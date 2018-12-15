@@ -1,3 +1,52 @@
+v3.491 [December 14, 2018]
+- Fuck blizzard
+- Fuck blizzard
+- Fuck blizzard
+- Fuck blizzard
+- Fuck UI department in particular
+- Fuck Ion
+- Fuck Tom
+- Fuck blizzard again
+- Fuck blizz forums censorship system
+
+Real one: https://www.tukui.org/forum/viewtopic.php?f=32&t=4621
+
+v3.49 [December 12, 2018]
+This is for patch 8.1, should work fine on 8.0 as well
+Additions:
+- Added apply font to all option. It is under media section.
+- Added an option to hide player model in afk screen
+- Added token price to currency dt (with option)
+- Added some option for currency dt to show less than your full 18 characters list for gold. No more tooltip going off-screen!
+Fixes:
+- Fixed another instance of AzeriteTooltip incompatibility
+- Fixed enhanced shadows not working for right chat data panel
+- Fixed viewport being for some reason failing to apply on sertain settings combo due to some magic and global frames shortcuts not working
+
+v3.482 [November 22nd 2018]
+Additions:
+- Added more options for stat fonts in character screen for armory
+Fixes:
+- Fixed chat tabs throwing errors on creation
+- Fixed some modules not functioning due to forgotten function rename
+
+WIP and To Do:
+These are probably going to appear in the next "planned" release for patch 8.1, unless something unexpected happens
+- Apply font to all
+- Some repositioning for "overflow" chat tabs
+- Overhaul of S&L currency datatext
+
+
+v3.481 [November 21st 2018]
+Additions:
+- Option for transmog glows in armory. Azerite traits are not going to change from how they are unless a massive request wave happens.
+
+WIP and To Do:
+These are probably going to appear in the next "planned" release for patch 8.1, unless something unexpected happens
+- Apply font to all
+- Some repositioning for "overflow" chat tabs
+- Overhaul of S&L currency datatext
+
 v3.48 [November 21st 2018]
 Requires ElvUI 10.83 to run
 Additions:
@@ -31,7 +80,7 @@ These are probably going to appear in the next "planned" release for patch 8.1
 - Apply font to all
 - Options for glows in character armory
 - Some repositioning for "overflow" chat tabs
-- Overhawl of S&L currency datatext
+- Overhaul of S&L currency datatext
 
 v3.471 [September 23rd 2018]
 Fixes:

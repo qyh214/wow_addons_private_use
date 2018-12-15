@@ -10,7 +10,7 @@ end
 local mod	= DBM:NewMod(dungeonID, "DBM-ZuldazarRaid", 1, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18026 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 18082 $"):sub(12, -3))
 mod:SetCreatureID(creatureID)
 mod:SetEncounterID(2263, 2284)--2263 Alliance, 2284 Horde
 --mod:DisableESCombatDetection()
@@ -34,9 +34,13 @@ mod:RegisterEventsInCombat(
 --	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
+--[[
+(ability.id = 282399 or ability.id = 281936 or ability.id = 285994 or ability.id = 286435 or ability.id = 285660) and type = "begincast"
+ or (ability.id = 282543 or ability.id = 282179 or ability.id = 282526 or ability.id = 282247 or ability.id = 286450 or ability.id = 282082) and type = "cast"
+ or (ability.id = 282533 or ability.id = 282243) and type = "begincast"
+--]]
 --TODO, detect Voodoo Blast targets and add runout?
 --TODO, add exploding soon and now warnings?
---TODO, same as above, but with Core. Update energy/timers
 --local warnXorothPortal				= mod:NewSpellAnnounce(244318, 2, nil, nil, nil, nil, nil, 7)
 local warnCrushed						= mod:NewYouAnnounce(285671, 3)
 local warnRendingBite					= mod:NewYouAnnounce(285875, 3)
@@ -45,7 +49,7 @@ local warnCore							= mod:NewTargetNoFilterAnnounce(coreSpellId, 2)
 
 local specWarnEnergyAOE					= mod:NewSpecialWarningCount(energyAOESpellId, nil, nil, nil, 2, 2)
 local specWarnSlam						= mod:NewSpecialWarningDodge(slamSpellId, nil, nil, nil, 2, 2)
-local specWarnFerociousRoar				= mod:NewSpecialWarningSpell(285994, nil, nil, nil, 2, 2)
+--local specWarnFerociousRoar				= mod:NewSpecialWarningSpell(285994, nil, nil, nil, 2, 2)
 local specWarnAdd						= mod:NewSpecialWarningSwitch(addSpawnId, "Dps", nil, nil, 1, 2)
 local specWarnAddInterrupt				= mod:NewSpecialWarningInterruptCount(addCastId, "HasInterrupt", nil, nil, 1, 2)
 local specWarnCrushedTaunt				= mod:NewSpecialWarningTaunt(285671, nil, nil, nil, 1, 2)
@@ -56,10 +60,10 @@ local specWarnRendingBiteTaunt			= mod:NewSpecialWarningTaunt(285875, nil, nil, 
 
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(18527))
 local timerEnergyAOECD					= mod:NewCDCountTimer(100, energyAOESpellId, nil, nil, nil, 2)
-local timerTankComboCD					= mod:NewCDTimer(20.1, tankComboId, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerSlamCD						= mod:NewCDTimer(23.1, slamSpellId, nil, nil, nil, 3)
-local timerFerociousRoarCD				= mod:NewCDTimer(21.9, 285994, nil, nil, nil, 2)
-local timerAddCD						= mod:NewCDTimer(60.7, addSpawnId, nil, nil, nil, 1)
+local timerTankComboCD					= mod:NewCDTimer(30.3, tankComboId, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerSlamCD						= mod:NewCDTimer(29.1, slamSpellId, nil, nil, nil, 3)
+--local timerFerociousRoarCD				= mod:NewCDTimer(21.9, 285994, nil, nil, nil, 2)
+local timerAddCD						= mod:NewCDTimer(120, addSpawnId, nil, nil, nil, 1)
 
 --local berserkTimer					= mod:NewBerserkTimer(600)
 
@@ -151,9 +155,9 @@ function mod:SPELL_CAST_START(args)
 		timerEnergyAOECD:Stop()
 		timerEnergyAOECD:Start(100, self.vb.EnergyAOECount+1)
 	elseif spellId == 285994 then
-		specWarnFerociousRoar:Show()
-		specWarnFerociousRoar:Play("fearsoon")
-		timerFerociousRoarCD:Start()
+		--specWarnFerociousRoar:Show()
+		--specWarnFerociousRoar:Play("fearsoon")
+		--timerFerociousRoarCD:Start()
 	elseif spellId == 282533 or spellId == 282243 then
 		if not castsPerGUID[args.sourceGUID] then
 			castsPerGUID[args.sourceGUID] = 0
@@ -256,7 +260,7 @@ function mod:SPELL_ENERGIZE(_, _, _, _, destGUID, _, _, _, spellId, _, _, amount
 	if (spellId == 282533 or spellId == 282243) and destGUID == UnitGUID("boss1") then
 		DBM:Debug("SPELL_ENERGIZE fired on Boss. Amount: "..amount)
 		local elapsed, total = timerEnergyAOECD:GetTime(self.vb.EnergyAOECount+1)--Grab current timer
-		local adjustAmount = 10--Assume on easy difficulties etc it'll be less, or more on harder ones
+		local adjustAmount = self:IsHard() and 10 or self:IsNormal() and 5 or 3
 		elapsed = elapsed + adjustAmount
 		local remaining = total-elapsed
 		--countdownRottingRegurg:Cancel()

@@ -1,9 +1,0 @@
-------------------------------------------------------------------------
-r96 | Caliaha | 2018-10-19 13:33:04 +0000 (Fri, 19 Oct 2018) | 2 lines
-Changed paths:
-   M /trunk/HandyNotes_DungeonLocations.lua
-
-Removed Seige of Boralus from one map, correct typos in comments, localization update
-
-------------------------------------------------------------------------
-

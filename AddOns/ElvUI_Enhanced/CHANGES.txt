@@ -1,19 +1,13 @@
-tag 1b86ed32b20a3981855384d925119d47ce5290b7 3.3.3-beta2
+tag cd1e88c0bbb5f687bb0f74208374648dc1adb120 3.3.4-beta1
 Author:	Feraldin <nickbock@hoarder.bocky.nl>
-Date:	Sat Sep 8 00:27:43 2018 +0200
+Date:	Fri Dec 14 21:37:46 2018 +0100
 
-3.3.3-beta2
-* Progression tooltip was not working
+3.3.4-beta1
+* Updated for 8.1
 
-commit de67a7f5924125f97be0b47c1d21323b03dd9c8b
+commit c41aeb4a3372a6b599871c5837fa63ba93b81218
 Author: Nick <git@bockmeulen.nl>
-Date:   Sat Sep 8 00:27:23 2018 +0200
+Date:   Fri Dec 14 21:33:54 2018 +0100
 
-    changelog and toc update
-
-commit 323021684fd5bdd188d9f3cc88475fe114527ad3
-Author: Nick <git@bockmeulen.nl>
-Date:   Sat Sep 8 00:26:46 2018 +0200
-
-    fix progression tooltip
+    Wow 8.1
 

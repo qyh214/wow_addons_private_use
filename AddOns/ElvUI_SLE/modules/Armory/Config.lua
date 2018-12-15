@@ -308,40 +308,10 @@ local function LoadArmoryConfigTable()
 										PaperDollFrame_UpdateStats()
 									end,
 								},
-								IlvlFont = {
-									type = 'group',
-									name = L["Fonts"],
-									order = 4,
-									guiInline = true,
-									get = function(info) return E.db.sle.Armory.Character.Stats.ItemLevel[ info[#info] ] end,
-									set = function(info, value) E.db.sle.Armory.Character.Stats.ItemLevel[ info[#info] ] = value; _G["CharacterArmory"]:UpdateIlvlFont() end,
-									args = {
-										font = {
-											type = 'select', dialogControl = 'LSM30_Font',
-											name = L["Font"],
-											order = 1,
-											values = function()
-												return AceGUIWidgetLSMlists and AceGUIWidgetLSMlists.font or {}
-											end,
-										},
-										size = {
-											type = 'range',
-											name = L["Font Size"],
-											order = 2,
-											min = 6,max = 22,step = 1,
-										},
-										outline = {
-											type = 'select',
-											name = L["Font Outline"],
-											order = 3,
-											values = FontStyleList,
-										},
-									},
-								},
 							},
 						},
 						Attributes = {
-							order = 3,
+							order = 10,
 							type = "group",
 							name = STAT_CATEGORY_ATTRIBUTES,
 							guiInline = true,
@@ -355,7 +325,7 @@ local function LoadArmoryConfigTable()
 							},
 						},
 						Attack = {
-							order = 4,
+							order = 11,
 							type = "group",
 							name = STAT_CATEGORY_ATTACK,
 							guiInline = true,
@@ -373,7 +343,7 @@ local function LoadArmoryConfigTable()
 							},
 						},
 						Enhancements = {
-							order = 5,
+							order = 12,
 							type = "group",
 							name = STAT_CATEGORY_ENHANCEMENTS,
 							guiInline = true,
@@ -388,7 +358,7 @@ local function LoadArmoryConfigTable()
 							},
 						},
 						Defence = {
-							order = 6,
+							order = 13,
 							type = "group",
 							name = DEFENSE,
 							guiInline = true,
@@ -405,10 +375,108 @@ local function LoadArmoryConfigTable()
 						},
 					},
 				},
+				Fonts = {
+					type = "group",
+					name = STAT_CATEGORY_ATTRIBUTES..": "..L["Fonts"],
+					-- guiInline = true,
+					order = 3,
+					args = {
+						IlvlFont = {
+							type = 'group',
+							name = STAT_AVERAGE_ITEM_LEVEL,
+							order = 1,
+							guiInline = true,
+							get = function(info) return E.db.sle.Armory.Character.Stats.ItemLevel[ info[#info] ] end,
+							set = function(info, value) E.db.sle.Armory.Character.Stats.ItemLevel[ info[#info] ] = value; _G["CharacterArmory"]:UpdateIlvlFont() end,
+							args = {
+								font = {
+									type = 'select', dialogControl = 'LSM30_Font',
+									name = L["Font"],
+									order = 1,
+									values = function()
+										return AceGUIWidgetLSMlists and AceGUIWidgetLSMlists.font or {}
+									end,
+								},
+								size = {
+									type = 'range',
+									name = L["Font Size"],
+									order = 2,
+									min = 6,max = 22,step = 1,
+								},
+								outline = {
+									type = 'select',
+									name = L["Font Outline"],
+									order = 3,
+									values = FontStyleList,
+								},
+							},
+						},
+						statFonts = {
+							type = 'group',
+							name = STAT_CATEGORY_ATTRIBUTES,
+							order = 2,
+							guiInline = true,
+							get = function(info) return E.db.sle.Armory.Character.Stats.statFonts[ info[#info] ] end,
+							set = function(info, value) E.db.sle.Armory.Character.Stats.statFonts[ info[#info] ] = value; _G["CharacterArmory"]:PaperDollFrame_UpdateStats() end,
+							args = {
+								font = {
+									type = 'select', dialogControl = 'LSM30_Font',
+									name = L["Font"],
+									order = 1,
+									values = function()
+										return AceGUIWidgetLSMlists and AceGUIWidgetLSMlists.font or {}
+									end,
+								},
+								size = {
+									type = 'range',
+									name = L["Font Size"],
+									order = 2,
+									min = 6,max = 22,step = 1,
+								},
+								outline = {
+									type = 'select',
+									name = L["Font Outline"],
+									order = 3,
+									values = FontStyleList,
+								},
+							},
+						},
+						catFonts = {
+							type = 'group',
+							name = L["Categories"],
+							order = 3,
+							guiInline = true,
+							get = function(info) return E.db.sle.Armory.Character.Stats.catFonts[ info[#info] ] end,
+							set = function(info, value) E.db.sle.Armory.Character.Stats.catFonts[ info[#info] ] = value; _G["CharacterArmory"]:PaperDollFrame_UpdateStats() end,
+							args = {
+								font = {
+									type = 'select', dialogControl = 'LSM30_Font',
+									name = L["Font"],
+									order = 1,
+									values = function()
+										return AceGUIWidgetLSMlists and AceGUIWidgetLSMlists.font or {}
+									end,
+								},
+								size = {
+									type = 'range',
+									name = L["Font Size"],
+									order = 2,
+									min = 6,max = 22,step = 1,
+								},
+								outline = {
+									type = 'select',
+									name = L["Font Outline"],
+									order = 3,
+									values = FontStyleList,
+								},
+							},
+						},
+					},
+				},
 				Backdrop = {
 					type = 'group',
 					name = L["Backdrop"],
-					order = 3,
+					order = 4,
 					args = {
 						SelectedBG = {
 							type = 'select',
@@ -577,10 +645,45 @@ local function LoadArmoryConfigTable()
 						},
 					},
 				},
+				Transmog = {
+					order = 9,
+					type = 'group',
+					name = L["Transmog"],
+					get = function(info) return E.db.sle.Armory.Character.Transmog[(info[#info])] end,
+					set = function(info, value) E.db.sle.Armory.Character.Transmog[(info[#info])] = value; _G["CharacterArmory"]:UpdateSettings("gear") end,
+					disabled = function() return not E.db.sle.Armory.Character.Enable end,
+					args = {
+						enableGlow = {
+							order = 1,
+							type = "toggle",
+							name = L["Enable Glow"],
+						},
+						enableArrow = {
+							order = 2,
+							type = "toggle",
+							name = L["Enable Arrow"],
+							desc = L["Enables a small arrow-like indicator on the item slot. Howering over this arrow will show the item this slot is transmogged into."],
+						},
+						glowNumber = {
+							type = 'range',
+							name = L["Glow Number"],
+							order = 3,
+							min = 2,max = 8,step = 1,
+							disabled = function() return not E.db.sle.Armory.Character.Transmog.enableGlow end,
+						},
+						glowOffset = {
+							type = 'range',
+							name = L["Glow Offset"],
+							order = 4,
+							min = -2,max = 4,step = 1,
+							disabled = function() return not E.db.sle.Armory.Character.Transmog.enableGlow end,
+						},
+					},
+				},
 				Enchant = {
 					type = 'group',
 					name = L["Enchant String"],
-					order = 9,
+					order = 10,
 					get = function(info) return E.db.sle.Armory.Character[(info[#info - 1])][(info[#info])] end,
 					set = function(info, value) E.db.sle.Armory.Character[(info[#info - 1])][(info[#info])] = value;  _G["CharacterArmory"]:UpdateSettings("ench") end,
 					args = {
@@ -1206,6 +1309,41 @@ local function LoadArmoryConfigTable()
 							set = function(_, value) E.db.sle.Armory.Inspect.Gem.yOffset = value; _G["InspectArmory"]:Update_Display(true) end,
 						},
 					}
+				},
+				Transmog = {
+					order = 12,
+					type = 'group',
+					name = L["Transmog"],
+					get = function(info) return E.db.sle.Armory.Inspect.Transmog[(info[#info])] end,
+					set = function(info, value) E.db.sle.Armory.Inspect.Transmog[(info[#info])] = value; _G["InspectArmory"]:UpdateSettings("transmog") end,
+					disabled = function() return not E.db.sle.Armory.Inspect.Enable end,
+					args = {
+						enableGlow = {
+							order = 1,
+							type = "toggle",
+							name = L["Enable Glow"],
+						},
+						enableArrow = {
+							order = 2,
+							type = "toggle",
+							name = L["Enable Arrow"],
+							desc = L["Enables a small arrow-like indicator on the item slot. Howering over this arrow will show the item this slot is transmogged into."],
+						},
+						glowNumber = {
+							type = 'range',
+							name = L["Glow Number"],
+							order = 3,
+							min = 2,max = 8,step = 1,
+							disabled = function() return not E.db.sle.Armory.Inspect.Transmog.enableGlow end,
+						},
+						glowOffset = {
+							type = 'range',
+							name = L["Glow Offset"],
+							order = 4,
+							min = -2,max = 4,step = 1,
+							disabled = function() return not E.db.sle.Armory.Inspect.Transmog.enableGlow end,
+						},
+					},
 				},
 				GeneralFonts = {
 					order = 20,

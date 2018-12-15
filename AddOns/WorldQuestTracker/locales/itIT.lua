@@ -3,9 +3,15 @@ if not L then return end
 
 L["S_APOWER_AVAILABLE"] = "Disponibile"
 L["S_APOWER_NEXTLEVEL"] = "Prossimo Livello"
+--[[Translation missing --]]
+--[[ L["S_DECREASESIZE"] = ""--]] 
 L["S_ENABLED"] = "Abilitato"
 L["S_ERROR_NOTIMELEFT"] = "Il tempo per questa missione è scaduto."
 L["S_ERROR_NOTLOADEDYET"] = "Questa quest non è ancora pronta, per favore aspetta qualche secondo. "
+--[[Translation missing --]]
+--[[ L["S_FACTION_TOOLTIP_SELECT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_FACTION_TOOLTIP_TRACK"] = ""--]] 
 L["S_FLYMAP_SHOWTRACKEDONLY"] = "Solo Tracciati"
 L["S_FLYMAP_SHOWTRACKEDONLY_DESC"] = "Mostra solo le missioni tracciate"
 L["S_FLYMAP_SHOWWORLDQUESTS"] = "Mostra Missioni Mondiali"
@@ -72,7 +78,7 @@ L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"] = "Lasciare l'attuale gruppo e cercarne u
 --[[Translation missing --]]
 --[[ L["S_GROUPFINDER_TUTORIAL1"] = ""--]] 
 --[[Translation missing --]]
---[[ L["S_MAPBAR_AUTOWORLDMAP"] = ""--]] 
+--[[ L["S_INCREASESIZE"] = ""--]] 
 L["S_MAPBAR_FILTER"] = "Filtro"
 L["S_MAPBAR_FILTERMENU_FACTIONOBJECTIVES"] = "Obiettivi Fazione"
 L["S_MAPBAR_FILTERMENU_FACTIONOBJECTIVES_DESC"] = "Mostra missioni fazioni anche se filtrate."
@@ -85,7 +91,6 @@ L["S_MAPBAR_OPTIONSMENU_ARROWSPEED_SLOW"] = "Lenta"
 L["S_MAPBAR_OPTIONSMENU_EQUIPMENTICONS"] = "Icone Equipaggiamento"
 L["S_MAPBAR_OPTIONSMENU_QUESTTRACKER"] = "Abilita Tracciamento Missione"
 L["S_MAPBAR_OPTIONSMENU_REFRESH"] = "Aggiorna"
-L["S_MAPBAR_OPTIONSMENU_SHARE"] = "Condividi Add-on"
 L["S_MAPBAR_OPTIONSMENU_SOUNDENABLED"] = "Abilita Suoni"
 --[[Translation missing --]]
 --[[ L["S_MAPBAR_OPTIONSMENU_STATUSBARANCHOR"] = ""--]] 
@@ -117,6 +122,46 @@ L["S_MAPBAR_SUMMARYMENU_MOREINFO"] = "Clicca per maggiori info"
 --[[ L["S_MAPBAR_SUMMARYMENU_NOATTENTION"] = ""--]] 
 L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "Richiede Attenzione"
 L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "Ricompense Odierne"
+--[[Translation missing --]]
+--[[ L["S_MAPFRAME_ALIGN_CENTER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_MAPFRAME_ALIGN_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_MAPFRAME_ALIGN_LEFT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_ANIMATIONS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_MAPFRAME_ALIGN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_MAPFRAME_SCALE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_QUESTBLACKLIST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_RESET"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_SHOWFACTIONS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_TRACKER_RESETPOSITION"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_WORLD_ANCHOR_LEFT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_WORLD_ANCHOR_RIGHT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_WORLD_DECREASEICONSPERROW"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_WORLD_INCREASEICONSPERROW"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = ""--]] 
 L["S_OVERALL"] = "Totale"
 L["S_PARTY"] = "Gruppo"
 --[[Translation missing --]]
@@ -159,10 +204,6 @@ L["S_QUESTTYPE_TRADESKILL"] = "Creazioni"
 --[[ L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = ""--]] 
-L["S_SHAREPANEL_THANKS"] = [=[Grazie per aver Condiviso World Quest Tracker!
-Manda il nostro link ai tuoi amici su facebook, twitter o al colosseo.]=]
---[[Translation missing --]]
---[[ L["S_SHAREPANEL_TITLE"] = ""--]] 
 L["S_SUMMARYPANEL_EXPIRED"] = "SCADUTO"
 L["S_SUMMARYPANEL_LAST15DAYS"] = "Ultimi 15 Giorni"
 --[[Translation missing --]]
@@ -173,11 +214,29 @@ L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Altri Personaggi"
 L["S_TUTORIAL_AMOUNT"] = "indica la quantità da ricevere"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Clicca per tracciare una missione."
 --[[Translation missing --]]
+--[[ L["S_TUTORIAL_MAPALIGN"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["S_TUTORIAL_PARTY"] = ""--]] 
 L["S_TUTORIAL_TIMELEFT"] = "indica il tempo rimasto (+4 ore, +90 minuti, + 30 minuti, meno di 30 minuti)"
+--[[Translation missing --]]
+--[[ L["S_TUTORIAL_WORLDBUTTONS"] = ""--]] 
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Questo pulsante mostra la mappa delle Isole Disperse."
 L["S_UNKNOWNQUEST"] = "Missione Sconosciuta"
 --[[Translation missing --]]
+--[[ L["S_WORLDBUTTONS_SHOW_NONE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_WORLDBUTTONS_SHOW_TYPE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_WORLDBUTTONS_SHOW_ZONE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_WORLDBUTTONS_TOGGLE_QUESTS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_WORLDMAP_QUESTLOCATIONS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_WORLDMAP_QUESTSUMMARY"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["S_WORLDMAP_TOOGLEQUESTS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_WORLDMAP_TOOLTIP_TRACKALL"] = ""--]] 
 L["S_WORLDQUESTS"] = "Missioni Mondiali"
 

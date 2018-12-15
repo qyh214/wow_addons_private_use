@@ -24,7 +24,7 @@ L= DBM:GetModLocalization(2323)--Grimfang and Firecaller (Alliance)
 L= DBM:GetModLocalization(2341)--Flamefist and the Illuminated (Horde)
 
 ---------------------------
---  Treasure Guardian (Both) --
+--  Opulence (Alliance) --
 ---------------------------
 L= DBM:GetModLocalization(2342)
 
@@ -46,14 +46,14 @@ L:SetMiscLocalization({
 })
 
 ---------------------------
---  Loa Council (Both) --
+--  Loa Council (Alliance) --
 ---------------------------
 L= DBM:GetModLocalization(2330)
 
----------------------------
--- High Tinker Mekkatorgue (Horde) --
----------------------------
-L= DBM:GetModLocalization(2332)
+L:SetMiscLocalization({
+	BwonsamdiWrath =	"Well, if ya so eager for death, ya shoulda come see me sooner!",
+	BwonsamdiWrath2 =	"Sooner or later... everybody serves me!"
+})
 
 ---------------------------
 --  King Rastakhan (Alliance) --
@@ -63,6 +63,11 @@ L= DBM:GetModLocalization(2335)
 L:SetOptionLocalization({
 	AnnounceAlternatePhase	= "Show general warnings for phase you aren't in as well (timers will always be shown regardless of this option)"
 })
+
+---------------------------
+-- High Tinker Mekkatorgue (Horde) --
+---------------------------
+L= DBM:GetModLocalization(2332)
 
 ---------------------------
 --  Sea Priest Blockade (Both) --

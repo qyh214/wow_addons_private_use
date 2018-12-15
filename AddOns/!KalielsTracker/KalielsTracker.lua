@@ -1052,8 +1052,10 @@ local function SetHooks()
 	local bck_QUEST_TRACKER_MODULE_SetBlockHeader = QUEST_TRACKER_MODULE.SetBlockHeader
 	function QUEST_TRACKER_MODULE:SetBlockHeader(block, text, questLogIndex, isQuestComplete, questID)
 		local _, level, suggestedGroup, _, _, _, frequency, _ = GetQuestLogTitle(questLogIndex)
-		local tagID, _ = GetQuestTagInfo(questID)
-		text = KT:CreateQuestTag(level, tagID, frequency, suggestedGroup)..text
+		if db.questShowTags then
+			local tagID, _ = GetQuestTagInfo(questID)
+			text = KT:CreateQuestTag(level, tagID, frequency, suggestedGroup)..text
+		end
 		bck_QUEST_TRACKER_MODULE_SetBlockHeader(self, block, text, questLogIndex, isQuestComplete, questID)
 		block.lineWidth = block.lineWidth or self.lineWidth - 8		-- mod default
 		block.level = level
@@ -1197,7 +1199,7 @@ local function SetHooks()
 			local border2 = progressBar.Bar:CreateTexture(nil, "BACKGROUND", nil, -3)
 			border2:SetPoint("TOPLEFT", -2, 2)
 			border2:SetPoint("BOTTOMRIGHT", 2, -2)
-			border2:SetColorTexture(0.3, 0.3, 0.3)
+			border2:SetColorTexture(0.4, 0.4, 0.4)
 
 			progressBar.Bar.Label:SetPoint("CENTER", 0, 0.5)
 			progressBar.Bar.Label:SetFont(LSM:Fetch("font", "Arial Narrow"), 13, "")
@@ -1412,7 +1414,7 @@ local function SetHooks()
 		return poiButton
 	end
 
-	hooksecurefunc("WorldMap_SetupWorldQuestButton", function(button, worldQuestType, rarity, isElite, tradeskillLineIndex, inProgress, selected, isCriteria, isSpellTarget, isEffectivelyTracked)
+	hooksecurefunc(QuestUtil, "SetupWorldQuestButton", function(button, worldQuestType, rarity, isElite, tradeskillLineIndex, inProgress, selected, isCriteria, isSpellTarget, isEffectivelyTracked)
         button.Glow:SetShown(false)
     end)
 

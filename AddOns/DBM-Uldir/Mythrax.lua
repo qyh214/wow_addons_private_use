@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2194, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18052 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 18122 $"):sub(12, -3))
 mod:SetCreatureID(134546)--138324 Xalzaix
 mod:SetEncounterID(2135)
 --mod:DisableESCombatDetection()
@@ -91,10 +91,24 @@ mod.vb.ruinIcon = 1
 mod.vb.echoesCast = 0
 mod.vb.isIntermission = false
 mod.vb.visionsCount = 0
-local beamTimers = {19.5, 24, 12, 12}--Changed for a 3rd time
+local beamTimers = {19.5, 12, 12, 12, 12}
 local mythicBeamTimers = {19.5, 15, 15, 15}
 local castsPerGUID = {}
 local infoframeTable = {}
+
+local function beamCorrection(self)
+	DBM:Debug("Boss skipped a beam, scheduling next one")
+	self:Unschedule(beamCorrection)
+	self.vb.beamCast = self.vb.beamCast + 1
+	local timer = self:IsMythic() and mythicBeamTimers[self.vb.beamCast+1] or beamTimers[self.vb.beamCast+1]
+	if timer then
+		timerObliterationbeamCD:Start(timer-4, self.vb.beamCast+1)
+		local timer2 = self:IsMythic() and mythicBeamTimers[self.vb.beamCast+1] or beamTimers[self.vb.beamCast+2]
+		if timer2 then
+			self:Schedule(timer2, beamCorrection, self)
+		end
+	end
+end
 
 function mod:OnCombatStart(delay)
 	self.vb.ruinCast = 0
@@ -124,6 +138,10 @@ function mod:OnCombatStart(delay)
 	countdownEssenceShear:Start(19-delay)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(5)
+	end
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(272146))
+		DBM.InfoFrame:Show(5, "table", infoframeTable, 1)
 	end
 end
 
@@ -173,7 +191,7 @@ function mod:SPELL_CAST_START(args)
 			timerObliterationBlastCD:Start(12, DBM_ADD)
 		end
 	elseif spellId == 273810 then--Timers start here, because we have to factor boss movement
-		timerOblivionSphereCD:Start(7)--Resets to 7
+		timerOblivionSphereCD:Start(7, self.vb.sphereCast+1)--Resets to 7
 		countdownOblivionSphere:Start(7)--Still seems same in all
 		if self:IsMythic() then
 			timerObliterationbeamCD:Start(18.5, 1)
@@ -187,12 +205,17 @@ function mod:SPELL_CAST_START(args)
 			timerIntermission:Start(80)
 		end
 	elseif spellId == 272115 then
+		self:Unschedule(beamCorrection)
 		self.vb.beamCast = self.vb.beamCast + 1
 		specWarnObliterationbeam:Show(self.vb.beamCast)
 		specWarnObliterationbeam:Play("watchstep")
 		local timer = self:IsMythic() and mythicBeamTimers[self.vb.beamCast+1] or beamTimers[self.vb.beamCast+1]
 		if timer then
 			timerObliterationbeamCD:Start(timer, self.vb.beamCast+1)
+			local timer2 = self:IsMythic() and mythicBeamTimers[self.vb.beamCast+1] or beamTimers[self.vb.beamCast+2]
+			if timer2 then
+				self:Schedule(timer2+4, beamCorrection, self)
+			end
 		end
 	elseif spellId == 274019 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnMindFlay:Show(args.sourceName)
@@ -303,12 +326,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 272146 then
 		infoframeTable[args.destName] = args.amount or 1
 		if self.Options.InfoFrame then
-			if not DBM.InfoFrame:IsShown() then
-				DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(272146))
-				DBM.InfoFrame:Show(5, "table", infoframeTable, 1)
-			else
-				DBM.InfoFrame:UpdateTable(infoframeTable)
-			end
+			DBM.InfoFrame:UpdateTable(infoframeTable)
 		end
 	end
 end
@@ -331,11 +349,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 272146 then
 		infoframeTable[args.destName] = nil
 		if self.Options.InfoFrame then
-			if #infoframeTable > 0 then
-				DBM.InfoFrame:UpdateTable(infoframeTable)
-			else
-				DBM.InfoFrame:Hide()
-			end
+			DBM.InfoFrame:UpdateTable(infoframeTable)
 		end
 	end
 end
@@ -395,6 +409,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		countdownImminentRuin:Cancel()
 		timerLivingWeaponCD:Stop()
 	elseif spellId == 279748 then
+		self:Unschedule(beamCorrection)
 		self.vb.sphereCast = 0
 		self.vb.ruinCast = 0
 		self.vb.isIntermission = false

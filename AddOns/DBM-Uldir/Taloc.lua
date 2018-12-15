@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2168, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18026 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 18116 $"):sub(12, -3))
 mod:SetCreatureID(137119)--Taloc
 mod:SetEncounterID(2144)
 mod:SetZone()
@@ -53,7 +53,7 @@ local specWarnGTFO						= mod:NewSpecialWarningGTFO(270290, nil, nil, nil, 1, 8)
 
 mod:AddTimerLine(BOSS)
 local timerPlasmaDischargeCD			= mod:NewCDCountTimer(30.4, 271225, nil, nil, nil, 3)--30.4-42
-local timerCudgelOfGoreCD				= mod:NewCDCountTimer(58.4, 271296, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)--60.4-63
+local timerCudgelOfGoreCD				= mod:NewCDCountTimer(58.2, 271296, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)--60.4-63
 local timerSanguineStaticCD				= mod:NewCDTimer(53.6, 272582, nil, nil, nil, 3)--60.4-63
 local timerEnlargedHeartCD				= mod:NewCDCountTimer(60.4, 275205, nil, nil, nil, 3, nil, DBM_CORE_TANK_ICON)--60.4-63 (also timer for hardened, go out at same time, no need for two)
 mod:AddTimerLine(DBM:GetSpellInfo(271965))
@@ -179,7 +179,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellPlasmaDischarge:Yell()
 		end
 	elseif spellId == 271965 then
-		ignoreGTFO = false
+		if self:IsTank() then
+			ignoreGTFO = true
+		end
 		warnPoweringDown:Show()
 		warnPoweringDown:Play("phasechange")
 		timerPoweredDown:Start()
@@ -235,6 +237,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	if spellId == 271225 then--Used later with icon feature
 
 	elseif spellId == 271965 then
+		ignoreGTFO = false
 		self.vb.plasmaCast = 0
 		self.vb.cudgelCount = 0
 		self.vb.enlargedCount = 0

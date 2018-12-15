@@ -1,6 +1,6 @@
 ## Interface: 80000
 ## Title: HandyNotes_DungeonLocations
-## Version: 1.43
+## Version: 1.44
 ## Notes: Shows locations of old world dungeon and raid entrances
 ## Author: Caliaha of Cairne
 ## RequiredDeps: HandyNotes

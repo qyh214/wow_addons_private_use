@@ -7,7 +7,7 @@ function AS:Postal(event, addon)
 
 	InboxPrevPageButton:SetPoint('CENTER', InboxFrame, 'BOTTOMLEFT', 45, 112)
 	InboxNextPageButton:SetPoint('CENTER', InboxFrame, 'BOTTOMLEFT', 295, 112)
-	OpenAllMail:Kill()
+	AS:Kill(OpenAllMail)
 
 	for i = 1, INBOXITEMS_TO_DISPLAY do
 		local b = _G['MailItem'..i..'ExpireTime']
@@ -29,7 +29,8 @@ function AS:Postal(event, addon)
 
 	if Postal_OpenAllMenuButton then
 		AS:SkinArrowButton(Postal_OpenAllMenuButton)
-		Postal_OpenAllMenuButton:SetPoint('LEFT', PostalOpenAllButton, 'RIGHT', 5, 0)
+		Postal_OpenAllMenuButton:SetPoint('LEFT', PostalOpenAllButton, 'RIGHT', 2, 0)
+		Postal_OpenAllMenuButton:SetSize(20, 20) -- Original it is 23, 23
 	end
 
 	if PostalOpenAllButton then

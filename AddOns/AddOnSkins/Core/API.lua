@@ -90,25 +90,47 @@ AS.Blizzard.Tooltip = {
 	'BorderBottomLeft',
 }
 
-function AS:StripTextures(Frame, Kill, Alpha)
-	local FrameName = Frame.GetName and Frame:GetName()
-	for _, Blizzard in pairs(AS.Blizzard.Frames) do
-		local BlizzFrame = Frame[Blizzard] or FrameName and _G[FrameName..Blizzard]
-		if BlizzFrame then
-			AS:StripTextures(BlizzFrame, Kill, Alpha)
-		end
+function AS:Kill(Object)
+	if Object.UnregisterAllEvents then
+		Object:UnregisterAllEvents()
+		Object:SetParent(AS.Hider)
+	else
+		Object.Show = Object.Hide
 	end
-	if Frame.GetNumRegions then
-		for i = 1, Frame:GetNumRegions() do
-			local Region = select(i, Frame:GetRegions())
-			if Region and Region:IsObjectType('Texture') then
-				if Kill then
-					Region:Hide()
-					Region.Show = AS.Noop
-				elseif Alpha then
-					Region:SetAlpha(0)
-				else
-					Region:SetTexture(nil)
+
+	Object:Hide()
+end
+
+function AS:StripTextures(Object, Kill, Alpha)
+	if Object:IsObjectType('Texture') then
+		if Kill then
+			AS:Kill(Object)
+		elseif Alpha then
+			Object:SetAlpha(0)
+		else
+			Object:SetTexture(nil)
+		end
+	else
+		local FrameName = Object.GetName and Object:GetName()
+
+		for _, Blizzard in pairs(AS.Blizzard.Frames) do
+			local BlizzFrame = Object[Blizzard] or FrameName and _G[FrameName..Blizzard]
+			if BlizzFrame then
+				AS:StripTextures(BlizzFrame, Kill)
+			end
+		end
+
+		if Object.GetNumRegions then
+			for i = 1, Object:GetNumRegions() do
+				local Region = select(i, Object:GetRegions())
+				if Region and Region:IsObjectType('Texture') then
+					if Kill then
+						AS:Kill(Region)
+					elseif Alpha then
+						Region:SetAlpha(0)
+					else
+						Region:SetTexture(nil)
+					end
 				end
 			end
 		end
@@ -170,7 +192,7 @@ function AS:Desaturate(frame)
 				local Texture = region:GetTexture()
 				if type(Texture) == 'string' and strlower(Texture) == 'interface\\dialogframe\\ui-dialogbox-corner' then
 					region:SetTexture(nil)
-					region:Kill()
+					AS:Kill(region)
 				else
 					region:SetDesaturated(true)
 				end

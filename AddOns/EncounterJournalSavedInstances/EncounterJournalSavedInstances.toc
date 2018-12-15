@@ -1,8 +1,0 @@
-## Interface: 80000
-## Title: Encounter Journal Saved Instances
-## Notes: Adds instance status indicators to Encounter Journal.
-## Notes-frFR: Ajoute des indicateurs de verrouillage d'instance au journal des rencontres.
-## Author: alex_chrome, Meivyn
-## Version: 1.2.3
-
-EncounterJournalSavedInstances.lua

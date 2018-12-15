@@ -13,6 +13,14 @@ to easily populate these arrays:
 ]]--
 
 local TRINKET_AGILITY_DPS = {
+	-- 8.1 trinkets
+	[165572] = true, -- Variable Intensity Gigavolt Oscillating Reactor
+	[165579] = true, -- Kimbul's Razor Claw
+	[165568] = true, -- Invocation of Yu'lon
+	[166794] = true, -- Forest Lord's Razorleaf
+	[165573] = true, -- Diamond-Laced Refracting Prism
+	[165577] = true, -- Bwonsamdi's Bargain
+	
 	-- 8.0 Trinkets
 	[161412] = true, -- Spiritbound Voodoo Burl
 	[161125] = true, -- Kaja-fied Banana
@@ -84,6 +92,15 @@ local TRINKET_AGILITY_DPS = {
 }
 
 local TRINKET_INTELLECT_DPS = {
+	-- 8.1 trinkets
+	[165569] = true, -- Ward of Envelopment
+	[165576] = true, -- Tidestorm Codex
+	[165578] = true, -- Mirror of Entwined Fate
+	[165571] = true, -- Incandescent Sliver
+	[165581] = true, -- Crest of Pa'ku
+	[166418] = true, -- Crest of Pa'ku
+	[166793] = true, -- Ancient Knot of Wisdom
+	
 	-- 8.0 Trinkets
 	[161472] = true, -- Lion's Grace
 	[161461] = true, -- Doom's Hatred
@@ -156,6 +173,14 @@ local TRINKET_INTELLECT_DPS = {
 }
 
 local TRINKET_STRENGTH_DPS = {
+	-- 8.1 trinkets
+	[165580] = true, -- Ramping Amplitude Gigavolt Engine
+	[166795] = true, -- Knot of Ancient Fury
+	[165574] = true, -- Grong's Primal Rage
+	[165570] = true, -- Everchill Anchor
+	[165573] = true, -- Diamond-Laced Refracting Prism
+	[165577] = true, -- Bwonsamdi's Bargain
+	
 	-- 8.0 Trinkets
 	[161474] = true, -- Lion's Strength
 	[161463] = true, -- Doom's Fury
@@ -222,6 +247,15 @@ local TRINKET_STRENGTH_DPS = {
 }
 
 local TRINKET_HEALER = {
+	-- 8.1 trinkets
+	[165569] = true, -- Ward of Envelopment
+	[165576] = true, -- Tidestorm Codex
+	[165578] = true, -- Mirror of Entwined Fate
+	[165571] = true, -- Incandescent Sliver
+	[165581] = true, -- Crest of Pa'ku
+	[166418] = true, -- Crest of Pa'ku
+	[166793] = true, -- Ancient Knot of Wisdom
+	
 	-- 8.0 Trinkets
 	[161472] = true, -- Lion's Grace
 	[161461] = true, -- Doom's Hatred
@@ -294,6 +328,18 @@ local TRINKET_HEALER = {
 }
 
 local TRINKET_TANK = {
+	-- 8.1 trinkets
+	[165572] = true, -- Variable Intensity Gigavolt Oscillating Reactor
+	[165580] = true, -- Ramping Amplitude Gigavolt Engine
+	[166795] = true, -- Knot of Ancient Fury
+	[165579] = true, -- Kimbul's Razor Claw
+	[165568] = true, -- Invocation of Yu'lon
+	[165574] = true, -- Grong's Primal Rage
+	[166794] = true, -- Forest Lord's Razorleaf
+	[165570] = true, -- Everchill Anchor
+	[165573] = true, -- Diamond-Laced Refracting Prism
+	[165577] = true, -- Bwonsamdi's Bargain
+	
 	-- 8.0 Trinkets
 	[161474] = true, -- Lion's Strength
 	[161463] = true, -- Doom's Fury

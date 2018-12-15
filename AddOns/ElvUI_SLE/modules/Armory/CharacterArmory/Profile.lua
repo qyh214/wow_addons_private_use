@@ -27,6 +27,13 @@ P.sle.Armory.Character = {
 		ItemQuality = false,
 	},
 	
+	Transmog = {
+		enableGlow = false,
+		enableArrow = true,
+		glowNumber = 3,
+		glowOffset = 1,
+	},
+	
 	Level = {
 		Display = 'Always', -- Always, MouseoverOnly, Hide
 		ShowUpgradeLevel = false,
@@ -71,6 +78,16 @@ P.sle.Armory.Character = {
 		AverageColor = {r = 0, g = 1, b = .59},
 		OnlyPrimary = true,
 		ItemLevel = {
+			font = "PT Sans Narrow",
+			size = 12,
+			outline = "NONE",
+		},
+		statFonts = {
+			font = "PT Sans Narrow",
+			size = 12,
+			outline = "NONE",
+		},
+		catFonts = {
 			font = "PT Sans Narrow",
 			size = 12,
 			outline = "NONE",

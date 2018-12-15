@@ -38,100 +38,108 @@ local _, pclass = UnitClass("Player")
 TMW.BE = {
 	debuffs = {
 		ReducedHealing = {
-			 115804, -- Mortal Wounds
+			   8679, -- Wound Poison
+			  27580, -- Sharpen Blade
+			  30213, -- Legion Strike
+			 115625, -- Mortal Cleave
+			-115804, -- Mortal Wounds
+			 195452, -- Nightblade
+			 287672, -- Fatal Wounds
 		},
 		CrowdControl = {
 			   -118, -- Polymorph
-			  -6770, -- Sap
 			   -605, -- Mind Control
-			  20066, -- Repentance
-			 -51514, -- Hex (also 211004, 210873, 211015, 211010)
-			  -9484, -- Shackle Undead
-			  -5782, -- Fear
-			  33786, -- Cyclone
-			  -3355, -- Freezing Trap
-			 209790, -- Freezing Arrow (hunter pvp)
 			   -710, -- Banish
-			  -6358, -- Seduction
 			  -2094, -- Blind
+			  -3355, -- Freezing Trap
+			  -5782, -- Fear
+			  -6358, -- Seduction
+			  -6770, -- Sap
+			  -9484, -- Shackle Undead
 			 -19386, -- Wyvern Sting
+			  20066, -- Repentance
+			  33786, -- Cyclone
+			 -51514, -- Hex (also 211015; 211010; 211004; 210873; 196942; 269352; 277778; 277784)
 			 -82691, -- Ring of Frost
+			 107079, -- Quaking Palm
 			 115078, -- Paralysis
 			 115268, -- Mesmerize
-			 107079, -- Quaking Palm
-			 207685, -- Sigil of Misery (Havoc Demon hunter)
 			 198909, -- Song of Chi-ji (mistweaver monk talent)
+			 207685, -- Sigil of Misery (Havoc Demon hunter)
 		},
 		Shatterable = {
 			    122, -- Frost Nova
-			 -82691, -- Ring of Frost
 			  33395, -- Freeze
+			 -82691, -- Ring of Frost
+			 198121, -- Frostbite
+			 228600, -- Glacial Spike
 		},
 		Bleeding = {
-			  -1822, -- Rake
-			  -1079, -- Rip
-			-115767, -- Deep Wounds
 			   -703, -- Garrote
-			  16511, -- Hemorrhage
-			 -11977, -- Rend
-			 155722, -- Rake
+			  -1079, -- Rip
+			  -1822, -- Rake
 			   1943, -- Rupture
+			 -11977, -- Rend
+			  16511, -- Hemorrhage
 			  77758, -- Thrash
 			 106830, -- Thrash
+			-115767, -- Deep Wounds
+			 155722, -- Rake
 			 162487, -- Steel Trap (hunter talent)
 			 185855, -- Lacerate (Survival hunter)
 			 194279, -- Caltrops (hunter talent)
+			-202028, -- Brutal Slash (feral druid talent)
+			 273794, -- Rezan's Fury (general azerite trait)
 		},
 		Feared = {
-			  -5782, -- Fear
-			  -5484, -- Howl of Terror
 			   5246, -- Intimidating Shout
+			  -5782, -- Fear
 			  -6789, -- Mortal Coil
-			 -87204, -- Sin and Punishment
 			  -8122, -- Psychic Scream
+			  87204, -- Sin and Punishment
 			 207685, -- Sigil of Misery (Havoc Demon hunter)
 		},
 		Incapacitated = {
 			     99, -- Incapacitating Roar
-			   3355, -- Freezing Trap
-			 209790, -- Freezing Arrow (hunter pvp)
-			  -6770, -- Sap
 			   -118, -- Polymorph
-			 115268, -- Mesmerize
-			 -51514, -- Hex (also 211004, 210873, 211015, 211010)
-			  20066, -- Repentance
-			 200196, -- Holy Word: Chastise
-			  82691, -- Ring of Frost
+			   2637, -- Hibernate
 			   1776, -- Gouge
+			  -3355, -- Freezing Trap
 			  -6358, -- Seduction
+			  -6770, -- Sap
 			 -19386, -- Wyvern Sting
-			 115078, -- Paralysis
-			  31661, -- Dragon's Breath
+			  20066, -- Repentance
+			 -51514, -- Hex (also 211015; 211010; 211004; 210873; 196942; 269352; 277778; 277784)
+			  82691, -- Ring of Frost
 			 107079, -- Quaking Palm
-			 198909, -- Song of Chi-ji (mistweaver monk talent)
-			 203126, -- Maim (with blood trauma feral pvp talent)
+			 115078, -- Paralysis
+			 115268, -- Mesmerize
+			 197214, -- Sundering
+			 200196, -- Holy Word: Chastise
+			 217832, -- Imprison (breakable)
+			 221527, -- Imprison (banish, talented)
 			 226943, -- Mind Bomb
 		},
 		Disoriented = {
 			  -2094, -- Blind
 			  31661, -- Dragon's Breath
-			 105421, -- Bliding light (paladin talent)
-			 186387, -- Bursting Shot (hunter marks ability)
+			 105421, -- Blinding light (paladin talent)
+			 198909, -- Song of Chi-ji (mistweaver monk talent)
 			 202274, -- Incendiary brew (brewmaster monk pvp talent)
 			 207167, -- Blinding Sleet (dk talent)
 			 213691, -- Scatter Shot (hunter pvp talent)
+			 236748, -- Intimidating Roar
 		},
 		Silenced = {
-			 -15487, -- Silence
-			 -25046, -- Arcane Torrent
 			  -1330, -- Garrote - Silence
+			 -15487, -- Silence
+			  31117, -- Unstable Affliction
 			  31935, -- Avenger's Shield
+			 -47476, -- Strangulate
 			 -78675, -- Solar Beam
 			 202933, -- Spider Sting
-			 199683, -- Last Word
-			 -47476, -- Strangulate
-			  31117, -- Unstable Affliction
 			 204490, -- Sigil of Silence
+			 217824; -- Shield of Virtue
 		},
 		Rooted = {
 			   -339, -- Entangling Roots
@@ -149,37 +157,40 @@ TMW.BE = {
 			 157997, -- Ice Nova (frost mage talent)
 			 162480, -- Steel Trap (hunter talent)
 			 190927, -- harpoon (survival hunter)
+			 198121, -- Frostbite
 			 199042, -- Thunderstruck (Warrior PVP)
 			 200108, -- Ranger's Net (Hunter talent)
 			 201158, -- Super Sticky Tar (Expert Trapper, Hunter talent, Tar Trap effect)
 			 204085, -- Deathchill (DK PVP)
-			 212638, -- tracker's net (hunter PvP )
-			 228600, -- glacial spike (frost mage talent)
+			 207171, -- Winter is Coming
+			 212638, -- Tracker's Net (hunter PvP )
+			 228600, -- Glacial Spike (frost mage talent)
+			 232559, -- Thorns
+			 233582, -- Entrenched in Flames
 		},
 		Slowed = {
 			   -116, -- Frostbolt
 			   -120, -- Cone of Cold
-			   2120, -- Flamestrike
-			   6343, -- Thunder Clap
 			  -1715, -- Hamstring
+			   2120, -- Flamestrike
 			  -3409, -- Crippling Poison
 			  -3600, -- Earthbind
 			  -5116, -- Concussive Shot
-			 -12544, -- Frost Armor
+			   6343, -- Thunder Clap
 			  -7992, -- Slowing Poison
-			  26679, -- Deadly Throw
+			 -12323, -- Piercing Howl
+			 -12544, -- Frost Armor
+			 -13810, -- Ice Trap
+			 -15407, -- Mind Flay
+			 -31589, -- Slow
 			  35346, -- Warp Time
 			  44614, -- Flurry
 			  45524, -- Chains of Ice
 			  50259, -- Dazed (Wild Charge, druid talent, cat form)
 			  50433, -- Ankle Crack
 			  51490, -- Thunderstorm
-			  61391, -- Typhoon
-			 -12323, -- Piercing Howl
-			 -13810, -- Ice Trap
-			 -15407, -- Mind Flay
-			 -31589, -- Slow
 			 -58180, -- Infected Wounds
+			  61391, -- Typhoon
 			 102793, -- Ursol's Vortex
 			 116095, -- Disable
 			 121253, -- Keg Smash
@@ -198,8 +209,9 @@ TMW.BE = {
 			 194858, -- Dragonsfire Grenade
 			 195645, -- Wing Clip
 			-196840, -- Frost Shock
+			 198222, -- System Shock
 			 198813, -- Vengeful Retreat
-			 201142, -- Frozen Wake (freezing trap break slow from master trapper survival hunter talent)
+			 201787, -- Heavy-Handed Strikes (ww pvp talent)
 			 204263, -- Shining Force
 			 204843, -- Sigil of Chains
 			 205021, -- Ray of Frost (frost mage talent)
@@ -210,28 +222,30 @@ TMW.BE = {
 			 206930, -- Heart Strike
 			 208278, -- Debilitating Infestation (DK unholy talent)
 			 209786, -- Goremaw's Bite
+			 210979, -- Focus in the light (holy priest artifact trait)
 			 211793, -- Remorseless Winter
 			 211831, -- Abomination's Might
 			 212764, -- White Walker
 			 212792, -- Cone of Cold (frost mage)
 			 222775, -- Strike from the Shadows
 			 228354, -- Flurry (frost mage ability)
-			 210979, -- Focus in the light (holy priest artifact trait)
+			 248744, -- Shiv
+			-287681, -- Turbo Fists
+			 288962, -- Blood Bolt
 		},
 		Stunned = {
-			  -1833, -- Cheap Shot
 			    -25, -- Stun
 			   -408, -- Kidney Shot
 			   -853, -- Hammer of Justice
+			  -1833, -- Cheap Shot
 			   5211, -- Mighty Bash
 			  -7922, -- Warbringer
 			  24394, -- Intimidation
-			  64044, -- Psychic Horror
-			  91797, -- Monstrous Blow
 			 -20549, -- War Stomp
-			  22703, -- Summon Infernal
+			  22703, -- Infernal Awakening
 			 -30283, -- Shadowfury
 			 -89766, -- Axe Toss
+			  91797, -- Monstrous Blow
 			 -91800, -- Gnaw
 			 108194, -- Asphyxiate (death knight, talent for unholy)
 			 118345, -- Pulverize
@@ -242,24 +256,27 @@ TMW.BE = {
 			 132169, -- Storm Bolt
 			 163505, -- Rake
 			 179057, -- Chaos Nova
-			 196958, -- Strike from the Shadows
 			 199804, -- Between the Eyes
-			 200166, -- Metamorphosis
+			 199085, -- Warpath
 			 200200, -- Holy Word: Chastise
+			 202244, -- Overrun
+			 202346, -- Double Barrel
 			 203123, -- Maim
-			 204399, -- Earthfury (enhancement shaman pvp talent)
+			 204437, -- Lightning Lasso
+			 205629, -- Demonic Trample
 			 205630, -- Illidan's Grasp (demon hunter vengeance pvp talent - primary effect)
 			 208618, -- Illidan's Grasp (demon hunter vengeance pvp talent - throw effect)
-			 207165, -- Abomination's Might
-			 207171, -- Winter is Coming
 			 211881, -- Fel Eruption
 			 221562, -- Asphyxiate (death knight, baseline for blood)
+			 255723, -- Bull Rush
+			 287254, -- Dead of Winter
 		},
 	},
 	buffs = {
 		SpeedBoosts = {
+			    783, -- Travel Form
 			  -2983, -- Sprint
-			   2379, -- Speed
+			  -2379, -- Speed
 			   2645, -- Ghost Wolf
 			   7840, -- Swim Speed
 			  36554, -- Shadowstep
@@ -267,156 +284,232 @@ TMW.BE = {
 			  58875, -- Spirit Walk
 			 -65081, -- Body and Soul
 			  68992, -- Darkflight
-			  85499, -- Speed of Light
 			  87023, -- Cauterize
 			 -61684, -- Dash
 			 -77761, -- Stampeding Roar
-			 108843, -- Blazing Speed
 			 111400, -- Burning Rush
 			 116841, -- Tiger's Lust
 			 118922, -- Posthaste
 			 119085, -- Chi Torpedo
 			 121557, -- Angelic Feather
-			 137452, -- Displacer Beast
-			 137573, -- Burst of Speed
+			-186257, -- Aspect of the Cheetah
+			 188024, -- Skystep Potion
 			 192082, -- Wind Rush (shaman wind rush totem talent)
 			 196674, -- Planewalker (warlock artifact trait)
-			 197023, -- Cut to the chase (rogue pvp talent)
-			 199407, -- Light on your feet (mistweaver monk artifact trait)
-			 201233, -- whirling kicks (windwalaker monk pvp talent)
-			 201447, -- Ride the wind (windwalaker monk pvp talent)
-			 209754, -- Boarding Party (rogue pvp talent)
-			 210980, -- Focus in the light (holy priest artifact trait)
-			 213177, -- swift as a coursing river (brewmaster artifact trait)
-			 214121, -- Body and Mind (priest talent)
-			 215572, -- Frothing Berserker (warrior talent)
-			 231390, -- Trailblazer (hunter talent)
-			-186257, -- Aspect of the Cheetah
+			 197023, -- Cut to the Chase (rogue pvp talent)
+			 199407, -- Light on your Feet (mistweaver monk artifact trait)
+			 201233, -- Whirling Kicks (windwalker monk pvp talent)
+			 201447, -- Ride the Wind (windwalker monk pvp talent)
+			 202164, -- Bounding Stride (warrior talent)
 			-204475, -- Windburst (marks hunter artifact ability)
+			 209754, -- Boarding Party (rogue pvp talent)
+			 210980, -- Focus in the Light (holy priest artifact trait)
+			 213177, -- Swift as a Coursing River (brewmaster artifact trait)
+			 213602, -- Greater Fade
+			 214121, -- Body and Mind (priest talent)
+			 231390, -- Trailblazer (hunter talent)
+			 236060, -- Frenetic Speed (fire mage talent)
+			 250878, -- Lightfoot Potion
+			 252216, -- Tiger Dash
+			 262232, -- War Machine
+			 273415, -- Gathering Storm
+			-276112, -- Divine Steed
 		},
 		ImmuneToStun = {
-			  33786, -- Cyclone
-			 -19263, -- Deterrence
-			  48792, -- Icebound Fortitude
-			  46924, -- Bladestorm
-			 227847, -- Bladestorm again?
-			    710, -- Banish
-			   6615, -- Free Action
-			  45438, -- Ice Block
 			    642, -- Divine Shield
+			    710, -- Banish
 			   1022, -- Blessing of Protection
+			   6615, -- Free Action
+			  33786, -- Cyclone
+			  45438, -- Ice Block
+			  46924, -- Bladestorm (fury)
+			  48792, -- Icebound Fortitude
+			 186265, -- Aspect of the Turtle
+			 213610, -- Holy Ward
+			 221527, -- Imprison
+			 227847, -- Bladestorm (arms)
+			-228049, -- Guardian of the Forgotten Queen (spellID might be wrong?)
+			 287081, -- Lichborne
 		},
 		DefensiveBuffsAOE = {
-			 -62618, -- Power Word: Barrier
 			 -31821, -- Aura Mastery
-			 -76577, -- Smoke Bomb
 			 -51052, -- Anti-Magic Zone
+			 -62618, -- Power Word: Barrier
+			  97463, -- Rallying Cry
+			 201633, -- Earthen Wall (from Earthen Wall Totem)
 			 204150, -- Aegis of light (prot pally talent)
 			 204335, -- Aegis of light (prot pally talent)
+			-209426, -- Darkness
 		},
 		DefensiveBuffsSingle = {
-			 114030, -- Vigilance
-			  47788, -- Guardian Spirit
-			  31850, -- Ardent Defender
-			  23920, -- Spell Reflection
-			    871, -- Shield Wall
-			 118038, -- Die by the Sword
-			  48707, -- Anti-Magic Shell
-			 104773, -- Unending Resolve
-			   6940, -- Blessing of Sacrifice
-			 108271, -- Astral Shift
-			   5277, -- Evasion
-			 102342, -- Ironbark
-			 155835, -- Bristling Fur
-			   1022, -- Blessing of Protection
-			  74001, -- Combat Readiness
-			  31224, -- Cloak of Shadows
-			  33206, -- Pain Suppression
-			  47585, -- Dispersion
-			 -19263, -- Deterrence
-			  48792, -- Icebound Fortitude
-			 115176, -- Zen Meditation
-			 122783, -- Diffuse Magic
-			  86659, -- Guardian of Ancient Kings
-			    642, -- Divine Shield
-			  45438, -- Ice Block
 			    498, -- Divine Protection
-			 157913, -- Evanesce
-			 115203, -- Fortifying Brew
+			    642, -- Divine Shield
+			    871, -- Shield Wall
+			   1022, -- Blessing of Protection
+			  -1966, -- Feint
+			   5277, -- Evasion
+			   6940, -- Blessing of Sacrifice
 			  22812, -- Barkskin
-			 122278, -- Dampen Harm
-			 113862, -- Greater Invisibility
+			  23920, -- Spell Reflection
+			  31224, -- Cloak of Shadows
+			  31850, -- Ardent Defender
+			  33206, -- Pain Suppression
+			  45182, -- Cheating Death
+			  45438, -- Ice Block
+			  47585, -- Dispersion
+			  47788, -- Guardian Spirit
+			  48707, -- Anti-Magic Shell
+			  48792, -- Icebound Fortitude
+			  53480, -- Roar of Sacrifice
 			  61336, -- Survival Instincts
+			  86659, -- Guardian of Ancient Kings
+			 102342, -- Ironbark
+			 104773, -- Unending Resolve
+			 108271, -- Astral Shift
+			 113862, -- Greater Invisibility
+			 115176, -- Zen Meditation
+			 115203, -- Fortifying Brew
+			 116849, -- Life Cocoon
+			 118038, -- Die by the Sword
+			 122278, -- Dampen Harm
+			 122783, -- Diffuse Magic
+			 155835, -- Bristling Fur
+			 184364, -- Enraged Regeneration
+			 186265, -- Aspect of the Turtle
+			 197268, -- Ray of Hope
+			 199754, -- Riposte
+		   	 204018, -- Blessing of Spellwarding
+			 205191, -- Eye for an Eye
+			 210918, -- Ethereal Form (shaman PVP talent)
+			 213602, -- Greater Fade
+			 213871, -- Bodyguard
+			-228049, -- Guardian of the Forgotten Queen (spellID might be wrong?)
+			 223658, -- Safeguard
+			 287081, -- Lichborne
 		},
 		DamageBuffs = {
-			  12292, -- Bloodbath
-			   1719, -- Battle Cry
+			   1719, -- Recklessness
+			   5217, -- Tiger's Fury
+			  12042, -- Arcane Power
 			  12472, -- Icy Veins
-			  51271, -- Pillar of Frost
+			  13750, -- Adrenaline Rush
+			  19574, -- Bestial Wrath
 			  31884, -- Avenging Wrath
+			  51271, -- Pillar of Frost
+			 102543, -- Incarnation: King of the Jungle
+			 102560, -- Incarnation: Chosen of Elune
+			 106951, -- Berserk
 			-107574, -- Avatar
+			 113858, -- Dark Soul: Instability
+			 113860, -- Dark Soul: Misery
 			 114050, -- Ascendance
 			 114051, -- Ascendance
-			   5217, -- Tiger's Fury
-		},
-		MiscHelpfulBuffs = {
-			   1044, -- Blessing of Freedom
-			  23920, -- Spell Reflection
-			  10060, -- Power Infusion
-			   2983, -- Sprint
-			  45182, -- Cheating Death
-			  31821, -- Aura Mastery
-			  68992, -- Darkflight
-			  53271, -- Master's Call
-			   1850, -- Dash
+			 137639, -- Storm, Earth, and Fire
+			 152173, -- Serenity
+			 162264, -- Metamorphosis
+			 185422, -- Shadow Dance
+			 190319, -- Combustion
+			 194223, -- Celestial Alignment
+			 194249, -- Voidform
+			 198144, -- Ice Form
+			 212155, -- Tricks of the Trade (Outlaw PVP talent)
+			 212283, -- Symbols of Death
+			 216113, -- Way of the Crane
+			 216331, -- Avenging Crusader
+			 262228, -- Deadly Calm
+			 266779, -- Coordinated Assault
+			 288613, -- Trueshot
 		},
 		DamageShield = {
+			    -17, -- Power Word: Shield
+			   1463, -- Incanter's Flow
+			 -11426, -- Ice Barrier
+			  48707, -- Anti-Magic Shell
+			  77535, -- Blood Shield
 			 114908, -- Spirit Shell
 			 108008, -- Indomitable
-			   1463, -- Incanter's Flow
-			 173260, -- Shieldtronic Shield
 			 108366, -- Soul Leech
-			 169373, -- Boulder Shield
-			 152118, -- Clarity of Will
-			 145441, -- Yu'lon's Barrier
 			 108416, -- Dark Pact
-			 -11426, -- Ice Barrier
-			    -17, -- Power Word: Shield
-			  77535, -- Blood Shield
 			 116849, -- Life Cocoon
-			 194022 --- Mental Fortitude (Shadow Priest Artifact)
+			 145441, -- Yu'lon's Barrier
+			 152118, -- Clarity of Will 
+			 169373, -- Boulder Shield
+			 173260, -- Shieldtronic Shield
+			 184662, -- Shield of Vengeance
+			 190456, -- Ignore Pain
+			 194022, -- Mental Fortitude (Shadow Priest Artifact)
+			 203538, -- Greater Blessing of Kings
+			 235313, -- Blazing Barrier
+			 235450, -- Prismatic Barrier
+			 258153, -- Watery Dome (m+)
+			 265991, -- Luster (m+)
+			 269279, -- Resounding Protection (general azerite trait)
+			 270657, -- Bulwark of the Masses (general azerite trait)
+			 272979, -- Bulwark of Light (paladin azerite trait)
+			 273432, -- Bound by Shadow (m+ and Uldir)
+			 274289, -- Burning Soul (DH azerite talent)
+			 274346, -- Soulmonger (DH azerite trait)
+			 274369, -- Sanctum (priest azerite trait)
+			-274814, -- Reawakening (druid azerite trait)
+			 271466, -- Luminous Barrier
+			 272987, -- Revel in Pain
+			 274395, -- Stalwart Protector (paladin azerite trait)
+			 280165, -- Ursoc's Endurance (druid azerite trait)
+			 280170, -- Duck and Cover (hunter azerite trait)
+			 280212, -- Bury the Hatchet (warrior azerite trait)
+			 280788, -- Retaliatory Fury
+			 280862, -- Last Gift
+			 287722, -- Death Denied
 		},
 		ImmuneToMagicCC = {
-			  33786, -- Cyclone
-			 -19263, -- Deterrence
-			  23920, -- Spell Reflection
-			  46924, -- Bladestorm
-			  48707, -- Anti-Magic Shell
-			  45438, -- Ice Block
 			    642, -- Divine Shield
-			  31224, -- Cloak of Shadows
-			   8178, -- Grounding Totem Effect
 			    710, -- Banish
-		     204018, -- Blessing of Spellwarding
+			   8178, -- Grounding Totem Effect
+			  23920, -- Spell Reflection
+			  31224, -- Cloak of Shadows
+			  33786, -- Cyclone
+			  45438, -- Ice Block
+			  46924, -- Bladestorm (fury)
+			  48707, -- Anti-Magic Shell
+			 186265, -- Aspect of the Turtle
+		   	 204018, -- Blessing of Spellwarding
+			 213610, -- Holy Ward
+			 213915, -- Mass Spell Reflection
+			 221527, -- Imprison
+			 227847, -- Bladestorm (arms)
+			-228049, -- Guardian of the Forgotten Queen (spellID might be wrong?)
 		},
 		BurstHaste = {
+			   2825, -- Bloodlust
+			  32182, -- Heroism
+			  80353, -- Time Warp
 			  90355, -- Ancient Hysteria
 			 146555, -- Drums of Rage
 			 178207, -- Drums of Fury
-			 230935, -- Drums of the Mountain
-			   2825, -- Bloodlust
-			  80353, -- Time Warp
 			 160452, -- Netherwinds
-			  32182, -- Heroism,
-			  264667, -- Primal Rage
-			  256740, -- Drums of the Maelstrom
+			 204361, -- Bloodlust (PVP talent)
+			 204362, -- Heroism (PVP talent)
+			 230935, -- Drums of the Mountain
+			 256740, -- Drums of the Maelstrom
+			 264667, -- Primal Rage
+		},
+		ImmuneToInterrupts = {
+			    642, -- Divine Shield
+			 186265, -- Aspect of the Turtle
+			 196773, -- Inner Focus
+			 209584, -- Zen Focus Tea
+			 210294, -- Divine Favor
+			 221705, -- Casting Circle
+			-228049, -- Guardian of the Forgotten Queen (spellID might be wrong?)
+			-289657, -- Holy Word: Concentration
+			 290641, -- Ancestral Gift
 		},
 	},
 	casts = {
 		Heals = {
-			   2061, -- Flash Heal
 			    596, -- Prayer of Healing
 			   2060, -- Heal
+			   2061, -- Flash Heal
 			  32546, -- Binding Heal
 			  33076, -- Prayer of Mending
 			  64843, -- Divine Hymn
@@ -447,21 +540,16 @@ TMW.BE = {
 			 209525, -- Soothing Mist
 
 		},
-		PvPSpells = {
-			    339, -- Entangling Roots
-			  33786, -- Cyclone
-			   5782, -- Fear
-			   -605, -- Mind Control
-			  51514, -- Hex
-			  20066, -- Repentance
-			    982, -- Revive Pet
-			  12051, -- Evocation
-			    118, -- Polymorph
-			   5484, -- Howl of Terror
-			  20484, -- Rebirth
-		},
 	},
 }
+
+TMW:RegisterUpgrade(85702, {
+	icon = function(self, ics)
+		-- Some equivalencies being retired.
+		ics.Name = ics.Name:gsub("PvPSpells", "118;605;982;5782;20066;33786;51514")
+		ics.Name = ics.Name:gsub("MiscHelpfulBuffs", "1044;1850;2983;10060;23920;31821;45182;53271;68992;197003;213915")
+	end,
+})
 
 TMW.BE.buffs.DefensiveBuffs	= CopyTable(TMW.BE.buffs.DefensiveBuffsSingle)
 for k, v in pairs(TMW.BE.buffs.DefensiveBuffsAOE) do

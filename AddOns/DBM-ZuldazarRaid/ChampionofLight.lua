@@ -7,7 +7,7 @@ end
 local mod	= DBM:NewMod(dungeonID, "DBM-ZuldazarRaid", 1, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18040 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 18064 $"):sub(12, -3))
 mod:SetCreatureID(creatureID)
 mod:SetEncounterID(2265)
 --mod:DisableESCombatDetection()

@@ -6,12 +6,10 @@ L["Allow right click to create waypoints with TomTom"] = [=[
 Autoriser le clic gauche pour créer des repéres avec TomTom]=]
 L["Continent Alpha"] = true
 L["Continent Scale"] = "Continent Echelle"
---[[Translation missing --]]
---[[ L["Don't show discovered dungeons"] = ""--]] 
+L["Don't show discovered dungeons"] = "Ne pas afficher les donjons decouverts."
 L["Enable TomTom integration"] = "Permettre l'intégration de TomTom"
 L["Filter Options"] = "Option de filtre"
---[[Translation missing --]]
---[[ L["Hide all BfA nodes from the map"] = ""--]] 
+L["Hide all BfA nodes from the map"] = "Cacher tous les nœuds de BFA de la carte"
 L["Hide all Broken Isle nodes from the map"] = "Cacher tous les nœuds des îles brisées de la carte"
 L["Hide all Cataclysm nodes from the map"] = "Cacher tous les nœuds de Cataclysme de la carte"
 L["Hide all Draenor nodes from the map"] = "Cacher tous les nœuds de Draenor de la carte"
@@ -19,8 +17,7 @@ L["Hide all Northrend nodes from the map"] = "Cacher tous les nœuds de Norfendr
 L["Hide all Outland nodes from the map"] = "Cacher tous les nœuds d' Outreterre de la carte"
 L["Hide all Pandaria nodes from the map"] = "Cacher tous les nœuds de Pandarie de la carte"
 L["Hide all Vanilla nodes from the map"] = "Cacher tous les nœuds de Vanilla de la carte"
---[[Translation missing --]]
---[[ L["Hide Battle for Azeroth"] = ""--]] 
+L["Hide Battle for Azeroth"] = "Masquer Battle For Azeroth"
 L["Hide Broken Isles"] = "Masquer les îles brisées"
 L["Hide Cataclysm"] = "Masquer Cataclysme"
 L["Hide Draenor"] = "Masquer Draenor"
@@ -41,7 +38,7 @@ L["Show icons on continent map"] = "Montrer les icônes sur la carte du continen
 L["Show lockout information on tooltips"] = "Montrer les informations de verrouillage dans les info-bulles"
 L["Show Mixed"] = "Montrer le mixte"
 L["Show mixed (dungeons + raids) locations on the map"] = "Montrer les emplacements mixtes (donjons + raids) sur la carte"
-L["Show on Continent"] = "Monter sur le continent"
+L["Show on Continent"] = "Montrer sur le continent"
 L["Show raid locations on the map"] = "Montrer les emplacements de raid sur la carte"
 L["Show Raids"] = "Montrer les raids"
 L["The alpha of dungeons and raids that are locked to any extent"] = [=[
@@ -55,8 +52,8 @@ L["The scale of the icons shown on the zone map"] = [=[
 L'échelle des icônes affichées sur la carte des zones]=]
 L["These settings control the look and feel of the icon."] = [=[
 Ces paramètres contrôlent l'apparence de l'icône.]=]
---[[Translation missing --]]
---[[ L["This will check for legion and bfa dungeons that have already been discovered. THIS IS KNOWN TO CAUSE TAINT, ENABLE AT OWN RISK."] = ""--]] 
+L["This will check for legion and bfa dungeons that have already been discovered. THIS IS KNOWN TO CAUSE TAINT, ENABLE AT OWN RISK."] = [=[
+Ceci permettra de vérifier si les donjons de Légion et BFA ont déjà été découverts. CELA EST CONNU POUR CAUSER DES CORRUPTIONS, A UTILISER A VOS RISQUES ET PÉRILS.]=]
 L["Turn mixed icons grey when ANY dungeon or raid listed is locked"] = [=[
 Transformez les icônes mixtes en gris lorsque TOUT donjon ou raid listé est verrouillé]=]
 L["Use a different alpha for dungeons and raids that are locked to any extent"] = "Utilisez un alpha différent pour les donjons et les raids qui sont verrouillés dans certaines conditions"

@@ -53,7 +53,6 @@ Bitte beachte dass diese Konfiguration vielleicht einige Einstellungen beinhalte
 Auch könnte es auch einige Optionen zurücksetzen/ändern die du den vorherigen Schritten ausgewählt hast.]]
 L["|cff1784d1%s|r role was chosen"] = "|cff1784d1%s|r Rolle wurde ausgewählt"
 L["Import Profile"] = "Profil importieren"
-L["AFK Mode"] = true
 L["SLE_INSTALL_SETTINGS_LAYOUT_TEXT"] = [[Diese Aktion könnte bewirken dass du einige Einstellungen verlierst.
 Fortfahren?]]
 L["SLE_INSTALL_SETTINGS_ADDONS_TEXT"] = [[Dieses wird ein Profil für diese Addons erstellen (wenn aktiviert) und zum erstellten Profil wechseln:
@@ -181,6 +180,13 @@ L["Block names"] = true
 L["PvP Type"] = true
 L["Spec Fonts"] = true
 L["Azerite Level Position"] = true
+L["Transmog"] = true
+L["Enable Glow"] = true
+L["Enable Arrow"] = true
+L["Enables a small arrow-like indicator on the item slot. Howering over this arrow will show the item this slot is transmogged into."] = true
+L["Glow Number"] = true
+L["Glow Offset"] = true
+L["Categories"] = true
 
 --AFK
 L["You Are Away From Keyboard for"] = "Du bist nicht an der Tastatur für"
@@ -449,6 +455,9 @@ L["Reversed"] = "Umgekehrt"
 L["Amount"] = "Anzahl"
 L["Order of each toon. Smaller numbers will go first"] = "Anordnung von jedem Twink. Kleiner Zahlen werden zu erst angezeigt."
 L["Tracked"] = "Verfolgt"
+L["Gold Throttle"] = true
+L["Mode"] = true
+L["Amount of gold needed on a character to show it in the list"] = true
 
 --Enhanced Shadows
 L["Enhanced Shadows"] = "Erweiterte Schatten"

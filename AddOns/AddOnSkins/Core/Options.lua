@@ -4,6 +4,32 @@ local sort, pairs, gsub, strfind, strlower, strtrim = sort, pairs, gsub, strfind
 local DEVELOPER_STRING = ''
 local LINE_BREAK = '\n'
 
+local Changelog = {
+	['4.00'] = {
+		'Core: API, Options & Embed',
+		'Removed: WeakAura & TellMeWhen',
+		'Added: ApparenceTooltip & Zygor',
+		'Updated: Blizzard Skins & Various Skin Updates',
+	},
+	['4.01'] = {
+		'Core: API & Options',
+		'Updated: Classic Quest Log',
+	},
+	['4.02'] = {
+		'Core: Options',
+		'Updated: Island Party Pose, Ace3, Parchment Remover',
+		'Added: WeakAuras, Immersion',
+	},
+	['4.03'] = {
+		'Core: API',
+		'Updated: Blizzard Character Skin',
+		'Removed: Parchment Remover (Added directly into ElvUI now)',
+	},
+	["4.04"] = {
+		'Core: API'
+	}
+}
+
 local DEVELOPERS = {
 	'AcidWeb', 'Affli', 'Aldarana', 'Arstraea',
 	'Blazeflack', 'Brian Thurlow',
@@ -455,24 +481,6 @@ AS.Options = {
 				},
 			},
 		},
-	},
-}
-
-local Changelog = {
-	['4.00'] = {
-		'Core: API, Options & Embed',
-		'Removed: WeakAura & TellMeWhen',
-		'Added: ApparenceTooltip & Zygor',
-		'Updated: Blizzard Skins & Various Skin Updates',
-	},
-	['4.01'] = {
-		'Core: API & Options',
-		'Updated: Classic Quest Log',
-	},
-	['4.02'] = {
-		'Core: Options',
-		'Updated: Island Party Pose, Ace3, Parchment Remover',
-		'Added: WeakAuras, Immersion',
 	},
 }
 
@@ -943,8 +951,6 @@ function AS:BuildOptions()
 
 	sort(skins)
 
-	tDeleteItem(skins, 'ParchmentRemover')
-
 	for _, skinName in pairs(skins) do
 		if strfind(skinName, 'Blizzard_') then
 			AS.Options.args.blizzard.args[skinName] = GenerateOptionTable(skinName, blizzorder)
@@ -960,13 +966,6 @@ function AS:BuildOptions()
 			type = 'toggle',
 			name = 'ElvUI Style',
 			order = 5,
-		}
-
-		AS.Options.args.general.args.ParchmentRemover = {
-			type = 'toggle',
-			name = 'ElvUI Parchment Remover',
-			desc = 'Removes Parchment added in ElvUI Blizzard Skins',
-			order = 6,
 		}
 
 		if AS:CheckAddOn('ElvUI_MerathilisUI') then

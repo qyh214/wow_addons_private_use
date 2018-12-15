@@ -197,30 +197,19 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |cffffffff3.1.3|r\n\n"..
-					"- FIXED - ticket #320 - problem after change position of PetTracker - changed"..
-					offs.."addon initialization.\n"..
-					"- FIXED - Quests - after click on quest inside the tracker, sometimes open map"..
-					offs.."but no quest detail (Blizz bug).\n"..
-					"- FIXED - Achievements - with no padding, when it has an option, without text"..
-					offs.."(Blizzard bug).\n"..
-					"- FIXED - Filters - Achievements - detection of instance type.\n"..
-					"- FIXED - ProgressBar duplicity.\n"..
-					"- UPDATED - Filters - track completed Bounty quests.\n"..
-					"- UPDATED - Wowhead URL - show it inside auto-tracked World Quest context"..
-					offs.."menu.\n"..
-					"- UPDATED - Addons support - PetTracker 8.0.6, TomTom v80001-1.0.2\n"..
-					"- UPDATED - Lib - MSA-DropDownMenu-1.0\n"..
-					"- IMPROVED - Addon TomTom - changed tag icon, removed click modifier,"..
-					offs.."added World Quest support, waypoint add by click on POI button, waypoint"..
-					offs.."update after change objective (see prev page).\n"..
-					"- IMPROVED - Dungeon / Scenario support (include fix for \"Collapse in"..
-					offs.."instance\" problem).\n"..
-					"- IMPROVED - Filters menu - War Campaign detection, added faction color and"..
-					offs.."icon for War Campaign item.\n"..
-					"- IMPROVED - Tooltip - Quests - add choices, better show of Azerite as Artifact"..
-					offs.."power.\n"..
-					"- IMPROVED - Tooltip - World Quests - better show of Azerite as Artifact power.\n\n"..
+			text = cTitle.."         What's NEW in version |cffffffff3.1.4|r\n\n"..
+					"- FIXED - code changes inside WoW 8.1.0\n"..
+					"- FIXED - ticket #317 - Error after Achievement filtering inside zone without"..
+					offs.."Continent.\n"..
+					"- FIXED - ticket #317 - Error after add TomTom quest waypoint inside zone"..
+					offs.."without Continent.\n"..
+					"- FIXED - Filters - World Event filtering.\n"..
+					"- UPDATED - Addons support - ElvUI 10.84, Tukui 18.19, SyncUI 8.0.3,"..
+					offs.."SpartanUI 5.0.11, SuperVillain UI 1.5.1\n"..
+					"- ADDED - Option to show / hide Quest tags (quest level, quest type) inside"..
+					offs.."the tracker and Quest Log.\n"..
+					"- ADDED - PetTracker - progress bar skin.\n"..
+					"- IMPROVED - PetTracker - position of pet source icons changed.\n\n"..
 
 					cTitle.."Issue reporting|r\n"..
 					"For reporting please use "..cBold.."Tickets|r instead of Comments on Curse.com.\n\n\n\n"..

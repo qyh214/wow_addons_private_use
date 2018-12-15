@@ -3,9 +3,14 @@ if not L then return end
 
 L["S_APOWER_AVAILABLE"] = "Disponible"
 L["S_APOWER_NEXTLEVEL"] = "Niveau suivant"
+L["S_DECREASESIZE"] = "Diminuer la taille"
 L["S_ENABLED"] = "Activé"
 L["S_ERROR_NOTIMELEFT"] = "Cette quête n'a pas de temps restant."
 L["S_ERROR_NOTLOADEDYET"] = "Cette quête n'est pas encore chargée, merci de patienter quelques secondes."
+L["S_FACTION_TOOLTIP_SELECT"] = [=[
+Clic: sélectionner cette faction]=]
+L["S_FACTION_TOOLTIP_TRACK"] = [=[
+Shift + Clic: suivi des quêtes de cette faction]=]
 L["S_FLYMAP_SHOWTRACKEDONLY"] = "Suivi seulement"
 L["S_FLYMAP_SHOWTRACKEDONLY_DESC"] = "Afficher seulement les quêtes suivies"
 L["S_FLYMAP_SHOWWORLDQUESTS"] = "Affiche les Expéditions"
@@ -53,7 +58,7 @@ L["S_GROUPFINDER_RIGHTCLICKCLOSE"] = "clic droit pour fermer"
 L["S_GROUPFINDER_SECONDS"] = "Secondes"
 L["S_GROUPFINDER_TITLE"] = "Recherche de groupe"
 L["S_GROUPFINDER_TUTORIAL1"] = "Faites vos expéditions rapidement grâce à un groupe!"
-L["S_MAPBAR_AUTOWORLDMAP"] = "Carte du monde (mode auto)"
+L["S_INCREASESIZE"] = "Augmenter la taille"
 L["S_MAPBAR_FILTER"] = "Filtre"
 L["S_MAPBAR_FILTERMENU_FACTIONOBJECTIVES"] = "Objectifs de faction"
 L["S_MAPBAR_FILTERMENU_FACTIONOBJECTIVES_DESC"] = "Afficher les quêtes de faction, même si elles sont filtrées."
@@ -66,7 +71,6 @@ L["S_MAPBAR_OPTIONSMENU_ARROWSPEED_SLOW"] = "Lent"
 L["S_MAPBAR_OPTIONSMENU_EQUIPMENTICONS"] = "Icônes d'équipement"
 L["S_MAPBAR_OPTIONSMENU_QUESTTRACKER"] = "Activer le suivi de WQT"
 L["S_MAPBAR_OPTIONSMENU_REFRESH"] = "Rafraichir"
-L["S_MAPBAR_OPTIONSMENU_SHARE"] = "Partager cet addon"
 L["S_MAPBAR_OPTIONSMENU_SOUNDENABLED"] = "Activer le son"
 L["S_MAPBAR_OPTIONSMENU_STATUSBARANCHOR"] = "Attacher en  haut"
 L["S_MAPBAR_OPTIONSMENU_TOMTOM_WPPERSISTENT"] = "Point de passage persistant"
@@ -95,6 +99,28 @@ L["S_MAPBAR_SUMMARYMENU_NOATTENTION"] = [=[Aucune quête suivie sur vos autres
 personnages n'a moins de 2 heures restantes.]=]
 L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "Demande votre attention"
 L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "Récompenses du jour"
+L["S_MAPFRAME_ALIGN_CENTER"] = "centrer"
+L["S_MAPFRAME_ALIGN_DESC"] = "|cFF22FF22Cliquez|r pour activer pour basculer l'alignement du cadre de la carte de gauche au centre, et du centre à gauche de l'écran."
+L["S_MAPFRAME_ALIGN_LEFT"] = "gauche"
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_ANIMATIONS"] = ""--]] 
+L["S_OPTIONS_MAPFRAME_ALIGN"] = "Cadre de la carte centré"
+L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "Vous devez activer 'Echelle du cadre de la carte' avant, aucune valeur n'à changé"
+L["S_OPTIONS_MAPFRAME_SCALE"] = [=[Échelle de la carte
+]=]
+L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = "Activer la mise à l'échelle du cadre"
+L["S_OPTIONS_QUESTBLACKLIST"] = "Liste noire de quêtes"
+L["S_OPTIONS_RESET"] = "Réinitialiser"
+L["S_OPTIONS_SHOWFACTIONS"] = "Afficher les factions"
+L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = "Pas de priorité par temps restant"
+L["S_OPTIONS_TRACKER_RESETPOSITION"] = "Réinitialiser la position"
+L["S_OPTIONS_WORLD_ANCHOR_LEFT"] = "Ancrer à gauche"
+L["S_OPTIONS_WORLD_ANCHOR_RIGHT"] = "Ancrer à droite"
+L["S_OPTIONS_WORLD_DECREASEICONSPERROW"] = "Diminuer le nombre de carrés par ligne"
+L["S_OPTIONS_WORLD_INCREASEICONSPERROW"] = "Augmenter le nombre de carrés par ligne"
+L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = "Organiser par cartes"
+L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = "Organiser par type de quête"
+L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = "Seulement traqués"
 L["S_OVERALL"] = "Total"
 L["S_PARTY"] = "Groupe"
 L["S_PARTY_DESC1"] = "Une étoile bleue veut dire que tous le groupe a la quête."
@@ -123,11 +149,7 @@ L["S_RAREFINDER_TOOLTIP_REMOVE"] = [=[Supprimer
 ]=]
 L["S_RAREFINDER_TOOLTIP_SEACHREALM"] = "Chercher sur d'autres royaumes"
 L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = "Repéré par"
---[[Translation missing --]]
---[[ L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = ""--]] 
-L["S_SHAREPANEL_THANKS"] = [=[Merci de partager World Quest Tracker !
-Envoyez notre lien à vos amis sur Facebook, Twitter, à l'Élysée...]=]
-L["S_SHAREPANEL_TITLE"] = "For All Those About to Rock!"
+L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = "il y a quelques minutes"
 L["S_SUMMARYPANEL_EXPIRED"] = "EXPIRÉ"
 L["S_SUMMARYPANEL_LAST15DAYS"] = "Les 15 derniers jours"
 L["S_SUMMARYPANEL_LIFETIMESTATISTICS_ACCOUNT"] = "Statistiques de votre compte "
@@ -135,10 +157,26 @@ L["S_SUMMARYPANEL_LIFETIMESTATISTICS_CHARACTER"] = "Statistiques de votre person
 L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Autres personnages"
 L["S_TUTORIAL_AMOUNT"] = "Indique le montant à recevoir"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Cliquez pour suivre une quête."
+L["S_TUTORIAL_MAPALIGN"] = "Cliquez ici pour sélectionner l'alignement de la carte du monde"
 L["S_TUTORIAL_PARTY"] = "Dans un groupe, une étoile bleue indique les quêtes que tous le groupe fait !"
 L["S_TUTORIAL_TIMELEFT"] = "Indique le temps restant (+4 heures, +90 minutes, +30 minutes, moins de 30 minutes)"
+L["S_TUTORIAL_WORLDBUTTONS"] = [=[Cliquez ici pour alterner entre trois types de sommaires:
+
+- |cFFFFAA11Par type de quête|r
+- |cFFFFAA11Par zone|r
+- |cFFFFAA11Aucun|r
+
+Cliquez sur |cFFFFAA11Afficher les quêtes|r pour cacher les emplacements de quêtes.
+]=]
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Ce bouton vous apporte la carte des îles brisées."
 L["S_UNKNOWNQUEST"] = "Quête inconnue"
+L["S_WORLDBUTTONS_SHOW_NONE"] = "Cacher le sommaire"
+L["S_WORLDBUTTONS_SHOW_TYPE"] = "Afficher le sommaire"
+L["S_WORLDBUTTONS_SHOW_ZONE"] = "Trier par zone"
+L["S_WORLDBUTTONS_TOGGLE_QUESTS"] = "Activer les quêtes"
+L["S_WORLDMAP_QUESTLOCATIONS"] = "Affiche les emplacements de quêtes"
+L["S_WORLDMAP_QUESTSUMMARY"] = "Affiche les résumés de quêtes "
 L["S_WORLDMAP_TOOGLEQUESTS"] = "Afficher les quêtes"
+L["S_WORLDMAP_TOOLTIP_TRACKALL"] = "suivre toutes les quêtes de cette liste"
 L["S_WORLDQUESTS"] = "Expéditions"
 

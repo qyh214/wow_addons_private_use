@@ -1,4 +1,4 @@
-﻿## Interface: 80000
+﻿## Interface: 80100
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Party-Classic (NYI)|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Gruppe-Classic|r
@@ -24,9 +24,25 @@
 ## X-DBM-Mod-Name-koKR: 5인 던전(오리지널)
 ## X-DBM-Mod-Name-zhTW: 隊伍首領 (傳統)
 ## X-DBM-Mod-Sort: 1115
-## X-DBM-Mod-MapID: 
+## X-DBM-Mod-MapID: 48,389,34
 localization.en.lua
 localization.de.lua
 localization.kr.lua
 localization.tw.lua
 BlackfathomDeeps\GhamooRa.lua
+BlackfathomDeeps\Domina.lua
+BlackfathomDeeps\Korul.lua
+BlackfathomDeeps\Thruk.lua
+BlackfathomDeeps\Guardian.lua
+BlackfathomDeeps\Gore.lua
+BlackfathomDeeps\Bathiel.lua
+BlackfathomDeeps\Akumai.lua
+
+RagefireChasm\Adarogg.lua
+RagefireChasm\Koranthal.lua
+RagefireChasm\Slagmaw.lua
+RagefireChasm\Gordoth.lua
+
+StormwindStockaid\Hogger.lua
+StormwindStockaid\LordOverheat.lua
+StormwindStockaid\Moloch.lua

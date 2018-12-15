@@ -1486,7 +1486,9 @@ If your input is a regular statement to be evaluated, e.g. 'a and b or c', you d
 
 If you have any control blocks (e.g. if/then), you'll need return statements.
 
-To get a reference to this icon/group, use "thisobj". To insert a reference to another icon by GUID, shift click that icon while this editbox has focus.
+|cff7fffff-|r To get a reference to the icon or group, use variable "thisobj". 
+|cff7fffff-|r To get a reference to the 'unit' for Unit Conditions, use variable "thisunit". 
+|cff7fffff-|r To insert a reference to another icon by GUID, shift click that icon while this editbox has focus.
 
 If more help is needed (but not help about how to write Lua code), open a ticket on CurseForge. For help on how to write Lua, go to the internet.]]
 
@@ -2767,9 +2769,9 @@ L["ReducedHealing"] = "Reduced Healing"
 L["DefensiveBuffs"] = "Defensive Buffs"
 L["DefensiveBuffsSingle"] = "Targeted Defensive Buffs"
 L["DefensiveBuffsAOE"] = "AOE Defensive Buffs"
-L["MiscHelpfulBuffs"] = "Misc. Helpful Buffs"
 L["SpeedBoosts"] = "Speed Boosts"
 L["DamageBuffs"] = "Damage Buffs"
+L["ImmuneToInterrupts"] = "Immunity to Interrupt Spells"
 
 -- Deprecated
 --L["IncreasedVersatility"] = "Increased Versatility"
@@ -2794,9 +2796,10 @@ L["DamageBuffs"] = "Damage Buffs"
 --L["IncreasedPhysHaste"] = "Increased Physical Haste"
 --L["IncreasedSpellHaste"] = "Increased Spell Haste"
 --L["PhysicalDmgTaken"] = "Physical Damage Taken"
+--L["MiscHelpfulBuffs"] = "Misc. Helpful Buffs"
+--L["PvPSpells"] = "PvP Crowd Control, etc."
 
 L["Heals"] = "Player Heals"
-L["PvPSpells"] = "PvP Crowd Control, etc."
 
 L["GCD"] = "Global Cooldown"
 

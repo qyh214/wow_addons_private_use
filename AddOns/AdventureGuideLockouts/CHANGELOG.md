@@ -1,3 +1,13 @@
+### v.1.2.6
+- [x] Attempt to implement new world bosses
+
+### v1.2.5
+- [x] Changed add-on name to be more user-friendly
+
+### v1.2.4
+- [x] Updated for patch 8.1
+- [x] New README, thanks to Willexan
+
 ### v1.2.3
 - [x] Warfront boss should no longer be flagged as killed if your faction doesn't have access to it
 

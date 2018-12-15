@@ -218,8 +218,10 @@ do --<< Button Script >>--
 				else
 					CurrentLineText = _G['GameTooltipTextLeft'..i]:GetText()
 				end
+				
+				if not CurrentLineText then CurrentLineText = "" end
 
-				SetName = CurrentLineText and CurrentLineText:match('^(.+) %((%d)/(%d)%)$') or nil
+				SetName = CurrentLineText:match('^(.+) %((%d)/(%d)%)$') or nil
 				
 				if SetName and type(IA.SetItem[SetName]) == 'table' then
 					local SetCount, SetOptionCount = 0, 0
@@ -2294,9 +2296,12 @@ function IA:InspectFrame_DataSetting(DataTable)
 							Slot.TransmogrifyAnchor.Link = DataTable.Gear[SlotName].Transmogrify ~= 'NotDisplayed' and DataTable.Gear[SlotName].Transmogrify or nil
 
 							if Slot.TransmogrifyAnchor.Link and T.type(Slot.TransmogrifyAnchor.Link) ~= 'number' then
-								Slot.TransmogrifyAnchor:Show()
-								LCG.AutoCastGlow_Start(Slot,{1, .5, 1, 1},6,0.25,1.2,nil,nil,"_TransmogGlow")
+								if E.db.sle.Armory.Inspect.Transmog.enableArrow then Slot.TransmogrifyAnchor:Show() end
+								if E.db.sle.Armory.Inspect.Transmog.enableGlow then LCG.AutoCastGlow_Start(Slot,{1, .5, 1, 1},E.db.sle.Armory.Inspect.Transmog.glowNumber,0.25,1,E.db.sle.Armory.Inspect.Transmog.glowOffset,E.db.sle.Armory.Inspect.Transmog.glowOffset,"_TransmogGlow") end
 							end
+								-- Slot.TransmogrifyAnchor:Show()
+								-- LCG.AutoCastGlow_Start(Slot,{1, .5, 1, 1},6,0.25,1.2,nil,nil,"_TransmogGlow")
+							-- end
 						end
 						
 						R, G, B = GetItemQualityColor(Slot.ItemRarity)
@@ -2873,6 +2878,22 @@ function IA:UpdateSettings(part)
 			end
 			if _G["InspectArmory"][SlotName] and _G["InspectArmory"][SlotName].EnchantWarning then
 				_G["InspectArmory"][SlotName].EnchantWarning:Size(db.Enchant.WarningSize)
+			end
+		end
+	end
+	if part == "transmog" or part == "all" then
+		for SlotName, _ in T.pairs(Info.Armory_Constants.CanTransmogrifySlot) do
+			local Slot = _G["InspectArmory"][SlotName]
+			LCG.AutoCastGlow_Stop(Slot,"_TransmogGlow")
+			if Slot and Slot.TransmogrifyAnchor then
+				if Slot.TransmogrifyAnchor.Link and T.type(Slot.TransmogrifyAnchor.Link) ~= 'number' then
+					if E.db.sle.Armory.Inspect.Transmog.enableArrow then Slot.TransmogrifyAnchor:Show() else Slot.TransmogrifyAnchor:Hide() end
+					if E.db.sle.Armory.Inspect.Transmog.enableGlow then
+						LCG.AutoCastGlow_Start(Slot,{1, .5, 1, 1},E.db.sle.Armory.Inspect.Transmog.glowNumber,0.25,1,E.db.sle.Armory.Inspect.Transmog.glowOffset,E.db.sle.Armory.Inspect.Transmog.glowOffset,"_TransmogGlow")
+					else
+						LCG.AutoCastGlow_Stop(Slot,"_TransmogGlow")
+					end
+				end
 			end
 		end
 	end

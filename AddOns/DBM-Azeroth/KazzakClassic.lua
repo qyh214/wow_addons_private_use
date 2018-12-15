@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("KazzakClassic", "DBM-Azeroth")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 656 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 660 $"):sub(12, -3))
 mod:SetCreatureID(121818)--121818 TW ID, need classic ID
 --mod:SetModelID(17887)
 mod:SetZone()
@@ -24,14 +24,14 @@ local specWarnMark				= mod:NewSpecialWarningMoveAway(243723, nil, nil, nil, 1, 
 
 local timerVoidBoltCD			= mod:NewCDTimer(27.8, 243713, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--Iffy
 local timerMarkCD				= mod:NewCDTimer(19.1, 243723, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON)
-local timerShadowBoltVolleyCD	= mod:NewCDTimer(11, 243712, nil, nil, nil, 2)
+--local timerShadowBoltVolleyCD	= mod:NewCDTimer(7.6, 243712, nil, nil, nil, 2)
 
 --mod:AddReadyCheckOption(48620, false)
 
 function mod:OnCombatStart(delay, yellTriggered)
 	if yellTriggered then
 		timerVoidBoltCD:Start(8.3-delay)
-		timerShadowBoltVolleyCD:Start(11.5-delay)
+		--timerShadowBoltVolleyCD:Start(11.5-delay)
 		timerMarkCD:Start(14.1-delay)
 	end
 end
@@ -39,7 +39,7 @@ end
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 243712 then
 		warningShadowBoltVolley:Show()
-		timerShadowBoltVolleyCD:Start()
+		--timerShadowBoltVolleyCD:Start()
 	end
 end
 

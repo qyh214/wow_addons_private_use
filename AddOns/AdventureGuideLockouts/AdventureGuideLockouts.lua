@@ -76,7 +76,7 @@ local instancesData = {
 	[649] = 757,	-- Trial of the Crusader
 	[249] = 760,	-- Onyxia's Lair
 	[631] = 758,	-- Icecrown Citadel
-	[724] = 761,	-- The Ruby Sanctum		
+	[724] = 761,	-- The Ruby Sanctum
 	[645] = 66,  	-- Blackrock Caverns
 	[36] = 63,  	-- Deadmines
 	[938] = 184,	-- End Time
@@ -110,7 +110,7 @@ local instancesData = {
 	[1009] = 330,	-- Heart of Fear
 	[996] = 320,	-- Terrace of Endless Spring
 	[1098] = 362,	-- Throne of Thunder
-	[1136] = 369,	-- Siege of Orgrimmar		
+	[1136] = 369,	-- Siege of Orgrimmar
 	[1182] = 547,	-- Auchindoun
 	[1175] = 385,	-- Bloodmaul Slag Mines
 	[1208] = 536,	-- Grimrail Depot
@@ -150,7 +150,9 @@ local instancesData = {
 	[1841] = 1022,	-- The Underrot
 	[1771] = 1002,	-- Tol Dagor
 	[1862] = 1021,	-- Waycrest Manor
-	[1861] = 1031	-- Uldir
+	[1861] = 1031,	-- Uldir
+	[2070] = 1176,	-- Battle of Dazar'alor
+	[2096] = 1177	-- Crucible of Storms
 }
 
 local worldBossesData = {
@@ -219,12 +221,13 @@ local worldBossesData = {
 			{encounter = 0, quest = 0},  		-- The Lion's Roar/Doom's Howl
 			{encounter = 2199, quest = 52163},	-- Azurethos, The Winged Typhoon
 			{encounter = 2198, quest = 52166},	-- Warbringer Yenajz
-			{encounter = 2210, quest = 52196}	-- Dunegorger Kraulok
+			{encounter = 2210, quest = 52196},	-- Dunegorger Kraulok
+			{encounter = 0, quest = 0}		-- Ivus the Forest Lord/Ivus the Decayed
 		}
 	}
 }
 
-local eventFrame = CreateFrame("Frame", "EncounterJournalSavedInstances_EventFrame", UIParent)
+local eventFrame = CreateFrame("Frame", "AdventureGuideLockouts_EventFrame", UIParent)
 eventFrame:Show()
 
 local startTime = -1
@@ -291,26 +294,44 @@ local function UpdateSavedInstances()
 		end
 	end
 
-	local isBossAvailable = false
-	local state = GetState(11)
+	local isStromgardeAvailable, isDarkshoreAvailable = false
+	local stromgardeState, darkshoreState = GetState(11), GetState(116)
 	if UnitFactionGroup("player") == "Horde" then
 		worldBossesData[1028].bosses[4].encounter = 2212
 		worldBossesData[1028].bosses[4].quest = 52848
+		worldBossesData[1028].bosses[8].encounter = 2329
+		worldBossesData[1028].bosses[8].quest = 54896
 
-		if state == 3 or state == 4 then
-			isBossAvailable = true
+		if (stromgardeState == 3 or stromgardeState == 4) and (darkshoreState == 3 or darkshoreState == 4) then
+			isStromgardeAvailable = true
+			isDarkshoreAvailable = true
+			worldBossesData[1028].maxBosses = 3
+		elseif stromgardeState == 3 or stromgardeState == 4 then
+			isStromgardeAvailable = true
+			worldBossesData[1028].maxBosses = 2
+		elseif darkshoreState == 3 or darkshoreState == 4 then
+			isDarkshoreAvailable = true
 			worldBossesData[1028].maxBosses = 2
 		end
 	else
-		worldBossesData[1028].bosses[4].encounter = 2213    
+		worldBossesData[1028].bosses[4].encounter = 2213
 		worldBossesData[1028].bosses[4].quest = 52847
+		worldBossesData[1028].bosses[8].encounter = 2345
+		worldBossesData[1028].bosses[8].quest = 54895
 
-		if state == 1 or state == 2 then
-			isBossAvailable = true
+		if (stromgardeState == 1 or stromgardeState == 2) and (darkshoreState == 1 or darkshoreState == 2) then
+			isStromgardeAvailable = true
+			isDarkshoreAvailable = true
+			worldBossesData[1028].maxBosses = 3
+		elseif stromgardeState == 1 or stromgardeState == 2 then
+			isStromgardeAvailable = true
+			worldBossesData[1028].maxBosses = 2
+		elseif darkshoreState == 1 or darkshoreState == 2 then
+			isDarkshoreAvailable = true
 			worldBossesData[1028].maxBosses = 2
 		end
 	end
-	
+
 	local worldBosses = {}
 	for instanceID, data in pairs(worldBossesData) do
 		worldBosses[instanceID] = worldBosses[instanceID] or {}
@@ -327,8 +348,11 @@ local function UpdateSavedInstances()
 			})
 			if instanceID == 1028 then
 				if i == 4 then
-					worldBosses[1028][i].isAvailable = isBossAvailable
-					worldBosses[1028][i].isKilled = worldBosses[1028][i].isKilled and isBossAvailable
+					worldBosses[1028][i].isAvailable = isStromgardeAvailable
+					worldBosses[1028][i].isKilled = worldBosses[1028][i].isKilled and isStromgardeAvailable
+				elseif i == 8 then
+					worldBosses[1028][i].isAvailable = isDarkshoreAvailable
+					worldBosses[1028][i].isKilled = worldBosses[1028][i].isKilled and isDarkshoreAvailable
 				else
 					worldBosses[1028][i].isAvailable = GetQuestTimeLeftMinutes(boss.quest) > 0
 				end
@@ -345,7 +369,7 @@ local function UpdateSavedInstances()
 				defeatedBosses = defeatedBosses + 1
 			end
 		end
-		
+
 		if savedInstances[instanceID] then
 			if defeatedBosses > 0 then
 				tinsert(savedInstances[instanceID], {

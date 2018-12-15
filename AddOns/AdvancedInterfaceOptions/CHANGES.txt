@@ -1,10 +1,10 @@
-tag e3462393bed2ca7c58a053cd728cfb502847b037 1.2.8
-Author:	semlar <teslagraafs@gmail.com>
-Date:	Mon Oct 1 13:40:50 2018 -0400
+tag da84584a235c17ecf2e61852c5b95eee05624570 1.2.9
+Author:	Benjamin Staneck <staneck@gmail.com>
+Date:	Fri Dec 14 03:38:54 2018 +0100
 
-commit 48f0d5d6268e27d1fb51cdb5aeaf66577f6f3be2
-Author: semlar <teslagraafs@gmail.com>
-Date:   Mon Oct 1 13:40:26 2018 -0400
+commit b95519e5c243d7a23fbff5df7a90397438de45aa
+Author: Benjamin Staneck <staneck@gmail.com>
+Date:   Fri Dec 14 03:37:59 2018 +0100
 
-    Removed old status text custom settings
+    Update TOC for Patch 8.1
 

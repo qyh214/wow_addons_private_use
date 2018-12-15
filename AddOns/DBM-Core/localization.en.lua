@@ -271,6 +271,7 @@ DBM_NO_DEBUFF						= "Not %s"--For use in places like info frame where you put "
 DBM_ALLY							= "Ally"--Such as "Move to Ally"
 DBM_ADD								= "Add"--A fight Add as in "boss spawned extra adds"
 DBM_ADDS							= "Adds"
+DBM_BIG_ADD							= "Big Add"
 DBM_BOSS							= "Boss"
 DBM_CORE_ROOM_EDGE					= "Room Edge"
 DBM_CORE_FAR_AWAY					= "Far Away"
@@ -422,7 +423,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS = {
 	stack 			= "Show special warning when you are affected by >=%d stacks of $spell:%s",
 	switch			= "Show special warning to switch targets for $spell:%s",
 	switchcount		= "Show special warning (with count) to switch targets for $spell:%s",
-	gtfo 			= "Show special warning to move out bad stuff on ground",
+	gtfo 			= "Show special warning to move out of bad stuff on ground",
 	Adds			= "Show special warning to switch targets for incoming adds",
 	Addscustom		= "Show special warning for incoming adds",
 	targetchange	= "Show special warning for priority target changes"

@@ -1,76 +1,28 @@
-lightweight tag 28f0740613110a83f4d254e67dec38db3697def9 4.02
-Author:	Azilroka <darktemplar9900@yahoo.com>
-Date:	Sun Nov 11 18:34:01 2018 -0600
+lightweight tag 4430761bbf0f5986edd85eef232fdf1468baa1d9 4.04
+Author:	Michael James <darktemplar9900@yahoo.com>
+Date:	Wed Nov 21 17:22:48 2018 -0600
 
-commit 28f0740613110a83f4d254e67dec38db3697def9
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Nov 11 18:34:01 2018 -0600
+commit 4430761bbf0f5986edd85eef232fdf1468baa1d9
+Author: Michael James <darktemplar9900@yahoo.com>
+Date:   Wed Nov 21 17:22:48 2018 -0600
 
-    4.02
+    4.04
 
-commit e4fdb1d3f9cabfd412c4f31778a31d33bf020e64
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Nov 11 18:27:21 2018 -0600
+commit 856532c45d1f21d50cde96b482eef3d84c649535
+Author: Michael James <darktemplar9900@yahoo.com>
+Date:   Wed Nov 21 17:21:38 2018 -0600
 
-    More Options Tweaks
+    :Kill to AS:Kill
 
-commit 8a9dfe62ff31f7dd7dc95fb28792f77d2cc13408
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Nov 11 18:17:42 2018 -0600
+commit 4cb0a155859c31f152930cf2f986637aca87073b
+Author: Michael James <darktemplar9900@yahoo.com>
+Date:   Wed Nov 21 16:43:31 2018 -0600
 
-    Bring ParchmentRemover up to date
+    Yea.. This is why drinking is bad kids.
 
-commit 5e258550ba6cc0ff657bb4fa968246f3aa29ea35
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Nov 11 18:16:42 2018 -0600
+commit dd538d02336cb78a81921c812171f5b85a2df5c6
+Author: Merathilis <neo0608@gmail.com>
+Date:   Wed Nov 21 17:25:44 2018 +0100
 
-    Update Options | Ace3 | Spellbook | WorldMap
-
-commit 33851ceb66d85dbdf09525f01dcc06ce1b077ce9
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Thu Nov 8 16:59:54 2018 -0600
-
-    Make these only show with 'ElvUI Style'
-
-commit 09fa6d0a3a9631806b291c15407459200b8dc50d
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Thu Nov 8 06:31:16 2018 -0600
-
-    Fix Blizzard Names
-
-commit 4a96f1b5c7fec5ec1215a8a329bed6c1d0bbc2fd
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Wed Nov 7 12:54:03 2018 -0600
-
-    Ace3
-
-commit 954ed0eaac7d3474bb2818fed5aa33d83cb7bf9e
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Wed Nov 7 06:01:30 2018 -0600
-
-    Fix this popup
-
-commit 37ebbfaa78a44f760a23100946255b362ee79b4b
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Wed Nov 7 06:00:19 2018 -0600
-
-    WA
-
-commit 54adf9ea01abb3ea6c34cfa17739c222b51fe028
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Wed Nov 7 05:50:30 2018 -0600
-
-    WA
-
-commit 0358de8679c557e169d2eaae5290e2b67c94788e
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Wed Nov 7 05:50:10 2018 -0600
-
-    Options
-
-commit 2fceb9006b2a97e745e5ca0d4c58c93a8db32478
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Wed Nov 7 05:06:59 2018 -0600
-
-    Island Party Pose
+    Slightly adjust the Postal OpenAllMenuButton: https://www.tukui.org/forum/viewtopic.php?f=35&t=4412
 

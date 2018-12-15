@@ -1,22 +1,28 @@
-lightweight tag 5cdaa0bd6672368df3cb9aee5b21502bd2a9ef7e 1.23
+lightweight tag f2db0f837ce5f1e0636b1c625dc71e6bb0e2b9ba 1.24
 Author:	Bernhard Saumweber <b.saumweber@gmail.com>
-Date:	Tue Nov 13 19:42:22 2018 +0100
+Date:	Wed Dec 12 20:56:39 2018 +0100
 
-commit 5cdaa0bd6672368df3cb9aee5b21502bd2a9ef7e
+commit f2db0f837ce5f1e0636b1c625dc71e6bb0e2b9ba
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Tue Nov 13 19:42:22 2018 +0100
+Date:   Wed Dec 12 20:56:39 2018 +0100
 
-    Better indentation
+    Fixes for API changes introduced with patch 8.1
 
-commit 39cff2a20cd9665c84f4e04c7d245c4493647387
+commit 4c267e3636ce57defe6eaf74725f47d52437075b
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Sun Nov 11 12:36:11 2018 +0100
+Date:   Sun Nov 18 10:13:31 2018 +0100
 
-    Added support for mythic+ RaiderIO metrics (if addon is installed) with new keywords: hasrio, norio, rio, riodps, rioheal, riotank, riokey5plus, riokey10plus, riokey15plus and riokeymax
+    Added RaiderIO main score via new keyword riomain
 
-commit f021878a0675c7dbb1b31168d8e7bf806b5c57ce
+commit f7f587e0b7fb139bd28ec2cb1b29ad32ff686f84
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Wed Oct 17 16:59:59 2018 +0200
+Date:   Tue Nov 13 20:17:38 2018 +0100
 
-    Set version to next release version: 1.23
+    Switch links in README to github wiki
+
+commit 5a0725eb3ae4aadf98ecc21e8f36848da106b3fc
+Author: Bernhard Saumweber <b.saumweber@gmail.com>
+Date:   Tue Nov 13 19:50:36 2018 +0100
+
+    Set version to next release version: 1.24
 

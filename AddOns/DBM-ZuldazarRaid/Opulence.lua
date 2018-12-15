@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2342, "DBM-ZuldazarRaid", 2, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18028 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 18100 $"):sub(12, -3))
 --mod:SetCreatureID(138967)--145261 or 147564
 mod:SetEncounterID(2271)
 --mod:DisableESCombatDetection()
@@ -15,15 +15,19 @@ mod:SetZone()
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 282939 287659 287070 285995 284941 283947 283606",
-	"SPELL_CAST_SUCCESS 283507 287648 284470 287072 285014 287037 285505",
-	"SPELL_AURA_APPLIED 284798 283507 287648 284470 287072 285014 287037 284105",
+	"SPELL_CAST_START 282939 287659 287070 285995 284941 283947 283606 289906 289155",
+	"SPELL_CAST_SUCCESS 283507 287648 284470 287072 285014 287037 285505 286541",
+	"SPELL_AURA_APPLIED 284798 283507 287648 284470 287072 285014 287037 284105 287424 289776",
 --	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED 284798 283507 287648 284470 287072 285014",
+	"SPELL_AURA_REMOVED 284798 283507 287648 284470 287072 285014 287424 289776",
 	"UNIT_DIED"
 --	"UNIT_SPELLCAST_START boss1 boss2 boss3"
 )
 
+--[[
+(ability.id = 282939 or ability.id = 287659 or ability.id = 287070 or ability.id = 285995 or ability.id = 284941 or ability.id = 283947 or ability.id = 283606 or ability.id = 289906 or ability.id = 289155) and type = "begincast"
+ or (ability.id = 283507 or ability.id = 287648 or ability.id = 284470 or ability.id = 287072 or ability.id = 285014 or ability.id = 287037 or ability.id = 285505 or ability.id = 286541) and type = "cast"
+--]]
 --Figure out right crush idea, too many to guess right, also need to see how it's done by source
 --TODO, more trap work, especially ruby beam targetting
 --The Zandalari Crown Jewels
@@ -66,9 +70,12 @@ local yellCoinShower					= mod:NewYell(285014, nil, nil, nil, "YELL")
 local yellCoinShowerFade				= mod:NewFadesYell(285014, nil, nil, nil, "YELL")
 local specWarnWailofGreed				= mod:NewSpecialWarningCount(284941, nil, nil, nil, 2, 2)
 local specWarnCoinSweep					= mod:NewSpecialWarningTaunt(287037, nil, nil, nil, 1, 2)
+local specWarnSurgingGold				= mod:NewSpecialWarningDodge(289155, nil, nil, nil, 1, 2)
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 8)
 
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(18527))
+--General
+local timerThiefsBane					= mod:NewBuffFadesTimer(30, 287424, nil, nil, nil, 3)
 --Stage One: Raiding The Vault
 local timerCrushCD						= mod:NewCDSourceTimer(55, 283604, nil, nil, nil, 3)--Both
 ----The Hand of In'zashi
@@ -76,16 +83,17 @@ local timerVolatileChargeCD				= mod:NewCDTimer(12.1, 283507, nil, nil, nil, 3)
 ----Yalat's Bulwark
 local timerFlamesofPunishmentCD			= mod:NewCDTimer(23, 282939, nil, nil, nil, 3)
 ----Traps
-local timerFlameJet						= mod:NewBuffActiveTimer(12, 285479, nil, nil, nil, 3)
+--local timerFlameJet						= mod:NewBuffActiveTimer(12, 285479, nil, nil, nil, 3)
 local timerRubyBeam						= mod:NewBuffActiveTimer(8, 284081, nil, nil, nil, 3)
 local timerTimeBombCD					= mod:NewCDTimer(21.8, 284470, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON)
 --Stage Two: Toppling the Guardian
 local timerDrawPower					= mod:NewCastTimer(5, 282939, nil, nil, nil, 6)
-local timerLiquidGoldCD					= mod:NewAITimer(5, 287072, nil, nil, nil, 3)
-local timerSpiritsofGoldCD				= mod:NewAITimer(5, 285995, nil, nil, nil, 1)
-local timerCoinShowerCD					= mod:NewAITimer(5, 285014, nil, nil, nil, 5, nil, DBM_CORE_DEADLY_ICON)
-local timerWailofGreedCD				= mod:NewAITimer(55, 284941, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
-local timerCoinSweepCD					= mod:NewAITimer(14.1, 287037, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerLiquidGoldCD					= mod:NewCDTimer(8.5, 287072, nil, nil, nil, 3)
+local timerSpiritsofGoldCD				= mod:NewCDTimer(65.6, 285995, nil, nil, nil, 1)
+local timerCoinShowerCD					= mod:NewCDTimer(30.3, 285014, nil, nil, nil, 5, nil, DBM_CORE_DEADLY_ICON)
+local timerWailofGreedCD				= mod:NewCDTimer(55, 284941, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)--Timer still needed, DON"T FORGET!
+local timerCoinSweepCD					= mod:NewCDTimer(10.9, 287037, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerSurgingGoldCD				= mod:NewAITimer(23, 289155, nil, nil, nil, 3)
 
 --local berserkTimer					= mod:NewBerserkTimer(600)
 
@@ -96,7 +104,7 @@ local timerCoinSweepCD					= mod:NewAITimer(14.1, 287037, nil, "Tank", nil, 5, n
 --mod:AddSetIconOption("SetIconGift", 255594, true)
 --mod:AddRangeFrameOption("8/10")
 --mod:AddInfoFrameOption(258040, true)
---mod:AddNamePlateOption("NPAuraOnPresence", 276093)
+mod:AddNamePlateOption("NPAuraOnGoldenRadiance", 289776)
 --mod:AddSetIconOption("SetIconDarkRev", 273365, true)
 
 mod.vb.phase = 1
@@ -168,14 +176,14 @@ function mod:OnCombatStart(delay)
 	self.vb.phase = 1
 	self.vb.wailCast = 0
 	self.vb.bulwarkCrush = 0
---	if self.Options.NPAuraOnPresence then
---		DBM:FireEvent("BossMod_EnableHostileNameplates")
---	end
 	timerVolatileChargeCD:Start(1-delay)
 	timerFlamesofPunishmentCD:Start(1-delay)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(OVERVIEW)
 		DBM.InfoFrame:Show(8, "function", updateInfoFrame, false, false)
+	end
+	if self.Options.NPAuraOnGoldenRadiance then
+		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
 end
 
@@ -186,9 +194,9 @@ function mod:OnCombatEnd()
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
---	if self.Options.NPAuraOnPresence then
---		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
---	end
+	if self.Options.NPAuraOnGoldenRadiance then
+		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
+	end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -207,10 +215,17 @@ function mod:SPELL_CAST_START(args)
 		timerTimeBombCD:Stop()
 		warnPhase2:Show()
 		timerDrawPower:Start()
-		timerLiquidGoldCD:Start(2)--14.5
-		timerCoinSweepCD:Start(2)--15.7
-		timerSpiritsofGoldCD:Start(2)
-		timerWailofGreedCD:Start(2)
+		--Normal Mode, may differ elsewhere
+		timerLiquidGoldCD:Start(4.5)
+		timerCoinSweepCD:Start(16.3)
+		timerSpiritsofGoldCD:Start(26.7)
+		timerWailofGreedCD:Start(60.7)
+		if not self:IsLFR() then
+			timerCoinShowerCD:Start(17)
+			if self:IsMythic() then
+				timerSurgingGoldCD:Start(2)
+			end
+		end
 	elseif spellId == 285995 then
 		specWarnSpiritsofGold:Show()
 		specWarnSpiritsofGold:Play("killmob")
@@ -219,26 +234,24 @@ function mod:SPELL_CAST_START(args)
 		self.vb.wailCast = self.vb.wailCast + 1
 		specWarnWailofGreed:Show(self.vb.wailCast)
 		specWarnWailofGreed:Play("aesoon")
-		timerWailofGreedCD:Start()
+		--timerWailofGreedCD:Start()
 	elseif spellId == 283947 and self:AntiSpam(5, 1) then--Flame Jet
 		warnFlameJet:Show()
-		timerFlameJet:Start(12)
-	elseif spellId == 283606 then
+		--timerFlameJet:Start(12)
+	elseif spellId == 283606 or spellId == 289906 then
 		if self:CheckTankDistance(args.sourceGUID, 43) then
 			specWarnCrush:Show()
 			specWarnCrush:Play("watchstep")
 		end
-		local cid = self:GetCIDFromGUID(args.sourceGUID)
-		if cid == 145274 then--Yalat's Bulwark
-			self.vb.bulwarkCrush = self.vb.bulwarkCrush + 1
-			if self.vb.bulwarkCrush == 1 then
-				timerCrushCD:Start(17, L.Bulwark)
-			else
-				timerCrushCD:Start(23, L.Bulwark)--7.5, 17.0, 23.2, 23.0, 23.1, 23.1, 23.1, 23.0, 23.1, 23.1, 23.1
-			end
+		if spellId == 289906 then--Yalat's Bulwark
+			timerCrushCD:Start(20.6, L.Bulwark)--7.7, 21.9, 31.6, 21.8, 20.6, 20.7, 18.2, 21.8
 		else--The Hand of In'zashi
 			timerCrushCD:Start(15.8, L.Hand)--7.1, 30.5, 26.7, 15.8, 26.7, 15.8, 25.6, 15.8, 15.8, 18.2, 15.8, 15.8
 		end
+	elseif spellId == 289155 then
+		specWarnSurgingGold:Show()
+		specWarnSurgingGold:Play("watchstep")
+		timerSurgingGoldCD:Start()
 	end
 end
 
@@ -256,6 +269,19 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerCoinSweepCD:Start()
 	elseif spellId == 285505 then--Arcane Amethyst Visual
 		timerTimeBombCD:Start(5.5, args.sourceGUID)
+	elseif spellId == 286541 then--Consuming Flame
+		local cid = self:GetCIDFromGUID(args.sourceGUID)
+		if cid == 145273 then--The Hand of In'zashi
+			timerVolatileChargeCD:Stop()
+			timerCrushCD:Stop(L.Hand)
+			timerVolatileChargeCD:Start(14.2)--Success
+			timerCrushCD:Start(14.5, L.Hand)
+		elseif cid == 145274 then--Yalat's Bulwark
+			timerFlamesofPunishmentCD:Stop()
+			timerCrushCD:Stop(L.Bulwark)
+			timerCrushCD:Start(14.5, L.Bulwark)
+			timerFlamesofPunishmentCD:Start(24.5)
+		end
 	end
 end
 
@@ -324,6 +350,12 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 284105 and self:AntiSpam(5, 2) then
 		warnRubyBeam:Show()
 		timerRubyBeam:Start(8)
+	elseif spellId == 287424 and args:IsPlayer() then
+		timerThiefsBane:Start()
+	elseif spellId == 289776 then
+		if self.Options.NPAuraOnGoldenRadiance then
+			DBM.Nameplate:Show(true, args.sourceGUID, spellId)
+		end
 	end
 end
 --mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -347,6 +379,12 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 285014 then
 		if args:IsPlayer() then
 			yellCoinShowerFade:Cancel()
+		end
+	elseif spellId == 287424 and args:IsPlayer() then
+		timerThiefsBane:Stop()
+	elseif spellId == 289776 then
+		if self.Options.NPAuraOnGoldenRadiance then
+			DBM.Nameplate:Hide(true, args.sourceGUID, spellId)
 		end
 	end
 end
