@@ -1,148 +1,71 @@
-tag ab62a2f4e53a38e68ca0dcbe753d3f234ac82300 8.1.0
+tag a657d437c5b2ee8c004d53a9261e1b706cbec746 8.1.1
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Tue Dec 11 17:24:16 2018 +0100
+Date:	Thu Dec 20 00:36:19 2018 +0100
 
-Tagging as 8.1.0
+Tagging as 8.1.1
 
-commit f3fc40adca91815b8a14401fdadccdc49f1ab62d
+commit 32ea0aab875a66ff1865c573c86cab9158371e09
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Dec 11 17:24:16 2018 +0100
+Date:   Thu Dec 20 00:36:19 2018 +0100
 
-    increment version number to 8.1.0
+    increment version number to 8.1.1
 
-commit 5e5380a4a2fa535345d120dc93a8d874d38f3a7e
+commit 4e00d8f3336c7ce0d8426c72a184de1484af1c2e
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Dec 11 06:08:44 2018 +0100
+Date:   Wed Dec 19 01:31:27 2018 +0100
 
-    Omega via svn r18125:
-    Fix some logic errors in vectis
+    Omega via svn r18134:
+    Further improve ivus timers with more data, which confirms petrify interaction
 
-commit e2a5a28a71f7b21784bd973520dc2951c1fab0ef
+commit 2a1431ac7e5e315fcb7514b95f92b02cf3e63bc8
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Dec 11 05:58:21 2018 +0100
+Date:   Tue Dec 18 05:16:41 2018 +0100
 
-    Omega via svn r18124:
-    Bumped TOCs
-    Tweaked loadmod code to consider dungeon journal may not exist, and if it doesn?\226?\128?\153t, check for fallback mod name (ie work has begun on classic dungeon mods which will use encounter Ids if available but will use fallback localized names if dungeon journal doesn?\226?\128?\153t exist)
-    Switched ghuun big worm interrupt warning to count interrupt warning per add
+    Omega via svn r18133:
+    An additional no taunt warning for ghuun, based on distance from other tank
 
-commit a9fd2580280e7ec02a53c594739cda06517d1707
+commit f1ce152e21d6aa0f1f58aa95662d8ca974e72d1a
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Dec 8 19:24:25 2018 +0100
+Date:   Fri Dec 14 05:12:20 2018 +0100
 
-    Omega via svn r18123:
-    Couple more BW sync fixes
+    Omega via svn r18132:
+    Adjust wind tunnel by 0.3
 
-commit 09f78ea329bbe1d2881d13027837f32224c8ba98
+commit ccab640280a207a9e21d520f7fa183f30085891f
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Dec 7 06:06:23 2018 +0100
+Date:   Fri Dec 14 05:11:43 2018 +0100
 
-    Omega via svn r18122:
-    Better handle How Mythrax can sometimes completely skip a beam. if he does, detect this and start a timer for next beam (if he skips a beam, it still goes on CD again as if it was cast)
+    Omega via svn r18131:
+    Adjust first Cudgel timer, which seems to have changed in 8.1 by about 4 seconds
 
-commit 3632ffae95888c95df937fa9ca6a26f3a0d0b34a
+commit e91baac3f5b1973736e393f104430fbed583a761
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Dec 7 00:35:45 2018 +0100
+Date:   Thu Dec 13 04:39:39 2018 +0100
 
-    Omega via svn r18121:
-    added Contagion countdown for healers, by user request
+    Omega via svn r18130:
+    Added requested  auto marking to Ass Pix
+    Added requested countdown option for Mythrax
 
-commit 6ea542baef40b555813c9f270eaf46157422add0
+commit aa82cb4f176bddccdd4ee7067d9c24f841111f3a
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Dec 5 06:15:23 2018 +0100
+Date:   Wed Dec 12 09:19:36 2018 +0100
 
-    Omega via svn r18120:
-    Reduce range blood host near you warning warns from 22 yards to 11
-    Changed tank taunt warning on ghuun to have 5 second antispam cd instead of 3.5
+    Omega via svn r18129:
+    CN update
 
-commit 98eedc08604c409d941f2f18ba4f6722287ae8ca
+commit 6e55207cd2d1afea44fb04e58722de80ee76cf7b
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Dec 5 02:40:40 2018 +0100
+Date:   Wed Dec 12 06:10:29 2018 +0100
 
-    Omega via svn r18119:
-    Cancel timer if it ends early
+    Omega via svn r18128:
+    Fix Ivus mod not loading/engaging properly
+    Updated Ivus timers with live ones while at it.
+    Improved shockwave warning with target scanning on ivus
 
-commit 35883fd513fa0c29748086f90c94cbe4d9a72230
+commit dc8b74fb3ba19881cb20f2bf3b7117143977ffe7
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Dec 4 06:34:13 2018 +0100
+Date:   Tue Dec 11 17:24:31 2018 +0100
 
-    Omega via svn r18118:
-    Unless show lowest is sort order, then they actually want to see 0s
-
-commit 9d4bfbb5f3c0f010300e3c774e6e93f66d71d74d
-Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Dec 4 06:31:38 2018 +0100
-
-    Omega via svn r18117:
-    if unit doesn?\226?\128?\153t have vector AND they have 0 stacks, auto hide from frame
-
-commit 049e8c6afc8a8940cbd3876f9e80d4a699f99f67
-Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Dec 4 06:10:44 2018 +0100
-
-    Omega via svn r18116:
-    go back to highest first
-
-commit 59521b2c2c3c8f70ca18af4feeac0913a0470c59
-Author: subversion <svn@deadlybossmods.com>
-Date:   Mon Dec 3 18:24:17 2018 +0100
-
-    Omega via svn r18115:
-    Additional redundancies because blizzard sucks and can apparently return true for unitDebuff on vector but nil for time remaining in rare cases.
-
-commit 39093faecfe2800c8e6e7d4176f85ba42fd1f2d3
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Dec 2 20:16:18 2018 +0100
-
-    Omega via svn r18114:
-    Add eye beam icon option
-
-commit 4372d0494a43c52739714924e6494bf939a6e490
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sun Dec 2 03:51:01 2018 +0100
-
-    Omega via svn r18113:
-    Remove disease icon from new vectis frame, it covers/replaces raid icon
-    Add additional code to zekvoz to deal with a super rare condition where stage change detection doesn?\226?\128?\153t work if boss is at 0 energy when he phases.
-
-commit c7ecdf78be027d415ef7e53f8f95f29884c58069
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Dec 1 21:14:35 2018 +0100
-
-    Omega via svn r18112:
-    Show all on heroic too. truncate in lfr and normal where it doesn?\226?\128?\153t matter
-
-commit aa84c390379ea40a6b54489a8151fd462b77ef68
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Dec 1 19:31:19 2018 +0100
-
-    Omega via svn r18111:
-    Disable ES detection since it bugs out and fires for trash if you pull Mother through door
-
-commit df7e08236adc650d6267d1616e52ebf7f0fab93b
-Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Dec 1 00:05:03 2018 +0100
-
-    Omega via svn r18110:
-    Option text
-
-commit daee301e3261762eac5430f93c71f70a2a5b595f
-Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Nov 30 23:59:04 2018 +0100
-
-    Omega via svn r18109:
-    # Total rewrite of vectis infoframe that should greatly improve presentation of information (if it works)
-    * On mythic difficulty it?\226?\128?\153s now hard coded to just show ALL names, period instead of truncating list to 8 entries
-    * Unless the ?\226?\128?\156show only party?\226?\128?\157 option is enabled. lingering and vector lists are combined now. It?\226?\128?\153ll be a lingering list but if target also has vector it?\226?\128?\153ll show a special disease icon on them, what vector numbers they have, and how much time remains on their vector.
-    * If show only party is enabled, infoframe will still show the vector targets in a separate target list, as it did before.
-    * Infoframe now uses a table cache for lingering infection instead of UnitDebuff checks to greatly reduce UnitDebuff usage.
-    
-    Also, fixed some errors on Stormwall Blockade
-
-commit 6bac3bd660050657454d164ff9e9514f50179ba8
-Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Nov 28 11:19:55 2018 +0100
-
-    tandanu via svn r18108:
+    tandanu via svn r18127:
     increment alpha version
 

@@ -1,38 +1,10 @@
-lightweight tag 2ffb3ac2dcaaf90760a263d8511c6258ed56f4d7 1.3.5
+lightweight tag fbbd2c91aad7ce5271a48ac943576ca09fbaf9e4 1.3.6
 Author:	GitHub <noreply@github.com>
-Date:	Sun Sep 30 15:19:48 2018 -0700
+Date:	Fri Dec 28 13:14:55 2018 +0900
 
-commit 73d97fbc55977d07fc49c196422ee8a906370db4
-Author: SomeBlu <webmaster@someblu.com>
-Date:   Fri Sep 28 00:36:28 2018 -0700
-
-    将rgb缓存定义于初始化函数外
-
-commit 73d97fbc55977d07fc49c196422ee8a906370db4
-Author: SomeBlu <webmaster@someblu.com>
-Date:   Fri Sep 28 00:36:28 2018 -0700
-
-    将rgb缓存定义于初始化函数外
-
-commit 6d4d3ea57a3982881faf74bf78d1fb891bf7670f
-Author: SomeBlu <webmaster@someblu.com>
-Date:   Fri Sep 28 00:34:03 2018 -0700
-
-    Revert "Revert "尝试修复E.db["Already Known"].color值为nil的问题""
-    
-    This reverts commit fb67e7bbbc785bf98cfd0b162deb281e506bae84.
-
-commit fb67e7bbbc785bf98cfd0b162deb281e506bae84
+commit 20de7135a0bf1cbf090ec1480e6735cb6d2c4262
 Author: Zhou Fang <houshuu@live.jp>
-Date:   Thu Sep 27 19:41:19 2018 +0900
+Date:   Thu Dec 27 10:48:41 2018 +0900
 
-    Revert "尝试修复E.db["Already Known"].color值为nil的问题"
-    
-    This reverts commit ab53cf897b73d4e101ba3636da429eeb5038b87a.
-
-commit 353f8c9895ea0db52dcf3eefc31336ddad1d22eb
-Author: SomeBlu <someblu@users.noreply.github.com>
-Date:   Tue Sep 25 21:45:18 2018 -0700
-
-    Update README.md
+    完善艾泽里特特质提示移植
 

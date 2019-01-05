@@ -6,6 +6,7 @@ local abs, mod = abs, mod
 local sort = sort
 local GetMoney, GetCurrencyInfo, GetNumWatchedTokens, GetBackpackCurrencyInfo, GetCurrencyListInfo = GetMoney, GetCurrencyInfo, GetNumWatchedTokens, GetBackpackCurrencyInfo, GetCurrencyListInfo
 
+local Ticker
 local defaultColor = { 1, 1, 1 }
 local Profit = 0
 local Spent = 0
@@ -22,6 +23,7 @@ local ARCHAEOLOGY_RUNE_STONES = ARCHAEOLOGY_RUNE_STONES
 local GROUP_FINDER = GROUP_FINDER
 local PLAYER_V_PLAYER = PLAYER_V_PLAYER
 local MISCELLANEOUS = MISCELLANEOUS
+local ITEM_QUALITY8_DESC = ITEM_QUALITY8_DESC
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 local IsLoggedIn = IsLoggedIn
 local BreakUpLargeNumbers = BreakUpLargeNumbers
@@ -231,6 +233,12 @@ end
 
 local function OnEvent(self, event, ...)
 	if not IsLoggedIn() then return end
+
+	if not Ticker then
+		C_WowTokenPublic.UpdateMarketPrice()
+		Ticker = C_Timer.NewTicker(60, C_WowTokenPublic.UpdateMarketPrice)
+	end
+
 	local NewMoney = GetMoney();
 	ElvDB = ElvDB or { };
 	ElvDB["gold"] = ElvDB["gold"] or {};
@@ -410,13 +418,8 @@ local function OnEnter(self)
 
 	ToggleCurrencies(false)
 
-	if E.db.sle.dt.currency.Token then
-		local DaToken = C_WowTokenPublic.GetCurrentMarketPrice()
-		if DaToken and DaToken ~= "" then
-			DT.tooltip:AddLine(' ')
-			DT.tooltip:AddDoubleLine(ITEM_QUALITY8_DESC.."|TInterface\\Icons\\WoW_Token01:12:12:0:0:64:64:4:60:4:60|t", E:FormatMoney(DaToken, E.db.datatexts.goldFormat or "BLIZZARD", not E.db.datatexts.goldCoins), 1, 1, 1, 1, 1, 1)
-		end
-	end
+	DT.tooltip:AddLine(' ')
+	DT.tooltip:AddDoubleLine(ITEM_QUALITY8_DESC.."|TInterface\\Icons\\WoW_Token01:12:12:0:0:64:64:4:60:4:60|t", E:FormatMoney(C_WowTokenPublic.GetCurrentMarketPrice() or 0, E.db.datatexts.goldFormat or "BLIZZARD", not E.db.datatexts.goldCoins), 1, 1, 1, 1, 1, 1)
 
 	DT.tooltip:AddLine(' ')
 	DT.tooltip:AddLine(resetInfoFormatter)

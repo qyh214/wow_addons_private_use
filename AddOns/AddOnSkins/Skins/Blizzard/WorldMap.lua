@@ -3,28 +3,33 @@ local AS = unpack(AddOnSkins)
 function AS:Blizzard_AlliedRacesUI(event, addon)
 	if addon ~= 'Blizzard_AlliedRacesUI' then return end
 
-	AlliedRacesFrame:CreateBackdrop("Transparent")
-	AlliedRacesFrameBg:Hide()
-	AlliedRacesFramePortrait:Hide()
-	AlliedRacesFramePortraitFrame:Hide()
-	AlliedRacesFrameTitleBg:Hide()
-	AlliedRacesFrameTopBorder:Hide()
-	AlliedRacesFrameTopRightCorner:Hide()
-	AlliedRacesFrameRightBorder:Hide()
-	AlliedRacesFrameBotRightCorner:Hide()
-	AlliedRacesFrameBotLeftCorner:Hide()
-	AlliedRacesFrameBtnCornerRight:Hide()
-	AlliedRacesFrameBtnCornerLeft:Hide()
-	AlliedRacesFrameButtonBottomBorder:Hide()
-	AlliedRacesFrameBottomBorder:Hide()
-	AlliedRacesFrameLeftBorder:Hide()
+	AS:SkinBackdropFrame(AlliedRacesFrame)
+	AlliedRacesFrame.Bg:Hide()
+
+	AlliedRacesFrame.portrait:Hide()
+	AlliedRacesFrame.TitleBg:Hide()
+
 	AlliedRacesFrame.RaceInfoFrame.ScrollFrame.ScrollBar.Border:Hide()
 	AlliedRacesFrame.RaceInfoFrame.ScrollFrame.ScrollBar.ScrollUpBorder:Hide()
 	AlliedRacesFrame.RaceInfoFrame.ScrollFrame.ScrollBar.ScrollDownBorder:Hide()
-	AlliedRacesFrame.ModelFrame:StripTextures()
+	AS:StripTextures(AlliedRacesFrame.ModelFrame)
 
 	AS:SkinCloseButton(AlliedRacesFrameCloseButton)
 	AS:SkinScrollBar(AlliedRacesFrame.RaceInfoFrame.ScrollFrame.ScrollBar)
+
+	AS:SkinFrame(AlliedRacesFrame.RaceInfoFrame.ScrollFrame.Child.ObjectivesFrame)
+
+	AlliedRacesFrame.RaceInfoFrame.AlliedRacesRaceName:SetTextColor(1, .8, 0)
+	AlliedRacesFrame.RaceInfoFrame.ScrollFrame.Child.RaceDescriptionText:SetTextColor(1, 1, 1)
+	AlliedRacesFrame.RaceInfoFrame.ScrollFrame.Child.RacialTraitsLabel:SetTextColor(1, .8, 0)
+
+	AlliedRacesFrame:HookScript("OnShow", function(self)
+		for button in self.abilityPool:EnumerateActive() do
+			select(3, button:GetRegions()):Hide()
+			AS:SkinTexture(button.Icon, true)
+			button.Text:SetTextColor(1, 1, 1)
+		end
+	end)
 
 	AS:UnregisterSkinEvent(addon, event)
 end
@@ -109,15 +114,13 @@ function AS:Blizzard_Quest()
 	AS:StripTextures(QuestInfoItemHighlight)
 
 	hooksecurefunc("QuestInfoItem_OnClick", function(self)
+		for _, Button in ipairs(QuestInfoRewardsFrame.RewardButtons) do
+			Button.Backdrop:SetBackdropBorderColor(unpack(AS.BorderColor))
+			Button.Name:SetTextColor(1, 1, 1)
+		end
+
 		self.Backdrop:SetBackdropBorderColor(1,.9,.1)
 		self.Name:SetTextColor(1, .8, .1)
-
-		for _, Button in ipairs(QuestInfoRewardsFrame.RewardButtons) do
-			if (Button ~= self) then
-				Button.Backdrop:SetBackdropBorderColor(unpack(AS.BorderColor))
-				Button.Name:SetTextColor(1, 1, 1)
-			end
-		end
 	end)
 
 	AS:SkinBackdropFrame(QuestInfoRewardsFrame.SkillPointFrame)
@@ -190,9 +193,10 @@ function AS:Blizzard_Quest()
 			RewardButton.Backdrop:SetPoint('TOPLEFT', RewardButton.Icon, 'TOPRIGHT', 1, 0)
 			RewardButton.Backdrop:SetPoint('BOTTOMLEFT', RewardButton.Icon, 'BOTTOMRIGHT', 1, 0)
 			RewardButton.Backdrop:SetPoint('RIGHT', RewardButton, 'RIGHT', -5, 0)
-
 			hooksecurefunc(RewardButton.IconBorder, 'SetVertexColor', function(self, r, g, b) RewardButton.Icon.Backdrop:SetBackdropBorderColor(r, g, b) end)
 			hooksecurefunc(RewardButton.IconBorder, 'Hide', function(self) RewardButton.Icon.Backdrop:SetBackdropBorderColor(unpack(AS.BorderColor)) end)
+		else
+			RewardButton.Name:SetTextColor(1, 1, 1)
 		end
 	end)
 
@@ -222,6 +226,66 @@ function AS:Blizzard_Quest()
 		QuestNPCModel:SetPoint("TOPLEFT", QuestFrame, "TOPRIGHT", x + 10, y)
 	end)
 
+	--Spell Rewards
+	local spellRewards = {QuestInfoRewardsFrame, MapQuestInfoRewardsFrame}
+	for _, rewardFrame in pairs(spellRewards) do
+		local spellRewardFrame = rewardFrame.spellRewardPool:Acquire()
+		local icon = spellRewardFrame.Icon
+		local nameFrame = spellRewardFrame.NameFrame
+
+		AS:StripTextures(spellRewardFrame)
+		AS:SkinTexture(icon, true)
+		nameFrame:Hide()
+
+--		bg:SetPoint("TOPLEFT", icon, "TOPRIGHT", 0, 2)
+--		bg:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 101, -1)
+	end
+
+	-- Title Reward
+	do
+		local frame = QuestInfoPlayerTitleFrame
+		local icon = frame.Icon
+
+		AS:SkinTexture(icon, true)
+
+		for i = 2, 4 do
+			select(i, frame:GetRegions()):Hide()
+		end
+
+--		bg:SetPoint("TOPLEFT", icon, "TOPRIGHT", 0, 2)
+--		bg:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 220, -1)
+	end
+
+	-- Follower Rewards
+	hooksecurefunc("QuestInfo_Display", function(template, parentFrame, acceptButton, material, mapView)
+		local rewardsFrame = QuestInfoFrame.rewardsFrame
+		local isQuestLog = QuestInfoFrame.questLog ~= nil
+		local isMapQuest = rewardsFrame == MapQuestInfoRewardsFrame
+		local numSpellRewards = isQuestLog and GetNumQuestLogRewardSpells() or GetNumRewardSpells()
+
+		if (template.canHaveSealMaterial) then
+			local questFrame = parentFrame:GetParent():GetParent()
+			questFrame.SealMaterialBG:Hide()
+		end
+
+		if numSpellRewards > 0 then
+			for reward in rewardsFrame.followerRewardPool:EnumerateActive() do
+				local portrait = reward.PortraitFrame
+				if not reward.styled then
+					portrait:ClearAllPoints()
+					portrait:SetPoint("TOPLEFT", 2, -5)
+					reward.BG:Hide()
+					--bg:SetPoint("TOPLEFT", 0, -3)
+					--bg:SetPoint("BOTTOMRIGHT", 2, 7)
+					reward.styled = true
+				end
+				if portrait then
+					--portrait.squareBG:SetBackdropBorderColor(GetItemQualityColor(portrait.quality or 1))
+				end
+			end
+		end
+	end)
+
 	if AS.ParchmentEnabled then
 		QuestDetailScrollFrame.Background = QuestDetailScrollFrame:CreateTexture(nil, 'ARTWORK')
 		QuestDetailScrollFrame.Background:SetTexture('Interface\\QuestFrame\\QuestBG')
@@ -244,12 +308,17 @@ function AS:Blizzard_Quest()
 		QuestLogPopupDetailFrameScrollFrame.Backdrop.Background:SetInside()
 		QuestLogPopupDetailFrameScrollFrame.Backdrop.Background:SetTexCoord(0, .585, 0.02, .655)
 	else
-		GreetingText:SetTextColor(1, 1, 1)
-		GreetingText.SetTextColor = AS.Noop
-		CurrentQuestsText:SetTextColor(1, .8, .1)
-		CurrentQuestsText.SetTextColor = AS.Noop
-		AvailableQuestsText:SetTextColor(1, .8, .1)
-		AvailableQuestsText.SetTextColor = AS.Noop
+		hooksecurefunc('QuestFrameProgressItems_Update', function()
+			QuestProgressRequiredItemsText:SetTextColor(1, .8, .1)
+		end)
+
+		hooksecurefunc("QuestFrame_SetTitleTextColor", function(fontString)
+			fontString:SetTextColor(1, .8, .1)
+		end)
+
+		hooksecurefunc("QuestFrame_SetTextColor", function(fontString)
+			fontString:SetTextColor(1, 1, 1)
+		end)
 
 		for i = 1, 16 do
 			local button = _G['QuestTitleButton'..i]
@@ -298,7 +367,7 @@ function AS:Blizzard_Quest()
 						if finished then
 							objective:SetTextColor(1, .8, .1)
 						else
-							objective:SetTextColor(0.6, 0.6, 0.6)
+							objective:SetTextColor(.63, .09, .09)
 						end
 					end
 				end

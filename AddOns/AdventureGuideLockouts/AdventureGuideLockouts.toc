@@ -3,6 +3,6 @@
 ## Notes: Adds instance status indicators to the Adventure Guide.
 ## Notes-frFR: Ajoute des indicateurs de verrouillage d'instance au Guide de l'aventurier.
 ## Author: alex_chrome, Meivyn
-## Version: 1.2.6
+## Version: 1.2.7
 
 AdventureGuideLockouts.lua

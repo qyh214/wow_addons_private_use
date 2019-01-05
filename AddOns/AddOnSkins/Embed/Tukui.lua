@@ -35,11 +35,8 @@ end
 function AS:CreateToggleButton(Name, Text, Panel, TooltipText)
 	local Frame = CreateFrame('Button', Name, UIParent)
 	Frame:SetFrameStrata("DIALOG")
-	AS:SetTemplate(Frame, 'Transparent')
 	Frame:Size(17, Panel:GetHeight() - 4)
-	Frame:FontString('Text', AS.ActionBarFont, 12)
-	Frame.Text:SetText(Text)
-	Frame.Text:SetPoint('CENTER', 0, 1)
+	AS:SkinArrowButton(Frame)
 	Frame:RegisterForClicks('LeftButtonDown', 'RightButtonDown')
 	UIFrameFadeOut(Frame, 0.2, Frame:GetAlpha(), 0)
 	Frame:SetScript('OnEnter', function(self)
@@ -58,7 +55,10 @@ end
 function AS:EmbedSystem_WindowResize()
 	local ChatPanel = AS:CheckOption('EmbedRightChat') and AS.InfoRight or AS.InfoLeft
 	local ChatTab = AS:CheckOption('EmbedRightChat') and AS.TabsRightBackground or AS.TabsLeftBackground
-	if Tukui[2]['Chat']['Background'] then
+	if Tukui[2]['General']['Themes']['Value'] == 'Tukui 17' then
+		_G.EmbedSystem_MainWindow:SetPoint('BOTTOM', ChatPanel, 'TOP', 0, 2)
+		_G.EmbedSystem_MainWindow:SetSize(ChatPanel:GetWidth(), 142)
+	else
 		local FramePoint, OffsetY
 		if AS:CheckOption('EmbedBelowTop') then
 			FramePoint, OffsetY = 'BOTTOMLEFT', -2
@@ -67,10 +67,8 @@ function AS:EmbedSystem_WindowResize()
 		end
 		_G.EmbedSystem_MainWindow:SetPoint('TOPLEFT', ChatTab, FramePoint, 0, OffsetY)
 		_G.EmbedSystem_MainWindow:SetPoint('BOTTOMRIGHT', ChatPanel, 'TOPRIGHT', 0, 0)
-	else
-		_G.EmbedSystem_MainWindow:SetPoint('BOTTOM', ChatPanel, 'TOP', 0, 2)
-		_G.EmbedSystem_MainWindow:SetSize(ChatPanel:GetWidth(), 142)
 	end
+
 	_G.EmbedSystem_LeftWindow:SetPoint('RIGHT', _G.EmbedSystem_RightWindow, 'LEFT', -2, 0)
 	_G.EmbedSystem_RightWindow:SetPoint('RIGHT', _G.EmbedSystem_MainWindow, 'RIGHT', 0, 0)
 	_G.EmbedSystem_LeftWindow:SetSize(AS:CheckOption('EmbedLeftWidth') - 1, _G.EmbedSystem_MainWindow:GetHeight())

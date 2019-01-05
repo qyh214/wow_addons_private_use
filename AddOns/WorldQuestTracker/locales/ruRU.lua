@@ -7,10 +7,8 @@ L["S_DECREASESIZE"] = "Уменьшить размер"
 L["S_ENABLED"] = "Включено"
 L["S_ERROR_NOTIMELEFT"] = "Время выполнения задания истекло."
 L["S_ERROR_NOTLOADEDYET"] = "Задание ещё не загружено, подождите несколько секунд."
---[[Translation missing --]]
---[[ L["S_FACTION_TOOLTIP_SELECT"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_FACTION_TOOLTIP_TRACK"] = ""--]] 
+L["S_FACTION_TOOLTIP_SELECT"] = "Нажатие: выберет эту фракцию"
+L["S_FACTION_TOOLTIP_TRACK"] = "Shift + Клик: отслеживание заданий этой фракции"
 L["S_FLYMAP_SHOWTRACKEDONLY"] = "Только отслеживаемые"
 L["S_FLYMAP_SHOWTRACKEDONLY_DESC"] = "Показывать только задания, которые вы отслеживаете"
 L["S_FLYMAP_SHOWWORLDQUESTS"] = "Показывать локальные задания"
@@ -99,22 +97,16 @@ L["S_MAPFRAME_ALIGN_CENTER"] = "центр"
 --[[ L["S_MAPFRAME_ALIGN_DESC"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_MAPFRAME_ALIGN_LEFT"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_ANIMATIONS"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_ALIGN"] = ""--]] 
+L["S_OPTIONS_ANIMATIONS"] = "С анимацией"
+L["S_OPTIONS_MAPFRAME_ALIGN"] = "Расположение карты по центру"
 --[[Translation missing --]]
 --[[ L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_SCALE"] = ""--]] 
+L["S_OPTIONS_MAPFRAME_SCALE"] = "Масштаб окна карты"
 --[[Translation missing --]]
 --[[ L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_QUESTBLACKLIST"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_RESET"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_SHOWFACTIONS"] = ""--]] 
+L["S_OPTIONS_QUESTBLACKLIST"] = "Чёрный список заданий"
+L["S_OPTIONS_RESET"] = "Сброс"
+L["S_OPTIONS_SHOWFACTIONS"] = "Показать фракции"
 --[[Translation missing --]]
 --[[ L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = ""--]] 
 --[[Translation missing --]]

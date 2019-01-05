@@ -1,4 +1,7 @@
-﻿v3.5.0
+﻿v3.5.1
+TOC bump for now.
+
+v3.5.0
 Haven't found anything to be broken, TOC bump.
 
 v3.4.4

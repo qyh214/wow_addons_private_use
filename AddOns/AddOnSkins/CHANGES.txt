@@ -1,28 +1,53 @@
-lightweight tag 4430761bbf0f5986edd85eef232fdf1468baa1d9 4.04
-Author:	Michael James <darktemplar9900@yahoo.com>
-Date:	Wed Nov 21 17:22:48 2018 -0600
+Changes since tag 4.07
 
-commit 4430761bbf0f5986edd85eef232fdf1468baa1d9
-Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Wed Nov 21 17:22:48 2018 -0600
+commit f3a46bb172f042aec3ed2ce25c22d9a3409499f5
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Thu Jan 3 22:55:20 2019 -0600
 
-    4.04
+    Order Hall / WorldMap
 
-commit 856532c45d1f21d50cde96b482eef3d84c649535
-Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Wed Nov 21 17:21:38 2018 -0600
-
-    :Kill to AS:Kill
-
-commit 4cb0a155859c31f152930cf2f986637aca87073b
-Author: Michael James <darktemplar9900@yahoo.com>
-Date:   Wed Nov 21 16:43:31 2018 -0600
-
-    Yea.. This is why drinking is bad kids.
-
-commit dd538d02336cb78a81921c812171f5b85a2df5c6
+commit d39290ceff1be0c4c7fbeffd3d455a7dfdf608de
 Author: Merathilis <neo0608@gmail.com>
-Date:   Wed Nov 21 17:25:44 2018 +0100
+Date:   Fri Dec 28 12:29:40 2018 +0100
 
-    Slightly adjust the Postal OpenAllMenuButton: https://www.tukui.org/forum/viewtopic.php?f=35&t=4412
+    Fix typo.
+
+commit 4c4a74b516b88f7a5b494fadae64c0ab63f760f4
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Thu Dec 27 17:56:58 2018 -0600
+
+    Theme & Shadows (WIP)
+
+commit 8dd006cb42b700018c117cf4707df0b88fb78595
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Wed Dec 26 21:42:32 2018 -0600
+
+    Azerite / Allied Races
+
+commit b59f8e6d70b26374df7d70fd43f52265a87645dc
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Mon Dec 24 12:24:26 2018 -0600
+
+    World Map / Quest
+
+commit 4e66795af2304813d2639a7fe704b39da9d97366
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Thu Dec 20 19:25:48 2018 -0600
+
+    Ace3 SubModul
+    
+    
+    Added submodule Libs/Ace3
+
+commit 52ed705848cc6b2e313a36ffa8b5717c2a8d3463
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Thu Dec 20 19:20:01 2018 -0600
+
+    Yea...
+
+commit cc0140229bde5ec751dd31d1e811001028a24340
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Thu Dec 20 19:17:49 2018 -0600
+
+    Retry this.. Torhal saved the day?
 

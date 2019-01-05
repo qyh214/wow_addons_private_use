@@ -1,18 +1,12 @@
-tag 9a7ecb947ebeb0906003a8ed635b077709c17e18 3.0.0
+tag 1257d21edeee672e081af904e0661d4e9e2f3d36 3.0.1
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Fri Aug 31 17:53:21 2018 +0200
+Date:	Sun Dec 16 18:23:10 2018 +0100
 
-BFA new fixes
+TOC BUMP
 
-commit d64531b38fd27c824e0749e21f7c90b6cd6393dd
+commit 868da2ecbacffe0123a0768ee5ddfa77e1a33d97
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Fri Aug 31 17:52:50 2018 +0200
+Date:   Sun Dec 16 18:22:12 2018 +0100
 
-    Hopefully final round of fixes for BFA
-
-commit c08038f645e602ac53b19fe3562ec179c8739b33
-Author: Alar of Runetotem <alar@aspide.it>
-Date:   Fri Aug 17 13:32:08 2018 +0200
-
-    Linked pkgmeta
+    TOC BUMP
 

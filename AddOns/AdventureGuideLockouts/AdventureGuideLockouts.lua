@@ -17,6 +17,8 @@ elseif locale == "frFR" then
 	L[1] = "Astres vénérables"
 elseif locale == "itIT" then
 	L[1] = "Venerabili Celestiali"
+elseif locale == "koKR" then
+	L[1] = "위대한 천신회"
 elseif locale == "zhCN" then
 	L[1] = "至尊天神"
 elseif locale == "zhTW" then
@@ -227,9 +229,6 @@ local worldBossesData = {
 	}
 }
 
-local eventFrame = CreateFrame("Frame", "AdventureGuideLockouts_EventFrame", UIParent)
-eventFrame:Show()
-
 local startTime = -1
 local savedInstances = {}
 local statusFrames = {}
@@ -294,7 +293,7 @@ local function UpdateSavedInstances()
 		end
 	end
 
-	local isStromgardeAvailable, isDarkshoreAvailable = false
+	local isStromgardeAvailable, isDarkshoreAvailable = false, false
 	local stromgardeState, darkshoreState = GetState(11), GetState(116)
 	if UnitFactionGroup("player") == "Horde" then
 		worldBossesData[1028].bosses[4].encounter = 2212
@@ -354,7 +353,7 @@ local function UpdateSavedInstances()
 					worldBosses[1028][i].isAvailable = isDarkshoreAvailable
 					worldBosses[1028][i].isKilled = worldBosses[1028][i].isKilled and isDarkshoreAvailable
 				else
-					worldBosses[1028][i].isAvailable = GetQuestTimeLeftMinutes(boss.quest) > 0
+					worldBosses[1028][i].isAvailable = GetQuestTimeLeftMinutes(boss.quest) ~= nil
 				end
 			end
 		end
@@ -547,6 +546,8 @@ local function UpdateInstanceStatusFrame(instanceButton)
 end
 
 -------------------
+
+local eventFrame = CreateFrame("Frame")
 
 eventFrame:RegisterEvent("PLAYER_LOGIN")
 local function OnEvent(self, event, ...)

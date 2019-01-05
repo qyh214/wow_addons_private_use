@@ -7,4 +7,5 @@
 	<Script file="LibDataBroker-1.1.lua"/>
 	<Script file="colorize.lua"/>
 	<Script file="factory.lua"/>
+	<Include file="MSA-DropDownMenu-1.0\MSA-DropDownMenu-1.0.xml"/>
 </Ui>

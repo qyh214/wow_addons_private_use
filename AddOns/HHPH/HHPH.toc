@@ -1,0 +1,6 @@
+## Interface: 80100
+## Title: Hivemind HoO Puzzle Helper
+## Author: ykiigor
+## Version: 2
+## SavedVariables: VHHPH
+core.lua

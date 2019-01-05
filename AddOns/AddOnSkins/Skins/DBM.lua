@@ -27,14 +27,14 @@ function AS:DBM(event, addon)
 							icon1.overlay = CreateFrame('Frame', '$parentIcon1Overlay', tbar)
 							AS:SetTemplate(icon1.overlay)
 							icon1.overlay:SetFrameLevel(0)
-							icon1.overlay:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMLEFT', -(AS.PixelPerfect and 2 or 3), 0)
+							icon1.overlay:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMLEFT', AS:AdjustForTheme(-2), 0)
 						end
 
 						if not icon2.overlay then
 							icon2.overlay = CreateFrame('Frame', '$parentIcon2Overlay', tbar)
 							AS:SetTemplate(icon2.overlay)
 							icon2.overlay:SetFrameLevel(0)
-							icon2.overlay:SetPoint('BOTTOMLEFT', frame, 'BOTTOMRIGHT', (AS.PixelPerfect and 2 or 3), 0)
+							icon2.overlay:SetPoint('BOTTOMLEFT', frame, 'BOTTOMRIGHT', AS:AdjustForTheme(2), 0)
 						end
 
 						AS:SkinTexture(icon1)
@@ -49,7 +49,7 @@ function AS:DBM(event, addon)
 						icon2.overlay:SetSize(bar.owner.options.Height, bar.owner.options.Height)
 						tbar:SetInside(frame)
 
-						frame:SetTemplate('Transparent')
+						AS:SetTemplate(frame)
 
 						name:ClearAllPoints()
 						name:SetWidth(165)
@@ -98,8 +98,8 @@ function AS:DBM(event, addon)
 				if AS:CheckOption('DBMRadarTrans') then
 					DBMRangeCheckRadar.background:Hide()
 				else
-					DBMRangeCheck:SetTemplate('Transparent')
-					DBMRangeCheckRadar:SetTemplate('Transparent')
+					AS:SetTemplate(DBMRangeCheck)
+					AS:SetTemplate(DBMRangeCheckRadar)
 				end
 			end
 		end
@@ -107,7 +107,7 @@ function AS:DBM(event, addon)
 		local function SkinInfo(self, maxLines, event, ...)
 			if DBM.Options.DontShowInfoFrame and (event or 0) ~= "test" then return end
 			if DBMInfoFrame then
-				DBMInfoFrame:SetTemplate('Transparent')
+				AS:SetTemplate(DBMInfoFrame)
 			end
 		end
 

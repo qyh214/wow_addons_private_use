@@ -1,7 +1,7 @@
 --- Main methods directly available in your addon
 -- @classmod lib
 -- @author Alar of Runetotem
--- @release 49
+-- @release 51
 -- @set sort=true
 -- @usage
 -- -- Create a new addon this way:
@@ -11,7 +11,7 @@
 local me, ns = ...
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):12:")) -- Always check line number in regexp and file
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 49
+local MINOR_VERSION = 51
 local LibStub=LibStub
 local dprint=function() end
 local encapsulate  = function ()
@@ -1032,6 +1032,7 @@ function lib:HF_Push(section,text)
 	self.lastsection=section
 	self.help[section]=self.help[section]  .. '\n' .. text
 end
+
 local getlibs
 do
 	local libs={}
@@ -1043,7 +1044,7 @@ do
 						end
 				end
 		end
-		function getlibs(self)
+		function getlibs(l)
 				local appo={}
 				if (not libs) then return end
 				for i,_ in pairs(libs) do
@@ -1052,12 +1053,11 @@ do
 				table.sort(appo)
 				for _,libname in pairs(appo) do
 						local minor=libs[libname]
-						self:HF_Pre(format("%s release: %s",self:Colorize(libname,'green'),self:Colorize(minor,'orange')),LIBRARIES)
+						l:HF_Pre(format("%s release: %s",l:Colorize(libname,'green'),l:Colorize(minor,'orange')),LIBRARIES)
 				end
 				libs=nil
 		end
 end
-
 function lib:HF_Toggle(flag,description)
 	flag=C(format("/%s toggle %s: ",strlower(lib.options[self].ID),flag),'orange') ..C(description,'white')
 	self:HF_Push(TOGGLES,"\n" .. C(flag,'orange'))

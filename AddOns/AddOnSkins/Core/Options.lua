@@ -27,7 +27,23 @@ local Changelog = {
 	},
 	["4.04"] = {
 		'Core: API'
-	}
+	},
+	['4.05'] = {
+		'Core: API 8.1',
+		'Updated: Azeroth Auto Pilot, Talent Set Manager, Blizzard Skins, NugRunning, FlyoutButtonCustom',
+		'Added: Collection Shop',
+		'Fixed: Tukui 18 Embed',
+	},
+	['4.06'] = {
+		'Curse Issues'
+	},
+	['4.07'] = {
+		'Fixed Curse Issues'
+	},
+	['4.08'] = {
+		'Core: Themes & Shadows',
+		'Updated: Allied Races, AzeriteUI, World Map, Quest'
+	},
 }
 
 local DEVELOPERS = {
@@ -67,7 +83,7 @@ AS.Options = {
 			name = GENERAL,
 			order = 0,
 			get = function(info) return AS:CheckOption(info[#info]) end,
-			set = function(info, value) AS:SetOption(info[#info], value) AS.NeedReload = true end,
+			set = function(info, value) AS:SetOption(info[#info], value) AS:UpdateSettings() AS.NeedReload = true end,
 			args = {
 				Header = {
 					order = 0,
@@ -89,14 +105,24 @@ AS.Options = {
 					name = ASL['Parchment']..' (WIP)', -- This doesn't need localized. Once I'm done doing the extra skinning I'll remove it.
 					order = 3,
 				},
-				ThinBorder = {
-					name = 'Thin Border',
+				Theme = {
+					name = ASL['Themes'],
 					order = 4,
+					type = 'select',
+					values = {
+						['PixelPerfect'] = 'Pixel Perfect',
+						['TwoPixel'] = 'Two Pixel',
+						['ThickBorder'] = 'Thick Border',
+					},
+				},
+				Shadows = {
+					name = ASL['Shadows'],
+					order = 7,
 					type = 'toggle',
 				},
 				SkinTemplate = {
 					name = ASL['Skin Template'],
-					order = 7,
+					order = 8,
 					type = 'select',
 					values = DefaultTemplates,
 				},
@@ -104,9 +130,9 @@ AS.Options = {
 					type = 'group',
 					name = 'Textures',
 					guiInline = true,
-					order = 8,
+					order = 9,
 					get = function(info) return AS:CheckOption(info[#info]) end,
-					set = function(info, value) AS:SetOption(info[#info], value) AS.NeedReload = true end,
+					set = function(info, value) AS:SetOption(info[#info], value) AS:UpdateSettings() AS.NeedReload = true end,
 					args = {
 						BackgroundTexture = {
 							type = 'select',
@@ -122,6 +148,12 @@ AS.Options = {
 							name = 'StatusBar Texture',
 							values = AS.LSM:HashTable('statusbar'),
 						},
+						CropIcons = {
+							name = ASL['Crop Icons'],
+							desc = ASL['Turn off for Full Icons'],
+							order = 3,
+							type = 'toggle',
+						},
 					},
 				},
 				Colors = {
@@ -130,9 +162,9 @@ AS.Options = {
 					guiInline = true,
 					order = 9,
 					get = function(info) return unpack(AS:CheckOption(info[#info])) end,
-					set = function(info, r, g, b, a) AS:SetOption(info[#info], { r, g, b, a }) end,
+					set = function(info, r, g, b, a) AS:SetOption(info[#info], { r, g, b, a }) AS:UpdateSettings() end,
 					args = {
-						BackdropColor = {
+						CustomBackdropColor = {
 							type = 'color',
 							order = 1,
 							hasAlpha = true,
@@ -140,7 +172,7 @@ AS.Options = {
 							desc = 'Only Available with Custom Template',
 							disabled = function() return (AS:CheckOption('SkinTemplate') ~= 'Custom') or AS:CheckOption('ElvUIStyle') end,
 						},
-						BorderColor = {
+						CustomBorderColor = {
 							type = 'color',
 							order = 2,
 							name = 'Border Color',
@@ -742,12 +774,10 @@ for Version, Table in pairs(Changelog) do
 	AS.Options.args.about.args.changelog.args[Version] = {
 		type = 'group',
 		name = Version,
-		order = 3,
 		args = {},
 	}
 	for i, Change in pairs(Table) do
 		AS.Options.args.about.args.changelog.args[Version].args[tostring(i)] = {
-			order = i,
 			type = 'description',
 			name = Change,
 			fontSize = 'large',
@@ -759,12 +789,10 @@ for Name, Table in pairs(Skins) do
 	AS.Options.args.about.args.skins.args[Name] = {
 		type = 'group',
 		name = Name,
-		order = 3,
 		args = {},
 	}
 	for i, Change in pairs(Table) do
 		AS.Options.args.about.args.skins.args[Name].args[tostring(i)] = {
-			order = i,
 			type = 'description',
 			name = Change,
 			fontSize = 'large',
@@ -853,47 +881,49 @@ function AS:BuildProfile()
 	local Defaults = {
 		profile = {
 		-- Embeds
+			['EmbedBelowTop'] = false,
+			['EmbedCoolLine'] = false,
+			['EmbedFrameLevel'] = 10,
+			['EmbedFrameStrata'] = '2-LOW',
+			['EmbedIsHidden'] = false,
+			['EmbedLeft'] = Embed,
+			['EmbedLeftWidth'] = 200,
+			['EmbedMain'] = Embed,
 			['EmbedOoC'] = false,
 			['EmbedOoCDelay'] = 10,
-			['EmbedCoolLine'] = false,
+			['EmbedRight'] = Embed,
+			['EmbedRightChat'] = true,
 			['EmbedSexyCooldown'] = false,
 			['EmbedSystem'] = false,
 			['EmbedSystemDual'] = false,
-			['EmbedMain'] = Embed,
-			['EmbedLeft'] = Embed,
-			['EmbedRight'] = Embed,
-			['EmbedRightChat'] = true,
-			['EmbedLeftWidth'] = 200,
-			['EmbedBelowTop'] = false,
 			['TransparentEmbed'] = false,
-			['EmbedIsHidden'] = false,
-			['EmbedFrameStrata'] = '2-LOW',
-			['EmbedFrameLevel'] = 10,
 		-- Misc
-			['RecountBackdrop'] = true,
-			['SkadaBackdrop'] = true,
-			['OmenBackdrop'] = true,
-			['DetailsBackdrop'] = true,
-			['DBMSkinHalf'] = false,
-			['DBMFont'] = 'Arial Narrow',
-			['DBMFontSize'] = 12,
-			['DBMFontFlag'] = 'OUTLINE',
-			['DBMRadarTrans'] = false,
-			['SkinTemplate'] = 'Transparent',
-			['HideChatFrame'] = 'NONE',
-			['Parchment'] = false,
-			['SkinDebug'] = false,
-			['LoginMsg'] = false,
-			['EmbedSystemMessage'] = true,
-			['ElvUIStyle'] = false,
-			['ThinBorder'] = true,
-			['ClassColor'] = false,
 			['BackgroundTexture'] = 'Blizzard Raid Bar',
-			['StatusBarTexture'] = 'Blizzard Raid Bar',
-			['BackdropColor'] = { .5, .5, .5, .8 },
-			['BorderColor'] = { 0, 0, 0 },
+			['ClassColor'] = false,
+			['CropIcons'] = true,
+			['CustomBackdropColor'] = { .5, .5, .5, .8 },
+			['CustomBorderColor'] = { 0, 0, 0 },
+			['DBMFont'] = 'Arial Narrow',
+			['DBMFontFlag'] = 'OUTLINE',
+			['DBMFontSize'] = 12,
+			['DBMRadarTrans'] = false,
+			['DBMSkinHalf'] = false,
+			['DetailsBackdrop'] = true,
+			['ElvUIStyle'] = false,
+			['EmbedSystemMessage'] = true,
+			['HideChatFrame'] = 'NONE',
 			['HighlightColor'] = { 1, .8, .1 },
+			['LoginMsg'] = false,
+			['OmenBackdrop'] = true,
+			['Parchment'] = false,
+			['RecountBackdrop'] = true,
 			['SelectedColor'] = { 0, 0.44, .87 },
+			['SkadaBackdrop'] = true,
+			['SkinDebug'] = false,
+			['SkinTemplate'] = 'Transparent',
+			['StatusBarTexture'] = 'Blizzard Raid Bar',
+			['Theme'] = 'PixelPerfect',
+			['Shadows'] = true,
 		},
 	}
 
@@ -925,12 +955,11 @@ function AS:SetupProfile()
 end
 
 function AS:BuildOptions()
-	local function GenerateOptionTable(skinName, order)
+	local function GenerateOptionTable(skinName)
 		local text = strfind(skinName, 'Blizzard_') and (BlizzardNames[skinName] or strtrim(skinName:gsub('^Blizzard_(.+)','%1'):gsub('(%l)(%u%l)','%1 %2'))) or GetAddOnMetadata(skinName, 'Title') or strtrim(skinName:gsub('(%l)(%u%l)','%1 %2'))
 		local options = {
 			type = 'toggle',
 			name = text,
-			order = order,
 		}
 		if AS:CheckAddOn('ElvUI') and strfind(skinName, 'Blizzard_') then
 			options.set = function(info, value) AS:SetOption(info[#info], value) AS:SetElvUIBlizzardSkinOption(info[#info], not value) AS.NeedReload = true end
@@ -938,7 +967,6 @@ function AS:BuildOptions()
 		return options
 	end
 
-	local order, blizzorder = 1, 1
 	local skins = {}
 
 	for skinName in pairs(AS.register) do
@@ -953,11 +981,9 @@ function AS:BuildOptions()
 
 	for _, skinName in pairs(skins) do
 		if strfind(skinName, 'Blizzard_') then
-			AS.Options.args.blizzard.args[skinName] = GenerateOptionTable(skinName, blizzorder)
-			blizzorder = blizzorder + 1
+			AS.Options.args.blizzard.args[skinName] = GenerateOptionTable(skinName)
 		else
-			AS.Options.args.addons.args[skinName] = GenerateOptionTable(skinName, order)
-			order = order + 1
+			AS.Options.args.addons.args[skinName] = GenerateOptionTable(skinName)
 		end
 	end
 

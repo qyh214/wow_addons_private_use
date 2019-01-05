@@ -1,7 +1,7 @@
-changeset:   346:bbe827635ad0
-tag:         v8.1.0.346
+changeset:   353:b4ca2dc292cf
+tag:         v8.1.0.353
 user:        Tercioo
-date:        Fri Dec 14 21:31:14 2018 -0200
-summary:     - Another polishing pass, several icons got emphasize.
+date:        Thu Dec 27 20:17:04 2018 -0200
+summary:     - Fixed an issue with the taxi map where hovering over a widget won't show the tooltip.
 
 

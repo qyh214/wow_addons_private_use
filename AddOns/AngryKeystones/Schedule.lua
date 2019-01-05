@@ -97,15 +97,9 @@ local function UpdateFrame()
 	Mod.PartyFrame:Show()
 	Mod.KeystoneText:Show()
 
-	local currentAffixes = C_MythicPlus.GetCurrentAffixes()
-	if currentAffixes and #currentAffixes then
-		ChallengesFrame.WeeklyInfo.Child.Affixes[1]:ClearAllPoints()
-		ChallengesFrame.WeeklyInfo.Child.Affixes[1]:SetPoint("CENTER", ChallengesFrame.WeeklyInfo.Child.Label, "CENTER", 31 + (-31 * #currentAffixes), -45)
-	end
-
 	ChallengesFrame.WeeklyInfo.Child.WeeklyChest:ClearAllPoints()
 	ChallengesFrame.WeeklyInfo.Child.WeeklyChest:SetPoint("LEFT", 50, -30)
-	if ChallengesFrame.WeeklyInfo.Child.WeeklyChest:IsShown() then
+	if false and ChallengesFrame.WeeklyInfo.Child.WeeklyChest:IsShown() then
 		ChallengesFrame.WeeklyInfo.Child.RunStatus:SetWidth(240)
 	else
 		ChallengesFrame.WeeklyInfo.Child.RunStatus:SetWidth(240)
@@ -310,7 +304,7 @@ function Mod:CheckAffixes()
 		for index, affixes in ipairs(affixSchedule) do
 			local matches = 0
 			for _, affix in ipairs(currentAffixes) do
-				if affix == affixes[1] or affix == affixes[2] or affix == affixes[3] then
+				if affix.id == affixes[1] or affix.id == affixes[2] or affix.id == affixes[3] then
 					matches = matches + 1
 				end
 			end
