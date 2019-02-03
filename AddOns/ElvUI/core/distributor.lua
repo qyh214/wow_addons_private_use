@@ -1,7 +1,7 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local D = E:NewModule('Distributor', "AceEvent-3.0","AceTimer-3.0","AceComm-3.0","AceSerializer-3.0")
-local LibCompress = LibStub("LibCompress")
-local LibBase64 = LibStub("LibBase64-1.0-ElvUI")
+local LibCompress = E.Libs.Compress
+local LibBase64 = E.Libs.Base64
 
 --Cache global variables
 local tonumber, type, gsub, pcall, loadstring = tonumber, type, gsub, pcall, loadstring
@@ -15,7 +15,7 @@ local LE_PARTY_CATEGORY_INSTANCE = LE_PARTY_CATEGORY_INSTANCE
 local ACCEPT, CANCEL, YES, NO = ACCEPT, CANCEL, YES, NO
 
 --Global variables that we don't cache, list them here for the mikk"s Find Globals script
--- GLOBALS: LibStub, ElvDB, ElvPrivateDB, ReloadUI
+-- GLOBALS: ElvDB, ElvPrivateDB, ReloadUI
 
 ----------------------------------
 -- CONSTANTS
@@ -183,7 +183,7 @@ function D:OnCommReceived(prefix, msg, dist, sender)
 						maxLetters = 127,
 						OnAccept = function(self)
 							ElvDB.profiles[self.editBox:GetText()] = data
-							LibStub("AceAddon-3.0"):GetAddon("ElvUI").data:SetProfile(self.editBox:GetText())
+							E.Libs.AceAddon:GetAddon("ElvUI").data:SetProfile(self.editBox:GetText())
 							E:StaggeredUpdateAll(nil, true)
 							Downloads[sender] = nil
 						end,
@@ -208,7 +208,7 @@ function D:OnCommReceived(prefix, msg, dist, sender)
 						E:CopyTable(ElvDB.global, data)
 						E:StaggeredUpdateAll(nil, true)
 					else
-						LibStub("AceAddon-3.0"):GetAddon("ElvUI").data:SetProfile(profileKey)
+						E.Libs.AceAddon:GetAddon("ElvUI").data:SetProfile(profileKey)
 					end
 					Downloads[sender] = nil
 				end,
@@ -240,6 +240,9 @@ end
 --Keys that should not be exported
 local blacklistedKeys = {
 	["profile"] = {
+		["general"] = {
+			["numberPrefixStyle"] = true,
+		},
 		["actionbar"] = {
 			--[[
 			["bar1"] = {
@@ -471,6 +474,7 @@ local function SetImportedProfile(profileType, profileKey, profileData, force)
 	D.profileData = nil
 
 	if profileType == "profile" then
+		profileData = E:FilterTableFromBlacklist(profileData, blacklistedKeys.profile) --Remove unwanted options from import
 		if not ElvDB.profiles[profileKey] or force then
 			if force and E.data.keys.profile == profileKey then
 				--Overwriting an active profile doesn't update when calling SetProfile
@@ -490,11 +494,13 @@ local function SetImportedProfile(profileType, profileKey, profileData, force)
 			return
 		end
 	elseif profileType == "private" then
+		profileData = E:FilterTableFromBlacklist(profileData, blacklistedKeys.private) --Remove unwanted options from import
 		local profileKey = ElvPrivateDB.profileKeys[E.myname..' - '..E.myrealm]
 		ElvPrivateDB.profiles[profileKey] = profileData
 		E:StaticPopup_Show('IMPORT_RL')
 
 	elseif profileType == "global" then
+		profileData = E:FilterTableFromBlacklist(profileData, blacklistedKeys.global) --Remove unwanted options from import
 		E:CopyTable(ElvDB.global, profileData)
 		E:StaticPopup_Show('IMPORT_RL')
 

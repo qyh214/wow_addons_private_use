@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 557 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 576 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,6 +16,22 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
+addEntry("3.7.22", "01/24/2019", [[
+	* trying to fix emote misbehavior in BNet names introduced with patch 8.1
+	* fix class names and icon display for non-english clients
+]]);
+addEntry("3.7.21", "01/24/2019", [[
+	* update BNetWhisper handler for 8.1
+	* update ExtractTellTarget handler
+]]);
+addEntry("3.7.20", "01/24/2019", [[
+	*TOC update for 8.1
+	*fix LibWho error
+	*fix changed BNet name handler
+]]);
+addEntry("3.7.19", "12/10/2018", [[
+	*Bumped TOC
+]]);
 addEntry("3.7.18", "07/27/2018", [[
 	*URL handler should now show dialog for copying URL as intended.
 ]]);
@@ -30,9 +46,6 @@ addEntry("3.7.16", "05/02/2018", [[
 ]]);
 addEntry("3.7.15", "04/20/2018", [[
 	*Grabbed latest ChatThrottleLib for 8.x compat
-]]);
-addEntry("3.7.14", "09/03/2017", [[
-	*Fixed Officer chat Taint
 ]]);
 
 

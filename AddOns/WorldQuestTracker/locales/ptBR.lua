@@ -66,6 +66,10 @@ L["S_MAPBAR_OPTIONSMENU_EQUIPMENTICONS"] = "Ícones de equipamentos"
 L["S_MAPBAR_OPTIONSMENU_QUESTTRACKER"] = "Habilitar Listagem de Missões"
 L["S_MAPBAR_OPTIONSMENU_REFRESH"] = "Recarregar"
 L["S_MAPBAR_OPTIONSMENU_SOUNDENABLED"] = "Habilitar som"
+--[[Translation missing --]]
+--[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_ONDISABLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = ""--]] 
 L["S_MAPBAR_OPTIONSMENU_STATUSBARANCHOR"] = "Ancorar ao topo"
 L["S_MAPBAR_OPTIONSMENU_TOMTOM_WPPERSISTENT"] = "Ponto persistente"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_CURRENTZONE"] = "Apenas zona atual"

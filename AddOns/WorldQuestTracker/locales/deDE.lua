@@ -69,6 +69,10 @@ L["S_MAPBAR_OPTIONSMENU_EQUIPMENTICONS"] = "Ausrüstungssymbole"
 L["S_MAPBAR_OPTIONSMENU_QUESTTRACKER"] = "Questverfolgung aktivieren"
 L["S_MAPBAR_OPTIONSMENU_REFRESH"] = "Aktualisieren"
 L["S_MAPBAR_OPTIONSMENU_SOUNDENABLED"] = "Ton aktivieren"
+--[[Translation missing --]]
+--[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_ONDISABLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = ""--]] 
 L["S_MAPBAR_OPTIONSMENU_STATUSBARANCHOR"] = "Oben anheften"
 L["S_MAPBAR_OPTIONSMENU_TOMTOM_WPPERSISTENT"] = "Ständige Wegpunkte"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_CURRENTZONE"] = "Nur in meinem Gebiet"

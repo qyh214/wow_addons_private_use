@@ -8,22 +8,19 @@ if namespace.locale == "frFR" then
 	-- uses the US English locale code.
 
 -- ####################################################################################################################################
--- ##	Français (French) translations provided by Medaleux, sv002, Darkcraft92, Ymvej, Druidzor, and napnapnapnapnap on Curseforge. ##
+-- ##	Français (French) translations provided by Lightuky, Medaleux, sv002, Darkcraft92, Ymvej, Druidzor, and napnapnapnapnap on Curseforge. ##
 -- ####################################################################################################################################
 
 L["  /dcstats config: Opens the DejaCharacterStats addon config menu."] = "/dcstats config: Ouvre le menu de configuration de DejaCharacterStats."
---[[Translation missing --]]
---[[ L["  /dcstats reset:  Resets DejaCharacterStats options to default."] = ""--]] 
---[[Translation missing --]]
---[[ L["%s of %s increases %s by %.2f%%"] = ""--]] 
+L["  /dcstats reset:  Resets DejaCharacterStats options to default."] = "/dcstats reset:  Réinitialise les options de DejaCharacterStats par défaut."
+L["%s of %s increases %s by %.2f%%"] = "%s de %s augmente %s par %.2f%%"
 L["About DCS"] = "À propos de DCS"
 L["All Stats"] = "Toutes les stats"
 L["Attack"] = "Attaque"
 L["Average Durability"] = "Durabilité Moyenne"
 L["Average equipped item durability percentage."] = "Pourcentage de durabilité moyen des objets équipés."
 L["Average Item Level:"] = "Moyenne du niveaux d'équipement:"
---[[Translation missing --]]
---[[ L["Avoidance Rating"] = ""--]] 
+L["Avoidance Rating"] = "Taux d'évitement"
 L["Blizzard's Hide At Zero"] = "Blizzard Cacher valeur nulle "
 L["Character Stats:"] = "Statistiques de personnage:"
 L["Class Colors"] = "Couleur par classe "
@@ -32,14 +29,12 @@ L["Critical Strike Rating"] = "Score de coup critique"
 L["DCS's Hide At Zero"] = "DCS Cacher valeur nulle "
 L["Decimals"] = "Décimales"
 L["Defense"] = "Défense"
---[[Translation missing --]]
---[[ L["Dejablue's improved character stats panel view."] = ""--]] 
+L["Dejablue's improved character stats panel view."] = "Vue améliorée des statistiques du personnage de Dejablue"
 L["DejaCharacterStats Slash commands (/dcstats):"] = "Commandes de DCS (/dcstats)"
 L["Displays a durability bar next to each item."] = "Afficher une barre de durabilité à côté de chaque objet."
 L["Displays average item durability on the character shirt slot and durability frames."] = "Afficher la durabilité moyenne des objets équipés sur l'emplacement de chemise et sur l'affichage de la durabilité."
 L["Displays average item level to one decimal place."] = "Afficher le niveau d'objet moyen avec une décimale."
---[[Translation missing --]]
---[[ L["Displays average item level to two decimal places."] = ""--]] 
+L["Displays average item level to two decimal places."] = "Affiche le niveau d'objet avec deux décimales"
 L["Displays average item level with class colors."] = "Montrer le niveaux d'équipement de la couleur de la classe"
 L["Displays each equipped item's durability."] = "Afficher la durabilité de chaque objet équipé."
 L["Displays each equipped item's repair cost."] = "Afficher le coût en réparations de chaque objet équipé."
@@ -55,19 +50,15 @@ L["Durability Bars"] = "Barres de durabilité"
 L["Equipped/Available"] = "Équipé/Disponible"
 L["Expand"] = "Étendre"
 L["General"] = "Général "
---[[Translation missing --]]
---[[ L["General global cooldown refresh time."] = ""--]] 
+L["General global cooldown refresh time."] = "Temps de rafraîchissement du temps de recharge global "
 L["Global Cooldown"] = "Temps de recharge global"
 L["Haste Rating"] = "Score d'hâte"
 L["Hide Character Stats"] = "Cacher les statistiques du personnage"
---[[Translation missing --]]
---[[ L["Hide low level mastery"] = ""--]] 
---[[Translation missing --]]
---[[ L["Hides 'Enhancements' stats if their displayed value would be zero. Checking 'Decimals' changes the displayed value."] = ""--]] 
---[[Translation missing --]]
---[[ L["Hides 'Enhancements' stats only if their numerical value is exactly zero. For example, if stat value is 0.001%, then it would be displayed as 0%."] = ""--]] 
---[[Translation missing --]]
---[[ L["Hides Mastery stat until the character starts to have benefit from it. Hiding Mastery with Select-A-Stat™ in the character panel has priority over this setting."] = ""--]] 
+L["Hide low level mastery"] = "Cacher la maîtrise à bas niveau "
+L["Hides 'Enhancements' stats if their displayed value would be zero. Checking 'Decimals' changes the displayed value."] = [=[Cacher les caractéristiques 'd'améliorations' si leur valeurs affichées sont égales à zéro. 
+Cocher 'Décimales' change la valeur affichée.]=]
+L["Hides 'Enhancements' stats only if their numerical value is exactly zero. For example, if stat value is 0.001%, then it would be displayed as 0%."] = "Cacher les caractéristiques 'd'améliorations' seulement si leurs valeurs numérique sont exactement égales à zéro. Si la valeur est égale à 0.001%, elle sera affichée comme 0%."
+L["Hides Mastery stat until the character starts to have benefit from it. Hiding Mastery with Select-A-Stat™ in the character panel has priority over this setting."] = "Cacher la caractéristique de Maîtrise jusqu'à ce que le personnage en bénéficie. Cacher la Maîtrise avec Select-A-Stat™ sur le panneau de personnage est prioritaire sur ce règlage. "
 L["Item Durability"] = "Durabilité de l'objet"
 L["Item Level"] = "Niveau d'équipement"
 L["Item Repair Cost"] = "Coût de réparation de l'objet"
@@ -79,25 +70,20 @@ L["Mastery Rating"] = "Score de maîtrise"
 L["Miscellaneous:"] = "Divers:"
 L["Movement Speed"] = "Vitesse de déplacement"
 L["Off Hand"] = "Main gauche"
---[[Translation missing --]]
---[[ L["Offense"] = ""--]] 
+L["Offense"] = "Attaque"
 L["One Decimal Place"] = "Afficher une décimale"
 L["Parry Rating"] = "Score de parade"
---[[Translation missing --]]
---[[ L["Ratings"] = ""--]] 
+L["Ratings"] = "Taux"
 L["Relevant Stats"] = "Stats pertinentes"
 L["Repair Total"] = "Réparation Total"
---[[Translation missing --]]
---[[ L["Requires Level "] = ""--]] 
+L["Requires Level "] = "Requiert le niveau"
 L["Reset Stats"] = "Réinitialiser"
 L["Reset to Default"] = "Remettre par défaut"
---[[Translation missing --]]
---[[ L["Resets order of stats."] = ""--]] 
+L["Resets order of stats."] = "Réinitialise l'ordre des caractéristiques"
 L["Scrollbar"] = "Barre de défilement"
 L["Show all stats."] = "Montrer toutes les statistiques"
 L["Show Character Stats"] = "Montrer les statistiques du personnage"
---[[Translation missing --]]
---[[ L["Show only stats relevant to your class spec."] = ""--]] 
+L["Show only stats relevant to your class spec."] = "Afficher seulement les caractéristiques adaptées à votre spécialisation de classe"
 L["Total equipped item repair cost before discounts."] = "Coût total de réparation des objets équipés avant réductions."
 L["Two Decimal Places"] = "Afficher deux décimales"
 L["Unlock DCS"] = "Déverouiller DCS"

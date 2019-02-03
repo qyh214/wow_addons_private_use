@@ -72,6 +72,10 @@ L["S_MAPBAR_OPTIONSMENU_EQUIPMENTICONS"] = "Icônes d'équipement"
 L["S_MAPBAR_OPTIONSMENU_QUESTTRACKER"] = "Activer le suivi de WQT"
 L["S_MAPBAR_OPTIONSMENU_REFRESH"] = "Rafraichir"
 L["S_MAPBAR_OPTIONSMENU_SOUNDENABLED"] = "Activer le son"
+--[[Translation missing --]]
+--[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_ONDISABLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = ""--]] 
 L["S_MAPBAR_OPTIONSMENU_STATUSBARANCHOR"] = "Attacher en  haut"
 L["S_MAPBAR_OPTIONSMENU_TOMTOM_WPPERSISTENT"] = "Point de passage persistant"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_CURRENTZONE"] = "Zone actuelle seulement"

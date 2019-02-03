@@ -21,66 +21,75 @@ local classList = {
 
 constants.classListEng = classList;
 
+local GetNumSpecializationsForClassID, GetSpecializationInfoForClassID = _G.GetNumSpecializationsForClassID, _G.GetSpecializationInfoForClassID
+local function createSpecNameTable(classID)
+	local t = {}
+	for spec = 1, GetNumSpecializationsForClassID(classID) do
+		local specID, name = GetSpecializationInfoForClassID(classID,spec)
+		t[spec] = name
+	end
+	return t
+end
 --Male Classes - this doesn't apply to every locale
 classes[L["Druid"]]	= {
                               color = "ff7d0a",
                               tag = "DRUID",
-                              talent = {L["Balance"], L["Feral Combat"], L["Guardian"], L["Restoration"]}
+                              talent = createSpecNameTable(11)
                          };
 classes[L["Hunter"]]	= {
                               color = "abd473",
                               tag = "HUNTER",
-                              talent = {L["Beast Mastery"], L["Marksmanship"], L["Survival"]}
+                              talent = createSpecNameTable(3)
                          };
 classes[L["Mage"]]	= {
                               color = "69ccf0",
                               tag = "MAGE",
-                              talent = {L["Arcane"], L["Fire"], L["Frost"]}
+                              talent = createSpecNameTable(8)
                          };
 classes[L["Paladin"]]	= {
                               color = "f58cba",
                               tag = "PALADIN",
-                              talent = {L["Holy"], L["Protection"], L["Retribution"]}
+                              talent = createSpecNameTable(2)
                          };
 classes[L["Priest"]]	= {
                               color = "ffffff",
                               tag = "PRIEST",
-                              talent = {L["Discipline"], L["Holy"], L["Shadow"]}
+                              talent = createSpecNameTable(5)
                          };
 classes[L["Rogue"]]	= {
                               color = "fff569",
                               tag = "ROGUE",
-                              talent = {L["Assassination"], L["Combat"], L["Subtlety"]}
+                              talent = createSpecNameTable(4)
                          };
 classes[L["Shaman"]]	= {
                               color = "2459FF",
                               tag = "SHAMAN",
-                              talent = {L["Elemental"], L["Enhancement"], L["Restoration"]}
+                              talent = createSpecNameTable(7)
                          };
 classes[L["Warlock"]]	= {
                               color = "9482ca",
                               tag = "WARLOCK",
-                              talent = {L["Affliction"], L["Demonology"], L["Destruction"]}
+                              talent = createSpecNameTable(9)
                          };
 classes[L["Warrior"]]	= {
                               color = "c79c6e",
                               tag = "WARRIOR",
-                              talent = {L["Arms"], L["Fury"], L["Protection"]}
+                              talent = createSpecNameTable(1)
                          };
 classes[L["Death Knight"]] = {
                               color = "c41f3b",
                               tag = "DEATHKNIGHT",
-                              talent = {L["Blood"], L["Frost"], L["Unholy"]}
+                              talent = createSpecNameTable(6)
                          };
 classes[L["Monk"]]		= {
                               color = "00ff96",
                               tag = "MONK",
-                              talent = {L["Brewmaster"], L["Windwalker"], L["Mistweaver"]}
+                              talent = createSpecNameTable(10)
                          };
 classes[L["Demon Hunter"]]	= {
                               color = "a330c9",
                               tag = "DEMONHUNTER",
-                              talent = {L["Havok"], L["Vengeance"]}
+                              talent = createSpecNameTable(12)
                          };
 classes[L["Game Master"]] = {
                               color = "00c0ff",

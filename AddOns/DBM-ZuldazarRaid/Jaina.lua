@@ -1,25 +1,25 @@
 local mod	= DBM:NewMod(2343, "DBM-ZuldazarRaid", 3, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18095 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 18243 $"):sub(12, -3))
 --mod:SetCreatureID(138967)--146409 or 146416 probably
 mod:SetEncounterID(2281)
 --mod:DisableESCombatDetection()
 mod:SetZone()
 --mod:SetBossHPInfoToHighest()
 --mod:SetUsedIcons(1, 2, 8)
---mod:SetHotfixNoticeRev(17775)
+mod:SetHotfixNoticeRev(18175)
 --mod:SetMinSyncRevision(16950)
 --mod.respawnTime = 35
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 287565 287626 285177 285459 290036 288221 288345 288441 288719 289219 289940 290084 288619 288747",
-	"SPELL_CAST_SUCCESS 285725 287925 287626 285257 289220 288374 288211",
+	"SPELL_CAST_START 287565 285177 285459 290036 288221 288345 288441 288719 289219 289940 290084 288619 288747",
+	"SPELL_CAST_SUCCESS 285725 287925 287626 289220 288374 288211",
 	"SPELL_AURA_APPLIED 287993 287490 289387 287925 285253 287626 288199 290053 288219 288212 288374 288412 288434 289220 285254 288038",
 	"SPELL_AURA_APPLIED_DOSE 287993 285253",
-	"SPELL_AURA_REMOVED 287993 287925 287626 288199 290053 288219 288212 288374 289220 288038",
+	"SPELL_AURA_REMOVED 287993 287925 288199 290053 288219 288212 288374 289220 288038 290001",
 	"SPELL_AURA_REMOVED_DOSE 287993",
 	"SPELL_PERIODIC_DAMAGE 288297",
 	"SPELL_PERIODIC_MISSED 288297",
@@ -33,13 +33,16 @@ mod:RegisterEventsInCombat(
 --TODO, detect set charge barrels, and add them to infoframe with time remaining
 --TODO, separate cast hand of frost from spread hand of frost spellIds (currently not possible)
 --TODO, enable hand of frost timer when can separate cast ID from spread ID and get boss cast event (currently not possible)
---TODO, verify elemental and P 2.5 phase end being based on elemental dying
 --TODO, improve elemental CDS to use GUID to handle the split mechanic on mythic.
 --TODO, rework interrupt to use vectis interrupt per GUID code for mythic
 --TODO, orb of frost targetting and improve voice/warning for it
 --TODO, shattering lance script and warning/cast timer
---TODO, what spells do Prismatic Images copy, so it can be handled by timer code
---TODO, Crystalline Dust was never used at all during heroic testing.
+--[[
+(ability.id = 290084 or ability.id = 287565 or ability.id = 285177 or ability.id = 285459 or ability.id = 290036 or ability.id = 288345 or ability.id = 288441 or ability.id = 288719 or ability.id = 289219 or ability.id = 288619 or ability.id = 288747) and type = "begincast"
+ or (ability.id = 287925 or ability.id = 287626 or ability.id = 289220 or ability.id = 288374 or ability.id = 288211) and type = "cast"
+ or (ability.id = 288199 or ability.id = 290053) and (type = "applybuff" or type = "removebuff")
+ or ability.id = 290001 and type = "removebuff"
+--]]
 --General
 local warnPhase							= mod:NewPhaseChangeAnnounce(2, nil, nil, nil, nil, nil, 2)
 local warnFrozenSolid					= mod:NewTargetNoFilterAnnounce(287490, 4)
@@ -49,6 +52,7 @@ local warnMarkedTarget					= mod:NewTargetAnnounce(288038, 2)
 local warnSetCharge						= mod:NewSpellAnnounce(285725, 2)
 local warnIceShard						= mod:NewStackAnnounce(285253, 2, nil, "Tank")
 local warnTimeWarp						= mod:NewSpellAnnounce(287925, 3)
+local warnFreezingBlast					= mod:NewSpellAnnounce(285177, 3)
 --Stage Two: Frozen Wrath
 local warnBurningExplosion				= mod:NewCastAnnounce(288221, 3)
 local warnBroadside						= mod:NewTargetNoFilterAnnounce(288212, 2)
@@ -57,40 +61,44 @@ local warnSiegebreaker					= mod:NewTargetNoFilterAnnounce(288374, 3)
 local warnHeartofFrost					= mod:NewTargetAnnounce(289220, 2)
 local warnFrostNova						= mod:NewCastAnnounce(289219, 3)
 --local warnShatteringLance				= mod:NewCastAnnounce(288671, 4)
+--Stage Three
+local warnCrystalDust					= mod:NewCountAnnounce(289940, 3)
 
 --General
 local specWarnFreezingBlood				= mod:NewSpecialWarningYou(289387, nil, nil, nil, 1, 2)
+local specWarnChillingStack				= mod:NewSpecialWarningStack(287993, nil, 2, nil, nil, 1, 6)
 --Stage One: Burning Seas
+local specWarnIceShard					= mod:NewSpecialWarningTaunt(285253, false, nil, nil, 1, 2)
 local specWarnMarkedTarget				= mod:NewSpecialWarningRun(288038, nil, nil, nil, 4, 2)
 local yellMarkedTarget					= mod:NewYell(288038, nil, false)
 --local specWarnBombard					= mod:NewSpecialWarningDodge(285828, nil, nil, nil, 2, 2)
 local specWarnAvalanche					= mod:NewSpecialWarningYou(285254, nil, nil, nil, 1, 2)
 local yellAvalanche						= mod:NewYell(285254)
 local specWarnAvalancheTaunt			= mod:NewSpecialWarningTaunt(287565, nil, nil, nil, 1, 2)
-local specWarGraspofFrost				= mod:NewSpecialWarningDispel(287626, "Healer", nil, nil, 1, 2)
-local specWarnFreezingBlast				= mod:NewSpecialWarningDodge(285177, nil, nil, nil, 2, 2)
+local specWarGraspofFrost				= mod:NewSpecialWarningDispel(287626, false, nil, 2, 1, 2)--Cast more often now, so make this an opt in warning
+local specWarnFreezingBlast				= mod:NewSpecialWarningDodge(285177, "Tank", nil, nil, 2, 2)
 local specWarnRingofIce					= mod:NewSpecialWarningRun(285459, nil, nil, nil, 4, 2)
 --Stage Two: Frozen Wrath
+local specWarnIceBlockTaunt				= mod:NewSpecialWarningTaunt(287490, nil, nil, nil, 3, 2)
 local specWarnGTFO						= mod:NewSpecialWarningGTFO(288297, nil, nil, nil, 1, 8)
-local specWarnBroadside					= mod:NewSpecialWarningYou(288212, nil, nil, nil, 1, 2)
-local yellBroadside						= mod:NewYell(288212)
-local yellBroadsideFades				= mod:NewShortFadesYell(288212)
+local specWarnBroadside					= mod:NewSpecialWarningMoveAway(288212, nil, nil, nil, 1, 2)--NewSpecialWarningYouPos
+local yellBroadside						= mod:NewPosYell(288212)
+local yellBroadsideFades				= mod:NewIconFadesYell(288212)
 local specWarnSiegebreaker				= mod:NewSpecialWarningMoveAway(288374, nil, nil, nil, 3, 2)
 local yellSiegebreaker					= mod:NewYell(288374, nil, nil, nil, "YELL")
 local yellSiegebreakerFades				= mod:NewShortFadesYell(288374, nil, nil, nil, "YELL")
 local specWarnHandofFrost				= mod:NewSpecialWarningYou(288412, nil, nil, nil, 1, 2)
 local yellHandofFrost					= mod:NewYell(288412)
 local specWarnHandofFrostNear			= mod:NewSpecialWarningClose(288412, nil, nil, nil, 1, 2)
-local specWarnGlacialRay				= mod:NewSpecialWarningDodge(288345, nil, nil, nil, 2, 2)
-local specWarnIcefall					= mod:NewSpecialWarningDodge(288475, nil, nil, nil, 2, 2)
+local specWarnGlacialRay				= mod:NewSpecialWarningDodgeCount(288345, nil, nil, nil, 2, 2)
+local specWarnIcefall					= mod:NewSpecialWarningDodgeCount(288475, nil, nil, nil, 2, 2)
 --Intermission 2
-local specWarnTideElemental				= mod:NewSpecialWarningSwitch(285257, "-Healer", nil, nil, 1, 2)
 local specWarnHeartofFrost				= mod:NewSpecialWarningMoveAway(289220, nil, nil, nil, 1, 2)
 local yellHeartofFrost					= mod:NewYell(289220)
-local specWarnWaterBoltVolley			= mod:NewSpecialWarningInterrupt(290084, "HasInterrupt", nil, nil, 1, 2)
+local specWarnWaterBoltVolley			= mod:NewSpecialWarningInterruptCount(290084, "HasInterrupt", nil, nil, 1, 2)
 --Stage Three:
-local specWarnOrbofFrost				= mod:NewSpecialWarningDodge(288619, nil, nil, nil, 2, 2)
-local specWarnPrismaticImage			= mod:NewSpecialWarningSwitch(288747, "Dps", nil, nil, 1, 2)
+local specWarnOrbofFrost				= mod:NewSpecialWarningDodgeCount(288619, nil, nil, nil, 2, 2)
+local specWarnPrismaticImage			= mod:NewSpecialWarningSwitchCount(288747, "Dps", nil, nil, 1, 2)
 
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(18527))
 --General
@@ -98,53 +106,63 @@ local timerPhaseTransition				= mod:NewPhaseTimer(55)
 --Stage One: Burning Seas
 local timerCorsairCD					= mod:NewCDTimer(60.4, "ej19690", nil, nil, nil, 1, "Interface\\ICONS\\Inv_tabard_kultiran")
 --local timerBombardCD					= mod:NewAITimer(55, 285828, nil, nil, nil, 3)
-local timerAvalancheCD					= mod:NewCDTimer(60.7, 287565, nil, nil, nil, 5, 2)
-local timerGraspofFrostCD				= mod:NewCDTimer(17, 287626, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON)
---local timerFreezingBlastCD				= mod:NewAITimer(55, 285177, nil, nil, nil, 3)--No explanation but HUGE variation
-local timerRingofIceCD					= mod:NewCDTimer(60.7, 285459, nil, nil, nil, 2, nil, DBM_CORE_IMPORTANT_ICON)
+local timerAvalancheCD					= mod:NewCDTimer(60.7, 287565, nil, nil, 2, 5)
+local timerGraspofFrostCD				= mod:NewCDTimer(6, 287626, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON)
+local timerFreezingBlastCD				= mod:NewCDTimer(10.1, 285177, nil, "Tank", nil, 3)
+local timerRingofIceCD					= mod:NewCDCountTimer(60.7, 285459, nil, nil, nil, 2, nil, DBM_CORE_IMPORTANT_ICON)
 --Stage Two: Frozen Wrath
-local timerBroadsideCD					= mod:NewCDTimer(31.5, 288212, nil, nil, nil, 3)
-local timerSiegebreakerCD				= mod:NewCDTimer(59.9, 288374, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
---local timerCrystallineDustCD			= mod:NewCDTimer(14.1, 289940, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--Was never used during fight
-local timerHandofFrostCD				= mod:NewCDTimer(55, 288412, nil, nil, nil, 3)--Timer is only for first cast of phase, after that, can't tell cast from jump
-local timerGlacialRayCD					= mod:NewCDTimer(49.8, 288345, nil, nil, nil, 3)--49.8-61.1?
-local timerIcefallCD					= mod:NewCDTimer(43.4, 288475, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
+local timerBroadsideCD					= mod:NewCDCountTimer(31.3, 288212, nil, nil, nil, 3)
+local timerSiegebreakerCD				= mod:NewCDCountTimer(59.9, 288374, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+--local timerHandofFrostCD				= mod:NewCDTimer(55, 288412, nil, nil, nil, 3)--Timer is only for first cast of phase, after that, can't tell cast from jump
+local timerGlacialRayCD					= mod:NewCDCountTimer(49.8, 288345, nil, nil, nil, 3)--49.8-61.1?
+local timerIcefallCD					= mod:NewCDCountTimer(42.8, 288475, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 --local timerIcefall						= mod:NewCastTimer(55, 288475, nil, nil, nil, 3)
 --Intermission 2
-local timerHeartofFrostCD				= mod:NewAITimer(55, 289220, nil, nil, nil, 3)
-local timerFrostNovaCD					= mod:NewAITimer(55, 289219, nil, nil, nil, 2)
-local timerWaterBoltVolleyCD			= mod:NewAITimer(55, 290084, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerHeartofFrostCD				= mod:NewCDTimer(8.5, 289220, nil, nil, nil, 3)
+local timerWaterBoltVolleyCD			= mod:NewCDCountTimer(7.2, 290084, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 --Stage 3
-local timerOrbofFrostCD					= mod:NewAITimer(55, 288619, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
-local timerPrismaticImageCD				= mod:NewAITimer(55, 288747, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
+local timerOrbofFrostCD					= mod:NewCDCountTimer(60, 288619, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
+local timerPrismaticImageCD				= mod:NewCDCountTimer(41.3, 288747, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
+local timerCrystallineDustCD			= mod:NewCDCountTimer(14.1, 289940, nil, nil, 2, 5, nil, DBM_CORE_TANK_ICON)
 
---local berserkTimer					= mod:NewBerserkTimer(600)
+local berserkTimer						= mod:NewBerserkTimer(900)
 
 --Stage One: Burning Seas
---local countdownCollapsingWorld			= mod:NewCountdown(50, 243983, true, 3, 3)
+local countdownRingofIce				= mod:NewCountdown(60, 285459, true)
 --local countdownRupturingBlood				= mod:NewCountdown("Alt12", 244016, false, 2, 3)
 --local countdownFelstormBarrage			= mod:NewCountdown("AltTwo32", 244000, nil, nil, 3)
 --Stage Two: Frozen Wrath
 
---mod:AddSetIconOption("SetIconGift", 255594, true)
 mod:AddRangeFrameOption(10, 289379)
-mod:AddInfoFrameOption(287993, false)--Will be changed to true later, right now it'll probably though too many thousands of errors to be on by default
+mod:AddInfoFrameOption(287993, true, 2)
 mod:AddNamePlateOption("NPAuraOnMarkedTarget", 288038)
 mod:AddNamePlateOption("NPAuraOnTimeWarp", 287925)
 mod:AddNamePlateOption("NPAuraOnRefractiveIce", 288219)
-mod:AddSetIconOption("SetIconGraspofFrost", 287626, true)
+mod:AddSetIconOption("SetIconBroadside", 287626, true)
 
 mod.vb.phase = 1
 mod.vb.corsairCount = 0
-mod.vb.GraspofFrostIcon = 1
+mod.vb.imageCount = 0
+mod.vb.ringofFrostCount = 0
+mod.vb.iceFallCount = 0
+mod.vb.dustCount = 0
+mod.vb.orbCount = 0
+mod.vb.broadsideCount = 0
+mod.vb.siegeCount = 0
+mod.vb.glacialRayCount = 0
+mod.vb.broadsideIcon = 0
+mod.vb.waterboltVolleyCount = 0
 local ChillingTouchStacks = {}
 
+--[[
 local updateInfoFrame
 do
 	local floor, tsort = math.floor, table.sort
 	local lines = {}
+	local tempLines = {}
+	local tempLinesSorted = {}
 	local sortedLines = {}
-	local function sortFuncDesc(a, b) return ChillingTouchStacks[a] > ChillingTouchStacks[b] end
+	local function sortFuncDesc(a, b) return tempLines[a] > tempLines[b] end
 	local function addLine(key, value)
 		-- sort by insertion order
 		lines[key] = value
@@ -152,6 +170,8 @@ do
 	end
 	updateInfoFrame = function()
 		table.wipe(lines)
+		table.wipe(tempLines)
+		table.wipe(tempLinesSorted)
 		table.wipe(sortedLines)
 		--Boss Powers first
 		for i = 1, 5 do
@@ -169,34 +189,59 @@ do
 		--Chilling Touch Stacks
 		--Sort debuffs by highest then inject into regular table
 		if #ChillingTouchStacks > 0 then
-			tsort(ChillingTouchStacks, sortFuncDesc)
-			for _, name in ipairs(ChillingTouchStacks) do
-				addLine(name, ChillingTouchStacks[name])
+			for uId in DBM:GetGroupMembers() do
+				local unitName = DBM:GetUnitFullName(uId)
+				local count = ChillingTouchStacks[unitName] or 0
+				tempLines[unitName] = count
+				tempLinesSorted[#tempLinesSorted + 1] = unitName
 			end
+			--Sort lingering according to options
+			tsort(tempLinesSorted, sortFuncDesc)
+			for _, name in ipairs(tempLinesSorted) do
+				addLine(name, tempLines[name])
+			end
+
 		end
 		return lines, sortedLines
 	end
 end
+--]]
 
 function mod:OnCombatStart(delay)
 	self.vb.phase = 1
 	self.vb.corsairCount = 0
-	self.vb.GraspofFrostIcon = 1
+	self.vb.imageCount = 0
+	self.vb.ringofFrostCount = 0
+	self.vb.iceFallCount = 0
+	self.vb.dustCount = 0
+	self.vb.orbCount = 0
+	self.vb.broadsideCount = 0
+	self.vb.siegeCount = 0
+	self.vb.glacialRayCount = 0
+	self.vb.broadsideIcon = 0
 	table.wipe(ChillingTouchStacks)
 	timerCorsairCD:Start(5.1-delay)
 	timerAvalancheCD:Start(8.5-delay)
+	timerFreezingBlastCD:Start(17.9-delay)
 	timerGraspofFrostCD:Start(26.6-delay)
-	--timerFreezingBlastCD:Start(1-delay)
-	timerRingofIceCD:Start(60.7-delay)
+	timerRingofIceCD:Start(60.7-delay, 1)
+	countdownRingofIce:Start(60.7)
 	if self.Options.RangeFrame and self:IsMythic() then
 		DBM.RangeCheck:Show(10)
 	end
 	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(DBM_CORE_INFOFRAME_POWER)
-		DBM.InfoFrame:Show(8, "function", updateInfoFrame, false, false)
+		--DBM.InfoFrame:SetHeader(DBM_CORE_INFOFRAME_POWER)
+		--DBM.InfoFrame:Show(8, "function", updateInfoFrame, false, false)
+		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(287993))
+		DBM.InfoFrame:Show(10, "table", ChillingTouchStacks, 1)
 	end
 	if self.Options.NPAuraOnMarkedTarget or self.Options.NPAuraOnTimeWarp or self.Options.NPAuraOnRefractiveIce then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
+	end
+	if self:IsMythic() then
+		berserkTimer:Start(720)
+	else
+		berserkTimer:Start(900)
 	end
 end
 
@@ -220,57 +265,80 @@ function mod:SPELL_CAST_START(args)
 		else
 			timerAvalancheCD:Start(75)--75-90
 		end
-	elseif spellId == 287626 then
-		self.vb.GraspofFrostIcon = 1
 	elseif spellId == 285177 then
-		specWarnFreezingBlast:Show()
-		specWarnFreezingBlast:Play("shockwave")
-		--timerFreezingBlastCD:Start()
+		if self.Options.SpecWarn285177dodge then
+			specWarnFreezingBlast:Show()
+			specWarnFreezingBlast:Play("shockwave")
+		else
+			warnFreezingBlast:Show()
+		end
+		timerFreezingBlastCD:Start()
 	elseif spellId == 285459 or spellId == 290036 then
-		specWarnRingofIce:Show()
+		self.vb.ringofFrostCount = self.vb.ringofFrostCount + 1
+		specWarnRingofIce:Show(self.vb.ringofFrostCount)
 		specWarnRingofIce:Play("justrun")
-		timerRingofIceCD:Start()
+		timerRingofIceCD:Start(nil, self.vb.ringofFrostCount+1)
+		countdownRingofIce:Start(60.7)
 	elseif spellId == 288221 and self:AntiSpam(3, 3) then
 		warnBurningExplosion:Show()
-	elseif spellId == 288345 then
-		specWarnGlacialRay:Show()
+	elseif spellId == 288345 and self:AntiSpam(4, 8) then
+		self.vb.glacialRayCount = self.vb.glacialRayCount + 1
+		specWarnGlacialRay:Show(self.vb.glacialRayCount)
 		specWarnGlacialRay:Play("watchstep")
-		timerGlacialRayCD:Start()
-	elseif spellId == 288441 then
-		specWarnIcefall:Show()
+		timerGlacialRayCD:Start(nil, self.vb.glacialRayCount+1)
+	elseif spellId == 288441 and self:AntiSpam(6, 7) then
+		self.vb.iceFallCount = self.vb.iceFallCount + 1
+		specWarnIcefall:Show(self.vb.iceFallCount)
 		specWarnIcefall:Play("watchstep")
-		timerIcefallCD:Start()
+		timerIcefallCD:Start(nil, self.vb.iceFallCount+1)
 		--timerIcefall:Start()
 	elseif spellId == 288719 then--Flash Freeze
 		self.vb.phase = 2.5
+		self.vb.waterboltVolleyCount = 0
 		warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage:format(2.5))
 		warnPhase:Play("phasechange")
 		timerBroadsideCD:Stop()
 		timerSiegebreakerCD:Stop()
-		--timerCrystallineDustCD:Stop()
 		timerAvalancheCD:Stop()
-		timerHandofFrostCD:Stop()
+		--timerHandofFrostCD:Stop()
 		timerGlacialRayCD:Stop()
 		timerIcefallCD:Stop()
 	elseif spellId == 289219 then
 		warnFrostNova:Show()
-		timerFrostNovaCD:Start()
 	elseif spellId == 289940 then
-		--timerCrystallineDustCD:Start()
+		self.vb.dustCount = self.vb.dustCount + 1
+		warnCrystalDust:Show(self.vb.dustCount)
+		timerCrystallineDustCD:Start(nil, self.vb.dustCount)
 	elseif spellId == 290084 then
-		timerWaterBoltVolleyCD:Start()
+		self.vb.waterboltVolleyCount = self.vb.waterboltVolleyCount + 1
+		local count = self.vb.waterboltVolleyCount
+		timerWaterBoltVolleyCD:Start(nil, count+1)
 		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
-			specWarnWaterBoltVolley:Show(args.sourceName)
-			specWarnWaterBoltVolley:Play("kickcast")
+			specWarnWaterBoltVolley:Show(args.sourceName, count)
+			if count == 1 then
+				specWarnWaterBoltVolley:Play("kick1r")
+			elseif count == 2 then
+				specWarnWaterBoltVolley:Play("kick2r")
+			elseif count == 3 then
+				specWarnWaterBoltVolley:Play("kick3r")
+			elseif count == 4 then
+				specWarnWaterBoltVolley:Play("kick4r")
+			elseif count == 5 then
+				specWarnWaterBoltVolley:Play("kick5r")
+			else
+				specWarnWaterBoltVolley:Play("kickcast")
+			end
 		end
 	elseif spellId == 288619 then
-		specWarnOrbofFrost:Show()
+		self.vb.orbCount = self.vb.orbCount + 1
+		specWarnOrbofFrost:Show(self.vb.orbCount)
 		specWarnOrbofFrost:Play("watchorb")
-		timerOrbofFrostCD:Start()
+		timerOrbofFrostCD:Start(nil, self.vb.orbCount+1)
 	elseif spellId == 288747 then
-		specWarnPrismaticImage:Show()
+		self.vb.imageCount = self.vb.imageCount + 1
+		specWarnPrismaticImage:Show(self.vb.imageCount)
 		specWarnPrismaticImage:Play("killmob")
-		timerPrismaticImageCD:Start()
+		timerPrismaticImageCD:Start(nil, self.vb.imageCount+1)
 	end
 end
 
@@ -282,20 +350,15 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnTimeWarp:Show()
 	elseif spellId == 287626 then
 		timerGraspofFrostCD:Start()
-	elseif spellId == 285257 then
-		specWarnTideElemental:Show()
-		specWarnTideElemental:Play("bigmob")
-		timerHeartofFrostCD:Start(2)
-		timerFrostNovaCD:Start(2)
-		if self:IsHard() then
-			timerWaterBoltVolleyCD:Start(2)
-		end
 	elseif spellId == 289220 then
 		timerHeartofFrostCD:Start()
 	elseif spellId == 288374 then
-		timerSiegebreakerCD:Start()
+		self.vb.siegeCount = self.vb.siegeCount + 1
+		timerSiegebreakerCD:Start(nil, self.vb.siegeCount+1)
 	elseif spellId == 288211 then
-		timerBroadsideCD:Start()
+		self.vb.broadsideIcon = 0
+		self.vb.broadsideCount = self.vb.broadsideCount + 1
+		timerBroadsideCD:Start(nil, self.vb.broadsideCount+1)
 	end
 end
 
@@ -306,13 +369,30 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:IsTanking(uId) then
 			local amount = args.amount or 1
 			if amount % 3 == 0 then
-				warnIceShard:Show(args.destName, amount)
+				if amount >= 8 and not args:IsPlayer() and self.Options.SpecWarn285253taunt and not DBM:UnitDebuff("player", 285254) then
+					specWarnIceShard:Show(args.destName)
+				else
+					warnIceShard:Show(args.destName, amount)
+				end
 			end
 		end
 	elseif spellId == 287993 then
-		ChillingTouchStacks[args.destName] = args.amount or 1
+		local amount = args.amount or 1
+		ChillingTouchStacks[args.destName] = amount
+		if args:IsPlayer() and (amount == 12 or amount >= 15 and amount % 2 == 1) then--12, 15, 17, 19
+			specWarnChillingStack:Show(amount)
+			specWarnChillingStack:Play("stackhigh")
+		end
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:UpdateTable(ChillingTouchStacks)
+		end
 	elseif spellId == 287490 then
 		warnFrozenSolid:CombinedShow(0.5, args.destName)
+		local uId = DBM:GetRaidUnitId(args.destName)
+		if self:IsTanking(uId) and not args:IsPlayer() then
+			specWarnIceBlockTaunt:Show(args.destName)
+			specWarnIceBlockTaunt:Play("tauntboss")
+		end
 	elseif spellId == 289387 then
 		if args:IsPlayer() and self:AntiSpam(6, 1) then
 			specWarnFreezingBlood:Show()
@@ -335,13 +415,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			DBM.Nameplate:Show(true, args.sourceGUID, spellId, nil, 40)
 		end
 	elseif spellId == 287626 then
-		specWarGraspofFrost:CombinedShow(0.5, args.destName)
-		specWarGraspofFrost:ScheduleVoice(0.5, "helpdispel")
-		if self.Options.SetIconGraspofFrost then
-			self:SetIcon(args.destName, self.vb.GraspofFrostIcon)
-		end
-		self.vb.GraspofFrostIcon = self.vb.GraspofFrostIcon + 1
-	elseif (spellId == 288199 or spellId == 290053) and self.vb.phase == 1 then--Howling Winds
+		specWarGraspofFrost:CombinedShow(1, args.destName)
+		specWarGraspofFrost:ScheduleVoice(1, "helpdispel")
+	elseif (spellId == 288199 or spellId == 290053) and self.vb.phase == 1 then--Howling Winds (secondary 1.5 trigger)
 		self.vb.phase = 1.5
 		warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage:format(1.5))
 		warnPhase:Play("phasechange")
@@ -349,19 +425,32 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerCorsairCD:Stop()
 		timerAvalancheCD:Stop()
 		timerGraspofFrostCD:Stop()
-		--timerFreezingBlastCD:Stop()
+		timerFreezingBlastCD:Stop()
 		timerRingofIceCD:Stop()
+		countdownRingofIce:Cancel()
+		--Blizzard closes tooltip windows during cut scenes, so we gotta make sure to recall this window
+		if self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
+			--DBM.InfoFrame:SetHeader(DBM_CORE_INFOFRAME_POWER)
+			--DBM.InfoFrame:Show(8, "function", updateInfoFrame, false, false)
+			DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(287993))
+			DBM.InfoFrame:Show(5, "table", ChillingTouchStacks, 1)
+		end
 	elseif spellId == 288219 then
 		if self.Options.NPAuraOnRefractiveIce then
 			DBM.Nameplate:Show(true, args.sourceGUID, spellId)
 		end
 	elseif spellId == 288212 then
+		self.vb.broadsideIcon = self.vb.broadsideIcon + 1
+		local icon = self.vb.broadsideIcon
 		warnBroadside:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
-			specWarnBroadside:Show()
+			specWarnBroadside:Show(self:IconNumToTexture(icon))
 			specWarnBroadside:Play("targetyou")
-			yellBroadside:Yell()
-			yellBroadsideFades:Countdown(4)
+			yellBroadside:Yell(icon, icon, icon)
+			yellBroadsideFades:Countdown(6, nil, icon)
+		end
+		if self.Options.SetIconBroadside then
+			self:SetIcon(args.destName, icon)
 		end
 	elseif spellId == 288374 then
 		if args:IsPlayer() then
@@ -375,7 +464,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnSiegebreaker:Show(args.destName)
 		end
-		timerSiegebreakerCD:Start()
 	elseif spellId == 288412 or spellId == 288434 then
 		if args:IsPlayer() then
 			specWarnHandofFrost:Show()
@@ -416,6 +504,9 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 287993 then
 		ChillingTouchStacks[args.destName] = nil
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:UpdateTable(ChillingTouchStacks)
+		end
 	elseif spellId == 288038 then
 		if self.Options.NPAuraOnMarkedTarget then
 			DBM.Nameplate:Hide(true, args.sourceGUID, spellId)
@@ -424,23 +515,25 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.NPAuraOnTimeWarp then
 			DBM.Nameplate:Hide(true, args.sourceGUID, spellId)
 		end
-	elseif spellId == 287626 then
-		if self.Options.SetIconGraspofFrost then
-			self:SetIcon(args.destName, 0)
-		end
 	elseif spellId == 288199 or spellId == 290053 then--Howling Winds
 		self.vb.phase = 2
 		warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage:format(2))
 		warnPhase:Play("ptwo")
-		timerBroadsideCD:Start(2)--It actually is 2 seconds
-		timerGlacialRayCD:Start(6.6)
+		timerBroadsideCD:Start(3.2, 1)--SUCCESS
+		timerGlacialRayCD:Start(6.6, 1)
 		timerAvalancheCD:Start(16.3)
-		timerHandofFrostCD:Start(21.5)--21.5-25.57
-		--timerCrystallineDustCD:Start(2)
+		--timerHandofFrostCD:Start(21.5)--21.5-25.57
 		if not self:IsLFR() then
-			timerIcefallCD:Start(30.8)
+			timerIcefallCD:Start(30.2, 1)
 		end
-		timerSiegebreakerCD:Start(40.3)
+		timerSiegebreakerCD:Start(40.3, 1)
+		--Blizzard closes tooltip windows during cut scenes, so we gotta make sure to recall this window
+		if self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
+			--DBM.InfoFrame:SetHeader(DBM_CORE_INFOFRAME_POWER)
+			--DBM.InfoFrame:Show(8, "function", updateInfoFrame, false, false)
+			DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(287993))
+			DBM.InfoFrame:Show(5, "table", ChillingTouchStacks, 1)
+		end
 	elseif spellId == 288219 then
 		if self.Options.NPAuraOnRefractiveIce then
 			DBM.Nameplate:Hide(true, args.sourceGUID, spellId)
@@ -448,6 +541,9 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 288212 then
 		if args:IsPlayer() then
 			yellBroadsideFades:Cancel()
+		end
+		if self.Options.SetIconBroadside then
+			self:SetIcon(args.destName, 0)
 		end
 	elseif spellId == 288374 then
 		if args:IsPlayer() then
@@ -462,6 +558,25 @@ function mod:SPELL_AURA_REMOVED(args)
 				DBM.RangeCheck:Hide()
 			end
 		end
+	elseif spellId == 290001 then--Arcane Barrage
+		self.vb.phase = 3
+		self.vb.iceFallCount = 0
+		self.vb.broadsideCount = 0
+		self.vb.siegeCount = 0
+		self.vb.glacialRayCount = 0
+		warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage:format(3))
+		warnPhase:Play("pthree")
+		timerBroadsideCD:Start(14.8, 1)--SUCCESS
+		timerCrystallineDustCD:Start(25, 1)
+		timerGlacialRayCD:Start(48.6, 1)
+		timerSiegebreakerCD:Start(58.4, 1)--to CLEU event, emote 1 second faster, may change
+		if not self:IsLFR() then
+			timerPrismaticImageCD:Start(12.6, 1)
+			timerIcefallCD:Start(60.5, 1)
+		end
+		if self:IsHard() then
+			timerOrbofFrostCD:Start(11, 1)
+		end
 	end
 end
 
@@ -469,6 +584,9 @@ function mod:SPELL_AURA_REMOVED_DOSE(args)
 	local spellId = args.spellId
 	if spellId == 287993 then
 		ChillingTouchStacks[args.destName] = args.amount or 1
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:UpdateTable(ChillingTouchStacks)
+		end
 	end
 end
 
@@ -484,23 +602,7 @@ function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 146765 then--Tide Elemental (or one of these, 149144, 149501, 149558)
 		timerHeartofFrostCD:Stop()
-		timerFrostNovaCD:Stop()
 		timerWaterBoltVolleyCD:Stop()
-		--Probably totally wrong, but just to have it coded, it can be moved later
-		self.vb.phase = 3
-		warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage:format(3))
-		warnPhase:Play("pthree")
-		timerBroadsideCD:Start(3)
-		timerSiegebreakerCD:Start(3)
-		--timerCrystallineDustCD:Start(3)
-		timerGlacialRayCD:Start(3)
-		if not self:IsLFR() then
-			timerIcefallCD:Start(3)
-			timerPrismaticImageCD:Start(3)
-		end
-		if self:IsHard() then
-			timerOrbofFrostCD:Start(3)
-		end
 	--elseif cid == 149535 then--Icebound Image
 	
 	--elseif cid == 148965 then--Kul Tiran Marine
@@ -528,18 +630,19 @@ end
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 288013 then--Corsair Picker
 		warnCorsair:Show()
+		warnCorsair:Play("mobsoon")
 		timerCorsairCD:Start()
-		--timerBombardCD:Start(2)--Assumed
-	elseif spellId == 288713 then--Blink to Intermission Spot Center
+	elseif spellId == 290681 then--Transition Visual 1
 		self.vb.phase = 1.5
 		warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage:format(1.5))
 		warnPhase:Play("phasechange")
 		timerCorsairCD:Stop()
 		timerAvalancheCD:Stop()
 		timerGraspofFrostCD:Stop()
-		--timerFreezingBlastCD:Stop()
+		timerFreezingBlastCD:Stop()
 		timerRingofIceCD:Stop()
-		timerPhaseTransition:Start(18)
+		countdownRingofIce:Cancel()
+		timerPhaseTransition:Start(12.5)
 	elseif spellId == 288405 or spellId == 288401 then--Ability Callout Corsair on the Port Side
 		DBM:Debug("Corsair on the Port Side")
 	elseif spellId == 288407 or spellId == 288406 then--Ability Callout Corsair on the Starboard Side

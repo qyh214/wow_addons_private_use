@@ -1,7 +1,7 @@
 local E, L, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local TT = E:GetModule('Tooltip')
 
-local tiers = { "Uldir" }
+local tiers = { "Uldir", "BoD (A)", "BoD (H)", "CoS" }
 local levels = { 
 	"Mythic", 
 	"Heroic", 
@@ -22,6 +22,48 @@ local bosses = {
 		},
 		{ -- LFR
 			12786, 12790, 12794, 12798, 12802, 12808, 12813, 12817,
+		},
+	},
+	{ -- Battle of Dazar'alor (BoD) Alliance
+		{ -- Mythic
+			13331, 13348, 13353, 13362, 13366, 13370,
+		},
+		{ -- Heroic
+			13330, 13347, 13351, 13361, 13365, 13369,
+		},
+		{ -- Normal
+			13329, 13346, 13350, 13359, 13364, 13368,
+		},
+		{ -- LFR
+			13328, 13344, 13349, 13358, 13363, 13367,
+		},
+	},
+	{ -- Battle of Dazar'alor (BoD) Horde
+		{ -- Mythic
+			13331, 13336, 13357, 13374, 13378, 13382,
+		},
+		{ -- Heroic
+			13330, 13334, 13356, 13373, 13377, 13381,
+		},
+		{ -- Normal
+			13329, 13333, 13355, 13372, 13376, 13380,
+		},
+		{ -- LFR
+			13328, 13332, 13354, 13371, 13375, 13379,
+		},
+	},
+	{ -- Crucible of Storms
+		{ -- Mythic
+			13407, 13413,
+		},
+		{ -- Heroic
+			13406, 13412,
+		},
+		{ -- Normal
+			13405, 13411,
+		},
+		{ -- LFR
+			13404, 13408,
 		},
 	},
 }

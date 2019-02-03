@@ -195,7 +195,8 @@ end
 
 function WorldQuestTracker:TAXIMAP_OPENED()
 	
-	if (not WorldQuestTracker.FlyMapHook and FlightMapFrame) then
+	--testing FlightMapFrame ~= WorldMapFrame for some addons modifying the flymap
+	if (not WorldQuestTracker.FlyMapHook and FlightMapFrame and FlightMapFrame ~= WorldMapFrame) then
 
 		for dataProvider, isInstalled in pairs (FlightMapFrame.dataProviders) do
 			if (dataProvider.DoesWorldQuestInfoPassFilters) then
@@ -358,7 +359,7 @@ function WorldQuestTracker:TAXIMAP_OPENED()
 						pin._WQT_Twin.AnchorFrame [member] = func
 					end
 				end
-
+				
 				pin._WQT_Twin:SetScript ("OnEnter", function (self)
 					TaskPOI_OnEnter (pin._WQT_Twin)
 					pin._WQT_Twin.Texture:SetBlendMode ("ADD")
@@ -368,7 +369,7 @@ function WorldQuestTracker:TAXIMAP_OPENED()
 					TaskPOI_OnLeave (pin._WQT_Twin)
 					pin._WQT_Twin.Texture:SetBlendMode ("BLEND")
 				end)
-
+				
 				tinsert (WorldQuestTracker.TaxyZoneWidgets, pin._WQT_Twin)
 			end
 			

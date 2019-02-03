@@ -1,7 +1,13 @@
-changeset:   353:b4ca2dc292cf
-tag:         v8.1.0.353
+changeset:   358:d189ebbcee03
+tag:         v8.1.0.358
 user:        Tercioo
-date:        Thu Dec 27 20:17:04 2018 -0200
-summary:     - Fixed an issue with the taxi map where hovering over a widget won't show the tooltip.
+date:        Thu Jan 31 13:07:00 2019 -0200
+summary:     - Fixed an issue where the summary in the world map couldn't sort it by quest type.
+
+
+changeset:   357:5d346d26ff70
+user:        Tercioo
+date:        Sat Jan 26 22:32:03 2019 -0200
+summary:     - Added hide statusbar option.
 
 

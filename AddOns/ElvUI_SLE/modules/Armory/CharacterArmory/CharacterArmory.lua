@@ -241,7 +241,7 @@ function CA:Setup_CharacterArmory()
 				self:SetScript('OnUpdate', self.ScanData)
 			end
 		elseif Event == 'PLAYER_EQUIPMENT_CHANGED' then
-			if KF.DebugEnabled then print("UPDATE_INVENTORY_DURABILITY") end
+			if KF.DebugEnabled then print("PLAYER_EQUIPMENT_CHANGED") end
 			args = ...
 			args = SlotIDList[args]
 			
@@ -256,8 +256,9 @@ function CA:Setup_CharacterArmory()
 				self.GearUpdated = nil
 				self:SetScript('OnUpdate', self.ScanData)
 			end
-		elseif Event == 'UPDATE_INVENTORY_DURABILITY' then
+		elseif Event == 'UPDATE_INVENTORY_DURABILITY' and self.DurabilityUpdated then
 			self.DurabilityUpdated = nil
+			-- self.GearUpdated = nil
 			if KF.DebugEnabled then print("UPDATE_INVENTORY_DURABILITY") end
 			self:SetScript('OnUpdate', self.ScanData)
 		end
@@ -552,7 +553,7 @@ function CA:ScanData()
 		if KF.DebugEnabled then print("Update_Durability: ", self:Update_Durability()) end
 		self.NeedUpdate = self:Update_Durability() or self.NeedUpdate
 	end
-	if KF.DebugEnabled then print("1: ", self.NeedUpdate) end
+	if KF.DebugEnabled then print("1: ", self.NeedUpdate, self.GearUpdated) end
 	if self.GearUpdated ~= true then
 		if KF.DebugEnabled then print("Update_Gear: ", self:Update_Gear()) end
 		self.NeedUpdate = self:Update_Gear() or self.NeedUpdate
@@ -631,6 +632,8 @@ function CA:Update_Gear()
 	local ErrorDetected, NeedUpdate, NeedUpdateList, R, G, B
 	local Slot, ItemLink, ItemData, BasicItemLevel, TrueItemLevel, ItemUpgradeID, CurrentUpgrade, MaxUpgrade, ItemType, UsableEffect, CurrentLineText, GemID, GemLink, GemTexture, GemCount_Default, GemCount_Now, GemCount, ItemTexture, IsTransmogrified
 
+	local totalIlvl, equippedIlvl = T.GetAverageItemLevel()
+
 	for _, SlotName in T.pairs(T.type(self.GearUpdated) == 'table' and self.GearUpdated or Info.Armory_Constants.GearList) do
 		Slot = self[SlotName]
 		ItemLink = T.GetInventoryItemLink('player', Slot.ID)
@@ -642,7 +645,7 @@ function CA:Update_Gear()
 			if ItemLink then
 				ItemInfoAvailable = T.GetItemInfo(ItemLink)
 			end
-			if ItemInfoAvailable or not ItemLink then --<< Clear Setting >>--
+			if not ItemLink or ItemInfoAvailable then --<< Clear Setting >>--
 				NeedUpdate, TrueItemLevel, UsableEffect, ItemUpgradeID, CurrentUpgrade, MaxUpgrade, ItemType, ItemTexture, IsTransmogrified = nil, nil, nil, nil, nil, nil, nil, nil, nil
 				Slot.ItemRarity = nil
 				Slot.ItemLevel:SetText(nil)
@@ -835,8 +838,17 @@ function CA:Update_Gear()
 							or
 							TrueItemLevel
 						)
-						if E.db.sle.Armory.Character.Level.ItemColor then
+						if E.db.sle.Armory.Character.Level.ItemColor == "QUALITY" then
 							Slot.ItemLevel:SetTextColor(R, G, B)
+						elseif E.db.sle.Armory.Character.Level.ItemColor == "GRADIENT" then
+							local diff = TrueItemLevel - equippedIlvl
+							local aR, aG, aB
+							if diff >= 0 then
+								aR, aG, aB = 0,1,0
+							else
+								aR, aG, aB = E:ColorGradient(-(3/diff), 1, 0, 0, 1, 1, 0, 0, 1, 0)
+							end
+								Slot.ItemLevel:SetTextColor(aR, aG, aB)
 						else
 							Slot.ItemLevel:SetTextColor(1, 1, 1)
 						end
@@ -892,11 +904,13 @@ function CA:Update_Gear()
 				else
 					NeedUpdate = true
 				end
-			else
-				NeedUpdate = true
+			-- else
+				-- print(SlotName)
+				-- NeedUpdate = true
 			end
 
 			if NeedUpdate then
+				if KF.DebugEnabled then print("Slot need update: ", SlotName) end
 				NeedUpdateList = NeedUpdateList or {}
 				table.insert(NeedUpdateList, SlotName)
 			end

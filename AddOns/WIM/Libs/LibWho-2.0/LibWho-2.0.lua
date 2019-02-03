@@ -16,7 +16,7 @@ assert(LibStub, "LibWho-2.0 requires LibStub")
 
 
 local major_version = 'LibWho-2.0'
-local minor_version = tonumber("557") or 99999
+local minor_version = tonumber("586") or 99999
 
 local lib = LibStub:NewLibrary(major_version, minor_version)
 
@@ -910,7 +910,7 @@ function lib:WHO_LIST_UPDATE()
 end
 
 function lib:ProcessWhoResults()
-	self.Result = self.Result and {}
+	self.Result = self.Result or {}
 
 	local num
 	self.Total, num = GetNumWhoResults()

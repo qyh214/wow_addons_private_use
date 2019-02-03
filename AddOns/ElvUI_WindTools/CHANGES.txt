@@ -1,10 +1,16 @@
-lightweight tag fbbd2c91aad7ce5271a48ac943576ca09fbaf9e4 1.3.6
+lightweight tag 2175f1916ffe69d5cce8ed7ea189ac37a08992f4 1.3.7
 Author:	GitHub <noreply@github.com>
-Date:	Fri Dec 28 13:14:55 2018 +0900
+Date:	Mon Jan 14 18:27:23 2019 +0900
 
-commit 20de7135a0bf1cbf090ec1480e6735cb6d2c4262
+commit c36c89e77a8907dcded1649f307784e33c86a211
 Author: Zhou Fang <houshuu@live.jp>
-Date:   Thu Dec 27 10:48:41 2018 +0900
+Date:   Mon Jan 14 18:26:26 2019 +0900
 
-    完善艾泽里特特质提示移植
+    Update TOC for 8.1
+
+commit c36c89e77a8907dcded1649f307784e33c86a211
+Author: Zhou Fang <houshuu@live.jp>
+Date:   Mon Jan 14 18:26:26 2019 +0900
+
+    Update TOC for 8.1
 

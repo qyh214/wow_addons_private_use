@@ -1,8 +1,12 @@
-## Interface: 70000
+## Interface: 80100
+## X-Curse-Packaged-Version: r154
+## X-Curse-Project-Name: WhoLib
+## X-Curse-Project-ID: wholib
+## X-Curse-Repository-ID: wow/wholib/mainline
 
 ## Title: Lib: LibWho-2.0
 ## Notes: Queing of /who and SendWho() queries and a much better interface (see docs), with gurantee to be executed & callback.
-## Version: 2.0.@project-revision@
+## Version: 2.0.155
 ## Author: ALeX Kazik, Sylvanaar, Pazza
 ## eMail: wow@kazik.de
 ## X-Category: Library

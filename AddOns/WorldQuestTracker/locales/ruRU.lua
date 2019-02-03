@@ -17,10 +17,10 @@ L["S_GROUPFINDER_ACTIONS_CANCELING"] = "отмена..."
 L["S_GROUPFINDER_ACTIONS_CREATE"] = "группа не найдена? нажмите, чтобы создать"
 L["S_GROUPFINDER_ACTIONS_CREATE_DIRECT"] = "создать группу"
 L["S_GROUPFINDER_ACTIONS_LEAVEASK"] = "Покинуть группу?"
-L["S_GROUPFINDER_ACTIONS_LEAVINGIN"] = "Выход из группы через (нажмите сейчас для выхода):"
+L["S_GROUPFINDER_ACTIONS_LEAVINGIN"] = "Выход из группы через (нажмите для выхода):"
 L["S_GROUPFINDER_ACTIONS_RETRYSEARCH"] = "повторить поиск"
 L["S_GROUPFINDER_ACTIONS_SEARCH"] = "нажмите для поиска группы"
-L["S_GROUPFINDER_ACTIONS_SEARCH_RARENPC"] = "поиск групп для убийства редкого"
+L["S_GROUPFINDER_ACTIONS_SEARCH_RARENPC"] = "поиск групп для убийства редкого моба"
 L["S_GROUPFINDER_ACTIONS_SEARCH_TOOLTIP"] = "присоединиться к группе для выполнения задания"
 L["S_GROUPFINDER_ACTIONS_SEARCHING"] = "поиск..."
 L["S_GROUPFINDER_ACTIONS_SEARCHMORE"] = "нажмите, чтобы найти больше участников для группы"
@@ -47,7 +47,7 @@ L["S_GROUPFINDER_RESULTS_FOUND"] = [=[найдено %d группы
 L["S_GROUPFINDER_RESULTS_FOUND1"] = [=[найдена 1 группа
 нажмите, чтобы присоединиться]=]
 L["S_GROUPFINDER_RESULTS_UNAPPLY"] = "%d предложения осталось..."
-L["S_GROUPFINDER_RIGHTCLICKCLOSE"] = "ПКМ для зaкрытия"
+L["S_GROUPFINDER_RIGHTCLICKCLOSE"] = "Правый клик для закрытия"
 L["S_GROUPFINDER_SECONDS"] = "Секунд"
 L["S_GROUPFINDER_TITLE"] = "Поиск групп"
 L["S_GROUPFINDER_TUTORIAL1"] = "Делайте локальные задания быстрее, присоединившись к группам, выполняя одно и то же задание!"
@@ -65,6 +65,8 @@ L["S_MAPBAR_OPTIONSMENU_EQUIPMENTICONS"] = "Знaчки экипировки"
 L["S_MAPBAR_OPTIONSMENU_QUESTTRACKER"] = "Включить World Quest Tracker"
 L["S_MAPBAR_OPTIONSMENU_REFRESH"] = "Обновить"
 L["S_MAPBAR_OPTIONSMENU_SOUNDENABLED"] = "Включить звуки"
+L["S_MAPBAR_OPTIONSMENU_STATUSBAR_ONDISABLE"] = "введите команду '/wqt statusbar' или воспользуйтесь меню аддона в управлении интерфейса для восстановления статус бара."
+L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = "Показать статус бар "
 L["S_MAPBAR_OPTIONSMENU_STATUSBARANCHOR"] = "Привязать к верху"
 L["S_MAPBAR_OPTIONSMENU_TOMTOM_WPPERSISTENT"] = "Постоянная путевая точка"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_CURRENTZONE"] = "Только текущая зона"
@@ -93,38 +95,25 @@ L["S_MAPBAR_SUMMARYMENU_NOATTENTION"] = [=[Нет заданий для отсл
 L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "Требует внимания"
 L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "Награды за сегодня"
 L["S_MAPFRAME_ALIGN_CENTER"] = "центр"
---[[Translation missing --]]
---[[ L["S_MAPFRAME_ALIGN_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_MAPFRAME_ALIGN_LEFT"] = ""--]] 
+L["S_MAPFRAME_ALIGN_DESC"] = "|cFF22FF22Нажмите сюда|r, чтобы поменять положение окна карты влево или по центру от позиции вашего экрана."
+L["S_MAPFRAME_ALIGN_LEFT"] = "влево"
 L["S_OPTIONS_ANIMATIONS"] = "С анимацией"
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "Расположение карты по центру"
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = ""--]] 
+L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "Сначала вам нужно включить 'Масштаб окна карты', значение не было изменено."
 L["S_OPTIONS_MAPFRAME_SCALE"] = "Масштаб окна карты"
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = ""--]] 
+L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = "Включить масштабирование окна карты"
 L["S_OPTIONS_QUESTBLACKLIST"] = "Чёрный список заданий"
 L["S_OPTIONS_RESET"] = "Сброс"
 L["S_OPTIONS_SHOWFACTIONS"] = "Показать фракции"
---[[Translation missing --]]
---[[ L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_TRACKER_RESETPOSITION"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_ANCHOR_LEFT"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_ANCHOR_RIGHT"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_DECREASEICONSPERROW"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_INCREASEICONSPERROW"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = ""--]] 
+L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = "Без приоритета по времени"
+L["S_OPTIONS_TRACKER_RESETPOSITION"] = "Сбросить положение"
+L["S_OPTIONS_WORLD_ANCHOR_LEFT"] = "Привязка к левой стороне"
+L["S_OPTIONS_WORLD_ANCHOR_RIGHT"] = "Привязка к правой стороне"
+L["S_OPTIONS_WORLD_DECREASEICONSPERROW"] = "Уменьшение квадратов в строке"
+L["S_OPTIONS_WORLD_INCREASEICONSPERROW"] = "Увеличение квадратов в строке"
+L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = "Организовать по карте"
+L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = "Организовать по типу задания"
+L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = "Только отслеживаемые"
 L["S_OVERALL"] = "Всего"
 L["S_PARTY"] = "Группа"
 L["S_PARTY_DESC1"] = "Если квест помечен синей звездочкой - он есть у всех игроков в вашей группе."
@@ -141,14 +130,14 @@ L["S_QUESTTYPE_PROFESSION"] = "Профессия"
 L["S_QUESTTYPE_PVP"] = "PvP"
 L["S_QUESTTYPE_RESOURCE"] = "Ресурсы"
 L["S_QUESTTYPE_TRADESKILL"] = "Материалы"
-L["S_RAREFINDER_ADDFROMPREMADE"] = "Добавить редких, найденные в заранее собранные группы"
-L["S_RAREFINDER_NPC_NOTREGISTERED"] = "нет, этого редкого в базе данных"
+L["S_RAREFINDER_ADDFROMPREMADE"] = "Добавить редких мобов, найденные в заранее собранные группы"
+L["S_RAREFINDER_NPC_NOTREGISTERED"] = "нет, этого редкого моба в базе данных"
 L["S_RAREFINDER_OPTIONS_ENGLISHSEARCH"] = "Всегда искать по-английски"
-L["S_RAREFINDER_OPTIONS_SHOWICONS"] = "Показывать значки для активных редких"
-L["S_RAREFINDER_SOUND_ALWAYSPLAY"] = "Играть, даже когда звуковые эффекты отключены"
-L["S_RAREFINDER_SOUND_ENABLED"] = "Воспроизведение звука для редких на мини-карте"
-L["S_RAREFINDER_SOUNDWARNING"] = "звук воспроизводится из-за редких на мини-карте, Вы можете отключить этот звук в меню параметров > подменю поиска редких."
-L["S_RAREFINDER_TITLE"] = "Поиск редких"
+L["S_RAREFINDER_OPTIONS_SHOWICONS"] = "Показывать значки для активных редких мобов"
+L["S_RAREFINDER_SOUND_ALWAYSPLAY"] = "Со звуком, даже когда звуковые эффекты отключены"
+L["S_RAREFINDER_SOUND_ENABLED"] = "Воспроизведение звука для редких мобов на мини-карте"
+L["S_RAREFINDER_SOUNDWARNING"] = "звук воспроизводится из-за редких мобов на мини-карте, Вы можете отключить этот звук в меню параметров > подменю поиска редких."
+L["S_RAREFINDER_TITLE"] = "Поиск редких мобов"
 L["S_RAREFINDER_TOOLTIP_REMOVE"] = "Убрать"
 L["S_RAREFINDER_TOOLTIP_SEACHREALM"] = "Поиск по другим мирам"
 L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = "Обнаружил(а)"
@@ -160,8 +149,7 @@ L["S_SUMMARYPANEL_LIFETIMESTATISTICS_CHARACTER"] = "Статистика пер�
 L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Другие персонажи"
 L["S_TUTORIAL_AMOUNT"] = "показывает количество или уровень награды"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Кликните, чтобы отслеживать задание"
---[[Translation missing --]]
---[[ L["S_TUTORIAL_MAPALIGN"] = ""--]] 
+L["S_TUTORIAL_MAPALIGN"] = "Нажмите здесь, чтобы выбрать выравнивание карты мира."
 L["S_TUTORIAL_PARTY"] = "Синей звездочкой помечаются те квесты, которые есть у каждого члена группы!"
 L["S_TUTORIAL_TIMELEFT"] = "показывает оставшееся время (+4 часа, +90 минут, +30 минут, менее 30 минут)"
 L["S_TUTORIAL_WORLDBUTTONS"] = [=[Нажмите здесь, чтобы переключиться между тремя типами сводок:
@@ -177,10 +165,8 @@ L["S_WORLDBUTTONS_SHOW_NONE"] = "Скрыть сводку"
 L["S_WORLDBUTTONS_SHOW_TYPE"] = "Показать сводку"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "По территориям"
 L["S_WORLDBUTTONS_TOGGLE_QUESTS"] = "Вкл/Выкл - задания"
---[[Translation missing --]]
---[[ L["S_WORLDMAP_QUESTLOCATIONS"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_WORLDMAP_QUESTSUMMARY"] = ""--]] 
+L["S_WORLDMAP_QUESTLOCATIONS"] = "Показать местоположения заданий"
+L["S_WORLDMAP_QUESTSUMMARY"] = "Показать количество заданий"
 L["S_WORLDMAP_TOOGLEQUESTS"] = "Вкл/Выкл - Задания"
 L["S_WORLDMAP_TOOLTIP_TRACKALL"] = "отслеживать все задания в этом списке"
 L["S_WORLDQUESTS"] = "Локальные задания"

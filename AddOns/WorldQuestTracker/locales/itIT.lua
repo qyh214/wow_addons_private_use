@@ -93,6 +93,10 @@ L["S_MAPBAR_OPTIONSMENU_QUESTTRACKER"] = "Abilita Tracciamento Missione"
 L["S_MAPBAR_OPTIONSMENU_REFRESH"] = "Aggiorna"
 L["S_MAPBAR_OPTIONSMENU_SOUNDENABLED"] = "Abilita Suoni"
 --[[Translation missing --]]
+--[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_ONDISABLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["S_MAPBAR_OPTIONSMENU_STATUSBARANCHOR"] = ""--]] 
 L["S_MAPBAR_OPTIONSMENU_TOMTOM_WPPERSISTENT"] = "Ricorda Tappe"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_CURRENTZONE"] = "Solo Questa Zona"

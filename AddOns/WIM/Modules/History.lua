@@ -1363,6 +1363,7 @@ table.insert(ViewTypes, {
 
 
 function ShowHistoryViewer(user)
+	local exists = HistoryViewer 
     if(HistoryViewer and not user and HistoryViewer:IsShown()) then
         HistoryViewer:Hide();
         return;
@@ -1380,6 +1381,10 @@ function ShowHistoryViewer(user)
  --       DisplayTutorial(L["WIM History Viewer"], L["WIM History Viewer can be accessed any time by typing:"].." \n|cff69ccf0/wim history|r");
     end
     HistoryViewer:Show();
+	if not exists and not user then --force update on first show without user
+		HistoryViewer:Hide();
+		HistoryViewer:Show();
+	end
 end
 
 RegisterSlashCommand("history", function() ShowHistoryViewer(); end, L["Display history viewer."])

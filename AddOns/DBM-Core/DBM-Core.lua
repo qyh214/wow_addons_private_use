@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 18134 $"):sub(12, -3)),
-	DisplayVersion = "8.1.1", -- the string that is shown as version
-	ReleaseRevision = 18134 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 18245 $"):sub(12, -3)),
+	DisplayVersion = "8.1.7", -- the string that is shown as version
+	ReleaseRevision = 18245 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -240,7 +240,7 @@ DBM.DefaultOptions = {
 	DontPlayPTCountdown = false,
 	DontShowPTText = false,
 	DontShowPTNoID = false,
-	PTCountThreshold = 5,
+	PTCountThreshold2 = 5,
 	LatencyThreshold = 250,
 	BigBrotherAnnounceToRaid = false,
 	SettingsMessageShown = false,
@@ -250,7 +250,7 @@ DBM.DefaultOptions = {
 	ShowQueuePop = true,
 	HelpMessageVersion = 3,
 	MoviesSeen = {},
-	MovieFilter = "AfterFirst",
+	MovieFilter2 = "OnlyFight",
 	BonusFilter = "Never",
 	LastRevision = 0,
 	DebugMode = false,
@@ -412,7 +412,7 @@ local delayedFunction
 local dataBroker
 local voiceSessionDisabled = false
 
-local fakeBWVersion, fakeBWHash = 122, "a213230"
+local fakeBWVersion, fakeBWHash = 130, "de5280d"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -2213,6 +2213,19 @@ do
 			DBM:TransitionToDungeonBGM(true)
 		elseif cmd:sub(1, 9) == "musicstop" then
 			DBM:TransitionToDungeonBGM(false, true)
+		elseif cmd:sub(1, 9) == "infoframe" then
+			if DBM.InfoFrame:IsShown() then
+				DBM.InfoFrame:Hide()
+			else
+				DBM.InfoFrame:Show(5, "test")
+			end
+		elseif cmd:sub(1, 10) == "aggroframe" then
+			if DBM.InfoFrame:IsShown() then
+				DBM.InfoFrame:Hide()
+			else
+				DBM.InfoFrame:SetHeader(DBM_CORE_INFOFRAME_AGGRO)
+				DBM.InfoFrame:Show(7, "playeraggro", 1)
+			end
 		else
 			DBM:LoadGUI()
 		end
@@ -2474,16 +2487,11 @@ do
 		if sender then self:ShowPizzaInfo(text, sender) end
 		if count then
 			if not fakeMod then
-				local threshold = self.Options.PTCountThreshold
+				local threshold = self.Options.PTCountThreshold2
+				threshold = floor(threshold)
 				fakeMod = self:NewMod("CreateCountTimerDummy")
 				self:GetModLocalization("CreateCountTimerDummy"):SetGeneralLocalization{ name = DBM_CORE_MINIMAP_TOOLTIP_HEADER }
-				local adjustedThreshold = 5
-				if threshold > 10 then
-					adjustedThreshold = 10
-				else
-					adjustedThreshold = floor(threshold)
-				end
-				fakeMod.countdown = fakeMod:NewCountdown(0, 0, nil, nil, adjustedThreshold, true)
+				fakeMod.countdown = fakeMod:NewCountdown(0, 0, nil, nil, threshold, true)
 			end
 			if not self.Options.DontPlayPTCountdown then
 				fakeMod.countdown:Cancel()
@@ -4092,6 +4100,11 @@ do
 			DBM:StopLogging()
 		end
 	end
+	
+	local function restoreTimerTrackerSounds()
+		SOUNDKIT.UI_BATTLEGROUND_COUNTDOWN_TIMER = 25477
+		SOUNDKIT.UI_BATTLEGROUND_COUNTDOWN_FINISHED = 25478
+	end
 
 	local syncHandlers = {}
 	local whisperSyncHandlers = {}
@@ -4246,16 +4259,11 @@ do
 			return
 		end
 		if not dummyMod then
-			local threshold = DBM.Options.PTCountThreshold
-			local adjustedThreshold = 5
-			if threshold > 10 then
-				adjustedThreshold = 10
-			else
-				adjustedThreshold = floor(threshold)
-			end
+			local threshold = DBM.Options.PTCountThreshold2
+			threshold = floor(threshold)
 			dummyMod = DBM:NewMod("PullTimerCountdownDummy")
 			DBM:GetModLocalization("PullTimerCountdownDummy"):SetGeneralLocalization{ name = DBM_CORE_MINIMAP_TOOLTIP_HEADER }
-			dummyMod.countdown = dummyMod:NewCountdown(0, 0, nil, nil, adjustedThreshold, true)
+			dummyMod.countdown = dummyMod:NewCountdown(0, 0, nil, nil, threshold, true)
 			dummyMod.text = dummyMod:NewAnnounce("%s", 1, "Interface\\Icons\\ability_warrior_offensivestance")
 			dummyMod.geartext = dummyMod:NewSpecialWarning("  %s  ", nil, nil, nil, 3)
 		end
@@ -4269,6 +4277,8 @@ do
 		end
 		if not DBM.Options.DontShowPTCountdownText then
 			TimerTracker_OnEvent(TimerTracker, "PLAYER_ENTERING_WORLD")--easiest way to nil out timers on TimerTracker frame. This frame just has no actual star/stop functions
+			DBM:Unschedule(restoreTimerTrackerSounds)
+			restoreTimerTrackerSounds()
 		end
 		dummyMod.text:Cancel()
 		if timer == 0 then return end--"/dbm pull 0" will strictly be used to cancel the pull timer (which is why we let above part of code run but not below)
@@ -4281,7 +4291,32 @@ do
 			dummyMod.countdown:Start(timer)
 		end
 		if not DBM.Options.DontShowPTCountdownText then
-			TimerTracker_OnEvent(TimerTracker, "START_TIMER", 2, timer, timer)
+			--Start A TimerTracker timer by tricking it to start a BG timer
+			TimerTracker_OnEvent(TimerTracker, "START_TIMER", 1, timer, timer)
+			--Set default timer sound globals to fake values
+			SOUNDKIT.UI_BATTLEGROUND_COUNTDOWN_TIMER = 999999
+			SOUNDKIT.UI_BATTLEGROUND_COUNTDOWN_FINISHED = 999999
+			--But schedule method to restore the globals when timer ends
+			DBM:Unschedule(restoreTimerTrackerSounds)
+			DBM:Schedule(timer+3, restoreTimerTrackerSounds)
+			--Find the timer object DBM just created and hack our own changes into it.
+			local timerObject
+			for a,b in pairs(TimerTracker.timerList) do
+				if b.type == 1 and not b.isFree then
+					timerObject = b
+					break
+				end
+			end
+			if timerObject then
+				--Set end texture to nothing to eliminate pvp logo/hourglass
+				timerObject.GoTexture:SetTexture("")
+				timerObject.GoTextureGlow:SetTexture("")
+				--We don't want the PVP bar, we only want timer text
+				if timer > 10 then
+					--timerObject.startNumbers:Play()
+					timerObject.bar:Hide()
+				end
+			end
 		end
 		if not DBM.Options.DontShowPTText then
 			if target then
@@ -4316,16 +4351,11 @@ do
 		local dummyMod2 -- dummy mod for the break timer
 		function breakTimerStart(self, timer, sender)
 			if not dummyMod2 then
-				local threshold = DBM.Options.PTCountThreshold
-				local adjustedThreshold = 5
-				if threshold > 10 then
-					adjustedThreshold = 10
-				else
-					adjustedThreshold = floor(threshold)
-				end
+				local threshold = DBM.Options.PTCountThreshold2
+				threshold = floor(threshold)
 				dummyMod2 = DBM:NewMod("BreakTimerCountdownDummy")
 				DBM:GetModLocalization("BreakTimerCountdownDummy"):SetGeneralLocalization{ name = DBM_CORE_MINIMAP_TOOLTIP_HEADER }
-				dummyMod2.countdown = dummyMod2:NewCountdown(0, 0, nil, nil, adjustedThreshold, true)
+				dummyMod2.countdown = dummyMod2:NewCountdown(0, 0, nil, nil, threshold, true)
 				dummyMod2.text = dummyMod2:NewAnnounce("%s", 1, "Interface\\Icons\\Spell_Holy_BorrowedTime")
 			end
 			--Cancel any existing break timers before creating new ones, we don't want double countdowns or mismatching blizz countdown text (cause you can't call another one if one is in progress)
@@ -6325,7 +6355,7 @@ do
 	local autoTLog = false
 	
 	local function isCurrentContent()
-		if LastInstanceMapID == 1861 then--BfA
+		if LastInstanceMapID == 1861 or LastInstanceMapID == 2070 or LastInstanceMapID == 2096 then--BfA
 			return true
 		end
 		return false
@@ -7115,9 +7145,10 @@ do
 end
 
 --To speed up creating new mods.
-function DBM:FindDungeonIDs(low, peak)
+function DBM:FindDungeonMapIDs(low, peak)
 	local start = low or 1
 	local range = peak or 3000
+	self:AddMsg("-----------------")
 	for i = start, range do
 		local dungeon = GetRealZoneText(i)
 		if dungeon and dungeon ~= "" then
@@ -7129,6 +7160,7 @@ end
 function DBM:FindInstanceIDs(low, peak)
 	local start = low or 1
 	local range = peak or 3000
+	self:AddMsg("-----------------")
 	for i = start, range do
 		local instance = EJ_GetInstanceInfo(i)
 		if instance then
@@ -7141,14 +7173,16 @@ end
 --/run DBM:FindEncounterIDs(1177)--Crucible of Storms
 --/run DBM:FindEncounterIDs(1176)--Zuldazar Raid
 --/run DBM:FindEncounterIDs(1001, 23)--Dungeon Template (mythic difficulty)
---/run DBM:FindEncounterIDs(instanceID, 1)--Classic Dungeons need diff 1 specified
---/run DBM:FindDungeonIDs(1, 300)--Find Classic Dungeon IDs
+--/run DBM:FindEncounterIDs(228, 1)--Classic Dungeons need diff 1 specified
+--/run DBM:FindDungeonMapIDs(1, 500)--Find Classic Dungeon Map IDs
+--/run DBM:FindInstanceIDs(1, 300)--Find Classic Dungeon Journal IDs
 function DBM:FindEncounterIDs(instanceID, diff)
 	if not instanceID then
 		self:AddMsg("Error: Function requires instanceID be provided")
 	end
 	if not diff then diff = 14 end--Default to "normal" in 6.0+ if diff arg not given.
 	EJ_SetDifficulty(diff)--Make sure it's set to right difficulty or it'll ignore mobs (ie ra-den if it's not set to heroic). Use user specified one as primary, with curernt zone difficulty as fallback
+	self:AddMsg("-----------------")
 	for i=1, 25 do
 		local name, _, encounterID = EJ_GetEncounterInfoByIndex(i, instanceID)
 		if name then
@@ -7175,8 +7209,8 @@ do
 		if id and not neverFilter[id] then
 			DBM:Debug("PLAY_MOVIE fired for ID: "..id, 2)
 			local isInstance, instanceType = IsInInstance()
-			if not isInstance or C_Garrison:IsOnGarrisonMap() or instanceType == "scenario" or DBM.Options.MovieFilter == "Never" then return end
-			if DBM.Options.MovieFilter == "Block" or DBM.Options.MovieFilter == "AfterFirst" and DBM.Options.MoviesSeen[id] then
+			if not isInstance or C_Garrison:IsOnGarrisonMap() or instanceType == "scenario" or DBM.Options.MovieFilter2 == "Never" or DBM.Options.MovieFilter2 == "OnlyFight" and not IsEncounterInProgress() then return end
+			if DBM.Options.MovieFilter2 == "Block" or (self.Options.MovieFilter2 == "AfterFirst" or self.Options.MovieFilter2 == "OnlyFight") and DBM.Options.MoviesSeen[id] then
 				MovieFrame:Hide()--can only just hide movie frame safely now, which means can't stop audio anymore :\
 				DBM:AddMsg(DBM_CORE_MOVIE_SKIPPED)
 			else
@@ -7188,10 +7222,10 @@ do
 	function DBM:CINEMATIC_START()
 		self:Debug("CINEMATIC_START fired", 2)
 		local isInstance, instanceType = IsInInstance()
-		if not isInstance or C_Garrison:IsOnGarrisonMap() or instanceType == "scenario" or self.Options.MovieFilter == "Never" then return end
+		if not isInstance or C_Garrison:IsOnGarrisonMap() or instanceType == "scenario" or self.Options.MovieFilter2 == "Never" or DBM.Options.MovieFilter2 == "OnlyFight" and not IsEncounterInProgress() then return end
 		local currentMapID = C_Map.GetBestMapForUnit("player")
 		if not currentMapID then return end--Protection from map failures in zones that have no maps yet
-		if self.Options.MovieFilter == "Block" or self.Options.MovieFilter == "AfterFirst" and self.Options.MoviesSeen[currentMapID] then
+		if self.Options.MovieFilter2 == "Block" or (self.Options.MovieFilter2 == "AfterFirst" or self.Options.MovieFilter2 == "OnlyFight") and self.Options.MoviesSeen[currentMapID] then
 			CinematicFrame_CancelCinematic()
 			self:AddMsg(DBM_CORE_MOVIE_SKIPPED)
 		else
@@ -7208,6 +7242,7 @@ do
 	local bonusRollForce = false
 	local warFrontMaps = {
 		[14] = true, -- Arathi Highlands
+		[62] = true, -- Darkshore
 	}
 	local function hideBonusRoll(self)
 		bonusTimeStamp = GetTime()
@@ -7247,7 +7282,7 @@ do
 			hideBonusRoll(DBM)
 		elseif DBM.Options.BonusFilter == "HeroicRaider" and (difficultyId == 14 or difficultyId == 17 or difficultyId == 23 or (difficultyId == 8 and keystoneLevel < 10) or (difficultyId == 0 and not warFrontMaps[localMapID])) then--Basically, anything below 370 (normal/heroic/mythic dungeons lower than 10, LFR/Normal Raids
 			hideBonusRoll(DBM)
-		elseif DBM.Options.BonusFilter == "MythicRaider" and (difficultyId == 14 or difficultyId == 15 or difficultyId == 17 or difficultyId == 23 or difficultyId == 8 or difficultyId == 0) then--Basically, anything below 385 (ANY dungeon, LFR/Normal/Heroic Raids
+		elseif DBM.Options.BonusFilter == "MythicRaider" and (difficultyId == 14 or difficultyId == 15 or difficultyId == 17 or difficultyId == 23 or difficultyId == 8 or difficultyId == 0) then--Basically, anything below Mythic Raid (ANY dungeon, LFR/Normal/Heroic Raids
 			hideBonusRoll(DBM)
 		end
 	end)
@@ -7583,8 +7618,8 @@ function bossModPrototype:IsCriteriaCompleted(criteriaIDToCheck)
 	return false
 end
 
-function bossModPrototype:LatencyCheck()
-	return select(4, GetNetStats()) < DBM.Options.LatencyThreshold
+function bossModPrototype:LatencyCheck(custom)
+	return select(4, GetNetStats()) < (custom or DBM.Options.LatencyThreshold)
 end
 
 function bossModPrototype:CheckBigWigs(name)
@@ -10127,8 +10162,8 @@ do
 		return newSpecialWarning(self, "jump", text, nil, optionDefault, ...)
 	end
 
-	function bossModPrototype:NewSpecialWarningRun(text, optionDefault, ...)
-		return newSpecialWarning(self, "run", text, nil, optionDefault, ...)
+	function bossModPrototype:NewSpecialWarningRun(text, optionDefault, optionName, optionVersion, runSound, ...)
+		return newSpecialWarning(self, "run", text, nil, optionDefault, optionName, optionVersion, runSound or 4, ...)
 	end
 
 	function bossModPrototype:NewSpecialWarningCast(text, optionDefault, ...)
@@ -10977,17 +11012,21 @@ function bossModPrototype:AddNamePlateOption(name, spellId, default)
 	self.localization.options[name] = DBM_CORE_AUTO_NAMEPLATE_OPTION_TEXT:format(spellId)
 end
 
-function bossModPrototype:AddInfoFrameOption(spellId, default)
-	self.DefaultOptions["InfoFrame"] = (default == nil) or default
+function bossModPrototype:AddInfoFrameOption(spellId, default, optionVersion)
+	local oVersion = ""
+	if optionVersion then
+		optionVersion = tostring(optionVersion)
+	end
+	self.DefaultOptions["InfoFrame"..oVersion] = (default == nil) or default
 	if default and type(default) == "string" then
 		default = self:GetRoleFlagValue(default)
 	end
-	self.Options["InfoFrame"] = (default == nil) or default
-	self:SetOptionCategory("InfoFrame", "misc")
+	self.Options["InfoFrame"..oVersion] = (default == nil) or default
+	self:SetOptionCategory("InfoFrame"..oVersion, "misc")
 	if spellId then
-		self.localization.options["InfoFrame"] = DBM_CORE_AUTO_INFO_FRAME_OPTION_TEXT:format(spellId)
+		self.localization.options["InfoFrame"..oVersion] = DBM_CORE_AUTO_INFO_FRAME_OPTION_TEXT:format(spellId)
 	else
-		self.localization.options["InfoFrame"] = DBM_CORE_AUTO_INFO_FRAME_OPTION_TEXT2
+		self.localization.options["InfoFrame"..oVersion] = DBM_CORE_AUTO_INFO_FRAME_OPTION_TEXT2
 	end
 end
 

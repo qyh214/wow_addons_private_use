@@ -14,7 +14,7 @@ setfenv(1, WIM);
 
 -- Core information
 addonTocName = "WIM";
-version = "3.7.18";
+version = "586";
 beta = false; -- flags current version as beta.
 debug = false; -- turn debugging on and off.
 useProtocol2 = true; -- test switch for new W2W Protocol. (Dev use only)
@@ -133,6 +133,11 @@ local function initialize()
     dPrint("WIM initialized...");
 end
 
+function WIM:resetWhisperStickies()
+	_G["ChatTypeInfo"]["WHISPER"].sticky = 0
+	_G["ChatTypeInfo"]["BN_WHISPER"].sticky = 0
+end
+
 -- called when WIM is enabled.
 -- WIM will not be enabled until WIM is initialized event is fired.
 local function onEnable()
@@ -144,6 +149,7 @@ local function onEnable()
     end
     
         if(isInitialized) then
+			WIM:resetWhisperStickies()
             for mName, module in pairs(modules) do
                 if(type(module.OnEnableWIM) == "function") then
                     module:OnEnableWIM();
@@ -381,14 +387,23 @@ end
 function WIM:FRIENDLIST_UPDATE()
     env.cache[env.realm][env.character].friendList = env.cache[env.realm][env.character].friendList or {};
     for key, d in pairs(env.cache[env.realm][env.character].friendList) do
-	if(d == 1) then
-	    env.cache[env.realm][env.character].friendList[key] = nil;
-	end
+		if(d == 1) then
+	    	env.cache[env.realm][env.character].friendList[key] = nil;
+		end
     end
-	for i=1, _G.GetNumFriends() do 
-		local name, junk = _G.GetFriendInfo(i);
-		if(name) then
-			env.cache[env.realm][env.character].friendList[name] = 1; --[set place holder for quick lookup
+    if _G.C_FriendList then
+		for i=1, _G.C_FriendList.GetNumFriends() do 
+			local name = _G.C_FriendList.GetFriendInfoByIndex(i).name;
+			if(name) then
+				env.cache[env.realm][env.character].friendList[name] = 1; --[set place holder for quick lookup
+			end
+		end
+    else
+		for i=1, _G.GetNumFriends() do 
+			local name = _G.GetFriendInfo(i);
+			if(name) then
+				env.cache[env.realm][env.character].friendList[name] = 1; --[set place holder for quick lookup
+			end
 		end
 	end
     lists.friends = env.cache[env.realm][env.character].friendList;

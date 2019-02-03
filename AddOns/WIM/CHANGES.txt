@@ -1,16 +1,26 @@
 ------------------------------------------------------------------------
-r557 | mysticalos | 2018-07-27 20:26:46 +0000 (Fri, 27 Jul 2018) | 1 line
+r586 | humfras | 2019-02-02 19:36:55 +0000 (Sat, 02 Feb 2019) | 1 line
 Changed paths:
-   M /trunk/ChangeLog.lua
-   M /trunk/WIM.lua
-   M /trunk/WIM.toc
+   M /trunk/Modules/WhisperEngine.lua
 
-bump version
+* add online/offline notification for BNet friends
 ------------------------------------------------------------------------
-r556 | mysticalos | 2018-07-27 20:11:58 +0000 (Fri, 27 Jul 2018) | 1 line
+r585 | humfras | 2019-02-02 15:59:59 +0000 (Sat, 02 Feb 2019) | 1 line
 Changed paths:
-   M /trunk/Modules/URLHandler.lua
+   M /trunk/Modules/History.lua
 
-Fix link copying
+* fix potential bug with WIM history viewer on first display
+------------------------------------------------------------------------
+r584 | humfras | 2019-02-02 15:55:21 +0000 (Sat, 02 Feb 2019) | 1 line
+Changed paths:
+   M /trunk/Modules/History.lua
+
+* fix potential bug with WIM history viewer on first display
+------------------------------------------------------------------------
+r583 | humfras | 2019-02-02 15:07:14 +0000 (Sat, 02 Feb 2019) | 1 line
+Changed paths:
+   M /trunk/Modules/Emoticons.lua
+
+* trying to fix emote misbehavior in BNet names introduced with patch 8.1
 ------------------------------------------------------------------------
 

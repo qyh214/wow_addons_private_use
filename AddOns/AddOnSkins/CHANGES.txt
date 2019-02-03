@@ -1,4 +1,24 @@
-Changes since tag 4.07
+lightweight tag a0715928e22003e6957cae2695d8e0330a291c75 4.08
+Author:	Azilroka <darktemplar9900@yahoo.com>
+Date:	Sat Jan 12 11:45:29 2019 -0600
+
+commit a0715928e22003e6957cae2695d8e0330a291c75
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sat Jan 12 11:45:29 2019 -0600
+
+    4.08
+
+commit 4cf7982baeac81f92ad9f03be0da0b6e3e5204fc
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sat Jan 12 11:39:21 2019 -0600
+
+    Artifact / PvP / WorldMap
+
+commit 27e23e51bcafd192daa2126720fbec370672b9b0
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sun Jan 6 22:43:25 2019 -0600
+
+    BigWigs cleanup by Simpy
 
 commit f3a46bb172f042aec3ed2ce25c22d9a3409499f5
 Author: Azilroka <darktemplar9900@yahoo.com>

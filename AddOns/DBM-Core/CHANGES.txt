@@ -1,71 +1,123 @@
-tag a657d437c5b2ee8c004d53a9261e1b706cbec746 8.1.1
+tag 79b0f1664138c80c939513814ea853a39be743ae 8.1.7
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Thu Dec 20 00:36:19 2018 +0100
+Date:	Wed Jan 30 04:14:32 2019 +0100
 
-Tagging as 8.1.1
+Tagging as 8.1.7
 
-commit 32ea0aab875a66ff1865c573c86cab9158371e09
+commit 1141b573fec634c3def35333baa161ae93013da0
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Dec 20 00:36:19 2018 +0100
+Date:   Wed Jan 30 04:14:32 2019 +0100
 
-    increment version number to 8.1.1
+    increment version number to 8.1.7
 
-commit 4e00d8f3336c7ce0d8426c72a184de1484af1c2e
+commit b17dcd93e08161df037c95fde046597baa517bc1
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Dec 19 01:31:27 2018 +0100
+Date:   Wed Jan 30 04:11:55 2019 +0100
 
-    Omega via svn r18134:
-    Further improve ivus timers with more data, which confirms petrify interaction
+    Omega via svn r18245:
+    Couple LFR tweaks, everything else looks good
 
-commit 2a1431ac7e5e315fcb7514b95f92b02cf3e63bc8
+commit 7bb31e000d2510b40b8749cc0ac02219a16c1a9f
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Dec 18 05:16:41 2018 +0100
+Date:   Wed Jan 30 03:13:41 2019 +0100
 
-    Omega via svn r18133:
-    An additional no taunt warning for ghuun, based on distance from other tank
+    Omega via svn r18244:
+    Add a guessed respawn for champion
 
-commit f1ce152e21d6aa0f1f58aa95662d8ca974e72d1a
+commit 2213406be371e28a1b96f53f39ecf7dbde31f23a
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Dec 14 05:12:20 2018 +0100
+Date:   Wed Jan 30 01:17:09 2019 +0100
 
-    Omega via svn r18132:
-    Adjust wind tunnel by 0.3
+    Omega via svn r18243:
+    Make this timer on for everyone by default, so they can better time their passes in front of jaina.
+    Add projectile announce to go with timer
 
-commit ccab640280a207a9e21d520f7fa183f30085891f
+commit d11962ed4143b875fb507abfe76c6c108e03b15a
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Dec 14 05:11:43 2018 +0100
+Date:   Wed Jan 30 00:54:39 2019 +0100
 
-    Omega via svn r18131:
-    Adjust first Cudgel timer, which seems to have changed in 8.1 by about 4 seconds
+    Omega via svn r18242:
+    Apply Jan 29 hotfix changes
 
-commit e91baac3f5b1973736e393f104430fbed583a761
+commit 421eaf3ed014565b251f5bfe651a460dd7a5db45
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Dec 13 04:39:39 2018 +0100
+Date:   Tue Jan 29 23:14:19 2019 +0100
 
-    Omega via svn r18130:
-    Added requested  auto marking to Ass Pix
-    Added requested countdown option for Mythrax
+    Omega via svn r18241:
+    Add interrupt counter to jaina?\226?\128?\153s water elemental
 
-commit aa82cb4f176bddccdd4ee7067d9c24f841111f3a
+commit 9245b1fa5d84bf09a4293deec46c9c1f6299393f
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Dec 12 09:19:36 2018 +0100
+Date:   Tue Jan 29 22:19:38 2019 +0100
 
-    Omega via svn r18129:
-    CN update
+    Omega via svn r18240:
+    Fix roar on mythic Grong
 
-commit 6e55207cd2d1afea44fb04e58722de80ee76cf7b
+commit 9b36d666761621b17a54dd319b21b788eca61798
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Dec 12 06:10:29 2018 +0100
+Date:   Tue Jan 29 22:15:04 2019 +0100
 
-    Omega via svn r18128:
-    Fix Ivus mod not loading/engaging properly
-    Updated Ivus timers with live ones while at it.
-    Improved shockwave warning with target scanning on ivus
+    Omega via svn r18239:
+    While at it, add taunt warning for other tank getting frozen solid. This IS on by default.
 
-commit dc8b74fb3ba19881cb20f2bf3b7117143977ffe7
+commit d1bd1d91d209cec5b6dd9351b615ff9375e0f8bc
 Author: subversion <svn@deadlybossmods.com>
-Date:   Tue Dec 11 17:24:31 2018 +0100
+Date:   Tue Jan 29 22:10:48 2019 +0100
 
-    tandanu via svn r18127:
+    Omega via svn r18238:
+    Add user request for additional swap warning for P1 jaina, off by default unless I get more feedback it should be required
+
+commit 13b1f18207f209386ccfc07a0b989575bb3a515f
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Jan 29 21:58:57 2019 +0100
+
+    Omega via svn r18237:
+    Updated Opulence mythic, it now has a valid surging gold timer
+    Also fixed liquid gold which is cast hella more often on mythic and even less on live heroic than ptr
+    And, fixed wail of greed timer, which i just completely forgot to fix on live
+
+commit 41dca27bafab9fbdcd8265628c659fb2068dbfab
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Jan 29 21:14:01 2019 +0100
+
+    Omega via svn r18236:
+    Fix mythic detection of Multi-Sided Strike so warning/timer for it now work
+    Timer updates for Jadefire as well
+    Fixed bug where magma trap counter didn?\226?\128?\153t reset each pull
+
+commit dd54ad7651a28c841b24db1a1c975bdfd7b600ec
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Jan 29 20:37:01 2019 +0100
+
+    Omega via svn r18235:
+    Grong fixes (mythic and non mythic)
+
+commit 4136dccd11d0b27dcf42126e8fb9c537812d8484
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Jan 29 20:21:19 2019 +0100
+
+    Omega via svn r18234:
+    Push Mythic timer update to Champion of Light. With the change to phases ending early if all adds die, Prayer of Fallen timer can no longer reliably started in phase change events, it should be more accurately attached to actual cast of prayer of the fallen
+
+commit 20729ac8c6c541163844e6efdd6b98677ab0bc84
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Jan 29 20:07:19 2019 +0100
+
+    Omega via svn r18233:
+    Show at least half the raid on jaina infoframe
+
+commit 4cc3390ec4d6ec9447e817f3392cfa1a4656bb0b
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Jan 29 19:57:58 2019 +0100
+
+    Omega via svn r18232:
+    Some logic tweaks to try and deal with user reports still saying this warning isn?\226?\128?\153t working in Stage 4
+    Fix timer while at it which wasn?\226?\128?\153t correct for S3
+
+commit 9771c39f14fd06d589d6bb6856c7f44ca30796fc
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Jan 29 18:53:51 2019 +0100
+
+    tandanu via svn r18231:
     increment alpha version
 

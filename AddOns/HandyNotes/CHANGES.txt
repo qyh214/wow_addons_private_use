@@ -1,32 +1,32 @@
 ------------------------------------------------------------------------
-r305 | nevcairiel | 2018-07-24 12:05:59 +0000 (Tue, 24 Jul 2018) | 1 line
+r311 | nevcairiel | 2019-01-24 09:27:43 +0000 (Thu, 24 Jan 2019) | 1 line
 Changed paths:
    M /trunk/HandyNotes.lua
 
-style nit
+Check that the data provider is active before trying to remove it
 ------------------------------------------------------------------------
-r304 | nevcairiel | 2018-07-24 12:04:36 +0000 (Tue, 24 Jul 2018) | 1 line
+r310 | nevcairiel | 2019-01-24 09:21:48 +0000 (Thu, 24 Jan 2019) | 1 line
 Changed paths:
    M /trunk/HandyNotes.lua
 
-Clean out commented code
+Fix backwards compat for frame levels
 ------------------------------------------------------------------------
-r303 | nevcairiel | 2018-07-24 12:02:03 +0000 (Tue, 24 Jul 2018) | 1 line
+r309 | nevcairiel | 2019-01-24 09:20:19 +0000 (Thu, 24 Jan 2019) | 1 line
 Changed paths:
    M /trunk/HandyNotes.lua
 
-Support all mouse buttons for clicks
+Fix jittering minimap pins
 ------------------------------------------------------------------------
-r302 | nevcairiel | 2018-07-24 09:10:11 +0000 (Tue, 24 Jul 2018) | 1 line
+r308 | nevcairiel | 2019-01-24 09:19:13 +0000 (Thu, 24 Jan 2019) | 1 line
 Changed paths:
-   M /trunk/HandyNotes.lua
+   M /trunk/HandyNotes.toc
 
-Verify that coordinates are valid before creating pins
+Update TOC for 8.1
 ------------------------------------------------------------------------
-r301 | nevcairiel | 2018-07-20 07:25:09 +0000 (Fri, 20 Jul 2018) | 1 line
+r307 | nevcairiel | 2019-01-24 09:18:52 +0000 (Thu, 24 Jan 2019) | 1 line
 Changed paths:
    M /trunk/HandyNotes.lua
 
-Protect against errors when the addon is disabled
+Remove 8.0 load guard
 ------------------------------------------------------------------------
 

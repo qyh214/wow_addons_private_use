@@ -359,7 +359,7 @@ local function CreateSection(parent, title, desc)
         frame.description:SetFullSize();
         frame.description:SetJustifyH("LEFT");
         frame.description:SetJustifyV("TOP");
-        frame:SetScript("OnUpdate", function(self, elapsed)
+    --[[    frame:SetScript("OnUpdate", function(self, elapsed)
                 if(frame:GetWidth() < self.description:GetStringWidth()) then
                     self.description:SetHeight(self.description:GetStringWidth()/parent:GetWidth()*(self.description:GetStringHeight()+
                                     self.description:GetSpacing()) + (self.description:GetStringHeight()+self.description:GetSpacing()));
@@ -367,7 +367,7 @@ local function CreateSection(parent, title, desc)
                 frame:Hide();
                 frame:Show();
                 self:SetScript("OnUpdate", nil);
-            end);
+            end);]]
     end
     frame:SetScript("OnShow", function(self)
             if(self.lastObj and cbm) then

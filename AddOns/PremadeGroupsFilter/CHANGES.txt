@@ -1,28 +1,22 @@
-lightweight tag f2db0f837ce5f1e0636b1c625dc71e6bb0e2b9ba 1.24
+lightweight tag 8469409dc568d1e4ea5df57c5f55596c20ff3836 1.25
 Author:	Bernhard Saumweber <b.saumweber@gmail.com>
-Date:	Wed Dec 12 20:56:39 2018 +0100
+Date:	Sun Jan 27 17:08:41 2019 +0100
 
-commit f2db0f837ce5f1e0636b1c625dc71e6bb0e2b9ba
+commit 8469409dc568d1e4ea5df57c5f55596c20ff3836
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Wed Dec 12 20:56:39 2018 +0100
+Date:   Sun Jan 27 17:08:41 2019 +0100
 
-    Fixes for API changes introduced with patch 8.1
+    Added keywords bod/daz for Battle of Dazar'alor and cs/cru for Crucible of Storms
 
-commit 4c267e3636ce57defe6eaf74725f47d52437075b
+commit 8f35f62f27dd493d73c246ae0d978ea4a79a9acf
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Sun Nov 18 10:13:31 2018 +0100
+Date:   Wed Dec 12 21:07:29 2018 +0100
 
-    Added RaiderIO main score via new keyword riomain
+    Set version to next release version: 1.25
 
-commit f7f587e0b7fb139bd28ec2cb1b29ad32ff686f84
+commit 3e46acc17711328b341334852e40190841f07d20
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Tue Nov 13 20:17:38 2018 +0100
+Date:   Wed Dec 12 21:06:51 2018 +0100
 
-    Switch links in README to github wiki
-
-commit 5a0725eb3ae4aadf98ecc21e8f36848da106b3fc
-Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Tue Nov 13 19:50:36 2018 +0100
-
-    Set version to next release version: 1.24
+    Remove TODO
 
