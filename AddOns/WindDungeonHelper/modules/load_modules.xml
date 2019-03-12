@@ -1,3 +1,4 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-	<Include file="avoidabledamage.lua"/>
+	<Include file="AvoidableDamage.lua"/>
+	<Include file="EnemyProgress.lua"/>
 </Ui>

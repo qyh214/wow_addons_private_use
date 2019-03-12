@@ -62,3 +62,5 @@ L["unit_W"] = "万"
 L["Western - k"] = "西方 - 千"
 L["Asia - W"] = "亚洲 - 万"
 L["Damage accuracy"] = "伤害准确度"
+-- Enemy Progress
+L["Enemy Progress"] = "小怪进度"

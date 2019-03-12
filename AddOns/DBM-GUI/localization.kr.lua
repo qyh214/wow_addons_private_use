@@ -161,6 +161,7 @@ L.ExpandUpwards				= "위로 쌓기"
 L.FillUpBars				= "채워나가기"
 L.ClickThrough				= "마우스 클릭 불가"
 L.Bar_Decimal				= "남은시간 소수점 표시: %d초 이하"
+L.Bar_Alpha					= "바 투명도: %0.1f"
 L.Bar_DBMOnly				= "아래 설정은 \"DBM\" 바 스타일에서만 적용됩니다."
 L.Bar_EnlargeTime			= "다음 시간보다 적으면 바 확대: %d초"
 L.Bar_EnlargePercent		= "다음 비율보다 적으면 바 확대: %0.1f%%"
@@ -170,6 +171,9 @@ L.BarSort					= "남은 시간 기준으로 정렬"
 L.BarColorByType			= "종류별 색상"
 L.BarInlineIcons			= "바 안쪽에 아이콘 사용"
 L.ShortTimerText			= "짧은 타이머 텍스트 사용 (사용 가능할 때만)"
+L.KeepBar					= "스킬 시전 전까지 타이머 작동 중단"
+L.KeepBar2					= "(모드에서 지원할 경우에만)"
+L.FadeBar					= "사정거리 밖의 스킬에 대한 타이머 바 숨김"
 
 -- Tab: Spec Warn Frame
 L.Panel_SpecWarnFrame		= "특수 경고"
@@ -293,10 +297,10 @@ L.Always					= "항상 끄기"
 L.CombatOnly				= "전투중 차단 (모든 전투)"
 L.RaidCombat				= "전투중 차단 (보스만)"
 L.HideBonusHeader			= "추가 전리품 주사위 굴림 창을 숨길 전리품 레벨..."
-L.TrivialContent			= "신화 미만 던전 (<340)"--Basically anything below 340
-L.NormalRaider				= "신화+ 5단 미만 던전과 공격대 찾기 레이드 (<355)"--Basically, anything below 355
-L.HeroicRaider				= "신화+ 10단 미만 던전과 영웅 미만 레이드와 격전지 이외 필드 레이드 보스 (<370)"--Basically anything below 370
-L.MythicRaider				= "신화 레이드 미만 모든 보스 (<385)"--Basically anything below 385
+L.TrivialContent			= "신화 미만 던전"--Basically anything below 340
+L.NormalRaider				= "신화+ 5단 미만 던전과 공격대 찾기 레이드"--Basically, anything below 355
+L.HeroicRaider				= "신화+ 10단 미만 던전과 영웅 미만 레이드와 격전지 이외 필드 레이드 보스"--Basically anything below 370
+L.MythicRaider				= "신화 레이드 미만 모든 보스"--Basically anything below 385
 
 L.Panel_ExtraFeatures		= "기타 기능"
 --

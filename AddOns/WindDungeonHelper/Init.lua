@@ -1,3 +1,4 @@
+-- Import libraries
 local AddOnName, WDH = ...
 local pairs = pairs
 LibStub("AceAddon-3.0"):NewAddon(WDH, AddOnName, "AceEvent-3.0", "AceConsole-3.0")
@@ -5,7 +6,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(AddOnName, true)
 local LDB = LibStub("LibDataBroker-1.1"):NewDataObject(L["Wind Dungeon Helper"], {
 	type = "data source",
 	text = "WDH",
-	icon = "Interface\\ICONS\\Achievement_Dungeon_Mythic15",
+	icon = "Interface\\ICONS\\Achievement_Challengemode_Gold",
 	OnClick = function() WDH:OpenOptionFrame() end,
 })
 
@@ -14,12 +15,12 @@ WDH.Base = {}
 WDH.Config = {}
 WDH.DataBase = {}
 local B, C, DB = WDH.Base, WDH.Config, WDH.DataBase
---------------------------------------------------------------
+
 -- Base
 B.AddonName = L["Wind Dungeon Helper"]
 B.Version = GetAddOnMetadata(AddOnName, "Version")
 B.AddonMsgPrefix = "WDH"
---------------------------------------------------------------
+
 -- Config
 WDH.Config.ModulesOrder = {}
 WDH.Config.ModulesOption = {}
@@ -30,7 +31,7 @@ function WDH.Config.CreateOptionTable()
 		args = {
 			author = {
 				order = 1,
-				name = L["Author"]..": "..B.ColorString("五氣歸元-暗影之月(TW)", 0, 1, 0.59).." @ "..B.ColorString("人生海海"),
+				name = L["Author"]..": "..B.ColorString("Weakaura-暗影之月(TW)", 0, 1, 0.59),
 				type = "description",
 			},
 			-- enable = {
@@ -87,7 +88,6 @@ function WDH.Config.CreateOptionTable()
 	return tempOptionsTable
 end
 
---------------------------------------------------------------
 -- DataBase
 DB.defaults = {
 	profile = {
@@ -99,7 +99,6 @@ DB.defaults = {
 	}
 }
 
-------------------------------------------
 -- Functions
 local function RGBToHex(r, g, b)
 	r = r <= 1 and r >= 0 and r or 0
@@ -151,7 +150,7 @@ function WDH:SetUpConfig()
     logo:SetFrameLevel(4)
     logo:SetSize(64, 64)
     logo:SetPoint('TOPRIGHT', -12, -12)
-    logo:SetBackdrop({bgFile = ('Interface\\ICONS\\Achievement_Dungeon_Mythic15'):format(AddOnName)})
+    logo:SetBackdrop({bgFile = ('Interface\\ICONS\\Ability_Racial_EmbraceoftheLoa_Bwonsomdi'):format(AddOnName)})
     self.optionFrame.logo = logo
 
     LibStub("LibDBIcon-1.0"):Register(L["Wind Dungeon Helper"], self.LDB, DB.profile.minimapicon)

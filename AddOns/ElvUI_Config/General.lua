@@ -1,5 +1,6 @@
 local E, L, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local B = E:GetModule("Blizzard")
+local M = E:GetModule("Misc")
 
 local _G = _G
 local FCF_GetNumActiveChatFrames = FCF_GetNumActiveChatFrames
@@ -42,67 +43,34 @@ E.Options.args.general = {
 					type = 'select',
 					values = GetChatWindowInfo()
 				},
-				pixelPerfect = {
+				AutoScale = {
 					order = 2,
+					type = 'execute',
+					name = L["Auto Scale"],
+					func = function()
+						E.global.general.UIScale = E:PixelClip(E:PixelBestSize())
+						E:StaticPopup_Show("UISCALE_CHANGE")
+					end,
+				},
+				UIScale = {
+					order = 3,
+					type = "range",
+					name = UI_SCALE,
+					min = 0.1, max = 1.25, step = 0.00001,
+					softMin = 0.40, softMax = 1.15, bigStep = 0.01,
+					get = function(info) return E.global.general.UIScale end,
+					set = function(info, value)
+						E.global.general.UIScale = value;
+						E:StaticPopup_Show("UISCALE_CHANGE")
+					end
+				},
+				pixelPerfect = {
+					order = 4,
 					name = L["Thin Border Theme"],
 					desc = L["The Thin Border Theme option will change the overall apperance of your UI. Using Thin Border Theme is a slight performance increase over the traditional layout."],
 					type = 'toggle',
 					get = function(info) return E.private.general.pixelPerfect end,
 					set = function(info, value) E.private.general.pixelPerfect = value; E:StaticPopup_Show("PRIVATE_RL") end
-				},
-				interruptAnnounce = {
-					order = 3,
-					name = L["Announce Interrupts"],
-					desc = L["Announce when you interrupt a spell to the specified chat channel."],
-					type = 'select',
-					values = {
-						['NONE'] = NONE,
-						['SAY'] = SAY,
-						['PARTY'] = L["Party Only"],
-						['RAID'] = L["Party / Raid"],
-						['RAID_ONLY'] = L["Raid Only"],
-						["EMOTE"] = CHAT_MSG_EMOTE,
-					},
-				},
-				autoRepair = {
-					order = 4,
-					name = L["Auto Repair"],
-					desc = L["Automatically repair using the following method when visiting a merchant."],
-					type = 'select',
-					values = {
-						['NONE'] = NONE,
-						['GUILD'] = GUILD,
-						['PLAYER'] = PLAYER,
-					},
-				},
-				autoAcceptInvite = {
-					order = 5,
-					name = L["Accept Invites"],
-					desc = L["Automatically accept invites from guild/friends."],
-					type = 'toggle',
-				},
-				autoRoll = {
-					order = 8,
-					name = L["Auto Greed/DE"],
-					desc = L["Automatically select greed or disenchant (when available) on green quality items. This will only work if you are the max level."],
-					type = 'toggle',
-					disabled = function() return not E.private.general.lootRoll end
-				},
-				loot = {
-					order = 9,
-					type = "toggle",
-					name = L["Loot"],
-					desc = L["Enable/Disable the loot frame."],
-					get = function(info) return E.private.general.loot end,
-					set = function(info, value) E.private.general.loot = value; E:StaticPopup_Show("PRIVATE_RL") end
-				},
-				lootRoll = {
-					order = 10,
-					type = "toggle",
-					name = L["Loot Roll"],
-					desc = L["Enable/Disable the loot roll frame."],
-					get = function(info) return E.private.general.lootRoll end,
-					set = function(info, value) E.private.general.lootRoll = value; E:StaticPopup_Show("PRIVATE_RL") end
 				},
 				eyefinity = {
 					order = 11,
@@ -112,12 +80,7 @@ E.Options.args.general = {
 					get = function(info) return E.global.general.eyefinity end,
 					set = function(info, value) E.global.general[ info[#info] ] = value; E:StaticPopup_Show("GLOBAL_RL") end
 				},
-				hideErrorFrame = {
-					order = 12,
-					name = L["Hide Error Text"],
-					desc = L["Hides the red error text at the top of the screen while in combat."],
-					type = "toggle"
-				},
+
 				taintLog = {
 					order = 13,
 					type = "toggle",
@@ -148,70 +111,8 @@ E.Options.args.general = {
 					get = function(info) return E.db.general.afk end,
 					set = function(info, value) E.db.general.afk = value; E:GetModule('AFK'):Toggle() end
 				},
-				enhancedPvpMessages = {
-					order = 17,
-					type = 'toggle',
-					name = L["Enhanced PVP Messages"],
-					desc = L["Display battleground messages in the middle of the screen."],
-				},
-				disableTutorialButtons = {
-					order = 18,
-					type = 'toggle',
-					name = L["Disable Tutorial Buttons"],
-					desc = L["Disables the tutorial button found on some frames."],
-					get = function(info) return E.global.general.disableTutorialButtons end,
-					set = function(info, value) E.global.general.disableTutorialButtons = value; E:StaticPopup_Show("GLOBAL_RL") end,
-				},
-				showMissingTalentAlert = {
-					order = 19,
-					type = "toggle",
-					name = L["Missing Talent Alert"],
-					desc = L["Show an alert frame if you have unspend talent points."],
-					get = function(info) return E.global.general.showMissingTalentAlert end,
-					set = function(info, value) E.global.general.showMissingTalentAlert = value; E:StaticPopup_Show("GLOBAL_RL") end,
-				},
-				autoScale = {
-					order = 20,
-					name = L["Auto Scale"],
-					desc = L["Automatically scale the User Interface based on your screen resolution"],
-					type = "toggle",
-					get = function(info) return E.global.general.autoScale end,
-					set = function(info, value) E.global.general[ info[#info] ] = value; E:StaticPopup_Show("GLOBAL_RL") end
-				},
-				raidUtility = {
-					order = 21,
-					type = "toggle",
-					name = RAID_CONTROL,
-					desc = L["Enables the ElvUI Raid Control panel."],
-					get = function(info) return E.private.general.raidUtility end,
-					set = function(info, value) E.private.general.raidUtility = value; E:StaticPopup_Show("PRIVATE_RL") end
-				},
-				voiceOverlay = {
-					order = 22,
-					type = "toggle",
-					name = L["Voice Overlay"],
-					desc = L["Replace Blizzard's Voice Overlay."],
-					get = function(info) return E.private.general.voiceOverlay end,
-					set = function(info, value) E.private.general.voiceOverlay = value; E:StaticPopup_Show("PRIVATE_RL") end
-				},
-				minUiScale = {
-					order = 23,
-					type = "range",
-					name = L["Lowest Allowed UI Scale"],
-					softMin = 0.20, softMax = 0.64, step = 0.01,
-					get = function(info) return E.global.general.minUiScale end,
-					set = function(info, value) E.global.general.minUiScale = value; E:StaticPopup_Show("GLOBAL_RL") end
-				},
-				vehicleSeatIndicatorSize = {
-					order = 24,
-					type = "range",
-					name = L["Vehicle Seat Indicator Size"],
-					min = 64, max = 128, step = 4,
-					get = function(info) return E.db.general.vehicleSeatIndicatorSize end,
-					set = function(info, value) E.db.general.vehicleSeatIndicatorSize = value; B:UpdateVehicleFrame() end,
-				},
 				decimalLength = {
-					order = 25,
+					order = 24,
 					type = "range",
 					name = L["Decimal Length"],
 					desc = L["Controls the amount of decimals used in values displayed on elements like NamePlates and UnitFrames."],
@@ -219,21 +120,9 @@ E.Options.args.general = {
 					get = function(info) return E.db.general.decimalLength end,
 					set = function(info, value) E.db.general.decimalLength = value; E:StaticPopup_Show("GLOBAL_RL") end,
 				},
-				commandBarSetting = {
-					order = 26,
-					type = "select",
-					name = L["Order Hall Command Bar"],
-					get = function(info) return E.global.general.commandBarSetting end,
-					set = function(info, value) E.global.general.commandBarSetting = value; E:StaticPopup_Show("GLOBAL_RL") end,
-					width = "normal",
-					values = {
-						["DISABLED"] = L["Disable"],
-						["ENABLED"] = L["Enable"],
-						["ENABLED_RESIZEPARENT"] = L["Enable + Adjust Movers"],
-					},
-				},
+
 				numberPrefixStyle = {
-					order = 27,
+					order = 26,
 					type = "select",
 					name = L["Unit Prefix Style"],
 					desc = L["The unit prefixes you want to use when values are shortened in ElvUI. This is mostly used on UnitFrames."],
@@ -266,7 +155,7 @@ E.Options.args.general = {
 					name = FONT_SIZE,
 					desc = L["Set the font size for everything in UI. Note: This doesn't effect somethings that have their own seperate options (UnitFrame Font, Datatext Font, ect..)"],
 					type = "range",
-					min = 4, softMax = 32, step = 1,
+					min = 4, max = 32, step = 1,
 					set = function(info, value) E.db.general[ info[#info] ] = value; E:UpdateMedia(); E:UpdateFontTemplates(); end,
 				},
 				font = {
@@ -594,8 +483,17 @@ E.Options.args.general = {
 					type = "header",
 					name = L["Objective Frame"],
 				},
-				objectiveFrameHeight = {
+				objectiveFrameAutoHide = {
 					order = 31,
+					type = "toggle",
+					name = L["Auto Hide"],
+					desc = L["Automatically hide the objetive frame during boss or arena fights."],
+					disabled = function() return IsAddOnLoaded("!KalielsTracker") end,
+					get = function(info) return E.db.general.objectiveFrameAutoHide end,
+					set = function(info, value) E.db.general.objectiveFrameAutoHide = value; E:GetModule('Blizzard'):SetObjectiveFrameAutoHide(); end,
+				},
+				objectiveFrameHeight = {
+					order = 32,
 					type = 'range',
 					name = L["Objective Frame Height"],
 					desc = L["Height of the objective tracker. Increase size to be able to see more objectives."],
@@ -604,7 +502,7 @@ E.Options.args.general = {
 					set = function(info, value) E.db.general.objectiveFrameHeight = value; E:GetModule('Blizzard'):SetObjectiveFrameHeight(); end,
 				},
 				bonusObjectivePosition = {
-					order = 32,
+					order = 33,
 					type = 'select',
 					name = L["Bonus Reward Position"],
 					desc = L["Position of bonus quest reward frame relative to the objective tracker."],
@@ -783,6 +681,256 @@ E.Options.args.general = {
 						CURMAX = L["Current / Max"],
 						CURMAXPERC = L["Current / Max - Percent"],
 					},
+				},
+			},
+		},
+		blizzUIImprovements = {
+			order = 11,
+			type = "group",
+			name = L["BlizzUI Improvements"],
+			get = function(info) return E.db.general[ info[#info] ] end,
+			set = function(info, value) E.db.general[ info[#info] ] = value end,
+			args = {
+				loot = {
+					order = 1,
+					type = "toggle",
+					name = L["Loot"],
+					desc = L["Enable/Disable the loot frame."],
+					get = function(info) return E.private.general.loot end,
+					set = function(info, value) E.private.general.loot = value; E:StaticPopup_Show("PRIVATE_RL") end
+				},
+				lootRoll = {
+					order = 2,
+					type = "toggle",
+					name = L["Loot Roll"],
+					desc = L["Enable/Disable the loot roll frame."],
+					get = function(info) return E.private.general.lootRoll end,
+					set = function(info, value) E.private.general.lootRoll = value; E:StaticPopup_Show("PRIVATE_RL") end
+				},
+				hideErrorFrame = {
+					order = 3,
+					name = L["Hide Error Text"],
+					desc = L["Hides the red error text at the top of the screen while in combat."],
+					type = "toggle"
+				},
+				enhancedPvpMessages = {
+					order = 4,
+					type = 'toggle',
+					name = L["Enhanced PVP Messages"],
+					desc = L["Display battleground messages in the middle of the screen."],
+				},
+				showMissingTalentAlert = {
+					order = 5,
+					type = "toggle",
+					name = L["Missing Talent Alert"],
+					desc = L["Show an alert frame if you have unspend talent points."],
+					get = function(info) return E.global.general.showMissingTalentAlert end,
+					set = function(info, value) E.global.general.showMissingTalentAlert = value; E:StaticPopup_Show("GLOBAL_RL") end,
+				},
+				raidUtility = {
+					order = 6,
+					type = "toggle",
+					name = RAID_CONTROL,
+					desc = L["Enables the ElvUI Raid Control panel."],
+					get = function(info) return E.private.general.raidUtility end,
+					set = function(info, value) E.private.general.raidUtility = value; E:StaticPopup_Show("PRIVATE_RL") end
+				},
+				voiceOverlay = {
+					order = 7,
+					type = "toggle",
+					name = L["Voice Overlay"],
+					desc = L["Replace Blizzard's Voice Overlay."],
+					get = function(info) return E.private.general.voiceOverlay end,
+					set = function(info, value) E.private.general.voiceOverlay = value; E:StaticPopup_Show("PRIVATE_RL") end
+				},
+				vehicleSeatIndicatorSize = {
+					order = 8,
+					type = "range",
+					name = L["Vehicle Seat Indicator Size"],
+					min = 64, max = 128, step = 4,
+					get = function(info) return E.db.general.vehicleSeatIndicatorSize end,
+					set = function(info, value) E.db.general.vehicleSeatIndicatorSize = value; B:UpdateVehicleFrame() end,
+				},
+				commandBarSetting = {
+					order = 9,
+					type = "select",
+					name = L["Order Hall Command Bar"],
+					get = function(info) return E.global.general.commandBarSetting end,
+					set = function(info, value) E.global.general.commandBarSetting = value; E:StaticPopup_Show("GLOBAL_RL") end,
+					width = "normal",
+					values = {
+						["DISABLED"] = L["Disable"],
+						["ENABLED"] = L["Enable"],
+						["ENABLED_RESIZEPARENT"] = L["Enable + Adjust Movers"],
+					},
+				},
+				disableTutorialButtons = {
+					order = 10,
+					type = 'toggle',
+					name = L["Disable Tutorial Buttons"],
+					desc = L["Disables the tutorial button found on some frames."],
+					get = function(info) return E.global.general.disableTutorialButtons end,
+					set = function(info, value) E.global.general.disableTutorialButtons = value; E:StaticPopup_Show("GLOBAL_RL") end,
+				},
+				itemLevelInfo = {
+					order = 11,
+					name = L["Item Level"],
+					type = 'group',
+					guiInline = true,
+					args = {
+						displayCharacterInfo = {
+							order = 1,
+							type = "toggle",
+							name = L["Display Character Info"],
+							desc = L["Shows item level of each item, enchants, and gems on the character page."],
+							get = function(info) return E.db.general.itemLevel.displayCharacterInfo end,
+							set = function(info, value)
+								E.db.general.itemLevel.displayCharacterInfo = value;
+								M:ToggleItemLevelInfo()
+							end
+						},
+						displayInspectInfo = {
+							order = 2,
+							type = "toggle",
+							name = L["Display Inspect Info"],
+							desc = L["Shows item level of each item, enchants, and gems when inspecting another player."],
+							get = function(info) return E.db.general.itemLevel.displayInspectInfo end,
+							set = function(info, value)
+								E.db.general.itemLevel.displayInspectInfo = value;
+								M:ToggleItemLevelInfo()
+							end
+						},
+						fontGroup = {
+							order = 3,
+							type = 'group',
+							name = L["Fonts"],
+							args = {
+								level ={
+									order = 1,
+									type = 'group',
+									name = L["Item Level Font"],
+									disabled = function() return not E.db.general.itemLevel.displayCharacterInfo end,
+									get = function(info) return E.db.general.itemLevel[ info[#info] ] end,
+									set = function(info, value)
+										E.db.general.itemLevel[ info[#info] ] = value
+										M:UpdateInspectPageFonts("Character")
+										M:UpdateInspectPageFonts("Inspect")
+									end,
+									args = {
+										itemLevelFont = {
+											order = 1,
+											type = "select",
+											name = L["Font"],
+											dialogControl = 'LSM30_Font',
+											values = AceGUIWidgetLSMlists.font,
+										},
+										itemLevelFontSize = {
+											order = 2,
+											type = "range",
+											name = FONT_SIZE,
+											min = 4, max = 40, step = 1,
+										},
+										itemLevelFontOutline = {
+											order = 3,
+											type = "select",
+											name = L["Font Outline"],
+											values = {
+												["NONE"] = NONE,
+												["OUTLINE"] = "OUTLINE",
+												["MONOCHROMEOUTLINE"] = "MONOCROMEOUTLINE",
+												["THICKOUTLINE"] = "THICKOUTLINE",
+											},
+										},
+									},
+								},
+								enchants = {
+									order = 2,
+									type = 'group',
+									name = L["Enchants Font"],
+									disabled = function() return not E.db.general.itemLevel.displayInspectInfo end,
+									get = function(info) return E.db.general.itemLevel[ info[#info] ] end,
+									set = function(info, value)
+										E.db.general.itemLevel[ info[#info] ] = value
+										M:UpdateInspectPageFonts("Character")
+										M:UpdateInspectPageFonts("Inspect")
+									end,
+									args = {
+										enchantFont = {
+											order = 1,
+											type = "select",
+											name = L["Font"],
+											dialogControl = 'LSM30_Font',
+											values = AceGUIWidgetLSMlists.font,
+										},
+										enchantFontSize = {
+											order = 2,
+											type = "range",
+											name = FONT_SIZE,
+											min = 4, max = 40, step = 1,
+										},
+										enchantFontOutline = {
+											order = 3,
+											type = "select",
+											name = L["Font Outline"],
+											values = {
+												["NONE"] = NONE,
+												["OUTLINE"] = "OUTLINE",
+												["MONOCHROMEOUTLINE"] = "MONOCROMEOUTLINE",
+												["THICKOUTLINE"] = "THICKOUTLINE",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		misc = {
+			order = 12,
+			type = "group",
+			name = L["Miscellaneous"],
+			get = function(info) return E.db.general[ info[#info] ] end,
+			set = function(info, value) E.db.general[ info[#info] ] = value end,
+			args = {
+				interruptAnnounce = {
+					order = 1,
+					name = L["Announce Interrupts"],
+					desc = L["Announce when you interrupt a spell to the specified chat channel."],
+					type = 'select',
+					values = {
+						['NONE'] = NONE,
+						['SAY'] = SAY,
+						['PARTY'] = L["Party Only"],
+						['RAID'] = L["Party / Raid"],
+						['RAID_ONLY'] = L["Raid Only"],
+						["EMOTE"] = CHAT_MSG_EMOTE,
+					},
+				},
+				autoRepair = {
+					order = 2,
+					name = L["Auto Repair"],
+					desc = L["Automatically repair using the following method when visiting a merchant."],
+					type = 'select',
+					values = {
+						['NONE'] = NONE,
+						['GUILD'] = GUILD,
+						['PLAYER'] = PLAYER,
+					},
+				},
+				autoAcceptInvite = {
+					order = 3,
+					name = L["Accept Invites"],
+					desc = L["Automatically accept invites from guild/friends."],
+					type = 'toggle',
+				},
+				autoRoll = {
+					order = 4,
+					name = L["Auto Greed/DE"],
+					desc = L["Automatically select greed or disenchant (when available) on green quality items. This will only work if you are the max level."],
+					type = 'toggle',
+					disabled = function() return not E.private.general.lootRoll end
 				},
 			},
 		},

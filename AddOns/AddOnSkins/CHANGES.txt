@@ -1,73 +1,16 @@
-lightweight tag a0715928e22003e6957cae2695d8e0330a291c75 4.08
+lightweight tag bf152f8a31671b7c9e2451979f8062a3f569b62a 4.10
 Author:	Azilroka <darktemplar9900@yahoo.com>
-Date:	Sat Jan 12 11:45:29 2019 -0600
+Date:	Thu Feb 21 17:02:32 2019 -0600
 
-commit a0715928e22003e6957cae2695d8e0330a291c75
+commit bf152f8a31671b7c9e2451979f8062a3f569b62a
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Jan 12 11:45:29 2019 -0600
+Date:   Thu Feb 21 17:02:32 2019 -0600
 
-    4.08
+    4.10
 
-commit 4cf7982baeac81f92ad9f03be0da0b6e3e5204fc
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Jan 12 11:39:21 2019 -0600
-
-    Artifact / PvP / WorldMap
-
-commit 27e23e51bcafd192daa2126720fbec370672b9b0
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Jan 6 22:43:25 2019 -0600
-
-    BigWigs cleanup by Simpy
-
-commit f3a46bb172f042aec3ed2ce25c22d9a3409499f5
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Thu Jan 3 22:55:20 2019 -0600
-
-    Order Hall / WorldMap
-
-commit d39290ceff1be0c4c7fbeffd3d455a7dfdf608de
+commit dab7d3f4e5337ca613151e4852d7ef6b7ecc3b57
 Author: Merathilis <neo0608@gmail.com>
-Date:   Fri Dec 28 12:29:40 2018 +0100
+Date:   Thu Feb 21 14:56:50 2019 +0100
 
-    Fix typo.
-
-commit 4c4a74b516b88f7a5b494fadae64c0ab63f760f4
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Thu Dec 27 17:56:58 2018 -0600
-
-    Theme & Shadows (WIP)
-
-commit 8dd006cb42b700018c117cf4707df0b88fb78595
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Wed Dec 26 21:42:32 2018 -0600
-
-    Azerite / Allied Races
-
-commit b59f8e6d70b26374df7d70fd43f52265a87645dc
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Mon Dec 24 12:24:26 2018 -0600
-
-    World Map / Quest
-
-commit 4e66795af2304813d2639a7fe704b39da9d97366
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Thu Dec 20 19:25:48 2018 -0600
-
-    Ace3 SubModul
-    
-    
-    Added submodule Libs/Ace3
-
-commit 52ed705848cc6b2e313a36ffa8b5717c2a8d3463
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Thu Dec 20 19:20:01 2018 -0600
-
-    Yea...
-
-commit cc0140229bde5ec751dd31d1e811001028a24340
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Thu Dec 20 19:17:49 2018 -0600
-
-    Retry this.. Torhal saved the day?
+    BW statusbar color update.
 

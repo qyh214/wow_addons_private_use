@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod(2342, "DBM-ZuldazarRaid", 2, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18244 $"):sub(12, -3))
---mod:SetCreatureID(138967)--145261 or 147564
+mod:SetRevision(("$Revision: 18401 $"):sub(12, -3))
+mod:SetCreatureID(145261)
 mod:SetEncounterID(2271)
 --mod:DisableESCombatDetection()
 mod:SetZone()
 --mod:SetBossHPInfoToHighest()
 --mod:SetUsedIcons(1, 2, 8)
-mod:SetHotfixNoticeRev(18175)
+mod:SetHotfixNoticeRev(18355)
 mod:SetMinSyncRevision(18175)
 --mod.respawnTime = 35
 
@@ -18,10 +18,10 @@ mod:SetWipeTime(30)
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 282939 287659 287070 285995 284941 283947 283606 289906 289155",
 	"SPELL_CAST_SUCCESS 283507 287648 284470 287072 285014 287037 285505 286541",
-	"SPELL_AURA_APPLIED 284798 283507 287648 284470 287072 285014 287037 284105 287424 289776 284664 284814 284881 284527",
+	"SPELL_AURA_APPLIED 284798 283507 287648 284470 287072 285014 287037 284105 287424 289776 284664 284814 284881 284527 289383",
 	"SPELL_AURA_APPLIED_DOSE 284664",
 	"SPELL_AURA_REFRESH 284470",
-	"SPELL_AURA_REMOVED 284798 283507 287648 284470 287072 285014 287424 289776 284664 284527",
+	"SPELL_AURA_REMOVED 284798 283507 287648 284470 287072 285014 287424 289776 284664 284527 289383",
 	"SPELL_AURA_REMOVED_DOSE 284664",
 	"UNIT_DIED"
 --	"UNIT_SPELLCAST_START boss1 boss2 boss3"
@@ -31,17 +31,17 @@ mod:RegisterEventsInCombat(
 (ability.id = 282939 or ability.id = 287659 or ability.id = 287070 or ability.id = 285995 or ability.id = 284941 or ability.id = 283947 or ability.id = 283606 or ability.id = 289906 or ability.id = 289155) and type = "begincast"
  or (ability.id = 283507 or ability.id = 287648 or ability.id = 284470 or ability.id = 287072 or ability.id = 285014 or ability.id = 287037 or ability.id = 285505 or ability.id = 286541) and type = "cast"
 --]]
---TODO, more trap work, especially ruby beam targetting
---TODO, auto correction code (for tank ability at least)
+--TODO, work on boss and bar behaviors when soloing this raid one day (assuming blizzard makes it so one boss running out of their tunnel across to other tunnel doesn't auto reset boss, because that will happen when soloing
 --The Zandalari Crown Jewels
 local warnGrosslyIncandescent			= mod:NewTargetNoFilterAnnounce(284798, 1)
+local warnChaoticDisplacement			= mod:NewTargetAnnounce(289383, 3)
 --Stage One: Raiding The Vault
 ----The Hand of In'zashi
 local warnVolatileCharge				= mod:NewTargetAnnounce(283507, 2)
 ----Traps
 local warnFlameJet						= mod:NewSpellAnnounce(285479, 3)
 local warnRubyBeam						= mod:NewSpellAnnounce(284081, 3)
-local warnHexofLethargy						= mod:NewTargetAnnounce(284470, 2)
+local warnHexofLethargy					= mod:NewTargetAnnounce(284470, 2)
 --Stage Two: Toppling the Guardian
 local warnPhase2						= mod:NewPhaseAnnounce(2, 2)
 local warnLiquidGold					= mod:NewTargetAnnounce(287072, 2)
@@ -53,6 +53,8 @@ local yellGrosslyIncandescent			= mod:NewYell(284798)
 --Stage One: Raiding The Vault
 ----General
 local specWarnCrush						= mod:NewSpecialWarningDodge(283606, nil, nil, nil, 2, 2)
+local specWarnChaoticDisplacement		= mod:NewSpecialWarningYou(289383, nil, nil, nil, 3, 2)
+local yellChaoticDisplacement			= mod:NewYell(289383, nil, false)
 ----The Hand of In'zashi
 local specWarnVolatileCharge			= mod:NewSpecialWarningMoveAway(283507, nil, nil, nil, 1, 2)
 local yellVolatileCharge				= mod:NewYell(283507)
@@ -60,7 +62,7 @@ local yellVolatileChargeFade			= mod:NewFadesYell(283507)
 ----Yalat's Bulwark
 local specWarnFlamesofPunishment		= mod:NewSpecialWarningDodge(282939, nil, nil, nil, 2, 8)
 ----Traps
-local specWarnHexofLethargy				= mod:NewSpecialWarningMoveAway(284470, nil, nil, nil, 1, 2)
+local specWarnHexofLethargy				= mod:NewSpecialWarningYou(284470, nil, nil, nil, 1, 2)
 local yellHexofLethargy					= mod:NewYell(284470)
 local yellHexofLethargyFade				= mod:NewFadesYell(284470)
 --Stage Two: Toppling the Guardian
@@ -76,20 +78,21 @@ local specWarnCoinSweep					= mod:NewSpecialWarningTaunt(287037, nil, nil, nil, 
 local specWarnSurgingGold				= mod:NewSpecialWarningDodge(289155, nil, nil, nil, 2, 2)
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 8)
 
---mod:AddTimerLine(DBM:EJ_GetSectionInfo(18527))
 --General
+mod:AddTimerLine(DBM:EJ_GetSectionInfo(19495))
 local timerThiefsBane					= mod:NewBuffFadesTimer(30, 287424, nil, nil, nil, 3)
 --Stage One: Raiding The Vault
 local timerCrushCD						= mod:NewCDSourceTimer(55, 283604, nil, nil, nil, 3)--Both
+local timerChaoticDisplacementCD		= mod:NewCDTimer(30.3, 289383, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)--Mythic
 ----The Hand of In'zashi
 local timerVolatileChargeCD				= mod:NewCDTimer(12.1, 283507, nil, nil, nil, 3)
 ----Yalat's Bulwark
 local timerFlamesofPunishmentCD			= mod:NewCDTimer(23, 282939, nil, nil, nil, 3)
 ----Traps
---local timerFlameJet						= mod:NewBuffActiveTimer(12, 285479, nil, nil, nil, 3)
 local timerRubyBeam						= mod:NewBuffActiveTimer(8, 284081, nil, nil, nil, 3)
 local timerHexofLethargyCD					= mod:NewCDTimer(21.8, 284470, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON)
 --Stage Two: Toppling the Guardian
+mod:AddTimerLine(DBM:EJ_GetSectionInfo(19496))
 local timerDrawPower					= mod:NewCastTimer(5, 282939, nil, nil, nil, 6)
 local timerLiquidGoldCD					= mod:NewCDTimer(15.6, 287072, nil, nil, nil, 3)
 local timerSpiritsofGoldCD				= mod:NewCDTimer(65.6, 285995, nil, nil, nil, 1)
@@ -104,11 +107,11 @@ local timerSurgingGoldCD				= mod:NewCDTimer(42.5, 289155, nil, nil, nil, 3)--Re
 --local countdownRupturingBlood				= mod:NewCountdown("Alt12", 244016, false, 2, 3)
 --local countdownFelstormBarrage			= mod:NewCountdown("AltTwo32", 244000, nil, nil, 3)
 
+mod:AddNamePlateOption("NPAuraOnGoldenRadiance", 289776)
+--mod:AddSetIconOption("SetIconDarkRev", 273365, true)
 --mod:AddSetIconOption("SetIconGift", 255594, true)
 --mod:AddRangeFrameOption("8/10")
 mod:AddInfoFrameOption(284664, true)
-mod:AddNamePlateOption("NPAuraOnGoldenRadiance", 289776)
---mod:AddSetIconOption("SetIconDarkRev", 273365, true)
 
 mod.vb.phase = 1
 mod.vb.wailCast = 0
@@ -132,16 +135,21 @@ do
 		table.wipe(lines)
 		table.wipe(sortedLines)
 		--The Zandalari Crown Jewels Helper
-		--Incandescent Stacks/Diamond Absorb Checks
+		--Diamond Absorb Checks
+		for uId in DBM:GetGroupMembers() do
+			local unitName = DBM:GetUnitFullName(uId)
+			local absorb = diamondTargets[unitName]
+			if absorb then
+				local absorbAmount = select(16, DBM:UnitDebuff(uId, 284527)) or 0
+				addLine(unitName, DBM_CORE_SHIELD.."-"..math.floor(absorbAmount))
+			end
+		end
+		--Incandescent Stacks
 		for uId in DBM:GetGroupMembers() do
 			local unitName = DBM:GetUnitFullName(uId)
 			local count = incandescentStacks[unitName]
-			local absorb = diamondTargets[unitName]
 			if count then
 				addLine(unitName, Incan.."-"..count)
-			elseif absorb then
-				local absorbAmount = select(16, DBM:UnitDebuff(uId, 284527)) or 0
-				addLine(unitName, DBM_CORE_SHIELD.."-"..math.floor(absorbAmount))
 			end
 		end
 		--Incandescent Full
@@ -157,7 +165,7 @@ do
 		end
 		--Player personal checks (Always Tracked)
 		local spellName2, _, currentStack2, _, _, expireTime2 = DBM:UnitDebuff("player", 284573)
-		if spellName2 and currentStack2 then--Personal Tailwinds count
+		if spellName2 and currentStack2 and expireTime2 then--Personal Tailwinds count
 			local remaining2 = expireTime2-GetTime()
 			addLine(spellName2.." ("..currentStack2..")", math.floor(remaining2))
 		end
@@ -165,7 +173,7 @@ do
 		if trackedGemBuff then
 			local spellName3, _, currentStack3 = DBM:UnitDebuff("player", 284817, 284883)
 			if spellName3 and currentStack3 then--Personal Earthen Roots/Unleashed Rage count
-				addLine(spellName3.." ("..currentStack2..")", "")
+				addLine(spellName3.." ("..currentStack3..")", "")
 			end
 		end
 		--Other Considerations
@@ -178,6 +186,20 @@ do
 	end
 end
 
+--Single check, assume that if not near one boss you are near the other
+local function updatePlayerTimers(self)
+	self:Unschedule(updatePlayerTimers)
+	if self:CheckBossDistance(145273, true) then--The Hand of In'zashi
+		timerFlamesofPunishmentCD:SetFade(true)
+		timerCrushCD:SetSTFade(false, L.Hand)
+		timerCrushCD:SetSTFade(true, L.Bulwark)
+	else--145274 Yalat's Bulwark
+		timerFlamesofPunishmentCD:SetFade(false)
+		timerCrushCD:SetSTFade(true, L.Hand)
+		timerCrushCD:SetSTFade(false, L.Bulwark)
+	end
+end
+
 function mod:OnCombatStart(delay)
 	table.wipe(incandescentStacks)
 	table.wipe(grosslyIncandescentTargets)
@@ -186,8 +208,11 @@ function mod:OnCombatStart(delay)
 	self.vb.phase = 1
 	self.vb.wailCast = 0
 	self.vb.bulwarkCrush = 0
-	timerVolatileChargeCD:Start(1-delay)
-	timerFlamesofPunishmentCD:Start(1-delay)
+	timerVolatileChargeCD:Start(6-delay)
+	timerFlamesofPunishmentCD:Start(17-delay)
+	if self:IsMythic() then
+		timerChaoticDisplacementCD:Start(30.3-delay)
+	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(OVERVIEW)
 		DBM.InfoFrame:Show(8, "function", updateInfoFrame, false, false)
@@ -195,6 +220,7 @@ function mod:OnCombatStart(delay)
 	if self.Options.NPAuraOnGoldenRadiance then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
+	self:Schedule(1, updatePlayerTimers, self)
 end
 
 function mod:OnCombatEnd()
@@ -212,10 +238,13 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 282939 or spellId == 287659 then
-		if self:CheckTankDistance(args.sourceGUID, 43) then
+		if self:CheckBossDistance(args.sourceGUID, true) then
 			specWarnFlamesofPunishment:Show()
 			specWarnFlamesofPunishment:Play("behindboss")
 			specWarnFlamesofPunishment:ScheduleVoice(1.5, "keepmove")
+			timerFlamesofPunishmentCD:SetFade(false)
+		else
+			timerFlamesofPunishmentCD:SetFade(true)
 		end
 		timerFlamesofPunishmentCD:Start()
 	elseif spellId == 287070 then
@@ -223,6 +252,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.wailCast = 0
 		--Do these stop?
 		timerHexofLethargyCD:Stop()
+		timerChaoticDisplacementCD:Stop()
 		warnPhase2:Show()
 		timerDrawPower:Start()
 		--Normal Mode, may differ elsewhere
@@ -247,16 +277,21 @@ function mod:SPELL_CAST_START(args)
 		--timerWailofGreedCD:Start()
 	elseif spellId == 283947 and self:AntiSpam(5, 1) then--Flame Jet
 		warnFlameJet:Show()
-		--timerFlameJet:Start(12)
-	elseif spellId == 283606 or spellId == 289906 then
-		if self:CheckTankDistance(args.sourceGUID, 43) then
+	elseif spellId == 283606 then
+		timerCrushCD:Start(15.8, L.Hand)--7.1, 30.5, 26.7, 15.8, 26.7, 15.8, 25.6, 15.8, 15.8, 18.2, 15.8, 15.8
+		if self:CheckBossDistance(args.sourceGUID, true) then
 			specWarnCrush:Show()
 			specWarnCrush:Play("watchstep")
+		else
+			timerCrushCD:SetSTFade(true, L.Hand)
 		end
-		if spellId == 289906 then--Yalat's Bulwark
-			timerCrushCD:Start(20.6, L.Bulwark)--7.7, 21.9, 31.6, 21.8, 20.6, 20.7, 18.2, 21.8
-		else--The Hand of In'zashi
-			timerCrushCD:Start(15.8, L.Hand)--7.1, 30.5, 26.7, 15.8, 26.7, 15.8, 25.6, 15.8, 15.8, 18.2, 15.8, 15.8
+	elseif spellId == 289906 then
+		timerCrushCD:Start(20.6, L.Bulwark)--7.7, 21.9, 31.6, 21.8, 20.6, 20.7, 18.2, 21.8
+		if self:CheckBossDistance(args.sourceGUID, true) then
+			specWarnCrush:Show()
+			specWarnCrush:Play("watchstep")
+		else
+			timerCrushCD:SetSTFade(true, L.Bulwark)
 		end
 	elseif spellId == 289155 then
 		specWarnSurgingGold:Show()
@@ -296,6 +331,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerCrushCD:Start(14.5, L.Bulwark)
 			timerFlamesofPunishmentCD:Start(24.2)
 		end
+		updatePlayerTimers(self)
 	end
 end
 
@@ -337,7 +373,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 284470 then
 		if args:IsPlayer() then
 			specWarnHexofLethargy:Show()
-			specWarnHexofLethargy:Play("runout")
+			specWarnHexofLethargy:Play("stopmove")
 			yellHexofLethargy:Yell()
 			yellHexofLethargyFade:Cancel()
 			yellHexofLethargyFade:Countdown(30)
@@ -378,9 +414,26 @@ function mod:SPELL_AURA_APPLIED(args)
 		trackedGemBuff = true
 	elseif spellId == 284527 then--Diamond
 		diamondTargets[args.destName] = true
+	elseif spellId == 289383 then--Chaotic Displaecment
+		warnChaoticDisplacement:CombinedShow(0.5, args.destName)
+		if args:IsPlayer() then
+			specWarnChaoticDisplacement:Show()
+			specWarnChaoticDisplacement:Play("targetyou")
+			yellChaoticDisplacement:Yell()
+		end
+		if self:AntiSpam(10, 3) then
+			timerChaoticDisplacementCD:Start()
+		end
 	end
 end
 mod.SPELL_AURA_REFRESH = mod.SPELL_AURA_APPLIED
+
+function mod:SPELL_AURA_APPLIED_DOSE(args)
+	local spellId = args.spellId
+	if spellId == 284664 then
+		incandescentStacks[args.destName] = args.amount
+	end
+end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
@@ -412,6 +465,10 @@ function mod:SPELL_AURA_REMOVED(args)
 		incandescentStacks[args.destName] = nil
 	elseif spellId == 284527 then--Diamond
 		diamondTargets[args.destName] = nil
+	elseif spellId == 289383 then--Chaotic Displaecment
+		if args:IsPlayer() then
+			self:Schedule(1, updatePlayerTimers, self)
+		end
 	end
 end
 

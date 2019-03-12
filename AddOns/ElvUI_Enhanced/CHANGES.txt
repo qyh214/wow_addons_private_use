@@ -1,23 +1,16 @@
-tag c45ab0d06ee7e71852d7d021b009ab2d3fdd98ed 3.3.5-beta1
+tag 1d828319c81b1b3b95a347b0e1b4d7a1682cba55 3.3.6-beta1
 Author:	Feraldin <nickbock@hoarder.bocky.nl>
-Date:	Wed Jan 23 09:21:21 2019 +0100
+Date:	Mon Feb 25 20:11:40 2019 +0100
 
-3.3.5-beta1
-* Progression updated with Battle of Dazar'alor and Crucible of Storms
+3.3.6-beta1
+* Fix for ElvUI 10.88 (https://github.com/nickbock/ElvUI_Enhanced_Again/issues/91)
 
-commit 6051a5146ef5360f25e1c3017e976da8c6986905
+commit df669ef265ec5a962395ac0e3165cea6ce758dd9
 Author: Nick <git@bockmeulen.nl>
-Date:   Sat Jan 5 11:27:05 2019 +0100
+Date:   Mon Feb 25 20:09:56 2019 +0100
 
-    Progression updated for new 8.1 raids
+    Fix for ElvUI 10.88
     
-    Progression updated with Battle of Dazar'alor and Crucible of Storms
-
-commit 6051a5146ef5360f25e1c3017e976da8c6986905
-Author: Nick <git@bockmeulen.nl>
-Date:   Sat Jan 5 11:27:05 2019 +0100
-
-    Progression updated for new 8.1 raids
-    
-    Progression updated with Battle of Dazar'alor and Crucible of Storms
+    3.3.6-beta1
+    * Fix for ElvUI 10.88 (https://github.com/nickbock/ElvUI_Enhanced_Again/issues/91)
 

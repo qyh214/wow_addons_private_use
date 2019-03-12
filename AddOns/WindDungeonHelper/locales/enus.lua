@@ -62,3 +62,5 @@ L["unit_W"] = "W"
 L["Western - k"] = true
 L["Asia - W"] = true
 L["Damage accuracy"] = true
+-- Enemy Progress
+L["Enemy Progress"] = true

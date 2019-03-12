@@ -336,6 +336,10 @@ function AS:Init(event, addon)
 		AS:RegisterEvent('PET_BATTLE_CLOSE', 'AddNonPetBattleFrames')
 		AS:RegisterEvent('PET_BATTLE_OPENING_START', 'RemoveNonPetBattleFrames')
 		AS:RegisterEvent('PLAYER_ENTERING_WORLD', 'StartSkinning')
+
+		if AS.LSM then
+			AS.LSM:Register('statusbar', 'Solid', [[Interface\Buttons\WHITE8X8]])
+		end
 	end
 end
 
@@ -394,18 +398,18 @@ function AS:BugReportFrame(ErrorIndex)
 			BugReportFrame[Name].Text = BugReportFrame[Name]:CreateFontString(nil, 'OVERLAY', "ChatFontNormal")
 		end
 
-		BugReportFrame.GitLab:SetPoint("TOP", 0, -180)
+		BugReportFrame.GitLab:SetPoint("TOP", 0, -30)
 		BugReportFrame.GitLab:SetSize(250, 19)
 		BugReportFrame.GitLab:SetText(AS.TicketTracker)
 		BugReportFrame.GitLab.Text:SetPoint('RIGHT', BugReportFrame.GitLab, 'LEFT', -10, 0)
 		BugReportFrame.GitLab.Text:SetText('GitLab')
 
-		BugReportFrame.BugTitle:SetPoint("TOP", 0, -210)
+		BugReportFrame.BugTitle:SetPoint("TOP", 0, -80)
 		BugReportFrame.BugTitle:SetSize(250, 19)
 		BugReportFrame.BugTitle.Text:SetPoint('RIGHT', BugReportFrame.BugTitle, 'LEFT', -10, 0)
 		BugReportFrame.BugTitle.Text:SetText('Ticket Title')
 
-		BugReportFrame.BugError:SetPoint("TOP", 0, -260)
+		BugReportFrame.BugError:SetPoint("TOP", 0, -130)
 		BugReportFrame.BugError:SetSize(350, 150)
 		BugReportFrame.BugError:SetMultiLine(true)
 		BugReportFrame.BugError.Text:SetPoint('BOTTOM', BugReportFrame.BugError, 'TOP', 0, 5)

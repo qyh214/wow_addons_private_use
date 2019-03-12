@@ -1,6 +1,6 @@
-## Interface: 80000
+## Interface: 80100
 ## Author: houshuu
-## Version: 1.2.2
+## Version: 1.3.2
 ## Title: |cff0288d1W|r|cff039be5i|r|cff03a9f4n|r|cff29b6f6d|r Dungeon Helper
 ## Title-zhCN: |cff039be5W|r|cff03a9f4i|r|cff29b6f6n|r|cff4fc3f7d|r 地下城助手
 ## Title-zhTW: |cff039be5W|r|cff03a9f4i|r|cff29b6f6n|r|cff4fc3f7d|r 地城助手
@@ -14,13 +14,13 @@
 ## X-Feedback: https://github.com/fang2hou/WindDungeonHelper/issues
 
 # Library
-libs\load_libs.xml
+Libs\Load_Libs.xml
 
 # Localization
-locales\load_locales.xml
+Locales\Load_Locales.xml
 
 # Initialize
-init.lua
+Init.lua
 
 # Module
-modules\load_modules.xml
+Modules\Load_Modules.xml

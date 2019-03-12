@@ -31,6 +31,7 @@ local defaults = {
 		show_crafted = false,
 
 		show_totals = false,
+		use_altoholic = true,
 		show_ilvl = false,
 
 		fade_own = 10,
@@ -112,7 +113,11 @@ function events.item(player, link, num)
 		end
 		local row = addon:AddRow(icon, (player and opt.fade_other or opt.fade_own), r, g, b)
 		local num = tonumber(num) or 1
-		row:SetTexts(player, num > 1 and ("%sx%d"):format(link, num) or link, GetItemCount(link) + num, nr, ng, nb)
+		local total = GetItemCount(link)
+		if opt.show_totals and opt.use_altoholic and Altoholic then
+			total = Altoholic:GetItemCount(Altoholic:GetIDFromLink(link))
+		end
+		row:SetTexts(player, num > 1 and ("%sx%d"):format(link, num) or link, total + num, nr, ng, nb)
 		if opt.show_ilvl and level > 1 then
 			row.ilvl:SetText(level)
 		end

@@ -30,7 +30,7 @@ end
 
 LibEvent:attachEvent("VARIABLES_LOADED", function()
     --CloseButton
-    if (ItemRefCloseButton) then
+    if (ItemRefCloseButton and not IsAddOnLoaded("ElvUI")) then
         ItemRefCloseButton:SetSize(14, 14)
         ItemRefCloseButton:SetPoint("TOPRIGHT", -4, -4)
         ItemRefCloseButton:SetNormalTexture("Interface\\\Buttons\\UI-StopButton")

@@ -1,3 +1,4 @@
+-- Based on ElitismHelper
 local AddOnName, WDH = ...
 local L, B, C, DB = WDH.L, WDH.Base, WDH.Config, WDH.DataBase
 local gsub = string.gsub
@@ -267,17 +268,14 @@ C.ModulesOption.AvoidableDamage = {
 }
 
 local Spells = {
-	-- Debug
-	-- [252144] = 1,
-	-- [252150] = 1,
-
 	-- Affixes
 	[209862] = 20,		-- Volcanic Plume (Environment)
 	[226512] = 20,		-- Sanguine Ichor (Environment)
+	[288694] = 20,		-- Shadow Smash (Environment) (Season 2)
 
 	-- Freehold
 	[272046] = 20,		--- Dive Bomb (Sharkbait)
-	[257426] = 0.1,		--- Brutal Backhand (Irontide Enforcer)
+	[257426] = 20,		--- Brutal Backhand (Irontide Enforcer)
 	[258352] = 20,		--- Grapeshot (Captain Eudora)
 	[272374] = 20,		--- Whirlpool of Blades
 	[256546] = 20,		--- Shark Tornado
@@ -295,7 +293,6 @@ local Spells = {
 	[268280] = 20,		--- Tidal Pod (Tidesage Enforcer)
 	[276286] = 20,		--- Slicing Hurricane (Environment)
 	[276292] = 20,		--- Whirlign Slam (Ironhull Apprentice)
-	--[269104] = 20,		--- Explosive Void (Lord Stormsong)
 	[267385] = 20,		--- Tentacle Slam (Vol'zith the Whisperer)
 	
 	-- Siege of Boralus
@@ -304,7 +301,6 @@ local Spells = {
 	[272426] = 20,		--- Sighted Artillery
 	[272140] = 20,		--- Iron Volley
 	[273681] = 20,		--- Heavy Hitter (Chopper Redhook)
-	
 	
 	-- Tol Dagor
 	[257785] = 20,		--- Flashing Daggers
@@ -343,7 +339,7 @@ local Spells = {
 	[271564] = 20,		--- Embalming Fluid (Embalming Fluid)
 	[270485] = 20,		--- Blooded Leap (Spectral Berserker)
 	[267639] = 20,		--- Burn Corruption (Mchimba the Embalmer)
-	[270931] = 20,		-- Darkshot
+	[270931] = 20,		--- Darkshot
 	
 	-- The MOTHERLODE!!
 	[257371] = 20,		--- Gas Can (Mechanized Peace Keeper)

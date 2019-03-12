@@ -187,7 +187,7 @@ end
 
 -- PVP圖標
 function addon:GetPVPIcon(unit)
-    if (UnitIsPVPFreeForAll(unit) and UnitPrestige(unit) and UnitPrestige(unit) <= 0) then
+    if (UnitIsPVPFreeForAll(unit)) then
         return self.icons.pvp
     end
 end
@@ -272,14 +272,16 @@ function addon:GetNpcTitle(tip)
 end
 
 --地區
-function addon:GetZone(unit)
+function addon:GetZone(unit, unitname)
     if not IsInGroup() then return end
     local t, i = string.match(unit, "(.-)(%d+)")
-    if (i and (t == "party" or t == "raid")) then
-        if (t == "party" and UnitIsGroupLeader("player")) then
-            return select(7, GetRaidRosterInfo(i+1))
-        else
-            return select(7, GetRaidRosterInfo(i))
+    if (i and t == "raid") then
+        return select(7, GetRaidRosterInfo(i))
+    elseif (i and t == "party") then
+        local name, zone
+        for j = 1, 4 do
+            name, _, _, _, _, _, zone = GetRaidRosterInfo(j)
+            if (name == unitname) then return zone end
         end
     end
 end
@@ -329,7 +331,7 @@ function addon:GetUnitInfo(unit)
     t.classifRare  = (classif == "rare" or classif == "rareelite") and RARE
     t.isPlayer     = UnitIsPlayer(unit) and PLAYER
     t.moveSpeed    = self:GetUnitSpeed(unit)
-    t.zone         = self:GetZone(unit)
+    t.zone         = self:GetZone(unit, t.name, t.realm)
     t.unit         = unit                     --unit
     t.level        = level                    --1~123|-1
     t.effectiveLevel = effectiveLevel or level

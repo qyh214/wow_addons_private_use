@@ -13,15 +13,16 @@ function AS:Blizzard_ArchaeologyUI(event, addon)
 	AS:SkinStatusBar(ArchaeologyFrame.rankBar)
 
 	AS:SkinButton(ArchaeologyFrame.artifactPage.solveFrame.solveButton, true)
+	AS:SkinButton(ArchaeologyFrame.artifactPage.backButton, true)
+
 	AS:SkinStatusBar(ArchaeologyFrame.artifactPage.solveFrame.statusBar)
-	ArchaeologyFrame.artifactPage.solveFrame.statusBar:SetStatusBarColor(0.03125, .85, 0)
 
 	for i = 1, ARCHAEOLOGY_MAX_RACES do
 		local frame = ArchaeologyFrame.summaryPage['race'..i]
 		local artifact = ArchaeologyFrame.completedPage['artifact'..i]
 		frame.raceName:SetTextColor(1, 1, 1)
 
-		artifact.border:SetTexture(nil)
+		artifact.border:SetTexture()
 		AS:SkinTexture(artifact.icon, true)
 		artifact.artifactName:SetTextColor(1, .8, .1)
 		artifact.artifactSubText:SetTextColor(0.6, 0.6, 0.6)
@@ -59,8 +60,7 @@ function AS:Blizzard_ArchaeologyUI(event, addon)
 	AS:SkinArrowButton(ArchaeologyFrame.completedPage.nextPageButton)
 
 	AS:StripTextures(ArcheologyDigsiteProgressBar)
-	AS:SkinStatusBar(ArcheologyDigsiteProgressBar.FillBar)
-	ArcheologyDigsiteProgressBar.FillBar:SetStatusBarColor(.61, .25, 0)
+	AS:SkinStatusBar(ArcheologyDigsiteProgressBar.FillBar, {.61, .25, 0})
 
 	AS:UnregisterSkinEvent(addon, event)
 end

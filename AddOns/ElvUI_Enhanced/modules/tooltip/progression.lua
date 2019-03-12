@@ -148,7 +148,7 @@ function TT:INSPECT_ACHIEVEMENT_READY(event, GUID)
 	self:UnregisterEvent("INSPECT_ACHIEVEMENT_READY")
 end
 
-hooksecurefunc(TT, 'ShowInspectInfo', function(self, tt, unit, level, r, g, b, numTries)
+hooksecurefunc(TT, 'AddInspectInfo', function(self, tt, unit, level, r, g, b, numTries)
 	if InCombatLockdown() then return end
 	if not E.db.tooltip.progressInfo then return end
 	if not (unit and CanInspect(unit)) then return end

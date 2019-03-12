@@ -32,7 +32,7 @@ function UF:Construct_Unit_GPS(frame, unit)
 end
 
 function UF:Construct_HealGlow(frame)
-	frame:CreateShadow('Default')
+	frame:CreateShadow()
 	local x = frame.shadow
 	frame.shadow = nil
 	x:Hide()

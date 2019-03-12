@@ -80,6 +80,20 @@ L= DBM:GetModLocalization(2337)
 ---------------------------
 L= DBM:GetModLocalization(2343)
 
+L:SetOptionLocalization({
+	ShowOnlySummary2	= "Hide player names on reverse range check and show only the summary info (the total nearby player count)",
+	InterruptBehavior	= "Set elemental interrupt behavior (Will override everyone elses setting if you are raid leader)",
+	Three				= "3 person rotation ",--Default
+	Four				= "4 person rotation ",
+	Five				= "5 person rotation "
+})
+
+L:SetMiscLocalization({
+	Port			=	"port side",
+	Starboard		=	"starboard side",
+	Freezing		=	"Freezing in %s"
+})
+
 -------------
 --  Trash  --
 -------------

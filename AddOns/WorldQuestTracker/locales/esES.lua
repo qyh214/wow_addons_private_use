@@ -7,10 +7,8 @@ L["S_DECREASESIZE"] = "Disminuir el Tamaño"
 L["S_ENABLED"] = "Habilitado"
 L["S_ERROR_NOTIMELEFT"] = "Esta misión no tiene tiempo restante."
 L["S_ERROR_NOTLOADEDYET"] = "Esta misión no está cargada todavía, por favor espera unos segundos."
---[[Translation missing --]]
---[[ L["S_FACTION_TOOLTIP_SELECT"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_FACTION_TOOLTIP_TRACK"] = ""--]] 
+L["S_FACTION_TOOLTIP_SELECT"] = "Click: Selecciona esta facción"
+L["S_FACTION_TOOLTIP_TRACK"] = "Shift + Click: Seguimiento de las misiones de esta facción"
 L["S_FLYMAP_SHOWTRACKEDONLY"] = "Sólo en rastreo"
 L["S_FLYMAP_SHOWTRACKEDONLY_DESC"] = "Mostrar sólo misiones en rastreo"
 L["S_FLYMAP_SHOWWORLDQUESTS"] = "Muestra misiones del mundo"
@@ -67,10 +65,8 @@ L["S_MAPBAR_OPTIONSMENU_EQUIPMENTICONS"] = "Iconos de equipo"
 L["S_MAPBAR_OPTIONSMENU_QUESTTRACKER"] = "Habilitar Rastreador de misiones"
 L["S_MAPBAR_OPTIONSMENU_REFRESH"] = "Refrescar"
 L["S_MAPBAR_OPTIONSMENU_SOUNDENABLED"] = "Habilitar sonido"
---[[Translation missing --]]
---[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_ONDISABLE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = ""--]] 
+L["S_MAPBAR_OPTIONSMENU_STATUSBAR_ONDISABLE"] = "Usar '/wqt statusbar' o la opción del addon en la parte inferior del menú de opciones para restaurar la barra de estado"
+L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = "Mostrar barra de estado"
 L["S_MAPBAR_OPTIONSMENU_STATUSBARANCHOR"] = "Anclar en la parte superior"
 L["S_MAPBAR_OPTIONSMENU_TOMTOM_WPPERSISTENT"] = "Punto de destino persistente"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_CURRENTZONE"] = "Sólo zona actual"
@@ -97,8 +93,7 @@ L["S_MAPBAR_SUMMARYMENU_MOREINFO"] = "Pulsa para más información"
 L["S_MAPBAR_SUMMARYMENU_NOATTENTION"] = "¡A ninguna de las misiones rastreadas en tus otros personajes le queda menos de 2 horas!"
 L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "Requiere atención"
 L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "Recompensas de hoy"
---[[Translation missing --]]
---[[ L["S_MAPFRAME_ALIGN_CENTER"] = ""--]] 
+L["S_MAPFRAME_ALIGN_CENTER"] = "Centro"
 --[[Translation missing --]]
 --[[ L["S_MAPFRAME_ALIGN_DESC"] = ""--]] 
 --[[Translation missing --]]

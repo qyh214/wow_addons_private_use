@@ -257,6 +257,8 @@ local methods = {
 	["SetCursorPosition"] = function(self, ...)
 		return self.editBox:SetCursorPosition(...)
 	end,
+
+
 }
 
 --[[-----------------------------------------------------------------------------

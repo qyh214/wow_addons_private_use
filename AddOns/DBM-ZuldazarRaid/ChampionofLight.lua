@@ -7,7 +7,7 @@ end
 local mod	= DBM:NewMod(dungeonID, "DBM-ZuldazarRaid", 1, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18245 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 18337 $"):sub(12, -3))
 mod:SetCreatureID(creatureID)
 mod:SetEncounterID(2265)
 --mod:DisableESCombatDetection()
@@ -22,12 +22,10 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 283598 284474 283662 284578 283628 283626 283650 283933 287469 287419",
 	"SPELL_INTERRUPT",
---	"SPELL_CAST_SUCCESS 283955",
 	"SPELL_AURA_APPLIED 284468 283619 283573 284469 283933 284436 282113 283582",
 	"SPELL_AURA_APPLIED_DOSE 283573",
 	"SPELL_AURA_REMOVED 283619 284468 284469 283933 284436",
 	"UNIT_DIED"
---	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 --[[
@@ -70,22 +68,17 @@ local timerPrayerfortheFallenCD			= mod:NewCDTimer(50.2, 287469, nil, nil, nil, 
 mod:AddTimerLine(DBM_ADDS)
 local timerBlindingFaithCD				= mod:NewCDTimer(13.4, 284474, nil, nil, nil, 2)
 
-
 --local berserkTimer					= mod:NewBerserkTimer(600)
 
-local countdownReleaseSeal				= mod:NewCountdown(50.3, 283955, true, 3, 3)
---local countdownRupturingBlood				= mod:NewCountdown("Alt12", 244016, false, 2, 3)
---local countdownFelstormBarrage			= mod:NewCountdown("AltTwo32", 244000, nil, nil, 3)
+local countdownReleaseSeal				= mod:NewCountdown(50.3, 283955, true, nil, 5)
+local countdownPrayerforFallen			= mod:NewCountdown("Alt12", 287469, true, nil, 4)
+--local countdownFelstormBarrage		= mod:NewCountdown("AltTwo32", 244000, nil, nil, 3)
 
---mod:AddSetIconOption("SetIconGift", 255594, true)
---mod:AddRangeFrameOption("8/10")
---mod:AddInfoFrameOption(258040, true)
 mod:AddNamePlateOption("NPAuraOnRet2", 284468, false)--off by default since it's basically on the mobs half the fight
 mod:AddNamePlateOption("NPAuraOnWave", 283619)
 mod:AddNamePlateOption("NPAuraOnJudgment", 283933)
 mod:AddNamePlateOption("NPAuraOnBlindingFaith", 283650)
 mod:AddNamePlateOption("NPAuraOnAngelicRenewal", 287419)
---mod:AddSetIconOption("SetIconDarkRev", 273365, true)
 
 function mod:WaveofLightTarget(targetname, uId)
 	if uId then
@@ -103,13 +96,8 @@ function mod:WaveofLightTarget(targetname, uId)
 				yellWaveofLight:Yell()
 			else
 				warnWaveofLight:Show(targetname)
-				--specWarnWaveofLightGeneral:Show()
-				--specWarnWaveofLightGeneral:Play("watchwave")
 			end
 		end
-	--else
-		--specWarnWaveofLightGeneral:Show()
-		--specWarnWaveofLightGeneral:Play("watchwave")
 	end
 end
 
@@ -120,9 +108,9 @@ function mod:OnCombatStart(delay)
 	countdownReleaseSeal:Start(50.7-delay)
 	specWarnJudgmentReckoning:Schedule(45.7-delay)
 	specWarnJudgmentReckoning:ScheduleVoice(45.7, "aesoon")
-	--timerCallToArmsCD:Start(110.4-delay)--94
 	if self:IsMythic() then
 		timerPrayerfortheFallenCD:Start(25.5-delay)
+		countdownPrayerforFallen:Start(25.5-delay)
 	end
 	if self.Options.NPAuraOnRet2 or self.Options.NPAuraOnWave or self.Options.NPAuraOnJudgment or self.Options.NPAuraOnBlindingFaith or self.Options.NPAuraOnAngelicRenewal then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
@@ -130,12 +118,6 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:OnCombatEnd()
---	if self.Options.RangeFrame then
---		DBM.RangeCheck:Hide()
---	end
---	if self.Options.InfoFrame then
---		DBM.InfoFrame:Hide()
---	end
 	if self.Options.NPAuraOnRet2 or self.Options.NPAuraOnWave or self.Options.NPAuraOnJudgment or self.Options.NPAuraOnBlindingFaith or self.Options.NPAuraOnAngelicRenewal then
 		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
 	end
@@ -155,7 +137,6 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 283662 then
 		specWarnCalltoArms:Show()
 		specWarnCalltoArms:Play("mobsoon")
-		--timerCallToArmsCD:Start(104.6)
 	elseif spellId == 284578 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnPenance:Show(args.sourceName)
 		specWarnPenance:Play("kickcast")
@@ -178,6 +159,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnPrayerfortheFallen:Show()
 		specWarnPrayerfortheFallen:Play("specialsoon")
 		timerPrayerfortheFallenCD:Start(50.2)
+		countdownPrayerforFallen:Start(50.2)
 	elseif spellId == 287419 then
 		if self.Options.NPAuraOnAngelicRenewal then
 			DBM.Nameplate:Show(true, args.sourceGUID, spellId, nil, 8)
@@ -192,15 +174,6 @@ function mod:SPELL_INTERRUPT(args)
 		end
 	end
 end
-
---[[
-function mod:SPELL_CAST_SUCCESS(args)
-	local spellId = args.spellId
-	if spellId == 283955 then
-
-	end
-end
---]]
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
@@ -300,11 +273,3 @@ function mod:UNIT_DIED(args)
 		end
 	end
 end
-
---[[
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
-	if spellId == 274315 then
-
-	end
-end
---]]

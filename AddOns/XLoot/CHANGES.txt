@@ -1,18 +1,18 @@
-tag 7a26607406426153ca4e3cc93a80103eeae00776 8.0-6
+tag 9bd5b1854658283e6ec5aa6c3d71af5743198462 8.1-1
 Author:	Xuerian <xuerian@gmail.com>
-Date:	Fri Aug 31 02:52:25 2018 -0400
+Date:	Sat Feb 9 22:50:30 2019 -0500
 
-Options fixes
+Monitor: Support Altoholic for item totals
 
-commit 5b0877a773260da355fb7e1f5de65d6295016ab5
+commit 4c58ed41a3c43da69705f251a7a71aa2a4692986
 Author: Xuerian <xuerian@gmail.com>
-Date:   Fri Aug 24 01:29:15 2018 -0400
+Date:   Sat Feb 9 22:49:57 2019 -0500
 
-    Options: Unify options formatting
+    Monitor: Support Altoholic for item totals
 
-commit 00ecdff6c0540a1faff02d3a63b0f0ac381a18eb
+commit 9327d28621140f6d6649b229f1dbac14ea44a218
 Author: Xuerian <xuerian@gmail.com>
-Date:   Fri Aug 24 01:08:40 2018 -0400
+Date:   Sat Feb 9 22:49:27 2019 -0500
 
-    Options: Correctly handle untyped select elements with more positional arguments
+    8.1 ToC bump
 

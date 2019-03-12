@@ -57,7 +57,7 @@ local applyFailed = false
 local totalBars = 0
 local barIsAnimating = false
 local function stringFromTimer(t)
-	if t <= DBM.Bars:GetOption("Decimal") then
+	if t <= DBM.Bars:GetOption("TDecimal") then
 		return ("%.1f"):format(t)
 	elseif t <= 60 then
 		return ("%d"):format(t)
@@ -380,9 +380,13 @@ options = {
 		type = "number",
 		default = 20,
 	},
-	Decimal = {
+	TDecimal = {
 		type = "number",
-		default = 60,
+		default = 11,
+	},
+	Alpha = {
+		type = "number",
+		default = 0.8,
 	},
 	Scale = {
 		type = "number",
@@ -395,6 +399,10 @@ options = {
 	HugeWidth = {
 		type = "number",
 		default = 200,
+	},
+	HugeAlpha = {
+		type = "number",
+		default = 1,
 	},
 	HugeScale = {
 		type = "number",
@@ -467,6 +475,14 @@ options = {
 	BarStyle = {
 		type = "string",
 		default = "NoAnim",
+	},
+	KeepBars = {
+		type = "boolean",
+		default = true,
+	},
+	FadeBars = {
+		type = "boolean",
+		default = true,
 	},
 }
 
@@ -734,7 +750,7 @@ do
 	end
 	local mt = {__index = barPrototype}
 
-	function DBT:CreateBar(timer, id, icon, huge, small, color, isDummy, colorType, inlineIcon)
+	function DBT:CreateBar(timer, id, icon, huge, small, color, isDummy, colorType, inlineIcon, keep, fade)
 		if timer <= 0 then return end
 		if (self.numBars or 0) >= 15 and not isDummy then return end
 		--Most efficient place to block it, nil colorType instead of checking option every update
@@ -770,6 +786,8 @@ do
 				newBar.colorType = colorType
 				newBar.flashing = nil
 				newBar.inlineIcon = inlineIcon
+				newBar.keep = keep
+				newBar.fade = fade
 			else  -- duplicate code ;(
 				newBar = setmetatable({
 					frame = newFrame,
@@ -785,6 +803,8 @@ do
 					flashing = nil,
 					colorType = colorType,
 					inlineIcon = inlineIcon,
+					keep = keep,
+					fade = fade,
 					lastUpdate = GetTime()
 				}, mt)
 			end
@@ -1033,7 +1053,7 @@ function barPrototype:Update(elapsed)
 			spark:SetVertexColor(r, g, b)
 		end
 	end
-	if timerValue <= 0 then
+	if timerValue <= 0 and not (barOptions.KeepBars and self.keep) then
 		return self:Cancel()
 	else
 		if fillUpBars then
@@ -1053,7 +1073,9 @@ function barPrototype:Update(elapsed)
 	end
 	if isFadingIn and isFadingIn < 0.5 and currentStyle ~= "NoAnim" then
 		self.fadingIn = isFadingIn + elapsed
-		frame:SetAlpha((isFadingIn) / 0.5)
+		if (isEnlarged and barOptions.HugeAlpha == 1) or barOptions.Alpha == 1 then--Only fade in if alpha is 1, otherwise we already have a faded bar
+			frame:SetAlpha((isFadingIn) / 0.5)
+		end
 	elseif isFadingIn then
 		self.fadingIn = nil
 	end
@@ -1267,8 +1289,25 @@ function barPrototype:ApplyStyle()
 	timer:SetTextColor(barTextColorRed, barTextColorGreen, barTextColorBlue)
 	if barOptions.IconLeft then icon1:Show() else icon1:Hide() end
 	if barOptions.IconRight then icon2:Show() else icon2:Hide() end
-	if enlarged then bar:SetWidth(barHugeWidth); bar:SetHeight(barHeight); else bar:SetWidth(barWidth) bar:SetHeight(barHeight); end
-	if enlarged then frame:SetScale(barOptions.HugeScale) else frame:SetScale(barOptions.Scale) end
+	if enlarged then
+		bar:SetWidth(barHugeWidth)
+		bar:SetHeight(barHeight)
+		frame:SetScale(barOptions.HugeScale)
+		if barOptions.FadeBars and self.fade then
+			frame:SetAlpha(barOptions.HugeAlpha/2)
+		else
+			frame:SetAlpha(barOptions.HugeAlpha)
+		end
+	else
+		bar:SetWidth(barWidth)
+		bar:SetHeight(barHeight)
+		frame:SetScale(barOptions.Scale)
+		if barOptions.FadeBars and self.fade then
+			frame:SetAlpha(barOptions.Alpha/2)
+		else
+			frame:SetAlpha(barOptions.Alpha)
+		end
+	end
 	if barOptions.IconLocked then
 		if enlarged then frame:SetWidth(barHugeWidth); frame:SetHeight(barHeight); else frame:SetWidth(barWidth); frame:SetHeight(barHeight); end
 		icon1:SetWidth(barHeight)
@@ -1282,7 +1321,6 @@ function barPrototype:ApplyStyle()
 	end
 	texture:SetAlpha(1)
 	bar:SetAlpha(1)
-	frame:SetAlpha(1)
 	local barFont, barFontSize, barFontFlag = barOptions.Font, barOptions.FontSize, barOptions.FontFlag
 	name:SetFont(barFont, barFontSize, barFontFlag)
 	name:SetPoint("LEFT", bar, "LEFT", 3, 0)

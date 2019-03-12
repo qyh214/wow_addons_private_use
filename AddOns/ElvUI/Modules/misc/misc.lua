@@ -2,58 +2,59 @@ local E, L, V, P, G = unpack(select(2, ...)); --Import: Engine, Locales, Private
 local M = E:NewModule('Misc', 'AceEvent-3.0', 'AceTimer-3.0');
 E.Misc = M;
 
---Cache global variables
 --Lua functions
-local format, gsub = string.format, string.gsub
+local _G = _G
+local format, gsub = format, gsub
 --WoW API / Variables
-local UnitGUID = UnitGUID
-local UnitInRaid = UnitInRaid
-local IsInGroup, IsInRaid = IsInGroup, IsInRaid
-local IsPartyLFG, IsInInstance = IsPartyLFG, IsInInstance
-local IsArenaSkirmish = IsArenaSkirmish
-local IsActiveBattlefieldArena = IsActiveBattlefieldArena
-local SendChatMessage = SendChatMessage
-local IsShiftKeyDown = IsShiftKeyDown
-local CanMerchantRepair = CanMerchantRepair
-local GetRepairAllCost = GetRepairAllCost
-local GetGuildBankWithdrawMoney = GetGuildBankWithdrawMoney
+local AcceptGroup = AcceptGroup
+local BNGetFriendGameAccountInfo = BNGetFriendGameAccountInfo
+local BNGetFriendInfo = BNGetFriendInfo
+local BNGetNumFriendGameAccounts = BNGetNumFriendGameAccounts
+local BNGetNumFriends = BNGetNumFriends
 local CanGuildBankRepair = CanGuildBankRepair
-local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
-local RepairAllItems = RepairAllItems
-local InCombatLockdown = InCombatLockdown
+local CanMerchantRepair = CanMerchantRepair
+local GetCVarBool, SetCVar = GetCVarBool, SetCVar
+local GetFriendInfo = GetFriendInfo
+local GetGuildBankWithdrawMoney = GetGuildBankWithdrawMoney
+local GetGuildRosterInfo = GetGuildRosterInfo
+local GetNumFriends = GetNumFriends
 local GetNumGroupMembers = GetNumGroupMembers
+local GetNumGuildMembers = GetNumGuildMembers
 local GetRaidRosterInfo = GetRaidRosterInfo
-local UninviteUnit = UninviteUnit
-local UnitExists = UnitExists
-local UnitName = UnitName
+local GetRepairAllCost = GetRepairAllCost
+local GuildRoster = GuildRoster
+local InCombatLockdown = InCombatLockdown
+local IsActiveBattlefieldArena = IsActiveBattlefieldArena
+local IsAddOnLoaded = IsAddOnLoaded
+local IsArenaSkirmish = IsArenaSkirmish
+local IsInGroup, IsInRaid = IsInGroup, IsInRaid
+local IsInGuild = IsInGuild
+local IsPartyLFG, IsInInstance = IsPartyLFG, IsInInstance
+local IsShiftKeyDown = IsShiftKeyDown
 local LeaveParty = LeaveParty
 local RaidNotice_AddMessage = RaidNotice_AddMessage
-local GetNumFriends = GetNumFriends
+local RepairAllItems = RepairAllItems
+local SendChatMessage = SendChatMessage
 local ShowFriends = ShowFriends
-local IsInGuild = IsInGuild
-local GuildRoster = GuildRoster
-local GetFriendInfo = GetFriendInfo
-local AcceptGroup = AcceptGroup
-local GetNumGuildMembers = GetNumGuildMembers
-local GetGuildRosterInfo = GetGuildRosterInfo
-local BNGetNumFriendGameAccounts = BNGetNumFriendGameAccounts
-local BNGetFriendGameAccountInfo = BNGetFriendGameAccountInfo
-local BNGetNumFriends = BNGetNumFriends
-local BNGetFriendInfo = BNGetFriendInfo
-local StaticPopupSpecial_Hide = StaticPopupSpecial_Hide
 local StaticPopup_Hide = StaticPopup_Hide
-local GetCVarBool, SetCVar = GetCVarBool, SetCVar
-local C_Timer_After = C_Timer.After
-local UIErrorsFrame = UIErrorsFrame
+local StaticPopupSpecial_Hide = StaticPopupSpecial_Hide
+local UninviteUnit = UninviteUnit
+local UnitExists = UnitExists
+local UnitGUID = UnitGUID
+local UnitInRaid = UnitInRaid
+local UnitName = UnitName
+local CreateFrame = CreateFrame
+local RegisterStateDriver = RegisterStateDriver
+
 local BNET_CLIENT_WOW = BNET_CLIENT_WOW
-local MAX_PARTY_MEMBERS = MAX_PARTY_MEMBERS
+local C_Timer_After = C_Timer.After
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local LE_GAME_ERR_GUILD_NOT_ENOUGH_MONEY = LE_GAME_ERR_GUILD_NOT_ENOUGH_MONEY
 local LE_GAME_ERR_NOT_ENOUGH_MONEY = LE_GAME_ERR_NOT_ENOUGH_MONEY
+local MAX_PARTY_MEMBERS = MAX_PARTY_MEMBERS
+local UIErrorsFrame = UIErrorsFrame
 
---Global variables that we don't cache, list them here for mikk's FindGlobals script
--- GLOBALS: RaidBossEmoteFrame, ChatTypeInfo, QueueStatusMinimapButton, LFGInvitePopup
-
-local interruptMsg = INTERRUPTED.." %s's \124cff71d5ff\124Hspell:%d:0\124h[%s]\124h\124r!"
+local INTERRUPT_MSG = INTERRUPTED.." %s's \124cff71d5ff\124Hspell:%d:0\124h[%s]\124h\124r!"
 
 function M:ErrorFrameToggle(event)
 	if not E.db.general.hideErrorFrame then return end
@@ -84,21 +85,21 @@ function M:COMBAT_LOG_EVENT_UNFILTERED()
 	end
 
 	if E.db.general.interruptAnnounce == "PARTY" then
-		SendChatMessage(format(interruptMsg, destName, spellID, spellName), inPartyLFG and "INSTANCE_CHAT" or "PARTY")
+		SendChatMessage(format(INTERRUPT_MSG, destName, spellID, spellName), inPartyLFG and "INSTANCE_CHAT" or "PARTY")
 	elseif E.db.general.interruptAnnounce == "RAID" then
 		if inRaid then
-			SendChatMessage(format(interruptMsg, destName, spellID, spellName), inPartyLFG and "INSTANCE_CHAT" or "RAID")
+			SendChatMessage(format(INTERRUPT_MSG, destName, spellID, spellName), inPartyLFG and "INSTANCE_CHAT" or "RAID")
 		else
-			SendChatMessage(format(interruptMsg, destName, spellID, spellName), inPartyLFG and "INSTANCE_CHAT" or "PARTY")
+			SendChatMessage(format(INTERRUPT_MSG, destName, spellID, spellName), inPartyLFG and "INSTANCE_CHAT" or "PARTY")
 		end
 	elseif E.db.general.interruptAnnounce == "RAID_ONLY" then
 		if inRaid then
-			SendChatMessage(format(interruptMsg, destName, spellID, spellName), inPartyLFG and "INSTANCE_CHAT" or "RAID")
+			SendChatMessage(format(INTERRUPT_MSG, destName, spellID, spellName), inPartyLFG and "INSTANCE_CHAT" or "RAID")
 		end
 	elseif E.db.general.interruptAnnounce == "SAY" then
-		SendChatMessage(format(interruptMsg, destName, spellID, spellName), "SAY")
+		SendChatMessage(format(INTERRUPT_MSG, destName, spellID, spellName), "SAY")
 	elseif E.db.general.interruptAnnounce == "EMOTE" then
-		SendChatMessage(format(interruptMsg, destName, spellID, spellName), "EMOTE")
+		SendChatMessage(format(INTERRUPT_MSG, destName, spellID, spellName), "EMOTE")
 	end
 end
 
@@ -195,7 +196,7 @@ function M:PVPMessageEnhancement(_, msg)
 	if not E.db.general.enhancedPvpMessages then return end
 	local _, instanceType = IsInInstance()
 	if instanceType == 'pvp' or instanceType == 'arena' then
-		RaidNotice_AddMessage(RaidBossEmoteFrame, msg, ChatTypeInfo["RAID_BOSS_EMOTE"]);
+		RaidNotice_AddMessage(_G.RaidBossEmoteFrame, msg, _G.ChatTypeInfo["RAID_BOSS_EMOTE"]);
 	end
 end
 
@@ -205,7 +206,7 @@ function M:AutoInvite(event, leaderName)
 	if not E.db.general.autoAcceptInvite then return; end
 
 	if event == "PARTY_INVITE_REQUEST" then
-		if QueueStatusMinimapButton:IsShown() then return end -- Prevent losing que inside LFD if someone invites you to group
+		if _G.QueueStatusMinimapButton:IsShown() then return end -- Prevent losing que inside LFD if someone invites you to group
 		if IsInGroup() then return end
 		hideStatic = true
 
@@ -270,7 +271,7 @@ function M:AutoInvite(event, leaderName)
 			end
 		end
 	elseif event == "GROUP_ROSTER_UPDATE" and hideStatic == true then
-		StaticPopupSpecial_Hide(LFGInvitePopup) --New LFD popup when invited in custom created group
+		StaticPopupSpecial_Hide(_G.LFGInvitePopup) --New LFD popup when invited in custom created group
 		StaticPopup_Hide("PARTY_INVITE")
 		hideStatic = false
 	end
@@ -287,11 +288,59 @@ function M:PLAYER_ENTERING_WORLD()
 	self:ToggleChatBubbleScript()
 end
 
+--[[local function OnValueChanged(self, value)
+	local bar = _G.ElvUI_ChallengeModeTimer
+	bar.text:SetText(self:GetParent().TimeLeft:GetText())
+	bar:SetValue(value)
+
+	local r, g, b = E:ColorGradient(value / self:GetParent().timeLimit, 1, 0, 0, 1, 1, 0, 0, 1, 0)
+	bar:SetStatusBarColor(r, g, b)
+end
+
+local function ChallengeModeTimer_Update(timerID, elapsedTime, timeLimit)
+	local block = _G.ScenarioChallengeModeBlock;
+
+	_G.ElvUI_ChallengeModeTimer:SetMinMaxValues(0, block.timeLimit)
+	_G.ElvUI_ChallengeModeTimer:Show()
+	OnValueChanged(_G.ScenarioChallengeModeBlock.StatusBar, _G.ScenarioChallengeModeBlock.StatusBar:GetValue())
+end
+
+function M:SetupChallengeTimer()
+	local bar = CreateFrame("StatusBar", "ElvUI_ChallengeModeTimer", E.UIParent)
+	bar:Size(250, 20)
+	bar:Point("TOPLEFT", E.UIParent, "TOPLEFT", 10, -10)
+	bar:CreateBackdrop("Transparent")
+	bar:SetStatusBarTexture(E.media.normTex)
+	bar.text = bar:CreateFontString(nil, "OVERLAY")
+	bar.text:SetPoint("CENTER")
+	bar.text:FontTemplate()
+
+	_G.ScenarioChallengeModeBlock.StatusBar:HookScript("OnValueChanged", OnValueChanged)
+	hooksecurefunc("Scenario_ChallengeMode_ShowBlock", ChallengeModeTimer_Update)
+end]]
+
+function M:ADDON_LOADED(_, addon)
+	if addon == "Blizzard_InspectUI" then
+		M:SetupInspectPageInfo()
+
+		--[[if IsAddOnLoaded("Blizzard_ObjectiveTracker") then
+			self:UnregisterEvent("ADDON_LOADED")
+		end]]
+	--[[elseif addon == "Blizzard_ObjectiveTracker" then
+		M:SetupChallengeTimer()
+
+		if IsAddOnLoaded("Blizzard_InspectUI") then
+			self:UnregisterEvent("ADDON_LOADED")
+		end	]]
+	end
+end
+
 function M:Initialize()
 	self:LoadRaidMarker()
 	self:LoadLootRoll()
 	self:LoadChatBubbles()
 	self:LoadLoot()
+	self:ToggleItemLevelInfo(true)
 	self:RegisterEvent('MERCHANT_SHOW')
 	self:RegisterEvent('PLAYER_REGEN_DISABLED', 'ErrorFrameToggle')
 	self:RegisterEvent('PLAYER_REGEN_ENABLED', 'ErrorFrameToggle')
@@ -303,6 +352,25 @@ function M:Initialize()
 	self:RegisterEvent('GROUP_ROSTER_UPDATE', 'AutoInvite')
 	self:RegisterEvent('CVAR_UPDATE', 'ForceCVars')
 	self:RegisterEvent('PLAYER_ENTERING_WORLD')
+
+	--local blizzTracker = IsAddOnLoaded("Blizzard_ObjectiveTracker")
+	local inspectUI = IsAddOnLoaded("Blizzard_InspectUI")
+
+	if inspectUI then
+		M:SetupInspectPageInfo()
+	end
+
+	--[[if blizzTracker then
+		M:SetupChallengeTimer()
+	end
+
+	if not blizzTracker or not inspectUI then
+		self:RegisterEvent("ADDON_LOADED")
+	end]]
+
+	if not inspectUI then
+		self:RegisterEvent("ADDON_LOADED")
+	end
 end
 
 local function InitializeCallback()

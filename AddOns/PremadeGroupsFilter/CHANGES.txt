@@ -1,22 +1,16 @@
-lightweight tag 8469409dc568d1e4ea5df57c5f55596c20ff3836 1.25
+lightweight tag bcd4772f51d3d5377ea45467445bb78675e920ac 1.26
 Author:	Bernhard Saumweber <b.saumweber@gmail.com>
-Date:	Sun Jan 27 17:08:41 2019 +0100
+Date:	Tue Feb 26 21:22:41 2019 +0100
 
-commit 8469409dc568d1e4ea5df57c5f55596c20ff3836
+commit bcd4772f51d3d5377ea45467445bb78675e920ac
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Sun Jan 27 17:08:41 2019 +0100
+Date:   Tue Feb 26 21:21:28 2019 +0100
 
-    Added keywords bod/daz for Battle of Dazar'alor and cs/cru for Crucible of Storms
+    Fixed RaiderIO keywords rio and riomain, removed riodps, rioheal and riotank and added rioprev (last season), riomainprev (last season on main char) and riokey20plus
 
-commit 8f35f62f27dd493d73c246ae0d978ea4a79a9acf
+commit e3686f7de089f6a5e05eccfa189f2ca1cd4760ab
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Wed Dec 12 21:07:29 2018 +0100
+Date:   Sun Jan 27 17:10:52 2019 +0100
 
-    Set version to next release version: 1.25
-
-commit 3e46acc17711328b341334852e40190841f07d20
-Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Wed Dec 12 21:06:51 2018 +0100
-
-    Remove TODO
+    Set version to next release version: 1.26
 

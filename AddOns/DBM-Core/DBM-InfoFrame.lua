@@ -812,6 +812,8 @@ function onUpdate(frame, table)
 				local _, class = UnitClass(unitId)
 				if class then
 					color = RAID_CLASS_COLORS[class]
+				else
+					color = NORMAL_FONT_COLOR
 				end
 				linesShown = linesShown + 1
 				if (extraName or leftText) == playerName then--It's player.
@@ -848,12 +850,16 @@ function onUpdate(frame, table)
 				local _, class = UnitClass(unitId)
 				if class then
 					color = RAID_CLASS_COLORS[class]
+				else
+					color = NORMAL_FONT_COLOR
 				end
 			end
 			if unitId2 then--Check right text
 				local _, class = UnitClass(unitId2)
 				if class then
 					color2 = RAID_CLASS_COLORS[class]
+				else
+					color2 = NORMAL_FONT_COLOR
 				end
 			end
 			linesShown = linesShown + 1

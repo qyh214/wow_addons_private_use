@@ -1,0 +1,181 @@
+tag f5cf58101ecbdbc424420b43b16fbaba8a947d5a 8.6.0
+Author:	Andrew Scott <ascott18@gmail.com>
+Date:	Sat Feb 23 18:14:00 2019 -0800
+
+8.6.0
+
+commit e7cfc1b1ee5717d8dbd47c08997c396c9bb85129
+Author: Andrew Scott <ascott18@gmail.com>
+Date:   Sat Feb 23 18:12:01 2019 -0800
+
+    8.6.0 release
+
+commit ecc8283b7033004cbd4653a84f84f82ee2a72f66
+Author: Andrew Scott <ascott18@gmail.com>
+Date:   Sat Feb 23 17:16:37 2019 -0800
+
+    Unit Conditions can now be copied from one icon to another. (#18)
+
+commit e582b35a245788115a452ae4f79609e86a71c24e
+Author: Andrew Scott <ascott18@gmail.com>
+Date:   Sat Feb 23 17:00:16 2019 -0800
+
+    New setting for Combat Event icons: Only if Conditions Passing. (Implements #20)
+
+commit 1b133d2105945c8acd5690fbbc39b823bc78f8ba
+Author: Andrew Scott <ascott18@gmail.com>
+Date:   Sat Feb 23 15:53:53 2019 -0800
+
+    #22 - You can now toggle an icon's enabled/disabled state by Ctrl+clicking it.
+
+commit a69fc1280ece0f605f31f7cd3f8693b0228f1c1d
+Author: Andrew Scott <ascott18@gmail.com>
+Date:   Sat Feb 23 14:03:13 2019 -0800
+
+    Fix pressing of escape key in the discord/github link boxes
+
+commit 17f8173ee7403d5964f5103d20ed430cbc321992
+Author: Andrew Scott <ascott18@gmail.com>
+Date:   Sat Feb 23 13:27:53 2019 -0800
+
+    Convert changelog to markdown
+
+commit c7304d5f3a801682fe6a492c0a30fc7708ae7a74
+Author: Andrew Scott <ascott18@gmail.com>
+Date:   Sat Feb 23 13:13:40 2019 -0800
+
+    Add Discord and Github links in-game
+
+commit 92cca4243fee28095640949a0119446a125e7403
+Author: cybeloras <ascott18@gmail.com>
+Date:   Sat Feb 23 12:49:49 2019 -0800
+
+    Fixed a bug that caused export strings to sometimes contain a large amount of superfluous defaults.
+
+commit 92cca4243fee28095640949a0119446a125e7403
+Author: cybeloras <ascott18@gmail.com>
+Date:   Sat Feb 23 12:49:49 2019 -0800
+
+    Fixed a bug that caused export strings to sometimes contain a large amount of superfluous defaults.
+
+commit ce7e505e52009ebd21c3fb1b11404be7b556efbb
+Author: Andrew Scott <ascott18@gmail.com>
+Date:   Sun Feb 17 22:49:06 2019 -0800
+
+    Update issue templates
+
+commit deb80de624d1a327b509ac47da27eeec81d73e8d
+Author: Andrew Scott <ascott18@gmail.com>
+Date:   Sun Feb 17 22:11:19 2019 -0800
+
+    Update issue templates
+
+commit 93d9318a708b9a382d03bc63425d9de79bb80a70
+Author: Andrew Scott <ascott18@gmail.com>
+Date:   Sun Feb 17 21:56:46 2019 -0800
+
+    Create LICENSE
+
+commit b003e177ef55fe9e33f4a7af97110895ae35698e
+Author: cybeloras <ascott18@gmail.com>
+Date:   Sun Feb 17 21:04:20 2019 -0800
+
+    Wrote with the wrong language (Fixes #1622 for real this time)
+
+commit 6d17d0609c8d4861a1bd4cc7b9819ea04b30adc0
+Author: cybeloras <ascott18@gmail.com>
+Date:   Sun Feb 17 20:40:37 2019 -0800
+
+    Fix #1622
+
+commit 40f34a6a765917463f3e06ec783dd4165d5c6eef
+Author: Jalopyy <sam.l.miller@outlook.com>
+Date:   Sun Feb 17 18:48:07 2019 -0800
+
+    Equivalencies updates
+    
+    * add blizzard slow
+    * updates to Slows equiv, additions and removing -'s
+    * fight or flight
+    * Readd prefixes
+    * Readd some -'s
+    * -Cone of Cold
+
+commit c582c18c200fa31ce41da94df8bfc4baab28e86b
+Author: Andrew Scott <ascott18@gmail.com>
+Date:   Sun Feb 17 18:32:25 2019 -0800
+
+    Update README.md
+
+commit 394cb4270975e9aee5e37f42fc93a102b6dd0f82
+Author: Andrew Scott <ascott18@gmail.com>
+Date:   Sun Feb 17 18:01:39 2019 -0800
+
+    Create no-response.yml
+
+commit 5d88ed95403a4f3ba74b9fbc3ecd4720f01d2b85
+Author: tmw-issue-import <47655111+tmw-issue-import@users.noreply.github.com>
+Date:   Sun Feb 17 17:56:24 2019 -0800
+
+    Update README.md
+
+commit 9d95ce35677f2b66889d75e42534c920194801d3
+Author: cybeloras <ascott18@gmail.com>
+Date:   Mon Feb 11 18:21:09 2019 -0800
+
+    Exclusively \r as the line ending? How did that even happen?
+
+commit 6a5dc8aecc3e6d96b6f500e3d924163139752abe
+Author: cybeloras <ascott18@gmail.com>
+Date:   Mon Feb 11 18:12:25 2019 -0800
+
+    Added a Scale setting to the Activation Border animation.
+
+commit a10f6dab7577dd7a0d9d96fb9b890710c3504f00
+Author: cybeloras <ascott18@gmail.com>
+Date:   Sun Feb 10 12:18:56 2019 -0800
+
+    Added colors to CPU profiling
+
+commit e59f0041639e9501e2190729ab9eb7ad18689686
+Author: cybeloras <ascott18@gmail.com>
+Date:   Sun Feb 10 00:00:25 2019 -0800
+
+    Created a new system to collect performance metrics on a per-icon basis. You can view this new feature via `/tmw cpu` or under the "Performance" section in the main options.
+
+commit e59f0041639e9501e2190729ab9eb7ad18689686
+Author: cybeloras <ascott18@gmail.com>
+Date:   Sun Feb 10 00:00:25 2019 -0800
+
+    Created a new system to collect performance metrics on a per-icon basis. You can view this new feature via `/tmw cpu` or under the "Performance" section in the main options.
+
+commit 5cf586695d6862c5566dedfd128ea6ed1e73f811
+Author: Jalopyy <sam.l.miller@outlook.com>
+Date:   Tue Feb 5 08:49:26 2019 -0800
+
+    Add/fix cauterize proc to ImmuneToSlows (#14)
+    
+    * Add/fix cauterize proc to ImmuneToSlows
+    
+    * Add new PVP trinket
+    
+    * surging tides
+    
+    * bone shield m+
+    
+    * Equiv updates
+    
+    * gilded path
+    
+    * Ward of Envelopment trinket
+    
+    * Diamond-Laced Refracting Prism
+    
+    * blacksmithing enchant
+
+commit 267aa9341eb1f99dd463133ff3e0a25e28c5dd25
+Author: Jalopyy <sam.l.miller@outlook.com>
+Date:   Thu Jan 17 23:41:45 2019 -0800
+
+    Fix cauterize effect ID
+

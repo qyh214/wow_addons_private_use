@@ -10,7 +10,7 @@ end
 local mod	= DBM:NewMod(dungeonID, "DBM-ZuldazarRaid", 1, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18243 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 18337 $"):sub(12, -3))
 mod:SetCreatureID(creatureID)
 mod:SetEncounterID(2263, 2284)--2263 Alliance, 2284 Horde
 --mod:DisableESCombatDetection()
@@ -64,26 +64,24 @@ local yellThrowTargetFades				= mod:NewShortFadesYell(289307)
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 8)
 
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(18527))
+mod:AddTimerLine(DBM_BOSS)
 --local timerEnergyAOECD					= mod:NewCDCountTimer(100, energyAOESpellId, nil, nil, nil, 2)
 local timerTankComboCD					= mod:NewCDTimer(30.3, tankComboId, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerSlamCD						= mod:NewCDTimer(27, slamSpellId, nil, nil, nil, 3)
 local timerFerociousRoarCD				= mod:NewCDTimer(36.5, 285994, nil, nil, nil, 2)
+mod:AddTimerLine(DBM_ADDS)
 local timerAddCD						= mod:NewCDTimer(120, addSpawnId, nil, nil, nil, 1)
 local timerAddAttackCD					= mod:NewCDTimer(23.8, addProjectileId, nil, nil, nil, 3)--12-32
 
 --local berserkTimer					= mod:NewBerserkTimer(600)
 
---local countdownCollapsingWorld			= mod:NewCountdown(50, 243983, true, 3, 3)
---local countdownRupturingBlood				= mod:NewCountdown("Alt12", 244016, false, 2, 3)
---local countdownFelstormBarrage			= mod:NewCountdown("AltTwo32", 244000, nil, nil, 3)
+local countdownAdd						= mod:NewCountdown(120, addSpawnId, true, nil, 5)
+local countdownTankCombo				= mod:NewCountdown("Alt12", tankComboId, "Tank", nil, 4)
+local countdownFerociousRoar			= mod:NewCountdown("AltTwo32", 285994, nil, nil, 3)
 
---mod:AddSetIconOption("SetIconGift", 255594, true)
---mod:AddRangeFrameOption("8/10")
+mod:AddRangeFrameOption(8, 285994)
 mod:AddInfoFrameOption(energyAOESpellId, true)
---mod:AddNamePlateOption("NPAuraOnPresence", 276093)
---mod:AddSetIconOption("SetIconDarkRev", 273365, true)
 
---mod.vb.phase = 1
 mod.vb.EnergyAOECount = 0
 mod.vb.comboCount = 0
 local coreTargets = {}
@@ -130,15 +128,18 @@ function mod:OnCombatStart(delay)
 	table.wipe(castsPerGUID)
 	timerSlamCD:Start(15-delay)
 	timerAddCD:Start(16.5-delay)
+	countdownAdd:Start(16.5-delay)
 	timerTankComboCD:Start(22-delay)
+	countdownTankCombo:Start(22-delay)
 	if self:IsHard() then
 		timerAddAttackCD:Start(10.6-delay)
 		timerFerociousRoarCD:Start(35.5-delay)--First one can be between 35.5-39
+		countdownFerociousRoar:Start(35.5-delay)
 	end
 --	timerEnergyAOECD:Start(100-delay, 1)
---	if self.Options.NPAuraOnPresence then
---		DBM:FireEvent("BossMod_EnableHostileNameplates")
---	end
+	if self.Options.RangeFrame then
+		DBM.RangeCheck:Show(8, nil, nil, 2, true)
+	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(OVERVIEW)
 		DBM.InfoFrame:Show(8, "function", updateInfoFrame, false, false)
@@ -146,15 +147,12 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:OnCombatEnd()
---	if self.Options.RangeFrame then
---		DBM.RangeCheck:Hide()
---	end
+	if self.Options.RangeFrame then
+		DBM.RangeCheck:Hide()
+	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
---	if self.Options.NPAuraOnPresence then
---		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
---	end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -169,6 +167,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnFerociousRoar:Show()
 		specWarnFerociousRoar:Play("fearsoon")
 		timerFerociousRoarCD:Start()
+		countdownFerociousRoar:Start(36.5)
 	elseif spellId == 282533 or spellId == 282243 then
 		if not castsPerGUID[args.sourceGUID] then
 			castsPerGUID[args.sourceGUID] = 0
@@ -207,12 +206,15 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnAdd:Play("killmob")
 		if self:IsMythic() then
 			timerAddCD:Start(120)--2 every 2 minutes
+			countdownAdd:Start(120)
 		else
 			timerAddCD:Start(60)--1 every 1 minute
+			countdownAdd:Start(60)
 		end
 	elseif spellId == 286450 or spellId == 282082 then--Necrotic Combo/Bestial Combo
 		self.vb.comboCount = 0
 		timerTankComboCD:Start()
+		countdownTankCombo:Start(30.3)
 	elseif spellId == 289292 then
 		if not args:IsPlayer() then
 			specWarnThrow:Show(args.destName)

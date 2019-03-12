@@ -3,15 +3,12 @@ if not L then return end
 
 L["S_APOWER_AVAILABLE"] = "획득 가능"
 L["S_APOWER_NEXTLEVEL"] = "다음 등급"
---[[Translation missing --]]
---[[ L["S_DECREASESIZE"] = ""--]] 
+L["S_DECREASESIZE"] = "크기 줄이기"
 L["S_ENABLED"] = "사용"
 L["S_ERROR_NOTIMELEFT"] = "이 퀘스트는 만료되었습니다."
 L["S_ERROR_NOTLOADEDYET"] = "이 퀘스트를 아직 불러오지 못했습니다, 몇 초만 기다려주세요."
---[[Translation missing --]]
---[[ L["S_FACTION_TOOLTIP_SELECT"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_FACTION_TOOLTIP_TRACK"] = ""--]] 
+L["S_FACTION_TOOLTIP_SELECT"] = "좌클릭: 이 사절을 선택"
+L["S_FACTION_TOOLTIP_TRACK"] = "Shift + 좌클릭: 이 사절의 퀘스트를 추적"
 L["S_FLYMAP_SHOWTRACKEDONLY"] = "추적 중인 퀘스트만"
 L["S_FLYMAP_SHOWTRACKEDONLY_DESC"] = "추적 중인 퀘스트만 표시"
 L["S_FLYMAP_SHOWWORLDQUESTS"] = "전역 퀘스트 표시"
@@ -55,8 +52,7 @@ L["S_GROUPFINDER_RIGHTCLICKCLOSE"] = "닫으려면 오른쪽 클릭하세요"
 L["S_GROUPFINDER_SECONDS"] = "초"
 L["S_GROUPFINDER_TITLE"] = "파티 찾기"
 L["S_GROUPFINDER_TUTORIAL1"] = "같은 퀘스트를 수행하는 파티에 참가하여 빠르게 전역 퀘스트를 완료하세요!"
---[[Translation missing --]]
---[[ L["S_INCREASESIZE"] = ""--]] 
+L["S_INCREASESIZE"] = "크기 늘리기"
 L["S_MAPBAR_FILTER"] = "필터"
 L["S_MAPBAR_FILTERMENU_FACTIONOBJECTIVES"] = "사절 퀘스트"
 L["S_MAPBAR_FILTERMENU_FACTIONOBJECTIVES_DESC"] = "선별하도록 설정하지 않은 퀘스트라도 사절 퀘스트에 포함되면 표시합니다."
@@ -70,10 +66,8 @@ L["S_MAPBAR_OPTIONSMENU_EQUIPMENTICONS"] = "장비 아이콘"
 L["S_MAPBAR_OPTIONSMENU_QUESTTRACKER"] = "퀘스트 추적기 사용"
 L["S_MAPBAR_OPTIONSMENU_REFRESH"] = "새로 고침"
 L["S_MAPBAR_OPTIONSMENU_SOUNDENABLED"] = "소리 사용"
---[[Translation missing --]]
---[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_ONDISABLE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = ""--]] 
+L["S_MAPBAR_OPTIONSMENU_STATUSBAR_ONDISABLE"] = "'/wqt statusbar' 또는 인터페이스 옵션의 애드온 옵션을 사용하여 상태 표시 줄을 복원하십시오."
+L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = "상태 표시 줄 표시"
 L["S_MAPBAR_OPTIONSMENU_STATUSBARANCHOR"] = "상단에 고정"
 L["S_MAPBAR_OPTIONSMENU_TOMTOM_WPPERSISTENT"] = "목표 지점 유지"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_CURRENTZONE"] = "현재 지역만"
@@ -85,7 +79,7 @@ L["S_MAPBAR_OPTIONSMENU_TRACKERMOVABLE_LOCKED"] = "고정"
 L["S_MAPBAR_OPTIONSMENU_UNTRACKQUESTS"] = "모든 퀘스트 추적 해제"
 L["S_MAPBAR_OPTIONSMENU_WORLDMAPCONFIG"] = "세계 지도 설정"
 L["S_MAPBAR_OPTIONSMENU_YARDSDISTANCE"] = "미터 거리 표시"
-L["S_MAPBAR_OPTIONSMENU_ZONE_QUESTSUMMARY"] = "퀘스트 요약 (전체 화면)"
+L["S_MAPBAR_OPTIONSMENU_ZONE_QUESTSUMMARY"] = "퀘스트 요약"
 L["S_MAPBAR_OPTIONSMENU_ZONEMAPCONFIG"] = "지역 지도 설정"
 L["S_MAPBAR_RESOURCES_TOOLTIP_TRACKALL"] = "모두 추적하려면 클릭: |cFFFFFFFF%s|r 퀘스트."
 L["S_MAPBAR_SORTORDER"] = "정렬 순서"
@@ -101,12 +95,10 @@ L["S_MAPBAR_SUMMARYMENU_NOATTENTION"] = [=[다른 캐릭터에 추적 중인 퀘
 2시간 내에 만료되는 퀘스트가 없습니다!]=]
 L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "주의 필요"
 L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "오늘의 보상"
---[[Translation missing --]]
---[[ L["S_MAPFRAME_ALIGN_CENTER"] = ""--]] 
+L["S_MAPFRAME_ALIGN_CENTER"] = "중앙"
 --[[Translation missing --]]
 --[[ L["S_MAPFRAME_ALIGN_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_MAPFRAME_ALIGN_LEFT"] = ""--]] 
+L["S_MAPFRAME_ALIGN_LEFT"] = "왼쪽"
 --[[Translation missing --]]
 --[[ L["S_OPTIONS_ANIMATIONS"] = ""--]] 
 --[[Translation missing --]]
@@ -117,30 +109,20 @@ L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "오늘의 보상"
 --[[ L["S_OPTIONS_MAPFRAME_SCALE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_QUESTBLACKLIST"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_RESET"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_SHOWFACTIONS"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_TRACKER_RESETPOSITION"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_ANCHOR_LEFT"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_ANCHOR_RIGHT"] = ""--]] 
+L["S_OPTIONS_QUESTBLACKLIST"] = "퀘스트 블랙리스트"
+L["S_OPTIONS_RESET"] = "재설정"
+L["S_OPTIONS_SHOWFACTIONS"] = "사절 보기"
+L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = "남은 시간별 우선 순위 없음"
+L["S_OPTIONS_TRACKER_RESETPOSITION"] = "위치 재설정"
+L["S_OPTIONS_WORLD_ANCHOR_LEFT"] = "왼쪽으로 고정"
+L["S_OPTIONS_WORLD_ANCHOR_RIGHT"] = "오른쪽으로 고정"
 --[[Translation missing --]]
 --[[ L["S_OPTIONS_WORLD_DECREASEICONSPERROW"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_OPTIONS_WORLD_INCREASEICONSPERROW"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = ""--]] 
+L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = "지역별 정리"
+L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = "퀘스트 유형별 정리"
+L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = "추적중인것만 표시"
 L["S_OVERALL"] = "종합"
 L["S_PARTY"] = "파티"
 L["S_PARTY_DESC1"] = "파란색 별이 표시된 퀘스트는 모든 파티원이 수행 중이라는 의미입니다."
@@ -176,28 +158,20 @@ L["S_SUMMARYPANEL_LIFETIMESTATISTICS_CHARACTER"] = "캐릭터 전체 시간 통�
 L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "다른 캐릭터"
 L["S_TUTORIAL_AMOUNT"] = "받을 수 있는 보상의 양을 나타냅니다"
 L["S_TUTORIAL_CLICKTOTRACK"] = "퀘스트를 추적하려면 클릭하세요."
---[[Translation missing --]]
---[[ L["S_TUTORIAL_MAPALIGN"] = ""--]] 
+L["S_TUTORIAL_MAPALIGN"] = "세계지도 정렬을 선택하려면 여기를 클릭하십시오."
 L["S_TUTORIAL_PARTY"] = "파티 중일 때 모든 파티원이 수행 중인 퀘스트에 파란색 별이 표시됩니다!"
 L["S_TUTORIAL_TIMELEFT"] = "남은 시간을 나타냅니다 (+4시간, +90분, +30분, 30분 미만)"
 --[[Translation missing --]]
 --[[ L["S_TUTORIAL_WORLDBUTTONS"] = ""--]] 
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "이 버튼을 누르면 부서진 섬 지도로 변경됩니다."
 L["S_UNKNOWNQUEST"] = "알 수 없는 퀘스트"
---[[Translation missing --]]
---[[ L["S_WORLDBUTTONS_SHOW_NONE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_WORLDBUTTONS_SHOW_TYPE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_WORLDBUTTONS_SHOW_ZONE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_WORLDBUTTONS_TOGGLE_QUESTS"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_WORLDMAP_QUESTLOCATIONS"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_WORLDMAP_QUESTSUMMARY"] = ""--]] 
+L["S_WORLDBUTTONS_SHOW_NONE"] = "요약 숨기기"
+L["S_WORLDBUTTONS_SHOW_TYPE"] = "요약 보기"
+L["S_WORLDBUTTONS_SHOW_ZONE"] = "지역별 구분"
+L["S_WORLDBUTTONS_TOGGLE_QUESTS"] = "퀘스트 토글"
+L["S_WORLDMAP_QUESTLOCATIONS"] = "퀘스트 위치보기"
+L["S_WORLDMAP_QUESTSUMMARY"] = "퀘스트 요약 보기"
 L["S_WORLDMAP_TOOGLEQUESTS"] = "퀘스트 표시 전환"
---[[Translation missing --]]
---[[ L["S_WORLDMAP_TOOLTIP_TRACKALL"] = ""--]] 
+L["S_WORLDMAP_TOOLTIP_TRACKALL"] = "이 목록에있는 모든 퀘스트 추적"
 L["S_WORLDQUESTS"] = "전역 퀘스트"
 
