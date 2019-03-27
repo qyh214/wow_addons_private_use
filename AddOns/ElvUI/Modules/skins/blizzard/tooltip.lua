@@ -22,26 +22,24 @@ local function LoadSkin()
 
 	S:HandleCloseButton(_G.ItemRefCloseButton)
 
-	-- World Quest Reward Icon
-	local WorldMapTooltip = _G.WorldMapTooltip
-	WorldMapTooltip.ItemTooltip.Icon:SetTexCoord(unpack(E.TexCoords))
-	WorldMapTooltip.ItemTooltip:CreateBackdrop()
-	WorldMapTooltip.ItemTooltip.backdrop:SetOutside(WorldMapTooltip.ItemTooltip.Icon)
-	WorldMapTooltip.ItemTooltip.Count:ClearAllPoints()
-	WorldMapTooltip.ItemTooltip.Count:SetPoint('BOTTOMRIGHT', WorldMapTooltip.ItemTooltip.Icon, 'BOTTOMRIGHT', 1, 0)
-	hooksecurefunc(WorldMapTooltip.ItemTooltip.IconBorder, 'SetVertexColor', function(self, r, g, b)
+	-- Skin Blizzard Tooltips
+	local GameTooltip = _G.GameTooltip
+	local StoryTooltip = _G.QuestScrollFrame.StoryTooltip
+	StoryTooltip:SetFrameLevel(4)
+
+	GameTooltip.ItemTooltip.Icon:SetTexCoord(unpack(E.TexCoords))
+	GameTooltip.ItemTooltip.IconBorder:SetAlpha(0)
+	GameTooltip.ItemTooltip:CreateBackdrop("Default")
+	GameTooltip.ItemTooltip.backdrop:SetOutside(GameTooltip.ItemTooltip.Icon)
+	GameTooltip.ItemTooltip.Count:ClearAllPoints()
+	GameTooltip.ItemTooltip.Count:SetPoint('BOTTOMRIGHT', GameTooltip.ItemTooltip.Icon, 'BOTTOMRIGHT', 1, 0)
+	hooksecurefunc(GameTooltip.ItemTooltip.IconBorder, 'SetVertexColor', function(self, r, g, b)
 		self:GetParent().backdrop:SetBackdropBorderColor(r, g, b)
 		self:SetTexture()
 	end)
-	hooksecurefunc(WorldMapTooltip.ItemTooltip.IconBorder, 'Hide', function(self)
+	hooksecurefunc(GameTooltip.ItemTooltip.IconBorder, 'Hide', function(self)
 		self:GetParent().backdrop:SetBackdropBorderColor(unpack(E.media.bordercolor))
 	end)
-
-	-- Skin Blizzard Tooltips
-	local GameTooltip = _G.GameTooltip
-	local GameTooltipStatusBar =  _G.GameTooltipStatusBar
-	local StoryTooltip = _G.QuestScrollFrame.StoryTooltip
-	StoryTooltip:SetFrameLevel(4)
 
 	local WarCampaignTooltip = _G.QuestScrollFrame.WarCampaignTooltip
 	local tooltips = {
@@ -54,15 +52,11 @@ local function LoadSkin()
 		_G.ShoppingTooltip1,
 		_G.ShoppingTooltip2,
 		_G.ShoppingTooltip3,
-		_G.WorldMapCompareTooltip1,
-		_G.WorldMapCompareTooltip2,
-		_G.WorldMapCompareTooltip3,
 		_G.ReputationParagonTooltip,
 		_G.EmbeddedItemTooltip,
 		-- already have locals
 		GameTooltip,
 		StoryTooltip,
-		WorldMapTooltip,
 		WarCampaignTooltip,
 	}
 
@@ -74,17 +68,17 @@ local function LoadSkin()
 	local reward = _G.EmbeddedItemTooltip.ItemTooltip
 	local icon = reward.Icon
 	if reward and reward.backdrop then
-		reward.backdrop:SetPoint("TOPLEFT", icon, "TOPLEFT", -2, 2)
-		reward.backdrop:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 2, -2)
+		reward.backdrop:Point("TOPLEFT", icon, "TOPLEFT", -2, 2)
+		reward.backdrop:Point("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 2, -2)
 	end
 
 	-- Skin GameTooltip Status Bar
-	GameTooltipStatusBar:SetStatusBarTexture(E.media.normTex)
-	E:RegisterStatusBar(GameTooltipStatusBar)
-	GameTooltipStatusBar:CreateBackdrop('Transparent')
-	GameTooltipStatusBar:ClearAllPoints()
-	GameTooltipStatusBar:Point("TOPLEFT", GameTooltip, "BOTTOMLEFT", E.Border, -(E.Spacing * 3))
-	GameTooltipStatusBar:Point("TOPRIGHT", GameTooltip, "BOTTOMRIGHT", -E.Border, -(E.Spacing * 3))
+	_G.GameTooltipStatusBar:SetStatusBarTexture(E.media.normTex)
+	E:RegisterStatusBar(_G.GameTooltipStatusBar)
+	_G.GameTooltipStatusBar:CreateBackdrop('Transparent')
+	_G.GameTooltipStatusBar:ClearAllPoints()
+	_G.GameTooltipStatusBar:Point("TOPLEFT", GameTooltip, "BOTTOMLEFT", E.Border, -(E.Spacing * 3))
+	_G.GameTooltipStatusBar:Point("TOPRIGHT", GameTooltip, "BOTTOMRIGHT", -E.Border, -(E.Spacing * 3))
 
 	TT:SecureHook('GameTooltip_ShowStatusBar') -- Skin Status Bars
 	TT:SecureHook('GameTooltip_ShowProgressBar') -- Skin Progress Bars

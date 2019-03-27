@@ -243,7 +243,7 @@ function B:SetSearch(query)
 	end
 
 	if ElvUIReagentBankFrameItem1 then
-		for slotID=1, 98 do
+		for slotID = 1, B.REAGENTBANK_SIZE do
 			local _, _, _, _, _, _, link = GetContainerItemInfo(REAGENTBANK_CONTAINER, slotID);
 			local button = _G["ElvUIReagentBankFrameItem"..slotID]
 			local success, result = pcall(method, Search, link, query)
@@ -336,7 +336,7 @@ function B:UpdateCountDisplay()
 
 	--Reagent Bank
 	if self.BankFrame and self.BankFrame.reagentFrame then
-		for i = 1, 98 do
+		for i = 1, B.REAGENTBANK_SIZE do
 			local slot = self.BankFrame.reagentFrame.slots[i]
 			if slot then
 				slot.Count:FontTemplate(E.Libs.LSM:Fetch("font", E.db.bags.countFont), E.db.bags.countFontSize, E.db.bags.countFontOutline)
@@ -509,15 +509,19 @@ function B:UpdateSlot(bagID, slotID)
 		UpdateItemUpgradeIcon(slot)
 	end
 
-	slot.itemLevel:SetText("")
-	slot.bindType:SetText("")
+	slot.itemLevel:SetText('')
+	slot.bindType:SetText('')
 
 	local professionColors = B.ProfessionColors[bagType]
 	local showItemLevel = B.db.itemLevel and clink and not professionColors
 	local showBindType = B.db.showBindType and (slot.rarity and slot.rarity > LE_ITEM_QUALITY_COMMON)
 	if showBindType or showItemLevel then
 		E.ScanTooltip:SetOwner(_G.UIParent, "ANCHOR_NONE")
-		E.ScanTooltip:SetBagItem(bagID, slotID)
+		if slot.GetInventorySlot then -- this fixes bank bagid -1
+			E.ScanTooltip:SetInventoryItem("player", slot:GetInventorySlot())
+		else
+			E.ScanTooltip:SetBagItem(bagID, slotID)
+		end
 		E.ScanTooltip:Show()
 	end
 
@@ -527,14 +531,14 @@ function B:UpdateSlot(bagID, slotID)
 		slot:SetBackdropBorderColor(r, g, b)
 		slot.ignoreBorderColors = true
 	elseif clink then
-		local name, _, _, _, _, _, _, _, itemEquipLoc, _, _, itemClassID, itemSubClassID = GetItemInfo(clink);
+		local name, _, itemRarity, _, _, _, _, _, itemEquipLoc, _, _, itemClassID, itemSubClassID = GetItemInfo(clink);
 		slot.name = name
 
 		local isQuestItem, questId, isActiveQuest = GetContainerItemQuestInfo(bagID, slotID);
 		local r, g, b
 
-		if slot.rarity then
-			r, g, b = GetItemQualityColor(slot.rarity);
+		if slot.rarity or itemRarity then
+			r, g, b = GetItemQualityColor(slot.rarity or itemRarity);
 		end
 
 		if showBindType or showItemLevel then
@@ -644,7 +648,7 @@ end
 
 function B:UpdateBagSlots(bagID)
 	if bagID == REAGENTBANK_CONTAINER then
-		for i=1, 98 do
+		for i=1, B.REAGENTBANK_SIZE do
 			self:UpdateReagentSlot(i);
 		end
 	else
@@ -679,7 +683,7 @@ function B:UpdateCooldowns()
 	for _, bagID in ipairs(self.BagIDs) do
 		for slotID = 1, GetContainerNumSlots(bagID) do
 			local start, duration, enable = GetContainerItemCooldown(bagID, slotID)
-			CooldownFrame_Set(self.Bags[bagID][slotID].cooldown, start, duration, enable)
+			CooldownFrame_Set(self.Bags[bagID][slotID].cooldown, start, duration, enable, _, _)
 		end
 	end
 end
@@ -961,7 +965,7 @@ function B:Layout(isBank)
 		if (not isBank) or (isBank and bagID ~= -1 and numContainerSlots >= 1 and not (i - 1 > numContainerSlots)) then
 			if not f.ContainerHolder[i] then
 				if isBank then
-					f.ContainerHolder[i] = CreateFrame("CheckButton", "ElvUIBankBag" .. (bagID-4), f.ContainerHolder, "BankItemButtonBagTemplate")
+					f.ContainerHolder[i] = CreateFrame("ItemButton", "ElvUIBankBag" .. (bagID-4), f.ContainerHolder, "BankItemButtonBagTemplate")
 					B:CreateFilterIcon(f.ContainerHolder[i])
 					f.ContainerHolder[i]:SetScript('OnClick', function(holder, button)
 						if button == "RightButton" and holder.id then
@@ -974,7 +978,7 @@ function B:Layout(isBank)
 					end)
 				else
 					if bagID == 0 then --Backpack needs different setup
-						f.ContainerHolder[i] = CreateFrame("CheckButton", "ElvUIMainBagBackpack", f.ContainerHolder, "ItemButtonTemplate, ItemAnimTemplate")
+						f.ContainerHolder[i] = CreateFrame("ItemButton", "ElvUIMainBagBackpack", f.ContainerHolder, "ItemAnimTemplate")
 						B:CreateFilterIcon(f.ContainerHolder[i])
 						f.ContainerHolder[i]:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 						f.ContainerHolder[i]:SetScript('OnClick', function(holder, button)
@@ -989,7 +993,7 @@ function B:Layout(isBank)
 							PutItemInBackpack();--Put bag on empty slot, or drop item in this bag
 						end)
 					else
-						f.ContainerHolder[i] = CreateFrame("CheckButton", "ElvUIMainBag" .. (bagID-1) .. "Slot", f.ContainerHolder, "BagSlotButtonTemplate")
+						f.ContainerHolder[i] = CreateFrame("ItemButton", "ElvUIMainBag" .. (bagID-1) .. "Slot", f.ContainerHolder, "BagSlotButtonTemplate")
 						B:CreateFilterIcon(f.ContainerHolder[i])
 						f.ContainerHolder[i]:SetScript('OnClick', function(holder, button)
 							if button == "RightButton" and holder.id then
@@ -1003,11 +1007,10 @@ function B:Layout(isBank)
 					end
 				end
 
-				f.ContainerHolder[i]:SetTemplate('Default', true)
+				f.ContainerHolder[i]:SetTemplate(nil, true)
 				f.ContainerHolder[i]:StyleButton()
 				f.ContainerHolder[i].IconBorder:SetAlpha(0)
 				f.ContainerHolder[i]:SetNormalTexture("")
-				f.ContainerHolder[i]:SetCheckedTexture(nil)
 				f.ContainerHolder[i]:SetPushedTexture("")
 				f.ContainerHolder[i].id = bagID
 				f.ContainerHolder[i]:HookScript("OnEnter", function(ch) B.SetSlotAlphaForBag(ch, f) end)
@@ -1071,11 +1074,10 @@ function B:Layout(isBank)
 			for slotID = 1, numSlots do
 				f.totalSlots = f.totalSlots + 1;
 				if not f.Bags[bagID][slotID] then
-					f.Bags[bagID][slotID] = CreateFrame('CheckButton', f.Bags[bagID]:GetName()..'Slot'..slotID, f.Bags[bagID], bagID == -1 and 'BankItemButtonGenericTemplate' or 'ContainerFrameItemButtonTemplate');
+					f.Bags[bagID][slotID] = CreateFrame('ItemButton', f.Bags[bagID]:GetName()..'Slot'..slotID, f.Bags[bagID], bagID == -1 and 'BankItemButtonGenericTemplate' or 'ContainerFrameItemButtonTemplate');
 					f.Bags[bagID][slotID]:StyleButton();
-					f.Bags[bagID][slotID]:SetTemplate('Default', true);
+					f.Bags[bagID][slotID]:SetTemplate(nil, true);
 					f.Bags[bagID][slotID]:SetNormalTexture(nil);
-					f.Bags[bagID][slotID]:SetCheckedTexture(nil);
 
 					if _G[f.Bags[bagID][slotID]:GetName()..'NewItemTexture'] then
 						_G[f.Bags[bagID][slotID]:GetName()..'NewItemTexture']:Hide()
@@ -1088,14 +1090,14 @@ function B:Layout(isBank)
 
 					if not(f.Bags[bagID][slotID].questIcon) then
 						f.Bags[bagID][slotID].questIcon = _G[f.Bags[bagID][slotID]:GetName()..'IconQuestTexture'] or _G[f.Bags[bagID][slotID]:GetName()].IconQuestTexture
-						f.Bags[bagID][slotID].questIcon:SetTexture("Interface\\AddOns\\ElvUI\\media\\textures\\bagQuestIcon");
+						f.Bags[bagID][slotID].questIcon:SetTexture(E.Media.Textures.BagQuestIcon);
 						f.Bags[bagID][slotID].questIcon:SetTexCoord(0,1,0,1);
 						f.Bags[bagID][slotID].questIcon:SetInside();
 						f.Bags[bagID][slotID].questIcon:Hide();
 					end
 
 					if f.Bags[bagID][slotID].UpgradeIcon then
-						f.Bags[bagID][slotID].UpgradeIcon:SetTexture("Interface\\AddOns\\ElvUI\\media\\textures\\bagUpgradeIcon");
+						f.Bags[bagID][slotID].UpgradeIcon:SetTexture(E.Media.Textures.BagUpgradeIcon);
 						f.Bags[bagID][slotID].UpgradeIcon:SetTexCoord(0,1,0,1);
 						f.Bags[bagID][slotID].UpgradeIcon:SetInside();
 						f.Bags[bagID][slotID].UpgradeIcon:Hide();
@@ -1113,7 +1115,7 @@ function B:Layout(isBank)
 					if not f.Bags[bagID][slotID].ScrapIcon then
 						local ScrapIcon = f.Bags[bagID][slotID]:CreateTexture(nil, "OVERLAY")
 						ScrapIcon:SetAtlas("bags-icon-scrappable")
-						ScrapIcon:SetSize(14, 12)
+						ScrapIcon:Size(14, 12)
 						ScrapIcon:Point("TOPRIGHT", -1, -1)
 						ScrapIcon:Hide()
 						f.Bags[bagID][slotID].ScrapIcon = ScrapIcon
@@ -1153,7 +1155,7 @@ function B:Layout(isBank)
 					if not f.Bags[bagID][slotID].newItemGlow then
 						local newItemGlow = f.Bags[bagID][slotID]:CreateTexture(nil, "OVERLAY")
 						newItemGlow:SetInside()
-						newItemGlow:SetTexture("Interface\\AddOns\\ElvUI\\media\\textures\\bagNewItemGlow")
+						newItemGlow:SetTexture(E.Media.Textures.BagNewItemGlow)
 						newItemGlow:Hide()
 						f.Bags[bagID][slotID].newItemGlow = newItemGlow
 						f.Bags[bagID][slotID]:HookScript("OnEnter", hideNewItemGlow)
@@ -1234,15 +1236,15 @@ function B:Layout(isBank)
 
 		local totalSlots, lastReagentRowButton = 0
 		numContainerRows = 1
-		for i = 1, 98 do
+		for i = 1, B.REAGENTBANK_SIZE do
 			totalSlots = totalSlots + 1;
 
 			if(not f.reagentFrame.slots[i]) then
-				f.reagentFrame.slots[i] = CreateFrame("Button", "ElvUIReagentBankFrameItem"..i, f.reagentFrame, "ReagentBankItemButtonGenericTemplate");
+				f.reagentFrame.slots[i] = CreateFrame("ItemButton", "ElvUIReagentBankFrameItem"..i, f.reagentFrame, "ReagentBankItemButtonGenericTemplate");
 				f.reagentFrame.slots[i]:SetID(i)
 
 				f.reagentFrame.slots[i]:StyleButton()
-				f.reagentFrame.slots[i]:SetTemplate('Default', true);
+				f.reagentFrame.slots[i]:SetTemplate(nil, true);
 				f.reagentFrame.slots[i]:SetNormalTexture(nil);
 
 				f.reagentFrame.slots[i].Count:ClearAllPoints();
@@ -1259,7 +1261,7 @@ function B:Layout(isBank)
 				if not f.reagentFrame.slots[i].newItemGlow then
 					local newItemGlow = f.reagentFrame.slots[i]:CreateTexture(nil, "OVERLAY")
 					newItemGlow:SetInside()
-					newItemGlow:SetTexture("Interface\\AddOns\\ElvUI\\media\\textures\\bagNewItemGlow")
+					newItemGlow:SetTexture(E.Media.Textures.BagNewItemGlow)
 					newItemGlow:Hide()
 					f.reagentFrame.slots[i].newItemGlow = newItemGlow
 					f.reagentFrame.slots[i]:HookScript("OnEnter", hideNewItemGlow)
@@ -1357,13 +1359,8 @@ function B:UpdateReagentSlot(slotID)
 end
 
 function B:UpdateAll()
-	if self.BagFrame then
-		self:Layout();
-	end
-
-	if self.BankFrame then
-		self:Layout(true);
-	end
+	if self.BagFrame then self:Layout() end
+	if self.BankFrame then self:Layout(true) end
 end
 
 function B:OnEvent(event, ...)
@@ -1567,7 +1564,7 @@ function B:VendorGrayCheck()
 	if value == 0 then
 		E:Print(L["No gray items to delete."])
 	elseif not _G.MerchantFrame or not _G.MerchantFrame:IsShown() then
-		E.PopupDialogs["DELETE_GRAYS"].Money = value
+		E.PopupDialogs.DELETE_GRAYS.Money = value
 		E:StaticPopup_Show('DELETE_GRAYS')
 	else
 		B:VendorGrays()
@@ -1627,7 +1624,7 @@ function B:ContructContainerFrame(name, isBank)
 	end)
 
 	f.closeButton = CreateFrame('Button', name..'CloseButton', f, 'UIPanelCloseButton');
-	f.closeButton:SetPoint('TOPRIGHT', 5, 5);
+	f.closeButton:Point('TOPRIGHT', 5, 5);
 
 	SkinModule:HandleCloseButton(f.closeButton);
 
@@ -1650,7 +1647,7 @@ function B:ContructContainerFrame(name, isBank)
 
 		f.reagentFrame.cover = CreateFrame("Button", nil, f.reagentFrame)
 		f.reagentFrame.cover:SetAllPoints(f.reagentFrame)
-		f.reagentFrame.cover:SetTemplate("Default", true)
+		f.reagentFrame.cover:SetTemplate(nil, true)
 		f.reagentFrame.cover:SetFrameLevel(f.reagentFrame:GetFrameLevel() + 10)
 
 		f.reagentFrame.cover.purchaseButton = CreateFrame("Button", nil, f.reagentFrame.cover)
@@ -1682,7 +1679,7 @@ function B:ContructContainerFrame(name, isBank)
 		f.bagText:SetText(L["Bank"])
 
 		f.reagentToggle = CreateFrame("Button", name..'ReagentButton', f);
-		f.reagentToggle:SetSize(16 + E.Border, 16 + E.Border)
+		f.reagentToggle:Size(16 + E.Border, 16 + E.Border)
 		f.reagentToggle:SetTemplate()
 		f.reagentToggle:Point("RIGHT", f.bagText, "LEFT", -5, E.Border * 2)
 		f.reagentToggle:SetNormalTexture("Interface\\ICONS\\INV_Enchant_DustArcane")
@@ -1697,27 +1694,14 @@ function B:ContructContainerFrame(name, isBank)
 		f.reagentToggle:SetScript("OnLeave", self.Tooltip_Hide)
 		f.reagentToggle:SetScript("OnClick", function()
 			PlaySound(841) --IG_CHARACTER_INFO_TAB
-			if f.holderFrame:IsShown() then
-				_G.BankFrame.selectedTab = 2
-				f.holderFrame:Hide()
-				f.reagentFrame:Show()
-				f.editBox:Point('RIGHT', f.depositButton, 'LEFT', -5, 0);
-				f.bagText:SetText(L["Reagent Bank"])
-			else
-				_G.BankFrame.selectedTab = 1
-				f.reagentFrame:Hide()
-				f.holderFrame:Show()
-				f.editBox:Point('RIGHT', f.purchaseBagButton, 'LEFT', -5, 0);
-				f.bagText:SetText(L["Bank"])
-			end
-
+			B:ShowBankTab(f, f.holderFrame:IsShown())
 			self:Layout(true)
 			f:Show()
 		end)
 
 		--Sort Button
 		f.sortButton = CreateFrame("Button", name..'SortButton', f);
-		f.sortButton:SetSize(16 + E.Border, 16 + E.Border)
+		f.sortButton:Size(16 + E.Border, 16 + E.Border)
 		f.sortButton:SetTemplate()
 		f.sortButton:Point("RIGHT", f.reagentToggle, "LEFT", -5, 0)
 		f.sortButton:SetNormalTexture("Interface\\ICONS\\INV_Pet_Broom")
@@ -1754,7 +1738,7 @@ function B:ContructContainerFrame(name, isBank)
 
 		--Toggle Bags Button
 		f.depositButton = CreateFrame("Button", name..'DepositButton', f.reagentFrame);
-		f.depositButton:SetSize(16 + E.Border, 16 + E.Border)
+		f.depositButton:Size(16 + E.Border, 16 + E.Border)
 		f.depositButton:SetTemplate()
 		f.depositButton:Point("RIGHT", f.sortButton, "LEFT", -5, 0)
 		f.depositButton:SetNormalTexture("Interface\\ICONS\\misc_arrowdown")
@@ -1774,7 +1758,7 @@ function B:ContructContainerFrame(name, isBank)
 
 		--Toggle Bags Button
 		f.bagsButton = CreateFrame("Button", name..'BagsButton', f.holderFrame);
-		f.bagsButton:SetSize(16 + E.Border, 16 + E.Border)
+		f.bagsButton:Size(16 + E.Border, 16 + E.Border)
 		f.bagsButton:SetTemplate()
 		f.bagsButton:Point("RIGHT", f.sortButton, "LEFT", -5, 0)
 		f.bagsButton:SetNormalTexture("Interface\\Buttons\\Button-Backpack-Up")
@@ -1799,7 +1783,7 @@ function B:ContructContainerFrame(name, isBank)
 		end)
 
 		f.purchaseBagButton = CreateFrame('Button', nil, f.holderFrame)
-		f.purchaseBagButton:SetSize(16 + E.Border, 16 + E.Border)
+		f.purchaseBagButton:Size(16 + E.Border, 16 + E.Border)
 		f.purchaseBagButton:SetTemplate()
 		f.purchaseBagButton:Point("RIGHT", f.bagsButton, "LEFT", -5, 0)
 		f.purchaseBagButton:SetNormalTexture("Interface\\ICONS\\INV_Misc_Coin_01")
@@ -1851,7 +1835,7 @@ function B:ContructContainerFrame(name, isBank)
 		f.editBox.searchIcon = f.editBox:CreateTexture(nil, 'OVERLAY')
 		f.editBox.searchIcon:SetTexture("Interface\\Common\\UI-Searchbox-Icon")
 		f.editBox.searchIcon:Point("LEFT", f.editBox.backdrop, "LEFT", E.Border + 1, -1)
-		f.editBox.searchIcon:SetSize(15, 15)
+		f.editBox.searchIcon:Size(15, 15)
 
 	else
 		--Gold Text
@@ -1862,7 +1846,7 @@ function B:ContructContainerFrame(name, isBank)
 
 		--Sort Button
 		f.sortButton = CreateFrame("Button", name..'SortButton', f);
-		f.sortButton:SetSize(16 + E.Border, 16 + E.Border)
+		f.sortButton:Size(16 + E.Border, 16 + E.Border)
 		f.sortButton:SetTemplate()
 		f.sortButton:Point("RIGHT", f.goldText, "LEFT", -5, E.Border * 2)
 		f.sortButton:SetNormalTexture("Interface\\ICONS\\INV_Pet_Broom")
@@ -1895,7 +1879,7 @@ function B:ContructContainerFrame(name, isBank)
 
 		--Bags Button
 		f.bagsButton = CreateFrame("Button", name..'BagsButton', f);
-		f.bagsButton:SetSize(16 + E.Border, 16 + E.Border)
+		f.bagsButton:Size(16 + E.Border, 16 + E.Border)
 		f.bagsButton:SetTemplate()
 		f.bagsButton:Point("RIGHT", f.sortButton, "LEFT", -5, 0)
 		f.bagsButton:SetNormalTexture("Interface\\Buttons\\Button-Backpack-Up")
@@ -1913,7 +1897,7 @@ function B:ContructContainerFrame(name, isBank)
 
 		--Vendor Grays
 		f.vendorGraysButton = CreateFrame('Button', nil, f.holderFrame)
-		f.vendorGraysButton:SetSize(16 + E.Border, 16 + E.Border)
+		f.vendorGraysButton:Size(16 + E.Border, 16 + E.Border)
 		f.vendorGraysButton:SetTemplate()
 		f.vendorGraysButton:Point("RIGHT", f.bagsButton, "LEFT", -5, 0)
 		f.vendorGraysButton:SetNormalTexture("Interface\\ICONS\\INV_Misc_Coin_01")
@@ -1948,7 +1932,7 @@ function B:ContructContainerFrame(name, isBank)
 		f.editBox.searchIcon = f.editBox:CreateTexture(nil, 'OVERLAY')
 		f.editBox.searchIcon:SetTexture("Interface\\Common\\UI-Searchbox-Icon")
 		f.editBox.searchIcon:Point("LEFT", f.editBox.backdrop, "LEFT", E.Border + 1, -1)
-		f.editBox.searchIcon:SetSize(15, 15)
+		f.editBox.searchIcon:Size(15, 15)
 
 		--Currency
 		f.currencyButton = CreateFrame('Frame', nil, f);
@@ -1982,12 +1966,6 @@ function B:ContructContainerFrame(name, isBank)
 			end
 
 			B:NewItemGlowBagClear(f)
-
-			if ElvUIBags and ElvUIBags.buttons then
-				for _, bagButton in pairs(ElvUIBags.buttons) do
-					bagButton:SetChecked(false)
-				end
-			end
 
 			if E.db.bags.clearSearchOnClose then
 				B.ResetAndClear(f.editBox);
@@ -2059,10 +2037,29 @@ function B:CloseBags()
 	TooltipModule:GameTooltip_SetDefaultAnchor(_G.GameTooltip)
 end
 
+function B:ShowBankTab(f, showReagent)
+	if showReagent then
+		_G.BankFrame.selectedTab = 2
+		f.holderFrame:Hide()
+		f.reagentFrame:Show()
+		f.editBox:Point('RIGHT', f.depositButton, 'LEFT', -5, 0);
+		f.bagText:SetText(L["Reagent Bank"])
+	else
+		_G.BankFrame.selectedTab = 1
+		f.reagentFrame:Hide()
+		f.holderFrame:Show()
+		f.editBox:Point('RIGHT', f.purchaseBagButton, 'LEFT', -5, 0);
+		f.bagText:SetText(L["Bank"])
+	end
+end
+
 function B:OpenBank()
 	if not self.BankFrame then
 		self.BankFrame = self:ContructContainerFrame('ElvUI_BankContainerFrame', true);
 	end
+
+	--Allow opening reagent tab directly by holding Shift
+	B:ShowBankTab(self.BankFrame, IsShiftKeyDown())
 
 	--Call :Layout first so all elements are created before we update
 	self:Layout(true)
@@ -2072,15 +2069,6 @@ function B:OpenBank()
 
 	self:OpenBags()
 	self:UpdateTokens()
-
-	--Allow opening reagent tab directly by holding Shift
-	if IsShiftKeyDown() then
-		_G.BankFrame.selectedTab = 2
-		self.BankFrame.holderFrame:Hide()
-		self.BankFrame.reagentFrame:Show()
-		self.BankFrame.editBox:Point('RIGHT', self.BankFrame.depositButton, 'LEFT', -5, 0);
-		self.BankFrame.bagText:SetText(L["Reagent Bank"])
-	end
 end
 
 function B:PLAYERBANKBAGSLOTS_CHANGED()
@@ -2103,7 +2091,7 @@ function B:GUILDBANKFRAME_OPENED(event)
 	--[[
 		local button = CreateFrame("Button", "GuildSortButton", GuildBankFrame, "UIPanelButtonTemplate")
 		button:StripTextures()
-		button:SetTemplate("Default", true)
+		button:SetTemplate(nil, true)
 		button:Size(110, 20)
 		button:Point("RIGHT", GuildItemSearchBox, "LEFT", -4, 0)
 		button:SetText(L["Sort Tab"])
@@ -2401,6 +2389,7 @@ function B:Initialize()
 	E.bags = self
 	self.db = E.db.bags
 	self.BagFrames = {}
+	self.REAGENTBANK_SIZE = 98 -- numRow (7) * numColumn (7) * numSubColumn (2) = size = 98
 
 	self.ProfessionColors = {
 		[0x0008]   = { self.db.colors.profession.leatherworking.r, self.db.colors.profession.leatherworking.g, self.db.colors.profession.leatherworking.b },

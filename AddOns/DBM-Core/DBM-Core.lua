@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 18418 $"):sub(12, -3)),
-	DisplayVersion = "8.1.11", -- the string that is shown as version
-	ReleaseRevision = 18418 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 18467 $"):sub(12, -3)),
+	DisplayVersion = "8.1.13", -- the string that is shown as version
+	ReleaseRevision = 18454 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -3838,19 +3838,19 @@ do
 	--This never wants to spam you to use mods for trivial content you don't need mods for.
 	--It's intended to suggest mods for content that's relevant to your level (TW, leveling up in dungeons, or even older raids you can't just shit on)
 	function DBM:CheckAvailableMods()
-		if BigWigs then return end--If they are running two boss mods at once, lets assume they are only using DBM for a specific feature and not nag
+		if BigWigs then return end--If they are running two boss mods at once, lets assume they are only using DBM for a specific feature (such as brawlers) and not nag
 		local timeWalking = difficultyIndex == 24 or difficultyIndex == 33 or false
-		if oldDungeons[LastInstanceMapID] and (timeWalking or playerLevel < 108) and not GetAddOnInfo("DBM-Party-BC") then
+		if oldDungeons[LastInstanceMapID] and (timeWalking or playerLevel < 110) and not GetAddOnInfo("DBM-Party-BC") then
 			AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM Old Dungeon mods"))
 		elseif (classicZones[LastInstanceMapID] or bcZones[LastInstanceMapID]) and (timeWalking or playerLevel < 71) and not GetAddOnInfo("DBM-BlackTemple") then
 			AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM BC/Vanilla mods"))
-		elseif wrathZones[LastInstanceMapID] and (timeWalking or playerLevel < 81) and not GetAddOnInfo("DBM-Ulduar") then
+		elseif wrathZones[LastInstanceMapID] and (timeWalking or playerLevel < 86) and not GetAddOnInfo("DBM-Ulduar") then
 			AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM Wrath of the Lich King mods"))
-		elseif cataZones[LastInstanceMapID] and (timeWalking or playerLevel < 86) and not GetAddOnInfo("DBM-Firelands") then
+		elseif cataZones[LastInstanceMapID] and (timeWalking or playerLevel < 91) and not GetAddOnInfo("DBM-Firelands") then
 			AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM Cataclysm mods"))
-		elseif mopZones[LastInstanceMapID] and (timeWalking or playerLevel < 91) and not GetAddOnInfo("DBM-SiegeOfOrgrimmarV2") then
+		elseif mopZones[LastInstanceMapID] and (timeWalking or playerLevel < 101) and not GetAddOnInfo("DBM-SiegeOfOrgrimmarV2") then
 			AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM Mists of Pandaria mods"))
-		elseif wodZones[LastInstanceMapID] and (timeWalking or playerLevel < 101) and not GetAddOnInfo("DBM-HellfireCitadel") then
+		elseif wodZones[LastInstanceMapID] and (timeWalking or playerLevel < 111) and not GetAddOnInfo("DBM-HellfireCitadel") then
 			AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM Warlords of Draenor mods"))
 		elseif legionZones[LastInstanceMapID] and (timeWalking or playerLevel < 121) and not GetAddOnInfo("DBM-AntorusBurningThrone") then
 			AddMsg(self, DBM_CORE_MOD_AVAILABLE:format("DBM Legion mods"))
@@ -7571,7 +7571,7 @@ end
 
 function bossModPrototype:IsMythic()
 	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
-	if diff == "mythic" then
+	if diff == "mythic" or diff == "challenge5" then
 		return true
 	end
 	return false
@@ -7980,7 +7980,7 @@ do
 				if UnitIsUnit(uId, "player") then return true end--If "player" is target, avoid doing any complicated stuff
 				local inRange = 0
 				if not UnitIsPlayer(uId) then
-					local inRange2, checkedRange = UnitInRange(uId)
+					local inRange2, checkedRange = UnitInRange(uId)--43
 					if checkedRange then--checkedRange only returns true if api worked, so if we get false, true then we are not near npc
 						return inRange2 and true or false
 					else--Its probably a totem or just something we can't assess. Fall back to no filtering
@@ -11719,6 +11719,11 @@ do
 			local timeNow = GetTime()
 			local creatureID = creatureID--This function must not be used to boss, so remove self.creatureId. Accepts cid, guid and cid table
 			local iconSetMethod = iconSetMethod or 0--Set IconSetMethod -- 0: Descending / 1:Ascending / 2: Force Set / 9:Force Stop
+			local scanningTime = scanningTime or 8
+			local maxIcon = maxIcon or 8 --We only have 8 icons.
+			local isFriendly = isFriendly or false
+			local secondCreatureID = secondCreatureID or 0
+			local scanInterval = scanInterval or 0.2
 			--With different scanID, this function can support multi scanning same time. Required for Nazgrim.
 			local scanID = 0
 			if type(creatureID) == "number" then
@@ -11734,11 +11739,6 @@ do
 			if not addsIcon[scanID] then addsIcon[scanID] = mobIcon or 8 end
 			if not addsIconSet[scanID] then addsIconSet[scanID] = 0 end
 			if not scanExpires[scanID] then scanExpires[scanID] = timeNow + scanningTime end
-			local maxIcon = maxIcon or 8 --We only have 8 icons.
-			local isFriendly = isFriendly or false
-			local secondCreatureID = secondCreatureID or 0
-			local scanInterval = scanInterval or 0.2
-			local scanningTime = scanningTime or 8
 			--DO SCAN NOW
 			for _, unitid2 in ipairs(mobUids) do
 				local guid2 = UnitGUID(unitid2)

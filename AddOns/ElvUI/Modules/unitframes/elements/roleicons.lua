@@ -22,9 +22,9 @@ function UF:Construct_RoleIcon(frame)
 end
 
 local roleIconTextures = {
-	TANK = [[Interface\AddOns\ElvUI\media\textures\tank]],
-	HEALER = [[Interface\AddOns\ElvUI\media\textures\healer]],
-	DAMAGER = [[Interface\AddOns\ElvUI\media\textures\dps]]
+	TANK = E.Media.Textures.Tank,
+	HEALER = E.Media.Textures.Healer,
+	DAMAGER = E.Media.Textures.DPS
 }
 
 --From http://forums.wowace.com/showpost.php?p=325677&postcount=5

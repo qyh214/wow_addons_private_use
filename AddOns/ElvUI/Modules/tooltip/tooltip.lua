@@ -78,7 +78,7 @@ local C_PetJournalGetPetTeamAverageLevel = C_PetJournal.GetPetTeamAverageLevel
 local LEVEL1 = _G.TOOLTIP_UNIT_LEVEL:gsub('%s?%%s%s?%-?','')
 local LEVEL2 = _G.TOOLTIP_UNIT_LEVEL_CLASS:gsub('^%%2$s%s?(.-)%s?%%1$s','%1'):gsub('^%-?г?о?%s?',''):gsub('%s?%%s%s?%-?','')
 
-local GameTooltip, GameTooltipStatusBar = _G["GameTooltip"], _G["GameTooltipStatusBar"]
+local GameTooltip, GameTooltipStatusBar = _G.GameTooltip, _G.GameTooltipStatusBar
 local targetList = {}
 local TAPPED_COLOR = { r=.6, g=.6, b=.6 }
 local AFK_LABEL = " |cffFFFFFF[|r|cffFF0000"..L["AFK"].."|r|cffFFFFFF]|r"
@@ -99,8 +99,17 @@ function TT:GameTooltip_SetDefaultAnchor(tt, parent)
 
 	if(tt:GetAnchorType() ~= "ANCHOR_NONE") then return end
 	if InCombatLockdown() and self.db.visibility.combat then
-		tt:Hide()
-		return
+		local modifier = self.db.visibility.combatOverride
+		if (not(
+				(modifier == 'SHIFT' and IsShiftKeyDown())
+				or
+				(modifier == 'CTRL' and IsControlKeyDown())
+				or
+				(modifier == 'ALT' and IsAltKeyDown())
+		)) then
+			tt:Hide()
+			return
+		end
 	end
 
 	local ownerName = tt:GetOwner() and tt:GetOwner().GetName and tt:GetOwner():GetName()
@@ -276,7 +285,6 @@ function TT:SetUnitText(tt, unit, level, isShiftKeyDown)
 			local unitReaction = UnitReaction(unit, "player")
 			if E.db.tooltip.useCustomFactionColors then
 				if unitReaction then
-					unitReaction = format("%s", unitReaction) --Cast to string because our table is indexed by string keys
 					color = E.db.tooltip.factionColors[unitReaction]
 				end
 			else
@@ -483,7 +491,7 @@ function TT:GameTooltip_OnTooltipSetUnit(tt)
 				local _, class = UnitClass(unitTarget)
 				targetColor = _G.CUSTOM_CLASS_COLORS and _G.CUSTOM_CLASS_COLORS[class] or RAID_CLASS_COLORS[class]
 			else
-				targetColor = E.db.tooltip.useCustomFactionColors and E.db.tooltip.factionColors[""..UnitReaction(unitTarget, "player")] or FACTION_BAR_COLORS[UnitReaction(unitTarget, "player")]
+				targetColor = E.db.tooltip.useCustomFactionColors and E.db.tooltip.factionColors[UnitReaction(unitTarget, "player")] or FACTION_BAR_COLORS[UnitReaction(unitTarget, "player")]
 			end
 
 			tt:AddDoubleLine(format("%s:", _G.TARGET), format("|cff%02x%02x%02x%s|r", targetColor.r * 255, targetColor.g * 255, targetColor.b * 255, UnitName(unitTarget)))
@@ -640,7 +648,7 @@ function TT:GameTooltip_ShowStatusBar(tt)
 	if (not sb or not sb.Text) or sb.backdrop then return end
 
 	sb:StripTextures()
-	sb:CreateBackdrop('Default', nil, true)
+	sb:CreateBackdrop(nil, nil, true)
 	sb:SetStatusBarTexture(E.media.normTex)
 end
 
@@ -738,7 +746,7 @@ end
 function TT:RepositionBNET(frame, _, anchor)
 	if anchor ~= _G.BNETMover then
 		frame:ClearAllPoints()
-		frame:SetPoint(_G.BNETMover.anchorPoint or 'TOPLEFT', _G.BNETMover, _G.BNETMover.anchorPoint or 'TOPLEFT');
+		frame:Point(_G.BNETMover.anchorPoint or 'TOPLEFT', _G.BNETMover, _G.BNETMover.anchorPoint or 'TOPLEFT');
 	end
 end
 
@@ -749,37 +757,37 @@ function TT:SetTooltipFonts()
 	local textSize = E.db.tooltip.textFontSize
 	local smallTextSize = E.db.tooltip.smallTextFontSize
 
-	_G.GameTooltipHeaderText:SetFont(font, headerSize, fontOutline)
-	_G.GameTooltipText:SetFont(font, textSize, fontOutline)
-	_G.GameTooltipTextSmall:SetFont(font, smallTextSize, fontOutline)
+	_G.GameTooltipHeaderText:FontTemplate(font, headerSize, fontOutline)
+	_G.GameTooltipText:FontTemplate(font, textSize, fontOutline)
+	_G.GameTooltipTextSmall:FontTemplate(font, smallTextSize, fontOutline)
 	if GameTooltip.hasMoney then
 		for i = 1, GameTooltip.numMoneyFrames do
-			_G["GameTooltipMoneyFrame"..i.."PrefixText"]:SetFont(font, textSize, fontOutline)
-			_G["GameTooltipMoneyFrame"..i.."SuffixText"]:SetFont(font, textSize, fontOutline)
-			_G["GameTooltipMoneyFrame"..i.."GoldButtonText"]:SetFont(font, textSize, fontOutline)
-			_G["GameTooltipMoneyFrame"..i.."SilverButtonText"]:SetFont(font, textSize, fontOutline)
-			_G["GameTooltipMoneyFrame"..i.."CopperButtonText"]:SetFont(font, textSize, fontOutline)
+			_G["GameTooltipMoneyFrame"..i.."PrefixText"]:FontTemplate(font, textSize, fontOutline)
+			_G["GameTooltipMoneyFrame"..i.."SuffixText"]:FontTemplate(font, textSize, fontOutline)
+			_G["GameTooltipMoneyFrame"..i.."GoldButtonText"]:FontTemplate(font, textSize, fontOutline)
+			_G["GameTooltipMoneyFrame"..i.."SilverButtonText"]:FontTemplate(font, textSize, fontOutline)
+			_G["GameTooltipMoneyFrame"..i.."CopperButtonText"]:FontTemplate(font, textSize, fontOutline)
 		end
 	end
 
 	--These show when you compare items ("Currently Equipped", name of item, item level)
 	--Since they appear at the top of the tooltip, we set it to use the header font size.
-	_G.ShoppingTooltip1TextLeft1:SetFont(font, headerSize, fontOutline)
-	_G.ShoppingTooltip1TextLeft2:SetFont(font, headerSize, fontOutline)
-	_G.ShoppingTooltip1TextLeft3:SetFont(font, headerSize, fontOutline)
-	_G.ShoppingTooltip1TextLeft4:SetFont(font, headerSize, fontOutline)
-	_G.ShoppingTooltip1TextRight1:SetFont(font, headerSize, fontOutline)
-	_G.ShoppingTooltip1TextRight2:SetFont(font, headerSize, fontOutline)
-	_G.ShoppingTooltip1TextRight3:SetFont(font, headerSize, fontOutline)
-	_G.ShoppingTooltip1TextRight4:SetFont(font, headerSize, fontOutline)
-	_G.ShoppingTooltip2TextLeft1:SetFont(font, headerSize, fontOutline)
-	_G.ShoppingTooltip2TextLeft2:SetFont(font, headerSize, fontOutline)
-	_G.ShoppingTooltip2TextLeft3:SetFont(font, headerSize, fontOutline)
-	_G.ShoppingTooltip2TextLeft4:SetFont(font, headerSize, fontOutline)
-	_G.ShoppingTooltip2TextRight1:SetFont(font, headerSize, fontOutline)
-	_G.ShoppingTooltip2TextRight2:SetFont(font, headerSize, fontOutline)
-	_G.ShoppingTooltip2TextRight3:SetFont(font, headerSize, fontOutline)
-	_G.ShoppingTooltip2TextRight4:SetFont(font, headerSize, fontOutline)
+	_G.ShoppingTooltip1TextLeft1:FontTemplate(font, headerSize, fontOutline)
+	_G.ShoppingTooltip1TextLeft2:FontTemplate(font, headerSize, fontOutline)
+	_G.ShoppingTooltip1TextLeft3:FontTemplate(font, headerSize, fontOutline)
+	_G.ShoppingTooltip1TextLeft4:FontTemplate(font, headerSize, fontOutline)
+	_G.ShoppingTooltip1TextRight1:FontTemplate(font, headerSize, fontOutline)
+	_G.ShoppingTooltip1TextRight2:FontTemplate(font, headerSize, fontOutline)
+	_G.ShoppingTooltip1TextRight3:FontTemplate(font, headerSize, fontOutline)
+	_G.ShoppingTooltip1TextRight4:FontTemplate(font, headerSize, fontOutline)
+	_G.ShoppingTooltip2TextLeft1:FontTemplate(font, headerSize, fontOutline)
+	_G.ShoppingTooltip2TextLeft2:FontTemplate(font, headerSize, fontOutline)
+	_G.ShoppingTooltip2TextLeft3:FontTemplate(font, headerSize, fontOutline)
+	_G.ShoppingTooltip2TextLeft4:FontTemplate(font, headerSize, fontOutline)
+	_G.ShoppingTooltip2TextRight1:FontTemplate(font, headerSize, fontOutline)
+	_G.ShoppingTooltip2TextRight2:FontTemplate(font, headerSize, fontOutline)
+	_G.ShoppingTooltip2TextRight3:FontTemplate(font, headerSize, fontOutline)
+	_G.ShoppingTooltip2TextRight4:FontTemplate(font, headerSize, fontOutline)
 end
 
 --This changes the growth direction of the toast frame depending on position of the mover

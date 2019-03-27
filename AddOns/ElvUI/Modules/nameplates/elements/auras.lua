@@ -1,73 +1,287 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
-local mod = E:GetModule('NamePlates')
+local NP = E:GetModule('NamePlates')
 local LSM = E.Libs.LSM
 
---Lua functions
-local select, unpack = select, unpack
-local tinsert, tremove = tinsert, tremove
-local strlower, strsplit = strlower, strsplit
+local floor = floor
+local unpack = unpack
+local select = select
+local strfind = strfind
+local strsplit = strsplit
 local strmatch = strmatch
---WoW API / Variables
 local CreateFrame = CreateFrame
-local UnitAura = UnitAura
-local UnitCanAttack = UnitCanAttack
 local UnitIsFriend = UnitIsFriend
+local UnitCanAttack = UnitCanAttack
 local UnitIsUnit = UnitIsUnit
+local DebuffTypeColor = DebuffTypeColor
 
-local auraCache = {}
+function NP:Auras_PostCreateIcon(button)
+	NP:Construct_AuraIcon(button)
+end
 
-function mod:SetAura(aura, index, name, icon, count, duration, expirationTime, spellID, buffType, isStealable, isFriend)
-	aura.icon:SetTexture(icon);
-	aura.name = name
-	aura.spellID = spellID
-	aura.expirationTime = expirationTime
-	if ( count > 1 ) then
-		aura.count:Show();
-		aura.count:SetText(count);
-	else
-		aura.count:Hide();
-	end
-	aura:SetID(index);
-	if ( expirationTime and expirationTime ~= 0 ) then
-		local startTime = expirationTime - duration;
-		aura.cooldown:SetCooldown(startTime, duration);
-		aura.cooldown:Show();
-	else
-		aura.cooldown:Hide();
-	end
+function NP:Auras_PostUpdateIcon(unit, button, index, position, duration, expiration, debuffType, isStealable)
+	NP:PostUpdateAura(unit, button, index, position, duration, expiration, debuffType, isStealable)
+end
 
-	if buffType == "Buffs" then
-		if isStealable and not isFriend then
-			aura.backdrop:SetBackdropBorderColor(237/255, 234/255, 142/255)
+function NP:Auras_CustomFilter(unit, button, name, _, _, debuffType, duration, expiration, caster, isStealable, _, spellID, _, isBossDebuff, casterIsPlayer)
+	button.name, button.spellID, button.expiration = name, spellID, expiration
+	return NP:AuraFilter(unit, button, name, _, _, debuffType, duration, expiration, caster, isStealable, _, spellID, _, isBossDebuff, casterIsPlayer)
+end
+
+function NP:Buffs_PostCreateIcon(button)
+	NP:Construct_AuraIcon(button)
+end
+
+function NP:Buffs_PostUpdateIcon(unit, button)
+	NP:PostUpdateAura(unit, button)
+end
+
+function NP:Buffs_CustomFilter(unit, button, name, _, _, debuffType, duration, expiration, caster, isStealable, _, spellID, _, isBossDebuff, casterIsPlayer)
+	button.name, button.spellID, button.expiration = name, spellID, expiration
+	return NP:AuraFilter(unit, button, name, _, _, debuffType, duration, expiration, caster, isStealable, _, spellID, _, isBossDebuff, casterIsPlayer)
+end
+
+function NP:Debuffs_PostCreateIcon(button)
+	NP:Construct_AuraIcon(button)
+end
+
+function NP:Debuffs_PostUpdateIcon(unit, button, index, position, duration, expiration, debuffType, isStealable)
+	NP:PostUpdateAura(unit, button, index, position, duration, expiration, debuffType, isStealable)
+end
+
+function NP:Debuffs_CustomFilter(unit, button, name, _, _, debuffType, duration, expiration, caster, isStealable, _, spellID, _, isBossDebuff, casterIsPlayer)
+	button.name, button.spellID, button.expiration = name, spellID, expiration
+	return NP:AuraFilter(unit, button, name, _, _, debuffType, duration, expiration, caster, isStealable, _, spellID, _, isBossDebuff, casterIsPlayer)
+end
+
+function NP:Construct_Auras(nameplate)
+	local Auras = CreateFrame('Frame', nameplate:GetDebugName()..'Auras', nameplate)
+	Auras:SetFrameStrata(nameplate:GetFrameStrata())
+	Auras:SetFrameLevel(5)
+	Auras:Size(300, 27)
+
+	Auras.disableMouse = true
+	Auras.gap = true
+	Auras.size = 27
+	Auras.numDebuffs = 4
+	Auras.numBuffs = 4
+	Auras.spacing = E.Border * 2
+	Auras.onlyShowPlayer = false
+	Auras.initialAnchor = 'BOTTOMLEFT'
+	Auras['growth-x'] = 'RIGHT'
+	Auras['growth-y'] = 'UP'
+	Auras.type = 'auras'
+
+	local Buffs = CreateFrame('Frame', nameplate:GetDebugName()..'Buffs', nameplate)
+	Buffs:SetFrameStrata(nameplate:GetFrameStrata())
+	Buffs:SetFrameLevel(5)
+	Buffs:Size(300, 27)
+	Buffs.disableMouse = true
+	Buffs.size = 27
+	Buffs.num = 4
+	Buffs.spacing = E.Border * 2
+	Buffs.onlyShowPlayer = false
+	Buffs.initialAnchor = 'BOTTOMLEFT'
+	Buffs['growth-x'] = 'RIGHT'
+	Buffs['growth-y'] = 'UP'
+	Buffs.type = 'buffs'
+
+	local Debuffs = CreateFrame('Frame', nameplate:GetDebugName()..'Debuffs', nameplate)
+	Debuffs:SetFrameStrata(nameplate:GetFrameStrata())
+	Debuffs:SetFrameLevel(5)
+	Debuffs:Size(300, 27)
+	Debuffs.disableMouse = true
+	Debuffs.size = 27
+	Debuffs.num = 4
+	Debuffs.spacing = E.Border * 2
+	Debuffs.onlyShowPlayer = false
+	Debuffs.initialAnchor = 'BOTTOMLEFT'
+	Debuffs['growth-x'] = 'RIGHT'
+	Debuffs['growth-y'] = 'UP'
+	Debuffs.type = 'debuffs'
+
+	Auras.PostCreateIcon = NP.Auras_PostCreateIcon
+	Auras.PostUpdateIcon = NP.Auras_PostUpdateIcon
+	Auras.CustomFilter = NP.Auras_CustomFilter
+	Buffs.PostCreateIcon = NP.Buffs_PostCreateIcon
+	Buffs.PostUpdateIcon = NP.Buffs_PostUpdateIcon
+	Buffs.CustomFilter = NP.Buffs_CustomFilter
+	Debuffs.PostCreateIcon = NP.Debuffs_PostCreateIcon
+	Debuffs.PostUpdateIcon = NP.Debuffs_PostUpdateIcon
+	Debuffs.CustomFilter = NP.Debuffs_CustomFilter
+
+	nameplate.Auras = Auras
+	nameplate.Buffs = Buffs
+	nameplate.Debuffs = Debuffs
+end
+
+function NP:Construct_AuraIcon(button)
+	if not button then return end
+	button:SetTemplate()
+
+	button.cd:SetReverse(true)
+	button.cd:SetInside(button)
+
+	button.cd.CooldownFontSize = 12
+	button.cd.CooldownOverride = 'nameplates'
+	button.cd.CooldownSettings = {
+		['font'] = LSM:Fetch('font', NP.db.font),
+		['fontSize'] = NP.db.fontSize,
+		['fontOutline'] = NP.db.fontOutline,
+	}
+
+	E:RegisterCooldown(button.cd)
+
+	button.icon:SetInside()
+	button.icon:SetTexCoord(unpack(E.TexCoords))
+	button.icon:SetDrawLayer('ARTWORK')
+	button.icon:SetSnapToPixelGrid(false)
+	button.icon:SetTexelSnappingBias(0)
+
+	button.count:ClearAllPoints()
+	button.count:Point('BOTTOMRIGHT', 1, 1)
+	button.count:SetJustifyH('RIGHT')
+
+	button.overlay:SetTexture(nil)
+	button.stealable:SetTexture(nil)
+end
+
+function NP:Update_Auras(nameplate)
+	local db = NP.db.units[nameplate.frameType]
+
+	if db.auras.enable or db.debuffs.enable or db.buffs.enable then
+		if not nameplate:IsElementEnabled('Aura') then
+			nameplate:EnableElement('Aura')
+		end
+
+		if db.auras.enable then
+			--nameplate.Auras.numDebuffs = db.debuffs.numAuras
+			--nameplate.Auras.numBuffs = db.buffs.numAuras
+
+			--if nameplate.Auras then
+				--nameplate.Auras:Point('BOTTOMLEFT', nameplate.Health, 'TOPLEFT', 0, 15)
+				--nameplate.Auras:Point('BOTTOMRIGHT', nameplate.Health, 'TOPRIGHT', 0, 15)
+			--end
+
+			nameplate.Debuffs:Hide()
+			nameplate.Buffs:Hide()
+			nameplate.Auras:Show()
 		else
-			aura.backdrop:SetBackdropBorderColor(unpack(E.media.bordercolor))
+			nameplate.Auras:Hide()
+
+			if db.debuffs.enable then
+				nameplate.Debuffs.size = db.debuffs.size
+				nameplate.Debuffs.num = db.debuffs.numAuras
+				nameplate.Debuffs.onlyShowPlayer = false
+				nameplate.Debuffs.spacing = db.debuffs.spacing
+				nameplate.Debuffs["growth-y"] = db.debuffs.growthY
+				nameplate.Debuffs["growth-x"] = db.debuffs.growthX
+				nameplate.Debuffs.initialAnchor = E.InversePoints[db.debuffs.anchorPoint]
+
+				local mult = floor(NP.db.clickableWidth / db.debuffs.size) < db.debuffs.numAuras
+				nameplate.Debuffs:Size(NP.db.clickableWidth, (mult and 1 or 2) * db.debuffs.size)
+				nameplate.Debuffs:ClearAllPoints()
+				nameplate.Debuffs:Point(E.InversePoints[db.debuffs.anchorPoint] or 'TOPRIGHT', db.debuffs.attachTo == 'BUFFS' and nameplate.Buffs or nameplate, db.debuffs.anchorPoint or 'TOPRIGHT', 0, db.debuffs.yOffset)
+				nameplate.Debuffs:Show()
+
+				nameplate.Debuffs:ForceUpdate()
+			else
+				nameplate.Debuffs:Hide()
+			end
+
+			if db.buffs.enable then
+				nameplate.Buffs.size = db.buffs.size
+				nameplate.Buffs.num = db.buffs.numAuras
+				nameplate.Buffs.onlyShowPlayer = false
+				nameplate.Buffs.spacing = db.buffs.spacing
+				nameplate.Buffs["growth-y"] = db.buffs.growthY
+				nameplate.Buffs["growth-x"] = db.buffs.growthX
+				nameplate.Buffs.initialAnchor = E.InversePoints[db.buffs.anchorPoint]
+
+				local mult = floor(NP.db.clickableWidth / db.buffs.size) < db.buffs.numAuras
+				nameplate.Buffs:Size(NP.db.clickableWidth, (mult and 1 or 2) * db.buffs.size)
+				nameplate.Buffs:ClearAllPoints()
+				nameplate.Buffs:Point(E.InversePoints[db.buffs.anchorPoint] or 'TOPLEFT', db.buffs.attachTo == 'DEBUFFS' and nameplate.Debuffs or nameplate, db.buffs.anchorPoint or 'TOPLEFT', 0, db.buffs.yOffset)
+				nameplate.Buffs:Show()
+
+				nameplate.Buffs:ForceUpdate()
+			else
+				nameplate.Buffs:Hide()
+			end
+		end
+	else
+		if nameplate:IsElementEnabled('Aura') then
+			nameplate:DisableElement('Aura')
+		end
+	end
+end
+
+function NP:PostUpdateAura(unit, button)
+	if button.isDebuff then
+		if (not button.isFriend and not button.isPlayer) then --[[and (not E.isDebuffWhiteList[name])]]
+			button:SetBackdropBorderColor(0.9, 0.1, 0.1)
+			button.icon:SetDesaturated((unit and not strfind(unit, 'arena%d')) and true or false)
+		else
+			local color = (button.dtype and DebuffTypeColor[button.dtype]) or DebuffTypeColor.none
+			if button.name and (button.name == 'Unstable Affliction' or button.name == 'Vampiric Touch') and E.myclass ~= 'WARLOCK' then
+				button:SetBackdropBorderColor(0.05, 0.85, 0.94)
+			else
+				button:SetBackdropBorderColor(color.r * 0.6, color.g * 0.6, color.b * 0.6)
+			end
+			button.icon:SetDesaturated(false)
+		end
+	else
+		if button.isStealable and not button.isFriend then
+			button:SetBackdropBorderColor(0.93, 0.91, 0.55, 1.0)
+		else
+			button:SetBackdropBorderColor(unpack(E.media.bordercolor))
 		end
 	end
 
-	aura:Show();
-end
+	local parent = button:GetParent()
+	local db = parent and NP.db.units[parent.__owner.frameType] and NP.db.units[parent.__owner.frameType][parent.type]
+	if db then
+		button:Size(db.size, db.size)
+		button.count:FontTemplate(LSM:Fetch('font', db.countFont), db.countFontSize, db.countFontOutline)
 
-function mod:HideAuraIcons(auras)
-	for i=1, #auras.icons do
-		auras.icons[i]:Hide()
-
-		-- cancel any StyleFilterAuraWaitTimer timers
-		if auras.icons[i].hasMinTimer then
-			auras.icons[i].hasMinTimer:Cancel()
-			auras.icons[i].hasMinTimer = nil
-		end
-		if auras.icons[i].hasMaxTimer then
-			auras.icons[i].hasMaxTimer:Cancel()
-			auras.icons[i].hasMaxTimer = nil
+		if button.cd then
+			NP:UpdateCooldownTextPosition(button.cd, db)
+			NP:UpdateCooldownSettings(button.cd, db)
 		end
 	end
 end
 
-function mod:CheckFilter(name, caster, spellID, isFriend, isPlayer, isUnit, isBossDebuff, allowDuration, noDuration, canDispell, casterIsPlayer, ...)
+function NP:UpdateCooldownTextPosition(cd, db)
+	if cd.timer and cd.timer.text then
+		cd.timer.text:ClearAllPoints()
+		if db and db.durationPosition == 'TOPLEFT' then
+			cd.timer.text:Point('TOPLEFT', 1, 1)
+		elseif db and db.durationPosition == 'BOTTOMLEFT' then
+			cd.timer.text:Point('BOTTOMLEFT', 1, 1)
+		elseif db and db.durationPosition == 'TOPRIGHT' then
+			cd.timer.text:Point('TOPRIGHT', 1, 1)
+		else
+			cd.timer.text:Point('CENTER', 1, 1)
+		end
+	end
+end
+
+function NP:UpdateCooldownSettings(cd, db)
+	if cd and cd.CooldownSettings and db then
+		cd.CooldownSettings.font = LSM:Fetch('font', db.font)
+		cd.CooldownSettings.fontSize = db.fontSize
+		cd.CooldownSettings.fontOutline = db.fontOutline
+		if cd.timer then
+			E:Cooldown_OnSizeChanged(cd.timer, cd, cd:GetSize(), 'override')
+		end
+	end
+end
+
+function NP:CheckFilter(name, caster, spellID, isFriend, isPlayer, isUnit, isBossDebuff, allowDuration, noDuration, canDispell, casterIsPlayer, ...)
 	local friendCheck, filterName, filter, filterType, spellList, spell
 	for i=1, select('#', ...) do
 		filterName = select(i, ...)
-		friendCheck = (isFriend and strmatch(filterName, "^Friendly:([^,]*)")) or (not isFriend and strmatch(filterName, "^Enemy:([^,]*)")) or nil
+		if not filterName then return true end
+		friendCheck = (isFriend and strmatch(filterName, '^Friendly:([^,]*)')) or (not isFriend and strmatch(filterName, '^Enemy:([^,]*)')) or nil
 		if friendCheck ~= false then
 			if friendCheck ~= nil and (G.unitframe.specialFilters[friendCheck] or E.global.unitframe.aurafilters[friendCheck]) then
 				filterName = friendCheck -- this is for our filters to handle Friendly and Enemy
@@ -116,228 +330,44 @@ function mod:CheckFilter(name, caster, spellID, isFriend, isPlayer, isUnit, isBo
 	end
 end
 
-function mod:AuraFilter(frame, frameNum, index, buffType, minDuration, maxDuration, priority, name, texture, count, debuffType, duration, expiration, caster, isStealable, _, spellID, _, isBossDebuff, casterIsPlayer)
-	if not name then return nil end -- checking for an aura that is not there, pass nil to break while loop
-	local isFriend, filterCheck, isUnit, isPlayer, canDispell, allowDuration, noDuration = false
+function NP:AuraFilter(unit, button, name, _, _, debuffType, duration, expiration, caster, isStealable, _, spellID, _, isBossDebuff, casterIsPlayer)
+	if not name then return end -- checking for an aura that is not there, pass nil to break while loop
 
-	noDuration = (not duration or duration == 0)
-	allowDuration = noDuration or (duration and (duration > 0) and (maxDuration == 0 or duration <= maxDuration) and (minDuration == 0 or duration >= minDuration))
+	local parent = button:GetParent()
+	local parentType = parent.type
+	local db = NP.db and NP.db.units and NP.db.units[parent.__owner.frameType] and NP.db.units[parent.__owner.frameType][parentType]
+	if not db then return true end
+
+	local isPlayer = (caster == 'player' or caster == 'vehicle')
+	local isFriend = unit and UnitIsFriend('player', unit) and not UnitCanAttack('player', unit)
+
+	-- keep these same as in `UF:AuraFilter`
+	button.isPlayer = isPlayer
+	button.isFriend = isFriend
+	button.isStealable = isStealable
+	button.dtype = debuffType
+	button.duration = duration
+	button.expiration = expiration
+	button.name = name
+	button.spellID = spellID
+	button.owner = caster
+	button.spell = name
+	button.priority = 0
+
+	if not db.filters then return true end
+
+	local priority = db.filters.priority
+	local noDuration = (not duration or duration == 0)
+	local allowDuration = noDuration or (duration and (duration > 0) and db.filters.maxDuration == 0 or duration <= db.filters.maxDuration) and (db.filters.minDuration == 0 or duration >= db.filters.minDuration)
+	local filterCheck
 
 	if priority ~= '' then
-		isFriend = frame.unit and UnitIsFriend('player', frame.unit) and not UnitCanAttack('player', frame.unit)
-		isPlayer = (caster == 'player' or caster == 'vehicle')
-		isUnit = frame.unit and caster and UnitIsUnit(frame.unit, caster)
-		canDispell = (buffType == 'Buffs' and isStealable) or (buffType == 'Debuffs' and debuffType and E:IsDispellableByMe(debuffType))
-		filterCheck = mod:CheckFilter(name, caster, spellID, isFriend, isPlayer, isUnit, isBossDebuff, allowDuration, noDuration, canDispell, casterIsPlayer, strsplit(",", priority))
+		local isUnit = unit and caster and UnitIsUnit(unit, caster)
+		local canDispell = (parentType == 'buffs' and isStealable) or (parentType == 'debuffs' and debuffType and E:IsDispellableByMe(debuffType))
+		filterCheck = NP:CheckFilter(name, caster, spellID, isFriend, isPlayer, isUnit, isBossDebuff, allowDuration, noDuration, canDispell, casterIsPlayer, strsplit(',', priority))
 	else
 		filterCheck = allowDuration and true -- Allow all auras to be shown when the filter list is empty, while obeying duration sliders
 	end
 
-	if filterCheck == true then
-		mod:SetAura(frame[buffType].icons[frameNum], index, name, texture, count, duration, expiration, spellID, buffType, isStealable, isFriend)
-		return true
-	end
-
-	return false
-end
-
-function mod:UpdateElement_Auras(frame)
-	local hasBuffs, hasDebuffs, showAura = false, false
-	local filterType, buffType, buffTypeLower, index, frameNum, maxAuras, minDuration, maxDuration, priority
-
-	--Auras
-	for i = 1, 2 do
-		filterType = (i == 1 and 'HELPFUL' or 'HARMFUL')
-		buffType = (i == 1 and 'Buffs' or 'Debuffs')
-		buffTypeLower = strlower(buffType)
-		index = 1;
-		frameNum = 1;
-		maxAuras = #frame[buffType].icons;
-		minDuration = self.db.units[frame.UnitType][buffTypeLower].filters.minDuration
-		maxDuration = self.db.units[frame.UnitType][buffTypeLower].filters.maxDuration
-		priority = self.db.units[frame.UnitType][buffTypeLower].filters.priority
-
-		self:HideAuraIcons(frame[buffType])
-		if(self.db.units[frame.UnitType][buffTypeLower].enable) then
-			while ( frameNum <= maxAuras ) do
-				showAura = mod:AuraFilter(frame, frameNum, index, buffType, minDuration, maxDuration, priority, UnitAura(frame.unit, index, filterType))
-				if showAura == nil then
-					break -- used to break the while loop when index is over the limit of auras we have (unitaura name will pass nil)
-				elseif showAura == true then -- has aura and passes checks
-					if i == 1 then hasBuffs = true else hasDebuffs = true end
-					frameNum = frameNum + 1;
-				end
-				index = index + 1;
-			end
-		end
-	end
-
-	local TopLevel = frame.HealthBar
-	local TopOffset = ((self.db.units[frame.UnitType].showName and select(2, frame.Name:GetFont()) + 5) or 0)
-	if(hasDebuffs) then
-		TopOffset = TopOffset + 3
-		frame.Debuffs:SetPoint("BOTTOMLEFT", TopLevel, "TOPLEFT", 0, TopOffset)
-		frame.Debuffs:SetPoint("BOTTOMRIGHT", TopLevel, "TOPRIGHT", 0, TopOffset)
-		TopLevel = frame.Debuffs
-		TopOffset = 3
-	end
-
-	if(hasBuffs) then
-		if(not hasDebuffs) then
-			TopOffset = TopOffset + 3
-		end
-		frame.Buffs:SetPoint("BOTTOMLEFT", TopLevel, "TOPLEFT", 0, TopOffset)
-		frame.Buffs:SetPoint("BOTTOMRIGHT", TopLevel, "TOPRIGHT", 0, TopOffset)
-		TopLevel = frame.Buffs
-		TopOffset = 3
-	end
-
-	if (frame.TopLevelFrame ~= TopLevel) then
-		frame.TopLevelFrame = TopLevel
-		frame.TopOffset = TopOffset
-
-		if (self.db.classbar.enable and self.db.classbar.position ~= "BELOW") then
-			mod:ClassBar_Update()
-		end
-
-		if (self.db.units[frame.UnitType].detection and self.db.units[frame.UnitType].detection.enable) then
-			mod:ConfigureElement_Detection(frame)
-		end
-
-		if (self.db.units[frame.UnitType].portrait and self.db.units[frame.UnitType].portrait.enable) then
-			mod:ConfigureElement_Portrait(frame)
-		end
-	end
-end
-
-function mod:UpdateCooldownTextPosition()
-	if self and self.timer and self.timer.text then
-		self.timer.text:ClearAllPoints()
-		if mod.db.durationPosition == "TOPLEFT" then
-			self.timer.text:Point("TOPLEFT", 1, 1)
-		elseif mod.db.durationPosition == "BOTTOMLEFT" then
-			self.timer.text:Point("BOTTOMLEFT", 1, 1)
-		elseif mod.db.durationPosition == "TOPRIGHT" then
-			self.timer.text:Point("TOPRIGHT", 1, 1)
-		else
-			self.timer.text:Point("CENTER", 0, 0)
-		end
-	end
-end
-
-function mod:UpdateCooldownSettings(cd)
-	if cd and cd.CooldownSettings then
-		cd.CooldownSettings.font = LSM:Fetch("font", self.db.font)
-		cd.CooldownSettings.fontSize = self.db.fontSize
-		cd.CooldownSettings.fontOutline = self.db.fontOutline
-		if cd.timer then
-			E:Cooldown_OnSizeChanged(cd.timer, cd, cd:GetSize(), 'override')
-		end
-	end
-end
-
-function mod:CreateAuraIcon(parent)
-	local aura = CreateFrame("Frame", nil, parent)
-	self:StyleFrame(aura)
-
-	aura.icon = aura:CreateTexture(nil, "OVERLAY")
-	aura.icon:SetAllPoints()
-	aura.icon:SetTexCoord(unpack(E.TexCoords))
-
-	aura.cooldown = CreateFrame("Cooldown", nil, aura, "CooldownFrameTemplate")
-	aura.cooldown:SetAllPoints(aura)
-	aura.cooldown:SetReverse(true)
-
-	aura.cooldown.CooldownFontSize = 12
-	aura.cooldown.CooldownOverride = 'nameplates'
-	aura.cooldown.CooldownPreHook = self.UpdateCooldownTextPosition
-	aura.cooldown.CooldownSettings = {
-		['font'] = LSM:Fetch("font", self.db.font),
-		['fontSize'] = self.db.fontSize,
-		['fontOutline'] = self.db.fontOutline,
-	}
-
-	E:RegisterCooldown(aura.cooldown)
-
-	aura.count = aura:CreateFontString(nil, "OVERLAY")
-	aura.count:SetFont(LSM:Fetch("font", self.db.stackFont), self.db.stackFontSize, self.db.stackFontOutline)
-	aura.count:Point("BOTTOMRIGHT", 1, 1)
-
-	return aura
-end
-
-function mod:Auras_SizeChanged(width)
-	local numAuras = #self.icons
-	if numAuras == 0 then return end
-	local overrideWidth = self.db.widthOverride and self.db.widthOverride > 0 and self.db.widthOverride
-	local auraWidth = overrideWidth or (((width - E.mult * numAuras) / numAuras) - (E.PixelMode and 0 or 3))
-	local auraHeight = (self.db.baseHeight or 18) * (self:GetParent().HealthBar.currentScale or 1)
-
-	for i=1, numAuras do
-		self.icons[i]:SetWidth(auraWidth)
-		self.icons[i]:SetHeight(auraHeight)
-	end
-
-	self:SetHeight(auraHeight)
-end
-
-function mod:UpdateAuraIcons(auras)
-	local maxAuras = auras.db.numAuras
-	local numCurrentAuras = #auras.icons
-	if numCurrentAuras > maxAuras then
-		for i = maxAuras, numCurrentAuras do
-			tinsert(auraCache, auras.icons[i])
-			auras.icons[i]:Hide()
-			auras.icons[i] = nil
-		end
-	end
-
-	if numCurrentAuras ~= maxAuras then
-		self.Auras_SizeChanged(auras, auras:GetWidth(), auras:GetHeight())
-	end
-
-	local stackFont = LSM:Fetch("font", self.db.stackFont)
-	local aurasHeight = auras.db.baseHeight or 18
-
-	for i=1, maxAuras do
-		auras.icons[i] = auras.icons[i] or tremove(auraCache) or mod:CreateAuraIcon(auras)
-		auras.icons[i]:SetParent(auras)
-		auras.icons[i]:ClearAllPoints()
-		auras.icons[i]:Hide()
-		auras.icons[i]:SetHeight(aurasHeight)
-
-		-- update stacks font on NAME_PLATE_UNIT_ADDED
-		if auras.icons[i].count then
-			auras.icons[i].count:SetFont(stackFont, self.db.stackFontSize, self.db.stackFontOutline)
-		end
-
-		-- update the cooldown text font defaults on NAME_PLATE_UNIT_ADDED
-		self:UpdateCooldownSettings(auras.icons[i].cooldown)
-		self.UpdateCooldownTextPosition(auras.icons[i].cooldown)
-
-		if(auras.side == "LEFT") then
-			if(i == 1) then
-				auras.icons[i]:SetPoint("BOTTOMLEFT", auras, "BOTTOMLEFT")
-			else
-				auras.icons[i]:SetPoint("LEFT", auras.icons[i-1], "RIGHT", E.Border + E.Spacing*3, 0)
-			end
-		else
-			if(i == 1) then
-				auras.icons[i]:SetPoint("BOTTOMRIGHT", auras, "BOTTOMRIGHT")
-			else
-				auras.icons[i]:SetPoint("RIGHT", auras.icons[i-1], "LEFT", -(E.Border + E.Spacing*3), 0)
-			end
-		end
-	end
-end
-
-function mod:ConstructElement_Auras(frame, side)
-	local auras = CreateFrame("FRAME", nil, frame)
-
-	auras:SetScript("OnSizeChanged", mod.Auras_SizeChanged)
-	auras:SetHeight(18) -- this really doesn't matter
-	auras.side = side
-	auras.icons = {}
-
-	return auras
+	return filterCheck
 end

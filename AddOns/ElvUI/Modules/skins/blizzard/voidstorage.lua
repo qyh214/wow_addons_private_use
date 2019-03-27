@@ -3,7 +3,7 @@ local S = E:GetModule('Skins')
 
 --Lua functions
 local _G = _G
-local pairs, select, unpack = pairs, select, unpack
+local pairs, unpack = pairs, unpack
 --WoW API / Variables
 local hooksecurefunc = hooksecurefunc
 
@@ -37,7 +37,7 @@ local function LoadSkin()
 	VoidStorageFrame:SetTemplate("Transparent")
 
 	VoidStorageFrame.Page1:SetNormalTexture("Interface\\Icons\\INV_Enchant_EssenceCosmicGreater")
-	VoidStorageFrame.Page1:SetPoint("LEFT", "$parent", "TOPRIGHT", 1, -60)
+	VoidStorageFrame.Page1:Point("LEFT", "$parent", "TOPRIGHT", 1, -60)
 
 	VoidStorageFrame.Page2:SetNormalTexture("Interface\\Icons\\INV_Enchant_EssenceArcaneLarge")
 

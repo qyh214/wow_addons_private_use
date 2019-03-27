@@ -175,7 +175,7 @@ local function CastStart(self, event, unit)
 	if(element.Shield) then element.Shield:SetShown(notInterruptible) end
 	if(element.Spark) then element.Spark:Show() end
 	if(element.Text) then element.Text:SetText(name) end
-	if(element.Time) then element.Time:SetText() end
+	if(element.Time) then element.Time:SetText('') end
 
 	local safeZone = element.SafeZone
 	if(safeZone) then
@@ -445,7 +445,7 @@ local function Enable(self, unit)
 
 		element:SetScript('OnUpdate', element.OnUpdate or onUpdate)
 
-		if(self.unit == 'player' and not (self.hasChildren or self.isChild)) then
+		if(self.unit == 'player' and not (self.hasChildren or self.isChild or self.isNamePlate)) then
 			CastingBarFrame_SetUnit(CastingBarFrame, nil)
 			CastingBarFrame_SetUnit(PetCastingBarFrame, nil)
 		end
@@ -493,7 +493,7 @@ local function Disable(self)
 
 		element:SetScript('OnUpdate', nil)
 
-		if(self.unit == 'player' and not (self.hasChildren or self.isChild)) then
+		if(self.unit == 'player' and not (self.hasChildren or self.isChild or self.isNamePlate)) then
 			CastingBarFrame_OnLoad(CastingBarFrame, 'player', true, false)
 			PetCastingBarFrame_OnLoad(PetCastingBarFrame)
 		end

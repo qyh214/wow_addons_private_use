@@ -234,19 +234,13 @@ function PD:InspectFrame_UpdateTabsComplete()
 end
 
 function PD:InitialUpdatePaperDoll()
-  PD:UnregisterEvent("PLAYER_ENTERING_WORLD")
-  LoadAddOn("Blizzard_InspectUI")
   self:BuildInfoText("Character")
-  self:BuildInfoText("Inspect")
-
-  -- hook to inspect frame update
-  originalInspectFrameUpdateTabs = _G.InspectFrame_UpdateTabs
-  _G.InspectFrame_UpdateTabs = PD.InspectFrame_UpdateTabsComplete
-
-  -- update player info
-  self:ScheduleTimer("UpdatePaperDoll", 10, false)
-
+  PD:ScheduleTimer("UpdatePaperDoll", 2, false)
   initialized = true
+  if IsAddOnLoaded("Blizzard_InspectUI") then 
+	self:OnAddonLoaded(_, "Blizzard_InspectUI") 
+  end
+  PD:UnregisterEvent("PLAYER_ENTERING_WORLD")
 end
 
 function PD:BuildInfoText(name)
@@ -265,6 +259,21 @@ function PD:BuildInfoText(name)
       frame.DurabilityInfo:FontTemplate(E.media.font, 12, "THINOUTLINE")
     end
   end
+end
+
+function PD:OnAddonLoaded(event, name)
+  if ((name ~= "Blizzard_InspectUI") or not initialized) then return end
+
+  self:BuildInfoText("Inspect")
+
+  -- hook to inspect frame update
+  originalInspectFrameUpdateTabs = _G.InspectFrame_UpdateTabs
+  _G.InspectFrame_UpdateTabs = PD.InspectFrame_UpdateTabsComplete
+  
+  -- update player info
+  PD:DelayUpdateInfo(true)
+  PD:UnregisterEvent("ADDON_LOADED")
+  
 end
 
 function PD:firstGarrisonToast()

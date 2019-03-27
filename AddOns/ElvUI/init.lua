@@ -12,6 +12,7 @@ To load the AddOn engine inside another addon add this to the top of your file:
 
 --Lua functions
 local _G = _G
+local min = min
 local format = format
 local pairs = pairs
 local strsplit = strsplit
@@ -27,6 +28,7 @@ local GetAddOnInfo = GetAddOnInfo
 local GetAddOnMetadata = GetAddOnMetadata
 local GetTime = GetTime
 local HideUIPanel = HideUIPanel
+local GetAddOnEnableState = GetAddOnEnableState
 local InCombatLockdown = InCombatLockdown
 local IsAddOnLoaded = IsAddOnLoaded
 local LoadAddOn = LoadAddOn
@@ -145,15 +147,16 @@ function AddOn:OnInitialize()
 		end
 	end
 
+	self.twoPixelsPlease = false
 	self.ScanTooltip = CreateFrame("GameTooltip", "ElvUI_ScanTooltip", _G.UIParent, "GameTooltipTemplate")
-	self.PixelMode = self.private.general.pixelPerfect -- keep this over `UIScale`
+	self.PixelMode = self.twoPixelsPlease or self.private.general.pixelPerfect -- keep this over `UIScale`
 	self:UIScale(true)
 	self:UpdateMedia()
 	self:RegisterEvent('PLAYER_REGEN_DISABLED')
 	self:Contruct_StaticPopups()
 	self:InitializeInitialModules()
 
-	if IsAddOnLoaded("Tukui") then
+	if GetAddOnEnableState(self.myname, "Tukui") == 2 then
 		self:StaticPopup_Show("TUKUI_ELVUI_INCOMPATIBLE")
 	end
 
@@ -242,6 +245,33 @@ function AddOn:OnProfileReset()
 	self:StaticPopup_Show("RESET_PROFILE_PROMPT")
 end
 
+function AddOn:ResetConfigSettings()
+	AddOn.configSavedPositionTop, AddOn.configSavedPositionLeft = nil, nil
+	AddOn.global.general.AceGUI = AddOn:CopyTable({}, AddOn.DF.global.general.AceGUI)
+end
+
+function AddOn:GetConfigPosition()
+	return AddOn.configSavedPositionTop, AddOn.configSavedPositionLeft
+end
+
+function AddOn:GetConfigSize()
+	return AddOn.global.general.AceGUI.width, AddOn.global.general.AceGUI.height
+end
+
+function AddOn:GetConfigDefaultSize()
+	local width, height = AddOn:GetConfigSize()
+	local maxWidth, maxHeight = AddOn.UIParent:GetSize()
+	width, height = min(maxWidth-50, width), min(maxHeight-50, height)
+	return width, height
+end
+
+function AddOn:ConfigStopMovingOrSizing()
+	if self.obj and self.obj.status then
+		AddOn.configSavedPositionTop, AddOn.configSavedPositionLeft = AddOn:Round(self:GetTop(), 2), AddOn:Round(self:GetLeft(), 2)
+		AddOn.global.general.AceGUI.width, AddOn.global.general.AceGUI.height = AddOn:Round(self:GetWidth(), 2), AddOn:Round(self:GetHeight(), 2)
+	end
+end
+
 local pageNodes = {}
 function AddOn:ToggleConfig(msg)
 	if InCombatLockdown() then
@@ -322,10 +352,38 @@ function AddOn:ToggleConfig(msg)
 			mode = 'Open'
 		end
 	end
+
 	ACD[mode](ACD, AddOnName)
 
-	if pages and (mode == 'Open') then
-		ACD:SelectGroup(AddOnName, unpack(pages))
+	if mode == 'Open' then
+		ConfigOpen = ACD and ACD.OpenFrames and ACD.OpenFrames[AddOnName]
+		if ConfigOpen then
+			local frame = ConfigOpen.frame
+			if frame and not self.GUIFrame then
+				self.GUIFrame = frame
+				_G.ElvUIGUIFrame = self.GUIFrame
+
+				local maxWidth, maxHeight = self.UIParent:GetSize()
+				frame:SetMinResize(600, 500)
+				frame:SetMaxResize(maxWidth-50, maxHeight-50)
+
+				local status = frame.obj and frame.obj.status
+				if status then
+					local top, left = self:GetConfigPosition()
+					if top and left then
+						status.top, status.left = top, left
+
+						ConfigOpen:ApplyStatus()
+					end
+				end
+
+				hooksecurefunc(frame, "StopMovingOrSizing", AddOn.ConfigStopMovingOrSizing)
+			end
+		end
+
+		if pages then
+			ACD:SelectGroup(AddOnName, unpack(pages))
+		end
 	end
 
 	_G.GameTooltip:Hide() --Just in case you're mouseovered something and it closes.

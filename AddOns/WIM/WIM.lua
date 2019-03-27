@@ -14,7 +14,7 @@ setfenv(1, WIM);
 
 -- Core information
 addonTocName = "WIM";
-version = "586";
+version = "595";
 beta = false; -- flags current version as beta.
 debug = false; -- turn debugging on and off.
 useProtocol2 = true; -- test switch for new W2W Protocol. (Dev use only)
@@ -133,7 +133,18 @@ local function initialize()
     dPrint("WIM initialized...");
 end
 
-function WIM:resetWhisperStickies()
+function WIM:checkPratSettings()
+	local Prat = _G.Prat
+	if not Prat then return end
+	local db=Prat.db
+	if not db then return end
+	local csdb = db.children.Prat_ChannelSticky.profile
+	csdb.whisper = false
+	csdb.bn_whisper = false
+end
+
+function WIM:checkWhisperStickies()
+	WIM:checkPratSettings()
 	_G["ChatTypeInfo"]["WHISPER"].sticky = 0
 	_G["ChatTypeInfo"]["BN_WHISPER"].sticky = 0
 end
@@ -149,7 +160,7 @@ local function onEnable()
     end
     
         if(isInitialized) then
-			WIM:resetWhisperStickies()
+			WIM:checkWhisperStickies()
             for mName, module in pairs(modules) do
                 if(type(module.OnEnableWIM) == "function") then
                     module:OnEnableWIM();

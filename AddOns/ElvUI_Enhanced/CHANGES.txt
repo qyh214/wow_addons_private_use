@@ -1,16 +1,14 @@
-tag 1d828319c81b1b3b95a347b0e1b4d7a1682cba55 3.3.6-beta1
+tag fe85cef5db555012a55889a4b0b7d6bdef16a082 3.3.7-beta1
 Author:	Feraldin <nickbock@hoarder.bocky.nl>
-Date:	Mon Feb 25 20:11:40 2019 +0100
+Date:	Sun Mar 17 07:54:49 2019 +0100
 
-3.3.6-beta1
-* Fix for ElvUI 10.88 (https://github.com/nickbock/ElvUI_Enhanced_Again/issues/91)
+3.3.7-beta1
+* Fix for https://github.com/nickbock/ElvUI_Enhanced_Again/issues/94
+* small change for https://github.com/nickbock/ElvUI_Enhanced_Again/issues/91
 
-commit df669ef265ec5a962395ac0e3165cea6ce758dd9
+commit 6b6a6c831a77026d0370d8d0e1d39a28b9fe31b7
 Author: Nick <git@bockmeulen.nl>
-Date:   Mon Feb 25 20:09:56 2019 +0100
+Date:   Sun Mar 17 07:53:23 2019 +0100
 
-    Fix for ElvUI 10.88
-    
-    3.3.6-beta1
-    * Fix for ElvUI 10.88 (https://github.com/nickbock/ElvUI_Enhanced_Again/issues/91)
+    some bug fixes
 

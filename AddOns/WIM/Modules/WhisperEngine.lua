@@ -178,8 +178,15 @@ end
 
 
 local function getWhisperWindowByUser(user, isBN)
-    user = string.gsub(user," ","") -- Drii: WoW build15050 whisper bug for x-realm server with space
-    user = FormatUserName(user);
+	if isBN then
+		if not string.find(user, "^|K") then
+			local _
+			_, user = _G.BNGetFriendInfoByID(isBN) -- fix window handler when using the chat hyperlink
+		end
+	else
+		user = string.gsub(user," ","") -- Drii: WoW build15050 whisper bug for x-realm server with space
+	--	user = FormatUserName(user);
+	end
     if(not user or user == "") then
         -- if invalid user, then return nil;
         return nil;
@@ -671,7 +678,7 @@ function CE_UpdateHeader(editBox)
 		local curState = curState;
 		curState = db.pop_rules.whisper.alwaysOther and "other" or curState;
 		if (db.pop_rules.whisper.intercept and db.pop_rules.whisper[curState].onSend) then
-			WIM:resetWhisperStickies()
+			WIM:checkWhisperStickies()
 			local bNetID = BNet_GetPresenceID(target);
 			target = _G.Ambiguate(target, "none")--For good measure, ambiguate again cause it seems some mods interfere with this process
 			local win = getWhisperWindowByUser(target, bNetID);

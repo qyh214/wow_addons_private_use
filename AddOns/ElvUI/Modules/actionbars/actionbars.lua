@@ -3,7 +3,7 @@ local AB = E:NewModule('ActionBars', 'AceHook-3.0', 'AceEvent-3.0');
 
 --Lua functions
 local _G = _G
-local pairs, select, unpack = pairs, select, unpack
+local pairs, select = pairs, select
 local ceil = math.ceil
 local format, gsub, strsplit, strfind = format, gsub, strsplit, strfind
 --WoW API / Variables
@@ -44,8 +44,7 @@ local LAB = E.Libs.LAB
 local LSM = E.Libs.LSM
 local Masque = E.Masque
 local MasqueGroup = Masque and Masque:Group("ElvUI", "ActionBars")
-
-local UIHider
+local UIHider, Skins
 
 AB.RegisterCooldown = E.RegisterCooldown
 
@@ -130,7 +129,7 @@ function AB:PositionAndSizeBar(barName)
 		numColumns = 1;
 	end
 
-	if self.db[barName].backdrop == true then
+	if bar.db.backdrop == true then
 		bar.backdrop:Show();
 	else
 		bar.backdrop:Hide();
@@ -139,13 +138,14 @@ function AB:PositionAndSizeBar(barName)
 		heightMult = 1
 	end
 
+	local sideSpacing = (bar.db.backdrop == true and (E.Border + backdropSpacing) or E.Spacing)
 	--Size of all buttons + Spacing between all buttons + Spacing between additional rows of buttons + Spacing between backdrop and buttons + Spacing on end borders with non-thin borders
-	local barWidth = (size * (buttonsPerRow * widthMult)) + ((buttonSpacing * (buttonsPerRow - 1)) * widthMult) + (buttonSpacing * (widthMult-1)) + ((self.db[barName].backdrop == true and (E.Border + backdropSpacing) or E.Spacing)*2)
-	local barHeight = (size * (numColumns * heightMult)) + ((buttonSpacing * (numColumns - 1)) * heightMult) + (buttonSpacing * (heightMult-1)) + ((self.db[barName].backdrop == true and (E.Border + backdropSpacing) or E.Spacing)*2)
+	local barWidth = (size * (buttonsPerRow * widthMult)) + ((buttonSpacing * (buttonsPerRow - 1)) * widthMult) + (buttonSpacing * (widthMult - 1)) + (sideSpacing*2)
+	local barHeight = (size * (numColumns * heightMult)) + ((buttonSpacing * (numColumns - 1)) * heightMult) + (buttonSpacing * (heightMult - 1)) + (sideSpacing*2)
 	bar:Width(barWidth);
 	bar:Height(barHeight);
 
-	bar.mouseover = self.db[barName].mouseover
+	bar.mouseover = bar.db.mouseover
 
 	local horizontalGrowth, verticalGrowth;
 	if point == "TOPLEFT" or point == "TOPRIGHT" then
@@ -160,44 +160,42 @@ function AB:PositionAndSizeBar(barName)
 		horizontalGrowth = "LEFT";
 	end
 
-	if self.db[barName].mouseover then
+	if bar.db.mouseover then
 		bar:SetAlpha(0);
 	else
-		bar:SetAlpha(self.db[barName].alpha);
+		bar:SetAlpha(bar.db.alpha);
 	end
 
-	if self.db[barName].inheritGlobalFade then
+	if bar.db.inheritGlobalFade then
 		bar:SetParent(self.fadeParent)
 	else
 		bar:SetParent(E.UIParent)
 	end
 
 	local button, lastButton, lastColumnButton;
-	local firstButtonSpacing = (self.db[barName].backdrop == true and (E.Border + backdropSpacing) or E.Spacing)
 	for i=1, NUM_ACTIONBAR_BUTTONS do
 		button = bar.buttons[i];
 		lastButton = bar.buttons[i-1];
 		lastColumnButton = bar.buttons[i-buttonsPerRow];
 		button:SetParent(bar);
 		button:ClearAllPoints();
-		button:Size(size)
 		button:SetAttribute("showgrid", 1);
+		button:Size(size);
 
 		if i == 1 then
 			local x, y;
 			if point == "BOTTOMLEFT" then
-				x, y = firstButtonSpacing, firstButtonSpacing;
+				x, y = sideSpacing, sideSpacing;
 			elseif point == "TOPRIGHT" then
-				x, y = -firstButtonSpacing, -firstButtonSpacing;
+				x, y = -sideSpacing, -sideSpacing;
 			elseif point == "TOPLEFT" then
-				x, y = firstButtonSpacing, -firstButtonSpacing;
+				x, y = sideSpacing, -sideSpacing;
 			else
-				x, y = -firstButtonSpacing, firstButtonSpacing;
+				x, y = -sideSpacing, sideSpacing;
 			end
 
 			button:Point(point, bar, point, x, y);
 		elseif (i - 1) % buttonsPerRow == 0 then
-			local x = 0;
 			local y = -buttonSpacing;
 			local buttonPoint, anchorPoint = "TOP", "BOTTOM";
 			if verticalGrowth == 'UP' then
@@ -205,10 +203,9 @@ function AB:PositionAndSizeBar(barName)
 				buttonPoint = "BOTTOM";
 				anchorPoint = "TOP";
 			end
-			button:Point(buttonPoint, lastColumnButton, anchorPoint, x, y);
+			button:Point(buttonPoint, lastColumnButton, anchorPoint, 0, y);
 		else
 			local x = buttonSpacing;
-			local y = 0;
 			local buttonPoint, anchorPoint = "LEFT", "RIGHT";
 			if horizontalGrowth == 'LEFT' then
 				x = -buttonSpacing;
@@ -216,7 +213,7 @@ function AB:PositionAndSizeBar(barName)
 				anchorPoint = "LEFT";
 			end
 
-			button:Point(buttonPoint, lastButton, anchorPoint, x, y);
+			button:Point(buttonPoint, lastButton, anchorPoint, x, 0);
 		end
 
 		if i > numButtons then
@@ -226,12 +223,11 @@ function AB:PositionAndSizeBar(barName)
 		end
 
 		self:StyleButton(button, nil, (MasqueGroup and E.private.actionbar.masque.actionbars and true) or nil);
-		button:SetCheckedTexture("")
 	end
 
-	if self.db[barName].enabled or not bar.initialized then
-		if not self.db[barName].mouseover then
-			bar:SetAlpha(self.db[barName].alpha);
+	if bar.db.enabled or not bar.initialized then
+		if not bar.db.mouseover then
+			bar:SetAlpha(bar.db.alpha);
 		end
 
 		local page = self:GetPage(barName, self.barDefaults[barName].page, self.barDefaults[barName].conditions)
@@ -334,9 +330,8 @@ function AB:CreateBar(id)
 	bar:SetFrameStrata("LOW")
 
 	--Use this method instead of :SetAllPoints, as the size of the mover would otherwise be incorrect
-	local offset = E.Spacing
-	bar.backdrop:SetPoint("TOPLEFT", bar, "TOPLEFT", offset, -offset)
-	bar.backdrop:SetPoint("BOTTOMRIGHT", bar, "BOTTOMRIGHT", -offset, offset)
+	bar.backdrop:SetPoint("TOPLEFT", bar, "TOPLEFT", E.Spacing, -E.Spacing)
+	bar.backdrop:SetPoint("BOTTOMRIGHT", bar, "BOTTOMRIGHT", -E.Spacing, E.Spacing)
 
 	bar.buttons = {}
 	bar.bindButtons = self.barDefaults['bar'..id].bindButtons
@@ -448,7 +443,7 @@ function AB:UpdateVehicleLeave()
 	local scale = 26 * (E.db.general.minimap.icons.vehicleLeave.scale or 1)
 	button:ClearAllPoints()
 	button:Point(pos, _G.Minimap, pos, E.db.general.minimap.icons.vehicleLeave.xOffset or 2, E.db.general.minimap.icons.vehicleLeave.yOffset or 2)
-	button:SetSize(scale, scale)
+	button:Size(scale, scale)
 end
 
 function AB:CreateVehicleLeave()
@@ -456,9 +451,9 @@ function AB:CreateVehicleLeave()
 	vehicle:Size(26)
 	vehicle:SetFrameStrata("HIGH")
 	vehicle:Point("BOTTOMLEFT", _G.Minimap, "BOTTOMLEFT", 2, 2)
-	vehicle:SetNormalTexture("Interface\\AddOns\\ElvUI\\media\\textures\\vehicleexit")
-	vehicle:SetPushedTexture("Interface\\AddOns\\ElvUI\\media\\textures\\vehicleexit")
-	vehicle:SetHighlightTexture("Interface\\AddOns\\ElvUI\\media\\textures\\vehicleexit")
+	vehicle:SetNormalTexture(E.Media.Textures.ExitVehicle)
+	vehicle:SetPushedTexture(E.Media.Textures.ExitVehicle)
+	vehicle:SetHighlightTexture(E.Media.Textures.ExitVehicle)
 	vehicle:SetTemplate()
 	vehicle:RegisterForClicks("AnyUp")
 
@@ -577,7 +572,7 @@ function AB:UpdateButtonSettings()
 
 	for button in pairs(self.handledbuttons) do
 		if button then
-			self:StyleButton(button, button.noBackdrop, button.useMasque)
+			self:StyleButton(button, button.noBackdrop, button.useMasque, button.ignoreNormal)
 			self:StyleFlyout(button)
 		else
 			self.handledbuttons[button] = nil
@@ -616,7 +611,7 @@ function AB:GetPage(bar, defaultPage, condition)
 	return condition
 end
 
-function AB:StyleButton(button, noBackdrop, useMasque)
+function AB:StyleButton(button, noBackdrop, useMasque, ignoreNormal)
 	local name = button:GetName();
 	local macroText = _G[name.."Name"];
 	local icon = _G[name.."Icon"];
@@ -634,16 +629,12 @@ function AB:StyleButton(button, noBackdrop, useMasque)
 	local countXOffset = self.db.countTextXOffset or 0
 	local countYOffset = self.db.countTextYOffset or 2
 
-	if not button.noBackdrop then
-		button.noBackdrop = noBackdrop;
-	end
-
-	if not button.useMasque then
-		button.useMasque = useMasque;
-	end
+	button.noBackdrop = noBackdrop
+	button.useMasque = useMasque
+	button.ignoreNormal = ignoreNormal
 
 	if flash then flash:SetTexture(); end
-	if normal then normal:SetTexture(); normal:Hide(); normal:SetAlpha(0); end
+	if normal and not ignoreNormal then normal:SetTexture(); normal:Hide(); normal:SetAlpha(0); end
 	if normal2 then normal2:SetTexture(); normal2:Hide(); normal2:SetAlpha(0); end
 
 	if border and not button.useMasque then
@@ -665,12 +656,13 @@ function AB:StyleButton(button, noBackdrop, useMasque)
 	end
 
 	if not button.noBackdrop and not button.backdrop and not button.useMasque then
-		button:CreateBackdrop('Default', true)
+		button:CreateBackdrop(nil, true)
 		button.backdrop:SetAllPoints()
 	end
 
 	if icon then
-		icon:SetTexCoord(unpack(E.TexCoords));
+		if not Skins then Skins = E:GetModule('Skins') end
+		Skins:HandleIcon(icon)
 		icon:SetInside()
 	end
 
@@ -1140,32 +1132,29 @@ function AB:VehicleFix()
 	local numColumns = ceil(numButtons / buttonsPerRow);
 
 	if (HasOverrideActionBar() or HasVehicleActionBar()) and numButtons == 12 then
-		local widthMult = 1;
-		local heightMult = 1;
+		local widthMult, heightMult, x, y = 1, 1
 
-		local offset = E.Spacing
-		local x, y
 		if point == "BOTTOMLEFT" then
-			x, y = offset, offset
+			x, y = E.Spacing, E.Spacing
 		elseif point == "BOTTOMRIGHT" then
-			x, y = -offset, offset
+			x, y = -E.Spacing, E.Spacing
 		elseif point == "TOPLEFT" then
-			x, y = offset, -offset
+			x, y = E.Spacing, -E.Spacing
 		elseif point == "TOPRIGHT" then
-			x, y = -offset, -offset
+			x, y = -E.Spacing, -E.Spacing
 		end
+
 		bar.backdrop:ClearAllPoints()
-		bar.backdrop:Point(point, bar, point, x, y)
+		bar.backdrop:SetPoint(point, bar, point, x, y)
 
 		local backdropWidth = (size * (buttonsPerRow * widthMult)) + ((buttonSpacing * (buttonsPerRow - 1)) * widthMult) + (backdropSpacing*2) + (E.Border*2) - (E.Spacing*2)
 		local backdropeight = (size * (numColumns * heightMult)) + ((buttonSpacing * (numColumns - 1)) * heightMult) + (backdropSpacing*2) + (E.Border*2) - (E.Spacing*2)
-		bar.backdrop:Width(backdropWidth)
-		bar.backdrop:Height(backdropeight)
+		bar.backdrop:SetWidth(backdropWidth)
+		bar.backdrop:SetHeight(backdropeight)
 	else
 		--Use this method instead of :SetAllPoints, as the size of the mover would otherwise be incorrect
-		local offset = E.Spacing
-		bar.backdrop:SetPoint("TOPLEFT", bar, "TOPLEFT", offset, -offset)
-		bar.backdrop:SetPoint("BOTTOMRIGHT", bar, "BOTTOMRIGHT", -offset, offset)
+		bar.backdrop:SetPoint("TOPLEFT", bar, "TOPLEFT", E.Spacing, -E.Spacing)
+		bar.backdrop:SetPoint("BOTTOMRIGHT", bar, "BOTTOMRIGHT", -E.Spacing, E.Spacing)
 	end
 end
 

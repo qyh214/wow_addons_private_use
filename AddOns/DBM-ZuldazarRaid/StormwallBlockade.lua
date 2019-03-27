@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod(2337, "DBM-ZuldazarRaid", 3, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18417 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 18453 $"):sub(12, -3))
 mod:SetCreatureID(146251, 146253, 146256)--Sister Katherine 146251, Brother Joseph 146253, Laminaria 146256
 mod:SetEncounterID(2280)
 --mod:DisableESCombatDetection()
 mod:SetZone()
 mod:SetBossHPInfoToHighest()
---mod:SetUsedIcons(1, 2, 8)
+mod:SetUsedIcons(1, 2, 3)
 mod:SetHotfixNoticeRev(18367)
 --mod:SetMinSyncRevision(16950)
 --mod.respawnTime = 35
@@ -15,12 +15,12 @@ mod:SetHotfixNoticeRev(18367)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 284262 284106 284393 284383 285017 284362 288696 288941",
-	"SPELL_CAST_SUCCESS 285350 285426 285118 290694 289795 287169",
-	"SPELL_AURA_APPLIED 286558 284405 285000 285382 285350 285426 287995",
+	"SPELL_CAST_START 284262 284393 284383 285017 284362 288696 288941",
+	"SPELL_CAST_SUCCESS 285350 285426 285118 290694 289795 287169 284106",
+	"SPELL_AURA_APPLIED 286558 284405 285000 285382 285350 285426 287995 288205",
 	"SPELL_AURA_REFRESH 285000 285382",
 	"SPELL_AURA_APPLIED_DOSE 285000 285382",
-	"SPELL_AURA_REMOVED 286558 285000 285382 285350 285426 287995",
+	"SPELL_AURA_REMOVED 286558 285000 285382 285350 285426 287995 288205",
 	"SPELL_INTERRUPT",
 --	"SPELL_PERIODIC_DAMAGE 285075",
 --	"SPELL_PERIODIC_MISSED 285075",
@@ -32,8 +32,8 @@ mod:RegisterEventsInCombat(
 --TODO, icons and stuff for storm's wail
 --TODO, add "watch wave" warning for Energized wake on mythic
 --[[
-(ability.id = 284262 or ability.id = 284106 or ability.id = 284393 or ability.id = 284383 or ability.id = 285017 or ability.id = 284362 or ability.id = 288696 or ability.id = 288941) and type = "begincast"
- or (ability.id = 285350 or ability.id = 285426 or ability.id = 285118 or ability.id = 290694 or ability.id = 289795 or ability.id = 287169) and type = "cast"
+(ability.id = 284262 or ability.id = 284393 or ability.id = 284383 or ability.id = 285017 or ability.id = 284362 or ability.id = 288696 or ability.id = 288941) and type = "begincast"
+ or (ability.id = 285350 or ability.id = 285426 or ability.id = 285118 or ability.id = 290694 or ability.id = 289795 or ability.id = 287169 or ability.id = 284106) and type = "cast"
  or type = "interrupt"
  or ability.id = 284405 and type = "applydebuff"
 --]]
@@ -41,7 +41,7 @@ mod:RegisterEventsInCombat(
 ----General
 local warnTranslocate					= mod:NewTargetNoFilterAnnounce(284393, 2)
 ----Sister Katherine
-local warnCracklingLightning			= mod:NewCastAnnounce(284106, 3)
+local warnCracklingLightning			= mod:NewTargetAnnounce(288205, 4)
 local warnElecShroud					= mod:NewTargetAnnounce(287995, 4)
 local warnJoltingVolley					= mod:NewCountAnnounce(287169, 3)
 ----Brother Joseph
@@ -58,8 +58,9 @@ local specWarnTidalEmpowerment			= mod:NewSpecialWarningInterrupt(284765, "HasIn
 --local specWarnGTFO						= mod:NewSpecialWarningGTFO(285075, false, nil, 2, 1, 8)
 ----Sister Katherine
 local specWarnVoltaicFlash				= mod:NewSpecialWarningDodge(284262, nil, nil, nil, 2, 2)
---local yellDarkRevolation				= mod:NewPosYell(273365)
---local yellDarkRevolationFades			= mod:NewIconFadesYell(273365
+local specWarnCracklingLightning		= mod:NewSpecialWarningMoveAway(288205, nil, nil, nil, 1, 2)
+local yellCracklingLightning			= mod:NewYell(288205)
+local yellCracklingLightningFades		= mod:NewShortFadesYell(288205)
 ----Brother Joseph
 local specWarnSeaStorm					= mod:NewSpecialWarningDodge(284360, nil, nil, nil, 2, 2)
 local specWarnSeasTemptation			= mod:NewSpecialWarningSwitch(284383, "RangedDps", nil, nil, 1, 2)--Ranged assumed for now, melee stay out until temping song goes out
@@ -103,7 +104,7 @@ local countdownSeaSwell					= mod:NewCountdown(20.6, 285118, true, 3, 3)
 --local countdownFelstormBarrage			= mod:NewCountdown("AltTwo32", 244000, nil, nil, 3)
 
 mod:AddNamePlateOption("NPAuraOnKepWrapping", 285382)
---mod:AddSetIconOption("SetIconDarkRev", 273365, true)
+mod:AddSetIconOption("SetIconWail", 285350, true)
 mod:AddRangeFrameOption(5, 285118)
 mod:AddInfoFrameOption(284760, true)
 
@@ -112,6 +113,8 @@ mod.vb.bossesDied = 0
 mod.vb.cracklingCast = 0
 mod.vb.sirenCount = 0
 mod.vb.joltingCast = 0
+mod.vb.stormsActive = 0
+mod.vb.stormsWailIcon = 1
 local freezingTidePod = DBM:GetSpellInfo(285075)
 local stormTargets = {}
 
@@ -193,9 +196,11 @@ function mod:OnCombatStart(delay)
 	self.vb.cracklingCast = 0
 	self.vb.sirenCount = 0
 	self.vb.joltingCast = 0
+	self.vb.stormsActive = 0
+	self.vb.stormsWailIcon = 1
 	if not self:IsLFR() then
 		--Sister
-		timerCracklingLightningCD:Start(3.9-delay)--3.9-8.8
+		timerCracklingLightningCD:Start(5.9-delay)--5.9-10.8
 		timerVoltaicFlashCD:Start(8.8-delay)
 		timerElecShroudCD:Start(30-delay)
 		--Brother
@@ -204,7 +209,7 @@ function mod:OnCombatStart(delay)
 		timerTidalShroudCD:Start(30.1-delay)--30-32
 	else
 		--Sister
-		timerCracklingLightningCD:Start(11.7-delay)--3.9-8.8
+		timerCracklingLightningCD:Start(13.7-delay)--3.9-8.8?
 		timerVoltaicFlashCD:Start(20-delay)
 		--Brother
 		timerSeaStormCD:Start(6-delay)--0.3-8
@@ -270,23 +275,6 @@ function mod:SPELL_CAST_START(args)
 		specWarnVoltaicFlash:Show()
 		specWarnVoltaicFlash:Play("watchorb")
 		timerVoltaicFlashCD:Start(42.5)
-	elseif spellId == 284106 then
-		self.vb.cracklingCast = self.vb.cracklingCast + 1
-		if self:CheckBossDistance(args.sourceGUID, true) then
-			warnCracklingLightning:Show()
-			timerCracklingLightningCD:SetFade(false)
-		else
-			timerCracklingLightningCD:SetFade(true)
-		end
-		if self:IsLFR() then
-			timerCracklingLightningCD:Start(30)
-		else
-			if self.vb.cracklingCast % 2 == 0 then
-				timerCracklingLightningCD:Start(21.9)--21.9 (usually 23.1 but I have one log showing 21.9)
-			else
-				timerCracklingLightningCD:Start(12.1)
-			end
-		end
 	elseif spellId == 284393 then
 		warnTranslocate:Show(args.sourceName)
 		local cid = self:GetCIDFromGUID(args.sourceGUID)
@@ -296,7 +284,7 @@ function mod:SPELL_CAST_START(args)
 			timerCracklingLightningCD:Stop()
 			timerElecShroudCD:Stop()
 			--This may be more complicated than this, like maybe a pause/resume more so than this
-			timerCracklingLightningCD:Start(12)
+			timerCracklingLightningCD:Start(14)
 			timerVoltaicFlashCD:Start(17)
 			timerElecShroudCD:Start(36.4)
 			self:Schedule(3, delayedSisterUpdate, self, true)
@@ -351,6 +339,7 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if (spellId == 285350 or spellId == 285426) and args:GetSrcCreatureID() == 146256 then
+		self.vb.stormsActive = self.vb.stormsActive + 1
 		timerStormsWailCD:Start()
 	elseif spellId == 285118 then--All P2 Sea Swell
 		specWarnSeaSwell:Show()
@@ -385,6 +374,22 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self.vb.joltingCast = self.vb.joltingCast + 1
 		warnJoltingVolley:Show(self.vb.joltingCast)
 		timerJoltingVolleyCD:Start(43.6, self.vb.joltingCast+1)
+	elseif spellId == 284106 then
+		self.vb.cracklingCast = self.vb.cracklingCast + 1
+		if self:CheckBossDistance(args.sourceGUID, true) then
+			timerCracklingLightningCD:SetFade(false)
+		else
+			timerCracklingLightningCD:SetFade(true)
+		end
+		if self:IsLFR() then
+			timerCracklingLightningCD:Start(30)
+		else
+			if self.vb.cracklingCast % 2 == 0 then
+				timerCracklingLightningCD:Start(21.9)--21.9 (usually 23.1 but I have one log showing 21.9)
+			else
+				timerCracklingLightningCD:Start(12.1)
+			end
+		end
 	end
 end
 
@@ -440,6 +445,25 @@ function mod:SPELL_AURA_APPLIED(args)
 		if not tContains(stormTargets, args.destName) then
 			table.insert(stormTargets, args.destName)
 		end
+		if self.Options.SetIconWail then
+			self:SetIcon(args.destName, self.vb.stormsWailIcon)
+		end
+		--Smart rotation code that'll automatically rotate betwen needed number of icons based on number of debuffs out
+		--Automatically reset icon to 1 if icon higher than our max count.
+		--ie 2 debuffs out, it'll alternate icons 1 and 2. 3 out, it'll cycle through icons 1-3, a single debuff, it'll basically keep resetting to 1
+		self.vb.stormsWailIcon = self.vb.stormsWailIcon + 1
+		if self.vb.stormsWailIcon > self.vb.stormsActive then
+			self.vb.stormsWailIcon = 1
+		end
+	elseif spellId == 288205 then
+		if args:IsPlayer() then
+			specWarnCracklingLightning:Show()
+			specWarnCracklingLightning:Play("runout")
+			yellCracklingLightning:Yell()
+			yellCracklingLightningFades:Countdown(4)
+		else
+			warnCracklingLightning:Show(args.destName)
+		end
 	end
 end
 mod.SPELL_AURA_REFRESH = mod.SPELL_AURA_APPLIED
@@ -471,6 +495,13 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 		timerStormsWail:Stop(12, args.destName)
 		tDeleteItem(stormTargets, args.destName)
+		if self.Options.SetIconWail then
+			self:SetIcon(args.destName, 0)
+		end
+	elseif spellId == 288205 then
+		if args:IsPlayer() then
+			yellCracklingLightningFades:Cancel()
+		end
 	end
 end
 

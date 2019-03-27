@@ -11,9 +11,9 @@ local hooksecurefunc = hooksecurefunc
 local function SkinRecipeList(self, _, tradeSkillInfo)
 	-- +/- Buttons
 	if tradeSkillInfo.collapsed then
-		self:SetNormalTexture("Interface\\AddOns\\ElvUI\\media\\textures\\PlusButton")
+		self:SetNormalTexture(E.Media.Textures.PlusButton)
 	else
-		self:SetNormalTexture("Interface\\AddOns\\ElvUI\\media\\textures\\MinusButton")
+		self:SetNormalTexture(E.Media.Textures.MinusButton)
 	end
 
 	-- Skillbar
@@ -50,7 +50,7 @@ local function LoadSkin()
 	TradeSkillFrame.LinkToButton:GetHighlightTexture():Kill()
 	TradeSkillFrame.LinkToButton:CreateBackdrop()
 	TradeSkillFrame.LinkToButton:Size(17, 14)
-	TradeSkillFrame.LinkToButton:SetPoint("BOTTOMRIGHT", TradeSkillFrame.FilterButton, "TOPRIGHT", -2, 4)
+	TradeSkillFrame.LinkToButton:Point("BOTTOMRIGHT", TradeSkillFrame.FilterButton, "TOPRIGHT", -2, 4)
 	TradeSkillFrame.bg1 = CreateFrame("Frame", nil, TradeSkillFrame)
 	TradeSkillFrame.bg1:SetTemplate("Transparent")
 	TradeSkillFrame.bg1:Point("TOPLEFT", 4, -81)

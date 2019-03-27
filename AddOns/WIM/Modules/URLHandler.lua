@@ -223,15 +223,19 @@ local function MENU_ARMORY_CLICKED(self)
     local armory_eu_us = isUS and "en-us" or "en-gb";
     local user, realm;
     if(MENU_ARMORY_USER:find("-")) then
-        user, realm = string.split("-", MENU_ARMORY_USER);
+        --user, realm = string.split("-", MENU_ARMORY_USER);
+		user, realm = GetNameAndServer(MENU_ARMORY_USER)
     else
         user = MENU_ARMORY_USER;
+		local _
+		_, realm = GetNameAndServer("-"..MENU_ARMORY_REALM)
     end
     realm = realm or MENU_ARMORY_REALM;
     local link = self.value;
     link = link:gsub("{eu/www}", eu_www);
+	realm = string.gsub(realm, "'", "")
     link = link:gsub("{realm}", realm);
-    link = link:gsub("{realm%-}", ""..realm:gsub(" ","-"));
+    link = link:gsub("{realm%-}", (string.gsub(realm," ","-")));
     link = link:gsub("{user}", user);
     link = link:gsub("{eu/us}", eu_us);
     link = link:gsub("{armeu/armus}", armory_eu_us);

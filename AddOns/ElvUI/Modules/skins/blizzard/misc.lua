@@ -23,7 +23,7 @@ local function SkinNavBarButtons(self)
 		if navButton.MenuArrowButton then
 			navButton.MenuArrowButton:StripTextures()
 			if navButton.MenuArrowButton.Art then
-				navButton.MenuArrowButton.Art:SetTexture([[Interface\AddOns\ElvUI\media\textures\ArrowUp]])
+				navButton.MenuArrowButton.Art:SetTexture(E.Media.Textures.ArrowUp)
 				navButton.MenuArrowButton.Art:SetTexCoord(0, 1, 0, 1)
 				navButton.MenuArrowButton.Art:SetRotation(3.14)
 			end
@@ -260,7 +260,7 @@ local function LoadSkin()
 		local p = E.PixelMode and 1 or 2
 		b:Point("TOPLEFT", _G.GhostFrameContentsFrameIcon, -p, p)
 		b:Point("BOTTOMRIGHT", _G.GhostFrameContentsFrameIcon, p, -p)
-		_G.GhostFrameContentsFrameIcon:SetSize(37,38)
+		_G.GhostFrameContentsFrameIcon:Size(37,38)
 		_G.GhostFrameContentsFrameIcon:SetParent(b)
 		b:SetTemplate()
 	end
@@ -274,10 +274,10 @@ local function LoadSkin()
 		local listFrameName = listFrame:GetName();
 		local expandArrow = _G[listFrameName.."Button"..index.."ExpandArrow"];
 		if expandArrow then
-			expandArrow:SetNormalTexture([[Interface\AddOns\ElvUI\media\textures\ArrowUp]])
-			expandArrow:SetSize(12, 12)
+			expandArrow:SetNormalTexture(E.Media.Textures.ArrowUp)
+			expandArrow:Size(12, 12)
 			expandArrow:GetNormalTexture():SetVertexColor(unpack(E.media.rgbvaluecolor))
-			expandArrow:GetNormalTexture():SetRotation(S.ArrowRotation['right'])
+			expandArrow:GetNormalTexture():SetRotation(S.ArrowRotation.right)
 		end
 
 		 _G[listFrameName.."MenuBackdrop"]:SetTemplate("Transparent")
@@ -287,7 +287,7 @@ local function LoadSkin()
 		if texture:find("Divider") then
 			local r, g, b = unpack(E.media.rgbvaluecolor)
 			icon:SetColorTexture(r, g, b, 0.45)
-			icon:SetHeight(1)
+			icon:Height(1)
 		end
 	end)
 
@@ -298,13 +298,13 @@ local function LoadSkin()
 
 		local r, g, b = unpack(E.media.rgbvaluecolor)
 
-		for i = 1, UIDROPDOWNMENU_MAXBUTTONS do
+		for i = 1, _G.UIDROPDOWNMENU_MAXBUTTONS do
 			local button = _G["DropDownList"..level.."Button"..i]
 			local check = _G["DropDownList"..level.."Button"..i.."Check"]
 			local uncheck = _G["DropDownList"..level.."Button"..i.."UnCheck"]
 			local highlight = _G["DropDownList"..level.."Button"..i.."Highlight"]
 
-			highlight:SetTexture([[Interface\AddOns\ElvUI\media\textures\Highlight]])
+			highlight:SetTexture(E.Media.Textures.Highlight)
 			highlight:SetBlendMode('BLEND')
 			highlight:SetDrawLayer('BACKGROUND')
 			highlight:SetVertexColor(r, g, b)
@@ -316,18 +316,18 @@ local function LoadSkin()
 			button.backdrop:Hide()
 
 			if not button.notCheckable then
-				uncheck:SetTexture('')
+				uncheck:SetTexture()
 				local _, co = check:GetTexCoord()
 				if co == 0 then
 					check:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
 					check:SetVertexColor(r, g, b, 1)
-					check:SetSize(20, 20)
+					check:Size(20, 20)
 					check:SetDesaturated(true)
 					button.backdrop:SetInside(check, 4, 4)
 				else
 					check:SetTexture(E.media.normTex)
 					check:SetVertexColor(r, g, b, 1)
-					check:SetSize(10, 10)
+					check:Size(10, 10)
 					check:SetDesaturated(false)
 					button.backdrop:SetOutside(check)
 				end
@@ -335,7 +335,7 @@ local function LoadSkin()
 				button.backdrop:Show()
 				check:SetTexCoord(0, 1, 0, 1);
 			else
-				check:SetSize(16, 16)
+				check:Size(16, 16)
 			end
 		end
 	end)

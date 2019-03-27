@@ -62,14 +62,14 @@ end
     
 local function AddFilterButtons(f, isBank)
     local buttonSize = isBank and B.db.bankSize or B.db.bagSize;
-    local buttonSpacing = E.PixelMode and 2 or 4;
+    local buttonSpacing = E.Border * 2;
     local lastContainerButton;
-    
+
     for i, filter in ipairs(U.Filters) do
         if not f.FilterHolder[i] then
             local name, icon, func = unpack(filter);
 
-            f.FilterHolder[i] = CreateFrame('CheckButton', 'ElvUIBagFilter', f.FilterHolder, 'ItemButtonTemplate');
+            f.FilterHolder[i] = CreateFrame('CheckButton', nil, f.FilterHolder);
             f.FilterHolder[i]:SetTemplate('Default', true);
             f.FilterHolder[i]:StyleButton();
             f.FilterHolder[i]:SetNormalTexture('');
@@ -82,15 +82,11 @@ local function AddFilterButtons(f, isBank)
             f.FilterHolder[i]:SetScript('OnClick', SetFilter);
             f.FilterHolder[i]:SetScript('OnHide', ResetFilter);
             f.FilterHolder[i]:SetID(i);
-            
-            local tex = f.FilterHolder[i]:CreateTexture(nil, 'OVERLAY');
-            tex:SetTexture(0.9, 0.8, 0.1, 0.3);
-            tex:SetInside();
-            f.FilterHolder[i]:SetCheckedTexture(tex);
-            
-            f.FilterHolder[i].icon:SetTexture(icon);
-            f.FilterHolder[i].icon:SetInside();
-            f.FilterHolder[i].icon:SetTexCoord(unpack(E.TexCoords));
+
+            f.FilterHolder[i].iconTexture = f.FilterHolder[i]:CreateTexture();
+            f.FilterHolder[i].iconTexture:SetInside();
+            f.FilterHolder[i].iconTexture:SetTexCoord(unpack(E.TexCoords));
+            f.FilterHolder[i].iconTexture:SetTexture(icon);
         end
         
         f.FilterHolder:Size(((buttonSize + buttonSpacing) * i) + buttonSpacing, buttonSize + (buttonSpacing * 2));

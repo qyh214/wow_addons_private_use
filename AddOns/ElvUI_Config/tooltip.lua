@@ -2,8 +2,8 @@ local E, L, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, Profi
 local TT = E:GetModule('Tooltip')
 
 local _G = _G
-local GameTooltip = _G['GameTooltip']
-local GameTooltipStatusBar = _G['GameTooltipStatusBar']
+local GameTooltip = _G.GameTooltip
+local GameTooltipStatusBar = _G.GameTooltipStatusBar
 
 E.Options.args.tooltip = {
 	type = "group",
@@ -206,12 +206,14 @@ E.Options.args.tooltip = {
 						},
 					},
 					get = function(info)
-						local t = E.db.tooltip.factionColors[ info[#info] ]
-						local d = P.tooltip.factionColors[ info[#info] ]
+						local v = tonumber(info[#info])
+						local t = E.db.tooltip.factionColors[v]
+						local d = P.tooltip.factionColors[v]
 						return t.r, t.g, t.b, t.a, d.r, d.g, d.b
 					end,
 					set = function(info, r, g, b)
-						local t = E.db.tooltip.factionColors[ info[#info] ]
+						local v = tonumber(info[#info])
+						local t = E.db.tooltip.factionColors[v]
 						t.r, t.g, t.b = r, g, b
 					end,
 				},
@@ -273,6 +275,18 @@ E.Options.args.tooltip = {
 					type = 'toggle',
 					name = COMBAT,
 					desc = L["Hide tooltip while in combat."],
+				},
+				combatOverride = {
+					order = 5,
+					type = 'select',
+					name = L["Combat Override Key"],
+					desc = L["Choose when you want the tooltip to show in combat. If a modifer is chosen, then you need to hold that down to show the tooltip."],
+					values = {
+						['ALL'] = L["Always Hide"],
+						['SHIFT'] = SHIFT_KEY,
+						['ALT'] = ALT_KEY,
+						['CTRL'] = CTRL_KEY
+					},
 				},
 			},
 		},

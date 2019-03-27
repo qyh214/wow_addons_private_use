@@ -125,7 +125,7 @@ function E:CreateStatusFrame()
 		section.Header.Text:SetJustifyH("CENTER")
 		section.Header.Text:SetJustifyV("MIDDLE")
 		local font, height, flags = section.Header.Text:GetFont()
-		section.Header.Text:SetFont(font, height*1.3, flags)
+		section.Header.Text:FontTemplate(font, height*1.3, flags)
 
 		section.Header.LeftDivider = section.Header:CreateTexture(nil, "ARTWORK")
 		section.Header.LeftDivider:Height(8)
@@ -183,7 +183,7 @@ function E:CreateStatusFrame()
 	StatusFrame.TitleLogoFrame:Size(128, 64)
 	StatusFrame.TitleLogoFrame:Point("CENTER", StatusFrame, "TOP", 0, 0)
 	StatusFrame.TitleLogoFrame.Texture = StatusFrame.TitleLogoFrame:CreateTexture(nil, "ARTWORK")
-	StatusFrame.TitleLogoFrame.Texture:SetTexture("Interface\\AddOns\\ElvUI\\media\\textures\\logo")
+	StatusFrame.TitleLogoFrame.Texture:SetTexture(E.Media.Textures.Logo)
 	StatusFrame.TitleLogoFrame.Texture:SetAllPoints()
 
 	--Sections

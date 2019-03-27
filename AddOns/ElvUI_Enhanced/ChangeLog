@@ -1,3 +1,7 @@
+3.3.7-beta1
+* Fix for https://github.com/nickbock/ElvUI_Enhanced_Again/issues/94
+* small change for https://github.com/nickbock/ElvUI_Enhanced_Again/issues/91
+
 3.3.6-beta1
 * Fix for ElvUI 10.88 (https://github.com/nickbock/ElvUI_Enhanced_Again/issues/91)
 

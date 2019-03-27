@@ -299,7 +299,7 @@ local function GetOptionsTable_AuraBars(updateFunc, groupName)
 	}
 
 	if groupName == "target" then
-		config.args.attachTo.values['PLAYER_AURABARS'] = L["Player Frame Aura Bars"]
+		config.args.attachTo.values.PLAYER_AURABARS = L["Player Frame Aura Bars"]
 	end
 
 	config.args.filters.args.minDuration = {
@@ -377,7 +377,7 @@ local function GetOptionsTable_AuraBars(updateFunc, groupName)
 		dragdrop = true,
 		type = "multiselect",
 		name = L["Filter Priority"],
-		dragOnLeave = function() end, --keep this here
+		dragOnLeave = E.noop, --keep this here
 		dragOnEnter = function(info)
 			carryFilterTo = info.obj.value
 		end,
@@ -648,7 +648,7 @@ local function GetOptionsTable_Auras(auraType, isGroupFrame, updateFunc, groupNa
 		dragdrop = true,
 		type = "multiselect",
 		name = L["Filter Priority"],
-		dragOnLeave = function() end, --keep this here
+		dragOnLeave = E.noop, --keep this here
 		dragOnEnter = function(info)
 			carryFilterTo = info.obj.value
 		end,
@@ -3650,8 +3650,8 @@ E.Options.args.unitframe.args.player = {
 					values = {
 						["CUSTOM"] = CUSTOM,
 						["DEFAULT"] = DEFAULT,
-						["RESTING"] = [[|TInterface\AddOns\ElvUI\media\textures\resting:14|t]],
-						["RESTING1"] = [[|TInterface\AddOns\ElvUI\media\textures\resting1:14|t]],
+						["RESTING"] = E:TextureString(E.Media.Textures.Resting, ":14"),
+						["RESTING1"] = E:TextureString(E.Media.Textures.Resting1, ":14"),
 					},
 				},
 				customTexture = {
@@ -3749,7 +3749,7 @@ E.Options.args.unitframe.args.player = {
 					values = {
 						["CUSTOM"] = CUSTOM,
 						["DEFAULT"] = DEFAULT,
-						["COMBAT"] = [[|TInterface\AddOns\ElvUI\media\textures\combat:14|t]],
+						["COMBAT"] = E:TextureString(E.Media.Textures.Combat, ":14"),
 						["PLATINUM"] = [[|TInterface\Challenges\ChallengeMode_Medal_Platinum:14|t]],
 						["ATTACK"] = [[|TInterface\CURSOR\Attack:14|t]],
 						["ALERT"] = [[|TInterface\DialogFrame\UI-Dialog-Icon-AlertNew:14|t]],
@@ -6030,7 +6030,7 @@ E.Options.args.unitframe.args.raid = {
 			type = 'execute',
 			name = L["Display Frames"],
 			func = function()
-				UF:HeaderConfig(_G['ElvUF_Raid'], _G['ElvUF_Raid'].forceShow ~= true or nil)
+				UF:HeaderConfig(_G.ElvUF_Raid, _G.ElvUF_Raid.forceShow ~= true or nil)
 			end,
 		},
 		resetSettings = {
@@ -6154,9 +6154,9 @@ E.Options.args.unitframe.args.raid = {
 							set = function(info, value)
 								E.db.unitframe.units.raid[ info[#info] ] = value;
 								UF:CreateAndUpdateHeaderGroup('raid')
-								if _G['ElvUF_Raid'].isForced then
-									UF:HeaderConfig(_G['ElvUF_Raid'])
-									UF:HeaderConfig(_G['ElvUF_Raid'], true)
+								if _G.ElvUF_Raid.isForced then
+									UF:HeaderConfig(_G.ElvUF_Raid)
+									UF:HeaderConfig(_G.ElvUF_Raid, true)
 								end
 							end,
 						},
@@ -6168,9 +6168,9 @@ E.Options.args.unitframe.args.raid = {
 							set = function(info, value)
 								E.db.unitframe.units.raid[ info[#info] ] = value;
 								UF:CreateAndUpdateHeaderGroup('raid')
-								if _G['ElvUF_Raid'].isForced then
-									UF:HeaderConfig(_G['ElvUF_Raid'])
-									UF:HeaderConfig(_G['ElvUF_Raid'], true)
+								if _G.ElvUF_Raid.isForced then
+									UF:HeaderConfig(_G.ElvUF_Raid)
+									UF:HeaderConfig(_G.ElvUF_Raid, true)
 								end
 							end,
 						},
@@ -6505,7 +6505,7 @@ E.Options.args.unitframe.args.raid40 = {
 			type = 'execute',
 			name = L["Display Frames"],
 			func = function()
-				UF:HeaderConfig(_G['ElvUF_Raid40'], _G['ElvUF_Raid40'].forceShow ~= true or nil)
+				UF:HeaderConfig(_G.ElvUF_Raid40, _G.ElvUF_Raid40.forceShow ~= true or nil)
 			end,
 		},
 		resetSettings = {
@@ -6629,9 +6629,9 @@ E.Options.args.unitframe.args.raid40 = {
 							set = function(info, value)
 								E.db.unitframe.units.raid40[ info[#info] ] = value;
 								UF:CreateAndUpdateHeaderGroup('raid40')
-								if _G['ElvUF_Raid'].isForced then
-									UF:HeaderConfig(_G['ElvUF_Raid40'])
-									UF:HeaderConfig(_G['ElvUF_Raid40'], true)
+								if _G.ElvUF_Raid.isForced then
+									UF:HeaderConfig(_G.ElvUF_Raid40)
+									UF:HeaderConfig(_G.ElvUF_Raid40, true)
 								end
 							end,
 						},
@@ -6643,9 +6643,9 @@ E.Options.args.unitframe.args.raid40 = {
 							set = function(info, value)
 								E.db.unitframe.units.raid40[ info[#info] ] = value;
 								UF:CreateAndUpdateHeaderGroup('raid40')
-								if _G['ElvUF_Raid'].isForced then
-									UF:HeaderConfig(_G['ElvUF_Raid40'])
-									UF:HeaderConfig(_G['ElvUF_Raid40'], true)
+								if _G.ElvUF_Raid.isForced then
+									UF:HeaderConfig(_G.ElvUF_Raid40)
+									UF:HeaderConfig(_G.ElvUF_Raid40, true)
 								end
 							end,
 						},
@@ -7462,8 +7462,8 @@ E.Options.args.unitframe.args.tank = {
 }
 E.Options.args.unitframe.args.tank.args.name.args.attachTextTo.values = { ["Health"] = L["Health"], ["Frame"] = L["Frame"] }
 E.Options.args.unitframe.args.tank.args.targetsGroup.args.name.args.attachTextTo.values = { ["Health"] = L["Health"], ["Frame"] = L["Frame"] }
-E.Options.args.unitframe.args.tank.args.targetsGroup.args.name.get = function(info) return E.db.unitframe.units['tank'].targetsGroup.name[ info[#info] ] end
-E.Options.args.unitframe.args.tank.args.targetsGroup.args.name.set = function(info, value) E.db.unitframe.units['tank'].targetsGroup.name[ info[#info] ] = value; UF.CreateAndUpdateHeaderGroup(UF, 'tank') end
+E.Options.args.unitframe.args.tank.args.targetsGroup.args.name.get = function(info) return E.db.unitframe.units.tank.targetsGroup.name[ info[#info] ] end
+E.Options.args.unitframe.args.tank.args.targetsGroup.args.name.set = function(info, value) E.db.unitframe.units.tank.targetsGroup.name[ info[#info] ] = value; UF.CreateAndUpdateHeaderGroup(UF, 'tank') end
 
 --Assist Frames
 E.Options.args.unitframe.args.assist = {
@@ -7662,8 +7662,8 @@ E.Options.args.unitframe.args.assist = {
 }
 E.Options.args.unitframe.args.assist.args.name.args.attachTextTo.values = { ["Health"] = L["Health"], ["Frame"] = L["Frame"] }
 E.Options.args.unitframe.args.assist.args.targetsGroup.args.name.args.attachTextTo.values = { ["Health"] = L["Health"], ["Frame"] = L["Frame"] }
-E.Options.args.unitframe.args.assist.args.targetsGroup.args.name.get = function(info) return E.db.unitframe.units['assist'].targetsGroup.name[ info[#info] ] end
-E.Options.args.unitframe.args.assist.args.targetsGroup.args.name.set = function(info, value) E.db.unitframe.units['assist'].targetsGroup.name[ info[#info] ] = value; UF.CreateAndUpdateHeaderGroup(UF, 'assist') end
+E.Options.args.unitframe.args.assist.args.targetsGroup.args.name.get = function(info) return E.db.unitframe.units.assist.targetsGroup.name[ info[#info] ] end
+E.Options.args.unitframe.args.assist.args.targetsGroup.args.name.set = function(info, value) E.db.unitframe.units.assist.targetsGroup.name[ info[#info] ] = value; UF.CreateAndUpdateHeaderGroup(UF, 'assist') end
 
 --MORE COLORING STUFF YAY
 E.Options.args.unitframe.args.generalOptionsGroup.args.allColorsGroup.args.classResourceGroup = {

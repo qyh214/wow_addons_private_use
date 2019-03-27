@@ -16,7 +16,7 @@ local classes = constants.classes;
 
 local classList = {
      "Druid", "Hunter", "Mage", "Paladin", "Priest", "Rogue",
-     "Shaman", "Warlock", "Warrior",  "Death Knight", "Monk"
+     "Shaman", "Warlock", "Warrior",  "Death Knight", "Monk", "Demon Hunter"
 };
 
 constants.classListEng = classList;

@@ -1,26 +1,58 @@
 ------------------------------------------------------------------------
-r586 | humfras | 2019-02-02 19:36:55 +0000 (Sat, 02 Feb 2019) | 1 line
+r595 | humfras | 2019-03-10 12:45:35 +0000 (Sun, 10 Mar 2019) | 2 lines
+Changed paths:
+   M /trunk/Modules/URLHandler.lua
+   M /trunk/Sources/WindowHandler.lua
+
+* more URL fixes
+* fix bug when clicking your own name in the chat window
+------------------------------------------------------------------------
+r594 | humfras | 2019-03-09 22:42:24 +0000 (Sat, 09 Mar 2019) | 2 lines
+Changed paths:
+   M /trunk/Modules/URLHandler.lua
+   M /trunk/Modules/WhisperEngine.lua
+   M /trunk/Sources/MessageWindows.lua
+   M /trunk/Sources/ToolBox.lua
+   M /trunk/Sources/WindowHandler.lua
+
+* fix armory links containing spaces and/or an apostrophe (only tested for EU and US)
+* show the whisper window's player names with realm in a more readable way
+------------------------------------------------------------------------
+r593 | humfras | 2019-02-25 18:27:10 +0000 (Mon, 25 Feb 2019) | 1 line
 Changed paths:
    M /trunk/Modules/WhisperEngine.lua
 
-* add online/offline notification for BNet friends
+* fix window handler when using a players BNet chat hyperlink
 ------------------------------------------------------------------------
-r585 | humfras | 2019-02-02 15:59:59 +0000 (Sat, 02 Feb 2019) | 1 line
+r592 | humfras | 2019-02-25 11:32:10 +0000 (Mon, 25 Feb 2019) | 1 line
 Changed paths:
-   M /trunk/Modules/History.lua
+   M /trunk/Modules/WhisperEngine.lua
 
-* fix potential bug with WIM history viewer on first display
+* fix window handler when using a players BNet chat hyperlink
 ------------------------------------------------------------------------
-r584 | humfras | 2019-02-02 15:55:21 +0000 (Sat, 02 Feb 2019) | 1 line
+r591 | humfras | 2019-02-06 21:52:54 +0000 (Wed, 06 Feb 2019) | 1 line
 Changed paths:
-   M /trunk/Modules/History.lua
+   M /trunk/Modules/WhisperEngine.lua
+   M /trunk/WIM.lua
 
-* fix potential bug with WIM history viewer on first display
+* add a check for Prat's `stickychannel� handler
 ------------------------------------------------------------------------
-r583 | humfras | 2019-02-02 15:07:14 +0000 (Sat, 02 Feb 2019) | 1 line
+r590 | humfras | 2019-02-06 21:15:48 +0000 (Wed, 06 Feb 2019) | 1 line
 Changed paths:
-   M /trunk/Modules/Emoticons.lua
+   M /trunk/WIM.lua
 
-* trying to fix emote misbehavior in BNet names introduced with patch 8.1
+* add a check for Prat's `stickychannel� handler
+------------------------------------------------------------------------
+r589 | humfras | 2019-02-06 21:11:15 +0000 (Wed, 06 Feb 2019) | 1 line
+Changed paths:
+   M /trunk/WIM.lua
+
+* add a check for Prat's `stickychannel� handler
+------------------------------------------------------------------------
+r588 | humfras | 2019-02-03 19:40:24 +0000 (Sun, 03 Feb 2019) | 1 line
+Changed paths:
+   M /trunk/Sources/Constants.lua
+
+* fix missing name coloring for Demon Hunter
 ------------------------------------------------------------------------
 

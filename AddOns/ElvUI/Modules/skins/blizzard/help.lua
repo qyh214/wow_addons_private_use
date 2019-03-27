@@ -34,7 +34,7 @@ local function LoadSkin()
 
 	local HelpFrameHeader = _G.HelpFrameHeader
 	HelpFrameHeader:StripTextures(true)
-	HelpFrameHeader:CreateBackdrop("Default", true)
+	HelpFrameHeader:CreateBackdrop(nil, true)
 	HelpFrameHeader:SetFrameLevel(HelpFrameHeader:GetFrameLevel() + 2)
 	_G.HelpFrameKnowledgebaseErrorFrame:SetFrameLevel(_G.HelpFrameKnowledgebaseErrorFrame:GetFrameLevel() + 2)
 
@@ -101,7 +101,7 @@ local function LoadSkin()
 	S:HandleButton(HelpBrowserNavHome)
 	HelpBrowserNavHome:Size(26)
 	HelpBrowserNavHome:ClearAllPoints()
-	HelpBrowserNavHome:SetPoint("BOTTOMLEFT", _G.HelpBrowser, "TOPLEFT", -5, 9)
+	HelpBrowserNavHome:Point("BOTTOMLEFT", _G.HelpBrowser, "TOPLEFT", -5, 9)
 	S:HandleNextPrevButton(_G.HelpBrowserNavBack)
 	_G.HelpBrowserNavBack:Size(26)
 	S:HandleNextPrevButton(_G.HelpBrowserNavForward)
@@ -113,7 +113,7 @@ local function LoadSkin()
 	S:HandleButton(_G.HelpBrowserBrowserSettings)
 	_G.HelpBrowserBrowserSettings:Size(26)
 	_G.HelpBrowserBrowserSettings:ClearAllPoints()
-	_G.HelpBrowserBrowserSettings:SetPoint("TOPRIGHT", _G.HelpFrameCloseButton, "TOPLEFT", -3, -8)
+	_G.HelpBrowserBrowserSettings:Point("TOPRIGHT", _G.HelpFrameCloseButton, "TOPLEFT", -3, -8)
 
 	-- skin misc items
 	_G.HelpFrameKnowledgebaseSearchBox:ClearAllPoints()
@@ -131,7 +131,7 @@ local function LoadSkin()
 	--Hearth Stone Button
 	local HelpFrameCharacterStuckHearthstone = _G.HelpFrameCharacterStuckHearthstone
 	HelpFrameCharacterStuckHearthstone:StyleButton()
-	HelpFrameCharacterStuckHearthstone:SetTemplate("Default", true)
+	HelpFrameCharacterStuckHearthstone:SetTemplate(nil, true)
 	HelpFrameCharacterStuckHearthstone.IconTexture:SetInside()
 	HelpFrameCharacterStuckHearthstone.IconTexture:SetTexCoord(unpack(E.TexCoords))
 

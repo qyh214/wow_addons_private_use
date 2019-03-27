@@ -3,8 +3,6 @@ local M = E:NewModule('WorldMap', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0')
 E.WorldMap = M
 
 --Lua functions
-local _G = _G
-local pairs = pairs
 local find = string.find
 --WoW API / Variables
 local CreateFrame = CreateFrame
@@ -26,13 +24,6 @@ local INVERTED_POINTS = {
 	["BOTTOM"] = "TOP",
 }
 
-local tooltips = {
-	WorldMapTooltip,
-	WorldMapCompareTooltip1,
-	WorldMapCompareTooltip2,
-	WorldMapCompareTooltip3
-}
-
 -- this will be updated later
 local smallerMapScale = 0.8
 
@@ -52,10 +43,6 @@ function M:SetLargeWorldMap()
 	WorldMapFrame:OnFrameSizeChanged()
 	if WorldMapFrame:GetMapID() then
 		WorldMapFrame.NavBar:Refresh()
-	end
-
-	for _, tt in pairs(tooltips) do
-		if _G[tt] then _G[tt]:SetFrameStrata("TOOLTIP") end
 	end
 end
 
@@ -109,10 +96,10 @@ function M:UpdateCoords(OnShow)
 			adjustedY = E:Round(100 * adjustedY, 2)
 			CoordsHolder.mouseCoords:SetFormattedText("%s:   %.2f, %.2f", MOUSE_LABEL, adjustedX, adjustedY)
 		else
-			CoordsHolder.mouseCoords:SetText("")
+			CoordsHolder.mouseCoords:SetText('')
 		end
 	else
-		CoordsHolder.mouseCoords:SetText("")
+		CoordsHolder.mouseCoords:SetText('')
 	end
 
 	if not inRestrictedArea and (OnShow or E.MapInfo.coordsWatching) then

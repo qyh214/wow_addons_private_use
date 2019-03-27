@@ -1,12 +1,14 @@
-tag 1257d21edeee672e081af904e0661d4e9e2f3d36 3.0.1
+tag cc67f9eb045b9f3360394e83735841d6986355a0 3.0.2
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Sun Dec 16 18:23:10 2018 +0100
+Date:	Fri Mar 15 16:08:19 2019 +0100
 
-TOC BUMP
+Fixed "ItemButtonTemplate" missing
 
-commit 868da2ecbacffe0123a0768ee5ddfa77e1a33d97
+commit 580358f7800c3bf3aa20d1a2993fc7e8e4859187
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Sun Dec 16 18:22:12 2018 +0100
+Date:   Fri Mar 15 14:52:12 2019 +0100
 
-    TOC BUMP
+    https://github.com/alarofrunetotem/GarrisonCommander/issues/17
+    
+    Second fix attempt
 

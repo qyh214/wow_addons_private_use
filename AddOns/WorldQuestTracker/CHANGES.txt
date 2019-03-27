@@ -1,7 +1,7 @@
-changeset:   362:50a860389853
-tag:         v8.1.0.362
+changeset:   366:bfe07dd5ac48
+tag:         v8.1.5.366
 user:        Tercioo
-date:        Fri Mar 01 17:25:10 2019 -0300
-summary:     - Added accessibility option for an extra icon above the quest location for color blind users.
+date:        Sat Mar 23 13:51:29 2019 -0300
+summary:     - Added accessibility option to show a yellow ring around quests that count towards bounties.
 
 

@@ -4,6 +4,7 @@ local S = E:GetModule('Skins')
 --Lua functions
 local _G = _G
 local gsub = gsub
+local pairs = pairs
 local ipairs = ipairs
 local select = select
 local unpack = unpack
@@ -23,7 +24,7 @@ local function HandleReward(frame)
 		S:HandleIcon(frame.Icon, true)
 
 		frame.Count:ClearAllPoints()
-		frame.Count:SetPoint("BOTTOMRIGHT", frame.Icon, "BOTTOMRIGHT", 2, 0)
+		frame.Count:Point("BOTTOMRIGHT", frame.Icon, "BOTTOMRIGHT", 2, 0)
 	end
 
 	if frame.NameFrame then
@@ -82,7 +83,7 @@ local function LoadSkin()
 
 	local QuestInfoItemHighlight = _G.QuestInfoItemHighlight
 	QuestInfoItemHighlight:StripTextures()
-	QuestInfoItemHighlight:SetTemplate("Default", nil, true)
+	QuestInfoItemHighlight:SetTemplate(nil, nil, true)
 	QuestInfoItemHighlight:SetBackdropBorderColor(1, 1, 0)
 	QuestInfoItemHighlight:SetBackdropColor(0, 0, 0, 0)
 	QuestInfoItemHighlight:Size(142, 40)
@@ -359,9 +360,9 @@ local function LoadSkin()
 					texture = tex:GetTexture()
 					if texture then
 						if texture:find("PlusButton") then
-							tex:SetTexture("Interface\\AddOns\\ElvUI\\media\\textures\\PlusButton")
+							tex:SetTexture(E.Media.Textures.PlusButton)
 						else
-							tex:SetTexture("Interface\\AddOns\\ElvUI\\media\\textures\\MinusButton")
+							tex:SetTexture(E.Media.Textures.MinusButton)
 						end
 					end
 				end

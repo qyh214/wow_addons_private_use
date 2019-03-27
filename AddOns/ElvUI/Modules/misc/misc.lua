@@ -43,8 +43,6 @@ local UnitExists = UnitExists
 local UnitGUID = UnitGUID
 local UnitInRaid = UnitInRaid
 local UnitName = UnitName
-local CreateFrame = CreateFrame
-local RegisterStateDriver = RegisterStateDriver
 
 local BNET_CLIENT_WOW = BNET_CLIENT_WOW
 local C_Timer_After = C_Timer.After
@@ -196,7 +194,7 @@ function M:PVPMessageEnhancement(_, msg)
 	if not E.db.general.enhancedPvpMessages then return end
 	local _, instanceType = IsInInstance()
 	if instanceType == 'pvp' or instanceType == 'arena' then
-		RaidNotice_AddMessage(_G.RaidBossEmoteFrame, msg, _G.ChatTypeInfo["RAID_BOSS_EMOTE"]);
+		RaidNotice_AddMessage(_G.RaidBossEmoteFrame, msg, _G.ChatTypeInfo.RAID_BOSS_EMOTE);
 	end
 end
 
@@ -312,7 +310,7 @@ function M:SetupChallengeTimer()
 	bar:CreateBackdrop("Transparent")
 	bar:SetStatusBarTexture(E.media.normTex)
 	bar.text = bar:CreateFontString(nil, "OVERLAY")
-	bar.text:SetPoint("CENTER")
+	bar.text:Point("CENTER")
 	bar.text:FontTemplate()
 
 	_G.ScenarioChallengeModeBlock.StatusBar:HookScript("OnValueChanged", OnValueChanged)

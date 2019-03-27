@@ -170,7 +170,8 @@ function AS:Blizzard_Quest()
 	local Rewards = { 'MoneyFrame', 'HonorFrame', 'XPFrame', 'SpellFrame', 'SkillPointFrame' }
 
 	for _, frame in pairs(Rewards) do
-		HandleReward(MapQuestInfoRewardsFrame[frame])
+		HandleReward(_G.MapQuestInfoRewardsFrame[frame])
+		HandleReward(_G.QuestInfoRewardsFrame[frame])
 	end
 
 	hooksecurefunc("QuestInfo_GetRewardButton", function(rewardsFrame, index)
@@ -309,19 +310,17 @@ function AS:Blizzard_Quest()
 			fontString:SetTextColor(1, 1, 1)
 		end)
 
-		for i = 1, 16 do
-			local button = _G['QuestTitleButton'..i]
-			if button then
-				hooksecurefunc(button, 'SetFormattedText', function(self)
-					if self:GetFontString() then
-						local Text = self:GetFontString():GetText()
-						if Text and strfind(Text, '|cff000000') then
-							button:GetFontString():SetText(string.gsub(Text, '|cff000000', '|cffffe519'))
-						end
-					end
-				end)
+		local function TitleButtonPool()
+			for Button in QuestFrameGreetingPanel.titleButtonPool:EnumerateActive() do
+				local Text = Button:GetFontString():GetText()
+				if Text and strfind(Text, '|cff000000') then
+					Button:GetFontString():SetText(string.gsub(Text, '|cff000000', '|cffffe519'))
+				end
 			end
 		end
+
+		QuestFrameGreetingPanel:HookScript('OnShow', TitleButtonPool)
+		hooksecurefunc("QuestFrameGreetingPanel_OnShow", TitleButtonPool)
 
 		hooksecurefunc('QuestInfo_Display', function(template, parentFrame, acceptButton, material)
 			QuestInfoTitleHeader:SetTextColor(1, .8, .1)

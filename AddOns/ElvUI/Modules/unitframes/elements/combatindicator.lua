@@ -8,8 +8,8 @@ local C_Timer_NewTimer = C_Timer.NewTimer
 local UnitAffectingCombat = UnitAffectingCombat
 
 local CombatTextures = {
+	["COMBAT"] = E.Media.Textures.Combat,
 	["DEFAULT"] = [[Interface\CharacterFrame\UI-StateIcon]],
-	["COMBAT"] = [[Interface\AddOns\ElvUI\media\textures\combat]],
 	["PLATINUM"] = [[Interface\Challenges\ChallengeMode_Medal_Platinum]],
 	["ATTACK"] = [[Interface\CURSOR\Attack]],
 	["ALERT"] = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],

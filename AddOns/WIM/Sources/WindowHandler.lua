@@ -1292,7 +1292,7 @@ local function loadWindowDefaults(obj)
     
 	obj.widgets.Backdrop:SetAlpha(1);
     
-	obj.widgets.from:SetText(obj.theUser);
+	obj.widgets.from:SetText(GetReadableName(obj.theUser));
 	obj.widgets.from:SetTextColor(RGBHexToPercent(GetSelectedSkin().message_window.widgets.from.font_color));
     
 	obj.widgets.char_info:SetText("");
@@ -1855,7 +1855,14 @@ RegisterWidgetTrigger("chat_display", "whisper,chat,w2w,demo", "OnMouseUp", func
                 end
 	end);
 
-RegisterWidgetTrigger("chat_display", "whisper,chat,w2w", "OnHyperlinkClick", function(self, link, text, button) _G.SetItemRef(link, text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""), button, self); end);
+local myself = _G.UnitName("player")
+RegisterWidgetTrigger("chat_display", "whisper,chat,w2w", "OnHyperlinkClick", function(self, link, text, button)
+	local t,n,i = string.split(":", link)
+	if n == myself then
+		return
+	end
+	_G.SetItemRef(link, text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""), button, self);
+end);
 --RegisterWidgetTrigger("chat_display", "whisper,chat,w2w","OnMessageScrollChanged", function(self) updateScrollBars(self:GetParent()); end);
 
 local lastTTlink

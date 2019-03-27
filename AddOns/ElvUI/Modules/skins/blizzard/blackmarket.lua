@@ -2,13 +2,11 @@ local E, L, V, P, G = unpack(select(2, ...)); --Import: Engine, Locales, Private
 local S = E:GetModule('Skins')
 
 local _G = _G
-local select, type, unpack = select, type, unpack
+local select, unpack, pairs = select, unpack, pairs
 --WoW API / Variables
 local GetItemInfo = GetItemInfo
-local GetItemQualityColor = GetItemQualityColor
-local C_BlackMarket_GetNumItems = C_BlackMarket.GetNumItems
-local C_BlackMarket_GetItemInfoByIndex = C_BlackMarket.GetItemInfoByIndex
 local hooksecurefunc = hooksecurefunc
+local GetItemQualityColor = GetItemQualityColor
 
 local function SkinTab(tab)
 	tab.Left:SetAlpha(0)

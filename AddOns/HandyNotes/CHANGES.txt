@@ -1,32 +1,8 @@
 ------------------------------------------------------------------------
-r311 | nevcairiel | 2019-01-24 09:27:43 +0000 (Thu, 24 Jan 2019) | 1 line
+r313 | nevcairiel | 2019-03-13 14:26:53 +0000 (Wed, 13 Mar 2019) | 1 line
 Changed paths:
-   M /trunk/HandyNotes.lua
+   M /trunk/HandyNotes_HandyNotes.lua
 
-Check that the data provider is active before trying to remove it
-------------------------------------------------------------------------
-r310 | nevcairiel | 2019-01-24 09:21:48 +0000 (Thu, 24 Jan 2019) | 1 line
-Changed paths:
-   M /trunk/HandyNotes.lua
-
-Fix backwards compat for frame levels
-------------------------------------------------------------------------
-r309 | nevcairiel | 2019-01-24 09:20:19 +0000 (Thu, 24 Jan 2019) | 1 line
-Changed paths:
-   M /trunk/HandyNotes.lua
-
-Fix jittering minimap pins
-------------------------------------------------------------------------
-r308 | nevcairiel | 2019-01-24 09:19:13 +0000 (Thu, 24 Jan 2019) | 1 line
-Changed paths:
-   M /trunk/HandyNotes.toc
-
-Update TOC for 8.1
-------------------------------------------------------------------------
-r307 | nevcairiel | 2019-01-24 09:18:52 +0000 (Thu, 24 Jan 2019) | 1 line
-Changed paths:
-   M /trunk/HandyNotes.lua
-
-Remove 8.0 load guard
+Remove usage of WorldMapTooltip, it has been removed
 ------------------------------------------------------------------------
 

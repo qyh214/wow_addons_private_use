@@ -12,7 +12,7 @@ local function MailFrameSkin()
 		local btn = _G["SendMailAttachment"..i]
 		if not btn.skinned then
 			btn:StripTextures()
-			btn:SetTemplate("Default", true)
+			btn:SetTemplate(nil, true)
 			btn:StyleButton()
 			btn.skinned = true
 			hooksecurefunc(btn.IconBorder, 'SetVertexColor', function(self, r, g, b)
@@ -44,7 +44,7 @@ local function LoadSkin()
 
 		local btn = _G["MailItem"..i.."Button"]
 		btn:StripTextures()
-		btn:SetTemplate("Default", true)
+		btn:SetTemplate(nil, true)
 		btn:StyleButton()
 
 		local t = _G["MailItem"..i.."ButtonIcon"]
@@ -62,8 +62,8 @@ local function LoadSkin()
 	end
 
 	_G.InboxFrame:CreateBackdrop("Transparent")
-	_G.InboxFrame.backdrop:SetPoint("TOPLEFT", _G.MailItem1, "TOPLEFT")
-	_G.InboxFrame.backdrop:SetPoint("BOTTOMRIGHT", _G.MailItem7, "BOTTOMRIGHT")
+	_G.InboxFrame.backdrop:Point("TOPLEFT", _G.MailItem1, "TOPLEFT")
+	_G.InboxFrame.backdrop:Point("BOTTOMRIGHT", _G.MailItem7, "BOTTOMRIGHT")
 
 	S:HandleNextPrevButton(_G.InboxPrevPageButton, nil, nil, true)
 	S:HandleNextPrevButton(_G.InboxNextPageButton, nil, nil, true)
@@ -89,8 +89,8 @@ local function LoadSkin()
 	_G.SendMailMoneyBg:Kill()
 	_G.SendMailMoneyInset:StripTextures()
 	_G.SendMailSubjectEditBox:Point("TOPLEFT", _G.SendMailNameEditBox, "BOTTOMLEFT", 0, -10)
-	_G.SendMailSubjectEditBox:SetHeight(18)
-	_G.SendMailNameEditBox:SetHeight(18)
+	_G.SendMailSubjectEditBox:Height(18)
+	_G.SendMailNameEditBox:Height(18)
 	_G.SendMailFrame:StripTextures()
 
 	hooksecurefunc("SendMailFrame_Update", MailFrameSkin)
@@ -123,20 +123,20 @@ local function LoadSkin()
 
 	_G.InboxPrevPageButton:Point("BOTTOMLEFT", 30, 100)
 	_G.InboxNextPageButton:Point("BOTTOMRIGHT", -80, 100)
-	_G.InvoiceTextFontNormal:SetFont(E.media.normFont, 13)
-	_G.MailTextFontNormal:SetFont(E.media.normFont, 13)
+	_G.InvoiceTextFontNormal:FontTemplate(E.media.normFont, 13)
+	_G.MailTextFontNormal:FontTemplate(E.media.normFont, 13)
 	_G.InvoiceTextFontNormal:SetTextColor(1, 1, 1)
 	_G.MailTextFontNormal:SetTextColor(1, 1, 1)
 	_G.OpenMailArithmeticLine:Kill()
 
 	_G.OpenMailLetterButton:StripTextures()
-	_G.OpenMailLetterButton:SetTemplate("Default", true)
+	_G.OpenMailLetterButton:SetTemplate(nil, true)
 	_G.OpenMailLetterButton:StyleButton()
 	_G.OpenMailLetterButtonIconTexture:SetTexCoord(unpack(E.TexCoords))
 	_G.OpenMailLetterButtonIconTexture:SetInside()
 
 	_G.OpenMailMoneyButton:StripTextures()
-	_G.OpenMailMoneyButton:SetTemplate("Default", true)
+	_G.OpenMailMoneyButton:SetTemplate(nil, true)
 	_G.OpenMailMoneyButton:StyleButton()
 	_G.OpenMailMoneyButtonIconTexture:SetTexCoord(unpack(E.TexCoords))
 	_G.OpenMailMoneyButtonIconTexture:SetInside()
@@ -144,7 +144,7 @@ local function LoadSkin()
 	for i = 1, _G.ATTACHMENTS_MAX_SEND do
 		local btn = _G["OpenMailAttachmentButton"..i]
 		btn:StripTextures()
-		btn:SetTemplate("Default", true)
+		btn:SetTemplate(nil, true)
 		btn:StyleButton()
 
 		hooksecurefunc(btn.IconBorder, 'SetVertexColor', function(self, r, g, b)

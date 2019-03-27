@@ -33,7 +33,7 @@ end
 local function SkinItemButton(_, block)
 	local item = block.itemButton
 	if item and not item.skinned then
-		item:SetSize(25, 25)
+		item:Size(25, 25)
 		item:SetTemplate("Transparent")
 		item:StyleButton()
 		item:SetNormalTexture(nil)
@@ -41,8 +41,8 @@ local function SkinItemButton(_, block)
 		item.icon:SetInside()
 		item.Cooldown:SetInside()
 		item.Count:ClearAllPoints()
-		item.Count:SetPoint("TOPLEFT", 1, -1)
-		item.Count:SetFont(E.media.normFont, 14, "OUTLINE")
+		item.Count:Point("TOPLEFT", 1, -1)
+		item.Count:FontTemplate(E.media.normFont, 14, "OUTLINE")
 		item.Count:SetShadowOffset(5, -5)
 		E:RegisterCooldown(item.Cooldown)
 		item.skinned = true
@@ -134,14 +134,14 @@ local function LoadSkin()
 	minimizeButton:StripTextures()
 	minimizeButton:Size(16, 16)
 	minimizeButton.tex = minimizeButton:CreateTexture(nil, "OVERLAY")
-	minimizeButton.tex:SetTexture("Interface\\AddOns\\ElvUI\\media\\textures\\MinusButton")
+	minimizeButton.tex:SetTexture(E.Media.Textures.MinusButton)
 	minimizeButton.tex:SetInside()
 	minimizeButton:SetHighlightTexture("Interface\\Buttons\\UI-PlusButton-Hilight", "ADD")
 	minimizeButton:HookScript("OnClick", function()
 		if ObjectiveTrackerFrame.collapsed then
-			minimizeButton.tex:SetTexture("Interface\\AddOns\\ElvUI\\media\\textures\\PlusButton")
+			minimizeButton.tex:SetTexture(E.Media.Textures.PlusButton)
 		else
-			minimizeButton.tex:SetTexture("Interface\\AddOns\\ElvUI\\media\\textures\\MinusButton")
+			minimizeButton.tex:SetTexture(E.Media.Textures.MinusButton)
 		end
 	end)
 

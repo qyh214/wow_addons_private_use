@@ -13,6 +13,7 @@ local strfind, gsub, format = strfind, gsub, format
 local CompactRaidFrameManager_GetSetting = CompactRaidFrameManager_GetSetting
 local CompactRaidFrameManager_SetSetting = CompactRaidFrameManager_SetSetting
 local CompactRaidFrameManager_UpdateShown = CompactRaidFrameManager_UpdateShown
+local SetCVar = SetCVar
 local CreateFrame = CreateFrame
 local GetInstanceInfo = GetInstanceInfo
 local hooksecurefunc = hooksecurefunc
@@ -25,13 +26,9 @@ local UnitFrame_OnLeave = UnitFrame_OnLeave
 local UnregisterAttributeDriver = UnregisterAttributeDriver
 local UnregisterStateDriver = UnregisterStateDriver
 local CompactRaidFrameContainer = CompactRaidFrameContainer
-local MAX_BOSS_FRAMES = MAX_BOSS_FRAMES
-local MAX_RAID_MEMBERS = MAX_RAID_MEMBERS
 
---Global variables that we don't cache, list them here for mikk's FindGlobals script
--- GLOBALS: UIParent, ElvCharacterDB, ElvUF_Parent, oUF_RaidDebuffs, CompactRaidFrameManager
--- GLOBALS: PlayerFrame, RuneFrame, PetFrame, TargetFrame, ComboFrame, FocusFrame
--- GLOBALS: FocusFrameToT, TargetFrameToT, CompactUnitFrameProfiles, PartyMemberBackground
+local C_NamePlate_GetNamePlateForUnit = C_NamePlate.GetNamePlateForUnit
+-- GLOBALS: ElvUF_Parent, Arena_LoadUI
 
 local _, ns = ...
 local ElvUF = ns.oUF
@@ -63,7 +60,7 @@ UF.classMaxResourceBar = {
 	['WARLOCK'] = 5,
 	['MONK'] = 6,
 	['MAGE'] = 4,
-	['ROGUE'] = 10,
+	['ROGUE'] = 6,
 	["DRUID"] = 5
 }
 
@@ -576,7 +573,7 @@ function UF.groupPrototype:Configure_Groups(self)
 
 			if not group.isForced then
 				if not group.initialized then
-					group:SetAttribute("startingIndex", db.raidWideSorting and (-min(numGroups * (db.groupsPerRowCol * 5), MAX_RAID_MEMBERS) + 1) or -4)
+					group:SetAttribute("startingIndex", db.raidWideSorting and (-min(numGroups * (db.groupsPerRowCol * 5), _G.MAX_RAID_MEMBERS) + 1) or -4)
 					group:Show()
 					group.initialized = true
 				end
@@ -670,7 +667,7 @@ function UF.groupPrototype:Configure_Groups(self)
 		self:GetScript("OnSizeChanged")(self) --Mover size is not updated if frame is hidden, so call an update manually
 	end
 
-	self:SetSize(width - db.horizontalSpacing -groupSpacing, height - db.verticalSpacing -groupSpacing)
+	self:Size(width - db.horizontalSpacing -groupSpacing, height - db.verticalSpacing -groupSpacing)
 end
 
 function UF.groupPrototype:Update(self)
@@ -934,6 +931,7 @@ function UF:CreateAndUpdateUF(unit)
 		self[unit].Update()
 		E:EnableMover(self[unit].mover:GetName())
 	else
+		self[unit].Update()
 		self[unit]:Disable()
 		E:DisableMover(self[unit].mover:GetName())
 	end
@@ -964,7 +962,7 @@ end
 
 function UF:RegisterRaidDebuffIndicator()
 	local _, instanceType = IsInInstance();
-	local ORD = ns.oUF_RaidDebuffs or oUF_RaidDebuffs
+	local ORD = ns.oUF_RaidDebuffs or _G.oUF_RaidDebuffs
 	if ORD then
 		ORD:ResetDebuffData()
 
@@ -1018,7 +1016,7 @@ end
 
 local function HideRaid()
 	if InCombatLockdown() then return end
-	CompactRaidFrameManager:Kill()
+	_G.CompactRaidFrameManager:Kill()
 	local compact_raid = CompactRaidFrameManager_GetSetting("IsShown")
 	if compact_raid and compact_raid ~= "0" then
 		CompactRaidFrameManager_SetSetting("IsShown", "0")
@@ -1030,10 +1028,10 @@ function UF:DisableBlizzard()
 	if not CompactRaidFrameManager_UpdateShown then
 		E:StaticPopup_Show("WARNING_BLIZZARD_ADDONS")
 	else
-		if not CompactRaidFrameManager.hookedHide then
+		if not _G.CompactRaidFrameManager.hookedHide then
 			hooksecurefunc("CompactRaidFrameManager_UpdateShown", HideRaid)
-			CompactRaidFrameManager:HookScript('OnShow', HideRaid)
-			CompactRaidFrameManager.hookedHide = true
+			_G.CompactRaidFrameManager:HookScript('OnShow', HideRaid)
+			_G.CompactRaidFrameManager.hookedHide = true
 		end
 		CompactRaidFrameContainer:UnregisterAllEvents()
 
@@ -1041,108 +1039,119 @@ function UF:DisableBlizzard()
 	end
 end
 
-local hiddenParent = CreateFrame("Frame")
+local hiddenParent = CreateFrame("Frame", nil, _G.UIParent)
+hiddenParent:SetAllPoints()
 hiddenParent:Hide()
 
 local HandleFrame = function(baseName)
 	local frame
-	if(type(baseName) == 'string') then
+	if (type(baseName) == 'string') then
 		frame = _G[baseName]
 	else
 		frame = baseName
 	end
 
-	if(frame) then
+	if (frame) then
 		frame:UnregisterAllEvents()
 		frame:Hide()
 
 		-- Keep frame hidden without causing taint
 		frame:SetParent(hiddenParent)
 
-		local health = frame.healthbar
-		if(health) then
+		local health = frame.healthBar or frame.healthbar
+		if (health) then
 			health:UnregisterAllEvents()
 		end
 
 		local power = frame.manabar
-		if(power) then
+		if (power) then
 			power:UnregisterAllEvents()
 		end
 
-		local spell = frame.spellbar
-		if(spell) then
+		local spell = frame.castBar or frame.spellbar
+		if (spell) then
 			spell:UnregisterAllEvents()
 		end
 
 		local altpowerbar = frame.powerBarAlt
-		if(altpowerbar) then
+		if (altpowerbar) then
 			altpowerbar:UnregisterAllEvents()
+		end
+
+		local buffFrame = frame.BuffFrame
+		if (buffFrame) then
+			buffFrame:UnregisterAllEvents()
 		end
 	end
 end
 
 function ElvUF:DisableBlizzard(unit)
-	if(not unit) or InCombatLockdown() then return end
+	if(not unit) then return end
 
-	if(unit == 'player') and E.private.unitframe.disabledBlizzardFrames.player then
+	if (unit == 'player') and E.private.unitframe.disabledBlizzardFrames.player then
+		local PlayerFrame = _G.PlayerFrame
 		HandleFrame(PlayerFrame)
 
 		-- For the damn vehicle support:
-		PlayerFrame:RegisterUnitEvent('UNIT_ENTERING_VEHICLE', "player")
-		PlayerFrame:RegisterUnitEvent('UNIT_ENTERED_VEHICLE', "player")
-		PlayerFrame:RegisterUnitEvent('UNIT_EXITING_VEHICLE', "player")
-		PlayerFrame:RegisterUnitEvent('UNIT_EXITED_VEHICLE', "player")
 		PlayerFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
+		PlayerFrame:RegisterEvent('UNIT_ENTERING_VEHICLE')
+		PlayerFrame:RegisterEvent('UNIT_ENTERED_VEHICLE')
+		PlayerFrame:RegisterEvent('UNIT_EXITING_VEHICLE')
+		PlayerFrame:RegisterEvent('UNIT_EXITED_VEHICLE')
 
 		-- User placed frames don't animate
 		PlayerFrame:SetUserPlaced(true)
 		PlayerFrame:SetDontSavePosition(true)
-		RuneFrame:SetParent(PlayerFrame)
-	elseif(unit == 'pet') and E.private.unitframe.disabledBlizzardFrames.player then
-		HandleFrame(PetFrame)
-	elseif(unit == 'target') and E.private.unitframe.disabledBlizzardFrames.target then
-		HandleFrame(TargetFrame)
-		HandleFrame(ComboFrame)
-	elseif(unit == 'focus') and E.private.unitframe.disabledBlizzardFrames.focus then
-		HandleFrame(FocusFrame)
-		HandleFrame(FocusFrameToT)
-	elseif(unit == 'targettarget') and E.private.unitframe.disabledBlizzardFrames.target then
-		HandleFrame(TargetFrameToT)
-	elseif(unit:match'(boss)%d?$' == 'boss') and E.private.unitframe.disabledBlizzardFrames.boss then
-		local id = unit:match'boss(%d)'
-		if(id) then
+	elseif (unit == 'pet') and E.private.unitframe.disabledBlizzardFrames.player then
+		HandleFrame(_G.PetFrame)
+	elseif (unit == 'target') and E.private.unitframe.disabledBlizzardFrames.target then
+		HandleFrame(_G.TargetFrame)
+		HandleFrame(_G.ComboFrame)
+	elseif (unit == 'focus') and E.private.unitframe.disabledBlizzardFrames.focus then
+		HandleFrame(_G.FocusFrame)
+		HandleFrame(_G.TargetofFocusFrame)
+	elseif (unit == 'targettarget') and E.private.unitframe.disabledBlizzardFrames.target then
+		HandleFrame(_G.TargetFrameToT)
+	elseif (unit:match('boss%d?$')) and E.private.unitframe.disabledBlizzardFrames.boss then
+		local id = unit:match('boss(%d)')
+		if (id) then
 			HandleFrame('Boss' .. id .. 'TargetFrame')
 		else
-			for i=1, MAX_BOSS_FRAMES do
+			for i = 1, _G.MAX_BOSS_FRAMES do
 				HandleFrame(('Boss%dTargetFrame'):format(i))
 			end
 		end
-	elseif(unit:match'(party)%d?$' == 'party') and E.private.unitframe.disabledBlizzardFrames.party then
-		local id = unit:match'party(%d)'
-		if(id) then
+	elseif (unit:match('party%d?$')) and E.private.unitframe.disabledBlizzardFrames.party then
+		local id = unit:match('party(%d)')
+		if (id) then
 			HandleFrame('PartyMemberFrame' .. id)
 		else
 			for i=1, 4 do
 				HandleFrame(('PartyMemberFrame%d'):format(i))
 			end
 		end
-		HandleFrame(PartyMemberBackground)
-	elseif(unit:match'(arena)%d?$' == 'arena') and E.private.unitframe.disabledBlizzardFrames.arena then
-		local id = unit:match'arena(%d)'
-
-		if(id) then
+		HandleFrame(_G.PartyMemberBackground)
+	elseif (unit:match('arena%d?$')) and E.private.unitframe.disabledBlizzardFrames.arena then
+		local id = unit:match('arena(%d)')
+		if (id) then
 			HandleFrame('ArenaEnemyFrame' .. id)
-			HandleFrame('ArenaPrepFrame'..id)
-			HandleFrame('ArenaEnemyFrame'..id..'PetFrame')
 		else
-			for i=1, 5 do
-				HandleFrame(('ArenaEnemyFrame%d'):format(i))
-				HandleFrame(('ArenaPrepFrame%d'):format(i))
-				HandleFrame(('ArenaEnemyFrame%dPetFrame'):format(i))
+			for i = 1, _G.MAX_ARENA_ENEMIES do
+				HandleFrame(format('ArenaEnemyFrame%d', i))
 			end
+		end
+
+		-- Blizzard_ArenaUI should not be loaded
+		Arena_LoadUI = E.noop
+		SetCVar('showArenaEnemyFrames', '0', 'SHOW_ARENA_ENEMY_FRAMES_TEXT')
+	elseif (unit:match('nameplate%d+$')) then
+		local frame = C_NamePlate_GetNamePlateForUnit(unit)
+		if (frame and frame.UnitFrame) then
+			HandleFrame(frame.UnitFrame)
 		end
 	end
 end
+
 
 function UF:ADDON_LOADED(_, addon)
 	if addon ~= 'Blizzard_ArenaUI' then return; end
@@ -1271,10 +1280,8 @@ function UF:ToggleTransparentStatusBar(isTransparent, statusBar, backdropTex, ad
 	if isTransparent then
 		if statusBar.backdrop then
 			statusBar.backdrop:SetTemplate("Transparent", nil, nil, nil, true)
-			statusBar.backdrop.ignoreUpdates = true
 		elseif statusBar:GetParent().template then
 			statusBar:GetParent():SetTemplate("Transparent", nil, nil, nil, true)
-			statusBar:GetParent().ignoreUpdates = true
 		end
 
 		statusBar:SetStatusBarTexture(0, 0, 0, 0)
@@ -1311,11 +1318,9 @@ function UF:ToggleTransparentStatusBar(isTransparent, statusBar, backdropTex, ad
 		end
 	else
 		if statusBar.backdrop then
-			statusBar.backdrop:SetTemplate("Default", nil, nil, not statusBar.PostCastStart and self.thinBorders, true)
-			statusBar.backdrop.ignoreUpdates = nil
+			statusBar.backdrop:SetTemplate(nil, nil, nil, not statusBar.PostCastStart and self.thinBorders, true)
 		elseif statusBar:GetParent().template then
-			statusBar:GetParent():SetTemplate("Default", nil, nil, self.thinBorders, true)
-			statusBar:GetParent().ignoreUpdates = nil
+			statusBar:GetParent():SetTemplate(nil, nil, nil, self.thinBorders, true)
 		end
 		statusBar:SetStatusBarTexture(LSM:Fetch("statusbar", self.db.statusbar))
 		if statusBar.texture then statusBar.texture = statusBar:GetStatusBarTexture() end
@@ -1382,9 +1387,9 @@ function UF:Initialize()
 		--InterfaceOptionsFrameCategoriesButton11:SetScale(0.0001)
 
 		self:RegisterEvent('GROUP_ROSTER_UPDATE', 'DisableBlizzard')
-		UIParent:UnregisterEvent('GROUP_ROSTER_UPDATE') --This may fuck shit up.. we'll see...
+		_G.UIParent:UnregisterEvent('GROUP_ROSTER_UPDATE') --This may fuck shit up.. we'll see...
 	else
-		CompactUnitFrameProfiles:RegisterEvent('VARIABLES_LOADED')
+		_G.CompactUnitFrameProfiles:RegisterEvent('VARIABLES_LOADED')
 	end
 
 	if (not E.private.unitframe.disabledBlizzardFrames.party) and (not E.private.unitframe.disabledBlizzardFrames.raid) then
@@ -1401,7 +1406,7 @@ function UF:Initialize()
 		end
 	end
 
-	local ORD = ns.oUF_RaidDebuffs or oUF_RaidDebuffs
+	local ORD = ns.oUF_RaidDebuffs or _G.oUF_RaidDebuffs
 	if not ORD then return end
 	ORD.ShowDispellableDebuff = true
 	ORD.FilterDispellableDebuff = true

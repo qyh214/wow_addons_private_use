@@ -99,11 +99,26 @@ function WIM.FormatUserName(user)
 	    user = string.gsub(user, "[A-Z]", string.lower);
 	    user = string.gsub(user, "^[a-z]", string.upper);
 	    user = string.gsub(user, "-[a-z]", string.upper); -- accomodate for cross server...
-            user = string.gsub(user, " [a-z]", string.upper); -- accomodate second name (BN)
+        user = string.gsub(user, " [a-z]", string.upper); -- accomodate second name (BN)
 	end
 	return user;
 end
 
+function WIM.GetNameAndServer(user)
+	local name, realm = string.split("-", user)
+	if realm then
+		realm = string.gsub(realm, "^[A-Z]", string.lower)
+		realm = string.gsub(realm, "[A-Z]", " %1")
+		realm = string.gsub(realm, "' ", "'")
+		realm = string.gsub(realm, "^[a-z]", string.upper)
+	end
+	return name, realm
+end
+
+function WIM.GetReadableName(user)
+	local name, realm = WIM.GetNameAndServer(user)
+	return name..(realm and " - "..realm or "")
+end
 
 ----------------------------------------------
 --              Gradient Tools              --

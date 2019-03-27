@@ -99,16 +99,11 @@ L["S_MAPFRAME_ALIGN_CENTER"] = "중앙"
 --[[Translation missing --]]
 --[[ L["S_MAPFRAME_ALIGN_DESC"] = ""--]] 
 L["S_MAPFRAME_ALIGN_LEFT"] = "왼쪽"
---[[Translation missing --]]
---[[ L["S_OPTIONS_ANIMATIONS"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_ALIGN"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_SCALE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = ""--]] 
+L["S_OPTIONS_ANIMATIONS"] = "애니메이션 사용"
+L["S_OPTIONS_MAPFRAME_ALIGN"] = "지도 창 중앙 고정"
+L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "먼저 '지도 창 크기 조절' 을 활성화 해야하며, 값이 변경되지 않았습니다."
+L["S_OPTIONS_MAPFRAME_SCALE"] = "지도 창 크기 조절"
+L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = "지도 창 크기 조절 활성화"
 L["S_OPTIONS_QUESTBLACKLIST"] = "퀘스트 블랙리스트"
 L["S_OPTIONS_RESET"] = "재설정"
 L["S_OPTIONS_SHOWFACTIONS"] = "사절 보기"
@@ -116,10 +111,8 @@ L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = "남은 시간별 우선 순위 없음"
 L["S_OPTIONS_TRACKER_RESETPOSITION"] = "위치 재설정"
 L["S_OPTIONS_WORLD_ANCHOR_LEFT"] = "왼쪽으로 고정"
 L["S_OPTIONS_WORLD_ANCHOR_RIGHT"] = "오른쪽으로 고정"
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_DECREASEICONSPERROW"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_INCREASEICONSPERROW"] = ""--]] 
+L["S_OPTIONS_WORLD_DECREASEICONSPERROW"] = "행 당 정사각형 줄이기"
+L["S_OPTIONS_WORLD_INCREASEICONSPERROW"] = "행 당 정사각형 늘리기"
 L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = "지역별 정리"
 L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = "퀘스트 유형별 정리"
 L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = "추적중인것만 표시"

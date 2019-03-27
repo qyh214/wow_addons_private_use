@@ -2,11 +2,7 @@ local AS = unpack(AddOnSkins)
 if not AS:CheckAddOn('ElvUI') then return end
 
 local E = unpack(ElvUI)
-local pairs, unpack, floor = pairs, unpack, floor
-local hooksecurefunc = hooksecurefunc
-local UIFrameFadeIn, UIFrameFadeOut = UIFrameFadeIn, UIFrameFadeOut
-local IsAddOnLoaded = IsAddOnLoaded
-local UnitAffectingCombat = UnitAffectingCombat
+local pairs = pairs
 
 local ElvUISkinTable = {
 	["Blizzard_AchievementUI"] = { 'achievement' },
@@ -79,8 +75,4 @@ function AS:UpdateMedia()
 	AS.BorderColor = E['media'].bordercolor
 	AS.Color = E["media"].rgbvaluecolor or AS.ClassColor
 	AS.HideShadows = false
-
-	E:GetModule('DataTexts'):RegisterLDB()
-	E:GetModule('DataTexts'):LoadDataTexts()
-	E:UpdateMedia()
 end

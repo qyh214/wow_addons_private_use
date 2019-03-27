@@ -453,7 +453,7 @@ local function drawItemButtons(frame)
 	for frameIndex,i in ipairs(classlist) do
 		local row = GMC.ignoreFrames[frameIndex]
 		if not row then
-			row= CreateFrame('BUTTON', "Priority" .. frameIndex, frame, 'ItemButtonTemplate')
+			row= CreateFrame('ItemButton', "Priority" .. frameIndex, frame)
 			row.chance=settings.rewardChance[row.key] or 100
 			GMC.ignoreFrames[frameIndex] = row
 			row.slider=row.slider or factory:Slider(row,0,100,row.chance,row.chance)

@@ -685,7 +685,7 @@ local function loadMessageWindowDefaults(obj)
     class_icon.class = "blank";
     
     local from = getglobal(fName.."BackdropFrom");
-    from:SetText(obj.theUser);
+    from:SetText(GetReadableName(obj.theUser));
     
     local char_info = getglobal(fName.."BackdropCharacterDetails");
     char_info:SetText("");

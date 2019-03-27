@@ -3,20 +3,16 @@ if not L then return end
 
 L["S_APOWER_AVAILABLE"] = "Disponibile"
 L["S_APOWER_NEXTLEVEL"] = "Prossimo Livello"
---[[Translation missing --]]
---[[ L["S_DECREASESIZE"] = ""--]] 
+L["S_DECREASESIZE"] = "Diminuisci le Dimensioni"
 L["S_ENABLED"] = "Abilitato"
 L["S_ERROR_NOTIMELEFT"] = "Il tempo per questa missione è scaduto."
 L["S_ERROR_NOTLOADEDYET"] = "Questa quest non è ancora pronta, per favore aspetta qualche secondo. "
---[[Translation missing --]]
---[[ L["S_FACTION_TOOLTIP_SELECT"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_FACTION_TOOLTIP_TRACK"] = ""--]] 
+L["S_FACTION_TOOLTIP_SELECT"] = "Click: seleziona questa fazione"
+L["S_FACTION_TOOLTIP_TRACK"] = "Shift + Click: tiene traccia delle quest di questa fazione"
 L["S_FLYMAP_SHOWTRACKEDONLY"] = "Solo Tracciati"
 L["S_FLYMAP_SHOWTRACKEDONLY_DESC"] = "Mostra solo le missioni tracciate"
 L["S_FLYMAP_SHOWWORLDQUESTS"] = "Mostra Missioni Mondiali"
---[[Translation missing --]]
---[[ L["S_GROUPFINDER_ACTIONS_CANCEL_APPLICATIONS"] = ""--]] 
+L["S_GROUPFINDER_ACTIONS_CANCEL_APPLICATIONS"] = "clicca per annullare le applicazioni....."
 L["S_GROUPFINDER_ACTIONS_CANCELING"] = "Cancellando..."
 L["S_GROUPFINDER_ACTIONS_CREATE"] = "Non hai trovato nessun gruppo?, Premi qui per crearne uno"
 L["S_GROUPFINDER_ACTIONS_CREATE_DIRECT"] = "Crea un gruppo"

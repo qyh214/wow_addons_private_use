@@ -4,7 +4,6 @@ local S = E:GetModule('Skins')
 --Lua functions
 local _G = _G
 --WoW API / Variables
-local unpack = unpack
 local hooksecurefunc = hooksecurefunc
 
 local FrameTexs = {
@@ -58,20 +57,23 @@ local function SkinTableAttributeDisplay(frame)
 	frame.ScrollFrameArt:SetTemplate("Transparent")
 	S:HandleCloseButton(frame.CloseButton)
 	frame.OpenParentButton:ClearAllPoints()
-	frame.OpenParentButton:SetPoint("TOPLEFT", frame, "TOPLEFT", 2, -2)
+	frame.OpenParentButton:Point("TOPLEFT", frame, "TOPLEFT", 2, -2)
 	S:HandleNextPrevButton(frame.OpenParentButton, 'up')
 	frame.OpenParentButton:Size(17)
 	frame.DuplicateButton:ClearAllPoints()
-	frame.DuplicateButton:SetPoint("LEFT", frame.NavigateForwardButton, "RIGHT")
+	frame.DuplicateButton:Point("LEFT", frame.NavigateForwardButton, "RIGHT")
 	S:HandleCheckBox(frame.VisibilityButton)
+	frame.VisibilityButton:Size(28)
 	S:HandleCheckBox(frame.HighlightButton)
+	frame.HighlightButton:Size(28)
 	S:HandleCheckBox(frame.DynamicUpdateButton)
+	frame.DynamicUpdateButton:Size(28)
 	frame.NavigateBackwardButton:ClearAllPoints()
-	frame.NavigateBackwardButton:SetPoint("LEFT", frame.OpenParentButton, "RIGHT", 2, 0)
+	frame.NavigateBackwardButton:Point("LEFT", frame.OpenParentButton, "RIGHT", 2, 0)
 	frame.NavigateForwardButton:ClearAllPoints()
-	frame.NavigateForwardButton:SetPoint("LEFT", frame.NavigateBackwardButton, "RIGHT", 2, 0)
+	frame.NavigateForwardButton:Point("LEFT", frame.NavigateBackwardButton, "RIGHT", 2, 0)
 	frame.DuplicateButton:ClearAllPoints()
-	frame.DuplicateButton:SetPoint("LEFT", frame.NavigateForwardButton, "RIGHT", 2, 0)
+	frame.DuplicateButton:Point("LEFT", frame.NavigateForwardButton, "RIGHT", 2, 0)
 	S:HandleNextPrevButton(frame.DuplicateButton)
 	frame.DuplicateButton:Size(17)
 	S:HandleNextPrevButton(frame.NavigateBackwardButton)
@@ -98,12 +100,7 @@ local function LoadSkin()
 		end)
 
 		_G.EventTraceTooltip:HookScript("OnShow", function(self)
-			if not self.template then
-				self:SetTemplate("Transparent", nil, true) --ignore updates
-			else
-				self:SetBackdropBorderColor(unpack(E.media.bordercolor))
-				self:SetBackdropColor(unpack(E.media.backdropfadecolor))
-			end
+			self:SetTemplate("Transparent", nil, true)
 		end)
 	end
 

@@ -32,7 +32,7 @@ local function PetButtons(btn, p)
 
 		button:SetFrameLevel(button:GetFrameLevel() + 2)
 		if not button.backdrop then
-			button:CreateBackdrop("Default", true)
+			button:CreateBackdrop(nil, true)
 			button.backdrop:SetAllPoints()
 		end
 	end
@@ -60,7 +60,7 @@ local function LoadSkin()
 		local b = CreateFrame("Frame", nil, PetStableSelectedPetIcon:GetParent())
 		b:Point("TOPLEFT", PetStableSelectedPetIcon, -p, p)
 		b:Point("BOTTOMRIGHT", PetStableSelectedPetIcon, p, -p)
-		PetStableSelectedPetIcon:SetSize(37,37)
+		PetStableSelectedPetIcon:Size(37,37)
 		PetStableSelectedPetIcon:SetParent(b)
 		b:SetTemplate()
 	end

@@ -1,56 +1,84 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
-local mod = E:GetModule('NamePlates')
+local NP = E:GetModule('NamePlates')
 
---Lua functions
---WoW API / Variables
-local IsInGroup = IsInGroup
-local IsInRaid = IsInRaid
-local UnitDetailedThreatSituation = UnitDetailedThreatSituation
 local UnitExists = UnitExists
-local UnitGroupRolesAssigned = UnitGroupRolesAssigned
 local UnitIsUnit = UnitIsUnit
+local UnitGroupRolesAssigned = UnitGroupRolesAssigned
 
---Get Data For All Group Members Threat on Each Nameplate
-function mod:Update_ThreatList(frame)
-	if frame.UnitType ~= "ENEMY_NPC" then return end
+function NP:ThreatIndicator_PreUpdate(unit)
+	local ROLE = NP.IsInGroup and UnitExists(unit..'target') and not UnitIsUnit(unit..'target', 'player') and UnitGroupRolesAssigned(unit..'target') or 'NONE'
 
-	local unit = frame.displayedUnit
-	local isTanking, status, percent = UnitDetailedThreatSituation(mod.playerUnitToken, unit)
-	local isInGroup, isInRaid = IsInGroup(), IsInRaid()
-	frame.ThreatData = {}
-	frame.ThreatData.player = {isTanking, status, percent}
-	frame.isBeingTanked = false
-	if(isTanking and E:GetPlayerRole() == "TANK") then
-		frame.isBeingTanked = true
+	if ROLE == 'TANK' then
+		self.feedbackUnit = unit..'target'
+		self.offTank = true
+		self.isTank = true
+	else
+		self.feedbackUnit = 'player'
+		self.offTank = false
+		self.isTank = NP.PlayerRole == 'TANK' and true or false
 	end
+end
 
-	if(status and (isInRaid or isInGroup)) then --We don't care about units we have no threat on at all
-		if isInRaid then
-			for i=1, 40 do
-				if UnitExists('raid'..i) and not UnitIsUnit('raid'..i, 'player') then
-					frame.ThreatData['raid'..i] = frame.ThreatData['raid'..i] or {}
-					isTanking, status, percent = UnitDetailedThreatSituation('raid'..i, unit)
-					frame.ThreatData['raid'..i] = {isTanking, status, percent}
-
-					if(frame.isBeingTanked ~= true and isTanking and UnitGroupRolesAssigned('raid'..i) == "TANK") then
-						frame.isBeingTanked = true
-					end
-				end
+function NP:ThreatIndicator_PostUpdate(unit, status)
+	if NP.db.threat and NP.db.threat.useThreatColor then
+		-- Set All Health Colors to false
+		self.__owner.Health.colorTapping = false
+		self.__owner.Health.colorDisconnected = false
+		self.__owner.Health.colorClass = false
+		self.__owner.Health.colorClassNPC = false
+		self.__owner.Health.colorClassPet = false
+		--self.__owner.Health.colorSelection = false
+		self.__owner.Health.colorReaction = false
+		self.__owner.Health.colorSmooth = false
+		self.__owner.Health.colorHealth = false
+		--
+		local Color
+		if status then
+			if (status == 3) then --Securely Tanking
+				Color = self.isTank and NP.db.colors.threat.goodColor or NP.db.colors.threat.badColor
+			elseif (status == 2) then --insecurely tanking
+				Color = self.isTank and NP.db.colors.threat.badTransition or NP.db.colors.threat.goodTransition
+			elseif (status == 1) then --not tanking but threat higher than tank
+				Color = self.isTank and NP.db.colors.threat.goodTransition or NP.db.colors.threat.badTransition
+			else -- not tanking at all
+				Color = self.isTank and self.offTank and NP.db.colors.threat.beingTankedByTankColor or self.isTank and NP.db.colors.threat.badColor or NP.db.colors.threat.goodColor
 			end
+		end
+
+		if Color then
+			self.__owner.Health:SetStatusBarColor(Color.r, Color.g, Color.b)
+		end
+	end
+end
+
+function NP:Construct_ThreatIndicator(nameplate)
+	local ThreatIndicator = nameplate:CreateTexture(nil, 'OVERLAY')
+	ThreatIndicator:Size(16, 16)
+	ThreatIndicator:Hide()
+	ThreatIndicator:Point('CENTER', nameplate, 'TOPRIGHT')
+
+	ThreatIndicator.PreUpdate = NP.ThreatIndicator_PreUpdate
+	ThreatIndicator.PostUpdate = NP.ThreatIndicator_PostUpdate
+
+	return ThreatIndicator
+end
+
+function NP:Update_ThreatIndicator(nameplate)
+	local db = NP.db.threat
+
+	if db.enable and nameplate.frameType == 'ENEMY_NPC' then -- only for NPC??
+		if not nameplate:IsElementEnabled('ThreatIndicator') then
+			nameplate:EnableElement('ThreatIndicator')
+		end
+
+		if db.indicator then
+			nameplate.ThreatIndicator:SetAlpha(1)
 		else
-			frame.ThreatData = {}
-			frame.ThreatData.player = {UnitDetailedThreatSituation('player', unit)}
-			for i=1, 4 do
-				if UnitExists('party'..i) --[[and not UnitIsUnit('party'..i, 'player')]] then
-					frame.ThreatData['party'..i] = frame.ThreatData['party'..i] or {}
-					isTanking, status, percent = UnitDetailedThreatSituation('party'..i, unit)
-					frame.ThreatData['party'..i] = {isTanking, status, percent}
-
-					if(frame.isBeingTanked ~= true and isTanking and UnitGroupRolesAssigned('party'..i) == "TANK") then
-						frame.isBeingTanked = true
-					end
-				end
-			end
+			nameplate.ThreatIndicator:SetAlpha(0)
+		end
+	else
+		if nameplate:IsElementEnabled('ThreatIndicator') then
+			nameplate:DisableElement('ThreatIndicator')
 		end
 	end
 end
