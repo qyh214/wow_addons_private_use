@@ -1,34 +1,40 @@
-lightweight tag 2e171558f1b8f0408a5aa40c086137d8aa1c876b 1.4.2
+lightweight tag 6d24a618abef30615b15a73c89456ec02a3f066a 1.4.3
 Author:	Zhou Fang <fang2hou@outlook.com>
-Date:	Mon Mar 18 20:34:15 2019 +0900
+Date:	Sat Mar 30 03:59:29 2019 +0900
 
-commit cf2b1f5479cad75c11644430ebaedc554b171e21
+commit 86dd636e5f42d78c97a04fb44862836541322334
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Mon Mar 18 20:30:03 2019 +0900
+Date:   Sat Mar 30 03:59:04 2019 +0900
 
-    更新支持信息
+    1.4.3 定版
 
-commit cf2b1f5479cad75c11644430ebaedc554b171e21
+commit 86dd636e5f42d78c97a04fb44862836541322334
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Mon Mar 18 20:30:03 2019 +0900
+Date:   Sat Mar 30 03:59:04 2019 +0900
 
-    更新支持信息
+    1.4.3 定版
 
-commit b5804da2ad0b59f4440baf38ce4c6ecc4af699cc
-Author: SomeBlu <webmaster@someblu.com>
-Date:   Thu Mar 14 16:31:43 2019 -0700
+commit f7d6a0fa098a63c5180813cc69a4bd00dd5436c1
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Thu Mar 28 04:08:51 2019 +0900
 
-    修正赋值的语法错误
+    好友列表染色除错
 
-commit 389715e9c8d60fad1a6a01c1cbd026d79003c26e
-Author: SomeBlu <webmaster@someblu.com>
-Date:   Thu Mar 14 16:11:34 2019 -0700
+commit 4112fe2b91b5951c54ff1a110b3e06a551850f5c
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Thu Mar 28 03:35:48 2019 +0900
 
-    修正世界任务奖励物品的信息获取方式
+    缓存提升性能
 
-commit 13b48b95c14b61597cce11d3e1bff50af0866f0f
-Author: SomeBlu <webmaster@someblu.com>
-Date:   Thu Mar 14 15:13:46 2019 -0700
+commit 6cf1cb5ba3d5bbb9f6b00c6f45e182846ad03ec8
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Wed Mar 27 18:57:31 2019 +0900
 
-    同步艾泽利特鼠标提示的最新改动
+    修正本地化文本错误
+
+commit 65ba29fb1e8052f2402bac74459e4b332618f0ef
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Wed Mar 27 18:02:55 2019 +0900
+
+    之前忘记把测试代码改回来了
 

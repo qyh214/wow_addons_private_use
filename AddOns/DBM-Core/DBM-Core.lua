@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 18467 $"):sub(12, -3)),
-	DisplayVersion = "8.1.13", -- the string that is shown as version
-	ReleaseRevision = 18454 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 18480 $"):sub(12, -3)),
+	DisplayVersion = "8.1.14", -- the string that is shown as version
+	ReleaseRevision = 18480 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -412,7 +412,7 @@ local delayedFunction
 local dataBroker
 local voiceSessionDisabled = false
 
-local fakeBWVersion, fakeBWHash = 135, "28bca4e"
+local fakeBWVersion, fakeBWHash = 142, "7e8a067"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -7205,7 +7205,7 @@ end
 --/run DBM:FindEncounterIDs(1177)--Crucible of Storms
 --/run DBM:FindEncounterIDs(1176)--Zuldazar Raid
 --/run DBM:FindEncounterIDs(1001, 23)--Dungeon Template (mythic difficulty)
---/run DBM:FindEncounterIDs(228, 1)--Classic Dungeons need diff 1 specified
+--/run DBM:FindEncounterIDs(231, 1)--Classic Dungeons need diff 1 specified
 --/run DBM:FindDungeonMapIDs(1, 500)--Find Classic Dungeon Map IDs
 --/run DBM:FindInstanceIDs(1, 300)--Find Classic Dungeon Journal IDs
 function DBM:FindEncounterIDs(instanceID, diff)

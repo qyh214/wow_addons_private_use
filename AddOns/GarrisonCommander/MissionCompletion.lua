@@ -5,16 +5,13 @@ local shipyard
 local _G=_G
 local GMF=GMF
 local GSF=GSF
-local GHF=GHF
 local GMFMissions=GarrisonMissionFrameMissions
 local GSFMissions=GarrisonMissionFrameMissions
-local GHFMissions=GarrisonMissionFrameMissions
 local GARRISON_CURRENCY=GARRISON_CURRENCY
 local GARRISON_SHIP_OIL_CURRENCY=_G.GARRISON_SHIP_OIL_CURRENCY
 local SEAL_CURRENCY=994
 local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0 -- 1
 local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2 -- 2
-local LE_FOLLOWER_TYPE_GARRISON_7_0=_G.LE_FOLLOWER_TYPE_GARRISON_7_0 -- 4
 local pairs=pairs
 local format=format
 local strsplit=strsplit
@@ -93,7 +90,6 @@ function module:MissionsCleanup()
 	-- Re-enable "view" button
 	fmissions.CompleteDialog.BorderFrame.ViewButton:SetEnabled(true)
 	module:OpenLastTab()
-	if panel==GHF then return end
 	f:UpdateMissions()
 	f:CheckCompleteMissions()
 end
@@ -120,11 +116,6 @@ function module:CloseReport()
 		print "Garr close mission"
 	--@end-debug@]===]
 		GMF:CloseMissionComplete()
-	elseif GHF and GHF:IsVisible() then
-	--[===[@debug@
-		print "Hall close mission"
-	--@end-debug@]===]
-		GHF:CloseMissionComplete()
 	end
 	addon:OpenMissionsTab()
 	addon:RefreshParties()

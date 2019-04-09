@@ -118,11 +118,11 @@ personajes que tengan menos de 2 horas restantes!]=]
 L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "Requieren atención"
 L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "Recompensas de hoy"
 --[[Translation missing --]]
---[[ L["S_MAPFRAME_ALIGN_CENTER"] = ""--]] 
+--[[ L["S_OPTIONS_ACCESSIBILITY"] = ""--]] 
 --[[Translation missing --]]
---[[ L["S_MAPFRAME_ALIGN_DESC"] = ""--]] 
+--[[ L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = ""--]] 
 --[[Translation missing --]]
---[[ L["S_MAPFRAME_ALIGN_LEFT"] = ""--]] 
+--[[ L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_OPTIONS_ANIMATIONS"] = ""--]] 
 --[[Translation missing --]]
@@ -204,8 +204,6 @@ L["S_SUMMARYPANEL_LIFETIMESTATISTICS_CHARACTER"] = "Estadísticas del personaje"
 L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Otros personajes"
 L["S_TUTORIAL_AMOUNT"] = "indica la cantidad a recibir"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Clic para seguir una misión."
---[[Translation missing --]]
---[[ L["S_TUTORIAL_MAPALIGN"] = ""--]] 
 L["S_TUTORIAL_PARTY"] = "¡Cuando en un grupo, se muestra una estrella azul, es una misiones que todos los miembros del grupo tienen!"
 L["S_TUTORIAL_TIMELEFT"] = "indica el tiempo que queda (+4 horas, +90 minutos, +30 minutos, menos de 30 minutos)"
 --[[Translation missing --]]

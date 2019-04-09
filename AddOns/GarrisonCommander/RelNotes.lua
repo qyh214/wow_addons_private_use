@@ -22,6 +22,10 @@ self:Wiki([[
 == Silent mode ==
 typing /gac silent in chat will eliminate every chat message from GarrisonCommander
 ]])
+self:RelNotes(3,1,0,[[
+Feature: Lots of cosmetic fixes Blind fix for errors related to changed blizzard itembutton thanks to wildcard-23
+Fix: Removed various lua errors thanks to wildcard-23
+]])
 self:RelNotes(3,0,2,[[
 Fix: Blind fix for errors related to changed blizzard itembutton
 ]])

@@ -97,10 +97,12 @@ keine Quests, deren verbleibende
 Zeit weniger als 2 Stunden beträgt!]=]
 L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "Erfordert Aufmerksamkeit"
 L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "Heutige Belohnungen"
-L["S_MAPFRAME_ALIGN_CENTER"] = "mittig"
 --[[Translation missing --]]
---[[ L["S_MAPFRAME_ALIGN_DESC"] = ""--]] 
-L["S_MAPFRAME_ALIGN_LEFT"] = "links"
+--[[ L["S_OPTIONS_ACCESSIBILITY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_OPTIONS_ANIMATIONS"] = ""--]] 
 --[[Translation missing --]]
@@ -162,7 +164,6 @@ L["S_SUMMARYPANEL_LIFETIMESTATISTICS_CHARACTER"] = "Charakterspezifische Statist
 L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Andere Charaktere"
 L["S_TUTORIAL_AMOUNT"] = "Zeigt die zu erhaltene Anzahl an"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Klicken, um eine Quest zu verfolgen."
-L["S_TUTORIAL_MAPALIGN"] = "Klicke hier, um die Ausrichtung der Weltkarte zu wählen."
 L["S_TUTORIAL_PARTY"] = "Wenn du in einer Gruppe bist, zeigt ein blauer Stern bei einer Quest an, dass diese alle Gruppenmitglieder haben."
 L["S_TUTORIAL_TIMELEFT"] = "Zeigt die verbleibende Zeit an (+4 Stunden, +90 Minuten, +30 Minuten, weniger als 30 Minuten)"
 --[[Translation missing --]]

@@ -426,7 +426,7 @@
 		<Scripts>
 			<OnLeave function="GameTooltip_Hide"/>
 			<OnClick>
-				PlaySound("igMainMenuOptionCheckBoxOn");
+				PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
 				local searchBox = GarrisonMissionFrameFollowers.SearchBox
 				local searchString = searchBox:GetText();
 				if (searchString == self.name) then

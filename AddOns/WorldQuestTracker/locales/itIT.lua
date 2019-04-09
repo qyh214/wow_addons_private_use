@@ -123,11 +123,11 @@ L["S_MAPBAR_SUMMARYMENU_MOREINFO"] = "Clicca per maggiori info"
 L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "Richiede Attenzione"
 L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "Ricompense Odierne"
 --[[Translation missing --]]
---[[ L["S_MAPFRAME_ALIGN_CENTER"] = ""--]] 
+--[[ L["S_OPTIONS_ACCESSIBILITY"] = ""--]] 
 --[[Translation missing --]]
---[[ L["S_MAPFRAME_ALIGN_DESC"] = ""--]] 
+--[[ L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = ""--]] 
 --[[Translation missing --]]
---[[ L["S_MAPFRAME_ALIGN_LEFT"] = ""--]] 
+--[[ L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_OPTIONS_ANIMATIONS"] = ""--]] 
 --[[Translation missing --]]
@@ -213,8 +213,6 @@ L["S_SUMMARYPANEL_LAST15DAYS"] = "Ultimi 15 Giorni"
 L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Altri Personaggi"
 L["S_TUTORIAL_AMOUNT"] = "indica la quantità da ricevere"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Clicca per tracciare una missione."
---[[Translation missing --]]
---[[ L["S_TUTORIAL_MAPALIGN"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_TUTORIAL_PARTY"] = ""--]] 
 L["S_TUTORIAL_TIMELEFT"] = "indica il tempo rimasto (+4 ore, +90 minuti, + 30 minuti, meno di 30 minuti)"

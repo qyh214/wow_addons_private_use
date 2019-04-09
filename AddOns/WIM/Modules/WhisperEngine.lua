@@ -177,11 +177,11 @@ end
 
 
 
-local function getWhisperWindowByUser(user, isBN)
+local function getWhisperWindowByUser(user, isBN, bnID)
 	if isBN then
 		if not string.find(user, "^|K") then
 			local _
-			_, user = _G.BNGetFriendInfoByID(isBN) -- fix window handler when using the chat hyperlink
+			_, user = _G.BNGetFriendInfoByID(bnID) -- fix window handler when using the chat hyperlink
 		end
 	else
 		user = string.gsub(user," ","") -- Drii: WoW build15050 whisper bug for x-realm server with space
@@ -386,7 +386,7 @@ function WhisperEngine:CHAT_MSG_BN_WHISPER_INFORM(...)
         return; -- ChatFrameEventFilter says don't process
     end
     local color = db.displayColors.BNwispOut; -- color contains .r, .g & .b
-    local win = getWhisperWindowByUser(arg2, true);
+    local win = getWhisperWindowByUser(arg2, true, bNetID);
     win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_BN_WHISPER_INFORM", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13);
     win:Pop("out");
     _G.ChatEdit_SetLastToldTarget(arg2, "BN_WHISPER");
@@ -419,7 +419,7 @@ function WhisperEngine:CHAT_MSG_BN_WHISPER(...)
         return; -- ChatFrameEventFilter says don't process
     end
     local color = WIM.db.displayColors.BNwispIn; -- color contains .r, .g & .b
-    local win = getWhisperWindowByUser(arg2, true);
+    local win = getWhisperWindowByUser(arg2, true, bNetID);
     win.unreadCount = win.unreadCount and (win.unreadCount + 1) or 1;
     win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_BN_WHISPER", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13);
     win:Pop("in");
@@ -517,6 +517,7 @@ function WhisperEngine:CHAT_MSG_SYSTEM_CONTROLLER(eventItem, msg)
     user = FormatUserName(string.match(msg, ERR_FRIEND_ONLINE_SS));
     win = Windows[user];
     if(win) then
+		local msg = user.." ".._G.BN_TOAST_ONLINE
         win:AddMessage(msg, db.displayColors.sysMsg.r, db.displayColors.sysMsg.g, db.displayColors.sysMsg.b);
         win.online = true;
         if(win and win:IsShown() and db.pop_rules.whisper[curState].supress) then
@@ -529,6 +530,7 @@ function WhisperEngine:CHAT_MSG_SYSTEM_CONTROLLER(eventItem, msg)
     user = FormatUserName(string.match(msg, ERR_FRIEND_OFFLINE_S));
     win = Windows[user];
     if(win) then
+		local msg = user.." ".._G.BN_TOAST_OFFLINE
         win:AddMessage(msg, db.displayColors.sysMsg.r, db.displayColors.sysMsg.g, db.displayColors.sysMsg.b);
         win.online = false;
         if(win and win:IsShown() and db.pop_rules.whisper[curState].supress) then
@@ -581,7 +583,7 @@ local function replyTellTarget(TellNotTold)
 
     if (lastTell ~= "" and db.pop_rules.whisper.intercept) then
       lastTell = _G.Ambiguate(lastTell, "none")
-      local win = getWhisperWindowByUser(lastTell, bNetID);
+      local win = getWhisperWindowByUser(lastTell, bNetID and true, bNetID);
 
       if (win:IsVisible() or db.pop_rules.whisper[curState].onSend) then
         win.widgets.msg_box.setText = 1;
@@ -639,7 +641,7 @@ function CF_ExtractTellTarget(editBox, msg, chatType)
 		curState = db.pop_rules.whisper.alwaysOther and "other" or curState;
 		if (db.pop_rules.whisper.intercept and db.pop_rules.whisper[curState].onSend) then
 			target = _G.Ambiguate(target, "none")--For good measure, ambiguate again cause it seems some mods interfere with this process
-			local win = getWhisperWindowByUser(target, bNetID);
+			local win = getWhisperWindowByUser(target, bNetID and true, bNetID);
 			win.widgets.msg_box.setText = 1;
 			win:Pop(true); -- force popup
 			win.widgets.msg_box:SetFocus();
@@ -655,7 +657,7 @@ function CF_SentBNetTell(target)
 		if (db.pop_rules.whisper.intercept and db.pop_rules.whisper[curState].onSend) then
 			local bNetID = BNet_GetPresenceID(target);
 			target = _G.Ambiguate(target, "none")--For good measure, ambiguate again cause it seems some mods interfere with this process
-			local win = getWhisperWindowByUser(target, bNetID);
+			local win = getWhisperWindowByUser(target, true, bNetID);
 			win.widgets.msg_box.setText = 1;
 			win:Pop(true); -- force popup
 			win.widgets.msg_box:SetFocus();
@@ -681,7 +683,7 @@ function CE_UpdateHeader(editBox)
 			WIM:checkWhisperStickies()
 			local bNetID = BNet_GetPresenceID(target);
 			target = _G.Ambiguate(target, "none")--For good measure, ambiguate again cause it seems some mods interfere with this process
-			local win = getWhisperWindowByUser(target, bNetID);
+			local win = getWhisperWindowByUser(target, bNetID and true, bNetID);
 			win.widgets.msg_box.setText = 1;
 			win:Pop(true); -- force popup
 			win.widgets.msg_box:SetFocus();

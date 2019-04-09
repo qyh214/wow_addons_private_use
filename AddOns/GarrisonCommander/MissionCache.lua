@@ -14,7 +14,6 @@ local GARRISON_SHIP_OIL_CURRENCY=GARRISON_SHIP_OIL_CURRENCY
 local GARRISON_FOLLOWER_MAX_LEVEL=GARRISON_FOLLOWER_MAX_LEVEL
 local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0
 local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2
-local LE_FOLLOWER_TYPE_GARRISON_7_0=_G.LE_FOLLOWER_TYPE_GARRISON_7_0
 local GMF=GMF
 local GSF=GSF
 local GMFMissions=GMFMissions
@@ -66,9 +65,9 @@ function module:OnInitialized()
 		addon.AuctionPrices=true
 		appraisers.ATR=Atr_GetAuctionBuyout
 	end
-	if _G.TSMAPI then
+	if _G.TSMAPI_FOUR then
 		addon.AuctionPrices=true
-		appraisers.TSM=function(itemlink) return TSMAPI:GetItemValue(itemlink,"DBMarket") end
+		appraisers.TSM=function(itemlink) return TSMAPI_FOUR.CustomPrice.GetItemPrice(itemlink,"DBMarket") end
 	end
 	if _G.TUJMarketInfo then
 		addon.AuctionPrices=true
@@ -122,12 +121,6 @@ function module:GetMission(id,noretry)
 		elseif type=="p" then
 			mission=GMFMissions.inProgressMissions[ix]
 			if mission and mission.missionID==id then return mission end
-		elseif type=="ha" then
-			mission=GHFMissions.availableMissions[ix]
-			if mission and mission.missionID==id then return mission end
-		elseif type=="hp" then
-			mission=GHFMissions.inProgressMissions[ix]
-			if mission and mission.missionID==id then return mission end
 		elseif type=="s" then
 			mission=GSFMissions.missions[ix]
 			if mission and mission.missionID==id then return mission end
@@ -138,10 +131,6 @@ function module:GetMission(id,noretry)
 	scan(GMFMissions.availableMissions,'a')
 	scan(GMFMissions.inProgressMissions,'p')
 	scan(GSFMissions.missions,'s')
-	if GHFMissions and not ns.ignoreHall then
-		scan(GHFMissions.availableMissions,'ha')
-		scan(GHFMissions.inProgressMissions,'hp')
-	end
 	return self:GetMission(id,true)
 end
 function module:AddExtraData(mission)
@@ -258,7 +247,7 @@ print("Iterator called, list is",list)
 	end,list,0
 end
 function module:OnAllGarrisonMissions(func,inProgress,missionType)
-	local m=(missionType and missionType==LE_FOLLOWER_TYPE_GARRISON_7_0) and GHFMissions or GMFMissions
+	local m=GMFMissions
 	local list=inProgress and m.inProgressMissions or m.availableMissions
 	if type(list)=='table' then
 		local tmp=new()
@@ -471,11 +460,6 @@ classes[LE_FOLLOWER_TYPE_SHIPYARD_6_2]={
 	newMissionType('toys',L['Toys and Mounts'],'INV_LesserGronnMount_Red',false,false,nil,128310,127748,128311),
 	newMissionType('reputation',L['Reputation Items'],'Spell_Shadow_DemonicCircleTeleport',false,false,nil,117492,128315),
 	newMissionType('itemLevel',L['Item Tokens'],'INV_Bracer_Cloth_Reputation_C_01',false,false,nil,0),
-	newMissionType('other',L['Other rewards'],'INV_Box_02',false,false,nil,0),
-}
-classes[LE_FOLLOWER_TYPE_GARRISON_7_0]={
-	newMissionType('xp',L['Follower experience'],'XPBonus_icon',false,false,nil,0),
-	newMissionType('gold',BONUS_ROLL_REWARD_MONEY,'inv_misc_coin_01',false,false,nil,0),
 	newMissionType('other',L['Other rewards'],'INV_Box_02',false,false,nil,0),
 }
 function addon:GetRewardClasses(followerType)

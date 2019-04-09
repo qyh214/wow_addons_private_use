@@ -222,7 +222,7 @@ do
 				timeElapsed=0.5
 			else
 				local missionID=aMissions[currentMission]
-				GMC.list.widget:SetFormattedTitle("Processing mission %d of %d (%s)",currentMission,#aMissions,G.GetMissionName(missionID))
+				GMC.list.widget:SetFormattedTitle(L["Processing mission %d of %d"], currentMission, #aMissions)
 				local class=self:GetMissionData(missionID,"class")
 				--print(C("Processing ","Red"),missionID,addon:GetMissionData(missionID,"name"))
 				local minimumChance=0
@@ -248,8 +248,8 @@ do
 					end
 					party.missionID=missionID
 					tinsert(GMC.list.Parties,party)
-					GMC.list.widget:PushChild(mb,missionID)
 					mb:SetFullWidth(true)
+					GMC.list.widget:PushChild(mb,missionID)
 					mb:SetMission(self:GetMissionData(missionID),party,false,"control")
 					mb:Blacklist(blacklist[missionID])
 					mb:SetCallback("OnClick",leftclick)
@@ -264,10 +264,11 @@ end
 function module:OnClick_Run(this,button)
 	local GMC=GMF.MissionControlTab
 	this:Disable()
-	--GMC.logoutButton:Disable()
 	do
 		local elapsed=0
 		local co=coroutine.wrap(self.RunMission)
+		GMC.list.widget:SetFormattedTitle(L["Sending..."])
+		GMC.list.widget:SetTitleColor(C.Yellow())
 		self:Unhook(GMC.runButton,'OnUpdate')
 		self:RawHookScript(GMC.runButton,'OnUpdate',function(this,ts)
 			elapsed=elapsed+ts
@@ -276,11 +277,8 @@ function module:OnClick_Run(this,button)
 				local rc=co(self)
 				if (not rc) then
 					self:Unhook(GMC.runButton,'OnUpdate')
-					--GMC.logoutButton:Enable()
-					if not ns.quick and addon:GetBoolean("AUTOLOGOUT") then
-						addon:LogoutPopout(5)
-					end
-					addon:missionDone()
+					GMC.list.widget:SetTitle(READY)
+					GMC.list.widget:SetTitleColor(C.Green())
 					ns.quick=false
 				end
 			end
@@ -302,13 +300,13 @@ function module:OnClick_Start(this,button)
 		return
 	end
 	this:Disable()
-	GMC.list.widget:SetTitleColor(C.Green())
 	self:CreateMissionList(aMissions)
 	wipe(GMCUsedFollowers)
 	wipe(GMC.list.Parties)
 	self:RefreshFollowerStatus()
 	if (#aMissions>0) then
 		GMC.list.widget:SetFormattedTitle(L["Processing mission %d of %d"],1,#aMissions)
+		GMC.list.widget:SetTitleColor(C.Yellow())
 	else
 		GMC.list.widget:SetTitle("No mission matches your criteria")
 		GMC.list.widget:SetTitleColor(C.Red())
@@ -787,7 +785,6 @@ function module:BuildFlags()
 	addon:AddSlider("MINGOLD",50,1,1000,L["Minimum Gold Value"],L["Gold missions wich returns less than this amount are ignored"])
 	addon:AddToggle("GCSKIPEPIC",settings.skipEpic,L["Ignore epic for xp missions."],L["IF you have a Salvage Yard you probably dont want to have this one checked"])
 	addon:AddToggle("GCSKIPRARE",settings.skipRare,L["Ignore rare missions"],L["Rare missions will not be considered"])
-	--addon:AddToggle("AUTOLOGOUT",false,L["Auto Logout"],L["Automatically logout after sending missions"])
 	addon:SetBoolean("AUTOLOGOUT",false)
 end
 function module:BuildDuration()
@@ -871,16 +868,6 @@ function module:BuildMissionList()
 	GMC.runButton:SetScript('OnClick',function(this,button) self:OnClick_Run(this,button) end)
 	GMC.runButton:Disable()
 	GMC.runButton:SetPoint('TOPRIGHT',-10,25)
---	GMC.logoutButton=CreateFrame('BUTTON', nil,ml.widget.frame, 'GameMenuButtonTemplate')
---	GMC.logoutButton:SetText(LOGOUT)
---	GMC.logoutButton:SetWidth(ns.bigscreen and 148 or 90)
---	GMC.logoutButton:SetScript("OnClick",function()
---		GMF:Hide()
---		module:Popup(LOGOUT)
---		module:ScheduleTimer(Logout,0.5)
---		end
---	)
---	GMC.logoutButton:SetPoint('TOP',0,25)
 	return ml
 end
 

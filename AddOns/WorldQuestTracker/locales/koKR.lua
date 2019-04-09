@@ -95,10 +95,12 @@ L["S_MAPBAR_SUMMARYMENU_NOATTENTION"] = [=[다른 캐릭터에 추적 중인 퀘
 2시간 내에 만료되는 퀘스트가 없습니다!]=]
 L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "주의 필요"
 L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "오늘의 보상"
-L["S_MAPFRAME_ALIGN_CENTER"] = "중앙"
 --[[Translation missing --]]
---[[ L["S_MAPFRAME_ALIGN_DESC"] = ""--]] 
-L["S_MAPFRAME_ALIGN_LEFT"] = "왼쪽"
+--[[ L["S_OPTIONS_ACCESSIBILITY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = ""--]] 
 L["S_OPTIONS_ANIMATIONS"] = "애니메이션 사용"
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "지도 창 중앙 고정"
 L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "먼저 '지도 창 크기 조절' 을 활성화 해야하며, 값이 변경되지 않았습니다."
@@ -151,7 +153,6 @@ L["S_SUMMARYPANEL_LIFETIMESTATISTICS_CHARACTER"] = "캐릭터 전체 시간 통�
 L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "다른 캐릭터"
 L["S_TUTORIAL_AMOUNT"] = "받을 수 있는 보상의 양을 나타냅니다"
 L["S_TUTORIAL_CLICKTOTRACK"] = "퀘스트를 추적하려면 클릭하세요."
-L["S_TUTORIAL_MAPALIGN"] = "세계지도 정렬을 선택하려면 여기를 클릭하십시오."
 L["S_TUTORIAL_PARTY"] = "파티 중일 때 모든 파티원이 수행 중인 퀘스트에 파란색 별이 표시됩니다!"
 L["S_TUTORIAL_TIMELEFT"] = "남은 시간을 나타냅니다 (+4시간, +90분, +30분, 30분 미만)"
 --[[Translation missing --]]

@@ -1,58 +1,40 @@
 ------------------------------------------------------------------------
-r595 | humfras | 2019-03-10 12:45:35 +0000 (Sun, 10 Mar 2019) | 2 lines
+r602 | humfras | 2019-03-28 11:18:01 +0000 (Thu, 28 Mar 2019) | 1 line
 Changed paths:
-   M /trunk/Modules/URLHandler.lua
-   M /trunk/Sources/WindowHandler.lua
+   M /trunk/Modules/ShortcutBar.lua
 
-* more URL fixes
-* fix bug when clicking your own name in the chat window
+* some code cleanup
 ------------------------------------------------------------------------
-r594 | humfras | 2019-03-09 22:42:24 +0000 (Sat, 09 Mar 2019) | 2 lines
+r601 | humfras | 2019-03-26 12:31:13 +0000 (Tue, 26 Mar 2019) | 1 line
 Changed paths:
-   M /trunk/Modules/URLHandler.lua
-   M /trunk/Modules/WhisperEngine.lua
-   M /trunk/Sources/MessageWindows.lua
-   M /trunk/Sources/ToolBox.lua
-   M /trunk/Sources/WindowHandler.lua
+   M /trunk/Modules/ShortcutBar.lua
 
-* fix armory links containing spaces and/or an apostrophe (only tested for EU and US)
-* show the whisper window's player names with realm in a more readable way
+* fix invite button for BNet whispers
 ------------------------------------------------------------------------
-r593 | humfras | 2019-02-25 18:27:10 +0000 (Mon, 25 Feb 2019) | 1 line
+r600 | humfras | 2019-03-26 11:45:57 +0000 (Tue, 26 Mar 2019) | 2 lines
 Changed paths:
+   M /trunk/Modules/ShortcutBar.lua
    M /trunk/Modules/WhisperEngine.lua
 
-* fix window handler when using a players BNet chat hyperlink
+* fix invite button for BNet whispers
+* restructure BN whisper handling
 ------------------------------------------------------------------------
-r592 | humfras | 2019-02-25 11:32:10 +0000 (Mon, 25 Feb 2019) | 1 line
+r599 | mysticalos | 2019-03-26 01:28:03 +0000 (Tue, 26 Mar 2019) | 1 line
+Changed paths:
+   M /trunk/Modules/ShortcutBar.lua
+
+This should quiet a lua error I was seeing from this code, but probably merits more investigating on why sometimes presence ID is a string and not a number
+------------------------------------------------------------------------
+r598 | humfras | 2019-03-24 21:49:50 +0000 (Sun, 24 Mar 2019) | 1 line
+Changed paths:
+   M /trunk/Modules/ShortcutBar.lua
+
+* fix invite button for BNet whispers
+------------------------------------------------------------------------
+r597 | humfras | 2019-03-17 21:36:57 +0000 (Sun, 17 Mar 2019) | 1 line
 Changed paths:
    M /trunk/Modules/WhisperEngine.lua
 
-* fix window handler when using a players BNet chat hyperlink
-------------------------------------------------------------------------
-r591 | humfras | 2019-02-06 21:52:54 +0000 (Wed, 06 Feb 2019) | 1 line
-Changed paths:
-   M /trunk/Modules/WhisperEngine.lua
-   M /trunk/WIM.lua
-
-* add a check for Prat's `stickychannel� handler
-------------------------------------------------------------------------
-r590 | humfras | 2019-02-06 21:15:48 +0000 (Wed, 06 Feb 2019) | 1 line
-Changed paths:
-   M /trunk/WIM.lua
-
-* add a check for Prat's `stickychannel� handler
-------------------------------------------------------------------------
-r589 | humfras | 2019-02-06 21:11:15 +0000 (Wed, 06 Feb 2019) | 1 line
-Changed paths:
-   M /trunk/WIM.lua
-
-* add a check for Prat's `stickychannel� handler
-------------------------------------------------------------------------
-r588 | humfras | 2019-02-03 19:40:24 +0000 (Sun, 03 Feb 2019) | 1 line
-Changed paths:
-   M /trunk/Sources/Constants.lua
-
-* fix missing name coloring for Demon Hunter
+* make friend/guild member online/offline messages more readable (like the BNet ones)
 ------------------------------------------------------------------------
 

@@ -101,9 +101,12 @@ L["S_MAPBAR_SUMMARYMENU_NOATTENTION"] = [=[Aucune quête suivie sur vos autres
 personnages n'a moins de 2 heures restantes.]=]
 L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "Demande votre attention"
 L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "Récompenses du jour"
-L["S_MAPFRAME_ALIGN_CENTER"] = "centrer"
-L["S_MAPFRAME_ALIGN_DESC"] = "|cFF22FF22Cliquez|r pour activer pour basculer l'alignement du cadre de la carte de gauche au centre, et du centre à gauche de l'écran."
-L["S_MAPFRAME_ALIGN_LEFT"] = "gauche"
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_ACCESSIBILITY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_OPTIONS_ANIMATIONS"] = ""--]] 
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "Cadre de la carte centré"
@@ -159,7 +162,6 @@ L["S_SUMMARYPANEL_LIFETIMESTATISTICS_CHARACTER"] = "Statistiques de votre person
 L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Autres personnages"
 L["S_TUTORIAL_AMOUNT"] = "Indique le montant à recevoir"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Cliquez pour suivre une quête."
-L["S_TUTORIAL_MAPALIGN"] = "Cliquez ici pour sélectionner l'alignement de la carte du monde"
 L["S_TUTORIAL_PARTY"] = "Dans un groupe, une étoile bleue indique les quêtes que tous le groupe fait !"
 L["S_TUTORIAL_TIMELEFT"] = "Indique le temps restant (+4 heures, +90 minutes, +30 minutes, moins de 30 minutes)"
 L["S_TUTORIAL_WORLDBUTTONS"] = [=[Cliquez ici pour alterner entre trois types de sommaires:

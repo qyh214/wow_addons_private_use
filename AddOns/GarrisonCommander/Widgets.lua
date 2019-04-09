@@ -289,15 +289,12 @@ local function GMCLayer()
 			self:ReleaseChildren()
 			self.scroll=nil
 		end
-		self.scroll=AceGUI:Create("ScrollFrame")
-		local scroll=self.scroll
-		self:AddChild(scroll)
-		scroll:SetLayout("List") -- probably?
+		local scroll = AceGUI:Create("ScrollFrame")
+		scroll:SetLayout("List")
 		scroll:SetFullWidth(true)
 		scroll:SetFullHeight(true)
-		scroll:SetPoint("TOPLEFT",self.title,"BOTTOMLEFT",0,0)
-		scroll:SetPoint("TOPRIGHT",self.title,"BOTTOMRIGHT",0,0)
-		scroll:SetPoint("BOTTOM",self.content,"BOTTOM",0,0)
+		self:AddChild(scroll)
+		self.scroll = scroll
 	end
 	---@function [parent=#GMCLayer]
 	local function Constructor()
@@ -326,8 +323,9 @@ local function GMCLayer()
 		local content = CreateFrame("Frame",nil,frame)
 		widget.content = content
 		content.obj = self
-		content:SetPoint("TOPLEFT",title,"BOTTOMLEFT")
-		content:SetPoint("BOTTOMRIGHT")
+		content:SetPoint("TOPLEFT",title,"BOTTOMLEFT",6,0)
+		content:SetPoint("TOPRIGHT",title,"BOTTOMRIGHT",-6,0)
+		content:SetPoint("BOTTOM",0,6)
 		AceGUI:RegisterAsContainer(widget)
 		return widget
 	end

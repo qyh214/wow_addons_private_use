@@ -1,14 +1,20 @@
-tag cc67f9eb045b9f3360394e83735841d6986355a0 3.0.2
+tag db23dedbda533f32e171ec2ae9ed6eeca08facea 3.1.0
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Fri Mar 15 16:08:19 2019 +0100
+Date:	Thu Mar 28 02:09:02 2019 +0100
 
-Fixed "ItemButtonTemplate" missing
+Cosmetic improvement and bug fixes
 
-commit 580358f7800c3bf3aa20d1a2993fc7e8e4859187
+commit 2689e2b8afe746aed5761f76a368629561459d15
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Fri Mar 15 14:52:12 2019 +0100
+Date:   Thu Mar 28 02:07:36 2019 +0100
 
-    https://github.com/alarofrunetotem/GarrisonCommander/issues/17
+    Notes
+
+commit dba0eb957f96febbc92c06d704979d2256625b49
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Thu Mar 28 02:03:42 2019 +0100
+
+    Fixed lua error when shift-clicking missions
     
-    Second fix attempt
+    Reward tooltip no longer disappear after a few seconds
 

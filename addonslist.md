@@ -8,11 +8,15 @@ AddOnSkins 插件皮肤统一（需配合elvui）
 
 AdvancedInterfaceOptions 额外界面设置、命令（被暴雪隐藏掉的命令、cvar）
 
+AdventureGuideLockouts 副本进度查看（shift+J的冒险指南上）
+
 AngryKeystones 大秘境钥石插件
 
 AuctionLite 拍卖行增强插件
 
-BlizzMove 暴雪系统窗体移动
+AuctionLite_AdvSearch 拍卖行增强插件的额外增强搜索插件
+
+BlizzMove 暴雪框架窗体移动
 
 BuyEmAll 批量购买物品增强（某些只能一个个买的物品，改进其堆叠购买的体验，你可以一起批量购买）
 
@@ -22,19 +26,13 @@ DBM 首领报警及其语音包
 
 DejaCharacterStats 角色信息增强
 
-EncounterJournalSavedInstances 副本进度统计（显示在地下城手册上）
-
 ElvUI ElvUI整合界面插件
+
+ElvUI_BagFilter ElvUI的背包扩展插件
 
 ElvUI_Enhanced ElvUI增强插件
 
-ElvUI_SLE  ElvUI增强插件shadow & light美化（与ElvUI_Enhanced互斥，建议启用ElvUI_Enhanced）
-
-ELvUI_wimskin  WIM的ElvUI皮肤美化（与elvui保持风格统一）
-
-ElvUI_BagFilter elvui的背包分类过滤（可高亮显示）
-
-ElvUI_WindTools elvui国人开发的小工具箱，提供一些改进功能
+ElvUI_WindTools Elvui配套的小玩意集合插件，国人开发的小工具箱
 
 ExRT 团队插件
 
@@ -45,6 +43,8 @@ GarrisonCommander 要塞功能增强（任务指派、含船坞与配置系统�
 HandyNotes
 
 HiddenArtifactTracker
+
+KeystoneHelper
 
 MikScrollingBattleText（MSBT战斗浮动信息，parrot替代品）
 
@@ -59,6 +59,8 @@ PremadeGroupsFilter
 PersonalLootHelper 个人拾取帮助
 
 Postal 邮件增强
+
+RaidAlerter
 
 RelicInspector 圣物提示
 
@@ -76,7 +78,13 @@ TinyInspect 角色面板信息增强显示额外的装备展示、与TinyTooltip
 
 TinyTooltip  tooltip美化（TipTac替代品，elvui已自带tooltip美化，建议不启用）
 
+WeakAuras
+
 WIM 聊天窗口美化（私聊以弹窗方式展现，更为直观）
+
+wimelvuiskin  WIM的ElvUI皮肤美化（与elvui保持风格统一）
+
+WindDungeonHelper  
 
 WorldQuestTracker 世界任务插件
 

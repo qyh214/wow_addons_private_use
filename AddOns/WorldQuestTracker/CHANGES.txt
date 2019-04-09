@@ -1,7 +1,7 @@
-changeset:   366:bfe07dd5ac48
-tag:         v8.1.5.366
+changeset:   368:3f19c577ea61
+tag:         v8.1.5.368
 user:        Tercioo
-date:        Sat Mar 23 13:51:29 2019 -0300
-summary:     - Added accessibility option to show a yellow ring around quests that count towards bounties.
+date:        Wed Apr 03 13:04:45 2019 -0300
+summary:     - Added accessibility strings to be localized.
 
 

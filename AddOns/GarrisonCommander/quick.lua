@@ -5,15 +5,12 @@ local _G=_G
 local GMF=GMF
 local GSF=GSF
 local qm=addon:NewSubModule("Quick") --#qm
-local missionDone
-local shipyardDone
 local format=format
 local ipairs=ipairs
 local NavalDomination={
 	Alliance=39068,
 	Horde=39246
 }
-local autologout=false
 local questid=NavalDomination[UnitFactionGroup("player")]
 function qm:OnInitialized()
 	ns.step="none"
@@ -21,12 +18,6 @@ end
 local watchdog=0
 local function HasShipTable()
 	return ns.quests[39068] or ns.quests[39246] -- Naval Domination
-end
-function addon:missionDone()
-	missionDone=true
-end
-function addon:shipyardDone()
-	shipyardDone=true
 end
 
 -- backported from LibInit 41
@@ -85,45 +76,11 @@ function addon:LogoutTimer(dialog,elapsed)
 		text:SetFormattedText(StaticPopupDialogs[which].text, ceil(timeleft / 60), MINUTES);
 	end
 end
-function addon:LogoutPopup(timeout)
-	local msg=''
-	if addon:HasSalvageYard() then
-		local salvage=0
-		local freeSlots=0
-		for i=0,NUM_BAG_SLOTS do
-			freeSlots=freeSlots+(GetContainerNumFreeSlots(i) or 0)
-		end
-		for _,id in ipairs(ns.allSalvages) do
-			salvage=salvage+(GetItemCount(id) or 0)
-		end
-		if salvage > 5 then
-			timeout=timeout+5
-			msg=format(L["You have %d items to salvage"],salvage)
-			if freeSlots < 5 then
-				msg=msg .. format(L[" and only %d free slots in your bags"],freeSlots)
-			end
-			msg=C(msg,'green').."\n"
-    	local popup=addon:Popup(msg,timeout or 10,
-    		function(dialog,data,data2)
-          StaticPopup_Hide("LIBINIT_POPUP")
-    		end
-    	)
-		end
-	end
-end
 function qm:RunQuick()
 	local completeButton=GMF:IsVisible() and GarrisonCommanderQuickMissionComplete or GCQuickShipMissionCompletionButton
 	local main=GMF:IsVisible() and GMF or GSF
 	if not ns.quick then
 		HideUIPanel(main)
-		if not G.HasShipyard() then
-			shipyardDone=true
-		end
-		if missionDone and shipyardDone then
-			addon:LogoutPopup(5)
-		else
-			autologout=false
-		end
 		return
 	end
 	while not qm.Mission do
@@ -148,9 +105,6 @@ function qm:RunQuick()
 		return addon.ScheduleTimer(qm,"RunQuick",1)
 	end
 
-end
-function addon:EnableAutoLogout()
-	autologout=true
 end
 function addon:RunQuick(force)
 	local main=GMF:IsVisible() and GMF or GSF

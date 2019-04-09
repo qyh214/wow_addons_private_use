@@ -2,6 +2,14 @@
 local AddOnName, WDH = ...
 local L, B, C, DB = WDH.L, WDH.Base, WDH.Config, WDH.DataBase
 local gsub = string.gsub
+local SendChatMessage = SendChatMessage
+local IsInGroup = IsInGroup
+local IsInRaid = IsInRaid
+local UnitGroupRolesAssigned = UnitGroupRolesAssigned
+local UnitIsGroupLeader = UnitIsGroupLeader
+local UnitIsPlayer = UnitIsPlayer
+local GetUnitName = GetUnitName
+local GetRealmName = GetRealmName
 local AD = WDH:NewModule("AvoidableDamage", "AceHook-3.0", "AceEvent-3.0")
 
 DB.defaults.profile.modules.AvoidableDamage = {
@@ -9,7 +17,7 @@ DB.defaults.profile.modules.AvoidableDamage = {
 	notification = {
 		enable = true,
 		compatible = true,
-		outputmode = "smart",
+		outputmode = "party",
 		threshold = 30,
 		unit = "western",
 		accuracy = 1,
@@ -28,6 +36,7 @@ DB.defaults.profile.modules.AvoidableDamage = {
 }
 
 C.ModulesOrder.AvoidableDamage = 20
+
 C.ModulesOption.AvoidableDamage = {
     name = L["Avoidable Damage"],
 	type = "group",
@@ -47,9 +56,8 @@ C.ModulesOption.AvoidableDamage = {
 					width = "full",
 					set = function(info,value)
 						AD.db.enable = value
-						if AD.db.enable then AD:Enable() else AD:Disable() end
-						AD:OnInitialize()
-						C_Timer.After(2, function() return AD:RefreshOption() end)
+						AD:ToggleModule()
+						C_Timer.After(1, function() return AD:RefreshOption() end)
 					end,
 					get = function(info) return AD.db.enable end
 				},
@@ -67,6 +75,7 @@ C.ModulesOption.AvoidableDamage = {
 			name = L["Notifications"],
 			type = "group",
 			inline = true,
+			hidden = function() return not AD.db.enable end,
 			args = {
 				enable = {
 					order = 11,
@@ -97,8 +106,7 @@ C.ModulesOption.AvoidableDamage = {
 					values = {
 						["self"] = L["Self(Chat Frame)"],
 						["party"] = L["Party"],
-						["raid"] = L["Raid"],
-						["smart"] = L["Smart"],
+						["emote"] = L["Emote"],
 					},
 				},
 				unit = {
@@ -154,6 +162,7 @@ C.ModulesOption.AvoidableDamage = {
 			name = L["Ranking"],
 			type = "group",
 			inline = true,
+			hidden = function() return not AD.db.enable end,
 			args = {
 				enable = {
 					order = 16,
@@ -199,7 +208,7 @@ C.ModulesOption.AvoidableDamage = {
 			name = L["Customization"],
 			type = "group",
 			inline = true,
-			hidden = function() return not AD.db.notification.enable end,
+			hidden = function() return not AD.db.enable end,
 			disabled = function() return not AD.db.custom.enable end,
 			args = {
 				enable = {
@@ -277,9 +286,13 @@ local Spells = {
 	[272046] = 20,		--- Dive Bomb (Sharkbait)
 	[257426] = 20,		--- Brutal Backhand (Irontide Enforcer)
 	[258352] = 20,		--- Grapeshot (Captain Eudora)
-	[272374] = 20,		--- Whirlpool of Blades
+	[256594] = 20,      --- Barrel Smash (Captain Raoul)
+	[267523] = 20,      --- Cutting Surge (Captain Jolly)
+	[272374] = 20,      --- Whirlpool of Blades (Captain Jolly)
 	[256546] = 20,		--- Shark Tornado
 	[257310] = 20,		--- Cannon Barrage
+	[257757] = 20,      --- Goin' Bananas (Bilge Rat Buccaneer)
+	[274389] = 20,      --- Rat Traps (Vermin Trapper)
 	[257902] = 20,		--- Shell Bounce (Ludwig Von Tortollan)
 	[258199] = 20,		--- Ground Shatter (Irontide Crusher)
 	[276061] = 20,		--- Boulder Throw (Irontide Crusher)
@@ -296,11 +309,17 @@ local Spells = {
 	[267385] = 20,		--- Tentacle Slam (Vol'zith the Whisperer)
 	
 	-- Siege of Boralus
+	[256627] = 20,		--- Slobber Knocker (Scrimshaw Enforcer)
 	[256663] = 20,		--- Burning Tar (Blacktar Bomber)
+	[257431] = 20,      --- Meat Hook (Chopper Redhook)
 	[275775] = 20,		--- Savage Tempest (Irontide Raider)
+	[269029] = 20,      --- Clear the Deck (Dread Captain Lockwood)
+	[272874] = 20,		--- Trample (Ashvane Commander)
 	[272426] = 20,		--- Sighted Artillery
 	[272140] = 20,		--- Iron Volley
+	[257292] = 20,      --- Heavy Slash (Irontide Cleaver)
 	[273681] = 20,		--- Heavy Hitter (Chopper Redhook)
+	[257886] = 20,      --- Brine Pool (Hadal Darkfathom)
 	
 	-- Tol Dagor
 	[257785] = 20,		--- Flashing Daggers
@@ -358,6 +377,7 @@ local Spells = {
 	[269092] = 20,		--- Artillery Barrage (Ordnance Specialist)
 
 	-- Temple of Sethraliss
+	[268851] = 20,      --- Lightning Shield (Adderis)
 	[273225] = 20,		--- Volley (Sandswept Marksman)
 	[273995] = 20,		--- Pyrrhic Blast (Crazed Incubator)
 	[264206] = 20,		--- Burrow (Merektha)
@@ -365,10 +385,14 @@ local Spells = {
 	
 
 	-- Underrot
+	[264757] = 20,		--- Sanguine Feast (Elder Leaxa)
 	[265542] = 20,		--- Rotten Bile (Fetid Maggot)
 	[265019] = 20,		--- Savage Cleave (Chosen Blood Matron)
 	[261498] = 20,		--- Creeping Rot (Elder Leaxa)
 	[265665] = 20,		--- Foul Sludge (Living Rot)
+	[265511] = 20,		--- Spirit Drain (Spirit Drain Totem)
+	[272469] = 20,		--- Abyssal Slam (Abyssal Reach)
+	[272609] = 20,		--- Maddening Gaze (Faceless Corruptor)
 }
 local SpellsNoTank = {
 	-- Freehold
@@ -396,8 +420,8 @@ local SpellsNoTank = {
 }
 local Auras = {
 	-- Freehold
-	[274389] = true,		-- Rat Traps (Vermin Trapper)
 	[274516] = true,		-- Slippery Suds
+	[274389] = true,        -- Rat Traps (Vermin Trapper)
 	
 	-- Shrine of the Storm
 	[268391] = true,		-- Mental Assault (Abyssal Cultist)
@@ -434,8 +458,8 @@ local Auras = {
 local AurasNoTank = {
 }
 
-local function compareDamage(a,b)
-	return a["value"] < b["value"]
+local function compareDamage(a, b)
+	return a["value"] > b["value"]
 end
 
 function AD:OnInitialize()
@@ -459,24 +483,25 @@ function AD:OnInitialize()
 	self:SetAddonMessagePrefix()
 	self:SetNotificationText()
 	self:RebuildTable()
+	self:ToggleModule()
 end
 
-function AD:OnEnable()
-	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-    self:RegisterEvent("CHAT_MSG_ADDON")
-    self:RegisterEvent("GROUP_ROSTER_UPDATE")
-    self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-    self:RegisterEvent("CHALLENGE_MODE_START")
-    self:RegisterEvent("CHALLENGE_MODE_COMPLETED")
-end
-
-function AD:OnDisable()
-	self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-    self:UnregisterEvent("CHAT_MSG_ADDON")
-    self:UnregisterEvent("GROUP_ROSTER_UPDATE")
-    self:UnregisterEvent("ZONE_CHANGED_NEW_AREA")
-    self:UnregisterEvent("CHALLENGE_MODE_START")
-    self:UnregisterEvent("CHALLENGE_MODE_COMPLETED")
+function AD:ToggleModule()
+	if self.db.enable then
+		self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+		self:RegisterEvent("CHAT_MSG_ADDON")
+		self:RegisterEvent("GROUP_ROSTER_UPDATE")
+		self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+		self:RegisterEvent("CHALLENGE_MODE_START")
+		self:RegisterEvent("CHALLENGE_MODE_COMPLETED")
+	else
+		self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+		self:UnregisterEvent("CHAT_MSG_ADDON")
+		self:UnregisterEvent("GROUP_ROSTER_UPDATE")
+		self:UnregisterEvent("ZONE_CHANGED_NEW_AREA")
+		self:UnregisterEvent("CHALLENGE_MODE_START")
+		self:UnregisterEvent("CHALLENGE_MODE_COMPLETED")
+	end
 end
 
 function AD:RefreshOption()
@@ -506,32 +531,25 @@ end
 function AD:SendAddonMessage(message)
 	if IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and not IsInRaid() then
 		C_ChatInfo.SendAddonMessage(self.prefix, message, "PARTY")
-	elseif IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and IsInRaid() then
-		C_ChatInfo.SendAddonMessage(self.prefix, message, "RAID")
 	end
 end
 
 function AD:SendChatMessage(message)
-	if self.activeUser ~= self.playerUser then return end
+	if not self.db.notification.enable or self.activeUser ~= self.playerUser then return end
 	if self.db.notification.outputmode == "self" then
 		print(message)
 	elseif self.db.notification.outputmode == "party" and IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
 		SendChatMessage(message,"PARTY")
-	elseif self.db.notification.outputmode == "raid" and IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and IsInRaid() then
-		SendChatMessage(message,"RAID")
-	elseif self.db.notification.outputmode == "smart" then
-		if IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and not IsInRaid() then
-			SendChatMessage(message,"PARTY")
-		elseif IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and IsInRaid() then
-			SendChatMessage(message,"RAID")
-		end
+	elseif self.db.notification.outputmode == "emote" and IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+		SendChatMessage(": "..message,"EMOTE")
 	end
 end
 
 function AD:SetNotificationText()
-	self.warningMsg = self.db.custom.enable and self.db.custom.warningMsg or L["%name% got hit by %spell%."]
-	self.stacksMsg = self.db.custom.enable and self.db.custom.stacksMsg or L["%name% got hit by %spell%. %stack% Stacks."]
-	self.spellMsg = self.db.custom.enable and self.db.custom.spellMsg or L["%name% got hit by %spell% for %damage% (%percent%)."]
+	local db = self.db.custom
+	self.warningMsg = db.enable and db.warningMsg or L["%name% got hit by %spell%."]
+	self.stacksMsg = db.enable and db.stacksMsg or L["%name% got hit by %spell%. %stack% Stacks."]
+	self.spellMsg = db.enable and db.spellMsg or L["%name% got hit by %spell% for %damage% (%percent%)."]
 end
 
 function AD:GenerateOutput(str, name, spell, stack, damage, percent)
@@ -643,7 +661,7 @@ function AD:ZONE_CHANGED_NEW_AREA(event, ...)
 end
 
 function AD:CHALLENGE_MODE_COMPLETED(event, ...)
-	if not self.db.rank.enable then return end
+	if not self.db.rank.enable or not self.db.enable then return end
 	local count = 0
 	for _ in pairs(self.CombinedFails) do count = count + 1 end
 	if count == 0 then
@@ -652,19 +670,19 @@ function AD:CHALLENGE_MODE_COMPLETED(event, ...)
 	else
 		self:SendChatMessage(L["Amount of failure damage:"])
 	end
-	local u = { }
+	local u = {}
 	for k, v in pairs(self.CombinedFails) do table.insert(u, { key = k, value = v }) end
 	table.sort(u, compareDamage)
 
-	local mostamount = -1
+	local failure_damage = -1
 	local name = "someone"
 
 	for k,v in pairs(u) do
-		if mostamount == -1 then
-			mostamount = v["value"]
+		if failure_damage == -1 then
+			failure_damage = v["value"]
 			name = v["key"]
 		else
-			if v["value"] > mostamount then name = v["key"] end
+			if v["value"] > failure_damage then name = v["key"] end
 		end
 		self:SendChatMessage(k..". "..v["key"].." "..self:GenerateNumber(v["value"]))
 	end
@@ -679,6 +697,7 @@ function AD:CHALLENGE_MODE_COMPLETED(event, ...)
 end
 
 function AD:CHALLENGE_MODE_START(event, ...)
+	if not self.db.enable then return end
 	self.CombinedFails = {}
 	self:SendChatMessage(L["[WDH] Avoidable damage notification enabled, glhf!"])
 end
@@ -690,11 +709,8 @@ function AD:CHAT_MSG_ADDON(event, ...)
 		self:SendAddonMessage("VANS;"..AD.Version)
 	elseif message:match("^VANS") then
 		self.allUsers[sender] = message
-		for k,v in pairs(self.allUsers) do
-			if self.activeUser == nil then
-				self.activeUser = k
-			end
-			if k < self.activeUser then
+		for k, v in pairs(self.allUsers) do
+			if UnitIsGroupLeader(k) or self.activeUser == nil or k < self.activeUser then
 				self.activeUser = k
 			end
 		end

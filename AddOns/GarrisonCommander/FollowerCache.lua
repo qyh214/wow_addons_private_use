@@ -20,13 +20,11 @@ local tostring=tostring
 local GetItemInfo=GetItemInfo
 local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0
 local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2
-local LE_FOLLOWER_TYPE_GARRISON_7_0=_G.LE_FOLLOWER_TYPE_GARRISON_7_0
 local maxrank=_G.GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY[LE_FOLLOWER_TYPE_GARRISON_6_0]*1000+GARRISON_FOLLOWER_MAX_LEVEL
-local maxrankoh=_G.GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY[LE_FOLLOWER_TYPE_GARRISON_7_0]*1000+110
 local module=addon:NewSubClass('FollowerCache') --#module
 local cache={} --#cache
 local followerTypes={}
-local cacheTypes={LE_FOLLOWER_TYPE_GARRISON_6_0,LE_FOLLOWER_TYPE_SHIPYARD_6_2,LE_FOLLOWER_TYPE_GARRISON_7_0}
+local cacheTypes={LE_FOLLOWER_TYPE_GARRISON_6_0,LE_FOLLOWER_TYPE_SHIPYARD_6_2}
 local EMPTY={}
 local GMCUsedFollowers={}
 local GMCUsedFollowersCount=0
@@ -50,12 +48,9 @@ print(event,...)
 		self.caches[LE_FOLLOWER_TYPE_SHIPYARD_6_2]:OnEvent(event,...)
 	elseif self.caches[LE_FOLLOWER_TYPE_GARRISON_6_0].cache[followerID].followerID then
 		self.caches[LE_FOLLOWER_TYPE_GARRISON_6_0]:OnEvent(event,...)
-	elseif self.caches[LE_FOLLOWER_TYPE_GARRISON_7_0].cache[followerID].followerID then
-		self.caches[LE_FOLLOWER_TYPE_GARRISON_7_0]:OnEvent(event,...)
 	else
 		self.caches[LE_FOLLOWER_TYPE_GARRISON_6_0]:Wipe()
 		self.caches[LE_FOLLOWER_TYPE_SHIPYARD_6_2]:Wipe()
-		self.caches[LE_FOLLOWER_TYPE_GARRISON_7_0]:Wipe()
 	end
 
 end
@@ -65,12 +60,6 @@ function cache:new(type)
 	return rc
 end
 function cache:OnEvent(event,followerType,followerID)
---[===[@debug@
-	if followerType==LE_FOLLOWER_TYPE_GARRISON_7_0  and ns.ignoreHall then
-		return
-	end
-print(event,followerType,followerID)
---@end-debug@]===]
 	if event=="GARRISON_FOLLOWER_UPGRADED" or event=="GARRISON_FOLLOWER_XP_CHANGED" then
 		if (self.cache[followerID]) then
 			self.cache[followerID]['level']=G.GetFollowerLevel(followerID)
@@ -154,9 +143,6 @@ function cache:AddExtraData(follower)
 	follower.coloredname=C(follower.name,tostring(follower.quality))
 	follower.fullname=format("%3d %s",follower.rank,follower.coloredname)
 	follower.maxed=follower.qLevel>=maxrank
-	if follower.followerTypeID==LE_FOLLOWER_TYPE_GARRISON_7_0 then
-		follower.maxed=follower.qLevel>=maxrankoh
-	end
 	local weaponItemID, weaponItemLevel, armorItemID, armorItemLevel = G.GetFollowerItems(follower.followerID);
 	follower.weaponItemID=weaponItemID
 	follower.weaponItemLevel=weaponItemLevel
@@ -241,14 +227,9 @@ function addon:GetAnyData(followerType,...)
 	end
 	if followerType== LE_FOLLOWER_TYPE_SHIPYARD_6_2 then
 		return self:GetShipData(...)
-	elseif followerType== LE_FOLLOWER_TYPE_GARRISON_7_0 then
-		return self:GetHeroData(...)
 	else
 		return self:GetFollowerData(...)
 	end
-end
-function addon:GetHeroData(followerID,key,default)
-	return module.caches[LE_FOLLOWER_TYPE_GARRISON_7_0]:GetFollowerData(followerID,key,default)
 end
 function addon:GetFollowerData(followerID,key,default)
 	return module.caches[LE_FOLLOWER_TYPE_GARRISON_6_0]:GetFollowerData(followerID,key,default)
@@ -267,9 +248,6 @@ function addon:GetFollowersIterator(func)
 end
 function addon:GetShipsIterator(func)
 	return module.caches[LE_FOLLOWER_TYPE_SHIPYARD_6_2]:GetFollowersIterator(func)
-end
-function addon:GetHeroesIterator(func)
-	return module.caches[LE_FOLLOWER_TYPE_GARRISON_7_0]:GetFollowersIterator(func)
 end
 function addon:GetAnyIterator(followerTypeID,func)
 	return module.caches[followerTypeID]:GetFollowersIterator(func)

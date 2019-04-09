@@ -25,7 +25,6 @@ local GARRISON_CURRENCY=GARRISON_CURRENCY
 local GARRISON_SHIP_OIL_CURRENCY=GARRISON_SHIP_OIL_CURRENCY
 local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0 -- 1
 local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2 -- 2
-local LE_FOLLOWER_TYPE_GARRISON_7_0=_G.LE_FOLLOWER_TYPE_GARRISON_7_0 -- 4
 local dbg
 local useCap=false
 local currentCap=100
@@ -220,7 +219,6 @@ local function MatchMaker(self,mission,party,includeBusy,onlyBest)
 	local filterOut=filters[class] or filters.other
 	filters.skipMaxed=self:GetBoolean("IGP")
 	local followerType=mission.followerTypeID
-	local hallMission=followerType==LE_FOLLOWER_TYPE_GARRISON_7_0
 	if followerType==LE_FOLLOWER_TYPE_SHIPYARD_6_2 then
 		filters.skipMaxed=false
 	end
@@ -238,11 +236,7 @@ local function MatchMaker(self,mission,party,includeBusy,onlyBest)
 		if self:IsFollowerAvailableForMission(followerID,filters.skipBusy) then
 			if P:AddFollower(followerID) then
 				local score,chance=self:FollowerScore(mission,followerID)
-				if hallMission and self:GetHeroData(followerID,'isTroop') then
-					tinsert(troops,format("%s@%s@%s",score,followerID,self:GetAnyData(missionTypeID,followerID,'fullname')))
-				else
-					tinsert(scores,format("%s@%s@%s",score,followerID,self:GetAnyData(missionTypeID,followerID,'fullname')))
-				end
+				tinsert(scores,format("%s@%s@%s",score,followerID,self:GetAnyData(missionTypeID,followerID,'fullname')))
 				P:RemoveFollower(followerID)
 			end
 		end
@@ -288,26 +282,7 @@ local function MatchMaker(self,mission,party,includeBusy,onlyBest)
 --@end-debug@]===]
 			end
 			if mission.numFollowers > 1 then
-				if missionTypeID== LE_FOLLOWER_TYPE_GARRISON_7_0 then
-					local nf=#scores
-					local nt=#troops
-					local total=#GHFMissions.availableMissions
-					local maxtroops=0
-					if total==1 then
-						AddMoreFollowers(self,mission,scores)
-						AddMoreFollowers(self,mission,troops)
-					else
-						local mm=math.floor((nt+nt)/3)
-						if mm==1 then
-							maxtroops=0
-						else
-							maxtroops=1
-						end
-						AddMoreFollowers(self,mission,troops,false,maxtroops)
-					end
-				else
-					AddMoreFollowers(self,mission,scores)
-				end
+				AddMoreFollowers(self,mission,scores)
 			end
 		end
 		if P:FreeSlots() > 0 then
