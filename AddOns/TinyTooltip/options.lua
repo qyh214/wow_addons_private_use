@@ -12,6 +12,7 @@ local UIDropDownMenuTemplate = "UIDropDownMenuTemplate"
 
 local addonName = ...
 local addon = TinyTooltip
+local CopyTable = CopyTable
 
 addon.L = addon.L or {}
 setmetatable(addon.L, { __index = function(self, k)
@@ -57,6 +58,9 @@ local function CallTrigger(keystring, value)
 end
 
 local function GetVariable(keystring, tbl)
+    if (keystring == "general.SavedVariablesPerCharacter") then
+        return BigTipDB.general.SavedVariablesPerCharacter
+    end
     local keys = {strsplit(".", keystring)}
     local value = tbl or addon.db
     for i, key in ipairs(keys) do
@@ -228,6 +232,17 @@ function widgets:dropdown(parent, config, labelText)
             UIDropDownMenu_AddButton(info)
         end
     end, config.displayMode)
+    frame.selectedFunc = function(self, value, text)
+        local parent = self:GetParent()
+        if (not parent or not parent.anchorbutton) then return end
+        if (value == "static" or value == "cursor") then
+            parent.anchorbutton:Show()
+            self.Label:Hide()
+        else
+            parent.anchorbutton:Hide()
+            self.Label:Show()
+        end
+    end
     UIDropDownMenu_SetSelectedValue(frame, GetVariable(config.keystring))
     frame.Label:SetText(labelText or L[config.keystring])
     return frame
@@ -267,6 +282,31 @@ do
     line:SetPoint("CENTER")
 end
 
+local function StaticFrameOnDragStop(self)
+    self:StopMovingOrSizing()
+    local p = GetVariable(self.cp) or "BOTTOMRIGHT"
+    local left, right, top, bottom = self:GetLeft(), self:GetRight(), self:GetTop(), self:GetBottom()
+    if (p == "BOTTOMRIGHT") then
+        SetVariable(self.kx, floor(right - GetScreenWidth())+4)
+        SetVariable(self.ky, floor(bottom)-3)
+    elseif (p == "BOTTOMLEFT") then
+        SetVariable(self.kx, floor(left)-2)
+        SetVariable(self.ky, floor(bottom)-3)
+    elseif (p == "TOPLEFT") then
+        SetVariable(self.kx, floor(left)-2)
+        SetVariable(self.ky, floor(top-GetScreenHeight()))
+    elseif (p == "TOPRIGHT") then
+        SetVariable(self.kx, floor(right - GetScreenWidth())+4)
+        SetVariable(self.ky, floor(top-GetScreenHeight()))
+    elseif (p == "TOP") then
+        SetVariable(self.kx, floor(left-GetScreenWidth()/2+100))
+        SetVariable(self.ky, floor(top-GetScreenHeight()))
+    elseif (p == "BOTTOM") then
+        SetVariable(self.kx, floor(left-GetScreenWidth()/2+100))
+        SetVariable(self.ky, floor(bottom)-3)
+    end
+end
+
 local function CreateAnchorButton(frame, anchorPoint)
     local button = CreateFrame("Button", nil, frame)
     button.cp = anchorPoint
@@ -281,6 +321,7 @@ local function CreateAnchorButton(frame, anchorPoint)
         end
         SetVariable(parent.cp, self.cp)
         self:GetNormalTexture():SetVertexColor(1, 0.2, 0.1)
+        StaticFrameOnDragStop(frame)
     end)
     frame[anchorPoint] = button
 end
@@ -308,30 +349,7 @@ saframe:SetMovable(true)
 saframe:SetSize(200, 80)
 saframe:RegisterForDrag("LeftButton")
 saframe:SetScript("OnDragStart", function(self) self:StartMoving() end)
-saframe:SetScript("OnDragStop", function(self)
-    self:StopMovingOrSizing()
-    local p = GetVariable(self.cp) or "BOTTOMRIGHT"
-    local left, right, top, bottom = self:GetLeft(), self:GetRight(), self:GetTop(), self:GetBottom()
-    if (p == "BOTTOMRIGHT") then
-        SetVariable(self.kx, floor(right - GetScreenWidth())+4)
-        SetVariable(self.ky, floor(bottom)-3)
-    elseif (p == "BOTTOMLEFT") then
-        SetVariable(self.kx, floor(left)-2)
-        SetVariable(self.ky, floor(bottom)-3)
-    elseif (p == "TOPLEFT") then
-        SetVariable(self.kx, floor(left)-2)
-        SetVariable(self.ky, floor(top-GetScreenHeight()))
-    elseif (p == "TOPRIGHT") then
-        SetVariable(self.kx, floor(right - GetScreenWidth())+4)
-        SetVariable(self.ky, floor(top-GetScreenHeight()))
-    elseif (p == "TOP") then
-        SetVariable(self.kx, floor(left-GetScreenWidth()/2))
-        SetVariable(self.ky, floor(top-GetScreenHeight()))
-    elseif (p == "BOTTOM") then
-        SetVariable(self.kx, floor(left-GetScreenWidth()/2))
-        SetVariable(self.ky, floor(bottom)-3)
-    end
-end)
+saframe:SetScript("OnDragStop", StaticFrameOnDragStop)
 CreateAnchorButton(saframe, "TOPLEFT")
 CreateAnchorButton(saframe, "BOTTOMLEFT")
 CreateAnchorButton(saframe, "TOPRIGHT")
@@ -445,14 +463,16 @@ end
 function widgets:anchor(parent, config)
     local frame = CreateFrame("Frame", nil, parent)
     frame:SetSize(400, 30)
+    frame.anchorbutton = self:anchorbutton(frame, config)
     frame.dropdown = self:dropdown(frame, {keystring=config.keystring..".position",dropdata=config.dropdata})
     frame.dropdown:SetPoint("LEFT", 0, 0)
-    frame.anchorbutton = self:anchorbutton(frame, config)
-    frame.anchorbutton:SetPoint("LEFT", frame.dropdown.Label, "RIGHT", 5, 0)
-    frame.checkbox1 = self:checkbox(frame, {keystring=config.keystring..".returnInCombat"})
-    frame.checkbox1:SetPoint("LEFT", frame.anchorbutton, "RIGHT", 5, -1)
-    frame.checkbox2 = self:checkbox(frame, {keystring=config.keystring..".returnOnUnitFrame"})
-    frame.checkbox2:SetPoint("LEFT", frame.checkbox1.Text, "RIGHT", 5, 0)
+    frame.anchorbutton:SetPoint("LEFT", frame.dropdown.Label, "LEFT", 1, 0)
+    frame.checkbox1 = self:checkbox(frame, {keystring=config.keystring..".hiddenInCombat"})
+    frame.checkbox1:SetPoint("LEFT", frame.dropdown.Label, "RIGHT", 10, -1)
+    frame.checkbox2 = self:checkbox(frame, {keystring=config.keystring..".returnInCombat"})
+    frame.checkbox2:SetPoint("LEFT", frame.checkbox1.Text, "RIGHT", 3, 0)
+    frame.checkbox3 = self:checkbox(frame, {keystring=config.keystring..".returnOnUnitFrame"})
+    frame.checkbox3:SetPoint("LEFT", frame.checkbox2.Text, "RIGHT", 3, 0)
     return frame
 end
 
@@ -503,6 +523,7 @@ local options = {
         { keystring = "item.showItemIcon",          type = "checkbox" },
         { keystring = "quest.coloredQuestBorder",   type = "checkbox" },
         { keystring = "general.alwaysShowIdInfo",   type = "checkbox" },
+        { keystring = "general.SavedVariablesPerCharacter",   type = "checkbox" },
     },
     pc = {
         { keystring = "unit.player.showTarget",           type = "checkbox" },
@@ -921,12 +942,23 @@ LibEvent:attachTrigger("tinytooltip:diy:player", function(self, unit, skipDisabl
     frame:Show()
 end)
 
-LibEvent:attachTrigger("tooltip:variable:changed", function()
+LibEvent:attachTrigger("tooltip:variables:loaded", function()
+    diytable = addon.db.unit.player.elements
+end)
+
+LibEvent:attachTrigger("tooltip:variable:changed", function(self, keystring, value)
     if (frame:IsShown()) then
         LibEvent:trigger("tinytooltip:diy:player", "player", true)
     end
-end)
-
-LibEvent:attachEvent("VARIABLES_LOADED", function()
-    diytable = addon.db.unit.player.elements
+    if (keystring == "general.SavedVariablesPerCharacter") then
+        BigTipDB.general.SavedVariablesPerCharacter = value
+        if (value) then
+            local db = CopyTable(addon.db)
+            addon.db = addon:MergeVariable(db, TinyTooltipCharacterDB)
+        else
+            addon.db = BigTipDB
+        end
+        LibEvent:trigger("tooltip:variables:loaded")
+        LibEvent:trigger("TINYTOOLTIP_GENERAL_INIT")
+    end
 end)

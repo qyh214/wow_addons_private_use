@@ -3,7 +3,7 @@
 -- 簡易下拉菜單 Author: M
 ---------------------------------
 
-local MAJOR, MINOR = "LibDropdown.7000", 1
+local MAJOR, MINOR = "LibDropdown.7000", 2
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not lib then return end
@@ -145,6 +145,9 @@ local Extensions = {
             text = info and info.text
         end
         self:SetText(text or VIDEO_QUALITY_LABEL6 or value)
+        if (self.selectedFunc) then
+            self.selectedFunc(self, value, text)
+        end
     end,
 
     SetListFunc = function(self, func)

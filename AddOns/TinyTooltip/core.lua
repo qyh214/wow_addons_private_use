@@ -37,8 +37,6 @@ addon.tooltips = {
     WorldMapTooltip,
     ItemRefShoppingTooltip1,
     ItemRefShoppingTooltip2,
-    WorldMapCompareTooltip1,
-    WorldMapCompareTooltip2,
     NamePlateTooltip,
 }
 
@@ -272,16 +270,21 @@ function addon:GetNpcTitle(tip)
 end
 
 --地區
-function addon:GetZone(unit, unitname)
+function addon:GetZone(unit, unitname, realm)
     if not IsInGroup() then return end
     local t, i = string.match(unit, "(.-)(%d+)")
     if (i and t == "raid") then
         return select(7, GetRaidRosterInfo(i))
     elseif (i and t == "party") then
         local name, zone
-        for j = 1, 4 do
+        local fullname = unitname .. "-" .. realm
+        for j = 1, 5 do
             name, _, _, _, _, _, zone = GetRaidRosterInfo(j)
-            if (name == unitname) then return zone end
+            if (name and not string.find(name, "-") and name == unitname) then
+                return zone
+            elseif (name and string.find(name, "-") and name == fullname) then
+                return zone
+            end
         end
     end
 end
@@ -529,6 +532,11 @@ LibEvent:attachTrigger("tooltip.anchor.static", function(self, frame, parent, of
     end
 end)
 
+LibEvent:attachTrigger("tooltip.anchor.none", function(self, frame, parent)
+    frame:SetOwner(parent, "ANCHOR_NONE")
+    frame:Hide()
+end)
+
 LibEvent:attachTrigger("tooltip.style.mask", function(self, frame, boolean)
     LibEvent:trigger("tooltip.style.init", frame)
     frame.style.mask:SetShown(boolean)
@@ -695,8 +703,8 @@ LibEvent:attachTrigger("tooltip.statusbar.position", function(self, position, of
         local offset = backdrop.edgeFile == "Interface\\Tooltips\\UI-Tooltip-Border" and 4 or backdrop.edgeSize
         if (not offsetX or offsetX == 0) then offsetX = offset end
         if (not offsetY or offsetY == 0) then offsetY = offset end
-        GameTooltipStatusBar:SetPoint("BOTTOMLEFT", GameTooltip, "TOPLEFT", offsetX, 0)
-        GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", GameTooltip, "TOPRIGHT", -offsetX, 0)
+        GameTooltipStatusBar:SetPoint("BOTTOMLEFT", GameTooltip, "TOPLEFT", offsetX, -4)
+        GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", GameTooltip, "TOPRIGHT", -offsetX, -4)
         GameTooltip.style:SetPoint("TOPLEFT", GameTooltipStatusBar, "TOPLEFT", -offsetX, offsetY)
         GameTooltip.style:SetPoint("BOTTOMRIGHT")
     else
@@ -779,6 +787,25 @@ LibEvent:attachTrigger("tooltip.style.init", function(self, tip)
         if (tip == v) then return end
     end
     addon.tooltips[#addon.tooltips+1] = tip
+end)
+
+LibEvent:attachTrigger("TINYTOOLTIP_GENERAL_INIT", function(self)
+    LibEvent:trigger("tooltip.style.font.header", GameTooltip, addon.db.general.headerFont, addon.db.general.headerFontSize, addon.db.general.headerFontFlag)
+    LibEvent:trigger("tooltip.style.font.body", GameTooltip, addon.db.general.bodyFont, addon.db.general.bodyFontSize, addon.db.general.bodyFontFlag)
+    LibEvent:trigger("tooltip.statusbar.height", addon.db.general.statusbarHeight)
+    LibEvent:trigger("tooltip.statusbar.text", addon.db.general.statusbarText)
+    LibEvent:trigger("tooltip.statusbar.font", addon.db.general.statusbarFont, addon.db.general.statusbarFontSize, addon.db.general.statusbarFontFlag)
+    LibEvent:trigger("tooltip.statusbar.texture", addon.db.general.statusbarTexture)
+    for _, tip in pairs(addon.tooltips) do
+        LibEvent:trigger("tooltip.style.init", tip)
+        LibEvent:trigger("tooltip.scale", tip, addon.db.general.scale)
+        LibEvent:trigger("tooltip.style.mask", tip, addon.db.general.mask)
+        LibEvent:trigger("tooltip.style.bgfile", tip, addon.db.general.bgfile)
+        LibEvent:trigger("tooltip.style.border.corner", tip, addon.db.general.borderCorner)
+        LibEvent:trigger("tooltip.style.border.size", tip, addon.db.general.borderSize)
+        LibEvent:trigger("tooltip.style.border.color", tip, unpack(addon.db.general.borderColor))
+        LibEvent:trigger("tooltip.style.background", tip, unpack(addon.db.general.background))
+    end
 end)
 
 hooksecurefunc("GameTooltip_SetDefaultAnchor", function(self, parent)

@@ -2,10 +2,12 @@
 local LibEvent = LibStub:GetLibrary("LibEvent.7000")
 
 local DEAD = DEAD
+local CopyTable = CopyTable
 
 local addon = TinyTooltip
 
 BigTipDB = {}
+TinyTooltipCharacterDB = {}
 
 local function ColorStatusBar(self, value)
     if (addon.db.general.statusbarColor == "auto") then
@@ -64,24 +66,13 @@ LibEvent:attachEvent("VARIABLES_LOADED", function()
     end)
     --Variable
     addon.db = addon:MergeVariable(addon.db, BigTipDB)
+    if (addon.db.general.SavedVariablesPerCharacter) then
+        local db = CopyTable(addon.db)
+        addon.db = addon:MergeVariable(db, TinyTooltipCharacterDB)
+    end
     LibEvent:trigger("tooltip:variables:loaded")
     --Init
-    LibEvent:trigger("tooltip.style.font.header", GameTooltip, addon.db.general.headerFont, addon.db.general.headerFontSize, addon.db.general.headerFontFlag)
-    LibEvent:trigger("tooltip.style.font.body", GameTooltip, addon.db.general.bodyFont, addon.db.general.bodyFontSize, addon.db.general.bodyFontFlag)
-    LibEvent:trigger("tooltip.statusbar.height", addon.db.general.statusbarHeight)
-    LibEvent:trigger("tooltip.statusbar.text", addon.db.general.statusbarText)
-    LibEvent:trigger("tooltip.statusbar.font", addon.db.general.statusbarFont, addon.db.general.statusbarFontSize, addon.db.general.statusbarFontFlag)
-    LibEvent:trigger("tooltip.statusbar.texture", addon.db.general.statusbarTexture)
-    for _, tip in ipairs(addon.tooltips) do
-        LibEvent:trigger("tooltip.style.init", tip)
-        LibEvent:trigger("tooltip.scale", tip, addon.db.general.scale)
-        LibEvent:trigger("tooltip.style.mask", tip, addon.db.general.mask)
-        LibEvent:trigger("tooltip.style.bgfile", tip, addon.db.general.bgfile)
-        LibEvent:trigger("tooltip.style.border.corner", tip, addon.db.general.borderCorner)
-        LibEvent:trigger("tooltip.style.border.size", tip, addon.db.general.borderSize)
-        LibEvent:trigger("tooltip.style.border.color", tip, unpack(addon.db.general.borderColor))
-        LibEvent:trigger("tooltip.style.background", tip, unpack(addon.db.general.background))
-    end
+    LibEvent:trigger("TINYTOOLTIP_GENERAL_INIT")
     --ShadowText
     GameTooltipHeaderText:SetShadowOffset(1, -1)
     GameTooltipHeaderText:SetShadowColor(0, 0, 0, 0.9)

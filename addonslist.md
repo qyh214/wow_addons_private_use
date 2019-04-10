@@ -36,13 +36,9 @@ ElvUI_WindTools Elvui配套的小玩意集合插件，国人开发的小工具�
 
 ExRT 团队插件
 
-Fizzle 装备耐久与品质显示
-
 GarrisonCommander 要塞功能增强（任务指派、含船坞与配置系统）
 
 HandyNotes
-
-HiddenArtifactTracker
 
 KeystoneHelper
 
@@ -59,8 +55,6 @@ PremadeGroupsFilter
 PersonalLootHelper 个人拾取帮助
 
 Postal 邮件增强
-
-RaidAlerter
 
 RelicInspector 圣物提示
 

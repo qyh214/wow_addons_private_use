@@ -2,8 +2,9 @@
 ## Title: TinyTooltip
 ## Notes: TinyTooltip
 ## Author: M
-## Version: 8.0.5
+## Version: 8.0.8
 ## SavedVariables: BigTipDB
+## SavedVariablesPerCharacter: TinyTooltipCharacterDB
 
 libs\lib.xml
 Core.lua

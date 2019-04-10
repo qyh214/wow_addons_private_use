@@ -2,7 +2,7 @@
 local addon = TinyTooltip
 
 addon.db = {
-    version = 2.5,
+    version = 2.6,
     general = {
         scale             = 1,                      --縮放
         mask              = true,                   --頂部遮罩層
@@ -20,7 +20,7 @@ addon.db = {
         statusbarText     = false,                  --HP文字
         statusbarColor    = "auto",                 --HP顔色 default|auto|smooth
         statusbarTexture  = "Interface\\AddOns\\TinyTooltip\\texture\\StatusBar", --HP材質
-        anchor            = { position = "cursorRight", returnInCombat = false, returnOnUnitFrame = false, cp = "BOTTOM", p = "BOTTOMRIGHT", }, --鼠標位置 default|cursor|static|cursorRight
+        anchor            = { position = "cursorRight", hiddenInCombat = false, returnInCombat = true, returnOnUnitFrame = false, cp = "BOTTOM", p = "BOTTOMRIGHT", }, --鼠標位置 default|cursor|static|cursorRight
         alwaysShowIdInfo  = true,
         skinMoreFrames    = true,
         headerFont        = "default",
@@ -29,12 +29,13 @@ addon.db = {
         bodyFont          = "default",
         bodyFontSize      = "default",
         bodyFontFlag      = "default",
+        SavedVariablesPerCharacter = false,
     },
     unit = {
         player = {
             coloredBorder = "class",                --玩家邊框顔色 default|class|level|reaction|itemQuality|selection|faction|HEX
             background = { colorfunc = "class", alpha = 0.9, },
-            anchor = { position = "inherit", returnInCombat = true, returnOnUnitFrame = false, cp = "BOTTOM", p = "BOTTOMRIGHT", },
+            anchor = { position = "inherit", hiddenInCombat = false, returnInCombat = false, returnOnUnitFrame = false, cp = "BOTTOM", p = "BOTTOMRIGHT", },
             showTarget = true,                      --顯示目標
             showTargetBy = true,                    --顯示被關注
             showModel = true,                       --顯示模型
@@ -76,7 +77,7 @@ addon.db = {
             showTarget = true,
             showTargetBy = true,
             grayForDead = false,
-            anchor = { position = "inherit", returnInCombat = true, returnOnUnitFrame = false, cp = "BOTTOM", p = "BOTTOMRIGHT", },
+            anchor = { position = "inherit", hiddenInCombat = false, returnInCombat = false, returnOnUnitFrame = false, cp = "BOTTOM", p = "BOTTOMRIGHT", },
             elements = {
                 raidIcon     = { enable = true,  filter = "none" },
                 classIcon    = { enable = false, filter = "none" },
