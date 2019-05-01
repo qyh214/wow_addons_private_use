@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Magmadar", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision("2019041710011")
 mod:SetCreatureID(11982)
 mod:SetEncounterID(664)
 mod:SetModelID(10193)
@@ -26,7 +26,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 19451 then
 		if self.Options.SpecWarn19451dispel then
 			specWarnEnrage:Show(args.destName)
-			specWarnEnrage:Play("trannow")
+			specWarnEnrage:Play("enrage")
 		else
 			warnEnrage:Show(args.destName)
 		end

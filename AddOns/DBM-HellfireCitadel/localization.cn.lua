@@ -1,4 +1,4 @@
-﻿-- Mini Dragon(projecteurs@gmail.com)
+-- Mini Dragon(projecteurs@gmail.com)
 -- Blizzard Entertainment
 -- Last update: Feb 18 2016, 18:59 UTC@14798
 

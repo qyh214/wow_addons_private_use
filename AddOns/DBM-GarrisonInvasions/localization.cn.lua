@@ -1,4 +1,4 @@
-﻿-- Mini_Dragon(projecteurs@gmail.com)
+-- Mini_Dragon(projecteurs@gmail.com)
 -- Special thanks to 178, Yike and Blizzard Entertainment
 -- Last update: Apr 25, 2015@13663
 

@@ -53,9 +53,9 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Bloodlust/Heroism"] = "Bloodlust/Heroism"
 	--[[Translation missing --]]
-	L["buff"] = "buff"
-	--[[Translation missing --]]
 	L["Buff"] = "Buff"
+	--[[Translation missing --]]
+	L["buff"] = "buff"
 	--[[Translation missing --]]
 	L["Buffs"] = "Buffs"
 	--[[Translation missing --]]
@@ -192,8 +192,6 @@ local L = WeakAuras.L
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
 	--[[Translation missing --]]
 	L["Specific Azerite Traits"] = "Specific Azerite Traits"
-	--[[Translation missing --]]
-	L["Stagger"] = "Stagger"
 	--[[Translation missing --]]
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."
 	--[[Translation missing --]]

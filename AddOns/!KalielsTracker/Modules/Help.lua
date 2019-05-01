@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2018, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2019, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -197,19 +197,18 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |cffffffff3.1.4|r\n\n"..
-					"- FIXED - code changes inside WoW 8.1.0\n"..
-					"- FIXED - ticket #317 - Error after Achievement filtering inside zone without"..
-					offs.."Continent.\n"..
-					"- FIXED - ticket #317 - Error after add TomTom quest waypoint inside zone"..
-					offs.."without Continent.\n"..
-					"- FIXED - Filters - World Event filtering.\n"..
-					"- UPDATED - Addons support - ElvUI 10.84, Tukui 18.19, SyncUI 8.0.3,"..
-					offs.."SpartanUI 5.0.11, SuperVillain UI 1.5.1\n"..
-					"- ADDED - Option to show / hide Quest tags (quest level, quest type) inside"..
-					offs.."the tracker and Quest Log.\n"..
-					"- ADDED - PetTracker - progress bar skin.\n"..
-					"- IMPROVED - PetTracker - position of pet source icons changed.\n\n"..
+			text = cTitle.."         What's NEW in version |cffffffff3.1.5|r\n\n"..
+					"- FIXED - ticket #345 - Comparing nil with number\n"..
+					"- FIXED - Error during quest item buttons reanchoring\n"..
+					"- ADDED - Support for WoW 8.1.5\n"..
+					"- ADDED - Option to Show / Hide Active button Binding text\n"..
+					"- ADDED - Compatibility - addon Dominos (moving Active button)\n"..
+					"- UPDATED - Addons support - PetTracker 8.1.2, TomTom 80105-1.0.0,"..
+					offs.."ElvUI 11.10, Tukui 18.22\n"..
+					"- IMPROVED - Q / WQ tooltips - same structure, compact rewards\n"..
+					"- IMPROVED - Active button\n"..
+					"- REMOVED - Default header animations\n"..
+					"- Some minor improvements\n\n"..
 
 					cTitle.."Issue reporting|r\n"..
 					"For reporting please use "..cBold.."Tickets|r instead of Comments on Curse.com.\n\n\n\n"..

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("KazzakClassic", "DBM-Azeroth")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 660 $"):sub(12, -3))
+mod:SetRevision("2019041710011")
 mod:SetCreatureID(121818)--121818 TW ID, need classic ID
 --mod:SetModelID(17887)
 mod:SetZone()

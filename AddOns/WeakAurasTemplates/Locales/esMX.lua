@@ -48,8 +48,8 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Basic Show On Cooldown"] = "Basic Show On Cooldown"
 	L["Bloodlust/Heroism"] = "Sed de sangre/Heroísmo"
-	L["buff"] = "beneficio"
 	L["Buff"] = "Beneficio"
+	L["buff"] = "beneficio"
 	L["Buffs"] = "Beneficios"
 	L["Cancel"] = "Cancelar"
 	L["Cast"] = "Lanzar hechizo"
@@ -170,7 +170,6 @@ local L = WeakAuras.L
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
 	--[[Translation missing --]]
 	L["Specific Azerite Traits"] = "Specific Azerite Traits"
-	L["Stagger"] = "Tambaleo"
 	--[[Translation missing --]]
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."
 	--[[Translation missing --]]

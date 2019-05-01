@@ -68,6 +68,8 @@ local L = WeakAuras.L
 	L["Animations"] = "애니메이션"
 	L["Any of"] = "다음 중 하나"
 	L["Apply Template"] = "견본 적용"
+	--[[Translation missing --]]
+	L["Arc Length"] = "Arc Length"
 	L["Arcane Orb"] = "비전 구슬"
 	L["At a position a bit left of Left HUD position."] = "좌측 HUD 위치보다 약간 왼쪽에 위치시킵니다."
 	L["At a position a bit left of Right HUD position"] = "우측 HUD 위치보다 약간 왼쪽에 위치시킵니다"
@@ -135,6 +137,10 @@ local L = WeakAuras.L
 	L["Collapse all non-loaded displays"] = "불러오지 않은 모든 디스플레이 접기"
 	L["Color"] = "색상"
 	L["color"] = "색상"
+	--[[Translation missing --]]
+	L["Column Height"] = "Column Height"
+	--[[Translation missing --]]
+	L["Column Space"] = "Column Space"
 	L["Combinations"] = "조합"
 	--[[Translation missing --]]
 	L["Combine Matches Per Unit"] = "Combine Matches Per Unit"
@@ -168,7 +174,11 @@ local L = WeakAuras.L
 	L["Custom Code"] = "사용자 정의 코드"
 	L["Custom Configuration"] = "사용자 설정 구성"
 	L["Custom Function"] = "사용자 설정 함수"
+	--[[Translation missing --]]
+	L["Custom Grow"] = "Custom Grow"
 	L["Custom Options"] = "사용자 설정 옵션"
+	--[[Translation missing --]]
+	L["Custom Sort"] = "Custom Sort"
 	L["Custom Trigger"] = "사용자 설정 활성 조건"
 	L["Custom trigger event tooltip"] = [=[
 사용자 설정 활성 조건을 확인할 이벤트를 선택하세요.
@@ -288,6 +298,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Glow Settings"] = "반짝임 설정"
 	L["Glow Type"] = "반짝임 유형"
 	L["Green Rune"] = "녹색 룬"
+	--[[Translation missing --]]
+	L["Grid direction"] = "Grid direction"
 	L["Group"] = "그룹"
 	L["Group (verb)"] = "그룹시키기"
 	L["Group aura count description"] = [=[디스플레이 조건을 충족하기 위해 주어진 효과에 영향을 받는 한명 이상의 %s원의 숫자.
@@ -311,6 +323,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Hawk"] = "매"
 	L["Height"] = "높이"
 	L["Hide"] = "숨기기"
+	--[[Translation missing --]]
+	L["Hide Cooldown Text"] = "Hide Cooldown Text"
 	L["Hide on"] = "숨기기"
 	L["Hide this group's children"] = "이 그룹의 자식 숨기기"
 	L["Hide When Not In Group"] = "파티중이 아닐 때 숨기기"
@@ -364,6 +378,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Legacy Aura Trigger"] = "Legacy Aura Trigger"
 	--[[Translation missing --]]
 	L["Length"] = "Length"
+	--[[Translation missing --]]
+	L["Limit"] = "Limit"
 	L["Load"] = "불러오기"
 	L["Loaded"] = "불러옴"
 	L["Loop"] = "반복"
@@ -502,6 +518,10 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Rotate Text"] = "문자 회전"
 	L["Rotation"] = "회전"
 	L["Rotation Mode"] = "회전 모드"
+	--[[Translation missing --]]
+	L["Row Space"] = "Row Space"
+	--[[Translation missing --]]
+	L["Row Width"] = "Row Width"
 	L["Same"] = "동일한"
 	L["Scale"] = "크기 비율"
 	L["Search"] = "검색"
@@ -520,7 +540,6 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Settings"] = "설정"
 	L["Shift-click to create chat link"] = "Shift+클릭 - 대화 링크 만들기"
 	L["Show all matches (Auto-clone)"] = "모든 일치 표시 (자동 복제)"
-	L["Show Cooldown Text"] = "재사용 대기시간 문자 표시"
 	L["Show Glow Effect"] = "반짝임 효과 표시"
 	--[[Translation missing --]]
 	L["Show If Unit Does Not Exist"] = "Show If Unit Does Not Exist"

@@ -42,8 +42,8 @@ local L = WeakAuras.L
 	L["Back"] = "뒤로"
 	L["Basic Show On Cooldown"] = "재사용 대기 시간 표시"
 	L["Bloodlust/Heroism"] = "피의 욕망/영웅심"
-	L["buff"] = "강화 효과"
 	L["Buff"] = "강화 효과"
+	L["buff"] = "강화 효과"
 	L["Buffs"] = "강화 효과"
 	L["Cancel"] = "취소"
 	L["Cast"] = "시전"
@@ -148,7 +148,6 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
 	L["Specific Azerite Traits"] = "특정 아제라이트 특성"
-	L["Stagger"] = "시간차"
 	--[[Translation missing --]]
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."
 	--[[Translation missing --]]

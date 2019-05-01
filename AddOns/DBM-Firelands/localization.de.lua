@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "deDE" then return end
+if GetLocale() ~= "deDE" then return end
 local L
 
 -----------------
@@ -80,7 +80,6 @@ L:SetOptionLocalization({
 	timerStrike			= "Zeit bis nächster $spell:99353 / $spell:101002 anzeigen",
 	TimerBladeActive	= "Dauer der aktiven Klinge anzeigen",
 	TimerBladeNext		= "Zeit bis nächste $spell:99352 / $spell:99350 anzeigen",
-	ArrowOnCountdown	= "Zeige DBM-Pfeil, wenn du von $spell:99516 betroffen bist",
 	InfoFrame			= "Zeige Infofenster für $spell:99262 Stapel",
 	RangeFrame			= "Zeige Abstandsfenster (5m) für $spell:99257"
 })
@@ -97,8 +96,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	timerNextSpecial			= "Zeige Zeit bis nächste Spezialfähigkeit ($spell:98474 / $spell:100208)",
 	RangeFrameSeeds				= "Zeige Abstandsfenster (12m) für $spell:98450",
-	RangeFrameCat				= "Zeige Abstandsfenster (10m) für $spell:98374",
-	LeapArrow					= "Zeige DBM-Pfeil, falls $spell:98476 nahe bei dir ist"
+	RangeFrameCat				= "Zeige Abstandsfenster (10m) für $spell:98374"
 })
 
 --------------

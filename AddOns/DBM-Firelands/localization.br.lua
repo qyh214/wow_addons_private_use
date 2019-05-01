@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "ptBR" then return end
+if GetLocale() ~= "ptBR" then return end
 
 local L
 
@@ -94,7 +94,6 @@ L:SetOptionLocalization({
 	TimerBladeNext		= "Exibir cronógrafo para a próxima Lâmina da Dizimação/Inferno",
 	SetIconOnCountdown	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(99516),
 	SetIconOnTorment	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(100232),
-	ArrowOnCountdown	= "Exibir seta do DBM quando você é afetado por $spell:99516 ",
 	InfoFrame			= "Exibir quadro de informações para pilhas de Centelha Vital",
 	RangeFrame			= "Exibir medidor de distância (5) para $spell:99404"
 })
@@ -112,7 +111,6 @@ L:SetOptionLocalization({
 	timerNextSpecial			= "Exibir cronógrafo para a próxima habilidade especial.",
 	RangeFrameSeeds				= "Exibir medidor de distância (12) para $spell:98450",
 	RangeFrameCat				= "Exibir medidor de distância (10) para $spell:98374",
-	LeapArrow					= "Exibir seta do DBM quando $spell:98476 está próximo de você",
 	IconOnLeapingFlames			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(100208)
 })
 

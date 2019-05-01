@@ -1,5 +1,5 @@
 local E, L, V, P, G = unpack(ElvUI)
---local LSM = LibStub("LibSharedMedia-3.0")
+local LSM = LibStub("LibSharedMedia-3.0")
 local WT = E:GetModule("WindTools")
 
 local _G = _G
@@ -131,31 +131,46 @@ P["WindTools"]["Interface"] = {
 		},
 		['FlipDragon'] = false,
 	},
-	["EasyShadow"] = {
-		["enabled"] = true,
-		["BlzFrames"] = {
-			["MMHolder"] = true,
-			["GameMenuFrame"] = true,
-			["InterfaceOptionsFrame"] = true,
-			["VideoOptionsFrame"] = true,
+	["Skins"] = {
+		enabled = true,
+		elvui = {
+			actionbars = true,
+			altpowerbar = true,
+			auras = true,
+			castbar = true,
+			chat_panel = false,
+			classbar = true,
+			databars = true,
+			general = true,
+			unitframe = true,
+			quest_item = true,
+			tooltips = true,
+			top_and_bottom_panel = true,
 		},
-		["ElvUIActionbars"] = {
-			["ElvUI_Bar1Button"] = false,
-			["ElvUI_Bar2Button"] = false,
-			["ElvUI_Bar3Button"] = false,
-			["ElvUI_Bar4Button"] = false,
-			["ElvUI_Bar5Button"] = false,
-			["ElvUI_Bar6Button"] = false,
+		addonskins = {
+			bigwigs = true,
+			general = true,
+			weakaura = true,
 		},
-		["ElvUIFrames"] = {
-			["Aura"] = true,
-			["Castbar"] = false,
-			["CastbarIcon"] = false,
-			["Classbar"] = false,
-			["UnitFrameAura"] = false,
-			["UnitFrames"] = false,
-			["QuestIconShadow"] = true,
-			["Tooltip"] = true,
+		ime = {
+			no_backdrop = true,
+			width = 200,
+			label = {
+				font = E.db.general.font,
+				size = E.db.general.fontSize + 3,
+				style = "OUTLINE",
+			},
+			candidate = {
+				font = E.db.general.font,
+				size = E.db.general.fontSize + 3,
+				style = "OUTLINE",
+			},
+		},
+		ui_errors = {
+			enabled = true,
+			font = E.db.general.font,
+			size = E.db.general.fontSize + 2,
+			style = "OUTLINE",
 		}
 	},
 	["Enhanced World Map"] = {
@@ -179,10 +194,8 @@ P["WindTools"]["Interface"] = {
 		['buttonsPerRow'] = 5,
 	},
 	["Enhanced Tooltip"] = {
-		["Offset"] = {
-			["mouseOffsetX"] = 0,
-			["mouseOffsetY"] = 0,
-			["overrideCombat"] = false,
+		["item_icon"] = {
+			["enabled"] = true,
 		},
 		["Progression"] = {
 			["enabled"] = true,
@@ -591,53 +604,160 @@ WT.ToolConfigs["Interface"] = {
 			end
 		end,
 	},
-	["EasyShadow"] = {
-		tDesc   = L["Add shadow to frames."],
+	["Skins"] = {
+		tDesc   = L["Provide a new style for ElvUI."],
 		oAuthor = "houshuu",
 		cAuthor = "houshuu",
-		["BlzFrames"] = {
+		["elvui"] = {
 			order = 5,
-			name = L["Game Menu"],
-			get = function(info) return E.db.WindTools["Interface"]["EasyShadow"].BlzFrames[info[#info]] end,
-			set = function(info, value) E.db.WindTools["Interface"]["EasyShadow"].BlzFrames[info[#info]] = value; E:StaticPopup_Show("PRIVATE_RL") end,
-			args = {}
-		},
-		["ElvUIActionbars"] = {
-			order = 6,
-			name = L["Action Bar"],
-			get = function(info) return E.db.WindTools["Interface"]["EasyShadow"].ElvUIActionbars[info[#info]] end,
-			set = function(info, value) E.db.WindTools["Interface"]["EasyShadow"].ElvUIActionbars[info[#info]] = value; E:StaticPopup_Show("PRIVATE_RL") end,
-			args = {}
-		},
-		["ElvUIFrames"] = {
-			order = 7,
 			name = "ElvUI"..L["Frame Setting"],
-			get = function(info) return E.db.WindTools["Interface"]["EasyShadow"].ElvUIFrames[info[#info]] end,
-			set = function(info, value) E.db.WindTools["Interface"]["EasyShadow"].ElvUIFrames[info[#info]] = value; E:StaticPopup_Show("PRIVATE_RL") end,
+			get = function(info) return E.db.WindTools.Interface.Skins.elvui[info[#info]] end,
+			set = function(info, value) E.db.WindTools.Interface.Skins.elvui[info[#info]] = value; E:StaticPopup_Show("PRIVATE_RL") end,
 			args = {}
+		},
+		["addonskins"] = {
+			order = 6,
+			name = "AddOnSkins",
+			hidden = function() return not IsAddOnLoaded("AddOnSkins") end,
+			get = function(info) return E.db.WindTools.Interface.Skins.addonskins[info[#info]] end,
+			set = function(info, value) E.db.WindTools.Interface.Skins.addonskins[info[#info]] = value; E:StaticPopup_Show("PRIVATE_RL") end,
+			args = {}
+		},
+		["ime"] = {
+			order = 7,
+			name = L["IME"],
+			get = function(info) return E.db.WindTools.Interface.Skins.ime[info[#info]] end,
+			set = function(info, value) E.db.WindTools.Interface.Skins.ime[info[#info]] = value; E:StaticPopup_Show("PRIVATE_RL") end,
+			args = {
+				no_backdrop = {
+					order = 1,
+					name = L["No backdrop"],
+				},
+				width = {
+					order = 2,
+					type = "range",
+					name = L["Width"],
+					desc = L["You can set width to display long text."],
+					min = 100, max = 600, step = 1,
+				},
+				label = {
+					order = 3,
+					name = L["Label"],
+					get = function(info) return E.db.WindTools.Interface.Skins.ime.label[info[#info]] end,
+					set = function(info, value) E.db.WindTools.Interface.Skins.ime.label[info[#info]] = value end,
+					args = {
+						font = {
+							type = 'select', dialogControl = 'LSM30_Font',
+							order = 1,
+							name = L['Font'],
+							values = LSM:HashTable('font'),
+						},
+						size = {
+							order = 2,
+							name = L['Size'],
+							type = 'range',
+							min = 6, max = 22, step = 1,
+						},
+						style = {
+							order = 3,
+							name = L["Style"],
+							type = 'select',
+							values = {
+								['NONE'] = L['None'],
+								['OUTLINE'] = L['OUTLINE'],
+								['MONOCHROME'] = L['MONOCHROME'],
+								['MONOCHROMEOUTLINE'] = L['MONOCROMEOUTLINE'],
+								['THICKOUTLINE'] = L['THICKOUTLINE'],
+							},
+						},
+					},
+				},
+				candidate = {
+					order = 4,
+					name = L["Candidate"],
+					desc = L["CJK IME candidates"],
+					get = function(info) return E.db.WindTools.Interface.Skins.ime.candidate[info[#info]] end,
+					set = function(info, value) E.db.WindTools.Interface.Skins.ime.candidate[info[#info]] = value end,
+					args = {
+						font = {
+							type = 'select', dialogControl = 'LSM30_Font',
+							order = 1,
+							name = L['Font'],
+							values = LSM:HashTable('font'),
+						},
+						size = {
+							order = 2,
+							name = L['Size'],
+							type = 'range',
+							min = 6, max = 22, step = 1,
+						},
+						style = {
+							order = 3,
+							name = L["Style"],
+							type = 'select',
+							values = {
+								['NONE'] = L['None'],
+								['OUTLINE'] = L['OUTLINE'],
+								['MONOCHROME'] = L['MONOCHROME'],
+								['MONOCHROMEOUTLINE'] = L['MONOCROMEOUTLINE'],
+								['THICKOUTLINE'] = L['THICKOUTLINE'],
+							},
+						},
+					},
+				},
+			}
+		},
+		["ui_errors"] = {
+			order = 8,
+			name = L["Error Frame"],
+			get = function(info) return E.db.WindTools.Interface.Skins.ui_errors[info[#info]] end,
+			set = function(info, value) E.db.WindTools.Interface.Skins.ui_errors[info[#info]] = value; E:StaticPopup_Show("PRIVATE_RL") end,
+			args = {
+				enabled = {
+					order = 1,
+					name = L["Enable"],
+				},
+				font = {
+					type = 'select', dialogControl = 'LSM30_Font',
+					order = 2,
+					name = L['Font'],
+					values = LSM:HashTable('font'),
+				},
+				size = {
+					order = 3,
+					name = L['Size'],
+					type = 'range',
+					min = 6, max = 22, step = 1,
+				},
+				style = {
+					order = 4,
+					name = L["Style"],
+					type = 'select',
+					values = {
+						['NONE'] = L['None'],
+						['OUTLINE'] = L['OUTLINE'],
+						['MONOCHROME'] = L['MONOCHROME'],
+						['MONOCHROMEOUTLINE'] = L['MONOCROMEOUTLINE'],
+						['THICKOUTLINE'] = L['THICKOUTLINE'],
+					},
+				},
+			}
 		},
 		func = function()
-			local EasyShadow = E:GetModule('Wind_EasyShadow')
-			local Options = WT.ToolConfigs["Interface"]["EasyShadow"]
+			local WS = E:GetModule('Wind_Skins')
+			local Options = WT.ToolConfigs.Interface.Skins
 			local optOrder = 1
-			for k, v in pairs(EasyShadow.BlzFrames) do
-				Options.BlzFrames.args[k]={
+			for k, v in pairs(WS.elvui_frame_list) do
+				Options.elvui.args[k]={
 					order = optOrder,
 					name = v,
 				}
 				optOrder = optOrder + 1
 			end
 
-			for i = 1, 6 do
-				Options.ElvUIActionbars.args["ElvUI_Bar"..i.."Button"] = {
-					order = i,
-					name = L["Action Bar"]..i,
-				}
-			end
-
 			optOrder = 1
-			for k, v in pairs(EasyShadow.ElvUIFrames) do
-				Options.ElvUIFrames.args[k]={
+			for k, v in pairs(WS.addonskins_list) do
+				Options.addonskins.args[k]={
 					order = optOrder,
 					name = v,
 				}
@@ -769,8 +889,20 @@ WT.ToolConfigs["Interface"] = {
 		tDesc   = L["Useful tooltip tweaks."],
 		oAuthor = "Nick Bockmeulen, houshuu",
 		cAuthor = "SomeBlu",
-		["progression"] = {
+		["item_icon"] = {
 			order = 5,
+			name = L["Item icon"],
+			get = function(info) return E.db.WindTools["Interface"]["Enhanced Tooltip"]["item_icon"][info[#info]] end,
+			set = function(info, value) E.db.WindTools["Interface"]["Enhanced Tooltip"]["item_icon"][info[#info]] = value; E:StaticPopup_Show("PRIVATE_RL") end,
+			args = {
+				["enabled"] = {
+					order = 1,
+					name = L["Enable"],
+				},
+			},
+		},
+		["progression"] = {
+			order = 6,
 			name = L["Progression"],
 			desc  = L["Add progression info to tooltip."],
 			get = function(info) return E.db.WindTools["Interface"]["Enhanced Tooltip"]["Progression"][info[#info]] end,

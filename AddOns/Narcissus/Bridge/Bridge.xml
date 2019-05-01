@@ -1,0 +1,81 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+    <Script file="Roleplay.lua"/>
+    <Script file="Bridge.lua"/>
+    <!--Script file="AzeriteUI.lua"/-->
+
+	<Frame name="Narci_SharedAnimatedParent" Alpha="0" hidden="false">
+		<Size>
+			<AbsDimension x="128" y="128"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER" x="0" y="100"/>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture setAllPoints="true" parentKey="Color">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="0" y="0"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+					</Anchors>
+					<Color r="1" g="0" b="0" a="0"/>
+				</Texture>
+			</Layer>
+		</Layers>
+        <Animations>
+            <AnimationGroup parentKey="animIn" smoothing="OUT" setToFinalAlpha="true">
+                <Translation parentKey="Translation1" offsetY="-60" duration="0" order="0"/>
+                <Translation parentKey="Translation2" offsetY="60" duration="0.25" order="1"/>
+                <Alpha fromAlpha="0" toAlpha="1" duration="0.25" order="1"/>
+                <Scripts>
+                    <OnPlay>
+
+                    </OnPlay>
+                    <OnFinished/>
+                </Scripts>
+            </AnimationGroup>
+            <AnimationGroup parentKey="animOut" smoothing="OUT" setToFinalAlpha="true">
+                <Translation parentKey="Translation2" offsetY="-80" duration="0.4" order="1"/>
+                <Alpha fromAlpha="1" toAlpha="0" duration="0.4" order="1"/>
+                <Scripts>
+                    <OnPlay>
+
+                    </OnPlay>
+                    <OnFinished/>
+                </Scripts>
+            </AnimationGroup>
+        </Animations>
+        <Frames>
+            <Frame name="Narci_SharedAnimatedParent_Anim" parentKey="AnimFrame" hidden="true">
+                <Scripts>
+                    <OnLoad>
+                        self.OppoDirection = false;
+                        self.Width = self:GetParent():GetWidth();
+                        self.TimeSinceLastUpdate = 0;
+                        self.EndPoint = 0;
+                        self.AnchorPoint, self.relativeTo, self.relativePoint, self.EndPoint, self.EndPointY = self:GetParent():GetPoint();
+                        self.EndPointBAK = self.EndPoint;
+                    </OnLoad>
+                    <OnShow>
+                        print(self.OppoDirection)
+                        self:GetParent():Show()
+                        Anchor1, _, _, self.StartPoint, self.StartPointY = self:GetParent():GetPoint();
+                        self.StartAlpha = self:GetParent():GetAlpha();
+                        if not self.OppoDirection then
+                            self.EndPointY = 0;
+                            self.EndAlpha = 1;
+                        else
+                            self.EndPointY = -100;
+                            self.EndAlpha = 0;
+                        end
+                    </OnShow>
+                    <OnHide>
+                        self.TimeSinceLastUpdate = 0;
+                        self.OppoDirection = not self.OppoDirection;
+                    </OnHide>
+                    <OnUpdate function="Narci_SharedAnimatedParent_AnimFrame_OnUpdate"/>
+                </Scripts>
+            </Frame>
+        </Frames>
+    </Frame>
+</Ui>

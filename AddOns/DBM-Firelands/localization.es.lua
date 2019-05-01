@@ -87,7 +87,6 @@ L:SetOptionLocalization({
 	TimerBladeNext		= "Mostrar temporizador para el siguiente cambio de hoja",
 	SetIconOnCountdown	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(99516),
 	SetIconOnTorment	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(99256),
-	ArrowOnCountdown	= "Mostrar flecha cuando te afecte $spell:99516",
 	InfoFrame			= "Mostrar marco de información para las acumulaciones de $spell:99262",
 	RangeFrame			= "Mostrar marco de distancia (5 m) para $spell:99257"
 })
@@ -105,7 +104,6 @@ L:SetOptionLocalization({
 	timerNextSpecial			= "Mostrar temporizador para la siguiente habilidad especial",
 	RangeFrameSeeds				= "Mostrar marco de distancia (12 m) para $spell:98450",
 	RangeFrameCat				= "Mostrar marco de distancia (10 m) para $spell:98374",
-	LeapArrow					= "Mostrar flecha cuando $spell:98476 ocurra cerca de ti",
 	IconOnLeapingFlames			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(98476)
 })
 

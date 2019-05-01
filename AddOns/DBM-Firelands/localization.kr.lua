@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "koKR" then return end
+if GetLocale() ~= "koKR" then return end
 local L
 
 ----------------
@@ -80,7 +80,6 @@ L:SetOptionLocalization({
 	timerStrike			= "칼날 공격 간격 바 보기",
 	TimerBladeActive	= "활성화된 칼날 유지시간 바 보기",
 	TimerBladeNext		= "다음 칼날 활성화 바 보기",
-	ArrowOnCountdown	= "$spell:99516 대상이 된 경우 DBM 화살표 보기",
 	InfoFrame			= "$spell:99262 중첩을 정보 창으로 보기",
 	RangeFrame			= "$spell:99257 대상이 된 경우 거리 창 보기(5m)"
 })
@@ -97,8 +96,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	timerNextSpecial		= "다음 불꽃 낫/화염도약 바 보기",
 	RangeFrameSeeds			= "$spell:98450 대상이 된 경우 거리 창 보기(12m)",
-	RangeFrameCat			= "$spell:98374 일때 거리 창 보기(10m)",
-	LeapArrow				= "$spell:98476 대상이 가까이 있을 경우 DBM 화살표 보기"
+	RangeFrameCat			= "$spell:98374 일때 거리 창 보기(10m)"
 })
 
 --------------

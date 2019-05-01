@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Lucifron", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 637 $"):sub(12, -3))
+mod:SetRevision("2019041710011")
 mod:SetCreatureID(12118)--, 12119
 mod:SetEncounterID(663)
 mod:SetModelID(13031)
@@ -14,7 +14,7 @@ mod:RegisterEventsInCombat(
 
 local warnDoom		= mod:NewSpellAnnounce(19702, 2)
 local warnCurse		= mod:NewSpellAnnounce(19703, 3)
-local warnMC		= mod:NewTargetAnnounce(20604, 4)
+local warnMC		= mod:NewTargetNoFilterAnnounce(20604, 4)
 
 local timerCurseCD	= mod:NewCDTimer(20.5, 19703, nil, nil, nil, 3, nil, DBM_CORE_CURSE_ICON)
 local timerDoomCD	= mod:NewCDTimer(20, 19702, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON)
@@ -27,8 +27,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerDoom:Start()
 		timerDoomCD:Start()
 	elseif spellId == 19703 then
-		timerCurseCD:Start()
 		warnCurse:Show()
+		timerCurseCD:Start()
 	end
 end
 

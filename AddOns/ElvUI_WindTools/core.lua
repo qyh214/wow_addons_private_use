@@ -25,8 +25,6 @@ P["WindTools"] = {}
 ---------------------------------------------------
 -- 常用函数
 ---------------------------------------------------
--- 摘自 ElvUI 源代码
--- 转换 RGB 数值为 16 进制
 -- 此处 r, g, b 各值均为 0~1 之间
 local function RGBToHex(r, g, b)
 	r = r <= 1 and r >= 0 and r or 0
@@ -34,22 +32,28 @@ local function RGBToHex(r, g, b)
 	b = b <= 1 and b >= 0 and b or 0
 	return format("%02x%02x%02x", r*255, g*255, b*255)
 end
--- 改自 ElvUI_CustomTweaks
+
 -- 为字符串添加自定义颜色
 function WT:ColorStr(str, r, g, b)
-	local hex
-	local coloredString
-	
-	if r and g and b then
-		hex = RGBToHex(r, g, b)
-	else
-		-- 默认设置为浅蓝色
-		hex = RGBToHex(52/255, 152/255, 219/255)
-	end
-	
-	coloredString = "|cff"..hex..str.."|r"
-	return coloredString
+	local hex = r and g and b and RGBToHex(r, g, b) or RGBToHex(52/255, 152/255, 219/255)
+	return "|cff"..hex..str.."|r"
 end
+
+-- 保持宽高比函数
+function WT:GetTexCoord(width, height, keepAspectRatio)
+	local left, right, top, bottom = unpack(E.TexCoords)
+	if width > height and keepAspectRatio then
+		local aspectRatio = height / width
+		top = 0.5 - (0.5 - top) * aspectRatio
+		bottom = 0.5 + (bottom - 0.5) * aspectRatio
+	elseif height > width and keepAspectRatio then
+		local aspectRatio = width / height
+		left = 0.5 - (0.5 - left) * aspectRatio
+		right = 0.5 + (right - 0.5) * aspectRatio
+	end
+	return left, right, top, bottom
+end
+
 -- 功能列表
 local ToolsOrder = {
 	["Interface"]  = 1,
@@ -67,6 +71,47 @@ E.PopupDialogs["WIND_UPDATE_RL"] = {
 	timeout = 0,
 	whileDead = 1,
 	hideOnEscape = false,
+}
+
+E.PopupDialogs["WIND_RESET"] = {
+	text = L["|cffff0000If you click Accept, it will reset your Windtools.|r"],
+	button1 = ACCEPT,
+	button2 = CANCEL,
+	OnAccept = function()
+		E.db.WindTools = P["WindTools"]
+		E.db.WindTools.InstalledVersion = WT.Version
+		ReloadUI()
+	end,
+	timeout = 0,
+	whileDead = 1,
+	hideOnEscape = false,
+}
+
+E.PopupDialogs["WIND_MODULE_RESET"] = {
+	text = L["|cffff0000If you click Accept, it will reset this module."],
+	button1 = ACCEPT,
+	button2 = CANCEL,
+	OnAccept = function(self)
+		if self.data and self.data.cata and self.data.wind_mod then
+			E.db.WindTools[self.data.cata][self.data.wind_mod] = P.WindTools[self.data.cata][self.data.wind_mod]
+			ReloadUI()
+		else
+			print(L["Reset is failed."])
+		end
+	end,
+	timeout = 0,
+	whileDead = 1,
+	hideOnEscape = false,
+}
+
+E.PopupDialogs["WIND_RL"] = {
+	text = L["WindTools will reload your user interface to apply the change."],
+	button1 = ACCEPT,
+	button2 = CANCEL,
+	OnAccept = ReloadUI,
+	timeout = 0,
+	whileDead = 1,
+	hideOnEscape = true,
 }
 
 function WT:InsertOptions()
@@ -140,6 +185,12 @@ function WT:InsertOptions()
 				type  = "description",
 				name  = "|cffC79C6Ehoushuu @ NGA|r (|cff00FF96Weakaura|r @ TW-暗影之月)\nSomeBlu @ Github"
 			},
+			reset_button = {
+				order = 10,
+				type  = "execute",
+				name  = L["Reset"],
+				func = function() E:StaticPopup_Show("WIND_RESET") end,
+			},
 			credit = {
 				order = -1,
 				type  = "group",
@@ -162,7 +213,7 @@ function WT:InsertOptions()
 		for arg_name, arg in pairs(feature) do
 			if arg.args then
 				arg.type = arg.type or "group"
-				arg.guiInline = true
+				if arg.type == "group" then arg.guiInline = true end
 				check_attributes(arg.args)
 			else
 				arg.type = arg.type or "toggle"
@@ -212,10 +263,17 @@ function WT:InsertOptions()
 						enablebtn = {
 							order = 4,
 							type  = "toggle",
-							width = "full",
+							width = "normal",
 							name  = WT:ColorStr(L["Enable"]),
 							get   = function(info) return E.db.WindTools[module_name][feature_name]["enabled"] end,
 							set   = function(info, value) E.db.WindTools[module_name][feature_name]["enabled"]     = value; E:StaticPopup_Show("PRIVATE_RL") end,
+						},
+						resetbtn = {
+							order = 4,
+							type  = "execute",
+							width = "normal",
+							name  = L["Reset"],
+							func  = function() E:StaticPopup_Show("WIND_MODULE_RESET", nil, nil, {cata=module_name, wind_mod=feature_name}) end,
 						}
 					}
 				}
@@ -252,11 +310,11 @@ function WT:InsertOptions()
 	-- if rl_popup then E:StaticPopup_Show("WIND_UPDATE_RL") end
 
 	-- 版本更新需要重置设置的时候使用
-	if not E.db.WindTools.InstalledVersion or E.db.WindTools.InstalledVersion ~= WT.Version then
-		E.db.WindTools["More Tools"]["Announce System"] = P["WindTools"]["More Tools"]["Announce System"]
-		E.db.WindTools.InstalledVersion = WT.Version
-		E:StaticPopup_Show("WIND_UPDATE_RL")
-	end
+	-- if not E.db.WindTools.InstalledVersion then
+	-- 	E.db.WindTools["More Tools"]["Announce System"] = P["WindTools"]["More Tools"]["Announce System"]
+	-- 	E.db.WindTools.InstalledVersion = WT.Version
+	-- 	E:StaticPopup_Show("WIND_UPDATE_RL")
+	-- end
 end
 ---------------------------------------------------
 -- ElvUI 设定部分初始化

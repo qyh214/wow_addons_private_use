@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Shot", "DBM-DMF")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 17247 $"):sub(12, -3))
+mod:SetRevision("20190416205700")
 mod:SetZone()
 
 mod:RegisterCombat("combat")

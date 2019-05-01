@@ -89,7 +89,7 @@ DBM_CORE_MPROFILE_DELETE_S_ERROR	= "원본이 손상되었습니다. 설정이 �
 DBM_CORE_NOTE_SHARE_SUCCESS			= "%s|1이;가; %s에 대한 메모를 공유했습니다."
 DBM_CORE_NOTE_SHARE_FAIL			= "%s|1이;가; %s에 대한 메모 공유를 시도했습니다. 하지만 해당 보스 스킬에 관련된 모드를 설치하지 않았거나 로딩하지 않은 상태입니다. 이 메모가 필요하다면 해당 모드를 로딩했는지 확인 후 공유를 다시 요청하세요."
 
-DBM_CORE_NOTEHEADER					= "%s에 대한 메모를 여기에 입력하세요. 캐릭터명을 >< 로 감싸면 직업 색상으로 표시됩니다. 여러개의 메모가 필요한 경우 '/'로 분리하세요."
+DBM_CORE_NOTEHEADER					= "%s에 대한 메모를 여기에 입력하세요. 캐릭터명을 >< 로 감싸면 직업 색상으로 표시됩니다. 여러번 경고가 필요한 경우 '/'로 메모를 구분해서 작성하세요."
 DBM_CORE_NOTEFOOTER					= "설정을 변경하려면 '확인', 변경을 취소하려면 '취소' 버튼을 누르세요."
 DBM_CORE_NOTESHAREDHEADER			= "%s|1이;가; %s에 대해 아래의 메모를 공유했습니다. 수락할 경우 이미 존재하는 메모를 덮어쓰게 됩니다."
 DBM_CORE_NOTESHARED					= "메모를 공격대 또는 파티에 전송했습니다."
@@ -161,8 +161,8 @@ DBM_CORE_VOICE_MISSING				= "선택한 DBM 음성팩을 찾을 수 없습니다.
 DBM_CORE_VOICE_DISABLED				= "현재 DBM 음성팩이 한 개 이상 설치되어 있지만 사용하고 있는게 없습니다. 음성팩을 사용하려면 '음성 경보' 항목에서 음성팩이 지정되어 있는지 확인하세요. 음성팩을 사용할 의사가 없으면 음성팩을 삭제하시면 이 메시지는 더이상 출력되지 않습니다"
 DBM_CORE_VOICE_COUNT_MISSING		= "초읽기 음성 %d번으로 설정된 음성/초읽기 팩을 찾을 수 없습니다. 기본 설정으로 초기화 되었습니다: %s"
 
-DBM_CORE_UPDATEREMINDER_HEADER			= "사용중인 Deadly Boss Mods 버전의 사용 기한이 지났습니다.\n Curse/Twitch, WoWI, deadlybossmods.com 등에서 %s (r%d) 버전을 다운로드 할 수 있습니다."
-DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "사용중인 Deadly Boss Mods ALPHA 버전의 사용 기한이 지났습니다.\n 적어도 %d 테스트 버전 이상은 사용해야 합니다. ALPHA 버전을 선택한 DBM 이용자는 최신 ALPHA 버전을 실행하는걸 권장합니다. 아니면 최신 RELEASE 버전을 사용하는 것도 좋습니다. 오래된 ALPHA 버전은 개발용인 관계로 버전 검사 기능이 제한되어 있기 때문입니다."
+DBM_CORE_UPDATEREMINDER_HEADER			= "사용중인 Deadly Boss Mods 버전의 사용 기한이 지났습니다.\n Curse/Twitch, WoWI, deadlybossmods.com 등에서 %s (%s) 버전을 다운로드 할 수 있습니다."
+DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "사용중인 Deadly Boss Mods ALPHA 버전의 사용 기한이 지났습니다.\n 적어도 %s 테스트 버전 이상은 사용해야 합니다. ALPHA 버전을 선택한 DBM 이용자는 최신 ALPHA 버전을 실행하는걸 권장합니다. 아니면 최신 RELEASE 버전을 사용하는 것도 좋습니다. 오래된 ALPHA 버전은 개발용인 관계로 버전 검사 기능이 제한되어 있기 때문입니다."
 DBM_CORE_UPDATEREMINDER_FOOTER			= (IsMacClient() and "Cmd-C" or "Ctrl-C").. "를 누르면 주소를 복사할 수 있습니다."
 DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= (IsMacClient() and "Cmd-C" or "Ctrl-C").. "를 누르면 주소를 복사할 수 있습니다."
 --DBM_CORE_UPDATEREMINDER_URL				= "http://www.inven.co.kr/board/powerbbs.php?come_idx=3716" -- No longer updated by the website

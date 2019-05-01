@@ -1,4 +1,4 @@
-﻿-- Mini Dragon(projecteurs@gmail.com)
+-- Mini Dragon(projecteurs@gmail.com)
 -- Yike Xia
 -- Last update: Jun 10, 2015@13867
 

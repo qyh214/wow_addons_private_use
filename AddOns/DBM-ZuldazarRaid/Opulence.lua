@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2342, "DBM-ZuldazarRaid", 2, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18401 $"):sub(12, -3))
+mod:SetRevision("2019042200858")
 mod:SetCreatureID(145261)
 mod:SetEncounterID(2271)
 --mod:DisableESCombatDetection()
@@ -45,7 +45,6 @@ local warnHexofLethargy					= mod:NewTargetAnnounce(284470, 2)
 --Stage Two: Toppling the Guardian
 local warnPhase2						= mod:NewPhaseAnnounce(2, 2)
 local warnLiquidGold					= mod:NewTargetAnnounce(287072, 2)
---local warnRupturingBlood				= mod:NewStackAnnounce(274358, 2, nil, "Tank")
 
 --The Zandalari Crown Jewels
 local specWarnGrosslyIncandescent		= mod:NewSpecialWarningYou(284798, nil, nil, nil, 1, 2)
@@ -108,8 +107,6 @@ local timerSurgingGoldCD				= mod:NewCDTimer(42.5, 289155, nil, nil, nil, 3)--Re
 --local countdownFelstormBarrage			= mod:NewCountdown("AltTwo32", 244000, nil, nil, 3)
 
 mod:AddNamePlateOption("NPAuraOnGoldenRadiance", 289776)
---mod:AddSetIconOption("SetIconDarkRev", 273365, true)
---mod:AddSetIconOption("SetIconGift", 255594, true)
 --mod:AddRangeFrameOption("8/10")
 mod:AddInfoFrameOption(284664, true)
 
@@ -141,7 +138,7 @@ do
 			local absorb = diamondTargets[unitName]
 			if absorb then
 				local absorbAmount = select(16, DBM:UnitDebuff(uId, 284527)) or 0
-				addLine(unitName, DBM_CORE_SHIELD.."-"..math.floor(absorbAmount))
+				addLine(unitName, DBM_CORE_SHIELD.."--"..math.floor(absorbAmount))
 			end
 		end
 		--Incandescent Stacks
@@ -149,7 +146,7 @@ do
 			local unitName = DBM:GetUnitFullName(uId)
 			local count = incandescentStacks[unitName]
 			if count then
-				addLine(unitName, Incan.."-"..count)
+				addLine(unitName, Incan.."--"..count)
 			end
 		end
 		--Incandescent Full
@@ -160,7 +157,7 @@ do
 			local spellName, _, _, _, _, expireTime = DBM:UnitDebuff(uId, 284798)
 			if expireTime then
 				local remaining = expireTime-GetTime()
-				addLine(name, grosslyIncan.."-"..math.floor(remaining))
+				addLine(name, grosslyIncan.."--"..math.floor(remaining))
 			end
 		end
 		--Player personal checks (Always Tracked)
@@ -366,7 +363,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnVolatileCharge:Show()
 			specWarnVolatileCharge:Play("runout")
 			yellVolatileCharge:Yell()
-			yellVolatileChargeFade:Countdown(8)
+			local spellName, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+			if expireTime then
+				local remaining = expireTime-GetTime()
+				yellVolatileChargeFade:Countdown(remaining)
+			end
 		else
 			warnVolatileCharge:CombinedShow(0.3, args.destName)
 		end
@@ -498,7 +499,7 @@ function mod:UNIT_DIED(args)
 		timerFlamesofPunishmentCD:Stop()
 		timerCrushCD:Stop(L.Bulwark)
 	--elseif cid == 147218 then--Spirit of Gold
-		
+
 	end
 end
 

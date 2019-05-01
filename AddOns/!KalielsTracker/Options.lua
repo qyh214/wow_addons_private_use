@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2018, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2019, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -87,6 +87,7 @@ local defaults = {
 		qiBgrBorder = false,
 		qiXOffset = -5,
 		qiActiveButton = true,
+		qiActiveButtonBindingShow = true,
 
 		hideEmptyTracker = false,
 		collapseInInstance = false,
@@ -852,7 +853,7 @@ local options = {
 						},
 						qiActiveButton = {
 							name = "Enable Active button "..beta,
-							desc = "Show Quest item button for CLOSEST quest as \"Extra Action Button\". "..
+							desc = "Show Quest item button for CLOSEST quest as \"Extra Action Button\".\n"..
 								   cBold.."Key bind is shared with EXTRAACTIONBUTTON1.",
 							descStyle = "inline",
 							width = "double",
@@ -893,12 +894,31 @@ local options = {
 							end,
 							order = 5.4,
 						},
+						qiActiveButtonBindingShow = {
+							name = "Show Active button Binding text",
+							width = "normal+half",
+							type = "toggle",
+							disabled = function()
+								return not db.qiActiveButton
+							end,
+							set = function()
+								db.qiActiveButtonBindingShow = not db.qiActiveButtonBindingShow
+								KT.ActiveButton:Update()
+							end,
+							order = 5.5,
+						},
+						qiActiveButtonSpacer = {
+							name = " ",
+							type = "description",
+							width = "normal+half",
+							order = 5.51,
+						},
 						addonMasqueLabel = {
 							name = " Skin options - for Quest item buttons or Active button",
 							type = "description",
 							width = "double",
 							fontSize = "medium",
-							order = 5.5,
+							order = 5.6,
 						},
 						addonMasqueOptions = {
 							name = "Masque",
@@ -909,7 +929,7 @@ local options = {
 							func = function()
 								SlashCmdList["MASQUE"]()
 							end,
-							order = 5.51,
+							order = 5.61,
 						},
 					},
 				},

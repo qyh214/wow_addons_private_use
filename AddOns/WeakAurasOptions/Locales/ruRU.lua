@@ -68,6 +68,8 @@ local L = WeakAuras.L
 	L["Animations"] = "Анимация"
 	L["Any of"] = "ИЛИ (любое условие)"
 	L["Apply Template"] = "Применить шаблон"
+	--[[Translation missing --]]
+	L["Arc Length"] = "Arc Length"
 	L["Arcane Orb"] = "Чародейский шар"
 	L["At a position a bit left of Left HUD position."] = "Немного левее позиции левого HUD"
 	L["At a position a bit left of Right HUD position"] = "Немного правее позиции правого HUD"
@@ -135,6 +137,10 @@ local L = WeakAuras.L
 	L["Collapse all non-loaded displays"] = "Свернуть все не загруженные индикации"
 	L["Color"] = "Цвет"
 	L["color"] = "цвет"
+	--[[Translation missing --]]
+	L["Column Height"] = "Column Height"
+	--[[Translation missing --]]
+	L["Column Space"] = "Column Space"
 	L["Combinations"] = "Логические операции"
 	--[[Translation missing --]]
 	L["Combine Matches Per Unit"] = "Combine Matches Per Unit"
@@ -174,7 +180,11 @@ local L = WeakAuras.L
 	L["Custom Configuration"] = "Custom Configuration"
 	L["Custom Function"] = "Своя функция"
 	--[[Translation missing --]]
+	L["Custom Grow"] = "Custom Grow"
+	--[[Translation missing --]]
 	L["Custom Options"] = "Custom Options"
+	--[[Translation missing --]]
+	L["Custom Sort"] = "Custom Sort"
 	L["Custom Trigger"] = "Свой триггер"
 	L["Custom trigger event tooltip"] = [=[Напишите события, которые будут вызывать проверку вашего триггера. Несколько событий должны быть разделены запятыми или пробелами.
 
@@ -294,6 +304,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	--[[Translation missing --]]
 	L["Glow Type"] = "Glow Type"
 	L["Green Rune"] = "Зеленая руна"
+	--[[Translation missing --]]
+	L["Grid direction"] = "Grid direction"
 	L["Group"] = "Группа"
 	L["Group (verb)"] = "Группировать"
 	L["Group aura count description"] = [=[Количество участников группы (рейда), к которым должен быть применен один или более данных эффектов, чтобы триггер сработал.
@@ -318,6 +330,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Hawk"] = "Ястреб"
 	L["Height"] = "Высота"
 	L["Hide"] = "Скрыть"
+	--[[Translation missing --]]
+	L["Hide Cooldown Text"] = "Hide Cooldown Text"
 	L["Hide on"] = "Скрыть на"
 	L["Hide this group's children"] = "Скрыть индикации этой группы"
 	L["Hide When Not In Group"] = "Скрыть когда не в группе"
@@ -371,6 +385,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Legacy Aura Trigger"] = "Legacy Aura Trigger"
 	--[[Translation missing --]]
 	L["Length"] = "Length"
+	--[[Translation missing --]]
+	L["Limit"] = "Limit"
 	L["Load"] = "Загрузка"
 	L["Loaded"] = "Загружено"
 	L["Loop"] = "Зациклить"
@@ -517,6 +533,10 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Rotate Text"] = "Повернуть текст"
 	L["Rotation"] = "Поворот"
 	L["Rotation Mode"] = "Режим вращения"
+	--[[Translation missing --]]
+	L["Row Space"] = "Row Space"
+	--[[Translation missing --]]
+	L["Row Width"] = "Row Width"
 	L["Same"] = "Похожие"
 	L["Scale"] = "Масштаб"
 	L["Search"] = "Поиск"
@@ -534,7 +554,6 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Settings"] = "Параметры"
 	L["Shift-click to create chat link"] = "Shift-клик для создания ссылки чата"
 	L["Show all matches (Auto-clone)"] = "Показать все совпадения (Автоклонирование)"
-	L["Show Cooldown Text"] = "Показать отсчет времени"
 	--[[Translation missing --]]
 	L["Show Glow Effect"] = "Show Glow Effect"
 	--[[Translation missing --]]

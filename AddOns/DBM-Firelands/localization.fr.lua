@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "frFR" then return end
+if GetLocale() ~= "frFR" then return end
 local L
 -----------------
 -- Beth'tilac --
@@ -116,7 +116,6 @@ L:SetOptionLocalization({
 	TimerBladeNext		= "Délai avant la prochaine Lame de décimation/infernale",
 	SetIconOnCountdown	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(99516),
 	SetIconOnTorment	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(100232),
-	ArrowOnCountdown	= "Flèche DBM quand vous êtes affecté par $spell:99516 ",
 	InfoFrame			= "Cadre d'infos concernant les cumuls d'Etincelle vitale",
 	RangeFrame			= "Cadre des portées (5) pour $spell:99404"
 })
@@ -137,7 +136,6 @@ L:SetOptionLocalization({
 	timerNextSpecial			= "Délai avant la prochaine technique spéciale",
 	RangeFrameSeeds				= "Cadre des portées (12) pour $spell:98450",
 	RangeFrameCat				= "Cadre des portées (10) pour $spell:98374",
-	LeapArrow					= "Flèche DBM quand $spell:98476 près de vous",
 	IconOnLeapingFlames			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(100208)
 })
 

@@ -79,6 +79,8 @@ Si la duración de la animación es |cFF00CC0010%|r, y el disparador del aura es
 	--[[Translation missing --]]
 	L["Any of"] = "Any of"
 	L["Apply Template"] = "Aplicar plantilla"
+	--[[Translation missing --]]
+	L["Arc Length"] = "Arc Length"
 	L["Arcane Orb"] = "Orbe Arcano"
 	L["At a position a bit left of Left HUD position."] = "Un poco a la izquierda de la posición de la visualización frontal (HUD) a la izquierda"
 	L["At a position a bit left of Right HUD position"] = "Un poco a la izquierda de la posición de la visualización frontal (HUD) a la derecha"
@@ -148,6 +150,10 @@ Si la duración de la animación es |cFF00CC0010%|r, y el disparador del aura es
 	--[[Translation missing --]]
 	L["color"] = "color"
 	--[[Translation missing --]]
+	L["Column Height"] = "Column Height"
+	--[[Translation missing --]]
+	L["Column Space"] = "Column Space"
+	--[[Translation missing --]]
 	L["Combinations"] = "Combinations"
 	--[[Translation missing --]]
 	L["Combine Matches Per Unit"] = "Combine Matches Per Unit"
@@ -190,7 +196,11 @@ Si la duración de la animación es |cFF00CC0010%|r, y el disparador del aura es
 	L["Custom Configuration"] = "Custom Configuration"
 	L["Custom Function"] = "Función personalizada"
 	--[[Translation missing --]]
+	L["Custom Grow"] = "Custom Grow"
+	--[[Translation missing --]]
 	L["Custom Options"] = "Custom Options"
+	--[[Translation missing --]]
+	L["Custom Sort"] = "Custom Sort"
 	L["Custom Trigger"] = "Desencadenador personalizado"
 	L["Custom trigger event tooltip"] = [=[Escoje qué eventos quieres que revise el desencadenador personalizado.
 Múltiples eventos pueden ser especificados. Sepáralos con comas o espacios.
@@ -318,6 +328,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	--[[Translation missing --]]
 	L["Glow Type"] = "Glow Type"
 	L["Green Rune"] = "Runa verde"
+	--[[Translation missing --]]
+	L["Grid direction"] = "Grid direction"
 	L["Group"] = "Grupo"
 	L["Group (verb)"] = "Agrupar "
 	L["Group aura count description"] = [=[La cantidad de miembros del grupo o banda que deben estar afectados por las auras indicadas para la activación.
@@ -346,6 +358,8 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	L["Hawk"] = "Halcón"
 	L["Height"] = "Alto"
 	L["Hide"] = "Ocultar"
+	--[[Translation missing --]]
+	L["Hide Cooldown Text"] = "Hide Cooldown Text"
 	L["Hide on"] = "Ocultar en"
 	L["Hide this group's children"] = "Ocultar los dependientes de este grupo"
 	L["Hide When Not In Group"] = "Ocultar cuando no esté en grupo"
@@ -409,6 +423,8 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	L["Legacy Aura Trigger"] = "Legacy Aura Trigger"
 	--[[Translation missing --]]
 	L["Length"] = "Length"
+	--[[Translation missing --]]
+	L["Limit"] = "Limit"
 	L["Load"] = "Cargar"
 	L["Loaded"] = "Cargado"
 	--[[Translation missing --]]
@@ -570,6 +586,10 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Rotate Text"] = "Rotar texto"
 	L["Rotation"] = "Rotación"
 	L["Rotation Mode"] = "Modo de rotación"
+	--[[Translation missing --]]
+	L["Row Space"] = "Row Space"
+	--[[Translation missing --]]
+	L["Row Width"] = "Row Width"
 	L["Same"] = "Igual"
 	L["Scale"] = "Ajustar tamaño"
 	L["Search"] = "Buscar"
@@ -589,7 +609,6 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Settings"] = "Settings"
 	L["Shift-click to create chat link"] = "Shift-Clic para un crear un enlace de chat"
 	L["Show all matches (Auto-clone)"] = "Mostrar todas las coincidencias (Auto-clonación)"
-	L["Show Cooldown Text"] = "Mostrar el texto del tiempo de recarga"
 	--[[Translation missing --]]
 	L["Show Glow Effect"] = "Show Glow Effect"
 	--[[Translation missing --]]

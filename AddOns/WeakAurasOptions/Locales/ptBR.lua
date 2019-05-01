@@ -72,6 +72,8 @@ WeakAuras → Opções → Opções ]=]
 	--[[Translation missing --]]
 	L["Apply Template"] = "Apply Template"
 	--[[Translation missing --]]
+	L["Arc Length"] = "Arc Length"
+	--[[Translation missing --]]
 	L["Arcane Orb"] = "Arcane Orb"
 	--[[Translation missing --]]
 	L["At a position a bit left of Left HUD position."] = "At a position a bit left of Left HUD position."
@@ -165,6 +167,10 @@ WeakAuras → Opções → Opções ]=]
 	--[[Translation missing --]]
 	L["color"] = "color"
 	--[[Translation missing --]]
+	L["Column Height"] = "Column Height"
+	--[[Translation missing --]]
+	L["Column Space"] = "Column Space"
+	--[[Translation missing --]]
 	L["Combinations"] = "Combinations"
 	--[[Translation missing --]]
 	L["Combine Matches Per Unit"] = "Combine Matches Per Unit"
@@ -213,7 +219,11 @@ WeakAuras → Opções → Opções ]=]
 	--[[Translation missing --]]
 	L["Custom Function"] = "Custom Function"
 	--[[Translation missing --]]
+	L["Custom Grow"] = "Custom Grow"
+	--[[Translation missing --]]
 	L["Custom Options"] = "Custom Options"
+	--[[Translation missing --]]
+	L["Custom Sort"] = "Custom Sort"
 	L["Custom Trigger"] = "Gatilho personalizado"
 	--[[Translation missing --]]
 	L["Custom trigger event tooltip"] = "Custom trigger event tooltip"
@@ -363,6 +373,8 @@ WeakAuras → Opções → Opções ]=]
 	--[[Translation missing --]]
 	L["Green Rune"] = "Green Rune"
 	--[[Translation missing --]]
+	L["Grid direction"] = "Grid direction"
+	--[[Translation missing --]]
 	L["Group"] = "Group"
 	--[[Translation missing --]]
 	L["Group (verb)"] = "Group (verb)"
@@ -384,6 +396,8 @@ WeakAuras → Opções → Opções ]=]
 	L["Height"] = "Altura"
 	--[[Translation missing --]]
 	L["Hide"] = "Hide"
+	--[[Translation missing --]]
+	L["Hide Cooldown Text"] = "Hide Cooldown Text"
 	--[[Translation missing --]]
 	L["Hide on"] = "Hide on"
 	--[[Translation missing --]]
@@ -460,6 +474,8 @@ WeakAuras → Opções → Opções ]=]
 	L["Legacy Aura Trigger"] = "Legacy Aura Trigger"
 	--[[Translation missing --]]
 	L["Length"] = "Length"
+	--[[Translation missing --]]
+	L["Limit"] = "Limit"
 	--[[Translation missing --]]
 	L["Load"] = "Load"
 	L["Loaded"] = "Carrregar"
@@ -655,6 +671,10 @@ WeakAuras → Opções → Opções ]=]
 	L["Rotation"] = "Rotação"
 	--[[Translation missing --]]
 	L["Rotation Mode"] = "Rotation Mode"
+	--[[Translation missing --]]
+	L["Row Space"] = "Row Space"
+	--[[Translation missing --]]
+	L["Row Width"] = "Row Width"
 	L["Same"] = "Mesmo"
 	--[[Translation missing --]]
 	L["Scale"] = "Scale"
@@ -679,8 +699,6 @@ WeakAuras → Opções → Opções ]=]
 	--[[Translation missing --]]
 	L["Shift-click to create chat link"] = "Shift-click to create chat link"
 	L["Show all matches (Auto-clone)"] = "Mostrar todas as correspondências"
-	--[[Translation missing --]]
-	L["Show Cooldown Text"] = "Show Cooldown Text"
 	--[[Translation missing --]]
 	L["Show Glow Effect"] = "Show Glow Effect"
 	--[[Translation missing --]]

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Majordomo", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 645 $"):sub(12, -3))
+mod:SetRevision("2019041710011")
 mod:SetCreatureID(12018, 11663, 11664)
 mod:SetEncounterID(671)
 mod:SetModelID(12029)
@@ -13,7 +13,7 @@ mod:RegisterEventsInCombat(
 )
 
 --TODO, if BOSS isn't available in classic, common local it in core
-local warnTeleport			= mod:NewTargetAnnounce(20534)
+local warnTeleport			= mod:NewTargetNoFilterAnnounce(20534)
 
 local specWarnMagicReflect	= mod:NewSpecialWarningReflect(20619, "-Melee")
 local specWarnDamageShield	= mod:NewSpecialWarningReflect(21075, "Melee")

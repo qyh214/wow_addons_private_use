@@ -1,4 +1,4 @@
-﻿-- Simplified Chinese by Diablohu(diablohudream@gmail.com)
+-- Simplified Chinese by Diablohu(diablohudream@gmail.com)
 -- Last update: 2/18/2013
 
 if GetLocale() ~= "zhCN" then return end

@@ -1,0 +1,10 @@
+lightweight tag 9cd5e470bd58c8154eb054575dd5617c915cd042 r666
+Author:	MysticalOS <mysticalosx@gmail.com>
+Date:	Tue Apr 16 21:22:51 2019 -0400
+
+commit 9cd5e470bd58c8154eb054575dd5617c915cd042
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Tue Apr 16 21:22:51 2019 -0400
+
+    Fix pkg meta for curse building
+

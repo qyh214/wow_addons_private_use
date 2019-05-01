@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Oz", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 631 $"):sub(12, -3))
+mod:SetRevision("2019041710011")
 mod:SetCreatureID(18168)
 --mod:SetEncounterID(655)--used by all 3 of them, so not usuable
 mod:SetModelID(17550)

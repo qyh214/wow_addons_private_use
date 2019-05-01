@@ -30,8 +30,8 @@ local L = WeakAuras.L
 	L["Back"] = "Indietro"
 	L["Basic Show On Cooldown"] = "Semplice Mostra in Ricarica"
 	L["Bloodlust/Heroism"] = "Brama di Sangue/Eroismo"
-	L["buff"] = "buff"
 	L["Buff"] = "Buff"
+	L["buff"] = "buff"
 	L["Buffs"] = "Buffs"
 	L["Cancel"] = "Cancella"
 	L["Cast"] = "Lancia"
@@ -167,8 +167,6 @@ local L = WeakAuras.L
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
 	--[[Translation missing --]]
 	L["Specific Azerite Traits"] = "Specific Azerite Traits"
-	--[[Translation missing --]]
-	L["Stagger"] = "Stagger"
 	--[[Translation missing --]]
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."
 	--[[Translation missing --]]

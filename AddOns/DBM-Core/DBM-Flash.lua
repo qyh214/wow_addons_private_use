@@ -1,4 +1,4 @@
-﻿-- globals
+-- globals
 DBM.Flash = {}
 -- locals
 local flashFrame = DBM.Flash
@@ -12,7 +12,7 @@ local totalRepeat = 0
 --------------------
 local frame = CreateFrame("Frame", "DBMFlash", UIParent)
 frame:Hide()
-frame:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",})
+frame:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",})--137056
 frame:SetAllPoints(UIParent)
 frame:SetFrameStrata("BACKGROUND")
 

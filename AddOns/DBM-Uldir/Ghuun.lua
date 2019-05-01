@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2147, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18477 $"):sub(12, -3))
+mod:SetRevision("20190420174733")
 mod:SetCreatureID(132998)
 mod:SetEncounterID(2122)
 mod:SetZone()
@@ -114,9 +114,9 @@ mod:AddRangeFrameOption(5, 270428)
 mod:AddInfoFrameOption(nil, true)
 mod:AddNamePlateOption("NPAuraOnFixate", 268074)
 mod:AddNamePlateOption("NPAuraOnUnstoppable", 275204)
-mod:AddSetIconOption("SetIconOnBloodHost", 267813, true)
-mod:AddSetIconOption("SetIconOnBurstingBoil", 277007, true)
-mod:AddSetIconOption("SetIconOnExplosiveCorruption", 272506, false)
+mod:AddSetIconOption("SetIconOnBloodHost", 267813, true, false, {7})
+mod:AddSetIconOption("SetIconOnBurstingBoil", 277007, true, false, {1, 2, 3, 4, 5, 6})
+mod:AddSetIconOption("SetIconOnExplosiveCorruption", 272506, false, false, {1, 2, 3, 4, 5, 6, 7, 8})
 
 mod.vb.phase = 1
 mod.vb.mawCastCount = 0
@@ -177,7 +177,7 @@ do
 			--Scan raid for notable debuffs and add them
 			for i=1, #matrixTargets do
 				local name = matrixTargets[i]
-				addLine(i.."-"..matrixSpellName, name)
+				addLine(i.."--"..matrixSpellName, name)
 			end
 			if mod.vb.matrixActive then
 				if mod:IsMythic() then--No side, short text
@@ -483,7 +483,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 272505 or spellId == 275756 then
 		self.vb.explosiveIcon = 0
 		self.vb.explosiveCount = self.vb.explosiveCount + 1
-		if self.vb.phase == 1 then	
+		if self.vb.phase == 1 then
 			local timer = self:IsMythic() and 44 or 26
 			timerExplosiveCorruptionCD:Start(timer, self.vb.explosiveCount+1)
 			countdownExplosiveCorruption:Start(timer)

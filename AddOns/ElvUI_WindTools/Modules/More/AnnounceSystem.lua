@@ -168,14 +168,13 @@ local Taunt = {
 	[196727] = true, -- 嘲心嘯（武僧守護者 玄牛怒兆）
 	[2649] = true,   -- 低吼（獵人寵物）
 	[17735] = true,  -- 受難 （術士寵物虛無行者）
-	-- [36213] = true,  -- 憤怒之土（薩滿守護者 土元素）待研究
 }
 
 local CombatResurrection = {
 	[61999] = true,	    -- 盟友復生
 	[20484] = true,	    -- 復生
 	[20707] = true,	    -- 靈魂石
-	[265116] = true,	-- 不穩定的時間轉移器（工程學）
+	[265116] = true,    -- 不穩定的時間轉移器（工程學）
 }
 
 local ThreatTransfer = {
@@ -221,10 +220,13 @@ function AS:GetChannel(channel_db)
 end
 
 function AS:SendAddonMessage(message)
-	if IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and not IsInRaid() then
-		C_ChatInfo.SendAddonMessage(self.Prefix, message, "PARTY")
-	elseif IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and IsInRaid() then
+	if not IsInGroup() then return end
+	if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) or IsInRaid(LE_PARTY_CATEGORY_INSTANCE) then
+		C_ChatInfo.SendAddonMessage(self.Prefix, message, "INSTANCE")
+	elseif IsInRaid(LE_PARTY_CATEGORY_HOME) then
 		C_ChatInfo.SendAddonMessage(self.Prefix, message, "RAID")
+	elseif IsInGroup(LE_PARTY_CATEGORY_HOME) then
+		C_ChatInfo.SendAddonMessage(self.Prefix, message, "PARTY")
 	end
 end
 
@@ -272,7 +274,7 @@ end
 
 function AS:Utility(...)
 	local config = self.db.utility_spells
-	if not config.enabled then return end
+	if not config or not config.enabled then return end
 	local _, event, _, sourceGUID, sourceName, _, _, _, destName, _, _, spellId = ...
 	if InCombatLockdown() or not event or not spellId or not sourceName then return end
 	if sourceName ~= PlayerName and not UnitInRaid(sourceName) and not UnitInParty(sourceName) then return end
@@ -316,7 +318,7 @@ end
 
 function AS:Combat(...)
 	local config = self.db.combat_spells
-	if not config.enabled then return end
+	if not config or not config.enabled then return end
 	local _, event, _, sourceGUID, sourceName, _, _, destGUID, destName, _, _, spellId = ...
 	local difficultyId = select(3, GetInstanceInfo())
 	if not destName or not sourceName then return end

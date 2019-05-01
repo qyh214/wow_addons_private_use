@@ -1,0 +1,10 @@
+lightweight tag b85c5e2459652470649509e69f14156512049cc8 r287
+Author:	MysticalOS <mysticalosx@gmail.com>
+Date:	Tue Apr 16 21:18:07 2019 -0400
+
+commit b85c5e2459652470649509e69f14156512049cc8
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Tue Apr 16 21:18:07 2019 -0400
+
+    Deal with curse fickle packaging
+

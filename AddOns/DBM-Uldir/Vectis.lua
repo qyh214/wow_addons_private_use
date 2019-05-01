@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2166, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18143 $"):sub(12, -3))
+mod:SetRevision("20190420174733")
 mod:SetCreatureID(134442)--135016 Plague Amalgam
 mod:SetEncounterID(2134)
 mod:SetZone()
@@ -72,7 +72,7 @@ local countdownGestate						= mod:NewCountdown(25.5, 265212, true, nil, 3)
 local countdownContagion					= mod:NewCountdown("Alt12", 267242, "Healer", 2, 3)
 local countdownLiquefy						= mod:NewCountdown("AltTwo90", 265217, nil, nil, 3)
 
-mod:AddSetIconOption("SetIconVector", 265129, true)
+mod:AddSetIconOption("SetIconVector", 265129, true, false, {1, 2, 3, 4})
 mod:AddRangeFrameOption("5/8")
 mod:AddInfoFrameOption(265127, true)
 mod:AddBoolOption("ShowHighestFirst3", true)--Show highest stacks first by default, since it alines with 3rd generation infoframe
@@ -158,7 +158,7 @@ do
 						local _, _, _, _, _, expireTime = DBM:UnitDebuff(uId, 265129)
 						if expireTime then
 							local remaining = floor(expireTime-GetTime())
-							addLine(i.."-"..name, remaining)--Insert numeric into name so a person who has more than two vectors will show both of them AND not conflict with lingering entries
+							addLine(i.."--"..name, remaining)--Insert numeric into name so a person who has more than two vectors will show both of them AND not conflict with lingering entries
 						end
 					end
 				end
@@ -209,7 +209,7 @@ do
 					if expireTime then
 						local remaining = floor(expireTime-GetTime())
 						--Inserts vector numbers unit has and remaining debuff along with lingering stacks even if it's 0 stacks
-						addLine(hasVector.."-"..name, tempLines[name].."-|cFF088A08"..remaining.."|r")--Insert numeric into name so a person who has more than two vectors will show both of them AND not conflict with lingering entries
+						addLine(hasVector.."--"..name, tempLines[name].."-|cFF088A08"..remaining.."|r")--Insert numeric into name so a person who has more than two vectors will show both of them AND not conflict with lingering entries
 					end
 				else
 					--No vector on this target, just insert name and lingering count
@@ -497,7 +497,7 @@ function mod:SPELL_AURA_REMOVED(args)
 				else
 					if self.Options.SetIconVector and iconsUsed then
 						self:SetIcon(args.destName, i)
-						break--Break loop, Icon updated to next 
+						break--Break loop, Icon updated to next
 					end
 				end
 			end

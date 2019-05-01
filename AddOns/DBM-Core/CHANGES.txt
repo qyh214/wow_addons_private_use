@@ -1,0 +1,92 @@
+Changes since tag 8.1.20
+
+commit ea4190077448ddda11f4b483a6dfed1de455f97f
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Mon Apr 29 23:36:52 2019 -0400
+
+    Fix missing count in one of timers, and update hotfix revision
+
+commit 99c6bf5125bd3041238e3455c49f64f60b714a3e
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Mon Apr 29 23:31:24 2019 -0400
+
+    Update Mythic Uunat for April 29th hotfixes
+    Fixed missing first timer for eyes (piercing) in stage 3 in all difficulties of Uunat
+
+commit 28742ab4b13e6c369cc3d605d934781616ec517f
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Mon Apr 29 14:41:54 2019 -0400
+
+    Instead of returning one function into another slow function lookup, both functions should call the same fast access local function for efficiency.
+
+commit 1299a8a6515ec029cd106bad946bdce8b4f76a5a
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Mon Apr 29 13:28:43 2019 -0400
+
+    Fix a minor usage of self
+
+commit 19895b7ef84414e7e4235b42f91a729f9b7ff0c0
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Sun Apr 28 17:48:53 2019 -0400
+
+    Add last 3 boss drycodes for Mechagon. Entire zone is now ready for the zone opening.
+
+commit b7a5e0a670ff2d04c5e641b304720c87173e1c21
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Sun Apr 28 12:47:07 2019 -0400
+
+    Add timer for when Visage will vanish on heroic and mythic Cabal
+    Fixed a bug where countdown yell for Aphotic Blast had wrong expire time
+    Fixed bug where special warning for Aphotic Blast showed every time you got a new stack or refreshed your 3 stack. only intended to warn you when you first get it.
+
+commit b5feafd723dd7562e84a32745afb93ccbe158f83
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Fri Apr 26 13:58:31 2019 -0400
+
+    Fix dbm alpha revisions not intcrementing every revision, hopefully
+
+commit 399b8fd4f7aa650f889390183be3fdee88d638a7
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Fri Apr 26 01:43:32 2019 -0400
+
+    Kr Update
+    Also fixed integer overflow error in DBM_CORE_UPDATEREMINDER_HEADER on non english clients.
+
+commit a1e8726551ff7179b1dfef28b9d8eca6dcc2a56a
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Fri Apr 26 00:33:46 2019 -0400
+
+    Thanks Travis
+
+commit 8cb6a1da84060bf700dcfab4a20289239455e3dc
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Fri Apr 26 00:26:13 2019 -0400
+
+    Oh, and finish the unstable resonance timer, thanks Vodka!
+
+commit 2dba880f97b3c7fa6d996f7a9968f1fb00182a46
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Fri Apr 26 00:17:37 2019 -0400
+
+    2 more Mechagon bosses done
+
+commit 9d715251520fd35523642fd7c185f67fbc3ee819
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Thu Apr 25 03:32:19 2019 -0400
+
+    Preliminary mythic timer update for Unstable
+    Also added code to handle the undying 2 eyes 2 at 1:16 and 1:26 swap behavior.
+
+commit 7c09eb611a8968b2d767476cfadcf039ced5a46c
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Thu Apr 25 00:23:40 2019 -0400
+
+    Allow users to control icon behavior of Unstable Resonance, since WA's decided to ignore what boss mods were doing and do their own thing.
+    Now, DBM can be configured to resolve conflicts with these WA's.
+
+commit 79cd96e04f2e4908409c34eb65f9fa382daef5fb
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Wed Apr 24 16:01:01 2019 -0400
+
+    Increment alpha
+

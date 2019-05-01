@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2194, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 18139 $"):sub(12, -3))
+mod:SetRevision("20190420174733")
 mod:SetCreatureID(134546)--138324 Xalzaix
 mod:SetEncounterID(2135)
 mod:SetZone()
@@ -76,7 +76,7 @@ local countdownEssenceShear				= mod:NewCountdown("Alt20", 274693, "Tank", nil, 
 local countdownImminentRuin				= mod:NewCountdown("AltTwo20", 272536, "-Tank", nil, 3)
 local countdownBeam						= mod:NewCountdown("AltTwo20", 272115, nil, nil, 3)
 
-mod:AddSetIconOption("SetIconRuin", 272536, true)
+mod:AddSetIconOption("SetIconRuin", 272536, true, false, {1, 2})
 mod:AddRangeFrameOption(5, 272407)
 mod:AddInfoFrameOption(272146, true)
 
@@ -299,7 +299,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 	elseif spellId == 272407 then--Purple Ball Lovin
-		
+
 		if args:IsPlayer() then
 			yellOblivionSphere:Yell()
 		end

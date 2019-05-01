@@ -1,4 +1,4 @@
-﻿-- Mini Dragon(projecteurs@gmail.com)
+-- Mini Dragon(projecteurs@gmail.com)
 -- Last update: Aug 14 2015, 6:57 UTC@14333
 if GetLocale() ~= "zhCN" then return end
 local L

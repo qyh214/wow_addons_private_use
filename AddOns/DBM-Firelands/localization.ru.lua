@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "ruRU" then return end
+if GetLocale() ~= "ruRU" then return end
 local L
 
 -----------------
@@ -117,7 +117,6 @@ L:SetOptionLocalization({
 	TimerBladeNext		= "Отсчет времени до следующего лезвия",
 	SetIconOnCountdown	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(99516),
 	SetIconOnTorment	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(100232),
-	ArrowOnCountdown	= "Показывать стрелку DBM, когда на вас $spell:99516",
 	InfoFrame			= "Информационное окно для стаков искр",
 	RangeFrame			= "Показывать окно проверки дистанции (5м) для $spell:99404"
 })
@@ -138,7 +137,6 @@ L:SetOptionLocalization({
 	timerNextSpecial		= "Отсчет времени до следующей особой способности",
 	RangeFrameSeeds			= "Показывать окно проверки дистанции (12м) для $spell:98450",
 	RangeFrameCat			= "Показывать окно проверки дистанции (10м) для $spell:98374",
-	LeapArrow				= "Показывать стрелку DBM, когда босс приземляется около вас",
 	IconOnLeapingFlames		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(100208)
 })
 

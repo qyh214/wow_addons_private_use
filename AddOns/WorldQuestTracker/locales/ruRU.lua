@@ -94,12 +94,9 @@ L["S_MAPBAR_SUMMARYMENU_NOATTENTION"] = [=[Нет заданий для отсл
 у которых осталось на выполнение менее 2х часов!]=]
 L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "Требует внимания"
 L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "Награды за сегодня"
---[[Translation missing --]]
---[[ L["S_OPTIONS_ACCESSIBILITY"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = ""--]] 
+L["S_OPTIONS_ACCESSIBILITY"] = "Доступность"
+L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = "Флаг над заданием"
+L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "Выделять золотым кольцом"
 L["S_OPTIONS_ANIMATIONS"] = "С анимацией"
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "Расположение карты по центру"
 L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "Сначала вам нужно включить 'Масштаб окна карты', значение не было изменено."

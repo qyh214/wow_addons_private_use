@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Garr-Classic", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 637 $"):sub(12, -3))
+mod:SetRevision("2019041710011")
 mod:SetCreatureID(12057)--, 12099
 mod:SetEncounterID(666)
 mod:SetModelID(12110)
@@ -13,7 +13,7 @@ mod:RegisterEventsInCombat(
 )
 
 local warnAntiMagicPulse	= mod:NewSpellAnnounce(19492, 2)
-local warnImmolate			= mod:NewTargetAnnounce(15732, 2, nil, "Healer", 2)
+local warnImmolate			= mod:NewTargetNoFilterAnnounce(15732, 2, nil, "Healer", 2)
 
 local timerAntiMagicPulseCD	= mod:NewCDTimer(16, 19492, nil, nil, nil, 2)--16-20 variation
 

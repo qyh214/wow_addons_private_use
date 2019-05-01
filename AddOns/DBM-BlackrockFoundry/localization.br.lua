@@ -1,4 +1,4 @@
-﻿-- Translated by GlitterStorm @ Azralon, last update: Feb.21th.2015
+-- Translated by GlitterStorm @ Azralon, last update: Feb.21th.2015
 if GetLocale() ~= "ptBR" then return end
 
 local L

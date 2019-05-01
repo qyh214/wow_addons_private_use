@@ -1,0 +1,28 @@
+## Interface: 80100
+## Plain Title: Narcissus
+## Title: |cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r
+
+## Notes: Immersive paperdoll frame and more. |n|cff959595Slash command: /Narci|r
+## Notes-zhCN: 为展示和分享而生的沉浸式角色界面|n|cff959595命令: /Narci|r
+## Notes-zhTW: 為展示和分享而生的沈浸式角色界面|n|cff959595命令: /Narci|r
+
+## Author: Peterodox
+## SavedVariables: NarcissusDB
+## SavedVariablesPerCharacter: NarcissusDB_PC
+
+Initialization.lua
+Locales\Localization.xml
+
+NarciDB\NarciAPIs.lua
+NarciDB\NarciUITemplates.xml
+NarciDB\GearBonus.lua
+
+Bridge\Bridge.xml
+
+Font\FontSettings.xml
+
+Narcissus.xml
+Preference.xml
+Widgets\NarciTooltip.xml
+Widgets\TitleManager.xml
+Widgets\PlayerModel.xml

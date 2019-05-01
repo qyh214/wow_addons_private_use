@@ -1,0 +1,453 @@
+<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+    <!-- © 2019 Peter Yu All Rights Reserved -->
+    <!--Call: 	self.AnimFrame.Anim:SetScale(scale)   self.AnimFrame.Anim.Bling:Play()-->
+     <Frame name="NarciClickFeedbackTemplate" parentKey="AnimFrame" clipChildren="true" virtual="true">
+        <Anchors>
+            <Anchor point="TOPLEFT" x="0" y="0"/>
+            <Anchor point="BOTTOMRIGHT" x="0" y="0"/>
+        </Anchors>			
+        <Layers>
+            <Layer level="ARTWORK" textureSubLevel="3">
+                <Texture file="Interface\AddOns\Narcissus\Art\BasicShapes\Circle" parentKey="Anim" hidden="false" alphaMode="ADD" Alpha="0">
+                    <Size x="36" y="36"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
+                    </Anchors>
+                    <Animations>
+                        <AnimationGroup parentKey="Bling" smoothing="IN_OUT">
+                            <Alpha fromAlpha="0" toAlpha="0.3" duration="0.2" order="1"/>
+                            <Scale scaleX="6" scaleY="6" duration="1.1" order="1"/>	
+                            <Alpha startDelay="0.2" fromAlpha="0.3" toAlpha="0" duration="0.8" order="1"/>		
+                            <Scripts>
+                                <OnPlay>
+                                    local mx, my = self:GetParent():GetParent():GetCenter();
+                                    local px, py = GetCursorPosition()
+                                    local scale = self:GetParent():GetParent():GetEffectiveScale()
+                                    px, py = px/scale, py/scale
+                                    self:GetParent():SetPoint("CENTER", px-mx, py-my)
+                                    self:GetParent():Show();
+                                </OnPlay>
+                                <OnStop>
+                                    self:GetParent():Hide();
+                                </OnStop>
+                                <OnFinished>
+                                    self:GetParent():Hide();
+                                </OnFinished>
+                            </Scripts>
+                        </AnimationGroup>
+                    </Animations>
+                </Texture>
+            </Layer>
+        </Layers>
+    </Frame>
+
+	<Frame name="NarciAnimContainerFrame" hidden="true" virtual="true">
+		<Scripts>
+			<OnLoad>
+				self.OppoDirection = false;
+				self.Width = self:GetParent():GetWidth();
+				self.TimeSinceLastUpdate = 0;
+
+				self.AnchorPoint, self.relativeTo, self.relativePoint, self.EndPoint, self.EndPointY = self:GetParent():GetPoint();
+				self.EndPointBAK = self.EndPoint;
+			</OnLoad>
+			<OnShow>
+				--print(self.OppoDirection)
+				self:GetParent():Show()
+				Anchor1, _, _, self.StartPoint, self.StartPointY = self:GetParent():GetPoint();
+				--print(Anchor1.." "..self.StartPoint)
+			</OnShow>
+			<OnHide>
+				self.TimeSinceLastUpdate = 0;
+				self.OppoDirection = not self.OppoDirection;
+			</OnHide>
+		</Scripts>
+	</Frame>
+
+	<Texture name="NarciTopShadowTemplate" parentKey="TopGradient" setAllPoints="true" virtual="true">
+		<Color a="1" r="1" g="1" b="1"/>
+		<Size y="4"/>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="0" y="0"/>
+			<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="0" y="0"/>
+		</Anchors>
+		<Gradient orientation="VERTICAL">
+			<MinColor a="0" r="0.0" g="0.0" b="0.0"/>
+			<MaxColor a="0.6" r="0" g="0" b="0"/>
+		</Gradient>
+	</Texture>
+
+	<Texture name="NarciBottomShadowTemplate" inherits="NarciTopShadowTemplate" parentKey="BottomGradient" setAllPoints="true" virtual="true">
+		<Anchors>
+			<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" x="0" y="0"/>
+			<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+		</Anchors>
+	</Texture>
+
+	<Slider name="NarciHorizontalSliderTemplate" orientation="HORIZONTAL" enableMouse="true" virtual="true">
+		<HitRectInsets>
+			<AbsInset left="-4" right="-4" top="-8" bottom="-8"/>
+		</HitRectInsets>
+		<ThumbTexture parentKey="Thumb" name="$parentThumb" setAllPoints="true" rotation="45">
+			<Size x="12" y="12"/>
+            <Color r="0" g="0" b="0" a="0.0"/>
+		</ThumbTexture>
+		<Layers>
+			<Layer level="BACKGROUND" textureSubLevel="1">
+				<Texture setAllPoints="true">
+					<Color r="0.3" g="0.3" b="0.3" a="1"/>
+				</Texture>
+			</Layer>
+			<Layer level="BACKGROUND" textureSubLevel="2">
+				<Texture setAllPoints="true" parentKey="Border">
+					<Color r="0" g="0" b="0" a="0.9"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="1" y="-1"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-1" y="1"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="BACKGROUND" textureSubLevel="4">
+				<Texture parentKey="VirtualThumb" setAllPoints="true" rotation="45">
+					<Color r="0" g="0" b="0" a="1"/>
+                    <Size x="10" y="10"/>
+					<Anchors>
+						<Anchor point="CENTER" relativePoint="CENTER" x="0" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="BACKGROUND" textureSubLevel="3">
+				<Texture setAllPoints="true" rotation="45" parentKey="ThumbBorder">
+					<Color r="0.3" g="0.3" b="0.3" a="1"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.VirtualThumb" relativePoint="TOPLEFT" x="-2" y="2"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.VirtualThumb" relativePoint="BOTTOMRIGHT" x="2" y="-2"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<FontString parentKey="KeyLabel" inherits="NarciIndicatorDigit" text="0" hidden="false" ignoreParentScale="true" justifyH="CENTER" justifyV="TOP">
+					<Anchors>
+						<Anchor point="TOP" relativeKey="$parent.VirtualThumb" relativePoint="BOTTOM" x="0" y="-6"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="KeyLabel2" inherits="NarciIndicatorLetter" text="0" hidden="true" ignoreParentScale="true" justifyH="LEFT" justifyV="MIDDLE">
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent" relativePoint="RIGHT" x="4" y="0"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="Label" inherits="AAAStatusNameMedium" justifyH="RIGHT" justifyV="CENTER" text="Label">
+					<Size x="0" y="0"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="LEFT" x="-12" y="0"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				self.ThumbBorder:SetColorTexture(1, 1, 1);
+			</OnEnter>
+			<OnLeave>
+				self.ThumbBorder:SetColorTexture(0.3, 0.3, 0.3);
+			</OnLeave>
+		</Scripts>
+	</Slider>
+
+    <Slider name="NarciHorizontalSliderWithMarksTemplate" inherits="NarciHorizontalSliderTemplate" virtual="true">
+        <Scripts>
+            <OnShow function="NarciAPI_OptimizeBorderThickness"/>
+            <OnLoad function="NarciAPI_SliderWithSteps_OnLoad"/>
+        </Scripts>
+    </Slider>
+
+	<Button name="NarciCloseButtonTemplate" virtual="true">
+		<Size x="12" y="12"/>
+		<HitRectInsets>
+			<AbsInset left="-4" right="-4" top="-4" bottom="-4"/>
+		</HitRectInsets>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture file="Interface\AddOns\Narcissus\ART\Tooltip\CloseButton" Alpha="1">
+					<TexCoords left="0" right="0.5" top="0" bottom="1"/>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture file="Interface\AddOns\Narcissus\ART\Tooltip\CloseButton" Alpha="0.2" alphaMode="ADD">
+					<TexCoords left="0.5" right="1" top="0" bottom="1"/>
+				</Texture>
+			</Layer>
+		</Layers>
+		<HighlightTexture file="Interface\AddOns\Narcissus\Art\Tooltip\CloseButton" Alpha="0.5" alphaMode="ADD">
+			<Size x="12" y="12"/>
+			<Anchors>
+				<Anchor point="CENTER"/>
+			</Anchors>
+			<TexCoords left="0.5" right="1" top="0" bottom="1"/>
+		</HighlightTexture>	
+		<Scripts>
+			<OnClick>
+				NarciAPI_FadeFrame(self:GetParent(), 0.2, "OUT");
+			</OnClick>
+			<OnEnter>
+				--GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT",0,15);
+				--GameTooltip:SetText(CLOSE);
+			</OnEnter>
+			<OnLeave>
+				--GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+
+	<Button name="NarciCheckButtonTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="16" y="16"/>
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="-4" right="-104" top="-4" bottom="-4"/>
+		</HitRectInsets>
+		<Layers>
+			<Layer level="BACKGROUND" textureSubLevel="1">
+				<Texture setAllPoints="true" parentKey="Background">
+					<Color r="0.3" g="0.3" b="0.3" a="1"/>
+				</Texture>
+			</Layer>
+			<Layer level="BACKGROUND" textureSubLevel="2">
+				<Texture setAllPoints="true" parentKey="Border">
+					<Color r="0" g="0" b="0" a="0.9"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="1" y="-1"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-1" y="1"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="4">
+				<FontString inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="MIDDLE" parentKey="Label">
+					<Size x="0" y="0"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent" relativePoint="RIGHT" x="8" y="0"/>
+					</Anchors>
+				</FontString>
+				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Arrows\Tick" parentKey="Tick" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="0" y="-0"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-0" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				self.IsOn = false;
+				NarciAPI_OptimizeBorderThickness(self);
+			</OnLoad>
+			<OnClick>
+				self.IsOn = not self.IsOn;
+				if self.IsOn then
+					self.Tick:Show();
+				else
+					self.Tick:Hide();
+				end
+			</OnClick>
+			<OnEnter>
+				self.Background:SetColorTexture(1, 1, 1);
+			</OnEnter>
+			<OnLeave>
+				self.Background:SetColorTexture(0.3, 0.3, 0.3);
+			</OnLeave>
+		</Scripts>
+	</Button>
+
+	<Button name="NarciConfirmButtonTemplate" hidden="true" virtual="true">
+		<Size>
+			<AbsDimension x="16" y="16"/>
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="-4" right="-4" top="-4" bottom="-4"/>
+		</HitRectInsets>
+		<Layers>
+			<Layer level="OVERLAY" textureSubLevel="1">
+				<Texture setAllPoints="true" parentKey="Background">
+					<Color r="0.9882" g="0.9294" b="0.0" a="1"/>
+					<Animations>
+						<AnimationGroup parentKey="bling" smoothing="OUT" looping="BOUNCE">
+							<Alpha startDelay="0.15" fromAlpha="1" toAlpha="0" duration="0.65" order="1"/>
+						</AnimationGroup>
+					</Animations>
+				</Texture>
+				<MaskTexture file="Interface\AddOns\Narcissus\Art\Widgets\Arrows\Tick" parentKey="Tick" hidden="false" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="0" y="-0"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-0" y="0"/>
+					</Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="Background"/>
+					</MaskedTextures>
+				</MaskTexture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				self.IsOn = false;
+				--NarciAPI_OptimizeBorderThickness(self);
+			</OnLoad>
+			<OnShow>
+				self.Background.bling:Play()
+			</OnShow>
+			<OnEnter>
+				self.Background:SetColorTexture(1, 1, 1);
+				self.Background.bling:Stop();
+			</OnEnter>
+			<OnLeave>
+				self.Background:SetColorTexture(0.9882, 0.9294, 0.0);
+				self.Background.bling:Play();
+			</OnLeave>
+				<OnClick>
+					local action = self:GetParent().action;
+					local key = self:GetParent().key;
+					if action and key then
+						if SetBinding(key, action, 1) then
+							local Color_Good_r = 124/255;
+							local Color_Good_g = 197/255;
+							local Color_Good_b = 118/255;
+							self:GetParent().Description:SetText("|cff7cc576"..KEY_BOUND)
+							self:GetParent().Highlight:SetColorTexture(Color_Good_r, Color_Good_g, Color_Good_b)
+							SaveBindings(1);    --account wide
+							self:Hide();
+						end
+					end
+				</OnClick>
+		</Scripts>
+	</Button>
+
+	<Button name="NarciBindingButtonTemplate" virtual="true" registerForClicks="LeftButtonUp, RightButtonUp">
+		<HitRectInsets>
+			<AbsInset left="-4" right="-4" top="-4" bottom="-4"/>
+		</HitRectInsets>
+		<Layers>
+			<Layer level="BACKGROUND" textureSubLevel="1">
+				<Texture setAllPoints="true" parentKey="Background">
+					<Color r="0.3" g="0.3" b="0.3" a="1"/>
+				</Texture>
+			</Layer>
+			<Layer level="BACKGROUND" textureSubLevel="2">
+				<Texture setAllPoints="true" parentKey="Highlight" Alpha="0">
+					<Color r="1" g="1" b="1" a="1"/>
+				</Texture>
+			</Layer>
+			<Layer level="BACKGROUND" textureSubLevel="3">
+				<Texture setAllPoints="true" parentKey="Border">
+					<Color r="0" g="0" b="0" a="0.9"/>
+					<Gradient orientation="VERTICAL">
+						<MinColor a="1" r="0.8" g="0.8" b="0.8"/>
+						<MaxColor a="1" r="1" g="1" b="1"/>
+					</Gradient>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="1" y="-1"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-1" y="1"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="4">
+				<FontString inherits="AAAStatusNameMedium" justifyH="RIGHT" justifyV="MIDDLE" parentKey="Label">
+					<Size x="0" y="0"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="LEFT" x="-8" y="0"/>
+					</Anchors>
+				</FontString>
+				<FontString inherits="NarciIndicatorLetter" justifyH="LEFT" justifyV="TOP" parentKey="Description" ignoreParentScale="true" Alpha="0">
+					<Size x="170" y="0"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="BOTTOMLEFT" x="0" y="-6"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<ButtonText inherits="AAAStatusNameMedium" justifyH="CENTER" justifyV="MIDDLE" parentKey="Value" text="NOT_BOUND">
+			<Size x="0" y="0"/>
+			<Anchors>
+				<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
+			</Anchors>
+		</ButtonText>
+		<Frames>
+			<Button parentKey="ConfirmButton" inherits="NarciConfirmButtonTemplate">
+				<Size>
+					<AbsDimension x="14" y="14"/>
+				</Size>
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.Border" relativePoint="RIGHT" x="6" y="0"/>
+				</Anchors>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				self.IsOn = false;
+			</OnLoad>
+			<OnEnter>
+				self.Background:SetColorTexture(1, 1, 1);
+			</OnEnter>
+			<OnLeave>
+				self.Background:SetColorTexture(0.3, 0.3, 0.3);
+			</OnLeave>
+			<OnHide>
+				self.Description:SetAlpha(0);
+				self.Background:SetColorTexture(0.3, 0.3, 0.3);
+				self.ConfirmButton:Hide();
+			</OnHide>
+		</Scripts>
+	</Button>
+
+
+
+    <Button name="Narci_PlaceHolderButtonRound" virtual="true">
+		<Size>
+			<AbsDimension x="24" y="24"/>
+		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="Color" setAllPoints="true">
+					<Color r="0.2" g="0.2" b="0.2" a="1"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture parentKey="Highlight" setAllPoints="true" hidden="true" alphaMode="ADD">
+					<Color r="1" g="1" b="1" a="0.5"/>
+				</Texture>
+				<MaskTexture file="Interface\AddOns\Narcissus\Art\Widgets\LightSetup\ColorButton-Mask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
+					</Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="Color"/>
+						<MaskedTexture childKey="Highlight"/>
+					</MaskedTextures>
+				</MaskTexture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\LightSetup\UI" Alpha="1" hidden="false" parentKey="Border">
+					<TexCoords left="0.75" right="0.8359375" top="0" bottom="0.171875"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+        <Scripts>
+			<OnLoad>
+				self.IsOn = false;
+			</OnLoad>
+            <OnEnter>
+                self.Highlight:Show();
+            </OnEnter>
+            <OnLeave>
+                self.Highlight:Hide();
+            </OnLeave>
+        </Scripts>
+    </Button>
+</Ui>
