@@ -2,11 +2,12 @@
 -- 作者：houshuu
 
 --Add access to ElvUI engine and unitframe framework
-local E, L, V, P, G = unpack(ElvUI)
+local E, _, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local L = unpack(select(2, ...))
 local WT = E:GetModule("WindTools")
+local WTT = E:NewModule('Wind_Tags')
 local ElvUF = ElvUI.oUF
 local RC = LibStub("LibRangeCheck-2.0")
-assert(ElvUF, "ElvUI was unable to locate oUF.")
 --Cache global variables
 --Lua functions
 local _G = _G
@@ -30,76 +31,6 @@ local UnitClass = UnitClass
 local UnitName = UnitName
 
 --GLOBALS: _TAGS, Hex, _COLORS
-
-function E:ShortValue(v)
-	local shortValueDec = format("%%.%df", E.db.general.decimalLength or 1)
-	local shortValue = abs(v)
-	if E.db.general.numberPrefixStyle == "METRIC" then
-		if shortValue >= 1e12 then
-			return format(shortValueDec.."T", v / 1e12)
-		elseif shortValue >= 1e9 then
-			return format(shortValueDec.."G", v / 1e9)
-		elseif shortValue >= 1e6 then
-			return format(shortValueDec.."M", v / 1e6)
-		elseif shortValue >= 1e3 then
-			return format(shortValueDec.."k", v / 1e3)
-		else
-			return format("%.0f", v)
-		end
-	elseif E.db.general.numberPrefixStyle == "CHINESE" then
-		if E.db.WindTools["More Tools"]["Enhanced Tags"]["enabled"] then
-			if shortValue >= 1e8 then
-				return format(shortValueDec..L["Yi"], v / 1e8)
-			elseif shortValue >= 1e4 then
-				return format(shortValueDec..L["Wan"], v / 1e4)
-			else
-				return format("%.0f", v)
-			end
-		else
-			if shortValue >= 1e8 then
-				return format(shortValueDec.."Y", v / 1e8)
-			elseif shortValue >= 1e4 then
-				return format(shortValueDec.."W", v / 1e4)
-			else
-				return format("%.0f", v)
-			end
-		end
-	elseif E.db.general.numberPrefixStyle == "KOREAN" then
-		if shortValue >= 1e8 then
-			return format(shortValueDec.."억", v / 1e8)
-		elseif shortValue >= 1e4 then
-			return format(shortValueDec.."만", v / 1e4)
-		elseif shortValue >= 1e3 then
-			return format(shortValueDec.."천", v / 1e3)
-		else
-			return format("%.0f", v)
-		end
-	elseif E.db.general.numberPrefixStyle == "GERMAN" then
-		if shortValue >= 1e12 then
-			return format(shortValueDec.."Bio", v / 1e12)
-		elseif shortValue >= 1e9 then
-			return format(shortValueDec.."Mrd", v / 1e9)
-		elseif shortValue >= 1e6 then
-			return format(shortValueDec.."Mio", v / 1e6)
-		elseif shortValue >= 1e3 then
-			return format(shortValueDec.."Tsd", v / 1e3)
-		else
-			return format("%.0f", v)
-		end
-	else
-		if shortValue >= 1e12 then
-			return format(shortValueDec.."T", v / 1e12)
-		elseif shortValue >= 1e9 then
-			return format(shortValueDec.."B", v / 1e9)
-		elseif shortValue >= 1e6 then
-			return format(shortValueDec.."M", v / 1e6)
-		elseif shortValue >= 1e3 then
-			return format(shortValueDec.."K", v / 1e3)
-		else
-			return format("%.0f", v)
-		end
-	end
-end
 
 local textFormatStyles = {
 	["CURRENT"] = "%s",
@@ -473,3 +404,18 @@ ElvUF.Tags.Methods["range:expect"] = function(unit)
 	local String = format("%s", floor((min+max)/2))
 	return String
 end
+
+function WTT:Initialize()
+	if E.db.WindTools["More Tools"]["Enhanced Tags"]["enabled"] then
+		if E.ShortPrefixStyles then
+			E.ShortPrefixStyles["CHINESE"] = {{1e8,L["Yi"]}, {1e4,L["Wan"]}}
+			E:BuildPrefixValues()
+		end
+	end
+end
+
+local function InitializeCallback()
+	WTT:Initialize()
+end
+
+E:RegisterModule(WTT:GetName(), InitializeCallback)

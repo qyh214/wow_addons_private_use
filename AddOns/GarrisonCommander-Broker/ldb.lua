@@ -98,12 +98,12 @@ for i=1,#ColorStrings do
 	ColorValues[i]={tonumber(c:sub(1,2),16)/255,tonumber(c:sub(3,4),16)/255,tonumber(c:sub(5,6),16)/255}
 end
 local spellids={
-	[158754]='herb',
-	[158745]='mine',
+	[158754]='mine',
+	[158745]='herb',
 	[170599]='mine',
 	[170691]='herb',
-	[195122]='herb',
-	[195114]='mine',
+	[195122]='mine',
+	[195114]='herb',
 }
 local buildids={
 	mine={61,62,63},

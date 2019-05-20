@@ -440,78 +440,12 @@ end
 -----------------------------
 ------AAA Smooth Scroll------
 -----------------------------
-
-local function SmoothScrollContainer_OnUpdate(self, elapsed)
-	local delta = self.delta;
-    local scrollBar = self:GetParent().scrollBar;
-	local step = max(abs(scrollBar:GetValue() - self.EndValue)/5 , 2);		--if the step (Δy) is too small, the fontstring will jitter.
-
-	if ( delta == 1 ) then
-		scrollBar:SetValue(max(0, scrollBar:GetValue() - step));
-	else
-		scrollBar:SetValue(min(self.maxVal, scrollBar:GetValue() + step));
-	end
-
-	local remainedStep = abs(self.EndValue - scrollBar:GetValue())
-	if self.animationDuration >= 2 or remainedStep <= 2.1 then
-		scrollBar:SetValue(min(self.maxVal, self.EndValue));
-		self:Hide();
-	end
-end
-
-local function NarciAPI_SmoothScroll_OnMouseWheel(self, delta, stepSize)
-	if ( not self.scrollBar:IsVisible() ) then
-		return;
-	end
-	Narci_TitleManager_TitleTooltip:SetAlpha(0);
-
-    local ScrollContainer = self.SmoothScrollContainer; 
-	local stepSize = stepSize or self.stepSize or self.buttonHeight;
-
-    ScrollContainer.stepSize = stepSize;
-	ScrollContainer.maxVal = self.range
-
-	self.scrollBar:SetValueStep(0.01);
-	ScrollContainer.delta = delta;
-
-	local Current = self.scrollBar:GetValue();
-	if not((Current == 0 and delta > 0) or (Current == self.range and delta < 0 )) then
-		ScrollContainer:Show()
-	end
-	
-	local deltaRatio = ScrollContainer.deltaRatio or 1;
-	ScrollContainer.EndValue = min(max(0, ScrollContainer.EndValue - delta*deltaRatio*self.buttonHeight), self.range);
-end
-
-function NarciAPI_SmoothScroll_Initialization(self, updatedList, updateFunc, deltaRatio)     --self=ListScrollFrame
-	self.update = updateFunc;
-	self.updatedList = UpdatedList;
-    local parentName = self:GetName();
-    local frameName = parentName and (parentName .. "SmoothScrollContainer") or nil;
-    
-    local SmoothScrollContainer = CreateFrame("Frame", frameName, self);
-    SmoothScrollContainer:Hide();
-    
-    SmoothScrollContainer.stepSize = 0;
-    SmoothScrollContainer.delta = 0;
-    SmoothScrollContainer.animationDuration = 0;
-    SmoothScrollContainer.EndValue = 0;
-	SmoothScrollContainer.maxVal = 0;
-	SmoothScrollContainer.deltaRatio = deltaRatio or 1;
-    SmoothScrollContainer:SetScript("OnUpdate", SmoothScrollContainer_OnUpdate);
-    SmoothScrollContainer:SetScript("OnShow", function(self)
-        self.EndValue = self:GetParent().scrollBar:GetValue();
-    end);
-
-    self.SmoothScrollContainer = SmoothScrollContainer;
-
-    self:SetScript("OnMouseWheel", NarciAPI_SmoothScroll_OnMouseWheel);
-end
+local NarciAPI_SmoothScroll_Initialization = NarciAPI_SmoothScroll_Initialization;
 
 function Narci_TitleManager_ListScrollFrame_OnLoad(self)
     self:EnableMouse(true);
     NarciAPI_BuildScrollFrame(self, "OptionalTitleTemplate", 0, 0, nil, nil, 0, 0);
-	NarciAPI_SmoothScroll_Initialization(self, playerTitles, Narci_TitileManager_UpdateList, 3)
+	NarciAPI_SmoothScroll_Initialization(self, playerTitles, Narci_TitileManager_UpdateList, 3, 0.2)
 end
 
 function Narci_TitleToken_OnClick(self)

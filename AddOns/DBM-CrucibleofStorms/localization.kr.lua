@@ -16,16 +16,8 @@ L:SetMiscLocalization({
 ---------------------------
 L= DBM:GetModLocalization(2332)
 
-L:SetWarningLocalization({
-
-})
-
-L:SetTimerLocalization({
-
-})
-
 L:SetOptionLocalization({
-	UnstableBehavior	= "공격대 전체의 공명 말풍선 작동 방식 설정 (공대장일 경우 공격대 전체 설정을 통제)",
+	UnstableBehavior2	= "공격대 전체의 공명 말풍선 작동 방식 설정 (공대장일 경우 공격대 전체 설정을 통제)",
 	SetOne				= "공허의 돌 (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:32:48:0:16|t), 삼지창/바다 (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:16:32:16:32|t), 폭풍우/폭풍 (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:0:16:16:32|t)",--Default
 	SetTwo				= "공허의 돌 (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:32:48:0:16|t), 삼지창/바다 (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:0:16:16:32|t), 폭풍우/폭풍 (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:16:32:16:32|t)",
 	SetThree			= "공허의 돌 (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:32:48:0:16|t), 삼지창/바다 (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:0:16:16:32|t), 폭풍우/폭풍 (|TInterface\\TargetingFrame\\UI-RaidTargetingIcons.blp:13:13:0:0:64:64:0:16:0:16|t)",
@@ -34,7 +26,7 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	Ocean = "삼지창/바다",
-	Storm = "폭풍우/폭풍",
+	Storm = "폭풍우 소환기",
 	Void = "공허의 돌",
 	Lunacy = "광기",
 	DBMConfigMsg	= "불안정한 공명 설정이 공대장의 설정대로 %s이 되었습니다."

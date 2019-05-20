@@ -1,6 +1,5 @@
-local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
-local L = AceLocale:NewLocale("ElvUI", "enUS")
-if not L then return end
+local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "enUS")
+
 -- enUS
 -- 设置主界面
 L["WindTools"] = "|cff0287d0Wi|r|cff1297e0n|r|cff22a7f0dT|r|cff19b5feo|r|cff29c5ffo|r|cff39d5ffl|r|cff39d5ffs|r"

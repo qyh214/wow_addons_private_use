@@ -15,6 +15,7 @@ L["Enables / disables the module"] = true
 L["Wind Dungeon Helper on Github"] = true
 L["Minimap icon"] = true
 L["Enables / disables Wind Dungeon Helper minimap icon"] = true
+L["Click to toggle config window."] = true
 -- Avoidable Damage
 L["Avoidable Damage"] = true
 L["General"] = true
@@ -26,7 +27,7 @@ L["Define output channel"] = true
 L["Self(Chat Frame)"] = true
 L["Party"] = true
 L["Emote"] = true
-L["Smart"] = true
+L["None"] = true
 L["Be compatible with ElitismHelper"] = true
 L["Use 'ElitismHelper' as addon message prefix."] = true
 L["Ranking"] = true
@@ -64,3 +65,10 @@ L["Asia - W"] = true
 L["Damage accuracy"] = true
 -- Enemy Progress
 L["Enemy Progress"] = true
+-- LFG Group Info
+L["LFG Group Info"] = true
+L["Compact mode"] = true
+L["Display a role icon for each class instead of the role title."] = true
+L["No title in tooltip"] = true
+L["Do not display the WindDungeonHelper title in tooltip."] = true
+L["|cff00a8ffWDH|r Group Info"] = true

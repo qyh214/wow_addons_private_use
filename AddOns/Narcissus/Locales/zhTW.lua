@@ -59,21 +59,63 @@ L["Minimap Tooltip Set Scale"] = "設定縮放大小: |cffffffff/narci [大小�
 
 NARCI_CLIPBOARD = "剪貼板";
 NARCI_LAYOUT = "版面配置";
-NARCI_LAYOUT_TEXTS_ONLY = "只有文字";
-NARCI_LAYOUT_TEXTS_MODEL = "文字和模組";
+NARCI_LAYOUT_SYMMETRY = "對稱";
+NARCI_LAYOUT_ASYMMETRY = "不對稱";
 NARCI_COPY_TEXTS = "複製文字";
 NARCI_SYNTAX = "句法";
 NARCI_SYNTAX_PLAIN_TEXT = "純文字";
 NARCI_EXPORT_INCLUDES = "同時導出...";
 NARCI_ITEM_ID = "物品ID";
+
+NARCI_3DMODEL = "3D模組";
+NARCI_EQUIPMENTSLOTS = "裝備欄";
+
+--Preferences--
+NARCI_PREFERENCE = "偏好設定-PH";
+NARCI_INTERFACE = "介面";
+NARCI_THEME = "主題";
+NARCI_EFFECTS = "效果";
+NARCI_TRANSMOG = "塑形";
+NARCI_PREFERENCE_TOOLTIP = "點一下打開偏好設定";
+NARCI_TRUNCATE_TEXT = "截斷文字";
+NARCI_TEXT_WIDTH = "文字寬度";
+NARCI_HOTKEY = "快捷鍵";
 NARCI_DOUBLE_TAP = "按兩下";
+NARCI_DOUBLE_TAP_DESCRIPTION = "Double-tap the key bound to Character Pane to open Narcissus."
 NARCI_OVERRIDE = "是否覆蓋";
 NARCI_INVALID_KEY = "無效的值";
 NARCI_MINIMAP_BUTTON = "小地圖按鈕";
-NARCI_SHORTCUTS = "快捷鍵";
+NARCI_SHORTCUTS = "快捷方式";
 NARCI_FILTERS = "濾鏡";
+NARCI_FILTERS_DESCRIPTION = "All filters except vignette will be disabled in transmog mode.";
 NARCI_GRAIN_EFFECT = "顆粒效果";
-NARCI_PREFERENCE = "偏好設定-PH";
+NARCI_CAMERA_MOVEMENT = "鏡頭運動";
+NARCI_CAMERA_ORBIT = "環繞鏡頭";
+NARCI_CAMERA_ORBIT_ENABLED_DESCRIPTION = "When you open this addon, the camera will be rotated to your front and begin orbiting.";
+NARCI_CAMERA_ORBIT_DISABLED_DESCRIPTION = "When you open this addon, the camera will be zoomed in without rotation";
+NARCI_FADEOUT = "自動淡化";
+NARCI_FADEOUT_DESCRIPTION = "Button fades out when you move the cursor out of it.";
+NARCI_FADE_MUSIC = "淡入/淡出音樂";
+NARCI_VIGNETTE_STRENGTH = "Vignette Strength";
+NARCI_WEATHER_EFFECT = "天氣效果";
+NARCI_DEFAULT_LAYOUT = "預設佈局";
+NARCI_LAYOUT_1 = "對稱，唯一模組";
+NARCI_LAYOUT_2 = "雙模組";
+NARCI_LAYOUT_3 = "緊湊模式";
+NARCI_BORDER_THEME = "邊框主題";
+NARCI_BORDER_THEME_BRIGHT = "明亮";
+NARCI_BORDER_THEME_DARK = "灰暗";
+NARCI_ALWAYS_SHOW_MODEL = "總是顯示模組";
+NARCI_SHOW_FULL_BODY = "顯示全身";
+--Model Control--
+NARCI_SHEATH_WEAPON = "收起武器";
+NARCI_STAND_IDLY = "站立狀態";
+NARCI_RANGED_WEAPON = "遠程武器";
+NARCI_MELEE_WEAPON = "近戰武器";
+NARCI_SPELLCASTING = "施法動作";
+NARCI_ANIMATION_ID = "動畫ID";
+NARCI_GROUND_SHADOW = "模擬地面陰影";
+NARCI_HIDE_PLAYER = "隱藏玩家自身";
 
 --Others need to be localized--
 L["Level"] = "等級";

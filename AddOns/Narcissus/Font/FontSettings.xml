@@ -583,6 +583,59 @@
 		</Member>
 	</FontFamily>
 
+	<FontFamily name="NarciMenu" virtual="true">
+		<Member alphabet="roman">
+			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="13">
+				<Shadow>
+					<Offset>
+						<AbsDimension x="1" y="-1"/>
+					</Offset>
+					<Color r="0" g="0" b="0"/>
+				</Shadow>
+			</Font>
+		</Member>
+		<Member alphabet="korean">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="13">
+				<Shadow>
+					<Offset>
+						<AbsDimension x="1" y="-1"/>
+					</Offset>
+					<Color r="0" g="0" b="0"/>
+				</Shadow>
+			</Font>
+		</Member>
+		<Member alphabet="simplifiedchinese">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="13">
+				<Shadow>
+					<Offset>
+						<AbsDimension x="1" y="-1"/>
+					</Offset>
+					<Color r="0" g="0" b="0"/>
+				</Shadow>
+			</Font>
+		</Member>
+		<Member alphabet="traditionalchinese">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="13">
+				<Shadow>
+					<Offset>
+						<AbsDimension x="1" y="-1"/>
+					</Offset>
+					<Color r="0" g="0" b="0"/>
+				</Shadow>
+			</Font>
+		</Member>
+		<Member alphabet="russian">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSans-Medium.ttf" height="13">
+				<Shadow>
+					<Offset>
+						<AbsDimension x="1" y="-1"/>
+					</Offset>
+					<Color r="0" g="0" b="0"/>
+				</Shadow>
+			</Font>
+		</Member>
+	</FontFamily>
+
 	<Font name="AAAItemName" inherits="ItemNameMedium" virtual="true">
 		<Color r="1" g="1" b="1"/>
 	</Font>
@@ -615,7 +668,11 @@
 
 	</Font>
 
-	<Font name="AAAPlayerInfo" inherits="PlayerInfoSmall" virtual="true">
+	<Font name="AAAPlayerInfo" inherits="PlayerInfoSmall" virtual="true" height="12"> 
+
+	</Font>
+
+	<Font name="AAAPreferenceMedium" inherits="NarciMenu" virtual="true">
 
 	</Font>
 
@@ -650,6 +707,24 @@
 				<AbsDimension x="0.6" y="-0.6"/>
 			</Offset>
 			<Color a="0.8" r="0" g="0" b="0"/>
+		</Shadow>
+	</Font>
+	<Font name="NarciHighlightFont" inherits="ItemLevelMedium" virtual="true">
+		<Color r="1" g="1" b="1"/>
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1"/>
+			</Offset>
+			<Color r="0" g="0" b="0"/>
+		</Shadow>
+	</Font>
+	<Font name="NarciDisabledFont" inherits="ItemLevelMedium" virtual="true">
+		<Color r="0.4" g="0.4" b="0.4"/>
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1"/>
+			</Offset>
+			<Color r="0" g="0" b="0"/>
 		</Shadow>
 	</Font>
 </Ui>

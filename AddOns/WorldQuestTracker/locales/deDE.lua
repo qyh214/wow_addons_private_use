@@ -89,14 +89,7 @@ L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_OPTION"] = "Weniger als %d Stunden"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SHOWTEXT"] = "Text für verbleibende Zeit"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SORTBYTIME"] = "Nach verbleibender Zeit anordnen"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_TITLE"] = "Verbleibende Zeit"
-L["S_MAPBAR_SUMMARY"] = "Übersicht"
 L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "Accountweit"
-L["S_MAPBAR_SUMMARYMENU_MOREINFO"] = "Linksklick: Mehr Info"
-L["S_MAPBAR_SUMMARYMENU_NOATTENTION"] = [=[Deine anderen Charaktere verfolgen
-keine Quests, deren verbleibende
-Zeit weniger als 2 Stunden beträgt!]=]
-L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "Erfordert Aufmerksamkeit"
-L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "Heutige Belohnungen"
 --[[Translation missing --]]
 --[[ L["S_OPTIONS_ACCESSIBILITY"] = ""--]] 
 --[[Translation missing --]]

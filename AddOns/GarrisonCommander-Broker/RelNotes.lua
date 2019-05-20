@@ -7,6 +7,9 @@ self:HF_Paragraph("Description")
 self:HF_Pre([[
 Data broker for Garrison stuff.
 ]])
+self:RelNotes(3,1,1,[[
+Fix: Harvesting node should now be detected again
+]])
 self:RelNotes(3,0,0,[[
 Fix: Harvesting detection works again, thanks to twitchdefresaemoved lua error GetAbsoluteMonth
 ]])

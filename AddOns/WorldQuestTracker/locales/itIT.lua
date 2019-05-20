@@ -115,13 +115,7 @@ L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_OPTION"] = "Meno di %d Ore"
 --[[ L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SHOWTEXT"] = ""--]] 
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SORTBYTIME"] = "Ordina per Tempo"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_TITLE"] = "Tempo Rimanente"
-L["S_MAPBAR_SUMMARY"] = "Sommario"
 L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "Legata all'Account"
-L["S_MAPBAR_SUMMARYMENU_MOREINFO"] = "Clicca per maggiori info"
---[[Translation missing --]]
---[[ L["S_MAPBAR_SUMMARYMENU_NOATTENTION"] = ""--]] 
-L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "Richiede Attenzione"
-L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "Ricompense Odierne"
 --[[Translation missing --]]
 --[[ L["S_OPTIONS_ACCESSIBILITY"] = ""--]] 
 --[[Translation missing --]]

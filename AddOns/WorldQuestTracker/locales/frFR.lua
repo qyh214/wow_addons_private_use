@@ -94,13 +94,7 @@ L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_OPTION"] = "Moins de %d heures"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SHOWTEXT"] = "Texte temps restant"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SORTBYTIME"] = "Trier par temps"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_TITLE"] = "Temps restant"
-L["S_MAPBAR_SUMMARY"] = "Résumé"
 L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "Tous vos perso."
-L["S_MAPBAR_SUMMARYMENU_MOREINFO"] = "Clic gauche pour plus d'info"
-L["S_MAPBAR_SUMMARYMENU_NOATTENTION"] = [=[Aucune quête suivie sur vos autres
-personnages n'a moins de 2 heures restantes.]=]
-L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "Demande votre attention"
-L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "Récompenses du jour"
 --[[Translation missing --]]
 --[[ L["S_OPTIONS_ACCESSIBILITY"] = ""--]] 
 --[[Translation missing --]]

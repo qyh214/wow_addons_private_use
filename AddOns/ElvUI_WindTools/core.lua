@@ -2,10 +2,13 @@
 ---------------------------------------------------
 -- 插件创建声明
 ---------------------------------------------------
-local E, L, V, P, G = unpack(ElvUI);
+local E, _, V, P, G = unpack(ElvUI);
 local WT = E:NewModule('WindTools', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0');
 local EP = LibStub("LibElvUIPlugin-1.0")
 local addonName, addonTable = ...
+-- 新的多语种设定
+addonTable[1] = ElvUI[1].Libs.ACL:GetLocale('ElvUI', E.global.general.locale or 'enUS')
+local L = addonTable[1]
 ---------------------------------------------------
 -- 缓存及提高代码可读性
 ---------------------------------------------------
@@ -53,6 +56,10 @@ function WT:GetTexCoord(width, height, keepAspectRatio)
 	end
 	return left, right, top, bottom
 end
+
+-- TODO: 刷新全部设定
+-- 或许可以添加到 staggerTable
+-- https://git.tukui.org/elvui/elvui/blob/development/ElvUI/Core/Core.lua#L1267
 
 -- 功能列表
 local ToolsOrder = {
@@ -117,18 +124,33 @@ E.PopupDialogs["WIND_RL"] = {
 function WT:InsertOptions()
 	-- 感谢名单
 	local WindToolsCreditList = {
-		"Blazeflack",
-		"Elv",
-		"Leatrix",
-		"bulleet",
-		"ahak",
-		"Simca",
-		"EUI",
+		"Awbee", 
+		"Azilroka", 
+		"Benik", 
+		"Blazeflack", 
+		"Elv", 
+		"Feraldin", 
+		"Leatrix", 
+		"Leatrix", 
+		"Marcel Menzel", 
+		"Permok", 
+		"Selias2k", 
+		"Simca", 
+		"Simca", 
+		"Sinaris", 
+		"StormFX", 
+		"Xruptor", 
+		"ahak", 
+		"bulleet", 
+		"cadcamzy", 
+		"heng9999", 
+		"icw82", 
+		"jjsheets", 
+		"jokair9", 
+		"kagaro", 
+		"loudsoul", 
+		"siweia", 
 		"wandercga",
-		"Leatrix",
-		"iShadow",
-		"Masque",
-		"XanChat",
 	}
 	E.Options.args.WindTools = {
 		-- 插件基本信息
@@ -183,7 +205,7 @@ function WT:InsertOptions()
 			author = {
 				order = 9,
 				type  = "description",
-				name  = "|cffC79C6Ehoushuu @ NGA|r (|cff00FF96Weakaura|r @ TW-暗影之月)\nSomeBlu @ Github"
+				name  = "|cffC79C6Ehoushuu @ NGA|r (|cff00FF96Tabimonk|r @ TW-暗影之月)\nSomeBlu @ Github"
 			},
 			reset_button = {
 				order = 10,

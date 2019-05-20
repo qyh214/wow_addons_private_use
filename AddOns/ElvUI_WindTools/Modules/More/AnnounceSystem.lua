@@ -1,6 +1,7 @@
 -- 原创模块
 -- 参考：https://wow.gamepedia.com/COMBAT_LOG_EVENT
-local E, L, V, P, G = unpack(ElvUI)
+local E, _, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local L = unpack(select(2, ...))
 local WT = E:GetModule("WindTools")
 local AS = E:NewModule('Wind_AnnounceSystem', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0');
 
@@ -166,6 +167,8 @@ local Taunt = {
 	[116189] = true, -- 嘲心嘯（武僧）
 	[118635] = true, -- 嘲心嘯（武僧圖騰 玄牛雕像 算作玩家群嘲）
 	[196727] = true, -- 嘲心嘯（武僧守護者 玄牛怒兆）
+	[281854] = true, -- 折磨（惡魔獵人 災虐）
+	[185245] = true, -- 折磨（惡魔獵人 復仇）
 	[2649] = true,   -- 低吼（獵人寵物）
 	[17735] = true,  -- 受難 （術士寵物虛無行者）
 }
@@ -476,9 +479,9 @@ function AS:SayThanks(...)
 	-- 格式化自定义字符串
 	local function FormatMessage(custom_message)
 		destName = destName:gsub("%-[^|]+", "")
-		sourceName = sourceName:gsub("%-[^|]+", "")
+		sourceNameWithoutServer = sourceName:gsub("%-[^|]+", "")
 		custom_message = gsub(custom_message, "%%player%%", destName)
-		custom_message = gsub(custom_message, "%%target%%", sourceName)
+		custom_message = gsub(custom_message, "%%target%%", sourceNameWithoutServer)
 		custom_message = gsub(custom_message, "%%spell%%", GetSpellLink(spellId))
 		return custom_message
 	end

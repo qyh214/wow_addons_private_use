@@ -1,92 +1,111 @@
-Changes since tag 8.1.20
+lightweight tag 3423744b9e1d34b9223e3e90b0e1c41675b6af88 8.1.24
+Author:	MysticalOS <mysticalosx@gmail.com>
+Date:	Tue May 7 16:11:54 2019 -0400
 
-commit ea4190077448ddda11f4b483a6dfed1de455f97f
+commit 3423744b9e1d34b9223e3e90b0e1c41675b6af88
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Mon Apr 29 23:36:52 2019 -0400
+Date:   Tue May 7 16:11:54 2019 -0400
 
-    Fix missing count in one of timers, and update hotfix revision
+    Prep Release
 
-commit 99c6bf5125bd3041238e3455c49f64f60b714a3e
+commit 2ccc15dc3427ff81ff1f3364f6274be82d4cf098
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Mon Apr 29 23:31:24 2019 -0400
+Date:   Mon May 6 22:06:03 2019 -0400
 
-    Update Mythic Uunat for April 29th hotfixes
-    Fixed missing first timer for eyes (piercing) in stage 3 in all difficulties of Uunat
+    Fix creature Ids for Cabal, so boss health reporting actually works.
 
-commit 28742ab4b13e6c369cc3d605d934781616ec517f
+commit 5d129619be67dd80448c7abd64123828616a4a91
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Mon Apr 29 14:41:54 2019 -0400
+Date:   Mon May 6 19:18:41 2019 -0400
 
-    Instead of returning one function into another slow function lookup, both functions should call the same fast access local function for efficiency.
+    Fixed regression from 8.0.1 update with spell lookup text caching that caused cast time and pre warn time to be broken since.
 
-commit 1299a8a6515ec029cd106bad946bdce8b4f76a5a
+commit 0898212f01fcc12cbb4a8d08741b1236ca41180c
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Mon Apr 29 13:28:43 2019 -0400
+Date:   Sun May 5 19:11:57 2019 -0400
 
-    Fix a minor usage of self
+    Bump hotfix and sync revisions to ignore previous versions of mod as well as tell people running previous versions of mod to update their stuff
 
-commit 19895b7ef84414e7e4235b42f91a729f9b7ff0c0
+commit 3cdf381e608d4d9512d438c0fdc6c4fa937c79b9
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Sun Apr 28 17:48:53 2019 -0400
+Date:   Sun May 5 13:37:30 2019 -0400
 
-    Add last 3 boss drycodes for Mechagon. Entire zone is now ready for the zone opening.
+    Apparently emote no longer fingers on heroic and mythic Yazma, so just move warning to SPELL_CAST_START instead.
+    Changed Uunat icon usage to be compatible with BWs finally released mythic uunat support.
+    Updated yell code to allow users to toggle relic and unstable yells independantly of one another since my favorite druid requested it at one point :)
 
-commit b7a5e0a670ff2d04c5e641b304720c87173e1c21
+commit c9c42c49effff7e86bbe20b9874cabad0cac2ab6
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Sun Apr 28 12:47:07 2019 -0400
+Date:   Sat May 4 22:28:02 2019 -0400
 
-    Add timer for when Visage will vanish on heroic and mythic Cabal
-    Fixed a bug where countdown yell for Aphotic Blast had wrong expire time
-    Fixed bug where special warning for Aphotic Blast showed every time you got a new stack or refreshed your 3 stack. only intended to warn you when you first get it.
+    Drycoded mods for 2 more Eternal Palace encounters
 
-commit b5feafd723dd7562e84a32745afb93ccbe158f83
+commit 80ea3c45317bb39542a48076d76bc392e8153f0d
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Fri Apr 26 13:58:31 2019 -0400
+Date:   Sat May 4 20:23:02 2019 -0400
 
-    Fix dbm alpha revisions not intcrementing every revision, hopefully
+    Kr update
 
-commit 399b8fd4f7aa650f889390183be3fdee88d638a7
+commit 33d04228ad7b4b68f055042bb8e1880a99633c64
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Fri Apr 26 01:43:32 2019 -0400
+Date:   Sat May 4 14:43:15 2019 -0400
 
-    Kr Update
-    Also fixed integer overflow error in DBM_CORE_UPDATEREMINDER_HEADER on non english clients.
+    Prevent multiple warnings of hidden blade within 3 second period of time if multiple go on same target
 
-commit a1e8726551ff7179b1dfef28b9d8eca6dcc2a56a
+commit 01aed2d16dbcb9e0b3efe65a3d6150163d56af3d
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Fri Apr 26 00:33:46 2019 -0400
+Date:   Sat May 4 02:30:32 2019 -0400
 
-    Thanks Travis
+    Sometimes emote fire twice, so this needs antispammed
 
-commit 8cb6a1da84060bf700dcfab4a20289239455e3dc
+commit 3e098c4d4d72b99b53711ea66a5de535e450ef69
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Fri Apr 26 00:26:13 2019 -0400
+Date:   Sat May 4 02:16:09 2019 -0400
 
-    Oh, and finish the unstable resonance timer, thanks Vodka!
+    Fix soundkit id for Yogg Saron
+    Disable forceNoDuplicates when using master or dialog channels.
 
-commit 2dba880f97b3c7fa6d996f7a9968f1fb00182a46
+commit fde9cf0d51d242178dec4f268ab27958940d76da
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Fri Apr 26 00:17:37 2019 -0400
+Date:   Fri May 3 23:38:07 2019 -0400
 
-    2 more Mechagon bosses done
+    Fix some improper string vs number situations with the new texture file IDs callbacks need to all be string, and objects need to be strings but direct injection to createbar need to be number
 
-commit 9d715251520fd35523642fd7c185f67fbc3ee819
+commit f8a720cb89f9d6a4705a8a45b84eb86e58a20aa7
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Thu Apr 25 03:32:19 2019 -0400
+Date:   Fri May 3 23:34:11 2019 -0400
 
-    Preliminary mythic timer update for Unstable
-    Also added code to handle the undying 2 eyes 2 at 1:16 and 1:26 swap behavior.
+    Improve brew warnings by user request
 
-commit 7c09eb611a8968b2d767476cfadcf039ced5a46c
+commit 2cad3d18d1d55c2793f46fc48678c1ebd22a0814
+Author: Benjamin Staneck <Stanzilla@users.noreply.github.com>
+Date:   Sat May 4 04:45:10 2019 +0200
+
+    fix copy pasta
+
+commit 3bd74796e39f399b5802bab2a174e192b540e6ae
+Author: Benjamin Staneck <Stanzilla@users.noreply.github.com>
+Date:   Sat May 4 03:45:40 2019 +0200
+
+    Update README.md
+    
+    Add Discord and Travis Badge
+
+commit d47b256014b8c7036c5fdd19e598d1b01c7eee00
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Thu Apr 25 00:23:40 2019 -0400
+Date:   Fri May 3 19:18:24 2019 -0400
 
-    Allow users to control icon behavior of Unstable Resonance, since WA's decided to ignore what boss mods were doing and do their own thing.
-    Now, DBM can be configured to resolve conflicts with these WA's.
+    Add Ulmath template
 
-commit 79cd96e04f2e4908409c34eb65f9fa382daef5fb
+commit 426a0777d1cdb3377f4e266247bc6374c89c9216
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Wed Apr 24 16:01:01 2019 -0400
+Date:   Thu May 2 23:42:27 2019 -0400
 
-    Increment alpha
+    Add support for defining max player level in the world boss ready check  option. this will allow world bosses that stop being relevent to automatically stop playing sounds.
+
+commit 52f5a8caf1ab78eb93517b5ad755b345d69edbf5
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Thu May 2 20:00:17 2019 -0400
+
+    First boss of Eternal Palace Drycoded. yay
 

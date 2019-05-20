@@ -6,10 +6,12 @@ local _G = _G
 local unpack = unpack
 local hooksecurefunc = hooksecurefunc
 
-local E, L, V, P, G = unpack(ElvUI)
+local E, _, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local L = unpack(select(2, ...))
 local WT = E:GetModule("WindTools")
 local A = E:GetModule('Auras')
 local S = E:GetModule('Skins')
+local AB = E:GetModule('ActionBars')
 local UF = E:GetModule('UnitFrames')
 local TT = E:GetModule('Tooltip')
 local DATABAR = E:GetModule('DataBars')
@@ -37,36 +39,39 @@ WS.addonskins_list = {
 	["bigwigs"] = L["Bigwigs"],
 }
 
-WS.blizzard_frames_backdrop = {
-	["MMHolder"] = false,
-	["HelpFrame"] = false,
-	["HelpFrameHeader"] = false,
-	["GameMenuFrame"] = false,
-	["InterfaceOptionsFrame"] = false,
-	["VideoOptionsFrame"] = false,
-	["CharacterFrame"] = false,
-	["EquipmentFlyoutFrameButtons"] = false,
-	["ElvUI_ContainerFrame"] = false,
-	["ElvUI_BankContainerFrame"] = false,
-	["AddonList"] = false,
-	["BonusRollFrame"] = false,
-	["ChatMenu"] = false,
-	["SplashFrame"] = false,
-	["DropDownList1"] = false,
-	["FriendsFrame"] = false,
-	["PVEFrame"] = false,
-	["SpellBookFrame"] = false,
-	["BNToastFrame"] = false,
-	["MailFrame"] = false,
-	["ReadyCheckFrame"] = false,
-	["IMECandidatesFrame"] = false,
-	["RaidUtility_ShowButton"] = false,
-	["RaidUtility_CloseButton"] = false,
-	["RaidUtilityRoleIcons"] = false,
-	["RaidUtilityPanel"] = false,
-	["WorldMapFrame"] = false,
-	["LeaveVehicleButton"] = false,
-	["GhostFrameContentsFrame"] = false,
+WS.blizzard_frames = {
+	["MMHolder"] = true,
+	["HelpFrame"] = true,
+	["HelpFrameHeader"] = true,
+	["GameMenuFrame"] = true,
+	["InterfaceOptionsFrame"] = true,
+	["VideoOptionsFrame"] = true,
+	["CharacterFrame"] = true,
+	["EquipmentFlyoutFrameButtons"] = true,
+	["ElvUI_ContainerFrame"] = true,
+	["ElvUI_BankContainerFrame"] = true,
+	["AddonList"] = true,
+	["BonusRollFrame"] = true,
+	["ChatMenu"] = true,
+	["SplashFrame"] = true,
+	["DropDownList1"] = true,
+	["FriendsFrame"] = true,
+	["PVEFrame"] = true,
+	["SpellBookFrame"] = true,
+	["BNToastFrame"] = true,
+	["MailFrame"] = true,
+	["ReadyCheckFrame"] = true,
+	["IMECandidatesFrame"] = true,
+	["RaidUtility_ShowButton"] = true,
+	["RaidUtility_CloseButton"] = true,
+	["RaidUtilityRoleIcons"] = true,
+	["RaidUtilityPanel"] = true,
+	["WorldMapFrame"] = true,
+	["LeaveVehicleButton"] = true,
+	["GhostFrameContentsFrame"] = true,
+	["ReputationDetailFrame"] = true,
+	["CinematicFrameCloseDialog"] = true,
+	["TaxiFrame"] = true,
 }
 
 WS.lazy_load_list = {
@@ -80,6 +85,7 @@ WS.lazy_load_list = {
 	},
 	["Blizzard_BindingUI"] = {"KeyBindingFrame"},
 	["Blizzard_ChallengesUI"] = {"ChallengesKeystoneFrame"},
+	["Blizzard_Calendar"] = {"CalendarFrame", "CalendarViewHolidayFrame"},
 }
 
 local function shadow_bigwigs(self, event, addon)
@@ -397,6 +403,7 @@ end
 
 function WS:ADDON_LOADED(_, addon)
 	if not self.db.elvui.general then return end
+
 	if self.lazy_load_list[addon] then
 		for _, frame in pairs(self.lazy_load_list[addon]) do
 			if _G[frame] then _G[frame]:CreateShadow(4) end
@@ -410,6 +417,10 @@ function WS:ADDON_LOADED(_, addon)
 		frame.RosterTab:CreateShadow()
 		frame.GuildBenefitsTab:CreateShadow()
 		frame.GuildInfoTab:CreateShadow()
+		frame.GuildMemberDetailFrame:CreateShadow()
+		frame.GuildMemberDetailFrame:ClearAllPoints()
+		frame.GuildMemberDetailFrame:SetPoint("TOPLEFT", frame, "TOPRIGHT", 5, -76)
+		if _G.CommunitiesGuildLogFrame then _G.CommunitiesGuildLogFrame:CreateShadow() end
 	end
 
 	-- 職業大廳條
@@ -423,12 +434,13 @@ end
 function WS:ShadowGeneralFrames()
 	if not self.db.elvui.general then return end
 
-	for frame, createOnBackdrop in pairs(self.blizzard_frames_backdrop) do
-		if not createOnBackdrop then
+	for frame, noBackdrop in pairs(self.blizzard_frames) do
+		if noBackdrop then
 			if _G[frame] then _G[frame]:CreateShadow() end
+		else
+			if _G[frame] and _G[frame].backdrop then _G[frame].backdrop:CreateShadow() end
 		end
 	end
-
 
 	-- 商人界面
 	if _G.MerchantFrame then
@@ -519,6 +531,12 @@ function WS:ShadowElvUIFrames()
 				if db.threatStyle == 'GLOW' and parent.shadow then parent.shadow:SetShown(not threat.glow:IsShown()) end
 			end
 		end)
+		-- 为分离的能量条提供阴影
+		hooksecurefunc(UF, "Configure_Power", function(_, frame)
+			if frame.USE_POWERBAR and frame.POWERBAR_DETACHED then 
+				frame.Power:CreateShadow()
+			end
+		end)
 		-- 为单位框体光环提供边缘美化
 		hooksecurefunc(UF, "UpdateAuraSettings", function(_, _, button) if button then button:CreateShadow() end end)
 	end
@@ -586,6 +604,11 @@ function WS:ShadowElvUIFrames()
 			-- 特殊技能栏 1 好像也没遇到需要用到 2 的，先放着吧
 			_G.ExtraActionButton1:CreateShadow()
 		end
+
+		hooksecurefunc(AB, "StyleButton", function(_, button)
+			button.backdrop:CreateShadow()
+		end)
+
 	end
 
 	-- 额外能量条

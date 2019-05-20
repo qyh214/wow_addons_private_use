@@ -77,6 +77,28 @@
 		</Gradient>
 	</Texture>
 
+	<Texture name="NarciTopLeftShadowNoneAnchorTemplate" parentKey="LeftGradient" setAllPoints="true" virtual="true">
+		<Color a="1" r="1" g="1" b="1"/>
+		<Size x="8"/>
+		<Gradient orientation="HORIZONTAL">
+			<MinColor a="0.0" r="0.0" g="0.0" b="0.0"/>
+			<MaxColor a="0.4" r="0" g="0" b="0"/>
+		</Gradient>
+	</Texture>
+
+	<Texture name="NarciTopLeftShadowTemplate" parentKey="LeftGradient" setAllPoints="true" virtual="true">
+		<Color a="1" r="1" g="1" b="1"/>
+		<Size x="8"/>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="0" y="0"/>
+			<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT" x="0" y="0"/>
+		</Anchors>
+		<Gradient orientation="HORIZONTAL">
+			<MinColor a="0.0" r="0.0" g="0.0" b="0.0"/>
+			<MaxColor a="0.4" r="0" g="0" b="0"/>
+		</Gradient>
+	</Texture>
+
 	<Texture name="NarciBottomShadowTemplate" inherits="NarciTopShadowTemplate" parentKey="BottomGradient" setAllPoints="true" virtual="true">
 		<Anchors>
 			<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" x="0" y="0"/>
@@ -94,12 +116,12 @@
 		</ThumbTexture>
 		<Layers>
 			<Layer level="BACKGROUND" textureSubLevel="1">
-				<Texture setAllPoints="true">
+				<Texture setAllPoints="true" snapToPixelGrid="false">
 					<Color r="0.3" g="0.3" b="0.3" a="1"/>
 				</Texture>
 			</Layer>
 			<Layer level="BACKGROUND" textureSubLevel="2">
-				<Texture setAllPoints="true" parentKey="Border">
+				<Texture setAllPoints="true" parentKey="Border" snapToPixelGrid="false">
 					<Color r="0" g="0" b="0" a="0.9"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="1" y="-1"/>
@@ -110,7 +132,7 @@
 			<Layer level="BACKGROUND" textureSubLevel="4">
 				<Texture parentKey="VirtualThumb" setAllPoints="true" rotation="45">
 					<Color r="0" g="0" b="0" a="1"/>
-                    <Size x="10" y="10"/>
+                    <Size x="12" y="12"/>
 					<Anchors>
 						<Anchor point="CENTER" relativePoint="CENTER" x="0" y="0"/>
 					</Anchors>
@@ -126,7 +148,7 @@
 				</Texture>
 			</Layer>
 			<Layer level="OVERLAY">
-				<FontString parentKey="KeyLabel" inherits="NarciIndicatorDigit" text="0" hidden="false" ignoreParentScale="true" justifyH="CENTER" justifyV="TOP">
+				<FontString parentKey="KeyLabel" inherits="NarciIndicatorLetter" text="0" hidden="false" ignoreParentScale="true" justifyH="CENTER" justifyV="TOP">
 					<Anchors>
 						<Anchor point="TOP" relativeKey="$parent.VirtualThumb" relativePoint="BOTTOM" x="0" y="-6"/>
 					</Anchors>
@@ -136,7 +158,7 @@
 						<Anchor point="LEFT" relativeKey="$parent" relativePoint="RIGHT" x="4" y="0"/>
 					</Anchors>
 				</FontString>
-				<FontString parentKey="Label" inherits="AAAStatusNameMedium" justifyH="RIGHT" justifyV="CENTER" text="Label">
+				<FontString parentKey="Label" inherits="AAAPreferenceMedium" justifyH="RIGHT" justifyV="CENTER" text="Label">
 					<Size x="0" y="0"/>
 					<Anchors>
 						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="LEFT" x="-12" y="0"/>
@@ -164,7 +186,7 @@
 	<Button name="NarciCloseButtonTemplate" virtual="true">
 		<Size x="12" y="12"/>
 		<HitRectInsets>
-			<AbsInset left="-4" right="-4" top="-4" bottom="-4"/>
+			<AbsInset left="-9" right="-9" top="-9" bottom="-9"/>
 		</HitRectInsets>
 		<Layers>
 			<Layer level="ARTWORK">
@@ -204,7 +226,7 @@
 			<AbsDimension x="16" y="16"/>
 		</Size>
 		<HitRectInsets>
-			<AbsInset left="-4" right="-104" top="-4" bottom="-4"/>
+			<AbsInset left="-4" right="-144" top="-4" bottom="-4"/>
 		</HitRectInsets>
 		<Layers>
 			<Layer level="BACKGROUND" textureSubLevel="1">
@@ -222,7 +244,7 @@
 				</Texture>
 			</Layer>
 			<Layer level="OVERLAY" textureSubLevel="4">
-				<FontString inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="MIDDLE" parentKey="Label">
+				<FontString inherits="AAAPreferenceMedium" justifyH="LEFT" justifyV="MIDDLE" parentKey="Label">
 					<Size x="0" y="0"/>
 					<Anchors>
 						<Anchor point="LEFT" relativeKey="$parent" relativePoint="RIGHT" x="8" y="0"/>
@@ -349,21 +371,30 @@
 				</Texture>
 			</Layer>
 			<Layer level="OVERLAY" textureSubLevel="4">
-				<FontString inherits="AAAStatusNameMedium" justifyH="RIGHT" justifyV="MIDDLE" parentKey="Label">
+				<FontString inherits="AAAPreferenceMedium" justifyH="RIGHT" justifyV="MIDDLE" parentKey="Label">
 					<Size x="0" y="0"/>
 					<Anchors>
 						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="LEFT" x="-8" y="0"/>
 					</Anchors>
 				</FontString>
-				<FontString inherits="NarciIndicatorLetter" justifyH="LEFT" justifyV="TOP" parentKey="Description" ignoreParentScale="true" Alpha="0">
+				<FontString inherits="NarciIndicatorLetter" justifyH="LEFT" justifyV="TOP" parentKey="Description" ignoreParentScale="true" Alpha="0" spacing="2">
 					<Size x="170" y="0"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="BOTTOMLEFT" x="0" y="-6"/>
 					</Anchors>
 				</FontString>
 			</Layer>
+			<Layer level="BACKGROUND" textureSubLevel="4">
+				<Texture setAllPoints="true" parentKey="DescriptionBackground">
+					<Color r="0" g="0" b="0" a="0"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.Description" relativePoint="TOPLEFT" x="2" y="-2"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Description" relativePoint="BOTTOMRIGHT" x="-2" y="2"/>
+					</Anchors>
+				</Texture>
+			</Layer>
 		</Layers>
-		<ButtonText inherits="AAAStatusNameMedium" justifyH="CENTER" justifyV="MIDDLE" parentKey="Value" text="NOT_BOUND">
+		<ButtonText inherits="AAAPreferenceMedium" justifyH="CENTER" justifyV="MIDDLE" parentKey="Value" text="NOT_BOUND">
 			<Size x="0" y="0"/>
 			<Anchors>
 				<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
@@ -391,6 +422,7 @@
 			</OnLeave>
 			<OnHide>
 				self.Description:SetAlpha(0);
+				self.DescriptionBackground:SetAlpha(0);
 				self.Background:SetColorTexture(0.3, 0.3, 0.3);
 				self.ConfirmButton:Hide();
 			</OnHide>
@@ -446,6 +478,7 @@
                 self.Highlight:Show();
             </OnEnter>
             <OnLeave>
+				if self.IsOn then	return; end
                 self.Highlight:Hide();
             </OnLeave>
         </Scripts>

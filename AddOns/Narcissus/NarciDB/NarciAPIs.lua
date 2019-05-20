@@ -23,7 +23,7 @@ local HeritageArmorItemIDs = {
 }
 
 local SecretlItemIDs = {
-    [157636]  = true,     --Waist of Time
+    [162690]  = true,     --Waist of Time
 }
 
 local SpecialItemList = {
@@ -41,7 +41,7 @@ local SpecialItemList = {
     [152341] = CommanderOfArgus,            --Lustrous Eventide Greatsword
     [152342] = CommanderOfArgus,            --Lustrous Daybreak Staff
     [152343] = CommanderOfArgus,            --Lustrous Eventide Staff
-    [157636] = CommanderOfArgus,            --Test
+    --[157636] = CommanderOfArgus,            --Test
 }
 
 
@@ -101,6 +101,44 @@ Narci_ColorTable = {
 	[896] = {156, 165, 153},	--Drustvar
 }
 
+local BorderTexture = {
+    ["Bright"]  = {
+        [0] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Black",
+        [1] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder",
+        [2] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Uncommon",
+        [3] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Rare",
+        [4] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Epic",
+        [5] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Legendary",
+        [6] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Artifact",
+        [7] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Heirloom",	--Void
+        [8] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Azerite",
+        [12] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Special",
+        ["Minimap"] = "Interface/AddOns/Narcissus/Art/Minimap/LOGO",
+    },
+
+    ["Dark"] = {
+        [0] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Black",
+        [1] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Black",
+        [2] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Uncommon",
+        [3] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Rare",
+        [4] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Epic",
+        [5] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Legendary",
+        [6] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Artifact",
+        [7] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Heirloom",	--Void
+        [8] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Azerite",
+        [12] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Black",
+        ["Minimap"] = "Interface/AddOns/Narcissus/Art/Minimap/LOGO-Thick",
+    },
+}
+
+function NarciAPI_GetBorderTexture()
+    local index = NarcissusDB and NarcissusDB.BorderTheme
+    if not index then
+        return BorderTexture["Bright"], BorderTexture["Bright"]["Minimap"], "Bright"
+    else
+        return (BorderTexture[index] or BorderTexture["Bright"]), BorderTexture[index]["Minimap"], index
+    end
+end
 
 --------------------
 ------Item API------
@@ -146,6 +184,19 @@ function NarciAPI_IsSpecialItem(itemID)
     else
         return false;
     end
+end
+
+local PrimaryStatusList = {
+	[LE_UNIT_STAT_STRENGTH] = NARCI_STAT_STRENGTH,
+	[LE_UNIT_STAT_AGILITY] = NARCI_STAT_AGILITY,
+	[LE_UNIT_STAT_INTELLECT] = NARCI_STAT_INTELLECT,
+};
+
+function NarciAPI_GetPrimaryStatusName()
+	local currentSpec = GetSpecialization();
+	local _, _, _, _, _, primaryStat = GetSpecializationInfo(currentSpec);
+	local ps = PrimaryStatusList[primaryStat];
+	return ps;
 end
 
 --------------------
@@ -227,7 +278,7 @@ function NarciAPI_OptimizeBorderThickness(self)
 end
 
 function NarciAPI_SliderWithSteps_OnLoad(self)
-    self.oldValue = 0;
+    self.oldValue = -1208;
     self.Marks = {};
     local width = self:GetWidth();
     local step = self:GetValueStep();
@@ -247,4 +298,118 @@ function NarciAPI_SliderWithSteps_OnLoad(self)
         tex:SetPoint("LEFT", self, "LEFT", markOffset + (i-1)*width/num_Gap, 0)
         tinsert(self.Marks, tex);
     end
+end
+
+-----Smooth Scroll-----
+local min = math.min;
+local max = math.max;
+local minOffset = 2;
+local function SmoothScrollContainer_OnUpdate(self, elapsed)
+	local delta = self.delta;
+    local scrollBar = self:GetParent().scrollBar;
+	local step = max(abs(scrollBar:GetValue() - self.EndValue)*(self.timeRatio) , self.minOffset);		--if the step (Δy) is too small, the fontstring will jitter.
+
+	if ( delta == 1 ) then
+		scrollBar:SetValue(max(0, scrollBar:GetValue() - step));
+	else
+		scrollBar:SetValue(min(self.maxVal, scrollBar:GetValue() + step));
+	end
+
+	local remainedStep = abs(self.EndValue - scrollBar:GetValue())
+	if self.animationDuration >= 2 or remainedStep <= ( self.minOffset - 0.4) then
+		scrollBar:SetValue(math.floor(min(self.maxVal, self.EndValue) + 0.5));
+		self:Hide();
+	end
+end
+
+local function NarciAPI_SmoothScroll_OnMouseWheel(self, delta, stepSize)
+	if ( not self.scrollBar:IsVisible() ) then
+		return;
+	end
+    local ScrollContainer = self.SmoothScrollContainer; 
+	local stepSize = stepSize or self.stepSize or self.buttonHeight;
+
+    ScrollContainer.stepSize = stepSize;
+	ScrollContainer.maxVal = self.range
+
+	self.scrollBar:SetValueStep(0.01);
+	ScrollContainer.delta = delta;
+
+	local Current = self.scrollBar:GetValue();
+	if not((Current == 0 and delta > 0) or (Current == self.range and delta < 0 )) then
+		ScrollContainer:Show()
+	end
+	
+	local deltaRatio = ScrollContainer.deltaRatio or 1;
+    ScrollContainer.EndValue = min(max(0, ScrollContainer.EndValue - delta*deltaRatio*self.buttonHeight), self.range);
+end
+
+function NarciAPI_SmoothScroll_Initialization(self, updatedList, updateFunc, deltaRatio, timeRatio, minOffset)     --self=ListScrollFrame
+	self.update = updateFunc;
+    self.updatedList = UpdatedList;
+
+    local parentName = self:GetName();
+    local frameName = parentName and (parentName .. "SmoothScrollContainer") or nil;
+    
+    local SmoothScrollContainer = CreateFrame("Frame", frameName, self);
+    SmoothScrollContainer:Hide();
+    
+    SmoothScrollContainer.stepSize = 0;
+    SmoothScrollContainer.delta = 0;
+    SmoothScrollContainer.animationDuration = 0;
+    SmoothScrollContainer.EndValue = 0;
+	SmoothScrollContainer.maxVal = 0;
+    SmoothScrollContainer.deltaRatio = deltaRatio or 1;
+    SmoothScrollContainer.timeRatio = timeRatio or 1;
+    SmoothScrollContainer.minOffset = minOffset or 2;
+    SmoothScrollContainer:SetScript("OnUpdate", SmoothScrollContainer_OnUpdate);
+    SmoothScrollContainer:SetScript("OnShow", function(self)
+        self.EndValue = self:GetParent().scrollBar:GetValue();
+    end);
+
+    self.SmoothScrollContainer = SmoothScrollContainer;
+
+    self:SetScript("OnMouseWheel", NarciAPI_SmoothScroll_OnMouseWheel);
+end
+
+-----Create A List of Button----
+function NarciAPI_BuildButtonList(self, buttonTemplate, buttonNameTable, initialOffsetX, initialOffsetY, initialPoint, initialRelative, offsetX, offsetY, point, relativePoint)
+	local button, buttonHeight, buttons, numButtons;
+
+	local parentName = self:GetName();
+	local buttonName = parentName and (parentName .. "Button") or nil;
+
+	initialPoint = initialPoint or "TOPLEFT";
+    initialRelative = initialRelative or "TOPLEFT";
+    initialOffsetX = initialOffsetX or 0;
+    initialOffsetY = initialOffsetY or 0;
+	point = point or "TOPLEFT";
+	relativePoint = relativePoint or "BOTTOMLEFT";
+	offsetX = offsetX or 0;
+	offsetY = offsetY or 0;
+
+	if ( self.buttons ) then
+		buttons = self.buttons;
+		buttonHeight = buttons[1]:GetHeight();
+	else
+		button = CreateFrame("BUTTON", buttonName and (buttonName .. 1) or nil, self, buttonTemplate);
+		buttonHeight = button:GetHeight();
+        button:SetPoint(initialPoint, self, initialRelative, initialOffsetX, initialOffsetY);
+        button:SetID(0);
+        buttons = {}
+        button.Name:SetText(buttonNameTable[1])
+		tinsert(buttons, button);
+	end
+
+	local numButtons = #buttonNameTable;
+
+	for i = 2, numButtons do
+		button = CreateFrame("BUTTON", buttonName and (buttonName .. i) or nil, self, buttonTemplate);
+        button:SetPoint(point, buttons[i-1], relativePoint, offsetX, offsetY);
+        button:SetID(i-1);
+        button.Name:SetText(buttonNameTable[i])
+		tinsert(buttons, button);
+	end
+
+	self.buttons = buttons;
 end

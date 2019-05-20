@@ -110,13 +110,7 @@ L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_OPTION"] = "Menos de %d horas"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SHOWTEXT"] = "Texto de tiempo restante"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SORTBYTIME"] = "Ordenar por tiempo"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_TITLE"] = "Tiempo restante"
-L["S_MAPBAR_SUMMARY"] = "Resumen"
 L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "Toda la cuenta"
-L["S_MAPBAR_SUMMARYMENU_MOREINFO"] = "Clic para más información"
-L["S_MAPBAR_SUMMARYMENU_NOATTENTION"] = [=[¡No hay misiones en seguimiento en tus otros
-personajes que tengan menos de 2 horas restantes!]=]
-L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "Requieren atención"
-L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "Recompensas de hoy"
 --[[Translation missing --]]
 --[[ L["S_OPTIONS_ACCESSIBILITY"] = ""--]] 
 --[[Translation missing --]]

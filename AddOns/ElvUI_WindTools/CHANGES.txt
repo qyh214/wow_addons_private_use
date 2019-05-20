@@ -1,40 +1,122 @@
-lightweight tag 55f36cbdae5507ff221f8ac42ca105625cb6d3b1 1.4.4
+lightweight tag ebca929603d9fe3f066f93ab898c0d4887f66341 1.4.5
 Author:	Zhou Fang <fang2hou@outlook.com>
-Date:	Wed Apr 17 15:03:50 2019 +0900
+Date:	Wed May 15 13:46:38 2019 +0900
 
-commit 55f36cbdae5507ff221f8ac42ca105625cb6d3b1
+commit ebca929603d9fe3f066f93ab898c0d4887f66341
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Wed Apr 17 15:03:50 2019 +0900
+Date:   Wed May 15 13:46:38 2019 +0900
 
-    防止特质提示两次
+    1.4.5 更新
 
-commit 176516698611a482203c9a7f996b46ce5889f58c
+commit 88aba20ffdc23bfdcbb369e5d2b0cc91009fc4c5
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Wed Apr 17 15:01:06 2019 +0900
+Date:   Mon May 13 15:16:16 2019 +0900
+
+    添加能量条阴影
+
+commit 6ab4d64d1755052a329e85f25b08db621bfde92a
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Mon May 13 02:51:01 2019 +0900
+
+    添加飞行地图美化
+
+commit a70c37864b67c7ec162604a061c2b412d12b2e68
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Thu May 9 16:48:47 2019 +0900
+
+    添加跳过动画及飞出按钮美化
+    
+    添加声望详细讯息窗口美化
+
+commit 619fbbd9f2df33cfff8edb01c48a60e97bf6c4eb
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Wed May 8 17:20:35 2019 +0900
+
+    优化Wind美化皮肤模块
+    
+    添加声望详细讯息窗口美化
+
+commit f440b2d28f37b020f8201f6bfc33bc11bfbb5b6b
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Wed May 8 16:13:07 2019 +0900
 
     更新日志
 
-commit a25aec671cf3ecf599f0f0f547a89ccda2953ec7
+commit 83c15966f4edc2c2985fe1ac79756b6864c3285c
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Wed Apr 17 00:43:45 2019 +0900
+Date:   Wed May 8 16:10:51 2019 +0900
 
-    减少垃圾
+    添加日历美化
 
-commit f47732d044b137320a99bbeb9ef1334db30c7684
+commit 5ce7722f7428efa3e36d392cdfd50dcd357fff74
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Tue Apr 16 20:48:29 2019 +0900
+Date:   Wed May 8 15:51:49 2019 +0900
 
-    清理代碼
+    新万亿单位实现除错
 
-commit 889887fb024de37a9c023ac014f156286e63fc43
+commit b0f50b4bdf8cc8029e2b777e1c80ae60c75b2a70
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Tue Apr 16 16:46:58 2019 +0900
+Date:   Wed May 8 11:49:43 2019 +0900
 
-    修复特质提示鼠标Bagnon并用错误
+    添加TODO
 
-commit 5acdbd6860c7041f691251f2f77a034912b559ff
+commit c633c55aca900d909c6372784a8b906e028d0f1f
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Mon Apr 15 14:31:51 2019 +0900
+Date:   Wed May 8 11:16:06 2019 +0900
 
-    添加商人界面美化
+    适配开发版本新的缩写函数
+
+commit a5b1f7b2d5ab2af1e8d3d3d016bab33f61329812
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Tue Apr 30 14:04:29 2019 +0900
+
+    更新感谢名单
+
+commit 5b81726cf4d069dfe6d0a65ee84f4f001a947149
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Tue Apr 30 13:44:48 2019 +0900
+
+    适配新的ElvUI语言特性
+
+commit c766e4f01171674dd8231571464e81166a80e6aa
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Tue Apr 30 13:18:21 2019 +0900
+
+    更新说明文档
+
+commit db71563290131237d1fb710c913df957d6aca5c3
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Tue Apr 30 13:16:08 2019 +0900
+
+    更新公会界面美化
+
+commit 9c7b1256be7c6d174a72489592434d6eacb31130
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Thu Apr 25 11:44:13 2019 +0900
+
+    添加DH坦克嘲諷提示
+
+commit 5c979c87d66a04984e6934db2d89abef11a47f2a
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Wed Apr 24 19:14:41 2019 +0900
+
+    修复本地化文本不作用在ElvUI开发分支的问题
+
+commit 7b737a76368fc905bf5daec61977829cc851bb45
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Sat Apr 20 13:56:04 2019 +0900
+
+    添加DH嘲讽技能通告
+
+commit d67967ce1982a266ba0a44995841f3a9da72ddce
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Thu Apr 18 00:32:44 2019 +0900
+
+    更新日志
+
+commit 4e963bdd83a44761eb7874de0b4c85627b81cc2e
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Thu Apr 18 00:31:19 2019 +0900
+
+    修复感谢别服玩家时发生错误
 

@@ -37,7 +37,7 @@ local function Initialize_NarcissusDB()
     end
 
     if NarcissusDB.GlobalScale == nil then
-        NarcissusDB.GlobalScale = 1;
+        NarcissusDB.GlobalScale = 0.8;
     end
 
     if NarcissusDB.AuotoColorTheme == nil then
@@ -54,6 +54,46 @@ local function Initialize_NarcissusDB()
 
     if NarcissusDB.CameraOrbit == nil then
         NarcissusDB.CameraOrbit = true;
+    end
+
+    if NarcissusDB.BorderTheme == nil then
+        NarcissusDB.BorderTheme = "Bright";
+    end
+
+    if  NarcissusDB.TruncateText == nil then
+        NarcissusDB.TruncateText = false;
+    end
+
+    if  NarcissusDB.ItemNameWidth == nil then
+        NarcissusDB.ItemNameWidth = 200;
+    end
+
+    if  NarcissusDB.FadeButton == nil then
+        NarcissusDB.FadeButton = false;
+    end
+
+    if  NarcissusDB.WeatherEffect == nil then
+        NarcissusDB.WeatherEffect = true;
+    end
+
+    if  NarcissusDB.VignetteStrength == nil then
+        NarcissusDB.VignetteStrength = 0.8;
+    end
+
+    if NarcissusDB.FadeMusic == nil then
+        NarcissusDB.FadeMusic = true;
+    end
+
+    if NarcissusDB.AlwaysShowModel == nil then
+        NarcissusDB.AlwaysShowModel = false;
+    end
+
+    if NarcissusDB.DefaultLayout == nil then
+        NarcissusDB.DefaultLayout = 2;
+    end
+
+    if NarcissusDB.ShowFullBody == nil then
+        NarcissusDB.ShowFullBody = true;
     end
     ---------------------
     ----Per Character----

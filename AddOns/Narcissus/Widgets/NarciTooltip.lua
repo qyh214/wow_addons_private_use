@@ -8,7 +8,7 @@ local DefaultHeight_StatsComparisonTemplate = 12;
 local Format_Digit = "%.2f";
 
 local BreakUpLargeNumbers = NarciAPI_FormatLargeNumbers --BreakUpLargeNumbers;
-
+local Narci_GetPrimaryStatusName = NarciAPI_GetPrimaryStatusName;
 local GetItemEnchant = NarciAPI_GetItemEnchant;
 
 local LocalizedSlotName = {                                                                         --{Localized Name, InventorySlotName}
@@ -361,6 +361,7 @@ function NarciTooltip_Resize()
     frame.Icon:SetWidth(frame.Background:GetHeight());
 end
 
+--[[
 hooksecurefunc("DressUpItemLink", function(link)
     local str = string.match(link, "item[%-?%d:]+")
     local _, a = string.find(link, ":%d+:.-:")
@@ -374,3 +375,4 @@ hooksecurefunc("DressUpItemLink", function(link)
     --print(str)
     --print(strp)
 end)
+--]]

@@ -1,12 +1,13 @@
 -- 原作：Skip Azerite Animations
--- 原作者：Permok(https://wago.io/HkUtqi7QQ)
+-- 原作者：Permok (https://wago.io/HkUtqi7QQ)
 -- 修改：SomeBlu
 -------------------
 -- 主要修改条目：
 -- 模块化
 -- 精简代码，移动设定项绑定 ElvUI 配置
 
-local E, L, V, P, G = unpack(ElvUI)
+local E, _, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local L = unpack(select(2, ...))
 local WT = E:GetModule("WindTools")
 local SAA = E:NewModule('Wind_SkipAzeriteAnimations', 'AceHook-3.0', 'AceEvent-3.0');
 

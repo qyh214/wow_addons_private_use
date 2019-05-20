@@ -10,6 +10,7 @@ local UnitIsGroupLeader = UnitIsGroupLeader
 local UnitIsPlayer = UnitIsPlayer
 local GetUnitName = GetUnitName
 local GetRealmName = GetRealmName
+local C_ChatInfo_SendAddonMessage = C_ChatInfo.SendAddonMessage
 local AD = WDH:NewModule("AvoidableDamage", "AceHook-3.0", "AceEvent-3.0")
 
 DB.defaults.profile.modules.AvoidableDamage = {
@@ -107,6 +108,7 @@ C.ModulesOption.AvoidableDamage = {
                         ["self"] = L["Self(Chat Frame)"],
                         ["party"] = L["Party"],
                         ["emote"] = L["Emote"],
+                        ["none"] = L["None"],
                     },
                 },
                 unit = {
@@ -278,129 +280,131 @@ C.ModulesOption.AvoidableDamage = {
 
 local Spells = {
     -- Affixes
-    [209862] = 20,		-- Volcanic Plume (Environment)
-    [226512] = 20,		-- Sanguine Ichor (Environment)
-    [288694] = 20,		-- Shadow Smash (Season 2)
-    [288858] = 20,		-- Expel Soul (Season 2)
+    [209862] = 20,    -- Volcanic Plume (Environment)
+    [226512] = 20,    -- Sanguine Ichor (Environment)
+    [288694] = 20,    -- Shadow Smash (Season 2)
+    [288858] = 20,    -- Expel Soul (Season 2)
 
     -- Freehold
-    [272046] = 20,		--- Dive Bomb (Sharkbait)
-    [257426] = 20,		--- Brutal Backhand (Irontide Enforcer)
-    [258352] = 20,		--- Grapeshot (Captain Eudora)
+    [272046] = 20,    --- Dive Bomb (Sharkbait)
+    [257426] = 20,    --- Brutal Backhand (Irontide Enforcer)
+    [258352] = 20,    --- Grapeshot (Captain Eudora)
     [256594] = 20,    --- Barrel Smash (Captain Raoul)
     [267523] = 20,    --- Cutting Surge (Captain Jolly)
     [272374] = 20,    --- Whirlpool of Blades (Captain Jolly)
-    [256546] = 20,		--- Shark Tornado
-    [257310] = 20,		--- Cannon Barrage
+    [272397] = 20,    --- Whirlpool of Blades (Captain Jolly)
+    [256546] = 20,    --- Shark Tornado
+    [257310] = 20,    --- Cannon Barrage
     [257757] = 20,    --- Goin' Bananas (Bilge Rat Buccaneer)
     [274389] = 20,    --- Rat Traps (Vermin Trapper)
-    [257902] = 20,		--- Shell Bounce (Ludwig Von Tortollan)
-    [258199] = 20,		--- Ground Shatter (Irontide Crusher)
-    [276061] = 20,		--- Boulder Throw (Irontide Crusher)
-    [258779] = 20,		--- Sea Spout (Irontide Oarsman)
-    [274400] = 20,		--- Duelist Dash (Cutwater Duelist)
-    [257274] = 20,		--- Vile Coating (Environment)
-    
+    [257902] = 20,    --- Shell Bounce (Ludwig Von Tortollan)
+    [258199] = 20,    --- Ground Shatter (Irontide Crusher)
+    [276061] = 20,    --- Boulder Throw (Irontide Crusher)
+    [258779] = 20,    --- Sea Spout (Irontide Oarsman)
+    [274400] = 20,    --- Duelist Dash (Cutwater Duelist)
+    [257274] = 20,    --- Vile Coating (Environment)
+
     -- Shrine of the Storm
-    [264560] = 20,		--- Choking Brine (Aqualing)
-    [267899] = 20,		--- Hindering Cleave (Brother Ironhull)
-    [268280] = 20,		--- Tidal Pod (Tidesage Enforcer)
-    [276286] = 20,		--- Slicing Hurricane (Environment)
-    [276292] = 20,		--- Whirlign Slam (Ironhull Apprentice)
-    [267385] = 20,		--- Tentacle Slam (Vol'zith the Whisperer)
-    
+    [264560] = 20,    --- Choking Brine (Aqualing)
+    [267899] = 20,    --- Hindering Cleave (Brother Ironhull)
+    [268280] = 20,    --- Tidal Pod (Tidesage Enforcer)
+    [276286] = 20,    --- Slicing Hurricane (Environment)
+    [276292] = 20,    --- Whirlign Slam (Ironhull Apprentice)
+    [267385] = 20,    --- Tentacle Slam (Vol'zith the Whisperer)
+
     -- Siege of Boralus
-    [256627] = 20,		--- Slobber Knocker (Scrimshaw Enforcer)
-    [256663] = 20,		--- Burning Tar (Blacktar Bomber)
-    [257431] = 20,      --- Meat Hook (Chopper Redhook)
-    [275775] = 20,		--- Savage Tempest (Irontide Raider)
-    [269029] = 20,      --- Clear the Deck (Dread Captain Lockwood)
-    [272874] = 20,		--- Trample (Ashvane Commander)
-    [272426] = 20,		--- Sighted Artillery
-    [272140] = 20,		--- Iron Volley
-    [257292] = 20,      --- Heavy Slash (Irontide Cleaver)
-    [273681] = 20,		--- Heavy Hitter (Chopper Redhook)
-    [257886] = 20,      --- Brine Pool (Hadal Darkfathom)
-    
+    [256627] = 20,    --- Slobber Knocker (Scrimshaw Enforcer)
+    [256663] = 20,    --- Burning Tar (Blacktar Bomber)
+    [257431] = 20,    --- Meat Hook (Chopper Redhook)
+    [275775] = 20,    --- Savage Tempest (Irontide Raider)
+    [269029] = 20,    --- Clear the Deck (Dread Captain Lockwood)
+    [272874] = 20,    --- Trample (Ashvane Commander)
+    [272426] = 20,    --- Sighted Artillery
+    [272140] = 20,    --- Iron Volley
+    [257292] = 20,    --- Heavy Slash (Irontide Cleaver)
+    [273681] = 20,    --- Heavy Hitter (Chopper Redhook)
+    [257886] = 20,    --- Brine Pool (Hadal Darkfathom)
+
     -- Tol Dagor
-    [257785] = 20,		--- Flashing Daggers
-    [256976] = 20,		--- Ignition (Knight Captain Valyri)
-    [256955] = 20,		--- Cinderflame (Knight Captain Valyri)
-    [256083] = 20,		--- Cross Ignition (Overseer Korgus)
-    [263345] = 20,		--- Massive Blast (Overseer Korgus)
-    [258864] = 20,		--- Suppression Fire (Ashvane Marine/Spotter)
-    [258364] = 20,		--- Fuselighter (Ashvane Flamecaster)
-    [259711] = 20,		--- Lockdown (Ashvane Warden)
-    
+    [257785] = 20,    --- Flashing Daggers
+    [256976] = 20,    --- Ignition (Knight Captain Valyri)
+    [256955] = 20,    --- Cinderflame (Knight Captain Valyri)
+    [256083] = 20,    --- Cross Ignition (Overseer Korgus)
+    [263345] = 20,    --- Massive Blast (Overseer Korgus)
+    [258864] = 20,    --- Suppression Fire (Ashvane Marine/Spotter)
+    [258364] = 20,    --- Fuselighter (Ashvane Flamecaster)
+    [259711] = 20,    --- Lockdown (Ashvane Warden)
+
     -- Waycrest Manor
-    [260569] = 20,		--- Wildfire (Soulbound Goliath)
-    [265407] = 20,		--- Dinner Bell (Banquet Steward)
-    [264923] = 20,		--- Tenderize (Raal the Gluttonous)
-    [264150] = 20,		--- Shatter (Thornguard)
-    [271174] = 20,		--- Retch (Pallid Gorger)
-    [268387] = 20,		--- Contagious Remnants (Lord Waycrest)
-    [268308] = 20,		--- Discordant Cadenza (Lady Waycrest
+    [260569] = 20,    --- Wildfire (Soulbound Goliath)
+    [265407] = 20,    --- Dinner Bell (Banquet Steward)
+    [264923] = 20,    --- Tenderize (Raal the Gluttonous)
+    [264150] = 20,    --- Shatter (Thornguard)
+    [271174] = 20,    --- Retch (Pallid Gorger)
+    [268387] = 20,    --- Contagious Remnants (Lord Waycrest)
+    [268308] = 20,    --- Discordant Cadenza (Lady Waycrest
 
     -- Atal'Dazar
-    [253666] = 20,		--- Fiery Bolt (Dazar'ai Juggernaught)
-    [257692] = 20,		--- Tiki Blaze (Environment)
-    [255620] = 20,		--- Festering Eruption (Reanimated Honor Guard)
-    [256959] = 20,		--- Rotting Decay (Renaimated Honor Guard)
-    [250259] = 20,		--- Toxic Leap
-    [250022] = 20,		--- Echoes of Shadra (Echoes of Shadra)
-    [250585] = 20, 		--- Toxic Pool
-    [250036] = 20,		--- Shadowy Remains
+    [253666] = 20,    --- Fiery Bolt (Dazar'ai Juggernaught)
+    [257692] = 20,    --- Tiki Blaze (Environment)
+    [255620] = 20,    --- Festering Eruption (Reanimated Honor Guard)
+    [256959] = 20,    --- Rotting Decay (Renaimated Honor Guard)
+    [250259] = 20,    --- Toxic Leap
+    [250022] = 20,    --- Echoes of Shadra (Echoes of Shadra)
+    [250585] = 20,    --- Toxic Pool
+    [250036] = 20,    --- Shadowy Remains
 
     -- King's Rest
-    [265914] = 20,		--- Molten Gold (The Golden Serpent)
-    [266191] = 20,		--- Whirling Axe (Council of Tribes)
-    [270289] = 20,		--- Purification Beam
-    [270503] = 20,		--- Hunting Leap (Honored Raptor)
-    [271564] = 20,		--- Embalming Fluid (Embalming Fluid)
-    [270485] = 20,		--- Blooded Leap (Spectral Berserker)
-    [267639] = 20,		--- Burn Corruption (Mchimba the Embalmer)
-    [270931] = 20,		--- Darkshot
-    
+    [265914] = 20,    --- Molten Gold (The Golden Serpent)
+    [266191] = 20,    --- Whirling Axe (Council of Tribes)
+    [270289] = 20,    --- Purification Beam
+    [270503] = 20,    --- Hunting Leap (Honored Raptor)
+    [271564] = 20,    --- Embalming Fluid (Embalming Fluid)
+    [270485] = 20,    --- Blooded Leap (Spectral Berserker)
+    [267639] = 20,    --- Burn Corruption (Mchimba the Embalmer)
+    [270931] = 20,    --- Darkshot
+
     -- The MOTHERLODE!!
-    [257371] = 20,		--- Gas Can (Mechanized Peace Keeper)
-    [262287] = 20,		--- Concussion Charge (Mech Jockey / Venture Co. Skyscorcher)
-    [268365] = 20,		--- Mining Charge (Wanton Sapper)
-    [269313] = 20,		--- Final Blast (Wanton Sapper)
-    [275907] = 20,		--- Tectonic Smash
-    [259533] = 20,		--- Azerite Catalyst (Rixxa Fluxflame)
-    [260103] = 20,		--- Propellant Blast
-    [260279] = 20,		--- Gattling Gun (Mogul Razdunk)
-    [276234] = 20, 		--- Micro Missiles
-    [270277] = 20,		--- Big Red Rocket (Mogul Razdunk)
-    [271432] = 20,		--- Test Missile (Venture Co. War Machine)
-    [262348] = 20,		--- Mine Blast
-    [257337] = 20,		--- Shocking Claw
-    [269092] = 20,		--- Artillery Barrage (Ordnance Specialist)
+    [257371] = 20,    --- Gas Can (Mechanized Peace Keeper)
+    [262287] = 20,    --- Concussion Charge (Mech Jockey / Venture Co. Skyscorcher)
+    [268365] = 20,    --- Mining Charge (Wanton Sapper)
+    [269313] = 20,    --- Final Blast (Wanton Sapper)
+    [275907] = 20,    --- Tectonic Smash
+    [259533] = 20,    --- Azerite Catalyst (Rixxa Fluxflame)
+    [260103] = 20,    --- Propellant Blast
+    [260279] = 20,    --- Gattling Gun (Mogul Razdunk)
+    [276234] = 20,    --- Micro Missiles
+    [270277] = 20,    --- Big Red Rocket (Mogul Razdunk)
+    [271432] = 20,    --- Test Missile (Venture Co. War Machine)
+    [262348] = 20,    --- Mine Blast
+    [257337] = 20,    --- Shocking Claw
+    [269092] = 20,    --- Artillery Barrage (Ordnance Specialist)
 
     -- Temple of Sethraliss
-    [268851] = 20,      --- Lightning Shield (Adderis)
-    [273225] = 20,		--- Volley (Sandswept Marksman)
-    [273995] = 20,		--- Pyrrhic Blast (Crazed Incubator)
-    [264206] = 20,		--- Burrow (Merektha)
-    [272657] = 20,		--- Noxious Breath
-    [272658] = 20,		--- Electrified Scales
-    [272821] = 20,		--- Call Lightning (Stormcaller)
+    [268851] = 20,    --- Lightning Shield (Adderis)
+    [273225] = 20,    --- Volley (Sandswept Marksman)
+    [264574] = 20,    --- Power Shot (Sandswept Marksman)
+    [273995] = 20,    --- Pyrrhic Blast (Crazed Incubator)
+    [264206] = 20,    --- Burrow (Merektha)
+    [272657] = 20,    --- Noxious Breath
+    [272658] = 20,    --- Electrified Scales
+    [272821] = 20,    --- Call Lightning (Stormcaller)
 
     -- Underrot
-    [264757] = 20,		--- Sanguine Feast (Elder Leaxa)
-    [265542] = 20,		--- Rotten Bile (Fetid Maggot)
-    [265019] = 20,		--- Savage Cleave (Chosen Blood Matron)
-    [261498] = 20,		--- Creeping Rot (Elder Leaxa)
-    [265665] = 20,		--- Foul Sludge (Living Rot)
-    [265511] = 20,		--- Spirit Drain (Spirit Drain Totem)
-    [272469] = 20,		--- Abyssal Slam (Abyssal Reach)
-    [272609] = 20,		--- Maddening Gaze (Faceless Corruptor)
+    [264757] = 20,    --- Sanguine Feast (Elder Leaxa)
+    [265542] = 20,    --- Rotten Bile (Fetid Maggot)
+    [265019] = 20,    --- Savage Cleave (Chosen Blood Matron)
+    [261498] = 20,    --- Creeping Rot (Elder Leaxa)
+    [265665] = 20,    --- Foul Sludge (Living Rot)
+    [265511] = 20,    --- Spirit Drain (Spirit Drain Totem)
+    [272469] = 20,    --- Abyssal Slam (Abyssal Reach)
+    [272609] = 20,    --- Maddening Gaze (Faceless Corruptor)
 }
 local SpellsNoTank = {
     -- Freehold
 
     -- Shrine of the Storm
-    [267899] = 20,  		--- Hindering Cleave
+    [267899] = 20,      --- Hindering Cleave
 
     -- Siege of Boralus
 
@@ -415,46 +419,46 @@ local SpellsNoTank = {
     -- The MOTHERLODE!!
 
     -- Temple of Sethraliss
-    [255741] = 20,			--- Cleave (Scaled Krolusk Rider)
+    [255741] = 20,    	--- Cleave (Scaled Krolusk Rider)
 
     -- Underrot
-    [265019] = 20,			--- Savage Cleave (Chosen Blood Matron)
+    [265019] = 20,    	--- Savage Cleave (Chosen Blood Matron)
 }
 local Auras = {
     -- Freehold
-    [274516] = true,		-- Slippery Suds
+    [274516] = true,    -- Slippery Suds
     [274389] = true,        -- Rat Traps (Vermin Trapper)
-    
+
     -- Shrine of the Storm
-    [268391] = true,		-- Mental Assault (Abyssal Cultist)
-    [276268] = true,		-- Heaving Blow (Shrine Templar)
+    [268391] = true,    -- Mental Assault (Abyssal Cultist)
+    [276268] = true,    -- Heaving Blow (Shrine Templar)
 
     -- Siege of Boralus
-    [257292] = true,		-- Heavy Slash (Kul Tiran Vanguard)
-    [272874] = true,		-- Trample (Ashvane Commander)
+    [257292] = true,    -- Heavy Slash (Kul Tiran Vanguard)
+    [272874] = true,    -- Trample (Ashvane Commander)
 
     -- Tol Dagor
-    [257119] = true,		-- Sand Trap (The Sand Queen)
-    [256474] = true,		-- Heartstopper Venom (Overseer Korgus)
+    [257119] = true,    -- Sand Trap (The Sand Queen)
+    [256474] = true,    -- Heartstopper Venom (Overseer Korgus)
 
     -- Waycrest Manor
-    [265352] = true,		-- Toad Blight (Toad)
-    
+    [265352] = true,    -- Toad Blight (Toad)
+
     -- Atal'Dazar
 
     -- King's Rest
-    [270003] = true,		-- Suppression Slam (Animated Guardian)
-    [270931] = true,		-- Darkshot
-    [268796] = true,		-- (Kind Dazar)
+    [270003] = true,    -- Suppression Slam (Animated Guardian)
+    [270931] = true,    -- Darkshot
+    [268796] = true,    -- (Kind Dazar)
 
     -- The MOTHERLODE!!
-    
+
     -- Temple of Sethraliss
-    [263914] = true,		-- Blinding Sand (Merektha)
-    [269970] = true,		-- Blinding Sand (Merektha)
+    [263914] = true,    -- Blinding Sand (Merektha)
+    [269970] = true,    -- Blinding Sand (Merektha)
 
     -- Underrot
-    [272609] = true,		-- Maddening Gaze (Faceless Corrupter)
+    [272609] = true,    -- Maddening Gaze (Faceless Corrupter)
 
 }
 local AurasNoTank = {
@@ -490,14 +494,12 @@ end
 
 function AD:ToggleModule()
     if self.db.enable then
-        self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
         self:RegisterEvent("CHAT_MSG_ADDON")
         self:RegisterEvent("GROUP_ROSTER_UPDATE")
         self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
         self:RegisterEvent("CHALLENGE_MODE_START")
         self:RegisterEvent("CHALLENGE_MODE_COMPLETED")
     else
-        self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
         self:UnregisterEvent("CHAT_MSG_ADDON")
         self:UnregisterEvent("GROUP_ROSTER_UPDATE")
         self:UnregisterEvent("ZONE_CHANGED_NEW_AREA")
@@ -518,7 +520,7 @@ function AD:SetAddonMessagePrefix()
 
     if self.db.notification.compatible then
         local registeredPrefixTable = C_ChatInfo.GetRegisteredAddonMessagePrefixes()
-        
+
         for i, v in pairs(registeredPrefixTable) do
             -- if registered, quit
             if self.prefix == v then return end
@@ -532,12 +534,15 @@ end
 
 function AD:SendAddonMessage(message)
     if IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and not IsInRaid() then
-        C_ChatInfo.SendAddonMessage(self.prefix, message, "PARTY")
+        if self.db.notification.outputmode == "party" or self.db.notification.outputmode == "emote" then
+            C_ChatInfo_SendAddonMessage(self.prefix, message, "PARTY")
+        end
     end
 end
 
 function AD:SendChatMessage(message)
     if not self.db.notification.enable or self.activeUser ~= self.playerUser then return end
+    if self.db.notification.outputmode == "none" then return end
     if self.db.notification.outputmode == "self" then
         print(message)
     elseif self.db.notification.outputmode == "party" and IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
@@ -564,7 +569,7 @@ function AD:GenerateOutput(str, name, spell, stack, damage, percent)
 end
 
 function AD:GenerateNumber(amount)
-    if self.db.notification.unit == "western" then 
+    if self.db.notification.unit == "western" then
         return B.Round(amount / 1000, self.db.notification.accuracy)..L["unit_k"]
     elseif self.db.notification.unit == "asia" then
         return B.Round(amount / 10000, self.db.notification.accuracy)..L["unit_W"]
@@ -581,7 +586,7 @@ function AD:SpellDamage(timestamp, eventType, srcGUID, srcName, srcFlags, dstGUI
         if self.CombinedFails[dstName] == nil then
             self.CombinedFails[dstName] = 0
         end
-        
+
         -- Add this event to TimerData / CombinedFails
         self.CombinedFails[dstName] = self.CombinedFails[dstName] + aAmount
         if self.TimerData[dstName][spellId] == nil then
@@ -589,7 +594,7 @@ function AD:SpellDamage(timestamp, eventType, srcGUID, srcName, srcFlags, dstGUI
         else
             self.TimerData[dstName][spellId] = self.TimerData[dstName][spellId] + aAmount
         end
-        
+
         -- If there is no timer yet, start one with this event
         if self.Timers[dstName] == nil then
             self.Timers[dstName] = true
@@ -620,7 +625,7 @@ function AD:SpellDamageAnnouncer(user)
     local userMaxHealth = UnitHealthMax(user)
     local msgAmount = self:GenerateNumber(amount)
     local pct = Round(amount / userMaxHealth * 100)
-    
+
     if pct >= self.hardMinPct and pct >= minPct and self.db.notification.enable then
         self:SendChatMessage(self:GenerateOutput(self.spellMsg, user, spellLink, nil, msgAmount, pct.."%%"))
     end
@@ -663,6 +668,7 @@ function AD:ZONE_CHANGED_NEW_AREA(event, ...)
 end
 
 function AD:CHALLENGE_MODE_COMPLETED(event, ...)
+    self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     if not self.db.rank.enable or not self.db.enable then return end
     local count = 0
     for _ in pairs(self.CombinedFails) do count = count + 1 end
@@ -702,6 +708,7 @@ function AD:CHALLENGE_MODE_START(event, ...)
     if not self.db.enable then return end
     self.CombinedFails = {}
     self:SendChatMessage(L["[WDH] Avoidable damage notification enabled, glhf!"])
+    self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 end
 
 function AD:CHAT_MSG_ADDON(event, ...)

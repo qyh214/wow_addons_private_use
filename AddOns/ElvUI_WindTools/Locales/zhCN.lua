@@ -1,6 +1,5 @@
-local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
-local L = AceLocale:NewLocale("ElvUI", "zhCN")
-if not L then return end
+local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "zhCN", true, true)
+
 -- zhCN
 -- 设置主界面
 L["WindTools"] = "|cff0287d0Wi|r|cff1297e0n|r|cff22a7f0d工|r|cff19b5fe具|r|cff29c5ff箱|r"

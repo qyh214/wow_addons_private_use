@@ -1,20 +1,18 @@
-tag db23dedbda533f32e171ec2ae9ed6eeca08facea 3.1.0
+tag aece9977a1c25380a72100cbfbd63aa32273ac94 3.1.1
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Thu Mar 28 02:09:02 2019 +0100
+Date:	Tue May 14 22:33:00 2019 +0200
 
-Cosmetic improvement and bug fixes
+Harvest nodes fix
 
-commit 2689e2b8afe746aed5761f76a368629561459d15
+commit 16d16d4ac7f75bd4d480cf5d7c01a84663684321
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Thu Mar 28 02:07:36 2019 +0100
+Date:   Tue May 14 22:32:24 2019 +0200
 
-    Notes
+    3.1.1
 
-commit dba0eb957f96febbc92c06d704979d2256625b49
+commit 3e1efedce67bd8e6c37eedd5f92da796a60a543f
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Thu Mar 28 02:03:42 2019 +0100
+Date:   Tue May 14 22:21:40 2019 +0200
 
-    Fixed lua error when shift-clicking missions
-    
-    Reward tooltip no longer disappear after a few seconds
+    fixed herbs/mine
 

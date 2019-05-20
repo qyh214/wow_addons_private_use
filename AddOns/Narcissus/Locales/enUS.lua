@@ -6,7 +6,7 @@ local L = Narci.L
 NARCI_GRADIENT = "|cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r"
 MYMOG_GRADIENT = "|cffA236EFM|cff9448F1y |cff865BF2T|cff786DF4r|cff6A80F6a|cff5D92F7n|cff4FA4F9s|cff41B7FAm|cff33C9FCo|cff32c9fbg|r"
 
-NARCI_VERSION_INFO = "1.0.2[BETA]";
+NARCI_VERSION_INFO = "1.0.3[BETA]";
 NARCI_DEVELOPER_INFO = "Designed by Peterodox";
 
 L["Movement Speed"] = "MSPD";
@@ -61,8 +61,8 @@ L["Minimap Tooltip Set Scale"] = "Set Scale: |cffffffff/narci [scale 0.8~1.2]";
 
 NARCI_CLIPBOARD = "Clipboard";
 NARCI_LAYOUT = "Layout";
-NARCI_LAYOUT_TEXTS_ONLY = "Texts Only";
-NARCI_LAYOUT_TEXTS_MODEL = "Texts & Model";
+NARCI_LAYOUT_SYMMETRY = "Symmetry";
+NARCI_LAYOUT_ASYMMETRY = "Asymmetry";
 NARCI_COPY_TEXTS = "Copy Texts";
 NARCI_SYNTAX = "Syntax";
 NARCI_SYNTAX_PLAIN_TEXT = "Plain Text";
@@ -70,13 +70,58 @@ NARCI_SYNTAX_BBCODE = "BB Code";
 NARCI_SYNTAX_MARKDOWN = "Markdown";
 NARCI_EXPORT_INCLUDES = "Export Includes...";
 NARCI_ITEM_ID = "Item ID";
+
+NARCI_3DMODEL = "3D Model";
+NARCI_EQUIPMENTSLOTS = "Equipment Slots";
+
+--Preferences--
+NARCI_PREFERENCE = "Preferences-PH";
+NARCI_INTERFACE = "Interface";
+NARCI_THEME = "Themes";
+NARCI_EFFECTS = "Effects";
+NARCI_TRANSMOG = "Transmog";
+NARCI_PREFERENCE_TOOLTIP = "Click to open Preference Frame.";
+NARCI_TRUNCATE_TEXT = "Truncate Text";
+NARCI_TEXT_WIDTH = "Text Width";
+NARCI_HOTKEY = "Hotkey";
 NARCI_DOUBLE_TAP = "Double-tap";
+NARCI_DOUBLE_TAP_DESCRIPTION = "Double-tap the key bound to Character Pane to open Narcissus."
 NARCI_OVERRIDE = "Override";
 NARCI_INVALID_KEY = "Invalid key combination.";
 NARCI_MINIMAP_BUTTON = "Minimap Button";
 NARCI_SHORTCUTS = "Shortcuts";
 NARCI_FILTERS = "Filters";
+NARCI_FILTERS_DESCRIPTION = "All filters except vignette will be disabled in transmog mode.";
 NARCI_GRAIN_EFFECT = "Grain Effect";
-NARCI_PREFERENCE = "Preference-PH";
-NARCI_CAMERA_ORBIT = "Camera"
+NARCI_CAMERA_MOVEMENT = "Camera Movement";
 NARCI_CAMERA_ORBIT = "Orbit Camera";
+NARCI_CAMERA_ORBIT_ENABLED_DESCRIPTION = "When you open this addon, the camera will be rotated to your front and begin orbiting.";
+NARCI_CAMERA_ORBIT_DISABLED_DESCRIPTION = "When you open this addon, the camera will be zoomed in without rotation";
+NARCI_FADEOUT = "Fade Out on Mouseout";
+NARCI_FADEOUT_DESCRIPTION = "Button fades out when you move the cursor out of it.";
+NARCI_FADE_MUSIC = "Fade Music In/Out";
+NARCI_VIGNETTE_STRENGTH = "Vignette Strength";
+NARCI_WEATHER_EFFECT = "Weather Effect";
+NARCI_DEFAULT_LAYOUT = "Default Layout";
+NARCI_LAYOUT_1 = "Symmetry, 1 Model";
+NARCI_LAYOUT_2 = "2 Models";
+NARCI_LAYOUT_3 = "Compact Mode";
+NARCI_BORDER_THEME = "Border Theme";
+NARCI_BORDER_THEME_BRIGHT = "Bright";
+NARCI_BORDER_THEME_DARK = "Dark";
+NARCI_ALWAYS_SHOW_MODEL = "Always Show Model";
+NARCI_SHOW_FULL_BODY = "Show Full Body";
+--Model Control--
+NARCI_SHEATH_WEAPON = "Sheath Weapon";
+NARCI_STAND_IDLY = "Stand Idly";
+NARCI_RANGED_WEAPON = "Ranged Weapon";
+NARCI_MELEE_WEAPON = "Melee Weapon";
+NARCI_SPELLCASTING = "Spellcasting";
+NARCI_ANIMATION_ID = "Animation ID";
+NARCI_GROUND_SHADOW = "Ground Shadow";
+NARCI_HIDE_PLAYER = "Hide Player";
+
+--Solving Lower-case Issue--
+NARCI_STAT_STRENGTH = SPEC_FRAME_PRIMARY_STAT_STRENGTH;
+NARCI_STAT_AGILITY = SPEC_FRAME_PRIMARY_STAT_AGILITY;
+NARCI_STAT_INTELLECT = SPEC_FRAME_PRIMARY_STAT_INTELLECT;

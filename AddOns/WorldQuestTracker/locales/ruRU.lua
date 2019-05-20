@@ -87,13 +87,7 @@ L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_OPTION"] = "Менее %d часов (ч�
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SHOWTEXT"] = "Время смены заданий"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SORTBYTIME"] = "Сортировка по времени"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_TITLE"] = "Смена через"
-L["S_MAPBAR_SUMMARY"] = "Сводка"
 L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "На аккаунте"
-L["S_MAPBAR_SUMMARYMENU_MOREINFO"] = "Кликните для подробной информации"
-L["S_MAPBAR_SUMMARYMENU_NOATTENTION"] = [=[Нет заданий для отслеживания у ваши других персонажей,
-у которых осталось на выполнение менее 2х часов!]=]
-L["S_MAPBAR_SUMMARYMENU_REQUIREATTENTION"] = "Требует внимания"
-L["S_MAPBAR_SUMMARYMENU_TODAYREWARDS"] = "Награды за сегодня"
 L["S_OPTIONS_ACCESSIBILITY"] = "Доступность"
 L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = "Флаг над заданием"
 L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "Выделять золотым кольцом"

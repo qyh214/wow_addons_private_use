@@ -8,6 +8,11 @@ local LDB = LibStub("LibDataBroker-1.1"):NewDataObject(L["Wind Dungeon Helper"],
 	text = "WDH",
 	icon = "Interface\\ICONS\\Achievement_Challengemode_Gold",
 	OnClick = function() WDH:OpenOptionFrame() end,
+	OnTooltipShow = function(tooltip)
+		if not tooltip or not tooltip.AddLine then return end
+		tooltip:AddLine("|cff00a8ff"..L["Wind Dungeon Helper"].."|r")
+		tooltip:AddLine(L["Click to toggle config window."])
+	end,
 })
 
 WDH.L, WDH.LDB = L, LDB
@@ -31,7 +36,7 @@ function WDH.Config.CreateOptionTable()
 		args = {
 			author = {
 				order = 1,
-				name = L["Author"]..": "..B.ColorString("Weakaura-暗影之月(TW)", 0, 1, 0.59),
+				name = L["Author"]..": "..B.ColorString("Tabimonk-暗影之月(TW)", 0, 1, 0.59).." @ 人生海海",
 				type = "description",
 			},
 			-- enable = {

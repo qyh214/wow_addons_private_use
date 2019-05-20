@@ -1,16 +1,13 @@
-lightweight tag 877600e2e84ec7c330f740dfdd670e3a854149c4 v8.1.5.369
+lightweight tag 7abce7fd0ecefe9569fd1de0164efa2d56ac566e v8.1.5.370
 Author:	Tercioo <terciob19@hotmail.com>
-Date:	Sat Apr 20 12:45:27 2019 -0300
+Date:	Wed May 1 12:40:16 2019 -0300
 
-commit 877600e2e84ec7c330f740dfdd670e3a854149c4
+commit 7abce7fd0ecefe9569fd1de0164efa2d56ac566e
 Author: Tercioo <terciob19@hotmail.com>
-Date:   Sat Apr 20 12:45:27 2019 -0300
+Date:   Wed May 1 12:40:16 2019 -0300
 
-    Faction assult quests now ignore filters and always show in the map
-
-commit bcd23e939541a2c9f094acf2f8d42f95a371ed97
-Author: Tercioo <Tercioo@localhost>
-Date:   Wed Apr 3 13:05:22 2019 -0300
-
-    Added tag v8.1.5.368 for changeset 3f19c577ea61
+    Summary Button Removed
+    
+    Since its content is covered by the Statistics button, there's no reason to still have it.
+    All localization for that button also got removed.
 
