@@ -72,6 +72,7 @@ WS.blizzard_frames = {
 	["ReputationDetailFrame"] = true,
 	["CinematicFrameCloseDialog"] = true,
 	["TaxiFrame"] = true,
+	["DressUpFrame"] = true,
 }
 
 WS.lazy_load_list = {
@@ -606,7 +607,7 @@ function WS:ShadowElvUIFrames()
 		end
 
 		hooksecurefunc(AB, "StyleButton", function(_, button)
-			button.backdrop:CreateShadow()
+			if button.backdrop then button.backdrop:CreateShadow() end
 		end)
 
 	end
@@ -651,6 +652,7 @@ function WS:CustomSkins()
 	if _G.UIErrorsFrame and self.db.ui_errors.enabled then
 		local db = self.db.ui_errors
 		_G.UIErrorsFrame:FontTemplate(LSM:Fetch('font', db.font), db.size, "OUTLINE")
+		_G.ActionStatusText:FontTemplate(LSM:Fetch('font', db.font), db.size, "OUTLINE")
 	end
 end
 

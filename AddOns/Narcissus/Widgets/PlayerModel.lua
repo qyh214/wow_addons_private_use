@@ -100,7 +100,7 @@ local TranslateValue_Female = {
 				[2] = {-0.5, 0.35, -0.1653}},		--9 Goblin √
 
 	[10] = {[1] = {0.2, 0.20, -0.25},
-				[2] = {-0.3, 0.65, -0.21}},		--10 BloodElf Female √
+				[2] = {-0.3, 0.75, -0.21}},		--10 BloodElf Female √
 
 	[11] = {[1] = {0.2, 0.35, -0.28},
 				[2] = {-0.3, 0.85, -0.33}},		--11 Goat Female √
@@ -576,11 +576,11 @@ function Narci_ShowPlayerModel(alpha)
 	else
 		if frame:GetAlpha() == 1 then
 			frame:SetAlpha(0);
-			VignetteLeft:Hide();
+			Narci_VignetteLeft:Hide();
 			VignetteRightLarge:Hide();
 		else
 			frame:SetAlpha(1);
-			VignetteLeft:Show();
+			Narci_VignetteLeft:Show();
 			VignetteRightLarge:Show();
 		end
 	end
@@ -749,8 +749,8 @@ local function LayerButton_OnClick(self)
 end
 
 local function HideVignette()
-	local state = VignetteLeft:IsShown()
-	VignetteLeft:SetShown(not state);
+	local state = Narci_VignetteLeft:IsShown()
+	Narci_VignetteLeft:SetShown(not state);
 	VignetteRightSmall:SetShown(not state);
 	if Narci_CharacterModelFrame.xmogMode == 2 and not state then
 		VignetteRightLarge:SetShown(true);
@@ -955,7 +955,7 @@ function Narci_Model_VignetteSlider_OnValueChanged(self, value, userInput)
     self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
     if value ~= self.oldValue then
 		self.oldValue = value
-		VignetteLeft:SetAlpha(value);
+		Narci_VignetteLeft:SetAlpha(value);
 		VignetteRightLarge:SetAlpha(value);
 		VignetteRightSmall:SetAlpha(value);
 		ModelVignetteRightSmall:SetAlpha(value);
@@ -1151,7 +1151,7 @@ function Narci_Model_CaptureButton_OnClick(self)
 	C_Timer.After(5, function()
 		Narci_Model_CaptureButton:Enable();
 	end)
-	VignetteLeft:SetAlpha(0);
+	Narci_VignetteLeft:SetAlpha(0);
 	VignetteRightSmall:SetAlpha(0);
 	LayersToBeCaptured = 5;
 	Screenshot();

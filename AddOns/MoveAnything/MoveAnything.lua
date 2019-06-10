@@ -4079,7 +4079,7 @@ function MovAny:UnanchorRelatives(e, f, opt)
 		local children = {p:GetChildren()}
 		if children ~= nil then
 			for i, v in ipairs(children) do
-				if not v:IsForbidden() and not v:IsProtected() then
+				if not v:IsForbidden() and not v:IsProtected() and v.GetPoint then
 					self:_AddDependents(relatives, v)
 				end
 			end
@@ -4126,7 +4126,7 @@ function MovAny:UnanchorRelatives(e, f, opt)
 end
 
 function MovAny:_AddDependents(l, f)
-	if MovAny:IsProtected(f) and InCombatLockdown() then
+	if (MovAny:IsProtected(f) and InCombatLockdown()) or not f.GetPoint then
 		return
 	end
 	local _, relativeTo = f:GetPoint(1)

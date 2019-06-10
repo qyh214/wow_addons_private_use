@@ -1,40 +1,22 @@
 ------------------------------------------------------------------------
-r602 | humfras | 2019-03-28 11:18:01 +0000 (Thu, 28 Mar 2019) | 1 line
+r606 | humfras | 2019-06-01 23:26:28 +0000 (Sat, 01 Jun 2019) | 1 line
 Changed paths:
-   M /trunk/Modules/ShortcutBar.lua
+   M /trunk/Sources/WindowHandler.lua
 
-* some code cleanup
+* updated C_Friendlist API
 ------------------------------------------------------------------------
-r601 | humfras | 2019-03-26 12:31:13 +0000 (Tue, 26 Mar 2019) | 1 line
+r605 | humfras | 2019-05-31 07:58:42 +0000 (Fri, 31 May 2019) | 1 line
 Changed paths:
-   M /trunk/Modules/ShortcutBar.lua
+   M /trunk/Sources/WindowHandler.lua
 
-* fix invite button for BNet whispers
+* updated C_Friendlist API
 ------------------------------------------------------------------------
-r600 | humfras | 2019-03-26 11:45:57 +0000 (Tue, 26 Mar 2019) | 2 lines
-Changed paths:
-   M /trunk/Modules/ShortcutBar.lua
-   M /trunk/Modules/WhisperEngine.lua
-
-* fix invite button for BNet whispers
-* restructure BN whisper handling
-------------------------------------------------------------------------
-r599 | mysticalos | 2019-03-26 01:28:03 +0000 (Tue, 26 Mar 2019) | 1 line
-Changed paths:
-   M /trunk/Modules/ShortcutBar.lua
-
-This should quiet a lua error I was seeing from this code, but probably merits more investigating on why sometimes presence ID is a string and not a number
-------------------------------------------------------------------------
-r598 | humfras | 2019-03-24 21:49:50 +0000 (Sun, 24 Mar 2019) | 1 line
-Changed paths:
-   M /trunk/Modules/ShortcutBar.lua
-
-* fix invite button for BNet whispers
-------------------------------------------------------------------------
-r597 | humfras | 2019-03-17 21:36:57 +0000 (Sun, 17 Mar 2019) | 1 line
+r604 | humfras | 2019-05-27 18:11:58 +0000 (Mon, 27 May 2019) | 2 lines
 Changed paths:
    M /trunk/Modules/WhisperEngine.lua
+   M /trunk/WIM.lua
 
-* make friend/guild member online/offline messages more readable (like the BNet ones)
+* updated whisper handling to fix various bugs like sticky chat and chain/tail calls
+- removed unused code
 ------------------------------------------------------------------------
 

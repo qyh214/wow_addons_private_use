@@ -123,8 +123,8 @@ local m = {
 		API:AddElement({name = "QueueStatusMinimapButton", displayName = "Battleground Minimap Button"}, c)
 		API:AddElement({name = "QueueStatusFrame", displayName = "Battleground Minimap Button Tooltip"}, c)
 		--API:AddElement({name = "BattlefieldFrame", displayName = "Battleground Queue"}, c)
-		API:AddElement({name = "WorldStateScoreFrame", displayName = "Battleground Scoreboard"}, c)
-		API:AddElement({name = "WorldStateCaptureBar1", displayName = "Flag Capture Timer Bar", onlyOnceCreated = 1}, c)
+		API:AddElement({name = "UIWidgetTopCenterContainerFrame", displayName = "Battleground Scoreboard"}, c)
+		API:AddElement({name = "UIWidgetBelowMinimapContainerFrame", displayName = "Flag Capture Timer Bar", onlyOnceCreated = 1}, c)
 		local wsauf = API:AddElement({name = "WorldStateAlwaysUpFrame", displayName = "Top Center Status Display", noUnanchorRelatives = 1}, c)
 		API:AddElement({name = "AlwaysUpFrame1", displayName = "AlwaysUp Frame 1", create = "WorldStateAlwaysUpTemplate", onlyOnceCreated = 1}, c)
 		API:AddElement({name = "AlwaysUpFrame2", displayName = "AlwaysUp Frame 2", create = "WorldStateAlwaysUpTemplate", onlyOnceCreated = 1}, c)
@@ -225,17 +225,18 @@ local m = {
 		local gbmfc = API:AddElement({name = "GuildBankMoneyFrameCopperButton", displayName = "Guild Bank Money Copper"}, c)
 		API:AddElement({name = "VoidStorageFrame", displayName = "Void Storage"}, c) --refuseSync = MOVANY.FRAME_ONLY_WHEN_VOIDSTORAGE_IS_OPEN
 		c = API:GetCategory("Blizzard Bottom Bar")
-		API:AddElement({name = "MainMenuBar", displayName = "Main Bar", run = function ()
+		--[[API:AddElement({name = "MainMenuBar", displayName = "Main Bar", run = function ()
 			if not MovAny:IsModified(OverrideActionBar) then
 				local v = _G["OverrideActionBar"]
 				v:ClearAllPoints()
 				v:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", (UIParentGetWidth() / 2) - (v:GetWidth() / 2), 0)
 			end
 		end, hideList = {
-			{"MainMenuBarArtFrame", "BACKGROUND","ARTWORK"},
-			{"PetActionBarFrame", "OVERLAY"},
-			{"StanceBarFrame", "OVERLAY"},
-			{"MainMenuBar", "DISABLEMOUSE"},
+				{"MainMenuBarArtFrameBackground", "BACKGROUND", "ARTWORK"},
+				{"MainMenuBarArtFrame", "BACKGROUND", "ARTWORK"},
+				{"PetActionBarFrame", "OVERLAY"},
+				{"StanceBarFrame", "OVERLAY"},
+				{"MainMenuBar", "DISABLEMOUSE"},
 			}
 		}, c)
 		API:AddElement({name = "MainMenuBarArtFrameLeftEndCapMover", displayName = "Left Gryphon", noScale = 1}, c)
@@ -276,11 +277,11 @@ local m = {
 					MovAny.API:SyncElement("MainMenuExpBar")
 				end)
 			end
-		}, c)
-		API:AddElement({name = "HonorWatchBar", displayName = "Honor Bar"}, c)
-		API:AddElement({name = "ArtifactWatchBar", displayName = "Artifact Bar"}, c)
+		}, c)--]]
+		--API:AddElement({name = "HonorWatchBar", displayName = "Honor Bar"}, c)
+		--API:AddElement({name = "ArtifactWatchBar", displayName = "Artifact Bar"}, c)
 		--API:AddElement({name = "MainMenuBarMaxLevelBar", displayName = "Max Level Bar Filler", noFE = 1, noScale = 1}, c)
-		API:AddElement({name = "ReputationWatchBar", displayName = "Reputation Tracker Bar", runOnce = function()
+		--[[API:AddElement({name = "ReputationWatchBar", displayName = "Reputation Tracker Bar", runOnce = function()
 			if ReputationWatchBar_Update then
 				hooksecurefunc("ReputationWatchBar_Update", MovAny.hReputationWatchBar_Update)
 			end
@@ -294,7 +295,7 @@ local m = {
 				ReputationXPBarTexture2,
 				ReputationXPBarTexture3,
 			}
-		}, c)
+		}, c)--]]
 		API:AddElement({name = "MicroButtonsMover", displayName = "Micro Menu"}, c)
 		--API:AddElement({name = "MicroButtonsSplitMover", displayName = "Micro Menu - Split"}, c)
 		--API:AddElement({name = "MicroButtonsVerticalMover", displayName = "Micro Menu - Vertical"}, c)

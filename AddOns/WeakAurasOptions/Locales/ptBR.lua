@@ -14,10 +14,22 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["%i auras selected"] = "%i auras selected"
 	L["%i Matches"] = "%i resultados"
+	--[[Translation missing --]]
+	L["%s %s, lines: %d, frequency: %0.2f, length: %d, thickness: %d"] = "%s %s, lines: %d, frequency: %0.2f, length: %d, thickness: %d"
+	--[[Translation missing --]]
+	L["%s %s, particles: %d, frequency: %0.2f, scale: %0.2f"] = "%s %s, particles: %d, frequency: %0.2f, scale: %0.2f"
 	L["%s Color"] = "%s Cor"
 	L["%s total auras"] = "%s auras totais"
 	--[[Translation missing --]]
+	L["%s, border"] = "%s, border"
+	--[[Translation missing --]]
+	L["%s, offset: %0.2f;%0.2f"] = "%s, offset: %0.2f;%0.2f"
+	--[[Translation missing --]]
+	L["|c%02x%02x%02x%02xColor|r"] = "|c%02x%02x%02x%02xColor|r"
+	--[[Translation missing --]]
 	L["|cFFFF0000Duplicate Keys Found!|nPlease change the keys of the following options!|r"] = "|cFFFF0000Duplicate Keys Found!|nPlease change the keys of the following options!|r"
+	--[[Translation missing --]]
+	L["|cFFffcc00Glow:|r"] = "|cFFffcc00Glow:|r"
 	L["1 Match"] = "1 resultado"
 	L["1. Text"] = "1. Texto"
 	L["1. Text Settings"] = "1. Configurações do texto"
@@ -237,6 +249,8 @@ WeakAuras → Opções → Opções ]=]
 	--[[Translation missing --]]
 	L["Default"] = "Default"
 	--[[Translation missing --]]
+	L["Default Color"] = "Default Color"
+	--[[Translation missing --]]
 	L["Delete"] = "Delete"
 	L["Delete all"] = "Apagar tudo"
 	--[[Translation missing --]]
@@ -355,6 +369,8 @@ WeakAuras → Opções → Opções ]=]
 	L["Foreground Texture"] = "Textura do primeiro plano"
 	L["Frame"] = "Quadro"
 	L["Frame Strata"] = "Camada do quadro"
+	--[[Translation missing --]]
+	L["Frequency"] = "Frequency"
 	--[[Translation missing --]]
 	L["From Template"] = "From Template"
 	--[[Translation missing --]]
@@ -476,6 +492,8 @@ WeakAuras → Opções → Opções ]=]
 	L["Length"] = "Length"
 	--[[Translation missing --]]
 	L["Limit"] = "Limit"
+	--[[Translation missing --]]
+	L["Lines & Particles"] = "Lines & Particles"
 	--[[Translation missing --]]
 	L["Load"] = "Load"
 	L["Loaded"] = "Carrregar"
@@ -812,6 +830,8 @@ WeakAuras → Opções → Opções ]=]
 	--[[Translation missing --]]
 	L["Then "] = "Then "
 	--[[Translation missing --]]
+	L["Thickness"] = "Thickness"
+	--[[Translation missing --]]
 	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."
 	--[[Translation missing --]]
 	L["This aura has legacy aura trigger(s). Convert them to the new system to benefit from enhanced performance and features"] = "This aura has legacy aura trigger(s). Convert them to the new system to benefit from enhanced performance and features"
@@ -890,6 +910,8 @@ WeakAuras → Opções → Opções ]=]
 	--[[Translation missing --]]
 	L["Update this Aura"] = "Update this Aura"
 	--[[Translation missing --]]
+	L["Use Display Info Id"] = "Use Display Info Id"
+	--[[Translation missing --]]
 	L["Use Full Scan (High CPU)"] = "Use Full Scan (High CPU)"
 	--[[Translation missing --]]
 	L["Use nth value from tooltip:"] = "Use nth value from tooltip:"
@@ -928,6 +950,8 @@ WeakAuras → Opções → Opções ]=]
 	--[[Translation missing --]]
 	L["X Scale"] = "X Scale"
 	--[[Translation missing --]]
+	L["X-Offset"] = "X-Offset"
+	--[[Translation missing --]]
 	L["Y Offset"] = "Y Offset"
 	--[[Translation missing --]]
 	L["Y Rotation"] = "Y Rotation"
@@ -937,6 +961,8 @@ WeakAuras → Opções → Opções ]=]
 	L["Yellow Rune"] = "Yellow Rune"
 	--[[Translation missing --]]
 	L["Yes"] = "Yes"
+	--[[Translation missing --]]
+	L["Y-Offset"] = "Y-Offset"
 	--[[Translation missing --]]
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"
 	--[[Translation missing --]]

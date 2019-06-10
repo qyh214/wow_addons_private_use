@@ -13,10 +13,22 @@ local L = WeakAuras.L
 	L["% of Progress"] = "% прогресса"
 	L["%i auras selected"] = "%i |4индикация выбрана:индикации выбраны:индикаций выбрано;"
 	L["%i Matches"] = "%i |4совпадение:совпадения:совпадений;"
+	--[[Translation missing --]]
+	L["%s %s, lines: %d, frequency: %0.2f, length: %d, thickness: %d"] = "%s %s, lines: %d, frequency: %0.2f, length: %d, thickness: %d"
+	--[[Translation missing --]]
+	L["%s %s, particles: %d, frequency: %0.2f, scale: %0.2f"] = "%s %s, particles: %d, frequency: %0.2f, scale: %0.2f"
 	L["%s Color"] = "%s "
 	L["%s total auras"] = "Всего %s |4индикация:индикации:индикаций;"
 	--[[Translation missing --]]
+	L["%s, border"] = "%s, border"
+	--[[Translation missing --]]
+	L["%s, offset: %0.2f;%0.2f"] = "%s, offset: %0.2f;%0.2f"
+	--[[Translation missing --]]
+	L["|c%02x%02x%02x%02xColor|r"] = "|c%02x%02x%02x%02xColor|r"
+	--[[Translation missing --]]
 	L["|cFFFF0000Duplicate Keys Found!|nPlease change the keys of the following options!|r"] = "|cFFFF0000Duplicate Keys Found!|nPlease change the keys of the following options!|r"
+	--[[Translation missing --]]
+	L["|cFFffcc00Glow:|r"] = "|cFFffcc00Glow:|r"
 	L["1 Match"] = "1 cовпадение"
 	L["1. Text"] = "1. Текст"
 	L["1. Text Settings"] = "1. Настройки текста"
@@ -199,6 +211,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Custom Variables"] = "Свои переменные"
 	L["Debuff Type"] = "Тип дебаффа"
 	L["Default"] = "По умолчанию"
+	--[[Translation missing --]]
+	L["Default Color"] = "Default Color"
 	L["Delete"] = "Удалить"
 	L["Delete all"] = "Удалить всё"
 	L["Delete children and group"] = "Удалить индикации и группу"
@@ -291,6 +305,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Foreground Texture"] = "Основная текстура"
 	L["Frame"] = "Кадр"
 	L["Frame Strata"] = "Слой кадра"
+	--[[Translation missing --]]
+	L["Frequency"] = "Frequency"
 	L["From Template"] = "Из шаблона"
 	--[[Translation missing --]]
 	L["From version "] = "From version "
@@ -387,6 +403,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Length"] = "Length"
 	--[[Translation missing --]]
 	L["Limit"] = "Limit"
+	--[[Translation missing --]]
+	L["Lines & Particles"] = "Lines & Particles"
 	L["Load"] = "Загрузка"
 	L["Loaded"] = "Загружено"
 	L["Loop"] = "Зациклить"
@@ -637,6 +655,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["The type of trigger"] = "Тип триггера"
 	L["Then "] = "Тогда "
 	--[[Translation missing --]]
+	L["Thickness"] = "Thickness"
+	--[[Translation missing --]]
 	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."
 	--[[Translation missing --]]
 	L["This aura has legacy aura trigger(s). Convert them to the new system to benefit from enhanced performance and features"] = "This aura has legacy aura trigger(s). Convert them to the new system to benefit from enhanced performance and features"
@@ -687,6 +707,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Update in Group"] = "Update in Group"
 	--[[Translation missing --]]
 	L["Update this Aura"] = "Update this Aura"
+	--[[Translation missing --]]
+	L["Use Display Info Id"] = "Use Display Info Id"
 	L["Use Full Scan (High CPU)"] = "Использовать Полное сканирование (загрузка ЦП)"
 	L["Use nth value from tooltip:"] = "Использовать n-ое значение из подсказки:"
 	L["Use SetTransform"] = "Использовать ф-ю SetTransform"
@@ -712,11 +734,15 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["X Offset"] = "Смещение по X"
 	L["X Rotation"] = "Поворот по X"
 	L["X Scale"] = "Масштаб по X"
+	--[[Translation missing --]]
+	L["X-Offset"] = "X-Offset"
 	L["Y Offset"] = "Смещение по Y"
 	L["Y Rotation"] = "Поворот по Y"
 	L["Y Scale"] = "Масштаб по Y"
 	L["Yellow Rune"] = "Жёлтая руна"
 	L["Yes"] = "Да"
+	--[[Translation missing --]]
+	L["Y-Offset"] = "Y-Offset"
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = [=[Вы собираетесь удалить %d |4индикацию:индикации:индикаций;.
 |cFFFF0000Это действие нельзя отменить!|r
 Вы хотите продолжить?]=]

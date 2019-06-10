@@ -46,10 +46,18 @@ L= DBM:GetModLocalization(2351)
 ---------------------------
 L= DBM:GetModLocalization(2359)
 
+L:SetMiscLocalization({
+	Circles =	"3초 후 동그라미"
+})
+
 ---------------------------
 -- Herald of N'zoth --
 ---------------------------
 L= DBM:GetModLocalization(2349)
+
+L:SetMiscLocalization({
+	Tear =	"눈물"
+})
 
 ---------------------------
 --  Queen Azshara --

@@ -123,3 +123,18 @@ L["Resource"] = "能量";
 L["Camera has been reset."] = "鏡頭已經重置。"
 L["Minimap button has been hidden. You may type /Narci minimap to re-enable it."] = "小地圖按鈕已經隱藏，可以輸入 /Narci minimap 來重新啟用。"
 L["Minimap button has been re-enabled."] = "小地圖按鈕已經重新啟用。"
+
+--Splash--
+NARCI_PATCH_NOTES = "v1.0.4b Patch Notes";
+NARCI_SPLASH_CLOSE_AND_CONTINUE = "關閉此窗口並繼續"
+NARCI_SHOW_DETAILS = "+ 顯示詳細內容..."
+NARCI_SPLASH_HEADER1 = "鏡頭";
+NARCI_SPLASH_HEADER2 = "裝備欄";
+NARCI_SPLASH_MESSAGE0 = "|cff40C7EB本次更新修復了以下兩個問題:|r\n\n1. 當角色為特定種族時無法打開插件。 |cFF959595(光鑄德萊尼, 瑪格哈獸人, 黑鐵矮人, 狼人, 熊貓人)|r\n\n2. 當裝備了某些物品時，進入分享塑形模式會報錯。"
+NARCI_SPLASH_MESSAGE1 = "|cff40C7EB1. 壹個因使用以往版本 (1.0.0, 1.0.1, 1.0.2, 1.0.3) 而導致的鏡頭問題已得到解決。|r";
+NARCI_SPLASH_MESSAGE1_CONDITIONAL_LINE = "妳已經關閉了鏡頭自動跟隨功能，因此妳將不會感受到任何變化。"
+NARCI_SPLASH_MESSAGE1_EXTRA_LINE = "在早期版本中，Narcissus將 |cffffffffcameraSmoothTimeMin|r 這個CVar的值由默認的0.1修改為0.8，以保證鏡頭能在退出插件後平穩地切換回原先位置。但是這壹改變會導致壹個問題——當妳的鏡頭只轉動了較小的角度，它將需要花費比原先更長的時間來調整到與妳人物朝向壹致的方向。在本次更新後，此插件所用到的所有鏡頭相關的CVar都將屬於Actioncam這壹類別之下，並且它們可以通過輸入|cffffffff/console actioncam off|r來徹底關閉。";
+NARCI_SPLASH_MESSAGE2 = "2. 如果妳在移動或騎乘期間打開此插件，鏡頭將不再自動旋轉到角色正面。"
+NARCI_SPLASH_MESSAGE3 = "3. 如果妳打開了鏡頭跟隨功能，妳的鏡頭距離將在退出插件後自動恢復。"
+NARCI_SPLASH_MESSAGE4 = "|cff40C7EB1. 妳又可以右鍵單擊裝備欄來使用物品了。裝備欄將在妳進入戰鬥後立即隱藏。|r"
+NARCI_SPLASH_MESSAGE5 = "2. 妳可以使用Alt+左鍵來快速卸下某件裝備。這壹操作在早期版本中就已加入，現在它有了壹個視覺反饋。"

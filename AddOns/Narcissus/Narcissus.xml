@@ -376,7 +376,7 @@
 		</Layers>
 	</Frame>
 	
-	<Frame name="AAACooldownFrameTemplate" virtual="true">
+	<Frame name="Narci_CooldownFrameTemplate" virtual="true">
 		<Size x="64" y="64"/>
 		<Anchors>
 			<Anchor point="CENTER"/>
@@ -1035,7 +1035,7 @@
 			<Layer level="OVERLAY" textureSubLevel="4">
 				<FontString inherits="NarciRuneFont" parentKey="RuneLetter" Alpha="0.6" hidden="true">
 					<Anchors>
-						<Anchor point="CENTER" x="-5" y="0"/>
+						<Anchor point="LEFT" relativeKey="$parent.$parent.Border" relativePoint="LEFT" x="6" y="0"/>
 					</Anchors>
 					<Shadow>
 						<Offset>
@@ -1074,7 +1074,7 @@
 			<Layer level="OVERLAY" textureSubLevel="4">
 				<FontString inherits="NarciRuneFont" parentKey="RuneLetter" Alpha="0.6" hidden="true"> <!--&#x000A;ᛏ-->
 					<Anchors>
-						<Anchor point="CENTER" x="6" y="0"/>
+						<Anchor point="RIGHT" relativeKey="$parent.$parent.Border" relativePoint="RIGHT" x="-6" y="0"/>
 					</Anchors>
 					<Shadow>
 						<Offset>
@@ -1096,7 +1096,7 @@
 		</Layers>
 	</Button>
 
-	<Button name="AAASlotButtonTemplate" registerForClicks="LeftButtonUp, RightButtonUp" virtual="true" frameLevel="5"> <!--inherits="SecureActionButtonTemplate"-->
+	<Button name="AAASlotButtonTemplate" registerForClicks="LeftButtonUp, RightButtonUp" virtual="true" frameLevel="5" inherits="SecureActionButtonTemplate"> <!--inherits="SecureActionButtonTemplate"  inherits="SecureHandlerClickTemplate" -->
 		<Size>
 			<AbsDimension x="64" y="64"/>
 		</Size>
@@ -1107,12 +1107,6 @@
 			<Layer level="BACKGROUND">
 				<Texture parentKey="Shadow" file="Interface\AddOns\Narcissus\Art\Border-Thick\HexagonShadow.tga" Alpha="0.8" hidden="true">
 					<Size x="70" y="70"/>
-					<Anchors>
-						<Anchor point="CENTER"/>
-					</Anchors>
-				</Texture>
-				<Texture parentKey="GuideRect">
-					<Size x="64" y="64"/>
 					<Anchors>
 						<Anchor point="CENTER"/>
 					</Anchors>
@@ -1199,7 +1193,7 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame parentKey="CooldownFrame" inherits="AAACooldownFrameTemplate"/>
+			<Frame parentKey="CooldownFrame" inherits="Narci_CooldownFrameTemplate"/>
 			<Frame parentKey="IlvlCenter"  hidden="true">
 				<Layers>
 					<Layer level="OVERLAY" textureSubLevel="3">
@@ -1302,7 +1296,7 @@
 				<Texture parentKey="GemSlot" hidden="true">
 					<Size x="30" y="30"/>
 					<Anchors>
-						<Anchor point="RIGHT" relativeKey="$parent.GuideRect" relativePoint="LEFT" x="8" y="0"/>
+						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="LEFT" x="8" y="0"/>
 					</Anchors>
 				</Texture>
 			</Layer>
@@ -1318,7 +1312,7 @@
 				<FontString parentKey="Name" inherits="AAAItemName" justifyH="LEFT" justifyV="BOTTOM" text="Item Name" maxLines="2">
 					<Size x="0" y="0"/>
 					<Anchors>
-						<Anchor point="BOTTOMLEFT" relativeKey="$parent.GuideRect" relativePoint="RIGHT" x="-3" y="3"/>
+						<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="RIGHT" x="-3" y="3"/>
 					</Anchors>
 				</FontString>
 				<FontString parentKey="ItemLevel" inherits="AAAItemLevel" justifyH="LEFT" justifyV="TOP" text="355" maxLines="2">
@@ -1353,7 +1347,7 @@
 					<Anchor point="CENTER" x="-40" y="0"/>
 				</Anchors>
 				<Scripts>
-					<OnEnter function="AAAGemButton_OnEnter"/>
+					<OnEnter function="Narci_GemButton_OnEnter"/>
 					<OnLeave>
 						HideButtonTooltip();
 					</OnLeave>
@@ -1385,7 +1379,7 @@
 					<TexCoords left="1" right="0" top="1" bottom="0"/>
 					<Size x="30" y="30"/>
 					<Anchors>
-						<Anchor point="LEFT" relativeKey="$parent.GuideRect" relativePoint="RIGHT" x="-8" y="0"/>
+						<Anchor point="LEFT" relativeKey="$parent" relativePoint="RIGHT" x="-8" y="0"/>
 					</Anchors>
 				</Texture>
 			</Layer>
@@ -1401,7 +1395,7 @@
 				<FontString parentKey="Name" inherits="AAAItemName" justifyH="RIGHT" justifyV="BOTTOM" text="Item Name" maxLines="2">
 					<Size x="0" y="0"/>
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.GuideRect" relativePoint="LEFT" x="3" y="3"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="LEFT" x="3" y="3"/>
 					</Anchors>
 				</FontString>
 				<FontString parentKey="ItemLevel" inherits="AAAItemLevel" justifyH="RIGHT" justifyV="TOP" text="355" maxLines="2">
@@ -1436,7 +1430,7 @@
 					<Anchor point="CENTER" x="40" y="0"/>
 				</Anchors>
 				<Scripts>
-					<OnEnter function="AAAGemButton_OnEnter"/>
+					<OnEnter function="Narci_GemButton_OnEnter"/>
 					<OnLeave>
 						HideButtonTooltip();
 					</OnLeave>
@@ -2214,7 +2208,7 @@
 							<OnClick function="TopQualityButton_OnClick"/>
 						</Scripts>
 					</Button>
-					<Slider name="TopQualityButton_MSAASlider" inherits="NarciHorizontalSliderWithMarksTemplate" Alpha="0" valueStep="1" obeyStepOnDrag="true" minValue="0" maxValue="3" ignoreParentScale="true" hidden="true" scale="0.711111111">
+					<Slider name="TopQualityButton_MSAASlider" inherits="NarciHorizontalSliderWithMarksTemplate" Alpha="0" valueStep="1" obeyStepOnDrag="true" minValue="0" maxValue="3" ignoreParentScale="true" hidden="true" scale="0.8">
 						<Size x="160" y="6"/>
 						<Scripts>
 							<OnHide>
@@ -2222,6 +2216,7 @@
 								self:SetAlpha(0);
 							</OnHide>
 							<OnShow>
+								self.VirtualThumb:SetSize(8, 8)
 								self.Label:SetText(MULTISAMPLE_ANTI_ALIASING);
 								local level = GetCVar("MSAAQuality")
 								local value0 = tonumber(string.sub(level, 1,1))
@@ -2520,7 +2515,7 @@
 	<Frame name="Narci_Character" setAllPoints="true" parentKey="Narci_Character" hidden="true">	
 		<Frames>
 			<Frame name="Narci_EquipmentFlyoutFrame" hidden="true" enableMouse="false" frameStrata="HIGH">
-				<Size x="43" y="43"/>
+				<Size x="64" y="64"/>
 				<Frames>
 					<Frame name="$parentButtons" frameStrata="HIGH" enableMouse="true" parentKey="buttonFrame" clampedToScreen="true">
 						<Anchors>
@@ -2530,6 +2525,22 @@
 						</Anchors>
 					</Frame>
 				</Frames>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture parentKey="Arrow" file="Interface\AddOns\Narcissus\Art\Widgets\Arrows\UnequipArrow-Yellow.tga" hidden="true"> 
+							<Size x="36" y="36" />
+							<Anchors>
+								<Anchor point="CENTER" relativeKey="$parent" relativePoint="LEFT" x="-32" y="5"/>
+							</Anchors>
+							<Animations>
+								<AnimationGroup parentKey="anim" looping="REPEAT" smoothing="IN_OUT">
+									<Translation parentKey="Translation" offsetY="-5" duration="0.6" order="1"/>
+									<Translation parentKey="Translation" offsetY="5" duration="0.6" order="2"/>
+								</AnimationGroup>
+							</Animations>
+						</Texture>
+					</Layer>
+				</Layers>				
 				<Scripts>
 					<OnLoad>
 						self.buttons = {};
@@ -2537,7 +2548,8 @@
 					</OnLoad>
 					<OnHide function="Narci_EquipmentFlyoutFrame_OnHide"/>
 					<OnShow>
-						self:RegisterEvent("MODIFIER_STATE_CHANGED")
+						self:RegisterEvent("MODIFIER_STATE_CHANGED");
+						self.Arrow.anim:Play();
 					</OnShow>
 					<OnEvent function="Narci_EquipmentFlyoutFrame_OnEvent"/>
 				</Scripts>
@@ -2747,19 +2759,19 @@
 
 			<Button name="Narci_BackSlot" inherits="AAASlotButtonLeft" parentKey="BackSlot" id="15">
 				<Anchors>
-					<Anchor point="BOTTOM" relativeKey="$parent.ChestSlot.GuideRect" relativePoint="TOP"  x="0" y="2" />
+					<Anchor point="BOTTOM" relativeKey="$parent.ChestSlot" relativePoint="TOP"  x="0" y="2" />
 				</Anchors>
 			</Button>
 
 			<Button name="Narci_ShoulderSlot" inherits="AAASlotButtonLeft" parentKey="ShoulderSlot" id="3">
 				<Anchors>
-					<Anchor point="BOTTOM" relativeKey="$parent.BackSlot.GuideRect" relativePoint="TOP"  x="0" y="2" />
+					<Anchor point="BOTTOM" relativeKey="$parent.BackSlot" relativePoint="TOP"  x="0" y="2" />
 				</Anchors>
 			</Button>
 
 			<Button name="Narci_NeckSlot" inherits="AAASlotButtonLeft" parentKey="NeckSlot" id="2">
 				<Anchors>
-					<Anchor point="BOTTOM" relativeKey="$parent.ShoulderSlot.GuideRect" relativePoint="TOP"  x="0" y="2" />
+					<Anchor point="BOTTOM" relativeKey="$parent.ShoulderSlot" relativePoint="TOP"  x="0" y="2" />
 				</Anchors>
 				<Frames>
 					<Frame name="HeartofAzeroth_AnimFrame" ignoreParentScale="false" Alpha="0" clampedToScreen="true">
@@ -2808,6 +2820,7 @@
 				<Scripts>
 					<OnEnter>
 						Narci_ItemSlotButton_OnEnter(self, "right");
+						self:RegisterEvent("MODIFIER_STATE_CHANGED");
 						AnimationSequenceContainer_Heart:Hide();
 						AnimationSequenceContainer_Heart:Show();
 						AnimationSequenceContainer_Heart.OppoDirection = false;
@@ -2821,36 +2834,37 @@
 					<PostClick>
 						Narci_ItemSlotButton_OnClick(self, button)
 					</PostClick>
+					<OnEvent function="Narci_ItemSlotButton_OnEvent"/>
 				</Scripts>
 			</Button>
 
 			<Button name="Narci_HeadSlot" inherits="AAASlotButtonLeft" parentKey="HeadSlot" id="1">
 				<Anchors>
-					<Anchor point="BOTTOM" relativeKey="$parent.NeckSlot.GuideRect" relativePoint="TOP" x="0" y="2" />
+					<Anchor point="BOTTOM" relativeKey="$parent.NeckSlot" relativePoint="TOP" x="0" y="2" />
 				</Anchors>
 			</Button>
 
 			<Button name="Narci_WristSlot" inherits="AAASlotButtonLeft" parentKey="WristSlot" id="9">
 				<Anchors>
-					<Anchor point="TOP" relativeKey="$parent.ChestSlot.GuideRect" relativePoint="BOTTOM"  x="0" y="-2" />
+					<Anchor point="TOP" relativeKey="$parent.ChestSlot" relativePoint="BOTTOM"  x="0" y="-2" />
 				</Anchors>
 			</Button>
 
 			<Button name="Narci_MainHandSlot" inherits="AAASlotButtonLeft" parentKey="MainHandSlot" id="16">
 				<Anchors>
-					<Anchor point="TOP" relativeKey="$parent.WristSlot.GuideRect" relativePoint="BOTTOM"  x="0" y="-2" />
+					<Anchor point="TOP" relativeKey="$parent.WristSlot" relativePoint="BOTTOM"  x="0" y="-2" />
 				</Anchors>
 			</Button>
 
 			<Button name="Narci_SecondaryHandSlot" inherits="AAASlotButtonLeft" parentKey="SecondaryHandSlot" id="17">
 				<Anchors>
-					<Anchor point="TOP" relativeKey="$parent.MainHandSlot.GuideRect" relativePoint="BOTTOM"  x="0" y="-2" />
+					<Anchor point="TOP" relativeKey="$parent.MainHandSlot" relativePoint="BOTTOM"  x="0" y="-2" />
 				</Anchors>
 			</Button>
 
 			<Button name="Narci_ShirtSlot" inherits="AAASlotButtonLeft" parentKey="ShirtSlot">
 				<Anchors>
-					<Anchor point="TOP" relativeKey="$parent.SecondaryHandSlot.GuideRect" relativePoint="BOTTOM"  x="0" y="-2" />
+					<Anchor point="TOP" relativeKey="$parent.SecondaryHandSlot" relativePoint="BOTTOM"  x="0" y="-2" />
 				</Anchors>
 			</Button>
 
@@ -2862,55 +2876,55 @@
 
 			<Button name="Narci_FeetSlot" inherits="AAASlotButtonRight" parentKey="FeetSlot" id="8">
 				<Anchors>
-					<Anchor point="BOTTOM" relativeKey="$parent.Finger0Slot.GuideRect" relativePoint="TOP"  x="0" y="2" />
+					<Anchor point="BOTTOM" relativeKey="$parent.Finger0Slot" relativePoint="TOP"  x="0" y="2" />
 				</Anchors>
 			</Button>
 
 			<Button name="Narci_LegsSlot" inherits="AAASlotButtonRight" parentKey="LegsSlot" id="7">
 				<Anchors>
-					<Anchor point="BOTTOM" relativeKey="$parent.FeetSlot.GuideRect" relativePoint="TOP"  x="0" y="2" />
+					<Anchor point="BOTTOM" relativeKey="$parent.FeetSlot" relativePoint="TOP"  x="0" y="2" />
 				</Anchors>
 			</Button>
 
 			<Button name="Narci_WaistSlot" inherits="AAASlotButtonRight" parentKey="WaistSlot" id="6">
 				<Anchors>
-					<Anchor point="BOTTOM" relativeKey="$parent.LegsSlot.GuideRect" relativePoint="TOP"  x="0" y="2" />
+					<Anchor point="BOTTOM" relativeKey="$parent.LegsSlot" relativePoint="TOP"  x="0" y="2" />
 				</Anchors>
 			</Button>
 
 			<Button name="Narci_HandsSlot" inherits="AAASlotButtonRight" parentKey="HandsSlot" id="10">
 				<Anchors>
-					<Anchor point="BOTTOM" relativeKey="$parent.WaistSlot.GuideRect" relativePoint="TOP" x="0" y="2" />
+					<Anchor point="BOTTOM" relativeKey="$parent.WaistSlot" relativePoint="TOP" x="0" y="2" />
 				</Anchors>
 			</Button>
 
 			<Button name="Narci_Finger1Slot" inherits="AAASlotButtonRight" parentKey="Finger1Slot" id="12">
 				<Anchors>
-					<Anchor point="TOP" relativeKey="$parent.Finger0Slot.GuideRect" relativePoint="BOTTOM"  x="0" y="-2" />
+					<Anchor point="TOP" relativeKey="$parent.Finger0Slot" relativePoint="BOTTOM"  x="0" y="-2" />
 				</Anchors>
 			</Button>
 
 			<Button name="Narci_Trinket0Slot" inherits="AAASlotButtonRight" parentKey="Trinket0Slot" id="13">
 				<Anchors>
-					<Anchor point="TOP" relativeKey="$parent.Finger1Slot.GuideRect" relativePoint="BOTTOM"  x="0" y="-2" />
+					<Anchor point="TOP" relativeKey="$parent.Finger1Slot" relativePoint="BOTTOM"  x="0" y="-2" />
 				</Anchors>
 			</Button>
 
 			<Button name="Narci_Trinket1Slot" inherits="AAASlotButtonRight" parentKey="Trinket1Slot" id="14">
 				<Anchors>
-					<Anchor point="TOP" relativeKey="$parent.Trinket0Slot.GuideRect" relativePoint="BOTTOM"  x="0" y="-2" />
+					<Anchor point="TOP" relativeKey="$parent.Trinket0Slot" relativePoint="BOTTOM"  x="0" y="-2" />
 				</Anchors>
 			</Button>
 
 			<Button name="Narci_TabardSlot" inherits="AAASlotButtonRight" parentKey="TabardSlot">
 				<Anchors>
-					<Anchor point="TOP" relativeKey="$parent.Trinket1Slot.GuideRect" relativePoint="BOTTOM"  x="0" y="-2" />
+					<Anchor point="TOP" relativeKey="$parent.Trinket1Slot" relativePoint="BOTTOM"  x="0" y="-2" />
 				</Anchors>
 			</Button>
 
 			<!--Button name="SlotLabelStyleButton" virtual="false" hidden="false">
 				<Anchors>
-					<Anchor point="BOTTOM" relativeKey="$parent.HeadSlot.GuideRect" relativePoint="TOP"  x="0" y="-2" />
+					<Anchor point="BOTTOM" relativeKey="$parent.HeadSlot" relativePoint="TOP"  x="0" y="-2" />
 				</Anchors>
 				<Size>
 					<AbsDimension x="18" y="18"/>
@@ -2962,11 +2976,9 @@
 				self:StopAnimating()
 			</OnShow>
 			<OnHide>
+				self:Hide();
 				Narci_FlyoutBlack:SetAlpha(0)
 				Narci_FlyoutBlack.AnimFrame.OppoDirection = false;
-				self:UnregisterEvent("PLAYER_REGEN_ENABLED");
-				self.animOut:Stop();
-				self:Hide();
 				self:StopAnimating()
 			</OnHide>
 		</Scripts>
@@ -2991,8 +3003,6 @@
 			</Layer>
 		</Layers>
 		<Frames>
-
-
 			<Frame name="PlayerInfoFrame" parentKey="PlayerInfo" frameLevel="20">
 				<Size>
 					<AbsDimension x="200" y="40"/>
@@ -3985,7 +3995,7 @@
 		<Size x="360" y="360"/>
 	</Texture>
 
-	<Frame name="AAAVignette" setAllPoints="true" hidden="true" Alpha="0" parentKey="AAAVignette" frameStrata="BACKGROUND" alphaMode="ADD">
+	<Frame name="Narci_Vignette" setAllPoints="true" hidden="true" Alpha="0" parentKey="Narci_Vignette" frameStrata="BACKGROUND" alphaMode="ADD">
 		<Layers>
 			<Layer level="OVERLAY">
 				<Texture name="VignetteRightLarge" parentKey="VignetteRight" file="Interface\AddOns\Narcissus\Art\Vignetting\Vignetting-Right"><!--182-->
@@ -3996,10 +4006,11 @@
 							<Translation parentKey="Translation" offsetX="-100" duration="1" order="1"/>
 							<Scripts>
 								<OnPlay>
-									self:GetParent():Show()
-									Narci_GuideLineFrame.VirtualLineRight:SetPoint("RIGHT", - 404, 0)
+									self:GetParent():Show();
+									Narci_GuideLineFrame.VirtualLineRight:SetPoint("RIGHT", - 404, 0);
+									Narci_Character:SetAlpha(0);
 								</OnPlay>
-								<OnFinished function="AAAVignette_OnFinished"/>
+								<OnFinished function="Narci_Vignette_OnFinished"/>
 							</Scripts>
 						</AnimationGroup>
 					</Animations>
@@ -4023,7 +4034,7 @@
 					</Animations>
 				</Texture>
 
-				<Texture name="VignetteLeft" parentKey="VignetteLeft" file="Interface\AddOns\Narcissus\Art\Vignetting\Vignetting-Left" Alpha="0.8">
+				<Texture name="Narci_VignetteLeft" parentKey="VignetteLeft" file="Interface\AddOns\Narcissus\Art\Vignetting\Vignetting-Left" Alpha="0.8">
 					<Animations>
 						<AnimationGroup parentKey="animIn" smoothing="OUT">
 							<Translation parentKey="Translation" offsetX="-100" duration="0" order="0"/>
@@ -4444,7 +4455,6 @@
 				</Texture>
 			</Layer>
 		</Layers>
-
 		<Frames>
 			<Frame name="Narci_MinimapButton_DraggingFrame" hidden="true">
 				<Scripts>
@@ -4478,15 +4488,13 @@
 				if Narci_MinimapButton_DraggingFrame:IsShown() then
 					return;
 				end
+				if not self:IsShown() then return; end
 				UIFrameFadeOut(self.Color, 0.2, self.Color:GetAlpha(), 0);
 				UIFrameFadeOut(self, 0.2, self:GetAlpha(), self.EndAlpha);
 			</OnLeave>
             <OnHide>
 
             </OnHide>
-			<OnShow>
-				NarcissusDB.ShowMinimapButton = true;
-			</OnShow>
 		</Scripts>
 	</Button>
 
@@ -4548,8 +4556,7 @@
 		</Scripts>		
 	</Frame>
 
-	
-	<Frame name="VisualCenterGuideLine" hidden="true" setAllPoints="true">
+	<!--Frame name="VisualCenterGuideLine" hidden="false" setAllPoints="true">
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeTo="Narci_ChestSlot" relativePoint="TOP" x="0" y="0"/>
 			<Anchor point="BOTTOMRIGHT" relativeTo="Narci_Finger0Slot" relativePoint="BOTTOM" x="0" y="0"/>
@@ -4576,7 +4583,7 @@
 				self.last = 0;
 				self.t = 1;
 			</OnLoad>
-			<!--OnUpdate>
+			<OnUpdate>
 				self.last = self.last + elapsed
 				if self.last >= self.t then
 					local Zoom = GetCameraZoom();
@@ -4584,8 +4591,8 @@
 					self.Readings:SetText(Zoom.."\n"..shoulder);
 					self.last = 0;
 				end
-			</OnUpdate-->
+			</OnUpdate>
 		</Scripts>
-	</Frame>
+	</Frame-->
 	
 </Ui>

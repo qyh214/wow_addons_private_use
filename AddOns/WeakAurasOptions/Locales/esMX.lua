@@ -15,11 +15,23 @@ local L = WeakAuras.L
 	L["%i auras selected"] = "%i auras selected"
 	L["%i Matches"] = "%i coincidencias"
 	--[[Translation missing --]]
+	L["%s %s, lines: %d, frequency: %0.2f, length: %d, thickness: %d"] = "%s %s, lines: %d, frequency: %0.2f, length: %d, thickness: %d"
+	--[[Translation missing --]]
+	L["%s %s, particles: %d, frequency: %0.2f, scale: %0.2f"] = "%s %s, particles: %d, frequency: %0.2f, scale: %0.2f"
+	--[[Translation missing --]]
 	L["%s Color"] = "%s Color"
 	--[[Translation missing --]]
 	L["%s total auras"] = "%s total auras"
 	--[[Translation missing --]]
+	L["%s, border"] = "%s, border"
+	--[[Translation missing --]]
+	L["%s, offset: %0.2f;%0.2f"] = "%s, offset: %0.2f;%0.2f"
+	--[[Translation missing --]]
+	L["|c%02x%02x%02x%02xColor|r"] = "|c%02x%02x%02x%02xColor|r"
+	--[[Translation missing --]]
 	L["|cFFFF0000Duplicate Keys Found!|nPlease change the keys of the following options!|r"] = "|cFFFF0000Duplicate Keys Found!|nPlease change the keys of the following options!|r"
+	--[[Translation missing --]]
+	L["|cFFffcc00Glow:|r"] = "|cFFffcc00Glow:|r"
 	L["1 Match"] = "1 Coincidencia"
 	L["1. Text"] = "1. Texto"
 	L["1. Text Settings"] = "1. Preferencias del texto"
@@ -219,6 +231,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Custom Variables"] = "Custom Variables"
 	L["Debuff Type"] = "Tipo de perjuicio"
 	L["Default"] = "Estándar"
+	--[[Translation missing --]]
+	L["Default Color"] = "Default Color"
 	L["Delete"] = "Eliminar"
 	L["Delete all"] = "Eliminar todo"
 	L["Delete children and group"] = "Eliminar dependientes y grupo"
@@ -314,6 +328,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Foreground Texture"] = "Textural frontal"
 	L["Frame"] = "Macro"
 	L["Frame Strata"] = "Importancia del macro"
+	--[[Translation missing --]]
+	L["Frequency"] = "Frequency"
 	L["From Template"] = "Desde la plantilla"
 	--[[Translation missing --]]
 	L["From version "] = "From version "
@@ -425,6 +441,8 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	L["Length"] = "Length"
 	--[[Translation missing --]]
 	L["Limit"] = "Limit"
+	--[[Translation missing --]]
+	L["Lines & Particles"] = "Lines & Particles"
 	L["Load"] = "Cargar"
 	L["Loaded"] = "Cargado"
 	--[[Translation missing --]]
@@ -702,6 +720,8 @@ Sólo un valor coincidente puede ser escogido.]=]
 	--[[Translation missing --]]
 	L["Then "] = "Then "
 	--[[Translation missing --]]
+	L["Thickness"] = "Thickness"
+	--[[Translation missing --]]
 	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."
 	--[[Translation missing --]]
 	L["This aura has legacy aura trigger(s). Convert them to the new system to benefit from enhanced performance and features"] = "This aura has legacy aura trigger(s). Convert them to the new system to benefit from enhanced performance and features"
@@ -755,6 +775,8 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Update in Group"] = "Update in Group"
 	--[[Translation missing --]]
 	L["Update this Aura"] = "Update this Aura"
+	--[[Translation missing --]]
+	L["Use Display Info Id"] = "Use Display Info Id"
 	L["Use Full Scan (High CPU)"] = "Escaneo Total (carga el procesador)"
 	--[[Translation missing --]]
 	L["Use nth value from tooltip:"] = "Use nth value from tooltip:"
@@ -784,11 +806,15 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["X Offset"] = "Posición de X"
 	L["X Rotation"] = "Rotación de X"
 	L["X Scale"] = "Ajuste de tamaño de X"
+	--[[Translation missing --]]
+	L["X-Offset"] = "X-Offset"
 	L["Y Offset"] = "Posición de Y"
 	L["Y Rotation"] = "Rotación de Y"
 	L["Y Scale"] = "Ajuste de tamaño de Y"
 	L["Yellow Rune"] = "Runa amarilla"
 	L["Yes"] = "Si"
+	--[[Translation missing --]]
+	L["Y-Offset"] = "Y-Offset"
 	--[[Translation missing --]]
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"
 	L["Z Offset"] = "Posición de Z"

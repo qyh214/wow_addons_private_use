@@ -6,7 +6,7 @@ local L = Narci.L
 NARCI_GRADIENT = "|cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r"
 MYMOG_GRADIENT = "|cffA236EFM|cff9448F1y |cff865BF2T|cff786DF4r|cff6A80F6a|cff5D92F7n|cff4FA4F9s|cff41B7FAm|cff33C9FCo|cff32c9fbg|r"
 
-NARCI_VERSION_INFO = "1.0.3[BETA]";
+NARCI_VERSION_INFO = "1.0.4b[BETA]";
 NARCI_DEVELOPER_INFO = "Designed by Peterodox";
 
 L["Movement Speed"] = "MSPD";
@@ -125,3 +125,18 @@ NARCI_HIDE_PLAYER = "Hide Player";
 NARCI_STAT_STRENGTH = SPEC_FRAME_PRIMARY_STAT_STRENGTH;
 NARCI_STAT_AGILITY = SPEC_FRAME_PRIMARY_STAT_AGILITY;
 NARCI_STAT_INTELLECT = SPEC_FRAME_PRIMARY_STAT_INTELLECT;
+
+--Splash--
+NARCI_PATCH_NOTES = "v1.0.4b Patch Notes";
+NARCI_SPLASH_CLOSE_AND_CONTINUE = "Close this window and continue"
+NARCI_SHOW_DETAILS = "+ Show details..."
+NARCI_SPLASH_HEADER1 = "Camera";
+NARCI_SPLASH_HEADER2 = "Equipment Slots";
+NARCI_SPLASH_MESSAGE0 = "|cff40C7EBThis update fixes two major issues:|r\n\n1. Unable to open the addon on certain races. |cFF959595(Lightforged Draenei, Mag'har Orc, Dark Iron Dwarf, Worgen, Pandaren)|r\n\n2. Entering Xmog Mode shows Lua errors due to wearing specific equipment."
+NARCI_SPLASH_MESSAGE1 = "|cff40C7EB1. A camera auto-follow issue caused by installing one of the following versions (1.0.0, 1.0.1, 1.0.2, 1.0.3) has been fixed.|r";
+NARCI_SPLASH_MESSAGE1_CONDITIONAL_LINE = "You have disabled the auto-follow feature so you will not feel any different."
+NARCI_SPLASH_MESSAGE1_EXTRA_LINE = "In the previous versions, Narcissus set a CVar named |cffffffffcameraSmoothTimeMin|r to 0.8 (was 0.1 by default) to ensure a smooth camera transition after closing the addon. This, however, caused an increase of the auto-follow duration when the camera is moved by a small degree. After this update, all camera-related CVars used in this addon belong to the Actioncam feature which can be disabled by |cffffffff/console actioncam off|r";
+NARCI_SPLASH_MESSAGE2 = "2. The camera will no longer be rotated to the front of your character when you open Narcissus while moving or mounting."
+NARCI_SPLASH_MESSAGE3 = "3. If you have the auto-follow feature enabled, your camera distance will be restored after exiting the addon."
+NARCI_SPLASH_MESSAGE4 = "|cff40C7EB1. You can once again use an item via right-click. Equipment slots will be immediately closed when entering combat.|r"
+NARCI_SPLASH_MESSAGE5 = "2. You can unequip a gear via Alt + Left-click. This action has been there since the very first version, and it now has visual feedback."

@@ -56,11 +56,9 @@ L["|cffeda55fRight-Click|r to toggle performance profiling on or off."] = "|cffe
 L["|cffeda55fShift-Click|r to pause addon execution."] = "|cffeda55fShift-Click|r to pause addon execution."
 --[[Translation missing --]]
 L["|cffeda55fShift-Right-Click|r to show profiling results."] = "|cffeda55fShift-Right-Click|r to show profiling results."
---[[Translation missing --]]
-L["1. Text"] = "1. Text"
+L["1. Text"] = "1. Текст"
 L["10 Man Raid"] = "Рейд на 10 человек"
---[[Translation missing --]]
-L["2. Text"] = "2. Text"
+L["2. Text"] = "2. Текст"
 L["20 Man Raid"] = "Рейд на 20 человек"
 L["25 Man Raid"] = "Рейд на 25 человек"
 L["40 Man Raid"] = "Рейд на 40 человек"
@@ -99,8 +97,7 @@ L["Anticlockwise"] = "Против часовой стрелки"
 L["Any"] = "Любая"
 L["Any Triggers"] = "Любые триггеры"
 L["Arena"] = "Арена"
---[[Translation missing --]]
-L["Armor (%)"] = "Armor (%)"
+L["Armor (%)"] = "Броня (%)"
 --[[Translation missing --]]
 L["Armor against Target (%)"] = "Armor against Target (%)"
 --[[Translation missing --]]
@@ -164,6 +161,8 @@ L["Block (%)"] = "Block (%)"
 --[[Translation missing --]]
 L["Block against Target (%)"] = "Block against Target (%)"
 L["Blocked"] = "Заблокировано"
+--[[Translation missing --]]
+L["Border"] = "Border"
 L["Border Color"] = "Цвет границы"
 --[[Translation missing --]]
 L["Boss"] = "Boss"
@@ -344,6 +343,8 @@ L["Focus"] = "Фокус"
 L["Font Size"] = "Размер шрифта"
 L["Foreground Color"] = "Основной цвет"
 L["Form"] = "Форма"
+--[[Translation missing --]]
+L["Frequency"] = "Frequency"
 L["Friendly"] = "Дружественный"
 L["Friendly Fire"] = "Дружественный огонь"
 L["From"] = "От"
@@ -457,7 +458,11 @@ L["Left, then Up"] = "Left, then Up"
 L["Legacy Aura"] = "Legacy Aura"
 L["Legacy RGB Gradient"] = "Градиент RGB"
 L["Legacy RGB Gradient Pulse"] = "Пульсир-й градиент RGB"
+--[[Translation missing --]]
+L["Length"] = "Length"
 L["Level"] = "Уровень"
+--[[Translation missing --]]
+L["Lines & Particles"] = "Lines & Particles"
 L["Load Conditions"] = "Условия загрузки"
 L["Loop"] = "Зациклить"
 L["Lost"] = "Израсходован"
@@ -671,6 +676,8 @@ L["Rune #5"] = "Руна #5"
 L["Rune #6"] = "Руна #6"
 L["Runes Count"] = "Количество рун"
 L["Say"] = "Сказать"
+--[[Translation missing --]]
+L["Scale"] = "Scale"
 L["Scenario"] = "Сценарий"
 L["Screen/Parent Group"] = "Экран/Исходная группа"
 L["Second"] = "Второе"
@@ -796,6 +803,8 @@ L["Target"] = "Цель"
 --[[Translation missing --]]
 L["There are %i updates to your auras ready to be installed!"] = "There are %i updates to your auras ready to be installed!"
 L["Thick Outline"] = "Толстый контур"
+--[[Translation missing --]]
+L["Thickness"] = "Thickness"
 L["Third"] = "Третье"
 --[[Translation missing --]]
 L["Third Value of Tooltip Text"] = "Third Value of Tooltip Text"

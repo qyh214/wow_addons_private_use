@@ -5,9 +5,8 @@ local ColorIndex = Narci_GlobalColorIndex;
 -----------------------------
 ------Build Title Table------
 -----------------------------
-function BuildTitlesDB(object)
+local function BuildTitlesDB(object)
     local NewTable = {};	--[TitleID] = {Category, Rarity, SourceID}
-    --local i = 1;
     for key, value in pairs(object) do
         NewTable[value[4]] = {value[1], value[2], value[5]}; --value[3] is the title's name // value[4] is TitleID // value[5] is AchievementID;
         --i = i + 1;
@@ -22,8 +21,6 @@ local TitlesDB = BuildTitlesDB(CharacterTitlesTable);
 local sortMethod = "Category";
 local function SortedByAlphabet(a, b) return a.name < b.name; end
 local function SortedByCategory(a, b)
-	local r
-
 	if a.category == b.category then
 		if a.rarity == b.rarity then
 			r = a.name < b.name;
@@ -66,7 +63,7 @@ local function Narci_GetKnownTitles(sortMethod)
 	local tempName = 0;
 	local CurrentTitle = -1;
 	local numPVP, numPVE, numACHV, numREPU, numEVENT = 0, 0, 0, 0, 0;
-
+	local category, rarity;
 	playerTitles[1] = { };
 	-- reserving space for None so it doesn't get sorted out of the top position
 	playerTitles[1].name = "       ";
@@ -83,27 +80,29 @@ local function Narci_GetKnownTitles(sortMethod)
 				playerTitles[titleCount].id = i;
 
 				if TitlesDB[i] then
-					local category = TitlesDB[i][1] or "achv";
-					local rarity = TitlesDB[i][2] or 0;
-					playerTitles[titleCount].category = category;
-					playerTitles[titleCount].rarity = rarity;
-					if category == "pvp" then
-						numPVP = numPVP + 1;
-					elseif category == "pve" then
-						numPVE = numPVE + 1; 
-					elseif category == "achv" then
-						numACHV = numACHV + 1; 
-					elseif category == "repu" then
-						numREPU = numREPU + 1; 
-					elseif category == "event" then
-						numEVENT = numEVENT + 1; 
-					end
-					
-					if rarity > 0 then
-						numRare = numRare + 1;
-					end
+					category = TitlesDB[i][1] or "achv";
+					rarity = TitlesDB[i][2] or 0;
+				else
+					category = "achv";
+					rarity = 0;
 				end
-
+				playerTitles[titleCount].category = category;
+				playerTitles[titleCount].rarity = rarity;
+				if category == "pvp" then
+					numPVP = numPVP + 1;
+				elseif category == "pve" then
+					numPVE = numPVE + 1; 
+				elseif category == "achv" then
+					numACHV = numACHV + 1; 
+				elseif category == "repu" then
+					numREPU = numREPU + 1; 
+				elseif category == "event" then
+					numEVENT = numEVENT + 1; 
+				end
+				
+				if rarity > 0 then
+					numRare = numRare + 1;
+				end
 				titleCount = titleCount + 1;
 			end
 		end

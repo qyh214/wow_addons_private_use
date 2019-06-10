@@ -219,9 +219,9 @@
 				</Layers>
 				<Scripts>
 					<OnShow>
-						local width = VignetteLeft:GetWidth();
-						local height = VignetteLeft:GetHeight();
-						local alpha = VignetteLeft:GetAlpha();
+						local width = Narci_VignetteLeft:GetWidth();
+						local height = Narci_VignetteLeft:GetHeight();
+						local alpha = Narci_VignetteLeft:GetAlpha();
 						self.VignetteRightSmall:SetSize(width, height);
 						self.VignetteRightSmall:SetAlpha(alpha)
 					</OnShow>

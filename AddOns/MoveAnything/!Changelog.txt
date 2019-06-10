@@ -3,6 +3,12 @@
 * Reseting bags while the bag is not opened won't reset it's scale to default.
 
 
+**17.0.5**
+* Anchor fix.
+
+**17.0.4**
+* Loads of various fixes.
+
 **17.0.3**
 * Updated for 8.1.0.
 

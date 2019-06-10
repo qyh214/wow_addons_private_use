@@ -4,6 +4,10 @@ local function Initialize_NarcissusDB()
     NarcissusDB.MinimapButton = NarcissusDB.MinimapButton or {};
     NarcissusDB.MinimapButton.Position = NarcissusDB.MinimapButton.Position or rad(150);
 
+    if (not NarcissusDB.Version) or (type(NarcissusDB.Version) ~= "number") then
+        NarcissusDB.Version = 10000;
+    end
+
     if (not NarcissusDB.PhotoModeButton) or (type(NarcissusDB.PhotoModeButton) ~= "table") then
         NarcissusDB.PhotoModeButton = {};
     end

@@ -1000,8 +1000,8 @@ local function instantiateWindow(obj)
                 -- get information of BN user from friends data.
                 local id = self.theUser and BNet_GetBNetIDAccount(self.theUser) or nil;
                 if(id) then
-                				local _, _, _, _, _, toonID = _G.BNGetFriendInfoByID(id)
-                                local hasFocus, toonName, client, realmName, realmID, faction, race, class, guild, zoneName, level, gameText, broadcastText, broadcastTime = BNGetGameAccountInfo(toonID or 0);
+                				local _, _, _, _, _, bnetIDGameAccount = _G.BNGetFriendInfoByID(id)
+                                local hasFocus, toonName, client, realmName, realmID, faction, race, class, guild, zoneName, level, gameText, broadcastText, broadcastTime = BNGetGameAccountInfo(bnetIDGameAccount or 0);
                                 self.class = class or "";
                                 self.level = level or "";
                                 self.race = race or "";

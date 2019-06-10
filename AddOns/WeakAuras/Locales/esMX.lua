@@ -183,6 +183,8 @@ L["Block (%)"] = "Block (%)"
 --[[Translation missing --]]
 L["Block against Target (%)"] = "Block against Target (%)"
 L["Blocked"] = "Bloqueado"
+--[[Translation missing --]]
+L["Border"] = "Border"
 L["Border Color"] = "Color del borde"
 --[[Translation missing --]]
 L["Boss"] = "Boss"
@@ -378,6 +380,8 @@ L["Focus"] = "Foco"
 L["Font Size"] = "Tamaño de fuente"
 L["Foreground Color"] = "Color frontal"
 L["Form"] = "Forma"
+--[[Translation missing --]]
+L["Frequency"] = "Frequency"
 L["Friendly"] = "Amistoso"
 L["Friendly Fire"] = "Fuego amistoso"
 L["From"] = "Desde"
@@ -513,7 +517,11 @@ L["Legacy Aura"] = "Legacy Aura"
 L["Legacy RGB Gradient"] = "Legacy RGB Gradient"
 --[[Translation missing --]]
 L["Legacy RGB Gradient Pulse"] = "Legacy RGB Gradient Pulse"
+--[[Translation missing --]]
+L["Length"] = "Length"
 L["Level"] = "Nivel"
+--[[Translation missing --]]
+L["Lines & Particles"] = "Lines & Particles"
 --[[Translation missing --]]
 L["Load Conditions"] = "Load Conditions"
 --[[Translation missing --]]
@@ -744,6 +752,8 @@ L["Rune #5"] = "Runa #5"
 L["Rune #6"] = "Runa #6"
 L["Runes Count"] = "Contador de runas"
 L["Say"] = "Decir"
+--[[Translation missing --]]
+L["Scale"] = "Scale"
 L["Scenario"] = "Escenario"
 L["Screen/Parent Group"] = "Pantalla/Grupo primario"
 --[[Translation missing --]]
@@ -890,6 +900,8 @@ L["Target"] = "Objetivo"
 --[[Translation missing --]]
 L["There are %i updates to your auras ready to be installed!"] = "There are %i updates to your auras ready to be installed!"
 L["Thick Outline"] = "Thick Outline"
+--[[Translation missing --]]
+L["Thickness"] = "Thickness"
 --[[Translation missing --]]
 L["Third"] = "Third"
 --[[Translation missing --]]

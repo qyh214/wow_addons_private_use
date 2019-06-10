@@ -667,12 +667,20 @@ function CF_SentBNetTell(target)
 	end
 end
 
-function CE_UpdateHeader(editBox)
+function CF_OpenChat(text, chatFrame, desiredCursorPosition)
+	local editBox = _G.ChatEdit_ChooseBoxForSend(chatFrame)
 	
-	local chatType = editBox:GetAttribute("chatType");
-    local target = editBox:GetAttribute("tellTarget");
+	local chatType = editBox:GetAttribute("chatType")
+    local target = editBox:GetAttribute("tellTarget")
+	local sticky = editBox:GetAttribute("stickyType")
 	
-	if not (chatType == "BN_WHISPER") or not target then return end
+	if chatType == "WHISPER" then
+		if not string.find(target, "^|K") then
+			return
+		end
+	elseif not (chatType == "BN_WHISPER") or not target then
+		return
+	end
 	
 	if not editBox:IsVisible() then return end
 	
@@ -680,22 +688,22 @@ function CE_UpdateHeader(editBox)
 		local curState = curState;
 		curState = db.pop_rules.whisper.alwaysOther and "other" or curState;
 		if (db.pop_rules.whisper.intercept and db.pop_rules.whisper[curState].onSend) then
-			WIM:checkWhisperStickies()
 			local bNetID = BNet_GetPresenceID(target);
 			target = _G.Ambiguate(target, "none")--For good measure, ambiguate again cause it seems some mods interfere with this process
 			local win = getWhisperWindowByUser(target, bNetID and true, bNetID);
 			win.widgets.msg_box.setText = 1;
 			win:Pop(true); -- force popup
-			win.widgets.msg_box:SetFocus();
-			local editBox = _G.ChatEdit_ChooseBoxForSend()
-			_G.ChatEdit_OnEscapePressed(editBox);
+			if not (sticky == "WHISPER" or sticky == "BN_WHISPER") then
+				win.widgets.msg_box:SetFocus();
+				_G.ChatEdit_OnEscapePressed(editBox);
+			end
 		end
 	end
 end
 
 -- the following hook is needed in order to intercept /r
 hooksecurefunc("ChatEdit_ExtractTellTarget", CF_ExtractTellTarget);
-hooksecurefunc("ChatEdit_UpdateHeader", CE_UpdateHeader);
+hooksecurefunc("ChatFrame_OpenChat", CF_OpenChat);
 
 hooksecurefunc("ChatFrame_SendBNetTell", CF_SentBNetTell);
 

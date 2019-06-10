@@ -1,13 +1,10 @@
-lightweight tag 7abce7fd0ecefe9569fd1de0164efa2d56ac566e v8.1.5.370
+lightweight tag f78c2b2a9bef6860bf91f8de9f05d34fe1db74c1 v8.1.5.371
 Author:	Tercioo <terciob19@hotmail.com>
-Date:	Wed May 1 12:40:16 2019 -0300
+Date:	Mon May 20 13:02:09 2019 -0300
 
-commit 7abce7fd0ecefe9569fd1de0164efa2d56ac566e
+commit f78c2b2a9bef6860bf91f8de9f05d34fe1db74c1
 Author: Tercioo <terciob19@hotmail.com>
-Date:   Wed May 1 12:40:16 2019 -0300
+Date:   Mon May 20 13:02:09 2019 -0300
 
-    Summary Button Removed
-    
-    Since its content is covered by the Statistics button, there's no reason to still have it.
-    All localization for that button also got removed.
+    Fixed the filter by pass for assault quests on Zandalar and Kultiras continents
 

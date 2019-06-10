@@ -174,6 +174,8 @@ L["Block (%)"] = "Block (%)"
 --[[Translation missing --]]
 L["Block against Target (%)"] = "Block against Target (%)"
 L["Blocked"] = "Geblockt"
+--[[Translation missing --]]
+L["Border"] = "Border"
 L["Border Color"] = "Rahmenfarbe"
 --[[Translation missing --]]
 L["Boss"] = "Boss"
@@ -360,6 +362,8 @@ L["Focus"] = "Fokus"
 L["Font Size"] = "Schriftgröße"
 L["Foreground Color"] = "Vordergrundfarbe"
 L["Form"] = "Form"
+--[[Translation missing --]]
+L["Frequency"] = "Frequency"
 L["Friendly"] = "Freundlich"
 L["Friendly Fire"] = "Eigenbeschuss"
 L["From"] = "Von"
@@ -489,7 +493,11 @@ L["Legacy Aura"] = "Legacy Aura"
 L["Legacy RGB Gradient"] = "Legacy RGB Gradient"
 --[[Translation missing --]]
 L["Legacy RGB Gradient Pulse"] = "Legacy RGB Gradient Pulse"
+--[[Translation missing --]]
+L["Length"] = "Length"
 L["Level"] = "Stufe"
+--[[Translation missing --]]
+L["Lines & Particles"] = "Lines & Particles"
 L["Load Conditions"] = "Ladebedingungen"
 L["Loop"] = "Schleife"
 L["Lost"] = "Verloren"
@@ -732,6 +740,8 @@ L["Rune #5"] = "Rune #5"
 L["Rune #6"] = "Rune #6"
 L["Runes Count"] = "Runenanzahl"
 L["Say"] = "Sagen"
+--[[Translation missing --]]
+L["Scale"] = "Scale"
 L["Scenario"] = "Szenario"
 L["Screen/Parent Group"] = "Bildschirm/Elterngruppe"
 --[[Translation missing --]]
@@ -870,6 +880,8 @@ L["Target"] = "Ziel"
 --[[Translation missing --]]
 L["There are %i updates to your auras ready to be installed!"] = "There are %i updates to your auras ready to be installed!"
 L["Thick Outline"] = "Dicke Kontur"
+--[[Translation missing --]]
+L["Thickness"] = "Thickness"
 --[[Translation missing --]]
 L["Third"] = "Third"
 --[[Translation missing --]]

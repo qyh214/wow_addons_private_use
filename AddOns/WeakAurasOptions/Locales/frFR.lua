@@ -11,9 +11,21 @@ local L = WeakAuras.L
 	L["% of Progress"] = "% de progression"
 	L["%i auras selected"] = "%i auras sélectionnées"
 	L["%i Matches"] = "%i Correspondances"
+	--[[Translation missing --]]
+	L["%s %s, lines: %d, frequency: %0.2f, length: %d, thickness: %d"] = "%s %s, lines: %d, frequency: %0.2f, length: %d, thickness: %d"
+	--[[Translation missing --]]
+	L["%s %s, particles: %d, frequency: %0.2f, scale: %0.2f"] = "%s %s, particles: %d, frequency: %0.2f, scale: %0.2f"
 	L["%s Color"] = "%s Couleur"
 	L["%s total auras"] = "%s auras au total"
+	--[[Translation missing --]]
+	L["%s, border"] = "%s, border"
+	--[[Translation missing --]]
+	L["%s, offset: %0.2f;%0.2f"] = "%s, offset: %0.2f;%0.2f"
+	--[[Translation missing --]]
+	L["|c%02x%02x%02x%02xColor|r"] = "|c%02x%02x%02x%02xColor|r"
 	L["|cFFFF0000Duplicate Keys Found!|nPlease change the keys of the following options!|r"] = "| cFFFF0000Clés en Double Trouvées! | nVeuillez modifier les clés des options suivantes! | r"
+	--[[Translation missing --]]
+	L["|cFFffcc00Glow:|r"] = "|cFFffcc00Glow:|r"
 	L["1 Match"] = "1 Correspondance"
 	L["1. Text"] = "1. Texte"
 	L["1. Text Settings"] = "1. Paramètres du Texte"
@@ -186,6 +198,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
 	L["Custom Variables"] = "Variables Personnalisées"
 	L["Debuff Type"] = "Type d'affaiblissement"
 	L["Default"] = "Par défaut"
+	--[[Translation missing --]]
+	L["Default Color"] = "Default Color"
 	L["Delete"] = "Supprimer"
 	L["Delete all"] = "Supprimer tout"
 	L["Delete children and group"] = "Supprimer enfants et groupe"
@@ -266,6 +280,8 @@ Ne sautez pas cette version]=]
 	L["Foreground Texture"] = "Texture premier-plan"
 	L["Frame"] = "Cadre"
 	L["Frame Strata"] = "Strate du cadre"
+	--[[Translation missing --]]
+	L["Frequency"] = "Frequency"
 	L["From Template"] = "D'après un modèle"
 	L["From version "] = "Depuis la version"
 	L["General Text Settings"] = "Paramètres Généraux du Texte"
@@ -347,6 +363,8 @@ Clé pour aura_env.config à laquelle la valeur utilisateur peut être trouvée]
 	L["Length"] = "Longueur"
 	--[[Translation missing --]]
 	L["Limit"] = "Limit"
+	--[[Translation missing --]]
+	L["Lines & Particles"] = "Lines & Particles"
 	L["Load"] = "Charger"
 	L["Loaded"] = "Chargé"
 	L["Loop"] = "Boucle"
@@ -571,6 +589,8 @@ Seule une unique valeur peut être choisie]=]
 	L["The duration of the animation in seconds. The finish animation does not start playing until after the display would normally be hidden."] = "La durée de l'animation en quelques secondes. L'animation de fin ne commence qu'après le moment où l'affichage est normalement caché."
 	L["The type of trigger"] = "Le type de déclencheur"
 	L["Then "] = "Alors"
+	--[[Translation missing --]]
+	L["Thickness"] = "Thickness"
 	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "Cela ajoute %infobulle, %infobulle1, %infobulle2, %infobulle3 en remplacement du texte."
 	L["This aura has legacy aura trigger(s). Convert them to the new system to benefit from enhanced performance and features"] = "Cette aura possède un ou plusieurs déclencheurs d’aura hérités. Convertissez-les dans le nouveau système pour bénéficier de performances et de fonctionnalités améliorées"
 	L["This display is currently loaded"] = "Cet affichage est actuellement chargé"
@@ -610,6 +630,8 @@ Seule une unique valeur peut être choisie]=]
 	L["Update Custom Text On..."] = "Mettre à jour Texte Perso sur..."
 	L["Update in Group"] = "Mettre à jour dans le Groupe"
 	L["Update this Aura"] = "Mettre à jour cette Aura"
+	--[[Translation missing --]]
+	L["Use Display Info Id"] = "Use Display Info Id"
 	L["Use Full Scan (High CPU)"] = "Utiliser Scan Complet (CPU élevé)"
 	L["Use nth value from tooltip:"] = "Utilisez la nième valeur de l'info-bulle:"
 	L["Use SetTransform"] = "Utiliser SetTransform"
@@ -630,11 +652,15 @@ Seule une unique valeur peut être choisie]=]
 	L["X Offset"] = "Décalage X"
 	L["X Rotation"] = "Rotation X"
 	L["X Scale"] = "Echelle X"
+	--[[Translation missing --]]
+	L["X-Offset"] = "X-Offset"
 	L["Y Offset"] = "Décalage Y"
 	L["Y Rotation"] = "Rotation Y"
 	L["Y Scale"] = "Echelle Y"
 	L["Yellow Rune"] = "Rune jaune"
 	L["Yes"] = "Oui"
+	--[[Translation missing --]]
+	L["Y-Offset"] = "Y-Offset"
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "Vous êtes sur le point de supprimer %d aura. |cFFFF0000Cela ne peut pas être annulé! | r Voulez-vous continuer?"
 	L["Z Offset"] = "Décalage Z"
 	L["Z Rotation"] = "Rotation Z"

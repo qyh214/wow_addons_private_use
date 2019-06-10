@@ -1,10 +1,16 @@
-tag da84584a235c17ecf2e61852c5b95eee05624570 1.2.9
-Author:	Benjamin Staneck <staneck@gmail.com>
-Date:	Fri Dec 14 03:38:54 2018 +0100
+tag d7c87ac0bb38db2253283f884d99d7a64d561c5e 1.2.11
+Author:	semlar <teslagraafs@gmail.com>
+Date:	Fri May 24 22:14:51 2019 -0400
 
-commit b95519e5c243d7a23fbff5df7a90397438de45aa
-Author: Benjamin Staneck <staneck@gmail.com>
-Date:   Fri Dec 14 03:37:59 2018 +0100
+commit ccfdbb7749443e199e32d58f1e7d662ed07fbd2a
+Author: semlar <teslagraafs@gmail.com>
+Date:   Fri May 24 22:14:28 2019 -0400
 
-    Update TOC for Patch 8.1
+    Fixed reverseCleanupBags scoping
+
+commit 9fc873bf2576751f4d93c2cc3d945a687a23b949
+Author: prometheus12345 <prometheus12345@gmail.com>
+Date:   Fri May 24 21:18:35 2019 -0400
+
+    Fixed reverseCleanupBags scoping
 

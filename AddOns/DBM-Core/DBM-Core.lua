@@ -68,9 +68,9 @@ local function showRealDate(curseDate)
 end
 
 DBM = {
-	Revision = parseCurseDate("20190507201154"),
-	DisplayVersion = "8.1.24", -- the string that is shown as version
-	ReleaseRevision = releaseDate(2019, 5, 7) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	Revision = parseCurseDate("20190523181942"),
+	DisplayVersion = "8.1.26", -- the string that is shown as version
+	ReleaseRevision = releaseDate(2019, 5, 23, 12) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -443,7 +443,7 @@ local delayedFunction
 local dataBroker
 local voiceSessionDisabled = false
 
-local fakeBWVersion, fakeBWHash = 147, "b9e4c1e"
+local fakeBWVersion, fakeBWHash = 148, "8b115ac"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -496,8 +496,12 @@ local IsInRaid, IsInGroup, IsInInstance = IsInRaid, IsInGroup, IsInInstance
 local UnitAffectingCombat, InCombatLockdown, IsFalling, IsEncounterInProgress, UnitPlayerOrPetInRaid, UnitPlayerOrPetInParty = UnitAffectingCombat, InCombatLockdown, IsFalling, IsEncounterInProgress, UnitPlayerOrPetInRaid, UnitPlayerOrPetInParty
 local UnitGUID, UnitHealth, UnitHealthMax, UnitBuff, UnitDebuff = UnitGUID, UnitHealth, UnitHealthMax, UnitBuff, UnitDebuff
 local UnitExists, UnitIsDead, UnitIsFriend, UnitIsUnit = UnitExists, UnitIsDead, UnitIsFriend, UnitIsUnit
-local GetSpellInfo, EJ_GetSectionInfo, GetSectionIconFlags, GetSpellTexture, GetSpellCooldown = GetSpellInfo, C_EncounterJournal.GetSectionInfo, C_EncounterJournal.GetSectionIconFlags, GetSpellTexture, GetSpellCooldown
-local EJ_GetEncounterInfo, EJ_GetCreatureInfo, GetDungeonInfo = EJ_GetEncounterInfo, EJ_GetCreatureInfo, GetDungeonInfo
+local GetSpellInfo, GetDungeonInfo, GetSpellTexture, GetSpellCooldown = GetSpellInfo, GetDungeonInfo, GetSpellTexture, GetSpellCooldown
+local EJ_GetEncounterInfo, EJ_GetCreatureInfo = EJ_GetEncounterInfo, EJ_GetCreatureInfo
+local EJ_GetSectionInfo, GetSectionIconFlags
+if C_EncounterJournal then
+	EJ_GetSectionInfo, GetSectionIconFlags = C_EncounterJournal.GetSectionInfo, C_EncounterJournal.GetSectionIconFlags
+end
 local GetInstanceInfo = GetInstanceInfo
 local GetSpecialization, GetSpecializationInfo, GetSpecializationInfoByID = GetSpecialization, GetSpecializationInfo, GetSpecializationInfoByID
 local UnitDetailedThreatSituation = UnitDetailedThreatSituation
@@ -1187,6 +1191,11 @@ do
 			end
 			onLoadCallbacks = nil
 			loadOptions(self)
+			if wowTOC < 80000 then
+				self:Disable(true)
+				C_TimerAfter(15, function() AddMsg(self, DBM_CORE_RETAIL_ONLY) end)
+				return
+			end
 			if GetAddOnEnableState(playerName, "VEM-Core") >= 1 then
 				self:Disable(true)
 				C_TimerAfter(15, function() AddMsg(self, DBM_CORE_VEM) end)
@@ -3790,9 +3799,9 @@ do
 				end
 			end
 			-- Check regular non-BNet friends
-			local nf = GetNumFriends()
+			local nf = C_FriendList.GetNumFriends()
 			for i = 1, nf do
-				local toonName = GetFriendInfo(i)
+				local toonName = C_FriendList.GetFriendInfo(i)
 				if toonName == sender then
 					AcceptPartyInvite()
 					return
@@ -4785,14 +4794,14 @@ do
 			end
 		end
 
-		syncHandlers["GCB"] = function(sender, modId, ver, difficulty, difficultyModifier)
+		syncHandlers["GCB"] = function(sender, modId, ver, difficulty, difficultyModifier, name)
 			if not DBM.Options.ShowGuildMessages or not difficulty then return end
 			if not ver or not (ver == "2") then return end--Ignore old versions
 			if DBM:AntiSpam(10, "GCB") then
 				if IsInInstance() then return end--Simple filter, if you are inside an instance, just filter it, if not in instance, good to go.
 				difficulty = tonumber(difficulty)
 				if not DBM.Options.ShowGuildMessagesPlus and difficulty == 8 then return end
-				local bossName = EJ_GetEncounterInfo(modId) or DBM_CORE_UNKNOWN
+				local bossName = EJ_GetEncounterInfo(modId) or name or DBM_CORE_UNKNOWN
 				local difficultyName = DBM_CORE_UNKNOWN
 				if difficulty == 8 then
 					if difficultyModifier and difficultyModifier ~= 0 then
@@ -4811,14 +4820,14 @@ do
 			end
 		end
 
-		syncHandlers["GCE"] = function(sender, modId, ver, wipe, time, difficulty, difficultyModifier, wipeHP)
+		syncHandlers["GCE"] = function(sender, modId, ver, wipe, time, difficulty, difficultyModifier, name, wipeHP)
 			if not DBM.Options.ShowGuildMessages or not difficulty then return end
-			if not ver or not (ver == "4") then return end--Ignore old versions
+			if not ver or not (ver == "5") then return end--Ignore old versions
 			if DBM:AntiSpam(5, "GCE") then
 				if IsInInstance() then return end--Simple filter, if you are inside an instance, just filter it, if not in instance, good to go.
 				difficulty = tonumber(difficulty)
 				if not DBM.Options.ShowGuildMessagesPlus and difficulty == 8 then return end
-				local bossName = EJ_GetEncounterInfo(modId) or DBM_CORE_UNKNOWN
+				local bossName = EJ_GetEncounterInfo(modId) or name or DBM_CORE_UNKNOWN
 				local difficultyName = DBM_CORE_UNKNOWN
 				if difficulty == 8 then
 					if difficultyModifier and difficultyModifier ~= 0 then
@@ -6027,7 +6036,7 @@ do
 						else
 							self:AddMsg(DBM_CORE_COMBAT_STARTED:format(difficultyText..name))
 							if (difficultyIndex == 8 or difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty() and not statusGuildDisabled and not self.Options.DisableGuildStatus then--Only send relevant content, not guild beating down lich king or LFR.
-								SendAddonMessage("D4", "GCB\t"..modId.."\t2\t"..difficultyIndex.."\t"..difficultyModifier, "GUILD")
+								SendAddonMessage("D4", "GCB\t"..modId.."\t2\t"..difficultyIndex.."\t"..difficultyModifier.."\t"..name, "GUILD")
 							end
 						end
 					end
@@ -6203,7 +6212,7 @@ do
 						else
 							self:AddMsg(DBM_CORE_COMBAT_ENDED_AT_LONG:format(difficultyText..name, wipeHP, strFromTime(thisTime), totalPulls - totalKills))
 							if (difficultyIndex == 8 or difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty() and not statusGuildDisabled and not self.Options.DisableGuildStatus then--Maybe add mythic plus/CM?
-								SendAddonMessage("D4", "GCE\t"..modId.."\t4\t1\t"..strFromTime(thisTime).."\t"..difficultyIndex.."\t"..difficultyModifier.."\t"..wipeHP, "GUILD")
+								SendAddonMessage("D4", "GCE\t"..modId.."\t5\t1\t"..strFromTime(thisTime).."\t"..difficultyIndex.."\t"..difficultyModifier.."\t"..name.."\t"..wipeHP, "GUILD")
 							end
 						end
 					end
@@ -6291,7 +6300,7 @@ do
 						else
 							msg = DBM_CORE_BOSS_DOWN:format(difficultyText..name, strFromTime(thisTime))
 							if (difficultyIndex == 8 or difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty() and not statusGuildDisabled and not self.Options.DisableGuildStatus then
-								SendAddonMessage("D4", "GCE\t"..modId.."\t4\t0\t"..strFromTime(thisTime).."\t"..difficultyIndex.."\t"..difficultyModifier, "GUILD")
+								SendAddonMessage("D4", "GCE\t"..modId.."\t5\t0\t"..strFromTime(thisTime).."\t"..difficultyIndex.."\t"..difficultyModifier.."\t"..name, "GUILD")
 							end
 						end
 					elseif thisTime < (bestTime or mhuge) then
@@ -6300,7 +6309,7 @@ do
 						else
 							msg = DBM_CORE_BOSS_DOWN_NR:format(difficultyText..name, strFromTime(thisTime), strFromTime(bestTime), totalKills)
 							if (difficultyIndex == 8 or difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty() and not statusGuildDisabled and not self.Options.DisableGuildStatus then
-								SendAddonMessage("D4", "GCE\t"..modId.."\t4\t0\t"..strFromTime(thisTime).."\t"..difficultyIndex.."\t"..difficultyModifier, "GUILD")
+								SendAddonMessage("D4", "GCE\t"..modId.."\t5\t0\t"..strFromTime(thisTime).."\t"..difficultyIndex.."\t"..difficultyModifier.."\t"..name, "GUILD")
 							end
 						end
 					else
@@ -6309,7 +6318,7 @@ do
 						else
 							msg = DBM_CORE_BOSS_DOWN_L:format(difficultyText..name, strFromTime(thisTime), strFromTime(lastTime), strFromTime(bestTime), totalKills)
 							if (difficultyIndex == 8 or difficultyIndex == 14 or difficultyIndex == 15 or difficultyIndex == 16) and InGuildParty() and not statusGuildDisabled and not self.Options.DisableGuildStatus then
-								SendAddonMessage("D4", "GCE\t"..modId.."\t4\t0\t"..strFromTime(thisTime).."\t"..difficultyIndex.."\t"..difficultyModifier, "GUILD")
+								SendAddonMessage("D4", "GCE\t"..modId.."\t5\t0\t"..strFromTime(thisTime).."\t"..difficultyIndex.."\t"..difficultyModifier.."\t"..name, "GUILD")
 							end
 						end
 					end
@@ -6458,7 +6467,7 @@ do
 	local autoTLog = false
 
 	local function isCurrentContent()
-		if LastInstanceMapID == 1861 or LastInstanceMapID == 2070 or LastInstanceMapID == 2096 then--BfA
+		if LastInstanceMapID == 1861 or LastInstanceMapID == 2070 or LastInstanceMapID == 2096 or LastInstanceMapID == 2164 then--BfA
 			return true
 		end
 		return false
@@ -7379,27 +7388,29 @@ do
 	end
 	--TODO, see where timewalking ilvl fits into filters
 	--Couldn't get any of events to work so have to hook the show script directly
-	BonusRollFrame:HookScript("OnShow", function(self, event, ...)
-		if bonusRollForce then
-			bonusRollForce = false
-			return
-		end
-		DBM:Debug("BonusRollFrame OnShow fired", 2)
-		if DBM.Options.BonusFilter == "Never" then return end
-		local _, _, difficultyId, _, _, _, _, mapID = GetInstanceInfo()
-		local localMapID = C_Map.GetBestMapForUnit("player") or 0
-		local keystoneLevel = C_ChallengeMode.GetActiveKeystoneInfo() or 0
-		DBM:Unschedule(hideBonusRoll)
-		if DBM.Options.BonusFilter == "TrivialContent" and (difficultyId == 1 or difficultyId == 2) then--Basically anything below 370 ilvl (normal/heroic dungeons)
-			hideBonusRoll(DBM)
-		elseif DBM.Options.BonusFilter == "NormalRaider" and (difficultyId == 17 or difficultyId == 23 or (difficultyId == 8 and keystoneLevel < 5) or (difficultyId == 0 and localMapID == 14)) then--Basically, anything below 385 (normal/heroic/mythic dungeons lower than 5, LFR
-			hideBonusRoll(DBM)
-		elseif DBM.Options.BonusFilter == "HeroicRaider" and (difficultyId == 14 or difficultyId == 17 or difficultyId == 23 or (difficultyId == 8 and keystoneLevel < 10) or (difficultyId == 0 and localMapID == 14)) then--Basically, anything below 400 (normal/heroic/mythic dungeons lower than 10, LFR/Normal Raids
-			hideBonusRoll(DBM)
-		elseif DBM.Options.BonusFilter == "MythicRaider" and (difficultyId == 14 or difficultyId == 15 or difficultyId == 17 or difficultyId == 23 or difficultyId == 8 or difficultyId == 0) then--Basically, anything below Mythic Raid (ANY dungeon, LFR/Normal/Heroic Raids
-			hideBonusRoll(DBM)
-		end
-	end)
+	if BonusRollFrame then
+		BonusRollFrame:HookScript("OnShow", function(self, event, ...)
+			if bonusRollForce then
+				bonusRollForce = false
+				return
+			end
+			DBM:Debug("BonusRollFrame OnShow fired", 2)
+			if DBM.Options.BonusFilter == "Never" then return end
+			local _, _, difficultyId, _, _, _, _, mapID = GetInstanceInfo()
+			local localMapID = C_Map.GetBestMapForUnit("player") or 0
+			local keystoneLevel = C_ChallengeMode.GetActiveKeystoneInfo() or 0
+			DBM:Unschedule(hideBonusRoll)
+			if DBM.Options.BonusFilter == "TrivialContent" and (difficultyId == 1 or difficultyId == 2) then--Basically anything below 370 ilvl (normal/heroic dungeons)
+				hideBonusRoll(DBM)
+			elseif DBM.Options.BonusFilter == "NormalRaider" and (difficultyId == 17 or difficultyId == 23 or (difficultyId == 8 and keystoneLevel < 5) or (difficultyId == 0 and localMapID == 14)) then--Basically, anything below 385 (normal/heroic/mythic dungeons lower than 5, LFR
+				hideBonusRoll(DBM)
+			elseif DBM.Options.BonusFilter == "HeroicRaider" and (difficultyId == 14 or difficultyId == 17 or difficultyId == 23 or (difficultyId == 8 and keystoneLevel < 10) or (difficultyId == 0 and localMapID == 14)) then--Basically, anything below 400 (normal/heroic/mythic dungeons lower than 10, LFR/Normal Raids
+				hideBonusRoll(DBM)
+			elseif DBM.Options.BonusFilter == "MythicRaider" and (difficultyId == 14 or difficultyId == 15 or difficultyId == 17 or difficultyId == 23 or difficultyId == 8 or difficultyId == 0) then--Basically, anything below Mythic Raid (ANY dungeon, LFR/Normal/Heroic Raids
+				hideBonusRoll(DBM)
+			end
+		end)
+	end
 end
 
 ----------------------------
@@ -9153,6 +9164,12 @@ do
 		return schedule(t, self.Play, self.mod, self, ...)
 	end
 
+	--Object Permits scheduling voice multiple times for same object
+	function announcePrototype:ScheduleVoiceOverLap(t, ...)
+		if voiceSessionDisabled or DBM.Options.ChosenVoicePack == "None" then return end
+		return schedule(t, self.Play, self.mod, self, ...)
+	end
+
 	function announcePrototype:CancelVoice(...)
 		if voiceSessionDisabled or DBM.Options.ChosenVoicePack == "None" then return end
 		return unschedule(self.Play, self.mod, self, ...)
@@ -10435,7 +10452,7 @@ do
 			return self:Start(nil, timer, ...) -- first argument is optional!
 		end
 		if not self.option or self.mod.Options[self.option] then
-			if self.type and self.type:find("count") and not self.allowdouble then--cdcount, nextcount. remove previous timer.
+			if self.type and (self.type == "cdcount" or self.type == "nextcount") and not self.allowdouble then--remove previous timer.
 				for i = #self.startedTimers, 1, -1 do
 					if DBM.Options.AutoCorrectTimer or (DBM.Options.DebugMode and DBM.Options.DebugLevel > 1) then
 						local bar = DBM.Bars:GetBar(self.startedTimers[i])

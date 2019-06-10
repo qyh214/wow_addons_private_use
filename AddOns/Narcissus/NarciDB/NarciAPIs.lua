@@ -17,7 +17,9 @@ local HeritageArmorItemIDs = {
     156690, 156691, 156692, 156693, 156694, 156695, 156696, 156697, 157758, 158917,     --Void Elf
     156675, 156676, 156677, 156678, 156679, 156680, 156681, 156685,                     --Nightborne
     166348, 166349, 166351, 166352, 166353, 166354, 166355, 166356, 166357,             --Blood Elf
-    
+    164993, 164994, 164995, 164996, 164997, 164998, 164999, 165000,                     --Zandalari
+    165002, 165003, 165004, 165005, 165006, 165007, 165008, 165009,                     --Kul'tiran
+
     --Reserved for test↓
     
 }
@@ -44,6 +46,19 @@ local SpecialItemList = {
     --[157636] = CommanderOfArgus,            --Test
 }
 
+local Ensemble_TheChosenDead_ItemIDs = {
+    142423, 142421, 142422, 142434, 142420, 142433,     --Mail
+    142427, 142425, 142431, 142435, 142426, 142424,     --Plate
+    142419, 142430, 142432, 142417, 142418, 142416,     --Leather
+    142415, 142411, 142410, 142413, 142429, 142414,     --Cloth
+    143355, 143345, 143334, 143354, 143346, 143347,
+    143356, 143339, 143349, 143342, 143344, 143335,
+    143353, 143368, 143340, 143337, 143348, 143341,
+    143343, 143367, 143336, 143352, 143366, 143351,
+    143360, 143358, 143350, 143361, 143364, 143359,
+    143338, 143369, 143365, 143363, 143362,
+}
+
 
 local function BuildSearchTable(table)
     if type(table) ~="table" then
@@ -56,11 +71,12 @@ local function BuildSearchTable(table)
         newTable[v] = true;
     end
 
-    wipe(HeritageArmorItemIDs)
+    wipe(table)
     return newTable;
 end
 
 local HeritageArmorList = BuildSearchTable(HeritageArmorItemIDs);
+local Ensemble_TheChosenDead = BuildSearchTable(Ensemble_TheChosenDead_ItemIDs);
 
 -----Color API------
 Narci_GlobalColorIndex = 0;
@@ -181,9 +197,13 @@ function NarciAPI_IsSpecialItem(itemID)
 
     if SecretlItemIDs[itemID] then
         return true, ITEMSOURCE_SECRETFINDING;
-    else
-        return false;
     end
+
+    if Ensemble_TheChosenDead[itemID] then
+        return true, "|cFFFFD100"..DUNGEON_FLOOR_HELHEIMRAID1.."|r";
+    end
+
+    return false;
 end
 
 local PrimaryStatusList = {

@@ -132,7 +132,7 @@
 			<Layer level="BACKGROUND" textureSubLevel="4">
 				<Texture parentKey="VirtualThumb" setAllPoints="true" rotation="45">
 					<Color r="0" g="0" b="0" a="1"/>
-                    <Size x="12" y="12"/>
+                    <Size x="10" y="10"/>
 					<Anchors>
 						<Anchor point="CENTER" relativePoint="CENTER" x="0" y="0"/>
 					</Anchors>
