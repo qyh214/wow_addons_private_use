@@ -726,7 +726,7 @@
 		<Layers>
 			<Layer level="OVERLAY">
 				<FontString inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="MIDDLE" parentKey="Label" text="Label">
-					<Size x="0" y="0"/>
+					<Size x="90" y="0"/>
 					<Anchors>
 						<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="10" y="0"/>
 					</Anchors>
@@ -1243,9 +1243,17 @@
 			<OnEnter>
 				self.Highlight:StopAnimating();
 				self.Highlight.BlingIn:Play();
-				NarciTooltip_SetComparison(self.itemLocation)
+				NarciTooltip_SetComparison(self.itemLocation, self)
 			</OnEnter>
 			<OnLeave function="Narci_ItemSlotButton_OnLeave"/>
+			<OnEvent>
+				local _, msg = ...
+				local frame = Narci_AlertFrame_Autohide;
+				frame.Text:SetText(msg)
+				frame:SetHeight(frame.Background:GetHeight())
+				UIFrameFadeIn(frame, 0.2, frame:GetAlpha(), 1);
+				self:UnregisterEvent("UI_ERROR_MESSAGE");
+			</OnEvent>
 		</Scripts>
 		<Frames>
 			<Button inherits="NarciRuneSlotRightTemplate">
@@ -1278,6 +1286,7 @@
 			<PostClick function="Narci_ItemSlotButton_OnClick"/>
 			
             <OnDragStart>
+				C_Item.UnlockItem(ItemLocation:CreateFromEquipmentSlot(self:GetID()))
 				PaperDollItemSlotButton_OnClick(self, "LeftButton");
 				Narci_Bridge_DragStratEvent();
 			</OnDragStart>
@@ -1290,9 +1299,17 @@
         </Scripts>
     </Button>
 
+	<Button name="Narci_InteractiveGemSlot_Template" inherits="Narci_GemSlot_Template" virtual="true">
+		<Scripts>
+			<OnEnter function="Narci_GemButton_OnEnter"/>
+			<OnLeave function="Narci_GemButton_OnLeave"/>
+			<OnClick function="Narci_GemSlot_OnClick"/>
+		</Scripts>
+	</Button>
+
 	<Button name="AAASlotButtonLeft" inherits="AAAEquipmentSlotButtonTemplate" virtual="true"> 
 		<Layers>
-			<Layer level="BORDER" textureSubLevel="2">
+			<!--Layer level="BORDER" textureSubLevel="2">
 				<Texture parentKey="GemSlot" hidden="true">
 					<Size x="30" y="30"/>
 					<Anchors>
@@ -1307,7 +1324,7 @@
 						<Anchor point="CENTER" relativeKey="$parent.GemSlot" relativePoint="CENTER" x="3" y="0"/>
 					</Anchors>
 				</Texture>
-			</Layer>					
+			</Layer-->					
 			<Layer level="OVERLAY">
 				<FontString parentKey="Name" inherits="AAAItemName" justifyH="LEFT" justifyV="BOTTOM" text="Item Name" maxLines="2">
 					<Size x="0" y="0"/>
@@ -1338,21 +1355,11 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame>
-				<Size x="30" y="30"/>
-			<HitRectInsets>
-				<AbsInset left="8" right="8" top="4" bottom="4"/>
-			</HitRectInsets>
+			<Button inherits="Narci_InteractiveGemSlot_Template">
 				<Anchors>
-					<Anchor point="CENTER" x="-40" y="0"/>
+					<Anchor point="RIGHT" relativeKey="$parent" relativePoint="LEFT" x="8" y="0"/>
 				</Anchors>
-				<Scripts>
-					<OnEnter function="Narci_GemButton_OnEnter"/>
-					<OnLeave>
-						HideButtonTooltip();
-					</OnLeave>
-				</Scripts>			
-			</Frame>
+			</Button>
 			<Button inherits="NarciRuneSlotLeftTemplate">
 				<Anchors>
 					<Anchor point="LEFT" relativeKey="$parent" x="0" y="0"/>
@@ -1374,7 +1381,7 @@
 
 	<Button name="AAASlotButtonRight" inherits="AAAEquipmentSlotButtonTemplate" virtual="true"> 
 		<Layers>
-			<Layer level="BORDER" textureSubLevel="2">
+			<!--Layer level="BORDER" textureSubLevel="2">
 				<Texture parentKey="GemSlot" hidden="true">
 					<TexCoords left="1" right="0" top="1" bottom="0"/>
 					<Size x="30" y="30"/>
@@ -1390,7 +1397,7 @@
 						<Anchor point="CENTER" relativeKey="$parent.GemSlot" relativePoint="CENTER" x="-3" y="0"/>
 					</Anchors>
 				</Texture>
-			</Layer>					
+			</Layer-->					
 			<Layer level="OVERLAY">
 				<FontString parentKey="Name" inherits="AAAItemName" justifyH="RIGHT" justifyV="BOTTOM" text="Item Name" maxLines="2">
 					<Size x="0" y="0"/>
@@ -1421,21 +1428,18 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame>
-				<Size x="30" y="30"/>
-			<HitRectInsets>
-				<AbsInset left="8" right="8" top="4" bottom="4"/>
-			</HitRectInsets>
+			<Button inherits="Narci_InteractiveGemSlot_Template">
 				<Anchors>
-					<Anchor point="CENTER" x="40" y="0"/>
+					<Anchor point="LEFT" relativeKey="$parent" relativePoint="RIGHT" x="-8" y="0"/>
 				</Anchors>
 				<Scripts>
-					<OnEnter function="Narci_GemButton_OnEnter"/>
-					<OnLeave>
-						HideButtonTooltip();
-					</OnLeave>
-				</Scripts>			
-			</Frame>
+					<OnLoad>
+						self.IsRight = true;
+						self.GemBorder:SetTexCoord(1, 0, 0, 1);
+						self.GemIcon:SetPoint("CENTER", self, "CENTER", -3, 0);
+					</OnLoad>
+				</Scripts>
+			</Button>
 			<Button inherits="NarciRuneSlotRightTemplate">
 				<Anchors>
 					<Anchor point="RIGHT" relativeKey="$parent" x="0" y="0"/>
@@ -1629,6 +1633,9 @@
 
 				HideButtonTooltip();
 			</OnLeave>
+			<OnDoubleClick>
+				return;
+			</OnDoubleClick>
 		</Scripts>
 	</Button>
 
@@ -1696,6 +1703,7 @@
 						local pi = math.pi;
 						self.StartDegree = 2*pi;
 						self.StartOffSet = 40;
+						self.TimeSinceLastUpdate = 0;
 					</OnLoad>
 					<OnHide>
 						self.StartDegree = self:GetParent().Switch.Ring:GetRotation();
@@ -2041,6 +2049,8 @@
 							</Button>
 							<Frame name="CameraControlBar_ResetPosition_AnimFrame" hidden="true">
 								<Scripts>
+									<OnShow function="CameraControlBar_ResetPosition_AnimFrame_OnShow"/>
+
 									<OnLoad>
 										self.OppoDirection = false;
 										self.TimeSinceLastUpdate = 0;
@@ -2526,6 +2536,11 @@
 					</Frame>
 				</Frames>
 				<Layers>
+					<Layer level="BORDER">
+						<Texture setAllPoints="true" hidden="true">
+							<Color r="0.4" g="0.4" b="1" a="0.6"/>
+						</Texture>
+					</Layer>
 					<Layer level="ARTWORK">
 						<Texture parentKey="Arrow" file="Interface\AddOns\Narcissus\Art\Widgets\Arrows\UnequipArrow-Yellow.tga" hidden="true"> 
 							<Size x="36" y="36" />
@@ -2558,7 +2573,7 @@
 				<Layers>
 					<Layer level="BACKGROUND">
 						<Texture setAllPoints="true" parentKey="Black">
-							<Color r="0" g="0" b="0" a="0.6"/>
+							<Color r="0" g="0" b="0" a="0.5"/>
 						</Texture>
 					</Layer>
 				</Layers>
@@ -2958,15 +2973,16 @@
 				<Alpha fromAlpha="1" toAlpha="0" duration="0.4" order="1"/>
 				<Scripts>
 					<OnFinished>
-						--[[
-						if not InCombatLockdown() then
-							
-						else
-							self:GetParent():SetScale(0.0001);
-							self:GetParent():RegisterEvent("PLAYER_REGEN_ENABLED");
-						end
-						--]]
 						self:GetParent():Hide();
+					</OnFinished>
+				</Scripts>
+			</AnimationGroup>
+			<AnimationGroup parentKey="AutoStand">
+				<Translation startDelay="20" duration="0" order="1"/>
+				<Scripts>
+					<OnFinished>
+						DoEmote("Stand", "none");
+						self:Play();
 					</OnFinished>
 				</Scripts>
 			</AnimationGroup>
@@ -4556,6 +4572,18 @@
 		</Scripts>		
 	</Frame>
 
+	<GameTooltip name="NarciCacheTooltip" inherits="GameTooltipTemplate" parent="UIParent" enableMouse="false" toplevel="false" movable="false" frameStrata="LOW" scale="0.001" hidden="true" Alpha="0">
+		<Size>
+			<AbsDimension x="10" y="10"/>
+		</Size>
+		<Anchors>
+			<Anchor point="BOTTOM"/>
+		</Anchors>
+		<Scripts>
+			<OnLoad function="GameTooltip_OnLoad"/>
+		</Scripts>
+	</GameTooltip>
+	
 	<!--Frame name="VisualCenterGuideLine" hidden="false" setAllPoints="true">
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeTo="Narci_ChestSlot" relativePoint="TOP" x="0" y="0"/>

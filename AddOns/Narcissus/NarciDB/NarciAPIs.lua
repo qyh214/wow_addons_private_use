@@ -1,3 +1,9 @@
+local max = math.max;
+local GetText = GetText;
+local GetTexture = GetTexture;
+local NumLines = NumLines;
+local _G = _G;
+local GetItemInfo = GetItemInfo;
 --------------------
 ----API Datebase----
 --------------------
@@ -220,6 +226,185 @@ function NarciAPI_GetPrimaryStatusName()
 end
 
 --------------------
+----Tooltip Scan----
+--------------------
+
+local TP = CreateFrame("GameTooltip", "NarciVirtualTooltip", nil, "GameTooltipTemplate")
+TP:SetScript("OnLoad", GameTooltip_OnLoad);
+TP:SetOwner(UIParent, 'ANCHOR_NONE');
+
+local SocketAction = ITEM_SOCKETABLE;
+local find = string.find;
+local SocketPath = "ItemSocketingFrame";
+function NarciAPI_IsItemSocketable(itemLink)
+    if not itemLink then    return; end
+    
+    local gemName, gemLink = GetItemGem(itemLink, 1)
+    if gemName then
+        return gemName, gemLink;
+    end
+    --]]
+
+    local tex, texID;
+    for i = 1, 3 do
+        tex = _G["NarciVirtualTooltip".."Texture"..i]
+        tex = tex:SetTexture(nil);
+    end
+
+    TP:SetHyperlink(itemLink);
+
+    for i = 1, 3 do     --max 10
+        tex = _G["NarciVirtualTooltip".."Texture"..i]
+        texID = tex and tex:GetTexture();
+        if texID and find(texID, SocketPath) then
+            --print(texID)
+            --print("Has Socket")
+            return "Empty", nil;
+        end
+    end
+    --[[
+    for i = begin, num do
+        local str = _G["NarciVirtualTooltip".."TextLeft"..i]
+        if str and str:GetText() == SocketAction then
+            print("Has Socket")
+            return;
+        end
+    end
+    --]]
+    return nil, nil;
+end
+
+local strtrim = strtrim;
+local gsub = gsub;
+local greyFont = "|cff959595";
+local leftBrace = "%(";
+local rightBrace = "%)";
+if (GetLocale() == "zhCN") or (GetLocale() == "zhTW") then
+    leftBrace = "（"
+    rightBrace = "）"
+end
+
+
+local SOURCE_KNOWN = TRANSMOGRIFY_TOOLTIP_APPEARANCE_KNOWN;
+local APPEARANCE_KNOWN = TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN;
+local APPEARANCE_UNKNOWN = TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN;
+
+function NarciAPI_IsAppearanceKnown(itemLink)
+    --Need to correspond with C_TransmogCollection.PlayerHasTransmog
+    if not itemLink then    return; end
+    TP:SetHyperlink(itemLink);
+    local str;
+    local num = TP:NumLines();
+    for i = num, num - 2, -1 do
+        str = nil;
+        str = _G["NarciVirtualTooltip".."TextLeft"..i]
+        if not str then
+            return false;
+        else
+            str = str:GetText();
+        end
+        if str == SOURCE_KNOWN or str == APPEARANCE_KNOWN then
+            return true;
+        elseif str == APPEARANCE_UNKNOWN then
+            return false;
+        end
+    end
+    return false;
+end
+
+local function trimComma(text)
+    return strtrim(text, ":：");
+end
+
+local function formatString(text, removedText)
+    text = strtrim(text, removedText);
+    text = trimComma(text);
+    text = strtrim(text);                               --remove space
+    text = gsub(text, leftBrace, "\n\n"..greyFont)
+    text = gsub(text, rightBrace, "|r")
+    return text;
+end
+
+
+
+local onUse = ITEM_SPELL_TRIGGER_ONUSE;
+local onEquip = ITEM_SPELL_TRIGGER_ONEQUIP;
+local onProc = ITEM_SPELL_TRIGGER_ONPROC;
+local minLevel = SOCKETING_ITEM_MIN_LEVEL_I;
+local _onUse = trimComma(onUse)
+local _onEquip = trimComma(onEquip)
+local _onProc = trimComma(onProc)
+
+function NarciAPI_GetItemExtraEffect(itemLink)
+    if not itemLink then    return; end
+
+    TP:SetHyperlink(itemLink);
+    local num = TP:NumLines();
+    local begin = max(num - 6, 0);
+    local output = "";
+    local category, str;
+
+    for i = begin, num, 1 do
+        str = nil;
+        str = _G["NarciVirtualTooltip".."TextLeft"..i]
+        if not str then
+            return;
+        else
+            str = str:GetText();
+        end
+
+        if find(str, onUse) then
+            str = formatString(str, _onUse);
+            if not category then    category = _onUse; end
+            --return _onUse, str;
+            output = output..str.."\n\n"
+        elseif find(str, onEquip) then
+            str = formatString(str, _onEquip);
+            if not category then    category = _onEquip; end
+            --return _onEquip, str;
+            output = output..str.."\n\n"
+        elseif find(str, onProc) then
+            str = formatString(str, _onProc);
+            if not category then    category = _onProc; end
+            --return _onProc, str;
+            output = output..str.."\n\n"
+        end
+        
+    end
+    return category, output;
+end
+
+function NarciAPI_GetGemBonues(itemID)
+    if not itemID then    return; end
+    if type(itemID) == "number" then
+        TP:SetItemByID(itemID)
+    else
+        TP:SetHyperlink(itemID)
+    end
+    local num = TP:NumLines();
+    local output;
+    local str, level;
+    for i = 1, num do
+        str = _G["NarciVirtualTooltip".."TextLeft"..i]
+        if not str then
+            return;
+        else
+            str = str:GetText();
+        end
+        
+        if strsub(str, 1, 1) == "+" then
+            output = str;
+        end
+
+        if find(str, minLevel) then
+            level = formatString(str, minLevel);
+        end
+
+        if level and output then return output, tonumber(level); end
+    end
+    return output, level;
+end
+--------------------
 ---Formating API----
 --------------------
 
@@ -277,8 +462,9 @@ function NarciAPI_OptimizeBorderThickness(self)
     self:SetPoint(point, relativeTo, relativePoint, math.floor(xOfs + 0.5), math.floor(yOfs + 0.5))
 
     local scale = string.match(GetCVar( "gxWindowedResolution" ), "%d+x(%d+)" );
-    local uiScale = self:GetEffectiveScale();
+    local uiScale = self:GetEffectiveScale(); 
     local rate = 768/scale/uiScale;
+    --print(rate)
     local borderWeight = 2;
     local weight = borderWeight * rate;
     local weight2 = weight * math.sqrt(2);
@@ -336,7 +522,7 @@ local function SmoothScrollContainer_OnUpdate(self, elapsed)
 	end
 
 	local remainedStep = abs(self.EndValue - scrollBar:GetValue())
-	if self.animationDuration >= 2 or remainedStep <= ( self.minOffset - 0.4) then
+	if self.animationDuration >= 2 or remainedStep <= ( self.minOffset) then
 		scrollBar:SetValue(math.floor(min(self.maxVal, self.EndValue) + 0.5));
 		self:Hide();
 	end
@@ -374,6 +560,10 @@ function NarciAPI_SmoothScroll_Initialization(self, updatedList, updateFunc, del
     local SmoothScrollContainer = CreateFrame("Frame", frameName, self);
     SmoothScrollContainer:Hide();
     
+    local scale = string.match(GetCVar( "gxWindowedResolution" ), "%d+x(%d+)" );
+    local uiScale = self:GetEffectiveScale(); 
+    local pixel = 768/scale/uiScale;
+    
     SmoothScrollContainer.stepSize = 0;
     SmoothScrollContainer.delta = 0;
     SmoothScrollContainer.animationDuration = 0;
@@ -381,7 +571,7 @@ function NarciAPI_SmoothScroll_Initialization(self, updatedList, updateFunc, del
 	SmoothScrollContainer.maxVal = 0;
     SmoothScrollContainer.deltaRatio = deltaRatio or 1;
     SmoothScrollContainer.timeRatio = timeRatio or 1;
-    SmoothScrollContainer.minOffset = minOffset or 2;
+    SmoothScrollContainer.minOffset = pixel or minOffset or 2;
     SmoothScrollContainer:SetScript("OnUpdate", SmoothScrollContainer_OnUpdate);
     SmoothScrollContainer:SetScript("OnShow", function(self)
         self.EndValue = self:GetParent().scrollBar:GetValue();
@@ -432,4 +622,27 @@ function NarciAPI_BuildButtonList(self, buttonTemplate, buttonNameTable, initial
 	end
 
 	self.buttons = buttons;
+end
+
+
+
+-----Filter Shared Functions-----
+function NarciAPI_LetterboxAnimation(command)
+	local frame = Narci_FullScreenMask;
+	frame:StopAnimating();
+	if command == "IN" then
+		frame:Show();
+		frame.BottomMask.animIn:Play();
+		frame.TopMask.animIn:Play();
+	elseif command == "OUT" then
+		frame.BottomMask.animOut:Play();
+		frame.TopMask.animOut:Play();
+	else
+        if NarcissusDB.LetterboxEffect then
+            PhotoModeController.PhotoModeController_AnimFrame.toAlpha = 0
+			frame:Show();
+			frame.BottomMask.animIn:Play();
+			frame.TopMask.animIn:Play();
+		end
+	end
 end

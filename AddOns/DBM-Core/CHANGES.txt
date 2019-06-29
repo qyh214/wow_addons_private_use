@@ -1,10 +1,22 @@
-lightweight tag 12509631b8098b96bcdf87d9106f3f4b2010cc19 8.1.26
+lightweight tag e6c5e9a09d6d65c97bf4e13e82d1bf2e67399f29 8.2.1
 Author:	MysticalOS <mysticalosx@gmail.com>
-Date:	Thu May 23 14:19:42 2019 -0400
+Date:	Wed Jun 26 14:04:14 2019 -0400
 
-commit 12509631b8098b96bcdf87d9106f3f4b2010cc19
+commit e6c5e9a09d6d65c97bf4e13e82d1bf2e67399f29
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Thu May 23 14:19:42 2019 -0400
+Date:   Wed Jun 26 14:04:14 2019 -0400
 
-    Fix a pretty critical regression from last release
+    Bump version
+
+commit 71b4061d4d841f79bb667117d2951b92d7eaecbd
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Wed Jun 26 13:56:12 2019 -0400
+
+    Fix another situation where DBM core attempted to playsoundfile "None" do to a bad option check in victory sound handler
+
+commit 57d643cabb036f61cce0d80836a8532ae06c9dbb
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Wed Jun 26 10:58:24 2019 -0400
+
+    Fix a missed playsoundfile usage i didn't change over to soundkit
 

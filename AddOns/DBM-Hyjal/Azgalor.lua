@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Azgalor", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019041710011")
+mod:SetRevision("20190625143429")
 mod:SetCreatureID(17842)
 mod:SetEncounterID(621)
 mod:SetModelID(18526)
@@ -44,7 +44,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnDoom:Show()
 			specWarnDoom:Play("targetyou")
-			yellDoom:Countdown(20)
+			yellDoom:Countdown(args.spellId)
 		else
 			warnDoom:Show(args.destName)
 		end

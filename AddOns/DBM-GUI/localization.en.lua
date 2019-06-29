@@ -155,6 +155,18 @@ L.Bar7Header				= "User Bar Options"
 L.Bar7ForceLarge			= "Always use large bar"
 L.Bar7CustomInline			= "Use custom '!' inline icon"
 L.Bar7Footer				= "(Dummy Bar won't live update)"
+--Dropdown Options
+L.CBTGeneric				= "Generic"
+L.CBTAdd					= "Add"
+L.CBTAOE					= "AOE"
+L.CBTTargeted				= "Targeted"
+L.CBTInterrupt				= "Interrupt"
+L.CBTRole					= "Role"
+L.CBTPhase					= "Phase"
+L.CBTImportant				= "Important (User)"
+L.CVoiceOne					= "Count Voice 1"
+L.CVoiceTwo					= "Count Voice 2"
+L.CVoiceThree				= "Count Voice 3"
 
 -- Tab: Timers
 L.AreaTitle_BarColors		= "Bar Colors by timer type"
@@ -273,6 +285,7 @@ L.SpamBlockNoRangeRestore	= "Do not restore range frame to previous state when m
 L.Area_SpamFilter			= "Spam Filter Options"
 L.DontShowFarWarnings		= "Do not show announces/timers for events that are far away"
 L.StripServerName			= "Strip realm name in warnings and timers"
+L.FilterVoidFormSay			= "Do not send chat position/count chat yells when in Void Form"
 
 L.Area_SpecFilter			= "Role Filter Options"
 L.FilterTankSpec			= "Filter warnings designated for Tank role when not tank spec. (Note: Disabling this is not recommended for most users as 'taunt' warnings are now all on by default.)"

@@ -22,7 +22,7 @@ local specWarnBlastNova		= mod:NewSpecialWarningInterrupt(30616, nil, nil, nil, 
 local specWarnHeal			= mod:NewSpecialWarningInterrupt(30528, "HasInterrupt", nil, nil, 1, 2)
 
 local timerHeal				= mod:NewCastTimer(2, 30528, nil, nil, nil, 4)
-local timerPhase2			= mod:NewTimer(120, "timerP2", "Interface\\Icons\\INV_Weapon_Halberd16", nil, nil, 6)
+local timerPhase2			= mod:NewTimer(120, "timerP2", "135566", nil, nil, 6)
 local timerBlastNovaCD		= mod:NewCDTimer(54, 30616, nil, nil, nil, 2)
 local timerDebris			= mod:NewNextTimer(15, 36449, nil, nil, nil, 2)--Only happens once per fight, after the phase 3 yell.
 

@@ -19,7 +19,6 @@ DBM_COPY_URL_DIALOG					= "Copy URL"
 --Post Patch 7.1
 DBM_CORE_NO_RANGE					= "Range Radar can not be used in instances. Legacy text range frame used instead"
 DBM_CORE_NO_ARROW					= "Arrow can not be used in instances"
-DBM_CORE_ARROW_SUMMONED				= "DBM Arrow has been activated. If you did not do this, you have a 3rd party addon configured to activated it for you"
 DBM_CORE_NO_HUD						= "HUDMap can not be used in instances"
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM has disabled dynamic range frame on this fight do to insufficient information about number of players needed to affect clump check for a group of your size."
@@ -100,7 +99,7 @@ DBM_CORE_NOTESHAREERRORALREADYOPEN	= "Cannot open a shared note link while note 
 DBM_CORE_ALLMOD_DEFAULT_LOADED		= "Default options for all mods in this instance have been loaded."
 DBM_CORE_ALLMOD_STATS_RESETED		= "All mod stats have been reset."
 DBM_CORE_MOD_DEFAULT_LOADED			= "Default options for this fight have been loaded."
-DBM_CORE_SOUNDKIT_MIGRATION			= "One or more of your warning/special warning sounds were reset to defaults do to incompatability with patch 8.2 and later (sound must reside in interface folder to play by path, or use SoundKit ID)"
+DBM_CORE_SOUNDKIT_MIGRATION			= "One or more of your warning/special warning sounds were reset to defaults do to incompatability with patch 8.2 and later. DBM now only supports sound files residing your addons folder, or SoundKit IDs for playing media"
 
 DBM_CORE_WORLDBOSS_ENGAGED			= "%s was possibly engaged on your realm at %s percent health. (Sent by %s)"
 DBM_CORE_WORLDBOSS_DEFEATED			= "%s was possibly defeated on your realm (Sent by %s)."
@@ -253,11 +252,9 @@ DBM_CORE_TIMER_USAGE	= {
 	"DBM timer commands:",
 	"-----------------",
 	"/dbm timer <sec> <text>: Starts a <sec> second timer with your <text>.",
-	"/dbm ctimer <sec> <text>: Starts a timer that also has countdown text.",
 	"/dbm ltimer <sec> <text>: Starts a timer that also automatically loops until canceled.",
-	"/dbm cltimer <sec> <text>: Starts a timer that also has countdown text and loops until canceled.",
 	"('Broadcast' in front of any timer also shares it with raid if leader/promoted)",
-	"/dbm timer endloop: Stops any looping ltimer or cltimer."
+	"/dbm timer endloop: Stops any looping ltimer."
 }
 
 DBM_ERROR_NO_PERMISSION				= "You don't have the required permission to do this."
@@ -291,7 +288,7 @@ DBM_BOSS							= "Boss"
 DBM_CORE_ROOM_EDGE					= "Room Edge"
 DBM_CORE_FAR_AWAY					= "Far Away"
 DBM_CORE_BREAK_LOS					= "Break LOS"
-DBM_CORE_RESTORE_LOS				= "Restore LOS"
+DBM_CORE_RESTORE_LOS				= "Restore/Maintain LOS"
 DBM_CORE_SAFE						= "Safe"
 DBM_CORE_SHIELD						= "Shield"
 DBM_INCOMING						= "%s Incoming"
@@ -334,7 +331,8 @@ DBM_CORE_AUTO_ANNOUNCE_TEXTS = {
 	stage		= "Stage %s",
 	prestage	= "Stage %s soon",
 	count		= "%s (%%s)",
-	stack		= "%s on >%%s< (%%d)"
+	stack		= "%s on >%%s< (%%d)",
+	moveto		= "%s - move to >%%s<"
 }
 
 local prewarnOption = "Show pre-warning for $spell:%s"
@@ -357,7 +355,8 @@ DBM_CORE_AUTO_ANNOUNCE_OPTIONS = {
 	stagechange	= "Announce stage changes",
 	prestage	= "Show a prewarning for Stage %s",
 	count		= "Show warning for $spell:%s (with count)",
-	stack		= "Announce $spell:%s stacks"
+	stack		= "Announce $spell:%s stacks",
+	moveto		= "Show warning to move to someone or some place for $spell:%s"
 }
 
 DBM_CORE_AUTO_SPEC_WARN_TEXTS = {
@@ -614,16 +613,17 @@ DBM_CORE_LAG_FOOTER					= "No Response: %s"
 
 --Role Icons
 DBM_CORE_TANK_ICON			= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:6:21:7:27|t"
-DBM_CORE_HEALER_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:70:86:7:27|t"
 DBM_CORE_DAMAGE_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:39:55:7:27|t"
+DBM_CORE_HEALER_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:70:86:7:27|t"
 
 DBM_CORE_TANK_ICON_SMALL	= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:12:12:0:0:255:66:6:21:7:27|t"
-DBM_CORE_HEALER_ICON_SMALL	= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:12:12:0:0:255:66:70:86:7:27|t"
 DBM_CORE_DAMAGE_ICON_SMALL	= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:12:12:0:0:255:66:39:55:7:27|t"
+DBM_CORE_HEALER_ICON_SMALL	= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:12:12:0:0:255:66:70:86:7:27|t"
 --Importance Icons
 DBM_CORE_HEROIC_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:22:22:0:0:255:66:102:118:7:27|t"
 DBM_CORE_DEADLY_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:22:22:0:0:255:66:133:153:7:27|t"
 DBM_CORE_IMPORTANT_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:168:182:7:27|t"
+DBM_CORE_MYTHIC_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:22:22:0:0:255:66:133:153:40:58|t"
 
 DBM_CORE_HEROIC_ICON_SMALL	= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:14:14:0:0:255:66:102:118:7:27|t"
 DBM_CORE_DEADLY_ICON_SMALL	= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:14:14:0:0:255:66:133:153:7:27|t"
@@ -631,9 +631,9 @@ DBM_CORE_IMPORTANT_ICON_SMALL= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:1
 --Type Icons
 DBM_CORE_INTERRUPT_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:198:214:7:27|t"
 DBM_CORE_MAGIC_ICON			= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:229:247:7:27|t"
+DBM_CORE_CURSE_ICON			= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:6:21:40:58|t"
 DBM_CORE_POISON_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:39:55:40:58|t"
 DBM_CORE_DISEASE_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:70:86:40:58|t"
-DBM_CORE_CURSE_ICON			= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:6:21:40:58|t"
 DBM_CORE_ENRAGE_ICON		= "|TInterface\\EncounterJournal\\UI-EJ-Icons.blp:20:20:0:0:255:66:102:118:40:58|t"
 
 --LDB

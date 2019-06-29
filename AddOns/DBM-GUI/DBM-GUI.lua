@@ -43,7 +43,7 @@
 --
 
 
-local revision =(string.sub("2019051765919", 1, -5))
+local revision =(string.sub("20190626175612", 1, -5))
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -239,16 +239,6 @@ local function MixinSharedMedia3(mediatype, mediatable)
 	if not soundsRegistered then
 		local LSM = LibStub("LibSharedMedia-3.0")
 		soundsRegistered = true
-		--Internal Game Media
-		--8.2 FIXME, sound kit IDs already ready, just waiting on LSM to support them. Currently LSM ignores media that doesn't end in .wav or .ogg
-		--LSM:Register("sound", "Headless Horseman: Laugh", [[Sound\Creature\HeadlessHorseman\Horseman_Laugh_01.ogg]])--11965
-		--LSM:Register("sound", "Yogg Saron: Laugh", [[Sound\Creature\YoggSaron\UR_YoggSaron_Slay01.ogg]])--15757
-		--LSM:Register("sound", "Loatheb: I see you", [[Sound\Creature\Loathstare\Loa_Naxx_Aggro02.ogg]])--128466
-		--LSM:Register("sound", "Lady Malande: Flee", [[Sound\Creature\LadyMalande\BLCKTMPLE_LadyMal_Aggro01.ogg]])--11482
-		--LSM:Register("sound", "Milhouse: Light You Up", [[Sound\Creature\MillhouseManastorm\TEMPEST_Millhouse_Pyro01.ogg]])--49764
-		--LSM:Register("sound", "Void Reaver: Marked", [[Sound\Creature\VoidReaver\TEMPEST_VoidRvr_Aggro01.ogg]])--11213
-		--LSM:Register("sound", "Kaz'rogal: Marked", [[Sound\Creature\KazRogal\CAV_Kaz_Mark02.ogg]])--11052
-		--LSM:Register("sound", "C'Thun: You Will Die!", [[Sound\Creature\CThun\CThunYouWillDIe.ogg]])--8585
 		--Embedded Sound Clip media
 		LSM:Register("sound", "Jaina: Beware", [[Interface\AddOns\DBM-Core\sounds\SoundClips\beware.ogg]])
 		LSM:Register("sound", "Jaina: Beware (reverb)", [[Interface\AddOns\DBM-Core\sounds\SoundClips\beware_with_reverb.ogg]])
@@ -259,6 +249,8 @@ local function MixinSharedMedia3(mediatype, mediatable)
 		LSM:Register("sound", "Blakbyrd Alert 2", [[Interface\AddOns\DBM-Core\sounds\BlakbyrdAlerts\Alert2.ogg]])
 		LSM:Register("sound", "Blakbyrd Alert 3", [[Interface\AddOns\DBM-Core\sounds\BlakbyrdAlerts\Alert3.ogg]])
 		--User Media
+		--IMPORTANT, as of 8.2+, if you register media that doesn't actually exist, it WILL throw Lua errors
+		--So use CustomSounds very carefully
 		if DBM.Options.CustomSounds >= 1 then
 			LSM:Register("sound", "DBM: Custom 1", [[Interface\AddOns\DBM-CustomSounds\Custom1.ogg]])
 		end
@@ -311,12 +303,16 @@ local function MixinSharedMedia3(mediatype, mediatable)
 				end
 			end
 			if insertme then
-				if mediatype == "sound" then
-					tinsert(result, {text=k, value=v, sound=true})
-				elseif mediatype == "statusbar" then
+				if mediatype == "statusbar" then
 					tinsert(result, {text=k, value=v, texture=v})
 				elseif mediatype == "font" then
 					tinsert(result, {text=k, value=v, font=v})
+				--Only insert paths from addons folder, ignore file data ID, since there is no clean way to handle supporitng both FDID and soundkit at same time
+				elseif mediatype == "sound" and type(v) == "string" then
+					local search = v:lower()
+					if search:find("addons") then
+						tinsert(result, {text=k, value=v, sound=true})
+					end
 				end
 			end
 		end
@@ -411,23 +407,29 @@ do
 	end
 
 	local sounds = MixinSharedMedia3("sound", {
-		{ sound=true, text = "None", value = "None" },
+		{ sound=true, text = L.None, value = "None" },
 		{ sound=true, text = "SW 1", value = 1 },
 		{ sound=true, text = "SW 2", value = 2 },
 		{ sound=true, text = "SW 3", value = 3 },
 		{ sound=true, text = "SW 4", value = 4 },
 	})
 
-	--TODO, this should be localized
 	local tcolors = {
-		{ text = "Generic", value = 0 },
-		{ text = "Add", value = 1 },
-		{ text = "AOE", value = 2 },
-		{ text = "Targeted", value = 3 },
-		{ text = "Interrupt", value = 4 },
-		{ text = "Role", value = 5 },
-		{ text = "Phase", value = 6 },
-		{ text = "Important (User)", value = 7 },
+		{ text = L.CBTGeneric, value = 0 },
+		{ text = L.CBTAdd, value = 1 },
+		{ text = L.CBTAOE, value = 2 },
+		{ text = L.CBTTargeted, value = 3 },
+		{ text = L.CBTInterrupt, value = 4 },
+		{ text = L.CBTRole, value = 5 },
+		{ text = L.CBTPhase, value = 6 },
+		{ text = L.CBTImportant, value = 7 },
+	}
+
+	local cvoice = {
+		{ text = L.None, value = 0 },
+		{ text = L.CVoiceOne, value = 1 },
+		{ text = L.CVoiceTwo, value = 2 },
+		{ text = L.CVoiceThree, value = 3 },
 	}
 
 	function PanelPrototype:CreateCheckButton(name, autoplace, textleft, dbmvar, dbtvar, mod, modvar, globalvar, isTimer)
@@ -460,7 +462,7 @@ do
 			end
 			name = name:gsub("%$journal:(%d+)", replaceJournalLinks)
 		end
-		local dropdown
+		local dropdown, dropdown2
 		local noteButton
 		if modvar then--Special warning, has modvar for sound and note
 			if isTimer then
@@ -469,6 +471,16 @@ do
 				end, 20, 25, button)
 				dropdown:SetScript("OnShow", function(self)
 					self:SetSelectedValue(mod.Options[modvar.."TColor"])
+				end)
+				dropdown2 = self:CreateDropdown(nil, cvoice, nil, nil, function(value)
+					mod.Options[modvar.."CVoice"] = value
+					if value > 0 then
+						local countPlay = value == 3 and DBM.Options.CountdownVoice3v2 or value == 2 and DBM.Options.CountdownVoice2 or DBM.Options.CountdownVoice
+						DBM:PlayCountSound(1, countPlay)
+					end
+				end, 20, 25, button)
+				dropdown2:SetScript("OnShow", function(self)
+					self:SetSelectedValue(mod.Options[modvar.."CVoice"])
 				end)
 			else
 				dropdown = self:CreateDropdown(nil, sounds, nil, nil, function(value)
@@ -507,6 +519,11 @@ do
 				textbeside = noteButton
 				textpad = 2
 				widthAdjust = widthAdjust + dropdown:GetWidth() + noteButton:GetWidth()
+			elseif dropdown2 then
+				dropdown2:SetPoint('LEFT', dropdown, "RIGHT", 18, 0)
+				textbeside = dropdown2
+				textpad = 35
+				widthAdjust = widthAdjust + dropdown:GetWidth() + dropdown2:GetWidth()
 			else
 				textbeside = dropdown
 				textpad = 35
@@ -2700,7 +2717,6 @@ local function CreateOptionsMenu()
 			{	text	= "NotPrepared2",		value 	= 68563, 		sound=true },--"Sound\\Creature\\Illidan_Stormrage\\VO_703_Illidan_Stormrage_03.ogg"
 			{	text	= "RunAwayLittleGirl",	value 	= 9278, 		sound=true },--"Sound\\Creature\\HoodWolf\\HoodWolfTransformPlayer01.ogg"
 			{	text	= "NightElfBell",		value 	= 11742, 		sound=true },--"Sound\\Doodad\\BellTollNightElf.ogg"
-			--8.2 FIXME, move back to LSM when supported
 			{	text	= "Headless Horseman: Laugh", value = 11965, sound = true },
 			{	text	= "Yogg Saron: Laugh", value = 15757, sound = true },
 			{	text	= "Loatheb: I see you", value = 128466, sound = true },
@@ -2988,6 +3004,7 @@ local function CreateOptionsMenu()
 			DBM.Options.CountdownVoice = value
 			DBM:PlayCountSound(1, DBM.Options.CountdownVoice)
 			DBM:BuildVoiceCountdownCache()
+			DBM:BuildVoiceCountdownCacheTwo()
 		end)
 		CountSoundDropDown:SetPoint("TOPLEFT", spokenGeneralArea.frame, "TOPLEFT", 0, -20)
 
@@ -2995,6 +3012,7 @@ local function CreateOptionsMenu()
 			DBM.Options.CountdownVoice2 = value
 			DBM:PlayCountSound(1, DBM.Options.CountdownVoice2)
 			DBM:BuildVoiceCountdownCache()
+			DBM:BuildVoiceCountdownCacheTwo()
 		end)
 		CountSoundDropDown2:SetPoint("LEFT", CountSoundDropDown, "RIGHT", 50, 0)
 
@@ -3002,6 +3020,7 @@ local function CreateOptionsMenu()
 			DBM.Options.CountdownVoice3v2 = value
 			DBM:PlayCountSound(1, DBM.Options.CountdownVoice3v2)
 			DBM:BuildVoiceCountdownCache()
+			DBM:BuildVoiceCountdownCacheTwo()
 		end)
 		CountSoundDropDown3:SetPoint("TOPLEFT", CountSoundDropDown, "TOPLEFT", 0, -45)
 
@@ -3044,8 +3063,8 @@ local function CreateOptionsMenu()
 
 	do
 		local Sounds = MixinSharedMedia3("sound", {
-			{	text	= L.NoSound,						value	= "" },
-			{	text	= "Muradin: Charge",				value 	= "Sound\\Creature\\MuradinBronzebeard\\IC_Muradin_Saurfang02.ogg", 		sound=true },--16971
+			{	text	= L.NoSound,						value	= "None" },
+			{	text	= "Muradin: Charge",				value 	= 16971, 		sound=true },--"Sound\\Creature\\MuradinBronzebeard\\IC_Muradin_Saurfang02.ogg"
 		})
 
 		local eventSoundsPanel	 	= DBM_GUI_Frame:CreateNewPanel(L.Panel_EventSounds, "option")
@@ -3102,9 +3121,9 @@ local function CreateOptionsMenu()
 		end)
 		MusicDropDown:SetPoint("TOPLEFT", VictorySoundDropdown2, "TOPLEFT", 0, -45)
 
-		local VictorySoundDropdown3 = eventSoundsGeneralArea:CreateDropdown(L.EventEngageSound, Sounds, "DBM", "EventSoundEngage", function(value)
-			DBM.Options.EventSoundEngage = value
-			DBM:PlaySoundFile(DBM.Options.EventSoundEngage)
+		local VictorySoundDropdown3 = eventSoundsGeneralArea:CreateDropdown(L.EventEngageSound, Sounds, "DBM", "EventSoundEngage2", function(value)
+			DBM.Options.EventSoundEngage2 = value
+			DBM:PlaySoundFile(DBM.Options.EventSoundEngage2)
 		end)
 		VictorySoundDropdown3:SetPoint("TOPLEFT", DungeonMusicDropDown, "TOPLEFT", 0, -45)
 
@@ -3162,6 +3181,7 @@ local function CreateOptionsMenu()
 		local spamArea = spamPanel:CreateArea(L.Area_SpamFilter, nil, 170, true)
 		spamArea:CreateCheckButton(L.DontShowFarWarnings, true, nil, "DontShowFarWarnings")
 		spamArea:CreateCheckButton(L.StripServerName, true, nil, "StripServerName")
+		spamArea:CreateCheckButton(L.FilterVoidFormSay, true, nil, "FilterVoidFormSay")
 
 		local spamSpecArea = spamPanel:CreateArea(L.Area_SpecFilter, nil, 140, true)
 		spamSpecArea:CreateCheckButton(L.FilterTankSpec, true, nil, "FilterTankSpec")

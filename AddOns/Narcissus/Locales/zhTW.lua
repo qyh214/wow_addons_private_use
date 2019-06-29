@@ -6,7 +6,6 @@ local L = Narci.L
 
 NARCI_GRADIENT = "|cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r 角色資訊"
 MYMOG_GRADIENT = "|cffA236EFM|cff9448F1y |cff865BF2T|cff786DF4r|cff6A80F6a|cff5D92F7n|cff4FA4F9s|cff41B7FAm|cff33C9FCo|cff32c9fbg|r"
-NARCI_TRANSLATOR_INFO = "Translated by gaspy10";
 
 L["Movement Speed"] = "移動速度";
 L["Damage Reduction Percentage"] = "減傷%";
@@ -74,8 +73,11 @@ NARCI_EQUIPMENTSLOTS = "裝備欄";
 NARCI_PREFERENCE = "偏好設定-PH";
 NARCI_INTERFACE = "介面";
 NARCI_THEME = "主題";
+NARCI_CAMERA = "鏡頭";
 NARCI_EFFECTS = "效果";
 NARCI_TRANSMOG = "塑形";
+NARCI_EXTENSIONS = "拓展功能";
+NARCI_ABOUT = "關於"
 NARCI_PREFERENCE_TOOLTIP = "點一下打開偏好設定";
 NARCI_TRUNCATE_TEXT = "截斷文字";
 NARCI_TEXT_WIDTH = "文字寬度";
@@ -98,6 +100,10 @@ NARCI_FADEOUT_DESCRIPTION = "Button fades out when you move the cursor out of it
 NARCI_FADE_MUSIC = "淡入/淡出音樂";
 NARCI_VIGNETTE_STRENGTH = "Vignette Strength";
 NARCI_WEATHER_EFFECT = "天氣效果";
+NARCI_LETTERBOX_EFFECT = "寬熒幕效果";
+NARCI_LETTERBOX_RATIO = "寬高比";
+NARCI_LETTERBOX_EFFECT_ALERT1 = "妳屏幕的寬高比超過了所選比例。";
+NARCI_LETTERBOX_EFFECT_ALERT2 = "建議將UI縮放比設置為%0.1f\n(當前縮放比為%0.1f)";
 NARCI_DEFAULT_LAYOUT = "預設佈局";
 NARCI_LAYOUT_1 = "對稱，唯一模組";
 NARCI_LAYOUT_2 = "雙模組";
@@ -107,6 +113,12 @@ NARCI_BORDER_THEME_BRIGHT = "明亮";
 NARCI_BORDER_THEME_DARK = "灰暗";
 NARCI_ALWAYS_SHOW_MODEL = "總是顯示模組";
 NARCI_SHOW_FULL_BODY = "顯示全身";
+NARCI_AFK_SCREEN = "AFK画面";
+NARCI_AFK_SCREEN_DESCRIPTION = "在妳的人物暫離後自動打開Narcissus。";
+NARCI_AFK_SCREEN_DESCRIPTION_EXTRA = "勾選此選項將覆蓋ElvUI的AFK模式。";
+NARCI_GEMMA = "\"Gemma\"";
+NARCI_GEMMY_DESCRIPTION = "在妳為壹件物品鑲嵌寶石時，顯示可用的寶石列表。"
+
 --Model Control--
 NARCI_SHEATH_WEAPON = "收起武器";
 NARCI_STAND_IDLY = "站立狀態";
@@ -117,6 +129,14 @@ NARCI_ANIMATION_ID = "動畫ID";
 NARCI_GROUND_SHADOW = "模擬地面陰影";
 NARCI_HIDE_PLAYER = "隱藏玩家自身";
 
+--Equipment Comparison--
+NARCI_AZERITE_POWERS = "艾澤萊晶岩之力"
+
+--Tutorial--
+NARCI_TUTORIAL_CAPTUREBUTTON = "點擊此按鈕後會自動保存5張圖層：\n僅背景、帶藍\\綠幕的3D模型、裝備欄的alpha\\顏色通道。\n\n如果想只保存壹張截圖，請按鍵盤上的截圖快捷鍵。";
+NARCI_TUTORIAL_ANIMATION_ID = "左鍵單擊 ID +1  右鍵單擊 ID -1\n動畫ID的有效範圍為 0~1447。";
+NARCI_TUTORIAL_GREEN_SCREEN = "點擊最左端的正方形按鈕可以顯示藍\\綠幕。";
+
 --Others need to be localized--
 L["Level"] = "等級";
 L["Resource"] = "能量";
@@ -125,16 +145,27 @@ L["Minimap button has been hidden. You may type /Narci minimap to re-enable it."
 L["Minimap button has been re-enabled."] = "小地圖按鈕已經重新啟用。"
 
 --Splash--
-NARCI_PATCH_NOTES = "v1.0.4b Patch Notes";
-NARCI_SPLASH_CLOSE_AND_CONTINUE = "關閉此窗口並繼續"
-NARCI_SHOW_DETAILS = "+ 顯示詳細內容..."
-NARCI_SPLASH_HEADER1 = "鏡頭";
-NARCI_SPLASH_HEADER2 = "裝備欄";
-NARCI_SPLASH_MESSAGE0 = "|cff40C7EB本次更新修復了以下兩個問題:|r\n\n1. 當角色為特定種族時無法打開插件。 |cFF959595(光鑄德萊尼, 瑪格哈獸人, 黑鐵矮人, 狼人, 熊貓人)|r\n\n2. 當裝備了某些物品時，進入分享塑形模式會報錯。"
-NARCI_SPLASH_MESSAGE1 = "|cff40C7EB1. 壹個因使用以往版本 (1.0.0, 1.0.1, 1.0.2, 1.0.3) 而導致的鏡頭問題已得到解決。|r";
-NARCI_SPLASH_MESSAGE1_CONDITIONAL_LINE = "妳已經關閉了鏡頭自動跟隨功能，因此妳將不會感受到任何變化。"
-NARCI_SPLASH_MESSAGE1_EXTRA_LINE = "在早期版本中，Narcissus將 |cffffffffcameraSmoothTimeMin|r 這個CVar的值由默認的0.1修改為0.8，以保證鏡頭能在退出插件後平穩地切換回原先位置。但是這壹改變會導致壹個問題——當妳的鏡頭只轉動了較小的角度，它將需要花費比原先更長的時間來調整到與妳人物朝向壹致的方向。在本次更新後，此插件所用到的所有鏡頭相關的CVar都將屬於Actioncam這壹類別之下，並且它們可以通過輸入|cffffffff/console actioncam off|r來徹底關閉。";
-NARCI_SPLASH_MESSAGE2 = "2. 如果妳在移動或騎乘期間打開此插件，鏡頭將不再自動旋轉到角色正面。"
-NARCI_SPLASH_MESSAGE3 = "3. 如果妳打開了鏡頭跟隨功能，妳的鏡頭距離將在退出插件後自動恢復。"
-NARCI_SPLASH_MESSAGE4 = "|cff40C7EB1. 妳又可以右鍵單擊裝備欄來使用物品了。裝備欄將在妳進入戰鬥後立即隱藏。|r"
-NARCI_SPLASH_MESSAGE5 = "2. 妳可以使用Alt+左鍵來快速卸下某件裝備。這壹操作在早期版本中就已加入，現在它有了壹個視覺反饋。"
+NARCI_PATCH_NOTES = "v1.0.5 Patch Notes";
+NARCI_SPLASH_CLOSE_AND_CONTINUE = "關閉此窗口並繼續";
+NARCI_TRY_IT_NOW = "點擊這裏來啟用...";
+    --Patch-specific
+    NARCI_AFK_ENABLED = "AFK畫面已開啟。妳可以在“偏好設定-拓展功能”中關閉它。";
+    NARCI_LETTERBOX_ENABLED = "寬熒幕效果已開啟。 妳可以在“偏好設定-效果”中關閉它。";
+    --
+NARCI_SHOW_DETAILS = "+ Show details...";
+NARCI_SPLASH_HEADER1 = "裝備欄";
+NARCI_SPLASH_HEADER2 = "效果";
+NARCI_SPLASH_MESSAGE0 = "|cff40C7EB1. 裝備對比界面已經過更新。|r\n妳現在可以在對比裝備時查看該物品的艾澤萊晶岩之力或是其他特效。"
+NARCI_SPLASH_MESSAGE1 = "|cff40C7EB2. 寶石管理員 -- \"Gemma\"|r\n當妳處於Narcissus界面時：如果壹件裝備有孔，點擊三角形圖標後會出現壹個可用的寶石列表。雙擊寶石來進行鑲嵌。\n\n當使用暴雪界面時：如果妳背包內有可用寶石，這個列表將會隨鑲嵌面板壹起顯示。";
+NARCI_SPLASH_MESSAGE1_CONDITIONAL_LINE = "You have disabled the auto-follow feature so you will not feel any different."
+NARCI_SPLASH_MESSAGE1_EXTRA_LINE = "In the previous versions, Narcissus set a CVar named |cffffffffcameraSmoothTimeMin|r to 0.8 (was 0.1 by default) to ensure a smooth camera transition after closing the addon. This, however, caused an increase of the auto-follow duration when the camera is moved by a small degree. After this update, all camera-related CVars used in this addon belong to the Actioncam feature which can be disabled by |cffffffff/console actioncam off|r";
+NARCI_SPLASH_MESSAGE2 = "|cff40C7EB2. 新濾鏡：寬熒幕效果。|r"
+NARCI_SPLASH_MESSAGE3 = "|cff40C7EB1. AFK畫面：在妳進入暫離狀態後自動打開Narcissus。|r"
+NARCI_SPLASH_MESSAGE4 = "|cff40C7EB1. You can once again use an item via right-click. Equipment slots will be immediately closed when entering combat.|r"
+NARCI_SPLASH_MESSAGE5 = "2. You can unequip a gear via Alt + Left-click. This action has been there since the very first version, and it now has visual feedback."
+
+--Project Details--
+NARCI_ALL_PROJECTS = "全部項目";
+NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2019.6.16|r\n\n感謝妳使用此插件！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
+NARCI_PROJECT_AAA_SUMMARY = "探索艾澤拉斯上的不同景點，並收集各種故事和照片。";
+NARCI_PROJECT_NARCISSUS_SUMMARY = "沈浸式角色面板；妳最好的截圖助手。"

@@ -231,6 +231,7 @@ L.RaidCheckMinFlaskExpMin = "мин."
 L.RaidCheckDisableInLFR = "Отключить в ЛФР"
 L.RaidCheckVRunesCheck = "Проверить вантийские руны"
 L.RaidCheckVRunesChat = "Опубликовать вантийские руны в чат"
+L.RaidCheckLQFlask = "Включить слежение за фласками низкого качества во время проверки готовности"
 
 L.marksbarstart = "Очистить"
 L.marksbardel = "Удалить"

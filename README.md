@@ -57,6 +57,8 @@ SkadaPlus：https://github.com/Yeatol/SkadaPlus
 
 SpeakinSpell：https://github.com/Toludin/SpeakinSpell
 
+Auctionlite：https://bbs.nga.cn/read.php?tid=17729131
+
 其他单体插件可用curse客户端管理，curse客户端下载地址：https://www.curseforge.com/twitch-client
 
 ## 一些有用的重要命令

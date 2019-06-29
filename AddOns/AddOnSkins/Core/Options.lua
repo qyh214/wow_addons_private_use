@@ -1,5 +1,15 @@
 local AS, ASL = unpack(AddOnSkins)
-local sort, pairs, gsub, strfind, strlower, strtrim = sort, pairs, gsub, strfind, strlower, strtrim
+
+-- Cache global variables
+--Lua functions
+local CopyTable = CopyTable
+local sort, pairs, gsub, strfind, strlower, strtrim, tostring, unpack = sort, pairs, gsub, strfind, strlower, strtrim, tostring, unpack
+local tinsert = table.insert
+--WoW API / Variables
+local GetAddOnMetadata = GetAddOnMetadata
+local GENERAL = GENERAL
+local hooksecurefunc = hooksecurefunc
+-- GLOBALS:
 
 local DEVELOPER_STRING = ''
 local LINE_BREAK = '\n'
@@ -62,6 +72,11 @@ AS.ChangeLog = {
 	},
 	['4.15'] = {
 		'Fixed: Comparing a string to a number'
+	},
+	['4.16'] = {
+		'Fixed: UI Widgets Error Spam',
+		' ',
+		'More updates will follow this weekend',
 	},
 }
 

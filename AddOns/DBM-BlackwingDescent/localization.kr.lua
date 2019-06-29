@@ -144,7 +144,6 @@ L:SetOptionLocalization({
 	NefBreathTimer			= "네파리안의 $spell:77826 대기시간 바 보기",
 	InfoFrame				= "$journal:3284 정보를 정보 창으로 보기",
 	SetWater				= "전투 시작시 수면 자동 시점 옵션을 자동으로 끄기<br/>(전투가 종료 되면 원상태로 복구됨)",
-	TankArrow				= "살아난 뼈다귀 전사 탱커 방향으로 DBM 화살표 보기<br/>(한 명의 탱커를 사용하는 경우에만 정상 작동)",--npc 41918
 	RangeFrame				= "$spell:79339 대상이 된 경우 거리 창(10m) 보기<br/>(대상자는 범위내 모든 사람 보임. 대상자가 아닌 경우 대상자와 아이콘만 보임)"
 })
 

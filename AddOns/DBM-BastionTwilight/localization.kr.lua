@@ -102,7 +102,6 @@ L:SetOptionLocalization({
 	TimerEggWeaken		= "$spell:87654 재생성 바 보기",
 	TimerOrbs			= "구슬 대기시간 바 보기(부정확함)",
 	SetIconOnOrbs		= "구슬 생성 예상시 위협 수준이 있는 대상에게 전술 목표 아이콘 설정",
-	OrbsCountdown		= "구슬 생성 이전에 초읽기 소리 듣기",
 	InfoFrame			= "위협 수준 획득(구슬 예상 대상)을 정보 창으로 보기"
 })
 

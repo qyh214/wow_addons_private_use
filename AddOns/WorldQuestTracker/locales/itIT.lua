@@ -209,11 +209,15 @@ L["S_TUTORIAL_AMOUNT"] = "indica la quantità da ricevere"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Clicca per tracciare una missione."
 --[[Translation missing --]]
 --[[ L["S_TUTORIAL_PARTY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["S_TUTORIAL_STATISTICS_BUTTON"] = ""--]] 
 L["S_TUTORIAL_TIMELEFT"] = "indica il tempo rimasto (+4 ore, +90 minuti, + 30 minuti, meno di 30 minuti)"
 --[[Translation missing --]]
 --[[ L["S_TUTORIAL_WORLDBUTTONS"] = ""--]] 
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Questo pulsante mostra la mappa delle Isole Disperse."
 L["S_UNKNOWNQUEST"] = "Missione Sconosciuta"
+--[[Translation missing --]]
+--[[ L["S_WHATSNEW"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_WORLDBUTTONS_SHOW_NONE"] = ""--]] 
 --[[Translation missing --]]

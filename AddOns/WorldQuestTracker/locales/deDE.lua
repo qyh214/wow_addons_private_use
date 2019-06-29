@@ -158,11 +158,15 @@ L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Andere Charaktere"
 L["S_TUTORIAL_AMOUNT"] = "Zeigt die zu erhaltene Anzahl an"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Klicken, um eine Quest zu verfolgen."
 L["S_TUTORIAL_PARTY"] = "Wenn du in einer Gruppe bist, zeigt ein blauer Stern bei einer Quest an, dass diese alle Gruppenmitglieder haben."
+--[[Translation missing --]]
+--[[ L["S_TUTORIAL_STATISTICS_BUTTON"] = ""--]] 
 L["S_TUTORIAL_TIMELEFT"] = "Zeigt die verbleibende Zeit an (+4 Stunden, +90 Minuten, +30 Minuten, weniger als 30 Minuten)"
 --[[Translation missing --]]
 --[[ L["S_TUTORIAL_WORLDBUTTONS"] = ""--]] 
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Diese Schaltfläche öffnet die Karte der Verheerten Inseln."
 L["S_UNKNOWNQUEST"] = "Unbekannte Quest"
+--[[Translation missing --]]
+--[[ L["S_WHATSNEW"] = ""--]] 
 L["S_WORLDBUTTONS_SHOW_NONE"] = "Übersicht ausblenden"
 L["S_WORLDBUTTONS_SHOW_TYPE"] = "Übersicht anzeigen"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "Nach Zone anordnen"

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Netherspite", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019041710011")
+mod:SetRevision("20190625143429")
 mod:SetCreatureID(15689)
 mod:SetModelID(15363)
 mod:RegisterCombat("combat")
@@ -12,15 +12,15 @@ mod:RegisterEventsInCombat(
 	"RAID_BOSS_EMOTE"
 )
 
-local warningPortal			= mod:NewAnnounce("warningPortal", 1, "Interface\\Icons\\Spell_Arcane_PortalIronForge")
-local warningBanish			= mod:NewAnnounce("warningBanish", 1, "Interface\\Icons\\Spell_Shadow_Cripple")
+local warningPortal			= mod:NewAnnounce("warningPortal", 1, "135743")
+local warningBanish			= mod:NewAnnounce("warningBanish", 1, "136135")
 local warningBreathCast		= mod:NewCastAnnounce(38523, 2)
 local warningVoid			= mod:NewSpellAnnounce(37063, 4)
 
 local specWarnVoid			= mod:NewSpecialWarningMove(30533, nil, nil, nil, 1, 2)
 
-local timerPortalPhase		= mod:NewTimer(61.5, "timerPortalPhase", "Interface\\Icons\\Spell_Arcane_PortalIronForge", nil, nil, 6)
-local timerBanishPhase		= mod:NewTimer(40, "timerBanishPhase", "Interface\\Icons\\Spell_Shadow_Cripple", nil, nil, 6)
+local timerPortalPhase		= mod:NewTimer(61.5, "timerPortalPhase", "135743", nil, nil, 6)
+local timerBanishPhase		= mod:NewTimer(40, "timerBanishPhase", "136135", nil, nil, 6)
 local timerBreathCast		= mod:NewCastTimer(2.5, 38523, nil, nil, nil, 3)
 
 local berserkTimer			= mod:NewBerserkTimer(540)

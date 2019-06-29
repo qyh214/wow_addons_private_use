@@ -366,9 +366,9 @@ end
 
 -- GuildNews
 LibEvent:attachEvent("ADDON_LOADED", function(self, addonName)
-    if (addonName == "Blizzard_Communities") then
+    if (addonName == "Blizzard_Communities" and GuildNewsButton_SetText) then
         GuildNewsItemCache = {}
-        hooksecurefunc("CommunitiesGuildNewsButton_SetText", function(button, text_color, text, text1, text2, ...)
+        hooksecurefunc("GuildNewsButton_SetText", function(button, text_color, text, text1, text2, ...)
             if (not TinyInspectDB or 
                 not TinyInspectDB.EnableItemLevel or 
                 not TinyInspectDB.EnableItemLevelGuildNews) then
@@ -467,7 +467,7 @@ local function ChatItemLevel(Hyperlink)
     end
     local link = string.match(Hyperlink, "|H(.-)|h")
     local count, level, name, _, quality, _, _, class, subclass, _, equipSlot = LibItemInfo:GetItemInfo(link)
-    if (level and level > 0) then
+    if (tonumber(level) and level > 0) then
         if (equipSlot == "INVTYPE_CLOAK" or equipSlot == "INVTYPE_TRINKET" or equipSlot == "INVTYPE_FINGER" or equipSlot == "INVTYPE_NECK") then
             level = format("%s(%s)", level, _G[equipSlot] or equipSlot)
         elseif (equipSlot and string.find(equipSlot, "INVTYPE_")) then

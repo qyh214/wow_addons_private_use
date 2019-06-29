@@ -20,7 +20,6 @@ DBM_COPY_URL_DIALOG					= "複製網址"
 --Post Patch 7.1
 DBM_CORE_NO_RANGE					= "距離雷達不能在副本中使用，使用傳統文字距離框架取代"
 DBM_CORE_NO_ARROW					= "箭頭不能在副本中使用"
-DBM_CORE_ARROW_SUMMONED				= "箭頭已被啟用。如果你沒有開啟此功能，可能有其他第三方插件為你啟用此功能。"
 DBM_CORE_NO_HUD						= "HUDMap 不能在副本中使用"
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM已中禁用動態距離框架，你目前的團隊人數在這場戰鬥中的機制資訊不足。"
@@ -248,9 +247,7 @@ DBM_CORE_TIMER_USAGE	= {
 	"DBM計時器指令：",
 	"-----------------",
 	"/dbm timer <秒> <文字>: 啟用計時器。",
-	"/dbm ctimer <秒> <文字>: 啟用計時器包含倒數文字。",
 	"/dbm ltimer <秒> <文字>: 啟用會自動循環的計時器。",
-	"/dbm cltimer <秒> <文字>: 啟用會自動循環及倒數文字的計時器。",
 	"(在任何計時器指令前加入'Broadcast'可以把指令分享給團隊（需要團隊隊長或助理權限）)",
 	"/dbm timer endloop：停止任何無限循環的計時器。"
 }

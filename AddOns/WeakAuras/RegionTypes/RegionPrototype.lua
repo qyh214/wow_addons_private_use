@@ -156,17 +156,23 @@ local function SoundPlayHelper(self)
 
   if (options.sound == " custom") then
     if (options.sound_path) then
-      local _, handle = PlaySoundFile(options.sound_path, options.sound_channel or "Master");
-      self.soundHandle = handle;
+      local ok, _, handle = pcall(PlaySoundFile, options.sound_path, options.sound_channel or "Master");
+      if ok then
+        self.soundHandle = handle;
+      end
     end
   elseif (options.sound == " KitID") then
     if (options.sound_kit_id) then
-      local _, handle = PlaySound(options.sound_kit_id, options.sound_channel or "Master");
-      self.soundHandle = handle;
+      local ok, _, handle = pcall(PlaySound,options.sound_kit_id, options.sound_channel or "Master");
+      if ok then
+        self.soundHandle = handle;
+      end
     end
   else
-    local _, handle = PlaySoundFile(options.sound, options.sound_channel or "Master");
-    self.soundHandle = handle;
+    local ok, _, handle = pcall(PlaySoundFile, options.sound, options.sound_channel or "Master");
+    if ok then
+      self.soundHandle = handle;
+    end
   end
   WeakAuras.StopProfileSystem("sound");
 end
@@ -208,6 +214,7 @@ local function UpdatePosition(self)
 
   local xOffset = self.xOffset + (self.xOffsetAnim or 0);
   local yOffset = self.yOffset + (self.yOffsetAnim or 0);
+  self:ClearAllPoints();
 
   xpcall(self.SetPoint, geterrorhandler(), self, self.anchorPoint, self.relativeTo, self.relativePoint, xOffset, yOffset);
 end
@@ -219,14 +226,10 @@ local function ResetPosition(self)
 end
 
 local function SetAnchor(self, anchorPoint, relativeTo, relativePoint)
-  local needsClearPoint = self.anchorPoint ~= anchorPoint or self.relativeTo ~= relativeTo or self.relativePoint ~= relativePoint;
   self.anchorPoint = anchorPoint;
   self.relativeTo = relativeTo;
   self.relativePoint = relativePoint;
 
-  if (needsClearPoint) then
-    self:ClearAllPoints();
-  end
 
   UpdatePosition(self);
 end

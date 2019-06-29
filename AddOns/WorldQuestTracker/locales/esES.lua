@@ -164,11 +164,15 @@ L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Otros personajes"
 L["S_TUTORIAL_AMOUNT"] = "Indica la cantidad a recibir"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Pulsa para rastrear una misión."
 L["S_TUTORIAL_PARTY"] = "Estando en grupo, ¡una estrella azul indica las misiones que todos los miembros del grupo tienen!"
+--[[Translation missing --]]
+--[[ L["S_TUTORIAL_STATISTICS_BUTTON"] = ""--]] 
 L["S_TUTORIAL_TIMELEFT"] = "Indica el tiempo restante (+4 horas, +90 minutos, +30 minutos, menos de 30 minutos)"
 --[[Translation missing --]]
 --[[ L["S_TUTORIAL_WORLDBUTTONS"] = ""--]] 
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Este botón te lleva al mapa de las Islas Abruptas."
 L["S_UNKNOWNQUEST"] = "Misión desconocida"
+--[[Translation missing --]]
+--[[ L["S_WHATSNEW"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_WORLDBUTTONS_SHOW_NONE"] = ""--]] 
 --[[Translation missing --]]

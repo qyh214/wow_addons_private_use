@@ -1,16 +1,88 @@
-lightweight tag ec2e9287743fca29fa3934019c73a9c9017e13a3 4.15
+tag 5a3050f7ff5f3280a928c8cecc2ff7d1054f860e 4.16
 Author:	Azilroka <darktemplar9900@yahoo.com>
-Date:	Thu Mar 21 14:44:59 2019 -0500
+Date:	Wed Jun 26 16:37:39 2019 -0500
 
-commit ec2e9287743fca29fa3934019c73a9c9017e13a3
+commit 396204a89ed89eedc3109a6f9bb333503cdfaa14
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Thu Mar 21 14:44:59 2019 -0500
+Date:   Wed Jun 26 16:37:33 2019 -0500
 
-    string it
+    4.16
 
-commit be637494b7aea99241b2d280ff563d0794aebd3b
+commit 65d95949eea4783aac2933a7efb3d07029176034
+Author: Merathilis <neo0608@gmail.com>
+Date:   Wed Jun 26 09:03:25 2019 +0200
+
+    Fix and add new UIWidgetVisualizationType.
+
+commit 019798fd908926cdcdf6aeb5bb6c9f604921dccb
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Thu Mar 21 14:41:43 2019 -0500
+Date:   Mon May 13 18:07:31 2019 -0500
 
-    4.15
+    Fix this
+
+commit 4e3004416eaba9d0ab527ccdb92e8acaacc6282a
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Mon May 13 18:05:33 2019 -0500
+
+    Point to SetPoint
+
+commit a5fc4990f25fb51ef8af9b58289b42e7a9adf1c5
+Author: Merathilis <neo0608@gmail.com>
+Date:   Mon May 13 16:54:47 2019 +0200
+
+    Some more upvalues.
+
+commit cb96cc44dceea0665ccbaa23fe6bcf4da9b8385c
+Author: Merathilis <neo0608@gmail.com>
+Date:   Mon May 13 15:47:03 2019 +0200
+
+    Steal Tabs and Upvalue
+
+commit 8fdee475f06fa6a786303126caa59e673b44a4a2
+Author: Paweł Jastrzębski <pawelj@iosphe.re>
+Date:   Mon May 13 15:41:30 2019 +0200
+
+    Raider.IO
+
+commit a9cf4863c68dd8339b81f57bf113076ba13b4f54
+Author: Merathilis <neo0608@gmail.com>
+Date:   Sun May 12 18:57:41 2019 +0200
+
+    More Upvalue stuff. Will finish it later. @Azilroka luv ya! <3
+
+commit 9fc071d4f18b2ea24b7e1defa321a2693ceb25f6
+Author: Merathilis <neo0608@gmail.com>
+Date:   Sun May 12 17:49:51 2019 +0200
+
+    Begin to cleanup upvalues.
+
+commit 386ed9db4c5a6debfaaa0051bfaf130551451360
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sun Apr 7 08:55:25 2019 -0500
+
+    ExtVendor
+
+commit b033cd63310f19bb612c2f4ebab163da4dc1a0d0
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sun Apr 7 08:52:30 2019 -0500
+
+    Remove AdiBags & ArkInventory
+
+commit 061266706f044f2ef2de884c2cc7994c4f454b9b
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sun Apr 7 08:44:36 2019 -0500
+
+    Some minor Changes
+
+commit 368080695f934c9319a38b913ccdfc4d08cc9b64
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Tue Mar 26 18:16:00 2019 +0000
+
+    Update Taiwanese.lua
+
+commit 368080695f934c9319a38b913ccdfc4d08cc9b64
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Tue Mar 26 18:16:00 2019 +0000
+
+    Update Taiwanese.lua
 

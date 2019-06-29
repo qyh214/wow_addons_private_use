@@ -113,7 +113,6 @@ L:SetOptionLocalization({
 	TimerEggWeaken		= "Exibir cronógrafo para regeneração de $spell:87654",
 	TimerOrbs			= "Exibir cronógrafo para os próximos orbes (Tempo esperado, Pode não ser correto)",
 	SetIconOnOrbs		= "Colocar ícones em jogadores que tenham Ameaça quando Orbes surgirem<br/>(possíveis alvos dos Orbes)",
-	OrbsCountdown		= "Tocar som de contagem regressiva para Orbes",
 	InfoFrame			= "Exibir quadro de informações para jogadores que tem ameaça"
 })
 

@@ -1,7 +1,7 @@
 local E, L, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local TT = E:GetModule('Tooltip')
 
-local tiers = { "Uldir", "BoD (A)", "BoD (H)", "CoS" }
+local tiers = { "EP", "CoS", "BoD"}
 local levels = { 
 	"Mythic", 
 	"Heroic", 
@@ -9,47 +9,50 @@ local levels = {
 	"LFR",
 }
 
-local bosses = {
-	{ -- Uldir
-		{ -- Mythic
-			12789, 12793, 12797, 12801, 12805, 12811, 12816, 12820,
-		},
-		{ -- Heroic
-			12788, 12792, 12796, 12800, 12804, 12810, 12815, 12819,
-		},
-		{ -- Normal
-			12787, 12791, 12795, 12799, 12803, 12809, 12814, 12818,
-		},
-		{ -- LFR
-			12786, 12790, 12794, 12798, 12802, 12808, 12813, 12817,
-		},
-	},
+local bossesBoD = {
 	{ -- Battle of Dazar'alor (BoD) Alliance
 		{ -- Mythic
-			13331, 13348, 13353, 13362, 13366, 13370,
+			13331, 13348, 13353, 13362, 13366, 13370, 13374, 13378, 13382,
 		},
 		{ -- Heroic
-			13330, 13347, 13351, 13361, 13365, 13369,
+			13330, 13347, 13351, 13361, 13365, 13369, 13373, 13377, 13381,
 		},
 		{ -- Normal
-			13329, 13346, 13350, 13359, 13364, 13368,
+			13329, 13346, 13350, 13359, 13364, 13368, 13372, 13376, 13380,
 		},
 		{ -- LFR
-			13328, 13344, 13349, 13358, 13363, 13367,
+			13328, 13344, 13349, 13358, 13363, 13367, 13371, 13375, 13379,
 		},
 	},
 	{ -- Battle of Dazar'alor (BoD) Horde
 		{ -- Mythic
-			13331, 13336, 13357, 13374, 13378, 13382,
+			13331, 13336, 13357, 13362, 13366, 13370, 13374, 13378, 13382,
 		},
 		{ -- Heroic
-			13330, 13334, 13356, 13373, 13377, 13381,
+			13330, 13334, 13356, 13361, 13365, 13369, 13373, 13377, 13381,
 		},
 		{ -- Normal
-			13329, 13333, 13355, 13372, 13376, 13380,
+			13329, 13333, 13355, 13358, 13363, 13367, 13371, 13375, 13379,
 		},
 		{ -- LFR
-			13328, 13332, 13354, 13371, 13375, 13379,
+			13328, 13332, 13354, 13358, 13363, 13367, 13371, 13375, 13379,
+		},
+	},
+}
+
+local bosses = {
+	{ -- Eternal Palace
+		{ -- Mythic
+			13590, 13594, 13598, 13603, 13607, 13611, 13615, 13619,
+		},
+		{ -- Heroic
+			13589, 13593, 13597, 13602, 13606, 13610, 13614, 13618,
+		},
+		{ -- Normal
+			13588, 13592, 13596, 13601, 13605, 13609, 13613, 13617,
+		},
+		{ -- LFR
+			13587, 13591, 13595, 13600, 13604, 13608, 13612, 13616,
 		},
 	},
 	{ -- Crucible of Storms
@@ -71,6 +74,15 @@ local bosses = {
 local playerGUID = UnitGUID("player")
 local progressCache = {}
 local highest = { 0, 0 }
+local englishFaction, localizedFaction = UnitFactionGroup("player")
+
+if (englishFaction == "Alliance") then
+	table.insert(bosses, bossesBoD[1])
+end
+
+if (englishFaction == "Horde") then
+	table.insert(bosses, bossesBoD[2])
+end
 
 local function GetProgression(guid)
 	local kills, complete, pos = 0, false, 0
@@ -104,7 +116,7 @@ local function UpdateProgression(guid)
 	progressCache[guid].header = progressCache[guid].header or {}
 	progressCache[guid].info =  progressCache[guid].info or {}
 	progressCache[guid].timer = GetTime()
-		
+	print(englishFaction)
 	GetProgression(guid)	
 end
 
@@ -148,7 +160,7 @@ function TT:INSPECT_ACHIEVEMENT_READY(event, GUID)
 	self:UnregisterEvent("INSPECT_ACHIEVEMENT_READY")
 end
 
-hooksecurefunc(TT, 'AddInspectInfo', function(self, tt, unit, level, r, g, b, numTries)
+hooksecurefunc(TT, 'AddInspectInfo', function(self, tt, unit, numTries, r, g, b)
 	if InCombatLockdown() then return end
 	if not E.db.tooltip.progressInfo then return end
 	if not (unit and CanInspect(unit)) then return end

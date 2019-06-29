@@ -1,8 +1,8 @@
-## Interface: 80100
+## Interface: 80200
 ## Title: TinyTooltip
 ## Notes: TinyTooltip
 ## Author: M
-## Version: 8.0.8
+## Version: 8.2.0
 ## SavedVariables: BigTipDB
 ## SavedVariablesPerCharacter: TinyTooltipCharacterDB
 

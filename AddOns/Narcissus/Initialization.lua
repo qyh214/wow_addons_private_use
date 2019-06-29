@@ -1,3 +1,33 @@
+local DefaultValue = {
+    ["DetailedIlvlInfo"] = true,
+    ["IsSortedByCategory"] = true,
+    ["EnableGrainEffect"] = false,
+    ["ShowMinimapButton"] = true,
+    ["FontHeightItemName"] = 10,
+    ["GlobalScale"] = 0.8,
+    ["AuotoColorTheme"] = true,
+    ["ColorChoice"] = 0,
+    ["EnableDoubleTap"] = false,
+    ["CameraOrbit"] = true,
+    ["BorderTheme"] = "Bright",
+    ["TruncateText"] = false,
+    ["ItemNameWidth"] = 200,
+    ["FadeButton"] = false,
+    ["WeatherEffect"] = true,
+    ["VignetteStrength"] = 0.7,
+    ["FadeMusic"] = true,
+    ["AlwaysShowModel"] = false,
+    ["DefaultLayout"] = 2,
+    ["ShowFullBody"] = true,
+    ["LetterboxEffect"] = false,
+    ["LetterboxRatio"] = 2.35,
+    ["AFKScreen"] = false,
+    ["GemManager"] = true,
+}
+
+local TutorialInclude = {
+    "CaptureButton", "NextAnimationButton", "PlayerModelLayerButton",
+}
 local function Initialize_NarcissusDB()
     NarcissusDB = NarcissusDB or {};
     NarcissusDB_PC = NarcissusDB_PC or {};
@@ -16,89 +46,15 @@ local function Initialize_NarcissusDB()
         NarcissusDB.PhotoModeButton.HideTexts =  true;
     end
 
-    if NarcissusDB.DetailedIlvlInfo == nil then
-        NarcissusDB.DetailedIlvlInfo =  true;
-    end
-
-    if NarcissusDB.IsSortedByCategory == nil then
-        NarcissusDB.IsSortedByCategory = true;
-    end
-
-
     ---------------------
     ------Preference-----
     ---------------------    
-    if NarcissusDB.EnableGrainEffect == nil then
-        NarcissusDB.EnableGrainEffect = false;
+    for k, v in pairs(DefaultValue) do
+        if NarcissusDB[k] == nil then
+            NarcissusDB[k] = v;
+        end
     end
 
-    if NarcissusDB.ShowMinimapButton == nil then
-        NarcissusDB.ShowMinimapButton = true;
-    end
-
-    if NarcissusDB.FontHeightItemName == nil then
-        NarcissusDB.FontHeightItemName = 10;
-    end
-
-    if NarcissusDB.GlobalScale == nil then
-        NarcissusDB.GlobalScale = 0.8;
-    end
-
-    if NarcissusDB.AuotoColorTheme == nil then
-        NarcissusDB.AuotoColorTheme = true;
-    end
-
-    if NarcissusDB.ColorChoice == nil then
-        NarcissusDB.ColorChoice = 0;    --default blue
-    end
-
-    if NarcissusDB.EnableDoubleTap == nil then
-        NarcissusDB.EnableDoubleTap = false;
-    end
-
-    if NarcissusDB.CameraOrbit == nil then
-        NarcissusDB.CameraOrbit = true;
-    end
-
-    if NarcissusDB.BorderTheme == nil then
-        NarcissusDB.BorderTheme = "Bright";
-    end
-
-    if  NarcissusDB.TruncateText == nil then
-        NarcissusDB.TruncateText = false;
-    end
-
-    if  NarcissusDB.ItemNameWidth == nil then
-        NarcissusDB.ItemNameWidth = 200;
-    end
-
-    if  NarcissusDB.FadeButton == nil then
-        NarcissusDB.FadeButton = false;
-    end
-
-    if  NarcissusDB.WeatherEffect == nil then
-        NarcissusDB.WeatherEffect = true;
-    end
-
-    if  NarcissusDB.VignetteStrength == nil then
-        NarcissusDB.VignetteStrength = 0.8;
-    end
-
-    if NarcissusDB.FadeMusic == nil then
-        NarcissusDB.FadeMusic = true;
-    end
-
-    if NarcissusDB.AlwaysShowModel == nil then
-        NarcissusDB.AlwaysShowModel = false;
-    end
-
-    if NarcissusDB.DefaultLayout == nil then
-        NarcissusDB.DefaultLayout = 2;
-    end
-
-    if NarcissusDB.ShowFullBody == nil then
-        NarcissusDB.ShowFullBody = true;
-    end
     ---------------------
     ----Per Character----
     ---------------------
@@ -109,6 +65,15 @@ local function Initialize_NarcissusDB()
     if NarcissusDB_PC.PlayerAlias == nil then
         NarcissusDB_PC.PlayerAlias = "";
     end
+
+    --
+    NarcissusDB.Tutorials = NarcissusDB.Tutorials or {};
+    local Tutorials = NarcissusDB.Tutorials;
+    for _, v in pairs(TutorialInclude) do
+        if Tutorials[v] == nil then
+            Tutorials[v] = true;   --True ~ will show tutorial
+        end
+    end
 end
 
 local initialize = CreateFrame("Frame")
@@ -117,4 +82,5 @@ initialize:SetScript("OnEvent",function(self,event,...)
     if event == "VARIABLES_LOADED" then
         Initialize_NarcissusDB();
     end
+    self:UnregisterEvent("VARIABLES_LOADED")
 end)

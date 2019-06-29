@@ -4,4 +4,5 @@
     <Script file="LibEvent.lua"/>
     <Script file="LibSchedule.lua"/>
     <Script file="LibDropdown.lua"/>
+    <Script file="LibJSON.lua"/>
 </Ui>

@@ -13,6 +13,7 @@ ns.L = {
     ShowInspectAngularBorder    = "Показать угловую границу осмотра",
     ShowInspectColoredLabel     = "Показать окрашенный, ярлычок осмотра",
     ShowCharacterItemSheet      = "Показать список предметов персонажа",
+    ShowInspectItemSheet        = "Показать окрашенный предметов персонажа",
     ShowOwnFrameWhenInspecting  = "Показывать собственную рамку, при осмотре",
     ShowItemStats               = "Показать характеристики преметов",
     DisplayPercentageStats      = "Отображение по процентам характеристик",

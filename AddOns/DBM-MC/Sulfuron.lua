@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Sulfuron", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019041710011")
+mod:SetRevision("2019042942432")
 mod:SetCreatureID(12098)--, 11662
 mod:SetEncounterID(669)
 mod:SetModelID(13030)
@@ -24,19 +24,25 @@ local timerInspire		= mod:NewTargetTimer(10, 19779, nil, "Tank|Healer", nil, 5, 
 local timerHeal			= mod:NewCastTimer(2, 19775, nil, nil, 2, 4, nil, DBM_CORE_INTERRUPT_ICON)
 
 function mod:OnCombatStart(delay)
-	timerInspireCD:Start(-delay)
+
 end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 19779 then
 		warnInspire:Show(args.destName)
-		timerInspireCD:Start()
+		timerInspire:Start(args.destName)
 	elseif args.spellId == 19780 and args:IsDestTypePlayer() then
 		warnHandRagnaros:CombinedShow(0.3, args.destName)
 	elseif args.spellId == 19776 then
 		warnShadowPain:CombinedShow(0.3, args.destName)
 	elseif args.spellId == 20294 then
 		warnImmolate:CombinedShow(0.3, args.destName)
+	end
+end
+
+function mod:SPELL_AURA_REMOVED(args)
+	if args.spellId == 19779 then
+		timerInspire:Stop(args.destName)
 	end
 end
 

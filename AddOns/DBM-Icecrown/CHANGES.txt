@@ -1,10 +1,31 @@
-lightweight tag b85c5e2459652470649509e69f14156512049cc8 r287
+lightweight tag e39496d26b3c2c0a4570db55059a2d74a5039aaa r288
 Author:	MysticalOS <mysticalosx@gmail.com>
-Date:	Tue Apr 16 21:18:07 2019 -0400
+Date:	Tue Jun 25 10:34:03 2019 -0400
 
-commit b85c5e2459652470649509e69f14156512049cc8
+commit e39496d26b3c2c0a4570db55059a2d74a5039aaa
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Tue Apr 16 21:18:07 2019 -0400
+Date:   Tue Jun 25 10:34:03 2019 -0400
 
-    Deal with curse fickle packaging
+    Migrated all mods to new countdown feature
+    Bumped TOC files
+    Disabled Model viewer playsoundfile in mods to avoid lua errors (since these aren't converted to soundkit yet)
+    Updated some textures to use file data id instead of texture path, in some legacy mods that still use direct textures instead of GetSpellTexture
+
+commit 574654e75a1ebba97234c0c0a62ddb3c2c58b24f
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Sat May 18 23:22:51 2019 -0400
+
+    Couple fixes merged from classic branch that should be here too
+
+commit 5ae648e31b08b728c37118f65706cfd754c950cf
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Thu May 16 12:54:14 2019 -0400
+
+    A few fixes migrated from classic branch
+
+commit 0eca14d74517fbbc93556644b7f8b8636e299504
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Thu May 16 12:16:06 2019 -0400
+
+    Couple performance fixes for naxx and onyxia
 

@@ -20,7 +20,6 @@ DBM_COPY_URL_DIALOG					= "Copiar vínculo"
 --Post Patch 7.1
 DBM_CORE_NO_RANGE					= "No se puede usar el radar de distancia en estancias. Se procederá a usar el marco de distancia por texto."
 DBM_CORE_NO_ARROW					= "No se puede usar la flecha en estancias."
-DBM_CORE_ARROW_SUMMONED				= "Flecha activada. SiArrow has been activated. If you did not do this manually, you have a 3rd party addon configured to activated it for you"
 DBM_CORE_NO_HUD						= "No se puede usar el indicador en pantalla en estancias."
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM ha desactivado el marco de distancia dinámico para este combate debido a la falta de información sobre las diferencias según el número de jugadores."
@@ -251,11 +250,9 @@ DBM_CORE_TIMER_USAGE	= {
 	"DBM timer commands:",
 	"-----------------",
 	"/dbm timer <seg> <texto>: Inicia un temporizador con texto.",
-	"/dbm ctimer <seg> <texto>: Inicia un temporizador con texto de cuenta atrás.",
 	"/dbm ltimer <seg> <texto>: Inicia un temporizador que se repite hasta que se cancela.",
-	"/dbm cltimer <seg> <texto>: Inicia un temporizador con texto de cuenta atrás que se repite hasta que se cancela.",
 	"(Si escribes 'broadcast' delante de un temporizador, lo compartirás con tu grupo de banda si eres líder o ayudante)",
-	"/dbm timer endloop: Cancela todos los ltimer o cltimer que se estén repitiendo."
+	"/dbm timer endloop: Cancela todos los ltimer que se estén repitiendo."
 }
 
 DBM_ERROR_NO_PERMISSION				= "No tienes permiso para hacer eso."

@@ -1,6 +1,6 @@
-## Interface: 80100
+## Interface: 80200
 ## Plain Title: Narcissus
-## Version: 1.0.4a
+## Version: 1.0.5b
 
 ## Title: |cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r
 
@@ -12,6 +12,9 @@
 ## SavedVariables: NarcissusDB
 ## SavedVariablesPerCharacter: NarcissusDB_PC
 
+
+Font\FontSettings.xml
+
 Initialization.lua
 Locales\Localization.xml
 
@@ -21,14 +24,18 @@ NarciDB\GearBonus.lua
 
 Bridge\Bridge.xml
 
-Font\FontSettings.xml
-
+Widgets\NarciSocketing.xml
 Narcissus.xml
 Preference.xml
 
 Widgets\NarciTooltip.xml
 Widgets\TitleManager.xml
 Widgets\PlayerModel.xml
+widgets\AFKMode.lua
+##widgets\Messi.lua
+##widgets\AR.xml
+widgets\AdvancedDressingRoom.xml
 widgets\Splash.xml
 
 Filters\CameraEffect.xml
+Filters\Letterbox.xml

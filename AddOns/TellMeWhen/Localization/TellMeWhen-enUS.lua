@@ -1497,7 +1497,7 @@ If you have any control blocks (e.g. if/then), you'll need return statements.
 |cff7fffff-|r To get a reference to the 'unit' for Unit Conditions, use variable "thisunit". 
 |cff7fffff-|r To insert a reference to another icon by GUID, shift click that icon while this editbox has focus.
 
-If more help is needed (but not help about how to write Lua code), open a ticket on CurseForge. For help on how to write Lua, go to the internet.]]
+If more help is needed (but not help about how to write Lua code), try the TMW Discord. For help on how to write Lua, go to the internet.]]
 
 
 L["CONDITIONPANEL_OLD"] = "<|cffff1300OLD|r>"
@@ -1891,7 +1891,7 @@ L["HELP"] = "Help"
 L["HELP_ISSUES"] = "Bugs & Feature Requests"
 L["HELP_ISSUES_DESC"] = [[Report bugs and request features on the official TellMeWhen issue tracker on GitHub.]]
 L["HELP_COMMUNITY"] = "Community Discord"
-L["HELP_COMMUNITY_DESC"] = [[Join the official TellMeWhen discord! 
+L["HELP_COMMUNITY_DESC"] = [[Join the official TellMeWhen discord!
 
 Ask questions, share configuration, or just hang out with other TellMeWhen users.]]
 
@@ -2190,13 +2190,9 @@ L["SOUND_SOUNDTOPLAY"] = "Sound to Play"
 L["SOUND_CUSTOM"] = "Custom sound file"
 L["SOUND_CUSTOM_DESC"] = [[Insert the path to a custom sound to play. You can also input a numeric Sound Kit ID.
 
-Here are some examples, where "file" is the name of your sound, and "ext" is the file's extension (ogg or mp3 only!):
+Files must be nested under the "Interface" folder in WoW's installation - e.g. "Interface/AddOns/file.ext". Only ogg and mp3 formats are supported.
 
-- "CustomSounds/file.ext": a file placed in a new folder named "CustomSounds" that is in WoW's root directory (the same location as Wow.exe, Interface and WTF folders, etc)
-
-- "Interface/AddOns/file.ext": a loose file in the AddOns folder
-
-- "file.ext": a loose file in WoW's root directory
+Sound Kit IDs can be found by browsing https://www.wowhead.com/sounds - the URL for the page for each sound contains the Sound Kit ID.
 
 NOTE: WoW must be restarted before it will recognize files that did not exist when it was started up.]]
 L["SOUND_TAB"] = "Sound"
@@ -2427,7 +2423,7 @@ L["EVENTS_SETTINGS_COUNTER_NAME_DESC"] = [[Enter the name of the counter to be m
 
 Counter names must be lower-case with no spaces.
 
-Use this counter name in other places where you would like to check this counter (Conditions and Text Displays via the [Counter] DogTag)
+Use this counter name in other places where you would like to check this counter (Conditions, and Text Displays via the [Counter] DogTag)
 
 
 Advanced Users: Counters are stored in TMW.COUNTERS[counterName] = value.   Call TMW:Fire( "TMW_COUNTER_MODIFIED", counterName ) if you change a counter in a custom Lua script.]]
@@ -2437,7 +2433,7 @@ L["EVENTS_SETTINGS_TIMER_NAME_DESC"] = [[Enter the name of the timer to be modif
 
 Timer names must be lower-case with no spaces.
 
-Use this timer name in other places where you would like to check this timer (Conditions and Text Displays via the [Timer] DogTag)]]
+Use this timer name in other places where you would like to check this timer (Conditions, and Text Displays via the [Timer] DogTag)]]
 
 
 L["EVENTS_SETTINGS_COUNTER_OP"] = "Operation"

@@ -1,10 +1,31 @@
-lightweight tag 9cd5e470bd58c8154eb054575dd5617c915cd042 r666
+lightweight tag 1b18e6c2e3fd0b22dcb8336a0b3ed5da2c8cbae3 r667
 Author:	MysticalOS <mysticalosx@gmail.com>
-Date:	Tue Apr 16 21:22:51 2019 -0400
+Date:	Tue Jun 25 10:34:29 2019 -0400
 
-commit 9cd5e470bd58c8154eb054575dd5617c915cd042
+commit 1b18e6c2e3fd0b22dcb8336a0b3ed5da2c8cbae3
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Tue Apr 16 21:22:51 2019 -0400
+Date:   Tue Jun 25 10:34:29 2019 -0400
 
-    Fix pkg meta for curse building
+    Migrated all mods to new countdown feature
+    Bumped TOC files
+    Disabled Model viewer playsoundfile in mods to avoid lua errors (since these aren't converted to soundkit yet)
+    Updated some textures to use file data id instead of texture path, in some legacy mods that still use direct textures instead of GetSpellTexture
+
+commit a355073686f0dbdd1715791d35a539acb43448ed
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Mon May 20 21:07:54 2019 -0400
+
+    Updated notes, nothing more
+
+commit 2c9973efd22f8d37a495e98e4ad3c2c25ab40878
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Mon Apr 29 00:24:32 2019 -0400
+
+    Fix for real this time.
+
+commit 7b69a1ff8c0d4f127a9cbedb3f9953414cdc14ea
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Sun Apr 28 18:25:18 2019 -0400
+
+    Fix sulfuron error
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Geddon", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019041710011")
+mod:SetRevision("20190625143429")
 mod:SetCreatureID(12056)
 mod:SetEncounterID(668)
 mod:SetModelID(12129)
@@ -47,7 +47,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnBomb:Play("runout")
 			if self:IsDifficulty("event40") or not self:IsTrivial(75) then
 				yellBomb:Yell()
-				yellBombFades:Countdown(8)
+				yellBombFades:Countdown(args.spellId)
 			end
 		else
 			warnBomb:Show(args.destName)

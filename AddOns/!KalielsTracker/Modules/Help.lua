@@ -70,14 +70,14 @@ local function SetupTutorials()
 			imageHeight = 128,
 			text = cTitle.."Header buttons|r\n\n"..
 					"Minimize button:                                Other buttons:\n"..
-					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:0:14:0:14:209:170:0|t "..cDots.."...|r Expand Tracker                           "..
-					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:2:-1:32:64:16:30:0:14:209:170:0|t  "..cDots.."...|r Open Quest Log\n"..
-					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:0:14:16:30:209:170:0|t "..cDots.."...|r Collapse Tracker                         "..
-					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:2:-1:32:64:16:30:16:30:209:170:0|t  "..cDots.."...|r Open Achievements\n"..
-					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:0:14:32:46:209:170:0|t "..cDots.."...|r when is tracker empty                "..
-					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:2:-1:32:64:16:30:32:46:209:170:0|t  "..cDots.."...|r Open Filters menu\n\n"..
-					"Buttons |T"..mediaPath.."UI-KT-HeaderButtons:14:14:0:-1:32:64:16:30:0:14:209:170:0|t and "..
-					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:0:-1:32:64:16:30:16:30:209:170:0|t you can disable in Options.\n\n"..
+					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:2:32:64:0:14:0:14:209:170:0|t "..cDots.."...|r Expand Tracker                          "..
+					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:4:2:32:64:16:30:0:14:209:170:0|t  "..cDots.."...|r Open Quest Log\n"..
+					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:2:32:64:0:14:16:30:209:170:0|t "..cDots.."...|r Collapse Tracker                        "..
+					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:4:2:32:64:16:30:16:30:209:170:0|t  "..cDots.."...|r Open Achievements\n"..
+					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:2:32:64:0:14:32:46:209:170:0|t "..cDots.."...|r when is tracker empty               "..
+					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:4:2:32:64:16:30:32:46:209:170:0|t  "..cDots.."...|r Open Filters menu\n\n"..
+					"Buttons |T"..mediaPath.."UI-KT-HeaderButtons:14:14:0:2:32:64:16:30:0:14:209:170:0|t and "..
+					"|T"..mediaPath.."UI-KT-HeaderButtons:14:14:0:2:32:64:16:30:16:30:209:170:0|t you can disable in Options.\n\n"..
 					"You can set "..cBold.."[key bind]|r for Minimize button.\n"..
 					cBold.."Alt+Click|r on Minimize button opens "..KT.title.." Options.",
 			textY = 16,
@@ -92,9 +92,9 @@ local function SetupTutorials()
 			text = cTitle.."Quest title tags|r\n\n"..
 					"At the start of quest titles you see tags like this |cffff8000[100|cff00b3ffhc!|cffff8000]|r.\n"..
 					"Tags are also in quest titles inside Quest Log.\n\n"..
-					"|cff00b3ff!|r|T:14:3|t "..cDots..".......|r Daily quest|T:14:122|t|cff00b3ffr|r "..cDots..".......|r Raid quest\n"..
+					"|cff00b3ff!|r|T:14:3|t "..cDots..".......|r Daily quest|T:14:121|t|cff00b3ffr|r "..cDots..".......|r Raid quest\n"..
 					"|cff00b3ff!!|r "..cDots.."......|r Weekly quest|T:14:108|t|cff00b3ffr10|r "..cDots.."...|r 10-man raid quest\n"..
-					"|cff00b3ffg3|r "..cDots..".....|r Group quest w/ group size|T:14:22|t|cff00b3ffr25|r "..cDots.."...|r 25-man raid quest\n"..
+					"|cff00b3ffg3|r "..cDots..".....|r Group quest w/ group size|T:14:25|t|cff00b3ffr25|r "..cDots.."...|r 25-man raid quest\n"..
 					"|cff00b3ffpvp|r "..cDots.."...|r PvP quest|T:14:133|t|cff00b3ffs|r "..cDots..".......|r Scenario quest\n"..
 					"|cff00b3ffd|r "..cDots..".......|r Dungeon quest|T:14:97|t|cff00b3ffa|r "..cDots..".......|r Account quest\n"..
 					"|cff00b3ffhc|r "..cDots..".....|r Heroic quest|T:14:113|t|cff00b3ffleg|r "..cDots.."....|r Legendary quest",
@@ -106,12 +106,12 @@ local function SetupTutorials()
 		{	-- 4
 			image = helpPath.."help_tracker-filters",
 			text = cTitle.."Tracker Filters|r\n\n"..
-					"For open Filters menu "..cBold.."Click|r on the button |T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:16:30:32:46:209:170:0|t.\n\n"..
+					"For open Filters menu "..cBold.."Click|r on the button |T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:2:32:64:16:30:32:46:209:170:0|t.\n\n"..
 					"There are two types of filters:\n"..
 					cTitle.."Static filter|r - adds quests/achievements to tracker by criterion (e.g. \"Daily\") and then you can add/remove items by hand.\n"..
 					cTitle.."Dynamic filter|r - automatically adding quests/achievements to tracker by criterion (e.g. \"|cff00ff00Auto|r Zone\") "..
 					"and continuously changing them. This type doesn't allow add/remove items by hand."..
-					"When is some Dynamic filter active, header button is green |T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:-1:32:64:16:30:32:46:0:255:0|t.\n\n"..
+					"When is some Dynamic filter active, header button is green |T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:2:32:64:16:30:32:46:0:255:0|t.\n\n"..
 					"For Achievements can change searched categories, it will affect the outcome of the filter.\n\n"..
 					"This menu displays other options affecting the content of the tracker (e.g. options for addon PetTracker).",
 			textY = 16,
@@ -197,25 +197,19 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |cffffffff3.1.5|r\n\n"..
-					"- FIXED - ticket #345 - Comparing nil with number\n"..
-					"- FIXED - Error during quest item buttons reanchoring\n"..
-					"- ADDED - Support for WoW 8.1.5\n"..
-					"- ADDED - Option to Show / Hide Active button Binding text\n"..
-					"- ADDED - Compatibility - addon Dominos (moving Active button)\n"..
-					"- UPDATED - Addons support - PetTracker 8.1.2, TomTom 80105-1.0.0,"..
-					offs.."ElvUI 11.10, Tukui 18.22\n"..
-					"- IMPROVED - Q / WQ tooltips - same structure, compact rewards\n"..
-					"- IMPROVED - Active button\n"..
-					"- REMOVED - Default header animations\n"..
-					"- Some minor improvements\n\n"..
+			text = cTitle.."         What's NEW in version |cffffffff3.1.6|r\n\n"..
+					"- UPDATED - code for WoW 8.2.0\n"..
+					"- UPDATED - Addon support - TomTom v80200-1.0.1, ElvUI 11.14, Tukui 18.24,"..
+					offs.."SpartanUI 5.1.2\n"..
+					"- UPDATED - Libs\n"..
+					"- ADDED - Option to Show / Hide Max. height overlay\n\n"..
 
 					cTitle.."Issue reporting|r\n"..
-					"For reporting please use "..cBold.."Tickets|r instead of Comments on Curse.com.\n\n\n\n"..
+					"For reporting please use "..cBold.."Tickets|r instead of Comments on CurseForge.\n\n\n\n"..
 
 					cWarning.."Before reporting of errors, please deactivate other addons and make sure the bug is not caused by a collision with another addon.|r",
 			textY = -20,
-			editbox = "https://wow.curseforge.com/projects/kaliels-tracker/issues",
+			editbox = "https://www.curseforge.com/wow/addons/kaliels-tracker/issues",
 			editboxBottom = 40,
 			shine = KTF,
 			shineTop = 5,

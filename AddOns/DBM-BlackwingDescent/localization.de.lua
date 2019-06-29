@@ -144,7 +144,6 @@ L:SetOptionLocalization({
 	NefBreathTimer			= "Zeige Abklingzeit für Nefarians $spell:77826",
 	InfoFrame				= "Zeige Infofenster für $journal:3284",
 	SetWater				= "Automatische Deaktivierung der Kameraeinstellung 'Wasserkollision'<br/>bei Kampfbeginn (wird nach Kampfende automatisch wieder aktiviert)",
-	TankArrow				= "Zeige DBM-Pfeil für den Kiter von 'Belebter Knochenkrieger'<br/>(abgestimmt auf eine Kiter-Taktik)",
 	RangeFrame				= "Zeige Abstandsfenster (10m) für $spell:79339 (zeigt jeden, falls du den Debuff hast; sonst nur betroffene Spieler)"
 })
 

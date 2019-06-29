@@ -108,4 +108,5 @@ addon.db = {
     quest = {
         coloredQuestBorder = true,  --任務按等差染色
     },
+    variables = {}, --用户配置数据
 }

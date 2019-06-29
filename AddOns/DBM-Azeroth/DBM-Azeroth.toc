@@ -1,4 +1,4 @@
-## Interface: 80100
+## Interface: 80200
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Azeroth (Classic)|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Azeroth (Classic)|r
@@ -17,7 +17,7 @@
 ## X-DBM-Mod-Name-zhTW: 艾澤拉斯 (經典)
 ## X-DBM-Mod-Sort: 1107
 ## X-DBM-Mod-MapID: 0, 1
-## X-DBM-Mod-LoadCID: 121820,121818,121911,121912,121913,121821,14889,14888,14887,14890
+## X-DBM-Mod-LoadCID: 121820,121818,121911,121912,121913,121821,14889,14888,14887,14890,12397,6109
 ## X-DBM-Mod-MinCoreRevision: 12473
 localization.en.lua
 localization.de.lua

@@ -542,7 +542,7 @@ local function SetHooks()
 		OTF.isUpdating = false
 	end
 
-	function DEFAULT_OBJECTIVE_TRACKER_MODULE:AddObjective(block, objectiveKey, text, lineType, useFullHeight, dashStyle, colorStyle, adjustForNoText)  -- RO
+	function DEFAULT_OBJECTIVE_TRACKER_MODULE:AddObjective(block, objectiveKey, text, lineType, useFullHeight, dashStyle, colorStyle, adjustForNoText, overrideHeight)  -- RO
 		if objectiveKey == "TimeLeft" then
 			text, colorStyle = GetTaskTimeLeftData(block.id)
 			self:FreeProgressBar(block, block.currentLine)	-- fix ProgressBar duplicity
@@ -608,7 +608,8 @@ local function SetHooks()
 			line.Check.KTskinned = true
 		end
 		-- set the text
-		local height = self:SetStringText(line.Text, text, useFullHeight, colorStyle, block.isHighlighted);
+		local textHeight = self:SetStringText(line.Text, text, useFullHeight, colorStyle, block.isHighlighted);
+		local height = overrideHeight or textHeight;
 		line:SetHeight(height);
 
 		local yOffset;

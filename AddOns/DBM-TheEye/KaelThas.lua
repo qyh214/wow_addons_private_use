@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("KaelThas", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019041710011")
+mod:SetRevision("20190625143429")
 mod:SetCreatureID(19622)
 mod:SetEncounterID(733)
 mod:SetModelID(20023)
@@ -46,8 +46,8 @@ local specWarnShield	= mod:NewSpecialWarningSpell(36815)--No decent voice for th
 local specWarnPyro		= mod:NewSpecialWarningInterrupt(36819, "HasInterrupt", nil, nil, 1, 2)
 local specWarnVapor		= mod:NewSpecialWarningStack(35859, nil, 2, nil, nil, 1, 6)
 
-local timerPhase		= mod:NewTimer(105, "TimerPhase", 28131, nil, nil, 6)
-local timerPhase1mob	= mod:NewTimer(30, "TimerPhase1mob", 28131, nil, nil, 1)
+local timerPhase		= mod:NewTimer(105, "TimerPhase", 28131, nil, nil, 6, nil, nil, 1, 4)
+local timerPhase1mob	= mod:NewTimer(30, "TimerPhase1mob", 28131, nil, nil, 1, nil, nil, 1, 4)
 local timerNextGaze		= mod:NewTimer(8.5, "TimerNextGaze", 39414, nil, nil, 3)
 local timerFearCD		= mod:NewCDTimer(31, 39427, nil, nil, nil, 2)
 local timerToy			= mod:NewTargetTimer(60, 37027, nil, nil, nil, 3)
@@ -56,8 +56,6 @@ local timerRebirth		= mod:NewTimer(15, "TimerRebirth", 36723, nil, nil, 1)
 local timerShieldCD		= mod:NewCDTimer(60, 36815, nil, nil, nil, 4)
 local timerGravityCD	= mod:NewNextTimer(92, 35941, nil, nil, nil, 6)
 local timerGravity		= mod:NewBuffActiveTimer(32, 35941, nil, nil, nil, 6)
-
-local countdownPhase	= mod:NewCountdown(105, 190978)
 
 mod:AddBoolOption("MCIcon", true)
 mod:AddBoolOption("GazeIcon", false)
@@ -86,7 +84,6 @@ function mod:OnCombatStart(delay)
 	self.vb.mcIcon = 8
 	self.vb.phase = 1
 	timerPhase1mob:Start(32, L.Thaladred)
-	countdownPhase:Start(32)
 end
 
 function mod:OnCombatEnd()
@@ -231,20 +228,16 @@ end
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.YellSang or msg:find(L.YellSang) then
 		timerPhase1mob:Start(12.5, L.Sanguinar)
-		countdownPhase:Start(12.5)
 	elseif msg == L.YellCaper or msg:find(L.YellCaper) then
 		timerPhase1mob:Start(7, L.Capernian)
-		countdownPhase:Start(7)
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show()
 		end
 	elseif msg == L.YellTelo or msg:find(L.YellTelo) then
 		timerPhase1mob:Start(8.4, L.Telonicus)
-		countdownPhase:Start(8.4)
 	elseif msg == L.YellPhase2 or msg:find(L.YellPhase2) then
 		self.vb.phase = 2
 		timerPhase:Start(105)
-		countdownPhase:Start()
 		warnPhase2:Show()
 		warnPhase3:Schedule(105)
 	elseif msg == L.YellPhase3 or msg:find(L.YellPhase3) then
@@ -254,13 +247,11 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		end
 		self:Schedule(10, function()
 			timerPhase:Start(173)
-			countdownPhase:Start(173)
 		end)
 	elseif msg == L.YellPhase4 or msg:find(L.YellPhase4) then
 		self.vb.phase = 4
 		warnPhase4:Show()
 		timerPhase:Cancel()
-		countdownPhase:Cancel()
 		timerPhoenixCD:Start(50)
 		timerShieldCD:Start(60)
 	elseif msg == L.YellPhase5 or msg:find(L.YellPhase5) then
@@ -268,7 +259,6 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		timerPhoenixCD:Cancel()
 		timerShieldCD:Cancel()
 		timerPhase:Start(45)
-		countdownPhase:Start(45)
 		warnPhase5:Schedule(45)
 		timerGravityCD:Start(60)
 		timerPhoenixCD:Start(137)

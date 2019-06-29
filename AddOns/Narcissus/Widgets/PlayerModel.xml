@@ -286,21 +286,13 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				self:SetUnit("player");
-				Model_OnLoad(self, MODELFRAME_MAX_PLAYER_ZOOM, -0.8, nil, CharacterModelFrame_OnMouseUp);
-				self.TimeSinceLastUpdate = 0;
-				local r, g, b = 0, 177/255, 64/255;
-				--local r, g, b =	0, 71/255, 187/255;
-				self.ChromaKey:SetColorTexture(r, g, b);
-				local W = self:GetWidth()
-				self:SetHitRectInsets(2*W/3, 0, 0, 0);
-				Narci_CharacterModelFrame_OnLoad(self);
+				NarciModel_OnLoad(self, MODELFRAME_MAX_PLAYER_ZOOM, -0.8, nil, nil);
 			</OnLoad>
 			<!--OnEvent function="Model_OnEvent"/-->
 			<OnUpdate function="Narci_Model_OnUpdate"/>
 			<OnMouseUp>
 				if ( button == "RightButton" and self.panning ) then
-					Model_StopPanning(self);
+					self.panning = false;
 				elseif ( self.mouseDown ) then
 					self.onMouseUpFunc(self, button);
 				end
@@ -308,24 +300,15 @@
 			</OnMouseUp>
 			<OnMouseDown>
 				if ( button == "RightButton" and not self.mouseDown ) then
-					Model_StartPanning(self);
+					NarciModel_StartPanning(self);
 				else
-					Model_OnMouseDown(self, button);
+					NarciModel_OnMouseDown(self, button);
 				end
 				if self.GuideFrame:IsVisible() then
 					self.GuideLineCenter:Show();
 				end
 			</OnMouseDown>
-			<OnMouseWheel>
-				maxZoom = self.maxZoom;
-				minZoom = self.minZoom;
-				local zoomLevel = self.zoomLevel;
-				zoomLevel = zoomLevel + delta * 0.1;
-				zoomLevel = min(zoomLevel, maxZoom);
-				zoomLevel = max(zoomLevel, minZoom);
-				self:SetPortraitZoom(zoomLevel);
-				self.zoomLevel = zoomLevel;
-			</OnMouseWheel>
+			<OnMouseWheel function="NarciModel_OnWheel"/>
 			<OnEnter>
 				SetCursor("Interface/CURSOR/UI-Cursor-Move.blp");
 			</OnEnter>
@@ -334,7 +317,7 @@
 			</OnLeave>
 			<OnHide>
 				if ( self.panning ) then
-					Model_StopPanning(self);
+					self.panning = false;
 				end
 				self.mouseDown = false;
 				Narci_CharacterModelSettings:Hide();
@@ -511,7 +494,7 @@
 	</Button>
 
     <Button name="Narci_RoundedRectangleTemplate_White" clampedToScreen="true" hidden="false" virtual="true">
-        <Size x="196" y="33"/>
+        <Size x="198" y="33"/>
 		<HitRectInsets>
 			<AbsInset left="0" right="0" top="4" bottom="4"/>
 		</HitRectInsets>
@@ -957,7 +940,7 @@
 
 			<Slider inherits="NarciModelSliderTemplate" name="Narci_Model_VignetteSlider">
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativeTo="Narci_BackgroundLayerButton" relativePoint="BOTTOMRIGHT" x="-8"/>
+					<Anchor point="BOTTOMRIGHT" relativeTo="Narci_BackgroundLayerButton" relativePoint="BOTTOMRIGHT" x="-10"/>
 				</Anchors>
 				<Scripts>
 					<OnLoad>
@@ -972,7 +955,7 @@
 
 			<Slider inherits="NarciModelSliderTemplate" name="Narci_Model_BrightnessSlider" parentKey="BrightnessSlider">
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="Narci_BackgroundLayerButton" relativePoint="BOTTOMRIGHT" x="-8"/>
+					<Anchor point="TOPRIGHT" relativeTo="Narci_BackgroundLayerButton" relativePoint="BOTTOMRIGHT" x="-10"/>
 				</Anchors>
 				<Scripts>
 					<OnValueChanged function="Narci_Model_BrightnessSlider_OnValueChanged"/>
@@ -985,7 +968,7 @@
 			<Button name="Narci_GroundShadowOption" parentKey="GroundShadowOption">
 				<Size x="192" y="24"/>
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="Narci_BackgroundLayerButton" relativePoint="BOTTOMRIGHT" x="0" y="-32"/>
+					<Anchor point="TOP" relativeTo="Narci_BackgroundLayerButton" relativePoint="BOTTOM" x="0" y="-32"/>
 				</Anchors>
 				<Layers>
 					<Layer level="BACKGROUND">
@@ -1196,6 +1179,9 @@
 					<OnClick function="Narci_Model_CaptureButton_OnClick"/>
 					<OnEnter function="Narci_Model_CaptureButton_OnEnter"/>
 					<OnLeave function="Narci_Model_CaptureButton_OnLeave"/>
+					<OnHide>
+						self:Enable();
+					</OnHide>
 				</Scripts>
 			</Button>
 
@@ -1429,7 +1415,7 @@
 					</Layer>
 				</Layers>
 				<Frames>
-					<EditBox parentKey="tab1" id="1" name="Narci_AnimationIDFrame_EditBox" numeric="true" autoFocus="false" letters="5" multiLine="false">
+					<EditBox parentKey="tab1" id="1" name="Narci_AnimationIDFrame_EditBox" numeric="true" autoFocus="false" letters="6" multiLine="false">
 						<Size x="56" y="30"/>
 						<Anchors>
 							<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0"/>
@@ -1500,7 +1486,7 @@
 							</OnEnterPressed>
 							<OnEditFocusLost>
 								self.Highlight:Hide();
-								if self:GetNumber() > 1447 then
+								if self:GetNumber() > 1447000 then
 									self:SetNumber(1447);
 								end
 								if self:GetParent().Pause.IsOn then
@@ -1593,6 +1579,7 @@
 								Narci_CharacterModelFrame:SetAnimation(id, 1)
 								Narci_Model_IdleButton.IsOn = false;
 								Narci_Model_IdleButton.Highlight:Hide();
+								Narci_CharacterModelFrame:SetPaused(false)
 							</OnClick>
 							<OnShow>
 								self.IsOn = true;
@@ -1601,7 +1588,7 @@
 						</Scripts>
 					</Button>
 
-					<Button parentKey="Next" inherits="Narci_Model_AnimationControlButtonTemplate" hidden="false" registerForClicks="LeftButtonUp, RightButtonUp">
+					<Button name="Narci_Model_NextAnimationButton" parentKey="Next" inherits="Narci_Model_AnimationControlButtonTemplate" hidden="false" registerForClicks="LeftButtonUp, RightButtonUp">
 						<Anchors>
 							<Anchor point="RIGHT" relativeKey="$parent.Play" relativePoint="LEFT" x="0"/>
 						</Anchors>
@@ -1611,7 +1598,7 @@
 									<TexCoords left="0.0625" right="0.125" top="0.9375" bottom="1"/>
 									<Size x="20" y="20"/>
 									<Anchors>
-										<Anchor point="CENTER"/>
+										<Anchor point="CENTER" x="0.25"/>
 									</Anchors>
 								</Texture>
 							</Layer>
@@ -1693,4 +1680,30 @@
 			</Layer>
 		</Layers>
 	</Frame>
+
+	<Button name="Narci_Tooltip_White" frameStrata="TOOLTIP">
+		<Size x="160" y="120"/>
+		<Layers>
+			<Layer level="ART" textureSubLevel="3">
+				<Texture setAllPoints="true" parentKey="TopBackground">
+					<Color r="1" g="1.0" b="1.0" a="1"/>
+					<Gradient orientation="VERTICAL">
+						<MinColor a="1" r="0.12" g="0.12" b="0.12"/>
+						<MaxColor a="1" r="0.25" g="0.25" b="0.25"/>
+					</Gradient>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="RIGHT" y="30"/>
+					</Anchors>
+				</Texture>
+				<Texture setAllPoints="true">
+					<Color r="0.12" g="0.12" b="0.12" a="1"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.TopBackground" relativePoint="BOTTOMLEFT"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Button>
 </Ui>

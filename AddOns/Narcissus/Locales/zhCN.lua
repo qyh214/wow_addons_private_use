@@ -72,8 +72,11 @@ NARCI_EQUIPMENTSLOTS = "装备栏位";
 --偏好设定--
 NARCI_INTERFACE = "界面";
 NARCI_THEME = "主题";
+NARCI_CAMERA = "镜头";
 NARCI_EFFECTS = "效果";
 NARCI_TRANSMOG = "幻化";
+NARCI_EXTENSIONS = "拓展功能";
+NARCI_ABOUT = "关于"
 NARCI_TRUNCATE_TEXT = "截断文字";
 NARCI_TEXT_WIDTH = "文本宽度";
 NARCI_HOTKEY = "快捷键";
@@ -96,6 +99,10 @@ NARCI_FADEOUT_DESCRIPTION = "在你将鼠标从小地图按钮上移出后，它
 NARCI_FADE_MUSIC = "淡入/淡出音乐";
 NARCI_VIGNETTE_STRENGTH = "暗角强度";
 NARCI_WEATHER_EFFECT = "天气效果";
+NARCI_LETTERBOX_EFFECT = "宽荧幕效果";
+NARCI_LETTERBOX_RATIO = "宽高比";
+NARCI_LETTERBOX_EFFECT_ALERT1 = "你屏幕的宽高比超过了所选比例。";
+NARCI_LETTERBOX_EFFECT_ALERT2 = "建议将UI缩放比设置为%0.1f\n(当前缩放比为%0.1f)";
 NARCI_DEFAULT_LAYOUT = "默认布局";
 NARCI_LAYOUT_1 = "对称，显示人物";
 NARCI_LAYOUT_2 = "人物及模型";
@@ -105,6 +112,12 @@ NARCI_BORDER_THEME_BRIGHT = "明亮";
 NARCI_BORDER_THEME_DARK = "灰暗";
 NARCI_ALWAYS_SHOW_MODEL = "总是显示3D模型";
 NARCI_SHOW_FULL_BODY = "显示全身";
+NARCI_AFK_SCREEN = "AFK画面";
+NARCI_AFK_SCREEN_DESCRIPTION = "在你的人物暂离后自动打开Narcissus。";
+NARCI_AFK_SCREEN_DESCRIPTION_EXTRA = "勾选此选项将覆盖ElvUI的AFK模式。";
+NARCI_GEMMA = "\"Gemma\"";
+NARCI_GEMMY_DESCRIPTION = "在你为一件物品镶嵌宝石时，显示可用的宝石列表。"
+
 --模型控制面板--
 NARCI_SHEATH_WEAPON = "收起武器";
 NARCI_STAND_IDLY = "普通站姿";
@@ -115,17 +128,38 @@ NARCI_ANIMATION_ID = "动画ID";
 NARCI_GROUND_SHADOW = "模拟地面阴影";
 NARCI_HIDE_PLAYER = "隐藏玩家自身";
 
+--装备对比--
+NARCI_AZERITE_POWERS = "艾泽里特之力"
+
+--Tutorial--
+NARCI_TUTORIAL_CAPTUREBUTTON = "点击此按钮后会自动保存5张图层：\n仅背景、带蓝\\绿幕的3D模型、装备栏的alpha\\颜色通道。\n\n如果想只保存一张截图，请按键盘上的截图快捷键。";
+NARCI_TUTORIAL_ANIMATION_ID = "左键单击 ID +1  右键单击 ID -1\n动画ID的有效范围为 0~1447。";
+NARCI_TUTORIAL_GREEN_SCREEN = "点击最左端的正方形按钮可以显示蓝\\绿幕。";
+
 --Splash--
-NARCI_PATCH_NOTES = "v1.0.4b 补丁说明";
-NARCI_SPLASH_CLOSE_AND_CONTINUE = "关闭此窗口并继续"
-NARCI_SHOW_DETAILS = "+ 显示详细内容..."
-NARCI_SPLASH_HEADER1 = "镜头";
-NARCI_SPLASH_HEADER2 = "装备栏";
-NARCI_SPLASH_MESSAGE0 = "|cff40C7EB本次更新修复了以下两个严重问题:|r\n\n1. 当角色为特定种族时无法打开插件。 |cFF959595(光铸德莱尼, 玛格汉兽人, 黑铁矮人, 狼人, 熊猫人)|r\n\n2. 当装备了某些物品时，进入分享幻化模式会报错。"
-NARCI_SPLASH_MESSAGE1 = "|cff40C7EB1. 一个因使用以往版本 (1.0.0, 1.0.1, 1.0.2, 1.0.3) 而导致的镜头问题已得到解决。|r";
-NARCI_SPLASH_MESSAGE1_CONDITIONAL_LINE = "你已经关闭了镜头跟随功能，因此你将不会感受到任何变化。"
-NARCI_SPLASH_MESSAGE1_EXTRA_LINE = "在早期版本中，Narcissus将 |cffffffffcameraSmoothTimeMin|r 这个CVar的值由默认的0.1修改为0.8，以保证镜头能在退出插件后平稳地切换回原先位置。但是这一改变会导致一个问题——当你的镜头只转动了较小的角度，它将需要花费比原先更长的时间来调整到与你人物朝向一致的方向。在本次更新后，此插件所用到的所有镜头相关的CVar都将属于Actioncam这一类别之下，并且它们可以通过输入|cffffffff/console actioncam off|r来彻底关闭。";
-NARCI_SPLASH_MESSAGE2 = "2. 如果你在移动或骑乘期间打开此插件，镜头将不再自动旋转到角色正面。"
-NARCI_SPLASH_MESSAGE3 = "3. 如果你打开了镜头跟随功能，你的镜头距离将在退出插件后自动恢复。"
-NARCI_SPLASH_MESSAGE4 = "|cff40C7EB1. 你又可以右键单击装备栏来使用物品了。装备栏将在你进入战斗后立即隐藏。|r"
-NARCI_SPLASH_MESSAGE5 = "2. 你可以使用Alt+左键来快速卸下某件装备。这一操作在早期版本中就已加入，现在它有了一个视觉反馈。"
+NARCI_PATCH_NOTES = "v1.0.5 Patch Notes";
+NARCI_SPLASH_CLOSE_AND_CONTINUE = "关闭此窗口并继续";
+NARCI_TRY_IT_NOW = "点击这里来启用...";
+    --Patch-specific
+    NARCI_SPLASH_MESSAGE82 = "|cff40C7EB8.2版本常规更新 :)|r"
+    NARCI_AFK_ENABLED = "AFK画面已开启。你可以在“偏好设定-拓展功能”中关闭它。";
+    NARCI_LETTERBOX_ENABLED = "宽荧幕效果已开启。 你可以在“偏好设定-效果”中关闭它。";
+    --
+NARCI_SHOW_DETAILS = "+ Show details...";
+NARCI_SPLASH_HEADER1 = "装备栏";
+NARCI_SPLASH_HEADER2 = "效果";
+NARCI_SPLASH_MESSAGE0 = "|cff40C7EB1. 装备对比界面已经过更新。|r\n你现在可以在对比装备时查看该物品的艾泽里特特质或是其他特效。"
+NARCI_SPLASH_MESSAGE1 = "|cff40C7EB2. 宝石管理员 -- \"Gemma\"|r\n当你处于Narcissus界面时：如果一件装备有孔，点击三角形图标后会出现一个可用的宝石列表。双击宝石来进行镶嵌。\n\n当使用暴雪界面时：如果你背包内有可用宝石，这个列表将会随镶嵌面板一起显示。";
+NARCI_SPLASH_MESSAGE1_CONDITIONAL_LINE = "You have disabled the auto-follow feature so you will not feel any different."
+NARCI_SPLASH_MESSAGE1_EXTRA_LINE = "In the previous versions, Narcissus set a CVar named |cffffffffcameraSmoothTimeMin|r to 0.8 (was 0.1 by default) to ensure a smooth camera transition after closing the addon. This, however, caused an increase of the auto-follow duration when the camera is moved by a small degree. After this update, all camera-related CVars used in this addon belong to the Actioncam feature which can be disabled by |cffffffff/console actioncam off|r";
+NARCI_SPLASH_MESSAGE2 = "|cff40C7EB2. 新滤镜：宽荧幕效果。|r"
+NARCI_SPLASH_MESSAGE3 = "|cff40C7EB1. AFK画面：在你进入暂离状态后自动打开Narcissus。|r"
+NARCI_SPLASH_MESSAGE4 = "|cff40C7EB1. You can once again use an item via right-click. Equipment slots will be immediately closed when entering combat.|r"
+NARCI_SPLASH_MESSAGE5 = "2. You can unequip a gear via Alt + Left-click. This action has been there since the very first version, and it now has visual feedback."
+
+
+--Project Details--
+NARCI_ALL_PROJECTS = "全部项目";
+NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2019.6.16|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
+NARCI_PROJECT_AAA_SUMMARY = "探索艾泽拉斯上的不同景点，并收集各种故事和照片。";
+NARCI_PROJECT_NARCISSUS_SUMMARY = "沉浸式角色面板；你最好的截图助手。"

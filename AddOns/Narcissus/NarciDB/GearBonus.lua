@@ -1,11 +1,23 @@
 Narci_GemInfo = {
     --[ItemID] = {"Attribute", Amount},
     ----8 BFA----
+    [168636] = {"STR", 120},         --Leviathan's Eye of Strength
+    [168637] = {"AGI", 120},         --Leviathan's Eye of Agility
+    [168638] = {"INT", 120},         --Leviathan's Eye of Intellect
+
+    [168639] = {"crit", 60},        --Deadly Lava Lazuli
+    [168640] = {"mastery", 60},     --Masterful Sea Currant
+    [168641] = {"haste", 60},       --Quick Sand Spinel
+    [168642] = {"versa", 60},       --Versatile Dark Opal
+
     [154126] = {"crit", 40},        --Deadly Amberblaze
     [154127] = {"haste", 40},       --Quick Owlseye
     [154128] = {"versa", 40},       --Versatile Royal Quartz
     [154129] = {"mastery", 40},     --Masterful Tidal Amethyst
 
+    ---------------------------
+    ---Set this to 80 in 8.2---
+    ---------------------------
     [153707] = {"STR", 40},         --Kraken's Eye of Strength
     [153708] = {"AGI", 40},         --Kraken's Eye of Agility
     [153709] = {"INT", 40},         --Kraken's Eye of Intellect
@@ -13,7 +25,9 @@ Narci_GemInfo = {
     [153710] = {"crit", 30},        --Deadly Solstone
     [153711] = {"haste", 30},       --Quick Golden Beryl
     [153712] = {"versa", 30},       --Versatile Kyanite
-    [153713] = {"mastery", 30},     --Masterful Kubiline 
+    [153713] = {"mastery", 30},     --Masterful Kubiline
+    [153714] = {"EXP", 5},          --***Insightful Rubellite 
+    [153715] = {"MSPD", 3},         --***Straddling Viridium
 
     ----7 LEG----
     [151580] = {"crit", 11},        --Deadly Deep Chemirine
@@ -21,16 +35,15 @@ Narci_GemInfo = {
     [151584] = {"mastery", 11},     --Masterful Argulite
     [151585] = {"versa", 11},       --Versatile Labradorite
 
-    [130215] = {"crit", 7},         --Deadly Deep Amber
-    [130216] = {"haste", 7},        --Quick Azsunite
-    [130217] = {"mastery", 7},      --Versatile Skystone
-    [130218] = {"versa", 7},        --Masterful Queen's Opal
-    
     [130219] = {"crit", 9},         --Deadly Eye of Prophecy
     [130220] = {"haste", 9},        --Quick Dawnlight
     [130221] = {"mastery", 9},      --Versatile Maelstrom Sapphire
     [130222] = {"versa", 9},        --Masterful Shadowruby
-    
+
+    [130215] = {"crit", 7},         --Deadly Deep Amber
+    [130216] = {"haste", 7},        --Quick Azsunite
+    [130217] = {"mastery", 7},      --Versatile Skystone
+    [130218] = {"versa", 7},        --Masterful Queen's Opal
 }
 
 Narci_EnchantInfo = {

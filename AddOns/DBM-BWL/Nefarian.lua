@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Nefarian-Classic", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019041710011")
+mod:SetRevision("20190625143429")
 mod:SetCreatureID(11583)
 mod:SetEncounterID(617)
 mod:SetModelID(11380)
@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_MONSTER_YELL"
 )
 
-local warnClassCall		= mod:NewAnnounce("WarnClassCall", 3, "Interface\\Icons\\Spell_Nature_WispSplode")
+local warnClassCall		= mod:NewAnnounce("WarnClassCall", 3, "136116")
 local warnPhase			= mod:NewPhaseChangeAnnounce()
 local warnPhase3Soon	= mod:NewPrePhaseAnnounce(3)
 local warnShadowFlame	= mod:NewCastAnnounce(22539, 2)
@@ -25,7 +25,7 @@ local warnFear			= mod:NewCastAnnounce(22686, 2)
 local specwarnMC		= mod:NewSpecialWarningTarget(22667, nil, nil, 2, 1, 2)
 local specwarnVeilShadow= mod:NewSpecialWarningDispel(22687, "RemoveCurse", nil, nil, 1, 2)
 
-local timerClassCall	= mod:NewTimer(30, "TimerClassCall", "Interface\\Icons\\Spell_Nature_WispSplode", nil, nil, 5)
+local timerClassCall	= mod:NewTimer(30, "TimerClassCall", "136116", nil, nil, 5)
 local timerFearNext		= mod:NewCDTimer(30, 22686, nil, nil, nil, 2)
 local timerVeilShadow	= mod:NewTargetTimer(6, 22687, nil, "RemoveCurse|Tank", 2, 3, nil, DBM_CORE_CURSE_ICON)
 local timerMC			= mod:NewTargetTimer(15, 22667, nil, nil, nil, 3)

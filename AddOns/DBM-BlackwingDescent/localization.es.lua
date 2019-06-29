@@ -152,7 +152,6 @@ L:SetOptionLocalization({
 	NefBreathTimer			= "Mostrar temporizador para el tiempo de reutilización de $spell:77826 de Nefarian",
 	InfoFrame				= "Mostrar marco de información para $journal:3284",
 	SetWater				= "Desactivar automáticamente la opción de cámara de colisión con el agua al iniciar el encuentro (se reactivará automáticamente al terminar el encuentro)",
-	TankArrow				= "Mostrar flecha para torear a los Guerreros osarios animados (solo para el jugador asignado en estrategias donde solo se asigne a uno)",--npc 41918
 	SetIconOnCinder			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79339),
 	RangeFrame				= "Mostrar marco de distancia (10 m) para $spell:79339 (muestra a todos los jugadores si tienes el perjuicio, o solo a los jugadores con el perjuicio si no estás afectado)"
 })

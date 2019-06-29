@@ -3,6 +3,27 @@ if not TMW then return end
 TMW.CHANGELOG_LASTVER="7.4.0"
 
 TMW.CHANGELOG = [==[
+## v8.6.3
+### Bug Fixes
+* Fixed #1698 (again): Utils.lua:438: attempt to index local 'path' (a number value)
+* Switched WoW-built-in sounds that TMW registers with LSM to use FileDataIDs instead of paths, since paths aren't allowed anymore in WoW 8.2.
+ * Note that if you have other addons which are still incorrectly registering these sounds (like Omen), they won't work for you.
+
+## v8.6.2
+### Bug Fixes
+* Fixed #1698: Utils.lua:438: attempt to index local 'path' (a number value)
+* Fixed #1699: Several lists when editing notifications were no longer displaying correctly, if at all, in WoW 8.2.
+
+## v8.6.1
+* Buff/Debuff equivalency improvements
+* Added Kul Tiran and Zandalari to the Unit Race condition
+
+### Bug Fixes
+* Fixed #1690: Framelevel issue with latest alphas of Masque.
+* Fixed #1694: Empty group shrinks to minimum size of 1 icon.
+* Fixed that Reactive Ability icons wouldn't use the No Mana state.
+* Fixed #1697: Error when logging in in WoW 8.2.
+
 ## v8.6.0
 
 ### Discord
@@ -15,6 +36,7 @@ TMW.CHANGELOG = [==[
 * You can now toggle an icon's enabled/disabled state by Ctrl+clicking it. (#22)
 * New setting for Combat Event icons: Only if Conditions Passing. (#20)
 * Unit Conditions can now be copied from one icon to another. (#18)
+* Added Raise Abomination to the totem icon type for DKs (#1688)
 
 ### Bug Fixes
 * Fixed a bug that caused export strings to sometimes contain a large amount of superfluous defaults.

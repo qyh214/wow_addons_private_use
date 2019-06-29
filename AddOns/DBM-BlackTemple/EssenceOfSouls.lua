@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Souls", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019041710011")
+mod:SetRevision("20190625143429")
 mod:SetCreatureID(23420)
 mod:SetEncounterID(606)
 mod:SetModelID(21483)
@@ -45,15 +45,13 @@ local timerPhaseChange	= mod:NewPhaseTimer(41)
 local timerFrenzy		= mod:NewBuffActiveTimer(8, 41305, nil, "Tank|Healer", 2, 5, nil, DBM_CORE_TANK_ICON)
 local timerNextFrenzy	= mod:NewNextTimer(40, 41305, nil, "Tank|Healer", 2, 5, nil, DBM_CORE_TANK_ICON)
 --Phase 2
-local timerDeaden		= mod:NewTargetTimer(10, 41410, nil, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON)
+local timerDeaden		= mod:NewTargetTimer(10, 41410, nil, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON, nil, mod:IsTank() and select(2, UnitClass("player")) == "WARRIOR" and 2, 4)
 local timerNextDeaden	= mod:NewCDTimer(31, 41410, nil, nil, nil, 5)--Roll timer because I don't want to assign it interrupt one when many groups will use prot warrior
 local timerMana			= mod:NewTimer(160, "TimerMana", 41350)
 local timerNextShock	= mod:NewCDTimer(12, 41426, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)--Blizz lied, this is a 12-15 second cd. you can NOT solo interrupt these with most classes
 --Phase 3
 local timerNextShield	= mod:NewCDTimer(15, 41431, nil, "MagicDispeller", 2, 5, nil, DBM_CORE_MAGIC_ICON)
 local timerNextSoul		= mod:NewCDTimer(10, 41545, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
-
-local countdownDeaden	= mod:NewCountdown(31, 41410, "Tank" and select(2, UnitClass("player")) == "WARRIOR")
 
 mod:AddSetIconOption("DrainIcon", 41303, false)
 mod:AddSetIconOption("SpiteIcon", 41376, false)
@@ -110,7 +108,6 @@ end
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 41410 then
 		timerNextDeaden:Start()
-		countdownDeaden:Start()
 	elseif args.spellId == 41426 then
 		timerNextShock:Start()
 		specWarnShock:Show(args.sourceName)
@@ -162,7 +159,6 @@ function mod:OnSync(msg)
 		timerMana:Stop()
 		timerNextShield:Stop()
 		timerNextDeaden:Stop()
-		countdownDeaden:Cancel()
 		timerNextShock:Stop()
 		timerPhaseChange:Start()--41
 	end

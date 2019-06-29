@@ -36,7 +36,7 @@ L:SetMiscLocalization({
 })
 
 ---------------------------
---  The Hatchery --
+--  Orgozoa --
 ---------------------------
 L= DBM:GetModLocalization(2351)
 
@@ -50,12 +50,13 @@ L:SetMiscLocalization({
 })
 
 ---------------------------
--- Herald of N'zoth --
+-- Za'qul --
 ---------------------------
 L= DBM:GetModLocalization(2349)
 
 L:SetMiscLocalization({
-	Tear =	"Tear"
+	Phase3	= "Za'qul tears open the pathway to Delirium Realm!",
+	Tear	= "Tear"
 })
 
 ---------------------------
@@ -78,5 +79,11 @@ L:SetMiscLocalization({
 	GroupUp =	"Group Up",
 	Spread =	"Spread",
 	Move	 =	"Keep Moving",
-	DontMove =	"Stop Moving"
+	DontMove =	"Stop Moving",
+	--For Yells, not yet used, localize anyways.
+	Soaking =	"{rt3}Soaking{rt3}",--Diamond for arcane orbs
+	Stacking =	"Stacking",
+	Solo =		"Solo",
+	Marching =	"{rt4}Marching{rt4}",--Green Triangle
+	Staying =	"{rt7}Staying{rt7}"--Red X
 })

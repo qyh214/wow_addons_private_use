@@ -690,6 +690,20 @@ frameFont.title:SetText(format("%s |cff33eeff%s|r", addonName, "Font"))
 frameFont.parent = addonName
 frameFont.name = " - Font"
 
+local frameVariables = CreateFrame("Frame", nil, UIParent)
+frameVariables.anchor = CreateFrame("Frame", nil, frameVariables)
+frameVariables.anchor:SetPoint("TOPLEFT", 32, -16)
+frameVariables.anchor:SetSize(InterfaceOptionsFramePanelContainer:GetWidth()-64, 1)
+frameVariables.title = frameVariables:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+frameVariables.title:SetPoint("TOPLEFT", 18, -16)
+frameVariables.title:SetText(format("%s |cff33eeff%s|r", addonName, "Variables"))
+frameVariables.parent = addonName
+frameVariables.name = " - Variables"
+
+local function InitVariablesFrame()
+    
+end
+
 local function InitOptions(list, parent, height)
     local element, offsetX
     for i, v in ipairs(list) do
@@ -712,6 +726,7 @@ LibEvent:attachEvent("VARIABLES_LOADED", function()
     InitOptions(options.statusbar, frameStatusbar, 36)
     InitOptions(options.spell, frameSpell, 32)
     InitOptions(options.font, frameFont, 32)
+    InitVariablesFrame()
 end)
 
 InterfaceOptions_AddCategory(frame)
@@ -720,6 +735,7 @@ InterfaceOptions_AddCategory(frameNPC)
 InterfaceOptions_AddCategory(frameStatusbar)
 InterfaceOptions_AddCategory(frameSpell)
 InterfaceOptions_AddCategory(frameFont)
+InterfaceOptions_AddCategory(frameVariables)
 SLASH_TinyTooltip1 = "/tinytooltip"
 SLASH_TinyTooltip2 = "/tt"
 SLASH_TinyTooltip3 = "/tip"

@@ -1,10 +1,25 @@
-lightweight tag a298c32757ed95a0ddcbae19fc570bba4f6f8dca r41
+lightweight tag 9857df64491445fc7414b120563cbfeff4f0e4b5 r42
 Author:	MysticalOS <mysticalosx@gmail.com>
-Date:	Tue Apr 16 21:24:10 2019 -0400
+Date:	Tue Jun 25 10:41:31 2019 -0400
 
-commit a298c32757ed95a0ddcbae19fc570bba4f6f8dca
+commit 9857df64491445fc7414b120563cbfeff4f0e4b5
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Tue Apr 16 21:24:10 2019 -0400
+Date:   Tue Jun 25 10:41:31 2019 -0400
 
-    Fix pkgmeta
+    Fixed couple errors
+
+commit 7c1b62009c2c34e5c3a030b3688fe56b3a26e856
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Tue Jun 25 10:33:52 2019 -0400
+
+    Migrated all mods to new countdown feature
+    Bumped TOC files
+    Disabled Model viewer playsoundfile in mods to avoid lua errors (since these aren't converted to soundkit yet)
+    Updated some textures to use file data id instead of texture path, in some legacy mods that still use direct textures instead of GetSpellTexture
+
+commit 57118d0c318197279f109fbc1f032d0fa5f9a842
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Mon May 20 21:02:31 2019 -0400
+
+    Push this change to git to test signing
 

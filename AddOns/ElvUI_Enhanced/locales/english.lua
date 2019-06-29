@@ -1,12 +1,12 @@
 -- English localization file for enUS and enGB.
-local AceLocale = LibStub:GetLibrary("AceLocale-3.0");
-local L = AceLocale:NewLocale("ElvUI", "enUS", true);
+local E = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local L = E.Libs.ACL:NewLocale("ElvUI", "enUS", true, true)
 
 if not L then return end
 
 -- Init
 L["ENH_LOGIN_MSG"] = "You are using |cff1784d1ElvUI Enhanced Again|r |cffff8000(BfA)|r version %s%s|r."
-L["Your version of ElvUI is to old (required v10.75 or higher). Please, download the latest version from tukui.org."] = true
+L["Your version of ElvUI is to old (required v11 or higher). Please, download the latest version from tukui.org."] = true
 
 -- Equipment
 L["Equipment"] = true

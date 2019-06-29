@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2342, "DBM-ZuldazarRaid", 2, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019042200858")
+mod:SetRevision("2019061001341")
 mod:SetCreatureID(145261)
 mod:SetEncounterID(2271)
 --mod:DisableESCombatDetection()
@@ -82,7 +82,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(19495))
 local timerThiefsBane					= mod:NewBuffFadesTimer(30, 287424, nil, nil, nil, 3)
 --Stage One: Raiding The Vault
 local timerCrushCD						= mod:NewCDSourceTimer(55, 283604, nil, nil, nil, 3)--Both
-local timerChaoticDisplacementCD		= mod:NewCDTimer(30.3, 289383, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)--Mythic
+local timerChaoticDisplacementCD		= mod:NewCDTimer(30.3, 289383, nil, nil, nil, 3, nil, DBM_CORE_MYTHIC_ICON)--Mythic
 ----The Hand of In'zashi
 local timerVolatileChargeCD				= mod:NewCDTimer(12.1, 283507, nil, nil, nil, 3)
 ----Yalat's Bulwark
@@ -101,10 +101,6 @@ local timerCoinSweepCD					= mod:NewCDTimer(10.9, 287037, nil, "Tank", nil, 5, n
 local timerSurgingGoldCD				= mod:NewCDTimer(42.5, 289155, nil, nil, nil, 3)--Real timer needed, using AI tech for now
 
 --local berserkTimer					= mod:NewBerserkTimer(600)
-
---local countdownCollapsingWorld			= mod:NewCountdown(50, 243983, true, 3, 3)
---local countdownRupturingBlood				= mod:NewCountdown("Alt12", 244016, false, 2, 3)
---local countdownFelstormBarrage			= mod:NewCountdown("AltTwo32", 244000, nil, nil, 3)
 
 mod:AddNamePlateOption("NPAuraOnGoldenRadiance", 289776)
 --mod:AddRangeFrameOption("8/10")
@@ -363,11 +359,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnVolatileCharge:Show()
 			specWarnVolatileCharge:Play("runout")
 			yellVolatileCharge:Yell()
-			local spellName, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
-			if expireTime then
-				local remaining = expireTime-GetTime()
-				yellVolatileChargeFade:Countdown(remaining)
-			end
+			yellVolatileChargeFade:Countdown(spellId)
 		else
 			warnVolatileCharge:CombinedShow(0.3, args.destName)
 		end
@@ -377,7 +369,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnHexofLethargy:Play("stopmove")
 			yellHexofLethargy:Yell()
 			yellHexofLethargyFade:Cancel()
-			yellHexofLethargyFade:Countdown(30)
+			yellHexofLethargyFade:Countdown(spellId)
 		else
 			warnHexofLethargy:CombinedShow(0.3, args.destName)
 		end
@@ -386,7 +378,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnLiquidGold:Show()
 			specWarnLiquidGold:Play("runout")
 			yellLiquidGold:Yell()
-			yellLiquidGoldFade:Countdown(12)
+			yellLiquidGoldFade:Countdown(spellId)
 		else
 			warnLiquidGold:CombinedShow(0.3, args.destName)
 		end
@@ -394,7 +386,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnCoinShower:Show(GROUP)
 			yellCoinShower:Yell()
-			yellCoinShowerFade:Countdown(10)
+			yellCoinShowerFade:Countdown(spellId)
 		elseif not self:IsTank() then--Exclude only tanks
 			specWarnCoinShower:Show(args.destName)
 		end

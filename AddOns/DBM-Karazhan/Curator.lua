@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Curator", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019041710011")
+mod:SetRevision("20190625143429")
 mod:SetCreatureID(15691)
 mod:SetEncounterID(656)
 mod:SetModelID(16958)
@@ -12,7 +12,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 30235"
 )
 
-local warnAdd			= mod:NewAnnounce("warnAdd", 3, "Interface\\Icons\\Spell_Nature_WispSplode")
+local warnAdd			= mod:NewAnnounce("warnAdd", 3, "136116")
 local warnEvo			= mod:NewSpellAnnounce(30254, 2)
 local warnArcaneInfusion= mod:NewSpellAnnounce(30403, 4)
 

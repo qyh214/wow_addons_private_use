@@ -112,7 +112,6 @@ L:SetOptionLocalization({
 	TimerEggWeaken		= "Mostrar temporizador para cuando se regenere $spell:87654",
 	TimerOrbs			= "Mostrar temporizador para siguientes orbes (estimación; puede no ser preciso)",
 	SetIconOnOrbs		= "Poner iconos en jugadores con amenaza cuando aparecen los orbes (posibles objetivos de los orbes)",
-	OrbsCountdown		= "Reproducir sonido de cuenta atrás para los orbes",
 	InfoFrame			= "Mostrar marco de información de jugadores con amenaza"
 })
 

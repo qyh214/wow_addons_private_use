@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2353, "DBM-EternalPalace", nil, 1179)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019051765919")
+mod:SetRevision("2019062320203")
 mod:SetCreatureID(152364)
 mod:SetEncounterID(2305)
 mod:SetZone()
@@ -13,7 +13,7 @@ mod:SetUsedIcons(1, 2)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 296546 296459 296894 302465 295916 296701",
+	"SPELL_CAST_START 296546 296459 296894 302465 295916 296701 304098",
 	"SPELL_CAST_SUCCESS 296737",
 	"SPELL_AURA_APPLIED 296566 296737",
 	"SPELL_AURA_REMOVED 296737",
@@ -23,7 +23,13 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
---TODO, verify correct unshackled power spellid for LFR or mythic
+--TODO, verify correct unshackled power spellid for LFR
+--TODO, see if heroic timers changed.
+--[[
+(ability.id = 296546 or ability.id = 296459 or ability.id = 296894 or ability.id = 302465 or ability.id = 295916 or ability.id = 296701) and type = "begincast"
+ or ability.id = 296737 and type = "cast"
+ or type = "death" and target.id = 152512
+--]]
 local warnArcanadoBurst					= mod:NewSpellAnnounce(296430, 2)
 local warnSquallTrap					= mod:NewSpellAnnounce(296459, 4)
 local warnArcaneBomb					= mod:NewTargetNoFilterAnnounce(296737, 4)
@@ -42,20 +48,16 @@ local specWarnGaleBuffet				= mod:NewSpecialWarningSpell(296701, nil, nil, nil, 
 
 --Rising Fury
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20076))
-local timerTideFistCD					= mod:NewNextCountTimer(58.2, 296546, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerTideFistCD					= mod:NewNextCountTimer(58.2, 296546, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, mod:IsTank() and 2, 4)
 local timerArcanadoBurstCD				= mod:NewNextCountTimer(58.2, 296430, nil, nil, nil, 3)
-local timerArcaneBombCD					= mod:NewNextCountTimer(58.2, 296737, nil, nil, nil, 3)
-local timerUnshacklingPowerCD			= mod:NewNextCountTimer(58.2, 296894, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
-local timerAncientTempestCD				= mod:NewNextTimer(95.9, 152364, nil, nil, nil, 6)
+local timerArcaneBombCD					= mod:NewNextCountTimer(58.2, 296737, nil, "-Tank", nil, 3, nil, nil, nil, 3, 4)
+local timerUnshacklingPowerCD			= mod:NewNextCountTimer(58.2, 296894, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON, nil, 1, 4)
+local timerAncientTempestCD				= mod:NewNextTimer(95.9, 295916, nil, nil, nil, 6)
 --Raging Storm
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20078))
-local timerGaleBuffetCD					= mod:NewCDTimer(23.1, 296701, nil, nil, nil, 2)
+local timerGaleBuffetCD					= mod:NewCDTimer(22.7, 296701, nil, nil, nil, 2)
 
 --local berserkTimer					= mod:NewBerserkTimer(600)
-
-local countdownUnshacklingPower			= mod:NewCountdown(58, 296894)
-local countdownTideFist					= mod:NewCountdown("Alt60", 296546, "Tank")
-local countdownArcaneBomb				= mod:NewCountdown("AltTwo60", 296737, "-Tank")
 
 --mod:AddRangeFrameOption(6, 264382)
 --mod:AddInfoFrameOption(275270, true)
@@ -67,10 +69,32 @@ mod.vb.tideFistCount = 0
 mod.vb.arcaneBombCount = 0
 mod.vb.arcaneBombicon = 1
 mod.vb.tempestStage = false
-local arcanadoTimers = {6.0, 12.0, 13.1, 10.9, 17.1, 6.9, 12.0}
-local tideFistTimers = {17.0, 20.0, 22.1, 17.9}
-local unshackledPowerTimers = {10.0, 18.0, 9.1, 17.0, 18.0}
-local arcaneBombTimers = {7.0, 20.0, 20.0, 20.0, 26.2}
+mod.vb.addsLeft = 1
+mod.vb.difficultyName = "None"
+local arcanadoTimers = {
+	["lfr"] = {5.9, 12.0, 13.1, 10.5, 12.0, 13.1, 10.6},--Not verified
+	["normal"] = {5.9, 12.0, 13.1, 10.5, 12.0, 13.1, 10.6},
+	["heroic"] = {5.9, 12.0, 13.1, 10.5, 12.0, 13.1, 10.6},--Not Verified, but old ones were scrapped
+	["mythic"] = {5.9, 12.0, 13.1, 10.5, 12.0, 13.1, 10.6}
+}
+local tideFistTimers = {
+	["lfr"] = {15.1, 20.0, 19.0, 20.0},--Not verified
+	["normal"] = {15.1, 20.0, 19.0, 20.0},
+	["heroic"] = {15.1, 20.0, 19.0, 20.0},--Not Verified, but old ones were scrapped
+	["mythic"] = {15.1, 20.0, 19.0, 20.0}
+}
+local unshackledPowerTimers = {
+	["lfr"] = {10.0, 18.0, 18.0, 18.0, 18.0},--Not verified
+	["normal"] = {10.0, 18.0, 18.0, 18.0, 18.0},--Same as mythic
+	["heroic"] = {10.0, 18.0, 18.0, 18.0, 18.0},--Not Verified, but old ones were scrapped
+	["mythic"] = {10.0, 18.0, 18.0, 18.0, 18.0}
+}
+local arcaneBombTimers = {
+	["lfr"] = {7.1, 19.9, 22.1, 18.0, 25.5},--Not verified
+	["normal"] = {7.1, 19.9, 22.1, 18.0, 25.5},--Same as Mythic
+	["heroic"] = {7.1, 19.9, 22.1, 18.0, 25.5},--Not Verified, but old ones were scrapped
+	["mythic"] = {7.1, 19.9, 22.1, 18.0, 25.5}
+}
 
 function mod:OnCombatStart(delay)
 	self.vb.unshackledCount = 0
@@ -79,14 +103,21 @@ function mod:OnCombatStart(delay)
 	self.vb.arcaneBombCount = 0
 	self.vb.arcaneBombicon = 1
 	self.vb.tempestStage = false
+	--Seem same in heroic and mythic thus far
 	timerArcanadoBurstCD:Start(6-delay, 1)
 	timerArcaneBombCD:Start(7-delay, 1)
-	countdownArcaneBomb:Start(7-delay)
 	timerUnshacklingPowerCD:Start(10-delay, 1)
-	countdownUnshacklingPower:Start(10-delay)
 	timerTideFistCD:Start(15-delay, 1)
-	countdownTideFist:Start(15-delay)
 	timerAncientTempestCD:Start(95.8)
+	if self:IsMythic() then
+		self.vb.difficultyName = "mythic"
+	elseif self:IsHeroic() then
+		self.vb.difficultyName = "heroic"
+	elseif self:IsNormal() then
+		self.vb.difficultyName = "normal"
+	else
+		self.vb.difficultyName = "lfr"
+	end
 end
 
 function mod:OnCombatEnd()
@@ -106,40 +137,47 @@ function mod:SPELL_CAST_START(args)
 			specWarnTideFistCast:Show()
 			specWarnTideFistCast:Play("defensive")
 		end
-		local timer = tideFistTimers[self.vb.tideFistCount+1]
+		local timer = tideFistTimers[self.vb.difficultyName][self.vb.tideFistCount+1]
 		if timer then
 			timerTideFistCD:Start(timer, self.vb.tideFistCount+1)
-			countdownTideFist:Start(timer)
 		end
 	elseif spellId == 296459 then
 		warnSquallTrap:Show()
-	elseif spellId == 296894 or spellId == 302465 then--296894 verified, 302465 unknown (maybe lfr or mythic)
+	elseif spellId == 296894 or spellId == 302465 then--296894 verified heroic and mythic, 302465 unknown (maybe lfr)
 		self.vb.unshackledCount = self.vb.unshackledCount + 1
 		specWarnUnshackledPower:Show(self.vb.unshackledCount)
 		specWarnUnshackledPower:Play("aesoon")
-		local timer = unshackledPowerTimers[self.vb.unshackledCount+1]
+		local timer = unshackledPowerTimers[self.vb.difficultyName][self.vb.unshackledCount+1]
 		if timer then
 			timerUnshacklingPowerCD:Start(timer, self.vb.unshackledCount+1)
-			countdownUnshacklingPower:Start(timer)
 		end
 	elseif spellId == 295916 then--Ancient Tempest (phase change)
 		self.vb.tempestStage = true
 		self.vb.arcaneBombCount = 0
+		if self:IsMythic() then
+			self.vb.addsLeft = 2
+		else
+			self.vb.addsLeft = 1
+		end
 		timerTideFistCD:Stop()
-		countdownTideFist:Cancel()
 		timerArcanadoBurstCD:Stop()
 		timerArcaneBombCD:Stop()
-		countdownArcaneBomb:Cancel()
 		timerUnshacklingPowerCD:Stop()
 		specWarnAncientTempest:Show()
 		specWarnAncientTempest:Play("phasechange")
-		timerArcaneBombCD:Start(17.1, 1)
-		countdownArcaneBomb:Start(17.1)
-		timerGaleBuffetCD:Start(22)
-	elseif spellId == 296701 then
-		specWarnGaleBuffet:Show()
-		specWarnGaleBuffet:Play("carefly")
-		timerGaleBuffetCD:Start()
+		if self:IsMythic() then
+			timerArcaneBombCD:Start(12.6, 1)
+			timerGaleBuffetCD:Start(18)
+		else
+			timerArcaneBombCD:Start(17.1, 1)
+			timerGaleBuffetCD:Start(22)
+		end
+	elseif spellId == 296701 or spellId == 304098 then
+		if self:CheckBossDistance(args.sourceGUID, true, 34471) then--43 yards
+			specWarnGaleBuffet:Show()
+			specWarnGaleBuffet:Play("carefly")
+		end
+		timerGaleBuffetCD:Start(nil, args.sourceGUID)
 	end
 end
 
@@ -148,10 +186,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 296737 and self:AntiSpam(5, 1) then
 		self.vb.arcaneBombicon = 1
 		self.vb.arcaneBombCount = self.vb.arcaneBombCount + 1
-		local timer = self.vb.tempestStage and 20 or arcaneBombTimers[self.vb.arcaneBombCount+1]
+		local timer = self.vb.tempestStage and 20 or arcaneBombTimers[self.vb.difficultyName][self.vb.arcaneBombCount+1]
 		if timer then
 			timerArcaneBombCD:Start(timer, self.vb.arcaneBombCount+1)
-			countdownArcaneBomb:Start(timer)
 		end
 	end
 end
@@ -170,7 +207,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnArcaneBomb:Show()
 			specWarnArcaneBomb:Play("runout")
 			yellArcaneBomb:Yell(icon, icon, icon)
-			yellArcaneBombFades:Countdown(10, nil, icon)
+			yellArcaneBombFades:Countdown(spellId, nil, icon)
 		end
 		if self.Options.SetIconOnArcaneBomb then
 			self:SetIcon(args.destname, self.vb.arcaneBombicon)
@@ -205,21 +242,21 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 152512 then--Stormwraith
-		self.vb.tempestStage = false
-		self.vb.unshackledCount = 0
-		self.vb.arcanadoCount = 0
-		self.vb.tideFistCount = 0
-		self.vb.arcaneBombCount = 0
-		timerGaleBuffetCD:Stop()
-		timerArcaneBombCD:Stop()
-		countdownArcaneBomb:Cancel()
-		timerArcanadoBurstCD:Start(6, 1)
-		timerArcaneBombCD:Start(7, 1)
-		countdownArcaneBomb:Start(7)
-		timerUnshacklingPowerCD:Start(10, 1)
-		timerTideFistCD:Start(15, 1)
-		countdownTideFist:Start(15)
-		timerAncientTempestCD:Start(95.8)
+		timerGaleBuffetCD:Stop(args.destGUID)
+		self.vb.addsLeft = self.vb.addsLeft - 1
+		if self.vb.addsLeft == 0 then
+			self.vb.tempestStage = false
+			self.vb.unshackledCount = 0
+			self.vb.arcanadoCount = 0
+			self.vb.tideFistCount = 0
+			self.vb.arcaneBombCount = 0
+			timerArcaneBombCD:Stop()
+			timerArcanadoBurstCD:Start(6, 1)
+			timerArcaneBombCD:Start(7, 1)
+			timerUnshacklingPowerCD:Start(10, 1)
+			timerTideFistCD:Start(15, 1)
+			timerAncientTempestCD:Start(95.8)
+		end
 	end
 end
 
@@ -227,7 +264,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 296428 then--Arcanado Burst
 		self.vb.arcanadoCount = self.vb.arcanadoCount + 1
 		warnArcanadoBurst:Show(self.vb.arcanadoCount)
-		local timer = arcanadoTimers[self.vb.arcanadoCount+1]
+		local timer = arcanadoTimers[self.vb.difficultyName][self.vb.arcanadoCount+1]
 		if timer then
 			timerArcanadoBurstCD:Start(timer, self.vb.arcanadoCount+1)
 		end

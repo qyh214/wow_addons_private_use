@@ -151,7 +151,7 @@
                 </Layers>
             </Frame>
 
-            <Frame name="Narci_TitleManager_TitleTooltip" parentKey="TooltipFrame" FrameLevel="30" Alpha="0">
+            <Frame name="Narci_TitleManager_TitleTooltip" parentKey="TooltipFrame" frameLevel="30" Alpha="0">
                 <Size x="240" y="60"/>
                 <HitRectInsets>
                     <AbsInset left="-4" right="-4" top="-4" bottom="-4"/>

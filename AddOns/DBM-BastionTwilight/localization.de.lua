@@ -102,7 +102,6 @@ L:SetOptionLocalization({
 	TimerEggWeaken		= "Dauer der Erneuerung des $spell:87654 anzeigen",
 	TimerOrbs			= "Zeige Zeit bis nächste Schattenkugeln erscheinen<br/>(voraussichtlich, kann ungenau sein)",
 	SetIconOnOrbs		= "Setze Zeichen auf Spieler mit Aggro, wenn Schattenkugeln erscheinen<br/>(mögliches Ziel der Schattenkugeln)",
-	OrbsCountdown		= "Spiele akustischen Countdown für Schattenkugeln",
 	InfoFrame			= "Zeige Infofenster für Spieler mit Aggro"
 })
 

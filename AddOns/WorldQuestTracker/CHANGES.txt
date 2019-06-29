@@ -1,10 +1,10 @@
-lightweight tag f78c2b2a9bef6860bf91f8de9f05d34fe1db74c1 v8.1.5.371
+lightweight tag 98c9b2701174d9a8add3f330ccc4849903f84a25 v8.1.5.373
 Author:	Tercioo <terciob19@hotmail.com>
-Date:	Mon May 20 13:02:09 2019 -0300
+Date:	Sat Jun 15 21:47:47 2019 -0300
 
-commit f78c2b2a9bef6860bf91f8de9f05d34fe1db74c1
+commit 98c9b2701174d9a8add3f330ccc4849903f84a25
 Author: Tercioo <terciob19@hotmail.com>
-Date:   Mon May 20 13:02:09 2019 -0300
+Date:   Sat Jun 15 21:47:47 2019 -0300
 
-    Fixed the filter by pass for assault quests on Zandalar and Kultiras continents
+    Wake up Curse Packager
 

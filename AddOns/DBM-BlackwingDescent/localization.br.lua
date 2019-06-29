@@ -153,7 +153,6 @@ L:SetOptionLocalization({
 	NefBreathTimer			= "Exibir cronógrafo para recarga de $spell:94124 (Nefarian)",
 	InfoFrame				= "Exibir quadro de informações da Energia Elétrica de Onyxia",
 	SetWater				= "Automaticamente desabilitar colisão com a água, ao entrar em combate<br/>(habilita novamente, ao sair de combate)",
-	TankArrow				= "Exibe seta do DBM para o kiter dos Guerreiros Animados de Osso<br/>(utilizado em stratégia de um kiter)",--npc 41918
 	SetIconOnCinder			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79339),
 	RangeFrame				= "Exibir medidor de distância (10) para $spell:79339<br/>(Mostra todo mundo se você tiver o debuff, caso contrário, apenas jogadores com ícones)"
 })

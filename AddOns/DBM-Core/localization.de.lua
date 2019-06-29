@@ -19,7 +19,6 @@ DBM_COPY_URL_DIALOG					= "Kopiere URL"
 --Post Patch 7.1
 DBM_CORE_NO_RANGE					= "Das Abstandsradar kann in Instanzen nicht genutzt werden. Es wird stattdessen die alte textbasierte Abstandsanzeige verwendet."
 DBM_CORE_NO_ARROW					= "Der Pfeil kann in Instanzen nicht genutzt werden."
-DBM_CORE_ARROW_SUMMONED				= "Der Pfeil wurde aktiviert. Falls du das nicht manuell gemacht hast, dann hast du ein Addon eines Drittanbieters so konfiguriert, dass es den Pfeil für dich aktiviert."
 DBM_CORE_NO_HUD						= "Die HudMap kann in Instanzen nicht genutzt werden."
 
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "DBM hat das dynamische Abstandsfenster für diesen Kampf deaktiviert, da nicht genügend Informationen vorliegen, auf wieviel versammelte Spieler bei deiner Gruppengröße geprüft werden muss."
@@ -237,11 +236,9 @@ DBM_CORE_SLASHCMD_HELP2				= {
 DBM_CORE_TIMER_USAGE	= {
 	"DBM-Timer Kommandos:",
 	"/dbm timer <sec> <text>: Startet einen <sec> Sekunden langen Timer mit deinem <text>.",
-	"/dbm ctimer <sec> <text>: Startet einen Timer mit Countdown.",
 	"/dbm ltimer <sec> <text>: Startet einen Timer, der automatisch wiederholt wird, bis er abgebrochen wird.",
-	"/dbm cltimer <sec> <text>: Startet einen Timer mit Countdown, der automatisch wiederholt wird, bis er abgebrochen wird.",
-	"/dbm broadcast timer/ctimer/ltimer/cltimer <sec> <text>: schickt den Timer an den Schlachtzug (nur als Leiter/Assistent).",
-	"/dbm timer endloop: Stoppt alle ltimer- und cltimer-Schleifen.",
+	"/dbm broadcast timer/ltimer/cltimer <sec> <text>: schickt den Timer an den Schlachtzug (nur als Leiter/Assistent).",
+	"/dbm timer endloop: Stoppt alle ltimer-.",
 }
 
 DBM_ERROR_NO_PERMISSION				= "Du hast nicht die benötigte Berechtigung für diesen Befehl!"

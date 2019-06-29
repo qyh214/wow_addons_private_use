@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2359, "DBM-EternalPalace", nil, 1179)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019051925059")
+mod:SetRevision("2019062442036")
 mod:SetCreatureID(152852, 152853)--Pashmar 152852, Silivaz 152853
 mod:SetEncounterID(2311)
 mod:SetZone()
@@ -14,8 +14,8 @@ mod:SetUsedIcons(1, 2, 3, 4)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 300088 301807 297325 301947",
-	"SPELL_CAST_SUCCESS 299914 296850",
+	"SPELL_CAST_START 300088 301807 297325 301947 299915 300395",
+	"SPELL_CAST_SUCCESS 296850",
 	"SPELL_AURA_APPLIED 296704 301244 297656 297566 297585 301828 299914 296851",
 	"SPELL_AURA_APPLIED_DOSE 301828",
 	"SPELL_AURA_REMOVED 296704 301244 297656 297566 299914 296851",
@@ -33,6 +33,10 @@ mod:RegisterEventsInCombat(
 --TODO, Frenetic Charge soak priority
 --TODO, at time of testing her decrees don't reset order between pulls, which means decree she starts with is whatever was next from PREVIOUS pull
 --TODO, assess where to put other two countdowns, right now one is on charge, and undecided on 3rd if it should be the run in aoe or run out one
+--[[
+(ability.id = 300088 or ability.id = 301807 or ability.id = 297325 or ability.id = 301947 or ability.id = 299915) and type = "begincast"
+ or (ability.id = 296850) and type = "cast"
+--]]
 --local warnPoweringDown				= mod:NewSpellAnnounce(271965, 2, nil, nil, nil, nil, nil, 2)
 --General
 local warnDesperateMeasures				= mod:NewCastAnnounce(300088, 4)
@@ -78,26 +82,23 @@ local specWarnViolentOutburst			= mod:NewSpecialWarningRun(297325, nil, nil, nil
 local timerDesperateMeasures			= mod:NewCastTimer(10, 271225, nil, nil, nil, 5)
 --Queen Azshara
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20258))
---local timerSummonDecreesCD			= mod:NewNextTimer(40, 297960, nil, nil, nil, 3)
-local timerFormRanksCD					= mod:NewNextTimer(40, 298050, nil, nil, nil, 3)
-local timerRepeatPerformanceCD			= mod:NewNextTimer(40, 301244, nil, nil, nil, 3)
-local timerStandAloneCD					= mod:NewNextTimer(40, 297656, nil, nil, nil, 3)
-local timerDeferredSentenceCD			= mod:NewNextTimer(40, 297566, nil, nil, nil, 3)
-local timerObeyorSufferCD				= mod:NewNextTimer(40, 297585, nil, nil, nil, 3)
+local timerFormRanksCD					= mod:NewNextTimer(40, 298050, nil, nil, nil, 3, nil, nil, nil, 1, 4)
+local timerRepeatPerformanceCD			= mod:NewNextTimer(40, 301244, nil, nil, nil, 3, nil, nil, nil, 1, 4)
+local timerStandAloneCD					= mod:NewNextTimer(40, 297656, nil, nil, nil, 3, nil, nil, nil, 1, 4)
+local timerDeferredSentenceCD			= mod:NewNextTimer(40, 297566, nil, nil, nil, 3, nil, nil, nil, 1, 4)
+local timerObeyorSufferCD				= mod:NewNextTimer(40, 297585, nil, nil, nil, 3, nil, nil, nil, 1, 4)
 --Silivaz the Zealous
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20231))
-local timerFreneticChargeCD				= mod:NewNextTimer(60.6, 299914, nil, nil, nil, 3)
+local timerFreneticChargeCD				= mod:NewNextTimer(60.6, 299914, nil, nil, nil, 3, nil, nil, nil, not mod:IsTank() and 2, 4)
 local timerZealousEruptionCD			= mod:NewNextTimer(104.4, 301807, nil, nil, nil, 2)
 --Pashmar the Fanatical
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20235))
+local timerFerventBoltCD				= mod:NewNextTimer(12.1, 300395, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerFanaticalVerdictCD			= mod:NewNextTimer(26.7, 296850, nil, nil, nil, 3)
 local timerViolentOutburstCD			= mod:NewNextTimer(104.4, 297325, nil, nil, nil, 2)
 local timerPotentSparkCD				= mod:NewNextTimer(92.2, 301947, nil, nil, nil, 1)
 
 --local berserkTimer					= mod:NewBerserkTimer(600)
-
-local countdownSummonDecrees			= mod:NewCountdown(40, 297960)
-local countdownFreneticCharge			= mod:NewCountdown("Alt60", 299914, "-Tank")
 
 mod:AddNamePlateOption("NPAuraOnSoP", 296704)
 --mod:AddRangeFrameOption(6, 264382)
@@ -111,16 +112,34 @@ mod.vb.sentenceActive = 0
 function mod:OnCombatStart(delay)
 	self.vb.sparkIcon = 1
 	self.vb.sentenceActive = 0
-	--ass-shara
-	--timerSummonDecreesCD:Start(1-delay)--used almost instantly on pull anyways
+	--CLEAN THIS MESS UP ON LIVE WITH UPDATED HEROIC TIMERS
+	if self:IsHard() then
+		--Pashmar
+		timerFanaticalVerdictCD:Start(30-delay)
+		--On heroic, azshara casts Form Ranks immediately on pull (still true?)
+		if self:IsMythic() then
+			--ass-shara
+			timerFormRanksCD:Start(30-delay)
+			--Pashmar
+			timerPotentSparkCD:Start(20.2-delay)
+		else
+			timerPotentSparkCD:Start(15.8-delay)
+		end
+	else
+		--Timers for Normal and LFR
+		--ass-shara
+		timerFormRanksCD:Start(30-delay)
+		--Pashmar
+		timerPotentSparkCD:Start(15.8-delay)
+		timerFanaticalVerdictCD:Start(37.3-delay)
+	end
+	--Timers that are same across board
 	--Silivaz
-	timerFreneticChargeCD:Start(30.4-delay)
-	countdownFreneticCharge:Start(30.4-delay)
-	timerZealousEruptionCD:Start(51.1-delay)
+	timerFreneticChargeCD:Start(30-delay)
+	timerZealousEruptionCD:Start(50.7-delay)
 	--Pashmar
-	timerPotentSparkCD:Start(15.8-delay)
-	timerFanaticalVerdictCD:Start(30.4-delay)
-	timerViolentOutburstCD:Start(100.8-delay)
+	timerViolentOutburstCD:Start(100.1-delay)
+	timerFerventBoltCD:Start(5.1-delay)
 	if self.Options.NPAuraOnSoP then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
@@ -152,20 +171,21 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 297325 then
 		specWarnViolentOutburst:Show()
 		specWarnViolentOutburst:Play("justrun")
-		timerViolentOutburstCD:Start()
+		timerViolentOutburstCD:Start(self:IsMythic() and 106 or 104.4)
 	elseif spellId == 301947 then
 		self.vb.sparkIcon = 1
 		warnPotentSpark:Show()
 		timerPotentSparkCD:Start()
+	elseif spellId == 299915 then
+		timerFreneticChargeCD:Start(self:IsMythic() and 40 or 60)
+	elseif spellId == 300395 then
+		timerFerventBoltCD:Start()
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
-	if spellId == 299914 then
-		timerFreneticChargeCD:Start()
-		countdownFreneticCharge:Start(60.6)
-	elseif spellId == 296850 then
+	if spellId == 296850 then
 		timerFanaticalVerdictCD:Start()
 	end
 end
@@ -272,7 +292,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnFreneticCharge:Show(GROUP)
 			specWarnFreneticCharge:Play("gathershare")
 			yellFreneticCharge:Yell()
-			yellFreneticChargeFades:Countdown(4)
+			yellFreneticChargeFades:Countdown(spellId)
 		elseif not DBM:UnitDebuff("player", 297656, 303188, 297585) and not self:IsTank() then--Not tank, or affected by decrees that'd conflict with soaking
 			specWarnFreneticCharge:Show(GROUP)
 			specWarnFreneticCharge:Play("gathershare")
@@ -281,15 +301,12 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetIcon(args.destName, 4)
 		end
 	elseif spellId == 296851 then
-		if args:IsPlayer() then--If you have form ranks, do NOT run out
-			--if not DBM:UnitDebuff("player", 303188) then
-				specWarnFanaticalVerdict:Show()
-				specWarnFanaticalVerdict:Play("runout")
-			--end
+		warnFanaticalVerdict:CombinedShow(0.3, args.destName)
+		if args:IsPlayer() then
+			specWarnFanaticalVerdict:Show()
+			specWarnFanaticalVerdict:Play("runout")
 			yellFanaticalVerdict:Yell()
-			yellFanaticalVerdictFades:Countdown(8)
-		else
-			warnFanaticalVerdict:Show(args.destName)
+			yellFanaticalVerdictFades:Countdown(spellId)
 		end
 	end
 end
@@ -349,20 +366,15 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 	if msg:find("spell:298050") then--Form Ranks (Repeat Performance is next)
 		specWarnFormRanks:Show(L.Circles)
 		specWarnFormRanks:Play("gathershare")
-		timerRepeatPerformanceCD:Start()
-		countdownSummonDecrees:Start(40)
+		timerRepeatPerformanceCD:Start(self:IsMythic() and 30 or self:IsHeroic() and 40 or 60)
 	elseif msg:find("spell:301244") then--Repeat Performance (Stand Alone is next)
-		timerStandAloneCD:Start()
-		countdownSummonDecrees:Start(40)
+		timerStandAloneCD:Start(self:IsMythic() and 30 or self:IsHeroic() and 40 or 60)
 	elseif msg:find("spell:297656") then--Stand Alone (Sentence is next)
-		timerDeferredSentenceCD:Start()
-		countdownSummonDecrees:Start(40)
+		timerDeferredSentenceCD:Start(self:IsMythic() and 30 or self:IsHeroic() and 40 or 60)
 	elseif msg:find("spell:297566") then--Defferred Sentence (Obey is next)
-		timerObeyorSufferCD:Start()
-		countdownSummonDecrees:Start(40)
+		timerObeyorSufferCD:Start(self:IsMythic() and 30 or self:IsHeroic() and 40 or 60)
 	elseif msg:find("spell:297585") then--Obey or Suffer (loops back to form ranks after)
-		timerFormRanksCD:Start()
-		countdownSummonDecrees:Start(40)
+		timerFormRanksCD:Start(self:IsMythic() and 30 or self:IsHeroic() and 40 or 60)
 	end
 end
 

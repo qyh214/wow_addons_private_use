@@ -40,6 +40,8 @@ GarrisonCommander 要塞功能增强（任务指派、含船坞与配置系统�
 
 HandyNotes
 
+Immersion
+
 KeystoneHelper
 
 MikScrollingBattleText（MSBT战斗浮动信息，parrot替代品）

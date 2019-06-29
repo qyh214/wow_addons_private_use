@@ -1,10 +1,15 @@
 local AS = unpack(AddOnSkins)
 
-local _G, CreateFrame = _G, CreateFrame
+-- Cache global variables
+--Lua functions
+local _G = _G
 local unpack, pairs, select, type, assert, next = unpack, pairs, select, type, assert, next
 local strlower, strfind = strlower, strfind
 local CopyTable, tremove = CopyTable, tremove
+--WoW API / Variables
+local CreateFrame = CreateFrame
 local EnumerateFrames = EnumerateFrames
+-- GLOBALS:
 
 -- Add texture id's to be stripped
 -- 137056 -- Interface\\Tooltips\\UI-Tooltip-Background
@@ -171,22 +176,22 @@ function AS:BuildPixelBorders(frame, noSecureHook)
 		borders.CENTER:SetSnapToPixelGrid(false)
 		borders.CENTER:SetTexelSnappingBias(0)
 
-		borders.TOPLEFT:Point("BOTTOMRIGHT", borders.CENTER, "TOPLEFT", 1, -1)
-		borders.TOPRIGHT:Point("BOTTOMLEFT", borders.CENTER, "TOPRIGHT", -1, -1)
-		borders.BOTTOMLEFT:Point("TOPRIGHT", borders.CENTER, "BOTTOMLEFT", 1, 1)
-		borders.BOTTOMRIGHT:Point("TOPLEFT", borders.CENTER, "BOTTOMRIGHT", -1, 1)
+		borders.TOPLEFT:SetPoint("BOTTOMRIGHT", borders.CENTER, "TOPLEFT", 1, -1)
+		borders.TOPRIGHT:SetPoint("BOTTOMLEFT", borders.CENTER, "TOPRIGHT", -1, -1)
+		borders.BOTTOMLEFT:SetPoint("TOPRIGHT", borders.CENTER, "BOTTOMLEFT", 1, 1)
+		borders.BOTTOMRIGHT:SetPoint("TOPLEFT", borders.CENTER, "BOTTOMRIGHT", -1, 1)
 
-		borders.TOP:Point("TOPLEFT", borders.TOPLEFT, "TOPRIGHT", 0, 0)
-		borders.TOP:Point("TOPRIGHT", borders.TOPRIGHT, "TOPLEFT", 0, 0)
+		borders.TOP:SetPoint("TOPLEFT", borders.TOPLEFT, "TOPRIGHT", 0, 0)
+		borders.TOP:SetPoint("TOPRIGHT", borders.TOPRIGHT, "TOPLEFT", 0, 0)
 
-		borders.BOTTOM:Point("BOTTOMLEFT", borders.BOTTOMLEFT, "BOTTOMRIGHT", 0, 0)
-		borders.BOTTOM:Point("BOTTOMRIGHT", borders.BOTTOMRIGHT, "BOTTOMLEFT", 0, 0)
+		borders.BOTTOM:SetPoint("BOTTOMLEFT", borders.BOTTOMLEFT, "BOTTOMRIGHT", 0, 0)
+		borders.BOTTOM:SetPoint("BOTTOMRIGHT", borders.BOTTOMRIGHT, "BOTTOMLEFT", 0, 0)
 
-		borders.LEFT:Point("TOPLEFT", borders.TOPLEFT, "BOTTOMLEFT", 0, 0)
-		borders.LEFT:Point("BOTTOMLEFT", borders.BOTTOMLEFT, "TOPLEFT", 0, 0)
+		borders.LEFT:SetPoint("TOPLEFT", borders.TOPLEFT, "BOTTOMLEFT", 0, 0)
+		borders.LEFT:SetPoint("BOTTOMLEFT", borders.BOTTOMLEFT, "TOPLEFT", 0, 0)
 
-		borders.RIGHT:Point("TOPRIGHT", borders.TOPRIGHT, "BOTTOMRIGHT", 0, 0)
-		borders.RIGHT:Point("BOTTOMRIGHT", borders.BOTTOMRIGHT, "TOPRIGHT", 0, 0)
+		borders.RIGHT:SetPoint("TOPRIGHT", borders.TOPRIGHT, "BOTTOMRIGHT", 0, 0)
+		borders.RIGHT:SetPoint("BOTTOMRIGHT", borders.BOTTOMRIGHT, "TOPRIGHT", 0, 0)
 
 		if not noSecureHook then
 			hooksecurefunc(frame, "SetBackdropColor", AS.HookedSetBackdropColor)
@@ -392,9 +397,9 @@ function AS:SetTemplate(Frame, Template, Texture)
 	AS:BuildPixelBorders(Frame)
 
 	--AS:SetBackdrop(frame, bgFile, edgeSize, insetLeft, insetRight, insetTop, insetBottom)
-	AS:SetBackdrop(Frame, Texture, AS.Mult)
+	AS:SetBackdrop(Frame, Texture, (AS:CheckOption('Theme') == 'TwoPixel' and AS.Mult*2 or AS.Mult))
 
-	if (AS:CheckOption('Theme') == 'TwoPixel' or AS:CheckOption('Theme') == 'ThickBorder') then
+	if AS:CheckOption('Theme') == 'ThickBorder' or AS:CheckOption('Theme') == 'TwoPixel' then
 		for _, Inset in pairs({ 'InsideBorder', 'OutsideBorder' }) do
 			Frame[Inset] = CreateFrame('Frame', nil, Frame)
 			AS:BuildPixelBorders(Frame[Inset], true)
@@ -702,7 +707,7 @@ function AS:SkinEditBox(EditBox, Width, Height)
 	if EditBox.GetTextInsets and EditBox.SetTextInsets then
 		local Left, Right, Top, Bottom = EditBox:GetTextInsets()
 		if (Left == 0 and Right == 0 and Top == 0 and Bottom == 0) then
-			EditBox:SetTextInsets(3, 3, 3, 3)
+			EditBox:SetTextInsets(3, 3, 0, 0)
 		end
 	end
 
@@ -1252,7 +1257,7 @@ function AS:SkinIconTextAndBackgroundWidget(widgetFrame) end
 
 function AS:SkinDoubleIconAndTextWidget(widgetFrame) end
 
-function AS:SKinStackedResourceTrackerWidget(widgetFrame) end
+function AS:SkinStackedResourceTrackerWidget(widgetFrame) end
 
 function AS:SkinIconTextAndCurrenciesWidget(widgetFrame) end
 
@@ -1267,7 +1272,15 @@ function AS:SkinBulletTextListWidget(widgetFrame) end
 
 function AS:SkinScenarioHeaderCurrenciesAndBackgroundWidget(widgetFrame) end
 
-function AS:SkinTextureWithStateWidget(widgetFrame) end
+function AS:SkinTextureAndTextWidget(widgetFrame) end
+
+function AS:SkinSpellDisplay(widgetFrame) end
+
+function AS:SkinDoubleStateIconRow(widgetFrame) end
+
+function AS:SkinTextureAndTextRowWidget(widgetFrame) end
+
+function AS:SkinZoneControl(widgetFrame) end
 
 local W = Enum.UIWidgetVisualizationType;
 AS.WidgetSkinningFuncs = {
@@ -1277,13 +1290,17 @@ AS.WidgetSkinningFuncs = {
 	[W.DoubleStatusBar] = "SkinDoubleStatusBarWidget",
 	[W.IconTextAndBackground] = "SkinIconTextAndBackgroundWidget",
 	[W.DoubleIconAndText] = "SkinDoubleIconAndTextWidget",
-	[W.StackedResourceTracker] = "SKinStackedResourceTrackerWidget",
+	[W.StackedResourceTracker] = "SkinStackedResourceTrackerWidget",
 	[W.IconTextAndCurrencies] = "SkinIconTextAndCurrenciesWidget",
 	[W.TextWithState] = "SkinTextWithStateWidget",
 	[W.HorizontalCurrencies] = "SkinHorizontalCurrenciesWidget",
 	[W.BulletTextList] = "SkinBulletTextListWidget",
 	[W.ScenarioHeaderCurrenciesAndBackground] = "SkinScenarioHeaderCurrenciesAndBackgroundWidget",
-	[W.TextureWithState] = "SkinTextureWithStateWidget"
+	[W.TextureAndText] = "SkinTextureAndTextWidget",
+	[W.SpellDisplay] = "SkinSpellDisplay",
+	[W.DoubleStateIconRow] = "SkinDoubleStateIconRow",
+	[W.TextureAndTextRow] = "SkinTextureAndTextRowWidget",
+	[W.ZoneControl] = "SkinZoneControl",
 }
 
 function AS:SkinWidgetContainer(widgetContainer)

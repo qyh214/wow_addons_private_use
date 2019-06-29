@@ -7,7 +7,7 @@ LibEvent:attachTrigger("tooltip:init", function(self, tip)
     if (tip ~= GameTooltip) then return end
     if (not tip.model) then
         tip.model = CreateFrame("PlayerModel", nil, tip)
-        tip.model:SetSize(90, 90)
+        tip.model:SetSize(100, 100)
         tip.model:SetFacing(-0.25)
         tip.model:SetPoint("BOTTOMRIGHT", tip, "TOPRIGHT", 8, -16)
         tip.model:Hide()

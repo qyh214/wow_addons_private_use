@@ -1,10 +1,25 @@
-lightweight tag 627664fc28f1212344c510040fec4ee03dcdbbec r129
+lightweight tag 517b3a853921479ad1da7e9e94b6206d29585b1b r130
 Author:	MysticalOS <mysticalosx@gmail.com>
-Date:	Wed Apr 17 12:33:49 2019 -0400
+Date:	Tue Jun 25 10:38:27 2019 -0400
 
-commit 627664fc28f1212344c510040fec4ee03dcdbbec
+commit 517b3a853921479ad1da7e9e94b6206d29585b1b
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Wed Apr 17 12:33:49 2019 -0400
+Date:   Tue Jun 25 10:38:27 2019 -0400
 
-    Fix another pkgmeta typo
+    Tsulong to a lua error.
+
+commit 11791be03ea5719d4a975efee149efc687bb8f08
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Tue Jun 25 10:34:17 2019 -0400
+
+    Migrated all mods to new countdown feature
+    Bumped TOC files
+    Disabled Model viewer playsoundfile in mods to avoid lua errors (since these aren't converted to soundkit yet)
+    Updated some textures to use file data id instead of texture path, in some legacy mods that still use direct textures instead of GetSpellTexture
+
+commit eeb1ef181288cb102f4d9626b9abe3c964c48f67
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Thu May 2 23:47:58 2019 -0400
+
+    Add max levels to timeless island world bosses, if player level exceeds this level (and they are on dbm core 8.1.24+), no more alerts.
 

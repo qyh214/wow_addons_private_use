@@ -233,6 +233,7 @@ end)
 
 --@see InspectCore.lua 
 LibEvent:attachTrigger("UNIT_INSPECT_READY, UNIT_REINSPECT_READY", function(self, data)
+    if (TinyInspectDB and not TinyInspectDB.ShowInspectItemSheet) then return end
     if (InspectFrame and InspectFrame.unit and UnitGUID(InspectFrame.unit) == data.guid) then
         local frame = ShowInspectItemListFrame(InspectFrame.unit, InspectFrame, data.ilevel, data.maxLevel)
         LibEvent:trigger("INSPECT_FRAME_COMPARE", frame)

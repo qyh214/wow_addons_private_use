@@ -58,7 +58,7 @@
 			<Font font="Interface\AddOns\Narcissus\Font\SemplicitaPro-Semibold.otf" height="9">
 				<Shadow>
 					<Offset>
-						<AbsDimension x="1.2" y="-1.2"/>
+						<AbsDimension x="0.6" y="-0.6"/>
 					</Offset>
 					<Color r="0" g="0" b="0"/>
 				</Shadow>
@@ -68,7 +68,7 @@
 			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="9">
 				<Shadow>
 					<Offset>
-						<AbsDimension x="1.2" y="-1.2"/>
+						<AbsDimension x="0.6" y="-0.6"/>
 					</Offset>
 					<Color r="0" g="0" b="0"/>
 				</Shadow>
@@ -78,7 +78,7 @@
 			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="9">
 				<Shadow>
 					<Offset>
-						<AbsDimension x="1.2" y="-1.2"/>
+						<AbsDimension x="0.6" y="-0.6"/>
 					</Offset>
 					<Color r="0" g="0" b="0"/>
 				</Shadow>
@@ -88,7 +88,7 @@
 			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="9">
 				<Shadow>
 					<Offset>
-						<AbsDimension x="1.2" y="-1.2"/>
+						<AbsDimension x="0.6" y="-0.6"/>
 					</Offset>
 					<Color r="0" g="0" b="0"/>
 				</Shadow>
@@ -98,7 +98,7 @@
 			<Font font="Interface\AddOns\Narcissus\Font\NotoSans-Medium.ttf" height="9">
 				<Shadow>
 					<Offset>
-						<AbsDimension x="1.2" y="-1.2"/>
+						<AbsDimension x="0.6" y="-0.6"/>
 					</Offset>
 					<Color r="0" g="0" b="0"/>
 				</Shadow>
