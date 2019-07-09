@@ -1,14 +1,9 @@
 ------------------------------------------------------------------------
-r761 | nebula169 | 2018-08-09 04:38:07 +0000 (Thu, 09 Aug 2018) | 1 line
-Changed paths:
-   M /trunk/modules/Tweaks.lua
-
-Tweaks: Handle the Animal Companion Hunter pet
-------------------------------------------------------------------------
-r760 | nebula169 | 2018-08-09 04:37:41 +0000 (Thu, 09 Aug 2018) | 1 line
+r763 | funkydude | 2019-07-02 16:55:47 +0000 (Tue, 02 Jul 2019) | 1 line
 Changed paths:
    M /trunk/Skada.lua
+   M /trunk/Skada.toc
 
-Reset the LDB text when reset
+Fix sound registration & bump toc
 ------------------------------------------------------------------------
 

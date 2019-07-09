@@ -1,34 +1,64 @@
-lightweight tag c14be3c07f2b1b2ea269fc41d4eb9e5b7770bff5 1.4.6
-Author:	Zhou Fang <fang2hou@outlook.com>
-Date:	Fri Jun 7 12:55:44 2019 +0900
+lightweight tag 4106cf9aee322cdf11a4db389b8e67b712ca055f 1.4.7
+Author:	GitHub <noreply@github.com>
+Date:	Mon Jul 8 12:43:06 2019 -0700
 
-commit c14be3c07f2b1b2ea269fc41d4eb9e5b7770bff5
-Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Fri Jun 7 12:55:44 2019 +0900
+commit 4106cf9aee322cdf11a4db389b8e67b712ca055f
+Author: SomeBlu <someblu@users.noreply.github.com>
+Date:   Mon Jul 8 12:43:06 2019 -0700
 
-    1.4.6
+    Update README.md
 
-commit 70993212524815b120be4205431e78894be07a25
+commit e4e607fccc19716b56d16d427642d2d3daba3e38
+Author: SomeBlu <someblu@users.noreply.github.com>
+Date:   Mon Jul 8 12:42:22 2019 -0700
+
+    Update CHANGELOG.md
+
+commit ac11de0bd34a41ba72c0f9ef34ee1011c2546d38
 Author: SomeBlu <webmaster@someblu.com>
-Date:   Tue May 28 04:52:45 2019 -0700
+Date:   Mon Jul 8 12:38:29 2019 -0700
 
-    修复backdrop可能为nil的报错
+    添加作者以及修改者信息
 
-commit 21f896d52632f0b715162b85d1be14219d1b8977
-Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Tue May 28 16:18:25 2019 +0900
+commit 1dfd452deabb8c32622133fc3ecdbd3ce38ebd0d
+Author: SomeBlu <webmaster@someblu.com>
+Date:   Mon Jul 8 12:27:47 2019 -0700
 
-    添加開關音效音樂的文字美化
+    修正暴雪框体增强模块，并添加艾泽利特特质、精华、重铸界面的支持。
 
-commit 69276cbfb46cb5f5f6cd240dc909074997fa014e
-Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Mon May 27 11:01:18 2019 +0900
+commit 30c0f378b08a152eabfceb0a43bafc0de0b08480
+Author: ChihChung Ma <mccjohnny@gmail.com>
+Date:   Wed Jul 3 21:49:57 2019 +0800
 
-    更新試衣間框架美化
+    fix stupid mistake..
 
-commit ff76d0c17ad695795d769479d831ad581fd45a55
-Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Wed May 15 13:56:00 2019 +0900
+commit 1dfd452deabb8c32622133fc3ecdbd3ce38ebd0d
+Author: SomeBlu <webmaster@someblu.com>
+Date:   Mon Jul 8 12:27:47 2019 -0700
 
-    更新说明文字
+    修正暴雪框体增强模块，并添加艾泽利特特质、精华、重铸界面的支持。
+
+commit 30c0f378b08a152eabfceb0a43bafc0de0b08480
+Author: ChihChung Ma <mccjohnny@gmail.com>
+Date:   Wed Jul 3 21:49:57 2019 +0800
+
+    fix stupid mistake..
+
+commit 12afed05e1994aafdc09405823d1964b9fd0c623
+Author: ChihChung Ma <mccjohnny@gmail.com>
+Date:   Sun Jun 9 04:30:44 2019 +0800
+
+    補上團隊標記列的翻譯
+
+commit 12afed05e1994aafdc09405823d1964b9fd0c623
+Author: ChihChung Ma <mccjohnny@gmail.com>
+Date:   Sun Jun 9 04:30:44 2019 +0800
+
+    補上團隊標記列的翻譯
+
+commit 19f689e5bcbfef019975b87e58d52c067e4ecedf
+Author: ChihChung Ma <mccjohnny@gmail.com>
+Date:   Sun Jun 9 04:29:19 2019 +0800
+
+    移植ElvUI_Enhanced的團隊標記列
 

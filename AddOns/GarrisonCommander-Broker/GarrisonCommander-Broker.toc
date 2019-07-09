@@ -1,11 +1,11 @@
-## Interface: 80100
+## Interface: 80200
 ## Title: GarrisonCommander-Broker
 ## Notes: Data-Broker for GarrisonCommander
 ## Notes-itIT: Data-Broker per GarrisonCommander
 ## Notes-frFR: Data-Broker pour GarrisonCommander
 ## Author: Alar of Runetotem
-## Version: 3.1.1 1.1.0
-## X-Revision: 16d16d4
+## Version: 3.2.0 1.1.0
+## X-Revision: c82db70
 ## eMail: alar@aspide.it
 ## URL: http://wow.aspide.it
 ## OptionalDeps: Titan, Bazooka, ChocolateBar , FuBar , LibDataBroker-1.1, LibDebug
@@ -16,7 +16,7 @@
 ## X-Category: Garrison
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it
-## X-Date: 2019-05-14T20:32:24Z
+## X-Date: 2019-07-01T8:29:13Z
 ## X-Embeds:
 embeds.xml
 localization.lua

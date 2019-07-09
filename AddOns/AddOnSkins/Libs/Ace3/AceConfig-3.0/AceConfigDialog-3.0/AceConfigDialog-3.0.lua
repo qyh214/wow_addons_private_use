@@ -7,7 +7,7 @@ local LibStub = LibStub
 local gui = LibStub("AceGUI-3.0")
 local reg = LibStub("AceConfigRegistry-3.0")
 
-local MAJOR, MINOR = "AceConfigDialog-3.0", 69
+local MAJOR, MINOR = "AceConfigDialog-3.0", 73
 local AceConfigDialog, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not AceConfigDialog then return end
@@ -296,7 +296,7 @@ local function compareOptions(a,b)
 		return NameA:upper() < NameB:upper()
 	end
 	if OrderA < 0 then
-		if OrderB > 0 then
+		if OrderB >= 0 then
 			return false
 		end
 	else
@@ -1049,6 +1049,10 @@ local function CreateControl(userControlType, fallbackControlType)
 	return control
 end
 
+local function sortTblAsStrings(x,y)
+	return tostring(x) < tostring(y) -- Support numbers as keys
+end
+
 --[[
 	options - root of the options table being fed
 	container - widget that controls will be placed in
@@ -1175,6 +1179,7 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 
 				elseif v.type == "select" then
 					local values = GetOptionsMemberValue("values", v, options, path, appName)
+					local sorting = GetOptionsMemberValue("sorting", v, options, path, appName)
 					if v.style == "radio" then
 						local disabled = CheckOptionDisabled(v, options, path, appName)
 						local width = GetOptionsMemberValue("width",v,options,path,appName)
@@ -1185,12 +1190,14 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 
 						control:PauseLayout()
 						local optionValue = GetOptionsMemberValue("get",v, options, path, appName)
-						local t = {}
-						for value, text in pairs(values) do
-							t[#t+1]=value
+						if not sorting then
+							sorting = {}
+							for value, text in pairs(values) do
+								sorting[#sorting+1]=value
+							end
+							tsort(sorting, sortTblAsStrings)
 						end
-						tsort(t)
-						for k, value in ipairs(t) do
+						for k, value in ipairs(sorting) do
 							local text = values[value]
 							local radio = gui:Create("CheckBox")
 							radio:SetLabel(text)
@@ -1224,7 +1231,7 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 							itemType = nil
 						end
 						control:SetLabel(name)
-						control:SetList(values, nil, itemType)
+						control:SetList(values, sorting, itemType)
 						local value = GetOptionsMemberValue("get",v, options, path, appName)
 						if not values[value] then
 							value = nil
@@ -1443,6 +1450,7 @@ local function TreeOnButtonEnter(widget, event, uniquevalue, button)
 	local desc = GetOptionsMemberValue("desc", group, options, feedpath, appName)
 
 	GameTooltip:SetOwner(button, "ANCHOR_NONE")
+	GameTooltip:ClearAllPoints()
 	if widget.type == "TabGroup" then
 		GameTooltip:SetPoint("BOTTOM",button,"TOP")
 	else

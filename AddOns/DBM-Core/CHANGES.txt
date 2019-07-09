@@ -1,22 +1,80 @@
-lightweight tag e6c5e9a09d6d65c97bf4e13e82d1bf2e67399f29 8.2.1
+lightweight tag c0fb5a174569ff4ca0ce210c21a45f5971e3ba7e 8.2.2
 Author:	MysticalOS <mysticalosx@gmail.com>
-Date:	Wed Jun 26 14:04:14 2019 -0400
+Date:	Sat Jul 6 21:22:51 2019 -0400
 
-commit e6c5e9a09d6d65c97bf4e13e82d1bf2e67399f29
+commit c0fb5a174569ff4ca0ce210c21a45f5971e3ba7e
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Wed Jun 26 14:04:14 2019 -0400
+Date:   Sat Jul 6 21:22:51 2019 -0400
 
-    Bump version
+    Added additional creature load conditions for Ulmath and Wekemara to ensure module loads even if main boss is submerged or whatever, via their adds
+    Added preliminary warnings/AI timers for Ulmath and Wekemara as well.
 
-commit 71b4061d4d841f79bb667117d2951b92d7eaecbd
+commit f4c8bfb738a7739130ecaad7632387cac3233af7
+Author: Cramerr <51456031+Cramerr@users.noreply.github.com>
+Date:   Wed Jul 3 23:14:59 2019 -0400
+
+    Queen's Court Form Ranks cast (#30)
+    
+    * Update TheQueensCourt.lua
+    
+    Make form ranks cast the same between all difficulties
+    
+    * Update TheQueensCourt.lua
+    
+    spacing
+
+commit a1a1d8031adb4e228ed6a374164e584f2a2115d9
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Wed Jun 26 13:56:12 2019 -0400
+Date:   Wed Jul 3 11:38:57 2019 -0400
 
-    Fix another situation where DBM core attempted to playsoundfile "None" do to a bad option check in victory sound handler
+    Fix another invalid voice pack media path
 
-commit 57d643cabb036f61cce0d80836a8532ae06c9dbb
+commit 8af840fe718a9607e5cf73e9396d5d400bf01d6b
 Author: MysticalOS <mysticalosx@gmail.com>
-Date:   Wed Jun 26 10:58:24 2019 -0400
+Date:   Mon Jul 1 11:45:22 2019 -0400
 
-    Fix a missed playsoundfile usage i didn't change over to soundkit
+    Fix a playsoundfile error that could occur if users voice pack was missing, their afk flag was set to true, and they entered combat, and the afk combat alert sound option was enabled.
+
+commit af70fe861efa6f7c307a60b9618425d0bc5812e7
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Sat Jun 29 18:05:57 2019 -0400
+
+    Fix same sound error in aother line
+
+commit a3f32c5b4b283ac929513814237508a5ed24f6ed
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Sat Jun 29 12:04:08 2019 -0400
+
+    Fix invalid voice name on ivus Closes #29
+
+commit f3d0b691fca177518eb58fcf87f0e12afd3d7967
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Thu Jun 27 22:22:21 2019 -0400
+
+    Try to bump twtich into grabbing new alpha file
+    also, these build checks no longer needed anyways 8.2 is live
+
+commit 609b5ce9f17183de7805fd48c0aa0dbc00deabb5
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Thu Jun 27 21:43:39 2019 -0400
+
+    ran my own validator so I can actually catch and fix problem
+
+commit 4657aeb83593cf25fe74dd3f27741726e6c01319
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Thu Jun 27 21:38:07 2019 -0400
+
+    Fix last
+
+commit c4d3ef8eff8ea8351836d5f4a13c96f1338cef6d
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Thu Jun 27 21:25:03 2019 -0400
+
+    Missed one check
+
+commit aa4372f46b1ee1f84b6a995ba50167e6ab1e28b0
+Author: MysticalOS <mysticalosx@gmail.com>
+Date:   Thu Jun 27 21:07:14 2019 -0400
+
+    Fixed two different bugs that'd occur if users actually disabled warning or special warning sounds
 

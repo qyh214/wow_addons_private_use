@@ -17,12 +17,10 @@ local L = WeakAuras.L
 	L["%s %s, particles: %d, frequency: %0.2f, scale: %0.2f"] = "%s %s, particles: %d, frequency: %0.2f, scale: %0.2f"
 	L["%s Color"] = "%s Couleur"
 	L["%s total auras"] = "%s auras au total"
-	--[[Translation missing --]]
-	L["%s, border"] = "%s, border"
+	L["%s, border"] = "%s, bordure"
 	--[[Translation missing --]]
 	L["%s, offset: %0.2f;%0.2f"] = "%s, offset: %0.2f;%0.2f"
-	--[[Translation missing --]]
-	L["|c%02x%02x%02x%02xColor|r"] = "|c%02x%02x%02x%02xColor|r"
+	L["|c%02x%02x%02x%02xColor|r"] = "|c%02x%02x%02x%02xCouleur|r"
 	L["|cFFFF0000Duplicate Keys Found!|nPlease change the keys of the following options!|r"] = "| cFFFF0000Clés en Double Trouvées! | nVeuillez modifier les clés des options suivantes! | r"
 	--[[Translation missing --]]
 	L["|cFFffcc00Glow:|r"] = "|cFFffcc00Glow:|r"

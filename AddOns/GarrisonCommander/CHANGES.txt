@@ -1,18 +1,12 @@
-tag aece9977a1c25380a72100cbfbd63aa32273ac94 3.1.1
+tag 97d6816aed3c4567bf2b432dd1c4fa057349232a 3.2.0
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Tue May 14 22:33:00 2019 +0200
+Date:	Mon Jul 1 10:31:53 2019 +0200
 
-Harvest nodes fix
+Updated for 8.2.0
 
-commit 16d16d4ac7f75bd4d480cf5d7c01a84663684321
+commit c82db70b357642fd5035a8433bf9617b96067322
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Tue May 14 22:32:24 2019 +0200
+Date:   Mon Jul 1 10:29:13 2019 +0200
 
-    3.1.1
-
-commit 3e1efedce67bd8e6c37eedd5f92da796a60a543f
-Author: Alar of Runetotem <alar@aspide.it>
-Date:   Tue May 14 22:21:40 2019 +0200
-
-    fixed herbs/mine
+    toc update
 

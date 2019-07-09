@@ -1,10 +1,10 @@
-lightweight tag 98c9b2701174d9a8add3f330ccc4849903f84a25 v8.1.5.373
+lightweight tag c0260ff821dbc31f3d6f9561239d48899b0f1cdd v8.2.0.376
 Author:	Tercioo <terciob19@hotmail.com>
-Date:	Sat Jun 15 21:47:47 2019 -0300
+Date:	Thu Jul 4 14:55:57 2019 -0300
 
-commit 98c9b2701174d9a8add3f330ccc4849903f84a25
+commit c0260ff821dbc31f3d6f9561239d48899b0f1cdd
 Author: Tercioo <terciob19@hotmail.com>
-Date:   Sat Jun 15 21:47:47 2019 -0300
+Date:   Thu Jul 4 14:55:57 2019 -0300
 
-    Wake up Curse Packager
+    Machagon added to zone list
 

@@ -22,13 +22,15 @@ local UnitExists = UnitExists
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 local UnitInVehicle = UnitInVehicle
+local UnitIsOwnerOrControllerOfUnit = UnitIsOwnerOrControllerOfUnit
+local UnitIsPVP = UnitIsPVP
 local UnitIsQuestBoss = UnitIsQuestBoss
 local UnitIsTapDenied = UnitIsTapDenied
-local UnitThreatSituation = UnitThreatSituation
 local UnitIsUnit = UnitIsUnit
 local UnitLevel = UnitLevel
 local UnitPower = UnitPower
 local UnitPowerMax = UnitPowerMax
+local UnitThreatSituation = UnitThreatSituation
 
 local hooksecurefunc = hooksecurefunc
 local C_Timer_NewTimer = C_Timer.NewTimer
@@ -656,8 +658,26 @@ function mod:StyleFilterConditionCheck(frame, filter, trigger)
 	end
 
 	-- Unit Pet
-	if trigger.isPet then
-		if frame.isPlayerControlled and not frame.isPlayer then passed = true else return end
+	if trigger.isPet or trigger.isNotPet then
+		if (trigger.isPet and frame.isPet or trigger.isNotPet and not frame.isPet) then passed = true else return end
+	end
+
+	-- Unit Player Controlled
+	if trigger.isPlayerControlled or trigger.isNotPlayerControlled then
+		local playerControlled = frame.isPlayerControlled and not frame.isPlayer
+		if (trigger.isPlayerControlled and playerControlled or trigger.isNotPlayerControlled and not playerControlled) then passed = true else return end
+	end
+
+	-- Unit Owned By Player
+	if trigger.isOwnedByPlayer or trigger.isNotOwnedByPlayer then
+		local ownedByPlayer = UnitIsOwnerOrControllerOfUnit("player", frame.unit)
+		if (trigger.isOwnedByPlayer and ownedByPlayer or trigger.isNotOwnedByPlayer and not ownedByPlayer) then passed = true else return end
+	end
+
+	-- Unit PvP
+	if trigger.isPvP or trigger.isNotPvP then
+		local isPvP = UnitIsPVP(frame.unit)
+		if (trigger.isPvP and isPvP or trigger.isNotPvP and not isPvP) then passed = true else return end
 	end
 
 	-- Unit Tap Denied

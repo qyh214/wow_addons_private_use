@@ -1,0 +1,11 @@
+## Interface: 70300
+## Title: RSA [|c12FF75B3Reminders|r]
+## Notes: Buff Reminder module for RSA. If you want to be reminded of buffs, you need to enable this!
+## Author: Raeli
+## Dependencies: RSA
+## LoadOnDemand: 1
+
+## Title-zhTW: RSA [|c12FF75B3提示|r]
+## Notes-zhTW: RSA 增益狀態提示模組。假如你想要被提醒增益狀態，你必須啟用它！
+
+Reminders.lua

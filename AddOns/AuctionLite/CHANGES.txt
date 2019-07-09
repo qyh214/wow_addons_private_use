@@ -1,9 +1,17 @@
 ------------------------------------------------------------------------
-r278 | nebula169 | 2018-08-29 23:41:15 +0000 (Wed, 29 Aug 2018) | 1 line
+r281 | cybeloras2 | 2019-07-07 16:56:57 +0000 (Sun, 07 Jul 2019) | 1 line
 Changed paths:
-   M /trunk/CreateAuctions.lua
-   M /trunk/SellFrame.lua
+   M /trunk/AuctionLite.lua
+   M /trunk/AuctionLite.toc
 
-Update for deposit changes
+Adjust version numbers, since a random citizen tagged a previous version as 1.9 without actually changing the .toc
+------------------------------------------------------------------------
+r280 | cybeloras2 | 2019-07-07 16:53:01 +0000 (Sun, 07 Jul 2019) | 1 line
+Changed paths:
+   M /trunk/AuctionFrame.lua
+   M /trunk/AuctionLite.lua
+   M /trunk/AuctionLite.toc
+
+Fixed for WoW 8.2
 ------------------------------------------------------------------------
 

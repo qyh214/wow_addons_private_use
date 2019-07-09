@@ -13,6 +13,20 @@ to easily populate these arrays:
 ]]--
 
 local TRINKET_AGILITY_DPS = {
+	-- 8.1.5 and 8.2 trinkets
+	[167866] = true, -- Lurker's Insidious Gift
+	[167868] = true, -- Idol of Indiscriminate Consumption
+	[168965] = true, -- Modular Platinum Plating
+	[169307] = true, -- Vision of Demise
+	[169308] = true, -- Chain of Suffering
+	[169310] = true, -- Bloodthirsty Urchin
+	[169311] = true, -- Ashvane's Razor Coral
+	[169313] = true, -- Phial of the Arcane Tempest
+	[169315] = true, -- Edicts of the Faithless
+	[169318] = true, -- Shockbiter's Fang
+	[169319] = true, -- Dribbling Inkpod
+	[169769] = true, -- Remote Guidance Device
+	
 	-- 8.1 trinkets
 	[165572] = true, -- Variable Intensity Gigavolt Oscillating Reactor
 	[165579] = true, -- Kimbul's Razor Claw
@@ -92,6 +106,18 @@ local TRINKET_AGILITY_DPS = {
 }
 
 local TRINKET_INTELLECT_DPS = {
+	-- 8.1.5 and 8.2 trinkets
+	[169344] = true, -- Ingenious Mana Battery
+	[169318] = true, -- Shockbiter's Fang
+	[169316] = true, -- Deferred Sentence
+	[169312] = true, -- Luminous Jellyweed
+	[169309] = true, -- Zoatroid Egg Sac
+	[169305] = true, -- Aquipotent Nautilus
+	[169304] = true, -- Leviathan's Lure
+	[168905] = true, -- Shiver Venom Relic
+	[167867] = true, -- Harbinger's Inscrutable Will
+	[167865] = true, -- Void Stone
+	
 	-- 8.1 trinkets
 	[165569] = true, -- Ward of Envelopment
 	[165576] = true, -- Tidestorm Codex
@@ -173,6 +199,20 @@ local TRINKET_INTELLECT_DPS = {
 }
 
 local TRINKET_STRENGTH_DPS = {
+	-- 8.1.5 and 8.2 trinkets
+	[169769] = true, -- Remote Guidance Device
+	[169319] = true, -- Dribbling Inkpod
+	[169318] = true, -- Shockbiter's Fang
+	[169315] = true, -- Edicts of the Faithless
+	[169313] = true, -- Phial of the Arcane Tempest
+	[169311] = true, -- Ashvane's Razor Coral
+	[169310] = true, -- Bloodthirsty Urchin
+	[169308] = true, -- Chain of Suffering
+	[169307] = true, -- Vision of Demise
+	[168965] = true, -- Modular Platinum Plating
+	[167868] = true, -- Idol of Indiscriminate Consumption
+	[167866] = true, -- Lurker's Insidious Gift
+	
 	-- 8.1 trinkets
 	[165580] = true, -- Ramping Amplitude Gigavolt Engine
 	[166795] = true, -- Knot of Ancient Fury
@@ -247,6 +287,18 @@ local TRINKET_STRENGTH_DPS = {
 }
 
 local TRINKET_HEALER = {
+	-- 8.1.5 and 8.2 trinkets
+	[169344] = true, -- Ingenious Mana Battery
+	[169318] = true, -- Shockbiter's Fang
+	[169316] = true, -- Deferred Sentence
+	[169312] = true, -- Luminous Jellyweed
+	[169309] = true, -- Zoatroid Egg Sac
+	[169305] = true, -- Aquipotent Nautilus
+	[169304] = true, -- Leviathan's Lure
+	[168905] = true, -- Shiver Venom Relic
+	[167867] = true, -- Harbinger's Inscrutable Will
+	[167865] = true, -- Void Stone
+	
 	-- 8.1 trinkets
 	[165569] = true, -- Ward of Envelopment
 	[165576] = true, -- Tidestorm Codex
@@ -328,6 +380,20 @@ local TRINKET_HEALER = {
 }
 
 local TRINKET_TANK = {
+	-- 8.1.5 and 8.2 trinkets
+	[169769] = true, -- Remote Guidance Device
+	[169319] = true, -- Dribbling Inkpod
+	[169318] = true, -- Shockbiter's Fang
+	[169315] = true, -- Edicts of the Faithless
+	[169313] = true, -- Phial of the Arcane Tempest
+	[169311] = true, -- Ashvane's Razor Coral
+	[169310] = true, -- Bloodthirsty Urchin
+	[169308] = true, -- Chain of Suffering
+	[169307] = true, -- Vision of Demise
+	[168965] = true, -- Modular Platinum Plating
+	[167868] = true, -- Idol of Indiscriminate Consumption
+	[167866] = true, -- Lurker's Insidious Gift
+	
 	-- 8.1 trinkets
 	[165572] = true, -- Variable Intensity Gigavolt Oscillating Reactor
 	[165580] = true, -- Ramping Amplitude Gigavolt Engine

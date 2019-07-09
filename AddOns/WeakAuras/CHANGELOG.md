@@ -1,16 +1,14 @@
-# [2.13.2](https://github.com/WeakAuras/WeakAuras2/tree/2.13.2) (2019-06-27)
+# [2.13.4](https://github.com/WeakAuras/WeakAuras2/tree/2.13.4) (2019-07-07)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/2.13.1...2.13.2)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/2.13.3...2.13.4)
 
 ## Highlights
 
- Swallow more errors 
+ Bug fix for corrupted custom options 
 
 ## Commits
 
-emptyrivers (3):
+emptyrivers (1):
 
-- use file id for lich king apocalypse
-- always ClearAllPoints() when updating positions
-- swallow errors from GetCenter
+- delete corrupted custom options (#1435)
 

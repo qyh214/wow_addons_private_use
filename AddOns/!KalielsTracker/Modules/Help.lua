@@ -197,12 +197,14 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |cffffffff3.1.6|r\n\n"..
-					"- UPDATED - code for WoW 8.2.0\n"..
-					"- UPDATED - Addon support - TomTom v80200-1.0.1, ElvUI 11.14, Tukui 18.24,"..
-					offs.."SpartanUI 5.1.2\n"..
-					"- UPDATED - Libs\n"..
-					"- ADDED - Option to Show / Hide Max. height overlay\n\n"..
+			text = cTitle.."         What's NEW in version |cffffffff3.1.10|r\n\n"..
+					"- ADDED - mechanics for reseting profiles, as a prevention false issues."..
+					offs..cBold.."Note:|r I'll use this, when I or Blizzard make incompatible changes with"..
+					offs.."the stored settings.\n\n"..
+
+                    cTitle.."WoW 8.2.0 - Known issues w/o solution|r\n"..
+                    "- Clicking on tracked quests or achievements has no response during combat.\n"..
+                    "- Header buttons Q and A don't work during combat.\n\n"..
 
 					cTitle.."Issue reporting|r\n"..
 					"For reporting please use "..cBold.."Tickets|r instead of Comments on CurseForge.\n\n\n\n"..

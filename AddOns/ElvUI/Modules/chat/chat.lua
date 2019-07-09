@@ -1129,12 +1129,7 @@ function CH:GetBNFriendColor(name, id, useBTag)
 		_, _, _, _, _, _, _, Class = BNGetGameAccountInfo(bnetIDGameAccount)
 	end
 
-	if Class and Class ~= '' then --other non-english locales require this
-		for k,v in pairs(_G.LOCALIZED_CLASS_NAMES_MALE) do if Class == v then Class = k;break end end
-		for k,v in pairs(_G.LOCALIZED_CLASS_NAMES_FEMALE) do if Class == v then Class = k;break end end
-	end
-
-	Class = Class and Class ~= '' and gsub(strupper(Class),'%s','')
+	Class = E:UnlocalizedClassName(Class)
 	local COLOR = Class and (_G.CUSTOM_CLASS_COLORS and _G.CUSTOM_CLASS_COLORS[Class] or _G.RAID_CLASS_COLORS[Class])
 
 	return (COLOR and format('|c%s%s|r', COLOR.colorStr, TAG or name)) or TAG or name, isBattleTagPresence and BATTLE_TAG
@@ -2395,14 +2390,14 @@ function CH:HandleChatVoiceIcons()
 		channelButtons[3]:HookScript("OnShow", CH.RepositionChatVoiceIcons)
 		channelButtons[3]:HookScript("OnHide", CH.RepositionChatVoiceIcons) -- dont think this is needed but meh
 
-		hooksecurefunc(_G.GeneralDockManagerScrollFrame, 'SetPoint', function(frame, point, anchor, attachTo, x, y)
+		hooksecurefunc(_G.GeneralDockManagerScrollFrame, 'SetPoint', function(frame, point, anchor, attachTo, x, y, stopLoop)
 			if anchor == _G.GeneralDockManagerOverflowButton and (x == 0 and y == 0) then
 				frame:Point(point, anchor, attachTo, -3, -6)
-			elseif point == "BOTTOMRIGHT" and anchor ~= channelButtons[3] and anchor ~= channelButtons[1] and not _G.GeneralDockManagerOverflowButton:IsShown() then
+			elseif point == "BOTTOMRIGHT" and anchor ~= channelButtons[3] and anchor ~= channelButtons[1] and not _G.GeneralDockManagerOverflowButton:IsShown() and not stopLoop then
 				if channelButtons[3]:IsShown() then
-					frame:Point("BOTTOMRIGHT", channelButtons[3], "BOTTOMLEFT")
+					frame:Point(point, anchor, attachTo, -30, -5, true)
 				else
-					frame:Point("BOTTOMRIGHT", channelButtons[1], "BOTTOMLEFT")
+					frame:Point(point, anchor, attachTo, -10, -5, true)
 				end
 			end
 		end)

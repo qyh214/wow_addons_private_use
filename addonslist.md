@@ -40,6 +40,8 @@ GarrisonCommander 要塞功能增强（任务指派、含船坞与配置系统�
 
 HandyNotes
 
+HandyNotes_DungeonLocations
+
 Immersion
 
 KeystoneHelper
@@ -52,21 +54,25 @@ Multishot 自动截图
 
 Myslot
 
-PremadeGroupsFilter
+Narcissus
 
 PersonalLootHelper 个人拾取帮助
 
 Postal 邮件增强
 
+PremadeGroupsFilter
+
+RareScanner
+
 RelicInspector 圣物提示
+
+RSA SpeakinSpell替代品
+
+SimpleChat 底部聊天窗口改进，添加频道切换条和一些功能
 
 Skada 伤害统计
 
 SkadaPlus skada的单位补丁插件
-
-SimpleChat 底部聊天窗口改进，添加频道切换条和一些功能
-
-SpeakinSpell 
 
 TellMeWhen
 
@@ -78,7 +84,7 @@ WeakAuras
 
 WIM 聊天窗口美化（私聊以弹窗方式展现，更为直观）
 
-wimelvuiskin  WIM的ElvUI皮肤美化（与elvui保持风格统一）
+WIM_ElvUI_Skin  WIM的ElvUI皮肤美化（与elvui保持风格统一）
 
 WindDungeonHelper  
 
