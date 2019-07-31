@@ -61,6 +61,16 @@ Auctionlite：https://bbs.nga.cn/read.php?tid=17729131
 
 其他单体插件可用curse客户端管理，curse客户端下载地址：https://www.curseforge.com/twitch-client
 
+## WA字符串
+鱼人兑换：https://wago.io/6YhvXz76q
+
+死亡时-菜：https://wago.io/4wZS7eLDz
+
+## TMW字符串
+萨满祭司：https://bbs.nga.cn/read.php?tid=16216888&_ff=185
+
+永恒王宫：https://bbs.nga.cn/read.php?pid=337629614
+
 ## 一些有用的重要命令
 在游戏内聊天窗口输入，然后回车：
 
