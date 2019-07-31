@@ -1,4 +1,7 @@
-﻿v3.5.3
+﻿v3.5.4
+TOC update.
+
+v3.5.3
 Slight fix of said minor fix without breaking functionality.
 
 v3.5.2

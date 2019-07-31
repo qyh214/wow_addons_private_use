@@ -24,6 +24,17 @@ private.SOUNDS = {
 	["Level Up"] = "Interface\\AddOns\\RareScanner\\Media\\levelup2-4.ogg",
 }
 
+private.MARKERS = {
+	["Star"] = "Interface\\TARGETINGFRAME\\UI-RaidTargetingIcon_1",
+	["Circle"] = "Interface\\TARGETINGFRAME\\UI-RaidTargetingIcon_2",
+	["Diamond"] = "Interface\\TARGETINGFRAME\\UI-RaidTargetingIcon_3",
+	["Triangle"] = "Interface\\TARGETINGFRAME\\UI-RaidTargetingIcon_4",
+	["Moon"] = "Interface\\TARGETINGFRAME\\UI-RaidTargetingIcon_5",
+	["Square"] = "Interface\\TARGETINGFRAME\\UI-RaidTargetingIcon_6",
+	["Cross"] = "Interface\\TARGETINGFRAME\\UI-RaidTargetingIcon_7",
+	["Skull"] = "Interface\\TARGETINGFRAME\\UI-RaidTargetingIcon_8",
+}
+
 private.TOOLTIP_POSITIONS = {
 	["ANCHOR_LEFT"] = AL["TOOLTIP_LEFT"],
 	["ANCHOR_RIGHT"] = AL["TOOLTIP_RIGHT"],
@@ -160,6 +171,38 @@ local DEFAULT_MAIN_CATEGORY = 0
 local general_options
 
 local function GetGeneralOptions()
+	local orderedMarkers = {}
+	for k, v in pairs(private.MARKERS) do
+		orderedMarkers[#orderedMarkers+1] = v
+	end
+			
+	table.sort(orderedMarkers, function(a,b) return string.upper(a) < string.upper(b) end)
+	local setMarker = function(value)
+		if (value) then
+			for k, m in pairs (private.MARKERS) do
+				if (k == value) then
+					for i, v in ipairs(orderedMarkers) do
+						if (m == v) then
+							private.db.general.marker = i
+						end
+					end
+				end
+			end
+		end
+	end
+	
+	local getMarker = function()
+		for i, v in ipairs(orderedMarkers) do
+			if (i == private.db.general.marker) then
+				for k, m in pairs (private.MARKERS) do
+					if (m == v) then
+						return k
+					end
+				end
+			end
+		end
+	end	
+	
 	if not general_options then
 		general_options = {
 			type = "group",
@@ -201,8 +244,19 @@ local function GetGeneralOptions()
 					end,
 					width = "full",
 				},
-				scanGarrison = {
+				scanChatAlerts = {
 					order = 3,
+					name = AL["ENABLE_SCAN_CHAT"],
+					desc = AL["ENABLE_SCAN_CHAT_DESC"],
+					type = "toggle",
+					get = function() return private.db.general.scanChatAlerts end,
+					set = function(_, value)
+						private.db.general.scanChatAlerts = value
+					end,
+					width = "full",
+				},
+				scanGarrison = {
+					order = 4,
 					name = AL["ENABLE_SCAN_GARRISON_CHEST"],
 					desc = AL["ENABLE_SCAN_GARRISON_CHEST_DESC"],
 					type = "toggle",
@@ -213,7 +267,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				scanInstances = {
-					order = 4,
+					order = 5,
 					name = AL["ENABLE_SCAN_IN_INSTANCE"],
 					desc = AL["ENABLE_SCAN_IN_INSTANCE_DESC"],
 					type = "toggle",
@@ -224,7 +278,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				scanOnTaxi = {
-					order = 5,
+					order = 6,
 					name = AL["ENABLE_SCAN_ON_TAXI"],
 					desc = AL["ENABLE_SCAN_ON_TAXI_DESC"],
 					type = "toggle",
@@ -234,8 +288,38 @@ local function GetGeneralOptions()
 					end,
 					width = "full",
 				},
+				showMaker = {
+					order = 7,
+					name = AL["ENABLE_MARKER"],
+					desc = AL["ENABLE_MARKER_DESC"],
+					type = "toggle",
+					get = function() return private.db.general.showMaker end,
+					set = function(_, value)
+						private.db.general.showMaker = value
+					end,
+					width = "full",
+				},
+				marker = {
+					order = 8,
+					type = "select",
+					dialogControl = 'RS_Markers',
+					name = AL["MARKER"],
+					desc = AL["MARKER_DESC"],
+					values = private.MARKERS,
+					get = function() return getMarker() end,
+					set = function(_, value)
+						setMarker(value)
+					end,
+					width = "normal",
+					disabled = function() return not private.db.general.showMaker end,
+				},
+				separatorMessages = {
+					order = 9,
+					type = "header",
+					name = "",
+				},
 				sync = {
-					order = 6,
+					order = 10,
 					name = AL["SYNCRONIZE"],
 					desc = AL["SYNCRONIZE_DESC"],
 					type = "execute",
@@ -243,7 +327,7 @@ local function GetGeneralOptions()
 					width = "double",
 				},
 				test = {
-					order = 7,
+					order = 11,
 					name = AL["TEST"],
 					desc = AL["TEST_DESC"],
 					type = "execute",
@@ -481,13 +565,24 @@ local function GetFilterOptions()
 			if (zoneID) then
 				for k, v in pairs(private.dbglobal.rare_names[GetLocale()]) do 
 					if (private.ZONE_IDS[k]) then
+						local tempName = v
 						if (npcName) then
 							if ((private.ZONE_IDS[k].zoneID == zoneID or (type(private.ZONE_IDS[k].zoneID) == "table" and RS_Set(private.ZONE_IDS[k].zoneID)[zoneID])) and RS_tContains(v,npcName)) then
-								filter_options.args.rareFilters.values[v] = k
+								local i = 2
+								while (filter_options.args.rareFilters.values[tempName]) do
+									tempName = v..' ('..i..')'
+									i = i+1
+								end
+								filter_options.args.rareFilters.values[tempName] = k
 							end
 						else
 							if (private.ZONE_IDS[k].zoneID == zoneID or (type(private.ZONE_IDS[k].zoneID) == "table" and RS_Set(private.ZONE_IDS[k].zoneID)[zoneID])) then
-								filter_options.args.rareFilters.values[v] = k
+								local i = 2
+								while (filter_options.args.rareFilters.values[tempName]) do
+									tempName = v..' ('..i..')'
+									i = i+1
+								end
+								filter_options.args.rareFilters.values[tempName] = k
 							end
 						end
 					else
@@ -526,8 +621,19 @@ local function GetFilterOptions()
 			handler = RareScanner,
 			desc = AL["FILTER"],
 			args = {
-				rareFiltersSearch = {
+				filterOnlyMap = {
 					order = 1,
+					type = "toggle",
+					name = AL["FILTER_NPCS_ONLY_MAP"],
+					desc = AL["FILTER_NPCS_ONLY_MAP_DESC"],
+					get = function() return private.db.rareFilters.filterOnlyMap end,
+					set = function(_, value)
+						private.db.rareFilters.filterOnlyMap = value
+					end,
+					width = "full",
+				},
+				rareFiltersSearch = {
+					order = 2,
 					type = "input",
 					name = AL["FILTERS_SEARCH"],
 					desc = AL["FILTERS_SEARCH_DESC"],
@@ -545,7 +651,7 @@ local function GetFilterOptions()
 					width = "full",
 				},
 				continents = {
-					order = 2.1,
+					order = 3.1,
 					type = "select",
 					name = AL["FILTER_CONTINENT"],
 					desc = AL["FILTER_CONTINENT_DESC"],
@@ -577,7 +683,7 @@ local function GetFilterOptions()
 					width = "normal",
 				},
 				subzones = {
-					order = 2.2,
+					order = 3.2,
 					type = "select",
 					name = AL["FILTER_ZONE"],
 					desc = AL["FILTER_ZONE_DESC"],
@@ -594,7 +700,7 @@ local function GetFilterOptions()
 					disabled = function() return (next(filter_options.args.subzones.values) == nil) end,
 				},
 				rareFiltersClear = {
-					order = 2.3,
+					order = 3.3,
 					name = AL["CLEAR_FILTERS_SEARCH"],
 					desc = AL["CLEAR_FILTERS_SEARCH_DESC"],
 					type = "execute",
@@ -612,12 +718,12 @@ local function GetFilterOptions()
 					width = "normal",
 				},
 				separator = {
-					order = 3,
+					order = 4,
 					type = "header",
 					name = AL["FILTERS"],
 				},
 				rareFiltersToogleAll = {
-					order = 4,
+					order = 5,
 					name = AL["TOGGLE_FILTERS"],
 					desc = AL["TOGGLE_FILTERS_DESC"],
 					type = "execute",
@@ -637,7 +743,7 @@ local function GetFilterOptions()
 					width = "full",
 				},
 				rareFilters = {
-					order = 5,
+					order = 6,
 					type = "multiselect",
 					name = AL["FILTER_RARE_LIST"],
 					desc = AL["FILTER_RARE_LIST_DESC"],
@@ -715,8 +821,19 @@ local function GetZonesFilterOptions()
 			handler = RareScanner,
 			desc = AL["ZONES_FILTER"],
 			args = {
-				zoneFiltersSearch = {
+				filterOnlyMap = {
 					order = 1,
+					type = "toggle",
+					name = AL["FILTER_ZONES_ONLY_MAP"],
+					desc = AL["FILTER_ZONES_ONLY_MAP_DESC"],
+					get = function() return private.db.zoneFilters.filterOnlyMap end,
+					set = function(_, value)
+						private.db.zoneFilters.filterOnlyMap = value
+					end,
+					width = "full",
+				},
+				zoneFiltersSearch = {
+					order = 2,
 					type = "input",
 					name = AL["FILTERS_SEARCH"],
 					desc = AL["ZONES_FILTERS_SEARCH_DESC"],
@@ -730,7 +847,7 @@ local function GetZonesFilterOptions()
 					width = "full",
 				},
 				continents = {
-					order = 2.1,
+					order = 3.1,
 					type = "select",
 					name = AL["FILTER_CONTINENT"],
 					desc = AL["FILTER_CONTINENT_DESC"],
@@ -756,7 +873,7 @@ local function GetZonesFilterOptions()
 					width = "normal",
 				},
 				zoneFiltersClear = {
-					order = 2.2,
+					order = 3.2,
 					name = AL["CLEAR_FILTERS_SEARCH"],
 					desc = AL["CLEAR_FILTERS_SEARCH_DESC"],
 					type = "execute",
@@ -770,12 +887,12 @@ local function GetZonesFilterOptions()
 					width = "normal",
 				},
 				separator = {
-					order = 3,
+					order = 4,
 					type = "header",
 					name = AL["ZONES_FILTER"],
 				},
 				zoneFiltersToogleAll = {
-					order = 4,
+					order = 5,
 					name = AL["TOGGLE_FILTERS"],
 					desc = AL["TOGGLE_FILTERS_DESC"],
 					type = "execute",
@@ -795,7 +912,7 @@ local function GetZonesFilterOptions()
 					width = "full",
 				},
 				zoneFilters = {
-					order = 5,
+					order = 6,
 					type = "multiselect",
 					name = AL["FILTER_ZONES_LIST"],
 					desc = AL["FILTER_ZONES_LIST_DESC"],

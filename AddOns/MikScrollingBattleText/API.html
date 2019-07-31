@@ -83,7 +83,7 @@
 				<tr>
 					<td class="ParameterName" nowrap="nowrap"><i>isDisabled</i></td>
 					<td class="ParameterDesc">
-						A flag that indicates if the mod is disabled.  The return value will be one of the following:<br /><br />
+						A flag that indicates if the mod is disabled. The return value will be one of the following:<br /><br />
 						<ul>
 							<li>true - The mod is disabled.</li>
 							<li>nil - The mod is enabled.</li>
@@ -124,8 +124,8 @@
 		<a href="#TOC">Return to TOC</a><br /><br />
 		<div class="SectionDesc">
 			Registers a font with MSBT and Shared Media.<br /><br />
-			Font registration is not permanent.  It must be done each load.  In this manner if the user were to remove
-			a mod that registers custom fonts, the fonts would simply no longer be available.  If anything in MSBT has a
+			Font registration is not permanent. It must be done each load. In this manner if the user were to remove
+			a mod that registers custom fonts, the fonts would simply no longer be available. If anything in MSBT has a
 			custom font selected that is no longer registered, MSBT will recognize that an invalid font is specified and
 			use the default font accordingly.
 		</div>
@@ -140,7 +140,7 @@
 				<tr>
 					<td class="ParameterName" nowrap="nowrap"><i>fontName</i> (Required)</td>
 					<td class="ParameterDesc">
-						The name to use for the font.  This name will be displayed in the font selection
+						The name to use for the font. This name will be displayed in the font selection
 						dialogs, and also is the name to be referenced when displaying messages via the
 						<a href="#MikSBT.DisplayMessage">MikSBT.DisplayMessage</a> function.
 					</td>
@@ -212,28 +212,28 @@
 				<tr>
 					<td class="ParameterName" nowrap="nowrap"><i>colorR</i> (Optional)</td>
 					<td class="ParameterDesc">
-						The red component of the color to display the message with.  Value range is 0-255.<br /><br />
+						The red component of the color to display the message with. Value range is 0-255.<br /><br />
 						If the parameter is omitted, a default of 255 will be used.
 					</td>
 				</tr>
 				<tr>
 					<td class="ParameterName" nowrap="nowrap"><i>colorG</i> (Optional)</td>
 					<td class="ParameterDesc">
-						The green component of the color to display the message with.  Value range is 0-255.<br /><br />
+						The green component of the color to display the message with. Value range is 0-255.<br /><br />
 						If the parameter is omitted, a default of 255 will be used.
 					</td>
 				</tr>
 				<tr>
 					<td class="ParameterName" nowrap="nowrap"><i>colorB</i> (Optional)</td>
 					<td class="ParameterDesc">
-						The blue component of the color to display the message with.  Value range is 0-255.<br /><br />
+						The blue component of the color to display the message with. Value range is 0-255.<br /><br />
 						If the parameter is omitted, a default of 255 will be used.
 					</td>
 				</tr>
 				<tr>
 					<td class="ParameterName" nowrap="nowrap"><i>fontSize</i> (Optional)</td>
 					<td class="ParameterDesc">
-						The font size to use.  Value range is 4-38.<br /><br />
+						The font size to use. Value range is 4-38.<br /><br />
 						If this value is omitted or an invalid value is passed, the settings for the scroll area will be used.
 					</td>
 				</tr>
@@ -340,7 +340,7 @@
 
 		<div class="SubsectionTitle">Remarks</div>
 		<div class="SubsectionBody">
-			This function has superseded the <span style="color: red;">MikSBT.GetRegisteredFontList</span> function.  The
+			This function has superseded the <span style="color: red;">MikSBT.GetRegisteredFontList</span> function. The
 			old function created a new table and returned it every time it was called which was wasteful.
 		</div>
 
@@ -385,7 +385,7 @@
 
 		<div class="SubsectionTitle">Remarks</div>
 		<div class="SubsectionBody">
-			This function has superseded the <span style="color: red;">MikSBT.GetScrollAreaList</span> function.  The
+			This function has superseded the <span style="color: red;">MikSBT.GetScrollAreaList</span> function. The
 			old function created a new table and returned it every time it was called which was wasteful.
 		</div>
 
@@ -404,7 +404,7 @@
 		<a href="#TOC">Return to TOC</a><br /><br />
 		<div class="SectionDesc">
 			Registers a sound with MSBT and Shared Media.<br /><br />
-			Sound registration is not permanent.  It must be done each load.  In this manner if the user were to remove
+			Sound registration is not permanent. It must be done each load. In this manner if the user were to remove
 			a mod that registers custom sounds, the sounds would simply no longer be available.
 		</div>
 		<div class="SubsectionTitle">Syntax</div>
@@ -418,7 +418,7 @@
 				<tr>
 					<td class="ParameterName" nowrap="nowrap"><i>soundName</i> (Required)</td>
 					<td class="ParameterDesc">
-						The name to use for the sound.  This name will be displayed in the sound selection
+						The name to use for the sound. This name will be displayed in the sound selection
 						dialogs.
 					</td>
 				</tr>
@@ -499,7 +499,7 @@
 			<br /><br />
 			The system works by allowing an initialization callback handler, directions, and behaviors for an animation style to be
 			registered with the <a href="#MikSBT.RegisterAnimationStyle">MikSBT.RegisterAnimationStyle</a> and
-			<a href="#MikSBT.RegisterStickyAnimationStyle">MikSBT.RegisterStickyAnimationStyle</a> functions.  The supplied initialization
+			<a href="#MikSBT.RegisterStickyAnimationStyle">MikSBT.RegisterStickyAnimationStyle</a> functions. The supplied initialization
 			handler then sets the appropriate animation handler for each new <a href="#DisplayEventTable">DisplayEvent</a> it receives.
 			<br /><br />
 
@@ -540,8 +540,8 @@
 		<div class="SectionDesc">
 			Registers a new animation style with MSBT.
 			<br /><br />
-			Custom animation style registration is not permanent. It must be done each load.  In order to remove a custom
-			animation style, all that needs to be done is no longer register it on subsequent loads.  If any of the scroll
+			Custom animation style registration is not permanent. It must be done each load. In order to remove a custom
+			animation style, all that needs to be done is no longer register it on subsequent loads. If any of the scroll
 			areas have a custom animation style selected that is no longer registered, MSBT will recognize that an invalid
 			animation style is specified and use the default animation style accordingly.<br /><br />
 		</div>
@@ -611,8 +611,8 @@
 		<div class="SectionDesc">
 			Registers a new sticky animation style with MSBT.
 			<br /><br />
-			Custom animation style registration is not permanent. It must be done each load.  In order to remove a custom animation style, all that needs to be done is
-			no longer register it on subsequent loads.  If any of the scroll areas have a custom animation style selected that is no longer registered, MSBT will recognize that an invalid
+			Custom animation style registration is not permanent. It must be done each load. In order to remove a custom animation style, all that needs to be done is
+			no longer register it on subsequent loads. If any of the scroll areas have a custom animation style selected that is no longer registered, MSBT will recognize that an invalid
 			animation style is specified and use the default animation style accordingly.<br /><br />
 		</div>
 		<div class="SubsectionTitle">Syntax</div>
@@ -758,9 +758,9 @@
 			The <a href="#DisplayEventTable">DisplayEvent</a> is positioned by setting its <i>.positionX</i> and <i>.positionY</i> fields, and its opacity can be controlled by setting its <i>.alpha</i> field.
 			<br /><br />
 			The x and y positions should be calculated based upon the completed animation percentage and the height and width of the scroll area available
-			in the <i>.scrollHeight</i> and <i>.scrollWidth</i> fields.   By basing your calculations on the completed animation percentage, the animation
-			will remain consistent under diverse performance situations.  If you were to base it simply on moving a set number of pixels each update then
-			the actual scroll speed would vary greatly.  These fields are further described in the <a href="#DisplayEventTable">DisplayEvent</a> Table section.
+			in the <i>.scrollHeight</i> and <i>.scrollWidth</i> fields. By basing your calculations on the completed animation percentage, the animation
+			will remain consistent under diverse performance situations. If you were to base it simply on moving a set number of pixels each update then
+			the actual scroll speed would vary greatly. These fields are further described in the <a href="#DisplayEventTable">DisplayEvent</a> Table section.
 		</div>
 		<div class="SubsectionTitle">Syntax</div>
 		<div class="SubsectionBody">
@@ -856,7 +856,7 @@
 				<tr>
 					<td class="ParameterName" nowrap="nowrap"><i>.animationSpeed</i> (Read-Only)</td>
 					<td class="ParameterDesc">
-						The user selected animation speed.  This is a decimal representation of a percentage.
+						The user selected animation speed. This is a decimal representation of a percentage.
 						<br /><br />
 						For example, 0.5 means that the animation should animate at 50% of the normal speed,
 						1.0 means it should animate at normal speed, and 2.5 means it should animate at 250% of normal speed.
@@ -889,7 +889,7 @@
 						<br /><br />
 						The value range is from 0 (invisible) to 1 (fully visible).
 						<br /><br />
-						MSBT automatically fades the animating frame out near the end of the animation.  This field can be used for altering the opacity
+						MSBT automatically fades the animating frame out near the end of the animation. This field can be used for altering the opacity
 						during the remainder of the animation.
 					</td>
 				</tr>
@@ -904,8 +904,8 @@
 
 		<div class="SubsectionTitle">Remarks</div>
 		<div class="SubsectionBody">
-			Technically the fields marked as read-only are normal fields just like the rest, however they should be treated as read-only.  Altering them can cause unexpected behavior.
-			I didn't want to add the extra overhead it would take to truly make them read-only.  There are also a few other internal fields that should not be altered.
+			Technically the fields marked as read-only are normal fields just like the rest, however they should be treated as read-only. Altering them can cause unexpected behavior.
+			I didn't want to add the extra overhead it would take to truly make them read-only. There are also a few other internal fields that should not be altered.
 		</div>
 
 

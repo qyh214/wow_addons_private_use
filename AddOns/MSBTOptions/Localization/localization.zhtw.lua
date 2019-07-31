@@ -2,7 +2,7 @@
 -- Title: MSBT Options Traditional Chinese Localization
 -- Author: Mikord
 -- Credits:
---	Whitepaw  @ 暗影之月(TW-Shadowmoon)
+--	Whitepaw @ 暗影之月(TW-Shadowmoon)
 --	yaroot#gmail_com
 -------------------------------------------------------------------------------
 

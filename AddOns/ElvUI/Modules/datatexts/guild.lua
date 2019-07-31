@@ -24,6 +24,7 @@ local SetItemRef = SetItemRef
 local ToggleGuildFrame = ToggleGuildFrame
 local UnitInParty = UnitInParty
 local UnitInRaid = UnitInRaid
+local InCombatLockdown = InCombatLockdown
 
 local COMBAT_FACTION_CHANGE = COMBAT_FACTION_CHANGE
 local GUILD = GUILD
@@ -210,6 +211,8 @@ local function Click(self, btn)
 		end
 
 		_G.EasyMenu(menuList, menuFrame, "cursor", 0, 0, "MENU", 2)
+	elseif InCombatLockdown() then
+		_G.UIErrorsFrame:AddMessage(E.InfoColor.._G.ERR_NOT_IN_COMBAT)
 	else
 		ToggleGuildFrame()
 	end

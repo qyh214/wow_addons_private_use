@@ -132,7 +132,7 @@ end
 -- ****************************************************************************
 local function Listbox_ScrollUp(this)
 	local slider = this.sliderFrame
-	slider:SetValue(slider:GetValue() -  slider:GetValueStep())
+	slider:SetValue(slider:GetValue() - slider:GetValueStep())
 end
 
 
@@ -333,7 +333,7 @@ end
 
 
 -- ****************************************************************************
--- Set the function to be called when a new line needs to be created.  The
+-- Set the function to be called when a new line needs to be created. The
 -- called function must return a "Button" frame.
 -- ****************************************************************************
 local function Listbox_SetCreateLineHandler(this, handler)
@@ -379,7 +379,7 @@ local function Listbox_AddItem(this, key, forceVisible)
 	local items = this.items
 	items[#items + 1] = key
 
-	--  Create a new line if the max number allowed per page hasn't been reached.
+	-- Create a new line if the max number allowed per page hasn't been reached.
 	local lines = this.lines
 	if (#lines < this.linesPerPage) then
 		Listbox_CreateLine(this)
@@ -818,7 +818,7 @@ end
 
 
 -- ****************************************************************************
--- Creates and returns a generic button object.  Only used internally.
+-- Creates and returns a generic button object. Only used internally.
 -- ****************************************************************************
 local function CreateButton(parent)
 	-- Create button frame.

@@ -1222,7 +1222,19 @@ local function UpdateFilterGroup()
 									name = L["Unit is Not Tap Denied"],
 									desc = L["If enabled then the filter will only activate when the unit is not tap denied."],
 									order = 21
-								}
+								},
+								playerCanAttack = {
+									type = "toggle",
+									name = L["Player Can Attack"],
+									desc = L["If enabled then the filter will only activate when the unit can be atacked by the active player."],
+									order = 22
+								},
+								playerCanNotAttack = {
+									type = "toggle",
+									name = L["Player Can Not Attack"],
+									desc = L["If enabled then the filter will only activate when the unit can not be atacked by the active player."],
+									order = 23
+								},
 							}
 						}
 					}
@@ -2441,6 +2453,16 @@ local function UpdateFilterGroup()
 				}
 			}
 		}
+
+		if NP.StyleFilterCustomChecks then
+			E.Options.args.nameplate.args.filters.args.triggers.args.combat.args.types.args.pluginSpacer = {
+				type = "description",
+				name = " ",
+				width = "full",
+				order = 49
+			}
+		end
+
 		E.Options.args.nameplate.args.filters.args.actions = {
 			type = "group",
 			name = L["Actions"],
@@ -4726,6 +4748,17 @@ local function GetUnitSettings(unit, name)
 				return not E.db.nameplates.units[unit].enable
 			end
 		}
+		group.args.general.args.nameOnly = {
+			type = "toggle",
+			order = 102,
+			name = L["Name Only"]
+		}
+		group.args.general.args.showTitle = {
+			type = "toggle",
+			order = 103,
+			name = L["Show Title"],
+			desc = L["Title will only appear if Name Only is enabled or triggered in a Style Filter."]
+		}
 		group.args.healthGroup.args.useClassColor = {
 			order = 10,
 			type = "toggle",
@@ -5031,7 +5064,7 @@ local function GetUnitSettings(unit, name)
 	end
 
 	-- start groups at 50
-	if unit == "FRIENDLY_PLAYER" or unit == "ENEMY_PLAYER" or unit == "FRIENDLY_NPC" or unit == "ENEMY_NPC" then
+	if unit == "PLAYER" or unit == "FRIENDLY_PLAYER" or unit == "ENEMY_PLAYER" or unit == "FRIENDLY_NPC" or unit == "ENEMY_NPC" then
 		group.args.titleGroup = {
 			order = 50,
 			name = L["UNIT_NAME_PLAYER_TITLE"],

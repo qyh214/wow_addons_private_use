@@ -1,12 +1,10 @@
-tag 64a0c19300c08d0d13621a9f8931046795fafb9b v1.8
-Author:	zanony <zanony@jsommer.at>
-Date:	Sun Jul 29 08:26:04 2018 +0200
+lightweight tag 770072cc31ae2dc85bab92a9bbadb7979b453592 v1.8.1
+Author:	GitHub <noreply@github.com>
+Date:	Sun Jul 21 23:02:01 2019 +0200
 
-BlizzMove 1.8
+commit 770072cc31ae2dc85bab92a9bbadb7979b453592
+Author: Jessica <zanony@jsommer.at>
+Date:   Sun Jul 21 23:02:01 2019 +0200
 
-commit 706087e759d674547da9d9b223c00e62a5c72058
-Author: zanony <zanony@jsommer.at>
-Date:   Sun Jul 29 08:24:57 2018 +0200
-
-    Fix OrderHallMissionFrame and remove the message: expected frame got nil.
+    Update BlizzMove.toc
 

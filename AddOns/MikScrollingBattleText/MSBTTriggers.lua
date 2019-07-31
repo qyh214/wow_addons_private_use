@@ -246,7 +246,7 @@ end
 
 -- ****************************************************************************
 -- Categorizes the passed trigger if it is not disabled and it applies to the
--- current player's class.  Also tracks the events the trigger uses so the
+-- current player's class. Also tracks the events the trigger uses so the
 -- only events that are received are those needed by the active triggers.
 -- ****************************************************************************
 local function CategorizeTrigger(triggerSettings)
@@ -340,7 +340,7 @@ local function CategorizeTrigger(triggerSettings)
 				listenEvents[mainEvent] = true
 				lastPercentages[mainEvent] = {}
 
-				-- Categorize the change by used units for better performance.  The unitID condition is required for
+				-- Categorize the change by used units for better performance. The unitID condition is required for
 				-- health triggers.
 				for x = 1, #conditions, 3 do
 					if (conditions[x] == "unitID") then
@@ -372,7 +372,7 @@ local function CategorizeTrigger(triggerSettings)
 			elseif (mainEvent == "UNIT_POWER_UPDATE") then
 				listenEvents[mainEvent] = true
 
-				-- Detect power type.  The powerType and unitID conditions are required for power triggers.
+				-- Detect power type. The powerType and unitID conditions are required for power triggers.
 				local powerType
 				for x = 1, #conditions, 3 do
 					if (conditions[x] == "powerType") then powerType = conditions[x+2] break end

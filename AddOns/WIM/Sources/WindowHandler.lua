@@ -1873,7 +1873,6 @@ RegisterWidgetTrigger("chat_display", "whisper,chat,w2w", "OnHyperlinkEnter", fu
                                 local t = string.match(link, "^(.-):")
                                 if(t == "item" or t == "enchant" or t == "spell" or t == "quest") then
                                 	lastTTlink = t
-                                	_G.ShowUIPanel(_G.GameTooltip);
                                 	_G.GameTooltip:SetOwner(_G.UIParent, "ANCHOR_CURSOR");
                                 	_G.GameTooltip:SetHyperlink(link);
                                 	_G.GameTooltip:Show();
@@ -1887,7 +1886,8 @@ RegisterWidgetTrigger("chat_display", "whisper,chat,w2w", "OnHyperlinkLeave", fu
                         if(db.hoverLinks) then
                                 local t = lastTTlink	--string.match(link, "^(.-):")
                                 if(t == "item" or t == "enchant" or t == "spell" or t == "quest") then
-                                        _G.HideUIPanel(_G.GameTooltip);
+                                    _G.GameTooltip:ClearLines()
+									_G.GameTooltip:Hide()
                                 	lastTTlink = nil
                                 end
                         end

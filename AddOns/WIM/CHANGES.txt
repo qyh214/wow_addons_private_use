@@ -1,22 +1,20 @@
 ------------------------------------------------------------------------
-r606 | humfras | 2019-06-01 23:26:28 +0000 (Sat, 01 Jun 2019) | 1 line
+r610 | humfras | 2019-07-16 21:25:39 +0000 (Tue, 16 Jul 2019) | 1 line
 Changed paths:
    M /trunk/Sources/WindowHandler.lua
 
-* updated C_Friendlist API
+* remove unnecessary ShowUIPanel / HideUIPanel calls
 ------------------------------------------------------------------------
-r605 | humfras | 2019-05-31 07:58:42 +0000 (Fri, 31 May 2019) | 1 line
+r609 | humfras | 2019-07-14 17:16:17 +0000 (Sun, 14 Jul 2019) | 1 line
+Changed paths:
+   M /trunk/Modules/Emoticons.lua
+
+* fix potential bug with emoticons in system messages (e.g. offline/online message)
+------------------------------------------------------------------------
+r608 | MysticalOS | 2019-06-12 02:20:23 +0000 (Wed, 12 Jun 2019) | 1 line
 Changed paths:
    M /trunk/Sources/WindowHandler.lua
 
-* updated C_Friendlist API
-------------------------------------------------------------------------
-r604 | humfras | 2019-05-27 18:11:58 +0000 (Mon, 27 May 2019) | 2 lines
-Changed paths:
-   M /trunk/Modules/WhisperEngine.lua
-   M /trunk/WIM.lua
-
-* updated whisper handling to fix various bugs like sticky chat and chain/tail calls
-- removed unused code
+Don�t call ShowUIPanel or HideUIPanel in combat
 ------------------------------------------------------------------------
 

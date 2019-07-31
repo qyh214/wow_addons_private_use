@@ -1,28 +1,28 @@
-lightweight tag 2b7ab8667c26b6f676b02a9b23cb83255a6915fe 1.27
+lightweight tag 4b85a2c34ce2b901ddea207337fa2174ee451eb6 1.28
 Author:	Bernhard Saumweber <b.saumweber@gmail.com>
-Date:	Wed Mar 20 20:10:45 2019 +0000
+Date:	Sat Jul 13 18:03:18 2019 +0200
 
-commit 2b7ab8667c26b6f676b02a9b23cb83255a6915fe
+commit 4b85a2c34ce2b901ddea207337fa2174ee451eb6
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Wed Mar 20 21:01:05 2019 +0100
+Date:   Sat Jul 13 18:03:18 2019 +0200
 
-    Increased timeout for declined groups to 30 minutes
+    Set version to next release version: 1.28
 
-commit c9a3e219ae815951c81a9388807b4d95df3f6fb5
+commit 6f6786557ccf42e2847d4a63a38c5d15ba203137
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Tue Mar 19 15:28:34 2019 +0100
+Date:   Sat Jul 13 18:01:37 2019 +0200
 
-    Refactored code and added a new keyword 'declined' for filtering groups that have declined you in the last 10 minutes
+    Update help tooltip with latest dungeon keywords
 
-commit bf72eebe2e61a135e77ed8b2227f9fbc6ef2005b
+commit 760edb42eeb8794263900b7cd150a87805637be7
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Tue Mar 19 15:22:01 2019 +0100
+Date:   Sat Jul 13 17:52:05 2019 +0200
 
-    Show names of groups that declined you in a dark red color using code from cheshire (Nephthis-Durotan-EU)
+    Raise interface version to 80200
 
-commit d0c554826edc8164d9fa27d6eca1f26b3a1e6a2c
-Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Tue Feb 26 21:31:01 2019 +0100
+commit dedc6febe8eb706d83941b5b03aa7b81e3e59450
+Author: Rhino <6531393+srhinos@users.noreply.github.com>
+Date:   Sat Jul 13 08:46:56 2019 -0700
 
-    Set version to next release version: 1.27
+    Update Addon to Include  Palace and Mechagon (#22)
 

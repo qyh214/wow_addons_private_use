@@ -94,7 +94,7 @@ end
 
 
 -- ****************************************************************************
--- Erases the passed table.  Subtables are NOT erased.
+-- Erases the passed table. Subtables are NOT erased.
 -- ****************************************************************************
 local function EraseTable(t)
 	-- Loop through all the keys in the table and clear it.

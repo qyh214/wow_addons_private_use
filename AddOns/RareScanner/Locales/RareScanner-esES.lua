@@ -45,6 +45,8 @@ if AL then
 	AL["DISPLAY_NPC_ICONS_DESC"] = "Si se desmarca se dejan de mostrar en el mapa del mundo iconos de NPCs raros."
 	AL["DISPLAY_OPTIONS"] = "Opciones de mostrar"
 	AL["DUNGEONS_SCENARIOS"] = "Mazmorras/Gestas"
+	AL["ENABLE_SCAN_CHAT"] = "Activa la búsqueda de NPCs raros mediante mensajes de chat"
+	AL["ENABLE_SCAN_CHAT_DESC"] = "Cuando este activo se avisará por pantalla y con un sonido cada vez que un NPC raro grite o se detecte un mensaje de chat relacionado con un NPC raro."
 	AL["ENABLE_SCAN_CONTAINERS"] = "Activa la búsqueda de tesoros, cofres..."
 	AL["ENABLE_SCAN_CONTAINERS_DESC"] = "Cuando este activo se avisará por pantalla y con un sonido cada vez que un tesoro, cofre, etc aparezca en el minimapa."
 	AL["ENABLE_SCAN_EVENTS"] = "Activa la búsqueda de eventos"
@@ -136,6 +138,8 @@ if AL then
 	AL["MAP_TOOLTIP_KILLED"] = "Shift-Click-Izdo para marcar como matado"
 	AL["MAP_TOOLTIP_NOT_FOUND"] = "Aún no has visto a este NPC y nadie lo ha compartido contigo."
 	AL["MAP_TOOLTIP_SEEN"] = "Visto hace: %s"
+	AL["MARKER"] = "Marcador de objetivo"
+	AL["MARKER_DESC"] = "Selecciona el marcador a añadir encima del objetivo cuando haces click en el botón principal."
 	AL["MESSAGE_OPTIONS"] = "Opciones de mensajes"
 	AL["MIDDLE_BUTTON"] = "Click-central"
 	AL["NOT_TARGETEABLE"] = "No es seleccionable"
@@ -226,7 +230,14 @@ if AL then
 	AL["UNKNOWN_TARGET"] = "Objectivo desconocido"
 	AL["ZONES_FILTER"] = "Filtros de zonas"
 	AL["ZONES_FILTERS_SEARCH_DESC"] = "Escribe el nombre de la zona para filtrar la lista de abajo"
-
+	
+	AL["ENABLE_MARKER"] = "Mostrar marcador sobre objetivo"
+	AL["ENABLE_MARKER_DESC"] = "Si se activa, se mostrará un marcador encima del objetivo al seleccionarlo pulsando el botón principal"
+	AL["FILTER_NPCS_ONLY_MAP"] = "Activa los filtros solo en el mapa del mundo"
+	AL["FILTER_NPCS_ONLY_MAP_DESC"] = "Cuando está activo aún recibirás alertas de NPCs filtrados pero no aparecerán en tu mapa del mundo. Cuando esta desactivado no recibirás alertas de NPCs filtrados ni aparecerán en el mapa del mundo."
+	AL["FILTER_ZONES_ONLY_MAP"] = "Activa los filtros solo en el mapa del mundo"
+	AL["FILTER_ZONES_ONLY_MAP_DESC"] = "Cuando está activo aún recibirás alertas de NPCs que pertenecen a zonas filtradas pero no aparecerán en tu mapa del mundo. Cuando esta desactivado no recibirás alertas de NPCs que pertenecen a zonas filtradas ni aparecerán en el mapa del mundo."
+	
 	-- CONTINENT names
 	AL["ZONES_CONTINENT_LIST"] = {
 		[9999] = "Sedes de clase"; --Class Halls

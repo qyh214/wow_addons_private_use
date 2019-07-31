@@ -372,8 +372,8 @@ end
 -------------------------------------------------------------------------------
 
 -- Protected Functions.
-module.ShowMainFrame       = ShowMainFrame
-module.HideMainFrame	   = HideMainFrame
-module.RegisterPopupFrame  = RegisterPopupFrame
-module.AddTab              = AddTab
-module.ScheduleCallback    = ScheduleCallback
+module.ShowMainFrame		= ShowMainFrame
+module.HideMainFrame		= HideMainFrame
+module.RegisterPopupFrame	= RegisterPopupFrame
+module.AddTab				= AddTab
+module.ScheduleCallback		= ScheduleCallback

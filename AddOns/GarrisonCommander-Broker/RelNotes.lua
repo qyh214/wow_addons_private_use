@@ -7,6 +7,9 @@ self:HF_Paragraph("Description")
 self:HF_Pre([[
 Data broker for Garrison stuff.
 ]])
+self:RelNotes(3,2,1,[[
+Fix: No longer gives error when clicking on minimap report icon while in combat
+]])
 self:RelNotes(3,1,1,[[
 Fix: Harvesting node should now be detected again
 ]])

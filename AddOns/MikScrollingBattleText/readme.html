@@ -77,14 +77,14 @@
 					<a href="#FAQ">Frequently Asked Questions</a></li>
 					<div class="TOCSection">
 						<ul>
-							<li><a href="#FAQFonts">I don't like any of the fonts supplied with MSBT.  How do I use my own fonts?</a></li>
+							<li><a href="#FAQFonts">I don't like any of the fonts supplied with MSBT. How do I use my own fonts?</a></li>
 							<li><a href="#FAQFontSize">How do I increase the font size to something larger than 38?</a></li>
 							<li><a href="#FAQSounds">How do I add my own custom sounds?</a></li>
 							<li><a href="#FAQNewTrigger">How do I create a new trigger?</a></li>
 							<li><a href="#FAQMutilate">Is it possible to prevent Mutilate from being merged?</a></li>
 							<li><a href="#FAQXP">Is is possible to disable the default Blizzard XP Text?</a></li>
 							<li><a href="#FAQVE">How do I suppress Vampiric Embrace?</a></li>
-							<li><a href="#FAQExclusiveIcons">I want to see skill names even when there is an icon.  Is that possible?</a></li>
+							<li><a href="#FAQExclusiveIcons">I want to see skill names even when there is an icon. Is that possible?</a></li>
 							<li><a href="#FAQGameDamage">Is there a way to show the damage above the target's heads like the default damage text?</a></li>
 							<li><a href="#FAQEfficiency">Is MSBT efficient?</a></li>
 						</ul>
@@ -136,7 +136,7 @@
 						<ul>
 							<li>
 								Output your own scrolling messages with the MikSBT.DisplayMessage function instead of having
-								to create your own frame and animation code.  You can also use your own font by first registering
+								to create your own frame and animation code. You can also use your own font by first registering
 								it with MSBT via the MikSBT.RegisterFont function.
 							</li>
 							<li>Create custom animation styles.</li>
@@ -261,25 +261,25 @@
 		<a href="#TOC">Return to TOC</a><br /><br />
 		<div class="SectionBody">
 			The trigger system is a powerful and flexible system that allows you to specify custom events to be displayed based on
-			specific game events that are not already handled by default.  There are several mechanisms in place to ensure triggers are efficient as
-			possible so they are not needlessly wasting CPU cycles checking conditions that aren't relevant.  Due to this optimization, several common
+			specific game events that are not already handled by default. There are several mechanisms in place to ensure triggers are efficient as
+			possible so they are not needlessly wasting CPU cycles checking conditions that aren't relevant. Due to this optimization, several common
 			triggers are included by default.
 			<div class="SubsectionTitle"><a name="TriggerBasicConcepts"></a>Basic Concepts:</div>
 			<div class="SubsectionBody">
-				Every time almost anything happens in the game, a combat log entry is generated for it.  While it is not readily visible, each of these
-				combat log entries is categorized by Blizzard according to specific event types.  It is these event types that drive triggers.  Triggers are
+				Every time almost anything happens in the game, a combat log entry is generated for it. While it is not readily visible, each of these
+				combat log entries is categorized by Blizzard according to specific event types. It is these event types that drive triggers. Triggers are
 				really just definitions of a specific set of circumstances that must occur before they will fire.
 				<br /><br />
 				Aside from being categorized into an event type, each event that occurs in game has several other pieces of information associated with it such as
-				who the source of the event was, how much the event hit or healed for, and whether or not the event was a crit.  Obviously this additional information
+				who the source of the event was, how much the event hit or healed for, and whether or not the event was a crit. Obviously this additional information
 				varies according to the type of event it is since, for example, an aura application can't crit.
 				<br /><br />
 				The trigger system refers to these event types as <a href="#MainEvents">main events</a> and the additional pieces of information as
 				<a href="#MainEventConditions">conditions</a>, since ultimately it is these additional pieces of information that define the specific
 				circumstances of interest.
 				<br /><br />
-				Let's consider an example event to better understand how the pieces fit together.  Assume that you were just hit by a fireball.  The damage caused
-				to you by the fireball generated an event of type "Skill Damage".  The event also has many of other pieces of information associated with it like
+				Let's consider an example event to better understand how the pieces fit together. Assume that you were just hit by a fireball. The damage caused
+				to you by the fireball generated an event of type "Skill Damage". The event also has many of other pieces of information associated with it like
 				the name of the unit who cast the fireball, how much the fireball hit you for, whether or not it crit, whether the unit who cast the fireball is a
 				player or an NPC, etc.
 				<br /><br />
@@ -288,7 +288,7 @@
 				<br /><br />
 				While the <a href="#MainEvents">main events</a> and their <a href="#MainEventConditions">conditions</a> offer a wealth the information, there is other non-event
 				related "state" information available such as the current zone your character is in, whether or not certain buffs are active, and whether or not certain skills are
-				available.  This "state" information forms the basis for what the trigger system refers to as <a href="#TriggerExceptions">exceptions</a>.  An
+				available. This "state" information forms the basis for what the trigger system refers to as <a href="#TriggerExceptions">exceptions</a>. An
 				<a href="#TriggerExceptions">exception</a> will prevent a trigger from being displayed when it applies.
 			</div>
 
@@ -301,11 +301,11 @@
 				<ol>
 					<li>One of the <a href="#MainEvents">main events</a> that a trigger has defined occurs.</li>
 					<li>
-						The specific <a href="#MainEventConditions">conditions</a> defined for the <a href="#MainEvents">main event</a> for the trigger are tested.  If any of the
+						The specific <a href="#MainEventConditions">conditions</a> defined for the <a href="#MainEvents">main event</a> for the trigger are tested. If any of the
 						conditions do not apply, the trigger will not fire and all processing for the trigger stops.
 					</li>
 					<li>
-						The <a href="#TriggerExceptions">exceptions</a> defined for the trigger are tested.  If any of the exceptions apply, the trigger will not fire and all
+						The <a href="#TriggerExceptions">exceptions</a> defined for the trigger are tested. If any of the exceptions apply, the trigger will not fire and all
 						processing for the trigger stops.
 					</li>
 					<li>The trigger fires thus displaying the specified output message and event settings.</li>
@@ -338,30 +338,30 @@
 				</ul>
 				<br />
 				Recall from the "<a href="#TriggerMechanics">Trigger Mechanics</a>" section that each trigger can have multiple <a href="#MainEvents">main events</a> treated
-				as an "or" relationship, and that each <a href="#MainEvents">main event</a> can have its own unique <a href="#MainEventConditions">conditions</a>.  Combining that
+				as an "or" relationship, and that each <a href="#MainEvents">main event</a> can have its own unique <a href="#MainEventConditions">conditions</a>. Combining that
 				with the capability to use a <a href="#MainEvents">main event</a> multiple times for a single trigger means you can effectively cover a set of common
-				scenarios all with a single trigger.  For example, imagine you want to see when both Mace Stun and Improved Hamstring proc.  Both cases are an aura application,
-				but they have different skill names.  By adding the same <a href="#MainEvents">main event</a> twice, but specifying a different skill name
-				<a href="#MainEventConditions">condition</a> for each one, you are effectively saying when Mace Stun or Improved Hamstring proc this trigger should fire.  Naturally
+				scenarios all with a single trigger. For example, imagine you want to see when both Mace Stun and Improved Hamstring proc. Both cases are an aura application,
+				but they have different skill names. By adding the same <a href="#MainEvents">main event</a> twice, but specifying a different skill name
+				<a href="#MainEventConditions">condition</a> for each one, you are effectively saying when Mace Stun or Improved Hamstring proc this trigger should fire. Naturally
 				the other <a href="#MainEventConditions">conditions</a> such as affiliation and reaction would need to also be set for each event.
 				<br /><br />
-				The astute reader will say "Wait a second!  How will I be able to tell which one procced if the output message is the same?".  This problem is solved with substitution
-				codes.  Depending on which event actually caused the trigger to fire, %s will be replaced the appropriate skill name.  Also, the correct icon would be displayed since
+				The astute reader will say "Wait a second! How will I be able to tell which one procced if the output message is the same?". This problem is solved with substitution
+				codes. Depending on which event actually caused the trigger to fire, %s will be replaced the appropriate skill name. Also, the correct icon would be displayed since
 				triggers attempt to choose an appropriate icon based on the <a href="#MainEvents">main event</a> that fired them.
 				<br /><br />
 				The capability of using the same condition multiple times for a given <a href="#MainEvents">main event</a> with different relationships means that things such as ranges
-				and complex pattern matching can be implemented.  For example, imagine you are trying to create a trigger that will fire when an amount is between two values.  The first
+				and complex pattern matching can be implemented. For example, imagine you are trying to create a trigger that will fire when an amount is between two values. The first
 				<a href="#MainEventConditions">condition</a> could be "Amount - Is Greater Than - X" and the second could be "Amount - Is Less Than - Y".
 				<br /><br />
-				Another advanced capability is using skill IDs to detect when specific ranks, such as rank 1, are being used.  Most online databases can be used to ascertain
-				what the skill ID is for the ranks of each skill.  By adding <a href="#MainEventConditions">conditions</a> that specify these specific skill IDs, it is possible
+				Another advanced capability is using skill IDs to detect when specific ranks, such as rank 1, are being used. Most online databases can be used to ascertain
+				what the skill ID is for the ranks of each skill. By adding <a href="#MainEventConditions">conditions</a> that specify these specific skill IDs, it is possible
 				to only trigger on specific skill ranks.
 			</div>
 
 			<div class="SubsectionTitle"><a name="ExampleTriggers"></a>Example Triggers:</div>
 			<div class="SubsectionBody">
 				Since the point of the trigger system is to allow for custom events that are not already available, there is no way to cover all of the possibilities.
-				However, most commonly requested triggers fall within the following categories.  An example trigger or two for each category is provided and can be
+				However, most commonly requested triggers fall within the following categories. An example trigger or two for each category is provided and can be
 				used as a guide to creating your desired trigger.
 				<br /><br />
 				Please note these examples don't make use of advanced capabilities in order to keep the examples easy to
@@ -442,7 +442,7 @@
 						<td class="ParameterName" nowrap="nowrap">Key Skill Usage:</td>
 						<td class="ParameterDesc">
 							Many players find it useful to create a trigger for when certain key abilities such as Hand of Freedom or Hand of Protection are used while
-							in the arena.  Most of these effects involve successfully casting a spell and so the <a href="#MainEvents">main event</a> type will usually be "Cast Success".
+							in the arena. Most of these effects involve successfully casting a spell and so the <a href="#MainEvents">main event</a> type will usually be "Cast Success".
 							<br /><br />
 							The most common <a href="#MainEventConditions">conditions</a> used for this category of triggers are "Skill Name" and "Source Unit Reaction".
 							<br /><br />
@@ -517,15 +517,15 @@
 				<tr>
 					<td class="ParameterName" nowrap="nowrap">Trigger Classes:</td>
 					<td class="ParameterDesc">
-						This allows you to set the classes that you want the trigger to apply to.  <b>NOTE: THIS IS YOUR
-						CLASS NOT THE TARGET CLASS.</b>  You may look at the Execute trigger for an example.  Since Warrior is
+						This allows you to set the classes that you want the trigger to apply to. <b>NOTE: THIS IS YOUR
+						CLASS NOT THE TARGET CLASS.</b> You may look at the Execute trigger for an example. Since Warrior is
 						selected, the trigger will only apply when you are playing on a warrior.
 					</td>
 				</tr>
 				<tr>
 					<td class="ParameterName" nowrap="nowrap"><a href="#MainEvents">Main Events</a>:</td>
 					<td class="ParameterDesc">
-						This allows you to define which <a href="#MainEvents">main events</a> should begin the process of testing the trigger.  When <b>ANY</b>
+						This allows you to define which <a href="#MainEvents">main events</a> should begin the process of testing the trigger. When <b>ANY</b>
 						(or relationship) of these main events occur and their <a href="#MainEventconditions">conditions</a> are true, the trigger will then make sure
 						none of the <a href="#TriggerExceptions">exceptions</a> are true before firing.
 						<br /><br />
@@ -585,7 +585,7 @@
 					</tr>
 					<tr>
 						<td class="ParameterName" nowrap="nowrap">Create:</td>
-						<td class="ParameterDesc">Fired when items are created.  This is typically for conjured items.</td>
+						<td class="ParameterDesc">Fired when items are created. This is typically for conjured items.</td>
 					</tr>
 					<tr>
 						<td class="ParameterName" nowrap="nowrap">Damage Shield Damage:</td>
@@ -855,7 +855,7 @@
 					</tr>
 					<tr>
 						<td class="ParameterName" nowrap="nowrap">Unit ID:</td>
-						<td class="ParameterDesc">The ID of the unit affected.  Use this condition to test specific units for changes in energy, health, mana, etc.</td>
+						<td class="ParameterDesc">The ID of the unit affected. Use this condition to test specific units for changes in energy, health, mana, etc.</td>
 					</tr>
 					<tr>
 						<td class="ParameterName" nowrap="nowrap">Unit Reaction:</td>
@@ -900,7 +900,7 @@
 					</tr>
 					<tr>
 						<td class="ParameterName" nowrap="nowrap">Warrior Stance:</td>
-						<td class="ParameterDesc">The current stance your warrior is in.  Only works correctly if you are playing a warrior.</td>
+						<td class="ParameterDesc">The current stance your warrior is in. Only works correctly if you are playing a warrior.</td>
 					</tr>
 					<tr>
 						<td class="ParameterName" nowrap="nowrap">Zone Name:</td>
@@ -997,7 +997,7 @@
 		<div class="SectionBody">
 			<ol>
 				<li class="FAQListItem">
-					<a name="FAQFonts"></a><b>I don't like any of the fonts supplied with MSBT.  How do I use my own fonts?</b>
+					<a name="FAQFonts"></a><b>I don't like any of the fonts supplied with MSBT. How do I use my own fonts?</b>
 					<br /><br />
 
 					<div style="color: red;">
@@ -1007,9 +1007,9 @@
 					<br /><br />
 
 					NOTE: Keep in mind that if you use your own font files that you need to make sure the font
-					supports the characters that will be displayed.  For example the typical way to display buff
-					gains is [BuffName].  If the font you use does not have a character glyph for the [ or ]
-					characters you will not be able to see the unsupported characters.  This is especially important
+					supports the characters that will be displayed. For example the typical way to display buff
+					gains is [BuffName]. If the font you use does not have a character glyph for the [ or ]
+					characters you will not be able to see the unsupported characters. This is especially important
 					with non-English clients since a lot of characters aren't supported by English fonts.
 					<br /><br />
 
@@ -1017,7 +1017,7 @@
 					<br /><br />
 					<ul>
 						<li>
-							The first, and preferred method, is to use MSBT's new in-game media editor available under the custom media tab.  If you follow
+							The first, and preferred method, is to use MSBT's new in-game media editor available under the custom media tab. If you follow
 							the recommended guideline of placing your custom font files in the MikScrollingBattleText\Fonts directory, all you need to enter
 							for the font path in the in-game media editor is the name of the font file.
 							<br /><br />
@@ -1035,8 +1035,8 @@
 						</li>
 						<br /><br />
 						<li>
-							The second method is aimed more at mod developers that want to display information using MSBT.  You can call the MikSBT.RegisterFont
-							function to register a custom font that you may then specify in your call to MikSBT.DisplayMessage.  See the included API.html file
+							The second method is aimed more at mod developers that want to display information using MSBT. You can call the MikSBT.RegisterFont
+							function to register a custom font that you may then specify in your call to MikSBT.DisplayMessage. See the included API.html file
 							for reference information.
 						</li>
 					</ul>
@@ -1062,9 +1062,9 @@
 					There are a couple of methods that can be used to add custom sounds.
 					<ul>
 						<li>
-							The first, and preferred method, is to use MSBT's new in-game media editor available under the custom media tab.  If you follow
+							The first, and preferred method, is to use MSBT's new in-game media editor available under the custom media tab. If you follow
 							the recommended guideline of placing your custom sound files in the MikScrollingBattleText\Sounds directory, all you need to enter
-							for the sound path in the in-game media editor is the name of the sound file.  The acceptable sound file types are .mp3 and .ogg.
+							for the sound path in the in-game media editor is the name of the sound file. The acceptable sound file types are .mp3 and .ogg.
 							<br /><br />
 
 							For example, assume you have an mp3 sound file "MyUberSound.mp3" you want to use.
@@ -1092,7 +1092,7 @@
 					The first step is to <b>read</b> the <a href="#TriggerGuide">Trigger Guide</a> and <a href="#TriggerReference">Trigger Reference</a> sections above.
 					<br /><br />
 					Among other things, the guide explains how triggers work, what the various components of the trigger system are, and provides example triggers for
-					common categories.  The reference section provides specific information about the various components such as the available substitution codes, main
+					common categories. The reference section provides specific information about the various components such as the available substitution codes, main
 					events, conditions, and exceptions.
 					<br /><br />
 					Once you've read those sections, we can continue on to the process for creating triggers.
@@ -1102,21 +1102,21 @@
 					<ol type="a">
 						<li>Since a new trigger is being created, click the Add New Trigger button, enter "Poly Broke - %r!" for the output message, and click Okay.</li>
 						<li>
-							The trigger conditions configuration dialog for the new trigger will automatically be shown.  You can click the trigger conditions icon
+							The trigger conditions configuration dialog for the new trigger will automatically be shown. You can click the trigger conditions icon
 							button (the gear) next to a trigger to access these settings manually at a later time.
 						</li>
 						<li>
-							Click the edit Trigger Classes icon button and uncheck "All" classes.  Check Mage for the class the trigger will apply to.
+							Click the edit Trigger Classes icon button and uncheck "All" classes. Check Mage for the class the trigger will apply to.
 							It is better to select the specific classes the trigger applies to instead of selecting all classes since by specifying
 							classes, the mod can completely ignore the trigger and save resources for the classes to which it does not apply.
 						</li>
 						<li>Click the Add Event button next to the Main Events label to add a new main event.</li>
 						<li>Select Aura Removal for the Main Event.</li>
 						<li>Modify the first condition to "Recipient Unit Reaction - Is Equal To - Hostile" because we don't want to see when poly fades from our teammates.</li>
-						<li>Modify the second condition to "Skill Name - Is Equal To - Polymorph".  It is case-sensitive, so make sure you use a capital P.</li>
+						<li>Modify the second condition to "Skill Name - Is Equal To - Polymorph". It is case-sensitive, so make sure you use a capital P.</li>
 						<li>Click the Save button to save the new main event and its conditions.</li>
 						<li>Click the Add Exception button next to the Trigger Exceptions label to add a new exception.</li>
-						<li>Select "Zone Type - Is Not Equal To - Arena" for the Exception.  This makes it so the trigger will not fire when we aren't in the arena.</li>
+						<li>Select "Zone Type - Is Not Equal To - Arena" for the Exception. This makes it so the trigger will not fire when we aren't in the arena.</li>
 						<li>Click the Save button to save the new exception.</li>
 						<li>Click the Save button on the trigger frame to save the trigger's new conditions.</li>
 					</ol>
@@ -1158,21 +1158,21 @@
 				</li>
 
 				<li class="FAQListItem">
-					<a name="FAQExclusiveIcons"></a><b>I want to see skill names even when there is an icon.  Is that possible?</b>
+					<a name="FAQExclusiveIcons"></a><b>I want to see skill names even when there is an icon. Is that possible?</b>
 					<br /><br />
-					Yes.  Uncheck "Exclusive Skill Names" under the Skill Icons tab.
+					Yes. Uncheck "Exclusive Skill Names" under the Skill Icons tab.
 				</li>
 
 				<li class="FAQListItem">
 					<a name="FAQGameDamage"></a><b>Is there a way to show the damage above the target's heads like the default damage text?</b>
 					<br /><br />
-					The only way this is possible is using the built-in game damage.  It can be enabled through the game's interface options, but keep
+					The only way this is possible is using the built-in game damage. It can be enabled through the game's interface options, but keep
 					in mind you will lose all customization capabilities for outgoing damage if you choose to use the game's built-in damage.
-					WoW's API does not provide a method to get the position of 3D game objects such as players and mobs.  This is intentional on their
+					WoW's API does not provide a method to get the position of 3D game objects such as players and mobs. This is intentional on their
 					part and will likely never change.
 					<br /><br />
-					I do not recommend using the built-in game damage option.  If you take the time to get used to having the damage in a consolidated area,
-					you will likely find it superior in many ways.  Aside from the obvious visual customization capabilities of using MSBT's damage display,
+					I do not recommend using the built-in game damage option. If you take the time to get used to having the damage in a consolidated area,
+					you will likely find it superior in many ways. Aside from the obvious visual customization capabilities of using MSBT's damage display,
 					there are many other benefits such as being able to see the damage and healing being done to targets that are not in your viewport, merging
 					of AoE with cumulative amounts, throttling of DoT spam, damage thresholds, per skill suppressions for things you don't care about, icons
 					annotating which skill caused the damage or healing, and more.
@@ -1181,25 +1181,25 @@
 				<li class="FAQListItem">
 					<a name="FAQEfficiency"></a><b>Is MSBT efficient?</b>
 					<br /><br />
-					Absolutely.  MSBT 5.0 was completely re-designed from the ground up using Blizzard's new mod statistics
-					API tools with the #1 priority of optimization for reduced memory usage and CPU efficiency.  As a result,
+					Absolutely. MSBT 5.0 was completely re-designed from the ground up using Blizzard's new mod statistics
+					API tools with the #1 priority of optimization for reduced memory usage and CPU efficiency. As a result,
 					it is both lightweight (low memory usage) and efficient (low CPU usage), which, sadly, is frequently ignored
-					in performance discussions.  Performance entails both memory usage and CPU usage. Unless you don't have enough
+					in performance discussions. Performance entails both memory usage and CPU usage. Unless you don't have enough
 					RAM available, CPU usage is almost always more of a factor on your FPS than raw memory usage is.
 					<br /><br />
-					Please don't just take my word for it though.  Test it out for yourself. Blizzard has made it simple to see
-					statistics about mod usage with the GetAddOnMemoryUsage and GetAddOnCPUUsage API calls.  Testing a mod will
+					Please don't just take my word for it though. Test it out for yourself. Blizzard has made it simple to see
+					statistics about mod usage with the GetAddOnMemoryUsage and GetAddOnCPUUsage API calls. Testing a mod will
 					give you a true picture of its performance.
 					<br /><br />
 
-					One thing to keep in mind during your testing is that MSBT is written to be completely dynamic.  It will only create exactly what
-					objects it needs when it needs them and then reuse them from that point forward.  This means during the first few combat cycles
-					you will see a slightly higher increasing rate than you might expect as the first set of objects is created.  The rate will quickly
-					stabilize to typically less than 1 KiB/s as the objects begin to be reused.  The main benefits to this approach are less overall memory
+					One thing to keep in mind during your testing is that MSBT is written to be completely dynamic. It will only create exactly what
+					objects it needs when it needs them and then reuse them from that point forward. This means during the first few combat cycles
+					you will see a slightly higher increasing rate than you might expect as the first set of objects is created. The rate will quickly
+					stabilize to typically less than 1 KiB/s as the objects begin to be reused. The main benefits to this approach are less overall memory
 					usage and very little memory churn.
 					<br /><br />
 
-					Also, don't forget to look at CPU utilization.  As I said above, it is frequently ignored, but it is also important.  Would you
+					Also, don't forget to look at CPU utilization. As I said above, it is frequently ignored, but it is also important. Would you
 					rather have your CPU spending extra time on the game engine, or wasting cycles on an inefficient mod?
 				</li>
 			</ol>
@@ -1304,7 +1304,7 @@
 					<td class="ParameterName" nowrap="nowrap">5.7.128</td>
 					<td class="ParameterDesc">
 						<ul>
-							<li>Updated parser to support the new amount parameter on applied and removed auras.  Thanks to pelf for the patch.</li>
+							<li>Updated parser to support the new amount parameter on applied and removed auras. Thanks to pelf for the patch.</li>
 						</ul>
 					</td>
 				</tr>
@@ -1393,7 +1393,7 @@
 									<li>Added default trigger for Elusive Brew at 5, 10, and 15 stacks.</li>
 									<li>Added default trigger for Power Guard x3.</li>
 									<li>Added new events for Alternate Power Gains and Losses so they may be customized.</li>
-									<li>Added temporary workaround for UnitGUID bug when in a group.  Triggers that involve party/raid members will not work currently due to this.</li>
+									<li>Added temporary workaround for UnitGUID bug when in a group. Triggers that involve party/raid members will not work currently due to this.</li>
 									<li>Updated environmental damage handler for environmental type changes.</li>
 									<li>Updated TOC for Patch 5.0.4.</li>
 								</ul>
@@ -1544,7 +1544,7 @@
 						<ul>
 							<li>Made several updates to the cooldown tracking system:
 								<ul>
-									<li>Implemented a work around for Blizzard's cooldown bug with dismissed pets.  Pet cooldowns should no longer be shown before they are actually finished.</li>
+									<li>Implemented a work around for Blizzard's cooldown bug with dismissed pets. Pet cooldowns should no longer be shown before they are actually finished.</li>
 									<li>Created new event for customizable pet cooldown notifications.</li>
 									<li>Added an option to customize the color of the skill name in cooldown events.</li>
 									<li>Changed Skill Cooldown Complete trigger event to Player Cooldown Complete (only detects player cooldowns).</li>
@@ -1635,7 +1635,7 @@
 					<td class="ParameterDesc">
 						<ul>
 							<li>Updated IDs for Abominable Might and Unleashed Rage to new values introduced in Patch 3.3.3.</li>
-							<li>Removed aura hack since Blizzard fixed the bug with aura applications not reporting to the combat log.  This will fix the double notifications.</li>
+							<li>Removed aura hack since Blizzard fixed the bug with aura applications not reporting to the combat log. This will fix the double notifications.</li>
 							<li>Updated Simplified and Traditional Chinese translations from yleaf.</li>
 						</ul>
 					</td>
@@ -1654,7 +1654,7 @@
 					<td class="ParameterDesc">
 						<ul>
 							<li>
-								Implemented a hack to work around Blizzard's bug with the combat log in Patch 3.3.  This will allow most of the default triggers to work
+								Implemented a hack to work around Blizzard's bug with the combat log in Patch 3.3. This will allow most of the default triggers to work
 								until Blizzard fixes the bug.
 							</li>
 							<li>Updated Korean translations from chkid.</li>
@@ -1692,7 +1692,7 @@
 					<td class="ParameterDesc">
 						<ul>
 							<li>Created new events for incoming and outgoing periodic heal (HoT) crits.</li>
-							<li>Lowered the minimum allowed cooldown threshold to 3 seconds.  The default value is still 5 seconds.</li>
+							<li>Lowered the minimum allowed cooldown threshold to 3 seconds. The default value is still 5 seconds.</li>
 							<li>Tweaked the animation event initializion logic to prevent some instances where events could briefly flicker at high framerates.</li>
 							<li>Added a recently fired exception to the default Rune Strike trigger to reduce its spaminess.</li>
 							<li>Updated Korean translations from chkid.</li>
@@ -1716,7 +1716,7 @@
 					<td class="ParameterName" nowrap="nowrap">5.4.63</td>
 					<td class="ParameterDesc">
 						<ul>
-							<li>Modified heal events to use the new combat log format in patch 3.2.  This fixes the issue with all heals showing as crits.</li>
+							<li>Modified heal events to use the new combat log format in patch 3.2. This fixes the issue with all heals showing as crits.</li>
 							<li>Added absorb amount as an available condition to heal based triggers.</li>
 							<li>Updated German translations from Archiv.</li>
 							<li>Updated French translations from Devfool.</li>
@@ -1743,7 +1743,7 @@
 							<li>Changed the interaction with Blizzard's default FCT (Floating Combat Text) and damage/healing displays:
 								<ul>
 									<li>
-										The default FCT and damage/healing displays are no longer manually controlled.  The settings in the game's
+										The default FCT and damage/healing displays are no longer manually controlled. The settings in the game's
 										Interface Options configuration must be used to control them instead.
 									</li>
 									<li>The Game Damage and Game Healing checkboxes have been removed from the General tab since they are no longer used.</li>
@@ -1788,7 +1788,7 @@
 							<br />
 							<li>Made minor optimizations to the merging system and event formatting.</li>
 							<li>Added overkill amounts to available partial effects, but they are disabled by default.</li>
-							<li>Added a default trigger for hostile player PvP trinket usage including who used it.  It is set to only show in arenas by default.</li>
+							<li>Added a default trigger for hostile player PvP trinket usage including who used it. It is set to only show in arenas by default.</li>
 							<li>Changed the event code for killing blows to %n so it works correctly with class coloring.</li>
 							<li>Made the %n event code available for the built-in outgoing dispels event.</li>
 							<li>Fixed an issue where certain new text could briefly appear in the wrong spot when initially displayed on slower PCs.</li>
@@ -1807,7 +1807,7 @@
 							<li>There is now an option to disable icons for each scroll area.</li>
 							<li>Added an option to hide heals that have an effective heal amount of zero (full overheals).</li>
 							<li>
-								Modified cast success and summon trigger events to include recipient conditions.  Unfortunately cast start
+								Modified cast success and summon trigger events to include recipient conditions. Unfortunately cast start
 								events do not report recipient information, so it is not available for them.
 							</li>
 							<li>Increased the damage, healing, and power thresholds significantly to keep up with inflation.</li>
@@ -1827,8 +1827,8 @@
 									<li>Dynamically adjusted cooldowns such as glyphed Guardian Spirit will now work correctly.</li>
 									<li>Cooldowns for skills that are unlearned will be automatically removed (dual spec).</li>
 									<li>
-										Death Knight cooldowns will now consider rune cooldowns.  For example, consider Rune Tap only has
-										4 seconds remaining, but a blood rune won't be available for 6 seconds.  The notification won't
+										Death Knight cooldowns will now consider rune cooldowns. For example, consider Rune Tap only has
+										4 seconds remaining, but a blood rune won't be available for 6 seconds. The notification won't
 										display until the rune is available.
 									</li>
 									<li>The small "time drift" that could occur on long cooldowns should no longer occur.</li>
@@ -1848,7 +1848,7 @@
 					<td class="ParameterName" nowrap="nowrap">5.4.44</td>
 					<td class="ParameterDesc">
 						<ul>
-							<li>Created new events for buff and debuff stacks.  They only apply when there are 2 or more auras stacked.</li>
+							<li>Created new events for buff and debuff stacks. They only apply when there are 2 or more auras stacked.</li>
 							<li>Changed default loot message to include the amount of the item looted in addition to the total in inventory.</li>
 							<li>Modified Impact trigger to use the new mechanics.</li>
 							<li>Added default trigger for Eradication.</li>
@@ -1889,7 +1889,7 @@
 							<li>Created new events for incoming and outgoing periodic damage (DoT) crits.</li>
 							<li>Added an option to control whether or not the text shadowing effect introduced in version 5.3.37 is applied.</li>
 							<li>Outgoing dispels will now display debuffs cleansed from friendly units as well as buffs from enemy units.</li>
-							<li>Aura gains now show how many are stacked by default.  You can remove the %a event code from the respective events if you don't want to see this information.</li>
+							<li>Aura gains now show how many are stacked by default. You can remove the %a event code from the respective events if you don't want to see this information.</li>
 							<li>Added Active Talents as an available trigger exception.</li>
 							<li>The blink buff gain and loss events are now ignored.</li>
 							<li>Disabling a scroll area will now ensure all events destined for it are suppressed regardless of their source.</li>
@@ -1924,7 +1924,7 @@
 					<td class="ParameterName" nowrap="nowrap">5.3.36</td>
 					<td class="ParameterDesc">
 						<ul>
-							<li>Updated to work with Patch 3.1 on the PTR.  There will be some triggers and skills that will need to be removed once 3.1 goes live.</li>
+							<li>Updated to work with Patch 3.1 on the PTR. There will be some triggers and skills that will need to be removed once 3.1 goes live.</li>
 							<li>Modified the channeled AoE aura suppression feature to only ignore the aura if it was caused by the player casting it.</li>
 							<li>Updated Simplified and Traditional Chinese translations from yleaf.</li>
 						</ul>
@@ -1935,7 +1935,7 @@
 					<td class="ParameterDesc">
 						<ul>
 							<li>
-									Implemented a work around for Blizzard's cooldown bug with Death Knights and runes.  Only abilities
+									Implemented a work around for Blizzard's cooldown bug with Death Knights and runes. Only abilities
 									with actual cooldowns should now be shown.
 							</li>
 							<li>Created a default suppression for Ferocious Inspiration to remove the spam it causes.</li>
@@ -2091,9 +2091,9 @@
 								</ul>
 							</li>
 							<br />
-							<li>Full paths may now be entered for sounds.  This includes path to sound files internal to WoW.</li>
+							<li>Full paths may now be entered for sounds. This includes path to sound files internal to WoW.</li>
 							<li>Added Traditional Chinese localization.</li>
-							<li>Moved font definitions to localization files so they can be unique per language.  MSBTFonts.lua can still be used to add custom fonts.</li>
+							<li>Moved font definitions to localization files so they can be unique per language. MSBTFonts.lua can still be used to add custom fonts.</li>
 							<li>Updated spell dispel/stolen events to the new values implemented by Blizzard in Patch 2.4.3.</li>
 						</ul>
 					</td>
@@ -2126,12 +2126,12 @@
 										over things such as affected units (target, focus, etc), applications, etc.
 									</li>
 									<li>
-										The old secondary conditions has been replaced with exceptions.  Exceptions will cause the trigger not to fire when
-										they are true.  In addition, most exceptions has a "reverse logic" option that causes them to behave as their opposite for
+										The old secondary conditions has been replaced with exceptions. Exceptions will cause the trigger not to fire when
+										they are true. In addition, most exceptions has a "reverse logic" option that causes them to behave as their opposite for
 										high flexibility.
 									</li>
 									<li>
-										Triggers now try to choose an appropriate icon based on the main event that fired it.  It is still possible
+										Triggers now try to choose an appropriate icon based on the main event that fired it. It is still possible
 										to specify an icon that will override the default.
 									</li>
 									<li>All of the default triggers will now work on non-English clients without the need for localization.</li>
@@ -2156,12 +2156,12 @@
 					<td class="ParameterName" nowrap="nowrap">5.1</td>
 					<td class="ParameterDesc">
 						<ul>
-							<li>The optional icons module is no longer required.  This is a significant memory savings for those previously using the module.</li>
+							<li>The optional icons module is no longer required. This is a significant memory savings for those previously using the module.</li>
 							<li>Unfortunately, the ability to add and customize triggers is disabled for this release while the system is rewritten.</li>
 							<li>
-								Rewrote the parser to work with the new combat log mechanics implemented in Patch 2.4.  Since
+								Rewrote the parser to work with the new combat log mechanics implemented in Patch 2.4. Since
 								manually parsing text strings is no longer required, things like pets with the same name as
-								party/raid members will no longer cause confusion.  There also should no longer be problems with
+								party/raid members will no longer cause confusion. There also should no longer be problems with
 								non-English clients that had strange parsing issues due to ambiguous strings.
 							</li>
 							<li>Load up memory usage is now around 221 KiB.</li>
@@ -2172,7 +2172,7 @@
 							<li>Only one five combo point notification will now be shown per combo point cycle.</li>
 							<li>Overhealing will now show on heals that have been excluded from merging.</li>
 							<li>Fixed an issue regarding cooldowns not being displayed for certain skills like Mangle (Bear).</li>
-							<li>Added Simplified Chinese localization.  Thanks to elafor and hscui for their work.</li>
+							<li>Added Simplified Chinese localization. Thanks to elafor and hscui for their work.</li>
 							<li>Updated TOC for Patch 2.4.</li>
 						</ul>
 					</td>
@@ -2227,17 +2227,17 @@
 						<ul>
 							<li>
 								Complete code rewrite to further reduce memory usage and CPU utilization. Blizzard's addition
-								of memory and CPU tracking tools to the API were used to help achieve this.  The CPU utilization
+								of memory and CPU tracking tools to the API were used to help achieve this. The CPU utilization
 								is about 55% less, and the load up memory usage is now around 258 KiB.
 							</li>
 							<li>
-								Redesigned the profile system to use a full master/diff approach.  This leads to a substantial
-								memory savings when using multiple profiles.  It also adds the benefit of allowing future changes
+								Redesigned the profile system to use a full master/diff approach. This leads to a substantial
+								memory savings when using multiple profiles. It also adds the benefit of allowing future changes
 								to defaults to take place without having to completely reset user profiles.
 							</li>
 							<li>
-								The options interface was streamlined and rewritten using pure lua.  All the tabs and popup
-								frames are now dynamically created only when needed.  The options are still load on demand
+								The options interface was streamlined and rewritten using pure lua. All the tabs and popup
+								frames are now dynamically created only when needed. The options are still load on demand
 								and use no resources when not loaded.
 							</li>
 							<li>Created a new set of spam controls:
@@ -2259,7 +2259,7 @@
 							<li>
 								Added some "high level" controls to the options interface such as a "Toggle All" button to quickly toggle
 								the enable state of all events in the selected category. This allows you to disable all incoming pet events
-								with one click for example.  Another example is a "Disable Skill Names" checkbox which quickly allows you
+								with one click for example. Another example is a "Disable Skill Names" checkbox which quickly allows you
 								to stop all skill names from being displayed without having to modify every single event and remove the %s.
 							</li>
 							<li>Added built-in customizable cooldown notifications.</li>
@@ -2348,7 +2348,7 @@
 							<li>The mana gained form the warlock Dark Pact talent will now be displayed.</li>
 							<li>
 								Recharacterized healing from some damage based spells (most notably Vampiric Embrace) into HoTs so they
-								will now follow the throttling mechanics.  Basically this means those spells should no longer spam you with healing
+								will now follow the throttling mechanics. Basically this means those spells should no longer spam you with healing
 								if you have HoT and DoT throttling enabled (it's on by default).
 							</li>
 							<li>Added parsing for damage taken from the tornado in the arenas.</li>
@@ -2380,15 +2380,15 @@
 										Redesigned the suppression system to use a hash table searching algorithm so that any number of suppressions may be added without any appreciable slowdown.
 									</li>
 									<li>
-										Optimized the default profile handling.  Due to the large number of options, the default
-										profile table takes up a decent chunk of memory (around 90 KiB).  In the previous versions, the
-										table was always memory resident - even when it wasn't needed.  It is now created dynamically
+										Optimized the default profile handling. Due to the large number of options, the default
+										profile table takes up a decent chunk of memory (around 90 KiB). In the previous versions, the
+										table was always memory resident - even when it wasn't needed. It is now created dynamically
 										only when it's needed, which is the first time you load a new version of the mod or reset a profile
 										to its defaults.
 									</li>
 									<li>
 										Redesigned the underlying options tables such that shared information amongst the events is
-										only stored once instead of separately for each event.  This saves quite a bit of memory,
+										only stored once instead of separately for each event. This saves quite a bit of memory,
 										especially when there are multiple profiles.
 									</li>
 									<li>
@@ -2413,8 +2413,8 @@
 							<br />
 
 							<li>
-								Rewrote the animation code to work using scaled timing.  Previously the animation was created by moving the text a set
-								amount of pixels each update.  This had the effect of causing the animation speed to vary greatly depending on system performance.
+								Rewrote the animation code to work using scaled timing. Previously the animation was created by moving the text a set
+								amount of pixels each update. This had the effect of causing the animation speed to vary greatly depending on system performance.
 								The animations should now keep the same speed regardless of large performance hits, such as those incurred while recording a
 								video or during extreme lag.
 							</li>
@@ -2426,15 +2426,15 @@
 							<li>
 								Added an option (enabled by default) to throttle DoTs and HoTs so that only one event for each ability will be displayed within the time period
 								specified (2.5 seconds by default). Any additional DoT/HoT abilities that occur while being throttled are merged into one event to be shown once the throttle
-								period has passed.  This will reduce the spam when you have HoTs and/or DoTs on multiple targets.
+								period has passed. This will reduce the spam when you have HoTs and/or DoTs on multiple targets.
 							</li>
 							<li>Made scroll areas dynamically creatable and made events/triggers assignable to them.</li>
 							<li>
-								Ability/Spell damage amounts now use a custom color according to their damage type by default.  The rest of the message will still show up with the event's selected color.
+								Ability/Spell damage amounts now use a custom color according to their damage type by default. The rest of the message will still show up with the event's selected color.
 								This behavior can be disabled.
 							</li>
 							<li>Partial effects (absorbs, resists, glancing, crushing, overheals, etc) can now be individually enabled, disabled, and color coded.</li>
-							<li>Separated Debuff and Item Buff Fades from Buff Fades into new notification events.  Totem buffs are now also handled as buff gains and fades.</li>
+							<li>Separated Debuff and Item Buff Fades from Buff Fades into new notification events. Totem buffs are now also handled as buff gains and fades.</li>
 							<li>Added an Extra Attacks notification event which will give notifications for Windfury, Thrash, Sword Spec, etc.</li>
 							<li>Added a Soul Shard Created notification event.</li>
 							<li>Overhauled the interface to include the new features.</li>
@@ -2467,12 +2467,12 @@
 							<li>Added support for power gains to yourself from other people.</li>
 							<li>
 								Increased the number of available event types for the trigger system to allow for greater
-								flexibility.  Due to the way the trigger system is designed this will not add much overhead since
+								flexibility. Due to the way the trigger system is designed this will not add much overhead since
 								triggers are only parsed against the selected event types.
 							</li>
 							<li>Alphabetized the list of available trigger events to make finding the one you want easier.</li>
 							<li>
-								Removed the default Blessing/Judgement of Wisdom suppression.  The user can choose to add one in for it
+								Removed the default Blessing/Judgement of Wisdom suppression. The user can choose to add one in for it
 								if they prefer.
 							</li>
 						</ul>
@@ -2490,25 +2490,25 @@
 					<td class="ParameterName" nowrap="nowrap">3.0</td>
 					<td class="ParameterDesc">
 						<ul>
-							<li>Implemented a low overhead trigger system.  <a href="#TriggerSystem">See documentation above</a>.</li>
+							<li>Implemented a low overhead trigger system. <a href="#TriggerSystem">See documentation above</a>.</li>
 							<li>Implemented a suppression system that allows you to suppress particular messages you don't want to see.</li>
 							<li>
-								Made significant changes to the scroll area settings interface.  The new interface shows all three
-								scroll areas at the same time.  Each scroll area is now titled with its coordinates and there are
+								Made significant changes to the scroll area settings interface. The new interface shows all three
+								scroll areas at the same time. Each scroll area is now titled with its coordinates and there are
 								editboxes to enter specific coordinates in addition to being able to drag the scroll areas around.
 							</li>
 							<li>
 								Changed the core animation routines to use function pointers in order to eliminate the need for a
-								ton of conditional testing.  Previously, every time the animation routine was called (typically
+								ton of conditional testing. Previously, every time the animation routine was called (typically
 								60-70 times per second for every scrolling item), the animation style and scroll direction were
-								checked to calculate how to move the text.  Now those items are only checked during the initial
-								animation object setup phase.  This should help performance on slower PCs.
+								checked to calculate how to move the text. Now those items are only checked during the initial
+								animation object setup phase. This should help performance on slower PCs.
 							</li>
 							<li>Added the command "/msbt search pattern" to enable an event searching mode which helps identify event types used in the trigger system. See documentation above for more info.</li>
 							<li>
-								Moved the Low Health, Low Mana, and Execute events into the trigger system.  Due to this change
+								Moved the Low Health, Low Mana, and Execute events into the trigger system. Due to this change
 								the Low Mana and Execute triggers will no longer waste resources checking on classes that don't
-								use mana or have an execute ability.  Also moving them into the trigger system made the thresholds
+								use mana or have an execute ability. Also moving them into the trigger system made the thresholds
 								at which to show the Low Health, and Low Mana warnings selectable.
 							</li>
 							<li>Made a few minor code performance tweaks to the animation setup "pipeline."</li>
@@ -2551,15 +2551,15 @@
 									<li>Made options load on demand to significantly reduce memory usage and start up time.</li>
 									<li>
 										Implemented a table recycling system to reuse tables created during combat instead
-										of creating new ones and allowing them to be garbage collected.  The net effect is that a
-										ton of garbage collection churn has been eliminated.  Thanks go to kergoth and Wobin for
+										of creating new ones and allowing them to be garbage collected. The net effect is that a
+										ton of garbage collection churn has been eliminated. Thanks go to kergoth and Wobin for
 										tips on how to achieve this.
 									</li>
 									<li>The combat event parser has been changed to reuse one single table for storing the results of the parsed data.</li>
 									<li>Streamlined the combat event to screen animation "pipeline."</li>
 									<li>Namespaced all code to reduce global namespace pollution.</li>
 									<li>
-										Load up KiB Usage in v1.03 was approximately 1050 KiB.  This has been reduced to around
+										Load up KiB Usage in v1.03 was approximately 1050 KiB. This has been reduced to around
 										488 KiB. In addition, due to the table recycling system, memory usage during operation is
 										much more consistent instead of continuously increasing until the next garbage collection
 										cycle.

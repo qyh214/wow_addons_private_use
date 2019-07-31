@@ -1,4 +1,4 @@
-## Interface: 80000
+## Interface: 80200
 ## Title: Lib: ChatAnims
 ## Notes: UIFrameFlash to Animation conversion library for Floating Chat Frame functions.
 ## Author: Funkydude

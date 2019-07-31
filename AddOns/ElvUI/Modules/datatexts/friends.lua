@@ -33,6 +33,7 @@ local C_FriendList_GetNumFriends = C_FriendList.GetNumFriends
 local C_FriendList_GetNumOnlineFriends = C_FriendList.GetNumOnlineFriends
 local C_FriendList_GetFriendInfoByIndex = C_FriendList.GetFriendInfoByIndex
 local ChatFrame_SendBNetTell = ChatFrame_SendBNetTell
+local InCombatLockdown = InCombatLockdown
 
 -- create a popup
 E.PopupDialogs.SET_BN_BROADCAST = {
@@ -391,6 +392,8 @@ local function Click(self, btn)
 		end
 
 		_G.EasyMenu(menuList, menuFrame, "cursor", 0, 0, "MENU", 2)
+	elseif InCombatLockdown() then
+		_G.UIErrorsFrame:AddMessage(E.InfoColor.._G.ERR_NOT_IN_COMBAT)
 	else
 		ToggleFriendsFrame()
 	end

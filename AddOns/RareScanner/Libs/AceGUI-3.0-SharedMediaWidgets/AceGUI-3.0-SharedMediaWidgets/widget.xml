@@ -6,4 +6,5 @@
 	<Script file="StatusbarWidget.lua" />
 	<Script file="BorderWidget.lua" />
 	<Script file="BackgroundWidget.lua" />
+	<Script file="MarkersWidget.lua" />
 </Ui>

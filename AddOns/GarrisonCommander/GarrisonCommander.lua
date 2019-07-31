@@ -461,29 +461,6 @@ function addon:OnInitialized()
 	self:AddOpenCmd("show","showdata","Prints a mission score")
 --@end-debug@]===]
 	self:Trigger("MSORT")
-	if (not IsAddOnLoaded("GarrisonCommander-Broker")) then
-		GarrisonLandingPageMinimapButton:HookScript("OnEnter",function(this)
-				if this.description==MINIMAP_ORDER_HALL_LANDING_PAGE_TOOLTIP then
-					GameTooltip:AddLine(WARDROBE_NEXT_VISUAL_KEY .. " " .. MINIMAP_GARRISON_LANDING_PAGE_TOOLTIP)
-				end
-				GameTooltip:Show()
-		end
-		)
-		GarrisonLandingPageMinimapButton:RegisterForClicks("LEFTBUTTONUP","RIGHTBUTTONUP")
-		GarrisonLandingPageMinimapButton:SetScript("OnClick",
-			function (this,button)
-					if (_G.GarrisonLandingPage and GarrisonLandingPage:IsShown()) then
-						HideUIPanel(GarrisonLandingPage);
-					else
-						if button=="RightButton" then
-								ShowGarrisonLandingPage(2)
-						else
-								ShowGarrisonLandingPage(C_Garrison.GetLandingPageGarrisonType());
-						end
-					end
-			end
-		)
-	end
 --[===[@debug@
 --	assert(self:GetAgeColor(1/0))
 --	assert(self:GetAgeColor(0/0))

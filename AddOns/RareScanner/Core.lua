@@ -29,7 +29,7 @@ local DEBUG_MODE = false
 
 -- Config constants
 local CURRENT_DB_VERSION = 5
-local CURRENT_LOOT_DB_VERSION = 13
+local CURRENT_LOOT_DB_VERSION = 14
 
 -- Hard reset versions
 local CURRENT_ADDON_VERSION = 600
@@ -47,11 +47,14 @@ local PROFILE_DEFAULTS = {
 			scanRares = true,
 			scanContainers = true,
 			scanEvents = true,
+			scanChatAlerts = true,
 			scanGarrison = false,
 			scanInstances = true,
 			scanOnTaxi = true,
 			filteredRares = {},
-			filteredZones = {}
+			filteredZones = {},
+			showMaker = true,
+			marker = 8
 		},
 		sound = {
 			soundPlayed = "Horn",
@@ -70,10 +73,13 @@ local PROFILE_DEFAULTS = {
 			autoHideLogWindow = 0
 		},
 		rareFilters = {
-			filtersToggled = true
+			filtersToggled = true,
+			filterOnlyMap = false
+			
 		},
 		zoneFilters = {
-			filtersToggled = true
+			filtersToggled = true,
+			filterOnlyMap = false
 		},
 		map = {
 			displayNpcIcons = true,
@@ -495,6 +501,11 @@ scanner_button:SetScript("OnEvent", function(self, event, ...)
 		end
 	-- Chat
 	elseif (event == "CHAT_MSG_MONSTER_YELL") then
+		-- If not disabled
+		if (not private.db.general.scanChatAlerts) then
+			return
+		end
+		
 		-- Only for Mechagon (lets don't support everywhere yet to see its performance)
 		local currentMap = C_Map.GetBestMapForUnit("player")
 		if (currentMap and currentMap == 1462) then
@@ -505,6 +516,12 @@ scanner_button:SetScript("OnEvent", function(self, event, ...)
 				if (npcID and npcID == 154342) then
 					npcID = 151934
 				end
+				
+				-- The Scrap King fix
+				if ((npcID == 151623 or npcID == 151625) and (private.dbchar.rares_killed[151623] or private.dbchar.rares_killed[151625])) then
+					return
+				end
+				
 				-- Simulates vignette event
 				if (npcID and private.ZONE_IDS[npcID] and not private.dbchar.rares_killed[npcID]) then
 					local vignetteInfo = {}
@@ -519,6 +536,11 @@ scanner_button:SetScript("OnEvent", function(self, event, ...)
 			end
 		end
 	elseif (event == "CHAT_MSG_MONSTER_EMOTE") then
+		-- If not disabled
+		if (not private.db.general.scanChatAlerts) then
+			return
+		end
+		
 		-- Only for Mechagon Construction Projects
 		local currentMap = C_Map.GetBestMapForUnit("player")
 		if (currentMap and currentMap == 1462) then
@@ -683,7 +705,7 @@ function scanner_button:CheckNotificationCache(self, vignetteInfo)
 		elseif (iconid == RareScanner.EVENT_VIGNETTE and not private.db.general.scanEvents) then
 			return
 		-- disable zones alerts if the player is in that zone
-		elseif (next(private.db.general.filteredZones) ~= nil and private.db.general.filteredZones[zone_id] == false) then
+		elseif (not private.db.zoneFilters.filterOnlyMap and next(private.db.general.filteredZones) ~= nil and private.db.general.filteredZones[zone_id] == false) then
 			return
 		-- disable alerts for containers
 		elseif (iconid == RareScanner.CONTAINER_VIGNETTE or iconid == RareScanner.CONTAINER_ELITE_VIGNETTE) then
@@ -748,7 +770,7 @@ function scanner_button:CheckNotificationCache(self, vignetteInfo)
 	end
 	
 	-- Check if the NPC is filtered, in which case we don't show anything
-	if (npcID and next(private.db.general.filteredRares) ~= nil and private.db.general.filteredRares[npcID] == false) then
+	if (npcID and not private.db.rareFilters.filterOnlyMap and next(private.db.general.filteredRares) ~= nil and private.db.general.filteredRares[npcID] == false) then
 		return
 	end
 	
@@ -975,7 +997,11 @@ function scanner_button:ShowButton()
 	if (self.npcID and (self.iconid == RareScanner.NPC_VIGNETTE or self.iconid == RareScanner.NPC_LEGION_VIGNETTE or self.iconid == RareScanner.NPC_VIGNETTE_ELITE)) then
 		self.Description_text:SetText(AL["CLICK_TARGET"])
 		
-		self:SetAttribute("macrotext", "/cleartarget\n/targetexact "..self.name.."\n/tm 8")
+		if (private.db.general.showMaker) then
+			self:SetAttribute("macrotext", "/cleartarget\n/targetexact "..self.name.."\n/tm "..private.db.general.marker)
+		else
+			self:SetAttribute("macrotext", "/cleartarget\n/targetexact "..self.name)
+		end
 		
 		-- show button
 		self:Show()
@@ -1271,9 +1297,13 @@ function RareScanner:DumpBrokenData()
 			if (not npcInfo.mapID or npcInfo.mapID == 0 or not npcInfo.coordY or not npcInfo.coordX) then
 				private.dbglobal.rares_found[npcID] = nil
 			end
-			
+		end
+	end
+	
+	if (private.dbchar.rares_killed and next(private.dbchar.rares_killed) ~= nil) then
+		for npcID, timestamp in pairs(private.dbchar.rares_killed) do
 			-- If the NPC belongs to Mechagon or Nazjatar and its set as eternal death, reset it
-			if (npcInfo.mapID and (npcInfo.mapID == 1462 or npcInfo.mapID == 1355) and private.dbchar.rares_killed and private.dbchar.rares_killed[npcID] == ETERNAL_DEATH) then
+			if (timestamp == ETERNAL_DEATH and private.ZONE_IDS[npcID] and (private.ZONE_IDS[npcID].zoneID == 1462 or private.ZONE_IDS[npcID].zoneID == 1355)) then
 				private.dbchar.rares_killed[npcID] = nil
 			end
 		end
@@ -1341,7 +1371,7 @@ function RareScanner:MarkCompletedAchievements()
 							private.dbchar.events_completed[npcID] = ETERNAL_COMPLETED
 						else
 							for npcID, name in pairs (private.dbglobal.rare_names[GetLocale()]) do
-								if (RS_tContains(name, criteriaString)) then
+								if (RS_tContains(name, criteriaString) and private.ZONE_IDS[npcID] and not private.RESETABLE_KILLS_ZONE_IDS[private.ZONE_IDS[npcID].zoneID]) then
 									private.dbchar.rares_killed[npcID] = ETERNAL_DEATH
 									break
 								end

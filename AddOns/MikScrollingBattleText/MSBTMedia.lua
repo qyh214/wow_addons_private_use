@@ -87,8 +87,14 @@ end
 -- ****************************************************************************
 local function RegisterSound(soundName, soundPath)
 	-- Don't do anything if the sound name or sound path is invalid.
-	if (type(soundName) ~= "string" or type(soundPath) ~= "string") then return end
-	if (soundName == "" or soundPath == "") then return end
+	-- Allow non-string entries for soundPath as of Patch 8.2.0.
+	if (type(soundName) ~= "string") then return end
+	-- Ensure that the custom file path is either a number (FileDataID)
+	-- Or a string that begins with "Interface" and ends with either ".mp3" or ".ogg"
+	local soundPathLower = string.lower(soundPath)
+	if (not soundPath or soundName == "" or soundPath == "" or (type(soundPath) == "string" and ((string.find(soundPathLower, "interface") or 0) ~= 1 or (not string.find(soundPathLower, ".mp3") and not string.find(soundPathLower, ".ogg"))))) then
+		return
+	end
 
 	-- Register with MSBT.
 	sounds[soundName] = soundPath

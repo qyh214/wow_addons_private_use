@@ -20,6 +20,7 @@ local affixSchedule = {
 	{ 10, 5, 13 },
 	{ 9, 7, 12 },
 }
+local affixScheduleUnknown = true
 local currentWeek
 local currentKeystoneMapID
 local currentKeystoneLevel
@@ -115,7 +116,7 @@ local function UpdateFrame()
 		Mod.KeystoneText:Hide()
 	end
 
-	if currentWeek then
+	if currentWeek and not affixScheduleUnknown then
 		for i = 1, rowCount do
 			local entry = Mod.AffixFrame.Entries[i]
 			entry:Show()
@@ -222,7 +223,11 @@ function Mod:Blizzard_ChallengesUI()
 	label:SetJustifyV("MIDDLE")
 	label:SetHeight(72)
 	label:SetWordWrap(true)
-	label:SetText(Addon.Locale.scheduleMissingKeystone)
+	if affixScheduleUnknown then
+		label:SetText(Addon.Locale.scheduleUnknown)
+	else
+		label:SetText(Addon.Locale.scheduleMissingKeystone)
+	end
 	frame.Label = label
 
 	local frame2 = CreateFrame("Frame", nil, ChallengesFrame)

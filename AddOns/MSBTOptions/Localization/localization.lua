@@ -121,7 +121,7 @@ obj["colorDamageEntry"]			= { tooltip="Enable coloring for this damage type."}
 obj["colorUnitNames"]			= { label="Color Unit Names", tooltip="Apply specified class colors to unit names."}
 obj["colorClassEntry"]			= { tooltip="Enable coloring for this class."}
 obj["enableScrollArea"]			= { tooltip="Enable the scroll area."}
-obj["inheritField"]				= { label="Inherit", tooltip="Inherit the field's value.  Uncheck to override."}
+obj["inheritField"]				= { label="Inherit", tooltip="Inherit the field's value. Uncheck to override."}
 obj["hideSkillIcons"]			= { label="Hide Icons", tooltip="Do not show icons in this scroll area."}
 obj["stickyEvent"]				= { label="Always Sticky", tooltip="Always display the event using the sticky style."}
 obj["enableTrigger"]			= { tooltip="Enable the trigger."}
@@ -248,7 +248,7 @@ obj["xOffset"]			= { label="X Offset:", tooltip="The X offset of the selected sc
 obj["yOffset"]			= { label="Y Offset:", tooltip="The Y offset of the selected scroll area."}
 obj["eventMessage"]		= { label="Output message:", tooltip="The message that will be displayed when the event occurs."}
 obj["soundFile"]		= { label="Sound filename:", tooltip="The name of the sound file to play when the event occurs."}
-obj["iconSkill"]		= { label="Icon Skill:", tooltip="The name or spell ID of a skill whose icon will be displayed when the event occurs.\n\nMSBT will automatically try to figure out an appropriate icon if one is not specified.\n\nNOTE: A spell ID must be used in place of a name if the skill is not in the spellbook for the class that is playing when the event occurs.  Most online databases such as wowhead can be used to discover it."}
+obj["iconSkill"]		= { label="Icon Skill:", tooltip="The name or spell ID of a skill whose icon will be displayed when the event occurs.\n\nMSBT will automatically try to figure out an appropriate icon if one is not specified.\n\nNOTE: A spell ID must be used in place of a name if the skill is not in the spellbook for the class that is playing when the event occurs. Most online databases such as wowhead can be used to discover it."}
 obj["skillName"]		= { label="Skill name:", tooltip="The name of the skill to add."}
 obj["substitutionText"]	= { label="Substition text:", tooltip="The text to be substituted for the skill name."}
 obj["itemName"]			= { label="Item name:", tooltip="The name of the item to add."}

@@ -1,5 +1,5 @@
-local MAJOR, MINOR = 'LibElvUIPlugin-1.0', 26
-local lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
+local MAJOR, MINOR = 'LibElvUIPlugin-1.0', 27
+local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
 --Lua functions
@@ -9,7 +9,7 @@ local format, gmatch, strlen, gsub, ceil = format, gmatch, strlen, gsub, ceil
 local GetNumGroupMembers = GetNumGroupMembers
 local GetLocale, IsInGuild = GetLocale, IsInGuild
 local CreateFrame, IsAddOnLoaded = CreateFrame, IsAddOnLoaded
-local GetAddOnMetadata, GetChannelName = GetAddOnMetadata, GetChannelName
+local GetAddOnMetadata = GetAddOnMetadata
 local IsInRaid, IsInGroup = IsInRaid, IsInGroup
 local LE_PARTY_CATEGORY_HOME = LE_PARTY_CATEGORY_HOME
 local LE_PARTY_CATEGORY_INSTANCE = LE_PARTY_CATEGORY_INSTANCE
@@ -189,8 +189,6 @@ function lib:VersionCheck(event, prefix, message, _, sender)
 						local Pname = GetAddOnMetadata(plugin.name, 'Title')
 						E:Print(format(MSG_OUTDATED,Pname,plugin.version,plugin.newversion))
 						ElvUI[1].pluginRecievedOutOfDateMessage = true
-					elseif (ver and Pver) and (ver < Pver) then
-						lib:DelayedSendVersionCheck()
 					end
 				end
 			end
@@ -236,18 +234,13 @@ function lib:SendPluginVersionCheck(message)
 		return
 	end
 
-	local ChatType, Channel
+	local ChatType
 	if IsInRaid() then
 		ChatType = (not IsInRaid(LE_PARTY_CATEGORY_HOME) and IsInRaid(LE_PARTY_CATEGORY_INSTANCE)) and 'INSTANCE_CHAT' or 'RAID'
 	elseif IsInGroup() then
 		ChatType = (not IsInGroup(LE_PARTY_CATEGORY_HOME) and IsInGroup(LE_PARTY_CATEGORY_INSTANCE)) and 'INSTANCE_CHAT' or 'PARTY'
-	else
-		local ElvUIGVC = GetChannelName('ElvUIGVC')
-		if ElvUIGVC and ElvUIGVC > 0 then
-			ChatType, Channel = 'CHANNEL', ElvUIGVC
-		elseif IsInGuild() then
-			ChatType = 'GUILD'
-		end
+	elseif IsInGuild() then
+		ChatType = 'GUILD'
 	end
 
 	if not ChatType then
@@ -262,14 +255,14 @@ function lib:SendPluginVersionCheck(message)
 			splitMessage = strmatch(strsub(message, 1, maxChar), '.+;')
 			if splitMessage then -- incase the string is over 250 but doesnt contain `;`
 				message = gsub(message, '^'..gsub(splitMessage, '([%(%)%.%%%+%-%*%?%[%^%$])','%%%1'), '')
-				E:Delay(delay, C_ChatInfo_SendAddonMessage, lib.prefix, splitMessage, ChatType, Channel)
+				E:Delay(delay, C_ChatInfo_SendAddonMessage, lib.prefix, splitMessage, ChatType)
 				delay = delay + 1
 			end
 		end
 
 		E:Delay(delay, lib.ClearSendMessageWait)
 	else
-		C_ChatInfo_SendAddonMessage(lib.prefix, message, ChatType, Channel)
+		C_ChatInfo_SendAddonMessage(lib.prefix, message, ChatType)
 		lib.ClearSendMessageWait()
 	end
 end

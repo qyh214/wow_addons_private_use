@@ -58,7 +58,7 @@ AddOn.worldBosses = {
   },
   {
     instanceID = 1028,                          -- Azeroth
-    numEncounters = 1,
+    numEncounters = 2,
     encounters = {
       { encounterID = 2139, questID = 52181 },  -- T'zane
       { encounterID = 2141, questID = 52169 },  -- Ji'arak

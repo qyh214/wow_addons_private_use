@@ -839,6 +839,25 @@ G.unitframe.aurafilters.RaidDebuffs = {
 		[266107] = Defaults(), -- Thirst for Blood
 		[260455] = Defaults(), -- Serrated Fangs
 
+		--Operation: Mechagon
+		[291928] = Defaults(), -- Giga-Zap
+		[292267] = Defaults(), -- Giga-Zap
+		[302274] = Defaults(), -- Fulminating Zap
+		[298669] = Defaults(), -- Taze
+		[295445] = Defaults(), -- Wreck
+		[294929] = Defaults(), -- Blazing Chomp
+		[297257] = Defaults(), -- Electrical Charge
+		[294855] = Defaults(), -- Blossom Blast
+		[291972] = Defaults(), -- Explosive Leap
+		[285443] = Defaults(), -- "Hidden" Flame Cannon
+		[291974] = Defaults(), -- Obnoxious Monologue
+		[296150] = Defaults(), -- Vent Blast
+		[298602] = Defaults(), -- Smoke Cloud
+		[296560] = Defaults(), -- Clinging Static
+		[297283] = Defaults(), -- Cave In
+		[291914] = Defaults(), -- Cutting Beam
+		[302384] = Defaults(), -- Static Discharge
+
 	-- Uldir
 		-- MOTHER
 		[268277] = Defaults(), -- Purifying Flame
@@ -1021,8 +1040,6 @@ G.unitframe.aurafilters.RaidDebuffs = {
 		[297397] = Defaults(), -- Briny Bubble
 
 		--Abyssal Commander Sivara
-		--[294715] = Defaults(), -- Toxic Brand
-		--[294711] = Defaults(), -- Frost Mark
 		[300701] = Defaults(), -- Rimefrost
 		[300705] = Defaults(), -- Septic Taint
 		[294847] = Defaults(), -- Unstable Mixture
@@ -1048,7 +1065,6 @@ G.unitframe.aurafilters.RaidDebuffs = {
 		[296746] = Defaults(), -- Arcane Bomb
 		[295920] = Defaults(), -- Ancient Tempest
 		[296462] = Defaults(), -- Squall Trap
-		[299152] = Defaults(), -- Waterlogged
 
 		--Orgozoa
 		[298156] = Defaults(), -- Desensitizing Sting
@@ -1098,7 +1114,6 @@ G.unitframe.aurafilters.RaidBuffsElvUI = {
 		[209859] = Defaults(), -- Bolster
 		[178658] = Defaults(), -- Raging
 		[226510] = Defaults(), -- Sanguine
-		[277242] = Defaults(), -- Symbiote of G'huun (Infested)
 
 		--Raids
 	},

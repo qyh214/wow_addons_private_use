@@ -1,10 +1,10 @@
-lightweight tag c0260ff821dbc31f3d6f9561239d48899b0f1cdd v8.2.0.376
+lightweight tag 878c77460ea49835369db4d0bd6aaa447eca3147 v8.2.0.378
 Author:	Tercioo <terciob19@hotmail.com>
-Date:	Thu Jul 4 14:55:57 2019 -0300
+Date:	Sat Jul 27 09:48:22 2019 -0300
 
-commit c0260ff821dbc31f3d6f9561239d48899b0f1cdd
+commit 878c77460ea49835369db4d0bd6aaa447eca3147
 Author: Tercioo <terciob19@hotmail.com>
-Date:   Thu Jul 4 14:55:57 2019 -0300
+Date:   Sat Jul 27 09:48:22 2019 -0300
 
-    Machagon added to zone list
+    Fixed an issue with the Quest Blacklist panel not opening and giving an error instead
 

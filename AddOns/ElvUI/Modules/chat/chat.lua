@@ -96,7 +96,6 @@ local C_VoiceChat_GetMemberName = C_VoiceChat.GetMemberName
 local C_VoiceChat_SetPortraitTexture = C_VoiceChat.SetPortraitTexture
 local Chat_ShouldColorChatByClass = Chat_ShouldColorChatByClass
 local ChatFrame_ResolvePrefixedChannelName = ChatFrame_ResolvePrefixedChannelName
-local CreateAnimationGroup = CreateAnimationGroup
 local GetBNPlayerCommunityLink = GetBNPlayerCommunityLink
 local GetPlayerCommunityLink = GetPlayerCommunityLink
 local LE_REALM_RELATION_SAME = LE_REALM_RELATION_SAME
@@ -777,15 +776,18 @@ end
 
 function CH:PositionChat(override)
 	if ((InCombatLockdown() and not override and self.initialMove) or (IsMouseButtonDown("LeftButton") and not override)) then return end
+
 	local RightChatPanel, LeftChatPanel, RightChatDataPanel, LeftChatToggleButton, LeftChatTab, CombatLogButton = _G.RightChatPanel, _G.LeftChatPanel, _G.RightChatDataPanel, _G.LeftChatToggleButton, _G.LeftChatTab, _G.CombatLogQuickButtonFrame_Custom
-	if not RightChatPanel or not LeftChatPanel then return; end
+	if not RightChatPanel or not LeftChatPanel then return end
+
 	RightChatPanel:Size(E.db.chat.separateSizes and E.db.chat.panelWidthRight or E.db.chat.panelWidth, E.db.chat.separateSizes and E.db.chat.panelHeightRight or E.db.chat.panelHeight)
 	LeftChatPanel:Size(E.db.chat.panelWidth, E.db.chat.panelHeight)
+
+	if E.private.chat.enable ~= true or not self.db.lockPositions then return end
+
 	CombatLogButton:Size(LeftChatTab:GetWidth(), LeftChatTab:GetHeight())
 
 	self.RightChatWindowID = FindRightChatID()
-
-	if not self.db.lockPositions or E.private.chat.enable ~= true then return end
 
 	local fadeUndockedTabs = E.db.chat.fadeUndockedTabs
 	local fadeTabsNoBackdrop = E.db.chat.fadeTabsNoBackdrop
@@ -2173,12 +2175,12 @@ function CH:SocialQueueEvent(_, guid, numAddedItems) -- event, guid, numAddedIte
 	local isLFGList = firstQueue and firstQueue.queueData and firstQueue.queueData.queueType == 'lfglist'
 
 	if isLFGList and firstQueue and firstQueue.eligible then
-		local searchResultInfo, activityID, name, comment, leaderName, fullName, isLeader
+		local searchResultInfo, activityID, name, leaderName, fullName, isLeader
 
 		if firstQueue.queueData.lfgListID then
 			searchResultInfo = C_LFGList_GetSearchResultInfo(firstQueue.queueData.lfgListID)
 			if searchResultInfo then
-				activityID, name, comment, leaderName = searchResultInfo.activityID, searchResultInfo.name, searchResultInfo.comment, searchResultInfo.leaderName
+				activityID, name, leaderName = searchResultInfo.activityID, searchResultInfo.name, searchResultInfo.leaderName
 				isLeader = self:SocialQueueIsLeader(playerName, leaderName)
 			end
 		end
@@ -2705,9 +2707,9 @@ function CH:Initialize()
 		self.ChatHeadFrame[i].StatusBar:SetStatusBarTexture(E.media.normTex)
 		self.ChatHeadFrame[i].StatusBar:SetMinMaxValues(0, 1)
 
-		self.ChatHeadFrame[i].StatusBar.anim = CreateAnimationGroup(self.ChatHeadFrame[i].StatusBar)
+		self.ChatHeadFrame[i].StatusBar.anim = _G.CreateAnimationGroup(self.ChatHeadFrame[i].StatusBar)
 		self.ChatHeadFrame[i].StatusBar.anim.progress = self.ChatHeadFrame[i].StatusBar.anim:CreateAnimation("Progress")
-		self.ChatHeadFrame[i].StatusBar.anim.progress:SetSmoothing("Out")
+		self.ChatHeadFrame[i].StatusBar.anim.progress:SetEasing("Out")
 		self.ChatHeadFrame[i].StatusBar.anim.progress:SetDuration(.3)
 
 		self.ChatHeadFrame[i]:Hide()
@@ -2809,8 +2811,4 @@ function CH:SetChatHeadOrientation(position)
 	end
 end
 
-local function InitializeCallback()
-	CH:Initialize()
-end
-
-E:RegisterModule(CH:GetName(), InitializeCallback)
+E:RegisterModule(CH:GetName())

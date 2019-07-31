@@ -38,6 +38,7 @@ langs.enUS = {
 	scheduleWeek3 = "In two weeks",
 	scheduleWeek4 = "In three weeks",
 	scheduleMissingKeystone = "Requires a level 7+ Mythic Keystone in your inventory to display.",
+	scheduleUnknown = "The updated affix schedule is currently unknown.",
 	config_hideTalkingHead = "Hide Talking Head dialog during a Mythic Keystone dungeon",
 	config_resetPopup = "Show popup to reset instances upon leaving a completed Mythic Keystone dungeon",
 	partyKeysTitle = "Party Keystones",

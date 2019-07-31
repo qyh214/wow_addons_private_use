@@ -682,7 +682,7 @@ local function MergeEvents(numEvents, currentProfile)
 				-- Increment the number of merged events.
 				mergedEvent.numMerged = mergedEvent.numMerged + 1
 
-				-- Increment the number of crits if the event being merged is a crit.  Clear the crit flag for the merged event if it isn't.
+				-- Increment the number of crits if the event being merged is a crit. Clear the crit flag for the merged event if it isn't.
 				if (unmergedEvent.isCrit) then mergedEvent.numCrits = mergedEvent.numCrits + 1 else mergedEvent.isCrit = false end
 
 				-- Break out of the merged events loop since the event has been merged.
@@ -1199,7 +1199,7 @@ local function ParserEventsHandler(parserEvent)
 
 			-- Check if there is a throttle duration for the ability.
 			if (throttleDuration and throttleDuration > 0) then
-				-- Get throttle info for the ability.  Create it if it hasn't already been.
+				-- Get throttle info for the ability. Create it if it hasn't already been.
 				local throttledAbility = throttledAbilities[effectName]
 				if (not throttledAbility) then
 					throttledAbility = {}

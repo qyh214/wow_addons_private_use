@@ -97,7 +97,7 @@ local SPELL_SUDDEN_DOOM				= GetSkillName(81340)	-- XXX: No trigger atm - DK
 --local SPELL_THE_ART_OF_WAR		= GetSkillName(59578)
 local SPELL_TIDAL_WAVES				= GetSkillName(53390)
 --local SPELL_ULTIMATUM				= GetSkillName(122510)
-local SPELL_VICTORY_RUSH			= GetSkillName(SPELLID_VICTORY_RUSH)  -- XXX: Update for buff
+local SPELL_VICTORY_RUSH			= GetSkillName(SPELLID_VICTORY_RUSH)	-- XXX: Update for buff
 --local SPELL_VITAL_MISTS			= GetSkillName(122107)
 
 -- Throttle, suppression, and other spell names.
@@ -322,7 +322,7 @@ local masterProfile = {
 		INCOMING_SPELL_BLOCK = {
 			colorR		= 0,
 			colorG		= 0,
-			message		= "(%s) " .. BLOCK  .. "!",
+			message		= "(%s) " .. BLOCK .. "!",
 			scrollArea	= "Incoming",
 		},
 		INCOMING_SPELL_DEFLECT = {
@@ -634,7 +634,7 @@ local masterProfile = {
 		},
 		PET_INCOMING_ABSORB = {
 			colorB		= 0.57,
-			message		= PET .. " " .. ABSORB .. "!  <%a>",
+			message		= PET .. " " .. ABSORB .. "! <%a>",
 			scrollArea	= "Incoming",
 		},
 		PET_INCOMING_IMMUNE = {
@@ -702,13 +702,13 @@ local masterProfile = {
 		PET_INCOMING_SPELL_BLOCK = {
 			colorR		= 0.57,
 			colorG		= 0.58,
-			message		= "(%s) " .. PET .. " " .. BLOCK  .. "!",
+			message		= "(%s) " .. PET .. " " .. BLOCK .. "!",
 			scrollArea	= "Incoming",
 		},
 		PET_INCOMING_SPELL_DEFLECT = {
 			colorR		= 0.57,
 			colorG		= 0.58,
-			message		= "(%s) " .. PET .. " " .. DEFLECT  .. "!",
+			message		= "(%s) " .. PET .. " " .. DEFLECT .. "!",
 			scrollArea	= "Incoming",
 		},
 		PET_INCOMING_SPELL_RESIST = {
@@ -720,7 +720,7 @@ local masterProfile = {
 		},
 		PET_INCOMING_SPELL_ABSORB = {
 			colorB		= 0.57,
-			message		= "(%s) " .. PET .. " " .. ABSORB .. "!  <%a>",
+			message		= "(%s) " .. PET .. " " .. ABSORB .. "! <%a>",
 			scrollArea	= "Incoming",
 		},
 		PET_INCOMING_SPELL_IMMUNE = {

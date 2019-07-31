@@ -111,7 +111,7 @@ end
 -- Handles looted items.
 -- ****************************************************************************
 local function HandleItems(parserEvent)
-	-- Created items are buggy.  Ignore them.
+	-- Created items are buggy. Ignore them.
 	if (parserEvent.isCreate) then return end
 
 	-- Get information about the looted item.

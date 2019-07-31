@@ -182,7 +182,7 @@ end
 
 
 -- ****************************************************************************
--- Compares two global strings so the most specific one comes first.  This
+-- Compares two global strings so the most specific one comes first. This
 -- prevents incorrectly capturing information for certain events.
 -- ****************************************************************************
 local function GlobalStringCompareFunc(globalStringNameOne, globalStringNameTwo)
@@ -377,8 +377,8 @@ local function ParseLogMessage(timestamp, event, hideCaster, sourceGUID, sourceN
 	if (not sourceUnit and TestFlagsAll(sourceFlags, FLAGS_MINE)) then sourceUnit = TestFlagsAll(sourceFlags, FLAGS_MY_GUARDIAN) and "pet" or "player" end
 	if (not recipientUnit and TestFlagsAll(recipientFlags, FLAGS_MINE)) then recipientUnit = TestFlagsAll(recipientFlags, FLAGS_MY_GUARDIAN) and "pet" or "player" end
 
-		-- Ignore the event if it is not one that should be fully parsed and it doesn't pertain to the player
-	-- or pet.  This is done to avoid wasting time parsing events that won't be used like damage that other
+	-- Ignore the event if it is not one that should be fully parsed and it doesn't pertain to the player
+	-- or pet. This is done to avoid wasting time parsing events that won't be used like damage that other
 	-- players are doing.
 	if (not fullParseEvents[event] and sourceUnit ~= "player" and sourceUnit ~= "pet" and
 					recipientUnit ~= "player" and recipientUnit ~= "pet") then
@@ -770,7 +770,7 @@ local function OnUpdateDelayedInfo(this, elapsed)
 					end
 				end -- Loop through group members
 
-				-- Add the player's pet and its class if there is one.  Treat vehicles as the player instead of a pet.
+				-- Add the player's pet and its class if there is one. Treat vehicles as the player instead of a pet.
 				if (petName) then
 					local unitID = "pet"
 					local guid = UnitGUID(unitID)

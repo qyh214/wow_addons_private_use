@@ -87,6 +87,8 @@ local function filterEmoticons(theMsg, smf)
 	if e then
 		playerLink = string.sub(theMsg, 1, e)
 		theMsg = string.sub(theMsg, e+1)
+	elseif string.find(theMsg, "^|K") then
+		return theMsg
 	end
 	
 	--safety check again...

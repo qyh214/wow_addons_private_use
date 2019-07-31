@@ -22,6 +22,9 @@ self:Wiki([[
 == Silent mode ==
 typing /gac silent in chat will eliminate every chat message from GarrisonCommander
 ]])
+self:RelNotes(3,2,1,[[
+Fix: Minimap report enhancement removed, You need Garrison Broker for it
+]])
 self:RelNotes(3,2,0,[[
 Fix: Checked Russian Localization
 ]])

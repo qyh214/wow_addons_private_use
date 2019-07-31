@@ -1,19 +1,19 @@
 local mod	= DBM:NewMod(2351, "DBM-EternalPalace", nil, 1179)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019062400030")
+mod:SetRevision("2019072531458")
 mod:SetCreatureID(152128)
 mod:SetEncounterID(2303)
 mod:SetZone()
---mod:SetHotfixNoticeRev(16950)
+mod:SetHotfixNoticeRev(20190716000000)--2019, 7, 16
 --mod:SetMinSyncRevision(16950)
 --mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 298548 295818 295822 296691",
-	"SPELL_CAST_SUCCESS 298413 298242 298103 298156 305057",
+	"SPELL_CAST_START 298548 295818 295822 296691 307167 305857",
+	"SPELL_CAST_SUCCESS 298242 298103 298156 305057",
 	"SPELL_SUMMON 298465",
 	"SPELL_AURA_APPLIED 298156 298306 296914 295779",
 	"SPELL_AURA_APPLIED_DOSE 298156",
@@ -31,8 +31,8 @@ mod:RegisterEventsInCombat(
 --TODO, do more with powerful stomp?
 --TODO, special warn for tender add spawns?
 --[[
-(ability.id = 298548 or ability.id = 295818 or ability.id = 295822 or ability.id = 296691) and type = "begincast"
- or (ability.id = 298413 or ability.id = 298242 or ability.id = 298103 or ability.id = 298156 or ability.id = 298548 or ability.id = 295779 or ability.id = 305057) and type = "cast"
+(ability.id = 298548 or ability.id = 295818 or ability.id = 295822 or ability.id = 296691 or ability.id = 307167 or ability.id = 305857) and type = "begincast"
+ or (ability.id = 298242 or ability.id = 298103 or ability.id = 298156 or ability.id = 298548 or ability.id = 295779 or ability.id = 305057) and type = "cast"
  or type = "interrupt"
 --]]
 local warnDesensitizingSting				= mod:NewStackAnnounce(298156, 2, nil, "Tank")
@@ -45,7 +45,8 @@ local warnPowerfulStomp						= mod:NewCountAnnounce(296691, 2)
 
 local specWarnDesensitizingSting			= mod:NewSpecialWarningStack(298156, nil, 9, nil, nil, 1, 6)
 local specWarnDesensitizingStingTaunt		= mod:NewSpecialWarningTaunt(298156, nil, nil, nil, 1, 2)
-local specWarnDribblingIchor				= mod:NewSpecialWarningSwitchCount(298103, nil, nil, nil, 1, 2)
+local specWarnDribblingIchor				= mod:NewSpecialWarningCount(298103, nil, nil, nil, 2, 2)
+local specWarnCallofTender					= mod:NewSpecialWarningSwitchCount(305057, "Tank", nil, nil, 1, 2)
 local specWarnIncubationFluid				= mod:NewSpecialWarningMoveAway(298306, nil, nil, nil, 1, 2)
 local specWarnArcingCurrent					= mod:NewSpecialWarningCount(295825, nil, nil, nil, 2, 2)
 local yellArcingCurrent						= mod:NewYell(295825)
@@ -57,9 +58,9 @@ local yellAquaLanceFades					= mod:NewShortFadesYell(295779)
 local specWarnConductivePulse				= mod:NewSpecialWarningInterrupt(295822, "HasInterrupt", nil, nil, 3, 2)
 
 mod:AddTimerLine(BOSS)
-local timerDesensitizingStingCD				= mod:NewCDTimer(5.3, 298156, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON, nil, nil, 3)--If user does enable countdown for this, max count at 3
+local timerDesensitizingStingCD				= mod:NewCDTimer(5.3, 298156, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON, nil, nil, 3)--If user does enable countdown for this, max count at 3
 local timerDribblingIchorCD					= mod:NewCDCountTimer(84, 298103, nil, nil, nil, 1, nil, nil, nil, 1, 4)--30.4-42
-local timerIncubationFluidCD				= mod:NewCDTimer(32, 298242, nil, nil, nil, 3, nil, nil, nil, 3, 4)
+local timerIncubationFluidCD				= mod:NewCDTimer(31.7, 298242, nil, nil, nil, 3, nil, nil, nil, 3, 4)
 local timerArcingCurrentCD					= mod:NewCDCountTimer(30.1, 295825, nil, nil, nil, 3)
 local timerCalloftheTenderCD				= mod:NewCDCountTimer(35, 305057, nil, nil, nil, 1, nil, DBM_CORE_MYTHIC_ICON, nil, 2, 4)--30.4-42
 --Transition
@@ -71,7 +72,7 @@ local timerShockingLightningCD				= mod:NewCDTimer(4.8, 295818, nil, false, nil,
 local timerConductivePulseCD				= mod:NewCDTimer(18.2, 295822, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
 local timerPowerfulStompCD					= mod:NewCDTimer(29.1, 296691, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
 
---local berserkTimer					= mod:NewBerserkTimer(600)
+local berserkTimer							= mod:NewBerserkTimer(600)
 
 --mod:AddRangeFrameOption(6, 264382)
 --mod:AddInfoFrameOption(275270, true)
@@ -96,16 +97,20 @@ function mod:OnCombatStart(delay)
 	playerHasIncubation = false
 	table.wipe(castsPerGUID)
 	timerDesensitizingStingCD:Start(3-delay)
-	if self:IsMythic() then
-		timerIncubationFluidCD:Start(17.1-delay)--SUCCESS (TODO, verify)
-		timerCalloftheTenderCD:Start(20.3-delay, 1)
-		timerDribblingIchorCD:Start(25.2-delay, 1)
-		timerArcingCurrentCD:Start(36.4-delay, 1)
-	else
-		timerIncubationFluidCD:Start(18.7-delay)--SUCCESS
+	--This could still be slightly wrong because there just a standard variation on this bosses mechanics
+	if self:IsHard() then
+		timerIncubationFluidCD:Start(18.6-delay)
 		timerDribblingIchorCD:Start(28.9-delay, 1)
 		timerArcingCurrentCD:Start(41.0-delay, 1)
+		if self:IsMythic() then
+			timerCalloftheTenderCD:Start(20.3-delay, 1)
+		end
+	else--Normal/LFR
+		timerIncubationFluidCD:Start(18.6-delay)--SUCCESS
+		timerDribblingIchorCD:Start(27.6-delay, 1)
+		timerArcingCurrentCD:Start(38.9-delay, 1)
 	end
+	berserkTimer:Start(759-delay)--Normal and Heroic at least, unconfirmed LFR and mythic
 	if self.Options.NPAuraOnChaoticGrowth or self.Options.NPAuraOnAquaLance then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
@@ -132,7 +137,9 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 298548 then
-		timerMassiveIncubator:Start(45)
+		local _, _, _, startTime, endTime = UnitCastingInfo("boss1")
+		local time = ((endTime or 0) - (startTime or 0)) / 1000
+		timerMassiveIncubator:Start(time)
 	elseif spellId == 295818 then
 		warnShockingLightning:Show()
 		timerShockingLightningCD:Start(nil, args.sourceGUID)
@@ -149,34 +156,32 @@ function mod:SPELL_CAST_START(args)
 		castsPerGUID[args.sourceGUID] = castsPerGUID[args.sourceGUID] + 1
 		warnPowerfulStomp:Show(castsPerGUID[args.sourceGUID])
 		timerPowerfulStompCD:Start(nil, args.sourceGUID)
-	end
-end
-
-function mod:SPELL_CAST_SUCCESS(args)
-	local spellId = args.spellId
-	if spellId == 298413 then--used by all arcing currents
+	elseif spellId == 307167 or spellId == 305857 then--Normal/Heroic, Mythic
 		self.vb.arcingCurrentCount = self.vb.arcingCurrentCount + 1
 		specWarnArcingCurrent:Show(self.vb.arcingCurrentCount)
 		timerArcingCurrentCD:Start(nil, self.vb.arcingCurrentCount+1)
 		if playerHasIncubation then
 			yellArcingCurrent:Yell()
 			specWarnArcingCurrent:Play("targetyou")
-		else
-			specWarnArcingCurrent:Play("farfromline")
+		--else
+		--	specWarnArcingCurrent:Play("farfromline")
 		end
-	elseif spellId == 298242 then
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	if spellId == 298242 then
 		timerIncubationFluidCD:Start()
 	elseif spellId == 298103 then--Dribbling Ichor
 		self.vb.addCount = self.vb.addCount + 1
 		self.vb.ichorAddsRemaining = self.vb.ichorAddsRemaining + 3
 		specWarnDribblingIchor:Show(self.vb.addCount)
 		specWarnDribblingIchor:Play("mobsoon")
-		if self.vb.phase == 2 or self.vb.addCount < 3 then--Assumed there are more than 3 in P2
-			if self.vb.addCount == 1 then
-				timerDribblingIchorCD:Start(85, 2)
-			else--2+ (todo verify the + part)
-				timerDribblingIchorCD:Start(92, self.vb.addCount+1)
-			end
+		if self.vb.addCount == 1 then
+			timerDribblingIchorCD:Start(85, 2)
+		else--2+ (todo verify the + part)
+			timerDribblingIchorCD:Start(86.4, self.vb.addCount+1)
 		end
 	elseif spellId == 298156 then
 		timerDesensitizingStingCD:Start()
@@ -184,7 +189,13 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerAquaLanceCD:Start(nil, args.sourceGUID)
 	elseif spellId == 305057 then
 		self.vb.tenderCount = self.vb.tenderCount + 1
-		warnCallofTender:Show(self.vb.tenderCount)
+		--Will not show warning if you are tanking boss, unless you're only tank left alive
+		if self.Options.SpecWarn305057switchcount and (not self:IsTanking("player", "boss1", nil, true) or self:GetNumAliveTanks() < 2) then
+			specWarnCallofTender:Show(self.vb.tenderCount)
+			specWarnCallofTender:Play("killmob")
+		else
+			warnCallofTender:Show(self.vb.tenderCount)
+		end
 		timerCalloftheTenderCD:Start(35, self.vb.tenderCount+1)
 	end
 end
@@ -207,7 +218,9 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnDesensitizingSting:Show(amount)
 				specWarnDesensitizingSting:Play("stackhigh")
 			else
-				if not UnitIsDeadOrGhost("player") and not DBM:UnitDebuff("player", spellId) then--Can't taunt less you've dropped yours off, period.
+				--Don't show taunt warning if you're 3 tanking and aren't near the boss (this means you are the add tank)
+				--Show taunt warning if you ARE near boss, or if number of alive tanks is less than 3
+				if (self:CheckNearby(8, args.destName) or self:GetNumAliveTanks() < 3) and not DBM:UnitDebuff("player", spellId) and not UnitIsDeadOrGhost("player") then--Can't taunt less you've dropped yours off, period.
 					specWarnDesensitizingStingTaunt:Show(args.destName)
 					specWarnDesensitizingStingTaunt:Play("tauntboss")
 				else
@@ -278,15 +291,18 @@ function mod:SPELL_INTERRUPT(args)
 	if type(args.extraSpellId) == "number" and args.extraSpellId == 298548 then
 		timerMassiveIncubator:Stop()
 		timerDesensitizingStingCD:Start(3)
-		if self:IsMythic() then
-			timerIncubationFluidCD:Start(17.1)--SUCCESS
-			timerCalloftheTenderCD:Start(20.3, 1)
-			timerDribblingIchorCD:Start(25.2, 1)
-			timerArcingCurrentCD:Start(36.4, 1)
-		else--Review these, can't be verified because in recent test boss bugged and didn't cast anything in phase 2, he stood there and did nothing
-			timerIncubationFluidCD:Start(18.7)--SUCCESS
+		--This could still be slightly wrong because there just a standard variation on this bosses mechanics
+		if self:IsHard() then
+			timerIncubationFluidCD:Start(18.6)
 			timerDribblingIchorCD:Start(28.9, 1)
 			timerArcingCurrentCD:Start(41.0, 1)
+			if self:IsMythic() then
+				timerCalloftheTenderCD:Start(20.3, 1)
+			end
+		else--Normal/LFR
+			timerIncubationFluidCD:Start(18.6)--SUCCESS
+			timerDribblingIchorCD:Start(27.6, 1)
+			timerArcingCurrentCD:Start(38.9, 1)
 		end
 	end
 end

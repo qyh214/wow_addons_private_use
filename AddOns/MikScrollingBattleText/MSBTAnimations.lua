@@ -202,7 +202,7 @@ end
 
 -- ****************************************************************************
 -- Loads the provided name into its own invisible font string in the animation
--- frame.  This is used to force fonts to load during initial start and profile
+-- frame. This is used to force fonts to load during initial start and profile
 -- switches so they are ready to be used for showing events.
 -- ****************************************************************************
 local function LoadFont(fontName)
@@ -213,7 +213,7 @@ local function LoadFont(fontName)
 	local fontString = loadedFontStrings[fontName]
 	if fontString ~= nil then return end
 
-	-- Create the font string and load the font.  Since it's only being used to
+	-- Create the font string and load the font. Since it's only being used to
 	-- cause the font to be loaded by the game, the default font size and outline
 	-- flags are acceptable to use.
 	fontLoaderFrame:Show()
@@ -234,7 +234,7 @@ end
 -------------------------------------------------------------------------------
 
 -- ****************************************************************************
--- Creates a display event using the passed settings.  If the max number of
+-- Creates a display event using the passed settings. If the max number of
 -- allowed animations for a scroll area are already active, the oldest one is
 -- reused.
 -- ****************************************************************************
@@ -264,7 +264,7 @@ local function Display(message, saSettings, isSticky, colorR, colorG, colorB, fo
 	local animationArray = isSticky and animationData.sticky[saSettings] or animationData.normal[saSettings]
 
 	-- Reuse the oldest display event if the max number of allowed animations for the scroll
-	-- area has been reached.  Otherwise acquire one from cache or create a new one if there
+	-- area has been reached. Otherwise acquire one from cache or create a new one if there
 	-- aren't any available in cache.
 	local displayEvent
 	if (#animationArray >= MAX_ANIMATIONS_PER_AREA) then
@@ -293,7 +293,7 @@ local function Display(message, saSettings, isSticky, colorR, colorG, colorB, fo
 	displayEvent.positionY = 0
 	displayEvent.fontSize = fontSize
 
-	-- Set font string properties.  The font is set to the default font first to
+	-- Set font string properties. The font is set to the default font first to
 	-- ensure any invalid font paths revert to the default.
 	local fontString = displayEvent.fontString
 	local fontOutline = OUTLINE_MAP[outlineIndex] or DEFAULT_OUTLINE
@@ -390,8 +390,25 @@ local function DisplayEvent(eventSettings, message, texturePath)
 	-- Play the event's sound file if there is one and sounds are enabled.
 	local soundFile = eventSettings.soundFile
 	if (soundFile and not currentProfile.soundsDisabled) then
-		soundFile = sounds[soundFile] or (string_find(soundFile, "\\", 1, true) and soundFile) or DEFAULT_SOUND_PATH .. soundFile
-		PlaySoundFile(soundFile, "Master")
+		for soundName, soundPath in MikSBT.IterateSounds() do
+			if (soundName == soundFile) then soundFile = soundPath end
+		end
+		--print(soundFile)
+		if (type(soundFile) == "string") then
+			if (soundFile ~= "") then
+				local soundFileLower = string.lower(soundFile)
+				-- If the sound file doesn't contain any slashes, assume it is in MSBT's sound folder
+				if (soundFile ~= "" and not string.find(soundFile, "\\", nil, 1) and not string.find(soundFile, "/", nil, 1)) then
+					soundFile = DEFAULT_SOUND_PATH .. soundFile
+				-- If the sound file doesn't begin with "Interface", don't bother trying
+				elseif ((string.find(soundFileLower, "interface", nil, 1) or 0) ~= 1) then
+					return
+				end
+				PlaySoundFile(soundFile, "Master")
+			end
+		else
+			PlaySoundFile(soundFile, "Master")
+		end
 	end
 
 	Display(message, saSettings, isSticky, eventSettings.colorR or 1, eventSettings.colorG or 1, eventSettings.colorB or 1, fontSize, fonts[fontName], outlineIndex, fontAlpha, texturePath)
@@ -399,8 +416,8 @@ end
 
 
 -- ****************************************************************************
--- Displays the passed message using the passed parameters.  This function is
--- for easy displaying of messages from external sources.  See the included
+-- Displays the passed message using the passed parameters. This function is
+-- for easy displaying of messages from external sources. See the included
 -- API.html file for usage info.
 -- ****************************************************************************
 local function DisplayMessage(message, scrollArea, isSticky, colorR, colorG, colorB, fontSize, fontName, outlineIndex, texturePath)
@@ -557,7 +574,7 @@ animationFrame:SetHeight(0.0001)
 animationFrame:Hide()
 animationFrame:SetScript("OnUpdate", OnUpdateAnimationFrame)
 
--- Create a frame for preloading fonts.  It seems that it needs to be anchored
+-- Create a frame for preloading fonts. It seems that it needs to be anchored
 -- and have a height and width in order for the fonts to actually to be loaded.
 fontLoaderFrame = CreateFrame("Frame", nil, UIParent)
 fontLoaderFrame:SetPoint("BOTTOM")
@@ -572,17 +589,17 @@ fontLoaderFrame:Hide()
 -------------------------------------------------------------------------------
 
 -- Protected Variables.
-module.scrollAreas				= scrollAreas
-module.animationStyles			= animationStyles
-module.stickyAnimationStyles	= stickyAnimationStyles
+module.scrollAreas					= scrollAreas
+module.animationStyles				= animationStyles
+module.stickyAnimationStyles		= stickyAnimationStyles
 
 -- Protected Functions.
-module.IsScrollAreaActive           = IsScrollAreaActive
-module.IsScrollAreaIconShown        = IsScrollAreaIconShown
-module.UpdateScrollAreas            = UpdateScrollAreas
-module.RegisterAnimationStyle       = RegisterAnimationStyle
+module.IsScrollAreaActive			= IsScrollAreaActive
+module.IsScrollAreaIconShown		= IsScrollAreaIconShown
+module.UpdateScrollAreas			= UpdateScrollAreas
+module.RegisterAnimationStyle		= RegisterAnimationStyle
 module.RegisterStickyAnimationStyle = RegisterStickyAnimationStyle
-module.IterateScrollAreas           = IterateScrollAreas
-module.LoadFont                     = LoadFont
-module.DisplayMessage               = DisplayMessage
-module.DisplayEvent                 = DisplayEvent
+module.IterateScrollAreas			= IterateScrollAreas
+module.LoadFont						= LoadFont
+module.DisplayMessage				= DisplayMessage
+module.DisplayEvent					= DisplayEvent

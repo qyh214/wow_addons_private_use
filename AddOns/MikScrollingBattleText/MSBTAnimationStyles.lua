@@ -225,7 +225,7 @@ local function ScrollLeftAngledUp(displayEvent, animationProgress)
 	-- Move the event horizontally to outer edge.
 	else
 		-- Calculate how far along the current phase is and set the x and y positions accordingly.
-		local phaseProgress = (animationProgress - horizontalPhasePercent)  / (1 - horizontalPhasePercent)
+		local phaseProgress = (animationProgress - horizontalPhasePercent) / (1 - horizontalPhasePercent)
 		displayEvent.positionX = displayEvent.scrollWidth - (displayEvent.finishPositionX + ((displayEvent.scrollWidth - displayEvent.finishPositionX) * phaseProgress))
 	end
 end
@@ -253,7 +253,7 @@ local function ScrollLeftAngledDown(displayEvent, animationProgress)
 	-- Move the event horizontally to outer edge.
 	else
 		-- Calculate how far along the current phase is and set the x and y positions accordingly.
-		local phaseProgress = (animationProgress - horizontalPhasePercent)  / (1 - horizontalPhasePercent)
+		local phaseProgress = (animationProgress - horizontalPhasePercent) / (1 - horizontalPhasePercent)
 		displayEvent.positionX = displayEvent.scrollWidth - (displayEvent.finishPositionX + ((displayEvent.scrollWidth - displayEvent.finishPositionX) * phaseProgress))
 	end
 end
@@ -281,7 +281,7 @@ local function ScrollRightAngledUp(displayEvent, animationProgress)
 	-- Move the event horizontally to outer edge.
 	else
 		-- Calculate how far along the current phase is and set the x and y positions accordingly.
-		local phaseProgress = (animationProgress - horizontalPhasePercent)  / (1 - horizontalPhasePercent)
+		local phaseProgress = (animationProgress - horizontalPhasePercent) / (1 - horizontalPhasePercent)
 		displayEvent.positionX = displayEvent.finishPositionX + ((displayEvent.scrollWidth - displayEvent.finishPositionX) * phaseProgress)
 	end
 end
@@ -309,7 +309,7 @@ local function ScrollRightAngledDown(displayEvent, animationProgress)
 	-- Move the event horizontally to outer edge.
 	else
 		-- Calculate how far along the current phase is and set the x and y positions accordingly.
-		local phaseProgress = (animationProgress - horizontalPhasePercent)  / (1 - horizontalPhasePercent)
+		local phaseProgress = (animationProgress - horizontalPhasePercent) / (1 - horizontalPhasePercent)
 		displayEvent.positionX = displayEvent.finishPositionX + ((displayEvent.scrollWidth - displayEvent.finishPositionX) * phaseProgress)
 	end
 end
@@ -643,7 +643,7 @@ local function RepositionHorizontalLeft(currentDisplayEvent, activeDisplayEvents
 		if ((topCurrent >= bottomPrev and topCurrent <= topPrev) or (bottomCurrent >= bottomPrev and bottomCurrent <= topPrev)) then
 			-- Calculate the elapsed time for the left and right points.
 			rightTimePrev = prevDisplayEvent.elapsedTime - ((prevDisplayEvent.offsetRight or 0) + MIN_HORIZONTAL_SPACING) * perPixelTime
-			leftTimeCurrent =  currentDisplayEvent.elapsedTime - (currentDisplayEvent.offsetLeft or 0) * perPixelTime
+			leftTimeCurrent = currentDisplayEvent.elapsedTime - (currentDisplayEvent.offsetLeft or 0) * perPixelTime
 
 			-- Adjust the elapsed time of the previous display event if the current one is colliding with it.
 			if (rightTimePrev <= leftTimeCurrent) then
@@ -758,7 +758,7 @@ end
 -- currently scrolling in the scroll area to prevent overlaps.
 -- ****************************************************************************
 local function InitStatic(newDisplayEvent, activeDisplayEvents, direction, behavior)
-	-- Set  how long the animation should take.
+	-- Set how long the animation should take.
 	newDisplayEvent.scrollTime = STATIC_DISPLAY_TIME
 
 	-- Set the animation function.

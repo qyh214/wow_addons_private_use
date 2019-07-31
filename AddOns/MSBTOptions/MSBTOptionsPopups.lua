@@ -540,7 +540,7 @@ local function CreateFontPopup()
 	frame.normalControlsFrame = normalControlsFrame
 
 	-- Normal font dropdown.
-	local dropdown =  MSBTControls.CreateDropdown(normalControlsFrame)
+	local dropdown = MSBTControls.CreateDropdown(normalControlsFrame)
 	local objLocale = L.DROPDOWNS["normalFont"]
 	dropdown:Configure(150, objLocale.label, objLocale.tooltip)
 	dropdown:SetListboxHeight(200)
@@ -553,7 +553,7 @@ local function CreateFontPopup()
 	frame.normalFontDropdown = dropdown
 
 	-- Normal outline dropdown.
-	dropdown =  MSBTControls.CreateDropdown(normalControlsFrame)
+	dropdown = MSBTControls.CreateDropdown(normalControlsFrame)
 	objLocale = L.DROPDOWNS["normalOutline"]
 	dropdown:Configure(150, objLocale.label, objLocale.tooltip)
 	dropdown:SetPoint("TOPLEFT", frame.normalFontDropdown, "BOTTOMLEFT", 0, -20)
@@ -683,7 +683,7 @@ local function CreateFontPopup()
 	frame.critControlsFrame = critControlsFrame
 
 	-- Crit font dropdown.
-	dropdown =  MSBTControls.CreateDropdown(critControlsFrame)
+	dropdown = MSBTControls.CreateDropdown(critControlsFrame)
 	objLocale = L.DROPDOWNS["critFont"]
 	dropdown:Configure(150, objLocale.label, objLocale.tooltip)
 	dropdown:SetListboxHeight(200)
@@ -696,7 +696,7 @@ local function CreateFontPopup()
 	frame.critFontDropdown = dropdown
 
 	-- Crit outline dropdown.
-	dropdown =  MSBTControls.CreateDropdown(critControlsFrame)
+	dropdown = MSBTControls.CreateDropdown(critControlsFrame)
 	objLocale = L.DROPDOWNS["critOutline"]
 	dropdown:Configure(150, objLocale.label, objLocale.tooltip)
 	dropdown:SetPoint("TOPLEFT", frame.critFontDropdown, "BOTTOMLEFT", 0, -20)
@@ -1620,7 +1620,7 @@ local function CreateScrollAreaConfig()
 	)
 
 	-- Scroll area dropdown.
-	local dropdown =  MSBTControls.CreateDropdown(frame)
+	local dropdown = MSBTControls.CreateDropdown(frame)
 	local objLocale = L.DROPDOWNS["scrollArea"]
 	dropdown:Configure(200, objLocale.label, objLocale.tooltip)
 	dropdown:SetPoint("TOP", frame, "TOP", 0, -20)
@@ -1642,7 +1642,7 @@ local function CreateScrollAreaConfig()
 
 
 	-- Normal animation style dropdown.
-	dropdown =  MSBTControls.CreateDropdown(frame)
+	dropdown = MSBTControls.CreateDropdown(frame)
 	objLocale = L.DROPDOWNS["animationStyle"]
 	dropdown:Configure(135, objLocale.label, objLocale.tooltip)
 	dropdown:SetPoint("TOPLEFT", texture, "BOTTOMLEFT", 5, -15)
@@ -1657,7 +1657,7 @@ local function CreateScrollAreaConfig()
 	frame.animationStyleDropdown = dropdown
 
 	-- Sticky animation style dropdown.
-	dropdown =  MSBTControls.CreateDropdown(frame)
+	dropdown = MSBTControls.CreateDropdown(frame)
 	objLocale = L.DROPDOWNS["stickyAnimationStyle"]
 	dropdown:Configure(135, objLocale.label, objLocale.tooltip)
 	dropdown:SetPoint("LEFT", frame.animationStyleDropdown, "RIGHT", 15, 0)
@@ -1672,7 +1672,7 @@ local function CreateScrollAreaConfig()
 	frame.stickyAnimationStyleDropdown = dropdown
 
 	-- Normal direction dropdown.
-	dropdown =  MSBTControls.CreateDropdown(frame)
+	dropdown = MSBTControls.CreateDropdown(frame)
 	objLocale = L.DROPDOWNS["direction"]
 	dropdown:Configure(135,objLocale.label, objLocale.tooltip)
 	dropdown:SetPoint("TOPLEFT", frame.animationStyleDropdown, "BOTTOMLEFT", 0, -10)
@@ -1684,7 +1684,7 @@ local function CreateScrollAreaConfig()
 	frame.directionDropdown = dropdown
 
 	-- Sticky direction dropdown.
-	dropdown =  MSBTControls.CreateDropdown(frame)
+	dropdown = MSBTControls.CreateDropdown(frame)
 	objLocale = L.DROPDOWNS["direction"]
 	dropdown:Configure(135, objLocale.label, objLocale.tooltip)
 	dropdown:SetPoint("TOPLEFT", frame.stickyAnimationStyleDropdown, "BOTTOMLEFT", 0, -10)
@@ -1696,7 +1696,7 @@ local function CreateScrollAreaConfig()
 	frame.stickyDirectionDropdown = dropdown
 
 	-- Normal behavior dropdown.
-	dropdown =  MSBTControls.CreateDropdown(frame)
+	dropdown = MSBTControls.CreateDropdown(frame)
 	objLocale = L.DROPDOWNS["behavior"]
 	dropdown:Configure(135, objLocale.label, objLocale.tooltip)
 	dropdown:SetPoint("TOPLEFT", frame.directionDropdown, "BOTTOMLEFT", 0, -10)
@@ -1708,7 +1708,7 @@ local function CreateScrollAreaConfig()
 	frame.behaviorDropdown = dropdown
 
 	-- Sticky behavior dropdown.
-	dropdown =  MSBTControls.CreateDropdown(frame)
+	dropdown = MSBTControls.CreateDropdown(frame)
 	objLocale = L.DROPDOWNS["behavior"]
 	dropdown:Configure(135, objLocale.label, objLocale.tooltip)
 	dropdown:SetPoint("TOPLEFT", frame.stickyDirectionDropdown, "BOTTOMLEFT", 0, -10)
@@ -1720,7 +1720,7 @@ local function CreateScrollAreaConfig()
 	frame.stickyBehaviorDropdown = dropdown
 
 	-- Normal text align dropdown.
-	dropdown =  MSBTControls.CreateDropdown(frame)
+	dropdown = MSBTControls.CreateDropdown(frame)
 	objLocale = L.DROPDOWNS["textAlign"]
 	dropdown:Configure(135, objLocale.label, objLocale.tooltip)
 	dropdown:SetPoint("TOPLEFT", frame.behaviorDropdown, "BOTTOMLEFT", 0, -10)
@@ -1735,7 +1735,7 @@ local function CreateScrollAreaConfig()
 	frame.textAlignDropdown = dropdown
 
 	-- Sticky text align dropdown.
-	dropdown =  MSBTControls.CreateDropdown(frame)
+	dropdown = MSBTControls.CreateDropdown(frame)
 	objLocale = L.DROPDOWNS["textAlign"]
 	dropdown:Configure(135, objLocale.label, objLocale.tooltip)
 	dropdown:SetPoint("TOPLEFT", frame.stickyBehaviorDropdown, "BOTTOMLEFT", 0, -10)
@@ -1851,7 +1851,7 @@ local function CreateScrollAreaConfig()
 
 
 	-- Icon align dropdown.
-	dropdown =  MSBTControls.CreateDropdown(frame)
+	dropdown = MSBTControls.CreateDropdown(frame)
 	objLocale = L.DROPDOWNS["iconAlign"]
 	dropdown:Configure(135, objLocale.label, objLocale.tooltip)
 	dropdown:SetPoint("TOPLEFT", frame.xOffsetEditbox, "BOTTOMLEFT", 0, -10)
@@ -1988,7 +1988,7 @@ local function CreateScrollAreaSelection()
 
 
 	-- Scroll area dropdown.
-	local dropdown =  MSBTControls.CreateDropdown(frame)
+	local dropdown = MSBTControls.CreateDropdown(frame)
 	local objLocale = L.DROPDOWNS["outputScrollArea"]
 	dropdown:Configure(150, objLocale.label, objLocale.tooltip)
 	dropdown:SetPoint("TOPLEFT", frame, "TOPLEFT", 20, -45)
@@ -2095,10 +2095,15 @@ end
 
 
 -- ****************************************************************************
--- Validates if the passed skill name does not already exist and is valid.
+-- Validates if the passed sound file path is valid.
 -- ****************************************************************************
-local function ValidateSoundFileName(fileName)
-	if (not string.find(fileName, ".mp3") and not string.find(fileName, ".ogg")) then
+local function ValidateSoundFileName(soundPath)
+	if (not soundPath) then return L.MSG_INVALID_SOUND_FILE end
+	-- Ensure that the custom file path is either a number (FileDataID)
+	if (type(soundPath) ~= "string") then return end
+	local soundPathLower = string.lower(soundPath)
+	-- Or a string that begins with "Interface" and ends with either ".mp3" or ".ogg"
+	if (soundPath == "" or (string.find(soundPathLower, "interface") or 0) ~= 1 or (not string.find(soundPathLower, ".mp3") and not string.find(soundPathLower, ".ogg"))) then
 		return L.MSG_INVALID_SOUND_FILE
 	end
 end
@@ -2128,7 +2133,7 @@ local function CreateEvent()
 	frame.titleFontString = fontString
 
 	-- Scroll area dropdown.
-	local dropdown =  MSBTControls.CreateDropdown(frame)
+	local dropdown = MSBTControls.CreateDropdown(frame)
 	local objLocale = L.DROPDOWNS["outputScrollArea"]
 	dropdown:Configure(150, objLocale.label, objLocale.tooltip)
 	dropdown:SetPoint("TOPLEFT", frame, "TOPLEFT", 20, -60)
@@ -2142,7 +2147,7 @@ local function CreateEvent()
 	controls.messageEditbox = editbox
 
 	-- Sound dropdown.
-	local dropdown =  MSBTControls.CreateDropdown(frame)
+	local dropdown = MSBTControls.CreateDropdown(frame)
 	objLocale = L.DROPDOWNS["sound"]
 	dropdown:Configure(150, objLocale.label, objLocale.tooltip)
 	dropdown:SetPoint("TOPLEFT", controls.messageEditbox, "BOTTOMLEFT", 0, -20)
@@ -2183,8 +2188,22 @@ local function CreateEvent()
 			for soundName, soundPath in MikSBT.IterateSounds() do
 				if (soundName == soundFile) then soundFile = soundPath end
 			end
-			soundFile = string.find(soundFile, "\\", nil, 1) and soundFile or DEFAULT_SOUND_PATH .. soundFile
-			PlaySoundFile(soundFile, "Master")
+			--print(soundFile)
+			if (type(soundFile) == "string") then
+				if (soundFile ~= "") then
+					local soundFileLower = string.lower(soundFile)
+					-- If the sound file doesn't contain any slashes, assume it is in MSBT's sound folder
+					if (soundFile ~= "" and not string.find(soundFile, "\\", nil, 1) and not string.find(soundFile, "/", nil, 1)) then
+						soundFile = DEFAULT_SOUND_PATH .. soundFile
+					-- If the sound file doesn't begin with "Interface", don't bother trying
+					elseif ((string.find(soundFileLower, "interface", nil, 1) or 0) ~= 1) then
+						return
+					end
+					PlaySoundFile(soundFile, "Master")
+				end
+			else
+				PlaySoundFile(soundFile, "Master")
+			end
 		end
 	)
 	controls[#controls+1] = button
@@ -2737,7 +2756,7 @@ local function CreateMainEvent()
 
 
 	-- Main event dropdown.
-	local dropdown =  MSBTControls.CreateDropdown(frame)
+	local dropdown = MSBTControls.CreateDropdown(frame)
 	local objLocale = L.DROPDOWNS["mainEvent"]
 	dropdown:Configure(200, objLocale.label, nil)
 	dropdown:SetListboxHeight(200)
@@ -3577,7 +3596,7 @@ local function CreateTriggerPopup()
 
 		-- Cast events.
 		SPELL_CAST_START = {availableConditions = commonSourceFields .. commonSkillFields, defaultConditions="sourceReaction;;eq;;" .. MSBTParser.REACTION_HOSTILE .. ";;skillName;;eq;;" .. UNKNOWN},
-		SPELL_CAST_SUCCESS  = {availableConditions = commonLogFields .. commonSkillFields, defaultConditions="sourceReaction;;eq;;" .. MSBTParser.REACTION_HOSTILE .. ";;skillName;;eq;;" .. UNKNOWN},
+		SPELL_CAST_SUCCESS = {availableConditions = commonLogFields .. commonSkillFields, defaultConditions="sourceReaction;;eq;;" .. MSBTParser.REACTION_HOSTILE .. ";;skillName;;eq;;" .. UNKNOWN},
 
 		-- Kill events.
 		PARTY_KILL = {availableConditions = commonLogFields, defaultConditions="recipientName;;eq;;" .. UNKNOWN},

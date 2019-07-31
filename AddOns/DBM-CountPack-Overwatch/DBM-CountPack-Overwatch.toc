@@ -1,10 +1,12 @@
-﻿## Interface: 80100
+﻿## Interface: 80200
 ## X-Min-Interface: 70200
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Countpack Overwatch|r
 ## DefaultState: enabled
 ## RequiredDeps: DBM-Core
 ## Author: MysticalOS, Domekologe
-## Version: 1.4.3
+## Version: 1.4.4
 ## X-DBM-CountPack: 1
 ## X-DBM-CountPack-GlobalName: DBMCPOverwatch
+## X-Curse-Project-ID: 267605
+
 CountLoadList.lua

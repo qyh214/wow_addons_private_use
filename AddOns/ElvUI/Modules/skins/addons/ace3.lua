@@ -6,7 +6,14 @@ local select = select
 --WoW API / Variables
 local hooksecurefunc = hooksecurefunc
 
+-- functions that were overwritten, we need these to
+-- finish the function call when our code executes!
 local oldRegisterAsWidget, oldRegisterAsContainer
+
+-- these do *not* need to match the current lib minor version
+-- these numbers are used to not attempt skinning way older
+-- versions of AceGUI and AceConfigDialog.
+local minorGUI, minorConfigDialog = 36, 76
 
 function S:Ace3_SkinDropdownPullout()
 	if self and self.obj then
@@ -39,6 +46,7 @@ function S:Ace3_RegisterAsWidget(widget)
 	if not E.private.skins.ace3.enable then
 		return oldRegisterAsWidget(self, widget)
 	end
+
 	local TYPE = widget.type
 	if TYPE == 'MultiLineEditBox' then
 		local frame = widget.frame
@@ -354,16 +362,45 @@ function S:Ace3_RegisterAsContainer(widget)
 	return oldRegisterAsContainer(self, widget)
 end
 
-function S:HookAce3(AceGUI)
-	if not AceGUI then return end
+function S:Ace3_StyleTooltip()
+	if not self or self:IsForbidden() then return end
+	self:SetTemplate('Transparent', nil, true)
+end
 
-	S.Ace3_L = E.Libs.ACL:GetLocale('ElvUI', E.global.general.locale or 'enUS')
+function S:Ace3_SkinTooltip(lib, minor) -- lib: AceConfigDialog or AceGUI
+	-- we only check `minor` here when checking an instance of AceConfigDialog
+	-- we can safely ignore it when checking AceGUI because we minor check that
+	-- inside of its own function.
+	if not lib or (minor and minor < minorConfigDialog) then return end
 
-	oldRegisterAsWidget = AceGUI.RegisterAsWidget
-	AceGUI.RegisterAsWidget = S.Ace3_RegisterAsWidget
+	if lib.tooltip and not S:IsHooked(lib.tooltip, 'OnShow') then
+		S:SecureHookScript(lib.tooltip, 'OnShow', S.Ace3_StyleTooltip)
+	end
 
-	oldRegisterAsContainer = AceGUI.RegisterAsContainer
-	AceGUI.RegisterAsContainer = S.Ace3_RegisterAsContainer
+	if lib.popup and not lib.popup.template then -- StaticPopup
+		lib.popup:SetTemplate('Transparent')
+		lib.popup:GetChildren():StripTextures()
+		S:HandleButton(lib.popup.accept, true)
+		S:HandleButton(lib.popup.cancel, true)
+	end
+end
 
-	S.SkinnedAce3 = true
+function S:HookAce3(lib, minor) -- lib: AceGUI
+	if not lib or (not minor or minor < minorGUI) then return end
+
+	if not S.Ace3_L then
+		S.Ace3_L = E.Libs.ACL:GetLocale('ElvUI', E.global.general.locale or 'enUS')
+	end
+
+	if lib.RegisterAsWidget ~= S.Ace3_RegisterAsWidget then
+		oldRegisterAsWidget = lib.RegisterAsWidget
+		lib.RegisterAsWidget = S.Ace3_RegisterAsWidget
+	end
+
+	if lib.RegisterAsContainer ~= S.Ace3_RegisterAsContainer then
+		oldRegisterAsContainer = lib.RegisterAsContainer
+		lib.RegisterAsContainer = S.Ace3_RegisterAsContainer
+	end
+
+	S:Ace3_SkinTooltip(lib)
 end
