@@ -1,4 +1,6 @@
-if GetLocale() ~= "koKR" then return end
+﻿if GetLocale() ~= "koKR" then
+	return
+end
 local L
 
 --------------------------
@@ -7,21 +9,21 @@ local L
 L = DBM:GetModLocalization("GarrisonInvasions")
 
 L:SetGeneralLocalization({
-	name = "주둔지 방어"
+	name	= "주둔지 방어"
 })
 
 L:SetWarningLocalization({
-	specWarnRylak	= "라일라크 등장!",
-	specWarnWorker	= "겁먹은 일꾼 등장!",
-	specWarnSpy		= "상대진영 침투요원 등장!",
-	specWarnBuilding= "건물이 공격받고 있습니다!"
+	specWarnRylak		= "라일라크 등장!",
+	specWarnWorker		= "겁먹은 일꾼 등장!",
+	specWarnSpy			= "상대진영 침투요원 등장!",
+	specWarnBuilding	= "건물이 공격받고 있습니다!"
 })
 
 L:SetOptionLocalization({
-	specWarnRylak	= "라이라크 등장시 특수 경고 보기",
-	specWarnWorker	= "겁먹은 일꾼 등장시 특수 경고 보기",
-	specWarnSpy		= "상대진영 침투요원 등장시 특수 경고 보기",
-	specWarnBuilding= "건물이 공격 받을시 특수 경고 보기"
+	specWarnRylak		= "라이라크 등장시 특수 경고 보기",
+	specWarnWorker		= "겁먹은 일꾼 등장시 특수 경고 보기",
+	specWarnSpy			= "상대진영 침투요원 등장시 특수 경고 보기",
+	specWarnBuilding	= "건물이 공격 받을시 특수 경고 보기"
 })
 
 L:SetMiscLocalization({
@@ -46,7 +48,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("Annihilon")
 
 L:SetGeneralLocalization({
-	name = "파멸혼"
+	name	= "파멸혼"
 })
 
 --------------
@@ -55,7 +57,7 @@ L:SetGeneralLocalization({
 L = DBM:GetModLocalization("Teluur")
 
 L:SetGeneralLocalization({
-	name = "텔루어"
+	name	= "텔루어"
 })
 
 ----------------------
@@ -64,7 +66,7 @@ L:SetGeneralLocalization({
 L = DBM:GetModLocalization("LadyFleshsear")
 
 L:SetGeneralLocalization({
-	name = "여군주 살점소각"
+	name	= "여군주 살점소각"
 })
 
 -------------------------
@@ -73,7 +75,7 @@ L:SetGeneralLocalization({
 L = DBM:GetModLocalization("Drogan")
 
 L:SetGeneralLocalization({
-	name = "사령관 드로관"
+	name	= "사령관 드로관"
 })
 
 -----------------------------
@@ -82,7 +84,7 @@ L:SetGeneralLocalization({
 L = DBM:GetModLocalization("Goggnathog")
 
 L:SetGeneralLocalization({
-	name = "마법사 군주 고그나토그"
+	name	= "마법사 군주 고그나토그"
 })
 
 ------------
@@ -91,5 +93,5 @@ L:SetGeneralLocalization({
 L = DBM:GetModLocalization("Gaur")
 
 L:SetGeneralLocalization({
-	name = "가우르"
+	name	= "가우르"
 })

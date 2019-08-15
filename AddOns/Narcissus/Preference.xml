@@ -526,7 +526,7 @@
                                         <Layers>
                                             <Layer level="OVERLAY">
                                                 <FontString name="Narci_LetterboxEffectSwitch_Description" inherits="NarciIndicatorLetter" justifyH="LEFT" justifyV="TOP" parentKey="Description" ignoreParentScale="true" Alpha="1" spacing="2" text="NARCI_LETTERBOX_EFFECT_ALERT2">
-                                                    <Size x="200" y="0"/>
+                                                    <Size x="210" y="0"/>
                                                     <Color r="0.5" g="0.5" b="0.5" a="1"/>
                                                     <Anchors>
                                                         <Anchor point="TOPLEFT" relativeKey="$parent.$parent.Letterbox.Label" relativePoint="BOTTOMLEFT" y="-6"/>
@@ -578,14 +578,14 @@
                                     </Layer>
                                 </Layers>                           
                                 <Frames>
-                                    <Button name="Narci_CameraOrbitSwitch" inherits="NarciCheckButtonTemplate">
+                                    <Button name="Narci_CameraOrbitSwitch" inherits="NarciCheckButtonTemplate" parentKey="Orbit">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate1" relativePoint="LEFT" x="18" y="-24"/>
                                         </Anchors>
                                         <Layers>
                                             <Layer level="OVERLAY">
                                                 <FontString inherits="NarciIndicatorLetter" justifyH="LEFT" justifyV="TOP" parentKey="Description" ignoreParentScale="true" Alpha="1" spacing="2">
-                                                    <Size x="200" y="0"/>
+                                                    <Size x="210" y="0"/>
                                                     <Color r="0.5" g="0.5" b="0.5" a="1"/>
                                                     <Anchors>
                                                         <Anchor point="TOPLEFT" relativeKey="$parent.Label" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
@@ -600,6 +600,36 @@
                                             </OnLoad>
                                             <OnShow function="NarciAPI_OptimizeBorderThickness"/>
                                             <OnClick function="Narci_CameraOrbitSwitch_OnClick"/>
+                                        </Scripts>
+                                    </Button>
+
+                                    <Button name="Narci_CameraSafeSwitch" inherits="NarciCheckButtonTemplate">
+                                        <Anchors>
+                                            <Anchor point="TOPLEFT" relativeKey="$parent.Orbit" relativePoint="BOTTOMLEFT" x="0" y="-60"/>
+                                        </Anchors>
+                                        <Layers>
+                                            <Layer level="OVERLAY">
+                                                <FontString inherits="NarciIndicatorLetter" justifyH="LEFT" justifyV="TOP" parentKey="Description" ignoreParentScale="true" Alpha="1" spacing="2" text="NARCI_CAMERA_SAFE_MODE_DESCRIPTION">
+                                                    <Size x="210" y="0"/>
+                                                    <Color r="0.5" g="0.5" b="0.5" a="1"/>
+                                                    <Anchors>
+                                                        <Anchor point="TOPLEFT" relativeKey="$parent.Label" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
+                                                    </Anchors>
+                                                </FontString>
+                                            </Layer>
+                                        </Layers>
+                                        <Scripts>
+                                            <OnLoad>
+                                                self.IsOn = false;
+                                                self.Label:SetText(NARCI_CAMERA_SAFE_MODE)
+                                            </OnLoad>
+                                            <OnShow>
+                                                NarciAPI_OptimizeBorderThickness(self);
+                                                if IsAddOnLoaded("DynamicCam") then
+                                                    self.Description:SetText(NARCI_CAMERA_SAFE_MODE_DESCRIPTION.."\n"..NARCI_CAMERA_SAFE_MODE_DESCRIPTION_EXTRA);
+                                                end
+                                            </OnShow>
+                                            <OnClick function="Narci_CameraSafeSwitch_OnClick"/>
                                         </Scripts>
                                     </Button>
                                 </Frames>
@@ -710,7 +740,7 @@
                                         <Layers>
                                             <Layer level="OVERLAY">
                                                 <FontString inherits="NarciIndicatorLetter" justifyH="LEFT" justifyV="TOP" parentKey="Description" ignoreParentScale="true" Alpha="1" spacing="2" hidden="true">
-                                                    <Size x="200" y="0"/>
+                                                    <Size x="210" y="0"/>
                                                     <Color r="0.5" g="0.5" b="0.5" a="1"/>
                                                     <Anchors>
                                                         <Anchor point="TOPLEFT" relativeKey="$parent.Label" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
@@ -754,7 +784,7 @@
                                         <Layers>
                                             <Layer level="OVERLAY">
                                                 <FontString inherits="NarciIndicatorLetter" justifyH="LEFT" justifyV="TOP" parentKey="Description" ignoreParentScale="true" Alpha="1" spacing="2" text="NARCI_AFK_SCREEN_DESCRIPTION">
-                                                    <Size x="200" y="0"/>
+                                                    <Size x="210" y="0"/>
                                                     <Color r="0.5" g="0.5" b="0.5" a="1"/>
                                                     <Anchors>
                                                         <Anchor point="TOPLEFT" relativeKey="$parent.Label" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
@@ -771,14 +801,14 @@
                                             <OnClick function="Narci_AFKScreenSwitch_OnClick"/>
                                         </Scripts>
                                     </Button>
-                                    <Button name="Narci_GemManagerSwitch" inherits="NarciCheckButtonTemplate">
+                                    <Button name="Narci_GemManagerSwitch" inherits="NarciCheckButtonTemplate" parentKey="Gemma">
                                         <Anchors>
                                             <Anchor point="TOPLEFT" relativeKey="$parent.AFK" relativePoint="BOTTOMLEFT" x="0" y="-60"/>
                                         </Anchors>
                                         <Layers>
                                             <Layer level="OVERLAY">
                                                 <FontString inherits="NarciIndicatorLetter" justifyH="LEFT" justifyV="TOP" parentKey="Description" ignoreParentScale="true" Alpha="1" spacing="2" text="NARCI_GEMMY_DESCRIPTION">
-                                                    <Size x="200" y="0"/>
+                                                    <Size x="210" y="0"/>
                                                     <Color r="0.5" g="0.5" b="0.5" a="1"/>
                                                     <Anchors>
                                                         <Anchor point="TOPLEFT" relativeKey="$parent.Label" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
@@ -793,6 +823,30 @@
                                             </OnLoad>
                                             <OnShow function="NarciAPI_OptimizeBorderThickness"/>
                                             <OnClick function="Narci_GemManagerSwitch_OnClick"/>
+                                        </Scripts>
+                                    </Button>
+                                    <Button name="Narci_DressingRoomSwitch" inherits="NarciCheckButtonTemplate">
+                                        <Anchors>
+                                            <Anchor point="TOPLEFT" relativeKey="$parent.Gemma" relativePoint="BOTTOMLEFT" x="0" y="-60"/>
+                                        </Anchors>
+                                        <Layers>
+                                            <Layer level="OVERLAY">
+                                                <FontString inherits="NarciIndicatorLetter" justifyH="LEFT" justifyV="TOP" parentKey="Description" ignoreParentScale="true" Alpha="1" spacing="2" text="NARCI_DRESSING_ROOM_DESCRIPTION">
+                                                    <Size x="210" y="0"/>
+                                                    <Color r="0.5" g="0.5" b="0.5" a="1"/>
+                                                    <Anchors>
+                                                        <Anchor point="TOPLEFT" relativeKey="$parent.Label" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
+                                                    </Anchors>
+                                                </FontString>
+                                            </Layer>
+                                        </Layers>
+                                        <Scripts>
+                                            <OnLoad>
+                                                self.IsOn = false;
+                                                self.Label:SetText(NARCI_DRESSING_ROOM)
+                                            </OnLoad>
+                                            <OnShow function="NarciAPI_OptimizeBorderThickness"/>
+                                            <OnClick function="Narci_DressingRoomSwitch_OnClick"/>
                                         </Scripts>
                                     </Button>
                                 </Frames>
@@ -860,7 +914,7 @@
                                         <FontString inherits="AAAPreferenceMedium" justifyH="LEFT" justifyV="TOP" text="NARCI_PROJECT_AAA_SUMMARY" spacing="2">
                                             <Size x="0" y="0"/>
                                             <Anchors>
-                                                <Anchor point="TOPLEFT" relativeKey="$parent.P1" relativePoint="BOTTOMLEFT" x="0" y="-8"/>
+                                                <Anchor point="TOPLEFT" relativeKey="$parent.P1" relativePoint="BOTTOMLEFT" x="0" y="-6"/>
                                                 <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-18"/>
                                             </Anchors>
                                         </FontString>
@@ -880,7 +934,7 @@
                                         <FontString inherits="AAAPreferenceMedium" justifyH="LEFT" justifyV="TOP" text="NARCI_PROJECT_NARCISSUS_SUMMARY" spacing="2">
                                             <Size x="0" y="0"/>
                                             <Anchors>
-                                                <Anchor point="TOPLEFT" relativeKey="$parent.P2" relativePoint="BOTTOMLEFT" x="0" y="-8"/>
+                                                <Anchor point="TOPLEFT" relativeKey="$parent.P2" relativePoint="BOTTOMLEFT" x="0" y="-6"/>
                                                 <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-18"/>
                                             </Anchors>
                                         </FontString>

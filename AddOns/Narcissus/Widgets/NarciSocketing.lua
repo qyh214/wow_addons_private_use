@@ -29,7 +29,7 @@ local function GetBagPosition(itemLink)
     end
 end
 --]]
-local GetGemBonues = NarciAPI_GetGemBonues; --(itemID)
+local GetGemBonues = NarciAPI_GetGemBonues; --(Gem's itemID or hyperlink)
 local max = math.max;
 local min = math.min;
 local floor = math.floor;
@@ -364,17 +364,10 @@ end)
 function Narci_GemButton_OnEnter(self)
     local link = self:GetParent().GemLink;
     local tooltip = Narci_GearEnhancement_Tooltip;
-    --[[
-    if not hasCounted then
-        local gemsInBag = GetTypeCount(GemIDList);
-        print(gemsInBag)
-        hasCounted = true;
-    end
-    --]]
+
 	if (not link) or Narci_ItemSocketing:IsShown() then
 		return;
 	end
-
 	
 	local bonus = GetGemBonues(link)
 	local name, _, quality, _, _, _, _, _, _, icon = GetItemInfo(link)
@@ -396,9 +389,6 @@ function Narci_GemButton_OnEnter(self)
 	end
 
     tooltip:SetMouseMotionEnabled(false)
-    
-
-
 	FadeFrame(tooltip, 0.15, "IN")
 end
 

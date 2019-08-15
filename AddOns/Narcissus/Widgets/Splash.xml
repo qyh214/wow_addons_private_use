@@ -27,7 +27,24 @@
             </OnLeave>
         </Scripts>
     </Button>
-    <Frame name="Narci_Splash_Template" frameStrata="TOOLTIP" hidden="true" Alpha="0" scale="0.8" virtual="true">
+
+    <Button name="Narci_SplashContinueButton_Template" inherits="NarciBindingButtonTemplate" parentKey="Continue" virtual="true">
+        <Size y="24"/>
+        <Animations>
+
+        </Animations>
+        <Scripts>
+            <OnLoad>
+                self.Value:SetText(NARCI_SPLASH_CLOSE_AND_CONTINUE);
+            </OnLoad>
+            <OnShow function="NarciAPI_OptimizeBorderThickness"/>
+            <OnClick>
+                NarciAPI_FadeFrame(self:GetParent(), 0.2, "OUT");
+            </OnClick>
+        </Scripts>
+    </Button>
+
+    <Frame name="Narci_PatchNote_Template" frameStrata="TOOLTIP" hidden="true" Alpha="0" scale="0.8" virtual="true">
         <Size x="420" y="560"/>
         <Anchors>
             <Anchor point="CENTER" y="-30"/>
@@ -51,7 +68,7 @@
                                     self:GetParent():GetParent():Show();
                                 </OnPlay>
                                 <OnFinished>
-                                    Narci_Splash.animIn:Play();
+                                    self:GetParent():GetParent().animIn:Play();
                                 </OnFinished>
                             </Scripts>
                         </AnimationGroup>
@@ -89,16 +106,7 @@
 					<Size x="0" y="0"/>
                     <Color r="0.9" g="0.9" b="0.9" a="1"/>
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="16" y="-36"/>
-                        <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-16"/>
-					</Anchors>
-				</FontString>
-
-				<FontString parentKey="Text82" inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_MESSAGE82" spacing="2">
-					<Size x="0" y="0"/>
-                    <Color r="0.9" g="0.9" b="0.9" a="1"/>
-					<Anchors>
-						<Anchor point="BOTTOMLEFT" relativeKey="$parent.Header1" relativePoint="TOPLEFT" x="0" y="12"/>
+						<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="16" y="-16"/>
                         <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-16"/>
 					</Anchors>
 				</FontString>
@@ -221,9 +229,10 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        self.enabledText = NARCI_AFK_ENABLED;
+                        self.Text:SetText(NARCI_DRESSING_ROOM_ENABLED_BY_DEFAULT);
+                        self.enabledText = NARCI_DRESSING_ROOM_DISABLED;
                     </OnLoad>
-                    <OnClick function="Narci_TryItNow_AFKScreen"/>
+                    <OnClick function="Narci_TryItNow_DressingRoom"/>
                 </Scripts>
             </Button>
         </Frames>
@@ -244,55 +253,27 @@
 
         <Frames>
             <Button inherits="Narci_TryItNow_Template" parentKey="TryIt2">
+                <Size y="20"/>
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent.Text5" relativePoint="BOTTOMLEFT" x="4" y="-6"/>
                     <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-20"/>
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        self.enabledText = NARCI_LETTERBOX_ENABLED;
+                        self.enabledText = NARCI_CAMERA_SAFE_MODE_ENABLED;
+                        self.disabledText = NARCI_CAMERA_SAFE_MODE_DISABLED;
                     </OnLoad>
-                    <OnClick function="Narci_TryItNow_Letterbox"/>
+                    <OnShow function="Narci_Splash_CameraSafeMode_OnShow"/>
+                    <OnClick function="Narci_TryItNow_CameraSafeMode"/>
                 </Scripts>
             </Button>
 
-            <Button inherits="NarciBindingButtonTemplate" scale="0.8" parentKey="Continue">
-                <Size y="24"/>
+            <Button inherits="Narci_SplashContinueButton_Template" scale="0.8" parentKey="Continue">
                 <Anchors>
                     <Anchor point="TOP" relativeKey="$parent.TryIt2" relativePoint="BOTTOM" y="-40"/>
                     <Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="24"/>
                     <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-24"/>
                 </Anchors>
-                <!--This is a Joke-->
-                <Animations>
-                    <AnimationGroup parentKey="a1" smoothing="IN_OUT">
-                        <Translation parentKey="Translation" offsetY="-40" duration="0.25" order="1"/>
-                        <Scripts>
-                            <OnFinished>
-                                self:GetParent():SetPoint("TOP", self:GetParent():GetParent().TryIt2, "BOTTOM", 0, -80);
-                            </OnFinished>
-                        </Scripts>
-                    </AnimationGroup>
-                    <AnimationGroup parentKey="a2" smoothing="IN_OUT">
-                        <Translation parentKey="Translation" offsetY="40" duration="0.25" order="1"/>
-                        <Scripts>
-                            <OnFinished>
-                                self:GetParent():SetPoint("TOP", self:GetParent():GetParent().TryIt2, "BOTTOM", 0, -40);
-                            </OnFinished>
-                        </Scripts>
-                    </AnimationGroup>
-                </Animations>
-                <!--This is a Joke-->
-                <Scripts>
-                    <OnLoad>
-                        self.Value:SetText(NARCI_SPLASH_CLOSE_AND_CONTINUE);
-                    </OnLoad>
-                    <OnShow function="NarciAPI_OptimizeBorderThickness"/>
-                    <OnClick>
-                        --Narci_CloseSplash(self);
-                        NarciAPI_FadeFrame(self:GetParent(), 0.2, "OUT");
-                    </OnClick>
-                </Scripts>
             </Button>
         </Frames>
 
@@ -330,13 +311,131 @@
             </AnimationGroup>
         </Animations>
         <Scripts>
-            <OnShow function="Narci_Splash_OnShow"/>
+            <OnShow/>
             <OnEnter>
 
             </OnEnter>
             <OnMouseWheel>
                 return;
             </OnMouseWheel>
+        </Scripts>
+    </Frame>
+
+    <Frame name="Narci_SplashFrame_Template" frameStrata="TOOLTIP" hidden="false" Alpha="0" ignoreParentScale="true" frameLevel="60" scale="1" virtual="true">
+        <Anchors>
+            <Anchor point="CENTER" x="0" y="20"/>
+        </Anchors>
+        <Size x="540" y="405"/>
+        <Layers>
+            <Layer level="ARTWORK" textureSubLevel="1">
+                <Texture file="Interface\AddOns\Narcissus\Art\Splash\Backdrop2.tga" setAllPoints="true" parentKey="Backdrop"/>
+            </Layer>
+            <Layer level="ARTWORK" textureSubLevel="2" Alpha="1" ignoreParentAlpha="true">
+                <Texture file="Interface\AddOns\Narcissus\Art\Splash\Backdrop1.tga" setAllPoints="true" parentKey="BackdropFront">
+                    <Animations>
+                        <AnimationGroup parentKey="animIn" smoothing="OUT">
+                            <Alpha startDelay="3.5" fromAlpha="0" toAlpha="1" duration="0.5" order="1"/> 
+                            <Scripts>
+                                <OnFinished>
+                                    self:GetParent():SetAlpha(1);
+                                    self:GetParent().animOut:Play();
+                                    self:GetParent():GetParent().ShowFront = true;
+                                    Narci_Splash_ChangePhoto();
+                                </OnFinished>
+                            </Scripts>
+                        </AnimationGroup>
+                        <AnimationGroup parentKey="animOut" smoothing="OUT" setToFinalAlpha="true">
+                            <Alpha startDelay="3.5" fromAlpha="1" toAlpha="0" duration="0.5" order="1"/> 
+                            <Scripts>
+                                <OnFinished>
+                                    self:GetParent():SetAlpha(0);
+                                    self:GetParent():GetParent().ShowFront = false;
+                                    Narci_Splash_ChangePhoto();
+                                    self:GetParent().animIn:Play();
+                                </OnFinished>
+                            </Scripts>
+                        </AnimationGroup>
+                    </Animations>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <Texture file="Interface\AddOns\Narcissus\Art\Splash\SplashBorder.tga" parentKey="Border">
+                    <TexCoords left="0" right="0.9375" top="0" bottom="0.703125"/>
+                    <Size x="600" y="450"/>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Frame parentKey="HiddenFrame" hidden="true" Alpha="0">
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString inherits="PlayerNameLarge" justifyH="LEFT" justifyV="TOP" text="NARCI_GROUP_PHOTO" parentKey="Header" >
+                            <Size x="0" y="0"/>
+                            <Color r="1" g="0.82" b="0"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativeKey="$parent.$parent.Backdrop" relativePoint="TOPLEFT" x="76" y="-35"/>
+                            </Anchors>
+                        </FontString>
+                        <FontString inherits="AAAPreferenceMedium" justifyH="LEFT" justifyV="TOP" text="NARCI_GROUP_PHOTO_AVAILABLE" >
+                            <Size x="0" y="0"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativeKey="$parent.Header" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <Button inherits="NarciCloseButtonTemplate" ignoreParentScale="true">
+                        <Anchors>
+                            <Anchor point="TOPRIGHT" relativeKey="$parent.$parent.Border" relativePoint="TOPRIGHT" x="-35" y="-28"/>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                PlaySound(SOUNDKIT.ACHIEVEMENT_MENU_CLOSE);
+                                NarciAPI_FadeFrame(self:GetParent():GetParent(), 0.2, "OUT");
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+                    <Button inherits="Narci_SplashContinueButton_Template" parentKey="Continue" scale="0.8">
+                        <Size x="240" y="24"/>
+                        <Anchors>
+                            <Anchor point="BOTTOM" relativeKey="$parent.$parent.Border" relativePoint="BOTTOM" y="50"/>
+                        </Anchors>
+                        <Scripts>
+                            <OnLoad>
+                                self.Value:SetText(NARCI_SPLASH_SOUNDS_GREAT_BYE);
+                            </OnLoad>
+                            <OnClick>
+                                PlaySound(SOUNDKIT.ACHIEVEMENT_MENU_CLOSE);
+                                NarciAPI_FadeFrame(self:GetParent():GetParent(), 0.2, "OUT");
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+                </Frames>
+            </Frame>
+        </Frames>
+		<Animations>
+			<AnimationGroup parentKey="animIn" smoothing="OUT">
+				<Scale scaleX="0.6" scaleY="0.6" duration="0" order="1"/>
+				<Scale scaleX="1.75" scaleY="1.75" duration="0.25" order="2"/>
+				<Scale scaleX="0.952" scaleY="0.952" duration="0.15" order="3"/>
+                <Scripts>
+                    <OnFinished>
+                        UIFrameFadeIn(self:GetParent().HiddenFrame, 0.2, 0, 1);
+                    </OnFinished>
+                </Scripts>
+			</AnimationGroup>
+		</Animations>
+        <Scripts>
+            <OnHide>
+                self:StopAnimating();
+                self:Hide();
+            </OnHide>
+            <OnShow>
+            </OnShow>
         </Scripts>
     </Frame>
 </Ui>

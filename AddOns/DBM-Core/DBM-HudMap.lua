@@ -1,4 +1,4 @@
---Original code and concept by Antiarc. Used and modified with his permission.
+﻿--Original code and concept by Antiarc. Used and modified with his permission.
 --First adaptation in dbm credits to VEM team. Continued on their behalf do to no time from origiinal author to make it an external mod or DBM plugin.
 
 local ADDON_NAME = ...

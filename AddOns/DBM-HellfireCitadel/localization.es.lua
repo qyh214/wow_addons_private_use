@@ -1,65 +1,67 @@
-if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then
+	return
+end
 local L
 
 -----------------------------
 -- Asalto a Fuego Infernal --
 -----------------------------
-L= DBM:GetModLocalization(1426)
+L = DBM:GetModLocalization(1426)
 
 L:SetTimerLocalization({
-	timerSiegeVehicleCD		= "Siguiente vehículo: %s",
+	timerSiegeVehicleCD	= "Siguiente vehículo: %s",
 })
 
 L:SetOptionLocalization({
-	timerSiegeVehicleCD =	"Mostrar temporizador para el siguiente vehículo"
+	timerSiegeVehicleCD = "Mostrar temporizador para el siguiente vehículo"
 })
 
 L:SetMiscLocalization({
-	AddsSpawn1		=	"¡Paso, que voy ardiendo!",--Blizzard seems to have disabled these
-	AddsSpawn2		=	"¡Bomba va!",--Blizzard seems to have disabled these
-	BossLeaving		=	"Volveré..."
+	AddsSpawn1	= "¡Paso, que voy ardiendo!",--Blizzard seems to have disabled these
+	AddsSpawn2	= "¡Bomba va!",--Blizzard seems to have disabled these
+	BossLeaving	= "Volveré..."
 })
 
 -------------------------------------
 -- Atracador de la Horda de Hierro --
 -------------------------------------
-L= DBM:GetModLocalization(1425)
+L = DBM:GetModLocalization(1425)
 
 ------------------------------------
 -- Alto Consejo de Fuego Infernal --
 ------------------------------------
-L= DBM:GetModLocalization(1432)
+L = DBM:GetModLocalization(1432)
 
 L:SetWarningLocalization({
-	reapDelayed =	"Segar tras Rostro de pesadilla"
+	reapDelayed	= "Segar tras Rostro de pesadilla"
 })
 
 L:SetOptionLocalization({
-	reapDelayed =	DBM_CORE_AUTO_ANNOUNCE_OPTIONS.soon:format(184476)
+	reapDelayed	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.soon:format(184476)
 })
 
 -------------
 -- Kormrok --
 -------------
-L= DBM:GetModLocalization(1392)
+L = DBM:GetModLocalization(1392)
 
 L:SetMiscLocalization({
-	ExRTNotice		= "%s está compartiendo su configuración de posiciones de Exorsus Raid Tools. Tus posiciones son: Naranja: %s, Verde: %s, Púrpura: %s."
+	ExRTNotice	= "%s está compartiendo su configuración de posiciones de Exorsus Raid Tools. Tus posiciones son: Naranja: %s, Verde: %s, Púrpura: %s."
 })
 
 ---------------------
 -- Kilrogg Mortojo --
 ---------------------
-L= DBM:GetModLocalization(1396)
+L = DBM:GetModLocalization(1396)
 
 L:SetMiscLocalization({
-	BloodthirstersSoon		=	"¡Hermanos, cumplid vuestro destino!"
+	BloodthirstersSoon	= "¡Hermanos, cumplid vuestro destino!"
 })
 
 --------------
 -- Sanguino --
 --------------
-L= DBM:GetModLocalization(1372)
+L = DBM:GetModLocalization(1372)
 
 L:SetTimerLocalization({
 	SoDDPS2		= "Siguiente Sombra (%s)",
@@ -77,50 +79,50 @@ L:SetOptionLocalization({
 --------------------------------
 -- Señor de las Sombras Iskar --
 --------------------------------
-L= DBM:GetModLocalization(1433)
+L = DBM:GetModLocalization(1433)
 
 L:SetWarningLocalization({
-	specWarnThrowAnzu =	"¡Pasa el Ojo de Anzu a %s!"
+	specWarnThrowAnzu	=	"¡Pasa el Ojo de Anzu a %s!"
 })
 
 L:SetOptionLocalization({
-	specWarnThrowAnzu =	"Mostrar aviso especial cuando debas pasar el $spell:179202"
+	specWarnThrowAnzu	=	"Mostrar aviso especial cuando debas pasar el $spell:179202"
 })
 
 ----------------------
 -- Señor vil Zakuun --
 ----------------------
-L= DBM:GetModLocalization(1391)
+L = DBM:GetModLocalization(1391)
 
 L:SetOptionLocalization({
-	SeedsBehavior		= "Patrón de gritos de la banda (requiere líder)",
-	Iconed				= "Estrella, Círculo, Diamante, Triángulo, Luna. Para marcadores del mundo.",--Default
-	Numbered			= "1, 2, 3, 4, 5. Para posiciones numeradas.",
-	DirectionLine		= "Izquierda, Medio izquierda, Medio, Medio derecha, Derecha. Para uso general.",
-	FreeForAll			= "Libre. No asigna ninguna posición, pero avisa por gritos."
+	SeedsBehavior	= "Patrón de gritos de la banda (requiere líder)",
+	Iconed			= "Estrella, Círculo, Diamante, Triángulo, Luna. Para marcadores del mundo.",--Default
+	Numbered		= "1, 2, 3, 4, 5. Para posiciones numeradas.",
+	DirectionLine	= "Izquierda, Medio izquierda, Medio, Medio derecha, Derecha. Para uso general.",
+	FreeForAll		= "Libre. No asigna ninguna posición, pero avisa por gritos."
 })
 
 L:SetMiscLocalization({
-	DBMConfigMsg		= "Configuración de semillas establecida a %s para que coincida con la del líder de banda.",
-	BWConfigMsg			= "El líder de banda está usando BigWigs. Configuración establecida automáticamente a 'numerada'."
+	DBMConfigMsg	= "Configuración de semillas establecida a %s para que coincida con la del líder de banda.",
+	BWConfigMsg		= "El líder de banda está usando BigWigs. Configuración establecida automáticamente a 'numerada'."
 })
 
 ----------------
 -- Xhul'horac --
 ----------------
-L= DBM:GetModLocalization(1447)
+L = DBM:GetModLocalization(1447)
 
 L:SetOptionLocalization({
-	ChainsBehavior		= "Patrón de avisos de cadenas. El temporizador se ajustará en función del patrón.",
-	Cast				= "Solo al objetivo original cuando se inicie el lanzamiento",
-	Applied				= "Solo a los objetivos afectados al terminar el lanzamiento",
-	Both				= "Objetivo original al iniciarse el lanzamiento, y resto de objetivos cuando termine"
+	ChainsBehavior	= "Patrón de avisos de cadenas. El temporizador se ajustará en función del patrón.",
+	Cast			= "Solo al objetivo original cuando se inicie el lanzamiento",
+	Applied			= "Solo a los objetivos afectados al terminar el lanzamiento",
+	Both			= "Objetivo original al iniciarse el lanzamiento, y resto de objetivos cuando termine"
 })
 
 -------------------------
 -- Socrethar el Eterno --
 -------------------------
-L= DBM:GetModLocalization(1427)
+L = DBM:GetModLocalization(1427)
 
 L:SetOptionLocalization({
 	InterruptBehavior	= "Patrón de interrupciones de la banda (requiere líder)",
@@ -133,25 +135,25 @@ L:SetOptionLocalization({
 --------------------
 -- Tirana Velhari --
 --------------------
-L= DBM:GetModLocalization(1394)
+L = DBM:GetModLocalization(1394)
 
 ---------------
 -- Mannoroth --
 ---------------
-L= DBM:GetModLocalization(1395)
+L = DBM:GetModLocalization(1395)
 
 L:SetOptionLocalization({
 	CustomAssignWrath	= "Poner iconos de $spell:186348 según el rol de los jugadores (requiere líder; puede causar conflictos con BigWigs o versiones antiguas de DBM)"
 })
 
 L:SetMiscLocalization({
-	felSpire		=	"comienza a potenciar la cumbre vil!"
+	felSpire	= "comienza a potenciar la cumbre vil!"
 })
 
 ----------------
 -- Archimonde --
 ----------------
-L= DBM:GetModLocalization(1438)
+L = DBM:GetModLocalization(1438)
 
 L:SetWarningLocalization({
 	specWarnBreakShackle	= "Tormento encadenado - ¡Rompe el %s!"
@@ -172,12 +174,12 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	phase2point5		= "Contemplad las tropas de la Legión Ardiente y asumid lo fútil que es vuestra resistencia.",--3 seconds faster than CLEU, used as primary, slower CLEU secondary
-	First				= "primero",
-	Second				= "segundo",
-	Third				= "tercero",
-	Fourth				= "cuarto",--Just in case, not sure how many targets in 30 man raid
-	Fifth				= "quinto"--Just in case, not sure how many targets in 30 man raid
+	phase2point5	= "Contemplad las tropas de la Legión Ardiente y asumid lo fútil que es vuestra resistencia.",--3 seconds faster than CLEU, used as primary, slower CLEU secondary
+	First			= "primero",
+	Second			= "segundo",
+	Third			= "tercero",
+	Fourth			= "cuarto",--Just in case, not sure how many targets in 30 man raid
+	Fifth			= "quinto"--Just in case, not sure how many targets in 30 man raid
 })
 
 ------------------------
@@ -186,5 +188,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("HellfireCitadelTrash")
 
 L:SetGeneralLocalization({
-	name =	"Enemigos menores"
+	name	=	"Enemigos menores"
 })

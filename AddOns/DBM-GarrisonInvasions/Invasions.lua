@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("GarrisonInvasions", "DBM-GarrisonInvasions")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019041705938")
+mod:SetRevision("20190814112014")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
@@ -13,13 +13,13 @@ mod.noStatistics = true
 mod.isTrashMod = true--Flag as trash mod to at least disable mod during raid combat, since it stays active at all times after loaded. Doing same way as pvp mods wouldn't save any cpu really considering we'd need ZONE_CHANGED too, not just ZONE_CHANGED_NEW_AREA and this fires a ton even in raids.
 
 --Generic
-local specWarnRylak				= mod:NewSpecialWarning("specWarnRylak")
-local specWarnWorker			= mod:NewSpecialWarning("specWarnWorker")
-local specWarnSpy				= mod:NewSpecialWarning("specWarnSpy")
-local specWarnBuilding			= mod:NewSpecialWarning("specWarnBuilding")
+local specWarnRylak			= mod:NewSpecialWarning("specWarnRylak")
+local specWarnWorker		= mod:NewSpecialWarning("specWarnWorker")
+local specWarnSpy			= mod:NewSpecialWarning("specWarnSpy")
+local specWarnBuilding		= mod:NewSpecialWarning("specWarnBuilding")
 
 --Generic
---local timerCombatStart			= mod:NewCombatTimer(44)--rollplay for first pull
+--local timerCombatStart	= mod:NewCombatTimer(44)--rollplay for first pull
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if not self.Options.Enabled then return end

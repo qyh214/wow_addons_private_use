@@ -2,7 +2,7 @@
 
 	<FontFamily name="ItemLevelMedium" virtual="true">
 		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="10">
+			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="11">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="0.6" y="-0.6"/>
@@ -214,7 +214,7 @@
 
 	<FontFamily name="StatusNameMedium" virtual="true">
 		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="11">
+			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="12">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
@@ -267,7 +267,7 @@
 
 	<FontFamily name="StatusNumberSmall" virtual="true">
 		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="11">
+			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="12">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
@@ -320,7 +320,7 @@
 
 	<FontFamily name="PlayerInfoSmall" virtual="true">
 		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="12">
+			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="13">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
@@ -532,7 +532,7 @@
 
 	<FontFamily name="NarciIndicatorTiny" virtual="true">
 		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="8">
+			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="9">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="0.6" y="-0.6"/>
@@ -585,7 +585,7 @@
 
 	<FontFamily name="NarciMenu" virtual="true">
 		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="13">
+			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="14">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
@@ -691,7 +691,7 @@
 		</Shadow>
 	</Font>
 
-	<Font name="NarciIndicatorDigit" font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="8" monochrome="false" virtual="true">
+	<Font name="NarciIndicatorDigit" font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="9" monochrome="false" virtual="true">
 		<Color r="1" g="1" b="1"/>
 		<Shadow>
 			<Offset>

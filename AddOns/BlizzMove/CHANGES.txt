@@ -1,10 +1,16 @@
-lightweight tag 770072cc31ae2dc85bab92a9bbadb7979b453592 v1.8.1
-Author:	GitHub <noreply@github.com>
-Date:	Sun Jul 21 23:02:01 2019 +0200
+lightweight tag b84b9a87ab8a8bbf5fced3a0ab0727a045682cdd 1.9
+Author:	zanony <zanony@jsommer.at>
+Date:	Sat Aug 10 03:55:21 2019 +0200
 
-commit 770072cc31ae2dc85bab92a9bbadb7979b453592
-Author: Jessica <zanony@jsommer.at>
-Date:   Sun Jul 21 23:02:01 2019 +0200
+commit b84b9a87ab8a8bbf5fced3a0ab0727a045682cdd
+Author: zanony <zanony@jsommer.at>
+Date:   Sat Aug 10 03:55:21 2019 +0200
 
-    Update BlizzMove.toc
+    Update for Classic WoW
+    
+    Classic WoW
+    - Add QuestLogFrame
+    8.2
+    -Add AddonList
+    -Add Blizzard_AzeriteUI
 

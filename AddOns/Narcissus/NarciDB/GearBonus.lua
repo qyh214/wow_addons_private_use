@@ -5,22 +5,19 @@ Narci_GemInfo = {
     [168637] = {"AGI", 120},         --Leviathan's Eye of Agility
     [168638] = {"INT", 120},         --Leviathan's Eye of Intellect
 
-    [168639] = {"crit", 60},        --Deadly Lava Lazuli
-    [168640] = {"mastery", 60},     --Masterful Sea Currant
-    [168641] = {"haste", 60},       --Quick Sand Spinel
-    [168642] = {"versa", 60},       --Versatile Dark Opal
+    [168639] = {"crit", 50},        --Deadly Lava Lazuli
+    [168640] = {"mastery", 50},     --Masterful Sea Currant
+    [168641] = {"haste", 50},       --Quick Sand Spinel
+    [168642] = {"versa", 50},       --Versatile Dark Opal
 
     [154126] = {"crit", 40},        --Deadly Amberblaze
     [154127] = {"haste", 40},       --Quick Owlseye
     [154128] = {"versa", 40},       --Versatile Royal Quartz
     [154129] = {"mastery", 40},     --Masterful Tidal Amethyst
 
-    ---------------------------
-    ---Set this to 80 in 8.2---
-    ---------------------------
-    [153707] = {"STR", 40},         --Kraken's Eye of Strength
-    [153708] = {"AGI", 40},         --Kraken's Eye of Agility
-    [153709] = {"INT", 40},         --Kraken's Eye of Intellect
+    [153707] = {"STR", 80},         --Kraken's Eye of Strength
+    [153708] = {"AGI", 80},         --Kraken's Eye of Agility
+    [153709] = {"INT", 80},         --Kraken's Eye of Intellect
 
     [153710] = {"crit", 30},        --Deadly Solstone
     [153711] = {"haste", 30},       --Quick Golden Beryl
@@ -50,26 +47,36 @@ Narci_EnchantInfo = {
     --[EnchantID] = {"Attribute", Amount, SpellID},  --need to be parsed from itemstring
     ----8 BFA----
     ----Ring----
-    [5938] = {"crit", 27, 255094},          --Seal of Critical Strike
-    [5939] = {"haste", 27, 255095},         --Seal of Haste
-    [5940] = {"mastery", 27, 255096},       --Seal of Mastery
-    [5941] = {"versa", 27, 255097},         --Seal of Versatility
+    [5938] = {"crit", 30, 255094},          --Seal of Critical Strike
+    [5939] = {"haste", 30, 255095},         --Seal of Haste
+    [5940] = {"mastery", 30, 255096},       --Seal of Mastery
+    [5941] = {"versa", 30, 255097},         --Seal of Versatility
 
-    [5942] = {"crit", 37, 255098},          --Pact of Critical Strike
-    [5943] = {"haste", 37, 255099},         --Pact of Haste
-    [5944] = {"mastery", 37, 255100},       --Pact of Mastery
-    [5945] = {"versa", 37, 255101},         --Pact of Versatility
+    [5942] = {"crit", 40, 255098},          --Pact of Critical Strike
+    [5943] = {"haste", 40, 255099},         --Pact of Haste
+    [5944] = {"mastery", 40, 255100},       --Pact of Mastery
+    [5945] = {"versa", 40, 255101},         --Pact of Versatility
+
+    [6108] = {"crit", 60, 298011},          --Accord of Critical Strike
+    [6109] = {"haste", 60, 298016},         --Accord of Haste
+    [6110] = {"mastery", 60, 298002},       --Accord of Mastery
+    [6111] = {"versa", 60, 297999},         --Accord of Versatility
 
     ----Weapon----
     [5946] = {"heal", 0, 255105},          --Coastal Surge***
     [5948] = {"leech", 0, 255112},         --Siphoning***
-    [5949] = {"spell", 0, 255131},         --Torrent of Elements       proc an aura which increases your elemental spell damage by 10%.
+    [5949] = {"spell", 0, 255131},         --Torrent of Elements       proc an aura which increases your elemental spell damage by 10%
     [5950] = {"speed", 0, 255143},         --Gale-Force Striking       increases your attack speed by 15% for 15 sec
     [5962] = {"versa", 0, 268879},         --Versatile Navigation      +50 per stack, up to 10 stacks
     [5963] = {"haste", 0, 268897},         --Quick Navigation
     [5964] = {"mastery", 0, 268903},       --Masterful Navigation
     [5965] = {"crit", 0, 268909},          --Deadly Navigation
     [5966] = {"armor", 0, 268915},         --Stalwart Navigation
+
+    [6112] = {"INT", 0, 300770},            --Machinist's Brilliance    occasionally increase Intellect and Mastery, Haste, or Critical Strike. Your highest stat is always chosen.
+    [6148] = {"STR", 0, 300788},            --Force Multiplier          occasionally increase Strength or Agility and Mastery, Haste, or Critical Strike. Your highest stat is always chosen.
+    [6150] = {"AGI", 0, 300789},            --Naga Hide                 When you Block, Dodge, or Parry, you have a chance to increase Strength or Agility
+    [6149] = {"INT", 0, 298515},            --Oceanic Restoration       occasionally increase Intellect and restore mana
 
     ----7 LEG----
     ----Ring----

@@ -313,26 +313,34 @@ local function GetGeneralOptions()
 					width = "normal",
 					disabled = function() return not private.db.general.showMaker end,
 				},
-				separatorMessages = {
+				separatorTomtom = {
 					order = 9,
 					type = "header",
 					name = "",
 				},
-				sync = {
+				enableTomtomSupport = {
 					order = 10,
+					name = AL["ENABLE_TOMTOM_SUPPORT"],
+					desc = AL["ENABLE_TOMTOM_SUPPORT_DESC"],
+					type = "toggle",
+					get = function() return private.db.general.enableTomtomSupport end,
+					set = function(_, value)
+						private.db.general.enableTomtomSupport = value
+					end,
+					width = "full",
+				},
+				separatorMessages = {
+					order = 11,
+					type = "header",
+					name = "",
+				},
+				sync = {
+					order = 12,
 					name = AL["SYNCRONIZE"],
 					desc = AL["SYNCRONIZE_DESC"],
 					type = "execute",
 					func = function() RareScanner:MarkCompletedAchievements() end,
 					width = "double",
-				},
-				test = {
-					order = 11,
-					name = AL["TEST"],
-					desc = AL["TEST_DESC"],
-					type = "execute",
-					func = function() RareScanner:Test() end,
-					width = "normal",
 				}
 			},
 		}
@@ -451,6 +459,7 @@ local function GetDisplayOptions()
 						private.db.display.displayMiniature = value
 					end,
 					width = "full",
+					disabled = function() return not private.db.display.displayButton end,
 				},
 				displayButtonContainers = {
 					order = 3,
@@ -480,13 +489,37 @@ local function GetDisplayOptions()
 					width = "full",
 					disabled = function() return not private.db.display.displayButton end,
 				},
+				scale = {
+					order = 5.1,
+					type = "range",
+					name = AL["DISPLAY_BUTTON_SCALE"],
+					desc = AL["DISPLAY_BUTTON_SCALE_DESC"],
+					min	= 0.4,
+					max	= 1,
+					step = 0.01,
+					bigStep = 0.05,
+					get = function() return private.db.display.scale end,
+					set = function(_, value)
+						private.db.display.scale = value
+					end,
+					width = "double",
+					disabled = function() return not private.db.display.displayButton end,	
+				},
+				test = {
+					order = 5.2,
+					name = AL["TEST"],
+					desc = AL["TEST_DESC"],
+					type = "execute",
+					func = function() RareScanner:Test() end,
+					width = "normal",
+				},
 				separatorMessages = {
-					order = 5,
+					order = 6,
 					type = "header",
 					name = AL["MESSAGE_OPTIONS"],
 				},
 				displayRaidWarning = {
-					order = 6,
+					order = 7,
 					type = "toggle",
 					name = AL["SHOW_RAID_WARNING"],
 					desc = AL["SHOW_RAID_WARNING_DESC"],
@@ -497,7 +530,7 @@ local function GetDisplayOptions()
 					width = "full",
 				},
 				displayChatMessage = {
-					order = 7,
+					order = 8,
 					type = "toggle",
 					name = AL["SHOW_CHAT_ALERT"],
 					desc = AL["SHOW_CHAT_ALERT_DESC"],
@@ -508,12 +541,12 @@ local function GetDisplayOptions()
 					width = "full",
 				},
 				separatorLog = {
-					order = 8,
+					order = 9,
 					type = "header",
 					name = AL["LOG_WINDOW_OPTIONS"],
 				},
 				displayLogWindow = {
-					order = 9,
+					order = 10,
 					type = "toggle",
 					name = AL["DISPLAY_LOG_WINDOW"],
 					desc = AL["DISPLAY_LOG_WINDOW_DESC"],
@@ -524,7 +557,7 @@ local function GetDisplayOptions()
 					width = "full",
 				},
 				autoHideLogWindow = {
-					order = 10,
+					order = 11,
 					type = "range",
 					name = AL["LOG_WINDOW_AUTOHIDE"],
 					desc = AL["LOG_WINDOW_AUTOHIDE_DESC"],
@@ -1169,6 +1202,18 @@ local function GetLootFilterOptions()
 							width = "full",
 							disabled = function() return (not private.db.loot.displayLoot and not private.db.loot.displayLootOnMap) end,
 						},
+						filterItemsCompletedQuest = {
+							order = 5,
+							type = "toggle",
+							name = AL["LOOT_FILTER_COMPLETED_QUEST"],
+							desc = AL["LOOT_FILTER_COMPLETED_QUEST_DESC"],
+							get = function() return private.db.loot.filterItemsCompletedQuest end,
+							set = function(_, value)
+								private.db.loot.filterItemsCompletedQuest = value
+							end,
+							width = "full",
+							disabled = function() return (not private.db.loot.displayLoot and not private.db.loot.displayLootOnMap) end,
+						},
 					},
 					disabled = function() return (not private.db.loot.displayLoot and not private.db.loot.displayLootOnMap) end,
 				}
@@ -1276,12 +1321,25 @@ local function GetMapOptions()
 					get = function() return private.db.map.keepShowingAfterDead end,
 					set = function(_, value)
 						private.db.map.keepShowingAfterDead = value
+						private.db.map.keepShowingAfterDeadReseteable = false
 					end,
 					width = "full",
 					disabled = function() return (not private.db.map.displayNpcIcons and not private.db.map.displayContainerIcons and not private.db.map.displayEventIcons) end,
 				},
-				keepShowingAfterCollected = {
+				keepShowingAfterDeadReseteable = {
 					order = 9,
+					type = "toggle",
+					name = AL["MAP_SHOW_ICON_AFTER_DEAD_RESETEABLE"],
+					desc = AL["MAP_SHOW_ICON_AFTER_DEAD_RESETEABLE_DESC"],
+					get = function() return private.db.map.keepShowingAfterDeadReseteable end,
+					set = function(_, value)
+						private.db.map.keepShowingAfterDeadReseteable = value
+					end,
+					width = "full",
+					disabled = function() return (not private.db.map.displayNpcIcons and not private.db.map.displayContainerIcons and not private.db.map.displayEventIcons) or private.db.map.keepShowingAfterDead end,
+				},
+				keepShowingAfterCollected = {
+					order = 10,
 					type = "toggle",
 					name = AL["MAP_SHOW_ICON_AFTER_COLLECTED"],
 					desc = AL["MAP_SHOW_ICON_AFTER_COLLECTED_DESC"],
@@ -1293,7 +1351,7 @@ local function GetMapOptions()
 					disabled = function() return (not private.db.map.displayNpcIcons and not private.db.map.displayContainerIcons and not private.db.map.displayEventIcons) end,
 				},
 				maxSeenTime = {
-					order = 10,
+					order = 11,
 					type = "range",
 					name = AL["MAP_SHOW_ICON_MAX_SEEN_TIME"],
 					desc = AL["MAP_SHOW_ICON_MAX_SEEN_TIME_DESC"],
@@ -1310,7 +1368,7 @@ local function GetMapOptions()
 					disabled = function() return ((not private.db.map.displayNpcIcons and not private.db.map.displayContainerIcons and not private.db.map.displayEventIcons) or private.db.map.disableLastSeenFilter) end,	
 				},
 				maxSeenTimeContainer = {
-					order = 11,
+					order = 12,
 					type = "range",
 					name = AL["MAP_SHOW_ICON_CONTAINER_MAX_SEEN_TIME"],
 					desc = AL["MAP_SHOW_ICON_CONTAINER_MAX_SEEN_TIME_DESC"],

@@ -1,10 +1,12 @@
-if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then
+	return
+end
 local L
 
 -----------
 -- Gruul --
 -----------
-L= DBM:GetModLocalization(1161)
+L = DBM:GetModLocalization(1161)
 
 L:SetOptionLocalization({
 	MythicSoakBehavior	= "Patrón de agrupamiento para Tajo infernal",
@@ -15,7 +17,7 @@ L:SetOptionLocalization({
 ----------------
 -- Tragamenas --
 ----------------
-L= DBM:GetModLocalization(1202)
+L = DBM:GetModLocalization(1202)
 
 L:SetOptionLocalization({
 	InterruptBehavior	= "Patrón de interrupciones para avisos especiales",
@@ -26,7 +28,7 @@ L:SetOptionLocalization({
 ---------------------------
 -- El Horno de Fundición --
 ---------------------------
-L= DBM:GetModLocalization(1154)
+L = DBM:GetModLocalization(1154)
 
 L:SetWarningLocalization({
 	warnRegulators			= "Reguladores de calor restantes: %d",
@@ -45,39 +47,39 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	heatRegulator		= "Regulador de calor",
-	Regulator			= "Regulador %d",--Can't use above, too long for infoframe
-	bombNeeded			= "%d bomba(s)"
+	heatRegulator	= "Regulador de calor",
+	Regulator		= "Regulador %d",--Can't use above, too long for infoframe
+	bombNeeded		= "%d bomba(s)"
 })
 
 ------------------------
 -- Hans'gar y Franzok --
 ------------------------
-L= DBM:GetModLocalization(1155)
+L = DBM:GetModLocalization(1155)
 
 --------------------------
 -- Dominallamas Ka'graz --
 --------------------------
-L= DBM:GetModLocalization(1123)
+L = DBM:GetModLocalization(1123)
 
 -----------
 --Kromog --
 -----------
-L= DBM:GetModLocalization(1162)
+L = DBM:GetModLocalization(1162)
 
 L:SetMiscLocalization({
-	ExRTNotice		= "%s está compartiendo su configuración de posiciones de Exorsus Raid Tools para las runas. Tu posición es: %s."
+	ExRTNotice	= "%s está compartiendo su configuración de posiciones de Exorsus Raid Tools para las runas. Tu posición es: %s."
 })
 
 ---------------------------------
 -- Señor de las bestias Darmac --
 ---------------------------------
-L= DBM:GetModLocalization(1122)
+L = DBM:GetModLocalization(1122)
 
 --------------------------
 -- Operador Thogar --
 --------------------------
-L= DBM:GetModLocalization(1147)
+L = DBM:GetModLocalization(1147)
 
 L:SetWarningLocalization({
 	specWarnSplitSoon	= "Separación de banda en 10 s"
@@ -108,7 +110,7 @@ L:SetMiscLocalization({
 -----------------------------
 -- Las Doncellas de Hierro --
 -----------------------------
-L= DBM:GetModLocalization(1203)
+L = DBM:GetModLocalization(1203)
 
 L:SetWarningLocalization({
 	specWarnReturnBase	= "¡Volved a tierra!"
@@ -128,7 +130,7 @@ L:SetMiscLocalization({
 ----------------
 -- Puño Negro --
 ----------------
-L= DBM:GetModLocalization(959)
+L = DBM:GetModLocalization(959)
 
 L:SetWarningLocalization({
 	specWarnMFDPosition		= "Posición para marcado: %s",
@@ -151,5 +153,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("BlackrockFoundryTrash")
 
 L:SetGeneralLocalization({
-	name =	"Enemigos menores"
+	name	= "Enemigos menores"
 })

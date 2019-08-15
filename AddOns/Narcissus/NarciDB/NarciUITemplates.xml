@@ -620,18 +620,40 @@
 				</Texture>
 			</Layer>
 		</Layers>
+		<Animations>
+			<AnimationGroup parentKey="animIn">
+				<Alpha startDelay="0.1" fromAlpha="0" toAlpha="1" duration="0.2" order="1"/>
+				<Scripts>
+					<OnPlay>
+						self:GetParent():Show();
+					</OnPlay>
+					<OnFinished>
+						self:GetParent():SetAlpha(1);
+					</OnFinished>
+				</Scripts>
+			</AnimationGroup>
+			<AnimationGroup parentKey="animOut">
+				<Alpha startDelay="0.1" fromAlpha="1" toAlpha="0" duration="0.2" order="1"/>
+				<Scripts>
+					<OnFinished>
+						self:GetParent():Hide();
+						self:GetParent():SetAlpha(0);
+					</OnFinished>
+				</Scripts>
+			</AnimationGroup>
+		</Animations>
 	</Button>
 
-	<Button name="Narci_AlertFrame" frameStrata="TOOLTIP" frameLevel="30" Alpha="0" clampedToScreen="true" registerForClicks="RightButtonUp" virtual="true">
+	<Button name="Narci_AlertFrame" frameStrata="TOOLTIP" frameLevel="30" Alpha="0" clampedToScreen="true" registerForClicks="RightButtonUp" virtual="true" hidden="true">
 		<Size x="240" y="60"/>
 		<Layers>
 			<Layer level="OVERLAY">
 				<FontString parentKey="Text" inherits="ItemLevelMedium" justifyH="LEFT" justifyV="TOP" text="Description" spacing="2">
-					<Size x="220" y="0"/>
+					<Size x="0" y="0"/>	<!--220, 0-->
 					<Color r="1" g="1" b="1" a="1"/>
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="10" y="-10"/>
-						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-10"/>
+						<Anchor point="TOP" relativeKey="$parent" relativePoint="TOP" x="0" y="-10"/>
+						<!--Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-10"/-->
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -643,7 +665,7 @@
 						<MaxColor a="1" r="0.1" g="0.1" b="0.1"/>
 					</Gradient>
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="0" y="0"/>
+						<Anchor point="TOPLEFT" relativeKey="$parent.Text" relativePoint="TOPLEFT" x="-10" y="10"/>
 						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Text" relativePoint="BOTTOMRIGHT" x="10" y="-10"/>
 					</Anchors>
 				</Texture>
@@ -676,10 +698,19 @@
 			<OnClick>
 				self:Hide();
 			</OnClick>
+			<OnShow>
+				if self.Text:GetWidth() > 220 then
+					self.Text:SetWidth(220);
+					self:SetHeight(self.Text:GetHeight() + 20)
+				end
+			</OnShow>
 		</Scripts>
 	</Button>
 
 	<Button name="Narci_AlertFrame_Autohide" inherits="Narci_AlertFrame">
+		<HitRectInsets>
+			<AbsInset left="0" right="0" top="0" bottom="24"/>
+		</HitRectInsets>
 		<Animations>
 			<AnimationGroup parentKey="Counter">
 				<Scale duration="3" order="1"/>
@@ -695,8 +726,13 @@
 				self.Text:SetTextColor(1, 0, 0)
 			</OnLoad>
 			<OnShow>
+				if self.Text:GetWidth() > 220 then
+					self.Text:SetWidth(220);
+					self:SetHeight(self.Text:GetHeight() + 20)
+				end
 				self:StopAnimating();
 				self.Counter:Play();
+				self:SetFrameStrata("TOOLTIP");
 			</OnShow>
 			<OnEnter>
 				self:StopAnimating();

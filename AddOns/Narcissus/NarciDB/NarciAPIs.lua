@@ -25,7 +25,8 @@ local HeritageArmorItemIDs = {
     166348, 166349, 166351, 166352, 166353, 166354, 166355, 166356, 166357,             --Blood Elf
     164993, 164994, 164995, 164996, 164997, 164998, 164999, 165000,                     --Zandalari
     165002, 165003, 165004, 165005, 165006, 165007, 165008, 165009,                     --Kul'tiran
-
+    168282, 168283, 168284, 168285, 168286, 168287, 168288, 168289, 168290,             --Gnome
+    168291, 168292, 168293, 168294, 168295, 168296, 168297, 168298, 170063,             --Tauren 
     --Reserved for test↓
     
 }
@@ -120,7 +121,10 @@ Narci_ColorTable = {
 	[895] = { 89, 140, 123},	--Tiragarde Sound
 	[1161]= { 89, 140, 123},	--Boralus
 	[942] = {127, 164, 114},	--Stormsong
-	[896] = {156, 165, 153},	--Drustvar
+    [896] = {156, 165, 153},	--Drustvar
+    
+    [1462] = {16, 156, 192},    --Mechagon
+    [1355] = {41,  74, 127},    --Nazjatar
 }
 
 local BorderTexture = {
@@ -135,6 +139,7 @@ local BorderTexture = {
         [7] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Heirloom",	--Void
         [8] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Azerite",
         [12] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Special",
+        ["Heart"] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Heart",    --Heart
         ["Minimap"] = "Interface/AddOns/Narcissus/Art/Minimap/LOGO",
     },
 
@@ -149,6 +154,7 @@ local BorderTexture = {
         [7] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Heirloom",	--Void
         [8] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Azerite",
         [12] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Black",
+        ["Heart"] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Heart",    --Heart
         ["Minimap"] = "Interface/AddOns/Narcissus/Art/Minimap/LOGO-Thick",
     },
 }
@@ -219,7 +225,7 @@ local PrimaryStatusList = {
 };
 
 function NarciAPI_GetPrimaryStatusName()
-	local currentSpec = GetSpecialization();
+	local currentSpec = GetSpecialization() or 1;
 	local _, _, _, _, _, primaryStat = GetSpecializationInfo(currentSpec);
 	local ps = PrimaryStatusList[primaryStat];
 	return ps;
@@ -236,10 +242,10 @@ TP:SetOwner(UIParent, 'ANCHOR_NONE');
 local SocketAction = ITEM_SOCKETABLE;
 local find = string.find;
 local SocketPath = "ItemSocketingFrame";
-function NarciAPI_IsItemSocketable(itemLink)
+function NarciAPI_IsItemSocketable(itemLink, SocketID)
     if not itemLink then    return; end
-    
-    local gemName, gemLink = GetItemGem(itemLink, 1)
+    if not SocketID then SocketID = 1; end
+    local gemName, gemLink = GetItemGem(itemLink, SocketID)
     if gemName then
         return gemName, gemLink;
     end
@@ -375,6 +381,7 @@ function NarciAPI_GetItemExtraEffect(itemLink)
 end
 
 function NarciAPI_GetGemBonues(itemID)
+    --itemID: Gem's Item ID or hyperlink
     if not itemID then    return; end
     if type(itemID) == "number" then
         TP:SetItemByID(itemID)
@@ -384,12 +391,16 @@ function NarciAPI_GetGemBonues(itemID)
     local num = TP:NumLines();
     local output;
     local str, level;
+    
     for i = 1, num do
         str = _G["NarciVirtualTooltip".."TextLeft"..i]
         if not str then
             return;
         else
             str = str:GetText();
+            if not str then
+                return;
+            end
         end
         
         if strsub(str, 1, 1) == "+" then
@@ -625,6 +636,83 @@ function NarciAPI_BuildButtonList(self, buttonTemplate, buttonNameTable, initial
 end
 
 
+-----Language Adaptor-----
+function Narci_LanguageDetector(string)
+	local str = string
+	local len = strlen(str)
+	local i = 1
+	while i <= len do
+		local c = string.byte(str, i)
+		local shift = 1
+		--print(c)
+		if (c > 0 and c <= 127)then
+			shift = 1
+		elseif c== 195 then
+			shift = 2	--Latin/Greek
+		elseif (c >= 208 and c <=211) then
+			shift = 2
+			return "RU" --RU included
+		elseif (c >= 224 and c <= 227) then
+			shift = 3	--JP
+			return "JP"
+		elseif (c >= 228 and c <= 233) then
+			shift = 3	--CN
+			return "CN"
+		elseif (c >= 234 and c <= 237) then
+			shift = 3	--KR
+			return "KR"
+		elseif (c >= 240 and c <= 244) then
+			shift = 4	--Unknown invalid
+		end
+		local char = string.sub(str, i, i+shift-1)
+		i = i + shift
+	end
+	return "RM"
+end
+
+--[[
+function LDTest(string)
+	local str = string
+	local lenInByte = #str
+	
+	for i=1,lenInByte do
+		local char = strsub(str, i,i)
+		local curByte = string.byte(str, i)
+		print(char.." "..curByte)
+	end
+	return "roman"
+end
+
+local Eng = "abcdefghijklmnopqrstuvwxyz" --abcdefghijklmnopqrstuvwxyz Z~90 z~122 1-1
+local DE =  "äöüß" --195 1-2
+local CN =  "乀氺" --228 229 230 233 HEX E4-E9 Hexadecimal UTF-8 CJK
+local KR = "제" --237 236 235 234 1-3  EB-ED
+local RU = "ѱӧ" --D0400-D04C0  208 209 210 211 1-2
+local FR = "ÀÃÇÊÉÕàãçêõáéíóúà" --1-2 195 C3 -PR
+local JP = "ひらがな" --1-3 227 E3 Kana
+--LDTest("繁體繁体")
+--local language = LanguageDetector("繁體中文")
+--print("Str is: "..language)
+--]]
+
+local LanguageDetector = Narci_LanguageDetector;
+local PlayerNameFont={
+	["CN"] = "Interface\\AddOns\\Narcissus\\Font\\NotoSansCJKsc-Medium.otf",
+	["RM"] = "Interface\\AddOns\\Narcissus\\Font\\SemplicitaPro-Semibold.otf",
+	["RU"] = "Interface\\AddOns\\Narcissus\\Font\\NotoSans-Medium.ttf",
+	["KR"] = "Interface\\AddOns\\Narcissus\\Font\\NotoSansCJKsc-Medium.otf",
+	["JP"] = "Interface\\AddOns\\Narcissus\\Font\\NotoSansCJKsc-Medium.otf",
+}
+
+function NarciAPI_SmartFontType(self, height)
+	local str = self:GetText();
+	local Language = LanguageDetector(str);
+	--print("Language is: "..Language);
+	local Height = self:GetHeight();
+	if Language and PlayerNameFont[Language] then
+		self:SetFont(PlayerNameFont[Language] , Height);
+	end
+end
 
 -----Filter Shared Functions-----
 function NarciAPI_LetterboxAnimation(command)

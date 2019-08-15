@@ -1,10 +1,12 @@
-if GetLocale() ~= "deDE" then return end
+﻿if GetLocale() ~= "deDE" then
+	return
+end
 local L
 
 ---------------
 -- Gruul --
 ---------------
-L= DBM:GetModLocalization(1161)
+L = DBM:GetModLocalization(1161)
 
 L:SetOptionLocalization({
 	MythicSoakBehavior	= "Strategie für Infernoschlitzer im mythischen Schwierigkeitsgrad (für Spezialwarnungen)",
@@ -15,7 +17,7 @@ L:SetOptionLocalization({
 ---------------------------
 -- Oregorger, The Devourer --
 ---------------------------
-L= DBM:GetModLocalization(1202)
+L = DBM:GetModLocalization(1202)
 
 L:SetOptionLocalization({
 	InterruptBehavior	= "Verhalten der Unterbrechungswarnungen",
@@ -26,7 +28,7 @@ L:SetOptionLocalization({
 ---------------------------
 -- The Blast Furnace --
 ---------------------------
-L= DBM:GetModLocalization(1154)
+L = DBM:GetModLocalization(1154)
 
 L:SetWarningLocalization({
 	warnRegulators			= "Hitzeregler verbleibend: %d",
@@ -45,28 +47,28 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	heatRegulator		= "Hitzeregler",
-	Regulator			= "Regler %d",
-	bombNeeded			= "%d Bombe(n)"
+	heatRegulator	= "Hitzeregler",
+	Regulator		= "Regler %d",
+	bombNeeded		= "%d Bombe(n)"
 })
 
 ------------------
 -- Hans'gar And Franzok --
 ------------------
-L= DBM:GetModLocalization(1155)
+L = DBM:GetModLocalization(1155)
 
 --------------
 -- Flamebender Ka'graz --
 --------------
-L= DBM:GetModLocalization(1123)
+L = DBM:GetModLocalization(1123)
 
 --------------------
 --Kromog, Legend of the Mountain --
 --------------------
-L= DBM:GetModLocalization(1162)
+L = DBM:GetModLocalization(1162)
 
 L:SetMiscLocalization({
-	ExRTNotice		= "%s hat ExRT Positionszuweisungen für die Runen gesendet. Deine Position ist: %s"
+	ExRTNotice	= "%s hat ExRT Positionszuweisungen für die Runen gesendet. Deine Position ist: %s"
 })
 
 --------------------------
@@ -77,7 +79,7 @@ L= DBM:GetModLocalization(1122)
 --------------------------
 -- Operator Thogar --
 --------------------------
-L= DBM:GetModLocalization(1147)
+L = DBM:GetModLocalization(1147)
 
 L:SetWarningLocalization({
 	specWarnSplitSoon	= "Schlachtzugteilung in 10"
@@ -108,7 +110,7 @@ L:SetMiscLocalization({
 --------------------------
 -- The Iron Maidens --
 --------------------------
-L= DBM:GetModLocalization(1203)
+L = DBM:GetModLocalization(1203)
 
 L:SetWarningLocalization({
 	specWarnReturnBase	= "Kehre zum Dock zurück!"
@@ -128,7 +130,7 @@ L:SetMiscLocalization({
 --------------------------
 -- Blackhand --
 --------------------------
-L= DBM:GetModLocalization(959)
+L = DBM:GetModLocalization(959)
 
 L:SetWarningLocalization({
 	specWarnMFDPosition		= "Todesurteil Position: %s",
@@ -151,5 +153,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("BlackrockFoundryTrash")
 
 L:SetGeneralLocalization({
-	name =	"Trash der Schwarzfelsgießerei"
+	name	= "Trash der Schwarzfelsgießerei"
 })

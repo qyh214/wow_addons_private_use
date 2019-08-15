@@ -1,38 +1,28 @@
-Changes since tag 4.21
+tag e11e08047d4f2afecd244435cc06b77da3aeebe6 4.24
+Author:	Azilroka <darktemplar9900@yahoo.com>
+Date:	Fri Aug 9 22:42:33 2019 -0500
 
-commit 14211e191510ce3c1f1ab88f2eca2fa8bf66dda1
+commit f8b310407fc252527d0fb22b0685a5466ce7aa4a
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Fri Jul 5 22:27:27 2019 -0500
+Date:   Fri Aug 9 22:42:16 2019 -0500
 
-    Ace3 Update
+    4.24
 
-commit f9f732e5df1f717045019b9fe8a53cdb978223b3
+commit 786b2079ec1bc816430a9682a7b21a0082a28940
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Thu Jul 4 23:50:26 2019 -0500
+Date:   Fri Aug 9 22:41:55 2019 -0500
 
-    Remove this
+    ElvUI TexCoords to ElvUI file.
 
-commit 0221376d122c00db5c7cfdc5fbf0cc20b7021126
+commit 62555defe39f9a4b87d7b0fe64bdc6f3d7760e05
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Thu Jul 4 23:45:08 2019 -0500
+Date:   Fri Aug 9 22:41:32 2019 -0500
 
-    CI 2
+    ProperVersion for Changelog commit
 
-commit 32e705c32bea1ec1b3d80b345c25637ff64f7b46
+commit c6769d94d1ab5bb95e7970023191887f6390db2a
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Thu Jul 4 23:36:18 2019 -0500
+Date:   Fri Aug 9 22:40:54 2019 -0500
 
-    CI
-
-commit 15c3cbfbf704037655ccc86a3c4c466de9a3447e
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Jun 30 18:49:20 2019 -0500
-
-    4.21
-
-commit 15c3cbfbf704037655ccc86a3c4c466de9a3447e
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Jun 30 18:49:20 2019 -0500
-
-    4.21
+    Correct Changelog Error when no changelog was written. Who reads it anyway?
 

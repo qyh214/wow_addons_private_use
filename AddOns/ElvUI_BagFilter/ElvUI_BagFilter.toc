@@ -1,6 +1,6 @@
-## Interface: 80100
+## Interface: 80200
 ## Title: |cff1784d1ElvUI|r Bag Filters
-## Version: 3.5
+## Version: 4.0
 ## Author: Warmexx [Neighbours]
 ## Dependencies: ElvUI
 ## X-Donate: PayPal:warmexx AT wow-neighbours DOT com

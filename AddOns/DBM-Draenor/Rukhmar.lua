@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1262, "DBM-Draenor", nil, 557)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019041705938")
+mod:SetRevision("20190814112014")
 mod:SetCreatureID(83746)
 mod:SetEncounterID(1755)
 mod:SetReCombatTime(20)
@@ -22,14 +22,14 @@ mod:RegisterEventsInCombat(
 --TODO, add warnings for fixates birds do if they fixate.
 local warnPiercedArmor			= mod:NewStackAnnounce(167615, 3, nil, "Tank|Healer", 2)
 
-local specWarnLooseQuills		= mod:NewSpecialWarningSpell(167647, nil, nil, nil, 2)
-local specWarnSolarBreath		= mod:NewSpecialWarningSpell(167679, "Tank")
-local specWarnExplode			= mod:NewSpecialWarningYou(167630)
+local specWarnLooseQuills	= mod:NewSpecialWarningSpell(167647, nil, nil, nil, 2)
+local specWarnSolarBreath	= mod:NewSpecialWarningSpell(167679, "Tank")
+local specWarnExplode		= mod:NewSpecialWarningYou(167630)
 
---local timerLooseQuillsCD		= mod:NewCDTimer(30, 167647)--seems health based. 80%, 40%
-local timerLooseQuills			= mod:NewBuffActiveTimer(30, 167647, nil, nil, nil, 6)
-local timerSolarBreathCD		= mod:NewCDTimer(29, 167679, nil, "Tank", nil, 5)
-local timerSharpBeakCD			= mod:NewCDTimer(11.5, 167614, nil, "Tank|Healer", 2, 5)
+--local timerLooseQuillsCD	= mod:NewCDTimer(30, 167647)--seems health based. 80%, 40%
+local timerLooseQuills		= mod:NewBuffActiveTimer(30, 167647, nil, nil, nil, 6)
+local timerSolarBreathCD	= mod:NewCDTimer(29, 167679, nil, "Tank", nil, 5)
+local timerSharpBeakCD		= mod:NewCDTimer(11.5, 167614, nil, "Tank|Healer", 2, 5)
 
 --mod:AddReadyCheckOption(37474, false)
 --mod:AddRangeFrameOption(8, 167647)

@@ -1,9 +1,14 @@
+local _, _, _, tocversion = GetBuildInfo();
+if tocversion ~= 80200 then     --Dressing Room gets a revamp in 8.2.5. Disable following funtions.
+    return;
+end
 
 --[[
     -- Blizzard Dressing Room --
     Size:   450, 545
-
 --]]
+
+
 local GetTransmogItemInfo = C_TransmogCollection.GetItemInfo;
 local GetTransmogSourceInfo = C_TransmogCollection.GetSourceInfo;
 local GetAppearanceSources = C_TransmogCollection.GetAppearanceSources;     --(isCollected, sourceID, sourceType, visualID, itemID, itemModID)
@@ -27,6 +32,8 @@ local EmptySlotAlpha = 0.4;
 
 OverrideHeight = math.floor(GetScreenHeight()*0.8 + 0.5);
 OverrideWidth = math.floor(WidthHeitghtRatio * OverrideHeight + 0.5);
+
+local SlotFrameVisibility = true;   --If DressUp addon is loaded, hide our slot frame
 
 local XmogSlotTable = {
 	[1] = {{5, INVTYPE_CHEST}, {15, INVTYPE_CLOAK}, {3, INVTYPE_SHOULDER}, {1, INVTYPE_HEAD}},		--Left 	**slotID for TABARD is 19
@@ -258,7 +265,7 @@ local function NarciBridge_GetDressUpModelSlotSource(slotID, enchantID)
     --print(appearanceID)
     local AppearnceSources
     if appearanceID then
-        AppearnceSources = GetAppearanceSources(appearanceID)
+        AppearnceSources = GetAppearanceSources(appearanceID);
     end
 
     unformatedHyperlink = "item:"..itemID.."::::::::120:::::";
@@ -284,7 +291,7 @@ local function NarciBridge_GetDressUpModelSlotSource(slotID, enchantID)
             end
         end
     end
-    return itemIcon, (hasMog or hasAppearance), hyperlink, unformatedHyperlink, itemName, sourceTextColorized;
+    return appliedSourceID, itemIcon, (hasMog or hasAppearance), hyperlink, unformatedHyperlink, itemName, sourceTextColorized;
 end
 
 -------Create Mogit List-------
@@ -303,7 +310,7 @@ end
 
 local function GetTargetSource(mainHandEnchant, offHandEnchant)
     local buttons = NarciBridge_DressUpFrame.buttons;
-    local button, icon, hasMog, hyperlink, unformatedHyperlink, isIllusionCollected, illusionHyperlink;
+    local button, appliedSourceID, icon, hasMog, hyperlink, unformatedHyperlink, isIllusionCollected, illusionHyperlink;
     local enchantID;
     wipe(newSet.items)
     wipe(ItemList)
@@ -315,7 +322,7 @@ local function GetTargetSource(mainHandEnchant, offHandEnchant)
         else
             enchantID = "";
         end
-        icon, hasMog, hyperlink, unformatedHyperlink, itemName, sourceTextColorized = NarciBridge_GetDressUpModelSlotSource(slotID, enchantID);
+        appliedSourceID, icon, hasMog, hyperlink, unformatedHyperlink, itemName, sourceTextColorized = NarciBridge_GetDressUpModelSlotSource(slotID, enchantID);
         if illusionHyperlink then
             --hyperlink = illusionHyperlink;
         end     
@@ -324,6 +331,9 @@ local function GetTargetSource(mainHandEnchant, offHandEnchant)
         button = buttons[slotID];
         button.hyperlink = hyperlink;
         if icon then
+            if appliedSourceID then
+                button.appearance = appliedSourceID;
+            end
             button.Icon:SetTexture(icon)
             if hasMog then
                 button.Icon:SetDesaturated(false);
@@ -337,9 +347,13 @@ local function GetTargetSource(mainHandEnchant, offHandEnchant)
             button:SetAlpha(1);
             button.Icon:Show();
         else
-            button:SetAlpha(EmptySlotAlpha);
-            button.Icon:Hide();
-            button.Border:SetTexCoord(0, 0.5, 0, 1);
+            if button.isHidden then
+                button:SetAlpha(EmptySlotAlpha);
+            else
+                button:SetAlpha(EmptySlotAlpha);
+                button.Icon:Hide();
+                button.Border:SetTexCoord(0, 0.5, 0, 1);
+            end
         end
     end
 end
@@ -364,13 +378,16 @@ local function DressUpSources(appearanceSources, mainHandEnchant, offHandEnchant
     end
     DressUpModel:Undress()
 	local mainHandSlotID = 16   --GetInventorySlotInfo("MAINHANDSLOT");
-	local secondaryHandSlotID = 17  --GetInventorySlotInfo("SECONDARYHANDSLOT");
+    local secondaryHandSlotID = 17  --GetInventorySlotInfo("SECONDARYHANDSLOT");
 	for i = 1, #appearanceSources do
 		if ( i ~= mainHandSlotID and i ~= secondaryHandSlotID ) then
 			if ( appearanceSources[i] and appearanceSources[i] ~= NO_TRANSMOG_SOURCE_ID ) then
-				DressUpModel:TryOn(appearanceSources[i]);
+                DressUpModel:TryOn(appearanceSources[i]);
 			end
-		end
+        end
+        if NarciBridge_DressUpFrame.buttons[i] then
+            NarciBridge_DressUpFrame.buttons[i].isHidden = false;
+        end
 	end
 
 	DressUpModel:TryOn(appearanceSources[mainHandSlotID], "MAINHANDSLOT", mainHandEnchant);
@@ -391,7 +408,7 @@ local function CopyTexts(frame)
         end
     end
     local GearTexts = frame:GetParent().GearTexts;
-    GearTexts:SetText(strtrim(texts))
+    GearTexts:SetText(strtrim(texts));
 end
 
 local function UpdateDressingRoomModel(self, unit)
@@ -399,18 +416,12 @@ local function UpdateDressingRoomModel(self, unit)
     if not UnitExists(unit) or not UnitIsPlayer(unit) or not CanInspect(unit, false) then return; end
     local className, classFileName = UnitClass(unit);
     SetDressUpBackground(DressUpFrame, classFileName);
-    self:GetParent().DressUpModel:SetUnit(unit)
+    DressUpModel:SetUnit(unit)
     NotifyInspect(unit);
-    local mainHandEnchant, offHandEnchant;
+    --local mainHandEnchant, offHandEnchant;
     C_Timer.After(0.1,function()
-        mainHandEnchant, offHandEnchant = DressUpSources(C_TransmogCollection.GetInspectSources())
+        self.mainHandEnchant, self.offHandEnchant = DressUpSources(C_TransmogCollection.GetInspectSources())
         ClearInspectPlayer();
-    end);
-    C_Timer.After(0.2,function()
-        GetTargetSource(mainHandEnchant, offHandEnchant)
-        if self.OptionFrame.GearTexts:IsShown() then
-            CopyTexts(self.OptionFrame.GearTexts)
-        end
     end);
 end
 
@@ -428,7 +439,7 @@ end
 
 local function NarciBridge_DressUpFrame_OnSizeChanged(self, width, height)
     --print(width.." x "..height);
-    if GetCVar("miniDressUpFrame") == "0" then
+    if GetCVar("miniDressUpFrame") == "0" and SlotFrameVisibility then
         self.SlotFrame:Show();
     else
         self.SlotFrame:Hide();
@@ -436,12 +447,53 @@ local function NarciBridge_DressUpFrame_OnSizeChanged(self, width, height)
 end
 
 local function NarciBridge_DressUpFrame_OnShow(self)
-    --self:GetParent():SetSize(OverrideWidth, OverrideHeight)
     self:RegisterEvent("PLAYER_TARGET_CHANGED");
     --self:RegisterEvent("PLAYER_STARTED_MOVING");
     --self:RegisterEvent("PLAYER_STOPPED_MOVING");
     --UpdateDressingRoomModel(self)
 end
+
+local function ResetHiddenSlot()
+    --print("Load model...")
+    for i = 1, 19 do
+        if NarciBridge_DressUpFrame.buttons[i] then
+            NarciBridge_DressUpFrame.buttons[i].isHidden = false;
+            NarciBridge_DressUpFrame.buttons[i].appearance = nil;
+        end
+    end
+end
+
+local function NarciBridge_DressUpFrame_OnModelLoaded(self)
+    if self:GetDisplayInfo() ~= 0 then      --If the current model in Dressing Room is not players', hide slot frame.
+        NarciBridge_DressUpFrame.SlotFrame:Hide();
+    else
+        NarciBridge_DressUpFrame_OnSizeChanged(NarciBridge_DressUpFrame);
+        ResetHiddenSlot()
+    end
+end
+-------------------------------------------
+--From Blizzard DressUpFrame_OnDressModel--
+local function DressUpFrame_OnDressModel2(self)
+	-- only want 1 update per frame
+	if ( not self.gotDressed ) then
+		self.gotDressed = true;
+        C_Timer.After(0, function()
+            self.gotDressed = nil;
+            DressUpFrameOutfitDropDown:UpdateSaveButton();
+            C_Timer.After(0.2,function()
+                GetTargetSource(self.mainHandEnchant, self.offHandEnchant)
+                if NarciBridge_DressUpFrame.OptionFrame.GearTexts:IsShown() then
+                    CopyTexts(NarciBridge_DressUpFrame.OptionFrame.GearTexts)
+                end
+            end);
+        end);
+	end
+end
+
+local function NarciBridge_DressUpFrame_OnDressModel(self)
+    DressUpFrame_OnDressModel2(self);
+end
+-----------------------------------------
 
 function NarciBridge_UpdateCharacterButton_OnClick(self)
     UpdateDressingRoomModel(self:GetParent():GetParent())
@@ -457,7 +509,9 @@ local function NarciBridge_MogIt_SaveButton_OnClick(self)
 end
 
 local function NarciBridge_DressUpFrame_Initialize()
+    if not (NarcissusDB and NarcissusDB.DressingRoom) then return; end;
     local parentFrame = DressUpFrame;
+    local modelFrame = DressUpModel;
     if not parentFrame then 
         print("Narcissus failed to initialize Advanced Dressing Room");
         return;
@@ -470,7 +524,9 @@ local function NarciBridge_DressUpFrame_Initialize()
     frame:SetScript("OnEvent", NarciBridge_DressUpFrame_OnEvent);
     frame:SetScript("OnSizeChanged", NarciBridge_DressUpFrame_OnSizeChanged);
 
-    parentFrame.DressUpModel:SetLight(true, false, - 0.44699833180028 ,  0.72403680806459 , -0.52532198881773, 0.8, 1, 1, 1, 0.6, 0.8, 0.8, 0.8)
+    modelFrame:SetScript("OnDressModel", NarciBridge_DressUpFrame_OnDressModel);
+    modelFrame:SetScript("OnModelLoaded", NarciBridge_DressUpFrame_OnModelLoaded);
+    modelFrame:SetLight(true, false, - 0.44699833180028 ,  0.72403680806459 , -0.52532198881773, 0.8, 1, 1, 1, 0.6, 0.8, 0.8, 0.8)
 
     local texName = parentFrame:GetName() and parentFrame:GetName().."BackgroundOverlay"
     local tex = parentFrame:CreateTexture(texName, "BACKGROUND", "ModelBackground_Template", 2)
@@ -485,21 +541,32 @@ local function NarciBridge_DressUpFrame_Initialize()
     end
 end
 
+
 local initialize = CreateFrame("Frame")
 initialize:RegisterEvent("VARIABLES_LOADED");
 initialize:RegisterEvent("PLAYER_ENTERING_WORLD");
 initialize:RegisterEvent("UI_SCALE_CHANGED");
 initialize:SetScript("OnEvent",function(self,event,...)
     if event == "VARIABLES_LOADED" then
-        NarciBridge_DressUpFrame_Initialize()
-        self:UnregisterEvent("VARIABLES_LOADED")
+        NarciBridge_DressUpFrame_Initialize();
+        self:UnregisterEvent("VARIABLES_LOADED");
     elseif event == "PLAYER_ENTERING_WORLD" then
-        if IsAddOnLoaded("MogIt") and MogIt then                         --Mogit
+        if not NarciBridge_DressUpFrame then
+            self:UnregisterAllEvents();
+            return
+        end
+
+        if IsAddOnLoaded("MogIt") and MogIt then                         --Mogit: Add Save as Mogit wishlist
             local button = NarciBridge_SaveToMogItButton;
             button:Show();
             button:SetHeight(48);
             button:SetScript("OnClick", NarciBridge_MogIt_SaveButton_OnClick);
             self:UnregisterEvent("PLAYER_ENTERING_WORLD");
+        end
+
+        if IsAddOnLoaded("DressUp") then                                --DressUp: Hide our dressing room slot frame
+            NarciBridge_DressUpFrame.SlotFrame:Hide();
+            SlotFrameVisibility = false;
         end
     elseif event == "UI_SCALE_CHANGED" then
         C_Timer.After(0.5, function()
@@ -512,16 +579,46 @@ initialize:SetScript("OnEvent",function(self,event,...)
     end
 end);
 
+local isMouseDown = false;
+
 function NarciRectangularItemButton_OnEnter(self)
     GameTooltip:SetOwner(self, "ANCHOR_NONE");
 	GameTooltip:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 1, 1);
 	if (self.hyperlink) then
 		GameTooltip:SetHyperlink(self.hyperlink);
 		GameTooltip:Show();
-		return;
+    end
+
+    if isMouseDown then
+        NarciRectangularItemButton_OnClick(self)
     end
 end
 
+function NarciRectangularItemButton_OnLeave(self)
+    GameTooltip:Hide();
+    if isMouseDown then
+        NarciRectangularItemButton_OnClick(self)
+    end
+end
+
+function NarciRectangularItemButton_OnClick(self)
+    GameTooltip:Hide();
+    self.isHidden = not self.isHidden;
+    if self.isHidden then
+        DressUpModel:UndressSlot(self:GetID());
+    elseif self.appearance then
+        --print(self.appearance)
+        DressUpModel:TryOn(self.appearance);
+    end
+end
+
+function NarciRectangularItemButton_OnDragStart()
+    isMouseDown = true;
+end
+
+function NarciRectangularItemButton_OnDragStop()
+    isMouseDown = false;
+end
 --[[
 hooksecurefunc("PanelTemplates_TabResize", function(tab, padding, absoluteSize, minWidth, maxWidth, absoluteTextSize)
     print(tab:GetName())

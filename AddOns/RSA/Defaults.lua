@@ -7,7 +7,7 @@ local DefaultOptions = {
 		},
 		General = {
 			["*"] = true,
-			GlobalAnnouncements = {				
+			GlobalAnnouncements = {
 				SmartSay = true,
 				SmartYell = true,
 				SmartEmote = true,
@@ -280,7 +280,7 @@ local function DemonHunter()
 				CustomChannel = {
 					Channel = "",
 				},
-			},				
+			},
 			MetamorphosisTank = {
 				Messages = {
 					Start = {"[LINK] activated!"},
@@ -700,7 +700,7 @@ local function Hunter()
 			Intimidation = {
 				Messages = {
 					Cast = {"Instructing pet to cast [LINK]."},
-					Start = {"[LINK] cast on [TARGET]!"},					
+					Start = {"[LINK] cast on [TARGET]!"},
 					End = {"[LINK] on [TARGET] ended!"},
 				},
 				CustomChannel = {
@@ -2294,7 +2294,7 @@ local function Warrior()
 				CustomChannel = {
 					Channel = "",
 				},
-			},				
+			},
 			Intercept = {
 				Messages = {
 					Start = {"[LINK] cast on [TARGET]!"},
@@ -2435,7 +2435,7 @@ local function Racials()
 				CustomChannel = {
 					Channel = "",
 				},
-			},		
+			},
 			WarStomp = {
 				Messages = {
 					Cast = {"[LINK] activated!"},
@@ -2513,7 +2513,7 @@ local function Racials()
 					Channel = "",
 				},
 			},
-			
+
 		},
 	}
 	return Racials
@@ -2562,6 +2562,24 @@ local function Utilities()
 					Channel = "",
 				},
 				SmartGroup = true,
+			},
+			SleepPotions = {
+				Messages = {
+					Start = {"Using [LINK]!"},
+					End = {"[LINK] ended."},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+			},
+			Codex = {
+				Messages = {
+					Start = {"[TARGET] placing a [LINK]!"},
+					End = {"[LINK] ended."},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
 			},
 			EngineerRessBFA = {
 				Messages = {

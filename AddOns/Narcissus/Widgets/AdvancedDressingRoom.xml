@@ -24,7 +24,7 @@
 					</Anchors>
 				</Texture>
 			</Layer>
-			<Layer level="ART">
+			<Layer level="ARTWORK">
 				<Texture parentKey="Black" setAllPoints="true" hidden="true">
 					<Color r="0" g="0" b="0" a="0.2"/>
 					<Anchors>
@@ -44,10 +44,15 @@
 			</Layer>
 		</Layers>
 		<Scripts>
+			<OnLoad>
+				self:RegisterForDrag("LeftButton");
+				self.isHidden = false;
+			</OnLoad>
 			<OnEnter function="NarciRectangularItemButton_OnEnter"/>
-			<OnLeave>
-				GameTooltip:Hide();
-			</OnLeave>
+			<OnLeave function="NarciRectangularItemButton_OnLeave"/>
+			<OnClick function="NarciRectangularItemButton_OnClick"/>
+			<OnDragStart function="NarciRectangularItemButton_OnDragStart"/>
+			<OnDragStop function="NarciRectangularItemButton_OnDragStop"/>
 		</Scripts>
 	</Button>
 
@@ -146,7 +151,7 @@
 					</Anchors>
 				</Texture>
 			</Layer>
-			<Layer level="ART" textureSubLevel="2">
+			<Layer level="ARTWORK" textureSubLevel="2">
 				<Texture file="Interface\AddOns\Narcissus\Art\Tooltip\Gem-Border-Colorized" setAllPoints="true" parentKey="Border1">
 					<TexCoords left="0" right="0.125" top="0.5" bottom="1"/>
 					<Anchors>
@@ -155,7 +160,7 @@
 					</Anchors>
 				</Texture>
 			</Layer>
-			<Layer level="ART" textureSubLevel="1">
+			<Layer level="ARTWORK" textureSubLevel="1">
 				<Texture parentKey="Icon">
 					<TexCoords left="0.08" right="0.92" top="0.08" bottom="0.92"/>
 					<Size x="24" y="24"/>
@@ -164,7 +169,7 @@
 					</Anchors>
 				</Texture>
 			</Layer>
-            <Layer level="ART" textureSubLevel="3">
+            <Layer level="ARTWORK" textureSubLevel="3">
 				<FontString inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="MIDDLE" hidden="false" parentKey="Label">
 					<Color r="1" g="1" b="1"/>
 					<Anchors>
@@ -315,7 +320,7 @@
 							</Layer>								
 						</Layers>
 						<Frames>
-							<Frame inherits="HeaderTemplate" parentKey="Header">
+							<Frame inherits="Narci_HeaderTemplate" parentKey="Header">
 								<Anchors>
 									<Anchor point="BOTTOMLEFT" relativeKey="$parent.Background" relativePoint="TOPLEFT" x="0" y="0"/>
 									<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Background" relativePoint="TOPRIGHT" x="0" y="0"/>
@@ -361,7 +366,6 @@
 								self.Border0:SetTexCoord(0.125, 0.25, 0, 0.5);
 								self.Border1:SetTexCoord(0.125, 0.25, 0.5, 1);
 							</OnLoad>
-							<OnClick function="NarciBridge_UpdateCharacterButton_OnClick"/>
 						</Scripts>
 					</Button>
 

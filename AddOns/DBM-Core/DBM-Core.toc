@@ -19,9 +19,8 @@
 ## X-Website: http://www.deadlybossmods.com
 ## X-Curse-Project-ID: 3358
 ## X-WoWI-ID: 8814
-## Version: 8.2.9
+## Version: 8.2.12
 
-#@no-lib-strip@
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
 Libs\LibChatAnims\LibChatAnims.xml
@@ -30,7 +29,6 @@ Libs\LibLatency\LibLatency.xml
 Libs\LibDurability\LibDurability.xml
 Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
 Libs\LibDBIcon-1.0\lib.xml
-#@end-no-lib-strip@
 
 localization.en.lua
 localization.de.lua

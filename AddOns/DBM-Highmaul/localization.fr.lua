@@ -1,30 +1,31 @@
-if GetLocale() ~= "frFR" then return end
+if GetLocale() ~= "frFR" then
+	return
+end
 local L
 
 ---------------
 -- Kargath Bladefist --
 ---------------
-L= DBM:GetModLocalization(1128)
+L = DBM:GetModLocalization(1128)
 
 ---------------------------
 -- The Butcher --
 ---------------------------
-L= DBM:GetModLocalization(971)
+L = DBM:GetModLocalization(971)
 
 ---------------------------
 -- Tectus, the Living Mountain --
 ---------------------------
-L= DBM:GetModLocalization(1195)
+L = DBM:GetModLocalization(1195)
 
 L:SetMiscLocalization({
 	pillarSpawn	= "MONTAGNES, ÉLEVEZ-VOUS !"
 })
 
-
 ------------------
 -- Brackenspore, Walker of the Deep --
 ------------------
-L= DBM:GetModLocalization(1196)
+L = DBM:GetModLocalization(1196)
 
 L:SetOptionLocalization({
 	InterruptCounter	= "Réinitialiser le nombre de Décomposition après",
@@ -36,7 +37,7 @@ L:SetOptionLocalization({
 --------------
 -- Twin Ogron --
 --------------
-L= DBM:GetModLocalization(1148)
+L = DBM:GetModLocalization(1148)
 
 L:SetOptionLocalization({
 	PhemosSpecial		= "Joue le compte à rebours sonore pour les cooldowns de Phémos",
@@ -48,8 +49,7 @@ L:SetOptionLocalization({
 --------------------
 --Koragh --
 --------------------
-L= DBM:GetModLocalization(1153)
-
+L = DBM:GetModLocalization(1153)
 
 L:SetWarningLocalization({
 	specWarnExpelMagicFelFades	= "Gangrène dissipé dans 5s - revenez à votre point de départ"
@@ -69,7 +69,7 @@ L:SetMiscLocalization({
 --------------------------
 -- Imperator Mar'gok --
 --------------------------
-L= DBM:GetModLocalization(1197)
+L = DBM:GetModLocalization(1197)
 
 L:SetOptionLocalization({
 	GazeYellType		= "Choisir le type de cri pour le Regard des Abysses",
@@ -79,10 +79,10 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	BrandedYell			= "Marque (%s) sur %s",
-	GazeYell			= "Regard disparaît dans %d",
-	GazeYell2			= "Regard (%d) sur %s",
-	PlayerDebuffs		= "Plus proche de l'Aperçu"
+	BrandedYell		= "Marque (%s) sur %s",
+	GazeYell		= "Regard disparaît dans %d",
+	GazeYell2		= "Regard (%d) sur %s",
+	PlayerDebuffs	= "Plus proche de l'Aperçu"
 })
 
 -------------
@@ -91,5 +91,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("HighmaulTrash")
 
 L:SetGeneralLocalization({
-	name =	"Trash de Cognefort"
+	name	= "Trash de Cognefort"
 })

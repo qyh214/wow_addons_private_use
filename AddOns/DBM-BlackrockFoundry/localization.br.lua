@@ -1,22 +1,22 @@
--- Translated by GlitterStorm @ Azralon, last update: Feb.21th.2015
-if GetLocale() ~= "ptBR" then return end
-
+﻿if GetLocale() ~= "ptBR" then
+	return
+end
 local L
 
 ---------------
 -- Gruul --
 ---------------
-L= DBM:GetModLocalization(1161)
+L = DBM:GetModLocalization(1161)
 
 ---------------------------
 -- Oregorger, The Devourer --
 ---------------------------
-L= DBM:GetModLocalization(1202)
+L = DBM:GetModLocalization(1202)
 
 ---------------------------
 -- The Blast Furnace --
 ---------------------------
-L= DBM:GetModLocalization(1154)
+L = DBM:GetModLocalization(1154)
 
 L:SetWarningLocalization({
 	warnBlastFrequency	= "Frequência da explosão aumentou : Aprox cada %d seg"
@@ -29,12 +29,12 @@ L:SetOptionLocalization({
 ------------------
 -- Hans'gar And Franzok --
 ------------------
-L= DBM:GetModLocalization(1155)
+L = DBM:GetModLocalization(1155)
 
 --------------
 -- Flamebender Ka'graz --
 --------------
-L= DBM:GetModLocalization(1123)
+L = DBM:GetModLocalization(1123)
 
 L:SetMiscLocalization({
 	TorrentYell	= "Torrente derretida caindo em %d"
@@ -43,17 +43,17 @@ L:SetMiscLocalization({
 --------------------
 --Kromog, Legend of the Mountain --
 --------------------
-L= DBM:GetModLocalization(1162)
+L = DBM:GetModLocalization(1162)
 
 --------------------------
 -- Beastlord Darmac --
 --------------------------
-L= DBM:GetModLocalization(1122)
+L = DBM:GetModLocalization(1122)
 
 --------------------------
 -- Operator Thogar --
 --------------------------
-L= DBM:GetModLocalization(1147)
+L = DBM:GetModLocalization(1147)
 
 L:SetWarningLocalization({
 	specWarnSplitSoon	= "Divisão da raid em 10"
@@ -76,16 +76,16 @@ L:SetMiscLocalization({
 --------------------------
 -- The Iron Maidens --
 --------------------------
-L= DBM:GetModLocalization(1203)
+L = DBM:GetModLocalization(1203)
 
 L:SetMiscLocalization({
-	shipMessage		= "prepara-se para usar o canhão principal do Couraçado!"
+	shipMessage	= "prepara-se para usar o canhão principal do Couraçado!"
 })
 
 --------------------------
 -- Blackhand --
 --------------------------
-L= DBM:GetModLocalization(959)
+L = DBM:GetModLocalization(959)
 
 -------------
 --  Trash  --
@@ -93,5 +93,5 @@ L= DBM:GetModLocalization(959)
 L = DBM:GetModLocalization("BlackrockFoundryTrash")
 
 L:SetGeneralLocalization({
-	name =	"Trash da Fundição da Rocha Negra"
+	name	= "Trash da Fundição da Rocha Negra"
 })

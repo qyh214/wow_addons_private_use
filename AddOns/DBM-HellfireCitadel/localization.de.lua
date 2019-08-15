@@ -1,61 +1,63 @@
-if GetLocale() ~= "deDE" then return end
+﻿if GetLocale() ~= "deDE" then
+	return
+end
 local L
 
 ---------------
 -- Hellfire Assault --
 ---------------
-L= DBM:GetModLocalization(1426)
+L = DBM:GetModLocalization(1426)
 
 L:SetTimerLocalization({
-	timerSiegeVehicleCD		= "Nächste Maschine %s"
+	timerSiegeVehicleCD	= "Nächste Maschine %s"
 })
 
 L:SetOptionLocalization({
-	timerSiegeVehicleCD =	"Zeige Zeit bis nächste Belagerungsmaschinen erscheinen"
+	timerSiegeVehicleCD = "Zeige Zeit bis nächste Belagerungsmaschinen erscheinen"
 })
 
 L:SetMiscLocalization({
-	AddsSpawn1		=	"Comin' in hot!",--translate (trigger) (unused)
-	AddsSpawn2		=	"Fire in the hole!",--translate (trigger) (unused)
-	BossLeaving		=	"Ich bin gleich wieder da..."
+	AddsSpawn1	= "Comin' in hot!",--translate (trigger) (unused)
+	AddsSpawn2	= "Fire in the hole!",--translate (trigger) (unused)
+	BossLeaving	= "Ich bin gleich wieder da..."
 })
 
 ---------------------------
 -- Iron Reaver --
 ---------------------------
-L= DBM:GetModLocalization(1425)
+L = DBM:GetModLocalization(1425)
 
 ---------------------------
 -- Hellfire High Council --
 ---------------------------
-L= DBM:GetModLocalization(1432)
+L = DBM:GetModLocalization(1432)
 
 L:SetWarningLocalization({
-	reapDelayed =	"Ernte nachdem Erscheinung endet"
+	reapDelayed	= "Ernte nachdem Erscheinung endet"
 })
 
 ------------------
 -- Kormrok --
 ------------------
-L= DBM:GetModLocalization(1392)
+L = DBM:GetModLocalization(1392)
 
 L:SetMiscLocalization({
-	ExRTNotice		= "%s hat ExRT Positionszuweisungen gesendet. Deine Positionen sind: Orange:%s, Grün:%s, Violett:%s"
+	ExRTNotice	= "%s hat ExRT Positionszuweisungen gesendet. Deine Positionen sind: Orange:%s, Grün:%s, Violett:%s"
 })
 
 --------------
 -- Kilrogg Deadeye --
 --------------
-L= DBM:GetModLocalization(1396)
+L = DBM:GetModLocalization(1396)
 
 L:SetMiscLocalization({
-	BloodthirstersSoon		=	"Kommt, Brüder! Eure Bestimmung wartet!"
+	BloodthirstersSoon	= "Kommt, Brüder! Eure Bestimmung wartet!"
 })
 
 --------------------
 --Gorefiend --
 --------------------
-L= DBM:GetModLocalization(1372)
+L = DBM:GetModLocalization(1372)
 
 L:SetTimerLocalization({
 	SoDDPS2		= "Nächste Schatten (%s)",
@@ -73,50 +75,50 @@ L:SetOptionLocalization({
 --------------------------
 -- Shadow-Lord Iskar --
 --------------------------
-L= DBM:GetModLocalization(1433)
+L = DBM:GetModLocalization(1433)
 
 L:SetWarningLocalization({
-	specWarnThrowAnzu =	"Wirf Auge von Anzu zu %s!"
+	specWarnThrowAnzu	=	"Wirf Auge von Anzu zu %s!"
 })
 
 L:SetOptionLocalization({
-	specWarnThrowAnzu =	"Spezialwarnung, wenn du das $spell:179202 werfen musst"
+	specWarnThrowAnzu	=	"Spezialwarnung, wenn du das $spell:179202 werfen musst"
 })
 
 --------------------------
 -- Fel Lord Zakuun --
 --------------------------
-L= DBM:GetModLocalization(1391)
+L = DBM:GetModLocalization(1391)
 
 L:SetOptionLocalization({
-	SeedsBehavior		= "Auswahl der Positionierungsschreie für Saat der Zerstörung (nur als Schlachtzugsleiter)",
-	Iconed				= "Stern, Kreis, Diamant, Dreieck, Mond (für Strategien mit Weltmarkierungen)",
-	Numbered			= "1, 2, 3, 4, 5 (für Strategien mit nummerierten Positionen)",
-	DirectionLine		= "Links, Mitte Links, Mitte, Mitte Rechts, Rechts (typisch für geradlinige Formationen)", 
-	FreeForAll			= "Nur Standardschrei verwenden (ohne Positionszuweisung)"
+	SeedsBehavior	= "Auswahl der Positionierungsschreie für Saat der Zerstörung (nur als Schlachtzugsleiter)",
+	Iconed			= "Stern, Kreis, Diamant, Dreieck, Mond (für Strategien mit Weltmarkierungen)",
+	Numbered		= "1, 2, 3, 4, 5 (für Strategien mit nummerierten Positionen)",
+	DirectionLine	= "Links, Mitte Links, Mitte, Mitte Rechts, Rechts (typisch für geradlinige Formationen)", 
+	FreeForAll		= "Nur Standardschrei verwenden (ohne Positionszuweisung)"
 })
 
 L:SetMiscLocalization({
-	DBMConfigMsg		= "Die Positionierungsschreie für Saat der Zerstörung wurden wie beim Schlachtzugsleiter auf \"%s\" gesetzt.",
-	BWConfigMsg			= "Der Schlachtzugsleiter nutzt \"BigWigs\". DBM wird für die Schreie für Saat der Zerstörung automatisch \"nummerierte Positionen\" verwenden."
+	DBMConfigMsg	= "Die Positionierungsschreie für Saat der Zerstörung wurden wie beim Schlachtzugsleiter auf \"%s\" gesetzt.",
+	BWConfigMsg		= "Der Schlachtzugsleiter nutzt \"BigWigs\". DBM wird für die Schreie für Saat der Zerstörung automatisch \"nummerierte Positionen\" verwenden."
 })
 
 --------------------------
 -- Xhul'horac --
 --------------------------
-L= DBM:GetModLocalization(1447)
+L = DBM:GetModLocalization(1447)
 
 L:SetOptionLocalization({
-	ChainsBehavior		= "Warnverhalten bei Dämonenketten",
-	Cast				= "nur ursprüngliches Ziel bei Zauberbeginn (Timersynchronisierung auf Zauberbeginn)",
-	Applied				= "nur betroffene Ziele bei Zauberende (Timersynchronisierung auf Zauberende)",
-	Both				= "urspüngliches Ziel bei Zauberbeginn und betroffene Ziele bei Zauberende"
+	ChainsBehavior	= "Warnverhalten bei Dämonenketten",
+	Cast			= "nur ursprüngliches Ziel bei Zauberbeginn (Timersynchronisierung auf Zauberbeginn)",
+	Applied			= "nur betroffene Ziele bei Zauberende (Timersynchronisierung auf Zauberende)",
+	Both			= "urspüngliches Ziel bei Zauberbeginn und betroffene Ziele bei Zauberende"
 })
 
 --------------------------
 -- Socrethar the Eternal --
 --------------------------
-L= DBM:GetModLocalization(1427)
+L = DBM:GetModLocalization(1427)
 
 L:SetOptionLocalization({
 	InterruptBehavior	= "Auswahl des Unterbrechungsverhaltens für Vorherrschaft (nur als Schlachtzugsleiter)",
@@ -129,25 +131,25 @@ L:SetOptionLocalization({
 --------------------------
 -- Tyrant Velhari --
 --------------------------
-L= DBM:GetModLocalization(1394)
+L = DBM:GetModLocalization(1394)
 
 --------------------------
 -- Mannoroth --
 --------------------------
-L= DBM:GetModLocalization(1395)
+L = DBM:GetModLocalization(1395)
 
 L:SetOptionLocalization({
 	CustomAssignWrath	= "Setze $spell:186348 Zeichen basierend auf Spielerrollen (muss vom Schlachtzugsleiter aktiviert werden, kann zu Konflikten mit \"BigWigs\" oder veralteten DBM-Versionen führen)"
 })
 
 L:SetMiscLocalization({
-	felSpire		=	"beginnt, die Teufelsspitze zu verstärken!"
+	felSpire	= "beginnt, die Teufelsspitze zu verstärken!"
 })
 
 --------------------------
 -- Archimonde --
 --------------------------
-L= DBM:GetModLocalization(1438)
+L = DBM:GetModLocalization(1438)
 
 L:SetWarningLocalization({
 	specWarnBreakShackle	= "Gefesselte Pein: Breche als %s!"
@@ -168,10 +170,10 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	phase2point5		= "Seht die endlosen Ränge der Brennenden Legion und erkennt die Ausichtslosigkeit Eurer Widerwehr!",
-	First				= "Erster",
-	Second				= "Zweiter",
-	Third				= "Dritter"
+	phase2point5	= "Seht die endlosen Ränge der Brennenden Legion und erkennt die Ausichtslosigkeit Eurer Widerwehr!",
+	First			= "Erster",
+	Second			= "Zweiter",
+	Third			= "Dritter"
 })
 
 -------------
@@ -180,5 +182,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("HellfireCitadelTrash")
 
 L:SetGeneralLocalization({
-	name =	"Trash der Höllenfeuerzitadelle"
+	name	= "Trash der Höllenfeuerzitadelle"
 })

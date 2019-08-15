@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Teluur", "DBM-GarrisonInvasions")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019041705938")
+mod:SetRevision("20190814112014")
 mod:SetCreatureID(90946)
 mod:SetZone()
 
@@ -15,11 +15,11 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED"
 )
 
-local warnPodlingSwarm			= mod:NewSpellAnnounce(180849, 2)
-local warnEntanglement			= mod:NewTargetAnnounce(180836, 3)--Players who didn't move and got caught
-local warnSpore					= mod:NewSpellAnnounce(180825, 3)--Hidden from combat log, until it's too late. Unit event gives enough time to run out but don't know who it's targeting then. target scanning seems to kinda work but not reliable enough. There is somewhat of a delay and often no target at all
+local warnPodlingSwarm		= mod:NewSpellAnnounce(180849, 2)
+local warnEntanglement		= mod:NewTargetAnnounce(180836, 3)--Players who didn't move and got caught
+local warnSpore				= mod:NewSpellAnnounce(180825, 3)--Hidden from combat log, until it's too late. Unit event gives enough time to run out but don't know who it's targeting then. target scanning seems to kinda work but not reliable enough. There is somewhat of a delay and often no target at all
 
-local specWarnEntanglement		= mod:NewSpecialWarningDodge(180836, nil, nil, nil, 1, 2)--Dodgable. puts green swirly under random player. traps everyone there after 4 seconds. Target scanning not possible, warn everyone to check feet
+local specWarnEntanglement	= mod:NewSpecialWarningDodge(180836, nil, nil, nil, 1, 2)--Dodgable. puts green swirly under random player. traps everyone there after 4 seconds. Target scanning not possible, warn everyone to check feet
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId

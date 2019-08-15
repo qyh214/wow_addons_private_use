@@ -1,6 +1,5 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("RSA", "deDE")
 if not L then return end
-L = L or {}
 --[[Translation missing --]]
 L[" Does not affect Immune, Immune will always use its own replacement."] = " Does not affect Immune, Immune will always use its own replacement."
 --[[Translation missing --]]
@@ -34,6 +33,8 @@ L["Always uses spell target's name"] = "Always uses spell target's name"
 --[[Translation missing --]]
 L["Announce to custom channels only while you are in a manually formed group."] = "Announce to custom channels only while you are in a manually formed group."
 L["Cast"] = "Zauber"
+--[[Translation missing --]]
+L["Cauldrons"] = "Cauldrons"
 L["Channel Name"] = "Channelname"
 L["Class Abilities"] = "Klassenfähigkeiten"
 L["Configuring"] = "Konfigurieren"
@@ -48,6 +49,8 @@ L["DamageAbsorb"] = "Schaden absorbieren"
 --[[Translation missing --]]
 L["Debuff"] = "Debuff"
 L["Dispel"] = "Entfernen"
+--[[Translation missing --]]
+L["Drums"] = "Drums"
 --[[Translation missing --]]
 L["EffectAbsorb"] = "Absorbed Debuff"
 L["Emote"] = true
@@ -72,6 +75,8 @@ L["Enable in War Mode"] = "Im Kriegsmodus aktivieren"
 L["Enable Only in Combat"] = "Nur im Kampf aktivieren"
 L["End"] = "Ende"
 L["Failed"] = "Fehlgeschlagen"
+--[[Translation missing --]]
+L["Feasts"] = "Feasts"
 L["Feedback"] = true
 L["General"] = "Allgemeines"
 --[[Translation missing --]]
@@ -127,9 +132,13 @@ L["Remove Server Names"] = "Servernamen entfernen"
 --[[Translation missing --]]
 L["Removes server name from |c5500DBBD[TARGET]|r tags."] = "Removes server name from |c5500DBBD[TARGET]|r tags."
 --[[Translation missing --]]
+L["Repair Bots"] = "Repair Bots"
+--[[Translation missing --]]
 L["Replacement"] = "Replacement"
 --[[Translation missing --]]
 L["Resist"] = "Resist"
+--[[Translation missing --]]
+L["Respec Codex"] = "Respec Codex"
 L["RSA on Curseforge"] = "RSA auf Curseforge"
 L["Say"] = "Sagen"
 --[[Translation missing --]]
@@ -138,6 +147,8 @@ L["Send to player created channel."] = "Send to player created channel."
 L["Sends a message locally only visible to you. To choose which part of the UI this is displayed in go to the |cff00B2FALocal Message Output Area|r in the General options."] = "Sends a message locally only visible to you. To choose which part of the UI this is displayed in go to the |cff00B2FALocal Message Output Area|r in the General options."
 --[[Translation missing --]]
 L["Sends a message to one of the following channels in order of priority:"] = "Sends a message to one of the following channels in order of priority:"
+--[[Translation missing --]]
+L["Sleeping Mana Potions"] = "Sleeping Mana Potions"
 --[[Translation missing --]]
 L["Smart Channel Options"] = "Smart Channel Options"
 --[[Translation missing --]]

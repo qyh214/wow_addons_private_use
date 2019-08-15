@@ -49,7 +49,7 @@ local Options = {
 			args = {
 				Module_Settings = {
 					name = L["Module Settings"],
-					type = 'header',					
+					type = 'header',
 					order = 0,
 					hidden = true,
 				},
@@ -214,7 +214,7 @@ local Options = {
 						Enable_In_Raids = {
 							name = '|cff91BE0F'..L["Enable in Raid Instances"]..'|r',
 							type = 'toggle',
-							order = 0,					
+							order = 0,
 							desc = L["Enable in manually formed raid groups."],
 							descStyle = 'inline',
 							width = 'double',
@@ -229,7 +229,7 @@ local Options = {
 							name = '|cff91BE0F'..L["Enable in Group Finder Dungeons"]..'|r',
 							type = 'toggle',
 							order = 1,
-							width = 'double',		
+							width = 'double',
 							get = function(info)
 								return RSA.db.profile.General.GlobalAnnouncements.InLFG_Party
 							end,
@@ -241,7 +241,7 @@ local Options = {
 							name = '|cff91BE0F'..L["Enable in Group Finder Raids"]..'|r',
 							type = 'toggle',
 							order = 1,
-							width = 'double',		
+							width = 'double',
 							get = function(info)
 								return RSA.db.profile.General.GlobalAnnouncements.InLFG_Raid
 							end,
@@ -255,7 +255,7 @@ local Options = {
 							order = 2,
 							desc = L["Enable in scenario instances."],
 							descStyle = 'inline',
-							width = 'double',					
+							width = 'double',
 							get = function(info)
 								return RSA.db.profile.General.GlobalAnnouncements.InScenario
 							end,
@@ -313,7 +313,7 @@ local Options = {
 								RSA.db.profile.General.GlobalAnnouncements.AlwaysAllowWhispers = value
 							end,
 						},
-					},					
+					},
 				},
 			},
 		},
@@ -387,27 +387,27 @@ local Options = {
 							set = function(info, value)
 								RSA.db.profile.General.Replacements.Target.AlwaysUseName = value
 							end,
-						},					
+						},
 						Replacement = {
 							name = L["Replacement"],
 							desc = L["|c5500DBBD[TARGET]|r will be replaced with this when whispering someone."],
 							type = 'input',
 							order = 10.1,
 							width = 'double',
-							disabled = function() 
+							disabled = function()
 								if RSA.db.profile.General.Replacements.Target.AlwaysUseName == true then
-									return true 
-								else 
+									return true
+								else
 									return false
 								end
-							end,							
+							end,
 							get = function(info)
 								return RSA.db.profile.General.Replacements.Target.Replacement
 							end,
 							set = function(info, value)
 								RSA.db.profile.General.Replacements.Target.Replacement = value
 							end,
-						},					
+						},
 					},
 				},
 				MissType = {
@@ -429,17 +429,17 @@ local Options = {
 							set = function(info, value)
 								RSA.db.profile.General.Replacements.MissType.UseGeneralReplacement = value
 							end,
-						},					
+						},
 						GeneralReplacement = {
 							name = L["General Replacement"],
 							desc = L["Whether the target blocks, dodges, absorbs etc. your attack, |c5500DBBD[MISSTYPE]|r will be replaced to this."],
 							type = 'input',
 							order = 10.1,
 							width = 'double',
-							disabled = function() 
+							disabled = function()
 								if RSA.db.profile.General.Replacements.MissType.UseGeneralReplacement == false then
-									return true 
-								else 
+									return true
+								else
 									return false
 								end
 							end,
@@ -461,10 +461,10 @@ local Options = {
 							type = 'input',
 							order = 20.1,
 							width = 'double',
-							disabled = function() 
+							disabled = function()
 								if RSA.db.profile.General.Replacements.MissType.UseGeneralReplacement == true then
-									return true 
-								else 
+									return true
+								else
 									return false
 								end
 							end,
@@ -474,17 +474,17 @@ local Options = {
 							set = function(info, value)
 								RSA.db.profile.General.Replacements.MissType.Miss = value
 							end,
-						},	
+						},
 						Resist = {
 							name = RESIST,
 							desc = L["When the target resists your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."],
 							type = 'input',
 							order = 20.1,
 							width = 'double',
-							disabled = function() 
+							disabled = function()
 								if RSA.db.profile.General.Replacements.MissType.UseGeneralReplacement == true then
-									return true 
-								else 
+									return true
+								else
 									return false
 								end
 							end,
@@ -501,10 +501,10 @@ local Options = {
 							type = 'input',
 							order = 20.1,
 							width = 'double',
-							disabled = function() 
+							disabled = function()
 								if RSA.db.profile.General.Replacements.MissType.UseGeneralReplacement == true then
-									return true 
-								else 
+									return true
+								else
 									return false
 								end
 							end,
@@ -521,10 +521,10 @@ local Options = {
 							type = 'input',
 							order = 20.1,
 							width = 'double',
-							disabled = function() 
+							disabled = function()
 								if RSA.db.profile.General.Replacements.MissType.UseGeneralReplacement == true then
-									return true 
-								else 
+									return true
+								else
 									return false
 								end
 							end,
@@ -541,10 +541,10 @@ local Options = {
 							type = 'input',
 							order = 20.1,
 							width = 'double',
-							disabled = function() 
+							disabled = function()
 								if RSA.db.profile.General.Replacements.MissType.UseGeneralReplacement == true then
-									return true 
-								else 
+									return true
+								else
 									return false
 								end
 							end,
@@ -561,10 +561,10 @@ local Options = {
 							type = 'input',
 							order = 20.1,
 							width = 'double',
-							disabled = function() 
+							disabled = function()
 								if RSA.db.profile.General.Replacements.MissType.UseGeneralReplacement == true then
-									return true 
-								else 
+									return true
+								else
 									return false
 								end
 							end,
@@ -581,10 +581,10 @@ local Options = {
 							type = 'input',
 							order = 20.1,
 							width = 'double',
-							disabled = function() 
+							disabled = function()
 								if RSA.db.profile.General.Replacements.MissType.UseGeneralReplacement == true then
-									return true 
-								else 
+									return true
+								else
 									return false
 								end
 							end,
@@ -601,10 +601,10 @@ local Options = {
 							type = 'input',
 							order = 20.1,
 							width = 'double',
-							disabled = function() 
+							disabled = function()
 								if RSA.db.profile.General.Replacements.MissType.UseGeneralReplacement == true then
-									return true 
-								else 
+									return true
+								else
 									return false
 								end
 							end,
@@ -634,10 +634,10 @@ local Options = {
 							type = 'input',
 							order = 20.1,
 							width = 'double',
-							disabled = function() 
+							disabled = function()
 								if RSA.db.profile.General.Replacements.MissType.UseGeneralReplacement == true then
-									return true 
-								else 
+									return true
+								else
 									return false
 								end
 							end,
@@ -659,7 +659,7 @@ local Options = {
 			args = {
 				Head = {
 					name = L["Feedback"],
-					type = 'header',					
+					type = 'header',
 					order = 0,
 				},
 				Revision = {
@@ -1552,7 +1552,7 @@ local function Monk_Options()
 			Message_Areas = {'Start', 'End'},
 			Message_Channels_Disabled = {["Whisper"] = true},
 			Valid_Tags = {'[SPELL]', '[LINK]'},
-		},		
+		},
 		[4] = {
 			Profile = 'SpearHandStrike',
 			Name = GetSpellInfo(116705),
@@ -2993,7 +2993,7 @@ local function Utilities_Options()
 	local Spells = {
 		["Jeeves"] = {
 			Profile = 'Jeeves',
-			Name = 'Repair Bots',
+			Name = L['Repair Bots'],
 			Desc = GetSpellDescription(44389),
 			Message_Amount = 1,
 			Message_Areas = {'Placed'},
@@ -3002,7 +3002,7 @@ local function Utilities_Options()
 		},
 		["Feasts"] = {
 			Profile = 'Feasts',
-			Name = 'Feasts',
+			Name = L['Feasts'],
 			Desc = GetSpellDescription(259410),
 			Message_Amount = 1,
 			Message_Areas = {'Placed'},
@@ -3011,7 +3011,7 @@ local function Utilities_Options()
 		},
 		["Drums"] = {
 			Profile = 'Drums',
-			Name = 'Drums',
+			Name = L['Drums'],
 			Desc = GetSpellDescription(256740),
 			Message_Amount = 1,
 			Message_Areas = {'Start'},
@@ -3020,7 +3020,7 @@ local function Utilities_Options()
 		},
 		["Cauldrons"] = {
 			Profile = 'Cauldrons',
-			Name = 'Cauldrons',
+			Name = L['Cauldrons'],
 			Desc = GetSpellDescription(276972),
 			Message_Amount = 1,
 			Message_Areas = {'Start'},
@@ -3034,6 +3034,24 @@ local function Utilities_Options()
 			Message_Amount = 2,
 			Message_Areas = {'Cast','AcceptedRess'},
 			Valid_Tags = {'[SPELL]', '[LINK]','[TARGET]'},
+		},
+		["SleepPotions"] = {
+			Profile = 'SleepPotions',
+			Name = L['Sleeping Mana Potions'],
+			Desc = GetSpellDescription(298157),
+			Message_Amount = 2,
+			Message_Areas = {'Start','End'},
+			Message_Channels_Disabled = {["Whisper"] = true},
+			Valid_Tags = {'[SPELL]', '[LINK]'},
+		},
+		["Codex"] = {
+			Profile = 'Codex',
+			Name = L['Respec Codex'],
+			Desc = GetSpellDescription(256230),
+			Message_Amount = 1,
+			Message_Areas = {'Start'},
+			Message_Channels_Disabled = {["Whisper"] = true},
+			Valid_Tags = {'[SPELL]', '[LINK]'},
 		},
 	}
 	return Spells
@@ -3185,8 +3203,8 @@ local function Spell_Options(NonClass)
 	for i,v in pairs(Spells) do
 		if Spells[i] then
 			Options.args[Spells[i].Name] = {
-				name = function() 
-					if Spells[i].Race then 
+				name = function()
+					if Spells[i].Race then
 						if RaceID ~= Spells[i].Race then
 							local name = '|cffFFCC00' .. Spells[i].Name .. '|r'
 							return name
@@ -3291,7 +3309,7 @@ local function Spell_Options(NonClass)
 						width = 'full',
 						hidden = function()
 							if Spells[i].Message_Channels_Disabled then
-								if Spells[i].Message_Channels_Disabled["Custom"] then 
+								if Spells[i].Message_Channels_Disabled["Custom"] then
 									return true
 								else
 									return RSA.db.profile[ProfileName].Spells[Spells[i].Profile].CustomChannel.Enabled ~= true
@@ -3349,7 +3367,7 @@ local function Spell_Options(NonClass)
 					Local = {
 						name = '|cff00B2FA'..L["Local"]..'|r',
 						type = 'toggle',
-						order = 5,					
+						order = 5,
 						desc = L["Sends a message locally only visible to you. To choose which part of the UI this is displayed in go to the |cff00B2FALocal Message Output Area|r in the General options."],
 						hidden = function() if Spells[i].Message_Channels_Disabled then if Spells[i].Message_Channels_Disabled["Local"] then return true end end end,
 						get = function(info)
@@ -3388,7 +3406,7 @@ local function Spell_Options(NonClass)
 					Message_Header = {
 						name = L["Message Texts"],
 						type = 'header',
-						order = 100,						
+						order = 100,
 					},
 					Message_Description = {
 						name = L["The following tags are available for use with this spell:"],
@@ -3399,7 +3417,7 @@ local function Spell_Options(NonClass)
 				},
 			}
 		end
-		
+
 		-- Add usable tags to description.
 		local TagList = ''
 		for j = 1,#Spells[i].Valid_Tags do
@@ -3562,7 +3580,7 @@ function RSA_O:OnInitialize()
 	local LibDualSpec = LibStub('LibDualSpec-1.0')
 	LibDualSpec:EnhanceDatabase(self.db, 'RSA')
 	LibDualSpec:EnhanceOptions(Profiles, self.db)
-	InterfaceAddOnsList_Update()	
+	InterfaceAddOnsList_Update()
 end
 
 function RSA:UpdateOptions()

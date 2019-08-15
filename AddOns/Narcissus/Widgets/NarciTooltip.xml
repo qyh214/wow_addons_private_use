@@ -279,7 +279,7 @@
 		</Scripts>
 	</Frame>
 
-    <Frame name="NarciTooltip" parent="Narci_EquipmentFlyoutFrame" clampedToScreen="true" frameStrata="TOOLTIP" hidden="false" enableMouseMotion="false" clipChildren="false" frameLevel="18">
+    <Frame name="NarciTooltip" parent="Narci_EquipmentFlyoutFrame" clampedToScreen="true" frameStrata="TOOLTIP" hidden="true" enableMouseMotion="false" clipChildren="false" frameLevel="18">
         <Size x="256" y="160"/>
         <Anchors>
             <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT"  x="8" y="8"/>

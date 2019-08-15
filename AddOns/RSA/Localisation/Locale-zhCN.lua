@@ -1,158 +1,272 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("RSA", "zhCN")
 if not L then return end
-L[" Does not affect Immune, Immune will always use its own replacement."] = "不會應用在免疫，免疫會永遠使用自己的替代詞。"
-L[" If you wish to add a message for this section, enter it above in the |cffFFD100Add New Message|r box. As no messages exist, nothing will be announced for this section."] = "如果你想要為此階段新增訊息，在|cffFFD100增加新訊息|r框中輸入。由於沒有訊息存在，此階段將不會有任何通告。"
-L[" is disabled. If you want to configure RSA, you need to enable it."] = "是停用的，如果您想要設置RSA，您需要啟用它。"
+L[" Does not affect Immune, Immune will always use its own replacement."] = "不会应用在免疫，免疫永远使用它自己的替代词。"
+L[" If you wish to add a message for this section, enter it above in the |cffFFD100Add New Message|r box. As no messages exist, nothing will be announced for this section."] = "如果你想在此阶段增加新信息，请在下面的|cffFFD100增加新信息|r框中输入。如果没有信息存在，则此阶段不会通告任何内容。"
+L[" is disabled. If you want to configure RSA, you need to enable it."] = "已禁用。如果你想设置RSA，你需要启用它。"
 L[" is Missing!"] = " 失效！"
-L[" message for this section."] = "此階段的訊息。"
-L[" messages for this section."] = "此階段的訊息。"
+L[" message for this section."] = "此阶段的信息。"
+L[" messages for this section."] = "此阶段的信息。"
 L[" Refreshed!"] = " 刷新！"
-L[" RSA will choose a message from this section at random, if you wish to remove a message, delete the contents and press enter. If no messages exist, nothing will be announced for this section."] = "RSA將隨機選擇本階段中的訊息，如果你要刪除訊息，請刪除訊息內容並按下Enter。如果沒有任何訊息存在，本階段將不會有任何通告。"
-L["|c5500DBBD[TARGET]|r will be replaced with this when whispering someone."] = "|c5500DBBD[TARGET]|r 將在密語某人時被替換。"
-L["|cff91BE0F/instance|r if you're in an instance group such as when in LFR or Battlegrounds."] = "|cff91BE0F/副本|r 如果您是在如團隊搜尋器或戰場的團隊中。"
-L["|cff91BE0F/party|r if you're in a manually formed group."] = "|cff91BE0F/隊伍|r 如果您在手動組建的隊伍中。"
-L["|cff91BE0F/raid|r if you're in a manually formed raid."] = "|cff91BE0F/團隊|r 如果你在手動組建的團隊中。"
-L["|cffFFCC00Whispers|r the target of the spell."] = "|cffFFCC00密語|r法術的目標。"
-L["AcceptedRess"] = "目標已接受。"
-L["Add New Message"] = "增加新訊息"
-L["Always allow Whispers"] = "永遠允許密語"
-L["Always allow whispers to be sent, ignoring the PvP and PvE Options on this page."] = "總是允許密語發送，忽略此頁的PvE以及PvP選項。"
-L["Always uses spell target's name"] = "總是使用法術目標的名稱"
-L["Announce to custom channels only while you are in a manually formed group."] = "僅在你處於手動組建的隊伍時才通告到自訂頻道。"
-L["Cast"] = "施放"
-L["Channel Name"] = "頻道名稱"
-L["Class Abilities"] = "職業技能"
-L["Configuring"] = "設置"
+L[" RSA will choose a message from this section at random, if you wish to remove a message, delete the contents and press enter. If no messages exist, nothing will be announced for this section."] = "RSA将随机选择本阶段中的信息，如果你要删除信息，请删除信息内容并按下Enter。如果没有任何信息存在，本阶段将不会有任何通告。 "
+L["|c5500DBBD[TARGET]|r will be replaced with this when whispering someone."] = "|c5500DBBD[TARGET]|r将在密语某人时被替换。 "
+L["|cff91BE0F/instance|r if you're in an instance group such as when in LFR or Battlegrounds."] = "|cff91BE0F/副本|r如果您是在副本队伍中例如团队搜寻器或战场。 "
+--[[Translation missing --]]
+L["|cff91BE0F/party|r if you're in a manually formed group."] = "|cff91BE0F/party|r if you're in a manually formed group."
+--[[Translation missing --]]
+L["|cff91BE0F/raid|r if you're in a manually formed raid."] = "|cff91BE0F/raid|r if you're in a manually formed raid."
+--[[Translation missing --]]
+L["|cffFFCC00Whispers|r the target of the spell."] = "|cffFFCC00Whispers|r the target of the spell."
+--[[Translation missing --]]
+L["AcceptedRess"] = "Target Accepted"
+L["Add New Message"] = "添加新信息"
+--[[Translation missing --]]
+L["Always allow Whispers"] = "Always allow Whispers"
+--[[Translation missing --]]
+L["Always allow whispers to be sent, ignoring the PvP and PvE Options on this page."] = "Always allow whispers to be sent, ignoring the PvP and PvE Options on this page."
+--[[Translation missing --]]
+L["Always uses spell target's name"] = "Always uses spell target's name"
+--[[Translation missing --]]
+L["Announce to custom channels only while you are in a manually formed group."] = "Announce to custom channels only while you are in a manually formed group."
+--[[Translation missing --]]
+L["Cast"] = "Cast"
+--[[Translation missing --]]
+L["Cauldrons"] = "Cauldrons"
+L["Channel Name"] = "频道名称"
+--[[Translation missing --]]
+L["Class Abilities"] = "Class Abilities"
+--[[Translation missing --]]
+L["Configuring"] = "Configuring"
 L["Corpse of "] = "死掉的 "
-L["Couldn't find target for Soulstone."] = "無法找到靈魂石的目標。"
-L["Current Revision"] = "當前的版本"
-L["Custom Channel"] = "自訂頻道"
-L["Damage"] = "傷害"
-L["DamageAbsorb"] = "已吸收傷害"
-L["Debuff"] = "減益"
-L["Dispel"] = "驅散"
-L["EffectAbsorb"] = "已吸收減益"
+--[[Translation missing --]]
+L["Couldn't find target for Soulstone."] = "Couldn't find target for Soulstone."
+--[[Translation missing --]]
+L["Current Revision"] = "Current Revision"
+L["Custom Channel"] = "自订频道"
+--[[Translation missing --]]
+L["Damage"] = "Damage"
+--[[Translation missing --]]
+L["DamageAbsorb"] = "Absorbed Damage"
+--[[Translation missing --]]
+L["Debuff"] = "Debuff"
+--[[Translation missing --]]
+L["Dispel"] = "Dispel"
+--[[Translation missing --]]
+L["Drums"] = "Drums"
+--[[Translation missing --]]
+L["EffectAbsorb"] = "Absorbed Debuff"
 L["Emote"] = "表情"
-L["Enable Buff Reminder Module"] = "啟用增益提醒模組"
-L["Enable in Arenas"] = "啟用於競技場"
-L["Enable in Battlegrounds"] = "啟用於戰場"
-L["Enable in Dungeons"] = "啟用於副本"
-L["Enable in Group Finder Dungeons"] = "啟用在地城搜尋器隊伍"
-L["Enable in Group Finder Raids"] = "啟用在團隊搜尋器的團隊"
-L["Enable in manually formed dungeon groups."] = "啟用在手動組建的地城隊伍。"
-L["Enable in manually formed raid groups."] = "啟用在手動組建的團隊。"
-L["Enable in Raid Instances"] = "啟用於團隊副本"
-L["Enable in scenario instances."] = "啟用在事件副本。"
-L["Enable in Scenarios"] = "啟用於事件中"
-L["Enable in the non-instanced world area when playing with War Mode disabled."] = "停用戰爭模式時，在副本以外世界區域啟用。"
-L["Enable in the World"] = "啟用於世界環境"
-L["Enable in the world area if you have War Mode active."] = "啟用在世界區域如果你有開啟戰爭模式。"
-L["Enable in War Mode"] = "啟用在戰爭模式"
-L["Enable Only in Combat"] = "只有戰鬥中啟用"
-L["End"] = "結束"
-L["Failed"] = "失敗了"
-L["Feedback"] = "反饋"
+L["Enable Buff Reminder Module"] = "启用增益提醒模组"
+L["Enable in Arenas"] = "启用于竞技场"
+L["Enable in Battlegrounds"] = "启用于战场"
+L["Enable in Dungeons"] = "启用于副本"
+--[[Translation missing --]]
+L["Enable in Group Finder Dungeons"] = "Enable in Group Finder Dungeons"
+--[[Translation missing --]]
+L["Enable in Group Finder Raids"] = "Enable in Group Finder Raids"
+--[[Translation missing --]]
+L["Enable in manually formed dungeon groups."] = "Enable in manually formed dungeon groups."
+--[[Translation missing --]]
+L["Enable in manually formed raid groups."] = "Enable in manually formed raid groups."
+L["Enable in Raid Instances"] = "启用于团队副本"
+--[[Translation missing --]]
+L["Enable in scenario instances."] = "Enable in scenario instances."
+L["Enable in Scenarios"] = "启用于事件中"
+--[[Translation missing --]]
+L["Enable in the non-instanced world area when playing with War Mode disabled."] = "Enable in the non-instanced world area when playing with War Mode disabled."
+L["Enable in the World"] = "启用于世界环境"
+--[[Translation missing --]]
+L["Enable in the world area if you have War Mode active."] = "Enable in the world area if you have War Mode active."
+L["Enable in War Mode"] = "在战争模式中开启"
+L["Enable Only in Combat"] = "仅战斗中开启"
+L["End"] = "结束"
+--[[Translation missing --]]
+L["Failed"] = "Failed"
+--[[Translation missing --]]
+L["Feasts"] = "Feasts"
+--[[Translation missing --]]
+L["Feedback"] = "Feedback"
 L["General"] = "一般"
-L["General Replacement"] = "一般替換"
-L["Heal"] = "治療"
-L["I have a Battle.net community for my addons. If you have any issues, now you can easily report them to me in game. Just copy the invite link below and throw me a message."] = "我的插件有設立一個戰網的社群。如果您有任何問題，現在可以在遊戲中簡易的向我回報。只要複製下方的邀請連結並發送給我訊息。"
-L["If selected, |c5500DBBD[MISSTYPE]|r will always use the General Replacement set below."] = "勾選後，|c5500DBBD[MISSTYPE]|r 將始終使用以下的一般替換設置。"
-L["If selected, |c5500DBBD[TARGET]|r will always use the spell target's name, rather than using the input below for whispers."] = "勾選後，|c5500DBBD[TARGET]|r 將始終使用法術目標的名稱，而不是使用下面輸入的密語者。"
-L["If you encounter a bug, or have a feature request, please file a ticket on Curseforge using the link below."] = "如果您遇到bug，或是有功能上的請求，請用以下連結在Curseforge上提交一個通知單。"
+--[[Translation missing --]]
+L["General Replacement"] = "General Replacement"
+L["Heal"] = "治疗"
+--[[Translation missing --]]
+L["I have a Battle.net community for my addons. If you have any issues, now you can easily report them to me in game. Just copy the invite link below and throw me a message."] = "I have a Battle.net community for my addons. If you have any issues, now you can easily report them to me in game. Just copy the invite link below and throw me a message."
+--[[Translation missing --]]
+L["If selected, |c5500DBBD[MISSTYPE]|r will always use the General Replacement set below."] = "If selected, |c5500DBBD[MISSTYPE]|r will always use the General Replacement set below."
+--[[Translation missing --]]
+L["If selected, |c5500DBBD[TARGET]|r will always use the spell target's name, rather than using the input below for whispers."] = "If selected, |c5500DBBD[TARGET]|r will always use the spell target's name, rather than using the input below for whispers."
+--[[Translation missing --]]
+L["If you encounter a bug, or have a feature request, please file a ticket on Curseforge using the link below."] = "If you encounter a bug, or have a feature request, please file a ticket on Curseforge using the link below."
 L["Immune"] = "免疫"
-L["In Game"] = "遊戲中"
-L["Instance"] = "副本"
-L["Interrupt"] = "中斷"
-L["Invite Link"] = "邀請連結"
+--[[Translation missing --]]
+L["In Game"] = "In Game"
+--[[Translation missing --]]
+L["Instance"] = "Instance"
+L["Interrupt"] = "中断"
+--[[Translation missing --]]
+L["Invite Link"] = "Invite Link"
 L["Local"] = "本地"
-L["Local Message Output Area"] = "本地訊息輸出區域"
-L["Message Announce Area"] = "訊息通告區域"
-L["Message Texts"] = "訊息文字"
+L["Local Message Output Area"] = "本地讯息输出区域"
+--[[Translation missing --]]
+L["Message Announce Area"] = "Message Announce Area"
+--[[Translation missing --]]
+L["Message Texts"] = "Message Texts"
 L["missed"] = "未命中"
-L["Module Settings"] = "模組設置"
-L["Online"] = "線上"
-L["Only announce if you are in combat."] = "只有當你處於戰鬥中才通告。"
-L["Only announce in /emote while you are in a group."] = "當你在隊伍中時只通告到/表情。"
-L["Only announce in /say while you are in a group."] = "當你在隊伍中時只通告到/說。"
-L["Only announce in /yell while you are in a group."] = "當你在隊伍中時只通告到/大喊。"
-L["Only usable for player created channels, do not use for Blizzard channels such as |cff91BE0F/party|r."] = "只有使用在玩家自建的頻道，不使用暴雪頻道例如像|cff91BE0F/隊伍|r。"
-L["Open Configuration Panel"] = "開啟設置面板"
-L["OptionsClass"] = "如果您想在此職業使用RSA，請啟用此模組。"
-L["OptionsDisabled"] = "模組已停用。"
-L["OptionsMissing"] = "無法找到模組，請刪除您的RSA資料夾，下載並且重新安裝。"
-L["Other Options"] = "其他選項"
-L["Party"] = "隊伍"
-L["Pet Dispels"] = "寵物驅散"
-L["Placed"] = "已放置"
-L["PvE Options"] = "PvE選項"
-L["PvP Options"] = "PvP選項"
-L["Racials"] = "種族"
-L["Raid"] = "團隊"
-L["Remove Server Names"] = "去除伺服器名稱"
-L["Removes server name from |c5500DBBD[TARGET]|r tags."] = "移除|c5500DBBD[TARGET]|r的伺服器名稱標籤。"
-L["Replacement"] = "替換"
+L["Module Settings"] = "模组设置"
+--[[Translation missing --]]
+L["Online"] = "Online"
+--[[Translation missing --]]
+L["Only announce if you are in combat."] = "Only announce if you are in combat."
+--[[Translation missing --]]
+L["Only announce in /emote while you are in a group."] = "Only announce in /emote while you are in a group."
+--[[Translation missing --]]
+L["Only announce in /say while you are in a group."] = "Only announce in /say while you are in a group."
+--[[Translation missing --]]
+L["Only announce in /yell while you are in a group."] = "Only announce in /yell while you are in a group."
+--[[Translation missing --]]
+L["Only usable for player created channels, do not use for Blizzard channels such as |cff91BE0F/party|r."] = "Only usable for player created channels, do not use for Blizzard channels such as |cff91BE0F/party|r."
+--[[Translation missing --]]
+L["Open Configuration Panel"] = "Open Configuration Panel"
+--[[Translation missing --]]
+L["OptionsClass"] = " If you want to use RSA with this class, please enable the module."
+--[[Translation missing --]]
+L["OptionsDisabled"] = "Module disabled."
+--[[Translation missing --]]
+L["OptionsMissing"] = "Module could not be found, please delete your RSA folders, download, and install again."
+L["Other Options"] = "其它选项"
+L["Party"] = "队伍"
+--[[Translation missing --]]
+L["Pet Dispels"] = "Pet Dispels"
+--[[Translation missing --]]
+L["Placed"] = "Placed"
+L["PvE Options"] = "PVE 选项"
+L["PvP Options"] = "PVP 选项"
+--[[Translation missing --]]
+L["Racials"] = "Racials"
+L["Raid"] = "团队"
+L["Remove Server Names"] = "移除服务器名称"
+--[[Translation missing --]]
+L["Removes server name from |c5500DBBD[TARGET]|r tags."] = "Removes server name from |c5500DBBD[TARGET]|r tags."
+--[[Translation missing --]]
+L["Repair Bots"] = "Repair Bots"
+--[[Translation missing --]]
+L["Replacement"] = "Replacement"
 L["Resist"] = "抵抗"
-L["RSA on Curseforge"] = "在Curseforge的RSA"
-L["Say"] = "說"
-L["Send to player created channel."] = "發送到玩家自建頻道。"
-L["Sends a message locally only visible to you. To choose which part of the UI this is displayed in go to the |cff00B2FALocal Message Output Area|r in the General options."] = "在本地發送只有你可見的訊息。選擇UI顯示的部分請到一般選項中的|cff00B2FA本地訊息輸出區域|r。"
-L["Sends a message to one of the following channels in order of priority:"] = "依據優先順序向以下頻道發送訊息："
-L["Smart Channel Options"] = "智能頻道選項"
-L["Smart Custom Channel"] = "智能自訂頻道"
-L["Smart Emote"] = "智能表情"
-L["Smart Group Channel"] = "智能團體頻道"
-L["Smart Say"] = "智能說"
+--[[Translation missing --]]
+L["Respec Codex"] = "Respec Codex"
+--[[Translation missing --]]
+L["RSA on Curseforge"] = "RSA on Curseforge"
+L["Say"] = "说"
+L["Send to player created channel."] = "发送到玩家创建频道"
+--[[Translation missing --]]
+L["Sends a message locally only visible to you. To choose which part of the UI this is displayed in go to the |cff00B2FALocal Message Output Area|r in the General options."] = "Sends a message locally only visible to you. To choose which part of the UI this is displayed in go to the |cff00B2FALocal Message Output Area|r in the General options."
+--[[Translation missing --]]
+L["Sends a message to one of the following channels in order of priority:"] = "Sends a message to one of the following channels in order of priority:"
+--[[Translation missing --]]
+L["Sleeping Mana Potions"] = "Sleeping Mana Potions"
+L["Smart Channel Options"] = "智能频道选项"
+L["Smart Custom Channel"] = "智能自订频道"
+--[[Translation missing --]]
+L["Smart Emote"] = "Smart Emote"
+L["Smart Group Channel"] = "智能团队频道"
+L["Smart Say"] = "智能说"
 L["Smart Yell"] = "智能大喊"
-L["Spells"] = "法術"
-L["Start"] = "開始"
-L["StatueOfTheBlackOx"] = "玄牛AoE嘲諷"
-L["Success"] = "成功"
-L["Tag Options"] = "標籤選項"
-L["The following tags are available for use with this spell:"] = "以下標記可用於此法術："
-L["This section requires LibResInfo-1.0 to work. As you don't have it, nothing from this section will announce."] = "此階段訊息需要LibResInfo-1.0來運作。如果沒有，此階段不會有任何通告。"
-L["This setting also does not follow the global announcement settings, and will, if checked, announce regardless of those settings."] = "此設置並不遵循全局通告設置，勾選以後，則無論如何設置都會通告。"
+L["Spells"] = "法术"
+L["Start"] = "开始"
+--[[Translation missing --]]
+L["StatueOfTheBlackOx"] = "Black Ox AoE Taunt"
+--[[Translation missing --]]
+L["Success"] = "Success"
+--[[Translation missing --]]
+L["Tag Options"] = "Tag Options"
+--[[Translation missing --]]
+L["The following tags are available for use with this spell:"] = "The following tags are available for use with this spell:"
+--[[Translation missing --]]
+L["This section requires LibResInfo-1.0 to work. As you don't have it, nothing from this section will announce."] = "This section requires LibResInfo-1.0 to work. As you don't have it, nothing from this section will announce."
+--[[Translation missing --]]
+L["This setting also does not follow the global announcement settings, and will, if checked, announce regardless of those settings."] = "This setting also does not follow the global announcement settings, and will, if checked, announce regardless of those settings."
 L["Unknown"] = "未知"
-L["Use Single Replacement"] = "使用單一替換"
-L["Utilities"] = "工具"
-L["was absorbed by"] = "被吸收在"
-L["was blocked by"] = "被格擋在"
-L["was deflected by"] = "被偏斜在"
-L["was dodged by"] = "被閃躲在"
-L["was evaded by"] = "被迴避於"
-L["was parried by"] = "被招架在"
+--[[Translation missing --]]
+L["Use Single Replacement"] = "Use Single Replacement"
+--[[Translation missing --]]
+L["Utilities"] = "Utilities"
+--[[Translation missing --]]
+L["was absorbed by"] = "was absorbed by"
+--[[Translation missing --]]
+L["was blocked by"] = "was blocked by"
+--[[Translation missing --]]
+L["was deflected by"] = "was deflected by"
+--[[Translation missing --]]
+L["was dodged by"] = "was dodged by"
+--[[Translation missing --]]
+L["was evaded by"] = "was evaded by"
+--[[Translation missing --]]
+L["was parried by"] = "was parried by"
 L["was resisted by"] = "抵抗了"
-L["When reporting an issue, please also post the revision number above. Thanks!"] = "當回報一個問題，請同時報告上方的版本號。感謝！"
-L["When someone accepts the resurrect you cast on them."] = "當有人接受你施放的復活時。"
-L["When the spell ends."] = "當法術結束時。"
-L["When the spell failed."] = "當法術失敗時。"
-L["When the target absorbs your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "當目標吸收你的法術時 |c5500DBBD[MISSTYPE]|r 將會替換為此。"
-L["When the target blocks your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "當目標格檔你的法術時 |c5500DBBD[MISSTYPE]|r 將會替換為此。"
-L["When the target deflects your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "當目標偏斜你的法術時 |c5500DBBD[MISSTYPE]|r 將會替換為此。"
-L["When the target dodges your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "當目標閃躲你的法術時 |c5500DBBD[MISSTYPE]|r 將會替換為此。"
-L["When the target evades your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "當目標閃避你的法術時 |c5500DBBD[MISSTYPE]|r 將會替換為此。"
-L["When the target is immune to your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "當目標免疫你的法術時 |c5500DBBD[MISSTYPE]|r 將會替換為此。"
-L["When the target is immune to your spell."] = "當目標免疫你的法術時。"
-L["When the target parries your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "當目標招架你的法術時 |c5500DBBD[MISSTYPE]|r 將會替換為此。"
-L["When the target reflects your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "當目標反射你的法術時 |c5500DBBD[MISSTYPE]|r 將會替換為此。"
-L["When the target resists your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "當目標抵抗你的法術時 |c5500DBBD[MISSTYPE]|r 將會替換為此。"
-L["When you absorb a debuff."] = "當你吸收了一個減益。"
-L["When you absorb damage."] = "當你吸收了傷害。"
-L["When you cast Provoke on your Statue of the Black Ox."] = "當你施放嘲心嘯在你的玄牛雕像上。"
-L["When you cast this spell."] = "當你施放此法術。"
-L["When you deal damage."] = "當你造成傷害。"
-L["When you debuff a unit."] = "當你上減益在一個單位。"
-L["When you dispel a buff or debuff."] = "當你驅散一個增益或減益。"
-L["When you have placed this in the world."] = "當你把這個放置在世界上。"
-L["When you heal."] = "當你治療時。"
-L["When you interrupt a spell cast."] = "當你中斷一個法術施放時。"
-L["When you start casting this spell or when this spell starts."] = "當你開始施放此法術或者當法術開始時。"
-L["When your spell is resisted."] = "當你的法術被抵抗時。"
-L["When your spell misses the target |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "當你的法術未命中目標時 |c5500DBBD[MISSTYPE]|r 將會替換為此。"
-L["Whether the target blocks, dodges, absorbs etc. your attack, |c5500DBBD[MISSTYPE]|r will be replaced to this."] = "目標對你的攻擊是否格檔、閃躲、吸收等等，|c5500DBBD[MISSTYPE]|r 將會替換為此。"
-L["Whisper"] = "悄悄話"
+--[[Translation missing --]]
+L["When reporting an issue, please also post the revision number above. Thanks!"] = "When reporting an issue, please also post the revision number above. Thanks!"
+--[[Translation missing --]]
+L["When someone accepts the resurrect you cast on them."] = "When someone accepts the resurrect you cast on them."
+--[[Translation missing --]]
+L["When the spell ends."] = "When the spell ends."
+--[[Translation missing --]]
+L["When the spell failed."] = "When the spell failed."
+--[[Translation missing --]]
+L["When the target absorbs your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "When the target absorbs your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."
+--[[Translation missing --]]
+L["When the target blocks your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "When the target blocks your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."
+--[[Translation missing --]]
+L["When the target deflects your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "When the target deflects your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."
+--[[Translation missing --]]
+L["When the target dodges your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "When the target dodges your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."
+--[[Translation missing --]]
+L["When the target evades your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "When the target evades your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."
+--[[Translation missing --]]
+L["When the target is immune to your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "When the target is immune to your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."
+--[[Translation missing --]]
+L["When the target is immune to your spell."] = "When the target is immune to your spell."
+--[[Translation missing --]]
+L["When the target parries your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "When the target parries your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."
+--[[Translation missing --]]
+L["When the target reflects your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "When the target reflects your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."
+--[[Translation missing --]]
+L["When the target resists your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "When the target resists your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."
+--[[Translation missing --]]
+L["When you absorb a debuff."] = "When you absorb a debuff."
+--[[Translation missing --]]
+L["When you absorb damage."] = "When you absorb damage."
+--[[Translation missing --]]
+L["When you cast Provoke on your Statue of the Black Ox."] = "When you cast Provoke on your Statue of the Black Ox."
+--[[Translation missing --]]
+L["When you cast this spell."] = "When you cast this spell."
+--[[Translation missing --]]
+L["When you deal damage."] = "When you deal damage."
+--[[Translation missing --]]
+L["When you debuff a unit."] = "When you debuff a unit."
+--[[Translation missing --]]
+L["When you dispel a buff or debuff."] = "When you dispel a buff or debuff."
+--[[Translation missing --]]
+L["When you have placed this in the world."] = "When you have placed this in the world."
+--[[Translation missing --]]
+L["When you heal."] = "When you heal."
+--[[Translation missing --]]
+L["When you interrupt a spell cast."] = "When you interrupt a spell cast."
+--[[Translation missing --]]
+L["When you start casting this spell or when this spell starts."] = "When you start casting this spell or when this spell starts."
+--[[Translation missing --]]
+L["When your spell is resisted."] = "When your spell is resisted."
+--[[Translation missing --]]
+L["When your spell misses the target |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "When your spell misses the target |c5500DBBD[MISSTYPE]|r will be replaced with this."
+--[[Translation missing --]]
+L["Whether the target blocks, dodges, absorbs etc. your attack, |c5500DBBD[MISSTYPE]|r will be replaced to this."] = "Whether the target blocks, dodges, absorbs etc. your attack, |c5500DBBD[MISSTYPE]|r will be replaced to this."
+L["Whisper"] = "悄悄话"
 L["Yell"] = "大喊"
 L["You"] = "你"
-L["You have "] = "您有"
-L["You have no messages for this section."] = "您在此階段沒有訊息。"
-L["Your message must contain at least one number or letter!"] = "您的訊息需要包含至少一個數字或字母！"
-L["Your version of RSA is out of date. You may want to grab the latest version from https://www.curseforge.com/wow/addons/rsa"] = "你的RSA版本已經過期了。你或許想獲取最新版本從 https://www.curseforge.com/wow/addons/rsa"
+--[[Translation missing --]]
+L["You have "] = "You have "
+--[[Translation missing --]]
+L["You have no messages for this section."] = "You have no messages for this section."
+--[[Translation missing --]]
+L["Your message must contain at least one number or letter!"] = "Your message must contain at least one number or letter!"
+--[[Translation missing --]]
+L["Your version of RSA is out of date. You may want to grab the latest version from https://www.curseforge.com/wow/addons/rsa"] = "Your version of RSA is out of date. You may want to grab the latest version from https://www.curseforge.com/wow/addons/rsa"

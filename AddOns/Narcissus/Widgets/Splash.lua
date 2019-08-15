@@ -1,10 +1,11 @@
-function Narci_Splash_OnShow(self)
-    local CameraFollowStyle = GetCVar("cameraSmoothStyle");
-    if CameraFollowStyle == "0" then		--auto-follow disabled
-        self.Text1:SetText(NARCI_SPLASH_MESSAGE1.."\n\n"..NARCI_SPLASH_MESSAGE1_CONDITIONAL_LINE)
-    else
-        self.Text1:SetText(NARCI_SPLASH_MESSAGE1)
-    end
+local ShowSplash = true;    --patch specific 1.0.6:Shown
+
+-----------------------------------------------------------------
+
+local function ApplyPatchFix(self)
+    --Apply fix--
+    --1.0.6 Reset vignette strength to 0.5 (was 0.8)--
+    Narci_VignetteStrengthSlider:SetValue(0.5);
 end
 
 --[[
@@ -16,40 +17,115 @@ end
 --]]
 
 local function Narci_TryItNow_OnClick(self)
-    local text = self.enabledText;
-    self.Text:SetText("|cff7cc576"..text);
+    local text;
+    if not self.HasEnabled then
+        text  = self.enabledText;   --"|cff7cc576"
+    else
+        text  = self.disabledText;
+    end
+    self.Text:SetText(text);
     self:SetHeight(self.Text:GetHeight() + 4);
     self:SetScript("OnLeave", function() return; end);
     self:SetScript("OnEnter", function() return; end);
 end
 
-function Narci_TryItNow_AFKScreen(self)
+function Narci_TryItNow_DressingRoom(self)
     Narci_TryItNow_OnClick(self);
-    if not NarcissusDB.AFKScreen then
-        Narci_AFKScreenSwitch_OnClick(Narci_AFKScreenSwitch);
+    if NarcissusDB.DressingRoom then
+        Narci_DressingRoomSwitch_OnClick(Narci_DressingRoomSwitch);
     end
 end
 
-function Narci_TryItNow_Letterbox(self)
-    Narci_TryItNow_OnClick(self);
-    if not NarcissusDB.LetterboxEffect then
-        Narci_LetterboxEffectSwitch_OnClick(Narci_LetterboxEffectSwitch);
-    end
-end
-
-local ClickCounter = 2;
-function Narci_CloseSplash(self)
-    local Anchor = self:GetParent().TryIt2;
-    if ClickCounter == 2 then
-        self.a1:Play();
-    elseif ClickCounter == 1 then
-        self:StopAnimating();
-        self.a2:Play();
+function Narci_Splash_CameraSafeMode_OnShow(self)
+    if IsAddOnLoaded("DynamicCam") then
+        self.HasEnabled = false;
+        if NarcissusDB.CameraSafeMode then
+            Narci_CameraSafeSwitch_OnClick(Narci_CameraSafeSwitch);
+        end
+        self.Text:SetText(NARCI_CAMERA_SAFE_MODE_DISABLED_BY_DEFAULT);
     else
-        NarciAPI_FadeFrame(self:GetParent(), 0.2, "OUT");
+        self.HasEnabled = true;
+        NarcissusDB.CameraSafeMode = true;
+        self.Text:SetText(NARCI_CAMERA_SAFE_MODE_ENABLED_BY_DEFAULT);
     end
-    ClickCounter = ClickCounter - 1;
 end
+
+function Narci_TryItNow_CameraSafeMode(self)
+    local state = self.HasEnabled;
+    local text;
+    if not state then
+        text  = self.enabledText;   --"|cff7cc576"
+    else
+        text  = self.disabledText;
+    end
+    Narci_CameraSafeSwitch_OnClick(Narci_CameraSafeSwitch);
+    self.Text:SetText(text);
+    self:SetHeight(self.Text:GetHeight() + 4);
+    self:SetScript("OnLeave", function() return; end);
+    self:SetScript("OnEnter", function() return; end);
+end
+
+
+-----------------------------------------------------------------
+if not ShowSplash then
+    return;
+end
+
+local Backdrops = {
+    [1] = "Interface/AddOns/Narcissus/Art/Splash/Backdrop1",
+    [2] = "Interface/AddOns/Narcissus/Art/Splash/Backdrop2",
+    [3] = "Interface/AddOns/Narcissus/Art/Splash/Backdrop3",
+    [4] = "Interface/AddOns/Narcissus/Art/Splash/Backdrop4",
+};
+local BackdopIndex = 3;
+
+function Narci_Splash_ChangePhoto()
+    local frame = Narci_Splash;
+    if not frame.ShowFront then
+        frame.BackdropFront:SetTexture(Backdrops[BackdopIndex]);
+        --print("front #"..BackdopIndex)
+    else
+        frame.Backdrop:SetTexture(Backdrops[BackdopIndex]);
+        --print("back #"..BackdopIndex)
+    end
+    if BackdopIndex >= #Backdrops then
+        BackdopIndex = 1;
+    else
+        BackdopIndex = BackdopIndex + 1;
+    end
+end
+
+local Splash = CreateFrame("Frame");
+Splash:RegisterEvent("VARIABLES_LOADED");
+if ShowSplash then  Splash:RegisterEvent("GARRISON_UPDATE"); end;
+Splash:SetScript("OnEvent", function(self, event)
+    local event = event;
+    self:UnregisterEvent(event);
+    if event == "VARIABLES_LOADED" then
+        if Narci.Current_Version > NarcissusDB.SplashVersion then
+            ApplyPatchFix()
+            NarcissusDB.SplashVersion = Narci.Current_Version;
+            if ShowSplash and (not Narci_Splash) then
+                CreateFrame("Frame", "Narci_Splash", UIParent, "Narci_SplashFrame_Template");
+            else
+                self:UnregisterAllEvents();
+            end
+        end
+    elseif event == "GARRISON_UPDATE" then
+        local frame = Narci_Splash;
+        if not frame then return; end;
+        tinsert(UISpecialFrames, frame:GetName());
+        C_Timer.After(1, function()
+            frame:Show();
+        end)
+        C_Timer.After(3, function()
+            frame.animIn:Play();
+            frame.BackdropFront.animOut:Play();
+            PlaySound(SOUNDKIT.ACHIEVEMENT_MENU_OPEN);
+            UIFrameFadeIn(frame, 0.25, 0, 1);
+        end)
+    end
+end)
 
 --Events Test--
 
@@ -75,9 +151,9 @@ EventListener:SetScript("OnEvent",function(self,event,...)
 	and event ~= "COMPANION_UPDATE" and event ~= "UPDATE_INVENTORY_DURABILITY" then
 		print("Event: |cFFFFD100"..event)
 		local name, value, value2, value3, value4, value5 = ...
-		print(name)
-		print(value)
-        print(value2)
+		--print(name)
+		--print(value)
+        --print(value2)
 		--print("\n")
     end
 end)

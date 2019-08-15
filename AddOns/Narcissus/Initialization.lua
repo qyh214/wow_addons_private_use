@@ -9,12 +9,13 @@ local DefaultValue = {
     ["ColorChoice"] = 0,
     ["EnableDoubleTap"] = false,
     ["CameraOrbit"] = true,
+    ["CameraSafeMode"] = true,
     ["BorderTheme"] = "Bright",
     ["TruncateText"] = false,
     ["ItemNameWidth"] = 200,
     ["FadeButton"] = false,
     ["WeatherEffect"] = true,
-    ["VignetteStrength"] = 0.7,
+    ["VignetteStrength"] = 0.5,
     ["FadeMusic"] = true,
     ["AlwaysShowModel"] = false,
     ["DefaultLayout"] = 2,
@@ -23,19 +24,26 @@ local DefaultValue = {
     ["LetterboxRatio"] = 2.35,
     ["AFKScreen"] = false,
     ["GemManager"] = true,
+    ["DressingRoom"] = true,
 }
 
 local TutorialInclude = {
     "CaptureButton", "NextAnimationButton", "PlayerModelLayerButton",
-}
+    "GroupPhoto",
+};
+
 local function Initialize_NarcissusDB()
     NarcissusDB = NarcissusDB or {};
     NarcissusDB_PC = NarcissusDB_PC or {};
     NarcissusDB.MinimapButton = NarcissusDB.MinimapButton or {};
     NarcissusDB.MinimapButton.Position = NarcissusDB.MinimapButton.Position or rad(150);
 
-    if (not NarcissusDB.Version) or (type(NarcissusDB.Version) ~= "number") then
+    if (not NarcissusDB.Version) or (type(NarcissusDB.Version) ~= "number") then    --Used for showing patch notes when opening Narcissus after an update
         NarcissusDB.Version = 10000;
+    end
+
+    if (not NarcissusDB.SplashVersion) or (type(NarcissusDB.SplashVersion) ~= "number") then    --Used for showing splash screen when entering the game after an update
+        NarcissusDB.SplashVersion = 10000;
     end
 
     if (not NarcissusDB.PhotoModeButton) or (type(NarcissusDB.PhotoModeButton) ~= "table") then

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1452, "DBM-Draenor", nil, 557)--Not yet in journal, needs journalID in whatever build they add his ID in
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019052110231")
+mod:SetRevision("20190814112014")
 mod:SetCreatureID(94015)
 mod:SetEncounterID(1801)
 mod:SetReCombatTime(20)
@@ -16,14 +16,14 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_START"
 )
 
-local warnMark						= mod:NewTargetAnnounce(187668, 2)
+local warnMark			= mod:NewTargetAnnounce(187668, 2)
 
-local specWarnDoom					= mod:NewSpecialWarningSpell(187466, nil, nil, nil, 2)
-local specWarnMark					= mod:NewSpecialWarningYou(187668)
-local yellMark						= mod:NewYell(187668)
+local specWarnDoom		= mod:NewSpecialWarningSpell(187466, nil, nil, nil, 2)
+local specWarnMark		= mod:NewSpecialWarningYou(187668)
+local yellMark			= mod:NewYell(187668)
 
-local timerDoomD					= mod:NewCDTimer(51, 187466, nil, nil, nil, 3)
-local timerBreathCD					= mod:NewCDTimer(22, 187664, nil, nil, nil, 5)
+local timerDoomD		= mod:NewCDTimer(51, 187466, nil, nil, nil, 3)
+local timerBreathCD		= mod:NewCDTimer(22, 187664, nil, nil, nil, 5)
 
 --mod:AddReadyCheckOption(37462, false, 100)--Unknown quest flag
 mod:AddRangeFrameOption(8, 187668)

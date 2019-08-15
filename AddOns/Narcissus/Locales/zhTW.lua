@@ -50,6 +50,7 @@ NARCI_ALIAS_USE_PLAYER_NAME = "切換成"..CALENDAR_PLAYER_NAME;
 L["Minimap Tooltip Double Click"] = "按兩下";
 L["Minimap Tooltip Left Click"] = "左鍵|r";
 L["Minimap Tooltip To Open"] = "|cffffffff開啟全螢幕角色資訊";
+L["Minimap Tooltip Enter Photo Mode"] = "|cffffffff開啟拍照模式";
 L["Minimap Tooltip Right Click"] = "右鍵";
 L["Minimap Tooltip Shift Right Click"] = "Shift + 右鍵"
 L["Minimap Tooltip Hide Button"] = "|cffffffff隱藏這個按鈕|r"
@@ -83,18 +84,21 @@ NARCI_TRUNCATE_TEXT = "截斷文字";
 NARCI_TEXT_WIDTH = "文字寬度";
 NARCI_HOTKEY = "快捷鍵";
 NARCI_DOUBLE_TAP = "按兩下";
-NARCI_DOUBLE_TAP_DESCRIPTION = "Double-tap the key bound to Character Pane to open Narcissus."
+NARCI_DOUBLE_TAP_DESCRIPTION = "連按兩下打開角色面板的快捷鍵來打開此插件。"
 NARCI_OVERRIDE = "是否覆蓋";
 NARCI_INVALID_KEY = "無效的值";
 NARCI_MINIMAP_BUTTON = "小地圖按鈕";
 NARCI_SHORTCUTS = "快捷方式";
 NARCI_FILTERS = "濾鏡";
-NARCI_FILTERS_DESCRIPTION = "All filters except vignette will be disabled in transmog mode.";
+NARCI_FILTERS_DESCRIPTION = "除暗角以外的所有濾鏡都會在幻化模式被暫時禁用。";
 NARCI_GRAIN_EFFECT = "顆粒效果";
 NARCI_CAMERA_MOVEMENT = "鏡頭運動";
 NARCI_CAMERA_ORBIT = "環繞鏡頭";
-NARCI_CAMERA_ORBIT_ENABLED_DESCRIPTION = "When you open this addon, the camera will be rotated to your front and begin orbiting.";
-NARCI_CAMERA_ORBIT_DISABLED_DESCRIPTION = "When you open this addon, the camera will be zoomed in without rotation";
+NARCI_CAMERA_ORBIT_ENABLED_DESCRIPTION = "當妳打開此插件時，鏡頭會自動旋轉到角色面前並開始環繞。";
+NARCI_CAMERA_ORBIT_DISABLED_DESCRIPTION = "當妳打開此插件時，鏡頭只會被拉近不會有任何旋轉。";
+NARCI_CAMERA_SAFE_MODE = "鏡頭安全模式";
+NARCI_CAMERA_SAFE_MODE_DESCRIPTION = "在關閉此插件後徹底關閉ActionCam功能。";
+NARCI_CAMERA_SAFE_MODE_DESCRIPTION_EXTRA = "已禁用因為妳正在使用DynamicCam插件。";
 NARCI_FADEOUT = "自動淡化";
 NARCI_FADEOUT_DESCRIPTION = "Button fades out when you move the cursor out of it.";
 NARCI_FADE_MUSIC = "淡入/淡出音樂";
@@ -118,6 +122,9 @@ NARCI_AFK_SCREEN_DESCRIPTION = "在妳的人物暫離後自動打開Narcissus。
 NARCI_AFK_SCREEN_DESCRIPTION_EXTRA = "勾選此選項將覆蓋ElvUI的AFK模式。";
 NARCI_GEMMA = "\"Gemma\"";
 NARCI_GEMMY_DESCRIPTION = "在妳為壹件物品鑲嵌寶石時，顯示可用的寶石列表。"
+NARCI_DRESSING_ROOM = "試衣間"
+NARCI_DRESSING_ROOM_DESCRIPTION = "增大試衣間窗口大小，並使妳能夠通過試衣間瀏覽、復制其他玩家的幻化調料包。";
+NARCI_REQUIRE_RELOAD = "需要重載UI才能使設置生效。";
 
 --Model Control--
 NARCI_SHEATH_WEAPON = "收起武器";
@@ -128,13 +135,21 @@ NARCI_SPELLCASTING = "施法動作";
 NARCI_ANIMATION_ID = "動畫ID";
 NARCI_GROUND_SHADOW = "模擬地面陰影";
 NARCI_HIDE_PLAYER = "隱藏玩家自身";
+NARCI_LINK_LIGHT_SETTINGS = "關聯燈光設定";
+NARCI_LINK_MODEL_SCALE = "關聯模組比例";
+NARCI_GROUP_PHOTO = "合影模式";
+NARCI_GROUP_PHOTO_AVAILABLE = "現已加入Narcissus插件";
+NARCI_GROUP_PHOTO_NOTIFICATION = "請選擇壹名玩家作為目標。";
+NARCI_GROUP_PHOTO_INDEX = "序號";
+NARCI_GROUP_PHOTO_FRONT = "|cff40c7eb頂層|r";
+NARCI_GROUP_PHOTO_STATUS_HIDDEN = "隱藏";
 
 --Equipment Comparison--
 NARCI_AZERITE_POWERS = "艾澤萊晶岩之力"
 
 --Tutorial--
-NARCI_TUTORIAL_CAPTUREBUTTON = "點擊此按鈕後會自動保存5張圖層：\n僅背景、帶藍\\綠幕的3D模型、裝備欄的alpha\\顏色通道。\n\n如果想只保存壹張截圖，請按鍵盤上的截圖快捷鍵。";
-NARCI_TUTORIAL_ANIMATION_ID = "左鍵單擊 ID +1  右鍵單擊 ID -1\n動畫ID的有效範圍為 0~1447。";
+NARCI_TUTORIAL_CAPTUREBUTTON = "點擊此按鈕後會自動保存5張圖層：\n僅背景、帶藍\\綠幕的3D模組、裝備欄的alpha\\顏色通道。\n\n如果想只保存壹張截圖，請按鍵盤上的截圖快捷鍵。";
+NARCI_TUTORIAL_ANIMATION_ID = "左鍵單擊 ID +1  右鍵單擊 ID -1\n動畫ID的有效範圍為 0~1472。";
 NARCI_TUTORIAL_GREEN_SCREEN = "點擊最左端的正方形按鈕可以顯示藍\\綠幕。";
 
 --Others need to be localized--
@@ -145,27 +160,29 @@ L["Minimap button has been hidden. You may type /Narci minimap to re-enable it."
 L["Minimap button has been re-enabled."] = "小地圖按鈕已經重新啟用。"
 
 --Splash--
-NARCI_PATCH_NOTES = "v1.0.5 Patch Notes";
+NARCI_PATCH_NOTES = "v1.0.6 Patch Notes";
 NARCI_SPLASH_CLOSE_AND_CONTINUE = "關閉此窗口並繼續";
-NARCI_TRY_IT_NOW = "點擊這裏來啟用...";
+NARCI_SPLASH_SOUNDS_GREAT_BYE = "聽上去不錯。待會兒見！";
+NARCI_TRY_IT_NOW = "點擊這裏以啟用...";
+NARCI_DISABLE_IT_NOW = "點擊這裏以禁用...";
     --Patch-specific
-    NARCI_AFK_ENABLED = "AFK畫面已開啟。妳可以在“偏好設定-拓展功能”中關閉它。";
-    NARCI_LETTERBOX_ENABLED = "寬熒幕效果已開啟。 妳可以在“偏好設定-效果”中關閉它。";
+    NARCI_DRESSING_ROOM_ENABLED_BY_DEFAULT = "|cff7cc576已默認開啟。|r "..NARCI_DISABLE_IT_NOW;
+    NARCI_DRESSING_ROOM_DISABLED = "|cffff5050已禁用。|r 需要重載UI才能使設置生效。 妳可以在偏好設定-拓展功能中重新啟用它。";
+    NARCI_CAMERA_SAFE_MODE_ENABLED_BY_DEFAULT = "|cff7cc576已默認開啟，因為妳沒有在使用DynamicCam插件。|r\n"..NARCI_DISABLE_IT_NOW;
+    NARCI_CAMERA_SAFE_MODE_DISABLED_BY_DEFAULT = "|cffff5050已默認關閉，因為妳正在使用DynamicCam插件。|r\n"..NARCI_TRY_IT_NOW;
+    NARCI_CAMERA_SAFE_MODE_ENABLED = "|cff7cc576已啟用。|r 妳可以在偏好設定-鏡頭中關閉它。";
+    NARCI_CAMERA_SAFE_MODE_DISABLED = "|cffff5050已禁用。|r 妳可以在偏好設定-鏡頭中啟用它。";
     --
 NARCI_SHOW_DETAILS = "+ Show details...";
-NARCI_SPLASH_HEADER1 = "裝備欄";
-NARCI_SPLASH_HEADER2 = "效果";
-NARCI_SPLASH_MESSAGE0 = "|cff40C7EB1. 裝備對比界面已經過更新。|r\n妳現在可以在對比裝備時查看該物品的艾澤萊晶岩之力或是其他特效。"
-NARCI_SPLASH_MESSAGE1 = "|cff40C7EB2. 寶石管理員 -- \"Gemma\"|r\n當妳處於Narcissus界面時：如果壹件裝備有孔，點擊三角形圖標後會出現壹個可用的寶石列表。雙擊寶石來進行鑲嵌。\n\n當使用暴雪界面時：如果妳背包內有可用寶石，這個列表將會隨鑲嵌面板壹起顯示。";
-NARCI_SPLASH_MESSAGE1_CONDITIONAL_LINE = "You have disabled the auto-follow feature so you will not feel any different."
-NARCI_SPLASH_MESSAGE1_EXTRA_LINE = "In the previous versions, Narcissus set a CVar named |cffffffffcameraSmoothTimeMin|r to 0.8 (was 0.1 by default) to ensure a smooth camera transition after closing the addon. This, however, caused an increase of the auto-follow duration when the camera is moved by a small degree. After this update, all camera-related CVars used in this addon belong to the Actioncam feature which can be disabled by |cffffffff/console actioncam off|r";
-NARCI_SPLASH_MESSAGE2 = "|cff40C7EB2. 新濾鏡：寬熒幕效果。|r"
-NARCI_SPLASH_MESSAGE3 = "|cff40C7EB1. AFK畫面：在妳進入暫離狀態後自動打開Narcissus。|r"
-NARCI_SPLASH_MESSAGE4 = "|cff40C7EB1. You can once again use an item via right-click. Equipment slots will be immediately closed when entering combat.|r"
-NARCI_SPLASH_MESSAGE5 = "2. You can unequip a gear via Alt + Left-click. This action has been there since the very first version, and it now has visual feedback."
+NARCI_SPLASH_HEADER1 = "合影模式和模組控制";
+NARCI_SPLASH_HEADER2 = "其他";
+NARCI_SPLASH_MESSAGE0 = "|cff40C7EB1. 借助Narcissus來拍攝合影|r\n妳可通過小地圖按鈕或是模型控制面板來進入這個模式。選擇玩家並把他們添加進妳的場景，創作獨壹無二的故事。"
+NARCI_SPLASH_MESSAGE1 = "|cff40C7EB2. 更全面地控制模型光照|r\n妳可以控制光照強度，並分別設置聚光燈和環境光的顏色。";
+NARCI_SPLASH_MESSAGE2 = "|cff40C7EB2. 鏡頭安全模式|r\n在罕見情況下，ActionCam功能沒有在退出Narcissus後正確關閉。勾選此選項可以確保在關閉此插件後ActionCam被徹底關閉。"
+NARCI_SPLASH_MESSAGE3 = "|cff40C7EB1. 試衣間增強|r\n增大試衣間窗口大小，並使妳能夠通過試衣間瀏覽、復制其他玩家的幻化調料包。"
 
 --Project Details--
 NARCI_ALL_PROJECTS = "全部項目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2019.6.16|r\n\n感謝妳使用此插件！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2019.8.13|r\n\n感謝妳使用此插件！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾澤拉斯上的不同景點，並收集各種故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沈浸式角色面板；妳最好的截圖助手。"

@@ -1,29 +1,30 @@
-if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then
+	return
+end
 local L
 
 -------------------------
 -- Kargath Garrafilada --
 -------------------------
-L= DBM:GetModLocalization(1128)
+L = DBM:GetModLocalization(1128)
 
 L:SetTimerLocalization({
-	timerSweeperCD			= "Next Arena Sweeper"
+	timerSweeperCD	= "Next Arena Sweeper"
 })
 
 L:SetOptionLocalization({
-	timerSweeperCD			= DBM_CORE_AUTO_TIMER_OPTIONS.next:format(177776),
-	countdownSweeper		= DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT:format(177776)
+	timerSweeperCD	= DBM_CORE_AUTO_TIMER_OPTIONS.next:format(177776)
 })
 
 ------------------
 -- El Carnicero --
 ------------------
-L= DBM:GetModLocalization(971)
+L = DBM:GetModLocalization(971)
 
 ------------
 -- Tectus --
 ------------
-L= DBM:GetModLocalization(1195)
+L = DBM:GetModLocalization(1195)
 
 L:SetMiscLocalization({
 	pillarSpawn	= "¡ALZAOS, MONTAÑAS!"
@@ -32,7 +33,7 @@ L:SetMiscLocalization({
 ------------------
 -- Frondaespora --
 ------------------
-L= DBM:GetModLocalization(1196)
+L = DBM:GetModLocalization(1196)
 
 L:SetOptionLocalization({
 	InterruptCounter	= "Patrón de reinicio del contador de Descomposición",
@@ -44,11 +45,11 @@ L:SetOptionLocalization({
 ---------------------
 -- Gemelos ogrones --
 ---------------------
-L= DBM:GetModLocalization(1148)
+L = DBM:GetModLocalization(1148)
 
 L:SetOptionLocalization({
-	PhemosSpecial	= "Reproducir sonido de cuenta atrás para los tiempos de reutilización de Femos",
-	PolSpecial		= "Reproducir sonido de cuenta atrás para los tiempos de reutilización de Pol",
+	PhemosSpecial		= "Reproducir sonido de cuenta atrás para los tiempos de reutilización de Femos",
+	PolSpecial			= "Reproducir sonido de cuenta atrás para los tiempos de reutilización de Pol",
 	PhemosSpecialVoice	= "Reproducir alertas de voz del paquete de voces seleccionado para las facultades de Femos",
 	PolSpecialVoice		= "Reproducir alertas de voz del paquete de voces seleccionado para las facultades de Pol"
 })
@@ -56,8 +57,7 @@ L:SetOptionLocalization({
 -------------
 -- Ko'ragh --
 -------------
-L= DBM:GetModLocalization(1153)
-
+L = DBM:GetModLocalization(1153)
 
 L:SetWarningLocalization({
 	specWarnExpelMagicFelFades	= "Expulsar magia: Vil expirando en 5 s - ¡vuelve a tu posición inicial!"
@@ -77,10 +77,10 @@ L:SetMiscLocalization({
 -----------------------
 -- Imperador Mar'gok --
 -----------------------
-L= DBM:GetModLocalization(1197)
+L = DBM:GetModLocalization(1197)
 
 L:SetTimerLocalization({
-	timerNightTwistedCD		= "Siguientes fieles"
+	timerNightTwistedCD	= "Siguientes fieles"
 })
 
 L:SetOptionLocalization({
@@ -91,10 +91,10 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	BrandedYell			= "Marca (%d) %d m",
-	GazeYell			= "Mirada expirando en %d",
-	GazeYell2			= "Mirada (%d) en %s",
-	PlayerDebuffs		= "Más cercano para Visión"
+	BrandedYell		= "Marca (%d) %d m",
+	GazeYell		= "Mirada expirando en %d",
+	GazeYell2		= "Mirada (%d) en %s",
+	PlayerDebuffs	= "Más cercano para Visión"
 })
 
 ------------------------
@@ -103,5 +103,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("HighmaulTrash")
 
 L:SetGeneralLocalization({
-	name =	"Enemigos menores"
+	name	= "Enemigos menores"
 })

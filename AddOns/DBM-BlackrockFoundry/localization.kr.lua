@@ -1,10 +1,12 @@
-if GetLocale() ~= "koKR" then return end
+﻿if GetLocale() ~= "koKR" then
+	return
+end
 local L
 
 ---------------
 -- Gruul --
 ---------------
-L= DBM:GetModLocalization(1161)
+L = DBM:GetModLocalization(1161)
 
 L:SetOptionLocalization({
 	MythicSoakBehavior	= "신화 난이도에서 지옥불 가르기 조 알림 방식 선택",
@@ -15,7 +17,7 @@ L:SetOptionLocalization({
 ---------------------------
 -- Oregorger, The Devourer --
 ---------------------------
-L= DBM:GetModLocalization(1202)
+L = DBM:GetModLocalization(1202)
 
 L:SetOptionLocalization({
 	InterruptBehavior	= "차단 경고 설정",
@@ -27,7 +29,7 @@ L:SetOptionLocalization({
 ---------------------------
 -- The Blast Furnace --
 ---------------------------
-L= DBM:GetModLocalization(1154)
+L = DBM:GetModLocalization(1154)
 
 L:SetWarningLocalization({
 	warnRegulators			= "열기 조절 장치 남음: %d",
@@ -46,47 +48,47 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	heatRegulator		= "열기 조절 장치",
-	Regulator			= "조절 장치 %d",
-	bombNeeded			= "폭탄 %d개 남음"
+	heatRegulator	= "열기 조절 장치",
+	Regulator		= "조절 장치 %d",
+	bombNeeded		= "폭탄 %d개 남음"
 })
 
 ------------------
 -- Hans'gar And Franzok --
 ------------------
-L= DBM:GetModLocalization(1155)
+L = DBM:GetModLocalization(1155)
 
 L:SetTimerLocalization({
-	timerStamperDodge			= DBM_CORE_AUTO_TIMER_TEXTS.nextcount:format("압축기 회피")
+	timerStamperDodge	= DBM_CORE_AUTO_TIMER_TEXTS.nextcount:format("압축기 회피")
 })
 
 L:SetOptionLocalization({
-	timerStamperDodge			= "다음 압축기 회피 바 보기"
+	timerStamperDodge	= "다음 압축기 회피 바 보기"
 })
 
 --------------
 -- Flamebender Ka'graz --
 --------------
-L= DBM:GetModLocalization(1123)
+L = DBM:GetModLocalization(1123)
 
 --------------------
 --Kromog, Legend of the Mountain --
 --------------------
-L= DBM:GetModLocalization(1162)
+L = DBM:GetModLocalization(1162)
 
 L:SetMiscLocalization({
-	ExRTNotice		= "ExRT 애드온으로부터 위치 받음 (%s|1이;가; 보냄). 당신의 위치: %s"
+	ExRTNotice	= "ExRT 애드온으로부터 위치 받음 (%s|1이;가; 보냄). 당신의 위치: %s"
 })
 
 --------------------------
 -- Beastlord Darmac --
 --------------------------
-L= DBM:GetModLocalization(1122)
+L = DBM:GetModLocalization(1122)
 
 --------------------------
 -- Operator Thogar --
 --------------------------
-L= DBM:GetModLocalization(1147)
+L = DBM:GetModLocalization(1147)
 
 L:SetWarningLocalization({
 	specWarnSplitSoon	= "10초 안에 공격대 상하로 분리하세요!",
@@ -120,7 +122,7 @@ L:SetMiscLocalization({
 --------------------------
 -- The Iron Maidens --
 --------------------------
-L= DBM:GetModLocalization(1203)
+L = DBM:GetModLocalization(1203)
 
 L:SetWarningLocalization({
 	specWarnReturnBase	= "지금 본진으로 복귀!"
@@ -133,14 +135,14 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	shipMessage			= "주 대포를 쏠 준비를 합니다!",
-	EarlyBladeDash		= "너무 느려."
+	shipMessage		= "주 대포를 쏠 준비를 합니다!",
+	EarlyBladeDash	= "너무 느려."
 })
 
 --------------------------
 -- Blackhand --
 --------------------------
-L= DBM:GetModLocalization(959)
+L = DBM:GetModLocalization(959)
 
 L:SetWarningLocalization({
 	specWarnMFDPosition		= "표적 피할 위치: %s",
@@ -163,5 +165,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("BlackrockFoundryTrash")
 
 L:SetGeneralLocalization({
-	name =	"검은바위 용광로: 일반구간"
+	name	= "검은바위 용광로: 일반구간"
 })

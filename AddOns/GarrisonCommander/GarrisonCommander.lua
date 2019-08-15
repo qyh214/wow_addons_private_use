@@ -416,7 +416,7 @@ function addon:OnInitialized()
 		dbGAC.namespaces=nil
 	end
 	self:AddLabel(L["Garrison Appearance"])
-	self:AddToggle("MOVEPANEL",true,L["Unlock Panel"],L["Makes main mission panel movable"])
+	--self:AddToggle("MOVEPANEL",true,L["Unlock Panel"],L["Makes main mission panel movable"])
 	self:AddToggle("BIGSCREEN",true,L["Big screen"],L["Disabling this will give you the interface from 1.1.8, given or taken. Need to reload interface"])
 	self:AddToggle("PIN",true,L["Show Garrison Commander menu"],L["Disable if you dont want the full Garrison Commander Header."])
 	self:AddLabel(L["Mission Panel"])
@@ -1215,7 +1215,7 @@ function addon:CreateHeader(module,MOVEPANEL,PIN)
 	end
 	GCF:EnableMouse(true)
 	GCF:SetMovable(true)
-	GCF:RegisterForDrag("LeftButton")
+	--GCF:RegisterForDrag("LeftButton")
 --@non-debug@
 	GCF:SetScript("OnDragStart",function(frame) print(MOVEPANEL,self:GetBoolean(MOVEPANEL)) if self:GetBoolean(MOVEPANEL) then frame:StartMoving() end end)
 --@end-non-debug@

@@ -563,7 +563,9 @@ local function Narci_TitleManager_Title_TooltipCountDown(self, elapsed)
 	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
 	if  self.TimeSinceLastUpdate > TooltipDelay then
 		self:SetScript("OnUpdate", function() end);
-		UIFrameFadeIn(self:GetParent(), 0.25, self:GetParent():GetAlpha(), 1);
+		if Narci_TitleManager_Switch.IsOn then
+			UIFrameFadeIn(self:GetParent(), 0.25, self:GetParent():GetAlpha(), 1);
+		end
 		self:Hide()
 	end
 end

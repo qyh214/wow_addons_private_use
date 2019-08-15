@@ -1,29 +1,31 @@
-if GetLocale() ~= "koKR" then return end
+﻿if GetLocale() ~= "koKR" then
+	return
+end
 local L
 
 ---------------
 -- Kargath Bladefist --
 ---------------
-L= DBM:GetModLocalization(1128)
+L = DBM:GetModLocalization(1128)
 
 L:SetTimerLocalization({
-	timerSweeperCD			= DBM_CORE_AUTO_TIMER_TEXTS.next:format("높은망치 난동꾼")
+	timerSweeperCD	= DBM_CORE_AUTO_TIMER_TEXTS.next:format("높은망치 난동꾼")
 })
 
 L:SetOptionLocalization({
-	timerSweeperCD			= "다음 높은망치 난동꾼 바 보기",
-	countdownSweeper		= "높은망치 난동꾼 이전에 초읽기 듣기"
+	timerSweeperCD		= "다음 높은망치 난동꾼 바 보기",
+	countdownSweeper	= "높은망치 난동꾼 이전에 초읽기 듣기"
 })
 
 ---------------------------
 -- The Butcher --
 ---------------------------
-L= DBM:GetModLocalization(971)
+L = DBM:GetModLocalization(971)
 
 ---------------------------
 -- Tectus, the Living Mountain --
 ---------------------------
-L= DBM:GetModLocalization(1195)
+L = DBM:GetModLocalization(1195)
 
 L:SetMiscLocalization({
 	pillarSpawn	= "산이여, 솟아라!"
@@ -32,7 +34,7 @@ L:SetMiscLocalization({
 ------------------
 -- Brackenspore, Walker of the Deep --
 ------------------
-L= DBM:GetModLocalization(1196)
+L = DBM:GetModLocalization(1196)
 
 L:SetOptionLocalization({
 	InterruptCounter	= "부패 시전 횟수 초기화",
@@ -44,7 +46,7 @@ L:SetOptionLocalization({
 --------------
 -- Twin Ogron --
 --------------
-L= DBM:GetModLocalization(1148)
+L = DBM:GetModLocalization(1148)
 
 L:SetOptionLocalization({
 	PhemosSpecial		= "페모스의 대기시간 초읽기 듣기",
@@ -56,8 +58,7 @@ L:SetOptionLocalization({
 --------------------
 --Koragh --
 --------------------
-L= DBM:GetModLocalization(1153)
-
+L = DBM:GetModLocalization(1153)
 
 L:SetWarningLocalization({
 	specWarnExpelMagicFelFades	= "5초 후 악마 사라짐 - 처음 지점으로 이동!"
@@ -77,10 +78,10 @@ L:SetMiscLocalization({
 --------------------------
 -- Imperator Mar'gok --
 --------------------------
-L= DBM:GetModLocalization(1197)
+L = DBM:GetModLocalization(1197)
 
 L:SetTimerLocalization({
-	timerNightTwistedCD		= "다음 뒤틀린 밤의 신봉자"
+	timerNightTwistedCD	= "다음 뒤틀린 밤의 신봉자"
 })
 
 L:SetOptionLocalization({
@@ -91,10 +92,10 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	BrandedYell			= "낙인(%d중첩): %dm",
-	GazeYell			= "%d초 후 시선 사라짐!",
-	GazeYell2			= "%2$s에게 시선! (%1$d)",
-	PlayerDebuffs		= "광기의 눈길 가까움"
+	BrandedYell		= "낙인(%d중첩): %dm",
+	GazeYell		= "%d초 후 시선 사라짐!",
+	GazeYell2		= "%2$s에게 시선! (%1$d)",
+	PlayerDebuffs	= "광기의 눈길 가까움"
 })
 
 -------------
@@ -103,5 +104,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("HighmaulTrash")
 
 L:SetGeneralLocalization({
-	name =	"높은망치: 일반구간"
+	name	= "높은망치: 일반구간"
 })

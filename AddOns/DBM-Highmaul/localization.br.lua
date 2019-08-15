@@ -1,22 +1,23 @@
--- Last update by GlitterStorm @ Azralon on Feb,28th,2015
-if GetLocale() ~= "ptBR" then return end
+﻿if GetLocale() ~= "ptBR" then
+	return
+end
 
 local L
 
 ---------------
 -- Kargath Bladefist --
 ---------------
-L= DBM:GetModLocalization(1128)
+L = DBM:GetModLocalization(1128)
 
 ---------------------------
 -- The Butcher --
 ---------------------------
-L= DBM:GetModLocalization(971)
+L = DBM:GetModLocalization(971)
 
 ---------------------------
 -- Tectus, the Living Mountain --
 ---------------------------
-L= DBM:GetModLocalization(1195)
+L = DBM:GetModLocalization(1195)
 
 L:SetMiscLocalization({
 	pillarSpawn	= "ASCENDAM, MONTANHAS!"
@@ -25,7 +26,7 @@ L:SetMiscLocalization({
 ------------------
 -- Brackenspore, Walker of the Deep --
 ------------------
-L= DBM:GetModLocalization(1196)
+L = DBM:GetModLocalization(1196)
 
 L:SetOptionLocalization({
 	InterruptCounter	= "Contador da decomposição reseta após",  
@@ -40,7 +41,7 @@ L:SetOptionLocalization({
 --------------
 -- Twin Ogron --
 --------------
-L= DBM:GetModLocalization(1148)
+L = DBM:GetModLocalization(1148)
 
 L:SetOptionLocalization({
 	PhemosSpecial		= "Play countdown sound for Phemos' cooldowns",
@@ -52,8 +53,7 @@ L:SetOptionLocalization({
 --------------------
 --Koragh --
 --------------------
-L= DBM:GetModLocalization(1153)
-
+L = DBM:GetModLocalization(1153)
 
 L:SetWarningLocalization({
 	specWarnExpelMagicFelFades	= "Vil surgindo em 5s - Volte ao início"
@@ -64,16 +64,16 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	supressionTarget1			= "Eu vou esmagá-lo!",
-	supressionTarget2			= "Silêncio!",
-	supressionTarget3			= "Quieto!",
-	supressionTarget4			= "Eu vou rasgá-lo ao meio!"
+	supressionTarget1	= "Eu vou esmagá-lo!",
+	supressionTarget2	= "Silêncio!",
+	supressionTarget3	= "Quieto!",
+	supressionTarget4	= "Eu vou rasgá-lo ao meio!"
 })
 
 --------------------------
 -- Imperator Mar'gok --
 --------------------------
-L= DBM:GetModLocalization(1197)
+L = DBM:GetModLocalization(1197)
 
 L:SetTimerLocalization({
 	timerNightTwistedCD	= "próximo Night-Twisted Adds"
@@ -87,10 +87,10 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	BrandedYell			= "Marcado (%d) %dy",
-	GazeYell			= "Olhar do Abismo acabando %d",
-	GazeYell2			= "Olhar do Abismo (%d) on %s",
-	PlayerDebuffs		= "Perto do Vestígio"
+	BrandedYell		= "Marcado (%d) %dy",
+	GazeYell		= "Olhar do Abismo acabando %d",
+	GazeYell2		= "Olhar do Abismo (%d) on %s",
+	PlayerDebuffs	= "Perto do Vestígio"
 })
 
 -------------
@@ -99,5 +99,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("HighmaulTrash")
 
 L:SetGeneralLocalization({
-	name =	"Malho Imponente Trash"
+	name	= "Malho Imponente Trash"
 })

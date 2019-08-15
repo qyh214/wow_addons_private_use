@@ -1,6 +1,6 @@
---Last update by GlitterStorm @ Azralon on Feb,21th,2015
-
-if GetLocale() ~= "ptBR" then return end
+﻿if GetLocale() ~= "ptBR" then
+	return
+end
 
 local L
 
@@ -10,21 +10,21 @@ local L
 L = DBM:GetModLocalization("GarrisonInvasions")
 
 L:SetGeneralLocalization({
-	name = "Invasão das guarnições"
+	name	= "Invasão das guarnições"
 })
 
 L:SetWarningLocalization({
-	specWarnRylak	= "Catador Alanegra esta vindo",
-	specWarnWorker	= "Trabalhador aterrorizado em perigo",
-	specWarnSpy		= "Um espião infiltrou-se em",
-	specWarnBuilding= "Uma construção esta sendo atacada"
+	specWarnRylak		= "Catador Alanegra esta vindo",
+	specWarnWorker		= "Trabalhador aterrorizado em perigo",
+	specWarnSpy			= "Um espião infiltrou-se em",
+	specWarnBuilding	= "Uma construção esta sendo atacada"
 })
 
 L:SetOptionLocalization({
-	specWarnRylak	= "Mostra aviso especial quando um Catador Alanegra estiver vindo",
-	specWarnWorker	= "Mostra aviso especial quando um trabalhador aterrorizado estiver em perigo",
-	specWarnSpy		= "Mostra aviso especial quando um espião infiltrar-se",
-	specWarnBuilding= "Mostra aviso especial quando uma construção estiver sendo atacada"
+	specWarnRylak		= "Mostra aviso especial quando um Catador Alanegra estiver vindo",
+	specWarnWorker		= "Mostra aviso especial quando um trabalhador aterrorizado estiver em perigo",
+	specWarnSpy			= "Mostra aviso especial quando um espião infiltrar-se",
+	specWarnBuilding	= "Mostra aviso especial quando uma construção estiver sendo atacada"
 })
 
 L:SetMiscLocalization({

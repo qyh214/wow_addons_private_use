@@ -199,12 +199,30 @@ function Narci_CameraOrbitSwitch_OnClick(self)
     end
 end
 
+local function CameraSafeSwitch_SetState(self)
+    local state = NarcissusDB.CameraSafeMode;
+    self.Tick:SetShown(state);
+end
+
+function Narci_CameraSafeSwitch_OnClick(self)
+    NarcissusDB.CameraSafeMode = not NarcissusDB.CameraSafeMode;
+    CameraSafeSwitch_SetState(self);
+end
+
+local function UnToggleElvUIAFK()
+    local E, L, V, P, G = unpack(ElvUI);
+    E.db.general.afk = false;
+    --local AFK = E:GetModule('AFK')
+    --AFK:Toggle()
+end
+
 local function AFKScreenSwitch_SetState(self)
     local state = NarcissusDB.AFKScreen;
     self.Tick:SetShown(state);
     if state then
         if IsAddOnLoaded("ElvUI") then
             self.Description:SetText(NARCI_AFK_SCREEN_DESCRIPTION.." "..NARCI_AFK_SCREEN_DESCRIPTION_EXTRA);
+            UnToggleElvUIAFK();
         else
             self.Description:SetText(NARCI_AFK_SCREEN_DESCRIPTION);
         end
@@ -225,7 +243,18 @@ end
 
 function Narci_GemManagerSwitch_OnClick(self)
     NarcissusDB.GemManager = not NarcissusDB.GemManager;
-    GemManagerSwitch_SetState(self)
+    GemManagerSwitch_SetState(self);
+end
+
+local function DressingRoomSwitch_SetState(self)
+    local state = NarcissusDB.DressingRoom;
+    self.Tick:SetShown(state);
+end
+
+function Narci_DressingRoomSwitch_OnClick(self)
+    NarcissusDB.DressingRoom = not NarcissusDB.DressingRoom;
+    DressingRoomSwitch_SetState(self);
+    self.Description:SetText(NARCI_DRESSING_ROOM_DESCRIPTION.."\n"..NARCI_REQUIRE_RELOAD);
 end
 
 local function MinimapButtonSwitch_SetState(self)
@@ -551,10 +580,18 @@ end
 function Narci_BorderThemeButton_OnClick(self)
     local id = self:GetID();
     if id == 1 then
-        NarcissusDB.BorderTheme = "Bright";
+        if NarcissusDB.BorderTheme ~= "Bright" then
+            NarcissusDB.BorderTheme = "Bright";
+        else
+            return;
+        end
         self:GetParent().Preview:SetTexCoord(0.5, 1, 0, 1)
     elseif id == 2 then
-        NarcissusDB.BorderTheme = "Dark";
+        if NarcissusDB.BorderTheme ~= "Dark" then
+            NarcissusDB.BorderTheme = "Dark";
+        else
+            return;
+        end
         self:GetParent().Preview:SetTexCoord(0, 0.5, 0, 1)
     end
     ShowSelfTick(self)
@@ -572,7 +609,7 @@ local function SetBorderThemeState()
     end
 end
 
-local SetVignetteStrength = Narci_Pref_SetVignetteStrength
+local SetVignetteStrength = Narci_Pref_SetVignetteStrength;
 function Narci_VignetteStrengthSlider_OnValueChanged(self, value, userInput)
     self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
     if value ~= self.oldValue then
@@ -618,6 +655,7 @@ local function InitializePreference()
     WeatherSwitch_SetState(Narci_WeatherEffectSwitch);
     LetterboxEffectSwitch_SetState(Narci_LetterboxEffectSwitch);
     CameraOrbitSwitch_SetState(Narci_CameraOrbitSwitch);
+    CameraSafeSwitch_SetState(Narci_CameraSafeSwitch);
     MinimapButtonSwitch_SetState(Narci_MinimapButtonSwitch);
     DoubleTapSwitch_SetState(Narci_DoubleTapSwitch);
     TruncateSwitch_SetState(Narci_TruncateSwitch);
@@ -626,7 +664,8 @@ local function InitializePreference()
     SetFullBodySwitchState(Narci_FullBodySwitch);
     SetAlwaysShowModelSwitchState(Narci_AlwaysShowModelSwitch);
     AFKScreenSwitch_SetState(Narci_AFKScreenSwitch);
-    GemManagerSwitch_SetState(Narci_GemManagerSwitch)
+    GemManagerSwitch_SetState(Narci_GemManagerSwitch);
+    DressingRoomSwitch_SetState(Narci_DressingRoomSwitch);
 
     Narci_VignetteStrengthSlider:SetValue(NarcissusDB.VignetteStrength);
     Narci_GlobalScaleSlider:SetValue(NarcissusDB.GlobalScale);
@@ -646,9 +685,9 @@ local function InitializePreference()
 end
 
 local initialize = CreateFrame("Frame")
-initialize:RegisterEvent("VARIABLES_LOADED");
+initialize:RegisterEvent("PLAYER_ENTERING_WORLD");
 initialize:SetScript("OnEvent",function(self,event,...)
-	if event == "VARIABLES_LOADED" then
+	if event == "PLAYER_ENTERING_WORLD" then
         SetItemNameTextSize(NarcissusDB.FontHeightItemName)
         InitializePreference();
     end

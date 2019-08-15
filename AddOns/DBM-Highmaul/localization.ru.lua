@@ -1,29 +1,31 @@
-if GetLocale() ~= "ruRU" then return end
+﻿if GetLocale() ~= "ruRU" then
+	return
+end
 local L
 
 ---------------
 -- Kargath Bladefist --
 ---------------
-L= DBM:GetModLocalization(1128)
+L = DBM:GetModLocalization(1128)
 
 L:SetTimerLocalization({
-	timerSweeperCD			= DBM_CORE_AUTO_TIMER_TEXTS.next:format("Чистильщик арены")
+	timerSweeperCD	= DBM_CORE_AUTO_TIMER_TEXTS.next:format("Чистильщик арены")
 })
 
 L:SetOptionLocalization({
-	timerSweeperCD			= "Отсчет времени до следующего Чистильщика арены",
-	countdownSweeper		= "Звуковой отсчет до восстановления \"Чистильщик арены\""
+	timerSweeperCD		= "Отсчет времени до следующего Чистильщика арены",
+	countdownSweeper	= "Звуковой отсчет до восстановления \"Чистильщик арены\""
 })
 
 ---------------------------
 -- The Butcher --
 ---------------------------
-L= DBM:GetModLocalization(971)
+L = DBM:GetModLocalization(971)
 
 ---------------------------
 -- Tectus, the Living Mountain --
 ---------------------------
-L= DBM:GetModLocalization(1195)
+L = DBM:GetModLocalization(1195)
 
 L:SetMiscLocalization({
 	pillarSpawn	= "ВОССТАНЬТЕ, ГОРЫ!"
@@ -32,7 +34,7 @@ L:SetMiscLocalization({
 ------------------
 -- Brackenspore, Walker of the Deep --
 ------------------
-L= DBM:GetModLocalization(1196)
+L = DBM:GetModLocalization(1196)
 
 L:SetOptionLocalization({
 	InterruptCounter	= "Сбрасывать счетчик Ослабления после",
@@ -44,11 +46,11 @@ L:SetOptionLocalization({
 --------------
 -- Twin Ogron --
 --------------
-L= DBM:GetModLocalization(1148)
+L = DBM:GetModLocalization(1148)
 
 L:SetOptionLocalization({
-	PhemosSpecial	= "Звуковой обратный отсчет для кулдаунов Фем'а",
-	PolSpecial		= "Звуковой обратный отсчет для кулдаунов Пол'а",
+	PhemosSpecial		= "Звуковой обратный отсчет для кулдаунов Фем'а",
+	PolSpecial			= "Звуковой обратный отсчет для кулдаунов Пол'а",
 	PhemosSpecialVoice	= "Звуковые оповещения для способностей Фем'а используя выбранный звуковой пакет",
 	PolSpecialVoice		= "Звуковые оповещения для способностей Пол'а используя выбранный звуковой пакет"
 })
@@ -56,8 +58,7 @@ L:SetOptionLocalization({
 --------------------
 --Koragh --
 --------------------
-L= DBM:GetModLocalization(1153)
-
+L = DBM:GetModLocalization(1153)
 
 L:SetWarningLocalization({
 	specWarnExpelMagicFelFades	= "Скверна спадает через 5 сек. - вернитесь в начало"
@@ -77,10 +78,10 @@ L:SetMiscLocalization({
 --------------------------
 -- Imperator Mar'gok --
 --------------------------
-L= DBM:GetModLocalization(1197)
+L = DBM:GetModLocalization(1197)
 
 L:SetTimerLocalization({
-	timerNightTwistedCD		= "След. Поддавшийся ночи верный служитель"
+	timerNightTwistedCD	= "След. Поддавшийся ночи верный служитель"
 })
 
 L:SetOptionLocalization({
@@ -91,10 +92,10 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	BrandedYell			= "Клеймо (%d) %dм",
-	GazeYell			= "Взгляд спадает через %d",
-	GazeYell2			= "Взгляд (%d) на %s",
-	PlayerDebuffs		= "Ближайшие к Вспышке"
+	BrandedYell		= "Клеймо (%d) %dм",
+	GazeYell		= "Взгляд спадает через %d",
+	GazeYell2		= "Взгляд (%d) на %s",
+	PlayerDebuffs	= "Ближайшие к Вспышке"
 })
 
 -------------
@@ -103,5 +104,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("HighmaulTrash")
 
 L:SetGeneralLocalization({
-	name =	"Трэш мобы Верховного Молота"
+	name	= "Трэш мобы Верховного Молота"
 })

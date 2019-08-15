@@ -1,4 +1,4 @@
--- Last update: Feb,21th,2015 Brazilian Portuguese format)
+﻿-- Last update: Feb,21th,2015 Brazilian Portuguese format)
 -- Por GlitterStorm @ Azralon
 if GetLocale() ~= "ptBR" then return end
 

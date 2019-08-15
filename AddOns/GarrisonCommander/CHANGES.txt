@@ -1,19 +1,16 @@
-tag 716138b6b4e8d871932411bdf04a7a35db754fea 3.2.1
+tag de6954fe2d1c13d4877e5fa55a8a006db5fa1a91 3.2.2
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Sun Jul 28 19:09:14 2019 +0200
+Date:	Sun Aug 4 20:11:19 2019 +0200
 
-Fix: No longer gives error when clicking on minimap report icon while in
-combat
+Panel is no longer moveble due to Bliz restrictions
 
-commit a15a675824161b38c32f8e2565495ec6644d099a
+commit ecafd1d8a15d16172fabbf1f266ee23ee1aeccfa
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Sun Jul 28 18:48:36 2019 +0200
+Date:   Sun Aug 4 20:09:02 2019 +0200
 
-    Rel Notes
-
-commit e6fa0ea54f917bad47434eed2d482c43d97a9efc
-Author: Alar of Runetotem <alar@aspide.it>
-Date:   Sun Jul 28 18:47:04 2019 +0200
-
-    Minimap icon button enhancement now is only in broker
+    27: Garrison Commander UI has a Glitch
+    
+    Task-Url: http://github.com/alarofrunetotem/GarrisonCommander/issues/27
+    
+    panel can no longer moved, sorry
 

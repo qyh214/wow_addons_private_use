@@ -4,8 +4,8 @@
 ## Notes-itIT: Data-Broker per GarrisonCommander
 ## Notes-frFR: Data-Broker pour GarrisonCommander
 ## Author: Alar of Runetotem
-## Version: 3.2.1 1.1.0
-## X-Revision: a15a675
+## Version: 3.2.2 1.1.0
+## X-Revision: ecafd1d
 ## eMail: alar@aspide.it
 ## URL: http://wow.aspide.it
 ## OptionalDeps: Titan, Bazooka, ChocolateBar , FuBar , LibDataBroker-1.1, LibDebug
@@ -16,10 +16,11 @@
 ## X-Category: Garrison
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it
-## X-Date: 2019-07-28T16:48:36Z
+## X-Date: 2019-08-04T18:09:02Z
 ## X-Embeds:
 embeds.xml
 localization.lua
 ldb.lua
 RelNotes.lua
+../GarrisonCommander/minimap.lua
 

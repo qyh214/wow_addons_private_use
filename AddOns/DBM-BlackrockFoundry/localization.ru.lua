@@ -1,10 +1,12 @@
-if GetLocale() ~= "ruRU" then return end
+﻿if GetLocale() ~= "ruRU" then
+	return
+end
 local L
 
 ---------------
 -- Gruul --
 ---------------
-L= DBM:GetModLocalization(1161)
+L = DBM:GetModLocalization(1161)
 
 L:SetOptionLocalization({
 	MythicSoakBehavior	= "Настройка получения стаков от Инфернального удара для спец предупреждений (эпох. сложность)",
@@ -15,7 +17,7 @@ L:SetOptionLocalization({
 ---------------------------
 -- Oregorger, The Devourer --
 ---------------------------
-L= DBM:GetModLocalization(1202)
+L = DBM:GetModLocalization(1202)
 
 L:SetOptionLocalization({
 	InterruptBehavior	= "Настройка поведения предупреждений для прерывания",
@@ -26,7 +28,7 @@ L:SetOptionLocalization({
 ---------------------------
 -- The Blast Furnace --
 ---------------------------
-L= DBM:GetModLocalization(1154)
+L = DBM:GetModLocalization(1154)
 
 L:SetWarningLocalization({
 	warnRegulators			= "Осталось Регуляторов температуры: %d",
@@ -45,39 +47,39 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	heatRegulator		= "Регулятор температуры",
-	Regulator			= "Регулятор %d",--Can't use above, too long for infoframe
-	bombNeeded			= "%d |4бомба:бомбы:бомб;"
+	heatRegulator	= "Регулятор температуры",
+	Regulator		= "Регулятор %d",--Can't use above, too long for infoframe
+	bombNeeded		= "%d |4бомба:бомбы:бомб;"
 })
 
 ------------------
 -- Hans'gar And Franzok --
 ------------------
-L= DBM:GetModLocalization(1155)
+L = DBM:GetModLocalization(1155)
 
 --------------
 -- Flamebender Ka'graz --
 --------------
-L= DBM:GetModLocalization(1123)
+L = DBM:GetModLocalization(1123)
 
 --------------------
 --Kromog, Legend of the Mountain --
 --------------------
-L= DBM:GetModLocalization(1162)
+L = DBM:GetModLocalization(1162)
 
 L:SetMiscLocalization({
-	ExRTNotice		= "%s отправил присвоенные позиции рун. Ваша позиция: %s"
+	ExRTNotice	= "%s отправил присвоенные позиции рун. Ваша позиция: %s"
 })
 
 --------------------------
 -- Beastlord Darmac --
 --------------------------
-L= DBM:GetModLocalization(1122)
+L = DBM:GetModLocalization(1122)
 
 --------------------------
 -- Operator Thogar --
 --------------------------
-L= DBM:GetModLocalization(1147)
+L = DBM:GetModLocalization(1147)
 
 L:SetWarningLocalization({
 	specWarnSplitSoon	= "Разделение рейда через 10 сек"
@@ -102,13 +104,13 @@ L:SetMiscLocalization({
 	oneRandom		= "Появляется на 1 случайном пути",
 	threeTrains		= "3 случайных пути: Поезд",
 	threeRandom		= "Появляются на 3 случайных путях",
-	helperMessage	= "Этот бой может быть упрощен с помощью аддона 'Thogar Assist' или одного из множества доступных голосовых пакетов DBM, которые можно найти на http://wow.curse.com/."
+	helperMessage	= "Этот бой может быть упрощен с помощью аддона 'Thogar Assist' или одного из множества доступных голосовых пакетов DBM, которые можно найти на Curse"
 })
 
 --------------------------
 -- The Iron Maidens --
 --------------------------
-L= DBM:GetModLocalization(1203)
+L = DBM:GetModLocalization(1203)
 
 L:SetWarningLocalization({
 	specWarnReturnBase	= "Возвращайтесь на причал!"
@@ -121,13 +123,13 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	shipMessage		= "готовится занять позицию у главного орудия дредноута!"
+	shipMessage	= "готовится занять позицию у главного орудия дредноута!"
 })
 
 --------------------------
 -- Blackhand --
 --------------------------
-L= DBM:GetModLocalization(959)
+L = DBM:GetModLocalization(959)
 
 L:SetWarningLocalization({
 	specWarnMFDPosition		= "Позиция метки: %s",
@@ -150,5 +152,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("BlackrockFoundryTrash")
 
 L:SetGeneralLocalization({
-	name =	"Трэш мобы Литейной клана Черной горы"
+	name	= "Трэш мобы Литейной клана Черной горы"
 })

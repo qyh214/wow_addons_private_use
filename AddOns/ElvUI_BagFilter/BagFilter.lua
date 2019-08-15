@@ -208,5 +208,7 @@ do
         AddMenuButton(isBank);
     end);
     
-    hooksecurefunc(B, 'UpdateSlot', SetSlotFilter);
+    hooksecurefunc(B, 'UpdateSlot', function(self, frame, bagID, slotID)
+        SetSlotFilter(frame, bagID, slotID); 
+    end);
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1426, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190720220053")
+mod:SetRevision("20190814112014")
 mod:SetCreatureID(90019)--Main ID is door, door death= win. 94515 Siegemaster Mar'tak
 mod:SetEncounterID(1778)
 mod:SetZone()

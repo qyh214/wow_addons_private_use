@@ -1,24 +1,26 @@
-if GetLocale() ~= "deDE" then return end
+﻿if GetLocale() ~= "deDE" then
+	return
+end
 local L
 
 ---------------
 -- Kargath Bladefist --
 ---------------
-L= DBM:GetModLocalization(1128)
+L = DBM:GetModLocalization(1128)
 
 L:SetTimerLocalization({
-	timerSweeperCD			= "Nächster Arena Sweeper"
+	timerSweeperCD	= "Nächster Arena Sweeper"
 })
 
 ---------------------------
 -- The Butcher --
 ---------------------------
-L= DBM:GetModLocalization(971)
+L = DBM:GetModLocalization(971)
 
 ---------------------------
 -- Tectus, the Living Mountain --
 ---------------------------
-L= DBM:GetModLocalization(1195)
+L = DBM:GetModLocalization(1195)
 
 L:SetMiscLocalization({
 	pillarSpawn	= "ERHEBT EUCH, BERGE!"
@@ -27,7 +29,7 @@ L:SetMiscLocalization({
 ------------------
 -- Brackenspore, Walker of the Deep --
 ------------------
-L= DBM:GetModLocalization(1196)
+L = DBM:GetModLocalization(1196)
 
 L:SetOptionLocalization({
 	InterruptCounter	= "Setze \"Verrottung\"-Zähler zurück nach",
@@ -39,11 +41,11 @@ L:SetOptionLocalization({
 --------------
 -- Twin Ogron --
 --------------
-L= DBM:GetModLocalization(1148)
+L = DBM:GetModLocalization(1148)
 
 L:SetOptionLocalization({
-	PhemosSpecial	= "Spiele akustischen Countdown für Phemos' Spezialfähigkeiten",
-	PolSpecial		= "Spiele akustischen Countdown für Pols Spezialfähigkeiten",
+	PhemosSpecial		= "Spiele akustischen Countdown für Phemos' Spezialfähigkeiten",
+	PolSpecial			= "Spiele akustischen Countdown für Pols Spezialfähigkeiten",
 	PhemosSpecialVoice	= "Spiele gesprochene Warnungen für Phemos' Spezialfähigkeiten",
 	PolSpecialVoice		= "Spiele gesprochene Warnungen für Pols Spezialfähigkeiten"
 })
@@ -51,8 +53,7 @@ L:SetOptionLocalization({
 --------------------
 --Koragh --
 --------------------
-L= DBM:GetModLocalization(1153)
-
+L = DBM:GetModLocalization(1153)
 
 L:SetWarningLocalization({
 	specWarnExpelMagicFelFades	= "Teufelsenergie endet in 5s - geh zum Start"
@@ -72,10 +73,10 @@ L:SetMiscLocalization({
 --------------------------
 -- Imperator Mar'gok --
 --------------------------
-L= DBM:GetModLocalization(1197)
+L = DBM:GetModLocalization(1197)
 
 L:SetTimerLocalization({
-	timerNightTwistedCD		= "Nächste Nachtsiechende Gläubiger"
+	timerNightTwistedCD	= "Nächste Nachtsiechende Gläubiger"
 })
 
 L:SetOptionLocalization({
@@ -86,10 +87,10 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	BrandedYell			= "Gebrandmarkt (%d) %dm",
-	GazeYell			= "Starren endet in %d",
-	GazeYell2			= "Starren (%d) auf %s",
-	PlayerDebuffs		= "Nächste zum Vorgeschmack"
+	BrandedYell		= "Gebrandmarkt (%d) %dm",
+	GazeYell		= "Starren endet in %d",
+	GazeYell2		= "Starren (%d) auf %s",
+	PlayerDebuffs	= "Nächste zum Vorgeschmack"
 })
 
 -------------
@@ -98,5 +99,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("HighmaulTrash")
 
 L:SetGeneralLocalization({
-	name =	"Trash des Hochfels"
+	name	= "Trash des Hochfels"
 })

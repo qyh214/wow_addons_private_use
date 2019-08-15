@@ -47,20 +47,24 @@ local CR_ConvertRatio = {      --Combat Rating number/percent
 local function SetCombatRatingRatio()
     local crit = math.max(GetCombatRating(CR_CRIT_MELEE), GetCombatRating(CR_CRIT_RANGED), GetCombatRating(CR_CRIT_SPELL));
     local critBonus = math.max(GetCombatRatingBonus(CR_CRIT_MELEE), GetCombatRatingBonus(CR_CRIT_RANGED), GetCombatRatingBonus(CR_CRIT_SPELL));
+    local haste = GetCombatRating(CR_HASTE_MELEE);
+    local mastery = GetCombatRating(CR_MASTERY);
+    local versa = GetCombatRating(CR_VERSATILITY_DAMAGE_DONE);
+    if crit == 0 or haste == 0 or mastery == 0 or versa == 0 then return; end;
     CR_ConvertRatio.crit = critBonus / crit;
 
     local _, bonusCoeff = GetMasteryEffect();
     local masteryBonus = GetCombatRatingBonus(CR_MASTERY) * bonusCoeff;
     
-    CR_ConvertRatio.haste = GetCombatRatingBonus(CR_HASTE_MELEE) / GetCombatRating(CR_HASTE_MELEE);
-    CR_ConvertRatio.mastery = masteryBonus / GetCombatRating(CR_MASTERY);
-    CR_ConvertRatio.versa = GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_DONE) / GetCombatRating(CR_VERSATILITY_DAMAGE_DONE);
-
+    CR_ConvertRatio.haste = GetCombatRatingBonus(CR_HASTE_MELEE) / haste;
+    CR_ConvertRatio.mastery = masteryBonus / mastery;
+    CR_ConvertRatio.versa = GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_DONE) / versa;
+    
     --[[
-    print(STAT_CRITICAL_STRIKE.." "..CR_ConvertRatio.crit)
-    print(STAT_HASTE.." "..CR_ConvertRatio.haste)
-    print(STAT_MASTERY.." "..CR_ConvertRatio.mastery)
-    print(STAT_VERSATILITY.." "..CR_ConvertRatio.versa)
+    print(STAT_CRITICAL_STRIKE.." "..math.floor(1/CR_ConvertRatio.crit + 0.5))
+    print(STAT_HASTE.." "..math.floor(1/CR_ConvertRatio.haste + 0.5))
+    print(STAT_MASTERY.." "..math.floor(1/CR_ConvertRatio.mastery + 0.5))
+    print(STAT_VERSATILITY.." "..math.floor(1/CR_ConvertRatio.versa + 0.5))
     --]]
 end
 
@@ -293,6 +297,7 @@ end
 
 local function UntruncateText(frame, fontstring)
     local n = 1;
+    frame:SetWidth(frame.WidthBAK)
     while fontstring:IsTruncated() do
         frame:SetWidth(frame.WidthBAK + 20*n);
         n = n + 1;
@@ -639,6 +644,7 @@ function NarciTooltip_SetComparison(itemLocation, self)
         extraText:Hide();
         SubTooltip:Hide();
     end
+
     UntruncateText(SubTooltip, SubTooltip.Description)
 
     ----
@@ -654,22 +660,22 @@ NT:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
 NT:SetScript("OnEvent",function(self,event,...)
     if event ~= "AZERITE_ITEM_POWER_LEVEL_CHANGED" then
         C_Timer.After(1, function()
-            SetCombatRatingRatio()
+            SetCombatRatingRatio();
         end)
     end
 
     if event == "ACTIVE_TALENT_GROUP_CHANGED" then
-        CurrentSpecID = GetSpecializationInfo(GetSpecialization())
+        CurrentSpecID = GetSpecializationInfo(GetSpecialization());
     end
 
     if event == "AZERITE_ITEM_POWER_LEVEL_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
-        local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem()
+        local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem();
         if azeriteItemLocation then
-            HeartLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation)
+            HeartLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation);
         else
-            HeartLevel = 0
+            HeartLevel = 0;
         end
-        CurrentSpecID = GetSpecializationInfo(GetSpecialization())
+        CurrentSpecID = GetSpecializationInfo(GetSpecialization());
     end
 end)
 

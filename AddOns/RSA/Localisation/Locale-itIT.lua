@@ -1,6 +1,5 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("RSA", "itIT")
 if not L then return end
-L = L or {}
 L[" Does not affect Immune, Immune will always use its own replacement."] = "Non influenza Immune, Immune utilizzerà sempre la propria sostituzione."
 L[" If you wish to add a message for this section, enter it above in the |cffFFD100Add New Message|r box. As no messages exist, nothing will be announced for this section."] = " Se desideri aggiungere un messaggio per questa sezione, inseriscilo sopra in |cffFFD100Aggiungi nuovo messaggio|r box.Poiché non esistono messaggi, nulla sarà annunciato per questa sezione."
 L[" is disabled. If you want to configure RSA, you need to enable it."] = " è disabilitato. Se si desidera configurare RSA, è necessario abilitarlo."
@@ -21,6 +20,8 @@ L["Always allow whispers to be sent, ignoring the PvP and PvE Options on this pa
 L["Always uses spell target's name"] = "Usa sempre il nome del bersaglio dell'incantesimo"
 L["Announce to custom channels only while you are in a manually formed group."] = "Annuncia i canali personalizzati solo mentre ti trovi in un gruppo formato manualmente."
 L["Cast"] = "Lanciare"
+--[[Translation missing --]]
+L["Cauldrons"] = "Cauldrons"
 L["Channel Name"] = "Nome del canale"
 L["Class Abilities"] = "Abilità di classe"
 L["Configuring"] = "Configurazione"
@@ -32,6 +33,8 @@ L["Damage"] = "Danno"
 L["DamageAbsorb"] = "Danno assorbito"
 L["Debuff"] = true
 L["Dispel"] = true
+--[[Translation missing --]]
+L["Drums"] = "Drums"
 L["EffectAbsorb"] = "Debuff assorbito"
 L["Emote"] = true
 L["Enable Buff Reminder Module"] = "Abilita modulo di promemoria Buff"
@@ -52,6 +55,8 @@ L["Enable in War Mode"] = "Abilita in modalità Guerra"
 L["Enable Only in Combat"] = "Abilita solo in combattimento"
 L["End"] = "Fine"
 L["Failed"] = "Mancato"
+--[[Translation missing --]]
+L["Feasts"] = "Feasts"
 L["Feedback"] = "Risposta"
 L["General"] = "Generale"
 L["General Replacement"] = "Sostituzione generale"
@@ -91,13 +96,19 @@ L["Racials"] = "Razziali"
 L["Raid"] = true
 L["Remove Server Names"] = "Rimuovi nomi server"
 L["Removes server name from |c5500DBBD[TARGET]|r tags."] = "Rimuove il nome del server da |c5500DBBD[TARGET]|r tags."
+--[[Translation missing --]]
+L["Repair Bots"] = "Repair Bots"
 L["Replacement"] = "Sostituzione"
 L["Resist"] = "Resistere"
+--[[Translation missing --]]
+L["Respec Codex"] = "Respec Codex"
 L["RSA on Curseforge"] = "RSA in Curseforge"
 L["Say"] = "Dire"
 L["Send to player created channel."] = "Invia al canale creato dal giocatore."
 L["Sends a message locally only visible to you. To choose which part of the UI this is displayed in go to the |cff00B2FALocal Message Output Area|r in the General options."] = "Invia un messaggio localmente visibile solo a te. Per scegliere quale parte dell'interfaccia utente è visualizzata, vai a |cff00B2FALocal Message Output Area|r nelle opzioni generali."
 L["Sends a message to one of the following channels in order of priority:"] = "Invia un messaggio a uno dei seguenti canali in ordine di priorità:"
+--[[Translation missing --]]
+L["Sleeping Mana Potions"] = "Sleeping Mana Potions"
 L["Smart Channel Options"] = "Intelligente Opzioni Canale"
 L["Smart Custom Channel"] = "Intelligente Canale personalizzato"
 L["Smart Emote"] = "Emote Intelligente"

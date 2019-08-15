@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("LadyFleshsear", "DBM-GarrisonInvasions")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019041705938")
+mod:SetRevision("20190814112014")
 mod:SetCreatureID(91012)
 mod:SetZone()
 
@@ -15,13 +15,13 @@ mod:RegisterEventsInCombat(
 	"SPELL_PERIODIC_DAMAGE 180775"
 )
 
-local warnRainofFire			= mod:NewSpellAnnounce(180774, 3)
-local warnOverwhelmingFlames	= mod:NewTargetAnnounce(180776, 4)
+local warnRainofFire				= mod:NewSpellAnnounce(180774, 3)
+local warnOverwhelmingFlames		= mod:NewTargetAnnounce(180776, 4)
 
-local specWarnOverwhelmingFlames= mod:NewSpecialWarningMoveAway(180776, nil, nil, nil, 1, 2)
-local yellOverwhelmingFlames	= mod:NewYell(180776)
-local specWarnRainofFireGTFO	= mod:NewSpecialWarningMove(180775, nil, nil, nil, 1, 2)
-local specWarnCallofFlame		= mod:NewSpecialWarningSpell(180779, nil, nil, nil, 2)--Don't really remember what this does to voice it right now
+local specWarnOverwhelmingFlames	= mod:NewSpecialWarningMoveAway(180776, nil, nil, nil, 1, 2)
+local yellOverwhelmingFlames		= mod:NewYell(180776)
+local specWarnRainofFireGTFO		= mod:NewSpecialWarningMove(180775, nil, nil, nil, 1, 2)
+local specWarnCallofFlame			= mod:NewSpecialWarningSpell(180779, nil, nil, nil, 2)--Don't really remember what this does to voice it right now
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId

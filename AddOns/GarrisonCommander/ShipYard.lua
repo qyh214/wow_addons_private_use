@@ -52,12 +52,12 @@ function module:OnInitialize()
 	self:SafeSecureHook(GSF,"OnClickMission","HookedGSF_OnClickMission")
 	self:SafeSecureHook("GarrisonShipyardMapMission_OnEnter")
 	self:SafeSecureHook("GarrisonShipyardMapMission_OnLeave")
-	self:SafeSecureHook(GSF,"SelectTab","AddMenu")	
+	self:SafeSecureHook(GSF,"SelectTab","AddMenu")
 	self:SafeSecureHookScript(GSF,"OnShow","Setup",true)
 	self:SafeRegisterEvent("GARRISON_SHIPYARD_NPC_CLOSED")
 	self:SafeRegisterEvent("GARRISON_MISSION_STARTED")
 	self:SafeSecureHookScript(GSF.FollowerTab,"OnShow","FollowerOnShow")
-  
+
 end
 function module:OpenLastTab()
 --[===[@debug@
@@ -93,7 +93,7 @@ function module:OpenProgressTab()
 	lastTab=3
 	return self:OpenLastTab()
 end
-function module:CloseMissionControlTab() 
+function module:CloseMissionControlTab()
 	GSF.MissionControlTab:Hide()
 	GSF.tabMC:SetChecked(false)
 end
@@ -136,24 +136,24 @@ local function dump(tip,data,indent)
 	indent=indent or ''
 	for k,v in kpairs(data) do
 		local color="Silver"
-		if type(v)=="number" then color="Cyan" 
+		if type(v)=="number" then color="Cyan"
 		elseif type(v)=="string" then color="Yellow" v=v:sub(1,30)
-		elseif type(v)=="boolean" then v=v and 'True' or 'False' color="White" 
-		elseif type(v)=="table" then color="Green" 
+		elseif type(v)=="boolean" then v=v and 'True' or 'False' color="White"
+		elseif type(v)=="table" then color="Green"
 		else v=type(v) color="Blue"
 		end
 		if k=="description" then v =v:sub(1,10) end
-		if type(v)=="table" then 
-			if v.GetObjectType then 
-				v=v:GetObjectType() 
+		if type(v)=="table" then
+			if v.GetObjectType then
+				v=v:GetObjectType()
 				tip:AddDoubleLine(indent..k,v,colors("Purple",color))
-			else 
+			else
 				tip:AddDoubleLine(indent..k,v,colors("Yellow",color))
 				dump(tip,v,indent .. '  ')
 			end
 		else
 			tip:AddDoubleLine(indent..k,v,colors("Orange",color))
-		end	
+		end
 	end
 end
 function module:TTDump(frame,data)
@@ -201,7 +201,7 @@ function module:HookedGarrisonShipyardMap_SetupBonus(missionList,frame,mission)
 		addendum.icon:SetTexture(reward.icon)
 	elseif reward.itemID then
 		addendum.icon:SetTexture(GetItemIcon(reward.itemID))
-	end	
+	end
 	local cost=mission.cost
 	local currency=mission.costCurrencyTypesID
 	if not mission.canStart then
@@ -277,7 +277,7 @@ print("Doing one time initialization for",this:GetName(),...)
 	--GarrisonShipyardFrameFollowersListScrollFrameButton1
 	--GarrisonShipyardMapMission1
 	addon:AddLabel(L["Shipyard Appearance"])
-	addon:AddToggle("SHIPMOVEPANEL",true,L["Unlock Panel"],L["Makes shipyard panel movable"])
+	--addon:AddToggle("SHIPMOVEPANEL",true,L["Unlock Panel"],L["Makes shipyard panel movable"])
 	--addon:AddToggle("BIGSCREEN",true,L["Use big screen"],L["Disabling this will give you the interface from 1.1.8, given or taken. Need to reload interface"])
 	addon:AddToggle("SHIPPIN",true,L["Show Garrison Commander menu"],L["Disable if you dont want the full Garrison Commander Header."])
  	addon:AddToggle("SHIPENHA",true,L["Show Enhancement buttons"],L["Disable if you dont want the equipment buttons in ship view."])
@@ -288,7 +288,7 @@ print("Doing one time initialization for",this:GetName(),...)
 	tabHP:SetPushedTexture("Interface\\ICONS\\INV_Misc_QuestionMark.blp")
 	tabHP:Show()
 	tabHP:SetPoint('TOPLEFT',GCS,'TOPRIGHT',0,-10)
-	tabHP:SetScript("OnClick",function(this,button) addon:ShowHelpWindow(this,button) end) 	
+	tabHP:SetScript("OnClick",function(this,button) addon:ShowHelpWindow(this,button) end)
 	local tabMC=CreateFrame("CheckButton",nil,GSF,"SpellBookSkillLineTabTemplate")
 	GSF.tabMC=tabMC
 	tabMC.tooltip=L["Open Garrison Commander Mission Control"]
@@ -299,14 +299,14 @@ print("Doing one time initialization for",this:GetName(),...)
 	local tabQ=CreateFrame("Button",nil,GSF,"SpellBookSkillLineTabTemplate")
 	GSF.tabQ=tabQ
 	tabQ.tooltip=L["Automatically process completed missions and schedules new ones."].."\n"..
-		format(L["Check %s in mission control in order to be also logged out"],L["Auto Logout"]) .. "\n" .. 
-		C(format(L["Keep pressed %s while opening table to automate processing"],CTRL_KEY),"green")	
+		format(L["Check %s in mission control in order to be also logged out"],L["Auto Logout"]) .. "\n" ..
+		C(format(L["Keep pressed %s while opening table to automate processing"],CTRL_KEY),"green")
 	tabQ:SetNormalTexture("Interface\\ICONS\\Ability_Rogue_Sprint.blp")
 	tabQ:SetPushedTexture("Interface\\ICONS\\Ability_Rogue_Sprint.blp")
 	tabQ:Show()
 	tabQ:SetScript("OnClick",function(this,button) addon:RunQuick() end)
 	tabQ:SetPoint('TOPLEFT',GCS,'TOPRIGHT',0,-210)
-	
+
 	GSF.FollowerStatusInfo=GSF.BorderFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	GSF.ResourceInfo=GSF.BorderFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	GSF.ResourceFormat="|TInterface\\Icons\\garrison_oil:0|t %s " .. GetCurrencyInfo(GARRISON_SHIP_OIL_CURRENCY)
@@ -325,7 +325,7 @@ print("Doing one time initialization for",this:GetName(),...)
 		if (_G[hook]) then
 			self:SafeHookScript(hook,"OnClick","HookedClickOnTabs")
 		end
-	end	
+	end
 	self:SafeSecureHookScript(GSF,"OnShow")
 	self:SafeHookScript(GSF,"OnHide","EventGARRISON_SHIPYARD_NPC_CLOSED")
 end
@@ -458,13 +458,13 @@ end
 local upgrades
 function addon:ApplySHIPENHA(value)
   if value then
-    if GSF.FollowerTab:IsVisible() then    
+    if GSF.FollowerTab:IsVisible() then
       module:ShowEnhancements()
     end
   else
     if upgrades then upgrades:Hide() end
   end
-    
+
 end
 function module:ShowEnhancements()
 	if not upgrades then

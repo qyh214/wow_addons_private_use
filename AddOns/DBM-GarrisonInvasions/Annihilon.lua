@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Annihilon", "DBM-GarrisonInvasions")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019041705938")
+mod:SetRevision("20190814112014")
 mod:SetCreatureID(90802)
 mod:SetZone()
 
@@ -14,13 +14,13 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_START"
 )
 
-local warnVoidBomb				= mod:NewTargetAnnounce(180939, 3)
-local warnWhirlingVoid			= mod:NewTargetAnnounce(180932, 2)
-local warnTwistMind				= mod:NewTargetAnnounce(180950, 4)
+local warnVoidBomb		= mod:NewTargetAnnounce(180939, 3)
+local warnWhirlingVoid	= mod:NewTargetAnnounce(180932, 2)
+local warnTwistMind		= mod:NewTargetAnnounce(180950, 4)
 
-local specWarnVoidBomb			= mod:NewSpecialWarningYou(180939, nil, nil, nil, 1, 2)
-local yellVoidBomb				= mod:NewYell(180939)
-local specWarnTwistMind			= mod:NewSpecialWarningSwitch(180950, "Dps", nil, nil, 1, 2)
+local specWarnVoidBomb	= mod:NewSpecialWarningYou(180939, nil, nil, nil, 1, 2)
+local yellVoidBomb		= mod:NewYell(180939)
+local specWarnTwistMind	= mod:NewSpecialWarningSwitch(180950, "Dps", nil, nil, 1, 2)
 
 mod:AddHudMapOption("HudMapOnMC", 180950)
 

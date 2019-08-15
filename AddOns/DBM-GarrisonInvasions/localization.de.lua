@@ -1,4 +1,6 @@
-if GetLocale() ~= "deDE" then return end
+﻿if GetLocale() ~= "deDE" then
+	return
+end
 local L
 
 --------------------------
@@ -7,21 +9,21 @@ local L
 L = DBM:GetModLocalization("GarrisonInvasions")
 
 L:SetGeneralLocalization({
-	name = "Garnisonsinvasionen"
+	name	= "Garnisonsinvasionen"
 })
 
 L:SetWarningLocalization({
-	specWarnRylak	= "Darkwing Scavenger Incoming",--translate
-	specWarnWorker	= "Ein panischer Arbeiter ist schutzlos.",
-	specWarnSpy		= "Ein Spion hat sich eingeschlichen.",
-	specWarnBuilding= "Ein Gebäude wird angegriffen."
+	specWarnRylak		= "Darkwing Scavenger Incoming",--translate
+	specWarnWorker		= "Ein panischer Arbeiter ist schutzlos.",
+	specWarnSpy			= "Ein Spion hat sich eingeschlichen.",
+	specWarnBuilding	= "Ein Gebäude wird angegriffen."
 })
 
 L:SetOptionLocalization({
-	specWarnRylak	= "Show special warning when a rylak is incoming",--translate
-	specWarnWorker	= "Spezialwarnung, wenn ein panischer Arbeiter schutzlos ist",
-	specWarnSpy		= "Spezialwarnung, wenn sich ein Spion eingeschlichen hat",
-	specWarnBuilding= "Spezialwarnung, wenn ein Gebäude angegriffen wird"
+	specWarnRylak		= "Show special warning when a rylak is incoming",--translate
+	specWarnWorker		= "Spezialwarnung, wenn ein panischer Arbeiter schutzlos ist",
+	specWarnSpy			= "Spezialwarnung, wenn sich ein Spion eingeschlichen hat",
+	specWarnBuilding	= "Spezialwarnung, wenn ein Gebäude angegriffen wird"
 })
 
 L:SetMiscLocalization({
@@ -45,7 +47,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("Annihilon")
 
 L:SetGeneralLocalization({
-	name = "Annihilon"
+	name	= "Annihilon"
 })
 
 --------------
@@ -54,7 +56,7 @@ L:SetGeneralLocalization({
 L = DBM:GetModLocalization("Teluur")
 
 L:SetGeneralLocalization({
-	name = "Teluur"
+	name	= "Teluur"
 })
 
 ----------------------
@@ -63,7 +65,7 @@ L:SetGeneralLocalization({
 L = DBM:GetModLocalization("LadyFleshsear")
 
 L:SetGeneralLocalization({
-	name = "Lady Schindflamme"
+	name	= "Lady Schindflamme"
 })
 
 -------------------------
@@ -72,7 +74,7 @@ L:SetGeneralLocalization({
 L = DBM:GetModLocalization("Drogan")
 
 L:SetGeneralLocalization({
-	name = "Kommandant Dro'gan"
+	name	= "Kommandant Dro'gan"
 })
 
 -----------------------------
@@ -81,7 +83,7 @@ L:SetGeneralLocalization({
 L = DBM:GetModLocalization("Goggnathog")
 
 L:SetGeneralLocalization({
-	name = "Magierfürst Gogg'nathog"
+	name	= "Magierfürst Gogg'nathog"
 })
 
 ------------
@@ -90,5 +92,5 @@ L:SetGeneralLocalization({
 L = DBM:GetModLocalization("Gaur")
 
 L:SetGeneralLocalization({
-	name = "Gaur"
+	name	= "Gaur"
 })
