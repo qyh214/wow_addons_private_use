@@ -1,4 +1,4 @@
-
+﻿
 local L = LibStub("AceLocale-3.0"):NewLocale("TellMeWhen", "esES", false)
 if not L then
 	L = LibStub("AceLocale-3.0"):NewLocale("TellMeWhen", "esMX", false)
@@ -1474,4 +1474,3 @@ L["WARN_DRMISMATCH"] = [=[Advertencia! Está comprobando rendimientos decrecient
 Todos los hechizos deben ser de la misma categoría de rendimiento decreciente para que el icono funcione correctamente. Se detectaron las siguientes categorías y hechizos:]=]
 L["WATER"] = "Agua"
 L["worldboss"] = "Jefe del Mundo"
-

@@ -1,4 +1,4 @@
-<Ui>
+﻿<Ui>
 
 
 	<CheckButton name="TellMeWhen_Event" motionScriptsWhileDisabled="true" inherits="TellMeWhen_FlatFrame" virtual="true" >

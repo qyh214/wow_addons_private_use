@@ -2746,7 +2746,7 @@ local function Warrior_Options()
 			Message_Amount = 3,
 			Message_Areas = {'Damage', 'Debuff', 'Resist'},
 			Message_Channels_Disabled = {["Whisper"] = true},
-			Valid_Tags = {'[SPELL]', '[LINK]','[TARGET]','[AMOUNT]'},
+			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]','[AMOUNT]'},
 		},
 		[8] = {
 			Profile = 'Recklessness',
@@ -2998,7 +2998,7 @@ local function Utilities_Options()
 			Message_Amount = 1,
 			Message_Areas = {'Placed'},
 			Message_Channels_Disabled = {["Whisper"] = true},
-			Valid_Tags = {'[SPELL]', '[LINK]','[TARGET]'},
+			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]'},
 		},
 		["Feasts"] = {
 			Profile = 'Feasts',
@@ -3007,7 +3007,7 @@ local function Utilities_Options()
 			Message_Amount = 1,
 			Message_Areas = {'Placed'},
 			Message_Channels_Disabled = {["Whisper"] = true},
-			Valid_Tags = {'[SPELL]', '[LINK]','[TARGET]'},
+			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]'},
 		},
 		["Drums"] = {
 			Profile = 'Drums',
@@ -3016,7 +3016,7 @@ local function Utilities_Options()
 			Message_Amount = 1,
 			Message_Areas = {'Start'},
 			Message_Channels_Disabled = {["Whisper"] = true},
-			Valid_Tags = {'[SPELL]', '[LINK]','[TARGET]'},
+			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]'},
 		},
 		["Cauldrons"] = {
 			Profile = 'Cauldrons',
@@ -3025,7 +3025,7 @@ local function Utilities_Options()
 			Message_Amount = 1,
 			Message_Areas = {'Start'},
 			Message_Channels_Disabled = {["Whisper"] = true},
-			Valid_Tags = {'[SPELL]', '[LINK]','[TARGET]'},
+			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]'},
 		},
 		["EngineerRessBFA"] = {
 			Profile = 'EngineerRessBFA',
@@ -3033,7 +3033,7 @@ local function Utilities_Options()
 			Desc = GetSpellDescription(265116),
 			Message_Amount = 2,
 			Message_Areas = {'Cast','AcceptedRess'},
-			Valid_Tags = {'[SPELL]', '[LINK]','[TARGET]'},
+			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]'},
 		},
 		["SleepPotions"] = {
 			Profile = 'SleepPotions',

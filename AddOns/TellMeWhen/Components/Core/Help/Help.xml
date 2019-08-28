@@ -1,4 +1,4 @@
-<Ui>
+﻿<Ui>
 
 	<Frame parentKey="Help" name="TellMeWhen_HelpFrame" parent="TellMeWhen_IconEditor" inherits="GlowBoxArrowTemplate" enableMouse="true" hidden="true">
 		<Size x="21" y="53"/>

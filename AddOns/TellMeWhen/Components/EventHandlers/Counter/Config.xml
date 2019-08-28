@@ -1,4 +1,4 @@
-<Ui>
+﻿<Ui>
 	
 	<Frame parentKey="Counter" name="$parentCounter" inherits="TellMeWhen_EventContainer">
 		<Layers>

@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 576 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision$"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;

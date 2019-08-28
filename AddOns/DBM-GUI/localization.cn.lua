@@ -2,7 +2,7 @@
 -- yleaf(yaroot@gmail.com)
 -- sunlcy@NGA
 -- Mini Dragon(projecteurs@gmail.com)
--- Last update: 2019/02/22
+-- Last update: 2019/08/09
 
 if GetLocale() ~= "zhCN" then return end
 if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
@@ -111,6 +111,7 @@ L.CombatMessages			= "战斗信息设置"
 L.ShowEngageMessage 		= "在聊天窗口中显示开战信息"
 L.ShowDefeatMessage 		= "在聊天窗口中显示击杀信息"
 L.ShowGuildMessages 		= "在聊天窗口中显示工会开战，击杀，灭团信息"
+L.ShowGuildMessagesPlus		= "显示工会中的M+以上难度的开战，击杀，灭团信息(需要团队选项)"
 L.WhisperMessages			= "密语信息设置"
 L.AutoRespond 				= "在战斗中自动回复私聊"
 L.EnableStatus 				= "回复“status”私聊当前战斗信息"
@@ -237,6 +238,7 @@ L.EventWipeSound			= "设置灭团音效"
 L.EventEngageSound			= "设置开战音效"
 L.EventDungeonMusic			= "设置在副本内播放的音乐"
 L.EventEngageMusic			= "设置战斗过程中的音乐"
+L.EventTurtleMusic			= "设置乌龟海滩场景播放的音乐"
 L.Area_EventSoundsExtras	= "事件音效选项"
 L.EventMusicCombined		= "允许在副本内播放在音乐选项中的全部音效(需要reload)"
 L.Area_EventSoundsFilters	= "事件音效过滤条件"
@@ -256,7 +258,8 @@ L.SpamBlockNoSetIcon		= "不在目标上设定标记"
 L.SpamBlockNoRangeFrame		= "不显示距离雷达框体"
 L.SpamBlockNoInfoFrame		= "不显示信息框体"
 L.SpamBlockNoHudMap			= "不显示HudMap"
-L.SpamBlockNoNameplate		= "不要显示姓名面板高亮"
+L.SpamBlockNoNameplate		= "不要显示姓名板高亮(完全取消)"
+L.SpamBlockNoNameplateLines	= "不要显示姓名版高亮(效果图标继续显示)"
 L.SpamBlockNoCountdowns		= "不要播放倒计时语音"
 L.SpamBlockNoYells			= "不要再战斗中大喊"
 L.SpamBlockNoNoteSync		= "不接受别人分享的自定义注记"
@@ -270,6 +273,7 @@ L.SpamBlockNoRangeRestore	= "当Boss模块隐藏距离窗体时不重置窗体�
 L.Area_SpamFilter			= "信息过滤设置"
 L.DontShowFarWarnings		= "不为过远的事件显示计时条/警报"
 L.StripServerName			= "警告和计时器中不显示服务器名"
+L.FilterVoidFormSay			= "当在虚无状态下，不播发位置或报数喊叫"
 
 L.Area_SpecFilter			= "角色过滤选项"
 L.FilterTankSpec			= "当非坦克专精时，过滤掉给予坦克的专用信息"
@@ -299,6 +303,7 @@ L.HideQuestTooltips			= "Boss战斗中隐藏鼠标提示窗体(tooltips)中的�
 L.HideTooltips				= "Boss战斗中完全隐藏鼠标提示窗体(tooltips)"
 L.DisableSFX				= "Boss战斗中关闭音效"
 L.DisableCinematics			= "自动跳过游戏内过场动画"
+L.OnlyFight					= "当每个动画被播放国一次后，只在战斗中放"
 L.AfterFirst				= "仅第一次播放"
 L.Always					= "总是跳过"
 L.CombatOnly				= "在任何战斗中隐藏"

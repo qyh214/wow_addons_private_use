@@ -533,6 +533,7 @@ local options = {
         { keystring = "unit.player.coloredBorder",        type = "dropdown", dropdata = widgets.colorDropdata },
         { keystring = "unit.player.background",           type = "dropdownslider", dropdata = widgets.colorDropdata, min = 0, max = 1, step = 0.01 },
         { keystring = "unit.player.anchor",               type = "anchor", dropdata = {"inherit", "default","cursorRight","cursor","static"} },
+        { keystring = "unit.player.elements.factionBig",  type = "element", filter = false,},
         { keystring = "unit.player.elements.raidIcon",    type = "element", filter = true, },
         { keystring = "unit.player.elements.roleIcon",    type = "element", filter = true, },
         { keystring = "unit.player.elements.pvpIcon",     type = "element", filter = true, },
@@ -565,6 +566,7 @@ local options = {
         { keystring = "unit.npc.coloredBorder",         type = "dropdown", dropdata = widgets.colorDropdata },
         { keystring = "unit.npc.background",            type = "dropdownslider", dropdata = widgets.colorDropdata, min = 0, max = 1, step = 0.01 },
         { keystring = "unit.npc.anchor",                type = "anchor", dropdata = {"inherit","default","cursorRight","cursor","static"} },
+        { keystring = "unit.npc.elements.factionBig",   type = "element", filter = false,},
         { keystring = "unit.npc.elements.raidIcon",     type = "element", filter = true, },
         { keystring = "unit.npc.elements.classIcon",    type = "element", filter = true, },
         { keystring = "unit.npc.elements.questIcon",    type = "element", filter = true, },
@@ -722,7 +724,7 @@ end
 LibEvent:attachEvent("VARIABLES_LOADED", function()
     InitOptions(options.general, frame, 32)
     InitOptions(options.pc, framePC, 29)
-    InitOptions(options.npc, frameNPC, 28)
+    InitOptions(options.npc, frameNPC, 27)
     InitOptions(options.statusbar, frameStatusbar, 36)
     InitOptions(options.spell, frameSpell, 32)
     InitOptions(options.font, frameFont, 32)

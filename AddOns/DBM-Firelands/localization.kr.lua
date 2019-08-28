@@ -1,14 +1,10 @@
-if GetLocale() ~= "koKR" then return end
+﻿if GetLocale() ~= "koKR" then return end
 local L
 
 ----------------
 -- Beth'tilac --
 ----------------
 L= DBM:GetModLocalization(192)
-
-L:SetOptionLocalization({
-	RangeFrame			= "거리 창 보기(10m)"
-})
 
 L:SetMiscLocalization({
 	EmoteSpiderlings 	= "새끼거미가 둥지에서 쏟아져나옵니다!"
@@ -40,14 +36,12 @@ L:SetOptionLocalization({
 	WarnNewInitiate		= "타오르는 발톱 수습생 알림 보기",
 	timerNextInitiate	= "다음 타오르는 발톱 수습생 등장 바 보기",
 	TimerPhaseChange	= "단계 전환 바 보기",
-	TimerHatchEggs		= "녹아내린 알 부화 바 보기",
-	InfoFrame			= "$spell:98734 정보를 정보 창으로 보기"
+	TimerHatchEggs		= "녹아내린 알 부화 바 보기"
 })
 
 L:SetMiscLocalization({
 	YellPull		= "이제 난 새 주인님을 섬긴다. 필멸자여!",
 	YellPhase2		= "이 하늘은 나의 것이다!",
-	FullPower		= "spell:99925",--This is in the emote, shouldn't need localizing, just msg:find
 	LavaWorms		= "불타는 용암 벌레가 땅에서 튀어나옵니다!",--Might use this one day if i feel it needs a warning for something. Or maybe pre warning for something else (like transition soon)
 	East			= "오른쪽",
 	West			= "왼쪽",
@@ -79,9 +73,7 @@ L:SetOptionLocalization({
 	warnStrike			= "칼날 피해를 입을 때 알림 보기",
 	timerStrike			= "칼날 공격 간격 바 보기",
 	TimerBladeActive	= "활성화된 칼날 유지시간 바 보기",
-	TimerBladeNext		= "다음 칼날 활성화 바 보기",
-	InfoFrame			= "$spell:99262 중첩을 정보 창으로 보기",
-	RangeFrame			= "$spell:99257 대상이 된 경우 거리 창 보기(5m)"
+	TimerBladeNext		= "다음 칼날 활성화 바 보기"
 })
 
 --------------------------------
@@ -122,7 +114,6 @@ L:SetOptionLocalization({
 	warnEngulfingFlameHeroic	= "$spell:99171 위치 알림 보기(영웅)",
 	warnSeedsLand				= "$spell:98520 주문이 시전될 때가 아니라 착지되는 시간에 맞는 알림/바 보기",
 	TimerPhaseSons				= "사잇단계 지속시간 바 보기",
-	RangeFrame					= "필요시 거리 창 보기",
 	InfoHealthFrame				= "체력이 낮은 대상을 정보 창으로 보기(10만 미만)",
 	MeteorFrame					= "$spell:99849 대상을 정보 창으로 보기",
 	AggroFrame					= "$journal:2647 에게 위협 수준이 없는 대상을 정보 창으로 보기"

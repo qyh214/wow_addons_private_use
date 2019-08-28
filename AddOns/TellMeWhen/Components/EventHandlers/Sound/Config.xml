@@ -1,4 +1,4 @@
-<Ui>
+﻿<Ui>
 	<CheckButton name="TellMeWhen_SoundSelectButton" inherits="TellMeWhen_FlatFrame" virtual="true" >
 		<Size y="13"/>
 		<Anchors>

@@ -1,19 +1,9 @@
-if GetLocale() ~= "frFR" then return end
+﻿if GetLocale() ~= "frFR" then return end
 local L
 -----------------
 -- Beth'tilac --
 -----------------
 L = DBM:GetModLocalization(192)
-
-L:SetWarningLocalization({
-})
-
-L:SetTimerLocalization({
-})
-
-L:SetOptionLocalization({
-	RangeFrame			= "Cadre des portées (10)"
-})
 
 L:SetMiscLocalization({
 	EmoteSpiderlings 	= "De jeunes araignées sont sorties de leur nid !"
@@ -23,18 +13,6 @@ L:SetMiscLocalization({
 -- Lord Rhyolith --
 -------------------
 L= DBM:GetModLocalization(193)
-
-L:SetWarningLocalization({
-})
-
-L:SetTimerLocalization({
-})
-
-L:SetOptionLocalization({
-})
-
-L:SetMiscLocalization({
-})
 
 ---------------
 -- Alysrazor --
@@ -57,14 +35,12 @@ L:SetOptionLocalization({
 	WarnNewInitiate		= "Alerte lors de l'arrivée d'un nouvel Initié de la Serre flamboyante",
 	timerNextInitiate	= "Délai avant l'arrivée d'un nouvel Initié de la Serre flamboyante",
 	TimerPhaseChange	= "Délai avant la prochaine phase",
-	TimerHatchEggs		= "Délai avant que les œufs n'éclosent",
-	InfoFrame			= "Cadre d'infos concernant les Plumes de feu"
+	TimerHatchEggs		= "Délai avant que les œufs n'éclosent"
 })
 
 L:SetMiscLocalization({
 	YellPull		= "Je sers désormais un nouveau maître, mortels !",
 	YellPhase2		= "Ce ciel est à MOI.",
-	FullPower		= "spell:99925",--This is in the emote, shouldn't need localizing, just msg:find
 	LavaWorms		= "Des vers de lave embrasés surgissent du sol !",--Might use this one day if i feel it needs a warning for something. Or maybe pre warning for something else (like transition soon)
 	PowerLevel		= "Plumes de feu",
 	East			= "Est",
@@ -76,22 +52,6 @@ L:SetMiscLocalization({
 -- Shannox --
 -------------
 L= DBM:GetModLocalization(195)
-
-L:SetWarningLocalization({
-})
-
-L:SetTimerLocalization({
-})
-
-L:SetOptionLocalization({
-	SetIconOnFaceRage	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(99945),
-	SetIconOnRage		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(100415)
-})
-
-L:SetMiscLocalization({
-	Riplimb		= "Croquepatte",
-	Rageface	= "Ragegueule"
-})
 
 -------------
 -- Baleroc --
@@ -113,20 +73,13 @@ L:SetOptionLocalization({
 	warnStrike			= "Alerte concernant la Frappe de décimation/du feu d'enfer",
 	timerStrike			= "Délai avant la prochaine Frappe de décimation/du feu d'enfer",
 	TimerBladeActive	= "Durée de la lame active",
-	TimerBladeNext		= "Délai avant la prochaine Lame de décimation/infernale",
-	SetIconOnCountdown	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(99516),
-	SetIconOnTorment	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(100232),
-	InfoFrame			= "Cadre d'infos concernant les cumuls d'Etincelle vitale",
-	RangeFrame			= "Cadre des portées (5) pour $spell:99404"
+	TimerBladeNext		= "Délai avant la prochaine Lame de décimation/infernale"
 })
 
 --------------------------------
 -- Majordomo Fandral Staghelm --
 --------------------------------
 L= DBM:GetModLocalization(197)
-
-L:SetWarningLocalization({
-})
 
 L:SetTimerLocalization({
 	timerNextSpecial	= "Prochain %s (%d)"
@@ -135,11 +88,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	timerNextSpecial			= "Délai avant la prochaine technique spéciale",
 	RangeFrameSeeds				= "Cadre des portées (12) pour $spell:98450",
-	RangeFrameCat				= "Cadre des portées (10) pour $spell:98374",
-	IconOnLeapingFlames			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(100208)
-})
-
-L:SetMiscLocalization({
+	RangeFrameCat				= "Cadre des portées (10) pour $spell:98374"
 })
 
 --------------
@@ -171,11 +120,9 @@ L:SetOptionLocalization({
 	warnEmpoweredSulf			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.cast:format(100997),
 	timerRageRagnaros			= DBM_CORE_AUTO_TIMER_OPTIONS.cast:format(101109),
 	TimerPhaseSons				= "Durée de la \"phase des Fils des flammes\"",
-	RangeFrame					= "Cadre des portées",
 	InfoHealthFrame				= "Cadre d'infos concernant les vies (<110k pv)",
 	MeteorFrame					= "Cadre d'infos concernant les cibles de $spell:99849",
-	AggroFrame					= "Cadre d'infos indiquant les joueurs n'ayant pas l'aggro des Elém. du magma",
-	BlazingHeatIcons			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(100983)
+	AggroFrame					= "Cadre d'infos indiquant les joueurs n'ayant pas l'aggro des Elém. du magma"
 })
 
 L:SetMiscLocalization({
@@ -203,18 +150,6 @@ L:SetGeneralLocalization({
 	name = "Trash des terres de Feu"
 })
 
-L:SetWarningLocalization({
-})
-
-L:SetTimerLocalization({
-})
-
-L:SetOptionLocalization({
-})
-
-L:SetMiscLocalization({
-})
-
 ----------------
 --  Volcanus  --
 ----------------
@@ -222,9 +157,6 @@ L = DBM:GetModLocalization("Volcanus")
 
 L:SetGeneralLocalization({
 	name = "Volcanus"
-})
-
-L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
@@ -248,16 +180,4 @@ L = DBM:GetModLocalization("NexusLegendary")
 
 L:SetGeneralLocalization({
 	name = "Thyrinar"
-})
-
-L:SetWarningLocalization({
-})
-
-L:SetTimerLocalization({
-})
-
-L:SetOptionLocalization({
-})
-
-L:SetMiscLocalization({
 })

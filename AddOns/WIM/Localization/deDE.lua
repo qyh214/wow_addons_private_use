@@ -294,6 +294,7 @@ WIM.AddLocale("deDE", {
     ["Window Behavior"] = "Fensterverhalten",
     ["You can control how windows behave while you are in different situations."] = "Du kannst das Verhalten von Fenstern in verschiedenen Situationen einstellen.",
     ["Intercept Slash Commands"] = "Slash-Befehle abfangen",
+	["Obey autofocus rules when opening frames via the menu. (autofocus if unchecked)"] = "Respektiere beim Öffnen via des Menüs die autofocus-Einstellung.",
     ["Use the same rules for all states."] = "Dieselben Regeln f\195\188r alle Situationen anwenden.",
     ["Behaviors for state:"] = "Verhalten f\195\188r Situation:",
     ["Pop-Up window when message is sent."] = "Fenster als Pop-Up sobald Nachricht versendet wurde.",

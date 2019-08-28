@@ -1,4 +1,4 @@
-<Ui>
+﻿<Ui>
 	
 	<Frame parentKey="Lua" name="$parentLua" inherits="TellMeWhen_EventContainer">
 		<Layers>

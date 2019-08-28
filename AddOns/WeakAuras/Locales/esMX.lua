@@ -52,8 +52,6 @@ L["/wa pstart - Start profiling"] = "/wa pstart - Start profiling"
 --[[Translation missing --]]
 L["/wa pstop - Finish profiling"] = "/wa pstop - Finish profiling"
 --[[Translation missing --]]
-L["|cff9900ffWeakAuras EXPERIMENTAL Profiling Data:|r"] = "|cff9900ffWeakAuras EXPERIMENTAL Profiling Data:|r"
---[[Translation missing --]]
 L["|cffeda55fLeft-Click|r to toggle showing the main window."] = "|cffeda55fLeft-Click|r to toggle showing the main window."
 --[[Translation missing --]]
 L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."
@@ -64,10 +62,10 @@ L["|cffeda55fShift-Click|r to pause addon execution."] = "|cffeda55fShift-Click|
 --[[Translation missing --]]
 L["|cffeda55fShift-Right-Click|r to show profiling results."] = "|cffeda55fShift-Right-Click|r to show profiling results."
 --[[Translation missing --]]
-L["1. Text"] = "1. Text"
-L["10 Man Raid"] = "Banda de 10 jugadores"
+L["|cFFffcc00Extra Options:|r %s"] = "|cFFffcc00Extra Options:|r %s"
 --[[Translation missing --]]
-L["2. Text"] = "2. Text"
+L["|cFFffcc00Extra Options:|r None"] = "|cFFffcc00Extra Options:|r None"
+L["10 Man Raid"] = "Banda de 10 jugadores"
 L["20 Man Raid"] = "Banda de 20 jugadores"
 L["25 Man Raid"] = "Banda de 25 jugadores"
 L["40 Man Raid"] = "Banda de 40 jugadores"
@@ -85,14 +83,16 @@ L["Action Usable"] = "Acción utilizable"
 L["Actions"] = "Actions"
 L["Active"] = "Activo"
 --[[Translation missing --]]
+L["Add"] = "Add"
+--[[Translation missing --]]
 L["Add Missing Auras"] = "Add Missing Auras"
 L["Additional Trigger Replacements"] = "Reemplazos adicionales de desencadenadores"
---[[Translation missing --]]
-L["Adjust Timer"] = "Adjust Timer"
 L["Affected"] = "Afectado"
 --[[Translation missing --]]
 L["Affected Unit Count"] = "Affected Unit Count"
 L["Aggro"] = "Agro"
+--[[Translation missing --]]
+L["Agility"] = "Agility"
 --[[Translation missing --]]
 L["Alert Type"] = "Alert Type"
 L["Alive"] = "Vivo"
@@ -114,6 +114,10 @@ L["Anticlockwise"] = "Izquierda"
 --[[Translation missing --]]
 L["Any"] = "Any"
 L["Any Triggers"] = "Cualquier desencadenador"
+--[[Translation missing --]]
+L["AOE"] = "AOE"
+--[[Translation missing --]]
+L["Arcane Resistance"] = "Arcane Resistance"
 L["Arena"] = "Arena"
 --[[Translation missing --]]
 L["Armor (%)"] = "Armor (%)"
@@ -121,6 +125,8 @@ L["Armor (%)"] = "Armor (%)"
 L["Armor against Target (%)"] = "Armor against Target (%)"
 --[[Translation missing --]]
 L["Armor Rating"] = "Armor Rating"
+--[[Translation missing --]]
+L["Array"] = "Array"
 L["Ascending"] = "Ascendente"
 L["At Least One Enemy"] = "Mínimo un enemigo"
 --[[Translation missing --]]
@@ -164,12 +170,12 @@ L["Avoidance (%)"] = "Avoidance (%)"
 --[[Translation missing --]]
 L["Avoidance Rating"] = "Avoidance Rating"
 L["Back and Forth"] = "De atrás hacia adelante"
-L["Backdrop Color"] = "Color de fondo"
 L["Background Color"] = "Color de fondo"
 L["Bar Color"] = "Color de la barra"
 L["Battle.net Whisper"] = "Mensaje de Battle.net"
 L["Battleground"] = "Campo de batalla"
-L["BG>Raid>Party>Say"] = "CdB>Banda>Grupo>Decir"
+--[[Translation missing --]]
+L["BG>Raid>Party>Say"] = "BG>Raid>Party>Say"
 L["BG-System Alliance"] = "Campo de batalla- Sistema de alianza"
 L["BG-System Horde"] = "Campo de batalla-Sistema de hordas"
 L["BG-System Neutral"] = "Campo de batalla-Sistema neutral"
@@ -202,6 +208,8 @@ L["Buffed/Debuffed"] = "Buffed/Debuffed"
 --[[Translation missing --]]
 L["Can be used for e.g. checking if \"boss1target\" is the same as \"player\"."] = "Can be used for e.g. checking if \"boss1target\" is the same as \"player\"."
 L["Cast"] = "Lanzar hechizo"
+--[[Translation missing --]]
+L["Cast Bar"] = "Cast Bar"
 L["Cast Failed"] = "Hechizo - Fallido"
 L["Cast Start"] = "Hechizo - Comenzar"
 L["Cast Success"] = "Hechizo - Completado"
@@ -234,6 +242,8 @@ L["Circle"] = "Círculo"
 --[[Translation missing --]]
 L["Clamp"] = "Clamp"
 L["Class"] = "Clase"
+--[[Translation missing --]]
+L["Class and Specialization"] = "Class and Specialization"
 L["Clockwise"] = "Derecha"
 L["Clone per Event"] = "Clon por evento"
 L["Clone per Match"] = "Clon por partida"
@@ -251,6 +261,8 @@ L["Cooldown Progress (Spell)"] = "Recarga en proceso (Hechizo)"
 L["Cooldown Ready (Equipment Slot)"] = "Recarga lista (Equipamiento)"
 L["Cooldown Ready (Item)"] = "Recarga lista (Objeto)"
 L["Cooldown Ready (Spell)"] = "Recarga lista (Hechizo)"
+--[[Translation missing --]]
+L["Count"] = "Count"
 L["Counter Clockwise"] = "Contrario a las agujas del rejoj"
 L["Create"] = "Crear"
 --[[Translation missing --]]
@@ -282,6 +294,10 @@ L["DBM Timer"] = "Temporizador de DBM"
 L["Death Knight Rune"] = "Runa del Caballero de la Muerte"
 L["Debuff"] = "Perjuicio"
 --[[Translation missing --]]
+L["Debuff Class"] = "Debuff Class"
+--[[Translation missing --]]
+L["Debuff Class Icon"] = "Debuff Class Icon"
+--[[Translation missing --]]
 L["Debuff Type"] = "Debuff Type"
 L["Deflect"] = "Desviar"
 L["Desaturate"] = "Desaturar"
@@ -295,6 +311,8 @@ L["Dest Raid Mark"] = "Dest Raid Mark"
 --[[Translation missing --]]
 L["Destination In Group"] = "Destination In Group"
 L["Destination Name"] = "Nombre de destino"
+--[[Translation missing --]]
+L["Destination NPC Id"] = "Destination NPC Id"
 L["Destination Unit"] = "Unidad de destino"
 L["Disease"] = "Enfermedad"
 L["Dispel"] = "Disipar"
@@ -326,6 +344,10 @@ L["Edge"] = "Edge"
 --[[Translation missing --]]
 L["Elide"] = "Elide"
 L["Emote"] = "Emoción"
+--[[Translation missing --]]
+L["Emphasized"] = "Emphasized"
+--[[Translation missing --]]
+L["Emphasized option checked in BigWigs's spell options"] = "Emphasized option checked in BigWigs's spell options"
 L["Empty"] = "Vacío"
 --[[Translation missing --]]
 L["Encounter ID(s)"] = "Encounter ID(s)"
@@ -355,29 +377,31 @@ L["Every Frame"] = "Todos los macros"
 L["Extend Outside"] = "Extend Outside"
 L["Extra Amount"] = "Cantidad adicional"
 L["Extra Attacks"] = "Ataques adicionales"
---[[Translation missing --]]
-L["Extra Options: %s"] = "Extra Options: %s"
---[[Translation missing --]]
-L["Extra Options: none"] = "Extra Options: none"
 L["Extra Spell Name"] = "Apagar"
 L["Fade In"] = "Fundir"
 L["Fade Out"] = "Difuminar"
 L["Fail Alert"] = "Alerta de error"
 L["False"] = "Falso"
 --[[Translation missing --]]
+L["Filter messages with format <message>"] = "Filter messages with format <message>"
+--[[Translation missing --]]
+L["Fire Resistance"] = "Fire Resistance"
+--[[Translation missing --]]
 L["First"] = "First"
-L["First Text Color"] = "Color del primer texto"
-L["First Text Size"] = "Tamaño del primer texto"
 --[[Translation missing --]]
 L["First Value of Tooltip Text"] = "First Value of Tooltip Text"
 L["Fishing Lure / Weapon Enchant (Old)"] = "Anzuelos/Encantamiento de armas (antiguo)"
 --[[Translation missing --]]
 L["Fixed"] = "Fixed"
+--[[Translation missing --]]
+L["Fixed Size"] = "Fixed Size"
 L["Flash"] = "Destello"
 L["Flex Raid"] = "Banda flexible"
 L["Flip"] = "Voltear"
 L["Focus"] = "Foco"
 L["Font Size"] = "Tamaño de fuente"
+--[[Translation missing --]]
+L["Foreground"] = "Foreground"
 L["Foreground Color"] = "Color frontal"
 L["Form"] = "Forma"
 --[[Translation missing --]]
@@ -385,6 +409,8 @@ L["Frequency"] = "Frequency"
 L["Friendly"] = "Amistoso"
 L["Friendly Fire"] = "Fuego amistoso"
 L["From"] = "Desde"
+--[[Translation missing --]]
+L["Frost Resistance"] = "Frost Resistance"
 L["Full"] = "Lleno"
 --[[Translation missing --]]
 L["Full Scan"] = "Full Scan"
@@ -419,16 +445,16 @@ L["Height"] = "Alto"
 L["Hide"] = "Ocultar"
 L["High Damage"] = "Daño alto"
 L["Higher Than Tank"] = "Mayor que el tanque"
+--[[Translation missing --]]
+L["Holy Resistance"] = "Holy Resistance"
 L["Horde"] = "Horda"
 L["Hostile"] = "Hostil"
 L["Hostility"] = "Hostilidad"
 L["Humanoid"] = "Humanoide"
 L["Hybrid"] = "Híbrido"
-L["Icon"] = "Icono"
 L["Icon Color"] = "Color de icono"
 --[[Translation missing --]]
 L["Icon Desaturate"] = "Icon Desaturate"
-L["Id"] = "ID"
 --[[Translation missing --]]
 L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/wa2!"] = "If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/wa2!"
 L["Ignore Rune CD"] = "Ignorar recarga de runa"
@@ -452,6 +478,8 @@ L["Import Group"] = "Import Group"
 --[[Translation missing --]]
 L["Import in progress"] = "Import in progress"
 --[[Translation missing --]]
+L["Important"] = "Important"
+--[[Translation missing --]]
 L["Importing is disabled while in combat"] = "Importing is disabled while in combat"
 L["In Combat"] = "En combate"
 --[[Translation missing --]]
@@ -474,6 +502,8 @@ L["Instance Difficulty"] = "Instance Difficulty"
 L["Instance Type"] = "Tipo de instancia"
 --[[Translation missing --]]
 L["Insufficient Resources"] = "Insufficient Resources"
+--[[Translation missing --]]
+L["Intellect"] = "Intellect"
 L["Interrupt"] = "Interrumpir"
 L["Interruptible"] = "Se puede interrumpir"
 L["Inverse"] = "Invertido"
@@ -483,6 +513,10 @@ L["Is Exactly"] = "Es exactamente"
 L["Is Moving"] = "Se está moviendo"
 L["Is Off Hand"] = "Está fuera de alcance"
 L["is useable"] = "se puede utilizar"
+--[[Translation missing --]]
+L["It might not work correctly on Classic!"] = "It might not work correctly on Classic!"
+--[[Translation missing --]]
+L["It might not work correctly on Retail!"] = "It might not work correctly on Retail!"
 --[[Translation missing --]]
 L["It might not work correctly with your version!"] = "It might not work correctly with your version!"
 L["Item"] = "Objeto"
@@ -520,6 +554,8 @@ L["Legacy RGB Gradient Pulse"] = "Legacy RGB Gradient Pulse"
 --[[Translation missing --]]
 L["Length"] = "Length"
 L["Level"] = "Nivel"
+--[[Translation missing --]]
+L["Limited"] = "Limited"
 --[[Translation missing --]]
 L["Lines & Particles"] = "Lines & Particles"
 --[[Translation missing --]]
@@ -597,9 +633,13 @@ L["Name of Caster's Target"] = "Name of Caster's Target"
 --[[Translation missing --]]
 L["Nameplate"] = "Nameplate"
 --[[Translation missing --]]
+L["Nameplates"] = "Nameplates"
+--[[Translation missing --]]
 L["Names of affected Players"] = "Names of affected Players"
 --[[Translation missing --]]
 L["Names of unaffected Players"] = "Names of unaffected Players"
+--[[Translation missing --]]
+L["Nature Resistance"] = "Nature Resistance"
 L["Neutral"] = "Neutral"
 L["Never"] = "Nunca"
 L["Next"] = "Siguiente"
@@ -627,10 +667,18 @@ L["Number"] = "Número"
 L["Number Affected"] = "Dependiente de números"
 L["Officer"] = "Oficial"
 --[[Translation missing --]]
+L["Offset Timer"] = "Offset Timer"
+--[[Translation missing --]]
 L["Older set IDs can be found on websites such as wowhead.com/item-sets"] = "Older set IDs can be found on websites such as wowhead.com/item-sets"
 L["On Cooldown"] = "Está en tiempo de reutilización"
+--[[Translation missing --]]
+L["Only if BigWigs shows it on it's bar"] = "Only if BigWigs shows it on it's bar"
+--[[Translation missing --]]
+L["Only if DBM shows it on it's bar"] = "Only if DBM shows it on it's bar"
 L["Only if Primary"] = "Solo primario"
 L["Opaque"] = "Opaco"
+--[[Translation missing --]]
+L["Option Group"] = "Option Group"
 --[[Translation missing --]]
 L["Options will finish loading after combat ends."] = "Options will finish loading after combat ends."
 --[[Translation missing --]]
@@ -662,12 +710,16 @@ L["Pet Behavior"] = "Comportamiento de la mascota"
 L["Pet Specialization"] = "Pet Specialization"
 L["Pet Spell"] = "Hechizo de la mascota"
 --[[Translation missing --]]
+L["Phase"] = "Phase"
+--[[Translation missing --]]
 L["Pixel Glow"] = "Pixel Glow"
 --[[Translation missing --]]
 L["Play"] = "Play"
 L["Player"] = "Jugador"
 L["Player Character"] = "Personaje del jugador"
 L["Player Class"] = "Clase del jugador"
+--[[Translation missing --]]
+L["Player Effective Level"] = "Player Effective Level"
 L["Player Faction"] = "Facción del jugador"
 L["Player Level"] = "Nivel del jugador"
 L["Player Name"] = "Nombre del jugador"
@@ -692,7 +744,6 @@ L["Profiling started."] = "Profiling started."
 L["Profiling still running, stop before trying to print."] = "Profiling still running, stop before trying to print."
 --[[Translation missing --]]
 L["Profiling stopped."] = "Profiling stopped."
-L["Progress"] = "Progreso"
 L["Progress Total"] = "Progreso total"
 L["Progress Value"] = "Valor de progreso"
 L["Pulse"] = "Pulso"
@@ -739,6 +790,8 @@ L["Right to Left"] = "De derecha a izquierda"
 L["Right, then Down"] = "Right, then Down"
 --[[Translation missing --]]
 L["Right, then Up"] = "Right, then Up"
+--[[Translation missing --]]
+L["Role"] = "Role"
 L["Rotate Left"] = "Rotar hacia la izquierda"
 L["Rotate Right"] = "Rotar hacia la derecha"
 --[[Translation missing --]]
@@ -758,8 +811,6 @@ L["Scenario"] = "Escenario"
 L["Screen/Parent Group"] = "Pantalla/Grupo primario"
 --[[Translation missing --]]
 L["Second"] = "Second"
-L["Second Text Color"] = "Color de texto secundario"
-L["Second Text Size"] = "Tamaño de texto secundario"
 --[[Translation missing --]]
 L["Second Value of Tooltip Text"] = "Second Value of Tooltip Text"
 L["Seconds"] = "Segundos"
@@ -767,9 +818,13 @@ L["Select Frame"] = "Seleccionar macro"
 --[[Translation missing --]]
 L["Separator"] = "Separator"
 --[[Translation missing --]]
+L["Set IDs can be found on websites such as classic.wowhead.com/item-sets"] = "Set IDs can be found on websites such as classic.wowhead.com/item-sets"
+--[[Translation missing --]]
 L["Set Maximum Progress"] = "Set Maximum Progress"
 --[[Translation missing --]]
 L["Set Minimum Progress"] = "Set Minimum Progress"
+--[[Translation missing --]]
+L["Shadow Resistance"] = "Shadow Resistance"
 L["Shake"] = "Sacudir"
 --[[Translation missing --]]
 L["Shift-Click to resume addon execution."] = "Shift-Click to resume addon execution."
@@ -781,11 +836,15 @@ L["Show all Matches"] = "Show all Matches"
 --[[Translation missing --]]
 L["Show all Matches from all Units"] = "Show all Matches from all Units"
 --[[Translation missing --]]
+L["Show Border"] = "Show Border"
+--[[Translation missing --]]
 L["Show CD of Charge"] = "Show CD of Charge"
 L["Show Code"] = "Mostrar código"
 --[[Translation missing --]]
 L["Show GCD"] = "Show GCD"
 L["Show Global Cooldown"] = "Mostrar recargas globales"
+--[[Translation missing --]]
+L["Show Glow"] = "Show Glow"
 --[[Translation missing --]]
 L["Show Incoming Heal"] = "Show Incoming Heal"
 --[[Translation missing --]]
@@ -802,7 +861,7 @@ L["Show lowest time left over all units"] = "Show lowest time left over all unit
 L["Show lowest time left per unit"] = "Show lowest time left per unit"
 L["Shrink"] = "Encoger"
 --[[Translation missing --]]
-L["Size"] = "Size"
+L["Simple"] = "Simple"
 --[[Translation missing --]]
 L["Size & Position"] = "Size & Position"
 L["Slide from Bottom"] = "Arrastrar desde abajo"
@@ -824,6 +883,8 @@ L["Sound by Kit ID"] = "Sonido según el ID del kit"
 L["Source In Group"] = "Source In Group"
 L["Source Name"] = "Nombre de origen"
 --[[Translation missing --]]
+L["Source NPC Id"] = "Source NPC Id"
+--[[Translation missing --]]
 L["Source Raid Mark"] = "Source Raid Mark"
 L["Source Unit"] = "Unidad de origen"
 --[[Translation missing --]]
@@ -842,6 +903,8 @@ L["Spell (Building)"] = "Hechizo (en curso)"
 L["Spell Activation Overlay Glow"] = "Activación de hechizo con superposición de brillo"
 --[[Translation missing --]]
 L["Spell Cost"] = "Spell Cost"
+--[[Translation missing --]]
+L["Spell Count"] = "Spell Count"
 L["Spell ID"] = "ID de hechizo"
 L["Spell Id"] = "ID de hechizo"
 --[[Translation missing --]]
@@ -854,15 +917,10 @@ L["Spell Known"] = "Hechizo conocido"
 L["Spell Name"] = "Nombre de hechizo"
 --[[Translation missing --]]
 L["Spell Usable"] = "Spell Usable"
-L["Spell/Encounter Id"] = "ID de hechizo/enfrentamiento"
 L["Spin"] = "Girar"
 L["Spiral"] = "Espiral"
 L["Spiral In And Out"] = "Espiral hacia adentro y afuera"
 L["Stacks"] = "Acumulaciones"
---[[Translation missing --]]
-L["Stacks Text Color"] = "Stacks Text Color"
---[[Translation missing --]]
-L["Stacks Text Size"] = "Stacks Text Size"
 --[[Translation missing --]]
 L["Stagger Scale"] = "Stagger Scale"
 --[[Translation missing --]]
@@ -876,6 +934,8 @@ L["Stolen"] = "Robado"
 L["Stop"] = "Stop"
 --[[Translation missing --]]
 L["Stop Profiling"] = "Stop Profiling"
+--[[Translation missing --]]
+L["Strength"] = "Strength"
 --[[Translation missing --]]
 L["String"] = "String"
 L["Summon"] = "Invocar"
@@ -891,12 +951,22 @@ L["Swing Timer"] = "Temporizador de golpe"
 L["Swipe"] = "Swipe"
 L["System"] = "Sistema"
 --[[Translation missing --]]
+L["Tab "] = "Tab "
+--[[Translation missing --]]
 L["Talent Selected"] = "Talent Selected"
 L["Talent selected"] = "Talento seleccionado"
 L["Talent Specialization"] = "Especialización de talento"
 L["Tanking And Highest"] = "Tanqueando - El más alto"
 L["Tanking But Not Highest"] = "Tanqueando - No el más alto"
 L["Target"] = "Objetivo"
+--[[Translation missing --]]
+L["Targeted"] = "Targeted"
+--[[Translation missing --]]
+L["Text"] = "Text"
+--[[Translation missing --]]
+L["The effective level differs from the level in e.g. Time Walking dungeons."] = "The effective level differs from the level in e.g. Time Walking dungeons."
+--[[Translation missing --]]
+L["The trigger number is optional, and uses the trigger providing dynamic information if not specified."] = "The trigger number is optional, and uses the trigger providing dynamic information if not specified."
 --[[Translation missing --]]
 L["There are %i updates to your auras ready to be installed!"] = "There are %i updates to your auras ready to be installed!"
 L["Thick Outline"] = "Thick Outline"
@@ -911,12 +981,18 @@ L["This aura contains custom Lua code."] = "This aura contains custom Lua code."
 --[[Translation missing --]]
 L["This aura was created with a newer version of WeakAuras."] = "This aura was created with a newer version of WeakAuras."
 --[[Translation missing --]]
+L["This aura was created with the Classic version of World of Warcraft."] = "This aura was created with the Classic version of World of Warcraft."
+--[[Translation missing --]]
+L["This aura was created with the retail version of World of Warcraft."] = "This aura was created with the retail version of World of Warcraft."
+--[[Translation missing --]]
 L["This is a modified version of your aura, |cff9900FF%s.|r"] = "This is a modified version of your aura, |cff9900FF%s.|r"
 --[[Translation missing --]]
 L["This is a modified version of your group, |cff9900FF%s.|r"] = "This is a modified version of your group, |cff9900FF%s.|r"
 L["Threat Situation"] = "Situación de la amenaza"
 L["Tier "] = "Tier"
 L["Timed"] = "Temporizado"
+--[[Translation missing --]]
+L["Timer Id"] = "Timer Id"
 --[[Translation missing --]]
 L["Toggle"] = "Toggle"
 --[[Translation missing --]]
@@ -935,7 +1011,6 @@ L["Top"] = "Superior"
 L["Top Left"] = "Superior izquierda"
 L["Top Right"] = "Superior derecha"
 L["Top to Bottom"] = "De arriba hacia abajo"
-L["Total"] = "Total"
 L["Total Duration"] = "Duración total"
 --[[Translation missing --]]
 L["Total Match Count"] = "Total Match Count"
@@ -974,11 +1049,15 @@ L["Unit Characteristics"] = "Características de la unidad"
 L["Unit Destroyed"] = "Unidad destruida "
 L["Unit Died"] = "Unidad muerta"
 --[[Translation missing --]]
+L["Unit Frames"] = "Unit Frames"
+--[[Translation missing --]]
 L["Unit is Unit"] = "Unit is Unit"
 --[[Translation missing --]]
 L["Unit Name"] = "Unit Name"
 --[[Translation missing --]]
 L["Units Affected"] = "Units Affected"
+--[[Translation missing --]]
+L["Unlimited"] = "Unlimited"
 L["Up"] = "Arriba"
 --[[Translation missing --]]
 L["Up, then Left"] = "Up, then Left"
@@ -1012,11 +1091,17 @@ L["Warning: Full Scan auras checking for both name and spell id can't be convert
 L["Warning: Name info is now available via %affected, %unaffected. Number of affected group members via %unitCount. Some options behave differently now. This is not automatically adjusted."] = "Warning: Name info is now available via %affected, %unaffected. Number of affected group members via %unitCount. Some options behave differently now. This is not automatically adjusted."
 --[[Translation missing --]]
 L["Warning: Tooltip values are now available via %tooltip1, %tooltip2, %tooltip3 instead of %s. This is not automatically adjusted."] = "Warning: Tooltip values are now available via %tooltip1, %tooltip2, %tooltip3 instead of %s. This is not automatically adjusted."
+--[[Translation missing --]]
+L["WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."] = "WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."
+--[[Translation missing --]]
+L["WeakAuras Profiling Data"] = "WeakAuras Profiling Data"
 L["Weapon"] = "Arma"
 L["Weapon Enchant"] = "Encantamiento de arma"
 --[[Translation missing --]]
 L["What do you want to do?"] = "What do you want to do?"
 L["Whisper"] = "Susurrar"
+--[[Translation missing --]]
+L["Whole Area"] = "Whole Area"
 L["Width"] = "Ancho"
 L["Wobble"] = "Temblar"
 --[[Translation missing --]]

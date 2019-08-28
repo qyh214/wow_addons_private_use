@@ -1,10 +1,16 @@
-lightweight tag 43197d3d45cba4024c07692118466a34faca2b81 v5.2.7
+lightweight tag 9ff893d0287f296eddcf189288b4f0bf8a4f8950 v5.2.8
 Author:	Boshi Lian <farmer1992@gmail.com>
-Date:	Sun Aug 11 02:15:27 2019 -0700
+Date:	Mon Aug 12 18:24:44 2019 -0700
 
-commit 43197d3d45cba4024c07692118466a34faca2b81
+commit 9ff893d0287f296eddcf189288b4f0bf8a4f8950
 Author: Boshi Lian <farmer1992@gmail.com>
-Date:   Sun Aug 11 02:15:27 2019 -0700
+Date:   Mon Aug 12 16:06:13 2019 -0700
 
-    update toc
+    fix locale extrace for multi line
+
+commit 47bc674d83d66ffc817af849251c9c6a172733ca
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Mon Aug 12 16:12:59 2019 -0700
+
+    Update README.markdown
 

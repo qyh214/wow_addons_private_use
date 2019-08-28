@@ -21,6 +21,13 @@ local RARE = GARRISON_MISSION_RARE
 local OFFLINE = FRIENDS_LIST_OFFLINE
 local BASE_MOVEMENT_SPEED = BASE_MOVEMENT_SPEED or 7
 
+--BLZ function (Fixed for classic WOW)
+local UnitEffectiveLevel = UnitEffectiveLevel or function() end
+local UnitGroupRolesAssigned = UnitGroupRolesAssigned or function() end
+local UnitGroupRolesAssigned = UnitGroupRolesAssigned  or function() end
+local UnitIsQuestBoss = UnitIsQuestBoss or function() end
+local IsFlying = IsFlying or function() end
+
 local addon = TinyTooltip
 
 -- language & global vars
@@ -50,9 +57,9 @@ addon.icons = {
     battlepet = "|TInterface\\Timer\\Panda-Logo:15|t",
     pettype   = "|TInterface\\TargetingFrame\\PetBadge-%s:14|t",
     questboss = "|TInterface\\TargetingFrame\\PortraitQuestBadge:0|t",
-    TANK      = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES:0:0:0:0:64:64:0:19:22:41|t",
-    HEALER    = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES:0:0:0:0:64:64:20:39:1:20|t",
-    DAMAGER   = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES:0:0:0:0:64:64:20:39:22:41|t",
+    TANK      = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES:14:14:0:0:64:64:0:19:22:41|t",
+    HEALER    = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES:14:14:0:0:64:64:20:39:1:20|t",
+    DAMAGER   = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES:14:14:0:0:64:64:20:39:22:41|t",
 }
 
 -- 背景
@@ -778,6 +785,13 @@ LibEvent:attachTrigger("tooltip.style.init", function(self, tip)
         tip.GetBackdrop = function(self) return self.style:GetBackdrop() end
         tip.GetBackdropColor = function(self) return self.style:GetBackdropColor() end
         tip.GetBackdropBorderColor = function(self) return self.style:GetBackdropBorderColor() end
+        if (not tip.BigFactionIcon) then
+            tip.BigFactionIcon = tip:CreateTexture(nil, "OVERLAY")
+            tip.BigFactionIcon:SetPoint("TOPRIGHT", tip, "TOPRIGHT", 18, 0)
+            tip.BigFactionIcon:SetBlendMode("ADD")
+            tip.BigFactionIcon:SetScale(0.25)
+            tip.BigFactionIcon:SetAlpha(0.40)
+        end
     end
     if (tip.DisableDrawLayer) then
         tip:DisableDrawLayer("BACKGROUND")

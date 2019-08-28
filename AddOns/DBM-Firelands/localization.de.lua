@@ -1,14 +1,10 @@
-if GetLocale() ~= "deDE" then return end
+﻿if GetLocale() ~= "deDE" then return end
 local L
 
 -----------------
 -- Beth'tilac --
 -----------------
 L= DBM:GetModLocalization(192)
-
-L:SetOptionLocalization({
-	RangeFrame			= "Zeige Abstandsfenster (10m)"
-})
 
 L:SetMiscLocalization({
 	EmoteSpiderlings 	= "Spinnlinge sind aus ihrem Nest aufgeschreckt worden!"
@@ -40,14 +36,12 @@ L:SetOptionLocalization({
 	WarnNewInitiate		= "Zeige Warnung für neue Lodernde Kralleninitianden",
 	timerNextInitiate	= "Zeige Zeit bis nächste Lodernde Kralleninitianden",
 	TimerPhaseChange	= "Zeige Zeit bis nächste Phase",
-	TimerHatchEggs		= "Zeige Zeit bis nächstes Eierausschlüpfen",
-	InfoFrame			= "Zeige Infofenster für $spell:98734"
+	TimerHatchEggs		= "Zeige Zeit bis nächstes Eierausschlüpfen"
 })
 
 L:SetMiscLocalization({
 	YellPull		= "Ich diene jetzt einem neuen Meister, Sterbliche!",
 	YellPhase2		= "Dieser Himmel ist MEIN.",
-	FullPower		= "spell:99925",--This is in the emote, shouldn't need localizing, just msg:find
 	LavaWorms		= "Feurige Lavawürmer brechen aus dem Boden hervor!",
 	East			= "Osten",
 	West			= "Westen",
@@ -79,9 +73,7 @@ L:SetOptionLocalization({
 	warnStrike			= "Zeige Warnungen für $spell:99353 / $spell:101002",
 	timerStrike			= "Zeit bis nächster $spell:99353 / $spell:101002 anzeigen",
 	TimerBladeActive	= "Dauer der aktiven Klinge anzeigen",
-	TimerBladeNext		= "Zeit bis nächste $spell:99352 / $spell:99350 anzeigen",
-	InfoFrame			= "Zeige Infofenster für $spell:99262 Stapel",
-	RangeFrame			= "Zeige Abstandsfenster (5m) für $spell:99257"
+	TimerBladeNext		= "Zeit bis nächste $spell:99352 / $spell:99350 anzeigen"
 })
 
 --------------------------------
@@ -122,7 +114,6 @@ L:SetOptionLocalization({
 	warnEngulfingFlameHeroic	= "Zeige Warnungen für Position der $spell:99171 auf Heroisch",
 	warnSeedsLand				= "Zeige Warnung/Timer für Landung der $spell:98520 (anstatt Erzeugung)",
 	TimerPhaseSons				= "Dauer des Phasenübergangs (\"Söhne der Flamme\") anzeigen",
-	RangeFrame					= "Zeige Abstandsfenster",
 	InfoHealthFrame				= "Zeige Infofenster für Gesundheit (weniger als 100k Lebenspunkte)",
 	MeteorFrame					= "Zeige Infofenster für Ziele von $spell:99849",
 	AggroFrame					= "Zeige Infofenster für Spieler, die keine Aggro während $journal:2647 haben"

@@ -1,20 +1,10 @@
-if GetLocale() ~= "ruRU" then return end
+﻿if GetLocale() ~= "ruRU" then return end
 local L
 
 -----------------
 -- Beth'tilac --
 -----------------
 L= DBM:GetModLocalization(192)
-
-L:SetWarningLocalization({
-})
-
-L:SetTimerLocalization({
-})
-
-L:SetOptionLocalization({
-	RangeFrame			= "Показывать окно проверки дистанции (10м)"
-})
 
 L:SetMiscLocalization({
 	EmoteSpiderlings 	= "Сверху свисают пеплопряды-ткачи!"
@@ -24,18 +14,6 @@ L:SetMiscLocalization({
 -- Lord Rhyolith --
 -------------------
 L= DBM:GetModLocalization(193)
-
-L:SetWarningLocalization({
-})
-
-L:SetTimerLocalization({
-})
-
-L:SetOptionLocalization({
-})
-
-L:SetMiscLocalization({
-})
 
 ---------------
 -- Alysrazor --
@@ -58,14 +36,12 @@ L:SetOptionLocalization({
 	WarnNewInitiate		= "Предупреждение о появлении нового друида-огнеястреба",
 	timerNextInitiate	= "Отсчет времени до появления нового друида-огнеястреба",
 	TimerPhaseChange	= "Отсчет времени до следующей фазы",
-	TimerHatchEggs		= "Отсчет времени до вылупления яиц",
-	InfoFrame			= "Информационное окно для $spell:97128"
+	TimerHatchEggs		= "Отсчет времени до вылупления яиц"
 })
 
 L:SetMiscLocalization({
 	YellPull			= "Теперь я служу новому господину, смертные!",
 	YellPhase2			= "Небо над вами принадлежит МНЕ!",
-	FullPower			= "spell:99925",--This is in the emote, shouldn't need localizing, just msg:find
 	LavaWorms			= "На поверхность вылезают огненные лавовые паразиты!",
 	PowerLevel			= "Опаляющее перо",
 	East				= "на востоке",
@@ -77,22 +53,6 @@ L:SetMiscLocalization({
 -- Shannox --
 -------------
 L= DBM:GetModLocalization(195)
-
-L:SetWarningLocalization({
-})
-
-L:SetTimerLocalization({
-})
-
-L:SetOptionLocalization({
-	SetIconOnFaceRage	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(99945),
-	SetIconOnRage		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(100415)
-})
-
-L:SetMiscLocalization({
-	Riplimb		= "Лютогрыз",
-	Rageface	= "Косоморд"
-})
 
 -------------
 -- Baleroc --
@@ -114,20 +74,13 @@ L:SetOptionLocalization({
 	warnStrike			= "Предупреждение о лезвиях",
 	timerStrike			= "Отсчет времени между ударами лезвий",
 	TimerBladeActive	= "Отсчет времени действия активного лезвия",
-	TimerBladeNext		= "Отсчет времени до следующего лезвия",
-	SetIconOnCountdown	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(99516),
-	SetIconOnTorment	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(100232),
-	InfoFrame			= "Информационное окно для стаков искр",
-	RangeFrame			= "Показывать окно проверки дистанции (5м) для $spell:99404"
+	TimerBladeNext		= "Отсчет времени до следующего лезвия"
 })
 
 --------------------------------
 -- Majordomo Fandral Staghelm --
 --------------------------------
 L= DBM:GetModLocalization(197)
-
-L:SetWarningLocalization({
-})
 
 L:SetTimerLocalization({
 	timerNextSpecial		= "След. %s (%d)"
@@ -136,11 +89,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	timerNextSpecial		= "Отсчет времени до следующей особой способности",
 	RangeFrameSeeds			= "Показывать окно проверки дистанции (12м) для $spell:98450",
-	RangeFrameCat			= "Показывать окно проверки дистанции (10м) для $spell:98374",
-	IconOnLeapingFlames		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(100208)
-})
-
-L:SetMiscLocalization({
+	RangeFrameCat			= "Показывать окно проверки дистанции (10м) для $spell:98374"
 })
 
 --------------
@@ -169,11 +118,9 @@ L:SetOptionLocalization({
 	warnEmpoweredSulf			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.cast:format(100997),
 	timerRageRagnaros			= DBM_CORE_AUTO_TIMER_OPTIONS.cast:format(101109),
 	TimerPhaseSons				= "Отсчет времени до окончания \"фазы Сыновей пламени\"",
-	RangeFrame					= "Показывать окно проверки дистанции",
 	InfoHealthFrame				= "Информационное окно для игроков с низким уровнем здоровья (<100к)",
 	MeteorFrame					= "Информационное окно для целей $spell:99849",
-	AggroFrame					= "Информационное окно для игроков, не имеющих аггро от элементалей",
-	BlazingHeatIcons			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(100983)
+	AggroFrame					= "Информационное окно для игроков, не имеющих аггро от элементалей"
 })
 
 L:SetMiscLocalization({
@@ -201,18 +148,6 @@ L:SetGeneralLocalization({
 	name = "Треш-мобы"
 })
 
-L:SetWarningLocalization({
-})
-
-L:SetTimerLocalization({
-})
-
-L:SetOptionLocalization({
-})
-
-L:SetMiscLocalization({
-})
-
 ----------------
 --  Volcanus  --
 ----------------
@@ -220,9 +155,6 @@ L = DBM:GetModLocalization("Volcanus")
 
 L:SetGeneralLocalization({
 	name = "Вулканий"
-})
-
-L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
@@ -246,16 +178,4 @@ L = DBM:GetModLocalization("NexusLegendary")
 
 L:SetGeneralLocalization({
 	name = "Тиринар"
-})
-
-L:SetWarningLocalization({
-})
-
-L:SetTimerLocalization({
-})
-
-L:SetOptionLocalization({
-})
-
-L:SetMiscLocalization({
 })

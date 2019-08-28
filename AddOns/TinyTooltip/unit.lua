@@ -54,6 +54,15 @@ local function GrayForDead(tip, config, unit)
     end
 end
 
+local function ShowBigFactionIcon(tip, config, raw)
+    if (config.elements.factionBig and config.elements.factionBig.enable and tip.BigFactionIcon and (raw.factionGroup=="Alliance" or raw.factionGroup == "Horde")) then
+        tip.BigFactionIcon:Show()
+        tip.BigFactionIcon:SetTexture("Interface\\Timer\\".. raw.factionGroup .."-Logo")
+        tip:Show()
+        tip:SetMinimumWidth(tip:GetWidth() + 20)
+    end
+end
+
 local function PlayerCharacter(tip, unit, config, raw)
     local data = addon:GetUnitData(unit, config.elements, raw)
     addon:HideLines(tip, 2, 3)
@@ -67,6 +76,7 @@ local function PlayerCharacter(tip, unit, config, raw)
     ColorBorder(tip, config, raw)
     ColorBackground(tip, config, raw)
     GrayForDead(tip, config, unit)
+    ShowBigFactionIcon(tip, config, raw)
 end
 
 local function NonPlayerCharacter(tip, unit, config, raw)
@@ -97,6 +107,7 @@ local function NonPlayerCharacter(tip, unit, config, raw)
     ColorBorder(tip, config, raw)
     ColorBackground(tip, config, raw)
     GrayForDead(tip, config, unit)
+    ShowBigFactionIcon(tip, config, raw)
 end
 
 LibEvent:attachTrigger("tooltip:unit", function(self, tip, unit)

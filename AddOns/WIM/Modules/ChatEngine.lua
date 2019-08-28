@@ -75,6 +75,7 @@ db_defaults.pop_rules.chat = {
         },
         alwaysOther = true,
         intercept = false,
+		obeyAutoFocusRules = false,
 }
 
 db_defaults.chat = {

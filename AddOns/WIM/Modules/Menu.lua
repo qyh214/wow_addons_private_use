@@ -91,7 +91,11 @@ local function createButton(parent)
     button.close:SetPoint("LEFT", button.status, "RIGHT", 2, 0);
     
     button:SetScript("OnClick", function(self, b)
-            self.win:Pop(true, true);
+			local forceShow = true
+			if db.pop_rules[self.win.type].obeyAutoFocusRules then
+				forceShow = self.win:GetRuleSet().autofocus
+			end
+            self.win:Pop(true, forceShow);
             WIM.Menu:Hide();
         end);
     button:SetScript("OnUpdate", function(self, elapsed)

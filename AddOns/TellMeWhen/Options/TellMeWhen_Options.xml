@@ -1,4 +1,4 @@
-<Ui>
+﻿<Ui>
 
 	<Frame name="TellMeWhen_OptionsModuleContainer" virtual="true" hidden="true">
 		<KeyValues>

@@ -1,4 +1,4 @@
-<Ui>
+﻿<Ui>
 	
 	<Frame parentKey="Animations" name="$parentAnimations" inherits="TellMeWhen_EventContainer">
 		<Frames>

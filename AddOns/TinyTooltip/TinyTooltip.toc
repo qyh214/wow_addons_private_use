@@ -2,7 +2,7 @@
 ## Title: TinyTooltip
 ## Notes: TinyTooltip
 ## Author: M
-## Version: 8.2.0
+## Version: 8.2.1
 ## SavedVariables: BigTipDB
 ## SavedVariablesPerCharacter: TinyTooltipCharacterDB
 

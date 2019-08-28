@@ -1,4 +1,4 @@
---[[ Credit for these translations goes to:
+﻿--[[ Credit for these translations goes to:
 	StingerSoft
 	Alphabot
 	zuko3d
@@ -1131,4 +1131,3 @@ L["WARN_DRMISMATCH"] = [=[Внимание! Вы проверяете убыва
 Все заклинания обязаны быть из одной убывающей категории чтобы иконка фунционировала должным образом. Были обнаружены следующие категории и заклинания :]=]
 L["WATER"] = "Водa"
 L["worldboss"] = "Мировой босс"
-

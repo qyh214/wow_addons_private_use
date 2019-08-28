@@ -1,5 +1,7 @@
 local WIM = WIM;
 
+local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+
 -- imports
 local _G = _G;
 local table = table;
@@ -24,6 +26,7 @@ constants.classListEng = classList;
 local GetNumSpecializationsForClassID, GetSpecializationInfoForClassID = _G.GetNumSpecializationsForClassID, _G.GetSpecializationInfoForClassID
 local function createSpecNameTable(classID)
 	local t = {}
+	if isClassic then return t end
 	for spec = 1, GetNumSpecializationsForClassID(classID) do
 		local specID, name = GetSpecializationInfoForClassID(classID,spec)
 		t[spec] = name

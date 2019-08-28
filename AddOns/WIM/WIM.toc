@@ -1,7 +1,11 @@
-## Interface: 80100 
+## Interface: 80200
+
+## X-Curse-Project-ID: 7474
+## X-WoWI-ID: 5342
+
 ## Title: WIM
 ## Author: Pazza (Bronzebeard), (Updated by Sylvanaar)
-## Version: 610
+## Version: 3.7.32
 ## Notes: Give whispers an instant messenger feel.
 ## eMail: johnlangone@gmail.com
 ## X-Email: johnlangone@gmail.com

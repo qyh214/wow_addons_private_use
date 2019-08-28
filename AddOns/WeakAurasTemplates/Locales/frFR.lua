@@ -1,3 +1,5 @@
+if not WeakAuras.IsCorrectVersion() then return end
+
 if not(GetLocale() == "frFR") then
   return
 end
@@ -109,6 +111,8 @@ Affiche toujours l'aura, mettez-la en surbrillance si elle améliore]=]
 	L["Show Only if on Cooldown"] = "Afficher Seulement si en Recharge"
 	L["Show Totem and Charge Information"] = "Afficher les Informations du Totem et de Charge"
 	L["Specific Azerite Traits"] = "Traits Azéritiques Spécéfiques"
+	--[[Translation missing --]]
+	L["Stance"] = "Stance"
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Suivre la charge et le proc, mettre en surbrillance pendant que le proc est actif, devient rouge lorsque vous êtes hors de portée, bleu lorsque les ressources sont insuffisantes"
 	L["Tracks the charge and the buff, highlight while the buff is active, blue on insufficient resources."] = "Suit la charge et le buff, surligne pendant que le buff est actif, bleu sur les ressources insuffisantes."
 	L["Tracks the charge and the debuff, highlight while the debuff is active, blue on insufficient resources."] = [=[

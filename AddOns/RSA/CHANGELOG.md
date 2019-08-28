@@ -1,3 +1,3 @@
-# RSA r521-Release
-### Fixed
-* Fixed Typo causing Lua error with options in r520.
+# RSA r522-Release
+### Updated
+* Updated localisations.

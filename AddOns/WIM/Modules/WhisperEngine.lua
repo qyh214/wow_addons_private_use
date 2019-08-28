@@ -96,6 +96,7 @@ db_defaults.pop_rules.whisper = {
         },
         alwaysOther = false,
         intercept = true,
+		obeyAutoFocusRules = false,
 }
 
 db_defaults.displayColors.wispIn = {
@@ -179,7 +180,7 @@ end
 
 local function getWhisperWindowByUser(user, isBN, bnID)
 	if isBN then
-		if not string.find(user, "^|K") then
+		if bnID and not string.find(user, "^|K") then
 			local _
 			_, user = _G.BNGetFriendInfoByID(bnID) -- fix window handler when using the chat hyperlink
 		end
@@ -386,7 +387,8 @@ function WhisperEngine:CHAT_MSG_BN_WHISPER_INFORM(...)
         return; -- ChatFrameEventFilter says don't process
     end
     local color = db.displayColors.BNwispOut; -- color contains .r, .g & .b
-    local win = getWhisperWindowByUser(arg2, true, bNetID);
+    local win = getWhisperWindowByUser(arg2, true, arg13);
+	if not win then return end	--due to a client bug, we can not receive the other player's name, so do nothing
     win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_BN_WHISPER_INFORM", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13);
     win:Pop("out");
     _G.ChatEdit_SetLastToldTarget(arg2, "BN_WHISPER");
@@ -419,7 +421,8 @@ function WhisperEngine:CHAT_MSG_BN_WHISPER(...)
         return; -- ChatFrameEventFilter says don't process
     end
     local color = WIM.db.displayColors.BNwispIn; -- color contains .r, .g & .b
-    local win = getWhisperWindowByUser(arg2, true, bNetID);
+    local win = getWhisperWindowByUser(arg2, true, arg13);
+	if not win then return end	--due to a client bug, we can not receive the other player's name, so do nothing
     win.unreadCount = win.unreadCount and (win.unreadCount + 1) or 1;
     win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_BN_WHISPER", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13);
     win:Pop("in");
@@ -642,6 +645,7 @@ function CF_ExtractTellTarget(editBox, msg, chatType)
 		if (db.pop_rules.whisper.intercept and db.pop_rules.whisper[curState].onSend) then
 			target = _G.Ambiguate(target, "none")--For good measure, ambiguate again cause it seems some mods interfere with this process
 			local win = getWhisperWindowByUser(target, bNetID and true, bNetID);
+			if not win then return end	--due to a client bug, we can not receive the other player's name, so do nothing
 			win.widgets.msg_box.setText = 1;
 			win:Pop(true); -- force popup
 			win.widgets.msg_box:SetFocus();
@@ -658,6 +662,7 @@ function CF_SentBNetTell(target)
 			local bNetID = BNet_GetPresenceID(target);
 			target = _G.Ambiguate(target, "none")--For good measure, ambiguate again cause it seems some mods interfere with this process
 			local win = getWhisperWindowByUser(target, true, bNetID);
+			if not win then return end	--due to a client bug, we can not receive the other player's name, so do nothing
 			win.widgets.msg_box.setText = 1;
 			win:Pop(true); -- force popup
 			win.widgets.msg_box:SetFocus();
@@ -691,6 +696,7 @@ function CF_OpenChat(text, chatFrame, desiredCursorPosition)
 			local bNetID = BNet_GetPresenceID(target);
 			target = _G.Ambiguate(target, "none")--For good measure, ambiguate again cause it seems some mods interfere with this process
 			local win = getWhisperWindowByUser(target, bNetID and true, bNetID);
+			if not win then return end	--due to a client bug, we can not receive the other player's name, so do nothing
 			win.widgets.msg_box.setText = 1;
 			win:Pop(true); -- force popup
 			if not (sticky == "WHISPER" or sticky == "BN_WHISPER") then

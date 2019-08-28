@@ -1,4 +1,4 @@
-<Ui>
+﻿<Ui>
 
 	<Button name="TellMeWhen_BackdropOptions_Color" parentKey="Color" inherits="TellMeWhen_ColorButtonTemplate" virtual="true">
 		<Scripts>

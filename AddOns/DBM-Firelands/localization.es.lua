@@ -6,10 +6,6 @@ local L
 -----------------
 L= DBM:GetModLocalization(192)
 
-L:SetOptionLocalization({
-	RangeFrame			= "Mostrar marco de distancia (10 m)"
-})
-
 L:SetMiscLocalization({
 	EmoteSpiderlings 	= "¡Las arañitas emergen de su nido!"
 })
@@ -40,14 +36,12 @@ L:SetOptionLocalization({
 	WarnNewInitiate		= "Mostrar aviso cuando aparezca un Iniciado de garfas llameantes",
 	timerNextInitiate	= "Mostrar temporizador para el siguiente Iniciado de garfas llameantes",
 	TimerPhaseChange	= "Mostrar temporizador para el cambio de fase",
-	TimerHatchEggs		= "Mostrar temporizador para la eclosión de huevos",
-	InfoFrame			= "Mostrar marco de información para $spell:98734"
+	TimerHatchEggs		= "Mostrar temporizador para la eclosión de huevos"
 })
 
 L:SetMiscLocalization({
 	YellPull		= "¡Mortales, ahora sirvo a un nuevo amo!",
 	YellPhase2		= "¡Estos cielos son MÍOS!",
-	FullPower		= "spell:99925",--This is in the emote, shouldn't need localizing, just msg:find
 	LavaWorms		= "¡Gusanos de lava ígneos surgen del suelo!",--Might use this one day if i feel it needs a warning for something. Or maybe pre warning for something else (like transition soon)
 	East			= "este",
 	West			= "oeste",
@@ -58,11 +52,6 @@ L:SetMiscLocalization({
 -- Shannox --
 -------------
 L= DBM:GetModLocalization(195)
-
-L:SetOptionLocalization({
-	SetIconOnFaceRage	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(99947),
-	SetIconOnRage		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(100415)
-})
 
 ---------------------------------------
 -- Baleroc, el Guardián de la Puerta --
@@ -84,11 +73,7 @@ L:SetOptionLocalization({
 	warnStrike			= "Mostrar aviso para $spell:99353 y $spell:99351",
 	timerStrike			= "Mostrar temporizador para el siguiente $spell:99353 o $spell:99351",
 	TimerBladeActive	= "Mostrar temporizador para la duración de la hoja activa",
-	TimerBladeNext		= "Mostrar temporizador para el siguiente cambio de hoja",
-	SetIconOnCountdown	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(99516),
-	SetIconOnTorment	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(99256),
-	InfoFrame			= "Mostrar marco de información para las acumulaciones de $spell:99262",
-	RangeFrame			= "Mostrar marco de distancia (5 m) para $spell:99257"
+	TimerBladeNext		= "Mostrar temporizador para el siguiente cambio de hoja"
 })
 
 ---------------------------
@@ -103,8 +88,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	timerNextSpecial			= "Mostrar temporizador para la siguiente habilidad especial",
 	RangeFrameSeeds				= "Mostrar marco de distancia (12 m) para $spell:98450",
-	RangeFrameCat				= "Mostrar marco de distancia (10 m) para $spell:98374",
-	IconOnLeapingFlames			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(98476)
+	RangeFrameCat				= "Mostrar marco de distancia (10 m) para $spell:98374"
 })
 
 --------------
@@ -133,11 +117,9 @@ L:SetOptionLocalization({
 	warnEmpoweredSulf			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.cast:format(100604),
 	timerRageRagnaros			= DBM_CORE_AUTO_TIMER_OPTIONS.cast:format(101109),
 	TimerPhaseSons				= "Mostrar temporizador de duración para los intermedios de Hijos de la llama",
-	RangeFrame					= "Mostrar marco de distancia",
 	InfoHealthFrame				= "Mostrar marco de información de salud (por debajo de 100mil)",
 	MeteorFrame					= "Mostrar marco de información de objetivos de $spell:99849",
-	AggroFrame					= "Mostrar marco de información de jugadores sin amenaza durante $journal:2647",
-	BlazingHeatIcons			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(100460)
+	AggroFrame					= "Mostrar marco de información de jugadores sin amenaza durante $journal:2647"
 })
 
 L:SetMiscLocalization({

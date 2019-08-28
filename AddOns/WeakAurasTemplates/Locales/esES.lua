@@ -1,3 +1,5 @@
+if not WeakAuras.IsCorrectVersion() then return end
+
 if not(GetLocale() == "esES") then
   return
 end
@@ -192,6 +194,8 @@ local L = WeakAuras.L
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
 	--[[Translation missing --]]
 	L["Specific Azerite Traits"] = "Specific Azerite Traits"
+	--[[Translation missing --]]
+	L["Stance"] = "Stance"
 	--[[Translation missing --]]
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."
 	--[[Translation missing --]]

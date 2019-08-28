@@ -1,4 +1,4 @@
-<Ui>
+﻿<Ui>
  
  
 	<Frame parentKey="Announcements" name="$parentAnnouncements" inherits="TellMeWhen_EventContainer">

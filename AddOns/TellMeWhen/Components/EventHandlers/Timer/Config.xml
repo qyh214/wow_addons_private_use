@@ -1,4 +1,4 @@
-<Ui>
+﻿<Ui>
 	
 	<Frame parentKey="Timer" name="$parentTimer" inherits="TellMeWhen_EventContainer">
 		<Layers>

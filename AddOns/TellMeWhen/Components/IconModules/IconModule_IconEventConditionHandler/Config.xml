@@ -1,4 +1,4 @@
-<Ui>
+﻿<Ui>
 
 	<Button parentKey="IconEventOnCondition" parent="TellMeWhen_IconEditorPagesEventsEventSettingsContainer" inherits="TellMeWhen_ButtonTemplate">
 		<Size x="200" y="16"/>

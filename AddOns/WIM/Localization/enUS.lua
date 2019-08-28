@@ -297,6 +297,7 @@ WIM.AddLocale("enUS", {
     ["Window Behavior"] = true,
     ["You can control how windows behave while you are in different situations."] = true,
     ["Intercept Slash Commands"] = true,
+	["Obey autofocus rules when opening frames via the menu. (autofocus if unchecked)"] = true,
     ["Use the same rules for all states."] = true,
     ["Behaviors for state:"] = true,
     ["Pop-Up window when message is sent."] = true,
