@@ -22,7 +22,7 @@ InspectUnitStats.lua
 InspectUnitGemAndEnchant.lua
 InspectUnitSpecialization.lua
 InspectMouse.lua
-#InspectGroupMember.lua
+##InspectGroupMember.lua
 InspectParty.lua
 InspectRaid.lua
 

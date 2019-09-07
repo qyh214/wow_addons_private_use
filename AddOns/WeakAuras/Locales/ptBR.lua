@@ -39,8 +39,7 @@ L["%s total auras"] = "%s auras totais"
 L["%s Trigger Function"] = "%s Função de gatilho"
 --[[Translation missing --]]
 L["%s Untrigger Function"] = "%s Untrigger Function"
---[[Translation missing --]]
-L["/wa help - Show this message"] = "/wa help - Show this message"
+L["/wa help - Show this message"] = "/wa help - Mostrar essa mensagem"
 --[[Translation missing --]]
 L["/wa minimap - Toggle the minimap icon"] = "/wa minimap - Toggle the minimap icon"
 --[[Translation missing --]]
@@ -87,12 +86,10 @@ L["Affected"] = "Afetado"
 --[[Translation missing --]]
 L["Affected Unit Count"] = "Affected Unit Count"
 L["Aggro"] = "Aggro"
---[[Translation missing --]]
-L["Agility"] = "Agility"
+L["Agility"] = "Agilidade"
 L["Alert Type"] = "Tipo de alerta"
 L["Alive"] = "Vivo"
---[[Translation missing --]]
-L["All"] = "All"
+L["All"] = "Todos"
 L["All Triggers"] = "Todos os Gatilhos"
 L["Alliance"] = "Aliança"
 L["Allow partial matches"] = "Permitir combinações parciais"
@@ -101,8 +98,7 @@ L["Alternate Power"] = "Alternar Poder"
 L["Always"] = "Sempre"
 L["Always active trigger"] = "Gatilho sempre ativo"
 L["Amount"] = "Quantidade"
---[[Translation missing --]]
-L["And Talent selected"] = "And Talent selected"
+L["And Talent selected"] = "E Talento selecionado"
 L["Animations"] = "Animações"
 L["Anticlockwise"] = "Anti-horário"
 L["Any"] = "Qualquer"
@@ -239,8 +235,7 @@ L["Charges"] = "Cargas"
 L["Charges Changed (Spell)"] = "Charges Changed (Spell)"
 L["Chat Frame"] = "Quadro do bate-papo"
 L["Chat Message"] = "Mensagem de bate-papo"
---[[Translation missing --]]
-L["Children:"] = "Children:"
+L["Children:"] = "Criança:"
 L["Choose a category"] = "Escolha uma catedoria"
 L["Circle"] = "Círculo"
 --[[Translation missing --]]
@@ -254,15 +249,13 @@ L["Clockwise"] = "Clockwise"
 L["Clone per Event"] = "Clone per Event"
 --[[Translation missing --]]
 L["Clone per Match"] = "Clone per Match"
---[[Translation missing --]]
-L["Color"] = "Color"
+L["Color"] = "Cor"
 L["Combat Log"] = "Registro de combate"
 --[[Translation missing --]]
 L["Combine all matches"] = "Combine all matches"
 L["Conditions"] = "Condições"
 L["Contains"] = "Contém"
---[[Translation missing --]]
-L["Cooldown"] = "Cooldown"
+L["Cooldown"] = "Tempo de Recarga"
 --[[Translation missing --]]
 L["Cooldown Progress (Equipment Slot)"] = "Cooldown Progress (Equipment Slot)"
 L["Cooldown Progress (Item)"] = "Curso do tempo de recarga (Item)"
@@ -276,8 +269,7 @@ L["Count"] = "Count"
 --[[Translation missing --]]
 L["Counter Clockwise"] = "Counter Clockwise"
 L["Create"] = "Criar"
---[[Translation missing --]]
-L["Create a Copy"] = "Create a Copy"
+L["Create a Copy"] = "Criar uma cópia"
 L["Critical"] = "Crítico"
 --[[Translation missing --]]
 L["Critical (%)"] = "Critical (%)"
@@ -323,8 +315,7 @@ L["Desaturate Background"] = "Desaturate Background"
 L["Desaturate Foreground"] = "Desaturate Foreground"
 --[[Translation missing --]]
 L["Descending"] = "Descending"
---[[Translation missing --]]
-L["Description"] = "Description"
+L["Description"] = "Descrição"
 --[[Translation missing --]]
 L["Dest Raid Mark"] = "Dest Raid Mark"
 --[[Translation missing --]]
@@ -343,8 +334,7 @@ L["Dispel"] = "Dispel"
 L["Dispel Failed"] = "Dispel Failed"
 --[[Translation missing --]]
 L["Display"] = "Display"
---[[Translation missing --]]
-L["Distance"] = "Distance"
+L["Distance"] = "Distância"
 --[[Translation missing --]]
 L["Dodge"] = "Dodge"
 --[[Translation missing --]]
@@ -457,12 +447,9 @@ L["Foreground"] = "Foreground"
 L["Foreground Color"] = "Foreground Color"
 --[[Translation missing --]]
 L["Form"] = "Form"
---[[Translation missing --]]
-L["Frequency"] = "Frequency"
---[[Translation missing --]]
-L["Friendly"] = "Friendly"
---[[Translation missing --]]
-L["Friendly Fire"] = "Friendly Fire"
+L["Frequency"] = "Frequência"
+L["Friendly"] = "Amigável"
+L["Friendly Fire"] = "Fogo Amigo"
 --[[Translation missing --]]
 L["From"] = "From"
 --[[Translation missing --]]

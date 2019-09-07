@@ -28,7 +28,7 @@ local function GetMembers(num, unitprefix)
         if (guid) then temp[guid] = unit end
     end
     for guid, v in pairs(members) do
-        if (not temp[guid]) then
+        if (not temp[guid] and v.unit ~= "player") then
             members[guid] = nil
         end
     end
@@ -81,19 +81,21 @@ local SendAddonMessage = C_ChatInfo and C_ChatInfo.SendAddonMessage or function(
 local function SendPlayerInfo(channel)
     local ilvl = select(2, GetAverageItemLevel())
     local spec = select(2, GetSpecializationInfo(GetSpecialization()))
-    SendAddonMessage("TinyInspect", format("%s|%s|%s", "LV", ilvl, spec or ""), channel)
+    SendAddonMessage("TinyInspect", format("%s|%s|%s|%s", "LV", ilvl, spec or "", select(2,UnitClass("player"))), channel)
 end
 
 --解析发送的信息 @trigger GROUP_MEMBER_INSPECT_READY
 LibEvent:attachEvent("CHAT_MSG_ADDON", function(self, prefix, text, channel, sender)
     if (prefix == "TinyInspect") then
-        local flag, ilvl, spec = strsplit("|", text)
+        local flag, ilvl, spec, class = strsplit("|", text)
         if (flag ~= "LV") then return end
         local name, realm = strsplit("-", sender)
         for guid, v in pairs(members) do
             if (v.name == name and v.realm == realm) then
                 v.ilevel = tonumber(ilvl) or -1
                 v.done = true
+                if (class) then v.class = class end
+                if (spec and spec ~= "") then v.spec = spec end
                 LibEvent:trigger("GROUP_MEMBER_INSPECT_READY", v)
             end
         end
@@ -108,6 +110,8 @@ LibEvent:attachTrigger("UNIT_INSPECT_READY", function(self, data)
         member.ilevel = data.ilevel
         member.spec = data.spec
         member.name = data.name
+        member.class = data.class
+        member.realm = data.realm
         member.done = true
         LibEvent:trigger("GROUP_MEMBER_INSPECT_READY", member)
     end
@@ -119,8 +123,8 @@ LibEvent:attachEvent("GROUP_ROSTER_UPDATE", function(self)
     if (not IsInGroup()) then return TinyInspectRaidFrame:Hide() end
     local unitprefix = IsInRaid() and "raid" or "party"
     local numCurrent = unitprefix == "party" and GetNumSubgroupMembers() or GetNumGroupMembers()
-    if (numCurrent ~= numMembers) then GetMembers(numCurrent, unitprefix) end
-    if (numCurrent > numMembers) then
+    if (numCurrent ~= numMembers) then
+        GetMembers(numCurrent, unitprefix)
         members[UnitGUID("player")] = {
             name   = UnitName("player"),
             class  = select(2, UnitClass("player")),
@@ -133,6 +137,7 @@ LibEvent:attachEvent("GROUP_ROSTER_UPDATE", function(self)
         LibSchedule:AddTask({
             override  = true,
             identity  = "InspectGroupMember",
+            timer     = 1,
             elasped   = 1,
             begined   = GetTime() + 2,
             expired   = GetTime() + (unitprefix == "party" and 30 or 900),
@@ -230,7 +235,7 @@ local function SendItemLevel(members)
 end
 
 --讀取完后執行
-LibEvent:attachTrigger("GROUP_MEMBER_INSPECT_DONE", function(self, members)
+LibEvent:attachTrigger("GROUP_MEMBER_INSPECT_TIMEOUT, GROUP_MEMBER_INSPECT_DONE", function(self, members)
     if (TinyInspectDB and TinyInspectDB.SendPartyItemLevelToSelf) then
         PrintItemLevel(members)
     end
@@ -470,7 +475,7 @@ frame.panel.rescanButton:SetScript("OnClick", function(self)
 end)
 
 --團友變更或觀察到數據時更新顯示
-LibEvent:attachTrigger("GROUP_MEMBER_CHANGED, GROUP_MEMBER_INSPECT_READY, GROUP_MEMBER_INSPECT_DONE", function(self)
+LibEvent:attachTrigger("GROUP_MEMBER_CHANGED, GROUP_MEMBER_INSPECT_TIMEOUT, GROUP_MEMBER_INSPECT_READY, GROUP_MEMBER_INSPECT_DONE", function(self)
     MakeMembersList()
     SortAndShowMembersList()
 end)

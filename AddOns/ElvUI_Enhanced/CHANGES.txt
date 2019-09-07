@@ -1,18 +1,24 @@
-tag 190120c8675a6ee42ca6eba7616a8df0b7d280e2 3.3.8
+tag 27d9f568c6e30bf90cddbf32296ca642e06d9d61 3.3.9
 Author:	Feraldin <nickbock@hoarder.bocky.nl>
-Date:	Sat Jun 29 13:13:44 2019 +0200
+Date:	Mon Sep 2 17:07:44 2019 +0200
 
-updated for 8.2
+Remove debug info spam
 
-commit e8bad525f5b0c35e068a52bb4cf36d15272e4516
-Author: Nick <git@bockmeulen.nl>
-Date:   Sat Jun 29 13:12:47 2019 +0200
+commit ba37c49a480048aaa84b4751f77eecf447889160
+Author: Nick <git@bocky.nl>
+Date:   Mon Sep 2 17:06:48 2019 +0200
 
-    updated progression
+    remove debugging info
 
-commit 06e66d65acbc04f7d6cf91b5e54b9c9b15c76872
-Author: Nick <git@bockmeulen.nl>
-Date:   Sat Jun 29 10:30:24 2019 +0200
+commit 4e9bb77d5223fb714e14558dc388a98c8b160aab
+Author: MarkW <17293527+Numynum@users.noreply.github.com>
+Date:   Sat Aug 17 14:08:20 2019 +0200
 
-    Updated for 8.2
+    removed debugging
+
+commit 4e9bb77d5223fb714e14558dc388a98c8b160aab
+Author: MarkW <17293527+Numynum@users.noreply.github.com>
+Date:   Sat Aug 17 14:08:20 2019 +0200
+
+    removed debugging
 

@@ -56,8 +56,7 @@ local L = WeakAuras.L
 	L["buff"] = "buff"
 	--[[Translation missing --]]
 	L["Buffs"] = "Buffs"
-	--[[Translation missing --]]
-	L["Cancel"] = "Cancel"
+	L["Cancel"] = "Cancelar"
 	--[[Translation missing --]]
 	L["Cast"] = "Cast"
 	--[[Translation missing --]]
@@ -68,18 +67,15 @@ local L = WeakAuras.L
 	L["Charge and Duration Tracking"] = "Charge and Duration Tracking"
 	--[[Translation missing --]]
 	L["Charge Tracking"] = "Charge Tracking"
-	--[[Translation missing --]]
-	L["cooldown"] = "cooldown"
+	L["cooldown"] = "tempo de recarga"
 	--[[Translation missing --]]
 	L["Cooldown Tracking"] = "Cooldown Tracking"
 	--[[Translation missing --]]
 	L["Create Auras"] = "Create Auras"
 	--[[Translation missing --]]
 	L["Debuffs"] = "Debuffs"
-	--[[Translation missing --]]
-	L["Enchants"] = "Enchants"
-	--[[Translation missing --]]
-	L["General"] = "General"
+	L["Enchants"] = "Encantamentos"
+	L["General"] = "Geral"
 	--[[Translation missing --]]
 	L["General Azerite Traits"] = "General Azerite Traits"
 	--[[Translation missing --]]

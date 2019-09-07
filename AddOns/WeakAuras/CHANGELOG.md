@@ -1,30 +1,35 @@
-# [2.14.5](https://github.com/WeakAuras/WeakAuras2/tree/2.14.5) (2019-08-27)
+# [2.14.6](https://github.com/WeakAuras/WeakAuras2/tree/2.14.6) (2019-08-30)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/2.14.4...2.14.5)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/2.14.5...2.14.6)
 
 ## Highlights
 
- - Let's call this the Reloe and Causese release
-- Bulk editing very large groups is now way faster
-- Your usual round of bug fixes 
+ - Bug fixes! Bug fixes! Get your bug fixes! 
 
 ## Commits
 
-InfusOnWoW (3):
+InfusOnWoW (1):
 
-- Pause dynamic groups in setAll
-- Text: Run custom text function in Update
-- Fix sorting of DynamicGroups
+- Fix regression Talent Selected Trigger
+
+LAMBOLEY Lucas (1):
+
+- Update .luacheckrc
 
 Stanzilla (2):
 
-- update opdeps for LibClassicCasterino
-- don't watch rune cooldowns on classic
+- add back the missing true(th)
+- remove last remnants of sticky duration, see our [wiki](https://github.com/WeakAuras/WeakAuras2/wiki/Deprecations) on what to use instead
 
-mrbuds (4):
+Vardex (1):
 
-- fix options for unsuported regions
-- fix import of unsupported region
-- add region.Update for "fallback" regionType
-- bossmod triggers: fix arithmetic error if state.extend is nil fix #1625
+- Fix wrong duration for oh enchantment
+
+mrbuds (5):
+
+- fix nil error in stance trigger
+- fix WeakAuras.GetProperties with unknown region type fixes #1643
+- classic: WA_GetUnitAura return duration & expirationTime from LibClassicDurations
+- fix a bug with combat log trigger arguments fix #1638
+- classic: fix register unknown event in bufftrigger1
 

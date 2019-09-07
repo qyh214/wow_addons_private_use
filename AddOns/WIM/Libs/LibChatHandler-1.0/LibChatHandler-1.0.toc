@@ -1,0 +1,10 @@
+## Interface: 70000
+
+## Title: LibChatHandler-1.0
+## Notes: Chat Event Model Control View (MCV)
+## Author: Pazza <Bronzebeard> johnlangone@gmail.com
+## X-Website: http://www.wimaddon.com
+## X-Category: Library
+## X-License: LGPL v2.1
+
+lib.xml

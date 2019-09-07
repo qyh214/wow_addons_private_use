@@ -34,8 +34,7 @@ local L = WeakAuras.L
 	L["%s total auras"] = "%s auras totais"
 	--[[Translation missing --]]
 	L["%s Zoom: %d%%"] = "%s Zoom: %d%%"
-	--[[Translation missing --]]
-	L["%s, Border"] = "%s, Border"
+	L["%s, Border"] = "%s, Borda"
 	--[[Translation missing --]]
 	L["%s, Offset: %0.2f;%0.2f"] = "%s, Offset: %0.2f;%0.2f"
 	--[[Translation missing --]]
@@ -72,10 +71,8 @@ local L = WeakAuras.L
 	L["Add %s"] = "Add %s"
 	L["Add a new display"] = "Adicionar um novo display"
 	L["Add Condition"] = "Adicionar condição"
-	--[[Translation missing --]]
-	L["Add Entry"] = "Add Entry"
-	--[[Translation missing --]]
-	L["Add Extra Elements"] = "Add Extra Elements"
+	L["Add Entry"] = "Adicionar Entrada"
+	L["Add Extra Elements"] = "Adicionar Elementos Extras"
 	L["Add Option"] = "Adicionar Opção"
 	--[[Translation missing --]]
 	L["Add Overlay"] = "Add Overlay"
@@ -137,8 +134,7 @@ WeakAuras → Opções → Opções ]=]
 	L["Auto-Clone (Show All Matches)"] = "Auto-Clone (Show All Matches)"
 	--[[Translation missing --]]
 	L["Auto-cloning enabled"] = "Auto-cloning enabled"
-	--[[Translation missing --]]
-	L["Automatic"] = "Automatic"
+	L["Automatic"] = "Automático"
 	L["Automatic Icon"] = "Ícone automático"
 	--[[Translation missing --]]
 	L["Backdrop Color"] = "Backdrop Color"
@@ -199,11 +195,9 @@ WeakAuras → Opções → Opções ]=]
 	--[[Translation missing --]]
 	L["Center"] = "Center"
 	L["Channel Number"] = "Número do canal"
-	--[[Translation missing --]]
-	L["Chat Message"] = "Chat Message"
+	L["Chat Message"] = "Mensagem do Chat"
 	L["Check On..."] = "Verificar..."
-	--[[Translation missing --]]
-	L["Children:"] = "Children:"
+	L["Children:"] = "Criança:"
 	L["Choose"] = "Escolher"
 	L["Choose Trigger"] = "Escolher o gatilho"
 	L["Choose whether the displayed icon is automatic or defined manually"] = "Escolher se o ícone mostrado é automático ou definido manualmente"
@@ -220,15 +214,13 @@ WeakAuras → Opções → Opções ]=]
 	L["Collapse all non-loaded displays"] = "Collapse all non-loaded displays"
 	--[[Translation missing --]]
 	L["Collapsible Group"] = "Collapsible Group"
-	--[[Translation missing --]]
-	L["color"] = "color"
+	L["color"] = "cor"
 	L["Color"] = "Cor"
 	--[[Translation missing --]]
 	L["Column Height"] = "Column Height"
 	--[[Translation missing --]]
 	L["Column Space"] = "Column Space"
-	--[[Translation missing --]]
-	L["Combinations"] = "Combinations"
+	L["Combinations"] = "Combinações"
 	--[[Translation missing --]]
 	L["Combine Matches Per Unit"] = "Combine Matches Per Unit"
 	--[[Translation missing --]]
@@ -238,8 +230,7 @@ WeakAuras → Opções → Opções ]=]
 	L["Compress"] = "Comprimir"
 	--[[Translation missing --]]
 	L["Condition %i"] = "Condition %i"
-	--[[Translation missing --]]
-	L["Conditions"] = "Conditions"
+	L["Conditions"] = "Condições"
 	--[[Translation missing --]]
 	L["Configure what options appear on this pannel."] = "Configure what options appear on this pannel."
 	L["Constant Factor"] = "Fator constante"
@@ -248,22 +239,18 @@ WeakAuras → Opções → Opções ]=]
 	L["Controls the positioning and configuration of multiple displays at the same time"] = "Controla o posicionamento e a configuração de múltiplos displays ao mesmo tempo"
 	--[[Translation missing --]]
 	L["Convert to New Aura Trigger"] = "Convert to New Aura Trigger"
-	--[[Translation missing --]]
-	L["Convert to..."] = "Convert to..."
+	L["Convert to..."] = "Converter para..."
 	--[[Translation missing --]]
 	L["Cooldown Edge"] = "Cooldown Edge"
 	--[[Translation missing --]]
 	L["Cooldown Settings"] = "Cooldown Settings"
 	--[[Translation missing --]]
 	L["Cooldown Swipe"] = "Cooldown Swipe"
-	--[[Translation missing --]]
-	L["Copy"] = "Copy"
-	--[[Translation missing --]]
-	L["Copy settings..."] = "Copy settings..."
+	L["Copy"] = "Copiar"
+	L["Copy settings..."] = "Copiar configurações"
 	--[[Translation missing --]]
 	L["Copy to all auras"] = "Copy to all auras"
-	--[[Translation missing --]]
-	L["Copy URL"] = "Copy URL"
+	L["Copy URL"] = "Copiar URL"
 	L["Count"] = "Contar"
 	--[[Translation missing --]]
 	L["Counts the number of matches over all units."] = "Counts the number of matches over all units."
@@ -298,12 +285,9 @@ WeakAuras → Opções → Opções ]=]
 	--[[Translation missing --]]
 	L["Custom Variables"] = "Custom Variables"
 	L["Debuff Type"] = "Tipo de penalidade"
-	--[[Translation missing --]]
-	L["Default"] = "Default"
-	--[[Translation missing --]]
-	L["Default Color"] = "Default Color"
-	--[[Translation missing --]]
-	L["Delete"] = "Delete"
+	L["Default"] = "Padrão"
+	L["Default Color"] = "Cor Padrão"
+	L["Delete"] = "Apagar"
 	L["Delete all"] = "Apagar tudo"
 	--[[Translation missing --]]
 	L["Delete children and group"] = "Delete children and group"
@@ -311,14 +295,11 @@ WeakAuras → Opções → Opções ]=]
 	L["Delete Entry"] = "Delete Entry"
 	L["Delete Trigger"] = "Apagar gatilho"
 	L["Desaturate"] = "Descolorir"
-	--[[Translation missing --]]
-	L["Description Text"] = "Description Text"
+	L["Description Text"] = "Texto Descritivo"
 	--[[Translation missing --]]
 	L["Determines how many entries can be in the table."] = "Determines how many entries can be in the table."
-	--[[Translation missing --]]
-	L["Differences"] = "Differences"
-	--[[Translation missing --]]
-	L["Disable Import"] = "Disable Import"
+	L["Differences"] = "Diferenças"
+	L["Disable Import"] = "Desabilitar Importação"
 	L["Disabled"] = "Desabilitar"
 	L["Discrete Rotation"] = "Rotação discreta"
 	L["Display"] = "Mostruário"
@@ -381,11 +362,9 @@ WeakAuras → Opções → Opções ]=]
 	L["Entry %i"] = "Entry %i"
 	--[[Translation missing --]]
 	L["Entry limit"] = "Entry limit"
-	--[[Translation missing --]]
-	L["Event"] = "Event"
+	L["Event"] = "Evento"
 	L["Event Type"] = "Tipo de evento"
-	--[[Translation missing --]]
-	L["Event(s)"] = "Event(s)"
+	L["Event(s)"] = "Evento(s)"
 	--[[Translation missing --]]
 	L["Everything"] = "Everything"
 	--[[Translation missing --]]
@@ -402,8 +381,7 @@ WeakAuras → Opções → Opções ]=]
 	L["Export to Lua table..."] = "Export to Lua table..."
 	--[[Translation missing --]]
 	L["Export to string..."] = "Export to string..."
-	--[[Translation missing --]]
-	L["External"] = "External"
+	L["External"] = "Externo"
 	L["Fade"] = "Sumir"
 	--[[Translation missing --]]
 	L["Fade In"] = "Fade In"
@@ -427,8 +405,7 @@ WeakAuras → Opções → Opções ]=]
 	L["Foreground Texture"] = "Textura do primeiro plano"
 	L["Frame"] = "Quadro"
 	L["Frame Strata"] = "Camada do quadro"
-	--[[Translation missing --]]
-	L["Frequency"] = "Frequency"
+	L["Frequency"] = "Frequência"
 	--[[Translation missing --]]
 	L["From Template"] = "From Template"
 	--[[Translation missing --]]

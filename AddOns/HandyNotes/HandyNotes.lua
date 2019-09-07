@@ -12,6 +12,8 @@ local HBD = LibStub("HereBeDragons-2.0")
 local HBDPins = LibStub("HereBeDragons-Pins-2.0")
 local HBDMigrate = LibStub("HereBeDragons-Migrate")
 
+local WoWClassic = select(4, GetBuildInfo()) < 20000
+
 ---------------------------------------------------------
 -- Our db upvalue and db defaults
 local db
@@ -60,7 +62,6 @@ end
 -- Our frames recycling code
 local pinCache = {}
 local minimapPins = {}
-local worldmapPins = {}
 local pinCount = 0
 
 local function recyclePin(pin)
@@ -154,7 +155,6 @@ function HandyNotes:RegisterPluginDB(pluginName, pluginHandler, optionsTable)
 	else
 		self.plugins[pluginName] = pluginHandler
 	end
-	worldmapPins[pluginName] = {}
 	minimapPins[pluginName] = {}
 	options.args.plugins.args[pluginName] = optionsTable
 	pluginsOptionsText[pluginName] = optionsTable and optionsTable.name or pluginName
@@ -176,7 +176,15 @@ end
 ---------------------------------------------------------
 -- Public functions
 
-local continentZoneList = {
+local continentZoneList = WoWClassic and {
+	[1414] = true, -- Kalimdor
+	[1415] = true, -- Eastern Kingdoms
+
+	-- mapFile compat entries
+	["Kalimdor"]              = 1414,
+	["Azeroth"]               = 1415,
+}
+or {
 	[12]  = true, -- Kalimdor
 	[13]  = true, -- Azeroth
 	[101] = true, -- Outlands
@@ -186,7 +194,7 @@ local continentZoneList = {
 	[619] = true, -- Broken Isles
 	[875] = true, -- Zandalar
 	[876] = true, -- Kul Tiras
-	
+
 	-- mapFile compat entries
 	["Kalimdor"]              = 12,
 	["Azeroth"]               = 13,
@@ -276,7 +284,7 @@ local function IterateNodes(pluginName, uiMapID, minimap)
 	if handler.GetNodes2 then
 		return handler:GetNodes2(uiMapID, minimap)
 	elseif handler.GetNodes then
-		local mapID, level, mapFile = HBDMigrate:GetLegacyMapInfo(uiMapID)
+		local _mapID, level, mapFile = HBDMigrate:GetLegacyMapInfo(uiMapID)
 		if not mapFile then
 			return next, emptyTbl
 		end
@@ -314,11 +322,11 @@ function HandyNotes.WorldMapDataProvider:RefreshPlugin(pluginName)
 			self:GetMap():RemovePin(pin)
 		end
 	end
-	
+
 	if not db.enabledPlugins[pluginName] then return end
 	local uiMapID = self:GetMap():GetMapID()
 	if not uiMapID then return end
-	
+
 	for coord, uiMapID2, iconpath, scale, alpha in IterateNodes(pluginName, uiMapID, false) do
 		local x, y = floor(coord / 10000) / 10000, (coord % 10000) / 10000
 		if uiMapID2 and uiMapID ~= uiMapID2 then
@@ -414,7 +422,7 @@ function HandyNotes:UpdateMinimapPlugin(pluginName)
 	if not db.enabledPlugins[pluginName] then return end
 
 	local uiMapID = HBD:GetPlayerZone()
-	if not uiMapID then return end 
+	if not uiMapID then return end
 
 	local ourScale, ourAlpha = 12 * db.icon_scale_minimap, db.icon_alpha_minimap
 	local frameLevel = Minimap:GetFrameLevel() + 5
@@ -616,7 +624,7 @@ function HandyNotes:OnEnable()
 		self:Disable()
 		return
 	end
-	
+
 	self:RegisterMessage("HandyNotes_NotifyUpdate", "UpdatePluginMap")
 	self:UpdateMinimap()
 	WorldMapFrame:AddDataProvider(HandyNotes.WorldMapDataProvider)
@@ -641,6 +649,3 @@ function HandyNotes:OnProfileChanged(event, database, newProfileKey)
 	self:UpdateMinimap()
 	self:UpdateWorldMap()
 end
-
-
--- vim: ts=4 noexpandtab

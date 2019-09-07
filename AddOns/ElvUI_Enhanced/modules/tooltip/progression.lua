@@ -116,7 +116,6 @@ local function UpdateProgression(guid)
 	progressCache[guid].header = progressCache[guid].header or {}
 	progressCache[guid].info =  progressCache[guid].info or {}
 	progressCache[guid].timer = GetTime()
-	print(englishFaction)
 	GetProgression(guid)	
 end
 

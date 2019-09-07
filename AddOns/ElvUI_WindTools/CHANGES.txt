@@ -1,64 +1,80 @@
-lightweight tag 4106cf9aee322cdf11a4db389b8e67b712ca055f 1.4.7
-Author:	GitHub <noreply@github.com>
-Date:	Mon Jul 8 12:43:06 2019 -0700
+lightweight tag a6ccadb218df6e2ae37567b5a12a19d59c5f5f86 1.5.0
+Author:	Zhou Fang <fang2hou@outlook.com>
+Date:	Thu Aug 29 16:05:05 2019 +0900
 
-commit 4106cf9aee322cdf11a4db389b8e67b712ca055f
-Author: SomeBlu <someblu@users.noreply.github.com>
-Date:   Mon Jul 8 12:43:06 2019 -0700
+commit a6ccadb218df6e2ae37567b5a12a19d59c5f5f86
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Thu Aug 29 16:05:05 2019 +0900
 
-    Update README.md
+    修复toc版本
 
-commit e4e607fccc19716b56d16d427642d2d3daba3e38
-Author: SomeBlu <someblu@users.noreply.github.com>
-Date:   Mon Jul 8 12:42:22 2019 -0700
+commit b2aea406c79931a143bd37089103a519c168c28f
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Thu Aug 29 16:00:49 2019 +0900
 
-    Update CHANGELOG.md
+    Revert "1.4.8"
+    
+    This reverts commit 45895a7af8295740f1c5b3fe15304bb0d655c3d1.
 
-commit ac11de0bd34a41ba72c0f9ef34ee1011c2546d38
-Author: SomeBlu <webmaster@someblu.com>
-Date:   Mon Jul 8 12:38:29 2019 -0700
+commit b2aea406c79931a143bd37089103a519c168c28f
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Thu Aug 29 16:00:49 2019 +0900
 
-    添加作者以及修改者信息
+    Revert "1.4.8"
+    
+    This reverts commit 45895a7af8295740f1c5b3fe15304bb0d655c3d1.
 
-commit 1dfd452deabb8c32622133fc3ecdbd3ce38ebd0d
-Author: SomeBlu <webmaster@someblu.com>
-Date:   Mon Jul 8 12:27:47 2019 -0700
+commit e50d0fa4c37f161faea6013f4ef94ef69ba16721
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Thu Aug 29 16:00:34 2019 +0900
 
-    修正暴雪框体增强模块，并添加艾泽利特特质、精华、重铸界面的支持。
+    补充更新记录
 
-commit 30c0f378b08a152eabfceb0a43bafc0de0b08480
-Author: ChihChung Ma <mccjohnny@gmail.com>
-Date:   Wed Jul 3 21:49:57 2019 +0800
+commit 251b040214cdd2632abeba73afdafedacd2ab840
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Thu Aug 29 15:57:28 2019 +0900
 
-    fix stupid mistake..
+    Revert "1.5.0"
+    
+    This reverts commit da4d8b7d0bb2f5cb3913c1cc350dba2a08f0869c.
 
-commit 1dfd452deabb8c32622133fc3ecdbd3ce38ebd0d
-Author: SomeBlu <webmaster@someblu.com>
-Date:   Mon Jul 8 12:27:47 2019 -0700
+commit da4d8b7d0bb2f5cb3913c1cc350dba2a08f0869c
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Thu Aug 29 15:55:31 2019 +0900
 
-    修正暴雪框体增强模块，并添加艾泽利特特质、精华、重铸界面的支持。
+    1.5.0
+    
+    之前看错了！
 
-commit 30c0f378b08a152eabfceb0a43bafc0de0b08480
-Author: ChihChung Ma <mccjohnny@gmail.com>
-Date:   Wed Jul 3 21:49:57 2019 +0800
+commit 45895a7af8295740f1c5b3fe15304bb0d655c3d1
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Thu Aug 29 15:52:28 2019 +0900
 
-    fix stupid mistake..
+    1.4.8
 
-commit 12afed05e1994aafdc09405823d1964b9fd0c623
-Author: ChihChung Ma <mccjohnny@gmail.com>
-Date:   Sun Jun 9 04:30:44 2019 +0800
+commit 6e5fc92bfd2a060aada856930c27b5a75bd13cd3
+Author: LiangYuxuan <lyx@lyx.es>
+Date:   Mon Aug 19 15:31:00 2019 +0800
 
-    補上團隊標記列的翻譯
+    在鼠标增强配置中加入永恒王宫
+    并调整默认配置
 
-commit 12afed05e1994aafdc09405823d1964b9fd0c623
-Author: ChihChung Ma <mccjohnny@gmail.com>
-Date:   Sun Jun 9 04:30:44 2019 +0800
+commit 6e5fc92bfd2a060aada856930c27b5a75bd13cd3
+Author: LiangYuxuan <lyx@lyx.es>
+Date:   Mon Aug 19 15:31:00 2019 +0800
 
-    補上團隊標記列的翻譯
+    在鼠标增强配置中加入永恒王宫
+    并调整默认配置
 
-commit 19f689e5bcbfef019975b87e58d52c067e4ecedf
-Author: ChihChung Ma <mccjohnny@gmail.com>
-Date:   Sun Jun 9 04:29:19 2019 +0800
+commit fe5dbdfe32f8d26215fd1a0fc8dff250dc5031f2
+Author: LiangYuxuan <lyx@lyx.es>
+Date:   Wed Jul 17 12:02:18 2019 +0800
 
-    移植ElvUI_Enhanced的團隊標記列
+    同步ElvUI_Enhanced的永恒王宫进度提示
+
+commit fe5dbdfe32f8d26215fd1a0fc8dff250dc5031f2
+Author: LiangYuxuan <lyx@lyx.es>
+Date:   Wed Jul 17 12:02:18 2019 +0800
+
+    同步ElvUI_Enhanced的永恒王宫进度提示
 
