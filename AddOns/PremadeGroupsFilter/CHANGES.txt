@@ -1,28 +1,16 @@
-lightweight tag 4b85a2c34ce2b901ddea207337fa2174ee451eb6 1.28
+lightweight tag f7a60ee9f2855e656146346c8f81d048fc40d34e 1.30
 Author:	Bernhard Saumweber <b.saumweber@gmail.com>
-Date:	Sat Jul 13 18:03:18 2019 +0200
+Date:	Sun Sep 8 17:08:01 2019 +0200
 
-commit 4b85a2c34ce2b901ddea207337fa2174ee451eb6
+commit f7a60ee9f2855e656146346c8f81d048fc40d34e
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Sat Jul 13 18:03:18 2019 +0200
+Date:   Sun Sep 8 17:08:01 2019 +0200
 
-    Set version to next release version: 1.28
+    Set version to: 1.30
 
-commit 6f6786557ccf42e2847d4a63a38c5d15ba203137
+commit baa71f2b4917bbdaa2a8136cdf11098a3d07d479
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Sat Jul 13 18:01:37 2019 +0200
+Date:   Sun Sep 8 17:06:14 2019 +0200
 
-    Update help tooltip with latest dungeon keywords
-
-commit 760edb42eeb8794263900b7cd150a87805637be7
-Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Sat Jul 13 17:52:05 2019 +0200
-
-    Raise interface version to 80200
-
-commit dedc6febe8eb706d83941b5b03aa7b81e3e59450
-Author: Rhino <6531393+srhinos@users.noreply.github.com>
-Date:   Sat Jul 13 08:46:56 2019 -0700
-
-    Update Addon to Include  Palace and Mechagon (#22)
+    Adds support for the Premade Regions addon: new keywords oce, usp, usm, usc, use, mex, bzl and region
 

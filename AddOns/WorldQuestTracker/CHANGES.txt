@@ -1,10 +1,8 @@
-lightweight tag aab12a1212ef9c82352202249e05550c1f6eb81c v8.2.0.381
-Author:	Tercioo <terciob19@hotmail.com>
-Date:	Sat Aug 17 13:10:04 2019 -0300
+Changes since tag v8.2.0.381
 
-commit aab12a1212ef9c82352202249e05550c1f6eb81c
-Author: Tercioo <terciob19@hotmail.com>
-Date:   Sat Aug 17 13:10:04 2019 -0300
+commit 03a23bdc0f5357877d5123ae0f559ffe5aa8ddc3
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Mon Sep 9 13:00:56 2019 -0300
 
-    Fixed the issue of sending messages to chat when a new rare is detected
+    Git Ignore localization files
 

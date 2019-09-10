@@ -88,46 +88,26 @@ L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SHOWTEXT"] = "Texto de tiempo restante"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SORTBYTIME"] = "Ordenado por tiempo"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_TITLE"] = "Tiempo restante"
 L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "Compartido a la cuenta"
---[[Translation missing --]]
---[[ L["S_OPTIONS_ACCESSIBILITY"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_ANIMATIONS"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_ALIGN"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_SCALE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_QUESTBLACKLIST"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_RESET"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_SHOWFACTIONS"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_TRACKER_RESETPOSITION"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_ANCHOR_LEFT"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_ANCHOR_RIGHT"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_DECREASEICONSPERROW"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_INCREASEICONSPERROW"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = ""--]] 
+L["S_OPTIONS_ACCESSIBILITY"] = "Accesibilidad"
+L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = "Marca de seguimiento adicional"
+L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "Mostrar anillo de recompensas"
+L["S_OPTIONS_ANIMATIONS"] = "Animaciones"
+L["S_OPTIONS_MAPFRAME_ALIGN"] = "Ventana del mapa centrada"
+L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "Primero tienes que activar 'Escala de la ventana del mapa', no se ha modificado ningún valor."
+L["S_OPTIONS_MAPFRAME_SCALE"] = "Escala de la ventana del mapa"
+L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = "Activa el cambio de tamaño de la ventana de mapa"
+L["S_OPTIONS_QUESTBLACKLIST"] = "Lista negra de misiones"
+L["S_OPTIONS_RESET"] = "Reiniciar"
+L["S_OPTIONS_SHOWFACTIONS"] = "Mostrar facciones"
+L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = "Sin prioridad por tiempo restante"
+L["S_OPTIONS_TRACKER_RESETPOSITION"] = "Reiniciar posición"
+L["S_OPTIONS_WORLD_ANCHOR_LEFT"] = "Anclar a la izquierda"
+L["S_OPTIONS_WORLD_ANCHOR_RIGHT"] = "Anclar a la derecha"
+L["S_OPTIONS_WORLD_DECREASEICONSPERROW"] = "Reducir cuadrados por fila"
+L["S_OPTIONS_WORLD_INCREASEICONSPERROW"] = "Aumentar cuadrados por fila"
+L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = "Organizar por mapa"
+L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = "Organizar por tipo de misión"
+L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = "Sólo con seguimiento"
 L["S_OVERALL"] = "Total"
 L["S_PARTY"] = "Grupo"
 L["S_PARTY_DESC1"] = "Las misiones con una estrella azul significa que todos los miembros del grupo tienen esa misión."
@@ -164,27 +144,21 @@ L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Otros personajes"
 L["S_TUTORIAL_AMOUNT"] = "Indica la cantidad a recibir"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Pulsa para rastrear una misión."
 L["S_TUTORIAL_PARTY"] = "Estando en grupo, ¡una estrella azul indica las misiones que todos los miembros del grupo tienen!"
---[[Translation missing --]]
---[[ L["S_TUTORIAL_STATISTICS_BUTTON"] = ""--]] 
+L["S_TUTORIAL_STATISTICS_BUTTON"] = "Haz clic aquí para ver las estadísticas y una lista guardada de las misiones de otros personajes."
 L["S_TUTORIAL_TIMELEFT"] = "Indica el tiempo restante (+4 horas, +90 minutos, +30 minutos, menos de 30 minutos)"
 --[[Translation missing --]]
 --[[ L["S_TUTORIAL_WORLDBUTTONS"] = ""--]] 
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Este botón te lleva al mapa de las Islas Abruptas."
 L["S_UNKNOWNQUEST"] = "Misión desconocida"
---[[Translation missing --]]
---[[ L["S_WHATSNEW"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_WORLDBUTTONS_SHOW_NONE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_WORLDBUTTONS_SHOW_TYPE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_WORLDBUTTONS_SHOW_ZONE"] = ""--]] 
+L["S_WHATSNEW"] = "¿Qué hay nuevo?"
+L["S_WORLDBUTTONS_SHOW_NONE"] = "Ocultar resumen"
+L["S_WORLDBUTTONS_SHOW_TYPE"] = "Mostrar resumen"
+L["S_WORLDBUTTONS_SHOW_ZONE"] = "Ordenar por zona"
 --[[Translation missing --]]
 --[[ L["S_WORLDBUTTONS_TOGGLE_QUESTS"] = ""--]] 
 L["S_WORLDMAP_QUESTLOCATIONS"] = "Mostrar las Localizaciones de las Misiones"
 L["S_WORLDMAP_QUESTSUMMARY"] = "Mostrar el Sumario de Misiones"
 L["S_WORLDMAP_TOOGLEQUESTS"] = "Alternar Misiones"
---[[Translation missing --]]
---[[ L["S_WORLDMAP_TOOLTIP_TRACKALL"] = ""--]] 
+L["S_WORLDMAP_TOOLTIP_TRACKALL"] = "seguir todas las misiones de esta lista"
 L["S_WORLDQUESTS"] = "Misiones del mundo"
 

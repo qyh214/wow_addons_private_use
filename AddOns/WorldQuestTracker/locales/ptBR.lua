@@ -176,8 +176,7 @@ L["S_WHATSNEW"] = "O que tem de novo?"
 --[[ L["S_WORLDBUTTONS_SHOW_NONE"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_WORLDBUTTONS_SHOW_TYPE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_WORLDBUTTONS_SHOW_ZONE"] = ""--]] 
+L["S_WORLDBUTTONS_SHOW_ZONE"] = "Ordenar por Zona"
 --[[Translation missing --]]
 --[[ L["S_WORLDBUTTONS_TOGGLE_QUESTS"] = ""--]] 
 L["S_WORLDMAP_QUESTLOCATIONS"] = "Mostrar local da quest"
