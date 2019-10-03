@@ -219,7 +219,7 @@ local WIM_ClassicSkin = {
             },
             chat_display = {
                 points = {
-                    {"TOPLEFT", "window", "TOPLEFT", 24, -46},
+                    {"TOPLEFT", "window", "TOPLEFT", 24, -50},
                     {"BOTTOMRIGHT", "window", "BOTTOMRIGHT", -38, 39}
                 },
                 font = "ChatFontNormal"
@@ -256,7 +256,7 @@ local WIM_ClassicSkin = {
                     icons = {
                         location = "Interface\\Icons\\Ability_TownWatch",
                         invite = "Interface\\Icons\\Spell_Holy_BlessingOfStrength",
-                        friend = "Interface\\Icons\\INV_Misc_GroupNeedMore",
+                        friend = "interface\\icons\\spell_chargepositive",
                         ignore = "Interface\\Icons\\Ability_Physical_Taunt",
                     }
                 }

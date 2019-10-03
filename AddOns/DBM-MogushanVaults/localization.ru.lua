@@ -1,10 +1,12 @@
-if GetLocale() ~= "ruRU" then return end
+﻿if GetLocale() ~= "ruRU" then
+	return
+end
 local L
 
 ------------
 -- The Stone Guard --
 ------------
-L= DBM:GetModLocalization(679)
+L = DBM:GetModLocalization(679)
 
 L:SetWarningLocalization({
 	SpecWarnOverloadSoon		= "Скоро %s!",
@@ -25,7 +27,7 @@ L:SetMiscLocalization({
 ------------
 -- Feng the Accursed --
 ------------
-L= DBM:GetModLocalization(689)
+L = DBM:GetModLocalization(689)
 
 L:SetWarningLocalization({
 	WarnPhase			= "Фаза %d",
@@ -39,19 +41,19 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Fire		= "О, превозносимый! Моими руками ты отделишь их плоть от костей!",
-	Arcane		= "О, великий мыслитель! Да снизойдет на меня твоя древняя мудрость!",
-	Nature		= "О, великий дух! Даруй мне силу земли!",
-	Shadow		= "Великие души защитников! Охраняйте меня!"
+	Fire	= "О, превозносимый! Моими руками ты отделишь их плоть от костей!",
+	Arcane	= "О, великий мыслитель! Да снизойдет на меня твоя древняя мудрость!",
+	Nature	= "О, великий дух! Даруй мне силу земли!",
+	Shadow	= "Великие души защитников! Охраняйте меня!"
 })
 
 -------------------------------
 -- Gara'jal the Spiritbinder --
 -------------------------------
-L= DBM:GetModLocalization(682)
+L = DBM:GetModLocalization(682)
 
 L:SetMiscLocalization({
-	Pull			= "Пора умирать!"
+	Pull	= "Пора умирать!"
 })
 
 ----------------------
@@ -60,7 +62,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(687)
 
 L:SetWarningLocalization({
-	DarknessSoon		= "Щит тьмы через %d сек."
+	DarknessSoon	= "Щит тьмы через %d сек."
 })
 
 L:SetTimerLocalization({
@@ -69,8 +71,8 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	DarknessSoon		= "Производить 5-секундный отсчет для $spell:117697",
-	timerUSRevive		= "Отсчет времени до формирования $spell:117506"
+	DarknessSoon	= "Производить 5-секундный отсчет для $spell:117697",
+	timerUSRevive	= "Отсчет времени до формирования $spell:117506"
 })
 
 ------------
@@ -83,7 +85,7 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerDespawnFloor		= "Пол исчезает!"
+	timerDespawnFloor	= "Пол исчезает!"
 })
 
 L:SetOptionLocalization({
@@ -94,7 +96,7 @@ L:SetOptionLocalization({
 ------------
 -- Will of the Emperor --
 ------------
-L= DBM:GetModLocalization(677)
+L = DBM:GetModLocalization(677)
 
 L:SetOptionLocalization({
 	InfoFrame		= "Показывать информационное окно для игроков с $spell:116525",

@@ -1,10 +1,12 @@
-if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then
+	return
+end
 local L
 
 ----------------------------
 -- Visir imperial Zor'lok --
 ----------------------------
-L= DBM:GetModLocalization(745)
+L = DBM:GetModLocalization(745)
 
 L:SetWarningLocalization({
 	warnEcho			= "Ha aparecido un eco",
@@ -23,14 +25,14 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Platform			= "¡El visir imperial Zor'lok vuela hacia una de las plataformas!",
-	Defeat				= "No sucumbiremos ante la desesperación del vacío oscuro. Si Ella desea que perezcamos, así lo haremos."
+	Platform	= "¡El visir imperial Zor'lok vuela hacia una de las plataformas!",
+	Defeat		= "No sucumbiremos ante la desesperación del vacío oscuro. Si Ella desea que perezcamos, así lo haremos."
 })
 
 ------------
 -- Ta'yak --
 ------------
-L= DBM:GetModLocalization(744)
+L = DBM:GetModLocalization(744)
 
 L:SetOptionLocalization({
 	UnseenStrikeArrow	= DBM_CORE_AUTO_ARROW_OPTION_TEXT:format(122949),
@@ -40,7 +42,7 @@ L:SetOptionLocalization({
 -------------
 -- Garalon --
 -------------
-L= DBM:GetModLocalization(713)
+L = DBM:GetModLocalization(713)
 
 L:SetWarningLocalization({
 	warnCrush		= "%s",
@@ -62,7 +64,7 @@ L:SetMiscLocalization({
 --------------------------------
 -- Señor del viento Mel'jarak --
 --------------------------------
-L= DBM:GetModLocalization(741)
+L = DBM:GetModLocalization(741)
 
 L:SetOptionLocalization({
 	AmberPrisonIcons		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(121885),
@@ -72,7 +74,7 @@ L:SetOptionLocalization({
 ------------------------------
 -- Formador de ámbar Un'sok --
 ------------------------------
-L= DBM:GetModLocalization(737)
+L = DBM:GetModLocalization(737)
 
 L:SetWarningLocalization({
 	warnReshapeLife				= "%s en >%s< (%d)",--Localized because i like class colors on warning and shoving a number into targetname broke it using the generic.
@@ -88,8 +90,8 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerDestabalize			= "Desestabilizar (%2$d) : %1$s",
-	timerAmberExplosionAMCD		= "Deflagración (Monstruosidad) TdR"
+	timerDestabalize		= "Desestabilizar (%2$d) : %1$s",
+	timerAmberExplosionAMCD	= "Deflagración (Monstruosidad) TdR"
 })
 
 L:SetOptionLocalization({
@@ -110,16 +112,16 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	WillPower					= "Voluntad"
+	WillPower	= "Voluntad"
 })
 
 -------------------------------
 -- Gran emperatriz Shek'zeer --
 -------------------------------
-L= DBM:GetModLocalization(743)
+L = DBM:GetModLocalization(743)
 
 L:SetWarningLocalization({
-	warnAmberTrap		= "Trampa de ámbar: %d/5 resinas"
+	warnAmberTrap	= "Trampa de ámbar: %d/5 resinas"
 })
 
 L:SetOptionLocalization({
@@ -131,8 +133,8 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	PlayerDebuffs		= "Fijar",
-	YellPhase3			= "¡Se acabaron las excusas, Emperatriz! ¡Acaba con estos despreciables o te mataré yo mismo!"
+	PlayerDebuffs	= "Fijar",
+	YellPhase3		= "¡Se acabaron las excusas, Emperatriz! ¡Acaba con estos despreciables o te mataré yo mismo!"
 })
 
 ------------------------
@@ -141,7 +143,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("HoFTrash")
 
 L:SetGeneralLocalization({
-	name =	"Enemigos menores"
+	name	= "Enemigos menores"
 })
 
 L:SetOptionLocalization({

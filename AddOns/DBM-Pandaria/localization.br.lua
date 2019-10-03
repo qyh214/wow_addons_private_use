@@ -1,4 +1,5 @@
-if GetLocale() ~= "ptBR" then return end
+﻿if GetLocale() ~= "ptBR" then
+	return
+end
 
 local L
-

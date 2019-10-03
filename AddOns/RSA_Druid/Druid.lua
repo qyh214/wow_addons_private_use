@@ -355,7 +355,7 @@ function RSA_Druid:OnEnable()
 						if RSA.db.profile.Druid.Spells.Revive.Raid == true then
 							if RSA.db.profile.Druid.Spells.Revive.SmartGroup == true and GetNumGroupMembers() > 0 then return end
 							RSA.Print_Raid(string.gsub(message, ".%a+.", RSA.String_Replace))
-						end						
+						end
 					end
 				end
 			end

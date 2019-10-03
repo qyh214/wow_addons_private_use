@@ -188,14 +188,6 @@ L:SetGeneralLocalization({
 	name = "그라불루스"
 })
 
-L:SetWarningLocalization({
-	SpecialWarningInjection		= "당신에게 돌연변이 유발!"
-})
-
-L:SetOptionLocalization({
-	SpecialWarningInjection		= "돌연변이 유발 특수 경고 보기"
-})
-
 -------------
 --  글루스  --
 -------------
@@ -397,8 +389,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	TimerPhase2			= "2 단계 바 보기",
 	specwarnP2Soon		= "2 단계 10초 전에 특수 경고 보기",
-	warnAddsSoon		= "얼음왕관의 수호자 이전에 알림 보기",
-	ShowRange			= "2 단계에서 거리 창 보기"
+	warnAddsSoon		= "얼음왕관의 수호자 이전에 알림 보기"
 })
 
 L:SetMiscLocalization({

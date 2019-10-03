@@ -80,6 +80,12 @@ L = DBM:GetModLocalization("Majordomo")
 L:SetGeneralLocalization{
 	name = "Majordomo Executus"
 }
+L:SetTimerLocalization{
+	timerShieldCD		= "Next Shield"
+}
+L:SetOptionLocalization{
+	timerShieldCD		= "Show timer for next Damage/Reflect Shield"
+}
 
 ----------------
 --  Ragnaros  --

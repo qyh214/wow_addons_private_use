@@ -107,7 +107,6 @@ L.ShowGuildMessages 		= "Zeige Meldungen für Kampfbeginn/Siege/Niederlagen für
 L.ShowGuildMessagesPlus		= "Zeige auch Meldungen für Kampfbeginn/Siege/Niederlagen für Mythisch+ Gildengruppen (benötigt Schlachtzugeinstellung)"
 L.WhisperMessages			= "Flüstermeldungen"
 L.AutoRespond 				= "Aktiviere automatische Antwort während eines Bosskampfes"
-L.EnableStatus 				= "Antworte auf 'status'-Flüsteranfragen"
 L.WhisperStats 				= "Füge Sieg-/Niederlagestatistik den Flüsterantworten hinzu"
 L.DisableStatusWhisper 		= "Deaktiviere 'status'-Flüsteranfragen für die gesamte Gruppe (nur als Gruppenleiter; nur für normale/heroische/mythische Schlachtzüge und Mythisch+ Dungeons)"
 L.DisableGuildStatus 		= "Deaktiviere das Senden von Fortschrittsmeldungen an die Gilde für die gesamte Gruppe (nur als Gruppenleiter)"
@@ -198,7 +197,7 @@ L.SpecialWarnSound5			= "Sound für Spezialwarnungen mit Notizen die deinen Name
 
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "Gesprochene Warnungen"
-L.Area_VoiceSelection		= "Stimmenauswahl für akustische Zählungen und gesprochene Warnungen (scrollbar per Mausrad)"
+L.Area_VoiceSelection		= "Stimmenauswahl für akustische Zählungen und gesprochene Warnungen"
 L.CountdownVoice			= "Primäre Stimme für Zählungen"
 L.CountdownVoice2			= "Sekundäre Stimme für Zählungen"
 L.CountdownVoice3			= "Tertiäre Stimme für Zählungen"

@@ -1,4 +1,4 @@
-﻿## Interface: 80200
+﻿## Interface: 80205
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Garrison Invasions|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0주둔지 침공|r
@@ -24,7 +24,7 @@
 ## X-DBM-Mod-MinCoreRevision: 15159
 ## X-Curse-Project-ID: 101956
 ## X-WoWI-ID: 24535
-## Version: r44-4-g98e9fb6
+## Version: r45
 
 localization.en.lua
 localization.fr.lua

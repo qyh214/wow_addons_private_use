@@ -12,9 +12,6 @@ local tostring = tostring;
 --set namespace
 setfenv(1, WIM);
 
---Quick and dirty fix for renames in legion to deal with renamed globals
-local BNet_GetPresenceID = _G.BNet_GetBNetIDAccount or _G.BNet_GetPresenceID
-
 db_defaults.disableAddonMessages = isPrivateServer;
 
 local SocketPool = {};
@@ -141,7 +138,7 @@ local function debugSentData(msg, ttype, target)
 end
 
 local function isBattleNet(user)
-  return BNet_GetPresenceID(user);
+  return _G.BNet_GetBNetIDAccount(user);
 end
 
 

@@ -44,7 +44,7 @@ function RSA_DemonHunter:OnEnable()
 			[187827] = { -- METAMORPHOSIS VENGEANCE TANK
 				profile = 'MetamorphosisTank',
 				tracker = 2
-			}, 
+			},
 			[196718] = { -- DARKNESS
 				profile = 'Darkness',
 			},
@@ -73,7 +73,7 @@ function RSA_DemonHunter:OnEnable()
 				linkID = 191427
 			},
 			[187827] = { -- METAMORPHOSIS VENGEANCE TANK
-				profile = 'MetamorphosisTank', 
+				profile = 'MetamorphosisTank',
 				tracker = 2
 			},
 			[207744] = { -- FIERY BRAND
@@ -117,7 +117,7 @@ function RSA_DemonHunter:OnEnable()
 			[188501] = { -- SPECTRAL SIGHT
 				profile = 'SpectralSight',
 				section = 'End',
-			},		
+			},
 			[212800] = { -- BLUR
 				profile = 'Blur',
 				section = 'End',

@@ -138,8 +138,8 @@ end
 
 function classes.GetColoredNameByChatEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)
      if(arg12 and arg12 ~= "") then
-	    	 local type = _G.strsplit(":", arg12 or "")
-	    	 if type ~= "player" then return arg2 end--Blizzard didn't return a valid guid, so abort class colors
+	    	 local type = _G.strsplit("-", arg12 or "")
+	    	 if type ~= "Player" then return arg2 end--Blizzard didn't return a valid guid, so abort class colors
           local localizedClass, englishClass, localizedRace, englishRace, sex = _G.GetPlayerInfoByGUID(arg12)
           if ( englishClass ) then
                local classColorTable = _G.RAID_CLASS_COLORS[englishClass];

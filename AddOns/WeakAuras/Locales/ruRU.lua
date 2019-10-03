@@ -45,6 +45,8 @@ L["/wa pstart - Start profiling"] = "/wa pstart - Start profiling"
 --[[Translation missing --]]
 L["/wa pstop - Finish profiling"] = "/wa pstop - Finish profiling"
 --[[Translation missing --]]
+L["/wa repair - Repair tool"] = "/wa repair - Repair tool"
+--[[Translation missing --]]
 L["|cffeda55fLeft-Click|r to toggle showing the main window."] = "|cffeda55fLeft-Click|r to toggle showing the main window."
 --[[Translation missing --]]
 L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."
@@ -145,6 +147,8 @@ L["Autocast Shine"] = "Autocast Shine"
 --[[Translation missing --]]
 L["Auto-Clone (Show all Matches)"] = "Auto-Clone (Show all Matches)"
 L["Automatic"] = "Автоматически"
+--[[Translation missing --]]
+L["Automatic Repair Confirmation Dialog"] = "Automatic Repair Confirmation Dialog"
 L["Automatic Rotation"] = "Автоматический поворот"
 --[[Translation missing --]]
 L["Avoidance (%)"] = "Avoidance (%)"
@@ -187,6 +191,8 @@ L["Buff"] = "Бафф"
 L["Buffed/Debuffed"] = "Есть бафф / дебафф"
 L["Can be used for e.g. checking if \"boss1target\" is the same as \"player\"."] = [=[Может использоваться для проверки равенства двух единиц.
 Например: "игрок" является целью 1-го босса - "boss1target".]=]
+--[[Translation missing --]]
+L["Cancel"] = "Cancel"
 L["Cast"] = "Применение заклинания"
 --[[Translation missing --]]
 L["Cast Bar"] = "Cast Bar"
@@ -231,6 +237,8 @@ L["Combat Log"] = "Журнал боя"
 L["Combine all matches"] = "Combine all matches"
 L["Conditions"] = "Условия"
 L["Contains"] = "Содержит"
+--[[Translation missing --]]
+L["Continue Without Repairing"] = "Continue Without Repairing"
 --[[Translation missing --]]
 L["Cooldown"] = "Cooldown"
 L["Cooldown Progress (Equipment Slot)"] = "Восстановление (ячейка экипировки)"
@@ -321,6 +329,12 @@ L["Emphasized"] = "Emphasized"
 --[[Translation missing --]]
 L["Emphasized option checked in BigWigs's spell options"] = "Emphasized option checked in BigWigs's spell options"
 L["Empty"] = "Пустой"
+--[[Translation missing --]]
+L["Enchant Found"] = "Enchant Found"
+--[[Translation missing --]]
+L["Enchant Missing"] = "Enchant Missing"
+--[[Translation missing --]]
+L["Enchant Name or ID"] = "Enchant Name or ID"
 L["Encounter ID(s)"] = "ID энкаунтера"
 L["Energize"] = "Восполнение"
 L["Enrage"] = "Исступление"
@@ -513,6 +527,8 @@ L["Main Stat"] = "Main Stat"
 L["Make sure you can trust the person who sent it!"] = [=[Убедитесь, что вы можете доверять человеку,
 отправившему ее!]=]
 L["Malformed WeakAuras link"] = "Неверная ссылка WeakAuras"
+--[[Translation missing --]]
+L["Manual Repair Confirmation Dialog"] = "Manual Repair Confirmation Dialog"
 L["Manual Rotation"] = "Ручной поворот"
 L["Marked First"] = "В начале списка"
 L["Marked Last"] = "В конце списка"
@@ -542,6 +558,8 @@ L["Miss"] = "Промах"
 L["Miss Type"] = "Тип промаха"
 L["Missed"] = "Промах"
 L["Missing"] = "Эффект отсутствует"
+--[[Translation missing --]]
+L["Model"] = "Model"
 L["Monochrome"] = "Монохромный"
 L["Monochrome Outline"] = "Монохромный контур"
 L["Monochrome Thick Outline"] = "Толстый монохромный контур"
@@ -609,7 +627,7 @@ L["Opaque"] = "Непрозрачность"
 L["Option Group"] = "Option Group"
 L["Options will finish loading after combat ends."] = "Параметры загрузятся после окончания боя."
 --[[Translation missing --]]
-L["Options will finish loading after the login process has completed."] = "Options will finish loading after the login process has completed."
+L["Options will open after the login process has completed."] = "Options will open after the login process has completed."
 L["Orbit"] = "Вращение по орбите"
 L["Orientation"] = "Ориентация"
 L["Outline"] = "Контур"
@@ -648,6 +666,8 @@ L["Player Name"] = "Имя игрока"
 L["Player Race"] = "Раса игрока"
 L["Player(s) Affected"] = "Задействованные игроки"
 L["Player(s) Not Affected"] = "Незадейств-ные игроки"
+--[[Translation missing --]]
+L["Please upgrade your Masque version"] = "Please upgrade your Masque version"
 L["Poison"] = "Яд"
 L["Power"] = "Энергия"
 L["Power (%)"] = "Энергия (%)"
@@ -723,6 +743,8 @@ L["Role"] = "Role"
 L["Rotate Left"] = "Поворот влево"
 L["Rotate Right"] = "Поворот вправо"
 L["Run Custom Code"] = "Выполнить свой код"
+--[[Translation missing --]]
+L["Run the repair tool"] = "Run the repair tool"
 L["Rune"] = "Руна"
 L["Rune #1"] = "Руна #1"
 L["Rune #2"] = "Руна #2"
@@ -780,6 +802,8 @@ L["Show lowest time left"] = "Show lowest time left"
 L["Show lowest time left over all units"] = "Show lowest time left over all units"
 --[[Translation missing --]]
 L["Show lowest time left per unit"] = "Show lowest time left per unit"
+--[[Translation missing --]]
+L["Show On"] = "Show On"
 L["Shrink"] = "Сжатие"
 --[[Translation missing --]]
 L["Simple"] = "Simple"
@@ -832,6 +856,8 @@ L["Spell Usable"] = "Заклинание доступно"
 L["Spin"] = "Вращение"
 L["Spiral"] = "Спираль"
 L["Spiral In And Out"] = "Спираль (вперед-назад)"
+--[[Translation missing --]]
+L["Stack Count"] = "Stack Count"
 L["Stacks"] = "Стаки"
 --[[Translation missing --]]
 L["Stagger Scale"] = "Stagger Scale"

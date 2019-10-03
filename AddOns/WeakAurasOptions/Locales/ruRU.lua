@@ -56,9 +56,7 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["|cFFffcc00Extra Options:|r"] = "|cFFffcc00Extra Options:|r"
 	--[[Translation missing --]]
-	L["|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r %s"] = "|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r %s"
-	--[[Translation missing --]]
-	L["|cFFffcc00Font:|r %s %s"] = "|cFFffcc00Font:|r %s %s"
+	L["|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r%s%s"] = "|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r%s%s"
 	L["1 Match"] = "1 cовпадение"
 	L["A 20x20 pixels icon"] = "Иконка 20х20 пикселей"
 	L["A 32x32 pixels icon"] = "Иконка 32х32 пикселей"
@@ -91,6 +89,8 @@ local L = WeakAuras.L
 	L["Addons"] = "Аддоны"
 	L["Advanced"] = "Комплексный подход"
 	L["Align"] = "Выравнивание"
+	--[[Translation missing --]]
+	L["Alignment"] = "Alignment"
 	L["All of"] = "И (все условия)"
 	L["Allow Full Rotation"] = "Разрешить полное вращение"
 	L["Alpha"] = "Прозрачность"
@@ -98,6 +98,14 @@ local L = WeakAuras.L
 	L["Anchor Point"] = "Точка крепления"
 	L["Anchored To"] = "Прикрепить к"
 	L["And "] = "И "
+	--[[Translation missing --]]
+	L["and aligned left"] = "and aligned left"
+	--[[Translation missing --]]
+	L["and aligned right"] = "and aligned right"
+	--[[Translation missing --]]
+	L["and rotated left"] = "and rotated left"
+	--[[Translation missing --]]
+	L["and rotated right"] = "and rotated right"
 	L["and Trigger %s"] = "Триггер %s"
 	L["Angle"] = "Угол"
 	L["Animate"] = "Анимация"
@@ -174,9 +182,10 @@ local L = WeakAuras.L
 	L["Bottom Right"] = "Bottom Right"
 	L["Bracket Matching"] = "Закрывать скобки"
 	L["Button Glow"] = "Подсветка кнопки"
-	L["Can be a name or a UID (e.g., party1). A name only works on friendly players in your group."] = "Может быть именем или UID (например, party1). Название работает только на дружественных игроках в вашей группе."
 	--[[Translation missing --]]
 	L["Can be a Name or a Unit ID (e.g. party1). A name only works on friendly players in your group."] = "Can be a Name or a Unit ID (e.g. party1). A name only works on friendly players in your group."
+	--[[Translation missing --]]
+	L["Can be a UID (e.g., party1)."] = "Can be a UID (e.g., party1)."
 	L["Cancel"] = "Отмена"
 	--[[Translation missing --]]
 	L["Center"] = "Center"
@@ -189,6 +198,8 @@ local L = WeakAuras.L
 	L["Choose whether the displayed icon is automatic or defined manually"] = "Выберите, будет ли иконка задана автоматически или вручную"
 	--[[Translation missing --]]
 	L["Clip Overlays"] = "Clip Overlays"
+	--[[Translation missing --]]
+	L["Clipped by Progress"] = "Clipped by Progress"
 	L["Clone option enabled dialog"] = [=[Вы активировали параметр, использующий |cFFFF0000Автоклонирование|r.
 
 |cFFFF0000Автоклонирование|r заставляет индикацию автоматически дублироваться для отображения нескольких источников информации. Если вы не разместите ее в |cFF22AA22Динамической группе|r, то все клоны будут отображаться друг над другом в большой куче.
@@ -217,7 +228,7 @@ local L = WeakAuras.L
 	L["Condition %i"] = "Условие %i"
 	L["Conditions"] = "Условия"
 	--[[Translation missing --]]
-	L["Configure what options appear on this pannel."] = "Configure what options appear on this pannel."
+	L["Configure what options appear on this panel."] = "Configure what options appear on this panel."
 	L["Constant Factor"] = "Постоянный параметр"
 	L["Control-click to select multiple displays"] = "Ctrl-клик для выбора нескольких индикаций"
 	L["Controls the positioning and configuration of multiple displays at the same time"] = "Управляет позиционированием и настройкой нескольких индикаций одновременно"
@@ -513,6 +524,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Mirror"] = "Отразить"
 	L["Model"] = "Модель"
 	--[[Translation missing --]]
+	L["Model %s"] = "Model %s"
+	--[[Translation missing --]]
 	L["Model Settings"] = "Model Settings"
 	--[[Translation missing --]]
 	L["Move Above Group"] = "Move Above Group"
@@ -648,10 +661,6 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Rotate Out"] = [=[Поворот из
 (исходного положения)]=]
 	L["Rotate Text"] = "Повернуть текст"
-	--[[Translation missing --]]
-	L["rotated left"] = "rotated left"
-	--[[Translation missing --]]
-	L["rotated right"] = "rotated right"
 	L["Rotation"] = "Поворот"
 	L["Rotation Mode"] = "Режим вращения"
 	--[[Translation missing --]]
@@ -698,6 +707,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Show Matches for"] = "Show Matches for"
 	--[[Translation missing --]]
 	L["Show Matches for Units"] = "Show Matches for Units"
+	--[[Translation missing --]]
+	L["Show Model"] = "Show Model"
 	L["Show model of unit "] = "Показать модель элемента"
 	L["Show On"] = "Показать"
 	--[[Translation missing --]]
@@ -709,6 +720,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	--[[Translation missing --]]
 	L["Shows a border"] = "Shows a border"
 	L["Shows a custom texture"] = "Показывает свою текстуру"
+	--[[Translation missing --]]
+	L["Shows a model"] = "Shows a model"
 	L["Shows a progress bar with name, timer, and icon"] = "Показывает полосу прогресса с названием, таймером и иконкой"
 	L["Shows a spell icon with an optional cooldown overlay"] = "Показывает иконку заклинания с наложением анимации восстановления (перезарядки)"
 	L["Shows a texture that changes based on duration"] = "Показывает текстуру, меняющуюся в зависимости от длительности"
@@ -761,6 +774,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	--[[Translation missing --]]
 	L["Stop ignoring Updates"] = "Stop ignoring Updates"
 	L["Stop Sound"] = "Остановить звук"
+	--[[Translation missing --]]
+	L["Sub Elements"] = "Sub Elements"
 	--[[Translation missing --]]
 	L["Sub Option %i"] = "Sub Option %i"
 	L["Temporary Group"] = "Временная группа"

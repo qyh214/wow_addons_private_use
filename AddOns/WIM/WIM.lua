@@ -8,13 +8,14 @@ local table = table;
 local pairs = pairs;
 local string = string;
 local next = next;
+local Ambiguate = Ambiguate;
 
 -- set name space
 setfenv(1, WIM);
 
 -- Core information
 addonTocName = "WIM";
-version = "3.7.33";
+version = "3.8.0";
 beta = false; -- flags current version as beta.
 debug = false; -- turn debugging on and off.
 useProtocol2 = true; -- test switch for new W2W Protocol. (Dev use only)
@@ -54,7 +55,7 @@ local Events = {};
 -- create a frame to moderate events and frame updates.
     local workerFrame = CreateFrame("Frame", "WIM_workerFrame");
     workerFrame:SetScript("OnEvent", function(self, event, ...) WIM:CoreEventHandler(event, ...); end);
-    
+
     -- some events we always want to listen to so data is ready upon WIM being enabled.
     workerFrame:RegisterEvent("VARIABLES_LOADED");
     workerFrame:RegisterEvent("ADDON_LOADED");
@@ -67,29 +68,28 @@ local function initialize()
         env.cache[env.realm][env.character] = env.cache[env.realm][env.character] or {};
 	lists.friends = env.cache[env.realm][env.character].friendList;
 	lists.guild = env.cache[env.realm][env.character].guildList;
-        
+
         if(type(lists.friends) ~= "table") then lists.friends = {}; end
         if(type(lists.guild) ~= "table") then lists.guild = {}; end
-        
+
         workerFrame:RegisterEvent("GUILD_ROSTER_UPDATE");
         workerFrame:RegisterEvent("FRIENDLIST_UPDATE");
 	workerFrame:RegisterEvent("BN_FRIEND_LIST_SIZE_CHANGED");
 	workerFrame:RegisterEvent("BN_FRIEND_INFO_CHANGED");
-        
+
         --querie guild roster
         if( _G.IsInGuild() ) then
             _G.GuildRoster();
         end
-        
+
     -- import libraries.
-    libs.WhoLib = _G.LibStub:GetLibrary("LibWho-2.0");
     libs.SML = _G.LibStub:GetLibrary("LibSharedMedia-3.0");
     libs.ChatHandler = _G.LibStub:GetLibrary("LibChatHandler-1.0");
-    
+
     isInitialized = true;
-    
+
     RegisterPrematureSkins();
-    
+
     --enableModules
     local moduleName, tData;
     for moduleName, tData in pairs(modules) do
@@ -110,7 +110,7 @@ local function initialize()
                 EnableModule(moduleName, true);
         end
     end
-    
+
         for mName, module in pairs(modules) do
                 if(db.enabled) then
                         if(type(module.OnEnableWIM) == "function") then
@@ -122,7 +122,7 @@ local function initialize()
                         end
                 end
         end
-    
+
     -- notify all modules of current state.
     CallModuleFunction("OnStateChange", WIM.curState);
     RegisterSlashCommand("enable", function() SetEnabled(not db.enabled) end, L["Toggle WIM 'On' and 'Off'."]);
@@ -133,16 +133,75 @@ local function initialize()
     dPrint("WIM initialized...");
 end
 
+--Begin Compat wrappers for retail and classic to access same functions and expect same returns
+--These should work in all files that use them since they are written to WIMs global namespace
+--Retail kind of has these for now, but won't forever, and classic is not expected to make same API restructuring, so this ugly mess is probably required forever
+function GetBNGetFriendInfo(friendIndex)
+	local accountInfo = _G.C_BattleNet and _G.C_BattleNet.GetFriendAccountInfo(friendIndex);
+	if accountInfo then
+		local wowProjectID = accountInfo.gameAccountInfo.wowProjectID or 0;
+		local clientProgram = accountInfo.gameAccountInfo.clientProgram ~= "" and accountInfo.gameAccountInfo.clientProgram or nil;
+
+		return	accountInfo.bnetAccountID, accountInfo.accountName, accountInfo.battleTag, accountInfo.isBattleTagFriend,
+				accountInfo.gameAccountInfo.characterName, accountInfo.gameAccountInfo.gameAccountID, clientProgram,
+				accountInfo.gameAccountInfo.isOnline, accountInfo.lastOnlineTime, accountInfo.isAFK, accountInfo.isDND, accountInfo.customMessage, accountInfo.note, accountInfo.isFriend,
+				accountInfo.customMessageTime, wowProjectID, accountInfo.rafLinkType == _G.Enum.RafLinkType.Recruit, accountInfo.gameAccountInfo.canSummon, accountInfo.isFavorite, accountInfo.gameAccountInfo.isWowMobile;
+	else
+		return _G.BNGetFriendInfo(friendIndex)
+	end
+end
+
+function GetBNGetFriendInfoByID(id)
+	local accountInfo = _G.C_BattleNet and _G.C_BattleNet.GetAccountInfoByID(id);
+	if accountInfo then
+		local wowProjectID = accountInfo.gameAccountInfo.wowProjectID or 0;
+		local clientProgram = accountInfo.gameAccountInfo.clientProgram ~= "" and accountInfo.gameAccountInfo.clientProgram or nil;
+
+		return	accountInfo.bnetAccountID, accountInfo.accountName, accountInfo.battleTag, accountInfo.isBattleTagFriend,
+				accountInfo.gameAccountInfo.characterName, accountInfo.gameAccountInfo.gameAccountID, clientProgram,
+				accountInfo.gameAccountInfo.isOnline, accountInfo.lastOnlineTime, accountInfo.isAFK, accountInfo.isDND, accountInfo.customMessage, accountInfo.note, accountInfo.isFriend,
+				accountInfo.customMessageTime, wowProjectID, accountInfo.rafLinkType == _G.Enum.RafLinkType.Recruit, accountInfo.gameAccountInfo.canSummon, accountInfo.isFavorite, accountInfo.gameAccountInfo.isWowMobile;
+	else
+		return _G.BNGetFriendInfoByID(id)
+	end
+end
+
+function GetBNGetGameAccountInfo(toonId)
+	local gameAccountInfo = _G.C_BattleNet and _G.C_BattleNet.GetGameAccountInfoByID(toonId)
+	if gameAccountInfo then
+		local wowProjectID = gameAccountInfo.wowProjectID or 0;
+		local characterName = gameAccountInfo.characterName or "";
+		local realmName = gameAccountInfo.realmName or "";
+		local realmID = gameAccountInfo.realmID or 0;
+		local factionName = gameAccountInfo.factionName or "";
+		local raceName = gameAccountInfo.raceName or "";
+		local className = gameAccountInfo.className or "";
+		local areaName = gameAccountInfo.areaName or "";
+		local characterLevel = gameAccountInfo.characterLevel or "";
+		local richPresence = gameAccountInfo.richPresence or "";
+		local gameAccountID = gameAccountInfo.gameAccountID or 0;
+		local playerGuid = gameAccountInfo.playerGuid or 0;
+		return	gameAccountInfo.hasFocus, characterName, gameAccountInfo.clientProgram,
+				realmName, realmID, factionName, raceName, className, "", areaName, characterLevel,
+				richPresence, nil, nil,
+				gameAccountInfo.isOnline, gameAccountID, nil, gameAccountInfo.isGameAFK, gameAccountInfo.isGameBusy,
+				playerGuid, wowProjectID, gameAccountInfo.isWowMobile
+	else
+		return _G.BNGetGameAccountInfo(toonId)
+	end
+end
+--End Compat wrappers for retail and classic to access same functions and expect same returns
+
 -- called when WIM is enabled.
 -- WIM will not be enabled until WIM is initialized event is fired.
 local function onEnable()
     db.enabled = true;
-    
+
     local tEvent;
     for tEvent, _ in pairs(Events) do
         workerFrame:RegisterEvent(tEvent);
     end
-    
+
         if(isInitialized) then
             for mName, module in pairs(modules) do
                 if(type(module.OnEnableWIM) == "function") then
@@ -155,7 +214,7 @@ local function onEnable()
         end
 --    DisplayTutorial(L["WIM (WoW Instant Messenger)"], L["WIM is currently running. To access WIM's wide array of options type:"].." |cff69ccf0/wim|r");
     dPrint("WIM is now enabled.");
-    
+
 --[[    --Private Server Check
     if(isPrivateServer and not db.alertedPrivateServer) then
       _G.StaticPopupDialogs["WIM_PRIVATE_SERVER"] = {
@@ -170,7 +229,7 @@ local function onEnable()
         timeout = 0,
         whileDead = 1,
         hideOnEscape = 1
-      };        
+      };
       _G.StaticPopup_Show ("WIM_PRIVATE_SERVER", theLink);
     end--]]
 end
@@ -178,12 +237,12 @@ end
 -- called when WIM is disabled.
 local function onDisable()
     db.enabled = false;
-    
+
     local tEvent;
     for tEvent, _ in pairs(Events) do
         workerFrame:UnregisterEvent(tEvent);
     end
-    
+
     if(isInitialized) then
         for _, module in pairs(modules) do
             if(type(module.OnDisableWIM) == "function") then
@@ -194,7 +253,7 @@ local function onDisable()
             end
         end
     end
-    
+
     dPrint("WIM is now disabled.");
 end
 
@@ -306,18 +365,18 @@ function WIM.honorChatFrameEventFilter(event, ...)
             local narg1, narg2, narg3, narg4, narg5, narg6, narg7, narg8, narg9, narg10, narg11, narg12, narg13, narg14, narg15;
             for _, filterFunc in next, chatFilters do
 		filter, narg1, narg2, narg3, narg4, narg5, narg6, narg7, narg8, narg9, narg10, narg11, narg12, narg13, narg14, narg15 = filterFunc(workerFrame, event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15);
-                if filter then 
-                    return true, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15; 
+                if filter then
+                    return true, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15;
                 elseif(narg1) then
                     arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15 = narg1, narg2, narg3, narg4, narg5, narg6, narg7, narg8, narg9, narg10, narg11, narg12, narg13, narg14, narg15;
                 end
-            end 
-        end 
+            end
+        end
         return filter, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15;
 end
 
 
-function WIM:EventHandler(event,...) 
+function WIM:EventHandler(event,...)
         -- depricated - here for compatibility only
 end
 
@@ -326,13 +385,13 @@ function WIM:CoreEventHandler(event, ...)
 
     -- Core WIM Event Handlers.
     dPrint("Event '"..event.."' received.");
-    
+
     local fun = WIM[event];
     if(type(fun) == "function") then
         dPrint("  +-- WIM:"..event);
         fun(WIM, ...);
     end
-    
+
     -- Module Event Handlers
     if(db and db.enabled) then
         local module, tData;
@@ -358,21 +417,21 @@ function WIM:VARIABLES_LOADED()
     end
     filters = _G.WIM3_Filters;
     chatFilters = _G.WIM3_ChatFilters;
-    
+
     _G.WIM3_History = _G.WIM3_History or {};
     history = _G.WIM3_History;
-    
+
     -- load some environment data.
     env.realm = _G.GetRealmName();
     env.character = _G.UnitName("player");
-    
+
     -- inherrit any new default options which wheren't shown in previous releases.
     inherritTable(db_defaults, db);
     lists.gm = {};
-    
+
     -- load previous state into memory
     curState = db.lastState;
-    
+
     SetEnabled(db.enabled);
     initialize();
      --_G.print("WIM Notice: Since 7.0 there is a new bug where first whisper is not visible until you get a 2nd whisper, or you scroll up and then back down. That's work around. Scroll up, then scroll down.")
@@ -386,14 +445,14 @@ function WIM:FRIENDLIST_UPDATE()
 		end
     end
     if _G.C_FriendList then
-		for i=1, _G.C_FriendList.GetNumFriends() do 
+		for i=1, _G.C_FriendList.GetNumFriends() do
 			local name = _G.C_FriendList.GetFriendInfoByIndex(i).name;
 			if(name) then
 				env.cache[env.realm][env.character].friendList[name] = 1; --[set place holder for quick lookup
 			end
 		end
     else
-		for i=1, _G.GetNumFriends() do 
+		for i=1, _G.GetNumFriends() do
 			local name = _G.GetFriendInfo(i);
 			if(name) then
 				env.cache[env.realm][env.character].friendList[name] = 1; --[set place holder for quick lookup
@@ -412,7 +471,7 @@ function WIM:BN_FRIEND_LIST_SIZE_CHANGED()
 	end
     end
 	for i=1, _G.BNGetNumFriends() do
-	    local id, name = _G.BNGetFriendInfo(i);
+	    local id, name = GetBNGetFriendInfo(i);
 	    if(name) then
 		env.cache[env.realm][env.character].friendList[name] = 2; --[set place holder for quick lookup
 			if(windows.active.whisper[name]) then
@@ -432,11 +491,11 @@ function WIM:GUILD_ROSTER_UPDATE()
             env.cache[env.realm][env.character].guildList[key] = nil;
         end
 	if(_G.IsInGuild()) then
-		for i=1, _G.GetNumGuildMembers(true) do 
+		for i=1, _G.GetNumGuildMembers(true) do
 			local name = _G.GetGuildRosterInfo(i);
 			if(name) then
-				name = _G.Ambiguate(name, "none")
-				env.cache[env.realm][env.character].guildList[name] = true; --[set place holder for quick lookup
+				name = Ambiguate(name, "none")
+				env.cache[env.realm][env.character].guildList[name] = i; --[set place holder for quick lookup
 			end
 		end
 	end
@@ -448,13 +507,13 @@ function IsGM(name)
         if(name == nil or name == "") then
 		return false;
 	end
-        
+
         -- Blizz gave us a new tool. Lets use it.
         if(_G.GMChatFrame_IsGM and _G.GMChatFrame_IsGM(name)) then
                 lists.gm[name] = 1;
                 return true;
         end
-        
+
 	if(lists.gm[name]) then
 		return true;
 	else
@@ -498,30 +557,30 @@ function TalentsToString(talents, class)
 	if(not t1 or not t2 or not t3 or not class) then
                 return talents;
         end
-	
+
         -- next check if we even have information to show.
         if(talents == "0/0/0") then return L["None"]; end
-        
+
         local classTbl = constants.classes[class];
 	if(not classTbl) then
                 return talents;
         end
-        
+
         -- clear talentOrder
         for k, _ in pairs(talentOrder) do
                 talentOrder[k] = nil;
         end
-        
+
 	--calculate which order the tabs should be in; in relation to spec.
 	table.insert(talentOrder, t1.."1");
         table.insert(talentOrder, t2.."2");
         table.insert(talentOrder, t3.."3");
 	table.sort(talentOrder);
-	
+
 	local fVal, f = string.match(_G.tostring(talentOrder[3]), "^(%d+)(%d)$");
         local sVal, s = string.match(_G.tostring(talentOrder[2]), "^(%d+)(%d)$");
         local tVal, t = string.match(_G.tostring(talentOrder[1]), "^(%d+)(%d)$");
-        
+
 	if(_G.tonumber(fVal)*.75 <= _G.tonumber(sVal)) then
 		if(_G.tonumber(fVal)*.75 <= _G.tonumber(tVal)) then
 			return L["Hybrid"]..": "..talents;

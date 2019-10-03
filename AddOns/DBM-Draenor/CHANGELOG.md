@@ -1,8 +1,9 @@
 # <DBM> Draenor
 
-## [r44-4-g98e9fb6](https://github.com/DeadlyBossMods/DBM-WoD/tree/98e9fb6f1025e07be80cea6a1a93bd34c39facc2) (2019-08-14)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r44...98e9fb6f1025e07be80cea6a1a93bd34c39facc2)
+## [r45](https://github.com/DeadlyBossMods/DBM-WoD/tree/r45) (2019-09-24)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r44...r45)
 
+- TOC Bump  
 - revert editorconfig changes  
 - Fix travis img  
 - Code cleanup  

@@ -181,18 +181,6 @@ L:SetGeneralLocalization({
 	name = "Grobbulus"
 })
 
-L:SetOptionLocalization({
-	SpecialWarningInjection		= "Mostrar aviso especial cuando te afecte $spell:28169",
-	SetIconOnInjectionTarget	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(28169)
-})
-
-L:SetWarningLocalization({
-	SpecialWarningInjection	= "Inyección mutante en ti"
-})
-
-L:SetTimerLocalization({
-})
-
 -----------
 -- Gluth --
 -----------
@@ -369,7 +357,7 @@ L:SetWarningLocalization({
 L:SetTimerLocalization({
 	TimerAir		= "Fase aérea",
 	TimerLanding	= "Fase en tierra",
-	TimerIceBlast	= "Aliento de Escarcha"	
+	TimerIceBlast	= "Aliento de Escarcha"
 })
 
 ----------------
@@ -385,11 +373,7 @@ L:SetGeneralLocalization({
 L:SetOptionLocalization({
 	TimerPhase2			= "Mostrar temporizador para el cambio a Fase 2",
 	specwarnP2Soon		= "Mostrar aviso especial 10 s antes del cambio a Fase 2",
-	warnAddsSoon		= "Mostrar aviso previo para cuando aparezcan los Guardianes de Corona de Hielo",
-	SetIconOnMC			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(28410),
-	SetIconOnManaBomb	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(27819),
-	SetIconOnFrostTomb	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(27808),
-	ShowRange			= "Mostrar marco de distancia cuando comience la Fase 2"
+	warnAddsSoon		= "Mostrar aviso previo para cuando aparezcan los Guardianes de Corona de Hielo"
 })
 
 L:SetMiscLocalization({

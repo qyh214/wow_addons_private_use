@@ -1,16 +1,17 @@
-if GetLocale() ~= "ptBR" then return end
-
+if GetLocale() ~= "ptBR" then
+	return
+end
 local L
 
 ---------------
 -- Immerseus --
 ---------------
-L= DBM:GetModLocalization(852)
+L = DBM:GetModLocalization(852)
 
 ---------------------------
 -- The Fallen Protectors --
 ---------------------------
-L= DBM:GetModLocalization(849)
+L = DBM:GetModLocalization(849)
 
 L:SetWarningLocalization({
 	specWarnMeasures	= "Medidas desesperadas em breve (%s)!"
@@ -19,16 +20,16 @@ L:SetWarningLocalization({
 ---------------------------
 -- Norushen --
 ---------------------------
-L= DBM:GetModLocalization(866)
+L = DBM:GetModLocalization(866)
 
 L:SetMiscLocalization({
-	wasteOfTime			= "Muito bem. Eu criarei um campo para manter sua corrupção isolada."
+	wasteOfTime	= "Muito bem. Eu criarei um campo para manter sua corrupção isolada."
 })
 
 ------------------
 -- Sha of Pride --
 ------------------
-L= DBM:GetModLocalization(867)
+L = DBM:GetModLocalization(867)
 
 L:SetOptionLocalization({
 	SetIconOnFragment	= "Definir ícone no Fragmento Corrompido"
@@ -37,11 +38,11 @@ L:SetOptionLocalization({
 --------------
 -- Galakras --
 --------------
-L= DBM:GetModLocalization(868)
+L = DBM:GetModLocalization(868)
 
 L:SetWarningLocalization({
-	warnTowerOpen		= "Torre aberta",
-	warnTowerGrunt		= "Bruto da Torre"
+	warnTowerOpen	= "Torre aberta",
+	warnTowerGrunt	= "Bruto da Torre"
 })
 
 L:SetTimerLocalization({
@@ -71,56 +72,56 @@ L:SetMiscLocalization({
 --------------------
 --Iron Juggernaut --
 --------------------
-L= DBM:GetModLocalization(864)
+L = DBM:GetModLocalization(864)
 
 --------------------------
 -- Kor'kron Dark Shaman --
 --------------------------
-L= DBM:GetModLocalization(856)
+L = DBM:GetModLocalization(856)
 
 L:SetMiscLocalization({
-	PrisonYell		= "Prisão em %s dissipa (%d)"
+	PrisonYell	= "Prisão em %s dissipa (%d)"
 })
 
 ---------------------
 -- General Nazgrim --
 ---------------------
-L= DBM:GetModLocalization(850)
+L = DBM:GetModLocalization(850)
 
 L:SetWarningLocalization({
-	warnDefensiveStanceSoon		= "Postura Defensiva em %ds"
+	warnDefensiveStanceSoon	= "Postura Defensiva em %ds"
 })
 
 L:SetMiscLocalization({
-	newForces1					= "Guerreiros, depressa!",
-	newForces2					= "Defendam o portão!",
-	newForces3					= "Reúnam as forças!",
-	newForces4					= "Kor'kron, ao meu lado!",
-	newForces5					= "Próximo esquadrão, avante!",
-	allForces					= "Todos os Kor'kron... sob meu comando... matem-os... AGORA!",
-	nextAdds					= "Próximos Adds: "
+	newForces1	= "Guerreiros, depressa!",
+	newForces2	= "Defendam o portão!",
+	newForces3	= "Reúnam as forças!",
+	newForces4	= "Kor'kron, ao meu lado!",
+	newForces5	= "Próximo esquadrão, avante!",
+	allForces	= "Todos os Kor'kron... sob meu comando... matem-os... AGORA!",
+	nextAdds	= "Próximos Adds: "
 })
 
 -----------------
 -- Malkorok -----
 -----------------
-L= DBM:GetModLocalization(846)
+L = DBM:GetModLocalization(846)
 
 ------------------------
 -- Spoils of Pandaria --
 ------------------------
-L= DBM:GetModLocalization(870)
+L = DBM:GetModLocalization(870)
 
 L:SetMiscLocalization({
-	wasteOfTime		= "Estamos gravando? Hein? Tudo bem. Módulo de controle do Titã-goblin iniciando, afastem-se.",
-	Module1 		= "Modulo 1's preparado para reiniciar o sistema.",
-	Victory			= "Modulo 2's preparado para reiniciar o sistema."
+	wasteOfTime	= "Estamos gravando? Hein? Tudo bem. Módulo de controle do Titã-goblin iniciando, afastem-se.",
+	Module1 	= "Modulo 1's preparado para reiniciar o sistema.",
+	Victory		= "Modulo 2's preparado para reiniciar o sistema."
 })
 
 ---------------------------
 -- Thok the Bloodthirsty --
 ---------------------------
-L= DBM:GetModLocalization(851)
+L = DBM:GetModLocalization(851)
 
 L:SetOptionLocalization({
 	RangeFrame	= "Mostrar frame dinâmico de distância (10)<br/>(Este é um frame de distância inteligente que mostra quando você alcança o limiar do Frenesi)"
@@ -129,7 +130,7 @@ L:SetOptionLocalization({
 ----------------------------
 -- Siegecrafter Blackfuse --
 ----------------------------
-L= DBM:GetModLocalization(865)
+L = DBM:GetModLocalization(865)
 
 L:SetMiscLocalization({
 	newWeapons	= "Armas inacabadas começam a surgir na linha de montagem.",
@@ -139,42 +140,42 @@ L:SetMiscLocalization({
 ----------------------------
 -- Paragons of the Klaxxi --
 ----------------------------
-L= DBM:GetModLocalization(853)
+L = DBM:GetModLocalization(853)
 
 L:SetWarningLocalization({
-	specWarnActivatedVulnerable		= "Você está vulnerável para %s - Evite!",
-	specWarnMoreParasites			= "Você precisa de mais parasitas - NÂO bloqueie!"
+	specWarnActivatedVulnerable	= "Você está vulnerável para %s - Evite!",
+	specWarnMoreParasites		= "Você precisa de mais parasitas - NÂO bloqueie!"
 })
 
 L:SetOptionLocalization({
-	specWarnActivatedVulnerable		= "Mostrar aviso especial quando você está vulnerável à paragões em ativamento",
-	specWarnMoreParasites			= "Mostrar aviso especial quando você precisar de mais parasitas"
+	specWarnActivatedVulnerable	= "Mostrar aviso especial quando você está vulnerável à paragões em ativamento",
+	specWarnMoreParasites		= "Mostrar aviso especial quando você precisar de mais parasitas"
 })
 
 L:SetMiscLocalization({
 	--thanks to blizz, the only accurate way for this to work, is to translate 5 emotes in all languages
-	one					= "Um",
-	two					= "Dois",
-	three				= "Três",
-	four				= "Quatro",
-	five				= "Cinco",
-	hisekFlavor			= "Olha quem está em silêncio agora",--http://ptr.wowhead.com/quest=31510
-	KilrukFlavor		= "Apenas mais um dia, expurgando o enxame",--http://ptr.wowhead.com/quest=31109
-	XarilFlavor			= "Eu vejo apenas céus sombrios no seu futuro",--http://ptr.wowhead.com/quest=31216
-	KaztikFlavor		= "Reduzidos à meros lanches de kunchong",--http://ptr.wowhead.com/quest=31024
-	KaztikFlavor2		= "1 mantideo a menos, só faltam mais 199",--http://ptr.wowhead.com/quest=31808
-	KorvenFlavor		= "O fim de um antigo império",--http://ptr.wowhead.com/quest=31232
-	KorvenFlavor2		= "Pegue suas Tabuletas de Gurthani e engasgue com elas",--http://ptr.wowhead.com/quest=31232
-	IyyokukFlavor		= "Veja oportunidades. Aproveite-as!",--Does not have quests, http://ptr.wowhead.com/npc=65305
-	KarozFlavor			= "Você não vai pular mais!",---Does not have quests, http://ptr.wowhead.com/npc=65303
-	SkeerFlavor			= "Uma delícia sangrenta!",--http://ptr.wowhead.com/quest=31178
-	RikkalFlavor		= "Solicitação de espécime atendida"--http://ptr.wowhead.com/quest=31508
+	one				= "Um",
+	two				= "Dois",
+	three			= "Três",
+	four			= "Quatro",
+	five			= "Cinco",
+	hisekFlavor		= "Olha quem está em silêncio agora",--http://ptr.wowhead.com/quest=31510
+	KilrukFlavor	= "Apenas mais um dia, expurgando o enxame",--http://ptr.wowhead.com/quest=31109
+	XarilFlavor		= "Eu vejo apenas céus sombrios no seu futuro",--http://ptr.wowhead.com/quest=31216
+	KaztikFlavor	= "Reduzidos à meros lanches de kunchong",--http://ptr.wowhead.com/quest=31024
+	KaztikFlavor2	= "1 mantideo a menos, só faltam mais 199",--http://ptr.wowhead.com/quest=31808
+	KorvenFlavor	= "O fim de um antigo império",--http://ptr.wowhead.com/quest=31232
+	KorvenFlavor2	= "Pegue suas Tabuletas de Gurthani e engasgue com elas",--http://ptr.wowhead.com/quest=31232
+	IyyokukFlavor	= "Veja oportunidades. Aproveite-as!",--Does not have quests, http://ptr.wowhead.com/npc=65305
+	KarozFlavor		= "Você não vai pular mais!",---Does not have quests, http://ptr.wowhead.com/npc=65303
+	SkeerFlavor		= "Uma delícia sangrenta!",--http://ptr.wowhead.com/quest=31178
+	RikkalFlavor	= "Solicitação de espécime atendida"--http://ptr.wowhead.com/quest=31508
 })
 
 ------------------------
 -- Garrosh Hellscream --
 ------------------------
-L= DBM:GetModLocalization(869)
+L = DBM:GetModLocalization(869)
 
 L:SetOptionLocalization({
 	timerRoleplay		= "Mostrar temporizador Garrosh/Thrall RP",
@@ -184,10 +185,10 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	wasteOfTime			= "Não é tarde demais, Garrosh. Abstenha-se do posto de Chefe Guerreiro. Podemos encerrar isso sem mais derramamento de sangue.",
-	NoReduce			= "Sem redução de dano",
-	MaliceFadeYell		= "Malícia acabando em %s (%d)",
-	phase3End			= "Vocês pensam que VENCERAM?"
+	wasteOfTime		= "Não é tarde demais, Garrosh. Abstenha-se do posto de Chefe Guerreiro. Podemos encerrar isso sem mais derramamento de sangue.",
+	NoReduce		= "Sem redução de dano",
+	MaliceFadeYell	= "Malícia acabando em %s (%d)",
+	phase3End		= "Vocês pensam que VENCERAM?"
 })
 
 -------------
@@ -196,5 +197,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("SoOTrash")
 
 L:SetGeneralLocalization({
-	name =	"Trash de Cerco a Orgrimmar"
+	name	= "Trash de Cerco a Orgrimmar"
 })

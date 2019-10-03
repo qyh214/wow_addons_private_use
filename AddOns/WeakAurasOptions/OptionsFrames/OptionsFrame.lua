@@ -314,7 +314,7 @@ function WeakAuras.CreateFrame()
     if frame.minimized then
       frame.minimized = nil
       if db.frame then
-        if db.frame.height < 240 then
+        if not db.frame.height or db.frame.height < 240 then
           db.frame.height = 500
         end
       end
@@ -339,6 +339,8 @@ function WeakAuras.CreateFrame()
       end
       minimizebutton:SetNormalTexture("Interface\\BUTTONS\\UI-Panel-CollapseButton-Up.blp")
       minimizebutton:SetPushedTexture("Interface\\BUTTONS\\UI-Panel-CollapseButton-Down.blp")
+
+      frame.buttonsScroll:DoLayout()
     else
       frame.minimized = true
       frame:SetHeight(40)

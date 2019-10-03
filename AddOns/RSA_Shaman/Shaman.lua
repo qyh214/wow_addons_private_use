@@ -26,7 +26,8 @@ function RSA.Resurrect(_, _, target, _, caster)
 	if messagemax == 0 then return end
 	local messagerandom = math.random(messagemax)
 	local message = RSA.db.profile.Shaman.Spells.AncestralSpirit.Messages.Start[messagerandom]
-	local full_destName,dest = RSA.RemoveServerNames(dest)
+	local full_destName
+	full_destName,dest = RSA.RemoveServerNames(dest)
 	local spellinfo = GetSpellInfo(spell)
 	local spelllinkinfo = GetSpellLink(spell)
 	RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = dest,}
@@ -60,7 +61,7 @@ function RSA.Resurrect(_, _, target, _, caster)
 			if RSA.db.profile.Shaman.Spells.AncestralSpirit.SmartGroup == true and GetNumGroupMembers() > 0 then return end
 			RSA.Print_Raid(string.gsub(message, '.%a+.', RSA.String_Replace))
 		end
-	end	
+	end
 end
 
 function RSA_Shaman:OnEnable()
@@ -291,10 +292,10 @@ function RSA_Shaman:OnEnable()
 			end -- BUFF REMINDER
 			if event == 'SPELL_SUMMON' then
 				if spellID == 98008 then -- SPIRIT LINK TOTEM
-					SpiritLink_GUID = destGUID return -- Unit source isn't player. GUID tracking used to ensure we only announce our own. 
+					SpiritLink_GUID = destGUID return -- Unit source isn't player. GUID tracking used to ensure we only announce our own.
 				end
 				if spellID == 8143 then -- SPIRIT LINK TOTEM
-					TremorTotem_GUID = destGUID return -- Unit source isn't player. GUID tracking used to ensure we only announce our own. 
+					TremorTotem_GUID = destGUID return -- Unit source isn't player. GUID tracking used to ensure we only announce our own.
 				end
 				if spellID == 192077 then -- WINDRUSH TOTEM
 					WindRush_GUID = destGUID return
@@ -327,7 +328,8 @@ function RSA_Shaman:OnEnable()
 			if event == 'SPELL_HEAL' and spellID == 157503 then -- Cloudburst Totem Heal
 				if Cloudburst_Announced == true then return end
 				Cloudburst_Announced = true
-				spellinfo = GetSpellInfo(157153) spelllinkinfo = GetSpellLink(157153)
+				local spellinfo = GetSpellInfo(157153)
+				local spelllinkinfo = GetSpellLink(157153)
 				local full_destName,dest = RSA.RemoveServerNames(dest)
 				RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = dest, ["[AMOUNT]"] = missType + overheal}
 				local messagemax = #RSA.db.profile.Shaman.Spells.Cloudburst.Messages.Heal
@@ -522,7 +524,8 @@ function RSA_Shaman:OnEnable()
 			GroundingCounter = GroundingCounter + 1
 		end
 		if event == 'SPELL_AURA_REMOVED' and sourceGUID == LightningSurge_GUID and spellID == 118905 then -- Lightning Surge Totem
-			spellinfo = GetSpellInfo(118905) spelllinkinfo = GetSpellLink(118905)
+			local spellinfo = GetSpellInfo(118905)
+			local spelllinkinfo = GetSpellLink(118905)
 			RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo,}
 			LightningCounter = LightningCounter -1
 			local messagemax = #RSA.db.profile.Shaman.Spells.LightningSurge.Messages.End
@@ -802,7 +805,7 @@ function RSA_Shaman:OnEnable()
 					end
 				end
 			end -- Earthen Shield Totem
-		end -- IF EVENT IS UNIT_DIED		
+		end -- IF EVENT IS UNIT_DIED
 	end -- END ENTIRELY
 	RSA.CombatLogMonitor:SetScript('OnEvent', Shaman_Spells)
 end

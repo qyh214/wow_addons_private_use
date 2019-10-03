@@ -90,7 +90,7 @@ local patterns = {
       "%f[%S]([-%w_%%]+%.[-%w_%%]+%.(%a%a+))",
       "^([-%w_%%]+%.(%a%a+))",
       "%f[%S]([-%w_%%]+%.(%a%a+))",
-};	
+};
 
 
 local LinkRepository = {};
@@ -102,6 +102,17 @@ local function formatRawURL(theURL)
         theURL = theURL:gsub('%%', '%%%%'); --make sure any %'s are escaped in order to preserve them.
         return " |cff"..RGBPercentToHex(db.displayColors.webAddress.r, db.displayColors.webAddress.g, db.displayColors.webAddress.b).."|Hwim_url:"..theURL.."|h".."["..theURL.."]".."|h|r";
     end
+end
+
+local decodeURI
+do
+   local char, gsub, tonumber = string.char, string.gsub, _G.tonumber
+   local function decode(hex) return char(tonumber(hex, 16)) end
+
+   function decodeURI(s)
+      s = gsub(s, '%%(%x%x)', decode)
+      return s
+   end
 end
 
 local function encodeColors(theMsg)
@@ -120,6 +131,7 @@ local function convertURLtoLinks(text)
         -- clean text first
         local theMsg = text;
         local results;
+        theMsg = decodeURI(theMsg)
         theMsg = encodeColors(theMsg);
         repeat
             theMsg, results = string.gsub(theMsg, "(|H[^|]+|h[^|]+|h)", function(theLink)
@@ -127,22 +139,22 @@ local function convertURLtoLinks(text)
                 return "\001\004"..#LinkRepository;
             end, 1);
         until results == 0;
-        
+
         -- create urls
         for i=1, table.getn(patterns) do
             theMsg = string.gsub(theMsg, patterns[i], formatRawURL);
         end
-        
+
         --restore links
         for i=1, #LinkRepository do
             theMsg = string.gsub(theMsg, "\001\004"..i.."", LinkRepository[i]);
         end
-        
+
         -- clear table to be recycled by next process
         for key, _ in pairs(LinkRepository) do
             LinkRepository[key] = nil;
         end
-        
+
 	return decodeColors(theMsg);
 end
 
@@ -188,12 +200,12 @@ local function displayURL(link)
                 editBox:SetText(format(theLink));
                 editBox:SetFocus();
                 editBox:HighlightText(0);
-    
+
                 local button = _G.getglobal(self:GetName().."Button2");
                 button:ClearAllPoints();
                 button:SetWidth(100);
                 button:SetPoint("CENTER", editBox, "CENTER", 0, -30);
-    
+
                 _G.getglobal(self:GetName().."AlertIcon"):Hide();  -- HACK : we hide the false AlertIcon
             end,
         OnHide = function() end,
@@ -206,7 +218,7 @@ local function displayURL(link)
         timeout = 0,
         whileDead = 1,
         hideOnEscape = 1
-    };        
+    };
     _G.StaticPopup_Show ("WIM_SHOW_URL", theLink);
 end
 

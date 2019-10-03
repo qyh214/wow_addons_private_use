@@ -1,10 +1,12 @@
-if GetLocale() ~= "ruRU" then return end
+﻿if GetLocale() ~= "ruRU" then
+	return
+end
 local L
 
 --------------------------
 -- Jin'rokh the Breaker --
 --------------------------
-L= DBM:GetModLocalization(827)
+L = DBM:GetModLocalization(827)
 
 L:SetWarningLocalization({
 	specWarnWaterMove	= "Скоро %s - выйдите из Проводящей воды!"
@@ -17,7 +19,7 @@ L:SetOptionLocalization({
 --------------
 -- Horridon --
 --------------
-L= DBM:GetModLocalization(819)
+L = DBM:GetModLocalization(819)
 
 L:SetWarningLocalization({
 	warnAdds				= "%s",
@@ -26,8 +28,8 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerDoor				= "Следующие ворота племени",
-	timerAdds				= "Следующие %s"
+	timerDoor	= "Следующие ворота племени",
+	timerAdds	= "Следующие %s"
 })
 
 L:SetOptionLocalization({
@@ -40,14 +42,14 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	newForces				= "прибывают из-за ворот",--Войска племени Амани прибывают из-за ворот племени Амани!
-	chargeTarget			= "бьет хвостом!"--Хорридон останавливает свой взгляд на Тентаклюме и бьет хвостом!
+	newForces		= "прибывают из-за ворот",--Войска племени Амани прибывают из-за ворот племени Амани!
+	chargeTarget	= "бьет хвостом!"--Хорридон останавливает свой взгляд на Тентаклюме и бьет хвостом!
 })
 
 ---------------------------
 -- The Council of Elders --
 ---------------------------
-L= DBM:GetModLocalization(816)
+L = DBM:GetModLocalization(816)
 
 L:SetWarningLocalization({
 	specWarnPossessed	= "%s на %s - переключитесь"
@@ -60,7 +62,7 @@ L:SetOptionLocalization({
 ------------
 -- Tortos --
 ------------
-L= DBM:GetModLocalization(825)
+L = DBM:GetModLocalization(825)
 
 L:SetWarningLocalization({
 	warnKickShell			= "%s использован >%s< (осталось %d)",
@@ -75,16 +77,16 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	WrongDebuff				= "Нет %s"
+	WrongDebuff	= "Нет %s"
 })
 
 -------------
 -- Megaera --
 -------------
-L= DBM:GetModLocalization(821)
+L = DBM:GetModLocalization(821)
 
 L:SetTimerLocalization({
-	timerBreathsCD			= "Следующее дыхание"
+	timerBreathsCD	= "Следующее дыхание"
 })
 
 L:SetOptionLocalization({
@@ -99,13 +101,13 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	rampageEnds				= "Ярость Мегеры идет на убыль."
+	rampageEnds	= "Ярость Мегеры идет на убыль."
 })
 
 ------------
 -- Ji-Kun --
 ------------
-L= DBM:GetModLocalization(828)
+L = DBM:GetModLocalization(828)
 
 L:SetWarningLocalization({
 	warnFlock			= "%s %s %s",
@@ -119,14 +121,14 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	ShowNestArrows		= "Показывать стрелку DBM при активации гнезд",
-	Never				= "Никогда",
-	Northeast			= "Синий - Низ & Верх СВ",
-	Southeast			= "Зеленый - Низ & Верх ЮВ",
-	Southwest			= "Фиолетовый/Красный - Низ ЮЗ & Верх ЮЗ(25) или Верх Центр(10)",
-	West				= "Красный - Низ З & Верх Центр (только 25)",
-	Northwest			= "Желтый - Низ & Верх СЗ (только 25)",
-	Guardians			= "Стражи гнезда"
+	ShowNestArrows	= "Показывать стрелку DBM при активации гнезд",
+	Never			= "Никогда",
+	Northeast		= "Синий - Низ & Верх СВ",
+	Southeast		= "Зеленый - Низ & Верх ЮВ",
+	Southwest		= "Фиолетовый/Красный - Низ ЮЗ & Верх ЮЗ(25) или Верх Центр(10)",
+	West			= "Красный - Низ З & Верх Центр (только 25)",
+	Northwest		= "Желтый - Низ & Верх СЗ (только 25)",
+	Guardians		= "Стражи гнезда"
 })
 
 L:SetMiscLocalization({
@@ -148,7 +150,7 @@ L:SetMiscLocalization({
 --------------------------
 -- Durumu the Forgotten --
 --------------------------
-L= DBM:GetModLocalization(818)
+L = DBM:GetModLocalization(818)
 
 L:SetWarningLocalization({
 	warnBeamNormal				= "Лучи - |cffff0000Красный|r : >%s<, |cff0000ffСиний|r : >%s<",
@@ -160,36 +162,36 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnBeam					= "Объявлять цели лучей",
-	warnAddsLeft				= "Объявлять сколько осталось туманов",
-	specWarnFogRevealed			= "Спец-предупреждение при обнаружении туманов",
-	ArrowOnBeam					= "Показывать стрелку DBM во время $journal:6882, чтобы указать, в каком направлении двигаться",
-	InfoFrame					= "Информационное окно для кол-ва стаков $spell:133795",
-	SetParticle					= "Автоматически устанавливать минимальную плотность частиц на пулле<br/>(Настройка восстановится после выхода из боя)"
+	warnBeam			= "Объявлять цели лучей",
+	warnAddsLeft		= "Объявлять сколько осталось туманов",
+	specWarnFogRevealed	= "Спец-предупреждение при обнаружении туманов",
+	ArrowOnBeam			= "Показывать стрелку DBM во время $journal:6882, чтобы указать, в каком направлении двигаться",
+	InfoFrame			= "Информационное окно для кол-ва стаков $spell:133795",
+	SetParticle			= "Автоматически устанавливать минимальную плотность частиц на пулле<br/>(Настройка восстановится после выхода из боя)"
 })
 
 L:SetMiscLocalization({
-	LifeYell		= "Похищение жизни на %s (%d)"
+	LifeYell	= "Похищение жизни на %s (%d)"
 })
 
 ----------------
 -- Primordius --
 ----------------
-L= DBM:GetModLocalization(820)
+L = DBM:GetModLocalization(820)
 
 L:SetWarningLocalization({
-	warnDebuffCount				= "Прогресс мутации: %d/5 хороших и %d плохих"
+	warnDebuffCount	= "Прогресс мутации: %d/5 хороших и %d плохих"
 })
 
 L:SetOptionLocalization({
-	warnDebuffCount				= "Показывать предупреждения о числе дебаффов, когда Вы поглощаете лужи",
-	SetIconOnBigOoze			= "Устанавливать метки на $journal:6969"
+	warnDebuffCount		= "Показывать предупреждения о числе дебаффов, когда Вы поглощаете лужи",
+	SetIconOnBigOoze	= "Устанавливать метки на $journal:6969"
 })
 
 -----------------
 -- Dark Animus --
 -----------------
-L= DBM:GetModLocalization(824)
+L = DBM:GetModLocalization(824)
 
 L:SetWarningLocalization({
 	warnMatterSwapped	= "%s: >%s< и >%s< поменялись"
@@ -200,47 +202,47 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Pull				= "Сфера взрывается!"
+	Pull	= "Сфера взрывается!"
 })
 
 --------------
 -- Iron Qon --
 --------------
-L= DBM:GetModLocalization(817)
+L = DBM:GetModLocalization(817)
 
 L:SetWarningLocalization({
-	warnDeadZone		= "%s: %s и %s защитованы"
+	warnDeadZone	= "%s: %s и %s защитованы"
 })
 
 L:SetOptionLocalization({
-	RangeFrame			= "Показывать динамическое окно проверки дистанции (10 м)",
-	InfoFrame			= "Информационное окно для игроков с $spell:136193"
+	RangeFrame	= "Показывать динамическое окно проверки дистанции (10 м)",
+	InfoFrame	= "Информационное окно для игроков с $spell:136193"
 })
 
 -------------------
 -- Twin Consorts --
 -------------------
-L= DBM:GetModLocalization(829)
+L = DBM:GetModLocalization(829)
 
 L:SetWarningLocalization({
-	warnNight		= "Ночная фаза",
-	warnDay			= "Дневная фаза",
-	warnDusk		= "Фаза сумерек"
+	warnNight	= "Ночная фаза",
+	warnDay		= "Дневная фаза",
+	warnDusk	= "Фаза сумерек"
 })
 
 L:SetTimerLocalization({
-	timerDayCD		= "След. дневная фаза",
-	timerDuskCD		= "След. фаза сумерек"
+	timerDayCD	= "След. дневная фаза",
+	timerDuskCD	= "След. фаза сумерек"
 })
 
 L:SetMiscLocalization({
-	DuskPhase		= "Мне нужна твоя сила, Лу'линь!"
+	DuskPhase	= "Мне нужна твоя сила, Лу'линь!"
 })
 
 --------------
 -- Lei Shen --
 --------------
-L= DBM:GetModLocalization(832)
+L = DBM:GetModLocalization(832)
 
 L:SetWarningLocalization({
 	specWarnIntermissionSoon	= "Скоро смена фаз",
@@ -248,7 +250,7 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerConduitCD				= "Восст. первый проводник"
+	timerConduitCD	= "Восст. первый проводник"
 })
 
 L:SetOptionLocalization({
@@ -260,16 +262,16 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	StaticYell		= "Статический шок на %s (%d)"
+	StaticYell	= "Статический шок на %s (%d)"
 })
 
 ------------
 -- Ra-den --
 ------------
-L= DBM:GetModLocalization(831)
+L = DBM:GetModLocalization(831)
 
 L:SetWarningLocalization({
-	specWarnUnstablVitaJump		= "Нестабильная жизнь перепрыгнула на вас!"
+	specWarnUnstablVitaJump	= "Нестабильная жизнь перепрыгнула на вас!"
 })
 
 L:SetOptionLocalization({
@@ -278,7 +280,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Defeat						= "Остановитесь! Я… не враг вам."
+	Defeat	= "Остановитесь! Я… не враг вам."
 })
 
 -------------
@@ -287,5 +289,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("ToTTrash")
 
 L:SetGeneralLocalization({
-	name 			= "Трэш мобы Престола Гроз"
+	name	= "Трэш мобы Престола Гроз"
 })

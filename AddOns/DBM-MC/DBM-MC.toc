@@ -1,4 +1,4 @@
-## Interface: 80200
+﻿## Interface: 80205
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Molten Core|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Núcleo de Magma|r
@@ -18,6 +18,10 @@
 ## X-DBM-Mod-MapID: 409
 ## X-DBM-Mod-Sort: 1105
 ## X-DBM-Mod-MinCoreRevision: 14565
+## X-Curse-Project-ID: 16442
+## X-WoWI-ID: 11700
+## Version: r668
+
 localization.en.lua
 localization.es.lua
 localization.ru.lua

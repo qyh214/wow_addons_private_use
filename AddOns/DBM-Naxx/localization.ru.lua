@@ -1,4 +1,4 @@
-if GetLocale() ~= "ruRU" then return end
+﻿if GetLocale() ~= "ruRU" then return end
 
 local L
 
@@ -182,18 +182,6 @@ L:SetGeneralLocalization({
 	name = "Гроббулус"
 })
 
-L:SetOptionLocalization({
-	SpecialWarningInjection		= "Cпец-предупреждение для Мутагенного укола",
-	SetIconOnInjectionTarget	= "Устанавливать метки на цели заклинания Мутагенный укол"
-})
-
-L:SetWarningLocalization({
-	SpecialWarningInjection	= "Вам сделали мутагенный укол."
-})
-
-L:SetTimerLocalization({
-})
-
 -------------
 --  Gluth  --
 -------------
@@ -370,7 +358,7 @@ L:SetWarningLocalization({
 L:SetTimerLocalization({
 	TimerAir		= "Воздушная фаза",
 	TimerLanding	= "Приземление",
-	TimerIceBlast	= "Ледяное дыхание"	
+	TimerIceBlast	= "Ледяное дыхание"
 })
 
 ------------------
@@ -386,8 +374,7 @@ L:SetGeneralLocalization({
 L:SetOptionLocalization({
 	TimerPhase2			= "Отсчет времени до фазы 2",
 	specwarnP2Soon		= "Спец-предупреждение за 10 секунд до вступления Кел'Тузада в бой",
-	warnAddsSoon		= "Предупреждать заранее о Стражах Ледяной Короны",
-	ShowRange			= "Показывать окно проверки дистанции в фазе 2"
+	warnAddsSoon		= "Предупреждать заранее о Стражах Ледяной Короны"
 })
 
 L:SetMiscLocalization({

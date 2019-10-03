@@ -115,7 +115,6 @@ L.ShowGuildMessages 		= "Mostra messaggi ingaggio/vittoria/disfatta per i raid d
 L.ShowGuildMessagesPlus		= "Mostra inoltre i messaggi ingaggio/vittoria/disfatta Mitiche+ per i gruppi di gilda (richiede opzione incursione)"
 L.WhisperMessages			= "Opzioni Sussurri"
 L.AutoRespond 				= "Rispondi automaticamente ai sussurri mentre stai combattendo"
-L.EnableStatus 				= "Rispondi ai sussurri con lo stato del combattimento"
 L.WhisperStats 				= "Nelle risposte ai sussurri, aggiungi le informazioni su uccisioni e sconfitte."
 L.DisableStatusWhisper 		= "Disabilita sussurri stato per il gruppo (richiede Capoincursione). Solo per incursioni normale/eroico/mitico e spedizioni mitiche+"
 L.DisableGuildStatus 		= "Disabilita messaggi di progresso alla gilda per il gruppo (richiede Capoincursione)."
@@ -222,7 +221,7 @@ L.SpecialWarnSound5			= "Suono predefinito per accisi speciali con note contenen
 
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "Avvisi Parlati"
-L.Area_VoiceSelection		= "Selezioni Voce (scorri i menu con la rotellina)"
+L.Area_VoiceSelection		= "Selezioni Voce"
 L.CountdownVoice			= "Prima Voce conto alla rovescia"
 L.CountdownVoice2			= "Seconda Voce conto alla rovescia"
 L.CountdownVoice3			= "Terza Voce conto alla rovescia"

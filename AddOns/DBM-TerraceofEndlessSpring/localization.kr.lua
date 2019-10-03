@@ -1,10 +1,12 @@
-if GetLocale() ~= "koKR" then return end
+﻿if GetLocale() ~= "koKR" then
+	return
+end
 local L
 
 ------------
 -- Protectors of the Endless --
 ------------
-L= DBM:GetModLocalization(683)
+L = DBM:GetModLocalization(683)
 
 L:SetWarningLocalization({
 	warnGroupOrder		= "타락한 정수 순번 : %s 파티",
@@ -20,7 +22,7 @@ L:SetOptionLocalization({
 ------------
 -- Tsulong --
 ------------
-L= DBM:GetModLocalization(742)
+L = DBM:GetModLocalization(742)
 
 L:SetMiscLocalization{
 	Victory	= "고맙다, 이방인이여. 날 자유롭게 해줘서."
@@ -29,20 +31,20 @@ L:SetMiscLocalization{
 -------------------------------
 -- Lei Shi --
 -------------------------------
-L= DBM:GetModLocalization(729)
+L = DBM:GetModLocalization(729)
 
 L:SetWarningLocalization({
-	warnHideOver			= "%s 종료"
+	warnHideOver	= "%s 종료"
 })
 
 L:SetTimerLocalization({
-	timerSpecialCD			= "숨기/저리 가! 가능 (%d)"
+	timerSpecialCD	= "숨기/저리 가! 가능 (%d)"
 })
 
 L:SetOptionLocalization({
-	warnHideOver			= "$spell:123244 종료 알림 보기",
-	timerSpecialCD			= "$spell:123244 또는 $spell:123461 대기시간 바 보기",
-	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121).."<br/>(숨기 중일때는 모든 공격대원 보임, 그 외에는 방어전담만 보임)"
+	warnHideOver	= "$spell:123244 종료 알림 보기",
+	timerSpecialCD	= "$spell:123244 또는 $spell:123461 대기시간 바 보기",
+	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121).."<br/>(숨기 중일때는 모든 공격대원 보임, 그 외에는 방어전담만 보임)"
 })
 
 L:SetMiscLocalization{
@@ -52,7 +54,7 @@ L:SetMiscLocalization{
 ----------------------
 -- Sha of Fear --
 ----------------------
-L= DBM:GetModLocalization(709)
+L = DBM:GetModLocalization(709)
 
 L:SetWarningLocalization({
 	MoveForward					= "건너편으로 이동!",
@@ -62,10 +64,10 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerSpecialAbilityCD		= "다음 용오름/혼비백산/일격",
-	timerSpoHudCD				= "혼비백산/용오름 가능",
-	timerSpoStrCD				= "용오름/일격 가능",
-	timerHudStrCD				= "혼비백산/일격 가능"
+	timerSpecialAbilityCD	= "다음 용오름/혼비백산/일격",
+	timerSpoHudCD			= "혼비백산/용오름 가능",
+	timerSpoStrCD			= "용오름/일격 가능",
+	timerHudStrCD			= "혼비백산/일격 가능"
 })
 
 L:SetOptionLocalization({

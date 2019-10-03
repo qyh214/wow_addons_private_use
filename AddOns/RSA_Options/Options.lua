@@ -39,7 +39,7 @@ RSAM = ListChannels
 
 local Options = {
 	type = 'group',
-	name = "RSA [|c5500DBBDRaeli's Spell Announcer|r]",
+	name = "RSA [|c5500DBBDRaeli's Spell Announcer|r] r|c5500DBBD" .. RSA.db.global.revision ..'|r',
 	order = 0,
 	args = {
 		General = {
@@ -136,6 +136,7 @@ local Options = {
 							desc = L["Announce to custom channels only while you are in a manually formed group."],
 							descStyle = 'inline',
 							width = 'double',
+							hidden = true,
 							get = function(info)
 								return RSA.db.profile.General.GlobalAnnouncements.SmartCustomChannel
 							end,
@@ -420,7 +421,7 @@ local Options = {
 							name = '|cffFFCC00' .. L["Use Single Replacement"] .. '|r',
 							type = 'toggle',
 							order = 10,
-							desc = L["If selected, |c5500DBBD[MISSTYPE]|r will always use the General Replacement set below."]..'\n'..L[" Does not affect Immune, Immune will always use its own replacement."],
+							desc = L["If selected, |c5500DBBD[MISSTYPE]|r will always use the General Replacement set below."]..'\n'..L["Does not affect Immune, Immune will always use its own replacement."],
 							descStyle = 'inline',
 							width = 'full',
 							get = function(info)
@@ -663,7 +664,7 @@ local Options = {
 					order = 0,
 				},
 				Revision = {
-					name = '|cffFFCC00'..L["Current Revision"]..'|r |c5500DBBD'.. RSA.db.global.revision.. '|r',
+					name = "|cffFFCC00" .. L["Current Version: %s"]:format("r|r|c5500DBBD" .. RSA.db.global.revision) .. "|r",
 					type = 'description',
 					order = 0.5,
 					fontSize = 'large',
@@ -679,18 +680,13 @@ local Options = {
 					order = 1,
 				},
 				Curseforge_Header = {
-					name = '|cff91BE0F'..L["Online"]..'|r',
+					name = '|cff91BE0F'..L["Curseforge"]..'|r',
 					type = 'description',
 					order = 50,
 					fontSize = 'large',
 				},
-				Curseforge_Description = {
-					name = L["If you encounter a bug, or have a feature request, please file a ticket on Curseforge using the link below."],
-					type = 'description',
-					order = 50.1,
-				},
 				Curseforge_URL = {
-					name = L["RSA on Curseforge"],
+					name = L["URL"],
 					type = 'input',
 					order = 50.2,
 					width = 'full',
@@ -698,28 +694,23 @@ local Options = {
 					set = function() return 'https://wow.curseforge.com/projects/rsa/issues' end,
 				},
 				Spacer_OnlineCommunity = {
-					name = '\n\n\n\n',
+					name = '\n\n',
 					type = 'description',
 					order = 75,
 				},
 				Community_Header = {
-					name = '|cff00B2FA'..L["In Game"]..'|r',
+					name = '|cff00B2FA'..L["Discord"]..'|r',
 					type = 'description',
 					order = 100,
 					fontSize = 'large',
-				},
-				Community_Description = {
-					name = L["I have a Battle.net community for my addons. If you have any issues, now you can easily report them to me in game. Just copy the invite link below and throw me a message."],
-					type = 'description',
-					order = 100.1,
 				},
 				Community_URL = {
 					name = L["Invite Link"],
 					type = 'input',
 					order = 100.2,
 					width = 'full',
-					get = function() return 'https://blizzard.com/invite/WqRG7EUgOR' end,
-					set = function() return 'https://blizzard.com/invite/WqRG7EUgOR' end,
+					get = function() return 'https://discord.gg/99QZ6sd' end,
+					set = function() return 'https://discord.gg/99QZ6sd' end,
 				},
 			},
 		},
@@ -3266,6 +3257,7 @@ local function Spell_Options(NonClass)
 					},
 					Say = {
 						name = '|cffCF374D'..L["Say"]..'|r',
+						desc = L["%s can only function inside instances since 8.2.5."] :format(L["Say"]),
 						type = 'toggle',
 						order = 0.11,
 						hidden = function() if Spells[i].Message_Channels_Disabled then if Spells[i].Message_Channels_Disabled["Say"] then return true end end end,
@@ -3278,6 +3270,7 @@ local function Spell_Options(NonClass)
 					},
 					Yell = {
 						name = '|cffCF374D'..L["Yell"]..'|r',
+						desc = L["%s can only function inside instances since 8.2.5."] :format(L["Yell"]),
 						type = 'toggle',
 						order = 0.11,
 						hidden = function() if Spells[i].Message_Channels_Disabled then if Spells[i].Message_Channels_Disabled["Yell"] then return true end end end,
@@ -3293,7 +3286,8 @@ local function Spell_Options(NonClass)
 						type = 'toggle',
 						order = 1,
 						desc = L["Send to player created channel."],
-						hidden = function() if Spells[i].Message_Channels_Disabled then if Spells[i].Message_Channels_Disabled["Custom"] then return true end end end,
+						--hidden = function() if Spells[i].Message_Channels_Disabled then if Spells[i].Message_Channels_Disabled["Custom"] then return true end end end,
+						hidden = true,
 						get = function(info)
 							return RSA.db.profile[ProfileName].Spells[Spells[i].Profile].CustomChannel.Enabled
 						end,
@@ -3307,7 +3301,8 @@ local function Spell_Options(NonClass)
 						order = 2,
 						desc = L["Only usable for player created channels, do not use for Blizzard channels such as |cff91BE0F/party|r."],
 						width = 'full',
-						hidden = function()
+						hidden = true,
+						--[[hidden = function()
 							if Spells[i].Message_Channels_Disabled then
 								if Spells[i].Message_Channels_Disabled["Custom"] then
 									return true
@@ -3317,7 +3312,7 @@ local function Spell_Options(NonClass)
 							else
 								return RSA.db.profile[ProfileName].Spells[Spells[i].Profile].CustomChannel.Enabled ~= true
 							end
-						end,
+						end,]]--
 						get = function(info)
 							return RSA.db.profile[ProfileName].Spells[Spells[i].Profile].CustomChannel.Channel
 						end,
@@ -3421,7 +3416,13 @@ local function Spell_Options(NonClass)
 		-- Add usable tags to description.
 		local TagList = ''
 		for j = 1,#Spells[i].Valid_Tags do
-			TagList = TagList ..'\n'.. '|c5500DBBD' .. Spells[i].Valid_Tags[j] .. '|r'
+			if j == 1 then--(j % 2 == 0) then
+				--TagList = TagList ..', '.. '|c5500DBBD' .. Spells[i].Valid_Tags[j] .. '|r'
+				TagList = '\n'.. '|c5500DBBD' .. Spells[i].Valid_Tags[j] .. '|r'
+			else
+				TagList = TagList ..', '.. '|c5500DBBD' .. Spells[i].Valid_Tags[j] .. '|r'
+				--TagList = TagList ..'\n'.. '|c5500DBBD' .. Spells[i].Valid_Tags[j] .. '|r'
+			end
 		end
 		Options.args[Spells[i].Name].args.Message_Description.name = L["The following tags are available for use with this spell:"] .. TagList
 
@@ -3484,9 +3485,9 @@ local function Spell_Options(NonClass)
 			if #Messages == 0 then
 				Options.args[Spells[i].Name].args[Spells[i].Message_Areas[k]].args.List_Description.name = '\n'.. L["You have no messages for this section."]..L[" If you wish to add a message for this section, enter it above in the |cffFFD100Add New Message|r box. As no messages exist, nothing will be announced for this section."]
 			elseif #Messages == 1 then
-				Options.args[Spells[i].Name].args[Spells[i].Message_Areas[k]].args.List_Description.name = '\n'.. L["You have "].. #Messages ..L[" message for this section."]..L[" RSA will choose a message from this section at random, if you wish to remove a message, delete the contents and press enter. If no messages exist, nothing will be announced for this section."]
+				Options.args[Spells[i].Name].args[Spells[i].Message_Areas[k]].args.List_Description.name = '\n'.. L["You have %d message for this section."]:format(#Messages)..L[" RSA will choose a message from this section at random, if you wish to remove a message, delete the contents and press enter. If no messages exist, nothing will be announced for this section."]
 			else
-				Options.args[Spells[i].Name].args[Spells[i].Message_Areas[k]].args.List_Description.name = '\n'.. L["You have "].. #Messages ..L[" messages for this section."]..L[" RSA will choose a message from this section at random, if you wish to remove a message, delete the contents and press enter. If no messages exist, nothing will be announced for this section."]
+				Options.args[Spells[i].Name].args[Spells[i].Message_Areas[k]].args.List_Description.name = '\n'.. L["You have %d messages for this section."]:format(#Messages)..L[" RSA will choose a message from this section at random, if you wish to remove a message, delete the contents and press enter. If no messages exist, nothing will be announced for this section."]
 			end
 
 
@@ -3543,7 +3544,7 @@ end
 
 local function LibSink_Options()
 	Options.args.General.args.Output = RSA_O:GetSinkAce3OptionsDataTable() -- Add LibSink Options.
-	Options.args.General.args.Output.args.Channel = nil -- Hide Channel options, we don't want those.
+	Options.args.General.args.Output.args.Channel = nil -- We don't want to display this, and it's broken since 8.2.5 anyway.
 	Options.args.General.args.Output.name = '|cff00B2FA'..L["Local Message Output Area"]..'|r'
 	Options.args.General.args.Output.order = 100.6
 	Options.args.General.args.Output.inline = true
@@ -3576,7 +3577,7 @@ function RSA_O:OnInitialize()
 	Options.args.profiles = Profiles
 	Options.args.profiles.order = 99
 	AddOptions()
-	LibStub('AceConfigDialog-3.0'):SetDefaultSize('RSA',975,700)
+	LibStub('AceConfigDialog-3.0'):SetDefaultSize('RSA',975,740)
 	local LibDualSpec = LibStub('LibDualSpec-1.0')
 	LibDualSpec:EnhanceDatabase(self.db, 'RSA')
 	LibDualSpec:EnhanceOptions(Profiles, self.db)

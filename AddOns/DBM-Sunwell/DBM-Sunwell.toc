@@ -1,4 +1,4 @@
-## Interface: 80200
+﻿## Interface: 80205
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Sunwell|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0태양샘 고원|r
@@ -16,6 +16,10 @@
 ## X-DBM-Mod-MapID: 580
 ## X-DBM-Mod-Sort: 1001
 ## X-DBM-Mod-MinCoreRevision: 12473
+## X-Curse-Project-ID: 16442
+## X-WoWI-ID: 11700
+## Version: r668
+
 localization.en.lua
 localization.cn.lua
 localization.de.lua

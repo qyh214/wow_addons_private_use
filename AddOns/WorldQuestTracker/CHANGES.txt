@@ -1,4 +1,16 @@
-Changes since tag v8.2.0.381
+lightweight tag 1c910a525fd035789062819aa08960bda1314730 v8.2.5.383
+Author:	Tercio Jose <terciob19@hotmail.com>
+Date:	Sat Sep 28 15:43:28 2019 -0300
+
+commit 1c910a525fd035789062819aa08960bda1314730
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Sat Sep 28 15:43:28 2019 -0300
+
+    Updates for the new retail version
+    
+    - ToC Update.
+    - Framework Update.
+    - Fixed GetPlayerFacing() returning null.
 
 commit 03a23bdc0f5357877d5123ae0f559ffe5aa8ddc3
 Author: Tercio Jose <terciob19@hotmail.com>

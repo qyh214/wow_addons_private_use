@@ -1,28 +1,220 @@
-tag e11e08047d4f2afecd244435cc06b77da3aeebe6 4.24
+tag 59ce622f5ca3c0ca428ca7ed8a29c163722ae679 4.31
 Author:	Azilroka <darktemplar9900@yahoo.com>
-Date:	Fri Aug 9 22:42:33 2019 -0500
+Date:	Tue Sep 17 22:23:24 2019 -0500
 
-commit f8b310407fc252527d0fb22b0685a5466ce7aa4a
+commit fa67c028221d0ad5ca9b7f432fcc85a380fc6e84
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Fri Aug 9 22:42:16 2019 -0500
+Date:   Tue Sep 17 22:23:12 2019 -0500
 
-    4.24
+    4.31
 
-commit 786b2079ec1bc816430a9682a7b21a0082a28940
+commit 83fb884297930986d94f01c3afb6e784677bd036
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Fri Aug 9 22:41:55 2019 -0500
+Date:   Tue Sep 17 21:41:23 2019 -0500
 
-    ElvUI TexCoords to ElvUI file.
+    ColorPickerPlus, Outfitter & RaiderIO
 
-commit 62555defe39f9a4b87d7b0fe64bdc6f3d7760e05
+commit 8ae7530910c9293e9e3d823ce44f9a2840cfb7fa
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Fri Aug 9 22:41:32 2019 -0500
+Date:   Tue Sep 17 20:23:58 2019 -0500
 
-    ProperVersion for Changelog commit
+    Disable Alerts for Retail
 
-commit c6769d94d1ab5bb95e7970023191887f6390db2a
+commit 126612cf53de9be79b7cc550df1b126389ffe391
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Fri Aug 9 22:40:54 2019 -0500
+Date:   Tue Sep 17 20:14:53 2019 -0500
 
-    Correct Changelog Error when no changelog was written. Who reads it anyway?
+    Cleanup for API & Classic
+
+commit 5fb96c3d0ff95272ceba53b3aa8f554244186d35
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Tue Sep 17 19:02:10 2019 -0500
+
+    Put the icons on ARTWORK
+
+commit 199334d45ef30e7bf178093c68ff348447303a1b
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Tue Sep 17 12:22:42 2019 -0500
+
+    Trainer / Auctionator
+
+commit 79849520ba1c4ef2eac43d1587a12c0ff6ee2b80
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Tue Sep 17 06:19:53 2019 -0500
+
+    More Tweaks to Error Print
+
+commit 11f739bf9018c44abe4e03cfc2d79cb412dc9117
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Tue Sep 17 06:15:29 2019 -0500
+
+    Try this @Mera
+
+commit 4ea90951ce8989314d31c3b21364185f04e8adfa
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Tue Sep 17 04:25:40 2019 -0500
+
+    Clean White Space
+
+commit e44894b77c19cb05fc063a8b45e403404e05bdea
+Author: Franz Strassmayr <q3fuba@gmail.com>
+Date:   Tue Sep 17 08:29:04 2019 +0000
+
+    added skin for DejaClassicStats
+
+commit e44894b77c19cb05fc063a8b45e403404e05bdea
+Author: Franz Strassmayr <q3fuba@gmail.com>
+Date:   Tue Sep 17 08:29:04 2019 +0000
+
+    added skin for DejaClassicStats
+
+commit e24ba73e1f6c0feebfba3e67202b2d1adff2ba4f
+Author: Franz Strassmayr <q3fuba@gmail.com>
+Date:   Tue Sep 17 08:28:40 2019 +0000
+
+    added skin for DejaClassicStats
+
+commit 93b9e604047085f2f1ba5f3fdf24bb8a1dc73015
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Mon Sep 16 21:41:21 2019 -0500
+
+    4.30
+
+commit d4b0ab11315ef6fafaeba6037ae892bdcff2df76
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sun Sep 15 01:58:39 2019 -0500
+
+    More Classic Tweaks
+
+commit 2d5c53953a0aab0ec9aa4575869ab350c64d0b36
+Author: Merathilis <neo0608@gmail.com>
+Date:   Sat Sep 14 09:32:04 2019 +0200
+
+    Dont Add your GameMenu Button if ElvUI is loaded.
+
+commit fef34e4b5b61277323641d3ba1d1e971a94669a2
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Fri Sep 13 18:48:39 2019 -0500
+
+    Move files around
+
+commit 04df1c4d020c32bbbd8350ad2b19650643fb827d
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sun Sep 8 19:34:56 2019 -0500
+
+    Communities / Spellbook / Quest / WorldMap
+
+commit 86f793ede97bf22f5d026108c6ac6c0e7eba5e2e
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sat Sep 7 12:31:16 2019 -0500
+
+    Details
+
+commit 56b011953f16fa234c3944223d8590fc09cf0cd5
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Fri Sep 6 17:00:30 2019 -0500
+
+    Friends
+
+commit c9c508f2cfd2ed307d2644703e1d13052a9a1d72
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Fri Sep 6 16:57:27 2019 -0500
+
+    Update API
+
+commit aaf70e629d7df8c9ed48ed4451cac38c6eda66bc
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Fri Sep 6 16:57:00 2019 -0500
+
+    Character / Communities / Other
+
+commit c0ab5ac56102ba02d08323e83f3046fcc00c8366
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Fri Sep 6 15:17:59 2019 -0500
+
+    Now... to do the rest of the work.
+
+commit 027b5ef5edcfc3a48051741e375f29bb00d55ed3
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Fri Sep 6 12:56:42 2019 -0500
+
+    More Restructure
+
+commit eae7793b3dcc6668e3b351201ace9707261a5632
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Fri Sep 6 12:36:12 2019 -0500
+
+    Restructure
+
+commit f04cb99e09340a007b707ef18ebb46669a770502
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Thu Sep 5 16:26:16 2019 -0500
+
+    Fix Validator
+
+commit d66b2c6c501db8b4ae532d32dcbf4572ecbcc667
+Author: Merathilis <neo0608@gmail.com>
+Date:   Thu Sep 5 13:06:22 2019 +0200
+
+    Now it should be good @Azilroka
+
+commit 23e63c6f19361b4c4238a57c90283e3a619114d5
+Author: Merathilis <neo0608@gmail.com>
+Date:   Thu Sep 5 09:53:03 2019 +0200
+
+    Partly revert my last commit part 2
+
+commit 22eb78512161e75d5451fa02014c8f340580d346
+Author: Merathilis <neo0608@gmail.com>
+Date:   Thu Sep 5 09:49:23 2019 +0200
+
+    Partly revert my last commit
+
+commit 03ac677af96507257135dfb16fc33b87df81d72f
+Author: Merathilis <neo0608@gmail.com>
+Date:   Thu Sep 5 09:34:11 2019 +0200
+
+    wtf Azil >.>
+
+commit 74907e5c3bca86113eb28d4846b505c618d66e0d
+Author: Merathilis <neo0608@gmail.com>
+Date:   Wed Sep 4 08:49:53 2019 +0200
+
+    Protect the SkinTextWithStateWidget a bit.
+
+commit 1aeb4bd07b72e6707baaa594c5cbe4e9e7c61205
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sat Aug 31 13:10:35 2019 -0500
+
+    Validate the Events
+
+commit c3b08725404a4093d476c5c7a9e19171971be010
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Sat Aug 31 13:08:45 2019 -0500
+
+    Starting Classic Merge
+
+commit e5c113eca524165d7dc0f6641e8d833b3c3007f2
+Author: Merathilis <neo0608@gmail.com>
+Date:   Sun Aug 25 11:29:31 2019 +0200
+
+    Changelog
+
+commit fcaf0ab1f154b5f280bcfccc934598bcf1f9e5f1
+Author: Merathilis <neo0608@gmail.com>
+Date:   Sun Aug 25 11:18:05 2019 +0200
+
+    Fix Auctionator scrollbar.
+
+commit f54fe47203351d4072dace142271bd6d64b2721b
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Thu Aug 22 16:18:48 2019 -0500
+
+    adjust pkgmeta
+
+commit 8a89ef6841800fba001bf205e2577a54fb6a56bc
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Mon Aug 12 19:09:09 2019 -0500
+
+    @Kringel
 

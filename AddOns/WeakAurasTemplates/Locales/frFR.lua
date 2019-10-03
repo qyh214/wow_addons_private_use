@@ -32,7 +32,6 @@ Affiche toujours l'aura, mettez-la en surbrillance si elle améliore]=]
 	L["Back"] = "Retour"
 	L["Basic Show On Cooldown"] = "Affichage de base en temps de recharge"
 	L["Bloodlust/Heroism"] = "Furie sanguinaire/Héroïsme"
-	L["Buff"] = "Amélioration"
 	L["buff"] = "amélioration"
 	L["Buffs"] = "Améliorations"
 	L["Cancel"] = "Annuler"
@@ -42,9 +41,15 @@ Affiche toujours l'aura, mettez-la en surbrillance si elle améliore]=]
 	L["Charge and Duration Tracking"] = "Suivi des Charges et Durée"
 	L["Charge Tracking"] = "Suivis des Charges"
 	L["cooldown"] = "recharge"
+	--[[Translation missing --]]
+	L["Cooldown"] = "Cooldown"
 	L["Cooldown Tracking"] = "Suivis du Temps de Recharge"
 	L["Create Auras"] = "Créer Auras"
+	--[[Translation missing --]]
+	L["debuff"] = "debuff"
 	L["Debuffs"] = "Affaiblissements"
+	--[[Translation missing --]]
+	L["debuiff"] = "debuiff"
 	L["Enchants"] = "Enchantements"
 	L["General"] = "Général"
 	L["General Azerite Traits"] = "Traits Azéritiques Généraux"
@@ -110,9 +115,13 @@ Affiche toujours l'aura, mettez-la en surbrillance si elle améliore]=]
 	L["Show Only if Debuffed"] = "Show Only if Debuffed"
 	L["Show Only if on Cooldown"] = "Afficher Seulement si en Recharge"
 	L["Show Totem and Charge Information"] = "Afficher les Informations du Totem et de Charge"
+	--[[Translation missing --]]
+	L["slow debuff"] = "slow debuff"
 	L["Specific Azerite Traits"] = "Traits Azéritiques Spécéfiques"
 	--[[Translation missing --]]
 	L["Stance"] = "Stance"
+	--[[Translation missing --]]
+	L["stun debuff"] = "stun debuff"
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Suivre la charge et le proc, mettre en surbrillance pendant que le proc est actif, devient rouge lorsque vous êtes hors de portée, bleu lorsque les ressources sont insuffisantes"
 	L["Tracks the charge and the buff, highlight while the buff is active, blue on insufficient resources."] = "Suit la charge et le buff, surligne pendant que le buff est actif, bleu sur les ressources insuffisantes."
 	L["Tracks the charge and the debuff, highlight while the debuff is active, blue on insufficient resources."] = [=[

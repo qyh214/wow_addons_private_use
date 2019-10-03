@@ -74,6 +74,8 @@ L["/wa pstart - Start profiling"] = "/wa pstart - Start profiling"
 --[[Translation missing --]]
 L["/wa pstop - Finish profiling"] = "/wa pstop - Finish profiling"
 --[[Translation missing --]]
+L["/wa repair - Repair tool"] = "/wa repair - Repair tool"
+--[[Translation missing --]]
 L["|cffeda55fLeft-Click|r to toggle showing the main window."] = "|cffeda55fLeft-Click|r to toggle showing the main window."
 --[[Translation missing --]]
 L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."
@@ -92,8 +94,7 @@ L["20 Man Raid"] = "Banda de 20 jugadores"
 L["25 Man Raid"] = "Banda de 25 Jugadores"
 L["40 Man Raid"] = "Banda de 40 jugadores"
 L["5 Man Dungeon"] = "Mazmorra de 5 jugadores"
---[[Translation missing --]]
-L["A WeakAura just tried to use a forbidden function but has been blocked from doing so. Please check your auras!"] = "A WeakAura just tried to use a forbidden function but has been blocked from doing so. Please check your auras!"
+L["A WeakAura just tried to use a forbidden function but has been blocked from doing so. Please check your auras!"] = "Un WeakAura acaba de intentar usar una función prohibida y ha sido bloqueado. ¡Por favor, revisa tus auras!"
 L["Absorb"] = "Absorción"
 --[[Translation missing --]]
 L["Absorb Display"] = "Absorb Display"
@@ -101,8 +102,7 @@ L["Absorbed"] = "Absorbido"
 --[[Translation missing --]]
 L["Action Button Glow"] = "Action Button Glow"
 L["Action Usable"] = "Acción Utilizable"
---[[Translation missing --]]
-L["Actions"] = "Actions"
+L["Actions"] = "Acciones"
 --[[Translation missing --]]
 L["Active"] = "Active"
 --[[Translation missing --]]
@@ -187,6 +187,8 @@ L["Autocast Shine"] = "Autocast Shine"
 L["Auto-Clone (Show all Matches)"] = "Auto-Clone (Show all Matches)"
 L["Automatic"] = "Automático"
 --[[Translation missing --]]
+L["Automatic Repair Confirmation Dialog"] = "Automatic Repair Confirmation Dialog"
+--[[Translation missing --]]
 L["Automatic Rotation"] = "Automatic Rotation"
 --[[Translation missing --]]
 L["Avoidance (%)"] = "Avoidance (%)"
@@ -235,6 +237,8 @@ L["Buff"] = "Beneficio"
 L["Buffed/Debuffed"] = "Buffed/Debuffed"
 --[[Translation missing --]]
 L["Can be used for e.g. checking if \"boss1target\" is the same as \"player\"."] = "Can be used for e.g. checking if \"boss1target\" is the same as \"player\"."
+--[[Translation missing --]]
+L["Cancel"] = "Cancel"
 L["Cast"] = "Lanzar Hechizo"
 --[[Translation missing --]]
 L["Cast Bar"] = "Cast Bar"
@@ -289,6 +293,8 @@ L["Combat Log"] = "Registro de Combate"
 L["Combine all matches"] = "Combine all matches"
 L["Conditions"] = "Condiciones"
 L["Contains"] = "Contiene"
+--[[Translation missing --]]
+L["Continue Without Repairing"] = "Continue Without Repairing"
 --[[Translation missing --]]
 L["Cooldown"] = "Cooldown"
 --[[Translation missing --]]
@@ -392,6 +398,12 @@ L["Emphasized"] = "Emphasized"
 L["Emphasized option checked in BigWigs's spell options"] = "Emphasized option checked in BigWigs's spell options"
 --[[Translation missing --]]
 L["Empty"] = "Empty"
+--[[Translation missing --]]
+L["Enchant Found"] = "Enchant Found"
+--[[Translation missing --]]
+L["Enchant Missing"] = "Enchant Missing"
+--[[Translation missing --]]
+L["Enchant Name or ID"] = "Enchant Name or ID"
 --[[Translation missing --]]
 L["Encounter ID(s)"] = "Encounter ID(s)"
 L["Energize"] = "Vigorizar"
@@ -637,6 +649,8 @@ L["Make sure you can trust the person who sent it!"] = "Make sure you can trust 
 --[[Translation missing --]]
 L["Malformed WeakAuras link"] = "Malformed WeakAuras link"
 --[[Translation missing --]]
+L["Manual Repair Confirmation Dialog"] = "Manual Repair Confirmation Dialog"
+--[[Translation missing --]]
 L["Manual Rotation"] = "Manual Rotation"
 --[[Translation missing --]]
 L["Marked First"] = "Marked First"
@@ -675,6 +689,8 @@ L["Miss"] = "Fallo"
 L["Miss Type"] = "Tipo de Fallo"
 L["Missed"] = "Fallado"
 L["Missing"] = "Ausente"
+--[[Translation missing --]]
+L["Model"] = "Model"
 L["Monochrome"] = "Monocromo"
 L["Monochrome Outline"] = "Monocromo"
 L["Monochrome Thick Outline"] = "Borde gordo monocromo"
@@ -757,7 +773,7 @@ L["Option Group"] = "Option Group"
 --[[Translation missing --]]
 L["Options will finish loading after combat ends."] = "Options will finish loading after combat ends."
 --[[Translation missing --]]
-L["Options will finish loading after the login process has completed."] = "Options will finish loading after the login process has completed."
+L["Options will open after the login process has completed."] = "Options will open after the login process has completed."
 L["Orbit"] = "Orbitar"
 --[[Translation missing --]]
 L["Orientation"] = "Orientation"
@@ -802,6 +818,8 @@ L["Player Name"] = "Nombre del Jugador"
 L["Player Race"] = "Raza del Jugador"
 L["Player(s) Affected"] = "Jugador(es) Afectados"
 L["Player(s) Not Affected"] = "Jugador(es) no Afectados"
+--[[Translation missing --]]
+L["Please upgrade your Masque version"] = "Please upgrade your Masque version"
 L["Poison"] = "Veneno"
 L["Power"] = "Poder"
 L["Power (%)"] = "Poder  (%)"
@@ -878,6 +896,8 @@ L["Rotate Left"] = "Rotar a la Izquierda"
 L["Rotate Right"] = "Rotar a la Derecha"
 --[[Translation missing --]]
 L["Run Custom Code"] = "Run Custom Code"
+--[[Translation missing --]]
+L["Run the repair tool"] = "Run the repair tool"
 L["Rune"] = "Runa"
 --[[Translation missing --]]
 L["Rune #1"] = "Rune #1"
@@ -953,6 +973,8 @@ L["Show lowest time left"] = "Show lowest time left"
 L["Show lowest time left over all units"] = "Show lowest time left over all units"
 --[[Translation missing --]]
 L["Show lowest time left per unit"] = "Show lowest time left per unit"
+--[[Translation missing --]]
+L["Show On"] = "Show On"
 L["Shrink"] = "Encoger"
 --[[Translation missing --]]
 L["Simple"] = "Simple"
@@ -1022,6 +1044,8 @@ L["Spell Usable"] = "Spell Usable"
 L["Spin"] = "Girar"
 L["Spiral"] = "Espiral"
 L["Spiral In And Out"] = "Espiral de Dentro a Fuera"
+--[[Translation missing --]]
+L["Stack Count"] = "Stack Count"
 L["Stacks"] = "Acumulaciones"
 --[[Translation missing --]]
 L["Stagger Scale"] = "Stagger Scale"

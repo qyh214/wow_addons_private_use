@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Tidewalker", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019041710011")
+mod:SetRevision("20190417010011")
 mod:SetCreatureID(21213)
 mod:SetEncounterID(627)
 mod:SetModelID(20739)

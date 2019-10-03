@@ -18,8 +18,8 @@ db_defaults.stats = {
 }
 
 local credits = {
-    "Pazza <Bronzebeard-US>",
-    "Stewarta <Emerald Dream - EU>\n\nAstaldo <Bronzebeard - EU>\nZeke <Coilfang - US>\nMorphieus <Spinebreaker>\nNachonut <Bronzebeard - US>\n\nChiaki <Frostwolf - EU> - deDE\n"..
+    "Pazza <Bronzebeard-US>\n\n",
+    "MysicalOS\nHumfras\nSylvaanar\n\nStewarta <Emerald Dream - EU>\n\nAstaldo <Bronzebeard - EU>\nZeke <Coilfang - US>\nMorphieus <Spinebreaker>\nNachonut <Bronzebeard - US>\n\nChiaki <Frostwolf - EU> - deDE\n"..
     "BlueNyx <bluenyx@gmail.com> - koKR\nStingerSoft <stingersoft@iti.lt> - ruRU\nJunxian <junxian1121@hotmail.com> - zhCN & zhTW\n"
 };
 
@@ -38,7 +38,7 @@ local function General_Main()
     frame.welcome.cb2:CreateCheckButton(L["<Right-Click> to show unread messages."], db.minimap, "rightClickNew");
     frame.welcome.nextOffSetY = -75;
     frame.welcome.tabFun = frame.welcome:CreateCheckButton(L["Press <Tab> to advance to next tell target."], WIM.db, "tabAdvance");
-    
+
     local sensitivity = {};
     table.insert(sensitivity, {
             text = L["Sensitivity"],
@@ -55,7 +55,7 @@ local function General_Main()
     frame.welcome.sensitivity = frame.welcome:CreateCheckButtonMenu(L["Enable WorldFrame Click Detection."], WIM.modules.ClickControl, "enabled", nil, function(self, button) EnableModule("ClickControl", self:GetChecked()); end, sensitivity, db.ClickControl, "clickSensitivity");
     frame.welcome:CreateCheckButton(L["Force sounds when game sound is disabled."], db.sounds, "force_game_sound");
     frame.welcome.nextOffSetY = -25;
-    
+
 --    frame.welcome.cb3 = frame.welcome:CreateCheckButton(L["Display Tutorials"], WIM.modules.Tutorials, "enabled", nil, function(self, button) EnableModule("Tutorials", self:GetChecked()); end);
 --    frame.welcome.reset = frame.welcome:CreateButton(L["Reset Tutorials"], function() db.shownTutorials = {}; end);
 --    frame.welcome.reset:ClearAllPoints();
@@ -125,7 +125,7 @@ local function General_MessageFormatting()
     f.prev:SetFading(false);
     f.prev:SetMaxLines(5);
     f.prev:SetJustifyH("LEFT");
-    
+
     f.prevFrame:SetHeight(60);
     f.prevFrame:SetScript("OnShow", nil); -- we don't want this to trigger
     f.prevFrame:ImportCustomObject(f.prev):SetFullSize();
@@ -159,7 +159,7 @@ local function General_MessageFormatting()
         });
     end
     f.default.bracket = f:CreateCheckButtonMenu(L["Bracket names."], db.formatting.bracketing, "enabled", nil, function(self, button) f.prev:Hide(); f.prev:Show(); end, fList, db.formatting.bracketing, "type");
-    
+
     return frame;
 end
 
@@ -272,7 +272,7 @@ local function General_WindowSettings()
     frame.menu.nextOffSetY = -45;
     frame.menu.scale = frame.menu:CreateSlider(L["Window Scale"], "10", "400", 10, 400, 1, db.winSize, "scale", function(self) UpdateAllWindowProps(); end);
     frame.menu.nextOffSetY = -25;
-    
+
     -- window strata
     local stratas = {"BACKGROUND", "LOW", "MEDIUM", "HIGH", "DIALOG", "TOOLTIP"};
     local strataList = {};
@@ -343,7 +343,7 @@ local function General_VisualSettings()
     frame.menu.skinList:ClearAllPoints();
     frame.menu.skinList:SetPoint("LEFT", frame.menu.skinText, "LEFT", frame.menu.skinText:GetStringWidth(), 0);
     frame.menu.lastObj = frame.menu.skinText;
-    
+
     frame.menu.nextOffSetY = -15;
     frame.menu:CreateColorPicker(L["Color: System Messages"], db.displayColors, "sysMsg");
     frame.menu:CreateColorPicker(L["Color: Error Messages"], db.displayColors, "errorMsg");
@@ -359,7 +359,7 @@ local function General_VisualSettings()
 	frame.menu:CreateCheckButton(L["Enable window fading effects."], db, "winFade");
 	frame.menu:CreateCheckButton(L["Enable window animation effects."], db, "winAnimation");
 	frame.menu:CreateCheckButton(L["Display item links when hovering over them."], db, "hoverLinks");
-    
+
     return frame;
 end
 
@@ -367,8 +367,8 @@ local function General_Fonts()
     local frame = options.CreateOptionsFrame();
     frame.menu = frame:CreateSection(L["Fonts"], L["Configure the fonts used in WIM's message windows."]);
     frame.menu.nextOffSetY = -30;
-    
-    
+
+
     frame.list = frame.menu:ImportCustomObject(CreateFrame("Frame"));
     options.frame.filterList = frame.list;
     options.AddFramedBackdrop(frame.list);
@@ -421,20 +421,20 @@ local function General_Fonts()
             button.title:SetFont(font, 18, flags);
             button.title:SetTextColor(_G.GameFontNormal:GetTextColor());
             button.title:SetText("Test");
-            
+
             button.SetFontItem = function(self, theFont)
                 self.font = theFont;
                 self.title:SetText("    "..theFont);
                 self.title:SetFont(libs.SML.MediaTable.font[theFont], 18, "");
             end
-            
+
             button:SetScript("OnClick", function(self)
                     _G.PlaySound(856);
                     db.skin.font = self.font;
                     LoadSkin(db.skin.selected);
                     frame.list:Hide(); frame.list:Show();
                 end);
-            
+
             if(#self.buttons == 0) then
                 button:SetPoint("TOPLEFT");
                 button:SetPoint("TOPRIGHT", -25, 0);
@@ -442,13 +442,13 @@ local function General_Fonts()
                 button:SetPoint("TOPLEFT", self.buttons[#self.buttons], "BOTTOMLEFT");
                 button:SetPoint("TOPRIGHT", self.buttons[#self.buttons], "BOTTOMRIGHT");
             end
-            
+
             table.insert(self.buttons, button);
         end
     for i=1, 4 do
         frame.list:createButton();
     end
-    
+
     frame.menu.nextOffSetY = -20;
     frame.menu.outlineText = frame.menu:CreateText();
     frame.menu.outlineText:SetText(L["Font Outline"]..":");
@@ -476,13 +476,13 @@ local function General_Fonts()
     frame.menu.outlineList:ClearAllPoints();
     frame.menu.outlineList:SetPoint("LEFT", frame.menu.outlineText, "LEFT", frame.menu.outlineText:GetStringWidth(), 0);
     frame.menu.lastObj = frame.menu.outlineText;
-    
+
     frame.menu.nextOffSetY = -20;
     frame.menu:CreateCheckButton(L["Use font suggested by skin."], db.skin, "suggest", nil, function(self) LoadSkin(db.skin.selected); end);
-    
+
     frame.menu.nextOffSetY = -60;
     frame.menu:CreateSlider(L["Chat Font Size"], "8", "50", 8, 50, 1, db, "fontSize", function(self) UpdateAllWindowProps(); end);
-    
+
     return frame;
 end
 
@@ -490,16 +490,16 @@ local function Whispers_DisplaySettings()
     local frame = options.CreateOptionsFrame();
     frame.menu = frame:CreateSection(L["Display Settings"], L["Configure general display settings when dealing with whispers."]);
     frame.menu.nextOffSetY = -10;
-    
+
     frame.menu:CreateColorPicker(L["Color: Messages Sent"], db.displayColors, "wispOut");
     frame.menu:CreateColorPicker(L["Color: Messages Received"], db.displayColors, "wispIn");
     frame.menu.nextOffSetY = -10;
     frame.menu:CreateColorPicker(L["Color: BNet Messages Sent"], db.displayColors, "BNwispOut");
     frame.menu:CreateColorPicker(L["Color: BNet Messages Received"], db.displayColors, "BNwispIn");
-    
+
     frame.menu.nextOffSetY = -20;
     frame.menu:CreateCheckButton(L["Use colors suggested by skin."], db.displayColors, "useSkin");
-    
+
     frame.menu.nextOffSetY = -20;
     frame.menu:CreateCheckButton(L["Display user class icons and details."], db, "whoLookups", L["Requires who lookups."]);
     frame.menu:CreateCheckButton(L["Display Shortcut Bar"], WIM.modules.ShortcutBar, "enabled", nil, function(self, button) EnableModule("ShortcutBar", self:GetChecked()); end);
@@ -611,7 +611,7 @@ local function Whispers_Filters(isChat)
                     if(frame.list.selected == index) then frame.list.selected = frame.list.selected - 1; end
                     frame.list:Hide(); frame.list:Show();
                 end);
-            
+
             button.SetFilterIndex = function(self, index)
                 self.index = index;
                 self.filter = filters[index];
@@ -626,13 +626,13 @@ local function Whispers_Filters(isChat)
                 if(index == 1) then self.up:Hide(); else self.up:Show(); end
                 if(index == #filters) then self.down:Hide(); else self.down:Show(); end
             end
-            
+
             button:SetScript("OnClick", function(self)
                     _G.PlaySound(856);
                     frame.list.selected = self.index;
                     frame.list:Hide(); frame.list:Show();
                 end);
-            
+
             if(#self.buttons == 0) then
                 button:SetPoint("TOPLEFT");
                 button:SetPoint("TOPRIGHT", -25, 0);
@@ -640,7 +640,7 @@ local function Whispers_Filters(isChat)
                 button:SetPoint("TOPLEFT", self.buttons[#self.buttons], "BOTTOMLEFT");
                 button:SetPoint("TOPRIGHT", self.buttons[#self.buttons], "BOTTOMRIGHT");
             end
-            
+
             table.insert(self.buttons, button);
         end
     for i=1, filterListCount do
@@ -693,7 +693,7 @@ local function General_History(isChat)
         f.sub:CreateCheckButton(_G.GUILD_RANK1_DESC, historyDB, "officer");
         f.sub:CreateCheckButton(_G.PARTY, historyDB, "party");
         f.sub.col1row = f.sub:CreateCheckButton(_G.RAID, historyDB, "raid");
-        
+
         f.sub.col2 = f.sub:CreateCheckButton(_G.SAY, historyDB, "say");
         f.sub.col2:ClearAllPoints();
         f.sub.col2:SetPoint("TOPLEFT", f.sub.col1, 200, 0);
@@ -709,7 +709,7 @@ local function General_History(isChat)
     f.sub.chat:CreateCheckButton(L["Record Everyone"], db.history.chat, "all");
     f.sub.chat:Disable();
     f.sub.lastObj = f.sub.whispers;]]
-    
+
     f.sub.maint = f.sub:CreateSection(L["Maintenance"], L["Allowing your history logs to grow too large will affect the game's performance, therefore it is reccomended that you use the following options."]);
     if (isChat) then
       f.sub.maint:ClearAllPoints();
@@ -769,7 +769,7 @@ local function General_Tabs()
     local f = options.CreateOptionsFrame();
     f.sub = f:CreateSection(L["Tab Management"], L["Automatically manage your open windows and place them into appropriate tab groups."]);
     f.sub.nextOffSetY = -20;
-    
+
     f.sub.sortText = f.sub:CreateText();
     f.sub.sortText:SetText(L["Sort tabs by:"]);
     local sorts = {L["Window Created"], L["Last Activity"], L["Alphabetical"]};
@@ -788,7 +788,7 @@ local function General_Tabs()
     f.sub.sortList:ClearAllPoints();
     f.sub.sortList:SetPoint("LEFT", f.sub.sortText, "LEFT", f.sub.sortText:GetStringWidth(), 0);
     f.sub.lastObj = f.sub.sortText;
-    
+
     f.sub.nextOffSetY = -30;
     f.sub.whispers = f.sub:CreateCheckButton(L["Automatically group whispers."], db.tabs.whispers, "enabled", L["Does not apply to windows already opened."]);
     f.sub.whispers:CreateCheckButton(L["Place friends in their own group."], db.tabs.whispers, "friends", L["Does not apply to windows already opened."]);
@@ -851,12 +851,12 @@ local function General_Expose()
     local frame = options.CreateOptionsFrame();
     frame.menu = frame:CreateSection(L["Expose"], L["Expose is a Mac OS X inspired feature which enables you to quickly clear your screen of windows and then restore them back to their original position."]);
     frame.menu.nextOffSetY = -20;
-    
+
     local cb1 = frame.menu:CreateCheckButton(L["Auto hide/restore windows during combat."], db.expose, "combat");
     cb1:CreateCheckButton(L["Delay if I am typing a message."], db.expose, "protect");
     cb1:CreateCheckButton(L["Only while in an instance."], db.expose, "groupOnly");
     frame.menu.nextOffSetY = -90;
-    
+
     local direction = {L["Up"], L["Down"], L["Left"], L["Right"]};
     local tsList = {};
     for i=1, #direction do
@@ -883,12 +883,12 @@ local function General_Credits()
     local frame = options.CreateOptionsFrame();
     frame.menu = frame:CreateSection(L["Credits"]);
     frame.menu.nextOffSetY = -20;
-    
+
     frame.menu.createdBy = frame.menu:CreateSection("|cff69ccf0"..L["Created By:"].."|r", credits[1]);
     frame.menu.nextOffSetY = -20;
-    
+
     frame.menu.createdBy2 = frame.menu.createdBy:CreateSection("|cff69ccf0"..L["Special Thanks:"].."|r", credits[2]);
-    
+
     return frame;
 end
 

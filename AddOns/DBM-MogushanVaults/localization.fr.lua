@@ -1,13 +1,12 @@
--- Last update: 01/03/2013 (03/01/2013 in french format)
--- By Edoz (stephanelc35@msn.com)
-
-if GetLocale() ~= "frFR" then return end
+﻿if GetLocale() ~= "frFR" then
+	return
+end
 local L
 
 ------------
 -- The Stone Guard --
 ------------
-L= DBM:GetModLocalization(679)
+L = DBM:GetModLocalization(679)
 
 L:SetWarningLocalization({
 	SpecWarnOverloadSoon		= "%s bientôt !", -- prepare survival ablility or move boss. need more specific message.
@@ -25,11 +24,10 @@ L:SetMiscLocalization({
 	Overload	= "%s est sur le point de surcharger !"
 })
 
-
 ------------
 -- Feng the Accursed --
 ------------
-L= DBM:GetModLocalization(689)
+L = DBM:GetModLocalization(689)
 
 L:SetWarningLocalization({
 	WarnPhase	= "Phase %d"
@@ -41,22 +39,20 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Fire		= "Ô être exalté ! Grâce à moi vous ferez fondre la chair et les os !",
-	Arcane		= "Ô sagesse ancestrale ! Distille en moi ta sagesse arcanique !",
-	Nature		= "Ô grand esprit ! Accorde-moi le pouvoir de la terre !",
-	Shadow		= "Grandes âmes des champions du passé ! Confiez-moi votre bouclier !"
+	Fire	= "Ô être exalté ! Grâce à moi vous ferez fondre la chair et les os !",
+	Arcane	= "Ô sagesse ancestrale ! Distille en moi ta sagesse arcanique !",
+	Nature	= "Ô grand esprit ! Accorde-moi le pouvoir de la terre !",
+	Shadow	= "Grandes âmes des champions du passé ! Confiez-moi votre bouclier !"
 })
-
 
 -------------------------------
 -- Gara'jal the Spiritbinder --
 -------------------------------
-L= DBM:GetModLocalization(682)
+L = DBM:GetModLocalization(682)
 
 L:SetMiscLocalization({
-	Pull		= "L'heure de mourir elle est arrivée maintenant !"
+	Pull	= "L'heure de mourir elle est arrivée maintenant !"
 })
-
 
 ----------------------
 -- The Spirit Kings --
@@ -78,7 +74,6 @@ L:SetOptionLocalization({
 	RangeFrame			= "Afficher le cadre de distance (8m)"
 })
 
-
 ------------
 -- Elegon --
 ------------
@@ -89,7 +84,7 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerDespawnFloor		= "Sol disparu"
+	timerDespawnFloor	= "Sol disparu"
 })
 
 L:SetOptionLocalization({
@@ -97,11 +92,10 @@ L:SetOptionLocalization({
 	timerDespawnFloor		= "Afficher le temps avant que le sol disparaît"
 })
 
-
 ------------
 -- Will of the Emperor --
 ------------
-L= DBM:GetModLocalization(677)
+L = DBM:GetModLocalization(677)
 
 L:SetOptionLocalization({
 	InfoFrame		= "Afficher le cadre d'informations pour les joueurs touché par $spell:116525",
@@ -116,4 +110,3 @@ L:SetMiscLocalization({
 	Courage		= "Le Courage de l'empereur apparaît dans les alcôves !",--Emote
 	Boss		= "Deux assemblages titanesques apparaissent dans les grandes alcôves !"--Emote
 })
-

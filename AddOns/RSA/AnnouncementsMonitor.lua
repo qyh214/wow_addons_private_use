@@ -78,7 +78,7 @@ local function MonitorAndAnnounce(self, configType, timestamp, event, hideCaster
 	if spell_data.targetIsMe and not RSA.IsMe(destFlags) then return end
 	if spell_data.targetNotMe and RSA.IsMe(destFlags) then return end
 	if spell_data.sourceIsMe and not RSA.IsMe(sourceFlags) then return end
-	if false --[[detect player/pet]] then return end
+	--if false --[[detect player/pet]] then return end
 
 	local spell_profile = nil
 	if (not configType) or (configType == "player") then
@@ -112,19 +112,19 @@ local function MonitorAndAnnounce(self, configType, timestamp, event, hideCaster
 	if tracker == 1 and running[spell_tracker] >= 500 then return end -- Prevent multiple announcements of buff/debuff removal.
 	if tracker == 2 then
 		if running[spell_tracker] ~= nil then
-			if running[spell_tracker] >= 0 and running[spell_tracker] < 500 then -- Prevent multiple announcements of buff/debuff application.				
+			if running[spell_tracker] >= 0 and running[spell_tracker] < 500 then -- Prevent multiple announcements of buff/debuff application.
 				running[spell_tracker] = running[spell_tracker] + 1
-				return 
+				return
 			end
-		end		
+		end
 		running[spell_tracker] = 0
-	end	
+	end
 	if tracker == 1 and running[spell_tracker] == 0 then
 		running[spell_tracker] = running[spell_tracker] + 500
 	end
 	if tracker == 1 and running[spell_tracker] > 0 and running[spell_tracker] < 500 then
 		running[spell_tracker] = running[spell_tracker] - 1
-		return 
+		return
 	end
 
 	-- Build Cache of valid messages
@@ -153,21 +153,21 @@ local function MonitorAndAnnounce(self, configType, timestamp, event, hideCaster
 	-- Build Spell Name and Link Cache
 	if spell_data.linkID ~= nil then
 		local spellinfo = GetSpellInfo(spell_data.linkID)
-		cache_SpellInfo[spellID] = spellinfo 
-		
+		cache_SpellInfo[spellID] = spellinfo
+
 		local spelllink = GetSpellLink(spell_data.linkID)
-		cache_SpellLink[spellID] = spelllink 	
-	end	
-	local spellinfo = cache_SpellInfo[spellID]	
-	if not spellinfo then 
+		cache_SpellLink[spellID] = spelllink
+	end
+	local spellinfo = cache_SpellInfo[spellID]
+	if not spellinfo then
 		if not spell_data.linkID then
 			spellinfo = GetSpellInfo(spellID)
 			cache_SpellInfo[spellID] = spellinfo
 		else
 			spellinfo = GetSpellInfo(spell_data.linkID)
-			cache_SpellInfo[spellID] = spellinfo 
-		end	
-	end	
+			cache_SpellInfo[spellID] = spellinfo
+		end
+	end
 	local spelllink = cache_SpellLink[spellID]
 	if not spelllink then
 		if not spell_data.linkID then
@@ -175,7 +175,7 @@ local function MonitorAndAnnounce(self, configType, timestamp, event, hideCaster
 			cache_SpellLink[spellID] = spelllink
 		else
 			spelllink = GetSpellLink(spell_data.linkID)
-			cache_SpellLink[spellID] = spelllink 
+			cache_SpellLink[spellID] = spelllink
 		end
 	end
 
@@ -255,7 +255,7 @@ local function MonitorAndAnnounce(self, configType, timestamp, event, hideCaster
 
 	if spell_profile.Local == true then
 		if spell_data.groupRequired == true then
-			if not (GetNumSubgroupMembers() > 0 or GetNumGroupMembers() > 0) then return end				
+			if not (GetNumSubgroupMembers() > 0 or GetNumGroupMembers() > 0) then return end
 		end
 		RSA.Print_LibSink(gsub(message, ".%a+.", replacements))
 	end
@@ -266,14 +266,14 @@ local function MonitorAndAnnounce(self, configType, timestamp, event, hideCaster
 	if spell_profile.Whisper == true and UnitExists(full_destName) and RSA.Whisperable(destFlags) then
 		RSA.Print_Whisper(message, full_destName, replacements, destName)
 	end
-	if spell_profile.CustomChannel and spell_profile.CustomChannel.Enabled == true then
-		RSA.Print_Channel(gsub(message, ".%a+.", replacements), spell_profile.CustomChannel.Channel)
-	end
+	--if spell_profile.CustomChannel and spell_profile.CustomChannel.Enabled == true then
+	--	RSA.Print_Channel(gsub(message, ".%a+.", replacements), spell_profile.CustomChannel.Channel)
+	--end
 	if spell_profile.Say == true then
-		RSA.Print_Say(gsub(message, ".%a+.", replacements))			
+		RSA.Print_Say(gsub(message, ".%a+.", replacements))
 	end
 	if spell_profile.Emote == true then
-		RSA.Print_Emote(gsub(message, ".%a+.", replacements))			
+		RSA.Print_Emote(gsub(message, ".%a+.", replacements))
 	end
 	local Announced = false
 	if spell_profile.Party == true then

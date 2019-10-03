@@ -15,8 +15,8 @@ setfenv(1, WIM);
 --[[
     type:   1 - Pattern
             2 - User Type
-            3 - Level
-            
+            3 - Level -- no longer possible since removal of who.
+
     action: 1 - Allow
             2 - Ignore
             3 - Block
@@ -63,16 +63,17 @@ local DefaultFilters = {
         received = true,
         stats = 0
     },
-    {
-        name = L["Example Spam Blocker"],
-        enabled = false;
-        type = 3,
-        action = 3,
-        level = 2,
-        received = true,
-        notify = true,
-        stats = 0
-    },
+    -- Who lookups are no longer possible. this filter is no longer possible.
+    -- {
+    --     name = L["Example Spam Blocker"],
+    --     enabled = false;
+    --     type = 3,
+    --     action = 3,
+    --     level = 2,
+    --     received = true,
+    --     notify = true,
+    --     stats = 0
+    -- },
     {
         name = L["WhisperSelect Part 2"],
         enabled = false;
@@ -202,13 +203,13 @@ local function processFilter(eventItem, filter)
                 filter.stats = filter.stats + 1;
                 return filter.action;
         end
-    elseif(filter.type == 3) then
+	--[[elseif(filter.type == 3) then--Without SendWho, this filter type not possible
         -- do not do look up if user has window opened already. Defeats the purpose.
         if(not windows.active.whisper[name] and not userCache[name] and _G.UnitName("player") ~= name) then
             dPrint("Running WhoLookUp on: "..name);
-            local result = libs.WhoLib:UserInfo(name, 
+            local result = libs.WhoLib:UserInfo(name,
     	    {
-    		queue = libs.WhoLib.WHOLIB_QUEUE_QUIET, 
+    		queue = libs.WhoLib.WHOLIB_QUEUE_QUIET,
     		timeout = 60,
     		--flags = libs.WhoLib.WHOLIB_FLAG_ALWAYS_CALLBACK,
     		callback = function(result)
@@ -231,7 +232,7 @@ local function processFilter(eventItem, filter)
             end
         else
             return;
-        end
+        end--]]
     else
         return; -- not a valid filter, return nil.
     end
@@ -331,6 +332,13 @@ local ChatFilters = CreateModule("ChatFilters");
 _G.LibStub:GetLibrary("LibChatHandler-1.0"):Embed(ChatFilters);
 
 function ChatFilters:OnEnable()
+    -- filter out filters using Who lookups.
+    for i = #filters, 1, -1 do
+        if (filters[i].type == 3) then
+            table.remove(filters, i);
+        end
+    end
+
     if(db.enabled) then
         ChatFilters:RegisterChatEvent("CHAT_MSG_GUILD", 1);
         ChatFilters:RegisterChatEvent("CHAT_MSG_OFFICER", 1);
@@ -415,11 +423,11 @@ local function createFilterFrame()
     win:SetWidth(475);
     win:SetHeight(390);
     win:SetPoint("CENTER");
-    
+
     -- set backdrop
-    win:SetBackdrop({bgFile = "Interface\\AddOns\\"..addonTocName.."\\Sources\\Options\\Textures\\Frame_Background", 
-        edgeFile = "Interface\\AddOns\\"..addonTocName.."\\Sources\\Options\\Textures\\Frame", 
-        tile = true, tileSize = 64, edgeSize = 64, 
+    win:SetBackdrop({bgFile = "Interface\\AddOns\\"..addonTocName.."\\Sources\\Options\\Textures\\Frame_Background",
+        edgeFile = "Interface\\AddOns\\"..addonTocName.."\\Sources\\Options\\Textures\\Frame",
+        tile = true, tileSize = 64, edgeSize = 64,
         insets = { left = 64, right = 64, top = 64, bottom = 64 }});
 
     -- set basic frame properties
@@ -433,13 +441,13 @@ local function createFilterFrame()
     -- set script events
     win:SetScript("OnDragStart", function(self) self:StartMoving(); end);
     win:SetScript("OnDragStop", function(self) self:StopMovingOrSizing(); end);
-    
+
     -- create and set title bar text
     win.title = win:CreateFontString(win:GetName().."Title", "OVERLAY", "ChatFontNormal");
     win.title:SetPoint("TOPLEFT", 50 , -20);
     local font = win.title:GetFont();
     win.title:SetFont(font, 16, "");
-    
+
     -- create close button
     win.close = CreateFrame("Button", win:GetName().."Close", win);
     win.close:SetWidth(18); win.close:SetHeight(18);
@@ -449,7 +457,7 @@ local function createFilterFrame()
     win.close:SetScript("OnClick", function(self)
             self:GetParent():Hide();
         end);
-        
+
     -- create filter name
     win.nameText = win:CreateFontString(win:GetName().."NameText", "OVERLAY", "ChatFontNormal");
     win.nameText:SetText(L["Filter Name"]..":");
@@ -470,7 +478,7 @@ local function createFilterFrame()
         end);
     win.name:SetScript("OnEscapePressed", function(self) self:ClearFocus() end);
     options.AddFramedBackdrop(win.name);
-    
+
     --create filter by
     win.byText = win:CreateFontString(win:GetName().."By_Text", "OVERLAY", "ChatFontNormal");
     win.byText:SetText(L["Filter By"]..":");
@@ -496,13 +504,13 @@ local function createFilterFrame()
             info.value = 2;
             info.func = win.by.click;
             _G.UIDropDownMenu_AddButton(info, _G.UIDROPDOWNMENU_MENU_LEVEL);
-            if(not win.isChat) then
-                local info = _G.UIDropDownMenu_CreateInfo();
-                info.text = L["Level"];
-                info.value = 3;
-                info.func = win.by.click;
-                _G.UIDropDownMenu_AddButton(info, _G.UIDROPDOWNMENU_MENU_LEVEL);
-            end
+            -- if(not win.isChat) then
+            --     local info = _G.UIDropDownMenu_CreateInfo();
+            --     info.text = L["Level"];
+            --     info.value = 3;
+            --     info.func = win.by.click;
+            --     _G.UIDropDownMenu_AddButton(info, _G.UIDROPDOWNMENU_MENU_LEVEL);
+            -- end
         end
     win.by:SetScript("OnShow", function(self)
             win.filter.type = win.filter.type or 1;
@@ -522,7 +530,7 @@ local function createFilterFrame()
                 win.level:Show();
             end
         end);
-    
+
     -- create patterns box
     win.patternContainer = CreateFrame("ScrollFrame", win:GetName().."PatternContainer", win, "UIPanelScrollFrameTemplate");
     win.patternContainer:SetPoint("TOPLEFT", win.byText, "BOTTOMLEFT", 0, -25);
@@ -545,7 +553,7 @@ local function createFilterFrame()
             self:SetText(win.filter.pattern);
         end);
     win.pattern:SetScript("OnEscapePressed", function(self) self:ClearFocus() end);
-    
+
     --create user options
     win.user = CreateFrame("Frame", win:GetName().."UserFrame", win);
     win.user:SetPoint("TOPLEFT", win.patternContainer, "TOPLEFT");
@@ -568,7 +576,7 @@ local function createFilterFrame()
     _G.getglobal(win.user.party:GetName().."Text"):SetText(L["Party Members"]);
     win.user.party:SetScript("OnShow", function(self) self:SetChecked(win.filter.party); end);
     win.user.party:SetScript("OnClick", function(self) win.filter.party = self:GetChecked(); end);
-    
+
     win.user.raid = CreateFrame("CheckButton", win.user:GetName().."Raid", win.user, "UICheckButtonTemplate");
     win.user.raid:SetPoint("TOPLEFT", win.user:GetWidth()/2, 0);
     _G.getglobal(win.user.raid:GetName().."Text"):SetText(L["Raid Members"]);
@@ -599,7 +607,7 @@ local function createFilterFrame()
             end
         end);
     win.user.all:SetScript("OnClick", function(self) win.filter.all = self:GetChecked(); self:Hide(); self:Show(); end);
-    
+
     --create level options
     win.level = CreateFrame("Frame", win:GetName().."LevelFrame", win);
     win.level:SetPoint("TOPLEFT", win.patternContainer, "TOPLEFT");
@@ -609,9 +617,9 @@ local function createFilterFrame()
     options.AddFramedBackdrop(win.level);
     win.level.slider = CreateFrame("Slider", win.level:GetName().."Slider", win.level);
     -- set backdrop
-    win.level.slider:SetBackdrop({bgFile = "Interface\\Buttons\\UI-SliderBar-Background", 
-        edgeFile = "Interface\\Buttons\\UI-SliderBar-Border", 
-        tile = true, tileSize = 8, edgeSize = 8, 
+    win.level.slider:SetBackdrop({bgFile = "Interface\\Buttons\\UI-SliderBar-Background",
+        edgeFile = "Interface\\Buttons\\UI-SliderBar-Border",
+        tile = true, tileSize = 8, edgeSize = 8,
         insets = { left = 3, right = 3, top = 6, bottom = 6 }});
     win.level.slider:SetHeight(17);
     --win.level.slider:SetPoint("CENTER");
@@ -677,9 +685,9 @@ local function createFilterFrame()
             _G.UIDropDownMenu_SetSelectedValue(self, win.filter.classSpecific);
         end);
 
-    
-    
-    
+
+
+
     --create incoming out going
     win.received = CreateFrame("CheckButton", win:GetName().."In", win, "UICheckButtonTemplate");
     win.received:SetPoint("TOPLEFT", win.patternContainer, "BOTTOMLEFT", 0, -10);
@@ -702,8 +710,8 @@ local function createFilterFrame()
     win.sent:SetScript("OnClick", function(self)
             win.filter.sent = self:GetChecked() and true or nil;
         end);
-        
-        
+
+
     --create action
     win.actionText = win:CreateFontString(win:GetName().."Action_Text", "OVERLAY", "ChatFontNormal");
     win.actionText:SetText(L["Action to Perform:"]);
@@ -746,7 +754,7 @@ local function createFilterFrame()
     win.actionNotify:SetScript("OnClick", function(self)
             win.filter.notify = self:GetChecked() and true or nil;
         end);
-        
+
     win.action:SetScript("OnShow", function(self)
             win.filter.action = win.filter.action or 2;
             _G.UIDropDownMenu_Initialize(self, self.init);
@@ -757,8 +765,8 @@ local function createFilterFrame()
                 win.actionNotify:Show();
             end
         end);
-    
-    
+
+
     -- cancel / save
     win.border = win:CreateTexture(nil, "OVERLAY");
     win.border:SetHeight(1);
@@ -798,7 +806,7 @@ local function createFilterFrame()
     win.cancel.text:SetText(L["Cancel"]);
     win.cancel:SetWidth(win.cancel.text:GetStringWidth()+60);
     win.cancel:SetScript("OnClick", function(self) win:Hide(); end);
-        
+
     -- window actions
     win:SetScript("OnShow", function(self)
             _G.PlaySound(850);
@@ -820,9 +828,9 @@ local function createFilterFrame()
                 options.frame.filterList:Show();
             end
         end);
-    
+
     table.insert(_G.UISpecialFrames,win:GetName());
-    
+
     return win;
 end
 

@@ -1,5 +1,5 @@
 local MAJOR_VERSION = "LibDogTag-Unit-3.0"
-local MINOR_VERSION = 90000 + (tonumber(("20190812014218"):match("%d+")) or 33333333333333)
+local MINOR_VERSION = 90000 + (tonumber(("20190917021642"):match("%d+")) or 33333333333333)
 
 if MINOR_VERSION > _G.DogTag_Unit_MINOR_VERSION then
 	_G.DogTag_Unit_MINOR_VERSION = MINOR_VERSION
@@ -40,6 +40,10 @@ end
 
 -- Parnic: pet happiness removed in 4.1
 local wow_401 = wow_ver >= 40100
+-- ...and back in Classic
+if wow_classic then
+	petHappinessEvent = "UNIT_HAPPINESS"
+end
 
 -- Parnic: GetNumRaidMembers/GetNumPartyMembers removed in 6.0
 if wow_600 or wow_classic then

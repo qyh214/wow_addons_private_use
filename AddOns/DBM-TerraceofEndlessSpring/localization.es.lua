@@ -1,10 +1,12 @@
-if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then
+	return
+end
 local L
 
 ---------------------------------
 -- Protectores de la Eternidad --
 ---------------------------------
-L= DBM:GetModLocalization(683)
+L = DBM:GetModLocalization(683)
 
 L:SetWarningLocalization({
 	warnGroupOrder		= "Interceptar esbirros: Grupo %s",
@@ -21,7 +23,7 @@ L:SetOptionLocalization({
 -------------
 -- Tsulong --
 -------------
-L= DBM:GetModLocalization(742)
+L = DBM:GetModLocalization(742)
 
 L:SetOptionLocalization({
 	warnLightOfDay	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(123716)
@@ -34,20 +36,20 @@ L:SetMiscLocalization{
 -------------
 -- Lei Shi --
 -------------
-L= DBM:GetModLocalization(729)
+L = DBM:GetModLocalization(729)
 
 L:SetWarningLocalization({
-	warnHideOver			= "%s ha terminado"
+	warnHideOver	= "%s ha terminado"
 })
 
 L:SetTimerLocalization({
-	timerSpecialCD			= "Facultad especial (%d) TdR"
+	timerSpecialCD	= "Facultad especial (%d) TdR"
 })
 
 L:SetOptionLocalization({
-	warnHideOver			= "Mostrar aviso cuando termine $spell:123244",
-	timerSpecialCD			= "Mostrar temporizador para el tiempo de reutilización de las facultades especiales",
-	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. " (muestra a todos durante Ocultar, y solo a los tanques el resto del tiempo)"
+	warnHideOver	= "Mostrar aviso cuando termine $spell:123244",
+	timerSpecialCD	= "Mostrar temporizador para el tiempo de reutilización de las facultades especiales",
+	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. " (muestra a todos durante Ocultar, y solo a los tanques el resto del tiempo)"
 })
 
 L:SetMiscLocalization{
@@ -57,7 +59,7 @@ L:SetMiscLocalization{
 -------------------
 -- Sha del miedo --
 -------------------
-L= DBM:GetModLocalization(709)
+L = DBM:GetModLocalization(709)
 
 L:SetWarningLocalization({
 	MoveForward					= "Ve adelante",
@@ -67,10 +69,10 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerSpecialAbilityCD		= "Siguiente habilidad especial",
-	timerSpoHudCD				= "Terror / Aspersor TdR",
-	timerSpoStrCD				= "Aspersor / Golpe TdR",
-	timerHudStrCD				= "Terror / Golpe TdR"
+	timerSpecialAbilityCD	= "Siguiente habilidad especial",
+	timerSpoHudCD			= "Terror / Aspersor TdR",
+	timerSpoStrCD			= "Aspersor / Golpe TdR",
+	timerHudStrCD			= "Terror / Golpe TdR"
 })
 
 L:SetOptionLocalization({

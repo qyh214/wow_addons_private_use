@@ -1,10 +1,12 @@
-if GetLocale() ~= "koKR" then return end
+﻿if GetLocale() ~= "koKR" then
+	return
+end
 local L
 
 --------------------------
 -- Jin'rokh the Breaker --
 --------------------------
-L= DBM:GetModLocalization(827)
+L = DBM:GetModLocalization(827)
 
 L:SetWarningLocalization({
 	specWarnWaterMove	= "곧 %s - 전도성 물에서 빠지세요!"
@@ -17,7 +19,7 @@ L:SetOptionLocalization({
 --------------
 -- Horridon --
 --------------
-L= DBM:GetModLocalization(819)
+L = DBM:GetModLocalization(819)
 
 L:SetWarningLocalization({
 	warnAdds				= "%s",
@@ -47,7 +49,7 @@ L:SetMiscLocalization({
 ---------------------------
 -- The Council of Elders --
 ---------------------------
-L= DBM:GetModLocalization(816)
+L = DBM:GetModLocalization(816)
 
 L:SetWarningLocalization({
 	specWarnPossessed	= "%s : %s - 대상 전환!"
@@ -60,7 +62,7 @@ L:SetOptionLocalization({
 ------------
 -- Tortos --
 ------------
-L= DBM:GetModLocalization(825)
+L = DBM:GetModLocalization(825)
 
 L:SetWarningLocalization({
 	warnKickShell			= "%s 사용 : >%s< (%d 남음)",
@@ -75,16 +77,16 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	WrongDebuff				= "%s 없음"
+	WrongDebuff	= "%s 없음"
 })
 
 -------------
 -- Megaera --
 -------------
-L= DBM:GetModLocalization(821)
+L = DBM:GetModLocalization(821)
 
 L:SetTimerLocalization({
-	timerBreathsCD			= "다음 숨결"
+	timerBreathsCD	= "다음 숨결"
 })
 
 L:SetOptionLocalization({
@@ -99,19 +101,19 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	rampageEnds				= "분노가 가라앉습니다."
+	rampageEnds	= "분노가 가라앉습니다."
 })
 
 ------------
 -- Ji-Kun --
 ------------
-L= DBM:GetModLocalization(828)
+L = DBM:GetModLocalization(828)
 
 L:SetWarningLocalization({
-	warnFlock			= "%2$s : %1$s %3$s",
-	specWarnFlock		= "%2$s : %1$s %3$s",
-	specWarnBigBird		= "곧 둥지 수호자 : %s",
-	specWarnBigBird		= "둥지 수호자 : %s"
+	warnFlock		= "%2$s : %1$s %3$s",
+	specWarnFlock	= "%2$s : %1$s %3$s",
+	specWarnBigBird	= "곧 둥지 수호자 : %s",
+	specWarnBigBird	= "둥지 수호자 : %s"
 })
 
 L:SetTimerLocalization({
@@ -119,14 +121,14 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	ShowNestArrows		= "활성화된 둥지쪽으로 화살표 보기",
-	Never				= "보이지 않음",
-	Northeast			= "파랑 - 아래/위 북동쪽",
-	Southeast			= "초록 - 아래/위 남동쪽",
-	Southwest			= "보라/빨강 - 아래 남서쪽 & 위 남서쪽(25인)/위 중앙(10인)",
-	West				= "빨강 - 아래 서쪽 & 위 중앙(25인)",
-	Northwest			= "노랑 - 아래/위 북서쪽(25인)",
-	Guardians			= "둥지 수호자"
+	ShowNestArrows	= "활성화된 둥지쪽으로 화살표 보기",
+	Never			= "보이지 않음",
+	Northeast		= "파랑 - 아래/위 북동쪽",
+	Southeast		= "초록 - 아래/위 남동쪽",
+	Southwest		= "보라/빨강 - 아래 남서쪽 & 위 남서쪽(25인)/위 중앙(10인)",
+	West			= "빨강 - 아래 서쪽 & 위 중앙(25인)",
+	Northwest		= "노랑 - 아래/위 북서쪽(25인)",
+	Guardians		= "둥지 수호자"
 })
 
 L:SetMiscLocalization({
@@ -148,7 +150,7 @@ L:SetMiscLocalization({
 --------------------------
 -- Durumu the Forgotten --
 --------------------------
-L= DBM:GetModLocalization(818)
+L = DBM:GetModLocalization(818)
 
 L:SetWarningLocalization({
 	warnBeamNormal				= "광선 - |cffff0000적색|r : >%s<, |cff0000ff청색|r : >%s<",
@@ -160,36 +162,36 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnBeam					= "광선 대상 알림 보기",
-	warnAddsLeft				= "안개도깨비 남은 횟수알림 보기",
-	specWarnFogRevealed			= "안개도깨비가 드러날 때 특수 경고 보기",
-	ArrowOnBeam					= "$journal:6882 활성화 중에 이동해야 될 방향을 DBM 화살표로 보기",
-	InfoFrame					= "$spell:133795 중첩을 정보 창으로 보기",
-	SetParticle					= "전투 시작시 입자 밀도를 최저로 설정<br/>(전투 종료 후 원상태로 복구됨)"
+	warnBeam			= "광선 대상 알림 보기",
+	warnAddsLeft		= "안개도깨비 남은 횟수알림 보기",
+	specWarnFogRevealed	= "안개도깨비가 드러날 때 특수 경고 보기",
+	ArrowOnBeam			= "$journal:6882 활성화 중에 이동해야 될 방향을 DBM 화살표로 보기",
+	InfoFrame			= "$spell:133795 중첩을 정보 창으로 보기",
+	SetParticle			= "전투 시작시 입자 밀도를 최저로 설정<br/>(전투 종료 후 원상태로 복구됨)"
 })
 
 L:SetMiscLocalization({
-	LifeYell					= "%s 생명력 흡수 중! (%d중첩)"
+	LifeYell	= "%s 생명력 흡수 중! (%d중첩)"
 })
 
 ----------------
 -- Primordius --
 ----------------
-L= DBM:GetModLocalization(820)
+L = DBM:GetModLocalization(820)
 
 L:SetWarningLocalization({
-	warnDebuffCount				= "변형 정보 : 이로운 효과 - %d/5개, 해로운 효과 - %d개"
+	warnDebuffCount	= "변형 정보 : 이로운 효과 - %d/5개, 해로운 효과 - %d개"
 })
 
 L:SetOptionLocalization({
-	warnDebuffCount				= "웅덩이를 흡수할 때 변형 상태 알림 보기",
-	SetIconOnBigOoze			= "$journal:6969 에게 전술 목표 아이콘 설정"
+	warnDebuffCount		= "웅덩이를 흡수할 때 변형 상태 알림 보기",
+	SetIconOnBigOoze	= "$journal:6969 에게 전술 목표 아이콘 설정"
 })
 
 -----------------
 -- Dark Animus --
 -----------------
-L= DBM:GetModLocalization(824)
+L = DBM:GetModLocalization(824)
 
 L:SetWarningLocalization({
 	warnMatterSwapped	= "%s 자리바꿈 : >%s<, >%s<"
@@ -200,47 +202,47 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Pull				= "구슬이 폭발합니다!"
+	Pull	= "구슬이 폭발합니다!"
 })
 
 --------------
 -- Iron Qon --
 --------------
-L= DBM:GetModLocalization(817)
+L = DBM:GetModLocalization(817)
 
 L:SetWarningLocalization({
 	warnDeadZone	= "%s : %s, %s"
 })
 
 L:SetOptionLocalization({
-	RangeFrame		= "전투 진영에 따라 거리 창 보기(10m)<br/>(일정 인원 이상이 뭉쳐 있을 때만 보이는 똑똑한 거리 창 입니다.)",
-	InfoFrame		= "$spell:136193 대상을 정보 창으로 보기"
+	RangeFrame	= "전투 진영에 따라 거리 창 보기(10m)<br/>(일정 인원 이상이 뭉쳐 있을 때만 보이는 똑똑한 거리 창 입니다.)",
+	InfoFrame	= "$spell:136193 대상을 정보 창으로 보기"
 })
 
 -------------------
 -- Twin Consorts --
 -------------------
-L= DBM:GetModLocalization(829)
+L = DBM:GetModLocalization(829)
 
 L:SetWarningLocalization({
-	warnNight		= "밤 단계",
-	warnDay			= "낮 단계",
-	warnDusk		= "황혼 단계"
+	warnNight	= "밤 단계",
+	warnDay		= "낮 단계",
+	warnDusk	= "황혼 단계"
 })
 
 L:SetTimerLocalization({
-	timerDayCD		= "낮 단계",
-	timerDuskCD		= "황혼 단계"
+	timerDayCD	= "낮 단계",
+	timerDuskCD	= "황혼 단계"
 })
 
 L:SetMiscLocalization({
-	DuskPhase		= "루린! 힘을 빌려다오!"
+	DuskPhase	= "루린! 힘을 빌려다오!"
 })
 
 --------------
 -- Lei Shen --
 --------------
-L= DBM:GetModLocalization(832)
+L = DBM:GetModLocalization(832)
 
 L:SetWarningLocalization({
 	specWarnIntermissionSoon	= "곧 사잇단계!",
@@ -248,7 +250,7 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerConduitCD				= "도관 기술 가능"
+	timerConduitCD	= "도관 기술 가능"
 })
 
 L:SetOptionLocalization({
@@ -260,25 +262,25 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	StaticYell		= "%s의 전하 충격 발생 전! (%d초 남음)"
+	StaticYell	= "%s의 전하 충격 발생 전! (%d초 남음)"
 })
 
 ------------
 -- Ra-den --
 ------------
-L= DBM:GetModLocalization(831)
+L = DBM:GetModLocalization(831)
 
 L:SetWarningLocalization({
-	specWarnUnstablVitaJump		= "당신에게 불안정한 생령 전이됨!"
+	specWarnUnstablVitaJump	= "당신에게 불안정한 생령 전이됨!"
 })
 
 L:SetOptionLocalization({
-	specWarnUnstablVitaJump		= "$spell:138297 전이 대상이 당신이 된 경우 특수 경고 보기",
-	SetIconsOnVita				= "$spell:138297 대상과 그 대상에서 가장 먼 공격대원에게 전술 목표 아이콘 설정"
+	specWarnUnstablVitaJump	= "$spell:138297 전이 대상이 당신이 된 경우 특수 경고 보기",
+	SetIconsOnVita			= "$spell:138297 대상과 그 대상에서 가장 먼 공격대원에게 전술 목표 아이콘 설정"
 })
 
 L:SetMiscLocalization({
-	Defeat						= "잠깐"
+	Defeat	= "잠깐"
 })
 
 -------------
@@ -287,5 +289,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("ToTTrash")
 
 L:SetGeneralLocalization({
-	name = "천둥의 왕좌: 일반구간"
+	name	= "천둥의 왕좌: 일반구간"
 })

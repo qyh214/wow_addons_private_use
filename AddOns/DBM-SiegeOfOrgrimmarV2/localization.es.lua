@@ -1,19 +1,21 @@
-if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then
+	return
+end
 local L
 
 ---------------
 -- Immerseus --
 ---------------
-L= DBM:GetModLocalization(852)
+L = DBM:GetModLocalization(852)
 
 L:SetMiscLocalization({
-	Victory			= "¡Ah, lo habéis logrado! Las aguas vuelven a ser puras."
+	Victory	= "¡Ah, lo habéis logrado! Las aguas vuelven a ser puras."
 })
 
 ----------------------------
 -- Los protectores caídos --
 ----------------------------
-L= DBM:GetModLocalization(849)
+L = DBM:GetModLocalization(849)
 
 L:SetWarningLocalization({
 	specWarnCalamity	= "%s",
@@ -23,16 +25,16 @@ L:SetWarningLocalization({
 --------------
 -- Norushen --
 --------------
-L= DBM:GetModLocalization(866)
+L = DBM:GetModLocalization(866)
 
 L:SetMiscLocalization({
-	wasteOfTime			= "Muy bien, crearé un campo para mantener aislada vuestra corrupción."
+	wasteOfTime	= "Muy bien, crearé un campo para mantener aislada vuestra corrupción."
 })
 
 ---------------------
 -- Sha del orgullo --
 ---------------------
-L= DBM:GetModLocalization(867)
+L = DBM:GetModLocalization(867)
 
 L:SetOptionLocalization({
 	SetIconOnFragment	= "Poner icono en Fragmento corrupto"
@@ -41,11 +43,11 @@ L:SetOptionLocalization({
 --------------
 -- Galakras --
 --------------
-L= DBM:GetModLocalization(868)
+L = DBM:GetModLocalization(868)
 
 L:SetWarningLocalization({
-	warnTowerOpen		= "Torre abierta",
-	warnTowerGrunt		= "Bruto Faucedraco"
+	warnTowerOpen	= "Torre abierta",
+	warnTowerGrunt	= "Bruto Faucedraco"
 })
 
 L:SetTimerLocalization({
@@ -75,70 +77,65 @@ L:SetMiscLocalization({
 --------------------
 -- Gigante férreo --
 --------------------
-L= DBM:GetModLocalization(864)
+L = DBM:GetModLocalization(864)
 
 L:SetOptionLocalization({
-	timerAssaultModeCD		= DBM_CORE_AUTO_TIMER_OPTIONS.next:format("ej8177"),
-	timerSiegeModeCD		= DBM_CORE_AUTO_TIMER_OPTIONS.next:format("ej8178")
+	timerAssaultModeCD	= DBM_CORE_AUTO_TIMER_OPTIONS.next:format("ej8177"),
+	timerSiegeModeCD	= DBM_CORE_AUTO_TIMER_OPTIONS.next:format("ej8178")
 })
 
 -------------------------------
 -- Chamanes oscuros Kor'kron --
 -------------------------------
-L= DBM:GetModLocalization(856)
+L = DBM:GetModLocalization(856)
 
 L:SetMiscLocalization({
-	PrisonYell		= "Prisión de hierro expira en %s (%d)"
+	PrisonYell	= "Prisión de hierro expira en %s (%d)"
 })
 
 ---------------------
 -- General Nazgrim --
 ---------------------
-L= DBM:GetModLocalization(850)
+L = DBM:GetModLocalization(850)
 
 L:SetWarningLocalization({
-	warnDefensiveStanceSoon		= "Actitud defensiva en %d s"
+	warnDefensiveStanceSoon	= "Actitud defensiva en %d s"
 })
 
 L:SetOptionLocalization({
-	warnDefensiveStanceSoon		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.prewarn:format(143593)
+	warnDefensiveStanceSoon	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.prewarn:format(143593)
 })
 
 L:SetMiscLocalization({
-	newForces1					= "¡Guerreros, paso ligero!",
-	newForces2					= "¡Defended la puerta!",
-	newForces3					= "¡Reunid a las tropas!",
-	newForces4					= "¡Kor'kron, conmigo!",
-	newForces5					= "¡Siguiente escuadrón, al frente!",
-	allForces					= "Atención, Korkron: ¡matadlos!",
-	nextAdds					= "Siguientes refuerzos: ",
-	mage						= "|c"..RAID_CLASS_COLORS["MAGE"].colorStr..LOCALIZED_CLASS_NAMES_MALE["MAGE"].."|r",
-	shaman						= "|c"..RAID_CLASS_COLORS["SHAMAN"].colorStr..LOCALIZED_CLASS_NAMES_MALE["SHAMAN"].."|r",
-	rogue						= "|c"..RAID_CLASS_COLORS["ROGUE"].colorStr..LOCALIZED_CLASS_NAMES_MALE["ROGUE"].."|r",
-	hunter						= "|c"..RAID_CLASS_COLORS["HUNTER"].colorStr..LOCALIZED_CLASS_NAMES_MALE["HUNTER"].."|r",
-	warrior						= "|c"..RAID_CLASS_COLORS["WARRIOR"].colorStr..LOCALIZED_CLASS_NAMES_MALE["WARRIOR"].."|r"
+	newForces1	= "¡Guerreros, paso ligero!",
+	newForces2	= "¡Defended la puerta!",
+	newForces3	= "¡Reunid a las tropas!",
+	newForces4	= "¡Kor'kron, conmigo!",
+	newForces5	= "¡Siguiente escuadrón, al frente!",
+	allForces	= "Atención, Korkron: ¡matadlos!",
+	nextAdds	= "Siguientes refuerzos: "
 })
 
 --------------
 -- Malkorok --
 --------------
-L= DBM:GetModLocalization(846)
+L = DBM:GetModLocalization(846)
 
 -----------------------
 -- Botín de Pandaria --
 -----------------------
-L= DBM:GetModLocalization(870)
+L = DBM:GetModLocalization(870)
 
 L:SetMiscLocalization({
-	wasteOfTime		= "¿Estamos grabando? ¿Sí? Vale. Iniciando módulo de control goblin-titán. Atrás.",
-	Module1			= "El módulo 1 está listo para el reinicio del sistema.",
-	Victory			= "El módulo 2 está listo para el reinicio del sistema."
+	wasteOfTime	= "¿Estamos grabando? ¿Sí? Vale. Iniciando módulo de control goblin-titán. Atrás.",
+	Module1		= "El módulo 1 está listo para el reinicio del sistema.",
+	Victory		= "El módulo 2 está listo para el reinicio del sistema."
 })
 
 -------------------------
 -- Thok el Sanguinario --
 -------------------------
-L= DBM:GetModLocalization(851)
+L = DBM:GetModLocalization(851)
 
 L:SetOptionLocalization({
 	RangeFrame	= "Mostrar marco de distancia (10 m) dinámico (se mostrará al estar en el umbral de alcance de $spell:143442)"
@@ -147,7 +144,7 @@ L:SetOptionLocalization({
 --------------------------
 -- Asediador Mechanegra --
 --------------------------
-L= DBM:GetModLocalization(865)
+L = DBM:GetModLocalization(865)
 
 L:SetMiscLocalization({
 	newWeapons	= "La cadena de montaje empieza a sacar armas sin terminar.",
@@ -157,47 +154,47 @@ L:SetMiscLocalization({
 ----------------------------
 -- Dechados de los Klaxxi --
 ----------------------------
-L= DBM:GetModLocalization(853)
+L = DBM:GetModLocalization(853)
 
 L:SetWarningLocalization({
-	specWarnActivatedVulnerable		= "Eres vulnerable a %s - ¡esquiva!",
-	specWarnMoreParasites			= "Necesitas más parásitos - ¡no uses mitigaciones activas!"
+	specWarnActivatedVulnerable	= "Eres vulnerable a %s - ¡esquiva!",
+	specWarnMoreParasites		= "Necesitas más parásitos - ¡no uses mitigaciones activas!"
 })
 
 L:SetOptionLocalization({
-	warnToxicCatalyst				= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej8036"),
-	specWarnActivatedVulnerable		= "Mostrar aviso especial cuando seas vulnerable a un dechado",
-	specWarnMoreParasites			= "Mostrar aviso especial cuando necesites más parásitos",
-	yellToxicCatalyst				= DBM_CORE_AUTO_YELL_OPTION_TEXT.yell:format("ej8036")
+	warnToxicCatalyst			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej8036"),
+	specWarnActivatedVulnerable	= "Mostrar aviso especial cuando seas vulnerable a un dechado",
+	specWarnMoreParasites		= "Mostrar aviso especial cuando necesites más parásitos",
+	yellToxicCatalyst			= DBM_CORE_AUTO_YELL_OPTION_TEXT.yell:format("ej8036")
 })
 
 L:SetMiscLocalization({
 	--thanks to blizz, the only accurate way for this to work, is to translate 5 emotes in all languages
-	one					= "Uno",
-	two					= "Dos",
-	three				= "Tres",
-	four				= "Cuatro",
-	five				= "Cinco",
-	hisekFlavor			= "¿Te gusta el silencio, Hisek?",--http://ptr.wowhead.com/quest=31510
-	KilrukFlavor		= "Otro días más de matar al enjambre.",--http://ptr.wowhead.com/quest=31109
-	XarilFlavor			= "Ya no verás más que cielos oscuros.",--http://ptr.wowhead.com/quest=31216
-	KaztikFlavor		= "Reducido a meras golosinas de kunchong.",--http://ptr.wowhead.com/quest=31024
-	KaztikFlavor2		= "Un mántide menos; solo quedan ciento noventa y nueve.",--http://ptr.wowhead.com/quest=31808
-	KorvenFlavor		= "El fin de un imperio ancestral.",--http://ptr.wowhead.com/quest=31232
-	KorvenFlavor2		= "Toma tus tablillas de Gurthani y métetelas por donde te quepan.",--http://ptr.wowhead.com/quest=31232
-	IyyokukFlavor		= "He visto una oportunidad y la he explotado.",--Does not have quests, http://ptr.wowhead.com/npc=65305
-	KarozFlavor			= "¡No volverás a saltar!",---Does not have quests, http://ptr.wowhead.com/npc=65303
-	SkeerFlavor			= "¡Una delicia sangrienta!",--http://ptr.wowhead.com/quest=31178
-	RikkalFlavor		= "Recogida de espécimen completada."--http://ptr.wowhead.com/quest=31508
+	one				= "Uno",
+	two				= "Dos",
+	three			= "Tres",
+	four			= "Cuatro",
+	five			= "Cinco",
+	hisekFlavor		= "¿Te gusta el silencio, Hisek?",--http://ptr.wowhead.com/quest=31510
+	KilrukFlavor	= "Otro días más de matar al enjambre.",--http://ptr.wowhead.com/quest=31109
+	XarilFlavor		= "Ya no verás más que cielos oscuros.",--http://ptr.wowhead.com/quest=31216
+	KaztikFlavor	= "Reducido a meras golosinas de kunchong.",--http://ptr.wowhead.com/quest=31024
+	KaztikFlavor2	= "Un mántide menos; solo quedan ciento noventa y nueve.",--http://ptr.wowhead.com/quest=31808
+	KorvenFlavor	= "El fin de un imperio ancestral.",--http://ptr.wowhead.com/quest=31232
+	KorvenFlavor2	= "Toma tus tablillas de Gurthani y métetelas por donde te quepan.",--http://ptr.wowhead.com/quest=31232
+	IyyokukFlavor	= "He visto una oportunidad y la he explotado.",--Does not have quests, http://ptr.wowhead.com/npc=65305
+	KarozFlavor		= "¡No volverás a saltar!",---Does not have quests, http://ptr.wowhead.com/npc=65303
+	SkeerFlavor		= "¡Una delicia sangrienta!",--http://ptr.wowhead.com/quest=31178
+	RikkalFlavor	= "Recogida de espécimen completada."--http://ptr.wowhead.com/quest=31508
 })
 
 ----------------------------
 -- Garrosh Grito Infernal --
 ----------------------------
-L= DBM:GetModLocalization(869)
+L = DBM:GetModLocalization(869)
 
 L:SetTimerLocalization({
-	timerRoleplay		= "Diálogo"
+	timerRoleplay	= "Diálogo"
 })
 
 L:SetOptionLocalization({
@@ -208,10 +205,10 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	wasteOfTime			= "No es demasiado tarde, Garrosh. Renuncia al cargo de Jefe de Guerra. Esto puede acabar ahora, sin más sangre.",
-	NoReduce			= "Sin reducción de daño",
-	MaliceFadeYell		= "Malicia expirando en %s (%d)",
-	phase3End			= "¿Creéis que habéis ganado?"
+	wasteOfTime		= "No es demasiado tarde, Garrosh. Renuncia al cargo de Jefe de Guerra. Esto puede acabar ahora, sin más sangre.",
+	NoReduce		= "Sin reducción de daño",
+	MaliceFadeYell	= "Malicia expirando en %s (%d)",
+	phase3End		= "¿Creéis que habéis ganado?"
 })
 
 ----------------------
@@ -220,5 +217,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("SoOTrash")
 
 L:SetGeneralLocalization({
-	name =	"Enemigos menores"
+	name	= "Enemigos menores"
 })

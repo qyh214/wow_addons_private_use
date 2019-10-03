@@ -1,21 +1,17 @@
-if GetLocale() ~= "itIT" then return end
+﻿if GetLocale() ~= "itIT" then
+	return
+end
 local L
 
 --------------------------
 -- Jin'rokh the Breaker --
 --------------------------
-L= DBM:GetModLocalization(827)
+L = DBM:GetModLocalization(827)
 
 --------------
 -- Horridon --
 --------------
-L= DBM:GetModLocalization(819)
-
-L:SetTimerLocalization({
-})
-
-L:SetOptionLocalization({
-})
+L = DBM:GetModLocalization(819)
 
 L:SetMiscLocalization({
 	newForces		= "irrompono",--Le forze Farraki irrompono dalla loro porta!
@@ -25,63 +21,58 @@ L:SetMiscLocalization({
 ---------------------------
 -- The Council of Elders --
 ---------------------------
-L= DBM:GetModLocalization(816)
+L = DBM:GetModLocalization(816)
 
 ------------
 -- Tortos --
 ------------
-L= DBM:GetModLocalization(825)
+L = DBM:GetModLocalization(825)
 
 -------------
 -- Megaera --
 -------------
-L= DBM:GetModLocalization(821)
+L = DBM:GetModLocalization(821)
 
 ------------
 -- Ji-Kun --
 ------------
-L= DBM:GetModLocalization(828)
+L = DBM:GetModLocalization(828)
 
 L:SetMiscLocalization({
-	eggsHatch		= "iniziano a schiudersi"
+	eggsHatch	= "iniziano a schiudersi"
 })
 
 --------------------------
 -- Durumu the Forgotten --
 --------------------------
-L= DBM:GetModLocalization(818)
+L = DBM:GetModLocalization(818)
 
 ----------------
 -- Primordius --
 ----------------
-L= DBM:GetModLocalization(820)
+L = DBM:GetModLocalization(820)
 
 -----------------
 -- Dark Animus --
 -----------------
-L= DBM:GetModLocalization(824)
+L = DBM:GetModLocalization(824)
 
 --------------
 -- Iron Qon --
 --------------
-L= DBM:GetModLocalization(817)
-
-L:SetOptionLocalization({
-})
-
+L = DBM:GetModLocalization(817)
 
 -------------------
 -- Twin Consorts --
 -------------------
-L= DBM:GetModLocalization(829)
+L = DBM:GetModLocalization(829)
 
 --------------
 -- Lei Shen --
 --------------
-L= DBM:GetModLocalization(832)
+L = DBM:GetModLocalization(832)
 
 ------------
 -- Ra-den --
 ------------
-L= DBM:GetModLocalization(831)
-
+L = DBM:GetModLocalization(831)

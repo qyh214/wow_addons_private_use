@@ -195,12 +195,12 @@ function RSA_DeathKnight:OnEnable()
 						RSA.Print_Self_RW(ReminderSpell .. L[" Refreshed!"])
 					end
 				end
-			end -- BUFF REMINDER			
+			end -- BUFF REMINDER
 			if spellID == 205223 and event == "SPELL_CAST_SUCCESS" then
 				ConsumptionAmount = 0
 			end
 			if spellID == 205224 then
-				ConsumptionAmount =  ConsumptionAmount + (missType - ex2)
+				ConsumptionAmount = ConsumptionAmount + (missType - overheal)
 			end
 			if event == "SPELL_DAMAGE" and spellID == 205223 then -- CONSUMPTION
 				ConsumptionCounter = ConsumptionCounter +1

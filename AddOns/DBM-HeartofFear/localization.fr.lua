@@ -1,13 +1,12 @@
--- Last update: 01/18/2013 (18/01/2013 in french format)
--- By Edoz (stephanelc35@msn.com)
-
-if GetLocale() ~= "frFR" then return end
+if GetLocale() ~= "frFR" then
+	return
+end
 local L
 
 ------------
 -- Imperial Vizier Zor'lok --
 ------------
-L= DBM:GetModLocalization(745)
+L = DBM:GetModLocalization(745)
 
 L:SetWarningLocalization({
 	warnAttenuation		= "%s sur %s (%s)",
@@ -25,28 +24,26 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Platform			= "s'envole vers l'une de ses plateformes !",
-	Defeat				= "Nous ne nous laisserons pas aller au désespoir du vide. Si Sa volonté est de nous faire périr, il en sera ainsi.",
-	Left				= "Gauche",
-	Right				= "Droite"
+	Platform	= "s'envole vers l'une de ses plateformes !",
+	Defeat		= "Nous ne nous laisserons pas aller au désespoir du vide. Si Sa volonté est de nous faire périr, il en sera ainsi.",
+	Left		= "Gauche",
+	Right		= "Droite"
 })
-
 
 ------------
 -- Blade Lord Ta'yak --
 ------------
-L= DBM:GetModLocalization(744)
+L = DBM:GetModLocalization(744)
 
 L:SetOptionLocalization({
 	UnseenStrikeArrow	= "Afficher la flêche DBM quand quelqu'un est touché par $spell:122949",
 	RangeFrame			= "Afficher le cadre de distance (10m) pour $spell:123175"
 })
 
-
 -------------------------------
 -- Garalon --
 -------------------------------
-L= DBM:GetModLocalization(713)
+L = DBM:GetModLocalization(713)
 
 L:SetWarningLocalization({
 	warnCrush		= "%s",
@@ -66,12 +63,12 @@ L:SetMiscLocalization({
 ----------------------
 -- Wind Lord Mel'jarak --
 ----------------------
-L= DBM:GetModLocalization(741)
+L = DBM:GetModLocalization(741)
 
 ------------
 -- Amber-Shaper Un'sok --
 ------------
-L= DBM:GetModLocalization(737)
+L = DBM:GetModLocalization(737)
 
 L:SetWarningLocalization({
 	warnReshapeLife				= "%s sur >%s< (%d)",--Localized because i like class colors on warning and shoving a number into targetname broke it using the generic.
@@ -87,8 +84,8 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerDestabalize			= "Déstabiliser (%2$d) : %1$s",
-	timerAmberExplosionAMCD		= "Explosion CD: Monstruosité"
+	timerDestabalize		= "Déstabiliser (%2$d) : %1$s",
+	timerAmberExplosionAMCD	= "Explosion CD: Monstruosité"
 })
 
 L:SetOptionLocalization({
@@ -107,25 +104,25 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	WillPower					= "Volonté"
+	WillPower	= "Volonté"
 })
 
 ------------
 -- Grand Empress Shek'zeer --
 ------------
-L= DBM:GetModLocalization(743)
+L = DBM:GetModLocalization(743)
 
 L:SetWarningLocalization({
-	warnAmberTrap		= "Progression du Piège d'ambre: (%d/5)"
+	warnAmberTrap	= "Progression du Piège d'ambre: (%d/5)"
 })
 
 L:SetOptionLocalization({
-	warnAmberTrap		= "Alerte préventive (avec progression) quand $spell:125826 est créé", -- maybe bad translation.
-	InfoFrame			= "Afficher le cadre d'informations pour les joueurs touché par $spell:125390",
-	RangeFrame			= "Afficher le cadre de distance (5m) pour $spell:123735"
+	warnAmberTrap	= "Alerte préventive (avec progression) quand $spell:125826 est créé", -- maybe bad translation.
+	InfoFrame		= "Afficher le cadre d'informations pour les joueurs touché par $spell:125390",
+	RangeFrame		= "Afficher le cadre de distance (5m) pour $spell:123735"
 })
 
 L:SetMiscLocalization({
-	PlayerDebuffs		= "Fixer",
-	YellPhase3			= "Assez de vos excuses, impératrice ! Éliminez ces crétins ou je vous achève moi-même !"
+	PlayerDebuffs	= "Fixer",
+	YellPhase3		= "Assez de vos excuses, impératrice ! Éliminez ces crétins ou je vous achève moi-même !"
 })

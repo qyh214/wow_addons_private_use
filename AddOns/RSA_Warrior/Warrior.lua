@@ -28,7 +28,7 @@ function RSA_Warrior:OnEnable()
 				profile = 'RallyingCry'
 			},]]--
 		},
-		SPELL_AURA_APPLIED = {		
+		SPELL_AURA_APPLIED = {
 			[355] = { -- TAUNT
 				profile = 'Taunt',
 				section = 'Cast',
@@ -186,7 +186,7 @@ function RSA_Warrior:OnEnable()
 				if messagemax == 0 then return end
 				messagerandom  = math.random(messagemax)
 				message = RSA.db.profile.Warrior.Spells.SpellReflect.Messages.Resist[messagerandom]
-			elseif missType == 'DEBUFF' then 
+			elseif missType == 'DEBUFF' then
 				RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = source}
 				messagemax = #RSA.db.profile.Warrior.Spells.SpellReflect.Messages.Debuff
 				if messagemax == 0 then return end
@@ -225,7 +225,7 @@ function RSA_Warrior:OnEnable()
 					RSA.Print_Raid(string.gsub(message, '.%a+.', RSA.String_Replace))
 				end
 			end
-		end	
+		end
 		if dest == pName then
 			if missType == 'REFLECT' then -- SPELL REFLECT
 				RSA_ReflectSource = source -- Track which unit we reflected.

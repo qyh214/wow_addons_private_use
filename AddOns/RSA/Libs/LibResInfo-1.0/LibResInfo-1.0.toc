@@ -1,5 +1,5 @@
 ## Interface: 80000
-## Version: @project-version@
+## Version: 27
 
 ## Title: Lib: ResInfo-1.0
 ## Notes: Library to provide information about resurrections in your group.

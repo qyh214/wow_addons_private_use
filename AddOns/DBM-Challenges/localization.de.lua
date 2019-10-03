@@ -1,60 +1,62 @@
-if GetLocale() ~= "deDE" then return end
+﻿if GetLocale() ~= "deDE" then
+	return
+end
 local L
 
 ------------------------
--- White TIger Temple --
+-- White Tiger Temple --
 ------------------------
-L= DBM:GetModLocalization("d640")
+L = DBM:GetModLocalization("d640")
 
 L:SetMiscLocalization({
-	Endless				= "Endlos",
-	ReplyWhisper		= "<Deadly Boss Mods> %s ist in der Feuerprobe beschäftigt (Modus: %s Welle: %d)"
+	Endless			= "Endlos",
+	ReplyWhisper	= "<Deadly Boss Mods> %s ist in der Feuerprobe beschäftigt (Modus: %s Welle: %d)"
 })
 
 ------------------------
 -- Mage Tower: TANK --
 ------------------------
-L= DBM:GetModLocalization("Kruul")
+L = DBM:GetModLocalization("Kruul")
 
 L:SetGeneralLocalization({
-	name =	"Rückkehr des Hochlords"
+	name	= "Rückkehr des Hochlords"
 })
 
 ------------------------
 -- Mage Tower: Healer --
 ------------------------
-L= DBM:GetModLocalization("ArtifactHealer")
+L = DBM:GetModLocalization("ArtifactHealer")
 
 L:SetGeneralLocalization({
-	name =	"Das Ende der erwachten Bedrohung"
+	name	= "Das Ende der erwachten Bedrohung"
 })
 
 ------------------------
 -- Mage Tower: DPS --
 ------------------------
-L= DBM:GetModLocalization("ArtifactFelTotem")
+L = DBM:GetModLocalization("ArtifactFelTotem")
 
 L:SetGeneralLocalization({
-	name =	"Sturz der Teufelstotems"
+	name	= "Sturz der Teufelstotems"
 })
 
 ------------------------
 -- Mage Tower: DPS --
 ------------------------
-L= DBM:GetModLocalization("ArtifactImpossibleFoe")
+L = DBM:GetModLocalization("ArtifactImpossibleFoe")
 
 L:SetGeneralLocalization({
-	name =	"Ein unmöglicher Feind"
+	name	= "Ein unmöglicher Feind"
 })
 
 L:SetMiscLocalization({
-	impServants =	"Tötet die Wichteldiener, bevor sie Agatha Energie gewähren!"--needs to be verified (video-captured translation)
+	impServants	= "Tötet die Wichteldiener, bevor sie Agatha Energie gewähren!"--needs to be verified (video-captured translation)
 })
 
 ------------------------
 -- Mage Tower: DPS --
 ------------------------
-L= DBM:GetModLocalization("ArtifactQueen")
+L = DBM:GetModLocalization("ArtifactQueen")
 
 L:SetGeneralLocalization({
 	name =	"Zorn der Gottkönigin"
@@ -63,18 +65,17 @@ L:SetGeneralLocalization({
 ------------------------
 -- Mage Tower: DPS --
 ------------------------
-L= DBM:GetModLocalization("ArtifactTwins")
+L = DBM:GetModLocalization("ArtifactTwins")
 
 L:SetGeneralLocalization({
-	name =	"Zwillinge bezwingen"
+	name	= "Zwillinge bezwingen"
 })
 
 ------------------------
 -- Mage Tower: DPS --
 ------------------------
-L= DBM:GetModLocalization("ArtifactXylem")
+L = DBM:GetModLocalization("ArtifactXylem")
 
 L:SetGeneralLocalization({
-	name =	"Ein Auge zudrücken"
+	name	= "Ein Auge zudrücken"
 })
-

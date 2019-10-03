@@ -115,7 +115,6 @@ L.ShowGuildMessages 		= "Show engage/kill/wipe messages for guild raids in chat 
 L.ShowGuildMessagesPlus		= "Also show Mythic+ engage/kill/wipe messages for guild groups (requires raid option)"
 L.WhisperMessages			= "Whisper Message Options"
 L.AutoRespond 				= "Auto-respond to whispers while fighting"
-L.EnableStatus 				= "Reply to 'status' whispers"
 L.WhisperStats 				= "Include kill/wipe stats in whisper responses"
 L.DisableStatusWhisper 		= "Disable status whispers for the entire group (requires Group Leader). Applies only to normal/heroic/mythic raids and mythic+ dungeons"
 L.DisableGuildStatus 		= "Disable progression messages from being sent to guild for entire group (requires Group Leader)."
@@ -222,7 +221,7 @@ L.SpecialWarnSound5			= "Set default sound for special warnings with notes conta
 
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "Spoken Alerts"
-L.Area_VoiceSelection		= "Voice Selections (scroll selection menus with mouse wheel)"
+L.Area_VoiceSelection		= "Voice Selections"
 L.CountdownVoice			= "Set primary voice for count sounds"
 L.CountdownVoice2			= "Set secondary voice for count sounds"
 L.CountdownVoice3			= "Set tertiary voice for count sounds"

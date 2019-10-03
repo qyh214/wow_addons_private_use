@@ -1,4 +1,4 @@
-local L
+﻿local L
 
 -- Lord Kazzak (Badlands)
 L = DBM:GetModLocalization("KazzakClassic")

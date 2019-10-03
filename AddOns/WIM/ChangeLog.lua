@@ -16,6 +16,9 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
+addEntry("3.7.26", "09/23/2019", [[
+	* Elimated WhoLib, blizzard killed it with fire. Some alternate solutions used to bring some but not all of the functionality back
+]]);
 addEntry("3.7.22", "01/24/2019", [[
 	* trying to fix emote misbehavior in BNet names introduced with patch 8.1
 	* fix class names and icon display for non-english clients
@@ -29,25 +32,6 @@ addEntry("3.7.20", "01/24/2019", [[
 	*fix LibWho error
 	*fix changed BNet name handler
 ]]);
-addEntry("3.7.19", "12/10/2018", [[
-	*Bumped TOC
-]]);
-addEntry("3.7.18", "07/27/2018", [[
-	*URL handler should now show dialog for copying URL as intended.
-]]);
-addEntry("3.7.17", "07/22/2018", [[
-	*Bumped TOC
-	*Fixed armory link
-	*Re-enabled support for SAY chat, with a new exception to disable during boss encounters
-	*Guild chat support should be working again.
-]]);
-addEntry("3.7.16", "05/02/2018", [[
-	*Fixed GetAutoCompleteResults for 8.x
-]]);
-addEntry("3.7.15", "04/20/2018", [[
-	*Grabbed latest ChatThrottleLib for 8.x compat
-]]);
-
 
 local function entryExists(version)
     for i=1, #log do
@@ -78,7 +62,7 @@ local function getEntryText(index)
     revision = entry.t and " - |cffff0000"..WIM.L["Available For Download!"].."|r" or revision;
     local txt = "Version "..entry.v.."  ("..entry.r..")"..revision.."\n";
     txt = txt..formatEntry(entry.d);
-    
+
     freshLoad = false;
     return txt.."\n\n";
 end
@@ -97,16 +81,16 @@ local function createChangeLogWindow()
     local win = CreateFrame("Frame", "WIM3_ChangeLog", _G.UIParent);
     win:Hide(); -- hide initially, scripts aren't loaded yet.
     table.insert(UISpecialFrames, "WIM3_ChangeLog");
-    
+
     -- set size and position
     win:SetWidth(700);
     win:SetHeight(500);
     win:SetPoint("CENTER");
-    
+
     -- set backdrop
-    win:SetBackdrop({bgFile = "Interface\\AddOns\\"..WIM.addonTocName.."\\Sources\\Options\\Textures\\Frame_Background", 
-        edgeFile = "Interface\\AddOns\\"..WIM.addonTocName.."\\Sources\\Options\\Textures\\Frame", 
-        tile = true, tileSize = 64, edgeSize = 64, 
+    win:SetBackdrop({bgFile = "Interface\\AddOns\\"..WIM.addonTocName.."\\Sources\\Options\\Textures\\Frame_Background",
+        edgeFile = "Interface\\AddOns\\"..WIM.addonTocName.."\\Sources\\Options\\Textures\\Frame",
+        tile = true, tileSize = 64, edgeSize = 64,
         insets = { left = 64, right = 64, top = 64, bottom = 64 }});
 
     -- set basic frame properties
@@ -122,14 +106,14 @@ local function createChangeLogWindow()
     win:SetScript("OnHide", function(self) _G.PlaySound(851);  end);
     win:SetScript("OnDragStart", function(self) self:StartMoving(); end);
     win:SetScript("OnDragStop", function(self) self:StopMovingOrSizing(); end);
-    
+
     -- create and set title bar text
     win.title = win:CreateFontString(win:GetName().."Title", "OVERLAY", "ChatFontNormal");
     win.title:SetPoint("TOPLEFT", 50 , -20);
     local font = win.title:GetFont();
     win.title:SetFont(font, 16, "");
     win.title:SetText(WIM.L["WIM (WoW Instant Messenger)"].." v"..WIM.version.."   -  "..WIM.L["Change Log"]);
-    
+
     -- create close button
     win.close = CreateFrame("Button", win:GetName().."Close", win);
     win.close:SetWidth(18); win.close:SetHeight(18);
@@ -139,16 +123,16 @@ local function createChangeLogWindow()
     win.close:SetScript("OnClick", function(self)
             self:GetParent():Hide();
         end);
-    
+
     win.textFrame = CreateFrame("ScrollFrame", "WIM3_ChangeLogTextFrame", win, "UIPanelScrollFrameTemplate");
     win.textFrame:SetPoint("TOPLEFT", 25, -50);
     win.textFrame:SetPoint("BOTTOMRIGHT", -42, 20);
-    
+
     win.textFrame.text = CreateFrame("SimpleHTML", "WIM3_ChangeLogTextFrameText", win.textFrame);
     win.textFrame.text:SetWidth(win.textFrame:GetWidth());
     win.textFrame.text:SetHeight(200);
     win.textFrame:SetScrollChild(win.textFrame.text);
-    
+
     win.update = function(self)
         local tmp = "";
         freshLoad = true;
@@ -163,7 +147,7 @@ local function createChangeLogWindow()
         self.textFrame.text:SetText(tmp);
         self.textFrame:UpdateScrollChildRect();
     end
-    
+
     return win;
 end
 

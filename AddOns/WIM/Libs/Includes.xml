@@ -7,6 +7,5 @@
 <Include file="LibChatAnims\LibChatAnims.xml"/>
 <Include file="LibSharedMedia-3.0\lib.xml"/>
 <Include file="ChatThrottleLib\ChatThrottleLib.xml"/>
-<Script file="LibWho-2.0\LibWho-2.0\LibWho-2.0.lua"/>
 <Include file="LibChatHandler-1.0\lib.xml"/>
 </Ui>

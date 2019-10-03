@@ -1,10 +1,12 @@
-if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then
+	return
+end
 local L
 
 --------------------------
 -- Jin'rokh el Rompedor --
 --------------------------
-L= DBM:GetModLocalization(827)
+L = DBM:GetModLocalization(827)
 
 L:SetWarningLocalization({
 	specWarnWaterMove	= "%s en breve - ¡sal de Agua conductiva!"
@@ -18,7 +20,7 @@ L:SetOptionLocalization({
 ----------------
 -- Horridonte --
 ----------------
-L= DBM:GetModLocalization(819)
+L = DBM:GetModLocalization(819)
 
 L:SetWarningLocalization({
 	warnAdds				= "%s",
@@ -27,8 +29,8 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerDoor				= "Siguiente puerta tribal",
-	timerAdds				= "Siguiente %s"
+	timerDoor	= "Siguiente puerta tribal",
+	timerAdds	= "Siguiente %s"
 })
 
 L:SetOptionLocalization({
@@ -43,17 +45,17 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	newForces				= "salen en tropel desde",--Farraki forces pour from the Farraki Tribal Door!
-	chargeTarget			= "fija la vista"--Horridon sets his eyes on Eraeshio and stamps his tail!
+	newForces		= "salen en tropel desde",--Farraki forces pour from the Farraki Tribal Door!
+	chargeTarget	= "fija la vista"--Horridon sets his eyes on Eraeshio and stamps his tail!
 })
 
 -------------------------
 -- Consejo de Ancianos --
 -------------------------
-L= DBM:GetModLocalization(816)
+L = DBM:GetModLocalization(816)
 
 L:SetWarningLocalization({
-	specWarnPossessed		= "%s en %s - ¡cambia de objetivo!"
+	specWarnPossessed	= "%s en %s - ¡cambia de objetivo!"
 })
 
 L:SetOptionLocalization({
@@ -68,7 +70,7 @@ L:SetOptionLocalization({
 ------------
 -- Tortos --
 ------------
-L= DBM:GetModLocalization(825)
+L = DBM:GetModLocalization(825)
 
 L:SetWarningLocalization({
 	warnKickShell			= "%s usado por >%s< (%d restantes)",
@@ -84,16 +86,16 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	WrongDebuff		= "Sin %s"
+	WrongDebuff	= "Sin %s"
 })
 
 -------------
 -- Megaera --
 -------------
-L= DBM:GetModLocalization(821)
+L = DBM:GetModLocalization(821)
 
 L:SetTimerLocalization({
-	timerBreathsCD			= "Siguiente aliento"
+	timerBreathsCD	= "Siguiente aliento"
 })
 
 L:SetOptionLocalization({
@@ -116,7 +118,7 @@ L:SetMiscLocalization({
 ------------
 -- Ji Kun --
 ------------
-L= DBM:GetModLocalization(828)
+L = DBM:GetModLocalization(828)
 
 L:SetWarningLocalization({
 	warnFlock			= "%s - %s %s",
@@ -167,7 +169,7 @@ L:SetMiscLocalization({
 ------------------------
 -- Durumu el Olvidado --
 ------------------------
-L= DBM:GetModLocalization(818)
+L = DBM:GetModLocalization(818)
 
 L:SetWarningLocalization({
 	warnBeamNormal				= "Luz - |cffff0000Roja|r : >%s<, |cff0000ffAzul|r : >%s<",
@@ -193,28 +195,28 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	LifeYell		= "Drenaje de vida en %s (%d)"
+	LifeYell	= "Drenaje de vida en %s (%d)"
 })
 
 ----------------
 -- Primordius --
 ----------------
-L= DBM:GetModLocalization(820)
+L = DBM:GetModLocalization(820)
 
 L:SetWarningLocalization({
-	warnDebuffCount				= "Mutaciones: %d/5 buenas, %d malas"
+	warnDebuffCount	= "Mutaciones: %d/5 buenas, %d malas"
 })
 
 L:SetOptionLocalization({
-	warnDebuffCount				= "Mostrar aviso (con contador) de perjuicios de mutación al absorber charcos",
-	RangeFrame					= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format("5/3"),
-	SetIconOnBigOoze			= "Poner icono en $journal:6969"
+	warnDebuffCount		= "Mostrar aviso (con contador) de perjuicios de mutación al absorber charcos",
+	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format("5/3"),
+	SetIconOnBigOoze	= "Poner icono en $journal:6969"
 })
 
 -------------------
 -- Animus oscuro --
 -------------------
-L= DBM:GetModLocalization(824)
+L = DBM:GetModLocalization(824)
 
 L:SetWarningLocalization({
 	warnMatterSwapped	= "%s: >%s< y >%s< intercambiados"
@@ -222,17 +224,17 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	warnMatterSwapped	= "Anunciar objetivos intercambiados por $spell:138618",
-	SetIconOnFont           = DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(138707)
+	SetIconOnFont		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(138707)
 })
 
 L:SetMiscLocalization({
-	Pull		= "¡El orbe explota!"
+	Pull	= "¡El orbe explota!"
 })
 
 ------------------
 -- Qon el Tenaz --
 ------------------
-L= DBM:GetModLocalization(817)
+L = DBM:GetModLocalization(817)
 
 L:SetWarningLocalization({
 	warnDeadZone	= "%s: escudado en %s / %s"
@@ -248,36 +250,36 @@ L:SetOptionLocalization({
 -----------------------
 -- Consortes Gemelas --
 -----------------------
-L= DBM:GetModLocalization(829)
+L = DBM:GetModLocalization(829)
 
 L:SetWarningLocalization({
-	warnNight		= "Fase de la noche",
-	warnDay			= "Fase del día",
-	warnDusk		= "Fase del ocaso"
+	warnNight	= "Fase de la noche",
+	warnDay		= "Fase del día",
+	warnDusk	= "Fase del ocaso"
 })
 
 L:SetTimerLocalization({
-	timerDayCD		= "Siguiente fase del día",
-	timerDuskCD		= "Siguiente fase del ocaso"
+	timerDayCD	= "Siguiente fase del día",
+	timerDuskCD	= "Siguiente fase del ocaso"
 })
 
 L:SetOptionLocalization({
-	warnNight		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej7641"),
-	warnDay			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej7645"),
-	warnDusk		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej7633"),
-	timerDayCD		= DBM_CORE_AUTO_TIMER_OPTIONS.next:format("ej7645"),
-	timerDuskCD		= DBM_CORE_AUTO_TIMER_OPTIONS.next:format("ej7633"),
-	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(5)
+	warnNight	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej7641"),
+	warnDay		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej7645"),
+	warnDusk	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej7633"),
+	timerDayCD	= DBM_CORE_AUTO_TIMER_OPTIONS.next:format("ej7645"),
+	timerDuskCD	= DBM_CORE_AUTO_TIMER_OPTIONS.next:format("ej7633"),
+	RangeFrame	= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(5)
 })
 
 L:SetMiscLocalization({
-	DuskPhase		= "¡Lu'lin! ¡Préstame tu fuerza!"
+	DuskPhase	= "¡Lu'lin! ¡Préstame tu fuerza!"
 })
 
 --------------
 -- Lei Shen --
 --------------
-L= DBM:GetModLocalization(832)
+L = DBM:GetModLocalization(832)
 
 L:SetWarningLocalization({
 	specWarnIntermissionSoon	= "Intermedio en breve",
@@ -285,7 +287,7 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerConduitCD				= "Primera facultad de conducto TdR"
+	timerConduitCD	= "Primera facultad de conducto TdR"
 })
 
 L:SetOptionLocalization({
@@ -300,25 +302,25 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	StaticYell		= "Choque estático en %s (%d)"
+	StaticYell	= "Choque estático en %s (%d)"
 })
 
 ------------
 -- Ra Den --
 ------------
-L= DBM:GetModLocalization(831)
+L = DBM:GetModLocalization(831)
 
 L:SetWarningLocalization({
-	specWarnUnstablVitaJump		= "¡Vita inestable salta a ti!"
+	specWarnUnstablVitaJump	= "¡Vita inestable salta a ti!"
 })
 
 L:SetOptionLocalization({
-	specWarnUnstablVitaJump		= "Mostrar aviso especial cuando $spell:138297 salta a ti",
-	SetIconsOnVita				= "Poner iconos en jugadores afectados por el perjuicio de $spell:138297 y el jugador más alejado de ellos"
+	specWarnUnstablVitaJump	= "Mostrar aviso especial cuando $spell:138297 salta a ti",
+	SetIconsOnVita			= "Poner iconos en jugadores afectados por el perjuicio de $spell:138297 y el jugador más alejado de ellos"
 })
 
 L:SetMiscLocalization({
-	Defeat						= "¡Esperad!"
+	Defeat	= "¡Esperad!"
 })
 
 ------------------------
@@ -327,9 +329,9 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("ToTTrash")
 
 L:SetGeneralLocalization({
-	name =	"Enemigos menores"
+	name	= "Enemigos menores"
 })
 
 L:SetOptionLocalization({
-	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(10)--For 3 different spells
+	RangeFrame	= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(10)--For 3 different spells
 })

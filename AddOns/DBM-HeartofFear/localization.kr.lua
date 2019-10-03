@@ -1,10 +1,12 @@
-if GetLocale() ~= "koKR" then return end
+﻿if GetLocale() ~= "koKR" then
+	return
+end
 local L
 
 ------------
 -- Imperial Vizier Zor'lok --
 ------------
-L= DBM:GetModLocalization(745)
+L = DBM:GetModLocalization(745)
 
 L:SetWarningLocalization({
 	warnEcho			= "메아리 생성",
@@ -21,19 +23,19 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Platform			= "황실 장로 조르로크가 단상으로 날아갑니다!",
-	Defeat				= "우리는 어두운 공허의 절망에 지지 않으리라. 우리가 죽는 것이 그분의 뜻이라면, 그대로 따르리라."
+	Platform	= "황실 장로 조르로크가 단상으로 날아갑니다!",
+	Defeat		= "우리는 어두운 공허의 절망에 지지 않으리라. 우리가 죽는 것이 그분의 뜻이라면, 그대로 따르리라."
 })
 
 ------------
 -- Blade Lord Ta'yak --
 ------------
-L= DBM:GetModLocalization(744)
+L = DBM:GetModLocalization(744)
 
 -------------------------------
 -- Garalon --
 -------------------------------
-L= DBM:GetModLocalization(713)
+L = DBM:GetModLocalization(713)
 
 L:SetWarningLocalization({
 	warnCrush		= "%s",
@@ -53,12 +55,12 @@ L:SetMiscLocalization({
 ----------------------
 -- Wind Lord Mel'jarak --
 ----------------------
-L= DBM:GetModLocalization(741)
+L = DBM:GetModLocalization(741)
 
 ------------
 -- Amber-Shaper Un'sok --
 ------------
-L= DBM:GetModLocalization(737)
+L = DBM:GetModLocalization(737)
 
 L:SetWarningLocalization({
 	warnReshapeLife				= "%s : >%s< (%d)",
@@ -74,8 +76,8 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerDestabalize			= "불안정화 (%2$d) : %1$s",
-	timerAmberExplosionAMCD		= "폭발 가능: 호박석 괴수"
+	timerDestabalize		= "불안정화 (%2$d) : %1$s",
+	timerAmberExplosionAMCD	= "폭발 가능: 호박석 괴수"
 })
 
 L:SetOptionLocalization({
@@ -94,26 +96,26 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	WillPower					= "의지력"
+	WillPower	= "의지력"
 })
 
 ------------
 -- Grand Empress Shek'zeer --
 ------------
-L= DBM:GetModLocalization(743)
+L = DBM:GetModLocalization(743)
 
 L:SetWarningLocalization({
-	warnAmberTrap		= "호박석 덪 생성중 (%d/5)"
+	warnAmberTrap	= "호박석 덪 생성중 (%d/5)"
 })
 
 L:SetOptionLocalization({
-	warnAmberTrap		= "$spell:125826 생성 과정 알림 보기", 
-	InfoFrame			= "$spell:125390 대상을 정보 창으로 보기"
+	warnAmberTrap	= "$spell:125826 생성 과정 알림 보기", 
+	InfoFrame		= "$spell:125390 대상을 정보 창으로 보기"
 })
 
 L:SetMiscLocalization({
-	PlayerDebuffs		= "시선 집중 대상",
-	YellPhase3			= "변명은 이제 지겹다, 여제! 당장 이 멍청이들을 쓸어버리지 않으면 내가 몸소 널 죽이겠다!"
+	PlayerDebuffs	= "시선 집중 대상",
+	YellPhase3		= "변명은 이제 지겹다, 여제! 당장 이 멍청이들을 쓸어버리지 않으면 내가 몸소 널 죽이겠다!"
 })
 
 -------------
@@ -122,7 +124,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("HoFTrash")
 
 L:SetGeneralLocalization({
-	name =	"공포의 심장: 일반구간"
+	name	= "공포의 심장: 일반구간"
 })
 
 L:SetOptionLocalization({

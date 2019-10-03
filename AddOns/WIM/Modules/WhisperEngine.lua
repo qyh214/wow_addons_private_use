@@ -26,13 +26,11 @@ local select = select;
 local unpack = unpack;
 local math = math;
 local time = time;
-local playerRealm = GetRealmName()
+local playerRealm = GetRealmName();
+local GetPlayerInfoByGUID = GetPlayerInfoByGUID;
 
 -- set name space
 setfenv(1, WIM);
-
---Quick and dirty fix for renames in legion to deal with renamed globals
-local BNet_GetPresenceID = _G.BNet_GetBNetIDAccount or _G.BNet_GetPresenceID
 
 -- create WIM Module
 local WhisperEngine = CreateModule("WhisperEngine", true);
@@ -100,13 +98,13 @@ db_defaults.pop_rules.whisper = {
 }
 
 db_defaults.displayColors.wispIn = {
-	r=0.5607843137254902, 
-	g=0.03137254901960784, 
+	r=0.5607843137254902,
+	g=0.03137254901960784,
 	b=0.7607843137254902
     }
 db_defaults.displayColors.wispOut = {
-        r=1, 
-	g=0.07843137254901961, 
+        r=1,
+	g=0.07843137254901961,
 	b=0.9882352941176471
     }
 db_defaults.displayColors.BNwispIn = {
@@ -182,11 +180,11 @@ local function getWhisperWindowByUser(user, isBN, bnID)
 	if isBN then
 		if bnID and not string.find(user, "^|K") then
 			local _
-			_, user = _G.BNGetFriendInfoByID(bnID) -- fix window handler when using the chat hyperlink
+			_, user = GetBNGetFriendInfoByID(bnID) -- fix window handler when using the chat hyperlink
 		end
 	else
 		user = string.gsub(user," ","") -- Drii: WoW build15050 whisper bug for x-realm server with space
-	--	user = FormatUserName(user);
+	    user = FormatUserName(user);
 	end
     if(not user or user == "") then
         -- if invalid user, then return nil;
@@ -242,10 +240,10 @@ function SendSplitMessage(PRIORITY, HEADER, theMsg, CHANNEL, EXTRA, to)
                 table.insert(splitMessageLinks, theLink);
                 return "\001\002"..paddString(#splitMessageLinks, "0", string.len(theLink)-4).."\003\004";
         end);
-        
+
         -- split up each word.
         SplitToTable(theMsg, "%s", splitMessage);
-        
+
         --reconstruct message into chunks of no more than 255 characters.
         local chunk = "";
         for i=1, #splitMessage + 1 do
@@ -265,7 +263,7 @@ function SendSplitMessage(PRIORITY, HEADER, theMsg, CHANNEL, EXTRA, to)
 			chunk = (splitMessage[i] or "").." ";
                 end
         end
-        
+
         -- clean up
         for k, _ in pairs(splitMessage) do
                 splitMessage[k] = nil;
@@ -329,6 +327,22 @@ function WhisperEngine:CHAT_MSG_WHISPER(...)
     _G.ChatEdit_SetLastTellTarget(arg2, "WHISPER");
     win.online = true;
     updateMinimapAlerts();
+
+    -- get missing data available from C_PlayerInfo
+    if (arg12 and (not win.race or win.class)) then
+        local class, _, race = GetPlayerInfoByGUID(arg12);
+
+        win.WhoCallback({
+            Name = win.theUser,
+            Online = true,
+            Guild = win.guild,
+            Class = class or win.class,
+            Level = win.level,
+            Race = race or win.race,
+            Zone = win.location
+        });
+    end
+
     CallModuleFunction("PostEvent_Whisper", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
 end
 
@@ -355,10 +369,12 @@ function WhisperEngine:CHAT_MSG_WHISPER_INFORM(...)
     arg2 = _G.Ambiguate(arg2, "none")
     local win = getWhisperWindowByUser(arg2);
     win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_WHISPER_INFORM", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
+    win.unreadCount = 0; -- having replied  to conversation implies the messages have been read.
     win:Pop("out");
     _G.ChatEdit_SetLastToldTarget(arg2, "WHISPER");
     win.online = true;
     win.msgSent = false;
+    updateMinimapAlerts();
     CallModuleFunction("PostEvent_WhisperInform", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
     addToTableUnique(recentSent, arg1);
         if(#recentSent > maxRecent) then
@@ -390,10 +406,12 @@ function WhisperEngine:CHAT_MSG_BN_WHISPER_INFORM(...)
     local win = getWhisperWindowByUser(arg2, true, arg13);
 	if not win then return end	--due to a client bug, we can not receive the other player's name, so do nothing
     win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_BN_WHISPER_INFORM", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13);
+    win.unreadCount = 0; -- having replied  to conversation implies the messages have been read.
     win:Pop("out");
     _G.ChatEdit_SetLastToldTarget(arg2, "BN_WHISPER");
     win.online = true;
     win.msgSent = false;
+    updateMinimapAlerts();
     CallModuleFunction("PostEvent_WhisperInform", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13);
     addToTableUnique(recentSent, arg1);
 	if(#recentSent > maxRecent) then
@@ -482,7 +500,7 @@ function WhisperEngine:CHAT_MSG_SYSTEM_CONTROLLER(eventItem, msg)
 
     local user;
     local curState = db.pop_rules.whisper.alwaysOther and "other" or curState;
-    
+
     -- detect player not online
     user = FormatUserName(string.match(msg, ERR_CHAT_PLAYER_NOT_FOUND_S));
     local win = Windows[user];
@@ -499,7 +517,7 @@ function WhisperEngine:CHAT_MSG_SYSTEM_CONTROLLER(eventItem, msg)
         end
         return;
     end
-    
+
     -- detect player has you ignored
     user = FormatUserName(string.match(msg, CHAT_IGNORED));
     win = Windows[user];
@@ -515,7 +533,7 @@ function WhisperEngine:CHAT_MSG_SYSTEM_CONTROLLER(eventItem, msg)
         end
         return;
     end
-    
+
     -- detect player has come online
     user = FormatUserName(string.match(msg, ERR_FRIEND_ONLINE_SS));
     win = Windows[user];
@@ -528,7 +546,7 @@ function WhisperEngine:CHAT_MSG_SYSTEM_CONTROLLER(eventItem, msg)
         end
         return;
     end
-    
+
         -- detect player has gone offline
     user = FormatUserName(string.match(msg, ERR_FRIEND_OFFLINE_S));
     win = Windows[user];
@@ -541,18 +559,18 @@ function WhisperEngine:CHAT_MSG_SYSTEM_CONTROLLER(eventItem, msg)
         end
         return;
     end
-    
+
 end
 
 
 function WhisperEngine:CHAT_MSG_BN_INLINE_TOAST_ALERT(process, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, unused, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox, supressRaidIcons)
-	
+
 	local online = process == "FRIEND_ONLINE"
 	local offline = process == "FRIEND_OFFLINE"
-	
+
 	local curState = db.pop_rules.whisper.alwaysOther and "other" or curState;
-	
-	local _, accName = _G.BNGetFriendInfoByID(bnSenderID)
+
+	local _, accName = GetBNGetFriendInfoByID(bnSenderID)
 	local win = Windows[accName]
 	if win then
 		local msg = accName.." "..(online and _G.BN_TOAST_ONLINE or offline and _G.BN_TOAST_OFFLINE or "")
@@ -581,7 +599,7 @@ local function replyTellTarget(TellNotTold)
     local bNetID;
     if (lastTell:find("^|K")) then
       lastTell = _G.BNTokenFindName(lastTell) or lastTell;
-      bNetID = BNet_GetPresenceID(lastTell);
+      bNetID = _G.BNet_GetBNetIDAccount(lastTell);
     end
 
     if (lastTell ~= "" and db.pop_rules.whisper.intercept) then
@@ -599,7 +617,7 @@ local function replyTellTarget(TellNotTold)
   end
 end
 
--- "/w |Kf287|k0000000000000|k " 
+-- "/w |Kf287|k0000000000000|k "
 local tellTargetExtractionAutoComplete = _G.AUTOCOMPLETE_LIST.ALL;
 function CF_ExtractTellTarget(editBox, msg, chatType)
 	-- Grab the string after the slash command
@@ -611,7 +629,7 @@ function CF_ExtractTellTarget(editBox, msg, chatType)
 		target, msg = _G.BNTokenFindName(target)
 		target = target or old_target
 		msg = msg or old_msg
-		bNetID = BNet_GetPresenceID(target);
+		bNetID = _G.BNet_GetBNetIDAccount(target);
 	else
 		--If we haven't even finished one word, we aren't done.
 		if (not target or not string.find(target, "%s") or (string.sub(target, 1, 1) == "|")) then
@@ -659,7 +677,7 @@ function CF_SentBNetTell(target)
 		local curState = curState;
 		curState = db.pop_rules.whisper.alwaysOther and "other" or curState;
 		if (db.pop_rules.whisper.intercept and db.pop_rules.whisper[curState].onSend) then
-			local bNetID = BNet_GetPresenceID(target);
+			local bNetID = _G.BNet_GetBNetIDAccount(target);
 			target = _G.Ambiguate(target, "none")--For good measure, ambiguate again cause it seems some mods interfere with this process
 			local win = getWhisperWindowByUser(target, true, bNetID);
 			if not win then return end	--due to a client bug, we can not receive the other player's name, so do nothing
@@ -674,11 +692,11 @@ end
 
 function CF_OpenChat(text, chatFrame, desiredCursorPosition)
 	local editBox = _G.ChatEdit_ChooseBoxForSend(chatFrame)
-	
+
 	local chatType = editBox:GetAttribute("chatType")
     local target = editBox:GetAttribute("tellTarget")
 	local sticky = editBox:GetAttribute("stickyType")
-	
+
 	if chatType == "WHISPER" then
 		if not string.find(target, "^|K") then
 			return
@@ -686,14 +704,14 @@ function CF_OpenChat(text, chatFrame, desiredCursorPosition)
 	elseif not (chatType == "BN_WHISPER") or not target then
 		return
 	end
-	
+
 	if not editBox:IsVisible() then return end
-	
+
 	if (db and db.enabled) then
 		local curState = curState;
 		curState = db.pop_rules.whisper.alwaysOther and "other" or curState;
 		if (db.pop_rules.whisper.intercept and db.pop_rules.whisper[curState].onSend) then
-			local bNetID = BNet_GetPresenceID(target);
+			local bNetID = _G.BNet_GetBNetIDAccount(target);
 			target = _G.Ambiguate(target, "none")--For good measure, ambiguate again cause it seems some mods interfere with this process
 			local win = getWhisperWindowByUser(target, bNetID and true, bNetID);
 			if not win then return end	--due to a client bug, we can not receive the other player's name, so do nothing

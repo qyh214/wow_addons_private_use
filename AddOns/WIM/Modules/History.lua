@@ -12,9 +12,6 @@ local select = select;
 --set namespace
 setfenv(1, WIM);
 
---Quick and dirty fix for renames in legion to deal with renamed globals
-local BNet_GetPresenceID = _G.BNet_GetBNetIDAccount or _G.BNet_GetPresenceID
-
 local History = CreateModule("History", true);
 
 -- default history settings.
@@ -128,15 +125,15 @@ local function recordWhisper(inbound, ...)
     if not from then
 	   	return
 	end
-    local db = db.history.whispers; 
+    local db = db.history.whispers;
     local win = windows.active.whisper[from] or windows.active.chat[from] or windows.active.w2w[from];
     if (win and (lists.gm[from] or db.all or (db.friends and (lists.friends[from] or win.isBN)) or (db.guild and lists.guild[from]))) then
         win.widgets.history:SetHistory(true);
         --If realid/btag whisper, we save them under btag to avoid caching issues
         --(ie NAME is encoded and changes every session, we can't use that to save whispers, plus if user dumps cache, they all return unknown)
-        local pid = BNet_GetPresenceID(from)
+        local pid = _G.BNet_GetBNetIDAccount(from)
         if pid then
-        	local _, _, btag, _, toonName = _G.BNGetFriendInfoByID(pid)
+        	local _, _, btag, _, toonName = GetBNGetFriendInfoByID(pid)
 			from = btag or toonName or from
 		end
         local history = getPlayerHistoryTable(from);
@@ -358,7 +355,7 @@ function ChatHistory:PostEvent_ChatMessage(event, ...)
             recordAs = _G.SAY;
             chatType = "say";
         end
-        
+
         if(recordAs) then
             recordChannelChat(recordAs, event, ...);
         end
@@ -392,11 +389,11 @@ local function createHistoryViewer()
     win:SetWidth(700);
     win:SetHeight(505);
     win:SetPoint("CENTER");
-    
+
     -- set backdrop
-    win:SetBackdrop({bgFile = "Interface\\AddOns\\"..addonTocName.."\\Sources\\Options\\Textures\\Frame_Background", 
-        edgeFile = "Interface\\AddOns\\"..addonTocName.."\\Sources\\Options\\Textures\\Frame", 
-        tile = true, tileSize = 64, edgeSize = 64, 
+    win:SetBackdrop({bgFile = "Interface\\AddOns\\"..addonTocName.."\\Sources\\Options\\Textures\\Frame_Background",
+        edgeFile = "Interface\\AddOns\\"..addonTocName.."\\Sources\\Options\\Textures\\Frame",
+        tile = true, tileSize = 64, edgeSize = 64,
         insets = { left = 64, right = 64, top = 64, bottom = 64 }});
 
     -- set basic frame properties
@@ -411,14 +408,14 @@ local function createHistoryViewer()
     -- set script events
     win:SetScript("OnDragStart", function(self) self:StartMoving(); end);
     win:SetScript("OnDragStop", function(self) self:StopMovingOrSizing(); end);
-    
+
     -- create and set title bar text
     win.title = win:CreateFontString(win:GetName().."Title", "OVERLAY", "ChatFontNormal");
     win.title:SetPoint("TOPLEFT", 50 , -20);
     local font = win.title:GetFont();
     win.title:SetFont(font, 16, "");
     win.title:SetText(L["History Viewer"])
-    
+
     -- create close button
     win.close = CreateFrame("Button", win:GetName().."Close", win);
     win.close:SetWidth(18); win.close:SetHeight(18);
@@ -428,7 +425,7 @@ local function createHistoryViewer()
     win.close:SetScript("OnClick", function(self)
             self:GetParent():Hide();
         end);
-    
+
     -- window actions
     win:SetScript("OnShow", function(self)
             _G.PlaySound(850);
@@ -436,7 +433,7 @@ local function createHistoryViewer()
         end);
     win:SetScript("OnHide", function(self) _G.PlaySound(851); end);
     table.insert(_G.UISpecialFrames,win:GetName());
-    
+
     -- create nav
     win.nav = CreateFrame("Frame", nil, win);
     win.nav.border = win.nav:CreateTexture(nil, "BACKGROUND");
@@ -524,11 +521,11 @@ local function createHistoryViewer()
                 button:SetHeight(20);
                 button:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestLogTitleHighlight" , "ADD");
                 button:GetHighlightTexture():SetVertexColor(.196, .388, .5);
-                
+
                 button.text = button:CreateFontString(nil, "OVERLAY", "ChatFontNormal");
                 button.text:SetAllPoints();
                 button.text:SetJustifyH("LEFT");
-                
+
                 button.SetFilter = function(self, filter)
                         self.filter = filter;
                         if(_G.type(filter) == "number") then
@@ -543,7 +540,7 @@ local function createHistoryViewer()
                         win.nav.filters.scroll.update();
                         win.UpdateDisplay();
                     end);
-                
+
                 table.insert(win.nav.filters.scroll.buttons, button);
             return button;
         end
@@ -567,7 +564,7 @@ local function createHistoryViewer()
                     self.buttons[i]:Hide();
                 end
             end
-            
+
             _G.FauxScrollFrame_Update(self, #win.FILTERLIST, 5, 20);
         end
     win.nav.filters.scroll:SetScript("OnShow", function(self)
@@ -602,12 +599,12 @@ local function createHistoryViewer()
                 button:SetHeight(20);
                 button:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestLogTitleHighlight" , "ADD");
                 button:GetHighlightTexture():SetVertexColor(.196, .388, .5);
-                
+
                 button.text = button:CreateFontString(nil, "OVERLAY", "ChatFontNormal");
                 button.text:SetPoint("TOPLEFT");
                 button.text:SetPoint("BOTTOMRIGHT", -18, 0);
                 button.text:SetJustifyH("LEFT");
-                
+
                 button.SetUser = function(self, user)
                         local original, extra, color = user, "";
                         local user, gmTag = string.match(original, "([^*]+)(*?)$");
@@ -677,7 +674,7 @@ local function createHistoryViewer()
                         };
                         _G.StaticPopup_Show("WIM_DELETE_HISTORY");
                     end);
-                
+
                 table.insert(win.nav.userList.scroll.buttons, button);
             return button;
         end
@@ -704,7 +701,7 @@ local function createHistoryViewer()
                     self.buttons[i]:Hide();
                 end
             end
-            
+
             _G.FauxScrollFrame_Update(self, #win.USERLIST, maxButtons, 20);
         end
     win.nav.userList.scroll:SetScript("OnShow", function(self)
@@ -720,7 +717,7 @@ local function createHistoryViewer()
     win.nav.userList.scroll:SetScript("OnVerticalScroll", function(self, offset)
             _G.FauxScrollFrame_OnVerticalScroll(self, offset, 20, win.nav.userList.scroll.update);
         end);
-    
+
     --search bar
     win.search = CreateFrame("Frame", nil, win);
     win.search.bg = win.search:CreateTexture(nil, "BACKGROUND");
@@ -799,8 +796,8 @@ local function createHistoryViewer()
     win.search.result:SetPoint("LEFT");
     win.search.result:SetPoint("RIGHT", win.search.label, "LEFT", -5, 0);
     win.search.result:Hide();
-    
-    
+
+
     --content frame
     win.content = CreateFrame("Frame", nil, win);
     win.content.border = win.content:CreateTexture(nil, "BACKGROUND");
@@ -810,7 +807,7 @@ local function createHistoryViewer()
     win.content.border:SetHeight(1);
     win.content:SetPoint("TOPLEFT", win.search, "BOTTOMLEFT");
     win.content:SetPoint("BOTTOMRIGHT", win, "BOTTOMRIGHT", -18, 40);
-    
+
     win.content.tabs = {};
     win.content.createTab = function(self, index)
             local tab = CreateFrame("Button", nil, self);
@@ -855,8 +852,8 @@ local function createHistoryViewer()
     for i=1, #ViewTypes do
         win.content:createTab(i);
     end
-    
-    
+
+
     win.content.chatFrame = CreateFrame("ScrollingMessageFrame", "WIM3_HistoryChatFrame", win.content);
     win.content.chatFrame:SetPoint("TOPLEFT", 4, -4);
     win.content.chatFrame:SetPoint("BOTTOMRIGHT", -30, 4);
@@ -947,7 +944,7 @@ local function createHistoryViewer()
 	    end
             obj:update();
         end);
-    
+
     win.content.textFrame = CreateFrame("ScrollFrame", "WIM3_HistoryTextFrame", win.content, "UIPanelScrollFrameTemplate");
     win.content.textFrame:SetPoint("TOPLEFT", win.content, "TOPLEFT", 4, -4);
     win.content.textFrame:SetPoint("BOTTOMRIGHT", -25, 4);
@@ -972,9 +969,9 @@ local function createHistoryViewer()
             --self:SetText(self:GetText()..(color and "|cff"..color or "")..msg..(color and "|r" or "").."\n");
             self:SetText(self:GetText()..msg.."\n");
         end;
-    
-    
-    
+
+
+
     --resize
     win.resize = CreateFrame("Button", nil, win);
     win.resize:SetNormalTexture("Interface\\AddOns\\"..addonTocName.."\\Skins\\Default\\resize");
@@ -996,7 +993,7 @@ local function createHistoryViewer()
             win.nav.userList.scroll:Hide();
             win.nav.userList.scroll:Show();
         end);
-    
+
     win.USER = env.realm.."/"..env.character;
     win.USERLIST = {};
     win.CONVO = "";
@@ -1017,13 +1014,13 @@ local function createHistoryViewer()
         win.UpdateFilterList();
         win.UpdateDisplay();
     end
-    
+
     win.UpdateDisplay = function(self)
         if(win.displayUpdate) then
             win.displayUpdate:Show();
         end
     end
-    
+
     win.UpdateFilterList = function(self)
         for i=1, #win.FILTERLIST do
             win.FILTERLIST[i] = nil;
@@ -1042,7 +1039,7 @@ local function createHistoryViewer()
         win.nav.filters.scroll:Hide();
         win.nav.filters.scroll:Show();
     end
-    
+
     win.UpdateConvoList = function(self)
         for i=1, #win.CONVOLIST do
             win.CONVOLIST[i] = nil;
@@ -1070,7 +1067,7 @@ local function createHistoryViewer()
             return a.time < b.time;
         end);
     end
-    
+
     win.UpdateUserList = function(self)
         for i=1, #win.USERLIST do
             win.USERLIST[i] = nil;
@@ -1106,8 +1103,8 @@ local function createHistoryViewer()
             win:SelectConvo("");
         end
     end
-    
-    
+
+
     win.progressBar = CreateFrame("Frame", nil, win.content);
     win.progressBar:SetFrameStrata("TOOLTIP");
     win.progressBar:SetWidth(300); win.progressBar:SetHeight(65);
@@ -1142,9 +1139,9 @@ local function createHistoryViewer()
     win.progressBar.delete:SetScript("OnClick", function(self)
             win.displayUpdate:Hide();
         end);
-    
+
     win.content.tabs[1]:Click();
-    
+
     return win;
 end
 
@@ -1163,7 +1160,7 @@ local function createDisplayUpdate()
                 return;
             end
             HistoryViewer.progressBar.bar.bg:SetWidth(HistoryViewer.progressBar.bar:GetWidth()*self.i/#self.curList);
-            
+
             -- clear tmpTable
             for k, _ in pairs(self.tmpTable) do
                 self.tmpTable[k] = nil;
@@ -1172,7 +1169,7 @@ local function createDisplayUpdate()
             for k, v in pairs(self.curList[self.i]) do
                 self.tmpTable[k] = v;
             end
-            
+
             if(self.filter) then
                 if(self.min <= self.tmpTable.time and self.max > self.tmpTable.time) then
                     ViewTypes[HistoryViewer.TAB].func(self.frame, self.tmpTable);
@@ -1212,7 +1209,7 @@ local function createDisplayUpdate()
             buttons[i]:Enable();
         end
     end);
-    
+
     displayUpdate:SetScript("OnShow", function(self)
         local buttons = HistoryViewer.nav.userList.scroll.buttons;
         for i=1, #buttons do
@@ -1226,9 +1223,9 @@ local function createDisplayUpdate()
         HistoryViewer.progressBar:Show();
         self.curList = #HistoryViewer.SEARCHLIST > 0 and HistoryViewer.SEARCHLIST or HistoryViewer.CONVOLIST;
         self.frame = ViewTypes[HistoryViewer.TAB].frame == "chatFrame" and HistoryViewer.content.chatFrame or HistoryViewer.content.textFrame.text;
-        
-        
-        
+
+
+
         self.filter = _G.type(HistoryViewer.FILTER) == "number" or nil;
         self.min, self.max = 0, 0;
         if(self.filter) then
@@ -1264,7 +1261,7 @@ table.insert(ViewTypes, {
                 frame:AddMessage(applyStringModifiers(applyMessageFormatting(frame, "CHAT_MSG_"..(msg.event or "WHISPER"), msg.msg, msg.from,
                         nil, nil, nil, nil, 0, msg.channelName and ChannelCache[msg.channelName], msg.channelName, nil, chatFrameMsgId, "0x0300000000000000"), frame), color.r, color.g, color.b);
                 chatFrameMsgId = chatFrameMsgId > -1000 and chatFrameMsgId - 1 or -1;
-                
+
         end
     });
 table.insert(ViewTypes, {
@@ -1281,11 +1278,11 @@ table.insert(ViewTypes, {
             end
         end
     });
-    
+
 -- stewart
-table.insert(ViewTypes, { 
-	        text = L["BBCode"], 
-	        frame = "textFrame", 
+table.insert(ViewTypes, {
+	        text = L["BBCode"],
+	        frame = "textFrame",
 	        func = function(frame, msg)
                     local color;
 	            if(msg.type == 1) then
@@ -1305,22 +1302,22 @@ table.insert(ViewTypes, {
 	            frame.nextStamp = msg.time;
                     local chatColor = "[color=#"..RGBPercentToHex(color.r, color.g, color.b).."]";
                     local chatColorPattern = "%[color%=%#"..RGBPercentToHex(color.r, color.g, color.b).."%]%s*%[%/color%]";
-	            msg = applyMessageFormatting(frame, "CHAT_MSG_WHISPER", msg.msg, msg.from) 
-	            msg = applyStringModifiers(msg, frame); 
-	            msg = msg:gsub("|c[0-9A-Fa-f][0-9A-Fa-f]([0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f])|Hwim_url:([^|]*)|h.-|h|r", "[/color][url=%2][color=#%1]%2[/color][/url]"..chatColor); 
-	            msg = msg:gsub("|c[0-9A-Fa-f][0-9A-Fa-f]([0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f])", "[color=#%1]"); 
-	            msg = msg:gsub("|r", "[/color]"); 
-	            msg = msg:gsub("(%[color%=%#[0-9A-Fa-f]+%])|Hitem:(%d+)[:%d]*|h([^|]+)|h(%[%/color%])", "[/color][url=http://www.wowhead.com/?item=%2]%1%3%4[/url]"..chatColor); 
-	            msg = chatColor..msg.."[/color]"; 
+	            msg = applyMessageFormatting(frame, "CHAT_MSG_WHISPER", msg.msg, msg.from)
+	            msg = applyStringModifiers(msg, frame);
+	            msg = msg:gsub("|c[0-9A-Fa-f][0-9A-Fa-f]([0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f])|Hwim_url:([^|]*)|h.-|h|r", "[/color][url=%2][color=#%1]%2[/color][/url]"..chatColor);
+	            msg = msg:gsub("|c[0-9A-Fa-f][0-9A-Fa-f]([0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f])", "[color=#%1]");
+	            msg = msg:gsub("|r", "[/color]");
+	            msg = msg:gsub("(%[color%=%#[0-9A-Fa-f]+%])|Hitem:(%d+)[:%d]*|h([^|]+)|h(%[%/color%])", "[/color][url=http://www.wowhead.com/?item=%2]%1%3%4[/url]"..chatColor);
+	            msg = chatColor..msg.."[/color]";
 	            msg = msg:gsub("(%[color%=%#[0-9A-Fa-f]+%])(%[color%=%#[0-9A-Fa-f]+%])(.-)(%[%/color%])", "%2%3%4%1");
                     msg = msg:gsub(chatColorPattern, "");
-	            frame:AddMessage(msg, color.r, color.g, color.b) 
-	        end 
-	    });  
+	            frame:AddMessage(msg, color.r, color.g, color.b)
+	        end
+	    });
 
-table.insert(ViewTypes, { 
-	        text = "HTML", 
-	        frame = "textFrame", 
+table.insert(ViewTypes, {
+	        text = "HTML",
+	        frame = "textFrame",
 	        func = function(frame, msg)
                     local color;
 	            if(msg.type == 1) then
@@ -1340,37 +1337,37 @@ table.insert(ViewTypes, {
 	            frame.nextStamp = msg.time;
                     local chatColor = "<font color='#"..RGBPercentToHex(color.r, color.g, color.b).."'>";
                     local chatColorPattern = "%<font color%='%#"..RGBPercentToHex(color.r, color.g, color.b).."'%>%s*%<%/font%>";
-	            msg = applyMessageFormatting(frame, "CHAT_MSG_WHISPER", msg.msg, msg.from) 
+	            msg = applyMessageFormatting(frame, "CHAT_MSG_WHISPER", msg.msg, msg.from)
 	            msg = applyStringModifiers(msg, frame);
-                    
+
                     -- html escapes
                     msg = msg:gsub("&", "&amp;");
                     msg = msg:gsub("<", "&lt;");
                     msg = msg:gsub(">", "&gt;");
                     msg = msg:gsub("\"", "&quot;");
-                    
+
                     -- color & URL handling...
-	            msg = msg:gsub("|c[0-9A-Fa-f][0-9A-Fa-f]([0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f])|Hwim_url:([^|]*)|h.-|h|r", "</color><a href='%2'><font color='#%1'>%2</font></a>"..chatColor); 
-	            msg = msg:gsub("|c[0-9A-Fa-f][0-9A-Fa-f]([0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f])", "<font color='#%1'>"); 
-	            msg = msg:gsub("|r", "</font>"); 
-	            msg = msg:gsub("(%<font color%='%#[0-9A-Fa-f]+'%>)|Hitem:(%d+)[:%d]*|h([^|]+)|h(%[%/color%])", "</font><a href='http://www.wowhead.com/?item=%2'>%1%3%4</a>"..chatColor); 
-	            msg = chatColor..msg.."</font>"; 
+	            msg = msg:gsub("|c[0-9A-Fa-f][0-9A-Fa-f]([0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f])|Hwim_url:([^|]*)|h.-|h|r", "</color><a href='%2'><font color='#%1'>%2</font></a>"..chatColor);
+	            msg = msg:gsub("|c[0-9A-Fa-f][0-9A-Fa-f]([0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f])", "<font color='#%1'>");
+	            msg = msg:gsub("|r", "</font>");
+	            msg = msg:gsub("(%<font color%='%#[0-9A-Fa-f]+'%>)|Hitem:(%d+)[:%d]*|h([^|]+)|h(%[%/color%])", "</font><a href='http://www.wowhead.com/?item=%2'>%1%3%4</a>"..chatColor);
+	            msg = chatColor..msg.."</font>";
 	            msg = msg:gsub("(%<font color%='%#[0-9A-Fa-f]+'%>)(%<font color%='%#[0-9A-Fa-f]+'%>)(.-)(%<%/font%>)", "%2%3%4%1");
                     msg = "<br>"..msg:gsub(chatColorPattern, "");
-	            frame:AddMessage(msg, color.r, color.g, color.b) 
-	        end 
-	    });  
+	            frame:AddMessage(msg, color.r, color.g, color.b)
+	        end
+	    });
 
 
 function ShowHistoryViewer(user)
-	local exists = HistoryViewer 
+	local exists = HistoryViewer
     if(HistoryViewer and not user and HistoryViewer:IsShown()) then
         HistoryViewer:Hide();
         return;
     end
     HistoryViewer = HistoryViewer or createHistoryViewer();
     HistoryViewer.displayUpdate = HistoryViewer.displayUpdate or createDisplayUpdate();
-    
+
     if(user) then
         HistoryViewer.USER = env.realm.."/"..env.character;
         HistoryViewer.SELECT = user;

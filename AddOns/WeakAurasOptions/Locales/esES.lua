@@ -7,8 +7,7 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Options
-	--[[Translation missing --]]
-	L[" by "] = " by "
+	L[" by "] = "por"
 	L["-- Do not remove this comment, it is part of this trigger: "] = "-- No elimines este comentario, es parte de este activador:"
 	--[[Translation missing --]]
 	L[" to version "] = " to version "
@@ -59,9 +58,7 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["|cFFffcc00Extra Options:|r"] = "|cFFffcc00Extra Options:|r"
 	--[[Translation missing --]]
-	L["|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r %s"] = "|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r %s"
-	--[[Translation missing --]]
-	L["|cFFffcc00Font:|r %s %s"] = "|cFFffcc00Font:|r %s %s"
+	L["|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r%s%s"] = "|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r%s%s"
 	L["1 Match"] = "1 Correspondencia"
 	--[[Translation missing --]]
 	L["A 20x20 pixels icon"] = "A 20x20 pixels icon"
@@ -106,6 +103,8 @@ local L = WeakAuras.L
 	L["Advanced"] = "Advanced"
 	L["Align"] = "Alinear"
 	--[[Translation missing --]]
+	L["Alignment"] = "Alignment"
+	--[[Translation missing --]]
 	L["All of"] = "All of"
 	L["Allow Full Rotation"] = "Permitir Rotación Total"
 	L["Alpha"] = "Transparencia"
@@ -113,6 +112,14 @@ local L = WeakAuras.L
 	L["Anchor Point"] = "Punto de Anclaje"
 	L["Anchored To"] = "anclado a"
 	L["And "] = "y"
+	--[[Translation missing --]]
+	L["and aligned left"] = "and aligned left"
+	--[[Translation missing --]]
+	L["and aligned right"] = "and aligned right"
+	--[[Translation missing --]]
+	L["and rotated left"] = "and rotated left"
+	--[[Translation missing --]]
+	L["and rotated right"] = "and rotated right"
 	--[[Translation missing --]]
 	L["and Trigger %s"] = "and Trigger %s"
 	L["Angle"] = "Ángulo"
@@ -205,9 +212,9 @@ Si la duración de la animación es |cFF00CC0010%|r, y el disparador del aura es
 	L["Bracket Matching"] = "Bracket Matching"
 	L["Button Glow"] = "Resplandor del Botón"
 	--[[Translation missing --]]
-	L["Can be a name or a UID (e.g., party1). A name only works on friendly players in your group."] = "Can be a name or a UID (e.g., party1). A name only works on friendly players in your group."
-	--[[Translation missing --]]
 	L["Can be a Name or a Unit ID (e.g. party1). A name only works on friendly players in your group."] = "Can be a Name or a Unit ID (e.g. party1). A name only works on friendly players in your group."
+	--[[Translation missing --]]
+	L["Can be a UID (e.g., party1)."] = "Can be a UID (e.g., party1)."
 	L["Cancel"] = "Cancelar"
 	--[[Translation missing --]]
 	L["Center"] = "Center"
@@ -222,6 +229,8 @@ Si la duración de la animación es |cFF00CC0010%|r, y el disparador del aura es
 	L["Choose whether the displayed icon is automatic or defined manually"] = "Escoge si quieres que el icono mostrado sea definido automáticamente o manualmente"
 	--[[Translation missing --]]
 	L["Clip Overlays"] = "Clip Overlays"
+	--[[Translation missing --]]
+	L["Clipped by Progress"] = "Clipped by Progress"
 	L["Clone option enabled dialog"] = "Activar diálogo de clonación"
 	L["Close"] = "Cerrar"
 	--[[Translation missing --]]
@@ -251,7 +260,7 @@ Si la duración de la animación es |cFF00CC0010%|r, y el disparador del aura es
 	--[[Translation missing --]]
 	L["Conditions"] = "Conditions"
 	--[[Translation missing --]]
-	L["Configure what options appear on this pannel."] = "Configure what options appear on this pannel."
+	L["Configure what options appear on this panel."] = "Configure what options appear on this panel."
 	L["Constant Factor"] = "Factor Constante"
 	--[[Translation missing --]]
 	L["Control-click to select multiple displays"] = "Control-click to select multiple displays"
@@ -619,6 +628,8 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	L["Mirror"] = "Reflejar"
 	L["Model"] = "Modelo"
 	--[[Translation missing --]]
+	L["Model %s"] = "Model %s"
+	--[[Translation missing --]]
 	L["Model Settings"] = "Model Settings"
 	--[[Translation missing --]]
 	L["Move Above Group"] = "Move Above Group"
@@ -791,10 +802,6 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Rotate In"] = "Rotar"
 	L["Rotate Out"] = "Rotar"
 	L["Rotate Text"] = "Rotar Texto"
-	--[[Translation missing --]]
-	L["rotated left"] = "rotated left"
-	--[[Translation missing --]]
-	L["rotated right"] = "rotated right"
 	L["Rotation"] = "Rotación"
 	--[[Translation missing --]]
 	L["Rotation Mode"] = "Rotation Mode"
@@ -850,6 +857,8 @@ Sólo un valor coincidente puede ser escogido.]=]
 	--[[Translation missing --]]
 	L["Show Matches for Units"] = "Show Matches for Units"
 	--[[Translation missing --]]
+	L["Show Model"] = "Show Model"
+	--[[Translation missing --]]
 	L["Show model of unit "] = "Show model of unit "
 	--[[Translation missing --]]
 	L["Show On"] = "Show On"
@@ -863,6 +872,8 @@ Sólo un valor coincidente puede ser escogido.]=]
 	--[[Translation missing --]]
 	L["Shows a border"] = "Shows a border"
 	L["Shows a custom texture"] = "Muestra una textura"
+	--[[Translation missing --]]
+	L["Shows a model"] = "Shows a model"
 	L["Shows a progress bar with name, timer, and icon"] = "Muestra una barra de progreso con nombres, temporizadores, y icono"
 	L["Shows a spell icon with an optional cooldown overlay"] = "Muestra un icono como aura con máscaras opcionales"
 	L["Shows a texture that changes based on duration"] = "Muestra una textura que cambia con el tiempo"
@@ -930,6 +941,8 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Stop ignoring Updates"] = "Stop ignoring Updates"
 	--[[Translation missing --]]
 	L["Stop Sound"] = "Stop Sound"
+	--[[Translation missing --]]
+	L["Sub Elements"] = "Sub Elements"
 	--[[Translation missing --]]
 	L["Sub Option %i"] = "Sub Option %i"
 	L["Temporary Group"] = "Grupo Temporal"

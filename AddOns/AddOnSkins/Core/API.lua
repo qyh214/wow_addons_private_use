@@ -317,7 +317,7 @@ function AS:CreateShadow(Frame, NoRegister, Inverted)
 	else
 		Shadow:SetBackdrop({ edgeFile = [[Interface\AddOns\AddOnSkins\Media\Textures\Shadows]], edgeSize = AS:Scale(3) })
 		Shadow:SetFrameLevel(FrameLevel)
-		Shadow:SetOutside(Frame, 3, 3)
+		Shadow:SetOutside(Frame, AS:Scale(2), AS:Scale(2))
 	end
 
 	Shadow.Inverted = Inverted
@@ -329,6 +329,29 @@ function AS:CreateShadow(Frame, NoRegister, Inverted)
 	end
 
 	Frame.Shadow = Shadow
+end
+
+function AS:GradientHighlight(frame, layer, color)
+	if frame.SetHighlightTexture then
+		frame:SetHighlightTexture("")
+	end
+
+	local r, g, b = .9, .9, .9
+	if color then
+		r, g, b = color.r or color[1], color.g or color[2], color.b or color[3]
+	end
+
+	local leftGrad = frame:CreateTexture(nil, layer or "HIGHLIGHT")
+	leftGrad:SetSize(frame:GetWidth() * 0.5, frame:GetHeight() * 0.95)
+	leftGrad:SetPoint("LEFT", frame, "CENTER")
+	leftGrad:SetTexture(AS.Blank)
+	leftGrad:SetGradientAlpha("Horizontal", r, g, b, 0.35, r, g, b, 0)
+
+	local rightGrad = frame:CreateTexture(nil, layer or "HIGHLIGHT")
+	rightGrad:SetSize(frame:GetWidth() * 0.5, frame:GetHeight() * 0.95)
+	rightGrad:SetPoint("RIGHT", frame, "CENTER")
+	rightGrad:SetTexture(AS.Blank)
+	rightGrad:SetGradientAlpha("Horizontal", r, g, b, 0, r, g, b, 0.35)
 end
 
 function AS:Desaturate(frame)
@@ -453,69 +476,84 @@ AS.ArrowRotation = {
 	['right'] = -1.57,
 }
 
-function AS:SkinArrowButton(Button, Arrow)
+function AS:SkinArrowButton(object, Arrow)
 	if Arrow then
 		Arrow = strlower(Arrow)
 	else
 		Arrow = 'down'
-		local ButtonName = Button:GetDebugName() and Button:GetDebugName():lower()
-		if ButtonName then
-			if (strfind(ButtonName, 'left') or strfind(ButtonName, 'prev') or strfind(ButtonName, 'decrement') or strfind(ButtonName, 'back')) then
+		local Name = object:GetDebugName() and object:GetDebugName():lower()
+		if Name then
+			if (strfind(Name, 'left') or strfind(Name, 'prev') or strfind(Name, 'decrement') or strfind(Name, 'back')) then
 				Arrow = 'left'
-			elseif (strfind(ButtonName, 'right') or strfind(ButtonName, 'next') or strfind(ButtonName, 'increment') or strfind(ButtonName, 'forward')) then
+			elseif (strfind(Name, 'right') or strfind(Name, 'next') or strfind(Name, 'increment') or strfind(Name, 'forward')) then
 				Arrow = 'right'
-			elseif (strfind(ButtonName, 'upbutton') or strfind(ButtonName, 'top') or strfind(ButtonName, 'asc') or strfind(ButtonName, 'home') or strfind(ButtonName, 'maximize')) then
+			elseif (strfind(Name, 'upbutton') or strfind(Name, 'top') or strfind(Name, 'asc') or strfind(Name, 'home') or strfind(Name, 'maximize')) then
 				Arrow = 'up'
 			end
 		end
 	end
 
-	if not Button.Mask then
-		AS:SkinFrame(Button)
+	if object:IsObjectType("Button") then
+		local Button = object
 
-		local Mask = Button:CreateMaskTexture()
-		Mask:SetTexture([[Interface\AddOns\AddOnSkins\Media\Textures\Arrow]], 'CLAMPTOBLACKADDITIVE', 'CLAMPTOBLACKADDITIVE')
-		Mask:SetRotation(AS.ArrowRotation[Arrow])
-		Mask:SetSize(Button:GetWidth() / 1.5, Button:GetHeight() / 1.5)
-		Mask:SetPoint('CENTER')
+		if not Button.Mask then
+			AS:SkinFrame(Button)
 
-		Button.Mask = Mask
+			local Mask = Button:CreateMaskTexture()
+			Mask:SetTexture([[Interface\AddOns\AddOnSkins\Media\Textures\Arrow]], 'CLAMPTOBLACKADDITIVE', 'CLAMPTOBLACKADDITIVE')
+			Mask:SetRotation(AS.ArrowRotation[Arrow])
+			Mask:SetSize(Button:GetWidth() / 1.5, Button:GetHeight() / 1.5)
+			Mask:SetPoint('CENTER')
 
-		Button:SetNormalTexture(AS.NormTex)
-		Button:SetDisabledTexture(AS.NormTex)
-		Button:SetPushedTexture(AS.NormTex)
+			Button.Mask = Mask
 
-		local Normal, Disabled, Pushed = Button:GetNormalTexture(), Button:GetDisabledTexture(), Button:GetPushedTexture()
+			Button:SetNormalTexture(AS.NormTex)
+			Button:SetDisabledTexture(AS.NormTex)
+			Button:SetPushedTexture(AS.NormTex)
 
-		Normal:SetInside()
-		Normal:SetTexCoord(0, 1, 0, 1)
-		Normal.SetTexCoord = AS.Noop
-		Normal:SetVertexColor(1, 1, 1)
-		Normal:AddMaskTexture(Mask)
+			local Normal, Disabled, Pushed = Button:GetNormalTexture(), Button:GetDisabledTexture(), Button:GetPushedTexture()
 
-		Disabled:SetInside()
-		Disabled:SetTexCoord(0, 1, 0, 1)
-		Disabled.SetTexCoord = AS.Noop
-		Disabled:SetVertexColor(.3, .3, .3)
-		Disabled:AddMaskTexture(Mask)
+			Normal:SetInside()
+			Normal:SetTexCoord(0, 1, 0, 1)
+			Normal.SetTexCoord = AS.Noop
+			Normal:SetVertexColor(1, 1, 1)
+			Normal:AddMaskTexture(Mask)
 
-		Pushed:SetInside()
-		Pushed:SetTexCoord(0, 1, 0, 1)
-		Pushed.SetTexCoord = AS.Noop
-		Pushed:SetVertexColor(unpack(AS.Color))
-		Pushed:AddMaskTexture(Mask)
+			Disabled:SetInside()
+			Disabled:SetTexCoord(0, 1, 0, 1)
+			Disabled.SetTexCoord = AS.Noop
+			Disabled:SetVertexColor(.3, .3, .3)
+			Disabled:AddMaskTexture(Mask)
 
-		Button:HookScript('OnEnter', function(self) self:SetBackdropBorderColor(unpack(AS.Color)) Normal:SetVertexColor(unpack(AS.Color)) end)
-		Button:HookScript('OnLeave', function(self) self:SetBackdropBorderColor(unpack(AS.BorderColor)) Normal:SetVertexColor(1, 1, 1) end)
+			Pushed:SetInside()
+			Pushed:SetTexCoord(0, 1, 0, 1)
+			Pushed.SetTexCoord = AS.Noop
+			Pushed:SetVertexColor(unpack(AS.Color))
+			Pushed:AddMaskTexture(Mask)
+
+			Button:HookScript('OnEnter', function(self) self:SetBackdropBorderColor(unpack(AS.Color)) Normal:SetVertexColor(unpack(AS.Color)) end)
+			Button:HookScript('OnLeave', function(self) self:SetBackdropBorderColor(unpack(AS.BorderColor)) Normal:SetVertexColor(1, 1, 1) end)
+		end
+
+		Button.Mask:SetRotation(AS.ArrowRotation[Arrow])
+	elseif object:IsObjectType("Texture") then
+		object:SetTexture([[Interface\AddOns\AddOnSkins\Media\Textures\Arrow]], 'CLAMPTOBLACKADDITIVE', 'CLAMPTOBLACKADDITIVE')
+		object:SetRotation(AS.ArrowRotation[Arrow])
 	end
-
-	Button.Mask:SetRotation(AS.ArrowRotation[Arrow])
 end
 
 function AS:SkinButton(Button, Strip)
 	if Button.isSkinned then return end
 
 	local ButtonName = Button.GetName and Button:GetName()
+	local foundArrow
+
+	if Button.Icon then
+		local Texture = Button.Icon:GetTexture()
+		if Texture and (type(Texture) == 'string' and strfind(Texture, [[Interface\ChatFrame\ChatFrameExpandArrow]])) then
+			foundArrow = true
+		end
+	end
 
 	if Strip then
 		AS:StripTextures(Button)
@@ -528,15 +566,12 @@ function AS:SkinButton(Button, Strip)
 		end
 	end
 
-	if Button.Icon then
-		local Texture = Button.Icon:GetTexture()
-		if Texture and (type(Texture) == 'string' and strfind(Texture, [[Interface\ChatFrame\ChatFrameExpandArrow]])) then
-			Button.Icon:SetTexture([[Interface\AddOns\AddOnSkins\Media\Textures\Arrow]])
-			Button.Icon:SetSnapToPixelGrid(false)
-			Button.Icon:SetTexelSnappingBias(0)
-			Button.Icon:SetVertexColor(1, 1, 1)
-			Button.Icon:SetRotation(AS.ArrowRotation['right'])
-		end
+	if foundArrow then
+		Button.Icon:SetTexture([[Interface\AddOns\AddOnSkins\Media\Textures\Arrow]])
+		Button.Icon:SetSnapToPixelGrid(false)
+		Button.Icon:SetTexelSnappingBias(0)
+		Button.Icon:SetVertexColor(1, 1, 1)
+		Button.Icon:SetRotation(AS.ArrowRotation['right'])
 	end
 
 	if Button.SetNormalTexture then Button:SetNormalTexture('') end
@@ -984,6 +1019,7 @@ end
 function AS:SkinFrame(frame, template, override, kill)
 	local name = frame and frame.GetName and frame:GetName()
 	local insetFrame = name and _G[name..'Inset'] or frame.Inset
+	local closeButton = name and _G[name..'CloseButton'] or frame.CloseButton
 
 	if not override then
 		AS:StripTextures(frame, kill)
@@ -991,18 +1027,19 @@ function AS:SkinFrame(frame, template, override, kill)
 
 	AS:SetTemplate(frame, template)
 
-	--if insetFrame then
-	--	AS:SkinFrame(insetFrame)
-	--end
+	if insetFrame then
+		AS:SkinFrame(insetFrame)
+	end
 
-	if frame.CloseButton then
-		AS:SkinCloseButton(frame.CloseButton)
+	if closeButton then
+		AS:SkinCloseButton(closeButton)
 	end
 end
 
 function AS:SkinBackdropFrame(frame, template, override, kill)
 	local name = frame and frame.GetName and frame:GetName()
 	local insetFrame = name and _G[name..'Inset'] or frame.Inset
+	local closeButton = name and _G[name..'CloseButton'] or frame.CloseButton
 
 	if not override then
 		AS:StripTextures(frame, kill)
@@ -1015,8 +1052,8 @@ function AS:SkinBackdropFrame(frame, template, override, kill)
 		AS:SkinFrame(insetFrame)
 	end
 
-	if frame.CloseButton then
-		AS:SkinCloseButton(frame.CloseButton)
+	if closeButton then
+		AS:SkinCloseButton(closeButton)
 	end
 end
 
@@ -1048,6 +1085,11 @@ function AS:SkinTexture(icon, backdrop)
 	if AS:CheckOption('CropIcons') then
 		icon:SetTexCoord(unpack(AS.TexCoords))
 	end
+
+	if icon:GetDrawLayer() ~= 'ARTWORK' then
+		icon:SetDrawLayer("ARTWORK")
+	end
+
 	icon:SetSnapToPixelGrid(false)
 	icon:SetTexelSnappingBias(0)
 	if backdrop then
@@ -1263,8 +1305,10 @@ function AS:SkinStackedResourceTrackerWidget(widgetFrame) end
 function AS:SkinIconTextAndCurrenciesWidget(widgetFrame) end
 
 function AS:SkinTextWithStateWidget(widgetFrame)
-	local text = widgetFrame.Text;
-	text:SetTextColor(1, 1, 1)
+	local text = widgetFrame.Text
+	if text then
+		text:SetTextColor(1, 1, 1)
+	end
 end
 
 function AS:SkinHorizontalCurrenciesWidget(widgetFrame) end
@@ -1297,12 +1341,15 @@ AS.WidgetSkinningFuncs = {
 	[W.HorizontalCurrencies] = "SkinHorizontalCurrenciesWidget",
 	[W.BulletTextList] = "SkinBulletTextListWidget",
 	[W.ScenarioHeaderCurrenciesAndBackground] = "SkinScenarioHeaderCurrenciesAndBackgroundWidget",
-	[W.TextureAndText] = "SkinTextureAndTextWidget",
-	[W.SpellDisplay] = "SkinSpellDisplay",
-	[W.DoubleStateIconRow] = "SkinDoubleStateIconRow",
-	[W.TextureAndTextRow] = "SkinTextureAndTextRowWidget",
-	[W.ZoneControl] = "SkinZoneControl",
 }
+
+if AS.Retail then
+	AS.WidgetSkinningFuncs[W.TextureAndText] = "SkinTextureAndTextWidget"
+	AS.WidgetSkinningFuncs[W.SpellDisplay] = "SkinSpellDisplay"
+	AS.WidgetSkinningFuncs[W.DoubleStateIconRow] = "SkinDoubleStateIconRow"
+	AS.WidgetSkinningFuncs[W.TextureAndTextRow] = "SkinTextureAndTextRowWidget"
+	AS.WidgetSkinningFuncs[W.ZoneControl] = "SkinZoneControl"
+end
 
 function AS:SkinWidgetContainer(widgetContainer)
 	for _, child in ipairs({widgetContainer:GetChildren()}) do

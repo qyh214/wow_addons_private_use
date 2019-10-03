@@ -1,10 +1,12 @@
-if GetLocale() ~= "deDE" then return end
+﻿if GetLocale() ~= "deDE" then
+	return
+end
 local L
 
 --------------------------
 -- Jin'rokh the Breaker --
 --------------------------
-L= DBM:GetModLocalization(827)
+L = DBM:GetModLocalization(827)
 
 L:SetWarningLocalization({
 	specWarnWaterMove	= "%s bald - Raus aus dem leitfähigen Wasser!"
@@ -17,7 +19,7 @@ L:SetOptionLocalization({
 --------------
 -- Horridon --
 --------------
-L= DBM:GetModLocalization(819)
+L = DBM:GetModLocalization(819)
 
 L:SetWarningLocalization({
 	warnAdds				= "%s",
@@ -26,8 +28,8 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerDoor				= "Nächstes Stammestor",
-	timerAdds				= "Nächster %s"
+	timerDoor	= "Nächstes Stammestor",
+	timerAdds	= "Nächster %s"
 })
 
 L:SetOptionLocalization({
@@ -40,17 +42,17 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	newForces				= "stürmen aus dem Stammestor",
-	chargeTarget			= "schlägt mit dem Schwanz auf den Boden!"
+	newForces		= "stürmen aus dem Stammestor",
+	chargeTarget	= "schlägt mit dem Schwanz auf den Boden!"
 })
 
 ---------------------------
 -- The Council of Elders --
 ---------------------------
-L= DBM:GetModLocalization(816)
+L = DBM:GetModLocalization(816)
 
 L:SetWarningLocalization({
-	specWarnPossessed		= "%s auf %s - Ziel wechseln"
+	specWarnPossessed	= "%s auf %s - Ziel wechseln"
 })
 
 L:SetOptionLocalization({
@@ -60,7 +62,7 @@ L:SetOptionLocalization({
 ------------
 -- Tortos --
 ------------
-L= DBM:GetModLocalization(825)
+L = DBM:GetModLocalization(825)
 
 L:SetWarningLocalization({
 	warnKickShell			= "%s genutzt von >%s< (%d verbleibend)",
@@ -75,16 +77,16 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	WrongDebuff		= "Kein %s"
+	WrongDebuff	= "Kein %s"
 })
 
 -------------
 -- Megaera --
 -------------
-L= DBM:GetModLocalization(821)
+L = DBM:GetModLocalization(821)
 
 L:SetTimerLocalization({
-	timerBreathsCD			= "Nächster Atem"
+	timerBreathsCD	= "Nächster Atem"
 })
 
 L:SetOptionLocalization({
@@ -105,7 +107,7 @@ L:SetMiscLocalization({
 ------------
 -- Ji-Kun --
 ------------
-L= DBM:GetModLocalization(828)
+L = DBM:GetModLocalization(828)
 
 L:SetWarningLocalization({
 	warnFlock			= "%s - %s %s",
@@ -119,14 +121,14 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	ShowNestArrows		= "Zeige DBM-Pfeil für Nestaktivierung",
-	Never				= "Nie",
-	Northeast			= "Blau - Unten NO & Oben NO",
-	Southeast			= "Grün - Unten SO & Oben SO",
-	Southwest			= "Violett/Rot - Unten SW & Oben SW/Mitte (25er/10er)",
-	West				= "Rot - Unten W & Oben Mitte (nur 25er)",
-	Northwest			= "Gelb - Unten NW & Oben NW (nur 25er)",
-	Guardians			= "Nestwächter"
+	ShowNestArrows	= "Zeige DBM-Pfeil für Nestaktivierung",
+	Never			= "Nie",
+	Northeast		= "Blau - Unten NO & Oben NO",
+	Southeast		= "Grün - Unten SO & Oben SO",
+	Southwest		= "Violett/Rot - Unten SW & Oben SW/Mitte (25er/10er)",
+	West			= "Rot - Unten W & Oben Mitte (nur 25er)",
+	Northwest		= "Gelb - Unten NW & Oben NW (nur 25er)",
+	Guardians		= "Nestwächter"
 })
 
 L:SetMiscLocalization({
@@ -148,7 +150,7 @@ L:SetMiscLocalization({
 --------------------------
 -- Durumu the Forgotten --
 --------------------------
-L= DBM:GetModLocalization(818)
+L = DBM:GetModLocalization(818)
 
 L:SetWarningLocalization({
 	warnBeamNormal				= "Strahlen - |cffff0000Rot|r : >%s<, |cff0000ffBlau|r : >%s<",
@@ -160,36 +162,36 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnBeam					= "Verkünde Ziele der Farbstrahlen",
-	warnAddsLeft				= "Verkünde die Anzahl der verbleibenden Nebel",
-	specWarnFogRevealed			= "Spezialwarnung, wenn ein Nebel offenbart wird",
-	ArrowOnBeam					= "Zeige DBM-Pfeil während $journal:6882 zur Anzeige der Ausweichrichtung",
-	InfoFrame					= "Zeige Infofenster für $spell:133795 Stapel",
-	SetParticle					= "Grafikeinstellung 'Partikeldichte' automatisch auf 'Niedrig' setzen<br/>(wird nach dem Kampfende auf die vorherige Einstellung zurückgesetzt)"
+	warnBeam			= "Verkünde Ziele der Farbstrahlen",
+	warnAddsLeft		= "Verkünde die Anzahl der verbleibenden Nebel",
+	specWarnFogRevealed	= "Spezialwarnung, wenn ein Nebel offenbart wird",
+	ArrowOnBeam			= "Zeige DBM-Pfeil während $journal:6882 zur Anzeige der Ausweichrichtung",
+	InfoFrame			= "Zeige Infofenster für $spell:133795 Stapel",
+	SetParticle			= "Grafikeinstellung 'Partikeldichte' automatisch auf 'Niedrig' setzen<br/>(wird nach dem Kampfende auf die vorherige Einstellung zurückgesetzt)"
 })
 
 L:SetMiscLocalization({
-	LifeYell		= "Lebensentzug auf %s (%d)"
+	LifeYell	= "Lebensentzug auf %s (%d)"
 })
 
 ----------------
 -- Primordius --
 ----------------
-L= DBM:GetModLocalization(820)
+L = DBM:GetModLocalization(820)
 
 L:SetWarningLocalization({
-	warnDebuffCount				= "Mutationen: %d/5 gute, %d schlechte"
+	warnDebuffCount	= "Mutationen: %d/5 gute, %d schlechte"
 })
 
 L:SetOptionLocalization({
-	warnDebuffCount				= "Zeige Warnung für die Debuffanzahl, wenn du Pfützen absorbierst",
-	SetIconOnBigOoze			= "Setze Zeichen auf $journal:6969"
+	warnDebuffCount		= "Zeige Warnung für die Debuffanzahl, wenn du Pfützen absorbierst",
+	SetIconOnBigOoze	= "Setze Zeichen auf $journal:6969"
 })
 
 -----------------
 -- Dark Animus --
 -----------------
-L= DBM:GetModLocalization(824)
+L = DBM:GetModLocalization(824)
 
 L:SetWarningLocalization({
 	warnMatterSwapped	= "%s: >%s< und >%s< getauscht"
@@ -200,47 +202,47 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Pull		= "Die Kugel explodiert!"
+	Pull	= "Die Kugel explodiert!"
 })
 
 --------------
 -- Iron Qon --
 --------------
-L= DBM:GetModLocalization(817)
+L = DBM:GetModLocalization(817)
 
 L:SetWarningLocalization({
 	warnDeadZone	= "%s: %s und %s abgeschirmt"
 })
 
 L:SetOptionLocalization({
-	RangeFrame				= "Zeige dynamisches Abstandsfenster (10m)<br/>(mit Indikator für zuviele Spieler in Reichweite)",
-	InfoFrame				= "Zeige Infofenster für Spieler mit $spell:136193"
+	RangeFrame	= "Zeige dynamisches Abstandsfenster (10m)<br/>(mit Indikator für zuviele Spieler in Reichweite)",
+	InfoFrame	= "Zeige Infofenster für Spieler mit $spell:136193"
 })
 
 -------------------
 -- Twin Consorts --
 -------------------
-L= DBM:GetModLocalization(829)
+L = DBM:GetModLocalization(829)
 
 L:SetWarningLocalization({
-	warnNight		= "Nachtphase",
-	warnDay			= "Tagphase",
-	warnDusk		= "Dämmerungsphase"
+	warnNight	= "Nachtphase",
+	warnDay		= "Tagphase",
+	warnDusk	= "Dämmerungsphase"
 })
 
 L:SetTimerLocalization({
-	timerDayCD		= "Nächste Tagphase",
-	timerDuskCD		= "Nächste Dämmerungsphase"
+	timerDayCD	= "Nächste Tagphase",
+	timerDuskCD	= "Nächste Dämmerungsphase"
 })
 
 L:SetMiscLocalization({
-	DuskPhase		= "Lu'lin, leiht mir Eure Kraft!"
+	DuskPhase	= "Lu'lin, leiht mir Eure Kraft!"
 })
 
 --------------
 -- Lei Shen --
 --------------
-L= DBM:GetModLocalization(832)
+L = DBM:GetModLocalization(832)
 
 L:SetWarningLocalization({
 	specWarnIntermissionSoon	= "Unterbrechung bald",
@@ -248,7 +250,7 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerConduitCD				= "Erste Leitung CD"
+	timerConduitCD	= "Erste Leitung CD"
 })
 
 L:SetOptionLocalization({
@@ -260,16 +262,16 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	StaticYell		= "Elektroschock auf %s (%d)"
+	StaticYell	= "Elektroschock auf %s (%d)"
 })
 
 ------------
 -- Ra-den --
 ------------
-L= DBM:GetModLocalization(831)
+L = DBM:GetModLocalization(831)
 
 L:SetWarningLocalization({
-	specWarnUnstablVitaJump		= "Instabile Vita ist auf dich übergesprungen!"
+	specWarnUnstablVitaJump	= "Instabile Vita ist auf dich übergesprungen!"
 })
 
 L:SetOptionLocalization({
@@ -278,7 +280,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Defeat						= "Wartet!"--needs to be verified (video-captured translation)
+	Defeat	= "Wartet!"--needs to be verified (video-captured translation)
 })
 
 -------------
@@ -287,5 +289,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("ToTTrash")
 
 L:SetGeneralLocalization({
-	name =	"Trash des Thron des Donners"
+	name	= "Trash des Thron des Donners"
 })

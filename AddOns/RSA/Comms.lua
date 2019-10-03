@@ -14,11 +14,11 @@ RSA.Comm.GroupStatus = {}
 
 function RSA.Comm.Registry()
 	C_ChatInfo.RegisterAddonMessagePrefix("RSA")
-	--RSA:RegisterComm("RSA", "OnCommReceived")	
+	--RSA:RegisterComm("RSA", "OnCommReceived")
 
 	C_ChatInfo.RegisterAddonMessagePrefix("RSA_Status")
 	RSA:RegisterComm("RSA_Status","OnStatusReceived")
-	
+
 	C_ChatInfo.RegisterAddonMessagePrefix("RSA_Version")
 	RSA:RegisterComm("RSA_Version","OnVersionCheckReceived")
 end
@@ -30,7 +30,7 @@ function RSA.VersionCheck(Guild)
 		RSA.SendCommMessage("RSA","RSA_Version",RSA.db.global.revision, (not IsInGroup(LE_PARTY_CATEGORY_HOME) and IsInGroup(LE_PARTY_CATEGORY_INSTANCE)) and "INSTANCE_CHAT" or "PARTY")
 	elseif IsInGuild() and Guild == true then
 		RSA.SendCommMessage("RSA","RSA_Version",RSA.db.global.revision, "GUILD")
-	end 
+	end
 end
 
 function RSA.OnVersionCheckReceived(addon, prefix, message, channel, sender)
@@ -101,5 +101,3 @@ RSA:RegisterEvent("GROUP_ROSTER_UPDATE","CheckGroupStatus")
 RSA:RegisterEvent("GROUP_FORMED","CheckGroupStatus","Joined")
 RSA:RegisterEvent("GROUP_JOINED","CheckGroupStatus","Joined")
 RSA:RegisterEvent("GROUP_LEFT","GroupLeft")
-
-

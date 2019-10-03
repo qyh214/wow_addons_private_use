@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Council", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019041710011")
+mod:SetRevision("20190417010011")
 mod:SetCreatureID(22949, 22950, 22951, 22952)
 mod:SetEncounterID(608)
 mod:SetModelID(21416)

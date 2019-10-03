@@ -34,7 +34,8 @@ local L = WeakAuras.L
 	L["%s total auras"] = "%s auras totais"
 	--[[Translation missing --]]
 	L["%s Zoom: %d%%"] = "%s Zoom: %d%%"
-	L["%s, Border"] = "%s, Borda"
+	--[[Translation missing --]]
+	L["%s, Border"] = "%s, Border"
 	--[[Translation missing --]]
 	L["%s, Offset: %0.2f;%0.2f"] = "%s, Offset: %0.2f;%0.2f"
 	--[[Translation missing --]]
@@ -54,9 +55,7 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["|cFFffcc00Extra Options:|r"] = "|cFFffcc00Extra Options:|r"
 	--[[Translation missing --]]
-	L["|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r %s"] = "|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r %s"
-	--[[Translation missing --]]
-	L["|cFFffcc00Font:|r %s %s"] = "|cFFffcc00Font:|r %s %s"
+	L["|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r%s%s"] = "|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r%s%s"
 	L["1 Match"] = "1 resultado"
 	L["A 20x20 pixels icon"] = "Um ícone de 20x20 pixels"
 	L["A 32x32 pixels icon"] = "Um ícone de 32x32 pixels"
@@ -71,8 +70,10 @@ local L = WeakAuras.L
 	L["Add %s"] = "Add %s"
 	L["Add a new display"] = "Adicionar um novo display"
 	L["Add Condition"] = "Adicionar condição"
-	L["Add Entry"] = "Adicionar Entrada"
-	L["Add Extra Elements"] = "Adicionar Elementos Extras"
+	--[[Translation missing --]]
+	L["Add Entry"] = "Add Entry"
+	--[[Translation missing --]]
+	L["Add Extra Elements"] = "Add Extra Elements"
 	L["Add Option"] = "Adicionar Opção"
 	--[[Translation missing --]]
 	L["Add Overlay"] = "Add Overlay"
@@ -87,6 +88,8 @@ local L = WeakAuras.L
 	L["Addons"] = "Addons"
 	L["Advanced"] = "Avançado"
 	L["Align"] = "Alinhar"
+	--[[Translation missing --]]
+	L["Alignment"] = "Alignment"
 	L["All of"] = "Todos"
 	L["Allow Full Rotation"] = "Habilitar rotação completa"
 	L["Alpha"] = "Transparência"
@@ -94,6 +97,14 @@ local L = WeakAuras.L
 	L["Anchor Point"] = "Ponto da âncora"
 	L["Anchored To"] = "Ancorado a"
 	L["And "] = "E"
+	--[[Translation missing --]]
+	L["and aligned left"] = "and aligned left"
+	--[[Translation missing --]]
+	L["and aligned right"] = "and aligned right"
+	--[[Translation missing --]]
+	L["and rotated left"] = "and rotated left"
+	--[[Translation missing --]]
+	L["and rotated right"] = "and rotated right"
 	L["and Trigger %s"] = "e gatilho %s"
 	L["Angle"] = "Ângulo"
 	L["Animate"] = "Animar"
@@ -134,7 +145,8 @@ WeakAuras → Opções → Opções ]=]
 	L["Auto-Clone (Show All Matches)"] = "Auto-Clone (Show All Matches)"
 	--[[Translation missing --]]
 	L["Auto-cloning enabled"] = "Auto-cloning enabled"
-	L["Automatic"] = "Automático"
+	--[[Translation missing --]]
+	L["Automatic"] = "Automatic"
 	L["Automatic Icon"] = "Ícone automático"
 	--[[Translation missing --]]
 	L["Backdrop Color"] = "Backdrop Color"
@@ -188,9 +200,9 @@ WeakAuras → Opções → Opções ]=]
 	L["Bracket Matching"] = "Bracket Matching"
 	L["Button Glow"] = "Iluminar botão"
 	--[[Translation missing --]]
-	L["Can be a name or a UID (e.g., party1). A name only works on friendly players in your group."] = "Can be a name or a UID (e.g., party1). A name only works on friendly players in your group."
-	--[[Translation missing --]]
 	L["Can be a Name or a Unit ID (e.g. party1). A name only works on friendly players in your group."] = "Can be a Name or a Unit ID (e.g. party1). A name only works on friendly players in your group."
+	--[[Translation missing --]]
+	L["Can be a UID (e.g., party1)."] = "Can be a UID (e.g., party1)."
 	L["Cancel"] = "Cancelar"
 	--[[Translation missing --]]
 	L["Center"] = "Center"
@@ -203,6 +215,8 @@ WeakAuras → Opções → Opções ]=]
 	L["Choose whether the displayed icon is automatic or defined manually"] = "Escolher se o ícone mostrado é automático ou definido manualmente"
 	--[[Translation missing --]]
 	L["Clip Overlays"] = "Clip Overlays"
+	--[[Translation missing --]]
+	L["Clipped by Progress"] = "Clipped by Progress"
 	--[[Translation missing --]]
 	L["Clone option enabled dialog"] = "Clone option enabled dialog"
 	L["Close"] = "Fechar"
@@ -232,7 +246,7 @@ WeakAuras → Opções → Opções ]=]
 	L["Condition %i"] = "Condition %i"
 	L["Conditions"] = "Condições"
 	--[[Translation missing --]]
-	L["Configure what options appear on this pannel."] = "Configure what options appear on this pannel."
+	L["Configure what options appear on this panel."] = "Configure what options appear on this panel."
 	L["Constant Factor"] = "Fator constante"
 	--[[Translation missing --]]
 	L["Control-click to select multiple displays"] = "Control-click to select multiple displays"
@@ -246,7 +260,8 @@ WeakAuras → Opções → Opções ]=]
 	L["Cooldown Settings"] = "Cooldown Settings"
 	--[[Translation missing --]]
 	L["Cooldown Swipe"] = "Cooldown Swipe"
-	L["Copy"] = "Copiar"
+	--[[Translation missing --]]
+	L["Copy"] = "Copy"
 	L["Copy settings..."] = "Copiar configurações"
 	--[[Translation missing --]]
 	L["Copy to all auras"] = "Copy to all auras"
@@ -286,7 +301,8 @@ WeakAuras → Opções → Opções ]=]
 	L["Custom Variables"] = "Custom Variables"
 	L["Debuff Type"] = "Tipo de penalidade"
 	L["Default"] = "Padrão"
-	L["Default Color"] = "Cor Padrão"
+	--[[Translation missing --]]
+	L["Default Color"] = "Default Color"
 	L["Delete"] = "Apagar"
 	L["Delete all"] = "Apagar tudo"
 	--[[Translation missing --]]
@@ -405,7 +421,8 @@ WeakAuras → Opções → Opções ]=]
 	L["Foreground Texture"] = "Textura do primeiro plano"
 	L["Frame"] = "Quadro"
 	L["Frame Strata"] = "Camada do quadro"
-	L["Frequency"] = "Frequência"
+	--[[Translation missing --]]
+	L["Frequency"] = "Frequency"
 	--[[Translation missing --]]
 	L["From Template"] = "From Template"
 	--[[Translation missing --]]
@@ -571,6 +588,8 @@ WeakAuras → Opções → Opções ]=]
 	L["Min"] = "Min"
 	L["Mirror"] = "Espelho"
 	L["Model"] = "Modelo"
+	--[[Translation missing --]]
+	L["Model %s"] = "Model %s"
 	--[[Translation missing --]]
 	L["Model Settings"] = "Model Settings"
 	--[[Translation missing --]]
@@ -748,10 +767,6 @@ WeakAuras → Opções → Opções ]=]
 	L["Rotate In"] = "Girar para dentro"
 	L["Rotate Out"] = "Girar para fora"
 	L["Rotate Text"] = "Girar o texto"
-	--[[Translation missing --]]
-	L["rotated left"] = "rotated left"
-	--[[Translation missing --]]
-	L["rotated right"] = "rotated right"
 	L["Rotation"] = "Rotação"
 	--[[Translation missing --]]
 	L["Rotation Mode"] = "Rotation Mode"
@@ -808,6 +823,8 @@ WeakAuras → Opções → Opções ]=]
 	--[[Translation missing --]]
 	L["Show Matches for Units"] = "Show Matches for Units"
 	--[[Translation missing --]]
+	L["Show Model"] = "Show Model"
+	--[[Translation missing --]]
 	L["Show model of unit "] = "Show model of unit "
 	--[[Translation missing --]]
 	L["Show On"] = "Show On"
@@ -821,6 +838,8 @@ WeakAuras → Opções → Opções ]=]
 	--[[Translation missing --]]
 	L["Shows a border"] = "Shows a border"
 	L["Shows a custom texture"] = "Mostrar uma textura personalizada"
+	--[[Translation missing --]]
+	L["Shows a model"] = "Shows a model"
 	L["Shows a progress bar with name, timer, and icon"] = "Mostrar uma barra de progresso com nome, temporizador e ícone"
 	L["Shows a spell icon with an optional cooldown overlay"] = "Mostrar um ícone de feitiço com o opcional do tempo de recarga sobreposto"
 	L["Shows a texture that changes based on duration"] = "Mostrar uma textura que muda com base na duração"
@@ -890,6 +909,8 @@ WeakAuras → Opções → Opções ]=]
 	L["Stop ignoring Updates"] = "Stop ignoring Updates"
 	--[[Translation missing --]]
 	L["Stop Sound"] = "Stop Sound"
+	--[[Translation missing --]]
+	L["Sub Elements"] = "Sub Elements"
 	--[[Translation missing --]]
 	L["Sub Option %i"] = "Sub Option %i"
 	L["Temporary Group"] = "Grupo temporário"

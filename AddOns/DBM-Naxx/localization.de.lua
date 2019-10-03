@@ -176,17 +176,6 @@ L:SetGeneralLocalization({
 	name = "Grobbulus"
 })
 
-L:SetOptionLocalization({
-	SpecialWarningInjection		= "Spezialwarnung, wenn du von $spell:28169 betroffen bist"
-})
-
-L:SetWarningLocalization({
-	SpecialWarningInjection	= "Mutagene Injektion auf dir"
-})
-
-L:SetTimerLocalization({
-})
-
 -------------
 --  Gluth  --
 -------------
@@ -361,7 +350,7 @@ L:SetWarningLocalization({
 L:SetTimerLocalization({
 	TimerAir		= "Nächste Luftphase",
 	TimerLanding	= "Nächste Bodenphase",
-	TimerIceBlast	= "Frostatem"   
+	TimerIceBlast	= "Frostatem"
 })
 
 ------------------
@@ -377,8 +366,7 @@ L:SetGeneralLocalization({
 L:SetOptionLocalization({
 	TimerPhase2			= "Zeige Zeit bis Phase 2",
 	specwarnP2Soon		= "Spezialwarnung 10 Sekunden bevor Kel'Thuzad angreift",
-	warnAddsSoon		= "Zeige Vorwarnung für Wächter von Eiskrone",
-	ShowRange			= "Zeige Abstandsfenster, wenn Phase 2 startet"
+	warnAddsSoon		= "Zeige Vorwarnung für Wächter von Eiskrone"
 })
 
 L:SetMiscLocalization({

@@ -1,3 +1,6 @@
+﻿-- Mini Dragon(projecteurs AT gmail.com) Brilla@金色平原
+-- Last update: 2019/08/22
+
 if GetLocale() ~= "zhCN" then return end
 local L
 
@@ -20,7 +23,7 @@ L:SetGeneralLocalization{
 }
 L:SetMiscLocalization{
 	Yauj = "亚尔基公主",
-	Vem = "維姆",
+	Vem = "维姆",
 	Kri = "克里勋爵"
 }
 
@@ -48,7 +51,7 @@ L:SetGeneralLocalization{
 L = DBM:GetModLocalization("Viscidus")
 
 L:SetGeneralLocalization{
-	name = "維希度斯"
+	name = "维希度斯"
 }
 L:SetWarningLocalization{
 	WarnFreeze	= "冰冻:%d/3",
@@ -64,7 +67,7 @@ L:SetMiscLocalization{
 	Frozen	= "变成冰冻的固体!",
 	Phase4 	= "开始爆裂!",
 	Phase5 	= "看來准备好毁灭了!",
-	Phase6 	= "Explodes."
+	Phase6 	= "爆炸."
 }
 -------------
 -- Huhuran --
@@ -83,8 +86,8 @@ L:SetGeneralLocalization{
 	name = "双子皇帝"
 }
 L:SetMiscLocalization{
-	Veklor = "維克洛尔大帝",
-	Veknil = "維克尼拉斯大帝"
+	Veklor = "维克洛尔大帝",
+	Veknil = "维克尼拉斯大帝"
 }
 
 ------------
@@ -97,8 +100,7 @@ L:SetGeneralLocalization{
 }
 L:SetWarningLocalization{
 	WarnEyeTentacle			= "眼球触须",
-	WarnWeakened			= "克苏恩变得虛弱了",
-	SpecWarnWeakened		= "克苏恩变得虛弱了!"
+	SpecWarnWeakened		= "克苏恩变得虚弱了!"
 }
 L:SetTimerLocalization{
 	TimerEyeTentacle		= "下一次眼球触须",
@@ -106,10 +108,10 @@ L:SetTimerLocalization{
 }
 L:SetOptionLocalization{
 	WarnEyeTentacle			= "为眼球触须显示警告",
-	WarnWeakened			= "當首领虛弱時显示警告",
-	SpecWarnWeakened		= "當首领虛弱時显示特別警告",
+	WarnWeakened			= "当首领虚弱時显示警告",
+	SpecWarnWeakened		= "当首领虚弱時显示特別警告",
 	TimerEyeTentacle		= "为下一次眼球触须显示计时器",
-	TimerWeakened			= "为首领虛弱時间显示计时器",
+	TimerWeakened			= "为首领虚弱時间显示计时器",
 	RangeFrame				= "显示距离框架(10码)"
 }
 L:SetMiscLocalization{

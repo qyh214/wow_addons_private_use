@@ -1,15 +1,17 @@
-if GetLocale() ~= "koKR" then return end
+﻿if GetLocale() ~= "koKR" then
+	return
+end
 local L
 
 ---------------
 -- Immerseus --
 ---------------
-L= DBM:GetModLocalization(852)
+L = DBM:GetModLocalization(852)
 
 ---------------------------
 -- The Fallen Protectors --
 ---------------------------
-L= DBM:GetModLocalization(849)
+L = DBM:GetModLocalization(849)
 
 L:SetWarningLocalization({
 	specWarnCalamity	= "%s",
@@ -19,16 +21,16 @@ L:SetWarningLocalization({
 ---------------------------
 -- Norushen --
 ---------------------------
-L= DBM:GetModLocalization(866)
+L = DBM:GetModLocalization(866)
 
 L:SetMiscLocalization({
-	wasteOfTime			= "그래, 좋다. 너희 타락을 가두어 둘 공간을 만들겠다."
+	wasteOfTime	= "그래, 좋다. 너희 타락을 가두어 둘 공간을 만들겠다."
 })
 
 ------------------
 -- Sha of Pride --
 ------------------
-L= DBM:GetModLocalization(867)
+L = DBM:GetModLocalization(867)
 
 L:SetOptionLocalization({
 	SetIconOnFragment	= "타락한 조각 에게 전술 목표 아이콘 설정"
@@ -37,7 +39,7 @@ L:SetOptionLocalization({
 --------------
 -- Galakras --
 --------------
-L= DBM:GetModLocalization(868)
+L = DBM:GetModLocalization(868)
 
 L:SetWarningLocalization({
 	warnTowerOpen	= "탑문 열림",
@@ -71,24 +73,24 @@ L:SetMiscLocalization({
 --------------------
 --Iron Juggernaut --
 --------------------
-L= DBM:GetModLocalization(864)
+L = DBM:GetModLocalization(864)
 
 --------------------------
 -- Kor'kron Dark Shaman --
 --------------------------
-L= DBM:GetModLocalization(856)
+L = DBM:GetModLocalization(856)
 
 L:SetMiscLocalization({
-	PrisonYell		= "%s의 강철 감옥 %d초 남음!"
+	PrisonYell	= "%s의 강철 감옥 %d초 남음!"
 })
 
 ---------------------
 -- General Nazgrim --
 ---------------------
-L= DBM:GetModLocalization(850)
+L = DBM:GetModLocalization(850)
 
 L:SetWarningLocalization({
-	warnDefensiveStanceSoon		= "%d초 후 방어 태세"
+	warnDefensiveStanceSoon	= "%d초 후 방어 태세"
 })
 
 L:SetMiscLocalization({
@@ -104,12 +106,12 @@ L:SetMiscLocalization({
 -----------------
 -- Malkorok -----
 -----------------
-L= DBM:GetModLocalization(846)
+L = DBM:GetModLocalization(846)
 
 ------------------------
 -- Spoils of Pandaria --
 ------------------------
-L= DBM:GetModLocalization(870)
+L = DBM:GetModLocalization(870)
 
 L:SetMiscLocalization({
 	wasteOfTime	= "녹음되고 있는 건가? 응? 좋아. 고블린 티탄 제어 모듈 시동 중. 물러서라고.",
@@ -120,7 +122,7 @@ L:SetMiscLocalization({
 ---------------------------
 -- Thok the Bloodthirsty --
 ---------------------------
-L= DBM:GetModLocalization(851)
+L = DBM:GetModLocalization(851)
 
 L:SetOptionLocalization({
 	RangeFrame	= "거리 창 보기(10m) (피의 광란이 가능한 경우에만 보임)"
@@ -129,7 +131,7 @@ L:SetOptionLocalization({
 ----------------------------
 -- Siegecrafter Blackfuse --
 ----------------------------
-L= DBM:GetModLocalization(865)
+L = DBM:GetModLocalization(865)
 
 L:SetOptionLocalization({
 	InfoFrame	= "$journal:8202 정보를 정보 창으로 보기"
@@ -143,45 +145,45 @@ L:SetMiscLocalization({
 ----------------------------
 -- Paragons of the Klaxxi --
 ----------------------------
-L= DBM:GetModLocalization(853)
+L = DBM:GetModLocalization(853)
 
 L:SetWarningLocalization({
-	specWarnActivatedVulnerable		= "%s에게 취약함 - 주의!",
-	specWarnMoreParasites			= "기생충이 더 필요합니다 - 막지마세요!"
+	specWarnActivatedVulnerable	= "%s에게 취약함 - 주의!",
+	specWarnMoreParasites		= "기생충이 더 필요합니다 - 막지마세요!"
 })
 
 L:SetOptionLocalization({
-	specWarnActivatedVulnerable		= "활성화된 용장중 주의해야 할 용장이 있을 경우 특수 경고 보기",
-	specWarnMoreParasites			= "기생충이 더 필요할 때 특수 경고 보기"
+	specWarnActivatedVulnerable	= "활성화된 용장중 주의해야 할 용장이 있을 경우 특수 경고 보기",
+	specWarnMoreParasites		= "기생충이 더 필요할 때 특수 경고 보기"
 })
 
 L:SetMiscLocalization({
 	--thanks to blizz, the only accurate way for this to work, is to translate 5 emotes in all languages
-	one					= "가 1",
-	two					= "가 2",
-	three				= "가 3",
-	four				= "가 4",
-	five				= "가 5",
-	hisekFlavor			= "누가 이제 조용한지 봐라.",
-	KilrukFlavor		= "무리의 도태가 일어난 또 다른 날이 되었군.",
-	XarilFlavor			= "너의 미래에 검은 하늘만 보일뿐.",
-	KaztikFlavor		= "단지 쿤총 특식이 되어버렸군.",
-	KaztikFlavor2		= "사마귀 한마리 처치. 199마리 남았음.",
-	KorvenFlavor		= "고대 제국의 멸망.",
-	KorvenFlavor2		= "구르다니 서판을 가져온 후 그들의 숨통을 끊어!",
-	IyyokukFlavor		= "기회를 포착하고, 활용해라!",
-	KarozFlavor			= "힘 안 들이고 잡아 없애면서도 명성이 높아지는데 뭘 그러나.",
-	SkeerFlavor			= "피투성이의 즐거움!",
-	RikkalFlavor		= "표본 요청 달성됨."
+	one				= "가 1",
+	two				= "가 2",
+	three			= "가 3",
+	four			= "가 4",
+	five			= "가 5",
+	hisekFlavor		= "누가 이제 조용한지 봐라.",
+	KilrukFlavor	= "무리의 도태가 일어난 또 다른 날이 되었군.",
+	XarilFlavor		= "너의 미래에 검은 하늘만 보일뿐.",
+	KaztikFlavor	= "단지 쿤총 특식이 되어버렸군.",
+	KaztikFlavor2	= "사마귀 한마리 처치. 199마리 남았음.",
+	KorvenFlavor	= "고대 제국의 멸망.",
+	KorvenFlavor2	= "구르다니 서판을 가져온 후 그들의 숨통을 끊어!",
+	IyyokukFlavor	= "기회를 포착하고, 활용해라!",
+	KarozFlavor		= "힘 안 들이고 잡아 없애면서도 명성이 높아지는데 뭘 그러나.",
+	SkeerFlavor		= "피투성이의 즐거움!",
+	RikkalFlavor	= "표본 요청 달성됨."
 })
 
 ------------------------
 -- Garrosh Hellscream --
 ------------------------
-L= DBM:GetModLocalization(869)
+L = DBM:GetModLocalization(869)
 
 L:SetTimerLocalization({
-	timerRoleplay		= "이벤트 진행"
+	timerRoleplay	= "이벤트 진행"
 })
 
 L:SetOptionLocalization({
@@ -192,10 +194,10 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	wasteOfTime			= "아직 늦지 않았다, 가로쉬. 대족장이라는 짐을 내려놓거라. 지금, 여기서 끝내자. 피를 흘릴 필요는 없다.",
-	NoReduce			= "피해 감소 없음",
-	MaliceFadeYell		= "%s의 악의 %d초 남음!",
-	phase3End			= "네가 이겼다고 생각하나?"
+	wasteOfTime		= "아직 늦지 않았다, 가로쉬. 대족장이라는 짐을 내려놓거라. 지금, 여기서 끝내자. 피를 흘릴 필요는 없다.",
+	NoReduce		= "피해 감소 없음",
+	MaliceFadeYell	= "%s의 악의 %d초 남음!",
+	phase3End		= "네가 이겼다고 생각하나?"
 })
 
 -------------
@@ -204,5 +206,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("SoOTrash")
 
 L:SetGeneralLocalization({
-	name =	"오그리마 공성전: 일반구간"
+	name	= "오그리마 공성전: 일반구간"
 })

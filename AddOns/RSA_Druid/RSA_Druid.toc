@@ -1,4 +1,4 @@
-## Interface: 80200
+## Interface: 80205
 ## Title: RSA [|c52FF7D0ADruid|r]
 ## Notes: RSA Druid Module. This is needed to announce Druid Spells.
 ## Author: Raeli

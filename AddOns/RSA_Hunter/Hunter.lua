@@ -48,14 +48,14 @@ function RSA_Hunter:OnEnable()
 			[264263] = Config_Tranq, -- Bat Sonic Blast
 			[264264] = Config_Tranq, -- Nether Ray Nether Shock
 			[264028] = Config_Tranq, -- Crane Chi-Ji's Tranquility
-			[264266] = Config_Tranq, -- Stag Nature's Grace 
+			[264266] = Config_Tranq, -- Stag Nature's Grace
 			[264265] = Config_Tranq, -- Spirit Beast Spirit Shock
 			[264055] = Config_Tranq, -- Moth Serenity Dust
 			[264056] = Config_Tranq, -- Sporebat Spore Cloud
 			[264262] = Config_Tranq, -- Water Strider Soothing Water
 		},
 		SPELL_AURA_APPLIED = {
-			[90355] = Config_Lust, -- Core Hound Ancient Hysteria 
+			[90355] = Config_Lust, -- Core Hound Ancient Hysteria
 			[160452] = Config_Lust, -- Nether Ray Netherwinds
 			[3355] = { -- FREEZING TRAP
 				profile = 'FreezingTrap',
@@ -80,7 +80,7 @@ function RSA_Hunter:OnEnable()
 			},
 		},
 		SPELL_AURA_REMOVED = {
-			[90355] = Config_Lust_End, -- Core Hound Ancient Hysteria 
+			[90355] = Config_Lust_End, -- Core Hound Ancient Hysteria
 			[160452] = Config_Lust_End, -- Nether Ray Netherwinds
 			[5116] = { -- CONCUSSIVE SHOT
 				profile = 'ConcussiveShot',

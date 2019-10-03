@@ -39,7 +39,8 @@ local L = WeakAuras.L
 	L["%s, Offset: %0.2f;%0.2f"] = "%s, Offset: %0.2f;%0.2f"
 	--[[Translation missing --]]
 	L["%s, offset: %0.2f;%0.2f"] = "%s, offset: %0.2f;%0.2f"
-	L["|c%02x%02x%02x%02xColor|r"] = "|c%02x%02x%02x%02xCouleur|r"
+	--[[Translation missing --]]
+	L["|c%02x%02x%02x%02xColor|r"] = "|c%02x%02x%02x%02xColor|r"
 	--[[Translation missing --]]
 	L["|cFFA9A9A9--Please Create an Entry--"] = "|cFFA9A9A9--Please Create an Entry--"
 	--[[Translation missing --]]
@@ -53,9 +54,7 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["|cFFffcc00Extra Options:|r"] = "|cFFffcc00Extra Options:|r"
 	--[[Translation missing --]]
-	L["|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r %s"] = "|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r %s"
-	--[[Translation missing --]]
-	L["|cFFffcc00Font:|r %s %s"] = "|cFFffcc00Font:|r %s %s"
+	L["|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r%s%s"] = "|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r%s%s"
 	L["1 Match"] = "1 Correspondance"
 	L["A 20x20 pixels icon"] = "Une icône de 20x20 pixels."
 	L["A 32x32 pixels icon"] = "Une icône de 32x32 pixels."
@@ -86,6 +85,8 @@ local L = WeakAuras.L
 	L["Addons"] = "Addons"
 	L["Advanced"] = "Avancé"
 	L["Align"] = "Aligner"
+	--[[Translation missing --]]
+	L["Alignment"] = "Alignment"
 	L["All of"] = "Tous vos"
 	L["Allow Full Rotation"] = "Permettre une rotation complète"
 	L["Alpha"] = "Alpha"
@@ -93,6 +94,14 @@ local L = WeakAuras.L
 	L["Anchor Point"] = "Point d'ancrage"
 	L["Anchored To"] = "Ancré à"
 	L["And "] = "Et"
+	--[[Translation missing --]]
+	L["and aligned left"] = "and aligned left"
+	--[[Translation missing --]]
+	L["and aligned right"] = "and aligned right"
+	--[[Translation missing --]]
+	L["and rotated left"] = "and rotated left"
+	--[[Translation missing --]]
+	L["and rotated right"] = "and rotated right"
 	L["and Trigger %s"] = "et Déclencheur %s"
 	L["Angle"] = "Angle"
 	L["Animate"] = "Animer"
@@ -165,8 +174,9 @@ Si la durée de l'animation est définie à |cFF00CC0010%|r, et le déclencheur 
 	L["Bottom Right"] = "Bottom Right"
 	L["Bracket Matching"] = "Crochet Correspondant"
 	L["Button Glow"] = "Bouton en surbrillance"
-	L["Can be a name or a UID (e.g., party1). A name only works on friendly players in your group."] = "Peut être un nom ou un UID (ex: party1). Un nom ne fonctionne que sur un joueur allié dans votre groupe."
 	L["Can be a Name or a Unit ID (e.g. party1). A name only works on friendly players in your group."] = "Peut être un nom ou un identifiant d'unité (par.ex..groupe1).Un nom ne fonctionne que sur les joueurs amicaux de votre groupe"
+	--[[Translation missing --]]
+	L["Can be a UID (e.g., party1)."] = "Can be a UID (e.g., party1)."
 	L["Cancel"] = "Annuler"
 	--[[Translation missing --]]
 	L["Center"] = "Center"
@@ -178,6 +188,8 @@ Si la durée de l'animation est définie à |cFF00CC0010%|r, et le déclencheur 
 	L["Choose Trigger"] = "Choisir un déclencheur"
 	L["Choose whether the displayed icon is automatic or defined manually"] = "Choisir si l'icône affichée est automatique ou définie manuellement"
 	L["Clip Overlays"] = "Superposition de l'attache "
+	--[[Translation missing --]]
+	L["Clipped by Progress"] = "Clipped by Progress"
 	L["Clone option enabled dialog"] = [=[
 Vous avez activé une option qui utilise l'|cFFFF0000Auto-clonage|r.
 
@@ -205,7 +217,8 @@ Souhaitez-vous que ce graphiques soit placé dans un nouveau |cFF22AA22Groupe Dy
 	L["Compress"] = "Compresser"
 	L["Condition %i"] = "Condition %i"
 	L["Conditions"] = "Conditions"
-	L["Configure what options appear on this pannel."] = "Configurez les options qui apparaissent sur ce panneau."
+	--[[Translation missing --]]
+	L["Configure what options appear on this panel."] = "Configure what options appear on this panel."
 	L["Constant Factor"] = "Facteur constant"
 	L["Control-click to select multiple displays"] = "Ctrl-clic pour sélectionner plusieurs affichages"
 	L["Controls the positioning and configuration of multiple displays at the same time"] = "Contrôle la position et la configuration de plusieurs graphiques en même temps"
@@ -471,6 +484,8 @@ Si cette case est cochée, ce séparateur inclura du texte. Sinon, ce sera juste
 	L["Min"] = "Min (minutes?)"
 	L["Mirror"] = "Miroir"
 	L["Model"] = "Modèle"
+	--[[Translation missing --]]
+	L["Model %s"] = "Model %s"
 	L["Model Settings"] = "Réglages du modèle"
 	--[[Translation missing --]]
 	L["Move Above Group"] = "Move Above Group"
@@ -591,10 +606,6 @@ Seule une unique valeur peut être choisie]=]
 	L["Rotate In"] = "Rotation entrante"
 	L["Rotate Out"] = "Rotation sortante"
 	L["Rotate Text"] = "Tourner le texte"
-	--[[Translation missing --]]
-	L["rotated left"] = "rotated left"
-	--[[Translation missing --]]
-	L["rotated right"] = "rotated right"
 	L["Rotation"] = "Rotation"
 	L["Rotation Mode"] = "Mode de rotation"
 	--[[Translation missing --]]
@@ -639,6 +650,8 @@ Seule une unique valeur peut être choisie]=]
 	L["Show Matches for"] = "Show Matches for"
 	--[[Translation missing --]]
 	L["Show Matches for Units"] = "Show Matches for Units"
+	--[[Translation missing --]]
+	L["Show Model"] = "Show Model"
 	L["Show model of unit "] = "Montrer le modèle de l'unité"
 	L["Show On"] = "Afficher Sur"
 	--[[Translation missing --]]
@@ -650,6 +663,8 @@ Seule une unique valeur peut être choisie]=]
 	--[[Translation missing --]]
 	L["Shows a border"] = "Shows a border"
 	L["Shows a custom texture"] = "Montre une texture personnalisée"
+	--[[Translation missing --]]
+	L["Shows a model"] = "Shows a model"
 	L["Shows a progress bar with name, timer, and icon"] = "Affiche une barre de progression avec nom, temps, icône"
 	L["Shows a spell icon with an optional cooldown overlay"] = "Affiche une icône de sort avec optionnellement la recharge sur-imprimée"
 	L["Shows a texture that changes based on duration"] = "Affiche une texture qui change selon la durée"
@@ -704,6 +719,8 @@ Seule une unique valeur peut être choisie]=]
 	L["Step Size"] = "Step Size"
 	L["Stop ignoring Updates"] = "Arrêtez d'ignorer les mises à jour"
 	L["Stop Sound"] = "Arrêter Son"
+	--[[Translation missing --]]
+	L["Sub Elements"] = "Sub Elements"
 	--[[Translation missing --]]
 	L["Sub Option %i"] = "Sub Option %i"
 	L["Temporary Group"] = "Groupe temporaire"

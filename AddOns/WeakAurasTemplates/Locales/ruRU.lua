@@ -41,7 +41,6 @@ local L = WeakAuras.L
 	L["Back"] = "Назад"
 	L["Basic Show On Cooldown"] = "Показать восстановление"
 	L["Bloodlust/Heroism"] = "Жажда крови / Героизм"
-	L["Buff"] = "(бафф)"
 	L["buff"] = "(бафф)"
 	L["Buffs"] = "Баффы"
 	L["Cancel"] = "Отмена"
@@ -55,10 +54,16 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Charge Tracking"] = "Charge Tracking"
 	L["cooldown"] = "(восстановление)"
+	--[[Translation missing --]]
+	L["Cooldown"] = "Cooldown"
 	L["Cooldown Tracking"] = "Отслеживание восстановления"
 	--[[Translation missing --]]
 	L["Create Auras"] = "Create Auras"
+	--[[Translation missing --]]
+	L["debuff"] = "debuff"
 	L["Debuffs"] = "Дебаффы"
+	--[[Translation missing --]]
+	L["debuiff"] = "debuiff"
 	L["Enchants"] = "Чары"
 	L["General"] = "Общие"
 	L["General Azerite Traits"] = "Общие азеритовые таланты"
@@ -139,9 +144,13 @@ local L = WeakAuras.L
 	L["Show Only if on Cooldown"] = "Показать восстановление"
 	--[[Translation missing --]]
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
+	--[[Translation missing --]]
+	L["slow debuff"] = "slow debuff"
 	L["Specific Azerite Traits"] = "Специальные азеритовые таланты"
 	--[[Translation missing --]]
 	L["Stance"] = "Stance"
+	--[[Translation missing --]]
+	L["stun debuff"] = "stun debuff"
 	--[[Translation missing --]]
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."
 	--[[Translation missing --]]

@@ -1,16 +1,27 @@
-lightweight tag f7a60ee9f2855e656146346c8f81d048fc40d34e 1.30
+lightweight tag 3c777808ddf4f3f0295f2cdf76919f6afcd12bfe 1.31
 Author:	Bernhard Saumweber <b.saumweber@gmail.com>
-Date:	Sun Sep 8 17:08:01 2019 +0200
+Date:	Tue Sep 17 20:39:44 2019 +0200
 
-commit f7a60ee9f2855e656146346c8f81d048fc40d34e
+commit 3c777808ddf4f3f0295f2cdf76919f6afcd12bfe
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Sun Sep 8 17:08:01 2019 +0200
+Date:   Tue Sep 17 20:39:44 2019 +0200
 
-    Set version to: 1.30
+    Fixes #24 by adding keywords rionormalprogress, rioheroicprogress, riomythicprogress, riomainprogress, rionormalkills, rioheroickills, riomythickills and rioraidbosscount
 
-commit baa71f2b4917bbdaa2a8136cdf11098a3d07d479
+commit b49ee919717b831f4843c2249f7ce3de06acae3a
+Author: romdeau23 <43295566+romdeau23@users.noreply.github.com>
+Date:   Mon Sep 16 23:40:00 2019 +0200
+
+    More filter expressions: myilvl and partyfit (#26)
+    
+    * Implement myilvl, rolefit and partyfit advanced expressions
+    * Apply suggestions from code review
+    Co-Authored-By: Bernhard Saumweber <b.saumweber@gmail.com>
+    * Remove rolefit, add translations
+
+commit c2c9e21c47b0d4598e04fcbd4c15ef1c13d2686a
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Sun Sep 8 17:06:14 2019 +0200
+Date:   Sun Sep 8 17:08:23 2019 +0200
 
-    Adds support for the Premade Regions addon: new keywords oce, usp, usm, usc, use, mex, bzl and region
+    Set version to next release version: 1.31
 

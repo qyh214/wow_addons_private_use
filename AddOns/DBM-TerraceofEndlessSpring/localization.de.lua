@@ -1,10 +1,12 @@
-if GetLocale() ~= "deDE" then return end
+﻿if GetLocale() ~= "deDE" then
+	return
+end
 local L
 
 ------------
 -- Protectors of the Endless --
 ------------
-L= DBM:GetModLocalization(683)
+L = DBM:GetModLocalization(683)
 
 L:SetWarningLocalization({
 	warnGroupOrder		= "Neue Gruppe für Verderbte Essenz: %s",
@@ -20,7 +22,7 @@ L:SetOptionLocalization({
 ------------
 -- Tsulong --
 ------------
-L= DBM:GetModLocalization(742)
+L = DBM:GetModLocalization(742)
 
 L:SetMiscLocalization{
 	Victory	= "Ich danke Euch, Fremdlinge. Ich wurde befreit."
@@ -29,20 +31,20 @@ L:SetMiscLocalization{
 -------------------------------
 -- Lei Shi --
 -------------------------------
-L= DBM:GetModLocalization(729)
+L = DBM:GetModLocalization(729)
 
 L:SetWarningLocalization({
-	warnHideOver			= "%s ist beendet"
+	warnHideOver	= "%s ist beendet"
 })
 
 L:SetTimerLocalization({
-	timerSpecialCD			= "Spezialfähigkeiten CD (%d)"
+	timerSpecialCD	= "Spezialfähigkeiten CD (%d)"
 })
 
 L:SetOptionLocalization({
-	warnHideOver			= "Zeige Warnung, wenn $spell:123244 beendet ist",
-	timerSpecialCD			= "Abklingzeit der Spezialfähigkeiten anzeigen",
-	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(zeigt jeden während $spell:123244, sonst nur die Tanks)"
+	warnHideOver	= "Zeige Warnung, wenn $spell:123244 beendet ist",
+	timerSpecialCD	= "Abklingzeit der Spezialfähigkeiten anzeigen",
+	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(zeigt jeden während $spell:123244, sonst nur die Tanks)"
 })
 
 L:SetMiscLocalization{
@@ -52,7 +54,7 @@ L:SetMiscLocalization{
 ----------------------
 -- Sha of Fear --
 ----------------------
-L= DBM:GetModLocalization(709)
+L = DBM:GetModLocalization(709)
 
 L:SetWarningLocalization({
 	MoveWarningForward			= "Lauf durch",
@@ -62,10 +64,10 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerSpecialAbilityCD		= "Nächste Spezialfähigkeit",
-	timerSpoHudCD				= "Angst/Fontäne CD", -- Furchterfülltes Kauern / Wasserfontäne
-	timerSpoStrCD				= "Fontäne/Stoß CD", -- Wasserfontäne / Unerbittlicher Stoß
-	timerHudStrCD				= "Angst/Stoß CD" -- Furchterfülltes Kauern / Stoß
+	timerSpecialAbilityCD	= "Nächste Spezialfähigkeit",
+	timerSpoHudCD			= "Angst/Fontäne CD", -- Furchterfülltes Kauern / Wasserfontäne
+	timerSpoStrCD			= "Fontäne/Stoß CD", -- Wasserfontäne / Unerbittlicher Stoß
+	timerHudStrCD			= "Angst/Stoß CD" -- Furchterfülltes Kauern / Stoß
 })
 
 L:SetOptionLocalization({

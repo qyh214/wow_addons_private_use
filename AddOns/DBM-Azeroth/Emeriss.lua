@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Emeriss", "DBM-Azeroth")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("2019041710011")
+mod:SetRevision("20190417010011")
 mod:SetCreatureID(121913)--121913 TW ID, 14889 classic ID
 --mod:SetModelID(17887)
 mod:SetZone()

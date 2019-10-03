@@ -1,10 +1,12 @@
-if GetLocale() ~= "koKR" then return end
+﻿if GetLocale() ~= "koKR" then
+	return
+end
 local L
 
 ------------
 -- The Stone Guard --
 ------------
-L= DBM:GetModLocalization(679)
+L = DBM:GetModLocalization(679)
 
 L:SetWarningLocalization({
 	SpecWarnOverloadSoon		= "곧 %s - 생존기 준비 또는 수호자 이동!",
@@ -22,11 +24,10 @@ L:SetMiscLocalization({
 	Overload	= "과부하되기 직전입니다!"
 })
 
-
 ------------
 -- Feng the Accursed --
 ------------
-L= DBM:GetModLocalization(689)
+L = DBM:GetModLocalization(689)
 
 L:SetWarningLocalization({
 	WarnPhase			= "%d 단계",
@@ -40,22 +41,20 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Fire		= "오 고귀한 자여! 나와 함께 발라내자! 뼈에서 살을!",
-	Arcane		= "오 세기의 현자여! 내게 비전의 지혜를 불어넣어라!",
-	Nature		= "오 위대한 영혼이여! 내게 대지의 힘을 부여하라!",
-	Shadow		= "과거의 위대한 영웅들이여! 너희의 방패를 빌려다오!"
+	Fire	= "오 고귀한 자여! 나와 함께 발라내자! 뼈에서 살을!",
+	Arcane	= "오 세기의 현자여! 내게 비전의 지혜를 불어넣어라!",
+	Nature	= "오 위대한 영혼이여! 내게 대지의 힘을 부여하라!",
+	Shadow	= "과거의 위대한 영웅들이여! 너희의 방패를 빌려다오!"
 })
-
 
 -------------------------------
 -- Gara'jal the Spiritbinder --
 -------------------------------
-L= DBM:GetModLocalization(682)
+L = DBM:GetModLocalization(682)
 
 L:SetMiscLocalization({
 	Pull		= "죽을 시간이다!"
 })
-
 
 ----------------------
 -- The Spirit Kings --
@@ -63,7 +62,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(687)
 
 L:SetWarningLocalization({
-	DarknessSoon		= "%d초 후 암흑의 방패"
+	DarknessSoon	= "%d초 후 암흑의 방패"
 })
 
 L:SetTimerLocalization({
@@ -72,10 +71,9 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	DarknessSoon		= "$spell:117697 이전에 초읽기 알림 보기(5초 전부터)",
-	timerUSRevive		= "$spell:117506 재형성 바 보기"
+	DarknessSoon	= "$spell:117697 이전에 초읽기 알림 보기(5초 전부터)",
+	timerUSRevive	= "$spell:117506 재형성 바 보기"
 })
-
 
 ------------
 -- Elegon --
@@ -83,23 +81,22 @@ L:SetOptionLocalization({
 L = DBM:GetModLocalization(726)
 
 L:SetWarningLocalization({
-	specWarnDespawnFloor		= "6초 후 가운데 바닥 사라짐 - 낙사 주의!"
+	specWarnDespawnFloor	= "6초 후 가운데 바닥 사라짐 - 낙사 주의!"
 })
 
 L:SetTimerLocalization({
-	timerDespawnFloor			= "가운데 바닥 사라짐"
+	timerDespawnFloor	= "가운데 바닥 사라짐"
 })
 
 L:SetOptionLocalization({
-	specWarnDespawnFloor		= "가운데 바닥이 사라짐 이전에 특수 경고 보기",
-	timerDespawnFloor			= "가운데 바닥이 사라짐 바 보기"
+	specWarnDespawnFloor	= "가운데 바닥이 사라짐 이전에 특수 경고 보기",
+	timerDespawnFloor		= "가운데 바닥이 사라짐 바 보기"
 })
-
 
 ------------
 -- Will of the Emperor --
 ------------
-L= DBM:GetModLocalization(677)
+L = DBM:GetModLocalization(677)
 
 L:SetOptionLocalization({
 	InfoFrame		= "$spell:116525 대상을 정보 창으로 보기",

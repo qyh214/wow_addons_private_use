@@ -1,19 +1,19 @@
-## Interface: 80200
+## Interface: 80205
 
 ## X-Curse-Project-ID: 7474
 ## X-WoWI-ID: 5342
 
 ## Title: WIM
-## Author: Pazza (Bronzebeard), (Updated by Sylvanaar)
-## Version: 3.7.33
+## Author: Pazza (Bronzebeard), (Updated by Sylvanaar/MysticalOS/Humfras)
+## Version: 3.8.0
 ## Notes: Give whispers an instant messenger feel.
 ## eMail: johnlangone@gmail.com
 ## X-Email: johnlangone@gmail.com
 ## X-Website: http://www.wimaddon.com/
 ## X-Category: Chat
 ## DefaultState: Enabled
-## OptionalDeps: LibStub, CallbackHandler-1.0, ChatThrottleLib, LibSharedMedia-3.0, LibWho-2.0, LibChatHandler-1.0, LibChatAnims
-## X-Embeds: LibStub, CallbackHandler-1.0, ChatThrottleLib, LibSharedMedia-3.0, LibWho-2.0, LibChatHandler-1.0, LibChatAnims
+## OptionalDeps: LibStub, CallbackHandler-1.0, ChatThrottleLib, LibSharedMedia-3.0, LibChatHandler-1.0, LibChatAnims
+## X-Embeds: LibStub, CallbackHandler-1.0, ChatThrottleLib, LibSharedMedia-3.0, LibChatHandler-1.0, LibChatAnims
 ## SavedVariables: WIM3_Data, WIM3_Cache, WIM3_Filters, WIM3_History, WIM3_ChatFilters, WIM3_Alias
 
 Libs\Includes.xml

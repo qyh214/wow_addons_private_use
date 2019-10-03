@@ -21,24 +21,24 @@ function RSA_Racials:OnEnable()
 		comm = true, -- If we only want one person in the group to announce this.
 		sourceIsMe = true, -- For personal utility spells like Rocket Boots, Trinkets etc.
 		replacements = { SOURCE = 1 }
-	}   
+	}
 	]]--
 	local Config_ArcaneTorrent = { -- Blood Elf Arcane Torrent
 		profile = 'ArcaneTorrent',
 		section = "Cast",
-	}  
+	}
 	local Config_GOTN = { -- Draenei Gift of the Naaru
 		profile = 'GOTN',
 		section = "Cast",
 		replacements = { TARGET = 1 },
-	}   
+	}
 	local Config_BloodFury = { -- Orc Blood Fury Start
 		profile = 'BloodFury',
 	}
 	local Config_BloodFury_End = { -- Orc Blood Fury End
 		profile = 'BloodFury',
 		section = "End",
-	} 
+	}
 	local Config_AncestralCall = { -- Mag'har Orc Ancestral Call Start
 		profile = 'AncestralCall',
 		linkID = 274738,
@@ -47,7 +47,7 @@ function RSA_Racials:OnEnable()
 		profile = 'AncestralCall',
 		linkID = 274738,
 		section = "End",
-	} 
+	}
 	MonitorConfig_Racials = {
 		player_profile = RSA.db.profile.Racials,
 		SPELL_AURA_APPLIED = {
@@ -57,7 +57,7 @@ function RSA_Racials:OnEnable()
 			[274741] = Config_AncestralCall, -- Mastery
 			[274742] = Config_AncestralCall, -- Versatility
 			[274740] = Config_AncestralCall, -- Haste
-			[274739] = Config_AncestralCall, -- Crit			
+			[274739] = Config_AncestralCall, -- Crit
 			[20594] = { -- Dwarf
 				profile = 'Stoneform',
 			},
@@ -85,7 +85,7 @@ function RSA_Racials:OnEnable()
 			[274741] = Config_AncestralCall_End, -- Mastery
 			[274742] = Config_AncestralCall_End, -- Versatility
 			[274740] = Config_AncestralCall_End, -- Haste
-			[274739] = Config_AncestralCall_End, -- Crit   
+			[274739] = Config_AncestralCall_End, -- Crit
 			[20594] = { -- Dwarf
 				profile = 'Stoneform',
 				section = "End",
@@ -182,6 +182,6 @@ function RSA_Racials:OnEnable()
 end
 
 function RSA_Racials:OnDisable()
-	RSA.db.profile.Modules.Racials = false 
+	RSA.db.profile.Modules.Racials = false
 	RSA_Racials.CombatLogMonitor:SetScript("OnEvent", nil)
 end

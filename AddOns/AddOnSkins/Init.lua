@@ -5,6 +5,9 @@ Engine[1] = AddOn
 Engine[2] = LibStub("AceLocale-3.0"):GetLocale('AddOnSkins', false)
 
 _G.AddOnSkins = Engine
+_G.AddOnSkins.Classic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+_G.AddOnSkins.Retail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+
 AddOnSkinsDS = {}
 
 -- Cache global variables
@@ -40,6 +43,13 @@ AddOn.TexCoords = {.08, .92, .08, .92}
 AddOn.UIScale = UIParent:GetScale()
 AddOn.Faction = UnitFactionGroup("player")
 
+AddOn.AC = LibStub('AceConfig-3.0')
+AddOn.GUI = LibStub('AceGUI-3.0')
+AddOn.ACR = LibStub('AceConfigRegistry-3.0')
+AddOn.ACD = LibStub('AceConfigDialog-3.0')
+AddOn.ACL = Engine[2]
+AddOn.ADB = LibStub('AceDB-3.0')
+
 AddOn.ScreenWidth, AddOn.ScreenHeight = GetPhysicalScreenSize()
 
 local Color = _G.RAID_CLASS_COLORS[AddOn.MyClass]
@@ -63,6 +73,13 @@ for i = 1, GetNumAddOns() do
 end
 
 _G.TEXTURE_ITEM_QUEST_BANG = [[Interface\AddOns\AddOnSkins\Media\Textures\UI-Icon-QuestBang]]
+
+AddOn.Media = {
+	Textures = {
+		Plus = [[Interface\AddOns\AddOnSkins\Media\Textures\Plus]],
+		Minus = [[Interface\AddOns\AddOnSkins\Media\Textures\Minus]],
+	}
+}
 
 AddOn.Hider = CreateFrame('Frame', nil, UIParent)
 AddOn.Hider:Hide()

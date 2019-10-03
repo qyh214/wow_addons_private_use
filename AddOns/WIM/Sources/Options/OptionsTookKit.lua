@@ -152,17 +152,23 @@ local function CreateSlider(parent, title, minText, maxText, min, max, step, dbT
     s.valText:SetText("");
     s:SetValueStep(step);
     s:SetScript("OnValueChanged", function(self)
-	    	local newValue = self:GetValue()
-            self.valText:SetText(newValue);
-            dbTree[varName] = newValue;
-            if(type(valChanged) == "function") then
-                valChanged(self, newValue);
-            end
-        end);
+        if not self._onsetting then   -- is single threaded 
+            self._onsetting = true
+            self:SetValue(self:GetValue())
+            value = self:GetValue()     -- cant use original 'value' parameter
+            self._onsetting = false
+        else return end
+        local newValue = self:GetValue()
+        self.valText:SetText(newValue);
+        dbTree[varName] = newValue;
+        if(type(valChanged) == "function") then
+            valChanged(self, newValue);
+        end
+    end);
     s:SetScript("OnShow", function(self)
             self:SetValue(tonumber(dbTree[varName]));
         end);
-        
+
     SetNextAnchor(s);
     return s;
 end
@@ -345,13 +351,13 @@ local function CreateSection(parent, title, desc)
     frame:Show();
     frame:SetFullSize();
     if(title) then
-        frame.title = frame:CreateText(nil, 18);
+        frame.title = frame:CreateText(nil, 16);
         frame.title:SetText(title);
         frame.title:SetTextColor(unpack(TitleColor));
         frame.title:SetFullSize();
         frame.title:SetJustifyH("LEFT");
         frame.title:SetPoint("TOPLEFT");
-        frame.nextOffSetY = -4;
+        frame.nextOffSetY = -6;
     end
     if(desc) then
         frame.description = frame:CreateText();

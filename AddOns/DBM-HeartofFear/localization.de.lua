@@ -1,10 +1,12 @@
-if GetLocale() ~= "deDE" then return end
+﻿if GetLocale() ~= "deDE" then
+	return
+end
 local L
 
 ------------
 -- Imperial Vizier Zor'lok --
 ------------
-L= DBM:GetModLocalization(745)
+L = DBM:GetModLocalization(745)
 
 L:SetWarningLocalization({
 	warnEcho			= "Echo erschienen",
@@ -21,19 +23,19 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Platform			= "fliegt zu einer seiner Plattformen!",
-	Defeat				= "Wir werden der Verzweiflung der dunklen Leere nicht nachgeben. Wenn es Ihr Wille ist, dass wir dahinscheiden, dann soll es so sein."
+	Platform	= "fliegt zu einer seiner Plattformen!",
+	Defeat		= "Wir werden der Verzweiflung der dunklen Leere nicht nachgeben. Wenn es Ihr Wille ist, dass wir dahinscheiden, dann soll es so sein."
 })
 
 ------------
 -- Blade Lord Ta'yak --
 ------------
-L= DBM:GetModLocalization(744)
+L = DBM:GetModLocalization(744)
 
 -------------------------------
 -- Garalon --
 -------------------------------
-L= DBM:GetModLocalization(713)
+L = DBM:GetModLocalization(713)
 
 L:SetWarningLocalization({
 	warnCrush		= "%s",
@@ -53,12 +55,12 @@ L:SetMiscLocalization({
 ----------------------
 -- Wind Lord Mel'jarak --
 ----------------------
-L= DBM:GetModLocalization(741)
+L = DBM:GetModLocalization(741)
 
 ------------
 -- Amber-Shaper Un'sok --
 ------------
-L= DBM:GetModLocalization(737)
+L = DBM:GetModLocalization(737)
 
 L:SetWarningLocalization({
 	warnReshapeLife				= "%s auf >%s< (%d)",
@@ -74,8 +76,8 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerDestabalize			= "Destabilisieren (%2$d) : %1$s",
-	timerAmberExplosionAMCD		= "Explosion CD: Monstrosität"
+	timerDestabalize		= "Destabilisieren (%2$d) : %1$s",
+	timerAmberExplosionAMCD	= "Explosion CD: Monstrosität"
 })
 
 L:SetOptionLocalization({
@@ -94,26 +96,26 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	WillPower					= "Willen"
+	WillPower	= "Willen"
 })
 
 ------------
 -- Grand Empress Shek'zeer --
 ------------
-L= DBM:GetModLocalization(743)
+L = DBM:GetModLocalization(743)
 
 L:SetWarningLocalization({
-	warnAmberTrap		= "Bernfallenbau: %d/5"
+	warnAmberTrap	= "Bernfallenbau: %d/5"
 })
 
 L:SetOptionLocalization({
-	warnAmberTrap		= "Verkünde den Fortschritt beim Bau einer $spell:125826",
-	InfoFrame			= "Zeige Infofenster für Spieler, welche von $spell:125390 betroffen sind"
+	warnAmberTrap	= "Verkünde den Fortschritt beim Bau einer $spell:125826",
+	InfoFrame		= "Zeige Infofenster für Spieler, welche von $spell:125390 betroffen sind"
 })
 
 L:SetMiscLocalization({
-	PlayerDebuffs		= "Fixiert",
-	YellPhase3			= "KEINE AUSREDEN MEHR, KAISERIN! Tötet diese Idioten oder ich selbst mache Euch den Garaus!"
+	PlayerDebuffs	= "Fixiert",
+	YellPhase3		= "KEINE AUSREDEN MEHR, KAISERIN! Tötet diese Idioten oder ich selbst mache Euch den Garaus!"
 })
 
 -------------
@@ -122,7 +124,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("HoFTrash")
 
 L:SetGeneralLocalization({
-	name =	"Trash des Herz der Angst"
+	name	= "Trash des Herz der Angst"
 })
 
 L:SetOptionLocalization({

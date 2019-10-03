@@ -51,8 +51,6 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Bloodlust/Heroism"] = "Bloodlust/Heroism"
 	--[[Translation missing --]]
-	L["Buff"] = "Buff"
-	--[[Translation missing --]]
 	L["buff"] = "buff"
 	--[[Translation missing --]]
 	L["Buffs"] = "Buffs"
@@ -69,11 +67,17 @@ local L = WeakAuras.L
 	L["Charge Tracking"] = "Charge Tracking"
 	L["cooldown"] = "tempo de recarga"
 	--[[Translation missing --]]
+	L["Cooldown"] = "Cooldown"
+	--[[Translation missing --]]
 	L["Cooldown Tracking"] = "Cooldown Tracking"
 	--[[Translation missing --]]
 	L["Create Auras"] = "Create Auras"
 	--[[Translation missing --]]
+	L["debuff"] = "debuff"
+	--[[Translation missing --]]
 	L["Debuffs"] = "Debuffs"
+	--[[Translation missing --]]
+	L["debuiff"] = "debuiff"
 	L["Enchants"] = "Encantamentos"
 	L["General"] = "Geral"
 	--[[Translation missing --]]
@@ -187,9 +191,13 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
 	--[[Translation missing --]]
+	L["slow debuff"] = "slow debuff"
+	--[[Translation missing --]]
 	L["Specific Azerite Traits"] = "Specific Azerite Traits"
 	--[[Translation missing --]]
 	L["Stance"] = "Stance"
+	--[[Translation missing --]]
+	L["stun debuff"] = "stun debuff"
 	--[[Translation missing --]]
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."
 	--[[Translation missing --]]

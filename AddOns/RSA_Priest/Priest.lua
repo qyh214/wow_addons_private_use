@@ -25,7 +25,8 @@ function RSA.Resurrect(_, _, target, _, caster)
 	if messagemax == 0 then return end
 	local messagerandom = math.random(messagemax)
 	local message = RSA.db.profile.Priest.Spells.Resurrection.Messages.Start[messagerandom]
-	local full_destName,dest = RSA.RemoveServerNames(dest)
+	local full_destName
+	full_destName,dest = RSA.RemoveServerNames(dest)
 	spellinfo = GetSpellInfo(spell) spelllinkinfo = GetSpellLink(spell)
 	RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = dest,}
 	if message ~= '' then
@@ -58,7 +59,7 @@ function RSA.Resurrect(_, _, target, _, caster)
 			if RSA.db.profile.Priest.Spells.Resurrection.SmartGroup == true and GetNumGroupMembers() > 0 then return end
 			RSA.Print_Raid(string.gsub(message, '.%a+.', RSA.String_Replace))
 		end
-	end	
+	end
 end
 
 function RSA_Priest:OnEnable()
@@ -138,7 +139,7 @@ function RSA_Priest:OnEnable()
 			},
 			[197862] = { -- Archangel
 				profile = 'Archangel',
-			},	
+			},
 			[213610] = { -- Holy Ward
 				profile = 'HolyWard',
 				replacements = { TARGET = 1 },
@@ -146,7 +147,7 @@ function RSA_Priest:OnEnable()
 			[197268] = { -- Ray Of Hope
 				profile = 'RayOfHope',
 				replacements = { TARGET = 1 },
-			},		
+			},
 		},
 		SPELL_CAST_START = {
 			[212036] = { -- MASS RESURRECTION
@@ -287,8 +288,8 @@ function RSA_Priest:OnEnable()
 			[197862] = { -- Archangel
 				profile = 'Archangel',
 				section = 'End',
-				
-			},	
+
+			},
 			[213610] = { -- Holy Ward
 				profile = 'HolyWard',
 				replacements = { TARGET = 1 },
@@ -298,7 +299,7 @@ function RSA_Priest:OnEnable()
 				profile = 'RayOfHope',
 				section = 'End',
 				replacements = { TARGET = 1 },
-			},	
+			},
 		},
 		SPELL_DISPEL = {
 			[528] = { -- DISPEL MAGIC
@@ -384,7 +385,7 @@ function RSA_Priest:OnEnable()
 			end -- IF EVENT IS SPELL_AURA_APPLIED
 			if event == 'SPELL_CAST_SUCCESS' then
 				if spellID == 47788 then -- Guardian Spirit
-					GSTarget = destGUID				
+					GSTarget = destGUID
 				end
 				if spellID == 62618 then -- POWER WORD: BARRIER timed end message
 					if RSA.db.profile.Priest.Spells.PowerWordBarrier.Messages.End ~= '' then
@@ -435,7 +436,7 @@ function RSA_Priest:OnEnable()
 					RSA_PsychicScream = false -- announcement done in unified core
 				end -- PSYCHIC SCREAM
 			end -- IF EVENT IS SPELL_CAST_SUCCESS
-			if event == 'SPELL_AURA_REMOVED' then			
+			if event == 'SPELL_AURA_REMOVED' then
 				if spellID == 47788 and GSTarget == destGUID then -- Guardian Spirit, temporary until I figure out a better method. Should prevent announcement due to artifact trait on the player, but still announce on the player if they cast it on themselves
 					spellinfo = GetSpellInfo(spellID)
 					spelllinkinfo = GetSpellLink(spellID)
@@ -474,7 +475,7 @@ function RSA_Priest:OnEnable()
 							if RSA.db.profile.Priest.Spells.GuardianSpirit.SmartGroup == true and GetNumGroupMembers() > 0 then return end
 							RSA.Print_Raid(string.gsub(message, '.%a+.', RSA.String_Replace))
 						end
-					end			
+					end
 				end
 				if (spellID == 8122 and RSA_PsychicScream == false) then -- PSYCHIC SCREAM
 					RSA_PsychicScream = true
@@ -509,7 +510,7 @@ function RSA_Priest:OnEnable()
 							if RSA.db.profile.Priest.Spells.PsychicScream.SmartGroup == true and GetNumGroupMembers() > 0 then return end
 							RSA.Print_Raid(string.gsub(message, '.%a+.', RSA.String_Replace))
 						end
-					end	
+					end
 				end -- PSYCHIC SCREAM
 				if (spellID == 226943 and RSA_PsychicScream == false) then -- Mind Bomb
 					RSA_PsychicScream = true
@@ -544,7 +545,7 @@ function RSA_Priest:OnEnable()
 							if RSA.db.profile.Priest.Spells.MindBomb.SmartGroup == true and GetNumGroupMembers() > 0 then return end
 							RSA.Print_Raid(string.gsub(message, '.%a+.', RSA.String_Replace))
 						end
-					end	
+					end
 				end -- Mind Bomb
 				if spellID == 15487 then -- SILENCE
 					RSA_Silenced = false -- announcement done in unified core

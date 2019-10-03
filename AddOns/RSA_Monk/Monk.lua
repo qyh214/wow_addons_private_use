@@ -25,7 +25,8 @@ function RSA.Resurrect(_, _, target, _, caster)
 	if messagemax == 0 then return end
 	local messagerandom = math.random(messagemax)
 	local message = RSA.db.profile.Monk.Spells.Resuscitate.Messages.Start[messagerandom]
-	local full_destName,dest = RSA.RemoveServerNames(dest)
+	local full_destName
+	full_destName,dest = RSA.RemoveServerNames(dest)
 	spellinfo = GetSpellInfo(spell) spelllinkinfo = GetSpellLink(spell)
 	RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = dest,}
 	if message ~= "" then
@@ -57,7 +58,7 @@ function RSA.Resurrect(_, _, target, _, caster)
 			if RSA.db.profile.Monk.Spells.Resuscitate.SmartGroup == true and GetNumGroupMembers() > 0 then return end
 			RSA.Print_Raid(string.gsub(message, ".%a+.", RSA.String_Replace))
 		end
-	end	
+	end
 end
 
 function RSA_Monk:OnEnable()

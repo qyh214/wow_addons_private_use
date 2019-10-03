@@ -1,8 +1,0 @@
-## Interface: 80200
-## Title: Lib: Diminishing Returns Data-1.0
-## Notes: Database of Diminishing return categories and general data
-## Author: Mayen
-## X-Category: Library
-
-
-DRData-1.0.xml

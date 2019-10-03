@@ -7,17 +7,21 @@ function RSA:TempOptions()
 	-- Register Various Options
 	local Options = {
 		type = "group",
-		name = "RSA [|c5500DBBDRaeli's Spell Announcer|r] - " .. "|cffFFCC00"..L["Current Revision"].."|r |c5500DBBD".. RSA.db.global.revision.. "|r",
+		name = "RSA [|c5500DBBDRaeli's Spell Announcer|r] - ".."|cffFFCC00"..L["Current Version: %s"]:format("r|r|c5500DBBD"..RSA.db.global.revision).."|r",
 		order = 0,
 		args = {
 				Open = {
 					name = L["Open Configuration Panel"],
 					type = "execute",
 					order = 0,
-					func = function() 
-						HideUIPanel(InterfaceOptionsFrame) 
-						HideUIPanel(GameMenuFrame)
-						RSA:ChatCommand() end,
+					func = function()
+						if not InCombatLockdown() then
+							-- Ensure we don't taint the UI from 8.2 change when trying to call HideUIPanel in combat
+							HideUIPanel(InterfaceOptionsFrame)
+							HideUIPanel(GameMenuFrame)
+							RSA:ChatCommand()
+						end
+					end,
 				},
 			},
 		}
@@ -30,14 +34,14 @@ function RSA:ChatCommand(input)
 		if not IsAddOnLoaded("RSA_Options") then
 			local loaded, reason = LoadAddOn("RSA_Options")
 			if not loaded then
-				ChatFrame1:AddMessage("|cFFFF75B3RSA|r [|cffFFCC00Options|r]"..L[" is disabled. If you want to configure RSA, you need to enable it."])
+				ChatFrame1:AddMessage(L["%s is disabled. If you want to configure RSA, you need to enable it."]:format("|cFFFF75B3RSA|r [|cffFFCC00Options|r]"))
 			else
 				LibStub("AceConfigDialog-3.0"):Open("RSA")
 			end
 		else
-			LibStub("AceConfigDialog-3.0"):Open("RSA")	
+			LibStub("AceConfigDialog-3.0"):Open("RSA")
 		end
-	end	
+	end
 end
 
 function RSA:RefreshConfig()
@@ -54,7 +58,7 @@ function RSA:RefreshConfig()
 		["SHAMAN"] = "Shaman",
 		["WARLOCK"] = "Warlock",
 		["WARRIOR"] = "Warrior",
-	}	
+	}
 	for k,v in pairs(Modules) do
 		if k == PlayerClass then
 			ModuleName = RSA:GetModule(v)
@@ -72,9 +76,9 @@ function RSA:RefreshConfig()
 		local loaded, reason = LoadAddOn("RSA_Reminders")
 		if not loaded then
 			if reason == "DISABLED" or reason == "INTERFACE_VERSION" then
-				ChatFrame1:AddMessage("|cFFFF75B3RSA:|r Reminders " .. L.OptionsDisabled)
+				ChatFrame1:AddMessage("|cFFFF75B3RSA:|r Reminders "..L.OptionsDisabled)
 			elseif reason == "MISSING" or reason == "CORRUPT" then
-				ChatFrame1:AddMessage("|cFFFF75B3RSA:|r Reminders " .. L.OptionsMissing)
+				ChatFrame1:AddMessage("|cFFFF75B3RSA:|r Reminders "..L.OptionsMissing)
 			end
 		else
 			RSA:EnableModule("Reminders")

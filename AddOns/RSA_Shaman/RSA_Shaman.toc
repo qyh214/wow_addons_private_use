@@ -1,4 +1,4 @@
-## Interface: 80200
+## Interface: 80205
 ## Title: RSA [|c590055FFShaman|r]
 ## Notes: RSA Shaman Module. This is needed to announce Shaman Spells.
 ## Author: Raeli

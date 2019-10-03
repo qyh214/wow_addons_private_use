@@ -140,10 +140,8 @@ local function createOptionsFrame()
 end
 
 local function createCategory(index)
-    local cat = CreateFrame("Button", options.frame.nav:GetName().."Cat"..index, options.frame.nav, "UIPanelButtonTemplate");
-    local bgtex = "Interface\\AddOns\\"..addonTocName.."\\Modules\\Textures\\Menu_bg"
-    cat:SetNormalTexture(bgtex); cat:SetPushedTexture(bgtex); cat:SetDisabledTexture(bgtex); cat:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestLogTitleHighlight", "ADD");
-    cat:GetHighlightTexture():SetVertexColor(.196, .388, .5);
+    local cat = CreateFrame("Button", options.frame.nav:GetName().."Cat"..index, options.frame.nav, "OptionsListButtonTemplate");
+
     cat:RegisterForClicks("LeftButtonUp", "RightButtonUp");
     cat.info = Categories[index];
     cat.catIndex = index;
@@ -152,8 +150,10 @@ local function createCategory(index)
     cat.bg:SetColorTexture(1, 1, 1);
     cat.bg:SetGradient("VERTICAL", getGradientFromColor("658daa"));
     cat.text = _G.getglobal(cat:GetName().."Text");
+    cat.text:ClearAllPoints();
+    cat.text:SetPoint("CENTER");
     local font, _, _ = _G.ChatFontNormal:GetFont();
-    cat.text:SetFont(font, 16, "");
+    cat.text:SetFont(font, 14, "");
     cat.text:SetText("|cffffffff"..cat.info.title.."|r");
     cat:SetHeight(28);
     cat:SetWidth(options.frame.nav:GetWidth()-2);
@@ -168,10 +168,8 @@ local function createCategory(index)
 end
 
 local function createSubCategory(index)
-    local sub = CreateFrame("Button", options.frame.nav.sub:GetName().."Button"..index, options.frame.nav.sub, "UIPanelButtonTemplate");
-    local bgtex = "Interface\\AddOns\\"..addonTocName.."\\Modules\\Textures\\Menu_bg"
-    sub:SetNormalTexture(bgtex); sub:SetPushedTexture(bgtex); sub:SetDisabledTexture(bgtex); sub:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestLogTitleHighlight", "ADD");
-    sub:GetHighlightTexture():SetVertexColor(.196, .388, .8);
+    local sub = CreateFrame("Button", options.frame.nav.sub:GetName().."Button"..index, options.frame.nav.sub, "OptionsListButtonTemplate");
+
     sub:SetWidth(sub:GetParent():GetWidth());
     sub:SetHeight(20);
     sub.text = _G.getglobal(sub:GetName().."Text");
