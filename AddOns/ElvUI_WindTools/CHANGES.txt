@@ -1,80 +1,43 @@
-lightweight tag a6ccadb218df6e2ae37567b5a12a19d59c5f5f86 1.5.0
+lightweight tag 873dfcdd7b50ac144e5d199c5ccbb71bdc6829b4 1.5.1
 Author:	Zhou Fang <fang2hou@outlook.com>
-Date:	Thu Aug 29 16:05:05 2019 +0900
+Date:	Sat Oct 5 11:02:10 2019 +0900
 
-commit a6ccadb218df6e2ae37567b5a12a19d59c5f5f86
+commit 873dfcdd7b50ac144e5d199c5ccbb71bdc6829b4
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Thu Aug 29 16:05:05 2019 +0900
+Date:   Sat Oct 5 11:02:10 2019 +0900
 
-    修复toc版本
+    更新支持信息
 
-commit b2aea406c79931a143bd37089103a519c168c28f
+commit b8dde429c97c829f3c706b6a307805f0d30f5e9d
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Thu Aug 29 16:00:49 2019 +0900
+Date:   Sat Oct 5 11:00:47 2019 +0900
 
-    Revert "1.4.8"
-    
-    This reverts commit 45895a7af8295740f1c5b3fe15304bb0d655c3d1.
+    更新说明文档
 
-commit b2aea406c79931a143bd37089103a519c168c28f
+commit 57e8df6964711a2c04157c9398c7ad77789565cb
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Thu Aug 29 16:00:49 2019 +0900
+Date:   Sat Oct 5 10:57:04 2019 +0900
 
-    Revert "1.4.8"
-    
-    This reverts commit 45895a7af8295740f1c5b3fe15304bb0d655c3d1.
+    修复世界标记错误
 
-commit e50d0fa4c37f161faea6013f4ef94ef69ba16721
-Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Thu Aug 29 16:00:34 2019 +0900
+commit 61305b6ccdc78c5668a440b6f2687a0aa6f09aa9
+Author: 404Polaris <574706224@qq.com>
+Date:   Wed Oct 2 21:12:18 2019 +0800
 
-    补充更新记录
+    检测S&L是否设置暴雪框体移动
 
-commit 251b040214cdd2632abeba73afdafedacd2ab840
-Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Thu Aug 29 15:57:28 2019 +0900
+commit 61305b6ccdc78c5668a440b6f2687a0aa6f09aa9
+Author: 404Polaris <574706224@qq.com>
+Date:   Wed Oct 2 21:12:18 2019 +0800
 
-    Revert "1.5.0"
-    
-    This reverts commit da4d8b7d0bb2f5cb3913c1cc350dba2a08f0869c.
+    检测S&L是否设置暴雪框体移动
 
-commit da4d8b7d0bb2f5cb3913c1cc350dba2a08f0869c
-Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Thu Aug 29 15:55:31 2019 +0900
+commit 460b5562174f8df098cc2fb19b10c40137926be3
+Author: 404Polaris <574706224@qq.com>
+Date:   Wed Oct 2 21:07:19 2019 +0800
 
-    1.5.0
-    
-    之前看错了！
-
-commit 45895a7af8295740f1c5b3fe15304bb0d655c3d1
-Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Thu Aug 29 15:52:28 2019 +0900
-
-    1.4.8
-
-commit 6e5fc92bfd2a060aada856930c27b5a75bd13cd3
-Author: LiangYuxuan <lyx@lyx.es>
-Date:   Mon Aug 19 15:31:00 2019 +0800
-
-    在鼠标增强配置中加入永恒王宫
-    并调整默认配置
-
-commit 6e5fc92bfd2a060aada856930c27b5a75bd13cd3
-Author: LiangYuxuan <lyx@lyx.es>
-Date:   Mon Aug 19 15:31:00 2019 +0800
-
-    在鼠标增强配置中加入永恒王宫
-    并调整默认配置
-
-commit fe5dbdfe32f8d26215fd1a0fc8dff250dc5031f2
-Author: LiangYuxuan <lyx@lyx.es>
-Date:   Wed Jul 17 12:02:18 2019 +0800
-
-    同步ElvUI_Enhanced的永恒王宫进度提示
-
-commit fe5dbdfe32f8d26215fd1a0fc8dff250dc5031f2
-Author: LiangYuxuan <lyx@lyx.es>
-Date:   Wed Jul 17 12:02:18 2019 +0800
-
-    同步ElvUI_Enhanced的永恒王宫进度提示
+    修复8.25更新后：
+    好友列表增强的一系列错误
+    Sins.lua内移除了过时AlertSystem的hook，并新增两项
+    为暴雪框体移动增加了检测，与Shadow&Light同功能选项冲突时将有所提示
 

@@ -1,10 +1,8 @@
 # WIM
 
-## [3.8.0](https://github.com/sylvanaar/wow-instant-messenger/tree/3.8.0) (2019-09-28)
-[Full Changelog](https://github.com/sylvanaar/wow-instant-messenger/compare/3.7.36...3.8.0)
+## [3.8.1](https://github.com/sylvanaar/wow-instant-messenger/tree/3.8.1) (2019-10-08)
+[Full Changelog](https://github.com/sylvanaar/wow-instant-messenger/compare/3.8.0...3.8.1)
 
-- Replying to a whisper now assumes that the conversation has been read.  
-- Redid invite battle.net frend so it actually works (on retail at least)  
-- Classic vs Retail invite method check.  
-- Fix bnet shortcut bar invite button on retail  
-- Purely cosmetic whitepsace cleanup  
+- Update change log notes.  
+- Added support for emotes. Option available to include emotes in SAY.  
+- Reworked window fading. This should hopefully resolve some of the problems reported regarding fading.  

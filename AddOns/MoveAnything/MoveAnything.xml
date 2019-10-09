@@ -8,7 +8,6 @@
 				self.OnMACreateVM = function(self)
 					self:ClearAllPoints()
 					self:SetPoint("BOTTOMRIGHT", "UIParent", "BOTTOMRIGHT", -90, 125)
-					
 					self.realID = self:GetID()
 					if self:GetName() == "KeyRingFrame" then
 						self.realID = KEYRING_CONTAINER
@@ -120,7 +119,7 @@
 			</OnLoad>
 		</Scripts>
 	</Frame>
-	
+
 	<Button name="GameMenuButtonMoveAnything" parent="GameMenuFrame" inherits="GameMenuButtonTemplate" text="MoveAnything">
 		<Scripts>
 			<OnLoad>
@@ -614,7 +613,7 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			
+
 			<Button name="$parentOpenBlizzardOptions" inherits="MAButtonTemplate" text="O">
 				<Anchors>
 					<Anchor point="TOPRIGHT" relativePoint="TOPLEFT" relativeTo="MAOptionsClose">
@@ -637,7 +636,7 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			
+
 			<Button name="$parentSync" inherits="MAButtonTemplate" text="S">
 				<Anchors>
 					<Anchor point="TOPRIGHT" relativePoint="TOPLEFT" relativeTo="MAOptionsOpenBlizzardOptions">
@@ -655,7 +654,7 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			
+
 			<CheckButton name="$parentToggleFrameEditors" inherits="MACheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>
@@ -684,7 +683,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			
+
 			<CheckButton name="$parentToggleMovers" inherits="MACheckButtonTemplate" checked="true">
 				<Size>
 					<AbsDimension x="20" y="20"/>
@@ -709,7 +708,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			
+
 			<CheckButton name="$parentToggleModifiedFramesOnly" inherits="MACheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>
@@ -731,7 +730,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			
+
 			<CheckButton name="$parentToggleCategories" inherits="MACheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>
@@ -753,7 +752,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			
+
 			<CheckButton name="$parentToggleFrameStack" inherits="MACheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>
@@ -776,7 +775,7 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			
+
 			<EditBox name="MA_Search" inherits="InputBoxTemplate" hidden="false" virtual="true" autoFocus="false">
 				<Size>
 					<AbsDimension x="464" y="18"/>
@@ -827,7 +826,7 @@
 					</OnEnterPressed>
 				</Scripts>
 			  </EditBox>
-			  
+
 			<ScrollFrame name="MAScrollFrame" inherits="FauxScrollFrameTemplate">
 				<Size>
 					<AbsDimension x="380" y="443"/>
@@ -888,8 +887,10 @@
 				self:RegisterEvent("PLAYER_REGEN_DISABLED")
 				self:RegisterEvent("PLAYER_REGEN_ENABLED")
 				self:RegisterEvent("GROUP_ROSTER_UPDATE")
-				self:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
-				self:RegisterEvent("PLAYER_FOCUS_CHANGED")
+				if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+					self:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
+					self:RegisterEvent("PLAYER_FOCUS_CHANGED")
+				end
 			</OnLoad>
 			<OnShow>
 				MovAny:OnShow()

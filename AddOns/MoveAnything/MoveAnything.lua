@@ -149,6 +149,9 @@ local MovAny = {
 		["AlwaysUpFrame3"] = true,
 		["CompactRaidFrameManager"] = true,
 	},
+	lForceForbidden = {
+		["NamePlateTooltip"] = true,
+	},
 	lForcedLock = {
 		["Boss1TargetFrame"] = true,
 		["Boss2TargetFrame"] = true,
@@ -949,7 +952,7 @@ function MovAny:Boot()
 	if UpdateContainerFrameAnchors then
 		hooksecurefunc("UpdateContainerFrameAnchors", self.hUpdateContainerFrameAnchors)
 	end
-	if SpellBookFrame_Update then
+	if SpellBookFrame_Update and SpellBookFrame and SpellBookPage1 then
 		hooksecurefunc("SpellBookFrame_Update", function()
 			SpellBookPage1:SetPoint("LEFT", SpellBookFrame)
 		end)
@@ -1347,6 +1350,18 @@ function MovAny:IsProtected(f)
 	end
 	local isProtected = f:IsProtected()
 	if isProtected or f.MAProtected or MovAny.lForceProtected[f:GetName()] then
+		return true
+	else
+		return nil
+	end
+end
+
+function MovAny:IsForbidden(f)
+	if not f then
+		return
+	end
+	local isForbidden = f:IsForbidden()
+	if isForbidden or MovAny.lForceForbidden[f:GetName()] then
 		return true
 	else
 		return nil
@@ -4079,7 +4094,7 @@ function MovAny:UnanchorRelatives(e, f, opt)
 		local children = {p:GetChildren()}
 		if children ~= nil then
 			for i, v in ipairs(children) do
-				if not v:IsForbidden() and not v:IsProtected() and v.GetPoint then
+				if not self:IsForbidden(v) and not self:IsProtected(v) and v.GetPoint then
 					self:_AddDependents(relatives, v)
 				end
 			end
@@ -4129,6 +4144,14 @@ function MovAny:_AddDependents(l, f)
 	if (MovAny:IsProtected(f) and InCombatLockdown()) or not f.GetPoint then
 		return
 	end
+
+	local error = false
+	xpcall(function() return f:GetPoint(1) end,
+		   function() error = true end)
+	if error then
+		return
+	end
+
 	local _, relativeTo = f:GetPoint(1)
 	if relativeTo and l[relativeTo] then
 		l[f] = f
@@ -6030,7 +6053,7 @@ function MovAny:CreateVM(name)
 		end, MovAny.SyncErrorHandler)
 	end
 	if not vm.MAPoint then
-		if data.point then
+		if data.point and _G[data.point[2]] then
 			vm:SetPoint(unpack(data.point))
 			if opt and opt.pos and not opt.orgPos then
 				opt.orgPos = data.point

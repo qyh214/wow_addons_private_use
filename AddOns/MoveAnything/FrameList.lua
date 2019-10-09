@@ -56,11 +56,14 @@ local m = {
 		local c, e
 		c = API:GetCategory("Achievements & Quests")
 		API:AddElement({name = "AchievementFrame", displayName = "Achievements"}, c)
-		API:AddElement({name = "AchievementAlertFrame1", displayName = "Achievement Alert 1", runOnce = AchievementFrame_LoadUI, create = "AchievementAlertFrameTemplate"}, c)
-		API:AddElement({name = "AchievementAlertFrame2", displayName = "Achievement Alert 2", runOnce = AchievementFrame_LoadUI, create = "AchievementAlertFrameTemplate"}, c)
-		API:AddElement({name = "CriteriaAlertFrame1", displayName = "Criteria Alert 1", create = "CriteriaAlertFrameTemplate"}, c)
-		API:AddElement({name = "CriteriaAlertFrame2", displayName = "Criteria Alert 2", create = "CriteriaAlertFrameTemplate"}, c)
-		local gcaf = API:AddElement({name = "GuildChallengeAlertFrame", displayName = "Guild Challenge Achievement Alert"}, c)
+		local gcaf
+		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+			API:AddElement({name = "AchievementAlertFrame1", displayName = "Achievement Alert 1", runOnce = AchievementFrame_LoadUI, create = "AchievementAlertFrameTemplate"}, c)
+			API:AddElement({name = "AchievementAlertFrame2", displayName = "Achievement Alert 2", runOnce = AchievementFrame_LoadUI, create = "AchievementAlertFrameTemplate"}, c)
+			API:AddElement({name = "CriteriaAlertFrame1", displayName = "Criteria Alert 1", create = "CriteriaAlertFrameTemplate"}, c)
+			API:AddElement({name = "CriteriaAlertFrame2", displayName = "Criteria Alert 2", create = "CriteriaAlertFrameTemplate"}, c)
+			gcaf = API:AddElement({name = "GuildChallengeAlertFrame", displayName = "Guild Challenge Achievement Alert"}, c)
+		end
 		API:AddElement({name = "ObjectiveTrackerFrameMover", displayName = "Objectives Window", scaleWH = 1}, c)
 		API:AddElement({name = "ObjectiveTrackerFrameScaleMover", displayName = "Objectives Window Scale"}, c)
 		API:AddElement({name = "ObjectiveTrackerBonusBannerFrame", displayName = "Objectives Banner Frame"}, c)
@@ -70,11 +73,12 @@ local m = {
 				HideUIPanel(QuestLogDetailFrame)
 			end
 		end}, c)]]
-		API:AddElement({name = "QuestLogPopupDetailFrame", displayName = "Quest Details"}, c)
+		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+			API:AddElement({name = "QuestLogPopupDetailFrame", displayName = "Quest Details"}, c)
+		end
 		API:AddElement({name = "QuestNPCModel", displayName = "Quest Log NPC Model"}, c)
-		--local qlf = API:AddElement({name = "QuestLogFrame", displayName = "Quest Log"}, c)
 		local qf = API:AddElement({name = "QuestFrame", displayName = "Quest Offer / Return", runOnce = function()
-			hooksecurefunc(QuestFrame, "Show", function()
+			hooksecurefunc(WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and QuestFrame or QuestLogFrame, "Show", function()
 				if MovAny:IsModified("QuestFrame") then
 					HideUIPanel(GossipFrame)
 				end
@@ -431,7 +435,9 @@ local m = {
 		gbmfg:AddCategory(c)
 		gbmfs:AddCategory(c)
 		gbmfc:AddCategory(c)
-		gcaf:AddCategory(c)
+		if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+			gcaf:AddCategory(c)
+		end
 		API:AddElement({name = "GuildControlUI", displayName = "Guild Control"}, c)
 		local lfgf = API:AddElement({name = "LookingForGuildFrame", displayName = "Guild Finder"}, c)
 		--API:AddElement({name = "GuildInfoFrame", displayName = "Guild Info"}, c)

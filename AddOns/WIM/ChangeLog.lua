@@ -16,6 +16,10 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
+addEntry("3.8.1", "10/08/2019", [[
+	* Add option to display emotes in SAY chat windows.
+	* Rewrite code to manage fading of windows. This should fix the issues some of you've been having.
+]]);
 addEntry("3.7.26", "09/23/2019", [[
 	* Elimated WhoLib, blizzard killed it with fire. Some alternate solutions used to bring some but not all of the functionality back
 ]]);

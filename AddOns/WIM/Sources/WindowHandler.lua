@@ -436,39 +436,52 @@ local function getParentMessageWindow(obj)
     end
 end
 
-local function createFadeAnimation(obj, direction)
-	local anim = obj:CreateAnimationGroup()
-	local fade = anim:CreateAnimation("Alpha")
-	fade:SetDuration(0.25)
-	if direction == "in" then
-		fade:SetFromAlpha(0.5)
-		fade:SetToAlpha(1)
-		anim:SetScript("OnFinished", function() obj:SetAlpha(1) end)
-	else
-		fade:SetFromAlpha(1)
-		fade:SetToAlpha(0.5)
-		fade:SetStartDelay(1)
-		anim:SetScript("OnFinished", function() obj:SetAlpha(0.5) end)
-	end
-	return anim
+local function animateFade(obj, directionIn, force)
+        local fadeAnimator = obj.animators.fade
+        local to = directionIn and FadeProps.max or FadeProps.min
+        local from = obj:GetAlpha()
+
+        if force then
+                obj:setAlpha(to)
+                fadeAnimator.animation.fadingDiretionIn = directionIn
+                return
+        end
+
+	if fadeAnimator:IsPlaying() then
+		local progress = fadeAnimator:GetProgress()
+                from = fadeAnimator.animation:GetToAlpha() * progress
+		fadeAnimator:Stop()
+
+                fadeAnimator.animation:SetDuration(FadeProps.interval)
+                fadeAnimator.animation:SetFromAlpha(from)
+                fadeAnimator.animation:SetToAlpha(to)
+                fadeAnimator:Play()
+		fadeAnimator:SetScript("OnFinished", function ()
+                    obj:SetAlpha(to)
+                end)
+        else
+		fadeAnimator.animation:SetDuration(FadeProps.interval)
+                fadeAnimator.animation:SetFromAlpha(from)
+                fadeAnimator.animation:SetToAlpha(to)
+		fadeAnimator:SetScript("OnFinished", function ()
+                    obj:SetAlpha(to)
+                end)
+                fadeAnimator:Play()
+        end
+
+        fadeAnimator.animation.fadingDiretionIn = directionIn
 end
 
 local function setWindowAsFadedIn(obj)
 	if(WIM.db.winFade) then
-		if obj.animOut and obj.animOut:GetProgress() > 0 and obj.animOut:GetProgress() < 0.5 then
-			obj.animOut:Stop()
-			obj.fadedIn = true
-		end
-		if not obj.animIn then obj.animIn = createFadeAnimation(obj, "in") end
-		if not obj.animIn:IsPlaying() and not obj.fadedIn then
-			obj:SetAlpha(0.5)
-			obj.animIn:Play()
-		end
-		obj.delayFadeElapsed = 0;
-		obj.delayFade = true;
-		obj.fadedIn = true;
+                if not obj.fadedIn then
+                        obj:fadeIn()
+                        obj.delayFadeElapsed = 0;
+                        obj.delayFade = true;
+                        obj.fadedIn = true;
+                end
 	else
-		obj:SetAlpha(FadeProps.max);
+		obj:fadeIn(true);
 	end
 end
 
@@ -650,15 +663,7 @@ local function MessageWindow_Frame_OnUpdate(self, elapsed)
                 					(EditBoxInFocus and EditBoxInFocus.parentWindow == self)) or
                 					(window.tabStrip and window.tabStrip.selected.obj == self)) and
                 					(not self.fadedIn or self.delayFade)) then
-								if self.animOut and self.animOut:GetProgress() > 0 and self.animOut:GetProgress() < 0.5 then
-									self.animOut:Stop()
-                                                                        self.fadedIn = true
-								end
-								if not self.animIn then self.animIn = createFadeAnimation(self, "in") end
-								if not self.animIn:IsPlaying() and not self.fadedIn then
-									self:SetAlpha(0.5)
-                                                                        self.animIn:Play()
-								end
+                                                                self:fadeIn()
                 				self.fadedIn = true;
                 				self.delayFade = false;
                 				self.delayFadeElapsed = 0;
@@ -675,9 +680,7 @@ local function MessageWindow_Frame_OnUpdate(self, elapsed)
                 				else
                 					self.fadedIn = false;
                 					self.delayFadeElapsed = 0;
-                                                        if not self.animOut then self.animOut = createFadeAnimation(self, "out") end
-                                                        self:SetAlpha(1)
-                                                        self.animOut:Play()
+                                                        self:fadeOut()
                 				end
                 			end
                 		end
@@ -808,6 +811,14 @@ local function instantiateWindow(obj)
 
     obj.SetScale_Orig = obj.SetScale;
     obj.SetScale = scaleWindow;
+
+    -- create animations
+    obj.animators = {}
+	obj.animators.fade = obj:CreateAnimationGroup()
+	obj.animators.fade.animation = obj.animators.fade:CreateAnimation("Alpha")
+    obj.fadeIn = function (self, force) animateFade(self, true, force) end
+    obj.fadeOut = function (self, force) animateFade(self, false, force) end
+    obj.fadedIn = true
 
     obj.widgets = {};
     local widgets = obj.widgets;
@@ -2048,7 +2059,12 @@ RegisterMessageFormatting(L["Default"], function(smf, event, ...)
                                 event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" or event == "CHAT_MSG_SAY" or event == "CHAT_MSG_PARTY_LEADER" or
                                 event == "CHAT_MSG_CHANNEL" or event == "CHAT_MSG_INSTANCE_CHAT" or event == "CHAT_MSG_INSTANCE_CHAT_LEADER") then
                         return applyBracket().."|Hplayer:"..arg2..":"..arg11.."|h"..(db.coloredNames and doColoredNames(event, ...) or arg2).."|h"..applyBracket(2)..": "..arg1;
-                elseif(event == "CHAT_MSG_RAID_WARNING") then
+				elseif(event == "CHAT_MSG_EMOTE") then
+					return "|Hplayer:"..arg2..":"..arg11.."|h"..(db.coloredNames and doColoredNames(event, ...) or arg2).."|h".." "..arg1;
+				elseif(event == "CHAT_MSG_TEXT_EMOTE") then
+					local user = "|Hplayer:"..arg2..":"..arg11.."|h"..(db.coloredNames and doColoredNames(event, ...) or arg2).."|h"
+					return arg1;
+				elseif(event == "CHAT_MSG_RAID_WARNING") then
                         return _G.RAID_WARNING.." "..applyBracket().."|Hplayer:"..arg2..":"..arg11.."|h"..(db.coloredNames and doColoredNames(event, ...) or arg2).."|h"..applyBracket(2)..": "..arg1;
                 elseif(event == "CHAT_MSG_CHANNEL_JOIN") then
                         return string.format(_G.CHAT_CHANNEL_JOIN_GET, arg2);
