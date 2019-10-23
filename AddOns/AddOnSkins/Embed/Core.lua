@@ -4,7 +4,7 @@ local AS = unpack(AddOnSkins)
 --Lua functions
 local _G = _G
 local format, pairs = format, pairs
-local strlower, strmatch, strsub = strlower, strmatch, strsub
+local strmatch, strsub = strmatch, strsub
 --WoW API / Variables
 local CreateFrame, UIParent = CreateFrame, UIParent
 local FCF_GetNumActiveChatFrames = FCF_GetNumActiveChatFrames
@@ -114,8 +114,7 @@ function AS:Embed_Hide()
 end
 
 function AS:CheckEmbed(AddOn)
-	AddOn = strlower(AddOn)
-	if AS:CheckAddOn(AddOn) and (AS:CheckOption('EmbedSystem') or AS:CheckOption('EmbedSystemDual')) and (strmatch(strlower(AS:CheckOption('EmbedMain')), AddOn) or strmatch(strlower(AS:CheckOption('EmbedLeft')), AddOn) or strmatch(strlower(AS:CheckOption('EmbedRight')), AddOn)) then
+	if AS:CheckAddOn(AddOn) and (AS:CheckOption('EmbedSystem') or AS:CheckOption('EmbedSystemDual')) and (strmatch(AS:CheckOption('EmbedMain'), AddOn) or strmatch(AS:CheckOption('EmbedLeft'), AddOn) or strmatch(AS:CheckOption('EmbedRight'), AddOn)) then
 		return true
 	else
 		return false
@@ -141,7 +140,6 @@ function AS:Embed_Check(Message)
 	if AS:CheckEmbed('Skada') then AS:Embed_Skada() end
 	if AS:CheckEmbed('TinyDPS') then AS:Embed_TinyDPS() end
 	if AS:CheckEmbed('Recount') then AS:Embed_Recount() end
-	if AS:CheckOption('EmbedCoolLine', 'CoolLine') then AS:Embed_CoolLine() end
 
 	if Message and AS:CheckOption('EmbedSystemMessage') then
 		Message = format("Main: '%s'", AS:CheckOption('EmbedMain'))

@@ -6,6 +6,12 @@ L["Another class can learn this item."] = "Une autre classe peut débloquer cett
 L["Appearances updated: "] = "Apparences mises à jour :"
 --[[Translation missing --]]
 --[[ L["Ask me later"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Bottom"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Bottom Left"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Bottom Right"] = ""--]] 
 L["Can be learned by:"] = "Peut être débloquée par :"
 L["Can I Mog It? Important Message: Please log into all of your characters to compile complete transmog appearance data."] = "Message important de Can I Mog It? : Merci de vous connecter sur tous vos personnages, afin d'assembler les données d'apparences de transmogrification."
 L["CanIMogItOptions not found, loading defaults!"] = "CanIMogItOptions introuvable, paramètres par défaut chargés !"
@@ -15,11 +21,17 @@ L["Cannot determine status on other characters."] = "État pour les autres perso
 L["Cannot learn:"] = "Ne peut être appris :"
 L["Cannot learn: Soulbound"] = "Ne peut être appris : Lié"
 --[[Translation missing --]]
+--[[ L["Center"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Database migrated to:"] = ""--]] 
 L["Database Scanning chat messages"] = "Messages de scan de la base de donnée dans le chat"
 L["Debug Tooltip"] = "Infobulle de débug"
 L["Detailed information for debug purposes. Use this when sending bug reports."] = "Informations détaillées à des fins de debug. À utiliser lors de l'envoi de rapports de bugs."
+--[[Translation missing --]]
+--[[ L["Does not affect Quests or Adventure Journal."] = ""--]] 
 L["Equippable Items Only"] = "Objets pouvant être équipés uniquement"
+--[[Translation missing --]]
+--[[ L["Icon Location"] = ""--]] 
 L["Items updated: "] = "Objets mis à jour :"
 L["Learned but cannot transmog yet."] = "Débloquée mais impossible à transmogrifier pour le moment."
 L["Learned for a different class and item."] = "Débloquée pour une autre classe et objet."
@@ -27,6 +39,8 @@ L["Learned for a different class."] = "Débloquée pour une autre classe."
 L["Learned from another item but cannot transmog yet."] = "Débloquée depuis un autre objet, mais impossible à transmogrifier pour le moment."
 L["Learned from another item."] = "Débloquée depuis un autre objet."
 L["Learned."] = "Débloquée."
+--[[Translation missing --]]
+--[[ L["Left"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Migrating Database version to:"] = ""--]] 
 L["Not learned."] = "Non débloquée."
@@ -37,6 +51,10 @@ L["Only show on items that can be equipped."] = "Afficher uniquement pour les ob
 L["Only show on items that can be transmoggrified."] = "Afficher uniquement pour les objets pouvant être transmogrifiés."
 L["Only show on items that you haven't learned."] = "Afficher uniquement pour les objets que vous n'avez pas appris."
 L["Please note that this may not always be correct as Blizzard's information is incomplete."] = "Notez que cela peut être incorrect du fait que l'information de Blizzard est incomplète."
+--[[Translation missing --]]
+--[[ L["Requires /reload to take effect."] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Right"] = ""--]] 
 L["Show Bag Icons"] = "Affiche l'icône sur l'objet"
 L["Show information on the tooltip about transmog sets."] = "Montre l'information dans l'info-bulle au sujet des sets de transmogryphication."
 L["Show Source Location Tooltip"] = "Montre l'info-bulle d'emplacement de la source."
@@ -48,6 +66,12 @@ L["Shows messages on login about the database scan."] = "Affiche les messages à
 L["Shows the icon directly on the item in your bag."] = "Affiche l'icône sur l'objet contenu dans votre inventaire."
 --[[Translation missing --]]
 --[[ L["Sorry! Your database has corrupted entries. This will cause errors and give incorrect results. Please click below to reset the database."] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Top"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Top Left"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Top Right (default)"] = ""--]] 
 L["Transmoggable Items Only"] = "Objets pouvant être transmogrifiés uniquement"
 L["Unknown Items Only"] = "Objets inconnus uniquement"
 L["Updating appearances database."] = "Mise à jour de la base de données d'apparences."

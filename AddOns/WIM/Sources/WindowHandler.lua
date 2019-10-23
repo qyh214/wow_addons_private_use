@@ -442,7 +442,7 @@ local function animateFade(obj, directionIn, force)
         local from = obj:GetAlpha()
 
         if force then
-                obj:setAlpha(to)
+                obj:SetAlpha(to)
                 fadeAnimator.animation.fadingDiretionIn = directionIn
                 return
         end

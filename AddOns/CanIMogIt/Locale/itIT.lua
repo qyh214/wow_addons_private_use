@@ -9,6 +9,12 @@ L["Another class can learn this item."] = "Un'altra classe può apprendere quest
 --[[ L["Appearances updated: "] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Ask me later"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Bottom"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Bottom Left"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Bottom Right"] = ""--]] 
 L["Can be learned by:"] = "Può essere imparato da:"
 L["Can I Mog It? Important Message: Please log into all of your characters to compile complete transmog appearance data."] = "Can I Mog It? Messaggio Importante: Per favore, effettua l'accesso con tutti i tuoi personaggi per ottenere informazioni riguardo la tua collezione di aspetti."
 L["CanIMogItOptions not found, loading defaults!"] = "CanIMogItOptions non trovato, carico le impostazioni predefinite!"
@@ -18,12 +24,18 @@ L["Cannot determine status on other characters."] = "Impossibile determinare lo 
 L["Cannot learn:"] = "Impossibile apprendere:"
 L["Cannot learn: Soulbound"] = "Impossibile apprendere: Vincolato"
 --[[Translation missing --]]
+--[[ L["Center"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Database migrated to:"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Database Scanning chat messages"] = ""--]] 
 L["Debug Tooltip"] = "Tooltip per il debug"
 L["Detailed information for debug purposes. Use this when sending bug reports."] = "Informazioni dettagliate per scopi di debug. Utilizza questo per inviare rapporti contenenti bug."
+--[[Translation missing --]]
+--[[ L["Does not affect Quests or Adventure Journal."] = ""--]] 
 L["Equippable Items Only"] = "Solo oggetti equipaggiabili"
+--[[Translation missing --]]
+--[[ L["Icon Location"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Items updated: "] = ""--]] 
 L["Learned but cannot transmog yet."] = "Imparato, ma non si può ancora trasmogrificare."
@@ -32,6 +44,8 @@ L["Learned for a different class."] = "Imparato per una classe differente."
 L["Learned from another item but cannot transmog yet."] = "Imparato da un altro oggetto, ma non si può ancora trasmogrificare."
 L["Learned from another item."] = "Imparato da un altro oggetto."
 L["Learned."] = "Imparato."
+--[[Translation missing --]]
+--[[ L["Left"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Migrating Database version to:"] = ""--]] 
 L["Not learned."] = "Non appreso."
@@ -44,6 +58,10 @@ L["Only show on items that can be transmoggrified."] = "Mostra solamente su ogge
 L["Only show on items that you haven't learned."] = "Mostra solamente su oggetti che non hai appreso."
 --[[Translation missing --]]
 --[[ L["Please note that this may not always be correct as Blizzard's information is incomplete."] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Requires /reload to take effect."] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Right"] = ""--]] 
 L["Show Bag Icons"] = "Mostra Icone Borsa"
 --[[Translation missing --]]
 --[[ L["Show information on the tooltip about transmog sets."] = ""--]] 
@@ -61,6 +79,12 @@ L["Shows a more detailed text for some of the tooltips."] = "Mostra un testo mol
 L["Shows the icon directly on the item in your bag."] = "Mostra direttamente l'icona sull'oggetto nella tua borsa."
 --[[Translation missing --]]
 --[[ L["Sorry! Your database has corrupted entries. This will cause errors and give incorrect results. Please click below to reset the database."] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Top"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Top Left"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Top Right (default)"] = ""--]] 
 L["Transmoggable Items Only"] = "Solo oggetti trasmogrificabili"
 L["Unknown Items Only"] = "Solo oggetti sconosciuti"
 --[[Translation missing --]]

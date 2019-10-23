@@ -6,6 +6,12 @@ L["Another class can learn this item."] = "Otra clase puede aprender este item."
 L["Appearances updated: "] = "Apariencias actualizadas"
 --[[Translation missing --]]
 --[[ L["Ask me later"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Bottom"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Bottom Left"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Bottom Right"] = ""--]] 
 L["Can be learned by:"] = "Puede ser aprendido por:"
 L["Can I Mog It? Important Message: Please log into all of your characters to compile complete transmog appearance data."] = "Can I Mog It? Mensaje Importante: Por favor, inicie sesión con todos sus personajes para compilar todos los datos de las apariencias transfigurables."
 L["CanIMogItOptions not found, loading defaults!"] = "CanIMogItOptions no encontrado, ¡Cargando por defecto!"
@@ -15,11 +21,17 @@ L["Cannot determine status on other characters."] = "No se puede determinar el e
 L["Cannot learn:"] = "No se puede aprender:"
 L["Cannot learn: Soulbound"] = "No se puede aprender: Ligado al alma"
 --[[Translation missing --]]
+--[[ L["Center"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Database migrated to:"] = ""--]] 
 L["Database Scanning chat messages"] = "Mensajes de chat sobre escaneo en la base de datos"
 L["Debug Tooltip"] = "Depurar información."
 L["Detailed information for debug purposes. Use this when sending bug reports."] = "Información detallada para fines de depuración. Utilice esta opción cuando reciba informes de errores."
+--[[Translation missing --]]
+--[[ L["Does not affect Quests or Adventure Journal."] = ""--]] 
 L["Equippable Items Only"] = "Solo items equipables"
+--[[Translation missing --]]
+--[[ L["Icon Location"] = ""--]] 
 L["Items updated: "] = "Items actualizados"
 L["Learned but cannot transmog yet."] = "Aprendido, pero no se puede transfigurar todavía."
 L["Learned for a different class and item."] = "Aprendido de una clase e item diferente."
@@ -27,6 +39,8 @@ L["Learned for a different class."] = "Aprendido de una clase diferente."
 L["Learned from another item but cannot transmog yet."] = "Aprendido de otro item, pero no se puede transfigurar todavía."
 L["Learned from another item."] = "Aprendido de otro item."
 L["Learned."] = "Aprendido."
+--[[Translation missing --]]
+--[[ L["Left"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Migrating Database version to:"] = ""--]] 
 L["Not learned."] = "No aprendido."
@@ -37,6 +51,10 @@ L["Only show on items that can be equipped."] = "Sólo mostrar en items que pued
 L["Only show on items that can be transmoggrified."] = "Sólo mostrar en items que puedan ser transfigurados."
 L["Only show on items that you haven't learned."] = "Sólo mostrar en items que no ha aprendido."
 L["Please note that this may not always be correct as Blizzard's information is incomplete."] = "Ten en cuenta que esto puede no siempre ser correcto si la información de Blizzard es incompleta"
+--[[Translation missing --]]
+--[[ L["Requires /reload to take effect."] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Right"] = ""--]] 
 L["Show Bag Icons"] = "Mostrar iconos en la mochila"
 L["Show information on the tooltip about transmog sets."] = "Mostrar información en la descripción emergente acerca de sets de transfiguración "
 L["Show Source Location Tooltip"] = "Mostrar información sobre la localización de la fuente"
@@ -48,6 +66,12 @@ L["Shows messages on login about the database scan."] = "Mostrar mensaje al inic
 L["Shows the icon directly on the item in your bag."] = "Muestra el icono directamente sobre el item en tu mochila."
 --[[Translation missing --]]
 --[[ L["Sorry! Your database has corrupted entries. This will cause errors and give incorrect results. Please click below to reset the database."] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Top"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Top Left"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Top Right (default)"] = ""--]] 
 L["Transmoggable Items Only"] = "Solo items transfigurables"
 L["Unknown Items Only"] = "Sólo items desconocidos"
 L["Updating appearances database."] = "Actualizando base de datos de apariencias"

@@ -46,16 +46,11 @@ L["/wa pstart - Start profiling"] = "/wa pstart - Start profiling"
 L["/wa pstop - Finish profiling"] = "/wa pstop - Finish profiling"
 --[[Translation missing --]]
 L["/wa repair - Repair tool"] = "/wa repair - Repair tool"
---[[Translation missing --]]
-L["|cffeda55fLeft-Click|r to toggle showing the main window."] = "|cffeda55fLeft-Click|r to toggle showing the main window."
---[[Translation missing --]]
-L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."
---[[Translation missing --]]
-L["|cffeda55fRight-Click|r to toggle performance profiling on or off."] = "|cffeda55fRight-Click|r to toggle performance profiling on or off."
---[[Translation missing --]]
-L["|cffeda55fShift-Click|r to pause addon execution."] = "|cffeda55fShift-Click|r to pause addon execution."
---[[Translation missing --]]
-L["|cffeda55fShift-Right-Click|r to show profiling results."] = "|cffeda55fShift-Right-Click|r to show profiling results."
+L["|cffeda55fLeft-Click|r to toggle showing the main window."] = "|cffeda55fЛКМ|r переключать показ главного окна."
+L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "|cffeda55fСКМ|r включить или выключить значок на мини-карте."
+L["|cffeda55fRight-Click|r to toggle performance profiling on or off."] = "|cffeda55fПКМ|r включить или выключить профилирование."
+L["|cffeda55fShift-Click|r to pause addon execution."] = "|cffeda55fShift-ЛКМ|r приостановить выполнение аддона."
+L["|cffeda55fShift-Right-Click|r to show profiling results."] = "|cffeda55fShift-ПКМ|r показать результаты профилирования."
 --[[Translation missing --]]
 L["|cFFffcc00Extra Options:|r %s"] = "|cFFffcc00Extra Options:|r %s"
 --[[Translation missing --]]
@@ -772,8 +767,7 @@ L["Set Minimum Progress"] = "Задать мин. прогресс"
 --[[Translation missing --]]
 L["Shadow Resistance"] = "Shadow Resistance"
 L["Shake"] = "Дрожь"
---[[Translation missing --]]
-L["Shift-Click to resume addon execution."] = "Shift-Click to resume addon execution."
+L["Shift-Click to resume addon execution."] = "Shift-Клик, чтобы возобновить выполнение аддона."
 L["Show"] = "Показать"
 L["Show Absorb"] = "Показать поглощение"
 --[[Translation missing --]]

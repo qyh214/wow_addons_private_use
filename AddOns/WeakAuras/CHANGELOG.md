@@ -1,20 +1,14 @@
-# [2.15.2](https://github.com/WeakAuras/WeakAuras2/tree/2.15.2) (2019-10-01)
+# [2.15.4](https://github.com/WeakAuras/WeakAuras2/tree/2.15.4) (2019-10-16)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/2.15.1...2.15.2)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/2.15.3...2.15.4)
 
 ## Highlights
 
- - Bug fixes! 
+ - hot fix for cast bar issue on retail 
 
 ## Commits
 
-InfusOnWoW (3):
-
-- Item Cooldowns: Don't compare against actual gcd duration
-- Options: Layout buttons on unminimize
-- Fix TimerTick running after a aura is hidden
-
 mrbuds (1):
 
-- Check if cooldown is ready after SPELLS_CHANGED fix #1745
+- cast trigger: don't hide cast bar on UNIT_SPELLCAST_FAILED fixes #1766
 
