@@ -1,316 +1,52 @@
-tag ed0c1986656b47e120084ccd05b32dde2f1ff4ec 4.32
+tag be9da31bbcc064c43ee54c89f531308e19a78514 4.36
 Author:	Azilroka <darktemplar9900@yahoo.com>
-Date:	Mon Oct 21 14:04:07 2019 -0500
+Date:	Tue Oct 29 21:00:36 2019 -0500
 
-commit 132cc9ec27264229459028235900226930120812
+commit c72989353f2b6f56443c7940df18f04a661950b8
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Mon Oct 21 14:03:34 2019 -0500
+Date:   Tue Oct 29 21:00:01 2019 -0500
 
-    4.32
+    4.36
 
-commit 833faabeaa464a40488c7f6c0d626febdef7255d
+commit 7e78184f887772775fd7b4dc8f362c5af40bb1b1
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Oct 20 19:47:13 2019 -0500
+Date:   Tue Oct 29 20:57:30 2019 -0500
 
-    Fix Tukui - Skinning.
+    1
 
-commit bd01b409b3eb2415231f1e55d98ed8f5fd686f17
+commit 7e78184f887772775fd7b4dc8f362c5af40bb1b1
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Oct 19 15:36:49 2019 -0500
+Date:   Tue Oct 29 20:57:30 2019 -0500
 
-    TitanClassic Support
+    1
 
-commit e39231ef3451bb7d474a6fb5acbbbd0370f2675f
+commit db862cd225f8add436b848ee22473fcd8eff96b6
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Oct 19 15:36:32 2019 -0500
+Date:   Tue Oct 29 20:55:50 2019 -0500
 
-    Spy
+    Update License
 
-commit 5ff129ae9f12881b93830085f65d9a519bbf755c
+commit 8abacbb493606cff7da930b4f17a20600f2f920a
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Oct 19 15:27:22 2019 -0500
+Date:   Tue Oct 29 20:54:50 2019 -0500
 
-    Auctioneer Tabs
+    Fix Retail .pkgmeta
 
-commit 167fd01a550cea78b7e64285e9179cecdeaf8797
+commit 2902d4ed469ec88d938f63b76a1eef765d7c42bc
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Oct 19 15:19:41 2019 -0500
+Date:   Tue Oct 29 20:51:53 2019 -0500
 
-    Bags for Classic
+    Lets Fix this now.
 
-commit ab4a48154605da92ebe736ae9b93eebda2254f45
+commit d819b67e7e9317745719da249dab82dd2c12736a
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Oct 19 14:45:20 2019 -0500
+Date:   Tue Oct 29 20:45:40 2019 -0500
 
-    BuyEmAllClassic
+    Testing
 
-commit 57d5aa555956e29fb3834e2b9910dfa7fdc5b484
+commit 1212e9a53c9632c4b64cf5b890bb630b2f042039
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Oct 19 14:04:20 2019 -0500
+Date:   Tue Oct 29 20:31:45 2019 -0500
 
-    Skillet
-
-commit d21863ce66b63f5ecafa7914649d7571f4b7d61d
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Oct 19 14:03:44 2019 -0500
-
-    Revert "Shift Skillet so I can work on the Classic Skillet because its now different than Retail Skillet."
-    
-    This reverts commit e9fae13fba8983d54712087496415fa13d75e421.
-
-commit 5972b27e3bd73e12e44c9d82c7d7a2c0e50017eb
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Oct 19 13:39:41 2019 -0500
-
-    RCLootCouncil Previous Skin
-
-commit e8b8c2a53a992d6376dd9d4e27f06151f151854d
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Oct 19 13:39:25 2019 -0500
-
-    Spy
-
-commit e9fae13fba8983d54712087496415fa13d75e421
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Oct 19 13:39:10 2019 -0500
-
-    Shift Skillet so I can work on the Classic Skillet because its now different than Retail Skillet.
-
-commit 4e6d7264b84e079b67cc6445f16b3e1b5c7695d3
-Author: Merathilis <neo0608@gmail.com>
-Date:   Sat Oct 19 13:02:02 2019 +0200
-
-    Update PvP Skin
-
-commit 49caa925703ca0d50c396f51f9f5e19f7dd67129
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Oct 6 19:47:19 2019 -0500
-
-    Disable Tukz Skin
-
-commit ca114607c13e1e9168022121a338cb5cb7dd55c1
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Fri Oct 4 19:04:05 2019 -0500
-
-    Cleanup
-
-commit 90c59563bd942e26f6e948841104651ae42791d1
-Author: Merathilis <neo0608@gmail.com>
-Date:   Fri Oct 4 19:52:09 2019 +0200
-
-    Transparency for previous commit.
-
-commit ae19afa65de3e6b6db99e8935e65c7ab647e5cb5
-Author: Merathilis <neo0608@gmail.com>
-Date:   Fri Oct 4 19:14:00 2019 +0200
-
-    Add XToLevel classic skin.
-
-commit d206f152291c98c58e40a1b11c12573d8392384b
-Author: Merathilis <neo0608@gmail.com>
-Date:   Fri Oct 4 07:43:02 2019 +0200
-
-    Missing Scrollbar on Auctionator Skin
-
-commit f61c68e8ffb5c335d99502dc059580c0eec2d75c
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Thu Oct 3 16:22:38 2019 -0500
-
-    Skillet
-
-commit 42917816b2f2ebeed45f54f010ba560f494b4a9e
-Author: Patrick Morgan <pmorgan133780@gmail.com>
-Date:   Wed Oct 2 13:28:05 2019 -0400
-
-    Pet Tab/Stables/Talents
-
-commit 42917816b2f2ebeed45f54f010ba560f494b4a9e
-Author: Patrick Morgan <pmorgan133780@gmail.com>
-Date:   Wed Oct 2 13:28:05 2019 -0400
-
-    Pet Tab/Stables/Talents
-
-commit f004a6c9582b001febc08505a7bcfb6bdb6facd1
-Author: Patrick Morgan <pmorgan133780@gmail.com>
-Date:   Wed Oct 2 07:53:51 2019 -0400
-
-    Update Character, Inspect and DressUp skins for Classic.
-
-commit f004a6c9582b001febc08505a7bcfb6bdb6facd1
-Author: Patrick Morgan <pmorgan133780@gmail.com>
-Date:   Wed Oct 2 07:53:51 2019 -0400
-
-    Update Character, Inspect and DressUp skins for Classic.
-
-commit 8c66cceba47bc20e1a64b97b87983bdfb09bce71
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Tue Oct 1 21:32:18 2019 -0500
-
-    More Embed Tweaks
-
-commit 463bbe6834c59c06ace47430c5429a59c6d0fe76
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Tue Oct 1 21:23:08 2019 -0500
-
-    Embed System Update.. Still more to do but this is a start.
-
-commit 629d8339554c5aab63d9253140d0a0d39434f7e9
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Tue Oct 1 21:22:44 2019 -0500
-
-    Zygor
-
-commit c5a1bd4fd21b39bb34996d2663e31b5221fee53f
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Tue Oct 1 16:48:47 2019 -0500
-
-    PixelPerfect
-
-commit 003216a0b817b29c9e797b568f35a19b81de2763
-Author: Aaron Topping <aaronjtopping@gmail.com>
-Date:   Mon Sep 30 15:46:43 2019 +0000
-
-    Replacing file with updated one with Classic/Retail compatibility in one codebase.
-
-commit 003216a0b817b29c9e797b568f35a19b81de2763
-Author: Aaron Topping <aaronjtopping@gmail.com>
-Date:   Mon Sep 30 15:46:43 2019 +0000
-
-    Replacing file with updated one with Classic/Retail compatibility in one codebase.
-
-commit ccf85d04235dc3cc7106381be1da44b7e204f27d
-Author: Patrick Morgan <pmorgan133780@gmail.com>
-Date:   Sun Sep 29 07:29:11 2019 -0400
-
-    Should have been SkinStatusBar not SkinBackdropFrame
-
-commit ccf85d04235dc3cc7106381be1da44b7e204f27d
-Author: Patrick Morgan <pmorgan133780@gmail.com>
-Date:   Sun Sep 29 07:29:11 2019 -0400
-
-    Should have been SkinStatusBar not SkinBackdropFrame
-
-commit 5266f78459e51d0c3d44a89d86f38f5606447375
-Author: Patrick Morgan <pmorgan133780@gmail.com>
-Date:   Sat Sep 28 23:26:09 2019 -0400
-
-    Skin Pet Tab of Character Frame
-
-commit 5266f78459e51d0c3d44a89d86f38f5606447375
-Author: Patrick Morgan <pmorgan133780@gmail.com>
-Date:   Sat Sep 28 23:26:09 2019 -0400
-
-    Skin Pet Tab of Character Frame
-
-commit 21ea3d4041dc4feffc06efaea485f95083d03101
-Author: Patrick Morgan <pmorgan133780@gmail.com>
-Date:   Sat Sep 28 17:32:44 2019 -0400
-
-    Fix Typo
-
-commit 21ea3d4041dc4feffc06efaea485f95083d03101
-Author: Patrick Morgan <pmorgan133780@gmail.com>
-Date:   Sat Sep 28 17:32:44 2019 -0400
-
-    Fix Typo
-
-commit a44923661197cebc50f78963185a05b1ad2fab0f
-Author: Simpy <kodi03466@hotmail.com>
-Date:   Wed Sep 25 14:37:40 2019 -0400
-
-    update ace
-
-commit 014a301ad52d0af89e37aa7a500dc138bb2856a5
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Sep 22 21:09:08 2019 -0500
-
-    ExtendedCharacterStats
-
-commit 7d27d67f3591a9791a5102343ebd4c3a46a0bf27
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Sep 22 20:48:37 2019 -0500
-
-    ExtendedCharacterStats
-
-commit 73fe082a2246c7647ce6ac32128579f63286d51a
-Author: Franz Strassmayr <q3fuba@gmail.com>
-Date:   Wed Sep 18 19:36:57 2019 +0000
-
-    fixed "Search Editbox" Skin for ArkInventory
-    the "Search EditBox Border Color" matches now with the "MainFrame Bar Border Color" for better look&feel
-    changes korks in both Classic and BfA
-
-commit 73fe082a2246c7647ce6ac32128579f63286d51a
-Author: Franz Strassmayr <q3fuba@gmail.com>
-Date:   Wed Sep 18 19:36:57 2019 +0000
-
-    fixed "Search Editbox" Skin for ArkInventory
-    the "Search EditBox Border Color" matches now with the "MainFrame Bar Border Color" for better look&feel
-    changes korks in both Classic and BfA
-
-commit 1e37eab49e4f545081d9b986c3577cfda1f5c82b
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Fri Sep 20 16:47:13 2019 -0500
-
-    AuctionHoude / DCS
-
-commit 3b88a1befd0392b0e60885aa0362892960bbe626
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Fri Sep 20 16:47:13 2019 -0500
-
-    AuctionHoude / DCS
-
-commit ad8ce67af52dd6f7a2afa0bbbe54cd5ae9fbf53b
-Author: Franz Strassmayr <q3fuba@gmail.com>
-Date:   Wed Sep 18 19:36:57 2019 +0000
-
-    fixed "Search Editbox" Skin for ArkInventory
-    the "Search EditBox Border Color" matches now with the "MainFrame Bar Border Color" for better look&feel
-    changes korks in both Classic and BfA
-
-commit 73fe082a2246c7647ce6ac32128579f63286d51a
-Author: Franz Strassmayr <q3fuba@gmail.com>
-Date:   Wed Sep 18 19:36:57 2019 +0000
-
-    fixed "Search Editbox" Skin for ArkInventory
-    the "Search EditBox Border Color" matches now with the "MainFrame Bar Border Color" for better look&feel
-    changes korks in both Classic and BfA
-
-commit ad8ce67af52dd6f7a2afa0bbbe54cd5ae9fbf53b
-Author: Franz Strassmayr <q3fuba@gmail.com>
-Date:   Wed Sep 18 19:36:57 2019 +0000
-
-    fixed "Search Editbox" Skin for ArkInventory
-    the "Search EditBox Border Color" matches now with the "MainFrame Bar Border Color" for better look&feel
-    changes korks in both Classic and BfA
-
-commit 7c9d2f5b4171e73ebf41500fb46cefbc8f1555d8
-Author: Merathilis <neo0608@gmail.com>
-Date:   Wed Sep 18 11:13:05 2019 +0200
-
-    Additional change for the previous commit.
-
-commit 47fddfe6560a4d252b474560afd7b18c521c6d9e
-Author: Merathilis <neo0608@gmail.com>
-Date:   Wed Sep 18 11:13:05 2019 +0200
-
-    Additional change for the previous commit.
-
-commit a5bf3602ee3ffdcfe8a34628e922b0534d7a2e13
-Author: Merathilis <neo0608@gmail.com>
-Date:   Wed Sep 18 09:45:53 2019 +0200
-
-    Change AS:SkinTooltip
-
-commit 66313623ad86d37786bebe97563c528f761a8520
-Author: Merathilis <neo0608@gmail.com>
-Date:   Wed Sep 18 09:45:53 2019 +0200
-
-    Change AS:SkinTooltip
-
-commit 32788470dce0ec04ae66c1f2964fdf265c39be67
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Tue Sep 17 22:38:45 2019 -0500
-
-    11302
+    Lets Play
 

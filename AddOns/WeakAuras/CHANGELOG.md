@@ -1,14 +1,23 @@
-# [2.15.4](https://github.com/WeakAuras/WeakAuras2/tree/2.15.4) (2019-10-16)
+# [2.15.5](https://github.com/WeakAuras/WeakAuras2/tree/2.15.5) (2019-10-22)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/2.15.3...2.15.4)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/2.15.4...2.15.5)
 
 ## Highlights
 
- - hot fix for cast bar issue on retail 
+ - A few more bug fixes 
 
 ## Commits
 
-mrbuds (1):
+Stanzilla (1):
 
-- cast trigger: don't hide cast bar on UNIT_SPELLCAST_FAILED fixes #1766
+- drop branch name from PR artifacts
+
+Vardex (1):
+
+- Fix weapon enchant shortened name
+
+mrbuds (2):
+
+- swing timer: fix nil error if no offhand equiped
+- update "Cooldown Progress (Equipment Slot)" for handling amno fixes #1762 refresh on UNIT_INVENTORY_CHANGED add a stacksFunc
 

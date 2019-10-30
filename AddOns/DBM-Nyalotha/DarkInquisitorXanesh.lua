@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2377, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20191012181115")
+mod:SetRevision("20191024000147")
 mod:SetCreatureID(160229)
 mod:SetEncounterID(2328)
 mod:SetZone()
@@ -39,7 +39,6 @@ local specWarnSoulFlay						= mod:NewSpecialWarningRun(306311, nil, nil, nil, 4,
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(270290, nil, nil, nil, 1, 8)
 --local specWarnConductivePulse				= mod:NewSpecialWarningInterrupt(295822, "HasInterrupt", nil, nil, 3, 2)
 
---mod:AddTimerLine(BOSS)
 local timerAbyssalStrikeCD					= mod:NewAITimer(5.3, 311551, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerVoidRitualCD						= mod:NewAITimer(84, 312336, nil, nil, nil, 5, nil, nil, nil, 1, 4)
 local timerSummonRitualObeliskCD			= mod:NewAITimer(30.1, 306495, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
@@ -82,7 +81,7 @@ do
 					local voidRemaining = voidExpireTime-GetTime()
 					if voidRemaining then
 						local _, _, doomCount, _, _, doomExpireTime = DBM:UnitDebuff("player", 314298)
-						if doomCount then--Has Imminent Doom count, show count and doom remaining
+						if doomCount and doomExpireTime then--Has Imminent Doom count, show count and doom remaining
 							local doomRemaining = doomExpireTime-GetTime()
 							addLine(i.."*"..name, doomCount.."("..floor(doomRemaining)..")-"..floor(voidRemaining))
 						else--no Doom, just show void stuff

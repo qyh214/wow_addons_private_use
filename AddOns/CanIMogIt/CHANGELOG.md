@@ -1,9 +1,16 @@
+8.2.5v1.18 Release - 2019/10/23
+
+* [#212](https://gitlab.com/toreltwiddler/CanIMogIt/issues/212) Added C_Timer.After for ArkInventory so CIMI's options are loaded.
+
+*****
 8.2.5v1.17 Release - 2019/10/22
 
 Icon location can now be changed! /cimi to open the options menu!
 
+![Icons move](https://i.imgur.com/eTUv7pI.gif)
+
 * [#11](https://gitlab.com/toreltwiddler/CanIMogIt/issues/11) Added option to move the icon location everywhere except for on Quests and in the Adventure Journal.
-* [#210](https://gitlab.com/toreltwiddler/CanIMogIt/issues/210) Fixed Bagnon not working in some cases by adding to Optional Dependencies.* 
+* [#210](https://gitlab.com/toreltwiddler/CanIMogIt/issues/210) Fixed Bagnon not working in some cases by adding to Optional Dependencies.
 
 *****
 
@@ -11,7 +18,7 @@ Icon location can now be changed! /cimi to open the options menu!
 
 Fixes for errors and TOC update.
 
-* [#207](https://gitlab.com/toreltwiddler/CanIMogIt/issues/207) No longer updates appearances during loading screens. 
+* [#207](https://gitlab.com/toreltwiddler/CanIMogIt/issues/207) No longer updates appearances during loading screens.
 * [#208](https://gitlab.com/toreltwiddler/CanIMogIt/issues/208) Makes sure item link is valid before adding to DB.
 * Updated TOC.
 

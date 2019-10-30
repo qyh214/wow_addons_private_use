@@ -20,7 +20,7 @@ db_defaults.stats = {
 local credits = {
     "Pazza <Bronzebeard-US>\n\n",
     "MysicalOS\nHumfras\nSylvaanar\n\nStewarta <Emerald Dream - EU>\n\nAstaldo <Bronzebeard - EU>\nZeke <Coilfang - US>\nMorphieus <Spinebreaker>\nNachonut <Bronzebeard - US>\n\nChiaki <Frostwolf - EU> - deDE\n"..
-    "BlueNyx <bluenyx@gmail.com> - koKR\nStingerSoft <stingersoft@iti.lt> - ruRU\nJunxian <junxian1121@hotmail.com> - zhCN & zhTW\n"
+    "BlueNyx <bluenyx@gmail.com> - koKR\nStingerSoft <stingersoft@iti.lt> - ruRU\nJunxian <junxian1121@hotmail.com> - zhCN & zhTW\nWoopy <Loatheb - NA> - esES & esMX\n"
 };
 
 local states = {"arena", "combat", "pvp", "raid", "party", "resting", "other"};
@@ -236,9 +236,9 @@ local function createPopRuleFrame(winType)
     end
     for i=1,#states do
         createButton(frame.main.tabs);
-    end    
-    
-    
+    end
+
+
     frame:SetScript("OnShow", function(self)
             if(self.main.alwaysOther:GetChecked()) then
                 for i=1, #frame.main.tabs.buttons-1 do
@@ -252,7 +252,7 @@ local function createPopRuleFrame(winType)
                 frame.main.tabs.title:Show();
             end
         end);
-    
+
     return frame;
 end
 
