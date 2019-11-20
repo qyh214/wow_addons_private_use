@@ -1,10 +1,76 @@
-lightweight tag 01096e95cd941d8e635eb6e6c0f25203a58609f0 v5.2.8.80205
-Author:	GitHub <noreply@github.com>
-Date:	Fri Oct 25 05:58:14 2019 -0700
+lightweight tag 2d4c9e5f6138128d6bac9a449da2c9ed90b1bb84 v5.3.0
+Author:	Boshi Lian <farmer1992@gmail.com>
+Date:	Wed Nov 6 01:35:33 2019 -0800
 
-commit 01096e95cd941d8e635eb6e6c0f25203a58609f0
+commit 2d4c9e5f6138128d6bac9a449da2c9ed90b1bb84
 Author: Boshi Lian <farmer1992@gmail.com>
-Date:   Fri Oct 25 05:58:14 2019 -0700
+Date:   Wed Nov 6 01:35:33 2019 -0800
 
-    bump ver
+    click to gain focus
+
+commit ddcf06884092faf151c91b9cb085a97fff0841d5
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Wed Nov 6 00:17:11 2019 -0800
+
+    remove all global var
+
+commit 635317db52bc1f11d95ab8b6419f0083c508b0b5
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Sun Oct 27 01:58:10 2019 -0700
+
+    Update README.markdown
+
+commit 9d95e5b1d95277977dd1e5b5bafe77607d5ebbc2
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Sun Oct 27 01:50:09 2019 -0700
+
+    remove wild card
+
+commit 10b28125f589b3bfd91f27723c2c080d2312b55e
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Sun Oct 27 01:44:50 2019 -0700
+
+    update pkgmeta
+
+commit 25bcd8b10c6f255c006df02e8f2e31df30cce23c
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Sun Oct 27 01:38:36 2019 -0700
+
+    remove libstub
+
+commit 32b303886acc773df22fa94c9b579777a6625ad9
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Sun Oct 27 01:36:41 2019 -0700
+
+    remove submodule luapb
+
+commit ce20ba3f6469bdb6d88a0afd5e47453ba4d91be8
+Author: Boshi LIAN <bolian@microsoft.com>
+Date:   Fri Oct 25 18:06:02 2019 -0700
+
+    clean up files
+
+commit fa8ad77fdbe898873e807eabcb5591eab74141e8
+Author: Boshi LIAN <bolian@microsoft.com>
+Date:   Fri Oct 25 17:55:16 2019 -0700
+
+    lint crc32
+
+commit d3a54d4f9c14622e2032d47f5e057c7821f01997
+Author: Boshi LIAN <bolian@microsoft.com>
+Date:   Fri Oct 25 17:53:30 2019 -0700
+
+    update libstub
+
+commit 704e4518ed61b663426628b514021f3ba3f7d458
+Author: Boshi LIAN <bolian@microsoft.com>
+Date:   Fri Oct 25 17:49:01 2019 -0700
+
+    clean up license for base64.lua
+
+commit f03db3486537c3e6ab0efebdcd40c9650a4d848e
+Author: Boshi LIAN <bolian@microsoft.com>
+Date:   Fri Oct 25 17:27:59 2019 -0700
+
+    fix lint
 

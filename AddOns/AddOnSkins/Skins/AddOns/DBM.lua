@@ -23,31 +23,15 @@ function AS:DBM(event, addon)
 						local name = _G[frame:GetName()..'BarName']
 						local timer = _G[frame:GetName()..'BarTimer']
 
-						if not icon1.overlay then
-							icon1.overlay = CreateFrame('Frame', '$parentIcon1Overlay', tbar)
-							AS:SetTemplate(icon1.overlay)
-							icon1.overlay:SetFrameLevel(0)
-							icon1.overlay:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMLEFT', AS:AdjustForTheme(-2), 0)
-						end
-
-						if not icon2.overlay then
-							icon2.overlay = CreateFrame('Frame', '$parentIcon2Overlay', tbar)
-							AS:SetTemplate(icon2.overlay)
-							icon2.overlay:SetFrameLevel(0)
-							icon2.overlay:SetPoint('BOTTOMLEFT', frame, 'BOTTOMRIGHT', AS:AdjustForTheme(2), 0)
-						end
-
-						AS:SkinTexture(icon1)
+						AS:SkinTexture(icon1, true)
 						icon1:ClearAllPoints()
-						icon1:SetInside(icon1.overlay)
+						icon1:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMLEFT', AS:AdjustForTheme(-2), AS:AdjustForTheme(1))
 
-						AS:SkinTexture(icon2)
+						AS:SkinTexture(icon2, true)
 						icon2:ClearAllPoints()
-						icon2:SetInside(icon2.overlay)
+						icon2:SetPoint('BOTTOMLEFT', frame, 'BOTTOMRIGHT', AS:AdjustForTheme(2), AS:AdjustForTheme(1))
 
-						icon1.overlay:SetSize(bar.owner.options.Height, bar.owner.options.Height)
-						icon2.overlay:SetSize(bar.owner.options.Height, bar.owner.options.Height)
-						tbar:SetInside(frame)
+						AS:SetInside(tbar, frame)
 
 						AS:SetTemplate(frame)
 
@@ -82,8 +66,8 @@ function AS:DBM(event, addon)
 						timer:SetFont(AS.LSM:Fetch('font', AS:CheckOption('DBMFont')), AS:CheckOption('DBMFontSize'), AS:CheckOption('DBMFontFlag'))
 						name:SetFont(AS.LSM:Fetch('font', AS:CheckOption('DBMFont')), AS:CheckOption('DBMFontSize'), AS:CheckOption('DBMFontFlag'))
 
-						if bar.owner.options.IconLeft then icon1.overlay:Show() else icon1.overlay:Hide() end
-						if bar.owner.options.IconRight then icon2.overlay:Show() else icon2.overlay:Hide() end
+						if bar.owner.options.IconLeft then icon1.Backdrop:Show() else icon1.Backdrop:Hide() end
+						if bar.owner.options.IconRight then icon2.Backdrop:Show() else icon2.Backdrop:Hide() end
 
 						bar.injected = true
 					end)

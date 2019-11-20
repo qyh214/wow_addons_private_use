@@ -104,14 +104,14 @@ local function SkinRockConfig(lib)
 		if self.base.isSkinned then return end
 
 		AS:SetTemplate(self.base, "Transparent")
-		self.base.header:StripTextures()
+		AS:StripTextures(self.base.header)
 		AS:SkinCloseButton(self.base.closeButton, self.base)
 
 		AS:SetTemplate(self.base.treeView)
 		AS:SkinScrollBar(self.base.treeView.scrollBar)
 		AS:SkinDropDownBox(self.base.addonChooser)
 
-		self.base.addonChooser.text:Height(20)
+		self.base.addonChooser.text:SetHeight(20)
 		AS:SetTemplate(self.base.addonChooser.text)
 		AS:SkinArrowButton(self.base.addonChooser.button)
 
@@ -186,7 +186,7 @@ function AS:SkinLibraries()
 		AS:RawHook(LZF, "Create", function(self, ...)
 			local frame = AS.hooks[self].Create(self, ...)
 			AS:SetTemplate(frame.ZMain)
-			frame.ZMain.close:Size(32)
+			frame.ZMain.close:SetSize(32, 32)
 			AS:SkinCloseButton(frame.ZMain.close, frame.ZMain)
 			return frame
 		end, true)

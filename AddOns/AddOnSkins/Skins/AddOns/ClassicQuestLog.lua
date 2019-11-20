@@ -6,11 +6,11 @@ function AS:ClassicQuestLog()
 	AS:SkinFrame(ClassicQuestLog, "Transparent")
 	AS:SkinScrollBar(ClassicQuestLogScrollFrameScrollBar)
 	AS:SkinScrollBar(ClassicQuestLogDetailScrollFrameScrollBar)
-	ClassicQuestLogInset:StripTextures()
-	ClassicQuestLogScrollFrame.expandAll:StripTextures()
-	ClassicQuestLog.count:StripTextures()
-	ClassicQuestLogScrollFrame:StripTextures()
-	ClassicQuestLogDetailScrollFrame:StripTextures()
+	AS:StripTextures(ClassicQuestLogInset)
+	AS:StripTextures(ClassicQuestLogScrollFrame.expandAll)
+	AS:StripTextures(ClassicQuestLog.count)
+	AS:StripTextures(ClassicQuestLogScrollFrame)
+	AS:StripTextures(ClassicQuestLogDetailScrollFrame)
 
 	for i = 1, ClassicQuestLog:GetNumChildren() do
 		local object = select(i, ClassicQuestLog:GetChildren())
@@ -25,23 +25,23 @@ function AS:ClassicQuestLog()
 
 	--Reposition Expand/Collapse Button
 	ClassicQuestLogScrollFrame.expandAll:ClearAllPoints()
-	ClassicQuestLogScrollFrame.expandAll:Point('BOTTOMLEFT', ClassicQuestLog, 'TOPLEFT', 10, -53)
+	ClassicQuestLogScrollFrame.expandAll:SetPoint('BOTTOMLEFT', ClassicQuestLog, 'TOPLEFT', 10, -53)
 
-	ClassicQuestLog.count:Size(100, 20)
+	ClassicQuestLog.count:SetSize(100, 20)
 	ClassicQuestLog.count:ClearAllPoints()
-	ClassicQuestLog.count:Point('LEFT', ClassicQuestLogScrollFrame.expandAll, 'RIGHT', -4, -4)
+	ClassicQuestLog.count:SetPoint('LEFT', ClassicQuestLogScrollFrame.expandAll, 'RIGHT', -4, -4)
 
 	--Reposition Show Map Button
 	ClassicQuestLog.mapButton:ClearAllPoints()
-	ClassicQuestLog.mapButton:Point('BOTTOMRIGHT', ClassicQuestLog, 'TOPRIGHT', 0, -59)
+	ClassicQuestLog.mapButton:SetPoint('BOTTOMRIGHT', ClassicQuestLog, 'TOPRIGHT', 0, -59)
 	ClassicQuestLog.mapButton.text:SetFormattedText("Click") -- Install addon and fix this button.
 
 	--Resize Expand/Collapse Button
-	ClassicQuestLogScrollFrame.expandAll:Size(120, 30)
+	ClassicQuestLogScrollFrame.expandAll:SetSize(120, 30)
 	ClassicQuestLogScrollFrame.expandAll:SetFormattedText("Expand/Collapse")
 
 	--Resize Show Map Button
-	ClassicQuestLog.mapButton:Size(56, 40)
+	ClassicQuestLog.mapButton:SetSize(56, 40)
 end
 
 AS:RegisterSkin('Classic Quest Log', AS.ClassicQuestLog)

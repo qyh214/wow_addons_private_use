@@ -52,6 +52,8 @@ L["Only show on items that can be transmoggrified."] = "Hinweise nur bei Gegenst
 L["Only show on items that you haven't learned."] = "Hinweise nur bei Gegenständen, die noch erlernt werden können."
 L["Please note that this may not always be correct as Blizzard's information is incomplete."] = "Bitte berücksichtige, dass dies nicht immer korrekt ist, da Blizzards Informationen unvollständig sind."
 --[[Translation missing --]]
+--[[ L["Reload to apply"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Requires /reload to take effect."] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Right"] = ""--]] 

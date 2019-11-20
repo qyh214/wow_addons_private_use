@@ -48,6 +48,8 @@ L["Only show on items that can be transmoggrified."] = "형상변환이 가능�
 L["Only show on items that you haven't learned."] = "아직 형상변환을 배우지 않은 아이템만 표시합니다."
 L["Please note that this may not always be correct as Blizzard's information is incomplete."] = "이는 블리자드의 정보가 불완전하기에 항상 올바른 것은 아닙니다."
 --[[Translation missing --]]
+--[[ L["Reload to apply"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Requires /reload to take effect."] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Right"] = ""--]] 

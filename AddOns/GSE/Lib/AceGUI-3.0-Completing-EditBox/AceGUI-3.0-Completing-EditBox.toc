@@ -1,0 +1,9 @@
+## Interface: 60200
+## Title: Lib: AceGUI-3.0-Completing-EditBox
+## Author: Farmbuyer of US-Kilrogg
+## Notes: Creates parameterized AceGUI-3.0 editboxes with autocompletion
+## OptionalDeps: Ace3
+
+
+AceGUI-3.0-Completing-EditBox.lua
+

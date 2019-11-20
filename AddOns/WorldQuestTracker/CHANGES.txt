@@ -1,16 +1,12 @@
-lightweight tag a08bd93afaf5b677faa0343eb4f89374da0f2f3c v8.2.5.384
+lightweight tag 0396ba9b438a86e803426d0cedb1f12b3e7a1a06 v8.2.5.385
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Tue Oct 22 19:55:21 2019 -0300
+Date:	Sat Nov 9 19:20:51 2019 -0300
 
-commit a08bd93afaf5b677faa0343eb4f89374da0f2f3c
+commit 0396ba9b438a86e803426d0cedb1f12b3e7a1a06
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Tue Oct 22 19:55:21 2019 -0300
+Date:   Sat Nov 9 19:20:51 2019 -0300
 
-    - Fixed pet battle track all button under Zone Maps
-
-commit d93183747d01634c628e82511375c9d7bdfb147b
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Wed Oct 9 19:08:08 2019 -0300
-
-    LibDeflate error fix
+    Library and Localization Updates
+    
+    Regular maintenance patch.
 

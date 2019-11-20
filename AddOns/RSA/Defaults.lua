@@ -2513,7 +2513,24 @@ local function Racials()
 					Channel = "",
 				},
 			},
-
+			Regeneratin = {
+				Messages = {
+					Start = {"[LINK] activated!"},
+					End = {},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+			},
+			Haymaker = {
+				Messages = {
+					Start = {"[LINK] cast on [TARGET]!"},
+					End = {},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+			},
 		},
 	}
 	return Racials

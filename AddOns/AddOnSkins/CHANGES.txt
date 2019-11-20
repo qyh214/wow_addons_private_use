@@ -1,52 +1,10 @@
-tag be9da31bbcc064c43ee54c89f531308e19a78514 4.36
+tag 1e4d80e5a186daee49b4a93aaf1ac678b2f8ce41 4.39
 Author:	Azilroka <darktemplar9900@yahoo.com>
-Date:	Tue Oct 29 21:00:36 2019 -0500
+Date:	Fri Nov 15 12:57:39 2019 -0600
 
-commit c72989353f2b6f56443c7940df18f04a661950b8
+commit befa97d892a6df5466a4f011b1a9df8dca3b0f25
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Tue Oct 29 21:00:01 2019 -0500
+Date:   Fri Nov 15 10:25:16 2019 -0600
 
-    4.36
-
-commit 7e78184f887772775fd7b4dc8f362c5af40bb1b1
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Tue Oct 29 20:57:30 2019 -0500
-
-    1
-
-commit 7e78184f887772775fd7b4dc8f362c5af40bb1b1
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Tue Oct 29 20:57:30 2019 -0500
-
-    1
-
-commit db862cd225f8add436b848ee22473fcd8eff96b6
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Tue Oct 29 20:55:50 2019 -0500
-
-    Update License
-
-commit 8abacbb493606cff7da930b4f17a20600f2f920a
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Tue Oct 29 20:54:50 2019 -0500
-
-    Fix Retail .pkgmeta
-
-commit 2902d4ed469ec88d938f63b76a1eef765d7c42bc
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Tue Oct 29 20:51:53 2019 -0500
-
-    Lets Fix this now.
-
-commit d819b67e7e9317745719da249dab82dd2c12736a
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Tue Oct 29 20:45:40 2019 -0500
-
-    Testing
-
-commit 1212e9a53c9632c4b64cf5b890bb630b2f042039
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Tue Oct 29 20:31:45 2019 -0500
-
-    Lets Play
+    4.39
 

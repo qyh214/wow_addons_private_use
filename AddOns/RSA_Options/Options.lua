@@ -2976,6 +2976,25 @@ local function Racial_Options()
 			Message_Channels_Disabled = {["Whisper"] = true},
 			Valid_Tags = {'[SPELL]', '[LINK]'},
 		},
+		["Regeneratin"] = {
+			Profile = 'Regeneratin',
+			Name = GetSpellInfo(291944),
+			Desc = GetSpellDescription(291944),
+			Race = 31,
+			Message_Amount = 2,
+			Message_Areas = {'Start', 'End'},
+			Message_Channels_Disabled = {["Whisper"] = true},
+			Valid_Tags = {'[SPELL]', '[LINK]'},
+		},
+		["Haymaker"] = {
+			Profile = 'Haymaker',
+			Name = GetSpellInfo(287712),
+			Desc = GetSpellDescription(287712),
+			Race = 32,
+			Message_Amount = 2,
+			Message_Areas = {'Start', 'End'},
+			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]'},
+		},
 	}
 	return Spells
 end

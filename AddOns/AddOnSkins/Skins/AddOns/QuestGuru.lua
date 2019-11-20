@@ -22,26 +22,26 @@ function AS:QuestGuru()
 
 	--Reposition Expand/Collapse Button
 	QuestGuruScrollFrame.expandAll:ClearAllPoints()
-	QuestGuruScrollFrame.expandAll:Point('BOTTOMLEFT', QuestGuru, 'TOPLEFT', 10, -53)
+	QuestGuruScrollFrame.expandAll:SetPoint('BOTTOMLEFT', QuestGuru, 'TOPLEFT', 10, -53)
 
 	--Reposition Show Map Button
 	QuestGuru.mapButton:ClearAllPoints()
-	QuestGuru.mapButton:Point('RIGHT', QuestGuru.count, 'RIGHT', 407, 0)
+	QuestGuru.mapButton:SetPoint('RIGHT', QuestGuru.count, 'RIGHT', 407, 0)
 
 	--Resize Expand/Collapse Button
-	QuestGuruScrollFrame.expandAll:Size(120, 30)
+	QuestGuruScrollFrame.expandAll:SetSize(120, 30)
 	QuestGuruScrollFrame.expandAll:SetFormattedText(" Expand/Collapse ")
 
 	--Resize Show Map Button
-	QuestGuru.mapButton:Size(50, 40)
+	QuestGuru.mapButton:SetSize(50, 40)
 	QuestGuru.mapButton:SetFormattedText(" Quest Log ")
 
 	AS:SkinScrollBar(QuestGuruScrollFrameScrollBar)
 	AS:SkinScrollBar(QuestGuruDetailScrollFrameScrollBar)
 
-	QuestGuruInset:StripTextures()
-	QuestGuruDetailScrollFrame:StripTextures()
-	QuestGuruScrollFrame:StripTextures()
+	AS:StripTextures(QuestGuruInset)
+	AS:StripTextures(QuestGuruDetailScrollFrame)
+	AS:StripTextures(QuestGuruScrollFrame)
 end
 
 AS:RegisterSkin('QuestGuru', AS.QuestGuru)

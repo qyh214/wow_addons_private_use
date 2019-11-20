@@ -58,6 +58,8 @@ L["Only show on items that you haven't learned."] = "Sólo mostrar en los objeto
 --[[Translation missing --]]
 --[[ L["Please note that this may not always be correct as Blizzard's information is incomplete."] = ""--]] 
 --[[Translation missing --]]
+--[[ L["Reload to apply"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Requires /reload to take effect."] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Right"] = ""--]] 

@@ -6,11 +6,11 @@ function AS:EnchantCheck()
 	AS:SkinButton(CharacterFrameEnchantCheckButton)
 	AS:SkinButton(InspectFrameEnchantCheckButton)
 	AS:SkinButton(InspectFrameInviteButton)
-	CharacterFrameEnchantCheckButton:Size(112, 20)
+	CharacterFrameEnchantCheckButton:SetSize(112, 20)
 
 	--Reposition Expand/Collapse Button
 	CharacterFrameEnchantCheckButton:ClearAllPoints()
-	CharacterFrameEnchantCheckButton:Point('RIGHT', CharacterMainHandSlot, 'LEFT', -8, -15)
+	CharacterFrameEnchantCheckButton:SetPoint('RIGHT', CharacterMainHandSlot, 'LEFT', -8, -15)
 end
 
 AS:RegisterSkin('EnchantCheck', AS.EnchantCheck)

@@ -1,4 +1,4 @@
-## Interface: 80200
+## Interface: 80205
 ## Title: GarrisonCommander
 ## Notes: Sending all follower to missions with just one click and more
 ## Notes-itIT: Invia tutti i seguaci in missione con un click e molto altro
@@ -12,8 +12,8 @@
 ## Notes-zhTW: 发送所有的追随者与点击多任务
 ## Notes-zhCN: 發送所有的追隨者與點擊多任務
 ## Author: Alar of Daggerspine
-## Version: 3.2.2 70200
-## X-Revision: ecafd1d
+## Version: 3.2.3 70200
+## X-Revision: b1f1756
 ## eMail: alar@aspide.it
 ## URL: http://wow.aspide.it
 ## OptionalDeps: Ace3,LibInit
@@ -28,7 +28,7 @@
 ## X-Category: Garrison
 ## X-License: GPL v3
 ## X-eMail: alar@aspide.it
-## X-Date: 2019-08-04T18:09:02Z
+## X-Date: 2019-10-05T14:59:52Z
 ## X-Embeds: LibInit
 embeds.xml
 wowhead.lua

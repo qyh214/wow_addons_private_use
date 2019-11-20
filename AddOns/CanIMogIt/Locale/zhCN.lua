@@ -48,6 +48,8 @@ L["Only show on items that can be transmoggrified."] = "只对可幻化的物品
 L["Only show on items that you haven't learned."] = "只对未解锁的物品进行提示"
 L["Please note that this may not always be correct as Blizzard's information is incomplete."] = "请注意，这可能并不总正确的，因为暴雪的信息不完整。"
 --[[Translation missing --]]
+--[[ L["Reload to apply"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Requires /reload to take effect."] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Right"] = ""--]] 

@@ -2,10 +2,10 @@ local _, MySlot = ...
 
 local L = MySlot.L
 
-local crc32 = LibStub:GetLibrary('CRC32-1.0')
-local base64 = LibStub:GetLibrary('BASE64-1.0')
+local crc32 = MySlot.crc32
+local base64 = MySlot.base64
 
-local pblua = LibStub:GetLibrary('pblua')
+local pblua = MySlot.luapb
 local _MySlot = pblua.load_proto_ast(MySlot.ast)
 
 
@@ -35,7 +35,7 @@ MySlot.SLOT_TYPE = {
     ["companion"] = MYSLOT_COMPANION,
     ["macro"]= MYSLOT_MACRO,
     ["item"]= MYSLOT_ITEM,
-    ["flyout"] = MYSLOT_FLYOUT, 
+    ["flyout"] = MYSLOT_FLYOUT,
     ["petaction"] = MYSLOT_EMPTY,
     ["futurespell"] = MYSLOT_EMPTY,
     ["equipmentset"] = MYSLOT_EQUIPMENTSET,
@@ -67,7 +67,7 @@ end
 local function StringToTable(s)
     if type(s) ~= 'string' then
         return {}
-    end 
+    end
     local r = {}
     for i = 1, string.len(s) do
         r[#r + 1] = string.byte(s, i)
@@ -78,7 +78,7 @@ end
 local function TableToString(s)
     if type(s) ~= 'table' then
         return ''
-    end 
+    end
     local t = {}
     for _,c in pairs(s) do
         t[#t + 1] = string.char(c)
@@ -95,17 +95,14 @@ function MySlot:GetMacroInfo(macroId)
     -- {macroId ,icon high 8, icon low 8 , namelen, ..., bodylen, ...}
 
     local name, iconTexture, body, isLocal = GetMacroInfo(macroId)
-    
+
     if not name then
         return nil
     end
 
-    local t = {macroId} 
-
     iconTexture = gsub( strupper(iconTexture or "INV_Misc_QuestionMark") , "INTERFACE\\ICONS\\", "");
-    
+
     local msg = _MySlot.Macro()
-    
     msg.id = macroId
     msg.icon = iconTexture
     msg.name = name
@@ -157,9 +154,8 @@ local function KeyToByte(key , command)
         return nil
     end
 
-    local mod,key = nil, key
-    local t = {}
-    local _,_,_mod,_key = string.find(key ,"(.+)-(.+)") 
+    local mod = nil
+    local _, _, _mod, _key = string.find(key ,"(.+)-(.+)") 
     if _mod and _key then
         mod, key = _mod, _key
     end
@@ -215,14 +211,13 @@ end
 -- }}}
 
 
-function MySlot:Export()
+function MySlot:Export(opt)
     -- ver nop nop nop crc32 crc32 crc32 crc32
 
     local msg = _MySlot.Charactor()
 
     msg.ver = MYSLOT_VER
     msg.name = UnitName("player")
-    
     msg.macro = {}
 
     for i = 1, MAX_ACCOUNT_MACROS + MAX_CHARACTER_MACROS do
@@ -249,7 +244,7 @@ function MySlot:Export()
     end
 
     local ct = msg:Serialize()
-    t = {MYSLOT_VER,86,04,22,0,0,0,0}
+    local t = {MYSLOT_VER,86,04,22,0,0,0,0}
     MergeTable(t, StringToTable(ct))
 
     -- {{{ CRC32
@@ -279,18 +274,18 @@ function MySlot:Export()
     for i = 1, d:len(), LINE_LEN do
         s = s .. d:sub(i, i + LINE_LEN - 1) .. MYSLOT_LINE_SEP
     end
-    MYSLOT_ReportFrame_EditBox:SetText(s)
-    MYSLOT_ReportFrame_EditBox:HighlightText()
+
+    return s
     -- }}}
 end
 
-function MySlot:Import()
+function MySlot:Import(text, opt)
     if InCombatLockdown() then
         MySlot:Print(L["Import is not allowed when you are in combat"])
         return
     end
 
-    local s = MYSLOT_ReportFrame_EditBox:GetText() or ""
+    local s = text or ""
     s = string.gsub(s,"(@.[^\n]*\n)","")
     s = string.gsub(s,"(#.[^\n]*\n)","")
     s = string.gsub(s,"\n","")
@@ -302,7 +297,7 @@ function MySlot:Import()
         return
     end
 
-    local force = _G['MYSLOT_ReportFrameForceImport']:GetChecked()
+    local force = opt.force
 
     local ver = s[1]
     local crc = s[5] * 2^24 + s[6] * 2^16 + s[7] * 2^8 + s[8]
@@ -333,12 +328,7 @@ function MySlot:Import()
     ct = TableToString(ct)
     
     local msg = _MySlot.Charactor():Parse(ct)
-
-    StaticPopupDialogs["MYSLOT_MSGBOX"].OnAccept = function()
-        StaticPopup_Hide("MYSLOT_MSGBOX")
-        MySlot:RecoverData(msg)
-    end
-    StaticPopup_Show("MYSLOT_MSGBOX")
+    return msg
 end
 
 -- {{{ FindOrCreateMacro
@@ -594,7 +584,7 @@ function MySlot:RecoverData(msg)
             if key == "KEYCODE" then
                 key = b.key1.keycode
             end
-            local key = ( mod ~= "NONE" and (mod .. "-") or "" ) .. key
+            key = ( mod ~= "NONE" and (mod .. "-") or "" ) .. key
             SetBinding(key, command, 1)
         end
 
@@ -632,54 +622,3 @@ function MySlot:Clear(what)
         SaveBindings(GetCurrentBindingSet())
     end
 end
-
-SlashCmdList["MYSLOT"] = function(msg, editbox)
-    local cmd, what = msg:match("^(%S*)%s*(%S*)%s*$")
-
-    if cmd == "clear" then
-        MySlot:Clear(what)
-    else
-        MYSLOT_ReportFrame:Show() 
-    end
-end
-SLASH_MYSLOT1 = "/MYSLOT"
-
-StaticPopupDialogs["MYSLOT_MSGBOX"] = {
-    text = L["Are you SURE to import ?"],
-    button1 = ACCEPT,
-    button2 = CANCEL,
-    timeout = 0,
-    whileDead = 1,
-    hideOnEscape = 1,
-    multiple = 0,
-}
-
-local f = CreateFrame('Frame')
-f:RegisterEvent('ADDON_LOADED')
-
-f:SetScript("OnEvent", function()
-    -- TODO clean up code
-    local FRAMENAME = 'MYSLOT_ReportFrame'
-    _G[FRAMENAME .. 'CloseButton']:SetText(L["Close"])
-    _G[FRAMENAME .. 'CloseButton']:SetScript('OnClick', function()
-        MYSLOT_ReportFrame:Hide()
-    end)
-
-    _G[FRAMENAME .. 'ImportButton']:SetText(L["Import"])
-    _G[FRAMENAME .. 'ImportButton']:SetScript('OnClick', function()
-        MySlot:Import()
-    end)
-
-    _G[FRAMENAME .. 'ExportButton']:SetText(L["Export"])
-    _G[FRAMENAME .. 'ExportButton']:SetScript('OnClick', function()
-        MySlot:Export()
-    end)
-
-    _G[FRAMENAME .. 'ForceImportText']:SetText(L["Force Import"])
-    _G[FRAMENAME .. 'ForceImport'].tooltip = L["Skip CRC32, version and any other validation before importing. May cause unknown behavior"]
-
-    -- _G[FRAMENAME .. 'OptionFrameOptionBarText']:SetText(L["Import and Export settings below"])
-    -- _G[FRAMENAME .. 'OptionFrameActionText']:SetText(L["Spell"])
-    -- _G[FRAMENAME .. 'OptionFrameMacroText']:SetText(L["Macro"])
-    -- _G[FRAMENAME .. 'OptionFrameBindingText']:SetText(L["Keys Binding"])
-end)

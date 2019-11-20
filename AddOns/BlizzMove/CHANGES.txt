@@ -1,16 +1,22 @@
-lightweight tag b84b9a87ab8a8bbf5fced3a0ab0727a045682cdd 1.9
-Author:	zanony <zanony@jsommer.at>
-Date:	Sat Aug 10 03:55:21 2019 +0200
+lightweight tag ed11a05fc663333845ce7b7c593418cc847b7047 v1.9.1
+Author:	GitHub <noreply@github.com>
+Date:	Sat Nov 9 15:17:57 2019 +0100
 
-commit b84b9a87ab8a8bbf5fced3a0ab0727a045682cdd
-Author: zanony <zanony@jsommer.at>
-Date:   Sat Aug 10 03:55:21 2019 +0200
+commit ed11a05fc663333845ce7b7c593418cc847b7047
+Author: MarkW <17293527+Numynum@users.noreply.github.com>
+Date:   Sat Nov 9 15:17:57 2019 +0100
 
-    Update for Classic WoW
-    
-    Classic WoW
-    - Add QuestLogFrame
-    8.2
-    -Add AddonList
-    -Add Blizzard_AzeriteUI
+    added support for azerite item&essence frames (#4)
+
+commit 7df7e105fe2eb8ff11bc0e5f7265ba2f443c3040
+Author: fuba <41425685+fubaBfA@users.noreply.github.com>
+Date:   Fri Sep 27 14:07:25 2019 +0200
+
+    added some Classic Frames & Code Cleanup
+
+commit 7df7e105fe2eb8ff11bc0e5f7265ba2f443c3040
+Author: fuba <41425685+fubaBfA@users.noreply.github.com>
+Date:   Fri Sep 27 14:07:25 2019 +0200
+
+    added some Classic Frames & Code Cleanup
 

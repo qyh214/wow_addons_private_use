@@ -68,9 +68,9 @@ local function showRealDate(curseDate)
 end
 
 DBM = {
-	Revision = parseCurseDate("20191024000147"),
-	DisplayVersion = "8.2.25", -- the string that is shown as version
-	ReleaseRevision = releaseDate(2019, 10, 23) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	Revision = parseCurseDate("20191114024226"),
+	DisplayVersion = "8.2.28", -- the string that is shown as version
+	ReleaseRevision = releaseDate(2019, 11, 9) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -140,7 +140,6 @@ DBM.DefaultOptions = {
 	EventSoundWipe = "None",
 	EventSoundEngage2 = "None",
 	EventSoundMusic = "None",
-	EventSoundTurle = "None",
 	EventSoundDungeonBGM = "None",
 	EventSoundMusicCombined = false,
 	EventDungMusicMythicFilter = true,
@@ -287,7 +286,6 @@ DBM.DefaultOptions = {
 	HelpMessageVersion = 3,
 	MoviesSeen = {},
 	MovieFilter2 = "OnlyFight",
-	BonusFilter = "Never",
 	LastRevision = 0,
 	DebugMode = false,
 	DebugLevel = 1,
@@ -1502,8 +1500,7 @@ do
 				"PLAYER_SPECIALIZATION_CHANGED",
 				"PARTY_INVITE_REQUEST",
 				"LOADING_SCREEN_DISABLED",
-				"SCENARIO_COMPLETED",
-				"UPDATE_VEHICLE_ACTIONBAR"
+				"SCENARIO_COMPLETED"
 			)
 			if RolePollPopup:IsEventRegistered("ROLE_POLL_BEGIN") then
 				RolePollPopup:UnregisterEvent("ROLE_POLL_BEGIN")
@@ -3707,43 +3704,6 @@ function DBM:SCENARIO_COMPLETED()
 	end
 end
 
-do
-	local function delayedVehicleCheck(self)
-		if self.Options.turtlePlaying and not HasVehicleActionBar() then
-			DBM:TransitionToDungeonBGM(false, true)
-			return
-		end
-		if self:GetCIDFromGUID(UnitGUID("pet")) == 138172 then
-			fireEvent("DBM_MusicStart", "Turtle")
-			if not self.Options.tempMusicSetting then
-				self.Options.tempMusicSetting = tonumber(GetCVar("Sound_EnableMusic")) or 1
-				if self.Options.tempMusicSetting == 0 then
-					SetCVar("Sound_EnableMusic", 1)
-				else
-					self.Options.tempMusicSetting = nil--Don't actually need it
-				end
-			end
-			local path = "MISSING"
-			if self.Options.EventSoundTurle == "Random" then
-				local random = fastrandom(3, #DBM.Music)
-				path = DBM.Music[random].value
-			else
-				path = self.Options.EventSoundTurle
-			end
-			PlayMusic(path)
-			self.Options.turtlePlaying = true
-			DBM:Debug("Starting turtle music with file: "..path)
-		end
-	end
-
-	function DBM:UPDATE_VEHICLE_ACTIONBAR()
-		if self.Options.EventSoundTurle and self.Options.EventSoundTurle ~= "None" and self.Options.EventSoundTurle ~= "" then
-			self:Unschedule(delayedVehicleCheck)
-			self:Schedule(1, delayedVehicleCheck, self)
-		end
-	end
-end
-
 --------------------------------
 --  Load Boss Mods on Demand  --
 --------------------------------
@@ -3796,10 +3756,9 @@ do
 				self.Options.tempMusicSetting = nil
 				DBM:Debug("Restoring Sound_EnableMusic CVAR")
 			end
-			if self.Options.musicPlaying or self.Options.turtlePlaying then--Primarily so DBM doesn't call StopMusic unless DBM is one that started it. We don't want to screw with other addons
+			if self.Options.musicPlaying then--Primarily so DBM doesn't call StopMusic unless DBM is one that started it. We don't want to screw with other addons
 				StopMusic()
 				self.Options.musicPlaying = nil
-				self.Options.turtlePlaying = nil
 				DBM:Debug("Stopping music")
 			end
 			fireEvent("DBM_MusicStop", "ZoneOrCombatEndTransition")
@@ -4412,10 +4371,8 @@ do
 					end
 					--Find min revision.
 					updateNotificationDisplayed = 2
-					if not DBM.Options.DontShowReminders then
-						AddMsg(DBM, DBM_CORE_UPDATEREMINDER_HEADER:match("([^\n]*)"))
-						AddMsg(DBM, DBM_CORE_UPDATEREMINDER_HEADER:match("\n(.*)"):format(displayVersion, version))
-					end
+					AddMsg(DBM, DBM_CORE_UPDATEREMINDER_HEADER:match("([^\n]*)"))
+					AddMsg(DBM, DBM_CORE_UPDATEREMINDER_HEADER:match("\n(.*)"):format(displayVersion, version))
 					showConstantReminder = 1
 				elseif not noRaid and #newerVersionPerson == 3 and updateNotificationDisplayed < 3 then--The following code requires at least THREE people to send that higher revision. That should be more than adaquate
 					--Disable if revision grossly out of date even if not major patch.
@@ -4424,13 +4381,14 @@ do
 						if revDifference > 100000000 then--Approx 1 month old 20190416172622
 							if updateNotificationDisplayed < 3 then
 								updateNotificationDisplayed = 3
-								AddMsg(DBM, DBM_CORE_UPDATEREMINDER_NODISABLE)
+								AddMsg(DBM, DBM_CORE_UPDATEREMINDER_DISABLE)
+								DBM:Disable(true)
 							end
 						end
 					--Disable if out of date and it's a major patch.
 					elseif not testBuild and dbmToc < wowTOC then
 						updateNotificationDisplayed = 3
-						AddMsg(DBM, DBM_CORE_UPDATEREMINDER_MAJORPATCH)--Major patches will ALWAYS ignore DontShowReminders
+						AddMsg(DBM, DBM_CORE_UPDATEREMINDER_MAJORPATCH)
 						DBM:Disable(true)
 					end
 				end
@@ -5666,7 +5624,7 @@ end
 
 do
 	local statVarTable = {
-		--6.0+
+		--Current
 		["event5"] = "normal",
 		["event20"] = "lfr25",
 		["event40"] = "lfr25",
@@ -5679,12 +5637,21 @@ do
 		["mythic"] = "mythic",
 		["worldboss"] = "normal",
 		["timewalker"] = "timewalker",
+		["normalwarfront"] = "normal",
+		["heroicwarfront"] = "heroic",
+		["normalisland"] = "normal",
+		["heroicisland"] = "heroic",
+		["mythicisland"] = "mythic",
 		--Legacy
 		["lfr25"] = "lfr25",
 		["normal10"] = "normal",
-		["normal25"] = "normal25",
+		["normal20"] = "normal",
+		["normal25"] = "normal25",--Legacy raids that have two normal difficulties still (10/25)
+		["normal40"] = "normal",
 		["heroic10"] = "heroic",
-		["heroic25"] = "heroic25",
+		["heroic25"] = "heroic25",--Legacy raids that have two heroic difficulties still (10/25)
+		["normalscenario"] = "normal",
+		["heroicscenario"] = "heroic",
 	}
 
 	function DBM:StartCombat(mod, delay, event, synced, syncedStartHp)
@@ -6306,7 +6273,7 @@ do
 	local autoTLog = false
 
 	local function isCurrentContent()
-		if LastInstanceMapID == 1861 or LastInstanceMapID == 2070 or LastInstanceMapID == 2096 or LastInstanceMapID == 2164 then--BfA
+		if LastInstanceMapID == 1861 or LastInstanceMapID == 2070 or LastInstanceMapID == 2096 or LastInstanceMapID == 2164 or LastInstanceMapID == 2217 then--BfA
 			return true
 		end
 		return false
@@ -6364,53 +6331,63 @@ end
 --TODO C_IslandsQueue.GetIslandDifficultyInfo(), if 38-40 don't work
 function DBM:GetCurrentInstanceDifficulty()
 	local _, instanceType, difficulty, difficultyName, _, _, _, _, instanceGroupSize = GetInstanceInfo()
-	local keystoneLevel = C_ChallengeMode.GetActiveKeystoneInfo() or 0
 	if difficulty == 0 or (difficulty == 1 and instanceType == "none") or C_Garrison:IsOnGarrisonMap() then--draenor field returns 1, causing world boss mod bug.
-		return "worldboss", RAID_INFO_WORLD_BOSS.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 1 then
-		return "normal5", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 2 then
-		return "heroic5", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 3 then
-		return "normal10", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 4 then
-		return "normal25", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 5 then
-		return "heroic10", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 6 then
-		return "heroic25", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 7 then--Fixed LFR (ie pre WoD zones)
-		return "lfr25", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 8 then
+		return "worldboss", RAID_INFO_WORLD_BOSS.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 1 then--5 man Normal Dungeon
+		return "normal5", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 2 then--5 man Heroic Dungeon
+		return "heroic5", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 3 then--Legacy 10 man Normal Raid
+		return "normal10", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 4 then--Legacy 25 man Normal Raid
+		return "normal25", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 5 then--Legacy 10 man Heroic Raid
+		return "heroic10", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 6 then--Legacy 25 man Heroic Raid
+		return "heroic25", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 7 then--Legacy 25 man LFR (ie pre WoD zones)
+		return "lfr25", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 8 then--Dungeon, Mythic+ (Challenge modes in mists and wod)
+		local keystoneLevel = C_ChallengeMode.GetActiveKeystoneInfo() or 0
 		return "challenge5", PLAYER_DIFFICULTY6.."+ ("..keystoneLevel..") - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 9 then--40 man raids have their own difficulty now, no longer returned as normal 10man raids
-		return "normal10", difficultyName.." - ",difficulty, instanceGroupSize, keystoneLevel--Just use normal10 anyways, since that's where we been saving 40 man stuff for so long anyways, no reason to change it now, not like any 40 mans can be toggled between 10 and 40 where we NEED to tell the difference.
-	elseif difficulty == 11 then
-		return "heroic5", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 12 then
-		return "normal5", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 14 or difficulty == 38 then
-		return "normal", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 15 or difficulty == 39 or difficulty == 149 then
-		return "heroic", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 16 or difficulty == 40 then
-		return "mythic", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 17 or difficulty == 151 then--Variable LFR (ie post WoD zones)/8.3+ LFR?
-		return "lfr", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 18 then
-		return "event40", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 19 then
-		return "event5", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 20 then
-		return "event20", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 23 then
-		return "mythic", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 24 or difficulty == 33 then
-		return "timewalker", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
-	elseif difficulty == 147 or difficulty == 149 then
-		return "warfront", difficultyName.." - ", difficulty, instanceGroupSize, keystoneLevel
+	elseif difficulty == 9 then--Legacy 40 man raids, no longer returned as index 3 (normal 10man raids)
+		return "normal40", difficultyName.." - ",difficulty, instanceGroupSize, 0
+	elseif difficulty == 11 then--Heroic Scenario (mostly Mists of pandaria)
+		return "heroicscenario", difficultyName.." - ",difficulty, instanceGroupSize, 0
+	elseif difficulty == 12 then--Normal Scenario (mostly Mists of pandaria)
+		return "normalscenario", difficultyName.." - ",difficulty, instanceGroupSize, 0
+	elseif difficulty == 14 then--Flexible Normal Raid
+		return "normal", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 15 then--Flexible Heroic Raid
+		return "heroic", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 16 then--Mythic 20 man Raid
+		return "mythic", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 17 or difficulty == 151 then--Flexible LFR (ie post WoD zones)/8.3+ LFR?
+		return "lfr", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 18 then--Special event 40 player LFR Queue (used by molten core aniversery event)
+		return "event40", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 19 then--Special event 5 player queue (used by wod pre expansion event that had miniturized version of UBRS remake)
+		return "event5", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 20 then--Special event 20 player LFR Queue (never used yet)
+		return "event20", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 23 then--Mythic 5 man Dungeon
+		return "mythic", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 24 or difficulty == 33 then--Timewalking Dungeon, Timewalking Raid
+		return "timewalker", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 38 then--Normal BfA Island expedition
+		return "normalisland", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 39 then--Heroic BfA Island expedition
+		return "heroicisland", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 40 then--Mythic BfA Island expedition
+		return "mythicisland", difficultyName.." - ", difficulty, instanceGroupSize, 0
+	elseif difficulty == 147 then--Normal BfA Warfront
+		return "normalwarfront", difficultyName.." - ",difficulty, instanceGroupSize, 0
+	elseif difficulty == 148 then--20 man classic raid
+		return "normal20", difficultyName.." - ",difficulty, instanceGroupSize, 0
+	elseif difficulty == 149 then--Heroic BfA Warfront
+		return "heroicwarfront", difficultyName.." - ",difficulty, instanceGroupSize, 0
 	else--failsafe
-		return "normal5", "", difficulty, instanceGroupSize, keystoneLevel
+		return "normal", "", difficulty, instanceGroupSize, 0
 	end
 end
 
@@ -7146,7 +7123,7 @@ function DBM:FindInstanceIDs(low, peak, contains)
 end
 
 
---/run DBM:FindEncounterIDs(1180)--Ny'alotha
+--/run DBM:FindEncounterIDs(1028)--Azeroth
 --/run DBM:FindEncounterIDs(1178, 23)--Dungeon Template (mythic difficulty)
 --/run DBM:FindEncounterIDs(237, 1)--Classic Dungeons need diff 1 specified
 --/run DBM:FindDungeonMapIDs(1, 500)--Find Classic Dungeon Map IDs
@@ -7211,62 +7188,6 @@ do
 	function DBM:CINEMATIC_STOP()
 		self:Debug("CINEMATIC_STOP fired", 2)
 		DBMHudMap:UnSupressCanvas()
-	end
-end
-
--------------------
---  Bonus Filter --
--------------------
-do
-	local bonusTimeStamp = 0
-	local bonusRollForce = false
-	--[[local warFrontMaps = {
-		[14] = true, -- Arathi Highlands
-		[62] = true, -- Darkshore
-	}--]]
-	local function hideBonusRoll(self)
-		bonusTimeStamp = GetTime()
-		BonusRollFrame:Hide()
-		self:AddMsg(DBM_CORE_BONUS_SKIPPED)
-	end
-	local function showBonusRoll(self)
-		if (GetTime() - bonusTimeStamp) < 180 then--3 min timer still active
-			BonusRollFrame:Show()
-			BonusRollFrame:Show()
-			bonusTimeStamp = 0--Reset to 0, because you can't call frame back more than once, once you pass it's over
-		else--Out of Time
-			self:AddMsg(DBM_CORE_BONUS_EXPIRED)
-		end
-	end
-	SLASH_DBMBONUS1 = "/dbmbonusroll"
-	SlashCmdList["DBMBONUS"] = function(msg)
-		bonusRollForce = true
-		showBonusRoll(DBM)
-	end
-	--TODO, see where timewalking ilvl fits into filters
-	--Couldn't get any of events to work so have to hook the show script directly
-	if BonusRollFrame then
-		BonusRollFrame:HookScript("OnShow", function(self, event, ...)
-			if bonusRollForce then
-				bonusRollForce = false
-				return
-			end
-			DBM:Debug("BonusRollFrame OnShow fired", 2)
-			if DBM.Options.BonusFilter == "Never" then return end
-			local _, _, difficultyId, _, _, _, _, mapID = GetInstanceInfo()
-			local localMapID = C_Map.GetBestMapForUnit("player") or 0
-			local keystoneLevel = C_ChallengeMode.GetActiveKeystoneInfo() or 0
-			DBM:Unschedule(hideBonusRoll)
-			if DBM.Options.BonusFilter == "TrivialContent" and (difficultyId == 1 or difficultyId == 2) then--Basically anything below 370 ilvl (normal/heroic dungeons)
-				hideBonusRoll(DBM)
-			elseif DBM.Options.BonusFilter == "NormalRaider" and (difficultyId == 17 or difficultyId == 23 or (difficultyId == 8 and keystoneLevel < 5) or (difficultyId == 0 and localMapID == 14)) then--Basically, anything below 385 (normal/heroic/mythic dungeons lower than 5, LFR
-				hideBonusRoll(DBM)
-			elseif DBM.Options.BonusFilter == "HeroicRaider" and (difficultyId == 14 or difficultyId == 17 or difficultyId == 23 or (difficultyId == 8 and keystoneLevel < 10) or (difficultyId == 0 and localMapID == 14)) then--Basically, anything below 400 (normal/heroic/mythic dungeons lower than 10, LFR/Normal Raids
-				hideBonusRoll(DBM)
-			elseif DBM.Options.BonusFilter == "MythicRaider" and (difficultyId == 14 or difficultyId == 15 or difficultyId == 17 or difficultyId == 23 or difficultyId == 8 or difficultyId == 0) then--Basically, anything below Mythic Raid (ANY dungeon, LFR/Normal/Heroic Raids
-				hideBonusRoll(DBM)
-			end
-		end)
 	end
 end
 
@@ -7490,7 +7411,7 @@ function bossModPrototype:IsEasy()
 	return false
 end
 
---Dungeons, mythic, mythic+. Raids: heroic, mythic
+--Dungeons: mythic, mythic+. Raids: heroic, mythic
 function bossModPrototype:IsHard()
 	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
 	if diff == "mythic" or diff == "challenge5" or diff == "heroic" then
@@ -7499,25 +7420,28 @@ function bossModPrototype:IsHard()
 	return false
 end
 
+--Pretty much ANYTHING that has a normal mode
 function bossModPrototype:IsNormal()
 	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
-	if diff == "normal" or diff == "normal5" or diff == "normal10" or diff == "normal25" then
+	if diff == "normal" or diff == "normal5" or diff == "normal10" or diff == "normal20" or diff == "normal25" or diff == "normal40" or diff == "normalisland" or diff == "normalwarfront" then
 		return true
 	end
 	return false
 end
 
+--Pretty much ANYTHING that has a heroic mode
 function bossModPrototype:IsHeroic()
 	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
-	if diff == "heroic" or diff == "heroic5" or diff == "heroic10" or diff == "heroic25" then
+	if diff == "heroic" or diff == "heroic5" or diff == "heroic10" or diff == "heroic25" or diff == "heroicisland" or diff == "heroicwarfront" then
 		return true
 	end
 	return false
 end
 
+--Pretty much ANYTHING that has mythic mode, with mythic+ included
 function bossModPrototype:IsMythic()
 	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
-	if diff == "mythic" or diff == "challenge5" then
+	if diff == "mythic" or diff == "challenge5" or diff == "mythicisland" then
 		return true
 	end
 	return false
@@ -7526,6 +7450,30 @@ end
 function bossModPrototype:IsEvent()
 	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
 	if diff == "event5" or diff == "event20" or diff == "event40" then
+		return true
+	end
+	return false
+end
+
+function bossModPrototype:IsWarfront()
+	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
+	if diff == "normalwarfront" or diff == "heroicwarfront" then
+		return true
+	end
+	return false
+end
+
+function bossModPrototype:IsIsland()
+	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
+	if diff == "normalisland" or diff == "heroicisland" or diff == "mythicisland" then
+		return true
+	end
+	return false
+end
+
+function bossModPrototype:IsScenario()
+	local diff = savedDifficulty or DBM:GetCurrentInstanceDifficulty()
+	if diff == "normalscenario" or diff == "heroicscenario" then
 		return true
 	end
 	return false
@@ -10704,10 +10652,12 @@ do
 		return newTimer(self, "target", ...)
 	end
 
+	--Buff/Debuff/event on boss
 	function bossModPrototype:NewBuffActiveTimer(...)
 		return newTimer(self, "active", ...)
 	end
 
+	----Buff/Debuff on players
 	function bossModPrototype:NewBuffFadesTimer(...)
 		return newTimer(self, "fades", ...)
 	end

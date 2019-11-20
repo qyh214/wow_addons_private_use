@@ -1,15 +1,15 @@
 ------------------------------------------------
 ---- Raeli's Spell Announcer Utility Spells ----
 ------------------------------------------------
-local RSA = LibStub("AceAddon-3.0"):GetAddon("RSA")
-local L = LibStub("AceLocale-3.0"):GetLocale("RSA")
-local RSA_Racials = RSA:NewModule("Racials")
+local RSA = LibStub('AceAddon-3.0'):GetAddon('RSA')
+local L = LibStub('AceLocale-3.0'):GetLocale('RSA')
+local RSA_Racials = RSA:NewModule('Racials')
 
 local MonitorConfig_Racials
 
 function RSA_Racials:OnInitialize()
-	RSA_Racials.CombatLogMonitor = CreateFrame("Frame", "RSA_Racials:CLM")
-	RSA_Racials.CombatLogMonitor:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+	RSA_Racials.CombatLogMonitor = CreateFrame('Frame', 'RSA_Racials:CLM')
+	RSA_Racials.CombatLogMonitor:RegisterEvent('COMBAT_LOG_EVENT_UNFILTERED')
 end
 
 function RSA_Racials:OnEnable()
@@ -25,11 +25,11 @@ function RSA_Racials:OnEnable()
 	]]--
 	local Config_ArcaneTorrent = { -- Blood Elf Arcane Torrent
 		profile = 'ArcaneTorrent',
-		section = "Cast",
+		section = 'Cast',
 	}
 	local Config_GOTN = { -- Draenei Gift of the Naaru
 		profile = 'GOTN',
-		section = "Cast",
+		section = 'Cast',
 		replacements = { TARGET = 1 },
 	}
 	local Config_BloodFury = { -- Orc Blood Fury Start
@@ -37,7 +37,7 @@ function RSA_Racials:OnEnable()
 	}
 	local Config_BloodFury_End = { -- Orc Blood Fury End
 		profile = 'BloodFury',
-		section = "End",
+		section = 'End',
 	}
 	local Config_AncestralCall = { -- Mag'har Orc Ancestral Call Start
 		profile = 'AncestralCall',
@@ -46,7 +46,7 @@ function RSA_Racials:OnEnable()
 	local Config_AncestralCall_End = { -- Mag'har Orc Ancestral Call End
 		profile = 'AncestralCall',
 		linkID = 274738,
-		section = "End",
+		section = 'End',
 	}
 	MonitorConfig_Racials = {
 		player_profile = RSA.db.profile.Racials,
@@ -77,6 +77,13 @@ function RSA_Racials:OnEnable()
 				profile = 'ArcanePulse',
 				tracker = 2,
 			},
+			[291944] = { -- Zandalari Troll Regeneratin
+				profile = 'Regeneratin',
+			},
+			[287712] = { -- Kul'Tiran Haymaker
+				profile = 'Haymaker',
+				replacements = { TARGET = 1 },
+			},
 		},
 		SPELL_AURA_REMOVED = {
 			[20572] = Config_BloodFury_End, -- Attack Power
@@ -88,32 +95,41 @@ function RSA_Racials:OnEnable()
 			[274739] = Config_AncestralCall_End, -- Crit
 			[20594] = { -- Dwarf
 				profile = 'Stoneform',
-				section = "End",
+				section = 'End',
 			},
 			[58984] = { -- Night Elf
 				profile = 'Shadowmeld',
-				section = "End",
+				section = 'End',
 			},
 			[68992] = { -- Worgen
 				profile = 'Darkflight',
-				section = "End",
+				section = 'End',
 			},
 			[26297] = { -- Troll
 				profile = 'Berserking',
-				section = "End",
+				section = 'End',
 			},
 			[265221] = { -- Dark Iron Dwarf
 				profile = 'Fireblood',
-				section = "End",
+				section = 'End',
 			},
 			[260364] = { -- Nightborne
 				profile = 'ArcanePulse',
-				section = "End",
+				section = 'End',
 				tracker = 1,
 			},
 			[274738] = { -- Mag'har Orc
 				profile = 'AncestralCall',
-				section = "End",
+				section = 'End',
+			},
+			[291944] = { -- Zandalari Troll Regeneratin
+				profile = 'Regeneratin',
+				section = 'End',
+			},
+			[287712] = { -- Kul'Tiran Haymaker
+				profile = 'Haymaker',
+				section = 'End',
+				replacements = { TARGET = 1 },
 			},
 		},
 		SPELL_CAST_SUCCESS = {
@@ -136,52 +152,52 @@ function RSA_Racials:OnEnable()
 			[232633] = Config_ArcaneTorrent, -- Priest
 			[59752] = { -- Human Every Man for Himself
 				profile = 'EMFH',
-				section = "Cast",
+				section = 'Cast',
 			},
 			[20589] = { -- Gnome
 				profile = 'EscapeArtist',
-				section = "Cast",
+				section = 'Cast',
 			},
 			[7744] = { -- Undead Will of the Forsaken
 				profile = 'WOTF',
-				section = "Cast",
+				section = 'Cast',
 			},
 			[20549] = { -- Tauren
 				profile = 'WarStomp',
-				section = "Cast",
+				section = 'Cast',
 			},
 			[69070] = { -- Goblin
 				profile = 'RocketJump',
-				section = "Cast",
+				section = 'Cast',
 			},
 			[256948] = { -- Void Elf Spawning the rift
 				profile = 'SpatialRift',
-				section = "Placed",
+				section = 'Placed',
 			},
 			[257040] = { -- Void Elf Teleporting to the rift
 				profile = 'SpatialRift',
-				section = "Cast",
+				section = 'Cast',
 			},
 			[255654] = { -- Highmountain Tauren
 				profile = 'BullRush',
-				section = "Cast",
+				section = 'Cast',
 			},
 		},
 	}
 
-	RSA.RacialMonitorConfig(MonitorConfig_Racials, UnitGUID("player"))
+	RSA.RacialMonitorConfig(MonitorConfig_Racials, UnitGUID('player'))
 
 	local function Spells()
 		if RSA.db.profile.Modules.Racials == false then return end
 		local timestamp, event, hideCaster, sourceGUID, source, sourceFlags, sourceRaidFlag, destGUID, dest, destFlags, destRaidFlags, spellID, spellName, spellSchool, missType, overheal, ex3, ex4, ex5, ex6, ex7, ex8 = CombatLogGetCurrentEventInfo()
 		if RSA.AffiliationMine(sourceFlags) then
-			RSA.MonitorAndAnnounce(self, "racials", timestamp, event, hideCaster, sourceGUID, source, sourceFlags, sourceRaidFlag, destGUID, dest, destFlags, destRaidFlags, spellID, spellName, spellSchool, missType, overheal, ex3, ex4, ex5, ex6, ex7, ex8)
+			RSA.MonitorAndAnnounce(self, 'racials', timestamp, event, hideCaster, sourceGUID, source, sourceFlags, sourceRaidFlag, destGUID, dest, destFlags, destRaidFlags, spellID, spellName, spellSchool, missType, overheal, ex3, ex4, ex5, ex6, ex7, ex8)
 		end
 	end
-	RSA_Racials.CombatLogMonitor:SetScript("OnEvent", Spells)
+	RSA_Racials.CombatLogMonitor:SetScript('OnEvent', Spells)
 end
 
 function RSA_Racials:OnDisable()
 	RSA.db.profile.Modules.Racials = false
-	RSA_Racials.CombatLogMonitor:SetScript("OnEvent", nil)
+	RSA_Racials.CombatLogMonitor:SetScript('OnEvent', nil)
 end
