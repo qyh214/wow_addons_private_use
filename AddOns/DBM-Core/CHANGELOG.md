@@ -1,18 +1,27 @@
 # Deadly Boss Mods Core
 
-## [8.2.28](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/8.2.28) (2019-11-14)
-[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/8.2.27...8.2.28)
+## [8.2.29](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/8.2.29) (2019-11-22)
+[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/8.2.28...8.2.29)
 
-- Version increase without update notification activation. This release is purely for this weeks ptr, so while it is version 8.2.28, it will not send update notification to 8.2.27 users.  
-- Update Nzoth again. The journal update posted by wowhead was from an obsolete build and some mechanics were missed. Thanks to Reloe for pointing this out.  
-- Some pre mythic testing tweaks to vexiona and maut. Wrathion already looks fine  
-- Tweaks to cataclysm and wrath events  
-    Revised update policy to return to DBM force disabling if more than 1 month out of date, instead of only doing force disables on major patches. When out of date mods are wiping raids REPEATEDLY, DBM is being too leaniant. In addition, the update notification nag message can no longer be disabled either. Out of date, get a nag, period.  
-- Full Nzoth drycode based on current build. quite a few guesses based on incomplete journal and 0 phase change code exists so timers will auto generate during phases but not between phase changes.  
-    Fixed bug where charged bonds was missing voice on Rad-den  
-    Additional tweaks to timer scheduling on Shadhar  
-- Several Nyalotha fixes/additions based on more normal mode feedback.  
-- KR Update (toc) (#86)  
-    * koKR Update (toc)  
-- KR Update (#85)  
+- Some mythic testing tweaks and bump version  
+- Fix error  
+- Miner timer tweaks  
+- KR Update (#90)  
     * KR Update  
+- Fix missing =  
+- Also add some preliminary mind phase detection to Nzoth (currently it'd only work ok for player, for rest of phase it'd fail to build accurate table do to combat log phasing issues that hopefully blizzard addresses)  
+- N'zoth update from the limited amount of test logs from the buggy mess that was called testing last week :D  
+- Added some debug to ashvane to try and figure out how/why Core is breaking on cleaning up old timers when :Stop() is called  
+- Azshara Update to new CLEU events  
+     - Improved timers for all events that didn't used to be in combat log (but are now). Nether Portal and All 4 add timers particularly  
+     - This update also finally enables add warnings on normal and LFR difficulty for Devoted, Myrmidon, and Indomitable adds. ALL add warnings will be 2-3 seconds faster (before the CLEU events, they were only detectable on heroic/mythic via a slightly slower event)  
+- Fixed heart of frost timer, which probably changed a long time ago when they adjusted fight to make killing elemental more disirable than ignoring it, but no one reported it/cared.  
+- Wrathion and Vexiona mythic updates  
+- Mythic Maut update  
+- Fixed energy infoframe to always show percent, not obnoxious numbers, during encounter.  
+    Auto Logger Feature Update  
+    - Re-worked auto logger to support either recording only bosses, or the entire zone via a new checkbox in options.  
+    - Tweaked defaults a bit so that the default is to record entire zone, but only current content raids (ie trivial content excluded)  
+- KR Update (#88)  
+    * KR Update  
+- Fix bad soundkit IDs for some sounds. Closes #87  

@@ -1,12 +1,16 @@
-lightweight tag 0396ba9b438a86e803426d0cedb1f12b3e7a1a06 v8.2.5.385
+lightweight tag 7104492c81a0ef928ce2385e66902650352e3a52 v8.2.5.386
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Sat Nov 9 19:20:51 2019 -0300
+Date:	Mon Dec 2 17:55:27 2019 -0300
 
-commit 0396ba9b438a86e803426d0cedb1f12b3e7a1a06
+commit 7104492c81a0ef928ce2385e66902650352e3a52
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Sat Nov 9 19:20:51 2019 -0300
+Date:   Mon Dec 2 17:55:27 2019 -0300
 
-    Library and Localization Updates
+    Added the ability to toggle all filters ON and OFF
     
-    Regular maintenance patch.
+    - Added two new options into the Filters menu:
+    * Select All
+    * Select None
+    
+    - Localization and Libraries Updates.
 

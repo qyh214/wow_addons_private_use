@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2372, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20191111030008")
+mod:SetRevision("20191122133937")
 mod:SetCreatureID(157253, 157254)--Ka'zir and Tek'ris
 mod:SetEncounterID(2333)
 mod:SetZone()
@@ -169,6 +169,15 @@ local allTimers = {
 		[307232] = {}
 	},
 }
+
+--/run DBM:GetModByName("2372"):SetMythicTimersToHeroic()
+function mod:SetMythicTimersToHeroic()
+	allTimers["mythic"] = allTimers["heroic"]
+end
+--/run DBM:GetModByName("2372"):SetMythicTimersToNormal()
+function mod:SetMythicTimersToNormal()
+	allTimers["mythic"] = allTimers["normal"]
+end
 
 function mod:OnCombatStart(delay)
 	self.vb.interruptCount = 0

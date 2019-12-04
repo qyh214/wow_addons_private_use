@@ -263,7 +263,7 @@ L.SpamBlockNoNameplateLines	= "이름표 오라에 선 표시 안함 (오라 아
 L.SpamBlockNoCountdowns		= "초읽기 효과음 재생 안함"
 L.SpamBlockNoYells			= "대화 알림 사용 안함"
 L.SpamBlockNoNoteSync		= "메모 공유 수락 안함"
-L.SpamBlockNoReminders		= "로그인, 권장사항, 업데이트 알림 메시지 표시 안함 (권장하지 않음)"
+L.SpamBlockNoReminders		= "로그인, 권장사항, 모드 없음, 핫픽스 메시지 표시 안함"
 
 L.Area_Restore				= "DBM 복구 설정 (DBM이 보스 모드 종료시 이전 사용자 설정 상태로 돌아갈 지 여부를 설정)"
 L.SpamBlockNoIconRestore	= "아이콘 설정 상태를 저장하지 않고 전투 종료시 원래대로 복구"
@@ -329,9 +329,10 @@ L.ShowRespawn				= "전멸 후 보스 재생성 타이머 표시"
 L.ShowQueuePop				= "입장 수락 남은 시간 타이머 표시 (공격대 찾기,전장 등)"
 --
 L.Area_AutoLogging			= "자동 전투 기록 설정"
-L.AutologBosses				= "보스 전투시 블리자드 전투 기록 자동 활성화 (전투 시작전 물약이나 여러 이벤트를 기록하려면 /dbm pull 명령어 사용)"
-L.AdvancedAutologBosses		= "Transcriptor 사용시 보스 전투 기록 자동 활성화"
-L.LogOnlyRaidBosses			= "현재 확장팩의 레이드 보스만 기록하기 (공격대 찾기/파티/시나리오/구 컨텐츠 제외)"
+L.AutologBosses				= "블리자드 전투 로그를 사용해 자동으로 던전/레이드 기록"
+L.AdvancedAutologBosses		= "Transcriptor를 사용해 자동으로 던전/레이드 기록"
+L.RecordOnlyBosses			= "보스만 기록 (모든 일반몹은 제외됩니다. 보스 전투 시작 물약과 ENCOUNTER_START 이벤트를 기록하고 싶으면 '/dbm pull' 명령어를 사용하세요)"
+L.LogOnlyNonTrivial			= "주요 콘텐츠만 기록 (공격대 찾기/던전/시나리오/구 확장팩 제외)"
 --
 L.Area_3rdParty				= "써드파티 애드온 설정"
 L.ShowBBOnCombatStart		= "전투 시작시 Big Brother 버프 검사 실행"
