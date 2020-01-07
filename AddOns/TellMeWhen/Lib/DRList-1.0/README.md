@@ -10,7 +10,7 @@ DRList is updated to seamlessly support both Classic and Retail World of Warcraf
 ## Upgrading from DRData to DRList
 
 - All occurances of `DRData` must be renamed to `DRList`.
-- There's a new category added for Disarms, depending on how your addon is coded you might need to account for this.
+- There's a new category added for Disarms, depending on how your addon is coded you might need to account for this. (In Classic there's several new categories added.)
 - If you used to access the tables directly, you'll now need to add the current expansion as an extra table property.
   E.g `DRData.categoryNames` to `DRList.categoryNames.retail` or `DRList.categoryNames.classic`. The only exception for this is
   the spell list table. For API functions there should be no need for changes.

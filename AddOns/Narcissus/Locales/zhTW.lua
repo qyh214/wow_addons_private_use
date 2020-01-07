@@ -7,6 +7,11 @@ local L = Narci.L
 NARCI_GRADIENT = "|cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r 角色資訊"
 MYMOG_GRADIENT = "|cffA236EFM|cff9448F1y |cff865BF2T|cff786DF4r|cff6A80F6a|cff5D92F7n|cff4FA4F9s|cff41B7FAm|cff33C9FCo|cff32c9fbg|r"
 
+NARCI_MODIFIER_ALT = "ALT鍵";   --Windows
+if IsMacClient() then
+    NARCI_MODIFIER_ALT = "Option鍵";  --Mac OS
+end
+
 L["Movement Speed"] = "移動速度";
 L["Damage Reduction Percentage"] = "減傷%";
 
@@ -124,7 +129,24 @@ NARCI_GEMMA = "\"Gemma\"";
 NARCI_GEMMY_DESCRIPTION = "在妳為壹件物品鑲嵌寶石時，顯示可用的寶石列表。"
 NARCI_DRESSING_ROOM = "試衣間"
 NARCI_DRESSING_ROOM_DESCRIPTION = "增大試衣間窗口大小，並使妳能夠通過試衣間瀏覽、復制其他玩家的幻化調料包。";
-NARCI_REQUIRE_RELOAD = "需要重載UI才能使設置生效。";
+NARCI_REQUIRE_RELOAD = "|cffff5050需要重載UI才能使設置生效。|r";
+L["Show Detailed Stats"] = "顯示詳盡的屬性信息";
+L["Tooltip Color"] = "小提示顏色";
+L["Entrance Visual"] = "登場效果";
+L["Entrance Visual Description"] = "在模組登場時播放法術效果。";
+L["Panel Scale"] = "面板縮放";
+L["Exit Confirmation"] = "退出確認";
+L["Exit Confirmation Texts"] = "退出合影模式？";
+L["Exit Confirmation Leave"] = "退出";
+L["Exit Confirmation Cancel"] = "取消";
+L["Ultra-wide"] = "超寬屏";
+L["Ultra-wide Optimization"] = "超寬屏優化";
+L["Baseline Offset"] = "基準線偏移";
+L["Ultra-wide Tooltip"] = "妳能看到此選項是因為妳正在使用壹臺%s:9顯示器。";
+L["Interactive Area"] = "交互區域";
+L["Item Socketing Tooltip"] = "雙擊左鍵進行鑲嵌";
+L["Credits"] = "致謝";
+L["Use Bust Shot"] = "使用半身像";
 
 --Model Control--
 NARCI_SHEATH_WEAPON = "收起武器";
@@ -139,18 +161,96 @@ NARCI_LINK_LIGHT_SETTINGS = "關聯燈光設定";
 NARCI_LINK_MODEL_SCALE = "關聯模組比例";
 NARCI_GROUP_PHOTO = "合影模式";
 NARCI_GROUP_PHOTO_AVAILABLE = "現已加入Narcissus插件";
-NARCI_GROUP_PHOTO_NOTIFICATION = "請選擇壹名玩家作為目標。";
-NARCI_GROUP_PHOTO_INDEX = "序號";
-NARCI_GROUP_PHOTO_FRONT = "|cff40c7eb頂層|r";
+NARCI_GROUP_PHOTO_NOTIFICATION = "請選擇壹個目標。";
 NARCI_GROUP_PHOTO_STATUS_HIDDEN = "隱藏";
+NARCI_DIRECTIONAL_AMBIENT_LIGHT = "平行光/環境光";
+NARCI_DIRECTIONAL_AMBIENT_LIGHT_TOOLTIP = "在以下兩種燈光間切換：\n- 可以被模組遮擋並投射陰影的平行光\n- 影響整個模組表面的環境光";
+L["Reset"] = "重置";
+L["Actor Index"] = "序號";
+L["Move To Font"] = "|cff40c7eb頂層|r";
+L["Actor Index Tooltip"] = "拖動壹個序號按鈕來改變其模組的層級。";
+L["Play Button Tooltip"] = "左鍵：播放此動畫\n右鍵：恢復所有模組的動畫";
+L["Pause Button Tooltip"] = "左鍵：定格此動畫\n右鍵：暫停所有模組的動畫";
+L["Save Layers"] = "保存圖層";
+L["Save Layers Tooltip"] = "自動截取6張截圖以供後期合成使用。\n在此過程中請不要移動鼠標或點擊任何按鈕，否則在退出插件後妳的角色可能變為不可見。如果發生這種情況，請輸入以下指令：\n/console showplayer";
+L["Ground Shadow"] = "模擬地面陰影";
+L["Ground Shadow Tooltip"] = "為妳的模組下方添加壹個可調整的陰影。";
+L["Hide Player"] = "隱藏玩家自身";
+L["Hide Player Tooltip"] = "讓妳的角色變為不可見。";
+L["Virtual Actor"] = "虛擬角色";
+L["Virtual Actor Tooltip"] = "只有法術效果可見";
+L["Self"] = "自身";
+L["Target"] = "目標";
+L["Compact Mode Tooltip"] = "僅用屏幕左側來展示妳的幻化。";
+L["Toggle Equipment Slots"] = "顯示裝備欄";
+L["Toggle Text Mask"] = "文字蒙版";
+L["Toggle 3D Model"] = "顯示3D模組";
+L["Toggle Model Mask"] = "模組蒙版";
+L["Show Color Sliders"] = "顯示色彩滑桿";
+L["Show Color Presets"] = "顯示色彩預設";
+
+
+--Spell Visual Browser--
+L["Visuals"] = "法術效果";
+L["Visual ID"] = "效果ID";
+L["Animation ID Abbre"] = "動畫ID";
+L["Category"] = "類別";
+L["Sub-category"] = "子類別";
+L["My Favorites"] = "收藏夾";
+L["Reset Visual Tooltip"] = "移除未應用的效果";
+L["Remove Visual Tooltip"] = "左鍵：移除選中的效果\n長按：移除所有效果";
+L["Apply"] = "應用";
+L["Applied"] = "已應用";
+L["Remove"] = "刪除";
+L["Rename"] = "重命名";
+L["Refresh Model"] = "重載模組";
+L["Toggle Browser"] = "效果瀏覽器";
+L["Next And Previous"] = "左鍵：下壹個\n右鍵：上壹個";
+L["New Favorite"] = "新的收藏";
+L["Favorites Add"] = "添加到收藏夾";
+L["Favorites Remove"] = "從收藏夾中移除";
+L["Auto-play"] = "Auto-play";   --Auto-play suggested animation
+L["Delete Entry Plural"] = "即將刪除%s個條目";
+L["Delete Entry Singular"] = "即將刪除%s個條目";
+L["History Panel Note"] = "被應用的效果會顯示在這裏";
+L["Return"] = "返回";
 
 --Equipment Comparison--
 NARCI_AZERITE_POWERS = "艾澤萊晶岩之力"
+L["Gem Tooltip Format1"] = "%s和%s";
+L["Gem Tooltip Format2"] = "%s、%s和另外%s種...";
+
+--Equipment Set Manager
+L["Toggle Equipment Set Manager"] = "點擊以打開/關閉裝備管理員";
+L["Low Item Level"] = "物品等级過低";
+L["1 Missing Item"] = "缺少1件物品";
+L["n Missing Items"] = "缺少%s件物品";
+L["Update Items"] = "更新裝備";
+L["Don't Update Items"] = "不要更新裝備";
+L["Update Talents"] = "更新天賦";
+L["Don't Update Talents"] = "不要更新天賦";
+L["Old Icon"] = "舊圖示";
+NARCI_ICON_SELECTOR = "圖示清單";
+NARCI_DELETE_SET_WITH_LONG_CLICK = "刪除此套裝\n|cff808080(按住左鍵)|r";
 
 --Tutorial--
-NARCI_TUTORIAL_CAPTUREBUTTON = "點擊此按鈕後會自動保存5張圖層：\n僅背景、帶藍\\綠幕的3D模組、裝備欄的alpha\\顏色通道。\n\n如果想只保存壹張截圖，請按鍵盤上的截圖快捷鍵。";
-NARCI_TUTORIAL_ANIMATION_ID = "左鍵單擊 ID +1  右鍵單擊 ID -1\n動畫ID的有效範圍為 0~1472。";
-NARCI_TUTORIAL_GREEN_SCREEN = "點擊最左端的正方形按鈕可以顯示藍\\綠幕。";
+L["Alert"] = "警告";
+L["Race Change"] = "種族/性別變更";
+L["Race Change Line1"] = "妳又可以改變妳的種族和性別了。但是此功能存在壹些限制：\n1. 妳的武器會消失。\n2. 法術效果不再能被移除。\n3. 此操作對其他玩家或NPC無效。";
+L["Guide Spell Headline"] = "試用和應用";
+L["Guide Spell Criteria1"] = "單擊左鍵：試用";
+L["Guide Spell Criteria2"] = "單擊右鍵：應用";
+L["Guide Spell Line1"] = "大多數通過左鍵添加的效果會在幾秒內自行消失，而通過右鍵添加的效果會壹直保留在模組上。\n\n現在請將鼠標移到壹個條目上：";
+L["Guide Spell Choose Category"] = "選擇壹個妳感興趣的類別，隨後展開壹個子類別。"
+L["Guide History Headline"] = "歷史記錄面板";
+L["Guide History Line1"] = "至多5個被應用的效果會出現在這裏。妳可以選中壹個，然後按右端的刪除按鈕將它移除。";
+L["Guide Refresh Line1"] = "點擊此按鈕可以移除所有未被應用的效果。儲存在妳歷史記錄面板中的效果會被重新應用。";
+L["Guide Input Headline"] = "自行輸入";
+L["Guide Input Line1"] = "妳也可以自行輸入SpellVisualKitID。截至8.3版本，這個ID的上限約為124,000。\n妳可以用鼠標滾輪來快速預覽上/下壹個ID。\n有極少的ID可能會導致遊戲報錯。";
+L["Guide Equipment Manager Line1"] = "雙擊：使用套裝\n右擊：編輯套裝";
+L["Guide Model Control Headline"] = "模組控制";
+L["Guide Model Control Line1"] = format("妳可以用控制試衣間的鼠標行為來控制此模組。此外，妳還可以：\n\n1.按住%s和鼠標左鍵來改變俯仰角。\n2.按住%s和鼠標右鍵來進行細微縮放。", NARCI_MODIFIER_ALT, NARCI_MODIFIER_ALT);
+
 
 --Others need to be localized--
 L["Level"] = "等級";
@@ -160,7 +260,7 @@ L["Minimap button has been hidden. You may type /Narci minimap to re-enable it."
 L["Minimap button has been re-enabled."] = "小地圖按鈕已經重新啟用。"
 
 --Splash--
-NARCI_PATCH_NOTES = "v1.0.6 Patch Notes";
+NARCI_SPELL_VISUALS = "法術視覺效果";
 NARCI_SPLASH_CLOSE_AND_CONTINUE = "關閉此窗口並繼續";
 NARCI_SPLASH_SOUNDS_GREAT_BYE = "聽上去不錯。待會兒見！";
 NARCI_TRY_IT_NOW = "點擊這裏以啟用...";
@@ -174,15 +274,27 @@ NARCI_DISABLE_IT_NOW = "點擊這裏以禁用...";
     NARCI_CAMERA_SAFE_MODE_DISABLED = "|cffff5050已禁用。|r 妳可以在偏好設定-鏡頭中啟用它。";
     --
 NARCI_SHOW_DETAILS = "+ Show details...";
-NARCI_SPLASH_HEADER1 = "合影模式和模組控制";
-NARCI_SPLASH_HEADER2 = "其他";
-NARCI_SPLASH_MESSAGE0 = "|cff40C7EB1. 借助Narcissus來拍攝合影|r\n妳可通過小地圖按鈕或是模型控制面板來進入這個模式。選擇玩家並把他們添加進妳的場景，創作獨壹無二的故事。"
-NARCI_SPLASH_MESSAGE1 = "|cff40C7EB2. 更全面地控制模型光照|r\n妳可以控制光照強度，並分別設置聚光燈和環境光的顏色。";
-NARCI_SPLASH_MESSAGE2 = "|cff40C7EB2. 鏡頭安全模式|r\n在罕見情況下，ActionCam功能沒有在退出Narcissus後正確關閉。勾選此選項可以確保在關閉此插件後ActionCam被徹底關閉。"
-NARCI_SPLASH_MESSAGE3 = "|cff40C7EB1. 試衣間增強|r\n增大試衣間窗口大小，並使妳能夠通過試衣間瀏覽、復制其他玩家的幻化調料包。"
+NARCI_SPLASH_HEADER1 = "視覺效果和模組控制";
+NARCI_SPLASH_HEADER2 = "套裝管理員";
+NARCI_SPLASH_HEADER3 = "其他";
+NARCI_SPLASH_MESSAGE0 = "|cffd9cdb41. 妳現在可以在場景裏應用獨特的效果了。|r\n妳可以為演員添加法術或者其他道具，甚至可以控制場景中的天氣。點擊模組控制面板左下角的按鈕即可展開選項。"
+NARCI_SPLASH_MESSAGE1 = format("|cffd9cdb42. 翻轉模組和細微縮放|r\n妳可以按住%s和滑鼠左鍵來讓模組演Y軸旋轉；或是按住%s和滑鼠右鍵來進行細微縮放。", NARCI_MODIFIER_ALT, NARCI_MODIFIER_ALT);
+NARCI_SPLASH_MESSAGE2 = "|cffd9cdb4可通過點擊右上方的六邊形按鈕（也是顯示妳最高物品等級的地方）來展開這個功能。";
+NARCI_SPLASH_MESSAGE3 = "|cffd9cdb41. 現在AFK畫面會在妳移動或者進入戰鬥時自動退出。\n2. 試衣間增強又恢復了工作。|r";
 
 --Project Details--
 NARCI_ALL_PROJECTS = "全部項目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2019.8.13|r\n\n感謝妳使用此插件！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2019.12.23|r\n\n感謝妳使用此插件！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾澤拉斯上的不同景點，並收集各種故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沈浸式角色面板；妳最好的截圖助手。"
+
+--Conversation--
+L["Q1"] = "這是什麽？";
+L["Q2"] = "這我知道。但是它為什麽這麽大？";
+L["Q3"] = "這不好笑。我只想要個正常大小的提示。";
+L["Q4"] = "很好。但我該怎麽禁用這個提示呢？";
+L["Q5"] = "還有壹件事：妳能保證不再搞惡作劇了嗎？";
+L["A1"] = "顯然這是壹個退出確認窗口。當妳嘗試按下快捷鍵來退出合影模式時它就會彈出來。";
+L["A2"] = "哈哈哈，她也是這麽說的。";
+L["A3"] = "好吧...好吧..."
+L["A4"] = "打開偏好設定，然後選擇拍照模式標簽，妳就能看到這個選項啦。";

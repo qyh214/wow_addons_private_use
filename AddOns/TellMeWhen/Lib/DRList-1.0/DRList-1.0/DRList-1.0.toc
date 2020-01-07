@@ -1,8 +1,6 @@
 ## Interface: 80205
 ## Title: Lib: Diminishing Returns Database
-## Notes: List of abilities that have diminishing returns and its categories.
-## Notes-ruRU: Список способностей с убывающей отдачей и их категорий.
-## Version: v1.0.9
+## Version: 66d7242
 ## X-Category: Library
 ## X-Curse-Project-ID: 315757
 

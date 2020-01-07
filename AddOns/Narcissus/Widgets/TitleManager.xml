@@ -377,11 +377,22 @@
                                         --Narci_TitleFrame_AnimFrame:Hide();
                                     </OnEnter>
                                     <OnLeave>
-                                        self.thumbTexture:SetColorTexture(0.1, 0.1, 0.1);
+                                        if not self.IsMouseDown then
+                                            self.thumbTexture:SetColorTexture(0.1, 0.1, 0.1);
+                                        end
                                     </OnLeave>
                                     <OnShow>
                                         self:SetValueStep(0.01)
                                     </OnShow>
+                                    <OnMouseDown>
+                                        self.IsMouseDown = true;
+                                    </OnMouseDown>
+                                    <OnMouseUp>
+                                        self.IsMouseDown = false;
+                                        if not self:IsMouseOver() then
+                                            self.thumbTexture:SetColorTexture(0.1, 0.1, 0.1);
+                                        end
+                                    </OnMouseUp>
                                 </Scripts>
                             </Slider>
                         </Frames>

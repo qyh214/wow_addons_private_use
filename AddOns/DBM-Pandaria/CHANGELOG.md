@@ -1,12 +1,10 @@
 # <DBM> Pandaria
 
-## [r131](https://github.com/DeadlyBossMods/DBM-MoP/tree/r131) (2019-09-24)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-MoP/compare/r130...r131)
+## [r132](https://github.com/DeadlyBossMods/DBM-MoP/tree/r132) (2019-11-06)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-MoP/compare/r131...r132)
 
-- TOC Bump  
-- Fix RU locales  
-- Fix lua error: Closing braces in locales  
-- Locale and readme updates  
-- Include project version in toc  
-- adjust packager call  
-- move to the BigWigs community packager  
+- Merge pull request #2 from amakinen/remove-outdated-localization  
+    Remove obsolete localization entry  
+- Remove obsolete localization entry  
+- Removed Arrow on Jasper chains, it somehow managed to dodge unit position pruning.  
+    Tweaked api call for heroic crypt of kings check in scenarios mod, so it's compatible with difficulty check refactor in upcoming core.  

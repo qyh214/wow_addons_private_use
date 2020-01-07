@@ -2,7 +2,7 @@
 
 	<FontFamily name="ItemLevelMedium" virtual="true">
 		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="11">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="11">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="0.6" y="-0.6"/>
@@ -214,7 +214,7 @@
 
 	<FontFamily name="StatusNameMedium" virtual="true">
 		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="12">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
@@ -254,7 +254,7 @@
 			</Font>
 		</Member>
 		<Member alphabet="russian">
-			<Font font="Interface\AddOns\Narcissus\Font\NotoSans-Medium.ttf" height="10">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSans-Medium.ttf" height="11">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
@@ -267,7 +267,7 @@
 
 	<FontFamily name="StatusNumberSmall" virtual="true">
 		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="12">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
@@ -320,7 +320,7 @@
 
 	<FontFamily name="PlayerInfoSmall" virtual="true">
 		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="13">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="13">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
@@ -373,7 +373,7 @@
 
 	<FontFamily name="IlvlSmall" virtual="true">
 		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="12">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
@@ -383,7 +383,7 @@
 			</Font>
 		</Member>
 		<Member alphabet="korean">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="12">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
@@ -393,7 +393,7 @@
 			</Font>
 		</Member>
 		<Member alphabet="simplifiedchinese">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="12">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
@@ -403,7 +403,7 @@
 			</Font>
 		</Member>
 		<Member alphabet="traditionalchinese">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="12">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
@@ -413,7 +413,7 @@
 			</Font>
 		</Member>
 		<Member alphabet="russian">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="12">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
@@ -426,7 +426,7 @@
 
 	<FontFamily name="IlvlLarge" virtual="true">
 		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="24">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="24">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="2" y="-2"/>
@@ -436,7 +436,7 @@
 			</Font>
 		</Member>
 		<Member alphabet="korean">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="24">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="24">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="2" y="-2"/>
@@ -446,7 +446,7 @@
 			</Font>
 		</Member>
 		<Member alphabet="simplifiedchinese">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="24">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="24">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="2" y="-2"/>
@@ -456,7 +456,7 @@
 			</Font>
 		</Member>
 		<Member alphabet="traditionalchinese">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="24">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="24">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="2" y="-2"/>
@@ -466,7 +466,7 @@
 			</Font>
 		</Member>
 		<Member alphabet="russian">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="24">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="24">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="2" y="-2"/>
@@ -532,60 +532,30 @@
 
 	<FontFamily name="NarciIndicatorTiny" virtual="true">
 		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="9">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="0.6" y="-0.6"/>
-					</Offset>
-					<Color r="0" g="0" b="0"/>
-				</Shadow>
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="9">
 			</Font>
 		</Member>
 		<Member alphabet="korean">
 			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="8">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="0.6" y="-0.6"/>
-					</Offset>
-					<Color r="0" g="0" b="0"/>
-				</Shadow>
 			</Font>
 		</Member>
 		<Member alphabet="simplifiedchinese">
 			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="8">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="0.6" y="-0.6"/>
-					</Offset>
-					<Color r="0" g="0" b="0"/>
-				</Shadow>
 			</Font>
 		</Member>
 		<Member alphabet="traditionalchinese">
 			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="8">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="0.6" y="-0.6"/>
-					</Offset>
-					<Color r="0" g="0" b="0"/>
-				</Shadow>
 			</Font>
 		</Member>
 		<Member alphabet="russian">
 			<Font font="Interface\AddOns\Narcissus\Font\NotoSans-Medium.ttf" height="8">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="0.6" y="-0.6"/>
-					</Offset>
-					<Color r="0" g="0" b="0"/>
-				</Shadow>
 			</Font>
 		</Member>
 	</FontFamily>
 
-	<FontFamily name="NarciMenu" virtual="true">
+	<FontFamily name="NarciMenuFont" virtual="true">
 		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="14">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="14">
 				<Shadow>
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
@@ -672,8 +642,20 @@
 
 	</Font>
 
-	<Font name="AAAPreferenceMedium" inherits="NarciMenu" virtual="true">
+	<Font name="NarciPrefFontCategory" inherits="NarciMenuFont" virtual="true">
+		<Color r="0.42" g="0.42" b="0.42"/>
+	</Font>
 
+	<Font name="NarciPrefFontWhiteLabel" inherits="NarciMenuFont" virtual="true">
+		<Color r="1" g="1" b="1"/>
+	</Font>
+
+	<Font name="NarciPrefFontWhiteMild" inherits="NarciMenuFont" virtual="true">
+		<Color r="0.72" g="0.72" b="0.72"/>
+	</Font>
+
+	<Font name="NarciPrefFontBrownLabel" inherits="NarciMenuFont" virtual="true">
+		<Color r="0.85098" g="0.80392" b="0.70588"/>
 	</Font>
 
 	<Font name="EquipLocFont" inherits="EquipmentLocationFont" virtual="true">
@@ -691,7 +673,7 @@
 		</Shadow>
 	</Font>
 
-	<Font name="NarciIndicatorDigit" font="Interface\AddOns\Narcissus\Font\OpenSans-Semibold.ttf" height="9" monochrome="false" virtual="true">
+	<Font name="NarciIndicatorDigit" font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="9" monochrome="false" virtual="true">
 		<Color r="1" g="1" b="1"/>
 		<Shadow>
 			<Offset>
@@ -726,5 +708,121 @@
 			</Offset>
 			<Color r="0" g="0" b="0"/>
 		</Shadow>
+	</Font>
+
+	<Font name="NarciPastelBrownFont" inherits="NarciIndicatorLetter" virtual="true">
+		<Color r="0.85098" g="0.80392" b="0.70588"/>
+	</Font>
+	<Font name="NarciNonInteractiveFont" inherits="NarciIndicatorLetter" virtual="true">
+		<Color r="0.42" g="0.42" b="0.42"/>
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1"/>
+			</Offset>
+			<Color a="1" r="0" g="0" b="0"/>
+		</Shadow>
+	</Font>
+	<Font name="NarciDisabledButtonFont" inherits="NarciIndicatorLetter" virtual="true">
+		<Color r="0.72" g="0.72" b="0.72"/>
+	</Font>
+	<Font name="NarciPastelWhiteFont" inherits="NarciIndicatorLetter" virtual="true">
+		<Color r="0.88" g="0.88" b="0.88"/>
+	</Font>
+
+
+
+
+
+
+
+
+	<!--The following fonts were solely used by NarciTooltip-->
+
+	<FontFamily name="NarciTooltipDescriptionFontRegular" virtual="true">
+		<Member alphabet="roman">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Regular.ttf" height="12"/>
+		</Member>
+		<Member alphabet="korean">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Regular.otf" height="11"/>
+		</Member>
+		<Member alphabet="simplifiedchinese">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Regular.otf" height="11"/>
+		</Member>
+		<Member alphabet="traditionalchinese">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Regular.otf" height="11"/>
+		</Member>
+		<Member alphabet="russian">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSans-Medium.ttf" height="12"/>
+		</Member>
+	</FontFamily>
+
+	<FontFamily name="NarciTooltipDescriptionFontSemibold" virtual="true">
+		<Member alphabet="roman">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12"/>
+		</Member>
+		<Member alphabet="korean">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="11"/>
+		</Member>
+		<Member alphabet="simplifiedchinese">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="11"/>
+		</Member>
+		<Member alphabet="traditionalchinese">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="11"/>
+		</Member>
+		<Member alphabet="russian">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSans-Regular.ttf" height="12"/>
+		</Member>
+	</FontFamily>
+
+	<FontFamily name="NarciTooltipHeaderFont" virtual="true">
+		<Member alphabet="roman">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="14"/>
+		</Member>
+		<Member alphabet="korean">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="13"/>
+		</Member>
+		<Member alphabet="simplifiedchinese">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="13"/>
+		</Member>
+		<Member alphabet="traditionalchinese">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="13"/>
+		</Member>
+		<Member alphabet="russian">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSans-Medium.ttf" height="14"/>
+		</Member>
+	</FontFamily>
+
+	<Font name="NarciTooltipDescriptionFontSemiboldBlack" inherits="NarciTooltipDescriptionFontSemibold" virtual="true" spacing="2">
+        <Color r="0" g="0" b="0"/>
+        <Shadow>
+            <Offset>
+                <AbsDimension x="1" y="-1"/>
+            </Offset>
+            <Color r="1" g="1" b="1" a="0"/>
+        </Shadow>     
+	</Font>   
+
+	<Font name="NarciTooltipDescriptionFontRegularWhite" inherits="NarciTooltipDescriptionFontRegular" virtual="true" spacing="2">
+        <Color r="0.9" g="0.9" b="0.9"/>
+        <Shadow>
+            <Offset>
+                <AbsDimension x="1" y="-1"/>
+            </Offset>
+            <Color r="0" g="0" b="0" a="1"/>
+        </Shadow>     
+	</Font>   
+
+	<Font name="NarciTooltipDescriptionFontRegularBlack" inherits="NarciTooltipDescriptionFontRegular" virtual="true" spacing="2">
+        <Color r="0" g="0" b="0"/>  
+	</Font>   
+
+	<Font name="NarciTooltipHeaderFontSemibold" inherits="NarciTooltipHeaderFont" virtual="true">
+        <Color r="0.25" g="0.78" b="0.92"/>
+        <Shadow>
+            <Offset>
+                <AbsDimension x="1" y="-1"/>
+            </Offset>
+            <Color r="0" g="0" b="0" a="1"/>
+        </Shadow>     
 	</Font>
 </Ui>

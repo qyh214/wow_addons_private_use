@@ -45,7 +45,6 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	specwarnUnder	= "Спец-предупреждение, когда вы стоите под боссом",
-	countdownCrush	= DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT:format(122774).." (только в героическом режиме)"
 })
 
 L:SetMiscLocalization({

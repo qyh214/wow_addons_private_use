@@ -145,8 +145,7 @@ L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "다른 캐릭터"
 L["S_TUTORIAL_AMOUNT"] = "받을 수 있는 보상의 양을 나타냅니다"
 L["S_TUTORIAL_CLICKTOTRACK"] = "퀘스트를 추적하려면 클릭하세요."
 L["S_TUTORIAL_PARTY"] = "파티 중일 때 모든 파티원이 수행 중인 퀘스트에 파란색 별이 표시됩니다!"
---[[Translation missing --]]
---[[ L["S_TUTORIAL_STATISTICS_BUTTON"] = ""--]] 
+L["S_TUTORIAL_STATISTICS_BUTTON"] = "다른 캐릭터에 대한 통계 및 저장된 퀘스트 목록을 보려면 여기를 클릭하십시오."
 L["S_TUTORIAL_TIMELEFT"] = "남은 시간을 나타냅니다 (+4시간, +90분, +30분, 30분 미만)"
 L["S_TUTORIAL_WORLDBUTTONS"] = [=[3가지 유형의 요약을 보려면 여기를 클릭하십시오:
 
@@ -157,8 +156,7 @@ L["S_TUTORIAL_WORLDBUTTONS"] = [=[3가지 유형의 요약을 보려면 여기�
 Click |cFFFFAA11Toggle Quests|r to hide quest locations.]=]
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "이 버튼을 누르면 부서진 섬 지도로 변경됩니다."
 L["S_UNKNOWNQUEST"] = "알 수 없는 퀘스트"
---[[Translation missing --]]
---[[ L["S_WHATSNEW"] = ""--]] 
+L["S_WHATSNEW"] = "새 소식"
 L["S_WORLDBUTTONS_SHOW_NONE"] = "요약 숨기기"
 L["S_WORLDBUTTONS_SHOW_TYPE"] = "요약 보기"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "지역별 구분"

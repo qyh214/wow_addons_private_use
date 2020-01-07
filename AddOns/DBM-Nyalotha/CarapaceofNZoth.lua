@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2366, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20191112032458")
+mod:SetRevision("20191215174316")
 mod:SetCreatureID(157439)--Fury of N'Zoth
 mod:SetEncounterID(2337)
 mod:SetZone()
@@ -29,6 +29,12 @@ mod:RegisterEventsInCombat(
 --TODO, Cyst Genesis still listed in overview but removed from P3 in latest build, see if it still exists. 313118/307064
 --TODO, Insanity Bomb CD, only saw the first case of phase, not time between casts
 --TODO, escalated tank warning for adaptive membrane on Fury, if you're tanking it
+--TODO, review CLEU for a phase 3 trigger that can be used in WCL expression in place of the faster UNIT event mod uses
+--[[
+(ability.id = 315820 or ability.id = 307809 or ability.id = 313039 or ability.id = 307092 or ability.id = 315891 or ability.id = 315947) and type = "begincast"
+ or (ability.id = 313362 or ability.id = 306973 or ability.id = 306986 or ability.id = 306988) and type = "cast"
+ or ability.id = 307079 and (type = "applybuff" or type = "removebuff")
+--]]
 --General
 local warnPhase								= mod:NewPhaseChangeAnnounce(2, nil, nil, nil, nil, nil, 2)
 local warnGiftofNzoth						= mod:NewTargetNoFilterAnnounce(313334, 2)
@@ -36,7 +42,7 @@ local warnGiftofNzoth						= mod:NewTargetNoFilterAnnounce(313334, 2)
 ----Fury of N'Zoth
 local warnMadnessBomb						= mod:NewTargetAnnounce(306973, 2)
 local warnAdaptiveMembrane					= mod:NewTargetNoFilterAnnounce(306990, 4)
-local warnGazeofMadness						= mod:NewCountAnnounce(307482, 2)
+--local warnGazeofMadness						= mod:NewCountAnnounce(307482, 2)
 local warnBlackScar							= mod:NewStackAnnounce(315954, 2, nil, "Tank")
 --Stage 2: Subcutaneous Tunnel
 local warnSynthesRemaining					= mod:NewCountAnnounce(307079, 2)
@@ -79,7 +85,7 @@ local timerMentalDecayCD					= mod:NewNextTimer(28.8, 313364, nil, nil, nil, 3)
 local timerGrowthCoveredTentacleCD			= mod:NewNextCountTimer(61, 307131, nil, nil, nil, 1, nil, nil, nil, 1, 4)
 local timerMandibleSlamCD					= mod:NewNextTimer(16.6, 306990, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 4)
 ----Adds
-local timerGazeofMadnessCD					= mod:NewNextCountTimer(61, 307482, nil, nil, nil, 1)
+--local timerGazeofMadnessCD					= mod:NewNextCountTimer(61, 307482, nil, nil, nil, 1)
 ----Wrathion (for now assuming his stuff is passive not timed)
 --Stage 2: Subcutaneous Tunnel
 local timerEternalDarknessCD				= mod:NewNextTimer(22.2, 307048, nil, nil, nil, 2)
@@ -108,7 +114,7 @@ function mod:OnCombatStart(delay)
 	self.vb.phase = 1
 	timerMadnessBombCD:Start(7.6-delay)--SUCCESS
 	timerMentalDecayCD:Start(11.1-delay)--SUCCESS
-	timerGazeofMadnessCD:Start(13.8-delay)
+	--timerGazeofMadnessCD:Start(13.8-delay)
 	timerMandibleSlamCD:Start(14.4-delay)
 	timerAdaptiveMembraneCD:Start(24.3-delay)--SUCCESS
 	timerGrowthCoveredTentacleCD:Start(39.1-delay)
@@ -160,7 +166,6 @@ function mod:SPELL_CAST_START(args)
 		specWarnOccipitalBlast:Play("shockwave")
 		timerOccipitalBlastCD:Start()
 	elseif spellId == 315947 then
-
 		timerMandibleSlamCD:Start()
 	end
 end
@@ -238,7 +243,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerAdaptiveMembraneCD:Stop()
 		timerMentalDecayCD:Stop()
 		timerGrowthCoveredTentacleCD:Stop()
-		timerGazeofMadnessCD:Stop()
+		--timerGazeofMadnessCD:Stop()
 		timerMandibleSlamCD:Stop()
 		timerMentalDecayCD:Start(30.3)
 		timerAdaptiveMembraneCD:Start(33.6)
@@ -343,8 +348,9 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 	--"<23.58 17:24:45> [CHAT_MSG_RAID_BOSS_EMOTE] |TInterface\\Icons\\INV_EyeofNzothPet.blp:20|t A %s emerges!#Gaze of Madness#####0#0##0#1983#nil#0#false#false#false#false", -- [566]
 	if msg:find("INV_EyeofNzothPet.blp") then
 		self.vb.gazeCount = self.vb.gazeCount + 1
-		warnGazeofMadness:Show(self.vb.gazeCount)
-		timerGazeofMadnessCD:Start(60.5, self.vb.gazeCount+1)
+		--warnGazeofMadness:Show(self.vb.gazeCount)
+		--timerGazeofMadnessCD:Start(60.5, self.vb.gazeCount+1)
+		DBM:Debug("Gaze still used? spellID is gone, figure out what this is for now")
 	--"<48.92 17:25:10> [CHAT_MSG_RAID_BOSS_EMOTE] |TInterface\\Icons\\INV_MISC_MONSTERHORN_04.BLP:20|t A %s emerges. Look out!#Growth-Covered Tentacle#####0#0##0#1990#nil#0#false#false#false#false",
 	elseif msg:find("INV_MISC_MONSTERHORN_04.BLP") then
 		self.vb.TentacleCount = self.vb.TentacleCount + 1

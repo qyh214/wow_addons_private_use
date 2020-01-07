@@ -14,7 +14,7 @@ local function BuildTitlesDB(object)
     return NewTable;
 end
 
-local TitlesDB = BuildTitlesDB(CharacterTitlesTable);
+local TitlesDB = BuildTitlesDB(Narci_CharacterTitlesTable);
 -----------------------------
 -------Sorting Function------
 -----------------------------
@@ -543,6 +543,7 @@ local function SetTitleSourceTooltip()
 		tooltipFrame.Icon:SetTexture(icon);
 		tooltipFrame.Title:SetText(name);
 		tooltipFrame.Description:SetText(description);
+		if not description then return; end;
 		local lines = tooltipFrame.Description:GetNumLines() + tooltipFrame.Title:GetNumLines();
 		if lines < 3 then
 			tooltipFrame.Description:SetText(description.."\n");

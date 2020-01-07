@@ -222,6 +222,9 @@ local translations = {
     ["Right-Click for profile links..."] = "Haga clic derecho para enlaces de perfil...",
     ["Profile Links"] = "Enlaces de Perfil",
     ["Location"] = "Localización",
+	["Game"] = "Juego",
+	["Realm"] = "Reino",
+	["Character"] = "Personaje",
 
     -- Tutorials.lua --
     ["Display WIM tips"] = "Mostrar consejos de WIM",

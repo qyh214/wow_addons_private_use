@@ -1,7 +1,10 @@
 <Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
-	<Script file="AR.lua"/>
+	
+    <Script file="AR.lua"/>
 
-    <Frame name="NarciAR" hidden="false">
+    
+
+    <!--Frame name="NarciAR" hidden="false">
         <Size x="44" y="44"/>
         <Anchors>
             <Anchor point="CENTER" relativeTo="UIParent" relativePoint="CENTER"/>
@@ -54,5 +57,5 @@
 				self:StopMovingOrSizing();
 			</OnDragStop>
         </Scripts>
-    </Frame>
+    </Frame-->
 </Ui>

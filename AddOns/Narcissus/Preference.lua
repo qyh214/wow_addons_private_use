@@ -1,7 +1,9 @@
+local L = Narci.L;
+
 local TabNames = { 
-    NARCI_INTERFACE, NARCI_SHORTCUTS, NARCI_THEME, NARCI_EFFECTS, NARCI_CAMERA, NARCI_TRANSMOG,
-    NARCI_EXTENSIONS, NARCI_ABOUT,
-}
+    NARCI_NEW_ENTRY_PREFIX..NARCI_INTERFACE, NARCI_SHORTCUTS, NARCI_NEW_ENTRY_PREFIX..NARCI_THEME, NARCI_EFFECTS, NARCI_NEW_ENTRY_PREFIX..NARCI_CAMERA, NARCI_NEW_ENTRY_PREFIX..NARCI_TRANSMOG,
+    NARCI_NEW_ENTRY_PREFIX..L["Photo Mode"], NARCI_EXTENSIONS,
+};  --Credits and About will be inserted later
 
 local FadeFrame = NarciAPI_FadeFrame;
 local Color_Good = "|cff7cc576";     --124 197 118
@@ -19,12 +21,13 @@ local Color_Alert_b = 0;
 local bindAction = "CLICK Narci_MinimapButton:LeftButton";
 local OptimizeBorderThickness = NarciAPI_OptimizeBorderThickness;
 local Narci_LetterboxAnimation = NarciAPI_LetterboxAnimation;
+local floor = math.floor;
 
 local function SetLetterboxEffectAlert()
     local selectedRatio = NarcissusDB.LetterboxRatio;
     local UIScale = NarcissusDB.GlobalScale;
     local recommendedScale;
-    UIScale = math.floor(UIScale*10 + 0.5)/10;
+    UIScale = floor(UIScale*10 + 0.5)/10;
     if selectedRatio == 2 then
         recommendedScale = 0.8;
     elseif selectedRatio == 2.35 then
@@ -65,7 +68,19 @@ end
 --command name = GetBindingAction("U")
 --GetBindingName(GetBindingAction("U"))
 local SetItemNameTextSize = Narci_Pref_SetItemNameTextSize;
-local SetFrameScale = Narci_Pref_SetFrameScale;
+
+local function SetFrameScale(scale)
+	local scale = tonumber(scale) or 1;
+
+	PhotoModeController:SetScale(scale);
+	Narci_Character:SetScale(scale);
+	Narci_Attribute:SetScale(scale);
+    NarciTooltip:SetCustomScale(scale);
+	if NarcissusDB then
+		NarcissusDB.GlobalScale = scale;
+	end
+end
+
 function Narci_ItemNameSizeSlider_OnValueChanged(self, value, userInput)
     self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
     if value ~= self.oldValue then
@@ -79,9 +94,21 @@ function Narci_GlobalScaleSlider_OnValueChanged(self, value, userInput)
     self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
     if value ~= self.oldValue then
         self.oldValue = value;
-        self.KeyLabel:SetText(string.format("%.1f", math.floor(value*10 +0.5)/10));
-        Narci_Pref_SetFrameScale(value);
+        value = floor(value*10 +0.5)/10;
+        self.KeyLabel:SetText(string.format("%.1f", value));
+        SetFrameScale(value);
         SetLetterboxEffectAlert();
+    end
+end
+
+function Narci_ModelPanelScaleSlider_OnValueChanged(self, value, userInput)
+    self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
+    if value ~= self.oldValue then
+        self.oldValue = value;
+        value = floor(value*10 +0.5)/10;
+        self.KeyLabel:SetText(string.format("%.1f", value));
+        Narci_ModelSettings:SetScale(value);
+        NarcissusDB.ModelPanelScale = value;
     end
 end
 
@@ -507,6 +534,36 @@ function Narci_TruncateSwitch_OnClick(self)
 	TruncateSwitch_SetState(self)
 end
 
+local function ExitConfirmSwitch_SetState(self)
+    local state = NarcissusDB.UseExitConfirmation;
+    if not state then
+        if Narci.showExitConfirm then
+            Narci.showExitConfirm = false;
+        end
+    end
+	self.Tick:SetShown(state);
+end
+
+function Narci_ExitConfirmSwitch_OnClick(self)
+    NarcissusDB.UseExitConfirmation = not NarcissusDB.UseExitConfirmation;
+    ExitConfirmSwitch_SetState(self)
+end
+
+local function BustShotSwitch_SetState(self)
+    local state = NarcissusDB.UseBustShot;
+    self.Tick:SetShown(state);
+    if state then
+        self.Preview:SetTexCoord(0, 0.5, 0, 0.75);
+    else
+        self.Preview:SetTexCoord(0.5, 1, 0, 0.75);
+    end
+end
+
+function Narci_BustShotSwitch_OnClick(self)
+    NarcissusDB.UseBustShot = not NarcissusDB.UseBustShot;
+    BustShotSwitch_SetState(self);
+    Narci:InitializeCameraFactors();
+end
 
 local function Narci_Pref_SetTextBackgroundWidth(width)
     local slotTable = Narci_Character.slotTable;
@@ -585,27 +642,64 @@ function Narci_BorderThemeButton_OnClick(self)
         else
             return;
         end
-        self:GetParent().Preview:SetTexCoord(0.5, 1, 0, 1)
+        self:GetParent().Preview:SetTexCoord(0.5, 1, 0, 1);
     elseif id == 2 then
         if NarcissusDB.BorderTheme ~= "Dark" then
             NarcissusDB.BorderTheme = "Dark";
         else
             return;
         end
-        self:GetParent().Preview:SetTexCoord(0, 0.5, 0, 1)
+        self:GetParent().Preview:SetTexCoord(0, 0.5, 0, 1);
     end
-    ShowSelfTick(self)
-    Narci_SetActiveBorderTexture()
+    ShowSelfTick(self);
+    Narci_SetActiveBorderTexture();
 end
 
 local function SetBorderThemeState()
     local theme = NarcissusDB.BorderTheme;
     if theme == "Bright" then
-        Narci_BorderThemeButton1.Tick:Show();
-        Narci_BorderThemePreview:SetTexCoord(0.5, 1, 0, 1)
+        NarciPref_Themes.Theme1.Tick:Show();
+        NarciPref_Themes.Preview:SetTexCoord(0.5, 1, 0, 1);
     elseif theme == "Dark" then
-        Narci_BorderThemeButton2.Tick:Show();
-        Narci_BorderThemePreview:SetTexCoord(0, 0.5, 0, 1)
+        NarciPref_Themes.Theme2.Tick:Show();
+        NarciPref_Themes.Preview:SetTexCoord(0, 0.5, 0, 1);
+    end
+end
+
+function Narci_TooltipThemeButton_OnClick(self)
+    local id = self:GetID();
+    if id == 1 then
+        if NarcissusDB.TooltipTheme ~= "Bright" then
+            NarcissusDB.TooltipTheme = "Bright";
+        else
+            return;
+        end
+        self:GetParent().Tooltip2.Tick:Hide();
+        self:GetParent().Preview2:SetTexCoord(0, 1, 0.5, 1);
+        NarciTooltip:SetColorTheme(1);
+    elseif id == 2 then
+        if NarcissusDB.TooltipTheme ~= "Dark" then
+            NarcissusDB.TooltipTheme = "Dark";
+        else
+            return;
+        end
+        self:GetParent().Tooltip1.Tick:Hide();
+        self:GetParent().Preview2:SetTexCoord(0, 1, 0, 0.5);
+        NarciTooltip:SetColorTheme(0);
+    end
+    self.Tick:Show();
+end
+
+local function SetTooltipThemeState()
+    local theme = NarcissusDB.TooltipTheme;
+    if theme == "Bright" then
+        NarciPref_Themes.Tooltip1.Tick:Show();
+        NarciPref_Themes.Preview2:SetTexCoord(0, 1, 0.5, 1);
+        NarciTooltip:SetColorTheme(1);
+    elseif theme == "Dark" then
+        NarciPref_Themes.Tooltip2.Tick:Show();
+        NarciPref_Themes.Preview2:SetTexCoord(0, 1, 0, 0.5);
+        NarciTooltip:SetColorTheme(0);
     end
 end
 
@@ -614,7 +708,7 @@ function Narci_VignetteStrengthSlider_OnValueChanged(self, value, userInput)
     self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
     if value ~= self.oldValue then
         self.oldValue = value
-        self.KeyLabel:SetText(string.format("%.1f", math.floor(value*10 +0.5)/10))
+        self.KeyLabel:SetText(string.format("%.1f", floor(value*10 +0.5)/10))
         NarcissusDB.VignetteStrength = value;
         SetVignetteStrength()
     end
@@ -635,7 +729,7 @@ function Narci_FullBodySwitch_OnClick(self)
     SetFullBodySwitchState(self)
 end
 
-local function SetAlwaysShowModelSwitchState(self)
+local function AlwaysShowModelSwitch_SetState(self)
     local state = NarcissusDB.AlwaysShowModel;
     self.Tick:SetShown(state);
     Narci_AlwaysShowModelButton.Tick:SetShown(state);
@@ -644,71 +738,91 @@ end
 
 function Narci_AlwaysShowModelSwitch_OnClick(self)
     NarcissusDB.AlwaysShowModel = not NarcissusDB.AlwaysShowModel;
-    SetAlwaysShowModelSwitchState(self);
-end
-----------------------------------------------------
-local function InitializePreference()
-    SetBorderThemeState();
-    SetFrameScale(NarcissusDB.GlobalScale);
-
-    GrainEffectSwitch_SetState(Narci_GrainEffectSwitch);
-    WeatherSwitch_SetState(Narci_WeatherEffectSwitch);
-    LetterboxEffectSwitch_SetState(Narci_LetterboxEffectSwitch);
-    CameraOrbitSwitch_SetState(Narci_CameraOrbitSwitch);
-    CameraSafeSwitch_SetState(Narci_CameraSafeSwitch);
-    MinimapButtonSwitch_SetState(Narci_MinimapButtonSwitch);
-    DoubleTapSwitch_SetState(Narci_DoubleTapSwitch);
-    TruncateSwitch_SetState(Narci_TruncateSwitch);
-    FadeOutSwitch_SetState(Narci_FadeOutSwitch);
-    FadeMusicSwitch_SetState(Narci_FadeMusicSwitch);
-    SetFullBodySwitchState(Narci_FullBodySwitch);
-    SetAlwaysShowModelSwitchState(Narci_AlwaysShowModelSwitch);
-    AFKScreenSwitch_SetState(Narci_AFKScreenSwitch);
-    GemManagerSwitch_SetState(Narci_GemManagerSwitch);
-    DressingRoomSwitch_SetState(Narci_DressingRoomSwitch);
-
-    Narci_VignetteStrengthSlider:SetValue(NarcissusDB.VignetteStrength);
-    Narci_GlobalScaleSlider:SetValue(NarcissusDB.GlobalScale);
-    Narci_ItemNameSizeSlider:SetValue(NarcissusDB.FontHeightItemName);
-    Narci_ItemNameWidthSlider:SetValue(NarcissusDB.ItemNameWidth);
-    Narci_AlwaysShowModelButton.Tick:SetShown(NarcissusDB.AlwaysShowModel);
-
-    local value0;
-    if NarcissusDB.LetterboxRatio == 2 then
-        value0 = 0;
-    else
-        value0 = 1;
-    end
-    Narci_LetterboxRatioSlider:SetValue(value0);
-
-    _G["Narci_DefalutLayoutButton"..NarcissusDB.DefaultLayout]:Click();
+    AlwaysShowModelSwitch_SetState(self);
 end
 
-local initialize = CreateFrame("Frame")
-initialize:RegisterEvent("PLAYER_ENTERING_WORLD");
-initialize:SetScript("OnEvent",function(self,event,...)
-	if event == "PLAYER_ENTERING_WORLD" then
-        SetItemNameTextSize(NarcissusDB.FontHeightItemName)
-        InitializePreference();
-    end
-end)
+function Narci:ShowDetailedIlvlInfo()
+    local state = NarcissusDB.DetailedIlvlInfo;
+	local frame = Narci_IlvlInfoFrame;
+	local frame1, frame2 = frame.IlvlButtonLeft, frame.IlvlButtonRight;
+	if state then
+		frame1.AnimFrame:Hide();
+		frame2.AnimFrame:Hide();
+		frame1.AnimFrame:Show();
+		frame2.AnimFrame:Show();
+		frame1:Show();
+		frame2:Show();
+        FadeFrame(Narci_DetailedStatFrame, 0.5, "IN");
+        FadeFrame(Narci_RadarChartFrame, 0.5, "IN");
+		FadeFrame(Narci_ConciseStatFrame, 0.5, "OUT");
+	else
+		frame1.AnimFrame:Hide();
+		frame2.AnimFrame:Hide();
+		frame1.AnimFrame:Show();
+		frame2.AnimFrame:Show();
+        FadeFrame(Narci_DetailedStatFrame, 0.5, "OUT");
+        FadeFrame(Narci_RadarChartFrame, 0.5, "OUT");
+		FadeFrame(Narci_ConciseStatFrame, 0.5, "IN");
+	end
+end
+
+local function DetailedStatsSwitch_SetState(self)
+    local state = NarcissusDB.DetailedIlvlInfo;
+    self.Tick:SetShown(state);
+end
+
+function Narci_DetailedStatsSwitch_OnClick(self)
+    NarcissusDB.DetailedIlvlInfo = not NarcissusDB.DetailedIlvlInfo;
+    DetailedStatsSwitch_SetState(self);
+    Narci:ShowDetailedIlvlInfo();
+end
+
+local function EntranceVisualSwitch_SetState(self)
+    local state = NarcissusDB.UseEntranceVisual;
+    self.Tick:SetShown(state);
+    Narci:SetUseEntranceVisual()
+end
+
+function Narci_EntranceVisualSwitch_OnClick(self)
+    NarcissusDB.UseEntranceVisual = not NarcissusDB.UseEntranceVisual;
+    EntranceVisualSwitch_SetState(self);
+end
 
 -------------------------------------------------------------
 ----------------Preference ScrollBar Animation---------------
 -------------------------------------------------------------
-local NarciAPI_SmoothScroll_Initialization = NarciAPI_SmoothScroll_Initialization;
+local function BuildTabNames()
+    --For Ultra Wide Monitor--
+    local ScreenRatio, maxOffset;
+    local W0, H = WorldFrame:GetSize();
+    if (W0 and H) and H ~= 0 and (W0 / H) > (16.01 / 9) then     --No resizing option on 16:9 or lower
+        local W = H / 9 * 16;
+        maxOffset = floor( (W0 - W)/2 + 0.5);
+        tinsert(TabNames, L["Ultra-wide"]);
+        ScreenRatio = floor((W0 / H) * 9 + 0.25);
+    end
+    tinsert(TabNames, L["Credits"]);
+    tinsert(TabNames, NARCI_ABOUT);
+
+    return ScreenRatio, maxOffset;
+end
+
+--/run local W, H = WorldFrame:GetSize(); print(floor((W / H) * 9 + 0.25)..":9")
+local ScreenRatio, MaxOffset = BuildTabNames();
+local SmoothScroll_Initialization = NarciAPI_SmoothScroll_Initialization;
 local TotalTab = #TabNames;
 local TabHeight = 1;
 local TotalHeight = 0;
-local floor = math.floor;
+local floor = floor;
 local SelectedColorAlpha = 0.6;
-function Narci_UpdateTabBackgroundColor(self)
+local currentTab = 1;
+local function UpdateTabBackgroundColor(self)
     --local scrollBar = Narci_Preference.ListScrollFrame.scrollBar;
     --if Narci_Preference.TabButtonFrame
     local buttons = Narci_Preference.TabButtonFrame.buttons;
     local scrollBarValue = self:GetValue();
     local currentValue = TotalTab - (TotalHeight - scrollBarValue)/TabHeight + 1;
-    local currentTab = floor(currentValue + 0.5)
+    currentTab = floor(currentValue + 0.5)
     --print(currentTab);
     if buttons[currentTab] then
         buttons[currentTab].SelectedColor:SetAlpha(SelectedColorAlpha);
@@ -730,12 +844,21 @@ function Narci_UpdateTabBackgroundColor(self)
         end
     end       
 
+    --Play heart animation for credit list
+    if currentTab == (TotalTab - 1) then
+        Narci_CreditList.Timer:Play();
+    end
+end
+
+local function ScrollBar_OnValueChanged(self, value)
+    self:GetParent():SetVerticalScroll(value)
+    UpdateTabBackgroundColor(self)
 end
 
 function Narci_Preference_ScrollFrame_OnLoad(self)
     TabHeight = self:GetHeight();
-    TotalHeight = math.floor(TotalTab * TabHeight + 0.5);
-    MaxScroll = math.floor((TotalTab-1) * TabHeight + 0.5);
+    TotalHeight = floor(TotalTab * TabHeight + 0.5);
+    MaxScroll = floor((TotalTab - 1) * TabHeight + 0.5);
     self.scrollBar:SetMinMaxValues(0, MaxScroll)
     self.scrollBar:SetValueStep(0.001);
     self.buttonHeight = TotalHeight + 2;
@@ -743,7 +866,8 @@ function Narci_Preference_ScrollFrame_OnLoad(self)
     --self.scrollBar:SetValue(0)
     self.range = MaxScroll;
 
-    NarciAPI_SmoothScroll_Initialization(self, nil, nil, 1/(TotalTab), 0.14, 1)
+    SmoothScroll_Initialization(self, nil, nil, 1/(TotalTab), 0.2);
+    self.scrollBar:SetScript("OnValueChanged", ScrollBar_OnValueChanged);
 end
 
 local function BuildTabButtonList(self, buttonTemplate, buttonNameTable, initialOffsetX, initialOffsetY, initialPoint, initialRelative, offsetX, offsetY, point, relativePoint)
@@ -780,23 +904,64 @@ local function BuildTabButtonList(self, buttonTemplate, buttonNameTable, initial
 		button = CreateFrame("BUTTON", buttonName and (buttonName .. i) or nil, self, buttonTemplate);
         button:SetID(i-1);
         button.Name:SetText(buttonNameTable[i])
-        if i == numButtons then
+        if i == numButtons then         --About Tab
             button:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", initialOffsetX, -initialOffsetY);
-        else
+        elseif i == numButtons - 1 then --Credit Tab
+            button:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", initialOffsetX, -initialOffsetY + buttonHeight);
+            button.HighlightColor:SetColorTexture(0.6666, 0, 0.549);
+            button.SelectedColor:SetColorTexture(0.6666, 0, 0.549);
+        else                            --Regular Tab
             button:SetPoint(point, buttons[i-1], relativePoint, offsetX, offsetY);
         end
 		tinsert(buttons, button);
 	end
 
-	self.buttons = buttons;
+    self.buttons = buttons;
+    buttons[1]:Click();
 end
 
+
 function Narci_Preference_OnLoad(self)
-    BuildTabButtonList(self, "Narci_TapButtonTemplate", TabNames, 0, -12)
+    --Ultra-wide Optimization
+    if ScreenRatio then
+        local function MoveBaselineSlider_OnLoad(self)
+            self:GetParent().Cate1:SetText(Narci.L["Ultra-wide Optimization"]);
+            self.Label:SetText(Narci.L["Baseline Offset"]);
+            self.Description:SetText(string.format( Narci.L["Ultra-wide Tooltip"], ScreenRatio));
+            --print("Max Offset: "..MaxOffset);
+            self:SetMinMaxValues(0, MaxOffset);
+            self:SetValueStep(MaxOffset);   --Disabled
+            NarciAPI_SliderWithSteps_OnLoad(self);
+        end
+
+        local function OnValueChanged(self, value)
+            self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
+            if value ~= self.oldValue then
+                self.oldValue = value;
+                value = floor(value)
+                self.KeyLabel:SetText(value);
+                Narci:SetReferenceFrameOffset(value);
+                NarcissusDB.BaseLineOffset = value;
+            end
+        end
+        MoveBaselineSlider_OnLoad(Narci_MoveBaselineSlider);
+        Narci_MoveBaselineSlider:SetScript("OnValueChanged", OnValueChanged)
+    else
+        local Tabs = self.ListScrollFrame.scrollChild;
+        Tabs.Tab9:ClearAllPoints();
+        Tabs.Tab9:SetPoint("TOPLEFT", Tabs.Tab8, "BOTTOMLEFT", 0, 0);
+        Tabs.Tab9:SetPoint("TOPRIGHT", Tabs.Tab8, "BOTTOMRIGHT", 0, 0);
+        Tabs.UltraWideSettings:Hide();
+    end
+
+    --Build Tab Buttons
+    BuildTabButtonList(self.TabButtonFrame, "Narci_TapButtonTemplate", TabNames, 0, -12)
 end
 
 local ColorTable = Narci_ColorTable;
+
 function Narci_SetTabButtonColorTheme(self)
+    --New options get highlighted, so this doesn't fit any more
     local ColorIndex = Narci_GlobalColorIndex;
 	local R, G, B = ColorTable[ColorIndex][1], ColorTable[ColorIndex][2], ColorTable[ColorIndex][3];
 	local r, g, b = R/255, G/255 ,B/255;
@@ -826,3 +991,181 @@ function Narci_LayoutButtonButton_OnClick(self)
     ShowSelfTick(self);
     NarcissusDB.DefaultLayout = id;
 end
+
+local function InteractiveAreaSlider_OnLoad(self)
+    local function OnValueChanged(self, value)
+        self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
+        if value ~= self.oldValue then
+            self.oldValue = value;
+            value = floor(value);
+            Narci:ShrinkModelHitRect(value);
+            NarcissusDB.ShrinkArea = value;
+            if value > 0 then
+                value = -value;
+            end
+            self.KeyLabel:SetText(value);
+
+            local frame = Narci_ModelInteractiveArea;
+            frame.InOut:Stop();
+            frame.InOut:Play();
+            frame:Show();
+        end
+    end
+
+    local W = floor( (WorldFrame:GetWidth()) *(1/3 - 1/8) + 0.5);
+    self:SetMinMaxValues(0, W);
+    self:SetValueStep(W/8);
+    self.Label:SetText(Narci.L["Interactive Area"]);
+    self:SetScript("OnValueChanged", OnValueChanged);
+    NarciAPI_SliderWithSteps_OnLoad(self);
+    self:SetValue(NarcissusDB.ShrinkArea);
+    Narci_ModelInteractiveArea:Hide();
+end
+
+
+-----------------
+-----Credits-----
+-----------------
+local function SetCreditList()
+   local RawList = {"Adam Stribley", "Elexys", "Ben Ashley", "Valnoressa", "Andrew Phoenix", "Solanya", "Stephen Berry", "Erik Shafer", "Mccr Karl", "Nantangitan", "Blastflight", "Psyloken",};
+   local LeftList, MidList, RightList = {}, {}, {};
+   local mod = mod;
+   local index;
+   for i = 1, #RawList do
+        index = mod(i, 3);
+        if index == 1 then
+            tinsert(LeftList, RawList[i]);
+        elseif index == 2 then
+            tinsert(MidList, RawList[i]);
+        else
+            tinsert(RightList, RawList[i]);
+        end
+   end
+
+   local LEFT, MID, RIGHT;
+   for i = 1, #LeftList do
+        if i == 1 then
+            LEFT = LeftList[i];
+            if MidList[i] then
+                MID = MidList[i];
+            end
+            if RightList[i] then
+                RIGHT = RightList[i];
+            end
+        else
+            LEFT = LEFT.."\n"..LeftList[i];
+            if MidList[i] then
+                MID =  MID.."\n"..MidList[i];
+                if RightList[i] then
+                    RIGHT =  RIGHT.."\n"..RightList[i];
+                end
+            end
+        end
+   end
+
+   local CreditList = Narci_CreditList;
+   CreditList.PatronListLeft:SetText(LEFT);
+   CreditList.PatronListMid:SetText(MID);
+   CreditList.PatronListRight:SetText(RIGHT);
+end
+
+local function Narci_InsertHeart()
+    local Pref = Narci_Preference;
+    local frame = Pref.LoveContainer;
+    if not frame:IsMouseOver() then return; end;
+
+    --Start at cursor position
+	local px, py = GetCursorPosition();
+    local scale = Pref:GetEffectiveScale();
+    px, py = px / scale, py / scale;
+
+    local d = math.max(py - Pref:GetBottom() + 16, 0); --distance
+    local depth = math.random(1, 8);
+    local scale = 0.25 + 0.25 * depth;
+    local size = 32 * scale;
+    local alpha = 1.35 - 0.15 * depth;
+    local v = 20 + 10 * depth;
+    local t= d / v;
+    local tex = frame.ReusedTexture;
+    if tex then
+        --print("Reuse heart "..t);
+    else
+        tex = frame:CreateTexture(nil, "BACKGROUND", "NarciPinkHeartTemplate");
+        --print("Inset a new heart "..t);
+    end
+
+    tex.animIn.Translation:SetOffset(0, -d);
+    tex.animIn.Translation:SetDuration(t);
+    tex:ClearAllPoints();
+    tex:SetPoint("CENTER", nil, "BOTTOMLEFT" , px, py);
+
+    tex:SetSize(size, size);
+    tex:SetAlpha(alpha);
+    tex.animIn:Play();
+end
+
+function Narci_CreditList_OnFinished(self)
+    if currentTab == (TotalTab - 1) then
+        Narci_InsertHeart();
+        self:Play();
+    end
+end
+
+----------------------------------------------------
+local function InitializePreference()
+    SetBorderThemeState();
+    SetTooltipThemeState();
+    SetFrameScale(NarcissusDB.GlobalScale);
+    Narci_ModelSettings:SetScale(NarcissusDB.ModelPanelScale or 1);
+    GrainEffectSwitch_SetState(Narci_GrainEffectSwitch);
+    WeatherSwitch_SetState(Narci_WeatherEffectSwitch);
+    LetterboxEffectSwitch_SetState(Narci_LetterboxEffectSwitch);
+    CameraOrbitSwitch_SetState(Narci_CameraOrbitSwitch);
+    CameraSafeSwitch_SetState(Narci_CameraSafeSwitch);
+    MinimapButtonSwitch_SetState(Narci_MinimapButtonSwitch);
+    DoubleTapSwitch_SetState(Narci_DoubleTapSwitch);
+    TruncateSwitch_SetState(Narci_TruncateSwitch);
+    DetailedStatsSwitch_SetState(Narci_DetailedStatsSwitch);
+    FadeOutSwitch_SetState(Narci_FadeOutSwitch);
+    FadeMusicSwitch_SetState(Narci_FadeMusicSwitch);
+    SetFullBodySwitchState(Narci_FullBodySwitch);
+    AlwaysShowModelSwitch_SetState(Narci_AlwaysShowModelSwitch);
+    AFKScreenSwitch_SetState(Narci_AFKScreenSwitch);
+    GemManagerSwitch_SetState(Narci_GemManagerSwitch);
+    DressingRoomSwitch_SetState(Narci_DressingRoomSwitch);
+    EntranceVisualSwitch_SetState(Narci_UseEntranceVisualSwitch);
+    ExitConfirmSwitch_SetState(Narci_ExitConfirmSwitch);
+    BustShotSwitch_SetState(Narci_BustShotSwitch);
+
+    Narci_VignetteStrengthSlider:SetValue(NarcissusDB.VignetteStrength);
+    Narci_GlobalScaleSlider:SetValue(NarcissusDB.GlobalScale);
+    Narci_ModelPanelScaleSlider:SetValue(NarcissusDB.ModelPanelScale);
+    Narci_ItemNameSizeSlider:SetValue(NarcissusDB.FontHeightItemName);
+    Narci_ItemNameWidthSlider:SetValue(NarcissusDB.ItemNameWidth);
+    Narci_AlwaysShowModelButton.Tick:SetShown(NarcissusDB.AlwaysShowModel);
+
+    local value0;
+    if NarcissusDB.LetterboxRatio == 2 then
+        value0 = 0;
+    else
+        value0 = 1;
+    end
+    Narci_LetterboxRatioSlider:SetValue(value0);
+
+    _G["Narci_DefalutLayoutButton"..NarcissusDB.DefaultLayout]:Click();
+
+    InteractiveAreaSlider_OnLoad(Narci_InteractiveAreaSlider);
+    --Ultra-wide
+    Narci_MoveBaselineSlider:SetValue(NarcissusDB.BaseLineOffset);
+end
+
+local initialize = CreateFrame("Frame");
+initialize:RegisterEvent("PLAYER_ENTERING_WORLD");
+initialize:SetScript("OnEvent",function(self,event,...)
+    if event == "PLAYER_ENTERING_WORLD" then
+        self:UnregisterEvent("PLAYER_ENTERING_WORLD");
+        SetItemNameTextSize(NarcissusDB.FontHeightItemName);
+        InitializePreference();
+        SetCreditList();
+    end
+end)

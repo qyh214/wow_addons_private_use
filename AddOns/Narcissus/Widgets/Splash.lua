@@ -4,8 +4,8 @@ local ShowSplash = true;    --patch specific 1.0.6:Shown
 
 local function ApplyPatchFix(self)
     --Apply fix--
-    --1.0.6 Reset vignette strength to 0.5 (was 0.8)--
-    Narci_VignetteStrengthSlider:SetValue(0.5);
+    --None in 1.0.7
+    return;
 end
 
 --[[
@@ -128,16 +128,17 @@ Splash:SetScript("OnEvent", function(self, event)
 end)
 
 --Events Test--
-
 --[[
 local EventListener = CreateFrame("Frame");
-EventListener:RegisterAllEvents()
+--EventListener:RegisterAllEvents()
 --EventListener:RegisterEvent("CVAR_UPDATE")
 --EventListener:RegisterEvent("CONSOLE_MESSAGE")
-EventListener:RegisterEvent("CHAT_MSG_SYSTEM")
+--EventListener:RegisterEvent("CHAT_MSG_SYSTEM")
+--EventListener:RegisterEvent("PLAYER_STARTED_LOOKING");
 --EventListener:RegisterEvent("PLAYER_LEAVING_WORLD");
 --EventListener:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED")
 --EventListener:RegisterEvent("PLAYER_FLAGS_CHANGED")
+EventListener:RegisterEvent("CRITERIA_UPDATE")
 EventListener:SetScript("OnEvent",function(self,event,...)
 	if event ~= "COMBAT_LOG_EVENT" and event ~= "COMBAT_LOG_EVENT_UNFILTERED" and event ~= "CHAT_MSG_ADDON"
     and event ~= "UNIT_COMBAT" and event ~= "ACTIONBAR_UPDATE_COOLDOWN" and event ~= "UNIT_AURA"
@@ -151,10 +152,16 @@ EventListener:SetScript("OnEvent",function(self,event,...)
 	and event ~= "COMPANION_UPDATE" and event ~= "UPDATE_INVENTORY_DURABILITY" then
 		print("Event: |cFFFFD100"..event)
 		local name, value, value2, value3, value4, value5 = ...
-		--print(name)
+		print(name)
 		--print(value)
         --print(value2)
-		--print("\n")
+        --print("\n")
+        print(IsFalling())
     end
 end)
+
+--To add a player into the scene, select a player in your sight and click + button.
+--Click a selected button will temporarily hide its model.
+--Drag a button to change the model's layer level.
+--You may also change the race and gender by clicking the portrait.
 --]]

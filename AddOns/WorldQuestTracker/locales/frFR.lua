@@ -95,8 +95,7 @@ L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SHOWTEXT"] = "Texte temps restant"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SORTBYTIME"] = "Trier par temps"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_TITLE"] = "Temps restant"
 L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "Tous vos perso."
---[[Translation missing --]]
---[[ L["S_OPTIONS_ACCESSIBILITY"] = ""--]] 
+L["S_OPTIONS_ACCESSIBILITY"] = "Accessibilité"
 --[[Translation missing --]]
 --[[ L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = ""--]] 
 --[[Translation missing --]]
@@ -104,10 +103,10 @@ L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "Tous vos perso."
 --[[Translation missing --]]
 --[[ L["S_OPTIONS_ANIMATIONS"] = ""--]] 
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "Cadre de la carte centré"
-L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "Vous devez activer 'Echelle du cadre de la carte' avant, aucune valeur n'à changé"
-L["S_OPTIONS_MAPFRAME_SCALE"] = [=[Échelle de la carte
+L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "Vous devez activer 'Échelle de la fenêtre de la carte' avant, aucune valeur n'a changé"
+L["S_OPTIONS_MAPFRAME_SCALE"] = [=[Échelle de la fenêtre de la carte
 ]=]
-L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = "Activer la mise à l'échelle du cadre"
+L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = "Activer la mise à l'échelle du cadre de la carte"
 L["S_OPTIONS_QUESTBLACKLIST"] = "Liste noire de quêtes"
 L["S_OPTIONS_RESET"] = "Réinitialiser"
 L["S_OPTIONS_SHOWFACTIONS"] = "Afficher les factions"
@@ -119,7 +118,7 @@ L["S_OPTIONS_WORLD_DECREASEICONSPERROW"] = "Diminuer le nombre de carrés par li
 L["S_OPTIONS_WORLD_INCREASEICONSPERROW"] = "Augmenter le nombre de carrés par ligne"
 L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = "Organiser par cartes"
 L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = "Organiser par type de quête"
-L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = "Seulement traqués"
+L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = "Seulement suivies"
 L["S_OVERALL"] = "Total"
 L["S_PARTY"] = "Groupe"
 L["S_PARTY_DESC1"] = "Une étoile bleue veut dire que tous le groupe a la quête."

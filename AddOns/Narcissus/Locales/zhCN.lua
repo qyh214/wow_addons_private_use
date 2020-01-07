@@ -4,6 +4,11 @@ end
 
 local L = Narci.L
 
+NARCI_MODIFIER_ALT = "ALT键";   --Windows
+if IsMacClient() then
+    NARCI_MODIFIER_ALT = "Option键";  --Mac OS
+end
+
 L["Movement Speed"] = STAT_MOVEMENT_SPEED;
 L["Damage Reduction Percentage"] = COMBAT_TEXT_SHOW_RESISTANCES_TEXT;
 
@@ -24,14 +29,15 @@ L["Xmog Button Copy Texts"] = "导出文本";
 
 L["Emote Button"] = "快捷表情";
 L["Emote Button Tooltip Open"] = "播放具有独特动画效果的表情";
+L["Auto Capture"] = "自动截图";
 
 L["HideTexts Button"] = "隐藏文本";
-L["HideTexts Button Tooltip Open"] = "点击以隐藏所有单位的姓名、聊天气泡和战斗文字";
-L["HideTexts Button Tooltip Close"] = "点击以恢复姓名、聊天气泡和战斗文字的设置";
+L["HideTexts Button Tooltip Open"] = "隐藏所有姓名、聊天气泡和战斗文字";
+L["HideTexts Button Tooltip Close"] = "恢复姓名、聊天气泡和战斗文字的设置";
 L["HideTexts Button Tooltip Special"] = "您先前的设置将会在你退出照片模式后自动恢复";
 
 L["TopQuality Button"] = "最佳画质";
-L["TopQuality Button Tooltip Open"] = "点击以将画面设置中的所有选项都调至极佳";
+L["TopQuality Button Tooltip Open"] = "将画面设置中的所有选项都调至极佳";
 L["TopQuality Button Tooltip Close"] = "点击以恢复先前的画质设置";
 
 L["Heritage Armor"] = "传承护甲";
@@ -77,8 +83,11 @@ NARCI_CAMERA = "镜头";
 NARCI_EFFECTS = "效果";
 NARCI_TRANSMOG = "幻化";
 NARCI_EXTENSIONS = "拓展功能";
+L["Credits"] = "致谢";
 NARCI_ABOUT = "关于"
 NARCI_TRUNCATE_TEXT = "截断文字";
+NARCI_ATTRIBUTE_FRAME = "属性栏";
+NARCI_SHOW_DETAILED_STATS = "显示详细信息";
 NARCI_TEXT_WIDTH = "文本宽度";
 NARCI_HOTKEY = "快捷键";
 NARCI_DOUBLE_TAP = "双击";
@@ -123,7 +132,23 @@ NARCI_GEMMA = "\"Gemma\"";
 NARCI_GEMMY_DESCRIPTION = "在你为一件物品镶嵌宝石时，显示可用的宝石列表。"
 NARCI_DRESSING_ROOM = "试衣间"
 NARCI_DRESSING_ROOM_DESCRIPTION = "增大试衣间窗口大小，并使你能够通过试衣间浏览、复制其他玩家的幻化调料包。";
-NARCI_REQUIRE_RELOAD = "需要重载UI才能使设置生效。";
+NARCI_REQUIRE_RELOAD = "|cffff5050需要重载UI才能使设置生效。|r";
+L["Show Detailed Stats"] = "显示详尽的属性信息";
+L["Tooltip Color"] = "小提示颜色";
+L["Entrance Visual"] = "登场效果";
+L["Entrance Visual Description"] = "在模型登场时播放法术效果。";
+L["Panel Scale"] = "面板缩放";
+L["Exit Confirmation"] = "退出确认";
+L["Exit Confirmation Texts"] = "退出合影模式？";
+L["Exit Confirmation Leave"] = "退出";
+L["Exit Confirmation Cancel"] = "取消";
+L["Ultra-wide"] = "超宽屏";
+L["Ultra-wide Optimization"] = "超宽屏优化";
+L["Baseline Offset"] = "基准线偏移";
+L["Ultra-wide Tooltip"] = "你能看到此选项是因为你正在使用一台%s:9显示器。";
+L["Interactive Area"] = "交互区域";
+L["Item Socketing Tooltip"] = "双击左键进行镶嵌";
+L["Use Bust Shot"] = "使用半身像";
 
 --模型控制面板--
 NARCI_SHEATH_WEAPON = "收起武器";
@@ -132,26 +157,104 @@ NARCI_RANGED_WEAPON = "远程武器";
 NARCI_MELEE_WEAPON = "近战武器";
 NARCI_SPELLCASTING = "施法动作";
 NARCI_ANIMATION_ID = "动画ID";
-NARCI_GROUND_SHADOW = "模拟地面阴影";
-NARCI_HIDE_PLAYER = "隐藏玩家自身";
 NARCI_LINK_LIGHT_SETTINGS = "关联灯光设置";
 NARCI_LINK_MODEL_SCALE = "关联模型比例";
 NARCI_GROUP_PHOTO = "合影模式";
 NARCI_GROUP_PHOTO_AVAILABLE = "现已加入Narcissus插件";
-NARCI_GROUP_PHOTO_NOTIFICATION = "请选择一名玩家作为目标。";
-NARCI_GROUP_PHOTO_INDEX = "序号";
-NARCI_GROUP_PHOTO_FRONT = "|cff40c7eb顶层|r";
+NARCI_GROUP_PHOTO_NOTIFICATION = "请选择一个目标。";
 NARCI_GROUP_PHOTO_STATUS_HIDDEN = "隐藏";
+NARCI_DIRECTIONAL_AMBIENT_LIGHT = "平行光/环境光";
+NARCI_DIRECTIONAL_AMBIENT_LIGHT_TOOLTIP = "在以下两种灯光间切换：\n- 可以被模型遮挡并投射阴影的平行光\n- 影响整个模型表面的环境光";
+L["Reset"] = "重置";
+L["Actor Index"] = "序号";
+L["Move To Font"] = "|cff40c7eb顶层|r";
+L["Actor Index Tooltip"] = "拖动一个序号按钮来改变其模型的层级。";
+L["Play Button Tooltip"] = "左键：播放此动画\n右键：恢复所有模型的动画";
+L["Pause Button Tooltip"] = "左键：定格此动画\n右键：暂停所有模型的动画";
+L["Save Layers"] = "保存图层";
+L["Save Layers Tooltip"] = "自动截取6张截图以供后期合成使用。\n在此过程中请不要移动鼠标或点击任何按钮，否则在退出插件后你的角色可能变为不可见。如果发生这种情况，请输入以下指令：\n/console showplayer";
+L["Ground Shadow"] = "模拟地面阴影";
+L["Ground Shadow Tooltip"] = "为你的模型下方添加一个可调整的阴影。";
+L["Hide Player"] = "隐藏玩家自身";
+L["Hide Player Tooltip"] = "让你的角色变为不可见。";
+L["Virtual Actor"] = "虚拟角色";
+L["Virtual Actor Tooltip"] = "只有法术效果可见";
+L["Self"] = "自身";
+L["Target"] = "目标";
+L["Compact Mode Tooltip"] = "仅用屏幕左侧来展示你的幻化。";
+L["Toggle Equipment Slots"] = "显示装备栏";
+L["Toggle Text Mask"] = "文字蒙版";
+L["Toggle 3D Model"] = "显示3D模型";
+L["Toggle Model Mask"] = "模型蒙版";
+L["Show Color Sliders"] = "显示色彩滑杆";
+L["Show Color Presets"] = "显示色彩预设";
+
+--Spell Visual Browser--
+L["Visuals"] = "法术效果";
+L["Visual ID"] = "效果ID";
+L["Animation ID Abbre"] = "动画ID";
+L["Category"] = "类别";
+L["Sub-category"] = "子类别";
+L["My Favorites"] = "收藏夹";
+L["Reset Visual Tooltip"] = "移除未应用的效果";
+L["Remove Visual Tooltip"] = "左键：移除选中的效果\n长按：移除所有效果";
+L["Apply"] = "应用";
+L["Applied"] = "已应用";
+L["Remove"] = "删除";
+L["Rename"] = "重命名";
+L["Refresh Model"] = "重载模型";
+L["Toggle Browser"] = "效果浏览器";
+L["Next And Previous"] = "左键：下一个\n右键：上一个";
+L["New Favorite"] = "新的收藏";
+L["Favorites Add"] = "添加到收藏夹";
+L["Favorites Remove"] = "从收藏夹中移除";
+L["Auto-play"] = "Auto-play";   --Auto-play suggested animation
+L["Delete Entry Plural"] = "即将删除%s个条目";
+L["Delete Entry Singular"] = "即将删除%s个条目";
+L["History Panel Note"] = "被应用的效果会显示在这里";
+L["Return"] = "返回";
+
 --装备对比--
 NARCI_AZERITE_POWERS = "艾泽里特之力";
+L["Gem Tooltip Format1"] = "%s和%s";
+L["Gem Tooltip Format2"] = "%s、%s和另外%s种...";
+
+--Equipment Set Manager
+L["Toggle Equipment Set Manager"] = "点击以打开/关闭套装管理器";
+L["Duplicated Set"] = "重复的套装";
+L["Low Item Level"] = "物品等级过低";
+L["1 Missing Item"] = "缺失1件物品";
+L["n Missing Items"] = "缺失%s件物品";
+L["Update Items"] = "更新装备";
+L["Don't Update Items"] = "不要更新装备";
+L["Update Talents"] = "更新天赋";
+L["Don't Update Talents"] = "不要更新天赋";
+L["Old Icon"] = "旧图标";
+NARCI_ICON_SELECTOR = "图标列表";
+NARCI_DELETE_SET_WITH_LONG_CLICK = "删除此套装\n|cff808080(按住左键)|r";
 
 --Tutorial--
-NARCI_TUTORIAL_CAPTUREBUTTON = "点击此按钮后会自动保存5张图层：\n仅背景、带蓝\\绿幕的3D模型、装备栏的alpha\\颜色通道。\n\n如果想只保存一张截图，请按键盘上的截图快捷键。";
-NARCI_TUTORIAL_ANIMATION_ID = "左键单击 ID +1  右键单击 ID -1\n动画ID的有效范围为 0~1472。";
-NARCI_TUTORIAL_GREEN_SCREEN = "点击最左端的正方形按钮可以显示蓝\\绿幕。";
+L["Alert"] = "警告";
+L["Race Change"] = "种族/性别变更";
+L["Race Change Line1"] = "你又可以改变你的种族和性别了。但是此功能存在一些限制：\n1. 你的武器会消失。\n2. 法术效果不再能被移除。\n3. 此操作对其他玩家或NPC无效。";
+L["Guide Spell Headline"] = "试用和应用";
+L["Guide Spell Criteria1"] = "单击左键：试用";
+L["Guide Spell Criteria2"] = "单击右键：应用";
+L["Guide Spell Line1"] = "大多数通过左键添加的效果会在几秒内自行消失，而通过右键添加的效果会一直保留在模型上。\n\n现在请将鼠标移到一个条目上：";
+L["Guide Spell Choose Category"] = "选择一个你感兴趣的类别，随后展开一个子类别。"
+L["Guide History Headline"] = "历史记录面板";
+L["Guide History Line1"] = "至多5个被应用的效果会出现在这里。你可以选中一个，然后按右端的删除按钮将它移除。";
+L["Guide Refresh Line1"] = "点击此按钮可以移除所有未被应用的效果。储存在你历史记录面板中的效果会被重新应用。";
+L["Guide Input Headline"] = "人工输入";
+L["Guide Input Line1"] = "你也可以自行输入SpellVisualKitID。截至8.3版本，这个ID的上限约为124,000。\n你可以用鼠标滚轮来快速预览上/下一个ID。\n有极少的ID可能会导致游戏报错。";
+L["Guide Equipment Manager Line1"] = "双击：使用套装\n右击：编辑套装";
+L["Guide Model Control Headline"] = "模型控制";
+L["Guide Model Control Line1"] = format("你可以用控制试衣间的鼠标行为来控制此模型。此外，你还可以：\n\n1.按住%s和鼠标左键来改变俯仰角。\n2.按住%s和鼠标右键来进行细微缩放。", NARCI_MODIFIER_ALT, NARCI_MODIFIER_ALT);
+
 
 --Splash--
-NARCI_PATCH_NOTES = "v1.0.6 Patch Notes";
+NARCI_SPELL_VISUALS = "法术视觉效果";
+NARCI_PATCH_NOTES = "v1.0.7 Patch Notes";
 NARCI_SPLASH_CLOSE_AND_CONTINUE = "关闭此窗口并继续";
 NARCI_SPLASH_SOUNDS_GREAT_BYE = "听上去不错。一会儿见！";
 NARCI_TRY_IT_NOW = "点击这里以启用...";
@@ -165,16 +268,28 @@ NARCI_DISABLE_IT_NOW = "点击这里以禁用...";
     NARCI_CAMERA_SAFE_MODE_DISABLED = "|cffff5050已禁用。|r 你可以在偏好设定-镜头中启用它。";
     --
 NARCI_SHOW_DETAILS = "+ Show details...";
-NARCI_SPLASH_HEADER1 = "合影模式和模型控制";
-NARCI_SPLASH_HEADER2 = "其他";
-NARCI_SPLASH_MESSAGE0 = "|cff40C7EB1. 借助Narcissus来拍摄合影|r\n你可通过小地图按钮或是模型控制面板来进入这个模式。选择玩家并把他们添加进你的场景，创作独一无二的故事。"
-NARCI_SPLASH_MESSAGE1 = "|cff40C7EB2. 更全面地控制模型光照|r\n你可以控制光照强度，并分别设置聚光灯和环境光的颜色。";
-NARCI_SPLASH_MESSAGE2 = "|cff40C7EB2. 镜头安全模式|r\n在罕见情况下，ActionCam功能没有在退出Narcissus后正确关闭。勾选此选项可以确保在关闭此插件后ActionCam被彻底关闭。"
-NARCI_SPLASH_MESSAGE3 = "|cff40C7EB1. 试衣间增强|r\n增大试衣间窗口大小，并使你能够通过试衣间浏览、复制其他玩家的幻化调料包。"
+NARCI_SPLASH_HEADER1 = "视觉效果和模型控制";
+NARCI_SPLASH_HEADER2 = "套装管理器";
+NARCI_SPLASH_HEADER3 = "其他";
+NARCI_SPLASH_MESSAGE0 = "|cffd9cdb41. 你现在可以在场景里应用独特的效果了。|r\n你可以为演员添加法术或者其他道具，甚至可以控制场景中的天气。点击模型控制面板左下角的按钮即可展开选项。"
+NARCI_SPLASH_MESSAGE1 = format("|cffd9cdb42. 翻转模型和细微缩放|r\n你可以按住%s和鼠标左键来让模型演Y轴旋转；或是按住%s和鼠标右键来进行细微缩放。", NARCI_MODIFIER_ALT, NARCI_MODIFIER_ALT);
+NARCI_SPLASH_MESSAGE2 = "|cffd9cdb4可通过点击右上方的六边形按钮（也是显示你最高物品等级的地方）来展开这个功能。";
+NARCI_SPLASH_MESSAGE3 = "|cffd9cdb41. 现在AFK画面会在你移动或者进入战斗时自动退出。\n2. 试衣间增强又恢复了工作。|r";
 
 
 --Project Details--
 NARCI_ALL_PROJECTS = "全部项目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2019.8.13|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2019.12.23|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾泽拉斯上的不同景点，并收集各种故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沉浸式角色面板；你最好的截图助手。"
+
+--Conversation--
+L["Q1"] = "这是个啥？";
+L["Q2"] = "这我知道。但是它为什么这么大？";
+L["Q3"] = "这不好笑。我只想要个正常大小的提示。";
+L["Q4"] = "很好。但我该怎么禁用这个提示呢？";
+L["Q5"] = "还有一件事：你能保证不再搞恶作剧了吗？";
+L["A1"] = "显然这是一个退出确认窗口。当你尝试按下快捷键来退出合影模式时它就会弹出来。";
+L["A2"] = "哈哈哈，她也是这么说的。";
+L["A3"] = "好吧...好吧..."
+L["A4"] = "打开偏好设定，然后选择拍照模式标签，你就能看到这个选项啦。";

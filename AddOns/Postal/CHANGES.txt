@@ -1,14 +1,10 @@
 ------------------------------------------------------------------------
-r409 | nevcairiel | 2018-07-20 08:41:50 +0000 (Fri, 20 Jul 2018) | 1 line
-Changed paths:
-   M /trunk/Postal.toc
-
-Update TOC for 8.0
-------------------------------------------------------------------------
-r408 | nevcairiel | 2018-07-18 16:41:01 +0000 (Wed, 18 Jul 2018) | 1 line
+r411 | the_original_manbot | 2020-01-04 15:39:23 +0000 (Sat, 04 Jan 2020) | 1 line
 Changed paths:
    M /trunk/Modules/BlackBook.lua
+   M /trunk/Postal.lua
+   M /trunk/Postal.toc
 
-Fix Send Mail auto-complete
+bug fixes, rewrote section that deals with friends due to api changes
 ------------------------------------------------------------------------
 

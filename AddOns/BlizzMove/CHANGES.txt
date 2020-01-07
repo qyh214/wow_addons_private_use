@@ -1,22 +1,12 @@
-lightweight tag ed11a05fc663333845ce7b7c593418cc847b7047 v1.9.1
-Author:	GitHub <noreply@github.com>
-Date:	Sat Nov 9 15:17:57 2019 +0100
+lightweight tag fe203710e7e004f3380c018ca631a5d9b724f31a v1.9.4
+Author:	MarkW <17293527+Numynum@users.noreply.github.com>
+Date:	Tue Dec 31 17:48:33 2019 +0100
 
-commit ed11a05fc663333845ce7b7c593418cc847b7047
-Author: MarkW <17293527+Numynum@users.noreply.github.com>
-Date:   Sat Nov 9 15:17:57 2019 +0100
+commit fe203710e7e004f3380c018ca631a5d9b724f31a
+Author: zaCade <zaCade@hotmail.com>
+Date:   Tue Dec 31 17:48:33 2019 +0100
 
-    added support for azerite item&essence frames (#4)
-
-commit 7df7e105fe2eb8ff11bc0e5f7265ba2f443c3040
-Author: fuba <41425685+fubaBfA@users.noreply.github.com>
-Date:   Fri Sep 27 14:07:25 2019 +0200
-
-    added some Classic Frames & Code Cleanup
-
-commit 7df7e105fe2eb8ff11bc0e5f7265ba2f443c3040
-Author: fuba <41425685+fubaBfA@users.noreply.github.com>
-Date:   Fri Sep 27 14:07:25 2019 +0200
-
-    added some Classic Frames & Code Cleanup
+    Move some frames, Fix some of them, Add Quest List (Classic & Retail) (#8)
+    
+    * Swap some frames around, refractor code, create move handles and small stuff
 

@@ -58,8 +58,8 @@
 
 	<Texture name="ModelBackground_Template" parentKey="ModelBackgroundOverlay" atlas="dressingroom-background-warrior" virtual="true" Alpha="0">
 		<Anchors>
-			<Anchor point="TOPLEFT" relativeKey="$parent.DressUpModel"/>
-			<Anchor point="BOTTOMRIGHT" relativeKey="$parent.DressUpModel"/>
+			<Anchor point="TOPLEFT" relativeKey="$parent.ModelScene"/>
+			<Anchor point="BOTTOMRIGHT" relativeKey="$parent.ModelScene"/>
 		</Anchors>
 		<Animations>
 			<AnimationGroup parentKey="animIn">
@@ -216,8 +216,8 @@
 				<Texture parentKey="Background" setAllPoints="true" hidden="false">
 					<Size x="0" y="120"/>
 					<Anchors>
-						<Anchor point="BOTTOMLEFT" relativeKey="$parent.$parent.DressUpModel" relativePoint="BOTTOMLEFT" x="0" y="0"/>	<!--10 30-->
-						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.$parent.DressUpModel" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+						<Anchor point="BOTTOMLEFT" relativeKey="$parent.$parent.ModelScene" relativePoint="BOTTOMLEFT" x="0" y="0"/>	<!--10 30-->
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.$parent.ModelScene" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
 					</Anchors>
 					<Color r="0" g="0" b="0" a="1"/>
                     <Gradient orientation="VERTICAL">
@@ -227,10 +227,10 @@
 				</Texture>
 				<Texture parentKey="Blackness" setAllPoints="true" hidden="false">
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent.$parent.DressUpModel" relativePoint="TOPLEFT" x="0" y="0"/>	<!--10 30-->
-						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.$parent.DressUpModel" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+						<Anchor point="TOPLEFT" relativeKey="$parent.$parent.ModelScene" relativePoint="TOPLEFT" x="0" y="0"/>	<!--10 30-->
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.$parent.ModelScene" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
 					</Anchors>
-					<Color r="0" g="0" b="0" a="0.5"/>
+					<Color r="0" g="0" b="0" a="0.2"/>
                     <Gradient orientation="VERTICAL">
                         <MinColor a="1" r="1" g="1" b="1"/>
                         <MaxColor a="1" r="1" g="1" b="1"/>
@@ -239,7 +239,7 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame parentKey="SlotFrame" Scale="0.6" ignoreParentScale="true" hidden="true">
+			<Frame parentKey="SlotFrame" Scale="0.5" ignoreParentScale="true" hidden="true">
 				<Size x="0" y="0"/>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.Background" relativePoint="TOPLEFT"/>
@@ -271,7 +271,7 @@
 						</Scripts>
 					</Button>
 
-					<Button name="NarciBridge_CopyTextButton" inherits="NarciDressingRoomTabButton_Template" hidden="false" parentKey="CopyButton">
+					<Button inherits="NarciDressingRoomTabButton_Template" hidden="false" parentKey="CopyButton">
 						<Anchors>
 							<Anchor point="BOTTOMLEFT" relativeKey="$parent.MogItButton" relativePoint="TOPLEFT" x="0" y="2"/>
 						</Anchors>
@@ -284,7 +284,6 @@
 								self.Border0:SetTexCoord(0.375, 0.5, 0, 0.5);
 								self.Border1:SetTexCoord(0.375, 0.5, 0.5, 1);
 							</OnLoad>
-							<OnClick function="NarciBridge_CopyTextButton_OnClick"/>
 						</Scripts>
 					</Button>
 
@@ -350,17 +349,21 @@
 									self:HighlightText(0,0)
 									self:ClearFocus();
 								</OnEscapePressed>
+								<OnHide>
+									self:SetAlpha(0);
+									self:Hide();
+								</OnHide>
 							</Scripts>
 					</EditBox>
 
-					<Button name="NarciBridge_UpdateCharacterButton" inherits="NarciDressingRoomTabButton_Template" hidden="false" parentKey="RefreshButton">
+					<Button inherits="NarciDressingRoomTabButton_Template" hidden="false" parentKey="TryOnButton">
 						<Anchors>
 							<Anchor point="BOTTOMLEFT" relativeKey="$parent.CopyButton" relativePoint="TOPLEFT" x="0" y="26"/>
 						</Anchors>
 						<Scripts>
 							<OnLoad>
-								self.Label:SetText("Reload Character")
-								self.Icon2:SetTexture(1530081)	--INV_Enchant_EssenceCosmicGreater;
+								self.Label:SetText("Use Target's Model")
+								self.Icon2:SetTexture(1530081)
 								self.Icon3:SetTexture(1530081)
 								self.Icon:SetTexture(1530081)
 								self.Border0:SetTexCoord(0.125, 0.25, 0, 0.5);

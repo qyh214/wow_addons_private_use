@@ -1,3 +1,12 @@
+local L = Narci.L;
+local ITEM_QUALITY_COLORS = ITEM_QUALITY_COLORS;
+local Narci_GemInfo = Narci_GemInfo;
+local GetGemBonus = NarciAPI_GetGemBonus; --(Gem's itemID or hyperlink)
+local max = math.max;
+local min = math.min;
+local floor = math.floor;
+local format = string.format;
+
 --[[ Blizzard APIs:
 PickupItem(item)            --Place the item on the cursor
 ClickSocketButton(id)       --Put the picked-up item into SocketButton
@@ -28,13 +37,7 @@ local function GetBagPosition(itemLink)
         end
     end
 end
---]]
-local GetGemBonues = NarciAPI_GetGemBonues; --(Gem's itemID or hyperlink)
-local max = math.max;
-local min = math.min;
-local floor = math.floor;
 
---[[
 local GemBorderTexture = {
 	[1]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Unique",
 	[2]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Green",
@@ -63,23 +66,11 @@ local ItemBorderTexture = {
     [10] = {0.625,  0.75},       --Red
 }
 
-local function designateColorID(itemID)
-    if itemID == 153714 then
-        return 10;
-    elseif itemID == 153715 then
-        return 2;
-    end
-end
+local GetGemBorderTexture = Narci.GetGemBorderTexture
 
-local function GetBorderTexture(itemSubClassID, designateColorID)
-    if designateColorID then return ItemBorderTexture[designateColorID][1], ItemBorderTexture[designateColorID][2]; end
-    if not itemSubClassID then
-        return 0.875, 1;
-    elseif not ItemBorderTexture[itemSubClassID] then
-        return 0.875, 1;
-    else
-        return ItemBorderTexture[itemSubClassID][1], ItemBorderTexture[itemSubClassID][2]
-    end
+local function GetBorderTexCoord(itemID, itemSubClassID)
+    local index = GetGemBorderTexture(itemID, itemSubClassID);
+    return ItemBorderTexture[index][1], ItemBorderTexture[index][2];
 end
 
 local function ShowFlyoutBlack(bool)
@@ -89,15 +80,39 @@ local function ShowFlyoutBlack(bool)
 	Narci_FlyoutBlack.AnimFrame:Show();
 end
 
-local GemIDList = {};
+local GemIDList, GemTypesByID = {}, {};
 
 local GetContainerItemID = GetContainerItemID;
 local GetItemCount = GetItemCount;
 local numBags = NUM_BAG_SLOTS;
 local FadeFrame = NarciAPI_FadeFrame;
 
-for GemID in pairs(Narci_GemInfo) do
+local function StatAbbreviationToFullForm(abbr)
+    if abbr == "crit" then
+        abbr = NARCI_CRITICAL_STRIKE;
+    elseif abbr == "haste" then
+        abbr = STAT_HASTE;
+    elseif abbr == "versatility" then
+        abbr = STAT_VERSATILITY;
+    elseif abbr == "mastery" then
+        abbr = STAT_MASTERY;
+    elseif abbr == "EXP" then
+        abbr = POWER_TYPE_EXPERIENCE;
+    elseif abbr == "MSPD" then
+        abbr = STAT_MOVEMENT_SPEED;
+    elseif abbr == "STR" then
+        abbr = NARCI_STAT_STRENGTH;
+    elseif abbr == "AGI" then
+        abbr = NARCI_STAT_AGILITY;
+    elseif abbr == "INT" then
+        abbr = SPEC_FRAME_PRIMARY_STAT_INTELLECT;
+    end
+    return abbr;
+end
+
+for GemID, info in pairs(Narci_GemInfo) do
     tinsert(GemIDList, GemID);
+    GemTypesByID[GemID] = StatAbbreviationToFullForm(info[1]);
 end
 
 local function SortedByID(a, b) return a > b; end
@@ -123,13 +138,19 @@ local function GetMatchCount(CheckList, OutputList)
     wipe(OutputList);
     local count = 0;
     local i = 1;
+    local types = {};
     for _, itemID in pairs(CheckList) do
         count = GetItemCount(itemID);
         if count ~= 0 then
             OutputList[i] = {itemID, count};
+            if i < 3 then
+                tinsert(types, GemTypesByID[itemID] );
+            end
             i = i + 1;
         end
     end
+    
+    return types[1], types[2], (i - 1);
 end
 
 local function AjustShadowHeight(frame, numButtons)
@@ -187,8 +208,8 @@ local function DisplayButtons(itemCountList, disabledID, rootFrame, buttonTempla
             local _, _, _, _, icon, _, itemSubClassID = GetItemInfoInstant(itemID);
             local name = C_Item.GetItemNameByID(itemID);
             local quality = C_Item.GetItemQualityByID(itemID);
-            local r, g, b = ITEM_QUALITY_COLORS[quality].r, ITEM_QUALITY_COLORS[quality].g, ITEM_QUALITY_COLORS[quality].b
-            button.ItemName:SetTextColor(r, g, b, 1);
+            local r, g, b = ITEM_QUALITY_COLORS[quality].r, ITEM_QUALITY_COLORS[quality].g, ITEM_QUALITY_COLORS[quality].b;
+            button.r, button.g, button.b = r, g, b;
             button.GemID = itemID;
             button.ColorID = itemSubClassID;
             button.ItemName:SetText(name);
@@ -196,26 +217,25 @@ local function DisplayButtons(itemCountList, disabledID, rootFrame, buttonTempla
             button.Icon2:SetTexture(icon);
             button.Icon3:SetTexture(icon);
             button.Count:SetText(count);
-            bonus, minLevel = GetGemBonues(itemID);
+            bonus, minLevel = GetGemBonus(itemID);
             button.Bonus:SetText(bonus);
 
-            texCoord1, texCoord2 = GetBorderTexture(itemSubClassID, designateColorID(button.GemID));
+            texCoord1, texCoord2 = GetBorderTexCoord(itemID, itemSubClassID);
             button.Border0:SetTexCoord(texCoord1, texCoord2, 0, 0.5);
             button.Border1:SetTexCoord(texCoord1, texCoord2, 0.5, 1);
             if itemID == disabledID or (minLevel and minLevel > SocektedItemLvl) then
-                button.Overlay:Show();   --Irrelevent Item Alpha
+                --Irrelevent Item Alpha
+                button.ItemName:SetTextColor(0.44, 0.44, 0.44, 1);
                 button:Disable();
             else
-                button.Overlay:Hide();
+                button.ItemName:SetTextColor(r, g, b, 1);
                 button:Enable();
             end
             button:Show();
         end
     end
 
-
-
-
+    --Scroll Frame
     scrollchild:SetHeight(numItems*buttonHeight)
     local listFrame = scrollchild:GetParent()
     local range = max( (numItems- buttonsPerPage)*buttonHeight, 0);
@@ -259,15 +279,16 @@ function AutoSocket(slotID, GemID)
     --CloseSocketInfo();
 end
 
-local function UpdateInnerShadowStates(self, currValue)
+local function UpdateInnerShadowStates(self)
 	local currValue = self:GetValue();
-
-	local minVal, maxVal = self:GetMinMaxValues();
+    local minVal, maxVal = self:GetMinMaxValues();
+    
 	if ( currValue >= maxVal -20) then
 		self.BottomShadow:Hide();
     else
         self.BottomShadow:Show();
-	end
+    end
+    
 	if ( currValue <= minVal +20) then
 		self.TopShadow:Hide();
     else
@@ -280,43 +301,35 @@ function Narci_ItemSocketing_ScrollFrame_OnLoad(self)
     local TotalTab = 5;
     local TotalHeight = floor(TotalTab * TabHeight + 0.5);
     local MaxScroll = floor((TotalTab-1) * TabHeight + 0.5);
-    self.scrollBar:SetMinMaxValues(0, MaxScroll)
-    self.scrollBar:SetValueStep(0.001);
     self.buttonHeight = TotalHeight;
-    --self.scrollBar.buttonHeight = TotalHeight;
-    --self.scrollBar:SetValue(0)
     self.range = MaxScroll;
     self.scrollBar:SetScript("OnValueChanged", function(self, value)
-        HybridScrollFrame_SetOffset(self:GetParent(), value)
-        UpdateInnerShadowStates(self)
+        --HybridScrollFrame_SetOffset(self:GetParent(), value);
+        self:GetParent():SetVerticalScroll(value);
+        UpdateInnerShadowStates(self);
     end)
-    NarciAPI_SmoothScroll_Initialization(self, nil, nil, 1/(TotalTab), 0.14, 0.4)
+    NarciAPI_SmoothScroll_Initialization(self, nil, nil, 1/(TotalTab), 0.14, 0.4);      --(self, updatedList, updateFunc, deltaRatio, timeRatio, minOffset) 
 end
 
---NarciAPI_SmoothScroll_Initialization(self, updatedList, updateFunc, deltaRatio, timeRatio, minOffset)  
-
+local numClicks = 0;
 function Narci_GemButton_OnClick(self)
-    
+    numClicks = numClicks + 1;
+    if numClicks >= 2 then
+        numClicks = 0;
+        Narci_ItemSocketing.Tooltip.animIn:Play();
+    end
 end
 
 function Narci_ItemSocketing_Succeed()
-    --Narci_ItemSocketing:Hide();
-    FadeFrame(Narci_ItemSocketing, 0.5, "OUT")	
+    FadeFrame(Narci_ItemSocketing, 0.5, "OUT");
     ShowFlyoutBlack(false);
     HideUIPanel(ItemSocketingFrame);
     Narci_ItemSocketing_GemFrame.Flare.Rotate:Play();
+    PlaySound(84378);
     C_Timer.After(0.25, function()
-        local slot = Narci_ItemSocketing:GetParent():GetParent();
+        local slot = Narci_ItemSocketing.anchorSlot;
         Narci_ItemSlotButton_OnLoad(slot)
         hasCounted = false;
-        --[[
-        local count = GetItemCount(self.GemID)
-        self.Count:SetText(count);
-        if count == 0 then
-            self.Overlay:Show();
-            self:Disable();
-        end
-        --]]
     end)
 end
 
@@ -329,8 +342,8 @@ end
 
 function Narci_GemButton_OnDoubleClick(self)
     Narci_ItemSocketing:RegisterEvent("UI_ERROR_MESSAGE");
-    SetAlertFrame(self)
-    local slot = Narci_ItemSocketing:GetParent():GetParent();
+    Narci_AlertFrame_Autohide:SetAnchor(Narci_ItemSocketing_GemFrame, -14, true);
+    local slot = Narci_ItemSocketing.anchorSlot;
     local slotID = slot:GetID();
     if not slotID then return; end
     self.ButtonHighlight.animIn:Play();
@@ -360,6 +373,7 @@ Finder:SetScript("OnEvent", function(self,event,...)
 end)
 --]]
 
+
 ---------------------------------------
 function Narci_GemButton_OnEnter(self)
     local link = self:GetParent().GemLink;
@@ -367,11 +381,35 @@ function Narci_GemButton_OnEnter(self)
 
 	if (not link) or Narci_ItemSocketing:IsShown() then
 		return;
-	end
-	
-	local bonus = GetGemBonues(link)
-	local name, _, quality, _, _, _, _, _, _, icon = GetItemInfo(link)
-	local r, g, b = ITEM_QUALITY_COLORS[quality].r, ITEM_QUALITY_COLORS[quality].g, ITEM_QUALITY_COLORS[quality].b
+    end
+    
+    --Show optional gem types in your inventory
+    local type1, type2, NumGems;
+    type1, type2, NumGems = GetMatchCount(GemIDList, GemCountList);
+    self.NumGems = NumGems;
+    if NumGems > 0 then
+        local text;
+        if NumGems == 1 then
+            text = type1;
+        else
+            if type1 == type2 then
+                type1 = type1.."+";    --Greater +40/+30 Versa
+            end
+            if NumGems == 2 then
+                text = format( L["Gem Tooltip Format1"], type1, type2);
+            elseif NumGems > 2 then
+                text = format( L["Gem Tooltip Format2"], type1, type2, (NumGems - 2) );
+            end
+            tooltip.OtherGems.Text:SetText(text);
+            tooltip.OtherGems:Show();
+        end
+    else
+        tooltip.OtherGems:Hide();
+    end
+
+	local bonus = GetGemBonus(link);
+	local name, _, quality, _, _, _, _, _, _, icon = GetItemInfo(link);
+	local r, g, b = ITEM_QUALITY_COLORS[quality].r, ITEM_QUALITY_COLORS[quality].g, ITEM_QUALITY_COLORS[quality].b;
 
 	tooltip.ArtFrame.Icon:SetTexture(icon);
 	tooltip.ArtFrame.ItemName:SetText(name);
@@ -383,13 +421,13 @@ function Narci_GemButton_OnEnter(self)
 	tooltip:SetFrameStrata("TOOLTIP");
 
 	if self:GetParent().IsRight then
-		tooltip:SetPoint("TOPRIGHT", self, "TOPLEFT", 1, 10)
+		tooltip:SetPoint("TOPRIGHT", self, "TOPLEFT", 1, 10);
 	else
-		tooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", -1, 10)
+		tooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", -1, 10);
 	end
 
-    tooltip:SetMouseMotionEnabled(false)
-	FadeFrame(tooltip, 0.15, "IN")
+    tooltip:SetMouseMotionEnabled(false);
+	FadeFrame(tooltip, 0.15, "IN");
 end
 
 function Narci_GemButton_OnLeave()
@@ -399,22 +437,26 @@ end
 function Narci_GemSlot_OnClick(self)
     local frame = Narci_ItemSocketing;
     local GemFrame = Narci_ItemSocketing_GemFrame;
+    frame.anchorSlot = self:GetParent();
     if frame:IsShown() then
         frame:Hide();
         ShowFlyoutBlack(false);
         HideUIPanel(ItemSocketingFrame);
     else
         SocektedItemLvl= self.ItemLevel;
-        GetMatchCount(GemIDList, GemCountList)
-        if #GemCountList == 0 then return; end
-        DisplayButtons(GemCountList, self.ItemID)
+        if self.NumGems == 0 then return; end;
+        DisplayButtons(GemCountList, self.ItemID);
         frame:ClearAllPoints();
         GemFrame:ClearAllPoints();
-        frame:SetParent(self);
-        GemFrame:SetParent(self);
+        --local scale = self:GetEffectiveScale();
+        --frame:SetScale(scale);
+        --GemFrame:SetScale(scale); 
+        frame:SetParent(Narci_Character);
+        GemFrame:SetParent(Narci_Character);   
+        frame:SetFrameLevel(20);
         GemFrame:SetPoint("CENTER", self, "CENTER");
-        GemFrame.GemBorder:SetTexture(self.GemBorder:GetTexture())
-        GemFrame.GemIcon:SetTexture(self.GemIcon:GetTexture())
+        GemFrame.GemBorder:SetTexture(self.GemBorder:GetTexture());
+        GemFrame.GemIcon:SetTexture(self.GemIcon:GetTexture());
         if self.IsRight then
             frame:SetPoint("TOPRIGHT", self, "TOPLEFT", 1 ,10);
             GemFrame.GemBorder:SetTexCoord(1, 0, 0, 1);
@@ -426,14 +468,14 @@ function Narci_GemSlot_OnClick(self)
             GemFrame.Bling:SetTexCoord(0, 0.5, 0, 1);
             GemFrame.GemIcon:SetPoint("CENTER", self, "CENTER", 3, 0);
         end
-        frame:SetAlpha(1)
+        frame:SetAlpha(1);
         frame:Show();
-        GemFrame:SetFrameStrata("TOOLTIP")
+        GemFrame:SetFrameStrata("TOOLTIP");
         GemFrame:Show();
         ShowFlyoutBlack(true);
-        FadeFrame(Narci_GearEnhancement_Tooltip, 0.2, "OUT")
+        FadeFrame(Narci_GearEnhancement_Tooltip, 0.2, "OUT");
     end
-    HideButtonTooltip();
+    Narci:HideButtonTooltip();
 end
 
 
@@ -474,7 +516,7 @@ function Narci_ItemSocketing_OnEvent(self, event, ...)
             count = GetItemCount(id);
             button.Count:SetText(count);
             if count == 0 then
-                button.Overlay:Show();   --Irrelevent Item Alpha
+                --Irrelevent Item Alpha
                 button:Disable();
             end
         end

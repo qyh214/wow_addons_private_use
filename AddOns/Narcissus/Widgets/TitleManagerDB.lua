@@ -2,7 +2,7 @@
 --Project Page: https://wow.curseforge.com/projects/narcissus/files
 --twitter @Peterodox
 
-CharacterTitlesTable = 
+Narci_CharacterTitlesTable = 
     {--[DBC ID] = {category, rarity, name, TitleID, AchievementID/QuestID, isQuest}
     --pvp, pve, repu, achv, event      numType=5
 
@@ -406,4 +406,11 @@ CharacterTitlesTable =
     [657] = {"pve", 0, "of the Deeps", 405, }, --Mythic Azshara
     [658] = {"achv", 0, "Sparking", 406, }, --
     [659] = {"achv", 1, "Azeroth's Champion", 407, 13779}, --
-    }
+    [661] = {"pve", 5, "Famed Slayer of Azshara", 408, 13788}, --Azshara HoF
+
+    [662] = {"achv", 0, "Renowned Explorer", 410, }, --Recruit friends
+    [664] = {"achv", 0, "Veteran of the Fourth War", 412, 13924}, --War Campaign
+    [665] = {"pvp", 5, "Notorious Gladiator", 411, 13957},  --BFA S4
+    [667] = {"pvp", 0, "Servant of N'Zoth", 414, },  --Use the N'lyeth then slay 10 Alliance players without dying
+    [668] = {"pve", 0, "Minion of Mayhem", 415, },  --
+}

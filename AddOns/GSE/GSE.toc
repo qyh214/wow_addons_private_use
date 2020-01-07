@@ -2,7 +2,7 @@
 ## Title: |cff0000FFGSE2:|r |cFF00D1FFGnome Sequencer Enhanced|r
 ## Notes: Allows you to execute a sequence of macros without stopping on unusable spells.
 ## Author: TimothyLuke
-## Version: 2.4.23
+## Version: 2.4.25
 ## SavedVariables: GSEOptions GSELibrary
 ## SavedVariablesPerCharacter: GSE_C
 ## OptionalDeps: WeakAuras

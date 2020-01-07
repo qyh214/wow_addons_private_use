@@ -1,3 +1,5 @@
+Narci = {};
+
 local DefaultValue = {
     ["DetailedIlvlInfo"] = true,
     ["IsSortedByCategory"] = true,
@@ -5,12 +7,13 @@ local DefaultValue = {
     ["ShowMinimapButton"] = true,
     ["FontHeightItemName"] = 10,
     ["GlobalScale"] = 0.8,
-    ["AuotoColorTheme"] = true,
+    ["AutoColorTheme"] = true,
     ["ColorChoice"] = 0,
     ["EnableDoubleTap"] = false,
     ["CameraOrbit"] = true,
     ["CameraSafeMode"] = true,
     ["BorderTheme"] = "Bright",
+    ["TooltipTheme"] = "Dark",
     ["TruncateText"] = false,
     ["ItemNameWidth"] = 200,
     ["FadeButton"] = false,
@@ -23,18 +26,27 @@ local DefaultValue = {
     ["LetterboxEffect"] = false,
     ["LetterboxRatio"] = 2.35,
     ["AFKScreen"] = false,
-    ["GemManager"] = true,
-    ["DressingRoom"] = true,
+    ["GemManager"] = true,                          --Enable gem manager for Blizzard item socketing frame
+    ["DressingRoom"] = true,                        --Enable dressing room module
+    ["DressingRoomUseTargetModel"] = true,          --Replace the the dressing room room with your targeted player
+    ["UseEntranceVisual"] = true,
+    ["ModelPanelScale"] = 1,
+    ["UseExitConfirmation"] = true,                 --Show exit confirmation dialog upon leaving group photo mode
+    ["BaseLineOffset"] = 0,                         --Ultra-wide
+    ["ShrinkArea"] = 0,                             --Reduce the width of the area where you can control the model
+    ["AutoPlayAnimation"] = true,                   --Play recommended animation when clicking a spell visual entry
+    ["UseBustShot"] = true,                         --Zoom in to the upper torso
 }
 
 local TutorialInclude = {
-    "CaptureButton", "NextAnimationButton", "PlayerModelLayerButton",
-    "GroupPhoto",
+    "RaceChange", "SpellVisualBrowser", "EquipmentSetManager", "Movement", "ExitConfirmation", "RaceChangeFixed",
 };
 
 local function Initialize_NarcissusDB()
-    NarcissusDB = NarcissusDB or {};
-    NarcissusDB_PC = NarcissusDB_PC or {};
+    NarcissusDB = NarcissusDB or {};        --Account-wide Variables
+    NarcissusDB_PC = NarcissusDB_PC or {};  --Character-specific Variables;
+    NarcissusDB_PC.EquipmentSetDB = NarcissusDB_PC.EquipmentSetDB or {};
+
     NarcissusDB.MinimapButton = NarcissusDB.MinimapButton or {};
     NarcissusDB.MinimapButton.Position = NarcissusDB.MinimapButton.Position or rad(150);
 

@@ -1,6 +1,10 @@
 <Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
     <Script file="Splash.lua"/>
 
+    <FontString name="NarciSplashWhiteFont" inherits="NarciPrefFontWhiteMild" virtual="true">
+        <Color r="0.5" g="0.5" b="0.5"/>
+    </FontString>
+    
     <Button name="Narci_TryItNow_Template" virtual="true">
         <Size y="12"/>
         <HitRectInsets>
@@ -36,11 +40,16 @@
         <Scripts>
             <OnLoad>
                 self.Value:SetText(NARCI_SPLASH_CLOSE_AND_CONTINUE);
+                self.Value:SetAlpha(0.6);
             </OnLoad>
             <OnShow function="NarciAPI_OptimizeBorderThickness"/>
             <OnClick>
                 NarciAPI_FadeFrame(self:GetParent(), 0.2, "OUT");
             </OnClick>
+			<OnEnter>
+				self.Background:SetColorTexture(1, 1, 1);
+                self.Value:SetAlpha(1);
+			</OnEnter>
         </Scripts>
     </Button>
 
@@ -93,36 +102,32 @@
             <Layer level="OVERLAY">
                 <Texture inherits="NarciTopShadowTemplate"/>
 
-				<FontString parentKey="Header" inherits="AAAStatusNameMedium" justifyH="CENTER" justifyV="MIDDLE" text="NARCI_PATCH_NOTES">
+				<FontString parentKey="Header" inherits="NarciNonInteractiveFont" justifyH="CENTER" justifyV="MIDDLE" text="NARCI_PATCH_NOTES">
 					<Size x="0" y="0"/>
-                    <Color r="0.4" g="0.4" b="0.4" a="1"/>
 					<Anchors>
 						<Anchor point="CENTER" relativeKey="$parent.HeaderBackground" relativePoint="CENTER" x="0" y="0"/>
 					</Anchors>
 				</FontString>
 
 
-				<FontString parentKey="Header1" inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_HEADER1" ignoreParentScale="true">
+				<FontString parentKey="Header1" inherits="NarciSplashWhiteFont" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_HEADER1" ignoreParentScale="true">
 					<Size x="0" y="0"/>
-                    <Color r="0.9" g="0.9" b="0.9" a="1"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="16" y="-16"/>
                         <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-16"/>
 					</Anchors>
 				</FontString>
 
-				<FontString parentKey="Text00" inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_MESSAGE0" spacing="2">
+				<FontString parentKey="Text00" inherits="NarciSplashWhiteFont" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_MESSAGE0" spacing="2">
 					<Size x="0" y="0"/>
-                    <Color r="0.9" g="0.9" b="0.9" a="1"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeKey="$parent.Header1" relativePoint="BOTTOMLEFT" x="0" y="-12"/>
                         <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-16"/>
 					</Anchors>
 				</FontString>
 
-				<FontString parentKey="Text1" inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_MESSAGE1" spacing="2">
+				<FontString parentKey="Text1" inherits="NarciSplashWhiteFont" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_MESSAGE1" spacing="2">
 					<Size x="0" y="0"/>
-                    <Color r="0.9" g="0.9" b="0.9" a="1"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeKey="$parent.Text00" relativePoint="BOTTOMLEFT" x="0" y="-12"/>
                         <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-16"/>
@@ -182,7 +187,7 @@
 
         <Layers>
             <Layer level="OVERLAY">
-				<!--FontString parentKey="Text2" inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_MESSAGE2" spacing="2">
+				<!--FontString parentKey="Text2" inherits="NarciSplashWhiteFont" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_MESSAGE2" spacing="2">
 					<Size x="0" y="0"/>
                     <Color r="0.9" g="0.9" b="0.9" a="1"/>
 					<Anchors>
@@ -191,7 +196,7 @@
                         <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-16"/>
 					</Anchors>
 				</FontString>
-				<FontString parentKey="Text3" inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_MESSAGE3" spacing="2">
+				<FontString parentKey="Text3" inherits="NarciSplashWhiteFont" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_MESSAGE3" spacing="2">
 					<Size x="0" y="0"/>
                     <Color r="0.9" g="0.9" b="0.9" a="1"/>
 					<Anchors>
@@ -200,9 +205,8 @@
 					</Anchors>
 				</FontString-->
 
-				<FontString parentKey="Header2" inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_HEADER2" ignoreParentScale="true">
+				<FontString parentKey="Header2" inherits="NarciSplashWhiteFont" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_HEADER2" ignoreParentScale="true">
 					<Size x="0" y="0"/>
-                    <Color r="0.9" g="0.9" b="0.9" a="1"/>
 					<Anchors>
 						<Anchor point="TOP" relativeKey="$parent.IMG1" relativePoint="BOTTOM" y="-20"/>
                         <Anchor point="LEFT" relativeKey="$parent.Header1" relativePoint="LEFT" x="0"/>
@@ -210,80 +214,47 @@
 					</Anchors>
 				</FontString>
 
-				<FontString parentKey="Text4" inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_MESSAGE3" spacing="2">
+				<FontString parentKey="Text4" inherits="NarciSplashWhiteFont" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_MESSAGE2" spacing="2">
 					<Size x="0" y="0"/>
-                    <Color r="0.9" g="0.9" b="0.9" a="1"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeKey="$parent.Header2" relativePoint="BOTTOMLEFT" x="0" y="-12"/>
                         <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-16"/>
 					</Anchors>
 				</FontString>
-            </Layer>
-        </Layers>
-        
-        <Frames>
-            <Button inherits="Narci_TryItNow_Template" parentKey="TryIt1">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeKey="$parent.Text4" relativePoint="BOTTOMLEFT" x="4" y="-6"/>
-                    <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-20"/>
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        self.Text:SetText(NARCI_DRESSING_ROOM_ENABLED_BY_DEFAULT);
-                        self.enabledText = NARCI_DRESSING_ROOM_DISABLED;
-                    </OnLoad>
-                    <OnClick function="Narci_TryItNow_DressingRoom"/>
-                </Scripts>
-            </Button>
-        </Frames>
 
-        <Layers>
-            <Layer level="OVERLAY">
-                <FontString parentKey="Text5" inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_MESSAGE2" spacing="2">
-                    <Size x="0" y="0"/>
-                    <Color r="0.9" g="0.9" b="0.9" a="1"/>
-                    <Anchors>
-                        <Anchor point="TOP" relativeKey="$parent.TryIt1" relativePoint="BOTTOM" y="-12"/>
-                        <Anchor point="LEFT" relativeKey="$parent.Text4" relativePoint="LEFT" x="0"/>
+				<FontString parentKey="Header3" inherits="NarciSplashWhiteFont" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_HEADER3" ignoreParentScale="true">
+					<Size x="0" y="0"/>
+					<Anchors>
+						<Anchor point="TOP" relativeKey="$parent.Text4" relativePoint="BOTTOM" y="-20"/>
+                        <Anchor point="LEFT" relativeKey="$parent.Header1" relativePoint="LEFT" x="0"/>
                         <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-16"/>
-                    </Anchors>
-                </FontString>
+					</Anchors>
+				</FontString>
+
+				<FontString parentKey="Text5" inherits="NarciSplashWhiteFont" justifyH="LEFT" justifyV="TOP" text="NARCI_SPLASH_MESSAGE3" spacing="2">
+					<Size x="0" y="0"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.Header3" relativePoint="BOTTOMLEFT" x="0" y="-12"/>
+                        <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-16"/>
+					</Anchors>
+				</FontString>
             </Layer>
         </Layers>
-
         <Frames>
-            <Button inherits="Narci_TryItNow_Template" parentKey="TryIt2">
-                <Size y="20"/>
+            <Button inherits="Narci_SplashContinueButton_Template" parentKey="Continue">
+                <Size x="240" y="24"/>
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeKey="$parent.Text5" relativePoint="BOTTOMLEFT" x="4" y="-6"/>
-                    <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-20"/>
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        self.enabledText = NARCI_CAMERA_SAFE_MODE_ENABLED;
-                        self.disabledText = NARCI_CAMERA_SAFE_MODE_DISABLED;
-                    </OnLoad>
-                    <OnShow function="Narci_Splash_CameraSafeMode_OnShow"/>
-                    <OnClick function="Narci_TryItNow_CameraSafeMode"/>
-                </Scripts>
-            </Button>
-
-            <Button inherits="Narci_SplashContinueButton_Template" scale="0.8" parentKey="Continue">
-                <Anchors>
-                    <Anchor point="TOP" relativeKey="$parent.TryIt2" relativePoint="BOTTOM" y="-40"/>
-                    <Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="24"/>
-                    <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-24"/>
+                    <Anchor point="TOP" relativeKey="$parent.Text5" relativePoint="BOTTOM" y="-26"/>
                 </Anchors>
             </Button>
         </Frames>
-
         <Layers>
 			<Layer level="BACKGROUND" textureSubLevel="2">
 				<Texture setAllPoints="true" parentKey="Background">
 					<Color r="0.07" g="0.07" b="0.08" a="0.95"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="0" y="0"/>
-						<Anchor point="BOTTOM" relativeKey="$parent.Continue" relativePoint="BOTTOM" y="-24"/>
+						<Anchor point="BOTTOM" relativeKey="$parent.Continue" relativePoint="BOTTOM" y="-20"/>
                         <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="0"/>
 					</Anchors>
 				</Texture>
@@ -372,14 +343,14 @@
             <Frame parentKey="HiddenFrame" hidden="true" Alpha="0">
                 <Layers>
                     <Layer level="OVERLAY">
-                        <FontString inherits="PlayerNameLarge" justifyH="LEFT" justifyV="TOP" text="NARCI_GROUP_PHOTO" parentKey="Header" >
+                        <FontString inherits="PlayerNameLarge" justifyH="LEFT" justifyV="TOP" text="NARCI_SPELL_VISUALS" parentKey="Header" >
                             <Size x="0" y="0"/>
                             <Color r="1" g="0.82" b="0"/>
                             <Anchors>
                                 <Anchor point="TOPLEFT" relativeKey="$parent.$parent.Backdrop" relativePoint="TOPLEFT" x="76" y="-35"/>
                             </Anchors>
                         </FontString>
-                        <FontString inherits="AAAPreferenceMedium" justifyH="LEFT" justifyV="TOP" text="NARCI_GROUP_PHOTO_AVAILABLE" >
+                        <FontString inherits="NarciMenuFont" justifyH="LEFT" justifyV="TOP" text="NARCI_GROUP_PHOTO_AVAILABLE" >
                             <Size x="0" y="0"/>
                             <Anchors>
                                 <Anchor point="TOPLEFT" relativeKey="$parent.Header" relativePoint="BOTTOMLEFT" x="0" y="-4"/>

@@ -52,7 +52,6 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnCrush		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(122774),
 	specwarnUnder	= "Mostrar aviso especial cuando estés debajo del jefe",
-	countdownCrush	= DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT:format(122774).." (dificultad heroica)",
 	PheromonesIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(122835)
 })
 

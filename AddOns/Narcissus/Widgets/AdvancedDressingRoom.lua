@@ -1,13 +1,19 @@
+--[[
 local _, _, _, tocversion = GetBuildInfo();
 if tocversion ~= 80200 then     --Dressing Room gets a revamp in 8.2.5. Disable following funtions.
     return;
 end
-
---[[
     -- Blizzard Dressing Room --
     Size:   450, 545
 --]]
 
+----------------------------------------------------------------------------------------
+local defaultWidth, defaultHeight = 450, 545;       --BLZ dressing room size
+local FrameAlpha_OnMoving = 0;                      --Currently Disabled
+local buttonWidth, buttonGap = 54, 16;              --Equipment slots
+local ButtonOffsetY = 20;                           --Equipment slots
+local EmptySlotAlpha = 0.4;                         --Equipment slots
+----------------------------------------------------------------------------------------
 
 local GetTransmogItemInfo = C_TransmogCollection.GetItemInfo;
 local GetTransmogSourceInfo = C_TransmogCollection.GetSourceInfo;
@@ -19,21 +25,15 @@ local GetIllusionSourceInfo = C_TransmogCollection.GetIllusionSourceInfo;
 
 local IsAppearanceKnown = NarciAPI_IsAppearanceKnown;
 local FadeFrame = NarciAPI_FadeFrame;
+local SlotIDtoName = Narci.SlotIDtoName;
 
-local defaultWidth, defaultHeight = 450, 545;
-local OverrideScale = 2;
 local WidthHeitghtRatio = defaultWidth/defaultHeight;
-local OverrideWidth, OverrideHeight = defaultWidth * OverrideScale, defaultHeight * OverrideScale;
-local FrameAlpha_OnMoving = 0;
-local buttonWidth, buttonGap = 54, 16;
 local FirstButtonOffset = 0.5*(buttonWidth + buttonGap);
-local ButtonOffsetY = 20;
-local EmptySlotAlpha = 0.4;
+local OverrideHeight = math.floor(GetScreenHeight()*0.8 + 0.5);
+local OverrideWidth = math.floor(WidthHeitghtRatio * OverrideHeight + 0.5);
 
-OverrideHeight = math.floor(GetScreenHeight()*0.8 + 0.5);
-OverrideWidth = math.floor(WidthHeitghtRatio * OverrideHeight + 0.5);
-
-local SlotFrameVisibility = true;   --If DressUp addon is loaded, hide our slot frame
+local SlotFrameVisibility = true;            --If DressUp addon is loaded, hide our slot frame
+local UseTargetModel = true;                 --Replace your model with target's
 
 local XmogSlotTable = {
 	[1] = {{5, INVTYPE_CHEST}, {15, INVTYPE_CLOAK}, {3, INVTYPE_SHOULDER}, {1, INVTYPE_HEAD}},		--Left 	**slotID for TABARD is 19
@@ -43,21 +43,48 @@ local XmogSlotTable = {
     ["Manual"] = {{10, INVTYPE_HAND}, {6, INVTYPE_WAIST}, {9, INVTYPE_WRIST}},                                          --Manually Created
 };
 
-local SlotIDtoName = {
-    [1] = {"HeadSlot", INVTYPE_HEAD},
-    [3] = {"ShoulderSlot", INVTYPE_SHOULDER},
-    [4] = {"ShirtSlot", INVTYPE_BODY},
-    [5] = {"ChestSlot", INVTYPE_CHEST},
-    [6] = {"WaistSlot", INVTYPE_WAIST},
-    [7] = {"LegsSlot", INVTYPE_LEGS},
-    [8] = {"FeetSlot", INVTYPE_FEET},
-    [9] = {"WristSlot", INVTYPE_WRIST},
-    [10]= {"HandsSlot", INVTYPE_HAND},
-    [15]= {"BackSlot", INVTYPE_CLOAK},
-    [16]= {"MainHandSlot", INVTYPE_WEAPONMAINHAND},
-    [17]= {"SecondaryHandSlot", INVTYPE_WEAPONOFFHAND},
-    [19]= {"TabardSlot", INVTYPE_TABARD},
+
+local ModelScales = {
+    --local GenderID = UnitSex(unit);   2 Male 3 Female
+	--[raceID] = {male actorID, female actorID},
+    [2]  = {483, 483},		-- Orc bow
+    [3]  = {471, nil},		-- Dwarf
+    [5]  = {472, 487},		-- UD   0.9585 seems small
+    [6]  = {449, 484},		-- Tauren
+    [7]  = {450, 450},		-- Gnome
+    [8]  = {485, 486},		-- Troll  0.9414 too high?  
+    [9]  = {476, 477},		-- Goblin
+    [11] = {475, 501},		-- Goat
+    [22] = {474, 500},      -- Worgen
+    [24] = {473, 473},		-- Pandaren
+    [28] = {490, 491},		-- Highmountain Tauren
+    [30] = {488, 489},		-- Lightforged Draenei
+    [31] = {492, 492},		-- Zandalari
+    [32] = {494, 497},		-- Kul'Tiran
+    [34] = {499, nil},		-- Dark Iron Dwarf
+    [35] = {924, 923},      -- Vulpera
+    [36] = {495, 498},		-- Mag'har
+    [37] = {929, 931},      -- Mechagnome
 }
+
+
+local DefaultActorInfoID = 438;
+local function GetActorInfoByUnit(unit)
+    if not UnitExists(unit) or not UnitIsPlayer(unit) or not CanInspect(unit, false) then return; end
+    
+    local _, _, raceID = UnitRace(unit);
+    local genderID = UnitSex(unit);
+    if raceID == 25 or raceID == 26 then --Pandaren A|H
+        raceID = 24
+    end
+    if not (raceID and genderID) then
+        return DefaultActorInfoID;     --438
+    elseif ModelScales[raceID] then
+        return ModelScales[raceID][genderID - 1] or DefaultActorInfoID;
+    else
+        return DefaultActorInfoID;     --438
+    end
+end
 
 local function CreateSlotButton(frame)
     local strupper = strupper;
@@ -236,7 +263,11 @@ end
 local function NarciBridge_GetDressUpModelSlotSource(slotID, enchantID)
     local sourcePlainText, itemQuality, itemIcon, hyperlink, unformatedHyperlink, itemModID, itemID, itemName, visualID, sourceType;
     local sourceTextColorized = "";
-    local appliedSourceID, illusionSourceID = DressUpModel:GetSlotTransmogSources(slotID)
+	local playerActor = DressUpFrame.ModelScene:GetPlayerActor();
+	if (not playerActor) then
+		return;
+	end
+    local appliedSourceID, illusionSourceID = playerActor:GetSlotTransmogSources(slotID)
     local illusionName, isIllusionCollected, illusionHyperlink, illusionVisualID;
     if illusionSourceID and illusionSourceID ~= 0 then
         local illusionSourceInfo = GetTransmogSourceInfo(illusionSourceID)
@@ -308,51 +339,53 @@ local function SetDressUpBackground(frame, atlasPostfix)
 	end
 end
 
-local function GetTargetSource(mainHandEnchant, offHandEnchant)
+local function GetDressingSource(mainHandEnchant, offHandEnchant)
     local buttons = NarciBridge_DressUpFrame.buttons;
     local button, appliedSourceID, icon, hasMog, hyperlink, unformatedHyperlink, isIllusionCollected, illusionHyperlink;
     local enchantID;
     wipe(newSet.items)
     wipe(ItemList)
     for slotID, v in pairs(SlotIDtoName) do
-        if slotID == 16 then
-            enchantID = mainHandEnchant or "";
-        elseif slotID == 17 then
-            enchantID = offHandEnchant or "";
-        else
-            enchantID = "";
-        end
-        appliedSourceID, icon, hasMog, hyperlink, unformatedHyperlink, itemName, sourceTextColorized = NarciBridge_GetDressUpModelSlotSource(slotID, enchantID);
-        if illusionHyperlink then
-            --hyperlink = illusionHyperlink;
-        end     
-        ItemList[slotID] = {itemName, sourceTextColorized};
-        newSet.items[slotID] = hyperlink;
-        button = buttons[slotID];
-        button.hyperlink = hyperlink;
-        if icon then
-            if appliedSourceID then
-                button.appearance = appliedSourceID;
-            end
-            button.Icon:SetTexture(icon)
-            if hasMog then
-                button.Icon:SetDesaturated(false);
-                button.Border:SetTexCoord(0.5, 1, 0, 1);
-                button.Black:Hide();
+        if slotID ~= 2 and slotID ~= 11 and slotID ~= 12 and slotID ~= 13 and slotID~=14 and slotID ~= 18 then
+            if slotID == 16 then
+                enchantID = mainHandEnchant or "";
+            elseif slotID == 17 then
+                enchantID = offHandEnchant or "";
             else
-                button.Icon:SetDesaturated(true);
-                button.Border:SetTexCoord(0, 0.5, 0, 1);
-                button.Black:Show();
+                enchantID = "";
             end
-            button:SetAlpha(1);
-            button.Icon:Show();
-        else
-            if button.isHidden then
-                button:SetAlpha(EmptySlotAlpha);
+            appliedSourceID, icon, hasMog, hyperlink, unformatedHyperlink, itemName, sourceTextColorized = NarciBridge_GetDressUpModelSlotSource(slotID, enchantID);
+            if illusionHyperlink then
+                --hyperlink = illusionHyperlink;
+            end     
+            ItemList[slotID] = {itemName, sourceTextColorized};
+            newSet.items[slotID] = hyperlink;
+            button = buttons[slotID];
+            button.hyperlink = hyperlink;
+            if icon then
+                if appliedSourceID then
+                    button.appearance = appliedSourceID;
+                end
+                button.Icon:SetTexture(icon)
+                if hasMog then
+                    button.Icon:SetDesaturated(false);
+                    button.Border:SetTexCoord(0.5, 1, 0, 1);
+                    button.Black:Hide();
+                else
+                    button.Icon:SetDesaturated(true);
+                    button.Border:SetTexCoord(0, 0.5, 0, 1);
+                    button.Black:Show();
+                end
+                button:SetAlpha(1);
+                button.Icon:Show();
             else
-                button:SetAlpha(EmptySlotAlpha);
-                button.Icon:Hide();
-                button.Border:SetTexCoord(0, 0.5, 0, 1);
+                if button.isHidden then
+                    button:SetAlpha(EmptySlotAlpha);
+                else
+                    button:SetAlpha(EmptySlotAlpha);
+                    button.Icon:Hide();
+                    button.Border:SetTexCoord(0, 0.5, 0, 1);
+                end
             end
         end
     end
@@ -376,13 +409,19 @@ local function DressUpSources(appearanceSources, mainHandEnchant, offHandEnchant
     if ( not appearanceSources ) then
 		return true;
     end
-    DressUpModel:Undress()
+
+	local playerActor = DressUpFrame.ModelScene:GetPlayerActor();
+	if (not playerActor) then
+		return true;
+	end
+    
+    playerActor:Undress()
 	local mainHandSlotID = 16   --GetInventorySlotInfo("MAINHANDSLOT");
     local secondaryHandSlotID = 17  --GetInventorySlotInfo("SECONDARYHANDSLOT");
 	for i = 1, #appearanceSources do
 		if ( i ~= mainHandSlotID and i ~= secondaryHandSlotID ) then
 			if ( appearanceSources[i] and appearanceSources[i] ~= NO_TRANSMOG_SOURCE_ID ) then
-                DressUpModel:TryOn(appearanceSources[i]);
+                playerActor:TryOn(appearanceSources[i]);
 			end
         end
         if NarciBridge_DressUpFrame.buttons[i] then
@@ -390,8 +429,8 @@ local function DressUpSources(appearanceSources, mainHandEnchant, offHandEnchant
         end
 	end
 
-	DressUpModel:TryOn(appearanceSources[mainHandSlotID], "MAINHANDSLOT", mainHandEnchant);
-    DressUpModel:TryOn(appearanceSources[secondaryHandSlotID], "SECONDARYHANDSLOT", offHandEnchant);
+	playerActor:TryOn(appearanceSources[mainHandSlotID], "MAINHANDSLOT", mainHandEnchant);
+    playerActor:TryOn(appearanceSources[secondaryHandSlotID], "SECONDARYHANDSLOT", offHandEnchant);
 
     return mainHandEnchant, offHandEnchant
 end
@@ -411,23 +450,68 @@ local function CopyTexts(frame)
     GearTexts:SetText(strtrim(texts));
 end
 
+local function NarciBridge_DressUpFrame_OnModelLoaded(self)
+    if self:GetDisplayInfo() ~= 0 then      --If the current model in Dressing Room is not players', hide slot frame.
+        NarciBridge_DressUpFrame.SlotFrame:Hide();
+    else
+        NarciBridge_DressUpFrame_OnSizeChanged(NarciBridge_DressUpFrame);
+        ResetHiddenSlot()
+    end
+    print("loaded")
+end
+
+local IsCurrentModelPlayer = false;
 local function UpdateDressingRoomModel(self, unit)
-    unit = unit or "player"
+    unit = unit or "player";
     if not UnitExists(unit) or not UnitIsPlayer(unit) or not CanInspect(unit, false) then return; end
     local className, classFileName = UnitClass(unit);
-    SetDressUpBackground(DressUpFrame, classFileName);
-    DressUpModel:SetUnit(unit)
+    local frame = DressUpFrame;
+    SetDressUpBackground(frame, classFileName);
+    local ModelScene = frame.ModelScene;
+    local actor = ModelScene:GetPlayerActor();
+    if not actor then return; end;
+
+    --Acquire target's gears
     NotifyInspect(unit);
-    --local mainHandEnchant, offHandEnchant;
+
+    local modelUnit;
+    local updateScale;
+    local sheatheWeapons = actor:GetSheathed() or false;
+
+    if UseTargetModel then
+        modelUnit = unit;
+        actor:SetModelByUnit(modelUnit, sheatheWeapons, true);
+        updateScale = true;
+        IsCurrentModelPlayer = false;
+    else
+        modelUnit = "player";
+        if not IsCurrentModelPlayer then
+            IsCurrentModelPlayer = true;
+            actor:SetModelByUnit(modelUnit, sheatheWeapons, true);
+            updateScale = true;
+        end
+    end
+
+    if updateScale then
+        local modelInfo = C_ModelInfo.GetModelSceneActorInfoByID(GetActorInfoByUnit(modelUnit));
+        C_Timer.After(0.0,function()
+            ModelScene:InitializeActor(actor, modelInfo);   --Re-scale
+        end);
+    end
+
     C_Timer.After(0.1,function()
         self.mainHandEnchant, self.offHandEnchant = DressUpSources(C_TransmogCollection.GetInspectSources())
+        GetDressingSource(self.mainHandEnchant, self.offHandEnchant)
+        if NarciBridge_DressUpFrame.OptionFrame.GearTexts:IsShown() then
+            CopyTexts(NarciBridge_DressUpFrame.OptionFrame.GearTexts)
+        end
         ClearInspectPlayer();
     end);
 end
 
 local function NarciBridge_DressUpFrame_OnEvent(self, event)
     if event == "PLAYER_TARGET_CHANGED" then
-        UpdateDressingRoomModel(self, "target")
+        UpdateDressingRoomModel(self, "target");
     elseif event == "PLAYER_STARTED_MOVING" then
         local parent = self:GetParent();
         UIFrameFadeOut(parent, 0.2, parent:GetAlpha(), FrameAlpha_OnMoving)
@@ -462,15 +546,6 @@ local function ResetHiddenSlot()
         end
     end
 end
-
-local function NarciBridge_DressUpFrame_OnModelLoaded(self)
-    if self:GetDisplayInfo() ~= 0 then      --If the current model in Dressing Room is not players', hide slot frame.
-        NarciBridge_DressUpFrame.SlotFrame:Hide();
-    else
-        NarciBridge_DressUpFrame_OnSizeChanged(NarciBridge_DressUpFrame);
-        ResetHiddenSlot()
-    end
-end
 -------------------------------------------
 --From Blizzard DressUpFrame_OnDressModel--
 local function DressUpFrame_OnDressModel2(self)
@@ -481,7 +556,7 @@ local function DressUpFrame_OnDressModel2(self)
             self.gotDressed = nil;
             DressUpFrameOutfitDropDown:UpdateSaveButton();
             C_Timer.After(0.2,function()
-                GetTargetSource(self.mainHandEnchant, self.offHandEnchant)
+                GetDressingSource(self.mainHandEnchant, self.offHandEnchant)
                 if NarciBridge_DressUpFrame.OptionFrame.GearTexts:IsShown() then
                     CopyTexts(NarciBridge_DressUpFrame.OptionFrame.GearTexts)
                 end
@@ -508,10 +583,32 @@ local function NarciBridge_MogIt_SaveButton_OnClick(self)
     MogIt.view:Show();  --Open a view window
 end
 
+local function CopyTextButton_OnClick(self)
+    CopyTexts(self)
+    local GearTexts = self:GetParent().GearTexts;
+    if not GearTexts:IsShown() then
+        FadeFrame(GearTexts, 0.25, "IN")
+    else
+        FadeFrame(GearTexts, 0.25, "OUT")
+    end
+end
+
+local function TryOnButton_OnClick(self)
+    local state = NarcissusDB.DressingRoomUseTargetModel;
+    NarcissusDB.DressingRoomUseTargetModel = not state
+    UseTargetModel = not state;
+    if not state then   --true
+        self.Label:SetText("Use Target's Model");
+    else
+        self.Label:SetText("Use Your Model");
+    end
+    UpdateDressingRoomModel(self, "target");
+end
+
 local function NarciBridge_DressUpFrame_Initialize()
     if not (NarcissusDB and NarcissusDB.DressingRoom) then return; end;
     local parentFrame = DressUpFrame;
-    local modelFrame = DressUpModel;
+    --local modelFrame = DressUpModel;
     if not parentFrame then 
         print("Narcissus failed to initialize Advanced Dressing Room");
         return;
@@ -524,21 +621,57 @@ local function NarciBridge_DressUpFrame_Initialize()
     frame:SetScript("OnEvent", NarciBridge_DressUpFrame_OnEvent);
     frame:SetScript("OnSizeChanged", NarciBridge_DressUpFrame_OnSizeChanged);
 
-    modelFrame:SetScript("OnDressModel", NarciBridge_DressUpFrame_OnDressModel);
-    modelFrame:SetScript("OnModelLoaded", NarciBridge_DressUpFrame_OnModelLoaded);
-    modelFrame:SetLight(true, false, - 0.44699833180028 ,  0.72403680806459 , -0.52532198881773, 0.8, 1, 1, 1, 0.6, 0.8, 0.8, 0.8)
-
     local texName = parentFrame:GetName() and parentFrame:GetName().."BackgroundOverlay"
     local tex = parentFrame:CreateTexture(texName, "BACKGROUND", "ModelBackground_Template", 2)
 
-    if MaximizeMinimizeFrame then
+    local ReScaleFrame;
+    local _, _, _, tocversion = GetBuildInfo();
+    if tocversion > 80205 then
+        --8.3 MaximizeMinimizeFrame becomes a child of DressUpFrame
+        ReScaleFrame = parentFrame.MaximizeMinimizeFrame
+    else
+        ReScaleFrame = MaximizeMinimizeFrame;
+    end
+    
+    if ReScaleFrame then
         local function OnMaximize(frame)
             frame:GetParent():SetSize(OverrideWidth, OverrideHeight);   --Override DressUpFrame Resize Mixin
             UpdateUIPanelPositions(frame);
         end
-
-        MaximizeMinimizeFrame:SetOnMaximizedCallback(OnMaximize);
+        ReScaleFrame:SetOnMaximizedCallback(OnMaximize);
     end
+
+    hooksecurefunc("DressUpVisual", function()
+        local frame = NarciBridge_DressUpFrame;
+        if frame and SlotFrameVisibility and GetCVar("miniDressUpFrame") == "0" then
+            frame.SlotFrame:Show();
+            frame.OptionFrame:Show();
+            GetDressingSource(frame.mainHandEnchant, frame.offHandEnchant)
+            if frame.OptionFrame.GearTexts:IsShown() then
+                CopyTexts(frame.OptionFrame.GearTexts)
+            end
+        end
+    end)
+    
+    local function HideIrrelevantUI()
+        local frame = NarciBridge_DressUpFrame;
+        if frame then
+            frame.SlotFrame:Hide();
+            frame.OptionFrame:Hide();
+        end
+    end
+    
+    hooksecurefunc("DressUpMountLink", function()
+        HideIrrelevantUI()
+    end)
+    
+    hooksecurefunc("DressUpBattlePetLink", function()
+        HideIrrelevantUI()
+    end)
+
+    frame.OptionFrame.CopyButton:SetScript("OnClick", CopyTextButton_OnClick);
+    local TryOnButton = frame.OptionFrame.TryOnButton;
+    TryOnButton:SetScript("OnClick", TryOnButton_OnClick);
 end
 
 
@@ -548,12 +681,21 @@ initialize:RegisterEvent("PLAYER_ENTERING_WORLD");
 initialize:RegisterEvent("UI_SCALE_CHANGED");
 initialize:SetScript("OnEvent",function(self,event,...)
     if event == "VARIABLES_LOADED" then
-        NarciBridge_DressUpFrame_Initialize();
         self:UnregisterEvent("VARIABLES_LOADED");
+        NarciBridge_DressUpFrame_Initialize();
     elseif event == "PLAYER_ENTERING_WORLD" then
+        UseTargetModel = NarcissusDB.DressingRoomUseTargetModel;
         if not NarciBridge_DressUpFrame then
             self:UnregisterAllEvents();
             return
+        end
+
+        local TryOnButton = NarciBridge_DressUpFrame.OptionFrame.TryOnButton;
+        TryOnButton:SetScript("OnClick", TryOnButton_OnClick);
+        if UseTargetModel then   --true
+            TryOnButton.Label:SetText("Use Target's Model");
+        else
+            TryOnButton.Label:SetText("Use Your Model");
         end
 
         if IsAddOnLoaded("MogIt") and MogIt then                         --Mogit: Add Save as Mogit wishlist
@@ -588,27 +730,27 @@ function NarciRectangularItemButton_OnEnter(self)
 		GameTooltip:SetHyperlink(self.hyperlink);
 		GameTooltip:Show();
     end
-
-    if isMouseDown then
-        NarciRectangularItemButton_OnClick(self)
-    end
 end
 
 function NarciRectangularItemButton_OnLeave(self)
     GameTooltip:Hide();
-    if isMouseDown then
-        NarciRectangularItemButton_OnClick(self)
-    end
 end
 
 function NarciRectangularItemButton_OnClick(self)
     GameTooltip:Hide();
     self.isHidden = not self.isHidden;
+	local playerActor = DressUpFrame.ModelScene:GetPlayerActor();
+	if (not playerActor) then
+		return true;
+    end
+    
     if self.isHidden then
-        DressUpModel:UndressSlot(self:GetID());
+        playerActor:UndressSlot(self:GetID());
+        self.Icon:SetDesaturated(true);
     elseif self.appearance then
         --print(self.appearance)
-        DressUpModel:TryOn(self.appearance);
+        playerActor:TryOn(self.appearance);
+        self.Icon:SetDesaturated(false);
     end
 end
 
@@ -619,6 +761,8 @@ end
 function NarciRectangularItemButton_OnDragStop()
     isMouseDown = false;
 end
+
+
 --[[
 hooksecurefunc("PanelTemplates_TabResize", function(tab, padding, absoluteSize, minWidth, maxWidth, absoluteTextSize)
     print(tab:GetName())
@@ -627,14 +771,208 @@ hooksecurefunc("PanelTemplates_TabResize", function(tab, padding, absoluteSize, 
     print(minWidth)
     print(maxWidth)
 end)
+
+/run A1=DressUpFrame.ModelScene:GetPlayerActor()
+/run DressUpFrame.ModelScene:SetLightDirection(- 0.44699833180028 ,  0.72403680806459 , -0.52532198881773)
+/dump A1:GetScale();    SetModelByUnit  SetModelByFileID GetModelFileID()
+/dump A1:GetModelFileID()   1100258 BE female
+/run A1:SetAnimation()  48 CrossBow/Rifle 
+/dump A1:SetCustomRace(1,1)
+/dump A1.OnModelLoaded
+/run A1:TryOn(105951)   105951 Renowned Explorer's Versatile Vest 105950 104948 105946 105945 105949 105947 105944 Cap    105952 Cloak 105959 Tabard  105953 Rucksack     1287 Explorer's Jungle Hopper
+/script local a=DressUpFrame.ModelScene:GetPlayerActor();a:Undress();for i=105945,105951 do a:TryOn(i);end;a:TryOn(105953);
+
+Wooly Wendigo
+/script local a=DressUpFrame.ModelScene:GetPlayerActor();a:Undress();for i=105954,105958 do a:TryOn(i);end;
+
+/script local a=NarciPlayerModelFrame1;a:Undress();for i=105945,105951 do a:TryOn(i);end;a:TryOn(105953);
+/run NarciPlayerModelFrame1:TryOn(66602)
+/dump DressUpFrame.ModelScene:GetCameraPosition()
+/dump DressUpFrame.ModelScene:GetActiveCamera():GetZoomDistance()
+:GetZoomDistance()
+local modelSceneType, cameraIDs, actorIDs = C_ModelInfo.GetModelSceneInfoByID(modelSceneID);
+playerActor:SetRequestedScale()
+/run A1:SetRequestedScale(0.65)
+C_ModelInfo.GetModelSceneActorInfoByID(486)
+ModelScene:AcquireActor()
+/run DressUpFrame.ModelScene:InitializeActor(DressUpFrame.ModelScene:GetPlayerActor(), C_ModelInfo.GetModelSceneActorInfoByID(438))
+/run local a = C_ModelInfo.GetModelSceneActorInfoByID(438);print(a.scriptTag)
+/run DressUpFrame.ModelScene:CreateActorFromScene(486)
+/run DressUpFrame.ModelScene:AcquireAndInitializeActor(C_ModelInfo.GetModelSceneActorInfoByID(486))
+/dump DressUpFrame.ModelScene.actorTemplate ModelSceneActorTemplate
+ApplyFromModelSceneActorInfo
+ReleaseAllActors()
+
+/dump C_TransmogCollection.GetItemInfo(itemID)  171324 118559 Shovel 66602 (return appearanceID, sourceID)
+2921871 Gillvanas ModelFileID 93312(DisplayID)  Finduin 2924741/93311 animation 217
+A1:SetAnimation(217,1,0.5,0)
+9331 Gnome
+/run NarciBridge_DressUpFrame.SlotFrame:Hide();
+
+function DressUpMountLink(link)
+	if( link ) then
+		local mountID = 0;
+
+		local _, _, _, linkType, linkID = strsplit(":|H", link);
+		if linkType == "item" then
+			mountID = C_MountJournal.GetMountFromItem(tonumber(linkID));
+		elseif linkType == "spell" then
+			mountID = C_MountJournal.GetMountFromSpell(tonumber(linkID));
+		end
+
+		if ( mountID ) then
+			return DressUpMount(mountID);
+		end
+	end
+	return false
+end
+local speciesID, customName, level, xp, maxXp, displayID, isFavorite, name, icon, petType = C_PetJournal.GetPetInfoByPetID(petID)
+SpeciesID = C_PetJournal.GetPetInfoByIndex()
+speciesName, speciesIcon, petType, companionID, tooltipSource, tooltipDescription, isWild, canBattle, isTradeable, isUnique, obtainable, creatureDisplayID = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
+C_PetJournal.FindPetIDByName()
+
+local creatureDisplayID, _, _, isSelfMount, _, modelSceneID, animID, spellVisualKitID, disablePlayerMountPreview = C_MountJournal.GetMountInfoExtraByID(mountID);   --93202 Hopper
+	local mountActor = frame.ModelScene:GetActorByTag("unwrapped");
+	if mountActor then
+        mountActor:SetModelByCreatureDisplayID(creatureDisplayID);  --93202
+DressUpFrame.ModelScene:AttachPlayerToMount(A2, 91, false, false);       
+DressUpFrame.ModelScene:AttachPlayerToMount(mountActor, animID, isSelfMount, disablePlayerMountPreview);   
+
+				local calcMountScale = mountActor:CalculateMountScale(playerActor);
+				local inverseScale = 1 / calcMountScale; 
+				playerActor:SetRequestedScale( inverseScale );
+                mountActor:AttachToMount(playerActor, animID, spellVisualKitID);
+                
+actorIDs:
+[486] = troll-female 0.65   (expected:0.8526)
+[487] = undead-female
+[488] = lightforgeddraenei-male
+[489] = lightforgeddraenei-female
+[490] = highmountaintauren-male
+[491] = highmountaintauren-female
+[492] = zandalaritroll
+[495] = magharorc-male
+[497] = kultiran-female
+[498] = magharorc-female
+[499] = darkirondwarf-male
+[500] = worgen-female
+[501] = draenei-female
+[494] = kultiran-male
+[438]   player!!!!
+[449] = tauren-male
+[450] = gnome
+[471] = dwarf-male
+[472] = undead-male
+[473] = pandaren
+[474] = worgen-male
+[475] = draenei-male
+[484] = tauren-female
+[483] = orc
+[477] = goblin-female
+[476] = goblin-male
+[485] = troll-male
+
+
+normalizeScaleAggressiveness
+A1:CalculateNormalizedScale(0.65)
+/run MountDressingRoom(307256)
+
+--Unlisted APIs:
+ModelSceneActor:
+SetModelByFileID(fileID [, enableMips])
+SetModelByCreatureDisplayID()
+SetAnimation(animation[, variation, animSpeed, timeOffsetSecs])
+SetSpellVisualKit(spellVisualKitID[, oneShot])
+
 --]]
 
-function NarciBridge_CopyTextButton_OnClick(self)
-    CopyTexts(self)
-    local GearTexts = self:GetParent().GearTexts;
-    if not GearTexts:IsShown() then
-        FadeFrame(GearTexts, 0.25, "IN")
-    else
-        FadeFrame(GearTexts, 0.25, "OUT")
+
+
+
+
+--[[
+--For Testing
+
+function MountDressingRoom(mountSpellID)
+    if not DressingRoomMountModel then
+        DressingRoomMountModel = DressUpFrame.ModelScene:CreateActor();
+    end
+
+    local mountActor = DressingRoomMountModel;
+    local ModelScene = DressUpFrame.ModelScene;
+    local playerActor = ModelScene:GetPlayerActor();
+
+    local mountID = C_MountJournal.GetMountFromSpell(tonumber(mountSpellID));
+    local creatureDisplayID, _, _, isSelfMount, _, modelSceneID, animID, spellVisualKitID, disablePlayerMountPreview = C_MountJournal.GetMountInfoExtraByID(mountID);   --93202 Hopper
+    mountActor:SetModelByCreatureDisplayID(creatureDisplayID);
+
+    local calcMountScale = mountActor:CalculateMountScale(playerActor);
+    if false then   --Scale down Player
+        local inverseScale = 1 / calcMountScale; 
+        playerActor:SetRequestedScale( inverseScale );
+    else            --Scale Mount
+        mountActor:SetScale( calcMountScale );
+    end
+    playerActor:SetYaw(0)
+    mountActor:AttachToMount(playerActor, animID, spellVisualKitID);
+end
+
+function GetActorScriptTag(actorID)
+    local a = C_ModelInfo.GetModelSceneActorInfoByID(actorID)
+    if a then print(" Tag: "..(a.scriptTag or "N/A") ); end;
+end
+
+function GetAllActorScriptTags()
+    local modelSceneID = 290;       --DressUpFrame
+    local _, _, actorIDs = C_ModelInfo.GetModelSceneInfoByID(modelSceneID);
+    for k, v in pairs(actorIDs) do
+        print("ID: "..(k or "N/A"));
+        GetActorScriptTag(v);
     end
 end
+
+function GetDressUpFrameInfo()
+    local ModelScene = DressUpFrame.ModelScene;
+    local camera = ModelScene:GetActiveCamera();
+    local actor = ModelScene:GetPlayerActor();
+    local scale = actor:GetScale();
+    local x, y, z = ModelScene:GetCameraPosition();
+    local cameraDistance = camera:GetZoomDistance();
+    print("Model Scale: "..scale);
+    print(x.."\n"..y.."\n"..z);
+    print("Distance: "..cameraDistance)
+    --/run GetDressUpFrameInfo()
+end
+
+function TestActorIDs(begin, ending)
+    local temp;
+    for i = begin, ending do
+        temp = C_ModelInfo.GetModelSceneActorInfoByID(i)
+        if temp and temp.scriptTag then
+            print(i.." Tag: "..temp.scriptTag);
+        end
+    end
+end
+
+function GetActorID(RaceName)
+    --Run this when new playable race available
+    local temp, tag;
+    local match1 = RaceName.."-male";
+    local match2 = RaceName.."-female";
+
+    for i = 1, 1500 do
+        temp = C_ModelInfo.GetModelSceneActorInfoByID(i)
+        if temp and temp.scriptTag then
+            tag = temp.scriptTag
+            if tag == match1 or tag == match2 or tag == RaceName then
+                print(i.." "..tag);
+            end
+        end
+    end
+end
+
+hooksecurefunc("ChatFrame_DisplayUsageError", function(messageTag)
+    print(messageTag)
+end)
+--]]
+

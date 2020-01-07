@@ -1,27 +1,17 @@
 # Deadly Boss Mods Core
 
-## [8.2.29](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/8.2.29) (2019-11-22)
-[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/8.2.28...8.2.29)
+## [8.2.31](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/8.2.31) (2019-12-19)
+[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/8.2.30...8.2.31)
 
-- Some mythic testing tweaks and bump version  
-- Fix error  
-- Miner timer tweaks  
-- KR Update (#90)  
-    * KR Update  
-- Fix missing =  
-- Also add some preliminary mind phase detection to Nzoth (currently it'd only work ok for player, for rest of phase it'd fail to build accurate table do to combat log phasing issues that hopefully blizzard addresses)  
-- N'zoth update from the limited amount of test logs from the buggy mess that was called testing last week :D  
-- Added some debug to ashvane to try and figure out how/why Core is breaking on cleaning up old timers when :Stop() is called  
-- Azshara Update to new CLEU events  
-     - Improved timers for all events that didn't used to be in combat log (but are now). Nether Portal and All 4 add timers particularly  
-     - This update also finally enables add warnings on normal and LFR difficulty for Devoted, Myrmidon, and Indomitable adds. ALL add warnings will be 2-3 seconds faster (before the CLEU events, they were only detectable on heroic/mythic via a slightly slower event)  
-- Fixed heart of frost timer, which probably changed a long time ago when they adjusted fight to make killing elemental more disirable than ignoring it, but no one reported it/cared.  
-- Wrathion and Vexiona mythic updates  
-- Mythic Maut update  
-- Fixed energy infoframe to always show percent, not obnoxious numbers, during encounter.  
-    Auto Logger Feature Update  
-    - Re-worked auto logger to support either recording only bosses, or the entire zone via a new checkbox in options.  
-    - Tweaked defaults a bit so that the default is to record entire zone, but only current content raids (ie trivial content excluded)  
-- KR Update (#88)  
-    * KR Update  
-- Fix bad soundkit IDs for some sounds. Closes #87  
+- Prep tag  
+- restore syncing of PVP mod timers  
+- Push the updated debug code for count and event sound packs  
+- Added additional trash warnings for boss 3 and boss 4 in mechagon dungeon  
+- No actual code changes, just added remaining WCL expressions for rest of bosses in Nyalotha for quick fight parsing later on.  
+- Quick fix to last  
+- Update battleground timer to use faction icon and more accurate timer when available from API  
+- Also enable the add switch waring while at it, on mythic.  
+- Timer updates from Mythic Skitra testing today.  
+- Forgot to register event  
+- Updated Ra-den and Xanesh from mythic testing  
+- Deleted nameplate interrupt helper from Restless Cabal, Uunat, Xanesh, Ilgynoth, Jaina, and Grong. It has never worked right despite all attempts to diagnose and fix problem. I've decided it's just unfixable so this broken feature will no longer appear in any mods.  

@@ -79,7 +79,7 @@ SnowyLand = {
     [896] = {150, 0.31, 0.48, 0.60, 0.96}, -- Drustvar
 
     --Test--
-    [625] = {200, -1, -1, 1, 1},
+    --[971] = {200, -1, -1, 1, 1},
 }
 
 --[[
@@ -95,7 +95,7 @@ local ScreenWidth, ScreenHeight = GetScreenWidth(), GetScreenHeight();
 ScreenHeight = 1100;
 
 local SnowContainer = CreateFrame("Frame", "SnowContainer", Narci_ScreenFilter)
-SnowContainer:SetFrameStrata("HIGH")
+SnowContainer:SetFrameStrata("BACKGROUND")
 SnowContainer:Hide();
 
 local animIn = SnowContainer:CreateAnimationGroup();

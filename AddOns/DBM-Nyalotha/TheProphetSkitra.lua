@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2369, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20191122133937")
+mod:SetRevision("20191213230833")
 mod:SetCreatureID(157620)
 mod:SetEncounterID(2334)
 mod:SetZone()
@@ -28,6 +28,12 @@ mod:RegisterEventsInCombat(
 
 --TODO, if tanks each get a diff mind debuff, mark them, and they can be designated callers
 --TODO, update timerImagesofAbsolutionCD after Projection phases
+--TODO, add warning to switch to add to prophet if it's yours
+--TODO, see if I made right call assuming slower shred psyche timer was changed in all modes, or if the 37 change is mythic only
+--[[
+(ability.id = 309687 or ability.id = 307725) and type = "begincast"
+ or (ability.id = 313239 or ability.id = 307937 or ability.id = 313276) and type = "cast"
+--]]
 local warnShadowShock						= mod:NewStackAnnounce(308059, 2, nil, "Tank")
 local warnImagesofAbsolution				= mod:NewCountAnnounce(313239, 3)--Spawn, not when killable
 local warnShredPsyche						= mod:NewTargetNoFilterAnnounce(307937, 2)
@@ -44,10 +50,11 @@ local specWarnShadowShockTaunt				= mod:NewSpecialWarningTaunt(308059, nil, nil,
 local specWarnShredPsyche					= mod:NewSpecialWarningMoveAway(307937, nil, nil, nil, 1, 2)
 local yellShredPsyche						= mod:NewPosYell(307937)
 local yellShredPsycheFades					= mod:NewIconFadesYell(307937)
+local specWarnShredPsycheSwitch				= mod:NewSpecialWarningSwitch(307937, "dps", nil, nil, 1, 2)
 --local specWarnGTFO						= mod:NewSpecialWarningGTFO(270290, nil, nil, nil, 1, 8)
 
 local timerImagesofAbsolutionCD				= mod:NewCDTimer(84.9, 313239, nil, nil, nil, 1, nil, DBM_CORE_HEROIC_ICON)
-local timerShredPsycheCD					= mod:NewCDTimer(32.5, 307937, nil, nil, nil, 3, nil, DBM_CORE_DAMAGE_ICON, nil, 1, 4)--32.5-34
+local timerShredPsycheCD					= mod:NewCDTimer(37.7, 307937, nil, nil, nil, 3, nil, DBM_CORE_DAMAGE_ICON, nil, 1, 4)
 
 --local berserkTimer						= mod:NewBerserkTimer(600)
 
@@ -169,7 +176,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		--Non mythic will assign just ordered icon, or if mythic icon debuff scan fails acts as fallback
 		if not icon then
-			icon = self.vb.shredIcon
+			icon = self.vb.shredIcon--Starting with 1 (star). if it's still 2 adds at once at 20+ players, it'll also use circle, if blizzard fixed that shit, it'll always be star
+		else--We have an icon from mythic assignments, prep the switch warning for phased players
+			if (DBM:UnitDebuff("player", 307784) and icon == 2) or (DBM:UnitDebuff("player", 307785) and icon == 3) then
+				specWarnShredPsycheSwitch:Schedule(5)
+				specWarnShredPsycheSwitch:ScheduleVoice(5, "killmob")
+			end
 		end
 		warnShredPsyche:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
@@ -207,10 +219,10 @@ function mod:UNIT_TARGETABLE_CHANGED()
 	if UnitCanAttack("player", "boss1") then--Returning from Illusions
 		warnProjectionsOver:Show()
 		self:UnregisterShortTermEvents()
-		timerShredPsycheCD:Start(16)
-		--if self:IsHard() then
-		--	timerImagesofAbsolutionCD:Start(30.5-delay)
-		--end
+		timerShredPsycheCD:Start(15.2)--SUCCESS
+		if self:IsHard() then
+			timerImagesofAbsolutionCD:Start(33.9)
+		end
 	end
 end
 

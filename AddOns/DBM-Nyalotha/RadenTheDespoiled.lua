@@ -1,26 +1,24 @@
 local mod	= DBM:NewMod(2364, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20191112032458")
+mod:SetRevision("20191215174316")
 mod:SetCreatureID(156866)
 mod:SetEncounterID(2331)
 mod:SetZone()
-mod:SetUsedIcons(1, 2, 3, 4, 5)
-mod:SetHotfixNoticeRev(20191109000000)--2019, 11, 09
+mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
+mod:SetHotfixNoticeRev(20191204000000)--2019, 12, 04
 mod:SetMinSyncRevision(20191109000000)
 --mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 306865 306819 306866 313213 310003 309985",
-	"SPELL_CAST_SUCCESS 310019 313213 306603",
-	"SPELL_SUMMON 306866",
-	"SPELL_AURA_APPLIED 312750 306090 306168 306732 306733 312996 306257 306279 306819 313227 309852 306207 306273 313077",
+	"SPELL_CAST_START 306865 306819 306866 313213 310003 309985 317276",
+	"SPELL_CAST_SUCCESS 310019 313213 306603 316913",
+	"SPELL_SUMMON 306866 314484",
+	"SPELL_AURA_APPLIED 312750 306090 306168 306732 306733 312996 306257 306279 306819 313227 309852 306207 306273 313077 315252 316065",
 	"SPELL_AURA_APPLIED_DOSE 306819 313227",
-	"SPELL_AURA_REMOVED 312750 306090 306168 306732 306733 312996 306257 306279 306207 306273 313077",
---	"SPELL_PERIODIC_DAMAGE",
---	"SPELL_PERIODIC_MISSED",
+	"SPELL_AURA_REMOVED 312750 306090 306168 306732 306733 312996 306257 306279 306207 306273 313077 316065",
 	"UNIT_DIED",
 	"UNIT_SPELLCAST_START boss2 boss3 boss4 boss5",--if you have 4 adds up, you're doing shit wrong. Just in case
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
@@ -28,8 +26,13 @@ mod:RegisterEventsInCombat(
 
 --TODO, fine tune range checker with more robust checks, if mythic has more than 1 add spawn at a time
 --TODO, fix charged bonds if non heroic difficulties use a diff spellId
---TODO, Crackle timer? at the moment add stutter casts it so coding it with success means only starting a 3 second timer. If stutter casting is fixed I might put the timer in at START event
---TODO, Remaining Mythic Phase abilities/timers drycode
+--TODO, Chain Lightning timer? at the moment add stutter casts it so coding it with success means only starting a 3 second timer. If stutter casting is fixed I might put the timer in at START event
+--[[
+(ability.id = 306865 or ability.id = 306819 or ability.id = 306866 or ability.id = 306881 or ability.id = 313213 or ability.id = 310003 or ability.id = 309985 or ability.id = 314484 or ability.id = 317276) and type = "begincast"
+ or (ability.id = 310019 or ability.id = 306603 or ability.id = 313213 or ability.id = 316913) and type = "cast"
+ or (ability.id = 306732 or ability.id = 306733 or ability.id = 312996 or ability.id = 309852) and type = "applybuff"
+ or (ability.id = 313077 or ability.id = 306207 or ability.id = 306273) and type = "applydebuff"
+--]]
 --Stage 1: Gathering Power
 ----Vita
 local warnVitaPhase							= mod:NewSpellAnnounce(306732, 2)
@@ -42,18 +45,21 @@ local warnVoidCollapse						= mod:NewTargetNoFilterAnnounce(306881, 4)
 ----Nightmare
 local warnNightmarePhase					= mod:NewSpellAnnounce(312996, 2)
 local warnUnstableNightmare					= mod:NewTargetNoFilterAnnounce(313077, 4)
+------Night Terror
+local warnDreadInferno						= mod:NewTargetNoFilterAnnounce(315252, 4)
 --Stage 2: Unleashed Wrath
 local warnPhase2							= mod:NewPhaseAnnounce(2, 2, nil, nil, nil, nil, nil, 2)
 local warnDecayingWound						= mod:NewTargetNoFilterAnnounce(313227, 4, nil, "Tank|Healer")
 local warnVoidEruption						= mod:NewCountAnnounce(310003, 2)
 local warnChargedBonds						= mod:NewTargetAnnounce(310019, 2)
+local warnCorruptedExistence				= mod:NewTargetNoFilterAnnounce(316065, 4)
 
 --Stage 1: Gathering Power
 local specWarnCallEssence					= mod:NewSpecialWarningSpell(306091, "-Healer")
 local specWarnNullifyingStrike				= mod:NewSpecialWarningStack(306819, nil, 2, nil, nil, 1, 6)
-local specWarnNullifyingStrikeTaunt			= mod:NewSpecialWarningStack(306819, nil, nil, nil, 1, 2)
+local specWarnNullifyingStrikeTaunt			= mod:NewSpecialWarningTaunt(306819, nil, nil, nil, 1, 2)
 local specWarnExposure						= mod:NewSpecialWarningYou(306279, nil, nil, nil, 1, 2)
---local specWarnGTFO						= mod:NewSpecialWarningGTFO(270290, nil, nil, nil, 1, 8)
+local specWarnGTFO							= mod:NewSpecialWarningGTFO(315258, nil, nil, nil, 1, 8)
 ----Vita
 local specWarnUnstableVita					= mod:NewSpecialWarningYou(306257, nil, nil, nil, 3, 2)
 local yellUnstableVita						= mod:NewYell(306257)
@@ -69,23 +75,29 @@ local yellVoidCollapseFades					= mod:NewShortFadesYell(306881, nil, nil, nil, "
 local specWarnUnstableNightmare				= mod:NewSpecialWarningYou(313077, nil, nil, nil, 3, 2)
 local yellUnstableNightmare					= mod:NewYell(313077)
 local yellUnstableNightmareFades			= mod:NewShortFadesYell(313077)
+local specWarnCallNightTerror				= mod:NewSpecialWarningSwitch(314484, "-Healer", nil, nil, 1, 2)
+------Night Terror
+local specWarnDreadInferno					= mod:NewSpecialWarningYou(315252, nil, nil, nil, 1, 2)
+local yellDreadInferno						= mod:NewYell(315252)
 --Stage 2: Unleashed Wrath
 local specWarnDecayingStrike				= mod:NewSpecialWarningDefensive(313213, nil, nil, nil, 1, 2)
 local specWarnChargedBonds					= mod:NewSpecialWarningMoveAwayCount(310019, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.moveaway:format(310019), nil, 3, 2)
 local yellChargedBonds						= mod:NewYell(310019)
 local specWarnDecayingWoundTaunt			= mod:NewSpecialWarningTaunt(313227, nil, nil, nil, 1, 2)
+local specWarnCorruptedExistence			= mod:NewSpecialWarningYou(316065, nil, nil, nil, 3, 2)--Mythic Only
+--local yellCorruptedExistence				= mod:NewYell(316065)
 
 --Stage 1: Gathering Power
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20527))
 local timerCallEssenceCD					= mod:NewCDCountTimer(44.9, 306091, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON, nil, 1, 5)--44.9-46.3
-local timerNullifyingStrikeCD				= mod:NewCDTimer(16.0, 306819, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 3)--16-19
+local timerNullifyingStrikeCD				= mod:NewCDTimer(15.8, 306819, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 3)--16-19
 ----Vita
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20528))
 local timerCallCracklingStalkerCD			= mod:NewCDTimer(30.1, 306865, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
 local timerUnstableVita						= mod:NewTargetTimer(5, 306257, nil, nil, nil, 5)
 ------Vita Add
 --mod:AddTimerLine(DBM:EJ_GetSectionInfo(20546))
---local timerCrackleCD						= mod:NewCDTimer(4.8, 306874, nil, nil, nil, 3)
+--local timerChainLightningCD					= mod:NewCDTimer(4.8, 306874, nil, nil, nil, 3)
 ----Void
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20529))
 local timerCallVoidHunterCD					= mod:NewCDTimer(30.1, 306866, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
@@ -93,12 +105,18 @@ local timerUnstableVoidCD					= mod:NewNextCountTimer(5.9, 306634, nil, nil, nil
 ------Void Add
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20549))
 local timerVoidCollapseCD					= mod:NewCDTimer(10.8, 306881, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+----Nightmare
+local timerCallNightTerrorCD				= mod:NewCDTimer(30.1, 314484, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
+------Night Terror
+--mod:AddTimerLine(DBM:EJ_GetSectionInfo(20549))
+local timerDreadInfernoCD					= mod:NewCDTimer(11.7, 315252, nil, nil, nil, 3)
 --Stage 2: Unleashed Wrath
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20853))
 local timerDecayingStrikeCD					= mod:NewCDTimer(16.9, 313213, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 3)--9.6-13.3
 local timerVoidEruptionCD					= mod:NewCDTimer(20.6, 310003, nil, nil, nil, 2)--20.6-23
 local timerChargedBondsCD					= mod:NewCDTimer(10.8, 310019, nil, nil, nil, 3)--10.8-18.2
 local timerGorgeEssenceCD					= mod:NewCDTimer(29.1, 309985, nil, nil, nil, 6)
+local timerCorruptedExistenceCD				= mod:NewAITimer(10.8, 317276, nil, nil, nil, 3, nil, DBM_CORE_MYTHIC_ICON..DBM_CORE_DEADLY_ICON)
 --local berserkTimer						= mod:NewBerserkTimer(600)
 
 mod:AddRangeFrameOption(6, 306874)
@@ -107,15 +125,18 @@ mod:AddSetIconOption("SetIconOnUnstableVita", 306257, true, false, {1, 2})
 mod:AddSetIconOption("SetIconOnChargedBonds", 310019, true, false, {1, 2})
 mod:AddSetIconOption("SetIconOnVoidCollapse", 306881, true, false, {3})
 mod:AddSetIconOption("SetIconOnUnstableNightmare", 313077, true, false, {4, 5})
+mod:AddSetIconOption("SetIconOnCorruptedExistence", 316065, true, false, {6, 7, 8})
 mod:AddNamePlateOption("NPAuraOnDraws", 312750)
 
 mod.vb.callEssenceCount = 0
+mod.vb.callActive = false
 mod.vb.currentVita = nil
-mod.vb.lastHighest = "Unknown"
+mod.vb.lastHighest = "^^ No DBM"
 mod.vb.unstableVoidCount = 0
 mod.vb.voidEruptionCount = 0
 mod.vb.currentNightmare = nil
-mod.vb.lastLowest = "Unknown"
+mod.vb.lastLowest = "^^ No DBM"
+mod.vb.corruptedExistenceIcon = 6
 local playerHasVita, playerHasNightmare = false, false
 local ExposureTargets = {}
 local consumingVoid = DBM:GetSpellInfo(306645)
@@ -271,11 +292,12 @@ end
 
 function mod:OnCombatStart(delay)
 	self.vb.callEssenceCount = 0
+	self.vb.callActive = false
 	self.vb.currentVita = nil
-	self.vb.lastHighest = "Unknown"
+	self.vb.lastHighest = "^^ No DBM"
 	self.vb.voidEruptionCount = 0
 	self.vb.currentNightmare = nil
-	self.vb.lastLowest = "Unknown"
+	self.vb.lastLowest = "^^ No DBM"
 	playerHasVita, playerHasNightmare = false, false
 	table.wipe(ExposureTargets)
 	table.wipe(ChargedBondsTargets)
@@ -288,9 +310,16 @@ function mod:OnCombatStart(delay)
 		DBM.InfoFrame:SetHeader(OVERVIEW)
 		DBM.InfoFrame:Show(8, "function", updateInfoFrame, false, false)
 	end
+	if self:IsMythic() then
+		self:RegisterShortTermEvents(
+			"SPELL_PERIODIC_DAMAGE 315258",
+			"SPELL_PERIODIC_MISSED 315258"
+		)
+	end
 end
 
 function mod:OnCombatEnd()
+	self:UnregisterShortTermEvents()
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
@@ -339,6 +368,12 @@ function mod:SPELL_CAST_START(args)
 		timerVoidEruptionCD:Start()
 	elseif spellId == 309985 then
 		timerGorgeEssenceCD:Start()
+	elseif spellId == 314484 then
+		specWarnCallNightTerror:Show()
+		specWarnCallNightTerror:Play("bigmob")
+	elseif spellId == 317276 then
+		self.vb.corruptedExistenceIcon = 6
+		timerCorruptedExistenceCD:Start()
 	end
 end
 
@@ -354,13 +389,17 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif spellId == 313213 then--Because he can stutter cast and restart cast, timer can't be reliable started in SPELL_CAST_START
 		timerDecayingStrikeCD:Start(8.1)
+	elseif spellId == 316913 and self:AntiSpam(3, 1) then
+		timerDreadInfernoCD:Start(11.7, args.sourceGUID)
 	end
 end
 
 function mod:SPELL_SUMMON(args)
 	local spellId = args.spellId
-	if spellId == 306866 then--Call Void Hunter#
+	if spellId == 306866 then--Call Void Hunter
 		timerVoidCollapseCD:Start(5, args.destGUID)
+	elseif spellId == 314484 then--Call Night Terror
+		timerDreadInfernoCD:Start(8.9, args.destGUID)--SUCCESS (when we know targets)
 	end
 end
 
@@ -371,25 +410,29 @@ function mod:SPELL_AURA_APPLIED(args)
 			DBM.Nameplate:Show(true, args.destGUID, spellId, nil, 60)
 		end
 	elseif spellId == 306732 then--Vita Empowered
+		self.vb.callActive = false
 		warnVitaPhase:Show()
 		timerCallCracklingStalkerCD:Start(5.8)--5.8-6.1
 	elseif spellId == 306733 then--Void Empowered
+		self.vb.callActive = false
 		warnVoidPhase:Show()
 		self.vb.unstableVoidCount = 0
 		--timerUnstableVoidCD:Start(6, 1)--No longer started here, ra-den's cast will trigger first timer
 		timerCallVoidHunterCD:Start(6.9)--6.9-7.1
-		--timerNullifyingStrikeCD:Start(10.3)
 	elseif spellId == 312996 then--Nightmare Empowered
+		self.vb.callActive = false
 		warnNightmarePhase:Show()
+		timerCallNightTerrorCD:Start(7.2)
 	elseif spellId == 306207 or spellId == 306273 then--Unstable Vita (Initial, hop)
 		self.vb.currentVita = args.destName
+		self.vb.lastHighest = "^^ No DBM"
 		if args:IsPlayer() then
 			playerHasVita = true
-			furthestPlayerScanner(self)
 			specWarnUnstableVita:Show()
 			specWarnUnstableVita:Play("targetyou")
 			yellUnstableVita:Yell()
 			yellUnstableVitaFades:Countdown(spellId)
+			furthestPlayerScanner(self)
 		else
 			warnUnstableVita:Show(args.destName)
 		end
@@ -399,13 +442,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerUnstableVita:Start(self:IsMythic() and 6 or 7, args.destName)
 	elseif spellId == 313077 then--Unstable Nightmare
 		self.vb.currentNightmare = args.destName
+		self.vb.lastLowest = "^^ No DBM"
 		if args:IsPlayer() then
 			playerHasNightmare = true
-			closestPlayerScanner(self)
 			specWarnUnstableNightmare:Show()
 			specWarnUnstableNightmare:Play("targetyou")
 			yellUnstableNightmare:Yell()
 			yellUnstableNightmareFades:Countdown(spellId)
+			closestPlayerScanner(self)
 		else
 			warnUnstableNightmare:Show(args.destName)
 		end
@@ -447,6 +491,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnDecayingWound:Show(args.destName)
 		end
 	elseif spellId == 309852 then--Ruin
+		self.vb.callActive = false
 		warnPhase2:Show()
 		warnPhase2:Play("ptwo")
 		timerCallEssenceCD:Stop()
@@ -455,6 +500,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerVoidEruptionCD:Start(14.5)
 		timerDecayingStrikeCD:Start(17)
 		--timerGorgeEssenceCD:Start(25.5)--Instantly on ruin now
+		if self:IsMythic() then
+			timerCorruptedExistenceCD:start(2)
+		end
 	elseif spellId == 310019 or spellId == 310022 then--310019 heroic confirmed, 310022 unknown, not used on heroic
 		ChargedBondsTargets[#ChargedBondsTargets + 1] = args.destName
 		self:Unschedule(warnChargedBondsTargets)
@@ -473,6 +521,23 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.SetIconOnChargedBonds then
 			self:SetIcon(args.destName, #ChargedBondsTargets)
 		end
+	elseif spellId == 315252 then
+		warnDreadInferno:CombinedShow(0.3, args.destName)
+		if args:IsPlayer() then
+			specWarnDreadInferno:Show()
+			specWarnDreadInferno:Play("runout")
+			yellDreadInferno:Yell()
+		end
+	elseif spellId == 316065 then
+		warnCorruptedExistence:CombinedShow(0.3, args.destName)
+		if args:IsPlayer() then
+			specWarnCorruptedExistence:Show()
+			specWarnCorruptedExistence:Play("targetyou")
+		end
+		if self.Options.SetIconOnCorruptedExistence then
+			self:SetIcon(args.destName, self.vb.corruptedExistenceIcon)
+		end
+		self.vb.corruptedExistenceIcon = self.vb.corruptedExistenceIcon + 1
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -515,33 +580,35 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 306279 then
 		tDeleteItem(ExposureTargets, args.destName)
+	elseif spellId == 316065 then
+		if self.Options.SetIconOnCorruptedExistence then
+			self:SetIcon(args.destName, 0)
+		end
 	end
 end
 
---[[
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
-	if spellId == 270290 and destGUID == UnitGUID("player") and self:AntiSpam(2, 2) then
+	if spellId == 315258 and destGUID == UnitGUID("player") and self:AntiSpam(2, 2) then
 		specWarnGTFO:Show(spellName)
 		specWarnGTFO:Play("watchfeet")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
---]]
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 157366 then--void-hunter
 		timerVoidCollapseCD:Stop(args.destGUID)
-	elseif cid == 69872 then--crackling-stalker
+	elseif cid == 157365 then--crackling-stalker
 		if self.Options.RangeFrame then
-			DBM.RangeCheck:Hide()
+			if self:IsMythic() and self.vb.callActive then
+				DBM.RangeCheck:Show(5)
+			else
+				DBM.RangeCheck:Hide()
+			end
 		end
-	--elseif cid == 160663 then--essence-of-nightmare
-
-	--elseif cid == 156884 then--essence-of-vita
-
-	--elseif cid == 156980 then--essence-of-void
-
+	elseif cid == 160937 then--Night Terror
+		timerDreadInfernoCD:Stop(args.destGUID)
 	end
 end
 
@@ -556,8 +623,12 @@ end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 306091 then--Materials of Destruction
+		self.vb.callActive = true
 		self.vb.callEssenceCount = self.vb.callEssenceCount + 1
 		specWarnCallEssence:Show(self.vb.callEssenceCount)
-		timerCallEssenceCD:Start(self:IsHard() and 45 or 56, self.vb.callEssenceCount+1)
+		timerCallEssenceCD:Start(self:IsHeroic() and 45 or 56, self.vb.callEssenceCount+1)--Normal and mythic both 56, mythic probably slow again cause it's 3
+		if self:IsMythic() and not DBM.RangeCheck:IsShown() then
+			DBM.RangeCheck:Show(5)
+		end
 	end
 end

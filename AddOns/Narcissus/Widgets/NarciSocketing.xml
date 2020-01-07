@@ -29,7 +29,7 @@
 		<Frames>
 			<Frame clipChildren="true" parentKey="ArtFrame" setAllPoints="true">
 				<Layers>
-					<Layer level="ART" textureSubLevel="2">
+					<Layer level="ARTWORK" textureSubLevel="2">
 						<Texture parentKey="Icon" desaturated="false" Alpha="0.4">
 							<TexCoords left="0.075" right="0.925" top="0.075" bottom="0.925"/>
 							<Size x="180" y="180"/>
@@ -76,7 +76,35 @@
 		</Scripts>
     </Frame>
 
-	<Button name="Narci_GearEnhancement_Tooltip" inherits="Narci_GearEnhancement_Tooltip_Template" frameStrata="TOOLTIP"/>
+	<Button name="Narci_GearEnhancement_Tooltip" inherits="Narci_GearEnhancement_Tooltip_Template" frameStrata="TOOLTIP">
+		<Frames>
+			<Frame parentKey="OtherGems">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="BOTTOMLEFT"/>
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" y="-16"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture setAllPoints="true">
+							<Color r="1" g="1" b="1" a="0.75"/>
+							<Gradient orientation="VERTICAL">
+								<MinColor a="1" r="1" g="1" b="1"/>
+								<MaxColor a="1" r="0.8" g="0.8" b="0.8"/>
+							</Gradient>
+						</Texture>
+					</Layer>
+					<Layer level="OVERLAY">
+						<FontString inherits="NarciTooltipDescriptionFontRegularBlack" setAllPoints="true" parentKey="Text">
+							<Anchors>
+								<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="6"/>
+								<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-6"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+		</Frames>
+	</Button>
 
     <Button name="Narci_GemButton_Template" clipChildren="true" virtual="true">
         <Size x="240" y="48"/>
@@ -105,13 +133,13 @@
 				</Texture>
             </Layer>
             <Layer level="BACKGROUND" textureSubLevel="2">
-						<Texture parentKey="Icon2" desaturated="false" Alpha="0.1">
-							<TexCoords left="0.075" right="0.925" top="0.075" bottom="0.925"/>
-							<Size x="180" y="180"/>
-							<Anchors>
-								<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="0" y="0"/>
-							</Anchors>
-						</Texture>
+				<Texture parentKey="Icon2" desaturated="false" Alpha="0.1">
+					<TexCoords left="0.075" right="0.925" top="0.075" bottom="0.925"/>
+					<Size x="180" y="180"/>
+					<Anchors>
+						<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="0" y="0"/>
+					</Anchors>
+				</Texture>
                 <Texture parentKey="Icon3" hidden="true" Alpha="0">
 					<TexCoords left="0.1" right="0.9" top="0.1" bottom="0.9"/>
                     <Anchors>
@@ -159,7 +187,7 @@
 					</Anchors>
 				</Texture>
 			</Layer>
-			<Layer level="ART">
+			<Layer level="ARTWORK">
 				<Texture parentKey="Icon">
 					<TexCoords left="0.08" right="0.92" top="0.08" bottom="0.92"/>
 					<Size x="24" y="24"/>
@@ -168,7 +196,7 @@
 					</Anchors>
 				</Texture>
 			</Layer>
-			<Layer level="ART" textureSubLevel="1">
+			<Layer level="ARTWORK" textureSubLevel="1">
 				<Texture file="Interface\AddOns\Narcissus\Art\Tooltip\Gem-Border-Colorized" setAllPoints="true" parentKey="Border1">
 					<TexCoords left="0" right="0.125" top="0.5" bottom="1"/>
 					<Anchors>
@@ -177,7 +205,7 @@
 					</Anchors>
 				</Texture>
 			</Layer>
-            <Layer level="ART" textureSubLevel="2">
+            <Layer level="ARTWORK" textureSubLevel="2">
 				<Texture parentKey="CountBackground" setAllPoints="true">
                     <Size x="14" y="11"/>
                     <Color r="0" g="0" b="0" a="0.8"/>
@@ -186,7 +214,7 @@
 					</Anchors>
 				</Texture>
             </Layer>
-            <Layer level="ART" textureSubLevel="3">
+            <Layer level="ARTWORK" textureSubLevel="3">
 				<FontString inherits="NarciIndicatorTiny" justifyH="CENTER" justifyV="MIDDLE" hidden="false" parentKey="Count" text="10">
 					<Color r="1" g="1" b="1"/>
                     <Shadow>
@@ -233,9 +261,32 @@
                 </Texture>
 			</Layer>         
 		</Layers>
+		<Scripts>
+			<OnDisable>
+				self.Icon:SetDesaturated(true);
+				self.Icon2:SetDesaturated(true);
+				self.Icon3:SetDesaturated(true);
+				self.Border0:SetDesaturated(true);
+				self.Border1:SetDesaturated(true);
+				self.Bonus:SetTextColor(0.72, 0.72, 0.72);
+				self.Count:SetTextColor(0.72, 0.72, 0.72);
+				self.ItemName:SetTextColor(0.44, 0.44, 0.44);
+			</OnDisable>
+			<OnEnable>
+				self.Icon:SetDesaturated(false);
+				self.Icon2:SetDesaturated(false);
+				self.Icon3:SetDesaturated(false);
+				self.Border0:SetDesaturated(false);
+				self.Border1:SetDesaturated(false);
+				self.Bonus:SetTextColor(1, 1, 1);
+				self.Count:SetTextColor(1, 1, 1);
+				self.ItemName:SetTextColor(self.r, self.g, self.b);
+			</OnEnable>
+		</Scripts>
     </Button>
 
 	<Button name="Narci_GearEnhancement_Template" inherits="Narci_GemButton_Template" virtual="true">
+		<!--Used in Narcissus-->
 		<Scripts>
 			<OnEnter>
 				UIFrameFadeIn(self.Icon3, 0.2, self.Icon3:GetAlpha(), 0.25);
@@ -249,6 +300,7 @@
 	</Button>
 
 	<Button name="Narci_OptionalGems_Template" inherits="Narci_GemButton_Template" virtual="true">
+		<!--Used in Blizzard Item Socketing UI-->
 		<Scripts>
 			<OnEnter>
 				UIFrameFadeIn(self.Icon3, 0.2, self.Icon3:GetAlpha(), 0.35);
@@ -302,7 +354,7 @@
 					</Frame>
 				</ScrollChild>
                 <Frames>
-                    <Slider name="Narci_ItemSocketing_ScrollBar" valueStep="0.01" parentKey="scrollBar" frameLevel="10">
+                    <Slider name="Narci_ItemSocketing_ScrollBar" valueStep="0.01" parentKey="scrollBar" frameLevel="24">
                         <Size x="0" y="0"/>
                         <Anchors>
                             <Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="0" y="0"/>
@@ -313,7 +365,7 @@
                             <Color r="0.1" g="0.1" b="0.1" a="1"/>
                         </ThumbTexture>
 						<Layers>
-							<Layer level="OVERLAY" textureSubLevel="5">
+							<Layer level="OVERLAY" textureSubLevel="20">
 								<Texture setAllPoints="true" parentKey="BottomShadow">
 									<Color a="1" r="0.1" g="0.1" b="0.1"/>
 									<Gradient orientation="VERTICAL">
@@ -351,11 +403,6 @@
                 <Scripts>
                     <OnLoad function="Narci_ItemSocketing_ScrollFrame_OnLoad"/>
                 </Scripts>
-				<Animations>
-					<AnimationGroup parentKey="animIn" smoothing="IN_OUT">
-
-					</AnimationGroup>
-				</Animations>
 			</ScrollFrame>
 			<Frame inherits="NarciHeaderWithShadowTemplate" hidden="true">
 				<Anchors>
@@ -380,6 +427,22 @@
     </Frame>
 
 	<Frame name="Narci_ItemSocketing" inherits="Narci_ItemSocketing_Template">
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString inherits="NarciTooltipDescriptionFontRegularWhite" parentKey="Tooltip" Alpha="0">
+					<Anchors>
+						<Anchor point="BOTTOM" relativeKey="$parent" relativePoint="TOP" y="4"/>
+					</Anchors>
+					<Animations>
+						<AnimationGroup parentKey="animIn" smoothing="IN_OUT">
+							<Alpha fromAlpha="0" toAlpha="1" duration="0.25" order="1"/>
+							<Alpha fromAlpha="1" toAlpha="1" duration="3" order="2"/>
+							<Alpha fromAlpha="1" toAlpha="0" duration="2" order="3"/>
+						</AnimationGroup>
+					</Animations>
+				</FontString>
+			</Layer>
+		</Layers>
 		<Animations>
 			<AnimationGroup parentKey="animIn" smoothing="IN_OUT">
 				<Translation parentKey="Translation" offsetY="8" duration="0" order="1"/>
@@ -388,6 +451,9 @@
 			</AnimationGroup>
 		</Animations>
         <Scripts>
+            <OnLoad>
+				self.Tooltip:SetText(Narci.L["Item Socketing Tooltip"]);
+            </OnLoad>
 			<OnHide>
 				self:Hide();
 				self:StopAnimating();
@@ -412,10 +478,7 @@
 					CloseSocketInfo();
 				else
 					local _, msg = ...
-					local frame = Narci_AlertFrame_Autohide;
-					frame.Text:SetText(msg)
-					frame:SetHeight(frame.Background:GetHeight())
-					UIFrameFadeIn(frame, 0.2, frame:GetAlpha(), 1);
+					Narci_AlertFrame_Autohide:AddMessage(msg, true);
 				end
 				self:UnregisterEvent("UI_ERROR_MESSAGE");
 			</OnEvent>

@@ -66,6 +66,7 @@ E.resolution = ({GetScreenResolutions()})[GetCurrentResolution()] or GetCVar('gx
 E.screenwidth, E.screenheight = GetPhysicalScreenSize()
 E.isMacClient = IsMacClient()
 E.NewSign = '|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:14:14|t' -- not used by ElvUI yet, but plugins like BenikUI and MerathilisUI use it.
+E.TexturePath = 'Interface\\AddOns\\ElvUI\\Media\\Textures\\' -- for plugins?
 E.InfoColor = '|cfffe7b2c'
 
 -- oUF Defines
@@ -994,7 +995,6 @@ function E:UpdateMisc(skipCallback)
 	Threat:UpdatePosition()
 
 	Totems:PositionAndSize()
-	Totems:ToggleEnable()
 
 	if not skipCallback then
 		E.callbacks:Fire('StaggeredUpdate')
@@ -1316,8 +1316,7 @@ function E:DBConversions()
 			E.db.unitframe.OORAlpha = nil
 		end
 
-		local rangeCheckUnits = { 'target', 'targettarget', 'targettargettarget', 'focus', 'focustarget', 'pet', 'pettarget', 'boss', 'arena', 'party', 'raid', 'raid40', 'raidpet', 'tank', 'assist' }
-		for _, unit in pairs(rangeCheckUnits) do
+		for _, unit in ipairs({'target','targettarget','targettargettarget','focus','focustarget','pet','pettarget','boss','arena','party','raid','raid40','raidpet','tank','assist'}) do
 			if E.db.unitframe.units[unit].rangeCheck ~= nil then
 				local enabled = E.db.unitframe.units[unit].rangeCheck
 				E.db.unitframe.units[unit].fader.enable = enabled
@@ -1362,6 +1361,23 @@ function E:DBConversions()
 		E.db.nameplates.units.TARGET.nonTargetTransparency = nil
 	end
 
+	--Removed additional table in nameplate filters cause it was basically useless
+	for _, unit in ipairs({'PLAYER','FRIENDLY_PLAYER','ENEMY_PLAYER','FRIENDLY_NPC','ENEMY_NPC'}) do
+		if E.db.nameplates.units[unit].buffs and E.db.nameplates.units[unit].buffs.filters ~= nil then
+			E.db.nameplates.units[unit].buffs.minDuration = E.db.nameplates.units[unit].buffs.filters.minDuration or P.nameplates.units[unit].buffs.minDuration
+			E.db.nameplates.units[unit].buffs.maxDuration = E.db.nameplates.units[unit].buffs.filters.maxDuration or P.nameplates.units[unit].buffs.maxDuration
+			E.db.nameplates.units[unit].buffs.priority = E.db.nameplates.units[unit].buffs.filters.priority or P.nameplates.units[unit].buffs.priority
+			E.db.nameplates.units[unit].buffs.filters = nil
+		end
+		if E.db.nameplates.units[unit].debuffs and E.db.nameplates.units[unit].debuffs.filters ~= nil then
+			E.db.nameplates.units[unit].debuffs.minDuration = E.db.nameplates.units[unit].debuffs.filters.minDuration or P.nameplates.units[unit].debuffs.minDuration
+			E.db.nameplates.units[unit].debuffs.maxDuration = E.db.nameplates.units[unit].debuffs.filters.maxDuration or P.nameplates.units[unit].debuffs.maxDuration
+			E.db.nameplates.units[unit].debuffs.priority = E.db.nameplates.units[unit].debuffs.filters.priority or P.nameplates.units[unit].debuffs.priority
+			E.db.nameplates.units[unit].debuffs.filters = nil
+		end
+	end
+
+	--Moved target scale to a style filter
 	if E.db.nameplates.units.TARGET.scale ~= nil then
 		E.global.nameplate.filters.ElvUI_Target.actions.scale = E.db.nameplates.units.TARGET.scale
 		E.db.nameplates.units.TARGET.scale = nil
@@ -1387,8 +1403,7 @@ function E:DBConversions()
 	end
 
 	--Heal Prediction is now a table instead of a bool
-	local healPredictionUnits = {'player','target','focus','pet','arena','party','raid','raid40','raidpet'}
-	for _, unit in pairs(healPredictionUnits) do
+	for _, unit in ipairs({'player','target','focus','pet','arena','party','raid','raid40','raidpet'}) do
 		if type(E.db.unitframe.units[unit].healPrediction) ~= 'table' then
 			local enabled = E.db.unitframe.units[unit].healPrediction
 			E.db.unitframe.units[unit].healPrediction = {}

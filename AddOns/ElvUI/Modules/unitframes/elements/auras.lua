@@ -4,8 +4,9 @@ local LSM = E.Libs.LSM
 
 --Lua functions
 local _G = _G
-local unpack, strfind, format, strsplit, sort, ceil = unpack, strfind, format, strsplit, sort, ceil
-local huge = math.huge
+local sort, ceil, huge = sort, ceil, math.huge
+local select, unpack, format = select, unpack, format
+local strfind, strsplit, strmatch = strfind, strsplit, strmatch
 --WoW API / Variables
 local CreateFrame = CreateFrame
 local IsShiftKeyDown = IsShiftKeyDown
@@ -141,12 +142,13 @@ function UF:Configure_Auras(frame, auraType)
 
 	local rows = auras.db.numrows
 	auras.forceShow = frame.forceShowAuras
+	auras.spacing = auras.db.spacing
 	auras.num = auras.db.perrow * rows
 	auras.size = auras.db.sizeOverride ~= 0 and auras.db.sizeOverride or ((((auras:GetWidth() - (auras.spacing*(auras.num/rows - 1))) / auras.num)) * rows)
 	auras.disableMouse = auras.db.clickThrough
 
 	if auras.db.sizeOverride and auras.db.sizeOverride > 0 then
-		auras:Width(auras.db.perrow * auras.db.sizeOverride)
+		auras:Width(auras.db.perrow * auras.db.sizeOverride + ((auras.db.perrow - 1) * auras.spacing))
 	else
 		local totalWidth = frame.UNIT_WIDTH - frame.SPACING*2
 		if frame.USE_POWERBAR_OFFSET then
@@ -433,7 +435,7 @@ function UF:AuraFilter(unit, button, name, _, count, debuffType, duration, expir
 	if not name then return end -- checking for an aura that is not there, pass nil to break while loop
 
 	local db = button.db or self.db
-	if not db then return true elseif db.filters then db = db.filters end
+	if not db then return true end
 
 	local isPlayer = (caster == 'player' or caster == 'vehicle')
 	local isFriend = unit and UnitIsFriend('player', unit) and not UnitCanAttack('player', unit)

@@ -44,7 +44,6 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	specwarnUnder	= "가랄론의 보라색 원 안에 있을때 특수 경고 보기",
-	countdownCrush	= DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT:format(122774).."(영웅 난이도만)"
 })
 
 L:SetMiscLocalization({
