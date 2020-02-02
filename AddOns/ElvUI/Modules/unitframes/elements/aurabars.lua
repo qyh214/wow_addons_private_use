@@ -27,8 +27,8 @@ end
 function UF:Construct_AuraBars(statusBar)
 	statusBar:CreateBackdrop(nil, nil, nil, UF.thinBorders, true)
 	statusBar:SetScript('OnMouseDown', UF.AuraBars_OnClick)
-	statusBar:SetPoint("LEFT")
-	statusBar:SetPoint("RIGHT")
+	statusBar:Point("LEFT")
+	statusBar:Point("RIGHT")
 
 	statusBar.icon:CreateBackdrop(nil, nil, nil, UF.thinBorders, true)
 	UF.statusbars[statusBar] = true
@@ -42,7 +42,7 @@ function UF:Construct_AuraBars(statusBar)
 
 	statusBar.nameText:SetJustifyH('LEFT')
 	statusBar.nameText:SetJustifyV('MIDDLE')
-	statusBar.nameText:SetPoint("RIGHT", statusBar.timeText, "LEFT", -4, 0)
+	statusBar.nameText:Point("RIGHT", statusBar.timeText, "LEFT", -4, 0)
 	statusBar.nameText:SetWordWrap(false)
 
 	statusBar.bg = statusBar:CreateTexture(nil, 'BORDER')
@@ -121,6 +121,14 @@ function UF:Configure_AuraBars(frame)
 		auraBars.maxBars = db.aurabar.maxBars
 		auraBars.spacing = db.aurabar.spacing
 		auraBars.width = frame.UNIT_WIDTH - auraBars.height - (frame.BORDER * 4)
+
+		local colors = UF.db.colors.auraBarBuff
+		if E:CheckClassColor(colors.r, colors.g, colors.b) then
+			local classColor = E:ClassColor(E.myclass, true)
+			colors.r = classColor.r
+			colors.g = classColor.g
+			colors.b = classColor.b
+		end
 
 		if not auraBars.Holder then
 			local holder = CreateFrame('Frame', nil, auraBars)
@@ -212,12 +220,6 @@ function UF:PostUpdateBar_AuraBars(unit, statusBar, index, position, duration, e
 			colors = UF.db.colors.auraBarDebuff
 		else
 			colors = UF.db.colors.auraBarBuff
-			if E:CheckClassColor(colors.r, colors.g, colors.b) then
-				local classColor = E:ClassColor(E.myclass, true)
-				colors.r = classColor.r
-				colors.g = classColor.g
-				colors.b = classColor.b
-			end
 		end
 	end
 

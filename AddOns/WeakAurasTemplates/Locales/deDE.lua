@@ -72,8 +72,6 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["debuff"] = "debuff"
 	L["Debuffs"] = "Debuffs"
-	--[[Translation missing --]]
-	L["debuiff"] = "debuiff"
 	L["Enchants"] = "Verzauberungen"
 	L["General"] = "Allgemein"
 	--[[Translation missing --]]

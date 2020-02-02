@@ -34,8 +34,8 @@ function S.AudioOptionsVoicePanel_InitializeCommunicationModeUI(btn)
 	HandlePushToTalkButton(btn.PushToTalkKeybindButton)
 end
 
-local function LoadSkin()
-	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.BlizzardOptions ~= true then return end
+function S:BlizzardOptions()
+	if not (E.private.skins.blizzard.enable and E.private.skins.blizzard.BlizzardOptions) then return end
 
 	-- here we reskin all "normal" buttons
 	S:HandleButton(_G.ReadyCheckFrameYesButton)
@@ -56,10 +56,10 @@ local function LoadSkin()
 	_G.ReadyCheckFrameText:Point("TOP", 0, -15)
 
 	_G.ReadyCheckListenerFrame:SetAlpha(0)
-	ReadyCheckFrame:HookScript("OnShow", function(self)
+	ReadyCheckFrame:HookScript("OnShow", function(rcf)
 		-- bug fix, don't show it if player is initiator
-		if self.initiator and UnitIsUnit("player", self.initiator) then
-			self:Hide()
+		if rcf.initiator and UnitIsUnit("player", rcf.initiator) then
+			rcf:Hide()
 		end
 	end)
 
@@ -69,19 +69,24 @@ local function LoadSkin()
 	_G.InterfaceOptionsFrame:SetMovable(true)
 	_G.InterfaceOptionsFrame:EnableMouse(true)
 	_G.InterfaceOptionsFrame:RegisterForDrag("LeftButton", "RightButton")
-	_G.InterfaceOptionsFrame:SetScript("OnDragStart", function(self)
+	_G.InterfaceOptionsFrame:SetScript("OnDragStart", function(iof)
 		if InCombatLockdown() then return end
-		self:StartMoving()
-		self.isMoving = true
+		iof:StartMoving()
+		iof.isMoving = true
 	end)
-	_G.InterfaceOptionsFrame:SetScript("OnDragStop", function(self)
-		self:StopMovingOrSizing()
-		self.isMoving = false
+	_G.InterfaceOptionsFrame:SetScript("OnDragStop", function(iof)
+		iof:StopMovingOrSizing()
+		iof.isMoving = false
 	end)
 
 	--Chat Config
-	hooksecurefunc(_G.ChatConfigFrameChatTabManager, "UpdateWidth", function(self)
-		for tab in self.tabPool:EnumerateActive() do
+	local ChatConfigFrame = _G.ChatConfigFrame
+	ChatConfigFrame.Header = ChatConfigFrame.Header
+	ChatConfigFrame.Header:StripTextures()
+	ChatConfigFrame.Header:Point("TOP", ChatConfigFrame, 0, 0)
+
+	hooksecurefunc(_G.ChatConfigFrameChatTabManager, "UpdateWidth", function(tm)
+		for tab in tm.tabPool:EnumerateActive() do
 			if not tab.IsSkinned then
 				tab:StripTextures()
 
@@ -278,6 +283,17 @@ local function LoadSkin()
 		Frame:SetTemplate('Transparent')
 	end
 
+	local InterfaceOptionsFrame = _G.InterfaceOptionsFrame
+	InterfaceOptionsFrame.Header = InterfaceOptionsFrame.Header
+	InterfaceOptionsFrame.Header:StripTextures()
+	InterfaceOptionsFrame.Header:ClearAllPoints()
+	InterfaceOptionsFrame.Header:Point("TOP", InterfaceOptionsFrame, 0, 0)
+
+	local VideoOptionsFrame = _G.VideoOptionsFrame
+	VideoOptionsFrame.Header:StripTextures()
+	VideoOptionsFrame.Header:ClearAllPoints()
+	VideoOptionsFrame.Header:Point("TOP", VideoOptionsFrame, 0, 0)
+
 	for _, Frame in pairs(OptionsFrameBackdrops) do
 		Frame:StripTextures()
 		Frame:CreateBackdrop('Transparent')
@@ -313,6 +329,7 @@ local function LoadSkin()
 	--Create New Raid Profle
 	local newProfileDialog = _G.CompactUnitFrameProfilesNewProfileDialog
 	if newProfileDialog then
+		newProfileDialog:StripTextures()
 		newProfileDialog:SetTemplate('Transparent')
 
 		S:HandleDropDownBox(_G.CompactUnitFrameProfilesNewProfileDialogBaseProfileSelector)
@@ -328,10 +345,18 @@ local function LoadSkin()
 	--Delete Raid Profile
 	local deleteProfileDialog = _G.CompactUnitFrameProfilesDeleteProfileDialog
 	if deleteProfileDialog then
+		deleteProfileDialog:StripTextures()
 		deleteProfileDialog:SetTemplate('Transparent')
+
 		S:HandleButton(_G.CompactUnitFrameProfilesDeleteProfileDialogDeleteButton)
 		S:HandleButton(_G.CompactUnitFrameProfilesDeleteProfileDialogCancelButton)
 	end
+
+	local AudioOptionsFrame = _G.AudioOptionsFrame
+	AudioOptionsFrame.Header = AudioOptionsFrame.Header
+	AudioOptionsFrame.Header:SetAlpha(0)
+	AudioOptionsFrame.Header:ClearAllPoints()
+	AudioOptionsFrame.Header:Point("TOP", AudioOptionsFrame, 0, 0)
 
 	-- Toggle Test Audio Button - Wow 8.0
 	S:HandleButton(_G.AudioOptionsVoicePanel.TestInputDevice.ToggleTest)
@@ -359,4 +384,4 @@ local function LoadSkin()
 	S:HandleSliderFrame(_G.UnitPopupVoiceUserVolume.Slider)
 end
 
-S:AddCallback("SkinBlizzard", LoadSkin)
+S:AddCallback('BlizzardOptions')

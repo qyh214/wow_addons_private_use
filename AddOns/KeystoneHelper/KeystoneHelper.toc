@@ -1,7 +1,7 @@
-## Interface: 80000
+## Interface: 80300
 ## Title: KeystoneHelper
 ## Notes: Adds descriptions for keystone modifiers to their tooltips
 ## Author: Semlar
-## Version: 8.0.0.1
+## Version: 8.3.0.1
 
 KeystoneHelper.lua

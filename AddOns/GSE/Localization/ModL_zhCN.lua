@@ -138,6 +138,8 @@ L["Enable Debug for the following Modules"] = "启用调试给以下模块"
 L["Enable Mod Debug Mode"] = "启用模块调试模式"
 L["Enable Sequence"] = "启用宏"
 L["Enable this option to stop automatically translating sequences from enUS to local language."] = "启用这个选项以停止自动将序列从英文翻译为本地语言."
+--[[Translation missing --]]
+L["Enable timing functions by using Click refresh speed as a pseudo timer."] = "Enable timing functions by using Click refresh speed as a pseudo timer."
 L["Error found in version %i of %s."] = "版本 %i 在序列 %s 中被发现错误."
 L["Export"] = "导出"
 L["Export a Sequence"] = "导出序列"
@@ -245,10 +247,14 @@ L["Matching helpTxt"] = "匹配帮助文本"
 L["Merge"] = "合并"
 L["MergeSequence"] = "合并序列"
 L["Middle Mouse Button"] = "鼠标中键"
+--[[Translation missing --]]
+L["Millisecond click settings"] = "Millisecond click settings"
 L["Mouse Button 4"] = "鼠标键4"
 L["Mouse Button 5"] = "鼠标键5"
 L["Mouse Buttons."] = "鼠标键."
 L["Moved %s to class %s."] = "移动 %s 到职业 %s ."
+--[[Translation missing --]]
+L["MS Click Rate"] = "MS Click Rate"
 L["Mythic"] = "史诗难度"
 --[[Translation missing --]]
 L["Mythic setting changed to Default."] = "Mythic setting changed to Default."
@@ -340,6 +346,8 @@ L["Running"] = "运行"
 L["Save"] = "保存"
 --[[Translation missing --]]
 L["Save the changes made to this macro"] = "Save the changes made to this macro"
+--[[Translation missing --]]
+L["Scenario"] = "Scenario"
 L["Seed Initial Macro"] = "种子初始宏"
 L["Select Other Version"] = "选择其他版本"
 L["Send"] = "发送"
@@ -393,6 +401,8 @@ L["The GUI has not been loaded.  Please activate this plugin amongst WoW's addon
 L["The Macro Translator will translate an English sequence to your local language for execution.  It can also be used to translate a sequence into a different language.  It is also used for syntax based colour markup of Sequences in the editor."] = "宏翻译器将英语序列翻译成你的本地语言以供执行. 它也可以用于将序列翻译成不同的语言. 同时可用于编辑器中基于语法的颜色标记."
 --[[Translation missing --]]
 L["The main lines of the macro."] = "The main lines of the macro."
+--[[Translation missing --]]
+L["The milliseconds being used in key click delay."] = "The milliseconds being used in key click delay."
 --[[Translation missing --]]
 L[ [=[The name of your macro.  This name has to be unique and can only be used for one object.
 You can copy this entire macro by changing the name and choosing Save.]=] ] = [=[The name of your macro.  This name has to be unique and can only be used for one object.
@@ -485,6 +495,8 @@ L["UpdateSequence"] = "更新序列"
 L["Updating due to new version."] = "更新至新版本."
 L["Use"] = "使用"
 L["Use Belt Item in KeyRelease"] = "使用腰部物品在释放按键"
+--[[Translation missing --]]
+L["Use External MS Timings"] = "Use External MS Timings"
 L["Use First Ring in KeyRelease"] = "使用第一个戒指在释放按键"
 L["Use First Trinket in KeyRelease"] = "使用第一个饰品在释放按键"
 L["Use Global Account Macros"] = "使用全局账户宏"

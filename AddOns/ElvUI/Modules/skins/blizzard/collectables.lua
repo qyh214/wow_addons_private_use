@@ -23,8 +23,8 @@ local function TextColorModified(self, r, g, b)
 	end
 end
 
-local function LoadSkin()
-	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.collections ~= true then return end
+function S:Blizzard_Collections()
+	if not (E.private.skins.blizzard.enable and E.private.skins.blizzard.collections) then return end
 
 	-- global
 	local CollectionsJournal = _G.CollectionsJournal
@@ -51,7 +51,7 @@ local function LoadSkin()
 
 	S:HandleIcon(MountJournal.MountDisplay.InfoButton.Icon)
 	S:HandleCheckBox(MountJournal.MountDisplay.ModelScene.TogglePlayer)
-	MountJournal.MountDisplay.ModelScene.TogglePlayer:SetSize(22, 22)
+	MountJournal.MountDisplay.ModelScene.TogglePlayer:Size(22)
 
 	S:HandleButton(_G.MountJournalMountButton, true)
 	S:HandleEditBox(_G.MountJournalSearchBox)
@@ -76,18 +76,18 @@ local function LoadSkin()
 		bu.icon:CreateBackdrop()
 		bu.icon.backdrop:SetOutside(bu.icon, 1, 1)
 
-		bu:HookScript("OnEnter", function(self)
-			self.backdrop:SetBackdropBorderColor(unpack(E.media.rgbvaluecolor))
-			self.icon.backdrop:SetBackdropBorderColor(unpack(E.media.rgbvaluecolor))
+		bu:HookScript("OnEnter", function(s)
+			s.backdrop:SetBackdropBorderColor(unpack(E.media.rgbvaluecolor))
+			s.icon.backdrop:SetBackdropBorderColor(unpack(E.media.rgbvaluecolor))
 		end)
 
-		bu:HookScript("OnLeave", function(self)
-			if self.selected then
-				self.backdrop:SetBackdropBorderColor(1, .8, .1)
-				self.icon.backdrop:SetBackdropBorderColor(1, .8, .1)
+		bu:HookScript("OnLeave", function(s)
+			if s.selected then
+				s.backdrop:SetBackdropBorderColor(1, .8, .1)
+				s.icon.backdrop:SetBackdropBorderColor(1, .8, .1)
 			else
-				self.backdrop:SetBackdropBorderColor(unpack(E.media.bordercolor))
-				self.icon.backdrop:SetBackdropBorderColor(unpack(E.media.bordercolor))
+				s.backdrop:SetBackdropBorderColor(unpack(E.media.bordercolor))
+				s.icon.backdrop:SetBackdropBorderColor(unpack(E.media.bordercolor))
 			end
 		end)
 
@@ -160,15 +160,15 @@ local function LoadSkin()
 		bu.icon:CreateBackdrop()
 		bu.icon.backdrop:SetOutside(bu.icon, 1, 1)
 
-		bu:HookScript("OnEnter", function(self)
-			self.backdrop:SetBackdropBorderColor(unpack(E.media.rgbvaluecolor))
+		bu:HookScript("OnEnter", function(s)
+			s.backdrop:SetBackdropBorderColor(unpack(E.media.rgbvaluecolor))
 		end)
 
-		bu:HookScript("OnLeave", function(self)
-			if self.selected then
-				self.backdrop:SetBackdropBorderColor(1, .8, .1)
+		bu:HookScript("OnLeave", function(s)
+			if s.selected then
+				s.backdrop:SetBackdropBorderColor(1, .8, .1)
 			else
-				self.backdrop:SetBackdropBorderColor(unpack(E.media.bordercolor))
+				s.backdrop:SetBackdropBorderColor(unpack(E.media.bordercolor))
 			end
 		end)
 
@@ -330,16 +330,16 @@ local function LoadSkin()
 		E:RegisterCooldown(button.cooldown)
 	end
 
-	hooksecurefunc("ToySpellButton_UpdateButton", function(self)
-		if PlayerHasToy(self.itemID) then
-			local quality = select(3, GetItemInfo(self.itemID))
+	hooksecurefunc("ToySpellButton_UpdateButton", function(s)
+		if PlayerHasToy(s.itemID) then
+			local quality = select(3, GetItemInfo(s.itemID))
 			local r, g, b = 1, 1, 1
 			if quality then
 				r, g, b = GetItemQualityColor(quality)
 			end
-			self.backdrop:SetBackdropBorderColor(r, g, b)
+			s.backdrop:SetBackdropBorderColor(r, g, b)
 		else
-			self.backdrop:SetBackdropBorderColor(unpack(E.media.bordercolor))
+			s.backdrop:SetBackdropBorderColor(unpack(E.media.bordercolor))
 		end
 	end)
 
@@ -507,6 +507,9 @@ local function LoadSkin()
 		end
 	end)
 
+	_G.WardrobeSetsCollectionVariantSetsButton.Icon:SetTexture(E.Media.Textures.ArrowUp)
+	_G.WardrobeSetsCollectionVariantSetsButton.Icon:SetRotation(S.ArrowRotation['down'])
+
 	-- Transmogrify NPC
 	local WardrobeFrame = _G.WardrobeFrame
 	S:HandlePortraitFrame(WardrobeFrame, true)
@@ -517,25 +520,26 @@ local function LoadSkin()
 	S:HandleButton(_G.WardrobeOutfitDropDown.SaveButton)
 	S:HandleDropDownBox(_G.WardrobeOutfitDropDown, 221)
 	_G.WardrobeOutfitDropDown:SetHeight(34)
-	_G.WardrobeOutfitDropDown.SaveButton:SetPoint("TOPLEFT", _G.WardrobeOutfitDropDown, "TOPRIGHT", -2, -2)
+	_G.WardrobeOutfitDropDown.SaveButton:ClearAllPoints()
+	_G.WardrobeOutfitDropDown.SaveButton:Point("TOPLEFT", _G.WardrobeOutfitDropDown, "TOPRIGHT", -2, -2)
 
 	local WardrobeTransmogFrame = _G.WardrobeTransmogFrame
 	WardrobeTransmogFrame:StripTextures()
 
-	for i = 1, #WardrobeTransmogFrame.Model.SlotButtons do
-		WardrobeTransmogFrame.Model.SlotButtons[i]:StripTextures()
-		WardrobeTransmogFrame.Model.SlotButtons[i]:SetFrameLevel(WardrobeTransmogFrame.Model.SlotButtons[i]:GetFrameLevel() + 2)
-		WardrobeTransmogFrame.Model.SlotButtons[i]:CreateBackdrop()
-		WardrobeTransmogFrame.Model.SlotButtons[i].backdrop:SetAllPoints()
-		WardrobeTransmogFrame.Model.SlotButtons[i].Border:Kill()
-		WardrobeTransmogFrame.Model.SlotButtons[i].Icon:SetTexCoord(unpack(E.TexCoords))
+	for i = 1, #WardrobeTransmogFrame.ModelScene.SlotButtons do
+		WardrobeTransmogFrame.ModelScene.SlotButtons[i]:StripTextures()
+		WardrobeTransmogFrame.ModelScene.SlotButtons[i]:SetFrameLevel(WardrobeTransmogFrame.ModelScene.SlotButtons[i]:GetFrameLevel() + 2)
+		WardrobeTransmogFrame.ModelScene.SlotButtons[i]:CreateBackdrop()
+		WardrobeTransmogFrame.ModelScene.SlotButtons[i].backdrop:SetAllPoints()
+		WardrobeTransmogFrame.ModelScene.SlotButtons[i].Border:Kill()
+		WardrobeTransmogFrame.ModelScene.SlotButtons[i].Icon:SetTexCoord(unpack(E.TexCoords))
 	end
 
 	WardrobeTransmogFrame.SpecButton:ClearAllPoints()
 	WardrobeTransmogFrame.SpecButton:Point("RIGHT", WardrobeTransmogFrame.ApplyButton, "LEFT", -2, 0)
 	S:HandleButton(WardrobeTransmogFrame.SpecButton)
 	S:HandleButton(WardrobeTransmogFrame.ApplyButton)
-	S:HandleButton(WardrobeTransmogFrame.Model.ClearAllPendingButton)
+	S:HandleButton(WardrobeTransmogFrame.ModelScene.ClearAllPendingButton)
 
 	--Transmogrify NPC Sets tab
 	WardrobeCollectionFrame.SetsTransmogFrame:StripTextures()
@@ -554,4 +558,4 @@ local function LoadSkin()
 	S:HandleButton(WardrobeOutfitEditFrame.DeleteButton)
 end
 
-S:AddCallbackForAddon("Blizzard_Collections", "Collections", LoadSkin)
+S:AddCallbackForAddon('Blizzard_Collections')

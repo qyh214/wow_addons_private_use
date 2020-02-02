@@ -1,8 +1,8 @@
 local L = Narci.L;
 
 local TabNames = { 
-    NARCI_NEW_ENTRY_PREFIX..NARCI_INTERFACE, NARCI_SHORTCUTS, NARCI_NEW_ENTRY_PREFIX..NARCI_THEME, NARCI_EFFECTS, NARCI_NEW_ENTRY_PREFIX..NARCI_CAMERA, NARCI_NEW_ENTRY_PREFIX..NARCI_TRANSMOG,
-    NARCI_NEW_ENTRY_PREFIX..L["Photo Mode"], NARCI_EXTENSIONS,
+    NARCI_INTERFACE, NARCI_SHORTCUTS, NARCI_THEME, NARCI_EFFECTS, NARCI_CAMERA, NARCI_TRANSMOG,
+    L["Photo Mode"], NARCI_NEW_ENTRY_PREFIX..L["Corruption System"], NARCI_EXTENSIONS,
 };  --Credits and About will be inserted later
 
 local FadeFrame = NarciAPI_FadeFrame;
@@ -54,12 +54,13 @@ function Narci_Pref_SetItemNameTextSize(height)
     local Height = tonumber(height) or ItemName_DefaultHeight or 10;
     local font = slotTable[1].Name:GetFont();
 
-    NarcissusDB.FontHeightItemName = Height;	
-	for i=1, #slotTable do
-		if slotTable[i] then
-            slotTable[i].Name:SetFont(font, Height);
-            local point, parent, relativePoint, xOfs = slotTable[i].Name:GetPoint();
-            slotTable[i].Name:SetPoint(point, parent, relativePoint, xOfs, 13 - Height)
+    NarcissusDB.FontHeightItemName = Height;
+    local slot;
+    for i=1, #slotTable do
+        slot = slotTable[i];
+		if slot then
+            slot.Name:SetFont(font, Height);
+            slot.GradientBackground:SetHeight(slot.Name:GetHeight() + slot.ItemLevel:GetHeight() + 18);
 		end
     end
 end
@@ -296,7 +297,6 @@ function Narci_MinimapButtonSwitch_OnClick(self)
 end
 
 function Narci_MinimapButtonSwitch_OnShow(self)
-    OptimizeBorderThickness(self);
     MinimapButtonSwitch_SetState(self);
 end
 
@@ -311,7 +311,6 @@ function Narci_DoubleTapSwitch_OnClick(self)
 end
 
 function Narci_DoubleTapSwitch_OnShow(self)
-    OptimizeBorderThickness(self)
     local HotKey1, HotKey2 = GetBindingKey("TOGGLECHARACTER0");
     local Text1 = ENABLE.." "..NARCI_DOUBLE_TAP;
     if HotKey1 then
@@ -459,7 +458,7 @@ end
 
 function Narci_KeybindingButton_OnShow(self)
     OptimizeBorderThickness(self);
-    self.Value:SetText(GetBindingKey(bindAction) or NOT_BOUND);
+    self.Value:SetText(GetBindingKey("CLICK Narci_MinimapButton:LeftButton") or NOT_BOUND);
     self.action = bindAction;
 end
 
@@ -476,10 +475,13 @@ local function Narci_Pref_SetItemNameTextWidth(width)
         Width = 1208;
     end
     
+    local slot;
     for i=1, #slotTable do
-        if slotTable[i] then
-            slotTable[i].Name:SetWidth(Width);
-            slotTable[i].ItemLevel:SetWidth(Width);
+        slot = slotTable[i];
+        if slot then
+            slot.Name:SetWidth(Width);
+            slot.ItemLevel:SetWidth(Width);
+            slot.GradientBackground:SetHeight(slot.Name:GetHeight() + slot.ItemLevel:GetHeight() + 18);
         end
     end
 end
@@ -511,14 +513,17 @@ local function Narci_Pref_SetItemNameTextTruncated(state)
         MaxLines = 1;
     end
     
+    local slot;
     for i=1, #slotTable do
-        if slotTable[i] then
-            slotTable[i].Name:SetMaxLines(MaxLines);
-            slotTable[i].ItemLevel:SetMaxLines(MaxLines);
-            slotTable[i].Name:SetWidth(slotTable[i].Name:GetWidth()+1)
-            slotTable[i].Name:SetWidth(slotTable[i].Name:GetWidth()-1)
-            slotTable[i].ItemLevel:SetWidth(slotTable[i].Name:GetWidth()+1)
-            slotTable[i].ItemLevel:SetWidth(slotTable[i].Name:GetWidth()-1)
+        slot = slotTable[i];
+        if slot then
+            slot.Name:SetMaxLines(MaxLines);
+            slot.ItemLevel:SetMaxLines(MaxLines);
+            slot.Name:SetWidth(slot.Name:GetWidth()+1)
+            slot.Name:SetWidth(slot.Name:GetWidth()-1)
+            slot.ItemLevel:SetWidth(slot.Name:GetWidth()+1)
+            slot.ItemLevel:SetWidth(slot.Name:GetWidth()-1)
+            slot.GradientBackground:SetHeight(slot.Name:GetHeight() + slot.ItemLevel:GetHeight() + 18);
         end
     end
 end
@@ -563,27 +568,6 @@ function Narci_BustShotSwitch_OnClick(self)
     NarcissusDB.UseBustShot = not NarcissusDB.UseBustShot;
     BustShotSwitch_SetState(self);
     Narci:InitializeCameraFactors();
-end
-
-local function Narci_Pref_SetTextBackgroundWidth(width)
-    local slotTable = Narci_Character.slotTable;
-    if not (slotTable and NarcissusDB) then
-        return;
-    end
-
-    local Width = tonumber(width) or 200;
-    NarcissusDB.ItemNameWidth = Width;
-
-    if Width == 200 then
-        Width = 0;
-    end
-    
-    for i=1, #slotTable do
-        if slotTable[i] then
-            slotTable[i].Name:SetWidth(Width);
-            slotTable[i].ItemLevel:SetWidth(Width);
-        end
-    end
 end
 
 local function RestoreClickFunc()
@@ -780,12 +764,61 @@ end
 local function EntranceVisualSwitch_SetState(self)
     local state = NarcissusDB.UseEntranceVisual;
     self.Tick:SetShown(state);
-    Narci:SetUseEntranceVisual()
+    Narci:SetUseEntranceVisual();
 end
 
 function Narci_EntranceVisualSwitch_OnClick(self)
     NarcissusDB.UseEntranceVisual = not NarcissusDB.UseEntranceVisual;
     EntranceVisualSwitch_SetState(self);
+end
+
+local function CorruptionBarSwitch_SetState(self)
+    local state = NarcissusDB.CorruptionBar;
+    self.Tick:SetShown(state);
+    if state then
+        Narci_CorruptionBar:Show();
+    else
+        Narci_CorruptionBar:Hide();
+    end
+end
+
+function Narci_CorruptionBarSwitch_OnClick(self)
+    NarcissusDB.CorruptionBar = not NarcissusDB.CorruptionBar;
+    CorruptionBarSwitch_SetState(self)
+end
+
+local function SetUseEcapeButtonForExit(self)
+    local state = NarcissusDB.UseEscapeButton;
+    if state then
+        PhotoModeController.KeyListener.EscapeKey = "ESCAPE";
+    else
+        PhotoModeController.KeyListener.EscapeKey = "HELLOWORLD";
+    end
+    self.Tick:SetShown(state);
+end
+
+function Narci_EscapeSwitch_OnClick(self)
+    NarcissusDB.UseEscapeButton = not NarcissusDB.UseEscapeButton;
+    SetUseEcapeButtonForExit(self);
+end
+
+local function MinimapButtonParentSwitch_SetState(self)
+    local state = NarcissusDB.IndependentMinimapButton;
+    local MinimapButton = Narci_MinimapButton;
+    if state then
+        MinimapButton:ClearAllPoints();
+        MinimapButton:SetParent(UIParent);
+        MinimapButton:SetFrameLevel(60);
+        Narci_MinimapButton_OnLoad();
+    else
+        MinimapButton:SetParent(Minimap);
+    end
+    self.Tick:SetShown(not state);
+end
+
+function Narci_MinimapButtonParentSwitch_OnClick(self)
+    NarcissusDB.IndependentMinimapButton = not NarcissusDB.IndependentMinimapButton;
+    MinimapButtonParentSwitch_SetState(self)
 end
 
 -------------------------------------------------------------
@@ -920,14 +953,42 @@ local function BuildTabButtonList(self, buttonTemplate, buttonNameTable, initial
     buttons[1]:Click();
 end
 
+local EyeColors = {{245, 127, 32}, {240, 25, 255}, {140, 218, 205}, {64, 155, 208}};
+
+local function EyeColorButton_OnClick(self)
+    NarciAPI_SetEyeballColor(self.ID);
+end
 
 function Narci_Preference_OnLoad(self)
+    local Tabs = self.ListScrollFrame.scrollChild;
+    local tab;
+    --Corruption Tab
+    tab = Tabs.CorruptionTab;
+    tab.Cate1:SetText(L["Eye Color"]);
+    tab.Cate2:SetText(L["Blizzard UI"]);
+    tab.ColorButtons = {};
+    local buttons = tab.ColorButtons;
+    local button;
+    for i = 1, #EyeColors do
+        button = CreateFrame("Button", nil, tab, "NarciPreferenceColorButtonTemplate")
+        if i == 1 then
+            button:SetPoint("LEFT", tab.Cate1, "LEFT", 40, -40);
+        else
+            button:SetPoint("LEFT", buttons[i - 1], "RIGHT", 9, 0);
+        end
+        local Color = EyeColors[i];
+        button.ID = i;
+        button:SetScript("OnClick", EyeColorButton_OnClick);
+        button:SetColor(Color[1], Color[2], Color[3]);
+        tinsert(buttons, button);
+    end
+
     --Ultra-wide Optimization
     if ScreenRatio then
         local function MoveBaselineSlider_OnLoad(self)
-            self:GetParent().Cate1:SetText(Narci.L["Ultra-wide Optimization"]);
-            self.Label:SetText(Narci.L["Baseline Offset"]);
-            self.Description:SetText(string.format( Narci.L["Ultra-wide Tooltip"], ScreenRatio));
+            self:GetParent().Cate1:SetText(L["Ultra-wide Optimization"]);
+            self.Label:SetText(L["Baseline Offset"]);
+            self.Description:SetText(string.format(L["Ultra-wide Tooltip"], ScreenRatio));
             --print("Max Offset: "..MaxOffset);
             self:SetMinMaxValues(0, MaxOffset);
             self:SetValueStep(MaxOffset);   --Disabled
@@ -947,10 +1008,9 @@ function Narci_Preference_OnLoad(self)
         MoveBaselineSlider_OnLoad(Narci_MoveBaselineSlider);
         Narci_MoveBaselineSlider:SetScript("OnValueChanged", OnValueChanged)
     else
-        local Tabs = self.ListScrollFrame.scrollChild;
-        Tabs.Tab9:ClearAllPoints();
-        Tabs.Tab9:SetPoint("TOPLEFT", Tabs.Tab8, "BOTTOMLEFT", 0, 0);
-        Tabs.Tab9:SetPoint("TOPRIGHT", Tabs.Tab8, "BOTTOMRIGHT", 0, 0);
+        Tabs.CreditTab:ClearAllPoints();
+        Tabs.CreditTab:SetPoint("TOPLEFT", Tabs.ExtensionTab, "BOTTOMLEFT", 0, 0);
+        Tabs.CreditTab:SetPoint("TOPRIGHT", Tabs.ExtensionTab, "BOTTOMRIGHT", 0, 0);
         Tabs.UltraWideSettings:Hide();
     end
 
@@ -1015,19 +1075,18 @@ local function InteractiveAreaSlider_OnLoad(self)
     local W = floor( (WorldFrame:GetWidth()) *(1/3 - 1/8) + 0.5);
     self:SetMinMaxValues(0, W);
     self:SetValueStep(W/8);
-    self.Label:SetText(Narci.L["Interactive Area"]);
+    self.Label:SetText(L["Interactive Area"]);
     self:SetScript("OnValueChanged", OnValueChanged);
     NarciAPI_SliderWithSteps_OnLoad(self);
     self:SetValue(NarcissusDB.ShrinkArea);
     Narci_ModelInteractiveArea:Hide();
 end
 
-
 -----------------
 -----Credits-----
 -----------------
 local function SetCreditList()
-   local RawList = {"Adam Stribley", "Elexys", "Ben Ashley", "Valnoressa", "Andrew Phoenix", "Solanya", "Stephen Berry", "Erik Shafer", "Mccr Karl", "Nantangitan", "Blastflight", "Psyloken",};
+   local RawList = {"Adam Stribley", "Elexys", "Ben Ashley", "Valnoressa", "Andrew Phoenix", "Solanya", "Stephen Berry", "Erik Shafer", "Mccr Karl", "Nantangitan", "Blastflight", "Psyloken", "Ellypse", "Victor Torres",};
    local LeftList, MidList, RightList = {}, {}, {};
    local mod = mod;
    local index;
@@ -1136,6 +1195,10 @@ local function InitializePreference()
     EntranceVisualSwitch_SetState(Narci_UseEntranceVisualSwitch);
     ExitConfirmSwitch_SetState(Narci_ExitConfirmSwitch);
     BustShotSwitch_SetState(Narci_BustShotSwitch);
+    CorruptionBarSwitch_SetState(Narci_CorruptionBarSwitch);
+    SetUseEcapeButtonForExit(Narci_EscapeSwitch);
+    MinimapButtonParentSwitch_SetState(Narci_MinimapButtonParentSwitch);
+    --CorruptionTooltipToggle_SetState(Narci_CorruptionTooltipSwitch);  --Status set in CorruptionSystem.lua
 
     Narci_VignetteStrengthSlider:SetValue(NarcissusDB.VignetteStrength);
     Narci_GlobalScaleSlider:SetValue(NarcissusDB.GlobalScale);
@@ -1155,13 +1218,15 @@ local function InitializePreference()
     _G["Narci_DefalutLayoutButton"..NarcissusDB.DefaultLayout]:Click();
 
     InteractiveAreaSlider_OnLoad(Narci_InteractiveAreaSlider);
+    NarciAPI_SetEyeballColor(NarcissusDB.EyeColor);
+
     --Ultra-wide
     Narci_MoveBaselineSlider:SetValue(NarcissusDB.BaseLineOffset);
 end
 
-local initialize = CreateFrame("Frame");
-initialize:RegisterEvent("PLAYER_ENTERING_WORLD");
-initialize:SetScript("OnEvent",function(self,event,...)
+local Initialize = CreateFrame("Frame");
+Initialize:RegisterEvent("PLAYER_ENTERING_WORLD");
+Initialize:SetScript("OnEvent",function(self,event,...)
     if event == "PLAYER_ENTERING_WORLD" then
         self:UnregisterEvent("PLAYER_ENTERING_WORLD");
         SetItemNameTextSize(NarcissusDB.FontHeightItemName);

@@ -58,8 +58,6 @@ local L = WeakAuras.L
 	L["Create Auras"] = "효과 생성"
 	L["debuff"] = "약화 효과"
 	L["Debuffs"] = "약화 효과"
-	--[[Translation missing --]]
-	L["debuiff"] = "debuiff"
 	L["Enchants"] = "마법부여"
 	L["General"] = "일반"
 	L["General Azerite Traits"] = "일반 아제라이트 특성"

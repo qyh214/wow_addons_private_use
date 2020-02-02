@@ -34,18 +34,12 @@ L["%s Texture Function"] = "%s - Функция текстуры"
 L["%s total auras"] = "Всего %s |4индикация:индикации:индикаций;"
 L["%s Trigger Function"] = "%s - Функция триггера"
 L["%s Untrigger Function"] = "%s - Функция детриггера"
---[[Translation missing --]]
-L["/wa help - Show this message"] = "/wa help - Show this message"
---[[Translation missing --]]
-L["/wa minimap - Toggle the minimap icon"] = "/wa minimap - Toggle the minimap icon"
---[[Translation missing --]]
-L["/wa pprint - Show the results from the most recent profiling"] = "/wa pprint - Show the results from the most recent profiling"
---[[Translation missing --]]
-L["/wa pstart - Start profiling"] = "/wa pstart - Start profiling"
---[[Translation missing --]]
-L["/wa pstop - Finish profiling"] = "/wa pstop - Finish profiling"
---[[Translation missing --]]
-L["/wa repair - Repair tool"] = "/wa repair - Repair tool"
+L["/wa help - Show this message"] = "/wa help - Показать это сообщение "
+L["/wa minimap - Toggle the minimap icon"] = "/wa minimap - Вкл / Выкл иконку на миникарте"
+L["/wa pprint - Show the results from the most recent profiling"] = "/wa pprint - Показать результаты последнего профилирования"
+L["/wa pstart - Start profiling"] = "/wa pstart - Начать профилирование"
+L["/wa pstop - Finish profiling"] = "/wa pstop - Завершить профилирование"
+L["/wa repair - Repair tool"] = "/wa repair - Инструмент для ремонта"
 L["|cffeda55fLeft-Click|r to toggle showing the main window."] = "|cffeda55fЛКМ|r переключать показ главного окна."
 L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "|cffeda55fСКМ|r включить или выключить значок на мини-карте."
 L["|cffeda55fRight-Click|r to toggle performance profiling on or off."] = "|cffeda55fПКМ|r включить или выключить профилирование."
@@ -64,25 +58,20 @@ L["A WeakAura just tried to use a forbidden function but has been blocked from d
 L["Absorb"] = "Поглощение"
 L["Absorb Display"] = "Отображение поглощения"
 L["Absorbed"] = "Поглощено"
---[[Translation missing --]]
-L["Action Button Glow"] = "Action Button Glow"
+L["Action Button Glow"] = "Свечение кнопки действия"
 L["Action Usable"] = "Действие возможно"
 L["Actions"] = "Действия"
 L["Active"] = "Активный"
---[[Translation missing --]]
-L["Add"] = "Add"
+L["Add"] = "Добавить"
 L["Add Missing Auras"] = "Добавить отсутствующие индикации"
 L["Additional Trigger Replacements"] = "Дополнительные коды триггера"
 L["Affected"] = "Задействовано"
---[[Translation missing --]]
-L["Affected Unit Count"] = "Affected Unit Count"
+L["Affected Unit Count"] = "Количество затронутых единиц"
 L["Aggro"] = "Агро"
---[[Translation missing --]]
-L["Agility"] = "Agility"
+L["Agility"] = "Ловкость"
 L["Alert Type"] = "Тип предупреждения"
 L["Alive"] = "Живой"
---[[Translation missing --]]
-L["All"] = "All"
+L["All"] = "Все"
 L["All Triggers"] = "Все триггеры"
 L["Alliance"] = "Альянс"
 L["Allow partial matches"] = "Разрешить частичные совпадения"
@@ -96,18 +85,13 @@ L["Animations"] = "Анимация"
 L["Anticlockwise"] = "Против часовой стрелки"
 L["Any"] = "Любая"
 L["Any Triggers"] = "Любые триггеры"
---[[Translation missing --]]
-L["AOE"] = "AOE"
---[[Translation missing --]]
-L["Arcane Resistance"] = "Arcane Resistance"
+L["AOE"] = "Область действия (АОЕ)"
+L["Arcane Resistance"] = "Сопротивление тайной магии"
 L["Arena"] = "Арена"
 L["Armor (%)"] = "Броня (%)"
---[[Translation missing --]]
-L["Armor against Target (%)"] = "Armor against Target (%)"
---[[Translation missing --]]
-L["Armor Rating"] = "Armor Rating"
---[[Translation missing --]]
-L["Array"] = "Array"
+L["Armor against Target (%)"] = "Броня против Цели (%)"
+L["Armor Rating"] = "Рейтинг брони"
+L["Array"] = "Массив"
 L["Ascending"] = "По возрастанию"
 L["At Least One Enemy"] = "Хотя бы один противник"
 L["Attach to End"] = "Прикрепить к концу"
@@ -127,35 +111,27 @@ L["Aura Removed"] = "Эффект удален"
 L["Aura Removed Dose"] = "Стак эффекта удален"
 L["Aura Stack"] = "Стаки эффекта"
 L["Aura Type"] = "Тип эффекта"
---[[Translation missing --]]
-L["Aura(s) Found"] = "Aura(s) Found"
---[[Translation missing --]]
-L["Aura(s) Missing"] = "Aura(s) Missing"
+L["Aura(s) Found"] = "Аура(ы) Найдена(ы)"
+L["Aura(s) Missing"] = "Аура(ы) Отсутствует(ют)"
 L["Aura:"] = "Эффект:"
 L["Auras:"] = "Эффекты:"
---[[Translation missing --]]
-L["Author Options"] = "Author Options"
---[[Translation missing --]]
-L["Auto"] = "Auto"
---[[Translation missing --]]
-L["Autocast Shine"] = "Autocast Shine"
---[[Translation missing --]]
-L["Auto-Clone (Show all Matches)"] = "Auto-Clone (Show all Matches)"
+L["Author Options"] = "Параметры Автора"
+L["Auto"] = "Автоматически"
+L["Autocast Shine"] = "Сияние автоматического применения"
+L["Auto-Clone (Show all Matches)"] = "Авто-клонирование (Показать все совпадения)"
 L["Automatic"] = "Автоматически"
---[[Translation missing --]]
-L["Automatic Repair Confirmation Dialog"] = "Automatic Repair Confirmation Dialog"
+L["Automatic Repair Confirmation Dialog"] = "Диалог подтверждения автоматической починки"
 L["Automatic Rotation"] = "Автоматический поворот"
---[[Translation missing --]]
-L["Avoidance (%)"] = "Avoidance (%)"
---[[Translation missing --]]
-L["Avoidance Rating"] = "Avoidance Rating"
+L["Avoidance (%)"] = "Избегание (%)"
+L["Avoidance Rating"] = "Рейтинг избегания"
 L["Back and Forth"] = "Назад и вперед"
+L["Background"] = "Фон"
 L["Background Color"] = "Цвет подложки"
+L["Bar"] = "Полоса"
 L["Bar Color"] = "Цвет полосы"
 L["Battle.net Whisper"] = "Шепот в сети Battle.net"
 L["Battleground"] = "Поле боя"
---[[Translation missing --]]
-L["BG>Raid>Party>Say"] = "BG>Raid>Party>Say"
+L["BG>Raid>Party>Say"] = "БГ>Рейд>Група>Сказать"
 L["BG-System Alliance"] = "Система ПБ: Альянс"
 L["BG-System Horde"] = "Система ПБ: Орда"
 L["BG-System Neutral"] = "Система ПБ: общее"
@@ -164,16 +140,12 @@ L["BigWigs Message"] = "Сообщение BigWigs"
 L["BigWigs Timer"] = "Таймер BigWigs"
 L["Blizzard Combat Text"] = "Текст боя Blizzard"
 L["Block"] = "Блок"
---[[Translation missing --]]
-L["Block (%)"] = "Block (%)"
---[[Translation missing --]]
-L["Block against Target (%)"] = "Block against Target (%)"
+L["Block (%)"] = "Блокировать (%)"
+L["Block against Target (%)"] = "Блокировать против цели (%)"
 L["Blocked"] = "Заблокировано"
---[[Translation missing --]]
-L["Border"] = "Border"
+L["Border"] = "Граница"
 L["Border Color"] = "Цвет границы"
---[[Translation missing --]]
-L["Boss"] = "Boss"
+L["Boss"] = "Босс"
 L["Boss Emote"] = "Эмоция рейд-босса"
 L["Boss Whisper"] = "Шепот рейд-босса"
 L["Bottom"] = "Снизу"
@@ -186,11 +158,11 @@ L["Buff"] = "Бафф"
 L["Buffed/Debuffed"] = "Есть бафф / дебафф"
 L["Can be used for e.g. checking if \"boss1target\" is the same as \"player\"."] = [=[Может использоваться для проверки равенства двух единиц.
 Например: "игрок" является целью 1-го босса - "boss1target".]=]
+L["Cancel"] = "Отменить"
 --[[Translation missing --]]
-L["Cancel"] = "Cancel"
+L["Can't schedule timer with %i, due to a World of Warcraft Bug with high computer uptime. (Uptime: %i). Please restart your Computer."] = "Can't schedule timer with %i, due to a World of Warcraft Bug with high computer uptime. (Uptime: %i). Please restart your Computer."
 L["Cast"] = "Применение заклинания"
---[[Translation missing --]]
-L["Cast Bar"] = "Cast Bar"
+L["Cast Bar"] = "Полоса применения"
 L["Cast Failed"] = "Каст провален"
 L["Cast Start"] = "Каст начат"
 L["Cast Success"] = "Каст успешно завершен"
@@ -208,8 +180,7 @@ L["Centered Vertical"] = "Вертикально по центру"
 L["Changed"] = "Изменен"
 L["Channel"] = "Канал"
 L["Channel (Spell)"] = "Потоковое"
---[[Translation missing --]]
-L["Character Stats"] = "Character Stats"
+L["Character Stats"] = "Характеристики персонажа"
 L["Character Type"] = "Тип персонажа"
 L["Charge gained/lost"] = "Событие заряда"
 L["Charges"] = "Заряды"
@@ -221,49 +192,38 @@ L["Choose a category"] = "Выберите категорию"
 L["Circle"] = "Круг"
 L["Clamp"] = "Закрепить текстуру"
 L["Class"] = "Класс"
---[[Translation missing --]]
-L["Class and Specialization"] = "Class and Specialization"
+L["Class and Specialization"] = "Класс и Специализация"
 L["Clockwise"] = "По часовой стрелке"
 L["Clone per Event"] = "Клон для каждого события"
 L["Clone per Match"] = "Клон для каждого совпадения"
 L["Color"] = "Цвет"
 L["Combat Log"] = "Журнал боя"
---[[Translation missing --]]
-L["Combine all matches"] = "Combine all matches"
+L["Combine all matches"] = "Объединить все совпадения"
 L["Conditions"] = "Условия"
 L["Contains"] = "Содержит"
---[[Translation missing --]]
-L["Continue Without Repairing"] = "Continue Without Repairing"
---[[Translation missing --]]
-L["Cooldown"] = "Cooldown"
+L["Cooldown"] = "Перезарядка"
 L["Cooldown Progress (Equipment Slot)"] = "Восстановление (ячейка экипировки)"
 L["Cooldown Progress (Item)"] = "Восстановление (предмет)"
 L["Cooldown Progress (Spell)"] = "Восстановление (заклинание)"
 L["Cooldown Ready (Equipment Slot)"] = "Восстановление завершено (ячейка экипировки)"
 L["Cooldown Ready (Item)"] = "Восстановление завершено (предмет)"
 L["Cooldown Ready (Spell)"] = "Восстановление завершено (заклинание)"
---[[Translation missing --]]
-L["Count"] = "Count"
+L["Count"] = "Подсчитывать"
 L["Counter Clockwise"] = "Против часовой стрелки"
 L["Create"] = "Создание"
 L["Create a Copy"] = "Создать копию"
 L["Critical"] = "Критический эффект"
---[[Translation missing --]]
-L["Critical (%)"] = "Critical (%)"
+L["Critical (%)"] = "Критический (%)"
 --[[Translation missing --]]
 L["Critical Rating"] = "Critical Rating"
 L["Crowd Controlled"] = "Потеря контроля над персонажем (CC)"
 L["Crushing"] = "Сокрушительный удар"
---[[Translation missing --]]
-L["Current Zone Group"] = "Current Zone Group"
---[[Translation missing --]]
+L["Current Zone Group"] = "Группа текущей зоны"
 L[ [=[Current Zone
-]=] ] = [=[Current Zone
-]=]
+]=] ] = "Текущая зона"
 L["Curse"] = "Проклятие"
 L["Custom"] = "Самостоятельно"
---[[Translation missing --]]
-L["Custom Configuration"] = "Custom Configuration"
+L["Custom Configuration"] = "Пользовательская конфигурация"
 L["Custom Function"] = "Своя функция"
 L["Damage"] = "Урон"
 L["Damage Shield"] = "Урон от щита"
@@ -273,24 +233,24 @@ L["DBM Announce"] = "Анонс DBM"
 L["DBM Timer"] = "Таймер DBM"
 L["Death Knight Rune"] = "Руна Рыцаря смерти"
 L["Debuff"] = "Дебафф"
---[[Translation missing --]]
-L["Debuff Class"] = "Debuff Class"
---[[Translation missing --]]
-L["Debuff Class Icon"] = "Debuff Class Icon"
---[[Translation missing --]]
-L["Debuff Type"] = "Debuff Type"
+L["Debuff Class"] = "Классовый дебафф"
+L["Debuff Class Icon"] = "Иконка классового дебаффа"
+L["Debuff Type"] = "Тип дебаффа"
 L["Deflect"] = "Отражение"
 L["Desaturate"] = "Обесцветить"
 L["Desaturate Background"] = "Обесцветить подложку"
 L["Desaturate Foreground"] = "Обесцветить основу"
 L["Descending"] = "По убыванию"
---[[Translation missing --]]
-L["Description"] = "Description"
+L["Description"] = "Описание"
 L["Dest Raid Mark"] = "Метка получателя"
 L["Destination In Group"] = "Получатель в группе"
 L["Destination Name"] = "Имя получателя"
 --[[Translation missing --]]
 L["Destination NPC Id"] = "Destination NPC Id"
+--[[Translation missing --]]
+L["Destination Object Type"] = "Destination Object Type"
+--[[Translation missing --]]
+L["Destination Reaction"] = "Destination Reaction"
 L["Destination Unit"] = "Получатель"
 L["Disease"] = "Болезнь"
 L["Dispel"] = "Рассеивание"
@@ -333,8 +293,12 @@ L["Enchant Name or ID"] = "Enchant Name or ID"
 L["Encounter ID(s)"] = "ID энкаунтера"
 L["Energize"] = "Восполнение"
 L["Enrage"] = "Исступление"
+--[[Translation missing --]]
+L["Enter static or relative values with %"] = "Enter static or relative values with %"
 L["Entering"] = "Вход"
 L["Entering/Leaving Combat"] = "Вход / Выход из боя"
+--[[Translation missing --]]
+L["Entry Order"] = "Entry Order"
 L["Environment Type"] = "Тип окружения"
 L["Environmental"] = "Окружающая среда"
 L["Equipment Set"] = "Комплект экипировки"
@@ -368,6 +332,8 @@ L["First"] = "Первое"
 L["First Value of Tooltip Text"] = "First Value of Tooltip Text"
 L["Fishing Lure / Weapon Enchant (Old)"] = "Рыболовная приманка / Чары оружия (старые)"
 L["Fixed"] = "Фиксированная"
+--[[Translation missing --]]
+L["Fixed Names"] = "Fixed Names"
 --[[Translation missing --]]
 L["Fixed Size"] = "Fixed Size"
 L["Flash"] = "Вспышка"
@@ -403,6 +369,8 @@ L["Group %s"] = "Группа %s"
 L["Group Arrangement"] = "Порядок и позиции индикаций в группе"
 L["Grow"] = "Рост"
 L["GTFO Alert"] = "Предупреждение GTFO"
+--[[Translation missing --]]
+L["Guardian"] = "Guardian"
 L["Guild"] = "Гильдия"
 L["Has Target"] = "Есть цель"
 L["Has Vehicle UI"] = "Имеет UI транспорта"
@@ -425,6 +393,8 @@ L["Hostile"] = "Враждебный"
 L["Hostility"] = "Враждебность"
 L["Humanoid"] = "Гуманоид"
 L["Hybrid"] = "Гибрид"
+--[[Translation missing --]]
+L["Icon"] = "Icon"
 L["Icon Color"] = "Цвет иконки"
 L["Icon Desaturate"] = "Обесцветить иконку"
 --[[Translation missing --]]
@@ -440,7 +410,6 @@ L["Immune"] = "Невосприимчивость"
 L["Import"] = "Импорт"
 L["Import as Copy"] = "Копировать"
 L["Import as Update"] = "Обновить"
-L["Import disabled"] = "Импорт отключен"
 L["Import Group"] = "Импорт"
 L["Import in progress"] = "Импорт в процессе ..."
 --[[Translation missing --]]
@@ -604,9 +573,14 @@ L["Note, that cross realm transmission is possible if you are on the same group"
 L["Note: 'Hide Alone' is not available in the new aura tracking system. A load option can be used instead."] = "Note: 'Hide Alone' is not available in the new aura tracking system. A load option can be used instead."
 --[[Translation missing --]]
 L["Note: The available text replacements for multi triggers match the normal triggers now."] = "Note: The available text replacements for multi triggers match the normal triggers now."
-L["Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate."] = "|cFFFFD200Примечание.|r Этот триггер оценивает (определяет приближённо) расстояние до хитбокса единицы. Фактическое расстояние до дружественных игроков обычно на 3 метра больше оценки."
+--[[Translation missing --]]
+L["Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate. Range checking capabilities depend on your current class and known abilities as well as the type of unit being checked. Some of the ranges may also not work with certain NPCs.|n|n|cFFAAFFAAFriendly Units:|r %s|n|cFFFFAAAAHarmful Units:|r %s|n|cFFAAAAFFMiscellanous Units:|r %s"] = "Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate. Range checking capabilities depend on your current class and known abilities as well as the type of unit being checked. Some of the ranges may also not work with certain NPCs.|n|n|cFFAAFFAAFriendly Units:|r %s|n|cFFFFAAAAHarmful Units:|r %s|n|cFFAAAAFFMiscellanous Units:|r %s"
+--[[Translation missing --]]
+L["NPC"] = "NPC"
 L["Number"] = "Количество"
 L["Number Affected"] = "Кол-во задействованных"
+--[[Translation missing --]]
+L["Object"] = "Object"
 L["Officer"] = "Офицер"
 --[[Translation missing --]]
 L["Offset Timer"] = "Offset Timer"
@@ -681,6 +655,8 @@ L["Pulse"] = "Пульс"
 L["PvP Flagged"] = "В режиме PvP"
 L["PvP Talent %i"] = "PvP талант %i"
 L["PvP Talent selected"] = "PvP талант выбран"
+--[[Translation missing --]]
+L["Queued Action"] = "Queued Action"
 L["Radius"] = "Радиус"
 L["Raid"] = "Рейд"
 L["Raid Warning"] = "Объявление рейду"
@@ -694,9 +670,15 @@ L["Receiving display information"] = "Получение информации о
 L["Reflect"] = "Отражение (обратно)"
 L["Region type %s not supported"] = "Тип региона \"%s\" не поддерживается"
 L["Relative"] = "Относительно"
+--[[Translation missing --]]
+L["Relative X-Offset"] = "Relative X-Offset"
+--[[Translation missing --]]
+L["Relative Y-Offset"] = "Relative Y-Offset"
 L["Remaining Duration"] = "Оставшееся время"
 L["Remaining Time"] = "Оставшееся время"
 L["Remove Obsolete Auras"] = "Удалить устаревшие индикации"
+--[[Translation missing --]]
+L["Repair"] = "Repair"
 L["Repeat"] = "Повторить (замостить)"
 L["Requested display does not exist"] = "Запрошенная индикация не существует"
 L["Requested display not authorized"] = "Запрошенная индикация не разрешена"
@@ -738,8 +720,6 @@ L["Role"] = "Role"
 L["Rotate Left"] = "Поворот влево"
 L["Rotate Right"] = "Поворот вправо"
 L["Run Custom Code"] = "Выполнить свой код"
---[[Translation missing --]]
-L["Run the repair tool"] = "Run the repair tool"
 L["Rune"] = "Руна"
 L["Rune #1"] = "Руна #1"
 L["Rune #2"] = "Руна #2"
@@ -820,7 +800,11 @@ L["Source In Group"] = "Источник в группе"
 L["Source Name"] = "Имя источника"
 --[[Translation missing --]]
 L["Source NPC Id"] = "Source NPC Id"
+--[[Translation missing --]]
+L["Source Object Type"] = "Source Object Type"
 L["Source Raid Mark"] = "Метка источника"
+--[[Translation missing --]]
+L["Source Reaction"] = "Source Reaction"
 L["Source Unit"] = "Источник"
 L["Source: "] = "Источник: "
 --[[Translation missing --]]
@@ -946,6 +930,8 @@ L["Total Units"] = "Total Units"
 L["Totem"] = "Тотем"
 L["Totem #%i"] = "Тотем #%i"
 L["Totem Name"] = "Название тотема"
+--[[Translation missing --]]
+L["Totem Name Pattern Match"] = "Totem Name Pattern Match"
 L["Totem Number"] = "Номер тотема"
 --[[Translation missing --]]
 L["Track Cooldowns"] = "Track Cooldowns"
@@ -978,46 +964,33 @@ L["Unit is Unit"] = "Является др-й единицей"
 L["Unit Name"] = "Unit Name"
 --[[Translation missing --]]
 L["Units Affected"] = "Units Affected"
---[[Translation missing --]]
-L["Unlimited"] = "Unlimited"
+L["Unlimited"] = "Неограниченый"
 L["Up"] = "Вверх"
 --[[Translation missing --]]
 L["Up, then Left"] = "Up, then Left"
 --[[Translation missing --]]
 L["Up, then Right"] = "Up, then Right"
 L["Update Auras"] = "Обновить индикацию"
---[[Translation missing --]]
-L["Usage:"] = "Usage:"
---[[Translation missing --]]
-L["Use /wa minimap to show the minimap icon again"] = "Use /wa minimap to show the minimap icon again"
---[[Translation missing --]]
-L["Use Custom Color"] = "Use Custom Color"
+L["Usage:"] = "Использование:"
+L["Use /wa minimap to show the minimap icon again"] = "Используйте /wa minimap, чтобы снова показать иконку миникарты"
+L["Use Custom Color"] = "Использовать пользовательский цвет"
 L["Values/Remaining Time above this value are displayed as full progress."] = "Значения/Оставшееся время выше указанного числа отображаются как полный прогресс."
 L["Values/Remaining Time below this value are displayed as no progress."] = "Значения/Оставшееся время ниже указанного числа отображаются как нулевой прогресс."
---[[Translation missing --]]
-L["Versatility (%)"] = "Versatility (%)"
---[[Translation missing --]]
-L["Versatility Rating"] = "Versatility Rating"
+L["Versatility (%)"] = "Универсальность (%)"
+L["Versatility Rating"] = "Рейтинг универсальности"
 L["Version: "] = "Версия: "
---[[Translation missing --]]
-L["Visibility"] = "Visibility"
+L["Visibility"] = "Видимость"
 L["War Mode Active"] = "Включен режим войны"
---[[Translation missing --]]
-L["Warning: Full Scan auras checking for both name and spell id can't be converted."] = "Warning: Full Scan auras checking for both name and spell id can't be converted."
---[[Translation missing --]]
-L["Warning: Name info is now available via %affected, %unaffected. Number of affected group members via %unitCount. Some options behave differently now. This is not automatically adjusted."] = "Warning: Name info is now available via %affected, %unaffected. Number of affected group members via %unitCount. Some options behave differently now. This is not automatically adjusted."
---[[Translation missing --]]
-L["Warning: Tooltip values are now available via %tooltip1, %tooltip2, %tooltip3 instead of %s. This is not automatically adjusted."] = "Warning: Tooltip values are now available via %tooltip1, %tooltip2, %tooltip3 instead of %s. This is not automatically adjusted."
---[[Translation missing --]]
-L["WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."] = "WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."
---[[Translation missing --]]
-L["WeakAuras Profiling Data"] = "WeakAuras Profiling Data"
+L["Warning: Full Scan auras checking for both name and spell id can't be converted."] = "Предупреждение: Ауры с полным сканированием, проверяющие как имя, так и идентификатор заклинания, не могут быть преобразованы."
+L["Warning: Name info is now available via %affected, %unaffected. Number of affected group members via %unitCount. Some options behave differently now. This is not automatically adjusted."] = "Предупреждение: информация об имени теперь доступна через %affected, %unaffected. Количество затронутых членов группы через %unitCount. Некоторые параметры ведут себя по-другому. Это не настраивается автоматически."
+L["Warning: Tooltip values are now available via %tooltip1, %tooltip2, %tooltip3 instead of %s. This is not automatically adjusted."] = "Предупреждение: значения всплывающей подсказки теперь доступны через %tooltip1, %tooltip2, %tooltip3 вместо %s. Это не настраивается автоматически."
+L["WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."] = "WeakAuras обнаружил ошибку во время входа в систему. Пожалуйста, сообщите об этой проблеме https://github.com/WeakAuras/Weakauras2/issues/new ."
+L["WeakAuras Profiling Data"] = "Данные профилирования WeakAuras"
 L["Weapon"] = "Оружие"
 L["Weapon Enchant"] = "Чары оружия"
 L["What do you want to do?"] = "Что вы хотите сделать?"
 L["Whisper"] = "Шепот"
---[[Translation missing --]]
-L["Whole Area"] = "Whole Area"
+L["Whole Area"] = "Вся область"
 L["Width"] = "Ширина"
 L["Wobble"] = "Колебание"
 L["Wrap"] = "Переносить слова"
@@ -1029,6 +1002,5 @@ L["You already have this group/aura. Importing will create a duplicate."] = [=[�
 L["Zone Group ID(s)"] = "ID группы игровых зон"
 L["Zone ID(s)"] = "ID игровой зоны"
 L["Zone Name"] = "Название игровой зоны"
---[[Translation missing --]]
-L["Zoom"] = "Zoom"
+L["Zoom"] = "Приближение"
 

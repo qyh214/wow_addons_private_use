@@ -1,6 +1,6 @@
 # Adventure Guide Lockouts
 
-Adventure Guide Lockouts is a lightweight utility add-on that tracks instances lockouts in the Adventure Guide.
+Adventure Guide Lockouts is a lightweight World of Warcraft add-on that tracks instances lockouts in the Adventure Guide.
 
 The add-on displays small flags next to the buttons of saved instances. Each difficulty of an instance will have a dedicated flag, displaying details such as available and killed bosses. Tracking is also available for world bosses and LFR.
 

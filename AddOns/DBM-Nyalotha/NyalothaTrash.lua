@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod("NyalothaTrash", "DBM-Nyalotha", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20191109215417")
+mod:SetRevision("20200129031518")
 --mod:SetModelID(47785)
 mod:SetZone()
 mod.isTrashMod = true
 --mod:SetUsedIcons(1, 2, 3, 4, 5)
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 310780 315011 159409 310839 315932 311550 311576 307403 306982",
+	"SPELL_CAST_START 310780 315011 159409 310839 315932 311550 311576 307403 306982 311544 314433",
 	"SPELL_AURA_APPLIED 316623",
 	"SPELL_AURA_REMOVED 316623"
 )
@@ -21,6 +21,8 @@ local specWarnShadowSmash					= mod:NewSpecialWarningDodge(310780, nil, nil, nil
 local specWarnBurstingShadows				= mod:NewSpecialWarningDodge(315011, nil, nil, nil, 2, 2)
 local specWarnDreadWind						= mod:NewSpecialWarningDodge(159409, nil, nil, nil, 2, 2)
 local specWarnBrutalSmash					= mod:NewSpecialWarningDodge(315932, nil, nil, nil, 3, 2)--This will wreck even a tank, it does over 900k damage, airhorn
+local specWarnRainofBlood					= mod:NewSpecialWarningDodge(311544, nil, nil, nil, 2, 2)
+local specWarnSanguineFountain				= mod:NewSpecialWarningDodge(314433, nil, nil, nil, 2, 2)
 local specWarnFeartheVoid					= mod:NewSpecialWarningSpell(311550, nil, nil, nil, 2, 2)--Aoe Fear
 local specWarnPsychicDetonation				= mod:NewSpecialWarningMoveAway(316623, nil, nil, nil, 1, 2)
 local yellPsychicDetonation					= mod:NewYell(316623)
@@ -42,13 +44,19 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 159409 and self:AntiSpam(5, 1) then
 		specWarnDreadWind:Show()
 		specWarnDreadWind:Play("watchstep")
-	elseif spellId == 315932 and self:AntiSpam(5, 1) then
+	elseif spellId == 315932 and self:AntiSpam(3, 1) then
 		specWarnBrutalSmash:Show()
 		specWarnBrutalSmash:Play("watchstep")
+	elseif spellId == 311544 and self:AntiSpam(5, 1) then
+		specWarnRainofBlood:Show()
+		specWarnRainofBlood:Play("watchstep")
+	elseif spellId == 314433 and self:AntiSpam(5, 1) then
+		specWarnSanguineFountain:Show()
+		specWarnSanguineFountain:Play("watchstep")
 	elseif spellId == 311550 then
 		specWarnFeartheVoid:Show()
 		specWarnFeartheVoid:Play("fearsoon")
-	elseif spellId == 307403 or spellId == 306982 then--Enemy, Player
+	elseif (spellId == 307403 or spellId == 306982) and self:AntiSpam(3, args.sourceName) then--Enemy, Player
 		specWarnAnnihilation:Show(args.sourceName)
 		specWarnAnnihilation:Play("shockwave")
 	elseif spellId == 310839 and self:CheckInterruptFilter(args.sourceGUID, false, true) then

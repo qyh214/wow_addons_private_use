@@ -1,19 +1,19 @@
 -- Lua functions
 local _G = _G
-local ipairs = ipairs
 local pairs = pairs
+local print = print
 local select = select
 local tinsert = tinsert
 local tonumber = tonumber
 
 -- WoW API / Variables
 local C_ContributionCollector_GetState = C_ContributionCollector.GetState
+local C_QuestLog_IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
 local C_TaskQuest_GetQuestTimeLeftMinutes = C_TaskQuest.GetQuestTimeLeftMinutes
 local CreateFrame = CreateFrame
 local EJ_GetEncounterInfo = EJ_GetEncounterInfo
 local EJ_GetInstanceInfo = EJ_GetInstanceInfo
 local Enum_ContributionState = Enum.ContributionState
-local GameTooltip = GameTooltip
 local GetAchievementInfo = GetAchievementInfo
 local GetDifficultyInfo = GetDifficultyInfo
 local GetNumSavedInstances = GetNumSavedInstances
@@ -21,7 +21,6 @@ local GetSavedInstanceChatLink = GetSavedInstanceChatLink
 local GetSavedInstanceEncounterInfo = GetSavedInstanceEncounterInfo
 local GetSavedInstanceInfo = GetSavedInstanceInfo
 local hooksecurefunc = hooksecurefunc
-local IsQuestFlaggedCompleted = IsQuestFlaggedCompleted
 local RequestRaidInfo = RequestRaidInfo
 local UnitFactionGroup = UnitFactionGroup
 
@@ -34,53 +33,38 @@ local GREEN_FONT_COLOR = GREEN_FONT_COLOR
 local HIGHLIGHT_FONT_COLOR = HIGHLIGHT_FONT_COLOR
 local RED_FONT_COLOR = RED_FONT_COLOR
 
-local _, AddOn = ...
---_G[AddOnName] = AddOn
+local ADDON_NAME, AddOn = ...
 
---local function debug(v)
--- if type(v) == "string" then
---   print("|cff00aeff["..AddOnName.."]:|r "..v)
--- elseif type(v) == "table" then
---   LoadAddOn("Blizzard_DebugTools")
---   print("|cff00aeff["..AddOnName.."]:|r ")
---   DevTools_Dump(v)
--- end
---end
+local function error(...)
+  AddOn.errors = AddOn.errors or {}
+  if not AddOn.errors[...] then
+    print("|cffff0000" .. ADDON_NAME .. ":|r", ...)
+    AddOn.errors[...] = true
+  end
+end
+
+local function debug(...)
+  _G[ADDON_NAME] = _G[ADDON_NAME] or AddOn
+  if not ... then return end
+  if type(...) == "table" then
+    print("|cff33ff99" .. ADDON_NAME .. ":|r")
+    DevTools_Dump(...)
+  else
+    print("|cff33ff99" .. ADDON_NAME .. ":|r", ...)
+  end
+end
 
 function AddOn:RequestWarfrontInfo()
-  local stromgardeState, darkshoreState
+  local stromgardeState = C_ContributionCollector_GetState(self.faction == "Horde" and 116 or 11)
+  local darkshoreState = C_ContributionCollector_GetState(self.faction == "Horde" and 117 or 118)
 
-  if UnitFactionGroup("player") == "Horde" then
-    self.worldBosses[5].encounters[4].encounterID = 2212
-    self.worldBosses[5].encounters[4].questID = 52848
-    self.worldBosses[5].encounters[8].encounterID = 2329
-    self.worldBosses[5].encounters[8].questID = 54896
+  self.isStromgardeAvailable = stromgardeState == Enum_ContributionState.Building or stromgardeState == Enum_ContributionState.Active
+  self.isDarkshoreAvailable = darkshoreState == Enum_ContributionState.Building or darkshoreState == Enum_ContributionState.Active
 
-    stromgardeState = C_ContributionCollector_GetState(116)
-    darkshoreState = C_ContributionCollector_GetState(117)
-  else
-    self.worldBosses[5].encounters[4].encounterID = 2213
-    self.worldBosses[5].encounters[4].questID = 52847
-    self.worldBosses[5].encounters[8].encounterID = 2345
-    self.worldBosses[5].encounters[8].questID = 54895
-
-    stromgardeState = C_ContributionCollector_GetState(11)
-    darkshoreState = C_ContributionCollector_GetState(118)
-  end
-
-  self.isStromgardeAvailable = false
-  self.isDarkshoreAvailable = false
-
-  if (stromgardeState == Enum_ContributionState.Building or stromgardeState == Enum_ContributionState.Active) and (darkshoreState == Enum_ContributionState.Building or darkshoreState == Enum_ContributionState.Active) then
-    self.isStromgardeAvailable = true
-    self.isDarkshoreAvailable = true
+  if self.isStromgardeAvailable and self.isDarkshoreAvailable then
+    self.worldBosses[5].numEncounters = 5
+  elseif self.isStromgardeAvailable or self.isDarkshoreAvailable then
     self.worldBosses[5].numEncounters = 4
-  elseif stromgardeState == Enum_ContributionState.Building or stromgardeState == Enum_ContributionState.Active then
-    self.isStromgardeAvailable = true
-    self.worldBosses[5].numEncounters = 3
-  elseif darkshoreState == Enum_ContributionState.Building or darkshoreState == Enum_ContributionState.Active then
-    self.isDarkshoreAvailable = true
-    self.worldBosses[5].numEncounters = 3
   end
 end
 
@@ -95,10 +79,9 @@ function AddOn:GetSavedWorldBossInfo(instanceIndex)
   local numEncounters = self.worldBosses[instanceIndex].numEncounters
   local numCompleted = 0
 
-  self:RequestWarfrontInfo()
-
-  for encounterIndex, encounter in ipairs(self.worldBosses[instanceIndex].encounters) do
-    local isDefeated = IsQuestFlaggedCompleted(encounter.questID)
+  for encounterIndex = 1, #self.worldBosses[instanceIndex].encounters do
+    local encounter = self.worldBosses[instanceIndex].encounters[encounterIndex]
+    local isDefeated = C_QuestLog_IsQuestFlaggedCompleted(encounter.questID)
     if instanceIndex == 5 and encounterIndex == 4 then
       isDefeated = isDefeated and self.isStromgardeAvailable
     elseif instanceIndex == 5 and encounterIndex == 8 then
@@ -119,97 +102,132 @@ end
 function AddOn:GetSavedWorldBossEncounterInfo(instanceIndex, encounterIndex)
   if encounterIndex > #self.worldBosses[instanceIndex].encounters then return end
   local bossName
-  local isKilled = IsQuestFlaggedCompleted(self.worldBosses[instanceIndex].encounters[encounterIndex].questID)
-  if self.worldBosses[instanceIndex].encounters[encounterIndex].name == " " then
-    bossName = (select(2, GetAchievementInfo(7333))) -- "The Four Celestials"
+  local isKilled = C_QuestLog_IsQuestFlaggedCompleted(self.worldBosses[instanceIndex].encounters[encounterIndex].questID)
+  if self.worldBosses[instanceIndex].encounters[encounterIndex].name == "" then
+    bossName = (select(2, GetAchievementInfo(7333))) -- Localize "The Four Celestials"
   elseif not self.worldBosses[instanceIndex].encounters[encounterIndex].name then
     bossName = EJ_GetEncounterInfo(self.worldBosses[instanceIndex].encounters[encounterIndex].encounterID)
   end
   return bossName, isKilled
 end
 
+---@param instanceIndex number
+---@return table @ instanceLockout
+function AddOn:GetInstanceLockout(instanceIndex)
+  local instanceName, _, _, instanceDifficulty, locked, extended, _, _, _, difficultyName, numEncounters, numCompleted = GetSavedInstanceInfo(instanceIndex)
+  if not locked and not extended then return end
+  local instanceID = self.instances[tonumber(GetSavedInstanceChatLink(instanceIndex):match(":(%d+):"))]
+  if not instanceID then
+    error(instanceName .. " instanceID is nil. Please report this at https://github.com/Meivyn/AdventureGuideLockouts/issues")
+    return
+  end
+
+  if instanceID == 777 then
+    numEncounters = 3 -- Fixes wrong encounters count for Assault on Violet Hold
+  elseif instanceID == 1023 then
+    numEncounters = 4 -- Fixes https://github.com/Meivyn/AdventureGuideLockouts/issues/1
+  end
+
+  local _, _, isHeroic, _, displayHeroic, displayMythic, _, isLFR = GetDifficultyInfo(instanceDifficulty)
+  local difficulty = 2
+
+  if displayMythic then
+    difficulty = 4
+  elseif isHeroic or displayHeroic then
+    difficulty = 3
+  elseif isLFR then
+    difficulty = 1
+  end
+
+  local encounters = {}
+  local encounterIndex = 1
+
+  while GetSavedInstanceEncounterInfo(instanceIndex, encounterIndex) do
+    if instanceID == 1023 then
+      if self.faction == "Alliance" and encounterIndex == 1 or self.faction == "Horde" and encounterIndex == 2 then
+        encounterIndex = encounterIndex + 1 -- Fixes https://github.com/Meivyn/AdventureGuideLockouts/issues/1
+      end
+    end
+    local bossName, _, isKilled = GetSavedInstanceEncounterInfo(instanceIndex, encounterIndex)
+    tinsert(encounters, {
+      bossName = bossName,
+      isKilled = isKilled
+    })
+    encounterIndex = encounterIndex + 1
+  end
+
+  return {
+    encounters = encounters,
+    instanceName = instanceName,
+    instanceID = instanceID,
+    difficulty = difficulty,
+    difficultyName = difficultyName,
+    numEncounters = numEncounters,
+    numCompleted = numCompleted,
+    progress = numCompleted .. "/" .. numEncounters,
+    complete = numCompleted == numEncounters
+  }
+end
+
+---@param instanceIndex number
+---@return table @ instanceLockout
+function AddOn:GetWorldBossLockout(instanceIndex)
+  local instanceName, instanceID, locked, difficultyName, numEncounters, numCompleted, difficulty = self:GetSavedWorldBossInfo(instanceIndex)
+  if not locked then return end
+
+  local encounters = {}
+  local encounterIndex = 1
+
+  while self:GetSavedWorldBossEncounterInfo(instanceIndex, encounterIndex) do
+    local bossName, isKilled = self:GetSavedWorldBossEncounterInfo(instanceIndex, encounterIndex)
+    local isAvailable
+    if instanceIndex == 5 and encounterIndex == 4 then
+      isAvailable = self.isStromgardeAvailable
+      isKilled = isKilled and isAvailable
+    elseif instanceIndex == 5 and encounterIndex == 8 then
+      isAvailable = self.isDarkshoreAvailable
+      isKilled = isKilled and isAvailable
+    elseif instanceIndex == 5 then
+      isAvailable = C_TaskQuest_GetQuestTimeLeftMinutes(self.worldBosses[instanceIndex].encounters[encounterIndex].questID) ~= nil
+    end
+    tinsert(encounters, {
+      bossName = bossName,
+      isKilled = isKilled,
+      isAvailable = isAvailable
+    })
+    encounterIndex = encounterIndex + 1
+  end
+
+  return {
+    encounters = encounters,
+    instanceName = instanceName,
+    instanceID = instanceID,
+    difficulty = difficulty,
+    difficultyName = difficultyName,
+    numEncounters = numEncounters,
+    numCompleted = numCompleted,
+    progress = numCompleted .. "/" .. numEncounters,
+    complete = numCompleted == numEncounters
+  }
+end
+
 function AddOn:UpdateSavedInstances()
   self.instancesLockouts = {}
 
   local savedInstances = GetNumSavedInstances()
-  local savedWorldBosses = #self.worldBosses
-  local instanceName, instanceID, instanceReset, instanceDifficulty, locked, extended, instanceIDMostSig, isRaid, maxPlayers, difficultyName, numEncounters, numCompleted, difficulty
-  local playerFaction = UnitFactionGroup("player")
 
-  for instanceIndex = 1, savedInstances + savedWorldBosses do
-    local encounters = {}
-    local encounterIndex = 1
+  for instanceIndex = 1, savedInstances + #self.worldBosses do
+    local lockout
 
     if instanceIndex <= savedInstances then
-      instanceName, instanceID, instanceReset, instanceDifficulty, locked, extended, instanceIDMostSig, isRaid, maxPlayers, difficultyName, numEncounters, numCompleted = GetSavedInstanceInfo(instanceIndex)
-      instanceID = self.instances[tonumber(GetSavedInstanceChatLink(instanceIndex):match(":(%d+)"))]
-
-      if instanceID == 777 then
-        numEncounters = 3 -- Fixes wrong encounters count for Assault on Violet Hold
-      elseif instanceID == 1023 then
-        numEncounters = 4 -- Fixes https://github.com/Meivyn/AdventureGuideLockouts/issues/1
-      end
-
-      local _, _, isHeroic, _, displayHeroic, displayMythic, _, isLFR = GetDifficultyInfo(instanceDifficulty)
-      difficulty = 2
-
-      if displayMythic then
-        difficulty = 4
-      elseif isHeroic or displayHeroic then
-        difficulty = 3
-      elseif isLFR then
-        difficulty = 1
-      end
-
-      while GetSavedInstanceEncounterInfo(instanceIndex, encounterIndex) do
-        if instanceID == 1023 then
-          if playerFaction == "Alliance" and encounterIndex == 1 or playerFaction == "Horde" and encounterIndex == 2 then
-            encounterIndex = encounterIndex + 1 -- Fixes https://github.com/Meivyn/AdventureGuideLockouts/issues/1
-          end
-        end
-        local bossName, _, isKilled = GetSavedInstanceEncounterInfo(instanceIndex, encounterIndex)
-        tinsert(encounters, {
-          bossName = bossName,
-          isKilled = isKilled
-        })
-        encounterIndex = encounterIndex + 1
-      end
+      lockout = self:GetInstanceLockout(instanceIndex)
     else
-      instanceName, instanceID, locked, difficultyName, numEncounters, numCompleted, difficulty = self:GetSavedWorldBossInfo(instanceIndex - savedInstances)
-
-      while self:GetSavedWorldBossEncounterInfo(instanceIndex - savedInstances, encounterIndex) do
-        local bossName, isKilled = self:GetSavedWorldBossEncounterInfo(instanceIndex - savedInstances, encounterIndex)
-        local isAvailable
-        if instanceIndex - savedInstances == 5 and encounterIndex == 4 then
-          isAvailable = self.isStromgardeAvailable
-          isKilled = isKilled and isAvailable
-        elseif instanceIndex - savedInstances == 5 and encounterIndex == 8 then
-          isAvailable = self.isDarkshoreAvailable
-          isKilled = isKilled and isAvailable
-        elseif instanceIndex - savedInstances == 5 then
-          isAvailable = C_TaskQuest_GetQuestTimeLeftMinutes(self.worldBosses[instanceIndex - savedInstances].encounters[encounterIndex].questID) ~= nil
-        end
-        tinsert(encounters, {
-          bossName = bossName,
-          isKilled = isKilled,
-          isAvailable = isAvailable
-        })
-        encounterIndex = encounterIndex + 1
-      end
+      lockout = self:GetWorldBossLockout(instanceIndex - savedInstances)
     end
 
-    if locked or extended then
-      self.instancesLockouts[instanceID] = self.instancesLockouts[instanceID] or {}
-      tinsert(self.instancesLockouts[instanceID], {
-        encounters = encounters,
-        instanceName = instanceName,
-        difficulty = difficulty,
-        difficultyName = difficultyName,
-        numEncounters = numEncounters,
-        numCompleted = numCompleted,
-        progress = numCompleted.."/"..numEncounters,
-        complete = numCompleted == numEncounters
-      })
+    if lockout then
+      self.instancesLockouts[lockout.instanceID] = self.instancesLockouts[lockout.instanceID] or {}
+      tinsert(self.instancesLockouts[lockout.instanceID], lockout)
     end
   end
 end
@@ -221,24 +239,25 @@ function AddOn:CreateStatusFrame(instanceButton, difficulty)
   local statusFrame = CreateFrame("Frame", nil, instanceButton)
   statusFrame:SetSize(38, 46)
   statusFrame:SetScript("OnEnter", function(frame)
-    GameTooltip:SetOwner(frame, "ANCHOR_RIGHT")
-    GameTooltip:SetText(frame.instanceInfo.instanceName.." ("..frame.instanceInfo.difficultyName..")")
-    for _, encounter in ipairs(frame.instanceInfo.encounters) do
+    _G.GameTooltip:SetOwner(frame, "ANCHOR_RIGHT")
+    _G.GameTooltip:SetText(frame.instanceInfo.instanceName .. " (" .. frame.instanceInfo.difficultyName .. ")")
+    for i = 1, #frame.instanceInfo.encounters do
+      local encounter = frame.instanceInfo.encounters[i]
       local r, g, b = GREEN_FONT_COLOR.r, GREEN_FONT_COLOR.g, GREEN_FONT_COLOR.b
       local bossStatus = BOSS_ALIVE
       if encounter.isKilled then
         r, g, b = RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b
         bossStatus = BOSS_DEAD
-      elseif not encounter.isAvailable and encounter.isAvailable ~= nil then
+      elseif encounter.isAvailable == false then
         r, g, b = GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b
         bossStatus = QUEUE_TIME_UNAVAILABLE
       end
-      GameTooltip:AddDoubleLine(encounter.bossName, bossStatus, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b, r, g, b)
+      _G.GameTooltip:AddDoubleLine(encounter.bossName, bossStatus, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b, r, g, b)
     end
-    GameTooltip:Show()
+    _G.GameTooltip:Show()
   end)
   statusFrame:SetScript("OnLeave", function()
-    GameTooltip:Hide()
+    _G.GameTooltip:Hide()
   end)
 
   statusFrame.texture = statusFrame:CreateTexture(nil, "ARTWORK")
@@ -279,7 +298,6 @@ function AddOn:CreateStatusFrame(instanceButton, difficulty)
 
   return statusFrame
 end
-
 
 ---@param instanceButton Button
 function AddOn:UpdateStatusFramePosition(instanceButton)
@@ -335,9 +353,10 @@ function AddOn:UpdateInstanceStatusFrame(instanceButton)
   end
 
   local instances = self.instancesLockouts[instanceButton.instanceID]
-  if instances == nil then return end
+  if not instances then return end
 
-  for _, instance in ipairs(instances) do
+  for i = 1, #instances do
+    local instance = instances[i]
     local frame = (self.statusFrames[instanceButton:GetName()] and self.statusFrames[instanceButton:GetName()][instance.difficulty]) or self:CreateStatusFrame(instanceButton, instance.difficulty)
     if instance.complete then
       frame.completeFrame:Show()
@@ -357,32 +376,39 @@ function AddOn:UpdateInstanceStatusFrame(instanceButton)
   self:UpdateStatusFramePosition(instanceButton)
 end
 
-function AddOn:UpdateFrames()
+local function UpdateFrames()
   local b1 = _G.EncounterJournalInstanceSelectScrollFrameScrollChildInstanceButton1
   if b1 then
-    self:UpdateInstanceStatusFrame(b1)
+    AddOn:UpdateInstanceStatusFrame(b1)
   end
   for i = 1, 100 do
-    local b = _G["EncounterJournalInstanceSelectScrollFrameinstance"..i]
+    local b = _G["EncounterJournalInstanceSelectScrollFrameinstance" .. i]
     if b then
-      self:UpdateInstanceStatusFrame(b)
+      AddOn:UpdateInstanceStatusFrame(b)
     end
   end
 end
 
-AddOn.eventFrame = CreateFrame("Frame")
-AddOn.eventFrame:RegisterEvent("ADDON_LOADED")
-AddOn.eventFrame:RegisterEvent("BOSS_KILL")
-AddOn.eventFrame:RegisterEvent("UPDATE_INSTANCE_INFO")
-AddOn.eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
-  if event == "ADDON_LOADED" and arg1 == "Blizzard_EncounterJournal" then
-    self:UnregisterEvent(event)
-    _G.EncounterJournal:HookScript("OnShow", function() AddOn:UpdateFrames() end)
-    hooksecurefunc("EncounterJournal_ListInstances", function() AddOn:UpdateFrames() end)
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+frame:RegisterEvent("ADDON_LOADED")
+frame:RegisterEvent("BOSS_KILL")
+frame:RegisterEvent("UPDATE_INSTANCE_INFO")
+frame:SetScript("OnEvent", function(_, event, arg1)
+  if event == "PLAYER_ENTERING_WORLD" then
+    AddOn.faction = UnitFactionGroup("player")
+    AddOn.worldBosses[5].encounters[4].encounterID = AddOn.faction == "Horde" and 2212 or 2213
+    AddOn.worldBosses[5].encounters[4].questID =  AddOn.faction == "Horde" and 52848 or 52847
+    AddOn.worldBosses[5].encounters[8].encounterID = AddOn.faction == "Horde" and 2329 or 2345
+    AddOn.worldBosses[5].encounters[8].questID =  AddOn.faction == "Horde" and 54896 or 54895
+  elseif event == "ADDON_LOADED" and arg1 == "Blizzard_EncounterJournal" then
+    _G.EncounterJournal:HookScript("OnShow", UpdateFrames)
+    hooksecurefunc("EncounterJournal_ListInstances", UpdateFrames)
   elseif event == "BOSS_KILL" then
     RequestRaidInfo()
   elseif event == "UPDATE_INSTANCE_INFO" then
+    AddOn:RequestWarfrontInfo()
     AddOn:UpdateSavedInstances()
-    AddOn:UpdateFrames()
+    UpdateFrames()
   end
 end)

@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod(2377, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20191215174316")
-mod:SetCreatureID(160229)
+mod:SetRevision("20200129010828")
+mod:SetCreatureID(156575)
 mod:SetEncounterID(2328)
 mod:SetZone()
-mod:SetUsedIcons(1, 2, 3)
---mod:SetHotfixNoticeRev(20190716000000)--2019, 7, 16
---mod:SetMinSyncRevision(20190716000000)
+mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
+mod:SetHotfixNoticeRev(20200128000000)--2020, 1, 28
+mod:SetMinSyncRevision(20200128000000)
 --mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
@@ -25,7 +25,6 @@ mod:RegisterEventsInCombat(
 --	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
---TODO, see if heroic timers still faster. Considering mythic timers were same as normal, it may just be that timers same in all now. OR, mythic was bugged
 --TODO, add https://ptr.wowhead.com/spell=313198/void-touched when it's put in combat log
 --[[
 (ability.id = 312336 or ability.id = 316211) and type = "begincast"
@@ -38,31 +37,31 @@ local warnSummonRitualObelisk				= mod:NewCountAnnounce(306495, 2)
 local warnSoulFlay							= mod:NewTargetAnnounce(306311, 2)
 
 local specWarnVoidRitual					= mod:NewSpecialWarningCount(312336, false, nil, nil, 1, 2)--Option in, since only certain players may be assigned
-local specWarnAbyssalStrike					= mod:NewSpecialWarningStack(311551, nil, 1, nil, nil, 1, 6)
+local specWarnAbyssalStrike					= mod:NewSpecialWarningStack(311551, nil, 2, nil, nil, 1, 6)
 local specWarnAbyssalStrikeTaunt			= mod:NewSpecialWarningTaunt(311551, nil, nil, nil, 1, 2)
 local specWarnSoulFlay						= mod:NewSpecialWarningRun(306311, nil, nil, nil, 4, 2)
 local specWarnTorment						= mod:NewSpecialWarningDodgeCount(306208, nil, nil, nil, 2, 2)
 local specWarnTerrorWave					= mod:NewSpecialWarningInterruptCount(316211, "HasInterrupt", nil, nil, 1, 2)
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(270290, nil, nil, nil, 1, 8)
 
-local timerAbyssalStrikeCD					= mod:NewCDTimer(42.6, 311551, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 4)--42.9-47
+local timerAbyssalStrikeCD					= mod:NewCDTimer(40, 311551, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 3)--42.9-47
 local timerVoidRitualCD						= mod:NewNextCountTimer(79.7, 312336, nil, nil, nil, 5, nil, nil, nil, 1, 4)
-local timerSummonRitualObeliskCD			= mod:NewNextCountTimer(79.7, 306495, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
-local timerSoulFlayCD						= mod:NewCDTimer(46.7, 306319, nil, nil, nil, 3)
-local timerTormentCD						= mod:NewNextCountTimer(46.7, 306208, nil, nil, nil, 3, nil, nil, nil, 3, 4)
+--local timerSummonRitualObeliskCD			= mod:NewNextCountTimer(79.7, 306495, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
+local timerSoulFlayCD						= mod:NewCDTimer(57, 306319, nil, nil, nil, 3)--57 but will spell queue behind other spells
+local timerTormentCD						= mod:NewNextCountTimer(46.5, 306208, nil, nil, nil, 3, nil, nil, nil, 3, 4)
 
---local berserkTimer						= mod:NewBerserkTimer(600)
+local berserkTimer							= mod:NewBerserkTimer(600)
 
 --mod:AddRangeFrameOption(6, 264382)
 mod:AddInfoFrameOption(312406, true)
-mod:AddSetIconOption("SetIconOnVoidWoken", 312406, true, false, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnVoidWoken2", 312406, false, false, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnAdds", "ej21227", true, true, {4, 5, 6, 7, 8})
 
 mod.vb.ritualCount = 0
 mod.vb.obeliskCount = 0
 mod.vb.tormentCount = 0
+mod.vb.addIcon = 8
 local voidWokenTargets = {}
-local heroicTormentTimers = {20.5, 50.6, 29, 49.6, 30.2, 49.6, 31.1, 48.7}--Heroic
-local normalTormentTimers = {20.5, 71.8, 30.4, 65.7, 30.6, 65.6, 30.5}--Normal and mythic
 local castsPerGUID = {}
 
 local updateInfoFrame
@@ -108,38 +107,37 @@ function mod:OnCombatStart(delay)
 	self.vb.ritualCount = 0
 	self.vb.obeliskCount = 0
 	self.vb.tormentCount = 0
+	self.vb.addIcon = 8
 	table.wipe(voidWokenTargets)
 	table.wipe(castsPerGUID)
-	if self:IsHard() then
-		timerSummonRitualObeliskCD:Start(12-delay, 1)
-	end
-	timerAbyssalStrikeCD:Start(32.9-delay)--SUCCESS
-	if self:IsHeroic() then
-		timerSoulFlayCD:Start(14-delay)--SUCCESS
-		timerVoidRitualCD:Start(52.9-delay, 1)
+	--if self:IsHard() then
+	--	timerSummonRitualObeliskCD:Start(12-delay, 1)
+	--end
+	timerAbyssalStrikeCD:Start(30-delay)--START
+	if self:IsMythic() then
+		timerVoidRitualCD:Start(18.1-delay, 1)
+		timerSoulFlayCD:Start(24.9-delay)--SUCCESS
+		timerTormentCD:Start(49.6, 1)
 	else
 		timerSoulFlayCD:Start(18.5-delay)--SUCCESS
-		timerVoidRitualCD:Start(62-delay, 1)
+		timerTormentCD:Start(20.3, 1)
+		timerVoidRitualCD:Start(61.8-delay, 1)
 	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(OVERVIEW)
 		DBM.InfoFrame:Show(8, "function", updateInfoFrame, false, false)
 	end
-	if self.Options.NPAuraOnTerrorWave then
-		DBM:FireEvent("BossMod_EnableHostileNameplates")
-	end
+	berserkTimer:Start(900-delay)
 end
 
 function mod:OnCombatEnd()
+	table.wipe(castsPerGUID)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
 --	if self.Options.RangeFrame then
 --		DBM.RangeCheck:Hide()
 --	end
-	if self.Options.NPAuraOnTerrorWave then
-		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
-	end
 end
 
 --function mod:OnTimerRecovery()
@@ -150,16 +148,21 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 312336 then
 		self.vb.ritualCount = self.vb.ritualCount + 1
+		self.vb.addIcon = 8
 		if self.Options.SpecWarn312336count then
 			specWarnVoidRitual:Show(self.vb.ritualCount)
 			specWarnVoidRitual:Play("specialsoon")
 		else
 			warnVoidRitual:Show(self.vb.ritualCount)
 		end
-		timerVoidRitualCD:Start(self:IsHeroic() and 79.7 or 95.2, self.vb.ritualCount+1)
+		timerVoidRitualCD:Start(94.7, self.vb.ritualCount+1)
 	elseif spellId == 316211 then
 		if not castsPerGUID[args.sourceGUID] then
 			castsPerGUID[args.sourceGUID] = 0
+			if self.Options.SetIconOnAdds and self.vb.addIcon > 3 then--Only use up to 5 icons
+				self:ScanForMobs(args.sourceGUID, 2, self.vb.addIcon, 1, 0.2, 12)
+			end
+			self.vb.addIcon = self.vb.addIcon - 1
 		end
 		castsPerGUID[args.sourceGUID] = castsPerGUID[args.sourceGUID] + 1
 		local count = castsPerGUID[args.sourceGUID]
@@ -185,16 +188,29 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 311551 then
-		timerAbyssalStrikeCD:Start()
+		timerAbyssalStrikeCD:Start(self:IsMythic() and 20.6 or 40.5)
 	elseif spellId == 306319 then
-		timerSoulFlayCD:Start(self:IsHeroic() and 46.7 or 57.2)
+		timerSoulFlayCD:Start(57)
 	elseif spellId == 306208 then
 		self.vb.tormentCount = self.vb.tormentCount + 1
 		specWarnTorment:Show(self.vb.tormentCount)
 		specWarnTorment:Play("watchstep")
-		local timer = self:IsHeroic() and heroicTormentTimers[self.vb.tormentCount+1] or normalTormentTimers[self.vb.tormentCount+1]
-		if timer then
-			timerTormentCD:Start(timer, self.vb.tormentCount+1)
+		if self:IsMythic() then
+			if self.vb.tormentCount % 2 == 0 then
+				timerTormentCD:Start(63.4, self.vb.tormentCount+1)--63.4-65
+			else
+				timerTormentCD:Start(30.0, self.vb.tormentCount+1)--30-31
+			end
+		else
+			if self.vb.tormentCount == 1 then
+				timerTormentCD:Start(76.1, 2)
+			else
+				if self.vb.tormentCount % 2 == 0 then
+					timerTormentCD:Start(30.3, self.vb.tormentCount+1)
+				else
+					timerTormentCD:Start(64.1, self.vb.tormentCount+1)
+				end
+			end
 		end
 	end
 end
@@ -205,7 +221,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if not tContains(voidWokenTargets, args.destName) then
 			table.insert(voidWokenTargets, args.destName)
 		end
-		if self.Options.SetIconOnVoidWoken then
+		if self.Options.SetIconOnVoidWoken2 then
 			self:SetIcon(args.destName, #voidWokenTargets)
 		end
 	elseif spellId == 314179 then
@@ -213,10 +229,18 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 311551 then
 		local amount = args.amount or 1
 		if args:IsPlayer() then
-			specWarnAbyssalStrike:Show(amount)
-			specWarnAbyssalStrike:Play("stackhigh")
+			if amount >= 2 then
+				specWarnAbyssalStrike:Show(amount)
+				specWarnAbyssalStrike:Play("stackhigh")
+			end
 		else
-			if not UnitIsDeadOrGhost("player") then
+			local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+			local remaining
+			if expireTime then
+				remaining = expireTime-GetTime()
+			end
+			local timer = self:IsMythic() and 20.6 or 40.5
+			if not UnitIsDeadOrGhost("player") and (not remaining or remaining and remaining < timer) then
 				specWarnAbyssalStrikeTaunt:Show(args.destName)
 				specWarnAbyssalStrikeTaunt:Play("tauntboss")
 			else
@@ -237,7 +261,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 312406 then
 		tDeleteItem(voidWokenTargets, args.destName)
-		if self.Options.SetIconOnVoidWoken then
+		if self.Options.SetIconOnVoidWoken2 then
 			self:SetIcon(args.destName, 0)
 		end
 	end
@@ -260,15 +284,15 @@ do
 		if msg == L.ObeliskSpawn then--Localized backup only if simply scanning auto translated target doesn't work forever or in all locals
 			self.vb.obeliskCount = self.vb.obeliskCount + 1
 			warnSummonRitualObelisk:Show(self.vb.obeliskCount)
-			timerSummonRitualObeliskCD:Start(80, self.vb.obeliskCount+1)
+			--timerSummonRitualObeliskCD:Start(80, self.vb.obeliskCount+1)
 		end
 	end
 end
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 160937 then--TODO, FIXME
-		castsPerGUID[args.destGUID] = nil
+	if cid == 162432 then
+		--castsPerGUID[args.destGUID] = nil
 	end
 end
 

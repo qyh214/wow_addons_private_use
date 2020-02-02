@@ -1,16 +1,22 @@
-lightweight tag afc8df049ceec8cabda6924a85656734540ffce2 v1.3.2
+lightweight tag 3792a4e1df642e9cba2f5fd5ef5c7b67511e3118 v1.3.3
 Author:	Meivyn <meivyn@live.ca>
-Date:	Tue Jul 30 06:46:33 2019 -0400
+Date:	Tue Jan 14 12:34:28 2020 -0500
 
-commit afc8df049ceec8cabda6924a85656734540ffce2
+commit 3792a4e1df642e9cba2f5fd5ef5c7b67511e3118
 Author: Meivyn <meivyn@live.ca>
-Date:   Tue Jul 30 06:46:33 2019 -0400
+Date:   Tue Jan 14 12:34:28 2020 -0500
 
-    update: bump changelog
+    update: patch 8.3 and lot of refactoring
 
-commit 8aa7edb9c3d54f0082909bda04034b005ffd2a45
+commit 496c56a0119ae492f4ba66cf049c14431c05b3ff
 Author: Meivyn <meivyn@live.ca>
-Date:   Tue Jul 30 06:42:02 2019 -0400
+Date:   Thu Nov 7 04:39:08 2019 -0500
 
-    fix: incorrect warfront info
+    refactor: worldBosses update is only needed once on login
+
+commit b35487435d61cfdcea37ca17a22d168a93920828
+Author: Meivyn <meivyn@live.ca>
+Date:   Wed Aug 14 21:27:20 2019 -0400
+
+    fix: typo in The Stonecore instanceID
 

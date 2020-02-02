@@ -127,7 +127,11 @@ L["Automatic Rotation"] = "자동 회전"
 L["Avoidance (%)"] = "광역회피(%)"
 L["Avoidance Rating"] = "광역회피 등급"
 L["Back and Forth"] = "왕복"
+--[[Translation missing --]]
+L["Background"] = "Background"
 L["Background Color"] = "배경 색상"
+--[[Translation missing --]]
+L["Bar"] = "Bar"
 L["Bar Color"] = "바 색상"
 L["Battle.net Whisper"] = "Battle.net 귓속말"
 L["Battleground"] = "전장"
@@ -159,6 +163,8 @@ L["Buff"] = "강화 효과"
 L["Buffed/Debuffed"] = "강화 효과/약화 효과"
 L["Can be used for e.g. checking if \"boss1target\" is the same as \"player\"."] = "예를 들어 사용할 수 있습니다. \"보스1타켓\"이 \"플레이어\"와 같은지 확인하십시오."
 L["Cancel"] = "취소"
+--[[Translation missing --]]
+L["Can't schedule timer with %i, due to a World of Warcraft Bug with high computer uptime. (Uptime: %i). Please restart your Computer."] = "Can't schedule timer with %i, due to a World of Warcraft Bug with high computer uptime. (Uptime: %i). Please restart your Computer."
 L["Cast"] = "시전"
 --[[Translation missing --]]
 L["Cast Bar"] = "Cast Bar"
@@ -198,8 +204,6 @@ L["Combat Log"] = "전투 기록"
 L["Combine all matches"] = "모든 경기 결합"
 L["Conditions"] = "조건"
 L["Contains"] = "포함"
---[[Translation missing --]]
-L["Continue Without Repairing"] = "Continue Without Repairing"
 L["Cooldown"] = "재사용 대기시간"
 L["Cooldown Progress (Equipment Slot)"] = "재사용 대기시간 진행 (장비 칸)"
 L["Cooldown Progress (Item)"] = "재사용 대기시간 진행 (아이템)"
@@ -248,6 +252,10 @@ L["Destination In Group"] = "대상이 속한 파티"
 L["Destination Name"] = "대상 이름"
 --[[Translation missing --]]
 L["Destination NPC Id"] = "Destination NPC Id"
+--[[Translation missing --]]
+L["Destination Object Type"] = "Destination Object Type"
+--[[Translation missing --]]
+L["Destination Reaction"] = "Destination Reaction"
 L["Destination Unit"] = "대상 유닛"
 L["Disease"] = "질병"
 L["Dispel"] = "무효화"
@@ -287,8 +295,12 @@ L["Enchant Name or ID"] = "Enchant Name or ID"
 L["Encounter ID(s)"] = "교전 ID(s)"
 L["Energize"] = "마력 얻음"
 L["Enrage"] = "격노"
+--[[Translation missing --]]
+L["Enter static or relative values with %"] = "Enter static or relative values with %"
 L["Entering"] = "입장"
 L["Entering/Leaving Combat"] = "전투 시작/종료"
+--[[Translation missing --]]
+L["Entry Order"] = "Entry Order"
 L["Environment Type"] = "환경 종류"
 L["Environmental"] = "환경"
 L["Equipment Set"] = "장비 세트"
@@ -320,6 +332,8 @@ L["First"] = "첫 번째"
 L["First Value of Tooltip Text"] = "툴팁 문자의 첫 번째 값"
 L["Fishing Lure / Weapon Enchant (Old)"] = "낚시 미끼 / 무기 마법부여 (구)"
 L["Fixed"] = "고정됨"
+--[[Translation missing --]]
+L["Fixed Names"] = "Fixed Names"
 --[[Translation missing --]]
 L["Fixed Size"] = "Fixed Size"
 L["Flash"] = "반짝임"
@@ -354,6 +368,8 @@ L["Group %s"] = "%s 그룹"
 L["Group Arrangement"] = "그룹 편성"
 L["Grow"] = "성장"
 L["GTFO Alert"] = "GTFO 경보"
+--[[Translation missing --]]
+L["Guardian"] = "Guardian"
 L["Guild"] = "길드"
 L["Has Target"] = "대상 있음"
 L["Has Vehicle UI"] = "차량 UI가 있을 때"
@@ -376,6 +392,8 @@ L["Hostile"] = "적대적"
 L["Hostility"] = "적대성"
 L["Humanoid"] = "인간형"
 L["Hybrid"] = "복합"
+--[[Translation missing --]]
+L["Icon"] = "Icon"
 L["Icon Color"] = "아이콘 색상"
 L["Icon Desaturate"] = "아이콘 채도감소(흑백)"
 L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/wa2!"] = "추가 지원이 필요하면 GitHub에서 티켓을 열거나 Discord에서 https://discord.gg/wa2 를 방문하십시오!"
@@ -388,7 +406,6 @@ L["Immune"] = "면역"
 L["Import"] = "가져오기"
 L["Import as Copy"] = "복사본 가져 오기"
 L["Import as Update"] = "업데이트 가져 오기"
-L["Import disabled"] = "가져 오기 사용 중지"
 L["Import Group"] = "그룹 가져오기"
 L["Import in progress"] = "진행 중인 가져 오기"
 --[[Translation missing --]]
@@ -543,9 +560,13 @@ L["Note: 'Hide Alone' is not available in the new aura tracking system. A load o
 --[[Translation missing --]]
 L["Note: The available text replacements for multi triggers match the normal triggers now."] = "Note: The available text replacements for multi triggers match the normal triggers now."
 --[[Translation missing --]]
-L["Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate."] = "Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate."
+L["Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate. Range checking capabilities depend on your current class and known abilities as well as the type of unit being checked. Some of the ranges may also not work with certain NPCs.|n|n|cFFAAFFAAFriendly Units:|r %s|n|cFFFFAAAAHarmful Units:|r %s|n|cFFAAAAFFMiscellanous Units:|r %s"] = "Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate. Range checking capabilities depend on your current class and known abilities as well as the type of unit being checked. Some of the ranges may also not work with certain NPCs.|n|n|cFFAAFFAAFriendly Units:|r %s|n|cFFFFAAAAHarmful Units:|r %s|n|cFFAAAAFFMiscellanous Units:|r %s"
+--[[Translation missing --]]
+L["NPC"] = "NPC"
 L["Number"] = "횟수"
 L["Number Affected"] = "영향 받은 횟수"
+--[[Translation missing --]]
+L["Object"] = "Object"
 L["Officer"] = "길드관리자"
 --[[Translation missing --]]
 L["Offset Timer"] = "Offset Timer"
@@ -619,6 +640,8 @@ L["Pulse"] = "맥박"
 L["PvP Flagged"] = "PvP 활성"
 L["PvP Talent %i"] = "PvP 특성 %i"
 L["PvP Talent selected"] = "선택된 명예 특성"
+--[[Translation missing --]]
+L["Queued Action"] = "Queued Action"
 L["Radius"] = "반경"
 L["Raid"] = "공격대"
 L["Raid Warning"] = "공격대 경보"
@@ -631,9 +654,15 @@ L["Receiving display information"] = "디스플레이 정보 수신 중"
 L["Reflect"] = "반사함"
 L["Region type %s not supported"] = "영역 유형 %s|1은;는; 지원되지 않습니다"
 L["Relative"] = "상대적"
+--[[Translation missing --]]
+L["Relative X-Offset"] = "Relative X-Offset"
+--[[Translation missing --]]
+L["Relative Y-Offset"] = "Relative Y-Offset"
 L["Remaining Duration"] = "남은 지속시간"
 L["Remaining Time"] = "남은 시간"
 L["Remove Obsolete Auras"] = "쓸모없는 효과를 제거"
+--[[Translation missing --]]
+L["Repair"] = "Repair"
 L["Repeat"] = "반복"
 L["Requested display does not exist"] = "요청한 디스플레이가 존재하지 않습니다"
 L["Requested display not authorized"] = "요청한 디스플레이가 올바르지 않습니다"
@@ -678,8 +707,6 @@ L["Role"] = "Role"
 L["Rotate Left"] = "왼쪽으로 회전"
 L["Rotate Right"] = "오른쪽으로 회전"
 L["Run Custom Code"] = "사용자 정의 코드 실행"
---[[Translation missing --]]
-L["Run the repair tool"] = "Run the repair tool"
 L["Rune"] = "룬"
 L["Rune #1"] = "룬 #1"
 L["Rune #2"] = "룬 #2"
@@ -748,7 +775,11 @@ L["Source In Group"] = "행위자가 속한 파티"
 L["Source Name"] = "행위자 이름"
 --[[Translation missing --]]
 L["Source NPC Id"] = "Source NPC Id"
+--[[Translation missing --]]
+L["Source Object Type"] = "Source Object Type"
 L["Source Raid Mark"] = "행위자 공격대 징표"
+--[[Translation missing --]]
+L["Source Reaction"] = "Source Reaction"
 L["Source Unit"] = "행위자 유닛"
 L["Source: "] = "출처:"
 L["Space"] = "공간"
@@ -856,6 +887,8 @@ L["Total Units"] = "총 유닛"
 L["Totem"] = "토템"
 L["Totem #%i"] = "토템 #%i"
 L["Totem Name"] = "토템 이름"
+--[[Translation missing --]]
+L["Totem Name Pattern Match"] = "Totem Name Pattern Match"
 L["Totem Number"] = "토템 번호"
 L["Track Cooldowns"] = "재사용 대기시간 추적"
 --[[Translation missing --]]

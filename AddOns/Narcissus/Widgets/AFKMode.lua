@@ -34,3 +34,9 @@ local function NullifyEvent(frame)
     if not frame then   return; end
     frame:SetScript("OnEvent", function()   return; end);
 end
+
+--[[
+/run print(A1=DressUpFrame.ModelScene:GetPlayerActor():GetModelFileID())
+1968587 Straight
+917116  Stoop
+--]]

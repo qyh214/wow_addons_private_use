@@ -1,12 +1,13 @@
-tag f5d842236ad2ca7a730cb1d3cd955e7b94364f90 3.4.0
+tag 9d2e08906429dcf554725cbef699b9646702f659 3.4.3
 Author:	Feraldin <nickbock@hoarder.bocky.nl>
-Date:	Wed Oct 2 17:07:45 2019 +0200
+Date:	Wed Jan 22 09:11:04 2020 +0100
 
-Patch update
+3.4.3
+* Version bumb due to Curse not picking up the tag.
 
-commit e5fc353c679b412c590f55eec13e108a8e23ce67
+commit fbf94cf300e899b77916d45c36cdc1a77d52fcea
 Author: Nick <git@bockmeulen.nl>
-Date:   Wed Oct 2 17:07:05 2019 +0200
+Date:   Wed Jan 22 09:10:41 2020 +0100
 
-    patch update
+    version bumb 3.4.3
 

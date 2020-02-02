@@ -1,5 +1,4 @@
 <Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
-    <Script file="TitleManagerDB.lua"/>
 	<Script file="TitleManager.lua"/>
     <Button name="OptionalTitleTemplate" registerForClicks="LeftButtonUp, RightButtonUp" virtual="true">
 		<Size>

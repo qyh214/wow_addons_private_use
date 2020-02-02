@@ -1,21 +1,21 @@
 local mod	= DBM:NewMod(2372, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20191213230407")
+mod:SetRevision("20200129181739")
 mod:SetCreatureID(157253, 157254)--Ka'zir and Tek'ris
 mod:SetEncounterID(2333)
 mod:SetZone()
-mod:SetUsedIcons(1, 2, 3, 4, 5)--Refine when max number of mythic Volatile Eruption is known
+mod:SetUsedIcons(1, 2, 3, 4, 5, 6)--Refine when max number of mythic Volatile Eruption is known
 mod:SetHotfixNoticeRev(20191109000000)--2019, 11, 09
 mod:SetMinSyncRevision(20191109000000)
---mod.respawnTime = 29
+mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 307569 307213 307201 310340 307968 307232 313652 307582",
-	"SPELL_CAST_SUCCESS 308178 308227 307232 312868 312710",
-	"SPELL_AURA_APPLIED 307637 313460",
+	"SPELL_CAST_SUCCESS 308178 307232 312868 312710 307635",
+	"SPELL_AURA_APPLIED 307637 313460 307377 307227",
 --	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED 307637"
 --	"SPELL_PERIODIC_DAMAGE",
@@ -28,10 +28,12 @@ mod:RegisterEventsInCombat(
 --TODO, if https://ptr.wowhead.com/spell=313129/mindless applies to players, nameplate aura it
 --TODO, GTFO shit on the ground
 --TODO, warn for fixate (308360)?
---TODO, normal timers were RADICALLY different from heroic, to point that makes me think they probably changed up fight some. Heroic timers probably need redoing
+--TODO, normal/lfr/mythic timers were RADICALLY different from heroic, but all the same. Heroic timers are VERY likely changed, so this mod assumes they are. if not, roll back to old heroic timers
+--TODO, related to above, if all 4 difficulties have same timers now (minus heroic+ mechanics), combine the tables and cleanup mod
 --[[
 (ability.id = 307569 or ability.id = 307213 or ability.id = 307201 or ability.id = 310340 or ability.id = 313652 or ability.id = 307968 or ability.id = 307232 or ability.id = 307582) and type = "begincast"
- or (ability.id = 308178 or ability.id = 308227 or ability.id = 307232 or ability.id = 312868 or ability.id = 312710) and type = "cast"
+ or (ability.id = 308178 or ability.id = 307635 or ability.id = 307232 or ability.id = 312868 or ability.id = 312710) and type = "cast"
+ or (ability.id = 307377 or ability.id = 307227) and type = "applybuff"
 --]]
 --General
 local warnDarkRecon							= mod:NewCastAnnounce(307569, 4)
@@ -54,26 +56,27 @@ local specWarnEchoingVoid					= mod:NewSpecialWarningMoveAway(307232, nil, nil, 
 local specWarnEtropicEhco					= mod:NewSpecialWarningDodge(313692, nil, nil, nil, 3, 2)--Mythic
 
 --General
-local timerTekrissHiveControlCD				= mod:NewNextTimer(69.6, 307213, nil, nil, nil, 6, nil, nil, nil, 1, 5)
-local timerKazirsHiveControlCD				= mod:NewNextTimer(69.6, 307201, nil, nil, nil, 6, nil, nil, nil, 1, 5)
+local timerTekrissHiveControlCD				= mod:NewNextTimer(98.7, 307213, nil, nil, nil, 6, nil, nil, nil, 1, 5)
+local timerKazirsHiveControlCD				= mod:NewNextTimer(98.7, 307201, nil, nil, nil, 6, nil, nil, nil, 1, 5)
+local timerDarkReconCast					= mod:NewNextTimer(10, 307569, nil, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON, nil, 3, 4)
 --Ka'zir
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20710))
-local timerVolatileEruptionCD				= mod:NewNextTimer(84, 307583, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
-local timerSpawnAcidicAqirCD				= mod:NewNextTimer(84, 310340, nil, nil, nil, 3)
-local timerMindNumbingNovaCD				= mod:NewNextTimer(7.3, 313652, nil, "HasInterrupt", nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
-local timerFlyerSwarmCD						= mod:NewNextTimer(120, 312710, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
+local timerVolatileEruptionCD				= mod:NewNextCountTimer(84, 307583, 155037, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerSpawnAcidicAqirCD				= mod:NewNextCountTimer(84, 310340, nil, nil, nil, 3)
+local timerMindNumbingNovaCD				= mod:NewNextCountTimer(7.3, 313652, 242396, "HasInterrupt", nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerFlyerSwarmCD						= mod:NewNextCountTimer(120, 312710, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
 --Tek'ris
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20713))
-local timerAcceleratedEvolutionCD			= mod:NewNextTimer(84, 307637, nil, nil, nil, 3, nil, DBM_CORE_TANK_ICON)
-local timerNullificationBlastCD				= mod:NewNextTimer(84, 307968, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerEchoingVoidCD					= mod:NewNextTimer(84, 307232, nil, nil, nil, 2)
-local timerDronesCD							= mod:NewNextTimer(120, 312868, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
+local timerAcceleratedEvolutionCD			= mod:NewNextCountTimer(84, 307637, 75610, nil, nil, 3, nil, DBM_CORE_TANK_ICON)
+local timerNullificationBlastCD				= mod:NewNextCountTimer(84, 307968, 158259, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
+local timerEchoingVoidCD					= mod:NewNextCountTimer(84, 307232, nil, nil, nil, 2, nil, nil, nil, 3, 4)
+local timerDronesCD							= mod:NewNextCountTimer(120, 312868, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
 
 --local berserkTimer						= mod:NewBerserkTimer(600)
 
 mod:AddRangeFrameOption(6, 307232)--While 4 yards is supported, we want wiggle room
 --mod:AddInfoFrameOption(275270, true)
-mod:AddSetIconOption("SetIconOnAdds", 307637, true, true, {1, 2, 3, 4, 5})
+mod:AddSetIconOption("SetIconOnAdds", 307637, true, true, {1, 2, 3, 4, 5, 6})
 mod:AddNamePlateOption("NPAuraOnVolatileEruption", 307583)
 mod:AddNamePlateOption("NPAuraOnAcceleratedEvolution", 307637)
 
@@ -88,115 +91,89 @@ mod.vb.AcidicAqirCount = 0
 mod.vb.DronesCount = 0
 mod.vb.VolatileEruptionCount = 0
 mod.vb.difficultyName = "None"
---local seenAdds = {}
---Timers (at least on heroic) have a point where you can just loop them, but since the loops don't match with other difficulties, it's a bit ugly to do
---Better to just hard code timers up until berserk as much as possible and not rely on loops that can change at any time
+local seenAdds = {}
 local allTimers = {
-	["lfr"] = {--Unknown, so normal timers are used for now
+	["lfr"] = {--Unknown, so normal timers are used for now, might be slightly slower and need to divide normal timers by 0.9379 to get them
 		--Ka'zir
 		----Mind-Numbing Nova
-		[313652] = {12.0, 12.0, 12.0, 15.0, 12.0, 17.5, 11.5, 12.0, 12.0, 11.9, 12.0, 12.0, 12.0, 12.0, 12.0, 11.9, 12.0, 27.0, 12.0, 12.0, 12.0, 12.0, 18.0, 12.0, 12.9},
+		[313652] = {16.0, 16.0, 16.0, 20.0, 16.0, 23.3, 15.2, 16.0, 16.0, 16.0, 16.0, 16.0, 16.0, 16.0, 16.0, 16.0, 16.0, 36.0, 16.0, 16.0, 16.0, 16.0, 23.9, 16.0, 17.3},
 		----Spawn Acidic Aqir
-		[310340] = {45.0, 52.0, 48.0, 50.0, 50.1, 49.9},
+		[310340] = {60.0, 69.3, 63.9, 66.6, 66.6, 66.6},
 		----Volatile Eruption (SUCCESS)
-		[308178] = {},--Should exist on normal based on journal, but wasn't cast?
+		[308178] = {},--Not on Normal/LFR
 		----Call Flyer Swarm (SUCCESS)
-		[312710] = {50.0, 70.1, 75.0, 60.0},
+		[312710] = {67.7, 108.3, 98.3, 78.9},
 		--Tek'ris
 		----Nullification Blast
-		[307968] = {22.0, 20.0, 20.0, 40.0, 20.0, 20.0, 21.0, 20.0, 19.9, 24.0, 20.0, 20.0, 20.0, 19.9, 20.0},
-		----Summon Drones Periodic (SUCCESS)
-		[312868] = {15.0, 70.0, 75.1, 73.0, 77.1},
+		[307968] = {28.0, 29.3, 25.2, 53.3, 26.6, 26.6, 27.9, 26.6, 26.6, 31.9, 26.6, 26.6, 26.6, 26.6, 26.6},
 		----Accelerated Evolution (SUCCESS)
-		[308227] = {},--Don't exist on Normal
+		[307635] = {},--Not on Normal/LFR
 		----Echoing Void
-		[307232] = {80.1, 30.0, 58.1, 52.0, 55.0}
+		[307232] = {36, 70.6, 39.9, 77.3, 69.3, 73.3, 73.2},
+		----Summon Drones Periodic (SUCCESS)
+		[312868] = {21.3, 92.4, 101.2, 96.2, 103.6}
 	},
-	["normal"] = {--11-08-19 Timers (same as mythic minus volatile and accelerated)
+	["normal"] = {--(Heroic timers are just normal *0.9379 so I ported heroic timers back to normal by dividing them by 0.9379 and this checks out)
 		--Ka'zir
 		----Mind-Numbing Nova
-		[313652] = {12.0, 12.0, 12.0, 15.0, 12.0, 17.5, 11.5, 12.0, 12.0, 11.9, 12.0, 12.0, 12.0, 12.0, 12.0, 11.9, 12.0, 27.0, 12.0, 12.0, 12.0, 12.0, 18.0, 12.0, 12.9},
+		[313652] = {16.0, 16.0, 16.0, 20.0, 16.0, 23.3, 15.2, 16.0, 16.0, 16.0, 16.0, 16.0, 16.0, 16.0, 16.0, 16.0, 16.0, 36.0, 16.0, 16.0, 16.0, 16.0, 23.9, 16.0, 17.3},
 		----Spawn Acidic Aqir
-		[310340] = {45.0, 52.0, 48.0, 50.0, 50.1, 49.9},
+		[310340] = {60.0, 69.3, 63.9, 66.6, 66.6, 66.6},
 		----Volatile Eruption (SUCCESS)
-		[308178] = {},--Should exist on normal based on journal, but wasn't cast?
+		[308178] = {},--Not on Normal/LFR
 		----Call Flyer Swarm (SUCCESS)
-		[312710] = {50.0, 70.1, 75.0, 60.0},
+		[312710] = {67.7, 108.3, 98.3, 78.9},
 		--Tek'ris
 		----Nullification Blast
-		[307968] = {22.0, 20.0, 20.0, 40.0, 20.0, 20.0, 21.0, 20.0, 19.9, 24.0, 20.0, 20.0, 20.0, 19.9, 20.0},
-		----Summon Drones Periodic (SUCCESS)
-		[312868] = {15.0, 70.0, 75.1, 73.0, 77.1},
+		[307968] = {28.0, 29.3, 25.2, 53.3, 26.6, 26.6, 27.9, 26.6, 26.6, 31.9, 26.6, 26.6, 26.6, 26.6, 26.6},
 		----Accelerated Evolution (SUCCESS)
-		[308227] = {},--Don't exist on Normal
+		[307635] = {},--Not on Normal/LFR
 		----Echoing Void
-		[307232] = {80.1, 30.0, 58.1, 52.0, 55.0}
+		[307232] = {36, 70.6, 39.9, 77.3, 69.3, 73.3, 73.2},
+		----Summon Drones Periodic (SUCCESS)
+		[312868] = {21.3, 92.4, 101.2, 96.2, 103.6}
 	},
-	["heroic"] = {--Unknown, so mythic timers are used for now
+	["heroic"] = {--UPDATED on Live Jan 21
 		--Ka'zir
 		----Mind-Numbing Nova
-		[313652] = {12.0, 12.0, 12.0, 15.0, 12.0, 17.5, 11.5, 12.0, 12.0, 11.9, 12.0, 12.0, 12.0, 12.0, 12.0, 11.9, 12.0, 27.0, 12.0, 12.0, 12.0, 12.0, 18.0, 12.0, 12.9},
+		[313652] = {15.0, 14.9, 15.0, 18.8, 15.0, 21.9, 14.3, 15.0, 15.0, 15.0, 15.0, 15.0, 15.0, 15.0, 15.0, 15.0, 15.0, 33.8, 15.0, 15.0, 15.0, 15.0, 22.5, 15.0, 16.3},
 		----Spawn Acidic Aqir
-		[310340] = {45.0, 52.0, 48.0, 50.0, 50.1, 49.9},
+		[310340] = {56.3, 65.0, 60.0, 62.5, 62.5, 62.5},
 		----Volatile Eruption (SUCCESS)
-		[308178] = {87.6},
+		[308178] = {110.0, 185.1},
 		----Call Flyer Swarm (SUCCESS)
-		[312710] = {50.0, 70.1, 75.0, 60.0},
+		[312710] = {63, 101.5, 92.3, 73.9},
 		--Tek'ris
 		----Nullification Blast
-		[307968] = {22.0, 20.0, 20.0, 40.0, 20.0, 20.0, 21.0, 20.0, 19.9, 24.0, 20.0, 20.0, 20.0, 19.9, 20.0},
-		----Summon Drones Periodic (SUCCESS)
-		[312868] = {15.0, 70.0, 75.1, 73.0, 77.1},
+		[307968] = {26.3, 27.5, 23.7, 50.0, 25.0, 25.0, 26.2, 25.0, 25.0, 30.0, 25.0, 25.0, 25.0, 25.0, 25.0},
 		----Accelerated Evolution (SUCCESS)
-		[308227] = {17.7},
+		[307635] = {19.6, 181.2, 187.5},
 		----Echoing Void
-		[307232] = {80.1, 30.0, 58.1, 52.0, 55.0}
+		[307232] = {33.8, 66.2, 37.5, 72.5, 65.0, 68.8, 68.7},
+		----Summon Drones Periodic (SUCCESS)
+		[312868] = {20.2, 87.5, 93.9, 90.1, 97.2}
 	},
-	["mythic"] = {--11-22-19 Timers
+	["mythic"] = {--Mythic timers are heroic * 0.8
 		--Ka'zir
 		----Mind-Numbing Nova
-		[313652] = {12.0, 12.0, 12.0, 15.0, 12.0, 17.5, 11.5, 12.0, 12.0, 11.9, 12.0, 12.0, 12.0, 12.0, 12.0, 11.9, 12.0, 27.0, 12.0, 12.0, 12.0, 12.0, 18.0, 12.0, 12.9},
+		[313652] = {12.0, 12.0, 12.0, 15.0, 12.0, 17.5, 11.5, 12.0, 12.0, 12.0, 12.0, 12.0, 12.0, 12.0, 12.0, 12.0, 12.0, 27.0, 12.0, 12.0, 12.0, 12.0, 18.0, 12.0, 13.0},
 		----Spawn Acidic Aqir
-		[310340] = {45.0, 52.0, 48.0, 50.0, 50.1, 49.9},
+		[310340] = {45.0, 52.0, 48.0, 50.0, 50.0, 50.0},
 		----Volatile Eruption (SUCCESS)
-		[308178] = {87.6},
+		[308178] = {88.5, 148.1},
 		----Call Flyer Swarm (SUCCESS)
-		[312710] = {50.0, 70.1, 75.0, 60.0},
+		[312710] = {50.4, 81.2, 73.8, 59.1},
 		--Tek'ris
 		----Nullification Blast
-		[307968] = {22.0, 20.0, 20.0, 40.0, 20.0, 20.0, 21.0, 20.0, 19.9, 24.0, 20.0, 20.0, 20.0, 19.9, 20.0},
-		----Summon Drones Periodic (SUCCESS)
-		[312868] = {15.0, 70.0, 75.1, 73.0, 77.1},
+		[307968] = {22.1, 20.0, 20.0, 40.0, 20.0, 20.0, 21.0, 20.0, 20.0, 24.0, 20.0, 20.0, 20.0, 20.0, 20.0},
 		----Accelerated Evolution (SUCCESS)
-		[308227] = {17.7},
+		[307635] = {15.7, 145.0, 150},
 		----Echoing Void
-		[307232] = {80.1, 30.0, 58.1, 52.0, 55.0}
+		[307232] = {27.1, 53.0, 30.0, 58.0, 52.0, 55.0, 54.9},
+		----Summon Drones Periodic (SUCCESS)
+		[312868] = {16.1, 70, 75.1, 72, 77.7}
 	},
 }
-
---[[
-OLD HEROIC 10-26-19 Timers
-	["heroic"] = {--10-26-19 Timers (probably now wrong and same as mythic)
-		--Ka'zir
-		----Mind-Numbing Nova
-		[313652] = {9.8, 50.1, 39.9, 45.0, 45.3, 100.2, 50.2, 39.8, 45.0, 45.0},
-		----Spawn Acidic Aqir
-		[310340] = {14.9, 30.1, 39.8, 20.0, 25.2, 34.8, 30.0, 100.5, 29.9, 40.1, 20.0, 24.8, 35.2, 29.9},
-		----Volatile Eruption (SUCCESS)
-		[308178] = {111.9, 108.5, 172.0},
-		----Call Flyer Swarm (SUCCESS)
-		[312710] = {121.9, 37.9, 95.0, 147.5, 38.1},
-		--Tek'ris
-		----Nullification Blast
-		[307968] = {26.9, 28.0, 44.9, 25.0, 25.0, 32.0, 17.9, 25.0, 82.5, 28.2, 44.9, 25.0, 25.0, 32.1, 17.9},
-		----Summon Drones Periodic (SUCCESS)
-		[312868] = {34.9, 76.5, 108.5, 95.4, 76.5},
-		----Accelerated Evolution (SUCCESS)
-		[308227] = {36.0, 280.3},
-		----Echoing Void
-		[307232] = {63.9, 16.0, 39.9, 45.0, 95.0, 84.5, 16.0, 40.0, 45.2}
-	},
---]]
 
 function mod:OnCombatStart(delay)
 	self.vb.interruptCount = 0
@@ -209,43 +186,53 @@ function mod:OnCombatStart(delay)
 	self.vb.AcidicAqirCount = 0
 	self.vb.DronesCount = 0
 	self.vb.VolatileEruptionCount = 0
-	--table.wipe(seenAdds)
+	table.wipe(seenAdds)
 	--Tek'ris's Hivemind Control instantly on pull
 	if self:IsMythic() then
 		self.vb.difficultyName = "mythic"
-		timerMindNumbingNovaCD:Start(12-delay, 1)
-		timerSpawnAcidicAqirCD:Start(45-delay, 1)
-		timerFlyerSwarmCD:Start(50-delay, 1)
-		timerVolatileEruptionCD:Start(87.6-delay, 1)
+		--Ka'zir
+		timerMindNumbingNovaCD:Start(12.1-delay, 1)
+		timerSpawnAcidicAqirCD:Start(45.1-delay, 1)
+		--timerFlyerSwarmCD:Start(59-delay, 1)
+		timerVolatileEruptionCD:Start(88.6-delay, 1)
 		--Tek'ris
-		timerDronesCD:Start(15-delay, 1)
-		timerAcceleratedEvolutionCD:Start(17.7-delay, 1)
-		timerNullificationBlastCD:Start(22-delay, 1)
-		timerEchoingVoidCD:Start(80.1-delay, 1)
+		timerDronesCD:Start(16.1-delay, 1)
+		timerAcceleratedEvolutionCD:Start(15.7-delay, 1)
+		timerNullificationBlastCD:Start(22.1-delay, 1)
+		timerEchoingVoidCD:Start(27.1-delay, 1)
 	elseif self:IsHeroic() then
 		self.vb.difficultyName = "heroic"
 		--Ka'zir
-		timerMindNumbingNovaCD:Start(9.8-delay, 1)
-		timerSpawnAcidicAqirCD:Start(14.9-delay, 1)
-		timerVolatileEruptionCD:Start(111.9-delay, 1)
-		timerFlyerSwarmCD:Start(121.9-delay, 1)
+		timerMindNumbingNovaCD:Start(15-delay, 1)
+		timerSpawnAcidicAqirCD:Start(56.3-delay, 1)
+		timerFlyerSwarmCD:Start(63-delay, 1)
+		timerVolatileEruptionCD:Start(110-delay, 1)
 		--Tek'ris
-		timerNullificationBlastCD:Start(26.9-delay, 1)
-		timerDronesCD:Start(34.9-delay, 1)
-		timerAcceleratedEvolutionCD:Start(36-delay, 1)
-		timerEchoingVoidCD:Start(63.9-delay, 1)
+		timerDronesCD:Start(20.2-delay, 1)
+		timerAcceleratedEvolutionCD:Start(19.6-delay, 1)
+		timerNullificationBlastCD:Start(26.3-delay, 1)
+		timerEchoingVoidCD:Start(33.8-delay, 1)
 	elseif self:IsNormal() then
 		self.vb.difficultyName = "normal"
-		timerMindNumbingNovaCD:Start(12-delay, 1)
-		timerSpawnAcidicAqirCD:Start(45-delay, 1)
+		timerMindNumbingNovaCD:Start(16-delay, 1)
+		timerSpawnAcidicAqirCD:Start(60-delay, 1)
 		--timerVolatileEruptionCD:Start(111.9-delay, 1)--Never Seen in normal in journal
-		timerFlyerSwarmCD:Start(50-delay, 1)
+		timerFlyerSwarmCD:Start(67.7-delay, 1)
 		--Tek'ris
-		timerDronesCD:Start(15-delay, 1)
-		timerNullificationBlastCD:Start(22-delay, 1)
-		timerEchoingVoidCD:Start(80.1-delay, 1)
+		timerDronesCD:Start(21-delay, 1)
+		timerNullificationBlastCD:Start(28-delay, 1)
+		timerEchoingVoidCD:Start(36-delay, 1)
 	else--LFR
 		self.vb.difficultyName = "lfr"
+		--Copied from normal for now
+		timerMindNumbingNovaCD:Start(16-delay, 1)
+		timerSpawnAcidicAqirCD:Start(60-delay, 1)
+		--timerVolatileEruptionCD:Start(111.9-delay, 1)--Never Seen in normal in journal
+		timerFlyerSwarmCD:Start(67.7-delay, 1)
+		--Tek'ris
+		timerDronesCD:Start(21-delay, 1)
+		timerNullificationBlastCD:Start(28-delay, 1)
+		timerEchoingVoidCD:Start(36-delay, 1)
 	end
 	if self.Options.NPAuraOnVolatileEruption or self.Options.NPAuraOnAcceleratedEvolution then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
@@ -268,14 +255,15 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 307569 then
 		warnDarkRecon:Show()
+		timerDarkReconCast:Start()
 	elseif spellId == 307213 then
 		specWarnTekrissHiveControl:Show(L.Together)
 		specWarnTekrissHiveControl:Play("phasechange")
-		timerKazirsHiveControlCD:Start(self:IsHard() and 69.6 or 74.1)
+		timerKazirsHiveControlCD:Start(self:IsMythic() and 73.9 or self:IsHeroic() and 92.4 or 98.7)
 	elseif spellId == 307201 then
 		specWarnKazirsHiveControl:Show(L.Apart)
 		specWarnKazirsHiveControl:Play("phasechange")
-		timerTekrissHiveControlCD:Start(self:IsHard() and 69.6 or 74.1)
+		timerTekrissHiveControlCD:Start(self:IsMythic() and 73.9 or self:IsHeroic() and 92.4 or 98.7)
 	elseif spellId == 310340 then
 		self.vb.AcidicAqirCount = self.vb.AcidicAqirCount + 1
 		specWarnSpawnAcidicAqir:Show(self.vb.AcidicAqirCount)
@@ -323,19 +311,27 @@ function mod:SPELL_CAST_START(args)
 		if self.Options.NPAuraOnVolatileEruption then
 			DBM.Nameplate:Show(true, args.sourceGUID, spellId, nil, 20)
 		end
+		if self.Options.SetIconOnAdds then
+			self:ScanForMobs(args.sourceGUID, 2, self.vb.addIcon, 1, 0.2, 12)
+		end
+		self.vb.addIcon = self.vb.addIcon + 1
+		if self.vb.addIcon == 7 then
+			self.vb.addIcon = 1
+		end
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 308178 then
+		--self.vb.addIcon = 1
 		self.vb.VolatileEruptionCount = self.vb.VolatileEruptionCount + 1
 		local timer = allTimers[self.vb.difficultyName][spellId][self.vb.VolatileEruptionCount+1]
 		if timer then
 			timerVolatileEruptionCD:Start(timer, self.vb.VolatileEruptionCount+1)
 		end
-	elseif spellId == 308227 then
-		self.vb.addIcon = 1
+	elseif spellId == 307635 then
+		--self.vb.addIcon = 1
 		self.vb.AccEvolutionCount = self.vb.AccEvolutionCount + 1
 		local timer = allTimers[self.vb.difficultyName][spellId][self.vb.AccEvolutionCount+1]
 		if timer then
@@ -350,17 +346,19 @@ function mod:SPELL_CAST_SUCCESS(args)
 			DBM.RangeCheck:Hide()
 		end
 	elseif spellId == 312868 then--Summon Drones Periodic
-		self.vb.DronesCount = self.vb.DronesCount + 1
-		local timer = allTimers[self.vb.difficultyName][spellId][self.vb.DronesCount+1]
-		if timer then
-			timerDronesCD:Start(timer, self.vb.DronesCount+1)
-		end
+		DBM:Debug("Summon Drones Periodic is back in combat Log, tell MysticalOS")
+		--self.vb.DronesCount = self.vb.DronesCount + 1
+		--local timer = allTimers[self.vb.difficultyName][spellId][self.vb.DronesCount+1]
+		--if timer then
+		--	timerDronesCD:Start(timer, self.vb.DronesCount+1)
+		--end
 	elseif spellId == 312710 then--Call Flyer Swarm
-		self.vb.FlyerSwarmCount = self.vb.FlyerSwarmCount + 1
-		local timer = allTimers[self.vb.difficultyName][spellId][self.vb.FlyerSwarmCount+1]
-		if timer then
-			timerFlyerSwarmCD:Start(timer, self.vb.FlyerSwarmCount+1)
-		end
+		DBM:Debug("Call Flyer Swarm is back in combat Log, tell MysticalOS")
+		--self.vb.FlyerSwarmCount = self.vb.FlyerSwarmCount + 1
+		--local timer = allTimers[self.vb.difficultyName][spellId][self.vb.FlyerSwarmCount+1]
+		--if timer then
+		--	timerFlyerSwarmCD:Start(timer, self.vb.FlyerSwarmCount+1)
+		--end
 	end
 end
 
@@ -372,17 +370,20 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.NPAuraOnAcceleratedEvolution then
 			DBM.Nameplate:Show(true, args.destGUID, spellId)
 		end
-		if self:AntiSpam(20, 1) then--TODO, better add icon reset location?
-			self.vb.addIcon = 1
-		end
+		--if self:AntiSpam(20, 1) then--TODO, better add icon reset location?
+		--	self.vb.addIcon = 1
+		--end
 		if self.Options.SetIconOnAdds then
 			self:ScanForMobs(args.destGUID, 2, self.vb.addIcon, 1, 0.2, 12)
 		end
 		self.vb.addIcon = self.vb.addIcon + 1
+		if self.vb.addIcon == 7 then
+			self.vb.addIcon = 1
+		end
 	elseif spellId == 313460 then
 		warnNullification:CombinedShow(0.5, args.destName)
-	--Backup add detection in case they remove the add scripts from combat log
-	--[[elseif (spellId == 307377 or spellId == 307227) and not seenAdds[args.destGUID] then--Void Infusion/Regeneration
+	--Backup add detection because they removed the add scripts from combat log
+	elseif (spellId == 307377 or spellId == 307227) and not seenAdds[args.destGUID] then--Void Infusion/Regeneration
 		seenAdds[args.destGUID] = true
 		local cid = self:GetCIDFromGUID(args.destGUID)
 		if cid == 157256 and self:AntiSpam(10, 10) then--Aqir Darter
@@ -397,7 +398,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			if timer then
 				timerDronesCD:Start(timer, self.vb.DronesCount+1)
 			end
-		end--]]
+		end
 	end
 end
 --mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED

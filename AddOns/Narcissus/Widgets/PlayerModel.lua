@@ -17,7 +17,7 @@ local defaultZ = -0.275;
 local defaultY = 0.4;
 local startY = 2.5;
 local endFacing = -pi/8;
-local animationID_Max = 1480 - 1;
+local animationID_Max = 1484 - 1;
 local NUM_MAX_ACTORS = 8;
 local IndexButtonPosition = {
 	1, 2, 3, 4, 5, 6, 7, 8
@@ -151,8 +151,8 @@ local TranslateValue_Male = {
 	[36] = {[1] = {0, 1.17, -0.55},
 				[2] = {-0.3, 1.52, -0.28}},		--36 Mag'har
 
-	[35] = {[1] = {0, 0.60, 0.07},
-				[2] = {-0.5, 0.85, 0.236}},		--35 Vulpera √
+	[35] = {[1] = {0.3, 0.73, 0.111},
+				[2] = {0, 0.95, 0.2375}},		--35 Vulpera √
 }
 
 local TranslateValue_Female = {
@@ -436,9 +436,14 @@ local function Narci_CharacterModelFrame_OnShow(self)
 	end
 	local ModelSettings = Narci_ModelSettings;
 	ModelSettings:Show();
+	ModelSettings.FadeIn:Stop();
+	if not ModelSettings:IsMouseOver() then
+		ModelSettings:SetAlpha(0);
+	end
 	C_Timer.After(1, function()
-		if not ModelSettings:IsMouseOver() then
-			FadeFrame(ModelSettings, 0.5, "IN");
+		if not ModelSettings:IsMouseOver(0, 0, -120, 0) then
+			--FadeFrame(ModelSettings, 0.5, "IN");
+			ModelSettings.FadeIn:Play();
 		end
 	end)
 end
@@ -559,6 +564,7 @@ function LightButton_UpdateFrame_OnUpdate(self)
 		Narci_ModelFrames[activeModelIndex]:SetLight(true, false, rX, rY, rZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB);
 	end
 end
+
 
 local PMAI = CreateFrame("Frame","Narci_PlayerModelAnimIn");
 PMAI:Hide();
@@ -1077,7 +1083,7 @@ Chroma Key Green :
 
 --- Show Alpha Channel ---
 
-local function ShowTextAlphaChannel(state)
+local function ShowTextAlphaChannel(state, doNotShowModel)
     local slotTable = Narci_Character.slotTable;
     if not (slotTable) then
         return;
@@ -1136,8 +1142,11 @@ local function ShowTextAlphaChannel(state)
 				Narci_ItemSlotButton_OnLoad(slotTable[i]);
 			end
 		end
-		Narci_ModelContainer:Show();
-		Narci_XmogNameFrame:Show();
+
+		if not doNotShowModel then
+			Narci_ModelContainer:Show();
+			Narci_XmogNameFrame:Show();
+		end
 	end
 end
 
@@ -1240,12 +1249,12 @@ local function ChangeHighlight(self)
 	end	
 end
 
-local function TextAlphaLayerButton_OnClick(self)
+local function SetTextAlphaLayerButtonVisual(self)
 	if Narci_PlayerModelLayerButton.AlphaButton.IsOn then
 		Narci_PlayerModelLayerButton.AlphaButton:Click();
 	end
 	ChangeHighlight(self);
-	ShowTextAlphaChannel(self.IsOn);
+
 	if self.IsOn then
 		FadeFrame(FullScreenAlphaChannel, 0.5, "IN");
 	else
@@ -1257,12 +1266,16 @@ local function TextAlphaLayerButton_OnClick(self)
 	end
 end
 
+local function TextAlphaLayerButton_OnClick(self)
+	SetTextAlphaLayerButtonVisual(self);
+	ShowTextAlphaChannel(self.IsOn);
+end
+
+
 local function TextAlphaLayerButton_OnHide(self)
 	if self.IsOn then
-		self.IsOn = false;
-		self:UnlockHighlight();
-		self:GetParent().Label:SetTextColor(0.72, 0.72, 0.72) --;
-		ShowTextAlphaChannel(false);
+		SetTextAlphaLayerButtonVisual(self);
+		ShowTextAlphaChannel(false, true);
 	end
 end
 
@@ -1587,8 +1600,7 @@ local function HSV2RGB(h, s, v)
 		r, g, b = Cmax, Cmin, Cmax - Cmid;
 	end
 
-	--print(floor(r + 0.5).." "..floor(g + 0.5).." "..floor(b + 0.5))
-	r, g, b = floor(r + 0.5)/255, floor(g + 0.5)/255, floor(b + 0.5)/255
+	r, g, b = floor(r + 0.5)/255, floor(g + 0.5)/255, floor(b + 0.5)/255;
 	return r, g, b
 end
 
@@ -2254,20 +2266,10 @@ end
 ------------------------------------------------------------
 local RaceList = {
 	1, 3, 4, 7, 11, 22,
-	29, 30, 34, 32, -1, 24,
+	29, 30, 34, 32, 37, 24,
 	2, 5, 6, 8, 10, 9,
-	27, 28, 36, 31, -1, 24,
+	27, 28, 36, 31, 35, 24,
 };
-
-local _, _, _, tocversion = GetBuildInfo();
-if tocversion >= 80300 then     --Add new races
-	RaceList = {
-		1, 3, 4, 7, 11, 22,
-		29, 30, 34, 32, 37, 24,
-		2, 5, 6, 8, 10, 9,
-		27, 28, 36, 31, 35, 24,
-	};
-end
 
 local function InitializeRaceName()
 	local GetRaceInfo = C_CreatureInfo.GetRaceInfo;
@@ -2373,7 +2375,8 @@ local function ExitGroupPhoto()
 	panel.ExpandButton:Show();
 	panel.ExpandButton:SetAlpha(1);
 	panel.ExtraPanel:Hide();
-	
+	panel.ActorButton.ActorName:SetWidth(96);
+
 	local NameFrame = panel.NameFrame;
 	NameFrame.NameBackground:SetPoint("LEFT", -96, 0);
 	NameFrame.Buttons:Hide();
@@ -2442,14 +2445,15 @@ function Narci_ModelIndexButton_OnClick(self, button)
 	if not self.HasModel then
 		local isPlayer = UnitIsPlayer(unit);
 		if UnitExists(unit) then
-			if isPlayer then
+			local alternateMode = IsAltKeyDown();
+			if isPlayer and not alternateMode then
 				model = _G["NarciPlayerModelFrame"..ID];
 			else
 				model = _G["NarciNPCModelFrame"..ID];
 			end
 			
 			if not model then
-				if isPlayer then
+				if isPlayer and not alternateMode then
 					model = CreateFrame("DressUpModel", "NarciPlayerModelFrame"..ID, Narci_ModelContainer, "Narci_CharacterModelFrame_Template");
 				else
 					model = CreateFrame("CinematicModel", "NarciNPCModelFrame"..ID, Narci_ModelContainer, "Narci_NPCModelFrame_Template");
@@ -2571,12 +2575,21 @@ local function CreateAndSelectNewActor(ActorIndex, unit, isVirtual)
 	local inputType = type(unit);
 	if inputType == "string" then
 		--Create from unit (player/target/party)
+		local alternateMode = IsAltKeyDown();
 		if UnitExists(unit) then
-			model = _G["NarciPlayerModelFrame"..ID];
+			if alternateMode then
+				model = _G["NarciNPCModelFrame"..ID];
+			else
+				model = _G["NarciPlayerModelFrame"..ID];
+			end
 		end
 
 		if not model then
-			model = CreateFrame("DressUpModel", "NarciPlayerModelFrame"..ID, Narci_ModelContainer, "Narci_CharacterModelFrame_Template");
+			if alternateMode and not isVirtual then
+				model = CreateFrame("CinematicModel", "NarciNPCModelFrame"..ID, Narci_ModelContainer, "Narci_NPCModelFrame_Template");
+			else
+				model = CreateFrame("DressUpModel", "NarciPlayerModelFrame"..ID, Narci_ModelContainer, "Narci_CharacterModelFrame_Template");
+			end
 		end
 
 		model:SetUnit(unit);
@@ -3418,6 +3431,7 @@ function Narci_ActorPanelExpandButton_OnClick(self)
 	self:GetParent().Animation:SetAlpha(1);
 	PanelAnim:Show();
 	local ExtraPanel = Narci_ActorPanel.ExtraPanel;
+	Narci_ActorPanel.ActorButton.ActorName:SetWidth(120);
 	FadeFrame(Narci_ActorPanel.NameFrame.Buttons, 0.5, "Forced_IN");
 	ExtraPanel:SetAlpha(0);
 	ExtraPanel.buttons[1]:SetAlpha(0);

@@ -43,7 +43,7 @@
 --
 
 
-local revision =(string.sub("20191116200254", 1, -5))
+local revision =(string.sub("20200128044806", 1, -5))
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -775,7 +775,7 @@ function PanelPrototype:CreateColorSelect(dimension, withalpha, alphawidth)
 
 	-- create the colorpicker
 	local colorwheelthumbtexture = colorselect:CreateTexture()
-	colorwheelthumbtexture:SetTexture(137056)--"Interface\\Buttons\\UI-ColorPicker-Buttons"
+	colorwheelthumbtexture:SetTexture(130756)--"Interface\\Buttons\\UI-ColorPicker-Buttons"
 	colorwheelthumbtexture:SetWidth(10)
 	colorwheelthumbtexture:SetHeight(10)
 	colorwheelthumbtexture:SetTexCoord(0,0.15625, 0, 0.625)
@@ -2264,8 +2264,11 @@ local function CreateOptionsMenu()
 		local ShortTimers = BarSetup:CreateCheckButton(L.ShortTimerText, false, nil, "ShortTimerText")
 		ShortTimers:SetPoint("TOPLEFT", ColorBars, "BOTTOMLEFT", 0, 0)
 
+		local StripTimers = BarSetup:CreateCheckButton(L.StripTimerText, false, nil, nil, "StripCDText")
+		StripTimers:SetPoint("TOPLEFT", ShortTimers, "BOTTOMLEFT", 0, 0)
+
 		local KeepTimers = BarSetup:CreateCheckButton(L.KeepBar, false, nil, nil, "KeepBars")
-		KeepTimers:SetPoint("TOPLEFT", ShortTimers, "BOTTOMLEFT", 0, 0)
+		KeepTimers:SetPoint("TOPLEFT", StripTimers, "BOTTOMLEFT", 0, 0)
 
 		local KeepTimers2 = BarSetup:CreateText(L.KeepBar2, 405, nil, nil, "LEFT")
 		KeepTimers2:SetPoint("TOPLEFT", KeepTimers, "BOTTOMLEFT", 25, 10)
@@ -3209,6 +3212,7 @@ local function CreateOptionsMenu()
 			{	text	= L.FilterInterrupts,	value 	= "onlyTandF"},
 			{	text	= L.FilterInterrupts2,	value 	= "TandFandBossCooldown"},
 			{	text	= L.FilterInterrupts3,	value 	= "TandFandAllCooldown"},
+			{	text	= L.FilterInterrupts4,	value 	= "Always"},
 		}
 		local interruptDropDown		= spamSpecArea:CreateDropdown(L.FilterInterruptsHeader, interruptOptions, "DBM", "FilterInterrupt2", function(value)
 			DBM.Options.FilterInterrupt2 = value
@@ -4716,7 +4720,7 @@ do
 						elseif mod.editboxes and mod.editboxes[v] then
 							local editBox = mod.editboxes[v]
 							button = catpanel:CreateEditBox(mod.localization.options[v], mod.Options[v], editBox.width, editBox.height)
-							button:SetScript("OnTextChanged", function(self)
+							button:SetScript("OnEnterPressed", function(self)
 								if mod.optionFuncs and mod.optionFuncs[v] then
 									mod.optionFuncs[v]()
 								end

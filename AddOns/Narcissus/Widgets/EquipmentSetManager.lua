@@ -934,7 +934,7 @@ local function ConfirmButton_OnClick(self)
         
         if ShouldUpdateTalent then
             SaveSetInfo(setID);
-            print("Talent Saved")
+            --print("Talent Saved")
         end
 
         if ShouldUpdateEquipment then
@@ -1245,7 +1245,7 @@ function ESM:Open()
     FadeFrame(Narci_ConciseStatFrame, 0.35, "OUT");
     FadeFrame(EquipmentSetManagerFrame, 0.25, "IN");
     FadeFrame(Narci_RadarChartFrame, 0.5, "IN");
-    UpdateScrollRange()
+    UpdateScrollRange();
 end
 
 function ESM:Close()
@@ -1325,11 +1325,8 @@ local function IlvlButtonCenter_OnClick(self)
     Narci:HideButtonTooltip();
     if RepositionFrame.IsOpen then
         ESM:Close();
-
-        local avgItemLevel = GetAverageItemLevel();
-        local avgIvl = math.floor(avgItemLevel);
-        self.PlayerItemLvl:SetText(avgIvl);
-        self.Header:SetText("MAX");
+        Narci:SetItemLevel();
+        self.isSetManagerOpen = false;
     else
         local colors = Narci_ColorTable[Narci_GlobalColorIndex];
         local R, G, B = colors[1], colors[2], colors[3];
@@ -1346,6 +1343,7 @@ local function IlvlButtonCenter_OnClick(self)
         --]]
         InitializeEquipmentSetManager();
         ESM:Open();
+        self.isSetManagerOpen = true;
         UIFrameFadeOut(self.Highlight, 0.15, self.Highlight:GetAlpha(), 0);
 	end
 end

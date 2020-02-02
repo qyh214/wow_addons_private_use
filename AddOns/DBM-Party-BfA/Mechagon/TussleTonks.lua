@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2336, "DBM-Party-BfA", 11, 1178)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20191011015318")
+mod:SetRevision("20200126211630")
 mod:SetCreatureID(144244, 145185)
 mod:SetEncounterID(2257)
 mod:SetZone()
@@ -14,11 +14,13 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 285344 285152",
 	"SPELL_AURA_REMOVED 282801 285388",
 	"SPELL_AURA_REMOVED_DOSE 282801",
-	"UNIT_DIED",
-	"UNIT_SPELLCAST_START boss1 boss2"
+	"UNIT_DIED"
+--	"UNIT_SPELLCAST_START boss1 boss2"
 )
 
 --TODO, Foe Flipper target?
+--TODO, thrust scan was changed to slower scan method, because UNIT_TARGET scan method relies on boss changing target after cast begins, but 8.3 notes now say boss changes target before cast starts
+--TODO, the two part of above is need to verify whether or not a target scanner is even needed at all now. If boss is already looking at atarget at cast start then all we need is boss1target and no scan what so ever
 --[[
 (ability.id = 285020 or ability.id = 283422 or ability.id = 285388) and type = "begincast"
  or (ability.id = 285344 or ability.id = 285152) and type = "cast"
@@ -38,7 +40,7 @@ local yellFoeFlipper				= mod:NewYell(285153)
 --local specWarnGTFO				= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 8)
 
 
-local timerLayMineCD				= mod:NewNextTimer(15.8, 285351, nil, nil, nil, 3)
+local timerLayMineCD				= mod:NewCDTimer(12.1, 285351, nil, nil, nil, 3)
 local timerWhirlingEdgeCD			= mod:NewNextTimer(32.8, 285020, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 --local timerFoeFlipperCD				= mod:NewAITimer(13.4, 285153, nil, nil, nil, 3)
 local timerVentJetsCD				= mod:NewCDTimer(43.8, 285388, nil, nil, nil, 2)
@@ -79,6 +81,7 @@ function mod:SPELL_CAST_START(args)
 		timerWhirlingEdgeCD:Start()
 	elseif spellId == 283422 then
 		timerMaxThrustCD:Start()
+		self:BossTargetScanner(args.sourceGUID, "ThrustTarget", 0.1, 7)
 	elseif spellId == 285388 then
 		specWarnVentJets:Show()
 		specWarnVentJets:Play("watchstep")
@@ -136,9 +139,11 @@ function mod:UNIT_DIED(args)
 	end
 end
 
+--[[
 --Used for auto acquiring of unitID and absolute fastest auto target scan using UNIT_TARGET events
 function mod:UNIT_SPELLCAST_START(uId, _, spellId)
 	if spellId == 283422 then--Maximum Thrust
 		self:BossUnitTargetScanner(uId, "ThrustTarget")
 	end
 end
+--]]

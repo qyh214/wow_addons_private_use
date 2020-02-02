@@ -287,9 +287,6 @@ function PD:Initialize()
   PD:RegisterEvent("UPDATE_INVENTORY_DURABILITY", "UpdatePaperDoll", false)
   PD:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", "UpdatePaperDoll", false)
   PD:RegisterEvent("SOCKET_INFO_UPDATE", "UpdatePaperDoll", false)
-  PD:RegisterEvent("COMBAT_RATING_UPDATE", "UpdatePaperDoll", false)
-  PD:RegisterEvent("MASTERY_UPDATE", "UpdatePaperDoll", false)
-  --PD:RegisterEvent("GARRISON_MISSION_FINISHED", "firstGarrisonToast", false)
   PD:RegisterEvent("PLAYER_ENTERING_WORLD", "InitialUpdatePaperDoll")
 end
 

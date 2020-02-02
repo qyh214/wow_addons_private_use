@@ -167,6 +167,8 @@ L["Enable Debug for the following Modules"] = "Aktiviere die Fehlerbeseitigung f
 L["Enable Mod Debug Mode"] = "Enable Mod Debug Mode"
 L["Enable Sequence"] = "Aktiviere Sequenz"
 L["Enable this option to stop automatically translating sequences from enUS to local language."] = "Wird diese Option aktiviert, wird die automatische Sequenzübersetzung gestoppt. Es findet keine Übersetzung von enUS zu Ihrer lokalen Sprache mehr statt."
+--[[Translation missing --]]
+L["Enable timing functions by using Click refresh speed as a pseudo timer."] = "Enable timing functions by using Click refresh speed as a pseudo timer."
 L["Error found in version %i of %s."] = "Fehler in der Version %i von %s gefunden."
 L["Export"] = "Exportieren"
 L["Export a Sequence"] = "Sequenz Exportieren"
@@ -302,11 +304,15 @@ L["Merge"] = "Merge"
 --[[Translation missing --]]
 L["MergeSequence"] = "MergeSequence"
 L["Middle Mouse Button"] = "Mittlere Maustaste"
+--[[Translation missing --]]
+L["Millisecond click settings"] = "Millisecond click settings"
 L["Mouse Button 4"] = "Maustaste 4"
 L["Mouse Button 5"] = "Maustaste 5"
 L["Mouse Buttons."] = "Maustasten."
 --[[Translation missing --]]
 L["Moved %s to class %s."] = "Moved %s to class %s."
+--[[Translation missing --]]
+L["MS Click Rate"] = "MS Click Rate"
 L["Mythic"] = "Mythisch"
 --[[Translation missing --]]
 L["Mythic setting changed to Default."] = "Mythic setting changed to Default."
@@ -421,6 +427,8 @@ L["Running"] = "laufen"
 L["Save"] = "speichern"
 --[[Translation missing --]]
 L["Save the changes made to this macro"] = "Save the changes made to this macro"
+--[[Translation missing --]]
+L["Scenario"] = "Scenario"
 L["Seed Initial Macro"] = "Verteile Ausgangsmakro"
 L["Select Other Version"] = "Wähle eine andere Version"
 L["Send"] = "senden"
@@ -488,6 +496,8 @@ L["The GUI has not been loaded.  Please activate this plugin amongst WoW's addon
 L["The Macro Translator will translate an English sequence to your local language for execution.  It can also be used to translate a sequence into a different language.  It is also used for syntax based colour markup of Sequences in the editor."] = "The Macro Translator will translate an English sequence to your local language for execution.  It can also be used to translate a sequence into a different language.  It is also used for syntax based colour markup of Sequences in the editor."
 --[[Translation missing --]]
 L["The main lines of the macro."] = "The main lines of the macro."
+--[[Translation missing --]]
+L["The milliseconds being used in key click delay."] = "The milliseconds being used in key click delay."
 --[[Translation missing --]]
 L[ [=[The name of your macro.  This name has to be unique and can only be used for one object.
 You can copy this entire macro by changing the name and choosing Save.]=] ] = [=[The name of your macro.  This name has to be unique and can only be used for one object.
@@ -602,6 +612,8 @@ L["UpdateSequence"] = "Sequenz aktualisieren"
 L["Updating due to new version."] = "Aktualisierung nötig wegen einer neuen Version"
 L["Use"] = "Benutze"
 L["Use Belt Item in KeyRelease"] = "Benutze den Gürtel in KeyRelease"
+--[[Translation missing --]]
+L["Use External MS Timings"] = "Use External MS Timings"
 L["Use First Ring in KeyRelease"] = "Benutze den ersten Ring in KeyRelease"
 L["Use First Trinket in KeyRelease"] = "Benutze das erste Schmuckstück in KeyRelease"
 --[[Translation missing --]]

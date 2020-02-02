@@ -9,8 +9,8 @@ local format = format
 local HideUIPanel = HideUIPanel
 local ShowUIPanel = ShowUIPanel
 
-local function LoadSkin()
-	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.macro ~= true then return end
+function S:Blizzard_MacroUI()
+	if not (E.private.skins.blizzard.enable and E.private.skins.blizzard.macro) then return end
 
 	local MacroFrame = _G.MacroFrame
 	S:HandlePortraitFrame(MacroFrame, true)
@@ -41,7 +41,7 @@ local function LoadSkin()
 	end
 
 	_G.MacroNewButton:ClearAllPoints()
-	_G.MacroNewButton:SetPoint("RIGHT", _G.MacroExitButton, "LEFT", -2 , 0)
+	_G.MacroNewButton:Point("RIGHT", _G.MacroExitButton, "LEFT", -2 , 0)
 
 	for i = 1, 2 do
 		local tab = _G[format("MacroFrameTab%s", i)]
@@ -102,10 +102,10 @@ local function LoadSkin()
 
 	S:HandleIconSelectionFrame(MacroPopupFrame, _G.NUM_MACRO_ICONS_SHOWN, "MacroPopupButton", "MacroPopup")
 
-	MacroPopupFrame:HookScript("OnShow", function(self)
-		self:ClearAllPoints()
-		self:Point("TOPLEFT", MacroFrame, "TOPRIGHT", 2, 0)
+	MacroPopupFrame:HookScript("OnShow", function(s)
+		s:ClearAllPoints()
+		s:Point("TOPLEFT", MacroFrame, "TOPRIGHT", 2, 0)
 	end)
 end
 
-S:AddCallbackForAddon("Blizzard_MacroUI", "Macro", LoadSkin)
+S:AddCallbackForAddon('Blizzard_MacroUI')

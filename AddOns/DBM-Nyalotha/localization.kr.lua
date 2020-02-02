@@ -37,7 +37,7 @@ L= DBM:GetModLocalization(2369)
 L= DBM:GetModLocalization(2377)
 
 L:SetMiscLocalization({
-	ObeliskSpawn	= "Obelisks of shadow, rise!"--Only as backup, in case the NPC target check stops working
+	ObeliskSpawn	= "솟아나라, 어둠의 방첨탑이여!"--Only as backup, in case the NPC target check stops working
 })
 
 ---------------------------
@@ -70,6 +70,10 @@ L= DBM:GetModLocalization(2370)
 ---------------------------
 L= DBM:GetModLocalization(2364)
 
+L:SetOptionLocalization({
+	OnlyParentBondMoves		= "충전된 결속의 기준점이 될 때만 특수 경고 표시"
+})
+
 L:SetMiscLocalization({
 	Furthest	= "제일 먼 대상",
 	Closest		= "가장 가까운 대상"
@@ -100,9 +104,9 @@ L= DBM:GetModLocalization(2366)
 L= DBM:GetModLocalization(2375)
 
 L:SetMiscLocalization({
-	ExitMind		= "정신 탈출",
-	Away			= "멀리 빠져",
-	Toward			= "가까이 붙어"
+	ExitMind		= "정신세계 출구",
+	Away			= "뒤로",
+	Toward			= "앞으로"
 })
 
 -------------

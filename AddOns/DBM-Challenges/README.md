@@ -8,11 +8,12 @@ Deadly Boss Mods: Challenges
 
 Description
 -----------
-This mod will add support for single player challenges such as Proving Grounds and Broken Shore Mage Tower scenario&nbsp;to Deadly Boss Mods (DBM).
+This extra mod for Deadly Boss Mods (DBM) adds support for challenging scenario content such as Proving Grounds, Broken Shore Mage Tower, and N'zoth Horrific Visions scenarios.
 
 Features:
-* Helpful combat warnings & timers for all of the Proving Grounds challenges
-* Helpful combat warnings & timers for Legion's Broken Shore scenario quests offered by Mage Tower
+* Helpful combat warnings & timers for all of the Proving Grounds challenges added in Mists of Pandaria and beyond.
+* Helpful combat warnings & timers for Legion's Broken Shore scenario quests offered by Mage Tower in patch 7.2
+* Helpful combat warnings & Timers for Battle for Azeroth N'Zoth Vision scenarios added in patch 8.3
 * All warnings are configurable through DBM GUI
 
 Requirements
@@ -27,11 +28,4 @@ Notes
 -----
 **TODO:**
 * Possibly localize in more languages.
-* Mage Tower support is WIP. Currently Supported:
-** The Highlord's Return (Complete, still needs testing/feedback)
-** End of the Risen Threat (Mostly complete, still needs testing/feedback)
-** Feltotem's Fall (Mostly Done, still needs testing/feedback)
-** Closing the Eye&nbsp;(Mostly complete, still needs testing/feedback)
-** The God-Queen's Fury (Mostly complete, still needs testing/feedback)
-** Thwarting the Twins (Complete, but still needs testing/feedback)
-** An Impossible Foe (Complete, still needs testing/feedback)
+* Continue to improve N'Zoth Visions scenarios with more warnings and improved timers

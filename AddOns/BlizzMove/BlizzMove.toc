@@ -1,9 +1,9 @@
-## Interface: 80205
+## Interface: 80300
 ## Title: BlizzMove
 ## Notes: Move those blizzard windows
 ## Author: yess
 ## X-WoWI-ID: 23875
-## Version: v1.9.4
+## Version: v1.9.7
 
 
 Handle.lua

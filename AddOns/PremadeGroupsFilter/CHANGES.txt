@@ -1,27 +1,28 @@
-lightweight tag 3c777808ddf4f3f0295f2cdf76919f6afcd12bfe 1.31
+lightweight tag 89ed08a63391ce97f4f69d9df1e0ccf2b11da803 1.32
 Author:	Bernhard Saumweber <b.saumweber@gmail.com>
-Date:	Tue Sep 17 20:39:44 2019 +0200
+Date:	Thu Jan 16 22:30:53 2020 +0100
 
-commit 3c777808ddf4f3f0295f2cdf76919f6afcd12bfe
+commit 89ed08a63391ce97f4f69d9df1e0ccf2b11da803
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Tue Sep 17 20:39:44 2019 +0200
+Date:   Thu Jan 16 22:30:53 2020 +0100
 
-    Fixes #24 by adding keywords rionormalprogress, rioheroicprogress, riomythicprogress, riomainprogress, rionormalkills, rioheroickills, riomythickills and rioraidbosscount
+    New keywords nya/ny for Ny’alotha, the Waking City as well as opmj for Operation: Mechagon - Junkyard and opmw for Operation: Mechagon - Workshop
 
-commit b49ee919717b831f4843c2249f7ce3de06acae3a
-Author: romdeau23 <43295566+romdeau23@users.noreply.github.com>
-Date:   Mon Sep 16 23:40:00 2019 +0200
-
-    More filter expressions: myilvl and partyfit (#26)
-    
-    * Implement myilvl, rolefit and partyfit advanced expressions
-    * Apply suggestions from code review
-    Co-Authored-By: Bernhard Saumweber <b.saumweber@gmail.com>
-    * Remove rolefit, add translations
-
-commit c2c9e21c47b0d4598e04fcbd4c15ef1c13d2686a
+commit b8dc53955c132d24ce758911f160e95414cb118c
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Sun Sep 8 17:08:23 2019 +0200
+Date:   Thu Jan 16 22:07:37 2020 +0100
 
-    Set version to next release version: 1.31
+    Raising interface version to 80300
+
+commit c8dce0331a5e2bcc152d07f07fe1e81d79894d30
+Author: Bernhard Saumweber <b.saumweber@gmail.com>
+Date:   Sun Oct 20 16:14:36 2019 +0200
+
+    Raising interface version to 80205
+
+commit 1325db0ea791811307861add468108ac2c3f1c31
+Author: Bernhard Saumweber <b.saumweber@gmail.com>
+Date:   Tue Sep 17 20:55:39 2019 +0200
+
+    Set version to next release version: 1.32
 

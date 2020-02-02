@@ -45,6 +45,8 @@ local function GetRandomIcon(subclass)
     return ( IconCategory[ math.random( #IconCategory ) ] );
 end
 
+--[[
+    --Dev Tool
 local IconNames = {};
 local IconNames_LowerCase = {};
 local SetTimer = C_Timer.After;
@@ -92,7 +94,6 @@ local function PrintIcons(name)
             ResetFlags();
             return;
         end
-        --]]
 
         index = index + 1;
         SetTimer(0, function()
@@ -108,7 +109,7 @@ function SearchIconsByClassName(ClassName)
     local name = strlower(ClassName);
     PrintIcons(name);
 end
-
+--]]
 ----------------------------------------------------------
 local staticIcons = {};     --exclude passive spell
 local usedIcons = {};       --usedIcons = staticIcons∪recently used icons

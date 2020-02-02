@@ -256,6 +256,8 @@ L.MarksBarHelp = "Нажатие правой кнопкой мыши на кн�
 L.MarksBarDisableInRaid = "Скрывать вне группы или рейда"
 L.MarksBarVertical = "Вертикально"
 L.MarksBarReverse = "Обратный порядок"
+L.MarksBarTimerLeftClick = "ЛКМ"
+L.MarksBarTimerRightClick = "ПКМ"
 
 L.inviterank = "Звание:"
 L.inviteinv = "Пригласить"

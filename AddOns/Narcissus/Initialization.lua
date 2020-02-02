@@ -15,7 +15,7 @@ local DefaultValue = {
     ["BorderTheme"] = "Bright",
     ["TooltipTheme"] = "Dark",
     ["TruncateText"] = false,
-    ["ItemNameWidth"] = 200,
+    ["ItemNameWidth"] = 180,
     ["FadeButton"] = false,
     ["WeatherEffect"] = true,
     ["VignetteStrength"] = 0.5,
@@ -29,6 +29,7 @@ local DefaultValue = {
     ["GemManager"] = true,                          --Enable gem manager for Blizzard item socketing frame
     ["DressingRoom"] = true,                        --Enable dressing room module
     ["DressingRoomUseTargetModel"] = true,          --Replace the the dressing room room with your targeted player
+    ["DressingRoomIncludeItemID"] = false,          --Show Item ID in the clipboard
     ["UseEntranceVisual"] = true,
     ["ModelPanelScale"] = 1,
     ["UseExitConfirmation"] = true,                 --Show exit confirmation dialog upon leaving group photo mode
@@ -36,10 +37,16 @@ local DefaultValue = {
     ["ShrinkArea"] = 0,                             --Reduce the width of the area where you can control the model
     ["AutoPlayAnimation"] = true,                   --Play recommended animation when clicking a spell visual entry
     ["UseBustShot"] = true,                         --Zoom in to the upper torso
+    ["EyeColor"] = 1,                               --Corruption Indicator Orange
+    ["CorruptionBar"] = true,
+    ["CorruptionTooltip"] = false,
+    ["CorruptionTooltipModel"] = true,
+    ["UseEscapeButton"] = true,                     --Use Escape button to exit
+    ["IndependentMinimapButton"] = false,           --Set Minimap Button Parent to Minimap or UIParent
 }
 
 local TutorialInclude = {
-    "RaceChange", "SpellVisualBrowser", "EquipmentSetManager", "Movement", "ExitConfirmation", "RaceChangeFixed",
+    "SpellVisualBrowser", "EquipmentSetManager", "Movement", "ExitConfirmation", "IndependentMinimapButton"
 };
 
 local function Initialize_NarcissusDB()
@@ -52,10 +59,6 @@ local function Initialize_NarcissusDB()
 
     if (not NarcissusDB.Version) or (type(NarcissusDB.Version) ~= "number") then    --Used for showing patch notes when opening Narcissus after an update
         NarcissusDB.Version = 10000;
-    end
-
-    if (not NarcissusDB.SplashVersion) or (type(NarcissusDB.SplashVersion) ~= "number") then    --Used for showing splash screen when entering the game after an update
-        NarcissusDB.SplashVersion = 10000;
     end
 
     if (not NarcissusDB.PhotoModeButton) or (type(NarcissusDB.PhotoModeButton) ~= "table") then
@@ -96,11 +99,14 @@ local function Initialize_NarcissusDB()
     end
 end
 
-local initialize = CreateFrame("Frame")
-initialize:RegisterEvent("VARIABLES_LOADED");
+local initialize = CreateFrame("Frame");
+initialize:RegisterEvent("ADDON_LOADED");
 initialize:SetScript("OnEvent",function(self,event,...)
-    if event == "VARIABLES_LOADED" then
-        Initialize_NarcissusDB();
+    if event == "ADDON_LOADED" then
+        local name = ...
+        if name == "Narcissus" then
+            Initialize_NarcissusDB();
+            self:UnregisterEvent("ADDON_LOADED");
+        end
     end
-    self:UnregisterEvent("VARIABLES_LOADED")
 end)

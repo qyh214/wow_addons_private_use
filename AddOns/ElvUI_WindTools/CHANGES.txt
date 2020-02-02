@@ -1,43 +1,36 @@
-lightweight tag 873dfcdd7b50ac144e5d199c5ccbb71bdc6829b4 1.5.1
+lightweight tag 1436a4ffdaecedd6ebc4c4af9afe34e4e03bcf79 1.5.3
 Author:	Zhou Fang <fang2hou@outlook.com>
-Date:	Sat Oct 5 11:02:10 2019 +0900
+Date:	Fri Jan 31 13:13:16 2020 +0900
 
-commit 873dfcdd7b50ac144e5d199c5ccbb71bdc6829b4
+commit 1436a4ffdaecedd6ebc4c4af9afe34e4e03bcf79
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Sat Oct 5 11:02:10 2019 +0900
+Date:   Fri Jan 31 13:13:16 2020 +0900
 
-    更新支持信息
+    更新日志
 
-commit b8dde429c97c829f3c706b6a307805f0d30f5e9d
+commit 7c3767bb8ae03e75adf7ed8de8b50b72c9aeab52
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Sat Oct 5 11:00:47 2019 +0900
+Date:   Fri Jan 31 13:09:56 2020 +0900
 
-    更新说明文档
+    去除中文万亿功能
+    
+    ElvUI 11.33版本中已经官方支持了
 
-commit 57e8df6964711a2c04157c9398c7ad77789565cb
+commit 2317e41b2c80cb5a60f8abfa1658ed8e228af9a1
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Sat Oct 5 10:57:04 2019 +0900
+Date:   Fri Jan 31 13:05:01 2020 +0900
 
-    修复世界标记错误
+    适配新版本ElvUI
 
-commit 61305b6ccdc78c5668a440b6f2687a0aa6f09aa9
-Author: 404Polaris <574706224@qq.com>
-Date:   Wed Oct 2 21:12:18 2019 +0800
+commit c6c1feb341fd1f3f95c24c0bd56bf279da26f4c7
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Fri Jan 31 12:55:00 2020 +0900
 
-    检测S&L是否设置暴雪框体移动
+    恢复之前的api修改
 
-commit 61305b6ccdc78c5668a440b6f2687a0aa6f09aa9
-Author: 404Polaris <574706224@qq.com>
-Date:   Wed Oct 2 21:12:18 2019 +0800
+commit 80c66183c2f05df346ebc93e747917bdd890b831
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Wed Jan 22 01:43:57 2020 +0900
 
-    检测S&L是否设置暴雪框体移动
-
-commit 460b5562174f8df098cc2fb19b10c40137926be3
-Author: 404Polaris <574706224@qq.com>
-Date:   Wed Oct 2 21:07:19 2019 +0800
-
-    修复8.25更新后：
-    好友列表增强的一系列错误
-    Sins.lua内移除了过时AlertSystem的hook，并新增两项
-    为暴雪框体移动增加了检测，与Shadow&Light同功能选项冲突时将有所提示
+    添加饿了没桌子提示
 

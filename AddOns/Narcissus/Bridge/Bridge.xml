@@ -3,6 +3,7 @@
     <Script file="Roleplay.lua"/>
     <Script file="Bridge.lua"/>
     <!--Script file="AzeriteUI.lua"/-->
+    <Script file="Storyline.lua"/>
 
 	<Frame name="Narci_SharedAnimatedParent" Alpha="0" hidden="false">
 		<Size>

@@ -56,7 +56,15 @@ Attachment ID:
 
 365680 Light bulb
 ----------------------------------------------
-Include when 8.3
+121971 Beam Long
+122148 Beam Only Forward 121990 Shower
+122435
+122447 122443 Azerite Beam Golden/Blue Heart 988
+122859 Corruption Body Texture Purple
+123494 Void Conjure
+123622 Azerite Beam 922 Charging
+
+8.3
 41004 Holy Solar left-hand
 41005 Solar Right hand
 121834 Void Radiant Core 

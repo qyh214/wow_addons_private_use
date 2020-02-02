@@ -1,9 +1,27 @@
 ------------------------------------------------------------------------
-r763 | funkydude | 2019-07-02 16:55:47 +0000 (Tue, 02 Jul 2019) | 1 line
+r768 | nebula169 | 2020-01-14 23:35:28 +0000 (Tue, 14 Jan 2020) | 1 line
 Changed paths:
-   M /trunk/Skada.lua
    M /trunk/Skada.toc
 
-Fix sound registration & bump toc
+Update TOC 8.3
+------------------------------------------------------------------------
+r767 | nebula169 | 2020-01-14 23:32:48 +0000 (Tue, 14 Jan 2020) | 1 line
+Changed paths:
+   M /trunk/Skada.lua
+   M /trunk/modules/Tweaks.lua
+
+Tweaks
+------------------------------------------------------------------------
+r766 | nebula169 | 2020-01-14 23:28:53 +0000 (Tue, 14 Jan 2020) | 1 line
+Changed paths:
+   M /trunk/modules/Deaths.lua
+
+Deaths: Fix args for _MISSED events
+------------------------------------------------------------------------
+r765 | nebula169 | 2020-01-14 23:27:17 +0000 (Tue, 14 Jan 2020) | 1 line
+Changed paths:
+   M /trunk/modules/Deaths.lua
+
+Deaths: Fix whitespace
 ------------------------------------------------------------------------
 

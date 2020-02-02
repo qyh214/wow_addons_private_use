@@ -287,7 +287,7 @@
 						</Scripts>
 					</Button>
 
-					<EditBox parentKey="GearTexts" clipChildren="false" autoFocus="false" letters="661118" multiLine="true" clampedToScreen="false" hidden="true" Alpha="0" frameLevel="20">
+					<EditBox name="NarciDressingRoom_GearTexts" parentKey="GearTexts" clipChildren="false" autoFocus="false" letters="661118" multiLine="true" clampedToScreen="false" hidden="true" Alpha="0" frameLevel="20">
 						<Size>
 							<AbsDimension x="300" y="720"/>
 						</Size>
@@ -297,7 +297,9 @@
 						<Anchors>
 							<Anchor point="BOTTOMLEFT" relativeKey="$parent.CopyButton" relativePoint="TOPLEFT" x="8" y="8"/>
 						</Anchors>
-						<FontString justifyH="LEFT" justifyV="TOP" inherits="AAAStatusNameMedium" spacing="2"/>
+						<FontString justifyH="LEFT" justifyV="TOP" inherits="AAAStatusNameMedium" spacing="2">
+							<Color r="0.88" g="0.88" b="0.88"/>
+						</FontString>
 						<Layers>					
 							<Layer level="BACKGROUND" textureSubLevel="2">
 								<Texture setAllPoints="true" hidden="false" parentKey="Background">
@@ -326,34 +328,87 @@
 								</Anchors>
 								<Scripts>
 									<OnLoad>
-										self.HeaderText:SetText(NARCI_CLIPBOARD)
+										self.HeaderText:SetText(NARCI_CLIPBOARD);
 									</OnLoad>
 								</Scripts>
 							</Frame>
+							<Button parentKey="IncludeID" frameLevel="22">
+								<Size x="58" y="20"/>
+								<Anchors>
+									<Anchor point="LEFT" relativeKey="$parent.Header" relativePoint="LEFT"/>
+								</Anchors>
+								<Layers>
+									<Layer level="ARTWORK">
+										<Texture parentKey="Background">
+											<Color r="0.8" g="0.8" b="0.8" a="1"/>
+											<Gradient orientation="VERTICAL">
+												<MaxColor a="1" r="1" g="1" b="1"/>
+												<MinColor a="1" r="0.5" g="0.5" b="0.5"/>
+											</Gradient>
+											<Anchors>
+												<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="2" y="-2"/>
+												<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-2" y="2"/>
+											</Anchors>
+										</Texture>
+									</Layer>
+									<Layer level="OVERLAY">
+										<Texture parentKey="Highlight" Alpha="0">
+											<Color r="1" g="1" b="1"/>
+											<Anchors>
+												<Anchor point="TOPLEFT" relativeKey="$parent.Background" relativePoint="TOPLEFT"/>
+												<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Background" relativePoint="BOTTOMRIGHT"/>
+											</Anchors>
+										</Texture>									
+										<FontString inherits="AAAStatusNameMedium" justifyH="CENTER" justifyV="MIDDLE" parentKey="Label" text="Item ID">
+											<Color r="1" g="1" b="1"/>
+											<Anchors>
+												<Anchor point="CENTER"/>
+											</Anchors>
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnMouseDown>
+										self.Highlight:SetAlpha(1);
+									</OnMouseDown>
+									<OnMouseUp>
+										if not self:IsMouseOver() then
+											self.Highlight:SetAlpha(0);
+										else
+											self.Highlight:SetAlpha(0.5);
+										end
+									</OnMouseUp>									
+									<OnEnter>
+										self.Highlight:SetAlpha(0.5);
+									</OnEnter>
+									<OnLeave>
+										self.Highlight:SetAlpha(0);
+									</OnLeave>
+								</Scripts>
+							</Button>
 							<Button inherits="NarciCloseButtonTemplate">
 								<Anchors>
 									<Anchor point="RIGHT" relativeKey="$parent.Header" relativePoint="RIGHT" x="-4" y="0"/>
 								</Anchors>
 							</Button>
 						</Frames>
-							<Scripts>
-								<OnShow>
-									--self:SetFocus()
-									--self:HighlightText()
-								</OnShow>
-								<OnEditFocusGained>
-									GameTooltip:Hide();
-								</OnEditFocusGained>
-								<OnEscapePressed>
-									self:SetAutoFocus(false)
-									self:HighlightText(0,0)
-									self:ClearFocus();
-								</OnEscapePressed>
-								<OnHide>
-									self:SetAlpha(0);
-									self:Hide();
-								</OnHide>
-							</Scripts>
+						<Scripts>
+							<OnEditFocusGained>
+								GameTooltip:Hide();
+								self:HighlightText();
+							</OnEditFocusGained>
+							<OnEscapePressed>
+								self:SetAutoFocus(false);
+								self:HighlightText(0,0);
+								self:ClearFocus();
+							</OnEscapePressed>
+							<OnHide>
+								self:SetAlpha(0);
+								self:HighlightText(0,0);
+								self:ClearFocus();
+								self:Hide();
+							</OnHide>
+						</Scripts>
 					</EditBox>
 
 					<Button inherits="NarciDressingRoomTabButton_Template" hidden="false" parentKey="TryOnButton">
@@ -362,10 +417,10 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
-								self.Label:SetText("Use Target's Model")
-								self.Icon2:SetTexture(1530081)
-								self.Icon3:SetTexture(1530081)
-								self.Icon:SetTexture(1530081)
+								self.Label:SetText("Use Target's Model");
+								self.Icon2:SetTexture(1530081);
+								self.Icon3:SetTexture(1530081);
+								self.Icon:SetTexture(1530081);
 								self.Border0:SetTexCoord(0.125, 0.25, 0, 0.5);
 								self.Border1:SetTexCoord(0.125, 0.25, 0.5, 1);
 							</OnLoad>
@@ -375,7 +430,7 @@
 				</Frames>
 				<Scripts>
 					<OnShow>
-						local UIScale = UIParent:GetEffectiveScale()
+						local UIScale = UIParent:GetEffectiveScale();
 						self:SetScale(math.max(UIScale, 0.75));
 					</OnShow>
 				</Scripts>

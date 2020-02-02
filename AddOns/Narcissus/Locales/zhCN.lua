@@ -56,10 +56,13 @@ L["Minimap Tooltip Left Click"] = "左键|r";
 L["Minimap Tooltip To Open"] = "|cffffffff打开装备界面";
 L["Minimap Tooltip Enter Photo Mode"] = "|cffffffff进入拍照模式";
 L["Minimap Tooltip Right Click"] = "右键";
+L["Minimap Tooltip Shift Left Click"] = "Shift + 左键";
 L["Minimap Tooltip Shift Right Click"] = "Shift + 右键";
 L["Minimap Tooltip Hide Button"] = "|cffffffff隐藏此按钮|r"
 L["Minimap Tooltip Middle Button"] = "|CFFFF1000中键 |cffffffff重置相机参数";
 L["Minimap Tooltip Set Scale"] = "设置缩放: |cffffffff/narci [有效范围 0.8~1.2]";
+L["Corrupted Item Parser"] = "|cffffffff打开腐蚀物品链接解析器|r";
+L["Toggle Dressing Room"] = "|cffffffff打开"..DRESSUP_FRAME.."|r";
 
 NARCI_CLIPBOARD = "剪切板";
 NARCI_LAYOUT = "布局";
@@ -85,6 +88,7 @@ NARCI_TRANSMOG = "幻化";
 NARCI_EXTENSIONS = "拓展功能";
 L["Credits"] = "致谢";
 NARCI_ABOUT = "关于"
+NARCI_PREFERENCE_TOOLTIP = "打开偏好设定。";
 NARCI_TRUNCATE_TEXT = "截断文字";
 NARCI_ATTRIBUTE_FRAME = "属性栏";
 NARCI_SHOW_DETAILED_STATS = "显示详细信息";
@@ -149,6 +153,8 @@ L["Ultra-wide Tooltip"] = "你能看到此选项是因为你正在使用一台%s
 L["Interactive Area"] = "交互区域";
 L["Item Socketing Tooltip"] = "双击左键进行镶嵌";
 L["Use Bust Shot"] = "使用半身像";
+L["Use Escape Button"] = "Esc键";
+L["Use Escape Button Description"] = "按下Esc键来退出插件。或者点击屏幕右上角隐藏的X按钮。";
 
 --模型控制面板--
 NARCI_SHEATH_WEAPON = "收起武器";
@@ -233,6 +239,33 @@ L["Old Icon"] = "旧图标";
 NARCI_ICON_SELECTOR = "图标列表";
 NARCI_DELETE_SET_WITH_LONG_CLICK = "删除此套装\n|cff808080(按住左键)|r";
 
+--Corruption System
+L["Corruption System"] = "腐蚀模块";
+L["Eye Color"] = "眼睛顏色";
+L["Blizzard UI"] = "原生界面";
+L["Corruption Bar"] = "腐蚀条";
+L["Corruption Bar Description"] = "在角色信息旁边显示腐蚀条。";
+L["Corruption Debuff Tooltip"] = "Debuff提示";
+L["Corruption Debuff Tooltip Description"] = "将默认的描述性的Debuff提示替换为数值型提示。";
+
+L["Crit Gained"] = "爆击获取";
+L["Haste Gained"] = STAT_HASTE.."获取";
+L["Mastery Gained"] = STAT_MASTERY.."获取";
+L["Versatility Gained"] = STAT_VERSATILITY.."获取";
+
+L["Proc Haste"] = "触发"..CRIT_ABBR;
+L["Proc Crit"] = "触发"..STAT_HASTE;
+L["Proc Mastery"] = "触发"..STAT_MASTERY;
+L["Proc Versatility"] = "触发"..STAT_VERSATILITY;
+
+L["Critical Damage"] = "爆击伤害";
+
+L["Corruption Effect Format1"] = "|cffffffff%s%%|r 移动速度降低";
+L["Corruption Effect Format2"] = "|cffffffff%s|r 初始伤害\n|cffffffff%s 码|r 半径";
+L["Corruption Effect Format3"] = "|cffffffff%s|r 伤害\n|cffffffff%s%%|r 最大生命值";
+L["Corruption Effect Format4"] = "被彼岸之物击中会立刻触发其余效果";
+L["Corruption Effect Format5"] = "|cffffffff%s%%|r 受到的伤害和治疗改变";
+
 --Tutorial--
 L["Alert"] = "警告";
 L["Race Change"] = "种族/性别变更";
@@ -250,7 +283,8 @@ L["Guide Input Line1"] = "你也可以自行输入SpellVisualKitID。截至8.3�
 L["Guide Equipment Manager Line1"] = "双击：使用套装\n右击：编辑套装";
 L["Guide Model Control Headline"] = "模型控制";
 L["Guide Model Control Line1"] = format("你可以用控制试衣间的鼠标行为来控制此模型。此外，你还可以：\n\n1.按住%s和鼠标左键来改变俯仰角。\n2.按住%s和鼠标右键来进行细微缩放。", NARCI_MODIFIER_ALT, NARCI_MODIFIER_ALT);
-
+L["Guide Minimap Button Headline"] = "小地图按钮";
+L["Guide Minimap Button Line1"] = "此按钮现在可以被其他插件控制。\n你可以在偏好设定中更改这一选项，改动可能需要重载界面才能生效。"
 
 --Splash--
 NARCI_SPELL_VISUALS = "法术视觉效果";
@@ -268,8 +302,6 @@ NARCI_DISABLE_IT_NOW = "点击这里以禁用...";
     NARCI_CAMERA_SAFE_MODE_DISABLED = "|cffff5050已禁用。|r 你可以在偏好设定-镜头中启用它。";
     --
 NARCI_SHOW_DETAILS = "+ Show details...";
-NARCI_SPLASH_HEADER1 = "视觉效果和模型控制";
-NARCI_SPLASH_HEADER2 = "套装管理器";
 NARCI_SPLASH_HEADER3 = "其他";
 NARCI_SPLASH_MESSAGE0 = "|cffd9cdb41. 你现在可以在场景里应用独特的效果了。|r\n你可以为演员添加法术或者其他道具，甚至可以控制场景中的天气。点击模型控制面板左下角的按钮即可展开选项。"
 NARCI_SPLASH_MESSAGE1 = format("|cffd9cdb42. 翻转模型和细微缩放|r\n你可以按住%s和鼠标左键来让模型演Y轴旋转；或是按住%s和鼠标右键来进行细微缩放。", NARCI_MODIFIER_ALT, NARCI_MODIFIER_ALT);
@@ -277,9 +309,17 @@ NARCI_SPLASH_MESSAGE2 = "|cffd9cdb4可通过点击右上方的六边形按钮（
 NARCI_SPLASH_MESSAGE3 = "|cffd9cdb41. 现在AFK画面会在你移动或者进入战斗时自动退出。\n2. 试衣间增强又恢复了工作。|r";
 
 
+L["Show Whats New"] = "显示欢迎界面";
+NARCI_SPLASH_WHATS_NEW_FORMAT = "|cff694d9cNarcissus %s ".."更新内容";
+NARCI_SPLASH_HEADER1 = "腐蚀模块";
+NARCI_SPLASH_HEADER2 = "照片模式";
+NARCI_SPLASH_INTERACTIVE_TEXT1 = NARCI_COLOR_GREY_85.."Narcissus UI|r\n- 腐蚀装备的实际效果和等级会同其物品等级一起显示。\n- 当你装备了任何腐蚀物品后，你会在原来显示最大平均装等的地方看到一只眼睛；瞳孔的形状表示人物当前的腐蚀等级。";
+NARCI_SPLASH_INTERACTIVE_TEXT2 = NARCI_COLOR_GREY_85.."Blizzard UI|r\n- 你可以在角色面板旁边看到一个腐蚀条，这样你就不用再把鼠标移到眼睛图标上来进行查看了。\n- 你也可以将默认的描述性的负面效果提示替换为数值型说明。以上两项设置都是可选的。";
+NARCI_SPLASH_INTERACTIVE_TEXT3 = NARCI_COLOR_GREY_85.."效果浏览器|r\n- 收录了包括冬幕节佩佩在内的86条新的法术效果。\n\n"..NARCI_COLOR_GREY_85.."合影模式|r\n- 如果你在添加角色的时候按住"..NARCI_MODIFIER_ALT.."，那么目标玩家当前的德鲁伊形态可以得到保留。"
+
 --Project Details--
 NARCI_ALL_PROJECTS = "全部项目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2019.12.23|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2020.1.28|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾泽拉斯上的不同景点，并收集各种故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沉浸式角色面板；你最好的截图助手。"
 

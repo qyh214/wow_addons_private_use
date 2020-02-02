@@ -5,12 +5,9 @@ L["Also shows a summary in the Appearance Sets UI of how many pieces of a transm
 L["Another class can learn this item."] = "다른 직업이 형상변환 등록할 수 있음"
 L["Appearances updated: "] = "형상 변환 자료 갱신: "
 L["Ask me later"] = "나중에"
---[[Translation missing --]]
---[[ L["Bottom"] = ""--]] 
---[[Translation missing --]]
---[[ L["Bottom Left"] = ""--]] 
---[[Translation missing --]]
---[[ L["Bottom Right"] = ""--]] 
+L["Bottom"] = "아래"
+L["Bottom Left"] = "왼쪽 아래"
+L["Bottom Right"] = "오른쪽 아래"
 L["Can be learned by:"] = "형상변환 등록 가능:"
 L["Can I Mog It? Important Message: Please log into all of your characters to compile complete transmog appearance data."] = "중요한 안내: 형상변환이 가능한지 확인하려면 모든 캐릭터에 접속하여 현재 형상변환 가능한 자료를 수집하여 주십시오."
 L["CanIMogItOptions not found, loading defaults!"] = "CanIMogItOptions 을 찾을 수 없습니다. 기본값으로 불러옵니다."
@@ -19,17 +16,14 @@ L["Cannot be learned."] = "형상변환 등록할 수 없음"
 L["Cannot determine status on other characters."] = "다른 캐릭터의 형상변환 상태 확인 불가"
 L["Cannot learn:"] = "형상변환 등록불가: "
 L["Cannot learn: Soulbound"] = "형상변환 등록불가: 귀속 아이템"
---[[Translation missing --]]
---[[ L["Center"] = ""--]] 
+L["Center"] = "가운데"
 L["Database migrated to:"] = "자료 버전: "
 L["Database Scanning chat messages"] = "데이터베이스 검색 대화 메시지"
 L["Debug Tooltip"] = "디버그 툴팁"
 L["Detailed information for debug purposes. Use this when sending bug reports."] = "아이템의 상세 정보를 툴팁에 표시합니다. 버그를 제보할 때 이것을 같이 보내주세요."
---[[Translation missing --]]
---[[ L["Does not affect Quests or Adventure Journal."] = ""--]] 
+L["Does not affect Quests or Adventure Journal."] = "퀘스트나 모험 일지에는 영향을 미치지 않습니다."
 L["Equippable Items Only"] = "착용 가능한 아이템만 표시"
---[[Translation missing --]]
---[[ L["Icon Location"] = ""--]] 
+L["Icon Location"] = "아이콘 위치"
 L["Items updated: "] = "아이템 갱신: "
 L["Learned but cannot transmog yet."] = "형상변환 등록 완료. 레벨이 낮아 사용불가"
 L["Learned for a different class and item."] = "형상변환 등록 완료! - 다른 직업이 사용가능"
@@ -37,8 +31,7 @@ L["Learned for a different class."] = "형상변환 등록 완료! - 다른 직�
 L["Learned from another item but cannot transmog yet."] = "형상변환 등록 완료. 레벨이 낮아 사용불가 - 동일 형상"
 L["Learned from another item."] = "형상변환 등록 완료! - 동일 형상"
 L["Learned."] = "형상변환 등록 완료!"
---[[Translation missing --]]
---[[ L["Left"] = ""--]] 
+L["Left"] = "왼쪽"
 L["Migrating Database version to:"] = "자료 버전 이동: "
 L["Not learned."] = "형상변환 미등록"
 L["Okay"] = "실행"
@@ -47,12 +40,9 @@ L["Only show on items that can be equipped."] = "착용 가능한 아이템만 �
 L["Only show on items that can be transmoggrified."] = "형상변환이 가능한 아이템만 표시합니다."
 L["Only show on items that you haven't learned."] = "아직 형상변환을 배우지 않은 아이템만 표시합니다."
 L["Please note that this may not always be correct as Blizzard's information is incomplete."] = "이는 블리자드의 정보가 불완전하기에 항상 올바른 것은 아닙니다."
---[[Translation missing --]]
---[[ L["Reload to apply"] = ""--]] 
---[[Translation missing --]]
---[[ L["Requires /reload to take effect."] = ""--]] 
---[[Translation missing --]]
---[[ L["Right"] = ""--]] 
+L["Reload to apply"] = "재시작 적용"
+L["Requires /reload to take effect."] = "적용하려면 /reload 가 필요합니다."
+L["Right"] = "오른쪽"
 L["Show Bag Icons"] = "가방 아이콘 표시"
 L["Show information on the tooltip about transmog sets."] = "툴팁에 형상변환 세트에 대한 정보를 표시합니다."
 L["Show Source Location Tooltip"] = "출처 위치 툴팁 표시"
@@ -63,12 +53,9 @@ L["Shows chat messages on login about the database scan."] = "데이터베이스
 L["Shows messages on login about the database scan."] = "데이터베이스 검색에 대한 로그인 시 메시지를 표시합니다."
 L["Shows the icon directly on the item in your bag."] = "가방에 있는 아이템에 형상변환 가능 여부를 아이콘으로 표시합니다."
 L["Sorry! Your database has corrupted entries. This will cause errors and give incorrect results. Please click below to reset the database."] = "당신의 자료에 문제가 발생했습니다. 잘못된 값의 결과를 나타낼 수 있습니다. 자료를 초기화 하십시오."
---[[Translation missing --]]
---[[ L["Top"] = ""--]] 
---[[Translation missing --]]
---[[ L["Top Left"] = ""--]] 
---[[Translation missing --]]
---[[ L["Top Right (default)"] = ""--]] 
+L["Top"] = "위"
+L["Top Left"] = "왼쪽 위"
+L["Top Right (default)"] = "오른쪽 위 (기본)"
 L["Transmoggable Items Only"] = "형상변환 가능한 아이템만 표시"
 L["Unknown Items Only"] = "형상변환 미등록 아이템만 표시"
 L["Updating appearances database."] = "형상 변환 자료를 갱신중입니다."

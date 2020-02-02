@@ -67,7 +67,7 @@ local function AddNotDiscoveredIcons(mixin, entities, mapID, atlasName)
 		end
 		for npcID, coords in pairs (entities[mapID]) do
 			-- Delete already found, opened without vignette or ignored
-			if (private.dbglobal.rares_found[npcID] or (private.dbchar.rares_not_discovered_ignored and private.dbchar.rares_not_discovered_ignored[npcID]) or private.dbchar.containers_opened[npcID] or private.dbchar.rares_killed[npcID]) then
+			if (private.dbglobal.rares_found[npcID] or (private.dbchar.rares_not_discovered_ignored and private.dbchar.rares_not_discovered_ignored[npcID]) or private.dbchar.containers_opened[npcID] or private.dbchar.rares_killed[npcID] or private.dbchar.events_completed[npcID]) then
 				entities[mapID][npcID] = nil
 			else
 				local npcInfo = {}
@@ -264,10 +264,20 @@ function RareScannerDataProviderMixin:AddPin(npcID, npcInfo, mapID)
 			end
 		end
 	-- If its an event
-	elseif (npcInfo.atlasName == RareScanner.EVENT_VIGNETTE) then
-		-- If compelted ignore it
-		if (private.dbchar.events_completed[npcID]) then
+	elseif (npcInfo.atlasName == RareScanner.EVENT_VIGNETTE or npcInfo.atlasName == RareScanner.EVENT_ELITE_VIGNETTE) then
+		-- If completed ignore it
+		local keepShowingAfterCompleted = false
+		if (private.dbchar.events_completed[npcID] and not private.db.map.keepShowingAfterCompleted) then
 			--RareScanner:PrintDebugMessage("DEBUG: Ignorado por estar completado")
+			return false
+		elseif (private.dbchar.events_completed[npcID] and private.db.map.keepShowingAfterCompleted) then
+			keepShowingAfterCompleted = true
+		end
+		
+		-- If its been seen after our max show time
+		-- Ignore if its completed and we want to keep showing its icon
+		if (not npcInfo.notDiscovered and not keepShowingAfterCompleted and private.db.map.maxSeenTimeEvent ~= 0 and time() - npcInfo.foundTime > private.db.map.maxSeenTimeEvent * 60) then
+			--RareScanner:PrintDebugMessage("DEBUG: Ignorado evento por haberle visto hace mas tiempo del configurado")
 			return false
 		end
 	end

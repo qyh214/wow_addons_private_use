@@ -73,6 +73,10 @@ local aceEvents = WeakAurasAceEvents
 local WeakAuras = WeakAuras;
 local L = WeakAuras.L;
 local GenericTrigger = {};
+local LCSA
+if WeakAuras.IsClassic() then
+  LCSA = LibStub("LibClassicSpellActionCount-1.0")
+end
 
 local event_prototypes = WeakAuras.event_prototypes;
 
@@ -356,6 +360,9 @@ local function RunOverlayFuncs(event, state)
       if (additionalProgress.max ~= b) then
         additionalProgress.max = b;
         changed = true;
+      end
+      if additionalProgress.direction then
+        changed = true
       end
       additionalProgress.direction = nil;
       additionalProgress.width = nil;
@@ -2116,9 +2123,16 @@ do
       end
     end
 
+    local count
+    if WeakAuras.IsClassic() then
+      count = LCSA:GetSpellReagentCount(id)
+    else
+      count = GetSpellCount(id)
+    end
+
     return charges, maxCharges, startTime, duration, unifiedCooldownBecauseRune,
            startTimeCooldown, durationCooldown, cooldownBecauseRune, startTimeCharges, durationCharges,
-           GetSpellCount(id);
+           count;
   end
 
   function WeakAuras.CheckSpellKnown()
@@ -2202,9 +2216,9 @@ do
       duration = duration or 0;
       local time = GetTime();
 
-      -- We check against 1.5 and not gcdDuration, as apparently the durations might not match exactly.
+      -- We check against 1.5 and gcdDuration, as apparently the durations might not match exactly.
       -- But there shouldn't be any trinket with a actual cd of less than 1.5 anyway
-      if(duration > 0 and duration > 1.5) then
+      if(duration > 0 and duration > 1.5 and duration ~= WeakAuras.gcdDuration()) then
         -- On non-GCD cooldown
         local endTime = startTime + duration;
 
@@ -2253,9 +2267,9 @@ do
       duration = duration or 0;
       local time = GetTime();
 
-      -- We check against 1.5 and not gcdDuration, as apparently the durations might not match exactly.
+      -- We check against 1.5 and gcdDuration, as apparently the durations might not match exactly.
       -- But there shouldn't be any trinket with a actual cd of less than 1.5 anyway
-      if(duration > 0 and duration > 1.5) then
+      if(duration > 0 and duration > 1.5 and duration ~= WeakAuras.gcdDuration()) then
         -- On non-GCD cooldown
         local endTime = startTime + duration;
 
@@ -2394,7 +2408,7 @@ do
         startTime, duration = 0, 0
       end
       itemCdEnabled[id] = enabled;
-      if(duration > 0 and duration > 1.5) then
+      if(duration > 0 and duration > 1.5 and duration ~= WeakAuras.gcdDuration()) then
         local time = GetTime();
         local endTime = startTime + duration;
         itemCdDurs[id] = duration;
@@ -2417,7 +2431,7 @@ do
       itemSlots[id] = GetInventoryItemID("player", id);
       local startTime, duration, enable = GetInventoryItemCooldown("player", id);
       itemSlotsEnable[id] = enable;
-      if(duration > 0 and duration > 1.5) then
+      if(duration > 0 and duration > 1.5 and duration ~= WeakAuras.gcdDuration()) then
         local time = GetTime();
         local endTime = startTime + duration;
         itemSlotsCdDurs[id] = duration;
@@ -2930,6 +2944,34 @@ do
   end
 end
 
+function WeakAuras.CheckTotemName(totemName, triggerTotemName, triggerTotemPattern, triggerTotemOperator)
+  if not totemName or totemName == "" then
+    return false
+  end
+
+  if triggerTotemName and #triggerTotemName > 0 and triggerTotemName ~= totemName then
+    return false
+  end
+
+  if triggerTotemPattern and #triggerTotemPattern > 0 then
+    if triggerTotemOperator == "==" then
+      if totemName ~= triggerTotemPattern then
+        return false
+      end
+    elseif triggerTotemOperator == "find('%s')" then
+      if not totemName:find(triggerTotemPattern, 1, true) then
+        return false
+      end
+    elseif triggerTotemOperator == "match('%s')" then
+      if not totemName:match(triggerTotemPattern) then
+        return false
+      end
+    end
+  end
+
+  return true
+end
+
 -- Weapon Enchants
 do
   local mh = GetInventorySlotInfo("MainHandSlot")
@@ -3379,6 +3421,10 @@ local commonConditions = {
   stacks = {
     display = L["Stacks"],
     type = "number"
+  },
+  name = {
+    display = L["Name"],
+    type = "string"
   }
 }
 
@@ -3410,6 +3456,10 @@ function GenericTrigger.GetTriggerConditions(data, triggernum)
 
       if (WeakAuras.event_prototypes[trigger.event].stacksFunc) then
         result.stacks = commonConditions.stacks;
+      end
+
+      if (WeakAuras.event_prototypes[trigger.event].nameFunc) then
+        result.name = commonConditions.name;
       end
 
       for _, v in pairs(WeakAuras.event_prototypes[trigger.event].args) do
@@ -3477,6 +3527,10 @@ function GenericTrigger.GetTriggerConditions(data, triggernum)
 
       if (trigger.customStacks and trigger.customStacks ~= "") then
         result.stacks = commonConditions.stacks;
+      end
+
+      if (trigger.customName and trigger.customName ~= "") then
+        result.name = commonConditions.name;
       end
 
       return result;
@@ -3632,5 +3686,7 @@ function GenericTrigger.GetTriggerDescription(data, triggernum, namestable)
     tinsert(namestable, {L["Trigger:"], L["Custom"]});
   end
 end
+
+
 
 WeakAuras.RegisterTriggerSystem({"event", "status", "custom"}, GenericTrigger);

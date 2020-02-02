@@ -2,6 +2,7 @@ local max = math.max;
 local GetText = GetText;
 local GetTexture = GetTexture;
 local NumLines = NumLines;
+local _;
 local _G = _G;
 local GetItemInfo = GetItemInfo;
 local UIFrameFadeIn = UIFrameFadeIn;
@@ -36,11 +37,13 @@ local SlotIDtoName = {
 Narci.SlotIDtoName = SlotIDtoName;
 -----------------------------------------------------
 
-local _, CommanderOfArgus = GetAchievementInfo(12078)                                   --Argus Weapon Transmogs: Arsenal: Weapons of the Lightforged
-CommanderOfArgus = CommanderOfArgus or "Commander of Argus"
-CommanderOfArgus = BATTLE_PET_SOURCE_6 .." |cFFFFD100"..CommanderOfArgus.."|r"
---print("Name: "..CommanderOfArgus)
+local _, CommanderOfArgus = GetAchievementInfo(12078);                                  --Argus Weapon Transmogs: Arsenal: Weapons of the Lightforged
+CommanderOfArgus = CommanderOfArgus or "Commander of Argus";
+CommanderOfArgus = "|cFFFFD100"..BATTLE_PET_SOURCE_6 .."|r "..CommanderOfArgus;
+--local EnsorcelledEverwyrm = C_MountJournal.GetMountFromSpell(307932);
+local _, _, PROMOTION_SHADOWLANDS = C_MountJournal.GetMountInfoExtraByID(1289);         --EnsorcelledEverwyrm   Promotion: Shadowlands Heroic Edition
 
+local HERITAGE_ARMOR = Narci.L["Heritage Armor"];
 local HeritageArmorItemIDs = {
     165931, 165932, 165933, 165934, 165935, 165936, 165937, 16598,                      --Dwarf
     161008, 161009, 161010, 161011, 161012, 161013, 161014, 161015,                     --Dark Iron
@@ -55,8 +58,12 @@ local HeritageArmorItemIDs = {
     164993, 164994, 164995, 164996, 164997, 164998, 164999, 165000,                     --Zandalari
     165002, 165003, 165004, 165005, 165006, 165007, 165008, 165009,                     --Kul'tiran
     168282, 168283, 168284, 168285, 168286, 168287, 168288, 168289, 168290,             --Gnome
-    168291, 168292, 168293, 168294, 168295, 168296, 168297, 168298, 170063,             --Tauren 
-    --Reserved for test↓
+    168291, 168292, 168293, 168294, 168295, 168296, 168297, 168298, 170063,             --Tauren
+    173968, 173966, 173970, 173971, 173967, 173969, 174354, 174355,                     --Vulpera
+    173961, 173962, 173963, 173964, 173958, 173972,                                     --Mechagnome
+    174000, 174001, 174002, 174003, 174004, 174005, 174006, 173999, 173998,             --Worgen
+
+    --Reserved for test ↓
     
 }
 
@@ -79,7 +86,17 @@ local SpecialItemList = {
     [152341] = CommanderOfArgus,            --Lustrous Eventide Greatsword
     [152342] = CommanderOfArgus,            --Lustrous Daybreak Staff
     [152343] = CommanderOfArgus,            --Lustrous Eventide Staff
-    --[157636] = CommanderOfArgus,            --Test
+
+    [172075] = PROMOTION_SHADOWLANDS,       --The Eternal Traveler's
+    [172076] = PROMOTION_SHADOWLANDS,
+    [172077] = PROMOTION_SHADOWLANDS,
+    [172078] = PROMOTION_SHADOWLANDS,
+    [172079] = PROMOTION_SHADOWLANDS,
+    [172080] = PROMOTION_SHADOWLANDS,
+    [172081] = PROMOTION_SHADOWLANDS,
+    [172082] = PROMOTION_SHADOWLANDS,
+    [172083] = PROMOTION_SHADOWLANDS,
+    --[134110] = PROMOTION_SHADOWLANDS,            --Test
 }
 
 local Ensemble_TheChosenDead_ItemIDs = {
@@ -95,7 +112,6 @@ local Ensemble_TheChosenDead_ItemIDs = {
     143338, 143369, 143365, 143363, 143362, 143357,
 };
 
-
 local function BuildSearchTable(table)
     if type(table) ~="table" then
         return;
@@ -107,7 +123,7 @@ local function BuildSearchTable(table)
         newTable[v] = true;
     end
 
-    wipe(table)
+    wipe(table);
     return newTable;
 end
 
@@ -126,12 +142,12 @@ Narci_ColorTable = {
 	[6] = {156, 165, 153},	--Drustvar
 	[7] = { 42,  63,  79},	--Halls of Shadow
 
-
-	--Main City--
+	--Major City--
     [84]  = { 35,  96, 147},	--Stormwind City
     
 	[85]  = {121,  52,  55},	--Orgrimmar
     [86]  = {121,  31,  35},	--Orgrimmar - Cleft of Shadow
+    [463] = {163,  99,  89},	--Echo Isles
     
     [87]  = {102,  64,  58},	--Ironforge
     [27]  = {151, 198, 213},	--Dun Morogh
@@ -143,11 +159,30 @@ Narci_ColorTable = {
     
     [90]  = { 42,  63,  79},	--Undercity
 
-	[625] = { 42,  63,  79},	--Dalaran  	Broken Isles Halls of Shadow
-	[626] = { 42,  63,  79},	--Hall of Shadow
-	[627] = {102,  58,  64},	--Dalaran  	Broken Isles
+    [110] = {172,  58,  54},    --Silvermoon City
 
-	-- BFA --
+    [202]  = {78,  78,  78},    --Gilneas City
+    [217]  = {78,  78,  78},    --Ruins of Gilneas
+    [627] = {102,  58,  64},	--Dalaran  	Broken Isles
+    [111] = {88,  108,  91},	--Shattrath City
+
+    -- TBC --
+    [107] = {181,  151, 93},	--Nagrand Outland
+    [109] = {96,   48, 108},	--Netherstorm
+    [102] = {61,   77, 162},	--Zangarmash
+    [105] = {123, 104,  80},	--Blade's Edge Mountains
+
+    -- MOP --
+    [378] = {120, 107,  81},	--The Wandering Isle
+    [371] = { 95, 132,  78},    --The Jade Forrest
+    [379] = { 90, 119, 156},    --Kun-Lai Summit
+
+    -- LEG --
+    [641] = { 70, 128, 116},    --Val'sharah
+
+    -- BFA --
+    [81]  = { 98,  84,  77},    --Silithus
+    [1473]= {168, 136,  90},    --Chamber of Heart
 	[1163]= { 89, 140, 123},	--Dazar'alor - The Great Seal
 	[1164]= { 89, 140, 123},	--Dazar'alor - Hall of Chroniclers
 	[1165]= { 89, 140, 123},	--Dazar'alor
@@ -162,11 +197,48 @@ Narci_ColorTable = {
     [1462] = {16, 156, 192},    --Mechagon
     [1355] = {41,  74, 127},    --Nazjatar
 
+    [249]  = {180,149, 121},    --Uldum Normal
+    [1527] = {180,149, 121},    --Uldum Assault
+    [390]  = {150, 117, 94},    --Eternal Blossoms Normal
+    [1530] = {150, 117, 94},    --Eternal Blossoms Assault
+    ["NZ"] = {105, 71, 156},    --During Assault: N'Zoth Purple Skybox
+
     --Allied Race Starting Zone--
     [124]  = {87,  56, 132},    --DK
     [1186] = {117,  26, 22},    --Dark Iron
+    [971]  = {65, 57, 124},     --Void Elf
 
+    --Class Hall
+	[625] = { 42,  63,  79},	--Dalaran, Broken Isles  Halls of Shadow
+    [626] = { 42,  63,  79},	--Hall of Shadow
+    [715] = {149, 180, 146},    --Emerald Dreamway
+    [747] = { 70, 128, 116},    --The Dreamgrove
+
+    --Frequently Visited
+    [198]  = {78,  78,  78},    --Hyjal
 };
+
+-- 8.3 When Assault: N'Zoth is active, the map uses a different skybox (purple). This quest's location alters every week, so we need to re-index a color preset during the login
+local AssignColor = CreateFrame("Frame");
+AssignColor:RegisterEvent("PLAYER_ENTERING_WORLD");
+AssignColor:SetScript("OnEvent", function(self)
+    self:UnregisterEvent("PLAYER_ENTERING_WORLD");
+    C_Timer.After(2, function()
+        local tag;
+        tag = IsQuestComplete(57566);           --N'Zoth Assault Tracker (Uldum)
+        if tag then
+            Narci_ColorTable[1527] = {105, 71, 156};
+            --print("N'Zoth in Uldum")
+        else
+            tag = IsQuestComplete(57567);       --N'Zoth Assault Tracker (Vale)
+            if tag then
+                Narci_ColorTable[1530] = {105, 71, 156};
+                --print("N'Zoth in Vale")
+            end
+        end
+    end)
+end);
+----------------------------------------------------------------------
 
 Narci_FontColor = {
     ["Brown"] = {0.85098, 0.80392, 0.70588, "|cffd9cdb4"},
@@ -175,6 +247,7 @@ Narci_FontColor = {
     ["White"] = {0.88, 0.88, 0.88, "|cffe0e0e0"},
     ["Good"] = {0.4862, 0.7725, 0.4627, "|cff7cc576"},
     ["Bad"] = {1, 0.3137, 0.3137, 0.3137, "|cffff5050"},
+    ["Corrupt"] = {0.584, 0.428, 0.82, "|cff946dd1"},
 };
 
 local BorderTexture = {
@@ -183,14 +256,16 @@ local BorderTexture = {
         [1] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder",
         [2] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Uncommon",
         [3] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Rare",
-        [4] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Epic",
+        [4] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Epic",   --Epic NZoth
         [5] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Legendary",
         [6] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Artifact",
         [7] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Heirloom",	--Void
         [8] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Azerite",
         [12] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Special",
         ["Heart"] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Heart",    --Heart
-        ["Minimap"] = "Interface/AddOns/Narcissus/Art/Minimap/LOGO",
+        ["NZoth"] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-NZoth",
+        ["BlackDragon"] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-BlackDragon",    --8.3 Legendary Cloak
+        ["Minimap"] = "Interface/AddOns/Narcissus/Art/Minimap/LOGO-Purple",
     },
 
     ["Dark"] = {
@@ -198,14 +273,16 @@ local BorderTexture = {
         [1] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Black",
         [2] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Uncommon",
         [3] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Rare",
-        [4] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Epic",
+        [4] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Epic",    --Epic
         [5] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Legendary",
         [6] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Artifact",
         [7] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Heirloom",	--Void
         [8] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Azerite",
         [12] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Black",
         ["Heart"] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Heart",    --Heart
-        ["Minimap"] = "Interface/AddOns/Narcissus/Art/Minimap/LOGO-Thick",
+        ["NZoth"] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-NZoth",
+        ["BlackDragon"] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-BlackDragon",    --8.3 Legendary Cloak
+        ["Minimap"] = "Interface/AddOns/Narcissus/Art/Minimap/LOGO-Purple",                                --only enable Thick minimap when AzeriteUI is loaded
     },
 }
 
@@ -227,7 +304,7 @@ function NarciAPI_GetItemEnchant(itemLink)
     return tonumber(EnchantID) or 0;
 end
 
-function NarciAPI_IsHeritageArmor(itemID)
+local function IsHeritageArmor(itemID)
     if not itemID then
         return false;
     end
@@ -243,8 +320,12 @@ function NarciAPI_IsSpecialItem(itemID, modID)
     if not itemID then
         return false;
     end
-    
-    local itemSource = SpecialItemList[itemID]
+
+    if IsHeritageArmor(itemID) then
+        return true, HERITAGE_ARMOR;
+    end
+
+    local itemSource = SpecialItemList[itemID];
     if itemSource ~= nil then
         --print("Is Special")
         return true, itemSource;
@@ -291,6 +372,7 @@ function NarciAPI_GetItemStats(itemLocation)
         statsTable.haste = 0;
         statsTable.mastery = 0;
         statsTable.versatility = 0;
+        statsTable.corruption = 0;
         statsTable.GemIcon = "";
         statsTable.GemPos = "";
         statsTable.EnchantPos = "";
@@ -301,13 +383,14 @@ function NarciAPI_GetItemStats(itemLocation)
 
     local ItemLevel = C_Item.GetCurrentItemLevel(itemLocation)
     local itemLink = C_Item.GetItemLink(itemLocation)
-    local stats = GetItemStats(itemLink);
+    local stats = GetItemStats(itemLink) or {};
     local prim = stats["ITEM_MOD_AGILITY_SHORT"] or stats["ITEM_MOD_STRENGTH_SHORT"] or stats["ITEM_MOD_INTELLECT_SHORT"] or 0;
     local stamina = stats["ITEM_MOD_STAMINA_SHORT"] or 0;
     local crit = stats["ITEM_MOD_CRIT_RATING_SHORT"] or 0;
     local haste = stats["ITEM_MOD_HASTE_RATING_SHORT"] or 0;
     local mastery = stats["ITEM_MOD_MASTERY_RATING_SHORT"] or 0;
     local versatility = stats["ITEM_MOD_VERSATILITY"] or 0;
+    local corruption = stats["ITEM_MOD_CORRUPTION"] or 0;
 
     statsTable.prim = prim;
     statsTable.stamina = stamina;
@@ -315,6 +398,7 @@ function NarciAPI_GetItemStats(itemLocation)
     statsTable.haste = haste;
     statsTable.mastery = mastery;
     statsTable.versatility = versatility;
+    statsTable.corruption = corruption;
     statsTable.ilvl = ItemLevel;
 
     --Calculate bonus from Gems and Enchants--
@@ -367,11 +451,18 @@ function NarciAPI_GetItemStats(itemLocation)
 
     return statsTable;
 end
+
+function NarciAPI_GetSlotStats(slotID)
+    local itemLocation = ItemLocation:CreateFromEquipmentSlot(slotID);
+    local itemLink = C_Item.GetItemLink(itemLocation)
+    stats = GetItemStats(itemLink);
+end
+
 --------------------
 ----Tooltip Scan----
 --------------------
 
-local TP = CreateFrame("GameTooltip", "NarciVirtualTooltip", nil, "GameTooltipTemplate")
+local TP = CreateFrame("GameTooltip", "NarciVirtualTooltip", nil, "GameTooltipTemplate");
 TP:SetScript("OnLoad", GameTooltip_OnLoad);
 TP:SetOwner(UIParent, 'ANCHOR_NONE');
 
@@ -379,7 +470,7 @@ local SocketAction = ITEM_SOCKETABLE;
 local find = string.find;
 local SocketPath = "ItemSocketingFrame";
 function NarciAPI_IsItemSocketable(itemLink, SocketID)
-    if not itemLink then    return; end
+    if not itemLink then return; end
     if not SocketID then SocketID = 1; end
     local gemName, gemLink = GetItemGem(itemLink, SocketID)
     if gemName then
@@ -399,9 +490,7 @@ function NarciAPI_IsItemSocketable(itemLink, SocketID)
         tex = _G["NarciVirtualTooltip".."Texture"..i]
         texID = tex and tex:GetTexture();
         --print(texID)
-        --if texID and find(texID, SocketPath) then
         if texID == 458977 then     --no file name anymore 458977:Regular empty socket texture
-            --print("Has Socket")
             return "Empty", nil;
         end
     end
@@ -415,6 +504,17 @@ function NarciAPI_IsItemSocketable(itemLink, SocketID)
     end
     --]]
     return nil, nil;
+end
+
+function NarciAPI_GetItemRank(itemLink)
+    --Items that can get upgraded
+    if not itemLink then return; end
+    TP:SetHyperlink(itemLink);
+    local fontstring = _G["NarciVirtualTooltip".."TextLeft"..2];
+    fontstring = fontstring:GetText() or "";
+    fontstring = strtrim(fontstring, "|r");
+    local rank = string.match(fontstring, "%d+", -2) or "";
+    return "|cff00ccff"..rank.."|r"
 end
 
 local strtrim = strtrim;
@@ -468,8 +568,6 @@ local function formatString(text, removedText)
     return text;
 end
 
-
-
 local onUse = ITEM_SPELL_TRIGGER_ONUSE;
 local onEquip = ITEM_SPELL_TRIGGER_ONEQUIP;
 local onProc = ITEM_SPELL_TRIGGER_ONPROC;
@@ -519,7 +617,7 @@ end
 
 function NarciAPI_GetGemBonus(itemID)
     --itemID: Gem's Item ID or hyperlink
-    if not itemID then    return; end
+    if not itemID then return; end
     if type(itemID) == "number" then
         TP:SetItemByID(itemID)
     else
@@ -553,6 +651,53 @@ function NarciAPI_GetGemBonus(itemID)
     return output, level;
 end
 
+function TestItemLinkAffix(from, to)
+    local TP = TP;
+    local max = max;
+    local total = 0;
+    local s = from  --6500;
+    local e = to    --6600;
+    local output;
+    local itemLink;
+    local function GetExtraInfo()
+        itemLink = "\124cffa335ee\124Hitem:174954::::::::120::::2:1477:".. s ..":\124h[]\124h\124r";
+        TP:SetHyperlink(itemLink);
+        local num = TP:NumLines();
+        local begin = max(num - 3, 0);
+        local str;
+    
+        for i = begin, num, 1 do
+            str = nil;
+            str = _G["NarciVirtualTooltip".."TextLeft"..i]
+            if not str then
+                break;
+            else
+                str = str:GetText();
+            end
+            
+            if find(str, onEquip) then
+                print("|cFFFFD100"..s.."|r "..str);
+                break
+            end
+        end
+
+        s = s + 1;
+        total = total + 1;
+        if s < e and total < 1000 then
+            C_Timer.After(0, GetExtraInfo);
+        else
+            print("Search Complete")
+        end
+    end
+
+    print("Search from "..s.." to "..e);
+    for i = s, e do
+        --Cache
+        itemLink = "\124cffa335ee\124Hitem:174954::::::::120::::2:1477:".. i ..":\124h[]\124h\124r";
+        TP:SetHyperlink(itemLink);
+    end
+    C_Timer.After(1, GetExtraInfo);
+end
 --------------------
 ---Formating API----
 --------------------
@@ -609,6 +754,24 @@ end
 --------------------
 ---UI Element API---
 --------------------
+NarciUIMixin = {};
+
+function NarciUIMixin:Highlight(state)
+    if state then
+        self.Border.Highlight:SetAlpha(1);
+        self.Border.Normal:SetAlpha(0);
+    else
+        self.Border.Highlight:SetAlpha(0);
+        self.Border.Normal:SetAlpha(1);
+    end
+end
+
+function NarciUIMixin:SetColor(r, g, b)
+    if self.Color then
+        self.Color:SetColorTexture(r/255, g/255, b/255);
+    end
+end
+
 local screenWidth, screenHeight = GetPhysicalScreenSize();
 local UIParentWidth, UIParentHeight = UIParent:GetSize();
 
@@ -965,6 +1128,37 @@ function NarciAPI_ShowDelayedTooltip(point, relativeTo, relativePoint, ofsx, ofs
     TP:Show();
 end
 
+-----Run Delayed Function-----
+local DelayedFunc = CreateFrame("Frame");
+DelayedFunc:Hide();
+DelayedFunc.delay = 0;
+DelayedFunc.t = 0;
+
+DelayedFunc:SetScript("OnHide", function(self)
+    self.focus = nil;
+    self.t = 0;
+end)
+
+DelayedFunc:SetScript("OnUpdate", function(self, elapsed)
+    self.t = self.t + elapsed;
+    if self.t >= self.delay then
+        if self.focus == GetMouseFocus() then
+            self.func();
+        end
+        self:Hide();
+    end
+end)
+
+function NarciAPI_RunDelayedFunction(frame, delay, func)
+    DelayedFunc:Hide();
+    if func and type(func) == "function" then
+        delay = delay or 0;
+        DelayedFunc.focus = frame;
+        DelayedFunc.delay = delay;
+        DelayedFunc.func = func;
+        DelayedFunc:Show();
+    end
+end
 -----Alert Frame-----
 NarciAlertFrameMixin = {};
 
@@ -1026,6 +1220,154 @@ function NarciAlertFrameMixin:AddMessage(msg, UseErrorAnimation)
 end
 
 
+
+------------------------
+--Filled Bar Animation--
+------------------------
+local cos = math.cos;
+local pi = math.pi;
+local function inOutSine(t, b, c, d)
+	return -c / 2 * (cos(pi * t / d) - 1) + b
+end
+
+local FluidAnim = CreateFrame("Frame");
+FluidAnim:Hide();
+FluidAnim.d = 0.5;
+FluidAnim.d1 = 0.25;
+FluidAnim.d2 = 0.5;
+
+local function FluidLevel(self, elapsed)
+	self.t = self.t + elapsed;
+	local height = inOutSine(self.t, self.startHeight, self.endHeight - self.startHeight, self.d);
+	if self.t >= self.d then
+		height = self.endHeight;
+		self:Hide();
+	end
+	self.Fluid:SetHeight(height);
+end
+
+local function FluidUp(self, elapsed)
+	self.t = self.t + elapsed;
+	local height;
+	if self.t <= self.d1 then
+		height = inOutSine(self.t, self.startHeight, 84 - self.startHeight, self.d1);
+    elseif self.t < self.d3 then
+        if not self.colorChanged then
+            self.colorChanged = true;
+            self.Fluid:SetColorTexture(self.r, self.g, self.b);
+        end
+		height = inOutSine(self.t - self.d1, 0.01, self.endHeight, self.d2);
+	else
+		height = self.endHeight;
+		self:Hide();
+	end
+	self.Fluid:SetHeight(height);
+end
+
+local function FluidDown(self, elapsed)
+	self.t = self.t + elapsed;
+	local height;
+	if self.t <= self.d1 then
+		height = inOutSine(self.t, self.startHeight, 0.01 - self.startHeight, self.d1);
+    elseif self.t < self.d3 then
+        if not self.colorChanged then
+            self.colorChanged = true;
+            self.Fluid:SetColorTexture(self.r, self.g, self.b);
+        end
+		height = inOutSine(self.t - self.d1, 84, self.endHeight - 84, self.d2);
+	else
+		height = self.endHeight;
+		self:Hide();
+	end
+	self.Fluid:SetHeight(height);
+end
+
+FluidAnim:SetScript("OnShow", function(self)
+    self.t = 0;
+    self.colorChanged = false;
+end);
+
+function NarciAPI_SmoothFluid(bar, newHeight, newLevel, r, g, b)
+	local FluidAnim = FluidAnim;
+	FluidAnim:Hide();
+    FluidAnim.endHeight = newHeight;
+    FluidAnim.Fluid = bar;
+    FluidAnim.r, FluidAnim.g, FluidAnim.b = r, g, b;
+
+	local oldLevel = FluidAnim.oldCorruptionLevel or newLevel;
+	FluidAnim.oldCorruptionLevel = newLevel;
+
+	local t1, t2;
+	local h = FluidAnim.Fluid:GetHeight();
+	FluidAnim.startHeight = h;
+
+	if newLevel == oldLevel then
+		FluidAnim:SetScript("OnUpdate", FluidLevel);
+        FluidAnim.d = math.max( math.abs(h - FluidAnim.endHeight) / 84 , 0.35); 
+        bar:SetColorTexture(r, g, b);
+	elseif newLevel < oldLevel then
+		FluidAnim:SetScript("OnUpdate", FluidDown);
+		t1 = math.max(h / 84, 0);
+		t2 = math.max((84 - FluidAnim.endHeight) / 84, 0.4);
+		FluidAnim.d1 = t1
+		FluidAnim.d2 = t2
+		FluidAnim.d3 = t1 + t2;
+	else
+		FluidAnim:SetScript("OnUpdate", FluidUp);
+		t1 = math.max((84 - h) / 84, 0);
+		t2 = math.max(FluidAnim.endHeight / 84, 0.4);
+		FluidAnim.d1 = t1
+		FluidAnim.d2 = t2
+		FluidAnim.d3 = t1 + t2;
+	end
+	
+	C_Timer.After(0, function()
+		FluidAnim:Show();
+	end)
+
+	return t1
+end
+
+
+local EyeballTexture = "Interface\\AddOns\\Narcissus\\ART\\Widgets\\CorruptionSystem\\Eyeball-Orange";
+local CorruptionColor = "|cfff57f20";
+local FluidColors = {0.847, 0.349, 0.145};
+        
+function NarciAPI_GetEyeballColor()
+    return EyeballTexture, CorruptionColor, FluidColors[1], FluidColors[2], FluidColors[3];
+end
+
+function NarciAPI_SetEyeballColor(index)
+    if index == 4 then
+        EyeballTexture = "Interface\\AddOns\\Narcissus\\ART\\Widgets\\CorruptionSystem\\Eyeball-Blue";
+        CorruptionColor = "|cff83c7e7";
+        FluidColors = {0.596, 0.73, 0.902};
+    elseif index == 2 then
+        EyeballTexture = "Interface\\AddOns\\Narcissus\\ART\\Widgets\\CorruptionSystem\\Eyeball-Purple";
+        CorruptionColor = "|cfff019ff";
+        FluidColors = {0.87, 0.106, 0.949};
+    elseif index == 3 then
+        EyeballTexture = "Interface\\AddOns\\Narcissus\\ART\\Widgets\\CorruptionSystem\\Eyeball-Green";
+        CorruptionColor = "|cff8cdacd";
+        FluidColors = {0.56, 0.855, 0.757};
+    else
+        index = 1;
+        EyeballTexture = "Interface\\AddOns\\Narcissus\\ART\\Widgets\\CorruptionSystem\\Eyeball-Orange";
+        CorruptionColor = "|cfff57f20";
+        FluidColors = {0.847, 0.349, 0.145};
+    end
+
+    NarcissusDB.EyeColor = index;
+    local Preview = Narci_EyeColorPreview;
+    local ColorButtons = Preview:GetParent().ColorButtons;
+    Preview:SetTexCoord(0.25*(index - 1), 0.25*index, 0, 1);
+    for i = 1, #ColorButtons do
+        ColorButtons[i]:Highlight(false);
+    end
+    ColorButtons[index]:Highlight(true);
+
+    Narci:SetItemLevel();
+end
 
 --------------------
 --UI 3D Animation---
@@ -1184,3 +1526,432 @@ end
 
 --Time
 --C_DateAndTime.GetCurrentCalendarTime
+
+local ActorIDByRace = {
+    --local GenderID = UnitSex(unit);   2 Male 3 Female
+	--[raceID] = {male actorID, female actorID, bustOffsetZ_M, bustOffsetZ_F},
+    [2]  = {483, 483},		-- Orc bow
+    [3]  = {471, nil},		-- Dwarf
+    [5]  = {472, 487},		-- UD   0.9585 seems small
+    [6]  = {449, 484},		-- Tauren
+    [7]  = {450, 450},		-- Gnome
+    [8]  = {485, 486},		-- Troll  0.9414 too high?  
+    [9]  = {476, 477},		-- Goblin
+    [11] = {475, 501},		-- Goat
+    [22] = {474, 500},      -- Worgen
+    [24] = {473, 473},		-- Pandaren
+    [28] = {490, 491},		-- Highmountain Tauren
+    [30] = {488, 489},		-- Lightforged Draenei
+    [31] = {492, 492},		-- Zandalari
+    [32] = {494, 497},		-- Kul'Tiran
+    [34] = {499, nil},		-- Dark Iron Dwarf
+    [35] = {924, 923},      -- Vulpera
+    [36] = {495, 498},		-- Mag'har
+    [37] = {929, 931},      -- Mechagnome
+}
+
+local ZoomDistanceByRace = {
+    --[raceID] = {male Zoom, female Zoom, bustOffsetZ_M, bustOffsetZ_F},
+    [1]  = {2.4, 2},		-- Human
+    [2]  = {2.5, 2},		-- Orc bow
+    [3]  = {2.5, 2},		-- Dwarf
+    [4]  = {2.2, 2.1},      -- Night Elf
+    [5]  = {2.5, 2},		-- UD
+    [6]  = {3, 2.5},		-- Tauren
+    [7]  = {2.6, 2.8},		-- Gnome
+    [8]  = {2.5, 2},		-- Troll
+    [9]  = {2.9, 2.9},		-- Goblin
+    [10] = {2, 2},          -- Blood Elf
+    [11] = {2.4, 2},		-- Goat
+    [22] = {2.8, 2},        -- Worgen
+    [24] = {2.9, 2.4},		-- Pandaren
+    [27] = {2, 2},		-- Nightborne
+    --[29] = {2, 2},            -- Void Elf
+    --[28] = {2, 2},		-- Highmountain Tauren
+    --[30] = {2, 2},		-- Lightforged Draenei
+    [31] = {2.2, 2},		-- Zandalari
+    [32] = {2.4, 2.3},		-- Kul'Tiran
+    --[34] = {2, 2},		-- Dark Iron Dwarf
+    [35] = {2.6, 2.1},      -- Vulpera
+    --[36] = {2, 2},		-- Mag'har
+    --[37] = {2, 2},      -- Mechagnome
+}
+
+function NarciAPI_GetCameraZoomDistanceByUnit(unit)
+    if not UnitExists(unit) or not UnitIsPlayer(unit) or not CanInspect(unit, false) then return; end
+    
+    local _, _, raceID = UnitRace(unit);
+    local genderID = UnitSex(unit);
+    if raceID == 25 or raceID == 26 then --Pandaren A|H
+        raceID = 24;
+    elseif raceID == 29 then
+        raceID = 10;
+    elseif raceID == 37 then
+        raceID = 7;
+    elseif raceID == 30 then
+        raceID = 11;
+    elseif raceID == 28 then
+        raceID = 6;
+    elseif raceID == 34 then
+        raceID = 3;
+    elseif raceID == 36 then
+        raceID = 2;
+    elseif raceID == 22 then
+        if unit == "player" then
+            local _, inAlternateForm = HasAlternateForm();
+            if not inAlternateForm then
+                --Wolf
+                raceID = 22;
+            else
+                raceID = 1;
+            end
+        end
+    end
+    if not (raceID and genderID) then
+        return 2
+    elseif ZoomDistanceByRace[raceID] then
+        return ZoomDistanceByRace[raceID][genderID - 1] or 2;
+    else
+        return 2
+    end
+end
+
+local DefaultActorInfoID = 438;
+local function GetActorIDByUnit(unit)
+    if not UnitExists(unit) or not UnitIsPlayer(unit) or not CanInspect(unit, false) then return; end
+    
+    local _, _, raceID = UnitRace(unit);
+    local genderID = UnitSex(unit);
+    if raceID == 25 or raceID == 26 then --Pandaren A|H
+        raceID = 24
+    end
+    if not (raceID and genderID) then
+        return DefaultActorInfoID;     --438
+    elseif ActorIDByRace[raceID] then
+        return ActorIDByRace[raceID][genderID - 1] or DefaultActorInfoID;
+    else
+        return DefaultActorInfoID;     --438
+    end
+end
+
+local GetModelSceneActorInfoByID = C_ModelInfo.GetModelSceneActorInfoByID;
+function NarciAPI_GetActorInfoByUnit(unit)
+    return GetModelSceneActorInfoByID(GetActorIDByUnit(unit))
+end
+
+function NarciAPI_SetupModelScene(modelScene, modelFileID, zoomDistance, view, actorIndex, UseTransit)
+    local pi = math.pi;
+    local model = modelScene;
+
+    local actorTag;
+    if not actorIndex then
+        actorTag = "narciEffectActor";
+    else
+        actorTag = "narciEffectActor"..actorIndex
+    end
+
+    local actor = model[actorTag];
+
+    if not actor then
+        local actorID = 156;    --effect    C_ModelInfo.GetModelSceneActorInfoByID(156)
+        local actorInfo = C_ModelInfo.GetModelSceneActorInfoByID(actorID);
+        actor = model:AcquireAndInitializeActor(actorInfo);
+        actor:SetYaw(pi);
+        model[actorTag] = actor;
+
+        local parentFrame = model:GetParent();
+        if parentFrame then
+            model:SetFrameLevel(parentFrame:GetFrameLevel() + 1 or 20);
+        else
+            model:SetFrameLevel(20);
+        end
+    end
+    
+    local cameraTag = "NarciUI";
+    local camera = model.narciCamera;
+    if not camera then
+        camera = CameraRegistry:CreateCameraByType("OrbitCamera");
+        if camera then
+            model.narciCamera = camera;
+            model:AddCamera(camera);
+            local modelSceneCameraInfo = C_ModelInfo.GetModelSceneCameraInfoByID(114);
+            camera:ApplyFromModelSceneCameraInfo(modelSceneCameraInfo, 1, 1);    --1 ~ CAMERA_TRANSITION_TYPE_IMMEDIATE / CAMERA_MODIFICATION_TYPE_DISCARD
+        end
+    end
+
+    model:SetActiveCamera(camera);
+
+    if modelFileID then
+        actor:SetModelByFileID(modelFileID);
+    end
+    
+    if zoomDistance then
+        if UseTransit then
+            --change camera.targetInterpolationAmount for smoothing time    --:GetTargetInterpolationAmount() :SetTargetInterpolationAmount(value)
+            camera:SetZoomDistance(1);
+            camera:SnapAllInterpolatedValues();
+            C_Timer.After(0, function()
+                camera:SetZoomDistance(zoomDistance);
+            end);    
+        else
+            camera:SetZoomDistance(zoomDistance);
+            camera:SynchronizeCamera();
+        end
+    end
+
+    if view then
+        local pitch, yaw;
+        if type(view) == "string" then
+            view = strupper(view);
+            if view == "FRONT" then
+                pitch = 0;
+                yaw = pi;
+            elseif view == "BACK" then
+                pitch = 0;
+                yaw = 0;
+            elseif view == "TOP" then
+                pitch = pi/2;
+                yaw = pi; 
+            elseif view == "BOTTOM" then
+                pitch = -pi/2;
+                yaw = pi;
+            elseif view == "LEFT" then
+                pitch = 0;
+                yaw = -pi/2;  
+            elseif view == "RIGHT" then
+                pitch = 0;
+                yaw = pi/2;
+            else
+                return;                    
+            end
+        elseif type(view) == "table" then
+            pitch = view[1];
+            yaw = view[2];
+            if not (pitch and yaw) then
+                return;
+            end
+        end
+
+        actor:SetPitch(pitch);
+        actor:SetYaw(yaw);
+    end
+
+    --[[
+    if rollDegree then
+        actor:SetRoll(rad(-rollDegree))     --Clockwise
+    end
+    --]]
+end
+
+local function ReAnchorFrame(frame)
+    --maintain frame top position when changing its height
+    local oldCenterX = frame:GetCenter();
+    --local oldBottom = frame:GetBottom();
+    local oldTop = frame:GetTop();
+    local screenWidth = WorldFrame:GetWidth();
+    local screenHeight = WorldFrame:GetHeight();
+    local scale = frame:GetEffectiveScale();
+    if not scale or scale == 0 then
+        scale = 1;
+    end
+    local width = frame:GetWidth()/2;
+    frame:ClearAllPoints();
+    --frame:SetPoint("BOTTOMRIGHT", nil, "BOTTOMRIGHT", oldCenterX + width - screenWidth / scale , oldBottom);
+    frame:SetPoint("TOPRIGHT", nil, "TOPRIGHT", oldCenterX + width - screenWidth / scale , oldTop - screenHeight/scale);
+end
+
+local function ParserButton_ShowTooltip(self)
+    if self.itemLink and not CursorHasItem() then
+        local frame =self:GetParent();
+        local TP = frame.tooltip;
+        --GameTooltip_SetBackdropStyle(TP, GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM);
+        TP:SetBackdrop(nil);
+        TP:SetOwner(self, "ANCHOR_NONE");
+        TP:SetPoint("TOP", frame.ItemString, "BOTTOM", 0, -14);
+        TP:SetHyperlink(self.itemLink);
+        TP:SetMinimumWidth(254 / 0.8);
+        TP:Show();
+        frame:SetHeight( math.max (math.floor(TP:GetHeight() - 260), 0) + 400);
+        ReAnchorFrame(frame);
+    end
+end
+
+local function ParserButton_GetCursor(self)
+    local infoType, itemID, itemLink = GetCursorInfo();
+    self.Highlight:Hide()
+
+    if not (infoType and infoType == "item") then
+        return
+    elseif not IsCorruptedItem(itemLink) then
+        self:GetParent().ItemName:SetText("Not a Corrupted Item");
+        C_Timer.After(2, function()
+            self:GetParent().ItemName:SetText("Drop a Corrupted Item Here");
+        end);
+        ClearCursor();
+        return
+    end
+    ClearCursor();
+    self.itemLink = itemLink;
+
+    local itemName, _, itemQuality, itemLevel, _, _, _, _, itemEquipLoc, itemIcon = GetItemInfo(itemLink);
+    local itemString = string.match(itemLink, "item:([%-?%d:]+)");
+    local supposedEffect, corruptionID = NarciAPI_GetCorruptedItemAffix(itemLink);
+    local hasGem = NarciAPI_IsItemSocketable(itemLink);
+    local enchantID = GetItemEnchant(itemLink);
+    local corruption = GetItemStats(itemLink)["ITEM_MOD_CORRUPTION"] or 0;
+    local _, extraEffect = NarciAPI_GetItemExtraEffect(itemLink);
+    local r, g, b = GetItemQualityColor(itemQuality);
+    local HEX_PURPLE = "|c"..CORRUPTION_COLOR:GenerateHexColor();
+
+    if extraEffect then
+        extraEffect = HEX_PURPLE.. extraEffect
+    end
+
+    if supposedEffect then
+        supposedEffect = supposedEffect.."  ".."|cff946dd1"..corruption.."|r";
+    else
+        supposedEffect = "|cff946dd1"..corruption.."|r";
+    end
+
+    if hasGem then
+        supposedEffect = supposedEffect.."  ".."|cff40C7ebSocket|r"
+    end
+
+    local enchantName;
+    local colorizedString = itemString;
+    if enchantID and enchantID ~= 0 then
+        local GREEN = "|cff1eff00";
+        local info = Narci_EnchantInfo[enchantID];
+        if info then
+            enchantName = string.gsub(info[1], "%a", string.upper, 1).." "..info[2];
+            supposedEffect = supposedEffect.."  "..GREEN..enchantName.."|r";
+        end
+        colorizedString = string.gsub(itemString, enchantID, GREEN..enchantID.."|r", 1);
+    end
+
+    if corruptionID then
+        colorizedString = string.gsub(colorizedString, corruptionID, HEX_PURPLE..corruptionID.."|r", 1);
+    end
+
+    --Show info
+    self.ItemIcon:SetTexture(itemIcon);
+    local frame = self:GetParent();
+    frame.ItemName:SetText(supposedEffect);
+    frame.ItemName:SetTextColor(r, g, b);
+    frame.ItemString:SetText(colorizedString);
+    frame.SupposedEffect:SetText(supposedEffect);
+    frame.ActualEffect:SetText(extraEffect);
+
+    frame.Pointer:Hide();
+
+    ParserButton_ShowTooltip(self)
+end
+
+
+
+function Narci_ItemParser_OnLoad(self)
+    self:SetUserPlaced(false)
+    self:ClearAllPoints();
+    self:SetPoint("CENTER", UIParent, "CENTER", 0, 0);
+    self:RegisterForDrag("LeftButton");
+    self:SetScript("OnShow", ReAnchorFrame);
+    self.ItemButton:SetScript("OnReceiveDrag", ParserButton_GetCursor);
+    self.ItemButton:SetScript("OnClick", ParserButton_GetCursor);
+    self.ItemButton:SetScript("OnEnter", ParserButton_ShowTooltip);
+
+    local locale = GetLocale();
+    local version, build, date, tocversion = GetBuildInfo();
+
+    self.ClientInfo:SetText(locale.."  "..version.."."..build.."  "..NARCI_VERSION_INFO);
+
+    local TP = CreateFrame("GameTooltip", "Narci_ItemParserTooltip", self, "GameTooltipTemplate");
+    TP:Hide();
+    self.tooltip = TP;
+
+    local scale = 0.8;
+    local tooltipScale = 0.8;
+    self:SetScale(0.8);
+    TP:SetScale(tooltipScale);
+end
+
+----Utility----
+local DistanceCalculator;
+local MovementListener;
+
+function NarciAPI_ActivateDistanceCalculator(calibrateDistance)
+    if not DistanceCalculator then
+        --Timer frame
+        DistanceCalculator = CreateFrame("Frame");
+        DistanceCalculator:Hide();
+        DistanceCalculator.basicSpeed = 0;
+
+        local function OnUpdate(self, elapsed)
+            self.t = self.t + elapsed;
+        end
+
+        DistanceCalculator:SetScript("OnShow", function(self)
+            self.t = 0;
+        end);
+
+        DistanceCalculator:SetScript("OnHide", function(self)
+            print(self.t);
+            if self.basicSpeed > 0 then
+                local d = self.basicSpeed * self.t;
+                d = math.floor(d * 100 + 0.5) / 100;
+                print("|cffFFF569"..d.." yd|r");
+            elseif self.t > 0.2 then
+                if self.calibrateDistance then
+                    self.basicSpeed = self.calibrateDistance / self.t;
+                    self.calibrateDistance = nil;
+                    print("Speed: ".. math.floor(self.basicSpeed * 100 + 0.5) / 100 .. " yd/s" );
+                else
+                    print("Speed Not Calibrated");
+                end
+            end
+            self.t = 0;
+        end);
+
+        DistanceCalculator:SetScript("OnUpdate", OnUpdate);
+
+        --Event listener
+        MovementListener = CreateFrame("Frame");
+        MovementListener:Hide();
+
+        MovementListener:SetScript("OnShow", function(self)
+            self:RegisterEvent("PLAYER_STARTED_MOVING");
+            self:RegisterEvent("PLAYER_STOPPED_MOVING");
+        end);
+
+        local function OnEvent(self, event)
+            if event == "PLAYER_STARTED_MOVING" then
+                DistanceCalculator:Show();
+            else
+                DistanceCalculator:Hide();
+            end
+        end
+
+        MovementListener:SetScript("OnEvent", OnEvent);
+
+        --Global
+        function NarciAPI_DeactivateDistanceCalculator()
+            MovementListener:Hide();
+            DistanceCalculator:Hide();
+        end
+    end
+
+    MovementListener:Show();
+
+    if calibrateDistance and type(calibrateDistance) == "number" and calibrateDistance >= 5 then
+        DistanceCalculator.basicSpeed = 0;
+        DistanceCalculator.calibrateDistance = calibrateDistance;
+    end
+end
+
+--[[
+function TestFX(modelFileID, zoomDistance, view)
+    NarciAPI_SetupModelScene(TestScene, modelFileID, zoomDistance, view);
+end
+--]]
+--/run TestFX(3152608, nil, ) 122972
+--/run TestFX(1011653, 8, "
+--/run TestFX(3004122, 8, "LEFT") --Eyeball

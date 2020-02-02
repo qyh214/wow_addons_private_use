@@ -1,4 +1,4 @@
-## Interface: 80205
+## Interface: 80300
 ## Title: RSA [|c58FFDD00Rogue|r]
 ## Notes: RSA Rogue Module. This is needed to announce Rogue Spells.
 ## Author: Raeli

@@ -113,10 +113,11 @@ module.db.findspecspells = {
 	[205546] = 72, [23881] = 72, [184367] = 72,
 	[203524] = 73, [20243] = 73, [23922] = 73,
 	
-	[202767] = 102, [190984] = 102, --[78674] = 102, 
-	[210722] = 103, [52610] = 103, --[1822] = 103, 
-	[200851] = 104, [33917] = 104, --[22842] = 104,
-	[208253] = 105, [188550] = 105, --[8936] = 105, 
+	--hard fix on druid spells
+	--[202767] = 102, [190984] = 102, --[78674] = 102, 
+	--[210722] = 103, [52610] = 103, --[1822] = 103, 
+	--[200851] = 104, [33917] = 104, --[22842] = 104,
+	--[208253] = 105, [188550] = 105, --[8936] = 105, 
 
 	[205223] = 250, [206930] = 250, [50842] = 250,
 	[190778] = 251, [49143] = 251, [49184] = 251,
@@ -280,14 +281,31 @@ do
 				e = {}
 				sessionData[k] = e
 			end
+			local reason = true
+			if type(v) == 'table' then
+				reason = v[2]
+				v = v[1]
+			end
 			if v > 0 then
-				e[v] = true
+				e[v] = reason
 			else
 				e[-v] = nil
 			end
 		end
 	})	
 	module.db.session_gGUIDs_DEBUG = sessionData
+
+	function module:ClearSessionDataReason(name,reason1,reason2,reason3,reason4)
+		local e = sessionData[name]
+		if not e then
+			return
+		end
+		for k,v in pairs(e) do
+			if v == reason1 or v == reason2 or v == reason3 or v == reason4 then
+				e[k] = nil
+			end
+		end
+	end
 end
 
 module.db.session_Pets = {}
@@ -3581,15 +3599,16 @@ function module.main:UNIT_PET(arg)
 end
 
 function module.main:ENCOUNTER_START(encounterID, encounterName, difficultyID, groupSize)
-	if encounterID == 1866 then
+	if encounterID == 1866 or encounterID == 2334 then
 		module.db.disableCDresetting = true
 	end
 end
 function module.main:ENCOUNTER_END(encounterID, encounterName, difficultyID, groupSize, success)
-	if encounterID == 1866 then
+	if encounterID == 1866 or encounterID == 2334 then
 		module.db.disableCDresetting = nil
-	end	
+	end
 end
+
 
 
 do
@@ -3789,8 +3808,8 @@ do
 		if spell_isTalent[spellID] then
 			if not session_gGUIDs[sourceName][spellID] then
 				forceUpdateAllData = true
+				session_gGUIDs[sourceName] = {spellID,"talent"}
 			end
-			session_gGUIDs[sourceName] = spellID
 		end
 		
 		local modifData = spell_resetOtherSpells[spellID]

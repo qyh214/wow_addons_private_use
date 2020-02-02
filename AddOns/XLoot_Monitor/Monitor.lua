@@ -137,7 +137,7 @@ function events.coin(coin_string, copper)
 end
 
 function events.currency(id, num)
-	if opt.show_currency then
+	if opt.show_currency and GetCurrencyInfo then
 		local num = tonumber(num) or 1
 		local name, total, icon = GetCurrencyInfo(id)
 		addon:AddRow(icon, opt.fade_own, 1, 1, 1, 1, 1, 1):SetTexts(nil,  num > 1 and ("%s x%d"):format(name, num) or name, total)

@@ -1,8 +1,8 @@
-## Interface: 80205
+## Interface: 80300
 ## Title: RSA [|c10FF75B3Core|r]
 ## Notes: Easy Spell Announcements! Amongst other things. This is required to run RSA.
 ## Author: Raeli
-## Version: r525-release
+## Version: r526-release
 ## SavedVariables: RSADB
 ## OptionalDeps: Ace3, LibDualSpec-1.0, LibSink-2.0, LibResInfo-1.0
 ## X-Curse-Project-ID: 21464

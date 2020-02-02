@@ -53,7 +53,7 @@
 		</Member>
 	</FontFamily>
 
-	<FontFamily name="EquipmentLocationFont" virtual="true">
+	<FontFamily name="NarciFontMedium9" virtual="true">
 		<Member alphabet="roman">
 			<Font font="Interface\AddOns\Narcissus\Font\SemplicitaPro-Semibold.otf" height="9">
 				<Shadow>
@@ -159,7 +159,7 @@
 		</Member>
 	</FontFamily>
 
-	<FontFamily name="ItemNameMedium" virtual="true">
+	<FontFamily name="NarciFontMedium10" virtual="true">
 		<Member alphabet="roman">
 			<Font font="Interface\AddOns\Narcissus\Font\SemplicitaPro-Semibold.otf" height="10">
 				<Shadow>
@@ -212,7 +212,7 @@
 		</Member>
 	</FontFamily>
 
-	<FontFamily name="StatusNameMedium" virtual="true">
+	<FontFamily name="NarciFontMedium12" virtual="true">
 		<Member alphabet="roman">
 			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12">
 				<Shadow>
@@ -265,7 +265,7 @@
 		</Member>
 	</FontFamily>
 
-	<FontFamily name="StatusNumberSmall" virtual="true">
+	<FontFamily name="NarciFontStatusNumber" virtual="true">
 		<Member alphabet="roman">
 			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12">
 				<Shadow>
@@ -318,7 +318,7 @@
 		</Member>
 	</FontFamily>
 
-	<FontFamily name="PlayerInfoSmall" virtual="true">
+	<FontFamily name="NarciFontPlayerInfo" virtual="true">
 		<Member alphabet="roman">
 			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="13">
 				<Shadow>
@@ -371,7 +371,7 @@
 		</Member>
 	</FontFamily>
 
-	<FontFamily name="IlvlSmall" virtual="true">
+	<FontFamily name="NarciFontNumber12" virtual="true">
 		<Member alphabet="roman">
 			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12">
 				<Shadow>
@@ -424,7 +424,7 @@
 		</Member>
 	</FontFamily>
 
-	<FontFamily name="IlvlLarge" virtual="true">
+	<FontFamily name="NarciFontNumber24" virtual="true">
 		<Member alphabet="roman">
 			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="24">
 				<Shadow>
@@ -477,7 +477,7 @@
 		</Member>
 	</FontFamily>
 
-	<FontFamily name="PlayerNameLarge" virtual="true">
+	<FontFamily name="NarciFontMedium24" virtual="true">
 		<Member alphabet="roman">
 			<Font font="Interface\AddOns\Narcissus\Font\SemplicitaPro-Semibold.otf" height="24">
 				<Shadow>
@@ -606,7 +606,7 @@
 		</Member>
 	</FontFamily>
 
-	<Font name="AAAItemName" inherits="ItemNameMedium" virtual="true">
+	<Font name="NarciFontItemName" inherits="NarciFontMedium10" virtual="true">
 		<Color r="1" g="1" b="1"/>
 	</Font>
 
@@ -618,27 +618,27 @@
 		<Color r="1" g="1" b="1"/>
 	</Font>
 
-	<Font name="AAAStatusNameMedium" inherits="StatusNameMedium" virtual="true">
+	<Font name="AAAStatusNameMedium" inherits="NarciFontMedium12" virtual="true">
 
 	</Font>
 
-	<Font name="AAAStatusNumber" inherits="StatusNumberSmall" virtual="true">
+	<Font name="AAAStatusNumber" inherits="NarciFontStatusNumber" virtual="true">
 
 	</Font>
 
-	<Font name="AAAIlvlSmall" inherits="IlvlSmall" virtual="true">
+	<Font name="AAAIlvlSmall" inherits="NarciFontNumber12" virtual="true">
 
 	</Font>
 
-	<Font name="AAAIlvlLarge" inherits="IlvlLarge" virtual="true">
+	<Font name="AAAIlvlLarge" inherits="NarciFontNumber24" virtual="true">
 
 	</Font>
 
-	<Font name="AAAPlayerName" inherits="PlayerNameLarge" virtual="true">
+	<Font name="AAAPlayerName" inherits="NarciFontMedium24" virtual="true">
 
 	</Font>
 
-	<Font name="AAAPlayerInfo" inherits="PlayerInfoSmall" virtual="true" height="12"> 
+	<Font name="AAAPlayerInfo" inherits="NarciFontPlayerInfo" virtual="true" height="12"> 
 
 	</Font>
 
@@ -658,8 +658,8 @@
 		<Color r="0.85098" g="0.80392" b="0.70588"/>
 	</Font>
 
-	<Font name="EquipLocFont" inherits="EquipmentLocationFont" virtual="true">
-
+	<Font name="NarciEquipLocFont" inherits="NarciFontMedium9" virtual="true">
+        <Color r="0.5" g="0.5" b="0.5" a="1"/>
 	</Font>
 
 
@@ -755,6 +755,15 @@
 			<Font font="Interface\AddOns\Narcissus\Font\NotoSans-Medium.ttf" height="12"/>
 		</Member>
 	</FontFamily>
+
+    <Font name="NarciTooltipDescriptionFontRegularShadow" inherits="NarciTooltipDescriptionFontRegular" virtual="true">
+		<Shadow>
+			<Offset>
+				<AbsDimension x="0.6" y="-0.6"/>
+			</Offset>
+			<Color a="1" r="0" g="0" b="0"/>
+		</Shadow>
+	</Font>
 
 	<FontFamily name="NarciTooltipDescriptionFontSemibold" virtual="true">
 		<Member alphabet="roman">

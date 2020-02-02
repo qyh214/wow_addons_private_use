@@ -68,12 +68,32 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame inherits="NarciFrameWithShadowTemplate" parentKey="Guide" Alpha="0">
+			<Frame parentKey="Guide" Alpha="0">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="TOPLEFT" y="-24"/>
 					<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" y="-24"/>
 				</Anchors>
+				<Backdrop edgeFile="Interface\AddOns\Narcissus\Art\Tooltip\Tooltip-White-Border" tile="true">
+					<EdgeSize>
+						<AbsValue val="24"/>
+					</EdgeSize>
+					<TileSize>
+						<AbsValue val="24"/>
+					</TileSize>
+					<BackgroundInsets>
+						<AbsInset left="0" right="0" top="0" bottom="0"/>
+					</BackgroundInsets>
+				</Backdrop>
 				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture setAllPoints="true" parentKey="inset" hidden="true">
+							<Color r="1" g="1" b="1" a="0"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="11.5" y="-11.5"/>
+								<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-11.5" y="11.5"/>
+							</Anchors>
+						</Texture>
+					</Layer>
 					<Layer level="OVERLAY">
 						<Texture parentKey="Picture" nounload="true">
 							<Anchors>

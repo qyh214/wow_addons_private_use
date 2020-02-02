@@ -350,17 +350,15 @@
 				</MaskTexture>
             </Layer>
 			<Layer level="OVERLAY">
-				<FontString inherits="EquipLocFont" justifyH="LEFT" justifyV="BOTTOM" parentKey="Label" text="Placeholder">
+				<FontString inherits="NarciEquipLocFont" justifyH="LEFT" justifyV="BOTTOM" parentKey="Label" text="Placeholder">
 					<Size x="0" y="0"/>
-                    <Color r="0.5" g="0.5" b="0.5" a="1"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="14" y="-14"/>
 					</Anchors>
 				</FontString>
 
-				<FontString inherits="EquipLocFont" justifyH="RIGHT" justifyV="BOTTOM" parentKey="EquipLoc" text="">
+				<FontString inherits="NarciEquipLocFont" justifyH="RIGHT" justifyV="BOTTOM" parentKey="EquipLoc" text="">
 					<Size x="0" y="0"/>
-                    <Color r="0.5" g="0.5" b="0.5" a="1"/>
 					<Anchors>
 						<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="-14" y="-14"/>
 					</Anchors>
@@ -408,7 +406,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="BORDER">
-						<Texture file="Interface\AddOns\Narcissus\Art\Tooltip\Hinge" Alpha="0.06">
+						<Texture file="Interface\AddOns\Narcissus\Art\Tooltip\Hinge" Alpha="0.06" parentKey="Hinge">
 							<Size x="23" y="23"/>
 							<Anchors>
 								<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="BOTTOMLEFT" x="0"/>
@@ -416,6 +414,11 @@
 						</Texture>
 					</Layer>
 				</Layers>
+				<Scripts>
+					<OnShow>
+						self.Hinge:SetAlpha(0.06);
+					</OnShow>
+				</Scripts>
 			</Frame>
 
 			<Frame name="$parentGuideLineV1" parentKey="GuideLineV1" hidden="true">
@@ -503,9 +506,13 @@
 			    self.Icon:SetWidth(self:GetHeight());
 			</OnSizeChanged>
 			<OnShow>
+				self.Icon:SetAlpha(0.06);	--Item Icon
 				self:StopAnimating();
 				self.animIn:Play();
 			</OnShow>
+			<OnHide>
+				self:Hide();
+			</OnHide>
 		</Scripts>
     </Frame>
 </Ui>

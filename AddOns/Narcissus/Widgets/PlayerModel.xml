@@ -1683,7 +1683,13 @@
 										<Scripts>
 											<OnLoad>
 												self.Label:SetText(Narci.L["Self"]);
-												self.Text:SetText("...Why not?");
+												local _, classFilename = UnitClass("player")
+												if classFilename and classFilename == "DRUID" then
+													self.Text:SetText(Narci.L["Keep Druid Form"]);
+												else
+													self.Text:SetText("...Why not?");
+												end
+												
 												self.Border:SetTexCoord(0, 0.125, 0, 0.5);
 											</OnLoad>
 											<OnClick function="Narci_ModelIndexButton_AddSelf"/>
@@ -3027,6 +3033,11 @@
 				</Layers>
 			</Frame>
 		</Frames>
+		<Animations>
+			<AnimationGroup parentKey="FadeIn" setToFinalAlpha="true">
+				<Alpha fromAlpha="0" toAlpha="1" duration="0.5"/>
+			</AnimationGroup>
+		</Animations>
 		<Scripts>
 			<OnLoad>
 				self:RegisterForDrag("LeftButton");

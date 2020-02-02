@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.3.3
+- The Stonecore lockout will not crash the add-on anymore
+- Updated for patch 8.3 with Ny'alotha and new world bosses
+- An error will now be displayed if ``instanceID`` is nil instead of crashing the add-on
+- Some refactoring
+
 ## v1.3.2
 - Fixed warfront info incorrectly displaying both Stromgarde and Darkshore as available
 

@@ -46,12 +46,10 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["debuff"] = "debuff"
 	L["Debuffs"] = "Affaiblissements"
-	--[[Translation missing --]]
-	L["debuiff"] = "debuiff"
 	L["Enchants"] = "Enchantements"
 	L["General"] = "Général"
 	L["General Azerite Traits"] = "Traits Azéritiques Généraux"
-	L["Health"] = "Santé"
+	L["Health"] = "Vie"
 	L["Highlight while active, red when out of range."] = "Mettre en surbrillance pendant qu'il est actif, rouge quand hors de portée."
 	L["Highlight while active."] = "Mettez en surbrillance pendant qu 'il est actif."
 	L["Highlight while buffed, red when out of range."] = "En surbrillance quand amélioré, rouge quand hors de portée"

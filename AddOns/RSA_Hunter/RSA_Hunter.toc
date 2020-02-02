@@ -1,4 +1,4 @@
-## Interface: 80205
+## Interface: 80300
 ## Title: RSA [|c53ABD473Hunter|r]
 ## Notes: RSA Hunter Module. This is needed to announce Hunter Spells.
 ## Author: Raeli

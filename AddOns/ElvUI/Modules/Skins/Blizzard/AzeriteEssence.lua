@@ -7,8 +7,8 @@ local pairs = pairs
 --WoW API / Variables
 local C_AzeriteEssence_CanOpenUI = C_AzeriteEssence.CanOpenUI
 
-local function LoadSkin()
-	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.AzeriteEssence ~= true then return end
+function S:Blizzard_AzeriteEssenceUI()
+	if not (E.private.skins.blizzard.enable and E.private.skins.blizzard.AzeriteEssence) then return end
 	if not C_AzeriteEssence_CanOpenUI() then return end
 
 	local AzeriteEssenceUI = _G.AzeriteEssenceUI
@@ -16,12 +16,12 @@ local function LoadSkin()
 
 	-- Reposition the Level Badge
 	AzeriteEssenceUI.PowerLevelBadgeFrame:ClearAllPoints()
-	AzeriteEssenceUI.PowerLevelBadgeFrame:SetPoint('TOPLEFT')
+	AzeriteEssenceUI.PowerLevelBadgeFrame:Point('TOPLEFT')
 	AzeriteEssenceUI.PowerLevelBadgeFrame.Ring:Hide()
 	AzeriteEssenceUI.PowerLevelBadgeFrame.BackgroundBlack:Hide()
 
 	AzeriteEssenceUI.OrbBackground:SetAllPoints(AzeriteEssenceUI.ItemModelScene)
-	AzeriteEssenceUI.OrbRing:SetSize(483, 480)
+	AzeriteEssenceUI.OrbRing:Size(483, 480)
 
 	S:HandleScrollBar(AzeriteEssenceUI.EssenceList.ScrollBar)
 
@@ -31,21 +31,21 @@ local function LoadSkin()
 		button:StyleButton()
 
 		S:HandleIcon(button.Icon)
-		button.Icon:SetPoint("LEFT", button, "LEFT", 6, 0)
+		button.Icon:Point("LEFT", button, "LEFT", 6, 0)
 
 		button:CreateBackdrop()
-		button.backdrop:SetPoint("TOPLEFT", 2, -3)
-		button.backdrop:SetPoint("BOTTOMRIGHT", -2, 3)
+		button.backdrop:Point("TOPLEFT", 2, -3)
+		button.backdrop:Point("BOTTOMRIGHT", -2, 3)
 	end
 
 	-- Header on the Essence List
-	AzeriteEssenceUI:HookScript('OnShow', function(self)
-		self.EssenceList.HeaderButton:StripTextures()
-		if not self.EssenceList.HeaderButton.backdrop then
-			self.EssenceList.HeaderButton:CreateBackdrop('Transparent')
-			self.EssenceList.HeaderButton.backdrop:SetAllPoints()
+	AzeriteEssenceUI:HookScript('OnShow', function(s)
+		s.EssenceList.HeaderButton:StripTextures()
+		if not s.EssenceList.HeaderButton.backdrop then
+			s.EssenceList.HeaderButton:CreateBackdrop('Transparent')
+			s.EssenceList.HeaderButton.backdrop:SetAllPoints()
 		end
 	end)
 end
 
-S:AddCallbackForAddon("Blizzard_AzeriteEssenceUI", "AzeriteEssenceUI", LoadSkin)
+S:AddCallbackForAddon('Blizzard_AzeriteEssenceUI')

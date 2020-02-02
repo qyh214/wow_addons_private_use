@@ -540,13 +540,41 @@ local function GetDisplayOptions()
 					end,
 					width = "full",
 				},
-				separatorLog = {
+				separatorNavigation = {
 					order = 9,
+					type = "header",
+					name = AL["NAVIGATION_OPTIONS"],
+				},
+				enableNavigation = {
+					order = 10,
+					type = "toggle",
+					name = AL["NAVIGATION_ENABLE"],
+					desc = AL["NAVIGATION_ENABLE_DESC"],
+					get = function() return private.db.display.enableNavigation end,
+					set = function(_, value)
+						private.db.display.enableNavigation = value
+					end,
+					width = "full",
+				},
+				navigationLockEntity = {
+					order = 11,
+					type = "toggle",
+					name = AL["NAVIGATION_LOCK_ENTITY"],
+					desc = AL["NAVIGATION_LOCK_ENTITY_DESC"],
+					get = function() return private.db.display.navigationLockEntity end,
+					set = function(_, value)
+						private.db.display.navigationLockEntity = value
+					end,
+					width = "full",
+					disabled = function() return not private.db.display.enableNavigation end,
+				},
+				separatorLog = {
+					order = 12,
 					type = "header",
 					name = AL["LOG_WINDOW_OPTIONS"],
 				},
 				displayLogWindow = {
-					order = 10,
+					order = 13,
 					type = "toggle",
 					name = AL["DISPLAY_LOG_WINDOW"],
 					desc = AL["DISPLAY_LOG_WINDOW_DESC"],
@@ -557,7 +585,7 @@ local function GetDisplayOptions()
 					width = "full",
 				},
 				autoHideLogWindow = {
-					order = 11,
+					order = 14,
 					type = "range",
 					name = AL["LOG_WINDOW_AUTOHIDE"],
 					desc = AL["LOG_WINDOW_AUTOHIDE_DESC"],
@@ -819,28 +847,50 @@ local function GetZonesFilterOptions()
 		local searchZoneByContinentID = function(continentID, zoneName)
 			if (continentID) then
 				table.foreach(private.CONTINENT_ZONE_IDS[continentID].zones, function(index, zoneID)
+					local tempName = nil
 					if (zoneName) then
 						local continentInfo = C_Map.GetMapInfo(zoneID)
 						local name = continentInfo.name
 						if (string.find(string.upper(name), string.upper(zoneName))) then
-							zones_filter_options.args.zoneFilters.values[name] = zoneID
+							tempName = name
 						end
 					else
 						local continentInfo = C_Map.GetMapInfo(zoneID)
-						zones_filter_options.args.zoneFilters.values[continentInfo.name] = zoneID
+						tempName = continentInfo.name
+					end
+					
+					if (tempName) then
+						local i = 2
+						while (zones_filter_options.args.zoneFilters.values[tempName]) do
+							tempName = tempName..' ('..i..')'
+							i = i+1
+						end
+						
+						zones_filter_options.args.zoneFilters.values[tempName] = zoneID
 					end
 				end)
 				if (private.CONTINENT_ZONE_IDS[continentID].extrazones) then
 					table.foreach(private.CONTINENT_ZONE_IDS[continentID].extrazones, function(index, zoneID)
+						local tempName = nil
 						if (zoneName) then
 							local continentInfo = C_Map.GetMapInfo(zoneID)
 							local name = continentInfo.name
 							if (string.find(string.upper(name), string.upper(zoneName))) then
-								zones_filter_options.args.zoneFilters.values[name] = zoneID
+								tempName = name
 							end
 						else
 							local continentInfo = C_Map.GetMapInfo(zoneID)
-							zones_filter_options.args.zoneFilters.values[continentInfo.name] = zoneID
+							tempName = continentInfo.name
+						end
+					
+						if (tempName) then
+							local i = 2
+							while (zones_filter_options.args.zoneFilters.values[tempName]) do
+								tempName = tempName..' ('..i..')'
+								i = i+1
+							end
+							
+							zones_filter_options.args.zoneFilters.values[tempName] = zoneID
 						end
 					end)
 				end
@@ -1214,6 +1264,18 @@ local function GetLootFilterOptions()
 							width = "full",
 							disabled = function() return (not private.db.loot.displayLoot and not private.db.loot.displayLootOnMap) end,
 						},
+						filterNotMatchingClass = {
+							order = 6,
+							type = "toggle",
+							name = AL["LOOT_FILTER_NOT_MATCHING_CLASS"],
+							desc = AL["LOOT_FILTER_NOT_MATCHING_CLASS_DESC"],
+							get = function() return private.db.loot.filterNotMatchingClass end,
+							set = function(_, value)
+								private.db.loot.filterNotMatchingClass = value
+							end,
+							width = "full",
+							disabled = function() return (not private.db.loot.displayLoot and not private.db.loot.displayLootOnMap) end,
+						},
 					},
 					disabled = function() return (not private.db.loot.displayLoot and not private.db.loot.displayLootOnMap) end,
 				}
@@ -1350,8 +1412,20 @@ local function GetMapOptions()
 					width = "full",
 					disabled = function() return (not private.db.map.displayNpcIcons and not private.db.map.displayContainerIcons and not private.db.map.displayEventIcons) end,
 				},
-				maxSeenTime = {
+				keepShowingAfterCompleted = {
 					order = 11,
+					type = "toggle",
+					name = AL["MAP_SHOW_ICON_AFTER_COMPLETED"],
+					desc = AL["MAP_SHOW_ICON_AFTER_COMPLETED_DESC"],
+					get = function() return private.db.map.keepShowingAfterCompleted end,
+					set = function(_, value)
+						private.db.map.keepShowingAfterCompleted = value
+					end,
+					width = "full",
+					disabled = function() return (not private.db.map.displayNpcIcons and not private.db.map.displayContainerIcons and not private.db.map.displayEventIcons) end,
+				},
+				maxSeenTime = {
+					order = 12,
 					type = "range",
 					name = AL["MAP_SHOW_ICON_MAX_SEEN_TIME"],
 					desc = AL["MAP_SHOW_ICON_MAX_SEEN_TIME_DESC"],
@@ -1368,7 +1442,7 @@ local function GetMapOptions()
 					disabled = function() return ((not private.db.map.displayNpcIcons and not private.db.map.displayContainerIcons and not private.db.map.displayEventIcons) or private.db.map.disableLastSeenFilter) end,	
 				},
 				maxSeenTimeContainer = {
-					order = 12,
+					order = 13,
 					type = "range",
 					name = AL["MAP_SHOW_ICON_CONTAINER_MAX_SEEN_TIME"],
 					desc = AL["MAP_SHOW_ICON_CONTAINER_MAX_SEEN_TIME_DESC"],
@@ -1379,6 +1453,22 @@ local function GetMapOptions()
 					get = function() return private.db.map.maxSeenTimeContainer end,
 					set = function(_, value)
 						private.db.map.maxSeenTimeContainer = value
+					end,
+					width = "full",
+					disabled = function() return (not private.db.map.displayNpcIcons and not private.db.map.displayContainerIcons and not private.db.map.displayEventIcons) end,	
+				},
+				maxSeenTimeEvent = {
+					order = 14,
+					type = "range",
+					name = AL["MAP_SHOW_ICON_EVENT_MAX_SEEN_TIME"],
+					desc = AL["MAP_SHOW_ICON_EVENT_MAX_SEEN_TIME_DESC"],
+					min	= 0,
+					max	= 15,
+					step = 1,
+					bigStep = 1,
+					get = function() return private.db.map.maxSeenTimeEvent end,
+					set = function(_, value)
+						private.db.map.maxSeenTimeEvent = value
 					end,
 					width = "full",
 					disabled = function() return (not private.db.map.displayNpcIcons and not private.db.map.displayContainerIcons and not private.db.map.displayEventIcons) end,	

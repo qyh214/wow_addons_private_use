@@ -61,6 +61,8 @@ L["Minimap Tooltip Shift Right Click"] = "Shift + 右鍵"
 L["Minimap Tooltip Hide Button"] = "|cffffffff隱藏這個按鈕|r"
 L["Minimap Tooltip Middle Button"] = "|CFFFF1000中鍵 |cffffffff重置鏡頭";
 L["Minimap Tooltip Set Scale"] = "設定縮放大小: |cffffffff/narci [大小數值 0.8~1.2]";
+L["Corrupted Item Parser"] = "|cffffffff開啟腐化物品鏈接解析器|r";
+L["Toggle Dressing Room"] = "|cffffffff開啟"..DRESSUP_FRAME.."|r";
 
 NARCI_CLIPBOARD = "剪貼板";
 NARCI_LAYOUT = "版面配置";
@@ -83,7 +85,7 @@ NARCI_CAMERA = "鏡頭";
 NARCI_EFFECTS = "效果";
 NARCI_TRANSMOG = "塑形";
 NARCI_EXTENSIONS = "拓展功能";
-NARCI_ABOUT = "關於"
+NARCI_ABOUT = "關於";
 NARCI_PREFERENCE_TOOLTIP = "點一下打開偏好設定";
 NARCI_TRUNCATE_TEXT = "截斷文字";
 NARCI_TEXT_WIDTH = "文字寬度";
@@ -147,6 +149,8 @@ L["Interactive Area"] = "交互區域";
 L["Item Socketing Tooltip"] = "雙擊左鍵進行鑲嵌";
 L["Credits"] = "致謝";
 L["Use Bust Shot"] = "使用半身像";
+L["Use Escape Button"] = "Esc鍵";
+L["Use Escape Button Description"] = "按下Esc鍵來退出插件。或者點擊屏幕右上角隱藏的X按鈕。";
 
 --Model Control--
 NARCI_SHEATH_WEAPON = "收起武器";
@@ -233,6 +237,33 @@ L["Old Icon"] = "舊圖示";
 NARCI_ICON_SELECTOR = "圖示清單";
 NARCI_DELETE_SET_WITH_LONG_CLICK = "刪除此套裝\n|cff808080(按住左鍵)|r";
 
+--Corruption System
+L["Corruption System"] = "腐化裝備";
+L["Eye Color"] = "眼睛顏色";
+L["Blizzard UI"] = "原生界面";
+L["Corruption Bar"] = "腐化條";
+L["Corruption Bar Description"] = "在角色資訊旁邊顯示腐化程度條。";
+L["Corruption Debuff Tooltip"] = "Debuff提示";
+L["Corruption Debuff Tooltip Description"] = "將默認的描述性的Debuff提示替換為數值型提示。";
+
+L["Crit Gained"] = CRIT_ABBR.."獲取";
+L["Haste Gained"] = STAT_HASTE.."獲取";
+L["Mastery Gained"] = STAT_MASTERY.."獲取";
+L["Versatility Gained"] = STAT_VERSATILITY.."獲取";
+
+L["Proc Haste"] = "觸發"..CRIT_ABBR;
+L["Proc Crit"] = "觸發"..STAT_HASTE;
+L["Proc Mastery"] = "觸發"..STAT_MASTERY;
+L["Proc Versatility"] = "觸發"..STAT_VERSATILITY;
+
+L["Critical Damage"] = "致命傷害";
+
+L["Corruption Effect Format1"] = "|cffffffff%s%%|r 移動速度降低";
+L["Corruption Effect Format2"] = "|cffffffff%s|r 初始傷害\n|cffffffff%s 碼|r 半徑";
+L["Corruption Effect Format3"] = "|cffffffff%s|r 傷害\n|cffffffff%s%%|r 生命力上限";
+L["Corruption Effect Format4"] = "被異界之物擊中會立刻觸發其余負面效果";
+L["Corruption Effect Format5"] = "|cffffffff%s%%|r 受到的傷害和治療改變";
+
 --Tutorial--
 L["Alert"] = "警告";
 L["Race Change"] = "種族/性別變更";
@@ -250,7 +281,8 @@ L["Guide Input Line1"] = "妳也可以自行輸入SpellVisualKitID。截至8.3�
 L["Guide Equipment Manager Line1"] = "雙擊：使用套裝\n右擊：編輯套裝";
 L["Guide Model Control Headline"] = "模組控制";
 L["Guide Model Control Line1"] = format("妳可以用控制試衣間的鼠標行為來控制此模組。此外，妳還可以：\n\n1.按住%s和鼠標左鍵來改變俯仰角。\n2.按住%s和鼠標右鍵來進行細微縮放。", NARCI_MODIFIER_ALT, NARCI_MODIFIER_ALT);
-
+L["Guide Minimap Button Headline"] = "小地圖按鈕";
+L["Guide Minimap Button Line1"] = "此按鈕現在可以被其他插件控制。\n妳可以在偏好設定中更改這壹選項，改動可能需要重載界面才能生效。";
 
 --Others need to be localized--
 L["Level"] = "等級";
@@ -282,9 +314,17 @@ NARCI_SPLASH_MESSAGE1 = format("|cffd9cdb42. 翻轉模組和細微縮放|r\n妳�
 NARCI_SPLASH_MESSAGE2 = "|cffd9cdb4可通過點擊右上方的六邊形按鈕（也是顯示妳最高物品等級的地方）來展開這個功能。";
 NARCI_SPLASH_MESSAGE3 = "|cffd9cdb41. 現在AFK畫面會在妳移動或者進入戰鬥時自動退出。\n2. 試衣間增強又恢復了工作。|r";
 
+L["Show Whats New"] = "顯示歡迎界面";
+NARCI_SPLASH_WHATS_NEW_FORMAT = "|cff694d9cNarcissus %s ".."更新內容";
+NARCI_SPLASH_HEADER1 = "腐化模組";
+NARCI_SPLASH_HEADER2 = "拍照模式";
+NARCI_SPLASH_INTERACTIVE_TEXT1 = NARCI_COLOR_GREY_85.."Narcissus UI|r\n- 腐化裝備的實際效果和等級會同其物品等級壹起顯示。\n- 當妳裝備了任何腐化物品後，妳會在原來顯示最大平均裝等的地方看到壹只眼睛；瞳孔的形狀表示人物當前的腐化等級。";
+NARCI_SPLASH_INTERACTIVE_TEXT2 = NARCI_COLOR_GREY_85.."Blizzard UI|r\n- 妳可以在角色面板旁邊看到壹個腐化條，這樣妳就不用再把鼠標移到眼睛圖標上來進行查看了。\n- 妳也可以將默認的描述性的負面效果提示替換為數值型說明。以上兩項設置都是可選的。";
+NARCI_SPLASH_INTERACTIVE_TEXT3 = NARCI_COLOR_GREY_85.."效果瀏覽器|r\n- 收錄了包括冬幕節佩佩在內的86條新的法術效果。\n\n"..NARCI_COLOR_GREY_85.."合影模式|r\n- 如果妳在添加角色的時候按住"..NARCI_MODIFIER_ALT.."，那麽目標玩家當前的德魯伊形態可以得到保留。"
+
 --Project Details--
 NARCI_ALL_PROJECTS = "全部項目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2019.12.23|r\n\n感謝妳使用此插件！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2020.1.28|r\n\n感謝妳使用此插件！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾澤拉斯上的不同景點，並收集各種故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沈浸式角色面板；妳最好的截圖助手。"
 

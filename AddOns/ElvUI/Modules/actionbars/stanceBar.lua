@@ -196,13 +196,16 @@ function AB:PositionAndSizeBarShapeShift()
 	local useMasque = MasqueGroup and E.private.actionbar.masque.stanceBar
 	local firstButtonSpacing = (self.db.stanceBar.backdrop == true and (E.Border + backdropSpacing) or E.Spacing)
 
-	for i=1, NUM_STANCE_SLOTS do
+	bar:EnableMouse(not self.db.stanceBar.clickThrough)
+
+	for i = 1, NUM_STANCE_SLOTS do
 		button = _G["ElvUI_StanceBarButton"..i]
 		lastButton = _G["ElvUI_StanceBarButton"..i-1]
 		lastColumnButton = _G["ElvUI_StanceBarButton"..i-buttonsPerRow]
 		button:SetParent(bar)
 		button:ClearAllPoints()
 		button:Size(size)
+		button:EnableMouse(not self.db.stanceBar.clickThrough)
 
 		if self.db.stanceBar.mouseover == true then
 			bar:SetAlpha(0)
@@ -269,7 +272,7 @@ function AB:PositionAndSizeBarShapeShift()
 		if not button.FlyoutUpdateFunc then
 			self:StyleButton(button, nil, useMasque and true or nil, true)
 
-			if button.checked then
+			if not useMasque then
 				if self.db.stanceBar.style == 'darkenInactive' then
 					button.checked:SetBlendMode('BLEND')
 				else
@@ -347,7 +350,7 @@ function AB:UpdateStanceBindings()
 end
 
 function AB:CreateBarShapeShift()
-	bar:CreateBackdrop()
+	bar:CreateBackdrop(self.db.transparent and 'Transparent')
 	bar.backdrop:SetAllPoints()
 	bar:Point('TOPLEFT', E.UIParent, 'TOPLEFT', 4, -4)
 	bar.buttons = {}

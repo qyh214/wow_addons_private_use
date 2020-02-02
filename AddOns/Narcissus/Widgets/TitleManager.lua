@@ -535,7 +535,7 @@ function Narci_TitleFrame_SetColorTheme(self)
 end
 
 local function SetTitleSourceTooltip()
-	local name, description, icon;
+	local _, name, description, icon;
 	local tooltipFrame = Narci_TitleManager_TitleTooltip;
 
 	if tooltipFrame.AchivementID then
@@ -600,23 +600,3 @@ function OptionalTitle_OnEnter(self)
 		end
 	end
 end
-
-Test_ToggleAzeriteUI = function(forced)
-    local CogWheel = _G.CogWheel
-    if CogWheel then 
-        local LibFader = CogWheel("LibFader", true)
-        if LibFader then 
-            LibFader:SetObjectFadeOverride(forced)
-        end 
-        local LibModule = CogWheel("LibModule", true)
-        if LibModule then 
-            local AzeriteUI = LibModule:GetModule("AzeriteUI", true)
-            if AzeriteUI then 
-                local ActionBars = AzeriteUI:GetModule("ActionBarMain", true)
-                if (ActionBars) then 
-                    ActionBars:SetForcedVisibility(forced)
-                end 
-            end 
-        end 
-    end 
-end 

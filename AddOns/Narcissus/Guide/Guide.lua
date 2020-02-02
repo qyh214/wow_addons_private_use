@@ -247,6 +247,16 @@ Initialization:SetScript("OnEvent", function(self, event, ...)
             end);
             
         end
+
+        --Minimap button can be influenced by other addons
+        key = tutorial["IndependentMinimapButton"];
+        if key then
+            local mini = CreateFrame("Frame", nil, Minimap, "NarciGenericGuideTemplate");
+            C_Timer.After(1, function()
+                mini:NewText(L["Guide Minimap Button Headline"], L["Guide Minimap Button Line1"], Narci_MinimapButton, 0, 0, 2, "END");
+            end)
+            tutorial["IndependentMinimapButton"] = false;
+        end
     end)
 end);
 

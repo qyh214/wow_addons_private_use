@@ -1,10 +1,10 @@
-lightweight tag 62ac776f9b4438ba151d63e1fb53044b360ebc04 v8.2.5.387
+lightweight tag 3258fbbb0c3c1b27f14c21c1b9638598a2e9fb70 v8.3.0.389
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Mon Dec 23 08:16:55 2019 -0300
+Date:	Wed Jan 15 19:29:03 2020 -0300
 
-commit 62ac776f9b4438ba151d63e1fb53044b360ebc04
+commit 3258fbbb0c3c1b27f14c21c1b9638598a2e9fb70
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon Dec 23 08:16:55 2019 -0300
+Date:   Wed Jan 15 19:29:03 2020 -0300
 
-    Fixed faction quest reward preview not hiding when disabling emissary quest info
+    Tooltips fix?
 

@@ -76,3 +76,13 @@ L = DBM:GetModLocalization("ArtifactXylem")
 L:SetGeneralLocalization({
 	name	= "Closing the Eye"
 })
+
+------------------------
+-- N'Zoth Visions: Stormwind --
+------------------------
+L= DBM:GetModLocalization("d1993")
+
+------------------------
+-- N'Zoth Visions: Orgrimmar --
+------------------------
+L= DBM:GetModLocalization("d1995")

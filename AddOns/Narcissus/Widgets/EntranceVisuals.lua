@@ -203,7 +203,6 @@ local function Entrance_Monk(self, elapsed)
 		local radian = outSine(self.FaceTime, -pi/2, -pi/8 + pi/2, 0.8) --0.11 NE
 		ModelFrame:SetFacing(radian)
         ModelFrame.rotation = radian
-        print(radian)
 	end
 
 	ModelFrame:SetPosition(0, offset, ModelFrame.posZ)

@@ -1,10 +1,8 @@
 ------------------------------------------------------------------------
-r411 | the_original_manbot | 2020-01-04 15:39:23 +0000 (Sat, 04 Jan 2020) | 1 line
+r413 | the_original_manbot | 2020-01-15 16:37:21 +0000 (Wed, 15 Jan 2020) | 1 line
 Changed paths:
-   M /trunk/Modules/BlackBook.lua
-   M /trunk/Postal.lua
    M /trunk/Postal.toc
 
-bug fixes, rewrote section that deals with friends due to api changes
+version number update after testing features
 ------------------------------------------------------------------------
 

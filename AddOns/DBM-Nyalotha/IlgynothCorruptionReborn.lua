@@ -1,22 +1,22 @@
 local mod	= DBM:NewMod(2374, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20191206214249")
+mod:SetRevision("20200201155552")
 mod:SetCreatureID(158328)
 mod:SetEncounterID(2345)
 mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 mod:SetBossHPInfoToHighest()
 mod.noBossDeathKill = true--Instructs mod to ignore 158328 deaths, since it might die 4x on this fight
---mod:SetHotfixNoticeRev(20190716000000)--2019, 7, 16
+mod:SetHotfixNoticeRev(20200130000000)--2020, 1, 30
 --mod:SetMinSyncRevision(20190716000000)
---mod.respawnTime = 29
+mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 309961 311401 310788",
-	"SPELL_CAST_SUCCESS 311401 311159 312204 314396",
+	"SPELL_CAST_START 309961 311401 310788 318383",
+	"SPELL_CAST_SUCCESS 311401 311159 314396 319005",
 	"SPELL_AURA_APPLIED 309961 311367 310322 315094 311159 313759",
 	"SPELL_AURA_APPLIED_DOSE 309961",
 	"SPELL_AURA_REMOVED 311367 315094 311159 313759",
@@ -28,12 +28,18 @@ mod:RegisterEventsInCombat(
 
 --TODO, https://ptr.wowhead.com/spell=312486/recurring-nightmare need DBM hand holding? Maybe we can track them on infoframe if required?
 --TODO, accurate mythic tracking of mythic version of CursedBlood
+--[[
+(ability.id = 309961 or ability.id = 311401) and type = "begincast"
+ or (ability.id = 311401 or ability.id = 311159 or ability.id = 314396 or ability.id = 319005) and type = "cast"
+ or ability.id = 310788
+--]]
 --Stage 01: The Corruptor, Reborn
 local warnEyeofNZoth						= mod:NewStackAnnounce(309961, 2, nil, "Tank")
 local warnTouchoftheCorruptor				= mod:NewTargetNoFilterAnnounce(311367, 4)
 local warnFixate							= mod:NewTargetAnnounce(315094, 2)
 --Stage 02: The Organs of Corruption
 local warnCursedBlood						= mod:NewTargetAnnounce(311159, 2)
+local warnAbsorbingCharge					= mod:NewTargetNoFilterAnnounce(318383, 3)
 
 --Stage 01: The Corruptor, Reborn
 local specWarnEyeofNZoth					= mod:NewSpecialWarningStack(309961, nil, 2, nil, nil, 1, 6)
@@ -46,24 +52,28 @@ local specWarnGTFO							= mod:NewSpecialWarningGTFO(310322, nil, nil, nil, 1, 8
 local specWarnFixate						= mod:NewSpecialWarningYou(315094, nil, nil, nil, 1, 2)
 --Stage 02: The Organs of Corruption
 local specWarnCursedBlood					= mod:NewSpecialWarningMoveAway(311159, nil, nil, nil, 1, 2)
-local yellCursedBlood						= mod:NewYell(311159)
+local yellCursedBlood						= mod:NewShortYell(311159)
 local yellCursedBloodFades					= mod:NewShortFadesYell(311159)
 local specWarnPumpingBlood					= mod:NewSpecialWarningInterruptCount(310788, "HasInterrupt", nil, nil, 1, 2)
+local specWarnAbsorbingCharge				= mod:NewSpecialWarningYou(318383, nil, nil, nil, 3, 2)
+local yellAbsorbingCharge					= mod:NewYell(318383)
 
 --mod:AddTimerLine(BOSS)
 --Stage 01: The Corruptor, Reborn
-local timerEyeofNZothCD						= mod:NewCDTimer(16.6, 309961, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 4)--16.6-17.4
-local timerTouchoftheCorruptorCD			= mod:NewCDTimer(64.4, 311401, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON, nil, 1, 4)--64.4-68
-local timerCorruptorsGazeCD					= mod:NewCDTimer(32.8, 310319, nil, nil, nil, 3)--32.8-34
+local timerEyeofNZothCD						= mod:NewCDTimer(17, 309961, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 3)--16.6-17.4 (0ld), new seems more stable 17
+local timerTouchoftheCorruptorCD			= mod:NewCDCountTimer(64.4, 311401, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON, nil, 1, 4)--64.4-68
+local timerCorruptorsGazeCD					= mod:NewCDCountTimer(32.2, 310319, 202046, nil, nil, 3)--32.8-34 Shorttext "Beam"
 --Stage 02: The Organs of Corruption
-local timerCursedBloodCD					= mod:NewNextTimer(18, 311159, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerCursedBloodCD					= mod:NewNextCountTimer(18, 311159, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerAbsorbingChargeCD				= mod:NewNextTimer(18.3, 318383, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
 
---local berserkTimer						= mod:NewBerserkTimer(600)
+local berserkTimer							= mod:NewBerserkTimer(600)
 
 mod:AddRangeFrameOption(11, 311159)
 mod:AddInfoFrameOption(315094, true)
 mod:AddSetIconOption("SetIconOnMC", 311367, false, false, {1, 2, 3, 4, 5, 6, 7})
 mod:AddSetIconOption("SetIconOnOoze", "ej20988", false, true, {8})--Perma disabled in LFR
+mod:AddSetIconOption("SetIconOnCusedBlood", 313759, false, false, {1, 2, 3, 4, 5, 6, 7, 8})
 mod:AddBoolOption("SetIconOnlyOnce", true)--If disabled, as long as living oozes are up, the skull will bounce around to lowest health mob continually, which is likely not desired by most, thus this defaulted on
 mod:AddMiscLine(DBM_CORE_OPTION_CATEGORY_DROPDOWNS)
 mod:AddDropdownOption("InterruptBehavior", {"Two", "Three", "Four", "Five"}, "Two", "misc")
@@ -73,6 +83,10 @@ mod.vb.TouchofCorruptorIcon = 1
 mod.vb.IchorCount = 0
 mod.vb.interruptBehavior = "Two"
 mod.vb.organPhase = false
+mod.vb.bloodIcon = 1
+mod.vb.bloodCount = 0
+mod.vb.mcCount = 0
+mod.vb.beamCount = 0
 
 local addsTable = {}
 local autoMarkScannerActive = false
@@ -154,6 +168,17 @@ do
 	end
 end
 
+function mod:AbsorbingChargeTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnAbsorbingCharge:Show()
+		specWarnAbsorbingCharge:Play("targetyou")
+		yellAbsorbingCharge:Yell()
+	else
+		warnAbsorbingCharge:Show(targetname)
+	end
+end
+
 function mod:OnCombatStart(delay)
 	--DBM Core Special Variables
 	self.vb.bossLeft = 4--Ilgynoth plus 3 organs
@@ -162,6 +187,10 @@ function mod:OnCombatStart(delay)
 	--self.vb.phase = 1
 	self.vb.TouchofCorruptorIcon = 1
 	self.vb.IchorCount = 0
+	self.vb.bloodIcon = 1
+	self.vb.bloodCount = 0
+	self.vb.mcCount = 0
+	self.vb.beamCount = 0
 	self.vb.interruptBehavior = self.Options.InterruptBehavior--Default it to whatever user has it set to, until group leader overrides it
 	self.vb.organPhase = false
 	autoMarkScannerActive = false
@@ -170,9 +199,10 @@ function mod:OnCombatStart(delay)
 	table.wipe(fixatedTargets)
 	table.wipe(castsPerGUID)
 	timerEyeofNZothCD:Start(5.2-delay)--START
-	timerCorruptorsGazeCD:Start(12.2-delay)
+	timerCorruptorsGazeCD:Start(12.2-delay, 1)
+	berserkTimer:Start(600-delay)--Confirmed heroic and normal
 	if self:IsHard() then
-		timerTouchoftheCorruptorCD:Start(50.7-delay)--SUCCESS
+		timerTouchoftheCorruptorCD:Start(50.7-delay, 1)--SUCCESS
 		if self:IsMythic() then
 			timerCursedBloodCD:Start(20-delay)
 			timerCursedBloodCD:UpdateInline(DBM_CORE_MAGIC_ICON)
@@ -236,29 +266,23 @@ function mod:SPELL_CAST_START(args)
 				specWarnPumpingBlood:Play("kickcast")
 			end
 		end
+	elseif spellId == 318383 then
+		timerAbsorbingChargeCD:Start(18.3, args.sourceGUID)
+		self:BossTargetScanner(args.sourceGUID, "AbsorbingChargeTarget", 0.1, 8)
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 311401 then
-		timerTouchoftheCorruptorCD:Start()
+		self.vb.mcCount = self.vb.mcCount + 1
+		timerTouchoftheCorruptorCD:Start(nil, self.vb.mcCount+1)
 	elseif spellId == 311159 or spellId == 314396 then--Non Mythic, Mythic
-		timerCursedBloodCD:Start(self:IsMythic() and 40 or 18)
+		self.vb.bloodCount = self.vb.bloodCount + 1
+		timerCursedBloodCD:Start(self:IsMythic() and 45 or 18, self.vb.bloodCount+1)
 		if self:IsMythic() then
-			timerCursedBloodCD:UpdateInline(DBM_CORE_MAGIC_ICON)
-		end
-	elseif spellId == 312204 then--Il'gynoth's Morass (Boss Re-activating)
-		--Start timers here, not at organ death
-		--it's possible to screw up organ phase so bad that you leave it without killing any of them
-		table.wipe(castsPerGUID)
-		if not self:IsMythic() then
-			timerCursedBloodCD:Stop()
-		end
-		timerEyeofNZothCD:Start(6)--START
-		timerCorruptorsGazeCD:Start(12)
-		if self:IsHard() then
-			timerTouchoftheCorruptorCD:Start(51.5)--SUCCESS
+			self.vb.bloodIcon = 1
+			timerCursedBloodCD:UpdateInline(DBM_CORE_MAGIC_ICON, self.vb.bloodCount+1)
 		end
 	end
 end
@@ -293,7 +317,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 	elseif spellId == 311367 then
-		warnTouchoftheCorruptor:CombinedShow(0.3, args.destName)
+		warnTouchoftheCorruptor:CombinedShow(1, args.destName)
 		if args:IsPlayer() then
 			specWarnTouchoftheCorruptor:Show()
 			specWarnTouchoftheCorruptor:Play("targetyou")
@@ -337,12 +361,18 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnCursedBlood:Show()
 			specWarnCursedBlood:Play("runout")
 			yellCursedBlood:Yell()
-			if spellId == 311159 then
+			if spellId == 311159 then--Non Mythic
 				yellCursedBloodFades:Countdown(spellId)
 				if self.Options.RangeFrame then
 					DBM.RangeCheck:Show(11)
 				end
 			end
+		end
+		if spellId == 313759 then--Mythic Only Option
+			if self.Options.SetIconOnCusedBlood then
+				self.SetIcon(args.destName, self.vb.bloodIcon)
+			end
+			self.vb.bloodIcon = self.vb.bloodIcon + 1
 		end
 	end
 end
@@ -370,6 +400,11 @@ function mod:SPELL_AURA_REMOVED(args)
 				DBM.RangeCheck:Hide()
 			end
 		end
+		if spellId == 313759 then--Mythic Only Option
+			if self.Options.SetIconOnCusedBlood then
+				self.SetIcon(args.destName, 0)
+			end
+		end
 	end
 end
 
@@ -394,19 +429,25 @@ function mod:UNIT_DIED(args)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:Update()
 		end
+	elseif cid == 163678 then--Clotted Corruption
+		timerAbsorbingChargeCD:Stop(args.destGUID)
 	end
 end
 
 --Placeholder. Maybe correct maybe totally wrong
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
-	if spellId == 310965 and self:AntiSpam(3, 1) then--Energy Regen (Organ phase begin)
+	--SPELL_CAST_SUCCESS 319005 appears in combat log for phase change on mythic, but don't be fooled, it doesn't exist on non mythic. Parry exists in all modes
+	if spellId == 110470 and self:AntiSpam(3, 1) then--Reduce Parry and Block Chance 100% (Organ phase begin)
 		self.vb.organPhase = true
 		--self.vb.phase = self.vb.phase + 0.5
 		timerCorruptorsGazeCD:Stop()
 		timerTouchoftheCorruptorCD:Stop()
 		timerEyeofNZothCD:Stop()
 		if not self:IsMythic() then
-			timerCursedBloodCD:Start(3)
+			self.vb.bloodCount = 0
+			timerCursedBloodCD:Start(3, 1)
+		else
+			timerAbsorbingChargeCD:Start(9)--Can't know GUID here, but only place to start it
 		end
 	elseif spellId == 311577 then--Damaged Organ (organs "dying")
 		self.vb.organPhase = false
@@ -415,7 +456,21 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	elseif spellId == 310433 then--Corruptor's Gaze
 		specWarnCorruptorsGaze:Show()
 		specWarnCorruptorsGaze:Play("watchstep")
-		timerCorruptorsGazeCD:Start()
+		timerCorruptorsGazeCD:Start(nil, self.vb.beamCount+1)
+	elseif spellId == 312204 then--Il'gynoth's Morass
+		--Start timers here, not at organ death
+		--it's possible to screw up organ phase so bad that you leave it without killing any of them
+		table.wipe(castsPerGUID)
+		self.vb.beamCount = 0
+		if not self:IsMythic() then
+			timerCursedBloodCD:Stop()
+		end
+		timerEyeofNZothCD:Start(6)--START
+		timerCorruptorsGazeCD:Start(12, 1)
+		if self:IsHard() then
+			self.vb.mcCount = 0
+			timerTouchoftheCorruptorCD:Start(51.5, 1)--SUCCESS
+		end
 	end
 end
 

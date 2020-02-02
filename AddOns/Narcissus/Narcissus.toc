@@ -1,10 +1,10 @@
-## Interface: 80205
+## Interface: 80300
 ## Plain Title: Narcissus
 ## Version: 1.0.7
 
 ## Title: |cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r
 
-## Notes: Immersive paperdoll frame and more. |n|cff959595Slash command: /Narci|r
+## Notes: Immersive paperdoll frame and in-game studio. |n|cff959595Slash command: /Narci|r
 ## Notes-zhCN: 为展示和分享而生的沉浸式角色界面|n|cff959595命令: /Narci|r
 ## Notes-zhTW: 為展示和分享而生的沈浸式角色界面|n|cff959595命令: /Narci|r
 
@@ -18,6 +18,7 @@ Font\FontSettings.xml
 Initialization.lua
 Locales\Localization.xml
 
+NarciDB\TitleManagerDB.lua
 NarciDB\GearBonus.lua
 NarciDB\NarciAPIs.lua
 NarciDB\NarciUITemplates.xml
@@ -49,3 +50,7 @@ Filters\Letterbox.xml
 ModelFileID.lua
 
 Guide\Guide.xml
+
+
+##Expansion Limited
+widgets\CorruptionSystem.xml

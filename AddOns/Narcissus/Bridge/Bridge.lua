@@ -23,26 +23,27 @@ Bridge:SetScript("OnEvent",function(self,event,...)
         end)
         hooksecurefunc("PawnAddTooltipLine", function(Tooltip, Text, r, g, b)
             if Tooltip:GetName() ~= "RefVirtualTooltip" then
-                PawnTooltipText = ""
+                PawnTooltipText = "";
                 return;
             end
             PawnTooltipLineNum = PawnTooltipLineNum + 1;
+            local NarciTooltip = Narci_Comparison;
             if not Text then
-                NarciTooltip.PawnText:SetText("")
-                NarciTooltip.PawnText:Hide()
-                NarciTooltip_Resize()
+                NarciTooltip.PawnText:SetText("");
+                NarciTooltip.PawnText:Hide();
+                Narci_Comparison_Resize();
                 return;
             end
 
             if PawnTooltipText then
-                PawnTooltipText = PawnTooltipText.."\n"..Text
+                PawnTooltipText = PawnTooltipText.."\n"..Text;
             else
-                PawnTooltipText = Text
+                PawnTooltipText = Text;
             end
 
-            NarciTooltip.PawnText:SetText(PawnTooltipText)
-            NarciTooltip.PawnText:Show()
-            NarciTooltip_Resize()
+            NarciTooltip.PawnText:SetText(PawnTooltipText);
+            NarciTooltip.PawnText:Show();
+            Narci_Comparison_Resize();
         end)
     end
 end)
@@ -55,19 +56,17 @@ local function outSine(t, b, c, d)
 	return c * sin(t / d * (pi / 2)) + b
 end
 
-local duration_Translation = 0.8;
-
 function Narci_SharedAnimatedParent_AnimFrame_OnUpdate(self, elapsed)
 	local duration = 0.8;
 	local offSet, alpha;
 	local t = self.TimeSinceLastUpdate;
     local frame = self:GetParent();
     
-    offSet = outSine(t, self.StartPointY, self.EndPointY - self.StartPointY , duration)
+    offSet = outSine(t, self.StartPointY, self.EndPointY - self.StartPointY , duration);
     --print(offSet)
-    alpha = outSine(t, self.StartAlpha, self.EndAlpha - self.StartAlpha, duration)
+    alpha = outSine(t, self.StartAlpha, self.EndAlpha - self.StartAlpha, duration);
 	frame:SetPoint(self.AnchorPoint, self.relativeTo, self.relativePoint, 0, offSet);
-    frame:SetAlpha(alpha)
+    frame:SetAlpha(alpha);
 	if t >= duration then
 		frame:SetPoint(self.AnchorPoint, self.relativeTo, self.relativePoint, 0, self.EndPointY);
 		if not self.OppoDirection then
@@ -75,12 +74,10 @@ function Narci_SharedAnimatedParent_AnimFrame_OnUpdate(self, elapsed)
 			frame:Show()
 		else
 			frame:SetAlpha(0)
-			--frame:Hide()
 		end
 
 		self:Hide()
 		return;
 	end
     self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
-    --print(self.TimeSinceLastUpdate)
 end

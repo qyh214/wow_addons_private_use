@@ -5,7 +5,7 @@ local L = Narci.L
 NARCI_GRADIENT = "|cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r"
 MYMOG_GRADIENT = "|cffA236EFM|cff9448F1y |cff865BF2T|cff786DF4r|cff6A80F6a|cff5D92F7n|cff4FA4F9s|cff41B7FAm|cff33C9FCo|cff32c9fbg|r"
 
-NARCI_VERSION_INFO = "1.0.7c[BETA]";
+NARCI_VERSION_INFO = "1.0.8c";
 NARCI_DEVELOPER_INFO = "Designed by Peterodox";
 
 NARCI_NEW_ENTRY_PREFIX = "|cff40C7EB";
@@ -62,10 +62,13 @@ L["Minimap Tooltip Left Click"] = "Left-click|r";
 L["Minimap Tooltip To Open"] = "|cffffffffOpen "..CHARACTER_INFO;
 L["Minimap Tooltip Enter Photo Mode"] = "|cffffffffEnter photo mode";
 L["Minimap Tooltip Right Click"] = "Right-click";
-L["Minimap Tooltip Shift Right Click"] = "Shift + Right-click"
+L["Minimap Tooltip Shift Left Click"] = "Shift + Left-click";
+L["Minimap Tooltip Shift Right Click"] = "Shift + Right-click";
 L["Minimap Tooltip Hide Button"] = "|cffffffffHide this button|r"
 L["Minimap Tooltip Middle Button"] = "|CFFFF1000Middle button |cffffffffReset camera";
 L["Minimap Tooltip Set Scale"] = "Set Scale: |cffffffff/narci [scale 0.8~1.2]";
+L["Corrupted Item Parser"] = "|cffffffffToggle Corrupted Item Parser|r";
+L["Toggle Dressing Room"] = "|cffffffffToggle "..DRESSUP_FRAME.."|r";
 
 NARCI_CLIPBOARD = "Clipboard";
 NARCI_LAYOUT = "Layout";
@@ -156,6 +159,9 @@ L["Ultra-wide Tooltip"] = "You can see this option because you are using a %s:9 
 L["Interactive Area"] = "Interactive Area";
 L["Item Socketing Tooltip"] = "Double-click to embed";
 L["Use Bust Shot"] = "Use Bust Shot";
+L["Use Escape Button"] = "Esc Key";
+L["Use Escape Button Description"] = "Press the Escape key to exit.\nOr exit by clicking the hidden X button on the top-right of your screen.";
+L["Handled by Other Addons"] = "Handled by Other Addons";
 
 --Model Control--
 NARCI_SHEATH_WEAPON = "Sheath Weapon";
@@ -196,6 +202,7 @@ L["Toggle 3D Model"] = "Toggle 3D model";
 L["Toggle Model Mask"] = "Toggle model mask";
 L["Show Color Sliders"] = "Show color sliders";
 L["Show Color Presets"] = "Show color presets";
+L["Keep Druid Form"] = "Hold "..NARCI_MODIFIER_ALT.."to keep druid from"
 
 --Spell Visual Browser--
 L["Visuals"] = "Visuals";
@@ -235,6 +242,8 @@ L["Gem Tooltip Format1"] = "%s and %s";
 L["Gem Tooltip Format2"] = "%s, %s and %s more...";
 
 --Equipment Set Manager
+L["Equipped Item Level Format"] = "Equipped %s";
+L["Equipped Item Level Tooltip"] = "The average item level of your currently equipped items.";
 L["Equipment Manager"] = EQUIPMENT_MANAGER;
 L["Toggle Equipment Set Manager"] = "Left click to toggle equipment set manager.";
 L["Duplicated Set"] = "Duplicated Set";
@@ -249,12 +258,41 @@ L["Old Icon"] = "Old Icon";
 NARCI_ICON_SELECTOR = "Icon Selector";
 NARCI_DELETE_SET_WITH_LONG_CLICK = "Delete Set\n|cff808080(click and hold)|r";
 
+--Corruption System
+L["Corruption System"] = "Corruption";
+L["Eye Color"] = "Eye Color";
+L["Blizzard UI"] = "Blizzard UI";
+L["Corruption Bar"] = "Corruption Bar";
+L["Corruption Bar Description"] = "Enable the corruption bar next to the Character Pane.";
+L["Corruption Debuff Tooltip"] = "Debuff Tooltip";
+L["Corruption Debuff Tooltip Description"] = "Replace the default negative effects tooltip with its numeric counterpart.";
+L["No Corrupted Item"] = "You haven't equipped any corrupted item";
+L["Total Corruption Format"] = CORRUPTION_TOOLTIP_LINE.." - "..CORRUPTION_RESISTANCE_TOOLTIP_LINE.." = ".."%s";
+
+L["Crit Gained"] = CRIT_ABBR.." Gained";
+L["Haste Gained"] = STAT_HASTE.." Gained";
+L["Mastery Gained"] = STAT_MASTERY.." Gained";
+L["Versatility Gained"] = STAT_VERSATILITY.." Gained";
+
+L["Proc Crit"] = "Proc "..CRIT_ABBR;
+L["Proc Haste"] = "Proc "..STAT_HASTE;
+L["Proc Mastery"] = "Proc "..STAT_MASTERY;
+L["Proc Versatility"] =  "Proc "..STAT_VERSATILITY;
+
+L["Critical Damage"] = CRIT_ABBR.."DMG";
+
+L["Corruption Effect Format1"] = "|cffffffff%s%%|r speed reduced";
+L["Corruption Effect Format2"] = "|cffffffff%s|r initial damage\n|cffffffff%s yd|r radius";
+L["Corruption Effect Format3"] = "|cffffffff%s|r damage\n|cffffffff%s%%|r of your HP";
+L["Corruption Effect Format4"] = "Struck by the Thing From Beyond triggers other debuffs";
+L["Corruption Effect Format5"] = "|cffffffff%s%%|r damage\\healing taken modified";
+
 --Tutorial--
 L["Alert"] = "Warning";
 L["Race Change"] = "Race/Gender Change";
 L["Race Change Line1"] = "You can again change your race and gender. But there are some limitations:\n1. Your weapons will disappear.\n2. Spell visuals can no longer be removed.\n3. It does not work on other players or NPC.";
 L["Guide Spell Headline"] = "Try or Apply";
-L["Guide Spell Criteria1"] = "Left-click to TRT";
+L["Guide Spell Criteria1"] = "Left-click to TRY";
 L["Guide Spell Criteria2"] = "Right-click to APPLY";
 L["Guide Spell Line1"] = "Most spell visuals that you add by clicking left button will fade away in seconds, while those you add by clicking right button will not.\n\nNow please move to an entry then:";
 L["Guide Spell Choose Category"] = "Choose a category you like. Then choose a subcategory."
@@ -266,6 +304,8 @@ L["Guide Input Line1"] = "You may also input a SpellVisualKitID yourself. As of 
 L["Guide Equipment Manager Line1"] = "Double-click: Use a set\nRight-click: Edit a set.\n\nThis button's previous function has been moved to Preferences.";
 L["Guide Model Control Headline"] = "Model Control";
 L["Guide Model Control Line1"] = format("This model shares the same mouse actions you use in the dressing room, plus:\n\n1.Hold %s and Left Button: Rotate model around Y-axis.\n2.Hold %s and Right Button: Execute scrubby zoom.", NARCI_MODIFIER_ALT, NARCI_MODIFIER_ALT);
+L["Guide Minimap Button Headline"] = "Minimap Button";
+L["Guide Minimap Button Line1"] = "Narcissus minimap button can now be handled by other addons.\nYou can change this option in the Preferences pane. It may require a UI reload."
 
 
 --Splash--
@@ -284,17 +324,24 @@ NARCI_DISABLE_IT_NOW = "Click here to disable...";
     NARCI_CAMERA_SAFE_MODE_DISABLED = "|cffff5050Disabled.|r You can turn it on via Preferences - Camera.";
     --
 NARCI_SHOW_DETAILS = "+ Show details...";
-NARCI_SPLASH_HEADER1 = "Visuals & Model Control";
-NARCI_SPLASH_HEADER2 = "Equipment Set Manager";
 NARCI_SPLASH_HEADER3 = "Miscellaneous";
 NARCI_SPLASH_MESSAGE0 = "|cffd9cdb41. You can now apply special visuals to your scene.|r\nYou can put spells, gadgets onto the actors and even control the weather. Access this feature from the model control panel."
 NARCI_SPLASH_MESSAGE1 = format("|cffd9cdb42. Flipping model and scrubby zoom.|r\nYou can hold %s and left button to rotate the model around Y-axis. Or hold %s and right button to execute scrubby zoom.", NARCI_MODIFIER_ALT, NARCI_MODIFIER_ALT);
 NARCI_SPLASH_MESSAGE2 = "|cffd9cdb4You can open it by clicking the hexagonal button on the top right (where your maximum item level is shown).";
 NARCI_SPLASH_MESSAGE3 = "|cffd9cdb41.The AFK screen will be closed automatically when moving or entering combat.\n2. The enhanced dressing room is back online.|r";
 
+L["Show Whats New"] = "Show Whats New";
+NARCI_SPLASH_WHATS_NEW_FORMAT = "|cff694d9cWhat's New in Narcissus %s";
+NARCI_COLOR_GREY_85 = "|cffd8d8d8";
+NARCI_SPLASH_HEADER1 = "Corruption Module";
+NARCI_SPLASH_HEADER2 = "Photo Mode";
+NARCI_SPLASH_INTERACTIVE_TEXT1 = NARCI_COLOR_GREY_85.."Narcissus UI|r\n- The actual effect and rank of a corrupted item will be shown next to its item level.\n- You will see an eyeball if you have equipped any corrupted items. Its iris displays your corruption level.";
+NARCI_SPLASH_INTERACTIVE_TEXT2 = NARCI_COLOR_GREY_85.."Blizzard UI|r\n- A corruption bar can be found on your character frame. So you do not have to mouse over the eye to check your status.\n- You can replace the default textual tooltip with its  numerical counterpart.\n- Both of the above are optional.";
+NARCI_SPLASH_INTERACTIVE_TEXT3 = NARCI_COLOR_GREY_85.."Spell Visual Browser|r\n- 86 newly categorized spell visuals, including The Winter Veil Greatfeather Pepe.\n\n"..NARCI_COLOR_GREY_85.."Group Photo|r\n- Druid form will be retained if you hold "..NARCI_MODIFIER_ALT.." when adding actors."
+
 --Project Details--
 NARCI_ALL_PROJECTS = "All Projects";
-NARCI_PROJECT_DETAILS = "|cFFFFD100Developer: Peterodox\nRelease Date: December 23, 2019|r\n\nThank you for trying this add-on! If you have any issues, suggestions, ideas, please leave a comment on the curseforge page or contact me on...";
+NARCI_PROJECT_DETAILS = "|cFFFFD100Developer: Peterodox\nRelease Date: January 28, 2020|r\n\nThank you for trying this add-on! If you have any issues, suggestions, ideas, please leave a comment on the curseforge page or contact me on...";
 NARCI_PROJECT_AAA_TITLE = "|cff008affA|cff0d8ef2z|cff1a92e5e|cff2696d9r|cff339acco|cff409ebft|cff4da1b2h |cff59a5a6A|cff66a999d|cff73ad8cv|cff7fb180e|cff8cb573n|cff99b966t|cffa6bd59u|cffb2c14dr|cffbfc440e |cffccc833A|cffd9cc26l|cffe5d01ab|cfff2d40du|cffffd800m";
 NARCI_PROJECT_AAA_SUMMARY = "Explore places of interest and collect lores and photos from all across Azeroth.|cff636363";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "An immersive character pane and your ultimate screenshot tool.";

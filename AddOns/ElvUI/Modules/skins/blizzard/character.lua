@@ -266,8 +266,13 @@ local function UpdateCurrencySkins()
 	end
 end
 
-local function LoadSkin()
-	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.character ~= true then return end
+local function CorruptionIcon(self)
+	local itemLink = GetInventoryItemLink("player", self:GetID())
+	self.IconOverlay:SetShown(itemLink and IsCorruptedItem(itemLink))
+end
+
+function S:CharacterFrame()
+	if not (E.private.skins.blizzard.enable and E.private.skins.blizzard.character) then return end
 
 	-- General
 	local CharacterFrame = _G.CharacterFrame
@@ -284,6 +289,14 @@ local function LoadSkin()
 			Slot:SetTemplate()
 			Slot:StyleButton(Slot)
 			Slot.icon:SetInside()
+
+			Slot.IconOverlay:SetAtlas("Nzoth-inventory-icon");
+			Slot.IconOverlay:SetInside()
+
+			Slot:HookScript("OnShow", CorruptionIcon)
+			Slot:HookScript("OnEvent", CorruptionIcon)
+
+			Slot.CorruptedHighlightTexture:SetAtlas('Nzoth-charactersheet-item-glow')
 
 			local Cooldown = _G[Slot:GetName().."Cooldown"]
 			E:RegisterCooldown(Cooldown)
@@ -322,6 +335,10 @@ local function LoadSkin()
 	_G.CharacterStatsPane.ItemLevelFrame.Value:FontTemplate(nil, 20)
 	_G.CharacterStatsPane.ItemLevelFrame.Background:SetAlpha(0)
 	ColorizeStatPane(_G.CharacterStatsPane.ItemLevelFrame)
+
+	--Corruption 8.3
+	_G.CharacterStatsPane.ItemLevelFrame.Corruption:ClearAllPoints()
+	_G.CharacterStatsPane.ItemLevelFrame.Corruption:Point("RIGHT", _G.CharacterStatsPane.ItemLevelFrame, "RIGHT", 22, -8)
 
 	hooksecurefunc("PaperDollFrame_UpdateStats", function()
 		if IsAddOnLoaded("DejaCharacterStats") then return end
@@ -433,8 +450,8 @@ local function LoadSkin()
 		object.icon:SetTexCoord(unpack(E.TexCoords))
 		--Making all icons the same size and position because otherwise BlizzardUI tries to attach itself to itself when it refreshes
 		object.icon:Point("LEFT", object, "LEFT", 4, 0)
-		hooksecurefunc(object.icon, "SetPoint", function(self, _, _, _, _, _, isForced)
-			if isForced ~= true then
+		hooksecurefunc(object.icon, "SetPoint", function(self, _, _, _, _, _, forced)
+			if forced ~= true then
 				self:Point("LEFT", object, "LEFT", 4, 0, true)
 			end
 		end)
@@ -492,4 +509,4 @@ local function LoadSkin()
 	-- S:HandleCloseButton(_G.PaperDollItemsFrame.HelpTipBox.CloseButton)
 end
 
-S:AddCallback("Character", LoadSkin)
+S:AddCallback('CharacterFrame')

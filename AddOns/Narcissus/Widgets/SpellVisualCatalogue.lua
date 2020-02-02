@@ -4,6 +4,7 @@
 
 NarciSpellVisualBrowser = {};
 
+local NEW = "|cfff2f2f2";
 NarciSpellVisualBrowser.Catalogue = {
     --[[
         [Category Index] = { ["name"] = Category Name,
@@ -33,8 +34,11 @@ NarciSpellVisualBrowser.Catalogue = {
             {20503, "Long tail", 135815},
             {17830, "Mixed", 429384},
             {97332, "Blue", 135777},
+            {28662, NEW.."Pink", 132854},
+            {69186, NEW.."Sha", 1043572},
             {64111, "Blue engulfing", 135781},
             {17758, "Dark", 425951},
+            {120955, NEW.."Contracting", 1391771},
             
         },
 
@@ -64,20 +68,28 @@ NarciSpellVisualBrowser.Catalogue = {
             {108109, "Stars", 135464},
             {41004, "Solar Left", 535045},
             {41005, "Solar Right", 535045},
+            {120868, NEW.."Gold Splash", 237151},
             {107648,"Orbiting", 1538775},
             {12481, "First aid", 135966, 63},
         },
 
 
         [4] = { ["name"] = "Shadow",
+            {121735, NEW.."Blast", 236222},
+            {122499, NEW.."Void&fire", 135823},
+            {122420, NEW.."Upcurrents", 136221},
+            {122321, NEW.."Dark blue Left", 136204},
+            {121860, NEW.."Downcurrent L", 425950},
+            {121861, NEW.."Downcurrent R", 425950},
+            {121834, NEW.."Radiant core", 237566},
             {79554, "Large", 1022950},
             {76379, "Bright", 132851},
             {65199, "Fire&shadow", 1357804},
             {64112, "Tiny", 132843},     --long tail
             {10354, "Warlock", 136197},
             {54582, "Green", 651085},
-            {15611, "Purple right", 631519},
-            {10715, "Purple left", 631519},
+            {15611, "Purple Right", 631519},
+            {10715, "Purple Left", 631519},
             {10678, "Blue light", 631503},
             {96842, "Dripping Void", 1386548},
             {58009, "Void", 1728724},
@@ -89,7 +101,7 @@ NarciSpellVisualBrowser.Catalogue = {
         },
 
         [5] = { ["name"] = "Arcane",
-            {115446, "Bling", 1717107},
+            {121471, "Pink stars", 1717107},
             {73948, "Sparse", 132861},
             {117171, "Orbiting", 132860},
             {12556, "Teleport", 2176537},
@@ -98,7 +110,7 @@ NarciSpellVisualBrowser.Catalogue = {
             {108730, "Complex", 135869},
             {68828, "Blast", 135735},
             {97136, "Azerite", 2065562},
-
+            {121489, NEW.."Triangle", 135750},
         },
 
         [6] = { ["name"] = "Fel",
@@ -115,7 +127,7 @@ NarciSpellVisualBrowser.Catalogue = {
             {96448, "Lightning", 606542},
             {65215, "Mist", 627487},
             {24677, "Cloud", 1360980},
-            {109599, "Sha", 651083},
+            {109599, "Sha Orbs", 651083},
 
         },
 
@@ -128,6 +140,10 @@ NarciSpellVisualBrowser.Catalogue = {
             {64834, "Water", 1698701},
             {108173, "Wind", 132837},
             {96075, "Gale", 132845},
+            {123599, NEW.."Sands", 796635},
+            {121352, NEW.."Gem Dust", 463521},
+            {121360, NEW.."Berserker Rage", 136146},
+            {120345, NEW.."Toxic", 458736},
 
         },
 
@@ -140,13 +156,16 @@ NarciSpellVisualBrowser.Catalogue = {
             {95805, "Scintillant", 136048},
             {70975, "Medium", 1385911},
             {107151, "Dark large", 135750},
+            {79766, NEW.."Twilight Blue", 135778},
+            {115535, NEW.."Spark", 132862},
         },
 
         [10] = { ["name"] = "Death",
             {95129, "Witchery", 2032589},
             {73426, "Nightmare 1", 1357798},
             {73112, "Nightmare 2", 1357816},
-            {102960, "Blood", 1357800},
+            {122401, NEW.."Nightmare 3", 876915},
+            {102960, "Dripping Blood", 1357800},
         },    
     },
 
@@ -177,6 +196,8 @@ NarciSpellVisualBrowser.Catalogue = {
             {103111, "Burning steps", 1339435, 143}, 
             {69530, "Dragon\'s breath", 134153, }, 
             {80292, "Blazing barrier", 132221, },
+            {123912, NEW.."Spiral Wrathion", 530999},
+            {122287, NEW.."Solar Wrath", 459027},
         },
 
         [3] = { ["name"] = "Lightning",
@@ -185,6 +206,9 @@ NarciSpellVisualBrowser.Catalogue = {
         },
 
         [4] = { ["name"] = "Shadow",
+            {122791, NEW.."Void Barrier", 136192},
+            {122250, NEW.."Void Circle", 3163618},
+            {122207, NEW.."Surrounded", 135945},
             {92782, "Dark mist", 2065615},
             {106887, "Channeling", 1022950},
             {20896, "Shadow mourne", 463286},
@@ -201,27 +225,42 @@ NarciSpellVisualBrowser.Catalogue = {
             {68380, "Wings&particals", 571555},
             {77556, "White Transparent", 1445239},
             {11186, "Guardian spirit", 1060983},
+            {122099, NEW.."Light Eruption", 571554},
 
         },
 
         [6] = { ["name"] = "Nature",
+            {122498, NEW.."Water Eruption 1", 893777},
+            {24512, NEW.."Water Eruption 2", 538567},
+            {122391, NEW.."Rising rock", 646672},
             {108411, "Star swirl", 236168,},
             {104605, "Spirit eagle", 612363,},
         },
 
-        [7] = { ["name"] = "Arcane",
+        [7] = { ["name"] = "Death",
+            {122570, NEW.."Blood Vortex M", 1394887},
+            {122569, NEW.."Blood Vortex S", 1392546},
+            {124180, NEW.."Blood Eruption 1", 236305},
+            {124281, NEW.."Blood Eruption 2", 1029738},
+            
+        },
+
+        [8] = { ["name"] = "Arcane",
             {69120, "Charged up", 839979},
             {95043, "Evocation", 136075,},   --72816
             {68661, "Teleport", 237509, 125},
             {108092, "Mana shield", 136153, },
             {108728, "Prismatic Image", 1391780},
-            {80197, "Prismatic barrier", 135991},
+            {80197, "Prismatic Barrier", 135991},
             {116946, "Absorbing power", 1120359},
-            {107247, "Azerite Abosrb", 2065618},
-
+            {122453, "Azerite Acquired", 2065618},
+            {122442, NEW.."Azerite Barrier", 2967107},
+            {122748, NEW.."Azerite Blast", 2032580},
+            {122436, NEW.."Azerite Shockwave", 2967103},
+            {122524, NEW.."Charging", 135786},
         },
 
-        [8] = { ["name"] = "Hearthstone",
+        [9] = { ["name"] = "Hearthstone",
             {106481, "Noblegarden", 237000, 1330},
             {106582, "Midsummer", 135268, 1088},
             {106588, "Brewfest", 133697,},
@@ -230,6 +269,16 @@ NarciSpellVisualBrowser.Catalogue = {
 
     [3] = {["name"] = "Body&Environment",
         [1] = { ["name"] = "Color Tone",
+            {123177, NEW.."Polarized", 237154},
+            {123041, NEW.."Negative film", 632261},
+            {122669, NEW.."Ghost Indigo", 237160},
+            {122275, NEW.."Ghost Red", 237156},
+            {111381, NEW.."Ghost Purple", 1021864},
+            {122926, NEW.."TL Golden", 132528},
+            {122913, NEW.."TL Purple", 132531},
+            {122333, NEW.."Magma", 971079},
+            {123875, NEW.."Corrupted Purple", 841379},
+            {123874, NEW.."Corrupted Red", 841381},
             {118304, "Shadowland", 838686},
             {118636, "Midsummer", 133886},
             {118726, "Ghost", 236548},
@@ -243,20 +292,33 @@ NarciSpellVisualBrowser.Catalogue = {
             {97236, "Void remnant", 236223},
             {102957, "Hexed", 2065567},
             {112020, "Golden", 1601097},
-            {108154, "Cyan", 897027},
+            {122741, NEW.."Green", 1030905},
+            {108154, "Pastel cyan", 897027},
             {110374, "White", 1391535},
             {97580, "Red", 1391537},
             {109613, "Red orange", 1817485},
             {105872, "Yellow orange", 1129414},
             {105870, "Yellow", 1391538},
             {108278, "Mustard", 1129419},
-            {105862, "Green", 1391536},
-            {105871, "Blue", 2902999},
+            {105862, "Yellow green", 1391536},
+            {105871, "Cyan", 2902999},
+            {122334, NEW.."Cyan blue", 1397642},
+            {122742, NEW.."Dark blue", 576310},
+            {123998, NEW.."Darker blue", 1035042},
             {108797, "Purple", 1122139},
             {108161, "Dark purple", 1032479},
         },
 
         [2] = { ["name"] = "Spells",
+            {121241, NEW.."Sha Touched", 1386549},
+            {122710, NEW.."Void Smoke", 136121},
+            {123918, NEW.."Void Vine", 237532},
+            {120655, NEW.."Nightmare Vine", 1396975},
+            {123443, NEW.."Mecha Empowerment", 465877},
+            {123866, NEW.."Bubbling Blood", 136124},
+            {121100, NEW.."Deepsea", 538516},
+            {120864, NEW.."Ghostly", 136125},
+            {123851, NEW.."Level Up", 1360764},
             {79517, "Fel eruption", 841219},
             {111150, "Ice form", 1387355, },
             {107849, "Prismatic Image", 135994},
@@ -268,7 +330,7 @@ NarciSpellVisualBrowser.Catalogue = {
             {111874, "PvP Buff Nature", 614747},
             {111875, "PvP Buff Rage", 136088},
             {111876, "PvP Buff Air", 132845},     
-            {59465, "Empowerment", 236295,},
+            {59465, "Arcane Empowerment", 236295,},
             {92131, "Dread Flame", 1027878},
             {61678, "Haunted soul", 136123},
             {86037, "Tendrils High", 537022},
@@ -285,11 +347,6 @@ NarciSpellVisualBrowser.Catalogue = {
             {86027, "Violent", 462324},
             {100707, "Madness", 1728724},
             --{114958, "Reflective", },
-
-
-            --Holy
-            --{69984, "Little wings",},
-            --{70065, "Huge wings",},
         },
 
 
@@ -309,25 +366,34 @@ NarciSpellVisualBrowser.Catalogue = {
             {112177, "Welding Condense", 2901574},
             {112178, "Welding Sparse", 2901574},
             {74104, "Column impact", 839983},  --66571
-            {14468, "Chains", },
+            {14468, NEW.."Chains", 132507},
+            {121932, NEW.."Void Blasted", 1728724},
             
         },
 
         [4] = { ["name"] = "Environment",
+            {122755, NEW.."Flame emitter", 135805},
+            {124647, NEW.."Inferno", 135789},
             {63318, "Snow", 135850},
             {112555, "Rain", 132844},
-            {24517, "Storm", 135739},
+            {24517, "Arcane Storm", 135739},
+            {123698, NEW.."Sandstorm", 796638},
+            {122523, NEW.."Charged Field", 136111},
             {20972, "Bubbles", 512902},
             {98587, "Fishes", 237309},
             {111865, "Jellies", 970806},
             {96013, "Arcane", 236392},
             {53514, "Fel dust", 134389},
             {80449, "Cosmos", 645203},
+            {121406, NEW.."Celestial", 1519351},
+            {119093, NEW.."Starfall", 1033487},
             {10598, "Photo bomb", 133709},
             {110958, "Welding sparks", 574795},
             {107876, "Coin rain", 237281},
+            {120946, NEW.."Gold eruption", 646670},
             {108176, "Smoke", 134382},
             {105367, "Filthy eruption", 840409},
+            {123897, NEW.."Filthy pool", 132108},
             {22924, "Rose shower", 134222},
             
 
@@ -347,6 +413,7 @@ NarciSpellVisualBrowser.Catalogue = {
         },
 
         [6] = { ["name"] = "Fireworks",
+            {119297, NEW.."Multicolored", 538566},
             {11212, "Low Red x2", 134273},
             {85802, "Swirl Blue", 134270},
             {85803, "Swirl Green", 134271},
@@ -368,6 +435,8 @@ NarciSpellVisualBrowser.Catalogue = {
             {22246, "Flowers", 413571},
             {23762, "Clay pot", 134514},
             {18436, "Lute", 463479},
+            {45430, NEW.."Harp", 652412,},
+
             {16458, "Human baby", 134508},
             {16099, "Planks", 134329},
             {108095, "Anchor", 1686581},
@@ -391,6 +460,10 @@ NarciSpellVisualBrowser.Catalogue = {
         },
 
         [2] = { ["name"] = "Wings",
+            {36397, NEW.."Jade Serpent", 611421},
+            {36396, NEW.."White Tiger", 611420},
+            {36399, NEW.."Red Crane", 977169},
+            {36398, NEW.."Black Ox", 611419},
             {79375, "Fel", 236293},
             {37269, "Fel small", 236293},
             {25145, "Purple", 136172},
@@ -524,8 +597,6 @@ NarciSpellVisualBrowser.Catalogue = {
             {12484, "Tourney: Ebon 1", 135309},
             {12485, "Tourney: Ebon 2", 135309},
             {12486, "Tourney: Ebon 3", 135309},      
-            --{, "", },
-            --{, "", },
 
         },
     },
@@ -543,7 +614,7 @@ NarciSpellVisualBrowser.Catalogue = {
             {100924, "Diver", 133151},
             {100671, "Zandalari", 1729380},
             {115987, "Robotic", 1041266},
-            {122909, "Winter Veil", 1339669},    --8.3
+            {122909, NEW.."Winter Veil", 1339669},
             {78648, "Feathers", 1108079},
         },
 
@@ -586,7 +657,11 @@ NarciSpellVisualBrowser.Catalogue = {
             {18823, "Bucket head", 1063279},
             {91304, "ZZzzz", 136090},
             {62786, "Hunter's mark", 236188},
-            {70954, "Dazzled", 135860, 1160},   --stun
+            {70954, "Dazzled", 136222, 1160},
+            {14482, NEW.."Stunned", 135860, },
+            {123888, NEW.."Fear", 237561, },
+            {120009, NEW.."Vaultbot", 1001977},
+
         },
 
     },
@@ -612,7 +687,8 @@ NarciSpellVisualBrowser.Catalogue = {
             {110786, "Energy cell", 2902386, 944},
             {88733, "Fel shard", 1135365, 1330},
             {84358, "Void crystal", 132776, 124},
-
+            {120817, NEW.."Cultist Alter", 2460895},
+            {119257, NEW.."Alter of Time", 609811},
         },
 
         [2] = { ["name"] = "Food&Drinks",
@@ -633,8 +709,10 @@ NarciSpellVisualBrowser.Catalogue = {
             {115629, "Cheese!", 133943, 1330},
             {104405, "Bread", 133950, },
             {80175, "Chicken leg", 133974, 76},
+            {122522, NEW.."Corrupted fish", 970828},
+            {123677, NEW.."Rib", 1045939},
             {90955, "Steak", 134026},
-            {86662, "Apple", 133976, },
+            {119709, "Apple", 133976, },  --86662
             {86949, "Giant apple", 133975, },
             {18628, "Spotted egg", 132833, 1330},
             {87215, "Plate Pastries", 237357, 604},
@@ -656,6 +734,7 @@ NarciSpellVisualBrowser.Catalogue = {
             {22907, "Route map 1", 134269, 520},
             {29521, "Route map 2", 237386, 520},
             {65487, "Mail", 133468,},
+            {120407, NEW.."Floating Mails", 133465},
             {84673, "Scroll&Bell", 133706, 1308},
             {103443, "Scroll&fish", 350650, 1306},
             {116079, "Scroll Boralus", 1500878, 1306},
@@ -674,16 +753,19 @@ NarciSpellVisualBrowser.Catalogue = {
             {19530, "Blue dye", 134715, 61},
             {16695, "Orange dye", 967520, 61},
             {14001, "Huge Conical", 134748, 63},
+            {120405, NEW.."Solar potion", 650640, 61},
 
     
         },
 
         [5] = { ["name"] = "Life",
+            {121948, NEW.."Cooking fire", 629054},
             {100265, "Kettle", 1056365},
             {100264, "Kettle Watering", 607527},
             {65731, "Wooden rulers", 135437},
             {63794, "Palm leaves", 134190},
-            {84366, "Giant sack", 133640},
+            {118813, NEW.."Sack Small", 132824},
+            {84366, "Sack Giant", 133640},
             {108949, "Paint brush", 1387616},
             {103793, "Hand anchor", 1914118},
             {103221, "\"Football\"", 660531},
@@ -714,6 +796,8 @@ NarciSpellVisualBrowser.Catalogue = {
             {103153, "Grain bags", 133622, 1284},
             {105997, "Steel plates", 133233, 1208},
             {108586, "Horned helmet", 353520, 1242},
+            {120565, NEW.."Package", 1506461},
+            {119901, NEW.."Remote control", 133015, 1330},
 
         },
 
@@ -736,7 +820,7 @@ NarciSpellVisualBrowser.Catalogue = {
         
         [7] = { ["name"] = "Arrows&Gunfires",
             {72393, "Brown", 133579},
-            {36751, "Flaming arrowhead", 135825},
+            {120581, NEW.."Flaming Arrow", 135825},
             {93815, "Windrunner", 1392555},
             {96303, "Gunfire 1", 236216},  --96371
             {96385, "Gunfire 2", 236216},

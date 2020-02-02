@@ -1,4 +1,5 @@
 --Parent: Narci_EquipmentFlyoutFrame (Narcissus.xml)
+local EquipmentFlyoutFrame;
 local hasGapAdjusted = false;
 local STAMINA_STRING = SPELL_STAT3_NAME
 local DefaultHeight_Comparison = 160;
@@ -95,10 +96,11 @@ local function SetCombatRatingRatio()
 end
 
 local ColorTable = {
-    Green = {r = 124 ,g = 197 ,b = 118},    --7cc576
-    Red = {r = 255 ,g = 80 ,b = 80},        --ff5050 (1, 0.3137, 0.3137)
+    Green = {r = 124, g = 197, b = 118},    --7cc576
+    Red = {r = 255, g = 80, b = 80},        --ff5050 (1, 0.3137, 0.3137)
     Positive = {r = 98, g = 239, b = 165}, 
-    Positive2 = {r = 135, g = 220, b = 153}, 
+    Positive2 = {r = 135, g = 220, b = 153},
+    Corrupt = {r = 148, g = 109, b = 209},  --946dd1
 }
 
 local function TextColor(Fontstring, color)
@@ -151,6 +153,8 @@ local function GetItemEnchant(itemLink)
     return tonumber(EnchantID)
 end
 --]]
+
+
 local function CacheTooltip(itemLink)
     NarciCacheTooltip:SetHyperlink(itemLink)
 end
@@ -244,16 +248,14 @@ end
 local HeartLevel = 0;
 local CurrentSpecID = 1;
 local PrimaryStatName = "Primary";
---local IsAzeriteEmpoweredItem = C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem
 local GetAllTierInfo = C_AzeriteEmpoweredItem.GetAllTierInfo;
 local GetPowerInfo = C_AzeriteEmpoweredItem.GetPowerInfo;
 local IsPowerSelected = C_AzeriteEmpoweredItem.IsPowerSelected;
 local GetPowerText = C_AzeriteEmpoweredItem.GetPowerText;   --azeriteEmpoweredItemLocation, powerID, level
 local IsPowerAvailableForSpec = C_AzeriteEmpoweredItem.IsPowerAvailableForSpec;
---local DoesItemExist = C_Item.DoesItemExist;
 local MaximumTier = 5;
 local TierInfos, azeritePowerDescription;
---local itemLocation = Narci_EquipmentFlyoutFrame.BaseItem
+
 local function GetActiveTraits(itemLocation, self)
     if not itemLocation then return; end
     local shouldCache = false;
@@ -328,7 +330,7 @@ local function BuildAzeiteTraitsFrame(TraitsFrame, itemLocation, self)
             if TraitsCache[i][5] > HeartLevel then
                 button.Level:SetText(TraitsCache[i][5]);
                 button.Level:Show();
-                button.Border0:SetTexCoord(0.5, 0.75, 0, 1);        --Desaturated
+                button.Border0:SetTexCoord(0.5, 0.75, 0, 1);            --Desaturated
                 button.Border1:SetDesaturated(true);
             else
                 button.Level:Hide();
@@ -336,7 +338,7 @@ local function BuildAzeiteTraitsFrame(TraitsFrame, itemLocation, self)
                 button.Icon:Show();
                 rightSpec = IsPowerAvailableForSpec(TraitsCache[i][1], CurrentSpecID);
                 if rightSpec then
-                    button.Border0:SetTexCoord(0, 0.25, 0, 1);      --Saturated
+                    button.Border0:SetTexCoord(0, 0.25, 0, 1);          --Saturated
                     button.Border1:SetDesaturated(false);
                     button.Icon:SetDesaturated(false);
                 else
@@ -378,9 +380,9 @@ local function BuildAzeiteTraitsFrame(TraitsFrame, itemLocation, self)
     end
 
     --Base Item--
-    if not Narci_EquipmentFlyoutFrame.BaseItem then return; end 
-    TraitsCache = GetActiveTraits(Narci_EquipmentFlyoutFrame.BaseItem);
-    if not TraitsCache or Narci_EquipmentFlyoutFrame.BaseItem == itemLocation then 
+    if not EquipmentFlyoutFrame.BaseItem then return; end 
+    TraitsCache = GetActiveTraits(EquipmentFlyoutFrame.BaseItem);
+    if not TraitsCache or EquipmentFlyoutFrame.BaseItem == itemLocation then 
         for i = 1, MaximumTier do
             TraitsFrame.Traits[i].BaseTrait:Hide();
         end
@@ -452,12 +454,13 @@ end
 local RequestLoadItemData = C_Item.RequestLoadItemData  --Cache Item info
 function Narci_Comparison_SetComparison(itemLocation, self)
     local frame = Narci_Comparison;
+    local FlyOut = EquipmentFlyoutFrame;
     if not C_Item.DoesItemExist(itemLocation) then
         frame.Label:SetText(CURRENTLY_EQUIPPED);
         frame.ItemName:SetText(EMPTY);
         frame.ItemName:SetTextColor(0.6, 0.6, 0.6);
-        frame.EquipLoc:SetText(LocalizedSlotName[Narci_EquipmentFlyoutFrame.slotID][2])
-        local _, textureName = GetInventorySlotInfo(LocalizedSlotName[Narci_EquipmentFlyoutFrame.slotID][1])
+        frame.EquipLoc:SetText(LocalizedSlotName[FlyOut.slotID][2])
+        local _, textureName = GetInventorySlotInfo(LocalizedSlotName[FlyOut.slotID][1])
         frame.Icon:SetTexture(textureName);
         frame.BonusButton1:Hide();
         frame.BonusButton2:Hide();
@@ -475,14 +478,16 @@ function Narci_Comparison_SetComparison(itemLocation, self)
     local r, g, b = GetItemQualityColor(quality);
 
     local stats = ItemStats(itemLocation);
-    local baseStats = ItemStats(Narci_EquipmentFlyoutFrame.BaseItem);
+    local baseStats = ItemStats(FlyOut.BaseItem);
 
     local _, _, itemSubType = GetItemInfoInstant(itemLink);
 
     frame.ItemName:SetText(name);
     frame.ItemName:SetTextColor(r, g, b);
     frame.Icon:SetTexture(itemIcon);
-    frame.EquipLoc:SetText(LocalizedSlotName[Narci_EquipmentFlyoutFrame.slotID][2])
+    if FlyOut.slotID then
+        frame.EquipLoc:SetText(LocalizedSlotName[FlyOut.slotID][2]);
+    end
     frame.Label:SetText(itemSubType);
 
     DisplayComparison("ilvl", STAT_AVERAGE_ITEM_LEVEL, stats.ilvl, baseStats.ilvl, nil, {1, 0.82, 0});
@@ -573,7 +578,7 @@ function Narci_Comparison_SetComparison(itemLocation, self)
         TraitsFrame:Hide();
     end
 
-    --Extra Effect
+    --Extra Effect (Trinket/Usable)
     --print("CacheCheck Extra: "..tostring(C_Item.IsItemDataCachedByID(itemLink)))
     local headline, str = GetItemExtraEffect(itemLink)
     if not headline then
@@ -581,8 +586,18 @@ function Narci_Comparison_SetComparison(itemLocation, self)
     end
 
     if headline then
+        if IsCorruptedItem(itemLink) then   --Corrupted Items
+            str = str.."|cff959595"..ITEM_MOD_CORRUPTION.."|r "..stats.corruption;
+            local corruptionDiff = stats.corruption - baseStats.corruption;
+            if corruptionDiff > 0 then
+                corruptionDiff = "+"..corruptionDiff;
+            end
+            str = str.." ("..corruptionDiff..")";
+            TextColor(extraText, ColorTable.Corrupt);
+        else
+            TextColor(extraText, ColorTable.Positive2);
+        end
         extraText:SetText(str);
-        TextColor(extraText, ColorTable.Positive2)
         headerText:SetText(headline);
         SubTooltip.Header:SetWidth(math.max(74, headerText:GetWidth() + 14))
         extraText:Show();
@@ -619,6 +634,13 @@ NT:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
 NT:RegisterEvent("AZERITE_ITEM_POWER_LEVEL_CHANGED");
 NT:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
 NT:SetScript("OnEvent",function(self,event,...)
+    if event == "VARIABLES_LOADED" then
+        self:UnregisterEvent("VARIABLES_LOADED");
+        C_Timer.After(1, function()
+            EquipmentFlyoutFrame = Narci_EquipmentFlyoutFrame;
+        end)
+    end
+
     if event ~= "AZERITE_ITEM_POWER_LEVEL_CHANGED" then
         if ( not self.pauseUpdate ) then
             self.pauseUpdate = true;
@@ -643,15 +665,6 @@ NT:SetScript("OnEvent",function(self,event,...)
         UpdateSpectIDAndPrimaryStat();
     end
 end)
-
---[[
-function PrintStats(slotID)
-    --GetItemStats(C_Item.GetItemLink(ItemLocation:CreateFromEquipmentSlot(slotID)))
-    local _, GemLink = GetItemGem(C_Item.GetItemLink(ItemLocation:CreateFromEquipmentSlot(slotID)), 1)
-    print(GemLink)
-    GemStats = GetItemStats(GemLink);
-end
---]]
 
 
 function Narci_Comparison_Resize()
@@ -718,4 +731,13 @@ hooksecurefunc("DressUpItemLink", function(link)
     --print(str)
     --print(strp)
 end)
+--]]
+
+--[[
+function PrintStats(slotID)
+    --GetItemStats(C_Item.GetItemLink(ItemLocation:CreateFromEquipmentSlot(slotID)))
+    local _, GemLink = GetItemGem(C_Item.GetItemLink(ItemLocation:CreateFromEquipmentSlot(slotID)), 1)
+    print(GemLink)
+    GemStats = GetItemStats(GemLink);
+end
 --]]

@@ -400,9 +400,9 @@ function Narci_GemButton_OnEnter(self)
             elseif NumGems > 2 then
                 text = format( L["Gem Tooltip Format2"], type1, type2, (NumGems - 2) );
             end
-            tooltip.OtherGems.Text:SetText(text);
-            tooltip.OtherGems:Show();
         end
+        tooltip.OtherGems.Text:SetText(text);
+        tooltip.OtherGems:Show();
     else
         tooltip.OtherGems:Hide();
     end

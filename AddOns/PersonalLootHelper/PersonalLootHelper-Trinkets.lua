@@ -13,6 +13,14 @@ to easily populate these arrays:
 ]]--
 
 local TRINKET_AGILITY_DPS = {
+
+	-- 8.3 trinkets
+	[173943] = true, -- Torment in a Jar
+	[173946] = true, -- Writhing Segment of Drest'agath
+	[174044] = true, -- Humming Black Dragonscale
+	[174277] = true, -- Lingering Psychic Shell
+	[173940] = true, -- Sigil of Warding
+
 	-- 8.1.5 and 8.2 trinkets
 	[167866] = true, -- Lurker's Insidious Gift
 	[167868] = true, -- Idol of Indiscriminate Consumption
@@ -106,6 +114,15 @@ local TRINKET_AGILITY_DPS = {
 }
 
 local TRINKET_INTELLECT_DPS = {
+
+	-- 8.3 trinkets
+	[174060] = true, -- Psyche Shredder
+	[174103] = true, -- Manifesto of Madness
+	[173944] = true, -- Forbidden Obsidian Claw
+	[174044] = true, -- Humming Black Dragonscale
+	[174180] = true, -- Oozing Coagulum
+	
+	
 	-- 8.1.5 and 8.2 trinkets
 	[169344] = true, -- Ingenious Mana Battery
 	[169318] = true, -- Shockbiter's Fang
@@ -199,6 +216,15 @@ local TRINKET_INTELLECT_DPS = {
 }
 
 local TRINKET_STRENGTH_DPS = {
+
+	-- 8.3 trinkets
+	[173943] = true, -- Torment in a Jar
+	[173946] = true, -- Writhing Segment of Drest'agath
+	[174044] = true, -- Humming Black Dragonscale
+	[174277] = true, -- Lingering Psychic Shell
+	[173940] = true, -- Sigil of Warding
+
+
 	-- 8.1.5 and 8.2 trinkets
 	[169769] = true, -- Remote Guidance Device
 	[169319] = true, -- Dribbling Inkpod
@@ -287,6 +313,15 @@ local TRINKET_STRENGTH_DPS = {
 }
 
 local TRINKET_HEALER = {
+
+	-- 8.3 trinkets
+	[174060] = true, -- Psyche Shredder
+	[174103] = true, -- Manifesto of Madness
+	[173944] = true, -- Forbidden Obsidian Claw
+	[174044] = true, -- Humming Black Dragonscale
+	[174180] = true, -- Oozing Coagulum
+
+
 	-- 8.1.5 and 8.2 trinkets
 	[169344] = true, -- Ingenious Mana Battery
 	[169318] = true, -- Shockbiter's Fang
@@ -380,6 +415,15 @@ local TRINKET_HEALER = {
 }
 
 local TRINKET_TANK = {
+
+	-- 8.3 trinkets
+	[173943] = true, -- Torment in a Jar
+	[173946] = true, -- Writhing Segment of Drest'agath
+	[174044] = true, -- Humming Black Dragonscale
+	[174277] = true, -- Lingering Psychic Shell
+	[173940] = true, -- Sigil of Warding
+
+
 	-- 8.1.5 and 8.2 trinkets
 	[169769] = true, -- Remote Guidance Device
 	[169319] = true, -- Dribbling Inkpod

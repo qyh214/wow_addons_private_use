@@ -1,8 +1,14 @@
-tag 9bd5b1854658283e6ec5aa6c3d71af5743198462 8.1-1
-Author:	Xuerian <xuerian@gmail.com>
-Date:	Sat Feb 9 22:50:30 2019 -0500
+commit 9eca1412b5a9e4d86c65a3ba172d548bd4d80bc1
+Author: Xuerian <xuerian@gmail.com>
+Date:   Mon Jan 13 01:19:38 2020 -0600
 
-Monitor: Support Altoholic for item totals
+    Support classic, add options partially implemented by Morrvas
+
+commit 450867ebd19f664cd156c892b8177fd4bf9694bd
+Author: Xuerian <xuerian@gmail.com>
+Date:   Sat Aug 31 00:07:44 2019 -0400
+
+    Test fixes for Classic
 
 commit 4c58ed41a3c43da69705f251a7a71aa2a4692986
 Author: Xuerian <xuerian@gmail.com>
@@ -15,4 +21,596 @@ Author: Xuerian <xuerian@gmail.com>
 Date:   Sat Feb 9 22:49:27 2019 -0500
 
     8.1 ToC bump
+
+commit 5b0877a773260da355fb7e1f5de65d6295016ab5
+Author: Xuerian <xuerian@gmail.com>
+Date:   Fri Aug 24 01:29:15 2018 -0400
+
+    Options: Unify options formatting
+
+commit 00ecdff6c0540a1faff02d3a63b0f0ac381a18eb
+Author: Xuerian <xuerian@gmail.com>
+Date:   Fri Aug 24 01:08:40 2018 -0400
+
+    Options: Correctly handle untyped select elements with more positional arguments
+
+commit c0a56103d1ff46259e491fc8748d9cb03b6a8651
+Author: Xuerian <xuerian@gmail.com>
+Date:   Fri Aug 24 00:46:03 2018 -0400
+
+    Frame: Respect padding options when collapsing looted slots
+
+commit 97b3a414c76e1fbd7e1e8e5905f4c762c379bb8e
+Author: Xuerian <xuerian@gmail.com>
+Date:   Wed Aug 22 19:51:33 2018 -0400
+
+    Add loot padding options
+
+commit 981a7ae69d6b233707cc3136005f969876ce1153
+Author: Xuerian <xuerian@gmail.com>
+Date:   Wed Jul 18 21:47:59 2018 -0400
+
+    Frame: Probably fix Locked incorrectly being displayed
+
+commit 5bfea3fdc0c8baea39d55f1edf9edaddd9bff03b
+Author: Xuerian <xuerian@gmail.com>
+Date:   Thu Jul 5 20:34:34 2018 -0400
+
+    Frame applyOptions: Set Fake.opt before updating appearance to avoid error
+
+commit 3a75ee740d9fcdab525b554aece7e01044b2cf40
+Author: Xuerian <xuerian@gmail.com>
+Date:   Mon Jul 2 16:02:09 2018 -0400
+
+    Initial 8.0 compat
+
+commit 8e6fd10075581cd8e7bfa3fd374ff027cad4aba3
+Author: Xuerian <xuerian@gmail.com>
+Date:   Sun Dec 31 19:10:52 2017 -0500
+
+    Monitor: Allow right-alignment of frames. Probably the most requested feature for years. Possibly fix some lingering anchoring bugs
+
+commit 00acd940c3d38f6999f12bbcb364311622c2ce52
+Author: Xuerian <xuerian@gmail.com>
+Date:   Fri Dec 8 01:09:02 2017 -0500
+
+    Monitor: Fix number formatting error
+
+commit adc122a0ee1e328eec1079f5c8b980385211d07f
+Author: Xuerian <xuerian@gmail.com>
+Date:   Fri Dec 8 01:07:12 2017 -0500
+
+    Monitor: Add item level display option
+
+commit 7168a81b6f687be3903133dec771c53baf2dd62d
+Author: Xuerian <xuerian@gmail.com>
+Date:   Mon Sep 4 01:07:40 2017 -0400
+
+    Monitor: Shorten obscene numbers for specialty farmers
+
+commit 85298dfc232f7dca65a420148a0216c542e3fbf6
+Author: Xuerian <xuerian@gmail.com>
+Date:   Fri Sep 1 15:36:32 2017 -0400
+
+    Bump ToC 70300
+
+commit 96222f285e1ce62a76706fbfa9e5879158b559b9
+Author: Xuerian <xuerian@gmail.com>
+Date:   Fri Sep 1 14:52:31 2017 -0400
+
+    Frame: Update PlaySound usage to fix #151
+
+commit f9d51e846946cd4b3790846f8025d062ecad9b56
+Author: Xuerian <xuerian@gmail.com>
+Date:   Wed Jul 26 22:19:26 2017 -0400
+
+    More autolooting fixes
+
+commit 430dd80b8a0aab500529e468828c6f23775d24f5
+Author: Xuerian <xuerian@gmail.com>
+Date:   Mon Jul 17 17:27:14 2017 -0400
+
+    Frame: Fix errors when autolooting
+
+commit a9a14b700b99b5a44a20bdb70eeb77720d6af9e3
+Author: Xuerian <xuerian@gmail.com>
+Date:   Wed Jun 21 20:11:04 2017 -0400
+
+    Fix dumb nil mistake
+
+commit 0aff598d7cf6bb83f8aff48d6dba15b5b73baa9d
+Author: Xuerian <xuerian@gmail.com>
+Date:   Wed Jun 21 20:02:12 2017 -0400
+
+    Attempt to work around Curse's handling of localizations, again.
+
+commit 56355f0ba26213f565544ebe1b7e4af057afc2a7
+Author: Xuerian <xuerian@gmail.com>
+Date:   Wed Jun 21 14:27:14 2017 -0400
+
+    Revert "Remove handle-subnamespaces option from localization replacements"
+    
+    This reverts commit 5be1052c47000c9417b06d29fb11033c15025e2f.
+
+commit 3f7fcfcb116180a5c62bc42d804d3e7ca6912771
+Author: Xuerian <xuerian@gmail.com>
+Date:   Wed Jun 21 14:27:09 2017 -0400
+
+    Revert "Switch to lua_table localization replacements"
+    
+    This reverts commit 7be5d776eefc40444cd50cfed95912da1579f3f8.
+
+commit 7be5d776eefc40444cd50cfed95912da1579f3f8
+Author: Xuerian <xuerian@gmail.com>
+Date:   Sat May 27 21:38:02 2017 -0400
+
+    Switch to lua_table localization replacements
+
+commit 5be1052c47000c9417b06d29fb11033c15025e2f
+Author: Xuerian <xuerian@gmail.com>
+Date:   Sat May 27 21:13:05 2017 -0400
+
+    Remove handle-subnamespaces option from localization replacements
+
+commit 5536179a992a3ae0b6694aa5f6b5917b45bcaf63
+Author: Xuerian <xuerian@gmail.com>
+Date:   Sat May 27 06:18:49 2017 -0400
+
+    Group: Add option to show item level on rolls
+
+commit 4fcb1406cfcf7d58e316999118703271c60d2836
+Author: Xuerian <xuerian@gmail.com>
+Date:   Thu Mar 30 17:45:38 2017 -0400
+
+    70200 TOC
+
+commit 1624f330704023ca3f7ca244ee9e87574ac56a54
+Author: Xuerian <xuerian@gmail.com>
+Date:   Tue Dec 27 03:33:14 2016 -0500
+
+    Monitor: Add Player name width option
+
+commit a17433cf3142801228533ce8a785903447142048
+Author: Xuerian <xuerian@gmail.com>
+Date:   Sat Nov 12 05:16:22 2016 -0500
+
+    Monitor/Frame: Cleanup
+
+commit b7b80824dae68b913b04b368e33132c7374d10c1
+Author: Xuerian <xuerian@gmail.com>
+Date:   Wed Oct 26 20:15:53 2016 -0400
+
+    Frame: Fix autolooting trade goods. GetItemInfo has _17_ return values now.
+
+commit 7fa6955ece1c54a08c7a86c664a0067e993e7bcf
+Author: Xuerian <xuerian@gmail.com>
+Date:   Wed Oct 26 20:05:11 2016 -0400
+
+    TOC bump
+
+commit dacf837ce1c5bad65ade7deab86e67353d77b294
+Author: Xuerian <xuerian@gmail.com>
+Date:   Tue Oct 18 02:33:52 2016 -0400
+
+    Frame: Prevent dangling loot slots when forcing a refresh after autolooting
+
+commit 6bf660d21b4e5aa2a95102b29abfefee6b0bb79d
+Author: Xuerian <xuerian@gmail.com>
+Date:   Fri Sep 30 20:04:50 2016 -0400
+
+    Support custom class colors
+
+commit bdfa566e0e6087b4dd2e6674a2ffa8fc010bc1a2
+Author: Xuerian <xuerian@gmail.com>
+Date:   Mon Sep 26 19:00:44 2016 -0400
+
+    Frame: Fix logic check, increase refresh delay
+
+commit 8184e5cdfeae259a90dda2d04b239f5b24c20735
+Author: Xuerian <xuerian@gmail.com>
+Date:   Mon Sep 26 14:21:30 2016 -0400
+
+    Frame: Simple attempt at eliminating flicker with BoP items
+
+commit 0fd76ea0cb17b87a5ad9922e70d3ac23d446b9f1
+Author: Xuerian <xuerian@gmail.com>
+Date:   Sun Sep 4 21:11:19 2016 -0400
+
+    Prepatch cleanup
+
+commit 418fd7bc0fcab7eb05b0c0229857e6775476527f
+Author: Xuerian <xuerian@gmail.com>
+Date:   Sun Sep 4 21:05:27 2016 -0400
+
+    License date bump
+
+commit e4d52285637f05f03524d1af13894958d617494d
+Author: Xuerian <xuerian@gmail.com>
+Date:   Mon Aug 22 03:18:38 2016 -0400
+
+    Frame/Group: Attempt to avoid errors with group rolls and config window I can't reproduce
+
+commit 8c7ef3e240d6b930a8c68478725ca32c512c6fbd
+Author: Xuerian <xuerian@gmail.com>
+Date:   Wed Aug 17 20:08:13 2016 -0400
+
+    Farme: Default quality color if absent. (I didn't even know it could be)
+
+commit c1e2c83b985fd36184f758ec33c977e56e5ff61d
+Author: Xuerian <xuerian@gmail.com>
+Date:   Thu Aug 4 04:26:01 2016 -0400
+
+    group: Add font and font_flag options, apply options to elements on creation and update on option change
+
+commit 442618ca78bb939a7d0a77ea14fb242b40813216
+Author: Xuerian <xuerian@gmail.com>
+Date:   Thu Aug 4 04:09:55 2016 -0400
+
+    options: Allow roll_offset to be negative
+
+commit a7851ea2dc931a9109e85f9a489e0ba5d2712e76
+Author: Xuerian <xuerian@gmail.com>
+Date:   Thu Aug 4 04:07:51 2016 -0400
+
+    group: Use XLoot:SetSlashCommand for debugging commands
+
+commit 659319252e543b55e3055b1088cfaa729da2d26c
+Author: Xuerian <xuerian@gmail.com>
+Date:   Thu Aug 4 04:06:11 2016 -0400
+
+    monitor: .test_settings() to .TestSettings()
+
+commit 80c212d5b09f7ed58adaad016fcf302265da5bf2
+Author: Xuerian <xuerian@gmail.com>
+Date:   Thu Aug 4 04:05:12 2016 -0400
+
+    Group: Use region:SetShown()
+
+commit acb88477f4bd64b6938b9db642ba628f7e3e1d90
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sun Jul 24 12:15:14 2016 -0400
+
+    helpers: Improve GetItemBindType
+
+commit 84c093f06d27c7c3bf3cea5acb7b4b3fb553a0bb
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sun Jul 24 12:09:32 2016 -0400
+
+    frame: Don't automatically clear autolooted slots that are BoP
+
+commit 0188f3bbe13d47c8a495b5224b50d95ec87893ba
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sun Jul 24 10:50:29 2016 -0400
+
+    skins: Support alpha value for SetBorderColor
+
+commit ec2426d26253d9e800b5dba6d9eb9d0dfbe3ff19
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sun Jul 24 10:44:25 2016 -0400
+
+    Frame: Add default alpha values to remaining colors, remove redundant hasAlpha from options
+
+commit 7ba80cc5d3efafa3fb09b7e996d10eef70050cf0
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sun Jul 24 10:43:44 2016 -0400
+
+    options BetterOptions: Default hasAlpha = true on color types
+
+commit b5a8f01301a94b2cff20f8ccda36ef08fbf9a4e1
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sun Jul 24 02:22:45 2016 -0400
+
+    Group: Add spacing and offset options for roll frames
+
+commit b24e9e25494153d1dd53e9a4b21d18f1be4950bd
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sun Jul 24 02:22:11 2016 -0400
+
+    stacks: Support anchor child spacing and offset data
+
+commit ce6d1a09db65153a16d1a7743d187d4161ef5b69
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Wed Jul 20 03:25:53 2016 -0400
+
+    group, monitor: Adjust anchor default positions
+
+commit b84b81613063518624fcddbc001263af31458c49
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Wed Jul 20 03:25:30 2016 -0400
+
+    frame: Trade Goods are now Tradeskills. Adjust accordingly.
+
+commit 0a477894de861277d351dea1f00926b79000cb52
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Mon Jul 18 19:50:04 2016 -0400
+
+    Bump TOC
+
+commit 44affc2feb64f9fee217e0b436033285f1689c21
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Mon Jul 18 19:49:07 2016 -0400
+
+    Update license info
+
+commit c9a31957afbbb3d2b38891ee12c765b9ce76af1e
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Mon Jul 18 19:29:55 2016 -0400
+
+    Temporarily disable features known to be broken by prepatch
+
+commit 404688000cf611de2bb16b2b0e8f4422b827f3f5
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Mon Jul 18 19:23:21 2016 -0400
+
+    frame: Fade auto button a bit by default
+
+commit bb7f0aec47706eb8b02fb2dcc0f1a882ad60813f
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Thu Apr 7 05:40:23 2016 -0400
+
+    Monitor options: Add button to test settings
+
+commit 0cb93f2061897a3e754c4cef3275b160a0ccbbb0
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Thu Apr 7 05:04:02 2016 -0400
+
+    Frame: Refactor states to auto_states
+
+commit a76f2432a0bd5928550adacb32adaedc3072d864
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sun Feb 14 02:10:01 2016 -0500
+
+    Group: Cleanup
+
+commit ab7b849d0b1ea3bce3740d883761c1baeb27a708
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Wed Feb 10 21:20:37 2016 -0500
+
+    Options: Use module name for reloadui warning
+
+commit 13d824b75f5c36f3270918c91ecd1130109cb294
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Wed Feb 10 19:08:42 2016 -0500
+
+    Options-Group: Enable reloadui warning for hooking options
+
+commit 0a9e09c723516fb81f972dff1bffa23717d4e7dc
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Wed Feb 10 19:08:08 2016 -0500
+
+    Options: Add empty line after hook warning message
+
+commit 12edc57874235de36d9a7663af3db034e7c4e7f7
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Wed Feb 10 19:07:33 2016 -0500
+
+    Options: Support alerting users when changing an option that requires a reloadui
+
+commit 684c1d8a3b0eef2b4e88f070c720fe1710f2b207
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Wed Feb 10 04:40:39 2016 -0500
+
+    Group: Re-enable, add warnings for hook options.
+
+commit 75bfb1d86d35c62d75d9e1b72a72988bd350ac51
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Wed Feb 10 02:23:23 2016 -0500
+
+    Group: Forcefully disable until fixed so more users don't miss loot.
+
+commit bcb9d18920d10131d56cf95ba925ecd667eff4bc
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Mon Feb 8 18:59:33 2016 -0500
+
+    group: Disabled hook_alert/hook_bonus options due to possibly breaking bonus rolls.
+    If you want these options back and are willing to accept the risk,
+    you can enable unsafe_hook_alert and unsafe_hook_bonus in your
+    saved variables.
+
+commit 8e4fc2d81ca28ae994eec744afcc4a70424cc62a
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Fri Jan 8 10:53:40 2016 -0500
+
+    Frame: Possibly fix autolooting. Maybe break it. Who knows
+
+commit 63f1332b42d7c1bf898dae14a79fa96141b51e0b
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Mon Dec 28 05:55:20 2015 -0500
+
+    Frame: Make options depending on grouped status more detailed
+
+commit fc5163acd3e85056f13b7ce1cf9a6055a29be18c
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Mon Dec 28 05:45:34 2015 -0500
+
+    Frame: Cleanup
+
+commit 815f0c91210734c651a573dac9a91feb4d0b347c
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Tue Oct 27 16:14:51 2015 -0400
+
+    Show a currency item in the preview frame
+
+commit 6298528cc0c3741a28195b0795e0480fa5ebf8ed
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Tue Sep 1 11:18:00 2015 -0400
+
+    Frame: Fix item name right-side attachment
+
+commit 04b217a31128aa076639a7433e138ec407ae1c80
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Tue Sep 1 11:17:34 2015 -0400
+
+    Frame: Avoid GetItemInfo related error when showing options
+
+commit 222b7a2a426eeef3b08a58f66ecee3ee7fb8926c
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sun Aug 30 21:00:06 2015 -0400
+
+    Monitor-events: Move handler() self callbacks into coin_self and loot_self, fixes #139
+
+commit 9b531d6aea3dd0ca81074bcd04d66149f19980d1
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Wed Aug 26 22:46:15 2015 -0400
+
+    Frame: Add optional button to loot rows for quickly adding a item to the auto-looting list
+
+commit a2a4b5bc535c5e6aa972f7ff32daed9f734b36d0
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Wed Aug 26 22:44:10 2015 -0400
+
+    Options-localization: "text" instead of "font"
+
+commit 4250b844e7d68b8fdfeba3cfdf465ff91bd10429
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Wed Aug 26 22:43:37 2015 -0400
+
+    Options-localization: Add note about disabling modules to detail text
+
+commit 1cb843c4114af9654a1517e9df6c08ab850b46ee
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Wed Aug 26 22:43:04 2015 -0400
+
+    Frame-GetColor: Fail on invalid option key
+
+commit 8ea0dd3dde581e4d7af5b1852404175da0b4de43
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Wed Jul 22 18:54:29 2015 -0400
+
+    Frame: Add preview frame in options (Four years later)
+
+commit b6bf720cbf0ad07129dca56d5486d8d341c2aab1
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Wed Jul 22 18:53:10 2015 -0400
+
+    Pass in_options to module:ApplyOptions()
+
+commit 43d4dd4e2ee60a8e587ac13e17dfc81c785549d7
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Wed Jul 22 18:52:06 2015 -0400
+
+    Options: Cleanup
+
+commit c573c9ae85a5e92a2eee8c973284bb106e9d52d9
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Wed Jul 22 18:51:38 2015 -0400
+
+    Options: Trigger OnOptionsShow/Hide for modules
+
+commit 4a92a60968df8d4403f4c03c66805e1a24a76383
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Fri Jul 10 10:49:07 2015 -0400
+
+    Bump for 6.2
+
+commit 4aaf07b4af0ac8f01794a401137c3ef41bdc3ecf
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Tue May 12 22:41:50 2015 -0400
+
+    Revert bad stacking behavior
+
+commit d6867d47404f22560a9afde169340384c8bef297
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Fri May 8 14:51:24 2015 -0400
+
+    stacks/Group: Actually fix nil error.
+
+commit cc8eee4577a34cf8db2610b20c26b1e52bf5c5cc
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Fri May 8 12:49:17 2015 -0400
+
+    stacks: Fix nil error by not being dumb
+
+commit c01966096fd79d7dfb1d998a6dbdc09fe08bb4f2
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Fri May 8 05:20:32 2015 -0400
+
+    Updates to test rigging (what little there is)
+
+commit 4cc3a226769032a0ea4a455b6af34945d970d357
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Fri May 8 05:18:25 2015 -0400
+
+    Stacks: Hide frames while messing with anchors
+
+commit 328c950335283c596d30b74a6611b43a1290a24e
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Fri May 8 05:16:17 2015 -0400
+
+    Master: pcall SendChatMessage to cheaply workaround errors if the user has not joined their specified channel
+
+commit 4ff6eb29067c0499316ce9b3c0c92e03e66d68f1
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Fri May 8 05:15:38 2015 -0400
+
+    Frame: Automatically fall back to party if link all setting is raid[warning], but not in party
+
+commit 6ce27c1887d2df42d452dffe616e71a1b623032a
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sat Mar 21 04:56:35 2015 -0400
+
+    Group: Fix alert offsets, increase offset option range
+
+commit 01e453f2cdac27a61f6b29c9f19c36c0e7fc6953
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sat Mar 21 04:03:23 2015 -0400
+
+    Group: Fix nil error when roll frames are removed
+
+commit 25fdbe5147a3f2d35285ef6f4ca5fb9974fb5b3f
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sun Mar 15 06:07:42 2015 -0400
+
+    Figuring out what I forgot took less time than I expected.
+    Group: Include options to show/hide alert dressing
+    Skins: Possible bugfix?
+
+commit d1bdaa8beb1d375e4cf6f2fa7047f62ff643dc04
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sun Mar 15 06:01:41 2015 -0400
+
+    Group: Gradients apparently got fixed at some point, add them to skinned alerts
+
+commit 4ef03838950d5bfd62b53597b7a3fb2cb572095e
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sun Mar 15 06:01:08 2015 -0400
+
+    Group: Control loot upgrade and money alerts as well, handle them all more gracefully
+    .. Not guaranteed to play well with anything else that touches these frames.
+
+commit 6342b2e51c123f24564be1a43b4dae00ad92e362
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sun Mar 15 05:03:08 2015 -0400
+
+    Group: Fix some errors when configuring and frames are visible
+
+commit 237c6746df4a0000fab4d754cebff3dc6db47ead
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sun Mar 15 05:02:50 2015 -0400
+
+    Group: Loop tweaks
+
+commit d912ed15ba9fe76c7f2a2ee9925f485cc2dd5c04
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sun Mar 15 05:02:17 2015 -0400
+
+    Group: Fix hook_alert and hook_bonus options
+
+commit f6783887d24f2fb2eecc6792458db0722ff7a639
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Sun Mar 15 05:00:47 2015 -0400
+
+    Options: Fix font flags options
+
+commit 9826d512b9f81b5127a0281caff6589978d517f7
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Mon Mar 2 23:03:57 2015 -0500
+
+    Fix potential issues due to misuse of expressions as ternary operators
+
+commit d310a12a1779da87647d5fd325ef2f3d94db2bdf
+Author: Xuerian <sky.shell@gmail.com>
+Date:   Mon Mar 2 21:39:15 2015 -0500
+
+    options: Improve documentation of path(info)
 

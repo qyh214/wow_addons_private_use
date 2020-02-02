@@ -1,12 +1,12 @@
-lightweight tag fe203710e7e004f3380c018ca631a5d9b724f31a v1.9.4
+lightweight tag be6203f6c8b8743d5e6e2342cc944fd3b2ff4863 v1.9.7
 Author:	MarkW <17293527+Numynum@users.noreply.github.com>
-Date:	Tue Dec 31 17:48:33 2019 +0100
+Date:	Sat Jan 18 15:17:43 2020 +0100
 
-commit fe203710e7e004f3380c018ca631a5d9b724f31a
+commit be6203f6c8b8743d5e6e2342cc944fd3b2ff4863
 Author: zaCade <zaCade@hotmail.com>
-Date:   Tue Dec 31 17:48:33 2019 +0100
+Date:   Sat Jan 18 15:17:43 2020 +0100
 
-    Move some frames, Fix some of them, Add Quest List (Classic & Retail) (#8)
+    Add frames (#10)
     
-    * Swap some frames around, refractor code, create move handles and small stuff
+    * Add new load on demand frames
 

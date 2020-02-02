@@ -1,9 +1,10 @@
 ------------------------------------------------------------------------
-r108 | Caliaha | 2019-10-13 03:26:54 +0000 (Sun, 13 Oct 2019) | 2 lines
+r110 | Caliaha | 2020-01-29 03:49:18 +0000 (Wed, 29 Jan 2020) | 2 lines
 Changed paths:
    M /trunk/HandyNotes_DungeonLocations.lua
+   M /trunk/HandyNotes_DungeonLocations.toc
 
-Added Operation: Mechagon and The Eternal Palace
+Added new nodes to vale and uldum
 
 ------------------------------------------------------------------------
 

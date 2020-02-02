@@ -63,7 +63,7 @@ local UnitReaction = UnitReaction
 local UnitStagger = UnitStagger
 local CreateAtlasMarkup = CreateAtlasMarkup
 
-local ALTERNATE_POWER_INDEX = ALTERNATE_POWER_INDEX
+local ALTERNATE_POWER_INDEX = Enum.PowerType.Alternate or 10
 local SPEC_MONK_BREWMASTER = SPEC_MONK_BREWMASTER
 local SPEC_PALADIN_RETRIBUTION = SPEC_PALADIN_RETRIBUTION
 local UNITNAME_SUMMON_TITLE17 = UNITNAME_SUMMON_TITLE17
@@ -86,6 +86,7 @@ local SPELL_POWER_SOUL_SHARDS = Enum.PowerType.SoulShards
 
 ElvUF.Tags.SharedEvents.PLAYER_TALENT_UPDATE = true
 ElvUF.Tags.SharedEvents.QUEST_LOG_UPDATE = true
+ElvUF.Tags.SharedEvents.INSTANCE_ENCOUNTER_ENGAGE_UNIT = true
 
 ------------------------------------------------------------------------
 --	Tags
@@ -172,7 +173,7 @@ local function GetClassPower(class)
 	return min, max, r, g, b
 end
 
-ElvUF.Tags.Events['altpowercolor'] = "UNIT_POWER_UPDATE UNIT_MAXPOWER"
+ElvUF.Tags.Events['altpowercolor'] = "UNIT_POWER_UPDATE UNIT_POWER_BAR_SHOW UNIT_POWER_BAR_HIDE"
 ElvUF.Tags.Methods['altpowercolor'] = function(u)
 	local cur = UnitPower(u, ALTERNATE_POWER_INDEX)
 	if cur > 0 then
@@ -219,7 +220,7 @@ ElvUF.Tags.Methods['healthcolor'] = function(unit)
 	end
 end
 
-ElvUF.Tags.Events['name:abbrev'] = 'UNIT_NAME_UPDATE'
+ElvUF.Tags.Events['name:abbrev'] = 'UNIT_NAME_UPDATE INSTANCE_ENCOUNTER_ENGAGE_UNIT'
 ElvUF.Tags.Methods['name:abbrev'] = function(unit)
 	local name = UnitName(unit)
 
@@ -232,7 +233,7 @@ end
 
 ElvUF.Tags.Events['health:deficit-percent:nostatus'] = 'UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH'
 ElvUF.Tags.Methods['health:deficit-percent:nostatus'] = function(unit)
-	local min, max = E:UnitHealthValues(unit)
+	local min, max = UnitHealth(unit), UnitHealthMax(unit)
 	local deficit = (min / max) - 1
 	if deficit == 0 then
 		return ''
@@ -291,7 +292,7 @@ for textFormat in pairs(E.GetFormattedTextStyles) do
 		end
 	end
 
-	ElvUF.Tags.Events[format('altpower:%s', tagTextFormat)] = "UNIT_POWER_UPDATE UNIT_MAXPOWER"
+	ElvUF.Tags.Events[format('altpower:%s', tagTextFormat)] = "UNIT_POWER_UPDATE UNIT_POWER_BAR_SHOW UNIT_POWER_BAR_HIDE"
 	ElvUF.Tags.Methods[format('altpower:%s', tagTextFormat)] = function(u)
 		local cur = UnitPower(u, ALTERNATE_POWER_INDEX)
 		if cur > 0 then
@@ -317,7 +318,7 @@ for textFormat, length in pairs({veryshort = 5, short = 10, medium = 15, long = 
 		end
 	end
 
-	ElvUF.Tags.Events[format('name:abbrev:%s', textFormat)] = 'UNIT_NAME_UPDATE'
+	ElvUF.Tags.Events[format('name:abbrev:%s', textFormat)] = 'UNIT_NAME_UPDATE INSTANCE_ENCOUNTER_ENGAGE_UNIT'
 	ElvUF.Tags.Methods[format('name:abbrev:%s', textFormat)] = function(unit)
 		local name = UnitName(unit)
 
@@ -328,13 +329,13 @@ for textFormat, length in pairs({veryshort = 5, short = 10, medium = 15, long = 
 		return name ~= nil and E:ShortenString(name, length) or ''
 	end
 
-	ElvUF.Tags.Events[format('name:%s', textFormat)] = 'UNIT_NAME_UPDATE'
+	ElvUF.Tags.Events[format('name:%s', textFormat)] = 'UNIT_NAME_UPDATE INSTANCE_ENCOUNTER_ENGAGE_UNIT'
 	ElvUF.Tags.Methods[format('name:%s', textFormat)] = function(unit)
 		local name = UnitName(unit)
 		return name ~= nil and E:ShortenString(name, length) or nil
 	end
 
-	ElvUF.Tags.Events[format('name:%s:status', textFormat)] = 'UNIT_NAME_UPDATE UNIT_CONNECTION PLAYER_FLAGS_CHANGED UNIT_HEALTH_FREQUENT'
+	ElvUF.Tags.Events[format('name:%s:status', textFormat)] = 'UNIT_NAME_UPDATE UNIT_CONNECTION PLAYER_FLAGS_CHANGED UNIT_HEALTH_FREQUENT INSTANCE_ENCOUNTER_ENGAGE_UNIT'
 	ElvUF.Tags.Methods[format('name:%s:status', textFormat)] = function(unit)
 		local status = UnitIsDead(unit) and L["Dead"] or UnitIsGhost(unit) and L["Ghost"] or not UnitIsConnected(unit) and L["Offline"]
 		local name = UnitName(unit)
@@ -345,7 +346,7 @@ for textFormat, length in pairs({veryshort = 5, short = 10, medium = 15, long = 
 		end
 	end
 
-	ElvUF.Tags.Events[format('name:%s:translit', textFormat)] = 'UNIT_NAME_UPDATE'
+	ElvUF.Tags.Events[format('name:%s:translit', textFormat)] = 'UNIT_NAME_UPDATE INSTANCE_ENCOUNTER_ENGAGE_UNIT'
 	ElvUF.Tags.Methods[format('name:%s:translit', textFormat)] = function(unit)
 		local name = Translit:Transliterate(UnitName(unit), translitMark)
 		return name ~= nil and E:ShortenString(name, length) or nil
@@ -458,7 +459,7 @@ ElvUF.Tags.Methods['difficultycolor'] = function(unit)
 	return Hex(r, g, b)
 end
 
-ElvUF.Tags.Events['namecolor'] = 'UNIT_NAME_UPDATE UNIT_FACTION'
+ElvUF.Tags.Events['namecolor'] = 'UNIT_NAME_UPDATE UNIT_FACTION INSTANCE_ENCOUNTER_ENGAGE_UNIT'
 ElvUF.Tags.Methods['namecolor'] = function(unit)
 	local unitReaction = UnitReaction(unit, 'player')
 	local unitPlayer = UnitIsPlayer(unit)
@@ -597,7 +598,7 @@ ElvUF.Tags.Methods['statustimer'] = function(unit)
 		local timer = GetTime() - unitStatus[guid][2]
 		local mins = floor(timer / 60)
 		local secs = floor(timer - (mins * 60))
-		return format("%s (%01.f:%02.f)", status, mins, secs)
+		return format("%s (%01.f:%02.f)", L[status], mins, secs)
 	else
 		return nil
 	end
@@ -912,6 +913,23 @@ ElvUF.Tags.Methods['npctitle'] = function(unit)
 	end
 end
 
+ElvUF.Tags.Events['npctitle:brackets'] = 'UNIT_NAME_UPDATE'
+ElvUF.Tags.Methods['npctitle:brackets'] = function(unit)
+	if (UnitIsPlayer(unit)) then
+		return
+	end
+
+	E.ScanTooltip:SetOwner(_G.UIParent, "ANCHOR_NONE")
+	E.ScanTooltip:SetUnit(unit)
+	E.ScanTooltip:Show()
+
+	local Title = _G[format('ElvUI_ScanTooltipTextLeft%d', GetCVarBool('colorblindmode') and 3 or 2)]:GetText()
+
+	if (Title and not Title:find('^'..LEVEL)) then
+		return Title and format("<%s>", Title) or nil
+	end
+end
+
 ElvUF.Tags.Events['guild:rank'] = 'UNIT_NAME_UPDATE'
 ElvUF.Tags.Methods['guild:rank'] = function(unit)
 	if (UnitIsPlayer(unit)) then
@@ -947,7 +965,7 @@ ElvUF.Tags.Methods['specialization'] = function(unit)
 	end
 end
 
-ElvUF.Tags.Events['name:title'] = 'UNIT_NAME_UPDATE'
+ElvUF.Tags.Events['name:title'] = 'UNIT_NAME_UPDATE INSTANCE_ENCOUNTER_ENGAGE_UNIT'
 ElvUF.Tags.Methods['name:title'] = function(unit)
 	if (UnitIsPlayer(unit)) then
 		return UnitPVPName(unit)
@@ -1052,6 +1070,7 @@ E.TagInfo = {
 	['shortclassification'] = { category = 'Classification', description = "Displays the unit's classification in short form (e.g. '+' for ELITE and 'R' for RARE)" },
 	['classification:icon'] = { category = 'Classification', description = "Displays the unit's classification in icon form (golden icon for 'ELITE' silver icon for 'RARE')" },
 	['rare'] = { category = 'Classification', description = "Displays 'Rare' when the unit is a rare or rareelite" },
+	['plus'] = { category = 'Classification', description = "Displays the character '+' if the unit is an elite or rare-elite" },
 	--Guild
 	['guild'] = { category = 'Guild', description = "Displays the guild name" },
 	['guild:brackets'] = { category = 'Guild', description = "Displays the guild name with < > brackets (e.g. <GUILD>)" },
@@ -1083,6 +1102,7 @@ E.TagInfo = {
 	['health:deficit'] = { category = 'Health', description = "Displays the health of the unit as a deficit (Total Health - Current Health = -Deficit)" },
 	['health:deficit-nostatus'] = { category = 'Health', description = "Displays the health of the unit as a deficit, without status" },
 	['health:deficit-nostatus:shortvalue'] = { category = 'Health', description = "Shortvalue of the health deficit, without status" },
+	['health:deficit-percent:nostatus'] = { category = 'Health', description = "Displays the health deficit as a percentage, without status" },
 	['health:deficit-percent:name'] = { category = 'Health', description = "Displays the health deficit as a percentage and the full name of the unit" },
 	['health:deficit-percent:name-long'] = { category = 'Health', description = "Displays the health deficit as a percentage and the name of the unit (limited to 20 letters)" },
 	['health:deficit-percent:name-medium'] = { category = 'Health', description = "Displays the health deficit as a percentage and the name of the unit (limited to 15 letters)" },
@@ -1137,7 +1157,8 @@ E.TagInfo = {
 	['name:medium:status'] = { category = 'Names', description = "Replace the name of the unit with 'DEAD' or 'OFFLINE' if applicable (limited to 15 letters)" },
 	['name:long:status'] = { category = 'Names', description = "Replace the name of the unit with 'DEAD' or 'OFFLINE' if applicable (limited to 20 letters)" },
 	['name:title'] = { category = 'Names', description = "Displays player name and title" },
-	['npctitle'] = { category = 'Names', description = "Displays the NPC title (e.g. <General Goods Vendor>)" },
+	['npctitle'] = { category = 'Names', description = "Displays the NPC title (e.g. General Goods Vendor)" },
+	['npctitle:brackets'] = { category = 'Names', description = "Displays the NPC title with brackets (e.g. <General Goods Vendor>)" },
 	--Party and Raid
 	['group'] = { category = 'Party and Raid', description = "Displays the group number the unit is in ('1' - '8')" },
 	['leader'] = { category = 'Party and Raid', description = "Displays 'L' if the unit is the group/raid leader" },
@@ -1160,6 +1181,13 @@ E.TagInfo = {
 	['perpp'] = { category = 'Power', description = "Displays the unit's percentage power without decimals " },
 	['maxpp'] = { category = 'Power', description = "Displays the max amount of power of the unit in whole numbers without decimals" },
 	['missingpp'] = { category = 'Power', description = "Displays the missing power of the unit in whole numbers when not at full power" },
+	--PvP
+	['pvp'] = { category = 'PvP', description = "Displays 'PvP' if the unit is pvp flagged" },
+	['pvptimer'] = { category = 'PvP', description = "Displays remaining time on pvp-flagged status" },
+	['arenaspec'] = { category = 'PvP', description = "Displays the area spec of an unit" },
+	['arena:number'] = { category = 'PvP', description = "Displays the arena number 1-5" },
+	['faction'] = { category = 'PvP', description = "Displays 'Aliance' or 'Horde'" },
+	['faction:icon'] = { category = 'PvP', description = "Displays 'Alliance' or 'Horde' Texture" },
 	--Classpower
 	['arcanecharges'] = { category = 'Classpower', description = "Displays the arcane charges (Mage)" },
 	['chi'] = { category = 'Classpower', description = "Displays the chi points (Monk)" },
@@ -1206,7 +1234,6 @@ E.TagInfo = {
 	['afk'] = { category = 'Status', description = "Displays <AFK> if the unit is afk" },
 	['dead'] = { category = 'Status', description = "Displays <DEAD> if the unit is dead" },
 	['resting'] = { category = 'Status', description = "Displays 'zzz' if the unit is resting" },
-	['pvp'] = { category = 'Status', description = "Displays 'PvP' if the unit is pvp flagged" },
 	['offline'] = { category = 'Status', description = "Displays 'OFFLINE' if the unit is disconnected" },
 	--Target
 	['target'] = { category = 'Target', description = "Displays the current target of the unit" },
@@ -1225,16 +1252,10 @@ E.TagInfo = {
 	['threat:current'] = { category = 'Threat', description = "Displays the current threat as a value" },
 	--Miscellanous
 	['affix'] = { category = 'Miscellanous', description = "Displays low level critter mobs" },
-	['smartclass'] = { category = 'Miscellanous', description = "Displays the player's class or creature's type" },
 	['class'] = { category = 'Miscellanous', description = "Displays the class of the unit, if that unit is a player" },
-	['specialization'] = { category = 'Miscellanous', description = "Displays your current specialization as text" },
-	['faction'] = { category = 'Miscellanous', description = "Displays 'Aliance' or 'Horde'" },
-	['faction:icon'] = { category = 'Miscellanous', description = "Displays 'Alliance' or 'Horde' Texture" },
-	['plus'] = { category = 'Miscellanous', description = "Displays the character '+' if the unit is an elite or rare-elite" },
-	['arenaspec'] = { category = 'Miscellanous', description = "Displays the area spec of an unit" },
-	['arena:number'] = { category = 'Miscellanous', description = "Displays the arena number 1-5" },
-	['pvptimer'] = { category = 'Miscellanous', description = "Displays remaining time on pvp-flagged status" },
 	['race'] = { category = 'Miscellanous', description = "Displays the race" },
+	['smartclass'] = { category = 'Miscellanous', description = "Displays the player's class or creature's type" },
+	['specialization'] = { category = 'Miscellanous', description = "Displays your current specialization as text" },
 	--Range
 	['nearbyplayers:8'] = { category = 'Range', description = "Displays all players within 8 yards" },
 	['nearbyplayers:10'] = { category = 'Range', description = "Displays all players within 10 yards" },

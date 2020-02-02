@@ -3,8 +3,6 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-Share
 --]]
 
 --Settings storaged in NarcissusDB
-local Current_Version = 10070;	--last: 60
-Narci.Current_Version = Current_Version;
 Narci.EnableAutoUpdate = true;
 
 local Irrelevant_Attribute_Alpha = 0.5;
@@ -13,18 +11,16 @@ local statTable = {};
 local statTable_Short = {};
 local L = Narci.L;
 local VignetteAlpha = 0.5;
-local FrameGap = 1/60;										-- 1 / FrameRate
+--local FrameGap = 1/60;									-- 1 / FrameRate
 local OpenViaClick = false;									--Addon was opened by clicking
 local TransmogMode = false;
 local Format_Digit = "%.2f";
 local xmogMode = 0;											-- 0 off	1 "Texts Only" 	2 "Texts & Model"
 
-local EnchantableSlotID = {9, 10, 11, 12, 16, 17}			--9~Wrist 10~Hands Enchanter only
 local GetItemEnchant = NarciAPI_GetItemEnchant;				--Bridge/ItemAPIs.lua
 local EnchantInfo = Narci_EnchantInfo;						--Bridge/GearBonus.lua
 local FormatLargeNumbers = NarciAPI_FormatLargeNumbers;
 local BreakUpLargeNumbers = BreakUpLargeNumbers;
-local IsHeritageArmor = NarciAPI_IsHeritageArmor;
 local IsSpecialItem = NarciAPI_IsSpecialItem;
 local Narci_GetPrimaryStatsName = NarciAPI_GetPrimaryStatsName;
 local Narci_LetterboxAnimation = NarciAPI_LetterboxAnimation;
@@ -32,6 +28,7 @@ local SmartFontType = NarciAPI_SmartFontType;
 local LanguageDetector = Narci_LanguageDetector;
 local IsItemSocketable = NarciAPI_IsItemSocketable;
 local GetItemExtraEffect = NarciAPI_GetItemExtraEffect;
+local GetCorruptedItemAffix = NarciAPI_GetCorruptedItemAffix;
 local Narci_AlertFrame_Autohide = Narci_AlertFrame_Autohide;
 
 local sin = math.sin;
@@ -66,7 +63,7 @@ function Narci_Pref_SetVignetteStrength()
 end
 
 local ACL = CreateFrame("Frame", "Narci_CharacterListener");
-
+ACL:Hide();
 --[[
 local TakenOutFrames = {
 	[1] = GameTooltip, 					--TOOLTTIP
@@ -108,7 +105,7 @@ end
 
 function Narci_ShowButtonTooltip(self)
 	GameTooltip:Hide();
-	ForceTooltipToShow()
+	ForceTooltipToShow();
 	GameTooltip:SetOwner(self, "ANCHOR_NONE");
 
 	if not self.tooltipHeadline then
@@ -127,10 +124,8 @@ function Narci_ShowButtonTooltip(self)
 		GameTooltip:AddLine(self.tooltipSpecial, 0.25, 0.78, 0.92, true);
 	end
 
-	--GameTooltip:SetPoint("BOTTOMLEFT",self,"TOP", -2, 4)
-	--GameTooltip:Show();
 	GameTooltip:SetAlpha(0)
-	NarciAPI_ShowDelayedTooltip("BOTTOMLEFT",self,"TOP", -2, 4);	
+	NarciAPI_ShowDelayedTooltip("BOTTOM", self, "TOP", 0, 2);	
 end
 
 function Narci:HideButtonTooltip()
@@ -317,11 +312,11 @@ local ZoomValuebyRaceID = {
 		   	[3] = {2.1, 0.2613, -0.0133, 4.7}},
 	
 	["Druid"] = {[1] = {3.71, 0.2027, -0.02, 5},		--Cat
-				 [5] = {4.8, 0.1707, -0.04, 5},		--Bear
-				 [31] = {4.61, 0.1947, -0.02, 5},	--Moonkin
+				 [5] = {4.8, 0.1707, -0.04, 5},			--Bear
+				 [31] = {4.61, 0.1947, -0.02, 5},		--Moonkin
 				 [4] = {4.61, 0.1307, -0.04, 5},		--Swim
-				 [27] = {3.61, 0.1067, -0.02, 5},	--Fly Swift
-				 [29] = {3.61, 0.1067, -0.02, 5},	--Fly
+				 [27] = {3.61, 0.1067, -0.02, 5},		--Fly Swift
+				 [29] = {3.61, 0.1067, -0.02, 5},		--Fly
 				 [3] = {4.91, 0.184, -0.02, 5}},		--Travel Form
 				 
 	["Mounted"] = {[1] = {8, 1.2495, -4, 5.5}},
@@ -434,6 +429,16 @@ local function ModifyCameraForShapeshifter()
 				end
 			end
 			formID = playerGenderID;
+		elseif formID == 31 then
+			local _, GlyphID = GetCurrentGlyphNameForSpell(24858);		--Moonkin form with Glyph of Stars use regular configuration
+			if GlyphID and GlyphID == 114301 then
+				local zoom = ZoomValuebyRaceID[playerRaceID] or ZoomValuebyRaceID[1];
+				ZoomInValue = zoom[playerGenderID][DistanceIndex];
+				Shoulder_Factor1 = zoom[playerGenderID][2];
+				Shoulder_Factor2 = zoom[playerGenderID][3];
+				ZoomInValue_XmogMode = zoom[playerGenderID][4];
+				return;
+			end
 		end
 		--print(raceID_shouldUse)
 		--print(formID)
@@ -444,11 +449,6 @@ local function ModifyCameraForShapeshifter()
 	end
 end
 
---SetCVar("test_cameraOverShoulder", 0.60)
---UnitOnTaxi
---test_cameraDynamicPitchSmartPivotCutoffDist
---test_cameraDynamicPitch
---EndPoint Head = 1.6 
 
 local Smooth_Shoulder = CreateFrame("Frame");
 Smooth_Shoulder.t = 0;
@@ -497,16 +497,12 @@ end
 
 hooksecurefunc("CameraZoomIn", function(increment)
 	if OpenViaClick and (xmogMode ~= 1) then
-		--local Zoom = GetCameraZoom() - increment;
-		--Smooth_ShoulderCVar(Shoulder_Factor1*Zoom + Shoulder_Factor2 + MogMode_Offset);
 		UpdateShoulderCVar:Start(-increment);
 	end
 end)
 
 hooksecurefunc("CameraZoomOut", function(increment)
 	if OpenViaClick  and (xmogMode ~= 1)then
-		--local Zoom = GetCameraZoom() + increment;
-		--Smooth_ShoulderCVar(Shoulder_Factor1*Zoom + Shoulder_Factor2 + MogMode_Offset);
 		UpdateShoulderCVar:Start(increment);
 	end
 end)
@@ -522,32 +518,29 @@ function Narci:CameraZoomIn(EndPoint)
 	end
 end
 
-local TimeSinceLastUpdate = 0
 local function SmoothYaw(self, elapsed)
-	TimeSinceLastUpdate = TimeSinceLastUpdate + elapsed;
-	local x = TimeSinceLastUpdate;
-	local t = ZoomFactor.Time;
-	local EndSpeed = ZoomFactor.EndSpeed;
-	local StartSpeed = ZoomFactor.StartSpeed;
-	local speed = inOutSine(TimeSinceLastUpdate, StartSpeed, EndSpeed - StartSpeed, t);
+	self.t = self.t + elapsed;
+	local factor = ZoomFactor;
+	local speed = inOutSine(self.t, factor.StartSpeed, factor.EndSpeed - factor.StartSpeed, 1.5);
 	MoveViewRightStart(speed);
 	
-	if TimeSinceLastUpdate >= t then
+	if self.t >= 1.5 then
 		if not IsPlayerMoving() then
-			MoveViewRightStart(EndSpeed);
+			MoveViewRightStart(factor.EndSpeed);
 		else
 			MoveViewRightStop();
 		end
-		TimeSinceLastUpdate = 0;
+		self.t = 0;
 		self:Hide();
 	end
 end
 
-local SY = CreateFrame("Frame","SmoothYawContainer");
+local SY = CreateFrame("Frame");
+SY.t = 0;
 SY:Hide();
 SY:SetScript("OnUpdate", SmoothYaw); --SmoothYaw
-SY:SetScript("OnHide", function()
-	TimeSinceLastUpdate = 0
+SY:SetScript("OnHide", function(self)
+	self.t = 0
 end);
 
 --[[
@@ -586,17 +579,11 @@ local function SmoothPitch_Update(self, elapsed)
 	local x = self.TimeSinceLastUpdate_Pitch;
 	local t = 1.65;
 	local EndDistance = ZoomFactor.Goal;
-	--local speed = 0.3*outSine(self.TimeSinceLastUpdate_Pitch, 1,  -1, t)
-	local PL = tostring(outSine(self.TimeSinceLastUpdate_Pitch, 88,  -88, t))
-	--MoveViewDownStart(0.1)
+	local PL = tostring(outSine(self.TimeSinceLastUpdate_Pitch, 88,  -88, t));
 	ConsoleExec( "pitchlimit "..PL)
-	--MoveViewDownStart(speed);
-	
 	if self.TimeSinceLastUpdate_Pitch >= t then
-		ConsoleExec( "pitchlimit 0")
-		--MoveViewDownStop()
-		ConsoleExec( "pitchlimit 88")
-		--MoveViewUpStart(0.02)
+		--ConsoleExec( "pitchlimit 0");
+		ConsoleExec( "pitchlimit 88");
 		self.TimeSinceLastUpdate_Pitch = 0;
 		self:Hide();
 	end
@@ -675,19 +662,6 @@ local function SetDate()
 	Narci_Vignette.Location:SetText(zoneText)
 end
 --]]
---[[
-function testAnim()
-	UIFrameFadeOut(UIParent, 0.5, 1, 0);
-	C_Timer.After(3, function()
-		UIFrameFadeIn(UIParent, 0.5, 0, 1);
-	end)
-end
---]]
-
-local function SetYawTransitionTime()
-	local zoomlevel = GetCameraZoom();
-	ZoomFactor.Time = 0;
-end
 
 local function BeginZoomingIn()
 	CVar_Temp.ZoomLevel = GetCameraZoom();
@@ -702,28 +676,36 @@ local function BeginZoomingIn()
 	end)
 end
 
+function Narci:EmergencyStop()
+	print("Camera has been reset.");
+	UIParent:SetAlpha(1);
+	MoveViewRightStop();
+	MoveViewLeftStop();
+	ResetView(5);
+	ConsoleExec( "pitchlimit 88");
+	CVar_Temp.OverShoulder = 0;
+	SetCVar("test_cameraOverShoulder", 0);
+	ConsoleExec( "actioncam off" );
+	Narci_ModelContainer:Hide();
+	Narci_ModelSettings:Hide();
+	Narci_Character:Hide();
+	Narci_Attribute:Hide();
+	Narci_Vignette:Hide();
+	OpenViaClick = false;
+	xmogMode = 0;
+	MogMode_Offset = 0;
+	NarciPlayerModelFrame1.xmogMode = 0;
+	ACL:Hide();
+end
+
+function Narci_MinimapButton_OnPostClick(self, button, down)
+	if button == "MiddleButton" then
+		Narci:EmergencyStop();
+	end
+end
+
 function Narci_MinimapButton_OnClick(self, button, down)
 	if button == "MiddleButton" then
-		--Emergency Stop --PH
-		print("Camera has been reset.");
-		UIParent:SetAlpha(1);
-		MoveViewRightStop();
-		MoveViewLeftStop();
-		ResetView(5);
-		ConsoleExec( "pitchlimit 88");
-		CVar_Temp.OverShoulder = 0;
-		SetCVar("test_cameraOverShoulder", 0);
-		ConsoleExec( "actioncam off" );
-		Narci_ModelContainer:Hide();
-		Narci_ModelSettings:Hide();
-		Narci_Character:Hide();
-		Narci_Attribute:Hide();
-		Narci_Vignette:Hide();
-		OpenViaClick = false;
-		xmogMode = 0;
-		MogMode_Offset = 0;
-		NarciPlayerModelFrame1.xmogMode = 0;
-		ACL:Hide();
 		return;
 	elseif button == "RightButton" then
 		if IsShiftKeyDown() then
@@ -742,25 +724,27 @@ function Narci_MinimapButton_OnClick(self, button, down)
 		return;
 	end
 	
+	if IsShiftKeyDown() then
+		DressUpFrame_Show(DressUpFrame);
+		Narci_UpdateDressingRoom();
+		--FadeFrame(Narci_ItemParser, 0.25, "Forced_IN");
+		return;
+	end
+
 	GameTooltip:Hide();
 	self:Disable();	
 	Narci_Open();
 
 	C_Timer.After(1.5, function()
-		self:Enable()
+		self:Enable();
 	end)
 end
 
 function Narci_MinimapButton_OnEnter(self)
 	if not NarcissusDB.ShowMinimapButton then return; end
+	self:RegisterForClicks("LeftButtonUp","RightButtonUp","MiddleButtonUp");
 
-	local function GetCharcterInfoHotKey()
-		local command = "TOGGLECHARACTER0";
-		local key1, key2 = GetBindingKey(command);
-		return key1, key2
-	end
-
-	local HotKey1, HotKey2 = GetCharcterInfoHotKey();
+	local HotKey1, HotKey2 = GetBindingKey("TOGGLECHARACTER0");
 	local KeyText;
 	local LeftClickText = L["Minimap Tooltip Left Click"];
 	if HotKey1 and NarcissusDB.EnableDoubleTap then
@@ -783,13 +767,14 @@ function Narci_MinimapButton_OnEnter(self)
 	--GameTooltip:AddDoubleLine(NARCI_GRADIENT, "A.A.K.");
 	GameTooltip:AddLine(LeftClickText.." "..L["Minimap Tooltip To Open"], nil, nil, nil, false);
 	GameTooltip:AddLine(L["Minimap Tooltip Right Click"].." "..L["Minimap Tooltip Enter Photo Mode"], nil, nil, nil, false);
+	GameTooltip:AddLine(L["Minimap Tooltip Shift Left Click"].." "..L["Toggle Dressing Room"], nil, nil, nil, true);
 	GameTooltip:AddLine(L["Minimap Tooltip Shift Right Click"].." "..L["Minimap Tooltip Hide Button"], nil, nil, nil, true);
 	GameTooltip:AddLine(L["Minimap Tooltip Middle Button"], nil, nil, nil, true);
 	GameTooltip:AddLine(" ", nil, nil, nil, true);
 	GameTooltip:AddDoubleLine(NARCI_VERSION_INFO, NARCI_DEVELOPER_INFO, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8);
-	if NARCI_TRANSLATOR_INFO then	GameTooltip:AddDoubleLine(" ", NARCI_TRANSLATOR_INFO, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8);	end
+	--if NARCI_TRANSLATOR_INFO then	GameTooltip:AddDoubleLine(" ", NARCI_TRANSLATOR_INFO, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8); end
 	GameTooltip:AddLine("https://wow.curseforge.com/projects/narcissus", 0.5, 0.5, 0.5, false);
-	GameTooltip:Show()
+	GameTooltip:Show();
 
 	self.Color:Show();
 	UIFrameFadeIn(self.Color, 0.2, self.Color:GetAlpha(), 1);
@@ -833,23 +818,22 @@ local function Narci_MinimapButton_UpdateAngle(radian)
 		x = max(-w, min(x*diagRadiusW, w));
 		y = max(-h, min(y*diagRadiusH, h));
 	end
-	Narci_MinimapButton:SetPoint("CENTER", "Minimap", "CENTER", x, y)
+	Narci_MinimapButton:SetPoint("CENTER", "Minimap", "CENTER", x, y);
 end
 
-local function Narci_MinimapButton_OnLoad()
+function Narci_MinimapButton_OnLoad()
 	local radian = NarcissusDB.MinimapButton.Position;
 	Narci_MinimapButton_UpdateAngle(radian);
 end
 
 function Narci_MinimapButton_DraggingFrame_OnUpdate()
-	local rad, cos, sin, sqrt, max, min = math.rad, math.cos, math.sin, math.sqrt, math.max, math.min
-	local button = Narci_MinimapButton
-	local radian
+	local button = Narci_MinimapButton;
+	local radian;
 
-	local mx, my = Minimap:GetCenter()
-	local px, py = GetCursorPosition()
-	local scale = Minimap:GetEffectiveScale()
-	px, py = px / scale, py / scale
+	local mx, my = Minimap:GetCenter();
+	local px, py = GetCursorPosition();
+	local scale = Minimap:GetEffectiveScale();
+	px, py = px / scale, py / scale;
 	radian = math.atan2(py - my, px - mx);
 
 	Narci_MinimapButton_UpdateAngle(radian);
@@ -859,13 +843,7 @@ end
 ---------------End of derivation---------------
 
 function Narci_ItemSlotButton_OnEnter(self, direction)
-	--[[
-	if self.itemModID then
-		print(self.itemModID)
-	end
-	--]]
-	self.Highlight:StopAnimating();
-	self.Highlight.BlingIn:Play();
+	UIFrameFadeIn(self.Highlight, 0.15, self.Highlight:GetAlpha(), 1);
 	ForceTooltipToShow();
 	if IsAltKeyDown() and not TransmogMode then
 		Narci_EquipmentFlyout_Show(self, self:GetID());
@@ -889,7 +867,6 @@ function Narci_ItemSlotButton_OnEnter(self, direction)
 		return;
 	end
 	local hasItem, hasCooldown, repairCost = GameTooltip:SetInventoryItem("player", self:GetID(), nil, true);
-
 	GameTooltip:Show()
 end
 
@@ -904,6 +881,8 @@ local RunePlateTexture = {
 	[5] = "Interface/AddOns/Narcissus/Art/Runes/RunePlate-Legendary",
 	[6] = "Interface/AddOns/Narcissus/Art/Runes/RunePlate-Artifact",
 	[7] = "Interface/AddOns/Narcissus/Art/Runes/RunePlate-Heirloom",
+
+	["NZoth"] = "Interface/AddOns/Narcissus/Art/Runes/RunePlate-NZoth",
 }
 
 ---Get Transmog Appearance---
@@ -942,13 +921,13 @@ local function ShareHyperLink()																	--Send transmog hyperlink to cha
 	end
 end
 
-local function AAASetCoolDown(self)
+local function SetCoolDown(self)
 	local frame = self.CooldownFrame.Cooldown;
-	if ( frame ) then
+	if frame then
 		local start, duration, enable = GetInventoryItemCooldown("player", self:GetID());
 		if enable and enable ~= 0 and start > 0 and duration > 0 then
 			frame:SetCooldown(start, duration);
-			frame:SetHideCountdownNumbers(false)
+			frame:SetHideCountdownNumbers(false);
 		else
 			frame:Clear();
 		end
@@ -987,19 +966,6 @@ local function SetItemSocketingFramePosition(self)		--Let ItemSocketingFrame app
 	end
 end
 
-local function FadeOutSlotButton(self)
-	self:SetAlpha(1);
-
-	local targetID = self:GetID()
-
-	for i=1, #slotTable do
-		if slotTable[i] and slotTable[i]:GetID() ~= targetID then
-			slotTable[i]:SetAlpha(Irrelevant_Attribute_Alpha);
-		end
-	end
-end
-
-local SlotIDtoName = Narci.SlotIDtoName;    --NarciAPI
 local function ShowOrHideEquiment(self)
 	if not self.sourceID then return; end;
 	self.IsHiddenSlot = not self.IsHiddenSlot;
@@ -1012,6 +978,7 @@ local function ShowOrHideEquiment(self)
 end
 
 function Narci_ItemSlotButton_OnClick(self, button)
+	ClearCursor();
 	Narci_AlertFrame_Autohide:SetAnchor(self, -24, true);
 	if ( IsModifiedClick() ) then
 		if IsAltKeyDown() and button == "LeftButton" then
@@ -1063,7 +1030,7 @@ local RuneLetterTable = {
 	["crit"] = "ᚲ\nᚱ\nᛁ",	  --CRI
 	["haste"] = "ᚼ\nᛆ\nᛋ",	 --HAS
 	["mastery"] = "ᛘ\nᛋ\nᛐ", --MST
-	["versa"] = "ᚡ\nᚽ\nᚱ",	 --VER
+	["versatility"] = "ᚡ\nᚽ\nᚱ",	 --VER
 	["STR"] = "ᛊ\nᛏ\nᚱ",	 --STR
 	["AGI"] = "ᛆ\nᚵ\nᛁ",	 --AGI
 	["INT"] = "ᛁ\nᚾ\nᛐ",	 --INT
@@ -1116,9 +1083,9 @@ function Narci_RuneButton_OnEnter(self)
 end
 
 ---------------------------------------------------
-local UseTimer = true;
-local function AssignTimer(id, forced)
-	if UseTimer or forced then
+local UseDelay = true;
+local function AssignDelay(id, forced)
+	if UseDelay or forced then
 		local time = 0;
 		if id == 1 then
 			time = 1;
@@ -1163,9 +1130,6 @@ local function AssignTimer(id, forced)
 	else
 		return 0;
 	end;
-	--[[
-
-	--]]
 end
 
 function Narci_ItemSlotButton_SetUseItem(self)
@@ -1213,7 +1177,7 @@ local GetGemBorderTexture = Narci.GetGemBorderTexture;
 function Narci_ItemSlotButton_OnLoad(self)
 	self:RegisterForDrag("LeftButton");
 	self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-	AAASetCoolDown(self);
+	SetCoolDown(self);
 	local slotId = self:GetID();
 	local slotName = strsub(self:GetName(), 7);
 	local _, textureName = GetInventorySlotInfo(slotName);
@@ -1225,6 +1189,7 @@ function Narci_ItemSlotButton_OnLoad(self)
 	local itemIcon, itemName, itemQuality, itemLevel, effectiveLvl, GemName, GemLink;
 	local isAzeriteEmpoweredItem = false;		--3 Pieces	**likely to be changed in patch 8.2
 	local isAzeriteItem = false;				--Heart of Azeroth
+	local isCorruptedItem = false;
 	local sourceitemIcon, sourceitemName, sourceitemQuality;
 
 	if C_Item.DoesItemExist(itemLocation) and not TransmogMode then
@@ -1263,6 +1228,8 @@ function Narci_ItemSlotButton_OnLoad(self)
 			isAzeriteItem = C_AzeriteItem.IsAzeriteItem(itemLocation);
 		elseif slotId == 1 or slotId == 3 or slotId == 5 then
 			isAzeriteEmpoweredItem = C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(itemLocation);
+		else
+			isCorruptedItem = IsCorruptedItem(itemLink);
 		end
 		
 
@@ -1399,7 +1366,7 @@ function Narci_ItemSlotButton_OnLoad(self)
 		if not C_AzeriteItem.IsAzeriteItemAtMaxLevel() then
 			HeartLevel = HeartLevel .. "  |CFFf8e694" .. math.floor((xp_Current/xp_Needed)*100 + 0.5) .. "%";
 		end
-		effectiveLvl = effectiveLvl.."  |cFFFFD100"..HeartLevel
+		effectiveLvl = effectiveLvl.."  |cFFFFD100"..HeartLevel;
 		
 		local EssenceID = GetMilestoneEssence(115);
 		if EssenceID then
@@ -1411,26 +1378,70 @@ function Narci_ItemSlotButton_OnLoad(self)
 			itemIcon = EssenceInfo.icon;
 		end
 
-		for i = 116, 117 do
-			EssenceID = GetMilestoneEssence(i);
-			if EssenceID then
-				local icon = GetEssenceInfo(EssenceID).icon;
-				effectiveLvl = effectiveLvl.." |T"..icon..":12:12:0:0:64:64:4:60:4:60|t";
+		for i = 116, 119 do
+			--116, 117, 119  3 minor slots
+			if i ~= 118 then
+				EssenceID = GetMilestoneEssence(i);
+				if EssenceID then
+					local icon = GetEssenceInfo(EssenceID).icon;
+					effectiveLvl = effectiveLvl.." |T"..icon..":12:12:0:0:64:64:4:60:4:60|t";
+				end
 			end
 		end
+
+		--Gem glow
+		self.VFX:Show();
 	else
+		if slotId == 2 then
+			self.VFX:Hide();
+		end
 		self.isAzeriteItem = false;
 	end
 
-	if effectiveLvl == nil then
-		if IsHeritageArmor(self.itemID) then
-			effectiveLvl = L["Heritage Armor"];
-		elseif IsSpecialItem(self.itemID) then
-			local _, sourceName = IsSpecialItem(self.itemID);
-			effectiveLvl = sourceName;
-		else
-			effectiveLvl = " ";
+	if isCorruptedItem then
+		borderTex = BorderTexture.NZoth;
+		if not TransmogMode then
+			local corruption = GetItemStats(itemLink)["ITEM_MOD_CORRUPTION"];
+			if corruption then
+				local Affix = GetCorruptedItemAffix(itemLink);
+				if Affix then
+					if self.IsRight then
+						effectiveLvl = Affix.."  |cff946dd1"..corruption.."|r  "..effectiveLvl;
+					else
+						effectiveLvl = effectiveLvl.."  "..Affix.."  |cff946dd1"..corruption.."|r";
+					end
+				else
+					if self.IsRight then
+						effectiveLvl = "|cff946dd1"..corruption.."|r  "..effectiveLvl;
+					else
+						effectiveLvl = effectiveLvl.."  |cff946dd1"..corruption.."|r";
+					end				
+				end
+			end
+			itemQuality = "NZoth";
 		end
+	end
+
+	if slotId == 15 then
+		--Backslot
+		if TransmogMode then
+			self.VFX:Hide();
+		else
+			local itemID = GetItemInfoInstant(itemLink);
+			if itemID == 169223 then 	--Ashjra'kamas, Shroud of Resolve
+				local rank = NarciAPI_GetItemRank(itemLink);
+				effectiveLvl = effectiveLvl.."  "..rank
+				borderTex = BorderTexture.BlackDragon;
+				self.VFX:Show();
+			else
+				self.VFX:Hide();
+			end
+		end
+	end
+
+	if effectiveLvl == nil then
+		local _, sourceName = IsSpecialItem(self.itemID);
+		effectiveLvl = sourceName or " ";
 	end
 	
 	--Enchant Frame--
@@ -1485,10 +1496,12 @@ function Narci_ItemSlotButton_OnLoad(self)
 			self.Name:SetText(itemName);
 			self.Name:SetTextColor(Br, Bg, Bb);
 			self.Name.anim2:Play();
+			C_Timer.After(0, function()
+				self.GradientBackground:SetHeight(self.Name:GetHeight() + self.ItemLevel:GetHeight() + 18);
+			end)
 		end)
 		self.ItemLevel.anim1:Play();
 		self.Name.anim1:Play();
-		--self.GradientBackground.anim1:Play();
 	else
 		self.ItemLevel:SetText(effectiveLvl);
 		self.Name:SetText(itemName);
@@ -1497,13 +1510,14 @@ function Narci_ItemSlotButton_OnLoad(self)
 		if itemIcon then
 			self.Icon:SetTexture(itemIcon);
 		end
+		self.GradientBackground:SetHeight(self.Name:GetHeight() + self.ItemLevel:GetHeight() + 18);
 	end
-
+	--self.GradientBackground:SetHeight(self.Name:GetHeight() + self.ItemLevel:GetHeight() + 18);
 end
 
 function Narci_ItemSlotButton_OnEvent(self, event, ...)
 	if event == "BAG_UPDATE_COOLDOWN" then
-		AAASetCoolDown(self);
+		SetCoolDown(self);
 	elseif event == "MODIFIER_STATE_CHANGED" then
 		local key, state = ...;
 		if ( key == "LALT" and self:IsMouseOver() ) then
@@ -1527,19 +1541,20 @@ function Narci_ItemSlotButton_OnEvent(self, event, ...)
 end
 
 function Narci_ItemSlotButton_OnShow(self)
-	AAASetCoolDown(self)
+	SetCoolDown(self)
 	self:RegisterEvent("BAG_UPDATE_COOLDOWN");
 end
 
 function Narci_ItemSlotButton_OnLeave(self)
 	self:UnregisterEvent("MODIFIER_STATE_CHANGED");
-	self.Highlight.BlingOut:Play();
-	--GameTooltip:Hide();
+	UIFrameFadeOut(self.Highlight, 0.25, 1, 0);
 	Narci:HideButtonTooltip();
 end
 
 function Narci_ItemSlotButton_OnHide(self)
 	self:UnregisterEvent("BAG_UPDATE_COOLDOWN");
+	self.Highlight:Hide();
+	self.Highlight:SetAlpha(0);
 end
 
 ------------------------------------------------------------------
@@ -1989,11 +2004,11 @@ local powerTypeList = {
 
 };
 
-local RegenList = {
+--[[local RegenList = {
 	[2] = STAT_FOCUS_REGEN,
 	[3] = STAT_ENERGY_REGEN,
 	[5] = STAT_RUNE_REGEN,
-}
+}--]]
 
 local function trim(s)
 	if s ~= nil then
@@ -2008,8 +2023,7 @@ local function PlayIlvlInfoAnimation()
 	local frame1 = frame.IlvlButtonLeft;
 	local frame2 = frame.IlvlButtonRight;
 
-
-	if NarcissusDB.DetailedIlvlInfo and (not frame1:IsShown()) then
+	if NarcissusDB.DetailedIlvlInfo and not frame1:IsVisible() and not TransmogMode then
 		frame1.AnimFrame:Show();
 		frame2.AnimFrame:Show();
 		frame1:Show();
@@ -2108,57 +2122,241 @@ function CalculateWA()
 	return WAvg;
 end
 
-local function SetIlvlBackground(level)
-	level = level or UnitLevel("player")
-	local avgItemLevel, avgItemLevelEquipped, _ = GetAverageItemLevel();
-	local avgIvl = math.floor(avgItemLevel);
-	local avgIvl2 = math.floor(avgItemLevel*100 + 0.5) / 100
-	local EAvg = math.floor(avgItemLevelEquipped*100 + 0.5) / 100;
-	--local WAvg = math.floor(CalculateWA()*10 + 0.5) / 10;
-	--frame3.PlayerItemLvlWeighted:SetText(WAvg);
-	local percentage = math.ceil( (avgItemLevel - avgIvl)*100 );		--Set the bar(Fluid) height in the Tube
+local SmoothFluid = NarciAPI_SmoothFluid;
+local GetEyeballColor = NarciAPI_GetEyeballColor;
 
-	local height
+local function SetIlvlBackground(level)
+	level = level or UnitLevel("player");
+	local frame = Narci_IlvlInfoFrame.IlvlButtonCenter;
+	local frame2 = Narci_IlvlInfoFrame.IlvlButtonLeft;
+	local frame3 = Narci_IlvlInfoFrame.IlvlButtonRight;
+	local avgItemLevel, avgItemLevelEquipped, _ = GetAverageItemLevel();
+	local floor = math.floor;
+	local avgIvl = floor(avgItemLevel);
+	local maxIlvl = floor(avgItemLevel*100 + 0.5) / 100
+	local EAvg = floor(avgItemLevelEquipped*100 + 0.5) / 100;
+	frame2.PlayerItemLvlEquipped:SetText(EAvg);
+	local percentage	--Set the bar(Fluid) height in the Tube
+	local height;
+	local centerText, centerHeader;
+	local rightText, rightHeader;
+	--Corruption System
+	local corruption = GetCorruption();
+	local corruptionResistance = GetCorruptionResistance();
+	local totalCorruption = max(corruption - corruptionResistance, 0);
+
+	if corruption > 0 then
+		frame3.Number:SetText(maxIlvl);
+		frame3.Header:SetText("MAX");
+		frame3.tooltipHeadline = format(ITEM_LEVEL, avgItemLevel);
+		frame3.tooltipLineOpen = STAT_AVERAGE_ITEM_LEVEL_TOOLTIP;
+		return;
+	else
+		frame.isCorrupted = false;
+		frame.Eyelid:Hide();
+		if level <= 60 then
+			frame.IvlBackground:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Solid\\HexagonSolid-Grey")
+			frame.Fluid:SetColorTexture(ITEM_QUALITY_COLORS[0].r, ITEM_QUALITY_COLORS[0].g, ITEM_QUALITY_COLORS[0].b);
+		elseif level <= 80 then
+			frame.IvlBackground:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Solid\\HexagonSolid-Green")
+			frame.Fluid:SetColorTexture(ITEM_QUALITY_COLORS[2].r, ITEM_QUALITY_COLORS[2].g, ITEM_QUALITY_COLORS[2].b);
+		elseif level <= 100 then
+			frame.IvlBackground:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Solid\\HexagonSolid-Blue")
+			frame.Fluid:SetColorTexture(ITEM_QUALITY_COLORS[3].r, ITEM_QUALITY_COLORS[3].g, ITEM_QUALITY_COLORS[3].b);
+		elseif level > 100 then
+			if avgItemLevel < 385 then
+				frame.IvlBackground:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Solid\\HexagonSolid-Blue")
+				frame.Fluid:SetColorTexture(ITEM_QUALITY_COLORS[3].r, ITEM_QUALITY_COLORS[3].g, ITEM_QUALITY_COLORS[3].b);
+			else
+				frame.IvlBackground:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Solid\\HexagonSolid-Purple")
+				frame.Fluid:SetColorTexture(ITEM_QUALITY_COLORS[4].r, ITEM_QUALITY_COLORS[4].g, ITEM_QUALITY_COLORS[4].b);
+			end
+		end
+		frame.IvlBackground:SetTexCoord(0, 1, 0, 1);
+		percentage = math.ceil( (avgItemLevel - avgIvl)*100 );
+		centerText = avgIvl;
+		centerHeader = "MAX";
+	end
+	
 	if percentage < 10 then
 		height = 0;
 	elseif percentage > 90 then
-		height = 100;
+		height = 84;
 	else
 		height = 84*percentage/100;
 	end
 	
-	local frame = Narci_IlvlInfoFrame.IlvlButtonCenter
-	local frame2 = Narci_IlvlInfoFrame.IlvlButtonLeft
-	local frame3 = Narci_IlvlInfoFrame.IlvlButtonRight
-	
-	frame.Fluid:SetHeight(height)
+	frame.Fluid:SetHeight(height);
+
 	if Narci.EnableAutoUpdate then
-		frame.PlayerItemLvl:SetText(avgIvl);
-		frame.Header:SetText("MAX");
+		frame.PlayerItemLvl:SetText(centerText);
+		frame.Header:SetText(centerHeader);
 	end
-	frame.tooltip = format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_AVERAGE_ITEM_LEVEL).." "..avgIvl2;
+	frame.tooltip = format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_AVERAGE_ITEM_LEVEL).." "..maxIlvl;
 	frame.tooltip2 = HIGHLIGHT_FONT_COLOR_CODE .. STAT_AVERAGE_ITEM_LEVEL_TOOLTIP .. FONT_COLOR_CODE_CLOSE;
 	frame.tooltip3 = L["Toggle Equipment Set Manager"];
-	frame2.PlayerItemLvlEquipped:SetText(EAvg);
+end
 
-	if level <= 60 then
-		frame.IvlBackground:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Solid\\HexagonSolid-Grey")
-		frame.Fluid:SetColorTexture(ITEM_QUALITY_COLORS[0].r, ITEM_QUALITY_COLORS[0].g, ITEM_QUALITY_COLORS[0].b);
-	elseif level <= 80 then
-		frame.IvlBackground:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Solid\\HexagonSolid-Green")
-		frame.Fluid:SetColorTexture(ITEM_QUALITY_COLORS[2].r, ITEM_QUALITY_COLORS[2].g, ITEM_QUALITY_COLORS[2].b);
-	elseif level <= 100 then
-		frame.IvlBackground:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Solid\\HexagonSolid-Blue")
-		frame.Fluid:SetColorTexture(ITEM_QUALITY_COLORS[3].r, ITEM_QUALITY_COLORS[3].g, ITEM_QUALITY_COLORS[3].b);
-	elseif level > 100 then
-		if avgItemLevel < 340 then
-			frame.IvlBackground:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Solid\\HexagonSolid-Blue")
-			frame.Fluid:SetColorTexture(ITEM_QUALITY_COLORS[3].r, ITEM_QUALITY_COLORS[3].g, ITEM_QUALITY_COLORS[3].b);
-		else
-			frame.IvlBackground:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Solid\\HexagonSolid-Purple")
-			frame.Fluid:SetColorTexture(ITEM_QUALITY_COLORS[4].r, ITEM_QUALITY_COLORS[4].g, ITEM_QUALITY_COLORS[4].b);
-		end
+Narci.Corruption = -1;
+Narci.corruptionResistance = -1;
+local function SetCorruptionBackground()
+	local frame = Narci_IlvlInfoFrame.IlvlButtonCenter;
+	local frame3 = Narci_IlvlInfoFrame.IlvlButtonRight;
+	local percentage	--Set the bar(Fluid) height in the Tube
+	local height;
+	local centerText, centerHeader;
+	--Corruption System
+	local corruption = GetCorruption();
+	local corruptionResistance = GetCorruptionResistance();
+	if corruption ~= Narci.corruption or corruptionResistance ~= Narci.corruptionResistance then
+		Narci.corruption = corruption;
+		Narci.corruptionResistance = corruptionResistance;
+	else
+		return;
 	end
+	--print("Update Corruption")
+	local totalCorruption = max(corruption - corruptionResistance, 0);
+
+	local newLevel, texID;
+	if corruption > 0 then
+		local cap, bottom, corruptionLevel;
+		if totalCorruption < 1 then
+			cap = 1;
+			corruptionLevel = 0;
+			texID = 6;
+		elseif totalCorruption < 20 then
+			cap = 20;
+			bottom = 1;
+			corruptionLevel = 1;
+			texID = 1;
+		elseif totalCorruption < 40 then
+			cap = 40;
+			bottom = 20;
+			corruptionLevel = 2;
+			texID = 2;
+		elseif totalCorruption < 60 then
+			cap = 60;
+			bottom = 40;
+			corruptionLevel = 3;
+			texID = 3;
+		elseif totalCorruption < 80 then
+			cap = 80;
+			bottom = 60;
+			corruptionLevel = 4;
+			texID = 4;
+		else
+			cap = 80;
+			bottom = 80;
+			corruptionLevel = 5;	
+			texID = 5;	
+		end
+
+		if corruptionLevel == 0 then
+			percentage = math.ceil(100 * (corruption / corruptionResistance));
+		elseif corruptionLevel < 5 then
+			percentage = math.ceil(100 * (20 - cap + totalCorruption) / 20);
+		else
+			percentage = 100;
+		end
+
+		local eyeballTex, hexTextColor, fR, fG, fB = GetEyeballColor();
+		frame.Eyelid.Blink.texID = texID;
+
+		if not frame.isCorrupted then
+			frame.IvlBackground:SetTexCoord(0.125*(texID - 1), 0.125*texID, 0, 1);
+			frame.IvlBackground:SetTexture(eyeballTex);
+			frame.isCorrupted = true;
+		end
+		
+		if corruptionLevel == 0 then
+			centerHeader = corruption.." ".. "|cffa59bb5" ..corruptionResistance;
+			fR, fG, fB = 0.73, 0.68, 0.8;
+		elseif corruptionLevel < 5 then
+			if totalCorruption < 20 then
+				bottom = "  1 ";
+			end
+			centerHeader = "|cffa59bb5".. bottom.." ".. hexTextColor .. totalCorruption .. " |cffa59bb5" .. cap;
+		else
+			centerHeader = "|cffa59bb5".. bottom.." ".. hexTextColor .. totalCorruption .. "    ";
+		end
+		
+		centerText = " ";
+		newLevel = corruptionLevel;
+
+		
+		frame.Eyelid:Show();
+		--Fluid Animation
+		if percentage < 10 then
+			height = 0;
+		elseif percentage > 90 then
+			height = 84;
+		else
+			height = 84*percentage/100;
+		end
+
+		local delay = SmoothFluid(frame.Fluid, height, newLevel, fR, fG, fB);
+		
+		if delay then
+			delay = min(delay, 0.85)
+			C_Timer.After(delay, function()
+				frame.Eyelid.Blink:Play();
+				--[[
+				if corruptionLevel ~= 0 then
+					frame.CorruptionEffect.Bling:Play();
+				end
+				--]]
+			end)
+		end
+	else
+		SetIlvlBackground();
+		frame3.Number:SetText(0);
+		frame3.Header:SetText("TC");
+		frame3.tooltipHeadline = TOTAL_CORRUPTION_TOOLTIP_LINE.." "..0;
+		frame3.tooltipLineOpen = L["No Corrupted Item"];
+		return;
+	end
+
+
+	if Narci.EnableAutoUpdate then
+		frame.PlayerItemLvl:SetText(centerText);
+		frame.Header:SetText(centerHeader);
+	else
+		frame3.Header:SetText("TC");
+		frame3.Number:SetText(totalCorruption);
+		frame3.tooltipHeadline = TOTAL_CORRUPTION_TOOLTIP_LINE.." "..totalCorruption;
+		frame3.tooltipLineOpen = format(L["Total Corruption Format"], totalCorruption);
+	end
+end
+
+function Narci_SolidHexagonButton_OnEnter(self)
+	UIFrameFadeIn(self.Highlight, 0.2, self.Highlight:GetAlpha(), 1);
+
+	--EquipmentSetManager
+	if self.isSetManagerOpen then return end
+
+	--corruption or not
+	if self.isCorrupted then
+		NarciAPI_RunDelayedFunction(self, 0.2, function()
+			local frame = Narci_CorruptionTooltip;
+			if not frame:IsVisible() and not self.isSetManagerOpen and not IsMouseButtonDown() then
+				frame:ClearAllPoints();
+				frame.ModelScene.Background:SetGradientAlpha("VERTICAL", 1, 1, 1, 1, 1, 1, 1, 1);
+				frame:SetScale(self:GetScale());
+				frame:SetParent(self);
+				frame:SetPoint("TOP", self, "BOTTOM", 0, -12);
+				frame:SetHitRectInsets(-32, -32, -32, -32);
+				FadeFrame(frame, 0.25, "IN");
+			end
+		end);
+	else
+		Narci_ShowStatTooltipDelayed(self);
+	end
+end
+function Narci:SetItemLevel()
+	--forced fresh
+	Narci_IlvlInfoFrame.IlvlButtonCenter.isCorrupted = false;
+	Narci.corruption = -1;
+	SetCorruptionBackground();
 end
 
 local function CharacterInfoFrame_OnLoad(NewLevel)
@@ -2182,9 +2380,9 @@ local function CharacterInfoFrame_OnLoad(NewLevel)
 	local frame = PlayerInfoFrame;
 	if currentSpecName ~= nil then
 		if TitleName ~= nil then
-			frame.Miscellaneous:SetText(TitleName.."  |  ".."|cFFFFD100"..level.."|r ".." ".."|c"..rgbHex..currentSpecName.." "..className.."|r");
+			frame.Miscellaneous:SetText(TitleName.."  |  ".."|cFFFFD100"..level.."|r  ".." ".."|c"..rgbHex..currentSpecName.." "..className.."|r");
 		else
-			frame.Miscellaneous:SetText("Level".." |cFFFFD100"..level.."|r ".."|c"..rgbHex..currentSpecName.." "..className.."|r");
+			frame.Miscellaneous:SetText("Level".." |cFFFFD100"..level.."|r  ".."|c"..rgbHex..currentSpecName.." "..className.."|r");
 		end
 	end
 
@@ -2193,7 +2391,7 @@ end
 
 local function RefreshSlot(SlotId)
 	if slotTable[SlotId] then
-		C_Timer.After(AssignTimer(SlotId), function()
+		C_Timer.After(AssignDelay(SlotId), function()
 			Narci_ItemSlotButton_OnLoad(slotTable[SlotId]);
 		end)
 	end
@@ -2219,7 +2417,7 @@ end
 local function CacheSourceInfo(slotId)
 	local appliedSourceID, appliedVisualID 
 	if slotId then
-		C_Timer.After(AssignTimer(slotId, true), function()
+		C_Timer.After(AssignDelay(slotId, true), function()
 			appliedSourceID, appliedVisualID = GetSlotVisualID(slotId);
 			if appliedVisualID > 0 then
 				local sourceInfo = C_TransmogCollection.GetSourceInfo(appliedSourceID);
@@ -2760,28 +2958,14 @@ local function SortedbyIlvl(a,b)
 	return tonumber(a.Level)> tonumber(b.Level)
 end
 
---[[
-function Narci_ItemFlyoutButton_OnEnter(self)
-	self.Highlight:StopAnimating();
-	self.Highlight.BlingIn:Play();
-	GameTooltip:SetOwner(self, "ANCHOR_NONE");
-	if (self.hyperlink) then
-		GameTooltip:SetHyperlink(self.hyperlink);
-		GameTooltip:SetPoint("BOTTOMLEFT", Narci_EquipmentFlyoutFrame, "TOPLEFT", 0, 0)
-		GameTooltip:Show()
-		return;
-	end
-end
---]]
-
 function Narci_ItemFlyoutButton_OnClick(self)
 	local action = EquipmentManager_EquipItemByLocation(self.location, self.id)
 	if action then
 		Narci_AlertFrame_Autohide:SetAnchor(self, -24, true);
 		EquipmentManager_RunAction(action)
 	end
-	self:Disable()
-	C_Timer.After(0.5, function()
+	self:Disable();
+	C_Timer.After(0.8, function()
 		self:Enable();
 	end)
 end
@@ -2889,7 +3073,7 @@ function Narci_EquipmentFlyoutFrame_OnEvent(self, event, ...)	--Hide Flyout if L
 	end
 end
 
-function Narci_EquipmentFlyout_Show(self,slotID)
+function Narci_EquipmentFlyout_Show(self, slotID)
 	--self: Item slot
 	if TransmogMode then
 		return;
@@ -3012,9 +3196,12 @@ function Narci_EquipmentFlyout_DisplayButton(button)
 	local itemQuality = C_Item.GetItemQuality(location);
 	local itemLevel = C_Item.GetCurrentItemLevel(location);
 	local itemIcon = C_Item.GetItemIcon(location);
+	local itemLink = C_Item.GetItemLink(location)
 
 	if C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(location) then
 		itemQuality = 8;	--AzeriteEmpoweredItem
+	elseif IsCorruptedItem(itemLink) then
+		itemQuality = "NZoth";
 	end
 
 	if itemLevel < MaxItemLevelinSlot - 44 then
@@ -3028,8 +3215,6 @@ function Narci_EquipmentFlyout_DisplayButton(button)
 	button.Border:SetTexture(BorderTexture[itemQuality])
 	button.IlvlCenter.ItemLevelCenter:SetText(itemLevel)
 	button.IlvlCenter:Show()
-
-	local itemLink = C_Item.GetItemLink(location)
 
 	if itemLink then
 		DisplayRuneSlot(button, button.id, itemQuality, itemLink);
@@ -3139,6 +3324,7 @@ function Narci:SetRadarChart(c, h, m, v, ManuallyInPutSum)
 	Radar.MaskedBackground2:SetShown(v6);
 
 	--[[
+		--4500 8.3 Stat Sum
 		Enchancements on ilvl 445 (Mythic Eternal Palace) Player Lvl 120
 		Weapon 152 Back 171 Wrist 171 Hands 229 Waist 229 Legs 306 Feet 229 Ring 538 Trinket 218	Max:3151 + 12*50Gem ~= 3750
 		ilvl 240 (Mythic Antorus) Player Lvl 110
@@ -3293,7 +3479,7 @@ function Narci:AnimateRadarChart(c, h, m, v)
 		--sum = 31 * math.exp( 0.04 * UnitLevel("player")) + 40;
 		sum = (e1 + e2 + e3 + e4) * 1.5;
 	else
-		sum = math.max(e1 + e2 + e3 + e4 , 3750);
+		sum = math.max(e1 + e2 + e3 + e4 , 5500);	--Status Sum for 8.3 Raid
 	end
 
 	local function UpdateFunc(self, elapsed)
@@ -3413,13 +3599,20 @@ local function RefreshStats(id, frame)
 	end
 end
 
+local isRefreshing;
 local function RefreshAllStats()
-	for i=1, #statTable do
-		RefreshStats(i);
-	end
-
-	for i=1, #statTable_Short do
-		RefreshStats(i, "Concise");
+	if not isRefreshing then
+		isRefreshing = true;
+		C_Timer.After(0, function()
+			for i=1, #statTable do
+				RefreshStats(i);
+			end
+	
+			for i=1, #statTable_Short do
+				RefreshStats(i, "Concise");
+			end
+			isRefreshing = nil;
+		end);
 	end
 end
 
@@ -3552,168 +3745,6 @@ function Narci_AliasButton_OnClick(self)
 end
 
 
-ACL:Hide();
-ACL:RegisterEvent("VARIABLES_LOADED");
-ACL:RegisterEvent("PLAYER_ENTERING_WORLD");
-ACL:RegisterEvent("UNIT_NAME_UPDATE");
-ACL:RegisterEvent("PLAYER_EQUIPMENT_CHANGED");
-ACL:RegisterEvent("PLAYER_AVG_ITEM_LEVEL_UPDATE");
-ACL:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
-ACL:RegisterEvent("PLAYER_LEVEL_UP");
-ACL:RegisterEvent("LOADING_SCREEN_DISABLED");
-
---These events might become deprecated in future expansions
-ACL:RegisterEvent("AZERITE_ESSENCE_ACTIVATED");
-ACL:SetScript("OnEvent",function(self,event,...)
-	--print(event)
-		
-	if event == "VARIABLES_LOADED" then
-		local function ShouldShowPatchNote()
-			if Current_Version > NarcissusDB.Version then
-				if not Narci_PatchNote then
-					CreateFrame("Frame", "Narci_PatchNote", nil, "Narci_PatchNote_Template")
-				end
-				VignetteRightLarge.animIn:SetScript("OnFinished", function()
-					NarcissusDB.Version = Current_Version;
-					Narci_Vignette_OnFinished();
-					Narci_PatchNote.Black.animIn:Play();
-					VignetteRightLarge.animIn:SetScript("OnFinished", Narci_Vignette_OnFinished);
-				end)
-			end
-		end
-		ShouldShowPatchNote()
-		AssignFrame();
-		Narci_AliasButton_SetState();
-		Narci_SetActiveBorderTexture();
-		ShowDetailedIlvlInfo();
-		Narci:InitializeCameraFactors();
-		C_Timer.After(2, function()
-			Narci_MinimapButton_OnLoad();
-			RefreshAllStats();
-			Narci:SetRadarChart(0,0,0,0,1);
-			XmogName_OnLoad();
-		end)
-	elseif event == "LOADING_SCREEN_DISABLED" then
-		Narci_MinimapButton:Disable();			--Disable minimap button while caching
-		C_Timer.After(2, function()
-			CacheSourceInfo();
-		end)
-		C_Timer.After(4, function()
-			TransmogMode = true;
-			UseTimer = true;
-			RefreshAllSlot();					--Cache transmog appearance sources
-		end)
-		C_Timer.After(5, function()
-			TransmogMode = false
-			--UseTimer = false;
-			RefreshAllSlot();
-			Narci_MinimapButton:Enable();
-		end)
-		self:UnregisterEvent("LOADING_SCREEN_DISABLED");
-	elseif event == "PLAYER_ENTERING_WORLD" then
-		CharacterInfoFrame_OnLoad()
-	elseif event == "PLAYER_EQUIPMENT_CHANGED" then
-		local InventorySlotId, isItem = ...;
-		CacheSourceInfo(InventorySlotId)
-		UseTimer = false;
-		RefreshSlot(InventorySlotId);
-		if Narci_EquipmentFlyoutFrame:IsShown() and Narci_EquipmentFlyoutFrame.slotID == InventorySlotId then
-			Narci_BuildFlyout(InventorySlotId)
-		end
-		UseTimer = true;
-	elseif event == "AZERITE_ESSENCE_ACTIVATED" then
-		RefreshSlot(2);		--Heart of Azeroth
-	elseif event == "PLAYER_AVG_ITEM_LEVEL_UPDATE" then
-		SetIlvlBackground();
-	elseif event == "UNIT_NAME_UPDATE" then
-		local UnitID = ...;
-		if UnitID == "player" then
-			CharacterInfoFrame_OnLoad()
-		end
-
-	elseif event == "ACTIVE_TALENT_GROUP_CHANGED" then
-		CharacterInfoFrame_OnLoad()
-
-	elseif event == "PLAYER_LEVEL_UP" then
-		local NewLevel = ...;
-		CharacterInfoFrame_OnLoad(NewLevel)
-
-	elseif ( event == "COMBAT_RATING_UPDATE" or
-			 event == "UNIT_MAXPOWER" or
-			 event == "UNIT_AURA") and Narci.EnableAutoUpdate then
-		-- don't refresh stats when equipment set manager is activated
-		RefreshAllStats();
-		if event == "COMBAT_RATING_UPDATE" then
-			if Narci_Character:IsShown() then
-				SetRadarChart();
-			end
-		end
-	elseif event == "PLAYER_TARGET_CHANGED" then
-		RefreshStats(9) 		--Damage Reduction
-	elseif event == "UNIT_MODEL_CHANGED" then
-		local unit = ...;
-		if unit == "player" then
-			NarciPlayerModelFrame1:Dress()
-		end
-	elseif event == "UPDATE_SHAPESHIFT_FORM" then
-		ModifyCameraForShapeshifter();
-		Narci:CameraZoomIn(ZoomInValue);
-		--print("Shape shift")
-	elseif event == "PLAYER_MOUNT_DISPLAY_CHANGED" then
-		ModifyCameraForMounts();
-		Narci:CameraZoomIn(ZoomInValue);
-	elseif event == "PLAYER_REGEN_DISABLED" then
-		Narci_Character:Hide();
-		if Narci.isAFK and Narci.isActive then
-			--exit when entering combat during AFK mode
-			print("Combat")
-			Narci_MinimapButton:Click();
-			Narci:PlayVoice("DANGER");
-		end
-	elseif event == "PLAYER_STARTED_MOVING" then
-		self:UnregisterEvent("PLAYER_STARTED_MOVING");
-		MoveViewRightStop();
-		if Narci.isAFK and Narci.isActive then
-			--exit when entering combat during AFK mode
-			Narci_MinimapButton:Click();
-		end
-	elseif event == "PLAYER_STARTED_TURNING" and not TransmogMode then
-		NarciAR.Turning.radian = GetPlayerFacing();
-		NarciAR.Turning:Show();
-	elseif event == "PLAYER_STOPPED_TURNING" and not TransmogMode then
-		NarciAR.Turning:Hide();
-	end
-end)
-ACL:SetScript("OnShow",function(self)
-	self:RegisterEvent("PLAYER_TARGET_CHANGED");
-	self:RegisterEvent("COMBAT_RATING_UPDATE");
-	self:RegisterEvent("UNIT_AURA");
-	self:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED");
-	self:RegisterEvent("PLAYER_STARTED_MOVING");
-	self:RegisterEvent("PLAYER_REGEN_DISABLED");
-	self:RegisterEvent("UNIT_MAXPOWER");
-	self:RegisterEvent("PLAYER_STARTED_TURNING");
-	self:RegisterEvent("PLAYER_STOPPED_TURNING");
-	if NarciAR then
-		NarciAR:Show();
-	end
-end)
-ACL:SetScript("OnHide",function(self)
-	self:UnregisterEvent("COMBAT_RATING_UPDATE");
-	self:UnregisterEvent("PLAYER_TARGET_CHANGED");
-	self:UnregisterEvent("UNIT_AURA");
-	self:UnregisterEvent("UPDATE_SHAPESHIFT_FORM");
-	self:UnregisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED");
-	self:UnregisterEvent("PLAYER_STARTED_MOVING");
-	self:UnregisterEvent("PLAYER_REGEN_DISABLED");
-	self:UnregisterEvent("UNIT_MAXPOWER");
-	self:UnregisterEvent("PLAYER_STARTED_TURNING");
-	self:UnregisterEvent("PLAYER_STOPPED_TURNING");
-	if NarciAR then
-		NarciAR:Hide();
-	end
-end)
-
 --local defaultVolume
 local MusicIO = CreateFrame("Frame", "Narci_MusicInOut");
 MusicIO.TimeSinceLastUpdate = 0;
@@ -3803,6 +3834,7 @@ function Narci_Open()
 
 			C_Timer.After(0.5, function()
 				SetUIVisibility(false); 		--Same as pressing Alt + Z
+				SetCorruptionBackground();
 			end)
 
 			C_Timer.After(0.8, function()
@@ -3924,6 +3956,7 @@ function Narci_OpenGroupPhoto()
 				UIParent:SetAlpha(1);
 			end)
 		end)
+		Narci.isActive = true;
 	end
 end
 
@@ -4027,7 +4060,7 @@ local function rotateFrame(frame, Degree)
 	ag:Pause()  
 end
 
-local Shaftdiameter = 53;
+local shaftDiameter = 53;
 local lastDegree = 0;
 local tinyIncre = 1000;
 
@@ -4054,8 +4087,8 @@ local function TinyZoom(degree, lastDegree)
 end
 
 local function RotateShaftNode(radian)
-	local ofsx = Shaftdiameter*math.cos(radian)
-	local ofsy = Shaftdiameter*math.sin(radian)
+	local ofsx = shaftDiameter*math.cos(radian)
+	local ofsy = shaftDiameter*math.sin(radian)
 	CameraControllerNode:SetPoint("CENTER", "CameraControllerThumb", "CENTER", ofsx, ofsy);
 	CameraControllerThumb.Shaft:SetRotation(radian)
 end
@@ -4630,28 +4663,28 @@ end
 
 local function SetClipboard(self, type, subType)
 	local frame = self or Narci_XmogButtonPopUp.CopyButton;
-	local type = type or frame.CodeType or "TEXT"
-	local subType = subType or frame.GearTexts.BBSCode.subType or "Wowhead"
+	local type = type or frame.CodeType or "TEXT";
+	local subType = subType or frame.GearTexts.BBSCode.subType or "Wowhead";
 	local texts = CopyTexts(type, subType);
-	frame.GearTexts:SetText(texts)
+	frame.GearTexts:SetText(texts);
 
 	if frame.GearTexts then
-	frame.GearTexts:HighlightText()
+		frame.GearTexts:SetFocus();
+		frame.GearTexts:HighlightText();
 	end
 end
 
 local CodeTokenList = {
-	[1] = "TEXT",	[2] = "BBS", [3] = "MARKDOWN"
+	[1] = "TEXT",	[2] = "BBS", [3] = "MARKDOWN",
 }
 
-function CodeTokenButton_OnClick(self)
-	self:GetParent():GetParent().CodeType = CodeTokenList[self:GetID()]
-	SetClipboard()
-	TokenButton_ClearMarker(self)
+function Narci_CodeTokenButton_OnClick(self)
+	self:GetParent():GetParent().CodeType = CodeTokenList[self:GetID()];
+	SetClipboard();
+	TokenButton_ClearMarker(self);
 	self.HighlightColor:Show();
-
-	self.AnimFrame.Anim:SetScale(1.8)
-	self.AnimFrame.Anim.Bling:Play()
+	self.AnimFrame.Anim:SetScale(1.8);
+	self.AnimFrame.Anim.Bling:Play();
 end
 
 function IncludeIDButton_OnClick(self)
@@ -4669,14 +4702,14 @@ end
 function CopyButton_OnClick(self)
 	self.IsOn = not self.IsOn;
 	if self.IsOn then
-		SetClipboard(self)
-		FadeFrame(self.GearTexts, 0.25, "IN")
+		SetClipboard(self);
+		FadeFrame(self.GearTexts, 0.25, "IN");
 	else
-		FadeFrame(self.GearTexts, 0.25, "OUT")
+		FadeFrame(self.GearTexts, 0.25, "OUT");
 	end
 
-	self.AnimFrame.Anim:SetScale(1.5)
-	self.AnimFrame.Anim.Bling:Play()
+	self.AnimFrame.Anim:SetScale(1.5);
+	self.AnimFrame.Anim.Bling:Play();
 end
 
 --Narci_EmoteButton
@@ -5182,21 +5215,6 @@ graphicsLightingQuality 3
 ------Photo Mode Switch------
 
 function SwitchMode_OnClick(self, key)
-	if key == "MiddleButton" then		--Emergency Stop --PH
-		UIParent:SetAlpha(1);
-		MoveViewRightStop();
-		ResetView(5);
-		ConsoleExec( "pitchlimit 88");
-		CVar_Temp.OverShoulder = 0;
-		SetUIVisibility(true);
-		ConsoleExec( "actioncam off" );
-		NarciPlayerModelFrame1:Hide();
-		Narci_ModelSettings:Hide();
-		return;
-	elseif key == "RightButton" then
-		return;
-	end
-
 	self.IsOn = not self.IsOn;
 	self:GetParent().PhotoModeController_UpdateFrame.TimeSinceLastUpdate = 0;
 	self:GetParent().PhotoModeController_UpdateFrame:Hide();
@@ -5209,7 +5227,6 @@ function SwitchMode_OnClick(self, key)
 		PhotoModeControllerBar:SetClipsChildren(true);
 	end
 
-	--GameTooltip:Hide();
 	NarciTooltip:FadeOut();
 	TemporarilyHidePopUp(Narci_XmogButtonPopUp);
 	TemporarilyHidePopUp(EmoteButtonPopUp);
@@ -5318,9 +5335,16 @@ SlashCmdList["NARCI"] = function(Msg)
 	elseif msg == "minimap" then
 		Narci_MinimapButton:Show();
 		NarcissusDB.ShowMinimapButton = true;
-		print("Minimap button has been re-enabled.")
+		print("Minimap button has been re-enabled.");
+	elseif msg == "itemlist" then
+		DressUpFrame_Show(DressUpFrame);
+	elseif msg == "parser" then
+		FadeFrame(Narci_ItemParser, 0.25, "Forced_IN");
 	else
-		print("Invalid!")
+		local color = "|cff40C7EB";
+		print(color.."Show Minimap Button:|r /narci minimap");
+		print(color.."Copy Item List:|r /narci itemlist");
+		print(color.."Corruption Item Parser:|r /narci parser");
 	end
 end
 
@@ -5494,7 +5518,7 @@ local function Controller_AnimationSequence_OnUpdate(self, elapsed)
 	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
 	self.TotalTime = self.TotalTime + elapsed;
 	
-	if self.TimeSinceLastUpdate >= FrameGap then
+	if self.TimeSinceLastUpdate >= 0.01666 then
 		self.TimeSinceLastUpdate = 0;
 		if self.OppoDirection then
 			self.Index = self.Index - 1;
@@ -5565,7 +5589,7 @@ local function Generic_AnimationSequence_OnUpdate(self, elapsed)
 	
 	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
 
-	if self.TimeSinceLastUpdate >= FrameGap then
+	if self.TimeSinceLastUpdate >= 0.01666 then
 		self.TimeSinceLastUpdate = 0;
 		if self.OppoDirection then
 			self.Index = self.Index - 1;
@@ -5587,21 +5611,9 @@ local function Generic_AnimationSequence_OnUpdate(self, elapsed)
 	end
 end
 
-ASC2:SetScript("OnUpdate", Generic_AnimationSequence_OnUpdate)
-ASC2:SetScript("OnHide", AnimationContainer_OnHide)
-ASC2:SetScript("OnShow", function(self)
+ASC2:SetScript("OnUpdate", Generic_AnimationSequence_OnUpdate);
+ASC2:SetScript("OnHide", AnimationContainer_OnHide);
 
-end)
-
-local IAC = CreateFrame("Frame");
-IAC:RegisterEvent("VARIABLES_LOADED")
-IAC:SetScript("OnEvent",function(self,event,...)
-	local AnimSequenceInfo = Narci.AnimSequenceInfo;
-	InitializeAnimationContainer(ASC2, AnimSequenceInfo["Heart"], HeartofAzeroth_AnimFrame.Sequence)
-	InitializeAnimationContainer(ASC, AnimSequenceInfo["Controller"], PhotoModeControllerTransition.Sequence)
-	local HeartSerialNumber = strsub(UnitGUID("player"), 8, 15);
-	HeartofAzeroth_AnimFrame.SN:SetText("No."..HeartSerialNumber)
-end)
 
 function CameraControlBar_ResetPosition_AnimFrame_OnShow(self)
 	local StartX = CameraOffsetControlBar.PosX or 0;
@@ -5803,10 +5815,186 @@ function PortraitPieces_OnLoad(self)
 		model:UndressSlot(3);
 		model:UndressSlot(16);
 		model:UndressSlot(17);
-		model:ApplySpellVisualKit(58897, false);	--Xmas Candy Mouth
+		--model:ApplySpellVisualKit(58897, false);	--Xmas Candy Mouth
 		--model:TryOn(80593);	--Xmas Hat 80593 Red 80594 Green
 	end
 end
+
+
+ACL:RegisterEvent("ADDON_LOADED");
+ACL:RegisterEvent("PLAYER_ENTERING_WORLD");
+ACL:RegisterEvent("UNIT_NAME_UPDATE");
+ACL:RegisterEvent("PLAYER_EQUIPMENT_CHANGED");
+ACL:RegisterEvent("PLAYER_AVG_ITEM_LEVEL_UPDATE");
+ACL:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
+ACL:RegisterEvent("PLAYER_LEVEL_UP");
+ACL:RegisterEvent("LOADING_SCREEN_DISABLED");
+
+--These events might become deprecated in future expansions
+ACL:RegisterEvent("AZERITE_ESSENCE_ACTIVATED");
+ACL:SetScript("OnEvent",function(self,event,...)
+	--print(event)
+		
+	if event == "ADDON_LOADED" then
+		local name = ...;
+		if name ~= "Narcissus" then
+			return;
+		end
+		self:UnregisterEvent("ADDON_LOADED");
+		AssignFrame();
+		Narci_AliasButton_SetState();
+		Narci_SetActiveBorderTexture();
+		ShowDetailedIlvlInfo();
+		Narci:InitializeCameraFactors();
+		C_Timer.After(2, function()
+			Narci_MinimapButton_OnLoad();
+			RefreshAllStats();
+			Narci:SetRadarChart(0,0,0,0,1);
+			XmogName_OnLoad();
+		end)
+
+		local AnimSequenceInfo = Narci.AnimSequenceInfo;
+		InitializeAnimationContainer(ASC2, AnimSequenceInfo["Heart"], HeartofAzeroth_AnimFrame.Sequence)
+		InitializeAnimationContainer(ASC, AnimSequenceInfo["Controller"], PhotoModeControllerTransition.Sequence)
+		local HeartSerialNumber = strsub(UnitGUID("player"), 8, 15);
+		HeartofAzeroth_AnimFrame.SN:SetText("No."..HeartSerialNumber)
+		
+	elseif event == "LOADING_SCREEN_DISABLED" then
+		Narci_MinimapButton:Disable();			--Disable minimap button while caching
+		C_Timer.After(2, function()
+			CacheSourceInfo();
+		end)
+		C_Timer.After(4, function()
+			TransmogMode = true;
+			UseDelay = true;
+			RefreshAllSlot();					--Cache transmog appearance sources
+		end)
+		C_Timer.After(5, function()
+			TransmogMode = false
+			RefreshAllSlot();
+			Narci_MinimapButton:Enable();
+		end)
+		self:UnregisterEvent("LOADING_SCREEN_DISABLED");
+	elseif event == "PLAYER_ENTERING_WORLD" then
+		CharacterInfoFrame_OnLoad()
+	elseif event == "PLAYER_EQUIPMENT_CHANGED" then
+		local InventorySlotId, isItem = ...;
+		CacheSourceInfo(InventorySlotId)
+		UseDelay = false;
+		RefreshSlot(InventorySlotId);
+		if Narci_EquipmentFlyoutFrame:IsShown() and Narci_EquipmentFlyoutFrame.slotID == InventorySlotId then
+			Narci_BuildFlyout(InventorySlotId)
+		end
+		UseDelay = true;
+	elseif event == "AZERITE_ESSENCE_ACTIVATED" then
+		RefreshSlot(2);		--Heart of Azeroth
+	elseif event == "PLAYER_AVG_ITEM_LEVEL_UPDATE" then
+        if not self.isRefreshing then
+            self.isRefreshing = true;
+            C_Timer.After(0, function()    -- only want 1 update per 0.4s
+				SetIlvlBackground();
+				C_Timer.After(0.4, function()
+					self.isRefreshing = nil;
+				end)
+            end)
+        end
+	elseif event == "UNIT_NAME_UPDATE" then
+		local UnitID = ...;
+		if UnitID == "player" then
+			CharacterInfoFrame_OnLoad()
+		end
+
+	elseif event == "ACTIVE_TALENT_GROUP_CHANGED" then
+		CharacterInfoFrame_OnLoad()
+
+	elseif event == "PLAYER_LEVEL_UP" then
+		local NewLevel = ...;
+		CharacterInfoFrame_OnLoad(NewLevel)
+
+	elseif ( event == "COMBAT_RATING_UPDATE" or
+			 event == "UNIT_MAXPOWER" or
+			 event == "UNIT_AURA") and Narci.EnableAutoUpdate then
+		-- don't refresh stats when equipment set manager is activated
+		RefreshAllStats();
+		if event == "COMBAT_RATING_UPDATE" then
+			if not self.pauseCorruption then
+				self.pauseCorruption = true;
+				C_Timer.After(0, function()    -- only want 1 update per 0.4s
+					SetCorruptionBackground();
+					C_Timer.After(0.4, function()
+						self.pauseCorruption = nil;
+					end)
+				end)
+			end
+
+			if Narci_Character:IsShown() then
+				SetRadarChart();
+			end
+		end
+	elseif event == "PLAYER_TARGET_CHANGED" then
+		RefreshStats(9) 		--Damage Reduction
+	elseif event == "UNIT_MODEL_CHANGED" then
+		local unit = ...;
+		if unit == "player" then
+			NarciPlayerModelFrame1:Dress()
+		end
+	elseif event == "UPDATE_SHAPESHIFT_FORM" then
+		ModifyCameraForShapeshifter();
+		Narci:CameraZoomIn(ZoomInValue);
+		--print("Shape shift")
+	elseif event == "PLAYER_MOUNT_DISPLAY_CHANGED" then
+		ModifyCameraForMounts();
+		Narci:CameraZoomIn(ZoomInValue);
+	elseif event == "PLAYER_REGEN_DISABLED" then
+		Narci_Character:Hide();
+		if Narci.isAFK and Narci.isActive then
+			--exit when entering combat during AFK mode
+			Narci_MinimapButton:Click();
+			Narci:PlayVoice("DANGER");
+		end
+	elseif event == "PLAYER_STARTED_MOVING" then
+		self:UnregisterEvent("PLAYER_STARTED_MOVING");
+		MoveViewRightStop();
+		if Narci.isAFK and Narci.isActive then
+			--exit when entering combat during AFK mode
+			Narci_MinimapButton:Click();
+		end
+	elseif event == "PLAYER_STARTED_TURNING" and not TransmogMode then
+		NarciAR.Turning.radian = GetPlayerFacing();
+		NarciAR.Turning:Show();
+	elseif event == "PLAYER_STOPPED_TURNING" and not TransmogMode then
+		NarciAR.Turning:Hide();
+	end
+end)
+ACL:SetScript("OnShow",function(self)
+	self:RegisterEvent("PLAYER_TARGET_CHANGED");
+	self:RegisterEvent("COMBAT_RATING_UPDATE");
+	self:RegisterEvent("UNIT_AURA");
+	self:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED");
+	self:RegisterEvent("PLAYER_STARTED_MOVING");
+	self:RegisterEvent("PLAYER_REGEN_DISABLED");
+	self:RegisterEvent("UNIT_MAXPOWER");
+	self:RegisterEvent("PLAYER_STARTED_TURNING");
+	self:RegisterEvent("PLAYER_STOPPED_TURNING");
+	if NarciAR then
+		NarciAR:Show();
+	end
+end)
+ACL:SetScript("OnHide",function(self)
+	self:UnregisterEvent("COMBAT_RATING_UPDATE");
+	self:UnregisterEvent("PLAYER_TARGET_CHANGED");
+	self:UnregisterEvent("UNIT_AURA");
+	self:UnregisterEvent("UPDATE_SHAPESHIFT_FORM");
+	self:UnregisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED");
+	self:UnregisterEvent("PLAYER_STARTED_MOVING");
+	self:UnregisterEvent("PLAYER_REGEN_DISABLED");
+	self:UnregisterEvent("UNIT_MAXPOWER");
+	self:UnregisterEvent("PLAYER_STARTED_TURNING");
+	self:UnregisterEvent("PLAYER_STOPPED_TURNING");
+	if NarciAR then
+		NarciAR:Hide();
+	end
+end)
 
 --[[
 function Te(a,b,r)
@@ -5831,8 +6019,6 @@ function Ce(a)
 end
 
 --]]
-
---local DoubleClickThreshold = 0.25;		--Clicks within (this value) seconds are deemed consecutive
 
 local function Narci_DoubleClickTrigger_OnUpdate(self, elapsed)
 	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
@@ -5879,42 +6065,41 @@ function Narci_SetActiveBorderTexture()
 	local minimapTexture, themeName;
 	BorderTexture, minimapTexture, themeName = NarciAPI_GetBorderTexture();
 	local MinimapButton = Narci_MinimapButton;
-
+	local minimapBackgroundSize = 42;
+	local slot;
 	if themeName == "Dark" then
 		for i=1, #slotTable do
-			if slotTable[i] then
+			slot = slotTable[i];
+			if slot then
 				RefreshSlot(i);
-				slotTable[i].RuneSlot.Background:SetAlpha(0);
-				slotTable[i].Shadow:Show();
-				slotTable[i].Icon:SetSize(44, 44);
-				slotTable[i]:SetWidth(70);
-				slotTable[i]:SetHeight(72);
+				slot.RuneSlot.Background:SetAlpha(0);
+				slot.Shadow:Show();
+				slot.Icon:SetSize(44, 44);
+				slot:SetWidth(70);
+				slot:SetHeight(72);
 			end
 		end
-
-		MinimapButton.Background:SetSize(58, 58)
 	else
 		for i=1, #slotTable do
-			if slotTable[i] then
+			slot = slotTable[i];
+			if slot then
 				RefreshSlot(i);
-				slotTable[i].RuneSlot.Background:SetAlpha(1);
-				slotTable[i].Shadow:Hide();
-				slotTable[i].Icon:SetSize(48, 48);
-				slotTable[i]:SetWidth(64);
-				slotTable[i]:SetHeight(64);
+				slot.RuneSlot.Background:SetAlpha(1);
+				slot.Shadow:Hide();
+				slot.Icon:SetSize(48, 48);
+				slot:SetWidth(64);
+				slot:SetHeight(64);
 			end
 		end
-		MinimapButton.Background:SetSize(42, 42);	
 	end
 
 	--Optimize this minimap button's radial offset
 	if IsAddOnLoaded("AzeriteUI") then
 		RadialOffset = 18;
-		if themeName == "Dark" then
-			MinimapButton.Background:SetSize(80, 80);
-		else
-			MinimapButton.Background:SetSize(48, 48);
+		if MinimapButton:GetParent() == UIParent then
+			minimapBackgroundSize = 80;
 		end
+		minimapTexture = "Interface/AddOns/Narcissus/Art/Minimap/LOGO-Thick";
 	elseif IsAddOnLoaded("DiabolicUI") then
 		RadialOffset = 12;
 	elseif IsAddOnLoaded("GoldieSix") then
@@ -5928,6 +6113,7 @@ function Narci_SetActiveBorderTexture()
 		RadialOffset = 10;
 	end
 
+	MinimapButton.Background:SetSize(minimapBackgroundSize, minimapBackgroundSize);	
 	MinimapButton.Background:SetTexture(minimapTexture);
 	MinimapButton.Color:SetTexture(minimapTexture);
 end
@@ -5936,7 +6122,7 @@ function Narci_GuideLineFrame_OnSizing(self, offset)
 	local W0, H = WorldFrame:GetSize();
 	if not (W0 and H) or H == 0 then return; end;
 	local offset = offset or 0;
-	local W = H / 9 * 16;
+	local W = math.min(H / 9 * 16, W0);
 	W = math.floor(W + 0.5);
 	--print("Original: "..W0.." Calculated: "..W);
 	self:SetWidth(W - offset);
@@ -5955,6 +6141,6 @@ function Narci_GuideLineFrame_OnSizing(self, offset)
 end
 
 function Narci:SetReferenceFrameOffset(offset)
-	--A positive offset expand the reference frame.
+	--A positive offset expands the reference frame.
 	Narci_GuideLineFrame_OnSizing(Narci_GuideLineFrame, -offset);
 end

@@ -174,7 +174,11 @@ L["Avoidance (%)"] = "Avoidance (%)"
 --[[Translation missing --]]
 L["Avoidance Rating"] = "Avoidance Rating"
 L["Back and Forth"] = "De atrás hacia adelante"
+--[[Translation missing --]]
+L["Background"] = "Background"
 L["Background Color"] = "Color de fondo"
+--[[Translation missing --]]
+L["Bar"] = "Bar"
 L["Bar Color"] = "Color de la barra"
 L["Battle.net Whisper"] = "Mensaje de Battle.net"
 L["Battleground"] = "Campo de batalla"
@@ -213,6 +217,8 @@ L["Buffed/Debuffed"] = "Buffed/Debuffed"
 L["Can be used for e.g. checking if \"boss1target\" is the same as \"player\"."] = "Can be used for e.g. checking if \"boss1target\" is the same as \"player\"."
 --[[Translation missing --]]
 L["Cancel"] = "Cancel"
+--[[Translation missing --]]
+L["Can't schedule timer with %i, due to a World of Warcraft Bug with high computer uptime. (Uptime: %i). Please restart your Computer."] = "Can't schedule timer with %i, due to a World of Warcraft Bug with high computer uptime. (Uptime: %i). Please restart your Computer."
 L["Cast"] = "Lanzar hechizo"
 --[[Translation missing --]]
 L["Cast Bar"] = "Cast Bar"
@@ -259,8 +265,6 @@ L["Combat Log"] = "Registro de combate"
 L["Combine all matches"] = "Combine all matches"
 L["Conditions"] = "Condiciones"
 L["Contains"] = "Contiene"
---[[Translation missing --]]
-L["Continue Without Repairing"] = "Continue Without Repairing"
 --[[Translation missing --]]
 L["Cooldown"] = "Cooldown"
 L["Cooldown Progress (Equipment Slot)"] = "Recarga en proceso (Equipamiento)"
@@ -321,6 +325,10 @@ L["Destination In Group"] = "Destination In Group"
 L["Destination Name"] = "Nombre de destino"
 --[[Translation missing --]]
 L["Destination NPC Id"] = "Destination NPC Id"
+--[[Translation missing --]]
+L["Destination Object Type"] = "Destination Object Type"
+--[[Translation missing --]]
+L["Destination Reaction"] = "Destination Reaction"
 L["Destination Unit"] = "Unidad de destino"
 L["Disease"] = "Enfermedad"
 L["Dispel"] = "Disipar"
@@ -367,8 +375,12 @@ L["Enchant Name or ID"] = "Enchant Name or ID"
 L["Encounter ID(s)"] = "Encounter ID(s)"
 L["Energize"] = "Vigorizar"
 L["Enrage"] = "Enfurecer"
+--[[Translation missing --]]
+L["Enter static or relative values with %"] = "Enter static or relative values with %"
 L["Entering"] = "Entrando"
 L["Entering/Leaving Combat"] = "Entrando/abandonando batalla"
+--[[Translation missing --]]
+L["Entry Order"] = "Entry Order"
 L["Environment Type"] = "Tipo de entorno"
 L["Environmental"] = "Ambiental"
 L["Equipment Set"] = "Equipamiento"
@@ -408,6 +420,8 @@ L["Fishing Lure / Weapon Enchant (Old)"] = "Anzuelos/Encantamiento de armas (ant
 --[[Translation missing --]]
 L["Fixed"] = "Fixed"
 --[[Translation missing --]]
+L["Fixed Names"] = "Fixed Names"
+--[[Translation missing --]]
 L["Fixed Size"] = "Fixed Size"
 L["Flash"] = "Destello"
 L["Flex Raid"] = "Banda flexible"
@@ -443,6 +457,8 @@ L["Group %s"] = "Grupo %s "
 L["Group Arrangement"] = "Group Arrangement"
 L["Grow"] = "Crecer"
 L["GTFO Alert"] = "Alerta de GTFO"
+--[[Translation missing --]]
+L["Guardian"] = "Guardian"
 L["Guild"] = "Hermandad"
 --[[Translation missing --]]
 L["Has Target"] = "Has Target"
@@ -466,6 +482,8 @@ L["Hostile"] = "Hostil"
 L["Hostility"] = "Hostilidad"
 L["Humanoid"] = "Humanoide"
 L["Hybrid"] = "Híbrido"
+--[[Translation missing --]]
+L["Icon"] = "Icon"
 L["Icon Color"] = "Color de icono"
 --[[Translation missing --]]
 L["Icon Desaturate"] = "Icon Desaturate"
@@ -485,8 +503,6 @@ L["Import"] = "Import"
 L["Import as Copy"] = "Import as Copy"
 --[[Translation missing --]]
 L["Import as Update"] = "Import as Update"
---[[Translation missing --]]
-L["Import disabled"] = "Import disabled"
 --[[Translation missing --]]
 L["Import Group"] = "Import Group"
 --[[Translation missing --]]
@@ -680,9 +696,13 @@ L["Note: 'Hide Alone' is not available in the new aura tracking system. A load o
 --[[Translation missing --]]
 L["Note: The available text replacements for multi triggers match the normal triggers now."] = "Note: The available text replacements for multi triggers match the normal triggers now."
 --[[Translation missing --]]
-L["Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate."] = "Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate."
+L["Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate. Range checking capabilities depend on your current class and known abilities as well as the type of unit being checked. Some of the ranges may also not work with certain NPCs.|n|n|cFFAAFFAAFriendly Units:|r %s|n|cFFFFAAAAHarmful Units:|r %s|n|cFFAAAAFFMiscellanous Units:|r %s"] = "Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate. Range checking capabilities depend on your current class and known abilities as well as the type of unit being checked. Some of the ranges may also not work with certain NPCs.|n|n|cFFAAFFAAFriendly Units:|r %s|n|cFFFFAAAAHarmful Units:|r %s|n|cFFAAAAFFMiscellanous Units:|r %s"
+--[[Translation missing --]]
+L["NPC"] = "NPC"
 L["Number"] = "Número"
 L["Number Affected"] = "Dependiente de números"
+--[[Translation missing --]]
+L["Object"] = "Object"
 L["Officer"] = "Oficial"
 --[[Translation missing --]]
 L["Offset Timer"] = "Offset Timer"
@@ -771,6 +791,8 @@ L["PvP Flagged"] = "Marcado JcJ"
 --[[Translation missing --]]
 L["PvP Talent %i"] = "PvP Talent %i"
 L["PvP Talent selected"] = "JcJ - Talento seleccionado"
+--[[Translation missing --]]
+L["Queued Action"] = "Queued Action"
 L["Radius"] = "Radio"
 L["Raid"] = "Banda"
 L["Raid Warning"] = "Advertencia de banda"
@@ -785,10 +807,16 @@ L["Receiving display information"] = "Recibiendo información de aura de %s..."
 L["Reflect"] = "Reflejar"
 L["Region type %s not supported"] = "No soporta el tipo de región %s"
 L["Relative"] = "Relativo"
+--[[Translation missing --]]
+L["Relative X-Offset"] = "Relative X-Offset"
+--[[Translation missing --]]
+L["Relative Y-Offset"] = "Relative Y-Offset"
 L["Remaining Duration"] = "Duración restante"
 L["Remaining Time"] = "Tiempo restante"
 --[[Translation missing --]]
 L["Remove Obsolete Auras"] = "Remove Obsolete Auras"
+--[[Translation missing --]]
+L["Repair"] = "Repair"
 --[[Translation missing --]]
 L["Repeat"] = "Repeat"
 L["Requested display does not exist"] = "El aura requerida no existe"
@@ -816,8 +844,6 @@ L["Rotate Left"] = "Rotar hacia la izquierda"
 L["Rotate Right"] = "Rotar hacia la derecha"
 --[[Translation missing --]]
 L["Run Custom Code"] = "Run Custom Code"
---[[Translation missing --]]
-L["Run the repair tool"] = "Run the repair tool"
 L["Rune"] = "Runa"
 L["Rune #1"] = "Runa #1"
 L["Rune #2"] = "Runa #2"
@@ -909,7 +935,11 @@ L["Source Name"] = "Nombre de origen"
 --[[Translation missing --]]
 L["Source NPC Id"] = "Source NPC Id"
 --[[Translation missing --]]
+L["Source Object Type"] = "Source Object Type"
+--[[Translation missing --]]
 L["Source Raid Mark"] = "Source Raid Mark"
+--[[Translation missing --]]
+L["Source Reaction"] = "Source Reaction"
 L["Source Unit"] = "Unidad de origen"
 --[[Translation missing --]]
 L["Source: "] = "Source: "
@@ -1047,6 +1077,8 @@ L["Total Units"] = "Total Units"
 L["Totem"] = "Tótem"
 L["Totem #%i"] = "Tótem #%i"
 L["Totem Name"] = "Nombre del tótem"
+--[[Translation missing --]]
+L["Totem Name Pattern Match"] = "Totem Name Pattern Match"
 L["Totem Number"] = "Número del tótem"
 --[[Translation missing --]]
 L["Track Cooldowns"] = "Track Cooldowns"

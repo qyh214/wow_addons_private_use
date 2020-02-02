@@ -1,6 +1,6 @@
-## Interface: 80205
+## Interface: 80300
 ## Title: Lib: Diminishing Returns Database
-## Version: 66d7242
+## Version: v1.1.1
 ## X-Category: Library
 ## X-Curse-Project-ID: 315757
 

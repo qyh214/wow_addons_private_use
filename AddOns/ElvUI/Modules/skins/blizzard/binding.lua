@@ -7,8 +7,8 @@ local pairs = pairs
 --WoW API / Variables
 local hooksecurefunc = hooksecurefunc
 
-local function LoadSkin()
-	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.binding ~= true then return end
+function S:Blizzard_BindingUI()
+	if not (E.private.skins.blizzard.enable and E.private.skins.blizzard.binding) then return end
 
 	local buttons = {
 		"defaultsButton",
@@ -22,13 +22,13 @@ local function LoadSkin()
 		S:HandleButton(KeyBindingFrame[v])
 	end
 
-	KeyBindingFrame.header:StripTextures()
 	_G.KeyBindingFrameScrollFrame:StripTextures()
 	S:HandleScrollBar(_G.KeyBindingFrameScrollFrameScrollBar)
 
 	S:HandleCheckBox(KeyBindingFrame.characterSpecificButton)
-	KeyBindingFrame.header:ClearAllPoints()
-	KeyBindingFrame.header:Point("TOP", KeyBindingFrame, "TOP", 0, -4)
+	KeyBindingFrame.Header:StripTextures()
+	KeyBindingFrame.Header:ClearAllPoints()
+	KeyBindingFrame.Header:Point("TOP", KeyBindingFrame, "TOP", 0, -4)
 	KeyBindingFrame:StripTextures()
 	KeyBindingFrame:SetTemplate("Transparent")
 
@@ -61,4 +61,4 @@ local function LoadSkin()
 	KeyBindingFrame.unbindButton:Point("BOTTOMRIGHT", KeyBindingFrame, "BOTTOMRIGHT", -211, 16)
 end
 
-S:AddCallbackForAddon("Blizzard_BindingUI", "Binding", LoadSkin)
+S:AddCallbackForAddon('Blizzard_BindingUI')
