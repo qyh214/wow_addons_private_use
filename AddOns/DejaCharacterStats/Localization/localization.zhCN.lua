@@ -90,4 +90,23 @@ L["Versatility Rating"] = "全能百分比值"
 L["weapon auto attack (white) DPS."] = "武器自动攻击(白字)每秒伤害。"
 L["Weapon DPS"] = "武器伤害"
 
+L["Hide Character Frame"] = "隐藏角色框架"
+L["Show Character Frame"] = "显示角色框架"
+L["Spirit"] = "精神"
+L["Stamina"] = "耐力"
+L["Strength"] = "力量"
+L["Intellect"] = "智力"
+L["Agility"] = "敏捷"
+L["Armor"] = "护甲"
+L["Power"] = "攻强"
+L["Damage"] = "伤害"
+L["Melee Attack"] = "近战攻击"
+L["Ranged Attack"] = "远程攻击"
+
+
+L["Corruption"] = "腐蚀"
+L["Base Corruption"] = "基础腐蚀"
+L["Corruption Resistance"] = "腐蚀抗性"
+L["Total Corruption"] = "合计腐蚀值"
+
 return end

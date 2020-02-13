@@ -1,12 +1,10 @@
-lightweight tag be6203f6c8b8743d5e6e2342cc944fd3b2ff4863 v1.9.7
-Author:	MarkW <17293527+Numynum@users.noreply.github.com>
-Date:	Sat Jan 18 15:17:43 2020 +0100
+lightweight tag da9190d19ef12662c322958965f3213bba0fe8e7 v2.1.1
+Author:	GitHub <noreply@github.com>
+Date:	Wed Feb 12 13:35:36 2020 +0100
 
-commit be6203f6c8b8743d5e6e2342cc944fd3b2ff4863
-Author: zaCade <zaCade@hotmail.com>
-Date:   Sat Jan 18 15:17:43 2020 +0100
+commit da9190d19ef12662c322958965f3213bba0fe8e7
+Author: MarkW <17293527+Numynum@users.noreply.github.com>
+Date:   Wed Feb 12 13:35:36 2020 +0100
 
-    Add frames (#10)
-    
-    * Add new load on demand frames
+    added a colored prefix for printed messages
 

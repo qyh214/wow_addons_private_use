@@ -20,6 +20,8 @@ CanIMogIt 幻化提示插件
 
 DBM 首领报警及其语音包
 
+Details 战斗数据统计(替代skada)
+
 DejaCharacterStats 角色信息增强
 
 ElvUI ElvUI整合界面插件
@@ -67,10 +69,6 @@ RelicInspector 圣物提示
 RSA SpeakinSpell替代品
 
 SimpleChat 底部聊天窗口改进，添加频道切换条和一些功能
-
-Skada 伤害统计
-
-SkadaPlus skada的单位补丁插件
 
 TellMeWhen
 

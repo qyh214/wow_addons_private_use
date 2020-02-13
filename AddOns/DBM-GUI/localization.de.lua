@@ -176,7 +176,6 @@ L.SpecWarn_ClassColor		= "Benutze Klassenfarben für Spezialwarnungen"
 L.ShowSWarningsInChat 		= "Zeige Spezialwarnungen im Chatfenster"
 L.SWarnNameInNote			= "Nutze SW 5 falls eine Notiz deinen Namen enthält"
 L.SpecialWarningIcon		= "Zeige Symbole an Spezialwarnungen"
-L.SpecWarn_FlashFrame		= "Aufblinkender Bildschirm bei Spezialwarnungen"
 L.SpecWarn_FlashFrameRepeat	= "Wiederhole %d-mal (falls aktiviert)"
 L.SpecWarn_Font				= "Schriftart für Spezialwarnungen" --unused
 L.SpecWarn_FontSize			= "Schriftgröße: %d"
@@ -189,11 +188,6 @@ L.SpecWarn_FlashAlpha		= "Blinkalpha: %0.1f"
 L.SpecWarn_DemoButton		= "Zeige Beispiel"
 L.SpecWarn_MoveMe			= "Positionieren"
 L.SpecWarn_ResetMe			= "Zurücksetzen"
-L.SpecialWarnSound			= "Sound für Spezialwarnungen, die dich oder deine Funktion betreffen"
-L.SpecialWarnSound2			= "Sound für Spezialwarnungen, die jeden betreffen"
-L.SpecialWarnSound3			= "Sound für SEHR wichtige Spezialwarnungen"
-L.SpecialWarnSound4			= "Sound für \"Lauf weg!\"-Spezialwarnungen"
-L.SpecialWarnSound5			= "Sound für Spezialwarnungen mit Notizen die deinen Namen enthalten"
 
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "Gesprochene Warnungen"
@@ -325,7 +319,6 @@ L.AutoAcceptGuildInvite		= "Automatisch Gruppeneinladungen von Gildenmitgliedern
 L.Area_Advanced				= "Erweiterte Einstellungen"
 L.FakeBW					= "Bei Versionsprüfungen als \"BigWigs\" ausgeben, statt als DBM (nützlich für Gilden, die die Nutzung von \"BigWigs\" erzwingen)"
 L.AITimer					= "Erzeuge automatisch Timer für unbekannte Kämpfe mit der in DBM eingebauten Timer-KI (nützlich beim erstmaligen Pullen eines Test-Bosses, etwa auf Beta- oder PTR-Servern) Hinweis: Dies funktioniert nicht richtig bei mehreren Gegnern mit derselben Fähigkeit."
-L.AutoCorrectTimer			= "Korrigiere automatisch zu lange Timer (nützlich für Gilden, die Kämpfe im topaktuellen \"End-Content\" bestreiten, für die noch keine aktualisierten Boss Mods verfügbar sind) Hinweis: Diese Einstellung kann auch einige Timer verschlechtern, falls bei Phasenwechseln, deren Behandlung in DBM bislang noch nicht geeignet programmiert wurde, Timerrücksetzungen stattfinden."
 
 L.Panel_Profile				= "Profile"
 L.Area_CreateProfile		= "Profilerzeugung für DBM Core Einstellungen"

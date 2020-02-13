@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2019, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2020, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -146,9 +146,16 @@ local options = {
 						version = {
 							name = " |cffffd100Version:|r  "..KT.version,
 							type = "description",
-							width = "double",
+							width = "normal",
 							fontSize = "medium",
-							order = 0.1,
+							order = 0.11,
+						},
+						build = {
+							name = " |cffffd100Build:|r  Retail",
+							type = "description",
+							width = "normal",
+							fontSize = "medium",
+							order = 0.12,
 						},
 						slashCmd = {
 							name = cBold.." /kt|r  |cff808080...............|r  Toggle (expand/collapse) the tracker\n"..
@@ -956,6 +963,7 @@ local options = {
 							end,
 							func = function()
 								SlashCmdList["MASQUE"]()
+								SlashCmdList["MASQUE"]()
 							end,
 							order = 5.61,
 						},
@@ -1154,7 +1162,7 @@ local options = {
 			type = "group",
 			args = {
 				sec1 = {
-					name = "Order of Modules "..beta,
+					name = "Order of Modules",
 					type = "group",
 					inline = true,
 					order = 1,
@@ -1220,7 +1228,7 @@ local options = {
 							order = 1.21,
 						},
 						addonPetTrackerDesc = {
-							name = beta.." PetTracker support adjusts display of zone pet tracking inside "..KT.title..". It also fix some visual bugs.",
+							name = "PetTracker support adjusts display of zone pet tracking inside "..KT.title..". It also fix some visual bugs.",
 							type = "description",
 							width = "double",
 							order = 1.22,
@@ -1243,7 +1251,7 @@ local options = {
 							order = 1.31,
 						},
 						addonTomTomDesc = {
-							name = beta.." TomTom support combined Blizzard's POI and\nTomTom's Arrow.",
+							name = "TomTom support combined Blizzard's POI and TomTom's Arrow.",
 							type = "description",
 							width = "double",
 							order = 1.32,

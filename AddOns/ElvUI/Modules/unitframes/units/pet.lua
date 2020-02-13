@@ -34,7 +34,7 @@ function UF:Construct_PetFrame(frame)
 	frame.customTexts = {}
 
 	frame:Point('BOTTOM', E.UIParent, 'BOTTOM', 0, 118)
-	E:CreateMover(frame, frame:GetName()..'Mover', L["Pet Frame"], nil, nil, nil, 'ALL,SOLO', nil, 'unitframe,pet,generalGroup')
+	E:CreateMover(frame, frame:GetName()..'Mover', L["Pet Frame"], nil, nil, nil, 'ALL,SOLO', nil, 'unitframe,individualUnits,pet,generalGroup')
 
 	frame.unitframeType = "pet"
 end
@@ -96,8 +96,7 @@ function UF:Update_PetFrame(frame, db)
 
 	--Auras
 	UF:EnableDisable_Auras(frame)
-	UF:Configure_Auras(frame, 'Buffs')
-	UF:Configure_Auras(frame, 'Debuffs')
+	UF:Configure_AllAuras(frame)
 
 	--Fader
 	UF:Configure_Fader(frame)

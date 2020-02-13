@@ -9,7 +9,7 @@ if namespace.locale == "deDE" then
 	-- uses the US English locale code.
 
 -- #######################################################################################################################
--- ##	Deutsche (German) translations provided by pas06, flow0284, Markurion, Branduril, and NekoNyaaaa on Curseforge.	##
+-- ##	Deutsche (German) translations provided by Kakjens, HappySubberducky, Bullseiify, pas06, flow0284, Markurion, Branduril, and NekoNyaaaa on Curseforge.	##
 -- #######################################################################################################################
 
 L["  /dcstats config: Opens the DejaCharacterStats addon config menu."] = "  /dcstats config: Öffnet das DejaCharacterStats Konfigurationsfenster."
@@ -93,5 +93,23 @@ L["Unlock DCS"] = "DCS freischalten"
 L["Versatility Rating"] = "Vielseitigkeitswertung"
 L["weapon auto attack (white) DPS."] = "Schaden pro Sekunde der automatischen (weißen) Waffenangriffe."
 L["Weapon DPS"] = "Waffen-SPS"
+
+L["Hide Character Frame"] = "Versteckt die Charakteranzeige"
+L["Show Character Frame"] = "Öffnet die Charakteranzeige"
+L["Spirit"] = "Willenskraft"
+L["Stamina"] = "Ausdauer"
+L["Strength"] = "Stärke"
+L["Intellect"] = "Intelligenz"
+L["Agility"] = "Beweglichkeit"
+L["Armor"] = "Rüstung"
+L["Power"] = "Angriffskraft"
+L["Damage"] = "Schaden"
+L["Melee Attack"] = "Nahk. Angriff"
+L["Ranged Attack"] = "Fernk. Angriff"
+
+L["Corruption"] = "Verderbnis"
+L["Base Corruption"] = "Grundverderbnis"
+L["Corruption Resistance"] = "Verderbniswiderstand"
+L["Total Corruption"] = "Verderbnis insgesamt"
 
 return end

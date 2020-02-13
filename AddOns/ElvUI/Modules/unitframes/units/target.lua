@@ -40,7 +40,7 @@ function UF:Construct_TargetFrame(frame)
 
 	frame.customTexts = {}
 	frame:Point('BOTTOMRIGHT', E.UIParent, 'BOTTOM', 413, 68)
-	E:CreateMover(frame, frame:GetName()..'Mover', L["Target Frame"], nil, nil, nil, 'ALL,SOLO', nil, 'unitframe,target,generalGroup')
+	E:CreateMover(frame, frame:GetName()..'Mover', L["Target Frame"], nil, nil, nil, 'ALL,SOLO', nil, 'unitframe,individualUnits,target,generalGroup')
 
 	frame.unitframeType = "target"
 end
@@ -110,8 +110,7 @@ function UF:Update_TargetFrame(frame, db)
 
 	--Auras
 	UF:EnableDisable_Auras(frame)
-	UF:Configure_Auras(frame, 'Buffs')
-	UF:Configure_Auras(frame, 'Debuffs')
+	UF:Configure_AllAuras(frame)
 
 	-- Resurrect
 	UF:Configure_ResurrectionIcon(frame)

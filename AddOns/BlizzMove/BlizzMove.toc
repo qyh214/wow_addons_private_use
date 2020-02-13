@@ -1,10 +1,8 @@
 ## Interface: 80300
 ## Title: BlizzMove
 ## Notes: Move those blizzard windows
-## Author: yess
+## Author: the-rebel-Mermaid
 ## X-WoWI-ID: 23875
-## Version: v1.9.7
-
-
+## Version: v2.1.1
 Handle.lua
 BlizzMove.lua

@@ -2128,6 +2128,7 @@ private.NPC_DISPLAY_IDS = {
 	[138513] = 32230, --Vyrantion
 	[138507] = 31501, --Warlord Ultriss
 	[138442] = 66815, --Wavebreaker
+	[138794] = 88375, --Dunegorger Kraulok
 	[138843] = 86381, --Wingleader Srak'ik
 	[138844] = 86391, --Ya'vik the Imperial Blade
 	[139220] = 27572, --Vya Crystalbloom
@@ -2723,5 +2724,6 @@ private.NPC_DISPLAY_IDS = {
 	[163534] = 3019, --Pet Training Dummy
 	[162372] = 36707, --Spirit of Cyrus the Black
 	[162619] = 76647, --Void Wrai
+	[161407] = 92229, --Unstable Glob
 	[161532] = 94590; --Instructor Teshal
 }

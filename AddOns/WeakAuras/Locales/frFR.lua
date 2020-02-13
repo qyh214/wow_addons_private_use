@@ -223,6 +223,8 @@ L[ [=[Current Zone
 ]=] ] = "Zone Actuelle"
 L["Curse"] = "Malédiction"
 L["Custom"] = "Personnalisé"
+--[[Translation missing --]]
+L["Custom Color"] = "Custom Color"
 L["Custom Configuration"] = "Configuration personnalisée"
 L["Custom Function"] = "Fonction personnalisée"
 L["Damage"] = "Dégâts"

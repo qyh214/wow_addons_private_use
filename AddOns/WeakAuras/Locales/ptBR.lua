@@ -8,12 +8,10 @@ local L = WeakAuras.L
 L["   • %d auras added"] = "• %d auras adicionadas"
 L["   • %d auras deleted"] = "• %d auras removidas"
 L["   • %d auras modified"] = "• %d auras modificadas"
---[[Translation missing --]]
-L["%s - %i. Trigger"] = "%s - %i. Trigger"
+L["%s - %i. Trigger"] = "%s - %i. Ativar"
 L["%s - Alpha Animation"] = "%s - Animação da transparência"
 L["%s - Color Animation"] = "%s - Animação da cor"
---[[Translation missing --]]
-L["%s - Condition Custom Chat"] = "%s - Condition Custom Chat"
+L["%s - Condition Custom Chat"] = "%s - Condição do Chat Personalizado"
 L["%s - Custom Text"] = "%s - Texto personalizado"
 L["%s - Finish"] = "%s - Finalização"
 L["%s - Finish Action"] = "%s - Ação de fim"
@@ -298,6 +296,8 @@ L[ [=[Current Zone
 ]=]
 L["Curse"] = "Maldição"
 L["Custom"] = "Personalizado"
+--[[Translation missing --]]
+L["Custom Color"] = "Custom Color"
 --[[Translation missing --]]
 L["Custom Configuration"] = "Custom Configuration"
 L["Custom Function"] = "Função personalizada"

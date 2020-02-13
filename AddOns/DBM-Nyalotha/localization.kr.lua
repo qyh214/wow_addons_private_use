@@ -6,21 +6,6 @@ local L
 ---------------------------
 L= DBM:GetModLocalization(2368)
 
-L:SetWarningLocalization({
-
-})
-
-L:SetTimerLocalization({
-
-})
-
-L:SetOptionLocalization({
-
-})
-
-L:SetMiscLocalization({
-})
-
 ---------------------------
 --  Maut --
 ---------------------------
@@ -103,10 +88,18 @@ L= DBM:GetModLocalization(2366)
 ---------------------------
 L= DBM:GetModLocalization(2375)
 
+L:SetOptionLocalization({
+	InterruptBehavior	= "정신학대 차단 방식 설정 (공대장일 경우 다른 사람의 설정보다 우선 적용)",
+	Four				= "4인 로테이션 ",
+	Five				= "5인 로테이션 ",--Default
+	Six					= "6인 로테이션 ",
+	NoReset				= "로테이션 없음 ",
+	ArrowOnGlare		= "$spell:317874을 피할 방향을 좌우 화살표로 표시"
+})
+
 L:SetMiscLocalization({
 	ExitMind		= "정신세계 출구",
-	Away			= "뒤로",
-	Toward			= "앞으로"
+	Gate			= "관문"
 })
 
 -------------

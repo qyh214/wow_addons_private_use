@@ -268,6 +268,8 @@ if AL then
 	AL["NOTE_332220"] = "Tienes que completar un minijuego que consiste en disparar a las bolas de fuego antes de que toquen los circulos del suelo. Cada vez que una bola toca el suelo, o usas el disparo sin darle a una bola, se reduce la energía disponible, y si llega a cero tendrás que volver a empezar."
 	AL["PROFILES"] = "Perfiles"
 	AL["RAIDS"] = "Bandas"
+	AL["RESET_POSITION"] = "Restaura posición"
+	AL["RESET_POSITION_DESC"] = "Restaura la posición original del botón principal."
 	AL["SHOW_CHAT_ALERT"] = "Mostrar alertas de chat"
 	AL["SHOW_CHAT_ALERT_DESC"] = "Muestra en el chat un mensaje privado cada vez que se detecta un cofre, tesoro o NPC."
 	AL["SHOW_RAID_WARNING"] = "Mostrar alertas de raid"

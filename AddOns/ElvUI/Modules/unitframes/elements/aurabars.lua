@@ -3,7 +3,6 @@ local UF = E:GetModule('UnitFrames');
 
 --Lua functions
 local _G = _G
-local tostring = tostring
 local format = format
 local unpack = unpack
 --WoW API / Variables
@@ -19,7 +18,7 @@ function UF:AuraBars_OnClick()
 
 	if auraName then
 		E:Print(format(L["The spell '%s' has been added to the Blacklist unitframe aura filter."], auraName))
-		E.global.unitframe.aurafilters.Blacklist.spells[auraName] = { enable = true, priority = 0 }
+		E.global.unitframe.aurafilters.Blacklist.spells[self.spellID or self.name] = { enable = true, priority = 0 }
 		UF:Update_AllFrames()
 	end
 end
@@ -136,13 +135,13 @@ function UF:Configure_AuraBars(frame)
 			holder:Size(db.aurabar.detachedWidth, 20)
 
 			if frame.unitframeType == "player" then
-				E:CreateMover(holder, 'ElvUF_PlayerAuraMover',  "Player Aura Bars", nil, nil, nil, 'ALL,SOLO', nil, 'unitframe,player,aurabar')
+				E:CreateMover(holder, 'ElvUF_PlayerAuraMover',  "Player Aura Bars", nil, nil, nil, 'ALL,SOLO', nil, 'unitframe,individualUnits,player,aurabar')
 			elseif frame.unitframeType == "target" then
-				E:CreateMover(holder, 'ElvUF_TargetAuraMover',  "Target Aura Bars", nil, nil, nil, 'ALL,SOLO', nil, 'unitframe,target,aurabar')
+				E:CreateMover(holder, 'ElvUF_TargetAuraMover',  "Target Aura Bars", nil, nil, nil, 'ALL,SOLO', nil, 'unitframe,individualUnits,target,aurabar')
 			elseif frame.unitframeType == "pet" then
-				E:CreateMover(holder, 'ElvUF_PetAuraMover',  "Pet Aura Bars", nil, nil, nil, 'ALL,SOLO', nil, 'unitframe,pet,aurabar')
+				E:CreateMover(holder, 'ElvUF_PetAuraMover',  "Pet Aura Bars", nil, nil, nil, 'ALL,SOLO', nil, 'unitframe,individualUnits,pet,aurabar')
 			elseif frame.unitframeType == "focus" then
-				E:CreateMover(holder, 'ElvUF_FocusAuraMover',  "Focus Aura Bars", nil, nil, nil, 'ALL,SOLO', nil, 'unitframe,focus,aurabar')
+				E:CreateMover(holder, 'ElvUF_FocusAuraMover',  "Focus Aura Bars", nil, nil, nil, 'ALL,SOLO', nil, 'unitframe,individualUnits,focus,aurabar')
 			end
 
 			auraBars.Holder = holder
@@ -203,7 +202,7 @@ function UF:PostUpdateBar_AuraBars(unit, statusBar, index, position, duration, e
 	statusBar.db = self.db
 	statusBar.icon:SetTexCoord(unpack(E.TexCoords))
 
-	local colors = E.global.unitframe.AuraBarColors[spellID] or E.global.unitframe.AuraBarColors[tostring(spellID)] or E.global.unitframe.AuraBarColors[spellName]
+	local colors = E.global.unitframe.AuraBarColors[spellID] and E.global.unitframe.AuraBarColors[spellID].enable and E.global.unitframe.AuraBarColors[spellID].color
 
 	if E.db.unitframe.colors.auraBarTurtle and (E.global.unitframe.aurafilters.TurtleBuffs.spells[spellID] or E.global.unitframe.aurafilters.TurtleBuffs.spells[spellName]) and not colors and (spellName ~= GOTAK or (spellName == GOTAK and spellID == GOTAK_ID)) then
 		colors = E.db.unitframe.colors.auraBarTurtleColor

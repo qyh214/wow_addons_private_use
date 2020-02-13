@@ -527,7 +527,7 @@ function EO:RaidMarkerOptions()
 end
 
 function EO:TooltipOptions()
-	E.Options.args.tooltip.args.general.args.progressInfo = {
+	E.Options.args.tooltip.args.progressInfo = {
 		order = 8,
 		type = 'toggle',
 		name = ColorizeSettingName(L['Progression Info']),
@@ -579,7 +579,7 @@ function EO:UnitFramesOptions()
 	}
 
 	--Target
-	E.Options.args.unitframe.args.target.args.gps = {
+	E.Options.args.unitframe.args.individualUnits.args.target.args.gps = {
 		order = 1000,
 		type = 'group',
 		name = ColorizeSettingName(L['GPS']),
@@ -601,7 +601,7 @@ function EO:UnitFramesOptions()
 		},
 	}
 	
-	E.Options.args.unitframe.args.target.args.attackicon = {
+	E.Options.args.unitframe.args.individualUnits.args.target.args.attackicon = {
 		order = 1001,
 		type = 'group',
 		name = ColorizeSettingName(L['Attack Icon']),
@@ -629,7 +629,7 @@ function EO:UnitFramesOptions()
 		},
 	}	
 	
-	E.Options.args.unitframe.args.target.args.classicon = {
+	E.Options.args.unitframe.args.individualUnits.args.target.args.classicon = {
 		order = 1002,
 		type = 'group',
 		name = ColorizeSettingName(L["Class Icons"]),
@@ -666,7 +666,7 @@ function EO:UnitFramesOptions()
 
 	
 	--Focus
-	E.Options.args.unitframe.args.focus.args.gps = {
+	E.Options.args.unitframe.args.individualUnits.args.focus.args.gps = {
 		order = 1000,
 		type = 'group',
 		name = ColorizeSettingName(L['GPS']),

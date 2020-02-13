@@ -29,7 +29,8 @@ local L = WeakAuras.L
 	L["%s, Border"] = "%s, Граница"
 	L["%s, Offset: %0.2f;%0.2f"] = "%s, Смещение: %0.2f;%0.2f"
 	L["%s, offset: %0.2f;%0.2f"] = "%s, смещение: %0.2f;%0.2f"
-	L["|c%02x%02x%02x%02xColor|r"] = "|c%02x%02x%02x%02xЦвет|r"
+	--[[Translation missing --]]
+	L["|c%02x%02x%02x%02xCustom Color|r"] = "|c%02x%02x%02x%02xCustom Color|r"
 	--[[Translation missing --]]
 	L["|cFFFF0000Note:|r The unit '%s' is not a trackable unit."] = "|cFFFF0000Note:|r The unit '%s' is not a trackable unit."
 	--[[Translation missing --]]
@@ -207,6 +208,8 @@ local L = WeakAuras.L
 	L["Custom"] = "Самостоятельно"
 	L["Custom Anchor"] = "Пользовательский Якорь"
 	L["Custom Code"] = "Свой код"
+	--[[Translation missing --]]
+	L["Custom Color"] = "Custom Color"
 	L["Custom Configuration"] = "Пользовательская конфигурация"
 	L["Custom Frames"] = "Пользовательские рамки"
 	L["Custom Function"] = "Своя функция"
@@ -809,6 +812,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Update Custom Text On..."] = "Обновить свой текст на..."
 	L["Update in Group"] = "Обновить в группе"
 	L["Update this Aura"] = "Обновить эту ауру"
+	--[[Translation missing --]]
+	L["Use Custom Color"] = "Use Custom Color"
 	L["Use Display Info Id"] = "Использовать id отображения информации"
 	L["Use Full Scan (High CPU)"] = "Использовать Полное сканирование (загрузка ЦП)"
 	L["Use nth value from tooltip:"] = "Использовать n-ое значение из подсказки:"

@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2015 Elotheon-Arthas-EU
+-- Copyright (C) 2020 Elotheon-Arthas-EU
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ end
 function PGF.Dialog_UpdatePosition()
     local dialog = PremadeGroupsFilterDialog
     dialog:SetPoint("TOPLEFT", GroupFinderFrame, "TOPRIGHT")
-    dialog:SetPoint("BOTTOMLEFT", GroupFinderFrame, "BOTTOMRIGHT")
+    dialog:SetPoint("BOTTOMLEFT", GroupFinderFrame, "BOTTOMRIGHT", 0, 2)
     dialog:SetWidth(300)
 end
 

@@ -22,13 +22,11 @@ function NP:Power_UpdateColor(event, unit)
 	local ptype, ptoken, altR, altG, altB = UnitPowerType(unit)
 	element.token = ptoken
 
-	if self.PowerColorChanged then return end
+	if NP:StyleFilterCheckChanges(self, 'PowerColor') then return end
 	local Selection = element.colorSelection and NP:UnitSelectionType(unit, element.considerSelectionInCombatHostile)
 
 	local r, g, b, t, atlas
-	if(element.colorDead and element.dead) then
-		t = self.colors.dead
-	elseif(element.colorDisconnected and element.disconnected) then
+	if(element.colorDisconnected and not UnitIsConnected(unit)) then
 		t = self.colors.disconnected
 	elseif(element.colorTapping and not UnitPlayerControlled(unit) and UnitIsTapDenied(unit)) then
 		t = self.colors.tapped

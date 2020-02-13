@@ -35,7 +35,8 @@ local L = WeakAuras.L
 	L["%s, Border"] = "%s, 테두리"
 	L["%s, Offset: %0.2f;%0.2f"] = "%s, 좌표: %0.2f;%0.2f"
 	L["%s, offset: %0.2f;%0.2f"] = "%s, 좌표: %0.2f;%0.2f"
-	L["|c%02x%02x%02x%02xColor|r"] = "|c%02x%02x%02x%02x 색상|r"
+	--[[Translation missing --]]
+	L["|c%02x%02x%02x%02xCustom Color|r"] = "|c%02x%02x%02x%02xCustom Color|r"
 	--[[Translation missing --]]
 	L["|cFFFF0000Note:|r The unit '%s' is not a trackable unit."] = "|cFFFF0000Note:|r The unit '%s' is not a trackable unit."
 	--[[Translation missing --]]
@@ -235,6 +236,8 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Custom Anchor"] = "Custom Anchor"
 	L["Custom Code"] = "사용자 정의 코드"
+	--[[Translation missing --]]
+	L["Custom Color"] = "Custom Color"
 	L["Custom Configuration"] = "사용자 설정 구성"
 	--[[Translation missing --]]
 	L["Custom Frames"] = "Custom Frames"
@@ -529,8 +532,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Nameplates"] = "이름표"
 	L["Negator"] = "Not"
 	L["Never"] = "절대 안함"
-	--[[Translation missing --]]
-	L["New Aura"] = "New Aura"
+	L["New Aura"] = "새 효과"
 	L["New Value"] = "새 값"
 	L["No"] = "아니오"
 	L["No Children"] = "자식 없음"
@@ -807,6 +809,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Update in Group"] = "Update in Group"
 	--[[Translation missing --]]
 	L["Update this Aura"] = "Update this Aura"
+	--[[Translation missing --]]
+	L["Use Custom Color"] = "Use Custom Color"
 	--[[Translation missing --]]
 	L["Use Display Info Id"] = "Use Display Info Id"
 	L["Use Full Scan (High CPU)"] = "전체 스캔 사용 (높은 CPU 사용률)"

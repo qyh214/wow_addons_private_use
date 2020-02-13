@@ -92,4 +92,22 @@ L["Versatility Rating"] = "Показатель универсальности"
 L["weapon auto attack (white) DPS."] = "Автоматическая атака оружием. 'Белый' урон."
 L["Weapon DPS"] = "Урон оружия"
 
+L["Hide Character Frame"] = "Скрыть окно персонажа"
+L["Show Character Frame"] = "Показать окно персонажа"
+L["Spirit"] = "Дух"
+L["Stamina"] = "Выносливость"
+L["Strength"] = "Сила"
+L["Intellect"] = "Интеллект"
+L["Agility"] = "Ловкость"
+L["Armor"] = "Броня"
+L["Power"] = "Сила атаки"
+L["Damage"] = "Урон"
+L["Melee Attack"] = "ближнего боя"
+L["Ranged Attack"] = "дальн. боя"
+
+L["Corruption"] = "Corruption"
+L["Base Corruption"] = "Base Corruption"
+L["Corruption Resistance"] = "Corruption Resistance"
+L["Total Corruption"] = "Total Corruption"
+
 return end

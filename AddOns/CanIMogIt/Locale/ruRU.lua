@@ -5,12 +5,9 @@ L["Also shows a summary in the Appearance Sets UI of how many pieces of a transm
 L["Another class can learn this item."] = "Другой класс может изучить этот предмет."
 L["Appearances updated: "] = "Обновлено моделей:"
 L["Ask me later"] = "Спросить позже"
---[[Translation missing --]]
---[[ L["Bottom"] = ""--]] 
---[[Translation missing --]]
---[[ L["Bottom Left"] = ""--]] 
---[[Translation missing --]]
---[[ L["Bottom Right"] = ""--]] 
+L["Bottom"] = "Снизу"
+L["Bottom Left"] = "Слева снизу"
+L["Bottom Right"] = "Справа снизу"
 L["Can be learned by:"] = "Может изучить:"
 L["Can I Mog It? Important Message: Please log into all of your characters to compile complete transmog appearance data."] = "Важное сообщение от Can I Mog It?: Пожалуйста, зайдите на всех своих персонажей для сбора полных данных о трансмогрификации."
 L["CanIMogItOptions not found, loading defaults!"] = "Не найдены настройки CanIMogIt, загружены настройки по умолчанию!"
@@ -19,17 +16,14 @@ L["Cannot be learned."] = "Невозможно изучить."
 L["Cannot determine status on other characters."] = "Невозможно получить статус на других персонажах."
 L["Cannot learn:"] = "Невозможно изучить:"
 L["Cannot learn: Soulbound"] = "Невозможно изучить: персональный"
---[[Translation missing --]]
---[[ L["Center"] = ""--]] 
+L["Center"] = "По центру"
 L["Database migrated to:"] = "База данных обновлена до версии:"
 L["Database Scanning chat messages"] = "Сообщения в чате о сканировании базы данных"
 L["Debug Tooltip"] = "Отладочная информация в подсказках"
 L["Detailed information for debug purposes. Use this when sending bug reports."] = "Показывать подробную информацию для отлова ошибок. Используйте её, когда посылаете сообщение об ошибке."
---[[Translation missing --]]
---[[ L["Does not affect Quests or Adventure Journal."] = ""--]] 
+L["Does not affect Quests or Adventure Journal."] = "Не влияет на журнал заданий или приключений."
 L["Equippable Items Only"] = "Только надеваемые предметы"
---[[Translation missing --]]
---[[ L["Icon Location"] = ""--]] 
+L["Icon Location"] = "Положение значка"
 L["Items updated: "] = "Обновлено предметов:"
 L["Learned but cannot transmog yet."] = "Изучен, но пока невозможно трансмогрифицировать."
 L["Learned for a different class and item."] = "Изучен для другого предмета и класса."
@@ -37,8 +31,7 @@ L["Learned for a different class."] = "Изучен для другого кла
 L["Learned from another item but cannot transmog yet."] = "Изучен от другого предмета, но пока невозможно трансмогрифицировать."
 L["Learned from another item."] = "Изучен от другого предмета."
 L["Learned."] = "Изучен."
---[[Translation missing --]]
---[[ L["Left"] = ""--]] 
+L["Left"] = "Слева"
 L["Migrating Database version to:"] = "Обновление базы данных до версии:"
 L["Not learned."] = "Не изучен."
 L["Okay"] = "Хорошо"
@@ -47,12 +40,9 @@ L["Only show on items that can be equipped."] = "Показывать тольк
 L["Only show on items that can be transmoggrified."] = "Показывать только на предметах, которые могут быть трансмогрифицированы."
 L["Only show on items that you haven't learned."] = "Показывать только на предметах, которые ещё не изучены."
 L["Please note that this may not always be correct as Blizzard's information is incomplete."] = "Обратите внимание, что подсказка не всегда верна, поскольку Blizzard не предоставляет полную информацию."
---[[Translation missing --]]
---[[ L["Reload to apply"] = ""--]] 
---[[Translation missing --]]
---[[ L["Requires /reload to take effect."] = ""--]] 
---[[Translation missing --]]
---[[ L["Right"] = ""--]] 
+L["Reload to apply"] = "Применить сейчас"
+L["Requires /reload to take effect."] = "Для применения требуется /reload"
+L["Right"] = "Справа"
 L["Show Bag Icons"] = "Показывать значки на предметах в сумках"
 L["Show information on the tooltip about transmog sets."] = "Показывать в подсказках сведения о наборах предметов."
 L["Show Source Location Tooltip"] = "Сведения об источнике в подсказке"
@@ -63,12 +53,9 @@ L["Shows chat messages on login about the database scan."] = "Показыват
 L["Shows messages on login about the database scan."] = "Показывать при входе в игру сообщения о сканировании базы данных."
 L["Shows the icon directly on the item in your bag."] = "Показывать значок прямо на предмете в вашей сумке."
 L["Sorry! Your database has corrupted entries. This will cause errors and give incorrect results. Please click below to reset the database."] = "Простите! В вашей базе данных есть повреждённые записи. Это может привести к ошибкам и выдавать неправильные результаты. Чтобы сбросить базу данных, нажмите ниже."
---[[Translation missing --]]
---[[ L["Top"] = ""--]] 
---[[Translation missing --]]
---[[ L["Top Left"] = ""--]] 
---[[Translation missing --]]
---[[ L["Top Right (default)"] = ""--]] 
+L["Top"] = "Сверху"
+L["Top Left"] = "Слева сверху"
+L["Top Right (default)"] = "Справа сверху (по умолчанию)"
 L["Transmoggable Items Only"] = "Только трансмогрифицируемые предметы"
 L["Unknown Items Only"] = "Только неизвестные предметы"
 L["Updating appearances database."] = "Обновление базы гардероба."

@@ -283,6 +283,8 @@ L[ [=[Current Zone
 L["Curse"] = "Fluch"
 L["Custom"] = "Benutzerdefiniert"
 --[[Translation missing --]]
+L["Custom Color"] = "Custom Color"
+--[[Translation missing --]]
 L["Custom Configuration"] = "Custom Configuration"
 L["Custom Function"] = "Benutzerdefiniert"
 L["Damage"] = "Schaden (DAMAGE)"

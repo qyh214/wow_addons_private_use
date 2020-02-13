@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2019, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2020, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -197,12 +197,13 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |cffffffff3.1.10|r\n\n"..
-					"- ADDED - mechanics for reseting profiles, as a prevention false issues."..
-					offs..cBold.."Note:|r I'll use this, when I or Blizzard make incompatible changes with"..
-					offs.."the stored settings.\n\n"..
+			text = cTitle.."         What's NEW in version |cffffffff3.2.1|r\n\n"..
+					"- FIXED - TomTom - support for BfA zones (Nazjatar)\n"..
+					"- IMPROVED - TomTom - support for Q / WQ\n"..
+					"- UPDATED - Addon support - TomTom v80300-1.1.1\n"..
+					"- UPDATED - Addon support - ElvUI 11.36, SpartanUI 5.3.0\n\n"..
 
-                    cTitle.."WoW 8.2.0 - Known issues w/o solution|r\n"..
+                    cTitle.."WoW 8.3.0 - Known issues w/o solution|r\n"..
                     "- Clicking on tracked quests or achievements has no response during combat.\n"..
                     "- Header buttons Q and A don't work during combat.\n\n"..
 

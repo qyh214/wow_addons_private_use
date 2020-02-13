@@ -223,6 +223,8 @@ L[ [=[Current Zone
 ]=] ] = "Текущая зона"
 L["Curse"] = "Проклятие"
 L["Custom"] = "Самостоятельно"
+--[[Translation missing --]]
+L["Custom Color"] = "Custom Color"
 L["Custom Configuration"] = "Пользовательская конфигурация"
 L["Custom Function"] = "Своя функция"
 L["Damage"] = "Урон"

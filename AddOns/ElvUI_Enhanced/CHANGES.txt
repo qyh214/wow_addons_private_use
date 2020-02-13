@@ -1,13 +1,30 @@
-tag 9d2e08906429dcf554725cbef699b9646702f659 3.4.3
-Author:	Feraldin <nickbock@hoarder.bocky.nl>
-Date:	Wed Jan 22 09:11:04 2020 +0100
+tag a033edce074f94c21417b8a73ff16085b65a97a7 3.4.4
+Author:	Bocky <nick@bocky.nl>
+Date:	Sun Feb 9 09:16:34 2020 +0100
 
-3.4.3
-* Version bumb due to Curse not picking up the tag.
+Fix error's due to ElvUI setting menu changes.
 
-commit fbf94cf300e899b77916d45c36cdc1a77d52fcea
+commit 81f6ec832947d0f595132e9cbd71c06f53c07f56
 Author: Nick <git@bockmeulen.nl>
-Date:   Wed Jan 22 09:10:41 2020 +0100
+Date:   Sun Feb 9 09:13:05 2020 +0100
 
-    version bumb 3.4.3
+    version updates
+
+commit 81f6ec832947d0f595132e9cbd71c06f53c07f56
+Author: Nick <git@bockmeulen.nl>
+Date:   Sun Feb 9 09:13:05 2020 +0100
+
+    version updates
+
+commit a8d32e03abfb645c32d3cbd03746e67ff15ef763
+Author: Adam Koch <me@adamko.ch>
+Date:   Sun Feb 9 02:33:28 2020 -0500
+
+    Fixed ElvUI Options error due to ElvUI Options changes.
+
+commit a8d32e03abfb645c32d3cbd03746e67ff15ef763
+Author: Adam Koch <me@adamko.ch>
+Date:   Sun Feb 9 02:33:28 2020 -0500
+
+    Fixed ElvUI Options error due to ElvUI Options changes.
 

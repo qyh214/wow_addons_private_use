@@ -279,8 +279,6 @@ function NP:StylePlate(nameplate)
 	nameplate.PVPRole = NP:Construct_PVPRole(nameplate.RaisedElement)
 	nameplate.Cutaway = NP:Construct_Cutaway(nameplate)
 	nameplate.WidgetXPBar = NP:Construct_WidgetXPBar(nameplate)
-	nameplate.WidgetXPBar.Rank = NP:Construct_TagText(nameplate.RaisedElement)
-	nameplate.WidgetXPBar.ProgressText = NP:Construct_TagText(nameplate.RaisedElement)
 
 	NP:Construct_Auras(nameplate)
 
@@ -301,9 +299,12 @@ function NP:UpdatePlate(nameplate)
 	NP:Update_RaidTargetIndicator(nameplate)
 	NP:Update_PVPRole(nameplate)
 	NP:Update_QuestIcons(nameplate)
+	NP:Update_WidgetXPBar(nameplate)
 
-	if (nameplate.VisibilityChanged or nameplate.NameOnlyChanged) or (not NP.db.units[nameplate.frameType].enable) or NP.db.units[nameplate.frameType].nameOnly then
-		NP:DisablePlate(nameplate, nameplate.NameOnlyChanged or (NP.db.units[nameplate.frameType].nameOnly and not nameplate.VisibilityChanged))
+	local SF_NameOnly = NP:StyleFilterCheckChanges(nameplate, 'NameOnly')
+	local SF_Visibility = NP:StyleFilterCheckChanges(nameplate, 'Visibility')
+	if SF_Visibility or SF_NameOnly or NP.db.units[nameplate.frameType].nameOnly or not NP.db.units[nameplate.frameType].enable then
+		NP:DisablePlate(nameplate, SF_NameOnly or (NP.db.units[nameplate.frameType].nameOnly and not SF_Visibility))
 	else
 		NP:Update_Health(nameplate)
 		NP:Update_HealthPrediction(nameplate)
@@ -318,7 +319,6 @@ function NP:UpdatePlate(nameplate)
 		NP:Update_TargetIndicator(nameplate)
 		NP:Update_ThreatIndicator(nameplate)
 		NP:Update_Cutaway(nameplate)
-		NP:Update_WidgetXPBar(nameplate)
 
 		if E.myclass == "DEATHKNIGHT" then
 			NP:Update_Runes(nameplate)
@@ -396,7 +396,7 @@ end
 
 function NP:SetupTarget(nameplate, removed)
 	local TCP = _G.ElvNP_TargetClassPower
-	local nameOnly = nameplate and (nameplate.NameOnlyChanged or NP.db.units[nameplate.frameType].nameOnly)
+	local nameOnly = nameplate and (NP:StyleFilterCheckChanges(nameplate, 'NameOnly') or NP.db.units[nameplate.frameType].nameOnly)
 	TCP.realPlate = (NP.db.units.TARGET.classpower.enable and not (removed or nameOnly) and nameplate) or nil
 
 	local moveToPlate = TCP.realPlate or TCP
@@ -438,8 +438,9 @@ function NP:SetNamePlateEnemyClickThrough()
 end
 
 function NP:Update_StatusBars()
-	for StatusBar in pairs(NP.StatusBars) do
-		StatusBar:SetStatusBarTexture(E.LSM:Fetch("statusbar", NP.db.statusbar) or E.media.normTex)
+	for bar in pairs(NP.StatusBars) do
+		local SF_HealthTexture = NP:StyleFilterCheckChanges(bar:GetParent(), 'HealthTexture')
+		if not SF_HealthTexture then bar:SetStatusBarTexture(E.LSM:Fetch("statusbar", NP.db.statusbar) or E.media.normTex) end
 	end
 end
 
@@ -562,7 +563,9 @@ function NP:NamePlateCallBack(nameplate, event, unit)
 
 		unit = unit or nameplate.unit
 
-		nameplate.blizzPlate = nameplate:GetParent().UnitFrame
+		local blizzPlate = nameplate:GetParent().UnitFrame
+		nameplate.blizzPlate = blizzPlate
+		nameplate.widget = blizzPlate.WidgetContainer
 		nameplate.className, nameplate.classFile, nameplate.classID = UnitClass(unit)
 		nameplate.classification = UnitClassification(unit)
 		nameplate.creatureType = UnitCreatureType(unit)

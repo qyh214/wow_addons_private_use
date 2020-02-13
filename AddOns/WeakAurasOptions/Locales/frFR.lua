@@ -39,7 +39,7 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["%s, offset: %0.2f;%0.2f"] = "%s, offset: %0.2f;%0.2f"
 	--[[Translation missing --]]
-	L["|c%02x%02x%02x%02xColor|r"] = "|c%02x%02x%02x%02xColor|r"
+	L["|c%02x%02x%02x%02xCustom Color|r"] = "|c%02x%02x%02x%02xCustom Color|r"
 	--[[Translation missing --]]
 	L["|cFFFF0000Note:|r The unit '%s' is not a trackable unit."] = "|cFFFF0000Note:|r The unit '%s' is not a trackable unit."
 	L["|cFFffcc00Anchors:|r Anchored |cFFFF0000%s|r to frame's |cFFFF0000%s|r"] = "|cFFffcc00Ancrages :|r Ancré |cFFFF0000%s|r au cadre de |cFFFF0000%s|r"
@@ -217,6 +217,8 @@ Souhaitez-vous que ce graphiques soit placé dans un nouveau |cFF22AA22Groupe Dy
 	L["Custom"] = "Personnalisé"
 	L["Custom Anchor"] = "Ancrage personnalisé"
 	L["Custom Code"] = "Code personnalisé"
+	--[[Translation missing --]]
+	L["Custom Color"] = "Custom Color"
 	L["Custom Configuration"] = "Configuration personnalisée"
 	L["Custom Frames"] = "Cadres personnalisés"
 	L["Custom Function"] = "Fonction personnalisée"
@@ -742,6 +744,8 @@ Seule une unique valeur peut être choisie]=]
 	L["Update Custom Text On..."] = "Mettre à jour le texte personnalisé sur..."
 	L["Update in Group"] = "Mettre à jour dans le Groupe"
 	L["Update this Aura"] = "Mettre à jour cette Aura"
+	--[[Translation missing --]]
+	L["Use Custom Color"] = "Use Custom Color"
 	L["Use Display Info Id"] = "Utiliser les informations d'identifiant de l'affichage"
 	L["Use Full Scan (High CPU)"] = "Utiliser Scan Complet (CPU élevé)"
 	L["Use nth value from tooltip:"] = "Utilisez la nième valeur de l'info-bulle:"

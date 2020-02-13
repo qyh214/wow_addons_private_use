@@ -33,7 +33,7 @@ function UF:Construct_FocusTargetFrame(frame)
 
 	frame.customTexts = {}
 	frame:Point('BOTTOM', ElvUF_Focus, 'TOP', 0, 7) --Set to default position
-	E:CreateMover(frame, frame:GetName()..'Mover', L["FocusTarget Frame"], nil, -7, nil, 'ALL,SOLO', nil, 'unitframe,focustarget,generalGroup')
+	E:CreateMover(frame, frame:GetName()..'Mover', L["FocusTarget Frame"], nil, -7, nil, 'ALL,SOLO', nil, 'unitframe,individualUnits,focustarget,generalGroup')
 
 	frame.unitframeType = "focustarget"
 end
@@ -93,8 +93,7 @@ function UF:Update_FocusTargetFrame(frame, db)
 
 	--Auras
 	UF:EnableDisable_Auras(frame)
-	UF:Configure_Auras(frame, 'Buffs')
-	UF:Configure_Auras(frame, 'Debuffs')
+	UF:Configure_AllAuras(frame)
 
 	--Fader
 	UF:Configure_Fader(frame)

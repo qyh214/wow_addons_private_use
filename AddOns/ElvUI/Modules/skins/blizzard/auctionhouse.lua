@@ -3,12 +3,9 @@ local S = E:GetModule('Skins')
 
 --Lua functions
 local _G = _G
-local pairs, select, unpack = pairs, select, unpack
-local GetItemInfo = GetItemInfo
-local GetItemQualityColor = GetItemQualityColor
+local pairs, select = pairs, select
 --WoW API / Variables
 local hooksecurefunc = hooksecurefunc
-local FRIENDS_BNET_NAME_COLOR = FRIENDS_BNET_NAME_COLOR
 
 --[[
 TO DO:
@@ -66,6 +63,10 @@ local function HandleSummaryIcons(frame)
 		if child and child.Icon then
 			if not child.IsSkinned then
 				S:HandleIcon(child.Icon)
+
+				if child.IconBorder then
+					child.IconBorder:SetAlpha(0)
+				end
 
 				child.IsSkinned = true
 			end

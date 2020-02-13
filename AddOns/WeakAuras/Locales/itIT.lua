@@ -282,6 +282,8 @@ L["Curse"] = "Curse"
 --[[Translation missing --]]
 L["Custom"] = "Custom"
 --[[Translation missing --]]
+L["Custom Color"] = "Custom Color"
+--[[Translation missing --]]
 L["Custom Configuration"] = "Custom Configuration"
 --[[Translation missing --]]
 L["Custom Function"] = "Custom Function"

@@ -1,3 +1,26 @@
+8.3.0v1.25 Release - 2020/02/12
+
+* [#221](https://gitlab.com/toreltwiddler/CanIMogIt/issues/221) Fix another error due to TSM eating AH window.
+
+*****
+
+8.3.0v1.24 Release - 2020/02/10
+
+* [#221](https://gitlab.com/toreltwiddler/CanIMogIt/issues/221) Fix error due to TSM eating auction house window.
+
+*****
+
+8.3.0v1.23 Release - 2020/02/09
+
+Auction House overlay is back!
+
+![Auction House overlay is back!](https://i.imgur.com/Yz6L7Uy.png "Auction House overlay is back!")
+
+* [#211](https://gitlab.com/toreltwiddler/CanIMogIt/issues/211) New Auction House is supported.
+* [#220](https://gitlab.com/toreltwiddler/CanIMogIt/issues/220) If you see a ? icon in the AH, press Search again and it will go away, there is a Blizzard bug on first searches sometimes.
+
+*****
+
 8.3.0v1.22 Release - 2020/01/14
 
 * [#211](https://gitlab.com/toreltwiddler/CanIMogIt/issues/211) Removed old Auction House code, new Auction House code coming soon.

@@ -69,9 +69,9 @@ local function showRealDate(curseDate)
 end
 
 DBM = {
-	Revision = parseCurseDate("20200201160251"),
-	DisplayVersion = "8.3.9", -- the string that is shown as version
-	ReleaseRevision = releaseDate(2020, 2, 1) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	Revision = parseCurseDate("20200210141512"),
+	DisplayVersion = "8.3.13", -- the string that is shown as version
+	ReleaseRevision = releaseDate(2020, 2, 10) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -152,6 +152,7 @@ DBM.DefaultOptions = {
 	WarningIconRight = true,
 	WarningIconChat = true,
 	WarningAlphabetical = true,
+	WarningShortText = true,
 	StripServerName = true,
 	ShowAllVersions = true,
 	ShowPizzaMessage = true,
@@ -164,7 +165,6 @@ DBM.DefaultOptions = {
 	DisableStatusWhisper = false,
 	DisableGuildStatus = false,
 	HideBossEmoteFrame2 = true,
-	ShowFlashFrame = true,
 	SWarningAlphabetical = true,
 	SWarnNameInNote = true,
 	CustomSounds = 0,
@@ -226,6 +226,7 @@ DBM.DefaultOptions = {
 	SpecialWarningFontStyle = "THICKOUTLINE",
 	SpecialWarningFontShadow = false,
 	SpecialWarningIcon = true,
+	SpecialWarningShortText = true,
 	SpecialWarningFontCol = {1.0, 0.7, 0.0},--Yellow, with a tint of orange
 	SpecialWarningFlashCol1 = {1.0, 1.0, 0.0},--Yellow
 	SpecialWarningFlashCol2 = {1.0, 0.5, 0.0},--Orange
@@ -242,12 +243,16 @@ DBM.DefaultOptions = {
 	SpecialWarningFlashAlph3 = 0.4,
 	SpecialWarningFlashAlph4 = 0.4,
 	SpecialWarningFlashAlph5 = 0.5,
-	SpecialWarningFlashRepeat1 = false,
-	SpecialWarningFlashRepeat2 = false,
-	SpecialWarningFlashRepeat3 = true,
-	SpecialWarningFlashRepeat4 = false,
-	SpecialWarningFlashRepeat5 = true,
-	SpecialWarningFlashRepeatAmount = 2,--Repeat 2 times, mean 3 flashes (first plus 2 repeat)
+	SpecialWarningFlash1 = true,
+	SpecialWarningFlash2 = true,
+	SpecialWarningFlash3 = true,
+	SpecialWarningFlash4 = true,
+	SpecialWarningFlash5 = true,
+	SpecialWarningFlashCount1 = 1,
+	SpecialWarningFlashCount2 = 1,
+	SpecialWarningFlashCount3 = 3,
+	SpecialWarningFlashCount4 = 2,
+	SpecialWarningFlashCount5 = 3,
 	SWarnClassColor = true,
 	ArrowPosX = 0,
 	ArrowPosY = -150,
@@ -298,7 +303,6 @@ DBM.DefaultOptions = {
 	AutoAcceptGuildInvite = false,
 	FakeBWVersion = false,
 	AITimer = true,
-	AutoCorrectTimer = false,
 	ShortTimerText = true,
 	ChatFrame = "DEFAULT_CHAT_FRAME",
 	CoreSavedRevision = 1,
@@ -452,7 +456,7 @@ local dataBroker
 local voiceSessionDisabled = false
 local handleSync
 
-local fakeBWVersion, fakeBWHash = 178, "4a8bec2"
+local fakeBWVersion, fakeBWHash = 181, "fa9dbc4"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -9088,9 +9092,15 @@ do
 			error("newAnnounce: you must provide spellId", 2)
 			return
 		end
-		local optionVersion
+		local optionVersion, alternateSpellId
 		if type(optionName) == "number" then
-			optionVersion = optionName
+			if optionName > 1000 then--Being used as spell name shortening
+				if DBM.Options.WarningShortText then
+					alternateSpellId = optionName
+				end
+			else--Being used as option version
+				optionVersion = optionName
+			end
 			optionName = nil
 		end
 		if soundOption and type(soundOption) == "boolean" then
@@ -9100,7 +9110,7 @@ do
 			print("newAnnounce for "..color.." is using OptionVersion hack. this is depricated")
 			return
 		end
-		local text, spellName = setText(announceType, spellId, castTime, preWarnTime)
+		local text, spellName = setText(announceType, alternateSpellId or spellId, castTime, preWarnTime)
 		icon = icon or spellId
 		local obj = setmetatable( -- todo: fix duplicate code
 			{
@@ -9196,6 +9206,11 @@ do
 
 	function bossModPrototype:NewSoonCountAnnounce(spellId, color, ...)
 		return newAnnounce(self, "sooncount", spellId, color or 2, ...)
+	end
+
+	--This object disables sounds, it's almost always used in combation with a countdown timer. Even if not a countdown, its a text only spam not a sound spam
+	function bossModPrototype:NewCountdownAnnounce(spellId, color, icon, optionDefault, optionName, castTime, preWarnTime, soundOption, noFilter)
+		return newAnnounce(self, "countdown", spellId, color or 4, icon, optionDefault, optionName, castTime, preWarnTime, 0, noFilter)
 	end
 
 	function bossModPrototype:NewPreWarnAnnounce(spellId, time, color, icon, optionDefault, optionName, noArg, soundOption)
@@ -9648,15 +9663,19 @@ do
 				local colorCode = ("|cff%.2x%.2x%.2x"):format(DBM.Options.SpecialWarningFontCol[1] * 255, DBM.Options.SpecialWarningFontCol[2] * 255, DBM.Options.SpecialWarningFontCol[3] * 255)
 				self.mod:AddMsg(colorCode.."["..DBM_CORE_MOVE_SPECIAL_WARNING_TEXT.."] "..text.."|r", nil)
 			end
-			if not UnitIsDeadOrGhost("player") and DBM.Options.ShowFlashFrame then
+			if not UnitIsDeadOrGhost("player") then
 				if noteHasName then
-					local repeatCount = DBM.Options.SpecialWarningFlashRepeat5 and DBM.Options.SpecialWarningFlashRepeatAmount or 0
-					DBM.Flash:Show(DBM.Options.SpecialWarningFlashCol5[1],DBM.Options.SpecialWarningFlashCol5[2], DBM.Options.SpecialWarningFlashCol5[3], DBM.Options.SpecialWarningFlashDura5, DBM.Options.SpecialWarningFlashAlph5, repeatCount)
+					if DBM.Options.SpecialWarningFlash5 then--Not included in above if statement on purpose. we don't want to trigger else rule if noteHasName is true but SpecialWarningFlash5 is false
+						local repeatCount = DBM.Options.SpecialWarningFlashCount5 or 1
+						DBM.Flash:Show(DBM.Options.SpecialWarningFlashCol5[1],DBM.Options.SpecialWarningFlashCol5[2], DBM.Options.SpecialWarningFlashCol5[3], DBM.Options.SpecialWarningFlashDura5, DBM.Options.SpecialWarningFlashAlph5, repeatCount-1)
+					end
 				else
 					local number = self.flash
-					local repeatCount = DBM.Options["SpecialWarningFlashRepeat"..number] and DBM.Options.SpecialWarningFlashRepeatAmount or 0
-					local flashcolor = DBM.Options["SpecialWarningFlashCol"..number]
-					DBM.Flash:Show(flashcolor[1], flashcolor[2], flashcolor[3], DBM.Options["SpecialWarningFlashDura"..number], DBM.Options["SpecialWarningFlashAlph"..number], repeatCount)
+					if DBM.Options["SpecialWarningFlash"..number] then
+						local repeatCount = DBM.Options["SpecialWarningFlashCount"..number] or 1
+						local flashcolor = DBM.Options["SpecialWarningFlashCol"..number]
+						DBM.Flash:Show(flashcolor[1], flashcolor[2], flashcolor[3], DBM.Options["SpecialWarningFlashDura"..number], DBM.Options["SpecialWarningFlashAlph"..number], repeatCount-1)
+					end
 				end
 			end
 			--Text: Full message text
@@ -9807,7 +9826,14 @@ do
 		if hasVoice == true then--if not a number, set it to 2, old mods that don't use new numbered system
 			hasVoice = 2
 		end
-		local text, spellName = setText(announceType, spellId, stacks)
+		local alternateSpellId
+		if type(optionName) == "number" then
+			if DBM.Options.SpecialWarningShortText then
+				alternateSpellId = optionName
+			end
+			optionName = nil
+		end
+		local text, spellName = setText(announceType, alternateSpellId or spellId, stacks)
 		local obj = setmetatable( -- todo: fix duplicate code
 			{
 				text = text,
@@ -10107,10 +10133,10 @@ do
 		if number and not noSound then
 			self:PlaySpecialWarningSound(number)
 		end
-		if self.Options.ShowFlashFrame and number then
+		if number and DBM.Options["SpecialWarningFlash"..number] then
 			local flashColor = self.Options["SpecialWarningFlashCol"..number]
-			local repeatCount = self.Options["SpecialWarningFlashRepeat"..number] and self.Options.SpecialWarningFlashRepeatAmount or 0
-			self.Flash:Show(flashColor[1], flashColor[2], flashColor[3], self.Options["SpecialWarningFlashDura"..number], self.Options["SpecialWarningFlashAlph"..number], repeatCount)
+			local repeatCount = self.Options["SpecialWarningFlashCount"..number] or 1
+			self.Flash:Show(flashColor[1], flashColor[2], flashColor[3], self.Options["SpecialWarningFlashDura"..number], self.Options["SpecialWarningFlashAlph"..number], repeatCount-1)
 		end
 	end
 end
@@ -10203,17 +10229,13 @@ do
 		if not self.option or self.mod.Options[self.option] then
 			if self.type and (self.type == "cdcount" or self.type == "nextcount") and not self.allowdouble then--remove previous timer.
 				for i = #self.startedTimers, 1, -1 do
-					if DBM.Options.AutoCorrectTimer or (DBM.Options.DebugMode and DBM.Options.DebugLevel > 1) then
+					if DBM.Options.DebugMode and DBM.Options.DebugLevel > 1 then
 						local bar = DBM.Bars:GetBar(self.startedTimers[i])
 						if bar then
 							local remaining = ("%.1f"):format(bar.timer)
 							local ttext = _G[bar.frame:GetName().."BarName"]:GetText() or ""
 							ttext = ttext.."("..self.id..")"
 							if bar.timer > 0.2 then
-								if timer and DBM.Options.AutoCorrectTimer then
-									self.correctedCast = timer - bar.timer--Store what lowest timer is in timer object
-									self.correctedDiff = difficultyIndex--Store index of correction to ensure the change is only used in one difficulty (so a mythic timer doesn't alter heroic for example)
-								end
 								DBM:Debug("Timer "..ttext.. " refreshed before expired. Remaining time is : "..remaining, 2)
 							end
 						end
@@ -10275,7 +10297,7 @@ do
 					end
 				end
 			end
-			if DBM.Options.AutoCorrectTimer or (DBM.Options.DebugMode and DBM.Options.DebugLevel > 1) then
+			if DBM.Options.DebugMode and DBM.Options.DebugLevel > 1 then
 				if not self.type or (self.type ~= "target" and self.type ~= "active" and self.type ~= "fades" and self.type ~= "ai") then
 					local bar = DBM.Bars:GetBar(id)
 					if bar then
@@ -10283,19 +10305,10 @@ do
 						local ttext = _G[bar.frame:GetName().."BarName"]:GetText() or ""
 						ttext = ttext.."("..self.id..")"
 						if bar.timer > 0.2 then
-							if DBM.Options.AutoCorrectTimer then
-								self.correctedCast = timer - bar.timer--Store what lowest timer is for advanced user feature
-								self.correctedDiff = difficultyIndex--Store index of correction to ensure the change is only used in one difficulty (so a mythic timer doesn't alter heroic for example
-							end
 							DBM:Debug("Timer "..ttext.. " refreshed before expired. Remaining time is : "..remaining, 2)
 						end
 					end
 				end
-			end
-			if DBM.Options.AutoCorrectTimer and self.correctedCast and self.correctedDiff and self.correctedDiff == difficultyIndex and self.correctedCast < timer then
-				local debugtemp = timer - self.correctedCast
-				DBM:Debug("Timer autocorrected by "..debugtemp, 2)
-				timer = self.correctedCast
 			end
 			local colorId = 0
 			if self.option then
@@ -11457,7 +11470,7 @@ end
 
 function bossModPrototype:SetRevision(revision)
 	revision = parseCurseDate(revision or "")
-	if not revision or revision == "20200201160251" then
+	if not revision or revision == "20200210141512" then
 		-- bad revision: either forgot the svn keyword or using github
 		revision = DBM.Revision
 	end

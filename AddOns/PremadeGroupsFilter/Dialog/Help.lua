@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2015 Elotheon-Arthas-EU
+-- Copyright (C) 2020 Elotheon-Arthas-EU
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -53,13 +53,14 @@ function PGF.Dialog_InfoButton_OnEnter(self, motion)
     AddDoubleWhiteUsingKey("myrealm")
     AddDoubleWhiteUsingKey("noid")
     AddDoubleWhiteUsingKey("matchingid")
-    PGF.GameTooltip_AddWhite("bossesmatching/bossesahead/bossesbehind — " .. L["dialog.tooltip.seewebsite"])
+    PGF.GameTooltip_AddWhite("boss/bossesmatching/... — " .. L["dialog.tooltip.seewebsite"])
     PGF.GameTooltip_AddDoubleWhite("priests/warriors/...", L["dialog.tooltip.classes"])
     PGF.GameTooltip_AddDoubleWhite("normal/heroic", L["dialog.tooltip.difficulty"])
     PGF.GameTooltip_AddWhite("mythic/mythicplus")
-    PGF.GameTooltip_AddDoubleWhite("uldir/daz/cru/ete/tep", L["dialog.tooltip.raids"])
+    PGF.GameTooltip_AddDoubleWhite("daz/cru/ete/tep/nya/ny", L["dialog.tooltip.raids"])
     PGF.GameTooltip_AddDoubleWhite("ad/fh/kr/sob/sots", L["dialog.tooltip.dungeons"])
-    PGF.GameTooltip_AddWhite("td/tml/tosl/tur/wm/opm")
+    PGF.GameTooltip_AddWhite("td/tml/tosl/tur/wm")
+    PGF.GameTooltip_AddWhite("opm/opmj/opmw")
     PGF.GameTooltip_AddDoubleWhite("arena2v2/arena3v3", L["dialog.tooltip.arena"])
     GameTooltip:AddLine(" ")
     GameTooltip:AddDoubleLine(L["dialog.tooltip.op.logic"], L["dialog.tooltip.example"])

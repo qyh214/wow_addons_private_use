@@ -226,6 +226,8 @@ L[ [=[Current Zone
 ]=] ] = "현재 지역"
 L["Curse"] = "저주"
 L["Custom"] = "사용자 설정"
+--[[Translation missing --]]
+L["Custom Color"] = "Custom Color"
 L["Custom Configuration"] = "사용자 설정 구성"
 L["Custom Function"] = "사용자 설정 함수"
 L["Damage"] = "피해"

@@ -1,6 +1,6 @@
 ## Interface: 80300
 ## Title: Premade Groups Filter
-## Version: 1.32
+## Version: 1.33
 ## Notes: Allows filtering of premade groups using an UI or advanced filter expressions.
 ## Author: Elotheon-Arthas-EU
 ## SavedVariables:
@@ -21,6 +21,8 @@ Modules\Lockout.lua
 Modules\Expression.lua
 Modules\Macro.lua
 Main.lua
+Plugins\PremadeRegions.lua
+Plugins\RaiderIO.lua
 Dialog\PopupMenu.xml
 Dialog\PopupMenu.lua
 Dialog\Help.lua

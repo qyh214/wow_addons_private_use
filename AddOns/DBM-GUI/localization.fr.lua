@@ -164,7 +164,6 @@ L.Area_SpecWarn				= "Options des alertes spéciales"
 L.SpecWarn_ClassColor		= "Utiliser des couleurs selon les classes pour les alertes spéciales"
 L.ShowSWarningsInChat 		= "Afficher les alertes spéciales dans la fenêtre de discussion"
 L.SWarnNameInNote			= "Utiliser les options SW5 si une note personnalisée contient votre nom"
-L.SpecWarn_FlashFrame		= "Faire flasher l'écran lors des alertes spéciales"
 L.SpecWarn_FlashFrameRepeat	= "Répéter %d fois (si activé)" --was missing
 L.SpecWarn_Font				= "Police de texte des alertes spéciales"
 L.SpecWarn_FontSize			= "Taille de la police: %d"
@@ -177,11 +176,6 @@ L.SpecWarn_FlashAlpha		= "Taux alpha du flash: %0.1f"
 L.SpecWarn_DemoButton		= "Aff. un exemple"
 L.SpecWarn_MoveMe			= "Définir la position"
 L.SpecWarn_ResetMe			= "Réinit. les valeurs"
-L.SpecialWarnSound			= "Son des alertes spéciales vous affectant vous ou votre rôle"
-L.SpecialWarnSound2			= "Son des alertes spéciales affectant tout le monde"
-L.SpecialWarnSound3			= "Son des alertes spéciales TRES IMPORTANTES"
-L.SpecialWarnSound4			= "Son des alertes spéciales de fuite"
-L.SpecialWarnSound5			= "Son des alertes spéciales avec des notes contenant votre nom"
 
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "Alertes Vocales"
@@ -287,7 +281,6 @@ L.AutoAcceptGuildInvite		= "Accepter les invitations venant d'un membre de la gu
 L.Area_Advanced				= "Options Avancées"
 L.FakeBW					= "Prétendre être BigWigs lors des vérifications de versions au lieu de DBM (Utile pour les guildes qui forcent l'utilisation de BigWigs)"
 L.AITimer					= "Utiliser un générateur automatique de timers pour des nouveaux combats utilisant l'IA intégrée de DBM (Utile pout engager les boss jamais vus sur la beta). Note: ceci ne fonctionnera pas correctement s'il y a plusieurs adds avec la même abilité"
-L.AutoCorrectTimer			= "Corriger automatiquement les timers trop longs (Utile pour les guildes sur le contenu haut niveau pour lequel les bossmods ne sont pas encore mis à jour)"
 
 L.Panel_Profile				= "Profils"
 L.Area_CreateProfile		= "Création de Profil"

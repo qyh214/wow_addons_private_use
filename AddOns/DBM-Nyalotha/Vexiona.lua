@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2370, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200130202759")
+mod:SetRevision("20200206171259")
 mod:SetCreatureID(151798)
 mod:SetEncounterID(2336)
 mod:SetZone()
@@ -14,7 +14,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 307020 307403 306982 307177 307639 315762 307729 315932 307453",
 	"SPELL_CAST_SUCCESS 307359 310323 307396 307075",
-	"SPELL_AURA_APPLIED 307314 307019 307359 306981 307075 310323",
+	"SPELL_AURA_APPLIED 307314 307019 307359 306981 307075 310323 307343",
 	"SPELL_AURA_APPLIED_DOSE 307019",
 	"SPELL_AURA_REMOVED 307314 307019 307359 310323",
 	"SPELL_PERIODIC_DAMAGE 307343",
@@ -51,7 +51,7 @@ local warnDesolation						= mod:NewTargetNoFilterAnnounce(310325, 4)
 local specWarnEncroachingShadows			= mod:NewSpecialWarningMoveAway(307314, nil, nil, nil, 1, 2)
 local yellEncroachingShadows				= mod:NewYell(307314)
 local yellEncroachingShadowsFades			= mod:NewShortFadesYell(307314)
-local specWarnTwilightBreath				= mod:NewSpecialWarningDefensive(307020, nil, nil, nil, 1, 2)
+local specWarnTwilightBreath				= mod:NewSpecialWarningDefensive(307020, nil, 18620, nil, 1, 2)
 local specWarnDespair						= mod:NewSpecialWarningYou(307359, nil, nil, nil, 1, 2)
 local yellDespairFades						= mod:NewFadesYell(307359, nil, false)
 local specWarnDespairOther					= mod:NewSpecialWarningTarget(307359, "Healer", nil, nil, 1, 2)
@@ -60,7 +60,7 @@ local specWarnGTFO							= mod:NewSpecialWarningGTFO(307343, nil, nil, nil, 1, 8
 ----Iron-Willed Enforcer
 local specWarnBrutalSmash					= mod:NewSpecialWarningDodge(315932, false, nil, 2, 2, 2, 4)--May feel spammy if multiple adds are up so elect in instead of out
 ----Stage 2: Death From Above
-local specWarnTwilightDecimator				= mod:NewSpecialWarningDodgeCount(307218, nil, nil, nil, 2, 2)
+local specWarnTwilightDecimator				= mod:NewSpecialWarningDodgeCount(307218, nil, 125030, nil, 2, 2)
 ----Stage 3: The Void Unleashed
 local specWarnHeartofDarkness				= mod:NewSpecialWarningRun(307639, nil, nil, nil, 4, 2)
 local specWarnDesolation					= mod:NewSpecialWarningYou(310325, nil, nil, nil, 1, 2)
@@ -97,9 +97,7 @@ local timerAnnihilationCD					= mod:NewCDTimer(14.6, 307403, nil, nil, nil, 3)
 
 local berserkTimer							= mod:NewBerserkTimer(600)
 
---mod:AddRangeFrameOption(6, 264382)
 mod:AddInfoFrameOption(307019, true)
---mod:AddSetIconOption("SetIconOnEyeBeam", 264382, true, false, {1, 2})
 mod:AddNamePlateOption("NPAuraOnPoweroftheChosen", 307729, false)
 
 local voidCorruptionStacks = {}
@@ -179,17 +177,7 @@ function mod:OnCombatEnd()
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
---	if self.Options.RangeFrame then
---		DBM.RangeCheck:Hide()
---	end
---	if self.Options.NPAuraOnChaoticGrowth then
---		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
---	end
 end
-
---function mod:OnTimerRecovery()
-
---end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
@@ -222,7 +210,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnTwilightDecimator:ScheduleVoice(16.3, "breathsoon")
 		timerTwilightDecimatorCD:Start(16.3, self.vb.TwilightDCasts+1)--Actually 18.3-19.1, but we make timer line up with pre scheduling
 	elseif spellId == 315932 then
-		if self:AntiSpam(4, 4) then
+		if self:AntiSpam(3, 4) then
 			if self.Options.SpecWarn315932dodge then
 				specWarnBrutalSmash:Show()
 				specWarnBrutalSmash:Play("watchstep")
@@ -315,6 +303,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnDesolation:Show(args.destName)
 		end
+	elseif spellId == 307343 and args:IsPlayer() and self:AntiSpam(2, 2) then
+		specWarnGTFO:Show(args.spellName)
+		specWarnGTFO:Play("watchfeet")
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -364,10 +355,6 @@ function mod:UNIT_DIED(args)
 			timerNoEscapeCD:Stop(seenAdds[args.destGUID])
 			seenAdds[args.destGUID] = nil
 		end
-	--elseif cid == 157450 then--spellbound-ritualist
-
-	--elseif cid == 157449 then--sinister-soulcarver (heroic+)
-
 	end
 end
 

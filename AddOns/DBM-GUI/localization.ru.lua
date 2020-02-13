@@ -181,7 +181,6 @@ L.SpecWarn_ClassColor		= "Использовать цвета классов д�
 L.ShowSWarningsInChat 		= "Показывать спец-предупреждения в окне чата"
 L.SWarnNameInNote			= "Использовать SW5 настройки если пользовательская заметка содержит ваше имя"
 L.SpecialWarningIcon		= "Показывать иконки на специальных предупреждениях"
-L.SpecWarn_FlashFrame		= "Мигать экраном во время специальных предупреждений"
 L.SpecWarn_FlashFrameRepeat	= "Повторять %d раз (если включено)"
 L.SpecWarn_Font				= "Выбор шрифта для специальных предупреждений"
 L.SpecWarn_FontSize			= "Размер шрифта: %d"
@@ -194,11 +193,6 @@ L.SpecWarn_FlashAlpha		= "Прозрачность мигания: %0.1f"
 L.SpecWarn_DemoButton		= "Показать пример"
 L.SpecWarn_MoveMe			= "Расположение"
 L.SpecWarn_ResetMe			= "Восстановить умолчания"
-L.SpecialWarnSound			= "Звук спец-предупреждения для вас или для вашей роли"
-L.SpecialWarnSound2			= "Звук спец-предупреждения для всех"
-L.SpecialWarnSound3			= "Звук очень важного спец-предупреждения"
-L.SpecialWarnSound4			= "Звук для спец-предупреждений \"убегайте\""
-L.SpecialWarnSound5			= "Звук по умолчанию для спец-предупреждений с заметками, содержащими ваше имя"
 
 -- Tab: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "Голосовые предупреждения"
@@ -332,7 +326,6 @@ L.AutoAcceptGuildInvite		= "Автоматически принимать при
 L.Area_Advanced				= "Дополнительные настройки"
 L.FakeBW					= "Притворяться BigWigs вместо DBM при приверке версий (Полезно для гильдий которые заставляют использовать BigWigs)"
 L.AITimer					= "Automatically generate timers for never before seen fights using DBM's built in timer AI (Useful for pulling a test boss for the very first time such as beta or PTR). Note: This won't work properly for multiple adds with same ability."
-L.AutoCorrectTimer			= "Automatically correct timers that are too long (Useful for guilds pulling cutting edge content that boss mods aren't updated for yet). Note: This option may also make some timers worse if boss resets timers on phase changes that DBM isn't coded to handle properly yet."
 
 L.Panel_Profile				= "Профили"
 L.Area_CreateProfile		= "Создание профиля настроек DBM Core"

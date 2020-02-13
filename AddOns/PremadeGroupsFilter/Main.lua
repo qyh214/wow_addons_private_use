@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2015 Elotheon-Arthas-EU
+-- Copyright (C) 2020 Elotheon-Arthas-EU
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -181,97 +181,6 @@ function PGF.SortByFriendsAndAge(searchResultID1, searchResultID2)
     return searchResultInfo1.age < searchResultInfo2.age
 end
 
---- Fetches Raider.IO metrics if installed and provides them in the filter environment
---- @generic V
---- @param env table<string, V> environment to be prepared
---- @param leaderName string name of the group leader
-function PGF.PutRaiderIOMetrics(env, leaderName)
-    env.hasrio            = false
-    env.norio             = true
-    env.rio               = 0
-    env.rioprev           = 0
-    env.riomain           = 0
-    env.riomainprev       = 0
-    env.riokey5plus       = 0
-    env.riokey10plus      = 0
-    env.riokey15plus      = 0
-    env.riokey20plus      = 0
-    env.riokeymax         = 0
-    env.rionormalprogress = 0
-    env.rioheroicprogress = 0
-    env.riomythicprogress = 0
-    env.riomainprogress   = 0
-    env.rionormalkills    = {}
-    env.rioheroickills    = {}
-    env.riomythickills    = {}
-    env.rioraidbosscount  = 0
-    setmetatable(env.rionormalkills, { __index = function() return 0 end })
-    setmetatable(env.rioheroickills, { __index = function() return 0 end })
-    setmetatable(env.riomythickills, { __index = function() return 0 end })
-    if leaderName and RaiderIO and RaiderIO.HasPlayerProfile(leaderName) then
-        local result = RaiderIO.GetPlayerProfile(RaiderIO.ProfileOutput.DATA, leaderName)
-        if result and type(result) == "table" then
-            for _, data in pairs(result) do
-                if data and data.dataType == RaiderIO.DataProvider.MYTHICPLUS and data.profile then
-                    env.hasrio       = true
-                    env.norio        = false
-                    env.rio          = data.profile.mplusCurrent.score
-                    env.rioprev      = data.profile.mplusPrevious.score
-                    env.riomain      = data.profile.mplusMainCurrent.score
-                    env.riomainprev  = data.profile.mplusMainPrevious.score
-                    env.riokey5plus  = data.profile.keystoneFivePlus
-                    env.riokey10plus = data.profile.keystoneTenPlus
-                    env.riokey15plus = data.profile.keystoneFifteenPlus
-                    env.riokey20plus = data.profile.keystoneTwentyPlus
-                    env.riokeymax    = data.profile.maxDungeonLevel
-                end
-                if data and data.dataType == RaiderIO.DataProvider.RAIDING and data.profile then
-                    if data.profile.currentRaid then
-                        env.rioraidbosscount = data.profile.currentRaid.bossCount
-                    end
-                    if data.profile.mainProgress and type(data.profile.mainProgress) == "table" then
-                        for _, mainProgress in pairs(data.profile.mainProgress) do
-                            env.riomainprogress = math.max(env.riomainprogress, mainProgress.progressCount)
-                        end
-                    end
-                    if data.profile.progress and type(data.profile.progress) == "table" then
-                        for _, progress in pairs(data.profile.progress) do
-                            if progress.difficulty == 1 then
-                                env.rionormalprogress = progress.progressCount
-                                env.rionormalkills = progress.killsPerBoss
-                            elseif progress.difficulty == 2 then
-                                env.rioheroicprogress = progress.progressCount
-                                env.rioheroickills = progress.killsPerBoss
-                            elseif progress.difficulty == 3 then
-                                env.riomythicprogress = progress.progressCount
-                                env.riomythickills = progress.killsPerBoss
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
-end
-
-function PGF.PutPremadeRegionInfo(env, leaderName)
-    env.region = nil
-    env.oce = false
-    env.usp = false
-    env.usm = false
-    env.usc = false
-    env.use = false
-    env.mex = false
-    env.bzl = false
-    if leaderName and PremadeRegions then
-        local region = PremadeRegions.GetRegion(leaderName)
-        if region then
-            env.region = region
-            env[region] = true
-        end
-    end
-end
-
 --- Ensures that all class-role/role-class and ranged/melees keywords are initialized to zero in the filter environment,
 --- because the values would cause a semantic error otherwise (because they do not exist)
 --- @generic V
@@ -291,6 +200,28 @@ function PGF.InitClassRoleTypeKeywords(env)
             env[roleClassPlural] = 0
         end
     end
+end
+
+--- Puts a table that maps localized boss names to a boolean that indicates if the boss was defeated
+--- @generic V
+--- @param resultID number search result identifier
+--- @param env table<string, V> environment to be prepared
+function PGF.PutEncounterNames(resultID, env)
+    local encounterToBool = {}
+    -- return false for all values not explicitly set to true
+    local encounterToBoolMeta = {}
+    encounterToBoolMeta.__index = function (table, key) return false end
+    setmetatable(encounterToBool, encounterToBoolMeta)
+
+    local encounterInfo = C_LFGList.GetSearchResultEncounterInfo(resultID); -- list of localized boss names
+    if encounterInfo then
+        for _, val in pairs(encounterInfo) do
+            encounterToBool[val] = true
+            encounterToBool[val:lower()] = true
+        end
+    end
+
+    env.boss = encounterToBool
 end
 
 --- Initializes all class-role/role-class and ranged/melees keywords and increments them to their correct value
@@ -391,6 +322,7 @@ function PGF.DoFilterSearchResults(results)
         env.declined = PGF.IsDeclinedGroup(searchResultInfo)
 
         PGF.PutSearchResultMemberInfos(resultID, searchResultInfo, env)
+        PGF.PutEncounterNames(resultID, env)
 
         local aID = searchResultInfo.activityID
         env.arena2v2 = aID == 6 or aID == 491
@@ -412,13 +344,15 @@ function PGF.DoFilterSearchResults(results)
         env.cru  = env.cs
         env.ete  = aID == 670 or aID == 671 or aID == 672  -- The Eternal Palace
         env.tep  = env.ete
-        
+        env.nya  = aID == 687 or aID == 686 or aID == 685  -- Ny’alotha, the Waking City
+        env.ny   = env.nya
+
         -- dungeons    normal        heroic        mythic       mythic+
         env.eoa  = aID == 425 or aID == 435 or aID == 445 or aID == 459  -- Eye of Azshara
         env.dht  = aID == 426 or aID == 436 or aID == 446 or aID == 460  -- Darkheart Thicket
         env.hov  = aID == 427 or aID == 437 or aID == 447 or aID == 461  -- Halls of Valor
         env.nl   = aID == 428 or aID == 438 or aID == 448 or aID == 462  -- Neltharion's Lair
-        env.vh   = aID == 429 or aID == 439 or aID == 449                     -- Violet Hold
+        env.vh   = aID == 429 or aID == 439 or aID == 449                -- Violet Hold
         env.brh  = aID == 430 or aID == 440 or aID == 450 or aID == 463  -- Black Rook Hold
         env.votw = aID == 431 or aID == 441 or aID == 451 or aID == 464  -- Vault of the Wardens
         env.mos  = aID == 432 or aID == 442 or aID == 452 or aID == 465  -- Maw of Souls
@@ -457,14 +391,12 @@ function PGF.DoFilterSearchResults(results)
                               or aID == 684               or aID == 683  -- Operation: Mechagon - Workshop
         env.opmj =               aID == 682               or aID == 679  -- Operation: Mechagon - Junkyard
         env.opmw =               aID == 684               or aID == 683  -- Operation: Mechagon - Workshop
-        env.nya  = aID == 687 or aID == 686 or aID == 685                -- Ny’alotha, the Waking City
 
         -- raider.io aliases
         env.ml = env.tml
         env.undr = env.tur
         env.siege = env.sob
         --env.tos = env.tosl -- collision with Tomb of Sargeras
-        env.ny = env.nya
         PGF.PutRaiderIOMetrics(env, searchResultInfo.leaderName)
         PGF.PutPremadeRegionInfo(env, searchResultInfo.leaderName)
 

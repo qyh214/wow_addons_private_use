@@ -29,8 +29,8 @@ local ETERNAL_COMPLETED = -1
 local DEBUG_MODE = false
 
 -- Config constants
-local CURRENT_DB_VERSION = 8
-local CURRENT_LOOT_DB_VERSION = 23
+local CURRENT_DB_VERSION = 9
+local CURRENT_LOOT_DB_VERSION = 26
 
 -- Hard reset versions
 local CURRENT_ADDON_VERSION = 600
@@ -142,6 +142,7 @@ local PROFILE_DEFAULTS = {
 local scanner_button = _G.CreateFrame("Button", "scanner_button", nil, "SecureActionButtonTemplate")
 scanner_button:Hide();
 scanner_button:SetFrameStrata("MEDIUM")
+scanner_button:SetFrameLevel(200)
 scanner_button:SetSize(200, 50)
 scanner_button:SetScale(0.85)
 scanner_button:SetAttribute("type", "macro")
@@ -955,13 +956,15 @@ function scanner_button:CheckNotificationCache(self, vignetteInfo, isNavigating)
 	
 	-- Check if we have found the NPC in the last 5 minutes
 	if (not isNavigating) then
-		-- FIX Blubbery Blobule (NPCID = 160841) multipoping
-		if (already_notified[vignetteInfo.id] or (npcID == 160841 and already_notified[160841])) then
+		-- FIX Blubbery Blobule/Unstable Glob (NPCID = 160841/161407) multipoping
+		if (already_notified[vignetteInfo.id] or (npcID == 160841 and already_notified[160841]) or (npcID == 161407 and already_notified[161407])) then
 			return
 		else
 			already_notified[vignetteInfo.id] = true
 			if (npcID == 160841) then
 				already_notified[160841] = true
+			elseif (npcID == 161407) then
+				already_notified[161407] = true
 			end
 		end
 	end
@@ -1061,6 +1064,8 @@ function scanner_button:CheckNotificationCache(self, vignetteInfo, isNavigating)
 		-- FIX Blubbery Blobule (NPCID = 160841) multipoping
 		if (npcID == 160841) then
 			already_notified[160841] = false
+		elseif (npcID == 161407) then
+			already_notified[161407] = false
 		end
 		private.dbglobal.recentlySeen[npcID] = nil
 	end)
@@ -1417,6 +1422,11 @@ function RareScanner:Test()
 	end
 	
 	RareScanner:PrintMessage("test launched")
+end
+
+function RareScanner:ResetPosition()
+	scanner_button:ClearAllPoints()
+	scanner_button:SetPoint("BOTTOM", UIParent, 0, 128)
 end
 
 ----------------------------------------------

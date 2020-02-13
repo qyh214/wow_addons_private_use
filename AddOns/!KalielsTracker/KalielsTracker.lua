@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2019, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2020, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -34,7 +34,7 @@ local round = function(n) return floor(n + 0.5) end
 local _G = _G
 local CreateFrame = CreateFrame
 local GameTooltip = GameTooltip
-local HaveQuestData = HaveQuestData
+local HaveQuestRewardData = HaveQuestRewardData
 local InCombatLockdown = InCombatLockdown
 local FormatLargeNumber = FormatLargeNumber
 local UIParent = UIParent
@@ -58,7 +58,6 @@ local OTF = ObjectiveTrackerFrame
 local OTFHeader = OTF.HeaderMenu
 
 -- Constants
-KT_OBJECTIVE_TRACKER_DOUBLE_LINE_HEIGHT = 0
 KT_QUEST_DASH = "- "
 
 -- Blizzard Constants
@@ -557,6 +556,8 @@ local function SetHooks()
 		if objectiveKey == "TimeLeft" then
 			text, colorStyle = GetTaskTimeLeftData(block.id)
 			self:FreeProgressBar(block, block.currentLine)	-- fix ProgressBar duplicity
+		elseif objectiveKey == 0 then	-- Bonus Objective as a Header
+			block.title = text
 		end
 		if self == ACHIEVEMENT_TRACKER_MODULE and text == "" then
 			text = "..."	-- fix Blizz bug
@@ -677,13 +678,14 @@ local function SetHooks()
 		if self == QUEST_TRACKER_MODULE and not useHighlight then
 			useHighlight = fontString:GetParent().isHighlighted		-- Fix Blizz bug
 		end
-		fontString:SetHeight(0)
-		fontString:SetText(text)
-		local stringHeight = fontString:GetHeight()
-		if ( stringHeight > KT_OBJECTIVE_TRACKER_DOUBLE_LINE_HEIGHT and not useFullHeight ) then
-			fontString:SetHeight(KT_OBJECTIVE_TRACKER_DOUBLE_LINE_HEIGHT)
-			stringHeight = KT_OBJECTIVE_TRACKER_DOUBLE_LINE_HEIGHT
+		if useFullHeight then
+			fontString:SetMaxLines(0)
+		else
+			fontString:SetMaxLines(2)
 		end
+		fontString:SetText(text)
+
+		local stringHeight = fontString:GetHeight()
 		colorStyle = colorStyle or OBJECTIVE_TRACKER_COLOR["Normal"]
 		if ( useHighlight and colorStyle.reverse ) then
 			colorStyle = colorStyle.reverse
@@ -695,12 +697,13 @@ local function SetHooks()
 		return stringHeight
 	end
 
-	local function ShouldShowWarModeBonus(questID, currencyID)	-- R
+	local function ShouldShowWarModeBonus(questID, currencyID, firstInstance)	-- R
 		if not C_PvP.IsWarModeDesired() then
 			return false;
 		end
 
-		if not C_CurrencyInfo.DoesWarModeBonusApply(currencyID) then
+		local warModeBonusApplies, limitOncePerTooltip = C_CurrencyInfo.DoesWarModeBonusApply(currencyID);
+		if not warModeBonusApplies or (limitOncePerTooltip and not firstInstance) then
 			return false;
 		end
 
@@ -710,10 +713,15 @@ local function SetHooks()
 	function QuestUtils_AddQuestCurrencyRewardsToTooltip(questID, tooltip, currencyContainerTooltip)	-- RO
 		local numQuestCurrencies = GetNumQuestLogRewardCurrencies(questID);
 		local currencies = { };
+		local uniqueCurrencyIDs = { };
 		for i = 1, numQuestCurrencies do
 			local name, texture, numItems, currencyID = GetQuestLogRewardCurrencyInfo(i, questID);
 			local rarity = select(8, GetCurrencyInfo(currencyID));
-			local currencyInfo = { name = name, texture = texture, numItems = numItems, currencyID = currencyID, rarity = rarity };
+			local firstInstance = not uniqueCurrencyIDs[currencyID];
+			if firstInstance then
+				uniqueCurrencyIDs[currencyID] = true;
+			end
+			local currencyInfo = { name = name, texture = texture, numItems = numItems, currencyID = currencyID, rarity = rarity, firstInstance = firstInstance };
 			tinsert(currencies, currencyInfo);
 		end
 
@@ -734,7 +742,7 @@ local function SetHooks()
 			local isCurrencyContainer = C_CurrencyInfo.IsCurrencyContainer(currencyInfo.currencyID, currencyInfo.numItems);
 			if ( currencyContainerTooltip and isCurrencyContainer and (alreadyUsedCurrencyContainerId == 0) ) then
 				if ( EmbeddedItemTooltip_SetCurrencyByID(currencyContainerTooltip, currencyInfo.currencyID, currencyInfo.numItems) ) then
-					if ShouldShowWarModeBonus(questID, currencyInfo.currencyID) then
+					if ShouldShowWarModeBonus(questID, currencyInfo.currencyID, currencyInfo.firstInstance) then
 						currencyContainerTooltip.Tooltip:AddLine(WAR_MODE_BONUS_PERCENTAGE_FORMAT:format(warModeBonus));
 						currencyContainerTooltip.Tooltip:Show();
 					end
@@ -758,7 +766,7 @@ local function SetHooks()
 					end
 					tooltip:AddLine(text, color.r, color.g, color.b)
 
-					if ShouldShowWarModeBonus(questID, currencyInfo.currencyID) then
+					if ShouldShowWarModeBonus(questID, currencyInfo.currencyID, currencyInfo.firstInstance) then
 						tooltip:AddLine(WAR_MODE_BONUS_PERCENTAGE_FORMAT:format(warModeBonus));
 					end
 
@@ -771,7 +779,7 @@ local function SetHooks()
 
 	hooksecurefunc(DEFAULT_OBJECTIVE_TRACKER_MODULE, "OnBlockHeaderEnter", function(self, block)
 		local colorStyle, _
-		if self == QUEST_TRACKER_MODULE then
+		if block.module == QUEST_TRACKER_MODULE then
 			if block.questCompleted then
 				colorStyle = OBJECTIVE_TRACKER_COLOR["CompleteHighlight"]
 			elseif db.colorDifficulty then
@@ -783,7 +791,7 @@ local function SetHooks()
 			block.HeaderText.colorStyle = colorStyle
 		end
 
-		if db.tooltipShow and (self == QUEST_TRACKER_MODULE or self == ACHIEVEMENT_TRACKER_MODULE) then
+		if db.tooltipShow and (block.module == QUEST_TRACKER_MODULE or block.module == ACHIEVEMENT_TRACKER_MODULE) then
 			GameTooltip:SetOwner(block, "ANCHOR_NONE")
 			GameTooltip:ClearAllPoints()
 			if KTF.anchorLeft then
@@ -791,10 +799,15 @@ local function SetHooks()
 			else
 				GameTooltip:SetPoint("TOPRIGHT", block, "TOPLEFT", -32, 1)
 			end
-			if self == QUEST_TRACKER_MODULE then
+			if block.module == QUEST_TRACKER_MODULE then
 				GameTooltip:SetHyperlink(GetQuestLink(block.id))
 				if db.tooltipShowRewards then
 					KT.GameTooltip_AddQuestRewardsToTooltip(GameTooltip, block.id)
+				end
+				if IsInGroup() then
+					GameTooltip:AddLine(" ")
+					GameTooltip:AddLine(PARTY..":")
+					GameTooltip:SetQuestPartyProgress(block.id, true)
 				end
 			else
 				GameTooltip:SetHyperlink(GetAchievementLink(block.id))
@@ -815,7 +828,7 @@ local function SetHooks()
 
 	hooksecurefunc(DEFAULT_OBJECTIVE_TRACKER_MODULE, "OnBlockHeaderLeave", function(self, block)
 		local colorStyle
-		if self == QUEST_TRACKER_MODULE then
+		if block.module == QUEST_TRACKER_MODULE then
 			if block.questCompleted then
 				colorStyle = OBJECTIVE_TRACKER_COLOR["Complete"]
 			elseif db.colorDifficulty then
@@ -837,6 +850,14 @@ local function SetHooks()
 			block.fixedTag.text:SetTextColor(colorStyle.r, colorStyle.g, colorStyle.b)
 		end
 	end)
+
+	function QUEST_TRACKER_MODULE:OnBlockHeaderEnter(block)	-- R
+		DEFAULT_OBJECTIVE_TRACKER_MODULE:OnBlockHeaderEnter(block)
+	end
+
+	function QUEST_TRACKER_MODULE:OnBlockHeaderLeave(block)	-- R
+		DEFAULT_OBJECTIVE_TRACKER_MODULE:OnBlockHeaderLeave(block)
+	end
 
 	hooksecurefunc(QUEST_TRACKER_MODULE, "OnBlockHeaderClick", function(self, block, mouseButton)
 		GameTooltip:Hide()
@@ -1223,7 +1244,7 @@ local function SetHooks()
 				GameTooltip:SetPoint("TOPRIGHT", block, "TOPLEFT", -12, -1)
 			end
 
-			if not HaveQuestData(questID) then
+			if not HaveQuestRewardData(questID) then
 				GameTooltip:AddLine(RETRIEVING_DATA, RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b);
 			else
 				GameTooltip:SetHyperlink(questLink)
@@ -1636,34 +1657,34 @@ local function SetHooks()
 	end
 
 	function BonusObjectiveTracker_OnBlockClick(self, button)	-- R
-		if self.module.ShowWorldQuests then
-			if button == "LeftButton" then
-				if ( not ChatEdit_TryInsertQuestLinkForQuestID(self.TrackedQuest.questID) ) then
-					MSA_CloseDropDownMenus();
-					if IsShiftKeyDown() then
-						if IsWorldQuestWatched(self.TrackedQuest.questID) then
-							BonusObjectiveTracker_UntrackWorldQuest(self.TrackedQuest.questID);
-						end
-					elseif IsModifiedClick(db.menuWowheadURLModifier) then
-						KT:ShowPopup("quest", self.TrackedQuest.questID)
-					else
-						local mapID = C_TaskQuest.GetQuestZoneID(self.TrackedQuest.questID);
-						if mapID then
-							QuestMapFrame_CloseQuestDetails();
-							OpenQuestLog(mapID);
-							WorldMapPing_StartPingQuest(self.TrackedQuest.questID);
-						end
+		local questID = self.TrackedQuest and self.TrackedQuest.questID or self.id;
+		local isThreatQuest = C_QuestLog.IsThreatQuest(questID);
+		if button == "LeftButton" then
+			if ( not ChatEdit_TryInsertQuestLinkForQuestID(questID) ) then
+				MSA_CloseDropDownMenus();
+				if IsShiftKeyDown() then
+					if IsWorldQuestWatched(questID) and not isThreatQuest then
+						BonusObjectiveTracker_UntrackWorldQuest(questID);
+					end
+				elseif IsModifiedClick(db.menuWowheadURLModifier) then
+					KT:ShowPopup("quest", questID)
+				else
+					local mapID = C_TaskQuest.GetQuestZoneID(questID);
+					if mapID then
+						QuestMapFrame_CloseQuestDetails();
+						OpenQuestLog(mapID);
+						WorldMapPing_StartPingQuest(questID);
 					end
 				end
-			elseif button == "RightButton" then
-				ObjectiveTracker_ToggleDropDown(self, BonusObjectiveTracker_OnOpenDropDown);
 			end
+		elseif button == "RightButton" then
+			ObjectiveTracker_ToggleDropDown(self, BonusObjectiveTracker_OnOpenDropDown);
 		end
 	end
 
 	function BonusObjectiveTracker_OnOpenDropDown(self)  -- R
 		local block = self.activeFrame;
-		local questID = block.TrackedQuest.questID;
+		local questID = block.TrackedQuest and block.TrackedQuest.questID or block.id;
 		local addStopTracking = IsWorldQuestWatched(questID);
 
 		-- Ensure at least one option will appear before showing the dropdown.
@@ -1684,7 +1705,6 @@ local function SetHooks()
 			info.notCheckable = true;
 			info.text = OBJECTIVES_STOP_TRACKING;
 			info.func = function()
-				--KT_BonusObjectiveTracker_UntrackWorldQuest(questID);
 				BonusObjectiveTracker_UntrackWorldQuest(questID);
 			end
 			MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
@@ -1701,11 +1721,25 @@ local function SetHooks()
 			MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
 		end
 	end
+
+	-- Headers
+	hooksecurefunc(QUEST_TRACKER_MODULE.Header, "UpdateHeader", function(self)
+		self.module.title = self.Text:GetText()
+		KT:SetQuestsHeaderText()
+	end)
 end
 
 --------------
 -- External --
 --------------
+
+function KT_WorldQuestPOIButton_OnClick(self)
+	local questID = self.questID
+
+	PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
+	SetSuperTrackedQuestID(questID)
+	WorldMapPing_StartPingQuest(questID)
+end
 
 function KT:SetSize()
 	local height = 33
@@ -1848,8 +1882,6 @@ end
 
 function KT:SetText()
 	self.font = LSM:Fetch("font", db.font)
-
-	KT_OBJECTIVE_TRACKER_DOUBLE_LINE_HEIGHT = (2 * db.fontSize) + 1
 
 	-- Headers
 	SetHeaders("text")

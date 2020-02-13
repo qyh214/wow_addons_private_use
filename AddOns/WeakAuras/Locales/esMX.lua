@@ -295,6 +295,8 @@ L[ [=[Current Zone
 L["Curse"] = "Maldición"
 L["Custom"] = "Personalizado"
 --[[Translation missing --]]
+L["Custom Color"] = "Custom Color"
+--[[Translation missing --]]
 L["Custom Configuration"] = "Custom Configuration"
 L["Custom Function"] = "Función personalizada"
 L["Damage"] = "Daño"

@@ -8,10 +8,8 @@ assert(ElvUF, "ElvUI was unable to locate oUF.")
 local _G = _G
 --WoW API / Variables
 local CreateFrame = CreateFrame
-local GetInstanceInfo = GetInstanceInfo
 local InCombatLockdown = InCombatLockdown
 local RegisterStateDriver = RegisterStateDriver
-local UnregisterStateDriver = UnregisterStateDriver
 
 function UF:Construct_PartyFrames()
 	self:SetScript('OnEnter', _G.UnitFrame_OnEnter)
@@ -89,40 +87,13 @@ function UF:Update_PartyHeader(header, db)
 	if not headerHolder.positioned then
 		headerHolder:ClearAllPoints()
 		headerHolder:Point("BOTTOMLEFT", E.UIParent, "BOTTOMLEFT", 4, 195)
+		E:CreateMover(headerHolder, headerHolder:GetName()..'Mover', L["Party Frames"], nil, nil, nil, 'ALL,PARTY,ARENA', nil, 'unitframe,groupUnits,party,generalGroup')
 
-		E:CreateMover(headerHolder, headerHolder:GetName()..'Mover', L["Party Frames"], nil, nil, nil, 'ALL,PARTY,ARENA', nil, 'unitframe,party,generalGroup')
 		headerHolder.positioned = true;
-
-		headerHolder:RegisterEvent("PLAYER_ENTERING_WORLD")
-		headerHolder:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-		headerHolder:SetScript("OnEvent", UF.PartySmartVisibility)
 	end
 
-	UF.PartySmartVisibility(headerHolder)
-end
-
-function UF:PartySmartVisibility(event)
-	if not self.db or (self.db and not self.db.enable) or (UF.db and not UF.db.smartRaidFilter) or self.isForced then
-		self.blockVisibilityChanges = false
-		return
-	end
-
-	if event == "PLAYER_REGEN_ENABLED" then
-		self:UnregisterEvent("PLAYER_REGEN_ENABLED")
-	end
-
-	if not InCombatLockdown() then
-		local _, instanceType = GetInstanceInfo()
-		if instanceType == "raid" or instanceType == "pvp" then
-			UnregisterStateDriver(self, "visibility")
-			self.blockVisibilityChanges = true
-			self:Hide()
-		elseif self.db.visibility then
-			RegisterStateDriver(self, "visibility", self.db.visibility)
-			self.blockVisibilityChanges = false
-		end
-	else
-		self:RegisterEvent("PLAYER_REGEN_ENABLED")
+	if not headerHolder.isForced and db.enable then
+		RegisterStateDriver(headerHolder, "visibility", db.visibility)
 	end
 end
 
@@ -197,33 +168,25 @@ function UF:Update_PartyFrames(frame, db)
 			childDB = db.targetsGroup
 		end
 
-		if not frame.originalParent.childList then
-			frame.originalParent.childList = {}
-		end
-		frame.originalParent.childList[frame] = true;
+		frame:Size(childDB.width, childDB.height)
 
 		if not InCombatLockdown() then
 			if childDB.enable then
-				frame:SetParent(frame.originalParent)
-				frame:Size(childDB.width, childDB.height)
+				frame:Enable()
 				frame:ClearAllPoints()
 				frame:Point(E.InversePoints[childDB.anchorPoint], frame.originalParent, childDB.anchorPoint, childDB.xOffset, childDB.yOffset)
 			else
-				frame:SetParent(E.HiddenFrame)
+				frame:Disable()
 			end
 		end
 
-		UF:UpdateNameSettings(frame, frame.childType)
 		UF:Configure_HealthBar(frame)
+		UF:UpdateNameSettings(frame, frame.childType)
 	else
-		if not InCombatLockdown() then
-			frame:Size(frame.UNIT_WIDTH, frame.UNIT_HEIGHT)
-		end
+		frame:Size(frame.UNIT_WIDTH, frame.UNIT_HEIGHT)
 
-		UF:UpdateNameSettings(frame)
 		UF:EnableDisable_Auras(frame)
-		UF:Configure_Auras(frame, 'Buffs')
-		UF:Configure_Auras(frame, 'Debuffs')
+		UF:Configure_AllAuras(frame)
 		UF:Configure_HealthBar(frame)
 		UF:Configure_InfoPanel(frame)
 		UF:Configure_PhaseIcon(frame)
@@ -243,6 +206,7 @@ function UF:Update_PartyFrames(frame, db)
 		UF:Configure_ClassBar(frame)
 		UF:Configure_AltPowerBar(frame)
 		UF:Configure_CustomTexts(frame)
+		UF:UpdateNameSettings(frame)
 	end
 
 	UF:Configure_RaidIcon(frame)

@@ -1,28 +1,40 @@
-lightweight tag 89ed08a63391ce97f4f69d9df1e0ccf2b11da803 1.32
+lightweight tag f46dd4fb1993ee6f05883bf0d60b1875bfb0760e 1.33
 Author:	Bernhard Saumweber <b.saumweber@gmail.com>
-Date:	Thu Jan 16 22:30:53 2020 +0100
+Date:	Sun Feb 9 12:18:52 2020 +0100
 
-commit 89ed08a63391ce97f4f69d9df1e0ccf2b11da803
+commit f46dd4fb1993ee6f05883bf0d60b1875bfb0760e
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Thu Jan 16 22:30:53 2020 +0100
+Date:   Sun Feb 9 12:12:45 2020 +0100
 
-    New keywords nya/ny for Ny’alotha, the Waking City as well as opmj for Operation: Mechagon - Junkyard and opmw for Operation: Mechagon - Workshop
+    Added a new table 'boss' that maps the localized boss name to a bool (true if encounter has been completed, false otherwise). This matches exactly the red colored encounter names in the group tooltip.
 
-commit b8dc53955c132d24ce758911f160e95414cb118c
+commit 256deb928de7dfde35bde01432ae7b53eda7a003
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Thu Jan 16 22:07:37 2020 +0100
+Date:   Sun Feb 9 11:48:28 2020 +0100
 
-    Raising interface version to 80300
+    Updated help tooltip and rearranged code fragments in Main.lua
 
-commit c8dce0331a5e2bcc152d07f07fe1e81d79894d30
+commit bbe381906a230d77d7dfc48a9a83ec4286a4f7e1
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Sun Oct 20 16:14:36 2019 +0200
+Date:   Sun Feb 9 11:43:10 2020 +0100
 
-    Raising interface version to 80205
+    Moved PremadeRegions and RaiderIO functions to own files
 
-commit 1325db0ea791811307861add468108ac2c3f1c31
+commit 0ca81c4489782a1284e5b4df26623b592a84d195
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Tue Sep 17 20:55:39 2019 +0200
+Date:   Sun Feb 9 11:40:45 2020 +0100
 
-    Set version to next release version: 1.32
+    Update copyright header to year 2020
+
+commit 90f3a1d530f6272bc9e4d153657b5e05f214d13c
+Author: Bernhard Saumweber <b.saumweber@gmail.com>
+Date:   Tue Feb 4 22:08:18 2020 +0100
+
+    Made the PGF window 2px smaller to be more exactly like the LFG window
+
+commit d3943c33fa614539702d82f43154397341841ec6
+Author: Bernhard Saumweber <b.saumweber@gmail.com>
+Date:   Thu Jan 16 22:35:39 2020 +0100
+
+    Set version to next release version: 1.33
 

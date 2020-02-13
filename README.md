@@ -68,6 +68,8 @@ Auctionlite：https://bbs.nga.cn/read.php?tid=17729131
 
 鼠标跟踪：https://wago.io/SypUT-DPm
 
+腐蚀监控（腐蚀1触发的贪婪触须+腐蚀20的腐化之眼+腐蚀40点壮美幻象整合版 腐化之眼超3层有心跳触发壮美幻象有猫叫提示版本）：https://bbs.nga.cn/read.php?tid=20290774
+
 ## TMW字符串
 萨满祭司：https://bbs.nga.cn/read.php?tid=16216888&_ff=185
 

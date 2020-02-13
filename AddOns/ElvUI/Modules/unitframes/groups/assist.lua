@@ -56,7 +56,9 @@ function UF:Update_AssistHeader(header, db)
 
 	UF:ClearChildPoints(header:GetChildren())
 
-	RegisterAttributeDriver(header, 'state-visibility', '[@raid1,exists] show;hide')
+	if not header.isForced and db.enable then
+		RegisterAttributeDriver(header, 'state-visibility', '[@raid1,exists] show;hide')
+	end
 
 	header:SetAttribute('point', 'BOTTOM')
 	header:SetAttribute('columnAnchorPoint', 'LEFT')
@@ -69,7 +71,7 @@ function UF:Update_AssistHeader(header, db)
 		local width, height = header:GetSize()
 		header.dirtyWidth, header.dirtyHeight = width, max(height, 2*db.height + db.verticalSpacing)
 
-		E:CreateMover(header, header:GetName()..'Mover', L["MA Frames"], nil, nil, nil, 'ALL,RAID', nil, 'unitframe,assist,generalGroup')
+		E:CreateMover(header, header:GetName()..'Mover', L["MA Frames"], nil, nil, nil, 'ALL,RAID', nil, 'unitframe,groupUnits,assist,generalGroup')
 		header.mover.positionOverride = "TOPLEFT"
 		header:SetAttribute('minHeight', header.dirtyHeight)
 		header:SetAttribute('minWidth', header.dirtyWidth)
@@ -115,25 +117,22 @@ function UF:Update_AssistFrames(frame, db)
 		frame.VARIABLES_SET = true
 	end
 
-	if frame.isChild and frame.originalParent then
+	if frame.isChild then
 		local childDB = db.targetsGroup
 		frame.db = db.targetsGroup
-		if not frame.originalParent.childList then
-			frame.originalParent.childList = {}
-		end
-		frame.originalParent.childList[frame] = true;
+
+		frame:Size(childDB.width, childDB.height)
 
 		if not InCombatLockdown() then
 			if childDB.enable then
-				frame:SetParent(frame.originalParent)
-				frame:Size(childDB.width, childDB.height)
+				frame:Enable()
 				frame:ClearAllPoints()
 				frame:Point(E.InversePoints[childDB.anchorPoint], frame.originalParent, childDB.anchorPoint, childDB.xOffset, childDB.yOffset)
 			else
-				frame:SetParent(E.HiddenFrame)
+				frame:Disable()
 			end
 		end
-	elseif not InCombatLockdown() then
+	else
 		frame:Size(frame.UNIT_WIDTH, frame.UNIT_HEIGHT)
 	end
 
@@ -157,8 +156,7 @@ function UF:Update_AssistFrames(frame, db)
 	if not frame.isChild then
 		--Auras
 		UF:EnableDisable_Auras(frame)
-		UF:Configure_Auras(frame, "Buffs")
-		UF:Configure_Auras(frame, "Debuffs")
+		UF:Configure_AllAuras(frame)
 
 		--RaidDebuffs
 		UF:Configure_RaidDebuffs(frame)

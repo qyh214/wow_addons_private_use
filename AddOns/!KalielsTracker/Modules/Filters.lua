@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2019, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2020, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -100,6 +100,10 @@ local function SetHooks()
 	local bck_QuestPOIButton_OnClick = QuestPOIButton_OnClick
 	QuestPOIButton_OnClick = function(self)
 		if not IsQuestWatched(GetQuestLogIndexByID(self.questID)) and db.filterAuto[1] then
+			SetSuperTrackedQuestID(self.questID)
+			if self.pingWorldMap then
+				WorldMapPing_StartPingQuest(self.questID)
+			end
 			return
 		end
 		bck_QuestPOIButton_OnClick(self)
@@ -184,14 +188,14 @@ local function Filter_Quests(self, spec, idx)
 		for i=numEntries, 1, -1 do
 			local _, _, _, isHeader, _, _, _, questID, _, _, _, _, isTask, isBounty = GetQuestLogTitle(i)
 			if not isHeader and not isTask and (not isBounty or IsQuestComplete(questID)) then
-				AddQuestWatch(i, true)
+				AddQuestWatch(i)
 			end
 		end
 	elseif spec == "group" then
 		for i=idx, 1, -1 do
 			local _, _, _, isHeader, _, _, _, questID, _, _, _, _, isTask, isBounty = GetQuestLogTitle(i)
 			if not isHeader and not isTask and (not isBounty or IsQuestComplete(questID)) then
-				AddQuestWatch(i, true)
+				AddQuestWatch(i)
 			else
 				break
 			end
@@ -199,20 +203,26 @@ local function Filter_Quests(self, spec, idx)
 		MSA_CloseDropDownMenus()
 	elseif spec == "zone" then
 		local mapID = KT.GetCurrentMapAreaID()
+		local zoneName = GetRealZoneText() or ""
+		local isInZone = false
 		if (C_Map.GetMapGroupID(mapID) and not KT.inInstance) or
 				mapID == 1165 then	-- BfA - Dazar'alor
 			local mapInfo = C_Map.GetMapInfo(mapID)
 			OpenQuestLog(mapInfo.parentMapID)
 		end
-		for i=numEntries, 1, -1 do
-			local _, _, _, isHeader, _, _, _, questID, _, _, isOnMap, _, isTask, isBounty = GetQuestLogTitle(i)
-			if not isHeader and not isTask and (not isBounty or IsQuestComplete(questID)) and isOnMap then
-				if KT.inInstance then
-					if IsInstanceQuest(questID) then
-						AddQuestWatch(i, true)
+		for i=1, numEntries do
+			local title, _, _, isHeader, _, _, _, questID, _, _, isOnMap, _, isTask, isBounty = GetQuestLogTitle(i)
+			if isHeader then
+				isInZone = (title == zoneName)
+			else
+				if not isTask and (not isBounty or IsQuestComplete(questID)) and (isOnMap or isInZone) then
+					if KT.inInstance then
+						if IsInstanceQuest(questID) then
+							AddQuestWatch(i)
+						end
+					else
+						AddQuestWatch(i)
 					end
-				else
-					AddQuestWatch(i, true)
 				end
 			end
 		end
@@ -221,7 +231,7 @@ local function Filter_Quests(self, spec, idx)
 		for i=numEntries, 1, -1 do
 			local _, _, _, isHeader, _, _, frequency, questID, _, _, _, _, isTask, isBounty = GetQuestLogTitle(i)
 			if not isHeader and not isTask and (not isBounty or IsQuestComplete(questID)) and frequency >= 2 then
-				AddQuestWatch(i, true)
+				AddQuestWatch(i)
 			end
 		end
 	elseif spec == "instance" then
@@ -234,7 +244,7 @@ local function Filter_Quests(self, spec, idx)
 					tagID == Enum.QuestTag.Raid or
 					tagID == Enum.QuestTag.Raid10 or
 					tagID == Enum.QuestTag.Raid25 then
-					AddQuestWatch(i, true)
+					AddQuestWatch(i)
 				end
 			end
 		end
@@ -242,12 +252,13 @@ local function Filter_Quests(self, spec, idx)
 		for i=numEntries, 1, -1 do
 			local _, _, _, isHeader, _, _, _, questID, _, _, _, _, isTask, isBounty = GetQuestLogTitle(i)
 			if not isHeader and not isTask and (not isBounty or IsQuestComplete(questID)) and IsQuestComplete(questID) then
-				AddQuestWatch(i, true)
+				AddQuestWatch(i)
 			end
 		end
 	end
 	KT.stopUpdate = false
 
+	SortQuestWatches()
 	ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_MODULE_QUEST)
 	QuestSuperTracking_ChooseClosestQuest()
 end
@@ -269,7 +280,9 @@ local function Filter_Achievements(self, spec)
 		local categoryName = continentName
 		if KT.GetCurrentMapContinent().mapID == 619 then
 			categoryName = EXPANSION_NAME6	-- Legion
-		elseif KT.GetCurrentMapContinent().mapID == 875 then
+		elseif KT.GetCurrentMapContinent().mapID == 875 or
+				KT.GetCurrentMapContinent().mapID == 876 or
+				KT.GetCurrentMapContinent().mapID == 1355 then
 			categoryName = EXPANSION_NAME7	-- Battle for Azeroth
 		end
 		local instance = KT.inInstance and 168 or nil

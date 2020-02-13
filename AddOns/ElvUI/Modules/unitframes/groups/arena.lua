@@ -110,7 +110,7 @@ function UF:Construct_ArenaFrames(frame)
 	frame.Cutaway = self:Construct_Cutaway(frame)
 
 	ArenaHeader:Point('BOTTOMRIGHT', E.UIParent, 'RIGHT', -105, -165)
-	E:CreateMover(ArenaHeader, ArenaHeader:GetName()..'Mover', L["Arena Frames"], nil, nil, nil, 'ALL,ARENA', nil, 'unitframe,arena,generalGroup')
+	E:CreateMover(ArenaHeader, ArenaHeader:GetName()..'Mover', L["Arena Frames"], nil, nil, nil, 'ALL,ARENA', nil, 'unitframe,groupUnits,arena,generalGroup')
 	frame.mover = ArenaHeader.mover
 end
 
@@ -171,8 +171,7 @@ function UF:Update_ArenaFrames(frame, db)
 
 	--Auras
 	UF:EnableDisable_Auras(frame)
-	UF:Configure_Auras(frame, 'Buffs')
-	UF:Configure_Auras(frame, 'Debuffs')
+	UF:Configure_AllAuras(frame)
 
 	--Castbar
 	UF:Configure_Castbar(frame)

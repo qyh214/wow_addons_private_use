@@ -43,6 +43,9 @@ private.EVENT_QUEST_IDS = {
 	[153241] = { 57384 }; --Monstruosidad reparadora
 	[158069] = { 57540 }; --Incubadora kunchong
 	[156289] = { 57085 }; --Carro de guerra potenciado
+	[158114] = { 57542 }; --Invocador de enjambre
+	[164307] = { 57089 }; --Criadero mántide
+	[156549] = { 56549 }; --Potenciación eléctrica
 	
 	-- Events 8.3.0 Uldum
 	[156865] = { 57219 }; --Centinela desenterrado
@@ -86,4 +89,13 @@ private.EVENT_QUEST_IDS = {
 	[163306] = { 57590 }; --Bebedor de espíritus
 	[160818] = { 58271 }; --Ritual de llama del Vacío
 	[158737] = { 57541 }; --Llamada del Vacío
+	[156869] = { 57223 }; --Centinela desenterrado
+	[339382] = { 58216 }; --Fauces acuciantes
+	[158754] = { 57429 }; --Pira del Amalgamado
+	[157794] = { 57456 }; --Bebedor de espíritus
+	[163308] = { 57591 }; --Bebedor de espíritus
+	[163301] = { 57587 }; --Bebedor de espíritus
+	[160928] = { 58276 }; --Mar'at en llamas
+	[163300] = { 57586 }; --Bebedor de espíritus
+	[163304] = { 57589 }; --Bebedor de espíritus
 }

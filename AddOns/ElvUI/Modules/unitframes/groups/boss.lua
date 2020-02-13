@@ -45,7 +45,7 @@ function UF:Construct_BossFrames(frame)
 	frame.customTexts = {}
 
 	BossHeader:Point('BOTTOMRIGHT', E.UIParent, 'RIGHT', -105, -165)
-	E:CreateMover(BossHeader, BossHeader:GetName()..'Mover', L["Boss Frames"], nil, nil, nil, 'ALL,PARTY,RAID', nil, 'unitframe,boss,generalGroup')
+	E:CreateMover(BossHeader, BossHeader:GetName()..'Mover', L["Boss Frames"], nil, nil, nil, 'ALL,PARTY,RAID', nil, 'unitframe,groupUnits,boss,generalGroup')
 	frame.mover = BossHeader.mover
 
 	frame.unitframeType = "boss"
@@ -102,8 +102,7 @@ function UF:Update_BossFrames(frame, db)
 
 	--Auras
 	UF:EnableDisable_Auras(frame)
-	UF:Configure_Auras(frame, 'Buffs')
-	UF:Configure_Auras(frame, 'Debuffs')
+	UF:Configure_AllAuras(frame)
 
 	--Castbar
 	UF:Configure_Castbar(frame)
