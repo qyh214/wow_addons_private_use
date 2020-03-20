@@ -13,14 +13,8 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	timerSweeperCD		= "Отсчет времени до следующего Чистильщика арены",
-	countdownSweeper	= "Звуковой отсчет до восстановления \"Чистильщик арены\""
+	timerSweeperCD		= "Отсчет времени до следующего Чистильщика арены"
 })
-
----------------------------
--- The Butcher --
----------------------------
-L = DBM:GetModLocalization(971)
 
 ---------------------------
 -- Tectus, the Living Mountain --

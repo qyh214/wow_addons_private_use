@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Flamegor", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200218153056")
 mod:SetCreatureID(11981)
 mod:SetEncounterID(615)
 mod:SetModelID(6377)
@@ -12,15 +12,19 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 23342"
 )
 
-local warnWingBuffet	= mod:NewCastAnnounce(23339, 2)
-local warnShadowFlame	= mod:NewCastAnnounce(22539, 2)
-local warnEnrage		= mod:NewSpellAnnounce(23342, 3, nil, "Tank", 2)
+--(ability.id = 23339 or ability.id = 22539) and type = "begincast" or ability.id = 23342 and type = "cast"
+local warnWingBuffet		= mod:NewCastAnnounce(23339, 2)
+local warnShadowFlame		= mod:NewCastAnnounce(22539, 2)
+local warnEnrage			= mod:NewSpellAnnounce(23342, 3, nil, "Tank|RemoveEnrage", 3)
 
-local timerWingBuffet	= mod:NewNextTimer(31, 23339, nil, nil, nil, 2)
-local timerEnrageNext 	= mod:NewNextTimer(10, 23342, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
+local timerWingBuffet		= mod:NewNextTimer(31, 23339, nil, nil, nil, 2)
+local timerShadowFlameCD	= mod:NewCDTimer(14, 22539, nil, false)--14-21
+local timerEnrageNext 		= mod:NewNextTimer(10, 23342, nil, "Tank|RemoveEnrage", 3, 5, nil, DBM_CORE_TANK_ICON)
 
 function mod:OnCombatStart(delay)
-	timerWingBuffet:Start(-delay)
+	timerEnrageNext:Start(9.6-delay)
+	timerShadowFlameCD:Start(18-delay)
+	timerWingBuffet:Start(30-delay)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -29,6 +33,7 @@ function mod:SPELL_CAST_START(args)
 		timerWingBuffet:Start()
 	elseif args.spellId == 22539 then
 		warnShadowFlame:Show()
+		timerShadowFlameCD:Start()
 	end
 end
 

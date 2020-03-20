@@ -16,7 +16,6 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	SpecWarnOverloadSoon		= "Спец-предупреждение перед насыщением",
 	specWarnBreakJasperChains	= "Спец-предупреждение, когда можно разорвать $spell:130395",
-	ArrowOnJasperChains			= "Показывать стрелку DBM, когда на вас $spell:130395",
 	InfoFrame					= "Показывать информационное окно с энергией боссов, окаменением игроков и какой босс кастует окаменение"
 })
 

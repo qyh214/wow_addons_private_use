@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d492", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200222213340")
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1024)
@@ -59,7 +59,7 @@ end
 "<229.2 21:21:30> [CLEU] SPELL_AURA_APPLIED#false#0xF13104D400005C84#Beast of Jade#68168#0#0xF13104D400005C84#Beast of Jade#68168#0#119364#Jade Statue#8#BUFF#10#10000000", -- [2082]
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 131209 then
-		
+
 	end
 end
 --]]

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Illidan", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200221204848")
 mod:SetCreatureID(22917)
 mod:SetEncounterID(609)
 mod:SetModelID(21135)
@@ -104,7 +104,7 @@ function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
-end 
+end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId

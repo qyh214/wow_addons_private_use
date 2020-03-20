@@ -520,6 +520,8 @@ local translations = {
 
 };
 
-
-WIM.AddLocale("esES", translations);
-WIM.AddLocale("esMX", translations);
+if WIM.getLocale() == "esES" then
+	WIM.AddLocale("esES", translations);
+else
+	WIM.AddLocale("esMX", translations);
+end

@@ -2,7 +2,7 @@
 local L
 
 -- Initial release by Sasmira: 12/26/2010
--- Last update: 01/25/2011 (by Sasmira) 
+-- Last update: 01/25/2011 (by Sasmira)
 
 ------------------------
 --  Conclave of Wind  --

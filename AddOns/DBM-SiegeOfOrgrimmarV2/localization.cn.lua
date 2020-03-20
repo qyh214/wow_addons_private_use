@@ -73,11 +73,6 @@ L:SetMiscLocalization({
 	tower			= "的门已经遭到破坏!"
 })
 
---------------------
---Iron Juggernaut --
---------------------
-L = DBM:GetModLocalization(864)
-
 --------------------------
 -- Kor'kron Dark Shaman --
 --------------------------
@@ -105,11 +100,6 @@ L:SetMiscLocalization({
 	allForces	= "所有库卡隆...听我号令...杀死他们!",
 	nextAdds	= "下一次小兵: "
 })
-
------------------
--- Malkorok -----
------------------
-L = DBM:GetModLocalization(846)
 
 ------------------------
 -- Spoils of Pandaria --

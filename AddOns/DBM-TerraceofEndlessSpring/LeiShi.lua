@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(729, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010000")
+mod:SetRevision("20200222213340")
 mod:SetCreatureID(62983)--62995 Animated Protector
 mod:SetEncounterID(1506)
 
@@ -45,7 +45,6 @@ local lastProtect = 0
 local specialRemaining = 0
 local lostHealth = 0
 local prevlostHealth = 0
-local hideTime = 0
 local hideName = DBM:GetSpellInfo(123244)
 
 local bossTank
@@ -67,7 +66,6 @@ function mod:OnCombatStart(delay)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(3, bossTank)
 	end
-	hideTime = 0
 	specialsCast = 0
 	hideActive = false
 	lastProtect = 0
@@ -94,7 +92,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 123250 then
 		local elapsed, total = timerSpecialCD:GetTime(specialsCast+1)
 		specialRemaining = total - elapsed
-		lastProtect = GetTime()	
+		lastProtect = GetTime()
 		warnProtect:Show()
 		specWarnAnimatedProtector:Show()
 		self:Schedule(0.2, function()
@@ -140,7 +138,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		if timerSpecialCD:GetTime(specialsCast+1) == 0 then -- failsafe. (i.e : 79.8% hide -> protect... bar remains)
 			local protectElapsed = GetTime() - lastProtect
 			local specialCD = specialRemaining - protectElapsed
-			if specialCD < 5 then 
+			if specialCD < 5 then
 				timerSpecialCD:Start(5, specialsCast+1)
 			else
 				timerSpecialCD:Start(specialCD, specialsCast+1)
@@ -156,7 +154,6 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 123244 then
-		hideTime = GetTime()
 		specialsCast = specialsCast + 1
 		hideActive = true
 		timerScaryFogCD:Cancel()
@@ -186,7 +183,7 @@ end
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 127524 then
 		DBM:EndCombat(self)
-	end	
+	end
 end
 
 --Fires twice when boss returns, once BEFORE visible (and before we can detect unitID, so it flags unknown), then once a 2nd time after visible

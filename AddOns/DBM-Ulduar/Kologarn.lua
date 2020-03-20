@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kologarn", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190722195205")
+mod:SetRevision("20200222200840")
 mod:SetCreatureID(32930)--, 32933, 32934
 mod:SetEncounterID(1137)
 mod:SetModelID(28638)
@@ -87,7 +87,7 @@ end
 function mod:SPELL_AURA_APPLIED_DOSE(args)
 	if args.spellId == 64002 then		        -- Crunch Armor (25-man only)
 		warnCrunchArmor:Show(args.destName)
-        if args.amount >= 2 then 
+        if args.amount >= 2 then
             if args:IsPlayer() then
                 specWarnCrunchArmor2:Show(args.amount)
                 specWarnCrunchArmor2:Play("stackhigh")
@@ -143,7 +143,7 @@ function mod:OnTranscriptorSync(msg, targetName)
 		if self:AntiSpam(5, targetName) then--Antispam sync by target name, since this doesn't use dbms built in onsync handler.
 			warnFocusedEyebeam:Show(targetName)
 			if self.Options.SetIconOnEyebeamTarget then
-				self:SetIcon(targetName, 5, 8) 
+				self:SetIcon(targetName, 5, 8)
 			end
 		end
 	end

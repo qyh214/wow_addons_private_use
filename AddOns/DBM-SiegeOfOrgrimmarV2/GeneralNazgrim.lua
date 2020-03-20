@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(850, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200222213340")
 mod:SetCreatureID(71515)
 mod:SetEncounterID(1603)
 mod:SetZone()
@@ -221,7 +221,7 @@ function mod:OnCombatEnd()
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
-end 
+end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
@@ -232,7 +232,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 143420 then
 		local source = args.sourceName
 		warnIronstorm:Show()
-		if source == UnitName("target") or source == UnitName("focus") then 
+		if source == UnitName("target") or source == UnitName("focus") then
 			specWarnIronstorm:Show(source)
 		end
 	elseif spellId == 143473 then

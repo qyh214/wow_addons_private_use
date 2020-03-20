@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(866, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200222213340")
 mod:SetCreatureID(72276)
 --mod:SetEncounterID(1624)
 mod:SetZone()
@@ -78,7 +78,6 @@ local Ambiguate = Ambiguate
 local residue = {}
 --Not important, don't need to recover
 local playerInside = false
-local previousPower = nil
 local warnedAdd = {}
 --Important, needs recover
 mod.vb.unleashedAngerCast = 0
@@ -106,7 +105,6 @@ end
 
 function mod:OnCombatStart(delay)
 	playerInside = false
-	previousPower = nil
 	table.wipe(warnedAdd)
 	mod.vb.unleashedAngerCast = 0
 	mod.vb.manifestationCount = 0

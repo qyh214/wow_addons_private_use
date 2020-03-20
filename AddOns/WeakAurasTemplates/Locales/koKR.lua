@@ -52,8 +52,7 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Charge Tracking"] = "Charge Tracking"
 	L["cooldown"] = "재사용 대기시간"
-	--[[Translation missing --]]
-	L["Cooldown"] = "Cooldown"
+	L["Cooldown"] = "재사용 대기시간"
 	L["Cooldown Tracking"] = "재사용 대기시간 추적"
 	L["Create Auras"] = "효과 생성"
 	L["debuff"] = "약화 효과"
@@ -128,16 +127,14 @@ local L = WeakAuras.L
 	L["Show Cooldown and Debuff"] = "재사용 대기시간 및 약화 효과 표시"
 	--[[Translation missing --]]
 	L["Show Cooldown and Debuff and Check for Target"] = "Show Cooldown and Debuff and Check for Target"
-	--[[Translation missing --]]
-	L["Show Cooldown and Duration"] = "Show Cooldown and Duration"
+	L["Show Cooldown and Duration"] = "재사용 대기시간 및 지속시간 표시"
 	--[[Translation missing --]]
 	L["Show Cooldown and Duration and Check for Target"] = "Show Cooldown and Duration and Check for Target"
 	--[[Translation missing --]]
 	L["Show Cooldown and Duration and Check Usable"] = "Show Cooldown and Duration and Check Usable"
 	--[[Translation missing --]]
 	L["Show Cooldown and Proc Tracking"] = "Show Cooldown and Proc Tracking"
-	--[[Translation missing --]]
-	L["Show Cooldown and Totem Information"] = "Show Cooldown and Totem Information"
+	L["Show Cooldown and Totem Information"] = "재사용 대기시간 및 토템 정보 표시"
 	L["Show Only if Buffed"] = "있는 강화 효과만 표시"
 	L["Show Only if Debuffed"] = "있는 약화 효과만 표시"
 	L["Show Only if on Cooldown"] = "재사용 대기 중일 때만 표시"

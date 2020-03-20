@@ -13,7 +13,6 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	SpecWarnOverloadSoon		= "Show special warning before overload", -- need to change this, i can not translate this with good grammer. please help.
 	specWarnBreakJasperChains	= "Show special warning when it is safe to break $spell:130395",
-	ArrowOnJasperChains			= "Show DBM Arrow when you are affected by $spell:130395",
 	InfoFrame					= "Show info frame for boss power, player petrification, and which boss is casting petrification"
 })
 

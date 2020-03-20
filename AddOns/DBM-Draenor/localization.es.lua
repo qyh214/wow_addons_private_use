@@ -3,21 +3,6 @@ if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then
 end
 local L
 
--------------------------
--- Drov the Arruinador --
--------------------------
-L = DBM:GetModLocalization(1291)
-
-----------------------
--- Tarlna el Eterno --
-----------------------
-L = DBM:GetModLocalization(1211)
-
---------------
--- Rukhmar --
---------------
-L = DBM:GetModLocalization(1262)
-
 --------------------------
 -- Señor supremo Kazzak --
 --------------------------

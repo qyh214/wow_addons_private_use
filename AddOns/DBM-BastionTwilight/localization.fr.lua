@@ -2,7 +2,7 @@
 local L
 
 -- Initial release by Sasmira: 12/26/2010
--- Last update: 01/22/2011 (by Sasmira) 
+-- Last update: 01/22/2011 (by Sasmira)
 
 --------------------------
 --  Halfus Wyrmbreaker  --

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1425, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814112014")
+mod:SetRevision("20200222221214")
 mod:SetCreatureID(90284)
 mod:SetEncounterID(1785)
 mod:SetZone()
@@ -179,7 +179,7 @@ function mod:OnCombatEnd()
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
-end 
+end
 
 --(ability.id = 186684 or ability.id = 186666 or ability.id = 186660 or ability.id = 188293 or ability.id = 182523) and type = "cast"
 function mod:SPELL_CAST_SUCCESS(args)

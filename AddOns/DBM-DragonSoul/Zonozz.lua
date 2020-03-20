@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(324, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143316")
+mod:SetRevision("20200222203750")
 mod:SetCreatureID(55308)
 mod:SetEncounterID(1294)
 --mod:DisableRegenDetection()--Uncomment in next dbm release
@@ -105,7 +105,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnPsychicDrain:Show()
 		timerPsychicDrainCD:Start()
 	end
-end	
+end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
@@ -146,7 +146,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:Schedule(0.3, warnShadowsTargets)
 		end
 	end
-end		
+end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)

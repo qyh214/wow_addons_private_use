@@ -8,10 +8,22 @@ local L
 ---------------
 L = DBM:GetModLocalization(1161)
 
+L:SetOptionLocalization({
+	MythicSoakBehavior	= "Set Mythic difficulty group soak preference for special warnings",--Translate
+	ThreeGroup			= "3 Group 1 stack each strat",--Translate
+	TwoGroup			= "2 Group 2 stacks each strat"--Translate
+})
+
 ---------------------------
 -- Oregorger, The Devourer --
 ---------------------------
 L = DBM:GetModLocalization(1202)
+
+L:SetOptionLocalization({
+	InterruptBehavior	= "Set behavior for interrupt warnings",--Translate
+	Smart				= "Interrupt warnings are based on bosses spine stacks",--Translate
+	Fixed				= "Interrupts use a 5 or 3 sequence no matter what (even if boss doesn't)"--Translate
+})
 
 ---------------------------
 -- The Blast Furnace --
@@ -25,30 +37,6 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnBlastFrequency	= "Anuncia quando $spell:155209 frequência aumentar"
 })
-
-------------------
--- Hans'gar And Franzok --
-------------------
-L = DBM:GetModLocalization(1155)
-
---------------
--- Flamebender Ka'graz --
---------------
-L = DBM:GetModLocalization(1123)
-
-L:SetMiscLocalization({
-	TorrentYell	= "Torrente derretida caindo em %d"
-})
-
---------------------
---Kromog, Legend of the Mountain --
---------------------
-L = DBM:GetModLocalization(1162)
-
---------------------------
--- Beastlord Darmac --
---------------------------
-L = DBM:GetModLocalization(1122)
 
 --------------------------
 -- Operator Thogar --
@@ -86,6 +74,21 @@ L:SetMiscLocalization({
 -- Blackhand --
 --------------------------
 L = DBM:GetModLocalization(959)
+
+L:SetWarningLocalization({
+	specWarnMFDPosition		= "Marked Position: %s",--Translate
+	specWarnSlagPosition	= "Bomb Position: %s"--Translate
+})
+
+L:SetOptionLocalization({
+	PositionsAllPhases	= "Give positions for $spell:156096 yells during all phases (Instead of just phase 3. This is mostly for testing and assurances, this option is not actually needed)",--Translate
+	InfoFrame			= "Show info frame for $spell:155992 and $spell:156530"--Translate
+})
+
+L:SetMiscLocalization({
+	customMFDSay	= "Marked %s on %s",--Translate
+	customSlagSay	= "Bomb %s on %s"--Translate
+})
 
 -------------
 --  Trash  --

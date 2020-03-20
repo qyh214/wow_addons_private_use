@@ -16,11 +16,6 @@ L:SetOptionLocalization({
 	timerSweeperCD	= DBM_CORE_AUTO_TIMER_OPTIONS.next:format(177776)
 })
 
-------------------
--- El Carnicero --
-------------------
-L = DBM:GetModLocalization(971)
-
 ------------
 -- Tectus --
 ------------

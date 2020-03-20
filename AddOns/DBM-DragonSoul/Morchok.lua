@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(311, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143316")
+mod:SetRevision("20200222203750")
 mod:SetCreatureID(55265)
 mod:SetEncounterID(1292)
 mod:SetZone()
@@ -38,7 +38,7 @@ local timerStomp 			= mod:NewCDTimer(11, 103414, nil, nil, nil, 2)	-- 12-14sec v
 local timerVortexNext		= mod:NewCDTimer(74, 103821, nil, nil, nil, 6)--96~97 sec after last vortex. must subtract blood 17 + vortex buff 5 sec. 74 sec left
 local timerBlood			= mod:NewBuffActiveTimer(17, 103851, nil, nil, nil, 6)
 local timerKohcromCD		= mod:NewTimer(6, "KohcromCD", 55342, nil, nil, nil, DBM_CORE_HEROIC_ICON)--Enable when we have actual timing for any of his abilies
---Basically any time morchok casts, we'll start an echo timer for when it will be mimiced by his twin Kohcrom. 
+--Basically any time morchok casts, we'll start an echo timer for when it will be mimiced by his twin Kohcrom.
 --We will not start timers using Kohcrom's casts, it'll waste WAY too much space.
 --EJ is pretty clear, they are cast shortly after morchok, always. So echo timer is perfect and clean solution.
 

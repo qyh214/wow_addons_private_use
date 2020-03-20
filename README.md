@@ -70,10 +70,22 @@ Auctionlite：https://bbs.nga.cn/read.php?tid=17729131
 
 腐蚀监控（腐蚀1触发的贪婪触须+腐蚀20的腐化之眼+腐蚀40点壮美幻象整合版 腐化之眼超3层有心跳触发壮美幻象有猫叫提示版本）：https://bbs.nga.cn/read.php?tid=20290774
 
+大幻象：https://wago.io/JxMRlFNNX
+
+属性监控：
+
+https://wago.io/rJZgZUxn7
+
+https://bbs.nga.cn/read.php?tid=20616554&_ff=185
+
+全职业中二语音：https://bbs.nga.cn/read.php?tid=20729857
+
 ## TMW字符串
 萨满祭司：https://bbs.nga.cn/read.php?tid=16216888&_ff=185
 
 永恒王宫：https://bbs.nga.cn/read.php?pid=337629614
+
+属性监视：http://nga.178.com/read.php?tid=15007312&_ff=185&forder_by=postdatedesc
 
 ## 一些有用的重要命令
 在游戏内聊天窗口输入，然后回车：

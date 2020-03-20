@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("IronCouncil", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190722195205")
+mod:SetRevision("20200222200840")
 mod:SetCreatureID(32867, 32927, 32857)
 mod:SetEncounterID(1140)
 mod:DisableEEKillDetection()--Fires for first one dying not last
@@ -41,7 +41,7 @@ local timerFusionPunchCast		= mod:NewCastTimer(3, 61903, nil, nil, nil, 5, nil, 
 local timerFusionPunchActive	= mod:NewTargetTimer(4, 61903, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON..DBM_CORE_MAGIC_ICON)
 local warnOverwhelmingPower		= mod:NewTargetAnnounce(61888, 2)
 local timerOverwhelmingPower	= mod:NewTargetTimer(25, 61888, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
-local warnStaticDisruption		= mod:NewTargetAnnounce(61912, 3) 
+local warnStaticDisruption		= mod:NewTargetAnnounce(61912, 3)
 mod:AddBoolOption("SetIconOnOverwhelmingPower", false)
 mod:AddBoolOption("SetIconOnStaticDisruption", false)
 
@@ -81,7 +81,7 @@ local function warnStaticDisruptionTargets(self)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 61920 then -- Supercharge - Unleashes one last burst of energy as the caster dies, increasing all allies damage by 25% and granting them an additional ability.	
+	if args.spellId == 61920 then -- Supercharge
 		warnSupercharge:Show()
 	elseif args:IsSpellID(63479, 61879) then	-- Chain light
 		warnChainlight:Show()
@@ -136,7 +136,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specwarnLightningTendrils:Play("justrun")
 	elseif args:IsSpellID(61912, 63494) then	-- Static Disruption (Hard Mode)
 		disruptTargets[#disruptTargets + 1] = args.destName
-		if self.Options.SetIconOnStaticDisruption then 
+		if self.Options.SetIconOnStaticDisruption then
 			self:SetIcon(args.destName, self.vb.disruptIcon, 20)
 		end
 		self.vb.disruptIcon = self.vb.disruptIcon - 1

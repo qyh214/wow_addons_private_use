@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NorthrendBeasts", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20200222200840")
 mod:SetCreatureID(34796, 35144, 34799, 34797)
 --mod:SetEncounterID(1088)--Buggy, never enable this
 mod:SetMinSyncRevision(104)
@@ -50,7 +50,7 @@ local specWarnTranq			= mod:NewSpecialWarningDispel(66759, "RemoveEnrage", nil, 
 local enrageTimer			= mod:NewBerserkTimer(223)
 local timerCombatStart		= mod:NewCombatTimer(21.5)
 local timerNextBoss			= mod:NewTimer(190, "TimerNextBoss", 2457, nil, nil, 1)
-local timerSubmerge			= mod:NewTimer(45, "TimerSubmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp", nil, nil, 6) 
+local timerSubmerge			= mod:NewTimer(45, "TimerSubmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp", nil, nil, 6)
 local timerEmerge			= mod:NewTimer(10, "TimerEmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp", nil, nil, 6)
 
 local timerBreath			= mod:NewCastTimer(5, 66689, nil, nil, nil, 3)--3 or 5? is it random target or tank?
@@ -138,7 +138,7 @@ function mod:WormsEmerge()
 			timerSweepCD:Start(16)
 			timerBurningSprayCD:Start(17)
 		end
-	end	
+	end
 	self:ScheduleMethod(45, "WormsSubmerge")
 end
 
@@ -197,7 +197,7 @@ function mod:SPELL_AURA_APPLIED_DOSE(args)
 	if args.spellId == 66331 then
 		local amount = args.amount or 1
 		timerNextImpale:Start()
-		if (amount >= 3) or (amount >= 2 and self:IsDifficulty("heroic10", "heroic25")) then 
+		if (amount >= 3) or (amount >= 2 and self:IsDifficulty("heroic10", "heroic25")) then
 			if args:IsPlayer() then
 				specWarnImpale3:Show(amount)
 				specWarnImpale3:Play("stackhigh")
@@ -263,8 +263,8 @@ end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
-	if msg:match(L.Charge) or msg:find(L.Charge) then
-		local target = DBM:GetUnitFullName(target)
+	if (msg:match(L.Charge) or msg:find(L.Charge)) and target then
+		target = DBM:GetUnitFullName(target)
 		warnCharge:Show(target)
 		timerNextCrash:Start()
 		if self.Options.ClearIconsOnIceHowl then

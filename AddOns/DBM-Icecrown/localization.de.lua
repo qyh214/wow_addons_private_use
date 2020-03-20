@@ -130,7 +130,7 @@ L:SetWarningLocalization{
 L:SetOptionLocalization{
 	WarnOozeSpawn				= "Zeige Warnung für Erscheinen eines Kleinen Schlamm",
 	SpecWarnLittleOoze			= "Spezialwarnung, wenn du von einem Kleinen Schlamm angegriffen wirst",
-	RangeFrame					= "Zeige Abstandsfenster (8m)" 
+	RangeFrame					= "Zeige Abstandsfenster (8m)"
 }
 
 L:SetMiscLocalization{

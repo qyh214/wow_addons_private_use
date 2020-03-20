@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1196, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814112014")
+mod:SetRevision("20200222221214")
 mod:SetCreatureID(78491)
 mod:SetEncounterID(1720)
 mod:SetZone()
@@ -100,7 +100,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 160013 then
 		if (self.Options.InterruptCounter == "Two" and self.vb.decayCounter == 2) or (self.Options.InterruptCounter == "Three" and self.vb.decayCounter == 3) or self.vb.decayCounter == 4 then
 			self.vb.decayCounter = 0
-		end	
+		end
 		self.vb.decayCounter = self.vb.decayCounter + 1
 		local guid = args.souceGUID
 		if guid == UnitGUID("target") or guid == UnitGUID("focus") then

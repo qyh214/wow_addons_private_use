@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Ossirian", "DBM-AQ20", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143429")
+mod:SetRevision("20200221204848")
 mod:SetCreatureID(15339)
 mod:SetEncounterID(723)
 mod:SetModelID(15432)
@@ -28,11 +28,11 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args:IsSpellID(25177, 25178, 25180, 25181, 25183) then
 		warnVulnerable:Show(args.spellName)
 		timerVulnerable:Show(args.spellName)
-	end	
+	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 25189 then
 		timerCyclone:Stop(args.destName)
-	end	
+	end
 end

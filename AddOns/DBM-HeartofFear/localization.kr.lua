@@ -90,8 +90,7 @@ L:SetOptionLocalization({
 	specwarnAmberExplosionAM	= "호박석 괴수가 $spell:122402 을 시전할때 차단 특수 경고 보기",
 	specwarnAmberExplosionOther	= "탑승자가 없는 피조물이 $spell:122398 을 시전할때 차단 특수 경고 보기",
 	timerAmberExplosionAMCD		= "호박석 괴수의 다음 $spell:122402 바 보기",
-	InfoFrame					= "의지력 정보를 정보 창으로 보기",
-	FixNameplates				= "피조물 탑승시 이름표 겹침 기능 끄기<br/>(전투 종료 후 원래대로 복구됨)"
+	InfoFrame					= "의지력 정보를 정보 창으로 보기"
 })
 
 L:SetMiscLocalization({
@@ -108,7 +107,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnAmberTrap	= "$spell:125826 생성 과정 알림 보기", 
+	warnAmberTrap	= "$spell:125826 생성 과정 알림 보기",
 	InfoFrame		= "$spell:125390 대상을 정보 창으로 보기"
 })
 
@@ -124,8 +123,4 @@ L = DBM:GetModLocalization("HoFTrash")
 
 L:SetGeneralLocalization({
 	name	= "공포의 심장: 일반구간"
-})
-
-L:SetOptionLocalization({
-	UnseenStrikeArrow	= "$spell:122949 대상이 정해진 경우 DBM 화살표 보기"
 })

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Attumen", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200221204848")
 mod:SetCreatureID(16151, 16152)--15550
 mod:SetEncounterID(652)
 mod:SetModelID(16416)
@@ -35,7 +35,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 		else
 			timerCurseCD:Start()
 		end
-	
 	end
 end
 

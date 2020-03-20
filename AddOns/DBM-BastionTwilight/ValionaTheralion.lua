@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(157, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143316")
+mod:SetRevision("20200222203750")
 mod:SetCreatureID(45992, 45993)
 mod:SetEncounterID(1032)
 mod:SetZone()
@@ -64,7 +64,7 @@ local timerBlackoutCD				= mod:NewCDTimer(45.5, 86788, nil, nil, nil, 3, nil, DB
 local timerDevouringFlamesCD		= mod:NewCDTimer(40, 86840, nil, nil, nil, 3)
 local timerNextDazzlingDestruction	= mod:NewNextTimer(132, 86408, nil, nil, nil, 3)
 --Theralion Ground Phase
-local timerTwilightMeteorite		= mod:NewCastTimer(6, 86013)		
+local timerTwilightMeteorite		= mod:NewCastTimer(6, 86013)
 local timerEngulfingMagic			= mod:NewBuffFadesTimer(20, 86622)
 local timerEngulfingMagicNext		= mod:NewCDTimer(35, 86622, nil, nil, nil, 3)--30-40 second variations.
 local timerNextFabFlames			= mod:NewNextTimer(15, 86505, nil, nil, nil, 3)
@@ -269,7 +269,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerTwilightShift:Cancel(args.destName.." (4)")
 		timerTwilightShift:Cancel(args.destName.." (5)")
 	end
-end	
+end
 
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(86840, 90950) then--Strange to have 2 cast ids instead of either 1 or 4

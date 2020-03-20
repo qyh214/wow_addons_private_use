@@ -4,17 +4,11 @@ end
 
 local L
 
------------------------
--- Drov the Ruiner --
------------------------
-L = DBM:GetModLocalization(1291)
+-------------------------
+-- Supreme Lord Kazzak --
+-------------------------
+L = DBM:GetModLocalization(1452)
 
------------------------
--- Tarlna the Ageless --
------------------------
-L = DBM:GetModLocalization(1211)
-
---------------
--- Rukhmar --
---------------
-L = DBM:GetModLocalization(1262)
+L:SetMiscLocalization({
+	Pull = "You face the might of the Burning Legion!"--Translate
+})

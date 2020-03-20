@@ -16,7 +16,6 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	SpecWarnOverloadSoon		= "석화중이지 않은 수호자가 과부화되려고 할 때 특수 경고 보기",
 	specWarnBreakJasperChains	= "$spell:130395 를 안전하게 해제할 수 있을 때 특수 경고 보기",
-	ArrowOnJasperChains			= "$spell:130395 대상이 된 경우 DBM 화살표 보기",
 	InfoFrame					= "수호자 기력, 현재 석화상태, 석화 진행중인 수호자를 정보 창으로 보기"
 })
 

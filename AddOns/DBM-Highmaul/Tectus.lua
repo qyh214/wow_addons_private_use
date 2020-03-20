@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1195, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814112014")
+mod:SetRevision("20200222221214")
 mod:SetCreatureID(78948, 80557, 80551, 99999)--78948 Tectus, 80557 Mote of Tectus, 80551 Shard of Tectus
 mod:SetEncounterID(1722)--Hopefully win will work fine off this because otherwise tracking shard deaths is crappy
 mod:SetZone()
@@ -64,8 +64,6 @@ local tectusN = EJ_GetEncounterInfo(1195)
 local shardN = DBM:EJ_GetSectionInfo(10063)
 local moteN = DBM:EJ_GetSectionInfo(10064)
 local moteH = {}
-local tectusGUID
-local shardGUID = {}
 local ltectusH, lshardC, lshardT, lmoteC, lmoteT = 1, 1, 1, 1, 1 -- not need to sync.
 
 function mod:CustomHealthUpdate()
@@ -78,19 +76,16 @@ function mod:CustomHealthUpdate()
 			local cid = self:GetCIDFromGUID(guid)
 			if cid == 78948 then
 				tectusH = UnitHealth(unitID) / UnitHealthMax(unitID) * 100
-				tectusGUID = guid
 				ltectusH = tectusH
 			elseif cid == 80551 then
 				shardC = shardC + 1
 				shardT = shardT + (UnitHealth(unitID) / UnitHealthMax(unitID) * 100)
-				shardGUID[guid] = true
 				lshardC = shardC
 				lshardT = shardT
 			elseif cid == 80557 then
 				local health = UnitHealth(unitID) / UnitHealthMax(unitID) * 100
 				moteC = moteC + 1
 				moteT = moteT + health
-				moteGUID[guid] = true
 				lmoteC = moteC
 				lmoteT = moteT
 				moteH[guid] = health

@@ -20,11 +20,6 @@ L:SetMiscLocalization({
 })
 
 ---------------------------
--- Iron Reaver --
----------------------------
-L = DBM:GetModLocalization(1425)
-
----------------------------
 -- Hellfire High Council --
 ---------------------------
 L = DBM:GetModLocalization(1432)
@@ -35,15 +30,6 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	reapDelayed	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.soon:format(184476)
-})
-
-------------------
--- Kormrok --
-------------------
-L = DBM:GetModLocalization(1392)
-
-L:SetMiscLocalization({
-	ExRTNotice	= "%s sent ExRT position assignents. Your positions: Orange:%s, Green:%s, Purple:%s"
 })
 
 --------------
@@ -128,11 +114,6 @@ L:SetOptionLocalization({
 	Count4Resume		= "4 person rotation that resumes where left off when barrier drops",
 	Count4Reset			= "4 person rotation that resets to 1 when barrier drops"
 })
-
---------------------------
--- Tyrant Velhari --
---------------------------
-L = DBM:GetModLocalization(1394)
 
 --------------------------
 -- Mannoroth --

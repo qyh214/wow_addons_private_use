@@ -5,7 +5,7 @@
 
 local LibEvent = LibStub:GetLibrary("LibEvent.7000")
 
-local VERSION = 2.4
+local VERSION = 2.5
 
 local addon, ns = ...
 
@@ -20,6 +20,7 @@ local DefaultDB = {
     ShowItemBorder = true,                --物品直角邊框
     EnableItemLevel  = true,              --物品等級
       ShowColoredItemLevelString = false, --裝等文字隨物品品質
+      ShowCorruptedMark = true,           --腐蚀装备标记
       ShowItemSlotString = true,          --物品部位文字
         EnableItemLevelBag = true,
         EnableItemLevelBank = true,
@@ -57,6 +58,7 @@ local options = {
     { key = "EnableItemLevel",
       child = {
         { key = "ShowColoredItemLevelString" },
+        { key = "ShowCorruptedMark" },
         { key = "ShowItemSlotString" },
       },
       subtype = {
@@ -218,7 +220,7 @@ end
 
 local function CreateCheckbox(list, parent, anchor, offsetx, offsety)
     local checkbox, subbox
-    local stepx, stepy = 20, 27
+    local stepx, stepy = 20, 25
     if (not list) then return offsety end
     for i, v in ipairs(list) do
         checkbox = CreateFrame("CheckButton", nil, parent, "InterfaceOptionsCheckButtonTemplate")

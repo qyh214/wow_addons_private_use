@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Sartharion", "DBM-ChamberOfAspects", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20200222200840")
 mod:SetCreatureID(28860)
 mod:SetEncounterID(1090)
 mod:SetModelID(27035)
@@ -84,7 +84,7 @@ function mod:OnCombatStart(delay)
 	twipe(lastfire)
 end
 
-function mod:OnCombatEnd(wipe)	
+function mod:OnCombatEnd(wipe)
 	if not self.Options.AnnounceFails then return end
 	if DBM:GetRaidRank() < 1 or not self.Options.Announce then return end
 
@@ -98,7 +98,6 @@ function mod:OnCombatEnd(wipe)
 	end
 	SendChatMessage(L.VoidZones:format(voids), "RAID")
 	twipe(sortedFails)
-	
 	local fire = ""
 	for k, v in pairs(lastfire) do
 		tinsert(sortedFails, k)
@@ -130,7 +129,7 @@ function mod:SPELL_DAMAGE(_, _, _, _, _, destName, _, _, spellId)
 	if self.Options.AnnounceFails and self.Options.Announce and spellId == 59128 and DBM:GetRaidRank() >= 1 and DBM:GetRaidUnitId(destName) ~= "none" and destName then
 		lastvoids[destName] = (lastvoids[destName] or 0) + 1
 		SendChatMessage(L.VoidZoneOn:format(destName), "RAID")
-	end	
+	end
 end
 
 function mod:RAID_BOSS_EMOTE(msg, mob)

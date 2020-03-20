@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Shahraz", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200221204848")
 mod:SetCreatureID(22947)
 mod:SetEncounterID(607)
 mod:SetModelID(21252)
@@ -58,7 +58,7 @@ end
 
 function mod:OnCombatEnd()
 	self:UnregisterShortTermEvents()
-end 
+end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 41001 then

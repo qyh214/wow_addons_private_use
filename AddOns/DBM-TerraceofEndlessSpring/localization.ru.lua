@@ -73,6 +73,6 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	warnBreathOnPlatform		= "Предупреждать о $spell:119414 когда вы на платформе<br/>(не рекомендуется, для рейд лидера)",
 	specWarnBreathOfFearSoon	= "Предупреждать заранее о $spell:119414, если на вас нет баффа $spell:117964",
-	specWarnMovement			= "Спец-предупреждение куда двигаться при выстрелах $spell:120047<br/>(Нажмите чтобы скопировать ссылку <a href=\"http://mysticalos.com/terraceofendlesssprings.jpg\">|cff3588ffhttp://mysticalos.com/terraceofendlesssprings.jpg|r</a>)",
+	specWarnMovement			= "Спец-предупреждение куда двигаться при выстрелах $spell:120047",
 	timerSpecialAbility			= "Отсчет времени до следующей спец-способности на второй фазе"
 })

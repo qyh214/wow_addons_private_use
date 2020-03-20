@@ -84,7 +84,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetTimerLocalization{
-	TimerSpecialSpell	= "Следующая спец-способность"	
+	TimerSpecialSpell	= "Следующая спец-способность"
 }
 
 L:SetWarningLocalization{

@@ -149,9 +149,7 @@ L.ExpandUpwards				= "Expandir para cima"
 L.FillUpBars				= "Barras enchem"
 L.ClickThrough				= "Desabilitar eventos de mouse (permite clicar através das barras)"
 L.Bar_Decimal				= "Exibir porcentagens abaixo do temporizador: %d"
-L.Bar_DBMOnly				= "As opções abaixo só funcionam com o estilo de barra \"DBM\" ."
 L.Bar_EnlargeTime			= "Barras aumentam abaixo deste tempo: %d"
-L.Bar_EnlargePercent		= "Barras aumentam abaixo desta porcentagem: %0.1f%%"
 L.BarSpark					= "Barra faísca"
 L.BarFlash					= "Barra pisca quando estiver para expirar"
 L.BarSort					= "selecionar pelo tempo restante"
@@ -192,8 +190,8 @@ L.SpecWarn_AlwaysVoice		= "Sempre tocar todos os avisos falados (Substitui opç�
 
 
 -- Tab: Global Filter
-L.Panel_SpamFilter			= "DBM Desligamentos globais & filtros"
-L.Area_SpamFilter_Outgoing	= "DBM opções de desligamentos globais & filtros"
+L.Panel_SpamFilter			= "Desligamentos globais & filtros"
+L.Area_SpamFilter_Outgoing	= "opções de desligamentos globais & filtros"
 L.SpamBlockNoShowAnnounce	= "Não exibir anúncios ou tocar avisos sonoros"
 L.SpamBlockNoSetIcon		= "Não marcar jogadores com ícones"
 L.SpamBlockNoRangeFrame		= "Não exibir quadro de distancia"

@@ -16,7 +16,6 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	SpecWarnOverloadSoon		= "為即將超載顯示特別警告",
 	specWarnBreakJasperChains	= "當可安全扯斷$spell:130395時顯示特別警告",
-	ArrowOnJasperChains			= "當中了$spell:130395時顯示DBM箭頭",
 	InfoFrame					= "為首領能量，玩家石化和那個首領施放石化顯示訊息框"
 })
 

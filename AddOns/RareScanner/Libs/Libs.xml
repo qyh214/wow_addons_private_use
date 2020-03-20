@@ -16,4 +16,5 @@
 	<Include file="AceDBOptions-3.0\AceDBOptions-3.0.xml"/>
 	<Include file="AceSerializer-3.0\AceSerializer-3.0.xml"/>
 	<Include file="LibQTip-1.0\lib.xml"/>
+	<Include file="LibRangeCheck-2.0\LibRangeCheck-2.0.xml"/>
 </Ui>

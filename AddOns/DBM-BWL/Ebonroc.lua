@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Ebonroc", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200218153056")
 mod:SetCreatureID(14601)
 mod:SetEncounterID(614)
 mod:SetModelID(6377)
@@ -13,18 +13,21 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 23340"
 )
 
+--(ability.id = 23339 or ability.id = 22539) and type = "begincast"
 local warnWingBuffet	= mod:NewCastAnnounce(23339, 2)
 local warnShadowFlame	= mod:NewCastAnnounce(22539, 2)
-local warnShadow		= mod:NewTargetAnnounce(23340, 4)
+local warnShadow		= mod:NewTargetNoFilterAnnounce(23340, 4, nil, "Tank|Healer")
 
 local specWarnShadowYou	= mod:NewSpecialWarningYou(23340, nil, nil, nil, 1, 2)
 local specWarnShadow	= mod:NewSpecialWarningTaunt(23340, nil, nil, nil, 1, 2)
 
 local timerWingBuffet	= mod:NewNextTimer(31, 23339, nil, nil, nil, 2)
+local timerShadowFlameCD= mod:NewCDTimer(14, 22539, nil, false)--14-21
 local timerShadow		= mod:NewTargetTimer(8, 23340, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
 
 function mod:OnCombatStart(delay)
-	timerWingBuffet:Start(-delay)
+	timerShadowFlameCD:Start(18-delay)
+	timerWingBuffet:Start(30-delay)
 end
 
 function mod:SPELL_CAST_START(args)--did not see ebon use any of these abilities
@@ -33,6 +36,7 @@ function mod:SPELL_CAST_START(args)--did not see ebon use any of these abilities
 		timerWingBuffet:Start()
 	elseif args.spellId == 22539 then
 		warnShadowFlame:Show()
+		timerShadowFlameCD:Start()
 	end
 end
 
@@ -42,7 +46,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnShadowYou:Show()
 			specWarnShadowYou:Play("targetyou")
 		else
-			if self.Options.SpecWarn23340taunt then
+			if self.Options.SpecWarn23340taunt and (self:IsTank() or not DBM.Options.FilterTankSpec) then
 				specWarnShadow:Show(args.destName)
 				specWarnShadow:Play("tauntboss")
 			else

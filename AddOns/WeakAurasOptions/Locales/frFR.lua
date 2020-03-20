@@ -565,6 +565,8 @@ Seule une unique valeur peut être choisie]=]
 	L["Repeat every"] = "Répéter tous les"
 	L["Required for Activation"] = "Requis pour l'activation"
 	L["Reset all options to their default values."] = "Réinitialiser toutes les options à leurs valeurs par défaut."
+	--[[Translation missing --]]
+	L["Reset Entry"] = "Reset Entry"
 	L["Reset to Defaults"] = "Réinitialiser les paramètres par défaut"
 	L["Right"] = "Droite"
 	L["Right 2 HUD position"] = "Position ATH Droite 2"

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("GeneralVezax", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190722195205")
+mod:SetRevision("20200222200840")
 mod:SetCreatureID(33271)
 mod:SetEncounterID(1134)
 mod:SetModelID(28548)
@@ -90,7 +90,7 @@ function mod:SPELL_CAST_START(args)
 		local kickCount = self.vb.interruptCount
 		specWarnSearingFlames:Show(args.sourceName, kickCount)
 		specWarnSearingFlames:Play("kick"..kickCount.."r")
-	elseif args.spellId == 62662 then 
+	elseif args.spellId == 62662 then
 		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
 		if tanking or (status == 3) then--Player is current target
 			specWarnSurgeDarkness:Show()
@@ -107,7 +107,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 62662 then	
+	if args.spellId == 62662 then
 		timerSurgeofDarkness:Stop()
 	end
 end

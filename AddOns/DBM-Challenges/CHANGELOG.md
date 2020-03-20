@@ -1,14 +1,12 @@
 # <DBM> Challenges
 
-## [r116](https://github.com/DeadlyBossMods/DBM-Challenges/tree/r116) (2020-02-11)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Challenges/compare/r115...r116)
+## [r125](https://github.com/DeadlyBossMods/DBM-Challenges/tree/r125) (2020-03-10)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Challenges/compare/r124...r125)
 
-- Added touch of the abyss and shockwave warnings to Vison of Org trash mobs, since they are both particularlly annoying stuns of not dodged or interrupted.  
-    Increased quills throttle by 1 second  
-- Removed dark gaze timer  
-    Added 5 second throttle to dark gaze warnings  
-- Revert "Adjust Entomophobia warning to happen earlier (2 stacks) instead of 3"  
-- Adjust Entomophobia warning to happen earlier (2 stacks) instead of 3  
-- Merge pull request #3 from Yllelder/patch-1  
-    Update localization.es.lua  
-- Update localization.es.lua  
+- Toned down Toxic Breath warning. It's used by more mobs than i realized and doesn't need a special warning anyways. Standard warning suits it fine  
+    Added defiled ground yell since it was missing one.  
+    Added horrifying Shout general announce if interrupt is on CD or it's an off target.  
+    Added Nameplate aura for horrifying Shout as well to visual which of the two mobs is casting it, if it's an off target.  
+    Improved Nameplate aura clearning for Touch of Abyss if cast is just flat out never interrupted in any way what so ever.  
+- Tweak last, to make sure ignores always added to table regardless  
+- Attempt to throttle false positives for haunting shadows, when they are running off screen but clip into nameplate range for brief moments while doing it.  

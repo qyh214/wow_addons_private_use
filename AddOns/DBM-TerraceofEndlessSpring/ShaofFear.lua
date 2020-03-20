@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(709, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143417")
+mod:SetRevision("20200222213340")
 mod:SetCreatureID(60999)--61042 Cheng Kang, 61046 Jinlun Kun, 61038 Yang Guoshi, 61034 Terror Spawn
 mod:SetEncounterID(1431)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
@@ -88,7 +88,6 @@ mod.vb.specialsCast = 000--Huddle(100), Spout(10), Strike(1)
 mod.vb.thrashCount = 0
 mod.vb.submergeCount = 0
 mod.vb.specialCount = 0
-local huddleIcon = 8
 local wallLight, fearless, waterspout, huddleinterror = DBM:GetSpellInfo(117964), DBM:GetSpellInfo(118977), DBM:GetSpellInfo(120519), DBM:GetSpellInfo(120629)
 local ominousCackleTargets = {}
 local platformGUIDs = {}
@@ -135,7 +134,6 @@ end
 local function warnHuddleInTerrorTargets()
 	warnHuddleInTerror:Show(mod.vb.specialCount, table.concat(huddleInTerrorTargets, "<, >"))
 	table.wipe(huddleInTerrorTargets)
-	huddleIcon = 8
 end
 
 local function startSpecialTimers(self)
@@ -215,7 +213,6 @@ function mod:OnCombatStart(delay)
 	self.vb.dreadSprayCounter = 0
 	self.vb.thrashCount = 0
 	self.vb.submergeCount = 0
-	huddleIcon = 8
 	MobID = nil
 	self.vb.specialsCast = 000
 	table.wipe(ominousCackleTargets)
@@ -287,7 +284,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerDreadSprayCD:Start(args.sourceGUID)
 	elseif spellId == 119888 and MobID and MobID == args:GetSrcCreatureID() then
 		timerDeathBlossom:Show()
-	elseif spellId == 118977 and args:IsPlayer() then--Fearless, you're leaving platform 
+	elseif spellId == 118977 and args:IsPlayer() then--Fearless, you're leaving platform
 		timerFearless:Start()
 		self:UnscheduleMethod("CheckPlatformLeaved")
 		self:LeavePlatform()
@@ -376,7 +373,7 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 129147 and args:IsPlayer() then -- Move onPlatform check when Ominous Cackle debuff removes (actually reachs platform). Because on 25 man, you can see other platform warning and timer while flying to platform. (not actually reachs platform). This causes health frame error and etc error. 
+	if spellId == 129147 and args:IsPlayer() then -- Move onPlatform check when Ominous Cackle debuff removes (actually reachs platform). Because on 25 man, you can see other platform warning and timer while flying to platform. (not actually reachs platform). This causes health frame error and etc error.
 		onPlatform = true
 	elseif spellId == 120047 then
 		timerDreadSpray:Cancel(args.sourceGUID)
@@ -435,12 +432,12 @@ function mod:SPELL_CAST_SUCCESS(args)--Handling Dread Sprays
 			if self.vb.dreadSprayCounter == 6 then
 				MoveWarningForward:Show()
 			end
-		end	
+		end
 		if MobID == 61042 then
 			if self.vb.dreadSprayCounter == 6 then
 				MoveWarningForward:Show()
 			end
-		end	
+		end
 		if MobID == 61038 then
 			if self.vb.dreadSprayCounter == 3 then
 				MoveWarningRight:Show()

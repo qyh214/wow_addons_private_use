@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1122, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814112014")
+mod:SetRevision("20200222221214")
 mod:SetCreatureID(76865)--No need to add beasts to this. It's always main boss that's engaged first and dies last.
 mod:SetEncounterID(1694)
 mod:SetZone()
@@ -412,7 +412,7 @@ function mod:UNIT_TARGETABLE_CHANGED(uId)
 		DBM:Debug("UNIT_TARGETABLE_CHANGED, Boss Dismounting", 2)
 		updateBeastTimers(self, true, nil, true)
 	end
-end	
+end
 
 
 function mod:UNIT_DIED(args)

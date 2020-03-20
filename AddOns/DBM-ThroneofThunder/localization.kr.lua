@@ -112,7 +112,6 @@ L = DBM:GetModLocalization(828)
 L:SetWarningLocalization({
 	warnFlock		= "%2$s : %1$s %3$s",
 	specWarnFlock	= "%2$s : %1$s %3$s",
-	specWarnBigBird	= "곧 둥지 수호자 : %s",
 	specWarnBigBird	= "둥지 수호자 : %s"
 })
 

@@ -29,7 +29,7 @@
 ## X-DBM-Mod-MinCoreRevision: 14565
 ## X-Curse-Project-ID: 85688
 ## X-WoWI-ID: 23199
-## Version: r133
+## Version: r134
 
 localization.en.lua
 localization.kr.lua
@@ -37,7 +37,6 @@ localization.de.lua
 localization.es.lua
 localization.tw.lua
 localization.cn.lua
-localization.fr.lua
 localization.ru.lua
 BrewingStorm.lua
 BattleHighSeas.lua

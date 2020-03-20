@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2125, "DBM-Party-BfA", 10, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200127182636")
+mod:SetRevision("20200306012401")
 mod:SetCreatureID(135358, 135359, 135360, 131823, 131824, 131825)--All versions so we can pull boss
 mod:SetEncounterID(2113)
 mod:DisableESCombatDetection()--ES fires For entryway trash pull sometimes, for some reason.
@@ -13,13 +13,17 @@ mod:SetMinSyncRevision(17703)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
+	"SPELL_CAST_START 260773 260741",
+	"SPELL_CAST_SUCCESS 260741 260907 260703 268088",
 	"SPELL_AURA_APPLIED 260805 260703 260741 260900",
 	"SPELL_AURA_REMOVED 260805 268088",
-	"SPELL_CAST_START 260773",
-	"SPELL_CAST_SUCCESS 260741 260907 260703 268088",
 	"UNIT_TARGET_UNFILTERED"
 )
 
+--[[
+(ability.id = 260741 or ability.id = 260907 or ability.id = 260703) and (type = "begincast" or type = "cast")
+ or ability.id = 260805 and (type = "applybuff" or type = "removebuff")
+--]]
 local warnActiveTriad				= mod:NewTargetNoFilterAnnounce(260805, 2)
 local warnUnstableMark				= mod:NewTargetAnnounce(260703, 2)
 local warnAuraofDreadOver			= mod:NewEndAnnounce(268088, 1)
@@ -28,9 +32,8 @@ local specWarnRitual				= mod:NewSpecialWarningSpell(260773, nil, nil, nil, 2, 2
 local specWarnUnstableMark			= mod:NewSpecialWarningMoveAway(260703, nil, nil, nil, 1, 2)
 local yellUnstableMark				= mod:NewYell(260703)
 local specWarnAuraofDread			= mod:NewSpecialWarningKeepMove(268088, nil, nil, nil, 1, 2)
-local specWarnJaggedNettles			= mod:NewSpecialWarningTarget(260703, "Healer", nil, nil, 1, 2)
+local specWarnJaggedNettles			= mod:NewSpecialWarningTarget(260741, nil, nil, 2, 1, 2)
 local specWarnSoulManipulation		= mod:NewSpecialWarningSwitch(260907, nil, nil, nil, 1, 2)
---local specWarnGTFO				= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 8)
 
 local timerJaggedNettlesCD			= mod:NewNextTimer(13.3, 260741, nil, nil, nil, 5, nil, DBM_CORE_HEALER_ICON)
 local timerSoulManipulationCD		= mod:NewNextTimer(13.3, 260907, nil, nil, nil, 3, nil, DBM_CORE_TANK_ICON)--Always tank? if not, remove tank icon
@@ -42,6 +45,14 @@ mod:AddSetIconOption("SetIconOnTriad", 260805, true, true, {8})
 
 mod.vb.activeTriad = nil
 local IrisBuff = DBM:GetSpellInfo(260805)
+
+function mod:NettlesTargetQuestionMark(targetname, uId)
+	if not targetname then return end
+	if self:AntiSpam(5, targetname) then
+		specWarnJaggedNettles:Show(targetname)
+		specWarnJaggedNettles:Play("healfull")
+	end
+end
 
 function mod:OnCombatStart(delay)
 	self.vb.activeTriad = nil
@@ -63,6 +74,50 @@ function mod:OnCombatEnd()
 	end
 end
 
+function mod:SPELL_CAST_START(args)
+	local spellId = args.spellId
+	if spellId == 260773 then
+		specWarnRitual:Show()
+		specWarnRitual:Play("aesoon")
+	elseif spellId == 260741 then
+		--People say LW warns this faster, but is target scanning actually accurate?
+		--My logs showed this spell was not a good candidate for target scanning, but maybe it merits more testing.
+		--Below shows that sparty was target at start of cast, Omega was target at the end of cast, but the spell didn't go on EITHER ONE of them
+		--"<48.98 23:48:04> [UNIT_SPELLCAST_START] Sister Briar(Sparty) - Jagged Nettles - 2s [[boss3:Cast-3-3882-1862-7607-260741-000A7796F4:260741]]", -- [651]
+		--"<51.01 23:48:06> [UNIT_SPELLCAST_SUCCEEDED] Sister Briar(Omegall) -Jagged Nettles- [[boss3:Cast-3-3882-1862-7607-260741-000A7796F4]]", -- [678]
+		--"<51.01 23:48:06> [CLEU] SPELL_CAST_SUCCESS#Creature-0-3882-1862-7607-131825-00007795D8#Sister Briar#Player-60-0BA0A53F#Lethorr#260741#Jagged Nettles#nil#nil", -- [681]
+		--"<51.02 23:48:06> [CLEU] SPELL_DAMAGE#Creature-0-3882-1862-7607-131825-00007795D8#Sister Briar#Player-60-0BA0A53F#Lethorr#260741#Jagged Nettles", -- [682]
+		--I guess if it starts spitting out random wrong targets, i'll hear about it, so here is to a drycode find out! Maybe the boss looks at a 3rd target mid cast that transcritor missed?
+		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "NettlesTargetQuestionMark", 0.1, 7, true)
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	if spellId == 260741 then
+		--Prevent timer from starting if Cast start started before transfer of power, but Iris sister changed by time fast finished
+		local bossUnitID = self:GetUnitIdFromGUID(args.sourceGUID)
+		if bossUnitID and not DBM:UnitBuff(bossUnitID, IrisBuff) and not DBM:UnitDebuff(bossUnitID, IrisBuff) then
+			timerJaggedNettlesCD:Start()--13.3, Time until cast START
+		end
+	--[[elseif spellId == 260907 then
+		--Prevent timer from starting if Cast start started before transfer of power, but Iris sister changed by time fast finished
+		local bossUnitID = self:GetUnitIdFromGUID(args.sourceGUID)
+		if bossUnitID and not DBM:UnitBuff(bossUnitID, IrisBuff) and not DBM:UnitDebuff(bossUnitID, IrisBuff) then
+			timerSoulManipulationCD:Start()
+		end--]]
+	elseif spellId == 260703 then
+		--Prevent timer from starting if Cast start started before transfer of power, but Iris sister changed by time fast finished
+		local bossUnitID = self:GetUnitIdFromGUID(args.sourceGUID)
+		if bossUnitID and not DBM:UnitBuff(bossUnitID, IrisBuff) and not DBM:UnitDebuff(bossUnitID, IrisBuff) then
+			timerUnstableRunicMarkCD:Start()
+		end
+	elseif spellId == 268088 then
+		specWarnAuraofDread:Show()
+		specWarnAuraofDread:Play("keepmove")
+	end
+end
+
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 260805 then--Iris
@@ -70,11 +125,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnActiveTriad:Show(args.destName)
 		local cid = self:GetCIDFromGUID(args.destGUID)
 		if cid == 135360 or cid == 131825 then--Sister Briar
-			timerJaggedNettlesCD:Start(7.8)--CAST SUCCESS
+			timerJaggedNettlesCD:Start(7.7)--CAST START
 		elseif cid == 135358 or cid == 131823 then--Sister Malady
 			timerSoulManipulationCD:Start(11.3)--CAST SUCCESS
 		elseif cid == 135359 or cid == 131824 then--Sister Solena
-			timerUnstableRunicMarkCD:Start(8.5)
+			timerUnstableRunicMarkCD:Start(10.5)--CAST SUCCESS
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(6)
 			end
@@ -86,7 +141,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnUnstableMark:Play("scatter")
 			yellUnstableMark:Yell()
 		end
-	elseif spellId == 260741 then
+	elseif spellId == 260741 and self:AntiSpam(5, args.destName) then
 		specWarnJaggedNettles:Show(args.destName)
 		specWarnJaggedNettles:Play("healfull")
 	elseif spellId == 260900 then
@@ -96,7 +151,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	end
 end
---mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
@@ -114,40 +168,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 268088 then
 		warnAuraofDreadOver:Show()
-	end
-end
-
-function mod:SPELL_CAST_START(args)
-	local spellId = args.spellId
-	if spellId == 260773 then
-		specWarnRitual:Show()
-		specWarnRitual:Play("aesoon")
-	end
-end
-
-function mod:SPELL_CAST_SUCCESS(args)
-	local spellId = args.spellId
-	if spellId == 260741 then
-		--Prevent timer from starting if Cast start started before transfer of power, but Iris sister changed by time fast finished
-		local bossUnitID = self:GetUnitIdFromGUID(args.sourceGUID)
-		if bossUnitID and not DBM:UnitBuff(bossUnitID, IrisBuff) and not DBM:UnitDebuff(bossUnitID, IrisBuff) then
-			timerJaggedNettlesCD:Start()
-		end
-	--[[elseif spellId == 260907 then
-		--Prevent timer from starting if Cast start started before transfer of power, but Iris sister changed by time fast finished
-		local bossUnitID = self:GetUnitIdFromGUID(args.sourceGUID)
-		if bossUnitID and not DBM:UnitBuff(bossUnitID, IrisBuff) and not DBM:UnitDebuff(bossUnitID, IrisBuff) then
-			timerSoulManipulationCD:Start()
-		end--]]
-	elseif spellId == 260703 then
-		--Prevent timer from starting if Cast start started before transfer of power, but Iris sister changed by time fast finished
-		local bossUnitID = self:GetUnitIdFromGUID(args.sourceGUID)
-		if bossUnitID and not DBM:UnitBuff(bossUnitID, IrisBuff) and not DBM:UnitDebuff(bossUnitID, IrisBuff) then
-			timerJaggedNettlesCD:Start()
-		end
-	elseif spellId == 268088 then
-		specWarnAuraofDread:Show()
-		specWarnAuraofDread:Play("keepmove")
 	end
 end
 
@@ -176,30 +196,3 @@ do
 		end
 	end
 end
-
---[[
-function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 228007 and destGUID == UnitGUID("player") and self:AntiSpam(2, 4) then
-		specWarnGTFO:Show()
-		specWarnGTFO:Play("watchfeet")
-	end
-end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
-
-function mod:UNIT_DIED(args)
-	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 135360 then--Sister Briar
-		timerJaggedNettlesCD:Stop()
-	elseif cid == 135358 then--Sister Malady
-
-	elseif cid == 135359 then--Sister Solena
-
-	end
-end
-
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
-	if spellId == 257939 then
-
-	end
-end
---]]

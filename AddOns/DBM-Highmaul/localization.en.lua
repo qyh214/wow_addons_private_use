@@ -14,11 +14,6 @@ L:SetOptionLocalization({
 })
 
 ---------------------------
--- The Butcher --
----------------------------
-L = DBM:GetModLocalization(971)
-
----------------------------
 -- Tectus, the Living Mountain --
 ---------------------------
 L = DBM:GetModLocalization(1195)

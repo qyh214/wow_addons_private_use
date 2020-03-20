@@ -8,10 +8,9 @@ local L
 ---------------
 L = DBM:GetModLocalization(1128)
 
----------------------------
--- The Butcher --
----------------------------
-L = DBM:GetModLocalization(971)
+L:SetTimerLocalization({
+	timerSweeperCD	= "Next Arena Sweeper"--Translate
+})
 
 ---------------------------
 -- Tectus, the Living Mountain --
@@ -62,7 +61,7 @@ L:SetOptionLocalization({
 L:SetMiscLocalization({
 	supressionTarget1	= "Je vous écraserai !",
 	supressionTarget2	= "Silence !",
-	supressionTarget3	= "Taisez-vous !", 
+	supressionTarget3	= "Taisez-vous !",
 	supressionTarget4	= "Je vous réduirai en pièces !"
 })
 

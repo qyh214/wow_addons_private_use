@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(155, "DBM-ThroneFourWinds", nil, 75)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143316")
+mod:SetRevision("20200222203750")
 mod:SetCreatureID(46753)
 mod:SetEncounterID(1034)
 mod:SetZone()
@@ -55,7 +55,6 @@ mod:AddBoolOption("LightningRodIcon")
 mod:AddBoolOption("RangeFrame", true)
 
 local phase2Started = false
-local strikeStarted = false
 
 function mod:CloudRepeat()
 	self:UnscheduleMethod("CloudRepeat")
@@ -73,7 +72,6 @@ end
 
 function mod:OnCombatStart(delay)
 	phase2Started = false
-	strikeStarted = false
 	berserkTimer:Start(-delay)
 	timerWindBurstCD:Start(20-delay)
 	timerIceStormCD:Start(6-delay)

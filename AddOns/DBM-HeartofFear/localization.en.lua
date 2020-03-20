@@ -32,7 +32,6 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(744)
 
 L:SetOptionLocalization({
-	UnseenStrikeArrow	= DBM_CORE_AUTO_ARROW_OPTION_TEXT:format(122949),
 	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 123175)
 })
 
@@ -140,8 +139,4 @@ L = DBM:GetModLocalization("HoFTrash")
 
 L:SetGeneralLocalization({
 	name	= "Heart of Fear Trash"
-})
-
-L:SetOptionLocalization({
-	UnseenStrikeArrow	= "Show DBM Arrow when someone is affected by $spell:122949"
 })

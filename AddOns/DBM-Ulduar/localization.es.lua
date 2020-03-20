@@ -9,7 +9,7 @@ L = DBM:GetModLocalization("FlameLeviathan")
 L:SetGeneralLocalization{
 	name = "Flame Leviathan"
 }
-	
+
 L:SetMiscLocalization{
 	YellPull	= "Entidades hostiles detectadas. Protocolo de evaluación de amenaza activado. Objetivo principal fijado. Tiempo restante para re-evaluación: 30 segundos.",
 	Emote		= "%%s persigue a (%S+)%."
@@ -51,7 +51,7 @@ L:SetGeneralLocalization{
 	name = "Razorscale"
 }
 
-L:SetWarningLocalization{	
+L:SetWarningLocalization{
 	warnTurretsReadySoon		= "Última torreta lista en 20 s",
 	warnTurretsReady			= "Última torreta lista"
 }
@@ -255,7 +255,7 @@ L:SetMiscLocalization{
 	YellPhase2	= "Gusanos impertinentes, ¿cómo osáis desafiarme en mi pedestal? ¡Os machacaré con mis propias manos!",
 	YellKill	= "¡Guardad las armas! ¡Me rindo!",
 	ChargeOn	= "Carga relámpago: %s",
-	Charge		= "Fallos en Carga relámpago (en este intento): %s" 
+	Charge		= "Fallos en Carga relámpago (en este intento): %s"
 }
 
 -----------
@@ -393,7 +393,7 @@ L:SetWarningLocalization{
 	SpecWarnSanity 					= "%d de Cordura restante",
 	SpecWarnGuardianLow				= "Guardián a poca salud - ¡deja de atacar!",
 	SpecWarnMadnessOutNow			= "Inducir a la locura en breve - ¡sal ya!",
-	WarnBrainPortalSoon				= "Portales en 3 s",	
+	WarnBrainPortalSoon				= "Portales en 3 s",
 	SpecWarnFervor					= "Fervor de Sara en ti",
 	SpecWarnFervorCast				= "Fervor de Sara se está lanzando en ti",
 	specWarnBrainPortalSoon			= "Portal en breve"

@@ -23,26 +23,12 @@ L:SetMiscLocalization({
 })
 
 ---------------------------
--- Iron Reaver --
----------------------------
-L = DBM:GetModLocalization(1425)
-
----------------------------
 -- Hellfire High Council --
 ---------------------------
 L = DBM:GetModLocalization(1432)
 
 L:SetWarningLocalization({
 	reapDelayed	= "악몽의 형상 종료 후 수확"
-})
-
-------------------
--- Kormrok --
-------------------
-L = DBM:GetModLocalization(1392)
-
-L:SetMiscLocalization({
-	ExRTNotice	= "ExRT 애드온으로부터 위치 받음 (%s|1이;가; 보냄). 당신의 위치 - 주황색: %s, 녹색: %s, 보라색: %s"
 })
 
 --------------
@@ -127,11 +113,6 @@ L:SetOptionLocalization({
 	Count4Resume		= "4명 차단, 보호막 종료 후 차단 횟수 유지",
 	Count4Reset			= "4명 차단, 보호막 종료 후 1번부터 다시 시작"
 })
-
---------------------------
--- Tyrant Velhari --
---------------------------
-L = DBM:GetModLocalization(1394)
 
 --------------------------
 -- Mannoroth --

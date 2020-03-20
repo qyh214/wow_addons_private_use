@@ -43,7 +43,7 @@
 --
 
 
-local revision =(string.sub("20200210022649", 1, -5))
+local revision =(string.sub("20200312212624", 1, -5))
 local FrameTitle = "DBM_GUI_Option_"	-- all GUI frames get automatically a name FrameTitle..ID
 
 local PanelPrototype = {}
@@ -1088,7 +1088,6 @@ do
 		else
 			TABLE = DBM_GUI_Bosses:GetVisibleTabs()
 		end
-		local element
 
 		for i, element in ipairs(displayedElements) do
 			displayedElements[i] = nil
@@ -1123,7 +1122,7 @@ do
 		end
 
 		for i = 1, #buttons do
-			element = displayedElements[i + offset]
+			local element = displayedElements[i + offset]
 			if ( not element ) then
 				DBM_GUI_OptionsFrame:HideButton(buttons[i])
 			else
@@ -2126,7 +2125,7 @@ local function CreateOptionsMenu()
 		bar7OptionsText2:SetPoint("TOPLEFT", customInline, "TOPLEFT", 0, -60)
 
 		--General Options
-		local BarSetup = BarSetupPanel:CreateArea(L.AreaTitle_BarSetup, nil, 410, true)
+		local BarSetup = BarSetupPanel:CreateArea(L.AreaTitle_BarSetup, nil, 460, true)
 
 		local color1 = BarSetup:CreateColorSelect(64)
 		local color2 = BarSetup:CreateColorSelect(64)
@@ -2196,6 +2195,16 @@ local function CreateOptionsMenu()
 			end
 		end
 
+		local Styles = {
+			{	text	= L.BarDBM,				value	= "DBM" },
+			{	text	= L.BarSimple,			value 	= "NoAnim" }
+		}
+
+		local StyleDropDown = BarSetup:CreateDropdown(L.BarStyle, Styles, "DBT", "BarStyle", function(value)
+			DBM.Bars:SetOption("BarStyle", value)
+		end, 210)
+		StyleDropDown:SetPoint("TOPLEFT", BarSetup.frame, "TOPLEFT", 210, -25)
+
 		local Textures = MixinSharedMedia3("statusbar", {
 			{	text	= "Default",	value 	= "Interface\\AddOns\\DBM-DefaultSkin\\textures\\default.blp", 	texture	= "Interface\\AddOns\\DBM-DefaultSkin\\textures\\default.blp"	},
 			{	text	= "Blizzad",	value 	= "Interface\\PaperDollInfoFrame\\UI-Character-Skills-Bar", 	texture	= 136570	},
@@ -2207,17 +2216,7 @@ local function CreateOptionsMenu()
 		local TextureDropDown = BarSetup:CreateDropdown(L.BarTexture, Textures, "DBT", "Texture", function(value)
 			DBM.Bars:SetOption("Texture", value)
 		end)
-		TextureDropDown:SetPoint("TOPLEFT", BarSetup.frame, "TOPLEFT", 210, -25)
-
-		local Styles = {
-			{	text	= L.BarDBM,				value	= "DBM" },
-			{	text	= L.BarSimple,			value 	= "NoAnim" }
-		}
-
-		local StyleDropDown = BarSetup:CreateDropdown(L.BarStyle, Styles, "DBT", "BarStyle", function(value)
-			DBM.Bars:SetOption("BarStyle", value)
-		end)
-		StyleDropDown:SetPoint("TOPLEFT", TextureDropDown, "BOTTOMLEFT", 0, -10)
+		TextureDropDown:SetPoint("TOPLEFT", StyleDropDown, "BOTTOMLEFT", 0, -10)
 
 		local Fonts = MixinSharedMedia3("font", {
 			{	text	= "Default",		value 	= standardFont,					font = standardFont	},
@@ -2229,7 +2228,7 @@ local function CreateOptionsMenu()
 		local FontDropDown = BarSetup:CreateDropdown(L.Bar_Font, Fonts, "DBT", "Font", function(value)
 			DBM.Bars:SetOption("Font", value)
 		end)
-		FontDropDown:SetPoint("TOPLEFT", StyleDropDown, "BOTTOMLEFT", 0, -10)
+		FontDropDown:SetPoint("TOPLEFT", TextureDropDown, "BOTTOMLEFT", 0, -10)
 
 		local FontFlags = {
 			{	text	= L.None,					value 	= "None"						},
@@ -2239,7 +2238,7 @@ local function CreateOptionsMenu()
 			{	text	= L.MonochromeThickOutline,	value 	= "MONOCHROME,THICKOUTLINE"		}
 		}
 
-		local FontFlagDropDown = BarSetup:CreateDropdown("Font Flags", FontFlags, "DBT", "FontFlag",
+		local FontFlagDropDown = BarSetup:CreateDropdown(L.Warn_FontStyle, FontFlags, "DBT", "FontFlag",
 			function(value)
 				DBM.Bars:SetOption("FontFlag", value)
 			end)
@@ -2251,8 +2250,14 @@ local function CreateOptionsMenu()
 		local iconright = BarSetup:CreateCheckButton(L.BarIconRight, nil, nil, nil, "IconRight")
 		iconright:SetPoint("LEFT", iconleft, "LEFT", 130, 0)
 
+		local SparkBars = BarSetup:CreateCheckButton(L.BarSpark, false, nil, nil, "Spark")
+		SparkBars:SetPoint("TOPLEFT", iconleft, "BOTTOMLEFT", 0, 0)
+
+		local FlashBars = BarSetup:CreateCheckButton(L.BarFlash, false, nil, nil, "FlashBar")
+		FlashBars:SetPoint("TOPLEFT", SparkBars, "BOTTOMLEFT", 0, 0)
+
 		local ClickThrough = BarSetup:CreateCheckButton(L.ClickThrough, false, nil, nil, "ClickThrough")
-		ClickThrough:SetPoint("TOPLEFT", iconleft, "BOTTOMLEFT", 0, 0)
+		ClickThrough:SetPoint("TOPLEFT", FlashBars, "BOTTOMLEFT", 0, 0)
 
 		local SortBars = BarSetup:CreateCheckButton(L.BarSort, false, nil, nil, "Sort")
 		SortBars:SetPoint("TOPLEFT", ClickThrough, "BOTTOMLEFT", 0, 0)
@@ -2284,22 +2289,13 @@ local function CreateOptionsMenu()
 		-- Functions for bar setup
 		local function createDBTOnShowHandler(option)
 			return function(self)
-				if option == "EnlargeBarsPercent" then
-					self:SetValue(DBM.Bars:GetOption(option) * 100)
-				else
-					self:SetValue(DBM.Bars:GetOption(option))
-				end
+				self:SetValue(DBM.Bars:GetOption(option))
 			end
 		end
 		local function createDBTOnValueChangedHandler(option)
 			return function(self)
-				if option == "EnlargeBarsPercent" then
-					DBM.Bars:SetOption(option, self:GetValue() / 100)
-					self:SetValue(DBM.Bars:GetOption(option) * 100)
-				else
-					DBM.Bars:SetOption(option, self:GetValue())
-					self:SetValue(DBM.Bars:GetOption(option))
-				end
+				DBM.Bars:SetOption(option, self:GetValue())
+				self:SetValue(DBM.Bars:GetOption(option))
 			end
 		end
 
@@ -2323,24 +2319,10 @@ local function CreateOptionsMenu()
 		DecimalSlider:SetScript("OnShow", createDBTOnShowHandler("TDecimal"))
 		DecimalSlider:HookScript("OnValueChanged", createDBTOnValueChangedHandler("TDecimal"))
 
-		-------
-		local BarSetupDBMClassic = BarSetupPanel:CreateArea(L.Bar_DBMOnly, nil, 100, true)
-
 		local EnlargeTimeSlider = BarSetup:CreateSlider(L.Bar_EnlargeTime, 6, 30, 1)
-		EnlargeTimeSlider:SetPoint("TOPLEFT", BarSetupDBMClassic.frame, "TOPLEFT", 30, -20)
+		EnlargeTimeSlider:SetPoint("TOPLEFT", BarSetup.frame, "TOPLEFT", 20, -310)
 		EnlargeTimeSlider:SetScript("OnShow", createDBTOnShowHandler("EnlargeBarTime"))
 		EnlargeTimeSlider:HookScript("OnValueChanged", createDBTOnValueChangedHandler("EnlargeBarTime"))
-
-		local EnlargePerecntSlider = BarSetup:CreateSlider(L.Bar_EnlargePercent, 0, 50, 0.5)
-		EnlargePerecntSlider:SetPoint("TOPLEFT", BarSetupDBMClassic.frame, "TOPLEFT", 30, -65)
-		EnlargePerecntSlider:SetScript("OnShow", createDBTOnShowHandler("EnlargeBarsPercent"))
-		EnlargePerecntSlider:HookScript("OnValueChanged", createDBTOnValueChangedHandler("EnlargeBarsPercent"))
-
-		local SparkBars = BarSetup:CreateCheckButton(L.BarSpark, false, nil, nil, "Spark")
-		SparkBars:SetPoint("TOPLEFT", BarSetupDBMClassic.frame, "TOPLEFT", 270, -20)
-
-		local FlashBars = BarSetup:CreateCheckButton(L.BarFlash, false, nil, nil, "Flash")
-		FlashBars:SetPoint("TOPLEFT", SparkBars, "BOTTOMLEFT", 0, 0)
 
 		-----------------------
 		-- Small Bar Options --
@@ -2464,7 +2446,7 @@ local function CreateOptionsMenu()
 
 	do
 		local specPanel = DBM_GUI_Frame:CreateNewPanel(L.Panel_SpecWarnFrame, "option")
-		local specArea = specPanel:CreateArea(L.Area_SpecWarn, nil, 280, true)
+		local specArea = specPanel:CreateArea(L.Area_SpecWarn, nil, 300, true)
 		local check1 = specArea:CreateCheckButton(L.SpecWarn_ClassColor, true, nil, "SWarnClassColor")
 		local check2 = specArea:CreateCheckButton(L.WarningAlphabetical, true, nil, "SWarningAlphabetical")
 		local check3 = specArea:CreateCheckButton(L.ShowSWarningsInChat, true, nil, "ShowSWarningsInChat")
@@ -2479,7 +2461,7 @@ local function CreateOptionsMenu()
 		movemebutton:SetScript("OnClick", function() DBM:MoveSpecialWarning() end)
 
 		local color0 = specArea:CreateColorSelect(64)
-		color0:SetPoint('TOPLEFT', specArea.frame, "TOPLEFT", 20, -180)
+		color0:SetPoint('TOPLEFT', specArea.frame, "TOPLEFT", 20, -200)
 		local color0text = specArea:CreateText(L.SpecWarn_FontColor, 80)
 		color0text:SetPoint("BOTTOM", color0, "TOP", 5, 4)
 		local color0reset = specArea:CreateButton(L.Reset, 64, 10, nil, GameFontNormalSmall)
@@ -2521,7 +2503,7 @@ local function CreateOptionsMenu()
 			DBM:UpdateSpecialWarningOptions()
 			DBM:ShowTestSpecialWarning(nil, 1)
 		end)
-		FontDropDown:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 100, -178)
+		FontDropDown:SetPoint("TOPLEFT", specArea.frame, "TOPLEFT", 95, -198)
 
 		local FontStyles = {
 			{	text	= L.None,					value 	= "None"						},
@@ -2642,9 +2624,9 @@ local function CreateOptionsMenu()
 		local SpecialWarnSoundDropDown = specWarnOne:CreateDropdown(L.SpecialWarnSoundOption, Sounds, "DBM", "SpecialWarningSound", function(value)
 			DBM.Options.SpecialWarningSound = value
 		end)
-		SpecialWarnSoundDropDown:SetPoint("TOPLEFT", specWarnOne.frame, "TOPLEFT", 100, -28)
+		SpecialWarnSoundDropDown:SetPoint("TOPLEFT", specWarnOne.frame, "TOPLEFT", 95, -28)
 		local flashCheck1 = specWarnOne:CreateCheckButton(L.SpecWarn_Flash, nil, nil, "SpecialWarningFlash1")
-		flashCheck1:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown, "BOTTOMLEFT", 210, 4)
+		flashCheck1:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown, "BOTTOMLEFT", 220, 4)
 
 		local flashdurSlider = specWarnOne:CreateSlider(L.SpecWarn_FlashDur, 0.2, 2, 0.2, 120)   -- (text , min_value , max_value , step , width)
 		flashdurSlider:SetPoint('TOPLEFT', SpecialWarnSoundDropDown, "TOPLEFT", 20, -45)
@@ -2662,7 +2644,7 @@ local function CreateOptionsMenu()
 		end
 
 		local flashdalphaSlider = specWarnOne:CreateSlider(L.SpecWarn_FlashAlpha, 0.1, 1, 0.1, 120)   -- (text , min_value , max_value , step , width)
-		flashdalphaSlider:SetPoint('BOTTOMLEFT', flashdurSlider, "BOTTOMLEFT", 150, -0)
+		flashdalphaSlider:SetPoint('BOTTOMLEFT', flashdurSlider, "BOTTOMLEFT", 180, -0)
 		do
 			local firstshow = true
 			flashdalphaSlider:HookScript("OnShow", function(self)
@@ -2677,7 +2659,7 @@ local function CreateOptionsMenu()
 		end
 
 		local flashRepSlider = specWarnOne:CreateSlider(L.SpecWarn_FlashFrameRepeat, 1, 4, 1, 120)
-		flashRepSlider:SetPoint('TOPLEFT', flashdurSlider, "TOPLEFT", 70, -45)
+		flashRepSlider:SetPoint('TOPLEFT', flashdurSlider, "TOPLEFT", 95, -45)
 		flashRepSlider:HookScript("OnShow", function(self) self:SetValue(mfloor(DBM.Options.SpecialWarningFlashCount1)) end)
 		flashRepSlider:HookScript("OnValueChanged", function(self)
 			DBM.Options.SpecialWarningFlashCount1 = mfloor(self:GetValue())
@@ -2727,9 +2709,9 @@ local function CreateOptionsMenu()
 		local SpecialWarnSoundDropDown2 = specWarnTwo:CreateDropdown(L.SpecialWarnSoundOption, Sounds, "DBM", "SpecialWarningSound2", function(value)
 			DBM.Options.SpecialWarningSound2 = value
 		end)
-		SpecialWarnSoundDropDown2:SetPoint("TOPLEFT", specWarnTwo.frame, "TOPLEFT", 100, -28)
+		SpecialWarnSoundDropDown2:SetPoint("TOPLEFT", specWarnTwo.frame, "TOPLEFT", 95, -28)
 		local flashCheck2 = specWarnTwo:CreateCheckButton(L.SpecWarn_Flash, nil, nil, "SpecialWarningFlash2")
-		flashCheck2:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown2, "BOTTOMLEFT", 210, 4)
+		flashCheck2:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown2, "BOTTOMLEFT", 220, 4)
 
 		local flashdurSlider2 = specWarnTwo:CreateSlider(L.SpecWarn_FlashDur, 0.2, 2, 0.2, 120)   -- (text , min_value , max_value , step , width)
 		flashdurSlider2:SetPoint('TOPLEFT', SpecialWarnSoundDropDown2, "TOPLEFT", 20, -45)
@@ -2748,7 +2730,7 @@ local function CreateOptionsMenu()
 		end
 
 		local flashdalphaSlider2 = specWarnTwo:CreateSlider(L.SpecWarn_FlashAlpha, 0.1, 1, 0.1, 120)   -- (text , min_value , max_value , step , width)
-		flashdalphaSlider2:SetPoint('BOTTOMLEFT', flashdurSlider2, "BOTTOMLEFT", 150, -0)
+		flashdalphaSlider2:SetPoint('BOTTOMLEFT', flashdurSlider2, "BOTTOMLEFT", 180, -0)
 		do
 			local firstshow = true
 			flashdalphaSlider2:HookScript("OnShow", function(self)
@@ -2764,7 +2746,7 @@ local function CreateOptionsMenu()
 		end
 
 		local flashRepSlider2 = specWarnOne:CreateSlider(L.SpecWarn_FlashFrameRepeat, 1, 4, 1, 120)
-		flashRepSlider2:SetPoint('TOPLEFT', flashdurSlider2, "TOPLEFT", 60, -45)
+		flashRepSlider2:SetPoint('TOPLEFT', flashdurSlider2, "TOPLEFT", 95, -45)
 		flashRepSlider2:HookScript("OnShow", function(self) self:SetValue(mfloor(DBM.Options.SpecialWarningFlashCount2)) end)
 		flashRepSlider2:HookScript("OnValueChanged", function(self)
 			DBM.Options.SpecialWarningFlashCount2 = mfloor(self:GetValue())
@@ -2815,9 +2797,9 @@ local function CreateOptionsMenu()
 		local SpecialWarnSoundDropDown3 = specWarnThree:CreateDropdown(L.SpecialWarnSoundOption, Sounds, "DBM", "SpecialWarningSound3", function(value)
 			DBM.Options.SpecialWarningSound3 = value
 		end)
-		SpecialWarnSoundDropDown3:SetPoint("TOPLEFT", specWarnThree.frame, "TOPLEFT", 100, -28)
+		SpecialWarnSoundDropDown3:SetPoint("TOPLEFT", specWarnThree.frame, "TOPLEFT", 95, -28)
 		local flashCheck3 = specWarnThree:CreateCheckButton(L.SpecWarn_Flash, nil, nil, "SpecialWarningFlash3")
-		flashCheck3:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown3, "BOTTOMLEFT", 210, 4)
+		flashCheck3:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown3, "BOTTOMLEFT", 220, 4)
 
 		local flashdurSlider3 = specWarnThree:CreateSlider(L.SpecWarn_FlashDur, 0.2, 2, 0.2, 120)   -- (text , min_value , max_value , step , width)
 		flashdurSlider3:SetPoint('TOPLEFT', SpecialWarnSoundDropDown3, "TOPLEFT", 20, -45)
@@ -2836,7 +2818,7 @@ local function CreateOptionsMenu()
 		end
 
 		local flashdalphaSlider3 = specWarnThree:CreateSlider(L.SpecWarn_FlashAlpha, 0.1, 1, 0.1, 120)   -- (text , min_value , max_value , step , width)
-		flashdalphaSlider3:SetPoint('BOTTOMLEFT', flashdurSlider3, "BOTTOMLEFT", 150, -0)
+		flashdalphaSlider3:SetPoint('BOTTOMLEFT', flashdurSlider3, "BOTTOMLEFT", 180, -0)
 		do
 			local firstshow = true
 			flashdalphaSlider3:HookScript("OnShow", function(self)
@@ -2852,7 +2834,7 @@ local function CreateOptionsMenu()
 		end
 
 		local flashRepSlider3 = specWarnOne:CreateSlider(L.SpecWarn_FlashFrameRepeat, 1, 4, 1, 120)
-		flashRepSlider3:SetPoint('TOPLEFT', flashdurSlider3, "TOPLEFT", 70, -45)
+		flashRepSlider3:SetPoint('TOPLEFT', flashdurSlider3, "TOPLEFT", 95, -45)
 		flashRepSlider3:HookScript("OnShow", function(self) self:SetValue(mfloor(DBM.Options.SpecialWarningFlashCount3)) end)
 		flashRepSlider3:HookScript("OnValueChanged", function(self)
 			DBM.Options.SpecialWarningFlashCount3 = mfloor(self:GetValue())
@@ -2902,9 +2884,9 @@ local function CreateOptionsMenu()
 		local SpecialWarnSoundDropDown4 = specWarnFour:CreateDropdown(L.SpecialWarnSoundOption, Sounds, "DBM", "SpecialWarningSound4", function(value)
 			DBM.Options.SpecialWarningSound4 = value
 		end)
-		SpecialWarnSoundDropDown4:SetPoint("TOPLEFT", specWarnFour.frame, "TOPLEFT", 100, -28)
+		SpecialWarnSoundDropDown4:SetPoint("TOPLEFT", specWarnFour.frame, "TOPLEFT", 95, -28)
 		local flashCheck4 = specWarnFour:CreateCheckButton(L.SpecWarn_Flash, nil, nil, "SpecialWarningFlash4")
-		flashCheck4:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown4, "BOTTOMLEFT", 210, 4)
+		flashCheck4:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown4, "BOTTOMLEFT", 220, 4)
 
 		local flashdurSlider4 = specWarnFour:CreateSlider(L.SpecWarn_FlashDur, 0.2, 2, 0.2, 120)   -- (text , min_value , max_value , step , width)
 		flashdurSlider4:SetPoint('TOPLEFT', SpecialWarnSoundDropDown4, "TOPLEFT", 20, -45)
@@ -2923,7 +2905,7 @@ local function CreateOptionsMenu()
 		end
 
 		local flashdalphaSlider4 = specWarnFour:CreateSlider(L.SpecWarn_FlashAlpha, 0.1, 1, 0.1, 120)   -- (text , min_value , max_value , step , width)
-		flashdalphaSlider4:SetPoint('BOTTOMLEFT', flashdurSlider4, "BOTTOMLEFT", 150, -0)
+		flashdalphaSlider4:SetPoint('BOTTOMLEFT', flashdurSlider4, "BOTTOMLEFT", 180, -0)
 		do
 			local firstshow = true
 			flashdalphaSlider4:HookScript("OnShow", function(self)
@@ -2939,7 +2921,7 @@ local function CreateOptionsMenu()
 		end
 
 		local flashRepSlider4 = specWarnOne:CreateSlider(L.SpecWarn_FlashFrameRepeat, 1, 4, 1, 120)
-		flashRepSlider4:SetPoint('TOPLEFT', flashdurSlider4, "TOPLEFT", 70, -45)
+		flashRepSlider4:SetPoint('TOPLEFT', flashdurSlider4, "TOPLEFT", 95, -45)
 		flashRepSlider4:HookScript("OnShow", function(self) self:SetValue(mfloor(DBM.Options.SpecialWarningFlashCount4)) end)
 		flashRepSlider4:HookScript("OnValueChanged", function(self)
 			DBM.Options.SpecialWarningFlashCount4 = mfloor(self:GetValue())
@@ -2989,9 +2971,9 @@ local function CreateOptionsMenu()
 		local SpecialWarnSoundDropDown5 = specWarnFive:CreateDropdown(L.SpecialWarnSoundOption, Sounds, "DBM", "SpecialWarningSound5", function(value)
 			DBM.Options.SpecialWarningSound5 = value
 		end)
-		SpecialWarnSoundDropDown5:SetPoint("TOPLEFT", specWarnFive.frame, "TOPLEFT", 100, -28)
+		SpecialWarnSoundDropDown5:SetPoint("TOPLEFT", specWarnFive.frame, "TOPLEFT", 95, -28)
 		local flashCheck5 = specWarnFive:CreateCheckButton(L.SpecWarn_Flash, nil, nil, "SpecialWarningFlash5")
-		flashCheck5:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown5, "BOTTOMLEFT", 210, 4)
+		flashCheck5:SetPoint("BOTTOMLEFT", SpecialWarnSoundDropDown5, "BOTTOMLEFT", 220, 4)
 
 		local flashdurSlider5 = specWarnFive:CreateSlider(L.SpecWarn_FlashDur, 0.2, 2, 0.2, 120)   -- (text , min_value , max_value , step , width)
 		flashdurSlider5:SetPoint('TOPLEFT', SpecialWarnSoundDropDown5, "TOPLEFT", 20, -45)
@@ -3010,7 +2992,7 @@ local function CreateOptionsMenu()
 		end
 
 		local flashdalphaSlider5 = specWarnFive:CreateSlider(L.SpecWarn_FlashAlpha, 0.1, 1, 0.1, 120)   -- (text , min_value , max_value , step , width)
-		flashdalphaSlider5:SetPoint('BOTTOMLEFT', flashdurSlider5, "BOTTOMLEFT", 150, -0)
+		flashdalphaSlider5:SetPoint('BOTTOMLEFT', flashdurSlider5, "BOTTOMLEFT", 180, -0)
 		do
 			local firstshow = true
 			flashdalphaSlider5:HookScript("OnShow", function(self)
@@ -3026,7 +3008,7 @@ local function CreateOptionsMenu()
 		end
 
 		local flashRepSlider5 = specWarnOne:CreateSlider(L.SpecWarn_FlashFrameRepeat, 1, 4, 1, 120)
-		flashRepSlider5:SetPoint('TOPLEFT', flashdurSlider5, "TOPLEFT", 70, -45)
+		flashRepSlider5:SetPoint('TOPLEFT', flashdurSlider5, "TOPLEFT", 95, -45)
 		flashRepSlider5:HookScript("OnShow", function(self) self:SetValue(mfloor(DBM.Options.SpecialWarningFlashCount5)) end)
 		flashRepSlider5:HookScript("OnValueChanged", function(self)
 			DBM.Options.SpecialWarningFlashCount5 = mfloor(self:GetValue())
@@ -3140,28 +3122,28 @@ local function CreateOptionsMenu()
 			DBM.Options.CountdownVoice = value
 			DBM:PlayCountSound(1, DBM.Options.CountdownVoice)
 			DBM:BuildVoiceCountdownCache()
-		end)
+		end, 180)
 		CountSoundDropDown:SetPoint("TOPLEFT", spokenGeneralArea.frame, "TOPLEFT", 0, -20)
 
 		local CountSoundDropDown2 = spokenGeneralArea:CreateDropdown(L.CountdownVoice2, DBM.Counts, "DBM", "CountdownVoice2", function(value)
 			DBM.Options.CountdownVoice2 = value
 			DBM:PlayCountSound(1, DBM.Options.CountdownVoice2)
 			DBM:BuildVoiceCountdownCache()
-		end)
-		CountSoundDropDown2:SetPoint("LEFT", CountSoundDropDown, "RIGHT", 50, 0)
+		end, 180)
+		CountSoundDropDown2:SetPoint("LEFT", CountSoundDropDown, "RIGHT", 45, 0)
 
 		local CountSoundDropDown3 = spokenGeneralArea:CreateDropdown(L.CountdownVoice3, DBM.Counts, "DBM", "CountdownVoice3", function(value)
 			DBM.Options.CountdownVoice3 = value
 			DBM:PlayCountSound(1, DBM.Options.CountdownVoice3)
 			DBM:BuildVoiceCountdownCache()
-		end)
+		end, 180)
 		CountSoundDropDown3:SetPoint("TOPLEFT", CountSoundDropDown, "TOPLEFT", 0, -45)
 
 		local VoiceDropDown = spokenGeneralArea:CreateDropdown(L.VoicePackChoice, DBM.Voices, "DBM", "ChosenVoicePack", function(value)
 			DBM.Options.ChosenVoicePack = value
 			DBM:Debug("DBM.Options.ChosenVoicePack is set to "..DBM.Options.ChosenVoicePack)
 			DBM:CheckVoicePackVersion(value)
-		end)
+		end, 180)
 		VoiceDropDown:SetPoint("TOPLEFT", CountSoundDropDown2, "TOPLEFT", 0, -45)
 
 		local voiceFilterArea		= spokenAlertsPanel:CreateArea(L.Area_VoicePackOptions, nil, 97, true)
@@ -3173,7 +3155,7 @@ local function CreateOptionsMenu()
 		}
 		local SWFilterDropDown		= voiceFilterArea:CreateDropdown(L.SpecWarn_NoSoundsWVoice, voiceSWOptions, "DBM", "VoiceOverSpecW2", function(value)
 			DBM.Options.VoiceOverSpecW2 = value
-		end)
+		end, 420)
 		SWFilterDropDown:SetPoint("TOPLEFT", VPF1, "TOPLEFT", 0, -45)
 
 		local VPUrlArea1		= spokenAlertsPanel:CreateArea(L.Area_GetVEM, nil, 28, true)
@@ -3208,7 +3190,7 @@ local function CreateOptionsMenu()
 			if value ~= "Random" then
 				DBM:PlaySoundFile(value)
 			end
-		end)
+		end, 180)
 		VictorySoundDropdown:SetPoint("TOPLEFT", eventSoundsGeneralArea.frame, "TOPLEFT", 0, -20)
 
 		local VictorySoundDropdown2 = eventSoundsGeneralArea:CreateDropdown(L.EventWipeSound, DBM.Defeat, "DBM", "EventSoundWipe", function(value)
@@ -3216,8 +3198,8 @@ local function CreateOptionsMenu()
 			if value ~= "Random" then
 				DBM:PlaySoundFile(value)
 			end
-		end)
-		VictorySoundDropdown2:SetPoint("LEFT", VictorySoundDropdown, "RIGHT", 70, 0)
+		end, 180)
+		VictorySoundDropdown2:SetPoint("LEFT", VictorySoundDropdown, "RIGHT", 45, 0)
 
 		local useCombined = DBM.Options.EventSoundMusicCombined
 		local DungeonMusicDropDown = eventSoundsGeneralArea:CreateDropdown(L.EventDungeonMusic, useCombined and DBM.Music or DBM.DungeonMusic, "DBM", "EventSoundDungeonBGM", function(value)
@@ -3234,7 +3216,7 @@ local function CreateOptionsMenu()
 				PlayMusic(value)
 				DBM.Options.musicPlaying = true
 			end
-		end)
+		end, 180)
 		DungeonMusicDropDown:SetPoint("TOPLEFT", VictorySoundDropdown, "TOPLEFT", 0, -45)
 
 		local MusicDropDown = eventSoundsGeneralArea:CreateDropdown(L.EventEngageMusic, useCombined and DBM.Music or DBM.BattleMusic, "DBM", "EventSoundMusic", function(value)
@@ -3251,13 +3233,13 @@ local function CreateOptionsMenu()
 				PlayMusic(value)
 				DBM.Options.musicPlaying = true
 			end
-		end)
+		end, 180)
 		MusicDropDown:SetPoint("TOPLEFT", VictorySoundDropdown2, "TOPLEFT", 0, -45)
 
 		local VictorySoundDropdown3 = eventSoundsGeneralArea:CreateDropdown(L.EventEngageSound, Sounds, "DBM", "EventSoundEngage2", function(value)
 			DBM.Options.EventSoundEngage2 = value
 			DBM:PlaySoundFile(DBM.Options.EventSoundEngage2)
-		end)
+		end, 180)
 		VictorySoundDropdown3:SetPoint("TOPLEFT", DungeonMusicDropDown, "TOPLEFT", 0, -45)
 
 		local eventSoundsExtrasArea	= eventSoundsPanel:CreateArea(L.Area_EventSoundsExtras, nil, 52, true)
@@ -3315,7 +3297,7 @@ local function CreateOptionsMenu()
 		}
 		local interruptDropDown		= spamSpecArea:CreateDropdown(L.FilterInterruptsHeader, interruptOptions, "DBM", "FilterInterrupt2", function(value)
 			DBM.Options.FilterInterrupt2 = value
-		end)
+		end, 410)
 		interruptDropDown:SetPoint("TOPLEFT", FilterInterruptNote, "TOPLEFT", 0, -45)
 
 		local spamPTArea = spamPanel:CreateArea(L.Area_PullTimer, nil, 180, true)
@@ -3357,7 +3339,7 @@ local function CreateOptionsMenu()
 		}
 		local blockMovieDropDown = hideBlizzArea:CreateDropdown(L.DisableCinematics, movieOptions, "DBM", "MovieFilter2", function(value)
 			DBM.Options.MovieFilter2 = value
-		end)
+		end, 350)
 		blockMovieDropDown:SetPoint("TOPLEFT", DisableSFX, "TOPLEFT", 0, -40)
 
 		--hideBlizzArea:AutoSetDimension()
@@ -4663,7 +4645,7 @@ do
 	local Categories = {}
 	local subTabId = 0
 	function DBM_GUI:UpdateModList()
-		for k, addon in ipairs(DBM.AddOns) do
+		for z, addon in ipairs(DBM.AddOns) do
 			if not Categories[addon.category] then
 				-- Create a Panel for "Wrath of the Lich King" "Burning Crusade" ...
 				local expLevel = GetExpansionLevel()
@@ -4786,27 +4768,27 @@ do
 			category = mod.optionCategories[catident]
 			if category then
 				local catpanel = panel:CreateArea(mod.localization.cats[catident], nil, nil, true)
-				local button, lastButton, addSpacer
+				local catbutton, lastButton, addSpacer
 				local hasDropdowns = 0
 				for _, v in ipairs(category) do
 					if v == DBM_OPTION_SPACER then
 						addSpacer = true
 					else
-						lastButton = button
+						lastButton = catbutton
 						if v.line then
-							button = catpanel:CreateLine(v.text)
+							catbutton = catpanel:CreateLine(v.text)
 						elseif type(mod.Options[v]) == "boolean" then
 							if mod.Options[v .. "TColor"] then
-								button = catpanel:CreateCheckButton(mod.localization.options[v], true, nil, nil, nil, mod, v, nil, true)
+								catbutton = catpanel:CreateCheckButton(mod.localization.options[v], true, nil, nil, nil, mod, v, nil, true)
 							elseif mod.Options[v .. "SWSound"] then
-								button = catpanel:CreateCheckButton(mod.localization.options[v], true, nil, nil, nil, mod, v)
+								catbutton = catpanel:CreateCheckButton(mod.localization.options[v], true, nil, nil, nil, mod, v)
 							else
-								button = catpanel:CreateCheckButton(mod.localization.options[v], true)
+								catbutton = catpanel:CreateCheckButton(mod.localization.options[v], true)
 							end
-							button:SetScript("OnShow", function(self)
+							catbutton:SetScript("OnShow", function(self)
 								self:SetChecked(mod.Options[v])
 							end)
-							button:SetScript("OnClick", function(self)
+							catbutton:SetScript("OnClick", function(self)
 								mod.Options[v] = not mod.Options[v]
 								if mod.optionFuncs and mod.optionFuncs[v] then
 									mod.optionFuncs[v]()
@@ -4814,32 +4796,32 @@ do
 							end)
 						elseif mod.buttons and mod.buttons[v] then
 							local but = mod.buttons[v]
-							button = catpanel:CreateButton(v, but.width, but.height, but.onClick, but.fontObject)
+							catbutton = catpanel:CreateButton(v, but.width, but.height, but.onClick, but.fontObject)
 						elseif mod.editboxes and mod.editboxes[v] then
 							local editBox = mod.editboxes[v]
-							button = catpanel:CreateEditBox(mod.localization.options[v], mod.Options[v], editBox.width, editBox.height)
-							button:SetScript("OnEnterPressed", function(self)
+							catbutton = catpanel:CreateEditBox(mod.localization.options[v], mod.Options[v], editBox.width, editBox.height)
+							catbutton:SetScript("OnEnterPressed", function(self)
 								if mod.optionFuncs and mod.optionFuncs[v] then
 									mod.optionFuncs[v]()
 								end
 							end)
 						elseif mod.sliders and mod.sliders[v] then
 							local slider = mod.sliders[v]
-							button = catpanel:CreateSlider(mod.localization.options[v], slider.minValue, slider.maxValue, slider.valueStep)
-							button:SetScript("OnShow", function(self)
+							catbutton = catpanel:CreateSlider(mod.localization.options[v], slider.minValue, slider.maxValue, slider.valueStep)
+							catbutton:SetScript("OnShow", function(self)
 								self:SetValue(mod.Options[v])
 							end)
-							button:HookScript("OnValueChanged", function(self)
+							catbutton:HookScript("OnValueChanged", function(self)
 								if mod.optionFuncs and mod.optionFuncs[v] then
 									mod.optionFuncs[v]()
 								end
 							end)
 						elseif mod.dropdowns and mod.dropdowns[v] then
 							local dropdownOptions = {}
-							for i, v in ipairs(mod.dropdowns[v]) do
-								dropdownOptions[#dropdownOptions + 1] = { text = mod.localization.options[v], value = v }
+							for i, val in ipairs(mod.dropdowns[v]) do
+								dropdownOptions[#dropdownOptions + 1] = { text = mod.localization.options[val], value = val }
 							end
-							button = catpanel:CreateDropdown(mod.localization.options[v], dropdownOptions, mod, v, function(value)
+							catbutton = catpanel:CreateDropdown(mod.localization.options[v], dropdownOptions, mod, v, function(value)
 								mod.Options[v] = value
 								if mod.optionFuncs and mod.optionFuncs[v] then
 									mod.optionFuncs[v]()
@@ -4847,11 +4829,11 @@ do
 							end, nil, 32)
 							if not addSpacer then
 								hasDropdowns = hasDropdowns + 7--Add 7 extra pixels per dropdown, because autodims is only reserving 25 per line, and dropdowns are 32
-								button:SetPoint("TOPLEFT", lastButton, "BOTTOMLEFT", 0, -10)
+								catbutton:SetPoint("TOPLEFT", lastButton, "BOTTOMLEFT", 0, -10)
 							end
 						end
 						if addSpacer then
-							button:SetPoint("TOPLEFT", lastButton, "BOTTOMLEFT", 0, -6)
+							catbutton:SetPoint("TOPLEFT", lastButton, "BOTTOMLEFT", 0, -6)
 							addSpacer = false
 						end
 					end

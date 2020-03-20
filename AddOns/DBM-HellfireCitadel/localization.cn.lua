@@ -23,22 +23,12 @@ L:SetMiscLocalization({
 })
 
 ---------------------------
--- Iron Reaver --
----------------------------
-L = DBM:GetModLocalization(1425)
-
----------------------------
 -- Hellfire High Council --
 ---------------------------
 L = DBM:GetModLocalization(1432)
 
-------------------
--- Kormrok --
-------------------
-L = DBM:GetModLocalization(1392)
-
-L:SetMiscLocalization({
-	ExRTNotice	= "%s 向你指派了ExRT的位置。你的位置: 橙色:%s, 绿色:%s, 紫色:%s"
+L:SetWarningLocalization({
+	reapDelayed	= "Reap after Visage ends"--Translate
 })
 
 --------------
@@ -59,7 +49,7 @@ L:SetTimerLocalization({
 	SoDDPS2		= "下一次死亡之影 (%s)",
 	SoDTank2	= "下一次死亡之影 (%s)",
 	SoDHealer2	= "下一次死亡之影 (%s)"
-}) 
+})
 
 L:SetOptionLocalization({
 	SoDDPS2			= "计时条：下一次针对DPS的$spell:179864",

@@ -25,7 +25,6 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(744)
 
 L:SetOptionLocalization({
-	UnseenStrikeArrow	= "Visualizza la Freccia di DBM quando qualcuno e' affetto da $spell:122949 ",
 	RangeFrame			= "Visualizza il radar (8) per $spell:123175"
 })
 

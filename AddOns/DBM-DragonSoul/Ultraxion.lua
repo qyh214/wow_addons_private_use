@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(331, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143316")
+mod:SetRevision("20200222203750")
 mod:SetCreatureID(55294)
 mod:SetEncounterID(1297)
 mod:SetZone()
@@ -122,7 +122,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		elseif self:IsDifficulty("normal10", "normal25", "lfr25") and fadingLightCount < 2 then
 			timerFadingLightCD:Start(15)
 		end
-		if (args:IsPlayer() or DBM:UnitDebuff("player", args.spellName)) and self:AntiSpam(2) then--Sometimes the combatlog doesn't report all fading lights, so we perform an additional aura check 
+		if (args:IsPlayer() or DBM:UnitDebuff("player", args.spellName)) and self:AntiSpam(2) then--Sometimes the combatlog doesn't report all fading lights, so we perform an additional aura check
 			local _, _, _, _, duration, expires = DBM:UnitDebuff("player", args.spellName)--Find out what our specific fading light is
 			if duration then
 				specWarnFadingLight:Show()

@@ -11,7 +11,7 @@ L = DBM:GetModLocalization(1161)
 L:SetOptionLocalization({
 	MythicSoakBehavior	= "Patrón de agrupamiento para Tajo infernal",
 	ThreeGroup			= "3 grupos, 1 acumulación",
-	TwoGroup			= "2 grupos, 2 acumulaciones" 
+	TwoGroup			= "2 grupos, 2 acumulaciones"
 })
 
 ----------------
@@ -51,30 +51,6 @@ L:SetMiscLocalization({
 	Regulator		= "Regulador %d",--Can't use above, too long for infoframe
 	bombNeeded		= "%d bomba(s)"
 })
-
-------------------------
--- Hans'gar y Franzok --
-------------------------
-L = DBM:GetModLocalization(1155)
-
---------------------------
--- Dominallamas Ka'graz --
---------------------------
-L = DBM:GetModLocalization(1123)
-
------------
---Kromog --
------------
-L = DBM:GetModLocalization(1162)
-
-L:SetMiscLocalization({
-	ExRTNotice	= "%s está compartiendo su configuración de posiciones de Exorsus Raid Tools para las runas. Tu posición es: %s."
-})
-
----------------------------------
--- Señor de las bestias Darmac --
----------------------------------
-L = DBM:GetModLocalization(1122)
 
 --------------------------
 -- Operador Thogar --

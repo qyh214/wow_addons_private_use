@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ValkTwins", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143403")
+mod:SetRevision("20200222200840")
 mod:SetCreatureID(34497, 34496)
 mod:SetEncounterID(1089)
 mod:SetModelID(29240)
@@ -100,15 +100,15 @@ function mod:SpecialAbility(debuff)
 	warnSpecial:Schedule(40)
 end
 
-function mod:resetDebuff(self)
+local function resetDebuff(self)
 	self.vb.debuffIcon = 8
 end
 
 function mod:warnDebuff()
 	warnTouchDebuff:Show(table.concat(debuffTargets, "<, >"))
 	table.wipe(debuffTargets)
-	self:UnscheduleMethod("resetDebuff")
-	self:ScheduleMethod(5, "resetDebuff")
+	self:Unschedule(resetDebuff)
+	self:Schedule(5, resetDebuff, self)
 end
 
 local function showPowerWarning(self, cid)

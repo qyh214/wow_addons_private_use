@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(683, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143417")
+mod:SetRevision("20200222213340")
 mod:SetCreatureID(60585, 60586, 60583)--60583 Protector Kaolan, 60585 Elder Regail, 60586 Elder Asani
 mod:SetEncounterID(1409)
 mod:SetZone()
@@ -28,7 +28,7 @@ local warnPhase3					= mod:NewPhaseAnnounce(3)
 local warnWaterBolt					= mod:NewCountAnnounce(118312, 3, nil, false)
 local warnCleansingWaters			= mod:NewTargetAnnounce(117309, 3)--Phase 1+ ability. If target scanning fails, will switch to spell announce
 --Elder Regail (Also uses Overwhelming Corruption in phase 3)
-local warnLightningPrison			= mod:NewTargetAnnounce(111850, 3)--Phase 1+ ability.							
+local warnLightningPrison			= mod:NewTargetAnnounce(111850, 3)--Phase 1+ ability.
 --Protector Kaolan
 local warnTouchofSha				= mod:NewTargetAnnounce(117519, 3, nil, "Healer")--Phase 1+ ability. He stops casting it when everyone in raid has it then ceases. If someone dies and is brezed, he casts it on them again.
 local warnDefiledGround				= mod:NewSpellAnnounce(117986, 3, nil, "Melee")--Phase 2+ ability.
@@ -177,7 +177,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetIcon(args.destName, prisonIcon)
 			prisonIcon = prisonIcon + 1
 		end
-	elseif spellId == 117283 and args.destGUID == (UnitGUID("target") or UnitGUID("focus")) then -- not needed to dispel except for raid member's dealing boss. 
+	elseif spellId == 117283 and args.destGUID == (UnitGUID("target") or UnitGUID("focus")) then -- not needed to dispel except for raid member's dealing boss.
 		specWarnCleansingWatersDispel:Show(args.destName)
 	elseif spellId == 117052 then--Phase changes
 		--Here we go off applied because then we can detect both targets in phase 1 to 2 transition.
@@ -252,7 +252,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 117986 then
 		warnDefiledGround:Show()
 		timerDefiledGroundCD:Start()
-		if args.sourceName == UnitName("target") then 
+		if args.sourceName == UnitName("target") then
 			specWarnDefiledGround:Show()
 		end
 	elseif spellId == 117052 and phase < 3 then--Phase changes

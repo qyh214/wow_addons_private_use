@@ -69,11 +69,6 @@ L:SetMiscLocalization({
 	tower			= "A porta fechando a"--A porta fechando a Torre Sul/Norte foi derrubada!
 })
 
---------------------
---Iron Juggernaut --
---------------------
-L = DBM:GetModLocalization(864)
-
 --------------------------
 -- Kor'kron Dark Shaman --
 --------------------------
@@ -101,11 +96,6 @@ L:SetMiscLocalization({
 	allForces	= "Todos os Kor'kron... sob meu comando... matem-os... AGORA!",
 	nextAdds	= "Próximos Adds: "
 })
-
------------------
--- Malkorok -----
------------------
-L = DBM:GetModLocalization(846)
 
 ------------------------
 -- Spoils of Pandaria --

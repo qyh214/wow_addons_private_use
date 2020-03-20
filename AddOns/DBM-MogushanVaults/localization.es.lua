@@ -16,7 +16,6 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	SpecWarnOverloadSoon		= "Mostrar aviso especial antes de Sobrecarga", -- need to change this, i can not translate this with good grammer. please help.
 	specWarnBreakJasperChains	= "Mostrar aviso especial cuando sea seguro romper $spell:130395",
-	ArrowOnJasperChains			= "Mostrar flecha cuando estés afectado por $spell:130395",
 	InfoFrame					= "Mostrar marco de información con la energía de los jefes, petrificación de los jugadores y qué jefe está lanzando la petrificación"
 })
 

@@ -58,10 +58,14 @@ local function GetItemLevelFrame(self, category)
 end
 
 --設置裝等文字
-local function SetItemLevelString(self, text, quality)
+local function SetItemLevelString(self, text, quality, link)
     if (quality and TinyInspectDB and TinyInspectDB.ShowColoredItemLevelString) then
         local r, g, b, hex = GetItemQualityColor(quality)
         text = format("|c%s%s|r", hex, text)
+    end
+    --腐蚀的物品加个标记
+    if (TinyInspectDB and TinyInspectDB.ShowCorruptedMark and link and IsCorruptedItem(link)) then
+        text = text .. "|cffFF3300★|r"
     end
     self:SetText(text)
 end
@@ -112,7 +116,7 @@ local function SetItemLevel(self, link, category, BagID, SlotID)
     if (not self) then return end
     local frame = GetItemLevelFrame(self, category)
     if (self.OrigItemLink == link) then
-        SetItemLevelString(frame.levelString, self.OrigItemLevel, self.OrigItemQuality)
+        SetItemLevelString(frame.levelString, self.OrigItemLevel, self.OrigItemQuality, link)
         SetItemSlotString(frame.slotString, self.OrigItemClass, self.OrigItemEquipSlot, self.OrigItemLink)
     else
         local level = ""
@@ -138,7 +142,7 @@ local function SetItemLevel(self, link, category, BagID, SlotID)
                 return SetItemLevelScheduled(self, frame, link)
             else
                 if (tonumber(level) == 0) then level = "" end
-                SetItemLevelString(frame.levelString, level, quality)
+                SetItemLevelString(frame.levelString, level, quality, link)
                 SetItemSlotString(frame.slotString, class, equipSlot, link)
             end
         else
@@ -315,19 +319,23 @@ end
 -- ForAddons: Bagnon Combuctor LiteBag ArkInventory
 LibEvent:attachEvent("PLAYER_LOGIN", function()
     -- For Bagnon
-    if (Bagnon and Bagnon.ItemSlot and Bagnon.ItemSlot.Update) then
+    if (Bagnon and Bagnon.Item and Bagnon.Item.Update) then
+        hooksecurefunc(Bagnon.Item, "Update", function(self)
+            SetItemLevel(self, self:GetItem(), "Bag", self:GetBag(), self:GetID())
+        end)
+    elseif (Bagnon and Bagnon.ItemSlot and Bagnon.ItemSlot.Update) then
         hooksecurefunc(Bagnon.ItemSlot, "Update", function(self)
             SetItemLevel(self, self:GetItem(), "Bag", self:GetBag(), self:GetID())
         end)
     end
     -- For Combuctor
-    if (Combuctor and Combuctor.ItemSlot and Combuctor.ItemSlot.Update) then
+    if (Combuctor and Combuctor.Item and Combuctor.Item.Update) then
+        hooksecurefunc(Combuctor.Item, "Update", function(self)
+            SetItemLevel(self, self.GetItem and self:GetItem(), "Bag", self.GetBag and self:GetBag(), self.GetID and self:GetID())
+        end)
+    elseif (Combuctor and Combuctor.ItemSlot and Combuctor.ItemSlot.Update) then
         hooksecurefunc(Combuctor.ItemSlot, "Update", function(self)
             SetItemLevel(self, self:GetItem(), "Bag", self:GetBag(), self:GetID())
-        end)
-    elseif (Combuctor and Combuctor.Item and Combuctor.Item.Update) then
-        hooksecurefunc(Combuctor.Item, "Update", function(self)
-            SetItemLevel(self, self.hasItem, "Bag", self.bag, self.GetID and self:GetID())
         end)
     end
     -- For LiteBag
@@ -399,13 +407,13 @@ local function SetPaperDollItemLevel(self, unit)
     local frame = GetItemLevelFrame(self, "PaperDoll")
     if (unit and GetInventoryItemTexture(unit, id)) then
         local count, level, _, link, quality, _, _, class, _, _, equipSlot = LibItemInfo:GetUnitItemInfo(unit, id)
-        SetItemLevelString(frame.levelString, level > 0 and level or "", quality)
+        SetItemLevelString(frame.levelString, level > 0 and level or "", quality, link)
         SetItemSlotString(frame.slotString, class, equipSlot)
         if (id == 16 or id == 17) then
             local _, mlevel, _, _, mquality = LibItemInfo:GetUnitItemInfo(unit, 16)
             local _, olevel, _, _, oquality = LibItemInfo:GetUnitItemInfo(unit, 17)
             if (mlevel > 0 and olevel > 0 and (mquality == 6 or oquality == 6)) then
-                SetItemLevelString(frame.levelString, max(mlevel,olevel), mquality or oquality)
+                SetItemLevelString(frame.levelString, max(mlevel,olevel), mquality or oquality, link)
             end
         end
     else

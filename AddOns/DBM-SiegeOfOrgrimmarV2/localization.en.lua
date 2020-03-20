@@ -118,11 +118,6 @@ L:SetMiscLocalization({
 	warrior		= "|c"..RAID_CLASS_COLORS["WARRIOR"].colorStr..LOCALIZED_CLASS_NAMES_MALE["WARRIOR"].."|r"
 })
 
------------------
--- Malkorok -----
------------------
-L = DBM:GetModLocalization(846)
-
 ------------------------
 -- Spoils of Pandaria --
 ------------------------

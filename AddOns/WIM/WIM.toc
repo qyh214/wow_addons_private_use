@@ -5,13 +5,12 @@
 
 ## Title: WIM
 ## Author: Pazza (Bronzebeard), (Updated by Sylvanaar/MysticalOS/Humfras)
-## Version: 3.8.5
+## Version: 3.8.8
 ## Notes: Give whispers an instant messenger feel.
 ## Notes-esES: Dale a los susurros una sensación de mensajería instantánea.
 ## Notes-esMX: Dale a los susurros una sensación de mensajería instantánea.
 ## eMail: johnlangone@gmail.com
 ## X-Email: johnlangone@gmail.com
-## X-Website: http://www.wimaddon.com/
 ## X-Category: Chat
 ## DefaultState: Enabled
 ## OptionalDeps: LibStub, CallbackHandler-1.0, ChatThrottleLib, LibSharedMedia-3.0, LibChatHandler-1.0, LibChatAnims

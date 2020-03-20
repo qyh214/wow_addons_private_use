@@ -22,11 +22,6 @@ L:SetMiscLocalization({
 	BossLeaving	= "Volveré..."
 })
 
--------------------------------------
--- Atracador de la Horda de Hierro --
--------------------------------------
-L = DBM:GetModLocalization(1425)
-
 ------------------------------------
 -- Alto Consejo de Fuego Infernal --
 ------------------------------------
@@ -34,19 +29,6 @@ L = DBM:GetModLocalization(1432)
 
 L:SetWarningLocalization({
 	reapDelayed	= "Segar tras Rostro de pesadilla"
-})
-
-L:SetOptionLocalization({
-	reapDelayed	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.soon:format(184476)
-})
-
--------------
--- Kormrok --
--------------
-L = DBM:GetModLocalization(1392)
-
-L:SetMiscLocalization({
-	ExRTNotice	= "%s está compartiendo su configuración de posiciones de Exorsus Raid Tools. Tus posiciones son: Naranja: %s, Verde: %s, Púrpura: %s."
 })
 
 ---------------------
@@ -131,11 +113,6 @@ L:SetOptionLocalization({
 	Count4Resume		= "Rotación de 4 jugadores que se mantiene cuando desaparece la barrera",
 	Count4Reset			= "Rotación de 4 jugadores que se reinicia cuando desaparece la barrera"
 })
-
---------------------
--- Tirana Velhari --
---------------------
-L = DBM:GetModLocalization(1394)
 
 ---------------
 -- Mannoroth --

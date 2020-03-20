@@ -92,7 +92,6 @@ L:SetMiscLocalization{
 	WarnWave_3		= "Oleada %s/8 - %s %s, %s %s y %s %s",
 	WarnWave_4		= "Oleada %s/8 - %s %s, %s %s, %s %s y %s %s",
 	WarnWave_5		= "Oleada %s/8 - %s %s, %s %s, %s %s, %s %s y %s %s",
-	RageGossip		= "My companions and I are with you, Lady Proudmoore.",
 	RageGossip		= "Mis compañeros y yo estamos contigo, Lady Valiente.",
 	AnetheronGossip	= "Estamos listos para cualquier cosa que Archimonde nos mande, Lady Valiente.",
 	KazrogalGossip	= "Estoy contigo, Thrall.",

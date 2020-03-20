@@ -2,7 +2,7 @@
 local L
 
 -- Initial release by Sasmira: 12/26/2010
--- Last update: 01/25/2011 (by Sasmira) 
+-- Last update: 01/25/2011 (by Sasmira)
 
 -------------------------------
 --  Dark Iron Golem Council  --
@@ -137,7 +137,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	NefAoe			= "L'air craque sous l'électricité !", -- à vérifier 
+	NefAoe			= "L'air craque sous l'électricité !", -- à vérifier
 	YellPhase2			= "Soyez maudits, mortels ! Un tel mépris pour les possessions d'autrui doit être traité avec une extrême fermeté !", -- à vérifier
 	YellPhase3			= "J'ai tout fait pour être un hôte accomodant, mais vous ne daignez pas mourir ! Oublions les bonnes manières et passons aux choses sérieuses... VOUS TUER TOUS !",
 	ShadowBlazeExact		= "Shadowblaze in %ds",

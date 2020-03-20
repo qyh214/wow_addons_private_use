@@ -16,7 +16,6 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	SpecWarnOverloadSoon		= "Alerte spéciale avant la surcharge",
 	specWarnBreakJasperChains	= "Alerte spéciale quand il est sûr de casser $spell:130395",
-	ArrowOnJasperChains			= "Voir la fleche DBM lorsque vous êtes affecté par $spell:130395",
 	InfoFrame					= "Afficher le cadre d'information pour la puissance des boss, la pétrification des joueurs, et quand le boss lance la pétrification"
 })
 

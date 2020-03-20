@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Freya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190722195205")
+mod:SetRevision("20200222200840")
 
 mod:SetCreatureID(32906)
 mod:SetEncounterID(1133)
@@ -76,7 +76,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnTremor:Play("stopcast")
 		timerTremorCD:Start()
 	end
-end 
+end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 62678 then -- Summon Allies of Nature
@@ -120,7 +120,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args:IsSpellID(62451, 62865) and args:IsPlayer() then
 		specWarnBeam:Show()
 		specWarnBeam:Play("runaway")
-	end 
+	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)

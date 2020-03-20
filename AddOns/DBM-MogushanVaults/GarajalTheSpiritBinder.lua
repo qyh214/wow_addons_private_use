@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(682, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200222213340")
 mod:SetCreatureID(60143)
 mod:SetEncounterID(1434)
 mod:SetZone()
@@ -130,7 +130,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if not self:IsDifficulty("lfr25") then -- lfr totems not breakable, instead totems can click. so lfr warns can be spam, not needed to warn. also CLEU fires all players, no need to use sync.
 			crossedOverTargets[#crossedOverTargets + 1] = args.destName
 			self:Unschedule(warnCrossedOverTargets)
-			self:Schedule(0.3, warnCrossedOverTargets)		
+			self:Schedule(0.3, warnCrossedOverTargets)
 		end
 	elseif spellId == 116278 then--this is tank spell, no delays?
 		if args:IsPlayer() then--no latency check for personal notice you aren't syncing.

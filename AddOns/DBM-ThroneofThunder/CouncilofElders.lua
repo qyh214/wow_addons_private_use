@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(816, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010000")
+mod:SetRevision("20200222213340")
 mod:SetCreatureID(69078, 69132, 69134, 69131)--69078 Sul the Sandcrawler, 69132 High Prestess Mar'li, 69131 Frost King Malakk, 69134 Kazra'jin --Adds: 69548 Shadowed Loa Spirit,
 mod:SetEncounterID(1570)
 mod:SetZone()
@@ -184,7 +184,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if cid == 69078 then--Sul the Sandcrawler
 			self:UnregisterShortTermEvents()
 		elseif cid == 69132 then--High Prestess Mar'li
-			--Swap timers. While possessed 
+			--Swap timers. While possessed
 			local elapsed, total = timerBlessedLoaSpiritCD:GetTime()
 			timerBlessedLoaSpiritCD:Cancel()
 			if elapsed and total then--If for some reason it was nil, like it JUST came off cd, do nothing, she should cast loa spirit right away.
@@ -196,7 +196,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 			self:UnregisterShortTermEvents()
 		elseif cid == 69131 then--Frost King Malakk
-			--Swap timers. While possessed 
+			--Swap timers. While possessed
 			local elapsed, total = timerBitingColdCD:GetTime()
 			timerBitingColdCD:Cancel()
 			if elapsed and total and total ~= 0 then--If for some reason it was nil, like it JUST came off cd, do nothing, he should cast frost bite right away.

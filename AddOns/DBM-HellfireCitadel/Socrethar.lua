@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1427, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814112014")
+mod:SetRevision("20200222221214")
 mod:SetCreatureID(92330)
 mod:SetEncounterID(1794)
 mod:SetZone()
@@ -203,7 +203,7 @@ function mod:OnCombatEnd()
 	if self.Options.HudMapOnOrb or self.Options.HudMapOnCharge then
 		DBMHudMap:Disable()
 	end
-end 
+end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
@@ -343,7 +343,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnEternalHunger:ScheduleVoice(2, "keepmove")
 		else
 			warnEternalHunger:Show(args.destName)
-		end	
+		end
 	elseif spellId == 182900 then
 		warnVirulentHaunt:CombinedShow(0.5, args.destName)
 	elseif spellId == 184124 then
@@ -493,7 +493,7 @@ function mod:OnSync(msg)
 		self.vb.interruptBehavior = "Count4Resume"
 	elseif msg == "Count4Reset" then
 		self.vb.interruptBehavior = "Count4Reset"
-	end	
+	end
 end
 
 --[[

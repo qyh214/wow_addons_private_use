@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(726, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200222213340")
 mod:SetCreatureID(60410)--Energy Charge (60913), Emphyreal Focus (60776), Cosmic Spark (62618), Celestial Protector (60793)
 mod:SetEncounterID(1500)
 mod:DisableESCombatDetection()
@@ -22,7 +22,7 @@ local warnPhase1					= mod:NewPhaseAnnounce(1, 2)--117727 Charge Vortex
 local warnBreath					= mod:NewSpellAnnounce(117960, 3)
 local warnArcingEnergy				= mod:NewSpellAnnounce(117945, 2)--Cast randomly at 2 players, it is avoidable.
 local warnClosedCircuit				= mod:NewTargetAnnounce(117949, 3, nil, "Healer")--what happens if you fail to avoid the above
-local warnStunned					= mod:NewTargetAnnounce(132222, 3, nil, "Healer")--Heroic / 132222 is stun debuff, 132226 is 2 min debuff. 
+local warnStunned					= mod:NewTargetAnnounce(132222, 3, nil, "Healer")--Heroic / 132222 is stun debuff, 132226 is 2 min debuff.
 local warnPhase2					= mod:NewPhaseAnnounce(2, 3)--124967 Draw Power
 local warnPhase3					= mod:NewPhaseAnnounce(3, 3)--116994 Unstable Energy Starting
 
@@ -84,7 +84,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		powerCount = 0
 		warnPhase2:Show()
 		timerBreathCD:Cancel()
-		timerProtectorCD:Cancel()	
+		timerProtectorCD:Cancel()
 	elseif spellId == 116994 then--Phase 3 begin/Phase 2 end
 		focusActivated = 0
 		phase2Started = false

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("YoggSaron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190722195205")
+mod:SetRevision("20200222200840")
 mod:SetCreatureID(33288)
 mod:SetEncounterID(1143)
 mod:SetModelID(28817)
@@ -126,7 +126,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 64144 and self:GetUnitCreatureId(args.sourceGUID) == 33966 then 
+	if args.spellId == 64144 and self:GetUnitCreatureId(args.sourceGUID) == 33966 then
 		warnCrusherTentacleSpawned:Show()
 	elseif args.spellId == 64465 then
 		timerEmpower:Start()
@@ -163,24 +163,24 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			self:Schedule(0.5, warnBrainLinkWarning, self)
 		end
-	elseif args:IsSpellID(63830, 63881) then   -- Malady of the Mind (Death Coil) 
+	elseif args:IsSpellID(63830, 63881) then   -- Malady of the Mind (Death Coil)
 		--timerMaladyCD:Start()
 		if self.Options.SetIconOnFearTarget then
-			self:SetIcon(args.destName, 6) 
+			self:SetIcon(args.destName, 6)
 		end
 		if args:IsPlayer() then
 			specWarnMalady:Show()
 			specWarnMalady:Play("targetyou")
 		else
-			local uId = DBM:GetRaidUnitId(args.destName) 
-			if uId then 
+			local uId = DBM:GetRaidUnitId(args.destName)
+			if uId then
 				local inRange = CheckInteractDistance(uId, 2)
-				if inRange then 
+				if inRange then
 					specWarnMaladyNear:Show(args.destName)
 					specWarnMaladyNear:Play("runaway")
 				end
 			end
-		end 
+		end
 	elseif args:IsSpellID(64126, 64125) then	-- Squeeze
 		warnSqueeze:Show(args.destName)
 		if args:IsPlayer() then
@@ -192,7 +192,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.SetIconOnFervorTarget then
 			self:SetIcon(args.destName, 7)
 		end
-		if args:IsPlayer() and self:AntiSpam(4, 1) then 
+		if args:IsPlayer() and self:AntiSpam(4, 1) then
 			specWarnFervor:Show()
 			specWarnFervor:Play("targetyou")
 		end
@@ -222,8 +222,8 @@ function mod:SPELL_AURA_REMOVED(args)
 		self:SendSync("Phase3")			-- Sync this because you don't get it in your combat log if you are in brain room.
 	elseif args:IsSpellID(64167, 64163) and self:AntiSpam(3, 2) then	-- Lunatic Gaze
 		timerNextLunaricGaze:Start()
-	elseif args:IsSpellID(63830, 63881) and self.Options.SetIconOnFearTarget then   -- Malady of the Mind (Death Coil) 
-		self:SetIcon(args.destName, 0) 
+	elseif args:IsSpellID(63830, 63881) and self.Options.SetIconOnFearTarget then   -- Malady of the Mind (Death Coil)
+		self:SetIcon(args.destName, 0)
 	elseif args.spellId == 64465 then
 		if self.Options.SetIconOnBeacon then
 			self:ScanForMobs(args.destGUID, 2, 0, 1, 0.2, 12, "SetIconOnBeacon")

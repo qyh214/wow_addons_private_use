@@ -70,11 +70,6 @@ L:SetMiscLocalization({
 	tower			= "문이 뚫렸습니다!"
 })
 
---------------------
---Iron Juggernaut --
---------------------
-L = DBM:GetModLocalization(864)
-
 --------------------------
 -- Kor'kron Dark Shaman --
 --------------------------
@@ -102,11 +97,6 @@ L:SetMiscLocalization({
 	allForces	= "전 코르크론, 내 명령을 따르라. 모두 죽여!",
 	nextAdds	= "다음 병력: "
 })
-
------------------
--- Malkorok -----
------------------
-L = DBM:GetModLocalization(846)
 
 ------------------------
 -- Spoils of Pandaria --

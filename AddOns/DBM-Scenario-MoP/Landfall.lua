@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Landfall", "DBM-Scenario-MoP")--Alliance : 590, Horde : 595
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200222213340")
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1103, 1102)
@@ -20,7 +20,7 @@ local warnAchFiveAlive		= mod:NewAnnounce("WarnAchFiveAlive", 3, nil, false)
 local specWarnDivineLight	= mod:NewSpecialWarningInterrupt(135403)
 
 --[[ Alliance 'heroes'
-68581 Daggin Windbeard 
+68581 Daggin Windbeard
 68685 Admiral Taylor
 68871 Amber Kearnen
 68883 Sully "The Pickle" MxLeary

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Maexxna", "DBM-Naxx", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20200222200840")
 mod:SetCreatureID(15952)
 mod:SetEncounterID(1116)
 mod:SetModelID(15928)
@@ -35,8 +35,8 @@ end
 function mod:OnCombatEnd(wipe)
 	if not wipe then
 		if DBM.Bars:GetBar(L.ArachnophobiaTimer) then
-			DBM.Bars:CancelBar(L.ArachnophobiaTimer) 
-		end	
+			DBM.Bars:CancelBar(L.ArachnophobiaTimer)
+		end
 	end
 end
 

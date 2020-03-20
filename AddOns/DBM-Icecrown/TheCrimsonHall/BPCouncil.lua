@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BPCouncil", "DBM-Icecrown", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20200222200840")
 mod:SetCreatureID(37970, 37972, 37973)
 mod:SetEncounterID(1095)
 mod:DisableEEKillDetection()--IEEU fires for this boss.
@@ -183,8 +183,8 @@ function mod:SPELL_SUMMON(args)
 end
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
-	if msg:match(L.EmpoweredFlames) then
-		local target = DBM:GetUnitFullName(target)
+	if msg:match(L.EmpoweredFlames) and target then
+		target = DBM:GetUnitFullName(target)
 		if self:IsTrivial(100) then return end
 		if target == UnitName("player") then
 			specWarnEmpoweredFlames:Show()

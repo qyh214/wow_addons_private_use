@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(167, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143316")
+mod:SetRevision("20200222203750")
 mod:SetCreatureID(43324)
 mod:SetEncounterID(1029)
 mod:SetZone()
@@ -127,7 +127,7 @@ function mod:OnCombatStart(delay)
 		DBM.InfoFrame:SetHeader(Bloodlevel)
 		DBM.InfoFrame:Show(5, "playerpower", 10, ALTERNATE_POWER_INDEX)
 	end
-end	
+end
 
 function mod:OnCombatEnd()
 	if self.Options.InfoFrame then
@@ -136,7 +136,7 @@ function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
-end 
+end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 91317 then

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Onyxia", "DBM-Onyxia")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20191118191635")
+mod:SetRevision("20200222200840")
 mod:SetCreatureID(10184)
 mod:SetEncounterID(1084)
 mod:SetZone()
@@ -117,7 +117,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	local spellName = args.spellId
+	local spellId = args.spellId
 	if spellId == 19633 then
 		warnKnockAway:Show(args.destName)
 	end

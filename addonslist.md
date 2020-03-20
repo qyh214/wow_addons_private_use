@@ -74,8 +74,6 @@ TellMeWhen
 
 TinyInspect 角色面板信息增强显示额外的装备展示、与TinyTooltip结合更好实现玩家等级显示
 
-TinyTooltip  tooltip美化（TipTac替代品，elvui已自带tooltip美化，建议不启用）
-
 WeakAuras
 
 WIM 聊天窗口美化（私聊以弹窗方式展现，更为直观）

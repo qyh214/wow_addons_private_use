@@ -13,14 +13,8 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	timerSweeperCD		= "다음 높은망치 난동꾼 바 보기",
-	countdownSweeper	= "높은망치 난동꾼 이전에 초읽기 듣기"
+	timerSweeperCD		= "다음 높은망치 난동꾼 바 보기"
 })
-
----------------------------
--- The Butcher --
----------------------------
-L = DBM:GetModLocalization(971)
 
 ---------------------------
 -- Tectus, the Living Mountain --

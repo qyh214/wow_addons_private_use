@@ -82,7 +82,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetTimerLocalization{
-	TimerSpecialSpell		= "下一次特別技能"	
+	TimerSpecialSpell		= "下一次特別技能"
 }
 
 L:SetWarningLocalization{

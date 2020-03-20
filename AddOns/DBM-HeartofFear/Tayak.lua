@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(744, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200223183033")
 mod:SetCreatureID(62543)
 mod:SetEncounterID(1504)
 mod:SetZone()
@@ -45,7 +45,6 @@ local timerBladeTempestCD				= mod:NewNextTimer(60, 125310, nil, nil, nil, 2, ni
 local berserkTimer						= mod:NewBerserkTimer(490)
 
 mod:AddBoolOption("RangeFrame", "Ranged")--For Wind Step
-mod:AddBoolOption("UnseenStrikeArrow")
 
 local intensifyCD = 60
 local phase2 = false
@@ -72,9 +71,6 @@ end
 function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
-	end
-	if self.Options.UnseenStrikeArrow then
-		DBM.Arrow:Hide()
 	end
 end
 
@@ -134,8 +130,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
-	if msg:find("spell:122949") then--Does not show in combat log except for after it hits. IT does fire a UNIT_SPELLCAST event but has no target info. You can get target 1 sec faster with UNIT_AURA but it's more cpu and not worth the trivial gain IMO
-		local target = DBM:GetUnitFullName(target)
+	if msg:find("spell:122949") and target then--Does not show in combat log except for after it hits. IT does fire a UNIT_SPELLCAST event but has no target info. You can get target 1 sec faster with UNIT_AURA but it's more cpu and not worth the trivial gain IMO
+		target = DBM:GetUnitFullName(target)
 		warnUnseenStrike:Show(target)
 		timerUnseenStrike:Start()
 		timerUnseenStrikeCD:Start()
@@ -144,9 +140,6 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 			yellUnseenStrike:Yell()
 		else
 			specWarnUnseenStrikeOther:Show(target)
-			if self.Options.UnseenStrikeArrow then
-				DBM.Arrow:ShowRunTo(target, 3, 5)
-			end
 		end
 	end
 end

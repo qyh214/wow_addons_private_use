@@ -197,11 +197,11 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |cffffffff3.2.1|r\n\n"..
-					"- FIXED - TomTom - support for BfA zones (Nazjatar)\n"..
-					"- IMPROVED - TomTom - support for Q / WQ\n"..
-					"- UPDATED - Addon support - TomTom v80300-1.1.1\n"..
-					"- UPDATED - Addon support - ElvUI 11.36, SpartanUI 5.3.0\n\n"..
+			text = cTitle.."         What's NEW in version |cffffffff3.2.2|r\n\n"..
+					"- ADDED - Tracker - reduces the width of the minimized tracker, when option"..
+					offs.."\"Collapsed tracker text\" is set to \"None\"\n"..
+					"- UPDATED - Addon support - PetTracker 8.3.5 (compatible with 8.3.1+)\n"..
+					"- UPDATED - Addon support - ElvUI 11.371\n\n"..
 
                     cTitle.."WoW 8.3.0 - Known issues w/o solution|r\n"..
                     "- Clicking on tracked quests or achievements has no response during combat.\n"..

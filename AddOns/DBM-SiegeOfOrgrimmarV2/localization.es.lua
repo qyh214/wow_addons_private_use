@@ -74,16 +74,6 @@ L:SetMiscLocalization({
 	tower			= "¡La puerta de la torre"--The door barring the South/North Tower has been breached!
 })
 
---------------------
--- Gigante férreo --
---------------------
-L = DBM:GetModLocalization(864)
-
-L:SetOptionLocalization({
-	timerAssaultModeCD	= DBM_CORE_AUTO_TIMER_OPTIONS.next:format("ej8177"),
-	timerSiegeModeCD	= DBM_CORE_AUTO_TIMER_OPTIONS.next:format("ej8178")
-})
-
 -------------------------------
 -- Chamanes oscuros Kor'kron --
 -------------------------------
@@ -115,11 +105,6 @@ L:SetMiscLocalization({
 	allForces	= "Atención, Korkron: ¡matadlos!",
 	nextAdds	= "Siguientes refuerzos: "
 })
-
---------------
--- Malkorok --
---------------
-L = DBM:GetModLocalization(846)
 
 -----------------------
 -- Botín de Pandaria --

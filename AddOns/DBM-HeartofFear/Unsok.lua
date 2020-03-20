@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(737, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200222213340")
 mod:SetCreatureID(62511)
 mod:SetEncounterID(1499)
 mod:SetZone()
@@ -80,7 +80,6 @@ local timerAmberExplosion		= mod:NewCastTimer(2.5, 122402)
 local berserkTimer				= mod:NewBerserkTimer(600)
 
 mod:AddBoolOption("InfoFrame", true)
-mod:AddBoolOption("FixNameplates", true)--Because having 215937495273598637205175t9 hostile nameplates on screen when you enter a construct is not cool.
 
 local Phase = 1
 local Puddles = 0
@@ -149,28 +148,6 @@ function mod:OnCombatStart(delay)
 		DBM.InfoFrame:SetSortingAsc(true)
 		DBM.InfoFrame:Show(5, "playerpower", 1, ALTERNATE_POWER_INDEX)
 	end
-	if self.Options.FixNameplates then
-		--Blizz settings either return 1 or nil, we pull users original settings first, then change em if appropriate after.
-		Totems = GetCVarBool("nameplateShowEnemyTotems")
-		Guardians = GetCVarBool("nameplateShowEnemyGuardians")
-		Pets = GetCVarBool("nameplateShowEnemyPets")
-		--Now change all settings to make the nameplates while in constructs not terrible.
-		if not InCombatLockdown() then--Now restricted functions in combat in 5.4.8. My hope is that startcombat fires first, if not, prevent lua errors.
-			if Totems then
-				SetCVar("nameplateShowEnemyTotems", 0)
-			end
-			if Guardians then
-				SetCVar("nameplateShowEnemyGuardians", 0)
-			end
-			if Pets then
-				SetCVar("nameplateShowEnemyPets", 0)
-			end
-		end
-		--Check for threat plates on pull and save users setting.
-		if IsAddOnLoaded("TidyPlates_ThreatPlates") then
-			TPTPNormal = TidyPlatesThreat.db.profile.nameplate.toggle["Normal"]--Returns true or false, use TidyPlatesNormal to save that value on pull
-		end
-	end
 end
 
 local function delayNamePlateRestore()
@@ -190,30 +167,7 @@ function mod:OnCombatEnd()
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
-	if self.Options.FixNameplates then
-		--if any of settings were on before pull, we put them back to way they were.
-		if not InCombatLockdown() then--Can't change options back yet
-			if Totems then
-				SetCVar("nameplateShowEnemyTotems", 1)
-			end
-			if Guardians then
-				SetCVar("nameplateShowEnemyGuardians", 1)
-			end
-			if Pets then
-				SetCVar("nameplateShowEnemyPets", 1)
-			end
-		else
-			self:Schedule(3, delayNamePlateRestore)--So try again in 3 seconds. Hopefuly PLAYER_REGEN_ENABLED fired by then (mod:stop called before mod:oncombatend so this scheduling SHOULD work)
-		end
-		if IsAddOnLoaded("TidyPlates_ThreatPlates") then
-			if TPTPNormal == true and not TidyPlatesThreat.db.profile.nameplate.toggle["Normal"] then--Normal plates were on when we pulled but aren't on now.
-				TidyPlatesThreat.db.profile.nameplate.toggle["Normal"] = true--Turn them back on
-				TidyPlates:ReloadTheme()--Call the Tidy plates update methods
-				TidyPlates:ForceUpdate()
-			end
-		end
-	end
-end 
+end
 
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
@@ -232,7 +186,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			else
 				timerDestabalize:Start(nil, args.destName, amount)
 			end
-			if cid == 62711 then 
+			if cid == 62711 then
 				amDestabalizeStack = amount -- save for timer canceling.
 			end
 		end
@@ -275,13 +229,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			specwarnReshape:Show()
 			warnReshapeLifeTutor:Show()
 			timerAmberExplosionCD:Start(15, args.destName)--Only player needs to see this, they are only person who can do anything about it.
-			if self.Options.FixNameplates and IsAddOnLoaded("TidyPlates_ThreatPlates") then
-				if TPTPNormal == true then
-					TidyPlatesThreat.db.profile.nameplate.toggle["Normal"] = false
-					TidyPlates:ReloadTheme()--Call the Tidy plates update methods
-					TidyPlates:ForceUpdate()
-				end
-			end
 		end
 		if Phase < 3 then
 			timerReshapeLifeCD:Start(nil, constructCount+1)
@@ -304,13 +251,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		if args:IsPlayer() then
 			self:UnregisterShortTermEvents()
 			playerIsConstruct = false
-			if self.Options.FixNameplates and IsAddOnLoaded("TidyPlates_ThreatPlates") then
-				if TPTPNormal == true and not TidyPlatesThreat.db.profile.nameplate.toggle["Normal"] then--Normal plates were on when we pulled but aren't on now.
-					TidyPlatesThreat.db.profile.nameplate.toggle["Normal"] = true--Turn them back on
-					TidyPlates:ReloadTheme()--Call the Tidy plates update methods
-					TidyPlates:ForceUpdate()
-				end
-			end
 		end
 		timerAmberExplosionCD:Cancel(args.destName)
 	elseif spellId == 121994 then

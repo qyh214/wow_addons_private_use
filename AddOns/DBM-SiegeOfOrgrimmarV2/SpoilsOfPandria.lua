@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(870, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200222213340")
 mod:SetCreatureID(73720, 71512)
 mod:SetEncounterID(1594)
 mod:DisableESCombatDetection()
@@ -181,7 +181,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self:AntiSpam(5, args.destName) then
 			warnForbiddenMagic:CombinedShow(1, args.destName)
 		end
-		if (source == UnitName("target") or source == UnitName("focus")) and self:AntiSpam(3, 6) then 
+		if (source == UnitName("target") or source == UnitName("focus")) and self:AntiSpam(3, 6) then
 			specWarnForbiddenMagic:Show(source)
 		end
 	elseif spellId == 145786 then

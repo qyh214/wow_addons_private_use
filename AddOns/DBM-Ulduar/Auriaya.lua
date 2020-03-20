@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Auriaya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20200222200840")
 
 mod:SetCreatureID(33515)--34014--Add this (kitties) to pull detection when it can be ignored in kill
 mod:SetEncounterID(1131)
@@ -87,7 +87,7 @@ function mod:UNIT_DIED(args)
 			else
 				warnCatDied:Show(self.vb.catLives)
 				timerDefender:Start()
-         	end
+			end
 		end
 	end
 end

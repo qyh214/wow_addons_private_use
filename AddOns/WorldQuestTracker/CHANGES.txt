@@ -1,10 +1,16 @@
-lightweight tag 3258fbbb0c3c1b27f14c21c1b9638598a2e9fb70 v8.3.0.389
+lightweight tag d2ca9dbec796f44272d5550c03df677eee88ba6c v8.3.0.392
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Wed Jan 15 19:29:03 2020 -0300
+Date:	Sat Mar 14 13:47:32 2020 -0300
 
-commit 3258fbbb0c3c1b27f14c21c1b9638598a2e9fb70
+commit d2ca9dbec796f44272d5550c03df677eee88ba6c
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Wed Jan 15 19:29:03 2020 -0300
+Date:   Sat Mar 14 13:47:32 2020 -0300
 
-    Tooltips fix?
+    Updating Framework
+
+commit 98a644e265c76c9144501ecd7fef078d35a6b26d
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Wed Feb 26 18:25:15 2020 -0300
+
+    Framework Update, Fixed show group finder windown on new quest
 

@@ -23,26 +23,12 @@ L:SetMiscLocalization({
 })
 
 ---------------------------
--- Iron Reaver --
----------------------------
-L = DBM:GetModLocalization(1425)
-
----------------------------
 -- Hellfire High Council --
 ---------------------------
 L = DBM:GetModLocalization(1432)
 
 L:SetWarningLocalization({
 	reapDelayed	= "Жатва после Лика закончилась"
-})
-
-------------------
--- Kormrok --
-------------------
-L = DBM:GetModLocalization(1392)
-
-L:SetMiscLocalization({
-	ExRTNotice	= "%s отправил присвоенные позиции ExRT. Ваши позиции: оранж.:%s, зел.:%s, фиол.:%s"
 })
 
 --------------
@@ -127,11 +113,6 @@ L:SetOptionLocalization({
 	Count4Resume		= "Ротация из 4 чел., которая продолжается когда барьер спадает",
 	Count4Reset			= "Ротация из 4 чел., которая начинается заново когда барьер спадает"
 })
-
---------------------------
--- Tyrant Velhari --
---------------------------
-L = DBM:GetModLocalization(1394)
 
 --------------------------
 -- Mannoroth --

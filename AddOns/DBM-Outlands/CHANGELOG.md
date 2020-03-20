@@ -1,9 +1,13 @@
 # <DBM> Outlands
 
-## [r669](https://github.com/DeadlyBossMods/DBM-BCVanilla/tree/r669) (2020-01-14)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-BCVanilla/compare/r668...r669)
+## [r670](https://github.com/DeadlyBossMods/DBM-BCVanilla/tree/r670) (2020-02-21)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-BCVanilla/compare/r669...r670)
 
-- Toc Bump for 8.3  
-- Fix error  
-- Synced ragnaros retail with classic updates  
-- Updated Nefarian to not show dispel warning if your dispel is on cooldown (ie CheckDispelFilter prototype)  
+- Last two  
+- Few fixes  
+- Update Luacheck  
+- Sync classic improvements to retail BWL/MC  
+- Apply fixes from classic. Locale classcall, and KR fix for warlock.  
+- Add ClassCall for DemonHunter, finished TODO  
+- Add yell for Demon Hunters to locale  
+- Sync Classic ragnaros bugfix with retail ragnaros mod  

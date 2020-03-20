@@ -457,7 +457,7 @@ local options = {
 								KT.forcedUpdate = true
 								ObjectiveTracker_Update()
 								if PetTracker then
-									PetTracker.Objectives:TrackingChanged()
+									PetTracker.Objectives:Update()
 								end
 								KT.forcedUpdate = false
 							end,
@@ -482,7 +482,7 @@ local options = {
 								KT:SetText()
 								ObjectiveTracker_Update()
 								if PetTracker then
-									PetTracker.Objectives:TrackingChanged()
+									PetTracker.Objectives:Update()
 								end
 								KT.forcedUpdate = false
 							end,
@@ -500,7 +500,7 @@ local options = {
 								KT:SetText()
 								ObjectiveTracker_Update()
 								if PetTracker then
-									PetTracker.Objectives:TrackingChanged()
+									PetTracker.Objectives:Update()
 								end
 								KT.forcedUpdate = false
 							end,
@@ -523,7 +523,7 @@ local options = {
 								KT:SetText()
 								ObjectiveTracker_Update()
 								if PetTracker then
-									PetTracker.Objectives:TrackingChanged()
+									PetTracker.Objectives:Update()
 								end
 								KT.forcedUpdate = false
 							end,
@@ -783,14 +783,15 @@ local options = {
 							order = 4.65,
 						},
 						hdrCollapsedTxtLabel = {
-							name = " Collapsed\n text",
+							name = " Collapsed tracker text",
 							type = "description",
-							width = "half",
+							width = "normal",
 							fontSize = "medium",
 							order = 4.7,
 						},
 						hdrCollapsedTxt1 = {
 							name = "None",
+							desc = "Reduces the tracker width when minimized.",
 							type = "toggle",
 							width = "half",
 							get = function()
@@ -835,6 +836,7 @@ local options = {
 								db.hdrOtherButtons = not db.hdrOtherButtons
 								KT:ToggleOtherButtons()
 								KT:SetBackground()
+								ObjectiveTracker_Update()
 							end,
 							order = 4.8,
 						},
@@ -1222,7 +1224,9 @@ local options = {
 							end,
 							set = function()
 								db.addonPetTracker = not db.addonPetTracker
-								PetTracker.Sets.HideTracker = not db.addonPetTracker
+								if PetTracker.sets then
+									PetTracker.sets.trackPets = db.addonPetTracker
+								end
 								ReloadUI()
 							end,
 							order = 1.21,

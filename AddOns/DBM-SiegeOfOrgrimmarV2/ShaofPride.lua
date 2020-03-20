@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(867, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200222213340")
 mod:SetCreatureID(71734)
 mod:SetEncounterID(1604)
 mod:SetZone()
@@ -126,7 +126,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 144379 then
 		local sourceGUID = args.sourceGUID
 		warnMockingBlast:Show()
-		if sourceGUID == UnitGUID("target") or sourceGUID == UnitGUID("focus") then 
+		if sourceGUID == UnitGUID("target") or sourceGUID == UnitGUID("focus") then
 			specWarnMockingBlast:Show(args.sourceName)
 		end
 	elseif spellId == 144832 then

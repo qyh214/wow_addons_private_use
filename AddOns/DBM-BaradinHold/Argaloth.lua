@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(139, "DBM-BaradinHold", nil, 74)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005904")
+mod:SetRevision("20200222203750")
 mod:SetCreatureID(47120)
 mod:SetEncounterID(1033)
 mod:SetZone()
@@ -97,7 +97,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerConsumingCD:Start(9)
 	end
 end
-	
+
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 88972 then
 		warnFirestorm:Show()

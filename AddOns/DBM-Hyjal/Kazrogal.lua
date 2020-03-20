@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kazrogal", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200221204848")
 mod:SetCreatureID(17888)
 mod:SetEncounterID(620)
 mod:SetModelID(17886)
@@ -25,7 +25,7 @@ mod.vb.time = 45
 
 function mod:OnCombatStart(delay)
 	self.vb.time = 45
-	self.vb.count = 0 
+	self.vb.count = 0
 	timerMark:Start(45-delay)
 end
 

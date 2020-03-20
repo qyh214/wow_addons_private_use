@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2367, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200209032212")
+mod:SetRevision("20200311164649")
 mod:SetCreatureID(157231)
 mod:SetEncounterID(2335)
 mod:SetZone()
@@ -44,7 +44,7 @@ local warnCrush								= mod:NewTargetNoFilterAnnounce(307471, 3, nil, "Tank")
 local warnDissolve							= mod:NewTargetNoFilterAnnounce(307472, 3, nil, "Tank")
 local warnDebilitatingSpit					= mod:NewTargetNoFilterAnnounce(307358, 3, nil, false, 58519)
 local warnFrenzy							= mod:NewTargetNoFilterAnnounce(306942, 2)
-local warnFixate							= mod:NewTargetAnnounce(307260, 2)
+local warnFixate							= mod:NewTargetCountAnnounce(307260, 2)
 local warnEntropicBuildup					= mod:NewCountAnnounce(308177, 2)
 local warnEntropicBreath					= mod:NewSpellAnnounce(306930, 2, nil, "Tank")
 local warnTastyMorsel						= mod:NewTargetNoFilterAnnounce(312099, 1)
@@ -79,7 +79,6 @@ mod.vb.bubblingCount = 0
 mod.vb.buildupCount = 0
 mod.vb.fixateCount = 0
 mod.vb.bossPowerUpdateRate = 4
-mod.vb.comboCount = 0
 mod.vb.firstCrush = nil
 mod.vb.firstDissolve = nil
 local playerName = UnitName("player")
@@ -165,7 +164,6 @@ function mod:OnCombatStart(delay)
 	self.vb.phase = 1
 	self.vb.fixateCount = 0
 	self.vb.bossPowerUpdateRate = 4
-	self.vb.comboCount = 0
 	self.vb.firstCrush = nil
 	self.vb.firstDissolve = nil
 	table.wipe(SpitStacks)
@@ -213,9 +211,9 @@ function mod:SPELL_CAST_START(args)
 		timerDebilitatingSpitCD:Start()
 	elseif spellId == 307478 then--Dissolve
 		if self:AntiSpam(11, 1) then
-			self.vb.comboCount = 0
+			self.vb.firstCrush = nil
+			self.vb.firstDissolve = nil
 		end
-		self.vb.comboCount = self.vb.comboCount + 1
 		--there is already a crush debuffed tank, and it is not us, therefor WE must taunt dissolve
 		--or, we are the dissolve debuffed tank and we need to tank this dissolve too
 		if not self:IsTanking("player", "boss1", nil, true) then
@@ -226,9 +224,9 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 307476 then--Crush
 		if self:AntiSpam(11, 1) then
-			self.vb.comboCount = 0
+			self.vb.firstCrush = nil
+			self.vb.firstDissolve = nil
 		end
-		self.vb.comboCount = self.vb.comboCount + 1
 		--there is already a dissolve debuffed tank, and it is not us, therefor WE must taunt crush
 		--or, we are the crush debuffed tank and we need to tank this crush too
 		if not self:IsTanking("player", "boss1", nil, true) then
@@ -288,7 +286,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 306942 then
 		warnFrenzy:Show(args.destName)
 	elseif spellId == 318078 or spellId == 307260 then
-		warnFixate:CombinedShow(0.3, args.destName)
+		warnFixate:CombinedShow(0.3, self.vb.fixateCount, args.destName)
 		if args:IsPlayer() then
 			specWarnFixate:Show()
 			specWarnFixate:Play("targetyou")

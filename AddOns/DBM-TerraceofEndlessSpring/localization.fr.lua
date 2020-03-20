@@ -27,7 +27,7 @@ L = DBM:GetModLocalization(742)
 L:SetMiscLocalization{
 	Victory	= "Je vous remercie étrangers. J'ai été libéré."
 }
- 
+
 -------------------------------
 -- Lei Shi --
 -------------------------------

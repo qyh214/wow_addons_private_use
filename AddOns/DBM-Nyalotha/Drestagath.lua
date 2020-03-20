@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(2373, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200204203451")
+mod:SetRevision("20200306003610")
 mod:SetCreatureID(157602)
 mod:SetEncounterID(2343)
 mod:SetZone()
+mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 mod:SetHotfixNoticeRev(20200112000000)--2020, 1, 12
 --mod:SetMinSyncRevision(20190716000000)
 --mod.respawnTime = 29
@@ -16,7 +17,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 310277 310478 315712",
 	"SPELL_AURA_APPLIED 310277 310358 310361 310552 310563 312595",
 	"SPELL_AURA_APPLIED_DOSE 310563",
-	"SPELL_AURA_REMOVED 310277 310358 312595",
+	"SPELL_AURA_REMOVED 310277 310358 312595 310361",
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
 	"UNIT_DIED",
@@ -36,7 +37,7 @@ mod:RegisterEventsInCombat(
 --]]
 --Drest'agath
 local warnVoidGrip							= mod:NewSpellAnnounce(310246, 2, nil, "Tank")--If Tank isn't in range of boss
-local warnVolatileSeed						= mod:NewTargetNoFilterAnnounce(310277, 2)
+local warnVolatileSeed						= mod:NewTargetCountAnnounce(310277, 2, nil, nil, nil, nil, nil, nil, true)
 local warnUnleashedInsanity					= mod:NewTargetAnnounce(310361, 4)--People stunned by muttering of Insanity
 local warnThrowsSoon						= mod:NewSoonAnnounce(308941, 4)
 --Tentacle of Drest'agath
@@ -45,7 +46,7 @@ local warnThroesofDismemberment				= mod:NewTargetNoFilterAnnounce(315712, 4)
 
 --Drest'agath
 local specWarnThrowsofAgony					= mod:NewSpecialWarningDodgeCount(308941, nil, nil, nil, 2, 2)--Acts as warning for All abilities triggered at 100 Energy
-local specWarnVolatileSeed					= mod:NewSpecialWarningYou(310277, nil, nil, nil, 1, 2)
+local specWarnVolatileSeed					= mod:NewSpecialWarningYouCount(310277, nil, nil, nil, 1, 2)
 local yellolatileSeed						= mod:NewYell(310277)
 local yellolatileSeedFades					= mod:NewFadesYell(310277)
 local specWarnEntropicCrash					= mod:NewSpecialWarningDodge(310329, nil, nil, nil, 2, 2)
@@ -64,7 +65,7 @@ local specWarnMutteringsofBetrayal			= mod:NewSpecialWarningStack(310563, nil, 3
 
 --mod:AddTimerLine(BOSS)
 --Drest'agath
-local timerVolatileSeedCD					= mod:NewCDTimer(16.6, 310277, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 3)--16.6-26.8 (boss has some channeled abilities, spell queuing)
+local timerVolatileSeedCD					= mod:NewCDCountTimer(16.6, 310277, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 3)--16.6-26.8 (boss has some channeled abilities, spell queuing)
 local timerEntropicCrashCD					= mod:NewCDTimer(44.3, 310329, nil, nil, nil, 2)
 local timerMutteringsofInsanityCD			= mod:NewCDTimer(50.2, 310358, nil, nil, nil, 3)--45-60, it's almost always 50.3+ but have to use the 46
 local timerUnleashedInsanity				= mod:NewCastTimer(5, 310361, nil, nil, nil, 3)
@@ -75,15 +76,20 @@ local berserkTimer							= mod:NewBerserkTimer(600)
 mod:AddRangeFrameOption("18/4")--Sadly, choices are 13 or 18, 13 too small so have to round 15 up to 18
 mod:AddInfoFrameOption(308377, false)
 mod:AddSetIconOption("SetIconOnVolatileSeed", 310277, true, false, {1})
+mod:AddSetIconOption("SetIconOnMuttering", 310358, false, false, {2, 3, 4, 5, 6, 7, 8})--Depends on number of maws up. Shouldn't need to use all 7 but CAN use up to 7
 mod:AddNamePlateOption("NPAuraOnVolatileCorruption", 312595)
 
 mod.vb.agonyCount = 0
+mod.vb.volatileSeedCount = 0
+mod.vb.mutteringIcon = 2
 local warnedSoon = false
 
 function mod:OnCombatStart(delay)
 	self.vb.agonyCount = 0
+	self.vb.volatileSeedCount = 0
+	self.vb.mutteringIcon = 2
 	warnedSoon = false
-	timerVolatileSeedCD:Start(7.2-delay)
+	timerVolatileSeedCD:Start(7.2-delay, 1)
 	timerEntropicCrashCD:Start(15.5-delay)
 	timerMutteringsofInsanityCD:Start(30.1-delay)
 	timerVoidGlareCD:Start(45.2-delay)--45.2-53.2
@@ -134,7 +140,8 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 310277 then
-		timerVolatileSeedCD:Start()
+		self.vb.volatileSeedCount = self.vb.volatileSeedCount + 1
+		timerVolatileSeedCD:Start(nil, self.vb.volatileSeedCount+1)
 	elseif spellId == 310478 and self:AntiSpam(5, 5) then
 		warnObscuringCloud:Show()
 	elseif spellId == 315712 then
@@ -173,7 +180,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 310277 then
 		if args:IsPlayer() then
-			specWarnVolatileSeed:Show()
+			specWarnVolatileSeed:Show(self.vb.volatileSeedCount)
 			specWarnVolatileSeed:Play("targetyou")
 			yellolatileSeed:Yell()
 			yellolatileSeedFades:Countdown(spellId)
@@ -181,7 +188,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				DBM.RangeCheck:Show(18)
 			end
 		else
-			warnVolatileSeed:Show(args.destName)
+			warnVolatileSeed:Show(self.vb.volatileSeedCount, args.destName)
 		end
 		if self.Options.SetIconOnVolatileSeed then
 			self:SetIcon(args.destName, 1)
@@ -200,6 +207,10 @@ function mod:SPELL_AURA_APPLIED(args)
 				DBM.RangeCheck:Show(18)
 			end
 		end
+		if self.Options.SetIconOnMuttering and self.vb.mutteringIcon < 9 then
+			self:SetIcon(args.destName, self.vb.mutteringIcon)
+		end
+		self.vb.mutteringIcon = self.vb.mutteringIcon + 1
 	elseif spellId == 310361 then
 		warnUnleashedInsanity:CombinedShow(0.3, args.destName)
 	--All mobs with same name now have same GUID, this basically makes CheckInterruptFilter half useless, thus the AntiSpam need.
@@ -242,6 +253,10 @@ function mod:SPELL_AURA_REMOVED(args)
 				DBM.RangeCheck:Show(4)
 			end
 		end
+	elseif spellId == 310361 then--Unleashed Insanity
+		if self.Options.SetIconOnMuttering then
+			self:SetIcon(args.destName, 0)
+		end
 	end
 end
 
@@ -282,6 +297,7 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	--Has success event, but only if a maw-of-drestagath is up, this script runs regardless
 	if spellId == 310351 then--Mutterings of Insanity
+		self.vb.mutteringIcon = 2
 		timerMutteringsofInsanityCD:Start(50.2)
 	end
 end

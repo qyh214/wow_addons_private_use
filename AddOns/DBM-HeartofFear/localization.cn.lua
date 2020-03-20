@@ -34,7 +34,6 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(744)
 
 L:SetOptionLocalization({
-	UnseenStrikeArrow	= "DBM箭头：当有人受到$spell:122949影响时",
 	RangeFrame			= "距离监视（10码）：$spell:123175"
 })
 
@@ -100,8 +99,7 @@ L:SetOptionLocalization({
 	specwarnAmberExplosionAM	= "特殊警报：打断琥珀畸怪的$spell:122402",
 	specwarnAmberExplosionOther	= "特殊警报：打断变异构造体的$spell:122398",
 	timerAmberExplosionAMCD		= "计时条：琥珀畸怪的下一次$spell:122402",
-	InfoFrame					= "信息框：意志值",
-	FixNameplates				= "在变为变异构造体后自动关闭影响战斗的姓名板<br/>（战斗结束后会自动恢复原始设置）"
+	InfoFrame					= "信息框：意志值"
 })
 
 L:SetMiscLocalization({

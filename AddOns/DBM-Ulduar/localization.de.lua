@@ -9,7 +9,7 @@ L = DBM:GetModLocalization("FlameLeviathan")
 L:SetGeneralLocalization{
 	name = "Flammenleviathan"
 }
-	
+
 L:SetMiscLocalization{
 	YellPull	= "Feindeinheiten erkannt. Bedrohungsbewertung aktiv. Hauptziel erfasst. Neubewertung in T minus 30 Sekunden.",
 	Emote		= "%%s verfolgt (%S+)%."
@@ -47,7 +47,7 @@ L:SetGeneralLocalization{
 	name = "Klingenschuppe"
 }
 
-L:SetWarningLocalization{	
+L:SetWarningLocalization{
 	warnTurretsReadySoon		= "Letzes Geschütz bereit in 20 Sekunden",
 	warnTurretsReady			= "Letzes Geschütz bereit"
 }
@@ -238,7 +238,7 @@ L:SetMiscLocalization{
 	YellPhase2	= "Ihr unverschämtes Geschmeiß! Ihr wagt es, mich in meinem Refugium herauszufordern? Ich werde Euch eigenhändig zerschmettern!",
 	YellKill	= "Senkt Eure Waffen! Ich ergebe mich!",
 	ChargeOn	= "Blitzladung: %s",
-	Charge		= "Fehler bei Blitzladung (dieser Versuch): %s" 
+	Charge		= "Fehler bei Blitzladung (dieser Versuch): %s"
 }
 
 -------------
@@ -358,7 +358,7 @@ L:SetWarningLocalization{
 	WarningSanity 					= "%d Geistige Gesundheit übrig",
 	SpecWarnSanity 					= "%d Geistige Gesundheit übrig",
 	SpecWarnMadnessOutNow			= "Wahnsinn hervorrufen - LAUF RAUS!",
-	WarnBrainPortalSoon				= "Gehirnportale in 3 Sek",	
+	WarnBrainPortalSoon				= "Gehirnportale in 3 Sek",
 	specWarnBrainPortalSoon			= "Gehirnportale bald"
 }
 

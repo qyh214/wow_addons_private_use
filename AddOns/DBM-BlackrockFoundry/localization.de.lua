@@ -52,30 +52,6 @@ L:SetMiscLocalization({
 	bombNeeded		= "%d Bombe(n)"
 })
 
-------------------
--- Hans'gar And Franzok --
-------------------
-L = DBM:GetModLocalization(1155)
-
---------------
--- Flamebender Ka'graz --
---------------
-L = DBM:GetModLocalization(1123)
-
---------------------
---Kromog, Legend of the Mountain --
---------------------
-L = DBM:GetModLocalization(1162)
-
-L:SetMiscLocalization({
-	ExRTNotice	= "%s hat ExRT Positionszuweisungen für die Runen gesendet. Deine Position ist: %s"
-})
-
---------------------------
--- Beastlord Darmac --
---------------------------
-L= DBM:GetModLocalization(1122)
-
 --------------------------
 -- Operator Thogar --
 --------------------------

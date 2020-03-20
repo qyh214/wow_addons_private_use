@@ -76,8 +76,7 @@ local L = WeakAuras.L
 	L["Addons"] = "애드온"
 	L["Advanced"] = "고급"
 	L["Align"] = "정렬"
-	--[[Translation missing --]]
-	L["Alignment"] = "Alignment"
+	L["Alignment"] = "정렬"
 	L["All of"] = "다음 모두"
 	L["Allow Full Rotation"] = "전체 회전 허용"
 	L["Alpha"] = "투명도"
@@ -125,8 +124,7 @@ local L = WeakAuras.L
 	L["Auto"] = "자동"
 	L["Auto-Clone (Show All Matches)"] = "자동 복제 (모든 일치 항목 표시)"
 	L["Auto-cloning enabled"] = "자동 복제 활성화"
-	--[[Translation missing --]]
-	L["Automatic"] = "Automatic"
+	L["Automatic"] = "자동"
 	L["Automatic Icon"] = "자동 아이콘"
 	L["Backdrop Color"] = "배경 색상"
 	--[[Translation missing --]]
@@ -147,8 +145,7 @@ local L = WeakAuras.L
 	L["Blue Rune"] = "푸른색 룬"
 	L["Blue Sparkle Orb"] = "푸른 불꽃 구슬"
 	L["Border"] = "테두리"
-	--[[Translation missing --]]
-	L["Border %s"] = "Border %s"
+	L["Border %s"] = "테두리 %s"
 	--[[Translation missing --]]
 	L["Border Anchor"] = "Border Anchor"
 	L["Border Color"] = "테두리 색상"
@@ -159,20 +156,16 @@ local L = WeakAuras.L
 	L["Border Settings"] = "테두리 설정"
 	L["Border Size"] = "테두리 크기"
 	L["Border Style"] = "테두리 모양"
-	--[[Translation missing --]]
-	L["Bottom"] = "Bottom"
-	--[[Translation missing --]]
-	L["Bottom Left"] = "Bottom Left"
-	--[[Translation missing --]]
-	L["Bottom Right"] = "Bottom Right"
+	L["Bottom"] = "아래"
+	L["Bottom Left"] = "왼쪽 아래"
+	L["Bottom Right"] = "오른쪽 아래"
 	L["Bracket Matching"] = "괄호 맞춤"
 	L["Button Glow"] = "버튼 반짝임"
 	L["Can be a Name or a Unit ID (e.g. party1). A name only works on friendly players in your group."] = "이름 또는 UID (예. party1)를 사용할 수 있습니다. 이름은 같은 파티에 속해 있는 우호적 플레이어에게만 작동합니다."
 	--[[Translation missing --]]
 	L["Can be a UID (e.g., party1)."] = "Can be a UID (e.g., party1)."
 	L["Cancel"] = "취소"
-	--[[Translation missing --]]
-	L["Center"] = "Center"
+	L["Center"] = "중앙"
 	L["Channel Number"] = "채널 번호"
 	L["Chat Message"] = "대화 메시지"
 	L["Check On..."] = "확인..."
@@ -236,17 +229,14 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Custom Anchor"] = "Custom Anchor"
 	L["Custom Code"] = "사용자 정의 코드"
-	--[[Translation missing --]]
-	L["Custom Color"] = "Custom Color"
+	L["Custom Color"] = "사용자 설정 색상"
 	L["Custom Configuration"] = "사용자 설정 구성"
 	--[[Translation missing --]]
 	L["Custom Frames"] = "Custom Frames"
 	L["Custom Function"] = "사용자 설정 함수"
-	--[[Translation missing --]]
-	L["Custom Grow"] = "Custom Grow"
+	L["Custom Grow"] = "사용자 설정 반짝임"
 	L["Custom Options"] = "사용자 설정 옵션"
-	--[[Translation missing --]]
-	L["Custom Sort"] = "Custom Sort"
+	L["Custom Sort"] = "사용자 설정 정렬"
 	L["Custom Trigger"] = "사용자 설정 활성 조건"
 	L["Custom trigger event tooltip"] = [=[
 사용자 설정 활성 조건을 확인할 이벤트를 선택하세요.
@@ -269,8 +259,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Delete"] = "삭제"
 	L["Delete all"] = "모두 삭제"
 	L["Delete children and group"] = "자식과 그룹 삭제"
-	--[[Translation missing --]]
-	L["Delete Entry"] = "Delete Entry"
+	L["Delete Entry"] = "항목 삭제"
 	L["Delete Trigger"] = "활성 조건 삭제"
 	L["Desaturate"] = "흑백"
 	--[[Translation missing --]]
@@ -328,8 +317,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Enter Author Mode"] = "Enter Author Mode"
 	L["Enter User Mode"] = "사용자 모드 시작"
 	L["Enter user mode."] = "사용자 모드를 시작합니다."
-	--[[Translation missing --]]
-	L["Entry %i"] = "Entry %i"
+	L["Entry %i"] = "항목 %i"
 	--[[Translation missing --]]
 	L["Entry limit"] = "Entry limit"
 	--[[Translation missing --]]
@@ -372,8 +360,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	--[[Translation missing --]]
 	L["From version "] = "From version "
 	L["Global Conditions"] = "전역 조건"
-	--[[Translation missing --]]
-	L["Glow %s"] = "Glow %s"
+	L["Glow %s"] = "반짝임 %s"
 	L["Glow Action"] = "반짝임 동작"
 	L["Glow Color"] = "반짝임 색상"
 	L["Glow Type"] = "반짝임 유형"
@@ -412,8 +399,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Help"] = "Help"
 	L["Hide"] = "숨기기"
 	L["Hide Cooldown Text"] = "재사용 대기시간 문자 숨기기"
-	--[[Translation missing --]]
-	L["Hide Extra Options"] = "Hide Extra Options"
+	L["Hide Extra Options"] = "추가 옵션 숨기기"
 	L["Hide on"] = "숨기기"
 	L["Hide this group's children"] = "이 그룹의 자식 숨기기"
 	L["Hide When Not In Group"] = "파티에 없을 때 숨기기"
@@ -425,8 +411,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Icon"] = "아이콘"
 	L["Icon Info"] = "아이콘 정보"
 	L["Icon Inset"] = "아이템 축소"
-	--[[Translation missing --]]
-	L["Icon Position"] = "Icon Position"
+	L["Icon Position"] = "아이콘 위치"
 	L["Icon Settings"] = "아이콘 설정"
 	--[[Translation missing --]]
 	L["If"] = "If"
@@ -471,8 +456,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Left"] = "Left"
 	L["Left 2 HUD position"] = "좌측 2 HUD 위치"
 	L["Left HUD position"] = "좌측 HUD 위치"
-	--[[Translation missing --]]
-	L["Legacy Aura Trigger"] = "Legacy Aura Trigger"
+	L["Legacy Aura Trigger"] = "v2.9.0 이전 효과 활성 조건"
 	L["Length"] = "길이"
 	--[[Translation missing --]]
 	L["Limit"] = "Limit"
@@ -482,8 +466,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Loaded"] = "불러옴"
 	L["Loop"] = "반복"
 	L["Low Mana"] = "마나 낮음"
-	--[[Translation missing --]]
-	L["Magnetically Align"] = "Magnetically Align"
+	L["Magnetically Align"] = "자석 정렬"
 	L["Main"] = "메인"
 	L["Manage displays defined by Addons"] = "애드온에 의해 정의된 디스플레이 관리"
 	L["Match Count"] = "일치 횟수"
@@ -581,8 +564,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Paste Custom Configuration"] = "Paste Custom Configuration"
 	L["Paste Display Settings"] = "디스플레이 설정 붙여넣기"
 	L["Paste Group Settings"] = "그룹 설정 붙여넣기"
-	--[[Translation missing --]]
-	L["Paste Load Settings"] = "Paste Load Settings"
+	L["Paste Load Settings"] = "불러오기 설정 붙여넣기"
 	L["Paste Settings"] = "붙여넣기 설정"
 	L["Paste text below"] = "아래에 문자를 붙여 넣으세요."
 	L["Paste Trigger Settings"] = "활성 조건 설정 붙여넣기"
@@ -617,6 +599,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Repeat every"] = "Repeat every"
 	L["Required for Activation"] = "활성화에 필요"
 	L["Reset all options to their default values."] = "모든 옵션을 기본값으로 재설정하십시오."
+	--[[Translation missing --]]
+	L["Reset Entry"] = "Reset Entry"
 	L["Reset to Defaults"] = "기본값으로 재설정"
 	--[[Translation missing --]]
 	L["Right"] = "Right"
@@ -657,8 +641,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Show Border"] = "테두리 표시"
 	L["Show Cooldown"] = "재사용 대기시간 표시"
 	L["Show Extra Options"] = "추가 옵션 표시"
-	--[[Translation missing --]]
-	L["Show Glow"] = "Show Glow"
+	L["Show Glow"] = "반짝임 표시"
 	L["Show Icon"] = "아이콘 표시"
 	L["Show If Unit Does Not Exist"] = "유닛이 존재하지 않는 경우 표시"
 	L["Show If Unit Is Invalid"] = "유닛이 유효하지 않은 경우 표시"
@@ -733,14 +716,11 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	--[[Translation missing --]]
 	L["Stop ignoring Updates"] = "Stop ignoring Updates"
 	L["Stop Sound"] = "소리 중지"
-	--[[Translation missing --]]
-	L["Sub Elements"] = "Sub Elements"
-	--[[Translation missing --]]
-	L["Sub Option %i"] = "Sub Option %i"
+	L["Sub Elements"] = "하위 요소"
+	L["Sub Option %i"] = "하위 옵션 %i"
 	L["Temporary Group"] = "임시 그룹"
 	L["Text"] = "문자"
-	--[[Translation missing --]]
-	L["Text %s"] = "Text %s"
+	L["Text %s"] = "문자 %s"
 	L["Text Color"] = "문자 색상"
 	L["Text Settings"] = "문자 설정"
 	L["Texture"] = "텍스쳐"
@@ -779,19 +759,16 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Tooltip Text"] = "툴팁 문자"
 	L["Tooltip Value"] = "툴팁 값"
 	L["Tooltip Value #"] = "툴팁 값 #"
-	--[[Translation missing --]]
-	L["Top"] = "Top"
+	L["Top"] = "위"
 	L["Top HUD position"] = "상단 HUD 위치"
-	--[[Translation missing --]]
-	L["Top Left"] = "Top Left"
-	--[[Translation missing --]]
-	L["Top Right"] = "Top Right"
+	L["Top Left"] = "왼쪽 위"
+	L["Top Right"] = "오른쪽 위"
 	--[[Translation missing --]]
 	L["Total Time"] = "Total Time"
 	L["Total Time Precision"] = "전체 시간 정밀도"
 	L["Trigger"] = "활성 조건"
 	L["Trigger %d"] = "%d 활성 조건"
-	L["Trigger %s"] = "%s 활성 조건"
+	L["Trigger %s"] = "활성 조건 %s"
 	L["True"] = "참"
 	L["Type"] = "유형"
 	L["Ungroup"] = "그룹 해제"
@@ -809,8 +786,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Update in Group"] = "Update in Group"
 	--[[Translation missing --]]
 	L["Update this Aura"] = "Update this Aura"
-	--[[Translation missing --]]
-	L["Use Custom Color"] = "Use Custom Color"
+	L["Use Custom Color"] = "사용자 설정 색상 사용"
 	--[[Translation missing --]]
 	L["Use Display Info Id"] = "Use Display Info Id"
 	L["Use Full Scan (High CPU)"] = "전체 스캔 사용 (높은 CPU 사용률)"

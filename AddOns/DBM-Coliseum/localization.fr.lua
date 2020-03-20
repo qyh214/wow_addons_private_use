@@ -82,7 +82,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetTimerLocalization{
-	TimerSpecialSpell	= "Prochaine Capacité Spéciale"	
+	TimerSpecialSpell	= "Prochaine Capacité Spéciale"
 }
 
 L:SetWarningLocalization{

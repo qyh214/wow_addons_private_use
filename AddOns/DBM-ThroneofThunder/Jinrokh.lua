@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(827, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143417")
+mod:SetRevision("20200222213340")
 mod:SetCreatureID(69465)
 mod:SetEncounterID(1577)
 mod:SetZone()
@@ -177,8 +177,8 @@ end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
-	if msg:find("spell:137175") then
-		local target = DBM:GetUnitFullName(target)
+	if msg:find("spell:137175") and target then
+		target = DBM:GetUnitFullName(target)
 		warnThrow:Show(target)
 		timerStormCD:Start()
 		self:Schedule(55.5, checkWaterStorm)--check before 5 sec.

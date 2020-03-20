@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Razorscale", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20200222200840")
 mod:SetCreatureID(33186)
 mod:SetEncounterID(1139)
 mod:SetModelID(28787)
@@ -86,7 +86,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 64771 then
 		local amount = args.amount or 1
-        if amount >= 2 then 
+        if amount >= 2 then
             if args:IsPlayer() then
                 specWarnFuseArmor:Show(args.amount)
                 specWarnFuseArmor:Play("stackhigh")
@@ -97,14 +97,14 @@ function mod:SPELL_AURA_APPLIED(args)
 					remaining = expireTime-GetTime()
 				end
 				if not UnitIsDeadOrGhost("player") and (not remaining or remaining and remaining < 12) then
-            		specWarnFuseArmorOther:Show(args.destName)
-            		specWarnFuseArmorOther:Play("tauntboss")
-            	else
+					specWarnFuseArmorOther:Show(args.destName)
+					specWarnFuseArmorOther:Play("tauntboss")
+				else
 					warnFuseArmor:Show(args.destName, amount)
-            	end
-            end
-        else
-        	warnFuseArmor:Show(args.destName, amount)
+				end
+			end
+		else
+			warnFuseArmor:Show(args.destName, amount)
 		end
 	end
 end

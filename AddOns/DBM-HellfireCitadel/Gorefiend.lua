@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1372, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814112014")
+mod:SetRevision("20200222221214")
 mod:SetCreatureID(90199)
 mod:SetEncounterID(1783)
 mod:SetZone()
@@ -174,7 +174,7 @@ function mod:OnCombatEnd()
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
-end 
+end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
@@ -392,7 +392,7 @@ function mod:OnSync(msg)
 				timerShadowofDeathCDTank:Start(60, "1x"..DBM_CORE_TANK_ICON)
 			elseif count == 3 then--Healer 2x (1 timer)
 				timerShadowofDeathCDHealer:Start(45, "2x"..DBM_CORE_HEALER_ICON)
-			end	
+			end
 		else
 			if count == 1 or count == 4 then--DPS 3x (2 timers)
 				local numPlayers = 1

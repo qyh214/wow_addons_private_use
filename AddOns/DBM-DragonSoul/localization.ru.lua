@@ -183,7 +183,7 @@ L:SetMiscLocalization({
 })
 
 ---------------------------
--- Madness of Deathwing  -- 
+-- Madness of Deathwing  --
 ---------------------------
 L= DBM:GetModLocalization(333)
 

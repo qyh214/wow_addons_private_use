@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(172, "DBM-BlackwingDescent", nil, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143316")
+mod:SetRevision("20200222203750")
 mod:SetCreatureID(43296)
 mod:SetEncounterID(1023)
 mod:SetZone()
@@ -66,7 +66,7 @@ end
 
 -- Chimaeron bots goes offline after massacre 2~3 cast. after 2 massacre casts if not bot goes offline, 3rd massacre cast 100% bot goes offline, this timer supports this.
 local function failureCheck()
-	if not botOffline and massacreCast >= 2 then 
+	if not botOffline and massacreCast >= 2 then
 		timerFailureNext:Start()
 	end
 end

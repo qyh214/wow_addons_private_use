@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(198, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20191212160858")
+mod:SetRevision("20200222190501")
 mod:SetCreatureID(52409)
 mod:SetEncounterID(1203)
 mod:SetZone()
@@ -564,7 +564,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		self:Schedule(17.5, clearSeedsActive, self)--Clear active/warned seeds after they have all blown up.
 		if self.Options.AggroFrame then--Show aggro frame regardless if health frame is still up, it should be more important than health frame at this point. Shouldn't be blowing up traps while elementals are up.
 			DBM.InfoFrame:SetHeader(L.NoAggro)
-			DBM.InfoFrame:Show(10, "playeraggro", 0)--20 man has at least 5 targets without aggro, often more do to immunities. because of it's size, it's now off by default.
+			DBM.InfoFrame:Show(10, "playeraggro", 1)--20 man has at least 5 targets without aggro, often more do to immunities. because of it's size, it's now off by default.
 		end
 	end
 end

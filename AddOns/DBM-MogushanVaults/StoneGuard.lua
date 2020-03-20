@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(679, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20191024191342")
+mod:SetRevision("20200222213340")
 mod:SetCreatureID(60051, 60043, 59915, 60047)--Cobalt: 60051, Jade: 60043, Jasper: 59915, Amethyst: 60047
 mod:SetEncounterID(1395)
 mod:SetZone()
@@ -277,7 +277,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end
 		if playerHasChains then
-			local uId = DBM:GetBossUnitId(Jasper)
+			--local uId = DBM:GetBossUnitId(Jasper)
 			if uId and UnitPower(uId) <= 50 then--Make sure his energy isn't already high, otherwise breaking chains when jasper will only be active for a few seconds is bad
 				specWarnBreakJasperChains:Show()
 			end

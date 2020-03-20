@@ -89,8 +89,7 @@ L:SetOptionLocalization({
 	specwarnAmberExplosionAM	= "為中斷琥珀巨怪的$spell:122402顯示特別警告",
 	specwarnAmberExplosionOther	= "為中斷突變傀儡的$spell:122398顯示特別警告",
 	timerAmberExplosionAMCD		= "為琥珀巨怪下一次的$spell:122402顯示計時器",
-	InfoFrame					= "為玩家的意志力顯示訊息框架",
-	FixNameplates				= "開戰後自動禁用擾人的名字血條(離開戰鬥後恢復設定)"
+	InfoFrame					= "為玩家的意志力顯示訊息框架"
 })
 
 L:SetMiscLocalization({
@@ -123,8 +122,4 @@ L = DBM:GetModLocalization("HoFTrash")
 
 L:SetGeneralLocalization({
 	name	= "恐懼之心小怪"
-})
-
-L:SetOptionLocalization({
-	UnseenStrikeArrow	= "當某人中了$spell:122949顯示DBM箭頭"
 })

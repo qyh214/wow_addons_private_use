@@ -81,7 +81,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetTimerLocalization{
-	TimerSpecialSpell	= "Next special ability"	
+	TimerSpecialSpell	= "Next special ability"
 }
 
 L:SetWarningLocalization{

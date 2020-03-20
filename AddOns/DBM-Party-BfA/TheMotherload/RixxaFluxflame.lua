@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2115, "DBM-Party-BfA", 7, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200127182636")
+mod:SetRevision("20200224182835")
 mod:SetCreatureID(129231)
 mod:SetEncounterID(2107)
 mod:SetZone()
@@ -11,20 +11,22 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 259853",
 	"SPELL_CAST_START 260669 259940",
-	"SPELL_CAST_SUCCESS 259022 270042",
+	"SPELL_CAST_SUCCESS 259022 270042 259856",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2"
 )
 
 --TODO, video fight to figure out whats going on with azerite and gushing and what makes them diff.
 --TODO, more work on blast timings, two casts isn't enough to establish a timer
 local warnAxeriteCatalyst			= mod:NewSpellAnnounce(259022, 2)--Cast often, so general warning not special
+local warnPoropellantBlast			= mod:NewTargetNoFilterAnnounce(259940, 2)
 
 local specWarnChemBurn				= mod:NewSpecialWarningDispel(259853, "Healer", nil, nil, 1, 2)
-local specWarnPoropellantBlast		= mod:NewSpecialWarningDodge(259940, nil, nil, nil, 2, 2)
---local specWarnGTFO				= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 8)
+local specWarnPoropellantBlast		= mod:NewSpecialWarningYou(259940, nil, nil, nil, 1, 2)
+local yellPoropellantBlast			= mod:NewYell(259940)
+local specWarnPoropellantBlastNear	= mod:NewSpecialWarningClose(259940, nil, nil, nil, 1, 2)
 
 local timerAxeriteCatalystCD		= mod:NewCDTimer(13, 259022, nil, nil, nil, 3)
-local timerChemBurnCD				= mod:NewCDTimer(13, 259853, nil, "Healer", nil, 5, nil, DBM_CORE_HEALER_ICON..DBM_CORE_MAGIC_ICON)
+local timerChemBurnCD				= mod:NewCDTimer(13, 259853, nil, nil, 2, 5, nil, DBM_CORE_HEALER_ICON..DBM_CORE_MAGIC_ICON)
 --local timerPropellantBlastCD		= mod:NewCDTimer(13, 259940, nil, nil, nil, 3)--Longer pull/more data needed (32.5, 6.0, 36.1)
 --local timerGushingCatalystCD		= mod:NewCDTimer(13, 275992, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
 
@@ -33,20 +35,28 @@ local timerChemBurnCD				= mod:NewCDTimer(13, 259853, nil, "Healer", nil, 5, nil
 mod.vb.chemBurnCast = 0
 mod.vb.azeriteCataCast = 0
 
+function mod:BlastTarget(targetname, uId)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		specWarnPoropellantBlast:Show()
+		specWarnPoropellantBlast:Play("targetyou")
+		yellPoropellantBlast:Yell()
+	elseif self:CheckNearby(10, targetname) then
+		specWarnPoropellantBlastNear:Show(targetname)
+		specWarnPoropellantBlastNear:Play("runaway")
+	else
+		warnPoropellantBlast:Show(targetname)
+	end
+end
+
 function mod:OnCombatStart(delay)
 	self.vb.chemBurnCast = 0
 	self.vb.azeriteCataCast = 0
 	timerAxeriteCatalystCD:Start(4-delay)
-	timerChemBurnCD:Start(12-delay)
+	timerChemBurnCD:Start(12-delay)--SUCCESS
 	--timerPropellantBlastCD:Start(31-delay)
 --	if not self:IsNormal() then
 --		timerGushingCatalystCD:Start(1-delay)
---	end
-end
-
-function mod:OnCombatEnd()
---	if self.Options.RangeFrame then
---		DBM.RangeCheck:Hide()
 --	end
 end
 
@@ -55,23 +65,13 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 259853 and self:CheckDispelFilter() then
 		specWarnChemBurn:CombinedShow(1, args.destName)
 		specWarnChemBurn:ScheduleVoice(1, "dispelnow")
-		if self:AntiSpam(5, 1) then
-			self.vb.chemBurnCast = self.vb.chemBurnCast + 1
-			if self.vb.chemBurnCast % 2 == 0 then
-				timerChemBurnCD:Start(27)
-			else
-				timerChemBurnCD:Start(15)
-			end
-		end
 	end
 end
---mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 260669 or spellId == 259940 then
-		specWarnPoropellantBlast:Show()
-		specWarnPoropellantBlast:Play("watchstep")
+		self:BossTargetScanner(args.sourceGUID, "BlastTarget", 0.1, 8)
 		--timerPropellantBlastCD:Start()
 	end
 end
@@ -81,25 +81,15 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 259022 or spellId == 270042 then
 		warnAxeriteCatalyst:Show()
 		timerAxeriteCatalystCD:Start()
+	elseif spellId == 259856 and self:AntiSpam(5, 1) then
+		self.vb.chemBurnCast = self.vb.chemBurnCast + 1
+		if self.vb.chemBurnCast % 2 == 0 then
+			timerChemBurnCD:Start(27)
+		else
+			timerChemBurnCD:Start(15)
+		end
 	end
 end
-
---[[
-function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 228007 and destGUID == UnitGUID("player") and self:AntiSpam(2, 4) then
-		specWarnGTFO:Show()
-		specWarnGTFO:Play("watchfeet")
-	end
-end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
-
-function mod:UNIT_DIED(args)
-	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 124396 then
-
-	end
-end
---]]
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 270028 then

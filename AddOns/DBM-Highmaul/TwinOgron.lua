@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1148, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814112014")
+mod:SetRevision("20200222221516")
 mod:SetCreatureID(78238, 78237)--Pol 78238, Phemos 78237
 mod:SetEncounterID(1719)
 mod:SetZone()
@@ -244,7 +244,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.PulverizeRadar = false
 		self.vb.PulverizeCount = self.vb.PulverizeCount + 1
 		warnPulverize:Show(self.vb.PulverizeCount)
-		--Hide range frame if arcane debuff not active, else switch 
+		--Hide range frame if arcane debuff not active, else switch
 		if self.Options.RangeFrame then
 			if self.vb.arcaneDebuff > 0 then
 				if DBM:UnitDebuff("player", arcaneDebuff) then

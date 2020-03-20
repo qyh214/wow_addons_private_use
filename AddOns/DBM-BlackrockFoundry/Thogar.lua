@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1147, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814112014")
+mod:SetRevision("20200222221214")
 mod:SetCreatureID(76906)--81315 Crack-Shot, 81197 Raider, 77487 Grom'kar Firemender, 80791 Grom'kar Man-at-Arms, 81318 Iron Gunnery Sergeant, 77560 Obliterator Cannon, 81612 Deforester
 mod:SetEncounterID(1692)
 mod:SetZone()
@@ -144,7 +144,7 @@ local otherTrains = {
 	[27] = { [2] = L.Train },--+15 after 26 (7:07)
 	[28] = { [3] = L.Train },--+10 after 27 (7:17)
 	[29] = { [3] = ManOArms },--+20 after 28 (7:37)
-	[30] = { [1] = L.Train, [4] = L.Train },--+5 after 29 (7:42) 
+	[30] = { [1] = L.Train, [4] = L.Train },--+5 after 29 (7:42)
 	[31] = { [4] = L.Train },--+15 after 30 (7:57) (guessed.)--seems berserk. 4 L.Trains in a row (interval 4 sec.)
 	[32] = { [3] = L.Train },--+4 after 31 (8:01)
 	[33] = { [2] = L.Train },--+4 after 32 (8:05)
@@ -185,7 +185,7 @@ local lfrTrains = {
 	[27] = { [2] = L.Train },--+15 after 26 (7:07)
 	[28] = { [3] = L.Train },--+10 after 27 (7:17)
 	[29] = { [3] = ManOArms },--+20 after 28 (7:37)
-	[30] = { [1] = L.Train, [4] = L.Train },--+5 after 29 (7:42) 
+	[30] = { [1] = L.Train, [4] = L.Train },--+5 after 29 (7:42)
 	[31] = { [4] = L.Train },--+15 after 30 (7:57) (guessed.)--seems berserk. 4 L.Trains in a row (interval 4 sec.)
 	[32] = { [3] = L.Train },--+4 after 31 (8:01)
 	[33] = { [2] = L.Train },--+4 after 32 (8:05)
@@ -203,7 +203,7 @@ end
 --	B: small Adds(Reinforcements)
 --	C: cannon
 --	D: big Adds (ManOArms)
---	E: fire(Deforester) 
+--	E: fire(Deforester)
 --	F: random express (3x TrainType A)
 --	X: random rail
 

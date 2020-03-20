@@ -11,7 +11,7 @@ L = DBM:GetModLocalization(1161)
 L:SetOptionLocalization({
 	MythicSoakBehavior	= "신화 난이도에서 지옥불 가르기 조 알림 방식 선택",
 	ThreeGroup			= "3개 파티가 1 중첩씩",
-	TwoGroup			= "2개 파티가 2 중첩씩" 
+	TwoGroup			= "2개 파티가 2 중첩씩"
 })
 
 ---------------------------
@@ -24,7 +24,6 @@ L:SetOptionLocalization({
 	Smart				= "우두머리 중첩에 따라 알림",
 	Fixed				= "무조건 5/3 중첩에 맞춰서 알림(중첩이 맞지 않더라도)"
 })
-
 
 ---------------------------
 -- The Blast Furnace --
@@ -52,38 +51,6 @@ L:SetMiscLocalization({
 	Regulator		= "조절 장치 %d",
 	bombNeeded		= "폭탄 %d개 남음"
 })
-
-------------------
--- Hans'gar And Franzok --
-------------------
-L = DBM:GetModLocalization(1155)
-
-L:SetTimerLocalization({
-	timerStamperDodge	= DBM_CORE_AUTO_TIMER_TEXTS.nextcount:format("압축기 회피")
-})
-
-L:SetOptionLocalization({
-	timerStamperDodge	= "다음 압축기 회피 바 보기"
-})
-
---------------
--- Flamebender Ka'graz --
---------------
-L = DBM:GetModLocalization(1123)
-
---------------------
---Kromog, Legend of the Mountain --
---------------------
-L = DBM:GetModLocalization(1162)
-
-L:SetMiscLocalization({
-	ExRTNotice	= "ExRT 애드온으로부터 위치 받음 (%s|1이;가; 보냄). 당신의 위치: %s"
-})
-
---------------------------
--- Beastlord Darmac --
---------------------------
-L = DBM:GetModLocalization(1122)
 
 --------------------------
 -- Operator Thogar --

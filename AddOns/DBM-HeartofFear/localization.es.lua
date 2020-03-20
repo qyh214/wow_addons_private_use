@@ -106,8 +106,7 @@ L:SetOptionLocalization({
 	specwarnAmberExplosionOther	= "Mostrar aviso especial para interrumpir la $spell:122398 de los Ensamblajes mutados descontrolados",
 	timerDestabalize			= DBM_CORE_AUTO_TIMER_OPTIONS.target:format(123059),
 	timerAmberExplosionAMCD		= "Mostrar temporizador para la siguiente $spell:122402 de la Monstruosidad de ámbar",
-	InfoFrame					= "Mostrar marco de información de la voluntad de los jugadores",
-	FixNameplates				= "Ocultar automáticamente las placas de nombres irrelevantes mientras estés mutado (se restaurarán automáticamente al terminar el encuentro)"
+	InfoFrame					= "Mostrar marco de información de la voluntad de los jugadores"
 })
 
 L:SetMiscLocalization({
@@ -143,8 +142,4 @@ L = DBM:GetModLocalization("HoFTrash")
 
 L:SetGeneralLocalization({
 	name	= "Enemigos menores"
-})
-
-L:SetOptionLocalization({
-	UnseenStrikeArrow	= "Mostrar flecha cuando un jugador esté afectado por $spell:122949"
 })

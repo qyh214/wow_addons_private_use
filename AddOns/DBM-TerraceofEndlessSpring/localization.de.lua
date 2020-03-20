@@ -73,6 +73,6 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	warnBreathOnPlatform		= "Zeige Warnung für $spell:119414, falls du auf einem der äußeren Schreine bist (nicht allgemein empfohlen, gedacht für Schlachtzugsleiter)",
 	specWarnBreathOfFearSoon	= "Spezialvorwarn. für $spell:119414, falls dir der $spell:117964 Buff fehlt",
-	specWarnMovement			= "Spezialwarnung zum Laufen bei $spell:120047 (auf den Link klicken um ihn zu kopieren: <a href=\"http://mysticalos.com/terraceofendlesssprings.jpg\">|cff3588ffhttp://mysticalos.com/terraceofendlesssprings.jpg|r</a>)",
+	specWarnMovement			= "Spezialwarnung zum Laufen bei $spell:120047",
 	timerSpecialAbility			= "Zeige Zeit bis nächste Spezialfähigkeit gewirkt wird"
 })

@@ -8,10 +8,9 @@ local L
 ---------------
 L = DBM:GetModLocalization(1128)
 
----------------------------
--- The Butcher --
----------------------------
-L = DBM:GetModLocalization(971)
+L:SetTimerLocalization({
+	timerSweeperCD	= "Next Arena Sweeper"--Translate
+})
 
 ---------------------------
 -- Tectus, the Living Mountain --

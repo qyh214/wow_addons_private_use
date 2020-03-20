@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(332, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143316")
+mod:SetRevision("20200222203750")
 mod:SetCreatureID(56598)--56427 is Boss, but engage trigger needs the ship which is 56598
 --mod:SetEncounterID(1298)--Fires when ship get actual engage. need to adjust timer.
 mod:SetMainBossID(56427)
@@ -223,7 +223,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnConsumingShroud:Show(args.destName)
 		timerConsumingShroud:Start()
 	end
-end		
+end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kurinnaxx", "DBM-AQ20", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200221204848")
 mod:SetCreatureID(15348)
 mod:SetEncounterID(718)
 mod:SetModelID(15742)
@@ -51,5 +51,5 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerWound:Stop(args.destName)
 	elseif args.spellId == 25656 then
 		timerSandTrap:Stop(args.destName)
-	end	
+	end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(959, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814112014")
+mod:SetRevision("20200222221214")
 mod:SetCreatureID(77325)--68168
 mod:SetEncounterID(1704)
 mod:SetZone()
@@ -44,7 +44,7 @@ local specWarnThrowSlagBombs		= mod:NewSpecialWarningCount(156030, nil, nil, nil
 local specWarnShatteringSmash		= mod:NewSpecialWarningCount(155992, "Melee", nil, nil, nil, 2)
 local specWarnMoltenSlag			= mod:NewSpecialWarningMove(156401)
 --Stage Two: Storage Warehouse
-local specWarnSiegemaker			= mod:NewSpecialWarningCount("ej9571", false)--Kiter switch. off by default. 
+local specWarnSiegemaker			= mod:NewSpecialWarningCount("ej9571", false)--Kiter switch. off by default.
 local specWarnSiegemakerPlatingFades= mod:NewSpecialWarningFades(156667, "Ranged", nil, 2)--Plating removed, NOW dps switch
 local specWarnFixate				= mod:NewSpecialWarningRun(156653, nil, nil, nil, 4)
 local yellFixate					= mod:NewYell(156653)
@@ -221,7 +221,7 @@ local function checkSlag(self)
 			if self.Options.Yell1570002 then
 				yellSlag2:Yell(DBM_CORE_BACK, playerName)
 			end
-		end	
+		end
 	else--Just use roster order
 		DBM:Debug("Slag on 2 ranged or 2 melee")
 		if tempTable[1] == playerName then
@@ -238,7 +238,7 @@ local function checkSlag(self)
 			if self.Options.Yell1570002 then
 				yellSlag2:Yell(DBM_CORE_BACK, playerName)
 			end
-		end	
+		end
 	end
 end
 
@@ -536,7 +536,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 			if self.Options.SpecWarn156479count then
 				specWarnMassiveDemolition:Schedule(6, 1)
 				specWarnMassiveDemolition:Schedule(11, 2)
-				specWarnMassiveDemolition:Schedule(16, 3)	
+				specWarnMassiveDemolition:Schedule(16, 3)
 			else
 				if not self:IsLFR() then
 					warnMassiveDemolition:Schedule(6, 1)

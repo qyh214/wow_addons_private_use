@@ -21,15 +21,15 @@
 ## X-DBM-Mod-MinCoreRevision: 15159
 ## X-Curse-Project-ID: 101956
 ## X-WoWI-ID: 24535
-## Version: r46
+## Version: r47
 
+localization.br.lua
 localization.en.lua
 localization.kr.lua
 localization.de.lua
 localization.es.lua
 localization.ru.lua
 localization.tw.lua
-localization.br.lua
 localization.cn.lua
 Drov.lua
 Tarlna.lua

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Buru", "DBM-AQ20", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200221200816")
 mod:SetCreatureID(15370)
 mod:SetEncounterID(721)
 mod:SetModelID(15654)
@@ -59,14 +59,13 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 96 then
 		timerDismember:Stop(args.destName)
-	end	
+	end
 end
 
 function mod:CHAT_MSG_MONSTER_EMOTE(msg, _, _, _, target)
 	if not msg:find(L.PursueEmote) then return end
-	local target = DBM:GetUnitFullName(target)
-	if not target then return end
 	if target then
+		target = DBM:GetUnitFullName(target)
 		if target == UnitName("player") then
 			specWarnPursue:Show()
 			specWarnPursue:Play("justrun")

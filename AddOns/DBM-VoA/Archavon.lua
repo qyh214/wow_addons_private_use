@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Archavon", "DBM-VoA")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20200222200840")
 mod:SetCreatureID(31125)
 mod:SetEncounterID(1126)
 mod:SetModelID(26967)
@@ -44,7 +44,7 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
   if args:IsSpellID(58963, 60895) then
-    	warnLeap:Show()
+		warnLeap:Show()
 	end
 end
 

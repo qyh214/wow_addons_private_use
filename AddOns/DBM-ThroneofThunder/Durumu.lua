@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(818, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143417")
+mod:SetRevision("20200222213340")
 mod:SetCreatureID(68036)--Crimson Fog 69050
 mod:SetEncounterID(1572)
 mod:SetZone()
@@ -404,12 +404,12 @@ function mod:CHAT_MSG_MONSTER_EMOTE(msg, npc, _, _, target)
 		elseif npc == crimsonFog and not self:IsDifficulty("lfr25") then
 			specWarnFogRevealed:Show(npc)
 		end
-	elseif msg:find("spell:133795") then--Does show in combat log, but emote gives targetname 3 seconds earlier.
-		local target = DBM:GetUnitFullName(target)
+	elseif msg:find("spell:133795") and target then--Does show in combat log, but emote gives targetname 3 seconds earlier.
+		target = DBM:GetUnitFullName(target)
 		warnLifeDrain:Show(target)
 		specWarnLifeDrain:Show(target)
 		timerLifeDrain:Start()
-		timerLifeDrainCD:Start(not lifeDrained and 50 or nil)--first is 50, 2nd and later is 40 
+		timerLifeDrainCD:Start(not lifeDrained and 50 or nil)--first is 50, 2nd and later is 40
 		lifeDrained = true
 		if self.Options.SetIconLifeDrain then
 			self:SetIcon(target, 8)--Skull

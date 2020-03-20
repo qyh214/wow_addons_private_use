@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(868, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200222213340")
 mod:SetCreatureID(72311, 72560, 72249, 73910, 72302, 72561, 73909)--Boss needs to engage off friendly NCPS, not the boss. I include the boss too so we don't detect a win off losing varian. :)
 mod:SetEncounterID(1622)
 mod:DisableESCombatDetection()
@@ -133,7 +133,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 146757 and (not DBM.Options.DontShowFarWarnings or UnitPower("player", 10) == 0) then
 		local source = args.sourceGUID
 		warnChainHeal:Show()
-		if source == UnitGUID("target") or source == UnitGUID("focus") then 
+		if source == UnitGUID("target") or source == UnitGUID("focus") then
 			specWarnChainheal:Show(args.sourceName)
 		end
 	end

@@ -75,11 +75,6 @@ L:SetMiscLocalization({
 	tower			= "Дверь "--Дверь южной/северной башни разбита!
 })
 
---------------------
---Iron Juggernaut --
---------------------
-L = DBM:GetModLocalization(864)
-
 --------------------------
 -- Kor'kron Dark Shaman --
 --------------------------
@@ -107,11 +102,6 @@ L:SetMiscLocalization({
 	allForces	= "Кор'кронцы... все, кто со мной! Убейте их!",
 	nextAdds	= "След. адды: "
 })
-
------------------
--- Malkorok -----
------------------
-L = DBM:GetModLocalization(846)
 
 ------------------------
 -- Spoils of Pandaria --

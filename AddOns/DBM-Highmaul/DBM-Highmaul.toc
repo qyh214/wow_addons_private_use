@@ -22,7 +22,7 @@
 ## X-DBM-Mod-MinCoreRevision: 15211
 ## X-Curse-Project-ID: 101956
 ## X-WoWI-ID: 24535
-## Version: r46
+## Version: r47
 
 localization.en.lua
 localization.kr.lua

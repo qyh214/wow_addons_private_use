@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Halion", "DBM-ChamberOfAspects", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20200222200840")
 mod:SetCreatureID(39863)--40142 (twilight form)
 mod:SetEncounterID(1150)
 mod:SetModelID(31952)
@@ -162,10 +162,10 @@ mod.SPELL_MISSED = mod.SPELL_DAMAGE
 function mod:UNIT_HEALTH(uId)
 	if not self.vb.warned_preP2 and self:GetUnitCreatureId(uId) == 39863 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.79 then
 		self.vb.warned_preP2 = true
-		warnPhase2Soon:Show()	
+		warnPhase2Soon:Show()
 	elseif not self.vb.warned_preP3 and self:GetUnitCreatureId(uId) == 40142 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.54 then
 		self.vb.warned_preP3 = true
-		warnPhase3Soon:Show()	
+		warnPhase3Soon:Show()
 	end
 end
 

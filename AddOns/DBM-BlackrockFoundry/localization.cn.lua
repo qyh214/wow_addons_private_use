@@ -11,7 +11,7 @@ L = DBM:GetModLocalization(1161)
 L:SetOptionLocalization({
 	MythicSoakBehavior	= "特殊警报：吸收伤害的分组方式 (史诗模式)",
 	ThreeGroup			= "3组1层换",
-	TwoGroup			= "2组2层换" 
+	TwoGroup			= "2组2层换"
 })
 
 ---------------------------
@@ -51,30 +51,6 @@ L:SetMiscLocalization({
 	Regulator		= "调节器 %d",
 	bombNeeded		= "%d个炸弹"
 })
-
-------------------
--- Hans'gar And Franzok --
-------------------
-L = DBM:GetModLocalization(1155)
-
---------------
--- Flamebender Ka'graz -- 
---------------
-L = DBM:GetModLocalization(1123)
-
---------------------
---Kromog, Legend of the Mountain --
---------------------
-L = DBM:GetModLocalization(1162)
-
-L:SetMiscLocalization({
-	ExRTNotice	= "%s 向你指派了ExRT的符文的站立位置。你的位置: %s"
- })
-
---------------------------
--- Beastlord Darmac --
---------------------------
-L = DBM:GetModLocalization(1122)
 
 --------------------------
 -- Operator Thogar --

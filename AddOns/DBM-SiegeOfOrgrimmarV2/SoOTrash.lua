@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("SoOTrash", "DBM-SiegeOfOrgrimmarV2")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200222213340")
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -46,7 +46,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 146728 and not galakrasMod:IsInCombat() then
 		local source = args.sourceName
 		warnChainHeal:Show()
-		if source == UnitName("target") or source == UnitName("focus") then 
+		if source == UnitName("target") or source == UnitName("focus") then
 			specWarnChainheal:Show(source)
 		end
 	elseif spellId == 147884 and self:AntiSpam(3) then

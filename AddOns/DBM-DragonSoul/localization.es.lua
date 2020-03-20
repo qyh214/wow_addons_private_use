@@ -183,7 +183,7 @@ L:SetMiscLocalization({
 })
 
 --------------------------
--- Locura de Alamuerte  -- 
+-- Locura de Alamuerte  --
 --------------------------
 L= DBM:GetModLocalization(333)
 

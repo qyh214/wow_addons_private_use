@@ -1,7 +1,9 @@
 # <DBM> Pandaria
 
-## [r133](https://github.com/DeadlyBossMods/DBM-MoP/tree/r133) (2020-01-14)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-MoP/compare/r132...r133)
+## [r134](https://github.com/DeadlyBossMods/DBM-MoP/tree/r134) (2020-02-23)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-MoP/compare/r133...r134)
 
-- Toc Bump for 8.3  
-- Removed yells from MoP world bosses, since it's no longer permitted by API  
+- Cleaned up unused locals and removed an arrow function that doesn't belong since patch 7.1  
+- Remove unneeded local  
+- Whitespace cleanup  
+- Update Luacheck  

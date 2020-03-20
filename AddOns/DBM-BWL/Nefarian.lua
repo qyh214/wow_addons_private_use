@@ -1,22 +1,23 @@
 local mod	= DBM:NewMod("Nefarian-Classic", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20191210204704")
+mod:SetRevision("20200218153056")
 mod:SetCreatureID(11583)
 mod:SetEncounterID(617)
 mod:SetModelID(11380)
-mod:RegisterCombat("combat")
+mod:RegisterCombat("combat_yell", L.YellP1)--ENCOUNTER_START appears to fire when he lands, so start of phase 2, ignoring all of phase 1
 mod:SetWipeTime(25)--guesswork
+mod:SetHotfixNoticeRev(20200218000000)--2020, Feb, 18th
+mod:SetMinSyncRevision(20200218000000)--2020, Feb, 18th
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 22539 22686",
 	"SPELL_AURA_APPLIED 22687 22667",
-	"SPELL_AURA_REMOVED 22687 22667",
 	"UNIT_HEALTH boss1",
 	"CHAT_MSG_MONSTER_YELL"
 )
 
---TODO, demon hunter class call
+local WarnAddsLeft		= mod:NewAnnounce("WarnAddsLeft", 2, "136116")
 local warnClassCall		= mod:NewAnnounce("WarnClassCall", 3, "136116")
 local warnPhase			= mod:NewPhaseChangeAnnounce()
 local warnPhase3Soon	= mod:NewPrePhaseAnnounce(3)
@@ -27,14 +28,16 @@ local specwarnMC		= mod:NewSpecialWarningTarget(22667, nil, nil, 2, 1, 2)
 local specwarnVeilShadow= mod:NewSpecialWarningDispel(22687, "RemoveCurse", nil, nil, 1, 2)
 
 local timerClassCall	= mod:NewTimer(30, "TimerClassCall", "136116", nil, nil, 5)
-local timerFearNext		= mod:NewCDTimer(30, 22686, nil, nil, nil, 2)
-local timerVeilShadow	= mod:NewTargetTimer(6, 22687, nil, "RemoveCurse|Tank", 2, 3, nil, DBM_CORE_CURSE_ICON)
-local timerMC			= mod:NewTargetTimer(15, 22667, nil, nil, nil, 3)
+local timerFearNext		= mod:NewCDTimer(26.7, 22686, nil, nil, nil, 2)--26-42.5
 
 mod.vb.phase = 1
+mod.vb.addLeft = 20
+local addsGuidCheck = {}
 
 function mod:OnCombatStart(delay)
+	table.wipe(addsGuidCheck)
 	self.vb.phase = 1
+	self.vb.addLeft = 20
 end
 
 function mod:SPELL_CAST_START(args)
@@ -52,19 +55,25 @@ function mod:SPELL_AURA_APPLIED(args)
 			specwarnVeilShadow:Show(args.destName)
 			specwarnVeilShadow:Play("dispelnow")
 		end
-		timerVeilShadow:Start(args.destName)
 	elseif args.spellId == 22667 then
 		specwarnMC:Show(args.destName)
 		specwarnMC:Play("findmc")
-		timerMC:Start(args.destName)
 	end
 end
 
-function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 22687 then
-		timerVeilShadow:Stop(args.destName)
-	elseif args.spellId == 22667 then
-		timerMC:Stop(args.destName)
+function mod:UNIT_DIED(args)
+	local guid = args.destGUID
+	local cid = self:GetCIDFromGUID(guid)
+	if cid == 14262 or cid == 14302 then--Green Drakonid, Chromatic Drakonid
+		self:SendSync("AddDied", guid)--Send sync it died do to combat log range and size of room
+		--We're in range of event, no reason to wait for sync, especially in a raid that might not have many DBM users
+		if not addsGuidCheck[guid] then
+			addsGuidCheck[guid] = true
+			self.vb.addLeft = self.vb.addLeft - 1
+			if self.vb.addLeft >= 1 and (self.vb.addLeft % 3 == 0) then
+				WarnAddsLeft:Show(self.vb.addLeft)
+			end
+		end
 	end
 end
 
@@ -77,27 +86,29 @@ end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.YellDK or msg:find(L.YellDK) then
-		self:SendSync("ClassCall", "DK")
+		self:SendSync("ClassCall", "DEATHKNIGHT")
+	elseif msg == L.YellDH or msg:find(L.YellDH) then
+		self:SendSync("ClassCall", "DEMONHUNTER")
 	elseif msg == L.YellDruid or msg:find(L.YellDruid) then
-		self:SendSync("ClassCall", "Druid")
+		self:SendSync("ClassCall", "DRUID")
 	elseif msg == L.YellHunter or msg:find(L.YellHunter) then
-		self:SendSync("ClassCall", "Hunter")
-	elseif msg == L.YellMage or msg:find(L.YellMage) then
-		self:SendSync("ClassCall", "Mage")
-	elseif msg == L.YellPaladin or msg:find(L.YellPaladin) then
-		self:SendSync("ClassCall", "Paladin")
-	elseif msg == L.YellPriest or msg:find(L.YellPriest) then
-		self:SendSync("ClassCall", "Priest")
-	elseif msg == L.YellRogue or msg:find(L.YellRogue) then
-		self:SendSync("ClassCall", "Rogue")
-	elseif msg == L.YellShaman or msg:find(L.YellShaman) then
-		self:SendSync("ClassCall", "Shaman")
+		self:SendSync("ClassCall", "HUNTER")
 	elseif msg == L.YellWarlock or msg:find(L.YellWarlock) then
-		self:SendSync("ClassCall", "Warlock")
+		self:SendSync("ClassCall", "WARLOCK")
+	elseif msg == L.YellMage or msg:find(L.YellMage) then
+		self:SendSync("ClassCall", "MAGE")
+	elseif msg == L.YellPaladin or msg:find(L.YellPaladin) then
+		self:SendSync("ClassCall", "PALADIN")
+	elseif msg == L.YellPriest or msg:find(L.YellPriest) then
+		self:SendSync("ClassCall", "PRIEST")
+	elseif msg == L.YellRogue or msg:find(L.YellRogue) then
+		self:SendSync("ClassCall", "ROGUE")
+	elseif msg == L.YellShaman or msg:find(L.YellShaman) then
+		self:SendSync("ClassCall", "SHAMAN")
 	elseif msg == L.YellWarrior or msg:find(L.YellWarrior) then
-		self:SendSync("ClassCall", "Warrior")
+		self:SendSync("ClassCall", "WARRIOR")
 	elseif msg == L.YellMonk or msg:find(L.YellMonk) then
-		self:SendSync("ClassCall", "Monk")
+		self:SendSync("ClassCall", "MONK")
 	elseif msg == L.YellP2 or msg:find(L.YellP2) then
 		self:SendSync("Phase", 2)
 	elseif msg == L.YellP3 or msg:find(L.YellP3) then
@@ -107,7 +118,7 @@ end
 
 function mod:OnSync(msg, arg)
 	if msg == "ClassCall" then
-		warnClassCall:Show(arg)
+		warnClassCall:Show(LOCALIZED_CLASS_NAMES_MALE[arg])
 		timerClassCall:Start(arg)
 	elseif msg == "Phase" then
 		local phase = tonumber(arg) or 0
@@ -117,5 +128,12 @@ function mod:OnSync(msg, arg)
 			self.vb.phase = 3
 		end
 		warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage:format(arg))
+	elseif msg == "AddDied" and arg and not addsGuidCheck[arg] then
+		--A unit died we didn't detect ourselves, so we correct our adds counter from sync
+		addsGuidCheck[arg] = true
+		self.vb.addLeft = self.vb.addLeft - 1
+		if self.vb.addLeft >= 1 and (self.vb.addLeft % 3 == 0) then
+			WarnAddsLeft:Show(self.vb.addLeft)
+		end
 	end
 end

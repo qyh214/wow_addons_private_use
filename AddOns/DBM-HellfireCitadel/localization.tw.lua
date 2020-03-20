@@ -23,26 +23,12 @@ L:SetMiscLocalization({
 })
 
 ---------------------------
--- Iron Reaver --
----------------------------
-L = DBM:GetModLocalization(1425)
-
----------------------------
 -- Hellfire High Council --
 ---------------------------
 L = DBM:GetModLocalization(1432)
 
 L:SetWarningLocalization({
 	reapDelayed	= "收割在夢魘幻貌結束之後"
-})
-
-------------------
--- Kormrok --
-------------------
-L = DBM:GetModLocalization(1392)
-
-L:SetMiscLocalization({
-	ExRTNotice		= "%s 送出ExRT的位置分配。你的位置：橘:%s, 綠:%s, 紫:%s"
 })
 
 --------------
@@ -70,7 +56,7 @@ L:SetOptionLocalization({
 	SoDTank2		= "為下一個坦克職中了$spell:179864顯示計時器",
 	SoDHealer2		= "為下一個治療職中了$spell:179864顯示計時器",
 	ShowOnlyPlayer	= "只顯示HudMap在當你參與到$spell:179909時"
-	
+
 })
 
 --------------------------
@@ -128,11 +114,6 @@ L:SetOptionLocalization({
 	Count4Resume		= "4人持續計數循環中斷當護盾消失時",
 	Count4Reset			= "4人重置計數循環中斷當護盾消失時"
 })
-
---------------------------
--- Tyrant Velhari --
---------------------------
-L = DBM:GetModLocalization(1394)
 
 --------------------------
 -- Mannoroth --

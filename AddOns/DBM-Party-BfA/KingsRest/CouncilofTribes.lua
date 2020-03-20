@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2170, "DBM-Party-BfA", 3, 1041)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200127182636")
+mod:SetRevision("20200224184452")
 mod:SetCreatureID(135475, 135470, 135472)
 mod:SetEncounterID(2140)
 mod:SetZone()
@@ -23,6 +23,10 @@ mod:RegisterEventsInCombat(
 
 --TODO, finish accurate detection of who starts fight, and bosses swapping in and out.
 --TODO, I believe the inactive bosses assisting is health based off the enabled boss, so timers only work for ACTIVE boss.
+--[[
+(ability.id = 266206 or ability.id = 266951 or ability.id = 266237 or ability.id = 267273 or ability.id = 267060) and type = "begincast"
+ or ability.id = 266231 and type = "cast"
+--]]
 local warnSeveringAxe				= mod:NewTargetNoFilterAnnounce(266231, 3, nil, "Healer")
 
 --Kula the Butcher
@@ -44,13 +48,12 @@ local specWarnEarthwall				= mod:NewSpecialWarningDispel(267256, "MagicDispeller
 local timerWhirlingAxesCD			= mod:NewCDTimer(10.8, 266206, nil, nil, nil, 3)--Used inactive
 local timerSeveringAxeCD			= mod:NewCDTimer(21.8, 266231, nil, nil, nil, 3)
 --Aka'ali the Conqueror
-local timerBarrelThroughCD			= mod:NewCDTimer(23.1, 266951, nil, nil, nil, 3)--Used inactive
+local timerBarrelThroughCD			= mod:NewCDTimer(23, 266951, nil, nil, nil, 3)--Used inactive
 local timerDebilitatingBackhandCD	= mod:NewCDTimer(24.3, 266237, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON..DBM_CORE_DEADLY_ICON)
 --Zanazal the Wise
-local timerPoisonNovaCD				= mod:NewCDTimer(133, 267273, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)--Used inactive
-local timerTotemsCD					= mod:NewCDTimer(13, 267060, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)--Actual timer needs doing
+local timerPoisonNovaCD				= mod:NewCDTimer(26.7, 267273, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)--Used inactive
+local timerTotemsCD					= mod:NewCDTimer(53.5, 267060, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)--Actual timer needs doing
 
---mod:AddRangeFrameOption(5, 194966)
 mod:AddSetIconOption("SetIconOnBarrel", 266951, true, false, {1})
 
 mod.vb.phase = 1
@@ -88,12 +91,6 @@ function mod:OnCombatStart(delay)
 	self:Schedule(2, whoDat, self, delay)
 end
 
-function mod:OnCombatEnd()
---	if self.Options.RangeFrame then
---		DBM.RangeCheck:Hide()
---	end
-end
-
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 267256 and not self.vb.earthTotemActive and not args:IsDestTypePlayer() then
@@ -109,7 +106,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	end
 end
---mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
@@ -146,13 +142,16 @@ function mod:SPELL_CAST_START(args)
 		end
 		local cid = self:GetCIDFromGUID(args.sourceGUID)
 		if cid ~= self.vb.bossOne and cid ~= self.vb.bossTwo then
-			--timerPoisonNovaCD:Start()--Not enough data
+			timerPoisonNovaCD:Start(26.7)
 		end
 	elseif spellId == 267060 then
 		self.vb.earthTotemActive = true
 		specWarnTotems:Show()
 		specWarnTotems:Play("changetarget")
-		--timerTotemsCD:Start()--Not enough data
+		local cid = self:GetCIDFromGUID(args.sourceGUID)
+		if cid ~= self.vb.bossOne and cid ~= self.vb.bossTwo then
+			timerTotemsCD:Start(53.5)
+		end
 	end
 end
 
@@ -193,16 +192,6 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
 		end
 	end
 end
-
---[[
-function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 228007 and destGUID == UnitGUID("player") and self:AntiSpam(2, 4) then
-		specWarnGTFO:Show()
-		specWarnGTFO:Play("watchfeet")
-	end
-end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
---]]
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 34098 and self:AntiSpam(3, uId) then--ClearAllDebuffs (sometimes fires twice, so antispam needed)

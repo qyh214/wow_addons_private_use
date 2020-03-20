@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Putricide", "DBM-Icecrown", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20200222200840")
 mod:SetCreatureID(36678)
 mod:SetEncounterID(1102)
 mod:SetModelID(30881)
@@ -304,9 +304,9 @@ end
 function mod:UNIT_HEALTH(uId)
 	if self.vb.phase == 1 and not self.vb.warned_preP2 and self:GetUnitCreatureId(uId) == 36678 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.83 then
 		self.vb.warned_preP2 = true
-		warnPhase2Soon:Show()	
+		warnPhase2Soon:Show()
 	elseif self.vb.phase == 2 and not self.vb.warned_preP3 and self:GetUnitCreatureId(uId) == 36678 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.38 then
 		self.vb.warned_preP3 = true
-		warnPhase3Soon:Show()	
+		warnPhase3Soon:Show()
 	end
 end

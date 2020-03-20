@@ -36,7 +36,6 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(744)
 
 L:SetOptionLocalization({
-	UnseenStrikeArrow	= "Afficher la flêche DBM quand quelqu'un est touché par $spell:122949",
 	RangeFrame			= "Afficher le cadre de distance (10m) pour $spell:123175"
 })
 
@@ -98,8 +97,7 @@ L:SetOptionLocalization({
 	specwarnAmberExplosionAM	= "Alerte spéciale pour interrompre $spell:122402<br/>de la Monstruosité d’ambre",
 	specwarnAmberExplosionOther	= "Alerte spéciale pour interrompre le $spell:122398<br/>de l'Assemblage muté",-- à vérifier
 	timerAmberExplosionAMCD		= "Afficher le temps avant la prochaine $spell:122402<br/>de la Monstruosité d'ambre",
-	InfoFrame					= "Afficher le cadre d'information de la Volonté des joueurs",
-	FixNameplates				= "Désactiver les barres d'info quand vous êtes en Assemblage muté<br/>(Restaure les paramètres en quittant le combat)"
+	InfoFrame					= "Afficher le cadre d'information de la Volonté des joueurs"
 })
 
 L:SetMiscLocalization({

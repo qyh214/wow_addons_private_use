@@ -1,6 +1,7 @@
 # <DBM> Dragon Soul
 
-## [r205](https://github.com/DeadlyBossMods/DBM-Cataclysm/tree/r205) (2020-01-14)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Cataclysm/compare/r204...r205)
+## [r206](https://github.com/DeadlyBossMods/DBM-Cataclysm/tree/r206) (2020-02-22)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Cataclysm/compare/r205...r206)
 
-- Toc Bump for 8.3  
+- Whitespace cleanup  
+- Update Luacheck  

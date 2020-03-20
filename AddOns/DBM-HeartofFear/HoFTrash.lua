@@ -19,8 +19,6 @@ local specWarnDispatch			= mod:NewSpecialWarningInterrupt(125877)
 
 local timerUnseenStrike			= mod:NewCastTimer(4.8, 123017)
 
-mod:AddBoolOption("UnseenStrikeArrow")
-
 local scanTime = 0
 
 local function findUnseen(spellName)
@@ -34,9 +32,6 @@ local function findUnseen(spellName)
 				yellUnseenStrike:Yell()
 			else
 				specWarnUnseenStrikeOther:Show(name)
-				if mod.Options.UnseenStrikeArrow then
-					DBM.Arrow:ShowRunTo(uId, 3, 5)
-				end
 			end
 			return
 		end

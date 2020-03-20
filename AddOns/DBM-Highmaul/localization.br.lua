@@ -29,9 +29,9 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(1196)
 
 L:SetOptionLocalization({
-	InterruptCounter	= "Contador da decomposição reseta após",  
+	InterruptCounter	= "Contador da decomposição reseta após",
 	Two					= "depois de dois casts",
-	Three				= "Depois de três casts", 
+	Three				= "Depois de três casts",
 	Four				= "Depois de quatro casts"
 
 -- cast translation would be lançar which relates to throw best to keep it at cast.

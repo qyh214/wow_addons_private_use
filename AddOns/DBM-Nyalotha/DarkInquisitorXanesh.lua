@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2377, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200203212050")
+mod:SetRevision("20200220014346")
 mod:SetCreatureID(156575)
 mod:SetEncounterID(2328)
 mod:SetZone()
@@ -33,7 +33,7 @@ local warnAbyssalStrike						= mod:NewStackAnnounce(311551, 2, nil, "Tank")
 local warnVoidRitual						= mod:NewCountAnnounce(312336, 2)--Fallback if specwarn is disabled
 local warnFanaticism						= mod:NewTargetNoFilterAnnounce(314179, 3, nil, "Tank|Healer")
 local warnSummonRitualObelisk				= mod:NewCountAnnounce(306495, 2)
-local warnSoulFlay							= mod:NewTargetAnnounce(306311, 2)
+local warnSoulFlay							= mod:NewTargetCountAnnounce(306311, 2)
 
 local specWarnVoidRitual					= mod:NewSpecialWarningCount(312336, false, nil, nil, 1, 2)--Option in, since only certain players may be assigned
 local specWarnAbyssalStrike					= mod:NewSpecialWarningStack(311551, nil, 2, nil, nil, 1, 6)
@@ -45,7 +45,7 @@ local specWarnGTFO							= mod:NewSpecialWarningGTFO(270290, nil, nil, nil, 1, 8
 
 local timerAbyssalStrikeCD					= mod:NewCDTimer(40, 311551, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 3)--42.9-47
 local timerVoidRitualCD						= mod:NewNextCountTimer(79.7, 312336, nil, nil, nil, 5, nil, nil, nil, 1, 4)
-local timerSoulFlayCD						= mod:NewCDTimer(57, 306319, nil, nil, nil, 3)--57 but will spell queue behind other spells
+local timerSoulFlayCD						= mod:NewCDCountTimer(57, 306319, nil, nil, nil, 3)--57 but will spell queue behind other spells
 local timerTormentCD						= mod:NewNextCountTimer(46.5, 306208, nil, nil, nil, 3, nil, nil, nil, 3, 4)
 
 local berserkTimer							= mod:NewBerserkTimer(600)
@@ -53,11 +53,15 @@ local berserkTimer							= mod:NewBerserkTimer(600)
 mod:AddInfoFrameOption(312406, true)
 mod:AddSetIconOption("SetIconOnVoidWoken2", 312406, false, false, {1, 2, 3})
 mod:AddSetIconOption("SetIconOnAdds", "ej21227", true, true, {4, 5, 6, 7, 8})
+mod:AddMiscLine(DBM_CORE_OPTION_CATEGORY_DROPDOWNS)
+mod:AddDropdownOption("InterruptBehavior", {"Four", "Five", "Six", "NoReset"}, "Four", "misc")
 
 mod.vb.ritualCount = 0
 mod.vb.obeliskCount = 0
 mod.vb.tormentCount = 0
+mod.vb.soulFlayCount = 0
 mod.vb.addIcon = 8
+mod.vb.interruptBehavior = "Four"
 local voidWokenTargets = {}
 local castsPerGUID = {}
 
@@ -104,16 +108,18 @@ function mod:OnCombatStart(delay)
 	self.vb.ritualCount = 0
 	self.vb.obeliskCount = 0
 	self.vb.tormentCount = 0
+	self.vb.soulFlayCount = 0
 	self.vb.addIcon = 8
+	self.vb.interruptBehavior = self.Options.InterruptBehavior--Default it to whatever user has it set to, until group leader overrides it
 	table.wipe(voidWokenTargets)
 	table.wipe(castsPerGUID)
 	timerAbyssalStrikeCD:Start(30-delay)--START
 	if self:IsMythic() then
 		timerVoidRitualCD:Start(18.1-delay, 1)
-		timerSoulFlayCD:Start(24.9-delay)--SUCCESS
+		timerSoulFlayCD:Start(24.9-delay, 1)--SUCCESS
 		timerTormentCD:Start(49.6, 1)
 	else
-		timerSoulFlayCD:Start(18.5-delay)--SUCCESS
+		timerSoulFlayCD:Start(18.5-delay, 1)--SUCCESS
 		timerTormentCD:Start(20.3, 1)
 		timerVoidRitualCD:Start(61.8-delay, 1)
 	end
@@ -122,6 +128,17 @@ function mod:OnCombatStart(delay)
 		DBM.InfoFrame:Show(8, "function", updateInfoFrame, false, false)
 	end
 	berserkTimer:Start(900-delay)
+	if UnitIsGroupLeader("player") and not self:IsLFR() then
+		if self.Options.InterruptBehavior == "Four" then
+			self:SendSync("Four")
+		elseif self.Options.InterruptBehavior == "Five" then
+			self:SendSync("Five")
+		elseif self.Options.InterruptBehavior == "Six" then
+			self:SendSync("Six")
+		elseif self.Options.InterruptBehavior == "NoReset" then
+			self:SendSync("NoReset")
+		end
+	end
 end
 
 function mod:OnCombatEnd()
@@ -151,6 +168,9 @@ function mod:SPELL_CAST_START(args)
 			end
 			self.vb.addIcon = self.vb.addIcon - 1
 		end
+		if (self.vb.interruptBehavior == "Four" and castsPerGUID[args.sourceGUID] == 4) or (self.vb.interruptBehavior == "Five" and castsPerGUID[args.sourceGUID] == 5) or (self.vb.interruptBehavior == "Six" and castsPerGUID[args.sourceGUID] == 6) then
+			castsPerGUID[args.sourceGUID] = 0
+		end
 		castsPerGUID[args.sourceGUID] = castsPerGUID[args.sourceGUID] + 1
 		local count = castsPerGUID[args.sourceGUID]
 		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
@@ -177,7 +197,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 311551 then
 		timerAbyssalStrikeCD:Start(self:IsMythic() and 20.6 or 40.5)
 	elseif spellId == 306319 then
-		timerSoulFlayCD:Start(57)
+		self.vb.soulFlayCount = self.vb.soulFlayCount + 1
+		timerSoulFlayCD:Start(57, self.vb.soulFlayCount+1)
 	elseif spellId == 306208 then
 		self.vb.tormentCount = self.vb.tormentCount + 1
 		specWarnTorment:Show(self.vb.tormentCount)
@@ -235,7 +256,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 	elseif spellId == 306311 then
-		warnSoulFlay:CombinedShow(0.3, args.destName)
+		warnSoulFlay:CombinedShow(0.3, self.vb.soulFlayCount, args.destName)
 		if args:IsPlayer() then
 			specWarnSoulFlay:Show()
 			specWarnSoulFlay:Play("justrun")
@@ -283,3 +304,16 @@ function mod:UNIT_DIED(args)
 	end
 end
 --]]
+
+function mod:OnSync(msg)
+	if self:IsLFR() then return end
+	if msg == "Four" then
+		self.vb.interruptBehavior = "Four"
+	elseif msg == "Five" then
+		self.vb.interruptBehavior = "Five"
+	elseif msg == "Six" then
+		self.vb.interruptBehavior = "Six"
+	elseif msg == "NoReset" then
+		self.vb.interruptBehavior = "NoReset"
+	end
+end

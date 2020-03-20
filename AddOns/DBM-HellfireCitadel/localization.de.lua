@@ -23,26 +23,12 @@ L:SetMiscLocalization({
 })
 
 ---------------------------
--- Iron Reaver --
----------------------------
-L = DBM:GetModLocalization(1425)
-
----------------------------
 -- Hellfire High Council --
 ---------------------------
 L = DBM:GetModLocalization(1432)
 
 L:SetWarningLocalization({
 	reapDelayed	= "Ernte nachdem Erscheinung endet"
-})
-
-------------------
--- Kormrok --
-------------------
-L = DBM:GetModLocalization(1392)
-
-L:SetMiscLocalization({
-	ExRTNotice	= "%s hat ExRT Positionszuweisungen gesendet. Deine Positionen sind: Orange:%s, Grün:%s, Violett:%s"
 })
 
 --------------
@@ -94,7 +80,7 @@ L:SetOptionLocalization({
 	SeedsBehavior	= "Auswahl der Positionierungsschreie für Saat der Zerstörung (nur als Schlachtzugsleiter)",
 	Iconed			= "Stern, Kreis, Diamant, Dreieck, Mond (für Strategien mit Weltmarkierungen)",
 	Numbered		= "1, 2, 3, 4, 5 (für Strategien mit nummerierten Positionen)",
-	DirectionLine	= "Links, Mitte Links, Mitte, Mitte Rechts, Rechts (typisch für geradlinige Formationen)", 
+	DirectionLine	= "Links, Mitte Links, Mitte, Mitte Rechts, Rechts (typisch für geradlinige Formationen)",
 	FreeForAll		= "Nur Standardschrei verwenden (ohne Positionszuweisung)"
 })
 
@@ -127,11 +113,6 @@ L:SetOptionLocalization({
 	Count4Resume		= "4-Personen-Rotation, die fortgesetzt wird, wenn die Barriere fällt",
 	Count4Reset			= "4-Personen-Rotation, die auf 1 zurückgesetzt wird, wenn die Barriere fällt"
 })
-
---------------------------
--- Tyrant Velhari --
---------------------------
-L = DBM:GetModLocalization(1394)
 
 --------------------------
 -- Mannoroth --

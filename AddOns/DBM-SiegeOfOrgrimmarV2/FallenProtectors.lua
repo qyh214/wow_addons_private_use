@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(849, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200222213340")
 mod:SetCreatureID(71479, 71475, 71480)--He-Softfoot, Rook Stonetoe, Sun Tenderheart
 mod:SetEncounterID(1598)
 mod:SetZone()
@@ -37,7 +37,7 @@ local warnGougeStun					= mod:NewTargetAnnounce(143301, 4, nil, "Tank")--Failed,
 local warnGarrote					= mod:NewTargetAnnounce(143198, 3, nil, "Healer")
 ----He Softfoot's Desperate Measures
 local warnMarkOfAnguish				= mod:NewSpellAnnounce(143812, 2)--Activation
-local warnMarked					= mod:NewTargetAnnounce(143840, 3)--Embodied Anguish			
+local warnMarked					= mod:NewTargetAnnounce(143840, 3)--Embodied Anguish
 --Sun Tenderheart
 local warnShaShear					= mod:NewCastAnnounce(143423, 3, 5, nil, false)
 local warnBane						= mod:NewCastAnnounce(143446, 4, nil, nil, "Healer")
@@ -169,7 +169,7 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 143958 then
 		local source = args.sourceName
-		if source == UnitName("target") or source == UnitName("focus") then 
+		if source == UnitName("target") or source == UnitName("focus") then
 			specWarnCorruptionShock:Show(source)
 		end
 	elseif spellId == 143330 then

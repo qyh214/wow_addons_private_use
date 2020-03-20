@@ -8,7 +8,7 @@ L = DBM:GetModLocalization("FlameLeviathan")
 L:SetGeneralLocalization{
 	name = "Flame Leviathan"
 }
-	
+
 L:SetMiscLocalization{
 	YellPull	= "Hostile entities detected. Threat assessment protocol active. Primary target engaged. Time minus 30 seconds to re-evaluation.",
 	Emote		= "%%s pursues (%S+)%."
@@ -50,7 +50,7 @@ L:SetGeneralLocalization{
 	name = "Razorscale"
 }
 
-L:SetWarningLocalization{	
+L:SetWarningLocalization{
 	warnTurretsReadySoon		= "Last turret ready in 20 seconds",
 	warnTurretsReady			= "Last turret ready"
 }
@@ -254,7 +254,7 @@ L:SetMiscLocalization{
 	YellPhase2	= "Impertinent whelps, you dare challenge me atop my pedestal? I will crush you myself!",
 	YellKill	= "Stay your arms! I yield!",
 	ChargeOn	= "Lightning Charge: %s",
-	Charge		= "Lightning Charge fails (this try): %s" 
+	Charge		= "Lightning Charge fails (this try): %s"
 }
 
 -------------
@@ -333,7 +333,7 @@ L:SetMiscLocalization{
 	MobPhase1		= "Leviathan Mk II",
 	MobPhase2		= "VX-001",
 	MobPhase3		= "Aerial Command Unit",
-	YellPull		= "We haven't much time, friends! You're going to help me test out my latest and greatest creation. Now, before you change your minds, remember that you kind of owe it to me after the mess you made with the XT-002.",	
+	YellPull		= "We haven't much time, friends! You're going to help me test out my latest and greatest creation. Now, before you change your minds, remember that you kind of owe it to me after the mess you made with the XT-002.",
 	YellHardPull	= "Self-destruct sequence initiated.",
 	LootMsg			= "([^%s]+).*Hitem:(%d+)"
 }
@@ -376,7 +376,7 @@ L:SetWarningLocalization{
 	WarningSanity 					= "%d Sanity remaining",
 	SpecWarnSanity 					= "%d Sanity remaining",
 	SpecWarnMadnessOutNow			= "Induce Madness ending - Move out",
-	WarnBrainPortalSoon				= "Brain Portal in 3 seconds",	
+	WarnBrainPortalSoon				= "Brain Portal in 3 seconds",
 	specWarnBrainPortalSoon			= "Brain Portal soon"
 }
 

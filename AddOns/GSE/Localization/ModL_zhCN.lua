@@ -88,6 +88,10 @@ L["Colour and Accessibility Options"] = "颜色和辅助功能设置"
 L["Combat"] = "战斗"
 L["Command Colour"] = "命令颜色"
 L["Completely New GS Macro."] = "全新的GS宏."
+--[[Translation missing --]]
+L["Compress"] = "Compress"
+--[[Translation missing --]]
+L["Compress Sequence from Forums"] = "Compress Sequence from Forums"
 L["Conditionals Colour"] = "条件颜色"
 L["Configuration"] = "结构"
 L["Continue"] = "继续"
@@ -108,6 +112,8 @@ L["Debug"] = "调试"
 L["Debug Mode Options"] = "调试模式设置"
 L["Debug Output Options"] = "调试输出设置"
 L["Debug Sequence Execution"] = "调试序列执行"
+--[[Translation missing --]]
+L["Decompress"] = "Decompress"
 L["Default Import Action"] = "默认导入动作"
 L["Default Version"] = "默认版本"
 L["Delete"] = "删除"
@@ -122,12 +128,16 @@ This is different to the Delete button below which will delete this entire macro
 L["Delete Version"] = "删除版本"
 L["Different helpTxt"] = "不同的帮助脚本"
 L["Disable"] = "禁用"
+--[[Translation missing --]]
+L["Disable Editor"] = "Disable Editor"
 L["Disable Sequence"] = "禁用序列"
 L["Display debug messages in Chat Window"] = "在聊天窗口中显示调试信息"
 L["Don't Translate Sequences"] = "不要翻译序列"
 --[[Translation missing --]]
 L["Drag this icon to your action bar to use this macro. You can change this icon in the /macro window."] = "Drag this icon to your action bar to use this macro. You can change this icon in the /macro window."
 L["Dungeon"] = "地下城版本"
+--[[Translation missing --]]
+L["Dungeon setting changed to Default."] = "Dungeon setting changed to Default."
 L["Edit"] = "编辑"
 --[[Translation missing --]]
 L["Edit this macro.  To delete a macro, choose this edit option and then from inside hit the delete button."] = "Edit this macro.  To delete a macro, choose this edit option and then from inside hit the delete button."
@@ -140,9 +150,13 @@ L["Enable Sequence"] = "启用宏"
 L["Enable this option to stop automatically translating sequences from enUS to local language."] = "启用这个选项以停止自动将序列从英文翻译为本地语言."
 --[[Translation missing --]]
 L["Enable timing functions by using Click refresh speed as a pseudo timer."] = "Enable timing functions by using Click refresh speed as a pseudo timer."
+--[[Translation missing --]]
+L["Enforce GSE minimum version for this macro"] = "Enforce GSE minimum version for this macro"
 L["Error found in version %i of %s."] = "版本 %i 在序列 %s 中被发现错误."
 L["Export"] = "导出"
 L["Export a Sequence"] = "导出序列"
+--[[Translation missing --]]
+L["Export Macro Read Only"] = "Export Macro Read Only"
 --[[Translation missing --]]
 L["Export this Macro."] = "Export this Macro."
 L["Extra Macro Versions of %s has been added."] = "额外宏版本 %s 已被添加."
@@ -154,6 +168,8 @@ L["Gameplay Options"] = "游戏选项"
 L["General"] = "常规"
 L["General Options"] = "常规设置"
 L["Global Macros are those that are valid for all classes.  GSE2 also imports unknown macros as Global.  This option will create a button for these macros so they can be called for any class.  Having all macros in this space is a performance loss hence having them saved with a the right specialisation is important."] = "全局宏是对所有职业都有效的宏.GSE2也导入未知的全局宏.此选项将创建一个按钮使它们可以被任何职业调用.所有宏存在这个空间都会有性能损失.因此最好把它们保存在正确的专精下."
+--[[Translation missing --]]
+L["Gnome Sequencer: Compress a Sequence String."] = "Gnome Sequencer: Compress a Sequence String."
 L["Gnome Sequencer: Export a Sequence String."] = "Gnome Sequencer: 输出序列字符串."
 L["Gnome Sequencer: Import a Macro String."] = "Gnome Sequencer: 导入宏字符串."
 L["Gnome Sequencer: Record your rotation to a macro."] = "Gnome Sequencer: 记录你的循环到一个宏."
@@ -171,6 +187,8 @@ L["GSE has a LibDataBroker (LDB) data feed.  List Other GSE Users and their vers
 L["GSE has a LibDataBroker (LDB) data feed.  Set this option to show queued Out of Combat events in the tooltip."] = "GSE有一个LibDataBroker（LDB）数据源.设置此选项可在提示中显示序列中的战斗外事件."
 L["GSE is a complete rewrite of that addon that allows you create a sequence of macros to be executed at the push of a button."] = "GSE是这个插件的完整的重写.这允许你创建一个宏的序列,在按下按钮时执行."
 L["GSE is out of date. You can download the newest version from https://mods.curse.com/addons/wow/gnomesequencer-enhanced."] = "GSE 已过期. 你可以在  https://mods.curse.com/addons/wow/gnomesequencer-enhanced 下载新版本."
+--[[Translation missing --]]
+L["GSE is out of date. You can download the newest version from https://www.curseforge.com/wow/addons/gse-gnome-sequencer-enhanced-advanced-macros."] = "GSE is out of date. You can download the newest version from https://www.curseforge.com/wow/addons/gse-gnome-sequencer-enhanced-advanced-macros."
 L["GSE Macro"] = "GSE 宏"
 L["GS-E Plugins"] = "GS-E 插件"
 L["GSE Users"] = "GSE 用户"
@@ -181,6 +199,8 @@ L[ [=[GSE was originally forked from GnomeSequencer written by semlar.  It was e
 GSE itself wouldn't be what it is without the efforts of the people who write macros with it.  Check out https://wowlazymacros.com for the things that make this mod work.  Special thanks to Lutechi for creating this community.]=] ] = [=[GSE was originally forked from GnomeSequencer written by semlar.  It was enhanced by TImothyLuke to include a lot of configuration and boilerplate functionality with a GUI added.  The enhancements pushed the limits of what the original code could handle and was rewritten from scratch into GSE.
 
 GSE itself wouldn't be what it is without the efforts of the people who write macros with it.  Check out https://wowlazymacros.com for the things that make this mod work.  Special thanks to Lutechi for creating this community.]=]
+--[[Translation missing --]]
+L["GSE: Import a Macro String."] = "GSE: Import a Macro String."
 L["GSE: Left Click to open the Sequence Editor"] = "GSE: 左键单击以打开序列编辑器"
 L["GS-E: Left Click to open the Sequence Editor"] = "GS-E: 左键单击以打开序列编辑器"
 L["GSE: Middle Click to open the Transmission Interface"] = "GSE: 中键单击以打开传输接口"
@@ -193,6 +213,8 @@ L["Help Information"] = "帮助信息"
 L["Help Link"] = "帮助链接"
 L["Help URL"] = "帮助网址"
 L["Heroic"] = "英雄难度"
+--[[Translation missing --]]
+L["Heroic setting changed to Default."] = "Heroic setting changed to Default."
 L["Hide Login Message"] = "隐藏加载信息"
 --[[Translation missing --]]
 L["Hide Minimap Icon"] = "Hide Minimap Icon"
@@ -235,6 +257,8 @@ L["Load"] = "读取"
 L["Load Sequence"] = "读取序列"
 L["Local Macro"] = "本地宏"
 L["Macro Collection to Import."] = "宏集合导入."
+--[[Translation missing --]]
+L["Macro found by the name %sPVP%s. Rename this macro to a different name to be able to use it.  WOW has a global object called PVP that is referenced instead of this macro."] = "Macro found by the name %sPVP%s. Rename this macro to a different name to be able to use it.  WOW has a global object called PVP that is referenced instead of this macro."
 L["Macro found by the name %sWW%s. Rename this macro to a different name to be able to use it.  WOW has a hidden button called WW that is executed instead of this macro."] = "宏被命名为 %sWW%s .重命名此宏以能使用此宏.魔兽世界有一个隐藏的名为\"WW\"的按钮,使用此宏实际上会点击该按钮而不是使用此宏. "
 L["Macro Icon"] = "宏图标"
 L["Macro Import Successful."] = "宏导入成功."
@@ -282,6 +306,10 @@ L["Options"] = "设置"
 L["Options have been reset to defaults."] = "设置已被重置为默认值."
 L["Output"] = "导出"
 L["Output the action for each button press to verify StepFunction and spell availability."] = "输出按钮按下后的每个的动作以验证步骤方法和法术的可用性."
+--[[Translation missing --]]
+L["Party"] = "Party"
+--[[Translation missing --]]
+L["Party setting changed to Default."] = "Party setting changed to Default."
 L["Pause"] = "暂停"
 L["Paused"] = "已暂停"
 L["Paused - In Combat"] = "已暂停  - 在战斗中"
@@ -364,6 +392,8 @@ L["Sequence Name"] = "序列名"
 L["Sequence Name %s is in Use. Please choose a different name."] = "序列名称 %s 已被使用.请选择一个不同的名称."
 L["Sequence Saved as version "] = "保存序列版本为 "
 L["Sequence specID set to current spec of "] = "序列天赋ID设置为当前天赋 "
+--[[Translation missing --]]
+L["Sequence to Compress."] = "Sequence to Compress."
 L["Sequence Viewer"] = "序列查看器"
 L["Sequential (1 2 3 4)"] = "顺序 (1 2 3 4)"
 L["Set Default Icon QuestionMark"] = "设置默认图标为问号"
@@ -463,11 +493,15 @@ L["This function will remove the SHIFT+N, ALT+N and CTRL+N keybindings for this 
 L["This function will update macro stubs to support listening to the options below.  This is required to be completed 1 time per character."] = "此功能将更新宏存根以支持下面的选项.每个角色都需要运行一次."
 L["This is a small addon that allows you create a sequence of macros to be executed at the push of a button."] = "这是一个小插件,允许你创建一个宏序列以便在按下按钮时执行."
 L["This is the only version of this macro.  Delete the entire macro to delete this version."] = "这是此宏的唯一版本. 删除整个宏以删除此版本."
+--[[Translation missing --]]
+L["This macro uses features that are not available in this version. You need to update GSE to %s in order to use this macro."] = "This macro uses features that are not available in this version. You need to update GSE to %s in order to use this macro."
 L["This option clears errors and stack traces ingame.  This is the equivalent of /run UIErrorsFrame:Clear() in a KeyRelease.  Turning this on will trigger a Scam warning about running custom scripts."] = "该选项会清除游戏中的错误追踪.这等于写入 /run UIErrorsFrame:Clear() 在按键释放.  打开这个将触发一个关于运行自定义脚本的欺骗警告."
 L["This option dumps extra trace information to your chat window to help troubleshoot problems with the mod"] = "此选项将额外的跟踪信息转储到聊天窗口,以帮助解决模块的问题"
 L["This option hide error sounds like \"That is out of range\" from being played while you are hitting a GS Macro.  This is the equivalent of /console Sound_EnableErrorSpeech lines within a Sequence.  Turning this on will trigger a Scam warning about running custom scripts."] = "该选项将隐藏当你使用GS宏时的\"超出范围了\"之类的音效.等于命令 /console Sound_EnableErrorSpeech.打开这个将触发一个关于运行自定义脚本的欺骗警告."
 L["This option hides text error popups and dialogs and stack traces ingame.  This is the equivalent of /script UIErrorsFrame:Hide() in a KeyRelease.  Turning this on will trigger a Scam warning about running custom scripts."] = "该选项僵隐藏错误文本弹出和对话框和堆栈跟踪.这等于写入 /script UIErrorsFrame:Hide() 在按键释放.  打开这个将触发一个关于运行自定义脚本的欺骗警告."
 L["This option prevents macros firing unless you have a target. Helps reduce mistaken targeting of other mobs/groups when your target dies."] = "该选项将禁止你在没有目标的时候启动宏.有助于减少当你的目标死亡时错误的针对其他怪物/组."
+--[[Translation missing --]]
+L["This sequence is Read Only and unable to be edited."] = "This sequence is Read Only and unable to be edited."
 L["This Sequence was exported from GSE %s."] = "该序列导出自GSE %s."
 L["This shows the Global Macros available as well as those for your class."] = "这将显示你当前职业可用的全局宏."
 L["This version has been modified by TimothyLuke to make the power of GnomeSequencer avaialble to people who are not comfortable with lua programming."] = "这个版本已经被TimothyLuke修改,使GnomeSequencer的强大功能可以让不习惯lua编程的人使用."
@@ -485,6 +519,8 @@ L["Translated Sequence"] = "翻译序列"
 L["Trinket 1"] = "饰品 1"
 L["Trinket 2"] = "饰品 2"
 L["Two sequences with unknown sources found."] = "找到两个未知来源的序列."
+--[[Translation missing --]]
+L["Unable to interpret sequence."] = "Unable to interpret sequence."
 L["Unknown Author|r "] = "未知作者|r "
 L["Unknown Colour"] = "未知颜色"
 L["Update"] = "更新"
@@ -506,6 +542,8 @@ L["Use Neck Item in KeyRelease"] = "使用颈部物品在释放按键"
 L["Use Realtime Parsing"] = "使用实时解析"
 L["Use Second Ring in KeyRelease"] = "使用第二个戒指在释放按键"
 L["Use Second Trinket in KeyRelease"] = "使用第二个饰品在释放按键"
+--[[Translation missing --]]
+L["Use Verbose Export Sequence Format"] = "Use Verbose Export Sequence Format"
 L["Use WLM Export Sequence Format"] = "使用WLM导出序列格式"
 L["Version="] = "版本="
 --[[Translation missing --]]
@@ -518,6 +556,8 @@ L[ [=[What are the preferred talents for this macro?
 L["What class or spec is this macro for?  If it is for all classes choose Global."] = "What class or spec is this macro for?  If it is for all classes choose Global."
 L["When creating a macro, if there is not a personal character macro space, create an account wide macro."] = "创建宏时,如果没有角色宏空间,创建帐户通用的宏."
 L["When exporting a sequence create a stub entry to import for WLM's Website."] = "导出序列时,创建一个存根条目以导入WLM的网站."
+--[[Translation missing --]]
+L["When exporting a sequence use a human readable verbose form."] = "When exporting a sequence use a human readable verbose form."
 L["When GSE imports a macro and it already exists locally and has local edits, what do you want the default action to be.  Merge - Add the new MacroVersions to the existing Macro.  Replace - Replace the existing macro with the new version. Ignore - ignore updates.  This default action will set the default on the Compare screen however if the GUI is not available this will be the action taken."] = "当GSE导入宏并且已经有本地版本时,如何进行下一步.\"合并\"-将新版本添加到现有版本.\"替换\"-用新版本替换现有版本.\"忽略\"-忽略更新.默认操作将在屏幕上进行比较,但是如果GUI不可用,则会按照此处设定进行下一步."
 L["When loading or creating a sequence, if it is a global or the macro has an unknown specID automatically create the Macro Stub in Account Macros"] = "加载或创建序列时,如果它是全局宏或宏具有未知的天赋ID,则会自动在帐户宏中创建宏存根"
 L["When loading or creating a sequence, if it is a macro of the same class automatically create the Macro Stub"] = "当加载或创建序列时,如果它是同职业的宏,则自动创建宏存根"

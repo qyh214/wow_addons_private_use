@@ -1,10 +1,22 @@
-lightweight tag cbd5617ca6ce163d37e4c9d951f4c884e122b6a0 v5.3.3
-Author:	Boshi Lian <farmer1992@gmail.com>
-Date:	Tue Jan 14 13:31:17 2020 -0800
+lightweight tag eaf5bbc97702d2ca334cb3eed22e8287d3ac6ed7 v5.3.4
+Author:	GitHub <noreply@github.com>
+Date:	Thu Mar 12 04:36:15 2020 -0700
 
-commit cbd5617ca6ce163d37e4c9d951f4c884e122b6a0
+commit eaf5bbc97702d2ca334cb3eed22e8287d3ac6ed7
 Author: Boshi Lian <farmer1992@gmail.com>
-Date:   Tue Jan 14 13:31:17 2020 -0800
+Date:   Thu Mar 12 04:36:15 2020 -0700
 
-    bump version
+    fix PickupEquipmentSet api moved
+
+commit a85dbb6447807b951135b2c7801336fae26f1fd9
+Author: Kai Zhang <zealotcs@gmail.com>
+Date:   Tue Jan 14 19:20:51 2020 -0500
+
+    Add a confirm dialog to delete button. Add focus when edit name for a setting
+
+commit a85dbb6447807b951135b2c7801336fae26f1fd9
+Author: Kai Zhang <zealotcs@gmail.com>
+Date:   Tue Jan 14 19:20:51 2020 -0500
+
+    Add a confirm dialog to delete button. Add focus when edit name for a setting
 

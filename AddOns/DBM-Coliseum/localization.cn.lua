@@ -77,7 +77,7 @@ L:SetMiscLocalization{
 	AllianceVictory			= "荣耀归于联盟！",
 	HordeVictory			= "那只是让你们知道将来必须面对的命运。为了部落！",
 	YellKill			= "肤浅而悲痛的胜利。今天痛失的生命反而令我们更加的颓弱。除了巫妖王之外，谁还能从中获利?伟大的战士失去了宝贵生命。为了什么?真正的威胁就在前方 - 巫妖王在死亡的领域中等着我们。"
-} 
+}
 
 ---------------------
 --  Val'kyr Twins  --
@@ -89,7 +89,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetTimerLocalization{
-	TimerSpecialSpell		= "下一次 特殊技能"	
+	TimerSpecialSpell		= "下一次 特殊技能"
 }
 
 L:SetWarningLocalization{

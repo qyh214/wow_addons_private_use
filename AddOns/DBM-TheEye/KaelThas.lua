@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("KaelThas", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143429")
+mod:SetRevision("20200221204848")
 mod:SetCreatureID(19622)
 mod:SetEncounterID(733)
 mod:SetModelID(20023)
@@ -210,8 +210,8 @@ function mod:UNIT_DIED(args)
 end
 
 function mod:CHAT_MSG_MONSTER_EMOTE(msg, _, _, _, target)
-	if msg == L.EmoteGaze or msg:find(L.EmoteGaze) then
-		local target = DBM:GetUnitFullName(target)
+	if (msg == L.EmoteGaze or msg:find(L.EmoteGaze)) and target then
+		target = DBM:GetUnitFullName(target)
 		timerNextGaze:Start()
 		if target == UnitName("player") then
 			specWarnGaze:Show()

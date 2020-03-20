@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d646", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200222213340")
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1130)
@@ -58,8 +58,8 @@ function mod:UNIT_DIED(args)
 end
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
-	if msg:find("spell:141407") then--Does show in combat log, but emote gives targetname 2 seconds earlier.
-		local target = DBM:GetUnitFullName(target)
+	if msg:find("spell:141407") and target then--Does show in combat log, but emote gives targetname 2 seconds earlier.
+		target = DBM:GetUnitFullName(target)
 		warnFrozenSolid:Show(target)
 		specWarnFrozenSolid:Show()
 		timerFrozenSolidCD:Start()
