@@ -88,8 +88,7 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	AnnounceBosses			= "Zeige Warnungen für Erscheinen der Bosse",
-	ShowBossTimers			= "Zeige Zeit bis die Bosse erscheinen",
-	DBM_OZ_OPTION_1			= "Zeige Abstandsfenster in Phase 2"
+	ShowBossTimers			= "Zeige Zeit bis die Bosse erscheinen"
 }
 
 L:SetMiscLocalization{
@@ -115,11 +114,6 @@ L:SetWarningLocalization{
 L:SetOptionLocalization{
 	warnAdd		= "Zeige Warnung, wenn Astralflimmern erscheinen"
 }
-
-L:SetOptionLocalization{
-	RangeFrame			= "Zeige Abstandsfenster (10m)"
-}
-
 
 -- Terestian Illhoof
 L = DBM:GetModLocalization("TerestianIllhoof")

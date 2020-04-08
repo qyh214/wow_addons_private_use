@@ -543,23 +543,19 @@ function AS:SkinButton(Button, Strip)
 	AS:SetTemplate(Button, AS:CheckOption('ElvUIStyle', 'ElvUI') and 'Default' or nil)
 
 	if Button.GetFontString and Button:GetFontString() ~= nil then
+		Button:HookScript("OnEnable", function(self) self:GetFontString():SetTextColor(1, 1, 1) end)
+		Button:HookScript("OnDisable", function(self) self:GetFontString():SetTextColor(.5, .5, .5) end)
+
 		if Button:IsEnabled() then
 			Button:GetFontString():SetTextColor(1, 1, 1)
 		else
 			Button:GetFontString():SetTextColor(.5, .5, .5)
 		end
+
+		Button:HookScript("OnEnable", function(self) self:GetFontString():SetTextColor(1, 1, 1) end)
+		Button:HookScript("OnDisable", function(self) self:GetFontString():SetTextColor(.5, .5, .5) end)
 	end
 
-	Button:HookScript("OnEnable", function(self)
-		if self.GetFontString and self:GetFontString() ~= nil then
-			self:GetFontString():SetTextColor(1, 1, 1)
-		end
-	end)
-	Button:HookScript("OnDisable", function(self)
-		if self.GetFontString and self:GetFontString() ~= nil then
-			self:GetFontString():SetTextColor(.5, .5, .5)
-		end
-	end)
 	Button:HookScript('OnEnter', function(self) self:SetBackdropBorderColor(unpack(AS.Color)) end)
 	Button:HookScript('OnLeave', function(self) self:SetBackdropBorderColor(unpack(AS.BorderColor)) end)
 
@@ -648,40 +644,44 @@ function AS:SkinCloseButton(Button, Reposition)
 	end
 end
 
-function AS:SkinDropDownBox(Frame, Width)
+function AS:SkinDropDownBox(Frame, Width, Pos)
 	if Frame.Backdrop then return end
 
 	local FrameName = Frame.GetName and Frame:GetName()
+	local Button = Frame.Button or FrameName and (_G[FrameName.."Button"] or _G[FrameName.."_Button"])
+	local Text = FrameName and _G[FrameName.."Text"] or Frame.Text
+	local Icon = Frame.Icon
 
-	local Button = FrameName and _G[FrameName..'Button'] or Frame.Button
-	local Text = FrameName and _G[FrameName..'Text'] or Frame.Text
+	if not Width then
+		Width = 155
+	end
 
 	AS:StripTextures(Frame)
-
-	if Width then
-		Frame:SetWidth(Width)
-	end
-
-	if Text then
-		local a, b, c, d, e = Text:GetPoint()
-		Text:SetPoint(a, b, c, d + 10, e - 4)
-		Text:SetWidth(Frame:GetWidth() / 1.4)
-	end
-
-	Button:SetPoint('TOPRIGHT', -14, -8)
-	Button:SetSize(16, 16)
-
-	AS:SkinArrowButton(Button, 'DOWN')
-
-	if Frame.Icon then
-		Frame.Icon:SetPoint('LEFT', 23, 0)
-	end
+	Frame:SetWidth(Width)
 
 	AS:CreateBackdrop(Frame, AS:CheckOption('ElvUIStyle', 'ElvUI') and 'Default' or nil)
+	Frame.Backdrop:SetPoint("TOPLEFT", 20, -2)
+	Frame.Backdrop:SetPoint("BOTTOMRIGHT", Button, "BOTTOMRIGHT", 2, -2)
 
-	Frame.Backdrop:SetFrameLevel(Frame:GetFrameLevel())
-	Frame.Backdrop:SetPoint('TOPLEFT', 20, -6)
-	Frame.Backdrop:SetPoint('BOTTOMRIGHT', Button, 'BOTTOMRIGHT', 2, -2)
+	Button:ClearAllPoints()
+
+	if Pos then
+		Button:SetPoint("TOPRIGHT", Frame.Right, -20, -21)
+	else
+		Button:SetPoint("RIGHT", Frame, "RIGHT", -10, 0)
+	end
+
+	Button.SetPoint = AS.noop
+	AS:SkinArrowButton(Button, 'DOWN')
+
+	if Text then
+		Text:ClearAllPoints()
+		Text:SetPoint("RIGHT", Button, "LEFT", -2, 0)
+	end
+
+	if Icon then
+		Icon:SetPoint("LEFT", 23, 0)
+	end
 end
 
 function AS:SkinEditBox(EditBox, Width, Height)
@@ -868,8 +868,15 @@ function AS:SkinTab(Tab)
 
 	AS:CreateBackdrop(Tab, AS:CheckOption('ElvUIStyle', 'ElvUI') and 'Default' or nil)
 
-	if Tab.GetFontString then
-		Tab:GetFontString():SetTextColor(1, 1, 1)
+	if Tab.GetFontString and Tab:GetFontString() ~= nil then
+		Tab:HookScript("OnEnable", function(self) self:GetFontString():SetTextColor(1, 1, 1) end)
+		Tab:HookScript("OnDisable", function(self) self:GetFontString():SetTextColor(.5, .5, .5) end)
+
+		if Tab:IsEnabled() then
+			Tab:GetFontString():SetTextColor(1, 1, 1)
+		else
+			Tab:GetFontString():SetTextColor(.5, .5, .5)
+		end
 	end
 
 	Tab:HookScript('OnEnter', function(self) self.Backdrop:SetBackdropBorderColor(unpack(AS.Color)) end)

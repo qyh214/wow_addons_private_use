@@ -37,10 +37,10 @@ function AS:Pawn(event, addon)
 		AS:SkinFrame(PawnUIFrame)
 		AS:SkinCloseButton(PawnUIFrame_TinyCloseButton)
 		AS:SkinScrollBar(PawnUIScaleSelectorScrollFrameScrollBar)
-		AS:SkinFrame(PawnUIStringDialog)
-		AS:SkinEditBox(PawnUIStringDialog_TextBox)
-		AS:SkinButton(PawnUIStringDialog_OKButton)
-		AS:SkinButton(PawnUIStringDialog_CancelButton)
+		AS:SkinFrame(PawnUIStringDialogMultiLine)
+		AS:SkinEditBox(PawnUIStringDialogMultiLine_TextBox)
+		AS:SkinButton(PawnUIStringDialogMultiLine.OKButton)
+		AS:SkinButton(PawnUIStringDialogMultiLine.CancelButton)
 
 		AS:SkinButton(PawnUI_InventoryPawnButton)
 		PawnUI_InventoryPawnButton:SetNormalTexture(Texture)
@@ -70,9 +70,9 @@ function AS:Pawn(event, addon)
 		AS:SkinButton(PawnUIFrame_ClearValueButton)
 
 		-- Compare
-		AS:SkinBackdropFrame(PawnUICompareItemIcon1, nil, true, false, true)
-		AS:SkinBackdropFrame(PawnUICompareItemIcon2, nil, true, false, true)
-		-- AS:SkinButton(PawnUIFrame_ClearItemsButton) -- This button needs some attention
+		AS:SkinBackdropFrame(PawnUICompareItemIcon1, nil, false)
+		AS:SkinBackdropFrame(PawnUICompareItemIcon2, nil, false)
+		AS:SkinBackdropFrame(PawnUIFrame_ClearItemsButton, nil, false)
 		AS:SkinButton(PawnUIFrame_CompareSwapButton)
 		AS:SkinScrollBar(PawnUICompareScrollFrameScrollBar)
 

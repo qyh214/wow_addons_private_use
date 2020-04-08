@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Ebonroc", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200218153056")
+mod:SetRevision("20200329220248")
 mod:SetCreatureID(14601)
 mod:SetEncounterID(614)
 mod:SetModelID(6377)
@@ -21,7 +21,7 @@ local warnShadow		= mod:NewTargetNoFilterAnnounce(23340, 4, nil, "Tank|Healer")
 local specWarnShadowYou	= mod:NewSpecialWarningYou(23340, nil, nil, nil, 1, 2)
 local specWarnShadow	= mod:NewSpecialWarningTaunt(23340, nil, nil, nil, 1, 2)
 
-local timerWingBuffet	= mod:NewNextTimer(31, 23339, nil, nil, nil, 2)
+local timerWingBuffet	= mod:NewCDTimer(31, 23339, nil, nil, nil, 2)
 local timerShadowFlameCD= mod:NewCDTimer(14, 22539, nil, false)--14-21
 local timerShadow		= mod:NewTargetTimer(8, 23340, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
 

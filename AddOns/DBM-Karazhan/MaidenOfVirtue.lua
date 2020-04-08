@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Maiden", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200329212634")
 mod:SetCreatureID(16457)
 mod:SetEncounterID(654)
 mod:SetModelID(16198)
@@ -14,13 +14,15 @@ mod:RegisterEventsInCombat(
 )
 
 local warningRepentance		= mod:NewSpellAnnounce(29511, 4)
-local warningHolyFire		= mod:NewTargetAnnounce(29522, 2)
+local warningHolyFire		= mod:NewTargetNoFilterAnnounce(29522, 2)
+
+--local specWarnHolyFire		= mod:NewSpecialWarningMoveAway(29522, nil, nil, nil, 1, 2)
 
 local timerRepentance		= mod:NewBuffActiveTimer(12.6, 29511, nil, nil, nil, 2)
 local timerRepentanceCD		= mod:NewCDTimer(45, 29511, nil, nil, nil, 6)
-local timerHolyFire			= mod:NewTargetTimer(12, 29522, nil, nil, nil, 3)
+local timerHolyFire			= mod:NewTargetTimer(12, 29522, nil, nil, nil, 5, nil, DBM_CORE_MAGIC_ICON)
 
-mod:AddBoolOption("RangeFrame", true)
+mod:AddRangeFrameOption(10, 29522)
 
 function mod:OnCombatStart(delay)
 	timerRepentanceCD:Start(35-delay)

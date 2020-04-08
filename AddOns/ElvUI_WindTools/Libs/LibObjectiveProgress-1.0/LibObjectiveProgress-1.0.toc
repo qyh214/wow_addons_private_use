@@ -1,4 +1,4 @@
-## Interface: 80205
+## Interface: 80300
 ## Title: LibObjectiveProgress-1.0
 ## Author: Simca
 ## Notes: LibObjectiveProgress is a library designed to provide an API for quest objective progress weight information.

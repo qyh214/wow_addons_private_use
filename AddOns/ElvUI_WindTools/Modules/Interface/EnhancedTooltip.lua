@@ -14,7 +14,7 @@ local ETT = E:NewModule('Wind_EnhancedTootip')
 
 ETT.RP = {
 	-- sort key
-	["tiers"] = { "Uldir", "BattleOfDazaralor", "CrucibleOfStorms", "EternalPalace" },
+	["tiers"] = { "Uldir", "BattleOfDazaralor", "CrucibleOfStorms", "EternalPalace", "Nyalotha" },
 	["levels"] = { "Mythic", "Heroic", "Normal", "LFR" },
 	-- stat id
 	["Raid"] = {
@@ -90,6 +90,20 @@ ETT.RP = {
 				13587, 13591, 13595, 13600, 13604, 13608, 13612, 13616,
 			},
 		},
+		["Nyalotha"] = {
+			["Mythic"] = {
+				14082, 14094, 14098, 14105, 14110, 14115, 14120, 14211, 14126, 14130, 14134, 14138,
+			},
+			["Heroic"] = {
+				14080, 14093, 14097, 14104, 14109, 14114, 14119, 14210, 14125, 14129, 14133, 14137,
+			},
+			["Normal"] = {
+				14079, 14091, 14096, 14102, 14108, 14112, 14118, 14208, 14124, 14128, 14132, 14136,
+			},
+			["LFR"] = {
+				14078, 14089, 14095, 14101, 14107, 14111, 14117, 14207, 14123, 14127, 14131, 14135,
+			},
+		},
 	},
 	["Dungeon"] = {
 		["MythicDungeon"] = {
@@ -103,6 +117,7 @@ ETT.RP = {
 			["TheUnderrot"] = 12745,
 			["TolDagor"] = 12782,
 			["WaycrestManor"] = 12785,
+			["Mechagon"] = 13620,
 		},
 		["Mythic+"] = {
 			["Mythic+(LEG&BFA)"] = 7399,
@@ -372,16 +387,42 @@ function ETT.AddInspectInfo(self, tt, unit, numTries, r, g, b)
 	ETT:SetProgressionInfo(guid, tt)
 end
 
+function ETT:MoveHealthInfo()
+	if E.private.tooltip.enable ~= true then return end
+
+	hooksecurefunc(TT, "GameTooltip_SetDefaultAnchor", function(self, tt, parent)
+		if tt.StatusBar then
+			if E.db.tooltip.healthBar.statusPosition == "BOTTOM" then
+				if not tt.StatusBar.anchoredToTop then
+					tt.StatusBar:ClearAllPoints()
+					tt.StatusBar:Point("TOPLEFT", tt, "BOTTOMLEFT", E.Border-1, -(E.Spacing * 3) + ETT.db.health_info_offset.bar)
+					tt.StatusBar:Point("TOPRIGHT", tt, "BOTTOMRIGHT", -E.Border+1, -(E.Spacing * 3) + ETT.db.health_info_offset.bar)
+					tt.StatusBar.text:Point("CENTER", tt.StatusBar, 0, ETT.db.health_info_offset.text)
+				end
+			else
+				if tt.StatusBar.anchoredToTop then
+					tt.StatusBar:ClearAllPoints()
+					tt.StatusBar:Point("BOTTOMLEFT", tt, "TOPLEFT", E.Border-1, (E.Spacing * 3) + ETT.db.health_info_offset.bar)
+					tt.StatusBar:Point("BOTTOMRIGHT", tt, "TOPRIGHT", -E.Border+1, (E.Spacing * 3) + ETT.db.health_info_offset.bar)
+					tt.StatusBar.text:Point("CENTER", tt.StatusBar, 0, ETT.db.health_info_offset.text)
+				end
+			end
+		end
+	end)
+end
+
 function ETT:Initialize()
 	if not E.db.WindTools["Interface"]["Enhanced Tooltip"].enabled then return end
 
 	self.db = E.db.WindTools["Interface"]["Enhanced Tooltip"]
 	tinsert(WT.UpdateAll, function()
 		ETT.db = E.db.WindTools["Interface"]["Enhanced Tooltip"]
+		ETT:MoveHealthInfo()
 	end)
 
 	self:ItemIcons()
 	hooksecurefunc(TT, 'AddInspectInfo', ETT.AddInspectInfo)
+	ETT:MoveHealthInfo()
 end
 
 local function InitializeCallback()

@@ -1,10 +1,52 @@
-tag 1e4d80e5a186daee49b4a93aaf1ac678b2f8ce41 4.39
+tag 6a199ae023aef73660a78010c6b0d79c7c377a2a 4.411
 Author:	Azilroka <darktemplar9900@yahoo.com>
-Date:	Fri Nov 15 12:57:39 2019 -0600
+Date:	Mon Mar 30 20:37:52 2020 -0500
 
-commit befa97d892a6df5466a4f011b1a9df8dca3b0f25
+commit ca08544b4da77144403e22bd9a89db5e0f1609ac
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Fri Nov 15 10:25:16 2019 -0600
+Date:   Mon Mar 30 20:33:37 2020 -0500
 
-    4.39
+    License
+
+commit ca08544b4da77144403e22bd9a89db5e0f1609ac
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Mon Mar 30 20:33:37 2020 -0500
+
+    License
+
+commit a21621f3bb0a5051e1e61f5b6ea3e91fefe5b985
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Mon Mar 30 20:18:37 2020 -0500
+
+    4.411
+
+commit a21621f3bb0a5051e1e61f5b6ea3e91fefe5b985
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Mon Mar 30 20:18:37 2020 -0500
+
+    4.411
+
+commit 089831fdf38aadd82067cf798b99f53cc382d01b
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Mon Mar 30 20:13:56 2020 -0500
+
+    pkgmeta
+
+commit 598d2fbeedb9f9daf3e47c8ecd3f5ea1b13cf0b4
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Mon Mar 30 20:06:39 2020 -0500
+
+    ToC
+
+commit 598d2fbeedb9f9daf3e47c8ecd3f5ea1b13cf0b4
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Mon Mar 30 20:06:39 2020 -0500
+
+    ToC
+
+commit e0efb48bbd17097670435e4ffe2254f80efe02df
+Author: Azilroka <darktemplar9900@yahoo.com>
+Date:   Mon Mar 30 20:04:16 2020 -0500
+
+    pkgmeta
 

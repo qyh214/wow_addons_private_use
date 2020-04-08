@@ -1,12 +1,15 @@
 local mod	= DBM:NewMod("Razorgore", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200218153056")
+mod:SetRevision("20200329220248")
 mod:SetCreatureID(12435, 99999)--Bogus detection to prevent invalid kill detection if razorgore happens to die in phase 1
 mod:SetEncounterID(610)--BOSS_KILL is valid, but ENCOUNTER_END is not
 mod:DisableEEKillDetection()--So disable only EE
 mod:SetModelID(10115)
 mod:SetMinSyncRevision(168)
+mod:SetHotfixNoticeRev(20200320000000)--2020, March, 20th
+mod:SetMinSyncRevision(20200320000000)--2020, March, 20th
+
 mod:RegisterCombat("yell", L.YellPull)
 mod:SetWipeTime(180)--guesswork
 
@@ -16,6 +19,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 23023",
 	"SPELL_AURA_REMOVED 23023",
 	"CHAT_MSG_MONSTER_EMOTE",
+	"CHAT_MSG_MONSTER_YELL",
 	"UNIT_DIED"
 )
 
@@ -23,7 +27,7 @@ mod:RegisterEventsInCombat(
 local warnPhase2			= mod:NewPhaseAnnounce(2)
 local warnFireballVolley	= mod:NewCastAnnounce(22425, 3)
 local warnConflagration		= mod:NewTargetAnnounce(23023, 2)
---local warnEggsLeft		= mod:NewCountAnnounce(19873, 1)--Not reliable in current form, can't rely on cast of egg breaking do to both CLEU reporting issues
+local warnEggsLeft			= mod:NewCountAnnounce(19873, 1)
 
 local specWarnFireballVolley= mod:NewSpecialWarningMoveTo(22425, false, nil, nil, 2, 2)
 
@@ -53,13 +57,6 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 23040 and self.vb.phase < 2 then
 		self:SendSync("Phase2")
-	elseif args.spellId == 19873 then--Reflects cast succeeding but not how many eggs are destroyed
-		--Not synced because latency would screw this all up
-		self.vb.eggsLeft = self.vb.eggsLeft - 1
-		DBM:Debug("Eggs Remaining: " .. self.vb.eggsLeft)
-		--if (self.vb.eggsLeft % 5 == 0) or self.vb.eggsLeft < 5 then
-		--	warnEggsLeft:Show(self.vb.eggsLeft)
-		--end
 	end
 end
 
@@ -80,6 +77,16 @@ end
 function mod:CHAT_MSG_MONSTER_EMOTE(msg)
 	if (msg == L.Phase2Emote or msg:find(L.Phase2Emote)) and self.vb.phase < 2 then
 		self:SendSync("Phase2")
+	end
+end
+
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if ((msg == L.YellEgg1 or msg:find(L.YellEgg1))
+	or (msg == L.YellEgg2 or msg:find(L.YellEgg2))
+	or (msg == L.YellEgg3) or msg:find(L.YellEgg3))
+	and self.vb.phase < 2 then
+		self.vb.eggsLeft = self.vb.eggsLeft - 2
+		warnEggsLeft:Show(string.format("%d/%d",30-self.vb.eggsLeft,30))
 	end
 end
 

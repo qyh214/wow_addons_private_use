@@ -5,6 +5,7 @@
 local _G = _G
 local unpack = unpack
 local hooksecurefunc = hooksecurefunc
+local _
 
 local E, L, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local WT = E:GetModule("WindTools")
@@ -14,6 +15,7 @@ local AB = E:GetModule('ActionBars')
 local UF = E:GetModule('UnitFrames')
 local TT = E:GetModule('Tooltip')
 local DATABAR = E:GetModule('DataBars')
+local AFK = E:GetModule('AFK')
 local WS = E:NewModule('Wind_Skins', 'AceEvent-3.0')
 local LSM = LibStub("LibSharedMedia-3.0")
 local AS
@@ -30,12 +32,17 @@ WS.elvui_frame_list = {
 	["altpowerbar"] = L["Altpower Bar"],
 	["top_and_bottom_panel"] = L["Top and Bottom panel"],
 	["chat_panel"] = L["Chat panel"],
+	["editbox"] = L["Edit box"],
+	["lang_icon"] = L["Language indicator"],
+	["losscontrol"] = L["Loss of control"],
+	["character_frame"] = CHARACTER_INFO,
 }
 
 WS.addonskins_list = {
 	["general"] = L["General"],
-	["weakaura"] = L["Weakaura"],
+	["weakaura"] = L["Weakauras2"],
 	["bigwigs"] = L["Bigwigs"],
+	["immersion"] = L["Immersion"]
 }
 
 WS.blizzard_frames = {
@@ -55,7 +62,13 @@ WS.blizzard_frames = {
 	["SplashFrame"] = true,
 	["DropDownList1"] = true,
 	["FriendsFrame"] = true,
+	["FriendsTooltip"] = true,
+	["RaidInfoFrame"] = true,
+	["RecruitAFriendRewardsFrame"] = true,
+	["RecruitAFriendRecruitmentFrame"] = true,
 	["PVEFrame"] = true,
+	["LFGDungeonReadyDialog"] = true,
+	["LFGDungeonReadyStatus"] = true,
 	["SpellBookFrame"] = true,
 	["BNToastFrame"] = true,
 	["MailFrame"] = true,
@@ -65,13 +78,14 @@ WS.blizzard_frames = {
 	["RaidUtility_CloseButton"] = true,
 	["RaidUtilityRoleIcons"] = true,
 	["RaidUtilityPanel"] = true,
-	["WorldMapFrame"] = true,
+	["WorldMapFrame"] = false,
 	["LeaveVehicleButton"] = true,
 	["GhostFrameContentsFrame"] = true,
 	["ReputationDetailFrame"] = true,
 	["CinematicFrameCloseDialog"] = true,
 	["TaxiFrame"] = true,
 	["DressUpFrame"] = true,
+	["MainMenuBarVehicleLeaveButton"] = true,
 }
 
 WS.lazy_load_list = {
@@ -86,7 +100,141 @@ WS.lazy_load_list = {
 	["Blizzard_BindingUI"] = {"KeyBindingFrame"},
 	["Blizzard_ChallengesUI"] = {"ChallengesKeystoneFrame"},
 	["Blizzard_Calendar"] = {"CalendarFrame", "CalendarViewHolidayFrame"},
+	["Blizzard_AuctionHouseUI"] = { "AuctionHouseFrame" },
+	["Blizzard_WarboardUI"] = { "WarboardQuestChoiceFrame" },
 }
+
+local function shadow_immersion(self, event, addon)
+	ImmersionFrame.TalkBox.BackgroundFrame:StripTextures()
+	ImmersionFrame.TalkBox.BackgroundFrame:CreateBackdrop('Transparent')
+
+	ImmersionFrame.TalkBox.BackgroundFrame.backdrop:SetPoint('TOPLEFT', ImmersionFrame.TalkBox.BackgroundFrame, 'TOPLEFT', 8, -8)
+	ImmersionFrame.TalkBox.BackgroundFrame.backdrop:SetPoint('BOTTOMRIGHT', ImmersionFrame.TalkBox.BackgroundFrame, 'BOTTOMRIGHT', -8, 8)
+	ImmersionFrame.TalkBox.BackgroundFrame.backdrop:CreateShadow()
+
+	ImmersionFrame.TalkBox.PortraitFrame:StripTextures()
+
+	S:HandleCloseButton(ImmersionFrame.TalkBox.MainFrame.CloseButton)
+
+	ImmersionFrame.TalkBox.Hilite:SetTemplate()
+	ImmersionFrame.TalkBox.Hilite:SetBackdropBorderColor(0, 0.44, .87, 1)
+	ImmersionFrame.TalkBox.Hilite:SetBackdropColor(0, 0, 0, 0)
+
+	ImmersionFrame.TalkBox.MainFrame.Model.ModelShadow:SetDrawLayer("OVERLAY", 7)
+	ImmersionFrame.TalkBox.MainFrame.Model.ModelShadow:SetPoint("BOTTOMRIGHT", 2, -2)
+	ImmersionFrame.TalkBox.MainFrame.Model.PortraitBG:Hide()
+
+	ImmersionFrame.TalkBox.Elements:StripTextures()
+	ImmersionFrame.TalkBox.Elements:CreateBackdrop('Transparent')
+	ImmersionFrame.TalkBox.Elements.backdrop:SetPoint('TOPLEFT', ImmersionFrame.TalkBox.Elements, 'TOPLEFT', 16, -16)
+	ImmersionFrame.TalkBox.Elements.backdrop:SetPoint('BOTTOMRIGHT', ImmersionFrame.TalkBox.Elements, 'BOTTOMRIGHT', -16, 16)
+	ImmersionFrame.TalkBox.Elements.backdrop:CreateShadow()
+
+	ImmersionFrame.TalkBox.MainFrame.Overlay:Kill()
+
+	S:HandleStatusBar(ImmersionFrame.TalkBox.ReputationBar)
+	ImmersionFrame.TalkBox.ReputationBar:ClearAllPoints()
+	ImmersionFrame.TalkBox.ReputationBar:SetPoint('TOPLEFT', ImmersionFrame.TalkBox, 'BOTTOMLEFT', -20, 10)
+	ImmersionFrame.TalkBox.ReputationBar.icon:SetAlpha(0)
+	ImmersionFrame.TalkBox.Elements.Content.RewardsFrame.ItemHighlight.Icon:Hide();
+	ImmersionFrame.TalkBox.Elements.Content.RewardsFrame.ItemHighlight.Icon.Show = function() end;
+
+	ImmersionFrame.TalkBox.Elements.Content.RewardsFrame.ItemHighlight.NameTag:Hide();
+	ImmersionFrame.TalkBox.Elements.Content.RewardsFrame.ItemHighlight.NameTag.Show = function() end;
+
+	ImmersionFrame.TalkBox.Elements.Content.RewardsFrame.ItemHighlight.TextSheen:Hide();
+	ImmersionFrame.TalkBox.Elements.Content.RewardsFrame.ItemHighlight.TextSheen.Show = function() end;
+
+	local function SkinReward(Button)
+		if Button.Icon then
+			Button:CreateBackdrop()
+			
+		if Button.NameFrame then
+			Button.NameFrame:Hide()
+		end
+		
+		if Button.Border then
+			Button.Border:Hide()
+		end
+		
+		if Button.Mask then
+			Button.Mask:Hide()
+		end
+		
+		Button.backdrop:SetPoint('TOPLEFT', Button.Icon, 'TOPRIGHT', 0, 0)
+		Button.backdrop:SetPoint('BOTTOMLEFT', Button.Icon, 'BOTTOMRIGHT', 0, 0)
+		Button.backdrop:SetPoint('RIGHT', Button, 'RIGHT', -5, 0)
+		
+		S:HandleIcon(Button.Icon)
+		
+		Button.AutoCastShine = CreateFrame('Frame', '$parentShine', Button, 'AutoCastShineTemplate')
+		Button.AutoCastShine:SetParent(Button.Icon.backdrop)
+		Button.AutoCastShine:SetAllPoints()
+		
+		for _, sparks in pairs(Button.AutoCastShine.sparkles) do
+			sparks:SetSize(sparks:GetWidth() * 2, sparks:GetHeight() * 2)
+		end
+		
+		Button:SetScript("OnUpdate", function(self)
+				if ImmersionFrame.TalkBox.Elements.chooseItems and ImmersionFrame.TalkBox.Elements.itemChoice == self:GetID() then
+					AutoCastShine_AutoCastStart(self.AutoCastShine, 0, .44, .87 )
+					self.backdrop:SetBackdropBorderColor(0, 0.44, .87, 1)
+				else
+					self.backdrop:SetBackdropBorderColor(unpack(E.media.bordercolor))
+					AutoCastShine_AutoCastStop(self.AutoCastShine)
+				end
+		end)
+	end
+	
+	if Button.CircleBackground then
+		Button.CircleBackground:SetTexture()
+		Button.CircleBackgroundGlow:SetTexture()
+		hooksecurefunc(Button.ValueText, "SetText", function(self, text) Button.Count:SetText('+'..text) self:Hide() end)
+	end
+	end
+
+	SkinReward(ImmersionFrame.TalkBox.Elements.Content.RewardsFrame.ArtifactXPFrame)
+	SkinReward(ImmersionFrame.TalkBox.Elements.Content.RewardsFrame.HonorFrame)
+	SkinReward(ImmersionFrame.TalkBox.Elements.Content.RewardsFrame.MoneyFrame)
+	SkinReward(ImmersionFrame.TalkBox.Elements.Content.RewardsFrame.TitleFrame)
+	SkinReward(ImmersionFrame.TalkBox.Elements.Content.RewardsFrame.SkillPointFrame)
+
+	ImmersionFrame:HookScript('OnEvent', function(self)
+		for _, Button in ipairs(self.TitleButtons.Buttons) do
+			if Button and not Button.backdrop then
+				Button:StripTextures()
+				Button:CreateBackdrop('Transparent')
+				Button.Overlay:Kill()
+				Button.backdrop:CreateShadow()
+				Button.backdrop:SetInside(Button, 4, 4)
+				Button.Hilite:SetTemplate()
+				Button.Hilite:SetBackdropBorderColor(0, 0.44, .87, 1)
+				Button.Hilite:SetBackdropColor(0, 0, 0, 0)
+				Button.Hilite:SetAllPoints(Button.backdrop)
+				Button:SetHighlightTexture('')
+			end
+		end
+		for _, Button in ipairs(self.TalkBox.Elements.Content.RewardsFrame.Buttons) do
+			if Button and not Button.backdrop then
+				SkinReward(Button)
+			end
+		end
+		for _, Button in ipairs(self.TalkBox.Elements.Progress.Buttons) do
+			if Button and not Button.backdrop then
+				Button:StripTextures()
+				Button:CreateBackdrop('Transparent')
+				S:HandleIcon(Button.Icon)
+				Button.NameFrame:Hide()
+				Button.Border:Hide()
+				Button.Mask:Hide()
+
+				Button.backdrop:SetPoint('TOPLEFT', Button.Icon, 'TOPRIGHT', 0, 0)
+				Button.backdrop:SetPoint('BOTTOMLEFT', Button.Icon, 'BOTTOMRIGHT', 0, 0)
+				Button.backdrop:SetPoint('RIGHT', Button, 'RIGHT', -5, 0)
+			end
+		end
+	end)
+end
 
 local function shadow_bigwigs(self, event, addon)
 	if event == 'PLAYER_ENTERING_WORLD' then
@@ -258,37 +406,40 @@ local function shadow_bigwigs(self, event, addon)
 end
 
 local function shadow_weakauras()
-	local function Skin_WeakAuras(frame, ftype)
-		if frame.Backdrop then frame.Backdrop:CreateShadow() end
+	local function Skin_WeakAuras(frame)
+		if not frame.shadow then frame:CreateShadow(2) end
 	end
-	local Create_Icon, Modify_Icon = WeakAuras.regionTypes.icon.create, WeakAuras.regionTypes.icon.modify
-	local Create_AuraBar, Modify_AuraBar = WeakAuras.regionTypes.aurabar.create, WeakAuras.regionTypes.aurabar.modify
 
-	WeakAuras.regionTypes.icon.create = function(parent, data)
+	local regionTypes = WeakAuras.regionTypes
+	local Create_Icon, Modify_Icon = regionTypes.icon.create, regionTypes.icon.modify
+	local Create_AuraBar, Modify_AuraBar = regionTypes.aurabar.create, regionTypes.aurabar.modify
+
+	regionTypes.icon.create = function(parent, data)
 		local region = Create_Icon(parent, data)
-		Skin_WeakAuras(region, 'icon')
+		Skin_WeakAuras(region)
 		return region
 	end
 
-	WeakAuras.regionTypes.aurabar.create = function(parent)
+	regionTypes.aurabar.create = function(parent)
 		local region = Create_AuraBar(parent)
-		Skin_WeakAuras(region, 'aurabar')
+		Skin_WeakAuras(region)
 		return region
 	end
 
-	WeakAuras.regionTypes.icon.modify = function(parent, region, data)
+	regionTypes.icon.modify = function(parent, region, data)
 		Modify_Icon(parent, region, data)
-		Skin_WeakAuras(region, 'icon')
+		Skin_WeakAuras(region)
 	end
 
-	WeakAuras.regionTypes.aurabar.modify = function(parent, region, data)
+	regionTypes.aurabar.modify = function(parent, region, data)
 		Modify_AuraBar(parent, region, data)
-		Skin_WeakAuras(region, 'aurabar')
+		Skin_WeakAuras(region)
 	end
 
-	for weakAura, _ in pairs(WeakAuras.regions) do
-		if WeakAuras.regions[weakAura].regionType == 'icon' or WeakAuras.regions[weakAura].regionType == 'aurabar' then
-			Skin_WeakAuras(WeakAuras.regions[weakAura].region, WeakAuras.regions[weakAura].regionType)
+	for weakAura in pairs(WeakAuras.regions) do
+		local regions = WeakAuras.regions[weakAura]
+		if regions.regionType == 'icon' or regions.regionType == 'aurabar' then
+			Skin_WeakAuras(regions.region)
 		end
 	end
 end
@@ -300,7 +451,7 @@ local function shadow_objective_tracker()
 	ObjectiveTrackerFrame.HeaderMenu.MinimizeButton:CreateShadow(5)
 	ObjectiveTrackerFrame.HeaderMenu.MinimizeButton.shadow:SetOutside()
 
-	local function ProgressBarsShadows(self, _, line)
+	local function ProgressBarsShadows(_, _, line)
 		local progressBar = line and line.ProgressBar
 		local bar = progressBar and progressBar.Bar
 		if not bar then return end
@@ -308,16 +459,23 @@ local function shadow_objective_tracker()
 		local label = bar.Label
 
 		if not progressBar.hasShadow then
-			if not bar.backdrop or not progressBar.backdrop then return end
-			bar.backdrop:CreateShadow()
-			progressBar.backdrop:CreateShadow()
+			if not bar.backdrop then 
+				bar:CreateShadow()
+			else
+				bar.backdrop:CreateShadow()
+			end
+
+			if progressBar.backdrop then
+				progressBar.backdrop:CreateShadow()
+			end
+
 			-- 稍微移动下图标位置，防止阴影重叠，更加美观！
 			if icon then icon:Point("LEFT", bar, "RIGHT", E.PixelMode and 7 or 11, 0) end
 			-- 顺便修正一下字体位置，反正不知道为什么 ElvUI 要往上移动一个像素
 			if label then
 				label:ClearAllPoints()
 				label:Point("CENTER", bar, 0, 0)
-				label:FontTemplate(E.media.normFont, 14, "OUTLINE")
+				label:FontTemplate(E.media.normFont, 13, "OUTLINE")
 			end
 			progressBar.hasShadow = true
 		end
@@ -340,10 +498,10 @@ local function shadow_objective_tracker()
 		end
 	end
 
-	hooksecurefunc(BONUS_OBJECTIVE_TRACKER_MODULE,"AddProgressBar", ProgressBarsShadows)
-	hooksecurefunc(WORLD_QUEST_TRACKER_MODULE,"AddProgressBar", ProgressBarsShadows)
-	hooksecurefunc(DEFAULT_OBJECTIVE_TRACKER_MODULE,"AddProgressBar", ProgressBarsShadows)
-	hooksecurefunc(SCENARIO_TRACKER_MODULE,"AddProgressBar", ProgressBarsShadows)
+	hooksecurefunc(_G.BONUS_OBJECTIVE_TRACKER_MODULE, "AddProgressBar", ProgressBarsShadows)
+	hooksecurefunc(_G.WORLD_QUEST_TRACKER_MODULE, "AddProgressBar", ProgressBarsShadows)
+	hooksecurefunc(_G.DEFAULT_OBJECTIVE_TRACKER_MODULE, "AddProgressBar", ProgressBarsShadows)
+	hooksecurefunc(_G.SCENARIO_TRACKER_MODULE, "AddProgressBar", ProgressBarsShadows)
 	hooksecurefunc(QUEST_TRACKER_MODULE,"SetBlockHeader", ItemButtonShadows)
 	hooksecurefunc(WORLD_QUEST_TRACKER_MODULE,"AddObjective", ItemButtonShadows)
 	hooksecurefunc("QuestObjectiveSetupBlockButton_FindGroup", FindGroupButtonShadows)
@@ -404,12 +562,49 @@ local function shadow_alerts()
 	hooksecurefunc(_G.RafRewardDeliveredAlertSystem, "setUpFunction", create_alert_shadow)
 end
 
+local function CreateTabShadow(tab)
+	if not tab then return end
+	if tab and tab.backdrop and not tab.hasWindSkin then
+		tab:StripTextures()
+		tab:CreateBackdrop('Transparent')
+		tab.backdrop:Point("TOPLEFT", 10, E.PixelMode and -1 or -3)
+		tab.backdrop:Point("BOTTOMRIGHT", -10, 3)
+		tab.backdrop:CreateShadow(2)
+		tab.hasWindSkin = true
+	else
+		tab:CreateShadow(2)
+	end
+end
+
 function WS:ADDON_LOADED(_, addon)
 	if not self.db.elvui.general then return end
 
 	if self.lazy_load_list[addon] then
 		for _, frame in pairs(self.lazy_load_list[addon]) do
 			if _G[frame] then _G[frame]:CreateShadow(4) end
+		end
+	end
+
+	-- 离开界面
+	AFK.AFKMode.bottom:CreateShadow(10)
+
+	AFK.AFKMode.bottom.logo:Size(512, 128)
+	AFK.AFKMode.bottom.logo:SetTexture("Interface\\Addons\\ElvUI_WindTools\\Texture\\WindTools.blp")
+
+	-- 离开界面字体位置美观性调整
+	AFK.AFKMode.bottom.logo:ClearAllPoints()
+	AFK.AFKMode.bottom.logo:Point("CENTER", AFK.AFKMode.bottom, "CENTER", 0, 25)
+
+	AFK.AFKMode.bottom.guild:ClearAllPoints()
+	AFK.AFKMode.bottom.guild:Point("TOPLEFT", AFK.AFKMode.bottom.name, "BOTTOMLEFT", 0, -11)
+
+	AFK.AFKMode.bottom.time:ClearAllPoints()
+	AFK.AFKMode.bottom.time:Point("TOPLEFT", AFK.AFKMode.bottom.guild, "BOTTOMLEFT", 0, -11)
+
+	-- 特写框架
+	if E.private.skins.blizzard.enable and E.private.skins.blizzard.talkinghead and addon == "Blizzard_TalkingHeadUI" then
+		if _G.TalkingHeadFrame then
+			TalkingHeadFrame:CreateShadow(6)
 		end
 	end
 
@@ -452,41 +647,40 @@ function WS:ShadowGeneralFrames()
 		_G.MerchantFrameTab2.backdrop:CreateShadow(2)
 	end
 
-
 	-- 暴雪通知
-	for i=1,4 do
+	for i=1, 4 do
 		local alert = _G["StaticPopup"..i]
 		if alert then alert:CreateShadow() end
 	end
-
+	
 	-- 人物面板标签页
 	for i=1,4 do
-		local tab = _G["CharacterFrameTab"..i]
-		if tab and tab.backdrop then tab.backdrop:CreateShadow(2) end
+		CreateTabShadow(_G["CharacterFrameTab"..i])
 	end
 
 	-- 好友面板标签页
-	for i=1,3 do
-		local tab = _G["FriendsFrameTab"..i]
-		if tab and tab.backdrop then tab.backdrop:CreateShadow(2) end
+	for i=1, 4 do
+		CreateTabShadow(_G["FriendsFrameTab"..i])
 	end
 
 	-- 地城团队标签页
-	for i=1,3 do
-		local tab = _G["PVEFrameTab"..i]
-		if tab and tab.backdrop then tab.backdrop:CreateShadow(2) end
+	for i=1, 3 do
+		CreateTabShadow(_G["PVEFrameTab"..i])
 	end
 
+	-- 天赋标签页
+	for i=1, 3 do
+		CreateTabShadow(_G["PlayerTalentFrameTab"..i])
+	end
+		
 	-- 法术书标签页
-	for i=1,3 do
-		local tab = _G["SpellBookFrameTabButton"..i]
-		if tab and tab.backdrop then tab.backdrop:CreateShadow(2) end
+	for i=1, 5 do
+		CreateTabShadow(_G["SpellBookFrameTabButton"..i])
 	end
 
 	-- 法术书侧栏
-	for i=1,8 do
-		local tab = _G["SpellBookSkillLineTab"..i]
-		if tab then tab:CreateShadow(2) end
+	for i=1, MAX_SKILLLINE_TABS do
+		CreateTabShadow(_G["SpellBookSkillLineTab"..i])
 	end
 
 	-- 镜像时间条 呼吸条
@@ -504,17 +698,35 @@ function WS:ShadowElvUIFrames()
 
 	if self.db.elvui.general then
 		-- 为 ElvUI 美化皮肤模块添加阴影功能
-		hooksecurefunc(S, "HandleTab", function(_, tab) if tab and tab.backdrop then tab.backdrop:CreateShadow(2) end end)
-		hooksecurefunc(S, "HandlePortraitFrame", function(_, f) if f and f.backdrop then f.backdrop:CreateShadow() end end)
+		hooksecurefunc(S, "HandleTab", function(self, tab)
+			CreateTabShadow(tab)
+		end)
+		hooksecurefunc(S, "HandlePortraitFrame", function(self, f) if f and f.backdrop then f.backdrop:CreateShadow() end end)
 		if _G.ElvUIVendorGraysFrame then _G.ElvUIVendorGraysFrame:CreateShadow() end
 		-- 提醒
 		shadow_alerts()
+		-- ElvUI 设定
+		hooksecurefunc(E, "ToggleOptionsUI", function()
+			local frame = E:Config_GetWindow()
+			if not frame.shadow then
+				frame:CreateShadow()
+			end
+		end)
 	end
 
 	-- 光环条
 	if self.db.elvui.auras then
 		hooksecurefunc(A, "CreateIcon", function(_, button) if button then button:CreateShadow() end end)
 		hooksecurefunc(A, "UpdateAura", function(_, button) if button then button:CreateShadow() end end)
+	end
+
+	if self.db.elvui.character_frame then
+		local CharacterModelFrame = _G.CharacterModelFrame
+		CharacterModelFrame:SetTemplate("Transparent")
+		CharacterModelFrame:DisableDrawLayer("BACKGROUND")
+		CharacterModelFrame:DisableDrawLayer("BORDER")
+		CharacterModelFrame:DisableDrawLayer("OVERLAY")
+		if CharacterModelFrame.backdrop then CharacterModelFrame.backdrop:Kill() end
 	end
 
 	-- 单位框体
@@ -534,12 +746,14 @@ function WS:ShadowElvUIFrames()
 				if db.threatStyle == 'GLOW' and parent.shadow then parent.shadow:SetShown(not threat.glow:IsShown()) end
 			end
 		end)
+
 		-- 为分离的能量条提供阴影
 		hooksecurefunc(UF, "Configure_Power", function(_, frame)
 			if frame.USE_POWERBAR and frame.POWERBAR_DETACHED then 
 				frame.Power:CreateShadow()
 			end
 		end)
+
 		-- 为单位框体光环提供边缘美化
 		hooksecurefunc(UF, "UpdateAuraSettings", function(_, _, button) if button then button:CreateShadow() end end)
 	end
@@ -564,10 +778,16 @@ function WS:ShadowElvUIFrames()
 
 	-- 鼠标提示
 	if self.db.elvui.tooltips then
-		hooksecurefunc(TT, "SetStyle", function(_, tt) if tt then tt:CreateShadow(4) end end)
+		hooksecurefunc(TT, "SetStyle", function(_, tt)
+			if not tt or (tt == E.ScanTooltip or tt.IsEmbedded) or tt:IsForbidden() then return end
+			tt:CreateShadow(4)
+		end)
 		hooksecurefunc(TT, "GameTooltip_SetDefaultAnchor", function(_, tt)
 			if tt:IsForbidden() or E.private.tooltip.enable ~= true then return end
 			if _G.GameTooltipStatusBar then _G.GameTooltipStatusBar:CreateShadow(4) end
+		end)
+		hooksecurefunc("QueueStatusFrame_Update", function(self)
+			self:CreateShadow()
 		end)
 	end
 
@@ -612,6 +832,12 @@ function WS:ShadowElvUIFrames()
 			if button.backdrop then button.backdrop:CreateShadow() end
 		end)
 
+		-- 微型系统条
+		for i=1, #MICRO_BUTTONS do
+			if _G[MICRO_BUTTONS[i]].backdrop then
+				_G[MICRO_BUTTONS[i]].backdrop:CreateShadow()
+			end
+		end
 	end
 
 	-- 额外能量条
@@ -632,6 +858,24 @@ function WS:ShadowElvUIFrames()
 	if self.db.elvui.chat_panel then
 		if _G.LeftChatPanel then _G.LeftChatPanel:CreateShadow() end
 		if _G.RightChatPanel then _G.RightChatPanel:CreateShadow() end
+	end
+
+	for i = 1, NUM_CHAT_WINDOWS do
+		-- 输入框
+		local editBox = _G['ChatFrame'..i..'EditBox']
+		-- 输入法语言标识
+		local langIcon = _G['ChatFrame'..i..'EditBoxLanguage']
+		if editBox and self.db.elvui.editbox then
+			editBox:CreateShadow(5)
+		end
+
+		if editBox and langIcon and self.db.elvui.lang_icon then
+			S:HandlePortraitFrame(langIcon)
+			langIcon:SetSize(20, 22)
+			langIcon:ClearAllPoints()
+			langIcon:SetPoint("TOPLEFT", editBox, "TOPRIGHT", 7, 0)
+			langIcon:CreateShadow(5)
+		end
 	end
 end
 
@@ -656,25 +900,80 @@ function WS:CustomSkins()
 		_G.UIErrorsFrame:FontTemplate(LSM:Fetch('font', db.font), db.size, "OUTLINE")
 		_G.ActionStatusText:FontTemplate(LSM:Fetch('font', db.font), db.size, "OUTLINE")
 	end
+
+	-- 失去控制
+	if self.db.elvui.losscontrol then
+		local function changeLocPos(s)
+			s.Icon:ClearAllPoints()
+			s.Icon:Point("LEFT", s, "LEFT", 0, 0)
+			
+			-- 没有框架可以上阴影，自己做个同大小且重叠的
+			if not s.WindBG then
+				local bg = CreateFrame("Frame", nil, s)
+				bg:Size(s.Icon:GetWidth(), s.Icon:GetHeight())
+				bg:Point("TOPLEFT", s.Icon, "TOPLEFT", 0, 0)
+				bg:CreateShadow(5)
+				s.WindBG = bg
+			end
+			
+			s.AbilityName:ClearAllPoints()
+			s.AbilityName:Point("TOPLEFT", s.Icon, "TOPRIGHT", 10, 0)
+			
+			-- 时间归位
+			s.TimeLeft:ClearAllPoints()
+			s.TimeLeft.NumberText:ClearAllPoints()
+			s.TimeLeft.NumberText:Point("BOTTOMLEFT", s.Icon, "BOTTOMRIGHT", 10, 0)
+			
+			s.TimeLeft.SecondsText:ClearAllPoints()
+			s.TimeLeft.SecondsText:Point("TOPLEFT", s.TimeLeft.NumberText, "TOPRIGHT", 3, 0)
+			
+			s:Size(s.Icon:GetWidth() + 10 + s.AbilityName:GetWidth(), s.Icon:GetHeight() )
+		end
+		hooksecurefunc("LossOfControlFrame_SetUpDisplay", changeLocPos)
+	end
 end
 
 function WS:AddOnSkins()
 	-- 用 AddOnSkins 美化的窗体标签页
 	AS = unpack(AddOnSkins)
-
-	if self.db.addonskins.general then
-		hooksecurefunc(AS, "SkinTab", function() if tab and tab.backdrop then tab.backdrop:CreateShadow() end end)
-	end
 	
+	-- AddOnSkins
+	if self.db.addonskins.general then
+		hooksecurefunc(AS, "SkinFrame", function(self, f)
+			f:CreateShadow()
+			f:StripTextures()
+			f:CreateBackdrop('Transparent')
+		end)
+
+		hooksecurefunc(AS, "SkinTab", function(self, f)
+			if f.Backdrop then f.Backdrop:Kill() end
+			S:HandleTab(f)
+		end)
+	
+		AS.SkinScrollBar = function(self, frame)
+			S.HandleScrollBar(self, frame)
+			frame:CreateShadow()
+		end
+
+		AS.SkinButton = function(self, button, strip)
+			S.HandleButton(self, button, strip)
+		end
+	end
+
 	-- Weakaura
 	if self.db.addonskins.weakaura and AS:CheckAddOn('WeakAuras') then
-		AS:RegisterSkin('WeakAuras', shadow_weakauras, 'ADDON_LOADED')
+		AS:RegisterSkin('WeakAuras2', shadow_weakauras, 'ADDON_LOADED')
 	end
 
 	-- Bigwigs
 	if self.db.addonskins.bigwigs and AS:CheckAddOn('BigWigs') then
 		AS:RegisterSkin('BigWigs', shadow_bigwigs, 'ADDON_LOADED')
 		AS:RegisterSkinForPreload('BigWigs_Plugins', shadow_bigwigs)
+	end
+
+	-- Immersion
+	if self.db.addonskins.immersion and AS:CheckAddOn('Immersion') then
+		AS:RegisterSkin('Immersion', shadow_immersion, 'PLAYER_ENTERING_WORLD')
 	end
 end
 

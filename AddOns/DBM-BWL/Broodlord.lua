@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Broodlord", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200218153056")
+mod:SetRevision("20200329220248")
 mod:SetCreatureID(12017)
 mod:SetEncounterID(612)
 mod:SetModelID(14308)
@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 --(ability.id = 18670 or ability.id = 23331 or ability.id = 24573) and type = "cast"
 local warnBlastWave		= mod:NewSpellAnnounce(23331, 2)
 local warnKnockAway		= mod:NewSpellAnnounce(18670, 3)
-local warnMortal		= mod:NewTargetAnnounce(24573, 2, nil, "Tank|Healer", 3)
+local warnMortal		= mod:NewTargetNoFilterAnnounce(24573, 2, nil, "Tank|Healer", 3)
 
 local timerMortal		= mod:NewTargetTimer(5, 24573, nil, "Tank|Healer", 3, 5, nil, DBM_CORE_TANK_ICON)
 

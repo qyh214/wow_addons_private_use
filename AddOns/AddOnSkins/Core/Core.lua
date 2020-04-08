@@ -23,11 +23,11 @@ function AS:CheckOption(optionName, ...)
 		if not AS:CheckAddOn(addon) then return false end
 	end
 
-	return self.db[optionName]
+	return AS.db[optionName]
 end
 
 function AS:SetOption(optionName, value)
-	self.db[optionName] = value
+	AS.db[optionName] = value
 
 	if AddOnSkinsDS[AS.Version] and AddOnSkinsDS[AS.Version][optionName] == true then
 		AddOnSkinsDS[AS.Version][optionName] = nil
@@ -252,7 +252,7 @@ function AS:UpdateMedia()
 	AS.Font = AS.LSM:Fetch('font', "Friz Quadrata TT")
 	AS.PixelFont = AS.LSM:Fetch('font', "Arial Narrow")
 	AS.NormTex = AS.LSM:Fetch('statusbar', "Blizzard")
-	AS.BackdropColor = { .2, .2, .2, .8}
+	AS.BackdropColor = { .2, .2, .2, .8 }
 	AS.BorderColor = { 0, 0, 0 }
 	AS.Color = AS.ClassColor
 	AS.HideShadows = false
@@ -262,8 +262,8 @@ function AS:GetPixelScale()
 	AS.mult = max(0.4, min(1.15, 768 / AS.ScreenHeight))
 end
 
-function AS:StartSkinning(event)
-	AS:UnregisterEvent(event)
+function AS:StartSkinning()
+	AS:UnregisterEvent('PLAYER_ENTERING_WORLD')
 	AS:GetPixelScale()
 
 	AS.Color = AS:CheckOption('ClassColor') and AS.ClassColor or { 0, 0.44, .87, 1 }
@@ -295,16 +295,20 @@ function AS:StartSkinning(event)
 			AS:SetOption(addonName, false)
 		end
 
-		-- Check forced Blizzard AddOns
-		if AS:CheckOption(addonName) and strfind(addonName, 'Blizzard_') and IsAddOnLoaded(addonName) then
+		-- Check Blizzard
+		if AS:CheckOption(addonName) and strfind(addonName, 'Blizzard_') then
 			for _, func in ipairs(funcs) do
-				AS:CallSkin(addonName, func, 'ADDON_LOADED', addonName)
+				if IsAddOnLoaded(addonName) then
+					AS:CallSkin(addonName, func, 'ADDON_LOADED', addonName)
+				end
+
+				AS:CallSkin(addonName, func, 'PLAYER_ENTERING_WORLD')
 			end
 		end
 
-		if AS:CheckOption(addonName) then
+		if AS:CheckOption(addonName) and (AS:CheckAddOn(addonName) or addonName == 'Libraries' or addonName == 'Ace3') then
 			for _, func in ipairs(funcs) do
-				AS:CallSkin(addonName, func, event)
+				AS:CallSkin(addonName, func, 'PLAYER_ENTERING_WORLD')
 			end
 		end
 	end
@@ -333,7 +337,7 @@ function AS:Init(event, addon)
 
 		AS:UpdateMedia()
 
-		self:RunPreload(addon)
+		AS:RunPreload(addon)
 	end
 
 	if event == 'PLAYER_LOGIN' then

@@ -2,15 +2,16 @@ local AS = unpack(AddOnSkins)
 
 if not AS:CheckAddOn('Scrap') then return end
 
-local AddOnCount = 0
 function AS:Scrap(event, addon)
 	if addon == 'Scrap_Merchant' or IsAddOnLoaded('Scrap_Merchant') then
-		if Scrap and Scrap:IsObjectType('Button') and not Scrap.IsSkinned then
-			AS:StyleButton(Scrap)
-			Scrap:SetTemplate('Default', true)
-			ScrapBorder:SetTexture()
-			ScrapIcon:SetTexture('Interface\\Addons\\Scrap\\Art\\Enabled Icon')
-			ScrapIcon:SetAllPoints()
+		local Button = Scrap.Merchant
+		if Button and not Button.IsSkinned then
+			Button:OnEnable()
+			AS:StyleButton(Button)
+			Button:SetTemplate('Default', true)
+			Button.border:SetTexture()
+			Button.icon:SetTexture('Interface/Addons/Scrap/Art/Enabled Icon')
+			Button.icon:SetAllPoints()
 			local numTabs = MerchantFrame.numTabs
 			for i = numTabs, 1, -1 do
 				local tab = _G[('MerchantFrameTab%d'):format(i)]
@@ -23,12 +24,9 @@ function AS:Scrap(event, addon)
 					break
 				end
 			end
-			Scrap.IsSkinned = true
-			AddOnCount = AddOnCount + 1
+			Button.IsSkinned = true
 		end
-	end
 
-	if addon == 'Scrap_Visualizer' or IsAddOnLoaded('Scrap_Visualizer')then
 		AS:SkinFrame(ScrapVisualizer, 'Default')
 		AS:StripTextures(ScrapVisualizerInset)
 		AS:StripTextures(ScrapVisualizerScroll)
@@ -37,11 +35,8 @@ function AS:Scrap(event, addon)
 		AS:SkinTab(ScrapVisualizerTab1)
 		AS:SkinTab(ScrapVisualizerTab2)
 		AS:SkinButton(ScrapVisualizerButton, true)
-		ScrapVisualizer:SetWidth(MerchantFrame:GetWidth()-6)
-		AddOnCount = AddOnCount + 1
-	end
+		ScrapVisualizer:SetWidth(MerchantFrame:GetWidth() - 6)
 
-	if AddOnCount == 2 then
 		AS:UnregisterSkinEvent('Scrap', 'ADDON_LOADED')
 	end
 end

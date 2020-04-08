@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TerestianIllhoof", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200329212634")
 mod:SetCreatureID(15688)
 mod:SetEncounterID(657)
 mod:SetModelID(11343)
@@ -14,9 +14,9 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 30066"
 )
 
-local warningWeakened	= mod:NewTargetAnnounce(30065, 2)
+local warningWeakened	= mod:NewTargetNoFilterAnnounce(30065, 2)
 local warningImp		= mod:NewSpellAnnounce(30066, 3)
-local warningSacrifice	= mod:NewTargetAnnounce(30115, 4)
+local warningSacrifice	= mod:NewTargetNoFilterAnnounce(30115, 4)
 
 local specWarnSacrifice	= mod:NewSpecialWarningYou(30115, nil, nil, nil, 1, 2)
 local yellSacrifice		= mod:NewYell(30115)
@@ -50,7 +50,7 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 30115 then
-		timerSacrifice:Cancel(args.destName)
+		timerSacrifice:Stop(args.destName)
 	end
 end
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Curator", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143429")
+mod:SetRevision("20200329212634")
 mod:SetCreatureID(15691)
 mod:SetEncounterID(656)
 mod:SetModelID(16958)
@@ -21,7 +21,7 @@ local timerNextEvo		= mod:NewNextTimer(115, 30254, nil, nil, nil, 6)
 
 local berserkTimer		= mod:NewBerserkTimer(720)
 
-mod:AddBoolOption("RangeFrame", true)
+mod:AddRangeFrameOption("10", nil, true)
 
 local addGUIDS = {}
 

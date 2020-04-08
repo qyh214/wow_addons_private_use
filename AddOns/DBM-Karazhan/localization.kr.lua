@@ -116,10 +116,6 @@ L:SetOptionLocalization{
 	warnAdd		= "별의 섬광 알림 보기"
 }
 
-L:SetOptionLocalization{
-	RangeFrame			= "거리 창 보기(10m)"
-}
-
 
 -- Terestian Illhoof
 L = DBM:GetModLocalization("TerestianIllhoof")

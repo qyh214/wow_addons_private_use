@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod("Aran", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143429")
+mod:SetRevision("20200329212634")
 mod:SetCreatureID(16524)
 mod:SetEncounterID(658)
 mod:SetModelID(16621)
 mod:RegisterCombat("combat")
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
+mod:SetMinSyncRevision(20200329000000)--March 3rd, 2020
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 30004 29973 29969",
@@ -16,10 +17,10 @@ mod:RegisterEventsInCombat(
 )
 
 local warningFlameCast		= mod:NewCastAnnounce(30004, 4)
-local warningFlameTargets	= mod:NewTargetAnnounce(29946, 4)
+local warningFlameTargets	= mod:NewTargetNoFilterAnnounce(29946, 4)
 local warningBlizzard		= mod:NewSpellAnnounce(29969, 3)
 local warningElementals		= mod:NewSpellAnnounce(37053, 3)
-local warningChains			= mod:NewTargetAnnounce(29991, 2)
+local warningChains			= mod:NewTargetNoFilterAnnounce(29991, 2)
 
 local specWarnFlameWreath	= mod:NewSpecialWarning("DBM_ARAN_DO_NOT_MOVE", nil, nil, nil, 3, 2)
 local specWarnArcane		= mod:NewSpecialWarningRun(29973, nil, nil, nil, 4, 7)
@@ -35,11 +36,12 @@ local timerChains			= mod:NewTargetTimer(10, 29991, nil, nil, nil, 3, nil, DBM_C
 
 local berserkTimer			= mod:NewBerserkTimer(900)
 
-mod:AddBoolOption("WreathIcons", true)
-mod:AddSetIconOption("ElementalIcons", 37053, true, true)
+mod:AddSetIconOption("WreathIcons", 29946, true, false, {5, 6, 7, 8})
+mod:AddSetIconOption("ElementalIcons", 37053, true, true, {1, 2, 3, 4})
 
 local WreathTargets = {}
 mod.vb.flameWreathIcon = 8
+mod.vb.mobIcon = 1
 
 local function warnFlameWreathTargets(self)
 	warningFlameTargets:Show(table.concat(WreathTargets, "<, >"))
@@ -52,6 +54,7 @@ function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
 	self.vb.flameWreathIcon = 8
 	table.wipe(WreathTargets)
+	self.vb.mobIcon = 1
 	if not self:IsTrivial(85) then
 		self:RegisterShortTermEvents(
 			"SPELL_PERIODIC_DAMAGE 29951",
@@ -108,24 +111,22 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
-do
-	local lastElemental = 0
-	function mod:SPELL_SUMMON(args)
-		if args:IsSpellID(29962, 37051, 37052, 37053) then -- Summon Water elementals
-			if time() - lastElemental > 5 then
-				warningElementals:Show()
-				timerElementals:Show()
-				lastElemental = time()
-			end
-			if self.Options.ElementalIcons then
-				self:ScanForMobs(args.destGUID, 1, 1, 4, 0.1, 20, "ElementalIcons")
-			end
+function mod:SPELL_SUMMON(args)
+	if args:IsSpellID(29962, 37051, 37052, 37053) then -- Summon Water elementals
+		if self:AntiSpam(5, 1) then
+			warningElementals:Show()
+			timerElementals:Show()
 		end
+		if self.Options.ElementalIcons then
+			self:ScanForMobs(args.destGUID, 2, self.vb.mobIcon, 1, 0.1, 10, "ElementalIcons")--creatureID, iconSetMethod, mobIcon, maxIcon, scanInterval, scanningTime, optionName, isFriendly, secondCreatureID, skipMarked
+		end
+		self.vb.mobIcon = self.vb.mobIcon + 1
+		if self.vb.mobIcon == 5 then self.vb.mobIcon = 1 end
 	end
 end
 
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 29951 and destGUID == UnitGUID("player") and self:AntiSpam() then
+	if spellId == 29951 and destGUID == UnitGUID("player") and self:AntiSpam(2.5, 2) then
 		specWarnBlizzard:Show()
 		specWarnBlizzard:Play("runaway")
 	end

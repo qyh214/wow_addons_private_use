@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Oz", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143429")
+mod:SetRevision("20200329212634")
 mod:SetCreatureID(18168)
 --mod:SetEncounterID(655)--used by all 3 of them, so not usuable
 mod:SetModelID(17550)
@@ -16,13 +16,13 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_MONSTER_YELL"
 )
 
+local WarnRoar		= mod:NewAnnounce("DBM_OZ_WARN_ROAR", 2, nil, nil, false)--Hidden Object, conrolled by AnnounceBosses bool option
+local WarnStrawman	= mod:NewAnnounce("DBM_OZ_WARN_STRAWMAN", 2, nil, nil, false)--Hidden Object, conrolled by AnnounceBosses bool option
+local WarnTinhead	= mod:NewAnnounce("DBM_OZ_WARN_TINHEAD", 2, nil, nil, false)--Hidden Object, conrolled by AnnounceBosses bool option
+local WarnTido		= mod:NewAnnounce("DBM_OZ_WARN_TITO", 2, nil, nil, false)--Hidden Object, conrolled by AnnounceBosses bool option
+local WarnCrone		= mod:NewAnnounce("DBM_OZ_WARN_CRONE", 2, nil, nil, false)--Hidden Object, conrolled by AnnounceBosses bool option
 local warnFear		= mod:NewSpellAnnounce(31013, 4)
-local WarnRoar		= mod:NewAnnounce("DBM_OZ_WARN_ROAR", 2, nil, nil, false)
-local WarnStrawman	= mod:NewAnnounce("DBM_OZ_WARN_STRAWMAN", 2, nil, nil, false)
-local WarnTinhead	= mod:NewAnnounce("DBM_OZ_WARN_TINHEAD", 2, nil, nil, false)
-local warnBrainBash	= mod:NewTargetAnnounce(31046, 2)
-local WarnTido		= mod:NewAnnounce("DBM_OZ_WARN_TITO", 2, nil, nil, false)
-local WarnCrone		= mod:NewAnnounce("DBM_OZ_WARN_CRONE", 2, nil, nil, false)
+local warnBrainBash	= mod:NewTargetNoFilterAnnounce(31046, 2)
 local warnChain		= mod:NewSpellAnnounce(32337, 3)
 
 local timerFearCD	= mod:NewCDTimer(19, 31013, nil, nil, nil, 2)
@@ -31,9 +31,9 @@ local timerStrawman	= mod:NewTimer(21, "DBM_OZ_WARN_STRAWMAN", "133136", nil, fa
 local timerTinhead	= mod:NewTimer(29, "DBM_OZ_WARN_TINHEAD", "133070", nil, false, 1)
 --local timerTito		= mod:NewTimer(47.5, "DBM_OZ_WARN_TITO", "I132266", nil, false, 1)
 
+mod:AddRangeFrameOption(10, 32337, true)
 mod:AddBoolOption("AnnounceBosses", true, "announce")
 mod:AddBoolOption("ShowBossTimers", true, "timer")
-mod:AddBoolOption("DBM_OZ_OPTION_1")
 
 function mod:OnCombatStart(delay)
 	if self.Options.ShowBossTimers then
@@ -45,7 +45,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:OnCombatEnd()
-	if self.Options.DBM_OZ_OPTION_1 then
+	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
 end
@@ -90,7 +90,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		if self.Options.AnnounceBosses then
 			WarnCrone:Show()
 		end
-		if self.Options.DBM_OZ_OPTION_1 then
+		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(10)
 		end
 	end

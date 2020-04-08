@@ -1,4 +1,7 @@
-﻿v3.5.4
+﻿v3.5.5
+[KyrosKrane via GitHub]Bug fix for Tempered Seal of Fate and similar currencies sold for gold.
+
+v3.5.4
 TOC update.
 
 v3.5.3

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Prince", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200329212634")
 mod:SetCreatureID(15690)
 mod:SetEncounterID(661)
 mod:SetModelID(19274)
@@ -15,11 +15,11 @@ mod:RegisterEventsInCombat(
 
 local warningNovaCast			= mod:NewCastAnnounce(30852, 3)
 local warningInfernal			= mod:NewSpellAnnounce(37277, 2)
-local warningEnfeeble			= mod:NewTargetAnnounce(30843, 4)
+local warningEnfeeble			= mod:NewTargetNoFilterAnnounce(30843, 4)
 local warnPhase2				= mod:NewPhaseAnnounce(2)
 local warnPhase3				= mod:NewPhaseAnnounce(3)
-local warningAmpMagic			= mod:NewTargetAnnounce(39095, 3)
-local warningSWP				= mod:NewTargetAnnounce(30898, 2, nil, false)
+local warningAmpMagic			= mod:NewTargetNoFilterAnnounce(39095, 3)
+local warningSWP				= mod:NewTargetNoFilterAnnounce(30898, 2, nil, "RemoveMagic")
 
 local specWarnEnfeeble			= mod:NewSpecialWarningYou(37277, nil, nil, nil, 3, 2)
 local specWarnNova				= mod:NewSpecialWarningRun(30852, "Melee", nil, nil, 4, 2)
@@ -29,9 +29,9 @@ local timerNextInfernal			= mod:NewCDTimer(45, 37277, nil, nil, nil, 1)
 local timerEnfeebleCD			= mod:NewNextTimer(30, 30843, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
 local timerEnfeeble				= mod:NewBuffFadesTimer(9, 30843)
 
-local phase	= 0
+mod.vb.phase = 1
+mod.vb.firstInfernal = false
 local enfeebleTargets = {}
-local firstInfernal = false
 
 local function showEnfeebleWarning()
 	warningEnfeeble:Show(table.concat(enfeebleTargets, "<, >"))
@@ -39,20 +39,16 @@ local function showEnfeebleWarning()
 	table.wipe(enfeebleTargets)
 end
 
-local function Infernals()
+local function Infernals(self)
 	warningInfernal:Show()
-	if phase == 3 then
-		timerNextInfernal:Start(22.5)
-	else
-		timerNextInfernal:Start()
-	end
+	timerNextInfernal:Start(self.vb.phase == 3 and 22.5 or 45)
 end
 
 function mod:OnCombatStart(delay)
-	phase = 1
+	self.vb.phase = 1
+	self.vb.firstInfernal = false
 	timerNextInfernal:Start(40-delay)
 	table.wipe(enfeebleTargets)
-	firstInfernal = false
 end
 
 function mod:SPELL_CAST_START(args)
@@ -87,19 +83,20 @@ end
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.DBM_PRINCE_YELL_INF1 or msg == L.DBM_PRINCE_YELL_INF2 then
 		self:Schedule(18.5, Infernals, self)--Infernal actually spawns 18.5sec after yell.
-		if not firstInfernal then
+		if not self.vb.firstInfernal then
 			timerNextInfernal:Start(18.5)
-			firstInfernal = true
+			self.vb.firstInfernal = true
 		end
-		if phase == 3 then
+		if self.vb.phase == 3 then
 			timerNextInfernal:Update(3.5, 22.5)--we attempt to update bars to show 18.5sec left. this will more than likely error out, it's not tested.
 		else
 			timerNextInfernal:Update(26.5, 45)--we attempt to update bars to show 18.5sec left. this will more than likely error out, it's not tested.
 		end
 	elseif msg == L.DBM_PRINCE_YELL_P3 then
-		phase = 3
+		self.vb.phase = 3
 		warnPhase3:Show()
 	elseif msg == L.DBM_PRINCE_YELL_P2 then
+		self.vb.phase = 2
 		warnPhase2:Show()
 	end
 end

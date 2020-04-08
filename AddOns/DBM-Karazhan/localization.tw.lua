@@ -115,10 +115,6 @@ L:SetOptionLocalization{
 	warnAdd		= "為小怪重生顯示警告"
 }
 
-L:SetOptionLocalization{
-	RangeFrame	= "顯示距離框架(10碼)"
-}
-
 
 -- Terestian Illhoof
 L = DBM:GetModLocalization("TerestianIllhoof")

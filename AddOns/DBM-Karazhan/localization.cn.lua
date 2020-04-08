@@ -37,10 +37,6 @@ L:SetGeneralLocalization{
 	name = "贞节圣女"
 }
 
-L:SetOptionLocalization{
-	RangeFrame			= "Show range frame (10)"
-}
-
 
 -- Romulo and Julianne
 L = DBM:GetModLocalization("RomuloAndJulianne")
@@ -63,10 +59,6 @@ L:SetGeneralLocalization{
 	name = "大灰狼"
 }
 
-L:SetOptionLocalization{
-	RRHIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(30753)
-}
-
 L:SetMiscLocalization{
 	DBM_BBW_YELL_1			= "可以一口把你吃掉呀！"
 }
@@ -77,10 +69,6 @@ L = DBM:GetModLocalization("Curator")
 
 L:SetGeneralLocalization{
 	name = "馆长"
-}
-
-L:SetOptionLocalization{
-	RangeFrame			= "Show range frame (10)"
 }
 
 
@@ -203,8 +191,7 @@ L:SetGeneralLocalization{
 
 L:SetOptionLocalization{
 	AnnounceBosses			= "Show warnings for boss spawns",
-	ShowBossTimers			= "Show timers for boss spawns",
-	DBM_OZ_OPTION_1			= "在第2阶段显示距离框体"
+	ShowBossTimers			= "Show timers for boss spawns"
 }
 
 L:SetMiscLocalization{

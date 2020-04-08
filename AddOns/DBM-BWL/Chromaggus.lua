@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Chromaggus", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200218153056")
+mod:SetRevision("20200329220547")
 mod:SetCreatureID(14020)
 mod:SetEncounterID(616)
 mod:SetModelID(14367)
@@ -21,15 +21,16 @@ local warnRed			= mod:NewSpellAnnounce(23155, 2, nil, false)
 local warnGreen			= mod:NewSpellAnnounce(23169, 2, nil, false)
 local warnBlue			= mod:NewSpellAnnounce(23153, 2, nil, false)
 local warnBlack			= mod:NewSpellAnnounce(23154, 2, nil, false)
-local warnEnrage		= mod:NewSpellAnnounce(23128, 3, nil, "Tank", 2)
+local warnFrenzy		= mod:NewSpellAnnounce(23128, 3, nil, "Tank|RemoveEnrage|Healer", 4)
 local warnPhase2Soon	= mod:NewPrePhaseAnnounce(2, 1)
 local warnPhase2		= mod:NewPhaseAnnounce(2)
 local warnMutation		= mod:NewCountAnnounce(23174, 4)
 
 local specWarnBronze	= mod:NewSpecialWarningYou(23170, nil, nil, nil, 1, 8)
 
+local timerBreath		= mod:NewCastTimer(2, "TimerBreath", 23316, nil, nil, 3)
 local timerBreathCD		= mod:NewTimer(60, "TimerBreathCD", 23316, nil, nil, 3)
-local timerEnrage		= mod:NewBuffActiveTimer(8, 23128, nil, "Tank|RemoveEnrage", 2, 5, nil, DBM_CORE_TANK_ICON..DBM_CORE_ENRAGE_ICON)
+local timerFrenzy		= mod:NewBuffActiveTimer(8, 23128, nil, "Tank|RemoveEnrage|Healer", 3, 5, nil, DBM_CORE_TANK_ICON..DBM_CORE_ENRAGE_ICON)
 local timerVuln			= mod:NewTimer(17, "TimerVulnCD", 4166)-- seen 16.94 - 25.53, avg 21.8
 
 mod.vb.phase = 1
@@ -45,7 +46,10 @@ end
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(23309, 23313, 23189, 23316, 23312) then
 		warnBreath:Show(args.spellName)
+		timerBreath:Start(2, args.spellName)
+		timerBreath:UpdateIcon(args.spellId)
 		timerBreathCD:Start(args.spellName)
+		timerBreathCD:UpdateIcon(args.spellId)
 	end
 end
 
@@ -98,8 +102,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnMutation:Show(mydebuffs.."/5")
 		end
 	elseif args.spellId == 23128 then
-		warnEnrage:Show()
-		timerEnrage:Start()
+		warnFrenzy:Show()
+		timerFrenzy:Start()
 	elseif args.spellId == 23537 then
 		self.vb.phase = 2
 		warnPhase2:Show()
@@ -128,7 +132,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif args.spellId == 23170 and args:IsPlayer() then
 		mydebuffs = mydebuffs - 1
 	elseif args.spellId == 23128 then
-		timerEnrage:Stop()
+		timerFrenzy:Stop()
 	end
 end
 

@@ -11,7 +11,6 @@ L["Author"] = true
 L["General"] = true
 L["Scale"] = true
 L["Reset"] = true
-L["Infomation"] = true
 L["ElvUI WindTools has been updated and the data structure of the stored config has also been greatly changed. In order to make these changes take effect, you may have to reload your User Interface."] = true
 L["|cffff0000If you click Accept, it will reset your Windtools."] = true
 L["|cffff0000If you click Accept, it will reset this module."] = true
@@ -19,7 +18,7 @@ L["WindTools will reload your user interface to apply the change."] = true
 -- 功能界面
 L["Enable"] = true
 L["Disable"] = true
-L["Information"] = true
+L["Module Information"] = true
 L["Author: %s, Edited by %s"] = true
 L["Setting"] = true
 L["Frame Setting"] = true
@@ -189,7 +188,7 @@ L["Close Quest Voice"] = true
 L["Disable TalkingHeadFrame."] = true
 -- 屏幕景深
 L["iShadow"] = true
-L["Movie effect for WoW."] = true
+L["Adding a shadowed border to the UI window."] = true
 L["Shadow Level"] = true
 L["Default is 50."] = true
 -- 光速拾取
@@ -211,6 +210,7 @@ L["Uldir"] = true
 L["BattleOfDazaralor"] = true
 L["CrucibleOfStorms"] = true
 L["EternalPalace"] = true
+L["Nyalotha"] = true
 L["Dungeon"] = true
 L["MythicDungeon"] = true
 L["AtalDazar"] = true
@@ -223,8 +223,11 @@ L["TheMOTHERLODE!!"] = true
 L["TheUnderrot"] = true
 L["TolDagor"] = true
 L["WaycrestManor"] = true
+L["Mechagon"] = true
 L["Mythic+"] = true
 L["Mythic+(LEG&BFA)"] = true
+L["Health Info"] = true
+L["Health Bar"] = true
 -- 跳过艾泽里特特质选择界面的渲染动画
 L["Skip Azerite Animations"] = true
 L["Skips the reveal animation of a new azerite armor piece and the animation after you select a trait."] = true
@@ -236,9 +239,15 @@ L["Include Officer Channel"] = true
 -- 任务通告
 L["Quest Announcment"] = true
 L["Let you know quest is completed."] = true
--- 自动摧毁
-L["Auto Delete"] = true
-L["Enter DELETE automatically."] = true
+-- 删除增强
+L["Enhanced Delete"] = true
+L["Provide a more convenient way to delete items."] = true
+L["Use Delete key"] = true
+L["You may also press the |cffffd200Delete|r key as confirmation."] = true
+L["Use delete button"] = true
+L["Click the button to confirm the deletion of good items."] = true
+L["Click to confirm"] = true
+L["Confirmed"] = true
 -- 目标进度
 L["Objective Progress"] = true
 L["Add quest/mythic+ dungeon progress to tooltip."] = true
@@ -398,6 +407,12 @@ L["I taunted all enemies in 10 yards!"] = true
 L["%player% taunted all enemies in 10 yards!"] = true
 L["%target%, thank you for using %spell% to revive me. :)"] = true
 L["Thanks all!"] = true
+L["Reset Instance"] = true
+L["Use prefix"] = true
+L["%s has been reset"] = true
+L["Cannot reset %s (There are players still inside the instance.)"] = true
+L["Cannot reset %s (There are players in your party attempting to zone into an instance.)"] = true
+L["Cannot reset %s (There are players offline in your party.)"] = true
 -- 进度追踪
 L["Objective Tracker"] = true
 L["The new-look interface for objective tracker."] = true
@@ -407,6 +422,9 @@ L["Info text"] = true
 L["Use class color"] = true
 L["Custom title color"] = true
 L["Custom highlight color"] = true
+L["Auto Turn In"] = true
+L["Switch button"] = true
+L["Auto"] = true
 -- 美化皮肤
 L["Provide a new style for ElvUI."] = true
 L["Game Tooltip"] = true
@@ -420,11 +438,18 @@ L["Databars"] = true
 L["Unit Frames"] = true
 L["Top and Bottom panel"] = true
 L["Chat panel"] = true
-L["Weakaura"] = true
+L["Weakauras2"] = true
 L["Bigwigs"] = true
+L["Immersion"] = true
 L["IME"] = true
 L["No backdrop"] = true
 L["Label"] = true
 L["Candidate"] = true
 L["You can set width to display long text."] = true
 L["CJK IME candidates"] = true
+L["Edit box"] = true
+L["Language indicator"] = true
+L["Loss of control"] = true
+-- 声望追踪
+L['Track Reputation'] = "声望追踪"
+L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'] = "当你获得某个阵营的声望时, 将自动追踪此阵营的声望至经验栏位." 

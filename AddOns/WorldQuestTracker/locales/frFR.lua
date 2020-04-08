@@ -96,12 +96,9 @@ L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SORTBYTIME"] = "Trier par temps"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_TITLE"] = "Temps restant"
 L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "Tous vos perso."
 L["S_OPTIONS_ACCESSIBILITY"] = "Accessibilité"
---[[Translation missing --]]
---[[ L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_ANIMATIONS"] = ""--]] 
+L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = "Marque de traçage supplémentaire"
+L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "Montrez l'anneau de récompense"
+L["S_OPTIONS_ANIMATIONS"] = "Faire des animations"
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "Cadre de la carte centré"
 L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "Vous devez activer 'Échelle de la fenêtre de la carte' avant, aucune valeur n'a changé"
 L["S_OPTIONS_MAPFRAME_SCALE"] = [=[Échelle de la fenêtre de la carte
@@ -156,8 +153,7 @@ L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Autres personnages"
 L["S_TUTORIAL_AMOUNT"] = "Indique le montant à recevoir"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Cliquez pour suivre une quête."
 L["S_TUTORIAL_PARTY"] = "Dans un groupe, une étoile bleue indique les quêtes que tous le groupe fait !"
---[[Translation missing --]]
---[[ L["S_TUTORIAL_STATISTICS_BUTTON"] = ""--]] 
+L["S_TUTORIAL_STATISTICS_BUTTON"] = "Cliquez ici pour voir les statistiques et une liste sauvegardée des quêtes sur les autres personnages."
 L["S_TUTORIAL_TIMELEFT"] = "Indique le temps restant (+4 heures, +90 minutes, +30 minutes, moins de 30 minutes)"
 L["S_TUTORIAL_WORLDBUTTONS"] = [=[Cliquez ici pour alterner entre trois types de sommaires:
 
@@ -169,8 +165,7 @@ Cliquez sur |cFFFFAA11Afficher les quêtes|r pour cacher les emplacements de qu�
 ]=]
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Ce bouton vous apporte la carte des îles brisées."
 L["S_UNKNOWNQUEST"] = "Quête inconnue"
---[[Translation missing --]]
---[[ L["S_WHATSNEW"] = ""--]] 
+L["S_WHATSNEW"] = "Quoi de neuf ?"
 L["S_WORLDBUTTONS_SHOW_NONE"] = "Cacher le sommaire"
 L["S_WORLDBUTTONS_SHOW_TYPE"] = "Afficher le sommaire"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "Trier par zone"

@@ -1,7 +1,7 @@
 ﻿local mod	= DBM:NewMod("d1995", "DBM-Challenges", 3)--1993 Stormwind 1995 Org
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200310235600")
+mod:SetRevision("20200323151931")
 mod:SetZone()
 mod.onlyNormal = true
 
@@ -18,6 +18,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_INTERRUPT",
 	"UNIT_DIED",
 	"ENCOUNTER_START",
+	"UNIT_SPELLCAST_SUCCEEDED_UNFILTERED",
 	"UNIT_SPELLCAST_INTERRUPTED_UNFILTERED",
 	"UNIT_AURA player",
 	"NAME_PLATE_UNIT_ADDED",
@@ -82,6 +83,8 @@ local specWarnToxicVolley			= mod:NewSpecialWarningDodge(304169, nil, nil, nil, 
 
 --General
 local timerGiftoftheTitan		= mod:NewBuffFadesTimer(20, 313698, nil, nil, nil, 5)
+--Affixes/Masks
+local timerDarkImaginationCD	= mod:NewCDTimer(60, 315976, nil, nil, nil, 1, 296733)
 --Thrall
 local timerSurgingDarknessCD	= mod:NewCDTimer(20.6, 297822, nil, nil, nil, 3)
 local timerSeismicSlamCD		= mod:NewCDTimer(12.1, 297746, nil, nil, nil, 3)
@@ -163,7 +166,7 @@ function mod:OnCombatStart(delay)
 			DBM:FireEvent("BossMod_EnableFriendlyNameplates")
 		end
 	end
-	if self.Options.NPAuraOnAbyss then
+	if self.Options.NPAuraOnAbyss or self.Options.NPAuraOnHorrifyingShout then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
 	if self.Options.InfoFrame then
@@ -177,8 +180,8 @@ function mod:OnCombatEnd()
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
 	end
-	if self.Options.NPAuraOnAbyss or self.Options.NPAuraOnHaunting2 then
-		DBM.Nameplate:Hide(true, nil, nil, nil, true, self.Options.NPAuraOnAbyss or self.Options.NPAuraOnMorale, CVAR1)--isGUID, unit, spellId, texture, force, isHostile, isFriendly
+	if self.Options.NPAuraOnAbyss or self.Options.NPAuraOnHaunting2 or self.Options.NPAuraOnHorrifyingShout then
+		DBM.Nameplate:Hide(true, nil, nil, nil, true, self.Options.NPAuraOnAbyss or self.Options.NPAuraOnHorrifyingShout, CVAR1)--isGUID, unit, spellId, texture, force, isHostile, isFriendly
 	end
 	--Check if we changed users nameplate options and restore them
 	if CVAR1 or CVAR2 or CVAR3 then
@@ -442,6 +445,15 @@ function mod:ENCOUNTER_START(encounterID)
 	end
 end
 
+function mod:UNIT_SPELLCAST_SUCCEEDED_UNFILTERED(uId, _, spellId)
+	if spellId == 18950 and self:AntiSpam(2, 6) then
+		local cid = self:GetUnitCreatureId(uId)
+		if cid == 164189 or cid == 164188 then
+			self:SendSync("DarkImagination")
+		end
+	end
+end
+
 function mod:UNIT_SPELLCAST_INTERRUPTED_UNFILTERED(uId, _, spellId)
 	if spellId == 298033 then
 		if self.Options.NPAuraOnAbyss then
@@ -489,3 +501,9 @@ function mod:NAME_PLATE_UNIT_ADDED(unit)
 end
 mod.FORBIDDEN_NAME_PLATE_UNIT_ADDED = mod.NAME_PLATE_UNIT_ADDED--Just in case blizzard fixes map restrictions
 
+function mod:OnSync(msg)
+	if not self:IsInCombat() then return end
+	if msg == "DarkImagination" then
+		timerDarkImaginationCD:Start()
+	end
+end

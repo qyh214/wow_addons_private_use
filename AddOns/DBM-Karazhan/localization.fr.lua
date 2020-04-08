@@ -37,10 +37,6 @@ L:SetGeneralLocalization{
 	name = "Damoiselle de vertu"
 }
 
-L:SetOptionLocalization{
-	RangeFrame			= "Show range frame (10)"
-}
-
 
 -- Romulo and Julianne
 L = DBM:GetModLocalization("RomuloAndJulianne")
@@ -73,10 +69,6 @@ L = DBM:GetModLocalization("Curator")
 
 L:SetGeneralLocalization{
 	name = "Le conservateur"
-}
-
-L:SetOptionLocalization{
-	RangeFrame			= "Show range frame (10)"
 }
 
 
@@ -200,8 +192,7 @@ L:SetGeneralLocalization{
 
 L:SetOptionLocalization{
 	AnnounceBosses			= "Show warnings for boss spawns",
-	ShowBossTimers			= "Show timers for boss spawns",
-	DBM_OZ_OPTION_1			= "Show range check frame in phase 2"
+	ShowBossTimers			= "Show timers for boss spawns"
 }
 
 L:SetMiscLocalization{

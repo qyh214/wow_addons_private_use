@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Vaelastrasz", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200218153056")
+mod:SetRevision("20200329220248")
 mod:SetCreatureID(13020)
 mod:SetEncounterID(611)
 mod:SetModelID(13992)
@@ -25,7 +25,7 @@ local warnAdrenaline		= mod:NewTargetAnnounce(18173, 2)
 
 local specWarnAdrenaline	= mod:NewSpecialWarningYou(18173, nil, nil, nil, 1, 2)
 local specWarnAdrenalineOut	= mod:NewSpecialWarningMoveAway(18173, nil, nil, nil, 1, 2)
-local yellAdrenaline		= mod:NewYell(18173)
+local yellAdrenaline		= mod:NewYell(18173, nil, false)
 local yellAdrenalineFades	= mod:NewShortFadesYell(18173)
 
 local timerAdrenalineCD		= mod:NewCDTimer(15.7, 18173, nil, nil, nil, 3)

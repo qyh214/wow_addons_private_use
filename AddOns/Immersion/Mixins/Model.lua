@@ -62,7 +62,7 @@ function Model:ApplyModelFromUnit(unit)
 		self.unit = 'ether'
 	else
 		local mt = getmetatable(self).__index
-		local creatureID = tonumber(unit) or API:GetCreatureID(unit)
+		local creatureID = tonumber(unit) -- or API:GetCreatureID(unit)
 		local apply = creatureID and mt.SetCreature or unit and mt.SetUnit
 		self:SetCamDistanceScale(1)
 		self:SetPortraitZoom(.85)

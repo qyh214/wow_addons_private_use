@@ -36,10 +36,6 @@ L:SetGeneralLocalization{
 	name = "Doncella de Virtud"
 }
 
-L:SetOptionLocalization{
-	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 29522)
-}
-
 -- Romulo and Julianne
 L = DBM:GetModLocalization("RomuloAndJulianne")
 
@@ -64,10 +60,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetWarningLocalization{
-}
-
-L:SetOptionLocalization{
-	RRHIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(30753)
 }
 
 L:SetMiscLocalization{
@@ -99,8 +91,7 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	AnnounceBosses			= "Show warnings for boss spawns",
-	ShowBossTimers			= "Show timers for boss spawns",
-	DBM_OZ_OPTION_1			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 32337)
+	ShowBossTimers			= "Show timers for boss spawns"
 }
 
 L:SetMiscLocalization{
@@ -125,10 +116,6 @@ L:SetWarningLocalization{
 
 L:SetOptionLocalization{
 	warnAdd		= "Mostrar aviso cuando aparezcan las Centellas astrales"
-}
-
-L:SetOptionLocalization{
-	RangeFrame			= "Mostrar marco de distancia (10 m)"
 }
 
 
@@ -162,8 +149,7 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	timerSpecial			= "Mostrar temporizador para el tiempo de reutilización de las facultades especiales",
-	DBM_ARAN_DO_NOT_MOVE	= "Mostrar aviso especial para $spell:30004",
-	WreathIcons				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(29946)
+	DBM_ARAN_DO_NOT_MOVE	= "Mostrar aviso especial para $spell:30004"
 }
 
 --Netherspite

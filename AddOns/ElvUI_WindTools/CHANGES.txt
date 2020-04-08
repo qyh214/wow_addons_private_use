@@ -1,36 +1,28 @@
-lightweight tag 1436a4ffdaecedd6ebc4c4af9afe34e4e03bcf79 1.5.3
+lightweight tag 0e56b75f8c82a3244b639078f018c35e6ccd6b67 1.5.11
 Author:	Zhou Fang <fang2hou@outlook.com>
-Date:	Fri Jan 31 13:13:16 2020 +0900
+Date:	Tue Apr 7 01:51:31 2020 +0900
 
-commit 1436a4ffdaecedd6ebc4c4af9afe34e4e03bcf79
+commit 0e56b75f8c82a3244b639078f018c35e6ccd6b67
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Fri Jan 31 13:13:16 2020 +0900
+Date:   Tue Apr 7 01:51:31 2020 +0900
 
-    更新日志
+    1.5.11
 
-commit 7c3767bb8ae03e75adf7ed8de8b50b72c9aeab52
+commit 1899cd6ba667b569847e18359f990b0a11467cf9
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Fri Jan 31 13:09:56 2020 +0900
+Date:   Tue Apr 7 01:47:35 2020 +0900
 
-    去除中文万亿功能
-    
-    ElvUI 11.33版本中已经官方支持了
+    修复额外载入导致的不兼容问题
 
-commit 2317e41b2c80cb5a60f8abfa1658ed8e228af9a1
+commit 5cad750083e51758f5ce8e5929de3abb366d13f2
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Fri Jan 31 13:05:01 2020 +0900
+Date:   Tue Apr 7 00:55:40 2020 +0900
 
-    适配新版本ElvUI
+    改变 Immersion 美化的载入事件
 
-commit c6c1feb341fd1f3f95c24c0bd56bf279da26f4c7
+commit f149909998a92c5bdf458cf710d7e24c4480f34b
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Fri Jan 31 12:55:00 2020 +0900
+Date:   Tue Apr 7 00:20:38 2020 +0900
 
-    恢复之前的api修改
-
-commit 80c66183c2f05df346ebc93e747917bdd890b831
-Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Wed Jan 22 01:43:57 2020 +0900
-
-    添加饿了没桌子提示
+    新增 Immersion 美化
 

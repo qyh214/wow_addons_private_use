@@ -1,30 +1,12 @@
-tag a033edce074f94c21417b8a73ff16085b65a97a7 3.4.4
+tag fe7e6ae49852857fcb7e3725b5290e7e866a4a51 3.4.5
 Author:	Bocky <nick@bocky.nl>
-Date:	Sun Feb 9 09:16:34 2020 +0100
+Date:	Sat Mar 28 15:43:28 2020 +0100
 
-Fix error's due to ElvUI setting menu changes.
+Progression update
 
-commit 81f6ec832947d0f595132e9cbd71c06f53c07f56
+commit a89e5dfdd982a5ccb4189d20483cdaf34c4260b7
 Author: Nick <git@bockmeulen.nl>
-Date:   Sun Feb 9 09:13:05 2020 +0100
+Date:   Sat Mar 28 15:32:09 2020 +0100
 
-    version updates
-
-commit 81f6ec832947d0f595132e9cbd71c06f53c07f56
-Author: Nick <git@bockmeulen.nl>
-Date:   Sun Feb 9 09:13:05 2020 +0100
-
-    version updates
-
-commit a8d32e03abfb645c32d3cbd03746e67ff15ef763
-Author: Adam Koch <me@adamko.ch>
-Date:   Sun Feb 9 02:33:28 2020 -0500
-
-    Fixed ElvUI Options error due to ElvUI Options changes.
-
-commit a8d32e03abfb645c32d3cbd03746e67ff15ef763
-Author: Adam Koch <me@adamko.ch>
-Date:   Sun Feb 9 02:33:28 2020 -0500
-
-    Fixed ElvUI Options error due to ElvUI Options changes.
+    Progression update
 

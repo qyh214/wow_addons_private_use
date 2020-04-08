@@ -25,11 +25,11 @@ function AS:DBM(event, addon)
 
 						AS:SkinTexture(icon1, true)
 						icon1:ClearAllPoints()
-						icon1:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMLEFT', AS:AdjustForTheme(-2), AS:AdjustForTheme(1))
+						icon1:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMLEFT', AS:AdjustForTheme(-2), 1)
 
 						AS:SkinTexture(icon2, true)
 						icon2:ClearAllPoints()
-						icon2:SetPoint('BOTTOMLEFT', frame, 'BOTTOMRIGHT', AS:AdjustForTheme(2), AS:AdjustForTheme(1))
+						icon2:SetPoint('BOTTOMLEFT', frame, 'BOTTOMRIGHT', AS:AdjustForTheme(2), 1)
 
 						AS:SetInside(tbar, frame)
 
@@ -58,7 +58,7 @@ function AS:DBM(event, addon)
 							name:SetPoint('BOTTOMLEFT', frame, 'TOPLEFT', 0, 3)
 							timer:SetPoint('BOTTOMRIGHT', frame, 'TOPRIGHT', -1, 1)
 						else
-							frame:SetHeight(bar.owner.options.Height)
+							frame:SetHeight(bar.owner.options.Height + 2)
 							name:SetPoint('LEFT', frame, 'LEFT', 4, 0)
 							timer:SetPoint('RIGHT', frame, 'RIGHT', -4, 0)
 						end

@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod("Nefarian-Classic", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200218153056")
+mod:SetRevision("20200329220248")
 mod:SetCreatureID(11583)
 mod:SetEncounterID(617)
 mod:SetModelID(11380)
 mod:RegisterCombat("combat_yell", L.YellP1)--ENCOUNTER_START appears to fire when he lands, so start of phase 2, ignoring all of phase 1
-mod:SetWipeTime(25)--guesswork
-mod:SetHotfixNoticeRev(20200218000000)--2020, Feb, 18th
-mod:SetMinSyncRevision(20200218000000)--2020, Feb, 18th
+mod:SetWipeTime(50)--guesswork
+mod:SetHotfixNoticeRev(20200310000000)--2020, Mar, 10th
+mod:SetMinSyncRevision(20200310000000)--2020, Mar, 10th
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 22539 22686",
@@ -27,6 +27,7 @@ local warnFear			= mod:NewCastAnnounce(22686, 2)
 local specwarnMC		= mod:NewSpecialWarningTarget(22667, nil, nil, 2, 1, 2)
 local specwarnVeilShadow= mod:NewSpecialWarningDispel(22687, "RemoveCurse", nil, nil, 1, 2)
 
+local timerPhase		= mod:NewPhaseTimer(15)
 local timerClassCall	= mod:NewTimer(30, "TimerClassCall", "136116", nil, nil, 5)
 local timerFearNext		= mod:NewCDTimer(26.7, 22686, nil, nil, nil, 2)--26-42.5
 
@@ -34,10 +35,14 @@ mod.vb.phase = 1
 mod.vb.addLeft = 20
 local addsGuidCheck = {}
 
-function mod:OnCombatStart(delay)
+function mod:OnCombatStart(delay, yellTriggered)
 	table.wipe(addsGuidCheck)
-	self.vb.phase = 1
-	self.vb.addLeft = 20
+	if yellTriggered then--Triggered by Phase 1 yell from talking to Nefarian (uncomment if ENCOUNTER_START isn't actually fixed with weekly reset)
+		self.vb.phase = 1
+		self.vb.addLeft = 42
+	else--Blizz can't seem to figure out ENCOUNTER_START, so any pull not triggered by yell will be treated as if it's already phase 2
+		self.vb.phase = 2
+	end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -64,7 +69,7 @@ end
 function mod:UNIT_DIED(args)
 	local guid = args.destGUID
 	local cid = self:GetCIDFromGUID(guid)
-	if cid == 14262 or cid == 14302 then--Green Drakonid, Chromatic Drakonid
+	if cid == 14264 or cid == 14263 or cid == 14261 or cid == 14265 or cid == 14262 or cid == 14302 then--Red, Bronze, Blue, Black, Green, Chromatic
 		self:SendSync("AddDied", guid)--Send sync it died do to combat log range and size of room
 		--We're in range of event, no reason to wait for sync, especially in a raid that might not have many DBM users
 		if not addsGuidCheck[guid] then
@@ -119,11 +124,12 @@ end
 function mod:OnSync(msg, arg)
 	if msg == "ClassCall" then
 		warnClassCall:Show(LOCALIZED_CLASS_NAMES_MALE[arg])
-		timerClassCall:Start(arg)
+		timerClassCall:Start(30, LOCALIZED_CLASS_NAMES_MALE[arg])
 	elseif msg == "Phase" then
 		local phase = tonumber(arg) or 0
 		if phase == 2 then
 			self.vb.phase = 2
+			timerPhase:Start(15)
 		elseif phase == 3 then
 			self.vb.phase = 3
 		end

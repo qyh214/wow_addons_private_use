@@ -1,3 +1,4 @@
+
 -- 原作：ElvUI_S&L 的一个增强组件
 -- 原作者：ElvUI_S&L (https://www.tukui.org/addons.php?id=38)
 -- 修改：mcc1, SomeBlu
@@ -121,12 +122,34 @@ function RM:UpdateBar()
 		end
 	end
 	
-	if self.db.enabled then self.frame:Show() else self.frame:Hide() end
+	if self.db.enabled then
+		self.frame:Show()
+	else
+		self.frame:Hide()
+	end
 end
 
 function RM:ToggleSettings()
 	if not InCombatLockdown() then
 		self:UpdateBar()
+
+		if E.db.WindTools.Interface.Skins.elvui.general then
+			if self.db.backdrop then
+				self.frame.backdrop:CreateShadow()
+				if self.frame.backdrop.shadow then self.frame.backdrop.shadow:Show() end
+				for i = 1, 9, 1 do
+					local button = self.frame.buttons[i]
+					if button.shadow then button.shadow:Hide() end
+				end
+			else
+				if self.frame.backdrop.shadow then self.frame.backdrop.shadow:Hide() end
+				for i = 1, 9, 1 do
+					local button = self.frame.buttons[i]
+					button:CreateShadow()
+					if button.shadow then button.shadow:Show() end
+				end
+			end
+		end
 	
 		if self.db.enabled then
 			RegisterStateDriver(self.frame, "visibility", self.db.visibility == 'DEFAULT' and '[noexists, nogroup] hide; show' or self.db.visibility == 'ALWAYS' and '[noexists, nogroup] show; show' or '[group] show; hide')
@@ -134,6 +157,7 @@ function RM:ToggleSettings()
 			UnregisterStateDriver(self.frame, "visibility")
 			self.frame:Hide()
 		end
+
 		if self.db.backdrop then
 			self.frame.backdrop:Show()
 		else
@@ -142,30 +166,8 @@ function RM:ToggleSettings()
 	end
 end
 
--- function RM:Initialize()
--- 	self.db = E.private.general.raidmarkerbar
-	
--- 	self.frame = CreateFrame("Frame", "RaidMarkerBar", E.UIParent, "SecureHandlerStateTemplate")
--- 	self.frame:SetResizable(false)
--- 	self.frame:SetClampedToScreen(true)
--- 	self.frame:SetFrameStrata('LOW')
--- 	self.frame:CreateBackdrop('Transparent')
--- 	self.frame:ClearAllPoints()
--- 	self.frame:Point("BOTTOMRIGHT", RightChatPanel, "TOPRIGHT", -1, 3)
--- 	self.frame.buttons = {}
-	
--- 	self.frame.backdrop:SetAllPoints()
-
--- 	E:CreateMover(self.frame, "RaidMarkerBarAnchor", L['Raid Marker Bar'])
-	
--- 	--self:RegisterEvent("GROUP_ROSTER_UPDATE", "ToggleSettings")
--- 	self:CreateButtons()
--- 	self:ToggleSettings()
--- end
-
 function RM:Initialize()
 	if not E.db.WindTools["Interface"]["Raid Markers"].enabled then return end
-
 	self.db = E.db.WindTools["Interface"]["Raid Markers"]
 	tinsert(WT.UpdateAll, function()
 		RM.db = E.db.WindTools["Interface"]["Raid Markers"]
@@ -182,12 +184,9 @@ function RM:Initialize()
 	self.frame:ClearAllPoints()
 	self.frame:Point("BOTTOMRIGHT", RightChatPanel, "TOPRIGHT", -1, 3)
 	self.frame.buttons = {}
-	
 	self.frame.backdrop:SetAllPoints()
-
 	E:CreateMover(self.frame, "RaidMarkerBarAnchor", L['Raid Marker Bar'])
-	
-	--self:RegisterEvent("GROUP_ROSTER_UPDATE", "ToggleSettings")
+
 	self:CreateButtons()
 	self:ToggleSettings()
 end
