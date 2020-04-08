@@ -80,6 +80,10 @@ https://bbs.nga.cn/read.php?tid=20616554&_ff=185
 
 全职业中二语音：https://bbs.nga.cn/read.php?tid=20729857
 
+疯狂宣言饰品监控：https://wago.io/EXzf87WMc
+
+监控武器玛寇瓦，心灵切削者的buff灵光一闪：https://wago.io/M7sntgG04
+
 ## TMW字符串
 萨满祭司：https://bbs.nga.cn/read.php?tid=16216888&_ff=185
 
@@ -102,5 +106,6 @@ WTF（WOW安装目录/WTF/config.wtf）：
 
 ```
 SET overrideArchive "0"
-SET profanityFilter "0"
 ```
+
+自2020年4月4日起，cn地区的`SET profanityFilter "0"`被agent强制监管覆盖更新，可配合使用fuckyou等插件以及诸如WA字符串解决。
