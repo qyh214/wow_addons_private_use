@@ -7,6 +7,7 @@ local _G = _G
 P["WindTools"]["Interface"] = {
 	["Auto Buttons"] = {
 		["enabled"] = true,
+		["disableSlot"] = false,
 		["questNum"] = 5,
 		["itemList"] = {},
 		["slotNum"] = 5,
@@ -147,7 +148,8 @@ P["WindTools"]["Interface"] = {
 			altpowerbar = true,
 			auras = true,
 			castbar = true,
-			chat_panel = false,
+			left_chat_panel = false,
+			right_chat_panel = false,
 			classbar = true,
 			databars = true,
 			general = true,
@@ -159,6 +161,7 @@ P["WindTools"]["Interface"] = {
 			lang_icon = true,
 			losscontrol = true,
 			character_frame = true,
+			scenario_background = true,
 		},
 		addonskins = {
 			bigwigs = true,
@@ -259,6 +262,14 @@ WT.ToolConfigs["Interface"] = {
 					type = "range",
 					min = 4, max = 40, step =1,
 					name = L["Item Count"]..L["Font Size"],
+				},
+				disableSlot = {
+					order = 2,
+					name = L["Disable Slot Button"],
+					set = function(info, value)
+						E.db.WindTools["Interface"]["Auto Buttons"].disableSlot = value
+						E:StaticPopup_Show("PRIVATE_RL")
+					end,
 				},
 				["AptifactItem"] = {
 					order = 2,

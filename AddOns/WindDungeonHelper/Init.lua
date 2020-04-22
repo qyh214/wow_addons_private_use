@@ -155,7 +155,7 @@ function WDH:SetUpConfig()
     logo:SetFrameLevel(4)
     logo:SetSize(64, 64)
     logo:SetPoint('TOPRIGHT', -12, -12)
-    logo:SetBackdrop({bgFile = ('Interface\\ICONS\\Ability_Racial_EmbraceoftheLoa_Bwonsomdi'):format(AddOnName)})
+    logo:SetBackdrop({bgFile = ('Interface\\ICONS\\TRADE_ARCHAEOLOGY_NERUBIAN_OBELISK'):format(AddOnName)})
     self.optionFrame.logo = logo
 
     LibStub("LibDBIcon-1.0"):Register(L["Wind Dungeon Helper"], self.LDB, DB.profile.minimapicon)

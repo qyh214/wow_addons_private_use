@@ -128,6 +128,7 @@ ETT.RP = {
 local playerGUID = UnitGUID("player")
 local playerFaction = UnitFactionGroup("player")
 local progressCache = {}
+local IsAzeriteEmpoweredItemByID = C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItemByID
 
 local function getLevelColorString(level, short)
 	local color = "ff8000"
@@ -159,6 +160,7 @@ function ETT:ItemIcons()
 			title:SetFormattedText("|T%s:20:20:"..newString..":%d|t %s", icon, 20, title:GetText())
 		end
 	
+		if self.NoWindItemIcon then return end
 		for i = 2, self:NumLines() do
 			local line = _G[self:GetName().."TextLeft"..i]
 			if not line then break end
@@ -187,12 +189,16 @@ function ETT:ItemIcons()
 	local hookItem = newTooltipHooker("OnTooltipSetItem", function(self)
 		local _, link = self:GetItem()
 		if link then
+			if IsAddOnLoaded("AzeriteTooltip") and IsAzeriteEmpoweredItemByID(link) or E.db.WindTools["Trade"]["Azerite Tooltip"]["enabled"] then
+				self.NoWindItemIcon = true
+			end
+
 			setTooltipIcon(self, GetItemIcon(link))
 		end
 	end)
 	
 	local hookSpell = newTooltipHooker("OnTooltipSetSpell", function(self)
-		local _, id = self:GetSpell()
+		local name, id = self:GetSpell()
 		if id then
 			setTooltipIcon(self, GetSpellTexture(id))
 		end
@@ -218,9 +224,36 @@ function ETT:ItemIcons()
 	hooksecurefunc("EmbeddedItemTooltip_SetItemByID", ReskinRewardIcon)
 	hooksecurefunc("EmbeddedItemTooltip_SetCurrencyByID", ReskinRewardIcon)
 	hooksecurefunc("QuestUtils_AddQuestCurrencyRewardsToTooltip", function(_, _, self) ReskinRewardIcon(self) end)
+
+	-- 比对装备修复
+	hooksecurefunc("GameTooltip_AnchorComparisonTooltips", function(self, anchorFrame, shoppingTooltip1, shoppingTooltip2, _, secondaryItemShown)
+		local point = shoppingTooltip1:GetPoint(2)
+		if secondaryItemShown then
+			if point == "TOP" then
+				shoppingTooltip1:ClearAllPoints()
+				shoppingTooltip1:SetPoint("TOPLEFT", anchorFrame, "TOPRIGHT", 3, 0)
+				shoppingTooltip2:ClearAllPoints()
+				shoppingTooltip2:SetPoint("TOPLEFT", shoppingTooltip1, "TOPRIGHT", 3, 0)
+			elseif point == "RIGHT" then
+				shoppingTooltip1:ClearAllPoints()
+				shoppingTooltip1:SetPoint("TOPRIGHT", anchorFrame, "TOPLEFT", -3, 0)
+				shoppingTooltip2:ClearAllPoints()
+				shoppingTooltip2:SetPoint("TOPRIGHT", shoppingTooltip1, "TOPLEFT", -3, 0)
+			end
+		else
+			if point == "LEFT" then
+				shoppingTooltip1:ClearAllPoints()
+				shoppingTooltip1:SetPoint("TOPLEFT", anchorFrame, "TOPRIGHT", 3, 0)
+			elseif point == "RIGHT" then
+				shoppingTooltip1:ClearAllPoints()
+				shoppingTooltip1:SetPoint("TOPRIGHT", anchorFrame, "TOPLEFT", -3, 0)
+			end
+		end
+	end)
 end
 
 function ETT:UpdateProgression(guid, faction)
+	if not self.db then return end
 	local statFunc = guid == playerGUID and GetStatistic or GetComparisonStatistic
 
 	progressCache[guid] = progressCache[guid] or {}

@@ -1,28 +1,58 @@
-lightweight tag 0e56b75f8c82a3244b639078f018c35e6ccd6b67 1.5.11
+lightweight tag 38185fd75362241cfef7e490f6aed6d23a7e2724 1.6.3
 Author:	Zhou Fang <fang2hou@outlook.com>
-Date:	Tue Apr 7 01:51:31 2020 +0900
+Date:	Tue Apr 21 03:20:07 2020 +0900
 
-commit 0e56b75f8c82a3244b639078f018c35e6ccd6b67
+commit 38185fd75362241cfef7e490f6aed6d23a7e2724
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Tue Apr 7 01:51:31 2020 +0900
+Date:   Tue Apr 21 03:20:07 2020 +0900
 
-    1.5.11
+    1.6.3
 
-commit 1899cd6ba667b569847e18359f990b0a11467cf9
+commit 6cf94c42076487f426cde188bacfba260bae7b91
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Tue Apr 7 01:47:35 2020 +0900
+Date:   Tue Apr 21 03:12:02 2020 +0900
 
-    修复额外载入导致的不兼容问题
+    为装备按钮关闭提供选项
 
-commit 5cad750083e51758f5ce8e5929de3abb366d13f2
+commit 243a898d4146553ef84789c911699860b14ed1b7
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Tue Apr 7 00:55:40 2020 +0900
+Date:   Tue Apr 21 02:53:57 2020 +0900
 
-    改变 Immersion 美化的载入事件
+    添加聊天面板的美化
 
-commit f149909998a92c5bdf458cf710d7e24c4480f34b
+commit 117e611a1d925e81e72fc894516229e067ab4356
 Author: Zhou Fang <fang2hou@outlook.com>
-Date:   Tue Apr 7 00:20:38 2020 +0900
+Date:   Tue Apr 21 02:35:14 2020 +0900
 
-    新增 Immersion 美化
+    添加动作栏背景的美化
+
+commit 2143611a9619ef7a44d2e864fdcab0a3a245f2a0
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Mon Apr 20 18:45:24 2020 +0900
+
+    修复观察他人页面中无法显示腐化等级的问题
+
+commit 4d7d203b4915b2079ef00db9c5a5d5a22dab5aaa
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Mon Apr 20 18:14:35 2020 +0900
+
+    在ElvUI中去除特写框架背景时不会美化边框
+
+commit a0cf1315c99c33a726421aac1486b762d1cfb710
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Mon Apr 20 18:12:15 2020 +0900
+
+    修复聊天条的阴影美化
+
+commit 5bb7b943161799514ccca57eaef95b702663ca91
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Mon Apr 20 12:23:27 2020 +0900
+
+    更新日志
+
+commit 86ba8ff74cf60aa8357cc29d77a4d85e32b3c0a1
+Author: Zhou Fang <fang2hou@outlook.com>
+Date:   Mon Apr 20 11:31:05 2020 +0900
+
+    更换设定条材质的方式
 

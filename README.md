@@ -64,13 +64,15 @@ Auctionlite：https://bbs.nga.cn/read.php?tid=17729131
 ## WA字符串
 鱼人兑换：https://wago.io/6YhvXz76q
 
-死亡时-菜：https://wago.io/4wZS7eLDz
+~~死亡时-菜：https://wago.io/4wZS7eLDz~~
 
 鼠标跟踪：https://wago.io/SypUT-DPm
 
 腐蚀监控（腐蚀1触发的贪婪触须+腐蚀20的腐化之眼+腐蚀40点壮美幻象整合版 腐化之眼超3层有心跳触发壮美幻象有猫叫提示版本）：https://bbs.nga.cn/read.php?tid=20290774
 
-大幻象：https://wago.io/JxMRlFNNX
+大幻象属性、debuff监控：https://wago.io/JxMRlFNNX
+
+大幻象宝箱监控：https://wago.io/XR0uk8e5a
 
 属性监控：
 
@@ -83,6 +85,10 @@ https://bbs.nga.cn/read.php?tid=20616554&_ff=185
 疯狂宣言饰品监控：https://wago.io/EXzf87WMc
 
 监控武器玛寇瓦，心灵切削者的buff灵光一闪：https://wago.io/M7sntgG04
+
+只狼特效：https://wago.io/sekirowa
+
+拍卖行显示腐蚀信息：https://wago.io/8Rr-Ski1F
 
 ## TMW字符串
 萨满祭司：https://bbs.nga.cn/read.php?tid=16216888&_ff=185

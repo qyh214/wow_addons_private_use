@@ -1,4 +1,5 @@
-local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "enUS", true, true)
+local E = unpack(ElvUI)
+local L = E.Libs.ACL:NewLocale("ElvUI", "enUS", true, true)
 
 -- enUS
 -- 设置主界面
@@ -16,8 +17,6 @@ L["|cffff0000If you click Accept, it will reset your Windtools."] = true
 L["|cffff0000If you click Accept, it will reset this module."] = true
 L["WindTools will reload your user interface to apply the change."] = true
 -- 功能界面
-L["Enable"] = true
-L["Disable"] = true
 L["Module Information"] = true
 L["Author: %s, Edited by %s"] = true
 L["Setting"] = true
@@ -60,6 +59,7 @@ L["Delete ItemID"] = true
 L["Must is itemID!"] = true
 L["Whitelist"] = true
 L["Blacklist"] = true
+L["Disable Slot Button"] = true
 -- 进入战斗提示功能
 L["Alert you after enter or leave combat."] = true
 L["Enter Combat Alert"] = true
@@ -154,7 +154,12 @@ L["Move ElvUI Bag"] = true
 L["Remember Position"] = true
 L["Error Frame"] = true
 L["Vehicle Seat Scale"] = true
-L["Move Blizzard frame is conflict with Shadow&Light, Please cancel the duplicate option."] = true
+L["Help information"] = true
+L["When you moved or resized a frame, it will display a message contains introduction of the module."] = true
+L["Move Blizzard frame is conflict with Shadow&Light.\nPlease cancel the duplicate option."] = true
+L["Move Blizzard frame is conflict with BlizzMove. \nPlease disable one of them."] = true
+L["You just moved a frame. SHIFT+Click to reset the position."] = true
+L["You just resized a frame. CTRL+Click to reset the scale."] = true
 -- Tag 增强
 L["Wan"] = true
 L["Yi"]  = true
@@ -183,8 +188,8 @@ L['Mouse Over'] = true
 L["Minimap Buttons"] = true
 L['Buttons per row'] = true
 L['The max number of buttons when a new row starts.'] = true
--- 关闭视频通话
-L["Close Quest Voice"] = true
+-- 关闭特写
+L["Disable Talking Head"] = true
 L["Disable TalkingHeadFrame."] = true
 -- 屏幕景深
 L["iShadow"] = true
@@ -231,11 +236,6 @@ L["Health Bar"] = true
 -- 跳过艾泽里特特质选择界面的渲染动画
 L["Skip Azerite Animations"] = true
 L["Skips the reveal animation of a new azerite armor piece and the animation after you select a trait."] = true
--- 频道切换
-L["Tab Chat Mod"] = true
-L["Use tab to switch channel."] = true
-L["Whisper Cycle"] = true
-L["Include Officer Channel"] = true
 -- 任务通告
 L["Quest Announcment"] = true
 L["Let you know quest is completed."] = true
@@ -248,6 +248,8 @@ L["Use delete button"] = true
 L["Click the button to confirm the deletion of good items."] = true
 L["Click to confirm"] = true
 L["Confirmed"] = true
+L["Skip confirm"] = true
+L["Just delete a good item as a junk."] = true
 -- 目标进度
 L["Objective Progress"] = true
 L["Add quest/mythic+ dungeon progress to tooltip."] = true
@@ -315,7 +317,7 @@ L["MicroMenu"] = true
 -- 艾泽里特特质提示
 L["Azerite Tooltip"] = true
 L["Show azerite traits in the tooltip when you mouseover an azerite item."] = true
-L["Level"] = true
+L["Icon Anchor"] = true
 L["Replace Blizzard Azerite Text"] = true
 L["Current Spec Only"] = true
 L["Show traits for your current specialization only"] = true
@@ -413,7 +415,8 @@ L["%s has been reset"] = true
 L["Cannot reset %s (There are players still inside the instance.)"] = true
 L["Cannot reset %s (There are players in your party attempting to zone into an instance.)"] = true
 L["Cannot reset %s (There are players offline in your party.)"] = true
--- 进度追踪
+L["Delay (sec)"] = true
+-- 任务列表
 L["Objective Tracker"] = true
 L["The new-look interface for objective tracker."] = true
 L["Header"] = true
@@ -423,8 +426,14 @@ L["Use class color"] = true
 L["Custom title color"] = true
 L["Custom highlight color"] = true
 L["Auto Turn In"] = true
+L["Auto Turn In Button"] = true
 L["Switch button"] = true
 L["Auto"] = true
+L["Fade with Objective Tracker"] = true
+L["Custom font"] = true
+L["Custom text"] = true
+L["Text when enabled"] = true
+L["Text when disabled"] = true
 -- 美化皮肤
 L["Provide a new style for ElvUI."] = true
 L["Game Tooltip"] = true
@@ -437,7 +446,8 @@ L["Cast Bar Icon"] = true
 L["Databars"] = true
 L["Unit Frames"] = true
 L["Top and Bottom panel"] = true
-L["Chat panel"] = true
+L["Left chat panel"] = true
+L["Right chat panel"] = true
 L["Weakauras2"] = true
 L["Bigwigs"] = true
 L["Immersion"] = true
@@ -450,6 +460,95 @@ L["CJK IME candidates"] = true
 L["Edit box"] = true
 L["Language indicator"] = true
 L["Loss of control"] = true
+L["Scenario stage background"] = true
 -- 声望追踪
-L['Track Reputation'] = "声望追踪"
-L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'] = "当你获得某个阵营的声望时, 将自动追踪此阵营的声望至经验栏位." 
+L["Track Reputation"] = true
+L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'] = true
+-- 巅峰声望
+L["Paragon Reputation"] = true
+L['Better visualization of Paragon Factions on the Reputation Frame.'] = true
+L["Toast"] = true
+L["Paragon Reputation Toast"] = true
+L["Fade time"] = true
+L["Format"] = true
+L["Sound"] = true
+L["Reputation panel"] = true
+L["Paragon"] = true
+L["Exalted"] = true
+-- 解锁过滤器
+L["Unblock Filter"] = true
+L["Unblock profanity filter setting for China server."] = true
+-- 聊天框增强
+L["Chat Frame"] = true
+L["Provide more features for chat frame."] = true
+L["Use Tab to switch channel"] = true
+L["Whisper Cycle"] = true
+L['Whisper history expiration time (min)'] = true
+L["There is no more whisper targets"]  = true
+L['This module will record whispers for switching.\n You can set the expiration time here for making a shortlist of recent targets.'] = true
+L["Add information on link"] = true
+L["Add Icon"] = true
+L["Add Level"] = true
+L["Add Armor Category"] = true
+L["Add Weapon Category"] = true
+L["Add Corruption Rank"] = true
+L["Head_Abbr"] = "Head"
+L["Neck_Abbr"] = "Neck"
+L["Shoulders_Abbr"] = "Shoulders"
+L["Back_Abbr"] = "Back"
+L["Chest_Abbr"] = "Chest"
+L["Wrist_Abbr"] = "Wrist"
+L["Hands_Abbr"] = "Hands"
+L["Waist_Abbr"] = "Waist"
+L["Legs_Abbr"] = "Legs"
+L["Feet_Abbr"] = "Feet"
+L["Finger_Abbr"] = "Finger"
+L["Trinket_Abbr"] = "Trinket"
+L["Held In Off-hand_Abbr"] = "Off-hand"
+L["Use Emote Panel"] = true
+L['Emote Icon Size'] = true
+L["Move (L\124\124R) Reset"] = true
+L["Parse emote expresstion from other players."] = true
+L["Press { to active the emote select window."] = true
+L["Input Correction"] = true
+L["Designed for Asian player, it will help you to enter command without switching IME."] = true
+L["Emote Selector"] = true
+-- 腐化等级
+L["Corruption Rank"] = true
+L["Show corruption rank in the tooltip when you mouseover an corruption item."] = true
+-- 聊天条
+L["Chat Bar"] = true
+L["Add a chat bar for switching channel."] = true
+L["World channel no found, please setup again."] = true
+L["Left Click: Change to"] = true
+L["Right Click: Join/Leave"] = true
+L["Left Click: Toggle"] = true
+L["Say_Abbr"] = "S"
+L["Yell_Abbr"] = "Y"
+L["Emote_Abbr"] = "E"
+L["Party_Abbr"] = "P"
+L["Instance_Abbr"] = "I"
+L["Raid_Abbr"] = "R"
+L["RaidWarning_Abbr"] = "RW"
+L["Guild_Abbr"] = "G"
+L["Officer_Abbr"] = "O"
+L["World_Abbr"] = "WD"
+L["Roll_Abbr"] = "R"
+L["Bar Backdrop"] = true
+L["Smart Hide"] = true
+L["Block Type"] = true
+L["Text Type"] = true
+L['Padding'] = true
+L["Block Type Setting"] = true
+L["Text Type Setting"] = true
+L["Use Color"] = true
+L["Add Button Shadow"] = true
+L["Button Texture"] = true
+L["Auto Join"] = true
+L["Channel Name"] = true
+L["Abbreviation"] = true
+L["Use Icon"] = true
+L["Use a icon rather than text"] = true
+-- 修正神器幻化
+L["Fix Artifact Transmog"] = true
+L["Fix saving Legion artifact in your transmog outfits."] = true

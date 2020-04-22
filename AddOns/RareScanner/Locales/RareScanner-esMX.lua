@@ -186,6 +186,7 @@ if AL then
 	AL["MAP_TOOLTIP_KILLED"] = "Shift-Click-Izdo para marcar como matado"
 	AL["MAP_TOOLTIP_NOT_FOUND"] = "Aún no has visto a este NPC y nadie lo ha compartido contigo."
 	AL["MAP_TOOLTIP_SEEN"] = "Visto hace: %s"
+	AL["MAP_TOOLTIP_SHOW_OVERLAY"] = "Click-izdo para mostrar/esconder otros puntos de aparición"
 	AL["MARKER"] = "Marcador de objetivo"
 	AL["MARKER_DESC"] = "Selecciona el marcador a añadir encima del objetivo cuando haces click en el botón principal."
 	AL["MESSAGE_OPTIONS"] = "Opciones de mensajes"

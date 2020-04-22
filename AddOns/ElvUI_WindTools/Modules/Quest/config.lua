@@ -36,13 +36,16 @@ P["WindTools"]["Quest"] = {
 			auto = false,
 			switch_button = {
 				enabled = true,
+				fade_with_objective_tracker = true,
 				font = E.db.general.font,
 				size = E.db.general.fontSize,
 				style = "OUTLINE",
-				x_offset = 0,
-				y_offset = 0,
-			}
-		}
+				enabled_text = L["Auto Turn In"],
+				disabled_text = L["Auto Turn In"],
+				enabled_color = {r = .298, g = .82, b = .216},
+				disabled_color = {r = .467, g = .467, b = .467},
+			},
+		},
 	},
 	["Quest Announcment"] = {
 		["enabled"] = true,
@@ -53,14 +56,24 @@ P["WindTools"]["Quest"] = {
 		["Solo"] = true,
 		["ignore_supplies"] = true,
 	},
-	["Close Quest Voice"] = {
+	["Disable Talking Head"] = {
 		["enabled"] = false,
 	},
 	["Objective Progress"] = {
 		["enabled"] = true,
 	},
 	["Track Reputation"] = {
-		["enabled"] = false,
+		enabled = false,
+	},
+	["Paragon Reputation"] = {
+		enabled = true,
+		color = { r = 0, g = .5, b = .9 },
+		text = "DEFICIT",
+		toast = {
+			enabled = true,
+			sound = true,
+			fade_time = 5,
+		}
 	},
 }
 
@@ -69,36 +82,51 @@ WT.ToolConfigs["Quest"] = {
 		tDesc   = L["The new-look interface for objective tracker."],
 		oAuthor = "houshuu",
 		cAuthor = "houshuu",
-		general = {
+		auto_turn_in = {
 			order = 5,
-			name = L['General'],
+			name = L["Auto Turn In"],
+			get = function(info) return E.db.WindTools.Quest["Objective Tracker"]["auto_turn_in"][info[#info]] end,
+			set = function(info, value)
+				E.db.WindTools.Quest["Objective Tracker"]["auto_turn_in"][info[#info]] = value
+				WT.UpdateSwitchButton()
+			end,
 			args = {
-				auto_turn_in = {
+				auto = {
 					order = 1,
-					name = L["Auto Turn In"],
-					get = function(info) return E.db.WindTools.Quest["Objective Tracker"]["auto_turn_in"][info[#info]] end,
+					name = L["Auto"],
+				},
+				use_switch_button = {
+					order = 1,
+					name = L["Switch button"],
+					get = function(info) return E.db.WindTools.Quest["Objective Tracker"]["auto_turn_in"]["switch_button"]["enabled"] end,
 					set = function(info, value)
-						E.db.WindTools.Quest["Objective Tracker"]["auto_turn_in"][info[#info]] = value
+						E.db.WindTools.Quest["Objective Tracker"]["auto_turn_in"]["switch_button"]["enabled"] = value
+						WT.UpdateSwitchButton()
+					end,
+				},
+				switch_button = {
+					order = 2,
+					name = L["Switch button"],
+					get = function(info) return E.db.WindTools.Quest["Objective Tracker"]["auto_turn_in"]["switch_button"][info[#info]] end,
+					set = function(info, value)
+						E.db.WindTools.Quest["Objective Tracker"]["auto_turn_in"]["switch_button"][info[#info]] = value
 						WT.UpdateSwitchButton()
 					end,
 					args = {
-						auto = {
+						fade_with_objective_tracker = {
 							order = 1,
-							name = L["Auto"],
+							name = L["Fade with Objective Tracker"],
+							width = "full",
 						},
-						switch_button = {
+						font_setting = {
 							order = 2,
-							name = L["Switch button"],
+							name = L["Custom font"],
 							get = function(info) return E.db.WindTools.Quest["Objective Tracker"]["auto_turn_in"]["switch_button"][info[#info]] end,
 							set = function(info, value)
 								E.db.WindTools.Quest["Objective Tracker"]["auto_turn_in"]["switch_button"][info[#info]] = value
 								WT.UpdateSwitchButton()
 							end,
 							args = {
-								enabled = {
-									order = 1,
-									name = L["Enable"],
-								},
 								font = {
 									type = 'select', dialogControl = 'LSM30_Font',
 									order = 2,
@@ -123,24 +151,71 @@ WT.ToolConfigs["Quest"] = {
 										['THICKOUTLINE'] = L['THICKOUTLINE'],
 									},
 								},
-								x_offset = {
-									order = 5,
-									type = 'range',
-									name = L['X Offset'],
-									min = -350, max = 350, step = 1,
+							},
+						},
+						text_setting = {
+							order = 3,
+							name = L["Custom text"],
+							get = function(info) return E.db.WindTools.Quest["Objective Tracker"]["auto_turn_in"]["switch_button"][info[#info]] end,
+							set = function(info, value)
+								E.db.WindTools.Quest["Objective Tracker"]["auto_turn_in"]["switch_button"][info[#info]] = value
+								WT.UpdateSwitchButton()
+							end,
+							args = {
+								enabled_text = {
+									order = 1,
+									type = "input",
+									width = 1.2,
+									name = L["Text when enabled"],
 								},
-								y_offset = {
-									order = 6,
-									type = 'range',
-									name = L['Y Offset'],
-									min = -350, max = 350, step = 1,
+								enabled_color = {
+									order = 2,
+									type = "color",
+									name = L["Enable"],
+									width = 0.8,
+									hasAlpha = false,
+									get = function(info)
+										local t = E.db.WindTools.Quest["Objective Tracker"]["auto_turn_in"]["switch_button"]["enabled_color"]
+										return t.r, t.g, t.b, nil, .298, .82, .216, nil
+									end,
+									set = function(info, r, g, b)
+										local t = E.db.WindTools.Quest["Objective Tracker"]["auto_turn_in"]["switch_button"]["enabled_color"]
+										t.r, t.g, t.b = r, g, b
+										WT.UpdateSwitchButton()
+									end,
+								},
+								disabled_text = {
+									order = 3,
+									type = "input",
+									width = 1.2,
+									name = L["Text when disabled"],
+								},
+								disabled_color = {
+									order = 4,
+									type = "color",
+									width = 0.8,
+									name = L["Disable"],
+									hasAlpha = false,
+									get = function(info)
+										local t = E.db.WindTools.Quest["Objective Tracker"]["auto_turn_in"]["switch_button"]["disabled_color"]
+										return t.r, t.g, t.b, nil, .467, .467, .467, nil
+									end,
+									set = function(info, r, g, b)
+										local t = E.db.WindTools.Quest["Objective Tracker"]["auto_turn_in"]["switch_button"]["disabled_color"]
+										t.r, t.g, t.b = r, g, b
+										WT.UpdateSwitchButton()
+									end,
 								},
 							},
-						}
-						
-
+						},
 					},
 				},
+			},
+		},
+		general = {
+			order = 6,
+			name = L['General'],
+			args = {
 				header = {
 					order = 2,
 					name = L["Header"],
@@ -346,7 +421,7 @@ WT.ToolConfigs["Quest"] = {
 		},
 		
 	},
-	["Close Quest Voice"] = {
+	["Disable Talking Head"] = {
 		tDesc   = L["Disable TalkingHeadFrame."],
 		oAuthor = "houshuu",
 		cAuthor = "houshuu",
@@ -360,5 +435,67 @@ WT.ToolConfigs["Quest"] = {
 		tDesc   = L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'],
 		oAuthor = "ElvUI_Enhanced, Marcel Menzel",
 		cAuthor = "houshuu",
+	},
+	["Paragon Reputation"] = {
+		tDesc   = L['Better visualization of Paragon Factions on the Reputation Frame.'],
+		oAuthor = "|cffabd473Fail|r |cffff4000US-Ragnaros|r",
+		cAuthor = "houshuu",
+		reputation_panel = {
+			order = 5,
+			name = L["Reputation panel"],
+			get = function(info) return E.db.WindTools["Quest"]["Paragon Reputation"][ info[#info] ] end,
+			set = function(info, value) E.db.WindTools["Quest"]["Paragon Reputation"][ info[#info] ] = value; ReputationFrame_Update() end,
+			args = {
+				color = {
+					order = 1, 
+					name = L["Color"],
+					type = "color",
+					hasAlpha = false,
+					get = function(info)
+						local t = E.db.WindTools["Quest"]["Paragon Reputation"].color
+						return t.r, t.g, t.b, 1, 0, .5, .9, 1
+					end,
+					set = function(info, r, g, b)
+						local t = E.db.WindTools["Quest"]["Paragon Reputation"].color
+						t.r, t.g, t.b = r, g, b
+						ReputationFrame_Update()
+					end,
+				},
+				text = {
+					order = 2, 
+					name = L["Format"],
+					type = 'select',
+					values = {
+						['PARAGON'] = L["Paragon"]..' (100/10000)',
+						['EXALTED'] = L["Exalted"]..' (100/10000)',
+						['CURRENT'] = '100 (100/10000)',
+						['VALUE'] = '100/10000',
+						['DEFICIT'] = '9900',
+					},
+				},
+			},
+		},
+		toast = {
+			order = 6,
+			name = L["Toast"],
+			get = function(info) return E.db.WindTools["Quest"]["Paragon Reputation"]["toast"][ info[#info] ] end,
+			set = function(info, value) E.db.WindTools["Quest"]["Paragon Reputation"]["toast"][ info[#info] ] = value end,
+			args = {
+				enabled = {
+					order = 1, 
+					name = L["Enable"],
+				},
+				sound = {
+					order = 1, 
+					name = L["Sound"],
+				},
+				fade_time = {
+					order = 3,
+					type = "range",
+					name = L["Fade time"],
+					min = 1, max = 15.0, step = 0.01,
+				},
+			},
+		},
 	},
 }

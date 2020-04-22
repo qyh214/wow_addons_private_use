@@ -12,8 +12,6 @@ AdventureGuideLockouts 副本进度查看（shift+J的冒险指南上）
 
 AngryKeystones 大秘境钥石插件
 
-BlizzMove 暴雪框架窗体移动
-
 BuyEmAll 批量购买物品增强（某些只能一个个买的物品，改进其堆叠购买的体验，你可以一起批量购买）
 
 CanIMogIt 幻化提示插件
@@ -35,8 +33,6 @@ ElvUI_WindTools Elvui配套的小玩意集合插件，国人开发的小工具�
 ExRT 团队插件
 
 GarrisonCommander 要塞功能增强（任务指派、含船坞与配置系统）
-
-GSE 懒人福利-用于职业一键输出
 
 HandyNotes
 
@@ -67,8 +63,6 @@ RareScanner
 RelicInspector 圣物提示
 
 RSA SpeakinSpell替代品
-
-SimpleChat 底部聊天窗口改进，添加频道切换条和一些功能
 
 TellMeWhen
 

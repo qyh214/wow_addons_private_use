@@ -211,20 +211,22 @@ P["WindTools"]["More Tools"] = {
 				},
 			},
 		},
-		["thanks"] = {
-			["goodbye"] = {
-				["enabled"] = true,
-				["text"] = L["Thanks all!"],
-				["channel"] = {
+		thanks = {
+			goodbye = {
+				enabled = true,
+				text = L["Thanks all!"],
+				delay = 0,
+				channel = {
 					["party"] = "PARTY",
 					["instance"] = "INSTANCE_CHAT",
 					["raid"] = "RAID",
 				},
 			},
-			["resurrection"] = {
-				["enabled"] = true,
-				["text"] = L["%target%, thank you for using %spell% to revive me. :)"],
-				["channel"] = {
+			resurrection = {
+				enabled = true,
+				text = L["%target%, thank you for using %spell% to revive me. :)"],
+				delay = 0,
+				channel = {
 					["solo"] = "WHISPER",
 					["party"] = "WHISPER",
 					["instance"] = "WHISPER",
@@ -232,10 +234,10 @@ P["WindTools"]["More Tools"] = {
 				},
 			},
 		},
-		["reset_instance"] = {
-			["enabled"] = true,
-			["prefix"] = true,
-			["channel"] = {
+		reset_instance = {
+			enabled = true,
+			prefix = true,
+			channel = {
 				["party"] = "PARTY",
 				["instance"] = "INSTANCE_CHAT",
 				["raid"] = "RAID",
@@ -255,6 +257,7 @@ P["WindTools"]["More Tools"] = {
 			["height"] = 60,
 			["width"] = 512,
 		},
+		["help_info"] = true,
 		["vehicleSeatScale"] = 1,
 	},
 	["Enhanced Tags"] = {
@@ -280,19 +283,22 @@ P["WindTools"]["More Tools"] = {
 				a = 1.0,
 			},
 			["stay_duration"] = 1.5,
-			["animation_duration"] = 0.5,
+			["animation_duration"] = 1,
 			["scale"] = 0.8,
 		},
 		["custom_text"] = {
 			["enabled"] = false,
-			["custom_enter_text"] = "",
-			["custom_leave_text"] = "",
+			["custom_enter_text"] = L["Enter Combat"],
+			["custom_leave_text"] = L["Leave Combat"],
 		},
 	},
 	["Fast Loot"] = {
 		["enabled"] = true,
 		["speed"] = 0.3,
 	},
+	["Fix Artifact Transmog"] = {
+		enabled = true,
+	}
 }
 
 WT.ToolConfigs["More Tools"] = {
@@ -2268,7 +2274,7 @@ WT.ToolConfigs["More Tools"] = {
 							order = 2,
 							type = "execute",
 							func = function(info)
-								E.db.WindTools["More Tools"]["Announce System"][info[4]]["text"] = P["WindTools"]["More Tools"]["Announce System"][info[4]]["text"]
+								E.db.WindTools["More Tools"]["Announce System"][info[4]][info[5]]["text"] = P["WindTools"]["More Tools"]["Announce System"][info[4]][info[5]]["text"]
 							end,
 							name = L["Use default text"],
 						},
@@ -2324,6 +2330,12 @@ WT.ToolConfigs["More Tools"] = {
 								},
 							},
 						},
+						delay = {
+							order = 4,
+							name = L["Delay (sec)"],
+							type = 'range',
+							min = 0, max = 20, step = 1,
+						},
 					},
 				},
 				resurrection = {
@@ -2345,7 +2357,7 @@ WT.ToolConfigs["More Tools"] = {
 							order = 2,
 							type = "execute",
 							func = function(info)
-								E.db.WindTools["More Tools"]["Announce System"][info[4]]["text"] = P["WindTools"]["More Tools"]["Announce System"][info[4]]["text"]
+								E.db.WindTools["More Tools"]["Announce System"][info[4]][info[5]]["text"] = P["WindTools"]["More Tools"]["Announce System"][info[4]][info[5]]["text"]
 							end,
 							name = L["Use default text"],
 						},
@@ -2432,6 +2444,12 @@ WT.ToolConfigs["More Tools"] = {
 									},
 								},
 							},
+						},
+						delay = {
+							order = 6,
+							name = L["Delay (sec)"],
+							type = 'range',
+							min = 0, max = 20, step = 1,
 						},
 					},
 				},			
@@ -2571,13 +2589,13 @@ WT.ToolConfigs["More Tools"] = {
 	},
 	["Enter Combat Alert"] = {
 		tDesc   = L["Alert you after enter or leave combat."],
-		oAuthor = "loudsoul",
+		oAuthor = "houshuu",
 		cAuthor = "houshuu",
 		["style"] = {
 			order = 5,
 			name = L["Style"],
 			get = function(info) return E.db.WindTools["More Tools"]["Enter Combat Alert"]["style"][info[#info]] end,
-			set = function(info, value) E.db.WindTools["More Tools"]["Enter Combat Alert"]["style"][info[#info]] = value; E:StaticPopup_Show("PRIVATE_RL") end,
+			set = function(info, value) E.db.WindTools["More Tools"]["Enter Combat Alert"]["style"][info[#info]] = value; E:GetModule("Wind_EnterCombatAlert"):RefreshAlert() end,
 			args = {
 				["font_name"] = {
 					order = 1,
@@ -2662,20 +2680,20 @@ WT.ToolConfigs["More Tools"] = {
 			order = 6,
 			name = L["Custom Text"],
 			get = function(info) return E.db.WindTools["More Tools"]["Enter Combat Alert"]["custom_text"][info[#info]] end,
-			set = function(info, value) E.db.WindTools["More Tools"]["Enter Combat Alert"]["custom_text"][info[#info]] = value; E:StaticPopup_Show("PRIVATE_RL") end,
+			set = function(info, value) E.db.WindTools["More Tools"]["Enter Combat Alert"]["custom_text"][info[#info]] = value; E:GetModule("Wind_EnterCombatAlert"):RefreshAlert(); end,
 			args = {
 				["enabled"] = {
 					order = 1,
 					name = L["Enable"],
 				},
-				["custom_enter_combat"] = {
+				["custom_enter_text"] = {
 					order = 2,
 					type = "input",
 					name = L["Custom Text (Enter)"],
 					width = 'full',
 					disabled = function(info) return not E.db.WindTools["More Tools"]["Enter Combat Alert"]["custom_text"] end,
 				},
-				["custom_leave_combat"] = {
+				["custom_leave_text"] = {
 					order = 3,
 					type = "input",
 					disabled = function(info) return not E.db.WindTools["More Tools"]["Enter Combat Alert"]["custom_text"] end,
@@ -2722,8 +2740,14 @@ WT.ToolConfigs["More Tools"] = {
 					name = L["Move ElvUI Bag"],
 					disabled = function(info) return not E.db.WindTools["More Tools"]["Enhanced Blizzard Frame"].enabled or not E.db.WindTools["More Tools"]["Enhanced Blizzard Frame"]["moveframe"] end,
 				},
-				["remember"] = {
+				["help_info"] = {
 					order = 3,
+					name = L["Help information"],
+					desc = L["When you moved or resized a frame, it will display a message contains introduction of the module."],
+					disabled = function(info) return not E.db.WindTools["More Tools"]["Enhanced Blizzard Frame"].enabled or not E.db.WindTools["More Tools"]["Enhanced Blizzard Frame"]["moveframe"] end,
+				},
+				["remember"] = {
+					order = 4,
 					name = L["Remember Position"],
 					disabled = function(info) return not E.db.WindTools["More Tools"]["Enhanced Blizzard Frame"].enabled or not E.db.WindTools["More Tools"]["Enhanced Blizzard Frame"]["moveframe"] end,
 				},
@@ -2834,5 +2858,10 @@ WT.ToolConfigs["More Tools"] = {
 		},
 		func = function()
 		end,
+	},
+	["Fix Artifact Transmog"] = {
+		tDesc   = L["Fix saving Legion artifact in your transmog outfits."],
+		oAuthor = "zaCade",
+		cAuthor = "houshuu",
 	},
 }

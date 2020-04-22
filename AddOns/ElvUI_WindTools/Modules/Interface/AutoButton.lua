@@ -179,6 +179,8 @@ local function HideAllButton(event)
 	for i = k, 12 do
 		AutoButtonHide(_G["AutoQuestButton"..i])
 	end
+
+	if AB.db.disableSlot then return end
 	for i = 1, 12 do
 		AutoButtonHide(_G["AutoSlotButton"..i])
 	end
@@ -310,10 +312,12 @@ function AB:ScanItem(event)
 				end
 			end
 		end
-		for k, v in pairs(self.db.whiteList) do
-			local count = GetItemCount(k)
-			if count and (count > 0) and v and (not self.db.blankList[k]) then
-				tinsert(questItemIDList, k)
+		if self.db.whiteList then
+			for k, v in pairs(self.db.whiteList) do
+				local count = GetItemCount(k)
+				if count and (count > 0) and v and (not self.db.blankList[k]) then
+					tinsert(questItemIDList, k)
+				end
 			end
 		end
 		if GetItemCount(123866) and (GetItemCount(123866) >= 5) and (not self.db.blankList[123866]) and (GetCurrentMapAreaID("player") == 945) then
@@ -331,9 +335,9 @@ function AB:ScanItem(event)
 		end
 	end)
 	
-	if self.db.questNum > 0 then
+	if AB.db and AB.db.questNum and AB.db.questNum > 0 then
 		local ApItemNum = 0
-		if self.db.AptifactItem and (event == "BAG_UPDATE_DELAYED") then
+		if AB.db.AptifactItem and (event == "BAG_UPDATE_DELAYED") then
 			local itemLink, itemID = GetAptifactItem()
 			if itemLink then
 				ApItemNum = 1
@@ -355,7 +359,7 @@ function AB:ScanItem(event)
 		end
 		if _G["AutoQuestButton1"].ap then ApItemNum = 1 end
 			
-		if not self.db.AptifactItem then
+		if not AB.db.AptifactItem then
 			_G["AutoQuestButton1"].ap = false
 			ApItemNum = 0
 		end
@@ -363,7 +367,7 @@ function AB:ScanItem(event)
 			local itemID = questItemIDList[i]
 			local itemName = GetItemInfo(itemID)
 
-			if i > self.db.questNum then break; end
+			if i > AB.db.questNum then break; end
 			
 			local AutoButton = _G["AutoQuestButton"..(i+ApItemNum)]
 			local count = GetItemCount(itemID, nil, 1)
@@ -407,17 +411,18 @@ function AB:ScanItem(event)
 	end
 	
 	-- Scan inventory for Equipment matches
+	if self.db.disableSlot then return end
 	local num = 0
-	if self.db.slotNum > 0 then
+	if AB.db and AB.db.slotNum and AB.db.slotNum > 0 then
 		for w = 1, 18 do
 			local slotID = GetInventoryItemID("player", w)
-			if slotID and IsSlotItem(slotID) and not self.db.blankList[slotID] then
+			if slotID and IsSlotItem(slotID) and not AB.db.blankList[slotID] then
 				local iSpell = GetItemSpell(slotID)
 				local itemName, _, rarity = GetItemInfo(slotID)
 				
 				local itemIcon = GetInventoryItemTexture("player", w)
 				num = num + 1
-				if num > self.db.slotNum then break; end
+				if num > AB.db.slotNum then break; end
 				
 				local AutoButton = _G["AutoSlotButton".. num]
 				if not AutoButton then break; end
@@ -447,6 +452,7 @@ end
 
 local lastUpdate = 0
 function AB:ScanItemCount(elapsed)
+	if not AB.db or not AB.db.questNum then return end
 	lastUpdate = lastUpdate + elapsed
 	if lastUpdate < 0.5 then
 		return
@@ -467,7 +473,7 @@ function AB:ScanItemCount(elapsed)
 end
 
 function AB:UpdateBind()
-	if not self.db then return; end
+	if not self.db or not self.db.questNum or not self.db.slotNum then return end
 	
 	for i = 1, self.db.questNum do
 		local bindButton = 'CLICK AutoQuestButton'..i..':LeftButton'
@@ -552,24 +558,25 @@ function AB:UpdateAutoButton()
 			f:Point("LEFT", lastButton, "RIGHT", 3, 0)
 		end
 	end
-	
-	for i = 1, self.db.slotNum do
-		local f = CreateButton("AutoSlotButton"..i, self.db.slotSize)
-		buttonsPerRow = self.db.slotPerRow
-		lastButton = _G["AutoSlotButton"..i-1];
-		lastColumnButton = _G["AutoSlotButton"..i-buttonsPerRow];
-		
-		if self.db.slotNum < self.db.slotPerRow then
-			buttonsPerRow = self.db.questNum;
-		end		
-		f:ClearAllPoints()
-		
-		if i == 1 then
-			f:Point("LEFT", AutoButtonAnchor2, "LEFT", 0, 0)
-		elseif (i-1) % buttonsPerRow == 0 then
-			f:Point("TOP", lastColumnButton, "BOTTOM", 0, -3)
-		else
-			f:Point("LEFT", lastButton, "RIGHT", 3, 0)
+	if not self.db.disableSlot then
+		for i = 1, self.db.slotNum do
+			local f = CreateButton("AutoSlotButton"..i, self.db.slotSize)
+			buttonsPerRow = self.db.slotPerRow
+			lastButton = _G["AutoSlotButton"..i-1];
+			lastColumnButton = _G["AutoSlotButton"..i-buttonsPerRow];
+			
+			if self.db.slotNum < self.db.slotPerRow then
+				buttonsPerRow = self.db.questNum;
+			end		
+			f:ClearAllPoints()
+			
+			if i == 1 then
+				f:Point("LEFT", AutoButtonAnchor2, "LEFT", 0, 0)
+			elseif (i-1) % buttonsPerRow == 0 then
+				f:Point("TOP", lastColumnButton, "BOTTOM", 0, -3)
+			else
+				f:Point("LEFT", lastButton, "RIGHT", 3, 0)
+			end
 		end
 	end
 	self:ToggleAutoButton()
@@ -589,14 +596,16 @@ function AB:Initialize()
 	AutoButtonAnchor:SetClampedToScreen(true)
 	AutoButtonAnchor:Point("BOTTOMLEFT", RightChatPanel or LeftChatPanel, "TOPLEFT", 0, 4)
 	AutoButtonAnchor:Size(self.db.questNum > 0 and self.db.questSize * self.db.questNum or 260, self.db.questNum > 0 and self.db.questSize or 40)
-	E:CreateMover(AutoButtonAnchor, "AutoButtonAnchorMover", L["Auto QuestItem Button"], nil, nil, nil, "ALL,EUI", function() return AB.db.enabled; end)
+	E:CreateMover(AutoButtonAnchor, "AutoButtonAnchorMover", L["Auto QuestItem Button"], nil, nil, nil, 'WINDTOOLS,ALL', function() return AB.db.enabled; end)
 	
-	-- Create anchor2
-	local AutoButtonAnchor2 = CreateFrame("Frame", "AutoButtonAnchor2", UIParent)
-	AutoButtonAnchor2:SetClampedToScreen(true)
-	AutoButtonAnchor2:Point("BOTTOMLEFT", RightChatPanel or LeftChatPanel, "TOPLEFT", 0, 48)
-	AutoButtonAnchor2:Size(self.db.slotNum > 0 and self.db.slotSize * self.db.slotNum or 260, self.db.slotNum > 0 and self.db.slotSize or 40)
-	E:CreateMover(AutoButtonAnchor2, "AutoButtonAnchor2Mover", L["Auto InventoryItem Button"], nil, nil, nil, "ALL,EUI", function() return AB.db.enabled; end)
+	if not self.db.disableSlot then
+		-- Create anchor2
+		local AutoButtonAnchor2 = CreateFrame("Frame", "AutoButtonAnchor2", UIParent)
+		AutoButtonAnchor2:SetClampedToScreen(true)
+		AutoButtonAnchor2:Point("BOTTOMLEFT", RightChatPanel or LeftChatPanel, "TOPLEFT", 0, 48)
+		AutoButtonAnchor2:Size(self.db.slotNum > 0 and self.db.slotSize * self.db.slotNum or 260, self.db.slotNum > 0 and self.db.slotSize or 40)
+		E:CreateMover(AutoButtonAnchor2, "AutoButtonAnchor2Mover", L["Auto InventoryItem Button"], nil, nil, nil, 'WINDTOOLS,ALL', function() return AB.db.enabled; end)
+	end
 	
 	self:UpdateAutoButton()
 end

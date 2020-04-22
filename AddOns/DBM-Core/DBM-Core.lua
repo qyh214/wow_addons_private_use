@@ -69,9 +69,9 @@ local function showRealDate(curseDate)
 end
 
 DBM = {
-	Revision = parseCurseDate("20200331140921"),
-	DisplayVersion = "8.3.19", -- the string that is shown as version
-	ReleaseRevision = releaseDate(2020, 3, 31) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	Revision = parseCurseDate("20200419142434"),
+	DisplayVersion = "8.3.20", -- the string that is shown as version
+	ReleaseRevision = releaseDate(2020, 4, 19) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -137,7 +137,7 @@ DBM.DefaultOptions = {
 	ChosenVoicePack = "None",
 	VoiceOverSpecW2 = "DefaultOnly",
 	AlwaysPlayVoice = false,
-	EventSoundVictory2 = "None",
+	EventSoundVictory2 = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\SmoothMcGroove_Fanfare.ogg",
 	EventSoundWipe = "None",
 	EventSoundEngage2 = "None",
 	EventSoundMusic = "None",
@@ -456,7 +456,7 @@ local dataBroker
 local voiceSessionDisabled = false
 local handleSync
 
-local fakeBWVersion, fakeBWHash = 182, "85a74be"
+local fakeBWVersion, fakeBWHash = 184, "b79a38c"
 local versionQueryString, versionResponseString = "Q^%d^%s", "V^%d^%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -526,8 +526,7 @@ local IsQuestFlaggedCompleted = C_QuestLog and C_QuestLog.IsQuestFlaggedComplete
 
 local SendAddonMessage = C_ChatInfo.SendAddonMessage
 
--- for Phanx' Class Colors
-local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
+local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS-- for Phanx' Class Colors
 
 ---------------------------------
 --  General (local) functions  --
@@ -2385,13 +2384,13 @@ do
 			end
 			if v.displayVersion and not v.bwversion then--DBM, no BigWigs
 				if self.Options.ShowAllVersions then
-					self:AddMsg(DBM_CORE_VERSIONCHECK_ENTRY:format(name, "DBM "..v.displayVersion, showRealDate(v.revision), v.VPVersion or ""), false)--Only display VP version if not running two mods
+					self:AddMsg(DBM_CORE_VERSIONCHECK_ENTRY:format(name, DBM_DBM.." "..v.displayVersion, showRealDate(v.revision), v.VPVersion or ""), false)--Only display VP version if not running two mods
 				end
 				if notify and v.revision < self.ReleaseRevision then
 					SendChatMessage(chatPrefixShort..DBM_CORE_YOUR_VERSION_OUTDATED, "WHISPER", nil, v.name)
 				end
 			elseif self.Options.ShowAllVersions and v.displayVersion and v.bwversion then--DBM & BigWigs
-				self:AddMsg(DBM_CORE_VERSIONCHECK_ENTRY_TWO:format(name, "DBM "..v.displayVersion, showRealDate(v.revision), DBM_BIG_WIGS, versionResponseString:format(v.bwversion, v.bwhash)), false)
+				self:AddMsg(DBM_CORE_VERSIONCHECK_ENTRY_TWO:format(name, DBM_DBM.." "..v.displayVersion, showRealDate(v.revision), DBM_BIG_WIGS, versionResponseString:format(v.bwversion, v.bwhash)), false)
 			elseif self.Options.ShowAllVersions and not v.displayVersion and v.bwversion then--BigWigs, No DBM
 				self:AddMsg(DBM_CORE_VERSIONCHECK_ENTRY:format(name, DBM_BIG_WIGS, versionResponseString:format(v.bwversion, v.bwhash), ""), false)
 			else
@@ -5693,11 +5692,14 @@ do
 		["mythic"] = "mythic",
 		["worldboss"] = "normal",
 		["timewalker"] = "timewalker",
+		["progressivechallenges"] = "normal",
+		--BFA
 		["normalwarfront"] = "normal",
 		["heroicwarfront"] = "heroic",
 		["normalisland"] = "normal",
 		["heroicisland"] = "heroic",
 		["mythicisland"] = "mythic",
+		["teamingisland"] = "mythic",--Blizz uses mythic as fallback, so I will too
 		--Legacy
 		["lfr25"] = "lfr25",
 		["normal10"] = "normal",
@@ -6420,7 +6422,7 @@ function DBM:GetCurrentInstanceDifficulty()
 		return "heroic", difficultyName.." - ", difficulty, instanceGroupSize, 0
 	elseif difficulty == 16 then--Mythic 20 man Raid
 		return "mythic", difficultyName.." - ", difficulty, instanceGroupSize, 0
-	elseif difficulty == 17 or difficulty == 151 then--Flexible LFR (ie post WoD zones)/8.3+ LFR?
+	elseif difficulty == 17 or difficulty == 151 then--Flexible LFR (ie post WoD zones)/8.3+ LFR
 		return "lfr", difficultyName.." - ", difficulty, instanceGroupSize, 0
 	elseif difficulty == 18 then--Special event 40 player LFR Queue (used by molten core aniversery event)
 		return "event40", difficultyName.." - ", difficulty, instanceGroupSize, 0
@@ -6444,6 +6446,10 @@ function DBM:GetCurrentInstanceDifficulty()
 		return "normal20", difficultyName.." - ",difficulty, instanceGroupSize, 0
 	elseif difficulty == 149 then--Heroic BfA Warfront
 		return "heroicwarfront", difficultyName.." - ",difficulty, instanceGroupSize, 0
+	elseif difficulty == 152 or difficulty == 167 then--Visions of Nzoth (bfa), Torghast (shadowlands)
+		return "progressivechallenges", difficultyName.." - ",difficulty, instanceGroupSize, 0
+	elseif difficulty == 153 then---Teaming BfA? Island expedition
+		return "teamingisland", difficultyName.." - ",difficulty, instanceGroupSize, 0
 	else--failsafe
 		return "normal", "", difficulty, instanceGroupSize, 0
 	end
@@ -7014,7 +7020,7 @@ end
 --  Misc. Functions  --
 -----------------------
 function DBM:AddMsg(text, prefix)
-	local tag = prefix or (self.localization and self.localization.general.name) or "DBM"
+	local tag = prefix or (self.localization and self.localization.general.name) or DBM_DBM
 	local frame = _G[tostring(DBM.Options.ChatFrame)]
 	frame = frame and frame:IsShown() and frame or DEFAULT_CHAT_FRAME
 	if prefix ~= false then
@@ -7602,7 +7608,7 @@ function bossModPrototype:IsValidWarning(sourceGUID, customunitID)
 	return false
 end
 
---Skip param is used when CheckInterruptFilter is actually being used for a simpe target/focus check and nothing more.
+--force param is used when CheckInterruptFilter is actually being used for a simpe target/focus check and nothing more.
 --checkCooldown should never be passed with skip or COUNT interrupt warnings. It should be passed with any other interrupt filter
 function bossModPrototype:CheckInterruptFilter(sourceGUID, force, checkCooldown, ignoreTandF)
 	if DBM.Options.FilterInterrupt2 == "None" and not force then return true end--user doesn't want to use interrupt filter, always return true
@@ -8017,10 +8023,11 @@ do
 		["RaidCooldown"] = true,
 		["RemovePoison"] = true,--from ally
 		["RemoveDisease"] = true,--from ally
-		["RemoveEnrage"] = true,--Can remove enemy enrage. returned in 8.x!
 		["RemoveCurse"] = true,--from ally
 		["RemoveMagic"] = true,--from ally
+		["RemoveEnrage"] = true,--Can remove enemy enrage. returned in 8.x+!
 		["MagicDispeller"] = true,--from ENEMY, not debuffs on players. use "Healer" or "RemoveMagic" for ally magic dispels. ALL healers can do that on retail, and warlock Imps
+		["ImmunityDispeller"] = true,--Priest mass dispel or Warrior Shattering Throw (shadowlands)
 		["HasInterrupt"] = true,--Has an interrupt that is 24 seconds or less CD that is BASELINE (not a talent)
 		["HasImmunity"] = true,--Has an immunity that can prevent or remove a spell effect (not just one that reduces damage like turtle or dispursion)
 	}]]
@@ -8077,13 +8084,15 @@ do
 			["RaidCooldown"] = true,--Rallying Cry
 			["Physical"] = true,
 			["HasInterrupt"] = true,
+			["ImmunityDispeller"] = true,
 		},
 		[73] = {	--Protection Warrior
 			["Tank"] = true,
 			["Melee"] = true,
 			["Physical"] = true,
 			["HasInterrupt"] = true,
-			["RaidCooldown"] = true,--Rallying Cry (in 8.x)
+			["RaidCooldown"] = true,--Rallying Cry
+			["ImmunityDispeller"] = true,
 		},
 		[102] = {	--Balance Druid
 			["Dps"] = true,
@@ -8153,6 +8162,7 @@ do
 			["RangedDps"] = true,
 			["Physical"] = true,
 			["HasInterrupt"] = true,
+			--["RemoveEnrage"] = true,--Enable in 9.0
 		},
 		[255] = {	--Survival Hunter (Legion+)
 			["Dps"] = true,
@@ -8172,6 +8182,7 @@ do
 			["RemoveDisease"] = true,
 			["RemoveMagic"] = true,
 			["MagicDispeller"] = true,
+			["ImmunityDispeller"] = true,
 		},
 		[258] = {	--Shadow Priest
 			["Dps"] = true,
@@ -8181,6 +8192,7 @@ do
 			["SpellCaster"] = true,
 			["CasterDps"] = true,
 			["MagicDispeller"] = true,
+			["ImmunityDispeller"] = true,
 			["HasInterrupt"] = true,
 			["RemoveDisease"] = true,
 		},
@@ -11474,7 +11486,7 @@ end
 
 function bossModPrototype:SetRevision(revision)
 	revision = parseCurseDate(revision or "")
-	if not revision or revision == "20200331140921" then
+	if not revision or revision == "20200419142434" then
 		-- bad revision: either forgot the svn keyword or using github
 		revision = DBM.Revision
 	end

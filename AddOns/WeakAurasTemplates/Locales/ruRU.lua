@@ -42,7 +42,7 @@ local L = WeakAuras.L
 	L["cooldown"] = "(восстановление)"
 	L["Cooldown"] = "Перезарядка"
 	L["Cooldown Tracking"] = "Отслеживание восстановления"
-	L["Create Auras"] = "Создать Ауры"
+	L["Create Auras"] = "Создать"
 	L["debuff"] = "дебафф"
 	L["Debuffs"] = "Дебаффы"
 	L["Enchants"] = "Чары"
@@ -59,8 +59,7 @@ local L = WeakAuras.L
 	L["Highlight while debuffed."] = "Выделяет индикацию, когда на цели есть дебафф."
 	--[[Translation missing --]]
 	L["Highlight while spell is active."] = "Highlight while spell is active."
-	--[[Translation missing --]]
-	L["Hold CTRL to create multiple auras at once"] = "Hold CTRL to create multiple auras at once"
+	L["Hold CTRL to create multiple auras at once"] = "Удерживайте Ctrl для создания нескольких индикаций"
 	L["Keeps existing triggers intact"] = "Сохраняет существующие триггеры нетронутыми"
 	L["Next"] = "Далее"
 	--[[Translation missing --]]
