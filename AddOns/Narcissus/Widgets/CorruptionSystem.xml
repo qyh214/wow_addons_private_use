@@ -108,7 +108,7 @@
         </Scripts>
     </Button>
 
-    <Frame name="Narci_CorruptionTooltip" frameStrata="HIGH" movable="false" enableMouse="true" scale="1" ignoreParentScale="false" hidden="true" clampedToScreen="true" Alpha="0">
+    <Frame name="Narci_CorruptionTooltip" frameStrata="HIGH" movable="false" enableMouse="true" scale="1" ignoreParentScale="false" hidden="true" clampedToScreen="false" Alpha="0">
         <Size x="360" y="360"/>
         <HitRectInsets>
             <AbsInset left="0" right="-32" top="-32" bottom="-24"/>
@@ -218,7 +218,7 @@
                                     <Color r="0" g="0" b="0" a="0.45"/>
                                     <Anchors>
                                         <Anchor point="TOPLEFT" relativePoint="TOP" x="-0.25"/>
-                                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
+                                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="0.25"/>
                                     </Anchors>
                                 </Texture>
                             </Layer>

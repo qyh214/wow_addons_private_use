@@ -30,6 +30,8 @@ local L = WeakAuras.L
 	L["Always shows the aura, turns red when out of range."] = "Всегда показывает индикацию; становится красной, если цель вне зоны действия."
 	L["Back"] = "Назад"
 	L["Basic Show On Cooldown"] = "Показать восстановление"
+	--[[Translation missing --]]
+	L["Basic Show On Ready"] = "Basic Show On Ready"
 	L["Bloodlust/Heroism"] = "Жажда крови / Героизм"
 	L["buff"] = "(бафф)"
 	L["Buffs"] = "Баффы"
@@ -71,6 +73,8 @@ local L = WeakAuras.L
 	L["Only show the aura when the item is on cooldown."] = "Показывает индикацию, только когда предмет восстанавливается."
 	L["Only shows the aura if the target has the buff."] = "Показывает индикацию, только когда на цели есть бафф."
 	L["Only shows the aura when the ability is on cooldown."] = "Показывает индикацию, только когда способность восстанавливается."
+	--[[Translation missing --]]
+	L["Only shows the aura when the ability is ready to use."] = "Only shows the aura when the ability is ready to use."
 	L["Pet alive"] = "Питомец жив"
 	L["Pet Behavior"] = "Поведение питомца"
 	L["PvP Azerite Traits"] = "Азеритовые PvP таланты"
@@ -119,6 +123,8 @@ local L = WeakAuras.L
 	L["Show Cooldown and Proc Tracking"] = "Show Cooldown and Proc Tracking"
 	--[[Translation missing --]]
 	L["Show Cooldown and Totem Information"] = "Show Cooldown and Totem Information"
+	--[[Translation missing --]]
+	L["Show on Ready"] = "Show on Ready"
 	L["Show Only if Buffed"] = "Показать бафф"
 	L["Show Only if Debuffed"] = "Показать дебафф"
 	L["Show Only if on Cooldown"] = "Показать восстановление"

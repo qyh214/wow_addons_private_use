@@ -1,6 +1,6 @@
 ## Interface: 80300
 ## Plain Title: Narcissus
-## Version: 1.0.7
+## Version: 1.0.9a
 
 ## Title: |cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r
 
@@ -9,7 +9,7 @@
 ## Notes-zhTW: 為展示和分享而生的沈浸式角色界面|n|cff959595命令: /Narci|r
 
 ## Author: Peterodox
-## SavedVariables: NarcissusDB
+## SavedVariables: NarcissusDB, NarciCreatureOptions
 ## SavedVariablesPerCharacter: NarcissusDB_PC
 
 
@@ -37,8 +37,10 @@ Widgets\EquipmentSetManager.xml
 
 Widgets\PlayerModel.xml
 Widgets\SpellVisualBrowser.xml
+Widgets\NPCBrowser.xml
 
 widgets\AFKMode.lua
+##widgets\ScreenshotInfo.xml
 ##widgets\Messi.lua
 widgets\AR.xml
 widgets\AdvancedDressingRoom.xml

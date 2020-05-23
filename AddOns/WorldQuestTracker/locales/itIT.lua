@@ -25,16 +25,11 @@ L["S_GROUPFINDER_ACTIONS_SEARCH_TOOLTIP"] = "Unisciti ad un gruppo che stia face
 L["S_GROUPFINDER_ACTIONS_SEARCHING"] = "cercando..."
 L["S_GROUPFINDER_ACTIONS_SEARCHMORE"] = "clicca per cercare altri membri per il gruppo"
 L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"] = "Lasciare l'attuale gruppo e cercarne un altro?"
---[[Translation missing --]]
---[[ L["S_GROUPFINDER_ACTIONS_UNAPPLY1"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_GROUPFINDER_ACTIONS_UNLIST"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_GROUPFINDER_ACTIONS_UNLISTING"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_GROUPFINDER_ACTIONS_WAITING"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_GROUPFINDER_AUTOOPEN_RARENPC_TARGETED"] = ""--]] 
+L["S_GROUPFINDER_ACTIONS_UNAPPLY1"] = "premi qui per rimuovere la coda e creare un nuovo gruppo"
+L["S_GROUPFINDER_ACTIONS_UNLIST"] = "premi qui per rimuovere dalla ricerca il tuo gruppo"
+L["S_GROUPFINDER_ACTIONS_UNLISTING"] = "esco dalla ricerca..."
+L["S_GROUPFINDER_ACTIONS_WAITING"] = "attendi..."
+L["S_GROUPFINDER_AUTOOPEN_RARENPC_TARGETED"] = "Apri automaticamente quando il bersaglio e' di tipo raro"
 --[[Translation missing --]]
 --[[ L["S_GROUPFINDER_ENABLED"] = ""--]] 
 --[[Translation missing --]]
@@ -218,8 +213,7 @@ L["S_TUTORIAL_WORLDMAPBUTTON"] = "Questo pulsante mostra la mappa delle Isole Di
 L["S_UNKNOWNQUEST"] = "Missione Sconosciuta"
 --[[Translation missing --]]
 --[[ L["S_WHATSNEW"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_WORLDBUTTONS_SHOW_NONE"] = ""--]] 
+L["S_WORLDBUTTONS_SHOW_NONE"] = "Nascondi indice"
 --[[Translation missing --]]
 --[[ L["S_WORLDBUTTONS_SHOW_TYPE"] = ""--]] 
 --[[Translation missing --]]

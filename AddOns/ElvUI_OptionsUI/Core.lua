@@ -90,19 +90,17 @@ local DEVELOPERS = {
 	"Omega1970",
 	"Hydrazine",
 	"Blazeflack",
-	"|cffff2020NihilisticPandemonium|r",
-	"|TInterface\\Icons\\INV_Misc_MonsterClaw_04:15:15:0:0:64:64:5:59:5:59|t |cffff7d0aMerathilis|r",
 	"|cff0070DEAzilroka|r",
 	"|cff9482c9Darth Predator|r",
-	E:TextGradient("Simpy but my name needs to be longer", 0.45,0.45,0.45, 0.98,0.4,0.53, 0.98,0.4,0.53, 0.45,0.98,0.45).."|r"
+	"|T134297:15:15:0:0:64:64:5:59:5:59|t |cffff7d0aMerathilis|r",
+	"|TInterface\\AddOns\\ElvUI\\Media\\ChatLogos\\FoxWarlock:15:15:0:0:64:64:5:59:5:59|t |cffff2020NihilisticPandemonium|r",
+	E:TextGradient("Simpy but my name needs to be longer.", 1.0,0.6,0.4, 1.0,0.4,0.6, 0.6,0.4,1.0, 0.4,0.6,1.0, 0.4,1.0,0.6).."|r"
 }
-
 
 local TESTERS = {
 	"Tukui Community",
 	"Affinity",
 	"Modarch",
-	"|TInterface\\Icons\\INV_Misc_MonsterClaw_04:15:15:0:0:64:64:5:59:5:59|t |cffFF7D0ABladesdruid|r - AKA SUPERBEAR",
 	"Tirain",
 	"Phima",
 	"Veiled",
@@ -112,12 +110,16 @@ local TESTERS = {
 	"Kurhyus",
 	"Shrom",
 	"BuG",
-	"Rubgrsch",
-	"Luckyone",
+	"Kringel",
+	"Botanica",
+	"|cff00c0faBenik|r",
+	"|T136012:15:15:0:0:64:64:5:59:5:59|t |cff006fdcRubgrsch|r |T656558:15:15:0:0:64:64:5:59:5:59|t",
+	"|TInterface\\AddOns\\ElvUI\\Media\\ChatLogos\\Clover:15:15:0:0:64:64:5:59:5:59|t Luckyone",
 	"Yachanay",
 	"AcidWeb",
-	"|TInterface\\Icons\\INV_Staff_30:15:15:0:0:64:64:5:59:5:59|t Loon - For being right",
-	"Catok"
+	"Catok",
+	"|T135167:15:15:0:0:64:64:5:59:5:59|t Loon - For being right",
+	"|T134297:15:15:0:0:64:64:5:59:5:59|t |cffFF7D0ABladesdruid|r - AKA SUPERBEAR",
 }
 
 local function SortList(a, b)
@@ -295,7 +297,7 @@ local function ExportImport_Open(mode)
 	Frame.frame:SetFrameStrata("FULLSCREEN_DIALOG")
 	Frame:SetLayout("flow")
 
-	local Box = E.Libs.AceGUI:Create("MultiLineEditBox")
+	local Box = E.Libs.AceGUI:Create("MultiLineEditBox-ElvUI")
 	Box:SetNumLines(30)
 	Box:DisableButton(true)
 	Box:SetWidth(800)
@@ -340,7 +342,7 @@ local function ExportImport_Open(mode)
 		ExportFormatDropdown:SetWidth(150)
 		Frame:AddChild(ExportFormatDropdown)
 
-		local exportButton = E.Libs.AceGUI:Create("Button")
+		local exportButton = E.Libs.AceGUI:Create("Button-ElvUI")
 		exportButton:SetText(L["Export Now"])
 		exportButton:SetAutoWidth(true)
 		exportButton:SetCallback("OnClick", function()

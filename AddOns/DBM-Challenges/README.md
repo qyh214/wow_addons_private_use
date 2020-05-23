@@ -14,6 +14,7 @@ Features:
 * Helpful combat warnings & timers for all of the Proving Grounds challenges added in Mists of Pandaria and beyond.
 * Helpful combat warnings & timers for Legion's Broken Shore scenario quests offered by Mage Tower in patch 7.2
 * Helpful combat warnings & Timers for Battle for Azeroth N'Zoth Vision scenarios added in patch 8.3
+* Helpful combat warnings & Timers for Shadowlands Torghast scenario added in patch 9.0
 * All warnings are configurable through DBM GUI
 
 Requirements

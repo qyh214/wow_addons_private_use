@@ -9,6 +9,54 @@
 		</Anchors>	
 	</Frame>
 
+	<Button name="Narci_NavigationButton_Template" virtual="true"> <!--Scripts in NarciTooltip-->
+		<Size x="15" y="15"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\SpellVisualBrowser\NavigationButton" parentKey="Background">
+					<Size x="30" y="30"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture setAllPoints="true" parentKey="Highlight" hidden="true">
+					<Color r="1" g="1" b="1" a="0.25"/>	
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="1">
+				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\SpellVisualBrowser\Icons" parentKey="Icon">
+					<TexCoords left="0" right="0.25" top="0.25" bottom="0.5"/>
+					<Size x="18" y="18"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				NarciTooltip:ShowTooltip(self);
+				self.Highlight:Show();
+			</OnEnter>
+			<OnLeave>
+				self.Highlight:Hide();
+				NarciTooltip:JustHide();
+			</OnLeave>
+			<OnMouseDown>
+				NarciTooltip:JustHide();
+				self.Icon:SetSize(16, 16);
+			</OnMouseDown>
+			<OnMouseUp>
+				self.Icon:SetSize(18, 18);
+			</OnMouseUp>
+			<OnDoubleClick>
+				return;
+			</OnDoubleClick>
+		</Scripts>
+	</Button>
+
 	<Frame name="Narci_HeaderTemplate" virtual="true">
 		<Size y="20"/>
 		<Layers>
@@ -213,8 +261,9 @@
 			</OnLoad>
 			<OnShow>
 				--print(self.OppoDirection)
+				local _;
 				self:GetParent():Show()
-				Anchor1, _, _, self.StartPoint, self.StartPointY = self:GetParent():GetPoint();
+				_, _, _, self.StartPoint, self.StartPointY = self:GetParent():GetPoint();
 				--print(Anchor1.." "..self.StartPoint)
 			</OnShow>
 			<OnHide>
@@ -453,7 +502,7 @@
 			<AbsDimension x="14" y="14"/>
 		</Size>
 		<HitRectInsets>
-			<AbsInset left="-4" right="-144" top="-4" bottom="-4"/>
+			<AbsInset left="-4" right="-120" top="-4" bottom="-4"/>
 		</HitRectInsets>
 		<Layers>
 			<Layer level="BACKGROUND" textureSubLevel="2">
@@ -645,6 +694,19 @@
 				self.Background:SetColorTexture(0.3, 0.3, 0.3);
 				self.ConfirmButton:Hide();
 			</OnHide>
+		</Scripts>
+	</Button>
+
+	<Button name="NarciGenricKeyBindingButtonTemplate" inherits="NarciBindingButtonTemplate" mixin="NarciGenericKeyBindingButtonMixin" virtual="true">
+		<Animations>
+			<AnimationGroup parentKey="Timer">
+				<Scale duration="1.7" order="1"/>
+			</AnimationGroup>
+		</Animations>
+		<Scripts>
+			<OnShow method="GetBindingKey"/>
+			<OnClick method="OnClick"/>
+			<OnHide method="OnHide"/>
 		</Scripts>
 	</Button>
 
@@ -842,12 +904,6 @@
 						<MaxColor a="0.4" r="0" g="0" b="0"/>
 					</Gradient>
 				</Texture>
-				<Texture file="Interface\AddOns\Narcissus\Art\Tooltip\Tooltip-Pointer" nounload="true" hidden="true">
-					<Size x="18" y="18"/>
-					<Anchors>
-						<Anchor point="TOP" relativeKey="$parent.Background" relativePoint="BOTTOM" x="0" y="1"/>
-					</Anchors>
-				</Texture>
 			</Layer>
 			<Layer level="ART">
 				<Texture setAllPoints="true" parentKey="Gradient">
@@ -862,7 +918,7 @@
 					</Gradient>
 				</Texture>
 
-				<Texture File="Interface\AddOns\Narcissus\Art\Tooltip\Tooltip-White-Arrow" nounload="true" parentKey="Pointer">
+				<Texture File="Interface\AddOns\Narcissus\Art\Tooltip\Tooltip-White-Arrow" nounload="true" parentKey="Pointer"> <!--Vertical Down-->
 					<Size x="16" y="16"/>
 					<TexCoords left="0.5" right="1" top="0" bottom="1"/>
 					<Anchors>
@@ -1029,6 +1085,76 @@
 			<OnLoad method="OnLoad"/>
 		</Scripts>
     </ModelScene>
+
+
+	<Frame name="NarciFrameTemplate" mixin="NarciFrameMixin" virtual="true">
+		<Layers>
+			<Layer level="BACKGROUND" textureSubLevel="1">
+				<Texture setAllPoints="true">
+					<Color r="0.07" g="0.07" b="0.08" a="0.95"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="0" y="0"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+            <Layer level="BACKGROUND" textureSubLevel="10">
+                <Texture parentKey="HeaderBackground" setAllPoints="true">
+                    <Size y="20"/>
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT"/>
+					</Anchors>                    
+                    <Color a="1" r="1" g="1" b="1"/>
+                    <Gradient orientation="VERTICAL">
+                        <MinColor a="1" r="0.0" g="0.0" b="0.0"/>
+                        <MaxColor a="1" r="0.1" g="0.1" b="0.1"/>
+                    </Gradient>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <Texture inherits="NarciTopShadowTemplate"/>
+
+				<FontString parentKey="Header" inherits="AAAStatusNameMedium" justifyH="CENTER" justifyV="MIDDLE">
+					<Size x="0" y="0"/>
+                    <Color r="0.4" g="0.4" b="0.4" a="1"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.HeaderBackground" relativePoint="LEFT" x="4" y="0"/>
+						<Anchor point="RIGHT" relativeKey="$parent.HeaderBackground" relativePoint="RIGHT" x="-4" y="0"/>
+					</Anchors>
+				</FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Frame>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="-11" y="31"/>
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="11" y="-11"/>
+                </Anchors>
+                <Backdrop edgeFile="Interface\AddOns\Narcissus\Art\Tooltip\Tooltip-White-Border" tile="true">
+                    <EdgeSize>
+                        <AbsValue val="24"/>
+                    </EdgeSize>
+                    <TileSize>
+                        <AbsValue val="24"/>
+                    </TileSize>
+                    <BackgroundInsets>
+                        <AbsInset left="0" right="0" top="0" bottom="0"/>
+                    </BackgroundInsets>
+                </Backdrop>
+            </Frame>
+
+            <Button inherits="NarciCloseButtonTemplate">
+                <Anchors>
+                    <Anchor point="RIGHT" relativeKey="$parent.HeaderBackground" relativePoint="RIGHT" x="-4" y="0"/>
+                </Anchors>
+            </Button>
+		</Frames>
+		<Scripts>
+
+		</Scripts>
+	</Frame>
+
 
     <Frame name="Narci_ItemParser" frameStrata="HIGH" level="11" movable="true" enableMouse="true" clampedToScreen="true" hidden="true" Alpha="1">
         <Size x="300" y="400"/>

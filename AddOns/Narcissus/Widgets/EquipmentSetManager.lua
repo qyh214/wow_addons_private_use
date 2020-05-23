@@ -30,6 +30,7 @@ local sin = math.sin;
 local cos = math.cos;
 local pi = math.pi;
 
+local _;
 -----------------------------------------------------------------------------------
 --[[ LibEasing
 --

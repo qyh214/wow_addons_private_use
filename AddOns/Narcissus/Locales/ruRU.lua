@@ -19,3 +19,6 @@ NARCI_STAT_INTELLECT = "Интеллект";
 --Model Control--
 NARCI_GROUP_PHOTO = "Групповое Фото";
 NARCI_GROUP_PHOTO_NOTIFICATION = "Пожалуйста, выберите игрока.";
+
+--NPC Browser--
+NARCI_NPC_BROWSER_TITLE_LEVEL = "%?.*";      --Level ?? --Use this to check if the second line of the tooltip is NPC's title or unit type 

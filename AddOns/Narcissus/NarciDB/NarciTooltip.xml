@@ -36,11 +36,19 @@
 						<MaskedTexture childKey="Icon"/>
 					</MaskedTextures>
 				</MaskTexture>
-				<Texture File="Interface\AddOns\Narcissus\Art\Tooltip\Tooltip-White-Arrow" nounload="true" parentKey="Pointer">
+				<Texture File="Interface\AddOns\Narcissus\Art\Tooltip\Tooltip-White-Arrow" nounload="true" parentKey="Pointer"> <!--Vertical Bottom-->
 					<Size x="16" y="16"/>
 					<TexCoords left="0.5" right="1" top="0" bottom="1"/>
 					<Anchors>
 						<Anchor point="CENTER" relativeKey="$parent.inset" relativePoint="BOTTOM" x="0" y="0.5"/>
+					</Anchors>				
+				</Texture>
+
+				<Texture File="Interface\AddOns\Narcissus\Art\Tooltip\Tooltip-White-Arrow-Right" nounload="true" parentKey="Pointer2" hidden="true"> <!--Horizontal Right-->
+					<Size x="16" y="16"/>
+					<TexCoords left="0" right="1" top="0" bottom="0.5"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.inset" relativePoint="RIGHT"  x="-0.5" y="0"/>
 					</Anchors>				
 				</Texture>
 			</Layer>

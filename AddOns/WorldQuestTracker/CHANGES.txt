@@ -1,13 +1,12 @@
-lightweight tag 87556a1eab1339df4afdab662174844756e52a5b v8.3.0.393
+lightweight tag bc3d4746c1b95272fbffa8a492c85223891c448c v8.3.0.394
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Fri Mar 27 16:26:27 2020 -0300
+Date:	Tue Apr 28 10:13:00 2020 -0300
 
-commit 87556a1eab1339df4afdab662174844756e52a5b
+commit bc3d4746c1b95272fbffa8a492c85223891c448c
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Fri Mar 27 16:26:27 2020 -0300
+Date:   Tue Apr 28 10:13:00 2020 -0300
 
-    Revert "Merge pull request #7 from Numynum/patch-1"
+    Added support for factions in Legion and paragon quests
     
-    This reverts commit 194af6d341ad404491c557adcef135e8129e04f4, reversing
-    changes made to 98a644e265c76c9144501ecd7fef078d35a6b26d.
+    Also framework and localization updates
 

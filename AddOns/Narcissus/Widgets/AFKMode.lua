@@ -17,10 +17,12 @@ AFK:SetScript("OnEvent",function(self,event,...)
             Narci_MinimapButton:Click();
             Narci.isAFK = true;
             C_Timer.After(2, function()
-                Narci_Character.AutoStand:Play();
+                if NarcissusDB.AFKAutoStand then
+                    Narci_Character.AutoStand:Play();
+                end
             end)
             C_Timer.After(0.6, function()
-                PhotoModeController:SetAlpha(0);
+                Narci_PhotoModeController:SetAlpha(0);
                 if IsResting() then
                     DoEmote("Read", "none");
                 end
@@ -30,13 +32,10 @@ AFK:SetScript("OnEvent",function(self,event,...)
 end)
 
 --Override other AFK screens--
+--Unused
+--[[
 local function NullifyEvent(frame)
     if not frame then   return; end
     frame:SetScript("OnEvent", function()   return; end);
 end
-
---[[
-/run print(A1=DressUpFrame.ModelScene:GetPlayerActor():GetModelFileID())
-1968587 Straight
-917116  Stoop
 --]]

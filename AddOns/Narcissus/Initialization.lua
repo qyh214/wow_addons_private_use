@@ -1,3 +1,10 @@
+--[[
+Saved Variables:
+1. NarcissusDB (primary)
+2. NarciCreatureOptions (creature database)
+3. NarcissusDB_PC (per character)
+--]]
+
 Narci = {};
 
 local DefaultValue = {
@@ -13,7 +20,7 @@ local DefaultValue = {
     ["CameraOrbit"] = true,
     ["CameraSafeMode"] = true,
     ["BorderTheme"] = "Bright",
-    ["TooltipTheme"] = "Dark",
+    ["TooltipTheme"] = "Bright",
     ["TruncateText"] = false,
     ["ItemNameWidth"] = 180,
     ["FadeButton"] = false,
@@ -26,6 +33,7 @@ local DefaultValue = {
     ["LetterboxEffect"] = false,
     ["LetterboxRatio"] = 2.35,
     ["AFKScreen"] = false,
+    ["AFKAutoStand"] = false,                       --Do /stand emote now and then when you go AFK
     ["GemManager"] = true,                          --Enable gem manager for Blizzard item socketing frame
     ["DressingRoom"] = true,                        --Enable dressing room module
     ["DressingRoomUseTargetModel"] = true,          --Replace the the dressing room room with your targeted player
@@ -43,15 +51,30 @@ local DefaultValue = {
     ["CorruptionTooltipModel"] = true,
     ["UseEscapeButton"] = true,                     --Use Escape button to exit
     ["IndependentMinimapButton"] = false,           --Set Minimap Button Parent to Minimap or UIParent
-}
+
+    --Internal Hotkey
+    ["SearchRelativesHotkey"] = "TAB",              --The key you press to begin/cycle relative search
+};
+
+local CreatureDatabaseOptions = {
+    ["LoadOnDemand"] = true,                        --Don't load until database is required
+    ["SearchRelatives"] = false,                    --Search for NPCs with the same last name
+    ["TranslateName"] = false,                      --Show NPC localized name
+    ["ShowTranslatedNameOnNamePlate"] = false,      --Show translated name on tooltip
+    ["NamePlateNameOffset"] = 0,                    --Y Offset
+    ["NamePlateLanguage"] = nil,                    --The localized name on NamePlate  (only one)
+    ["Languages"] = {},                             --Enabled localized names on tooltip
+};
 
 local TutorialInclude = {
-    "SpellVisualBrowser", "EquipmentSetManager", "Movement", "ExitConfirmation", "IndependentMinimapButton"
+    "SpellVisualBrowser", "EquipmentSetManager", "Movement", "ExitConfirmation", "IndependentMinimapButton",
+    "NPCBrowserEntance", "NPCBrowser", 
 };
 
 local function Initialize_NarcissusDB()
-    NarcissusDB = NarcissusDB or {};        --Account-wide Variables
-    NarcissusDB_PC = NarcissusDB_PC or {};  --Character-specific Variables;
+    NarcissusDB = NarcissusDB or {};                            --Account-wide Variables
+    NarciCreatureOptions = NarciCreatureOptions or {};          --Creature Database
+    NarcissusDB_PC = NarcissusDB_PC or {};                      --Character-specific Variables
     NarcissusDB_PC.EquipmentSetDB = NarcissusDB_PC.EquipmentSetDB or {};
 
     NarcissusDB.MinimapButton = NarcissusDB.MinimapButton or {};
@@ -79,6 +102,15 @@ local function Initialize_NarcissusDB()
     end
 
     ---------------------
+    ----Creature Data----
+    ---------------------
+    for k, v in pairs(CreatureDatabaseOptions) do
+        if NarciCreatureOptions[k] == nil then
+            NarciCreatureOptions[k] = v;
+        end
+    end
+
+    ---------------------
     ----Per Character----
     ---------------------
     if NarcissusDB_PC.UseAlias == nil then
@@ -101,12 +133,18 @@ end
 
 local initialize = CreateFrame("Frame");
 initialize:RegisterEvent("ADDON_LOADED");
+--initialize:RegisterEvent("PLAYER_ENTERING_WORLD");
 initialize:SetScript("OnEvent",function(self,event,...)
     if event == "ADDON_LOADED" then
         local name = ...
         if name == "Narcissus" then
-            Initialize_NarcissusDB();
             self:UnregisterEvent("ADDON_LOADED");
+            Initialize_NarcissusDB();
+            if (not NarciCreatureOptions.LoadOnDemand) or NarciCreatureOptions.SearchRelatives or NarciCreatureOptions.TranslateName then
+                C_Timer.After(0, function()
+                    LoadAddOn("Narcissus_Database");
+                end)
+            end
         end
     end
 end)

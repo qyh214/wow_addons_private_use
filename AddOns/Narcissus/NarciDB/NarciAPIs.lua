@@ -4,10 +4,34 @@ local GetTexture = GetTexture;
 local NumLines = NumLines;
 local _;
 local _G = _G;
+local After = C_Timer.After;
 local GetItemInfo = GetItemInfo;
 local UIFrameFadeIn = UIFrameFadeIn;
 local UIFrameFadeOut = UIFrameFadeOut;
 local PlaySound = PlaySound;
+local _, _, _, tocversion = GetBuildInfo();
+
+------------------------
+--Redirect API for 9.0--
+------------------------
+tocversion = tonumber(tocversion);
+
+local HasQuestCompleted;
+
+if tocversion == 80300 then
+    function HasQuestCompleted(questID)
+        return IsQuestComplete(questID);
+    end
+elseif tocversion > 89999 and C_QuestLog.IsComplete then
+    function HasQuestCompleted(questID)
+        return C_QuestLog.IsComplete(questID);
+    end
+else
+    function HasQuestCompleted(questID)
+        return false
+    end
+end
+
 --------------------
 ----API Datebase----
 --------------------
@@ -130,10 +154,32 @@ end
 local HeritageArmorList = BuildSearchTable(HeritageArmorItemIDs);
 local Ensemble_TheChosenDead = BuildSearchTable(Ensemble_TheChosenDead_ItemIDs);
 
+function GetArtifactVisualModID(colorID)
+    colorID = colorID or 42;
+    local PRINT = false;
+    local baseSourceID, baseVisualID, appliedSourceID, appliedVisualID, pendingSourceID, pendingVisualID, hasPendingUndo, hideVisual = C_Transmog.GetSlotVisualInfo(16, 0);
+    if not appliedSourceID or appliedSourceID == 0 then
+        appliedSourceID = baseSourceID;
+    end
+    local categoryID, visualID, canEnchant, icon, _, itemLink, transmogLink, _ = C_TransmogCollection.GetAppearanceSourceInfo(appliedSourceID)
+    local sourceInfo  = C_TransmogCollection.GetSourceInfo(appliedSourceID)
+    if sourceInfo and PRINT then
+        for k, v in pairs(sourceInfo) do
+            print(k.." "..tostring(v))
+        end
+    else
+        print(sourceInfo.itemModID);
+    end
+    itemID = sourceInfo.itemID or 127829;
+    itemLink = "\124cffe5cc80\124Hitem:".. itemID .."::::::::120::16777472::2:::"..colorID..":::::::::::::\124h[".. (sourceInfo.name or "") .."]\124h\124r"
+    DEFAULT_CHAT_FRAME:AddMessage(itemLink)
+end
+
 -----Color API------
 Narci_GlobalColorIndex = 0;
 Narci_ColorTable = {
-	[0] = { 35,  96, 147},	--default Blue  0.1372, 0.3765, 0.5765
+    --[0] = { 35,  96, 147},	--default Blue  0.1372, 0.3765, 0.5765
+    [0] = {78,  78,  78},   --Default Black
 	[1] = {121,  31,  35},	--Orgrimmar
 	[2] = { 49, 176, 107},	--Zuldazar
 	[3] = {187, 161, 134},	--Vol'dun
@@ -142,8 +188,9 @@ Narci_ColorTable = {
 	[6] = {156, 165, 153},	--Drustvar
 	[7] = { 42,  63,  79},	--Halls of Shadow
 
-	--Major City--
-    [84]  = { 35,  96, 147},	--Stormwind City
+    --Major City--
+    --[UiMapID] = {r, g, b}
+    [84]  = {129, 144, 155},	--Stormwind City
     
 	[85]  = {121,  52,  55},	--Orgrimmar
     [86]  = {121,  31,  35},	--Orgrimmar - Cleft of Shadow
@@ -203,6 +250,18 @@ Narci_ColorTable = {
     [1530] = {150, 117, 94},    --Eternal Blossoms Assault
     ["NZ"] = {105, 71, 156},    --During Assault: N'Zoth Purple Skybox
 
+    [1580] = {105, 71, 156},    --Ny'alotha - Vision of Destiny
+    [1581] = {105, 71, 156},    --Ny'alotha - Annex of Prophecy
+    [1582] = {105, 71, 156},    --Ny'alotha - Ny'alotha
+    [1590] = {105, 71, 156},    --Ny'alotha - The Hive
+    [1591] = {105, 71, 156},    --Ny'alotha - Terrace of Desolation
+    [1592] = {105, 71, 156},    --Ny'alotha - The Ritual Chamber
+    [1593] = {105, 71, 156},    --Ny'alotha - Twilight Landing
+    [1594] = {105, 71, 156},    --Ny'alotha - Maw of Gor'ma
+    [1595] = {105, 71, 156},    --Ny'alotha - Warren of Decay
+    [1596] = {105, 71, 156},    --Ny'alotha - Chamber of Rebirth
+    [1597] = {105, 71, 156},    --Ny'alotha - Locus of Infinite Truths
+
     --Allied Race Starting Zone--
     [124]  = {87,  56, 132},    --DK
     [1186] = {117,  26, 22},    --Dark Iron
@@ -223,17 +282,16 @@ local AssignColor = CreateFrame("Frame");
 AssignColor:RegisterEvent("PLAYER_ENTERING_WORLD");
 AssignColor:SetScript("OnEvent", function(self)
     self:UnregisterEvent("PLAYER_ENTERING_WORLD");
-    C_Timer.After(2, function()
+    After(2, function()
         local tag;
-        tag = IsQuestComplete(57566);           --N'Zoth Assault Tracker (Uldum)
+        tag = HasQuestCompleted(57566);           --N'Zoth Assault Tracker (Uldum)    --/dump C_QuestLog.IsQuestFlaggedCompleted(57566)
         if tag then
             Narci_ColorTable[1527] = {105, 71, 156};
             --print("N'Zoth in Uldum")
         else
-            tag = IsQuestComplete(57567);       --N'Zoth Assault Tracker (Vale)
+            tag = HasQuestCompleted(57567);       --N'Zoth Assault Tracker (Vale)
             if tag then
                 Narci_ColorTable[1530] = {105, 71, 156};
-                --print("N'Zoth in Vale")
             end
         end
     end)
@@ -265,7 +323,7 @@ local BorderTexture = {
         ["Heart"] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Heart",    --Heart
         ["NZoth"] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-NZoth",
         ["BlackDragon"] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-BlackDragon",    --8.3 Legendary Cloak
-        ["Minimap"] = "Interface/AddOns/Narcissus/Art/Minimap/LOGO-Purple",
+        ["Minimap"] = "Interface/AddOns/Narcissus/Art/Minimap/LOGO-Large",
     },
 
     ["Dark"] = {
@@ -282,7 +340,7 @@ local BorderTexture = {
         ["Heart"] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Heart",    --Heart
         ["NZoth"] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-NZoth",
         ["BlackDragon"] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-BlackDragon",    --8.3 Legendary Cloak
-        ["Minimap"] = "Interface/AddOns/Narcissus/Art/Minimap/LOGO-Purple",                                --only enable Thick minimap when AzeriteUI is loaded
+        ["Minimap"] = "Interface/AddOns/Narcissus/Art/Minimap/LOGO-Large",                                --only enable Thick minimap when AzeriteUI is loaded
     },
 }
 
@@ -361,11 +419,15 @@ end
 local GetItemEnchant = NarciAPI_GetItemEnchant;
 local GemInfo = Narci_GemInfo;
 local EnchantInfo = Narci_EnchantInfo;
+local DoesItemExist = C_Item.DoesItemExist;
+local GetCurrentItemLevel = C_Item.GetCurrentItemLevel;
+local GetItemLink = C_Item.GetItemLink
+local GetItemStats = GetItemStats;
 
 function NarciAPI_GetItemStats(itemLocation)
     local statsTable = {};
     statsTable.gems = 0;
-    if not itemLocation or not C_Item.DoesItemExist(itemLocation) then
+    if not itemLocation or not DoesItemExist(itemLocation) then
         statsTable.prim = 0;
         statsTable.stamina = 0;
         statsTable.crit = 0;
@@ -381,8 +443,8 @@ function NarciAPI_GetItemStats(itemLocation)
         return statsTable;
     end
 
-    local ItemLevel = C_Item.GetCurrentItemLevel(itemLocation)
-    local itemLink = C_Item.GetItemLink(itemLocation)
+    local ItemLevel = GetCurrentItemLevel(itemLocation)
+    local itemLink = GetItemLink(itemLocation)
     local stats = GetItemStats(itemLink) or {};
     local prim = stats["ITEM_MOD_AGILITY_SHORT"] or stats["ITEM_MOD_STRENGTH_SHORT"] or stats["ITEM_MOD_INTELLECT_SHORT"] or 0;
     local stamina = stats["ITEM_MOD_STAMINA_SHORT"] or 0;
@@ -452,10 +514,10 @@ function NarciAPI_GetItemStats(itemLocation)
     return statsTable;
 end
 
-function NarciAPI_GetSlotStats(slotID)
+function NarciAPI_GetItemStatsFromSlot(slotID)
     local itemLocation = ItemLocation:CreateFromEquipmentSlot(slotID);
     local itemLink = C_Item.GetItemLink(itemLocation)
-    stats = GetItemStats(itemLink);
+    return GetItemStats(itemLink);
 end
 
 --------------------
@@ -506,15 +568,22 @@ function NarciAPI_IsItemSocketable(itemLink, SocketID)
     return nil, nil;
 end
 
-function NarciAPI_GetItemRank(itemLink)
+function NarciAPI_GetItemRank(itemLink, statName)
     --Items that can get upgraded
     if not itemLink then return; end
+    
     TP:SetHyperlink(itemLink);
     local fontstring = _G["NarciVirtualTooltip".."TextLeft"..2];
     fontstring = fontstring:GetText() or "";
     fontstring = strtrim(fontstring, "|r");
     local rank = string.match(fontstring, "%d+", -2) or "";
-    return "|cff00ccff"..rank.."|r"
+
+    if statName then
+        local stats = GetItemStats(itemLink) or {};
+        return "|cff00ccff"..rank.."|r", stats[statName] or 0
+    else
+        return "|cff00ccff"..rank.."|r"
+    end
 end
 
 local strtrim = strtrim;
@@ -684,7 +753,7 @@ function TestItemLinkAffix(from, to)
         s = s + 1;
         total = total + 1;
         if s < e and total < 1000 then
-            C_Timer.After(0, GetExtraInfo);
+            After(0, GetExtraInfo);
         else
             print("Search Complete")
         end
@@ -696,7 +765,7 @@ function TestItemLinkAffix(from, to)
         itemLink = "\124cffa335ee\124Hitem:174954::::::::120::::2:1477:".. i ..":\124h[]\124h\124r";
         TP:SetHyperlink(itemLink);
     end
-    C_Timer.After(1, GetExtraInfo);
+    After(1, GetExtraInfo);
 end
 --------------------
 ---Formating API----
@@ -805,6 +874,8 @@ function NarciAPI_OptimizeBorderThickness(self)
     end
 end
 
+local OptimizeBorderThickness = NarciAPI_OptimizeBorderThickness;
+
 function NarciAPI_SliderWithSteps_OnLoad(self)
     self.oldValue = -1208;
     self.Marks = {};
@@ -829,29 +900,128 @@ function NarciAPI_SliderWithSteps_OnLoad(self)
     end
 end
 
+
+--Internal Keybinding
+NarciGenericKeyBindingButtonMixin = {};
+
+local function ResetBindVisualAndScript(self)
+    self.Border:SetColorTexture(0, 0, 0);
+    self.Value:SetTextColor(1, 1, 1);
+    self.Value:SetShadowColor(0, 0, 0);
+    self.Value:SetShadowOffset(0.6, -0.6);
+    self:SetPropagateKeyboardInput(true)
+    self:SetScript("OnKeyDown", nil); 
+    --self:SetScript("OnKeyUp", nil);
+    self.IsOn = false;
+end
+
+local function GenericKeyBindingButton_OnKeydown(self, key)
+    if key == "ESCAPE" or key == "SPACE" or key == "ENTER" then
+        self:ExitKeyBinding();
+        return
+    end
+
+    if self.keyValue then
+        self:ExitKeyBinding(true);
+        NarcissusDB[self.keyValue] = key;
+    end
+end
+
+function NarciGenericKeyBindingButtonMixin:ExitKeyBinding(success)
+    ResetBindVisualAndScript(self);
+    After(0, function()
+        self:GetBindingKey();
+    end)
+    if success then
+        self.Highlight:SetColorTexture(0.4862, 0.7725, 0.4627);
+        self.Description:SetText("|cff7cc576".. KEY_BOUND);
+        UIFrameFadeIn(self.Highlight, 0.2, 0, 1);
+        UIFrameFadeIn(self.Description, 0.2, 0, 1);
+        self.Timer:Stop();
+        self.Timer:SetScript("OnFinished", function()
+            UIFrameFadeOut(self.Highlight, 0.5, 1, 0);
+            UIFrameFadeOut(self.Description, 0.5, 1, 0);
+        end);
+        self.Timer:Play();
+    end
+end
+
+function NarciGenericKeyBindingButtonMixin:GetBindingKey()
+    OptimizeBorderThickness(self);
+    if self.keyValue then
+        self.Value:SetText(NarcissusDB[self.keyValue] or NOT_BOUND);
+    else
+        self.Value:SetText(NARCI_COLOR_RED_MILD.. "No Action");
+    end
+end
+
+function NarciGenericKeyBindingButtonMixin:ReleaseBindingKey()
+    ResetBindVisualAndScript(self);
+    if self.keyValue then
+        self.Value:SetText(self.defaultKey or NOT_BOUND);
+        NarcissusDB[self.keyValue] = self.defaultKey;
+        self.Highlight:SetColorTexture(0.9333, 0.1961, 0.1412);
+        self.Description:SetText(NARCI_COLOR_RED_MILD.."Hotkey reset");
+        UIFrameFadeIn(self.Description, 0.2, 0, 1);
+        UIFrameFadeIn(self.Highlight, 0.2, 0, 1);
+        self.Timer:Stop();
+        self.Timer:SetScript("OnFinished", function()
+            UIFrameFadeOut(self.Highlight, 0.5, 1, 0);
+            UIFrameFadeOut(self.Description, 0.5, 1, 0);
+        end);
+        self.Timer:Play();
+    end
+end
+
+function NarciGenericKeyBindingButtonMixin:OnClick(button)
+    self.IsOn = not self.IsOn;
+
+    if button == "LeftButton" then
+        if self.IsOn then
+            self.Border:SetColorTexture(0.9, 0.9, 0.9);
+            self.Value:SetTextColor(0, 0, 0);
+            self.Value:SetShadowColor(1, 1, 1);
+            self.Value:SetShadowOffset(0.6, -0.6);
+            self:SetPropagateKeyboardInput(false);
+            self:SetScript("OnKeyDown", GenericKeyBindingButton_OnKeydown);
+        end
+    else
+        self:ReleaseBindingKey();
+    end
+end
+
+function NarciGenericKeyBindingButtonMixin:OnHide()
+    self:StopAnimating();
+end
+
 -----Smooth Scroll-----
 local min = math.min;
 local max = math.max;
 local minOffset = 2;
 local function SmoothScrollContainer_OnUpdate(self, elapsed)
 	local delta = self.delta;
-    local scrollBar = self:GetParent().scrollBar;
-    local step = max(abs(scrollBar:GetValue() - self.EndValue)*(self.timeRatio) , self.minOffset);		--if the step (Δy) is too small, the fontstring will jitter.
-    
-	local remainedStep = abs(self.EndValue - scrollBar:GetValue())
+    local scrollBar = self.scrollBar;
+    local value = scrollBar:GetValue();
+    local step = max(abs(value - self.endValue)*(self.timeRatio) , self.minOffset);		--if the step (Δy) is too small, the fontstring will jitter.
+    local remainedStep;
     if ( delta == 1 ) then
-		scrollBar:SetValue(max(0, scrollBar:GetValue() - step));
+        --Up
+        remainedStep = min(self.endValue - value, 0);
+        if - remainedStep <= ( self.minOffset) then
+            self:Hide();
+            scrollBar:SetValue(min(self.maxVal, self.endValue));
+        else
+            scrollBar:SetValue(max(0, value - step));
+        end
 	else
-		scrollBar:SetValue(min(self.maxVal, scrollBar:GetValue() + step));
+        remainedStep = max(self.endValue - value, 0);
+        if remainedStep <= ( self.minOffset) then
+            self:Hide();
+            scrollBar:SetValue(min(self.maxVal, self.endValue));
+        else
+            scrollBar:SetValue(min(self.maxVal, value + step));
+        end
     end
-    
-	if self.animationDuration >= 2 or remainedStep <= ( self.minOffset) then
-        --scrollBar:SetValue(math.floor(min(self.maxVal, self.EndValue) + 0.5));
-        scrollBar:SetValue(min(self.maxVal, self.EndValue));
-        self:Hide();
-    end
-
-    --print(step)
 end
 
 local function NarciAPI_SmoothScroll_OnMouseWheel(self, delta, stepSize)
@@ -872,12 +1042,17 @@ local function NarciAPI_SmoothScroll_OnMouseWheel(self, delta, stepSize)
 		ScrollContainer:Show()
 	end
 	
-	local deltaRatio = ScrollContainer.deltaRatio or 1;
-    ScrollContainer.EndValue = min(max(0, ScrollContainer.EndValue - delta*deltaRatio*self.buttonHeight), self.range);
+    local deltaRatio = ScrollContainer.deltaRatio or 1;
+    local endValue = min(max(0, ScrollContainer.endValue - delta*deltaRatio*self.buttonHeight), self.range);
+    ScrollContainer.endValue = endValue;
+    if self.positionFunc then
+        self.positionFunc(endValue);
+    end
 end
 
-function NarciAPI_SmoothScroll_Initialization(self, updatedList, updateFunc, deltaRatio, timeRatio, minOffset)     --self=ListScrollFrame
-	self.update = updateFunc;
+function NarciAPI_SmoothScroll_Initialization(self, updatedList, updateFunc, deltaRatio, timeRatio, minOffset, positionFunc)     --self=ListScrollFrame
+    self.update = updateFunc;
+    self.positionFunc = positionFunc;
     self.updatedList = UpdatedList;
 
     local parentName = self:GetName();
@@ -890,24 +1065,25 @@ function NarciAPI_SmoothScroll_Initialization(self, updatedList, updateFunc, del
     local uiScale = self:GetEffectiveScale(); 
     --local pixel = 768/scale/uiScale;
     --local _, screenHeight = GetPhysicalScreenSize();
-    local pixel = (768/screenHeight)/uiScale
+    local pixel = (768/screenHeight)/uiScale;
     self.scrollBar:SetValueStep(0.001);
     SmoothScrollContainer.stepSize = 0;
     SmoothScrollContainer.delta = 0;
     SmoothScrollContainer.animationDuration = 0;
-    SmoothScrollContainer.EndValue = 0;
+    SmoothScrollContainer.endValue = 0;
 	SmoothScrollContainer.maxVal = 0;
     SmoothScrollContainer.deltaRatio = deltaRatio or 1;
     SmoothScrollContainer.timeRatio = timeRatio or 1;
-    SmoothScrollContainer.minOffset = pixel or minOffset or 2;
+    SmoothScrollContainer.minOffset = minOffset or pixel;
+    SmoothScrollContainer.scrollBar = self.scrollBar;
     SmoothScrollContainer:SetScript("OnUpdate", SmoothScrollContainer_OnUpdate);
     SmoothScrollContainer:SetScript("OnShow", function(self)
-        self.EndValue = self:GetParent().scrollBar:GetValue();
+        self.endValue = self:GetParent().scrollBar:GetValue();
     end);
 
     self.SmoothScrollContainer = SmoothScrollContainer;
 
-    self:SetScript("OnMouseWheel", NarciAPI_SmoothScroll_OnMouseWheel);
+    self:SetScript("OnMouseWheel", NarciAPI_SmoothScroll_OnMouseWheel);  --a position-related function
 end
 
 -----Create A List of Button----
@@ -1073,7 +1249,7 @@ function NarciAPI_LetterboxAnimation(command)
 		frame.TopMask.animOut:Play();
 	else
         if NarcissusDB.LetterboxEffect then
-            PhotoModeController.PhotoModeController_AnimFrame.toAlpha = 0
+            Narci_PhotoModeController.PhotoModeController_AnimFrame.toAlpha = 0
 			frame:Show();
 			frame.BottomMask.animIn:Play();
 			frame.TopMask.animIn:Play();
@@ -1112,9 +1288,9 @@ DelayedTP:SetScript("OnUpdate", function(self, elapsed)
     --self.ScanTime = self.ScanTime + elapsed;
     if self.TotalTime >= timeDelay then
         if self.focus and self.focus == GetMouseFocus() then
-            GameTooltip:ClearAllPoints();
-            GameTooltip:SetPoint(self.point, self.relativeTo, self.relativePoint, self.ofsx, self.ofsy);
-            UIFrameFadeIn(GameTooltip, 0.12, 0, 1);
+            NarciGameTooltip:ClearAllPoints();
+            NarciGameTooltip:SetPoint(self.point, self.relativeTo, self.relativePoint, self.ofsx, self.ofsy);
+            UIFrameFadeIn(NarciGameTooltip, 0.12, 0, 1);
         end
         self:Hide();
     end
@@ -1200,7 +1376,7 @@ function NarciAlertFrameMixin:SetAnchor(frame, offsetY, AddErrorAnimation)
         CreateErrorAnimation(frame);
     end
 
-    C_Timer.After(0.5, function()
+    After(0.5, function()
 		frame:UnregisterEvent("UI_ERROR_MESSAGE");
     end)
 end
@@ -1321,7 +1497,7 @@ function NarciAPI_SmoothFluid(bar, newHeight, newLevel, r, g, b)
 		FluidAnim.d3 = t1 + t2;
 	end
 	
-	C_Timer.After(0, function()
+	After(0, function()
 		FluidAnim:Show();
 	end)
 
@@ -1616,28 +1792,61 @@ function NarciAPI_GetCameraZoomDistanceByUnit(unit)
     end
 end
 
-local DefaultActorInfoID = 438;
-local function GetActorIDByUnit(unit)
-    if not UnitExists(unit) or not UnitIsPlayer(unit) or not CanInspect(unit, false) then return; end
+local DEFAULT_ACTOR_INFO_ID = 438;
+
+local PanningYOffsetByRace = {
+    --[raceID] = { { male = {offsetY1 when frame maximiazed, offsetY2} }, {female = ...} }
+    [0] = {     --default
+        {-290, -110},
+    },
+
+    [4] = { --NE
+        {-317, -117},
+        {-282, -115.5},
+    },
+
+    [10] = {    --BE
+        {-282, -110},
+        {-290, -116}, 
+    }
+    --/dump DressUpFrame.ModelScene:GetActiveCamera().panningYOffset
+}
+
+PanningYOffsetByRace[29] = PanningYOffsetByRace[10];
+
+local function GetPanningYOffset(raceID, genderID)
+    genderID = genderID -1;
+    if PanningYOffsetByRace[raceID] and PanningYOffsetByRace[raceID][genderID] then
+        return PanningYOffsetByRace[raceID][genderID]
+    else
+        return PanningYOffsetByRace[0][1]
+    end
+end
+
+local GetModelSceneActorInfoByID = C_ModelInfo.GetModelSceneActorInfoByID;
+
+function NarciAPI_GetActorInfoByUnit(unit)
+    if not UnitExists(unit) or not UnitIsPlayer(unit) or not CanInspect(unit, false) then return nil, PanningYOffsetByRace[0][1]; end
     
     local _, _, raceID = UnitRace(unit);
     local genderID = UnitSex(unit);
     if raceID == 25 or raceID == 26 then --Pandaren A|H
         raceID = 24
     end
+
+    local actorInfoID;
     if not (raceID and genderID) then
-        return DefaultActorInfoID;     --438
+        actorInfoID = DEFAULT_ACTOR_INFO_ID;     --438
     elseif ActorIDByRace[raceID] then
-        return ActorIDByRace[raceID][genderID - 1] or DefaultActorInfoID;
+        actorInfoID = ActorIDByRace[raceID][genderID - 1] or DEFAULT_ACTOR_INFO_ID;
     else
-        return DefaultActorInfoID;     --438
+        actorInfoID = DEFAULT_ACTOR_INFO_ID;     --438
     end
+
+    return GetModelSceneActorInfoByID(actorInfoID), GetPanningYOffset(raceID, genderID)
 end
 
-local GetModelSceneActorInfoByID = C_ModelInfo.GetModelSceneActorInfoByID;
-function NarciAPI_GetActorInfoByUnit(unit)
-    return GetModelSceneActorInfoByID(GetActorIDByUnit(unit))
-end
+
 
 function NarciAPI_SetupModelScene(modelScene, modelFileID, zoomDistance, view, actorIndex, UseTransit)
     local pi = math.pi;
@@ -1690,7 +1899,7 @@ function NarciAPI_SetupModelScene(modelScene, modelFileID, zoomDistance, view, a
             --change camera.targetInterpolationAmount for smoothing time    --:GetTargetInterpolationAmount() :SetTargetInterpolationAmount(value)
             camera:SetZoomDistance(1);
             camera:SnapAllInterpolatedValues();
-            C_Timer.After(0, function()
+            After(0, function()
                 camera:SetZoomDistance(zoomDistance);
             end);    
         else
@@ -1736,6 +1945,7 @@ function NarciAPI_SetupModelScene(modelScene, modelFileID, zoomDistance, view, a
         actor:SetYaw(yaw);
     end
 
+    return actor, camera
     --[[
     if rollDegree then
         actor:SetRoll(rad(-rollDegree))     --Clockwise
@@ -1783,9 +1993,13 @@ local function ParserButton_GetCursor(self)
     if not (infoType and infoType == "item") then
         return
     elseif not IsCorruptedItem(itemLink) then
-        self:GetParent().ItemName:SetText("Not a Corrupted Item");
-        C_Timer.After(2, function()
-            self:GetParent().ItemName:SetText("Drop a Corrupted Item Here");
+        local frame = self:GetParent();
+        frame.ItemName:SetText("Not a Corrupted Item");
+        local itemString = string.match(itemLink, "item:([%-?%d:]+)");
+        frame.ItemString:SetText(itemString);
+
+        After(2, function()
+            frame.ItemName:SetText("Drop a Corrupted Item Here");
         end);
         ClearCursor();
         return
@@ -1874,7 +2088,9 @@ function Narci_ItemParser_OnLoad(self)
     TP:SetScale(tooltipScale);
 end
 
-----Utility----
+-----------------
+-----Utility-----
+-----------------
 local DistanceCalculator;
 local MovementListener;
 
@@ -1946,6 +2162,276 @@ function NarciAPI_ActivateDistanceCalculator(calibrateDistance)
         DistanceCalculator.calibrateDistance = calibrateDistance;
     end
 end
+
+local Globals = {};
+local totalGlobals = 1;
+for k, v in pairs(_G) do
+    Globals[totalGlobals] = k;
+    totalGlobals = totalGlobals + 1;
+end
+
+local SEARCH_PER_FRAME = 240;
+local numLoop = 0;
+local numMatch = 0;
+local function SearchLoop(b, key)
+    local find = string.find;
+    local index;
+    for i = b, b + SEARCH_PER_FRAME  do
+        if Globals[i] then
+            index = i;
+
+            if find(Globals[i], key) then
+                numMatch = numMatch + 1;
+                
+                local t = type(_G[ Globals[i] ]);
+                if t == "number" or t == "string" then
+                    print("|cffffd200".. Globals[i].."|r = ".. (_G[Globals[i]] or "nil") );
+                else
+                    print("|cff808080"..t.." |cffffd200".. Globals[i]);
+                end
+            end
+        else
+            print("Search Completes ---------------")
+            print("Found ".. "|cffffd200".. numMatch .. "|r matches.")
+            numLoop = 0;
+            return
+        end
+    end
+    After(0, function()
+        SearchLoop(b + SEARCH_PER_FRAME + 1, key)
+    end)
+
+
+    numLoop = numLoop + 1;
+    if numLoop == 100 then
+        numLoop = 0;
+        print(math.floor(index / totalGlobals * 10000 + 0.5)/100 .. "% ----------------------------")
+    end
+end
+
+function SearchGlobalString(key)
+    if type(key) ~= "string" then
+        print("The key must be a string!");
+        return
+    end
+    numLoop = 0;
+    numMatch = 0;
+    local beginning = 1;
+    SearchLoop(beginning, key)
+end
+
+
+----------------------------
+-----Item Import/Export-----
+----------------------------
+local WOWHEAD_ENCODING = "0zMcmVokRsaqbdrfwihuGINALpTjnyxtgevElBCDFHJKOPQSUWXYZ123456789";  --version: 9    WH.calc.hash.getEncoding(9)
+local WOWHEAD_DELIMITER = 8;                        --WH.calc.hash.getDelimiter(9)
+local COMPRESSION_INDICATOR = 7;                    --WH.calc.hash.getZeroDelimiterCompressionIndicator(9) :7 + single letter
+local WOWHEAD_MAXCODING_INDEX = 58                  --WH.calc.hash.getMaxEncodingIndex(a);  //9 ~ 58
+local WOWHEAD_CUSTOMIZATION = "0zJ89b";
+
+local EncodeValue = {}
+for i = 0, #WOWHEAD_ENCODING do
+    EncodeValue[i] = strsub(WOWHEAD_ENCODING, i+1, i+1);
+end
+
+local EquipmentOrderToCharacterSlot = {
+    [1] = 1,
+    [2] = 3,
+    [3] = 15,
+    [4] = 5,
+    [5] = 4,
+    [6] = 19,
+    [7] = 9,
+    [8] = 10,
+    [9] = 6,
+    [10]= 7,
+    [11]= 8,
+    [12]= 16,
+    [13]= 17,
+};
+
+local CharacterSlotToEquipmentOrder = {}
+for k, v in pairs(EquipmentOrderToCharacterSlot) do
+    CharacterSlotToEquipmentOrder[v] = tostring(k);
+    v = tostring(v);
+end
+
+local function EncodeLongValue(number)
+    local m = WOWHEAD_MAXCODING_INDEX;
+    if number <= m then
+        return EncodeValue[number];
+    end
+
+    local floor = math.floor;
+    local shortValues = {number};
+    local v = 0;
+    while(shortValues[1] > m) do
+        v = floor(shortValues[1] / m);
+        tinsert(shortValues, shortValues[1] - m * v);
+        shortValues[1] = v;
+    end
+
+    local str = EncodeValue[ shortValues[1] ];
+    for i = #shortValues, 2, -1 do
+        if shortValues[2] ~= "0" then
+            str = str .. EncodeValue[ shortValues[i] ]
+        else
+            str = str .. "7"
+        end
+    end
+    return str
+end
+
+function NarciBridge_EncodeItemlist(itemlist, unitInfo)
+    if not itemlist or type(itemlist) ~= "table" or itemlist == {} then return ""; end
+    --itemlist = {[slot] = {itemID, bonusID}}
+
+    local raceID, genderID, classID;
+
+    if unitInfo then
+        raceID, genderID, classID = unitInfo.raceID, unitInfo.genderID, unitInfo.classID;
+    else
+        local _;
+        local unit = "player";
+        _, _, raceID = UnitRace(unit);
+        genderID = UnitSex(unit);
+        _, _, classID = UnitClass(unit);
+    end
+
+    if not (raceID and genderID and classID) then
+        local _;
+        local unit = "player";
+        _, _, raceID = UnitRace(unit);
+
+        _, _, classID = UnitClass(unit);
+        genderID = UnitSex(unit) or 2;
+        raceID = raceID or 1;
+        classID = classID or 1;
+    end
+    genderID = genderID - 2;      --Male 2 → 0  Female 3 → 1
+
+    local wowheadLink = "https://www.wowhead.com/dressing-room#s".. EncodeValue[raceID] .. EncodeValue[genderID] .. EncodeValue[classID] .. WOWHEAD_CUSTOMIZATION.. WOWHEAD_DELIMITER;
+    
+    local segment, slot;
+    local blanks = 0;
+    for i = 1, #EquipmentOrderToCharacterSlot do
+        --item = { itemID, bonusID }
+        slot = EquipmentOrderToCharacterSlot[i]
+        item = itemlist[slot];
+        if item and item[1] then
+            segment = EncodeLongValue(item[1])
+            if #segment < 3 then
+                segment = "7".. CharacterSlotToEquipmentOrder[slot] .. segment
+            end
+            item[2] = item[2] or 0; --bonusID
+            if slot == 16 and item[2] > 0 and item[2] < 99 then
+                local offHand = itemlist[17];
+                if offHand and offHand[1] then
+                    segment = segment .. WOWHEAD_DELIMITER .. "0" .. WOWHEAD_DELIMITER .. EncodeLongValue(offHand[1]) .. WOWHEAD_DELIMITER .. "7c" .. EncodeValue[ item[2] ];
+                else
+                    segment = segment .. WOWHEAD_DELIMITER .. "7V" .. EncodeValue[ item[2] ];
+                end
+                wowheadLink = wowheadLink .. segment;
+                break;
+            else
+                segment = segment .. WOWHEAD_DELIMITER .. EncodeLongValue(item[2]) .. WOWHEAD_DELIMITER;
+            end
+            wowheadLink = wowheadLink .. segment;
+        else
+            blanks = blanks + 1;
+            wowheadLink = wowheadLink .. "7M"
+        end
+    end
+
+    return wowheadLink
+end
+
+
+----------------------------
+----UI Animation Generic----
+----------------------------
+function NarciAPI_CreateAnimationFrame(duration)
+    local frame = CreateFrame("Frame");
+    frame:Hide();
+    frame.total = 0;
+    frame.duration = duration;
+    frame:SetScript("OnHide", function(self)
+        self.total = 0;
+    end);
+    return frame;
+end
+
+
+
+----------------------------
+-------Frame Template-------
+----------------------------
+NarciFrameMixin = {};
+
+function NarciFrameMixin:ShowFrame(state)
+    self:SetShown(state);
+    if state then
+        self:SetAlpha(1);
+    else
+        self:SetAlpha(0);
+    end
+end
+
+function NarciFrameMixin:HideFrame()
+    self:ShowFrame(false);
+end
+
+function NarciFrameMixin:SetHeaderText(text, r, g, b)
+    self.Header:SetText(text);
+
+    self.Header:SetTextColor(r or 0.4, g or 0.4, b or 0.4);
+end
+
+function NarciFrameMixin:SetSizeAndAnchor(x, y, point, relativeTo, relativePoint, offsetX, offsetY)
+    if x then x = max(x, 40) end;
+    if y then y = max(y, 40) end;
+
+    if x then
+        if y then
+            self:SetSize(x, y);
+        else
+            self:SetWidth(x);
+        end
+    else
+        self:SetHeight(y);
+    end
+
+    self:ClearAllPoints();
+    self:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
+end
+
+function NarciFrameMixin:SetRelativeFrameLevel(offset)
+    local parent = self:GetParent();
+    if parent then
+        local parentLevel = parent:GetFrameLevel() or 0;
+        self:SetFrameStrata(parent:GetFrameStrata());
+        self:SetFrameLevel( max(parentLevel + offset, 0) );
+    end
+end
+
+function NarciFrameMixin:HideWhenParentIsHidden(state)
+    if state then
+        self:SetScript("OnHide", function(self)
+            self:HideFrame();
+        end);
+
+        local parent = self:GetParent();
+        if parent and not parent:IsVisible() then
+            self:HideFrame();
+        end
+    else
+        self:SetScript("OnHide", nil);
+    end
+end
+
+
+
 
 --[[
 function TestFX(modelFileID, zoomDistance, view)

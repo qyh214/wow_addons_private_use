@@ -181,9 +181,9 @@ local function OnEnter(self, _, noUpdate)
 		DT.tooltip:AddLine(L["Nazjatar Follower XP"])
 		for i = 2, 4 do
 			local npcName, widgetID = unpack(widgetGroup[i])
-			local rank, cur, toNext, _, isMax = E:GetNazjatarBodyguardXP(widgetID)
+			local cur, toNext, _, rank, maxRank = E:GetWidgetInfoBase(widgetID)
 			if npcName and rank then
-				DT.tooltip:AddDoubleLine(npcName, (isMax and L["Max Rank"]) or BODYGUARD_LEVEL_XP_FORMAT:format(rank, cur, toNext), 1, 1, 1)
+				DT.tooltip:AddDoubleLine(npcName, (maxRank and L["Max Rank"]) or BODYGUARD_LEVEL_XP_FORMAT:format(rank, cur, toNext), 1, 1, 1)
 			end
 		end
 		hasNazjatarBodyguardXP = true
@@ -240,4 +240,4 @@ local function ValueColorUpdate()
 end
 E.valueColorUpdateFuncs[ValueColorUpdate] = true
 
-DT:RegisterDatatext("BfA Missions", {"PLAYER_ENTERING_WORLD", "CURRENCY_DISPLAY_UPDATE", "GARRISON_LANDINGPAGE_SHIPMENTS"}, OnEvent, nil, OnClick, OnEnter, nil, L["BfA Missions"])
+DT:RegisterDatatext("BfA Missions", {"CURRENCY_DISPLAY_UPDATE", "GARRISON_LANDINGPAGE_SHIPMENTS"}, OnEvent, nil, OnClick, OnEnter, nil, L["BfA Missions"])

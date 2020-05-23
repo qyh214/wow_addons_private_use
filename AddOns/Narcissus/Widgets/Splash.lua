@@ -1,9 +1,10 @@
-local CurrentVersion = 10082;	--last: 10080
+local currentVersion = 10091;
+local lastMajorVersion = 10080;
 -----------------------------------------------------------------
 
 local function ApplyPatchFix(self)
     --Apply fix--
-    --None in 1.0.8b
+    --None in 1.0.9
     return;
 end
 
@@ -15,10 +16,18 @@ function Narci_ExtraInfoButton_OnClick(self)
 end
 --]]
 
+local After = C_Timer.After
 local FadeFrame = NarciAPI_FadeFrame;
+local UIFrameFadeIn = UIFrameFadeIn;
+local UIFrameFadeOut = UIFrameFadeOut;
 local pi = math.pi;
 local sin = math.sin;
 local cos = math.cos;
+local pow = math.pow;
+
+local function linear(t, b, e, d)
+    return (e - b) * t / d + b
+end
 
 local function outSine(t, b, c, d)
 	return c * sin(t / d * (pi / 2)) + b
@@ -28,6 +37,11 @@ local function inOutSine(t, b, e, d)
 	return (b - e) / 2 * (cos(pi * t / d) - 1) + b
 end
 
+local function outCubic(t, b, c, d)
+    t = t / d - 1
+    return c * (pow(t, 3) + 1) + b
+end
+  
 --[[
 local function Narci_TryItNow_OnClick(self)
     local text;
@@ -276,7 +290,7 @@ local function SetPlayerModel(model, visualIDs, animationID, fullBody, isReverse
     playerActor:SetModelByUnit("player");
     ------
 
-    C_Timer.After(0.0, function()
+    After(0.0, function()
         playerActor:SetSheathed(true);
         playerActor:SetAlpha(1);
         model:InitializeActor(playerActor, playerModelInfo);   --Re-scale
@@ -301,7 +315,7 @@ local function SetPlayerModel(model, visualIDs, animationID, fullBody, isReverse
         playerActor:UndressSlot(16)
         camera:SetZoomDistance(1);
         camera:SnapAllInterpolatedValues();
-        C_Timer.After(0.0, function()
+        After(0.0, function()
             camera:SetZoomDistance(zoom);
             if visualIDs then
                 local _type = type(visualIDs);
@@ -322,30 +336,287 @@ local function SetPlayerModel(model, visualIDs, animationID, fullBody, isReverse
 end
 
 
-local function SetSplashModel(self)
-    SetModelOffset();
-    local model = self;
-    local camera, playerActor;
-    model:TransitionToModelSceneID(290, 1, 1, true);
-    SetupPlayerForModelScene(model, nil, true, true);   --3 sheathWeapon
-    playerActor = model:GetPlayerActor();
-    playerActor:SetModelByUnit("player");
-    model.narciPlayerActor = playerActor;
-    camera = model:GetActiveCamera();
-    camera.minZoomDistance = 1;
-    camera.targetInterpolationAmount = 0.01;
-    model.narciPlayerCamera = camera;
+local IcecrownAssets = {};
+IcecrownAssets.filePath = "Interface/AddOns/Narcissus/Art/Splash/Icecrown/";
 
-    local animationID = SplashModelAnimationID; --52 1448 860
-    SetPlayerModel(model, {122669, 112555, 58009}, animationID, false, true);   -- 95630 123912
+function IcecrownAssets:CreateStairs(container)
+    local parent = container;
+    local stair;
+    local stairs = {};
+    local numStairs = 10;
+    local duration = 8;
+    local startOffsetY = -60;
+    local frameLevel = 30;
+
+    local function ResetFrameOrder()
+        for i = 1, numStairs do
+            stairs[i]:SetFrameLevel(frameLevel - i + 1);
+        end
+    end
+
+    local function UpdatePosition(self, elapsed)
+        self.t = self.t + elapsed;
+        if self.t >= duration then
+            self.t = 0;
+            self.parent:SetFrameLevel(self.parent:GetFrameLevel() + numStairs)
+        end
+        local offsetY = outCubic(self.t, startOffsetY, 140, duration);
+        local scale = linear(self.t, 2.2, 0.33, duration);
+        self.parent:SetPoint("TOP", parent, "BOTTOM", 0, offsetY);
+        self.parent:SetScale(scale);
+    end
+
+    local function UpdatePositionAndReset(self, elapsed)
+        self.t = self.t + elapsed;
+        if self.t >= duration then
+            self.t = 0;
+            ResetFrameOrder()
+        end
+        local offsetY = outCubic(self.t, startOffsetY, 140, duration);
+        local scale = linear(self.t, 2.2, 0.33, duration);
+        self.parent:SetPoint("TOP", parent, "BOTTOM", 0, offsetY);
+        self.parent:SetScale(scale);
+    end
+
+    for i = 1, numStairs do
+        stair = CreateFrame("Frame", nil, parent, "Narci_Splash_Icecrown_Stairs");
+        tinsert(stairs, stair);
+        stair.Texture:SetTexture(self.filePath .. "Stairs");
+        if i % 2 == 0 then
+            stair.Texture:SetTexCoord(1, 0, 0, 1);
+        end
+        stair:ClearAllPoints();
+        stair:SetPoint("TOP", parent, "BOTTOM", 0, startOffsetY);
+        stair:SetFrameLevel(frameLevel - i + 1);
+        stair:Hide();
+
+        --Script
+        stair.UpdateFrame.t = duration/numStairs*(i - 1);
+        stair.UpdateFrame.parent = stair;
+        stair:Show();
+
+        if i ~= 1 then
+            stair.UpdateFrame:SetScript("OnUpdate", UpdatePosition);
+        else
+            stair.UpdateFrame:SetScript("OnUpdate", UpdatePositionAndReset);   
+        end
+    end
+
+    self.stairs = stairs;
+end
+
+function IcecrownAssets:CreateWalls(container, mirror)
+    local parent = container;
+    local pow = math.pow;
+    local wall;
+    local walls = {};
+    local w,h = 687, 691;
+    local scale = 1;
+    local W, H = w * scale, h * scale;
+    local numWalls = 12;
+    local duration = 16;
+    local startOffsetX = -680;
+    local startOffsetY = 60; 
+    local frameLevel = 20;
+    local q = 0.65;
+    local distance = 0.5 * W * (1- pow(q, numWalls) )/ (1 - q);
+
+    local relativePoint;
+
+    if mirror then
+        relativePoint = "BOTTOMRIGHT";
+        startOffsetX = - startOffsetX;
+        distance = - distance;
+    else
+        relativePoint = "BOTTOMLEFT";
+    end
+
+    local endX = startOffsetX + distance;
+
+    local function ResetFrameOrder()
+        for i = 1, numWalls do
+            walls[i]:SetFrameLevel(frameLevel - i + 1);
+        end
+    end
+
+    local function UpdatePosition(self, elapsed)
+        self.t = self.t + elapsed;
+        if self.t >= duration then
+            self.t = 0;
+            self.parent:SetFrameLevel(self.parent:GetFrameLevel() + numWalls)
+        end
+        local offsetX = outCubic(self.t, startOffsetX, distance, duration);
+        local scale = (endX - offsetX)/distance;
+        self.parent:SetPoint(relativePoint, parent, relativePoint, offsetX, startOffsetY);
+        self.parent:SetSize(W*scale, H*scale);
+    end
+
+    local function UpdatePositionAndReset(self, elapsed)
+        self.t = self.t + elapsed;
+        if self.t >= duration then
+            self.t = 0;
+            ResetFrameOrder()
+        end
+        local offsetX = outCubic(self.t, startOffsetX, distance, duration);
+        local scale = (distance - offsetX + startOffsetX)/distance;
+        self.parent:SetPoint(relativePoint, parent, relativePoint, offsetX, startOffsetY);
+        self.parent:SetSize(W*scale, H*scale);
+    end
+
+    for i = 1, numWalls do
+        wall = CreateFrame("Frame", nil, parent, "Narci_Splash_Icecrown_Wall");
+        tinsert(walls, wall);
+        wall.Texture:SetTexture(self.filePath .. "Wall");
+        if mirror then
+            wall.Texture:SetTexCoord(1, 0, 0, 1);
+        end
+        wall:SetSize(W, H);
+        wall:SetFrameLevel(frameLevel - i + 1);
+        wall:SetPoint(relativePoint, container, relativePoint, startOffsetX, startOffsetY);
+        wall:Hide();
+
+        --Scripts
+        wall.UpdateFrame.t = duration/numWalls*(i - 1);
+        wall.UpdateFrame.parent = wall;
+        wall:Show();
+
+        if i ~= 1 then
+            wall.UpdateFrame:SetScript("OnUpdate", UpdatePosition);
+        else
+            wall.UpdateFrame:SetScript("OnUpdate", UpdatePositionAndReset);
+        end
+    end
+
+    if mirror then
+        self.rightWalls = walls;
+    else
+        self.leftWalls = walls;
+    end
+
+    for i = 1, numWalls do
+        After(duration/numWalls*(i - 1), function()
+            --walls[i]:Show();
+        end)
+    end
+end
+
+function IcecrownAssets:CreateSpire(container)
+    local w,h = 512, 1024;
+    local scale = 0.5;
+    local offsetY = -20;
+    local W, H = w * scale, h * scale;
+    local tex1 = container:CreateTexture(nil, "OVERLAY", nil, 2);
+    local tex2 = container:CreateTexture(nil, "OVERLAY", nil, 2);
+
+    tex1:SetSize(W, H);
+    tex2:SetSize(W, H);
+    tex1:SetPoint("RIGHT", container, "CENTER", 0, offsetY);
+    tex2:SetPoint("LEFT", container, "CENTER", 0, offsetY);
+    tex1:SetTexture(self.filePath.. "Spire-Left");
+    tex2:SetTexture(self.filePath.. "Spire-Left");
+    tex2:SetTexCoord(1, 0, 0, 1);
+end
+
+function IcecrownAssets:CreateSky(container)
+    local cinematicModel = container.skyBox;
+    if not cinematicModel then
+        cinematicModel = CreateFrame("CinematicModel", nil, container);
+        container.skyBox = cinematicModel;
+        cinematicModel:SetPoint("TOPLEFT", container, "TOPLEFT", 0, 0);
+        cinematicModel:SetPoint("BOTTOMRIGHT", container, "BOTTOMRIGHT", 0, 0);
+        self:CreateSpire(cinematicModel);
+
+        cinematicModel:SetScript("OnModelLoaded", function()
+            cinematicModel:SetPitch(0);
+            cinematicModel:SetFacing(2.7);
+            cinematicModel:MakeCurrentCameraCustom();
+            cinematicModel:SetCameraDistance(4);
+            cinematicModel:SetCameraPosition(25.6, 0, -30);
+            cinematicModel:SetPosition(0, 4.87, 1.86);
+        end)
+    end
+    cinematicModel:ClearModel();
+    cinematicModel:SetFrameLevel(2);
+    cinematicModel:SetModel(235326);
+end
+
+function IcecrownAssets:SetLighting(modelScene)
+    --Lighting
+    modelScene:SetLightAmbientColor(0.13, 0.454, 0.67);
+    modelScene:SetLightDiffuseColor(0.13, 0.454, 0.87);
+    modelScene:SetLightDirection(0, 0, 0);
+    modelScene:SetDesaturation(0.5);
+
+    --Filter
+    local tune = modelScene:CreateTexture(nil, "OVERLAY", nil);
+    tune:SetColorTexture(2/255, 129/255, 175/255, 0.16);
+    tune:SetBlendMode("ADD");
+    tune:SetAllPoints(true);
+
+    local vignetting = modelScene:CreateTexture(nil, "OVERLAY", nil, 4);
+    vignetting:SetTexture(self.filePath.. "Vignetting");
+    vignetting:SetBlendMode("BLEND");
+    vignetting:SetAlpha(0.45);
+    vignetting:SetAllPoints(true);
+end
+
+local function CreateBlankFrame(parent)
+    local frame = CreateFrame("Frame", nil, parent);
+    frame:SetPoint("TOPLEFT", parent, "TOPLEFT", 0, 0);
+    frame:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", 0, 0);
+    return frame
+end
+
+function IcecrownAssets:CreateScene(modelScene)
+    local container = Narci_InteractiveSplash.ClipFrame.AssetContainer;
+    container:Hide();
+    local Stairs = CreateBlankFrame(container);
+    local Walls = CreateBlankFrame(container);
+
+    container:SetScript("OnShow", function()
+        self:CreateSky(container);
+        Stairs:SetAlpha(0);
+        Walls:SetAlpha(0);
+        container.skyBox:SetAlpha(0);
+        After(1.5, function()
+            UIFrameFadeIn(Stairs, 0.25, 0, 1);
+            After(1, function()
+                UIFrameFadeIn(Walls, 0.25, 0, 1);
+                After(1, function()
+                    UIFrameFadeIn(container.skyBox, 1, 0, 1);
+                end)
+            end)
+        end)
+    end)
+
+    container:Show();
+    self:CreateStairs(Stairs);
+    self:CreateWalls(Walls);
+    self:CreateWalls(Walls, true);
+    self:CreateSky(container);
+
+end
+
+
+
+local function SetSplashModel(self)
+    IcecrownAssets:CreateScene(self);
+
+    local actor = NarciAPI_SetupModelScene(self, 1245874, 3, "FRONT");
+    --actor:SetSpellVisualKit(63318)  --Snow
+    actor:SetAnimation(4, 0, 0.55);
+    actor:SetPitch(-pi/10);
+    actor:SetPosition(0, 0.154, -1.44);
+    self:SetFrameLevel(80);
+    IcecrownAssets:SetLighting(self);
 end
 
 local UpdateFrame = CreateFrame("Frame");
 UpdateFrame:Hide();
 UpdateFrame.t = 0;
 UpdateFrame.duration = 0.5;
-local function OnUpdateFunc(self, elapse)
-    self.t = self.t + elapse;
+local function OnUpdateFunc(self, elapsed)
+    self.t = self.t + elapsed;
     local modelOffset = inOutSine(self.t, self.startX, self.endX, self.duration);
     local frameOffset = inOutSine(self.t, self.textstartX, self.textendX, self.duration);
     local scale = outSine(self.t, self.startScale, self.endScale - self.startScale, self.duration);
@@ -386,6 +657,7 @@ local function FlyOutModel(self)
         UpdateFrame.startScale = 1;
         UpdateFrame.endScale = 1;
         FadeFrame(clip.ModelScene, UpdateFrame.duration, "IN");
+        UIFrameFadeIn(clip.AssetContainer, UpdateFrame.duration, 0, 1);
         FadeFrame(clip.NoteFrame, 0.45, "OUT");
         FadeFrame(clip.Preview, 0.25, "OUT");
 
@@ -401,11 +673,12 @@ local function FlyOutModel(self)
         UpdateFrame.startScale = 1.5;
         UpdateFrame.endScale = 1;
         FadeFrame(clip.ModelScene, UpdateFrame.duration, "OUT");
+        UIFrameFadeOut(clip.AssetContainer, UpdateFrame.duration, 1, 0);
         FadeFrame(clip.NoteFrame, 0.35, "IN");
         FadeFrame(clip.Preview, 0.5, "IN");
 
         --button visual
-        self.Text:SetText(string.format(NARCI_SPLASH_WHATS_NEW_FORMAT, NARCI_VERSION_INFO));
+        self.Text:SetText(string.format(NARCI_COLOR_CYAN_DARK.. NARCI_SPLASH_WHATS_NEW_FORMAT, NARCI_VERSION_INFO));
         self.Text.Bling:Stop();
     end 
     self.IsExpanded = not self.IsExpanded;
@@ -414,8 +687,11 @@ local function FlyOutModel(self)
 end
 
 local function SplashModel_OnShow(self)
-    local ModelScene = self.ClipFrame.ModelScene;
-    SetSplashModel(ModelScene);
+    if not self.hasInitialized then
+        self.hasInitialized = true;
+        local ModelScene = self.ClipFrame.ModelScene;
+        SetSplashModel(ModelScene);
+    end
 end
 
 local function LogoButton_OnClick(self)
@@ -513,6 +789,7 @@ end
 local Splash = CreateFrame("Frame");
 Splash:RegisterEvent("ADDON_LOADED");
 Splash:RegisterEvent("PLAYER_ENTERING_WORLD");
+--Splash:RegisterEvent("GARRISON_UPDATE");  --Always Shown
 Splash:SetScript("OnEvent", function(self, event, ...)
     local event = event;
     if event == "ADDON_LOADED" then
@@ -523,19 +800,19 @@ Splash:SetScript("OnEvent", function(self, event, ...)
             return
         end
 
-        if CurrentVersion > NarcissusDB.Version then
+        if currentVersion > NarcissusDB.Version then
             ApplyPatchFix();
             
-            if NarcissusDB.Version < 10080 then
+            if NarcissusDB.Version < lastMajorVersion then
                 self:RegisterEvent("GARRISON_UPDATE");
             end
 
-            NarcissusDB.Version = CurrentVersion;
+            NarcissusDB.Version = currentVersion;
         end
 
     elseif event == "GARRISON_UPDATE" then
         self:UnregisterEvent("GARRISON_UPDATE");
-        C_Timer.After(2.5, function()
+        After(2.5, function()
             if CinematicFrame:IsShown() or MovieFrame:IsShown() then
                 self:RegisterEvent("CINEMATIC_STOP");
             else
@@ -543,16 +820,16 @@ Splash:SetScript("OnEvent", function(self, event, ...)
             end
         end);
     elseif event == "CINEMATIC_STOP" then
-        self:UnregisterEvent("CINEMATIC_STOP")
-        C_Timer.After(2, function()
+        self:UnregisterEvent("CINEMATIC_STOP");
+        After(2, function()
             FadeFrame(Narci_InteractiveSplash, 0.25, "Forced_IN");
         end);
     elseif event == "PLAYER_ENTERING_WORLD" then
         --Load Model Info
-        self:UnregisterEvent("PLAYER_ENTERING_WORLD")
+        self:UnregisterEvent("PLAYER_ENTERING_WORLD");
         playerModelInfo = NarciAPI_GetActorInfoByUnit("player");
         local frame = Narci_InteractiveSplash;
-        local genderID = UnitSex("player");
+        local genderID = 3;  --UnitSex("player")
         if genderID == 3 then
             --She Comes
             local ModelScene = frame.ClipFrame.ModelScene;
@@ -564,6 +841,7 @@ Splash:SetScript("OnEvent", function(self, event, ...)
         frame:SetScript("OnShow", SplashModel_OnShow);
         frame.LogoButton:SetScript("OnClick", LogoButton_OnClick);
 
+        --[[
         local ButtonTab = frame.ClipFrame.Preview.ButtonTab;    --Directly preview\change preferences on splash pane
         ButtonTab.Button1.onEnterFunc = TryOutButton1_OnEnter;
         ButtonTab.Button2.onEnterFunc = TryOutButton2_OnEnter;
@@ -571,6 +849,7 @@ Splash:SetScript("OnEvent", function(self, event, ...)
         ButtonTab.Button2.onLeaveFunc = TryOutButton2_OnLeave;
         ButtonTab.Button1:SetScript("OnClick", TryOutButton1_OnClick);
         ButtonTab.Button2:SetScript("OnClick", TryOutButton2_OnClick);
+        --]]
     end
 end)
 
@@ -578,6 +857,11 @@ end)
 local RunDelayedFunction = NarciAPI_RunDelayedFunction;
 
 local function ShowButtonTab(Preview, id)
+    --Narcissus 1.0.9
+    if true then
+        return
+    end
+
     --Narcissus 1.0.8
     if id == 2 then
         Preview.ButtonTab:Show();
@@ -598,10 +882,10 @@ function NarciSplash_InteractiveText_OnEnter(self)
             Preview.pauseUpdate = true;
             Preview.ImageBottom:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Splash\\SplashIMG"..id);
             Preview.ImageBottom:SetAlpha(1);
-            C_Timer.After(0, function()
+            After(0, function()
                 Preview.ImageTop.fadeOut:Play();
                 ShowButtonTab(Preview, id);
-                C_Timer.After(0.5, function()
+                After(0.5, function()
                     Preview.id = id;
                 end)
             end)
@@ -626,9 +910,9 @@ function NarciSplash_PreviewFadeIn_OnFinished(self)
                     Preview.pauseUpdate = true;
                     Preview.ImageBottom:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Splash\\SplashIMG"..id);
                     Preview.ImageBottom:SetAlpha(1);
-                    C_Timer.After(0.2, function()
+                    After(0.2, function()
                         Preview.ImageTop.fadeOut:Play();
-                        C_Timer.After(0.5, function()
+                        After(0.5, function()
                             Preview.id = id;
                         end)
                     end) 
@@ -649,6 +933,7 @@ function Narci:ShowSplash(animationID)
 end
 
 --Events Test--
+--235326 Icecrown Sky
 --/run SetSplashModelAnimation()
 --[[
 local EventListener = CreateFrame("Frame");

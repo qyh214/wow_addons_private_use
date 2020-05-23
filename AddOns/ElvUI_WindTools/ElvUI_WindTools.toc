@@ -1,6 +1,6 @@
 ## Interface: 80300
 ## Author: houshuu, Someblu
-## Version: 1.6.3
+## Version: 1.6.5
 ## Title: |cff1784d1ElvUI|r |cffffffffWind|r|cff00aaffTools|r
 ## Title-zhTW: |cff1784d1ElvUI|r |cffffffffWind|r|cff00aaff工具箱|r
 ## Title-zhCN: |cff1784d1ElvUI|r |cffffffffWind|r|cff00aaff工具箱|r

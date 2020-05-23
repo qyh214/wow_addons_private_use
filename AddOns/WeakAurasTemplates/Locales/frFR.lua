@@ -30,6 +30,8 @@ local L = WeakAuras.L
 	L["Always shows the aura, turns red when out of range."] = "Toujours afficher l'aura, rouge si hors de portée."
 	L["Back"] = "Retour"
 	L["Basic Show On Cooldown"] = "Affichage de base en temps de recharge"
+	--[[Translation missing --]]
+	L["Basic Show On Ready"] = "Basic Show On Ready"
 	L["Bloodlust/Heroism"] = "Furie sanguinaire/Héroïsme"
 	L["buff"] = "amélioration"
 	L["Buffs"] = "Améliorations"
@@ -67,6 +69,8 @@ local L = WeakAuras.L
 	L["Only show the aura when the item is on cooldown."] = "Afficher uniquement l'aura quand l'objet est en recharge."
 	L["Only shows the aura if the target has the buff."] = "Montre l'aura que si la cible a l'amélioration."
 	L["Only shows the aura when the ability is on cooldown."] = "Afficher uniquement l'aura quand la technique est en recharge."
+	--[[Translation missing --]]
+	L["Only shows the aura when the ability is ready to use."] = "Only shows the aura when the ability is ready to use."
 	L["Pet alive"] = "Familier vivant"
 	L["Pet Behavior"] = "Comportement du Familier"
 	L["PvP Azerite Traits"] = "Traits Azéritiques JcJ"
@@ -105,6 +109,8 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Show Cooldown and Proc Tracking"] = "Show Cooldown and Proc Tracking"
 	L["Show Cooldown and Totem Information"] = "Afficher le Temps de Rechargement et l'Information du Totem"
+	--[[Translation missing --]]
+	L["Show on Ready"] = "Show on Ready"
 	--[[Translation missing --]]
 	L["Show Only if Buffed"] = "Show Only if Buffed"
 	--[[Translation missing --]]

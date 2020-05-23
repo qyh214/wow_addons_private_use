@@ -30,6 +30,9 @@ local IsItemSocketable = NarciAPI_IsItemSocketable;
 local GetItemExtraEffect = NarciAPI_GetItemExtraEffect;
 local GetCorruptedItemAffix = NarciAPI_GetCorruptedItemAffix;
 local Narci_AlertFrame_Autohide = Narci_AlertFrame_Autohide;
+local C_Item = C_Item;
+local C_TransmogCollection = C_TransmogCollection;
+local After = C_Timer.After;
 
 local sin = math.sin;
 local cos = math.cos;
@@ -66,15 +69,15 @@ local ACL = CreateFrame("Frame", "Narci_CharacterListener");
 ACL:Hide();
 --[[
 local TakenOutFrames = {
-	[1] = GameTooltip, 					--TOOLTTIP
 	[2] = AzeriteEmpoweredItemUI, 		--
 	[3] = ItemSocketingFrame,			--
 	[4] = ArtifactFrame,				--
 }
 --]]
 
-local GameTooltipScale = 1;		--Some users set the tooltip scale separately (using Tip Tac, for example)
-local function TakeOutFromUIParent(frame, FrameStrata, bool) --take out Gametooltip and other frames from UIParent, so they will still be visible when UI is hidden
+local DefaultTooltip = GameTooltip;
+
+local function TakeOutFromUIParent(frame, FrameStrata, bool) --take out frames from UIParent, so they will still be visible when UI is hidden
 	local effectiveScale = UIParent:GetEffectiveScale();
 	FrameStrata = FrameStrata or "MEDIUM";
 
@@ -82,57 +85,41 @@ local function TakeOutFromUIParent(frame, FrameStrata, bool) --take out Gametool
 		if bool == true then
 			frame:SetParent(nil);
 			frame:SetFrameStrata(FrameStrata);
-			if frame:GetName() == "GameTooltip" then
-				frame:SetScale(GameTooltipScale*(UIParent:GetScale()));
-			else
-				frame:SetScale(effectiveScale);
-			end
+			frame:SetScale(effectiveScale);
 		elseif bool == false or bool == nil then
-			if frame:GetName() == "GameTooltip" then
-				frame:SetScale(GameTooltipScale);
-			else
-				frame:SetScale(1);
-			end
+			frame:SetScale(1);
 			frame:SetParent(UIParent);
 			frame:SetFrameStrata(FrameStrata);
 		end
 	end
 end
 
-local function ForceTooltipToShow()
-	TakeOutFromUIParent(GameTooltip, "TOOLTIP", true);
-end
-
 function Narci_ShowButtonTooltip(self)
-	GameTooltip:Hide();
-	ForceTooltipToShow();
-	GameTooltip:SetOwner(self, "ANCHOR_NONE");
-
+	DefaultTooltip:Hide();
+	DefaultTooltip:SetOwner(self, "ANCHOR_NONE");
 	if not self.tooltipHeadline then
 		return
 	end
 
-	GameTooltip:SetText(self.tooltipHeadline);
+	DefaultTooltip:SetText(self.tooltipHeadline);
 	if self.IsOn then
-		GameTooltip:AddLine(self.tooltipLineClose, 1, 1, 1, true);
+		DefaultTooltip:AddLine(self.tooltipLineClose, 1, 1, 1, true);
 	else
-		GameTooltip:AddLine(self.tooltipLineOpen, 1 ,1 ,1 ,true);
+		DefaultTooltip:AddLine(self.tooltipLineOpen, 1 ,1 ,1 ,true);
 	end
 
 	if self.tooltipSpecial then
-		GameTooltip:AddLine(" ")
-		GameTooltip:AddLine(self.tooltipSpecial, 0.25, 0.78, 0.92, true);
+		DefaultTooltip:AddLine(" ");
+		DefaultTooltip:AddLine(self.tooltipSpecial, 0.25, 0.78, 0.92, true);
 	end
 
-	GameTooltip:SetAlpha(0)
+	DefaultTooltip:SetAlpha(0);
 	NarciAPI_ShowDelayedTooltip("BOTTOM", self, "TOP", 0, 2);	
 end
 
 function Narci:HideButtonTooltip()
-	GameTooltip:Hide();	
-	GameTooltip:SetParent(UIParent);
-	GameTooltip:SetFrameStrata("TOOLTIP");
-	GameTooltip:SetScale(GameTooltipScale);
+	DefaultTooltip:Hide();	
+	--DefaultTooltip:SetFrameStrata("TOOLTIP");
 end
 
 --[[
@@ -317,8 +304,11 @@ local ZoomValuebyRaceID = {
 				 [4] = {4.61, 0.1307, -0.04, 5},		--Swim
 				 [27] = {3.61, 0.1067, -0.02, 5},		--Fly Swift
 				 [29] = {3.61, 0.1067, -0.02, 5},		--Fly
-				 [3] = {4.91, 0.184, -0.02, 5}},		--Travel Form
-				 
+				 [3] = {4.91, 0.184, -0.02, 5},			--Travel Form
+				 [36] = {4.2, 0.1707, -0.04, 5},		--Treant
+				 [2] = {5.4, 0.1707, -0.04, 5},			--Tree of Life
+				},
+
 	["Mounted"] = {[1] = {8, 1.2495, -4, 5.5}},
 	
 	--1 	Human 32 Kultiran
@@ -337,7 +327,7 @@ local ZoomValuebyRaceID = {
 local _, _, playerRaceID = UnitRace("player")
 local playerGenderID = UnitSex("player")
 local _, _, playerClassID = UnitClass("player");
-local DistanceIndex = 1;
+local distanceIndex = 1;
 local ZoomInValue = ZoomValuebyRaceID[0][1];
 local Shoulder_Factor1 = ZoomValuebyRaceID[0][2];
 local Shoulder_Factor2 = ZoomValuebyRaceID[0][3];
@@ -361,9 +351,9 @@ playerRaceID = ReIndexRaceID(playerRaceID)
 
 function Narci:InitializeCameraFactors()
 	if NarcissusDB and not NarcissusDB.UseBustShot then
-		DistanceIndex = 4;
+		distanceIndex = 4;
 	else
-		DistanceIndex = 1;
+		distanceIndex = 1;
 	end
 end
 
@@ -393,7 +383,7 @@ local function ModifyCameraForShapeshifter()
 
 	if playerRaceID ~= 22 and playerClassID ~= 11 then	--22 Worgen 11 druid
 		local zoom = ZoomValuebyRaceID[playerRaceID] or ZoomValuebyRaceID[1];
-		ZoomInValue = zoom[playerGenderID][DistanceIndex];
+		ZoomInValue = zoom[playerGenderID][distanceIndex];
 		Shoulder_Factor1 = zoom[playerGenderID][2];
 		Shoulder_Factor2 = zoom[playerGenderID][3];
 		ZoomInValue_XmogMode = zoom[playerGenderID][4];
@@ -403,46 +393,48 @@ local function ModifyCameraForShapeshifter()
 	local raceID_shouldUse = 1;
 	
 	if playerClassID ~= 11 then
+		--Not Druid
 		local _, inAlternateForm = HasAlternateForm();
 		if not inAlternateForm then						--Is curren in wolf form
 			raceID_shouldUse = "Wolf";
 		else
 			raceID_shouldUse = 1;
 		end
-		ZoomInValue = ZoomValuebyRaceID[raceID_shouldUse][playerGenderID][DistanceIndex];
+		ZoomInValue = ZoomValuebyRaceID[raceID_shouldUse][playerGenderID][distanceIndex];
 		Shoulder_Factor1 = ZoomValuebyRaceID[raceID_shouldUse][playerGenderID][2];
 		Shoulder_Factor2 = ZoomValuebyRaceID[raceID_shouldUse][playerGenderID][3];
 		ZoomInValue_XmogMode = ZoomValuebyRaceID[raceID_shouldUse][playerGenderID][4];
 		return;
 	else
-		ACL:RegisterEvent("UPDATE_SHAPESHIFT_FORM");
-		local formID = GetShapeshiftFormID()
+		--Druid
 		raceID_shouldUse = "Druid";
-		if (not formID) or (not ZoomValuebyRaceID[raceID_shouldUse][formID]) then
-			raceID_shouldUse = playerRaceID
-			if playerRaceID == 22 and (not formID) then
+		ACL:RegisterEvent("UPDATE_SHAPESHIFT_FORM");
+		local formID = GetShapeshiftFormID();
+		
+		if ( not formID ) or ( not ZoomValuebyRaceID[raceID_shouldUse][formID] ) then
+			if playerRaceID == 22 then
 				local _, inAlternateForm = HasAlternateForm();
 				if not inAlternateForm then						--Is curren in wolf form
 					raceID_shouldUse = "Wolf";
 				else
 					raceID_shouldUse = 1;
 				end
+			else
+				raceID_shouldUse = playerRaceID;
 			end
 			formID = playerGenderID;
 		elseif formID == 31 then
 			local _, GlyphID = GetCurrentGlyphNameForSpell(24858);		--Moonkin form with Glyph of Stars use regular configuration
 			if GlyphID and GlyphID == 114301 then
 				local zoom = ZoomValuebyRaceID[playerRaceID] or ZoomValuebyRaceID[1];
-				ZoomInValue = zoom[playerGenderID][DistanceIndex];
+				ZoomInValue = zoom[playerGenderID][distanceIndex];
 				Shoulder_Factor1 = zoom[playerGenderID][2];
 				Shoulder_Factor2 = zoom[playerGenderID][3];
 				ZoomInValue_XmogMode = zoom[playerGenderID][4];
 				return;
 			end
 		end
-		--print(raceID_shouldUse)
-		--print(formID)
-		ZoomInValue = ZoomValuebyRaceID[raceID_shouldUse][formID][DistanceIndex];
+		ZoomInValue = ZoomValuebyRaceID[raceID_shouldUse][formID][distanceIndex];
 		Shoulder_Factor1 = ZoomValuebyRaceID[raceID_shouldUse][formID][2];
 		Shoulder_Factor2 = ZoomValuebyRaceID[raceID_shouldUse][formID][3];
 		ZoomInValue_XmogMode = ZoomValuebyRaceID[raceID_shouldUse][formID][4];
@@ -487,7 +479,7 @@ function UpdateShoulderCVar:Start(increment)
 	if ( not self.pauseUpdate ) then
 		self.zoom = GetCameraZoom();
 		self.pauseUpdate = true;
-		C_Timer.After(0.1, function()    -- Execute after 0.1s
+		After(0.1, function()    -- Execute after 0.1s
 			self.pauseUpdate = nil;
 			Smooth_ShoulderCVar(self.zoom * Shoulder_Factor1 + Shoulder_Factor2 + MogMode_Offset);
 		end)
@@ -608,16 +600,16 @@ local function ExitFunc()
 	NarciPlayerModelFrame1.xmogMode = 0;
 	ACL:Hide();
 	MoveViewRightStop();
-	if CVar_Temp.ActioncamState ~= 1 or NarcissusDB.CameraSafeMode then		--Restore the acioncam state
-		SetCVar("test_cameraDynamicPitch", 0);	--Note: "test_cameraDynamicPitch" may cause camera to jitter while reseting the player's view
+	if CVar_Temp.ActioncamState ~= 1 or not Narci.keepActionCam then		--Restore the acioncam state
+		SetCVar("test_cameraDynamicPitch", 0);								--Note: "test_cameraDynamicPitch" may cause camera to jitter while reseting the player's view
 		Smooth_ShoulderCVar(0);
-		C_Timer.After(1, function()
+		After(1, function()
 			ConsoleExec( "actioncam off" );
 			MoveViewRightStop();
 		end)
 	else
 		Smooth_ShoulderCVar(CVar_Temp.OverShoulder);
-		C_Timer.After(1, function()
+		After(1, function()
 			MoveViewRightStop();
 		end)
 	end
@@ -627,7 +619,7 @@ local function ExitFunc()
 	FadeFrame(Narci_Vignette, 0.5, "OUT");
 	Narci_Attribute.animOut:Play();
 	UIParent:SetAlpha(0);
-	C_Timer.After(0.1, function()
+	After(0.1, function()
 		UIPA.StartAlpha = 0;
 		UIPA.EndAlpha = 1;
 		UIPA:Show();
@@ -647,6 +639,8 @@ local function ExitFunc()
 
 	Narci.isActive = false;
 	Narci.isAFK = false;
+
+	DefaultTooltip:Hide();
 end
 
 --[[
@@ -670,8 +664,12 @@ local function BeginZoomingIn()
 		SY:Show();
 		SetView(2);	
 	end
-	SP:Show();	
-	C_Timer.After(0.1, function()
+
+	if not IsFlying("player") then
+		SP:Show();
+	end
+	
+	After(0.1, function()
 		Narci:CameraZoomIn(ZoomInValue)
 	end)
 end
@@ -717,7 +715,7 @@ function Narci_MinimapButton_OnClick(self, button, down)
 			Narci_OpenGroupPhoto();
 			GameTooltip:Hide();
 			self:Disable();
-			C_Timer.After(1.5, function()
+			After(1.5, function()
 				self:Enable()
 			end)
 		end
@@ -735,15 +733,19 @@ function Narci_MinimapButton_OnClick(self, button, down)
 	self:Disable();	
 	Narci_Open();
 
-	C_Timer.After(1.5, function()
+	After(1.5, function()
 		self:Enable();
 	end)
 end
 
 function Narci_MinimapButton_OnEnter(self)
 	if not NarcissusDB.ShowMinimapButton then return; end
-	self:RegisterForClicks("LeftButtonUp","RightButtonUp","MiddleButtonUp");
 
+	GameTooltip:SetOwner(self, "ANCHOR_NONE");
+	GameTooltip:SetPoint("TOPRIGHT", self, "BOTTOM", 0, 0);
+	GameTooltip:SetText(NARCI_GRADIENT);
+	
+	--Normal Tooltip
 	local HotKey1, HotKey2 = GetBindingKey("TOGGLECHARACTER0");
 	local KeyText;
 	local LeftClickText = L["Minimap Tooltip Left Click"];
@@ -761,10 +763,7 @@ function Narci_MinimapButton_OnEnter(self)
 		LeftClickText = LeftClickText.." |cffffffff".."/|r "..keyBind;
 	end
 
-	GameTooltip:SetOwner(self, "ANCHOR_NONE");
-	GameTooltip:SetPoint("TOPRIGHT", self, "BOTTOM", 0, 0);
-	GameTooltip:SetText(NARCI_GRADIENT);
-	--GameTooltip:AddDoubleLine(NARCI_GRADIENT, "A.A.K.");
+
 	GameTooltip:AddLine(LeftClickText.." "..L["Minimap Tooltip To Open"], nil, nil, nil, false);
 	GameTooltip:AddLine(L["Minimap Tooltip Right Click"].." "..L["Minimap Tooltip Enter Photo Mode"], nil, nil, nil, false);
 	GameTooltip:AddLine(L["Minimap Tooltip Shift Left Click"].." "..L["Toggle Dressing Room"], nil, nil, nil, true);
@@ -772,14 +771,14 @@ function Narci_MinimapButton_OnEnter(self)
 	GameTooltip:AddLine(L["Minimap Tooltip Middle Button"], nil, nil, nil, true);
 	GameTooltip:AddLine(" ", nil, nil, nil, true);
 	GameTooltip:AddDoubleLine(NARCI_VERSION_INFO, NARCI_DEVELOPER_INFO, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8);
-	--if NARCI_TRANSLATOR_INFO then	GameTooltip:AddDoubleLine(" ", NARCI_TRANSLATOR_INFO, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8); end
 	GameTooltip:AddLine("https://wow.curseforge.com/projects/narcissus", 0.5, 0.5, 0.5, false);
-	GameTooltip:Show();
 
 	self.Color:Show();
 	UIFrameFadeIn(self.Color, 0.2, self.Color:GetAlpha(), 1);
 	UIFrameFadeIn(self, 0.2, self:GetAlpha(), 1);
 	SetCursor("Interface/CURSOR/Item.blp");
+
+	GameTooltip:Show();
 end
 
 -- Derivative from [[LibDBIcon-1.0]]
@@ -821,7 +820,7 @@ local function Narci_MinimapButton_UpdateAngle(radian)
 	Narci_MinimapButton:SetPoint("CENTER", "Minimap", "CENTER", x, y);
 end
 
-function Narci_MinimapButton_OnLoad()
+function Narci_MinimapButton_OnLoad(self)
 	local radian = NarcissusDB.MinimapButton.Position;
 	Narci_MinimapButton_UpdateAngle(radian);
 end
@@ -844,7 +843,6 @@ end
 
 function Narci_ItemSlotButton_OnEnter(self, direction)
 	UIFrameFadeIn(self.Highlight, 0.15, self.Highlight:GetAlpha(), 1);
-	ForceTooltipToShow();
 	if IsAltKeyDown() and not TransmogMode then
 		Narci_EquipmentFlyout_Show(self, self:GetID());
 		Narci_EquipmentFlyoutFrame.Arrow:Show();
@@ -855,19 +853,19 @@ function Narci_ItemSlotButton_OnEnter(self, direction)
 		return;
 	end
 
-	GameTooltip:SetOwner(self, "ANCHOR_NONE");
+	DefaultTooltip:SetOwner(self, "ANCHOR_NONE");
 	if direction == "left" then
-		GameTooltip:SetPoint("TOPRIGHT", self, "TOPLEFT", 10, -20);
+		DefaultTooltip:SetPoint("TOPRIGHT", self, "TOPLEFT", 10, -20);
 	else
-		GameTooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", -10, -20);
+		DefaultTooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", -10, -20);
 	end
 	if (self.hyperlink) then
-		GameTooltip:SetHyperlink(self.hyperlink);
-		GameTooltip:Show();
+		DefaultTooltip:SetHyperlink(self.hyperlink);
+		DefaultTooltip:Show();
 		return;
 	end
-	local hasItem, hasCooldown, repairCost = GameTooltip:SetInventoryItem("player", self:GetID(), nil, true);
-	GameTooltip:Show()
+	local hasItem, hasCooldown, repairCost = DefaultTooltip:SetInventoryItem("player", self:GetID(), nil, true);
+	DefaultTooltip:Show()
 end
 
 local BorderTexture = NarciAPI_GetBorderTexture();
@@ -913,7 +911,7 @@ local function ShareHyperLink()																	--Send transmog hyperlink to cha
 	for i=1, #xmogTable do
 		local index =  xmogTable[i][1]
 		if slotTable[index] and slotTable[index].hyperlink then			
-			C_Timer.After(delay, function()
+			After(delay, function()
 			SendChatMessage(xmogTable[i][2]..": "..slotTable[index].hyperlink, "GUILD")
 			end)
 			delay = delay + 0.1;
@@ -962,7 +960,7 @@ local function SetItemSocketingFramePosition(self)		--Let ItemSocketingFrame app
 		else
 			ItemSocketingFrame:SetPoint("TOPLEFT", self, "TOPRIGHT", -4, 0);
 		end
-		GameTooltip:Hide();
+		DefaultTooltip:Hide();
 	end
 end
 
@@ -989,9 +987,9 @@ function Narci_ItemSlotButton_OnClick(self, button)
 			return;
 		elseif IsShiftKeyDown() and button == "LeftButton" then
 			if self.hyperlink then
-				--SendChatMessage(self.hyperlink)
+				SendChatMessage(self.hyperlink)
 			end
-			ShareHyperLink()
+			--ShareHyperLink()
 		else
 			PaperDollItemSlotButton_OnModifiedClick(self, button);
 			
@@ -999,7 +997,6 @@ function Narci_ItemSlotButton_OnClick(self, button)
 			TakeOutFromUIParent(AzeriteEssenceUI, "MEDIUM", true);
 			TakeOutFromUIParent(ItemSocketingFrame, "MEDIUM", true);
 			TakeOutFromUIParent(ArtifactFrame, "MEDIUM", true);
-			C_Timer.After(0.2, ForceTooltipToShow);
 			SetItemSocketingFramePosition(self);
 		end
 	else
@@ -1075,11 +1072,10 @@ function Narci_RuneButton_OnEnter(self)
 	if (not spellID) then
 		return;
 	end
-	ForceTooltipToShow()
-	GameTooltip:SetOwner(self, "ANCHOR_NONE");
-	GameTooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", 0, 0)
-	GameTooltip:SetSpellByID(spellID);
-	GameTooltip:Show()
+	DefaultTooltip:SetOwner(self, "ANCHOR_NONE");
+	DefaultTooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", 0, 0);
+	DefaultTooltip:SetSpellByID(spellID);
+	DefaultTooltip:Show()
 end
 
 ---------------------------------------------------
@@ -1144,7 +1140,7 @@ local function GetTraitsIcon(itemLocation)
     if not itemLocation then return; end
     local TierInfos = C_AzeriteEmpoweredItem.GetAllTierInfo(itemLocation);
 	if not TierInfos then return; end
-	local PowerIDs, icon;
+	local PowerIDs, icon, _;
 	local isRightSpec = true;
 	local TraitIcons = {};
 	local specIndex = GetSpecialization() or 1;
@@ -1203,7 +1199,7 @@ function Narci_ItemSlotButton_OnLoad(self)
 		end
 		itemLink = C_Item.GetItemLink(itemLocation);
 		self.hyperlink = nil;
-		itemIcon = C_Item.GetItemIcon(itemLocation);
+		itemIcon = GetInventoryItemTexture("player", slotId);
 		itemName = C_Item.GetItemName(itemLocation);
 		self.GradientBackground:Show()
 		itemQuality = C_Item.GetItemQuality(itemLocation);
@@ -1257,13 +1253,16 @@ function Narci_ItemSlotButton_OnLoad(self)
 			itemName = sourceInfo.name; 																							--sourceitemName
 			--local _, sourceID = C_TransmogCollection.GetItemInfo(sourceInfo.itemID, sourceInfo.itemModID)							--appearanceID, sourceID
 			itemQuality = sourceInfo.quality or 12;																					--sourceitemQuality
-			itemIcon = GetItemIcon(sourceInfo.itemID); 																				--sourceitemIcon
+			--itemIcon = GetItemIcon(sourceInfo.itemID); 																				--sourceitemIcon
+			itemIcon = C_TransmogCollection.GetSourceIcon(appliedSourceID);
 			local _, _, _, hex = GetItemQualityColor(itemQuality);
 			_, self.hyperlink = GetItemInfo(sourceInfo.itemID);
 			self.itemModID = sourceInfo.itemModID;
 
 			local sourceType = sourceInfo.sourceType;
 			local difficulty;
+			local bonusID;
+
 			if sourceType == 1 then	--TRANSMOG_SOURCE_BOSS_DROP = 1
 				local drops = self.drops	--C_TransmogCollection.GetAppearanceSourceDrops(self.sourceID)
 				if drops and drops[1] then
@@ -1272,30 +1271,39 @@ function Narci_ItemSlotButton_OnLoad(self)
 					
 					if sourceInfo.itemModID == 0 then 
 						difficulty = PLAYER_DIFFICULTY1;
-						self.sourcePlainText = self.sourcePlainText.." "..PLAYER_DIFFICULTY1;
+						bonusID = 3561;
 						self.hyperlink = "|c"..hex.."|Hitem:"..sourceInfo.itemID.."::::::::120::::2:356".."1"..":1476:|h|r";
 					elseif sourceInfo.itemModID == 1 then 
 						difficulty = PLAYER_DIFFICULTY2;
+						bonusID = 3562;
 						self.hyperlink = "|c"..hex.."|Hitem:"..sourceInfo.itemID.."::::::::120::::2:356".."2"..":1476:|h|r";
 					elseif sourceInfo.itemModID == 3 then 
 						difficulty = PLAYER_DIFFICULTY6;
+						bonusID = 3563;
 						self.hyperlink = "|c"..hex.."|Hitem:"..sourceInfo.itemID.."::::::::120::::2:356".."3"..":1476:|h|r";
 					elseif sourceInfo.itemModID == 4 then
 						difficulty = PLAYER_DIFFICULTY3;
+						bonusID = 3564;
 						self.hyperlink = "|c"..hex.."|Hitem:"..sourceInfo.itemID.."::::::::120::::2:356".."4"..":1476:|h|r";
 					end
-					effectiveLvl = effectiveLvl.." "..difficulty;
-					self.sourcePlainText = self.sourcePlainText.." "..difficulty;
+
+					if difficulty then
+						effectiveLvl = effectiveLvl.." "..difficulty;
+						self.sourcePlainText = self.sourcePlainText.." "..difficulty;
+					end
 				end
 			else
 				if sourceType == 2 then --quest
 					effectiveLvl = TRANSMOG_SOURCE_2
 					if sourceInfo.itemModID == 3 then 
 						self.hyperlink = "|c"..hex.."|Hitem:"..sourceInfo.itemID.."::::::::120::::2:512".."6"..":1562:|h|r";
+						bonusID = 5126;
 					elseif sourceInfo.itemModID == 2 then 
 						self.hyperlink = "|c"..hex.."|Hitem:"..sourceInfo.itemID.."::::::::120::::2:512".."5"..":1562:|h|r";
+						bonusID = 5125;
 					elseif sourceInfo.itemModID == 1 then 
 						self.hyperlink = "|c"..hex.."|Hitem:"..sourceInfo.itemID.."::::::::120::::2:512".."4"..":1562:|h|r";
+						bonusID = 5124;
 					end
 				elseif sourceType == 3 then --vendor
 					effectiveLvl = TRANSMOG_SOURCE_3;
@@ -1312,23 +1320,32 @@ function Narci_ItemSlotButton_OnLoad(self)
 						effectiveLvl = ITEM_QUALITY5_DESC;
 					end
 				end
-				self.sourcePlainText = nil;
+				self.sourcePlainText = effectiveLvl;
 			end
 			if self.hyperlink then
 				_, self.hyperlink = GetItemInfo(self.hyperlink);																		--original hyperlink cannot be printed (workaround)
-				if self.hyperlink then
-					_, _, _, _, itemIcon = GetItemInfoInstant(self.hyperlink);
+			end
+
+			if itemQuality == 6 then
+				if slotId == 16 then
+					bonusID = (sourceInfo.itemModID or 0);	--Artifact use itemModID "7V0" + modID - 1
+				else
+					bonusID = 0;
 				end
 			end
+			self.bonusID = bonusID;
 		else	--irrelevant slot
 			self.Icon:SetDesaturated(true);
 			itemQuality = 0;
 			self.Name:Hide();
 			self.ItemLevel:Hide();
 			self.GradientBackground:Hide();
+			self.bonusID = nil;
 		end
 	else
 		self.Icon:SetDesaturated(false);
+		self.itemID = nil;
+		self.bonusID = nil;
 		itemQuality = 0;
 		itemIcon = textureName;
 		itemName = "" ;
@@ -1358,7 +1375,6 @@ function Narci_ItemSlotButton_OnLoad(self)
 	end
 
 	if isAzeriteItem then
-		self.isAzeriteItem = true;
 		local HeartLevel = C_AzeriteItem.GetPowerLevel(itemLocation);
 		local xp_Current, xp_Needed =  C_AzeriteItem.GetAzeriteItemXPInfo(itemLocation);
 		local GetEssenceInfo = C_AzeriteEssence.GetEssenceInfo;
@@ -1376,6 +1392,9 @@ function Narci_ItemSlotButton_OnLoad(self)
 			if Colors then	Br, Bg, Bb = Colors.r, Colors.g, Colors.b; end;
 			itemName = EssenceInfo.name;
 			itemIcon = EssenceInfo.icon;
+
+			--Gem glow
+			self.VFX:Show();
 		end
 
 		for i = 116, 119 do
@@ -1388,14 +1407,10 @@ function Narci_ItemSlotButton_OnLoad(self)
 				end
 			end
 		end
-
-		--Gem glow
-		self.VFX:Show();
 	else
 		if slotId == 2 then
 			self.VFX:Hide();
 		end
-		self.isAzeriteItem = false;
 	end
 
 	if isCorruptedItem then
@@ -1428,9 +1443,9 @@ function Narci_ItemSlotButton_OnLoad(self)
 			self.VFX:Hide();
 		else
 			local itemID = GetItemInfoInstant(itemLink);
-			if itemID == 169223 then 	--Ashjra'kamas, Shroud of Resolve
-				local rank = NarciAPI_GetItemRank(itemLink);
-				effectiveLvl = effectiveLvl.."  "..rank
+			if itemID == 169223 then 	--Ashjra'kamas, Shroud of Resolve Legendary Cloak
+				local rank, corruptionResistance = NarciAPI_GetItemRank(itemLink, "ITEM_MOD_CORRUPTION_RESISTANCE");
+				effectiveLvl = effectiveLvl.."  "..rank.."  |cFFFFD100"..corruptionResistance.."|r";
 				borderTex = BorderTexture.BlackDragon;
 				self.VFX:Show();
 			else
@@ -1496,7 +1511,7 @@ function Narci_ItemSlotButton_OnLoad(self)
 			self.Name:SetText(itemName);
 			self.Name:SetTextColor(Br, Bg, Bb);
 			self.Name.anim2:Play();
-			C_Timer.After(0, function()
+			After(0, function()
 				self.GradientBackground:SetHeight(self.Name:GetHeight() + self.ItemLevel:GetHeight() + 18);
 			end)
 		end)
@@ -1703,7 +1718,7 @@ end
 local function MasteryFrame_OnEnter(self)
 	SetRadarVertexSize(self, 15);
 
-	GameTooltip:SetOwner(self, "ANCHOR_NONE");
+	DefaultTooltip:SetOwner(self, "ANCHOR_NONE");
 
 	local _, class = UnitClass("player");
 	local mastery, bonusCoeff = GetMasteryEffect();
@@ -1713,35 +1728,33 @@ local function MasteryFrame_OnEnter(self)
 	if (masteryBonus > 0) then
 		title = title..HIGHLIGHT_FONT_COLOR_CODE.." ("..format("%.2F%%", mastery-masteryBonus)..FONT_COLOR_CODE_CLOSE..GREEN_FONT_COLOR_CODE.."+"..format("%.2F%%", masteryBonus)..FONT_COLOR_CODE_CLOSE..HIGHLIGHT_FONT_COLOR_CODE..")"..FONT_COLOR_CODE_CLOSE;
 	end
-	GameTooltip:SetText(title);
+	DefaultTooltip:SetText(title);
 
 	local masteryRating = GetCombatRating(CR_MASTERY);
 	local primaryTalentTree = GetSpecialization();
 	if (primaryTalentTree) then
 		local masterySpell, masterySpell2 = GetSpecializationMasterySpells(primaryTalentTree);
 		if (masterySpell) then
-			GameTooltip:AddSpellByID(masterySpell);
+			DefaultTooltip:AddSpellByID(masterySpell);
 		end
 		if (masterySpell2) then
-			GameTooltip:AddLine(" ");
-			GameTooltip:AddSpellByID(masterySpell2);
+			DefaultTooltip:AddLine(" ");
+			DefaultTooltip:AddSpellByID(masterySpell2);
 		end
-		GameTooltip:AddLine(" ");
+		DefaultTooltip:AddLine(" ");
 		local tooltip = format(STAT_MASTERY_TOOLTIP, BreakUpLargeNumbers(masteryRating), masteryBonus);
 		if masteryBonus ~= 0 then
-			GameTooltip:AddDoubleLine(tooltip ,math.floor( (masteryRating / masteryBonus) * 100 + 0.5) / 100 .. " [+1%]", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+			DefaultTooltip:AddDoubleLine(tooltip ,math.floor( (masteryRating / masteryBonus) * 100 + 0.5) / 100 .. " [+1%]", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
 		else
-			GameTooltip:AddLine(tooltip, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
+			DefaultTooltip:AddLine(tooltip, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
 		end
 	else
-		GameTooltip:AddLine(format(STAT_MASTERY_TOOLTIP, BreakUpLargeNumbers(masteryRating), masteryBonus), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
-		GameTooltip:AddLine(" ");
-		GameTooltip:AddLine(STAT_MASTERY_TOOLTIP_NO_TALENT_SPEC, GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b, true);
+		DefaultTooltip:AddLine(format(STAT_MASTERY_TOOLTIP, BreakUpLargeNumbers(masteryRating), masteryBonus), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
+		DefaultTooltip:AddLine(" ");
+		DefaultTooltip:AddLine(STAT_MASTERY_TOOLTIP_NO_TALENT_SPEC, GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b, true);
 	end
-	GameTooltip:SetPoint("TOPRIGHT",self,"TOPLEFT", -4, 0)
-	--self.UpdateTooltip = self.onEnterFunc;
-	ForceTooltipToShow();
-	GameTooltip:Show();
+	DefaultTooltip:SetPoint("TOPRIGHT",self,"TOPLEFT", -4, 0)
+	DefaultTooltip:Show();
 end
 
 local function SetMastery(self)
@@ -1752,6 +1765,7 @@ local function SetMastery(self)
 	local PercentageText = string.format(Format_Digit, mastery).."%"
 	self.Label:SetText(STAT_MASTERY);
 
+	--[[
 	if (UnitLevel("player") < SHOW_MASTERY_LEVEL) then
 		self.numericValue = 0;
 		self.Value:SetText("N/A");
@@ -1761,6 +1775,7 @@ local function SetMastery(self)
 		self.ValueRating:SetAlpha(Irrelevant_Attribute_Alpha)
 		return;
 	end
+	--]]
 
 	self.Value:SetText(PercentageText);
 	self.ValueRating:SetText(GetCombatRating(CR_MASTERY));
@@ -1870,11 +1885,6 @@ local function AAAMovementSpeed_OnUpdate(self, elapsedTime)
 	flightSpeed = flightSpeed/BASE_MOVEMENT_SPEED*100;
 	swimSpeed = swimSpeed/BASE_MOVEMENT_SPEED*100;
 
-	-- Pets seem to always actually use run speed
-	if (unit == "pet") then
-		swimSpeed = runSpeed;
-	end
-
 	-- Determine whether to display running, flying, or swimming speed
 	local speed = runSpeed;
 	local swimming = IsSwimming(unit);
@@ -1905,21 +1915,19 @@ local function AAAMovementSpeed_OnUpdate(self, elapsedTime)
 end
 
 local function MovementSpeed_OnEnter(self)
-	GameTooltip:SetOwner(self, "ANCHOR_NONE");
-	GameTooltip:SetText(HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_MOVEMENT_SPEED).." "..format("%d%%", self.speed+0.5)..FONT_COLOR_CODE_CLOSE);
+	DefaultTooltip:SetOwner(self, "ANCHOR_NONE");
+	DefaultTooltip:SetText(HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_MOVEMENT_SPEED).." "..format("%d%%", self.speed+0.5)..FONT_COLOR_CODE_CLOSE);
 
-	GameTooltip:AddLine(format(STAT_MOVEMENT_GROUND_TOOLTIP, self.runSpeed+0.5));
+	DefaultTooltip:AddLine(format(STAT_MOVEMENT_GROUND_TOOLTIP, self.runSpeed+0.5));
 	if (self.unit ~= "pet") then
-		GameTooltip:AddLine(format(STAT_MOVEMENT_FLIGHT_TOOLTIP, self.flightSpeed+0.5));
+		DefaultTooltip:AddLine(format(STAT_MOVEMENT_FLIGHT_TOOLTIP, self.flightSpeed+0.5));
 	end
-	GameTooltip:AddLine(format(STAT_MOVEMENT_SWIM_TOOLTIP, self.swimSpeed+0.5));
-	GameTooltip:AddLine(" ");
-	GameTooltip:AddLine(format(CR_SPEED_TOOLTIP, BreakUpLargeNumbers(GetCombatRating(CR_SPEED)), GetCombatRatingBonus(CR_SPEED)));
+	DefaultTooltip:AddLine(format(STAT_MOVEMENT_SWIM_TOOLTIP, self.swimSpeed+0.5));
+	DefaultTooltip:AddLine(" ");
+	DefaultTooltip:AddLine(format(CR_SPEED_TOOLTIP, BreakUpLargeNumbers(GetCombatRating(CR_SPEED)), GetCombatRatingBonus(CR_SPEED)));
 
-	GameTooltip:SetPoint("TOPRIGHT",self,"TOPLEFT", -4, 0)
-
-	ForceTooltipToShow()
-	GameTooltip:Show();
+	DefaultTooltip:SetPoint("TOPRIGHT",self,"TOPLEFT", -4, 0)
+	DefaultTooltip:Show();
 
 	self.UpdateTooltip = MovementSpeed_OnEnter;
 end
@@ -1938,18 +1946,18 @@ local function SetMovementSpeed(self)
 end
 
 local function SetStatTooltipText(self)
-	GameTooltip:SetOwner(self, "ANCHOR_NONE");
-	GameTooltip:SetText(self.tooltip);
+	DefaultTooltip:SetOwner(self, "ANCHOR_NONE");
+	DefaultTooltip:SetText(self.tooltip);
 	if ( self.tooltip2 ) then
-		GameTooltip:AddLine(self.tooltip2, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
+		DefaultTooltip:AddLine(self.tooltip2, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
 	end
 	if ( self.tooltip3 ) then
-		GameTooltip:AddLine(" ");
-		GameTooltip:AddLine(self.tooltip3, RAID_CLASS_COLORS["MAGE"].r, RAID_CLASS_COLORS["MAGE"].g, RAID_CLASS_COLORS["MAGE"].b, true);
+		DefaultTooltip:AddLine(" ");
+		DefaultTooltip:AddLine(self.tooltip3, RAID_CLASS_COLORS["MAGE"].r, RAID_CLASS_COLORS["MAGE"].g, RAID_CLASS_COLORS["MAGE"].b, true);
 	end
 	if ( self.tooltip4 ) then
-		GameTooltip:AddLine(" ");
-		GameTooltip:AddDoubleLine(self.tooltip4[1], self.tooltip4[2], NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);		
+		DefaultTooltip:AddLine(" ");
+		DefaultTooltip:AddDoubleLine(self.tooltip4[1], self.tooltip4[2], NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);		
 	end
 end
 
@@ -1959,25 +1967,24 @@ function Narci_ShowStatTooltip(self, direction)
 	end
 	SetStatTooltipText(self)
 	if (not direction) then
-		GameTooltip:SetPoint("TOPRIGHT",self,"TOPLEFT", -4, 0)
+		DefaultTooltip:SetPoint("TOPRIGHT",self,"TOPLEFT", -4, 0)
 	elseif direction=="RIGHT" then
-		GameTooltip:SetPoint("LEFT",self,"RIGHT", 0, 0)
+		DefaultTooltip:SetPoint("LEFT",self,"RIGHT", 0, 0)
 	elseif direction=="TOP" then
-		GameTooltip:SetPoint("BOTTOM",self,"TOP", 0, -4)
+		DefaultTooltip:SetPoint("BOTTOM",self,"TOP", 0, -4)
 	elseif direction=="CURSOR" then
-		GameTooltip:SetOwner(self, "ANCHOR_CURSOR");
+		DefaultTooltip:SetOwner(self, "ANCHOR_CURSOR");
 	end
-	ForceTooltipToShow();
-	GameTooltip:Show();
+
+	DefaultTooltip:Show();
 end
 
 function Narci_ShowStatTooltipDelayed(self)
 	if ( not self.tooltip ) then
 		return;
 	end
-	SetStatTooltipText(self)
-	ForceTooltipToShow();
-	GameTooltip:SetAlpha(0)
+	SetStatTooltipText(self);
+	DefaultTooltip:SetAlpha(0);
 	NarciAPI_ShowDelayedTooltip("BOTTOM",self,"TOP", 0, -4);
 end
 
@@ -2298,7 +2305,7 @@ local function SetCorruptionBackground()
 		
 		if delay then
 			delay = min(delay, 0.85)
-			C_Timer.After(delay, function()
+			After(delay, function()
 				frame.Eyelid.Blink:Play();
 				--[[
 				if corruptionLevel ~= 0 then
@@ -2367,7 +2374,7 @@ local function CharacterInfoFrame_OnLoad(NewLevel)
 	end
 	local level = NewLevel or UnitLevel("player");
 
-	local currentSpecName;
+	local _, currentSpecName;
 	local currentSpec = GetSpecialization();
 	if currentSpec then
 	   _, currentSpecName = GetSpecializationInfo(currentSpec);
@@ -2391,7 +2398,7 @@ end
 
 local function RefreshSlot(SlotId)
 	if slotTable[SlotId] then
-		C_Timer.After(AssignDelay(SlotId), function()
+		After(AssignDelay(SlotId), function()
 			Narci_ItemSlotButton_OnLoad(slotTable[SlotId]);
 		end)
 	end
@@ -2417,7 +2424,7 @@ end
 local function CacheSourceInfo(slotId)
 	local appliedSourceID, appliedVisualID 
 	if slotId then
-		C_Timer.After(AssignDelay(slotId, true), function()
+		After(AssignDelay(slotId, true), function()
 			appliedSourceID, appliedVisualID = GetSlotVisualID(slotId);
 			if appliedVisualID > 0 then
 				local sourceInfo = C_TransmogCollection.GetSourceInfo(appliedSourceID);
@@ -2504,17 +2511,12 @@ local function SetPrimary(self)
 	local PrimaryStatsName, PrimaryStatsNum = NarciAPI_GetPrimaryStats();
 	self.Label:SetText(PrimaryStatsName)
 	self.Value:SetText(PrimaryStatsNum)
-	local primaryStat, spec;
-	spec = GetSpecialization();
+	local spec = GetSpecialization();
 	if not spec then return; end
 	local role = GetSpecializationRole(spec);
-	_, _, _, _, _, primaryStat = GetSpecializationInfo(spec);
+	local _, _, _, _, _, primaryStat = GetSpecializationInfo(spec);
 	if type(tonumber(primaryStat)) ~= "number" then return; end		--sometimes changing zones cause Lua error
-	local stat;
-	local effectiveStat;
-	local posBuff;
-	local negBuff;
-	stat, effectiveStat, posBuff, negBuff = UnitStat(unit, primaryStat);
+	local stat, effectiveStat, posBuff, negBuff = UnitStat(unit, primaryStat);
 	local effectiveStatDisplay = FormatLargeNumbers(effectiveStat);
 
 	-- Set the tooltip text
@@ -2659,25 +2661,24 @@ end
 
 local function CharacterDamageFrame_OnEnter(self)
 	-- Main hand weapon
-	GameTooltip:SetOwner(self, "ANCHOR_NONE");
+	DefaultTooltip:SetOwner(self, "ANCHOR_NONE");
 	if ( self.unit == "pet" ) then
-		GameTooltip:SetText(INVTYPE_WEAPONMAINHAND_PET, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
+		DefaultTooltip:SetText(INVTYPE_WEAPONMAINHAND_PET, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
 	else
-		GameTooltip:SetText(INVTYPE_WEAPONMAINHAND, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
+		DefaultTooltip:SetText(INVTYPE_WEAPONMAINHAND, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
 	end
-	GameTooltip:AddDoubleLine(format(STAT_FORMAT, ATTACK_SPEED_SECONDS), format("%.2F", self.attackSpeed), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-	GameTooltip:AddDoubleLine(format(STAT_FORMAT, DAMAGE), self.damage, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+	DefaultTooltip:AddDoubleLine(format(STAT_FORMAT, ATTACK_SPEED_SECONDS), format("%.2F", self.attackSpeed), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+	DefaultTooltip:AddDoubleLine(format(STAT_FORMAT, DAMAGE), self.damage, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
 	-- Check for offhand weapon
 	if ( self.offhandAttackSpeed ) then
-		GameTooltip:AddLine("\n");
-		GameTooltip:AddLine(INVTYPE_WEAPONOFFHAND, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
-		GameTooltip:AddDoubleLine(format(STAT_FORMAT, ATTACK_SPEED_SECONDS), format("%.2F", self.offhandAttackSpeed), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-		GameTooltip:AddDoubleLine(format(STAT_FORMAT, DAMAGE), self.offhandDamage, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+		DefaultTooltip:AddLine("\n");
+		DefaultTooltip:AddLine(INVTYPE_WEAPONOFFHAND, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
+		DefaultTooltip:AddDoubleLine(format(STAT_FORMAT, ATTACK_SPEED_SECONDS), format("%.2F", self.offhandAttackSpeed), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+		DefaultTooltip:AddDoubleLine(format(STAT_FORMAT, DAMAGE), self.offhandDamage, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
 	end
 
-	GameTooltip:SetPoint("TOPRIGHT",self,"TOPLEFT", -4, 0)
-	ForceTooltipToShow()
-	GameTooltip:Show();
+	DefaultTooltip:SetPoint("TOPRIGHT",self,"TOPLEFT", -4, 0);
+	DefaultTooltip:Show();
 end
 
 local function SetDamage(self)
@@ -2965,7 +2966,7 @@ function Narci_ItemFlyoutButton_OnClick(self)
 		EquipmentManager_RunAction(action)
 	end
 	self:Disable();
-	C_Timer.After(0.8, function()
+	After(0.8, function()
 		self:Enable();
 	end)
 end
@@ -3603,7 +3604,7 @@ local isRefreshing;
 local function RefreshAllStats()
 	if not isRefreshing then
 		isRefreshing = true;
-		C_Timer.After(0, function()
+		After(0, function()
 			for i=1, #statTable do
 				RefreshStats(i);
 			end
@@ -3787,9 +3788,6 @@ local function SmoothMusicVolume(state)
 end
 
 function Narci_Open()
-	
-	--ForceTooltipToShow(); --Make GameTooltip visible while the UIParent is hidden
-	
 	if not OpenViaClick then
 		if InCombatLockdown() then
 			return;
@@ -3810,11 +3808,13 @@ function Narci_Open()
 		SmoothMusicVolume(true);
 		ACL:Show();
 
-		PhotoModeController:Show();
+		Narci_PhotoModeController:Show();
 		Narci_XmogButton:Enable();
 		BeginZoomingIn();
-		GameTooltipScale = GameTooltip:GetScale();
-		C_Timer.After(0, function()
+
+		DefaultTooltip:SetScale(UIParent:GetEffectiveScale() or 1);
+
+		After(0, function()
 			RefreshAllSlot();
 			Narci:SetRadarChart(0,0,0,0,1);
 			Narci_LetterboxAnimation();
@@ -3832,12 +3832,12 @@ function Narci_Open()
 			end
 			SetCVar("test_cameraDynamicPitchSmartPivotCutoffDist", 10);
 
-			C_Timer.After(0.5, function()
+			After(0.5, function()
 				SetUIVisibility(false); 		--Same as pressing Alt + Z
 				SetCorruptionBackground();
 			end)
 
-			C_Timer.After(0.8, function()
+			After(0.8, function()
 				UIParent:SetAlpha(1);
 			end)
 		end)
@@ -3853,7 +3853,7 @@ function Narci_Open()
 				--"Nullify" ShowUI
 				UIParent:SetAlpha(0);
 				Minimap:Hide();
-				C_Timer.After(0, function()
+				After(0, function()
 					SetUIVisibility(false);
 					Narci_MinimapButton:Enable();
 					UIParent:SetAlpha(1);
@@ -3876,13 +3876,12 @@ function Narci_Open()
 		Narci_TitleManager_TitleTooltip:Hide();		--TitleManager
 		Narci_ModelSettings:Hide();
 
-		local frame = PhotoModeController;
+		local frame = Narci_PhotoModeController;
 		frame.PhotoModeController_AnimFrame.OppoDirection = true;
 		frame.PhotoModeController_AnimFrame:Hide();
 		frame.PhotoModeController_AnimFrame.EndPointY = "-80"
 		frame.PhotoModeController_AnimFrame.toAlpha = 0;
 		frame.PhotoModeController_AnimFrame:Show();
-		TakeOutFromUIParent(GameTooltip, "TOOLTIP", false);
 		TakeOutFromUIParent(AzeriteEmpoweredItemUI, "MEDIUM", false);
 		TakeOutFromUIParent(AzeriteEssenceUI, "MEDIUM", false);
 		TakeOutFromUIParent(ArtifactFrame, "MEDIUM", false);
@@ -3912,7 +3911,7 @@ function Narci_OpenGroupPhoto()
 		Narci_XmogButton:Click();
 
 		--Narci_ActorPanelExpandButton_OnClick(Narci_ExpandButton)
-		C_Timer.After(0.4, function()
+		After(0.4, function()
 			NarcissusDB.DefaultLayout = xmogMode_Temp;
 		end)
 		
@@ -3927,11 +3926,13 @@ function Narci_OpenGroupPhoto()
 		Narci_FlyoutBlack:SetAlpha(0);
 		ACL:Show();
 
-		PhotoModeController:Show();
+		Narci_PhotoModeController:Show();
 		
 		SP:Show();	
-		GameTooltipScale = GameTooltip:GetScale();
-		C_Timer.After(0, function()
+
+		DefaultTooltip:SetScale(UIParent:GetEffectiveScale() or 1);
+
+		After(0, function()
 			RefreshAllSlot();
 			local Vignette = Narci_Vignette;
 			Vignette.VignetteLeft:SetAlpha(VignetteAlpha);
@@ -3948,11 +3949,11 @@ function Narci_OpenGroupPhoto()
 
 			SetCVar("test_cameraDynamicPitchSmartPivotCutoffDist", 10);
 
-			C_Timer.After(0.5, function()
+			After(0.5, function()
 				SetUIVisibility(false); 		--Same as pressing Alt + Z
 			end)
 
-			C_Timer.After(0.8, function()
+			After(0.8, function()
 				UIParent:SetAlpha(1);
 			end)
 		end)
@@ -4000,22 +4001,17 @@ local function CameraControlBarThumb_Reposition(self, ofsx)
 	self:GetParent().Thumb:SetPoint("CENTER", ofsx, 0);
 	CameraOffsetControlBar.PosX = ofsx;
 	SetCVar("test_cameraOverShoulder", 0 - ofsx/20)	--Ajust the Zoom - Shoulder factor
-	--Shoulder_Factor2 = Shoulder_Factor2_Defalut + ofsx/100
-	--Shoulder_Factor1 = Shoulder_Factor1_Defalut + ofsx/100
-	--Smooth_ShoulderCVar(Shoulder_Factor1*Zoom + Shoulder_Factor2)
 	local currentShoulder = GetCVar("test_cameraOverShoulder");
 	local Zoom = GetCameraZoom();
-	--self:GetParent().Thumb.Reading:SetText(Zoom.." | "..string.format("%.4f", currentShoulder))
 end
 
 function CameraControlBar_DraggingFrame_OnUpdate(self)
 	local scale = self:GetParent():GetEffectiveScale();
 	local xpos, _ = GetCursorPosition() / scale;
-	--xpos = xpos	* scale
 	local xmin, xmax = self:GetParent():GetLeft() + 18 , self:GetParent():GetRight() - 18;
+
 	CameraOffsetControlBar.Range = xmax - xmin;
-	--xmin, xmax = xmin *scale, xmax *scale
-	--print(xmin.." "..xmax)
+
 	local xcenter, _ = self:GetParent():GetCenter();
 	local ofsx;
 	if xpos < xmin then
@@ -4025,7 +4021,7 @@ function CameraControlBar_DraggingFrame_OnUpdate(self)
 	else
 		ofsx = xpos - xcenter;
 	end
-	--print(ofsx)
+
 	CameraControlBarThumb_Reposition(self, ofsx);
 end
 
@@ -4034,7 +4030,7 @@ function CameraControlBarThumb_OnClick(self, button, down)
 	self:Disable()
 	CameraControlBar_ResetPosition_AnimFrame.OppoDirection = true
 	CameraControlBar_ResetPosition_AnimFrame:Show();
-	C_Timer.After(0.6, function()
+	After(0.6, function()
 		self:Enable();
 		CameraOffsetControlBar.PosX = 0;
 		CameraOffsetControlBar.PosRadian = 0;
@@ -4121,8 +4117,6 @@ end
 ------------------------------------------------------
 ------------------Photo Mode Controller---------------
 ------------------------------------------------------
-SetCVar("screenshotQuality", 10)
-
 function Narci_KeyListener_OnEscapePressed()
 	if OpenViaClick then
 		Narci_MinimapButton:Click();
@@ -4330,7 +4324,7 @@ end
 local function HidePlayerModel()
 	if (not Narci_ModelContainer:IsVisible()) or (NarcissusDB.AlwaysShowModel) then	return; end
 	PlayerModelAnimOut:Show()
-	C_Timer.After(0.4, function()
+	After(0.4, function()
 		FadeFrame(NarciPlayerModelFrame1, 0.5 , "OUT")
 	end)
 end
@@ -4369,10 +4363,12 @@ local function UseXmogLayout(index)
 		Narci_GuideLineFrame.VirtualLineRight.AnimFrame.EndPoint = -600
 		Narci_GuideLineFrame.VirtualLineRight.AnimFrame:Show()
 		Narci_XmogButtonPopUp_ModeButton.ShowModel = true;
-		C_Timer.After(0, function()
+		After(0, function()
 			if not IsMounted() then
-				Narci:CameraZoomIn(ZoomInValue_XmogMode)	--ajust by raceID
 				SmoothPitchContainer:Show()
+				Narci:CameraZoomIn(ZoomInValue_XmogMode)	--ajust by raceID
+			else
+				Narci:CameraZoomIn(8)	--ajust by raceID
 			end
 		end)
 	end
@@ -4409,7 +4405,7 @@ local function ActiveXmogMode()
 		NarciPlayerModelFrame1.xmogMode = xmogMode;
 	else
 		Narci_GuideLineFrame.VirtualLineRight.AnimFrame.EndPoint = Narci_GuideLineFrame.VirtualLineRight.AnimFrame.EndPointBAK
-		if PhotoModeController:IsShown() then
+		if Narci_PhotoModeController:IsShown() then
 			Narci_GuideLineFrame.VirtualLineRight.AnimFrame:Show()
 			FadeFrame(Narci_Attribute, 0.5, "IN")
 			local Zoom = GetCameraZoom()
@@ -4452,7 +4448,7 @@ function XmogButton_OnClick(self)
 				Smooth_ShoulderCVar(0)
 			end
 			PlayerModelAnimOut:Show()
-			C_Timer.After(0.4, function()
+			After(0.4, function()
 				FadeFrame(NarciPlayerModelFrame1, 0.5 , "OUT")
 			end)
 		end
@@ -4481,7 +4477,7 @@ function XmogButton_OnClick(self)
 	end
 	
 	RefreshAllSlot();
-	C_Timer.After(0.1, function()
+	After(0.1, function()
 		ActiveXmogMode();
 	end)
 
@@ -4493,11 +4489,12 @@ end
 function XmogName_OnLoad()
 	local Frame = Narci_XmogNameFrame;
 	Narci_SetPlayerName(Frame)
-	local currentSpecName;
 	local currentSpec = GetSpecialization()
-	if currentSpec then
-	   _, currentSpecName = GetSpecializationInfo(currentSpec)
+	if not currentSpec then
+	   return;
 	end
+	
+	local _, currentSpecName = GetSpecializationInfo(currentSpec);
 	currentSpecName = currentSpecName or " ";
 
 	local className, englishClass, _ = UnitClass("player");
@@ -4526,6 +4523,17 @@ function XmogName_OnLoad()
 	Frame.Miscellaneous:SetText("|cFFFFD100"..ArmorType.."|r".."  |  ".."|c"..rgbHex..currentSpecName.." "..className.."|r");
 end
 
+function GetWowHeadDressingRoomURL()
+	local slot;
+	local ItemList = {};
+	for i=1, #xmogTable do
+		slot = xmogTable[i][1];
+		if slotTable[slot] and slotTable[slot].itemID then
+			ItemList[slot] = {slotTable[slot].itemID, slotTable[slot].bonusID};
+		end
+	end
+	return NarciBridge_EncodeItemlist(ItemList);
+end
 
 local function CopyTexts(type, subType)
 	local texts = Narci_XmogNameFrame.PlayerName:GetText() or "My Transmog";
@@ -4592,6 +4600,11 @@ local function CopyTexts(type, subType)
 		end
 		texts = texts.."\n|cFF959595[/table]|r"
 
+
+		-----
+		if subType == "Wowhead" then
+			texts = GetWowHeadDressingRoomURL()
+		end
 	elseif type == "MARKDOWN" then	
 		texts = "|cFF959595**|r"..texts.."|cFF959595**\n\n| Slot | Name | Source |".."\n".."|:--|:--|:--|"
 		for i=1, #xmogTable do
@@ -4874,7 +4887,7 @@ function EmoteButton_UpdateFrame_OnShow(self)
 	end
 
 	if EmoteButtonPopUp.autoCapture then
-		C_Timer.After(0.8, function()
+		After(0.8, function()
 			Screenshot()
 		end)
 	end
@@ -5013,7 +5026,7 @@ function Narci_Vignette_OnFinished()
 	FadeFrame(Narci_Character, 0.6, "Forced_IN")
 	VirtualLineRight.AnimFrame:Show()
 	GuideLineFrame.VirtualLineLeft.AnimFrame:Show()
-	C_Timer.After(0.3, function()
+	After(0.3, function()
 		PlayIlvlInfoAnimation()	
 	end)
 	Narci_SnowEffect(true);
@@ -5098,7 +5111,7 @@ function LeftLineAnimFrame_OnUpdate(self, elapsed)
 
 	if t >= duration_Translation then
 		offSet = EndPoint;
-		C_Timer.After(0, function()
+		After(0, function()
 			self:Hide();
 		end);
 	end
@@ -5117,7 +5130,7 @@ function RightLineAnimFrame_OnUpdate(self, elapsed)
 	if t >= duration_Translation then
 		offSet = EndPoint;
 		self:Hide();
-		C_Timer.After(0, function()
+		After(0, function()
 			self:Hide();
 		end);
 	end
@@ -5283,7 +5296,7 @@ hooksecurefunc("SetUIVisibility", function(bool)
 			if NarcissusDB.PhotoModeButton.HideTexts and (not Narci_HideTextsButton.IsOn) then
 				Narci_HideTextsButton:Click();
 			end
-			local frame = PhotoModeController;
+			local frame = Narci_PhotoModeController;
 			if not frame:IsShown() then
 				frame:Show();
 				frame.PhotoModeController_AnimFrame.OppoDirection = false;
@@ -5291,7 +5304,7 @@ hooksecurefunc("SetUIVisibility", function(bool)
 		end
 	else						--when user hide the UI manually
 		if not bool then
-			local frame = PhotoModeController;
+			local frame = Narci_PhotoModeController;
 			if not frame:IsShown() then
 				CVar_Temp.OverShoulder = GetCVar("test_cameraOverShoulder");
 			end
@@ -5310,12 +5323,12 @@ hooksecurefunc("SetUIVisibility", function(bool)
 			--WorldMapFrame.VisibilityTracker.state
 			if Narci_Character:IsShown() then return; end
 			Smooth_ShoulderCVar(CVar_Temp.OverShoulder);
-			if NarcissusDB.CameraSafeMode then
-				C_Timer.After(0.6, function()
+			if not Narci.keepActionCam then
+				After(0.6, function()
 					ConsoleExec( "actioncam off" );
 				end)
 			end
-			local frame = PhotoModeController;
+			local frame = Narci_PhotoModeController;
 			frame.PhotoModeController_AnimFrame:Hide();
 			frame.PhotoModeController_AnimFrame.OppoDirection = true;
 			frame.PhotoModeController_AnimFrame.EndPointY = "-80";
@@ -5410,7 +5423,7 @@ NarciPlayerModelFrame1:SetSequenceTime(68)
 
 function Narci_ModelToggle_OnClick(self)
 	self:Disable()
-	C_Timer.After(1, function()
+	After(1, function()
 		self:Enable()
 	end)
 	self.AnimFrame.Anim:SetScale(1.5)
@@ -5434,7 +5447,7 @@ end
 
 function Narci_XmogLayoutButton_OnClick(self)
 	self:Disable()
-	C_Timer.After(0.8, function()
+	After(0.8, function()
 		self:Enable()
 	end)
 	
@@ -5479,7 +5492,7 @@ local function TemporarilyDisableWheel(frame)
 	frame:SetScript("OnMouseWheel", function(self, delta)
 	end)
 
-	C_Timer.After(0.2, function()
+	After(0.2, function()
 		frame:SetScript("OnMouseWheel", PhotoMode_WheelEventContrainer_OnMouseWheel)
 	end)
 end
@@ -5541,7 +5554,7 @@ local function Controller_AnimationSequence_OnUpdate(self, elapsed)
 				CameraOffsetControlBar:Show()
 				CameraOffsetControlBar:SetAlpha(1);
 				UIFrameFadeOut(PhotoModeControllerTransition.Sequence, 0.2, 1 , 0)
-				C_Timer.After(0.25, function()
+				After(0.25, function()
 					CameraControlBar_ResetPosition(false)
 				end)
 			end
@@ -5578,7 +5591,7 @@ local function Generic_AnimationSequence_OnUpdate(self, elapsed)
 	elseif not self.IsPlaying then
 		if not self.OppoDirection then		--box closing
 			FadeFrame(HeartofAzeroth_AnimFrame, 0.25, "IN")
-			C_Timer.After(0.3, function()
+			After(0.3, function()
 				HeartofAzeroth_AnimFrame.Background:SetAlpha(1);
 				HeartofAzeroth_AnimFrame.Quote:SetAlpha(1);
 				HeartofAzeroth_AnimFrame.SN:SetAlpha(1);
@@ -5846,7 +5859,7 @@ ACL:SetScript("OnEvent",function(self,event,...)
 		Narci_SetActiveBorderTexture();
 		ShowDetailedIlvlInfo();
 		Narci:InitializeCameraFactors();
-		C_Timer.After(2, function()
+		After(2, function()
 			Narci_MinimapButton_OnLoad();
 			RefreshAllStats();
 			Narci:SetRadarChart(0,0,0,0,1);
@@ -5861,22 +5874,26 @@ ACL:SetScript("OnEvent",function(self,event,...)
 		
 	elseif event == "LOADING_SCREEN_DISABLED" then
 		Narci_MinimapButton:Disable();			--Disable minimap button while caching
-		C_Timer.After(2, function()
+		After(2, function()
 			CacheSourceInfo();
 		end)
-		C_Timer.After(4, function()
+		After(4, function()
 			TransmogMode = true;
 			UseDelay = true;
 			RefreshAllSlot();					--Cache transmog appearance sources
 		end)
-		C_Timer.After(5, function()
+		After(7, function()
 			TransmogMode = false
 			RefreshAllSlot();
 			Narci_MinimapButton:Enable();
+			Narci_MinimapButton:SetMotionScriptsWhileDisabled(false)
 		end)
 		self:UnregisterEvent("LOADING_SCREEN_DISABLED");
 	elseif event == "PLAYER_ENTERING_WORLD" then
-		CharacterInfoFrame_OnLoad()
+		DefaultTooltip = CreateFrame("GameTooltip", "NarciGameTooltip", nil, "GameTooltipTemplate");
+		DefaultTooltip:SetIgnoreParentScale(true);
+		DefaultTooltip:SetIgnoreParentAlpha(true);
+		CharacterInfoFrame_OnLoad();
 	elseif event == "PLAYER_EQUIPMENT_CHANGED" then
 		local InventorySlotId, isItem = ...;
 		CacheSourceInfo(InventorySlotId)
@@ -5891,9 +5908,9 @@ ACL:SetScript("OnEvent",function(self,event,...)
 	elseif event == "PLAYER_AVG_ITEM_LEVEL_UPDATE" then
         if not self.isRefreshing then
             self.isRefreshing = true;
-            C_Timer.After(0, function()    -- only want 1 update per 0.4s
+            After(0, function()    -- only want 1 update per 0.4s
 				SetIlvlBackground();
-				C_Timer.After(0.4, function()
+				After(0.4, function()
 					self.isRefreshing = nil;
 				end)
             end)
@@ -5919,9 +5936,9 @@ ACL:SetScript("OnEvent",function(self,event,...)
 		if event == "COMBAT_RATING_UPDATE" then
 			if not self.pauseCorruption then
 				self.pauseCorruption = true;
-				C_Timer.After(0, function()    -- only want 1 update per 0.4s
+				After(0, function()    -- only want 1 update per 0.4s
 					SetCorruptionBackground();
-					C_Timer.After(0.4, function()
+					After(0.4, function()
 						self.pauseCorruption = nil;
 					end)
 				end)
@@ -6042,7 +6059,7 @@ end
 
 function Narci_Bridge_DragStratEvent()
 	if Bridge_AzeriteUI_ShowActionBars then
-		UIFrameFadeOut(PhotoModeController, 0.2, PhotoModeController:GetAlpha(), 0);
+		UIFrameFadeOut(Narci_PhotoModeController, 0.2, Narci_PhotoModeController:GetAlpha(), 0);
 		--Bridge_AzeriteUI_ShowActionBars(true);
 		--Narci_SharedAnimatedParent.animIn:Play();
 		--Narci_SharedAnimatedParent_Anim:Show()

@@ -1,6 +1,7 @@
 # HandyNotes
 
-## [v1.5.9](https://github.com/Nevcairiel/HandyNotes/tree/v1.5.9) (2019-10-08)
-[Full Changelog](https://github.com/Nevcairiel/HandyNotes/compare/v1.5.8...v1.5.9)
+## [v1.5.10](https://github.com/Nevcairiel/HandyNotes/tree/v1.5.10) (2020-04-27)
+[Full Changelog](https://github.com/Nevcairiel/HandyNotes/compare/v1.5.9...v1.5.10)
 
-- Properly set classic interface version in TOC  
+- Update ToC  
+- Add fallbacks for plugins that don't provide scale or alpha  

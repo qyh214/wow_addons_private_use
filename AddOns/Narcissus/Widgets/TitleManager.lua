@@ -406,7 +406,7 @@ local playerTitles_SortedByAlphabet = {};
 local playerTitles_SortedByCategory = {};
 local CategoryNumDetails = {};
 
-local function Narci_TitleManager_Filter_OnLoad(self)
+local function TitleManager_Filter_OnLoad(self)
 	if NarcissusDB.IsSortedByCategory then
 		sortMethod = "Category"
 		self.Method:SetText(CATEGORY);
@@ -419,10 +419,11 @@ local function Narci_TitleManager_Filter_OnLoad(self)
 end
 
 local LoadSettings = CreateFrame("Frame");
-LoadSettings:RegisterEvent("VARIABLES_LOADED");
+LoadSettings:RegisterEvent("PLAYER_ENTERING_WORLD");
 LoadSettings:SetScript("OnEvent",function(self,event,...)
+	self:UnregisterEvent("PLAYER_ENTERING_WORLD");
 	C_Timer.After(2, function()
-		Narci_TitleManager_Filter_OnLoad(Narci_TitleManager.FilterFrame)
+		TitleManager_Filter_OnLoad(Narci_TitleManager.FilterFrame)
 		CreateSliderTextureAndLabel();
 		HideSliderLabel();
 	end)
@@ -432,7 +433,7 @@ end)
 
 function Narci_TitleManager_Filter_OnClick(self)
 	NarcissusDB.IsSortedByCategory = not NarcissusDB.IsSortedByCategory;
-	Narci_TitleManager_Filter_OnLoad(self);
+	TitleManager_Filter_OnLoad(self);
 	HideSliderLabel();
 	Narci_TitleManager.ListScrollFrame.scrollBar:SetValue(0);
 end

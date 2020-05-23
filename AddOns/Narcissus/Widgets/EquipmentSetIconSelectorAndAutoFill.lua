@@ -150,9 +150,8 @@ end
 local GetEquipmentSetInfo = C_EquipmentSet.GetEquipmentSetInfo;
 local function LoadEquipmentSetIcons()
     local SetIDs = C_EquipmentSet.GetEquipmentSetIDs() or {};
-    local iconFileID;
     for i = 1, #SetIDs do
-        _, iconFileID = GetEquipmentSetInfo(SetIDs[i]);
+        local _, iconFileID = GetEquipmentSetInfo(SetIDs[i]);
         usedIcons[iconFileID] = true;
     end
 end

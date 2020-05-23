@@ -125,7 +125,7 @@ local hasCounted = false;   --Only calculate once, until a Socketing succeed eve
 local function GetTypeCount(CheckList)
     local count = 0;
     local i = 0;
-    for _, itemID in pairs(CheckList) do
+    for k, itemID in pairs(CheckList) do
         count = GetItemCount(itemID);
         if count ~= 0 then
             i = i + 1;
@@ -139,7 +139,7 @@ local function GetMatchCount(CheckList, OutputList)
     local count = 0;
     local i = 1;
     local types = {};
-    for _, itemID in pairs(CheckList) do
+    for k, itemID in pairs(CheckList) do
         count = GetItemCount(itemID);
         if count ~= 0 then
             OutputList[i] = {itemID, count};
@@ -379,7 +379,7 @@ function Narci_GemButton_OnEnter(self)
     local link = self:GetParent().GemLink;
     local tooltip = Narci_GearEnhancement_Tooltip;
 
-	if (not link) or Narci_ItemSocketing:IsShown() then
+	if Narci_ItemSocketing:IsShown() then
 		return;
     end
     
@@ -387,8 +387,9 @@ function Narci_GemButton_OnEnter(self)
     local type1, type2, NumGems;
     type1, type2, NumGems = GetMatchCount(GemIDList, GemCountList);
     self.NumGems = NumGems;
+
+    local text;     --Show how many types of gems in bags
     if NumGems > 0 then
-        local text;
         if NumGems == 1 then
             text = type1;
         else
@@ -407,8 +408,18 @@ function Narci_GemButton_OnEnter(self)
         tooltip.OtherGems:Hide();
     end
 
-	local bonus = GetGemBonus(link);
-	local name, _, quality, _, _, _, _, _, _, icon = GetItemInfo(link);
+    local _, bonus, name, quality, icon;
+    if link then
+        bonus = GetGemBonus(link);
+        name, _, quality, _, _, _, _, _, _, icon = GetItemInfo(link);
+    else
+        bonus = text or L["No Available Gem"];
+        tooltip.OtherGems:Hide();
+        name = EMPTY;
+        quality = 0;
+        icon = 458977;
+    end
+
 	local r, g, b = ITEM_QUALITY_COLORS[quality].r, ITEM_QUALITY_COLORS[quality].g, ITEM_QUALITY_COLORS[quality].b;
 
 	tooltip.ArtFrame.Icon:SetTexture(icon);
@@ -432,6 +443,12 @@ end
 
 function Narci_GemButton_OnLeave()
 	FadeFrame(Narci_GearEnhancement_Tooltip, 0.4, "OUT")
+end
+
+function Narci_ItemSocketing_Close()
+    Narci_ItemSocketing:Hide();
+    ShowFlyoutBlack(false);
+    HideUIPanel(ItemSocketingFrame);
 end
 
 function Narci_GemSlot_OnClick(self)

@@ -1,17 +1,18 @@
 local L
 
 ---------------------------
---  Sire Denathrius --
----------------------------
---L= DBM:GetModLocalization(2424)
-
----------------------------
 --  Shriekwing --
 ---------------------------
 --L= DBM:GetModLocalization(2393)
 
+--L:SetOptionLocalization({
+--})
+
+--L:SetMiscLocalization({
+--})
+
 ---------------------------
---  Broker Curator --
+--  Artificer Xy'Mox --
 ---------------------------
 --L= DBM:GetModLocalization(2418)
 
@@ -26,15 +27,24 @@ local L
 --L= DBM:GetModLocalization(2420)
 
 ---------------------------
---  Dredger Giant --
+--  The Council of Blood --
+---------------------------
+--L= DBM:GetModLocalization(2426)
+
+---------------------------
+--  Sludgefist --
 ---------------------------
 --L= DBM:GetModLocalization(2394)
 
---L:SetOptionLocalization({
---})
+---------------------------
+--  Stoneborne Generals --
+---------------------------
+--L= DBM:GetModLocalization(2425)
 
---L:SetMiscLocalization({
---})
+---------------------------
+--  Sire Denathrius --
+---------------------------
+--L= DBM:GetModLocalization(2424)
 
 -------------
 --  Trash  --

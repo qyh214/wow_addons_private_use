@@ -124,7 +124,6 @@ NARCI_BORDER_THEME_BRIGHT = "明亮";
 NARCI_BORDER_THEME_DARK = "灰暗";
 NARCI_ALWAYS_SHOW_MODEL = "總是顯示模組";
 NARCI_SHOW_FULL_BODY = "顯示全身";
-NARCI_AFK_SCREEN = "AFK画面";
 NARCI_AFK_SCREEN_DESCRIPTION = "在妳的人物暫離後自動打開Narcissus。";
 NARCI_AFK_SCREEN_DESCRIPTION_EXTRA = "勾選此選項將覆蓋ElvUI的AFK模式。";
 NARCI_GEMMA = "\"Gemma\"";
@@ -147,13 +146,41 @@ L["Baseline Offset"] = "基準線偏移";
 L["Ultra-wide Tooltip"] = "妳能看到此選項是因為妳正在使用壹臺%s:9顯示器。";
 L["Interactive Area"] = "交互區域";
 L["Item Socketing Tooltip"] = "雙擊左鍵進行鑲嵌";
+L["No Available Gem"] = "|cffd8d8d8沒有可鑲嵌的寶石|r";
 L["Credits"] = "致謝";
 L["Use Bust Shot"] = "使用半身像";
 L["Use Escape Button"] = "Esc鍵";
 L["Use Escape Button Description"] = "按下Esc鍵來退出插件。或者點擊屏幕右上角隱藏的X按鈕。";
+L["Handled by Other Addons"] = "受其他模組控制";
+L["AFK Screen"] = "AFK画面";
+L["Keep Standing"] = "保持站立";
+L["Keep Standing Description"] = "當妳AFK後定時使用/站立表情。此選項不會中斷自動登出。"
+L["None"] = "無";
+L["NPC"] = "NPC";
+L["Database"] = "數據庫";
+L["Creature Tooltip"] = "生物信息";
+L["RAM Usage"] = "內存占用";
+L["Others"] = "其它";
+L["Find Relatives"] = "查找相關生物";
+L["Find Related Creatures Description"] = "找到與目標同姓的其他生物。";
+L["Find Relatives Hotkey"] = "按Tab搜索相關生物。";
+L["Find Relatives Hotkey Format"] = "按下%s開始查找。";
+L["Translate Names"] = "翻譯姓名";
+L["Translate Names Description On"] = "獲取目標譯名並將其顯示在...";
+L["Select A Language"] = "已選語言：";
+L["Select Multiple Languages"] = "已選語言：";
+L["Load on Demand"] = "隨需求載入";
+L["Load on Demand Description On"] = "在搜索功能被調用時再載入數據庫。";
+L["Load on Demand Description Off"] = "數據庫將在妳登入時載入。";
+L["Load on Demand Description Disabled"] = NARCI_COLOR_YELLOW.. "這壹選項被鎖住了，因為妳選擇顯示生物信息。";
+L["Tooltip"] = "小提示";
+L["Name Plate"] = "名條";
+L["Y Offset"] = "縱向偏移";
+L["Sceenshot Quality"] = "截圖質量";
+L["Screenshot Quality Description"] = "更高的截圖質量會增加圖片大小。";
 
 --Model Control--
-NARCI_SHEATH_WEAPON = "收起武器";
+NARCI_HOLD_WEAPON = "握住武器";
 NARCI_STAND_IDLY = "站立狀態";
 NARCI_RANGED_WEAPON = "遠程武器";
 NARCI_MELEE_WEAPON = "近戰武器";
@@ -214,10 +241,34 @@ L["New Favorite"] = "新的收藏";
 L["Favorites Add"] = "添加到收藏夾";
 L["Favorites Remove"] = "從收藏夾中移除";
 L["Auto-play"] = "Auto-play";   --Auto-play suggested animation
+L["Auto-play Tooltip"] = "如果存在與選中的效果相關的動畫，自動播放它";
 L["Delete Entry Plural"] = "即將刪除%s個條目";
 L["Delete Entry Singular"] = "即將刪除%s個條目";
 L["History Panel Note"] = "被應用的效果會顯示在這裏";
 L["Return"] = "返回";
+L["Close"] = "關閉";
+
+--Dressing Room--
+L["Favorited"] = "已設為最愛";
+L["Unfavorited"] = "已取消最愛";
+L["Item List"] = "裝備清單";
+L["Use Target Model"] = "使用目標外形";
+L["Use Your Model"] = "使用自身外形";
+L["Cannot Inspect Target"] = "無法檢視目標";
+L["External Link"] = "外部鏈接";
+L["Add to MogIt Wishlist"] = "加入MogIt願望清單";
+
+--NPC Browser--
+NARCI_NPC_BROWSER_TITLE_LEVEL = ".*%?%?.?";      --Level ?? --Use this to check if the second line of the tooltip is NPC's title or unit type
+L["NPC Browser"] = "NPC瀏覽器";
+L["NPC Browser Tooltip"] = "在列表中選擇壹個人物並加入到當前場景。";
+L["Search for NPC"] = "查找人物";
+L["Name or ID"] = "姓名或ID";
+L["NPC Has Weapons"] = "包含獨特武器";
+L["Retrieving NPC Info"] = "正在獲取NPC信息";
+L["Loading Database"] = "數據庫加載中...\n遊戲畫面可能會靜止幾秒鐘。";
+L["Other Last Name Format"] = "其他"..NARCI_COLOR_GREY_70.." %s(s)|r:\n";
+L["Too Many Matches Format"] = "\n超過%s個結果";
 
 --Equipment Comparison--
 NARCI_AZERITE_POWERS = "艾澤萊晶岩之力"
@@ -251,8 +302,8 @@ L["Haste Gained"] = STAT_HASTE.."獲取";
 L["Mastery Gained"] = STAT_MASTERY.."獲取";
 L["Versatility Gained"] = STAT_VERSATILITY.."獲取";
 
-L["Proc Haste"] = "觸發"..CRIT_ABBR;
-L["Proc Crit"] = "觸發"..STAT_HASTE;
+L["Proc Crit"] = "觸發"..CRIT_ABBR;
+L["Proc Haste"] = "觸發"..STAT_HASTE;
 L["Proc Mastery"] = "觸發"..STAT_MASTERY;
 L["Proc Versatility"] = "觸發"..STAT_VERSATILITY;
 
@@ -315,16 +366,16 @@ NARCI_SPLASH_MESSAGE2 = "|cffd9cdb4可通過點擊右上方的六邊形按鈕（
 NARCI_SPLASH_MESSAGE3 = "|cffd9cdb41. 現在AFK畫面會在妳移動或者進入戰鬥時自動退出。\n2. 試衣間增強又恢復了工作。|r";
 
 L["Show Whats New"] = "顯示歡迎界面";
-NARCI_SPLASH_WHATS_NEW_FORMAT = "|cff694d9cNarcissus %s ".."更新內容";
-NARCI_SPLASH_HEADER1 = "腐化模組";
-NARCI_SPLASH_HEADER2 = "拍照模式";
-NARCI_SPLASH_INTERACTIVE_TEXT1 = NARCI_COLOR_GREY_85.."Narcissus UI|r\n- 腐化裝備的實際效果和等級會同其物品等級壹起顯示。\n- 當妳裝備了任何腐化物品後，妳會在原來顯示最大平均裝等的地方看到壹只眼睛；瞳孔的形狀表示人物當前的腐化等級。";
-NARCI_SPLASH_INTERACTIVE_TEXT2 = NARCI_COLOR_GREY_85.."Blizzard UI|r\n- 妳可以在角色面板旁邊看到壹個腐化條，這樣妳就不用再把鼠標移到眼睛圖標上來進行查看了。\n- 妳也可以將默認的描述性的負面效果提示替換為數值型說明。以上兩項設置都是可選的。";
-NARCI_SPLASH_INTERACTIVE_TEXT3 = NARCI_COLOR_GREY_85.."效果瀏覽器|r\n- 收錄了包括冬幕節佩佩在內的86條新的法術效果。\n\n"..NARCI_COLOR_GREY_85.."合影模式|r\n- 如果妳在添加角色的時候按住"..NARCI_MODIFIER_ALT.."，那麽目標玩家當前的德魯伊形態可以得到保留。"
+NARCI_SPLASH_WHATS_NEW_FORMAT = "Narcissus %s ".."更新內容";
+NARCI_SPLASH_HEADER1 = "NPC瀏覽器";
+NARCI_SPLASH_HEADER2 = "雜項";
+NARCI_SPLASH_INTERACTIVE_TEXT1 = NARCI_COLOR_GREY_85.."合影模式|r\n- 妳現在可以隨時隨地添加NPC模型，不再需要先在遊戲中找到他。\n- 妳可以從已分類的列表中選擇，或是按姓名或ID進行搜索。\n\n" ..NARCI_COLOR_GREY_85.."NPC信息(可選)|r\n- 在妳的鼠標在目標身上懸停時，找到其他與其同姓的NPC。\n- 可以在NPC姓名版或鼠標提示上顯示其在其他語言中的譯名。";
+NARCI_SPLASH_INTERACTIVE_TEXT2 = NARCI_COLOR_GREY_85.."";
+NARCI_SPLASH_INTERACTIVE_TEXT3 = NARCI_COLOR_GREY_85.."AFK畫面|r\n保持站立這壹功能已變為可選。\n\n"..NARCI_COLOR_GREY_85.."截圖質量|r\n- 不再強制將截圖質量設置為10。\n- 偏好設定中新增壹個截圖質量滑桿。\n\n"..NARCI_COLOR_GREY_85.."腐化模塊|r\n- 修復了與Corruption Tooltip部分功能不兼容的問題。\n- 更新了腐化之眼的傷害計算公式。新公式為：\n(0.5*腐化值+ 15) * HP";
 
 --Project Details--
 NARCI_ALL_PROJECTS = "全部項目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2020.1.28|r\n\n感謝妳使用此插件！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2020.4.26|r\n\n感謝妳使用此插件！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾澤拉斯上的不同景點，並收集各種故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沈浸式角色面板；妳最好的截圖助手。"
 

@@ -411,10 +411,10 @@ Narci_CharacterTitlesTable =
     [662] = {"achv", 0, "Renowned Explorer", 410, }, --Recruit friends
     [664] = {"achv", 0, "Veteran of the Fourth War", 412, 13924}, --War Campaign
     [665] = {"pvp", 5, "Notorious Gladiator", 411, 13957},  --BFA S4
-    [667] = {"pvp", 0, "Servant of N'Zoth", 414, 14191},  --Use the N'lyeth then slay 10 Alliance players without dying
+    [667] = {"pvp", 3, "Servant of N'Zoth", 414, 14191},  --Use the N'lyeth then slay 10 Alliance players without dying
     [668] = {"pve", 0, "Minion of Mayhem", 415, },  --??
     [669] = {"pve", 5, "Famed Slayer of N'Zoth", 416, 14072},  --
     [670] = {"pve", 5, "the Uncorrupted", 417, 14055},  --Mythic: N'Zoth the Corruptor
     [671] = {"pve", 5, "the Awakened", 418, 14144},  --10+ Keystone S4
-    [672] = {"pve", 5, "the Faceless One", 419, 14140},  --Horrific Visions Mad World
+    [672] = {"pve", 1, "the Faceless One", 419, 14140},  --Horrific Visions Mad World
 }

@@ -3,7 +3,7 @@
 ## DefaultState: enabled
 ## RequiredDeps: DBM-Core
 ## Author: MysticalOS, Domekologe
-## Version: 1.4.10
+## Version: 1.4.11
 ## X-DBM-CountPack: 1
 ## X-DBM-CountPack-GlobalName: DBMCPOverwatch
 ## X-Curse-Project-ID: 267605

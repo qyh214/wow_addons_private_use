@@ -6,10 +6,10 @@
 ## DefaultState: enabled
 ## RequiredDeps: DBM-Core
 ## Author: VV
-## Version: 8.3.1
+## Version: 8.3.2
 ## X-DBM-Voice: 1
 ## X-DBM-Voice-Name: VV(普通话女)
 ## X-DBM-Voice-ShortName: VV
-## X-DBM-Voice-Version: 8
+## X-DBM-Voice-Version: 11
 ## X-DBM-Voice-HasCount: 1
 DBM-VPVV.lua

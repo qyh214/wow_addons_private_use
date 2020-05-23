@@ -10,9 +10,9 @@ local FadeFrame = NarciAPI_FadeFrame;
 local max = math.max;
 local sin = math.sin;
 local pi = math.pi;
-
+local After = C_Timer.After
 -----------------------------------
-local tooltipAnchor, pointerOffsetX, pointerOffsetY;
+local tooltipAnchor, pointerOffsetX, pointerOffsetY, isHorizontal;
 local pendingText, pendingTexture;
 local callbackFunc;
 local minSize = 48;
@@ -29,17 +29,17 @@ local function outSine(t, b, c, d)
 	return c * sin(t / d * (pi / 2)) + b
 end
 -----------------------------------
-local prefix = "Interface/AddOns/Narcissus/Guide/";
-local Images = {
-    [1] =  prefix .. "HideTexts",
-    [2] =  prefix .. "TopQuality",
-    [3] =  prefix .. "GroundShadow",
-    [4] =  prefix .. "HidePlayer",
-    [5] =  prefix .. "CompactMode",
-    [6] =  prefix .. "SaveLayers",
-    [7] =  prefix .. "LightSwitch",
-}
 
+local PATH_PREFIX = "Interface/AddOns/Narcissus/Guide/IMG/";
+local Images = {
+    [1] =  PATH_PREFIX .. "HideTexts",
+    [2] =  PATH_PREFIX .. "TopQuality",
+    [3] =  PATH_PREFIX .. "GroundShadow",
+    [4] =  PATH_PREFIX .. "HidePlayer",
+    [5] =  PATH_PREFIX .. "CompactMode",
+    [6] =  PATH_PREFIX .. "SaveLayers",
+    [7] =  PATH_PREFIX .. "LightSwitch",
+}
 
 
 -----------------------------------
@@ -64,9 +64,19 @@ local function FadeInTooltip()
     local offsetX = pointerOffsetX or 0;
     local offsetY = pointerOffsetY or DefaultPointerOffset;
 
-    tooltip:SetPoint("BOTTOM", tooltipAnchor, "TOP", offsetX, offsetY);
-    tooltip.Pointer:SetPoint("CENTER", tooltipAnchor, "TOP", offsetX, offsetY + 12);
-    C_Timer.After(0, function()
+    if isHorizontal then
+        tooltip:SetPoint("RIGHT", tooltipAnchor, "LEFT", offsetX, offsetY);
+        tooltip.Pointer2:SetPoint("CENTER", tooltipAnchor, "LEFT", offsetX - 12);
+        tooltip.Pointer2:Show();
+        tooltip.Pointer:Hide();
+    else
+        tooltip:SetPoint("BOTTOM", tooltipAnchor, "TOP", offsetX, offsetY);
+        tooltip.Pointer:SetPoint("CENTER", tooltipAnchor, "TOP", offsetX, offsetY + 12);
+        tooltip.Pointer:Show();
+        tooltip.Pointer2:Hide();
+    end
+    
+    After(0, function()
         UIFrameFadeIn(tooltip, 0.12, 0, 1);
     end);
 end
@@ -137,6 +147,7 @@ local function GetIconFile(anchorFrame)
     end
     return texs;
 end
+
 -----------------------------------
 function TP:OnHide()
     Timer:Hide();
@@ -185,17 +196,18 @@ function TP:JustHide()
     Timer:Hide();
 end
 
-function TP:NewText(texts, offsetX, offsetY, delay)
+function TP:NewText(texts, offsetX, offsetY, delay, horizontal)
     Timer:Hide();
-    UIFrameFadeOut(self, 0.2, self:GetAlpha(), 0);
+    --UIFrameFadeOut(self, 0.2, self:GetAlpha(), 0);
     tooltipAnchor = GetMouseFocus();
     if not tooltipAnchor or tooltipAnchor == WorldFrame or not texts then return; end;
     pointerOffsetX, pointerOffsetY = offsetX, offsetY;
     delayDuration = delay or DefaultDelay;
+    isHorizontal = horizontal;
     pendingText = texts;
     pendingTexture = GetIconFile(tooltipAnchor);
     self.GuideIndex = tooltipAnchor.GuideIndex;
-    C_Timer.After(0, function()
+    After(0, function()
         Timer:Show();
         if type(texts) == "string" then
             callbackFunc = SetSingleLine;
@@ -216,6 +228,7 @@ function TP:SetColorTheme(index)
         --Bright
         minG, maxG = 0.82, 1.0;
         self.Pointer:SetTexCoord(0, 0.5, 0, 1);
+        self.Pointer2:SetTexCoord(0, 1, 0, 0.5);
         self.Text0:SetTextColor(0, 0, 0);
         self.Text0:SetShadowColor(1, 1, 1, 0);
         self.Text1:SetTextColor(0, 0, 0);
@@ -227,6 +240,7 @@ function TP:SetColorTheme(index)
         --Dark
         minG, maxG = 0.05, 0.12;
         self.Pointer:SetTexCoord(0.5, 1, 0, 1);
+        self.Pointer2:SetTexCoord(0, 1, 0.5, 1);
         self.Text0:SetTextColor(1, 1, 1);
         self.Text0:SetShadowColor(0, 0, 0, 0);
         self.Text1:SetTextColor(1, 1, 1);

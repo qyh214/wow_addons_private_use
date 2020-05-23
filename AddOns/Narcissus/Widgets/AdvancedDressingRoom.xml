@@ -1,9 +1,9 @@
 <Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
     <Script file="AdvancedDressingRoom.lua"/>
-	<Button name="NarciRectangularItemButtonTemplate" virtual="true">
+	<Button name="NarciRectangularItemButtonTemplate" virtual="true" mixin="NarciDressingRoomItemButtonMixin">
 		<Size x="54" y="54"/>
 		<!--HitRectInsets>
-			<AbsInset left="8" right="8" top="8" bottom="8"/>
+			<AbsInset left="1" right="1" top="-2" bottom="-2"/>
 		</HitRectInsets-->
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -42,17 +42,23 @@
 					</Anchors>
 				</Texture>
 			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="2">
+				<Texture parentKey="Star" file="Interface\AddOns\Narcissus\Art\Widgets\DressingRoom\FavoriteStar-Golden" hidden="true">
+					<Size x="16" y="16"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent" relativePoint="BOTTOM" y="6"/>
+					</Anchors>
+				</Texture>
+			</Layer>
 		</Layers>
 		<Scripts>
-			<OnLoad>
-				self:RegisterForDrag("LeftButton");
-				self.isHidden = false;
-			</OnLoad>
-			<OnEnter function="NarciRectangularItemButton_OnEnter"/>
-			<OnLeave function="NarciRectangularItemButton_OnLeave"/>
-			<OnClick function="NarciRectangularItemButton_OnClick"/>
-			<OnDragStart function="NarciRectangularItemButton_OnDragStart"/>
-			<OnDragStop function="NarciRectangularItemButton_OnDragStop"/>
+			<OnLoad method="OnLoad"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnClick method="OnClick"/>
+			<OnMouseDown method="OnMouseDown"/>
+			<OnDragStart method="OnDragStart"/>
+			<OnDragStop method="OnDragStop"/>
 		</Scripts>
 	</Button>
 
@@ -66,7 +72,7 @@
 				<Alpha fromAlpha="0" toAlpha="1" duration="0.5" order="1"/>
 				<Scripts>
 					<OnFinished>
-						local background = self:GetParent():GetParent().ModelBackground
+						local background = self:GetParent():GetParent().ModelBackground;
 						if background then
 							background:SetAtlas(self:GetParent():GetAtlas());
 						end
@@ -76,132 +82,54 @@
 		</Animations>
 	</Texture>
 
-    <Button name="NarciDressingRoomTabButton_Template" clipChildren="true" virtual="true" Alpha="1">
-        <Size x="240" y="48"/>
+    <Button name="NarciDressingRoomTabButton_Template" virtual="true" Alpha="1">
+        <Size x="144" y="36"/>
+		<HitRectInsets>
+			<AbsInset left="0" right="-24" top="0" bottom="0"/>
+		</HitRectInsets>
 		<Layers>
             <Layer level="BACKGROUND" textureSubLevel="1">
-				<Texture setAllPoints="true">
-					<Color a="0.9" r="1" g="1" b="1"/>
+				<Texture setAllPoints="true" parentKey="Background">
+					<Color a="1" r="0" g="0" b="0"/>
 					<Gradient orientation="HORIZONTAL">
-						<MaxColor a="1" r="0.06" g="0.06" b="0.06"/>
-						<MinColor a="1" r="0.02" g="0.02" b="0.02"/>
+						<MaxColor a="0" r="1" g="1" b="1"/>
+						<MinColor a="1" r="1" g="1" b="1"/>
 					</Gradient>
-                    <Anchors>
-                        <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
-                        <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOM"/>
-                    </Anchors>
-				</Texture>
-				<Texture setAllPoints="true">
-					<Color a="0.9" r="0.06" g="0.06" b="0.06"/>
-                    <Anchors>
-                        <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOP"/>
-                        <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT"/>
-                    </Anchors>
 				</Texture>
             </Layer>
             <Layer level="BACKGROUND" textureSubLevel="2">
-				<Texture parentKey="Icon2" desaturated="false" Alpha="0.1">
-					<TexCoords left="0.075" right="0.925" top="0.075" bottom="0.925"/>
-					<Size x="180" y="180"/>
+				<Texture parentKey="Icon" Alpha="0.8" file="Interface\AddOns\Narcissus\Art\Widgets\DressingRoom\DressingRoomIcons">
+					<TexCoords left="0" right="0.25" top="0" bottom="0.25"/>
+					<Size x="40" y="40"/>
 					<Anchors>
-						<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="0" y="0"/>
+						<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="-2" y="0"/>
 					</Anchors>
 				</Texture>
-                <Texture parentKey="Icon3" hidden="true" Alpha="0">
-					<TexCoords left="0.075" right="0.925" top="0.075" bottom="0.925"/>
-                    <Anchors>
-                        <Anchor point="TOPLEFT" relativeKey="$parent.Icon2" relativePoint="TOPLEFT" x="0" y="0"/>
-						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Icon2" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
-                    </Anchors>
-                </Texture>
-				<MaskTexture file="Interface\AddOns\Narcissus\Art\Tooltip\Icon-Mask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
-                    <Anchors>
-                        <Anchor point="TOPLEFT" relativeKey="$parent.Icon2" relativePoint="TOPLEFT" x="0" y="0"/>
-                        <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Icon2" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
-                    </Anchors>
-					<MaskedTextures>
-						<MaskedTexture childKey="Icon2"/>
-						<MaskedTexture childKey="Icon3"/>
-					</MaskedTextures>
-				</MaskTexture>
             </Layer>
-			<Layer level="BORDER">
-				<Texture setAllPoints="true" parentKey="ButtonHighlight" Alpha="0">
-					<Color a="0.1" r="1" g="1" b="1"/>
-					<Size x="480"/>
-                    <Anchors>
-                        <Anchor point="TOP" relativeKey="$parent" relativePoint="TOPLEFT" x="0" y="0"/>
-						<Anchor point="BOTTOM" relativeKey="$parent" relativePoint="BOTTOMLEFT" x="0" y="0"/>
-                    </Anchors>
-					<Animations>
-						<AnimationGroup parentKey="animIn" smoothing="IN_OUT">
-							<Alpha fromAlpha="0" toAlpha="1" duration="0" order="1"/>		
-							<Alpha fromAlpha="1" toAlpha="0" startDelay="0.5" duration="0.4" order="2"/>
-							<Scale parentKey="scale" fromScaleX="0" toScaleX="1" fromScaleY="1" toScaleY="1" duration="0.6" order="2"/>
-							<Scripts>
-							</Scripts>
-						</AnimationGroup>
-					</Animations>
-				</Texture>
-				<Texture file="Interface\AddOns\Narcissus\Art\Tooltip\Gem-Border-Colorized" setAllPoints="true" parentKey="Border0">
-					<TexCoords left="0" right="0.125" top="0" bottom="0.5"/>
-                    <Size x="40" y="40"/>
-					<Anchors>
-						<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="8"/>
-					</Anchors>
-				</Texture>
-			</Layer>
-			<Layer level="ARTWORK" textureSubLevel="2">
-				<Texture file="Interface\AddOns\Narcissus\Art\Tooltip\Gem-Border-Colorized" setAllPoints="true" parentKey="Border1">
-					<TexCoords left="0" right="0.125" top="0.5" bottom="1"/>
-					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent.Border0" relativePoint="TOPLEFT"/>
-                        <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Border0" relativePoint="BOTTOMRIGHT"/>
-					</Anchors>
-				</Texture>
-			</Layer>
-			<Layer level="ARTWORK" textureSubLevel="1">
-				<Texture parentKey="Icon">
-					<TexCoords left="0.08" right="0.92" top="0.08" bottom="0.92"/>
-					<Size x="24" y="24"/>
-					<Anchors>
-						<Anchor point="CENTER" relativeKey="$parent.Border0" relativePoint="CENTER"/>
-					</Anchors>
-				</Texture>
-			</Layer>
             <Layer level="ARTWORK" textureSubLevel="3">
-				<FontString inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="MIDDLE" hidden="false" parentKey="Label">
-					<Color r="1" g="1" b="1"/>
+				<FontString inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="MIDDLE" parentKey="Label">
+					<Color r="1" g="1" b="1" a="0.8"/>
 					<Anchors>
-						<Anchor point="LEFT" relativeKey="$parent.Border0" relativePoint="RIGHT" x="5" y="0"/>
+						<Anchor point="LEFT" relativeKey="$parent.Icon" relativePoint="RIGHT" x="-2" y="0"/>
 					</Anchors>
 				</FontString>
-            </Layer>
-			<Layer level="OVERLAY" textureSubLevel="5">
-				<Texture file="Interface\AddOns\Narcissus\Art\Tooltip\Divider" parentKey="BottomDivider" hidden="true">
-					<Size y="9"/>
-					<Anchors>
-						<Anchor point="LEFT" relativeKey="$parent" relativePoint="BOTTOMLEFT"/>
-						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT"/>
-					</Anchors>
-				</Texture>
-				<Texture file="Interface\AddOns\Narcissus\Art\Tooltip\Divider" parentKey="TopDivider" hidden="true">
-					<Size y="9"/>
-					<Anchors>
-						<Anchor point="LEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
-						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="TOPRIGHT"/>
-					</Anchors>
-				</Texture>
-			</Layer>         
+            </Layer>       
 		</Layers>
 		<Scripts>
 			<OnEnter>
-				UIFrameFadeIn(self.Icon3, 0.2, self.Icon3:GetAlpha(), 0.25);
+				self.Icon:SetAlpha(1);
+				self.Label:SetAlpha(1);
 			</OnEnter>
 			<OnLeave>
-				UIFrameFadeOut(self.Icon3, 0.3, self.Icon3:GetAlpha(), 0);
+				self.Icon:SetAlpha(0.8);
+				self.Label:SetAlpha(0.8);
 			</OnLeave>
-
+			<OnMouseDown>
+				self.Background:SetColorTexture(0.125, 0.125, 0.125);
+			</OnMouseDown>
+			<OnMouseUp>
+				self.Background:SetColorTexture(0, 0, 0);
+			</OnMouseUp>
 		</Scripts>
     </Button>
 
@@ -244,7 +172,26 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.Background" relativePoint="TOPLEFT"/>
 					<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Background" relativePoint="BOTTOMRIGHT"/>
-				</Anchors>	
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString inherits="NarciIndicatorLetter" justifyH="CENTER" justifyV="MIDDLE" parentKey="Notification" Alpha="0" ignoreParentScale="true">
+							<Color r="1" g="1" b="1"/>
+							<Animations>
+								<AnimationGroup parentKey="fadeOut" setToFinalAlpha="true">
+									<Alpha fromAlpha="0" toAlpha="1" duration="0.15" order="1"/>
+									<Alpha startDelay="0.8" fromAlpha="1" toAlpha="0" duration="1.2" order="2"/>
+								</AnimationGroup>
+							</Animations>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnHide>
+						self:StopAnimating();
+						self.Notification:SetAlpha(0);
+					</OnHide>
+				</Scripts>
 			</Frame>
 
 			<Frame parentKey="OptionFrame" ignoreParentScale="true">
@@ -261,28 +208,20 @@
 						<Scripts>
 							<OnLoad>
 								self:SetHeight(1);
-								self.Label:SetText("Add to Mogit Wishlist")
-								self.Icon2:SetTexture(237016)	--INV_Enchant_EssenceCosmicGreater;
-								self.Icon3:SetTexture(237016)
-								self.Icon:SetTexture(237016)
-								self.Border0:SetTexCoord(0.5, 0.625, 0, 0.5);
-								self.Border1:SetTexCoord(0.5, 0.625, 0.5, 1);
+								self.Label:SetText(Narci.L["Add to MogIt Wishlist"]);
+								self.Icon:SetTexCoord(0.5, 0.75, 0, 0.25);
 							</OnLoad>
 						</Scripts>
 					</Button>
 
-					<Button inherits="NarciDressingRoomTabButton_Template" hidden="false" parentKey="CopyButton">
+					<Button name="NarciBridge_ItemListButton" inherits="NarciDressingRoomTabButton_Template" hidden="false" parentKey="CopyButton">
 						<Anchors>
-							<Anchor point="BOTTOMLEFT" relativeKey="$parent.MogItButton" relativePoint="TOPLEFT" x="0" y="2"/>
+							<Anchor point="BOTTOMLEFT" relativeKey="$parent.MogItButton" relativePoint="TOPLEFT" x="0" y="6"/>
 						</Anchors>
 						<Scripts>
 							<OnLoad>
-								self.Label:SetText("Copy Itemlist")
-								self.Icon2:SetTexture(1500886)	--INV_Enchant_EssenceCosmicGreater;
-								self.Icon3:SetTexture(1500886)
-								self.Icon:SetTexture(1500886)
-								self.Border0:SetTexCoord(0.375, 0.5, 0, 0.5);
-								self.Border1:SetTexCoord(0.375, 0.5, 0.5, 1);
+								self.Label:SetText(Narci.L["Item List"]);
+								self.Label:SetTextColor(0.25, 0.78, 0.92, 0.8);
 							</OnLoad>
 						</Scripts>
 					</Button>
@@ -295,7 +234,7 @@
 							<AbsInset left="-10" right="-10" top="-10" bottom="-10"/>
 						</HitRectInsets>
 						<Anchors>
-							<Anchor point="BOTTOMLEFT" relativeKey="$parent.CopyButton" relativePoint="TOPLEFT" x="8" y="8"/>
+							<Anchor point="BOTTOMLEFT" relativeKey="$parent.CopyButton" relativePoint="TOPLEFT" x="8" y="10"/>
 						</Anchors>
 						<FontString justifyH="LEFT" justifyV="TOP" inherits="AAAStatusNameMedium" spacing="2">
 							<Color r="0.88" g="0.88" b="0.88"/>
@@ -307,15 +246,6 @@
 									<Anchors>
 										<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="-8" y="4"/>
 										<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="8" y="-4"/>
-									</Anchors>
-								</Texture>
-							</Layer>
-							<Layer level="OVERLAY">
-								<Texture inherits="NarciBottomShadowTemplate">
-									<Size y="4"/>
-									<Anchors>
-										<Anchor point="TOPLEFT" relativeKey="$parent.Background" relativePoint="BOTTOMLEFT" x="0" y="0"/>
-										<Anchor point="TOPRIGHT" relativeKey="$parent.Background" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
 									</Anchors>
 								</Texture>
 							</Layer>								
@@ -402,31 +332,176 @@
 								self:HighlightText(0,0);
 								self:ClearFocus();
 							</OnEscapePressed>
+							<OnShow>
+								self:GetParent().CopyButton.Icon:SetTexCoord(0, 0.25, 0.25, 0.5);
+							</OnShow>
 							<OnHide>
 								self:SetAlpha(0);
 								self:HighlightText(0,0);
 								self:ClearFocus();
 								self:Hide();
+								self:GetParent().CopyButton.Icon:SetTexCoord(0, 0.25, 0, 0.25);
 							</OnHide>
 						</Scripts>
 					</EditBox>
 
-					<Button inherits="NarciDressingRoomTabButton_Template" hidden="false" parentKey="TryOnButton">
+					<Button inherits="NarciDressingRoomTabButton_Template" hidden="false" parentKey="TryOnButton" motionScriptsWhileDisabled="true">
 						<Anchors>
-							<Anchor point="BOTTOMLEFT" relativeKey="$parent.CopyButton" relativePoint="TOPLEFT" x="0" y="26"/>
+							<Anchor point="BOTTOMLEFT" relativeKey="$parent.CopyButton" relativePoint="TOPLEFT" x="0" y="24"/>
 						</Anchors>
 						<Scripts>
 							<OnLoad>
-								self.Label:SetText("Use Target's Model");
-								self.Icon2:SetTexture(1530081);
-								self.Icon3:SetTexture(1530081);
-								self.Icon:SetTexture(1530081);
-								self.Border0:SetTexCoord(0.125, 0.25, 0, 0.5);
-								self.Border1:SetTexCoord(0.125, 0.25, 0.5, 1);
+								self.targetModelText = Narci.L["Use Target Model"];
+								self.yourModelText = Narci.L["Use Your Model"];
+								self.disabledText = "|cff959595".. Narci.L["Cannot Inspect Target"];
+								self.Icon:SetTexCoord(0.25, 0.5, 0, 0.25);
 							</OnLoad>
+							<OnDisable>
+								self.Icon:SetTexCoord(0.25, 0.5, 0.25, 0.5);
+								self.Label:SetText(self.disabledText);
+							</OnDisable>
+							<OnEnable>
+								self.Icon:SetTexCoord(0.25, 0.5, 0, 0.25);
+								if self.useTargetModel then
+									self.Label:SetText(self.targetModelText);
+								else
+									self.Label:SetText(self.yourModelText);
+								end
+							</OnEnable>
 						</Scripts>
 					</Button>
 
+					<Button name="NarciBridge_ExternalLinkButton" inherits="NarciDressingRoomTabButton_Template" parentKey="ExternalLinkButton">
+						<Anchors>
+							<Anchor point="BOTTOMLEFT" relativeKey="$parent.TryOnButton" relativePoint="TOPLEFT" x="0" y="48"/>
+						</Anchors>
+						<Layers>
+							<Layer>				
+								<FontString parentKey="Tooltip" inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="MIDDLE" Alpha="0">
+									<Anchors>
+										<Anchor point="LEFT" relativeKey="$parent.Label" relativePoint="LEFT" x="0"/>
+									</Anchors>
+									<Animations>
+										<AnimationGroup parentKey="good" smoothing="IN_OUT">
+											<Alpha fromAlpha="0" toAlpha="1" duration="0.25" order="1"/>
+											<Alpha fromAlpha="1" toAlpha="1" duration="1.25" order="2"/>
+											<Alpha fromAlpha="1" toAlpha="0" duration="0.25" order="3"/>
+											<Scripts>
+												<OnPlay>
+													self:GetParent():GetParent().Label:Hide();
+												</OnPlay>
+												<OnFinished>
+													UIFrameFadeIn(self:GetParent():GetParent().Label, 0.25, 0, 0.8);
+												</OnFinished>
+											</Scripts>
+										</AnimationGroup>
+									</Animations>
+								</FontString>
+							</Layer>
+						</Layers>
+						<Scripts>
+							<OnLoad>
+								self.Icon:SetTexCoord(0.75, 1, 0, 0.25);
+								self.Label:SetText(Narci.L["External Link"]);
+								self.Tooltip:SetText(Narci.L["Copied"]);
+							</OnLoad>
+							<OnEnable>
+								self.Icon:SetTexCoord(0.75, 1, 0, 0.25);
+								self.Label:Show();
+								if self.Clipboard.hasCopied then
+									self.Clipboard.hasCopied = nil;
+									self:StopAnimating();
+									self.Tooltip.good:Play();
+								end
+							</OnEnable>
+							<OnDisable>
+								self.Icon:SetTexCoord(0.75, 1, 0.25, 0.5);
+								self.Label:Hide();
+								self.Tooltip.good:Stop();
+							</OnDisable>
+							<OnShow>
+								self.Label:Show();
+								self.Label:SetAlpha(0.8);
+							</OnShow>
+							<OnHide>
+								self:StopAnimating();
+								self.Label:SetAlpha(1);
+							</OnHide>
+						</Scripts>
+
+						<Frames>
+							<EditBox parentKey="Clipboard" autoFocus="false" letters="661118" multiLine="false" hidden="true" frameLevel="20">
+								<Size x="130" y="36"/>
+								<Anchors>
+									<Anchor point="LEFT" relativeKey="$parent.Label" relativePoint="LEFT"/>
+								</Anchors>
+								<HitRectInsets>
+									<AbsInset left="-10" right="-10" top="-10" bottom="-10"/>
+								</HitRectInsets>
+								<Anchors>
+									<Anchor point="BOTTOMLEFT" relativeKey="$parent.CopyButton" relativePoint="TOPLEFT" x="8" y="10"/>
+								</Anchors>
+								<FontString justifyH="LEFT" justifyV="MIDDLE" inherits="AAAStatusNameMedium">
+									<Color r="0.88" g="0.88" b="0.88"/>
+								</FontString>
+								<Layers>
+									<Layer>
+										<FontString parentKey="Tooltip" inherits="NarciIndicatorLetter" justifyH="CENTER" Alpha="0">
+											<Anchors>
+												<Anchor point="TOP" relativeKey="$parent" relativePoint="TOP" y="-1"/>
+											</Anchors>
+											<Animations>
+												<AnimationGroup parentKey="fadeIn" smoothing="IN_OUT">
+													<Alpha fromAlpha="0" toAlpha="0" duration="3" order="1"/>
+													<Alpha fromAlpha="0" toAlpha="1" duration="0.25" order="2"/>
+													<Alpha fromAlpha="1" toAlpha="1" duration="3" order="3"/>
+													<Alpha fromAlpha="1" toAlpha="0" duration="2" order="4"/>
+												</AnimationGroup>
+											</Animations>
+										</FontString>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnLoad>
+										self.Tooltip:SetText(Narci.L["Press Copy"])
+									</OnLoad>
+									<OnEditFocusGained>
+										self:HighlightText();
+									</OnEditFocusGained>
+									<OnEditFocusLost>
+										self:Hide();
+									</OnEditFocusLost>
+									<OnEscapePressed>
+										self:Hide();
+									</OnEscapePressed>
+									<OnEnterPressed>
+										self:Hide();
+									</OnEnterPressed>
+									<OnTabPressed>
+										self:Hide();
+									</OnTabPressed>
+									<OnSpacePressed>
+										self:Hide();
+									</OnSpacePressed>
+									<OnCursorChanged>
+										self:HighlightText();
+									</OnCursorChanged>
+									<OnShow>
+										self:GetParent():Disable();
+										self.Tooltip.fadeIn:Play();
+									</OnShow>
+									<OnHide>
+										self.lockText = false;
+										self:Hide();
+										self:HighlightText(0,0);
+										self:ClearFocus();
+										self:GetParent():Enable();
+										self:StopAnimating();
+									</OnHide>
+								</Scripts>
+							</EditBox>
+						</Frames>
+					</Button>
 				</Frames>
 				<Scripts>
 					<OnShow>

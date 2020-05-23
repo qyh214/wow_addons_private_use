@@ -1,52 +1,31 @@
 # Deadly Boss Mods Core
 
-## [8.3.20](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/8.3.20) (2020-04-19)
-[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/8.3.19...8.3.20)
+## [8.3.21](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/8.3.21) (2020-05-02)
+[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/8.3.20...8.3.21)
 
-- Prep new retail core as well  
-- Fixed a bug on mechagon trash where dispel warning for suffocating smog lacked target name  
-    Added 2 more dungeon drycodes to Theater of Pain  
-- Updated Boss Names for Devos Shreikwing, and Alee  
-    Added mod drycode for "A Front of Challengers" dungeon boss  
-    Fixed bug on Kin'Tara drycode  
-- KR Update (#174)  
+- Ok, now prep a retail release, should fix the WowI problem too  
+- Revert "Prep new classic tag"  
+- Prep new classic tag  
+- Only set close player text when it's actually shown, to avoid nil errors and also to not waste cpu  
+- Updated Shreikwing mod with two new abilities added in build 34199  
+- Renamed Dredger Giant to Sludgefist  
+    Added Stoneborne Generals and The Council of Blood now that they have journal entries.  
+- When wrong version of DBM is installed, don't just display message once at login. display message every 15 seconds, indefinitely, until incorrect version of DBM is uninstalled.  
+- missed a couple  
+- Fixed a bug that caused radar not to display first decimal place when more than 1 person was in range  
+    Changed measurement indicator from d back to y in english and m in all other languages. TODO, check region instead. if region US then y else m, regardless of language.  
+- Updated Lord Chamberlain from logs, removing infoframe for stacking debuff they appear to have deleted, added very preliminary timers (pull too short) and fixed a missing spellId  
+- KR Update (#178)  
     * KR Update  
-- Revert an unneeded change, NORMAL\_FONT\_COLOR isn't going anywhere, it was just moved from Constants to SharedConstants  
-- Revert UNIT\_HEALTH change on carapace for now, since it relies on accuracy and UNIT\_HEALTH doesn't have that on live, not til 9.0  
-    Couple more dungeon drycodes  
-    Some improved debug on all target scanner drycodes  
-- Fix a bug that caused brutal smash special warning (when enabled) not to work. Closes #173  
-- Couple more Dungeon boss drycodes  
-- KR Update (#171)  
-    * KR Update  
-- Begin prep work on Castle Nathria  
-- Slight drycode tweak to stichflesh based on what i saw on streams. Cant confirm spellID though without trancsriptor log though.  
-- I lied, 2 more dungeon bosses drycoded and ready. 11 others with updated creature Ids as wowhead's data improves  
-- Push just a couple more dungeon boss updates then take rest of night off, hit it harder tomorrow.  
-- Fix bug with assignment of shadowlands party mods that caused them to appear in wrong mod cat.  
-    Added drycodes to first two bosses of Plaguefall dungeon.  
-- Preliminary drycoded warnings/timers/features for Halls of Atonement. This one will need a revisit when updated build ships that fills in some of the blanks on these fights.  
-- Update Luacheck  
-- Fix error in last  
-- Push a few more Core and GUI fixes for Shadowlands  
-- Fix bug with deleted line and removed some completely useless debug code and instead add better debug code to help find that kind of bug faster going forward  
-- Update pkgmeta so shadowlands dungeon mods are included in packager  
-- Update luacheck to accept EXPANSION\_NAME8 so it doesn't build fail for it :D  
-- Missed DBM-GUI in last  
-- Shadowlands Update 1  
-     - *Worked around a crash bug in alpha client that causes it to crash when PlaySoundFile api is used. This is temporarily disabled in DBM (which will cause a lot of features to just not work like audio countdowns and custom sounds, but better that then frequent crashes. This work around will be removed when blizzard fixes the bug. They've been made aware and in fact have already fixed it internally, we just have to wait til next alpha build).  
-     - Updated DBM-Core to support Shadowlands mod category  
-     - Added full drycoded support for The Necrotic Wake dungeon preliminary warnings, AI Timers, and other features  
-     - Added basic support for EVERY other 5 man dungeon boss in Shadow lands with basic support for combat detection and stats (Warnings will be populated over coming days/weeks)  
-- Fix last  
-- Updated difficulty mapping for shadowlands  
-- Change UNIT\_HEALTH\_FREQUENT to UNIT\_HEALTH  
-- Fix megadrill as well on mechagon trash  
-- Fixed incorrect warning being caused by process waste cast on mechagon trash  
-- Update heroic timer data for Nzoth thought harvesters  
-- Fix one more replacement  
-- Also fix the api glitch too, so apparently it won't work at all this year :\  
-- Fixed some name replacements i missed, which sadly won't show for most til next year  
-- Changed touch of corruptor timer to expire on SPELL\_CAST\_START instead of SPELL\_CAST\_SUCCESS on Ilgynoth. Some would prefer to know when cast starts vs when debuffs happen.  
-- Tweak an option default  
-    Updated BW version check since I haven't been remembering to do that lately  
+- Updated first 3 bosses of Halls of Atonement from logs. few events/spellIds fixed. some timers added, others disabled do to insufficient data to substanciate they even have timers.  
+- The rest of Sanguine Depths drycoded  
+- Drycoded first two bosses of Sanguine Depths dungeon  
+    Drycoded Shriekwing (first boss) of Castle Nathria raid  
+- Added Mordretha drycode to Theater of Pain  
+- DBM Timer Update  
+     - Improved the DBM-GUI bar setup UI with better organizing of options  
+     - Improved labeling each dummy bar with an appropriate bar label for each instead of all of them saying "dummy"  
+     - Added a large bar example right next to small bar example in the part of timer GUI for configuring appearance options, so you can more visibly see how appearance options affect the two bar types.  
+     - Added a user requested new option to change Start/End color to apply those colors to small/large bar types instead of being used as an animated color fade. This will allow users to setup bars in more ways (such as making small bars red and large bars blue if they wish)  
+- Sync boss names/order to current journal build  
+- Kul'tharok Drycode added to Theater of Pain  

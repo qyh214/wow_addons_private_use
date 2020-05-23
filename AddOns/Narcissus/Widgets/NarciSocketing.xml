@@ -76,7 +76,7 @@
 		</Scripts>
     </Frame>
 
-	<Button name="Narci_GearEnhancement_Tooltip" inherits="Narci_GearEnhancement_Tooltip_Template" frameStrata="TOOLTIP">
+	<Button name="Narci_GearEnhancement_Tooltip" inherits="Narci_GearEnhancement_Tooltip_Template" frameStrata="FULLSCREEN">
 		<Frames>
 			<Frame parentKey="OtherGems">
 				<Anchors>
@@ -443,6 +443,20 @@
 				</FontString>
 			</Layer>
 		</Layers>
+		<Frames>
+			<Button parentKey="ClickToClose">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="-100" y="100"/>
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="100" y="-100"/>
+				</Anchors>
+				<Scripts>
+					<OnShow>
+						self:SetFrameLevel((self:GetParent():GetFrameLevel() or 1) -1);
+					</OnShow>
+					<OnClick function="Narci_ItemSocketing_Close"/>
+				</Scripts>
+			</Button>
+		</Frames>
 		<Animations>
 			<AnimationGroup parentKey="animIn" smoothing="IN_OUT">
 				<Translation parentKey="Translation" offsetY="8" duration="0" order="1"/>

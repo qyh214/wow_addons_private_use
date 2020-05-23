@@ -14,6 +14,7 @@ local L = Narci.L;
 local FadeFrame = NarciAPI_FadeFrame;
 local UIFrameFadeIn = UIFrameFadeIn;
 local UIFrameFadeOut = UIFrameFadeOut;
+local After = C_Timer.After;
 local BrowserFrame, ListFrame, PreviewFrame, HistoryFrame, Tab1, ListScrollBar, HistoryButtonFrame, QuickFavoriteButton, SuggestionFrame;
 local NumEffectiveButtons = 0;
 
@@ -22,6 +23,7 @@ local SpellVisualList = NarciSpellVisualBrowser.Catalogue;
 local GetSpellVisualKitInfo = Narci_GetSpellVisualKitInfo;
 local NarciTooltip = NarciTooltip;
 local SelectedVisualIndex;
+local _;
 
 local function CountLength(table)
     local count = 0;
@@ -92,17 +94,6 @@ local function inOutSine(t, b, e, d)
 	return -(e - b) / 2 * (cos(pi * t / d) - 1) + b
 end
 
-local function CreateAnimationFrame(duration)
-    local frame = CreateFrame("Frame", nil, AnimationContariner);
-    frame:Hide();
-    frame.total = 0;
-    frame.duration = duration;
-    frame:SetScript("OnHide", function(self)
-        self.total = 0;
-    end);
-    return frame;
-end
-
 -------------------------------------------
 --Toggle Spell Visual Brower frame
 local ExpandAnim = CreateFrame("Frame");
@@ -165,11 +156,13 @@ local function ReAnchorBrowser()
 end
 
 
-function Narci_ShowSpellVisualBrowser(self)
+function Narci_ToggleSpellVisualBrowser(self)
     if ExpandAnim:IsShown() then return; end;
-    self.IsExpanded = not self.IsExpanded;
+    self.isActive = not self.isActive;
     ReAnchorBrowser();
-    local state = self.IsExpanded;
+    local state = self.isActive;
+    BrowserFrame.isActive = state;
+    
     local newWidth;
     local newOffsetX, newOffsetY;  --for 2 different widgets
     if state then
@@ -179,7 +172,7 @@ function Narci_ShowSpellVisualBrowser(self)
         FadeFrame(BrowserFrame, 0.15, "IN");
         UIFrameFadeOut(self.Background, 0.15, 1, 0);
         UIFrameFadeOut(self.Label, 0.15, 1, 0);
-        C_Timer.After(0.25, function()
+        After(0.25, function()
             FadeFrame(BrowserFrame.ExpandableFrames, 0.25, "IN");
         end);
 
@@ -189,7 +182,7 @@ function Narci_ShowSpellVisualBrowser(self)
         newOffsetX = BROWSER_ANCHOR_OFFSET_COLLAPSED_X;
         newOffsetY = -40;
         FadeFrame(BrowserFrame.ExpandableFrames, 0.15, "OUT");
-        C_Timer.After(0.15, function()
+        After(0.15, function()
             FadeFrame(BrowserFrame, 0.25, "OUT");
         end);
 
@@ -207,7 +200,7 @@ function Narci_ShowSpellVisualBrowser(self)
         ExpandAnim:Show();
     else
         ExpandAnim.duration2 = 0.25;
-        C_Timer.After(0.2, function()
+        After(0.2, function()
             ExpandAnim:Show();
             UIFrameFadeIn(self.Background, 0.15, 0, 1);
             UIFrameFadeIn(self.Label, 0.15, 0, 1);
@@ -217,18 +210,18 @@ end
 
 
 --Tab Changing Animation    (Choose a category and go)
-local SwipeAnim = CreateAnimationFrame(0.25);
+local SwipeAnim = NarciAPI_CreateAnimationFrame(0.25);
 
 SwipeAnim:SetScript("OnShow", function(self)
-    self.point, self.relativeTo, self.relativePoint, self.StartOffset = Tab1:GetPoint();
+    self.point, self.relativeTo, self.relativePoint, self.startOffset = Tab1:GetPoint();
 end);
 
 local function Swipe_OnUpdate(self, elapsed)
 	self.total = self.total + elapsed;
-	local offset = outSine(self.total, self.StartOffset, self.EndOffset, self.duration);
+	local offset = outSine(self.total, self.startOffset, self.endOffset, self.duration);
 
 	if self.total >= self.duration then
-		offset = self.EndOffset;
+		offset = self.endOffset;
 		self:Hide();
     end
     Tab1:SetPoint(self.point, self.relativeTo, self.relativePoint, offset, 0);
@@ -238,7 +231,7 @@ SwipeAnim:SetScript("OnUpdate", Swipe_OnUpdate);
 
 local function GoToTab(index)
     SwipeAnim:Hide();
-    SwipeAnim.EndOffset = (1 - index) * TAB_WIDTH;
+    SwipeAnim.endOffset = (1 - index) * TAB_WIDTH;
     SwipeAnim:Show();
     if index ~= 1 then
         local HomeButton = ListFrame.Header.HomeButton;
@@ -255,7 +248,7 @@ end
 
 
 --Tab collapsing Animation
-local CollapseAnim = CreateAnimationFrame(0.2);
+local CollapseAnim = NarciAPI_CreateAnimationFrame(0.2);
 
 CollapseAnim:SetScript("OnShow", function(self)
     self.StartHeight = self.tab:GetHeight();
@@ -283,7 +276,7 @@ end
 
 
 --Gradually Update Scroll Range
-local RangeAnim = CreateAnimationFrame(0.5);
+local RangeAnim = NarciAPI_CreateAnimationFrame(0.5);
 
 RangeAnim:SetScript("OnShow", function(self)
     _, self.StartValue = ListScrollBar:GetMinMaxValues();
@@ -358,9 +351,9 @@ local function SmoothRange(newRange)
 end
 
 --Add button onto History tab
-local InsertAnim = CreateAnimationFrame(0.5);
+local InsertAnim = NarciAPI_CreateAnimationFrame(0.5);
 --Remove a button from History tab
-local RemoveAnim = CreateAnimationFrame(0.5);
+local RemoveAnim = NarciAPI_CreateAnimationFrame(0.5);
 
 local function RemapButton()
     --print(NumEffectiveButtons)
@@ -434,7 +427,7 @@ local function Insert_OnUpdate(self, elapsed)
         offsetX = self.EndX;
         offsetY = 0;
         self:Hide();
-        C_Timer.After(0, function()
+        After(0, function()
             if self.button3 then
                 self.button2:ClearAllPoints();
                 self.button2:SetPoint("LEFT", self.button3, "RIGHT", 0, 0);
@@ -576,7 +569,7 @@ local function Remove_OnUpdate(self, elapsed)
         alpha = 0;
         offsetX = self.EndX;
         self:Hide();
-        C_Timer.After(0, function()
+        After(0, function()
             HistoryButton_ResetSelection();
             self.RemovedButton:SetAlpha(1);
             if self.LeftButton then
@@ -732,7 +725,7 @@ end
 
 local HasPreview = BuildPreviewCheckTable();
 
-local PreviewTimer = CreateAnimationFrame(0.25);
+local PreviewTimer = NarciAPI_CreateAnimationFrame(0.25);
 PreviewTimer:SetScript("OnHide", function(self)
     self:Hide();
     self.total = 0;
@@ -803,11 +796,11 @@ local function EnrtyButton_OnEnter(self)
     Star:Show();
     Star.visualID = self.visualID;
     if IsFavorite[self.visualID] then
-        Star.IsOn = true;
+        Star.isFav = true;
         Star.Icon:SetTexCoord(0.75, 1, 0.25, 0.5);
         Star.Icon:SetAlpha(1);
     else
-        Star.IsOn = false;
+        Star.isFav = false;
         Star.Icon:SetTexCoord(0.5, 0.75, 0.25, 0.5);
         Star.Icon:SetAlpha(0.4);
     end
@@ -942,7 +935,7 @@ end
 local function CategoryButton_OnClick(self)
     CreateEntryButtonFrames(self.index);
     ListFrame.Header.Tab2Label:SetText(self:GetText());
-    C_Timer.After(0, function()
+    After(0, function()
         UpdateScrollRange();
         GoToTab(2);  
     end);
@@ -1057,7 +1050,7 @@ end
 
 local function GoToMyFavorites()
     CreateMyFavorites();
-    C_Timer.After(0, function()
+    After(0, function()
         GoToTab(3);  
     end);
 end
@@ -1252,6 +1245,14 @@ local function ReApplySpellVisual(model)
     end
 end
 
+local function ReEquipWeapons(model)
+    if model.weapons and model.holdWeapon then
+        for i = 1, #model.weapons do
+            model:EquipItem(model.weapons[i]);
+        end
+    end
+end
+
 local function ResetModel()
     local model = Narci.ActiveModel;
     if not model then return; end;
@@ -1266,9 +1267,13 @@ local function ResetModel()
         end
     end
     --]]
-    model:RefreshUnit();
+    if model.creatureID then
+        model:SetCreature(model.creatureID);
+    else
+        model:RefreshUnit();
+    end
 
-    C_Timer.After(0, function()
+    After(0, function()
         model:MakeCurrentCameraCustom();
         model:SetPosition(posX, posY, posZ);
         model:SetCameraTarget(0, 0, 0.8);
@@ -1281,14 +1286,21 @@ local function ResetModel()
             model:SetAnimation(model.animationID or 804, 1);
         end
 
-        C_Timer.After(0, function()
+        After(0, function()
             ReApplySpellVisual(model);
+
+            if model.creatureID then
+                ReEquipWeapons(model);
+            end
+
             if model.IsVirtual then
                 model:SetModelAlpha(0);
             end
         end)
     end);
 end
+
+NarciPhotoModeAPI.ResetModel = ResetModel;
 
 local function ResetButton_OnClick(self)
     ResetModel();
@@ -1344,7 +1356,7 @@ local function HistoryButton_RemoveAll()
     for i = 1, #buttons do
         button  = buttons[i];
         button.Border:SetTexCoord(0, 0.25, 0, 1);
-        C_Timer.After( (i - 1)/10, function()
+        After( (i - 1)/10, function()
             FadeFrame(buttons[i], 0.25, "OUT");
         end);
     end  
@@ -1414,7 +1426,7 @@ local function FavoriteButton_OnLeave(self)
     end
 end
 
-local function SaveToFavorites(SpellVisualKitID, CustomName, CustomAnimationID)
+local function AddToFavorites(SpellVisualKitID, CustomName, CustomAnimationID)
     if not SpellVisualKitID then return; end;
     local name, icon, animationID = GetSpellVisualKitInfo(SpellVisualKitID);
     local ShowPreview;
@@ -1433,7 +1445,7 @@ local function SaveToFavorites(SpellVisualKitID, CustomName, CustomAnimationID)
     MyCategoryButton.Differential:SetText("|cff7cc576+1");     --Green 7cc576
     MyCategoryButton.FadeText:Play(); 
     
-    C_Timer.After(0, CreateMyFavorites);
+    After(0, CreateMyFavorites);
 
     PlaySound(39672, "SFX");
 end
@@ -1470,14 +1482,14 @@ local function RemoveFromFavortes(IDsToBeDeleted)
     local newList = {};
     local oldList = FavoriteSpellVisualKitIDs;
     local sum = 0;
-    for k, v in pairs(oldList) do
-        if not ShouldBeDeleted[k] then
-            newList[k] = v;
+    for id, v in pairs(oldList) do
+        if not ShouldBeDeleted[id] then
+            newList[id] = v;
             sum = sum + 1;
         else
-            IsFavorite[k] = false;
+            IsFavorite[id] = false;
 
-            if k == currentID then
+            if id == currentID then
                 --Update favorite button
                 local Star = BrowserFrame.ExpandableFrames.FavoriteButton;
                 Star.Icon:SetTexCoord(0, 0.25, 0, 1);
@@ -1535,7 +1547,7 @@ local function FavoritePopUp_Confirm()
     local PopUp = Narci_SpellVisualBrowser_PopUpFrame;
     local EditBox = PopUp.HiddenFrame.EditBox;
     local ID = tonumber(BrowserFrame.ExpandableFrames.EditBox:GetText());
-    SaveToFavorites(ID, EditBox:GetText());
+    AddToFavorites(ID, EditBox:GetText());
     EditBox:ClearFocus();
     FadeFrame(PopUp, 0.25, "OUT");
 
@@ -1545,7 +1557,7 @@ local function FavoritePopUp_Confirm()
     Star.IsFav= true;
     Star.IsFirstClick = true;
 
-    C_Timer.After(0, function()
+    After(0, function()
         local sum = CountFavorites();
         MyCategoryButton.Count:SetText(sum);
     end)
@@ -1586,7 +1598,7 @@ local function FavoriteButton_OnClick(self)
             MyCategoryButton.Count:SetText(numLeft);
             MyCategoryButton.Differential:SetText("|cffff5050-1");  --minus 1
             MyCategoryButton.FadeText:Play();
-            C_Timer.After(0, CreateMyFavorites);
+            After(0, CreateMyFavorites);
         end
     end
 end
@@ -1673,17 +1685,18 @@ local function EditFrame_EditBox_Confirm(self)
 end
 
 local function QuickFavoriteButton_OnClick(self)
-    if self.IsOn then
+    if self.isFav then
         --Current ID is favorite
         RemoveFromFavortes(self.visualID);
         self.Icon:SetTexCoord(0.5, 0.75, 0.25, 0.5);
         self.parent.Star:SetAlpha(0);
     else
-        SaveToFavorites(self.visualID);
+        AddToFavorites(self.visualID);
         self.Icon:SetTexCoord(0.75, 1, 0.25, 0.5);
         self.parent.Star:SetAlpha(1);
+        self.Bling.animIn:Play();
     end
-    self.IsOn = not self.IsOn;
+    self.isFav = not self.isFav;
 end
 
 local function HomeButton_OnClick(self)
@@ -1699,7 +1712,7 @@ local function HomeButton_OnClick(self)
             MyCategoryButton.FadeText:Play();      
         end
     end
-    C_Timer.After(0, function()
+    After(0, function()
         PreviewFrame.TopImage.FadeOut:Play();
     end);
 end
@@ -1789,7 +1802,7 @@ local initialize = CreateFrame("Frame");
 initialize:RegisterEvent("VARIABLES_LOADED");
 initialize:SetScript("OnEvent", function(self)
     self:UnregisterEvent("VARIABLES_LOADED");
-    C_Timer.After(4.5, function()
+    After(4.5, function()
         SetAutoPlayButtonScript(SuggestionFrame.AutoPlay);
         local numFavorites = LoadFavorites();
         MyCategoryButton.Count:SetText(numFavorites);

@@ -148,10 +148,19 @@
 		<Scripts>
 			<OnEnter>
 				self.Highlight:Show();
+				if self.tooltip then
+					NarciTooltip:ShowTooltip(self, nil, nil, 1);
+				end
 			</OnEnter>
 			<OnLeave>
 				self.Highlight:Hide();
+				if self.tooltip then
+					NarciTooltip:FadeOut();
+				end
 			</OnLeave>
+			<OnMouseDown>
+				NarciTooltip:FadeOut();
+			</OnMouseDown>
 			<OnHide>
 				self.Highlight:Hide();
 			</OnHide>
@@ -479,7 +488,7 @@
 		</Scripts>
 	</Button>
 
-	<Frame name="Narci_SpellVisualBrowser" parent="Narci_ModelSettings" Alpha="0">
+	<Frame name="Narci_SpellVisualBrowser" parent="Narci_ModelSettings" Alpha="0" parentKey="SpellPanel">
 		<Size x="200" y="34"/>	<!-- full height: 216 -->
 		<Anchors>
 			<Anchor point="BOTTOMRIGHT" relativeTo="Narci_AnimationIDFrame" relativePoint="BOTTOMLEFT" x="150" y="-6"/>	<!-- -28 -->
@@ -896,6 +905,7 @@
 										self.EnabledText = Narci.L["Auto-play"];
 										self:GetParent().Label:SetText(Narci.L["Animation ID Abbre"]);
 										self.DisabledText = "|cffa7a7a7"..Narci.L["Auto-play"];
+										self.tooltip = Narci.L["Auto-play Tooltip"];
 									</OnLoad>
 								</Scripts>
 							</Button>
@@ -1081,15 +1091,32 @@
 										<Frames>
 											<Button inherits="Narci_SavedSpellVisualButton_EditButtonTemplate" parentKey="QuickFavoriteButton" frameLevel="12" hidden="true">
 												<!--Waiting to be assigned anchors-->
+												<Layers>
+													<Layer level="OVERLAY" textureSubLevel="5">
+														<Texture file="Interface\AddOns\Narcissus\Art\Widgets\SpellVisualBrowser\Favorites" Alpha="0" parentKey="Bling">
+															<TexCoords left="0.5" right="0.75" top="0" bottom="1"/>
+															<Anchors>
+																<Anchor point="TOPLEFT" relativeKey="$parent.Icon" relativePoint="TOPLEFT" x="0" y="0"/>
+																<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Icon" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+															</Anchors>
+															<Animations>
+																<AnimationGroup parentKey="animIn">
+																	<Scale startDelay="0" fromScaleX="1" toScaleX="2.25" fromScaleY="1" toScaleY="2.25" duration="0.6" order="1"/>
+																	<Alpha startDelay="0" fromAlpha="1" toAlpha="0" duration="0.5" order="1"/>
+																</AnimationGroup>
+															</Animations>
+														</Texture>
+													</Layer>
+												</Layers>
 												<Scripts>
 													<OnLoad>
 														self.Icon:SetTexCoord(0.5, 0.75, 0.25, 0.5);
 														self.tooltip = Narci.L["Favorites Add"];
-														self.IsOn = false;
+														self.isFav = false;
 													</OnLoad>
 													<OnLeave>
 														NarciTooltip:JustHide();
-														if not self.IsOn then
+														if not self.isFav then
 															self.Icon:SetAlpha(0.4);
 														end
 													</OnLeave>
@@ -1177,7 +1204,7 @@
 										<Layers>
 											<Layer level="BACKGROUND">
 												<Texture file="Interface\AddOns\Narcissus\Art\Widgets\SpellVisualBrowser\Panel">
-													<Size x="125" y="21.0"/>
+													<Size x="128" y="21"/>
 													<TexCoords left="0.228515625" right="0.45703125" top="0.21875" bottom="0.3125"/>
 													<Anchors>
 														<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER"/>
@@ -1206,58 +1233,13 @@
 											</Layer>
 										</Layers>
 										<Frames>
-											<Button parentKey="HomeButton" hidden="true">
-												<Size x="15" y="15"/>
+											<Button parentKey="HomeButton" hidden="true" inherits="Narci_NavigationButton_Template">
 												<HitRectInsets>
 													<AbsInset left="0" right="-10" top="-1" bottom="0"/>
 												</HitRectInsets>
 												<Anchors>
 													<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="2" y="0"/> 
 												</Anchors>
-												<Layers>
-													<Layer level="BACKGROUND">
-														<Texture file="Interface\AddOns\Narcissus\Art\Widgets\SpellVisualBrowser\HomeButton" parentKey="Background">
-															<Size x="30" y="30"/>
-															<Anchors>
-																<Anchor point="CENTER"/>
-															</Anchors>
-														</Texture>
-													</Layer>
-													<Layer level="ARTWORK">
-														<Texture setAllPoints="true" parentKey="Highlight" hidden="true">
-															<Color r="1" g="1" b="1" a="0.25"/>	
-														</Texture>
-													</Layer>
-													<Layer level="OVERLAY" textureSubLevel="1">
-														<Texture file="Interface\AddOns\Narcissus\Art\Widgets\SpellVisualBrowser\Icons" parentKey="Icon">
-															<TexCoords left="0" right="0.25" top="0.25" bottom="0.5"/>
-															<Size x="18" y="18"/>
-															<Anchors>
-																<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER"/>
-															</Anchors>
-														</Texture>
-													</Layer>
-												</Layers>
-												<Scripts>
-													<OnEnter>
-														NarciTooltip:ShowTooltip(self);
-														self.Highlight:Show();
-													</OnEnter>
-													<OnLeave>
-														self.Highlight:Hide();
-														NarciTooltip:JustHide();
-													</OnLeave>
-													<OnMouseDown>
-														NarciTooltip:JustHide();
-														self.Icon:SetSize(16, 16);
-													</OnMouseDown>
-													<OnMouseUp>
-														self.Icon:SetSize(18, 18);
-													</OnMouseUp>
-													<OnDoubleClick>
-														return;
-													</OnDoubleClick>
-												</Scripts>
 											</Button>
 										</Frames>
 										<Scripts>
@@ -1353,7 +1335,7 @@
 		</Scripts>
 	</Frame>
 
-	<Button parentKey="ExpandButton" parent="Narci_ModelSettings">
+	<Button parentKey="SpellPanelToggle">
 		<Size x="58" y="30"/>
 		<Anchors>
 			<Anchor point="RIGHT" relativeTo="Narci_AnimationIDFrame" relativePoint="LEFT" x="0"/>
@@ -1395,9 +1377,10 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				self.IsExpanded = false;
+				self.isActive = false;
 				self.tooltip = Narci.L["Toggle Browser"];
 				self.Label:SetText(Narci.L["Visuals"]);
+				self:SetParent(Narci_ModelSettings.BasicPanel);
 			</OnLoad>
 			<OnEnter>
 				NarciTooltip:ShowTooltip(self);
@@ -1409,7 +1392,7 @@
 				self.Background:SetTexCoord(0, 0.42578125, 0, 0.21875);
 				self.RightArrow:SetTexCoord(0.7734375, 1, 0, 0.21875);
 			</OnLeave>
-			<OnClick function="Narci_ShowSpellVisualBrowser"/>
+			<OnClick function="Narci_ToggleSpellVisualBrowser"/>
 			<OnDoubleClick>
 				return;
 			</OnDoubleClick>

@@ -141,11 +141,12 @@ E.Options.args.general = {
 						E:StaticPopup_Show("CONFIG_RL")
 					end,
 					values = {
-						["CHINESE"] = "Chinese (万, 亿)",
-						["ENGLISH"] = "English (K, M, B)",
-						["GERMAN"] = "German (Tsd, Mio, Mrd)",
-						["KOREAN"] = "Korean (천, 만, 억)",
-						["METRIC"] = "Metric (k, M, G)"
+						["TCHINESE"] = "萬, 億",
+						["CHINESE"] = "万, 亿",
+						["ENGLISH"] = "K, M, B",
+						["GERMAN"] = "Tsd, Mio, Mrd",
+						["KOREAN"] = "천, 만, 억",
+						["METRIC"] = "k, M, G"
 					},
 				},
 				decimalLength = {
@@ -322,7 +323,7 @@ E.Options.args.general = {
 			},
 		},
 		media = {
-			order = 5,
+			order = 10,
 			type = "group",
 			name = L["Media"],
 			get = function(info) return E.db.general[info[#info]] end,
@@ -823,7 +824,7 @@ E.Options.args.general = {
 							order = 31,
 							type = "toggle",
 							name = L["Auto Hide"],
-							desc = L["Automatically hide the objetive frame during boss or arena fights."],
+							desc = L["Automatically hide the objective frame during boss or arena fights."],
 							disabled = function() return IsAddOnLoaded("!KalielsTracker") end,
 							set = function(info, value) E.db.general.objectiveFrameAutoHide = value; Blizzard:SetObjectiveFrameAutoHide(); end,
 						},

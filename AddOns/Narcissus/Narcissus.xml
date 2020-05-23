@@ -362,7 +362,7 @@
 			</Anchors>
 			<Layers>
 				<Layer level="OVERLAY" textureSubLevel="20">
-					<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Cooldown-Border" parentKey="CooldownBorder"/>
+					<Texture file="Interface\AddOns\Narcissus\Art\Cooldown\Cooldown-Border" parentKey="CooldownBorder"/>
 				</Layer>
 			</Layers>
 		</Frame>
@@ -371,7 +371,7 @@
 			<Anchors>
 				<Anchor point="CENTER"/>
 			</Anchors>	
-			<SwipeTexture file="Interface\AddOns\Narcissus\Art\Widgets\Cooldown-Fluid">
+			<SwipeTexture file="Interface\AddOns\Narcissus\Art\Cooldown\Cooldown-Fluid">
 				<Size x="64" y="64"/>
 				<Anchors>
 					<Anchor point="CENTER"/>
@@ -404,7 +404,7 @@
 		</Anchors>
 	</Texture>
 
-	<Texture name="RectTopLeftCorner" file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Border" virtual="true">
+	<Texture name="RectTopLeftCorner" file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Border" virtual="true">
 		<TexCoords left="0.8828125" right="1" top="0" bottom="0.1171875"/>
 		<Size x="21" y="21"/>
 		<Anchors>
@@ -412,7 +412,7 @@
 		</Anchors>
 	</Texture>
 
-	<Texture name="RectTopRightCorner" file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Border" virtual="true">
+	<Texture name="RectTopRightCorner" file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Border" virtual="true">
 		<TexCoords left="1" right="0.8828125" top="0" bottom="0.1171875"/>
 		<Size x="21" y="21"/>
 		<Anchors>
@@ -420,7 +420,7 @@
 		</Anchors>
 	</Texture>
 
-	<Texture name="RectBottomLeftCorner" file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Border" virtual="true">
+	<Texture name="RectBottomLeftCorner" file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Border" virtual="true">
 		<TexCoords left="0.8828125" right="1" top="0.1171875" bottom="0"/>
 		<Size x="21" y="21"/>
 		<Anchors>
@@ -428,7 +428,7 @@
 		</Anchors>
 	</Texture>
 
-	<Texture name="RectBottomRightCorner" file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Border" virtual="true">
+	<Texture name="RectBottomRightCorner" file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Border" virtual="true">
 		<TexCoords left="1" right="0.8828125" top="0.1171875" bottom="0"/>
 		<Size x="21" y="21"/>
 		<Anchors>
@@ -442,7 +442,7 @@
 		</Size>
 		<Layers>
 			<Layer level="OVERLAY">
-				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Border" hidden="false">
+				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Border" hidden="false">
 					<TexCoords left="0.94921875" right="1" top="0.890625" bottom="1"/>
 					<Size>
 						<AbsDimension x="9" y="96"/>
@@ -451,7 +451,7 @@
 						<Anchor point="CENTER" relativeKey="$parent" relativePoint="LEFT" x="-2" y="0"/>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Border" hidden="false">
+				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Border" hidden="false">
 					<TexCoords left="0.94921875" right="1" top="0.890625" bottom="1"/>
 					<Size>
 						<AbsDimension x="9" y="96"/>
@@ -460,14 +460,14 @@
 						<Anchor point="CENTER" relativeKey="$parent" relativePoint="RIGHT" x="2" y="0"/>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Border"  hidden="false">
+				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Border"  hidden="false">
 					<TexCoords left="0" right="0.87890625" top="0.94921875" bottom="1"/>
 					<Size x="96" y="9"/>
 					<Anchors>
 						<Anchor point="CENTER" relativeKey="$parent" relativePoint="TOP" x="0" y="2"/>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Border"  hidden="false">
+				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Border"  hidden="false">
 					<TexCoords left="0.87890625" right="0" top="1" bottom="0.94921875"/>
 					<Size x="96" y="9"/>
 					<Anchors>
@@ -647,7 +647,7 @@
 
 			<Layer level="OVERLAY">
 				<FontString inherits="AAAStatusNameMedium" justifyH="CENTER" justifyV="MIDDLE" parentKey="Label" text="Label">
-					<Size x="0" y="0"/>
+					<Size x="92" y="0"/>
 					<Anchors>
 						<Anchor point="CENTER" relativeKey="$parent.Black" relativePoint="CENTER" x="-1" y="0"/>  <!--Compensate for Radar's Border-->
 					</Anchors>
@@ -731,7 +731,7 @@
 
 			<Layer level="OVERLAY">
 				<FontString inherits="AAAStatusNameMedium" justifyH="CENTER" justifyV="MIDDLE" parentKey="Label" text="Label">
-					<Size x="0" y="0"/>
+					<Size x="92" y="0"/>
 					<Anchors>
 						<Anchor point="CENTER" relativeKey="$parent.Black" relativePoint="CENTER" x="1" y="0"/>
 					</Anchors>
@@ -1483,7 +1483,7 @@
 		</Size>
 		<Layers>
 			<Layer level="BACKGROUND" textureSubLevel="2">
-				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Controller">
+				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Controller\Panel">
 					<TexCoords left="0.369140625" right="0.5" top="0" bottom="0.130859375"/>	<!--Ring <TexCoords left="0.369140625" right="0.5" top="0" bottom="0.130859375"/> <TexCoords left="0.177734375" right="0.326171875" top="0" bottom="0.1171875"/>-->
 					<Size x="40" y="40"/>
 					<Anchors>
@@ -1492,7 +1492,7 @@
 				</Texture>
 			</Layer>
 		</Layers>
-		<PushedTexture parentKey="Pushed" file="Interface\AddOns\Narcissus\Art\Widgets\Xmog">
+		<PushedTexture parentKey="Pushed" file="Interface\AddOns\Narcissus\Art\Widgets\Controller\Xmog">
 			<TexCoords left="0" right="0.5" top="0" bottom="1"/>
 			<Size x="36" y="36"/>
 			<Anchors>
@@ -1530,7 +1530,7 @@
 		</Scripts>
 	</Button>
 
-	<Frame name="PhotoModeController" hidden="true" frameStrata="HIGH" Alpha="0" frameLevel="10">
+	<Frame name="Narci_PhotoModeController" hidden="true" frameStrata="HIGH" Alpha="0" frameLevel="10">
 		<Size>
 			<AbsDimension x="80" y="80"/>
 		</Size>
@@ -1574,9 +1574,10 @@
 				<Scripts>
 					<OnUpdate function="PhotoModeController_AnimFrame_OnUpdate"/>
 					<OnShow>
+						local _;
 						self.fromAlpha = self:GetParent():GetAlpha();
 						self:GetParent():Show()
-						Anchor1, _, _, self.StartPoint, self.StartPointY = self:GetParent():GetPoint();
+						_, _, _, self.StartPoint, self.StartPointY = self:GetParent():GetPoint();
 					</OnShow>
 					<OnLoad>
 						self.fromAlpha = 0;
@@ -1647,7 +1648,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="OVERLAY" textureSubLevel="6">
-						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Controller">
+						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Controller\Panel">
 							<TexCoords left="0" right="0.25" top="0.5" bottom="0.75"/>
 							<Size x="80" y="80"/>
 							<Anchors>
@@ -1656,7 +1657,7 @@
 						</Texture>
 					</Layer>
 					<Layer level="OVERLAY" textureSubLevel="7">
-						<Texture parentKey="Icon" file="Interface\AddOns\Narcissus\Art\Widgets\Controller">
+						<Texture parentKey="Icon" file="Interface\AddOns\Narcissus\Art\Widgets\Controller\Panel">
 							<TexCoords left="0" right="0.25" top="0.75" bottom="1"/>
 							<Size x="80" y="80"/>
 							<Anchors>
@@ -1665,7 +1666,7 @@
 						</Texture>
 					</Layer>
 					<Layer level="OVERLAY" textureSubLevel="8">
-						<Texture parentKey="Ring" file="Interface\AddOns\Narcissus\Art\Widgets\Controller">
+						<Texture parentKey="Ring" file="Interface\AddOns\Narcissus\Art\Widgets\Controller\Panel">
 							<TexCoords left="0" right="0.25" top="0.25" bottom="0.5"/>
 							<Size x="80" y="80"/>
 							<Anchors>
@@ -1733,7 +1734,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="BACKGROUND" textureSubLevel="1">
-						<Texture parentKey="RightEnd" file="Interface\AddOns\Narcissus\Art\Widgets\Controller">
+						<Texture parentKey="RightEnd" file="Interface\AddOns\Narcissus\Art\Widgets\Controller\Panel">
 							<TexCoords left="0.126953125" right="0.177734375" top="0" bottom="0.15234375"/>
 							<Size x="17" y="50"/>
 							<Anchors>
@@ -1741,7 +1742,7 @@
 							</Anchors>
 						</Texture>
 
-						<Texture parentKey="Right1" file="Interface\AddOns\Narcissus\Art\Widgets\Controller">
+						<Texture parentKey="Right1" file="Interface\AddOns\Narcissus\Art\Widgets\Controller\Panel">
 							<TexCoords left="0" right="0.126953125" top="0" bottom="0.15234375"/>
 							<Size x="41.5" y="50"/>
 							<Anchors>
@@ -1749,7 +1750,7 @@
 							</Anchors>
 						</Texture>
 
-						<Texture parentKey="Right2" file="Interface\AddOns\Narcissus\Art\Widgets\Controller">
+						<Texture parentKey="Right2" file="Interface\AddOns\Narcissus\Art\Widgets\Controller\Panel">
 							<TexCoords left="0" right="0.126953125" top="0" bottom="0.15234375"/>
 							<Size x="41.5" y="50"/>
 							<Anchors>
@@ -1757,7 +1758,7 @@
 							</Anchors>
 						</Texture>
 
-						<Texture parentKey="Right3" file="Interface\AddOns\Narcissus\Art\Widgets\Controller">
+						<Texture parentKey="Right3" file="Interface\AddOns\Narcissus\Art\Widgets\Controller\Panel">
 							<TexCoords left="0" right="0.126953125" top="0" bottom="0.15234375"/>
 							<Size x="41.5" y="50"/>
 							<Anchors>
@@ -1765,7 +1766,7 @@
 							</Anchors>
 						</Texture>
 
-						<Texture parentKey="Right4" file="Interface\AddOns\Narcissus\Art\Widgets\Controller">
+						<Texture parentKey="Right4" file="Interface\AddOns\Narcissus\Art\Widgets\Controller\Panel">
 							<TexCoords left="0" right="0.126953125" top="0" bottom="0.15234375"/>
 							<Size x="41.5" y="50"/>
 							<Anchors>
@@ -1773,7 +1774,7 @@
 							</Anchors>
 						</Texture>
 
-						<Texture parentKey="Right5" file="Interface\AddOns\Narcissus\Art\Widgets\Controller" hidden="false">
+						<Texture parentKey="Right5" file="Interface\AddOns\Narcissus\Art\Widgets\Controller\Panel" hidden="false">
 							<TexCoords left="0" right="0.126953125" top="0" bottom="0.15234375"/>
 							<Size x="42" y="50"/>
 							<Anchors>
@@ -1811,7 +1812,7 @@
 								</Anchors>
 								<Layers>		
 									<Layer level="ARTWORK" textureSubLevel="2">
-										<Texture file="Interface\AddOns\Narcissus\Art\Widgets\ControlBar">
+										<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Controller\ControlBar">
 										<TexCoords left="0" right="0.5078125" top="0" bottom="0.40625"/>
 											<Anchors>
 												<Anchor point="TOPLEFT"/>
@@ -1854,7 +1855,7 @@
 										</Texture>
 									</Layer>		
 									<Layer level="OVERLAY" textureSubLevel="4">
-										<Texture file="Interface\AddOns\Narcissus\Art\Widgets\ControlBar">
+										<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Controller\ControlBar">
 										<TexCoords left="0.875" right="1" top="0" bottom="1"/>
 											<Anchors>
 												<Anchor point="TOPLEFT"/>
@@ -1929,7 +1930,7 @@
 								</Anchors>
 								<Layers>		
 									<Layer level="ARTWORK" textureSubLevel="4">
-										<Texture file="Interface\AddOns\Narcissus\Art\Widgets\ControlBar">
+										<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Controller\ControlBar">
 										<TexCoords left="0.75" right="0.875" top="0" bottom="1"/>
 											<Anchors>
 												<Anchor point="TOPLEFT"/>
@@ -1993,14 +1994,14 @@
 						<Anchors>
 							<Anchor point="CENTER" relativeKey="$parent.Right4" relativePoint="CENTER" x="0" y="0"/>
 						</Anchors>
-						<NormalTexture parentKey="Icon" file="Interface\AddOns\Narcissus\Art\Widgets\Xmog">
+						<NormalTexture parentKey="Icon" file="Interface\AddOns\Narcissus\Art\Widgets\Controller\Xmog">
 							<TexCoords left="0" right="0.5" top="0" bottom="1"/>
 							<Size x="40" y="40"/>
 							<Anchors>
 								<Anchor point="CENTER" y="-0.5"/>
 							</Anchors>
 						</NormalTexture>
-						<DisabledTexture parentKey="IconDisabled" file="Interface\AddOns\Narcissus\Art\Widgets\Xmog" Alpha="0.4">
+						<DisabledTexture parentKey="IconDisabled" file="Interface\AddOns\Narcissus\Art\Widgets\Controller\Xmog" Alpha="0.4">
 							<TexCoords left="0" right="0.5" top="0" bottom="1"/>
 							<Size x="40" y="40"/>
 							<Anchors>
@@ -2041,7 +2042,7 @@
 						<Anchors>
 							<Anchor point="CENTER" relativeKey="$parent.Right3" relativePoint="CENTER" x="0" y="0"/>
 						</Anchors>
-						<NormalTexture parentKey="Icon" file="Interface\AddOns\Narcissus\Art\Widgets\Emote">
+						<NormalTexture parentKey="Icon" file="Interface\AddOns\Narcissus\Art\Widgets\Controller\Emote">
 							<TexCoords left="0" right="0.5" top="0" bottom="1"/>
 							<Size x="38" y="39"/>
 							<Anchors>
@@ -2094,7 +2095,7 @@
 
 							</Layer>
 						</Layers>
-						<NormalTexture parentKey="Icon" file="Interface\AddOns\Narcissus\Art\Widgets\HideTexts">
+						<NormalTexture parentKey="Icon" file="Interface\AddOns\Narcissus\Art\Widgets\Controller\HideTexts">
 							<TexCoords left="0" right="0.5" top="0" bottom="1"/>
 							<Size x="40" y="40"/>
 							<Anchors>
@@ -2110,7 +2111,7 @@
 						<Anchors>
 							<Anchor point="CENTER" relativeKey="$parent.Right1" relativePoint="CENTER" x="0" y="0"/>
 						</Anchors>
-						<NormalTexture parentKey="Icon" file="Interface\AddOns\Narcissus\Art\Widgets\TopQuality">
+						<NormalTexture parentKey="Icon" file="Interface\AddOns\Narcissus\Art\Widgets\Controller\TopQuality">
 							<TexCoords left="0" right="0.5" top="0" bottom="1"/>
 							<Size x="40" y="40"/>
 							<Anchors>
@@ -2861,37 +2862,6 @@
 					<Anchor point="TOP" relativeKey="$parent.Trinket1Slot" relativePoint="BOTTOM"  x="0" y="-2" />
 				</Anchors>
 			</Button>
-
-			<!--Button name="SlotLabelStyleButton" virtual="false" hidden="false">
-				<Anchors>
-					<Anchor point="BOTTOM" relativeKey="$parent.HeadSlot" relativePoint="TOP"  x="0" y="-2" />
-				</Anchors>
-				<Size>
-					<AbsDimension x="18" y="18"/>
-				</Size>
-				<Layers>
-					<Layer level="OVERLAY">
-						<Texture parentKey="icon" file="Interface\AddOns\Narcissus\Art\Widgets\SlotLabelStyleIcon" Alpha="0.4">
-							<TexCoords left="0" right="0.5" top="0" bottom="1"/>
-							<Size x="18" y="18"/>
-							<Anchors>
-								<Anchor point="CENTER"/>
-							</Anchors>
-						</Texture>
-					</Layer>
-				</Layers>
-				<Scripts>
-					<OnEnter>
-						self.icon:SetAlpha(0.8);
-						Narci_ShowButtonTooltip(self);
-					</OnEnter>
-					<OnLeave>
-						self.icon:SetAlpha(0.4);
-						Narci:HideButtonTooltip();
-					</OnLeave>
-					<OnClick function="SetSlotLabelStyle"/>
-				</Scripts>
-			</Button-->
 		</Frames>
 		<Animations>
 			<AnimationGroup parentKey="animOut">
@@ -2914,7 +2884,7 @@
 		</Animations>
 		<Scripts>
 			<OnShow>
-				self:StopAnimating()
+				self:StopAnimating();
 			</OnShow>
 			<OnHide>
 				self:Hide();
@@ -3544,7 +3514,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="BACKGROUND">
-						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Border" Alpha="0.9" hidden="false">
+						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Border" Alpha="0.9" hidden="false">
 							<TexCoords left="0" right="0.625" top="0" bottom="0.625"/>
 							<Size x="98" y="98"/>
 							<Anchors>
@@ -3567,7 +3537,7 @@
 							</Anchors>
 							<Color r="1" g="1" b="1" a="1"/>
 						</Texture>
-						<MaskTexture parentKey="Mask1" file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Mask-2Square" hWrapMode="CLAMPTOBLACK" vWrapMode="CLAMPTOBLACK" rotation="0">
+						<MaskTexture parentKey="Mask1" file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Mask-2Square" hWrapMode="CLAMPTOBLACK" vWrapMode="CLAMPTOBLACK" rotation="0">
 							<Size>
 								<AbsDimension x="200" y="200"/>
 							</Size>
@@ -3578,7 +3548,7 @@
 								<MaskedTexture childKey="MaskedBackground"/> 
 							</MaskedTextures>
 						</MaskTexture>
-						<MaskTexture parentKey="Mask2" file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Mask-2Square" hWrapMode="CLAMPTOBLACK" vWrapMode="CLAMPTOBLACK" rotation="0">
+						<MaskTexture parentKey="Mask2" file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Mask-2Square" hWrapMode="CLAMPTOBLACK" vWrapMode="CLAMPTOBLACK" rotation="0">
 							<Size>
 								<AbsDimension x="400" y="400"/>
 							</Size>
@@ -3589,7 +3559,7 @@
 								<MaskedTexture childKey="MaskedBackground"/>
 							</MaskedTextures>
 						</MaskTexture>
-						<MaskTexture parentKey="Mask3" file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Mask-2Square" hWrapMode="CLAMPTOBLACK" vWrapMode="CLAMPTOBLACK" rotation="0">
+						<MaskTexture parentKey="Mask3" file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Mask-2Square" hWrapMode="CLAMPTOBLACK" vWrapMode="CLAMPTOBLACK" rotation="0">
 							<Size>
 								<AbsDimension x="400" y="400"/>
 							</Size>
@@ -3600,7 +3570,7 @@
 								<MaskedTexture childKey="MaskedBackground2"/>
 							</MaskedTextures>
 						</MaskTexture>
-						<MaskTexture parentKey="Mask4" file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Mask-2Square" hWrapMode="CLAMPTOBLACK" vWrapMode="CLAMPTOBLACK" rotation="0">
+						<MaskTexture parentKey="Mask4" file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Mask-2Square" hWrapMode="CLAMPTOBLACK" vWrapMode="CLAMPTOBLACK" rotation="0">
 							<Size>
 								<AbsDimension x="400" y="400"/>
 							</Size>
@@ -3611,7 +3581,7 @@
 								<MaskedTexture childKey="MaskedBackground2"/>
 							</MaskedTextures>
 						</MaskTexture>
-						<MaskTexture parentKey="MaskHalf1" file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Mask2" hWrapMode="CLAMPTOBLACK" vWrapMode="CLAMPTOBLACK">
+						<MaskTexture parentKey="MaskHalf1" file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Mask2" hWrapMode="CLAMPTOBLACK" vWrapMode="CLAMPTOBLACK">
 							<Size>
 								<AbsDimension x="100" y="100"/>
 							</Size>
@@ -3622,7 +3592,7 @@
 								<MaskedTexture childKey="MaskedBackground"/>
 							</MaskedTextures>
 						</MaskTexture>
-						<MaskTexture parentKey="MaskHalf2" file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Mask2" hWrapMode="CLAMPTOBLACK" vWrapMode="CLAMPTOBLACK" rotation="180">
+						<MaskTexture parentKey="MaskHalf2" file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Mask2" hWrapMode="CLAMPTOBLACK" vWrapMode="CLAMPTOBLACK" rotation="180">
 							<Size>
 								<AbsDimension x="100" y="100"/>
 							</Size>
@@ -3683,7 +3653,7 @@
 							</Anchors>
 							<Color r="1" g="1" b="1" a="1"/>
 						</Texture>
-						<MaskTexture parentKey="MaskLine1" file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Mask-Line" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+						<MaskTexture parentKey="MaskLine1" file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Mask-Line" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
 							<Size>
 								<AbsDimension x="200" y="200"/>
 							</Size>
@@ -3694,7 +3664,7 @@
 								<MaskedTexture childKey="MaskedLine1"/>
 							</MaskedTextures>
 						</MaskTexture>
-						<MaskTexture parentKey="MaskLine2" file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Mask-Line" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+						<MaskTexture parentKey="MaskLine2" file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Mask-Line" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
 							<Size>
 								<AbsDimension x="200" y="200"/>
 							</Size>
@@ -3705,7 +3675,7 @@
 								<MaskedTexture childKey="MaskedLine2"/>
 							</MaskedTextures>
 						</MaskTexture>
-						<MaskTexture parentKey="MaskLine3" file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Mask-Line" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+						<MaskTexture parentKey="MaskLine3" file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Mask-Line" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
 							<Size>
 								<AbsDimension x="200" y="200"/>
 							</Size>
@@ -3716,7 +3686,7 @@
 								<MaskedTexture childKey="MaskedLine3"/>
 							</MaskedTextures>
 						</MaskTexture>
-						<MaskTexture parentKey="MaskLine4" file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Mask-Line" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+						<MaskTexture parentKey="MaskLine4" file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Mask-Line" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
 							<Size>
 								<AbsDimension x="200" y="200"/>
 							</Size>
@@ -3729,25 +3699,25 @@
 						</MaskTexture>
 					</Layer>
 					<Layer level="OVERLAY" textureSubLevel="2">
-						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Vertex" Alpha="0.8" hidden="false" parentKey="P1">
+						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Vertex" Alpha="0.8" hidden="false" parentKey="P1">
 							<Size x="12" y="12"/>
 							<Anchors>
 								<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
 							</Anchors>
 						</Texture>
-						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Vertex" Alpha="0.8" hidden="false" parentKey="P2">
+						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Vertex" Alpha="0.8" hidden="false" parentKey="P2">
 							<Size x="12" y="12"/>
 							<Anchors>
 								<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
 							</Anchors>
 						</Texture>
-						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Vertex" Alpha="0.8" hidden="false" parentKey="P3">
+						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Vertex" Alpha="0.8" hidden="false" parentKey="P3">
 							<Size x="12" y="12"/>
 							<Anchors>
 								<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
 							</Anchors>
 						</Texture>
-						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Vertex" Alpha="0.8" hidden="false" parentKey="P4">
+						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Vertex" Alpha="0.8" hidden="false" parentKey="P4">
 							<Size x="12" y="12"/>
 							<Anchors>
 								<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
@@ -3808,7 +3778,7 @@
 				</Anchors>	
 				<Layers>
 					<Layer level="BORDER">
-						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Border"  hidden="true">
+						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Border"  hidden="true">
 							<TexCoords left="0" right="0.87890625" top="0.94921875" bottom="1"/>
 							<Size x="160" y="9"/>
 							<Anchors>
@@ -3828,7 +3798,7 @@
 				</Anchors>	
 				<Layers>
 					<Layer level="BORDER">
-						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Border"  hidden="true">
+						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Border"  hidden="true">
 							<TexCoords left="0.87890625" right="0" top="0.94921875" bottom="1"/>
 							<Size x="160" y="9"/>
 							<Anchors>
@@ -3848,7 +3818,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="BORDER">
-						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Border"  hidden="true">
+						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Border"  hidden="true">
 							<TexCoords left="0" right="0.87890625" top="1" bottom="0.94921875"/>
 							<Size x="160" y="9"/>
 							<Anchors>
@@ -3868,7 +3838,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="BORDER">
-						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Radar-Border"  hidden="true">
+						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\RadarChart\Radar-Border"  hidden="true">
 							<TexCoords left="0.87890625" right="0" top="1" bottom="0.94921875"/>
 							<Size x="160" y="9"/>
 							<Anchors>
@@ -4435,7 +4405,7 @@
 		</Scripts>
 	</Frame>
 
-    <Button name="Narci_MinimapButton" parent="Minimap" enableMouse="true" movable="true" hidden="true" frameStrata="MEDIUM" frameLevel="62" ignoreParentAlpha="false" clampedToScreen="true">
+    <Button name="Narci_MinimapButton" parent="Minimap" enableMouse="true" movable="true" hidden="true" frameStrata="MEDIUM" frameLevel="62" ignoreParentAlpha="false" clampedToScreen="true" motionScriptsWhileDisabled="false">
 		<Size>
 			<AbsDimension x="36" y="36"/>
 		</Size>
@@ -4508,13 +4478,22 @@
 				if Narci_MinimapButton_DraggingFrame:IsShown() then
 					return;
 				end
-				if not self:IsShown() then return; end
-				UIFrameFadeOut(self.Color, 0.2, self.Color:GetAlpha(), 0);
-				UIFrameFadeOut(self, 0.2, self:GetAlpha(), self.EndAlpha);
+				if self:IsShown() then
+					UIFrameFadeOut(self.Color, 0.2, self.Color:GetAlpha(), 0);
+					UIFrameFadeOut(self, 0.2, self:GetAlpha(), self.EndAlpha);
+				else
+					self.Color:SetAlpha(0);
+				end	
 			</OnLeave>
             <OnHide>
 
             </OnHide>
+			<OnEnable>
+				if self:IsMouseOver() then
+					Narci_MinimapButton_OnEnter(self)
+					self:SetScript("OnEnable", nil);
+				end
+			</OnEnable>
 		</Scripts>
 	</Button>
 

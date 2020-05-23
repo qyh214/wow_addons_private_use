@@ -40,6 +40,8 @@ local L = WeakAuras.L
 	L["Always shows the aura, turns red when out of range."] = "Always shows the aura, turns red when out of range."
 	L["Back"] = "뒤로"
 	L["Basic Show On Cooldown"] = "재사용 대기 시간 표시"
+	--[[Translation missing --]]
+	L["Basic Show On Ready"] = "Basic Show On Ready"
 	L["Bloodlust/Heroism"] = "피의 욕망/영웅심"
 	L["buff"] = "강화 효과"
 	L["Buffs"] = "강화 효과"
@@ -88,6 +90,8 @@ local L = WeakAuras.L
 	L["Only show the aura when the item is on cooldown."] = "Only show the aura when the item is on cooldown."
 	L["Only shows the aura if the target has the buff."] = "대상에 강화 효과가 있는 경우 그 효과만 표시합니다."
 	L["Only shows the aura when the ability is on cooldown."] = "능력이 재사용 대기 중인 경우 그 효과만 표시합니다."
+	--[[Translation missing --]]
+	L["Only shows the aura when the ability is ready to use."] = "Only shows the aura when the ability is ready to use."
 	L["Pet alive"] = "소환수 생존"
 	L["Pet Behavior"] = "소환수 행동"
 	L["PvP Azerite Traits"] = "PvP 아제라이트 특성"
@@ -135,6 +139,8 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Show Cooldown and Proc Tracking"] = "Show Cooldown and Proc Tracking"
 	L["Show Cooldown and Totem Information"] = "재사용 대기시간 및 토템 정보 표시"
+	--[[Translation missing --]]
+	L["Show on Ready"] = "Show on Ready"
 	L["Show Only if Buffed"] = "있는 강화 효과만 표시"
 	L["Show Only if Debuffed"] = "있는 약화 효과만 표시"
 	L["Show Only if on Cooldown"] = "재사용 대기 중일 때만 표시"

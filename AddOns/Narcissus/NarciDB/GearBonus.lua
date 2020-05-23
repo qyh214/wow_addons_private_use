@@ -277,21 +277,6 @@ local function GetCorruptionModID(itemLink)
 end
 
 function NarciAPI_GetCorruptedItemAffix(itemLink)
-    --Old Method
-    --[[
-    local _, _, _, itemEquipLoc = GetItemInfoInstant(itemLink);
-    if itemEquipLoc == "INVTYPE_WRIST" then
-        ID = match(itemLink, ":%d:(%d+):");
-        if not ID then
-            ID = match(itemLink, "6578:6579:(%d+):");
-        end
-    else
-        ID = match(itemLink, "6578:6579:(%d+):");
-        if not ID then
-            ID = match(itemLink, ":%d:(%d+):");
-        end
-    end
-    --]]
     local ID = GetCorruptionModID(itemLink);
 
     if ID then
@@ -314,12 +299,14 @@ function NarciAPI_GetCorruptedItemAffix(itemLink)
     
 end
 
-local GetSpellInfo = GetSpellInfo;
 local Initialize = CreateFrame("Frame")
 Initialize:RegisterEvent("PLAYER_ENTERING_WORLD");
 Initialize:SetScript("OnEvent", function(self, event, ...)
     self:UnregisterEvent("PLAYER_ENTERING_WORLD");
+    local GetSpellInfo = GetSpellInfo;
+    local GetSpellDescription = GetSpellDescription;
     local flatTable = {};
+    local queueTable = {};
     local sum = 0;
     for k, v in pairs(Corruption_SpellIDs) do
         --Cache
@@ -333,8 +320,8 @@ Initialize:SetScript("OnEvent", function(self, event, ...)
     local info, modID, rank, spellID, name, type;
     local description, num;
     local match = string.match;
-    local function BuildAffix()
-        spellID = flatTable[i];
+    local function BuildAffix(spellList)
+        spellID = spellList[i];
         info = Corruption_SpellIDs[spellID];
         type = info[4];
         if type then
@@ -365,12 +352,32 @@ Initialize:SetScript("OnEvent", function(self, event, ...)
         if i < sum then
             i = i + 1;
             C_Timer.After(0, function()
-                BuildAffix();
+                BuildAffix(spellList);
             end)
         end
     end
 
-    C_Timer.After(2, BuildAffix);
+    C_Timer.After(0.73, function()
+        BuildAffix(flatTable)
+
+        --Check Cache
+        C_Timer.After(1, function()
+            local IsSpellDataCached = C_Spell.IsSpellDataCached;
+            for j = 1, #flatTable do
+                spellID = flatTable[i];
+                if not IsSpellDataCached(spellID) then
+                    tinsert(queueTable, spellID);
+                end
+            end
+
+            C_Timer.After(0.25, function()
+                if #queueTable ~= 0 then
+                    BuildAffix(queueTable);
+                end
+            end)
+        end)
+        
+    end);
 end)
 
 
@@ -388,14 +395,15 @@ end)
 
     /dump string.match("Racing Pulse: Your spells and abilities have a chance to increase your Haste by 546 for 4 sec.", "(%d+)")
 
+
+
+
     hooksecurefunc("DressUpItemLink", function(link)
         local str = string.match(link, "item[%-?%d:]+")
         --local test = string.match(link, "6578:6579:(%d+):");
         print(link)
         print(str)
-        print(GetCorruptionModID(link))
+        --print(GetCorruptionModID(link))
         --NarciAPI_GetCorruptedItemAffix(link)
     end)
 --]]
-
-

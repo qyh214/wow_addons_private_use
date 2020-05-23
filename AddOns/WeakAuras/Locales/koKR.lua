@@ -37,7 +37,8 @@ L["%s Untrigger Function"] = "%s 비활성 조건 함수"
 L["/wa help - Show this message"] = "/wa help - 이 메시지 보이기"
 L["/wa minimap - Toggle the minimap icon"] = "/wa minimap - 미니맵 아이콘 토글"
 L["/wa pprint - Show the results from the most recent profiling"] = "/wa pprint - 가장 최근의 프로필 결과 표시"
-L["/wa pstart - Start profiling"] = "/wa pstart - 프로필 시작"
+--[[Translation missing --]]
+L["/wa pstart - Start profiling. Optionally include a duration in seconds after which profiling automatically stops. To profile the next combat/encounter, pass a \"combat\" or \"encounter\" argument."] = "/wa pstart - Start profiling. Optionally include a duration in seconds after which profiling automatically stops. To profile the next combat/encounter, pass a \"combat\" or \"encounter\" argument."
 L["/wa pstop - Finish profiling"] = "/wa pstop - 프로필 종료"
 --[[Translation missing --]]
 L["/wa repair - Repair tool"] = "/wa repair - Repair tool"
@@ -104,6 +105,8 @@ L["Assigned Role"] = "Assigned Role"
 L["At Least One Enemy"] = "최소 1명의 적 대상"
 L["Attach to End"] = "공격 종료"
 L["Attach to Start"] = "공격 시작"
+--[[Translation missing --]]
+L["Attack Power"] = "Attack Power"
 L["Attackable"] = "공격 가능"
 L["Attackable Target"] = "공격 가능 대상"
 L["Aura"] = "효과"
@@ -213,6 +216,8 @@ L["Circle"] = "동그라미"
 L["Clamp"] = "더미"
 L["Class"] = "직업"
 L["Class and Specialization"] = "직업 및 전문화"
+--[[Translation missing --]]
+L["Classification"] = "Classification"
 L["Clockwise"] = "시계 방향"
 L["Clone per Event"] = "이벤트 별 복제"
 L["Clone per Match"] = "일치 별 복제"
@@ -310,6 +315,8 @@ L["Edge"] = "Edge"
 L["Edge of Madness"] = "Edge of Madness"
 --[[Translation missing --]]
 L["Elide"] = "Elide"
+--[[Translation missing --]]
+L["Elite"] = "Elite"
 L["Emote"] = "감정표현"
 --[[Translation missing --]]
 L["Emphasized"] = "Emphasized"
@@ -468,8 +475,14 @@ L["Icon"] = "아이콘"
 L["Icon Color"] = "아이콘 색상"
 L["Icon Desaturate"] = "아이콘 채도감소(흑백)"
 L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/wa2!"] = "추가 지원이 필요하면 GitHub에서 티켓을 열거나 Discord에서 https://discord.gg/wa2 를 방문하십시오!"
+--[[Translation missing --]]
+L["Ignore Dead"] = "Ignore Dead"
+--[[Translation missing --]]
+L["Ignore Disconnected"] = "Ignore Disconnected"
 L["Ignore Rune CD"] = "룬 재사용 대기시간 무시"
 L["Ignore Rune CDs"] = "룬 재사용 대기시간 무시"
+--[[Translation missing --]]
+L["Ignore Self"] = "Ignore Self"
 L["Ignore Unknown Spell"] = "알 수 없는 주문 무시"
 L["Immune"] = "면역"
 L["Import"] = "가져오기"
@@ -597,6 +610,8 @@ L["Meta Data"] = "메타 데이터"
 L["Minimum"] = "최소"
 L["Minimum Estimate"] = "최소 예상치"
 --[[Translation missing --]]
+L["Minus (Small Nameplate)"] = "Minus (Small Nameplate)"
+--[[Translation missing --]]
 L["Mirror"] = "Mirror"
 L["Miss"] = "빗나감"
 L["Miss Type"] = "적중 실패 유형"
@@ -642,6 +657,10 @@ L["Nefarian"] = "Nefarian"
 L["Neutral"] = "중립"
 L["Never"] = "절대 안함"
 L["Next"] = "다음"
+--[[Translation missing --]]
+L["Next Combat"] = "Next Combat"
+--[[Translation missing --]]
+L["Next Encounter"] = "Next Encounter"
 L["No Children"] = "자식 없음"
 L["No Instance"] = "인스턴스가 아닐 때"
 L["No Profiling information saved."] = "프로필 정보가 저장되지 않았습니다."
@@ -745,8 +764,12 @@ L["Princess Huhuran"] = "Princess Huhuran"
 --[[Translation missing --]]
 L["Print Profiling Results"] = "Print Profiling Results"
 L["Profiling already started."] = "프로필이 이미 시작되었습니다."
+--[[Translation missing --]]
+L["Profiling automatically started."] = "Profiling automatically started."
 L["Profiling not running."] = "프로필이 실행되지 않습니다."
 L["Profiling started."] = "프로필이 시작되었습니다."
+--[[Translation missing --]]
+L["Profiling started. It will end automatically in %d seconds"] = "Profiling started. It will end automatically in %d seconds"
 L["Profiling still running, stop before trying to print."] = "프로필이 여전히 실행 중이면 출력을 시작하기 전에 중지하십시오."
 L["Profiling stopped."] = "프로필이 중지되었습니다."
 L["Progress Total"] = "진행 현황"
@@ -766,6 +789,10 @@ L["Raids"] = "공격대"
 L["Range"] = "원거리"
 L["Range Check"] = "거리 확인"
 --[[Translation missing --]]
+L["Rare"] = "Rare"
+--[[Translation missing --]]
+L["Rare Elite"] = "Rare Elite"
+--[[Translation missing --]]
 L["Razorgore the Untamed"] = "Razorgore the Untamed"
 L["Ready Check"] = "전투 준비"
 L["Realm"] = "서버"
@@ -784,7 +811,7 @@ L["Remove Obsolete Auras"] = "쓸모없는 효과를 제거"
 L["Repair"] = "Repair"
 L["Repeat"] = "반복"
 --[[Translation missing --]]
-L["Report"] = "Report"
+L["Report Summary"] = "Report Summary"
 L["Requested display does not exist"] = "요청한 디스플레이가 존재하지 않습니다"
 L["Requested display not authorized"] = "요청한 디스플레이가 올바르지 않습니다"
 L["Requesting display information from %s ..."] = "%s의 디스플레이 정보 요청 중 ..."
@@ -939,6 +966,8 @@ L["Stance/Form/Aura"] = "태세/형상/효과"
 L["Star Shake"] = "Star Shake"
 --[[Translation missing --]]
 L["Start"] = "Start"
+--[[Translation missing --]]
+L["Start Now"] = "Start Now"
 L["Status"] = "상태"
 L["Stolen"] = "훔침"
 L["Stop"] = "중지"
@@ -1039,6 +1068,8 @@ L["Trigger 1"] = "활성 조건 1"
 L["Trigger State Updater (Advanced)"] = "활성 조건 상태 업데이터 (고급)"
 L["Trigger Update"] = "활성 조건 업데이트"
 L["Trigger:"] = "활성 조건:"
+--[[Translation missing --]]
+L["Trivial (Low Level)"] = "Trivial (Low Level)"
 L["True"] = "참"
 --[[Translation missing --]]
 L["Twin Emperors"] = "Twin Emperors"
@@ -1089,7 +1120,7 @@ L["WeakAuras has encountered an error during the login process. Please report th
 --[[Translation missing --]]
 L["WeakAuras Profiling"] = "WeakAuras Profiling"
 --[[Translation missing --]]
-L["WeakAuras Profiling Data"] = "WeakAuras Profiling Data"
+L["WeakAuras Profiling Report"] = "WeakAuras Profiling Report"
 L["Weapon"] = "무기"
 L["Weapon Enchant"] = "무기 마법부여"
 L["What do you want to do?"] = "무엇을 하고 싶나요?"
@@ -1097,11 +1128,19 @@ L["Whisper"] = "귓속말"
 L["Whole Area"] = "전체 영역"
 L["Width"] = "너비"
 L["Wobble"] = "흔들기"
+--[[Translation missing --]]
+L["World Boss"] = "World Boss"
 L["Wrap"] = "구속"
 L["X-Offset"] = "X-좌표"
 L["Yell"] = "외침"
 L["Y-Offset"] = "Y-좌표"
 L["You already have this group/aura. Importing will create a duplicate."] = "이미 이 그룹/효과가 있습니다. 가져 오기를 수행하면 복제본이 만들어집니다."
+--[[Translation missing --]]
+L["Your next encounter will automatically be profiled."] = "Your next encounter will automatically be profiled."
+--[[Translation missing --]]
+L["Your next instance of combat will automatically be profiled."] = "Your next instance of combat will automatically be profiled."
+--[[Translation missing --]]
+L["Your scheduled automatic profile has been cancelled."] = "Your scheduled automatic profile has been cancelled."
 L["Zone Group ID(s)"] = "지역 그룹 ID"
 L["Zone ID(s)"] = "지역 ID"
 L["Zone Name"] = "지역 이름"

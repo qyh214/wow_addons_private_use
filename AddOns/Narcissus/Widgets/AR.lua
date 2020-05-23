@@ -14,6 +14,10 @@ local TurningFrame = CreateFrame("Frame", nil, NarciAR);
 NarciAR.Turning = TurningFrame;
 TurningFrame:Hide();
 
+AR:SetScript("OnHide", function(self)
+    self.Turning:Hide();
+end)
+
 local GetFacing = GetPlayerFacing;
 if not GetFacing then return; end;
 

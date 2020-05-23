@@ -90,6 +90,8 @@ https://bbs.nga.cn/read.php?tid=20616554&_ff=185
 
 拍卖行显示腐蚀信息：https://wago.io/8Rr-Ski1F
 
+奶萨wa技能监控：https://bbs.nga.cn/read.php?tid=20612058
+
 ## TMW字符串
 萨满祭司：https://bbs.nga.cn/read.php?tid=16216888&_ff=185
 

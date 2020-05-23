@@ -52,6 +52,7 @@ if AL then
 	AL["DISPLAY_BUTTON_DESC"] = "When disabled the button and the miniature won't be shown again. It doesn't affect the alarm sound and the chat alerts"
 	AL["DISPLAY_BUTTON_SCALE"] = "Scale of the button and miniature"
 	AL["DISPLAY_BUTTON_SCALE_DESC"] = "This will adjust the scale of the button and miniature, being the value of 0.85 the original size"
+	AL["DISPLAY_BUTTON_SCALE_POSITION"] = "Scale and position options"
 	AL["DISPLAY_CONTAINER_ICONS"] = "Toggle showing container icons on the world map"
 	AL["DISPLAY_CONTAINER_ICONS_DESC"] = "When disabled, icons of containers/treasures won't be shown on the world map."
 	AL["DISPLAY_EVENT_ICONS"] = "Toggle showing event icons on the world map"
@@ -112,6 +113,8 @@ if AL then
 	AL["GENERAL_OPTIONS"] = "General options"
 	AL["JUST_SPAWNED"] = "%s just showed up. Check your map!"
 	AL["LEFT_BUTTON"] = "Left-click"
+	AL["LOCK_BUTTON_POSITION"] = "Lock buttons position"
+	AL["LOCK_BUTTON_POSITION_DESC"] = "When enabled you won't be able to change the position of the button by dragging and dropping it."
 	AL["LOG_WINDOW_AUTOHIDE"] = "Autohide logged NPC buttons"
 	AL["LOG_WINDOW_AUTOHIDE_DESC"] = "Hides each NPC button after the time selected (in minutes). If you select zero minutes the buttons will remain until you close the log window, or it reaches the maximun number of buttons (in which case the oldest will be replaced)."
 	AL["LOG_WINDOW_OPTIONS"] = "Log window options"
@@ -129,6 +132,8 @@ if AL then
 	AL["LOOT_FILTER_NOT_EQUIPABLE_DESC"] = "When activated, armor and weapons that this character cannot wear won't show up on the loot bar. This filter doesn't affect other kinds of lootable items, whatsoever."
 	AL["LOOT_FILTER_NOT_MATCHING_CLASS"] = "Filter items that require a different class than yours"
 	AL["LOOT_FILTER_NOT_MATCHING_CLASS_DESC"] = "When activated, any item that requires a specific class to be used that doesn't match yours, won't show up on the loot bar."
+	AL["LOOT_FILTER_NOT_MATCHING_FACTION"] = "Filter items that require a different faction than yours"
+	AL["LOOT_FILTER_NOT_MATCHING_FACTION_DESC"] = "When activated, any item that requires a specific faction to be used that doesn't match yours, won't show up on the loot bar."
 	AL["LOOT_FILTER_NOT_TRANSMOG"] = "Show only transmog armor and weapons"
 	AL["LOOT_FILTER_NOT_TRANSMOG_DESC"] = "When activated, only armor and weapons that you haven't collected yet will be shown on the loot bar. This filter doesn't affect other kinds of lootable items, whatsoever."
 	AL["LOOT_FILTER_SUBCATEGORY_DESC"] = "Toggle showing this kind of loot on the loot bar. When disabled you won't see any item that matches this category on the loot shown when you find a rare NPC."
@@ -184,7 +189,7 @@ if AL then
 	AL["MAP_TOOLTIP_EVENT_DONE"] = "Shift-Left-Click to set as completed"
 	AL["MAP_TOOLTIP_IGNORE_ICON"] = "Shift-Left-Click to hide this icon forever if it shouldn't be here."
 	AL["MAP_TOOLTIP_KILLED"] = "Shift-Left-Click to set as killed"
-	AL["MAP_TOOLTIP_NOT_FOUND"] = "You haven't seen this NPC and no one has shared it with you yet."
+	AL["MAP_TOOLTIP_NOT_FOUND"] = "You haven't seen this NPC"
 	AL["MAP_TOOLTIP_SEEN"] = "Seen before: %s"
 	AL["MAP_TOOLTIP_SHOW_OVERLAY"] = "Left-click to toggle showing other spawn spots"
 	AL["MARKER"] = "Target marker"
@@ -305,9 +310,15 @@ if AL then
 	AL["TOOLTIP_TOP"] = "Upper side"
 	AL["UNKNOWN"] = "Unknown"
 	AL["UNKNOWN_TARGET"] = "Unknown target"
+	AL["ZONE_1527"] = "%s (BFA Assault)"
+	AL["ZONE_1530"] = "%s (BFA Assault)"
+	AL["ZONE_1570"] = "%s (BFA Lesser vision of N'Zoth)"
+	AL["ZONE_1571"] = "%s (BFA Lesser vision of N'Zoth)"
+	AL["ZONE_317"] = "%s (Human side)"
+	AL["ZONE_318"] = "%s (Undead side)"
 	AL["ZONES_FILTER"] = "Zone filters"
 	AL["ZONES_FILTERS_SEARCH_DESC"] = "Type the name of the zone to filter the list below"
-					
+				
 	-- CONTINENT names
 	AL["ZONES_CONTINENT_LIST"] = {
 		[9999] = "Class Halls"; --Class Halls

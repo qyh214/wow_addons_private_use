@@ -11,6 +11,12 @@ local GetPrimaryStatsName = NarciAPI_GetPrimaryStatsName;
 local GetItemExtraEffect = NarciAPI_GetItemExtraEffect;
 local IsItemSocketable = NarciAPI_IsItemSocketable;
 
+local DoesItemExist = C_Item.DoesItemExist;
+local GetItemLink = C_Item.GetItemLink;
+local GetItemIcon = C_Item.GetItemIcon;
+local GetItemName = C_Item.GetItemName;
+local GetItemQuality = C_Item.GetItemQuality;
+
 local GemBorderTexture = {
 	[1]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Unique",
 	[2]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Green",
@@ -171,7 +177,7 @@ local function DisplayComparison(key, name, number, baseNumber, ratio, CustomCol
         return;
     end
 
-    local differentialNumber = tonumber(number) - tonumber(baseNumber)
+    local differentialNumber = tonumber(number) - tonumber(baseNumber);
 
     if differentialNumber > 0 then
         Textframe.Arrow:Show()
@@ -200,12 +206,9 @@ local function DisplayComparison(key, name, number, baseNumber, ratio, CustomCol
     Textframe.Label:SetText(name)
     if number ~= 0 then
         Textframe.Num:SetText(number);
-        --Textframe:SetHeight(DefaultHeight_StatsComparisonTemplate);
         Textframe:Show();
     else
         Textframe.Num:SetText("-");
-        --Textframe:SetHeight(0);
-        --Textframe:Hide();
     end
     Textframe.NumDiff:SetText(differentialNumber);
 
@@ -261,8 +264,8 @@ local function GetActiveTraits(itemLocation, self)
     local shouldCache = false;
     local PowerIDs, azeritePowerName, icon, unlockLevel, azeritePowerDescription;
     local ActiveTraits = {}  --[tier] = {PowerID, icon, name, description, unlockLevel}
-    if (not C_Item.DoesItemExist(itemLocation)) or (not C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(itemLocation)) then return; end
-    TierInfos = GetAllTierInfo(itemLocation)
+    if (not DoesItemExist(itemLocation)) or (not C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(itemLocation)) then return; end
+    TierInfos = GetAllTierInfo(itemLocation);
     if not TierInfos then return; end
 
     for i = 1, MaximumTier do
@@ -320,8 +323,8 @@ end
 
 local function BuildAzeiteTraitsFrame(TraitsFrame, itemLocation, self)
     TraitsCache = GetActiveTraits(itemLocation, self);
-    --print("CacheCheck Azerite: "..tostring(C_Item.IsItemDataCached(itemLocation)))
     if not TraitsCache then return; end
+
     local rightSpec = false;
     for i = 1, MaximumTier do
         local button = TraitsFrame.Traits[i];
@@ -452,10 +455,11 @@ local function BuildAzeiteTraitsFrame(TraitsFrame, itemLocation, self)
 end
 
 local RequestLoadItemData = C_Item.RequestLoadItemData  --Cache Item info
+
 function Narci_Comparison_SetComparison(itemLocation, self)
     local frame = Narci_Comparison;
     local FlyOut = EquipmentFlyoutFrame;
-    if not C_Item.DoesItemExist(itemLocation) then
+    if not DoesItemExist(itemLocation) then
         frame.Label:SetText(CURRENTLY_EQUIPPED);
         frame.ItemName:SetText(EMPTY);
         frame.ItemName:SetTextColor(0.6, 0.6, 0.6);
@@ -470,11 +474,11 @@ function Narci_Comparison_SetComparison(itemLocation, self)
 
     RequestLoadItemData(itemLocation)
     --print("location"..C_Item.GetItemInventoryType(itemLocation))
-    local itemLink = C_Item.GetItemLink(itemLocation)
+    local itemLink = GetItemLink(itemLocation)
     CacheTooltip(itemLink)
-    local itemIcon = C_Item.GetItemIcon(itemLocation);
-    local name = C_Item.GetItemName(itemLocation);
-    local quality = C_Item.GetItemQuality(itemLocation);
+    local itemIcon = GetItemIcon(itemLocation);
+    local name = GetItemName(itemLocation);
+    local quality = GetItemQuality(itemLocation);
     local r, g, b = GetItemQualityColor(quality);
 
     local stats = ItemStats(itemLocation);
@@ -621,7 +625,7 @@ local function UpdateSpectIDAndPrimaryStat()
     };
 
     local currentSpec = GetSpecialization() or 1;
-    local primaryStatID;
+    local _, primaryStatID;
     CurrentSpecID, _, _, _, _, primaryStatID = GetSpecializationInfo(currentSpec);
     PrimaryStatName = PrimaryStatsList[primaryStatID];
 end

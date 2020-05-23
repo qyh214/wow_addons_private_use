@@ -1,7 +1,7 @@
-﻿local mod	= DBM:NewMod("d1995", "DBM-Challenges", 3)--1993 Stormwind 1995 Org
+﻿local mod	= DBM:NewMod("d1995", "DBM-Challenges", 2)--1993 Stormwind 1995 Org
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200323151931")
+mod:SetRevision("20200512201539")
 mod:SetZone()
 mod.onlyNormal = true
 
@@ -340,7 +340,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 311390 and args:IsPlayer() then
 		local amount = args.amount or 1
-		if amount >= 3 then
+		if amount >= 4 then
 			specWarnEntomophobia:Show()
 			specWarnEntomophobia:Play("keepjump")
 		end
@@ -484,12 +484,12 @@ do
 end
 
 function mod:NAME_PLATE_UNIT_ADDED(unit)
-	if unit and (UnitName(unit) == playerName) and not (UnitPlayerOrPetInRaid(unit) or UnitPlayerOrPetInParty(unit)) then--Throttled because sometimes two spawn at once
+	if unit and (UnitName(unit) == playerName) and not (UnitPlayerOrPetInRaid(unit) or UnitPlayerOrPetInParty(unit)) then
 		local guid = UnitGUID(unit)
 		if not guid then return end
 		if not warnedGUIDs[guid] then
 			warnedGUIDs[guid] = true
-			if self:AntiSpam(2, 4) then
+			if self:AntiSpam(2, 4) then--Throttled because sometimes two spawn at once
 				specWarnHauntingShadows:Show()
 				specWarnHauntingShadows:Play("runaway")
 			end

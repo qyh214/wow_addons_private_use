@@ -5,15 +5,28 @@ local L = Narci.L
 NARCI_GRADIENT = "|cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r"
 MYMOG_GRADIENT = "|cffA236EFM|cff9448F1y |cff865BF2T|cff786DF4r|cff6A80F6a|cff5D92F7n|cff4FA4F9s|cff41B7FAm|cff33C9FCo|cff32c9fbg|r"
 
-NARCI_VERSION_INFO = "1.0.8c";
+NARCI_VERSION_INFO = "1.0.9a";
 NARCI_DEVELOPER_INFO = "Designed by Peterodox";
 
 NARCI_NEW_ENTRY_PREFIX = "|cff40C7EB";
+NARCI_COLOR_GREY_85 = "|cffd8d8d8";
+NARCI_COLOR_GREY_70 = "|cffb3b3b3";
+NARCI_COLOR_RED_MILD = "|cffff5050";
+NARCI_COLOR_GREEN_MILD = "|cff7cc576";
+NARCI_COLOR_YELLOW = "|cfffced00";
+NARCI_COLOR_CYAN_DARK = "|cff5385a5";
+NARCI_COLOR_CYAN_DARK_RGB = {58/255, 97/255, 122/255};
 
 NARCI_MODIFIER_ALT = "ALT key";   --Windows
+NARCI_SHORTCUTS_COPY = "Ctrl+C";
 if IsMacClient() then
-    NARCI_MODIFIER_ALT = "Option key";  --Mac OS
+      --Mac OS
+    NARCI_MODIFIER_ALT = "Option key";
+    NARCI_SHORTCUTS_COPY = "Command+C";
 end
+
+L["Press Copy"] = NARCI_COLOR_GREY_70.. "Press |r".. NARCI_SHORTCUTS_COPY.. NARCI_COLOR_GREY_70 .." to Copy";
+L["Copied"] = NARCI_COLOR_GREEN_MILD.. "Link Copied";
 
 L["Movement Speed"] = "MSPD";
 L["Damage Reduction Percentage"] = "DR%";
@@ -98,7 +111,7 @@ L["Credits"] = "Credits";
 NARCI_ABOUT = "About";
 NARCI_PREFERENCE_TOOLTIP = "Click to open Preference Frame.";
 NARCI_TRUNCATE_TEXT = "Truncate Text";
-NARCI_ATTRIBUTE_FRAME = "Attribute Frame";
+NARCI_ATTRIBUTE_FRAME = "Stat Sheet";
 NARCI_TEXT_WIDTH = "Text Width";
 NARCI_HOTKEY = "Hotkey";
 NARCI_DOUBLE_TAP = "Double-tap";
@@ -135,14 +148,15 @@ NARCI_BORDER_THEME_BRIGHT = "Bright";
 NARCI_BORDER_THEME_DARK = "Dark";
 NARCI_ALWAYS_SHOW_MODEL = "Always Show Model";
 NARCI_SHOW_FULL_BODY = "Show Full Body";
-NARCI_AFK_SCREEN = "AFK Screen";
 NARCI_AFK_SCREEN_DESCRIPTION = "Automatically open Narcissus when yo go AFK.";
 NARCI_AFK_SCREEN_DESCRIPTION_EXTRA = "This will override ElvUI AFK Mode.";
 NARCI_GEMMA = "\"Gemma\"";
 NARCI_GEMMY_DESCRIPTION = "Show a list of gems when socketing an item.";
 NARCI_DRESSING_ROOM = "Dressing Room"
-NARCI_DRESSING_ROOM_DESCRIPTION = "Have a bigger dressing room panel with the ability to view and copy other players' item lists.";
-NARCI_REQUIRE_RELOAD = "|cffff5050UI reload is required.|r";
+NARCI_DRESSING_ROOM_DESCRIPTION = "Bigger dressing room pane with the abilities to view and copy other players' item lists and generate Wowhead dressing room links.";
+NARCI_REQUIRE_RELOAD = NARCI_COLOR_RED_MILD.. "UI reload is required.|r";
+NARCI_PREFERENCE_GENERAL = "General";   --General options
+
 L["Show Detailed Stats"] = "Show Detailed Stats";
 L["Tooltip Color"] = "Tooltip Color";
 L["Entrance Visual"] = "Entrance Visual";
@@ -158,13 +172,40 @@ L["Baseline Offset"] = "Baseline Offset";
 L["Ultra-wide Tooltip"] = "You can see this option because you are using a %s:9 monitor.";
 L["Interactive Area"] = "Interactive Area";
 L["Item Socketing Tooltip"] = "Double-click to embed";
+L["No Available Gem"] = "|cffd8d8d8No available gem|r";
 L["Use Bust Shot"] = "Use Bust Shot";
 L["Use Escape Button"] = "Esc Key";
 L["Use Escape Button Description"] = "Press the Escape key to exit.\nOr exit by clicking the hidden X button on the top-right of your screen.";
 L["Handled by Other Addons"] = "Handled by Other Addons";
+L["AFK Screen"] = "AFK Screen";
+L["Keep Standing"] = "Keep Standing";
+L["Keep Standing Description"] = "Cast /stand every now and then when you go AFK. This will not prevent AFK logout.";
+L["None"] = "None";
+L["NPC"] = "NPC";
+L["Database"] = "Database";
+L["Creature Tooltip"] = "Creature Tooltip";
+L["RAM Usage"] = "RAM Usage";
+L["Others"] = "Others";
+L["Find Relatives"] = "Find Relatives";
+L["Find Related Creatures Description"] = "Search for creatures with the same last name.";
+L["Find Relatives Hotkey Format"] = "Press %s to find relatives.";
+L["Translate Names"] = "Translate Names";
+L["Translate Names Description On"] = "Show unit's translated name(s) on...";
+L["Translate Names Description Off"] = "";
+L["Select A Language"] = "Selected languge:";
+L["Select Multiple Languages"] = "Selected languges:";
+L["Load on Demand"] = "Load on Demand";
+L["Load on Demand Description On"] = "Don't load database until using search functions.";
+L["Load on Demand Description Off"] = "Load creature database when you log in.";
+L["Load on Demand Description Disabled"] = NARCI_COLOR_YELLOW.. "This toggle is locked because you have enabled creature tooltip.";
+L["Tooltip"] = "Tooltip";
+L["Name Plate"] = "Name Plate";
+L["Y Offset"] = "Y Offset";
+L["Sceenshot Quality"] = "Sceenshot Quality";
+L["Screenshot Quality Description"] = "Higher quality results in bigger file size.";
 
 --Model Control--
-NARCI_SHEATH_WEAPON = "Sheath Weapon";
+NARCI_HOLD_WEAPON = "Grab Weapon";
 NARCI_STAND_IDLY = "Stand Idly";
 NARCI_RANGED_WEAPON = "Ranged Weapon";
 NARCI_MELEE_WEAPON = "Melee Weapon";
@@ -190,7 +231,7 @@ L["Save Layers Tooltip"] = "Automatically capture 6 screenshots for picture comp
 L["Ground Shadow"] = "Ground Shadow";
 L["Ground Shadow Tooltip"] = "Add a movable ground shadow beneath you model.";
 L["Hide Player"] = "Hide Player";
-L["Hide Player Tooltip"] = "Hide your character from the world.";
+L["Hide Player Tooltip"] = "Make your character invisible to yourself.";
 L["Virtual Actor"] = "Virtual";
 L["Virtual Actor Tooltip"] = "Only the spell visual on this model is visible."
 L["Self"] = "Self";
@@ -202,7 +243,9 @@ L["Toggle 3D Model"] = "Toggle 3D model";
 L["Toggle Model Mask"] = "Toggle model mask";
 L["Show Color Sliders"] = "Show color sliders";
 L["Show Color Presets"] = "Show color presets";
-L["Keep Druid Form"] = "Hold "..NARCI_MODIFIER_ALT.."to keep druid from"
+L["Keep Druid Form"] = "Hold "..NARCI_MODIFIER_ALT.." to keep druid form"
+L["Race Change Tooltip"] = "Change to another playerable race";
+L["Sex Change Tooltip"] = "Change sex";
 
 --Spell Visual Browser--
 L["Visuals"] = "Visuals";
@@ -224,10 +267,34 @@ L["New Favorite"] = "New Favorite";
 L["Favorites Add"] = "Add to My Favorites";
 L["Favorites Remove"] = "Remove from Favorites";
 L["Auto-play"] = "Auto-play";   --Auto-play suggested animation
+L["Auto-play Tooltip"] = "Auto-play the animation\nthat is tied to the selected visual.";
 L["Delete Entry Plural"] = "Will delete %s entries";
 L["Delete Entry Singular"] = "Will delete %s entry";
 L["History Panel Note"] = "Applied visuals will be shown here";
 L["Return"] = "Return";
+L["Close"] = "Close";
+
+--Dressing Room--
+L["Favorited"] = "Favorited";
+L["Unfavorited"] = "Unfavorited";
+L["Item List"] = "Item List";
+L["Use Target Model"] = "Use Target's Model";
+L["Use Your Model"] = "Use Your Model";
+L["Cannot Inspect Target"] = "Cannot Inspect Target"
+L["External Link"] = "External Link";
+L["Add to MogIt Wishlist"] = "Add to MogIt Wishlist";
+
+--NPC Browser--
+NARCI_NPC_BROWSER_TITLE_LEVEL = ".*%?%?.?";      --Level ?? --Use this to check if the second line of the tooltip is NPC's title or unit type
+L["NPC Browser"] = "NPC Browser";
+L["NPC Browser Tooltip"] = "Choose an NPC from the list.";
+L["Search for NPC"] = "Search for NPC";
+L["Name or ID"] = "Name or ID";
+L["NPC Has Weapons"] = "Has Signiture Weapons";
+L["Retrieving NPC Info"] = "Retrieving NPC Info";
+L["Loading Database"] = "Loading Database...\nYour screen could freeze for a few seconds.";
+L["Other Last Name Format"] = "Other "..NARCI_COLOR_GREY_70.."%s(s)|r:\n";
+L["Too Many Matches Format"] = "\nOver %s matches.";
 
 --Solving Lower-case or Abbreviation Issue--
 NARCI_STAT_STRENGTH = SPEC_FRAME_PRIMARY_STAT_STRENGTH;
@@ -266,7 +333,7 @@ L["Corruption Bar"] = "Corruption Bar";
 L["Corruption Bar Description"] = "Enable the corruption bar next to the Character Pane.";
 L["Corruption Debuff Tooltip"] = "Debuff Tooltip";
 L["Corruption Debuff Tooltip Description"] = "Replace the default negative effects tooltip with its numeric counterpart.";
-L["No Corrupted Item"] = "You haven't equipped any corrupted item";
+L["No Corrupted Item"] = "You haven't equipped any corrupted item.";
 L["Total Corruption Format"] = CORRUPTION_TOOLTIP_LINE.." - "..CORRUPTION_RESISTANCE_TOOLTIP_LINE.." = ".."%s";
 
 L["Crit Gained"] = CRIT_ABBR.." Gained";
@@ -295,7 +362,7 @@ L["Guide Spell Headline"] = "Try or Apply";
 L["Guide Spell Criteria1"] = "Left-click to TRY";
 L["Guide Spell Criteria2"] = "Right-click to APPLY";
 L["Guide Spell Line1"] = "Most spell visuals that you add by clicking left button will fade away in seconds, while those you add by clicking right button will not.\n\nNow please move to an entry then:";
-L["Guide Spell Choose Category"] = "Choose a category you like. Then choose a subcategory."
+L["Guide Spell Choose Category"] = "You can add spell visuals to your model. Choose any category you like. Then choose a subcategory.";
 L["Guide History Headline"] = "History Panel";
 L["Guide History Line1"] = "At most 5 recently applied visuals can retain here. You can select one and delete it by clicking the Remove button on the right end.";
 L["Guide Refresh Line1"] = "Use this button to remove all unapplied spell visuals. Those that were in the history panel will be reapplied.";
@@ -306,7 +373,8 @@ L["Guide Model Control Headline"] = "Model Control";
 L["Guide Model Control Line1"] = format("This model shares the same mouse actions you use in the dressing room, plus:\n\n1.Hold %s and Left Button: Rotate model around Y-axis.\n2.Hold %s and Right Button: Execute scrubby zoom.", NARCI_MODIFIER_ALT, NARCI_MODIFIER_ALT);
 L["Guide Minimap Button Headline"] = "Minimap Button";
 L["Guide Minimap Button Line1"] = "Narcissus minimap button can now be handled by other addons.\nYou can change this option in the Preferences pane. It may require a UI reload."
-
+L["Guide NPC Entrance Line1"] = "The access to this new feature is in here."
+L["Guide NPC Browser Line1"] = "Notable NPCs are listed in the catalog below.\nYou can also search for ANY creatures by name or ID.\nNotice that the first time you use the search function this login, it could take a few seconds to build the search table and your screen might freeze as well.\nYou may untoggle the \"Load on Demand\" option in the Preference Pane so that the database will be constructed right after you log in.";
 
 --Splash--
 NARCI_SPELL_VISUALS = "Spell Visuals";
@@ -316,12 +384,12 @@ NARCI_SPLASH_SOUNDS_GREAT_BYE = "That sounds great. See ya!";
 NARCI_TRY_IT_NOW = "Click here to enable...";
 NARCI_DISABLE_IT_NOW = "Click here to disable...";
     --Patch-specific
-    NARCI_DRESSING_ROOM_ENABLED_BY_DEFAULT = "|cff7cc576Enabled by default.|r "..NARCI_DISABLE_IT_NOW;
-    NARCI_DRESSING_ROOM_DISABLED = "|cffff5050Disabled.|r UI reload is required. You can turn it on via Preferences - Extensions.";
-    NARCI_CAMERA_SAFE_MODE_ENABLED_BY_DEFAULT = "|cff7cc576Enabled by default because you are not using DynamicCam addon.|r\n"..NARCI_DISABLE_IT_NOW;
-    NARCI_CAMERA_SAFE_MODE_DISABLED_BY_DEFAULT = "|cffff5050Disabled by default because you are using DynamicCam.|r\n"..NARCI_TRY_IT_NOW;
-    NARCI_CAMERA_SAFE_MODE_ENABLED = "|cff7cc576Enabled.|r You can turn it off via Preferences - Camera.";
-    NARCI_CAMERA_SAFE_MODE_DISABLED = "|cffff5050Disabled.|r You can turn it on via Preferences - Camera.";
+    NARCI_DRESSING_ROOM_ENABLED_BY_DEFAULT = NARCI_COLOR_GREEN_MILD.."Enabled by default.|r "..NARCI_DISABLE_IT_NOW;
+    NARCI_DRESSING_ROOM_DISABLED = NARCI_COLOR_RED_MILD.. "Disabled.|r UI reload is required. You can turn it on via Preferences - Extensions.";
+    NARCI_CAMERA_SAFE_MODE_ENABLED_BY_DEFAULT = NARCI_COLOR_GREEN_MILD.."Enabled by default because you are not using DynamicCam addon.|r\n"..NARCI_DISABLE_IT_NOW;
+    NARCI_CAMERA_SAFE_MODE_DISABLED_BY_DEFAULT = NARCI_COLOR_RED_MILD.."Disabled by default because you are using DynamicCam.|r\n"..NARCI_TRY_IT_NOW;
+    NARCI_CAMERA_SAFE_MODE_ENABLED = NARCI_COLOR_GREEN_MILD.."Enabled.|r You can turn it off via Preferences - Camera.";
+    NARCI_CAMERA_SAFE_MODE_DISABLED = NARCI_COLOR_RED_MILD.."Disabled.|r You can turn it on via Preferences - Camera.";
     --
 NARCI_SHOW_DETAILS = "+ Show details...";
 NARCI_SPLASH_HEADER3 = "Miscellaneous";
@@ -331,24 +399,23 @@ NARCI_SPLASH_MESSAGE2 = "|cffd9cdb4You can open it by clicking the hexagonal but
 NARCI_SPLASH_MESSAGE3 = "|cffd9cdb41.The AFK screen will be closed automatically when moving or entering combat.\n2. The enhanced dressing room is back online.|r";
 
 L["Show Whats New"] = "Show Whats New";
-NARCI_SPLASH_WHATS_NEW_FORMAT = "|cff694d9cWhat's New in Narcissus %s";
-NARCI_COLOR_GREY_85 = "|cffd8d8d8";
-NARCI_SPLASH_HEADER1 = "Corruption Module";
-NARCI_SPLASH_HEADER2 = "Photo Mode";
-NARCI_SPLASH_INTERACTIVE_TEXT1 = NARCI_COLOR_GREY_85.."Narcissus UI|r\n- The actual effect and rank of a corrupted item will be shown next to its item level.\n- You will see an eyeball if you have equipped any corrupted items. Its iris displays your corruption level.";
-NARCI_SPLASH_INTERACTIVE_TEXT2 = NARCI_COLOR_GREY_85.."Blizzard UI|r\n- A corruption bar can be found on your character frame. So you do not have to mouse over the eye to check your status.\n- You can replace the default textual tooltip with its  numerical counterpart.\n- Both of the above are optional.";
-NARCI_SPLASH_INTERACTIVE_TEXT3 = NARCI_COLOR_GREY_85.."Spell Visual Browser|r\n- 86 newly categorized spell visuals, including The Winter Veil Greatfeather Pepe.\n\n"..NARCI_COLOR_GREY_85.."Group Photo|r\n- Druid form will be retained if you hold "..NARCI_MODIFIER_ALT.." when adding actors."
+NARCI_SPLASH_WHATS_NEW_FORMAT = "What's New in Narcissus %s";
+NARCI_SPLASH_HEADER1 = "NPC Browser";
+NARCI_SPLASH_HEADER2 = "Miscellaneous";
+NARCI_SPLASH_INTERACTIVE_TEXT1 = NARCI_COLOR_GREY_85.."Group Photo|r\n- You can add any NPC into your scene regardless of your current location.\n- Choose from the list or search by name or ID.\n\n".. NARCI_COLOR_GREY_85.."Creature Tooltip (Optional)|r\n- Find the creatures with the same last name when mousing over an NPC.\n- Show NPC’s translated names on its name plate or tooltip.";
+NARCI_SPLASH_INTERACTIVE_TEXT2 = NARCI_COLOR_GREY_85.."";
+NARCI_SPLASH_INTERACTIVE_TEXT3 = NARCI_COLOR_GREY_85.."AFK Screen|r\nThe auto-stand feature has become optional.\n\n" ..NARCI_COLOR_GREY_85.."Screenshot Quality|r\n- No longer overrides the quality to 10\n- A quality slider was added to the Preferences pane.\n\n" ..NARCI_COLOR_GREY_85.."Corruption Module|r\n- Now compatible with Corruption Tooltip.\n- Damage from Eye of Corruption has been updated to ( 0.5*corruption + 15 ) * HP";
 
 --Project Details--
 NARCI_ALL_PROJECTS = "All Projects";
-NARCI_PROJECT_DETAILS = "|cFFFFD100Developer: Peterodox\nRelease Date: January 28, 2020|r\n\nThank you for trying this add-on! If you have any issues, suggestions, ideas, please leave a comment on the curseforge page or contact me on...";
+NARCI_PROJECT_DETAILS = "|cFFFFD100Developer: Peterodox\nRelease Date: April 26, 2020|r\n\nThank you for trying this add-on! If you have any issues, suggestions, ideas, please leave a comment on the curseforge page or contact me on...";
 NARCI_PROJECT_AAA_TITLE = "|cff008affA|cff0d8ef2z|cff1a92e5e|cff2696d9r|cff339acco|cff409ebft|cff4da1b2h |cff59a5a6A|cff66a999d|cff73ad8cv|cff7fb180e|cff8cb573n|cff99b966t|cffa6bd59u|cffb2c14dr|cffbfc440e |cffccc833A|cffd9cc26l|cffe5d01ab|cfff2d40du|cffffd800m";
 NARCI_PROJECT_AAA_SUMMARY = "Explore places of interest and collect lores and photos from all across Azeroth.|cff636363";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "An immersive character pane and your ultimate screenshot tool.";
 
 
 --Credits--
-NARCI_CREDITS_WEBSITES = "Marlamin | WoW.tools";
+NARCI_CREDITS_EXTRA = "Marlamin | WoW.tools\nKeyboardturner";
 
 --Conversation--
 L["Q1"] = "What is this?";

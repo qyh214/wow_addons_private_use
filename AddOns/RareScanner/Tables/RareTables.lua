@@ -380,7 +380,7 @@ private.RARE_LIST = {
 	18241, --Crusty
 	16855, --Tregla
 	
-	-- Wrath of the Lich King
+	-- Rares Wrath of the Lich King
 	32517, --Loque'nahak
 	32491, --Time-Lost Proto-Drake
 	35189, --Skoll
@@ -409,24 +409,115 @@ private.RARE_LIST = {
 	32495, --Hildana Deathstealer
 	32447, --Zul'drak Sentinel
 	32435, --Vern
+	
+	-- Rares Cataclysm
+	50062, --Aeonaxx
+	54320, --Ban'thalos
+	54318, --Ankha
+	54319, --Magria
+	50138, --Karoma
+	50005, --Poseidus
+	50051, --Ghostcrawler
+	50058, --Terrorpene
+	50159, --Sambas
+	50815, --Skarr
+	50061, --Xariona
+	54322, --Deth'tilac
+	50052, --Burgy Blackheart
+	50959, --Karkin
+	51661, --Tsul'Kalu
+	51663, --Pogeyan
+	50056, --Garr
+	50063, --Akma'hat
+	50089, --Julak-Doom
+	45380, --Ashtail
+	45399, --Optimo
+	54323, --Kirix
+	49822, --Jadefang
+	50065, --Armagedillo
+	50009, --Mobus
+	50057, --Blazewing
+	54321, --Solix
+	54324, --Skitterflame
+	54533, --Prince Lakma
+	44759, --Andre Firebeard
+	56081, --Optimistic Benj
+	45402, --Nix
+	39185, --Slaverjaw
+	47387, --Harakiss the Infestor
+	54338, --Anthriss
+	47015, --Lost Son of Arugal
+	51662, --Mahamba
+	44767, --Occulus the Corrupted
+	47008, --Fenwick Thatros
+	39186, --Hellgazer
+	45739, --The Unknown Soldier
+	49913, --Lady La-La
+	51402, --Madexx
+	50060, --Terborus
+	50059, --Golgarok
+	44750, --Caliph Scorpidsting
+	52146, --Chitter
+	45785, --Carved One
+	47386, --Ainamiss the Hive Queen
+	50064, --Cyrus the Black
+	45801, --Eliza
+	47010, --Indigos
+	45811, --Marina DeSirrus
+	45740, --Watcher Eva
+	45398, --Grizlak
+	51404, --Madexx
+	44226, --Sarltooth
+	47023, --Thule Ravenclaw
+	50086, --Tarvus the Vile
+	50085, --Overlord Sunderfury
+	51401, --Madexx
+	45771, --Marus
+	45262, --Narixxus the Doombringer
+	47003, --Bolgaff
+	51079, --Captain Foulwind
+	45258, --Cassia the Slitherqueen
+	51403, --Madexx
+	45257, --Mordak Nightbender
+	51071, --Captain Florence
+	56080, --Little Samras
+	46981, --Nightlash
+	39183, --Scorpitar
+	43613, --Doomsayer Wiserunner
+	50053, --Thartuk the Exile
+	45401, --Whitefin
+	47009, --Aquarius the Unbound
+	45260, --Blackleaf
+	45404, --Geoshaper Maren
+	45384, --Sagepaw
+	46992, --Berard the Moon-Crazed
+	50050, --Shok'sharak
+	47012, --Effritus
+	43488, --Mordei the Earthrender
+	44722, --Twisted Reflection of Narain
+	44761, --Aquementas the Unchained
+	44714, --Fronkle the Disturbed
+	45369, --Morick Darkbrew
+	44224, --Two-Toes
+	44227, --Gazz the Loch-Hunter
+	51658, --Mogh the Dead
+	44225, --Rufus Darkshot
+	43720, --"Pokey" Thornmantle
+	50154, --Madexx
 
 	-- Rares Pandaria
-	50062, --Aeonaxx
 	58778, --Aetha
 	50750, --Aethis
 	50817, --Ahone the Wanderer
 	50821, --Ai-Li Skymirror
 	50822, --Ai-Ran the Shifting Cloud
 	70000, --Al'tabim the All-Seeing
-	54318, --Ankha
-	54338, --Anthriss
 	73174, --Archiereus of Flame
 	73666, --Archiereus of Flame
 	70243, --Archritualist Kelada
 	50787, --Arness the Scale
 	70001, --Backbreaker Uru
 	58949, --Bai-Jin the Butcher
-	54320, --Ban'thalos
 	63695, --Baolai the Immolator
 	51059, --Blackhoof
 	58474, --Bloodtip
@@ -441,7 +532,6 @@ private.RARE_LIST = {
 	72049, --Cranegnasher
 	50334, --Dak the Breaker
 	68318, --Dalan Nightbreaker
-	54322, --Deth'tilac
 	68319, --Disha Fearwarden
 	59369, --Doctor Theolen Krastinov
 	73281, --Dread Ship Vazuvius
@@ -457,7 +547,6 @@ private.RARE_LIST = {
 	50739, --Gar'lok
 	73282, --Garnia
 	63101, --General Temuja
-	50051, --Ghostcrawler
 	50331, --Go-Kan
 	62880, --Gochao the Ironfist
 	69999, --God-Hulk Ramuk
@@ -472,7 +561,6 @@ private.RARE_LIST = {
 	50836, --Ik-Ik the Nimble
 	73163, --Imperial Python
 	73160, --Ironfur Steelhorn
-	49822, --Jadefang
 	73169, --Jakur of Ordon
 	50351, --Jonn-Dar
 	50355, --Kah'tir
@@ -480,10 +568,7 @@ private.RARE_LIST = {
 	50349, --Kang the Soul Thief
 	68321, --Kar Warmaker
 	72193, --Karkanos
-	50959, --Karkin
-	50138, --Karoma
 	50347, --Karr the Darkener
-	54323, --Kirix
 	50338, --Kor'nas Nightsavage
 	50332, --Korda Torros
 	70323, --Krakkanon
@@ -495,7 +580,6 @@ private.RARE_LIST = {
 	50734, --Lith'ik the Stalker
 	50333, --Lon the Bull
 	70002, --Lu-Ban
-	54319, --Magria
 	50840, --Major Nanners
 	68317, --Mavis Harms
 	50823, --Mister Ferocious
@@ -513,8 +597,6 @@ private.RARE_LIST = {
 	70276, --No'ku Stormsayer
 	50344, --Norlaxx
 	50805, --Omnis Grinlok
-	50085, --Overlord Sunderfury
-	54533, --Prince Lakma
 	69997, --Progenitus
 	50352, --Qu'nas
 	58771, --Quid
@@ -525,23 +607,18 @@ private.RARE_LIST = {
 	50816, --Ruun Ghostpaw
 	50780, --Sahn Tidehunter
 	50783, --Salyin Warscout
-	50159, --Sambas
 	50782, --Sarnak
 	50831, --Scritch
 	50766, --Sele'na
 	63240, --Shadowmaster Sydow
 	50791, --Siltriss the Sharpener
-	50815, --Skarr
 	50733, --Ski'thik
-	54324, --Skitterflame
-	54321, --Solix
 	71864, --Spelurk
 	72769, --Spirit of Jadefire
 	58817, --Spirit of Lao-Fe
 	50830, --Spriggin
 	73704, --Stinkbraid
 	50339, --Sulik'shor
-	50086, --Tarvus the Vile
 	50832, --The Yowler
 	50388, --Torik-Ethis
 	72808, --Tsavo'ka
@@ -567,8 +644,158 @@ private.RARE_LIST = {
 	69843, --Zao'cho
 	72245, --Zesqua
 	71919, --Zhu-Gon the Sour
+	50842, --Magmagan
+	50839, --Chromehound
+	51052, --Gib the Banana-Hoarder
+	50343, --Quall
+	50737, --Acroniss
+	50837, --Kash
+	50348, --Norissis
+	50346, --Ronak
+	50357, --Sunwing
+	51077, --Bushtail
+	51044, --Plague
+	50786, --Sparkwing
+	50908, --Nighthowl
+	50818, --The Dark Prowler
+	50819, --Iceclaw
+	50833, --Duskcoat
+	50792, --Chiaa
+	51045, --Arcanus
+	50328, --Fangor
+	50856, --Snark
+	50916, --Lamepaw the Whimperer
+	50864, --Thicket
+	51076, --Lopex
+	50874, --Tenok
+	50353, --Manas
+	50784, --Anith
+	50797, --Yukiko
+	50763, --Shadowstalker
+	51014, --Terrapis
+	50813, --Fene-mal
+	50825, --Feras
+	50895, --Volux
+	50788, --Quetzl
+	50915, --Snort
+	50335, --Alitus
+	51042, --Bleakheart
+	50743, --Manax
+	50362, --Blackbog the Fang
+	50803, --Bonechewer
+	50744, --Qu'rik
+	51018, --Zormus
+	50330, --Kree
+	50930, --Hibernus the Sleeper
+	50947, --Varah
+	50903, --Orlix the Swamplord
+	50370, --Karapax
+	50838, --Tabbs
+	50926, --Grizzled Ben
+	50949, --Finn's Gambit
+	51069, --Scintillex
+	50725, --Azelisk
+	50882, --Chupacabros
+	50986, --Goldenback
+	50906, --Mutilax
+	50846, --Slavermaw
+	50940, --Swee
+	50361, --Ornat
+	51040, --Snuffles
+	50993, --Gal'dorak
+	51048, --Rexxus
+	50886, --Seawing
+	50337, --Cackle
+	50342, --Heronis
+	50855, --Jaxx the Rabid
+	50858, --Dustwing
+	50790, --Ionis
+	50759, --Iriss the Widow
+	51037, --Lost Gilnean Wardog
+	51046, --Fidonis
+	50779, --Sporeggon
+	50997, --Bornak the Gorer
+	50995, --Bruiser
+	50810, --Favored of Isiset
+	51027, --Spirocula
+	51028, --The Deep Tunneler
+	50891, --Boros
+	50724, --Spinecrawl
+	51004, --Toxx
+	50884, --Dustflight the Cowardly
+	50925, --Grovepaw
+	50742, --Qem
+	50948, --Crystalback
+	51062, --Khep-Re
+	50775, --Likk the Hunter
+	51063, --Phalanax
+	50730, --Venomspine
+	50746, --Bornix the Burrower
+	50922, --Warg
+	50937, --Hamhide
+	50929, --Little Bjorn
+	50752, --Tarantis
+	50946, --Hogzilla
+	51021, --Vorticus
+	51017, --Gezan
+	50745, --Losaj
+	50727, --Strix the Barbed
+	50814, --Corpsefeeder
+	50876, --Avis
+	50952, --Barnacle Jim
+	50967, --Craw the Ravager
+	50738, --Shimmerscale
+	50345, --Alit
+	50905, --Cida
+	50809, --Heress
+	50955, --Carcinak
+	50778, --Ironweb
+	51007, --Serkett
+	50785, --Skyshadow
+	51066, --Crystalfang
+	50892, --Cyn
+	50329, --Rrakk
+	50945, --Scruff
+	50777, --Needle
+	51061, --Roth-Salam
+	51029, --Parasitus
+	51010, --Snips
+	50741, --Kaxx
+	51053, --Quirix
+	51000, --Blackshell the Impenetrable
+	51022, --Chordix
+	73854, --Cranegnasher
+	50728, --Deathstrike
+	51026, --Gnath
+	50931, --Mange
+	50731, --Needlefang
+	50812, --Arae
+	50735, --Blinkeye the Rattler
+	51067, --Glint
+	50726, --Kalixx
+	50807, --Catal
+	50901, --Teromak
+	51031, --Tracker
+	50875, --Nychus
+	50865, --Saurix
+	50942, --Snoot the Rooter
+	50804, --Ripwing
+	50957, --Hugeclaw
+	51008, --The Barbed Horror
+	50747, --Tix
+	50770, --Zorn
+	50964, --Chops
+	51025, --Dilennaa
+	51001, --Venomclaw
+	51002, --Scorpoxx
+	50764, --Paraliss
+	50748, --Nyaj
+	51058, --Aphis
+	50897, --Ffexk the Dunestalker
+	50765, --Miasmiss
+	51057, --Weevil
 	
-	-- Rares Draenor
+	-- Rares Warlords of Draenor
 	77140, --Amaukwa
 	82899, --Ancient Blademaster
 	86213, --Aqualir
@@ -595,12 +822,10 @@ private.RARE_LIST = {
 	77085, --Dark Emanation
 	82268, --Darkmaster Go'vid
 	82411, --Darktalon
-	77763, --Deadshot Kizi
 	82058, --Depthroot
 	86729, --Direhoof
 	77561, --Dr. Gloom
 	84807, --Durkath Steelmaw
-	77768, --Elementalist Utrah
 	82676, --Enavra
 	82742, --Enavra
 	82207, --Faebright
@@ -611,12 +836,10 @@ private.RARE_LIST = {
 	74971, --Firefury Giant
 	88580, --Firestarter Grash
 	83483, --Flinthide
-	77648, --Forge Matron Targa
 	85250, --Fossilwood the Petrified
 	77614, --Frenzied Golem
 	78713, --Galzomar
 	82764, --Gar'lua
-	86058, --Garrison Ford
 	81038, --Gelgor of the Blue Flame
 	82882, --General Aevd
 	80471, --Gennadian
@@ -675,11 +898,9 @@ private.RARE_LIST = {
 	83680, --Outrider Duretha
 	78606, --Pale Fishmonger
 	78134, --Pathfinder Jalog
-	77095, --Pathstalker Draga
 	88208, --Pit Beast
 	84838, --Poisonmaster Bortusk
 	76918, --Primalist Mur'og
-	77642, --Pyrecaster Zindra
 	77741, --Ra'kahn
 	84392, --Ragore Driftstalker
 	82374, --Rai'vosh
@@ -714,9 +935,7 @@ private.RARE_LIST = {
 	75482, --Veloss
 	85078, --Voidreaver Urnae
 	83385, --Voidseer Kalurg
-	77926, --Vulceros
 	77776, --Wandering Vindicator
-	78733, --Warcaster Bargol
 	79024, --Warmaster Blugthol
 	75434, --Windfang Matriarch
 	82922, --Xothear, the Destroyer
@@ -853,8 +1072,6 @@ private.RARE_LIST = {
 	51015, --Silthide
 	50883, --Pathrunner
 	81001, --Nok-Karosh
-	
-	-- Rares Draenor 6.2
 	91871, --Argosh the Destroyer
 	92552, --Belgork
 	90884, --Bilkor the Thrower
@@ -865,7 +1082,6 @@ private.RARE_LIST = {
 	93076, --Captain Ironbeard
 	90434, --Ceraxas
 	90519, --Cindral the Wildfire
-	90081, --Dark Summoner Rendkra
 	90887, --Dorg the Bloody
 	93028, --Driss Vile
 	90888, --Drivnul
@@ -877,19 +1093,15 @@ private.RARE_LIST = {
 	92941, --Gorabosh
 	91695, --Grand Warlock Nethekurse
 	93057, --Grannok
-	90089, --Grobthok Skullbreaker
 	90094, --Harbormaster Korak
-	90281, --High Priest Ikzan
 	90777, --High Priest Ikzan
 	90429, --Imp-Master Valessa
-	90087, --Iron Captain Argha
 	90437, --Jax'zor
 	92517, --Krell the Serene
 	93279, --Kris'kar the Unredeemed
 	90438, --Lady Oran
 	93002, --Magwia
 	90442, --Mistress Thavra
-	90088, --Ormak Bloodbolt
 	92411, --Overlord Ma'gruth
 	92274, --Painmistress Selora
 	91374, --Podlord Wakkawam
@@ -927,8 +1139,6 @@ private.RARE_LIST = {
 	95054, --Vengeance
 	91921, --Wyrmple
 	96235, --Xemirkol
-	
-	-- Rares Draenor 6.2.1
 	98200, --Guk
 	98199, --Pugg
 	98198, --Rukdug
@@ -937,7 +1147,15 @@ private.RARE_LIST = {
 	98285, --Smashum Grabb
 	98408, --Fel Overseer Mudlump
 	96323, --Arachnis
-	97209, --Eraakis
+	75590, --Enormous Bullfrog
+	87029, --Giga Sentinel
+	86621, --Morphed Sentient
+	85037, --Kenos the Unraveler
+	84376, --Earthshaker Holar
+	87622, --Ogom the Mangler
+	85036, --Formless Nightmare
+	77750, --Kaavu the Crimson Claw
+	84374, --Kaga the Ironbender
 
 	-- Rares Legion	
 	110378, --Drugon the Frostblood

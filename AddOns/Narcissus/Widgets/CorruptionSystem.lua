@@ -4,7 +4,7 @@
 local FILLED_BAR_HEIGHT = 75;
 
 local CorruptionEffectInfo = {};
-local OldCorruptionLevel;
+local oldCorruptionLevel;
 
 local L = Narci.L;
 local FadeFrame = NarciAPI_FadeFrame;
@@ -52,27 +52,71 @@ end
 AnimFrame:SetScript("OnShow", OnShowFunc);
 AnimFrame:SetScript("OnUpdate", OnUpdateFunc);
 
-local function SetThresholds(corruptionLevel)
+local function SetBarTexts(corruptionLevel, totalCorruption)
     local frame = Narci_CorruptionBar;
     local Ceiling, Floor;
+    
     if corruptionLevel == 0 then
-        Ceiling = GetCorruptionResistance() or "";
-        Floor = "";
+        Ceiling = GetCorruptionResistance() or 0;
+        Floor = 0;
     elseif corruptionLevel == 1 then
         Ceiling = 20;
         Floor = 1;
     elseif corruptionLevel == 5 then
-        Ceiling = "";
+        Ceiling = 0;
         Floor = 80;
     else
         Ceiling = 20 * corruptionLevel;
         Floor = Ceiling - 20;      
     end
+
+    local COLOR;
+    if corruptionLevel < 1 then
+        --When corruption level is 0, show total curruption and resistance
+        COLOR = "|cffa59bb5";   --Purple
+    elseif corruptionLevel < 2 then
+        COLOR = "|cffdbbc34";   --Yellow
+    elseif corruptionLevel < 4 then
+        COLOR = "|cfff26522";   --Orange
+    else
+        COLOR = "|cffee3224";   --red
+    end
+
+    --Avoid text overlapping
+    local diff = (Ceiling - totalCorruption)/(Ceiling - Floor);
+    local offsetY = 0;
+    if diff <= 0 or diff >= 1 then
+        offsetY = 0;
+    elseif diff <= 0.05 then
+        offsetY = -7;
+    elseif diff <= 0.1 then
+        offsetY = -6;
+    elseif diff >= 0.95 then
+        offsetY = 7;
+    elseif diff >= 0.9 then
+        offsetY = 6;
+    else
+        offsetY = 0;
+    end
+    frame.Current:SetPoint("LEFT", frame.Fluid, "TOP", 7, offsetY);
+    --
+
+    local Current = totalCorruption.." "..COLOR..corruptionLevel .."|r";
+
+    if Floor == 0 then
+        Floor = "";
+    end
+
+    if Ceiling == 0 then
+        Ceiling = "";
+    end
+
+    frame.Current:SetText(Current);
     frame.Ceiling:SetText(Ceiling);
     frame.Floor:SetText(Floor);
 end
 
-local function SmoothHeight(height, newCorruptionLevel)
+local function SmoothHeight(height, newCorruptionLevel, totalCorruption)
     if not AnimFrame.Bar then
         AnimFrame.Bar = Narci_CorruptionBar.Fluid;
     end
@@ -80,10 +124,10 @@ local function SmoothHeight(height, newCorruptionLevel)
     AnimFrame:Hide();
     AnimFrame.startHeight = AnimFrame.Bar:GetHeight();
 
-    if newCorruptionLevel > OldCorruptionLevel then
+    if newCorruptionLevel > oldCorruptionLevel then
         AnimFrame.endHeight = FILLED_BAR_HEIGHT;
         function CallBackFunc(self)
-            OldCorruptionLevel = newCorruptionLevel;
+            oldCorruptionLevel = newCorruptionLevel;
             AnimFrame.t = 0;
             AnimFrame.startHeight = 0;
             AnimFrame.endHeight = height;
@@ -91,15 +135,15 @@ local function SmoothHeight(height, newCorruptionLevel)
                 AnimFrame.Bar:SetTexCoord(0.9375, 1, 0, 1);
             end
             UpdateDuration(self);
-            SetThresholds(newCorruptionLevel);
+            SetBarTexts(newCorruptionLevel, totalCorruption);
             function CallBackFunc(self)
                 self:Hide();
             end
         end
-    elseif newCorruptionLevel < OldCorruptionLevel then
+    elseif newCorruptionLevel < oldCorruptionLevel then
         AnimFrame.endHeight = 0.01;
         function CallBackFunc(self)
-            OldCorruptionLevel = newCorruptionLevel;
+            oldCorruptionLevel = newCorruptionLevel;
             AnimFrame.t = 0;
             AnimFrame.startHeight = FILLED_BAR_HEIGHT;
             AnimFrame.endHeight = height;
@@ -107,7 +151,7 @@ local function SmoothHeight(height, newCorruptionLevel)
                 AnimFrame.Bar:SetTexCoord(0.875, 0.9375, 0, 1);
             end
             UpdateDuration(self);
-            SetThresholds(newCorruptionLevel);
+            SetBarTexts(newCorruptionLevel, totalCorruption);
             function CallBackFunc(self)
                 self:Hide();
             end
@@ -115,9 +159,10 @@ local function SmoothHeight(height, newCorruptionLevel)
     else 
         AnimFrame.endHeight = height;
         function CallBackFunc(self)
-            OldCorruptionLevel = newCorruptionLevel;
+            oldCorruptionLevel = newCorruptionLevel;
             self:Hide();
         end
+        SetBarTexts(newCorruptionLevel, totalCorruption);
     end
     AnimFrame.newCorruptionLevel = newCorruptionLevel;
     AnimFrame:Show();
@@ -162,6 +207,7 @@ function Narci_SetCorruptionBar(self, smooth)
             barHeight = FILLED_BAR_HEIGHT;
         elseif corruptionLevel == 0 then
             barHeight = max(FILLED_BAR_HEIGHT * corruption / Ceiling, 0.01);
+            totalCorruption = corruption;
         else
             barHeight = max(FILLED_BAR_HEIGHT * (totalCorruption - Floor) / (Ceiling - Floor), 0.01);
         end
@@ -177,27 +223,12 @@ function Narci_SetCorruptionBar(self, smooth)
         barHeight = 0.01;
     end
 
-    local COLOR;
-    if corruptionLevel < 1 then
-        --When corruption level is 0, show total curruption and resistance
-        COLOR = "|cffa59bb5";   --Purple
-        totalCorruption = corruption;
-    elseif corruptionLevel < 2 then
-        COLOR = "|cffdbbc34";   --Yellow
-    elseif corruptionLevel < 4 then
-        COLOR = "|cfff26522";   --Orange
-    else
-        COLOR = "|cffee3224";   --red
-    end
-
-    self.Current:SetText(totalCorruption.." "..COLOR..corruptionLevel);      --red
-
     if smooth then
-        SmoothHeight(barHeight, corruptionLevel);
+        SmoothHeight(barHeight, corruptionLevel, totalCorruption);
     else
         self.Fluid:SetHeight(barHeight);
-        SetThresholds(corruptionLevel);
-        OldCorruptionLevel = corruptionLevel;
+        SetBarTexts(corruptionLevel, totalCorruption);
+        oldCorruptionLevel = corruptionLevel;
         if corruptionLevel == 0 then
             self.Fluid:SetTexCoord(0.875, 0.9375, 0, 1);
         else
@@ -558,18 +589,45 @@ local function UpdateBarHeight(bar, effectiveCorruption)
     bar.FluidFrame:SetHeight(height);
 end
 
+local IsSpellKnown = IsSpellKnown;
+local function GetMagicReduction()
+    --Calculate passive reduction
+    local r;
+    if IsSpellKnown(203513) then
+        r = 0.15;   --Demonic Wards Vengeance
+    elseif IsSpellKnown(278386) then
+        r = 0.1;    --Demonic Wards Havoc
+    elseif IsSpellKnown(255668) or IsSpellKnown(59221) or IsSpellKnown(20579) then
+        r = 0.01;   --1% Shadow DMG Racial VE, UD, Draenei  --Highmountain omitted
+    else
+        r = 0;
+    end
+    return (1-r)
+end
+
+local function GetConstantReduction()
+    local r;
+    if IsSpellKnown(255659) then
+        r = UnitHealthMax("player") * 0.0003;   --Highmountain Tauren Racial Rugged Tenacity
+    else
+        r = 0;
+    end
+    return r
+end
+
 local function UpdateCorruptionTooltip()
     local corruption = GetCorruption();
     local corruptionResistance = GetCorruptionResistance();
     local corruption = max(corruption - corruptionResistance, 0);
     local frame = Narci_CorruptionTooltip;
-    local slowBy, damageModifier, radius, delustionDamage, percentageHP;
+    local slowBy, damageModifier, radius, delusionDamage, percentageHP;
     local entry;
     local level = 1;
 
     local HP = UnitHealthMax("player");
-    local eyeDamage = 0.007093451*HP/1000*(70.677*corruption + 2119.1);
-    local delustionDamage = 0.35*HP;
+    local magicReduction = GetMagicReduction();
+    local eyeDamage = (0.5*corruption + 15) * (HP/1000) * magicReduction;
+    local delusionDamage = 0.35 * HP * magicReduction;
 
     if corruption >= 1 then
         level = 1;
@@ -621,21 +679,20 @@ local function UpdateCorruptionTooltip()
     CalculateAnimation(corruption);
     SetPreview(level);
 
-    local damageBonus = GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_DONE) + GetVersatilityBonus(CR_VERSATILITY_DAMAGE_DONE);
     local reduction = GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_TAKEN) + GetVersatilityBonus(CR_VERSATILITY_DAMAGE_TAKEN);
-    
-    eyeDamage = floor(eyeDamage * (1 + damageModifier / 100) * (1 - reduction/100) / 10) * 10;
-    delustionDamage = floor(delustionDamage * (1 + damageModifier / 100) * (1 - reduction/100) * (1 + damageBonus/100) + 0.5);  --change me when they fix the bug
-    percentageHP = floor(10000 * delustionDamage / HP + 0.5) / 100;
+    local constantReduction = GetConstantReduction();   --Reduction as constant instead of percentage
+
+    eyeDamage = floor(eyeDamage * (1 + damageModifier / 100) * (1 - reduction/100) + 0.5 - constantReduction);
+    delusionDamage = floor(delusionDamage * (1 + damageModifier / 100) * (1 - reduction/100) + 0.5 - constantReduction);  --change me when they fix the bug
+    percentageHP = floor(10000 * delusionDamage / HP + 0.5) / 100;
 
     SetTooltipText(frame.Entry1, slowBy);
     SetTooltipText(frame.Entry2, eyeDamage, radius);
-    SetTooltipText(frame.Entry3, delustionDamage, percentageHP);
+    SetTooltipText(frame.Entry3, delusionDamage, percentageHP);
     SetTooltipText(frame.Entry5, damageModifier);
 
     UpdateBarHeight(frame.CorruptionBar, corruption);
 
-    
     local COLOR;    --for corruption value
     if level < 1 then
         --When corruption level is 0, show total curruption and resistance
@@ -662,7 +719,10 @@ local function CorruptionTooltip_OnEvent(self)
 end
 
 local function CorruptionTooltip_OnShow(self)
-    Narci_CorruptionBar:SetAlpha(0);
+    local bar = Narci_CorruptionBar;
+    if bar:IsShown() then 
+        UIFrameFadeOut(bar, 0.25, 0 ,0);
+    end
     self:RegisterEvent("COMBAT_RATING_UPDATE");
     UpdateCorruptionTooltip();
 end
@@ -735,10 +795,6 @@ local function InitializeCorruptionTooltip()
         entry:SetHeight(TAB_HEIGHT);
         entry.Name:SetText(CorruptionEffectInfo[i].name);
         text = CorruptionEffectInfo[i].description;
-        if not text then
-            CorruptionEffectInfo = GetNegativeCorruptionEffectInfo();
-            text = CorruptionEffectInfo[i].description;
-        end
         entry.Description:SetText(CorruptionEffectInfo[i].description);
         entry.format = L["Corruption Effect Format"..i];
         entry.Icon:SetTexture(icons[i]);
@@ -845,15 +901,14 @@ local function NewOnLeave(self)
 end
 
 
---Preferences Corruption Tooltip Toggle--
-local function ItemLevelFrame_OnEnter(self)
-	if ( not self.tooltip ) then
+local function ShowItemlevelAndCorruptionInfo(frame)
+	if ( not frame.tooltip ) then
 		return;
 	end
-	GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-	GameTooltip:SetText(self.tooltip);
-	if ( self.tooltip2 ) then
-		GameTooltip:AddLine(self.tooltip2, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
+	GameTooltip:SetOwner(frame, "ANCHOR_RIGHT");
+	GameTooltip:SetText(frame.tooltip);
+	if ( frame.tooltip2 ) then
+		GameTooltip:AddLine(frame.tooltip2, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
     end
     local corruption = GetCorruption();
     if corruption > 0 then
@@ -864,6 +919,17 @@ local function ItemLevelFrame_OnEnter(self)
         GameTooltip_AddColoredDoubleLine(GameTooltip, CORRUPTION_RESISTANCE_TOOLTIP_LINE, corruptionResistance, HIGHLIGHT_FONT_COLOR, HIGHLIGHT_FONT_COLOR, false);
         GameTooltip_AddColoredDoubleLine(GameTooltip, TOTAL_CORRUPTION_TOOLTIP_LINE, totalCorruption, CORRUPTION_COLOR, CORRUPTION_COLOR, false);
     end
+end
+
+--Preferences Corruption Tooltip Toggle--
+local function ItemLevelFrame_OnEnter(self)
+    ShowItemlevelAndCorruptionInfo(self);
+	GameTooltip:Show();
+end
+
+local function ItemLevelFrame_withCorruptionTooltips_OnEnter(self)
+    ShowItemlevelAndCorruptionInfo(self)
+    CorruptionTooltips:SummaryHook(self);
 	GameTooltip:Show();
 end
 
@@ -875,20 +941,33 @@ function Narci:SetUseCorruptionTooltip()
     local state = NarcissusDB.CorruptionTooltip;
     if state then
         GameTooltip_Hide();
-        ItemLevelFrame.onEnterFunc = ItemLevelFrame_OnEnter;
+        if IsAddOnLoaded("CorruptionTooltips") then
+            ItemLevelFrame.onEnterFunc = ItemLevelFrame_withCorruptionTooltips_OnEnter;
+        else
+            ItemLevelFrame.onEnterFunc = ItemLevelFrame_OnEnter;
+        end
         BlizzardCorruptionWidget:SetScript("OnEnter", NewOnEnter);
         BlizzardCorruptionWidget:SetScript("OnLeave", NewOnLeave);
     else
         ItemLevelFrame.onEnterFunc = nil;
         Narci_CorruptionTooltip:Hide();
-        BlizzardCorruptionWidget:SetScript("OnEnter", CharacterFrameCorruption_OnEnter);
         BlizzardCorruptionWidget:SetScript("OnLeave", CharacterFrameCorruption_OnLeave);
+
+        if IsAddOnLoaded("CorruptionTooltips") then
+            BlizzardCorruptionWidget:SetScript("OnEnter", function(self)
+                CharacterFrameCorruption_OnEnter(self)
+                CorruptionTooltips:SummaryHook(self);
+            end)
+        else
+            BlizzardCorruptionWidget:SetScript("OnEnter", CharacterFrameCorruption_OnEnter);
+        end
     end
 
     Narci_CorruptionTooltipToggle.Tick:SetShown(state);
 
     --Fix Compatible Issue with DejaCharacterStats
     if not NarcissusDB.CorruptionBar then return end
+
     if IsAddOnLoaded("DejaCharacterStats") then
         local Bar = Narci_CorruptionBar;
         BlizzardCorruptionWidget:SetScript("OnHide", function(self)
@@ -915,6 +994,39 @@ local function CorruptionTooltipSwitch_OnClick()
     Narci:SetUseCorruptionTooltip()
 end
 
+
+local function GetCorruptionDescription(corruptionSpells)
+    local spellID, description;
+    local IsSpellCached = C_Spell.IsSpellDataCached;
+    for i = 1, #corruptionSpells do
+        spellID = corruptionSpells[i];
+        if IsSpellCached(spellID) and not CorruptionEffectInfo[i] then
+            CorruptionEffectInfo[i] = {};
+            CorruptionEffectInfo[i].name = GetSpellInfo(spellID);
+            
+            description = GetSpellDescription(spellID);
+            description = string.gsub(description, "\n.+", "");
+            --print(description)
+            CorruptionEffectInfo[i].description = description;
+        else
+            corruptionSpells.iteration = corruptionSpells.iteration + 1;
+            if corruptionSpells.iteration <= 8 then
+                C_Spell.RequestLoadSpellData(spellID);
+                C_Timer.After(0.2, function()
+                    GetCorruptionDescription(corruptionSpells);
+                end)
+                return;
+            else
+                InitializeCorruptionTooltip();
+            end
+        end
+    end
+    InitializeCorruptionTooltip();
+    C_Timer.After(0.2, function()
+        SetPreview(2);
+    end);
+end
+
 local Initialize = CreateFrame("Frame");
 Initialize:RegisterEvent("PLAYER_ENTERING_WORLD");
 Initialize:SetScript("OnEvent", function(self, event, ...)
@@ -924,7 +1036,7 @@ Initialize:SetScript("OnEvent", function(self, event, ...)
         hooksecurefunc("UseContainerItem", function(bag, slot)
             if bag and slot then
                 local id = GetContainerItemID(bag, slot);
-                if id == 171335 or id == 171354 or id == 171355 then
+                if id == 171335 or id == 171354 or id == 171355 or id == 175062 then
                     id = GetInventoryItemID("player", 15);       --Legendary Cloak
                     if id and id == 169223 then
                         ShowUIPanel(CharacterFrame);
@@ -938,8 +1050,7 @@ Initialize:SetScript("OnEvent", function(self, event, ...)
             end
         end)
     end
-
-    GetNegativeCorruptionEffectInfo();
+    
     SetModelOffset();
     playerModelInfo = NarciAPI_GetActorInfoByUnit("player");
 
@@ -953,20 +1064,26 @@ Initialize:SetScript("OnEvent", function(self, event, ...)
 
     Narci_CorruptionTooltipToggle:SetScript("OnClick", CorruptionTooltipSwitch_OnClick);
 
-    C_Timer.After(1, function()
-        CorruptionEffectInfo = GetNegativeCorruptionEffectInfo();
-        local function SortCorruptionEffects(a, b)
-            return a.minCorruption < b.minCorruption;
-        end
-        C_Timer.After(1, function()
-            CorruptionEffectInfo = GetNegativeCorruptionEffectInfo();
-            for i = 1, #CorruptionEffectInfo do
-                CorruptionEffectInfo[i].description = string.gsub(CorruptionEffectInfo[i].description, "\n.+", "");
-            end
-            C_Timer.After(0.5, function()
-                table.sort(CorruptionEffectInfo, SortCorruptionEffects);
-                InitializeCorruptionTooltip();
-            end);
-        end);
+    --Cache Negative Corruption Effect Info
+    local corruptionSpells = {
+        315176,    --Grasping Tendrils
+        315154,    --Eye of Corruption
+        315184,    --Grand Delusions
+        315857,    --Cascading Disaster
+        315179,    --Inevitable Doom
+    }
+    
+    for k, v in pairs(corruptionSpells) do
+        GetSpellInfo(v);
+        GetSpellDescription(v);
+    end
+    corruptionSpells.iteration = 0;
+
+    C_Timer.After(0.5, function()
+        GetCorruptionDescription(corruptionSpells);
     end)
+
+    local spellID = ...;
+    --print(spellID)
+    --print(GetSpellInfo(spellID));
 end)

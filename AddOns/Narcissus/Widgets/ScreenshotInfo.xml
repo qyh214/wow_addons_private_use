@@ -1,0 +1,40 @@
+<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+    <!-- © 2020 Peter Yu All Rights Reserved -->
+
+	<Script file="ScreenshotInfo.lua"/>
+
+	<Frame name="Narci_PlayerPositionFrame" mixin="NarciScreenshotInfoMixin" hidden="true">
+		<Size x="200" y="16"/>
+		<Anchors>
+			<Anchor point="RIGHT" relativeTo="UIParent" relativePoint="RIGHT" x="0" y="0"/>
+		</Anchors>
+		<Layers>
+			<Layer>
+				<FontString inherits="NarciNonInteractiveFont" justifyH="LEFT" justifyV="MIDDLE" maxLines="1" parentKey="Coordinates">
+					<Size x="0" y="0"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="16"/>
+					</Anchors>
+				</FontString>
+				<FontString inherits="NarciNonInteractiveFont" justifyH="RIGHT" justifyV="MIDDLE" maxLines="1" parentKey="MapName">
+					<Size x="0" y="0"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="LEFT" x="0"/>
+					</Anchors>
+				</FontString>
+				<Texture parentKey="Map">
+					<Size x="128" y="128"/>
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="0" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnShow method="OnShow"/>
+			<OnHide method="OnHide"/>
+			<OnUpdate method="OnUpdate"/>
+		</Scripts>
+	</Frame>
+</Ui>
