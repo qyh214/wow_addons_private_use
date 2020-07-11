@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Council", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200524145731")
 mod:SetCreatureID(22949, 22950, 22951, 22952)
 mod:SetEncounterID(608)
 mod:SetModelID(21416)
@@ -13,13 +13,12 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 41455",
 	"SPELL_CAST_SUCCESS 41455",
-	"SPELL_INTERRUPT",
 	"SPELL_AURA_APPLIED 41485 41481 41482 41541 41476 41475 41452 41453 41450 41451",
 	"SPELL_AURA_REMOVED 41479 41485"
 )
 
-local warnPoison			= mod:NewTargetAnnounce(41485, 3, nil, "Healer", 3)
-local warnVanish			= mod:NewTargetAnnounce(41476, 3)
+local warnPoison			= mod:NewTargetNoFilterAnnounce(41485, 3, nil, "Healer", 3)
+local warnVanish			= mod:NewTargetNoFilterAnnounce(41476, 3)
 local warnVanishEnd			= mod:NewEndAnnounce(41476, 3)
 local warnDevAura			= mod:NewSpellAnnounce(41452, 3, nil, "Physical", 2)
 local warnResAura			= mod:NewSpellAnnounce(41453, 3, nil, "-Physical", 2)
@@ -32,13 +31,12 @@ local specWarnCoH			= mod:NewSpecialWarningInterrupt(41455, "HasInterrupt", nil,
 local specWarnImmune		= mod:NewSpecialWarning("Immune", false)
 
 local timerVanish			= mod:NewBuffActiveTimer(31, 41476, nil, nil, nil, 6)
-local timerShield			= mod:NewBuffActiveTimer(20, 41475, nil, nil, nil, 5, nil, DBM_CORE_HEALER_ICON..DBM_CORE_DAMAGE_ICON)
-local timerMeleeImmune		= mod:NewTargetTimer(15, 41450, nil, "Physical", 2, 5, nil, DBM_CORE_DAMAGE_ICON)
-local timerSpellImmune		= mod:NewTargetTimer(15, 41451, nil, "-Physical", 2, 5, nil, DBM_CORE_DAMAGE_ICON)
-local timerDevAura			= mod:NewBuffActiveTimer(30, 41452, nil, "Physical", 2, 5, nil, DBM_CORE_DAMAGE_ICON)
-local timerResAura			= mod:NewBuffActiveTimer(30, 41453, nil, "-Physical", 2, 5, nil, DBM_CORE_DAMAGE_ICON)
-local timerCoH				= mod:NewCastTimer(2.5, 41455, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
-local timerNextCoH			= mod:NewCDTimer(14, 41455, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerShield			= mod:NewBuffActiveTimer(20, 41475, nil, nil, nil, 5, nil, DBM_CORE_L.HEALER_ICON..DBM_CORE_L.DAMAGE_ICON)
+local timerMeleeImmune		= mod:NewTargetTimer(15, 41450, nil, "Physical", 2, 5, nil, DBM_CORE_L.DAMAGE_ICON)
+local timerSpellImmune		= mod:NewTargetTimer(15, 41451, nil, "-Physical", 2, 5, nil, DBM_CORE_L.DAMAGE_ICON)
+local timerDevAura			= mod:NewBuffActiveTimer(30, 41452, nil, "Physical", 2, 5, nil, DBM_CORE_L.DAMAGE_ICON)
+local timerResAura			= mod:NewBuffActiveTimer(30, 41453, nil, "-Physical", 2, 5, nil, DBM_CORE_L.DAMAGE_ICON)
+local timerNextCoH			= mod:NewCDTimer(14, 41455, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)
 
 local berserkTimer			= mod:NewBerserkTimer(900)
 
@@ -99,7 +97,6 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 41455 then
-		timerCoH:Start()
 		if self:CheckInterruptFilter(args.sourceGUID) then
 			specWarnCoH:Show(args.sourceName)
 			specWarnCoH:Play("kickcast")
@@ -110,11 +107,5 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 41455 then
 		timerNextCoH:Start(13.3)
-	end
-end
-
-function mod:SPELL_INTERRUPT(args)
-	if type(args.extraSpellId) == "number" and args.extraSpellId == 41455 then
-		timerCoH:Cancel()
 	end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(745, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200524145716")
 mod:SetCreatureID(62980)--63554 (Special invisible Vizier that casts the direction based spellid versions of attenuation)
 mod:SetEncounterID(1507)
 mod:SetZone()
@@ -124,9 +124,9 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 122713 then
 		timerForce:Start()
 	elseif args:IsSpellID(122474, 122496, 123721) then--All direction IDs are cast by an invisible version of Vizier.
-		lastDirection = DBM_CORE_LEFT
+		lastDirection = DBM_CORE_L.LEFT
 	elseif args:IsSpellID(122479, 122497, 123722) then--We monitor direction, but we need to announce off non invisible mob
-		lastDirection = DBM_CORE_RIGHT
+		lastDirection = DBM_CORE_L.RIGHT
 	elseif spellId == 127834 then--This is only id that properly identifies CORRECT boss source
 		--Example
 		--http://worldoflogs.com/reports/rt-g8ncl718wga0jbuj/xe/?enc=bosses&boss=66791&x=%28spellid+%3D+127834+or+spellid+%3D+122496+or+spellid+%3D+122497%29+and+fulltype+%3D+SPELL_CAST_START
@@ -136,7 +136,7 @@ function mod:SPELL_CAST_START(args)
 			local inRange = DBM.RangeCheck:GetDistance("player", uId)--We check how far we are from the tank who has that boss
 			if (inRange and inRange < 60) then--Only show warning if we are near the boss casting it (or rathor, the player tanking that boss). I realize orbs go very far, but the special warning is for the dance, not stray discs, that's what normal warning is for
 				if self.Options.ArrowOnAttenuation then
-					DBM.Arrow:ShowStatic(lastDirection == DBM_CORE_LEFT and 90 or 270, 12)
+					DBM.Arrow:ShowStatic(lastDirection == DBM_CORE_L.LEFT and 90 or 270, 12)
 				end
 				specwarnAttenuation:Show(args.spellName, args.sourceName, lastDirection)
 				timerAttenuation:Start()

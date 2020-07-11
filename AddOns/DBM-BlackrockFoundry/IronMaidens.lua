@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1203, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814112014")
+mod:SetRevision("20200524145633")
 mod:SetCreatureID(77557, 77231, 77477)
 mod:SetEncounterID(1695)
 mod:SetZone()
@@ -93,7 +93,7 @@ local yellHeartseeker					= mod:NewYell(158010, nil, false)
 --Ship
 mod:AddTimerLine(Ship)
 local timerShipCD						= mod:NewNextCountTimer(198, "ej10019", nil, nil, nil, 6, 76204, nil, nil, 1, 5)
-local timerBombardmentAlphaCD			= mod:NewNextTimer(18, 157854, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerBombardmentAlphaCD			= mod:NewNextTimer(18, 157854, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON)
 local timerWarmingUp					= mod:NewCastTimer(90, 158849, nil, nil, nil, 6, nil, nil, nil, 1, 5)
 --Ground
 ----Admiral Gar'an
@@ -101,14 +101,14 @@ mod:AddTimerLine(Garan)
 local timerRapidFireCD					= mod:NewCDTimer(30, 156626, nil, nil, nil, 3)
 local timerDarkHuntCD					= mod:NewCDCountTimer(13.5, 158315, nil, false, nil, 3)--Important to know you have it, not very important to know it's coming soon.
 local timerPenetratingShotCD			= mod:NewCDCountTimer(28.8, 164271, nil, nil, nil, 3)--22-30 at least. maybe larger variation.
-local timerDeployTurretCD				= mod:NewCDCountTimer(20.2, 158599, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)--20.2-23.5
+local timerDeployTurretCD				= mod:NewCDCountTimer(20.2, 158599, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)--20.2-23.5
 ----Enforcer Sorka
 mod:AddTimerLine(Sorka)
-local timerBladeDashCD					= mod:NewCDCountTimer(20, 155794, nil, "Ranged|Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, mod:IsTank() and 3, 4)
+local timerBladeDashCD					= mod:NewCDCountTimer(20, 155794, nil, "Ranged|Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, mod:IsTank() and 3, 4)
 local timerConvulsiveShadowsCD			= mod:NewNextCountTimer(55.6, 156214, nil, nil, nil, 3)--Timer only enabled on mythic, On non mythic, it's just an unimportant dot. On mythic, MUCH more important because user has to run out of raid and get dispelled.
 ----Marak the Blooded
 mod:AddTimerLine(Marak)
-local timerBloodRitualCD				= mod:NewCDCountTimer(20, 158078, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON, nil, mod:IsTank() and 2, 4)
+local timerBloodRitualCD				= mod:NewCDCountTimer(20, 158078, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, mod:IsTank() and 2, 4)
 local timerHeartSeekerCD				= mod:NewCDCountTimer(70, 158010, nil, "Ranged", nil, 3)
 
 mod:AddSetIconOption("SetIconOnRapidFire", 156626, true)
@@ -210,7 +210,7 @@ function mod:OnCombatStart(delay)
 	timerRapidFireCD:Start(15.5-delay, 1)
 	timerShipCD:Start(59.5-delay, 1)
 	self:RegisterShortTermEvents(
-		"UNIT_HEALTH_FREQUENT boss1 boss2 boss3"
+		"UNIT_HEALTH boss1 boss2 boss3"
 	)
 	DBM:AddMsg("Warning: This mod is completely and utterly broken with no proper way to detect boat phase ending or player location, both of which timers/other features HEAVILY replied upon")
 end
@@ -581,7 +581,7 @@ function mod:RAID_BOSS_WHISPER(msg)
 	end
 end
 
-function mod:UNIT_HEALTH_FREQUENT(uId)
+function mod:UNIT_HEALTH(uId)
 	local hp = UnitHealth(uId) / UnitHealthMax(uId)
 	if hp < 0.20 and self.vb.phase ~= 2 then
 		timerShipCD:Stop()

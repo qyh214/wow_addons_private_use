@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(851, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222213340")
+mod:SetRevision("20200524145716")
 mod:SetCreatureID(71529)
 mod:SetEncounterID(1599)
 mod:SetZone()
@@ -65,23 +65,23 @@ local yellBurningBlood				= mod:NewYell(143783, nil, false)
 
 --Stage 1: A Cry in the Darkness
 local timerFearsomeRoar				= mod:NewTargetTimer(30, 143766, nil, "Tank|Healer")
-local timerFearsomeRoarCD			= mod:NewCDTimer(11, 143766, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerDeafeningScreechCD		= mod:NewNextCountTimer(13, 143343, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)-- (143345 base power regen, 4 every half second)
+local timerFearsomeRoarCD			= mod:NewCDTimer(11, 143766, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerDeafeningScreechCD		= mod:NewNextCountTimer(13, 143343, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)-- (143345 base power regen, 4 every half second)
 --Stage 2: Frenzy for Blood!
 local timerBloodFrenzyCD			= mod:NewNextTimer(5, 143442)
 local timerBloodFrenzyEnd			= mod:NewBuffActiveTimer(13.5, 143442)
-local timerFixate					= mod:NewTargetTimer(12, 143445, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerFixate					= mod:NewTargetTimer(12, 143445, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)
 local timerKey						= mod:NewTargetTimer(60, 146589, nil, false)
 --Infusion of Acid
 local timerAcidBreath				= mod:NewTargetTimer(30, 143780, nil, "Tank|Healer")
-local timerAcidBreathCD				= mod:NewCDTimer(11, 143780, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--Often 12, but sometimes 11
+local timerAcidBreathCD				= mod:NewCDTimer(11, 143780, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)--Often 12, but sometimes 11
 local timerCorrosiveBloodCD			= mod:NewCDTimer(3.5, 143791, nil, false, nil, 3)--Cast often, so off by default
 --Infusion of Frost
 local timerFrostBreath				= mod:NewTargetTimer(30, 143773, nil, "Tank|Healer")
-local timerFrostBreathCD			= mod:NewCDTimer(9.5, 143773, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerFrostBreathCD			= mod:NewCDTimer(9.5, 143773, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 --Infusion of Fire
 local timerScorchingBreath			= mod:NewTargetTimer(30, 143767, nil, "Tank|Healer")
-local timerScorchingBreathCD		= mod:NewCDTimer(11, 143767, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--Often 12, but sometimes 11
+local timerScorchingBreathCD		= mod:NewCDTimer(11, 143767, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)--Often 12, but sometimes 11
 local timerBurningBloodCD			= mod:NewCDTimer(3.5, 143783, nil, false, nil, 3)--cast often, but someone might want to show it
 
 local berserkTimer					= mod:NewBerserkTimer(600)
@@ -124,7 +124,7 @@ function mod:OnCombatStart(delay)
 		specWarnDeafeningScreech:Schedule(12)
 	end
 	berserkTimer:Start(-delay)
-	DBM:AddMsg(DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP)
+	DBM:AddMsg(DBM_CORE_L.DYNAMIC_DIFFICULTY_CLUMP)
 	if not self:IsTrivial(100) then
 		self:RegisterShortTermEvents(
 			"SPELL_PERIODIC_DAMAGE 143784",

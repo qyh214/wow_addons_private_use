@@ -11,7 +11,7 @@ local AL = LibStub("AceLocale-3.0"):GetLocale("RareScanner");
 
 local BLUE_NPC_TEXTURE = "Interface\\AddOns\\RareScanner\\Media\\Icons\\BlueSkullDark.blp"
  
-function RareScanner:UpdateMinimap(forzed)
+function RareScanner:UpdateMinimap(forzed)	
 	-- Ignore if minimap not available
 	if (not Minimap:IsVisible()) then 
 		return
@@ -29,7 +29,7 @@ function RareScanner:UpdateMinimap(forzed)
 	end
 	
 	if (not self.pinFramesPool) then
-		self.pinFramesPool = _G.CreateFramePool("FRAME", Minimap, "RSMinimapPinTemplate");
+		self.pinFramesPool = CreateFramePool("FRAME", Minimap, "RSMinimapPinTemplate");
 	end
 	
 	-- If same zone ignore it
@@ -66,7 +66,7 @@ end
 
 function RSMinimapPinMixin:ShowOverlay()
 	if (not self.overlayFramesPool) then
-		self.overlayFramesPool = _G.CreateFramePool("FRAME", Minimap, "RSMinimapPinTemplate");
+		self.overlayFramesPool = CreateFramePool("FRAME", Minimap, "RSMinimapPinTemplate");
 	end
 	
 	if (private.ZONE_IDS[self.npcID]) then
@@ -75,6 +75,7 @@ function RSMinimapPinMixin:ShowOverlay()
 				local x, y = strsplit("-", coordinates)
 				local pin = self.overlayFramesPool:Acquire()
 				pin.npcID = self.npcID
+				pin.name = self.name
 				RareScanner:SetUpOverlayPin(pin)
 				HBD_Pins:AddMinimapIconMap(self, pin, self.mapID, tonumber(x), tonumber(y), false, false)
 			end
@@ -84,6 +85,7 @@ function RSMinimapPinMixin:ShowOverlay()
 				local x, y = strsplit("-", coordinates)
 				local pin = self.overlayFramesPool:Acquire()
 				pin.npcID = self.npcID
+				pin.name = self.name
 				RareScanner:SetUpOverlayPin(pin)
 				HBD_Pins:AddMinimapIconMap(self, pin, self.mapID, tonumber(x), tonumber(y), false, false)
 			end

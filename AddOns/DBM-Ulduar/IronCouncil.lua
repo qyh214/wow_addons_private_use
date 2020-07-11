@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("IronCouncil", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222200840")
+mod:SetRevision("20200530203003")
 mod:SetCreatureID(32867, 32927, 32857)
 mod:SetEncounterID(1140)
 mod:DisableEEKillDetection()--Fires for first one dying not last
@@ -14,7 +14,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 61920 63479 61879 61903 63493 62274 63489 62273",
 	"SPELL_CAST_SUCCESS 63490 62269 64321 61974 61869 63481",
 	"SPELL_AURA_APPLIED 61903 63493 62269 63490 62277 63967 64637 61888 63486 61887 61912 63494 63483 61915",
-	"SPELL_AURA_REMOVED 64637 61888 63483 61915",
+	"SPELL_AURA_REMOVED 64637 61888 63483 61915 61912 63494",
 	"UNIT_DIED"
 )
 
@@ -27,7 +27,7 @@ local warnSupercharge			= mod:NewSpellAnnounce(61920, 3)
 -- High Voltage ... 63498
 local warnChainlight			= mod:NewSpellAnnounce(64215, 2, nil, false, 2)
 local timerOverload				= mod:NewCastTimer(6, 63481, nil, nil, nil, 2)
-local timerLightningWhirl		= mod:NewCastTimer(5, 63483, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerLightningWhirl		= mod:NewCastTimer(5, 63483, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)
 local specwarnLightningTendrils	= mod:NewSpecialWarningRun(63486, nil, nil, nil, 4, 2)
 local timerLightningTendrils	= mod:NewBuffActiveTimer(27, 63486, nil, nil, nil, 6)
 local specwarnOverload			= mod:NewSpecialWarningRun(63481, nil, nil, nil, 4, 2)
@@ -37,25 +37,25 @@ mod:AddBoolOption("AlwaysWarnOnOverload", false, "announce")
 -- Steelbreaker
 -- High Voltage ... don't know what to show here - 63498
 local warnFusionPunch			= mod:NewSpellAnnounce(61903, 4)
-local timerFusionPunchCast		= mod:NewCastTimer(3, 61903, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON..DBM_CORE_MAGIC_ICON)
-local timerFusionPunchActive	= mod:NewTargetTimer(4, 61903, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON..DBM_CORE_MAGIC_ICON)
+local timerFusionPunchCast		= mod:NewCastTimer(3, 61903, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON..DBM_CORE_L.MAGIC_ICON)
+local timerFusionPunchActive	= mod:NewTargetTimer(4, 61903, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON..DBM_CORE_L.MAGIC_ICON)
 local warnOverwhelmingPower		= mod:NewTargetAnnounce(61888, 2)
-local timerOverwhelmingPower	= mod:NewTargetTimer(25, 61888, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerOverwhelmingPower	= mod:NewTargetTimer(25, 61888, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local warnStaticDisruption		= mod:NewTargetAnnounce(61912, 3)
-mod:AddBoolOption("SetIconOnOverwhelmingPower", false)
-mod:AddBoolOption("SetIconOnStaticDisruption", false)
+mod:AddSetIconOption("SetIconOnOverwhelmingPower", 61888, false, false, {8})
+mod:AddSetIconOption("SetIconOnStaticDisruption", 63494, false, false, {1, 2, 3, 4, 5, 6, 7})
 
 -- Runemaster Molgeim
 -- Lightning Blast ... don't know, maybe 63491
 local timerRuneofShields		= mod:NewBuffActiveTimer(15, 63967)
-local warnRuneofPower			= mod:NewTargetAnnounce(64320, 2)
+local warnRuneofPower			= mod:NewTargetNoFilterAnnounce(64320, 2)
 local warnRuneofDeath			= mod:NewSpellAnnounce(63490, 2)
 local warnShieldofRunes			= mod:NewSpellAnnounce(63489, 2)
 local warnRuneofSummoning		= mod:NewSpellAnnounce(62273, 3)
 local specwarnRuneofDeath		= mod:NewSpecialWarningMove(63490, nil, nil, nil, 1, 2)
 local specWarnRuneofShields		= mod:NewSpecialWarningDispel(63967, "MagicDispeller", nil, nil, 1, 2)
 local timerRuneofDeath			= mod:NewCDTimer(47.3, 63490, nil, nil, nil, 3)
-local timerRuneofPower			= mod:NewCDTimer(30, 61974, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerRuneofPower			= mod:NewCDTimer(30, 61974, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerRuneofSummoning		= mod:NewCDTimer(24.1, 62273, nil, nil, nil, 1)
 
 local enrageTimer				= mod:NewBerserkTimer(900)
@@ -136,7 +136,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specwarnLightningTendrils:Play("justrun")
 	elseif args:IsSpellID(61912, 63494) then	-- Static Disruption (Hard Mode)
 		disruptTargets[#disruptTargets + 1] = args.destName
-		if self.Options.SetIconOnStaticDisruption then
+		if self.Options.SetIconOnStaticDisruption and self.vb.disruptIcon > 0 then
 			self:SetIcon(args.destName, self.vb.disruptIcon, 20)
 		end
 		self.vb.disruptIcon = self.vb.disruptIcon - 1
@@ -158,6 +158,10 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif args:IsSpellID(63483, 61915) then	-- LightningWhirl
 		timerLightningWhirl:Stop()
+	elseif args:IsSpellID(61912, 63494) then	-- Static Disruption (Hard Mode)
+		if self.Options.SetIconOnStaticDisruption then
+			self:SetIcon(args.destName, 0)
+		end
 	end
 end
 

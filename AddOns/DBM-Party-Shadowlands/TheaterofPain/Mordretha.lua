@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2417, "DBM-Party-Shadowlands", 6, 1187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200424172403")
+mod:SetRevision("20200528135243")
 mod:SetCreatureID(165946)
 mod:SetEncounterID(2404)
 mod:SetZone()
@@ -31,7 +31,7 @@ local specWarnSoulBolt				= mod:NewSpecialWarningInterrupt(324589, "HasInterrupt
 local specWarnGraspingRift			= mod:NewSpecialWarningRun(323685, nil, nil, nil, 4, 2)
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
-local timerReapingScytheCD			= mod:NewAITimer(15.8, 324079, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerReapingScytheCD			= mod:NewAITimer(15.8, 324079, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerDarkDevastationCD		= mod:NewAITimer(15.8, 323608, nil, nil, nil, 3)
 local timerManifesstDeathCD			= mod:NewAITimer(15.8, 324449, nil, nil, nil, 3)
 local timerGraspingriftCD			= mod:NewAITimer(15.8, 323685, nil, nil, nil, 3)

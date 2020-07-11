@@ -145,9 +145,9 @@ function DejaCharacterStats.SlashCmdHandler(msg, editbox)
 	--print("command is " .. msg .. "\n")
 	--if (string.lower(msg) == L["config"]) then --I think string.lowermight not work for Russian letters
 	if (msg == "config") then
-		InterfaceOptionsFrame_OpenToCategory("DejaCharacterStats");
-		InterfaceOptionsFrame_OpenToCategory("DejaCharacterStats");
-		InterfaceOptionsFrame_OpenToCategory("DejaCharacterStats");
+		InterfaceOptionsFrame_OpenToCategory("DejaCharacterStats"); 
+		-- InterfaceOptionsFrame_OpenToCategory("DejaCharacterStats"); --previously needed to call 3 times due to Blizzard bug
+		-- InterfaceOptionsFrame_OpenToCategory("DejaCharacterStats");
 	--[[	
 	elseif (string.lower(msg) == L["dumpconfig"]) then
 		print(L["With defaults"])
@@ -292,10 +292,15 @@ CharacterFrame:HookScript("OnHide", function(self)
 	_G[DCSShowCharacterFrameButton:GetName() .. "Text"]:SetText(L["Show Character Frame"])
 end)
 
-DCSShowCharacterFrameButton:SetScript("OnClick", function(self, button, down)
+DCSShowCharacterFrameButton:SetScript("OnClick", function(self, button, down)	
 	if CharacterFrame:IsShown() then
 		HideUIPanel(CharacterFrame)
 	else
+		HideUIPanel(InterfaceOptionsFrame)
+		HideUIPanel(GameMenuFrame)
+		InterfaceOptionsFrame_OpenToCategory("DejaCharacterStats");
+		-- InterfaceOptionsFrame_OpenToCategory("DejaCharacterStats"); --previously needed to call 3 times due to Blizzard bug
+		-- InterfaceOptionsFrame_OpenToCategory("DejaCharacterStats");
 		ShowUIPanel(CharacterFrame)
 	end
 end)

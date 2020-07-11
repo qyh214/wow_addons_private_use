@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(853, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200524145716")
 mod:SetCreatureID(71152, 71153, 71154, 71155, 71156, 71157, 71158, 71160, 71161)
 mod:SetEncounterID(1593)
 mod:DisableESCombatDetection()
@@ -122,7 +122,7 @@ local specWarnRapidFire				= mod:NewSpecialWarningSpell(143243, nil, nil, nil, 2
 local timerJumpToCenter				= mod:NewCastTimer(6.5, 143545)
 --Kil'ruk the Wind-Reaver
 local timerGouge					= mod:NewTargetTimer(10, 143939, nil, "Tank", nil, 5)
-local timerReaveCD					= mod:NewCDTimer(33, 148676, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
+local timerReaveCD					= mod:NewCDTimer(33, 148676, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)
 local timerDFACD					= mod:NewCDTimer(34, 142232, nil, nil, nil, 3)--34-43 variation
 --Xaril the Poisoned-Mind
 local timerToxicCatalystCD			= mod:NewCDTimer(33, "ej8036", nil, nil, nil, 3)
@@ -130,7 +130,7 @@ local timerToxicCatalystCD			= mod:NewCDTimer(33, "ej8036", nil, nil, nil, 3)
 local timerMesmerizeCD				= mod:NewCDTimer(34, 142671, nil, nil, nil, 3)
 --Korven the Prime
 local timerShieldBash				= mod:NewTargetTimer(6, 143974, nil, "Tank")
-local timerShieldBashCD				= mod:NewCDTimer(17, 143974, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerShieldBashCD				= mod:NewCDTimer(17, 143974, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerEncaseInAmber			= mod:NewTargetTimer(10, 142564)
 local timerEncaseInAmberCD			= mod:NewCDTimer(30, 142564, nil, nil, nil, 5, nil, nil, nil, 1, 4)--Technically a next timer but we use cd cause it's only cast if someone is low when it comes off 30 second internal cd. VERY important timer for heroic
 --Iyyokuk the Lucid
@@ -145,11 +145,11 @@ local timerBloodlettingCD			= mod:NewCDTimer(35, 143280, nil, nil, nil, 1)--35-6
 --Rik'kal the Dissector
 local timerMutate					= mod:NewBuffFadesTimer(20, 143337, nil, false)
 local timerMutateCD					= mod:NewCDCountTimer(31.5, 143337, nil, nil, nil, 3)
-local timerInjectionCD				= mod:NewNextTimer(9.5, 143339, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 4)
+local timerInjectionCD				= mod:NewNextTimer(9.5, 143339, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, 2, 4)
 --Hisek the Swarmkeeper
 --local timerAim						= mod:NewTargetTimer(5, 142948)--or is it 7, conflicting tooltips
 local timerAimCD					= mod:NewCDCountTimer(39.5, 142948, nil, nil, nil, 3)
-local timerRapidFireCD				= mod:NewCDTimer(47, 143243, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)--Heroic, 47-50 variation
+local timerRapidFireCD				= mod:NewCDTimer(47, 143243, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON)--Heroic, 47-50 variation
 
 local berserkTimer					= mod:NewBerserkTimer(720)
 
@@ -444,7 +444,7 @@ function mod:OnCombatStart(delay)
 	if self:IsMythic() then
 		self.vb.parasitesActive = 0
 	else
-		DBM:AddMsg(DBM_CORE_DYNAMIC_ADD_COUNT)
+		DBM:AddMsg(DBM_CORE_L.DYNAMIC_ADD_COUNT)
 	end
 	self.vb.aimActive = false
 	self.vb.mutateActive = false

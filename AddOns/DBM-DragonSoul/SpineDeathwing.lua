@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(318, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190913151156")
+mod:SetRevision("20200524145601")
 mod:SetCreatureID(53879)
 mod:SetEncounterID(1291)
 mod:SetZone()
@@ -39,7 +39,7 @@ local specWarnSealArmor		= mod:NewSpecialWarningSpell(105847, "Dps")
 local specWarnAmalgamation	= mod:NewSpecialWarningSpell("ej4054", false)
 
 local timerSealArmor		= mod:NewCastTimer(23, 105847, nil, nil, nil, 6)
-local timerBarrelRoll		= mod:NewCastTimer(5, "ej4050", nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON, nil, 1, 3)
+local timerBarrelRoll		= mod:NewCastTimer(5, "ej4050", nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON, nil, 1, 3)
 local timerGripCD			= mod:NewNextTimer(32, 105490, nil, nil, nil, 3)
 local timerDeathCD			= mod:NewCDTimer(8.5, 106199, nil, nil, nil, 5)--8.5-10sec variation.
 
@@ -47,7 +47,7 @@ mod:AddBoolOption("InfoFrame", true)
 mod:AddBoolOption("SetIconOnGrip", true)
 
 mod.vb.shieldCount = 0
-local sealArmorText = DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast:format(DBM:GetSpellInfo(105847), 23)
+local sealArmorText = DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.cast:format(DBM:GetSpellInfo(105847), 23)
 local gripTargets = {}
 local gripIcon = 6
 local corruptionActive = {}
@@ -102,9 +102,9 @@ function mod:OnCombatStart(delay)
 	self.vb.shieldCount = 0
 	numberOfPlayers = DBM:GetNumRealGroupMembers()
 	if self:IsDifficulty("lfr25") then
-		sealArmorText = DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast:format(DBM:GetSpellInfo(105847), 34.5)
+		sealArmorText = DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.cast:format(DBM:GetSpellInfo(105847), 34.5)
 	else
-		sealArmorText = DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast:format(DBM:GetSpellInfo(105847), 23)
+		sealArmorText = DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.cast:format(DBM:GetSpellInfo(105847), 23)
 	end
 	table.wipe(gripTargets)
 	table.wipe(corruptionActive)

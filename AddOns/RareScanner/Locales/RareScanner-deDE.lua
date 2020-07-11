@@ -158,17 +158,14 @@ if AL then
 	AL["SHOW_CHAT_ALERT"] = "Chatwarnungen ein-/ausschalten"
 	AL["SHOW_CHAT_ALERT_DESC"] = "Zeigt eine private Nachricht im Chat, wenn ein Schatz, eine Truhe oder ein NSC gefunden wird."
 	AL["SHOW_RAID_WARNING"] = "Schlachtzugswarnungen umschalten"
-	AL["SHOW_RAID_WARNING_DESC"] = "Zeigt eine Schlachtzugswarnung an, wenn ein Schatz, eine Kiste oder ein NPC gefunden wird. "
+	AL["SHOW_RAID_WARNING_DESC"] = "Zeigt eine Schlachtzugswarnung an, wenn ein Schatz, eine Kiste oder ein NPC gefunden wird."
 	AL["SOUND"] = "Sound"
 	AL["SOUND_OPTIONS"] = "Soundeinstellungen"
 	AL["SOUND_VOLUME"] = "Lautstärke"
 	AL["SOUND_VOLUME_DESC"] = "Stellt die Lautstärke von Alarmen ein."
-	AL["SYNCRONIZATION_COMPLETED"] = "Synchronisation abgeschlossen"
-	AL["SYNCRONIZE"] = "Datenbank synchronisieren"
-	AL["SYNCRONIZE_DESC"] = "Hiermit wird analysiert, welche seltenen NPC und Schätze Du bereits getötet/gesammelt hast, wenn diese Teil eines Erfolgs sind. Diese werden von der Karte entfernt. Es gibt keinen Weg den Status eines seltenen NPC oder Schatzes zu ermitteln, welche nicht Teil eines Erfolgs sind. Diese werden weiterhin auf der Karte angezeigt."
 	AL["TEST"] = "Test starten"
-	AL["TEST_DESC"] = "Drücke die Taste, um eine Beispielwarnung zu zeigen. Du kannst die Anzeige anklicken und auf eine andere Position ziehen, wo sie von nun an angezeigt wird. "
-	AL["TOC_NOTES"] = "Minikartenüberprüfung. Warnt dich visuell mit einer Schaltfläche und einer Miniaturansicht und spielt jedes Mal einen Ton ab, wenn ein seltener Gegner, ein Schatz/eine Kiste oder ein Ereignis auf deiner Minikarte entdeckt wird. "
+	AL["TEST_DESC"] = "Drücke die Taste, um eine Beispielwarnung zu zeigen. Du kannst die Anzeige anklicken und auf eine andere Position ziehen, wo sie von nun an angezeigt wird."
+	AL["TOC_NOTES"] = "Minikartenüberprüfung. Warnt dich visuell mit einer Schaltfläche und einer Miniaturansicht und spielt jedes Mal einen Ton ab, wenn ein seltener Gegner, ein Schatz/eine Kiste oder ein Ereignis auf deiner Minikarte entdeckt wird."
 	AL["TOGGLE_FILTERS"] = "Filter umschalten"
 	AL["TOGGLE_FILTERS_DESC"] = "Alle FIlter auf einmal umschalten"
 	AL["TOOLTIP_BOTTOM"] = "Unterseite"
@@ -183,10 +180,11 @@ if AL then
 
 	-- CONTINENT names
 	AL["ZONES_CONTINENT_LIST"] = {
-		[9999] = "Class Halls"; --Class Halls
+		[9999] = "Ordenshallen"; --Class Halls
 		[9998] = "Dunkelmond-Insel"; --Darkmoon Island
-		[9997] = "Dungeons/Scenarios"; --Dungeons/Scenarios
-		[9996] = "Raids"; --Raids
-		[9995] = "Unknown"; --Unknown
+		[9997] = "Instanzen/Szenarien"; --Dungeons/Scenarios
+		[9996] = "Schlachtzüge"; --Raids
+		[9995] = "Unbekannt"; --Unknown
+		[9994] = "Expedition islands"; --Expedition islands
 	}
 end

@@ -1,4 +1,4 @@
-﻿-- Thanks to q09q09 and networm!
+-- Thanks to q09q09 and networm!
 
 if GetLocale() == "zhTW" then
 	BUYEMALL_LOCALS = {

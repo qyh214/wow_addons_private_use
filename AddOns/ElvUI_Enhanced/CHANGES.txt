@@ -1,12 +1,12 @@
-tag fe7e6ae49852857fcb7e3725b5290e7e866a4a51 3.4.5
+tag 67aebe07e9183c56ca262103692a649933098055 3.4.6
 Author:	Bocky <nick@bocky.nl>
-Date:	Sat Mar 28 15:43:28 2020 +0100
+Date:	Fri Jul 10 14:18:08 2020 +0200
 
-Progression update
+ElvUI fix
 
-commit a89e5dfdd982a5ccb4189d20483cdaf34c4260b7
+commit 318cbcdf0cd2c0cf25a38c0cbddfae22eec461a6
 Author: Nick <git@bockmeulen.nl>
-Date:   Sat Mar 28 15:32:09 2020 +0100
+Date:   Fri Jul 10 14:17:43 2020 +0200
 
-    Progression update
+    remove beta
 

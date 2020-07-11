@@ -89,9 +89,9 @@ L:SetOptionLocalization({
 	TimerSpecial			= "Show timer for first special ability cast",
 	RangeFrame				= "Show range frame: (3) for $spell:105269, (10) for $journal:4327",
 	AnnounceFrostTombIcons	= "Announce icons for $spell:104451 targets to raid chat<br/>(requires raid leader)",
-	warnFrostTombCast		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.cast:format(104448),
-	SetIconOnFrostTomb		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(104451),
-	SetIconOnFrostflake		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(109325),
+	warnFrostTombCast		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.cast:format(104448),
+	SetIconOnFrostTomb		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(104451),
+	SetIconOnFrostflake		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(109325),
 	SpecialCount			= "Play countdown sound for $spell:105256 or $spell:105465",
 	SetBubbles				= "Automatically disable chat bubbles when $spell:104451 available<br/>(restores them when combat ends)"
 })
@@ -166,10 +166,10 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnSealArmor			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.cast:format(105847),
+	warnSealArmor			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.cast:format(105847),
 	SpecWarnTendril			= "Show special warning when you are missing $spell:105563 debuff",
 	InfoFrame				= "Show info frame for players without $spell:105563",
-	SetIconOnGrip			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(105490),
+	SetIconOnGrip			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(105490),
 	ShowShieldInfo			= "Show absorb bar for $spell:105479<br/>(Ignores boss health frame option)"
 })
 
@@ -188,7 +188,7 @@ L= DBM:GetModLocalization(333)
 
 L:SetOptionLocalization({
 	RangeFrame			= "Show dynamic range frame based on player debuff status for<br/>$spell:108649 on Heroic difficulty",
-	SetIconOnParasite	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(108649)
+	SetIconOnParasite	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(108649)
 })
 
 L:SetMiscLocalization({

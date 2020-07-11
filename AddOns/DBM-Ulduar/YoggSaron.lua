@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("YoggSaron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222200840")
+mod:SetRevision("20200530203003")
 mod:SetCreatureID(33288)
 mod:SetEncounterID(1143)
 mod:SetModelID(28817)
@@ -31,7 +31,7 @@ local warnBrainLink 				= mod:NewTargetAnnounce(63802, 3)
 local warnBrainPortalSoon			= mod:NewAnnounce("WarnBrainPortalSoon", 2, 57687)
 local warnEmpowerSoon				= mod:NewSoonAnnounce(64465, 4)
 
-local specWarnBrainLink 			= mod:NewSpecialWarningYou(63802)
+local specWarnBrainLink 			= mod:NewSpecialWarningYou(63802, nil, nil, nil, 1, 2)
 local specWarnSanity 				= mod:NewSpecialWarning("SpecWarnSanity")
 local specWarnMadnessOutNow			= mod:NewSpecialWarning("SpecWarnMadnessOutNow")
 local specWarnDeafeningRoar			= mod:NewSpecialWarningSpell(64189, nil, nil, nil, 1, 2)
@@ -54,10 +54,10 @@ local timerCastDeafeningRoar		= mod:NewCastTimer(2.3, 64189, nil, nil, nil, 2)
 local timerNextDeafeningRoar		= mod:NewNextTimer(30, 64189, nil, nil, nil, 2)
 local timerAchieve					= mod:NewAchievementTimer(420, 12396)--3012
 
-mod:AddBoolOption("SetIconOnFearTarget", true)
-mod:AddBoolOption("SetIconOnFervorTarget", false)
-mod:AddBoolOption("SetIconOnBrainLinkTarget", true)
-mod:AddSetIconOption("SetIconOnBeacon", 64465, true, true)
+mod:AddSetIconOption("SetIconOnFearTarget", 63802, true, false, {6})
+mod:AddSetIconOption("SetIconOnFervorTarget", 63802, false, false, {7})
+mod:AddSetIconOption("SetIconOnBrainLinkTarget", 63802, true, false, {1, 2})
+mod:AddSetIconOption("SetIconOnBeacon", 64465, true, true, {1, 2, 3, 4, 5, 6, 7, 8})
 mod:AddInfoFrameOption(212647)
 
 mod.vb.phase = 1
@@ -210,6 +210,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:ScanForMobs(args.destGUID, 2, self.vb.beaconIcon, 1, 0.2, 10, "SetIconOnBeacon")
 		end
 		self.vb.beaconIcon = self.vb.beaconIcon - 1
+		if self.vb.beaconIcon == 0 then
+			self.vb.beaconIcon = 8
+		end
 	end
 end
 

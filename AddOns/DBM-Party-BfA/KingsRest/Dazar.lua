@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2172, "DBM-Party-BfA", 3, 1041)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200220034831")
+mod:SetRevision("20200602212246")
 mod:SetCreatureID(136160)
 mod:SetEncounterID(2143)
 mod:SetZone()
@@ -34,7 +34,7 @@ local specWarnDeadlyRoar			= mod:NewSpecialWarningSpell(269369, nil, nil, nil, 2
 
 local timerGaleSlashCD				= mod:NewCDTimer(13, 268403, nil, nil, nil, 3)
 local timerQuakingLeapCD			= mod:NewCDTimer(19.3, 268932, nil, nil, nil, 3)
-local timerBladeComboCD				= mod:NewCDTimer(14.5, 268586, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerBladeComboCD				= mod:NewCDTimer(14.5, 268586, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)
 --Adds
 local timerHuntingLeapCD			= mod:NewCDTimer(12.8, 269231, nil, nil, nil, 3)
 local timerDeathlyRoarCD			= mod:NewCDTimer(13.6, 269369, nil, nil, nil, 2)
@@ -43,7 +43,7 @@ local timerDeathlyRoarCD			= mod:NewCDTimer(13.6, 269369, nil, nil, nil, 2)
 local seenMobs = {}
 
 --Handles the ICD that Boss triggers on other abilities
-local function updateAllTimers(self, ICD)
+local function updateAllTimers(_, ICD)
 	DBM:Debug("updateAllTimers running", 3)
 	if timerGaleSlashCD:GetRemaining() < ICD then
 		local elapsed, total = timerGaleSlashCD:GetTime()
@@ -68,7 +68,7 @@ local function updateAllTimers(self, ICD)
 	end
 end
 
-function mod:LeapTarget(targetname, uId)
+function mod:LeapTarget(targetname)
 	if not targetname then return end
 	if targetname == UnitName("player") then
 		specWarnQuakingLeap:Show()

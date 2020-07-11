@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Ignis", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190722195205")
+mod:SetRevision("20200530203003")
 mod:SetCreatureID(33118)
 mod:SetEncounterID(1136)
 mod:SetModelID(29185)
@@ -31,7 +31,7 @@ local timerAchieve				= mod:NewAchievementTimer(240, 12325)--2930
 
 mod.vb.ConstructCount = 0
 
-mod:AddBoolOption("SlagPotIcon", false)
+mod:AddSetIconOption("SlagPotIcon", 63477, false, false, {8})
 
 function mod:OnCombatStart(delay)
 	self.vb.ConstructCount = 0

@@ -172,7 +172,6 @@ L:SetOptionLocalization{
 	TimerStrider		= "Zeige Zeit bis nächster Schreiter",
 	TimerNaga			= "Zeige Zeit bis nächster Naga",
 	SpecWarnElemental	= "Spezialwarnung, wenn Besudelter Elementar kommt",
-	RangeFrame			= "Zeige Abstandsfenster (10m)",
 	AutoChangeLootToFFA	= "Plündermodus in Phase 2 automatisch auf 'Jeder gegen jeden' einstellen"
 }
 

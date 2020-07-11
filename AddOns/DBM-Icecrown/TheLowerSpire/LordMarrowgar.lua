@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("LordMarrowgar", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20200524145648")
 mod:SetCreatureID(36612)
 mod:SetEncounterID(1101)
 mod:SetModelID(31119)
@@ -23,7 +23,7 @@ local warnImpale			= mod:NewTargetAnnounce(72669, 3)
 local specWarnColdflame		= mod:NewSpecialWarningMove(69146, nil, nil, nil, 1, 2)
 local specWarnWhirlwind		= mod:NewSpecialWarningRun(69076, nil, nil, nil, 4, 2)
 
-local timerBoneSpike		= mod:NewCDTimer(18, 69057, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
+local timerBoneSpike		= mod:NewCDTimer(18, 69057, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)
 local timerWhirlwindCD		= mod:NewCDTimer(90, 69076, nil, nil, nil, 2)
 local timerWhirlwind		= mod:NewBuffActiveTimer(20, 69076, nil, nil, nil, 6)
 local timerBoned			= mod:NewAchievementTimer(8, 4610)

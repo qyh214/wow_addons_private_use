@@ -110,13 +110,13 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	warnRageRagnarosSoon		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.prewarn:format(101109),
+	warnRageRagnarosSoon		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.prewarn:format(101109),
 	warnSplittingBlow			= "Предупреждение для $spell:100877",
 	warnEngulfingFlame			= "Предупреждение для $spell:99171",
 	WarnEngulfingFlameHeroic	= "Предупреждение о появлении $spell:99171 (в героическом режиме)",
 	warnSeedsLand				= "Отсчитывать время до появления $spell:98520, а не до их появления в воздухе",
-	warnEmpoweredSulf			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.cast:format(100997),
-	timerRageRagnaros			= DBM_CORE_AUTO_TIMER_OPTIONS.cast:format(101109),
+	warnEmpoweredSulf			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.cast:format(100997),
+	timerRageRagnaros			= DBM_CORE_L.AUTO_TIMER_OPTIONS.cast:format(101109),
 	TimerPhaseSons				= "Отсчет времени до окончания \"фазы Сыновей пламени\"",
 	InfoHealthFrame				= "Информационное окно для игроков с низким уровнем здоровья (<100к)",
 	MeteorFrame					= "Информационное окно для целей $spell:99849",

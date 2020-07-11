@@ -1,7 +1,7 @@
 if GetLocale() ~= "ruRU" then return end
 
-if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
-local L = DBM_GUI_Translations
+if not DBM_GUI_L then DBM_GUI_L = {} end
+local L = DBM_GUI_L
 
 L.MainFrame = "Deadly Boss Mods"
 
@@ -106,7 +106,7 @@ L.ShowEngageMessage 		= "Показывать сообщения о вступл
 L.ShowDefeatMessage 		= "Показывать сообщения об убийстве босса в окне чата"
 L.ShowGuildMessages 		= "Показывать сообщения о вступлении в бой/убийстве/вайпе рейда гильдии в окне чата"
 L.ShowGuildMessagesPlus		= "Так же показывать сообщения о вступлении в бой/убийстве/вайпе для группы гильдии в M+ (требуется опция рейда)"
-L.WhisperMessages			= "Параметры приватных сообщений"
+L.Area_WhisperMessages		= "Параметры приватных сообщений"
 L.AutoRespond 				= "Включить авто-ответ в бою"
 L.WhisperStats 				= "Добавлять статистику убийств/вайпов в авто-ответ"
 L.DisableStatusWhisper 		= "Отключить ответы на запрос статуса боя шепотом для всей группы (требуется лидер группы). Применяется только для обычных/гер./эпох. рейдов и испытаний/эпох. подземелий"
@@ -146,7 +146,6 @@ L.BarEndColorUI				= "Конечный цвет (Польз.)"
 L.Bar7Header				= "Параметры пользовательского индикатора"
 L.Bar7ForceLarge			= "Всегда использовать большой индикатор"
 L.Bar7CustomInline			= "Использовать пользовательскую '!' встроенную иконку"
-L.Bar7Footer				= "(Dummy Bar won't live update)"
 
 -- Tab: Timers
 L.AreaTitle_BarColors		= "Цвета индикатора по типу таймера"
@@ -173,7 +172,7 @@ L.KeepBar2					= "(когда поддерживается модулем)"
 L.FadeBar					= "Fade timers for out of range abilities"
 
 -- Tab: Spec Warn Frame
-L.Panel_SpecWarnFrame		= "Специальные предупреждения"
+L.Panel_SpecWarnFrame		= "Специальные предупреждения для рейда"
 L.Area_SpecWarn				= "Настройка специальных предупреждений"
 L.SpecWarn_ClassColor		= "Использовать цвета классов для спец-предупреждений"
 L.ShowSWarningsInChat 		= "Показывать спец-предупреждения в окне чата"
@@ -230,23 +229,25 @@ L.EventFilterMythicMusic	= "Не проигрывать музыку боя на
 
 -- Tab: Global Filter
 L.Panel_SpamFilter			= "Глобальные отключения и фильтры"
-L.Area_SpamFilter_Outgoing	= "Настройки глобальных отключений и фильтров"
+L.Area_SpamFilter_Anounces	= "Announce Global Disable & Filter Options"
 L.SpamBlockNoShowAnnounce	= "Не показывать текст или проигрывать звук для ЛЮБЫХ общих объявлений"
 L.SpamBlockNoShowTgtAnnounce= "Не показывать текст или проигрывать звук для общих объявлений ЦЕЛИ (фильтр выше переопределяет этот)"
-L.SpamBlockNoSpecWarn		= "Не показывать спец-предупреждения и не проигрывать звуки для них"
 L.SpamBlockNoSpecWarnText	= "Не показывать текст спец-предупреждений, но разрешить голосовые пакеты (фильтр выше переопределяет этот)"
+
+L.Area_SpamFilter_Timers	= "Timer Global Disable & Filter Options"
 L.SpamBlockNoShowTimers		= "Не показывать таймеры (отсчет времени)"
 L.SpamBlockNoShowUTimers	= "Не показывать таймеры, отправленные пользователями (пользов./пул/отдых)"
+L.SpamBlockNoCountdowns		= "Не воспроизводить звуки обратного отсчета"
+
+L.Area_SpamFilter_Misc		= "Misc Global Disable & Filter Options"
 L.SpamBlockNoSetIcon		= "Не устанавливать метки на цели"
 L.SpamBlockNoRangeFrame		= "Не показывать окно проверки дистанции"
 L.SpamBlockNoInfoFrame		= "Не показывать информационное окно"
 L.SpamBlockNoHudMap			= "Не показывать HudMap"
 L.SpamBlockNoNameplate		= "Не показывать Nameplate Auras (отключает полностью)"
 L.SpamBlockNoNameplateLines	= "Не показывать линии Nameplate Aura (иконки аур будут отображаться)"
-L.SpamBlockNoCountdowns		= "Не воспроизводить звуки обратного отсчета"
 L.SpamBlockNoYells			= "Не отправлять крики в чат"
 L.SpamBlockNoNoteSync		= "Не принимать заметки"
-L.SpamBlockNoReminders		= "Не показывать никаких сообшений при входе в игру, рекомендаций или об обновлениях (НЕ рекомендуется)"
 
 L.Area_Restore				= "Параметры DBM для возврата настроек (восстанавливать ли предыдущее пользов. состояние по окончание работы модулей)"
 L.SpamBlockNoIconRestore	= "Не сохранять состояние меток и восстанавливать их после боя"
@@ -287,7 +288,6 @@ L.DisableSFX				= "Отключить канал звуковых эффекто
 L.DisableCinematics			= "Отключить внутриигровые ролики"
 L.OnlyFight					= "Только во время боя, после того как ролик был показан один раз"
 L.AfterFirst				= "После одного просмотра"
-L.Always					= "Всегда"
 L.CombatOnly				= "Отключить в бою (любом)"
 L.RaidCombat				= "Отключить в бою (только боссы)"
 

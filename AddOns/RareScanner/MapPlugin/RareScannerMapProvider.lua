@@ -100,7 +100,6 @@ function RareScanner:RefreshAllData(mapID, dataProviderMixin)
 	end
 end
 
- 
 function RareScanner:AddPin(npcID, npcInfo, mapID, dataProviderMixin)
 	local npcInfoBak = nil
 	
@@ -109,14 +108,14 @@ function RareScanner:AddPin(npcID, npcInfo, mapID, dataProviderMixin)
 		for zoneID, zoneInfo in pairs (private.ZONE_IDS[npcID].zoneID) do
 			if (zoneID == mapID) then
 				npcInfoBak = {}
-				npcInfoBak.coordX  = private.dbglobal.rares_found[npcID].coordX
-				npcInfoBak.coordY  = private.dbglobal.rares_found[npcID].coordY
-				npcInfoBak.mapID  = private.dbglobal.rares_found[npcID].mapID
-				npcInfoBak.artID  = private.dbglobal.rares_found[npcID].artID
+				npcInfoBak.coordX = private.dbglobal.rares_found[npcID].coordX
+				npcInfoBak.coordY = private.dbglobal.rares_found[npcID].coordY
+				npcInfoBak.mapID = private.dbglobal.rares_found[npcID].mapID
+				npcInfoBak.artID = private.dbglobal.rares_found[npcID].artID
 				npcInfo.mapID = mapID
 				npcInfo.coordX = zoneInfo.x
 				npcInfo.coordY = zoneInfo.y
-				npcInfo.artID = C_Map.GetMapArtID(mapID)
+				npcInfo.artID = { C_Map.GetMapArtID(mapID) }
 				break;
 			end
 		end
@@ -135,7 +134,7 @@ function RareScanner:AddPin(npcID, npcInfo, mapID, dataProviderMixin)
 	end
 	
 	-- If the map is in a different phase
-	if ((npcInfo.artID and npcInfo.artID ~= C_Map.GetMapArtID(mapID)) or (private.ZONE_IDS[npcID] and private.ZONE_IDS[npcID].artID and private.ZONE_IDS[npcID].artID ~= C_Map.GetMapArtID(mapID))) then
+	if ((npcInfo.artID and not RS_tContains(npcInfo.artID, C_Map.GetMapArtID(mapID))) or (private.ZONE_IDS[npcID] and not RS_tContains(private.ZONE_IDS[npcID].artID, C_Map.GetMapArtID(mapID)))) then
 		--RareScanner:PrintDebugMessage("DEBUG: Ignorado por pertenecer a una fase del mapa distinta a la actual")
 		return false
 	end
@@ -190,6 +189,13 @@ function RareScanner:AddPin(npcID, npcInfo, mapID, dataProviderMixin)
 		-- If filtered we dont show either
 		if (next(private.db.general.filteredRares) ~= nil and private.db.general.filteredRares[npcID] == false) then
 			--RareScanner:PrintDebugMessage("DEBUG: Ignorado porque este NPC esta siendo filtrado")
+			return false
+		end
+		
+		-- If friendly and filtered dont show
+		local faction, _ = UnitFactionGroup("player")
+		if (private.ZONE_IDS[npcID] and private.ZONE_IDS[npcID].friendly and not private.db.map.displayFriendlyNpcIcons and RS_tContains(private.ZONE_IDS[npcID].friendly, string.sub(faction, 1, 1))) then
+			--RareScanner:PrintDebugMessage("DEBUG: Ignorado porque este NPC es amistoso")
 			return false
 		end
 
@@ -284,7 +290,7 @@ function RareScanner:AddPin(npcID, npcInfo, mapID, dataProviderMixin)
 	else
 		local pin = self.pinFramesPool:Acquire()
 		RareScanner:SetUpMapPin(pin, npcID, npcInfo)
-		pin:SetScale(0.7)
+		pin.Texture:SetScale(private.db.map.minimapscale)
 		HBD_Pins:AddMinimapIconMap(self, pin, npcInfo.mapID, tonumber(npcInfo.coordX), tonumber(npcInfo.coordY), false, false)
 				
 		-- Adds overlay if active
@@ -307,31 +313,17 @@ end
 
 RareScannerDataProviderMixin = CreateFromMixins(MapCanvasDataProviderMixin);
 
-function RareScannerDataProviderMixin:OnAdded(mapCanvas)
-	MapCanvasDataProviderMixin.OnAdded(self, mapCanvas);
-	self:InitializeAllTrackingTables();
+function RareScannerDataProviderMixin:OnMapChanged()
+	self:RefreshAllData();
 end
 
-function RareScannerDataProviderMixin:OnShow()
-
-end
- 
 function RareScannerDataProviderMixin:OnHide()
 	self:RemoveAllData()
 end
- 
-function RareScannerDataProviderMixin:OnEvent(event, ...)
 
-end
- 
 function RareScannerDataProviderMixin:RemoveAllData()
 	self:GetMap():RemoveAllPinsByTemplate("RSRarePinTemplate");
 	self:GetMap():RemoveAllPinsByTemplate("RSOverlayTemplate");
-	self:InitializeAllTrackingTables();
-end
- 
-function RareScannerDataProviderMixin:InitializeAllTrackingTables()
-
 end
  
 function RareScannerDataProviderMixin:RefreshAllData(fromOnShow)
@@ -344,10 +336,5 @@ function RareScannerDataProviderMixin:RefreshAllData(fromOnShow)
 	local mapID = self:GetMap():GetMapID();
 	RareScanner:PrintDebugMessage("DEBUG: MAPID actual "..mapID.." ARTID actual "..C_Map.GetMapArtID(mapID))
 
-	-- 
 	RareScanner:RefreshAllData(mapID, self)
-end
- 
-function RareScannerDataProviderMixin:OnMapChanged()
-	self:RefreshAllData();
 end

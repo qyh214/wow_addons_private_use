@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BlackrockFoundryTrash", "DBM-BlackrockFoundry")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814112014")
+mod:SetRevision("20200524145633")
 --mod:SetModelID(47785)
 mod:SetZone()
 mod.isTrashMod = true
@@ -20,7 +20,7 @@ local warnEmberInWind				= mod:NewTargetAnnounce(177855, 3, nil, false)
 local warnBlastWaves				= mod:NewCountAnnounce(159750, 4)--On mythic the miniboss casts 3 of them in a row at different locations, 3 seconds apart. Basically sindragosa
 
 local specWarnOverheadSmash			= mod:NewSpecialWarningTaunt(175765)
-local specWarnBlastWave				= mod:NewSpecialWarningMoveTo(156446, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format(156446))
+local specWarnBlastWave				= mod:NewSpecialWarningMoveTo(156446, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(156446))
 local specWarnInsatiableHunger		= mod:NewSpecialWarningRun(159632, nil, nil, nil, 4)
 local specWarnLumberingStrength		= mod:NewSpecialWarningRun(175993, "Tank", nil, 2, 4)
 local specWarnLivingBlaze			= mod:NewSpecialWarningMoveAway(175583)

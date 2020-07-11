@@ -19,8 +19,8 @@ L:SetOptionLocalization({
 	TwilightBlastArrow		= "Show DBM arrow when $spell:86369 is near you",
 	RangeFrame				= "Show range frame (10)",
 	BlackoutShieldFrame		= "Show boss health with a health bar for $spell:86788",
-	BlackoutIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(86788),
-	EngulfingIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(86622)
+	BlackoutIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(86788),
+	EngulfingIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(86622)
 })
 
 L:SetMiscLocalization({
@@ -51,13 +51,13 @@ L:SetOptionLocalization({
 	RangeFrame				= "Show range frame automatically when needed",
 	yellScrewed				= "Yell when you have $spell:83099 &amp; $spell:92307 at same time",
 	InfoFrame				= "Show info frame for players without $spell:83581 or $spell:83500",
-	HeartIceIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(82665),
-	BurningBloodIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(82660),
-	LightningRodIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(83099),
-	GravityCrushIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(84948),
-	FrostBeaconIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92307),
-	StaticOverloadIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92067),
-	GravityCoreIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92075)
+	HeartIceIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(82665),
+	BurningBloodIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(82660),
+	LightningRodIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(83099),
+	GravityCrushIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(84948),
+	FrostBeaconIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92307),
+	StaticOverloadIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92067),
+	GravityCoreIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92075)
 })
 
 L:SetMiscLocalization({
@@ -79,7 +79,7 @@ L:SetOptionLocalization({
 	CorruptingCrashArrow	= "Show DBM arrow when $spell:81685 is near you",
 	InfoFrame				= "Show info frame for $journal:3165",
 	RangeFrame				= "Show range frame (5) for $journal:3165",
-	SetIconOnWorship		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(91317)
+	SetIconOnWorship		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(91317)
 })
 
 ----------------

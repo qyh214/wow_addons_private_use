@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2377, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200220034831")
+mod:SetRevision("20200610172832")
 mod:SetCreatureID(156575)
 mod:SetEncounterID(2328)
 mod:SetZone()
@@ -43,7 +43,7 @@ local specWarnTorment						= mod:NewSpecialWarningDodgeCount(306208, nil, nil, n
 local specWarnTerrorWave					= mod:NewSpecialWarningInterruptCount(316211, "HasInterrupt", nil, nil, 1, 2)
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(270290, nil, nil, nil, 1, 8)
 
-local timerAbyssalStrikeCD					= mod:NewCDTimer(40, 311551, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 3)--42.9-47
+local timerAbyssalStrikeCD					= mod:NewCDTimer(40, 311551, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, 2, 3)--42.9-47
 local timerVoidRitualCD						= mod:NewNextCountTimer(79.7, 312336, nil, nil, nil, 5, nil, nil, nil, 1, 4)
 local timerSoulFlayCD						= mod:NewCDCountTimer(57, 306319, nil, nil, nil, 3)--57 but will spell queue behind other spells
 local timerTormentCD						= mod:NewNextCountTimer(46.5, 306208, nil, nil, nil, 3, nil, nil, nil, 3, 4)
@@ -53,7 +53,7 @@ local berserkTimer							= mod:NewBerserkTimer(600)
 mod:AddInfoFrameOption(312406, true)
 mod:AddSetIconOption("SetIconOnVoidWoken2", 312406, false, false, {1, 2, 3})
 mod:AddSetIconOption("SetIconOnAdds", "ej21227", true, true, {4, 5, 6, 7, 8})
-mod:AddMiscLine(DBM_CORE_OPTION_CATEGORY_DROPDOWNS)
+mod:AddMiscLine(DBM_CORE_L.OPTION_CATEGORY_DROPDOWNS)
 mod:AddDropdownOption("InterruptBehavior", {"Four", "Five", "Six", "NoReset"}, "Four", "misc")
 
 mod.vb.ritualCount = 0
@@ -99,6 +99,8 @@ do
 					end
 				end
 			end
+		else--Nothing left to track, auto hide
+			DBM.InfoFrame:Hide()
 		end
 		return lines, sortedLines
 	end
@@ -232,6 +234,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.SetIconOnVoidWoken2 then
 			self:SetIcon(args.destName, #voidWokenTargets)
 		end
+		if self.Options.InfoFrame and not DBM.InfoFrame:IsShown() then
+			DBM.InfoFrame:SetHeader(OVERVIEW)
+			DBM.InfoFrame:Show(8, "function", updateInfoFrame, false, false)
+		end
 	elseif spellId == 314179 then
 		warnFanaticism:Show(args.destName)
 	elseif spellId == 311551 then
@@ -285,7 +291,7 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
 do
 	--"<185.26 22:54:22> [CHAT_MSG_MONSTER_YELL] Obelisks of shadow, rise!#Dark Inquisitor Xanesh###Dark Inquisitor Xanesh##0#0##0#920#nil#0#false#false#false#false", -- [1338]
-	local bossName = DBM:EJ_GetSectionInfo(20786)
+	--local bossName = DBM:EJ_GetSectionInfo(20786)
 	function mod:CHAT_MSG_MONSTER_YELL(msg, _, _, _, target)
 		if not self:IsInCombat() then return end
 		--Boss only targets himself during a yell for Obelisk spawns, any other yells he targets a playername, azshara, or nobody

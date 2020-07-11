@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2143, "DBM-Party-BfA", 6, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200220034831")
+mod:SetRevision("20200602212246")
 mod:SetCreatureID(133384)
 mod:SetEncounterID(2125)
 mod:SetZone()
@@ -33,7 +33,7 @@ local specWarnKnotofSnakesYou		= mod:NewSpecialWarningYou(263958, nil, nil, nil,
 local yellKnotofSnakes				= mod:NewYell(263958)
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(263927, nil, nil, nil, 1, 8)
 
-local timerHadotoxinCD				= mod:NewAITimer(13, 263957, nil, "Tank|Healer|RemovePoison", nil, 5, nil, DBM_CORE_TANK_ICON..DBM_CORE_POISON_ICON)
+local timerHadotoxinCD				= mod:NewAITimer(13, 263957, nil, "Tank|Healer|RemovePoison", nil, 5, nil, DBM_CORE_L.TANK_ICON..DBM_CORE_L.POISON_ICON)
 local timerNoxiousBreathCD			= mod:NewCDTimer(89.3, 272657, nil, nil, nil, 3)
 --local timerBlindingSandCD			= mod:NewCDTimer(51, 263914, nil, nil, nil, 2)
 --local timerHatchCD					= mod:NewCDTimer(43.9, 264239, nil, nil, nil, 1)--even need a CD bar or just cast bar?
@@ -121,7 +121,7 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spell
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, spellId)
 	if spellId == 264172 then--Summon (cast when he burrows)
 		timerHadotoxinCD:Stop()
 		timerNoxiousBreathCD:Stop()

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(870, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222213340")
+mod:SetRevision("20200524145716")
 mod:SetCreatureID(73720, 71512)
 mod:SetEncounterID(1594)
 mod:DisableESCombatDetection()
@@ -70,12 +70,12 @@ local specWarnGustingCraneKick	= mod:NewSpecialWarningSpell(146180, nil, nil, ni
 local timerCombatStarts			= mod:NewCombatTimer(18)
 --Massive Crate of Goods
 local timerReturnToStoneCD		= mod:NewNextTimer(12, 145489)
-local timerSetToBlowCD			= mod:NewNextTimer(9.6, 145996, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
-local timerSetToBlow			= mod:NewBuffFadesTimer(30, 145996, nil, nil, nil, 5, nil, DBM_CORE_DEADLY_ICON, nil, 1, 4)
+local timerSetToBlowCD			= mod:NewNextTimer(9.6, 145996, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)
+local timerSetToBlow			= mod:NewBuffFadesTimer(30, 145996, nil, nil, nil, 5, nil, DBM_CORE_L.DEADLY_ICON, nil, 1, 4)
 --Stout Crate of Goods
 local timerMatterScramble		= mod:NewCastTimer(7, 145288, nil, "-Tank")
 local timerMatterScrambleCD		= mod:NewCDTimer(18, 145288, nil, nil, nil, 5)--18-22 sec variation. most of time it's 20 exactly, unsure what causes the +-2 variations
-local timerCrimsonReconCD		= mod:NewNextTimer(15, 142947, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerCrimsonReconCD		= mod:NewNextTimer(15, 142947, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerMantidSwarmCD		= mod:NewCDTimer(35, 142539, nil, nil, nil, 1)
 local timerResidueCD			= mod:NewCDTimer(18, 145786, nil, "MagicDispeller", nil, 5)
 local timerWindstormCD			= mod:NewCDTimer(34, 145286, nil, false)--Spammy but might be useful to some, if they aren't releasing a ton of these at once.
@@ -90,9 +90,9 @@ local timerGustingCraneKickCD	= mod:NewCDTimer(18, 146180)
 local timerPathOfBlossomsCD		= mod:NewCDTimer(15, 146253)
 
 --Berserk Timer stuff
-local berserkTimer				= mod:NewTimer(480, DBM_CORE_GENERIC_TIMER_BERSERK, 28131, nil, "timer_berserk")
-local berserkWarning1			= mod:NewAnnounce(DBM_CORE_GENERIC_WARNING_BERSERK, 1, nil, "warning_berserk", false)
-local berserkWarning2			= mod:NewAnnounce(DBM_CORE_GENERIC_WARNING_BERSERK, 4, nil, "warning_berserk", false)
+local berserkTimer				= mod:NewTimer(480, DBM_CORE_L.GENERIC_TIMER_BERSERK, 28131, nil, "timer_berserk")
+local berserkWarning1			= mod:NewAnnounce(DBM_CORE_L.GENERIC_WARNING_BERSERK, 1, nil, "warning_berserk", false)
+local berserkWarning2			= mod:NewAnnounce(DBM_CORE_L.GENERIC_WARNING_BERSERK, 4, nil, "warning_berserk", false)
 
 mod:AddRangeFrameOption(10, 145987)
 mod:AddInfoFrameOption("ej8350")--Eh, "overview" works.
@@ -289,15 +289,15 @@ function mod:UPDATE_UI_WIDGET(table)
 	if time % 10 == 0 then
 		berserkTimer:Update(maxTimer-time-1, maxTimer)
 		if time == 300 and self.Options["timer_berserk"] and self:AntiSpam(2, 5) then
-			berserkWarning1:Show(5, DBM_CORE_MIN)
+			berserkWarning1:Show(5, DBM_CORE_L.MIN)
 		elseif time == 180 and self.Options["timer_berserk"] and self:AntiSpam(2, 5) then
-			berserkWarning1:Show(3, DBM_CORE_MIN)
+			berserkWarning1:Show(3, DBM_CORE_L.MIN)
 		elseif time == 60 and self.Options["timer_berserk"] and self:AntiSpam(2, 5) then
-			berserkWarning2:Show(1, DBM_CORE_MIN)
+			berserkWarning2:Show(1, DBM_CORE_L.MIN)
 		elseif time == 30 and self.Options["timer_berserk"] and self:AntiSpam(2, 5) then
-			berserkWarning2:Show(30, DBM_CORE_SEC)
+			berserkWarning2:Show(30, DBM_CORE_L.SEC)
 		elseif time == 10 and self.Options["timer_berserk"] and self:AntiSpam(2, 5) then
-			berserkWarning2:Show(10, DBM_CORE_SEC)
+			berserkWarning2:Show(10, DBM_CORE_L.SEC)
 		end
 	end
 	worldTimer = time

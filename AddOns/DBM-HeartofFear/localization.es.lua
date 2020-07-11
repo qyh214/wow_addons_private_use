@@ -18,10 +18,10 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnEcho			= "Anunciar cuando aparezca un eco",
 	warnEchoDown		= "Anunciar cuando se derrote a un eco",
-	specwarnAttenuation	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format(127834),
+	specwarnAttenuation	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(127834),
 	specwarnPlatform	= "Mostrar aviso especial cuando el jefe cambie de plataforma",
 	ArrowOnAttenuation	= "Mostrar flecha durante $spell:127834 para indicar la dirección en que moverse",
-	MindControlIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(122740)
+	MindControlIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(122740)
 })
 
 L:SetMiscLocalization({
@@ -35,8 +35,8 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(744)
 
 L:SetOptionLocalization({
-	UnseenStrikeArrow	= DBM_CORE_AUTO_ARROW_OPTION_TEXT:format(122949),
-	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 123175)
+	UnseenStrikeArrow	= DBM_CORE_L.AUTO_ARROW_OPTION_TEXT:format(122949),
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(10, 123175)
 })
 
 -------------
@@ -50,9 +50,9 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnCrush		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(122774),
+	warnCrush		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(122774),
 	specwarnUnder	= "Mostrar aviso especial cuando estés debajo del jefe",
-	PheromonesIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(122835)
+	PheromonesIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(122835)
 })
 
 L:SetMiscLocalization({
@@ -66,8 +66,8 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(741)
 
 L:SetOptionLocalization({
-	AmberPrisonIcons		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(121885),
-	specWarnReinforcements	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format("ej6554")
+	AmberPrisonIcons		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(121885),
+	specWarnReinforcements	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format("ej6554")
 })
 
 ------------------------------
@@ -94,7 +94,7 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	warnReshapeLife				= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(122784),
+	warnReshapeLife				= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.target:format(122784),
 	warnReshapeLifeTutor		= "Mostrar explicación de facultades del Ensamblaje mutado",
 	warnAmberExplosion			= "Mostrar aviso (y quién lo lanza) cuando $spell:122398 se esté lanzando",
 	warnAmberExplosionAM		= "Mostrar aviso personal cuando la Monstruosidad de ámbar lance $spell:122398 (para interrumpirla)",
@@ -104,7 +104,7 @@ L:SetOptionLocalization({
 	specwarnAmberExplosionYou	= "Mostrar aviso especial para interrumpir tu propia $spell:122398",
 	specwarnAmberExplosionAM	= "Mostrar aviso especial para interrumpir la $spell:122402 de la Monstruosidad de ámbar",
 	specwarnAmberExplosionOther	= "Mostrar aviso especial para interrumpir la $spell:122398 de los Ensamblajes mutados descontrolados",
-	timerDestabalize			= DBM_CORE_AUTO_TIMER_OPTIONS.target:format(123059),
+	timerDestabalize			= DBM_CORE_L.AUTO_TIMER_OPTIONS.target:format(123059),
 	timerAmberExplosionAMCD		= "Mostrar temporizador para la siguiente $spell:122402 de la Monstruosidad de ámbar",
 	InfoFrame					= "Mostrar marco de información de la voluntad de los jugadores"
 })
@@ -125,9 +125,9 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnAmberTrap		= "Mostrar aviso (con progreso) cuando se esté creando una $spell:125826",
 	InfoFrame			= "Mostrar marco de información de jugadores afectados por $spell:125390",
-	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(5, 123735),
-	StickyResinIcons	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(124097),
-	HeartOfFearIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(123845)
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(5, 123735),
+	StickyResinIcons	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(124097),
+	HeartOfFearIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(123845)
 })
 
 L:SetMiscLocalization({

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NexusLegendary", "DBM-Firelands")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005904")
+mod:SetRevision("20200524145601")
 mod:SetCreatureID(53472)
 mod:SetModelID(32230)
 mod:SetZone()
@@ -20,7 +20,7 @@ local specwarnHealInterrupt		= mod:NewSpecialWarningInterrupt(99392, "HasInterru
 local specwarnHealDispel		= mod:NewSpecialWarningDispel(99392, "MagicDispeller", nil, 2, 1, 2)
 
 local timerBreath				= mod:NewBuffActiveTimer(14, 99502, nil, nil, nil, 3)
-local timerHeal					= mod:NewTargetTimer(16, 99392, nil, nil, nil, 5, nil, DBM_CORE_MAGIC_ICON)
+local timerHeal					= mod:NewTargetTimer(16, 99392, nil, nil, nil, 5, nil, DBM_CORE_L.MAGIC_ICON)
 
 function mod:OnCombatStart(delay)
 end

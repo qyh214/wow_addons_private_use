@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(828, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010000")
+mod:SetRevision("20200524145716")
 mod:SetCreatureID(69712)
 mod:SetEncounterID(1573)
 mod:SetZone()
@@ -187,7 +187,7 @@ local nestCoords = {
 }
 
 local function GetNestPositions(flockC)
-	local dir = DBM_CORE_UNKNOWN --direction
+	local dir = DBM_CORE_L.UNKNOWN --direction
 	local loc = "" --location
 	if mod:IsDifficulty("lfr25") then
 		--LFR: L (NE), L (SE), L (SW), U (NE), U (SE), U (M) [repeating]
@@ -236,7 +236,7 @@ local function GetNestPositions(flockC)
 		elseif flockC == 16 then dir, loc = L.UpperAndLower, "22-"..L.ArrowLower.." "..L.SouthWest..", 23-"..L.ArrowUpper.." "..L.NorthWest		--Lower SW & Upper NW
 		elseif flockC == 17 then dir, loc = L.Lower, "24-"..L.ArrowLower.." "..L.West															--Lower W
 		elseif flockC == 18 then dir, loc = L.UpperAndLower, "25-"..L.ArrowLower.." "..L.NorthWest..", 26-"..L.ArrowUpper.." "..L.NorthEast		--Lower NW & Upper NE
-		elseif flockC == 19 then dir, loc = L.UpperAndLower, "27-"..L.ArrowLower.." "..DBM_CORE_UNKNOWN..", 28-"..L.ArrowUpper.." "..L.SouthEast--Lower ? & Upper SE
+		elseif flockC == 19 then dir, loc = L.UpperAndLower, "27-"..L.ArrowLower.." "..DBM_CORE_L.UNKNOWN..", 28-"..L.ArrowUpper.." "..L.SouthEast--Lower ? & Upper SE
 		elseif flockC == 20 then dir, loc = L.UpperAndLower, "29-"..L.ArrowLower.." "..L.Southeast..", 30-"..L.ArrowUpper.." "..L.Middle25		--Lower SE & Upper Middle?
 		end
 	elseif mod:IsDifficulty("heroic25") then
@@ -289,8 +289,8 @@ function mod:CHAT_MSG_MONSTER_EMOTE(msg, _, _, _, target)
 			elseif flockCount ==  7 then specWarnBigBirdSoon:Schedule(20, L.Upper.." ("..L.NorthWest..")")
 			elseif flockCount == 10 then specWarnBigBirdSoon:Schedule(20, L.Upper.." ("..L.SouthEast..")")
 			elseif flockCount == 13 then specWarnBigBirdSoon:Schedule(20, L.Lower.." ("..L.SouthWest..")")
-			elseif flockCount == 16 then specWarnBigBirdSoon:Schedule(20, L.Lower.." ("..DBM_CORE_UNKNOWN..")")
-			elseif flockCount == 19 then specWarnBigBirdSoon:Schedule(20, L.Upper.." ("..DBM_CORE_UNKNOWN..")")
+			elseif flockCount == 16 then specWarnBigBirdSoon:Schedule(20, L.Lower.." ("..DBM_CORE_L.UNKNOWN..")")
+			elseif flockCount == 19 then specWarnBigBirdSoon:Schedule(20, L.Upper.." ("..DBM_CORE_L.UNKNOWN..")")
 			elseif flockCount ==  2 then
 				specWarnBigBird:Show(L.Lower.." ("..L.SouthEast..")")
 				if self.Options.ShowNestArrows == "Guardians" then
@@ -317,8 +317,8 @@ function mod:CHAT_MSG_MONSTER_EMOTE(msg, _, _, _, target)
 					DBM.Arrow:ShowRunTo(nestCoords[3][1], nestCoords[3][2], 3, 10, true)
 				end
 			--Reports of birds in next two nests but not precise locations
-			elseif flockCount == 17 then specWarnBigBird:Show(L.Lower.." ("..DBM_CORE_UNKNOWN..")")
-			elseif flockCount == 20 then specWarnBigBird:Show(L.Upper.." ("..DBM_CORE_UNKNOWN..")")
+			elseif flockCount == 17 then specWarnBigBird:Show(L.Lower.." ("..DBM_CORE_L.UNKNOWN..")")
+			elseif flockCount == 20 then specWarnBigBird:Show(L.Upper.." ("..DBM_CORE_L.UNKNOWN..")")
 			end
 		end
 		if currentLocation ~= "" then

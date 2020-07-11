@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2336, "DBM-Party-BfA", 11, 1178)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200326020034")
+mod:SetRevision("20200602212246")
 mod:SetCreatureID(144244, 145185)
 mod:SetEncounterID(2257)
 mod:SetZone()
@@ -19,7 +19,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 282801 285388",
 	"SPELL_AURA_REMOVED_DOSE 282801",
 	"UNIT_DIED"
---	"UNIT_SPELLCAST_START boss1 boss2"
 )
 
 --TODO, Foe Flipper success target valid?
@@ -45,14 +44,12 @@ local yellFoeFlipper				= mod:NewYell(285153)
 
 local timerRP						= mod:NewRPTimer(68)
 local timerLayMineCD				= mod:NewCDTimer(12.1, 285351, nil, nil, nil, 3)
-local timerWhirlingEdgeCD			= mod:NewNextTimer(32.8, 285020, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerWhirlingEdgeCD			= mod:NewNextTimer(32.8, 285020, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 --local timerFoeFlipperCD				= mod:NewAITimer(13.4, 285153, nil, nil, nil, 3)
 local timerVentJetsCD				= mod:NewCDTimer(43.8, 285388, nil, nil, nil, 2)
 local timerMaxThrustCD				= mod:NewCDTimer(45.8, 283565, nil, nil, nil, 3)
 
---mod:AddRangeFrameOption(5, 194966)
-
-function mod:ThrustTarget(targetname, uId)
+function mod:ThrustTarget(targetname)
 	if not targetname then return end
 	if targetname == UnitName("player") then
 		specWarnMaxThrust:Show()
@@ -69,12 +66,6 @@ function mod:OnCombatStart(delay)
 	timerLayMineCD:Start(15.5-delay)
 	--timerFoeFlipperCD:Start(16.7-delay)
 	timerVentJetsCD:Start(22.8-delay)
-end
-
-function mod:OnCombatEnd()
---	if self.Options.RangeFrame then
---		DBM.RangeCheck:Hide()
---	end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -123,16 +114,6 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 mod.SPELL_AURA_REMOVED_DOSE = mod.SPELL_AURA_REMOVED
 
---[[
-function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 228007 and destGUID == UnitGUID("player") and self:AntiSpam(2, 4) then
-		specWarnGTFO:Show()
-		specWarnGTFO:Play("watchfeet")
-	end
-end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
---]]
-
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 144244 then--The Platinum Pummeler
@@ -144,7 +125,7 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, target)
+function mod:CHAT_MSG_MONSTER_YELL(msg)
 	--"<745.04 00:25:22> [CHAT_MSG_MONSTER_YELL] Now this is a statistical anomaly! Our visitors are still alive!#Deuce Mecha-Buffer###Anshlun##0#0##0#2667#nil#0#false#false#false#false", -- [3780]
 	--"<769.56 00:25:47> [ENCOUNTER_START] 2257#Tussle Tonks#23#5", -- [3807]
 	if (msg == L.openingRP or msg:find(L.openingRP)) and self:LatencyCheck(1000) then
@@ -152,7 +133,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, target)
 	end
 end
 
-function mod:OnSync(msg, targetname)
+function mod:OnSync(msg)
 	if msg == "openingRP" and self:AntiSpam(10, 1) then
 		timerRP:Start(24.5)
 	end

@@ -4,6 +4,13 @@
 local RSA = LibStub('AceAddon-3.0'):GetAddon('RSA')
 local L = LibStub('AceLocale-3.0'):GetLocale('RSA')
 local RSA_Warrior = RSA:NewModule('Warrior')
+
+
+local reflectSource
+local function ResetReflectSource()
+	reflectSource = nil
+end
+
 function RSA_Warrior:OnInitialize()
 	if RSA.db.profile.General.Class == 'WARRIOR' then
 		RSA_Warrior:SetEnabledState(true)
@@ -11,6 +18,7 @@ function RSA_Warrior:OnInitialize()
 		RSA_Warrior:SetEnabledState(false)
 	end
 end -- End OnInitialize
+
 function RSA_Warrior:OnEnable()
 	local MonitorConfig_Warrior = {
 		player_profile = RSA.db.profile.Warrior,
@@ -170,65 +178,68 @@ function RSA_Warrior:OnEnable()
 	RSA.db.profile.Modules.Warrior = true -- Set state to loaded, to know if we should announce when a spell is refreshed.
 	local spellinfo,spelllinkinfo,extraspellinfo,extraspellinfolink,missinfo
 	local pName = UnitName('player')
-	local RSA_ReflectSource = 'RSADummy'
-	local RSA_ReflectAmount = 0
+	local reflectAmount = 0
 	local function Warrior_Spells()
 		local timestamp, event, hideCaster, sourceGUID, source, sourceFlags, sourceRaidFlag, destGUID, dest, destFlags, destRaidFlags, spellID, spellName, spellSchool, missType, overheal, ex3, ex4, ex5, ex6, ex7, ex8 = CombatLogGetCurrentEventInfo()
-		if source == RSA_ReflectSource and dest == RSA_ReflectSource then -- It damaged itself.
-			RSA_ReflectAmount = missType
-			spellinfo = GetSpellInfo(spellID)
-			spelllinkinfo = GetSpellLink(spellID)
-			local full_destName,dest = RSA.RemoveServerNames(dest)
-			local message, messagemax, messagerandom
-			if event == 'SPELL_MISSED' then
-				RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = source}
-				messagemax = #RSA.db.profile.Warrior.Spells.SpellReflect.Messages.Resist
+		if reflectSource then
+			if source == reflectSource and dest == reflectSource then -- It damaged itself.
+				reflectAmount = missType
+				spellinfo = GetSpellInfo(spellID)
+				spelllinkinfo = GetSpellLink(spellID)
+				local full_destName,dest = RSA.RemoveServerNames(dest)
+				local message, messagemax, messagerandom
+				if event == 'SPELL_MISSED' then
+					RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = source}
+					messagemax = #RSA.db.profile.Warrior.Spells.SpellReflect.Messages.Resist
+					if messagemax == 0 then return end
+					messagerandom = math.random(messagemax)
+					message = RSA.db.profile.Warrior.Spells.SpellReflect.Messages.Resist[messagerandom]
+				elseif missType == 'DEBUFF' then
+					RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = source}
+					messagemax = #RSA.db.profile.Warrior.Spells.SpellReflect.Messages.Debuff
+					if messagemax == 0 then return end
+					messagerandom = math.random(messagemax)
+					message = RSA.db.profile.Warrior.Spells.SpellReflect.Messages.Debuff[messagerandom]
+				else
+					RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = source, ["[AMOUNT]"] = reflectAmount}
+					messagemax = #RSA.db.profile.Warrior.Spells.SpellReflect.Messages.Damage
+					if messagemax == 0 then return end
+					messagerandom = math.random(messagemax)
+					message = RSA.db.profile.Warrior.Spells.SpellReflect.Messages.Damage[messagerandom]
+				end
 				if messagemax == 0 then return end
-				messagerandom  = math.random(messagemax)
-				message = RSA.db.profile.Warrior.Spells.SpellReflect.Messages.Resist[messagerandom]
-			elseif missType == 'DEBUFF' then
-				RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = source}
-				messagemax = #RSA.db.profile.Warrior.Spells.SpellReflect.Messages.Debuff
-				if messagemax == 0 then return end
-				messagerandom  = math.random(messagemax)
-				message = RSA.db.profile.Warrior.Spells.SpellReflect.Messages.Debuff[messagerandom]
-			else
-				RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = source, ["[AMOUNT]"] = RSA_ReflectAmount}
-				messagemax = #RSA.db.profile.Warrior.Spells.SpellReflect.Messages.Damage
-				if messagemax == 0 then return end
-				messagerandom  = math.random(messagemax)
-				message = RSA.db.profile.Warrior.Spells.SpellReflect.Messages.Damage[messagerandom]
-			end
-			if messagemax == 0 then return end
-			if message ~= '' then
-				if RSA.db.profile.Warrior.Spells.SpellReflect.Local == true then
-					RSA.Print_LibSink(string.gsub(message, '.%a+.', RSA.String_Replace))
+				if message ~= '' then
+					if RSA.db.profile.Warrior.Spells.SpellReflect.Local == true then
+						RSA.Print_LibSink(string.gsub(message, '.%a+.', RSA.String_Replace))
+					end
+					if RSA.db.profile.Warrior.Spells.SpellReflect.Yell == true then
+						RSA.Print_Yell(string.gsub(message, '.%a+.', RSA.String_Replace))
+					end
+					if RSA.db.profile.Warrior.Spells.SpellReflect.CustomChannel.Enabled == true then
+						RSA.Print_Channel(string.gsub(message, '.%a+.', RSA.String_Replace), RSA.db.profile.Warrior.Spells.SpellReflect.CustomChannel.Channel)
+					end
+					if RSA.db.profile.Warrior.Spells.SpellReflect.Say == true then
+						RSA.Print_Say(string.gsub(message, '.%a+.', RSA.String_Replace))
+					end
+					if RSA.db.profile.Warrior.Spells.SpellReflect.SmartGroup == true then
+						RSA.Print_SmartGroup(string.gsub(message, '.%a+.', RSA.String_Replace))
+					end
+					if RSA.db.profile.Warrior.Spells.SpellReflect.Party == true then
+						if RSA.db.profile.Warrior.Spells.SpellReflect.SmartGroup == true and GetNumGroupMembers() == 0 then return end
+							RSA.Print_Party(string.gsub(message, '.%a+.', RSA.String_Replace))
+					end
+					if RSA.db.profile.Warrior.Spells.SpellReflect.Raid == true then
+						if RSA.db.profile.Warrior.Spells.SpellReflect.SmartGroup == true and GetNumGroupMembers() > 0 then return end
+						RSA.Print_Raid(string.gsub(message, '.%a+.', RSA.String_Replace))
+					end
 				end
-				if RSA.db.profile.Warrior.Spells.SpellReflect.Yell == true then
-					RSA.Print_Yell(string.gsub(message, '.%a+.', RSA.String_Replace))
-				end
-				if RSA.db.profile.Warrior.Spells.SpellReflect.CustomChannel.Enabled == true then
-					RSA.Print_Channel(string.gsub(message, '.%a+.', RSA.String_Replace), RSA.db.profile.Warrior.Spells.SpellReflect.CustomChannel.Channel)
-				end
-				if RSA.db.profile.Warrior.Spells.SpellReflect.Say == true then
-					RSA.Print_Say(string.gsub(message, '.%a+.', RSA.String_Replace))
-				end
-				if RSA.db.profile.Warrior.Spells.SpellReflect.SmartGroup == true then
-					RSA.Print_SmartGroup(string.gsub(message, '.%a+.', RSA.String_Replace))
-				end
-				if RSA.db.profile.Warrior.Spells.SpellReflect.Party == true then
-					if RSA.db.profile.Warrior.Spells.SpellReflect.SmartGroup == true and GetNumGroupMembers() == 0 then return end
-						RSA.Print_Party(string.gsub(message, '.%a+.', RSA.String_Replace))
-				end
-				if RSA.db.profile.Warrior.Spells.SpellReflect.Raid == true then
-					if RSA.db.profile.Warrior.Spells.SpellReflect.SmartGroup == true and GetNumGroupMembers() > 0 then return end
-					RSA.Print_Raid(string.gsub(message, '.%a+.', RSA.String_Replace))
-				end
+				ResetReflectSource()
 			end
 		end
 		if dest == pName then
 			if missType == 'REFLECT' then -- SPELL REFLECT
-				RSA_ReflectSource = source -- Track which unit we reflected.
+				reflectSource = source -- Track which unit we reflected.
+				C_Timer.After(5, ResetReflectSource)
 			end -- SPELL REFLECT
 		end
 		if RSA.AffiliationMine(sourceFlags) then

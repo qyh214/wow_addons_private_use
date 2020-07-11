@@ -11,7 +11,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetOptionLocalization{
-	SetIconOnImpale		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(69062)
+	SetIconOnImpale		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(69062)
 }
 
 ------------------------
@@ -36,9 +36,9 @@ L:SetOptionLocalization{
 	WarnAddsSoon				= "Mostrar aviso previo para cuando aparezcan esbirros",
 	WarnReanimating				= "Mostrar aviso cuando se esté reanimando a un esbirro",	-- Reanimated Adherent/Fanatic spawning
 	TimerAdds					= "Mostrar temporizador para los siguientes esbirros",
-	SetIconOnDominateMind		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(71289),
-	SetIconOnDeformedFanatic	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(70900),
-	SetIconOnEmpoweredAdherent	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(70901)
+	SetIconOnDominateMind		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(71289),
+	SetIconOnDeformedFanatic	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(70900),
+	SetIconOnEmpoweredAdherent	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(70901)
 }
 
 L:SetMiscLocalization{
@@ -91,7 +91,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetOptionLocalization{
-	BoilingBloodIcons		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(72385),
+	BoilingBloodIcons		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(72385),
 	RangeFrame				= "Mostrar marco de distancia (12 m)",
 	RunePowerFrame			= "Mostrar marco de salud del jefe y $spell:72371"
 }
@@ -112,7 +112,7 @@ L:SetGeneralLocalization{
 
 L:SetOptionLocalization{
 	RangeFrame			= "Mostrar marco de distancia (8 m)",
-	SetIconOnGasSpore	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(69279),
+	SetIconOnGasSpore	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(69279),
 	AnnounceSporeIcons	= "Anunciar iconos de los objetivos de $spell:69279 en el chat de banda (requiere líder o ayudante)",
 	AchievementCheck	= "Anunciar si se falla el logro 'Sin vacunas' en el chat de banda (requiere líder o ayudante)"
 }
@@ -140,7 +140,7 @@ L:SetOptionLocalization{
 	WarnOozeSpawn				= "Mostrar aviso cuando aparezca un Moco pequeño",
 	SpecWarnLittleOoze			= "Mostrar aviso especial cuando te ataque un Moco pequeño",--creatureid 36897
 	RangeFrame					= "Mostrar marco de distancia (8 m)",
-	InfectionIcon				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(69674)
+	InfectionIcon				= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(69674)
 }
 
 L:SetMiscLocalization{
@@ -158,9 +158,9 @@ L:SetGeneralLocalization{
 }
 
 L:SetOptionLocalization{
-	OozeAdhesiveIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(70447),
-	GaseousBloatIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(70672),
-	UnboundPlagueIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(70911),
+	OozeAdhesiveIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(70447),
+	GaseousBloatIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(70672),
+	UnboundPlagueIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(70911),
 	MalleableGooIcon			= "Poner icono en el primer objetivo de $spell:72295"
 }
 
@@ -186,7 +186,7 @@ L:SetOptionLocalization{
 	WarnTargetSwitch		= "Mostrar aviso cuando haya que cambiar de objetivo",-- Warn when another Prince needs to be damaged
 	WarnTargetSwitchSoon	= "Mostrar aviso previo para cuando haya que cambiar de objetivo",-- Every ~47 secs, you have to dps a different Prince
 	TimerTargetSwitch		= "Mostrar temporizador para el siguiente cambio de objetivo",
-	EmpoweredFlameIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(72040),
+	EmpoweredFlameIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(72040),
 	ActivePrinceIcon		= "Poner icono (calavera) en el príncipe potenciado",
 	RangeFrame				= "Mostrar marco de distancia (12 m)"
 }
@@ -208,9 +208,9 @@ L:SetGeneralLocalization{
 }
 
 L:SetOptionLocalization{
-	SetIconOnDarkFallen		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(71340),
-	SwarmingShadowsIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(71266),
-	BloodMirrorIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(70838),
+	SetIconOnDarkFallen		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(71340),
+	SwarmingShadowsIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(71266),
+	BloodMirrorIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(70838),
 	RangeFrame				= "Mostrar marco de distancia (8 m)"
 }
 
@@ -278,8 +278,8 @@ L:SetOptionLocalization{
 	TimerNextAirphase		= "Mostrar temporizador para la siguiente fase aérea",
 	TimerNextGroundphase	= "Mostrar temporizador para la siguiente fase en tierra",
 	AnnounceFrostBeaconIcons= "Anunciar iconos de los objetivos de $spell:70126 en el chat de banda (requiere líder)",
-	SetIconOnFrostBeacon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(70126),
-	SetIconOnUnchainedMagic	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(69762),
+	SetIconOnFrostBeacon	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(70126),
+	SetIconOnUnchainedMagic	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(69762),
 	ClearIconsOnAirphase	= "Quitar todos los iconos al comenzar la fase aérea",
 	AchievementCheck		= "Anunciar avisos del logro 'Sacúdete' en el chat de banda (requiere líder o ayudante)",
 	RangeFrame				= "Mostrar marco de distancia (10/20 m) dinámico en función de la última habilidad usada por el jefe y los perjuicios de los jugadores"
@@ -324,11 +324,11 @@ L:SetOptionLocalization{
 	PhaseTransition			= "Mostrar duración de los intermedios",
 	ValkyrWarning			= "Anunciar jugadores agarrados por las Guardias de las Sombras Val'kyr",
 	SpecWarnYouAreValkd		= "Mostrar aviso especial cuando te agarrae una Guardia de las Sombras Val'kyr",--npc36609
-	DefileIcon				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(72762),
-	NecroticPlagueIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(70337),
-	RagingSpiritIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(69200),
-	TrapIcon				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(73539),
-	HarvestSoulIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(68980),
+	DefileIcon				= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(72762),
+	NecroticPlagueIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(70337),
+	RagingSpiritIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(69200),
+	TrapIcon				= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(73539),
+	HarvestSoulIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(68980),
 	AnnounceValkGrabs		= "Anunciar jugadores agarrados por las Guardias de las Sombras Val'kyr en el chat de banda (requiere líder o ayudante)",
 	SpecWarnValkyrLow		= "Mostrar aviso especial cuando una Guardia de las Sombras Val'kyr esté por debajo del 55% de salud",
 	AnnouncePlagueStack		= "Anunciar acumulaciones de $spell:70337 en el chat de banda (al llegar a 10 y tras cada 5; requiere líder o ayudante)"

@@ -411,12 +411,20 @@ WorldQuestTracker.MapData.ResourceIcons = {
 }
 
 --which faction set to be used by the map id
-WorldQuestTracker.MapData.FactionByMapID = {
+WorldQuestTracker.MapData.FactionByMapID = { --not in use
 	[WorldQuestTracker.MapData.ZoneIDs.ZANDALAR] = "BFA",
 	[WorldQuestTracker.MapData.ZoneIDs.KULTIRAS] = "BFA",
 	[WorldQuestTracker.MapData.ZoneIDs.AZEROTH] = "BFA",
+
 	[619] = "LEGION", --brosken isles map
 	[905] = "LEGION", --argus map
+
+	[WorldQuestTracker.MapData.ZoneIDs.ZULDAZAAR] = 	"BFA",
+	[WorldQuestTracker.MapData.ZoneIDs.NAZMIR] = 		"BFA",
+	[WorldQuestTracker.MapData.ZoneIDs.VOLDUN] = 		"BFA",
+	[WorldQuestTracker.MapData.ZoneIDs.TIRAGARDE] = 	"BFA",
+	[WorldQuestTracker.MapData.ZoneIDs.STORMSONG] = 	"BFA",
+	[WorldQuestTracker.MapData.ZoneIDs.DRUSTVAR] = 		"BFA",
 }
 
 -- texture ID of the reward when the world quest reward is a faction rep token
@@ -433,6 +441,11 @@ WorldQuestTracker.MapData.ReputationIcons = {
 	[2032594] = true, --Order of Embers BFA
 	[2032595] = true, --Proudmoore BFA
 	[2032591] = true, --7th Legion
+
+	--[0] = true, --Rustbolt Resistance | 8.2
+	--[0] = true, --The Unshackled | 8.2
+	--[0] = true, --Rajani | 8.3
+	--[0] = true, --Uldum Accord | 8.3
 }
 
 WorldQuestTracker.MapData.AllFactionIds = {
@@ -447,6 +460,10 @@ WorldQuestTracker.MapData.AllFactionIds = {
 	[2158] = true, --Voldunai
 	[2163] = true, --Tortollan Seekers
 	[2164] = true, --Champions of Azeroth
+	[2391] = true, --Rustbolt Resistance | 8.2
+	[2373] = true, --The Unshackled | 8.2
+	[2415] = true, --Rajani | 8.3
+	[2417] = true, --Uldum Accord | 8.3
 
 	--Legion Factions
 	[2170] = true, --Argussian Reach
@@ -472,6 +489,10 @@ WorldQuestTracker.MapData.FactionIcons = {
 	[2158] = "Interface\\ICONS\\inv__faction_voldunai", --Voldunai
 	[2163] = "Interface\\ICONS\\inv__faction_tortollanseekers", --Tortollan Seekers
 	[2164] = "Interface\\ICONS\\inv__faction_championsofazeroth", --Champions of Azeroth
+	[2391] = "Interface\\ICONS\\INV_Faction_Rustbolt", --Rustbolt Resistance | 8.2
+	[2373] = "Interface\\ICONS\\INV_Faction_Unshackled", --The Unshackled | 8.2
+	[2415] = "Interface\\ICONS\\INV_FACTION_83_RAJANI", --Rajani | 8.3
+	[2417] = "Interface\\ICONS\\INV_FACTION_83_ULDUMACCORD", --Uldum Accord | 8.3
 
 	--Legion
 	[2170] = "Interface\\ICONS\\INV_Legion_Faction_ArgussianReach", --Argussian Reach
@@ -529,13 +550,22 @@ local LegionFactions = {
 	[1948] = true, --Valarjar
 }
 
---what are the factionIds que belong to the map
+--what are the factionIds belong to the map
 WorldQuestTracker.MapData.ReputationByMap = {
+	--world maps
 	[WorldQuestTracker.MapData.ZoneIDs.BROKENISLES] = LegionFactions,
 	[WorldQuestTracker.MapData.ZoneIDs.ARGUS] = LegionFactions,
 	[WorldQuestTracker.MapData.ZoneIDs.KULTIRAS] = BFAFactions,
 	[WorldQuestTracker.MapData.ZoneIDs.ZANDALAR] = BFAFactions,
 	[WorldQuestTracker.MapData.ZoneIDs.AZEROTH] = BFAFactions,
+
+	--zones
+	[WorldQuestTracker.MapData.ZoneIDs.ZULDAZAAR] = 	BFAFactions,
+	[WorldQuestTracker.MapData.ZoneIDs.NAZMIR] = 		BFAFactions,
+	[WorldQuestTracker.MapData.ZoneIDs.VOLDUN] = 		BFAFactions,
+	[WorldQuestTracker.MapData.ZoneIDs.TIRAGARDE] = 	BFAFactions,
+	[WorldQuestTracker.MapData.ZoneIDs.STORMSONG] = 	BFAFactions,
+	[WorldQuestTracker.MapData.ZoneIDs.DRUSTVAR] = 		BFAFactions,
 }
 
 function WorldQuestTracker.GetFactionsAllowedOnMap(mapId)

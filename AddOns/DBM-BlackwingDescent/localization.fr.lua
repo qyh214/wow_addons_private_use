@@ -17,10 +17,10 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	timerShadowConductorCast	= "Affiche le timer : $spell:92053",
 	timerArcaneBlowbackCast	= "Affiche le timer : $spell:91879",
-	AcquiringTargetIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79501),
-	ConductorIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79888),
-	BombTargetIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(80094),
-	ShadowConductorIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92053)
+	AcquiringTargetIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79501),
+	ConductorIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79888),
+	BombTargetIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(80094),
+	ShadowConductorIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92053)
 })
 
 L:SetMiscLocalization({
@@ -53,7 +53,7 @@ L = DBM:GetModLocalization(171)
 
 L:SetOptionLocalization({
 	InfoFrame			= "Affiche une fenêtre d'info pour le niveau sonore",
-	TrackingIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(78092)
+	TrackingIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(78092)
 })
 
 L:SetMiscLocalization({
@@ -67,7 +67,7 @@ L = DBM:GetModLocalization(172)
 
 L:SetOptionLocalization({
 	RangeFrame	= "Affiche la fenêtre de portée (6)",
-	SetIconOnSlime	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(82935),
+	SetIconOnSlime	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(82935),
 	InfoFrame		= "Affiche une fenêtre d'info sur la santé (<10k pv)"
 })
 
@@ -92,9 +92,9 @@ L:SetOptionLocalization({
 	WarnPhase			= "Affiche l'alerte d'une nouvelle phase",
 	TimerPhase			= "Affiche le timer de la prochaine phase",
 	RangeFrame		= "Affiche la fenêtre de portée (6) durant la Phase Bleue",
-	FlashFreezeIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92979),
-	BitingChillIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(77760),
-	ConsumingFlamesIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(77786)
+	FlashFreezeIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92979),
+	BitingChillIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(77760),
+	ConsumingFlamesIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(77786)
 })
 
 L:SetMiscLocalization({
@@ -133,7 +133,7 @@ L:SetOptionLocalization({
 	OnyBreathTimer		= "Affiche le CoolDown $spell:94124 d'Onyxia",
 	NefBreathTimer		= "Affiche le CoolDown $spell:94124 de Nefarian",
 	RangeFrame		= "Affiche la fenêtre de portée (10) lorsque vous avez $spell:79339",
-	SetIconOnCinder		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79339)
+	SetIconOnCinder		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79339)
 })
 
 L:SetMiscLocalization({

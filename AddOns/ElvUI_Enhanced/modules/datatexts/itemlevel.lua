@@ -92,7 +92,7 @@ end
 E["valueColorUpdateFuncs"][ValueColorUpdate] = true
 
 --[[
-	DT:RegisterDatatext(name, events, eventFunc, updateFunc, clickFunc, onEnterFunc)
+	DT:RegisterDatatext(name, category, events, eventFunc, updateFunc, clickFunc, onEnterFunc, onLeaveFunc, localizedName, objectEvent)
 	
 	name - name of the datatext (required)
 	events - must be a table with string values of event names to register 
@@ -101,4 +101,4 @@ E["valueColorUpdateFuncs"][ValueColorUpdate] = true
 	click - function to fire when clicking the datatext
 	onEnterFunc - function to fire OnEnter
 ]]
-DT:RegisterDatatext(L["Item Level"], {"PLAYER_ENTERING_WORLD", "PLAYER_EQUIPMENT_CHANGED", "UNIT_INVENTORY_CHANGED"}, OnEvent, nil, nil, OnEnter)
+DT:RegisterDatatext(L["Item Level"], 'ElvUI_Enhanced', {"PLAYER_ENTERING_WORLD", "PLAYER_EQUIPMENT_CHANGED", "UNIT_INVENTORY_CHANGED"}, OnEvent, nil, nil, OnEnter)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Leotheras", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200518210032")
 mod:SetCreatureID(21215)
 mod:SetEncounterID(625)
 mod:SetModelID(20514)
@@ -19,10 +19,10 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_MONSTER_YELL"
 )
 
-local warnPhase			= mod:NewAnnounce("WarnPhase", 1)
+local warnPhase			= mod:NewAnnounce("WarnPhase", 2)
 local warnDemon			= mod:NewTargetAnnounce(37676, 4)
-local warnMC			= mod:NewTargetAnnounce(37749, 4)
-local warnPhase2		= mod:NewPhaseAnnounce(2)
+local warnMC			= mod:NewTargetNoFilterAnnounce(37749, 4)
+local warnPhase2		= mod:NewPhaseAnnounce(2, 2)
 
 local specWarnWhirl		= mod:NewSpecialWarningRun(37640, nil, nil, nil, 4, 2)
 local specWarnDemon		= mod:NewSpecialWarningYou(37676, nil, nil, nil, 1, 2)
@@ -35,7 +35,7 @@ local timerDemon		= mod:NewBuffFadesTimer(30, 37676, nil, nil, nil, 6)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
-mod:AddBoolOption("DemonIcon", false)
+mod:AddSetIconOption("DemonIcon", 37676, false, false, {8, 7, 6, 5})
 
 local warnDemonTargets = {}
 local warnMCTargets = {}

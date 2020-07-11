@@ -57,6 +57,8 @@ if AL then
 	AL["DISPLAY_CONTAINER_ICONS_DESC"] = "Lorsqu'elles sont désactivées, les icônes des conteneurs et des trésors ne seront pas affichées sur la carte du monde."
 	AL["DISPLAY_EVENT_ICONS"] = "Afficher les icônes des événements sur la carte du monde"
 	AL["DISPLAY_EVENT_ICONS_DESC"] = "Lorsqu'elles sont désactivées, les icônes des événements ne seront pas affichées sur la carte du monde."
+	AL["DISPLAY_FRIENDLY_NPC_ICONS"] = "Affiche les icônes de PNJ rares et amicales sur la carte du monde"
+	AL["DISPLAY_FRIENDLY_NPC_ICONS_DESC"] = "Lorsqu'elles est désactivées, les icônes de PNJ rares et amicales ne seront pas affichées sur la carte du monde."
 	AL["DISPLAY_LOG_WINDOW"] = "Afficher la fenêtre du journal"
 	AL["DISPLAY_LOG_WINDOW_DESC"] = "Lorsqu'elle est désactivée, la fenêtre du journal ne s'affichera plus."
 	AL["DISPLAY_LOOT_ON_MAP"] = "Afficher le butin sur les info-bulles de la carte"
@@ -94,6 +96,7 @@ if AL then
 	AL["ENABLE_TOMTOM_SUPPORT_DESC"] = "Lorsque cette fonction est activée, elle ajoute un point de cheminement Tomtom aux coordonnées trouvées de la créature."
 	AL["ENABLED_SEARCHING_RARE"] = "Active l'alerte pour ce PNJ rare :"
 	AL["EVENT"] = "Événement"
+	AL["EXPEDITION_ISLANDS"] = "Expédition dans les îles"
 	AL["FILTER"] = "Filtres des PNJ"
 	AL["FILTER_CONTINENT"] = "Continent/Catégorie"
 	AL["FILTER_CONTINENT_DESC"] = "Nom du continent ou de la catégorie"
@@ -132,6 +135,8 @@ if AL then
 	AL["LOOT_FILTER_NOT_EQUIPABLE_DESC"] = "Lorsqu'ils sont activés, les armures et les armes que ce personnage ne peut pas porter n'apparaîtront pas sur la barre de butin. Ce filtre n'affecte pas les autres types d'objets à piller, quels qu'ils soient."
 	AL["LOOT_FILTER_NOT_MATCHING_CLASS"] = "Filtre les éléments qui nécessitent une classe différente de la vôtre"
 	AL["LOOT_FILTER_NOT_MATCHING_CLASS_DESC"] = "Une fois activé, tout objet nécessitant l'utilisation d'une classe spécifique qui ne correspond pas à la vôtre, n'apparaîtra pas sur la barre de butin."
+	AL["LOOT_FILTER_NOT_MATCHING_FACTION"] = "Filtre les éléments qui nécessitent une faction différente de la vôtre"
+	AL["LOOT_FILTER_NOT_MATCHING_FACTION_DESC"] = "Lorsqu'il est activé, tout objet nécessitant l'utilisation d'une faction spécifique qui ne correspond pas à la vôtre, n'apparaîtra pas sur la barre de butin."
 	AL["LOOT_FILTER_NOT_TRANSMOG"] = "Afficher que les armures et les armes transmogrifiable"
 	AL["LOOT_FILTER_NOT_TRANSMOG_DESC"] = "Lorsqu'elles sont activées, seules les armures et les armes que vous n'avez pas encore collectées seront affichées sur la barre de butin. Ce filtre n'affecte pas les autres types d'objets à piller, quels qu'ils soient."
 	AL["LOOT_FILTER_SUBCATEGORY_DESC"] = "Afficher ce type de butin sur la barre du butin. Lorsque cette option est désactivée, vous ne verrez aucun objet correspondant à cette catégorie sur le butin affiché lorsque vous trouvez un PNJ rare"
@@ -194,6 +199,8 @@ if AL then
 	AL["MARKER_DESC"] = "Choisissez le marqueur à ajouter au dessus de la cible lorsque vous cliquez sur le bouton principal."
 	AL["MESSAGE_OPTIONS"] = "Options de messages"
 	AL["MIDDLE_BUTTON"] = "Cliquez sur le bouton du milieu"
+	AL["MINIMAP_SCALE_ICONS"] = "Échelle des icônes dans la minimap"
+	AL["MINIMAP_SCALE_ICONS_DESC"] = "Cela permettra d'ajuster l'échelle des icônes dans la minimap, soit la valeur de 0,7 de la taille originale."
 	AL["NAVIGATION_ENABLE"] = "Active la navigation"
 	AL["NAVIGATION_ENABLE_DESC"] = "Lorsqu'elles sont activées, les flèches de navigation s'affichent à côté du bouton principal pour vous permettre d'accéder aux nouvelles ou anciennes créatures trouvées"
 	AL["NAVIGATION_LOCK_ENTITY"] = "Bloquer l'affichage de nouvelles créatures si elle est déjà affichée"
@@ -203,10 +210,16 @@ if AL then
 	AL["NAVIGATION_SHOW_PREVIOUS"] = "Afficher la créature précédente trouvée"
 	AL["NOT_TARGETEABLE"] = "Non ciblable"
 	AL["NOTE_10263"] = "Le [Démoniste du Bouclier balafré] ouvre de temps en temps un portail d'où le PNJ rare peut être invoqué"
+	AL["NOTE_129836"] = "Il n'a pas de vignette, donc vous n'aurez pas une alerte. Il se trouve dans le sous-sol du bâtiment."
 	AL["NOTE_130350"] = "Vous devez chevaucher ce rare jusqu'au conteneur que vous trouverez en suivant le chemin à droite de cette position."
 	AL["NOTE_131453"] = "Vous devez monter [Gardien de la source] à cette position. Le cheval est d'une rareté amicale que vous trouverez en suivant le chemin à gauche de ce conteneur."
+	AL["NOTE_131735"] = "C'est un PNJ neutre. Une fois que vous l'aurez tué, un petit cochon se présentera et vous donnera l'animal de compagnie [Taptaf]."
+	AL["NOTE_135448"] = "Disponible uniquement en difficulté mythique. Vous devez trouver une [clé de cellule] (elle se trouve sur les meubles) pour ouvrir la prison où ce crâne apparaît. Une fois à l'intérieur, passez par le trou sur le mur et vous arrivez dans une pièce avec un seau. Cliquez dessus pour convoquer le rare PNJ."
 	AL["NOTE_135497"] = "Disponible uniquement dans le cadre de la quête quotidienne [Nordrassil à la rescousse] obtenue auprès de Mylune. Pendant cette quête, vous trouverez des champignons sous les arbres. En cliquant dessus, vous pourrez peut-être faire naître ce PNJ."
+	AL["NOTE_140474"] = "Vous devez collecter 20x [Fragment abyssal]. Une fois que vous avez les 20 éléments, cliquez dessus pour créer [l'essence détestable de l'abîme]. Vous devez utiliser le dernier élément aux coordonnées 73.23 (derrière une cascade). Une fois que vous aurez utilisé l'objet, il vous indiquera la direction d'une mine où vous pourrez invoquer le PNJ rare (l'entrée de la mine est aux coordonnées 46.36)"
 	AL["NOTE_149847"] = "Quand vous vous approchez, il vous dit une couleur qu'il déteste. Une fois que vous savez de quelle couleur il s'agit, vous devez vous rendre aux coordonnées 63.41 pour choisir cette couleur. Lorsque vous reviendrez à sa position, il vous attaquera."
+	AL["NOTE_149886"] = "Il n'apparaîtra qu'une seule fois dès que vous entrerez dans la Bibliothèque royale. Il s'agit simplement d'un hommage à Stan Lee de Marvel."
+	AL["NOTE_149887"] = "Il ne se présentera qu'une seule fois dès que vous entrerez dans la maison à cet endroit. Il s'agit simplement d'un hommage à Stan Lee de Marvel."
 	AL["NOTE_150342"] = "Disponible uniquement pendant l'événement  [Foreuse DR-TR35]."
 	AL["NOTE_150394"] = "Pour le tuer, vous devez l'amener aux coordonnées 63.38, où se trouve un appareil avec un éclair bleu. Une fois que le PNJ sera touché par la foudre, il explosera et vous pourrez le piller"
 	AL["NOTE_151124"] = "Vous devez piller un [Relais de transport démoli] sur des ennemis qui apparaissent pendant l'événement [Foreuse DR-JD99] (coordonnées 59.67) et ensuite l'utiliser sur la machine qui se trouve sur la plate-forme."
@@ -293,9 +306,6 @@ if AL then
 	AL["SOUND_OPTIONS"] = "Options audio"
 	AL["SOUND_VOLUME"] = "Volume"
 	AL["SOUND_VOLUME_DESC"] = "Règle le niveau du volume sonore"
-	AL["SYNCRONIZATION_COMPLETED"] = "Syncronisation terminée"
-	AL["SYNCRONIZE"] = "Synchronisation de la base de données."
-	AL["SYNCRONIZE_DESC"] = "Cela vous permettra d'analyser les PNJs rares et les trésors qui font partie d'une réussite que vous avez déjà tuée/collectés, et ils disparaîtront de votre carte. Il n'y a aucun moyen de connaître l'état des PNJs et des trésors rares qui ne font pas partie d'une réussite, donc ils resteront dans votre carte tels qu'ils sont actuellement affichés."
 	AL["TEST"] = "Lancement du test"
 	AL["TEST_DESC"] = "Appuyez sur le bouton pour afficher un exemple d'alerte. Vous pouvez faire glisser le panneau jusqu'à une autre position où il sera désormais affiché."
 	AL["TOC_NOTES"] = "Minimap scanner. Vous avertit visuellement grâce à un bouton et une miniature et émet un son chaque fois qu'un PNJ, un trésor ou un événement rare apparaît dans votre minimap"
@@ -308,15 +318,22 @@ if AL then
 	AL["TOOLTIP_TOP"] = "Côté haute"
 	AL["UNKNOWN"] = "Inconnu"
 	AL["UNKNOWN_TARGET"] = "Cible inconnue"
+	AL["ZONE_1332"] = "%s (Front de guerre)"
+	AL["ZONE_1527"] = "%s (BFA Assaut)"
+	AL["ZONE_1530"] = "%s (BFA Assaut)"
+	AL["ZONE_317"] = "%s (Côté humain)"
+	AL["ZONE_318"] = "%s (Côté morts-vivants)"
+	AL["ZONE_943"] = "%s (Front de guerre)"
 	AL["ZONES_FILTER"] = "Filtres de zone"
 	AL["ZONES_FILTERS_SEARCH_DESC"] = "Tapez le nom de la zone pour filtrer la liste ci-dessous"
 
 	-- CONTINENT names
 	AL["ZONES_CONTINENT_LIST"] = {
-		[9999] = "Class Halls"; --Class Halls
+		[9999] = "Domaines de classe"; --Class Halls
 		[9998] = "Île de Sombrelune"; --Darkmoon Island
-		[9997] = "Dungeons/Scenarios"; --Dungeons/Scenarios
+		[9997] = "Donjons/Scénarios"; --Dungeons/Scenarios
 		[9996] = "Raids"; --Raids
-		[9995] = "Unknown"; --Unknown
+		[9995] = "Inconnu"; --Unknown
+		[9994] = "Expedition islands"; --Expedition islands
 	}
 end

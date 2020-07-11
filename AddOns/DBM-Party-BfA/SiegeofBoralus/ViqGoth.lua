@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2140, "DBM-Party-BfA", 5, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200220034831")
+mod:SetRevision("20200602212246")
 mod:SetCreatureID(120553)
 mod:SetEncounterID(2100)
 mod:SetZone()
@@ -26,9 +26,9 @@ local yellPutridWaters				= mod:NewYell(275014)
 local specWarnSlam					= mod:NewSpecialWarningDodge(269266, "Tank", nil, 2, 2, 2)
 
 --local timerCalloftheDeepCD			= mod:NewAITimer(13, 270185, nil, nil, nil, 3)--6.4, 15.1, 19.0, 11.9, 12.1, 12.3, 15.6, 12.1, 12.9, 7.0, 8.6, 7.5, 7.2, 7.4, 7.0, 7.0, 7.3, 7.2
-local timerPutridWatersCD			= mod:NewCDTimer(19.9, 275014, nil, nil, nil, 5, nil, DBM_CORE_MAGIC_ICON)
-local timerSlamCD					= mod:NewCDTimer(7.3, 269266, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerDemolisherTerrorCD		= mod:NewCDTimer(20, 270605, nil, nil, nil, 1, nil, DBM_CORE_TANK_ICON..DBM_CORE_DAMAGE_ICON)
+local timerPutridWatersCD			= mod:NewCDTimer(19.9, 275014, nil, nil, nil, 5, nil, DBM_CORE_L.MAGIC_ICON)
+local timerSlamCD					= mod:NewCDTimer(7.3, 269266, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerDemolisherTerrorCD		= mod:NewCDTimer(20, 270605, nil, nil, nil, 1, nil, DBM_CORE_L.TANK_ICON..DBM_CORE_L.DAMAGE_ICON)
 
 mod:AddRangeFrameOption(5, 275014)
 
@@ -112,7 +112,7 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, spellId)
 	if spellId == 270605 then--Summon Demolisher
 		timerDemolisherTerrorCD:Start(20)
 	elseif spellId == 269984 then--Damage Boss 35% (can use SPELL_CAST_START of 269456 alternatively)

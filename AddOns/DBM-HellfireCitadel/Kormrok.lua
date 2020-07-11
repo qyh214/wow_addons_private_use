@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1392, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222221214")
+mod:SetRevision("20200524145633")
 mod:SetCreatureID(90435)
 mod:SetEncounterID(1787)
 mod:SetZone()
@@ -45,12 +45,12 @@ local timerLeapCD					= mod:NewPhaseTimer(113.5)--Not techincally a leap timer, 
 local timerPoundCD					= mod:NewNextCountTimer(42, 180244, nil, nil, nil, 2)
 local timerFelOutpouringCD			= mod:NewNextTimer(107, 181292, nil, nil, nil, 2)
 local timerExplosiveRunesCD			= mod:NewNextTimer(48, 181296, nil, nil, nil, 5)
-local timerGraspingHandsCD			= mod:NewNextTimer(107, 181299, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON, nil, 1, 4)
+local timerGraspingHandsCD			= mod:NewNextTimer(107, 181299, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON, nil, 1, 4)
 --Tank Debuffs. These are also hard coded, but in different place.
 mod:AddTimerLine(TANK)
 local timerExplosiveBurstCD			= mod:NewNextCountTimer(40, 181306, nil, nil, nil, 3, nil, nil, nil, 2, 4)--Everyone needs to know these 2
 local timerFoulCrushCD				= mod:NewNextCountTimer(40, 181307, nil, nil, nil, 1)--Everyone needs to know these 2
-local timerSwatCD					= mod:NewNextCountTimer(40, 181305, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerSwatCD					= mod:NewNextCountTimer(40, 181305, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 
 --local berserkTimer				= mod:NewBerserkTimer(360)--Was 8 min on heroic PTR, but that also might have been a bug so will wait to confirm
 

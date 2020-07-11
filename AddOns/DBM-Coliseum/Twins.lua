@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ValkTwins", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222200840")
+mod:SetRevision("20200524145648")
 mod:SetCreatureID(34497, 34496)
 mod:SetEncounterID(1089)
 mod:SetModelID(29240)
@@ -30,7 +30,7 @@ local specWarnEmpoweredLight		= mod:NewSpecialWarningYou(65748)--No voice ideas 
 
 local enrageTimer					= mod:NewBerserkTimer(360)
 local timerSpecial					= mod:NewTimer(45, "TimerSpecialSpell", "132866", nil, nil, 6)
-local timerHeal						= mod:NewCastTimer(15, 65875, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerHeal						= mod:NewCastTimer(15, 65875, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)
 local timerLightTouch				= mod:NewTargetTimer(20, 65950, nil, false, 2, 3)
 local timerDarkTouch				= mod:NewTargetTimer(20, 66001, nil, false, 2, 3)
 local timerAchieve					= mod:NewAchievementTimer(180, 3815)

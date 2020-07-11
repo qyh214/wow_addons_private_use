@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1128, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814112014")
+mod:SetRevision("20200524145633")
 mod:SetCreatureID(78714)
 mod:SetEncounterID(1721)
 mod:SetZone()
@@ -26,22 +26,22 @@ local warnOnTheHunt					= mod:NewTargetAnnounce(162497, 4)
 
 local specWarnChainHurl				= mod:NewSpecialWarningSpell(159947, nil, nil, nil, nil, 2)
 local specWarnBerserkerRushOther	= mod:NewSpecialWarningTarget(158986, nil, nil, nil, 2, 2)
-local specWarnBerserkerRush			= mod:NewSpecialWarningMoveTo(158986, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.run:format(158986), nil, 3, 2)--Creative use of warning. Run option text but a moveto warning to get players in LFR to actually run to the flame jet instead of being clueless.
+local specWarnBerserkerRush			= mod:NewSpecialWarningMoveTo(158986, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.run:format(158986), nil, 3, 2)--Creative use of warning. Run option text but a moveto warning to get players in LFR to actually run to the flame jet instead of being clueless.
 local yellBerserkerRush				= mod:NewYell(158986)
 local specWarnImpale				= mod:NewSpecialWarningYou(159113)
 local specWarnOpenWounds			= mod:NewSpecialWarningStack(159178, nil, 2)
 local specWarnOpenWoundsOther		= mod:NewSpecialWarningTaunt(159178)--If it is swap every impale, will move this to impale cast and remove stack stuff all together.
 local specWarnMaulingBrew			= mod:NewSpecialWarningMove(159413)
 local specWarnFlameJet				= mod:NewSpecialWarningMove(159311)
-local specWarnOnTheHunt				= mod:NewSpecialWarningMoveTo(162497, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.run:format(162497), nil, nil, 2)--Does not need yell, tigers don't cleave other targets like berserker rush does.
+local specWarnOnTheHunt				= mod:NewSpecialWarningMoveTo(162497, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.run:format(162497), nil, nil, 2)--Does not need yell, tigers don't cleave other targets like berserker rush does.
 
 local timerPillarCD					= mod:NewNextTimer(20, "ej9394", nil, nil, nil, nil, 159202)
 local timerChainHurlCD				= mod:NewNextTimer(106, 159947, nil, nil, nil, 6, nil, nil, nil, 1, 5)--177776
 local timerSweeperCD				= mod:NewTimer(55, "timerSweeperCD", 177258, nil, nil, 6, nil, nil, nil, 1, 5)
-local timerBerserkerRushCD			= mod:NewCDTimer(45, 158986, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)--45 to 70 variation. Small indication that you can use a sequence to get it a little more accurate but even then it's variable. Pull1: 48, 60, 46, 70, 45, 51, 46, 70. Pull2: 48, 60, 50, 55, 45. Mythic pull1, 48, 50, 57, 49
-local timerImpaleCD					= mod:NewCDTimer(43.5, 159113, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 4)--Highly variable now, seems better adjusted for berserker rush interaction
+local timerBerserkerRushCD			= mod:NewCDTimer(45, 158986, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)--45 to 70 variation. Small indication that you can use a sequence to get it a little more accurate but even then it's variable. Pull1: 48, 60, 46, 70, 45, 51, 46, 70. Pull2: 48, 60, 50, 55, 45. Mythic pull1, 48, 50, 57, 49
+local timerImpaleCD					= mod:NewCDTimer(43.5, 159113, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, 2, 4)--Highly variable now, seems better adjusted for berserker rush interaction
 mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
-local timerTigerCD					= mod:NewNextTimer(110, "ej9396", nil, "-Tank", nil, 1, 162497, DBM_CORE_HEROIC_ICON, nil, 3, 4)
+local timerTigerCD					= mod:NewNextTimer(110, "ej9396", nil, "-Tank", nil, 1, 162497, DBM_CORE_L.HEROIC_ICON, nil, 3, 4)
 
 mod:AddRangeFrameOption(4, 159386)
 

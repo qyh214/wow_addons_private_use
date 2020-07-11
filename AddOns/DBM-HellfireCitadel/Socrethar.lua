@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1427, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222221214")
+mod:SetRevision("20200524145633")
 mod:SetCreatureID(92330)
 mod:SetEncounterID(1794)
 mod:SetZone()
@@ -66,21 +66,21 @@ local specWarnEternalHunger			= mod:NewSpecialWarningRun(188666, nil, nil, nil, 
 local yellEternalHunger				= mod:NewYell(188666, nil, false)
 
 --Soulbound Construct
-local timerReverberatingBlowCD		= mod:NewCDCountTimer(17, 180008, nil, "Tank|Healer", 2, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 4)
+local timerReverberatingBlowCD		= mod:NewCDCountTimer(17, 180008, nil, "Tank|Healer", 2, 5, nil, DBM_CORE_L.TANK_ICON, nil, 2, 4)
 local timerFelPrisonCD				= mod:NewCDTimer(29, 182994, nil, nil, nil, 3)--29-33
 local timerVolatileFelOrbCD			= mod:NewCDTimer(23, 180221, 186532, nil, nil, 3)
 local timerFelChargeCD				= mod:NewCDTimer(23, 182051, nil, nil, nil, 3, nil, nil, nil, 2, 4)
-local timerApocalypticFelburstCD	= mod:NewCDCountTimer(30, 188693, 206388, nil, nil, 2, nil, DBM_CORE_HEROIC_ICON)
+local timerApocalypticFelburstCD	= mod:NewCDCountTimer(30, 188693, 206388, nil, nil, 2, nil, DBM_CORE_L.HEROIC_ICON)
 --Socrethar
 local timerTransition				= mod:NewPhaseTimer(6.5)
-local timerExertDominanceCD			= mod:NewCDCountTimer(4.5, 183331, nil, "-Healer", nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerExertDominanceCD			= mod:NewCDCountTimer(4.5, 183331, nil, "-Healer", nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)
 local timerApocalypseCD				= mod:NewCDTimer(46, 183329, nil, nil, nil, 2)
 --Adds
 local timerSargereiDominatorCD		= mod:NewNextCountTimer(60, "ej11456", nil, nil, nil, 1, 184053)
 local timerHauntingSoulCD			= mod:NewCDCountTimer(29, "ej11462", nil, nil, nil, 1, 182769, nil, nil, 1, 5)
 local timerGiftofManariCD			= mod:NewCDTimer(11, 184124, nil, nil, nil, 3)
 --Mythic
-local timerVoraciousSoulstalkerCD	= mod:NewCDCountTimer(59.5, "ej11778", 151869, nil, nil, 1, 190776, DBM_CORE_HEROIC_ICON)
+local timerVoraciousSoulstalkerCD	= mod:NewCDCountTimer(59.5, "ej11778", 151869, nil, nil, 1, 190776, DBM_CORE_L.HEROIC_ICON)
 
 --local berserkTimer				= mod:NewBerserkTimer(360)
 
@@ -127,7 +127,7 @@ end
 --if this isn't accurate, or isn't as fast as listing to RAID_BOSS_WHISPER sync i'll switch to a RAID_BOSS_WHISPER transcriptor listener
 function mod:ChargeTarget(targetname, uId)
 	if not targetname then
-		specWarnFelCharge:Show(DBM_CORE_UNKNOWN)
+		specWarnFelCharge:Show(DBM_CORE_L.UNKNOWN)
 		specWarnFelCharge:Play("chargemove")
 		return
 	end

@@ -12,12 +12,22 @@ local L
 --})
 
 ---------------------------
+--  Altimor the Huntsman --
+---------------------------
+--L= DBM:GetModLocalization(2429)
+
+---------------------------
+--  Hungering Destroyer --
+---------------------------
+--L= DBM:GetModLocalization(2428)
+
+---------------------------
 --  Artificer Xy'Mox --
 ---------------------------
 --L= DBM:GetModLocalization(2418)
 
 ---------------------------
---  Kael'thas --
+--  Sun King's Salvation/Kael'thas --
 ---------------------------
 --L= DBM:GetModLocalization(2422)
 

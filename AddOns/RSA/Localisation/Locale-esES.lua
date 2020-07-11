@@ -1,19 +1,15 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("RSA", "esES")
 if not L then return end
 --[[Translation missing --]]
-L[" Does not affect Immune, Immune will always use its own replacement."] = " Does not affect Immune, Immune will always use its own replacement."
---[[Translation missing --]]
 L[" If you wish to add a message for this section, enter it above in the |cffFFD100Add New Message|r box. As no messages exist, nothing will be announced for this section."] = " If you wish to add a message for this section, enter it above in the |cffFFD100Add New Message|r box. As no messages exist, nothing will be announced for this section."
---[[Translation missing --]]
-L[" is disabled. If you want to configure RSA, you need to enable it."] = " is disabled. If you want to configure RSA, you need to enable it."
 L[" is Missing!"] = " falta!"
---[[Translation missing --]]
-L[" message for this section."] = " message for this section."
---[[Translation missing --]]
-L[" messages for this section."] = " messages for this section."
 L[" Refreshed!"] = " renovado!"
 --[[Translation missing --]]
 L[" RSA will choose a message from this section at random, if you wish to remove a message, delete the contents and press enter. If no messages exist, nothing will be announced for this section."] = " RSA will choose a message from this section at random, if you wish to remove a message, delete the contents and press enter. If no messages exist, nothing will be announced for this section."
+--[[Translation missing --]]
+L["%s can only function inside instances since 8.2.5."] = "%s can only function inside instances since 8.2.5."
+--[[Translation missing --]]
+L["%s is disabled. If you want to configure RSA, you need to enable it."] = "%s is disabled. If you want to configure RSA, you need to enable it."
 --[[Translation missing --]]
 L["|c5500DBBD[TARGET]|r will be replaced with this when whispering someone."] = "|c5500DBBD[TARGET]|r will be replaced with this when whispering someone."
 --[[Translation missing --]]
@@ -49,7 +45,9 @@ L["Corpse of "] = "Cuerpo de "
 --[[Translation missing --]]
 L["Couldn't find target for Soulstone."] = "Couldn't find target for Soulstone."
 --[[Translation missing --]]
-L["Current Revision"] = "Current Revision"
+L["Current Version: %s"] = "Current Version: %s"
+--[[Translation missing --]]
+L["Curseforge"] = "Curseforge"
 L["Custom Channel"] = "Canal personalizado"
 --[[Translation missing --]]
 L["Damage"] = "Damage"
@@ -58,7 +56,11 @@ L["DamageAbsorb"] = "Absorbed Damage"
 --[[Translation missing --]]
 L["Debuff"] = "Debuff"
 --[[Translation missing --]]
+L["Discord"] = "Discord"
+--[[Translation missing --]]
 L["Dispel"] = "Dispel"
+--[[Translation missing --]]
+L["Does not affect Immune, Immune will always use its own replacement."] = "Does not affect Immune, Immune will always use its own replacement."
 --[[Translation missing --]]
 L["Drums"] = "Drums"
 --[[Translation missing --]]
@@ -103,16 +105,10 @@ L["General"] = "General"
 L["General Replacement"] = "General Replacement"
 L["Heal"] = "Sanacion"
 --[[Translation missing --]]
-L["I have a Battle.net community for my addons. If you have any issues, now you can easily report them to me in game. Just copy the invite link below and throw me a message."] = "I have a Battle.net community for my addons. If you have any issues, now you can easily report them to me in game. Just copy the invite link below and throw me a message."
---[[Translation missing --]]
 L["If selected, |c5500DBBD[MISSTYPE]|r will always use the General Replacement set below."] = "If selected, |c5500DBBD[MISSTYPE]|r will always use the General Replacement set below."
 --[[Translation missing --]]
 L["If selected, |c5500DBBD[TARGET]|r will always use the spell target's name, rather than using the input below for whispers."] = "If selected, |c5500DBBD[TARGET]|r will always use the spell target's name, rather than using the input below for whispers."
---[[Translation missing --]]
-L["If you encounter a bug, or have a feature request, please file a ticket on Curseforge using the link below."] = "If you encounter a bug, or have a feature request, please file a ticket on Curseforge using the link below."
 L["Immune"] = "Inmune"
---[[Translation missing --]]
-L["In Game"] = "In Game"
 --[[Translation missing --]]
 L["Instance"] = "Instance"
 L["Interrupt"] = "Interrumpir"
@@ -126,8 +122,6 @@ L["Message Announce Area"] = "Message Announce Area"
 L["Message Texts"] = "Message Texts"
 L["missed"] = "fallado"
 L["Module Settings"] = "Opciones del modulo"
---[[Translation missing --]]
-L["Online"] = "Online"
 --[[Translation missing --]]
 L["Only announce if you are in combat."] = "Only announce if you are in combat."
 --[[Translation missing --]]
@@ -172,8 +166,6 @@ L["Replacement"] = "Replacement"
 L["Resist"] = "Resist"
 --[[Translation missing --]]
 L["Respec Codex"] = "Respec Codex"
---[[Translation missing --]]
-L["RSA on Curseforge"] = "RSA on Curseforge"
 L["Say"] = "Decir"
 --[[Translation missing --]]
 L["Send to player created channel."] = "Send to player created channel."
@@ -211,22 +203,11 @@ L["This setting also does not follow the global announcement settings, and will,
 --[[Translation missing --]]
 L["Unknown"] = "Unknown"
 --[[Translation missing --]]
+L["URL"] = "URL"
+--[[Translation missing --]]
 L["Use Single Replacement"] = "Use Single Replacement"
 --[[Translation missing --]]
 L["Utilities"] = "Utilities"
---[[Translation missing --]]
-L["was absorbed by"] = "was absorbed by"
---[[Translation missing --]]
-L["was blocked by"] = "was blocked by"
---[[Translation missing --]]
-L["was deflected by"] = "was deflected by"
---[[Translation missing --]]
-L["was dodged by"] = "was dodged by"
---[[Translation missing --]]
-L["was evaded by"] = "was evaded by"
---[[Translation missing --]]
-L["was parried by"] = "was parried by"
-L["was resisted by"] = "fue resistido por"
 --[[Translation missing --]]
 L["When reporting an issue, please also post the revision number above. Thanks!"] = "When reporting an issue, please also post the revision number above. Thanks!"
 --[[Translation missing --]]
@@ -288,7 +269,9 @@ L["Whisper"] = "Susurrar"
 L["Yell"] = "Yell"
 L["You"] = "tí"
 --[[Translation missing --]]
-L["You have "] = "You have "
+L["You have %d message for this section."] = "You have %d message for this section."
+--[[Translation missing --]]
+L["You have %d messages for this section."] = "You have %d messages for this section."
 --[[Translation missing --]]
 L["You have no messages for this section."] = "You have no messages for this section."
 --[[Translation missing --]]

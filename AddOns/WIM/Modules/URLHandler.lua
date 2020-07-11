@@ -45,6 +45,10 @@ armoryLinks = {
         title = "Warcraftlogs",
         url = "https://www.warcraftlogs.com/character/{eu/us}/{realm}/{user}"
     },
+	{
+        title = "Raider io",
+        url = "https://raider.io/characters/{eu/us}/{realm}/{user}"
+    },
     {
         title = "WoWTrack",
         url = "https://wowtrack.org/characters/{eu/us}/{realm}/{user}"

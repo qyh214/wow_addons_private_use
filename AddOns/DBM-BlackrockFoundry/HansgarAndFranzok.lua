@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1155, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222221214")
+mod:SetRevision("20200524145633")
 mod:SetCreatureID(76974, 76973)
 mod:SetEncounterID(1693)
 mod:SetZone()
@@ -32,11 +32,11 @@ local specWarnStampersEnd				= mod:NewSpecialWarningEnd(174825, nil, nil, nil, 1
 
 local timerDisruptingRoar				= mod:NewCastTimer(2.5, 160838, nil, "SpellCaster")
 local timerDisruptingRoarCD				= mod:NewCDTimer(45, 160838, nil, "SpellCaster")
-local timerSkullcrackerCD				= mod:NewCDTimer(22, 153470, nil, "Healer", nil, 5, nil, DBM_CORE_HEALER_ICON)
-local timerCripplingSupplex				= mod:NewCastTimer(9.5, 156938, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 4)
+local timerSkullcrackerCD				= mod:NewCDTimer(22, 153470, nil, "Healer", nil, 5, nil, DBM_CORE_L.HEALER_ICON)
+local timerCripplingSupplex				= mod:NewCastTimer(9.5, 156938, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, 2, 4)
 local timerJumpSlamCD					= mod:NewNextTimer(34, "ej9854", nil, nil, nil, 3)
 mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
-local timerSmartStamperCD				= mod:NewNextTimer(12, 162124, nil, nil, nil, 6, nil, DBM_CORE_HEROIC_ICON, nil, 1, 4)--Activation
+local timerSmartStamperCD				= mod:NewNextTimer(12, 162124, nil, nil, nil, 6, nil, DBM_CORE_L.HEROIC_ICON, nil, 1, 4)--Activation
 
 --local berserkTimer						= mod:NewBerserkTimer(360)
 

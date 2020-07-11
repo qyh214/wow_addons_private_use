@@ -26,9 +26,9 @@ L:SetOptionLocalization({
 	timerNefAblity				= "Exibir cronógrafo para recarga do bônus Melhorar Habilidade (modo Heróico)",
 	SpecWarnActivated			= "Exibir aviso especial quando um novo chefe é ativado",
 	specWarnGenerator			= "Exibir aviso especial quando um chefe obtém $spell:91557",
-	AcquiringTargetIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79501),
-	ConductorIcon				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79888),
-	ShadowConductorIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92053),
+	AcquiringTargetIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79501),
+	ConductorIcon				= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79888),
+	ShadowConductorIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92053),
 	SetIconOnActivated			= "Colocar ícone no último chefe ativado"
 })
 
@@ -63,7 +63,7 @@ L = DBM:GetModLocalization(171)
 
 L:SetOptionLocalization({
 	InfoFrame				= "Exibir quadro de informações para o níveis de som",
-	TrackingIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(78092)
+	TrackingIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(78092)
 })
 
 L:SetMiscLocalization({
@@ -78,7 +78,7 @@ L = DBM:GetModLocalization(172)
 
 L:SetOptionLocalization({
 	RangeFrame		= "Exibir medidor de distância (6)",
-	SetIconOnSlime	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(82935),
+	SetIconOnSlime	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(82935),
 	InfoFrame		= "Exibir quadro de informações para vida (<10k pv)"
 })
 
@@ -104,9 +104,9 @@ L:SetOptionLocalization({
 	TimerPhase			= "Exibir cronógrafo para a próxima fase",
 	RangeFrame			= "Exibir medidor de distância (6) durante a fase azul",
 	SetTextures			= "Automaticamente desabilitar texturas projetadas durante a fase escura<br/>(habilita novamente ao término da fase)",
-	FlashFreezeIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92979),
-	BitingChillIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(77760),
-	ConsumingFlamesIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(77786)
+	FlashFreezeIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92979),
+	BitingChillIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(77760),
+	ConsumingFlamesIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(77786)
 })
 
 L:SetMiscLocalization({
@@ -153,7 +153,7 @@ L:SetOptionLocalization({
 	NefBreathTimer			= "Exibir cronógrafo para recarga de $spell:94124 (Nefarian)",
 	InfoFrame				= "Exibir quadro de informações da Energia Elétrica de Onyxia",
 	SetWater				= "Automaticamente desabilitar colisão com a água, ao entrar em combate<br/>(habilita novamente, ao sair de combate)",
-	SetIconOnCinder			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79339),
+	SetIconOnCinder			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79339),
 	RangeFrame				= "Exibir medidor de distância (10) para $spell:79339<br/>(Mostra todo mundo se você tiver o debuff, caso contrário, apenas jogadores com ícones)"
 })
 

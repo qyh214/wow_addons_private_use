@@ -57,6 +57,7 @@ function RSA_Hunter:OnEnable()
 		SPELL_AURA_APPLIED = {
 			[90355] = Config_Lust, -- Core Hound Ancient Hysteria
 			[160452] = Config_Lust, -- Nether Ray Netherwinds
+			[264667] = Config_Lust, -- Primal Rage Pet Specialization
 			[3355] = { -- FREEZING TRAP
 				profile = 'FreezingTrap',
 				replacements = { TARGET = 1 }
@@ -82,6 +83,7 @@ function RSA_Hunter:OnEnable()
 		SPELL_AURA_REMOVED = {
 			[90355] = Config_Lust_End, -- Core Hound Ancient Hysteria
 			[160452] = Config_Lust_End, -- Nether Ray Netherwinds
+			[264667] = Config_Lust_End, -- Primal Rage Pet Specialization
 			[5116] = { -- CONCUSSIVE SHOT
 				profile = 'ConcussiveShot',
 				section = 'End',

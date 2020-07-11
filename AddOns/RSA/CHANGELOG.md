@@ -1,3 +1,8 @@
-# RSA r526-Release
-### Changed
-* Updated interface version for 8.3.
+# RSA r532-Release
+
+### Changes
+* Updated localisations
+
+### Priest
+* Added Evangelism
+* Added Rapture

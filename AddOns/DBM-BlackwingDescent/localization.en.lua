@@ -24,9 +24,9 @@ L:SetOptionLocalization({
 	timerNefAblity				= "Show timer for heroic ability buff cooldown",
 	SpecWarnActivated			= "Show special warning when new boss activated",
 	specWarnGenerator			= "Show special warning when a boss gains $spell:79629",
-	AcquiringTargetIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79501),
-	ConductorIcon				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79888),
-	ShadowConductorIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92053),
+	AcquiringTargetIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79501),
+	ConductorIcon				= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79888),
+	ShadowConductorIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92053),
 	SetIconOnActivated			= "Set icon on last activated boss"
 })
 
@@ -61,7 +61,7 @@ L = DBM:GetModLocalization(171)
 
 L:SetOptionLocalization({
 	InfoFrame				= "Show info frame for $journal:3072",
-	TrackingIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(78092)
+	TrackingIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(78092)
 })
 
 L:SetMiscLocalization({
@@ -76,7 +76,7 @@ L = DBM:GetModLocalization(172)
 
 L:SetOptionLocalization({
 	RangeFrame		= "Show range frame (6)",
-	SetIconOnSlime	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(82935),
+	SetIconOnSlime	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(82935),
 	InfoFrame		= "Show info frame for health (<10k hp)"
 })
 
@@ -102,9 +102,9 @@ L:SetOptionLocalization({
 	TimerPhase			= "Show timer for next phase",
 	RangeFrame			= "Show range frame (6) during blue phase",
 	SetTextures			= "Automatically disable projected textures in dark phase<br/>(returns it to enabled upon leaving phase)",
-	FlashFreezeIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(77699),
-	BitingChillIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(77760),
-	ConsumingFlamesIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(77786)
+	FlashFreezeIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(77699),
+	BitingChillIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(77760),
+	ConsumingFlamesIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(77786)
 })
 
 L:SetMiscLocalization({
@@ -151,7 +151,7 @@ L:SetOptionLocalization({
 	NefBreathTimer			= "Show timer for Nefarian's $spell:77826 cooldown",
 	InfoFrame				= "Show info frame for $journal:3284",
 	SetWater				= "Automatically disable water collision on pull<br/>(returns it to enabled upon leaving combat)",
-	SetIconOnCinder			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79339),
+	SetIconOnCinder			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79339),
 	RangeFrame				= "Show range frame (10) for $spell:79339<br/>(Shows everyone if you have debuff, only players with debuff if not)"
 })
 

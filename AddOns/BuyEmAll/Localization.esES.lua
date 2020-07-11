@@ -1,4 +1,4 @@
-﻿-- Thanks to jsr1976!
+-- Thanks to jsr1976!
 
 if GetLocale() == "esES" or GetLocale() == "esMX" then
 	BUYEMALL_LOCALS = {

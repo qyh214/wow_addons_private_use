@@ -29,9 +29,9 @@ L:SetOptionLocalization({
 	timerNefAblity				= "计时条：英雄模式增益法术冷却时间",
 	SpecWarnActivated			= "特殊警报：新的金刚已激活",
 	specWarnGenerator			= "特殊警报：金刚获得$spell:91557效果",
-	AcquiringTargetIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79501),
-	ConductorIcon				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79888),
-	ShadowConductorIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92053),
+	AcquiringTargetIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79501),
+	ConductorIcon				= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79888),
+	ShadowConductorIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92053),
 	SetIconOnActivated			= "自动为最新激活的金刚添加团队标记"
 })
 
@@ -66,7 +66,7 @@ L = DBM:GetModLocalization(171)
 
 L:SetOptionLocalization({
 	InfoFrame				= "信息框：团员声音等级列表",
-	TrackingIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(78092)
+	TrackingIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(78092)
 })
 
 L:SetMiscLocalization({
@@ -81,7 +81,7 @@ L = DBM:GetModLocalization(172)
 
 L:SetOptionLocalization({
 	RangeFrame		= "距离监视器（6码）",
-	SetIconOnSlime	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(82935),
+	SetIconOnSlime	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(82935),
 	InfoFrame		= "信息框：生命值小于1万的团员的列表"
 })
 
@@ -107,9 +107,9 @@ L:SetOptionLocalization({
 	TimerPhase			= "计时条：下一阶段",
 	RangeFrame			= "在蓝瓶阶段显示距离监视器（6码）",
 	SetTextures			= "在黑暗阶段自动取消材质投射效果（当阶段结束时会自动恢复）",
-	FlashFreezeIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92979),
-	BitingChillIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(77760),
-	ConsumingFlamesIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(77786)
+	FlashFreezeIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92979),
+	BitingChillIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(77760),
+	ConsumingFlamesIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(77786)
 })
 
 L:SetMiscLocalization({
@@ -156,7 +156,7 @@ L:SetOptionLocalization({
 	NefBreathTimer			= "计时条：奈法利安的$spell:94124冷却时间",
 	InfoFrame				= "信息框：奥妮克希亚的电能",
 	SetWater				= "在拉怪时自动取消水体碰撞效果（战斗结束后会自动恢复）",
-	SetIconOnCinder			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79339),
+	SetIconOnCinder			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79339),
 	RangeFrame				= "为$spell:79339显示距离监视器（10码）",-- Shows everyone if you have debuff, only players with icons if not
 	FixShadowblaze        = "自动同步$spell:94085时间（实验功能，利用首领的喊话进行同步）",
 })

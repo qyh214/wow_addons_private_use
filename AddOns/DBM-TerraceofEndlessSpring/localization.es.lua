@@ -16,8 +16,8 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnGroupOrder		= "Anunciar rotación de grupos para $spell:118191 (por ahora solo para 25 jugadores con la estrategia de 5, 2, 2, 2)",
 	specWarnYourGroup	= "Mostrar aviso especial cuando a tu grupo le toque interceptar $spell:118191 (25 jugadores)",
-	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(8, 111850) .. " (muestra a todos los jugadores si tienes el perjuicio, o solo a los jugadores con el perjuicio si no estás afectado)",
-	SetIconOnPrison		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(117436)
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(8, 111850) .. " (muestra a todos los jugadores si tienes el perjuicio, o solo a los jugadores con el perjuicio si no estás afectado)",
+	SetIconOnPrison		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(117436)
 })
 
 -------------
@@ -26,7 +26,7 @@ L:SetOptionLocalization({
 L = DBM:GetModLocalization(742)
 
 L:SetOptionLocalization({
-	warnLightOfDay	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(123716)
+	warnLightOfDay	= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.target:format(123716)
 })
 
 L:SetMiscLocalization{
@@ -49,7 +49,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	warnHideOver	= "Mostrar aviso cuando termine $spell:123244",
 	timerSpecialCD	= "Mostrar temporizador para el tiempo de reutilización de las facultades especiales",
-	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. " (muestra a todos durante Ocultar, y solo a los tanques el resto del tiempo)"
+	RangeFrame		= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. " (muestra a todos durante Ocultar, y solo a los tanques el resto del tiempo)"
 })
 
 L:SetMiscLocalization{
@@ -76,11 +76,11 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	warnThrash					= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(131996),
+	warnThrash					= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(131996),
 	warnBreathOnPlatform		= "Mostrar aviso para $spell:119414 al estar en los santuarios (no recomendable salvo que seas el líder de la banda)",
 	specWarnBreathOfFearSoon	= "Mostrar aviso especial previo para $spell:119414 si no estás afectado por el beneficio de $spell:117964",
 	specWarnMovement			= "Mostrar aviso especial para esquivar durante $spell:120047",
 	timerSpecialAbility			= "Mostrar temporizador para la siguiente habilidad especial",
-	RangeFrame					= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(2, 119519),
-	SetIconOnHuddle				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(120629)
+	RangeFrame					= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(2, 119519),
+	SetIconOnHuddle				= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(120629)
 })

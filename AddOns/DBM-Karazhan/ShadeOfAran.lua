@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Aran", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200329212634")
+mod:SetRevision("20200524145731")
 mod:SetCreatureID(16524)
 mod:SetEncounterID(658)
 mod:SetModelID(16621)
@@ -27,12 +27,12 @@ local specWarnArcane		= mod:NewSpecialWarningRun(29973, nil, nil, nil, 4, 7)
 local specWarnBlizzard		= mod:NewSpecialWarningMove(29951, nil, nil, nil, 1, 2)
 
 local timerSpecial			= mod:NewTimer(30, "timerSpecial", "132866", nil, nil, 2)
-local timerFlameCast		= mod:NewCastTimer(5, 30004, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerFlameCast		= mod:NewCastTimer(5, 30004, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)
 local timerArcaneExplosion	= mod:NewCastTimer(10, 29973, nil, nil, nil, 2)
-local timerFlame			= mod:NewBuffActiveTimer(20.2, 29946, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerFlame			= mod:NewBuffActiveTimer(20.2, 29946, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)
 local timerBlizzad			= mod:NewBuffActiveTimer(30, 29951, nil, nil, nil, 3)
 local timerElementals		= mod:NewBuffActiveTimer(90, 37053, nil, nil, nil, 6)
-local timerChains			= mod:NewTargetTimer(10, 29991, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON)
+local timerChains			= mod:NewTargetTimer(10, 29991, nil, nil, nil, 3, nil, DBM_CORE_L.MAGIC_ICON)
 
 local berserkTimer			= mod:NewBerserkTimer(900)
 

@@ -77,8 +77,8 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(864)
 
 L:SetOptionLocalization({
-	timerAssaultModeCD	= DBM_CORE_AUTO_TIMER_OPTIONS.next:format("ej8177"),
-	timerSiegeModeCD	= DBM_CORE_AUTO_TIMER_OPTIONS.next:format("ej8178")
+	timerAssaultModeCD	= DBM_CORE_L.AUTO_TIMER_OPTIONS.next:format("ej8177"),
+	timerSiegeModeCD	= DBM_CORE_L.AUTO_TIMER_OPTIONS.next:format("ej8178")
 })
 
 --------------------------
@@ -100,7 +100,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnDefensiveStanceSoon	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.prewarn:format(143593)
+	warnDefensiveStanceSoon	= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.prewarn:format(143593)
 })
 
 L:SetMiscLocalization({
@@ -159,10 +159,10 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnToxicCatalyst			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej8036"),
+	warnToxicCatalyst			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format("ej8036"),
 	specWarnActivatedVulnerable	= "Show special warning when you are vulnerable to activating paragons",
 	specWarnMoreParasites		= "Show special warning when you need more parasites",
-	yellToxicCatalyst			= DBM_CORE_AUTO_YELL_OPTION_TEXT.yell:format("ej8036")
+	yellToxicCatalyst			= DBM_CORE_L.AUTO_YELL_OPTION_TEXT.yell:format("ej8036")
 })
 
 L:SetMiscLocalization({

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2392, "DBM-Party-Shadowlands", 1, 1182)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200415165936")
+mod:SetRevision("20200610154704")
 mod:SetCreatureID(166882)
 mod:SetEncounterID(2389)
 mod:SetZone()
@@ -40,7 +40,7 @@ local timerSummonCreationCD			= mod:NewAITimer(13, 320358, nil, nil, nil, 1)
 --local timerMeatHookCD				= mod:NewAITimer(15.8, 322681, nil, nil, nil, 3)
 --local timerMutilateCD				= mod:NewCDTimer(13, 320376, nil, nil, nil, 3)--Can't AI timer, multiple adds might be up, enable later
 local timerEmbalmingIchorCD			= mod:NewAITimer(15.8, 322681, nil, nil, nil, 3)
-local timerStichNeedleCD			= mod:NewAITimer(15.8, 320200, nil, nil, nil, 5, nil, DBM_CORE_HEALER_ICON)
+local timerStichNeedleCD			= mod:NewAITimer(15.8, 320200, nil, nil, nil, 5, nil, DBM_CORE_L.HEALER_ICON)
 local timerDarkinfusionCD			= mod:NewAITimer(13, 323016, nil, nil, nil, 2)
 
 function mod:IchorTarget(targetname, uId)
@@ -110,7 +110,7 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:RAID_BOSS_WHISPER(msg)
 	if msg:find("spell:327461") then
-		specWarnMeatHook:Show(DBM_BOSS)
+		specWarnMeatHook:Show(DBM_CORE_L.BOSS)
 		specWarnMeatHook:Play("targetyou")
 		yellMeatHook:Yell()
 	end

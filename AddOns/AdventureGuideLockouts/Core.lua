@@ -1,4 +1,3 @@
--- Lua functions
 local _G = _G
 local pairs = pairs
 local print = print
@@ -6,7 +5,6 @@ local select = select
 local tinsert = tinsert
 local tonumber = tonumber
 
--- WoW API / Variables
 local C_ContributionCollector_GetState = C_ContributionCollector.GetState
 local C_QuestLog_IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
 local C_TaskQuest_GetQuestTimeLeftMinutes = C_TaskQuest.GetQuestTimeLeftMinutes
@@ -35,11 +33,24 @@ local RED_FONT_COLOR = RED_FONT_COLOR
 
 local ADDON_NAME, AddOn = ...
 
-local function error(...)
+local function debug(...)
+  _G[ADDON_NAME] = _G[ADDON_NAME] or AddOn
+  if not ... then return end
+  if type(...) == "table" then
+    print("|cff33ff99" .. ADDON_NAME .. " DEBUG:|r")
+    LoadAddOn("Blizzard_DebugTools")
+    DevTools_Dump(...)
+  else
+    print("|cff33ff99" .. ADDON_NAME .. " DEBUG:|r", ...)
+  end
+end
+
+local function error(err, debugTable)
   AddOn.errors = AddOn.errors or {}
-  if not AddOn.errors[...] then
-    print("|cffff0000" .. ADDON_NAME .. ":|r", ...)
-    AddOn.errors[...] = true
+  if not AddOn.errors[err] then
+    print("|cffff0000" .. ADDON_NAME .. " ERROR:|r", err)
+    debug(debugTable)
+    AddOn.errors[err] = true
   end
 end
 
@@ -60,12 +71,6 @@ function AddOn:RequestWarfrontInfo()
 
   self.isStromgardeAvailable = stromgardeState == Enum_ContributionState.Building or stromgardeState == Enum_ContributionState.Active
   self.isDarkshoreAvailable = darkshoreState == Enum_ContributionState.Building or darkshoreState == Enum_ContributionState.Active
-
-  if self.isStromgardeAvailable and self.isDarkshoreAvailable then
-    self.worldBosses[5].numEncounters = 5
-  elseif self.isStromgardeAvailable or self.isDarkshoreAvailable then
-    self.worldBosses[5].numEncounters = 4
-  end
 end
 
 ---@param instanceIndex number
@@ -76,7 +81,7 @@ function AddOn:GetSavedWorldBossInfo(instanceIndex)
   local difficulty = 2
   local locked = false
   local difficultyName = RAID_INFO_WORLD_BOSS
-  local numEncounters = self.worldBosses[instanceIndex].numEncounters
+  local numEncounters = 0
   local numCompleted = 0
 
   for encounterIndex = 1, #self.worldBosses[instanceIndex].encounters do
@@ -116,9 +121,15 @@ end
 function AddOn:GetInstanceLockout(instanceIndex)
   local instanceName, _, _, instanceDifficulty, locked, extended, _, _, _, difficultyName, numEncounters, numCompleted = GetSavedInstanceInfo(instanceIndex)
   if not locked and not extended then return end
-  local instanceID = self.instances[tonumber(GetSavedInstanceChatLink(instanceIndex):match(":(%d+):"))]
+  local instanceLink = GetSavedInstanceChatLink(instanceIndex)
+  local instanceMatch = instanceLink:match("%b::(%d+)")
+  local instanceID = self.instances[tonumber(instanceMatch)]
   if not instanceID then
-    error(instanceName .. " instanceID is nil. Please report this at https://github.com/Meivyn/AdventureGuideLockouts/issues")
+    local debugTable = {
+      instanceLink = instanceLink,
+      instanceMatch = instanceMatch
+    }
+    error("instanceID is nil. Please report following values at https://github.com/Meivyn/AdventureGuideLockouts/issues", debugTable)
     return
   end
 
@@ -180,7 +191,7 @@ function AddOn:GetWorldBossLockout(instanceIndex)
 
   while self:GetSavedWorldBossEncounterInfo(instanceIndex, encounterIndex) do
     local bossName, isKilled = self:GetSavedWorldBossEncounterInfo(instanceIndex, encounterIndex)
-    local isAvailable
+    local isAvailable = true
     if instanceIndex == 5 and encounterIndex == 4 then
       isAvailable = self.isStromgardeAvailable
       isKilled = isKilled and isAvailable
@@ -195,6 +206,7 @@ function AddOn:GetWorldBossLockout(instanceIndex)
       isKilled = isKilled,
       isAvailable = isAvailable
     })
+    numEncounters = (isAvailable or isKilled) and numEncounters + 1 or numEncounters
     encounterIndex = encounterIndex + 1
   end
 

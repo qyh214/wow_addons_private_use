@@ -1,15 +1,23 @@
 # Changelog
 
+## v1.3.4
+
+- Fixed an issue that sometimes caused an error for some people when exiting an instance
+- Error message now displays debug data that user can report when opening an issue
+
 ## v1.3.3
+
 - The Stonecore lockout will not crash the add-on anymore
 - Updated for patch 8.3 with Ny'alotha and new world bosses
-- An error will now be displayed if ``instanceID`` is nil instead of crashing the add-on
+- An error will now be displayed if `instanceID` is nil instead of crashing the add-on
 - Some refactoring
 
 ## v1.3.2
+
 - Fixed warfront info incorrectly displaying both Stromgarde and Darkshore as available
 
 ## v1.3.1
+
 - Updated Azeroth's world bosses count
 
 ## v1.3.0
@@ -53,16 +61,16 @@
 
 ## v1.2.2
 
-- Fixed a crash caused by the missing The Eye of Eternity raid in ``instancesData``
+- Fixed a crash caused by the missing The Eye of Eternity raid in `instancesData`
 - Azeroth's World Bosses availability should now be fixed
 
 ## v1.2.1
 
-- Fixed instances ``instanceID`` match with EJ
+- Fixed instances `instanceID` match with EJ
 
 ## v1.2.0
 
-- Reworked the addon so frames will now be matched with EJ tiles according to its ``instanceID`` attribute instead of ``tooltipTitle``, so no more locale dependant!
+- Reworked the addon so frames will now be matched with EJ tiles according to its `instanceID` attribute instead of `tooltipTitle`, so no more locale dependant!
 - Azeroth's World Bosses lockout tooltip will now display the unavailable status of inactive bosses, as well as the status of the Warfront boss
 - Changed Uldir lockout bosses name according to Encounter Journal
 - Fixed an issue with flags displaying wrong difficulty in some cases
@@ -76,7 +84,7 @@
 ## v1.1.8
 
 - Various improvements code-side
-- Instance progress frames should now be updated by switching tab as intended, no more ``/reload`` needed
+- Instance progress frames should now be updated by switching tab as intended, no more `/reload` needed
 
 ## v1.1.7
 

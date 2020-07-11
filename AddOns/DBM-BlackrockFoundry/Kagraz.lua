@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1123, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814112014")
+mod:SetRevision("20200524145633")
 mod:SetCreatureID(76814)--76794 Cinder Wolf, 80590 Aknor Steelbringer
 mod:SetEncounterID(1689)
 mod:SetZone()
@@ -54,11 +54,11 @@ local timerLavaSlashCD					= mod:NewCDTimer(14.5, 155318, nil, false, nil, 3)
 local timerMoltenTorrentCD				= mod:NewCDTimer(14, 154932, nil, "Ranged", 2, 3)
 local timerSummonEnchantedArmamentsCD	= mod:NewCDTimer(45, 156724, nil, "Ranged", 2, 3, nil, nil, nil, 2, 4)--45-47sec variation
 local timerSummonCinderWolvesCD			= mod:NewNextTimer(76, 155776, nil, nil, nil, 1, nil, nil, nil, 1, 4)
-local timerOverheated					= mod:NewTargetTimer(14, 154950, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 4)
-local timerCharringBreathCD				= mod:NewNextTimer(5, 155074, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerOverheated					= mod:NewTargetTimer(14, 154950, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, 2, 4)
+local timerCharringBreathCD				= mod:NewNextTimer(5, 155074, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerFixate						= mod:NewBuffFadesTimer(9.6, 154952)
 local timerBlazingRadianceCD			= mod:NewCDTimer(12, 155277, nil, false, nil, 3)--somewhat important but not important enough. there is just too much going on to be distracted by this timer
-local timerFireStormCD					= mod:NewNextCountTimer(61, 155493, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON, nil, 1, 5)
+local timerFireStormCD					= mod:NewNextCountTimer(61, 155493, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON, nil, 1, 5)
 local timerFireStorm					= mod:NewBuffActiveTimer(14, 155493, nil, nil, nil, 6)
 
 local berserkTimer						= mod:NewBerserkTimer(420)

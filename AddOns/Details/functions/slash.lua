@@ -199,7 +199,7 @@ function SlashCmdList.DETAILS (msg, editbox)
 	
 	elseif (command == "spells") then
 		Details.OpenForge()
-		DetailsForgePanel.SelectModule (_, _, 2)
+		DetailsForgePanel.SelectModule (_, _, 1)
 	
 	elseif (command == "feedback") then
 		_detalhes.OpenFeedbackWindow()
@@ -725,10 +725,6 @@ function SlashCmdList.DETAILS (msg, editbox)
 		print (serial)
 		
 		--tonumber((UnitGUID("target")):sub(-12, -9), 16))
-		
-	elseif (command == "callfunction") then
-	
-		_detalhes:InstanceCall (_detalhes.SetCombatAlpha, nil, nil, true)
 	
 	elseif (command == "guid") then --> localize-me
 	

@@ -15,10 +15,10 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnEcho			= "Announce when an Echo spawns",
 	warnEchoDown		= "Announce when an Echo is defeated",
-	specwarnAttenuation	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format(127834),
+	specwarnAttenuation	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(127834),
 	specwarnPlatform	= "Show special warning when boss changes platforms",
 	ArrowOnAttenuation	= "Show DBM Arrow during $spell:127834 to indicate which direction to move",
-	MindControlIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(122740)
+	MindControlIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(122740)
 })
 
 L:SetMiscLocalization({
@@ -32,7 +32,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(744)
 
 L:SetOptionLocalization({
-	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 123175)
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(10, 123175)
 })
 
 -------------------------------
@@ -46,9 +46,9 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnCrush		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(122774),
+	warnCrush		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(122774),
 	specwarnUnder	= "Show special warning when you are under boss",
-	PheromonesIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(122835)
+	PheromonesIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(122835)
 })
 
 L:SetMiscLocalization({
@@ -62,8 +62,8 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(741)
 
 L:SetOptionLocalization({
-	AmberPrisonIcons		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(121885),
-	specWarnReinforcements	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format("ej6554")
+	AmberPrisonIcons		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(121885),
+	specWarnReinforcements	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format("ej6554")
 })
 
 ------------
@@ -90,7 +90,7 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	warnReshapeLife				= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(122784),
+	warnReshapeLife				= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.target:format(122784),
 	warnReshapeLifeTutor		= "Display ability purpose rundown of Mutated Construct abilities",
 	warnAmberExplosion			= "Show warning (with source) when $spell:122398 is cast",
 	warnAmberExplosionAM		= "Show personal warning when Amber Montrosity's<br/> $spell:122398 is cast(for interrupt)",
@@ -100,7 +100,7 @@ L:SetOptionLocalization({
 	specwarnAmberExplosionYou	= "Show special warning to interrupt your own $spell:122398",
 	specwarnAmberExplosionAM	= "Show special warning to interrupt Amber Montrosity's<br/> $spell:122402",
 	specwarnAmberExplosionOther	= "Show special warning to interrupt loose Mutated Construct's<br/> $spell:122398",
-	timerDestabalize			= DBM_CORE_AUTO_TIMER_OPTIONS.target:format(123059),
+	timerDestabalize			= DBM_CORE_L.AUTO_TIMER_OPTIONS.target:format(123059),
 	timerAmberExplosionAMCD		= "Show timer for Amber Monstrosity's next $spell:122402",
 	InfoFrame					= "Show info frame for players will power",
 	FixNameplates				= "Automatically disable interfering nameplates while a construct<br/>(restores settings upon leaving combat)"
@@ -122,9 +122,9 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnAmberTrap		= "Show warning (with progress) when $spell:125826 is making", -- maybe bad translation.
 	InfoFrame			= "Show info frame for players affected by $spell:125390",
-	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(5, 123735),
-	StickyResinIcons	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(124097),
-	HeartOfFearIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(123845)
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(5, 123735),
+	StickyResinIcons	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(124097),
+	HeartOfFearIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(123845)
 })
 
 L:SetMiscLocalization({

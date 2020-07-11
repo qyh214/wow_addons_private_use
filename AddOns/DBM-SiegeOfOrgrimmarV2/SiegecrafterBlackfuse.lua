@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(865, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200524145716")
 mod:SetCreatureID(71504)--71591 Automated Shredder
 mod:SetEncounterID(1601)
 mod:SetZone()
@@ -60,15 +60,15 @@ local yellCrawlerMineFixate				= mod:NewYell("ej8212", nil, false)
 --Siegecrafter Blackfuse
 local timerProtectiveFrenzy				= mod:NewBuffActiveTimer(10, 145365, nil, false, nil, nil, nil, nil, nil, 2)
 local timerElectroStaticCharge			= mod:NewTargetTimer(60, 143385, nil, "Tank")
-local timerElectroStaticChargeCD		= mod:NewCDTimer(17, 143385, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 4)--17-22 second variation
+local timerElectroStaticChargeCD		= mod:NewCDTimer(17, 143385, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, 2, 4)--17-22 second variation
 local timerLaunchSawbladeCD				= mod:NewCDTimer(10, 143265, nil, nil, nil, 3)--10-15sec cd
 --Automated Shredders
-local timerAutomatedShredderCD			= mod:NewNextTimer(60, "ej8199", nil, "Tank", nil, 1, 85914, DBM_CORE_TANK_ICON, nil, 2, 4)
-local timerOverloadCD					= mod:NewCDCountTimer(10, 145444, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
+local timerAutomatedShredderCD			= mod:NewNextTimer(60, "ej8199", nil, "Tank", nil, 1, 85914, DBM_CORE_L.TANK_ICON, nil, 2, 4)
+local timerOverloadCD					= mod:NewCDCountTimer(10, 145444, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)
 local timerDeathFromAboveDebuff			= mod:NewTargetTimer(5, 144210, nil, "-Healer")
 local timerDeathFromAboveCD				= mod:NewNextTimer(40, 144208, nil, "-Healer")
 --The Assembly Line
-local timerAssemblyLineCD				= mod:NewNextCountTimer(40, "ej8202", nil, "Dps", nil, 5, 59193, DBM_CORE_DAMAGE_ICON)
+local timerAssemblyLineCD				= mod:NewNextCountTimer(40, "ej8202", nil, "Dps", nil, 5, 59193, DBM_CORE_L.DAMAGE_ICON)
 local timerPatternRecognition			= mod:NewBuffFadesTimer(60, 144236, nil, false)
 local timerLaserFixate					= mod:NewBuffFadesTimer(15, 143828)
 local timerBreakinPeriod				= mod:NewTargetTimer(60, 145269, nil, false)--Many mines can be up at once so timer off by default do to spam

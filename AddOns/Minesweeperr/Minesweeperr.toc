@@ -1,0 +1,21 @@
+## Interface: 11302
+## Title: Minesweeperr
+## Notes: Inspect your party member's gears and keystone achievements.
+## Author: Geo
+## SavedVariables: MSDB 
+## SavedVariables: FIRSTOPEN
+## SavedVariables: msACEDB
+
+embeds.xml
+locales\zhCN.lua
+locales\enUS.lua
+
+Constdata.lua
+Utils.lua
+Datacore.lua
+UI.lua
+History.lua
+Quickrating.lua
+Message.lua
+Option.lua
+Minesweeperr.lua

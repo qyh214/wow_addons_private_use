@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Auriaya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222200840")
+mod:SetRevision("20200530203003")
 
 mod:SetCreatureID(33515)--34014--Add this (kitties) to pull detection when it can be ignored in kill
 mod:SetEncounterID(1131)
@@ -37,7 +37,7 @@ local timerSonic		= mod:NewCastTimer(64688, nil, nil, nil, 2)
 mod.vb.catLives = 9
 
 function mod:OnCombatStart(delay)
-	mod.vb.catLives = 9
+	self.vb.catLives = 9
 	enrageTimer:Start(-delay)
 	timerNextFear:Start(40-delay)
 	timerNextSonic:Start(60-delay)

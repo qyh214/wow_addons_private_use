@@ -3,7 +3,7 @@ if not L then return end
 
 L["S_APOWER_AVAILABLE"] = "Disponible"
 L["S_APOWER_NEXTLEVEL"] = "Siguiente nivel"
-L["S_DECREASESIZE"] = "Disminuir tamaño"
+L["S_DECREASESIZE"] = "Reducir tamaño"
 L["S_ENABLED"] = "Habilitado"
 L["S_ERROR_NOTIMELEFT"] = "A esta misión no le queda tiempo."
 L["S_ERROR_NOTLOADEDYET"] = "Esta misión no se ha cargado todavía, por favor espere unos segundos."

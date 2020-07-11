@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2421, "DBM-Party-Shadowlands", 8, 1189)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200427004145")
+mod:SetRevision("20200528135243")
 mod:SetCreatureID(162102)
 mod:SetEncounterID(2362)
 mod:SetZone()
@@ -25,9 +25,9 @@ local specWarnIronSpikes			= mod:NewSpecialWarningDefensive(325254, nil, nil, ni
 local specWarnEndlessTorment		= mod:NewSpecialWarningMoveAway(326039, nil, nil, nil, 2, 2)
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
-local timerIronSpikesCD				= mod:NewAITimer(13, 325254, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerRiteofSupremacyCD		= mod:NewAITimer(10, 325360, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
-local timerRiteofSupremacy			= mod:NewCastTimer(10, 325360, nil, false, nil, 5, nil, DBM_CORE_DEADLY_ICON)
+local timerIronSpikesCD				= mod:NewAITimer(13, 325254, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerRiteofSupremacyCD		= mod:NewAITimer(10, 325360, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON)
+local timerRiteofSupremacy			= mod:NewCastTimer(10, 325360, nil, false, nil, 5, nil, DBM_CORE_L.DEADLY_ICON)
 local timerEndlessTormentCD			= mod:NewAITimer(10, 326039, nil, nil, nil, 2)
 
 mod:AddRangeFrameOption(6, 325885)

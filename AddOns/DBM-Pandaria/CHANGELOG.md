@@ -1,9 +1,7 @@
 # <DBM> Pandaria
 
-## [r134](https://github.com/DeadlyBossMods/DBM-MoP/tree/r134) (2020-02-23)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-MoP/compare/r133...r134)
+## [r136](https://github.com/DeadlyBossMods/DBM-MoP/tree/r136) (2020-06-10)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-MoP/compare/r135...r136)
 
-- Cleaned up unused locals and removed an arrow function that doesn't belong since patch 7.1  
-- Remove unneeded local  
-- Whitespace cleanup  
-- Update Luacheck  
+- Update LuaCheck to find broken stuff  
+- Sync editorconfig from deadlybossmods  

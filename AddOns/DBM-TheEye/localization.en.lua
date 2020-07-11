@@ -56,8 +56,7 @@ L:SetOptionLocalization{
 	WarnPriest		= "Show warning for Priests and Solarian spawn",
 	TimerSplit		= "Show timer for Split",
 	TimerAgent		= "Show timer for Agents spawn",
-	TimerPriest		= "Show timer for Priests and Solarian spawn",
-	WrathIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(42783)
+	TimerPriest		= "Show timer for Priests and Solarian spawn"
 }
 
 L:SetMiscLocalization{
@@ -100,9 +99,7 @@ L:SetOptionLocalization{
 	TimerPhase1mob	= "Show time for Phase 1 mob active",
 	TimerNextGaze	= "Show timer for Thaladred's Gaze target changes",
 	TimerRebirth	= "Show timer for Phoenix Egg rebirth remaining",
-	GazeIcon		= "Set icon on Thaladred's Gaze target",
-	MCIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(36797),
-	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 37018)
+	GazeIcon		= "Set icon on Thaladred's Gaze target"
 }
 
 L:SetMiscLocalization{

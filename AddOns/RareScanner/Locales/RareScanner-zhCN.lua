@@ -57,6 +57,8 @@ if AL then
 	AL["DISPLAY_CONTAINER_ICONS_DESC"] = "禁用时，宝箱的图标不会显示在世界地图上"
 	AL["DISPLAY_EVENT_ICONS"] = "世界地图显示事件图标开关"
 	AL["DISPLAY_EVENT_ICONS_DESC"] = "禁用时，事件的图标不会显示在世界地图上"
+	AL["DISPLAY_FRIENDLY_NPC_ICONS"] = "世界地图显示友善稀有 NPC 图标开关"
+	AL["DISPLAY_FRIENDLY_NPC_ICONS_DESC"] = "禁用时，友善稀有 NPC 的图标不会显示在世界地图上。"
 	AL["DISPLAY_LOG_WINDOW"] = "记录窗口显示开关"
 	AL["DISPLAY_LOG_WINDOW_DESC"] = "禁用时记录窗口不会再显示。"
 	AL["DISPLAY_LOOT_ON_MAP"] = "在地图鼠标提示工具条上显示掉落"
@@ -73,6 +75,8 @@ if AL then
 	AL["DISPLAY_NPC_ICONS_DESC"] = "禁用时，稀有 NPC 的图标不会显示在世界地图上"
 	AL["DISPLAY_OPTIONS"] = "显示选项"
 	AL["DUNGEONS_SCENARIOS"] = "副本/场景战役"
+	AL["ENABLE_AUTO_TOMTOM_WAYPOINTS"] = "启用自动替换路径点"
+	AL["ENABLE_AUTO_TOMTOM_WAYPOINTS_DESC"] = "当启用该插件后找到一个实体，该插件将用一个新的指向最近找到的实体替换现有的 Tomtom 路径点。 禁用时仅在单击主按钮时才会添路径点。"
 	AL["ENABLE_MARKER"] = "切换目标标记"
 	AL["ENABLE_MARKER_DESC"] = "此选项激活时，点击主按钮会在目标头顶显示一个标记"
 	AL["ENABLE_SCAN_CHAT"] = "NPC 喊话搜寻开关"
@@ -94,6 +98,7 @@ if AL then
 	AL["ENABLE_TOMTOM_SUPPORT_DESC"] = "激活后，将在实体找到的坐标处添加 Tomtom 路径点。"
 	AL["ENABLED_SEARCHING_RARE"] = "已启用警报的稀有 NPC："
 	AL["EVENT"] = "事件"
+	AL["EXPEDITION_ISLANDS"] = "海岛探险"
 	AL["FILTER"] = "NPC 过滤"
 	AL["FILTER_CONTINENT"] = "大陆/星球"
 	AL["FILTER_CONTINENT_DESC"] = "大陆名或星球名"
@@ -165,7 +170,7 @@ if AL then
 	AL["MAP_NEVER"] = "从不"
 	AL["MAP_OPTIONS"] = "地图选项"
 	AL["MAP_SCALE_ICONS"] = "图标缩放"
-	AL["MAP_SCALE_ICONS_DESC"] = "调整地图上的图标缩放，1表示原始尺寸"
+	AL["MAP_SCALE_ICONS_DESC"] = "调整地图上的图标缩放，1表示原始尺寸。"
 	AL["MAP_SHOW_ICON_AFTER_COLLECTED"] = "宝箱开启后仍然显示"
 	AL["MAP_SHOW_ICON_AFTER_COLLECTED_DESC"] = "禁用此选项时，宝箱开启后图标会自动消失。"
 	AL["MAP_SHOW_ICON_AFTER_COMPLETED"] = "事件完成后保持图标显示"
@@ -196,6 +201,8 @@ if AL then
 	AL["MARKER_DESC"] = "点击主按钮将一个标记添加到目标头上。"
 	AL["MESSAGE_OPTIONS"] = "消息选项"
 	AL["MIDDLE_BUTTON"] = "鼠标中键点击"
+	AL["MINIMAP_SCALE_ICONS"] = "小地图上的图标缩放"
+	AL["MINIMAP_SCALE_ICONS_DESC"] = "调整小地图上的图标缩放，0.7表示原始尺寸。"
 	AL["NAVIGATION_ENABLE"] = "导航开关"
 	AL["NAVIGATION_ENABLE_DESC"] = "启用时导航箭头会显示在主按钮旁边，可以方便发现的更新或更老的实体"
 	AL["NAVIGATION_LOCK_ENTITY"] = "当已经显示一个实体时不显示新的实体"
@@ -205,10 +212,16 @@ if AL then
 	AL["NAVIGATION_SHOW_PREVIOUS"] = "显示上一个发现的实体"
 	AL["NOT_TARGETEABLE"] = "无法设为目标"
 	AL["NOTE_10263"] = "“裂盾术士”打开传送门有时会从中召唤稀有 NPC。"
+	AL["NOTE_129836"] = "它没有插图，所以无法获得他的报警信息。在建筑的地下室中。"
 	AL["NOTE_130350"] = "你需要骑着这个精英沿着右边的路到箱子旁"
 	AL["NOTE_131453"] = "你需要骑着[泉水护卫]到这里。那是一匹友善的稀有 NPC 马，沿左边的路能找到它。"
+	AL["NOTE_131735"] = "他是一个中立NPC。击杀他之后会出现一只小猪，可以获得一个小宠物[帕菲]"
+	AL["NOTE_135448"] = "仅在史诗难度下出现。你需要找到[被遗弃的监狱钥匙]（刷新在附近家具顶部）来打开有骷髅的监舍。进入后穿过墙上的洞进入一个有桶的房间，点击桶召唤稀有 NPC。"
 	AL["NOTE_135497"] = "仅在米露恩发放日常任务[来自诺达希尔的援助]时有效。当你在做这个日常任务时，点击树底下的蘑菇有几率召唤该 NPC。"
+	AL["NOTE_140474"] = "你需要收集20个[深渊碎片]（世界掉落）。收集齐20个之后点击合成[让人厌恶的深渊精华]，在坐标73.23处（瀑布后面）使用它。它会指引你去一个可以召唤稀有 NPC 的矿洞（矿洞入口坐标46.36）"
 	AL["NOTE_149847"] = "你靠近他时他会告诉你一个他讨厌的颜色，你要到坐标63.41被染成这个颜色，然后回来找他，他就会攻击你。"
+	AL["NOTE_149886"] = "他只会在你刚进入皇家图书馆时出现一次。这是对漫威的斯坦·李的致敬。"
+	AL["NOTE_149887"] = "他只会在你刚进入这个房子时出现一次。这是对漫威的斯坦·李的致敬。"
 	AL["NOTE_150342"] = "在事件[DR-TR35号钻机系统]激活期间可用"
 	AL["NOTE_150394"] = "你需要把他带到坐标63.38，那里有一个蓝色闪电装置，当 NPC 触碰到闪电时他会爆炸，然后你就可以拾取战利品。"
 	AL["NOTE_151124"] = "你需要在事件[DR-JD99号钻机系统]激活期间（坐标59.67）从小怪身上拾取[被砸烂的运输中继器]，然后在这个机器上使用"
@@ -295,9 +308,6 @@ if AL then
 	AL["SOUND_OPTIONS"] = "声音选项"
 	AL["SOUND_VOLUME"] = "音量"
 	AL["SOUND_VOLUME_DESC"] = "设置音量"
-	AL["SYNCRONIZATION_COMPLETED"] = "同步完成"
-	AL["SYNCRONIZE"] = "同步数据库"
-	AL["SYNCRONIZE_DESC"] = "这会分析哪些是成就要求的一部分的稀有 NPC 和宝箱已经被你击杀或打开，他们会从你的地图中移除。插件无法得知不在成就追踪中的稀有 NPC 和宝箱的击杀状态，他们还会保留在地图上。"
 	AL["TEST"] = "启动测试"
 	AL["TEST_DESC"] = "点击按钮显示一个测试警报样本。你可以拖拽警告面板到任意位置，位置将会被用于今后的面板显示"
 	AL["TOC_NOTES"] = "小地图扫描器。 当每次稀有 NPC、宝藏/宝箱或事件出现在您的小地图上时，使用一个按钮与缩小的模型视觉化提醒您并拨放声音。"
@@ -310,21 +320,24 @@ if AL then
 	AL["TOOLTIP_TOP"] = "顶边"
 	AL["UNKNOWN"] = "未知"
 	AL["UNKNOWN_TARGET"] = "未知目标"
+	AL["ZONE_1332"] = "%s（战争前线）"
 	AL["ZONE_1527"] = "%s（争霸艾泽拉斯突袭）"
 	AL["ZONE_1530"] = "%s（争霸艾泽拉斯突袭）"
 	AL["ZONE_1570"] = "%s（争霸艾泽拉斯恩佐斯的幻象小突袭）"
 	AL["ZONE_1571"] = "%s（争霸艾泽拉斯恩佐斯的幻象小突袭）"
 	AL["ZONE_317"] = "%s（人形区）"
 	AL["ZONE_318"] = "%s（亡灵区）"
+	AL["ZONE_943"] = "%s（战争前线）"
 	AL["ZONES_FILTER"] = "地区过滤器"
 	AL["ZONES_FILTERS_SEARCH_DESC"] = "输入地区名称过滤以下列表"
 
 	-- CONTINENT names
 	AL["ZONES_CONTINENT_LIST"] = {
-		[9999] = "Class Halls"; --Class Halls
+		[9999] = "职业大厅"; --Class Halls
 		[9998] = "暗月岛"; --Darkmoon Island
-		[9997] = "Dungeons/Scenarios"; --Dungeons/Scenarios
-		[9996] = "Raids"; --Raids
-		[9995] = "Unknown"; --Unknown
+		[9997] = "副本/场景战役"; --Dungeons/Scenarios
+		[9996] = "团队副本"; --Raids
+		[9995] = "未知"; --Unknown
+		[9994] = "海岛探险"; --Expedition islands
 	}
 end

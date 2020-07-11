@@ -1,9 +1,7 @@
 # <DBM> Draenor
 
-## [r47](https://github.com/DeadlyBossMods/DBM-WoD/tree/r47) (2020-02-23)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r46...r47)
+## [r49](https://github.com/DeadlyBossMods/DBM-WoD/tree/r49) (2020-06-10)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r48...r49)
 
-- Cleanup unused locals, and added/commented ones that are still missing.  
-- Missed one  
-- whitespace cleanup  
-- Update Luacheck  
+- Update LuaCheck to find broken stuff  
+- Sync editorconfig from DeadlyBossMods  

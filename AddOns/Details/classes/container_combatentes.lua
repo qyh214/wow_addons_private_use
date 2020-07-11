@@ -23,7 +23,11 @@
 	
 	local AddUnique = DetailsFramework.table.addunique --framework
 	local UnitGroupRolesAssigned = DetailsFramework.UnitGroupRolesAssigned --framework
+
+	local GetNumDeclensionSets = _G.GetNumDeclensionSets
+	local DeclineName = _G.DeclineName
 	
+	local GetLocale = _G.GetLocale
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --> constants
 
@@ -401,11 +405,12 @@
 	--> check pet owner name with correct declension for ruRU locale (from user 'denis-kam' on github)
 	local find_name_declension = function (petTooltip, playerName)
 		--> 2 - male, 3 - female
-		for gender = 2, 3 do
+		for gender = 3, 2, -1 do
 			for declensionSet = 1, GetNumDeclensionSets(playerName, gender) do
 				--> check genitive case of player name
 				local genitive = DeclineName(playerName, gender, declensionSet)
 				if petTooltip:find(genitive) then
+					--print("found genitive: ", gender, declensionSet, playerName, petTooltip:find(genitive))
 					return true
 				end
 			end
@@ -432,10 +437,11 @@
 				--if the user client is in russian language
 				--make an attempt to remove declensions from the character's name
 				--this is equivalent to remove 's from the owner on enUS
-				if (CONST_CLIENT_LANGUAGE == "ruRU") then
+				if (GetLocale() == "ruRU") then
 					if (find_name_declension (text1, playerName)) then
 						return find_pet_found_owner (pName, serial, nome, flag, self)
 					else
+						--print("not found declension (1):", pName, nome)
 						if (text1:find (playerName)) then
 							return find_pet_found_owner (pName, serial, nome, flag, self)
 						end
@@ -455,10 +461,11 @@
 				local pName = playerName
 				playerName = playerName:gsub ("%-.*", "") --remove realm name
 
-				if (CONST_CLIENT_LANGUAGE == "ruRU") then
+				if (GetLocale() == "ruRU") then
 					if (find_name_declension (text2, playerName)) then
 						return find_pet_found_owner (pName, serial, nome, flag, self)
 					else
+						--print("not found declension (2):", pName, nome)
 						if (text2:find (playerName)) then
 							return find_pet_found_owner (pName, serial, nome, flag, self)
 						end
@@ -470,6 +477,11 @@
 				end
 			end
 		end
+	end
+
+	--english alias
+	function container_combatentes:GetOrCreateActor (serial, nome, flag, criar)
+		return self:PegarCombatente (serial, nome, flag, criar)
 	end
 
 	function container_combatentes:PegarCombatente (serial, nome, flag, criar)

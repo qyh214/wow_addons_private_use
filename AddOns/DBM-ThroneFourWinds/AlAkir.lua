@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(155, "DBM-ThroneFourWinds", nil, 75)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222203750")
+mod:SetRevision("20200524145601")
 mod:SetCreatureID(46753)
 mod:SetEncounterID(1034)
 mod:SetZone()
@@ -41,13 +41,13 @@ local yellLightningRod		= mod:NewYell(89668)
 local timerWindBurst		= mod:NewCastTimer(5, 87770, nil, nil, nil, 2)
 local timerWindBurstCD		= mod:NewCDTimer(25, 87770, nil, nil, nil, 2)		-- 25-30 Variation
 local timerAddCD			= mod:NewCDTimer(20, 88272, nil, nil, nil, 1)
-local timerFeedback			= mod:NewTimer(20, "TimerFeedback", 87904, nil, nil, 5, DBM_CORE_DAMAGE_ICON)
+local timerFeedback			= mod:NewTimer(20, "TimerFeedback", 87904, nil, nil, 5, DBM_CORE_L.DAMAGE_ICON)
 local timerAcidRainStack	= mod:NewNextTimer(15, 88301, nil, isDKorPaly)
 local timerLightningRod		= mod:NewTargetTimer(5, 89668, nil, false)
 local timerLightningRodCD	= mod:NewNextTimer(15, 89668, nil, nil, nil, 3)
-local timerLightningCloudCD	= mod:NewNextTimer(15, 89588, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerLightningCloudCD	= mod:NewNextTimer(15, 89588, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)
 local timerIceStormCD		= mod:NewCDTimer(25, 88239, nil, nil, nil, 3)
-local timerSquallLineCD		= mod:NewCDTimer(20, 91129, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerSquallLineCD		= mod:NewCDTimer(20, 91129, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)
 
 local berserkTimer			= mod:NewBerserkTimer(600)
 

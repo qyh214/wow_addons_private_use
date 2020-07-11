@@ -92,9 +92,9 @@ L:SetOptionLocalization({
 	TimerSpecial			= "计时条：第一次特殊技能施放",
 	RangeFrame				= "距离监视器（3码）：应对$spell:105269 |（10码）：应对$journal:4327",
 	AnnounceFrostTombIcons	= "向团队频道通报$spell:104451目标的团队标记（需要团队领袖权限）",
-	warnFrostTombCast		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.cast:format(104448),
-	SetIconOnFrostTomb		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(104451),
-	SetIconOnFrostflake		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(109325),
+	warnFrostTombCast		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.cast:format(104448),
+	SetIconOnFrostTomb		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(104451),
+	SetIconOnFrostflake		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(109325),
 	SpecialCount			= "倒计时声音警报：$spell:105256或$spell:105465",
 	SetBubbles				= "在$spell:104451阶段自动关闭聊天气泡（战斗结束后自动恢复）"
 })
@@ -172,7 +172,7 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	SpecWarnTendril			= "特殊警报：当你没有$spell:109454效果时",
 	InfoFrame				= "信息框：没有$spell:109454效果的玩家",
-	SetIconOnGrip			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(109459),
+	SetIconOnGrip			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(109459),
 	ShowShieldInfo			= "首领生命值信息框：应对$spell:105479"
 })
 
@@ -191,7 +191,7 @@ L= DBM:GetModLocalization(333)
 
 L:SetOptionLocalization({
 	RangeFrame			= "距离监视器（根据状态动态变化）：应对$spell:108649（英雄难度）",
-	SetIconOnParasite	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(108649)
+	SetIconOnParasite	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(108649)
 })
 
 L:SetMiscLocalization({

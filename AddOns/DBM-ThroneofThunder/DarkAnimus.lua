@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(824, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143417")
+mod:SetRevision("20200524145716")
 mod:SetCreatureID(69427)
 mod:SetEncounterID(1576)
 mod:SetZone()
@@ -48,7 +48,7 @@ local timerExplosiveSlam			= mod:NewTargetTimer(25, 138569, nil, "Tank|Healer")
 --Boss
 local timerAnimusActivation			= mod:NewCastTimer(60, 139537, nil, nil, nil, 6, nil, nil, nil, 1, 5)--LFR only
 local timerSiphonAnimaCD			= mod:NewNextCountTimer(20, 138644)--Needed mainly for heroic. not important on normal/LFR
-local timerAnimaRingCD				= mod:NewNextTimer(24.2, 136954, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 4)--Updated/Verified post march 19 hotfix
+local timerAnimaRingCD				= mod:NewNextTimer(24.2, 136954, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, 2, 4)--Updated/Verified post march 19 hotfix
 local timerAnimaFontCD				= mod:NewCDTimer(25, 138691, nil, nil, nil, 3)
 local timerInterruptingJolt			= mod:NewCastTimer(2.2, 138763)
 local timerInterruptingJoltCD		= mod:NewCDCountTimer(21.5, 138763, nil, nil, nil, 2, nil, nil, nil, 1, 4)--seems 23~24 normal and lfr. every 21.5 exactly on heroic

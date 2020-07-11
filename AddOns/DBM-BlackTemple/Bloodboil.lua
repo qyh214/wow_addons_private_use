@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Bloodboil", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200524145731")
 mod:SetCreatureID(22948)
 mod:SetEncounterID(605)
 mod:SetModelID(21443)
@@ -18,7 +18,7 @@ mod:RegisterEventsInCombat(
 
 local warnBlood			= mod:NewTargetAnnounce(42005, 3)
 local warnWound			= mod:NewStackAnnounce(40481, 2, nil, "Tank", 2)
-local warnStrike		= mod:NewTargetAnnounce(40491, 3, nil, "Tank", 2)
+local warnStrike		= mod:NewTargetNoFilterAnnounce(40491, 3, nil, "Tank", 2)
 local warnRage			= mod:NewTargetAnnounce(40604, 4)
 local warnRageSoon		= mod:NewSoonAnnounce(40604, 3)
 local warnRageEnd		= mod:NewEndAnnounce(40604, 4)
@@ -28,9 +28,9 @@ local specWarnRage		= mod:NewSpecialWarningYou(40604, nil, nil, nil, 1, 2)
 local yellRage			= mod:NewYell(40604)
 
 local timerBlood		= mod:NewCDTimer(10, 42005, nil, nil, nil, 5)--10-12. Most of time it's 11 but I have seen as low as 10.1
-local timerStrikeCD		= mod:NewCDTimer(25, 40491, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)--25-82? Is this even a CD timer?
+local timerStrikeCD		= mod:NewCDTimer(25, 40491, nil, "Tank", 2, 5, nil, DBM_CORE_L.TANK_ICON)--25-82? Is this even a CD timer?
 local timerRageCD		= mod:NewCDTimer(52, 40604, nil, nil, nil, 3)--Verify?
-local timerRageEnd		= mod:NewBuffActiveTimer(28, 40604, nil, nil, nil, 5, nil, DBM_CORE_HEALER_ICON)
+local timerRageEnd		= mod:NewBuffActiveTimer(28, 40604, nil, nil, nil, 5, nil, DBM_CORE_L.HEALER_ICON)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 

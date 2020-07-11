@@ -1,5 +1,5 @@
 
-local dversion = 180
+local dversion = 190
 
 local major, minor = "DetailsFramework-1.0", dversion
 local DF, oldminor = LibStub:NewLibrary (major, minor)
@@ -26,6 +26,8 @@ local UnitIsTapDenied = UnitIsTapDenied
 
 SMALL_NUMBER = 0.000001
 ALPHA_BLEND_AMOUNT = 0.8400251
+
+DF.dversion = dversion
 
 DF.AuthorInfo = {
 	Name = "Terciob",
@@ -1057,7 +1059,7 @@ end
 
 	--volatile menu can be called several times, each time all settings are reset and a new menu is built using the same widgets
 	function DF:BuildMenuVolatile (parent, menu, x_offset, y_offset, height, use_two_points, text_template, dropdown_template, switch_template, switch_is_box, slider_template, button_template, value_change_hook)
-		
+
 		if (not parent.widget_list) then
 			DF:SetAsOptionsPanel (parent)
 		end
@@ -1093,15 +1095,20 @@ end
 					local label = getMenuWidgetVolative(parent, "label", widgetIndexes)
 					widget_created = label
 
-					label.text = widget_table.get() or widget_table.text or ""
-					label.color = widget_table.color
-					label.fontface = widget_table.font
-
 					if (widget_table.text_template or text_template) then
 						label:SetTemplate(widget_table.text_template or text_template)
 					else
 						label.fontsize = widget_table.size or 10
 					end
+					
+					if (label.fontface) then
+						label.fontface = widget_table.font or "GameFontHighlightSmall"
+					end
+					if (widget_table.color) then
+						label.fontcolor = widget_table.color
+					end
+					
+					label.text = widget_table.get() or widget_table.text or ""
 
 					label._get = widget_table.get
 					label.widget_type = "label"
@@ -1211,15 +1218,16 @@ end
 					local slider = getMenuWidgetVolative(parent, "slider", widgetIndexes)
 					widget_created = slider
 
-					slider.slider:SetMinMaxValues (widget_table.min, widget_table.max)
-					slider.slider:SetValue (widget_table.get())
-					slider.ivalue = slider.slider:GetValue()
-
 					if (widget_table.usedecimals) then
 						slider.slider:SetValueStep (0.01)
 					else
 						slider.slider:SetValueStep (widget_table.step)
 					end
+					slider.useDecimals = widget_table.usedecimals
+
+					slider.slider:SetMinMaxValues (widget_table.min, widget_table.max)
+					slider.slider:SetValue (widget_table.get())
+					slider.ivalue = slider.slider:GetValue()
 
 					slider:SetTemplate(slider_template)
 
@@ -1366,7 +1374,10 @@ end
 					textentry:SetPoint ("left", textentry.hasLabel, "right", 2)
 					textentry.hasLabel:SetPoint (cur_x, cur_y)
 
-					--> text entry doesn't trigger global callback
+					if (value_change_hook) then
+						textentry:SetHook("OnEnterPressed", value_change_hook)
+						textentry:SetHook("OnEditFocusLost", value_change_hook)
+					end
 					
 					--> hook list
 					if (widget_table.hooks) then
@@ -1991,7 +2002,7 @@ end
 	end	
 	
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---> templates
+--> ~templates
 
 --fonts
 
@@ -2040,8 +2051,6 @@ function DF:GetBestFontForLanguage (language, western, cyrillic, china, korean, 
 	end
 end
 
---DF.font_templates ["ORANGE_FONT_TEMPLATE"] = {color = "orange", size = 11, font = "Accidental Presidency"}
---DF.font_templates ["OPTIONS_FONT_TEMPLATE"] = {color = "yellow", size = 12, font = "Accidental Presidency"}
 DF.font_templates ["ORANGE_FONT_TEMPLATE"] = {color = "orange", size = 11, font = DF:GetBestFontForLanguage()}
 DF.font_templates ["OPTIONS_FONT_TEMPLATE"] = {color = "yellow", size = 12, font = DF:GetBestFontForLanguage()}
 
@@ -2049,11 +2058,22 @@ DF.font_templates ["OPTIONS_FONT_TEMPLATE"] = {color = "yellow", size = 12, font
 
 DF.dropdown_templates = DF.dropdown_templates or {}
 DF.dropdown_templates ["OPTIONS_DROPDOWN_TEMPLATE"] = {
-	backdrop = {edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1, bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true},
-	backdropcolor = {1, 1, 1, .5},
+	backdrop = {
+		edgeFile = [[Interface\Buttons\WHITE8X8]],
+		edgeSize = 1,
+		bgFile = [[Interface\Tooltips\UI-Tooltip-Background]],
+		tileSize = 64,
+		tile = true
+	},
+
+	backdropcolor = {1, 1, 1, .7},
 	backdropbordercolor = {0, 0, 0, 1},
-	onentercolor = {1, 1, 1, .5},
+	onentercolor = {1, 1, 1, .9},
 	onenterbordercolor = {1, 1, 1, 1},
+
+	dropicon = "Interface\\BUTTONS\\arrow-Down-Down",
+	dropiconsize = {16, 16},
+	dropiconpoints = {-2, -3},
 }
 
 -- switches
@@ -3300,6 +3320,21 @@ function DF_CALC_PERFORMANCE()
 	end)
 end
 
+DF.ClassIndexToFileName = {
+	[6] = "DEATHKNIGHT",
+	[1] = "WARRIOR",
+	[4] = "ROGUE",
+	[8] = "MAGE",
+	[5] = "PRIEST",
+	[3] = "HUNTER",
+	[9] = "WARLOCK",
+	[12] = "DEMONHUNTER",
+	[7] = "SHAMAN",
+	[11] = "DRUID",
+	[10] = "MONK",
+	[2] = "PALADIN",
+}
+
 DF.ClassFileNameToIndex = {
 	["DEATHKNIGHT"] = 6,
 	["WARRIOR"] = 1,
@@ -3666,6 +3701,87 @@ DF.BattlegroundSizes = {
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--> execute range
+
+	function DF.GetExecuteRange(unitId)
+		unitId = unitId or "player"
+
+		local classLoc, class = UnitClass(unitId)
+		local spec = GetSpecialization()
+		
+		if (spec and class) then
+			--prist
+			if (class == "PRIEST") then
+				--playing as shadow?
+				local specID = GetSpecializationInfo(spec)
+				if (specID and specID ~= 0) then
+					if (specID == 258) then --shadow
+						local _, _, _, using_SWDeath = GetTalentInfo(5, 2, 1)
+						if (using_SWDeath) then
+							return 0.20
+						end
+					end
+				end
+				
+			elseif (class == "MAGE") then
+				--playing fire mage?
+				local specID = GetSpecializationInfo(spec)
+				if (specID and specID ~= 0) then
+					if (specID == 63) then --fire
+						local _, _, _, using_SearingTouch = GetTalentInfo(1, 3, 1)
+						if (using_SearingTouch) then
+							return 0.30
+						end
+					end
+				end
+				
+			elseif (class == "WARRIOR") then
+				--is playing as a Arms warrior?
+				local specID = GetSpecializationInfo(spec)
+				if (specID and specID ~= 0) then
+
+					if (specID == 71) then --arms
+						local _, _, _, using_Massacre = GetTalentInfo(3, 1, 1)
+						if (using_Massacre) then
+							--if using massacre, execute can be used at 35% health in Arms spec
+							return 0.35
+						end
+					end
+
+					if (specID == 71 or specID == 72) then --arms or fury
+						return 0.20
+					end
+				end
+				
+			elseif (class == "HUNTER") then
+				local specID = GetSpecializationInfo(spec)
+				if (specID and specID ~= 0) then
+					if (specID == 253) then --beast mastery
+						--> is using killer instinct?
+						local _, _, _, using_KillerInstinct = GetTalentInfo(1, 1, 1)
+						if (using_KillerInstinct) then
+							return 0.35
+						end
+					end
+				end
+
+			elseif (class == "PALADIN") then
+				local specID = GetSpecializationInfo(spec)
+				if (specID and specID ~= 0) then
+					if (specID == 70) then --retribution paladin
+						--> is using hammer of wrath?
+						local _, _, _, using_HammerOfWrath = GetTalentInfo(2, 3, 1)
+						if (using_HammerOfWrath) then
+							return 0.20
+						end
+					end
+				end
+			end
+		end
+	end	
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --> delta seconds reader
 
 if (not DetailsFrameworkDeltaTimeFrame) then
@@ -3787,16 +3903,15 @@ end
 do    
     local get = function(self)
         local object = tremove(self.notUse, #self.notUse)
-        if (object) then
+		if (object) then
             tinsert(self.inUse, object)
 			return object, false
-			
         else
             --need to create the new object
-            local newObject = self.newObjectFunc(self, unpack(self.payload))
+			local newObject = self.newObjectFunc(self, unpack(self.payload))
             if (newObject) then
 				tinsert(self.inUse, newObject)
-				return object, true
+				return newObject, true
             end
         end
 	end

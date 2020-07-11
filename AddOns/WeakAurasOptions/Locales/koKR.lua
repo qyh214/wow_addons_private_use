@@ -32,7 +32,8 @@ local L = WeakAuras.L
 	L["%s, Offset: %0.2f;%0.2f"] = "%s, 좌표: %0.2f;%0.2f"
 	L["%s, offset: %0.2f;%0.2f"] = "%s, 좌표: %0.2f;%0.2f"
 	--[[Translation missing --]]
-	L["|c%02x%02x%02x%02xCustom Color|r"] = "|c%02x%02x%02x%02xCustom Color|r"
+	L["(Right click to rename)"] = "(Right click to rename)"
+	L["|c%02x%02x%02x%02xCustom Color|r"] = "|c%02x%02x%02x%02x사용자 설정 색상|r"
 	--[[Translation missing --]]
 	L["|cFFFF0000Note:|r The unit '%s' is not a trackable unit."] = "|cFFFF0000Note:|r The unit '%s' is not a trackable unit."
 	--[[Translation missing --]]
@@ -44,10 +45,10 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["|cFFffcc00Anchors:|r Anchored to frame's |cFFFF0000%s|r with offset |cFFFF0000%s/%s|r"] = "|cFFffcc00Anchors:|r Anchored to frame's |cFFFF0000%s|r with offset |cFFFF0000%s/%s|r"
 	L["|cFFffcc00Extra Options:|r"] = "|cFFffcc00추가 옵션:|r"
+	L["|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r%s%s"] = "|cFFffcc00글꼴 표시 특성:|r |cFFFF0000%s|r, 그림자 |c%s색상|r (좌표 |cFFFF0000%s/%s|r)%s%s"
+	L["|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r%s%s%s"] = "|cFFffcc00글꼴 표시 특성:|r |cFFFF0000%s|r, 그림자 |c%s색상|r (좌표 |cFFFF0000%s/%s|r)%s%s%s"
 	--[[Translation missing --]]
-	L["|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r%s%s"] = "|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r%s%s"
-	--[[Translation missing --]]
-	L["|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r%s%s%s"] = "|cFFffcc00Font Flags:|r |cFFFF0000%s|r and shadow |c%sColor|r with offset |cFFFF0000%s/%s|r%s%s%s"
+	L["|cFFffcc00Format Options|r"] = "|cFFffcc00Format Options|r"
 	L["1 Match"] = "1개 일치"
 	L["A 20x20 pixels icon"] = "20x20 픽셀 아이콘"
 	L["A 32x32 pixels icon"] = "32x32 픽셀 아이콘"
@@ -55,7 +56,7 @@ local L = WeakAuras.L
 	L["A 48x48 pixels icon"] = "48x48 픽셀 아이콘"
 	L["A 64x64 pixels icon"] = "64x64 픽셀 아이콘"
 	L["A group that dynamically controls the positioning of its children"] = "포함된 개체들의 배열을 유동적으로 조절하는 그룹"
-	L["A Unit ID (e.g., party1)."] = "유닛 ID (예 : party1)."
+	L["A Unit ID (e.g., party1)."] = "유닛 ID (예, party1)."
 	L["Actions"] = "동작"
 	L["Add %s"] = "%s 추가"
 	L["Add a new display"] = "새로운 디스플레이 추가"
@@ -65,6 +66,8 @@ local L = WeakAuras.L
 	L["Add Option"] = "옵션 추가"
 	L["Add Overlay"] = "오버레이 추가"
 	L["Add Property Change"] = "속성 변경 추가"
+	--[[Translation missing --]]
+	L["Add Snippet"] = "Add Snippet"
 	L["Add Sub Option"] = "하위 옵션 추가"
 	L["Add to group %s"] = "그룹 %s에 추가"
 	L["Add to new Dynamic Group"] = "새 유동적 그룹에 추가"
@@ -83,18 +86,15 @@ local L = WeakAuras.L
 	L["Anchored To"] = "다음에 고정:"
 	--[[Translation missing --]]
 	L["And "] = "And "
-	--[[Translation missing --]]
-	L["and aligned left"] = "and aligned left"
-	--[[Translation missing --]]
-	L["and aligned right"] = "and aligned right"
+	L["and aligned left"] = ", 왼쪽 정렬"
+	L["and aligned right"] = ", 오른쪽 정렬"
 	--[[Translation missing --]]
 	L["and rotated left"] = "and rotated left"
 	--[[Translation missing --]]
 	L["and rotated right"] = "and rotated right"
 	--[[Translation missing --]]
 	L["and Trigger %s"] = "and Trigger %s"
-	--[[Translation missing --]]
-	L["and with width |cFFFF0000%s|r and %s"] = "and with width |cFFFF0000%s|r and %s"
+	L["and with width |cFFFF0000%s|r and %s"] = ", 너비 |cFFFF0000%s|r, %s"
 	L["Angle"] = "각도"
 	L["Animate"] = "애니메이션"
 	L["Animated Expand and Collapse"] = "확장 / 접기 애니메이션"
@@ -126,6 +126,8 @@ local L = WeakAuras.L
 	L["Auto-cloning enabled"] = "자동 복제 활성화"
 	L["Automatic"] = "자동"
 	L["Automatic Icon"] = "자동 아이콘"
+	--[[Translation missing --]]
+	L["Automatic length"] = "Automatic length"
 	L["Backdrop Color"] = "배경 색상"
 	--[[Translation missing --]]
 	L["Backdrop in Front"] = "Backdrop in Front"
@@ -137,18 +139,13 @@ local L = WeakAuras.L
 	L["Bar Alpha"] = "바 투명도"
 	L["Bar Color"] = "바 색상"
 	L["Bar Color Settings"] = "바 색상 설정"
-	--[[Translation missing --]]
-	L["Bar Inner"] = "Bar Inner"
+	L["Bar Inner"] = "바 내부"
 	L["Bar Texture"] = "바 텍스쳐"
 	L["Big Icon"] = "큰 아이콘"
-	--[[Translation missing --]]
-	L["Blacklisted Aura Name"] = "Blacklisted Aura Name"
-	--[[Translation missing --]]
-	L["Blacklisted Exact Spell ID(s)"] = "Blacklisted Exact Spell ID(s)"
-	--[[Translation missing --]]
-	L["Blacklisted Name(s)"] = "Blacklisted Name(s)"
-	--[[Translation missing --]]
-	L["Blacklisted Spell ID"] = "Blacklisted Spell ID"
+	L["Blacklisted Aura Name"] = "차단된 효과 이름"
+	L["Blacklisted Exact Spell ID(s)"] = "차단된 정확한 주문 ID(s)"
+	L["Blacklisted Name(s)"] = "차단된 이름(s)"
+	L["Blacklisted Spell ID"] = "차단된 주문 ID"
 	L["Blend Mode"] = "혼합 모드"
 	L["Blue Rune"] = "푸른색 룬"
 	L["Blue Sparkle Orb"] = "푸른 불꽃 구슬"
@@ -168,20 +165,18 @@ local L = WeakAuras.L
 	L["Bottom Left"] = "왼쪽 아래"
 	L["Bottom Right"] = "오른쪽 아래"
 	L["Bracket Matching"] = "괄호 맞춤"
-	L["Can be a Name or a Unit ID (e.g. party1). A name only works on friendly players in your group."] = "이름 또는 UID (예. party1)를 사용할 수 있습니다. 이름은 같은 파티에 속해 있는 우호적 플레이어에게만 작동합니다."
+	L["Can be a Name or a Unit ID (e.g. party1). A name only works on friendly players in your group."] = "이름 또는 유닛 ID(예. party1)일 수 있습니다. 이름은 같은 파티의 우호적 플레이어에게만 작동합니다."
 	--[[Translation missing --]]
 	L["Can be a UID (e.g., party1)."] = "Can be a UID (e.g., party1)."
 	L["Cancel"] = "취소"
 	L["Center"] = "중앙"
-	L["Channel Number"] = "채널 번호"
 	L["Chat Message"] = "대화 메시지"
 	L["Check On..."] = "확인..."
 	L["Children:"] = "자식:"
 	L["Choose"] = "선택"
 	L["Choose Trigger"] = "활성 조건 선택"
 	L["Choose whether the displayed icon is automatic or defined manually"] = "아이콘을 자동으로 표시할 지 또는 수동 지정할 지 선택하세요"
-	--[[Translation missing --]]
-	L["Class"] = "Class"
+	L["Class"] = "직업"
 	--[[Translation missing --]]
 	L["Clip Overlays"] = "Clip Overlays"
 	--[[Translation missing --]]
@@ -214,11 +209,10 @@ local L = WeakAuras.L
 	L["Compress"] = "누르기"
 	L["Condition %i"] = "조건 %i"
 	L["Conditions"] = "조건"
-	--[[Translation missing --]]
-	L["Configure what options appear on this panel."] = "Configure what options appear on this panel."
+	L["Configure what options appear on this panel."] = "이 패널에 나오는 옵션을 구성합니다."
 	L["Constant Factor"] = "고정 요소"
 	L["Control-click to select multiple displays"] = "Ctrl+클릭 - 여러 디스플레이 선택"
-	L["Controls the positioning and configuration of multiple displays at the same time"] = "동시에 여러 디스플레이의 위치와 설정을 조절합니다"
+	L["Controls the positioning and configuration of multiple displays at the same time"] = "여러 디스플레이의 위치 및 구성을 동시에 조절합니다"
 	L["Convert to New Aura Trigger"] = "신규 방식 효과 활성 조건으로 변환"
 	L["Convert to..."] = "변환하기..."
 	L["Cooldown Edge"] = "재사용 대기시간 경계"
@@ -240,8 +234,7 @@ local L = WeakAuras.L
 	L["Custom Code"] = "사용자 정의 코드"
 	L["Custom Color"] = "사용자 설정 색상"
 	L["Custom Configuration"] = "사용자 설정 구성"
-	--[[Translation missing --]]
-	L["Custom Frames"] = "Custom Frames"
+	L["Custom Frames"] = "사용자 설정 프레임"
 	L["Custom Function"] = "사용자 설정 함수"
 	L["Custom Grow"] = "사용자 설정 반짝임"
 	L["Custom Options"] = "사용자 설정 옵션"
@@ -249,17 +242,17 @@ local L = WeakAuras.L
 	L["Custom Trigger"] = "사용자 설정 활성 조건"
 	L["Custom trigger event tooltip"] = [=[
 사용자 설정 활성 조건을 확인할 이벤트를 선택하세요.
-콤마와 공백을 사용해 여러 이벤트를 선택할 수 있습니다.
+쉼표나 공백을 사용해 여러 이벤트를 지정할 수 있습니다.
 
 |cFF4444FF예제:|r
-UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
+UNIT_POWER_UPDATE, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Custom trigger status tooltip"] = [=[
 사용자 설정 활성 조건을 확인할 이벤트를 선택하세요.
-상태 형식 조건이면 특정 이벤트는 독립 변수없이 WeakAuras에 의해 불러와집니다.
-콤마와 공백을 사용해 여러 이벤트를 선택할 수 있습니다.
+이는 상태-유형 활성 조건이므로, 지정된 이벤트는 예상 인수 없이 WeakAuras에 의해 호출될 수 있습니다.
+쉼표나 공백을 사용해 여러 이벤트를 지정할 수 있습니다.
 
 |cFF4444FF예제:|r
-UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
+UNIT_POWER_UPDATE, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Custom Untrigger"] = "사용자 설정 비활성 조건"
 	L["Custom Variables"] = "사용자 설정 변수"
 	L["Debuff Type"] = "약화 효과 유형"
@@ -290,19 +283,18 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Distribute Vertically"] = "세로로 퍼뜨리기"
 	L["Do not group this display"] = "이 디스플레이 그룹하지 않기"
 	L["Done"] = "완료"
-	L["Don't skip this Version"] = "이 버전을 건너 뛰지 마십시오."
+	L["Don't skip this Version"] = "이 버전을 건너뛰지 마십시오."
 	L["Down"] = "아래로"
 	L["Drag to move"] = "끌기 - 이동"
 	L["Duplicate"] = "복제"
 	L["Duplicate All"] = "모두 복제"
 	L["Duration (s)"] = "지속시간 (초)"
 	L["Duration Info"] = "지속시간 정보"
-	--[[Translation missing --]]
-	L["Dynamic Duration"] = "Dynamic Duration"
+	L["Dynamic Duration"] = "유동적 지속시간"
 	L["Dynamic Group"] = "유동적 그룹"
-	L["Dynamic Group Settings"] = "유동적 그룹 셋팅"
+	L["Dynamic Group Settings"] = "유동적 그룹 설정"
 	L["Dynamic Information"] = "유동적 정보"
-	L["Dynamic information from first active trigger"] = "첫번째 활성화된 활성 조건의 유동적 정보"
+	L["Dynamic information from first active trigger"] = "첫 번째 활성화된 활성 조건의 유동적 정보"
 	L["Dynamic information from Trigger %i"] = "활성 조건 %i의 유동적 정보"
 	L["Dynamic text tooltip"] = [=[이 문자를 유동적으로 만들 수 있는 특별 코드들입니다:
 
@@ -330,6 +322,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Enter an Aura Name, partial Aura Name, or Spell ID. A Spell ID will match any spells with the same name."] = "Enter an Aura Name, partial Aura Name, or Spell ID. A Spell ID will match any spells with the same name."
 	--[[Translation missing --]]
 	L["Enter Author Mode"] = "Enter Author Mode"
+	--[[Translation missing --]]
+	L["Enter in a value for the tick's placement."] = "Enter in a value for the tick's placement."
 	L["Enter User Mode"] = "사용자 모드 시작"
 	L["Enter user mode."] = "사용자 모드를 시작합니다."
 	L["Entry %i"] = "항목 %i"
@@ -342,8 +336,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Event(s)"] = "이벤트"
 	L["Everything"] = "모두"
 	L["Exact Spell ID(s)"] = "정확한 주문 ID"
-	--[[Translation missing --]]
-	L["Exact Spell Match"] = "Exact Spell Match"
+	L["Exact Spell Match"] = "정확한 주문 일치"
 	L["Expand"] = "확장"
 	L["Expand all loaded displays"] = "불러온 모든 디스플레이 확장"
 	L["Expand all non-loaded displays"] = "불러오지 않은 모드 디스플레이 확장"
@@ -362,15 +355,26 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	--[[Translation missing --]]
 	L["Filter by Group Role"] = "Filter by Group Role"
 	--[[Translation missing --]]
-	L["Filter by Hostility"] = "Filter by Hostility"
+	L["Filter by Nameplate Type"] = "Filter by Nameplate Type"
+	--[[Translation missing --]]
+	L[ [=[Filter formats: 'Name', 'Name-Realm', '-Realm'.
+
+Supports multiple entries, separated by commas
+]=] ] = [=[Filter formats: 'Name', 'Name-Realm', '-Realm'.
+
+Supports multiple entries, separated by commas
+]=]
 	L["Finish"] = "종료"
 	L["Fire Orb"] = "화염 구슬"
 	L["Font"] = "글꼴"
 	L["Font Size"] = "글꼴 크기"
-	--[[Translation missing --]]
-	L["Foreground"] = "Foreground"
+	L["Foreground"] = "전경"
 	L["Foreground Color"] = "전경 색상"
 	L["Foreground Texture"] = "전경 텍스쳐"
+	--[[Translation missing --]]
+	L["Format"] = "Format"
+	--[[Translation missing --]]
+	L["Format for %s"] = "Format for %s"
 	L["Frame"] = "프레임"
 	--[[Translation missing --]]
 	L["Frame Selector"] = "Frame Selector"
@@ -386,8 +390,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	--[[Translation missing --]]
 	L["Glow Anchor"] = "Glow Anchor"
 	L["Glow Color"] = "반짝임 색상"
-	--[[Translation missing --]]
-	L["Glow External Element"] = "Glow External Element"
+	L["Glow External Element"] = "외부 요소 반짝임"
 	--[[Translation missing --]]
 	L["Glow Frame Type"] = "Glow Frame Type"
 	L["Glow Type"] = "반짝임 유형"
@@ -412,8 +415,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	--[[Translation missing --]]
 	L["Group contains updates from Wago"] = "Group contains updates from Wago"
 	L["Group Icon"] = "그룹 아이콘"
-	--[[Translation missing --]]
-	L["Group key"] = "Group key"
+	L["Group key"] = "그룹 키"
 	L["Group Member Count"] = "그룹원 수"
 	L["Group Role"] = "그룹 역할"
 	L["Group Scale"] = "그룹 크기 비율"
@@ -422,12 +424,10 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Grow"] = "성장"
 	L["Hawk"] = "매"
 	L["Height"] = "높이"
-	--[[Translation missing --]]
-	L["Help"] = "Help"
+	L["Help"] = "도움말"
 	L["Hide"] = "숨기기"
 	L["Hide Cooldown Text"] = "재사용 대기시간 문자 숨기기"
-	--[[Translation missing --]]
-	L["Hide Glows applied by this aura"] = "Hide Glows applied by this aura"
+	L["Hide Glows applied by this aura"] = "이 효과가 적용되는 반짝임 숨기기"
 	L["Hide on"] = "숨기기"
 	L["Hide this group's children"] = "이 그룹의 자식 숨기기"
 	L["Hide When Not In Group"] = "파티에 없을 때 숨기기"
@@ -462,12 +462,13 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["If unchecked, then a default color will be used (usually yellow)"] = "체크하지 않으면 기본 색상(보통 노란색)이 사용됩니다."
 	--[[Translation missing --]]
 	L["If unchecked, then this space will fill the entire line it is on in User Mode."] = "If unchecked, then this space will fill the entire line it is on in User Mode."
-	--[[Translation missing --]]
-	L["Ignore all Updates"] = "Ignore all Updates"
+	L["Ignore all Updates"] = "모든 업데이트 무시"
 	--[[Translation missing --]]
 	L["Ignore Dead"] = "Ignore Dead"
 	--[[Translation missing --]]
 	L["Ignore Disconnected"] = "Ignore Disconnected"
+	--[[Translation missing --]]
+	L["Ignore out of checking range"] = "Ignore out of checking range"
 	--[[Translation missing --]]
 	L["Ignore Self"] = "Ignore Self"
 	--[[Translation missing --]]
@@ -475,8 +476,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Ignored"] = "무시됨"
 	L["Import"] = "가져오기"
 	L["Import a display from an encoded string"] = "암호화된 문자열에서 디스플레이 가져오기"
-	--[[Translation missing --]]
-	L["Inner"] = "Inner"
+	L["Inner"] = "내부"
 	L["Invalid Item Name/ID/Link"] = "잘못된 아이템 이름/ID/링크"
 	L["Invalid Spell ID"] = "잘못된 주문 ID"
 	L["Invalid Spell Name/ID/Link"] = "잘못된 주문 이름/ID/링크"
@@ -488,8 +488,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	--[[Translation missing --]]
 	L["Large Input"] = "Large Input"
 	L["Leaf"] = "잎"
-	--[[Translation missing --]]
-	L["Left"] = "Left"
+	L["Left"] = "왼쪽"
 	L["Left 2 HUD position"] = "좌측 2 HUD 위치"
 	L["Left HUD position"] = "좌측 HUD 위치"
 	L["Legacy Aura Trigger"] = "v2.9.0 이전 효과 활성 조건"
@@ -506,6 +505,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Main"] = "메인"
 	L["Manage displays defined by Addons"] = "애드온에 의해 정의된 디스플레이 관리"
 	L["Match Count"] = "일치 횟수"
+	--[[Translation missing --]]
+	L["Matches the height setting of a horizontal bar or width for a vertical bar."] = "Matches the height setting of a horizontal bar or width for a vertical bar."
 	L["Max"] = "최대"
 	L["Max Length"] = "최대 길이"
 	L["Medium Icon"] = "보통 아이콘"
@@ -517,18 +518,15 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Min"] = "Min"
 	L["Mirror"] = "뒤집기"
 	L["Model"] = "모델"
-	--[[Translation missing --]]
-	L["Model %s"] = "Model %s"
+	L["Model %s"] = "모델 %s"
 	L["Model Settings"] = "모델 설정"
 	--[[Translation missing --]]
 	L["Move Above Group"] = "Move Above Group"
 	--[[Translation missing --]]
 	L["Move Below Group"] = "Move Below Group"
 	L["Move Down"] = "아래로 이동"
-	--[[Translation missing --]]
-	L["Move Entry Down"] = "Move Entry Down"
-	--[[Translation missing --]]
-	L["Move Entry Up"] = "Move Entry Up"
+	L["Move Entry Down"] = "항목 아래로 이동"
+	L["Move Entry Up"] = "항목 위로 이동"
 	--[[Translation missing --]]
 	L["Move Into Above Group"] = "Move Into Above Group"
 	--[[Translation missing --]]
@@ -543,15 +541,14 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 디스플레이를 불러오는 데 영향을 주지 않습니다]=]
 	L["Multiselect multiple tooltip"] = [=[
 |cFF777777무시|r - |cFF777777단일|r - |cFF00FF00다중|r
-선택한 것중 하나라도 일치할 때 불러옵니다]=]
+일치하는 여러 값을 선택할 수 있습니다]=]
 	L["Multiselect single tooltip"] = [=[
 |cFF777777무시|r - |cFF00FF00단일|r - |cFF777777다중|r
-선택한 한가지만 일치할 때 불러옴]=]
+일치하는 한 값만 선택할 수 있습니다]=]
 	L["Name Info"] = "이름 정보"
 	L["Name Pattern Match"] = "이름 패턴 일치"
 	L["Name(s)"] = "이름(s)"
-	--[[Translation missing --]]
-	L["Nameplate"] = "Nameplate"
+	L["Nameplate"] = "이름표"
 	L["Nameplates"] = "이름표"
 	L["Negator"] = "Not"
 	L["Never"] = "절대 안함"
@@ -565,10 +562,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Not Loaded"] = "불러오지 않음"
 	--[[Translation missing --]]
 	L["Note: Automated Messages to SAY and YELL are blocked outside of Instances."] = "Note: Automated Messages to SAY and YELL are blocked outside of Instances."
-	--[[Translation missing --]]
-	L["Number of Entries"] = "Number of Entries"
-	--[[Translation missing --]]
-	L["Offer a guided way to create auras for your character"] = "Offer a guided way to create auras for your character"
+	L["Number of Entries"] = "항목 수"
+	L["Offer a guided way to create auras for your character"] = "캐릭터를 위한 효과 생성 가이드를 제공합니다"
 	L["Okay"] = "확인"
 	L["On Hide"] = "숨겨질 때"
 	L["On Init"] = "초기 실행 시"
@@ -587,11 +582,9 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["or Trigger %s"] = "or Trigger %s"
 	L["Orange Rune"] = "오렌지색 룬"
 	L["Orientation"] = "방향"
-	--[[Translation missing --]]
-	L["Outer"] = "Outer"
+	L["Outer"] = "외부"
 	L["Outline"] = "외곽선"
-	--[[Translation missing --]]
-	L["Overflow"] = "Overflow"
+	L["Overflow"] = "넘침"
 	L["Overlay %s Info"] = "오버레이 %s 정보"
 	L["Overlays"] = "오버레이"
 	L["Own Only"] = "내 것만"
@@ -600,22 +593,24 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	--[[Translation missing --]]
 	L["Paste Author Options Settings"] = "Paste Author Options Settings"
 	L["Paste Condition Settings"] = "조건 설정 붙여넣기"
-	--[[Translation missing --]]
-	L["Paste Custom Configuration"] = "Paste Custom Configuration"
+	L["Paste Custom Configuration"] = "사용자 설정 구성 붙여넣기"
 	L["Paste Display Settings"] = "디스플레이 설정 붙여넣기"
 	L["Paste Group Settings"] = "그룹 설정 붙여넣기"
 	L["Paste Load Settings"] = "불러오기 설정 붙여넣기"
 	L["Paste Settings"] = "붙여넣기 설정"
 	L["Paste text below"] = "아래에 문자를 붙여 넣으세요."
 	L["Paste Trigger Settings"] = "활성 조건 설정 붙여넣기"
+	--[[Translation missing --]]
+	L["Places a tick on the bar"] = "Places a tick on the bar"
 	L["Play Sound"] = "소리 재생"
 	L["Portrait Zoom"] = "초상화 확대"
-	L["Position Settings"] = "자리 설정"
+	L["Position Settings"] = "위치 설정"
 	--[[Translation missing --]]
 	L["Preferred Match"] = "Preferred Match"
-	L["Preset"] = "프리셋"
 	--[[Translation missing --]]
-	L["Press Ctrl+C to copy"] = "Press Ctrl+C to copy"
+	L["Premade Snippets"] = "Premade Snippets"
+	L["Preset"] = "프리셋"
+	L["Press Ctrl+C to copy"] = "복사하려면 Ctrl+C를 누르세요"
 	--[[Translation missing --]]
 	L["Prevent Merging"] = "Prevent Merging"
 	L["Processed %i chars"] = "%i 문자 복사됨"
@@ -631,7 +626,6 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	--[[Translation missing --]]
 	L["Regions of type \"%s\" are not supported."] = "Regions of type \"%s\" are not supported."
 	L["Remaining Time"] = "남은 시간"
-	L["Remaining Time Precision"] = "남은 시간 정밀도"
 	L["Remove"] = "제거"
 	L["Remove this display from its group"] = "이 디스플레이를 그룹에서 제거하기"
 	L["Remove this property"] = "이 속성 제거"
@@ -646,8 +640,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	--[[Translation missing --]]
 	L["Reset Entry"] = "Reset Entry"
 	L["Reset to Defaults"] = "기본값으로 재설정"
-	--[[Translation missing --]]
-	L["Right"] = "Right"
+	L["Right"] = "오른쪽"
 	L["Right 2 HUD position"] = "우측 2 HUD 위치"
 	L["Right HUD position"] = "우측 HUD 위치"
 	L["Right-click for more options"] = "우클릭 - 추가 옵션"
@@ -675,7 +668,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Set Thumbnail Icon"] = "Set Thumbnail Icon"
 	L["Set tooltip description"] = "툴팁 설명 설정"
 	--[[Translation missing --]]
-	L["Sets the anchored frame as the aura's parent, causing the aura to inherit attributes such as visiblility and scale."] = "Sets the anchored frame as the aura's parent, causing the aura to inherit attributes such as visiblility and scale."
+	L["Sets the anchored frame as the aura's parent, causing the aura to inherit attributes such as visibility and scale."] = "Sets the anchored frame as the aura's parent, causing the aura to inherit attributes such as visibility and scale."
 	L["Settings"] = "설정"
 	L["Shadow Color"] = "그림자 색상"
 	L["Shadow X Offset"] = "그림자 X 좌표"
@@ -698,22 +691,22 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Show Spark"] = "섬광 표시"
 	L["Show Text"] = "문자 표시"
 	L["Show this group's children"] = "이 그룹의 자식 표시"
+	--[[Translation missing --]]
+	L["Show Tick"] = "Show Tick"
 	L["Shows a 3D model from the game files"] = "게임 데이터의 3D 모델을 표시합니다"
 	--[[Translation missing --]]
 	L["Shows a border"] = "Shows a border"
 	L["Shows a custom texture"] = "사용자 설정 텍스쳐 표시"
 	--[[Translation missing --]]
 	L["Shows a glow"] = "Shows a glow"
-	--[[Translation missing --]]
-	L["Shows a model"] = "Shows a model"
+	L["Shows a model"] = "모델을 표시합니다"
 	L["Shows a progress bar with name, timer, and icon"] = "이름, 타이머, 아이콘과 함께 진행 바를 표시합니다"
 	L["Shows a spell icon with an optional cooldown overlay"] = "재사용 대기시간 오버레이와 함께 주문 아이콘을 표시합니다"
 	L["Shows a texture that changes based on duration"] = "지속시간에 따라 변화하는 텍스쳐를 표시합니다"
 	L["Shows one or more lines of text, which can include dynamic information such as progress or stacks"] = "여러 줄의 문자를 표시합니다, 진행 시간 또는 중첩과 같은 여러 정보를 포함할 수 있습니다"
 	L["Simple"] = "단순"
 	L["Size"] = "크기"
-	--[[Translation missing --]]
-	L["Skip this Version"] = "Skip this Version"
+	L["Skip this Version"] = "이 버전 건너뛰기"
 	L["Slant Amount"] = "기울기 양"
 	L["Slant Mode"] = "기울기 모드"
 	L["Slanted"] = "기울임"
@@ -724,6 +717,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Slider Step Size"] = "Slider Step Size"
 	L["Small Icon"] = "작은 아이콘"
 	L["Smooth Progress"] = "부드러운 진행"
+	--[[Translation missing --]]
+	L["Snippets"] = "Snippets"
 	--[[Translation missing --]]
 	L["Soft Max"] = "Soft Max"
 	--[[Translation missing --]]
@@ -755,8 +750,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Stealable"] = "훔치기 가능"
 	--[[Translation missing --]]
 	L["Step Size"] = "Step Size"
-	--[[Translation missing --]]
-	L["Stop ignoring Updates"] = "Stop ignoring Updates"
+	L["Stop ignoring Updates"] = "업데이트 무시 중지"
 	L["Stop Sound"] = "소리 중지"
 	L["Sub Elements"] = "하위 요소"
 	L["Sub Option %i"] = "하위 옵션 %i"
@@ -775,8 +769,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["The type of trigger"] = "활성 조건의 유형"
 	--[[Translation missing --]]
 	L["Then "] = "Then "
-	--[[Translation missing --]]
-	L["Thickness"] = "Thickness"
+	L["Thickness"] = "굵기"
 	--[[Translation missing --]]
 	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."
 	--[[Translation missing --]]
@@ -785,6 +778,12 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["This display is not currently loaded"] = "이 디스플레이는 불러오지 않았습니다"
 	L["This region of type \"%s\" is not supported."] = "이 영역은 \"%s\" 유형을 지원하지 않습니다."
 	L["This setting controls what widget is generated in user mode."] = "이 설정은 사용자 모드에서 생성된 위젯을 제어합니다."
+	--[[Translation missing --]]
+	L["Tick %s"] = "Tick %s"
+	--[[Translation missing --]]
+	L["Tick Mode"] = "Tick Mode"
+	--[[Translation missing --]]
+	L["Tick Placement"] = "Tick Placement"
 	L["Time in"] = "시간 단위"
 	L["Tiny Icon"] = "더 작은 아이콘"
 	L["To Frame's"] = "프레임의 다음 지점:"
@@ -807,7 +806,6 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Top Left"] = "왼쪽 위"
 	L["Top Right"] = "오른쪽 위"
 	L["Total Time"] = "전체 시간"
-	L["Total Time Precision"] = "전체 시간 정밀도"
 	L["Trigger"] = "활성 조건"
 	L["Trigger %d"] = "%d 활성 조건"
 	L["Trigger %s"] = "활성 조건 %s"
@@ -818,10 +816,12 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	--[[Translation missing --]]
 	L["Unit %s is not a valid unit for RegisterUnitEvent"] = "Unit %s is not a valid unit for RegisterUnitEvent"
 	L["Unit Count"] = "유닛 수"
+	L["Unit Frame"] = "유닛 프레임"
+	L["Unit Frames"] = "유닛 프레임"
 	--[[Translation missing --]]
-	L["Unit Frame"] = "Unit Frame"
+	L["Unit Name Filter"] = "Unit Name Filter"
 	--[[Translation missing --]]
-	L["Unit Frames"] = "Unit Frames"
+	L["UnitName Filter"] = "UnitName Filter"
 	L["Unlike the start or finish animations, the main animation will loop over and over until the display is hidden."] = "시작 또는 종료 애니메이션과 달리 메인 애니메이션은 디스플레이가 숨겨질 때까지 계속 반복됩니다."
 	L["Up"] = "위로"
 	--[[Translation missing --]]
@@ -829,12 +829,10 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Update Custom Text On..."] = "사용자 설정 문자 갱신 중..."
 	--[[Translation missing --]]
 	L["Update in Group"] = "Update in Group"
-	--[[Translation missing --]]
-	L["Update this Aura"] = "Update this Aura"
+	L["Update this Aura"] = "이 효과 업데이트"
 	L["Use Custom Color"] = "사용자 설정 색상 사용"
-	--[[Translation missing --]]
-	L["Use Display Info Id"] = "Use Display Info Id"
-	L["Use Full Scan (High CPU)"] = "전체 스캔 사용 (높은 CPU 사용률)"
+	L["Use Display Info Id"] = "디스플레이 정보 ID 사용"
+	L["Use Full Scan (High CPU)"] = "전체 스캔 사용 (높은 CPU 이용률)"
 	--[[Translation missing --]]
 	L["Use nth value from tooltip:"] = "Use nth value from tooltip:"
 	L["Use SetTransform"] = "SetTransform 사용"
@@ -842,9 +840,10 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Use Tooltip Information"] = "툴팁 정보 사용"
 	L["Used in Auras:"] = "사용되는 효과:"
 	L["Used in auras:"] = "사용되는 효과:"
-	L["Value %i"] = "값 %i"
 	--[[Translation missing --]]
-	L["Values are in normalized rgba format."] = "Values are in normalized rgba format."
+	L["Uses UnitIsVisible() to check if in range. This is polled every second."] = "Uses UnitIsVisible() to check if in range. This is polled every second."
+	L["Value %i"] = "값 %i"
+	L["Values are in normalized rgba format."] = "값은 정규화된 rgba 형식입니다."
 	L["Values:"] = "값:"
 	L["Version: "] = "버전:"
 	L["Vertical Align"] = "수직 정렬"
@@ -866,6 +865,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Yes"] = "네"
 	L["Y-Offset"] = "Y-좌표"
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "효과 %d개를 삭제하려고 합니다. |cFFFF0000이는 취소할 수 없습니다!|r 계속할까요?"
+	--[[Translation missing --]]
+	L["Your Saved Snippets"] = "Your Saved Snippets"
 	L["Z Offset"] = "Z 좌표"
 	L["Z Rotation"] = "Z 회전"
 	L["Zoom"] = "확대"

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1396, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222221214")
+mod:SetRevision("20200524145633")
 mod:SetCreatureID(90378)
 mod:SetEncounterID(1786)
 mod:SetZone()
@@ -50,13 +50,13 @@ local specWarnRendingHowl			= mod:NewSpecialWarningInterruptCount(183917, "HasIn
 --CDs used for all of them because of them screwing with eachother.
 --Coding them perfectly is probably possible but VERY ugly, would require tones of calculating on the overlaps and lots of on fly adjusting.
 --Adjusting one timer like blackhand no big deal, checking time remaining on THREE other abilities any time one of these are cast, and on fly adjusting, no
-local timerShredCD					= mod:NewCDTimer(17, 180199, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 4)
+local timerShredCD					= mod:NewCDTimer(17, 180199, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, 2, 4)
 local timerHeartseekerCD			= mod:NewCDTimer(25, 180372, nil, nil, nil, 3)
-local timerVisionofDeathCD			= mod:NewCDCountTimer(75, 181488, nil, nil, nil, 5, nil, DBM_CORE_DEADLY_ICON, nil, 1, 4)
+local timerVisionofDeathCD			= mod:NewCDCountTimer(75, 181488, nil, nil, nil, 5, nil, DBM_CORE_L.DEADLY_ICON, nil, 1, 4)
 local timerDeathThroesCD			= mod:NewCDCountTimer(40, 180224, nil, nil, nil, 2)
 --Adds
-local timerBloodthirsterCD			= mod:NewCDCountTimer(70.3, "ej11266", nil, nil, nil, 1, 131150, DBM_CORE_DAMAGE_ICON)--55969 is an iffy short name for bloodthirster since "bloodthirst" is all I could find that was close
-local timerRendingHowlCD			= mod:NewNextTimer(6, 183917, nil, "HasInterrupt", 2, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerBloodthirsterCD			= mod:NewCDCountTimer(70.3, "ej11266", nil, nil, nil, 1, 131150, DBM_CORE_L.DAMAGE_ICON)--55969 is an iffy short name for bloodthirster since "bloodthirst" is all I could find that was close
+local timerRendingHowlCD			= mod:NewNextTimer(6, 183917, nil, "HasInterrupt", 2, 4, nil, DBM_CORE_L.INTERRUPT_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 

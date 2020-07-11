@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Hodir", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20200530203003")
 mod:SetCreatureID(32845,32926)
 mod:SetEncounterID(1135)
 mod:SetModelID(28743)
@@ -18,7 +18,7 @@ mod:RegisterEventsInCombat(
 )
 
 --TODO, refactor biting cold to track unit aura stacks and start spaming at like 4-5
-local warnStormCloud		= mod:NewTargetAnnounce(65123)
+local warnStormCloud		= mod:NewTargetNoFilterAnnounce(65123)
 
 local warnFlashFreeze		= mod:NewSpecialWarningSpell(61968, nil, nil, nil, 3, 2)
 local specWarnStormCloud	= mod:NewSpecialWarningYou(65123, nil, nil, nil, 1, 2)
@@ -27,11 +27,11 @@ local specWarnBitingCold	= mod:NewSpecialWarningMove(62188, nil, nil, nil, 1, 2)
 
 local enrageTimer			= mod:NewBerserkTimer(475)
 local timerFlashFreeze		= mod:NewCastTimer(9, 61968, nil, nil, nil, 2)
-local timerFrozenBlows		= mod:NewBuffActiveTimer(20, 63512, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON..DBM_CORE_HEALER_ICON)
+local timerFrozenBlows		= mod:NewBuffActiveTimer(20, 63512, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON..DBM_CORE_L.HEALER_ICON)
 local timerFlashFrCD		= mod:NewCDTimer(50, 61968, nil, nil, nil, 2)
 local timerAchieve			= mod:NewAchievementTimer(179, 12347)--3182
 
-mod:AddBoolOption("SetIconOnStormCloud")
+mod:AddSetIconOption("SetIconOnStormCloud", 65123, true, false, {8, 7})
 
 mod.vb.stormCloudIcon = 8
 

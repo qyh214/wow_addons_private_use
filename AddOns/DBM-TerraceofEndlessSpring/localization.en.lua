@@ -13,8 +13,8 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnGroupOrder		= "Announce group rotation for $spell:118191<br/>(Currently only supports 25 man 5,2,2,2, etc... strat)",
 	specWarnYourGroup	= "Show special warning when it's your group's turn for $spell:118191<br/>(25 man only)",
-	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(8, 111850) .. "<br/>(Shows everyone if you have debuff, only players with debuff if not)",
-	SetIconOnPrison		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(117436)
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(8, 111850) .. "<br/>(Shows everyone if you have debuff, only players with debuff if not)",
+	SetIconOnPrison		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(117436)
 })
 
 ------------
@@ -23,7 +23,7 @@ L:SetOptionLocalization({
 L = DBM:GetModLocalization(742)
 
 L:SetOptionLocalization({
-	warnLightOfDay	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(123716)
+	warnLightOfDay	= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.target:format(123716)
 })
 
 L:SetMiscLocalization{
@@ -46,7 +46,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	warnHideOver	= "Show warning when $spell:123244 has ended",
 	timerSpecialCD	= "Show timer for special ability CD",
-	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(Shows everyone during Hide, otherwise, only shows tanks)"
+	RangeFrame		= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(Shows everyone during Hide, otherwise, only shows tanks)"
 })
 
 L:SetMiscLocalization{
@@ -73,11 +73,11 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	warnThrash					= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(131996),
+	warnThrash					= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(131996),
 	warnBreathOnPlatform		= "Show $spell:119414 warning when you are on platform<br/>(not recommended, for raid leader)",
 	specWarnBreathOfFearSoon	= "Show pre-special warning for $spell:119414 if you not have a $spell:117964 buff",
 	specWarnMovement			= "Show special warning to move when $spell:120047 is being fired",
 	timerSpecialAbility			= "Show timer for when next special ability will be cast",
-	RangeFrame					= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(2, 119519),
-	SetIconOnHuddle				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(120629)
+	RangeFrame					= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(2, 119519),
+	SetIconOnHuddle				= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(120629)
 })

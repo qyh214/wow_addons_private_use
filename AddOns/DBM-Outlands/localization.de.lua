@@ -21,8 +21,7 @@ L:SetWarningLocalization{
 }
 
 L:SetOptionLocalization{
-	WarnGrowth	= "Zeige Warnung für $spell:36300",
-	RangeFrame = "Zeige Abstandsfenster (15m)"
+	WarnGrowth	= "Zeige Warnung für $spell:36300"
 }
 
 
@@ -31,9 +30,6 @@ L = DBM:GetModLocalization("Magtheridon")
 
 L:SetGeneralLocalization{
 	name = "Magtheridon"
-}
-
-L:SetWarningLocalization{
 }
 
 L:SetTimerLocalization{
@@ -57,9 +53,6 @@ L:SetGeneralLocalization{
 	name = "Verdammnislord Kazzak"
 }
 
-L:SetWarningLocalization{
-}
-
 L:SetMiscLocalization{
 	DBM_KAZZAK_EMOTE_ENRAGE		= "%s wird wütend!" --guessed translation / currently unused (r335)
 }
@@ -69,16 +62,6 @@ L = DBM:GetModLocalization("Doomwalker")
 
 L:SetGeneralLocalization{
 	name = "Verdammniswandler"
-}
-
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
-	RangeFrame = "Zeige Abstandsfenster (10m)"
 }
 
 L:SetMiscLocalization{

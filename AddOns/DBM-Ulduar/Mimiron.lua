@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Mimiron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143403")
+mod:SetRevision("20200530203003")
 mod:SetCreatureID(33432)
 mod:SetEncounterID(1138)
 mod:DisableESCombatDetection()
@@ -46,20 +46,20 @@ local timerProximityMines		= mod:NewCDTimer(30.2, 63027, nil, nil, nil, 3)
 local timerShockBlast			= mod:NewCastTimer(4, 63631, nil, nil, nil, 2)
 local timerShockBlastCD			= mod:NewCDTimer(35, 63631, nil, nil, nil, 2)
 local timerRocketStrikeCD		= mod:NewCDTimer(20, 63631, nil, nil, nil, 3)--20-25
-local timerSpinUp				= mod:NewCastTimer(4, 63414, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
-local timerDarkGlareCast		= mod:NewCastTimer(10, 63274, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
-local timerNextDarkGlare		= mod:NewNextTimer(48, 63414, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerSpinUp				= mod:NewCastTimer(4, 63414, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)
+local timerDarkGlareCast		= mod:NewCastTimer(10, 63274, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)
+local timerNextDarkGlare		= mod:NewNextTimer(48, 63414, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)
 local timerNextShockblast		= mod:NewNextTimer(34, 63631, nil, nil, nil, 2)
 local timerPlasmaBlastCD		= mod:NewCDTimer(30, 64529, nil, "Tank", 2, 5)
-local timerShell				= mod:NewBuffActiveTimer(6, 63666, nil, "Healer", 2, 5, nil, DBM_CORE_HEALER_ICON)
+local timerShell				= mod:NewBuffActiveTimer(6, 63666, nil, "Healer", 2, 5, nil, DBM_CORE_L.HEALER_ICON)
 --local timerNextFlameSuppressant	= mod:NewNextTimer(60, 64570, nil, nil, nil, 3)
 local timerFlameSuppressant		= mod:NewBuffActiveTimer(10, 65192, nil, nil, nil, 3)
-local timerNextFrostBomb		= mod:NewNextTimer(80, 64623, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
+local timerNextFrostBomb		= mod:NewNextTimer(80, 64623, nil, nil, nil, 3, nil, DBM_CORE_L.HEROIC_ICON)
 local timerBombExplosion		= mod:NewCastTimer(15, 65333, nil, nil, nil, 3)
 
-mod:AddBoolOption("SetIconOnNapalm", false)
-mod:AddBoolOption("SetIconOnPlasmaBlast", false)
-mod:AddBoolOption("RangeFrame")
+mod:AddSetIconOption("SetIconOnNapalm", 65026, false, false, {1, 2, 3, 4, 5, 6, 7})
+mod:AddSetIconOption("SetIconOnPlasmaBlast", 64529, false, false, {8})
+mod:AddRangeFrameOption("6")
 
 mod.vb.hardmode = false
 mod.vb.phase = 0
@@ -147,7 +147,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(63666, 65026) and args:IsDestTypePlayer() then -- Napalm Shell
 		napalmShellTargets[#napalmShellTargets + 1] = args.destName
 		timerShell:Start()
-		if self.Options.SetIconOnNapalm then
+		if self.Options.SetIconOnNapalm and self.vb.napalmShellIcon > 0 then
 			self:SetIcon(args.destName, self.vb.napalmShellIcon, 6)
 		end
 		self.vb.napalmShellIcon = self.vb.napalmShellIcon - 1

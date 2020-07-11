@@ -22,7 +22,6 @@ L:SetWarningLocalization{
 }
 
 L:SetOptionLocalization{
-	RangeFrame	= "거리 창 보기",
 	WarnGrowth	= "$spell:36300 알림 보기"
 }
 
@@ -64,10 +63,6 @@ L = DBM:GetModLocalization("Doomwalker")
 
 L:SetGeneralLocalization{
 	name = "파멸의 절단기"
-}
-
-L:SetOptionLocalization{
-	RangeFrame			= "거리 창 보기"
 }
 
 L:SetMiscLocalization{

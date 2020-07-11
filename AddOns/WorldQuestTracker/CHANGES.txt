@@ -1,12 +1,10 @@
-lightweight tag bc3d4746c1b95272fbffa8a492c85223891c448c v8.3.0.394
+lightweight tag 460587da98473f84899136591d3ed822e681a751 v8.3.0.397
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Tue Apr 28 10:13:00 2020 -0300
+Date:	Sun Jun 28 20:35:53 2020 -0300
 
-commit bc3d4746c1b95272fbffa8a492c85223891c448c
+commit 460587da98473f84899136591d3ed822e681a751
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Tue Apr 28 10:13:00 2020 -0300
+Date:   Sun Jun 28 20:35:53 2020 -0300
 
-    Added support for factions in Legion and paragon quests
-    
-    Also framework and localization updates
+    major framework update and minor bug fix
 

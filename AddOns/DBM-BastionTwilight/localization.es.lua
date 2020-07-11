@@ -20,8 +20,8 @@ L:SetOptionLocalization({
 	TwilightBlastArrow		= "Mostrar flecha cuando $spell:86369 ocurra cerca de ti",
 	RangeFrame				= "Mostrar marco de distancia (10 m)",
 	BlackoutShieldFrame		= "Mostrar salud del jefe en una barra durante $spell:86788",
-	BlackoutIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(86788),
-	EngulfingIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(86622)
+	BlackoutIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(86788),
+	EngulfingIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(86622)
 })
 
 L:SetMiscLocalization({
@@ -52,13 +52,13 @@ L:SetOptionLocalization({
 	RangeFrame				= "Mostrar marco de distancia automáticamente cuando sea necesario",
 	yellScrewed				= "Gritar cuando te afecten $spell:83099 y $spell:92307 a la vez",
 	InfoFrame				= "Mostrar marco de información de jugadores sin $spell:83581 o $spell:83500",
-	HeartIceIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(82665),
-	BurningBloodIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(82660),
-	LightningRodIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(83099),
-	GravityCrushIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(84948),
-	FrostBeaconIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92307),
-	StaticOverloadIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92067),
-	GravityCoreIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92075)
+	HeartIceIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(82665),
+	BurningBloodIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(82660),
+	LightningRodIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(83099),
+	GravityCrushIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(84948),
+	FrostBeaconIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92307),
+	StaticOverloadIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92067),
+	GravityCoreIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92075)
 })
 
 L:SetMiscLocalization({
@@ -80,7 +80,7 @@ L:SetOptionLocalization({
 	CorruptingCrashArrow	= "Mostrar flecha cuando $spell:81685 ocurra cerca de ti",
 	InfoFrame				= "Mostrar marco de información para $journal:3165",
 	RangeFrame				= "Mostrar marco de distancia (5 m) para $journal:3165",
-	SetIconOnWorship		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(91317)
+	SetIconOnWorship		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(91317)
 })
 
 ----------------

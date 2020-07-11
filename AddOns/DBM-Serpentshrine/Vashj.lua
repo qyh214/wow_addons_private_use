@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Vashj", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200518210032")
 mod:SetCreatureID(21212)
 mod:SetEncounterID(628)
 mod:SetModelID(20748)
@@ -20,7 +20,7 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_LOOT"
 )
 
-local warnCharge		= mod:NewTargetAnnounce(38280, 4)
+local warnCharge		= mod:NewTargetNoFilterAnnounce(38280, 4)
 local warnEntangle		= mod:NewSpellAnnounce(38316, 3)
 local warnPhase2		= mod:NewPhaseAnnounce(2)
 local warnElemental		= mod:NewAnnounce("WarnElemental", 4, 31687)
@@ -41,8 +41,8 @@ local timerElementalCD	= mod:NewTimer(45, "TimerElemental", 39088, nil, nil, 1)-
 local timerStrider		= mod:NewTimer(63, "TimerStrider", 475, nil, nil, 1)
 local timerNaga			= mod:NewTimer(47.5, "TimerNaga", 2120, nil, nil, 1)
 
-mod:AddBoolOption("RangeFrame", true)
-mod:AddBoolOption("ChargeIcon", false)
+mod:AddRangeFrameOption(10, 38280)
+mod:AddSetIconOption("ChargeIcon", 38280, false, false, {1})
 --mod:AddBoolOption("AutoChangeLootToFFA", true)
 
 mod.vb.phase = 1
@@ -100,7 +100,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnCharge:Play("runout")
 			yellCharge:Yell()
 			if self.Options.RangeFrame then
-				DBM.RangeCheck:Show()
+				DBM.RangeCheck:Show(10)
 			end
 		else
 			warnCharge:Show(args.destName)

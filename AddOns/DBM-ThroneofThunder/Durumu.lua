@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(818, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222213340")
+mod:SetRevision("20200524145716")
 mod:SetCreatureID(68036)--Crimson Fog 69050
 mod:SetEncounterID(1572)
 mod:SetZone()
@@ -55,7 +55,7 @@ local yellLifeDrain					= mod:NewYell(133795, L.LifeYell)
 local timerHardStareCD				= mod:NewCDTimer(12, 133765, nil, "Tank|Healer", nil, 5)
 local timerSeriousWound				= mod:NewTargetTimer(60, 133767, nil, "Tank|Healer")
 local timerLingeringGazeCD			= mod:NewCDTimer(46, 138467, nil, nil, nil, 3)
-local timerForceOfWillCD			= mod:NewCDTimer(20, 136413, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)--Actually has a 20 second cd but rarely cast more than once per phase because of how short the phases are (both beams phases cancel this ability)
+local timerForceOfWillCD			= mod:NewCDTimer(20, 136413, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)--Actually has a 20 second cd but rarely cast more than once per phase because of how short the phases are (both beams phases cancel this ability)
 local timerLightSpectrumCD			= mod:NewNextTimer(60, "ej6891", nil, nil, nil, 6, nil, nil, nil, 1, 5)
 local timerDisintegrationBeam		= mod:NewBuffActiveTimer(55, "ej6882", nil, nil, nil, 6, nil, nil, nil, 1, 5)
 local timerDisintegrationBeamCD		= mod:NewNextTimer(136, "ej6882", nil, nil, nil, 6)

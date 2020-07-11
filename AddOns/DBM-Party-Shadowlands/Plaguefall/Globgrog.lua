@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2419, "DBM-Party-Shadowlands", 2, 1183)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200412002938")
+mod:SetRevision("20200528135243")
 mod:SetCreatureID(164255)
 mod:SetEncounterID(2382)
 mod:SetZone()
@@ -28,8 +28,8 @@ local specWarnSummonSlime			= mod:NewSpecialWarningSwitch(327608, "-Healer", nil
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
 local timerPlaguestompCD			= mod:NewAITimer(15.8, 324527, nil, nil, nil, 3)
-local timerSummonSlimeCD			= mod:NewCDTimer(13, 327608, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
-local timerSlimeWaveCD				= mod:NewCDTimer(13, 324667, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerSummonSlimeCD			= mod:NewCDTimer(13, 327608, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)
+local timerSlimeWaveCD				= mod:NewCDTimer(13, 324667, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 
 function mod:OnCombatStart(delay)
 	timerPlaguestompCD:Start(1-delay)

@@ -121,15 +121,15 @@ function RSA_Priest:OnEnable()
 			[205364] = Config_MC, -- Mind Control
 			[200196] = Config_Chastise, -- Holy Word: Chastise
 			[200200] = Config_Chastise, -- Holy Word: Chastise with Censure talent
-			[9484] = { -- SHACKLE UNDEAD
+			[9484] = {
 				profile = 'ShackleUndead',
 				replacements = { TARGET = 1 }
 			},
-			[15286] = { -- VAMPIRIC EMBRACE
+			[15286] = {
 				profile = 'VampiricEmbrace',
 				replacements = { TARGET = 1 }
 			},
-			[65081] = { -- BODY AND SOUL
+			[65081] = {
 				profile = 'BodyAndSoul',
 				section = 'Cast',
 				replacements = { TARGET = 1 }
@@ -137,16 +137,19 @@ function RSA_Priest:OnEnable()
 			[197871] = { -- Dark Archangel
 				profile = 'DarkAngel',
 			},
-			[197862] = { -- Archangel
+			[197862] = {
 				profile = 'Archangel',
 			},
-			[213610] = { -- Holy Ward
+			[213610] = {
 				profile = 'HolyWard',
 				replacements = { TARGET = 1 },
 			},
-			[197268] = { -- Ray Of Hope
+			[197268] = {
 				profile = 'RayOfHope',
 				replacements = { TARGET = 1 },
+			},
+			[47536] = {
+				profile = 'Rapture',
 			},
 		},
 		SPELL_CAST_START = {
@@ -161,37 +164,37 @@ function RSA_Priest:OnEnable()
 		SPELL_CAST_SUCCESS = {
 			[586] = Config_Fade, -- Fade
 			[213602] = Config_Fade, -- Greater Fade
-			[212036] = { -- MASS RESURRECTION
+			[212036] = {
 				profile = 'MassRess',
 				section = 'End'
 			},
-			[73325] = { -- LEAP OF FAITH
+			[73325] = {
 				profile = 'LeapOfFaith',
 				section = 'Cast',
 				replacements = { TARGET = 1 }
 			},
-			[32375] = { -- MASS DISPEL
+			[32375] = {
 				profile = 'MassDispel',
 				section = 'Cast',
 			},
-			[62618] = { -- POWER WORD: BARRIER
+			[62618] = {
 				profile = 'PowerWordBarrier'
 			},
-			[64843] = { -- DIVINE HYMN
+			[64843] = {
 				profile = 'DivineHymn'
 			},
 			[200183] = {
 				profile = 'Apotheosis'
 			},
-			[1706] = { -- LEVITATE
+			[1706] = {
 				profile = 'Levitate',
 				replacements = { TARGET = 1 }
 			},
-			[33206] = { -- PAIN SUPPRESSION
+			[33206] = {
 				profile = 'PainSuppression',
 				replacements = { TARGET = 1 }
 			},
-			[64044] = { -- PSYCHIC HORROR
+			[64044] = {
 				profile = 'PsychicHorror',
 				replacements = { TARGET = 1 }
 			},
@@ -207,22 +210,26 @@ function RSA_Priest:OnEnable()
 				profile = 'Shadowfiend',
 				section = 'Cast'
 			},
-			[47788] = { -- GUARDIAN SPIRIT
+			[47788] = {
 				profile = 'GuardianSpirit',
 				replacements = { TARGET = 1 }
 			},
-			[8122] = { -- PSYCHIC SCREAM
+			[8122] = {
 				profile = 'PsychicScream'
 			},
-			[205369] = { -- Mind Bomb
+			[205369] = {
 			profile = 'MindBomb',
 			replacements = { TARGET = 1 }
 			},
-			[64901] = { -- SYMBOL OF HOPE
+			[64901] = {
 				profile = 'SymbolOfHope'
 			},
 			[265202] = { -- Holy Word: Salvation
 				profile = 'Salvation',
+				section = 'Cast'
+			},
+			[246287] = {
+				profile = 'Evangelism',
 				section = 'Cast'
 			},
 		},
@@ -233,11 +240,11 @@ function RSA_Priest:OnEnable()
 			[205364] = Config_MC_End, -- Mind Control
 			[200196] = Config_Chastise_End, -- Holy Word: Chastise
 			[200200] = Config_Chastise_End, -- Holy Word: Chastise with Censure talent
-			[15286] = { -- VAMPIRIC EMBRACE
+			[15286] = {
 				profile = 'VampiricEmbrace',
 				section = 'End'
 			},
-			[64843] = { -- DIVINE HYMN
+			[64843] = {
 				profile = 'DivineHymn',
 				section = 'End'
 			},
@@ -245,37 +252,37 @@ function RSA_Priest:OnEnable()
 				profile = 'Apotheosis',
 				section = 'End'
 			},
-			[111759] = { -- LEVITATE
+			[111759] = {
 				profile = 'Levitate',
 				section = 'End',
 				replacements = { TARGET = 1 }
 			},
-			[9484] = { -- SHACKLE UNDEAD
+			[9484] = {
 				profile = 'ShackleUndead',
 				section = 'End',
 				replacements = { TARGET = 1 }
 			},
-			[33206] = { -- PAIN SUPPRESSION
+			[33206] = {
 				profile = 'PainSuppression',
 				section = 'End',
 				replacements = { TARGET = 1 }
 			},
-			[15487] = { -- SILENCE
+			[15487] = {
 				profile = 'Silence',
 				section = 'End',
 				replacements = { TARGET = 1 }
 			},
-			[64044] = { -- PSYCHIC HORROR
+			[64044] = {
 				profile = 'PsychicHorror',
 				section = 'End',
 				replacements = { TARGET = 1 }
 			},
-			--[[[47788] = { -- GUARDIAN SPIRIT
+			--[[[47788] = {
 				profile = 'GuardianSpirit',
 				section = 'End',
 				replacements = { TARGET = 1 }
 			},]]--
-			[64901] = { -- SYMBOL OF HOPE
+			[64901] = {
 				profile = 'SymbolOfHope',
 				section = 'End',
 				targetIsMe = 1
@@ -285,20 +292,24 @@ function RSA_Priest:OnEnable()
 				section = 'End',
 				targetIsMe = 1
 			},
-			[197862] = { -- Archangel
+			[197862] = {
 				profile = 'Archangel',
 				section = 'End',
 
 			},
-			[213610] = { -- Holy Ward
+			[213610] = {
 				profile = 'HolyWard',
 				replacements = { TARGET = 1 },
 				section = 'End',
 			},
-			[197268] = { -- Ray Of Hope
+			[197268] = {
 				profile = 'RayOfHope',
 				section = 'End',
 				replacements = { TARGET = 1 },
+			},
+			[47536] = {
+				profile = 'Rapture',
+				section = 'End',
 			},
 		},
 		SPELL_DISPEL = {

@@ -1,4 +1,4 @@
-﻿-- Thanks to Phanx!
+-- Thanks to Phanx!
 
 if GetLocale() == "ptBR" or GetLocale() == "ptPT" then
 	BUYEMALL_LOCALS = {

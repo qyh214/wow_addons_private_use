@@ -1,4 +1,4 @@
-﻿
+
 
 if GetLocale() == "enUS" then
 	BUYEMALL_LOCALS = {

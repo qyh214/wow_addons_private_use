@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Tidewalker", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200518210032")
 mod:SetCreatureID(21213)
 mod:SetEncounterID(627)
 mod:SetModelID(20739)
@@ -18,7 +18,7 @@ mod:RegisterEventsInCombat(
 )
 
 local warnTidal			= mod:NewSpellAnnounce(37730, 3)
-local warnGrave			= mod:NewTargetAnnounce(38049, 4)
+local warnGrave			= mod:NewTargetNoFilterAnnounce(38049, 4)--TODO, make run out special warning instead?
 local warnBubble		= mod:NewSpellAnnounce(37854, 4)
 
 local specWarnMurlocs	= mod:NewSpecialWarning("SpecWarnMurlocs")

@@ -3,7 +3,6 @@ local _, AddOn = ...
 AddOn.worldBosses = {
   {
     instanceID = 322,                          -- Pandaria
-    numEncounters = 6,
     encounters = {
       { encounterID = 691, questID = 32099 },  -- Sha of Anger
       { encounterID = 725, questID = 32098 },  -- Salyis's Warband
@@ -15,7 +14,6 @@ AddOn.worldBosses = {
   },
   {
     instanceID = 557,                          -- Draenor
-    numEncounters = 3,
     encounters = {
       { encounterID = 1291, questID = 37460 }, -- Drov the Ruiner
       { encounterID = 1211, questID = 37462 }, -- Tarlna the Ageless
@@ -25,7 +23,6 @@ AddOn.worldBosses = {
   },
   {
     instanceID = 822,                          -- Broken Isles
-    numEncounters = 1,
     encounters = {
       { encounterID = 1790, questID = 43512 }, -- Ana-Mouz
       { encounterID = 1956, questID = 47061 }, -- Apocron
@@ -46,7 +43,6 @@ AddOn.worldBosses = {
   },
   {
     instanceID = 959,                          -- Invasion Points
-    numEncounters = 1,
     encounters = {
       { encounterID = 2010, questID = 49199 }, -- Matron Folnuna
       { encounterID = 2011, questID = 48620 }, -- Mistress Alluradel
@@ -58,7 +54,6 @@ AddOn.worldBosses = {
   },
   {
     instanceID = 1028,                         -- Azeroth
-    numEncounters = 3,
     encounters = {
       { encounterID = 2139, questID = 52181 }, -- T'zane
       { encounterID = 2141, questID = 52169 }, -- Ji'arak

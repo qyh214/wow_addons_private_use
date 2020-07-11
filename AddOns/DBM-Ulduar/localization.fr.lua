@@ -104,7 +104,7 @@ L:SetMiscLocalization{
 	YellAir2			= "Incendie éteint ! Reconstruisons les tourelles !",
 	YellGround		= "Faites vite ! Elle va pas rester au sol très longtemps !",
 	EmotePhase2			= "bloquée au sol",
-	FlamecastUnknown	= DBM_CORE_UNKNOWN
+	FlamecastUnknown	= DBM_CORE_L.UNKNOWN
 }
 
 -------------
@@ -128,9 +128,7 @@ L:SetWarningLocalization{
 L:SetOptionLocalization{
 	SpecialWarningLightBomb		= "Activer l'avertissement spécial quand vous êtes affecté par la bombe de lumière",
 	SpecialWarningGravityBomb	= "Activer l'avertissement spécial quand vous êtes affecté par la bombe à gravité",
-	specWarnConsumption			= "Montre une alerte spéciale quand vous subissez des dégats venant des Zone de Vide ( Hard-mode )",
-	SetIconOnLightBombTarget	= "Mettre un icône sur la cible de la bombe de lumière",
-	SetIconOnGravityBombTarget	= "Mettre un icône sur la cible de la bombe à gravité"
+	specWarnConsumption			= "Montre une alerte spéciale quand vous subissez des dégats venant des Zone de Vide ( Hard-mode )"
 }
 
 -------------------
@@ -155,9 +153,7 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	WarningSupercharge			= "Activer l'avertissement quand la Supercharge est incanté",
 	LightningTendrils			= "Activer l'avertissement spécial pour les Vrilles d'éclair",
-	SetIconOnOverwhelmingPower	= "Mettre un icône sur la cible de la Puissance accablante",
 	RuneofDeath					= "Activer l'avertissement spécial pour les runes de mort",
-	SetIconOnStaticDisruption	= "Met une icône sur la cible de Static Disruption",
 	Overload					= "Montre une alerte spéciale pour la Surcharge",
 	AlwaysWarnOnOverload		= "Toujours alerter pour la surcharge (sinon seulement quand ciblé)"
 }
@@ -234,8 +230,7 @@ L:SetOptionLocalization{
 	timerLeftArm			= "Afficher un timer pour le repop du bras gauche",
 	timerRightArm			= "Afficher un timer pour le repop du bras droit",
 	achievementDisarmed		= "Afficher un timer pour le Haut Fait Désarmement",
-	WarnGrip				= "Annonce les cibles de la poigne",
-	SetIconOnGripTarget		= "Met une icône sur les joueurs victimes du sort poigne"
+	WarnGrip				= "Annonce les cibles de la poigne"
 }
 
 L:SetMiscLocalization{
@@ -300,7 +295,6 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	WarningFlashFreeze		= "Activer l'avertissement pour le gel instantané",
 	YellOnStormCloud		= "Crie quand la tempête de glace est active",
-	SetIconOnStormCloud		= "Met une icône sur la cible de la tempête de glace",
 	specWarnBitingCold		= "Montre une alerte spéciale quand vous êtes affecter par Froid mordant"
 }
 
@@ -328,7 +322,6 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	TimerHardmode			= "Afficher le timer pour le mode difficile",
-	RangeFrame				= "Afficher la fenêtre de portée",
 	AnnounceFails			= "Affiche les joueurs qui n'ont pas évité les Charges de foudre (Nécessite l'activation des annonces et être promu ou leader)",
 	LightningOrb			= "Montre une alerte spéciale pour les Charges de foudre"
 }
@@ -436,8 +429,7 @@ L:SetOptionLocalization{
 	WarnBombSpawn			= "Annonce les Robots Bombes",
 	TimerHardmode			= "Montre le timer pour le Hard Mode",
 	ShockBlastWarningInP1	= "Montre une alerte spéciale pour les Horions explosifs durant la Phase 1",
-	ShockBlastWarningInP4	= "Montre une alerte spéciale pour les Horions explosifs durant la Phase 4",
-	RangeFrame				= "Affiche la fenêtre de portée pour la phase 1"
+	ShockBlastWarningInP4	= "Montre une alerte spéciale pour les Horions explosifs durant la Phase 4"
 }
 
 L:SetMiscLocalization{
@@ -475,8 +467,6 @@ L:SetWarningLocalization{
 
 L:SetOptionLocalization{
 	WarningShadowCrash				= "Montre une alerte spéciale pour les Déferlante d'ombre",
-	SetIconOnShadowCrash			= "met une icône sur la cible des Déferlante d'ombre ( Tête de mort )",
-	SetIconOnLifeLeach				= "Met une icône sur la cible de la Marque du Sans-visage ( Croix )",
 	SpecialWarningSurgeDarkness		= "Montre une alerte spéciale pour les Vague de ténèbres",
 	SpecialWarningShadowCrash		= "Montre une alerte spéciale pour les Déferlante d'ombre",
 	SpecialWarningShadowCrashNear	= "Montre une alerte spéciale quand la Déferlante d'ombre tombe à côté de vous",
@@ -543,16 +533,12 @@ L:SetOptionLocalization{
 	SpecWarnGuardianLow				= "Montre une alerte spéciale quand les gardiens (P1) n'a plus beaucoup de vie",
 	WarnBrainPortalSoon				= "Annonce les Portails",
 	SpecWarnMadnessOutNow			= "Montre une alerte spéciale avant la fin du cast de Susciter la folie",
-	SetIconOnFearTarget				= "Met une icône sur la cible du fear",
 	SpecWarnFervor					= "Montre une alerte spéciale pour la ferveur de Sara",
 	SpecWarnFervorCast				= "Montre une alerte spéciale quand la Ferveur de Sara commence a cast sur vous (Il faut avoir Sara en Target/Focus)",
 	specWarnBrainPortalSoon			= "Annonce l'arrivée d'un portail",
 	NextPortal						= "Montre un timer avant le prochain portail",
 	WhisperBrainLink				= "Envoie un whisp aux Cerveaux liés",
-	SetIconOnFervorTarget			= "Met une icône sur les cible de la ferveur de Sara",
-	SetIconOnMCTarget				= "met une icône sur la cible du contrôle mental",
 	WarnEmpowerSoon					= "Alerte avant le Renforcement des ombres",
-	SpecWarnDeafeningRoar			= "Montre une alerte spéciale pour le Rugissement assourdissant (silence et haut-fait)",
-	SetIconOnBrainLinkTarget		= "Met une icone sur la cible des Cerveaux liés"
+	SpecWarnDeafeningRoar			= "Montre une alerte spéciale pour le Rugissement assourdissant (silence et haut-fait)"
 }
 

@@ -109,13 +109,13 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	warnRageRagnarosSoon		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.prewarn:format(101109),
+	warnRageRagnarosSoon		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.prewarn:format(101109),
 	warnSplittingBlow			= "Mostrar avisos de ubicación para $spell:98951",
 	warnEngulfingFlame			= "Mostrar avisos de ubicación para $spell:99171 en dificultad normal",
 	warnEngulfingFlameHeroic	= "Mostrar avisos de ubicación para $spell:99171 en dificultad heroica",
 	warnSeedsLand				= "Mostrar temporizador y aviso para $spell:98520 en función de cuando aterricen las semillas en lugar de cuando ocurra el lanzamiento",
-	warnEmpoweredSulf			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.cast:format(100604),
-	timerRageRagnaros			= DBM_CORE_AUTO_TIMER_OPTIONS.cast:format(101109),
+	warnEmpoweredSulf			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.cast:format(100604),
+	timerRageRagnaros			= DBM_CORE_L.AUTO_TIMER_OPTIONS.cast:format(101109),
 	TimerPhaseSons				= "Mostrar temporizador de duración para los intermedios de Hijos de la llama",
 	InfoHealthFrame				= "Mostrar marco de información de salud (por debajo de 100mil)",
 	MeteorFrame					= "Mostrar marco de información de objetivos de $spell:99849",

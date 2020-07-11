@@ -1667,6 +1667,23 @@ local function Priest()
 					Channel = "",
 				},
 			},
+			Rapture = {
+				Messages = {
+					Start = {"[LINK] activated!"},
+					End = {"[LINK] faded!"},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+			},
+			Evangelism = {
+				Messages = {
+					Cast = {"[LINK] activated!"},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+			},
 		},
 	}
 	return Priest

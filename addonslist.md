@@ -4,6 +4,8 @@ wow_addons_private_use
 
 !KalielsTracker 任务列表美化、整理，主视图界面右侧
 
+Acamar auto-learning spam blocker
+
 AddOnSkins 插件皮肤统一（需配合elvui）
 
 AdvancedInterfaceOptions 额外界面设置、命令（被暴雪隐藏掉的命令、cvar）
@@ -80,4 +82,7 @@ WorldQuestTracker 世界任务插件
 
 XLoot 掉落美化
 
+Mythic Dungeon Tools
+
+Minesweeperr
 

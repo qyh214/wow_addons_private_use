@@ -1,13 +1,13 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("RSA", "itIT")
 if not L then return end
-L[" Does not affect Immune, Immune will always use its own replacement."] = "Non influenza Immune, Immune utilizzerà sempre la propria sostituzione."
 L[" If you wish to add a message for this section, enter it above in the |cffFFD100Add New Message|r box. As no messages exist, nothing will be announced for this section."] = " Se desideri aggiungere un messaggio per questa sezione, inseriscilo sopra in |cffFFD100Aggiungi nuovo messaggio|r box.Poiché non esistono messaggi, nulla sarà annunciato per questa sezione."
-L[" is disabled. If you want to configure RSA, you need to enable it."] = " è disabilitato. Se si desidera configurare RSA, è necessario abilitarlo."
 L[" is Missing!"] = " Manca!"
-L[" message for this section."] = " messaggio per questa sezione."
-L[" messages for this section."] = " messaggi per questa sezione."
 L[" Refreshed!"] = " Aggiornare!"
 L[" RSA will choose a message from this section at random, if you wish to remove a message, delete the contents and press enter. If no messages exist, nothing will be announced for this section."] = " RSA sceglierà a caso un messaggio da questa sezione, se desideri rimuovere un messaggio, elimina i contenuti e premi invio. Se non ci sono messaggi, non verrà annunciato nulla per questa sezione."
+--[[Translation missing --]]
+L["%s can only function inside instances since 8.2.5."] = "%s can only function inside instances since 8.2.5."
+--[[Translation missing --]]
+L["%s is disabled. If you want to configure RSA, you need to enable it."] = "%s is disabled. If you want to configure RSA, you need to enable it."
 L["|c5500DBBD[TARGET]|r will be replaced with this when whispering someone."] = "|c5500DBBD[TARGET]|r sarà sostituito con questo quando sussurrare qualcuno."
 L["|cff91BE0F/instance|r if you're in an instance group such as when in LFR or Battlegrounds."] = "|cff91BE0F/instance|r  se ti trovi in un gruppo di istanze come in LFR o Battlegrounds."
 L["|cff91BE0F/party|r if you're in a manually formed group."] = "|cff91BE0F/party|r se sei in un gruppo formato manualmente."
@@ -27,12 +27,19 @@ L["Class Abilities"] = "Abilità di classe"
 L["Configuring"] = "Configurazione"
 L["Corpse of "] = "Cadavere di"
 L["Couldn't find target for Soulstone."] = "Impossibile trovare l'obiettivo per Soulstone."
-L["Current Revision"] = "Revisione corrente"
+--[[Translation missing --]]
+L["Current Version: %s"] = "Current Version: %s"
+--[[Translation missing --]]
+L["Curseforge"] = "Curseforge"
 L["Custom Channel"] = "Canale personalizzato"
 L["Damage"] = "Danno"
 L["DamageAbsorb"] = "Danno assorbito"
 L["Debuff"] = true
+--[[Translation missing --]]
+L["Discord"] = "Discord"
 L["Dispel"] = true
+--[[Translation missing --]]
+L["Does not affect Immune, Immune will always use its own replacement."] = "Does not affect Immune, Immune will always use its own replacement."
 --[[Translation missing --]]
 L["Drums"] = "Drums"
 L["EffectAbsorb"] = "Debuff assorbito"
@@ -61,12 +68,9 @@ L["Feedback"] = "Risposta"
 L["General"] = "Generale"
 L["General Replacement"] = "Sostituzione generale"
 L["Heal"] = "Guarire"
-L["I have a Battle.net community for my addons. If you have any issues, now you can easily report them to me in game. Just copy the invite link below and throw me a message."] = "Ho una community Battle.net per i miei addon. Se hai problemi, ora puoi segnalarmeli facilmente in gioco. Basta copiare il link di invito qui sotto e mandarmi un messaggio."
 L["If selected, |c5500DBBD[MISSTYPE]|r will always use the General Replacement set below."] = "Se selezionato, |c5500DBBD[MISSTYPE]|r utilizzerà sempre il set di sostituzione generale riportato di seguito."
 L["If selected, |c5500DBBD[TARGET]|r will always use the spell target's name, rather than using the input below for whispers."] = "Se selezionato, |c5500DBBD[TARGET]|r userà sempre il nome del bersaglio dell'incantesimo, piuttosto che usare l'input sottostante per i sussurri."
-L["If you encounter a bug, or have a feature request, please file a ticket on Curseforge using the link below."] = "Se riscontri un bug o hai una richiesta di funzionalità, invia un ticket su Curseforge utilizzando il link sottostante."
 L["Immune"] = true
-L["In Game"] = "In Gioco"
 L["Instance"] = "Istanza"
 L["Interrupt"] = "Interrompere"
 L["Invite Link"] = "Invita link"
@@ -76,7 +80,6 @@ L["Message Announce Area"] = "Area annuncio per il Messaggio "
 L["Message Texts"] = "Testo del messaggio"
 L["missed"] = "perse"
 L["Module Settings"] = "Impostazioni del modulo"
-L["Online"] = true
 L["Only announce if you are in combat."] = "Annuncia solo se sei in combattimento."
 L["Only announce in /emote while you are in a group."] = "Annunciare solo /emote mentre sei in un gruppo."
 L["Only announce in /say while you are in a group."] = "Annuncia solo in /dire mentre sei in un gruppo."
@@ -102,7 +105,6 @@ L["Replacement"] = "Sostituzione"
 L["Resist"] = "Resistere"
 --[[Translation missing --]]
 L["Respec Codex"] = "Respec Codex"
-L["RSA on Curseforge"] = "RSA in Curseforge"
 L["Say"] = "Dire"
 L["Send to player created channel."] = "Invia al canale creato dal giocatore."
 L["Sends a message locally only visible to you. To choose which part of the UI this is displayed in go to the |cff00B2FALocal Message Output Area|r in the General options."] = "Invia un messaggio localmente visibile solo a te. Per scegliere quale parte dell'interfaccia utente è visualizzata, vai a |cff00B2FALocal Message Output Area|r nelle opzioni generali."
@@ -124,15 +126,10 @@ L["The following tags are available for use with this spell:"] = "I seguenti tag
 L["This section requires LibResInfo-1.0 to work. As you don't have it, nothing from this section will announce."] = "Questa sezione richiede che LibResInfo-1.0 funzioni. Siccome non c'è l'hai, nulla da questa sezione lo annuncerà."
 L["This setting also does not follow the global announcement settings, and will, if checked, announce regardless of those settings."] = "Questa impostazione inoltre non segue le impostazioni degli annunci globali e se selezionata, annuncia indipendentemente da tali impostazioni."
 L["Unknown"] = "Sconosciuto"
+--[[Translation missing --]]
+L["URL"] = "URL"
 L["Use Single Replacement"] = "Utilizzare la sostituzione singola"
 L["Utilities"] = "Utilità"
-L["was absorbed by"] = "è stato assorbito da"
-L["was blocked by"] = "è stato bloccato da"
-L["was deflected by"] = "è stato deviato da"
-L["was dodged by"] = "è stato schivato da"
-L["was evaded by"] = "è stato eluso da"
-L["was parried by"] = "è stato parato da"
-L["was resisted by"] = "è stato resistito da"
 L["When reporting an issue, please also post the revision number above. Thanks!"] = "Quando si segnala un problema, si prega di inviare anche il numero di revisione sopra. Grazie!"
 L["When someone accepts the resurrect you cast on them."] = "Quando qualcuno accetta di essere risorto, tu lo esegui."
 L["When the spell ends."] = "Quando l'incantesimo finisce."
@@ -164,7 +161,10 @@ L["Whether the target blocks, dodges, absorbs etc. your attack, |c5500DBBD[MISST
 L["Whisper"] = "Sussurro"
 L["Yell"] = "Urlo"
 L["You"] = "Tu"
-L["You have "] = "Hai"
+--[[Translation missing --]]
+L["You have %d message for this section."] = "You have %d message for this section."
+--[[Translation missing --]]
+L["You have %d messages for this section."] = "You have %d messages for this section."
 L["You have no messages for this section."] = "Non ci sono messaggi per questa sezione."
 L["Your message must contain at least one number or letter!"] = "Il tuo messaggio deve contenere almeno un numero o una lettera!"
 L["Your version of RSA is out of date. You may want to grab the latest version from https://www.curseforge.com/wow/addons/rsa"] = "La tua versione di RSA non è aggiornata. Si consiglia di scaricare l'ultima versione da https://www.curseforge.com/wow/addons/rsa"

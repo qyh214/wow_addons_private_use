@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(869, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222213340")
+mod:SetRevision("20200524145716")
 mod:SetCreatureID(71865)
 mod:SetEncounterID(1623)
 mod:SetZone()
@@ -80,24 +80,24 @@ local specWarnNapalm				= mod:NewSpecialWarningMove(147136)
 local timerRoleplay					= mod:NewTimer(120.5, "timerRoleplay", "237538")--Wonder if this is somewhat variable?
 --Stage 1: A Cry in the Darkness
 local timerDesecrateCD				= mod:NewCDCountTimer(35, 144748, nil, nil, nil, 3, nil, nil, nil, 2, 4)
-local timerHellscreamsWarsongCD		= mod:NewNextTimer(42.2, 144821, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerHellscreamsWarsongCD		= mod:NewNextTimer(42.2, 144821, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerFarseerWolfRiderCD		= mod:NewNextTimer(50, "ej8294", nil, nil, nil, 1, 144585)--EJ says they come faster as phase progresses but all i saw was 3 spawn on any given pull and it was 30 50 50
 local timerSiegeEngineerCD			= mod:NewNextTimer(40, "ej8298", nil, nil, nil, 1, 144616)
-local timerPowerIronStar			= mod:NewCastTimer(16.5, 144616, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON, nil, 1, 5)
+local timerPowerIronStar			= mod:NewCastTimer(16.5, 144616, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON, nil, 1, 5)
 --Intermission: Realm of Y'Shaarj
 local timerEnterRealm				= mod:NewNextTimer(145.5, 144866, nil, nil, nil, 6, 144945)
 local timerRealm					= mod:NewBuffActiveTimer(60.5, "ej8305", nil, nil, nil, 6, 144945, nil, nil, 1, 8)--May be too long, but intermission makes more sense than protection buff which actually fades before intermission ends if you do it right.
 --Stage Two: Power of Y'Shaarj
-local timerWhirlingCorruptionCD		= mod:NewCDCountTimer(49.5, 144985, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON, nil, 1, 4)--One bar for both, "empowered" makes timer too long
+local timerWhirlingCorruptionCD		= mod:NewCDCountTimer(49.5, 144985, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON, nil, 1, 4)--One bar for both, "empowered" makes timer too long
 local timerWhirlingCorruption		= mod:NewBuffActiveTimer(9, 144985, nil, false)
-local timerTouchOfYShaarjCD			= mod:NewCDCountTimer(45, 145071, nil, nil, nil, 3, nil, DBM_CORE_INTERRUPT_ICON, nil, 3, 4)
-local timerGrippingDespair			= mod:NewTargetTimer(15, 145183, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerTouchOfYShaarjCD			= mod:NewCDCountTimer(45, 145071, nil, nil, nil, 3, nil, DBM_CORE_L.INTERRUPT_ICON, nil, 3, 4)
+local timerGrippingDespair			= mod:NewTargetTimer(15, 145183, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 --Starge Three: MY WORLD
 --Starge Four: Heroic Hidden Phase
 local timerEnterGarroshRealm		= mod:NewNextTimer(20, 146984, nil, nil, nil, 6, 144945)
 local timerMaliceCD					= mod:NewNextTimer(29.5, 147209, nil, nil, nil, 3, nil, nil, nil, 3, 4)--29.5-33sec variation
-local timerBombardmentCD			= mod:NewNextTimer(55, 147120, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON, nil, 1, 4)
-local timerBombardment				= mod:NewBuffActiveTimer(13, 147120, nil, nil, nil, 5, nil, DBM_CORE_HEALER_ICON, nil, 2, 4)
+local timerBombardmentCD			= mod:NewNextTimer(55, 147120, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON, nil, 1, 4)
+local timerBombardment				= mod:NewBuffActiveTimer(13, 147120, nil, nil, nil, 5, nil, DBM_CORE_L.HEALER_ICON, nil, 2, 4)
 local timerClumpCheck				= mod:NewNextTimer(3, 147126)
 local timerMaliciousBlast			= mod:NewBuffFadesTimer(3, 147235, nil, false)
 local timerFixate					= mod:NewTargetTimer(12, 147665)

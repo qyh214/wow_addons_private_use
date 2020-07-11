@@ -36,7 +36,7 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	WarnPhase			= "단계 전환 알림 보기",
 	specWarnBarrierNow	= "$spell:115817 을 사용해야 할 때 특수 경고 보기(공격대 찾기 전용)",
-	RangeFrame			= "지팡이의 혼 단계에서" .. DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format("6")
+	RangeFrame			= "지팡이의 혼 단계에서" .. DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format("6")
 })
 
 L:SetMiscLocalization({

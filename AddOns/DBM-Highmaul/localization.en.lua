@@ -10,7 +10,7 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	timerSweeperCD	= DBM_CORE_AUTO_TIMER_OPTIONS.next:format(177776)
+	timerSweeperCD	= DBM_CORE_L.AUTO_TIMER_OPTIONS.next:format(177776)
 })
 
 ---------------------------
@@ -81,11 +81,11 @@ L:SetOptionLocalization({
 	Stacks				= "Stacks as they are applied",
 	timerNightTwistedCD	= "Show timer for Next Night-Twisted Faithful",
 	--Auto generated, don't copy to non english files, not needed.
-	warnBranded			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.stack:format(156225),
-	warnResonance		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(156467),
-	warnMarkOfChaos		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(158605),
-	warnForceNova		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(157349),
-	warnAberration		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(156471)
+	warnBranded			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(156225),
+	warnResonance		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(156467),
+	warnMarkOfChaos		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(158605),
+	warnForceNova		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(157349),
+	warnAberration		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(156471)
 	--Auto generated, don't copy to non english files, not needed.
 })
 

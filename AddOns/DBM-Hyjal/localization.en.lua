@@ -9,10 +9,6 @@ L:SetGeneralLocalization{
 	name = "Rage Winterchill"
 }
 
-L:SetOptionLocalization{
-	IceBoltIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(31249)
-}
-
 -----------------
 --  Anetheron  --
 -----------------
@@ -40,10 +36,6 @@ L:SetGeneralLocalization{
 	name = "Azgalor"
 }
 
-L:SetOptionLocalization{
-	DoomIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(31347)
-}
-
 ------------------
 --  Archimonde  --
 ------------------
@@ -51,10 +43,6 @@ L = DBM:GetModLocalization("Archimonde")
 
 L:SetGeneralLocalization{
 	name = "Archimonde"
-}
-
-L:SetOptionLocalization{
-	BurstIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(32014)
 }
 
 ----------------

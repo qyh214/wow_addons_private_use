@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Hydross", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200518210032")
 mod:SetCreatureID(21216)
 mod:SetEncounterID(623)
 mod:SetModelID(20162)
@@ -17,8 +17,8 @@ mod:RegisterEventsInCombat(
 
 local warnMark		= mod:NewAnnounce("WarnMark", 3, 38215)
 local warnPhase		= mod:NewAnnounce("WarnPhase", 4)
-local warnTomb		= mod:NewTargetAnnounce(38235, 3)
-local warnSludge	= mod:NewTargetAnnounce(38246, 2)
+local warnTomb		= mod:NewTargetNoFilterAnnounce(38235, 3)
+local warnSludge	= mod:NewTargetNoFilterAnnounce(38246, 2)--Maybe filter it some if spammy?
 
 local specWarnMark	= mod:NewSpecialWarning("SpecWarnMark")
 
@@ -27,7 +27,7 @@ local timerSludge	= mod:NewTargetTimer(24, 38246, nil, nil, nil, 3)
 
 local berserkTimer	= mod:NewBerserkTimer(600)
 
-mod:AddBoolOption("RangeFrame", true)
+mod:AddRangeFrameOption("10")
 
 local markOfH, markOfC = DBM:GetSpellInfo(38215), DBM:GetSpellInfo(38219)
 local damage = {

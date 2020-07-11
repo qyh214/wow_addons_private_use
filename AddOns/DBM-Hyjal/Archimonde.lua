@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Archimonde", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200524145731")
 mod:SetCreatureID(17968)
 mod:SetEncounterID(622)
 mod:SetModelID(20939)
@@ -15,19 +15,19 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 31970 32014"
 )
 
-local warnGrip			= mod:NewTargetAnnounce(31972, 3)
-local warnBurst			= mod:NewTargetAnnounce(32014, 3)
+local warnGrip			= mod:NewTargetNoFilterAnnounce(31972, 3, nil, "RemoveMagic")--Magic on retail, but I think a curse in TBC
+local warnBurst			= mod:NewTargetNoFilterAnnounce(32014, 3)
 local warnFear			= mod:NewSpellAnnounce(31970, 3)
 
 local specWarnBurst		= mod:NewSpecialWarningYou(32014, nil, nil, nil, 3, 2)
 local yellBurst			= mod:NewYell(32014)
 
 local timerFearCD		= mod:NewCDTimer(41, 31970, nil, nil, nil, 2)
---local timerGripCD		= mod:NewCDTimer(6, 31972, nil, "RemoveCurse", nil, 3, nil, DBM_CORE_CURSE_ICON)
+--local timerGripCD		= mod:NewCDTimer(6, 31972, nil, "RemoveMagic", nil, 3, nil, DBM_CORE_L.MAGIC_ICON)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
-mod:AddBoolOption("BurstIcon", true)
+mod:AddSetIconOption("BurstIcon", 32014, true, false, {8})
 
 function mod:BurstTarget(targetname, uId)
 	if not targetname then return end

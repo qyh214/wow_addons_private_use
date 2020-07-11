@@ -1,13 +1,12 @@
 local mod	= DBM:NewMod("Kologarn", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222200840")
+mod:SetRevision("20200530203003")
 mod:SetCreatureID(32930)--, 32933, 32934
 mod:SetEncounterID(1137)
 mod:SetModelID(28638)
 mod:SetUsedIcons(5, 6, 7, 8)
---mod:SetMinSyncRevision(4623)
-mod:SetMinSyncRevision(7)--Could break if someone is running out of date version with higher revision
+mod:SetMinSyncRevision(20191109000000)
 
 mod:RegisterCombat("combat")
 
@@ -23,7 +22,7 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
-local warnFocusedEyebeam		= mod:NewTargetAnnounce(63346, 3)
+local warnFocusedEyebeam		= mod:NewTargetNoFilterAnnounce(63346, 4)
 local warnGrip					= mod:NewTargetAnnounce(64292, 2)
 local warnCrunchArmor			= mod:NewTargetAnnounce(64002, 2)
 
@@ -32,7 +31,7 @@ local specWarnEyebeam			= mod:NewSpecialWarningRun(63346, nil, nil, nil, 4, 2)
 local yellBeam					= mod:NewYell(63346)
 
 local timerCrunch10             = mod:NewTargetTimer(6, 63355)
-local timerNextSmash			= mod:NewCDTimer(20.4, 64003, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerNextSmash			= mod:NewCDTimer(20.4, 64003, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerNextShockwave		= mod:NewCDTimer(15.9, 63982, nil, nil, nil, 2)--15.9-20
 local timerNextEyebeam			= mod:NewCDTimer(18.2, 63346, nil, nil, nil, 3)
 local timerNextGrip				= mod:NewCDTimer(20, 64292, nil, nil, nil, 3)
@@ -40,8 +39,8 @@ local timerRespawnLeftArm		= mod:NewTimer(48, "timerLeftArm", nil, nil, nil, 1)
 local timerRespawnRightArm		= mod:NewTimer(48, "timerRightArm", nil, nil, nil, 1)
 local timerTimeForDisarmed		= mod:NewTimer(10, "achievementDisarmed")	-- 10 HC / 12 nonHC
 
-mod:AddBoolOption("SetIconOnGripTarget", true)
-mod:AddBoolOption("SetIconOnEyebeamTarget", true)
+mod:AddSetIconOption("SetIconOnGripTarget", 64292, true, false, {7, 6, 5})
+mod:AddSetIconOption("SetIconOnEyebeamTarget", 63346, true, false, {8})
 
 mod.vb.disarmActive = false
 local gripTargets = {}

@@ -90,9 +90,9 @@ L:SetOptionLocalization({
 	TimerSpecial			= "Visualizza un Timer per il lancio della prima abilita' speciale",
 	RangeFrame				= "Visualizza Radar di Prossimita'(3mt) per $spell:105269, (10) per $journal:4327",
 	AnnounceFrostTombIcons	= "Elenca in Chat le Icone per i bersagli di $spell:104451 <br/>(Richiede CapoIncursione)",
-	warnFrostTombCast		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.cast:format(104448),
-	SetIconOnFrostTomb		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(104451),
-	SetIconOnFrostflake		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(109325),
+	warnFrostTombCast		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.cast:format(104448),
+	SetIconOnFrostTomb		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(104451),
+	SetIconOnFrostflake		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(109325),
 	SpecialCount			= "Fai Conto alla Rovescia per $spell:105256 o $spell:105465",
 	SetBubbles				= "Disabilita le vignette della chat automaticamente quando e' disponibile $spell:104451 <br/>(Ripristinale alla fine del combattimento)"
 })
@@ -170,7 +170,7 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	SpecWarnTendril			= "Visualizza un messaggio speciale quando non hai $spell:105563",
 	InfoFrame				= "Visualizza Finestra Informazioni per i giocatori che non hanno $spell:105563",
-	SetIconOnGrip			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(105490),
+	SetIconOnGrip			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(105490),
 	ShowShieldInfo			= "Usa la Finestra della Vita dei Boss per chi ha $spell:105479"
 })
 
@@ -189,7 +189,7 @@ L= DBM:GetModLocalization(333)
 
 L:SetOptionLocalization({
 	RangeFrame			= "Visualizza il radar di prossimita' per i giocatori afflitti da<br/>$spell:108649 in Eroico",
-	SetIconOnParasite	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(108649)
+	SetIconOnParasite	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(108649)
 })
 
 L:SetMiscLocalization({

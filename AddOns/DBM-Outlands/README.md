@@ -4,8 +4,8 @@
 <p>Vanilla WoW and Burning Crusade raid mods for <a href="http://wow.curse.com/downloads/wow-addons/details/deadly-boss-mods.aspx">Deadly Boss Mods</a></p>
 <h2 id="w-features"><strong>Features</strong></h2>
 <ul>
-<li>Boss mods for all Vanilla raids</li>
-<li>Boss mods for all Burning Crusade raids</li>
+<li>Boss mods for all Vanilla (Retail) raids</li>
+<li>Boss mods for all Burning Crusade (Retail) raids</li>
 </ul>
 <h2><strong>Looking for Dungeons?</strong></h2>
 <p>Dungeon mods are now all grouped together in <a href="https://wow.curseforge.com/projects/deadly-boss-mods-dbm-dungeons">DBM-Dungeons package</a></p>

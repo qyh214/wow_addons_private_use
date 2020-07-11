@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Jaraxxus", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222200840")
+mod:SetRevision("20200524145648")
 mod:SetCreatureID(34780)
 mod:SetEncounterID(1087)
 mod:SetModelID(29615)
@@ -40,9 +40,9 @@ local SpecWarnFelFireballDispel	= mod:NewSpecialWarningDispel(66532, false, nil,
 local timerCombatStart			= mod:NewCombatTimer(82)--rollplay for first pull
 local timerFlame 				= mod:NewTargetTimer(8, 66197, nil, nil, nil, 3)--There are 8 debuff Ids. Since we detect first to warn, use an 8sec timer to cover duration of trigger spell and damage debuff.
 local timerFlameCD				= mod:NewCDTimer(30, 66197, nil, nil, nil, 3)
-local timerNetherPowerCD		= mod:NewCDTimer(42, 67009, nil, "MagicDispeller", nil, 5, nil, DBM_CORE_MAGIC_ICON)
-local timerFlesh				= mod:NewTargetTimer(12, 66237, nil, "Healer", 2, 5, nil, DBM_CORE_HEALER_ICON)
-local timerFleshCD				= mod:NewCDTimer(23, 66237, nil, "Healer", 2, 5, nil, DBM_CORE_HEALER_ICON)
+local timerNetherPowerCD		= mod:NewCDTimer(42, 67009, nil, "MagicDispeller", nil, 5, nil, DBM_CORE_L.MAGIC_ICON)
+local timerFlesh				= mod:NewTargetTimer(12, 66237, nil, "Healer", 2, 5, nil, DBM_CORE_L.HEALER_ICON)
+local timerFleshCD				= mod:NewCDTimer(23, 66237, nil, "Healer", 2, 5, nil, DBM_CORE_L.HEALER_ICON)
 local timerPortalCD				= mod:NewCDTimer(120, 66269, nil, nil, nil, 1)
 local timerVolcanoCD			= mod:NewCDTimer(120, 66258, nil, nil, nil, 1)
 

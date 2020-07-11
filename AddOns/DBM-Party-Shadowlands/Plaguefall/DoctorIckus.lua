@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2403, "DBM-Party-Shadowlands", 2, 1183)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200412002938")
+mod:SetRevision("20200528135243")
 mod:SetCreatureID(164967)
 mod:SetEncounterID(2384)
 mod:SetZone()
@@ -38,12 +38,12 @@ local yellFocusedGaze				= mod:NewYell(321384)
 local yellFocusedGazeFades			= mod:NewShortFadesYell(321384)
 local specWarnEngulf				= mod:NewSpecialWarningDispel(322174, "RemoveDisease", nil, nil, 1, 2)
 
-local timerSurgingSlamCD			= mod:NewAITimer(13, 321166, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerSurgingSlamCD			= mod:NewAITimer(13, 321166, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)
 --Burning Contagion Abilities
-local timerPestilenceSlamCD			= mod:NewAITimer(13, 321321, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerVirulentExplosionCD		= mod:NewAITimer(13, 321406, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerPestilenceSlamCD			= mod:NewAITimer(13, 321321, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerVirulentExplosionCD		= mod:NewAITimer(13, 321406, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON)
 --Congealed Contagion Abilities
-local timerCongealedSlamCD			= mod:NewAITimer(13, 321285, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerCongealedSlamCD			= mod:NewAITimer(13, 321285, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerFocusedGazeCD			= mod:NewAITimer(20, 321384, nil, nil, nil, 3)
 local timerEngulf					= mod:NewTargetTimer(20, 322174, nil, nil, nil, 3)
 

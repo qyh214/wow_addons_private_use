@@ -158,9 +158,6 @@ if AL then
 	AL["SOUND_OPTIONS"] = "Opzioni del suono"
 	AL["SOUND_VOLUME"] = "Volume"
 	AL["SOUND_VOLUME_DESC"] = "Imposta il livello del volume sonoro"
-	AL["SYNCRONIZATION_COMPLETED"] = "Sincronizzazione completata"
-	AL["SYNCRONIZE"] = "Sincronizzazione database"
-	AL["SYNCRONIZE_DESC"] = "Si analizzeranno PNG rari e tesori già uccisi/raccolti che fanno parte di un'impresa. Completata l'analisi, si rimuoveranno dalla mappa. È impossibile conoscere lo stato dei PNG rari e tesori che non fanno parte di un'impresa, per questo motivo rimarranno sulla mappa quando appariranno."
 	AL["TEST"] = "Avvia il Test"
 	AL["TEST_DESC"] = "Premi il pulsante per mostrare un avviso di esempio. Puoi trascinare e rilasciare il pannello in un'altra posizione di propria preferenza."
 	AL["TOC_NOTES"] = "Scanner Minimappa. Crea un avviso sonoro e grafico riportante una miniatura e un pulsante ogniqualvolta un PNG, tesoro, cassa o evento apparirà sulla minimappa"
@@ -178,10 +175,11 @@ if AL then
 
 	-- CONTINENT names
 	AL["ZONES_CONTINENT_LIST"] = {
-		[9999] = "Class Halls"; --Class Halls
+		[9999] = "Enclavi di Classe"; --Class Halls
 		[9998] = "Isola di Lunacupa"; --Darkmoon Island
-		[9997] = "Dungeons/Scenarios"; --Dungeons/Scenarios
-		[9996] = "Raids"; --Raids
-		[9995] = "Unknown"; --Unknown
+		[9997] = "Spedizioni/Scenari"; --Dungeons/Scenarios
+		[9996] = "Incursioni"; --Raids
+		[9995] = "Sconosciuto"; --Unknown
+		[9994] = "Expedition islands"; --Expedition islands
 	}
 end

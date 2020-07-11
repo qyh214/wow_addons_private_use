@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Saviana", "DBM-ChamberOfAspects", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20200524145648")
 mod:SetCreatureID(39747)
 mod:SetEncounterID(1149)
 mod:SetModelID(31577)
@@ -24,8 +24,8 @@ local specWarnTranq			= mod:NewSpecialWarningDispel(78722, "RemoveEnrage", nil, 
 local timerBeacon			= mod:NewBuffActiveTimer(5, 74453, nil, nil, nil, 3)
 local timerConflag			= mod:NewBuffActiveTimer(5, 74456, nil, nil, nil, 3)
 local timerConflagCD		= mod:NewNextTimer(50, 74452, nil, nil, nil, 3)
-local timerBreath			= mod:NewCDTimer(25, 74403, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerEnrage			= mod:NewBuffActiveTimer(10, 78722, nil, "RemoveEnrage|Tank|Healer", nil, 5, nil, DBM_CORE_ENRAGE_ICON..DBM_CORE_TANK_ICON)
+local timerBreath			= mod:NewCDTimer(25, 74403, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerEnrage			= mod:NewBuffActiveTimer(10, 78722, nil, "RemoveEnrage|Tank|Healer", nil, 5, nil, DBM_CORE_L.ENRAGE_ICON..DBM_CORE_L.TANK_ICON)
 
 mod:AddBoolOption("RangeFrame", true)
 mod:AddBoolOption("beaconIcon", true)

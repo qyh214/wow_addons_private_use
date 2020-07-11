@@ -2,7 +2,7 @@ local mod	= DBM:NewMod("Kal", "DBM-Sunwell")
 local Kal 	= DBM:GetModByName("Kal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200524145731")
 mod:SetCreatureID(24850)
 mod:SetEncounterID(724)
 mod:SetModelID(26628)
@@ -27,7 +27,7 @@ local specWarnBuffet	= mod:NewSpecialWarningStack(45018, nil, 10, nil, nil, 1, 6
 local specWarnWildMagic	= mod:NewSpecialWarning("SpecWarnWildMagic")
 
 local timerNextPortal	= mod:NewNextCountTimer(25, 46021, nil, nil, nil, 5)
-local timerBreathCD		= mod:NewCDTimer(15, 44799, nil, false, nil, 5, nil, DBM_CORE_TANK_ICON)--Tanks?
+local timerBreathCD		= mod:NewCDTimer(15, 44799, nil, false, nil, 5, nil, DBM_CORE_L.TANK_ICON)--Tanks?
 local timerBuffetCD		= mod:NewCDTimer(8, 45018, nil, nil, nil, 2)
 local timerPorted		= mod:NewBuffActiveTimer(60, 46021, nil, nil, nil, 6)
 local timerExhausted	= mod:NewBuffActiveTimer(60, 44867, nil, nil, nil, 6)

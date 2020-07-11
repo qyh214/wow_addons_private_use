@@ -18,10 +18,10 @@
 ## X-DBM-Mod-Category: CATA
 ## X-DBM-Mod-MapID: 669
 ## X-DBM-Mod-Sort: 805
-## X-DBM-Mod-MinCoreRevision: 14002
+## X-DBM-Mod-MinCoreRevision: 20200524142133
 ## X-Curse-Project-ID: 43971
 ## X-WoWI-ID: 21469
-## Version: r206
+## Version: r208
 
 localization.en.lua
 localization.de.lua

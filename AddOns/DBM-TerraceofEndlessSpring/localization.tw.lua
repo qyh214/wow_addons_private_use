@@ -16,7 +16,7 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnGroupOrder		= "提示$spell:118191的隊伍輪班<br/>(目前只支援25人5,2,2,2,戰術)",
 	specWarnYourGroup	= "為$spell:118191顯示特別警告當輪到你的隊伍時(只適用於25人)",
-	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(8, 111850) .. "<br/>(當你有debuff時只顯示其他沒有debuff的玩家)"
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(8, 111850) .. "<br/>(當你有debuff時只顯示其他沒有debuff的玩家)"
 })
 
 ------------
@@ -44,7 +44,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	warnHideOver	= "為$spell:123244結束顯示警告",
 	timerSpecialCD	= "為下一次特別技能冷卻顯示計時器",
-	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(消失時顯示所有玩家其餘時間只有顯示坦)"
+	RangeFrame		= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(消失時顯示所有玩家其餘時間只有顯示坦)"
 })
 
 L:SetMiscLocalization{

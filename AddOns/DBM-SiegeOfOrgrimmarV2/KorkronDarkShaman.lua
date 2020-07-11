@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(856, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814211345")
+mod:SetRevision("20200524145716")
 mod:SetCreatureID(71859, 71858)--haromm, Kardris
 mod:SetEncounterID(1606)
 mod:SetZone()
@@ -54,7 +54,7 @@ local specWarnIronPrison			= mod:NewSpecialWarningPreWarn(144330, nil, 4)--If th
 local yellIronPrisonFades			= mod:NewYell(144330, L.PrisonYell, false)--Off by default since it's an atypical yell (it's not used for avoiding person it's used to get healer attention to person)
 
 --Earthbreaker Haromm
-local timerFroststormStrike			= mod:NewTargetTimer(30, 144215, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerFroststormStrike			= mod:NewTargetTimer(30, 144215, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerToxicMistsCD				= mod:NewCDTimer(32, 144089, nil, false, nil, 3)--Pretty much a next timers unless boss is casting something else
 local timerFoulStreamCD				= mod:NewCDTimer(32.5, 144090, nil, nil, nil, 3)--Pretty much a next timers unless boss is casting something else
 local timerAshenWallCD				= mod:NewCDTimer(32.5, 144070, nil, nil, nil, 3)--Pretty much a next timers unless boss is casting something else
@@ -63,7 +63,7 @@ local timerIronTombCD				= mod:NewCDTimer(31.5, 144328, nil, nil, nil, 3)--Prett
 local timerToxicStormCD				= mod:NewCDTimer(32, 144005, nil, nil, nil, 3)--Pretty much a next timers unless boss is casting something else
 local timerFoulGeyserCD				= mod:NewCDTimer(32.5, 143990, nil, nil, nil, 1, nil, nil, nil, 1, 4)--Pretty much a next timers unless boss is casting something else
 local timerFallingAsh				= mod:NewCastTimer(17, 143973)
-local timerFallingAshCD				= mod:NewCDCountTimer(32.5, 143973, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON, nil, 2, 5)--Pretty much a next timers unless boss is casting something else
+local timerFallingAshCD				= mod:NewCDCountTimer(32.5, 143973, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON, nil, 2, 5)--Pretty much a next timers unless boss is casting something else
 local timerIronPrison				= mod:NewTargetTimer(60, 144330, nil, "Healer")
 local timerIronPrisonCD				= mod:NewCDTimer(31.5, 144330, nil, nil, nil, 5)--Pretty much a next timers unless boss is casting something else
 local timerIronPrisonSelf			= mod:NewBuffFadesTimer(60, 144330)

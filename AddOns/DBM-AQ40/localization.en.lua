@@ -10,7 +10,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetOptionLocalization{
-	SetIconOnMC		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(785)
+	SetIconOnMC		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(785)
 }
 
 ----------------

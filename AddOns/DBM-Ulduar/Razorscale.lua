@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Razorscale", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222200840")
+mod:SetRevision("20200524145648")
 mod:SetCreatureID(33186)
 mod:SetEncounterID(1139)
 mod:SetModelID(28787)
@@ -40,7 +40,7 @@ local timerTurret2					= mod:NewTimer(73, "timerTurret2", 48642, nil, nil, 5)
 local timerTurret3					= mod:NewTimer(93, "timerTurret3", 48642, nil, nil, 5)
 local timerTurret4					= mod:NewTimer(113, "timerTurret4", 48642, nil, nil, 5)
 local timerGrounded                 = mod:NewTimer(45, "timerGrounded", nil, nil, nil, 6)
-local timerFuseArmorCD				= mod:NewCDTimer(12.1, 64771, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerFuseArmorCD				= mod:NewCDTimer(12.1, 64771, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 
 local combattime = 0
 

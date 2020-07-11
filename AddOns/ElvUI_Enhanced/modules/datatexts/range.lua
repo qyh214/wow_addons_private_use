@@ -52,7 +52,7 @@ end
 E.valueColorUpdateFuncs[ValueColorUpdate] = true
 
 --[[
-	DT:RegisterDatatext(name, events, eventFunc, updateFunc, clickFunc, onEnterFunc)
+	DT:RegisterDatatext(name, category, events, eventFunc, updateFunc, clickFunc, onEnterFunc)
 	
 	name - name of the datatext (required)
 	events - must be a table with string values of event names to register 
@@ -61,4 +61,4 @@ E.valueColorUpdateFuncs[ValueColorUpdate] = true
 	click - function to fire when clicking the datatext
 	onEnterFunc - function to fire OnEnter
 ]]
-DT:RegisterDatatext(L['Target Range'], {"PLAYER_TARGET_CHANGED"}, OnEvent, OnUpdate)
+DT:RegisterDatatext(L['Target Range'], 'ElvUI_Enhanced', {"PLAYER_TARGET_CHANGED"}, OnEvent, OnUpdate)

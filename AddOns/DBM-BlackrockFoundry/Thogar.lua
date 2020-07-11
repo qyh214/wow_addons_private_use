@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1147, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222221214")
+mod:SetRevision("20200524145633")
 mod:SetCreatureID(76906)--81315 Crack-Shot, 81197 Raider, 77487 Grom'kar Firemender, 80791 Grom'kar Man-at-Arms, 81318 Iron Gunnery Sergeant, 77560 Obliterator Cannon, 81612 Deforester
 mod:SetEncounterID(1692)
 mod:SetZone()
@@ -47,11 +47,11 @@ local specWarnBurning				= mod:NewSpecialWarningStack(164380, nil, 2)--Mythic
 
 --Operator Thogar
 local timerProtoGrenadeCD			= mod:NewCDTimer(11, 155864, nil, nil, nil, 3)
-local timerEnkindleCD				= mod:NewCDTimer(11.5, 155921, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerTrainCD					= mod:NewNextCountTimer("d15", 176312, nil, nil, nil, 1, nil, DBM_CORE_DEADLY_ICON, nil, 1, 5)
+local timerEnkindleCD				= mod:NewCDTimer(11.5, 155921, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerTrainCD					= mod:NewNextCountTimer("d15", 176312, nil, nil, nil, 1, nil, DBM_CORE_L.DEADLY_ICON, nil, 1, 5)
 --Adds
---local timerCauterizingBoltCD		= mod:NewNextTimer(30, 160140, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
-local timerIronbellowCD				= mod:NewCDTimer(8.5, 163753, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
+--local timerCauterizingBoltCD		= mod:NewNextTimer(30, 160140, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)
+local timerIronbellowCD				= mod:NewCDTimer(8.5, 163753, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)
 local timerDelayedSiegeBomb			= mod:NewNextCountTimer(6, 159481)
 
 local berserkTimer					= mod:NewBerserkTimer(492)
@@ -406,7 +406,7 @@ local function updateInfoFrame()
 			addLine(TrainTable[train]["speciali"], "")
 		end
 	else
-		addLine(DBM_CORE_UNKNOWN, "")
+		addLine(DBM_CORE_L.UNKNOWN, "")
 	end
 	return lines, sortedLines
 end
@@ -538,7 +538,7 @@ end
 
 function mod:GrenadeTarget(targetname, uId)
 	if not targetname then
-		warnProtoGrenade:Show(DBM_CORE_UNKNOWN)
+		warnProtoGrenade:Show(DBM_CORE_L.UNKNOWN)
 		return
 	end
 	if targetname == UnitName("player") then

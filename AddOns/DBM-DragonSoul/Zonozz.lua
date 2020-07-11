@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(324, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222203750")
+mod:SetRevision("20200524145601")
 mod:SetCreatureID(55308)
 mod:SetEncounterID(1294)
 --mod:DisableRegenDetection()--Uncomment in next dbm release
@@ -35,8 +35,8 @@ local yellShadows				= mod:NewYell(103434, nil, false, L.ShadowYell)--Requested 
 local timerVoidofUnmakingCD		= mod:NewNextTimer(90.3, 103571, nil, nil, nil, 5, 103527)
 local timerVoidDiffusionCD		= mod:NewCDTimer(5, 106836, nil, nil, nil, 5)
 local timerFocusedAngerCD		= mod:NewCDTimer(6, 104543, nil, false)--Off by default as it may not be entirely useful information to know, but an option just for heck of it. You know SOMEONE is gonna request it
-local timerPsychicDrainCD		= mod:NewCDTimer(20, 104322, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--Every 20-25 seconds, variates.
-local timerShadowsCD			= mod:NewCDTimer(25, 103434, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON)--Every 25-30, variates
+local timerPsychicDrainCD		= mod:NewCDTimer(20, 104322, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)--Every 20-25 seconds, variates.
+local timerShadowsCD			= mod:NewCDTimer(25, 103434, nil, nil, nil, 3, nil, DBM_CORE_L.MAGIC_ICON)--Every 25-30, variates
 local timerBlackBlood			= mod:NewBuffActiveTimer(30, 104378, nil, nil, nil, 6)
 
 local berserkTimer				= mod:NewBerserkTimer(360)

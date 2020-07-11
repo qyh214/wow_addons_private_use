@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(959, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222221214")
+mod:SetRevision("20200524145633")
 mod:SetCreatureID(77325)--68168
 mod:SetEncounterID(1704)
 mod:SetZone()
@@ -61,23 +61,23 @@ local specWarnFallingDebris			= mod:NewSpecialWarningCount(162585, nil, nil, nil
 
 --Stage One: The Blackrock Forge
 mod:AddTimerLine(SCENARIO_STAGE:format(1))
-local timerDemolitionCD				= mod:NewNextCountTimer(45, 156425, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
-local timerMassiveDemolitionCD		= mod:NewNextCountTimer(6, 156479, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerDemolitionCD				= mod:NewNextCountTimer(45, 156425, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)
+local timerMassiveDemolitionCD		= mod:NewNextCountTimer(6, 156479, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON)
 local timerMarkedforDeathCD			= mod:NewNextCountTimer(15.5, 156096, nil, nil, nil, 3, nil, nil, nil, 3, 4)--Deadly icon? DJ doesn't give it an icon so i won't either for now
 local timerThrowSlagBombsCD			= mod:NewCDCountTimer(24.5, 156030, nil, "Melee", nil, 3, nil, nil, nil, 2, 4)--It's a next timer, but sometimes delayed by Shattering Smash
-local timerShatteringSmashCD		= mod:NewCDCountTimer(44.5, 155992, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON, nil, 1, 5)--power based, can variate a little do to blizzard buggy power code.
-local timerImpalingThrow			= mod:NewCastTimer(5, 156111, nil, nil, nil, nil, nil, DBM_CORE_DEADLY_ICON)--How long marked target has to aim throw at Debris Pile or Siegemaker
+local timerShatteringSmashCD		= mod:NewCDCountTimer(44.5, 155992, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, 1, 5)--power based, can variate a little do to blizzard buggy power code.
+local timerImpalingThrow			= mod:NewCastTimer(5, 156111, nil, nil, nil, nil, nil, DBM_CORE_L.DEADLY_ICON)--How long marked target has to aim throw at Debris Pile or Siegemaker
 --Stage Two: Storage Warehouse
 mod:AddTimerLine(SCENARIO_STAGE:format(2))
 local timerSiegemakerCD				= mod:NewNextCountTimer(50, "ej9571", nil, nil, nil, 1, 156667)
-local timerMassiveExplosion			= mod:NewCastTimer(5, 163008, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerMassiveExplosion			= mod:NewCastTimer(5, 163008, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON)
 --Stage Three: Iron Crucible
 mod:AddTimerLine(SCENARIO_STAGE:format(3))
 local timerSlagEruptionCD			= mod:NewCDCountTimer(32.5, 156928, nil, nil, nil, 2)
 local timerAttachSlagBombsCD		= mod:NewCDCountTimer(25.5, 157000, nil, nil, nil, 3)--26-28. Do to increased cast time vs phase 1 and 2 slag bombs, timer is 1 second longer on CD
 local timerSlagBomb					= mod:NewCastTimer(5, 157015)
 local timerFallingDebris			= mod:NewCastTimer(6, 162585)--Mythic
-local timerFallingDebrisCD			= mod:NewNextCountTimer(40, 162585, nil, nil, nil, 5, nil, DBM_CORE_HEROIC_ICON)--Mythic
+local timerFallingDebrisCD			= mod:NewNextCountTimer(40, 162585, nil, nil, nil, 5, nil, DBM_CORE_L.HEROIC_ICON)--Mythic
 
 mod:AddSetIconOption("SetIconOnMarked", 156096, true)
 mod:AddRangeFrameOption("6/10")
@@ -152,26 +152,26 @@ local function warnMarked(self)
 			if UnitName("raid"..i) == playerName then
 				if mfdFound == 1 then
 					if self.Options.SpecWarn156096you then
-						specWarnMFDPosition:Show(DBM_CORE_LEFT)
+						specWarnMFDPosition:Show(DBM_CORE_L.LEFT)
 					end
 					if self.Options.Yell156096 then
-						yellMFD2:Yell(DBM_CORE_LEFT, playerName)
+						yellMFD2:Yell(DBM_CORE_L.LEFT, playerName)
 					end
 					specWarnMFDPosition:Play("left")--Schedule another 0.7, for total of 1.2 second after "find shelder"
 				elseif mfdFound == 2 then
 					if self.Options.SpecWarn156096you then
-						specWarnMFDPosition:Show(DBM_CORE_RIGHT)
+						specWarnMFDPosition:Show(DBM_CORE_L.RIGHT)
 					end
 					if self.Options.Yell156096 then
-						yellMFD2:Yell(DBM_CORE_RIGHT, playerName)
+						yellMFD2:Yell(DBM_CORE_L.RIGHT, playerName)
 					end
 					specWarnMFDPosition:Play("right")--Schedule another 0.7, for total of 1.2 second after "find shelder"
 				elseif mfdFound == 3 then
 					if self.Options.SpecWarn156096you then
-						specWarnMFDPosition:Show(DBM_CORE_MIDDLE)
+						specWarnMFDPosition:Show(DBM_CORE_L.MIDDLE)
 					end
 					if self.Options.Yell156096 then
-						yellMFD2:Yell(DBM_CORE_MIDDLE, playerName)
+						yellMFD2:Yell(DBM_CORE_L.MIDDLE, playerName)
 					end
 					specWarnMFDPosition:Play("center")--Schedule another 0.7, for total of 1.2 second after "find shelder"
 				end
@@ -209,34 +209,34 @@ local function checkSlag(self)
 		local playerIsMelee = self:IsMeleeDps()
 		if playerIsMelee and ((tempTable[1] == playerName) or (tempTable[2] == playerName)) then
 			if self.Options.SpecWarn157000you then
-				specWarnSlagPosition:Show(DBM_CORE_MIDDLE)
+				specWarnSlagPosition:Show(DBM_CORE_L.MIDDLE)
 			end
 			if self.Options.Yell1570002 then
-				yellSlag2:Yell(DBM_CORE_MIDDLE, playerName)
+				yellSlag2:Yell(DBM_CORE_L.MIDDLE, playerName)
 			end
 		elseif not playerIsMelee and ((tempTable[1] == playerName) or (tempTable[2] == playerName)) then
 			if self.Options.SpecWarn157000you then
-				specWarnSlagPosition:Show(DBM_CORE_BACK)
+				specWarnSlagPosition:Show(DBM_CORE_L.BACK)
 			end
 			if self.Options.Yell1570002 then
-				yellSlag2:Yell(DBM_CORE_BACK, playerName)
+				yellSlag2:Yell(DBM_CORE_L.BACK, playerName)
 			end
 		end
 	else--Just use roster order
 		DBM:Debug("Slag on 2 ranged or 2 melee")
 		if tempTable[1] == playerName then
 			if self.Options.SpecWarn157000you then
-				specWarnSlagPosition:Show(DBM_CORE_MIDDLE)
+				specWarnSlagPosition:Show(DBM_CORE_L.MIDDLE)
 			end
 			if self.Options.Yell1570002 then
-				yellSlag2:Yell(DBM_CORE_MIDDLE, playerName)
+				yellSlag2:Yell(DBM_CORE_L.MIDDLE, playerName)
 			end
 		elseif tempTable[2] == playerName then
 			if self.Options.SpecWarn157000you then
-				specWarnSlagPosition:Show(DBM_CORE_BACK)
+				specWarnSlagPosition:Show(DBM_CORE_L.BACK)
 			end
 			if self.Options.Yell1570002 then
-				yellSlag2:Yell(DBM_CORE_BACK, playerName)
+				yellSlag2:Yell(DBM_CORE_L.BACK, playerName)
 			end
 		end
 	end
@@ -569,7 +569,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		end
 		timerMarkedforDeathCD:Stop()
 		timerMarkedforDeathCD:Start(25.5, 1)
-		warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage:format(2))
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(2))
 		warnPhase:Play("ptwo")
 		--Maybe not needed whole phase, only when balcony adds are up? A way to detect and improve?
 		if self.Options.RangeFrame and not self:IsMelee() then
@@ -602,7 +602,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 			timerMarkedforDeathCD:Start(17, 1)
 		end
 		timerSlagEruptionCD:Start(31.5, 1)
-		warnPhase:Show(DBM_CORE_AUTO_ANNOUNCE_TEXTS.stage:format(3))
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(3))
 		warnPhase:Play("pthree")
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Hide()

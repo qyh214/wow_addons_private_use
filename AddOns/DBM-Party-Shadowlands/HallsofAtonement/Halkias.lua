@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2406, "DBM-Party-Shadowlands", 4, 1185)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200427012409")
+mod:SetRevision("20200528135243")
 mod:SetCreatureID(165408)
 mod:SetEncounterID(2401)
 mod:SetZone()
@@ -30,10 +30,10 @@ local specWarnRefractedSinlight		= mod:NewSpecialWarningDodge(322711, nil, nil, 
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(323001, nil, nil, nil, 1, 8)
 local specWarnSinlightVisions		= mod:NewSpecialWarningDispel(322977, "RemoveMagic", nil, nil, 1, 2)
 
---local timerCrumblingSlamCD			= mod:NewCDTimer(13, 322936, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)--4.7, 13.3, 34, 17, nani?
+--local timerCrumblingSlamCD			= mod:NewCDTimer(13, 322936, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)--4.7, 13.3, 34, 17, nani?
 --local timerHeaveDebrisCD			= mod:NewCDTimer(15.8, 322943, nil, nil, nil, 3)
-local timerRefractedSinlightD		= mod:NewCDTimer(13, 322711, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
-local timerSinlightVisionsCD		= mod:NewCDTimer(13, 322977, nil, nil, nil, 5, nil, DBM_CORE_MAGIC_ICON)
+local timerRefractedSinlightD		= mod:NewCDTimer(13, 322711, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)
+local timerSinlightVisionsCD		= mod:NewCDTimer(13, 322977, nil, nil, nil, 5, nil, DBM_CORE_L.MAGIC_ICON)
 
 function mod:OnCombatStart(delay)
 --	timerCrumblingSlamCD:Start(4.7-delay)

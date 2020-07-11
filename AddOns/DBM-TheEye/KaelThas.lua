@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("KaelThas", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200221204848")
+mod:SetRevision("20200518210032")
 mod:SetCreatureID(19622)
 mod:SetEncounterID(733)
 mod:SetModelID(20023)
@@ -24,20 +24,20 @@ mod:RegisterEventsInCombat(
 
 local warnGaze			= mod:NewAnnounce("WarnGaze", 4, 39414)
 local warnFear			= mod:NewCastAnnounce(44863, 3)
-local warnConflag		= mod:NewTargetAnnounce(37018, 4)
-local warnToy			= mod:NewTargetAnnounce(37027, 2)
+local warnConflag		= mod:NewTargetAnnounce(37018, 4, nil, false)
+local warnToy			= mod:NewTargetAnnounce(37027, 2, nil, false)
 local warnPhase2		= mod:NewPhaseAnnounce(2)
 local warnMobDead		= mod:NewAnnounce("WarnMobDead", 3, nil, false)
 local warnPhase3		= mod:NewPhaseAnnounce(3)
 local warnPhase4		= mod:NewPhaseAnnounce(4)
 local warnDisruption	= mod:NewSpellAnnounce(36834, 3)
-local warnMC			= mod:NewTargetAnnounce(36797, 4)
+local warnMC			= mod:NewTargetNoFilterAnnounce(36797, 4)
 local warnPhoenix		= mod:NewSpellAnnounce(36723, 2)
 local warnFlamestrike	= mod:NewSpellAnnounce(36735, 4)
 local warnEgg			= mod:NewAnnounce("WarnEgg", 4, 36723)
 local warnPyro			= mod:NewCastAnnounce(36819, 4)
 local warnPhase5		= mod:NewPhaseAnnounce(5)
-local warnGravity		= mod:NewSpellAnnounce(35966, 4)
+local warnGravity		= mod:NewSpellAnnounce(35966, 3)
 
 local specWarnGaze		= mod:NewSpecialWarning("SpecWarnGaze", nil, nil, nil, 4, 2)
 local specWarnToy		= mod:NewSpecialWarningYou(37027, nil, nil, nil, 1, 2)
@@ -50,16 +50,17 @@ local timerPhase		= mod:NewTimer(105, "TimerPhase", 28131, nil, nil, 6, nil, nil
 local timerPhase1mob	= mod:NewTimer(30, "TimerPhase1mob", 28131, nil, nil, 1, nil, nil, 1, 4)
 local timerNextGaze		= mod:NewTimer(8.5, "TimerNextGaze", 39414, nil, nil, 3)
 local timerFearCD		= mod:NewCDTimer(31, 39427, nil, nil, nil, 2)
-local timerToy			= mod:NewTargetTimer(60, 37027, nil, nil, nil, 3)
+local timerToy			= mod:NewTargetTimer(60, 37027, nil, false, nil, 3)
 local timerPhoenixCD	= mod:NewCDTimer(45, 36723, nil, nil, nil, 1)
 local timerRebirth		= mod:NewTimer(15, "TimerRebirth", 36723, nil, nil, 1)
 local timerShieldCD		= mod:NewCDTimer(60, 36815, nil, nil, nil, 4)
 local timerGravityCD	= mod:NewNextTimer(92, 35941, nil, nil, nil, 6)
 local timerGravity		= mod:NewBuffActiveTimer(32, 35941, nil, nil, nil, 6)
 
-mod:AddBoolOption("MCIcon", true)
+mod:AddSetIconOption("MCIcon", 36797, true, false, {8, 7, 6})
 mod:AddBoolOption("GazeIcon", false)
-mod:AddBoolOption("RangeFrame", true)
+--mod:AddSetIconOption("GazeIcon", 38280, false, false, {1})--Problem with no auto localized spellID to use
+mod:AddRangeFrameOption(10, 37018)
 mod:AddInfoFrameOption(36815, true)
 
 mod.vb.mcIcon = 8
@@ -231,7 +232,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	elseif msg == L.YellCaper or msg:find(L.YellCaper) then
 		timerPhase1mob:Start(7, L.Capernian)
 		if self.Options.RangeFrame then
-			DBM.RangeCheck:Show()
+			DBM.RangeCheck:Show(10)
 		end
 	elseif msg == L.YellTelo or msg:find(L.YellTelo) then
 		timerPhase1mob:Start(8.4, L.Telonicus)
@@ -243,7 +244,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	elseif msg == L.YellPhase3 or msg:find(L.YellPhase3) then
 		self.vb.phase = 3
 		if self.Options.RangeFrame then
-			DBM.RangeCheck:Show()
+			DBM.RangeCheck:Show(10)
 		end
 		self:Schedule(10, function()
 			timerPhase:Start(173)

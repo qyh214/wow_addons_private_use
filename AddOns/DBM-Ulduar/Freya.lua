@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Freya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222200840")
+mod:SetRevision("20200530203003")
 
 mod:SetCreatureID(32906)
 mod:SetEncounterID(1133)
@@ -40,14 +40,14 @@ local specWarnTremor		= mod:NewSpecialWarningCast(62859, "SpellCaster", nil, 2, 
 local specWarnBeam			= mod:NewSpecialWarningMove(62865, nil, nil, nil, 1, 2)	-- Hard mode
 
 local enrage 				= mod:NewBerserkTimer(600)
-local timerAlliesOfNature	= mod:NewCDTimer(25, 62678, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)--No longer has CD, they spawn instant last set is dead, and not a second sooner, except first set
-local timerSimulKill		= mod:NewTimer(12, "TimerSimulKill", nil, nil, nil, 5, DBM_CORE_DAMAGE_ICON)
+local timerAlliesOfNature	= mod:NewCDTimer(25, 62678, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)--No longer has CD, they spawn instant last set is dead, and not a second sooner, except first set
+local timerSimulKill		= mod:NewTimer(12, "TimerSimulKill", nil, nil, nil, 5, DBM_CORE_L.DAMAGE_ICON)
 local timerTremorCD 		= mod:NewCDTimer(22.9, 62859, nil, nil, nil, 2)--22.9-47.8
 local timerLifebinderCD 	= mod:NewCDTimer(38.2, 62869, nil, nil, nil, 1)
 local timerRootsCD 			= mod:NewCDTimer(29.6, 62859, nil, nil, nil, 3)
 
-mod:AddSetIconOption("SetIconOnFury", 63571, false)
-mod:AddSetIconOption("SetIconOnRoots", 62438, false)
+mod:AddSetIconOption("SetIconOnFury", 63571, false, false, {7, 8})
+mod:AddSetIconOption("SetIconOnRoots", 62438, false, false, {6, 5, 4})
 mod:AddRangeFrameOption(8, 63571)
 
 local adds = {}

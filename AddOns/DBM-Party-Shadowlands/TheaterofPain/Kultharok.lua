@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2389, "DBM-Party-Shadowlands", 6, 1187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200421020000")
+mod:SetRevision("20200528135243")
 mod:SetCreatureID(162309)
 mod:SetEncounterID(2364)
 mod:SetZone()
@@ -33,9 +33,9 @@ local yellHaunt						= mod:NewYell(319626)
 local specWarnGraspingHands			= mod:NewSpecialWarningDodge(319589, nil, nil, nil, 2, 2)
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
-local timerDrawSoulCD				= mod:NewAITimer(13, 319521, nil, nil, nil, 3, nil, DBM_CORE_DAMAGE_ICON)
+local timerDrawSoulCD				= mod:NewAITimer(13, 319521, nil, nil, nil, 3, nil, DBM_CORE_L.DAMAGE_ICON)
 local timerExpelSoulCD				= mod:NewAITimer(15.8, 319390, nil, nil, nil, 3)
-local timerHauntCD					= mod:NewAITimer(13, 319626, nil, nil, nil, 3, nil, DBM_CORE_HEALER_ICON)--DBM_CORE_MAGIC_ICON tooltip shows it dispelable, journal does not
+local timerHauntCD					= mod:NewAITimer(13, 319626, nil, nil, nil, 3, nil, DBM_CORE_L.HEALER_ICON)--DBM_CORE_L.MAGIC_ICON tooltip shows it dispelable, journal does not
 local timerGraspingHandsCD			= mod:NewAITimer(15.8, 319589, nil, nil, nil, 3)
 
 function mod:OnCombatStart(delay)

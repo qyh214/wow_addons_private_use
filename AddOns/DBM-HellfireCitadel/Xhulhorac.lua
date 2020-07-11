@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1447, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222221214")
+mod:SetRevision("20200524145633")
 mod:SetCreatureID(93068)
 mod:SetEncounterID(1800)
 mod:SetZone()
@@ -73,23 +73,23 @@ local specWarnEmpBlackHole			= mod:NewSpecialWarningCount(189779, nil, nil, nil,
 
 --Fire Phase
 ----Boss
-local timerFelStrikeCD				= mod:NewCDTimer(13, 186271, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--15.8-17
+local timerFelStrikeCD				= mod:NewCDTimer(13, 186271, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)--15.8-17
 local timerFelSurgeCD				= mod:NewCDTimer(29, 186407, nil, "-Tank", 2, 3, nil, nil, nil, 1, 3)
 local timerImpCD					= mod:NewNextTimer(25, "ej11694", nil, nil, nil, 1, 112866, nil, nil, 3, 4)
 ----Big Add
-local timerFelBlazeFlurryCD			= mod:NewCDTimer(12.9, 186453, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerFelBlazeFlurryCD			= mod:NewCDTimer(12.9, 186453, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerFelChainsCD				= mod:NewCDTimer(30, 186490, nil, "-Tank", nil, 3)--30-34. Often 34 but it can and will be 30 sometimes.
 --Void Phase
 ----Boss
-local timerVoidStrikeCD				= mod:NewCDTimer(15, 186292, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerVoidStrikeCD				= mod:NewCDTimer(15, 186292, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerVoidSurgeCD				= mod:NewCDTimer(29, 186333, nil, "-Tank", 2, 3, nil, nil, nil, 2, 3)
 local timerVoidsCD					= mod:NewNextTimer(30, "ej11714", nil, "Ranged", nil, 1, 697)
 ----Big Add
-local timerWitheringGazeCD			= mod:NewCDTimer(22, 186783, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
+local timerWitheringGazeCD			= mod:NewCDTimer(22, 186783, nil, "Tank", 2, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerBlackHoleCD				= mod:NewCDCountTimer(29.5, 186546, nil, "-Tank", 2, 5)
-local timerEmpBlackHoleCD			= mod:NewCDCountTimer(29.5, 189779, 186546, "-Tank", 2, 5, nil, DBM_CORE_DEADLY_ICON)
+local timerEmpBlackHoleCD			= mod:NewCDCountTimer(29.5, 189779, 186546, "-Tank", 2, 5, nil, DBM_CORE_L.DEADLY_ICON)
 --End Phase
-local timerOverwhelmingChaosCD		= mod:NewNextCountTimer(10, 187204, nil, nil, 2, 2, nil, DBM_CORE_HEALER_ICON)
+local timerOverwhelmingChaosCD		= mod:NewNextCountTimer(10, 187204, nil, nil, 2, 2, nil, DBM_CORE_L.HEALER_ICON)
 
 --local berserkTimer					= mod:NewBerserkTimer(360)
 
@@ -226,7 +226,7 @@ function mod:SPELL_CAST_START(args)
 					--Not Tanking
 					if self.vb.phase >= 3 and playerTanking == 1 and not DBM:UnitDebuff("player", vanguardTank) then--Vanguard Tank
 						--You're the Vanguard tank and do NOT have aggro for this strike or void debuff, taunt NOW
-						local targetName = UnitName(bossUnitID.."target") or DBM_CORE_UNKNOWN
+						local targetName = UnitName(bossUnitID.."target") or DBM_CORE_L.UNKNOWN
 						if self:AntiSpam(3, targetName) then
 							specWarnPhasing:Show(targetName)
 							specWarnPhasing:Play("tauntboss")
@@ -247,7 +247,7 @@ function mod:SPELL_CAST_START(args)
 					--Not Tanking
 					if self.vb.phase >= 3 and playerTanking == 2 and not DBM:UnitDebuff("player", voidwalkerTank) then--VoidWalker Tank
 						--You're the void walker tank and do NOT have aggro for this strike or fel debuff, taunt NOW
-						local targetName = UnitName(bossUnitID.."target") or DBM_CORE_UNKNOWN
+						local targetName = UnitName(bossUnitID.."target") or DBM_CORE_L.UNKNOWN
 						if self:AntiSpam(3, targetName) then
 							specWarnPhasing:Show(targetName)
 							specWarnPhasing:Play("tauntboss")

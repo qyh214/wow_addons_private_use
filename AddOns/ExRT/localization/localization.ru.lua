@@ -238,6 +238,7 @@ L.RaidCheckHeadFlask = "Настой"
 L.RaidCheckHeadRune = "Руна"
 L.RaidCheckHeadVantus = "Вантийская"
 L.RaidCheckOnlyRL = "Только для лидера рейда"
+L.RaidCheckSortByClass = "Сортировка по классам"
 
 L.marksbarstart = "Очистить"
 L.marksbardel = "Удалить"

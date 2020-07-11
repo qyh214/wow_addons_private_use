@@ -25,7 +25,7 @@ L:SetOptionLocalization{
 	WarnPhase		= "Anunciar cambios de fase",
 	SpecWarnMark	= "Mostrar aviso cuando el daño del perjuicio de las marcas esté por encima del 100%",
 	TimerMark		= "Mostrar temporizador para las siguientes marcas",
-	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(10)
+	RangeFrame		= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format(10)
 }
 
 L:SetMiscLocalization{
@@ -78,8 +78,7 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	WarnPhase		= "Anunciar cambios de fase",
-	TimerPhase		= "Mostrar temporizador para la siguiente fase",
-	DemonIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(37676)
+	TimerPhase		= "Mostrar temporizador para la siguiente fase"
 }
 
 L:SetMiscLocalization{
@@ -135,7 +134,7 @@ L:SetOptionLocalization{
 	WarnMurlocs		= "Mostrar aviso cuando aparezcan múrlocs",
 	SpecWarnMurlocs	= "Mostrar aviso especial cuando aparezcan múrlocs",
 	TimerMurlocs	= "Mostrar temporizador para los siguientes múrlocs",
-	GraveIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(38049)
+	GraveIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(38049)
 }
 
 L:SetMiscLocalization{
@@ -178,7 +177,7 @@ L:SetOptionLocalization{
 	TimerNaga			= "Mostrar temporizador para el siguiente Élite Colmillo Torcido",
 	SpecWarnElemental	= "Mostrar aviso previo especial para cuando aparezca un Elemental corrupto",
 	RangeFrame			= "Mostrar marco de distancia (10 m)",
-	ChargeIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(38280),
+	ChargeIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(38280),
 	AutoChangeLootToFFA	= "Cambiar modo de botín a libre en Fase 2"
 }
 

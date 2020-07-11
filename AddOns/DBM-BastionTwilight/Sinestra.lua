@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(168, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143316")
+mod:SetRevision("20200524145601")
 mod:SetCreatureID(45213)
 mod:SetEncounterID(1082, 1083)--Muiti encounter id. need to verify.
 mod:SetZone()
@@ -42,11 +42,11 @@ local specWarnEggWeaken		= mod:NewSpecialWarningSwitch("ej3238", "Ranged")
 local specWarnIndomitable	= mod:NewSpecialWarningDispel(90045, "RemoveEnrage")
 
 local timerBreathCD			= mod:NewCDTimer(21, 90125, nil, nil, nil, 2)
-local timerOrbs				= mod:NewTimer(28, "TimerOrbs", 92852, nil, nil, 3, DBM_CORE_DEADLY_ICON, nil, 1, 4)
-local timerWrack			= mod:NewNextTimer(61, 89421, nil, "Healer", nil, 5, nil, DBM_CORE_HEALER_ICON)
+local timerOrbs				= mod:NewTimer(28, "TimerOrbs", 92852, nil, nil, 3, DBM_CORE_L.DEADLY_ICON, nil, 1, 4)
+local timerWrack			= mod:NewNextTimer(61, 89421, nil, "Healer", nil, 5, nil, DBM_CORE_L.HEALER_ICON)
 local timerExtinction		= mod:NewCastTimer(16, 86227)
 local timerEggWeakening		= mod:NewTimer(4, "TimerEggWeakening", 61357)
-local timerEggWeaken		= mod:NewTimer(30, "TimerEggWeaken", 61357, nil, nil, 5, DBM_CORE_DAMAGE_ICON)
+local timerEggWeaken		= mod:NewTimer(30, "TimerEggWeaken", 61357, nil, nil, 5, DBM_CORE_L.DAMAGE_ICON)
 local timerDragon			= mod:NewNextTimer(50, "ej3231", nil, nil, nil, 1, 69002)
 local timerRedEssenceCD		= mod:NewNextTimer(22, 87946)--21-23 seconds after red egg dies
 local timerRedEssence		= mod:NewBuffFadesTimer(180, 87946)

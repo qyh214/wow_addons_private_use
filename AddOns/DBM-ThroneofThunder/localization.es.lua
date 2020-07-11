@@ -14,7 +14,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	specWarnWaterMove	= "Mostrar aviso especial para salir de $spell:138470 (avisa antes de $spell:137313 o cuando el perjuicio de $spell:138732 esté a punto de expirar)",
-	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format("8/4")
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format("8/4")
 })
 
 ----------------
@@ -40,8 +40,8 @@ L:SetOptionLocalization({
 	timerDoor				= "Mostrar temporizador para la apertura de la siguiente puerta tribal",
 	timerAdds				= "Mostrar temporizador para los siguientes esbirros",
 	SetIconOnAdds			= "Poner iconos en los esbirros de las gradas",
-	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(5, 136480),
-	SetIconOnCharge			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(136769)
+	RangeFrame				= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(5, 136480),
+	SetIconOnCharge			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(136769)
 })
 
 L:SetMiscLocalization({
@@ -59,12 +59,12 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnPossessed		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(136442),
-	specWarnPossessed	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch:format(136442),
-	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(5),
+	warnPossessed		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.target:format(136442),
+	specWarnPossessed	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.switch:format(136442),
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format(5),
 	AnnounceCooldowns	= "Anunciar (con contador, hasta 3) los lanzamientos de $spell:137166 para el uso de facultades potentes de sanación",
-	SetIconOnBitingCold	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(136992),
-	SetIconOnFrostBite	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(136922)
+	SetIconOnBitingCold	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(136992),
+	SetIconOnFrostBite	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(136922)
 })
 
 ------------
@@ -78,7 +78,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnKickShell			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(134031),
+	warnKickShell			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(134031),
 	specWarnCrystalShell	= "Mostrar aviso especial cuando no tengas el perjuicio de $spell:137633 y estés por encima del 90% de salud",
 	InfoFrame				= "Mostrar marco de información de jugadores no afectados por $spell:137633",
 	ClearIconOnTurtles		= "Quitar iconos de $journal:7129 cuando les afecte $spell:133971",
@@ -100,8 +100,8 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	timerBreaths			= "Mostrar temporizador para el siguiente aliento",
-	SetIconOnCinders		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(139822),
-	SetIconOnTorrentofIce	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(139889),
+	SetIconOnCinders		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(139822),
+	SetIconOnTorrentofIce	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(139889),
 	AnnounceCooldowns		= "Anunciar Desenfreno (con contador) para el uso de facultades potentes de sanación",
 	Never					= "Nunca",
 	Every					= "Todos (consecutivo)",
@@ -132,12 +132,12 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	warnFlock			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.count:format("ej7348"),
-	specWarnFlock		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch:format("ej7348"),
-	specWarnBigBird		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch:format("ej7827"),
-	specWarnBigBirdSoon	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.soon:format("ej7827"),
-	timerFlockCD		= DBM_CORE_AUTO_TIMER_OPTIONS.nextcount:format("ej7348"),
-	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 138923),
+	warnFlock			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.count:format("ej7348"),
+	specWarnFlock		= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.switch:format("ej7348"),
+	specWarnBigBird		= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.switch:format("ej7827"),
+	specWarnBigBirdSoon	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.soon:format("ej7827"),
+	timerFlockCD		= DBM_CORE_L.AUTO_TIMER_OPTIONS.nextcount:format("ej7348"),
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(10, 138923),
 	ShowNestArrows		= "Mostrar flecha para nidos activos",
 	Never				= "Nunca",
 	Northeast			= "Azul - Noreste superior e inferior",
@@ -184,12 +184,12 @@ L:SetOptionLocalization({
 	warnBeam					= "Anunciar objetivos de los haces de luz",
 	warnAddsLeft				= "Anunciar el número de nieblas restantes",
 	specWarnFogRevealed			= "Mostrar aviso especial cuando se revele una niebla",
-	specWarnBlueBeam			= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format(139202),
-	specWarnDisintegrationBeam	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format("ej6882"),
+	specWarnBlueBeam			= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(139202),
+	specWarnDisintegrationBeam	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format("ej6882"),
 	ArrowOnBeam					= "Mostrar flecha durante $journal:6882 para indicar la dirección en que moverse",
-	SetIconRays					= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format("ej6891"),
-	SetIconLifeDrain			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(133795),
-	SetIconOnParasite			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(133597),
+	SetIconRays					= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format("ej6891"),
+	SetIconLifeDrain			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(133795),
+	SetIconOnParasite			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(133597),
 	InfoFrame					= "Mostrar marco de información para las acumulaciones de $spell:133795",
 	SetParticle					= "Cambiar automáticamente la opción gráfica de densidad de partículas a bajo al iniciar el encuentro (se restaurará al terminar el encuentro)"
 })
@@ -209,7 +209,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	warnDebuffCount		= "Mostrar aviso (con contador) de perjuicios de mutación al absorber charcos",
-	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format("5/3"),
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format("5/3"),
 	SetIconOnBigOoze	= "Poner icono en $journal:6969"
 })
 
@@ -224,7 +224,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	warnMatterSwapped	= "Anunciar objetivos intercambiados por $spell:138618",
-	SetIconOnFont		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(138707)
+	SetIconOnFont		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(138707)
 })
 
 L:SetMiscLocalization({
@@ -241,8 +241,8 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnDeadZone			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(137229),
-	SetIconOnLightningStorm	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(136192),
+	warnDeadZone			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(137229),
+	SetIconOnLightningStorm	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(136192),
 	RangeFrame				= "Mostrar marco de distancia (10 m) dinámico (se mostrará si hay demasiados jugadores demasiado juntos)",
 	InfoFrame				= "Mostrar marco de información de jugadores afectados por el perjuicio de $spell:136193"
 })
@@ -264,12 +264,12 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	warnNight	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej7641"),
-	warnDay		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej7645"),
-	warnDusk	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej7633"),
-	timerDayCD	= DBM_CORE_AUTO_TIMER_OPTIONS.next:format("ej7645"),
-	timerDuskCD	= DBM_CORE_AUTO_TIMER_OPTIONS.next:format("ej7633"),
-	RangeFrame	= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(5)
+	warnNight	= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format("ej7641"),
+	warnDay		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format("ej7645"),
+	warnDusk	= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format("ej7633"),
+	timerDayCD	= DBM_CORE_L.AUTO_TIMER_OPTIONS.next:format("ej7645"),
+	timerDuskCD	= DBM_CORE_L.AUTO_TIMER_OPTIONS.next:format("ej7633"),
+	RangeFrame	= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format(5)
 })
 
 L:SetMiscLocalization({
@@ -294,11 +294,11 @@ L:SetOptionLocalization({
 	specWarnIntermissionSoon	= "Mostrar aviso especial previo para los intermedios",
 	warnDiffusionChainSpread	= "Anunciar objetivos de los saltos de $spell:135991",
 	timerConduitCD				= "Mostrar temporizador para el tiempo de reutilización de la primera facultad de conducto",
-	RangeFrame					= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format("8/6"),--For two different spells
+	RangeFrame					= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format("8/6"),--For two different spells
 	StaticShockArrow			= "Mostrar flecha cuando un jugador esté afectado por $spell:135695",
 	OverchargeArrow				= "Mostrar flecha cuando un jugador esté afectado por $spell:136295",
-	SetIconOnOvercharge			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(136295),
-	SetIconOnStaticShock		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(135695)
+	SetIconOnOvercharge			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(136295),
+	SetIconOnStaticShock		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(135695)
 })
 
 L:SetMiscLocalization({
@@ -333,5 +333,5 @@ L:SetGeneralLocalization({
 })
 
 L:SetOptionLocalization({
-	RangeFrame	= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(10)--For 3 different spells
+	RangeFrame	= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format(10)--For 3 different spells
 })

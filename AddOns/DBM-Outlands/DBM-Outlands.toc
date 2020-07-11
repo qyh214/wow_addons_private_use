@@ -16,10 +16,10 @@
 ## X-DBM-Mod-Sort: 1006
 ## X-DBM-Mod-MapID: 530,565,544
 ## X-DBM-Mod-LoadCID: 17711,18728
-## X-DBM-Mod-MinCoreRevision: 12473
+## X-DBM-Mod-MinCoreRevision: 20200524142133
 ## X-Curse-Project-ID: 16442
 ## X-WoWI-ID: 11700
-## Version: r671
+## Version: r673
 
 localization.en.lua
 localization.de.lua

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(325, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222203750")
+mod:SetRevision("20200524145601")
 mod:SetCreatureID(55312)
 mod:SetEncounterID(1295)
 --mod:DisableRegenDetection()--Uncomment in next dbm release
@@ -32,15 +32,15 @@ local specWarnVoidBoltOther	= mod:NewSpecialWarningTarget(104849, "Tank")
 local specWarnManaVoid		= mod:NewSpecialWarningSpell(105530, "ManaUser")
 local specWarnPurple		= mod:NewSpecialWarningSpell(104896, "Tank|Healer")
 
-local timerOozesCD			= mod:NewNextTimer(90, "ej3978", nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
-local timerOozesActive		= mod:NewTimer(7, "timerOozesActive", 16372, nil, nil, 1, DBM_CORE_DAMAGE_ICON) -- varies (7.0~8.5)
-local timerOozesReach		= mod:NewTimer(34.5, "timerOozesReach", 16372, nil, nil, 1, DBM_CORE_DAMAGE_ICON)
+local timerOozesCD			= mod:NewNextTimer(90, "ej3978", nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)
+local timerOozesActive		= mod:NewTimer(7, "timerOozesActive", 16372, nil, nil, 1, DBM_CORE_L.DAMAGE_ICON) -- varies (7.0~8.5)
+local timerOozesReach		= mod:NewTimer(34.5, "timerOozesReach", 16372, nil, nil, 1, DBM_CORE_L.DAMAGE_ICON)
 local timerAcidCD			= mod:NewNextTimer(8.3, 105573, nil, nil, nil, 2)--Green ooze aoe
 local timerSearingCD		= mod:NewNextTimer(6, 105033, nil, nil, nil, 2)--Red ooze aoe
-local timerVoidBoltCD		= mod:NewNextTimer(6, 104849, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerVoidBoltCD		= mod:NewNextTimer(6, 104849, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerVoidBolt			= mod:NewTargetTimer(12, 104849, nil, "Tank|Healer")--Nerfed yet again, its now 12. Good thing dbm timers were already right since i dbm pulls duration from aura heh.
 local timerManaVoid			= mod:NewBuffFadesTimer(4, 105530, nil, "ManaUser")
-local timerDeepCorruption	= mod:NewBuffFadesTimer(25, 105171, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_HEALER_ICON..DBM_CORE_TANK_ICON)
+local timerDeepCorruption	= mod:NewBuffFadesTimer(25, 105171, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.HEALER_ICON..DBM_CORE_L.TANK_ICON)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 

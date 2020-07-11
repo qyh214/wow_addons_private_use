@@ -42,7 +42,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnSingularitySoon		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.soon:format(235059)
+	warnSingularitySoon		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.soon:format(235059)
 })
 
 L:SetMiscLocalization({

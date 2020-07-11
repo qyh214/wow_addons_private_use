@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(196, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190817195516")
+mod:SetRevision("20200610151619")
 mod:SetCreatureID(53494)
 mod:SetEncounterID(1200)
 mod:SetZone()
@@ -38,11 +38,11 @@ local specWarnTormented		= mod:NewSpecialWarningYou(99257, nil, nil, 2, 1, 2)
 local specWarnDecimation	= mod:NewSpecialWarningSpell(99352, "Tank|Healer", nil, 2, 3, 2)
 
 local timerBladeActive		= mod:NewTimer(15, "TimerBladeActive", 99352, nil, nil, 6)
-local timerBladeNext		= mod:NewTimer(30, "TimerBladeNext", 99350, "Tank|Healer", nil, 5, DBM_CORE_TANK_ICON)	-- either Decimation Blade or Inferno Blade
-local timerStrikeCD			= mod:NewTimer(5, "timerStrike", 99353, "Tank|Healer", nil, 5, DBM_CORE_TANK_ICON)--5 or 2.5 sec. Variations are noted but can be auto corrected after first timer since game follows correction.
+local timerBladeNext		= mod:NewTimer(30, "TimerBladeNext", 99350, "Tank|Healer", nil, 5, DBM_CORE_L.TANK_ICON)	-- either Decimation Blade or Inferno Blade
+local timerStrikeCD			= mod:NewTimer(5, "timerStrike", 99353, "Tank|Healer", nil, 5, DBM_CORE_L.TANK_ICON)--5 or 2.5 sec. Variations are noted but can be auto corrected after first timer since game follows correction.
 local timerShardsTorment	= mod:NewNextCountTimer(34, 99259, nil, nil, nil, 5)
 local timerCountdown		= mod:NewBuffFadesTimer(8, 99516, nil, nil, nil, 5)
-local timerCountdownCD		= mod:NewNextTimer(45, 99516, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
+local timerCountdownCD		= mod:NewNextTimer(45, 99516, nil, nil, nil, 3, nil, DBM_CORE_L.HEROIC_ICON)
 local timerVitalFlame		= mod:NewBuffFadesTimer(15, 99263, nil, nil, nil, 5)
 local timerTormented		= mod:NewBuffFadesTimer(40, 99257, nil, nil, nil, 5)
 
@@ -145,7 +145,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetIcon(args.destName, #countdownTargets, 8)
 		end
 		if args:IsPlayer() then
-			specWarnCountdown:Show(DBM_ALLY)
+			specWarnCountdown:Show(DBM_CORE_L.ALLY)
 			specWarnCountdown:Play("gather")
 			yellCountdown:Yell()
 			yellCountdownFades:Countdown(8)

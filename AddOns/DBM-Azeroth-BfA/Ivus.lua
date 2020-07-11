@@ -10,7 +10,7 @@ end
 local mod	= DBM:NewMod(dungeonID, "DBM-Azeroth-BfA", 4, 1028)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200220034831")
+mod:SetRevision("20200602212246")
 mod:SetCreatureID(creatureID)
 --mod:SetEncounterID(2263)
 --mod:DisableESCombatDetection()
@@ -36,11 +36,11 @@ local specWarnShockwave					= mod:NewSpecialWarningDodge(282463, nil, nil, nil, 
 local specWarnGroundSpell				= mod:NewSpecialWarningSpell(strikeId, nil, nil, nil, 3, 2)
 local specWarnGTFO						= mod:NewSpecialWarningGTFO(gtfoId, nil, nil, nil, 1, 8)
 
-local timerBreathCD						= mod:NewCDTimer(71.5, breathId, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)--71-76?
+local timerBreathCD						= mod:NewCDTimer(71.5, breathId, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)--71-76?
 local timerShockwaveCD					= mod:NewCDTimer(23, 282463, nil, nil, nil, 3)--23-25
 local timerGroundSpellCD				= mod:NewCDTimer(71.5, strikeId, nil, nil, nil, 3)--71-76?
 
-function mod:ShockwaveTarget(targetname, uId)
+function mod:ShockwaveTarget(targetname)
 	if not targetname then
 		specWarnShockwave:Show()
 		specWarnShockwave:Play("shockwave")
@@ -58,19 +58,21 @@ function mod:ShockwaveTarget(targetname, uId)
 	end
 end
 
+--[[
 function mod:OnCombatStart(delay, yellTriggered)
 	if yellTriggered then
-		--timerBreathCD:Start(1-delay)
-		--timerShockwaveCD:Start(1-delay)
-		--timerGroundSpellCD:Start(1-delay)
+		timerBreathCD:Start(1-delay)
+		timerShockwaveCD:Start(1-delay)
+		timerGroundSpellCD:Start(1-delay)
 	end
 end
 
 function mod:OnCombatEnd()
---	if self.Options.RangeFrame then
---		DBM.RangeCheck:Hide()
---	end
+	if self.Options.RangeFrame then
+		DBM.RangeCheck:Hide()
+	end
 end
+--]]
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId

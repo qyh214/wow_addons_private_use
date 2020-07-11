@@ -16,7 +16,7 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnGroupOrder		= "Объявлять ротацию для $spell:118191<br/>(Опция расчитана на стратегию для 25-ппл: 5,2,2,2, и т.д.)",
 	specWarnYourGroup	= "Спец-предупреждение, когда ваша группа должна получить<br/>$spell:118191 (только для 25-ппл)",
-	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(8, 111850) .. "<br/>(Показывает всех, если на вас дебафф, иначе только игроков с дебаффом)"
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(8, 111850) .. "<br/>(Показывает всех, если на вас дебафф, иначе только игроков с дебаффом)"
 })
 
 ------------
@@ -44,7 +44,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	warnHideOver	= "Предупреждение о появлении босса после $spell:123244",
 	timerSpecialCD	= "Отсчет времени до следующей спец-способности",
-	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(Показывает всех во время $spell:123244, иначе только танков)"
+	RangeFrame		= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(Показывает всех во время $spell:123244, иначе только танков)"
 })
 
 L:SetMiscLocalization{

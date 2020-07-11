@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2115, "DBM-Party-BfA", 7, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200224182835")
+mod:SetRevision("20200602212246")
 mod:SetCreatureID(129231)
 mod:SetEncounterID(2107)
 mod:SetZone()
@@ -26,16 +26,16 @@ local yellPoropellantBlast			= mod:NewYell(259940)
 local specWarnPoropellantBlastNear	= mod:NewSpecialWarningClose(259940, nil, nil, nil, 1, 2)
 
 local timerAxeriteCatalystCD		= mod:NewCDTimer(13, 259022, nil, nil, nil, 3)
-local timerChemBurnCD				= mod:NewCDTimer(13, 259853, nil, nil, 2, 5, nil, DBM_CORE_HEALER_ICON..DBM_CORE_MAGIC_ICON)
+local timerChemBurnCD				= mod:NewCDTimer(13, 259853, nil, nil, 2, 5, nil, DBM_CORE_L.HEALER_ICON..DBM_CORE_L.MAGIC_ICON)
 --local timerPropellantBlastCD		= mod:NewCDTimer(13, 259940, nil, nil, nil, 3)--Longer pull/more data needed (32.5, 6.0, 36.1)
---local timerGushingCatalystCD		= mod:NewCDTimer(13, 275992, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
+--local timerGushingCatalystCD		= mod:NewCDTimer(13, 275992, nil, nil, nil, 3, nil, DBM_CORE_L.HEROIC_ICON)
 
 --mod:AddRangeFrameOption(5, 194966)
 
 mod.vb.chemBurnCast = 0
 mod.vb.azeriteCataCast = 0
 
-function mod:BlastTarget(targetname, uId)
+function mod:BlastTarget(targetname)
 	if not targetname then return end
 	if targetname == UnitName("player") then
 		specWarnPoropellantBlast:Show()
@@ -91,7 +91,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	end
 end
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, spellId)
 	if spellId == 270028 then
 		self.vb.azeriteCataCast = self.vb.azeriteCataCast + 1
 		warnAxeriteCatalyst:Show()

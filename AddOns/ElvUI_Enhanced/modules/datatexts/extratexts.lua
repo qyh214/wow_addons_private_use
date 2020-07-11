@@ -31,9 +31,9 @@ AB.barDefaults.bar5.position = "BOTTOMRIGHT,ElvUI_Bar1,BOTTOMLEFT,-4,0"
 
 function EDT:ToggleSettings(barnumber)
 	EDT:RegisterDrivers()
-	
+
 	twipe(visibility)
-	
+
 	for k, v in pairs(extrapanel) do
 		-- actionbarName, enabled, showPanel
 		local actionBarName = ('bar%d'):format(k)
@@ -43,12 +43,12 @@ function EDT:ToggleSettings(barnumber)
 			visibility[k] = { showPanel, mover }
 		end
 	end
-	
+
 	if visibility[1][1] then
 		EDT:ResetMover(2)
 		EDT:CheckForMoveUp(visibility[1][2])
 	end
-	
+
 	if visibility[1][1] then
 		if visibility[3][1] then
 			EDT:ResetMover(3)
@@ -77,7 +77,6 @@ end
 
 function EDT:CheckForMoveUp(mover)
 	local point, relativeTo, relativePoint, xOfs, yOfs = mover:GetPoint()
-	
 	if (relativePoint == 'BOTTOM' and yOfs < 26) then
 		EDT:PositionActionBar(mover, point, relativeTo, relativePoint, xOfs, 26)
 	end
@@ -99,7 +98,6 @@ function EDT:RegisterDrivers()
 	for k, v in pairs(extrapanel) do	
 		local panel = _G[('Actionbar%dDataPanel'):format(k)]
 		local showPanel = E.db.datatexts[("actionbar%d"):format(k)]
-		
 		if (panel.db.enabled and showPanel) then
 			RegisterStateDriver(panel, "visibility", panel.db.visibility)
 		else
@@ -113,31 +111,31 @@ function EDT:PositionActionBar(mover, point, relativeTo, relativePoint, xOfs, yO
 	mover:ClearAllPoints()
 	mover:Point(point, relativeTo, relativePoint, xOfs, yOfs)
 	E:SaveMoverPosition(mover.name)
-	
 	mover.parent:ClearAllPoints()
 	mover.parent:SetPoint(relativePoint, mover, 0, 0)
 end
 
 function EDT:PositionDataPanel(panel, index)
 	if not panel then return end
-	
+
 	local actionbar = _G[("ElvUI_Bar%d"):format(index)]
 	local spacer = panel.db.backdrop and 0 or panel.db.buttonspacing
-	
+
 	panel:ClearAllPoints()
 	panel:Point('TOPLEFT', actionbar, 'BOTTOMLEFT', spacer, 0)
 	panel:Point('BOTTOMRIGHT', actionbar, 'BOTTOMRIGHT', -spacer, -PANEL_HEIGHT)
-	
+
 	EDT:RegisterDrivers()
 end
 
 function EDT:GetPanelDatatextName()
-	if menuPanel.numPoints == 1 then
-		return E.db.datatexts.panels[menuPanel:GetName()]
-	else
-		local index = tonumber(match(menuDatatext:GetName(), "%d+"))
-		local pointIndex = DT.PointLocation[index]
-		return E.db.datatexts.panels[menuPanel:GetName()][pointIndex]
+	if menuPanel ~= nil then
+		if menuPanel.numPoints == 1 then
+			return E.db.datatexts.panels[menuPanel:GetName()]
+		else
+			local index = tonumber(match(menuDatatext:GetName(), "%d+"))
+			return E.db.datatexts.panels[menuPanel:GetName()][index]
+		end
 	end
 end
 
@@ -146,11 +144,10 @@ function EDT:ChangeDatatext(name)
 		E.db.datatexts.panels[menuPanel:GetName()] = name
 	else
 		local index = tonumber(match(menuDatatext:GetName(), "%d+"))
-		local pointIndex = DT.PointLocation[index]
-		E.db.datatexts.panels[menuPanel:GetName()][pointIndex] = name
+		E.db.datatexts.panels[menuPanel:GetName()][index] = name
 	end
 
-	DT:LoadDataTexts()	
+	DT:LoadDataTexts()
 end
 
 function EDT:UpdateCheckedMenuOption()
@@ -170,9 +167,9 @@ local enhancedClickMenu = function(self, button)
 	if button == "RightButton" and IsAltKeyDown() and IsControlKeyDown() then
 		menuFrame.point = "BOTTOM"
 		menuFrame.relativePoint = "TOP"
-		
+
 		EDT:UpdateCheckedMenuOption()
-		
+
 		EasyMenu(menu, menuFrame, menuDatatext, 0 , 0, "MENU", 2);			
 	else
 		local data = DT.RegisteredDataTexts[EDT:GetPanelDatatextName()]
@@ -192,22 +189,21 @@ end
 function EDT:HookClickMenuToEmptyDataText()
 	for panelName, panel in pairs(DT.RegisteredPanels) do
 		for i=1, panel.numPoints do
-			local pointIndex = DT.PointLocation[i]
-			local datatext = panel.dataPanels[pointIndex]
+			local datatext = panel.dataPanels[i]
 			local isSet
 			if panel.numPoints == 1 then
 				isSet = E.db.datatexts.panels[panelName]
 			else
 				if E.db.datatexts.panels[panelName] then
-				    isSet = E.db.datatexts.panels[panelName][pointIndex] --20141124
+					isSet = E.db.datatexts.panels[panelName][i]
 				else
-				    isSet = ''
-				end				
+					isSet = ''
+				end
 			end
 			if not isSet or isSet == '' then
 				datatext:SetScript('OnClick', enhancedClickMenu)
 			end
-		end		
+		end
 	end
 end
 
@@ -225,29 +221,29 @@ function EDT:OnInitialize()
 		
 		DT:RegisterPanel(panel, v, 'ANCHOR_TOP', 0, -4)
 	end
-	
+
 	EDT:RegisterDrivers()
-	
+
 	hooksecurefunc(AB,"PositionAndSizeBar",function(self, barName)
 	local barnumber = tonumber(string.match(barName, "%d+"))
 		if extrapanel[barnumber] then
 			EDT:PositionDataPanel(_G[('Actionbar%dDataPanel'):format(barnumber)], barnumber)
 		end
 	end)
-	
+
 	menuFrame = CreateFrame("Frame", "EDTMenuFrame", E.UIParent, "UIDropDownMenuTemplate")
 	menuFrame:SetTemplate("Default")
-	
+
 	-- extend datatext click function
 	for name, data in pairs(DT.RegisteredDataTexts) do
 	 	EDT:ExtendClickFunction(DT.RegisteredDataTexts[name])
 	end
-	
+
 	-- hook function for datatexts that are added later
 	hooksecurefunc(DT, "RegisterDatatext", function(self, name)
 		EDT:ExtendClickFunction(DT.RegisteredDataTexts[name])	
 	end)
-	
+
 	hooksecurefunc(DT, "LoadDataTexts", function()
 		twipe(menu)
 		for name, _ in pairs(DT.RegisteredDataTexts) do
@@ -255,10 +251,10 @@ function EDT:OnInitialize()
 		end
 		tsort(menu, function(a,b) return a.text < b.text end)
 		tinsert(menu, 1, { text = 'None', func = function() EDT:ChangeDatatext('') end, checked = false })
-		
+
 		EDT:HookClickMenuToEmptyDataText()
 	end)
-	
+
 	hooksecurefunc(LO, "SetDataPanelStyle", function()
 		for k, v in pairs(extrapanel) do
 			if E.db.datatexts.panelTransparency then

@@ -35,8 +35,8 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	TwilightBlastArrow		= "Afficher la flèche DBM lorsque $spell:92898 est près de vous",
 	RangeFrame				= "Afficher la fenêtre de portée (10)",
-	BlackoutIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92878),
-	EngulfingIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(86622)
+	BlackoutIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92878),
+	EngulfingIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(86622)
 })
 
 L:SetMiscLocalization({
@@ -72,13 +72,13 @@ L:SetOptionLocalization({
 	SpecWarnSearingWinds	= "Alerte spéciale lorsque vous manquez l'amélioration  $spell:83500 <br/>(~10sec avant le lancement du sort)",
 	timerTransition		= "Affiche le temps pour: Changement de phase",
 	RangeFrame		= "Affiche automatiquement la fenêtre de portée lorsque c'est nécessaire",
-	HeartIceIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(82665),
-	BurningBloodIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(82660),
-	LightningRodIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(83099),
-	GravityCrushIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(84948),
-	FrostBeaconIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92307),
-	StaticOverloadIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92067),
-	GravityCoreIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92075)
+	HeartIceIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(82665),
+	BurningBloodIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(82660),
+	LightningRodIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(83099),
+	GravityCrushIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(84948),
+	FrostBeaconIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92307),
+	StaticOverloadIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92067),
+	GravityCoreIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92075)
 })
 
 ----------------
@@ -98,7 +98,7 @@ L:SetOptionLocalization({
 	CorruptingCrashArrow	= "Afficher la flèche DBM lorsque $spell:93178 est près de vous",
 	InfoFrame			= "Afficher la fenêtre d'info pour le sort $journal:3165",
 	RangeFrame		= "Afficher la fenêtre de portée (5) pour $spell:82235",
-	SetIconOnWorship	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(91317)
+	SetIconOnWorship	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(91317)
 })
 
 ----------------

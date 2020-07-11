@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Illidan", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200221204848")
+mod:SetRevision("20200524145731")
 mod:SetCreatureID(22917)
 mod:SetEncounterID(609)
 mod:SetModelID(21135)
@@ -38,23 +38,24 @@ local warnDemon				= mod:NewAnnounce("WarnDemon", 3 , 40506)
 local warnHuman				= mod:NewAnnounce("WarnHuman", 3 , 97061)
 local warnFlame				= mod:NewTargetAnnounce(40932, 3)
 local warnFlameBurst		= mod:NewSpellAnnounce(41131, 3)
-local warnShadowDemon		= mod:NewTargetAnnounce(41117, 3)
+local warnShadowDemon		= mod:NewTargetNoFilterAnnounce(41117, 3)
 local warnPhase4Soon		= mod:NewPrePhaseAnnounce(4, 3)
 local warnPhase4			= mod:NewPhaseAnnounce(4)
 local warnEnrage			= mod:NewSpellAnnounce(40683, 3)
 local warnCaged				= mod:NewSpellAnnounce(40695, 3)
 
 local specWarnParasite		= mod:NewSpecialWarningYou(41917, nil, nil, nil, 1, 2)
+local yellParasiteFades		= mod:NewShortFadesYell(41917)
 local specWarnBarrage		= mod:NewSpecialWarningMoveAway(40585, nil, nil, nil, 1, 2)
 local specWarnShadowDemon	= mod:NewSpecialWarningSwitch(41117, "Dps", nil, nil, 3, 2)
 local specWarnGTFO			= mod:NewSpecialWarningGTFO(40841, nil, nil, nil, 1, 2)
 
-local timerParasite			= mod:NewTargetTimer(10, 41917, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
-local timerBarrage			= mod:NewTargetTimer(10, 40585, nil, nil, nil, 3)
+local timerParasite			= mod:NewTargetTimer(10, 41917, nil, false, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)
+local timerBarrage			= mod:NewTargetTimer(10, 40585, nil, false, nil, 3)
 local timerNextBarrage		= mod:NewCDTimer(44, 40585, nil, nil, nil, 3)
 --local timerFlame			= mod:NewTargetTimer(60, 40932)
 local timerNextFlameBurst	= mod:NewCDTimer(20, 41131, nil, nil, nil, 3)
-local timerShadowDemon		= mod:NewCDTimer(34, 41117, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
+local timerShadowDemon		= mod:NewCDTimer(34, 41117, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)
 local timerNextHuman		= mod:NewTimer(74, "TimerNextHuman", 97061, nil, nil, 6)
 local timerNextDemon		= mod:NewTimer(60, "TimerNextDemon", 40506, nil, nil, 6)
 local timerEnrage			= mod:NewBuffActiveTimer(10, 40683)
@@ -94,7 +95,7 @@ function mod:OnCombatStart(delay)
 		self:RegisterShortTermEvents(
 			"SPELL_DAMAGE 40841",
 			"SPELL_MISSED 40841",
-			"UNIT_HEALTH_FREQUENT boss1"
+			"UNIT_HEALTH boss1"
 		)
 	end
 end
@@ -113,6 +114,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnParasite:Show()
 			specWarnParasite:Play("targetyou")
+			yellParasiteFades:Countdown(spellId)
 		else
 			warnParasite:Show(args.destName)
 		end
@@ -147,6 +149,9 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 41917 or spellId == 41914 then
 		timerParasite:Stop(args.destName)
+		if args:IsPlayer() then
+			yellParasiteFades:Cancel()
+		end
 		if self.Options.ParasiteIcon then
 			self:SetIcon(args.destName, 0)
 		end
@@ -245,7 +250,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	end
 end
 
-function mod:UNIT_HEALTH_FREQUENT(uId)
+function mod:UNIT_HEALTH(uId)
 	local cid = self:GetUnitCreatureId(uId)
 	if not self.vb.warned_preP2 and cid == 22917 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.75 then
 		self.vb.warned_preP2 = true

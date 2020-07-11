@@ -26,9 +26,9 @@ L:SetOptionLocalization({
 	timerNefAblity				= "Отсчет времени восстановления баффа (героический режим)",
 	SpecWarnActivated			= "Спец-предупреждение при активации нового босса",
 	specWarnGenerator			= "Спец-предупреждение, когда босс стоит в $spell:91557",
-	AcquiringTargetIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79501),
-	ConductorIcon				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79888),
-	ShadowConductorIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92053),
+	AcquiringTargetIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79501),
+	ConductorIcon				= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79888),
+	ShadowConductorIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92053),
 	SetIconOnActivated			= "Устанавливать метку на появившегося босса"
 })
 
@@ -63,7 +63,7 @@ L = DBM:GetModLocalization(171)
 
 L:SetOptionLocalization({
 	InfoFrame				= "Показывать информационное окно для уровня звуков",
-	TrackingIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(78092)
+	TrackingIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(78092)
 })
 
 L:SetMiscLocalization({
@@ -78,7 +78,7 @@ L = DBM:GetModLocalization(172)
 
 L:SetOptionLocalization({
 	RangeFrame		= "Показывать окно проверки дистанции (6м)",
-	SetIconOnSlime	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(82935),
+	SetIconOnSlime	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(82935),
 	InfoFrame		= "Показывать информационное окно со здоровьем (<10к хп)"
 })
 
@@ -104,9 +104,9 @@ L:SetOptionLocalization({
 	TimerPhase			= "Показывать таймер до следующей фазы",
 	RangeFrame			= "В ходе синей фазы, показывать окно проверки дистанции (6м)",
 	SetTextures			= "Автоматически отключить \"Проецирование текстур\" в темной фазе<br/>(включается обратно при выходе из фазы)",
-	FlashFreezeIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92979),
-	BitingChillIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(77760),
-	ConsumingFlamesIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(77786)
+	FlashFreezeIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92979),
+	BitingChillIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(77760),
+	ConsumingFlamesIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(77786)
 })
 
 L:SetMiscLocalization({
@@ -153,7 +153,7 @@ L:SetOptionLocalization({
 	NefBreathTimer		= "Отсчет времени до восстановления $spell:94124 Нефариана",
 	InfoFrame			= "Показывать информационное окно для Электрического заряда Ониксии",
 	SetWater			= "Автоматически отключать настройку Брызги воды<br/>(Включается обратно при выходе из боя)",
-	SetIconOnCinder		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79339),
+	SetIconOnCinder		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79339),
 	RangeFrame			= "Окно проверки дистанции (10м) для $spell:79339<br/>(Если на вас дебафф - показывает всех, иначе только игроков с метками)"
 })
 

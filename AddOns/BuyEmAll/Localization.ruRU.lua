@@ -1,4 +1,4 @@
-﻿-- Thanks to OUGHT!
+-- Thanks to OUGHT!
 
 if GetLocale() == "ruRU" then
 	BUYEMALL_LOCALS = {

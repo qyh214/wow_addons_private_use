@@ -9,8 +9,8 @@ mod:SetZone()
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_AURA_APPLIED"
+	"SPELL_CAST_START 32637",
+	"SPELL_AURA_APPLIED 32686"
 )
 
 local warnCharge			= mod:NewSpellAnnounce(32637, 3)
@@ -20,7 +20,7 @@ local timerChargeCD			= mod:NewCDTimer(42, 32637, nil, nil, nil, 3)
 local timerQuakeCD			= mod:NewCDTimer(52, 32686, nil, nil, nil, 2)
 local timerQuake			= mod:NewBuffActiveTimer(8, 32686, nil, nil, nil, 2)
 
-mod:AddBoolOption("RangeFrame", true)
+mod:AddRangeFrameOption("10")
 
 function mod:OnCombatStart(delay)
 	if self.Options.RangeFrame then

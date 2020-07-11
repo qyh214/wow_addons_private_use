@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(817, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010000")
+mod:SetRevision("20200524145716")
 mod:SetCreatureID(68078, 68079, 68080, 68081)--Ro'shak 68079, Quet'zal 68080, Dam'ren 68081, Iron Qon 68078
 mod:SetEncounterID(1559)
 mod:SetMainBossID(68078)
@@ -262,27 +262,27 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnMoltenInferno:Show()
 	--Dead zone IDs, each dead zone has two shields and two openings. Each spellid identifies those openings.
 	elseif spellId == 137226 then--Front, Right Shielded
-		warnDeadZone:Show(args.spellName, DBM_CORE_FRONT, DBM_CORE_RIGHT)
+		warnDeadZone:Show(args.spellName, DBM_CORE_L.FRONT, DBM_CORE_L.RIGHT)
 		timerDeadZoneCD:Start()
 		--Attack left or Behind (maybe add special warning that says where you can attack, for dps?)
 	elseif spellId == 137227 then--Left, Right Shielded
-		warnDeadZone:Show(args.spellName, DBM_CORE_LEFT, DBM_CORE_RIGHT)
+		warnDeadZone:Show(args.spellName, DBM_CORE_L.LEFT, DBM_CORE_L.RIGHT)
 		timerDeadZoneCD:Start()
 		--Attack Front or Behind
 	elseif spellId == 137228 then--Left, Front Shielded
-		warnDeadZone:Show(args.spellName, DBM_CORE_LEFT, DBM_CORE_FRONT)
+		warnDeadZone:Show(args.spellName, DBM_CORE_L.LEFT, DBM_CORE_L.FRONT)
 		timerDeadZoneCD:Start()
 		--Attack Right or Behind
 	elseif spellId == 137229 then--Back, Front Shielded
-		warnDeadZone:Show(args.spellName, DBM_CORE_BACK, DBM_CORE_FRONT)
+		warnDeadZone:Show(args.spellName, DBM_CORE_L.BACK, DBM_CORE_L.FRONT)
 		timerDeadZoneCD:Start()
 		--Attack left or Right
 	elseif spellId == 137230 then--Back, Left Shielded
-		warnDeadZone:Show(args.spellName, DBM_CORE_BACK, DBM_CORE_LEFT)
+		warnDeadZone:Show(args.spellName, DBM_CORE_L.BACK, DBM_CORE_L.LEFT)
 		timerDeadZoneCD:Start()
 		--Attack Front or Right
 	elseif spellId == 137231 then--Back, Right Shielded
-		warnDeadZone:Show(args.spellName, DBM_CORE_BACK, DBM_CORE_RIGHT)
+		warnDeadZone:Show(args.spellName, DBM_CORE_L.BACK, DBM_CORE_L.RIGHT)
 		timerDeadZoneCD:Start()
 		--Attack Front or Left
 	end

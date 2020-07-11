@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod("XT002", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20200530203003")
 mod:SetCreatureID(33293)
 mod:SetEncounterID(1142)
 mod:SetModelID(28611)
-mod:SetUsedIcons(7, 8)
+mod:SetUsedIcons(1, 2)
 
 mod:RegisterCombat("combat")
 
@@ -19,6 +19,7 @@ mod:RegisterEventsInCombat(
 
 --TODO, figure out TIMEwalker CD for tantrums
 --TODO, bomb CD timers?
+--TODO, correct timers on heart phases?
 local warnLightBomb					= mod:NewTargetAnnounce(65121, 3)
 local warnGravityBomb				= mod:NewTargetAnnounce(64234, 3)
 
@@ -29,15 +30,15 @@ local yellGravityBomb				= mod:NewYell(64234)
 local specWarnConsumption			= mod:NewSpecialWarningMove(64206, nil, nil, nil, 1, 2)--Hard mode void zone dropped by Gravity Bomb
 
 local enrageTimer					= mod:NewBerserkTimer(600)
-local timerTympanicTantrum			= mod:NewBuffActiveTimer(8, 62776, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
-local timerTympanicTantrumCD		= mod:NewCDTimer(62, 62776, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
-local timerHeart					= mod:NewCastTimer(30, 63849, nil, nil, nil, 6, nil, DBM_CORE_DAMAGE_ICON)
+local timerTympanicTantrum			= mod:NewBuffActiveTimer(8, 62776, nil, nil, nil, 5, nil, DBM_CORE_L.HEALER_ICON)
+local timerTympanicTantrumCD		= mod:NewCDTimer(62, 62776, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)
+local timerHeart					= mod:NewCastTimer(30, 63849, nil, nil, nil, 6, nil, DBM_CORE_L.DAMAGE_ICON)
 local timerLightBomb				= mod:NewTargetTimer(9, 65121, nil, nil, nil, 3)
 local timerGravityBomb				= mod:NewTargetTimer(9, 64234, nil, nil, nil, 3)
 local timerAchieve					= mod:NewAchievementTimer(205, 12329)--2937
 
-mod:AddBoolOption("SetIconOnLightBombTarget", true)
-mod:AddBoolOption("SetIconOnGravityBombTarget", true)
+mod:AddSetIconOption("SetIconOnLightBombTarget", 65121, true, true, {1})
+mod:AddSetIconOption("SetIconOnGravityBombTarget", 64234, true, true, {2})
 
 function mod:OnCombatStart(delay)
 	enrageTimer:Start(-delay)
@@ -61,7 +62,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellLightBomb:Yell()
 		end
 		if self.Options.SetIconOnLightBombTarget then
-			self:SetIcon(args.destName, 7, 9)
+			self:SetIcon(args.destName, 1)
 		end
 		warnLightBomb:Show(args.destName)
 		timerLightBomb:Start(args.destName)
@@ -72,7 +73,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellGravityBomb:Yell()
 		end
 		if self.Options.SetIconOnGravityBombTarget then
-			self:SetIcon(args.destName, 8, 9)
+			self:SetIcon(args.destName, 2)
 		end
 		warnGravityBomb:Show(args.destName)
 		timerGravityBomb:Start(args.destName)
@@ -86,7 +87,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.SetIconOnLightBombTarget then
 			self:SetIcon(args.destName, 0)
 		end
-	elseif args:IsSpellID(63024, 64234) then		-- Gravity Bomb
+	elseif args:IsSpellID(63024, 64234) then	-- Gravity Bomb
 		if self.Options.SetIconOnGravityBombTarget then
 			self:SetIcon(args.destName, 0)
 		end

@@ -36,7 +36,7 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	WarnPhase			= "Verkünde Phasenwechsel",
 	specWarnBarrierNow	= "Spezialwarnung, wenn von dir erwartet wird $spell:115817 zu benutzen (nur bei Schlachtzugsbrowserkämpfen)",
-	RangeFrame	= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format("6") .. " während Arkanphase"
+	RangeFrame	= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format("6") .. " während Arkanphase"
 })
 
 L:SetMiscLocalization({

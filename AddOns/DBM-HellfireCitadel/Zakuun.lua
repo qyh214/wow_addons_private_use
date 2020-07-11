@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1391, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222221214")
+mod:SetRevision("20200524145633")
 mod:SetCreatureID(89890)
 mod:SetEncounterID(1777)
 mod:SetZone()
@@ -48,12 +48,12 @@ local yellSeedsofDestruction			= mod:NewYell(181508)
 
 --Armed
 local timerRumblingFissureCD			= mod:NewNextTimer(39, 179582, 161600, nil, nil, 5)
-local timerBefouledCD					= mod:NewNextTimer(38, 179711, nil, nil, nil, 3, nil, DBM_CORE_HEALER_ICON)
-local timerSoulCleaveCD					= mod:NewNextTimer(40, 179406, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerBefouledCD					= mod:NewNextTimer(38, 179711, nil, nil, nil, 3, nil, DBM_CORE_L.HEALER_ICON)
+local timerSoulCleaveCD					= mod:NewNextTimer(40, 179406, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerCavitationCD					= mod:NewNextTimer(40, 181461, nil, nil, nil, 2)
 --Disarmed
 local timerDisarmCD						= mod:NewNextTimer(85.8, 179667, nil, nil, nil, 6, nil, nil, nil, 1, 4)
-local timerSeedsofDestructionCD			= mod:NewNextCountTimer(14.5, 181508, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON, nil, 3, 4)--14.5-16
+local timerSeedsofDestructionCD			= mod:NewNextCountTimer(14.5, 181508, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON, nil, 3, 4)--14.5-16
 
 --local berserkTimer					= mod:NewBerserkTimer(360)
 
@@ -102,7 +102,7 @@ local iconedAssignments = {RAID_TARGET_1, RAID_TARGET_2, RAID_TARGET_3, RAID_TAR
 local iconedVoiceAssignments = {"mm1", "mm2", "mm3", "mm4", "mm5"}
 local numberedAssignments = {1, 2, 3, 4, 5}
 local numberedVoiceAssignments = {"\\count\\1", "\\count\\2", "\\count\\3", "\\count\\4", "\\count\\5"}
-local DirectionLineAssignments = {DBM_CORE_LEFT, DBM_CORE_MIDDLE..DBM_CORE_LEFT, DBM_CORE_MIDDLE, DBM_CORE_MIDDLE..DBM_CORE_RIGHT, DBM_CORE_RIGHT}
+local DirectionLineAssignments = {DBM_CORE_L.LEFT, DBM_CORE_L.MIDDLE..DBM_CORE_L.LEFT, DBM_CORE_L.MIDDLE, DBM_CORE_L.MIDDLE..DBM_CORE_L.RIGHT, DBM_CORE_L.RIGHT}
 local DirectionVoiceAssignments = {"left", "centerleft", "center", "centerright", "right"}
 local function warnSeeds(self)
 	--Sort alphabetical to match bigwigs, and since combat log order may diff person to person

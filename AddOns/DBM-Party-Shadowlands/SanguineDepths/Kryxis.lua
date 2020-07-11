@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2388, "DBM-Party-Shadowlands", 8, 1189)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200425190512")
+mod:SetRevision("20200528135243")
 mod:SetCreatureID(162100)
 mod:SetEncounterID(2360)
 mod:SetZone()
@@ -32,8 +32,8 @@ local yellJuggernautRushFades		= mod:NewShortFadesYell(319713)
 local specWarnJuggernautRushSoak	= mod:NewSpecialWarningMoveTo(319713, nil, nil, nil, 1, 2)
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
-local timerViciousHeadbuttCD		= mod:NewAITimer(13, 319650, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerHungeringDrainCD			= mod:NewAITimer(15.8, 319654, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerViciousHeadbuttCD		= mod:NewAITimer(13, 319650, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerHungeringDrainCD			= mod:NewAITimer(15.8, 319654, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)
 local timerSeveringSmashCD			= mod:NewAITimer(15.8, 319685, nil, nil, nil, 6)
 local timerJuggernautRushCD			= mod:NewAITimer(15.8, 319713, nil, nil, nil, 3)
 
@@ -58,8 +58,8 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 319654 then
 		timerHungeringDrainCD:Start()
 		self.vb.interruptCount = self.vb.interruptCount + 1
-		local count = self.vb.interruptCount
 		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
+			local count = self.vb.interruptCount
 			specWarnHungeringDrain:Show(args.sourceName, count)
 			if count == 1 then
 				specWarnHungeringDrain:Play("kick1r")

@@ -16,7 +16,7 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnGroupOrder		= "$spell:118191 파티 순서 알림 보기(25인 전용)<br/>참고: 1파-5번/2파-2번/3파-2번/4파-2번, 그 후 1/2/2/2 순서대로 알립니다.",
 	specWarnYourGroup	= "$spell:118191를 받을 차례가 된 경우 특수 경고 보기(25인 전용)",
-	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(8, 111850) .. "<br/>(대상이 된 경우 모든 공격대원을 보임, 그 외에는 대상자만 보임)"
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(8, 111850) .. "<br/>(대상이 된 경우 모든 공격대원을 보임, 그 외에는 대상자만 보임)"
 })
 
 ------------
@@ -44,7 +44,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	warnHideOver	= "$spell:123244 종료 알림 보기",
 	timerSpecialCD	= "$spell:123244 또는 $spell:123461 대기시간 바 보기",
-	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121).."<br/>(숨기 중일때는 모든 공격대원 보임, 그 외에는 방어전담만 보임)"
+	RangeFrame		= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(3, 123121).."<br/>(숨기 중일때는 모든 공격대원 보임, 그 외에는 방어전담만 보임)"
 })
 
 L:SetMiscLocalization{

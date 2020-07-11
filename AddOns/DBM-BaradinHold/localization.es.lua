@@ -7,7 +7,7 @@ local L
 L= DBM:GetModLocalization(139)
 
 L:SetOptionLocalization({
-	SetIconOnConsuming		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(88954)
+	SetIconOnConsuming		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(88954)
 })
 
 ---------------

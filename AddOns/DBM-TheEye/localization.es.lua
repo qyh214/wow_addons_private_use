@@ -57,8 +57,7 @@ L:SetOptionLocalization{
 	WarnPriest		= "Mostrar aviso cuando aparezcan los Sacerdotes Solarium y la Gran astromante Solarian",
 	TimerSplit		= "Mostrar temporizador para la separación de banda",
 	TimerAgent		= "Mostrar temporizador para los siguientes Agentes Solarium",
-	TimerPriest		= "Mostrar temporizador para cuando vuelva a aparecer la Gran astromante Solarian con los Sacerdotes Solarium",
-	WrathIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(42783)
+	TimerPriest		= "Mostrar temporizador para cuando vuelva a aparecer la Gran astromante Solarian con los Sacerdotes Solarium"
 }
 
 L:SetMiscLocalization{
@@ -101,9 +100,7 @@ L:SetOptionLocalization{
 	TimerPhase1mob	= "Mostrar temporizador para cuando se active cada jefe de Fase 1",
 	TimerNextGaze	= "Show timer for Thaladred's Gaze target changes",
 	TimerRebirth	= "Mostrar temporizador para el renacimiento de los Huevos de fénix",
-	GazeIcon		= "Poner icono en el objetivo de la Mirada de Thaladred",
-	MCIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(36797),
-	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 37018)
+	GazeIcon		= "Poner icono en el objetivo de la Mirada de Thaladred"
 }
 
 L:SetMiscLocalization{

@@ -90,9 +90,9 @@ L:SetOptionLocalization({
 	TimerSpecial			= "Отсчет времени до первой особой способности",
 	RangeFrame				= "Показывать окно проверки дистанции: (3м) для $spell:105269 и<br/>(10м) для $journal:4327",
 	AnnounceFrostTombIcons	= "Дублировать рейдовые иконки на целях $spell:104451 в рейд-чат<br/>(Необходимы права лидера или помощника)",
-	warnFrostTombCast		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.cast:format(104448),
-	SetIconOnFrostTomb		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(104451),
-	SetIconOnFrostflake		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(109325),
+	warnFrostTombCast		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.cast:format(104448),
+	SetIconOnFrostTomb		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(104451),
+	SetIconOnFrostflake		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(109325),
 	SpecialCount			= "Звуковой отсчет для $spell:105256 или $spell:105465",
 	SetBubbles				= "Автоматически отключать сообщения в облачках когда $spell:104451 доступен<br/>(возвращает их в исходное после боя)"
 })
@@ -167,10 +167,10 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnSealArmor			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.cast:format(105847),
+	warnSealArmor			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.cast:format(105847),
 	SpecWarnTendril			= "Спец-предупреждение, когда на вас нет дебаффа $spell:109454",
 	InfoFrame				= "Показывать информационное окно для игроков без $spell:109454",
-	SetIconOnGrip			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(109459),
+	SetIconOnGrip			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(109459),
 	ShowShieldInfo			= "Показывать полосы здоровья для исцеления $spell:105479"
 })
 
@@ -189,7 +189,7 @@ L= DBM:GetModLocalization(333)
 
 L:SetOptionLocalization({
 	RangeFrame			= "Динамическое окно проверки дистанции используя статус дебафа<br/>$spell:108649 на героическом уровне сложности",
-	SetIconOnParasite	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(108649)
+	SetIconOnParasite	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(108649)
 })
 
 L:SetMiscLocalization({

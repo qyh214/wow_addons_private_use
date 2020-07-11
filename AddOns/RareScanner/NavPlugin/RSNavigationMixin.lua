@@ -68,11 +68,12 @@ function RSNavigationMixin:AddNext(vignetteInfo)
 	-- If its not locking then we have to keep moving the index to the last position
 	if (not private.db.display.navigationLockEntity) then
 		currentIndex = table.getn(navigationCache)
-	end
-	
+		
+		-- Refresh waypoint
+		RareScanner:AddTomtomWaypointFromVignette(vignetteInfo)
 	-- If the navigation cache only contains one item, adds Tomtom waypoint
-	if (table.getn(navigationCache) == 1) then
-		RareScanner:AddTomtomWaypoint(vignetteInfo)
+	elseif (table.getn(navigationCache) == 1) then
+		RareScanner:AddTomtomWaypointFromVignette(vignetteInfo)
 	end
 end
 
@@ -100,7 +101,7 @@ function RSNavigationMixin:Navigate()
 	self:GetParent():CheckNotificationCache(self:GetParent(), vignetteInfo, true)
 	
 	-- Adds Tomtom waypoint
-    RareScanner:AddTomtomWaypoint(vignetteInfo)
+    RareScanner:AddTomtomWaypointFromVignette(vignetteInfo)
 end
 
 function RSNavigationMixin:Reset()

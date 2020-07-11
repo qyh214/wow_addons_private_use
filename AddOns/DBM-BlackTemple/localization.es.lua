@@ -11,7 +11,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetOptionLocalization{
-	RangeFrame	= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(8)
+	RangeFrame	= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format(8)
 }
 
 L:SetMiscLocalization{
@@ -75,7 +75,7 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	TimerVengefulSpirit		= "Mostrar temporizador para la duración de la forma de fantasma",
-	CrushIcon				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(40243)
+	CrushIcon				= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(40243)
 }
 
 ----------------------------

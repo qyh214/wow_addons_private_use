@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Emalon", "DBM-VoA")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20200524145648")
 mod:SetCreatureID(33993)
 mod:SetEncounterID(1127)
 mod:SetModelID(27108)
@@ -22,8 +22,8 @@ local specWarnNova			= mod:NewSpecialWarningRun(65279, nil, nil, nil, 4, 2)
 
 local timerNova				= mod:NewCastTimer(65279, nil, nil, nil, 2)
 local timerNovaCD			= mod:NewCDTimer(45, 65279, nil, nil, nil, 2)--Varies, 45-60seconds in between nova's
-local timerOvercharge		= mod:NewNextTimer(45, 64218, nil, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON)
-local timerMobOvercharge	= mod:NewTimer(20, "timerMobOvercharge", 64217, nil, nil, 5, DBM_CORE_DAMAGE_ICON)
+local timerOvercharge		= mod:NewNextTimer(45, 64218, nil, nil, nil, 5, nil, DBM_CORE_L.DAMAGE_ICON)
+local timerMobOvercharge	= mod:NewTimer(20, "timerMobOvercharge", 64217, nil, nil, 5, DBM_CORE_L.DAMAGE_ICON)
 
 local timerEmalonEnrage		= mod:NewTimer(360, "EmalonEnrage", 26662)
 

@@ -25,9 +25,9 @@ L:SetOptionLocalization({
 	timerNefAblity				= "Mostrar temporizador para las mejoras de lord Victor Nefarius (dificultad heroica)",
 	SpecWarnActivated			= "Mostrar aviso especial cuando se active un jefe",
 	specWarnGenerator			= "Mostrar aviso especial cuando un jefe obtenga $spell:79629",
-	AcquiringTargetIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79501),
-	ConductorIcon				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79888),
-	ShadowConductorIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92053),
+	AcquiringTargetIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79501),
+	ConductorIcon				= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79888),
+	ShadowConductorIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92053),
 	SetIconOnActivated			= "Poner icono en el último jefe activado"
 })
 
@@ -62,7 +62,7 @@ L = DBM:GetModLocalization(171)
 
 L:SetOptionLocalization({
 	InfoFrame				= "Mostrar marco de información para $journal:3072",
-	TrackingIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(78092)
+	TrackingIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(78092)
 })
 
 L:SetMiscLocalization({
@@ -77,7 +77,7 @@ L = DBM:GetModLocalization(172)
 
 L:SetOptionLocalization({
 	RangeFrame		= "Mostrar marco de distancia (6 m)",
-	SetIconOnSlime	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(82935),
+	SetIconOnSlime	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(82935),
 	InfoFrame		= "Mostrar marco de información de salud (por debajo de 10mil)"
 })
 
@@ -103,9 +103,9 @@ L:SetOptionLocalization({
 	TimerPhase			= "Mostrar temporizador para la siguiente fase",
 	RangeFrame			= "Mostrar marco de distancia (6 m) durante la fase azul",
 	SetTextures			= "Desactivar automáticamente la opción gráfica de texturas proyectadas durante la fase oscura (se reactivará automáticamente al cambiar de fase)",
-	FlashFreezeIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(77699),
-	BitingChillIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(77760),
-	ConsumingFlamesIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(77786)
+	FlashFreezeIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(77699),
+	BitingChillIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(77760),
+	ConsumingFlamesIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(77786)
 })
 
 L:SetMiscLocalization({
@@ -152,7 +152,7 @@ L:SetOptionLocalization({
 	NefBreathTimer			= "Mostrar temporizador para el tiempo de reutilización de $spell:77826 de Nefarian",
 	InfoFrame				= "Mostrar marco de información para $journal:3284",
 	SetWater				= "Desactivar automáticamente la opción de cámara de colisión con el agua al iniciar el encuentro (se reactivará automáticamente al terminar el encuentro)",
-	SetIconOnCinder			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(79339),
+	SetIconOnCinder			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79339),
 	RangeFrame				= "Mostrar marco de distancia (10 m) para $spell:79339 (muestra a todos los jugadores si tienes el perjuicio, o solo a los jugadores con el perjuicio si no estás afectado)"
 })
 

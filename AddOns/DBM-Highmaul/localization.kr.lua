@@ -9,7 +9,7 @@ local L
 L = DBM:GetModLocalization(1128)
 
 L:SetTimerLocalization({
-	timerSweeperCD	= DBM_CORE_AUTO_TIMER_TEXTS.next:format("높은망치 난동꾼")
+	timerSweeperCD	= DBM_CORE_L.AUTO_TIMER_TEXTS.next:format("높은망치 난동꾼")
 })
 
 L:SetOptionLocalization({

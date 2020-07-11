@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2404, "DBM-Party-Shadowlands", 2, 1183)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200412002938")
+mod:SetRevision("20200528135243")
 mod:SetCreatureID(163958)--Or 164267
 mod:SetEncounterID(2386)
 mod:SetZone()
@@ -25,7 +25,7 @@ local specWarnTouchofSlime			= mod:NewSpecialWarningSoak(257314, "Tank", nil, ni
 local specWarnPlagueCrash			= mod:NewSpecialWarningDodge(322477, nil, nil, nil, 3, 2)--Maybe run away sound instead depending on effect
 --local specWarnGTFO				= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
-local timerTouchofSlimeCD				= mod:NewCDTimer(13, 322236, nil, nil, nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerTouchofSlimeCD				= mod:NewCDTimer(13, 322236, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)
 
 function mod:OnCombatStart(delay)
 	timerTouchofSlimeCD:Start(1-delay)

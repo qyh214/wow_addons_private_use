@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TheaterofPainTrash", "DBM-Party-Shadowlands", 6)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200410015726")
+mod:SetRevision("20200605175350")
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -26,9 +26,9 @@ mod:RegisterEvents(
 function mod:RicochetingTarget(targetname, uId)
 	if not targetname then return end
 --	warnRicochetingThrow:Show(targetname)
-	if targetname == UnitName("player") then
+--	if targetname == UnitName("player") then
 --		yellRicochetingThrow:Yell()
-	end
+--	end
 end
 
 function mod:SPELL_CAST_START(args)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1154, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814112014")
+mod:SetRevision("20200524145633")
 mod:SetCreatureID(76809, 76806)--76809 foreman feldspar, 76806 heart of the mountain, 76809 Security Guard, 76810 Furnace Engineer, 76811 Bellows Operator, 76815 Primal Elementalist, 78463 Slag Elemental, 76821 Firecaller
 mod:SetEncounterID(1690)
 mod:SetZone()
@@ -43,7 +43,7 @@ local warnPhase3				= mod:NewPhaseAnnounce(3, 2, nil, nil, nil, nil, nil, 2)
 local warnMelt					= mod:NewTargetAnnounce(155225, 4)--Every 10 sec.
 local warnHeat					= mod:NewStackAnnounce(155242, 2, nil, "Tank")
 
-local specWarnBomb				= mod:NewSpecialWarningMoveTo(155192, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you:format(155192), nil, 3, 2)
+local specWarnBomb				= mod:NewSpecialWarningMoveTo(155192, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.you:format(155192), nil, 3, 2)
 local specWarnBellowsOperator	= mod:NewSpecialWarningSwitch("ej9650", "-Healer", nil, 2, nil, 2)
 local specWarnDeafeningRoar		= mod:NewSpecialWarningSpell(177756, "Tank")--Can't be dodged(was only dodgable on beta), was wrong warning for a long time. Also does a lot less damage than it did in beta too so not 3 anymore either.
 local specWarnRepair			= mod:NewSpecialWarningInterrupt(155179, "-Healer", nil, nil, nil, 2)
@@ -80,10 +80,10 @@ local timerBellowsOperator		= mod:NewCDCountTimer(59, "ej9650", nil, nil, nil, 1
 mod:AddTimerLine(SCENARIO_STAGE:format(2))
 local timerVolatileFireCD		= mod:NewCDTimer(20, 176121, nil, false, nil, 3)--Very useful, but off by default since it can be spammy if > 2 adds up at once.
 local timerVolatileFire			= mod:NewBuffFadesTimer(8, 176121, nil, nil, nil, 5, nil, nil, nil, 1, 4)
-local timerShieldsDown			= mod:NewBuffActiveTimer(30, 158345, nil, "Dps", nil, 6, nil, DBM_CORE_DAMAGE_ICON)
+local timerShieldsDown			= mod:NewBuffActiveTimer(30, 158345, nil, "Dps", nil, 6, nil, DBM_CORE_L.DAMAGE_ICON)
 local timerSlagElemental		= mod:NewNextCountTimer(55, "ej9657", nil, "-Tank", nil, 1, 155196)--Definitely 55 seconds, although current detection method may make it appear 1-2 seconds if slag has to run across room before casting first fixate
 local timerFireCaller			= mod:NewNextCountTimer(45, "ej9659", nil, "Tank", nil, 1, 156937, nil, nil, 3, 4)
-local timerSecurityGuard		= mod:NewNextCountTimer(40, "ej9648", nil, "Tank", nil, 1, 160379, DBM_CORE_TANK_ICON, nil, 2, 4)
+local timerSecurityGuard		= mod:NewNextCountTimer(40, "ej9648", nil, "Tank", nil, 1, 160379, DBM_CORE_L.TANK_ICON, nil, 2, 4)
 
 local berserkTimer				= mod:NewBerserkTimer(780)
 
@@ -298,7 +298,7 @@ function mod:CustomHealthUpdate()
 		end
 		return ("%d%%"):format(health)
 	end
-	return DBM_CORE_UNKNOWN
+	return DBM_CORE_L.UNKNOWN
 end
 
 function mod:OnCombatStart(delay)

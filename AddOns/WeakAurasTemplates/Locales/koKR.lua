@@ -39,7 +39,7 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Always shows the aura, turns red when out of range."] = "Always shows the aura, turns red when out of range."
 	L["Back"] = "뒤로"
-	L["Basic Show On Cooldown"] = "재사용 대기 시간 표시"
+	L["Basic Show On Cooldown"] = "재사용 대기 중 표시"
 	--[[Translation missing --]]
 	L["Basic Show On Ready"] = "Basic Show On Ready"
 	L["Bloodlust/Heroism"] = "피의 욕망/영웅심"
@@ -49,10 +49,8 @@ local L = WeakAuras.L
 	L["Cast"] = "시전"
 	L["Charge and Buff Tracking"] = "충전량 및 강화 효과 추적"
 	L["Charge and Debuff Tracking"] = "충전량 및 약화 효과 추적"
-	--[[Translation missing --]]
-	L["Charge and Duration Tracking"] = "Charge and Duration Tracking"
-	--[[Translation missing --]]
-	L["Charge Tracking"] = "Charge Tracking"
+	L["Charge and Duration Tracking"] = "충전량 및 지속시간 추적"
+	L["Charge Tracking"] = "충전량 추적"
 	L["cooldown"] = "재사용 대기시간"
 	L["Cooldown"] = "재사용 대기시간"
 	L["Cooldown Tracking"] = "재사용 대기시간 추적"
@@ -72,8 +70,7 @@ local L = WeakAuras.L
 	L["Highlight while buffed."] = "강화 효과가 있는 동안 강조합니다."
 	--[[Translation missing --]]
 	L["Highlight while debuffed, red when out of range."] = "Highlight while debuffed, red when out of range."
-	--[[Translation missing --]]
-	L["Highlight while debuffed."] = "Highlight while debuffed."
+	L["Highlight while debuffed."] = "약화 효과가 있는 동안 강조합니다."
 	--[[Translation missing --]]
 	L["Highlight while spell is active."] = "Highlight while spell is active."
 	L["Hold CTRL to create multiple auras at once"] = "한 번에 여러 효과를 만드려면 CTRL 키를 누르세요"
@@ -86,12 +83,10 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["On Use Trinkets (CD)"] = "On Use Trinkets (CD)"
 	L["Only show the aura if the target has the debuff."] = "대상에 약화 효과가 있는 경우 그 효과만 표시합니다."
-	--[[Translation missing --]]
-	L["Only show the aura when the item is on cooldown."] = "Only show the aura when the item is on cooldown."
+	L["Only show the aura when the item is on cooldown."] = "아이템이 재사용 대기 중일 때 그 효과만 표시합니다."
 	L["Only shows the aura if the target has the buff."] = "대상에 강화 효과가 있는 경우 그 효과만 표시합니다."
-	L["Only shows the aura when the ability is on cooldown."] = "능력이 재사용 대기 중인 경우 그 효과만 표시합니다."
-	--[[Translation missing --]]
-	L["Only shows the aura when the ability is ready to use."] = "Only shows the aura when the ability is ready to use."
+	L["Only shows the aura when the ability is on cooldown."] = "능력이 재사용 대기 중일 때 그 효과만 표시합니다."
+	L["Only shows the aura when the ability is ready to use."] = "능력을 사용할 준비가 되었을 때 그 효과만 표시합니다."
 	L["Pet alive"] = "소환수 생존"
 	L["Pet Behavior"] = "소환수 행동"
 	L["PvP Azerite Traits"] = "PvP 아제라이트 특성"
@@ -113,11 +108,10 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Show Charges with Usable Check"] = "Show Charges with Usable Check"
 	L["Show Cooldown and Buff"] = "재사용 대기시간 및 강화 효과 표시"
-	L["Show Cooldown and Buff and Check for Target"] = "쿨 다운 및 버프 표시 및 대상 확인"
+	L["Show Cooldown and Buff and Check for Target"] = "재사용 대기시간과 강화 효과 표시 및 대상 확인"
 	--[[Translation missing --]]
 	L["Show Cooldown and Buff and Check Usable"] = "Show Cooldown and Buff and Check Usable"
-	--[[Translation missing --]]
-	L["Show Cooldown and Check for Target"] = "Show Cooldown and Check for Target"
+	L["Show Cooldown and Check for Target"] = "재사용 대기시간 표시 및 대상 확인"
 	--[[Translation missing --]]
 	L["Show Cooldown and Check for Target & Proc Tracking"] = "Show Cooldown and Check for Target & Proc Tracking"
 	--[[Translation missing --]]
@@ -132,8 +126,7 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Show Cooldown and Debuff and Check for Target"] = "Show Cooldown and Debuff and Check for Target"
 	L["Show Cooldown and Duration"] = "재사용 대기시간 및 지속시간 표시"
-	--[[Translation missing --]]
-	L["Show Cooldown and Duration and Check for Target"] = "Show Cooldown and Duration and Check for Target"
+	L["Show Cooldown and Duration and Check for Target"] = "재사용 대기시간과 지속시간 표시 및 대상 확인"
 	--[[Translation missing --]]
 	L["Show Cooldown and Duration and Check Usable"] = "Show Cooldown and Duration and Check Usable"
 	--[[Translation missing --]]

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(687, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222213340")
+mod:SetRevision("20200524145716")
 mod:SetCreatureID(60701, 60708, 60709, 60710)--Adds: 60731 Undying Shadow, 60958 Pinning Arrow
 mod:SetEncounterID(1436)
 mod:SetZone()
@@ -99,7 +99,7 @@ local Zian = DBM:EJ_GetSectionInfo(5852)
 local Meng = DBM:EJ_GetSectionInfo(5835)
 local Qiang = DBM:EJ_GetSectionInfo(5841)
 local Subetai = DBM:EJ_GetSectionInfo(5846)
-local rainTimerText = DBM_CORE_AUTO_TIMER_TEXTS.cd:format(DBM:GetSpellInfo(118122))
+local rainTimerText = DBM_CORE_L.AUTO_TIMER_TEXTS.cd:format(DBM:GetSpellInfo(118122))
 local bossesActivated = {}
 local zianActive = false
 local mengActive = false
@@ -126,11 +126,11 @@ function mod:OnCombatStart(delay)
 	timerAnnihilateCD:Start(10.5)
 	timerFlankingOrdersCD:Start(25)
 	if self:IsHeroic() then
-		rainTimerText = DBM_CORE_AUTO_TIMER_TEXTS.next:format(DBM:GetSpellInfo(118122))
+		rainTimerText = DBM_CORE_L.AUTO_TIMER_TEXTS.next:format(DBM:GetSpellInfo(118122))
 		timerImperviousShieldCD:Start(40.7)
 		warnImperviousShieldSoon:Schedule(35.7)
 	else
-		rainTimerText = DBM_CORE_AUTO_TIMER_TEXTS.cd:format(DBM:GetSpellInfo(118122))
+		rainTimerText = DBM_CORE_L.AUTO_TIMER_TEXTS.cd:format(DBM:GetSpellInfo(118122))
 	end
 end
 

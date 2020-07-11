@@ -229,7 +229,6 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	TimerHardmode			= "영웅 난이도 진입 가능 바 보기",
-	RangeFrame				= "거리 창 보기",
 	AnnounceFails			= "$spell:62017 주문에 피해를 입은 대상을 공격대 대화로 알림(승급 권한 필요)"
 }
 
@@ -310,8 +309,7 @@ L:SetOptionLocalization{
 	WarnBombSpawn			= "폭탄 로봇 생성 알림 보기",
 	TimerHardmode			= "영웅 난이도 광폭화 바 보기",
 	ShockBlastWarningInP1	= "$spell:63631 특수 경고 보기(1 단계)",
-	ShockBlastWarningInP4	= "$spell:63631 특수 경고 보기(4 단계)",
-	RangeFrame				= "1 단계에서 거리 창 보기(6m)"
+	ShockBlastWarningInP4	= "$spell:63631 특수 경고 보기(4 단계)"
 }
 
 L:SetMiscLocalization{
@@ -343,8 +341,6 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	SetIconOnShadowCrash			= "$spell:62660 대상에게 전술 목표 아이콘 설정(해골)",
-	SetIconOnLifeLeach				= "$spell:62660 대상에게 전술 목표 아이콘 설정(엑스)",
 	SpecialWarningShadowCrash		= "$spell:62660 특수 경고 보기",
 	SpecialWarningShadowCrashNear	= "$spell:62660 대상이 가까이 있을 경우 특수 경고 보기",
 	SpecialWarningLLNear			= "$spell:63276 대상이 가까이 있을 경우 특수 경고 보기",

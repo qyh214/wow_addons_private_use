@@ -103,7 +103,6 @@ L:SetOptionLocalization{
 	TimerPhase1mob	= "Show time for Phase 1 mob active",--Translate
 	TimerNextGaze	= "Show timer for Thaladred's Gaze target changes",--Translate
 	TimerRebirth	= "Show timer for Phoenix Egg rebirth remaining",--Translate
-	RangeFrame		= "显示距离框体",
 	GazeWhisper		= "对萨拉德雷的目标发送密语",
 	GazeIcon		= "对萨拉德雷的目标添加标注"
 }

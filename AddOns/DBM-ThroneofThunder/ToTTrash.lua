@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ToTTrash", "DBM-ThroneofThunder")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010000")
+mod:SetRevision("20200524145716")
 mod:SetModelID(47785)
 mod:SetZone()
 
@@ -26,10 +26,10 @@ local specWarnSonicScreech		= mod:NewSpecialWarningInterrupt(136751)
 local specWarnConductiveShield	= mod:NewSpecialWarningTarget(140296)
 
 local timerSpiritfireCD			= mod:NewCDTimer(12, 139895, nil, nil, nil, 3)
-local timerShadowNovaCD			= mod:NewCDTimer(12, 139899, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerShadowNovaCD			= mod:NewCDTimer(12, 139899, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)
 local timerFixatedCD			= mod:NewNextTimer(15, 140306, nil, nil, nil, 3)
 local timerConductiveShield		= mod:NewTargetTimer(10, 140296)
-local timerConductiveShieldCD	= mod:NewCDSourceTimer(20, 140296, nil, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON)--On 25 man, it always 20, But 10 man, it variables.
+local timerConductiveShieldCD	= mod:NewCDSourceTimer(20, 140296, nil, nil, nil, 5, nil, DBM_CORE_L.DAMAGE_ICON)--On 25 man, it always 20, But 10 man, it variables.
 
 mod:AddBoolOption("RangeFrame")
 

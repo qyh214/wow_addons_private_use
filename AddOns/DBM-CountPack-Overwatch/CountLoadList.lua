@@ -1,4 +1,7 @@
+local tinsert = table.insert
+
 local inserted = false
+
 function DBMCPOverwatch()
 	if inserted then return end
 	tinsert(DBM.Counts, {	text	= "Overwatch: Ana",						value 	= "Ana",				path = "Interface\\AddOns\\DBM-CountPack-Overwatch\\Ana\\",					max = 5})

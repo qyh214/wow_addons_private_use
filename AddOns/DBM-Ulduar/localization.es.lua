@@ -39,7 +39,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetOptionLocalization{
-	SlagPotIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63477)
+	SlagPotIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(63477)
 }
 
 ----------------
@@ -90,11 +90,6 @@ L:SetGeneralLocalization{
 	name = "Desarmador XA-002"
 }
 
-L:SetOptionLocalization{
-	SetIconOnLightBombTarget	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(65121),
-	SetIconOnGravityBombTarget	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(64234)
-}
-
 ---------------------------
 -- La Asamblea de Hierro --
 ---------------------------
@@ -105,8 +100,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetOptionLocalization{
-	SetIconOnOverwhelmingPower	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(61888),
-	SetIconOnStaticDisruption	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(61912),
 	AlwaysWarnOnOverload		= "Mostrar siempre aviso para $spell:63481 (de lo contrario, solo se muestra cuando eres el objetivo)"
 }
 
@@ -169,9 +162,7 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	timerLeftArm			= "Mostrar temporizador para la regeneración del Brazo izquierdo",
 	timerRightArm			= "Mostrar temporizador para la regeneración del Brazo derecho",
-	achievementDisarmed		= "Mostrar temporizador para el logro 'Desarmado'",
-	SetIconOnGripTarget		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(64292),
-	SetIconOnEyebeamTarget	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63346)
+	achievementDisarmed		= "Mostrar temporizador para el logro 'Desarmado'"
 }
 
 L:SetMiscLocalization{
@@ -222,10 +213,6 @@ L:SetGeneralLocalization{
 	name = "Hodir"
 }
 
-L:SetOptionLocalization{
-	SetIconOnStormCloud		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(65133)
-}
-
 L:SetMiscLocalization{
 	Pull		= "¡Sufriréis por esta intromisión!",
 	YellKill	= "Estoy... estoy libre de sus garras... al fin."
@@ -246,7 +233,6 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	TimerHardmode	= "Mostrar temporizador para el modo difícil",
-	RangeFrame		= "Mostrar marco de distancia",
 	AnnounceFails	= "Anunciar jugadores que reciban daño de $spell:62017 en el chat de banda (requiere líder o ayudante)"
 }
 
@@ -327,10 +313,7 @@ L:SetOptionLocalization{
 	WarnBombSpawn			= "Mostrar aviso cuando aparezcan Bombabots",
 	TimerHardmode			= "Mostrar temporizador para la autodestrucción del modo difícil",
 	ShockBlastWarningInP1	= "Mostrar aviso especial para $spell:63631 en Fase 1",
-	ShockBlastWarningInP4	= "Mostrar aviso especial para $spell:63631 en Fase 4",
-	RangeFrame				= "Mostrar marco de distancia (6 m) en Fase 1",
-	SetIconOnNapalm			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(65026),
-	SetIconOnPlasmaBlast	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(62997)
+	ShockBlastWarningInP4	= "Mostrar aviso especial para $spell:63631 en Fase 4"
 }
 
 L:SetMiscLocalization{
@@ -362,8 +345,6 @@ L:SetWarningLocalization{
 }
 
 L:SetOptionLocalization{
-	SetIconOnShadowCrash			= "Poner icono (calavera) en objetivos de $spell:62660",
-	SetIconOnLifeLeach				= "Poner icono (cruz) en objetivos de $spell:63276",
 	SpecialWarningShadowCrash		= "Mostrar aviso especial para $spell:62660",
 	SpecialWarningShadowCrashNear	= "Mostrar aviso especial cuando $spell:62660 ocurra cerca de ti",
 	SpecialWarningLLNear			= "Mostrar aviso especial cuando $spell:63276 ocurra cerca de ti",
@@ -411,12 +392,9 @@ L:SetOptionLocalization{
 	SpecWarnGuardianLow				= "Mostrar aviso especial cuando a un Guardián de Yogg-Saron le quede poca vida (solo para DPS)",
 	WarnBrainPortalSoon				= "Mostrar aviso previo para los siguientes portales",
 	SpecWarnMadnessOutNow			= "Mostrar aviso especial cuando $spell:64059 esté a punto de lanzarse",
-	SetIconOnFearTarget				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63881),
 	SpecWarnFervorCast				= "Mostrar aviso especial cuando te estén lanzando $spell:63138",
 	specWarnBrainPortalSoon			= "Mostrar aviso especial para los siguientes portales",
 	NextPortal						= "Mostrar temporizador para los siguientes portales",
-	SetIconOnFervorTarget			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63138),
-	SetIconOnBrainLinkTarget		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63802),
 	MaladyArrow						= "Mostrar flecha cuando $spell:63881 ocurra cerca de ti"
 }
 

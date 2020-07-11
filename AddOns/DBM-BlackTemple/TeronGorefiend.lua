@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TeronGorefiend", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200524145731")
 mod:SetCreatureID(22871)
 mod:SetEncounterID(604)
 mod:SetModelID(21254)
@@ -17,14 +17,14 @@ mod:RegisterEventsInCombat(
 )
 
 --Incinerate useful?
-local warnCrushed			= mod:NewTargetAnnounce(40243, 3)
+local warnCrushed			= mod:NewTargetNoFilterAnnounce(40243, 3, nil, "Healer")
 local warnIncinerate		= mod:NewSpellAnnounce(40239, 3)
-local warnDeath				= mod:NewTargetAnnounce(40251, 3)
+local warnDeath				= mod:NewTargetNoFilterAnnounce(40251, 3)
 
 local specWarnDeath			= mod:NewSpecialWarningYou(40251, nil, nil, nil, 1, 2)
 local specWarnDeathEnding	= mod:NewSpecialWarningMoveAway(40251, nil, nil, nil, 3, 2)
 
-local timerCrushed			= mod:NewBuffActiveTimer(15, 40243, nil, "Healer", 2, 5, nil, DBM_CORE_HEALER_ICON)
+local timerCrushed			= mod:NewBuffActiveTimer(15, 40243, nil, "Healer", 2, 5, nil, DBM_CORE_L.HEALER_ICON)
 local timerDeath			= mod:NewTargetTimer(55, 40251, nil, nil, nil, 3)
 local timerVengefulSpirit	= mod:NewTimer(60, "TimerVengefulSpirit", 40325, nil, nil, 1)
 

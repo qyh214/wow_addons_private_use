@@ -93,7 +93,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnDefensiveStanceSoon	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.prewarn:format(143593)
+	warnDefensiveStanceSoon	= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.prewarn:format(143593)
 })
 
 L:SetMiscLocalization({
@@ -147,10 +147,10 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnToxicCatalyst			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej8036"),
+	warnToxicCatalyst			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format("ej8036"),
 	specWarnActivatedVulnerable	= "Mostrar aviso especial cuando seas vulnerable a un dechado",
 	specWarnMoreParasites		= "Mostrar aviso especial cuando necesites más parásitos",
-	yellToxicCatalyst			= DBM_CORE_AUTO_YELL_OPTION_TEXT.yell:format("ej8036")
+	yellToxicCatalyst			= DBM_CORE_L.AUTO_YELL_OPTION_TEXT.yell:format("ej8036")
 })
 
 L:SetMiscLocalization({

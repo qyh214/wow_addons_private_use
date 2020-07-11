@@ -1,11 +1,10 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local B = E:GetModule('Blizzard')
 
---Lua functions
 local _G = _G
 local floor = floor
 local format = format
---WoW API / Variables
+
 local CreateFrame = CreateFrame
 local hooksecurefunc = hooksecurefunc
 local UnitPowerMax = UnitPowerMax
@@ -56,24 +55,15 @@ function B:SetAltPowerBarText(text, name, value, max, percent)
 	end
 end
 
-function B:PositionAltPower()
-	self:Point('CENTER', _G.AltPowerBarHolder, 'CENTER')
-end
-
 function B:PositionAltPowerBar()
 	local holder = CreateFrame('Frame', 'AltPowerBarHolder', E.UIParent)
-	holder:Point('TOP', E.UIParent, 'TOP', 0, -175)
+	holder:Point('TOP', E.UIParent, 'TOP', -1, -36)
 	holder:Size(128, 50)
 
 	_G.PlayerPowerBarAlt:ClearAllPoints()
 	_G.PlayerPowerBarAlt:Point('CENTER', holder, 'CENTER')
 	_G.PlayerPowerBarAlt:SetParent(holder)
-	_G.PlayerPowerBarAlt.ignoreFramePositionManager = true
-
-	--The Blizzard function FramePositionDelegate:UIParentManageFramePositions()
-	--calls :ClearAllPoints on PlayerPowerBarAlt under certain conditions.
-	--Doing ".ClearAllPoints = E.noop" causes error when you enter combat.
-	hooksecurefunc(_G.PlayerPowerBarAlt, "ClearAllPoints", B.PositionAltPower)
+	_G.UIPARENT_MANAGED_FRAME_POSITIONS.PlayerPowerBarAlt = nil
 
 	E:CreateMover(holder, 'AltPowerBarMover', L["Alternative Power"], nil, nil, nil, nil, nil, 'general,alternativePowerGroup')
 end
@@ -193,11 +183,11 @@ function B:SkinAltPowerBar()
 			Hide = function() texTop:Hide() texBotomLeft:Hide() texBottomRight:Hide() end,
 		}
 
-		texTop:SetTexture('Interface\\AddOns\\ElvUI\\Media\\Textures\\NZothTop')
+		texTop:SetTexture([[Interface\AddOns\ElvUI\Media\Textures\NZothTop]])
 		texTop:Point("CENTER", powerbar, "TOP", 0, -19)
-		texBotomLeft:SetTexture('Interface\\AddOns\\ElvUI\\Media\\Textures\\NZothBottomLeft')
+		texBotomLeft:SetTexture([[Interface\AddOns\ElvUI\Media\Textures\NZothBottomLeft]])
 		texBotomLeft:Point("BOTTOMLEFT", powerbar, "BOTTOMLEFT", -7, -10)
-		texBottomRight:SetTexture('Interface\\AddOns\\ElvUI\\Media\\Textures\\NZothBottomRight')
+		texBottomRight:SetTexture([[Interface\AddOns\ElvUI\Media\Textures\NZothBottomRight]])
 		texBottomRight:Point("BOTTOMRIGHT", powerbar, "BOTTOMRIGHT", 7, -10)
 	end
 

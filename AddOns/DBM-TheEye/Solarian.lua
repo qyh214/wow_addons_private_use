@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod("Solarian", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200518210032")
 mod:SetCreatureID(18805)
 mod:SetEncounterID(732)
 mod:SetModelID(18239)
 mod:SetZone()
+mod:SetUsedIcons(8)
 
 mod:RegisterCombat("combat")
 
@@ -15,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_MONSTER_YELL"
 )
 
-local warnWrath			= mod:NewTargetAnnounce(42783, 2)
+local warnWrath			= mod:NewTargetNoFilterAnnounce(42783, 2)
 local warnSplit			= mod:NewAnnounce("WarnSplit", 4, 39414)
 local warnAgent			= mod:NewAnnounce("WarnAgent", 1, 39414)
 local warnPriest		= mod:NewAnnounce("WarnPriest", 1, 39414)
@@ -32,7 +33,7 @@ local timerPriest		= mod:NewTimer(20, "TimerPriest", 39414, nil, nil, 1)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
-mod:AddBoolOption("WrathIcon", true)
+mod:AddSetIconOption("WrathIcon", 42783, true, false, {8})
 
 function mod:OnCombatStart(delay)
 	timerSplit:Start(50-delay)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(192, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190821185238")
+mod:SetRevision("20200524145601")
 mod:SetCreatureID(52498)
 mod:SetEncounterID(1197)
 mod:SetZone()
@@ -34,12 +34,12 @@ local specWarnTouchWidowKissOther	= mod:NewSpecialWarningTarget(99476, "Tank", n
 local timerSpinners 				= mod:NewNextTimer(15, "ej2770", nil, nil, nil, 1, 97370) -- 15secs after Smoldering cast start
 local timerSpiderlings				= mod:NewNextTimer(30, "ej2778", nil, nil, nil, 1, 72106)
 local timerDrone					= mod:NewNextTimer(60, "ej2773", nil, nil, nil, 1, 28866)
-local timerSmolderingDevastationCD	= mod:NewNextCountTimer(90, 99052, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerSmolderingDevastationCD	= mod:NewNextCountTimer(90, 99052, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON)
 local timerEmberFlareCD				= mod:NewNextTimer(6, 98934, nil, nil, nil, 2)
-local timerSmolderingDevastation	= mod:NewCastTimer(8, 99052, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerSmolderingDevastation	= mod:NewCastTimer(8, 99052, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON)
 local timerFixate					= mod:NewTargetTimer(10, 99526, nil, false)
-local timerWidowsKissCD				= mod:NewCDTimer(32, 99476, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerWidowKiss				= mod:NewTargetTimer(23, 99476, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerWidowsKissCD				= mod:NewCDTimer(32, 99476, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerWidowKiss				= mod:NewTargetTimer(23, 99476, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 

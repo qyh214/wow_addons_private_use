@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(311, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222203750")
+mod:SetRevision("20200524145601")
 mod:SetCreatureID(55265)
 mod:SetEncounterID(1292)
 mod:SetZone()
@@ -32,12 +32,12 @@ local specwarnVortex		= mod:NewSpecialWarningSpell(103821, nil, nil, nil, 2)
 local specwarnBlood			= mod:NewSpecialWarningMove(103785)
 local specwarnCrystal		= mod:NewSpecialWarningTarget(103639, false)
 
-local timerCrushArmor		= mod:NewTargetTimer(20, 103687, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerCrushArmor		= mod:NewTargetTimer(20, 103687, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerCrystal			= mod:NewCDTimer(12, 103640, nil, nil, nil, 5)	-- 12-14sec variation (is also time till 'detonate')
 local timerStomp 			= mod:NewCDTimer(11, 103414, nil, nil, nil, 2)	-- 12-14sec variation
 local timerVortexNext		= mod:NewCDTimer(74, 103821, nil, nil, nil, 6)--96~97 sec after last vortex. must subtract blood 17 + vortex buff 5 sec. 74 sec left
 local timerBlood			= mod:NewBuffActiveTimer(17, 103851, nil, nil, nil, 6)
-local timerKohcromCD		= mod:NewTimer(6, "KohcromCD", 55342, nil, nil, nil, DBM_CORE_HEROIC_ICON)--Enable when we have actual timing for any of his abilies
+local timerKohcromCD		= mod:NewTimer(6, "KohcromCD", 55342, nil, nil, nil, DBM_CORE_L.HEROIC_ICON)--Enable when we have actual timing for any of his abilies
 --Basically any time morchok casts, we'll start an echo timer for when it will be mimiced by his twin Kohcrom.
 --We will not start timers using Kohcrom's casts, it'll waste WAY too much space.
 --EJ is pretty clear, they are cast shortly after morchok, always. So echo timer is perfect and clean solution.

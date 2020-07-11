@@ -19,10 +19,10 @@
 ## X-DBM-Mod-Has-LFR : 1
 ## X-DBM-Mod-Sort: 702
 ## X-DBM-Mod-MapID: 1098
-## X-DBM-Mod-MinCoreRevision: 14569
+## X-DBM-Mod-MinCoreRevision: 20200524142133
 ## X-Curse-Project-ID: 85688
 ## X-WoWI-ID: 23199
-## Version: r134
+## Version: r136
 
 localization.en.lua
 localization.it.lua

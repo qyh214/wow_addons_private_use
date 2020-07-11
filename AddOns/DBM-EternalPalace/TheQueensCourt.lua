@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2359, "DBM-EternalPalace", nil, 1179)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200220034831")
+mod:SetRevision("20200602212246")
 mod:SetCreatureID(152852, 152853)--Pashmar 152852, Silivaz 152853
 mod:SetEncounterID(2311)
 mod:SetZone()
@@ -84,7 +84,7 @@ local timerFreneticChargeCD				= mod:NewNextTimer(40, 299914, nil, nil, nil, 3, 
 local timerZealousEruptionCD			= mod:NewNextTimer(104.4, 301807, nil, nil, nil, 2)
 --Pashmar the Fanatical
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20235))
-local timerFerventBoltCD				= mod:NewCDTimer(11.3, 300395, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerFerventBoltCD				= mod:NewCDTimer(11.3, 300395, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerFanaticalVerdictCD			= mod:NewNextTimer(26.7, 296850, nil, nil, nil, 3)
 local timerViolentOutburstCD			= mod:NewNextTimer(104.4, 297325, nil, nil, nil, 2)
 local timerPotentSparkCD				= mod:NewCDTimer(92.2, 301947, nil, nil, nil, 1)
@@ -319,7 +319,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
-function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, npc, _, _, target)
+function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 	if msg:find("spell:298050") then--Form Ranks (Repeat Performance is next)
 		specWarnFormRanks:Show(L.Circles)
 		specWarnFormRanks:Play("gathershare")

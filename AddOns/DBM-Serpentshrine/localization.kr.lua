@@ -162,7 +162,6 @@ L:SetOptionLocalization{
 	TimerStrider			= "다음 포자손 바 보기",
 	TimerNaga				= "다음 나가 바 보기",
 	SpecWarnElemental		= "오염된 정령 등장 특수 경고 보기",
-	RangeFrame				= "거리 창 보기",
 	AutoChangeLootToFFA		= "2 단계에서 전리품 획득 설정 자동으로 변경"
 }
 

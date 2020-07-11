@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2102, "DBM-Party-BfA", 2, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200220034831")
+mod:SetRevision("20200602212246")
 mod:SetCreatureID(126832)
 mod:SetEncounterID(2093)
 mod:SetZone()
@@ -34,7 +34,7 @@ local timerChargeCD					= mod:NewCDTimer(8.4, 255952, nil, nil, nil, 3)
 local timerDiveBombCD				= mod:NewCDTimer(17, 272046, nil, nil, nil, 3)
 local timerPowderShotCD				= mod:NewCDTimer(10.8, 256106, nil, nil, nil, 3)
 local timerVilebombardmentCD		= mod:NewCDTimer(5.9, 256005, nil, nil, nil, 3)
-local timerBrewCD					= mod:NewCDTimer(20.6, 256060, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerBrewCD					= mod:NewCDTimer(20.6, 256060, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)
 
 function mod:OnCombatStart(delay)
 	timerChargeCD:Start(4.7-delay)
@@ -86,7 +86,7 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spell
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
-function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
+function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, spellId)
 	if spellId == 256056 then--Spawn Parrot
 		timerChargeCD:Stop()
 		warnPhase2:Show()

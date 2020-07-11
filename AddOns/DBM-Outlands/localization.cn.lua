@@ -33,9 +33,6 @@ L:SetGeneralLocalization{
 	name = "玛瑟里顿"
 }
 
-L:SetWarningLocalization{
-}
-
 L:SetTimerLocalization{
 	timerP2	= "Phase 2"
 }
@@ -57,13 +54,6 @@ L:SetGeneralLocalization{
 	name = "末日领主卡扎克"
 }
 
-L:SetWarningLocalization{
-}
-
-L:SetOptionLocalization{
-	SetIconOnMark		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(32960)
-}
-
 L:SetMiscLocalization{
 	DBM_KAZZAK_EMOTE_ENRAGE		= "%s becomes enraged!"--Probalby won't be used, at least not long. Once spellid replaces it
 }
@@ -73,15 +63,6 @@ L = DBM:GetModLocalization("Doomwalker")
 
 L:SetGeneralLocalization{
 	name = "末日行者"
-}
-
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{

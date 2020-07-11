@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(158, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143316")
+mod:SetRevision("20200524145601")
 mod:SetCreatureID(43686, 43687, 43688, 43689, 43735)
 mod:SetEncounterID(1028)
 mod:SetZone()
@@ -91,27 +91,27 @@ local specWarnBossLow		= mod:NewSpecialWarning("specWarnBossLow")
 mod:AddTimerLine(Feludius)
 local timerHeartIce			= mod:NewTargetTimer(60, 82665, nil, false)
 local timerHeartIceCD		= mod:NewCDTimer(22, 82665, nil, false)--22-24 seconds
-local timerGlaciate			= mod:NewCDTimer(33, 82746, nil, "Melee", nil, 2, nil, DBM_CORE_DEADLY_ICON)--33-35 seconds
+local timerGlaciate			= mod:NewCDTimer(33, 82746, nil, "Melee", nil, 2, nil, DBM_CORE_L.DEADLY_ICON)--33-35 seconds
 local timerWaterBomb		= mod:NewCDTimer(33, 82699, nil, nil, nil, 3)--33-35 seconds
-local timerFrozen			= mod:NewBuffFadesTimer(10, 82772, nil, "Healer", nil, 5, nil, DBM_CORE_HEALER_ICON)
-local timerHydroLanceCD		= mod:NewCDTimer(12, 82752, nil, "HasInterrupt", 2, 4, nil, DBM_CORE_INTERRUPT_ICON)--12 second cd but lowest cast priority
+local timerFrozen			= mod:NewBuffFadesTimer(10, 82772, nil, "Healer", nil, 5, nil, DBM_CORE_L.HEALER_ICON)
+local timerHydroLanceCD		= mod:NewCDTimer(12, 82752, nil, "HasInterrupt", 2, 4, nil, DBM_CORE_L.INTERRUPT_ICON)--12 second cd but lowest cast priority
 --Ignacious
 mod:AddTimerLine(Ignacious)
 local timerBurningBlood		= mod:NewTargetTimer(60, 82660, nil, false)
 local timerBurningBloodCD	= mod:NewCDTimer(22, 82660, nil, false)--22-33 seconds, even worth having a timer?
-local timerAegisFlame		= mod:NewNextTimer(60, 82631, nil, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON)
+local timerAegisFlame		= mod:NewNextTimer(60, 82631, nil, nil, nil, 5, nil, DBM_CORE_L.DAMAGE_ICON)
 --Terrastra
 mod:AddTimerLine(Terrastra)
 local timerEruptionCD		= mod:NewNextTimer(15, 83675, nil, "Melee", nil, 3)
-local timerHardenSkinCD		= mod:NewCDTimer(42, 83718, nil, "HasInterrupt", 2, 4, nil, DBM_CORE_INTERRUPT_ICON)--This one is iffy, it isn't as consistent as other ability timers
-local timerQuakeCD			= mod:NewNextTimer(33, 83565, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerHardenSkinCD		= mod:NewCDTimer(42, 83718, nil, "HasInterrupt", 2, 4, nil, DBM_CORE_L.INTERRUPT_ICON)--This one is iffy, it isn't as consistent as other ability timers
+local timerQuakeCD			= mod:NewNextTimer(33, 83565, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON)
 local timerQuakeCast		= mod:NewCastTimer(3, 83565)
 --Arion
 mod:AddTimerLine(Arion)
 local timerLightningRod		= mod:NewBuffFadesTimer(15, 83099)
 local timerDisperse			= mod:NewCDTimer(30, 83087, nil, nil, nil, 6)
 local timerLightningBlast	= mod:NewCastTimer(4, 83070, nil, false)
-local timerThundershockCD	= mod:NewNextTimer(33, 83067, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerThundershockCD	= mod:NewNextTimer(33, 83067, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON)
 local timerThundershockCast	= mod:NewCastTimer(3, 83067)
 --Elementium Monstrosity
 mod:AddTimerLine(Monstrosity)
@@ -121,10 +121,10 @@ local timerGravityCrush		= mod:NewBuffActiveTimer(10, 84948)
 local timerGravityCrushCD	= mod:NewCDTimer(24, 84948, nil, nil, nil, 3)--24-28sec cd, decent varation
 --Heroic
 mod:AddTimerLine(PLAYER_DIFFICULTY2)
-local timerGravityCoreCD	= mod:NewNextTimer(20, 92075, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)--Heroic Phase 1 ablity
-local timerStaticOverloadCD	= mod:NewNextTimer(20, 92067, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)--Heroic Phase 1 ablity
-local timerFlameStrikeCD	= mod:NewNextTimer(20, 92212, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)--Heroic Phase 2 ablity
-local timerFrostBeaconCD	= mod:NewNextTimer(20, 92307, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)--Heroic Phase 2 ablity
+local timerGravityCoreCD	= mod:NewNextTimer(20, 92075, nil, nil, nil, 3, nil, DBM_CORE_L.HEROIC_ICON)--Heroic Phase 1 ablity
+local timerStaticOverloadCD	= mod:NewNextTimer(20, 92067, nil, nil, nil, 3, nil, DBM_CORE_L.HEROIC_ICON)--Heroic Phase 1 ablity
+local timerFlameStrikeCD	= mod:NewNextTimer(20, 92212, nil, nil, nil, 3, nil, DBM_CORE_L.HEROIC_ICON)--Heroic Phase 2 ablity
+local timerFrostBeaconCD	= mod:NewNextTimer(20, 92307, nil, nil, nil, 3, nil, DBM_CORE_L.HEROIC_ICON)--Heroic Phase 2 ablity
 
 mod:AddBoolOption("HeartIceIcon")
 mod:AddBoolOption("BurningBloodIcon")

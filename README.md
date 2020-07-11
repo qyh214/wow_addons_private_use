@@ -78,7 +78,7 @@ Auctionlite：https://bbs.nga.cn/read.php?tid=17729131
 
 https://wago.io/rJZgZUxn7
 
-https://bbs.nga.cn/read.php?tid=20616554&_ff=185
+https://bbs.nga.cn/read.php?tid=20616554
 
 全职业中二语音：https://bbs.nga.cn/read.php?tid=20729857
 
@@ -92,12 +92,20 @@ https://bbs.nga.cn/read.php?tid=20616554&_ff=185
 
 奶萨wa技能监控：https://bbs.nga.cn/read.php?tid=20612058
 
+不可言喻的真相监控：https://bbs.nga.cn//read.php?tid=20539121
+
+蓝量报警：https://bbs.nga.cn/read.php?tid=21781278
+
+壮美幻象额外伤害报警：https://bbs.nga.cn/read.php?tid=22080232
+
+腐蚀兑换轮换表：https://wago.io/9Lkj_ajIJ
+
 ## TMW字符串
-萨满祭司：https://bbs.nga.cn/read.php?tid=16216888&_ff=185
+萨满祭司：https://bbs.nga.cn/read.php?tid=16216888
 
 永恒王宫：https://bbs.nga.cn/read.php?pid=337629614
 
-属性监视：http://nga.178.com/read.php?tid=15007312&_ff=185&forder_by=postdatedesc
+属性监视：https://bbs.nga.cn/read.php?tid=15007312
 
 ## 一些有用的重要命令
 在游戏内聊天窗口输入，然后回车：

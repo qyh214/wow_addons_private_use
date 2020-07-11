@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1372, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222221214")
+mod:SetRevision("20200524145633")
 mod:SetCreatureID(90199)
 mod:SetEncounterID(1783)
 mod:SetZone()
@@ -51,11 +51,11 @@ local timerShadowofDeathCDDps		= mod:NewTimer(30, "SoDDPS2", 179864, "Dps", nil,
 local timerShadowofDeathCDTank		= mod:NewTimer(30, "SoDTank2", 179864, "Tank", nil, 5)
 local timerShadowofDeathCDHealer	= mod:NewTimer(30, "SoDHealer2", 179864, "Healer", nil, 5)
 local timerTouchofDoomCD			= mod:NewCDTimer(18, 179977, nil, nil, nil, 3)--25 seconds in LFR, tested after heroic. changed? VERIFY
-local timerSharedFateCD				= mod:NewNextCountTimer(29, 179909, nil, "-Tank", 2, 3, nil, DBM_CORE_DEADLY_ICON)--29-31
+local timerSharedFateCD				= mod:NewNextCountTimer(29, 179909, nil, "-Tank", 2, 3, nil, DBM_CORE_L.DEADLY_ICON)--29-31
 local timerCrushingDarknessCD		= mod:NewNextTimer(10, 180017, nil, false, 2, 2)--Actually 16, but i delay start by 6 seconds for reduced spam
 local timerFeastofSouls				= mod:NewNextTimer(123.5, 181973, nil, nil, nil, 6)--Probably next timer too, or close to it, depends how consistent energy gains are, may have small variation, like gruul
 
-local timerDigest					= mod:NewCastTimer(40, 181295, nil, nil, nil, nil, nil, DBM_CORE_DEADLY_ICON, nil, 1, 8)
+local timerDigest					= mod:NewCastTimer(40, 181295, nil, nil, nil, nil, nil, DBM_CORE_L.DEADLY_ICON, nil, 1, 8)
 local timerCrushingDarkness			= mod:NewCastTimer(6, 180017, nil, false)
 
 --local berserkTimer				= mod:NewBerserkTimer(360)
@@ -133,9 +133,9 @@ function mod:OnCombatStart(delay)
 		DBM.RangeCheck:Show(5)
 	end
 	if self:IsMythic() then
-		timerShadowofDeathCDDps:Start(2-delay, "2x"..DBM_CORE_DAMAGE_ICON)
-		timerShadowofDeathCDTank:Start(9-delay, "1x"..DBM_CORE_TANK_ICON)
-		timerShadowofDeathCDHealer:Start(21-delay, "2x"..DBM_CORE_HEALER_ICON)
+		timerShadowofDeathCDDps:Start(2-delay, "2x"..DBM_CORE_L.DAMAGE_ICON)
+		timerShadowofDeathCDTank:Start(9-delay, "1x"..DBM_CORE_L.TANK_ICON)
+		timerShadowofDeathCDHealer:Start(21-delay, "2x"..DBM_CORE_L.HEALER_ICON)
 	else
 		local numDpsPlayers = 1
 		local numHealerPlayers = 1
@@ -148,9 +148,9 @@ function mod:OnCombatStart(delay)
 			numDpsPlayers = 4
 		end
 		if playersCount >= 20 then numHealerPlayers = 2 end--2 healers 20 players or over
-		timerShadowofDeathCDDps:Start(2-delay, numDpsPlayers.."x"..DBM_CORE_DAMAGE_ICON, 1)
-		timerShadowofDeathCDTank:Start(13-delay, "1x"..DBM_CORE_TANK_ICON, 2)
-		timerShadowofDeathCDHealer:Start(30-delay, numHealerPlayers.."x"..DBM_CORE_HEALER_ICON, 3)
+		timerShadowofDeathCDDps:Start(2-delay, numDpsPlayers.."x"..DBM_CORE_L.DAMAGE_ICON, 1)
+		timerShadowofDeathCDTank:Start(13-delay, "1x"..DBM_CORE_L.TANK_ICON, 2)
+		timerShadowofDeathCDHealer:Start(30-delay, numHealerPlayers.."x"..DBM_CORE_L.HEALER_ICON, 3)
 	end
 	timerCrushingDarknessCD:Start(5-delay)
 	timerTouchofDoomCD:Start(9-delay)
@@ -387,11 +387,11 @@ function mod:OnSync(msg)
 		local count = self.vb.shadowOfDeathCount
 		if self:IsMythic() then
 			if count == 1 or count == 4 or count == 5 then--DPS 4x (3 timers)
-				timerShadowofDeathCDDps:Start(27, "2x"..DBM_CORE_DAMAGE_ICON)
+				timerShadowofDeathCDDps:Start(27, "2x"..DBM_CORE_L.DAMAGE_ICON)
 			elseif count == 2 then--Tank 2x (1 timer)
-				timerShadowofDeathCDTank:Start(60, "1x"..DBM_CORE_TANK_ICON)
+				timerShadowofDeathCDTank:Start(60, "1x"..DBM_CORE_L.TANK_ICON)
 			elseif count == 3 then--Healer 2x (1 timer)
-				timerShadowofDeathCDHealer:Start(45, "2x"..DBM_CORE_HEALER_ICON)
+				timerShadowofDeathCDHealer:Start(45, "2x"..DBM_CORE_L.HEALER_ICON)
 			end
 		else
 			if count == 1 or count == 4 then--DPS 3x (2 timers)
@@ -408,14 +408,14 @@ function mod:OnSync(msg)
 				if count == 4 and (playersCount == 15 or playersCount == 16 or playersCount == 21 or playersCount == 22) then--subtrack 1 from above for 2nd cast
 					numPlayers = numPlayers - 1
 				end
-				timerShadowofDeathCDDps:Start(36, numPlayers.."x"..DBM_CORE_DAMAGE_ICON)
+				timerShadowofDeathCDDps:Start(36, numPlayers.."x"..DBM_CORE_L.DAMAGE_ICON)
 			elseif count == 2 then--Tank 1x (0 timers)
 				--Do nothing, only one tank is sent
-				--timerShadowofDeathCDTank:Start(60, "1x"..DBM_CORE_TANK_ICON)
+				--timerShadowofDeathCDTank:Start(60, "1x"..DBM_CORE_L.TANK_ICON)
 			elseif count == 3 and playersCount > 10 then--Healer 2x (1 timer). Only gets a 2nd one if > 10 players
 				local numPlayers = 1--Only one healer for 11-28 players
 				if playersCount >= 29 then numPlayers = 2 end--Only 2 healers for player count 29 and 30
-				timerShadowofDeathCDHealer:Start(36, numPlayers.."x"..DBM_CORE_HEALER_ICON)
+				timerShadowofDeathCDHealer:Start(36, numPlayers.."x"..DBM_CORE_L.HEALER_ICON)
 			end
 		end
 	elseif msg == "FeastEnded" then
@@ -423,9 +423,9 @@ function mod:OnSync(msg)
 		specWarnFeastofSoulsEnded:Show()
 		--Timers exactly same as pull
 		if self:IsMythic() then
-			timerShadowofDeathCDDps:Start(2, "2x"..DBM_CORE_DAMAGE_ICON)
-			timerShadowofDeathCDTank:Start(9, "1x"..DBM_CORE_TANK_ICON)
-			timerShadowofDeathCDHealer:Start(21, "2x"..DBM_CORE_HEALER_ICON)
+			timerShadowofDeathCDDps:Start(2, "2x"..DBM_CORE_L.DAMAGE_ICON)
+			timerShadowofDeathCDTank:Start(9, "1x"..DBM_CORE_L.TANK_ICON)
+			timerShadowofDeathCDHealer:Start(21, "2x"..DBM_CORE_L.HEALER_ICON)
 			if self.Options.InfoFrame then
 				--Switch back to digest
 				DBM.InfoFrame:SetHeader(digestDebuff)
@@ -443,9 +443,9 @@ function mod:OnSync(msg)
 				numDpsPlayers = 4
 			end
 			if playersCount >= 20 then numHealerPlayers = 2 end--2 healers 20 players or over
-			timerShadowofDeathCDDps:Start(2, numDpsPlayers.."x"..DBM_CORE_DAMAGE_ICON)
-			timerShadowofDeathCDTank:Start(13, "1x"..DBM_CORE_TANK_ICON)
-			timerShadowofDeathCDHealer:Start(30, numHealerPlayers.."x"..DBM_CORE_HEALER_ICON)
+			timerShadowofDeathCDDps:Start(2, numDpsPlayers.."x"..DBM_CORE_L.DAMAGE_ICON)
+			timerShadowofDeathCDTank:Start(13, "1x"..DBM_CORE_L.TANK_ICON)
+			timerShadowofDeathCDHealer:Start(30, numHealerPlayers.."x"..DBM_CORE_L.HEALER_ICON)
 		end
 		timerCrushingDarknessCD:Start(5)
 		timerTouchofDoomCD:Start(9)

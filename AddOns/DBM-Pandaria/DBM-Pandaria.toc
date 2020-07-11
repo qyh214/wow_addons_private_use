@@ -21,10 +21,10 @@
 ## X-DBM-Mod-Sort: 706
 ## X-DBM-Mod-MapID: 870,1064
 ## X-DBM-Mod-LoadCID: 62346,60491,69161,69099,71952,71954,72057,71953,71955,69768,69769,69841,69842
-## X-DBM-Mod-MinCoreRevision: 14002
+## X-DBM-Mod-MinCoreRevision: 20200524142133
 ## X-Curse-Project-ID: 85688
 ## X-WoWI-ID: 23199
-## Version: r134
+## Version: r136
 
 localization.en.lua
 localization.de.lua

@@ -160,7 +160,6 @@ L:SetOptionLocalization{
 	TimerStrider		= "為下一次盤牙旅行者顯示計時器",
 	TimerNaga			= "為下一次盤牙精英顯示計時器",
 	SpecWarnElemental	= "為污染的元素出現顯示特別警告",
-	RangeFrame			= "顯示距離框架(10碼)",
 	AutoChangeLootToFFA	= "第2階段自動轉換拾取方式為自由拾取"
 }
 

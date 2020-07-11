@@ -229,7 +229,6 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	TimerHardmode	= "Zeige Timer für Hard Mode",
-	RangeFrame		= "Zeige Abstandsfenster (10m)",
 	AnnounceFails	= "Verkünde Spieler im Schlachtzugchat, die bei $spell:62466 scheitern (benötigt aktivierte Mitteilungen und Leiter-/Assistentenstatus)"
 }
 
@@ -307,8 +306,7 @@ L:SetOptionLocalization{
 	TimeToPhase4			= "Zeige Zeit bis Phase 4",
 	MagneticCore			= "Verkünde Spieler, die Magnetische Kerne plündern",
 	WarnBombSpawn			= "Zeige Warnung für Bombenbot",
-	TimerHardmode			= "Zeige Timer für Hard Mode",
-	RangeFrame				= "Zeige Abstandsfenster in Phase 1 (6m)"
+	TimerHardmode			= "Zeige Timer für Hard Mode"
 }
 
 L:SetMiscLocalization{
@@ -334,8 +332,6 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	SetIconOnShadowCrash			= "Setze Zeichen auf Ziele von $spell:62660 (Totenkopf)",
-	SetIconOnLifeLeach				= "Setze Zeichen auf Ziele von $spell:63276 (Kreuz)",
 	hardmodeSpawn					= "Zeige Zeit bis zum Erscheinen des Saronitanimus (Hard Mode)"
 }
 

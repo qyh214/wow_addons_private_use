@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(140, "DBM-BaradinHold", nil, 74)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005904")
+mod:SetRevision("20200524145601")
 mod:SetCreatureID(52363)
 mod:SetEncounterID(1250)
 mod:SetZone()
@@ -23,7 +23,7 @@ local warnEyes					= mod:NewSpellAnnounce(96920, 3)
 local specWarnSearingShadows	= mod:NewSpecialWarningSpell(96913, "Tank")
 local specWarnFocusedFire		= mod:NewSpecialWarningMove(97212)
 
-local timerSearingShadows		= mod:NewCDTimer(24, 96913, nil, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
+local timerSearingShadows		= mod:NewCDTimer(24, 96913, nil, "Tank", 2, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerEyes					= mod:NewCDTimer(57.5, 96920, nil, nil, nil, 1)
 local timerFocusedFire			= mod:NewCDTimer(16, 96884, nil, nil, nil, 3) -- 24 16 16, repeating pattern. Can vary by a couple seconds, ie be 26 18 18, but the pattern is same regardless.
 

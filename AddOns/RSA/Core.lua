@@ -18,6 +18,7 @@ function RSA:OnInitialize() -- Do all this when the addon loads.
 	-- project-revision
 	self.db.global.version = 4.0
 	self.db.global.revision = string.match(GetAddOnMetadata("RSA","Version"),"%d+")
+	self.db.global.releaseType = string.match(GetAddOnMetadata('RSA','Version'),'%a+',2)
 
 	if not RSA.db.global.ID then
 		RSA.db.global.ID = RSA.GetMyRandomNumber()

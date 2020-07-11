@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2367, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200323225936")
+mod:SetRevision("20200528135243")
 mod:SetCreatureID(157231)
 mod:SetEncounterID(2335)
 mod:SetZone()
@@ -59,14 +59,14 @@ local yellFixate							= mod:NewYell(307260, nil, true, 2)
 local specWarnUmbralEruption				= mod:NewSpecialWarningDodge(308157, false, nil, 2, 2, 2)--Because every 8-10 seconds is excessive, let user opt in for this
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(314736, nil, nil, nil, 1, 8)
 
-local timerCrushCD							= mod:NewCDTimer(25.1, 307471, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON, nil, 2, 3)
+local timerCrushCD							= mod:NewCDTimer(25.1, 307471, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, 2, 3)
 local timerSlurryBreathCD					= mod:NewCDTimer(17, 306736, nil, nil, nil, 3, nil, nil, nil, 1, 3)
-local timerDebilitatingSpitCD				= mod:NewCDTimer(30.1, 306953, 58519, nil, nil, 5, nil, DBM_CORE_HEALER_ICON)
-local timerFixateCD							= mod:NewCDCountTimer(30.2, 307260, nil, nil, nil, 3, nil, DBM_CORE_DAMAGE_ICON)
-local timerUmbralMantleCD					= mod:NewNextCountTimer(20, 306448, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
-local timerUmbralEruptionCD					= mod:NewNextTimer(10, 308157, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
-local timerBubblingOverflowCD				= mod:NewNextTimer(10, 314736, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
-local timerEntropicBuildupCD				= mod:NewNextCountTimer(10, 308177, nil, nil, nil, 5, nil, DBM_CORE_HEROIC_ICON)
+local timerDebilitatingSpitCD				= mod:NewCDTimer(30.1, 306953, 58519, nil, nil, 5, nil, DBM_CORE_L.HEALER_ICON)
+local timerFixateCD							= mod:NewCDCountTimer(30.2, 307260, nil, nil, nil, 3, nil, DBM_CORE_L.DAMAGE_ICON)
+local timerUmbralMantleCD					= mod:NewNextCountTimer(20, 306448, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)
+local timerUmbralEruptionCD					= mod:NewNextTimer(10, 308157, nil, nil, nil, 3, nil, DBM_CORE_L.HEROIC_ICON)
+local timerBubblingOverflowCD				= mod:NewNextTimer(10, 314736, nil, nil, nil, 3, nil, DBM_CORE_L.HEROIC_ICON)
+local timerEntropicBuildupCD				= mod:NewNextCountTimer(10, 308177, nil, nil, nil, 5, nil, DBM_CORE_L.HEROIC_ICON)
 
 local berserkTimer							= mod:NewBerserkTimer(360)
 
@@ -93,7 +93,7 @@ local seenAdds = {}
 
 local function umbralEruptionLoop(self)
 	self.vb.eruptionCount = self.vb.eruptionCount + 1
-	if self.Options.SpecWarn308157dodge then
+	if self.Options.SpecWarn308157dodge2 then
 		specWarnUmbralEruption:Show()
 		specWarnUmbralEruption:Play("watchstep")
 	else
@@ -315,8 +315,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:Unschedule(umbralEruptionLoop)
 			--Schedule P2 Loop
 			self.vb.bubblingCount = 0
-			timerBubblingOverflowCD:Start(10)
-			self:Schedule(10, bubblingOverflowLoop, self)
+			timerBubblingOverflowCD:Start(8)
+			self:Schedule(8, bubblingOverflowLoop, self)
 		end
 		updateBreathTimer(self)
 	elseif spellId == 306933 then

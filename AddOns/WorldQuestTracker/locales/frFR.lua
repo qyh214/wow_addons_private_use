@@ -7,10 +7,8 @@ L["S_DECREASESIZE"] = "Réduire la taille"
 L["S_ENABLED"] = "Activé"
 L["S_ERROR_NOTIMELEFT"] = "Cette quête n'a pas de temps restant."
 L["S_ERROR_NOTLOADEDYET"] = "Cette quête n'est pas encore chargée, merci de patienter quelques secondes."
-L["S_FACTION_TOOLTIP_SELECT"] = [=[
-Clic: sélectionner cette faction]=]
-L["S_FACTION_TOOLTIP_TRACK"] = [=[
-Shift + Clic: suivre les quêtes de cette faction]=]
+L["S_FACTION_TOOLTIP_SELECT"] = "Clic: sélectionner cette faction"
+L["S_FACTION_TOOLTIP_TRACK"] = "Shift + Clic: suivre les quêtes de cette faction"
 L["S_FLYMAP_SHOWTRACKEDONLY"] = "Suivi seulement"
 L["S_FLYMAP_SHOWTRACKEDONLY_DESC"] = "Afficher seulement les quêtes suivies"
 L["S_FLYMAP_SHOWWORLDQUESTS"] = "Affiche les Expéditions"

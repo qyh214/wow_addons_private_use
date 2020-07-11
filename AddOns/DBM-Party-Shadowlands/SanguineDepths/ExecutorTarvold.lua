@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2415, "DBM-Party-Shadowlands", 8, 1189)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200425190512")
+mod:SetRevision("20200528135243")
 mod:SetCreatureID(162103)
 mod:SetEncounterID(2361)
 mod:SetZone()
@@ -28,7 +28,7 @@ local specWarnCoalesceManifestation	= mod:NewSpecialWarningSwitch(322574, "-Heal
 --local specWarnGTFO				= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
 local timerCastigateCD				= mod:NewAITimer(13, 322554, nil, nil, nil, 3)
-local timerCoalesceManifestationCD	= mod:NewAITimer(15.8, 322574, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
+local timerCoalesceManifestationCD	= mod:NewAITimer(15.8, 322574, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)
 
 mod:AddRangeFrameOption(8, 322554)
 mod:AddNamePlateOption("NPAuraOnEnergy", 323548)

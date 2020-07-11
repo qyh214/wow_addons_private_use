@@ -32,9 +32,6 @@ L:SetGeneralLocalization{
 	name = "Magtheridon"
 }
 
-L:SetWarningLocalization{
-}
-
 L:SetTimerLocalization{
 	timerP2	= "Fase 2"
 }
@@ -56,13 +53,6 @@ L:SetGeneralLocalization{
 	name = "Señor de fatalidad Kazzak"
 }
 
-L:SetWarningLocalization{
-}
-
-L:SetOptionLocalization{
-	SetIconOnMark		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(32960)
-}
-
 L:SetMiscLocalization{
 	DBM_KAZZAK_EMOTE_ENRAGE		= "¡%s se enfurece!"--Probalby won't be used, at least not long. Once spellid replaces it
 }
@@ -72,15 +62,6 @@ L = DBM:GetModLocalization("Doomwalker")
 
 L:SetGeneralLocalization{
 	name = "Caminante del Destino"
-}
-
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{

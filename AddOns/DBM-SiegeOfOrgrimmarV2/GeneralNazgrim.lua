@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(850, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222213340")
+mod:SetRevision("20200524145716")
 mod:SetCreatureID(71515)
 mod:SetEncounterID(1603)
 mod:SetZone()
@@ -70,8 +70,8 @@ local specWarnHuntersMarkOther		= mod:NewSpecialWarningTarget(143882, false)
 --Nazgrim Core Abilities
 local timerAddsCD					= mod:NewNextCountTimer(45, "ej7920", nil, nil, nil, 1, "132349", nil, nil, 1, 4)
 local timerSunder					= mod:NewTargetTimer(30, 143494, nil, "Tank|Healer")
-local timerSunderCD					= mod:NewCDTimer(7.5, 143494, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerExecuteCD				= mod:NewCDTimer(18, 143502, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerSunderCD					= mod:NewCDTimer(7.5, 143494, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerExecuteCD				= mod:NewCDTimer(18, 143502, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerBoneCD					= mod:NewCDTimer(30, 143638, nil, false, nil, 5)
 local timerBattleStanceCD			= mod:NewNextTimer(60, 143589, nil, nil, nil, 6)
 local timerBerserkerStanceCD		= mod:NewNextTimer(60, 143594, nil, nil, nil, 6)
@@ -79,7 +79,7 @@ local timerDefensiveStanceCD		= mod:NewNextTimer(60, 143593, nil, nil, nil, 6)
 --Nazgrim Rage Abilities
 local timerCoolingOff				= mod:NewBuffFadesTimer(15, 143484, nil, nil, nil, 5, nil, nil, nil, 2, 4)
 --Kor'kron Adds
-local timerEmpoweredChainHealCD		= mod:NewNextSourceTimer(6, 143473, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerEmpoweredChainHealCD		= mod:NewNextSourceTimer(6, 143473, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 

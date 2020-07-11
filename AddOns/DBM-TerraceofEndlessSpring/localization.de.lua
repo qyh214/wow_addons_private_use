@@ -16,7 +16,7 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnGroupOrder		= "Verkünde Gruppenrotation für $spell:118191<br/>(unterstützt derzeit nur 25-Spieler, Strategie: 5222 1222 1222 1222 1111)",
 	specWarnYourGroup	= "Spezialwarnung, wenn deine Gruppe bei $spell:118191 dran ist (unterstützt derzeit nur 25-Spieler, siehe oben)",
-	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(8, 111850) .. "<br/>(zeigt jeden, falls du den Debuff hast; sonst nur betroffene Spieler)"
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(8, 111850) .. "<br/>(zeigt jeden, falls du den Debuff hast; sonst nur betroffene Spieler)"
 })
 
 ------------
@@ -44,7 +44,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	warnHideOver	= "Zeige Warnung, wenn $spell:123244 beendet ist",
 	timerSpecialCD	= "Abklingzeit der Spezialfähigkeiten anzeigen",
-	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(zeigt jeden während $spell:123244, sonst nur die Tanks)"
+	RangeFrame		= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(zeigt jeden während $spell:123244, sonst nur die Tanks)"
 })
 
 L:SetMiscLocalization{

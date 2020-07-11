@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2395, "DBM-Party-Shadowlands", 1, 1182)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200415165936")
+mod:SetRevision("20200528135243")
 mod:SetCreatureID(166880)
 mod:SetEncounterID(2387)
 mod:SetZone()
@@ -26,7 +26,7 @@ local specWarnGTFO					= mod:NewSpecialWarningGTFO(320646, nil, nil, nil, 1, 8)
 
 local timerHeavingRetchCD			= mod:NewAITimer(15.8, 320596, nil, nil, nil, 3)
 local timerFetidGasCD				= mod:NewAITimer(15.8, 320637, nil, nil, nil, 3)
-local timerCrunchCD					= mod:NewAITimer(13, 320655, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerCrunchCD					= mod:NewAITimer(13, 320655, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 
 function mod:RetchTarget(targetname, uId)
 	if not targetname then return end

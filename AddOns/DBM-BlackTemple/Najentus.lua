@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Najentus", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200518210032")
 mod:SetCreatureID(22887)
 mod:SetEncounterID(601)
 mod:SetModelID(21174)
@@ -17,7 +17,7 @@ mod:RegisterEventsInCombat(
 
 local warnShield		= mod:NewSpellAnnounce(39872, 4)
 local warnShieldSoon	= mod:NewSoonAnnounce(39872, 10, 3)
-local warnSpine			= mod:NewTargetAnnounce(39837, 3)
+local warnSpine			= mod:NewTargetNoFilterAnnounce(39837, 3)
 
 local specWarnSpineTank	= mod:NewSpecialWarningTaunt(39837, nil, nil, nil, 1, 2)
 local yellSpine			= mod:NewYell(39837)

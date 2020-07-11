@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2372, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200220034831")
+mod:SetRevision("20200606011038")
 mod:SetCreatureID(157253, 157254)--Ka'zir and Tek'ris
 mod:SetEncounterID(2333)
 mod:SetZone()
@@ -36,8 +36,8 @@ local warnDarkRecon							= mod:NewCastAnnounce(307569, 4)
 local warnNullification						= mod:NewTargetNoFilterAnnounce(313460, 4)--Might feel spammy in a mass fuckup situation, but in most cases on by default should be fine
 
 --General
-local specWarnTekrissHiveControl			= mod:NewSpecialWarningCount(307213, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format(307213), nil, 2, 2)--Keep Together
-local specWarnKazirsHiveControl				= mod:NewSpecialWarningCount(307201, nil, DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format(307201), nil, 2, 2)--Keep Apart
+local specWarnTekrissHiveControl			= mod:NewSpecialWarningCount(307213, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(307213), nil, 2, 2)--Keep Together
+local specWarnKazirsHiveControl				= mod:NewSpecialWarningCount(307201, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(307201), nil, 2, 2)--Keep Apart
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(313672, nil, nil, nil, 1, 8)
 --Ka'zir
 local specWarnVolatileEruption				= mod:NewSpecialWarningTargetChange(307583, nil, 155037, nil, 1, 2)
@@ -53,39 +53,38 @@ local specWarnEtropicEhco					= mod:NewSpecialWarningDodge(313692, nil, nil, nil
 --General
 local timerTekrissHiveControlCD				= mod:NewNextTimer(98.7, 307213, nil, nil, nil, 6, nil, nil, nil, 1, 5)
 local timerKazirsHiveControlCD				= mod:NewNextTimer(98.7, 307201, nil, nil, nil, 6, nil, nil, nil, 1, 5)
-local timerDarkReconCast					= mod:NewNextTimer(10, 307569, nil, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON, nil, 3, 4)
+local timerDarkReconCast					= mod:NewNextTimer(10, 307569, nil, nil, nil, 5, nil, DBM_CORE_L.DAMAGE_ICON, nil, 3, 4)
 --Ka'zir
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20710))
-local timerVolatileEruptionCD				= mod:NewNextCountTimer(84, 307583, 155037, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)
+local timerVolatileEruptionCD				= mod:NewNextCountTimer(84, 307583, 155037, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)
 local timerSpawnAcidicAqirCD				= mod:NewNextCountTimer(84, 310340, nil, nil, nil, 3)
-local timerMindNumbingNovaCD				= mod:NewNextCountTimer(7.3, 313652, 242396, "HasInterrupt", nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
-local timerFlyerSwarmCD						= mod:NewNextCountTimer(120, 312710, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
+local timerMindNumbingNovaCD				= mod:NewNextCountTimer(7.3, 313652, 242396, "HasInterrupt", nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)
+local timerFlyerSwarmCD						= mod:NewNextCountTimer(120, 312710, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)
 --Tek'ris
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(20713))
-local timerAcceleratedEvolutionCD			= mod:NewNextCountTimer(84, 307637, 75610, nil, nil, 3, nil, DBM_CORE_TANK_ICON)
-local timerNullificationBlastCD				= mod:NewNextCountTimer(84, 307968, 158259, "Tank", 2, 5, nil, DBM_CORE_TANK_ICON)
+local timerAcceleratedEvolutionCD			= mod:NewNextCountTimer(84, 307637, 75610, nil, nil, 3, nil, DBM_CORE_L.TANK_ICON)
+local timerNullificationBlastCD				= mod:NewNextCountTimer(84, 307968, 158259, "Tank", 2, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerEchoingVoidCD					= mod:NewNextCountTimer(84, 307232, nil, nil, nil, 2, nil, nil, nil, 3, 4)
-local timerDronesCD							= mod:NewNextCountTimer(120, 312868, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
+local timerDronesCD							= mod:NewNextCountTimer(120, 312868, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)
 
 --local berserkTimer						= mod:NewBerserkTimer(600)
 
 mod:AddRangeFrameOption(6, 307232)--While 4 yards is supported, we want wiggle room
---mod:AddInfoFrameOption(308360, false)
 mod:AddSetIconOption("SetIconOnAdds", 307637, true, true, {1, 2, 3, 4, 5, 6})
 mod:AddNamePlateOption("NPAuraOnVolatileEruption", 307583)
 mod:AddNamePlateOption("NPAuraOnAcceleratedEvolution", 307637)
 
 mod.vb.interruptCount = 0
 mod.vb.addIcon = 1
-mod.vb.AccEvolutionCount = 0
-mod.vb.FlyerSwarmCount = 0
-mod.vb.EchoingVoidCount = 0
-mod.vb.MindNumbingNovaCount = 0
-mod.vb.NullificationBlastCount = 0
-mod.vb.AcidicAqirCount = 0
+mod.vb.AccEvoCount = 0
+mod.vb.FlyerCount = 0
+mod.vb.EchoVoidCount = 0
+mod.vb.MindNovaCount = 0
+mod.vb.NullBlastCount = 0
+mod.vb.AqirCount = 0
 mod.vb.DronesCount = 0
-mod.vb.VolatileEruptionCount = 0
-mod.vb.difficultyName = "None"
+mod.vb.VolEruptionCount = 0
+local diffName = "easy"
 local seenAdds = {}
 local allTimers = {
 	["easy"] = {--(Heroic timers are just normal *0.9379 so I ported heroic timers back to normal by dividing them by 0.9379 and this checks out)
@@ -153,18 +152,18 @@ local allTimers = {
 function mod:OnCombatStart(delay)
 	self.vb.interruptCount = 0
 	self.vb.addIcon = 1
-	self.vb.AccEvolutionCount = 0
-	self.vb.FlyerSwarmCount = 0
-	self.vb.EchoingVoidCount = 0
-	self.vb.MindNumbingNovaCount = 0
-	self.vb.NullificationBlastCount = 0
-	self.vb.AcidicAqirCount = 0
+	self.vb.AccEvoCount = 0
+	self.vb.FlyerCount = 0
+	self.vb.EchoVoidCount = 0
+	self.vb.MindNovaCount = 0
+	self.vb.NullBlastCount = 0
+	self.vb.AqirCount = 0
 	self.vb.DronesCount = 0
-	self.vb.VolatileEruptionCount = 0
+	self.vb.VolEruptionCount = 0
 	table.wipe(seenAdds)
 	--Tek'ris's Hivemind Control instantly on pull
 	if self:IsMythic() then
-		self.vb.difficultyName = "mythic"
+		diffName = "mythic"
 		--Ka'zir
 		timerMindNumbingNovaCD:Start(12.1-delay, 1)
 		timerSpawnAcidicAqirCD:Start(45.1-delay, 1)
@@ -176,7 +175,7 @@ function mod:OnCombatStart(delay)
 		timerNullificationBlastCD:Start(22.1-delay, 1)
 		timerEchoingVoidCD:Start(27.1-delay, 1)
 	elseif self:IsHeroic() then
-		self.vb.difficultyName = "heroic"
+		diffName = "heroic"
 		--Ka'zir
 		timerMindNumbingNovaCD:Start(15-delay, 1)
 		timerSpawnAcidicAqirCD:Start(56.3-delay, 1)
@@ -188,7 +187,7 @@ function mod:OnCombatStart(delay)
 		timerNullificationBlastCD:Start(26.3-delay, 1)
 		timerEchoingVoidCD:Start(33.8-delay, 1)
 	else--Normal & LFR
-		self.vb.difficultyName = "easy"
+		diffName = "easy"
 		--Copied from normal for now
 		timerMindNumbingNovaCD:Start(15.9-delay, 1)
 		timerSpawnAcidicAqirCD:Start(59.6-delay, 1)
@@ -205,14 +204,21 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:OnCombatEnd()
---	if self.Options.InfoFrame then
---		DBM.InfoFrame:Hide()
---	end
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
 	if self.Options.NPAuraOnVolatileEruption or self.Options.NPAuraOnAcceleratedEvolution then
 		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
+	end
+end
+
+function mod:OnTimerRecovery()
+	if self:IsMythic() then
+		diffName = "mythic"
+	elseif self:IsHeroic() then
+		diffName = "heroic"
+	else--Normal & LFR
+		diffName = "easy"
 	end
 end
 
@@ -230,42 +236,42 @@ function mod:SPELL_CAST_START(args)
 		specWarnKazirsHiveControl:Play("phasechange")
 		timerTekrissHiveControlCD:Start(self:IsMythic() and 73.9 or self:IsHeroic() and 92.4 or 98.7)
 	elseif spellId == 310340 then
-		self.vb.AcidicAqirCount = self.vb.AcidicAqirCount + 1
-		specWarnSpawnAcidicAqir:Show(self.vb.AcidicAqirCount)
+		self.vb.AqirCount = self.vb.AqirCount + 1
+		specWarnSpawnAcidicAqir:Show(self.vb.AqirCount)
 		specWarnSpawnAcidicAqir:Play("watchstep")--or farfromline
-		local timer = allTimers[self.vb.difficultyName][spellId][self.vb.AcidicAqirCount+1]
+		local timer = allTimers[diffName][spellId][self.vb.AqirCount+1]
 		if timer then
-			timerSpawnAcidicAqirCD:Start(timer, self.vb.AcidicAqirCount+1)
+			timerSpawnAcidicAqirCD:Start(timer, self.vb.AqirCount+1)
 		end
 	elseif spellId == 313652 then
-		self.vb.MindNumbingNovaCount = self.vb.MindNumbingNovaCount + 1
-		specWarnMindNumbingNova:Show(args.sourceName, self.vb.MindNumbingNovaCount)
+		self.vb.MindNovaCount = self.vb.MindNovaCount + 1
+		specWarnMindNumbingNova:Show(args.sourceName, self.vb.MindNovaCount)
 		specWarnMindNumbingNova:Play("kickcast")
-		local timer = allTimers[self.vb.difficultyName][spellId][self.vb.MindNumbingNovaCount+1]
+		local timer = allTimers[diffName][spellId][self.vb.MindNovaCount+1]
 		if timer then
-			timerMindNumbingNovaCD:Start(timer, self.vb.MindNumbingNovaCount+1)
+			timerMindNumbingNovaCD:Start(timer, self.vb.MindNovaCount+1)
 		end
 	elseif spellId == 307968 then
-		self.vb.NullificationBlastCount = self.vb.NullificationBlastCount + 1
+		self.vb.NullBlastCount = self.vb.NullBlastCount + 1
 		for i = 1, 2 do
 			local bossUnitID = "boss"..i
 			if UnitExists(bossUnitID) and UnitGUID(bossUnitID) == args.sourceGUID and UnitDetailedThreatSituation("player", bossUnitID) then--We are highest threat target
-				specWarnNullificationBlast:Show(self.vb.NullificationBlastCount)--So show tank warning
+				specWarnNullificationBlast:Show(self.vb.NullBlastCount)--So show tank warning
 				specWarnNullificationBlast:Play("shockwave")
 				break
 			end
 		end
-		local timer = allTimers[self.vb.difficultyName][spellId][self.vb.NullificationBlastCount+1]
+		local timer = allTimers[diffName][spellId][self.vb.NullBlastCount+1]
 		if timer then
-			timerNullificationBlastCD:Start(timer, self.vb.NullificationBlastCount+1)
+			timerNullificationBlastCD:Start(timer, self.vb.NullBlastCount+1)
 		end
 	elseif spellId == 307232 then
-		self.vb.EchoingVoidCount = self.vb.EchoingVoidCount + 1
-		specWarnEchoingVoid:Show(self.vb.EchoingVoidCount)
+		self.vb.EchoVoidCount = self.vb.EchoVoidCount + 1
+		specWarnEchoingVoid:Show(self.vb.EchoVoidCount)
 		specWarnEchoingVoid:Play("scatter")
-		local timer = allTimers[self.vb.difficultyName][spellId][self.vb.EchoingVoidCount+1]
+		local timer = allTimers[diffName][spellId][self.vb.EchoVoidCount+1]
 		if timer then
-			timerEchoingVoidCD:Start(timer, self.vb.EchoingVoidCount+1)
+			timerEchoingVoidCD:Start(timer, self.vb.EchoVoidCount+1)
 		end
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(6)
@@ -290,17 +296,17 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 308178 then
 		--self.vb.addIcon = 1
-		self.vb.VolatileEruptionCount = self.vb.VolatileEruptionCount + 1
-		local timer = allTimers[self.vb.difficultyName][spellId][self.vb.VolatileEruptionCount+1]
+		self.vb.VolEruptionCount = self.vb.VolEruptionCount + 1
+		local timer = allTimers[diffName][spellId][self.vb.VolEruptionCount+1]
 		if timer then
-			timerVolatileEruptionCD:Start(timer, self.vb.VolatileEruptionCount+1)
+			timerVolatileEruptionCD:Start(timer, self.vb.VolEruptionCount+1)
 		end
 	elseif spellId == 307635 then
 		--self.vb.addIcon = 1
-		self.vb.AccEvolutionCount = self.vb.AccEvolutionCount + 1
-		local timer = allTimers[self.vb.difficultyName][spellId][self.vb.AccEvolutionCount+1]
+		self.vb.AccEvoCount = self.vb.AccEvoCount + 1
+		local timer = allTimers[diffName][spellId][self.vb.AccEvoCount+1]
 		if timer then
-			timerAcceleratedEvolutionCD:Start(timer, self.vb.AccEvolutionCount+1)
+			timerAcceleratedEvolutionCD:Start(timer, self.vb.AccEvoCount+1)
 		end
 	elseif spellId == 307232 then
 		if self:IsMythic() then
@@ -316,16 +322,16 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 312868 then--Summon Drones Periodic
 		DBM:Debug("Summon Drones Periodic is back in combat Log, tell MysticalOS")
 		--self.vb.DronesCount = self.vb.DronesCount + 1
-		--local timer = allTimers[self.vb.difficultyName][spellId][self.vb.DronesCount+1]
+		--local timer = allTimers[diffName][spellId][self.vb.DronesCount+1]
 		--if timer then
 		--	timerDronesCD:Start(timer, self.vb.DronesCount+1)
 		--end
 	elseif spellId == 312710 then--Call Flyer Swarm
 		DBM:Debug("Call Flyer Swarm is back in combat Log, tell MysticalOS")
-		--self.vb.FlyerSwarmCount = self.vb.FlyerSwarmCount + 1
-		--local timer = allTimers[self.vb.difficultyName][spellId][self.vb.FlyerSwarmCount+1]
+		--self.vb.FlyerCount = self.vb.FlyerCount + 1
+		--local timer = allTimers[diffName][spellId][self.vb.FlyerCount+1]
 		--if timer then
-		--	timerFlyerSwarmCD:Start(timer, self.vb.FlyerSwarmCount+1)
+		--	timerFlyerSwarmCD:Start(timer, self.vb.FlyerCount+1)
 		--end
 	end
 end
@@ -355,14 +361,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		seenAdds[args.destGUID] = true
 		local cid = self:GetCIDFromGUID(args.destGUID)
 		if cid == 157256 and self:AntiSpam(10, 10) then--Aqir Darter
-			self.vb.FlyerSwarmCount = self.vb.FlyerSwarmCount + 1
-			local timer = allTimers[self.vb.difficultyName][312710][self.vb.FlyerSwarmCount+1]
+			self.vb.FlyerCount = self.vb.FlyerCount + 1
+			local timer = allTimers[diffName][312710][self.vb.FlyerCount+1]
 			if timer then
-				timerFlyerSwarmCD:Start(timer, self.vb.FlyerSwarmCount+1)
+				timerFlyerSwarmCD:Start(timer, self.vb.FlyerCount+1)
 			end
 		elseif cid == 157255 and self:AntiSpam(10, 11) then--Aqir Drone
 			self.vb.DronesCount = self.vb.DronesCount + 1
-			local timer = allTimers[self.vb.difficultyName][312868][self.vb.DronesCount+1]
+			local timer = allTimers[diffName][312868][self.vb.DronesCount+1]
 			if timer then
 				timerDronesCD:Start(timer, self.vb.DronesCount+1)
 			end

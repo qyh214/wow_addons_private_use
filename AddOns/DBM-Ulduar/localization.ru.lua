@@ -211,10 +211,6 @@ L:SetGeneralLocalization{
 	name = "Ходир"
 }
 
-L:SetOptionLocalization{
-	SetIconOnStormCloud		= "Устанавливать метки на цели заклинания $spell:65133"
-}
-
 L:SetMiscLocalization{
 	YellKill	= "Наконец-то я... свободен от его оков…"
 }
@@ -234,7 +230,6 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	TimerHardmode	= "Отсчет времени для сложного режима",
-	RangeFrame		= "Показывать окно проверки дистанции",
 	AnnounceFails	= "Объявлять игроков, попавших под $spell:62017, в рейд-чат<br/>(требуются права лидера или помощника)"
 }
 
@@ -315,8 +310,7 @@ L:SetOptionLocalization{
 	WarnBombSpawn			= "Предупреждение о Бомботах",
 	TimerHardmode			= "Отсчет времени для сложного режима",
 	ShockBlastWarningInP1	= "Спец-предупреждение для $spell:63631 в фазе 1",
-	ShockBlastWarningInP4	= "Спец-предупреждение для $spell:63631 в фазе 4",
-	RangeFrame				= "Показывать окно проверки дистанции в фазе 1 (6 м)"
+	ShockBlastWarningInP4	= "Спец-предупреждение для $spell:63631 в фазе 4"
 }
 
 L:SetMiscLocalization{
@@ -348,8 +342,6 @@ L:SetWarningLocalization{
 }
 
 L:SetOptionLocalization{
-	SetIconOnShadowCrash			= "Устанавливать метки на цели заклинания $spell:62660 (череп)",
-	SetIconOnLifeLeach				= "Устанавливать метки на цели заклинания $spell:63276 (крест)",
 	SpecialWarningShadowCrash		= "Спец-предупреждение для $spell:62660<br/>(должен быть в цели или фокусе хотя бы у одного члена рейда)",
 	SpecialWarningShadowCrashNear	= "Спец-предупреждение о $spell:62660 около вас",
 	SpecialWarningLLNear			= "Спец-предупреждение о $spell:63276 около вас",
@@ -401,11 +393,8 @@ L:SetOptionLocalization{
 	SpecWarnGuardianLow				= "Спец-предупреждение, когда у Стража (в фазе 1) мало здоровья (для бойцов)",
 	WarnBrainPortalSoon				= "Предупреждать заранее о Провале Безумия",
 	SpecWarnMadnessOutNow			= "Спец-предупреждение незадолго до окончания $spell:64059",
-	SetIconOnFearTarget				= "Устанавливать метки на цели заклинания $spell:63881",
 	SpecWarnFervorCast				= "Спец-предупреждение, когда на вас накладывается $spell:63138<br/>(должна быть в цели или фокусе хотя бы у одного члена рейда)",
 	specWarnBrainPortalSoon			= "Спец-предупреждение о следующем Провале Безумия",
 	NextPortal						= "Отсчет времени до следующего Провала Безумия",
-	SetIconOnFervorTarget			= "Устанавливать метки на цели заклинания $spell:63138",
-	SetIconOnBrainLinkTarget		= "Устанавливать метки на цели заклинания $spell:63802",
 	MaladyArrow						= "Показывать стрелку, когда $spell:63881 около вас"
 }

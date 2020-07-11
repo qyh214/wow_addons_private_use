@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("GeneralVezax", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222200840")
+mod:SetRevision("20200530203003")
 mod:SetCreatureID(33271)
 mod:SetEncounterID(1134)
 mod:SetModelID(28548)
@@ -33,16 +33,16 @@ local specWarnSearingFlames		= mod:NewSpecialWarningInterruptCount(62661, "HasIn
 local specWarnAnimus			= mod:NewSpecialWarningSwitch("ej17651", nil, nil, nil, 1, 2)
 
 local timerEnrage				= mod:NewBerserkTimer(600)
-local timerSurgeofDarkness		= mod:NewBuffActiveTimer(10, 62662, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
-local timerNextSurgeofDarkness	= mod:NewCDTimer(61.7, 62662, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerSurgeofDarkness		= mod:NewBuffActiveTimer(10, 62662, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerNextSurgeofDarkness	= mod:NewCDTimer(61.7, 62662, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerSaroniteVapors		= mod:NewNextCountTimer(30, 63322, nil, nil, nil, 5)
 local timerShadowCrashCD		= mod:NewCDTimer(12, 62660, nil, "Ranged", nil, 3)
 local timerLifeLeech			= mod:NewTargetTimer(10, 63276, nil, false, 2, 3)
 local timerLifeLeechCD			= mod:NewCDTimer(20.4, 63276, nil, nil, nil, 3)
 local timerHardmode				= mod:NewTimer(189, "hardmodeSpawn", nil, nil, nil, 1)
 
-mod:AddBoolOption("SetIconOnShadowCrash", true)
-mod:AddBoolOption("SetIconOnLifeLeach", true)
+mod:AddSetIconOption("SetIconOnShadowCrash", 62660, true, false, {8})
+mod:AddSetIconOption("SetIconOnLifeLeach", 63276, true, false, {7})
 
 mod.vb.interruptCount = 0
 mod.vb.vaporsCount = 0

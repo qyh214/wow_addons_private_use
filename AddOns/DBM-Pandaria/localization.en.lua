@@ -7,7 +7,7 @@ L = DBM:GetModLocalization(691)
 
 L:SetOptionLocalization({
 	RangeFrame		= "Show dynamic range frame based on player debuff status for<br/>$spell:119622",
-	SetIconOnMC2	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(119622)
+	SetIconOnMC2	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(119622)
 })
 
 L:SetMiscLocalization({
@@ -29,7 +29,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(826)
 
 L:SetOptionLocalization({
-	RangeFrame	= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 137511)
+	RangeFrame	= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(10, 137511)
 })
 
 L:SetMiscLocalization({
@@ -42,7 +42,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(814)
 
 L:SetOptionLocalization({
-	RangeFrame	= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 136340)
+	RangeFrame	= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(10, 136340)
 })
 
 L:SetMiscLocalization({
@@ -55,7 +55,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(857)
 
 L:SetOptionLocalization({
-	SetIconOnBeacon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(144473),
+	SetIconOnBeacon	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(144473),
 	BeaconArrow		= "Show DBM Arrow when someone is affected by $spell:144473"
 })
 
@@ -70,7 +70,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(858)
 
 L:SetOptionLocalization({
-	RangeFrame	= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(11, 144532)
+	RangeFrame	= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(11, 144532)
 })
 
 L:SetMiscLocalization({
@@ -98,7 +98,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(860)
 
 L:SetOptionLocalization({
-	RangeFrame	= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 144642)
+	RangeFrame	= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(3, 144642)
 })
 
 L:SetMiscLocalization({
@@ -112,8 +112,8 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(861)
 
 L:SetOptionLocalization({
-	SetIconOnBurningSoul	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(144689),
-	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(8, 144689)
+	SetIconOnBurningSoul	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(144689),
+	RangeFrame				= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(8, 144689)
 })
 
 L:SetMiscLocalization({

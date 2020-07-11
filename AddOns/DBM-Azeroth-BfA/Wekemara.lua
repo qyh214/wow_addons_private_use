@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2363, "DBM-Azeroth-BfA", 5, 1028)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200220034831")
+mod:SetRevision("20200602212246")
 mod:SetCreatureID(152671)--155702/spawn-of-wekemara
 mod:SetEncounterID(2318)
 mod:SetReCombatTime(20)
@@ -25,12 +25,13 @@ local specWarnBioelectricBlast		= mod:NewSpecialWarningDodge(303319, nil, nil, n
 local specWarnShockBurst			= mod:NewSpecialWarningMoveAway(303488, nil, nil, nil, 1, 2)
 --local specWarnGTFO				= mod:NewSpecialWarningGTFO(238028, nil, nil, nil, 1, 8)
 
-local timerBioelectricblastCD		= mod:NewCDTimer(13.9, 303319, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON)--13.9 to like 30?
+local timerBioelectricblastCD		= mod:NewCDTimer(13.9, 303319, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)--13.9 to like 30?
 local timerShockburstCD				= mod:NewCDTimer(36.6, 303488, nil, nil, nil, 3)
-local timerElectricDischargeCD		= mod:NewCDTimer(25.6, 303451, nil, nil, nil, 2, nil, DBM_CORE_HEALER_ICON)
+local timerElectricDischargeCD		= mod:NewCDTimer(25.6, 303451, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)
 
 --mod:AddReadyCheckOption(37460, false)
 
+--[[
 function mod:OnCombatStart(delay, yellTriggered)
 	if yellTriggered then
 --		timerBioelectricblastCD:Start(1-delay)
@@ -38,6 +39,7 @@ function mod:OnCombatStart(delay, yellTriggered)
 --		timerElectricDischargeCD:Start(1-delay)
 	end
 end
+--]]
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId

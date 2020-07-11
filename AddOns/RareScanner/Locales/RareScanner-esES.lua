@@ -57,6 +57,8 @@ if AL then
 	AL["DISPLAY_CONTAINER_ICONS_DESC"] = "Si se desmarca se dejan de mostrar en el mapa del mundo iconos de contenedores."
 	AL["DISPLAY_EVENT_ICONS"] = "Mostrar iconos de eventos en el mapa del mundo"
 	AL["DISPLAY_EVENT_ICONS_DESC"] = "Si se desmarca se dejan de mostrar en el mapa del mundo iconos de eventos."
+	AL["DISPLAY_FRIENDLY_NPC_ICONS"] = "Mostrar iconos de NPCs raros amistosos en el mapa del mundo"
+	AL["DISPLAY_FRIENDLY_NPC_ICONS_DESC"] = "Si se desmarca se dejan de mostrar en el mapa del mundo iconos de NPCs raros amistosos."
 	AL["DISPLAY_LOG_WINDOW"] = "Mostrar la ventana de log"
 	AL["DISPLAY_LOG_WINDOW_DESC"] = "Si se desmarca se deja de mostrar la ventana de log."
 	AL["DISPLAY_LOOT_ON_MAP"] = "Mostrar botín en el mapa"
@@ -73,6 +75,8 @@ if AL then
 	AL["DISPLAY_NPC_ICONS_DESC"] = "Si se desmarca se dejan de mostrar en el mapa del mundo iconos de NPCs raros."
 	AL["DISPLAY_OPTIONS"] = "Opciones de mostrar"
 	AL["DUNGEONS_SCENARIOS"] = "Mazmorras/Gestas"
+	AL["ENABLE_AUTO_TOMTOM_WAYPOINTS"] = "Activa auto reemplazar punteros"
+	AL["ENABLE_AUTO_TOMTOM_WAYPOINTS_DESC"] = "Cuando se activa, tan pronto como encuentres una nueva entidad, el addon auto reemplazará todos tus punteros de Tomtom por uno nuevo indicando la posición de la entidad recién encontrada. Cuando se desactiva, solo se añadirá un puntero al hacer click sobre el botón principal."
 	AL["ENABLE_MARKER"] = "Mostrar marcador sobre objetivo"
 	AL["ENABLE_MARKER_DESC"] = "Si se activa, se mostrará un marcador encima del objetivo al seleccionarlo pulsando el botón principal"
 	AL["ENABLE_SCAN_CHAT"] = "Activa la búsqueda de NPCs raros mediante mensajes de chat"
@@ -94,6 +98,7 @@ if AL then
 	AL["ENABLE_TOMTOM_SUPPORT_DESC"] = "Cuando este activo se añadirán punteros de Tomtom a las coordenadas de las entidades encontradas."
 	AL["ENABLED_SEARCHING_RARE"] = "Se ha habilitado la búsqueda del NPC raro: "
 	AL["EVENT"] = "Evento"
+	AL["EXPEDITION_ISLANDS"] = "Expediciones insulares"
 	AL["FILTER"] = "Filtros de NPCs"
 	AL["FILTER_CONTINENT"] = "Continente/Categoría"
 	AL["FILTER_CONTINENT_DESC"] = "Nombre del continente o categoría."
@@ -164,8 +169,8 @@ if AL then
 	AL["MAP_MENU_SHOW_RARE_NPCS"] = "Mostrar iconos de NPC raros"
 	AL["MAP_NEVER"] = "Nunca"
 	AL["MAP_OPTIONS"] = "Opciones del mapa"
-	AL["MAP_SCALE_ICONS"] = "Escala de los iconos"
-	AL["MAP_SCALE_ICONS_DESC"] = "Ajusta la escala de los iconos, siendo 1 el tamaño original."
+	AL["MAP_SCALE_ICONS"] = "Escala de los iconos en el mapa del mundo"
+	AL["MAP_SCALE_ICONS_DESC"] = "Ajusta la escala de los iconos en el mapa del mundo, siendo 1 el tamaño original."
 	AL["MAP_SHOW_ICON_AFTER_COLLECTED"] = "Seguir mostrando iconos de contenedores después de abrirlos"
 	AL["MAP_SHOW_ICON_AFTER_COLLECTED_DESC"] = "Si se desmarca se deja de mostrar el icono del contenedor después de abrirlo."
 	AL["MAP_SHOW_ICON_AFTER_COMPLETED"] = "Seguir mostrando iconos de eventos después de completarlos"
@@ -196,6 +201,8 @@ if AL then
 	AL["MARKER_DESC"] = "Selecciona el marcador a añadir encima del objetivo cuando haces click en el botón principal."
 	AL["MESSAGE_OPTIONS"] = "Opciones de mensajes"
 	AL["MIDDLE_BUTTON"] = "Click-central"
+	AL["MINIMAP_SCALE_ICONS"] = "Escala de los iconos en el minimapa"
+	AL["MINIMAP_SCALE_ICONS_DESC"] = "Ajusta la escala de los iconos en el minimapa, siendo 0.7 el tamaño original."
 	AL["NAVIGATION_ENABLE"] = "Activa el navegador de entidades"
 	AL["NAVIGATION_ENABLE_DESC"] = "Si se activa, se mostrarán las flechas de navegación al lado del botón principal que permiten acceder a entidades antiguas o nuevas encontradas"
 	AL["NAVIGATION_LOCK_ENTITY"] = "Bloquea mostrar nuevas entidades si ya se está mostrando una"
@@ -205,10 +212,16 @@ if AL then
 	AL["NAVIGATION_SHOW_PREVIOUS"] = "Mostrar entidad anterior"
 	AL["NOT_TARGETEABLE"] = "No es seleccionable"
 	AL["NOTE_10263"] = "Los [Brujo del Escudo del Estigma] abren un portal rojo cada poco tiempo del que puede aparecer este NPC."
+	AL["NOTE_129836"] = "No tiene icono en el minimapa, de modo que el addon no te avisará de su presencia. Se encuentra en el sótano del edificio."
 	AL["NOTE_130350"] = "Tienes que montar a este caballo hasta un contenedor que se encuentra siguiendo el camino hacia la derecha desde esta posición."
 	AL["NOTE_131453"] = "Tienes que traer a [Guardián de la fuente] a esta posición. El caballo es un raro amistodo que se encuentra siguiendo el camino hacia la izquierda."
-	AL["NOTE_135497"] = "Disponible durante la misión diaria [Ayuda de Nordrassil] que ofrece Mylune. Durante esta misión aparecen por debajo de los árboles unas setas, que al pulsarlas se estacionan y te mantienen en combate. Para hacer que el NPC aparezca tienes que conseguir que 4 setas se mantengan en este estado al mismo tiempo (si no eres lo suficientemente rápido las setas desaparecen y tienes que volver a empezar)."
+	AL["NOTE_131735"] = "Es un NPC neutral. Una vez lo matas aparece un cerdito que te entregará la mascota [Taptaf]."
+	AL["NOTE_135448"] = "Solo disponible en dificultad mítica. Tienes que encontrar una [Llave de celda descartada] (aparecen encima de los muebles de alrededor) para poder abrir la prisión situada justo donde aparece esta calavera. Una vez dentro, metete por el agujero de la pared y llegarás a una sala donde hay un cubo. Haz click en este para invocar al NPC."
+	AL["NOTE_135497"] = "Disponible durante la misión diaria [Ayuda de Nordrassil] que ofrece Mylune. Durante esta misión aparecen por debajo de los árboles unas setas sobre las que puedes hacer click. Ves activando todas las setas hasta que aparezca el NPC."
+	AL["NOTE_140474"] = "Tienes que recolectar 20x[Fragmento abisal] (botín de mundo). Una vez que tienes los 20, los tienes que usar para crear [Esencia del abismo aberrante]. Utiliza este último objeto en las coordenadas 73.23 (detrás de una cascada). Una vez que uses el objeto, te mandarán a una mina para invocar al NPC (la entrada de la mina se encuentra en las coordenadas 46.36)."
 	AL["NOTE_149847"] = "Cuando te acercas dice que odia un color. Una vez sepas que color es, tienes que ir a las coordenadas 63.41 para que te pinten de dicho color. Cuando vuelvas te atacará y podrás matarle."
+	AL["NOTE_149886"] = "SÓLO aparece la primera vez que accedes a la librería real. Es un mero tributo a Stan Lee de Marvel."
+	AL["NOTE_149887"] = "SÓLO aparece la primera vez que accedes a la casa que aparece en esta posición. Es un mero tributo a Stan Lee de Marvel."
 	AL["NOTE_150342"] = "Solo aparece durante el evento [Proyecto de construcción DR-TR35]."
 	AL["NOTE_150394"] = "Para matarle tienes que atraerlo hasta las coordenadas 63,38, donde se encuentra una especie de torre echando rayos, que hará que explote y se convierta en un objeto despojable."
 	AL["NOTE_151124"] = "Tienes que obtener un [Smashed Transport Relay] de los enemigos que aparecen durante el evento [Proyecto de construcción DR-JD99] (coordenadas 59.67) y utilizarlo sobre la máquina que hay en la plataforma."
@@ -295,9 +308,6 @@ if AL then
 	AL["SOUND_OPTIONS"] = "Opciones de sonido"
 	AL["SOUND_VOLUME"] = "Volumen"
 	AL["SOUND_VOLUME_DESC"] = "Establece el volumen de los sonidos"
-	AL["SYNCRONIZATION_COMPLETED"] = "Sincronización completada"
-	AL["SYNCRONIZE"] = "Sincroniza base de datos"
-	AL["SYNCRONIZE_DESC"] = "Analiza que NPCs raros y tesoros ya has matado/recolectado que forman parte de un logro, y se dejarán de mostrar en el mapa si es que se están mostrando. No existe modo de saber el estado de NPCs y tesoros que no forman parte de un logro, con lo que no habrá cambios en el mapa respecto a estos."
 	AL["TEST"] = "Lanzar Test"
 	AL["TEST_DESC"] = "Pulsa el botón para mostrar un ejemplo de alerta. Puedes arrastrar el panel a otra posición donde se mostrarán las futuras alertas."
 	AL["TOC_NOTES"] = "Escaner del minimapa. Avisa con un mensaje, una miniatura y reproduce un sonido cada vez que un NPC raro, tesoro o evento aparece en tu minimapa."
@@ -310,15 +320,17 @@ if AL then
 	AL["TOOLTIP_TOP"] = "Lado superior"
 	AL["UNKNOWN"] = "Desconocido"
 	AL["UNKNOWN_TARGET"] = "Objectivo desconocido"
+	AL["ZONE_1332"] = "%s (Frente de guerra)"
 	AL["ZONE_1527"] = "%s (BFA Asalto)"
 	AL["ZONE_1530"] = "%s (BFA Asalto)"
 	AL["ZONE_1570"] = "%s (BFA Visión de N'Zoth menor)"
 	AL["ZONE_1571"] = "%s (BFA Visión de N'Zoth menor)"
 	AL["ZONE_317"] = "%s (Lado humanos)"
 	AL["ZONE_318"] = "%s (Lado no-muertos)"
+	AL["ZONE_943"] = "%s (Frente de guerra)"
 	AL["ZONES_FILTER"] = "Filtros de zonas"
 	AL["ZONES_FILTERS_SEARCH_DESC"] = "Escribe el nombre de la zona para filtrar la lista de abajo"
-	
+
 	-- CONTINENT names
 	AL["ZONES_CONTINENT_LIST"] = {
 		[9999] = "Sedes de clase"; --Class Halls
@@ -326,5 +338,6 @@ if AL then
 		[9997] = "Mazmorras/Gestas"; --Dungeons/Scenarios
 		[9996] = "Bandas"; --Raids
 		[9995] = "Desconocido"; --Unknown
+		[9994] = "Expediciones insulares"; --Expedition islands
 	}
 end

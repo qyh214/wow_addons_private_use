@@ -19,10 +19,10 @@
 ## X-DBM-Mod-Has-Mythic : 1
 ## X-DBM-Mod-Sort: 601
 ## X-DBM-Mod-MapID: 1448
-## X-DBM-Mod-MinCoreRevision: 15211
+## X-DBM-Mod-MinCoreRevision: 20200524142133
 ## X-Curse-Project-ID: 101956
 ## X-WoWI-ID: 24535
-## Version: r47
+## Version: r49
 
 localization.en.lua
 localization.de.lua

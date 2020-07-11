@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("FlameLeviathan", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20200530203003")
 
 mod:SetCreatureID(33113)
 mod:SetEncounterID(1132)
@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_SUMMON 62907"
 )
 
-local warnHodirsFury		= mod:NewTargetAnnounce(62297)
+local warnHodirsFury		= mod:NewTargetAnnounce(62297, 3)
 local pursueTargetWarn		= mod:NewAnnounce("PursueWarn", 2, 62374)
 local warnNextPursueSoon	= mod:NewAnnounce("warnNextPursueSoon", 3, 62374)
 

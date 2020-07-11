@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2396, "DBM-Party-Shadowlands", 1, 1182)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200412002938")
+mod:SetRevision("20200528135243")
 mod:SetCreatureID(166945)
 mod:SetEncounterID(2390)
 mod:SetZone()
@@ -31,10 +31,10 @@ local yellFrozenBindsFades			= mod:NewShortYell(323730)
 local specWarnDarkExile				= mod:NewSpecialWarningYou(321894, nil, nil, nil, 1, 5)
 --local specWarnGTFO				= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
---local timerAvastyeCD				= mod:NewAITimer(13, 257316, nil, nil, nil, 1, nil, DBM_CORE_DAMAGE_ICON)
+--local timerAvastyeCD				= mod:NewAITimer(13, 257316, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)
 local timerCometStormCD				= mod:NewAITimer(15.8, 320772, nil, nil, nil, 3)
-local timerIceboundAegisCD			= mod:NewAITimer(15.8, 321754, nil, nil, nil, 5, nil, DBM_CORE_DAMAGE_ICON)
-local timerFrozenBindsCD			= mod:NewAITimer(15.8, 323730, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON)
+local timerIceboundAegisCD			= mod:NewAITimer(15.8, 321754, nil, nil, nil, 5, nil, DBM_CORE_L.DAMAGE_ICON)
+local timerFrozenBindsCD			= mod:NewAITimer(15.8, 323730, nil, nil, nil, 3, nil, DBM_CORE_L.MAGIC_ICON)
 local timerDarkExileCD				= mod:NewAITimer(15.8, 321894, nil, nil, nil, 3)
 local timerDarkExile				= mod:NewTargetTimer(50, 321894, nil, nil, nil, 5)
 

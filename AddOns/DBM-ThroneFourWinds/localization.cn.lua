@@ -44,7 +44,7 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	LightningRodIcon= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(89668),
+	LightningRodIcon= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(89668),
 	TimerFeedback	= "计时条：$spell:87904持续时间",
 	RangeFrame		= "当你中了$spell:89668时显示距离监视器（20码）"
 })

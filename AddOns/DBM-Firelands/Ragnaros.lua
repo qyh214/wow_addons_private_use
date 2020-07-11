@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(198, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222190501")
+mod:SetRevision("20200524145601")
 mod:SetCreatureID(52409)
 mod:SetEncounterID(1203)
 mod:SetZone()
@@ -83,20 +83,20 @@ local timerMagmaTrap		= mod:NewCDTimer(25, 98164, nil, nil, nil, 5)		-- Phase 1 
 local timerSulfurasSmash	= mod:NewNextTimer(30, 98710, nil, nil, nil, 3)
 local timerHandRagnaros		= mod:NewCDTimer(25, 98237, nil, "Melee", nil, 2)-- might even be a "next" timer
 local timerWrathRagnaros	= mod:NewCDTimer(30, 98263, nil, "Ranged", nil, 3)--It's always 12 seconds after smash unless delayed by magmatrap or hand of rag.
-local timerBurningWound		= mod:NewTargetTimer(20, 99399, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerBurningWound		= mod:NewTargetTimer(20, 99399, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerFlamesCD			= mod:NewNextTimer(40, 99171, nil, nil, nil, 3)
-local timerMoltenSeedCD		= mod:NewCDTimer(60, 98495, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON, nil, 1, 4)--60 seconds CD in between from seed to seed. 50 seconds using the molten inferno trigger.
+local timerMoltenSeedCD		= mod:NewCDTimer(60, 98495, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON, nil, 1, 4)--60 seconds CD in between from seed to seed. 50 seconds using the molten inferno trigger.
 local timerMoltenInferno	= mod:NewNextTimer(10, 98518, nil, nil, nil, 2)--Cast bar for molten Inferno (seeds exploding)
 local timerLivingMeteorCD	= mod:NewNextCountTimer(45, 99268, nil, nil, nil, 1, nil, nil, nil, 2, 4)
-local timerInvokeSons		= mod:NewCastTimer(17, 99014, nil, nil, nil, 1, nil, DBM_CORE_DEADLY_ICON..DBM_CORE_DAMAGE_ICON)--8 seconds for splitting blow, about 8-10 seconds after for them landing, using the average, 9.
+local timerInvokeSons		= mod:NewCastTimer(17, 99014, nil, nil, nil, 1, nil, DBM_CORE_L.DEADLY_ICON..DBM_CORE_L.DAMAGE_ICON)--8 seconds for splitting blow, about 8-10 seconds after for them landing, using the average, 9.
 local timerLavaBoltCD		= mod:NewNextTimer(4, 98981)
 local timerBlazingHeatCD	= mod:NewCDTimer(20, 100460, nil, nil, nil, 3)
 local timerPhaseSons		= mod:NewTimer(45, "TimerPhaseSons", 99014, nil, nil, 6)	-- lasts 45secs or till all sons are dead
 local timerCloudBurstCD		= mod:NewCDTimer(50, 100714)
 local timerBreadthofFrostCD	= mod:NewCDTimer(45, 100479)
 local timerEntrapingRootsCD	= mod:NewCDTimer(56, 100646, nil, nil, nil, 5)--56-60sec variations. Always cast before empowered sulf, varies between 3 sec before and like 11 sec before.
-local timerEmpoweredSulfCD	= mod:NewCDTimer(56, 100604, nil, nil, nil, 5, nil, DBM_CORE_DEADLY_ICON..DBM_CORE_TANK_ICON, nil, mod:IsTank() and 1, 5)--56-64sec variations
-local timerEmpoweredSulf	= mod:NewBuffActiveTimer(10, 100604, nil, "Tank", nil, 5, nil, DBM_CORE_DEADLY_ICON..DBM_CORE_TANK_ICON, nil, 1, 0)--Countout timer
+local timerEmpoweredSulfCD	= mod:NewCDTimer(56, 100604, nil, nil, nil, 5, nil, DBM_CORE_L.DEADLY_ICON..DBM_CORE_L.TANK_ICON, nil, mod:IsTank() and 1, 5)--56-64sec variations
+local timerEmpoweredSulf	= mod:NewBuffActiveTimer(10, 100604, nil, "Tank", nil, 5, nil, DBM_CORE_L.DEADLY_ICON..DBM_CORE_L.TANK_ICON, nil, 1, 0)--Countout timer
 local timerDreadFlameCD		= mod:NewCDTimer(40, 100675, nil, false, nil, 5)--Off by default as only the people dealing with them care about it.
 
 local berserkTimer			= mod:NewBerserkTimer(1080)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1433, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222221214")
+mod:SetRevision("20200524145633")
 mod:SetCreatureID(90316)
 mod:SetEncounterID(1788)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
@@ -69,15 +69,15 @@ local specWarnFelConduit				= mod:NewSpecialWarningInterrupt(181827, nil, nil, n
 
 local timerFelLaserCD					= mod:NewCDTimer(16, 182582, nil, nil, nil, 3)--16-22. Never pauses, used all phases
 local timerChakramCD					= mod:NewCDTimer(33, 182178, nil, nil, nil, 3)
-local timerPhantasmalWindsCD			= mod:NewCDTimer(35, 181957, nil, nil, nil, 3, nil, DBM_CORE_DEADLY_ICON, nil, 1, 5)
+local timerPhantasmalWindsCD			= mod:NewCDTimer(35, 181957, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON, nil, 1, 5)
 local timerPhantasmalWoundsCD			= mod:NewCDTimer(30.5, 182325, nil, "Healer", 2, 5)--30.5-32
 local timerFocusedBlast					= mod:NewCastTimer(11, 181912, nil, nil, nil, 2)--Doesn't realy need a cd timer. he casts it twice back to back, then lands
-local timerShadowRiposteCD				= mod:NewCDTimer(23.5, 185345, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
+local timerShadowRiposteCD				= mod:NewCDTimer(23.5, 185345, nil, nil, nil, 3, nil, DBM_CORE_L.HEROIC_ICON)
 --Adds
-local timerFelBombCD					= mod:NewCDTimer(18.5, 181753, nil, nil, nil, 3, nil, DBM_CORE_MAGIC_ICON, nil, 3, 4)
-local timerFelConduitCD					= mod:NewCDTimer(15, 181827, nil, nil, nil, 4, nil, DBM_CORE_INTERRUPT_ICON)
+local timerFelBombCD					= mod:NewCDTimer(18.5, 181753, nil, nil, nil, 3, nil, DBM_CORE_L.MAGIC_ICON, nil, 3, 4)
+local timerFelConduitCD					= mod:NewCDTimer(15, 181827, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)
 local timerPhantasmalCorruptionCD		= mod:NewCDTimer(14, 181824, 156842, "Tank", nil, 3, nil, nil, nil, 2, 4)--14-18
-local timerDarkBindingsCD				= mod:NewCDTimer(34, 185456, nil, nil, nil, 3, nil, DBM_CORE_HEROIC_ICON)
+local timerDarkBindingsCD				= mod:NewCDTimer(34, 185456, nil, nil, nil, 3, nil, DBM_CORE_L.HEROIC_ICON)
 
 local berserkTimer						= mod:NewBerserkTimer(540)
 

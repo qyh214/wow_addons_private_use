@@ -346,6 +346,19 @@ DCS_TableData.StatData.RatingCategory = {
     updateFunc = function()	end
 }
 
+
+DCS_TableData.StatData.HonorCategory = {
+    category   = true,
+    frame      = char_ctats_pane.HonorCategory,
+    updateFunc = function()	end
+}
+
+DCS_TableData.StatData.ConquestCategory = {
+    category   = true,
+    frame      = char_ctats_pane.ConquestCategory,
+    updateFunc = function()	end
+}
+
 function MovementSpeed_OnUpdate(statFrame, elapsedTime) --Added this so Vehicles update as well. Shouldn't be too bad if other addons access this function, but still not as clean as I would like.
 	local unit = statFrame.unit;
 	local currentSpeed, runSpeed, flightSpeed, swimSpeed = GetUnitSpeed(unit);
@@ -906,6 +919,91 @@ DCS_TableData.StatData.CR_TOTAL_CORRUPTION = {
 
 		PaperDollFrame_SetLabelAndText(statFrame, "|cff8787ED"..ratingname.."|r", "|cff8787ED"..totalcorruption.."|r", false, totalcorruption);
 		statFrame.tooltip = "|cff8787ED" .. ratingname .. " " .. totalcorruption .. "|r";
+		statFrame:Show();
+	end
+}
+
+local function UpdateRatingFrame(statFrame, unit, bracketIndex, bracketString, bracketCodeName)
+	return function(statFrame, unit)
+		RequestRatedInfo();
+		local rating = select(1, GetPersonalRatedInfo(bracketIndex));
+		local ratingStr = tostring(rating);
+
+		PaperDollFrame_SetLabelAndText(statFrame, bracketString, ratingStr, false, rating);
+		statFrame.tooltip = highlight_code..dcs_format(doll_tooltip_format, bracketString).." "..ratingStr..font_color_close;
+		statFrame.tooltip2 = _G["STAT_"..bracketCodeName.."_TOOLTIP"];
+		statFrame:Show();
+	end
+end
+
+DCS_TableData.StatData.RATING_2V2 = {
+	updateFunc = UpdateRatingFrame(statFrame, unit, 1, L["2v2 Rating"], "RATING_2V2");
+}
+
+DCS_TableData.StatData.RATING_3V3 = {
+	updateFunc = UpdateRatingFrame(statFrame, unit, 2, L["3v3 Rating"], "RATING_3V3");
+}
+
+DCS_TableData.StatData.RATING_RBG = {
+	updateFunc = UpdateRatingFrame(statFrame, unit, 4, L["RBG Rating"], "RATING_RBG");
+}
+
+local function RoundNumber(value, decimalPlaces)
+	local roundedValue;
+	local scale = 10 ^ decimalPlaces;
+
+	roundedValue = (floor(value * scale + 0.5))/scale;
+
+	return roundedValue;
+end
+
+local function BuildProgressAndPercentString(current, maximum)
+	local str;
+
+	if (maximum and not (maximum == 0)) then
+		local percent = 100 * (current / maximum);
+		local rounded = RoundNumber(percent, 2);
+		str = current .. "/" .. maximum .. " (" .. rounded .. "%)";
+	else
+		str = "-"
+	end
+
+	return str;
+end
+
+DCS_TableData.StatData.CONQUEST_PROGRESS = {
+	updateFunc = function(statFrame, unit)
+		local currentValue, maxValue, questID = PVPGetConquestLevelInfo();
+		local conquestStr = BuildProgressAndPercentString(currentValue, maxValue);
+
+		PaperDollFrame_SetLabelAndText(statFrame, "Conquest", conquestStr, false, conquestValue);
+		statFrame.tooltip = highlight_code..dcs_format(doll_tooltip_format, L["Conquest"]).." "..conquestStr..font_color_close;
+		statFrame.tooltip2 = _G["STAT_CONQUEST_TOOLTIP"];
+		statFrame:Show();
+	end
+}
+
+DCS_TableData.StatData.HONOR_PROGRESS = {
+	updateFunc = function(statFrame, unit)
+		local currentValue = UnitHonor("player");
+		local maxValue = UnitHonorMax("player");
+		local honorProgressStr = BuildProgressAndPercentString(currentValue, maxValue);
+
+		PaperDollFrame_SetLabelAndText(statFrame, "Honor", honorProgressStr, false, currentValue);
+		statFrame.tooltip = highlight_code..dcs_format(doll_tooltip_format, L["Honor"]).." "..honorProgressStr..font_color_close;
+		statFrame.tooltip2 = _G["STAT_HONOR_PROGRESS_TOOLTIP"];
+		statFrame:Show();
+	end
+}
+
+DCS_TableData.StatData.HONOR_LEVEL = {
+	updateFunc = function(statFrame, unit)
+		local honorLevel = UnitHonorLevel("player");
+		local honorLevelStr = tostring(honorLevel);
+
+		PaperDollFrame_SetLabelAndText(statFrame, "Honor Level", honorLevelStr, false, honorLevel);
+		statFrame.tooltip = highlight_code..dcs_format(doll_tooltip_format, L["Honor Level"]).." "..honorLevelStr..font_color_close;
+		statFrame.tooltip2 = _G["STAT_HONOR_LEVEL_TOOLTIP"];
 		statFrame:Show();
 	end
 }

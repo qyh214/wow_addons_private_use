@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Shahraz", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200221204848")
+mod:SetRevision("20200518210032")
 mod:SetCreatureID(22947)
 mod:SetEncounterID(607)
 mod:SetModelID(21252)
@@ -19,7 +19,7 @@ mod:RegisterEventsInCombat(
 )
 
 --TODO, announce auras?
-local warnFA			= mod:NewTargetAnnounce(41001, 4)
+local warnFA			= mod:NewTargetNoFilterAnnounce(41001, 4)
 local warnShriek		= mod:NewSpellAnnounce(40823)
 local warnEnrageSoon	= mod:NewSoonAnnounce(21340)--not actual spell id
 local warnEnrage		= mod:NewSpellAnnounce(21340)
@@ -51,7 +51,7 @@ function mod:OnCombatStart(delay)
 	timerFACD:Start(24.4-delay)
 	if not self:IsTrivial(85) then
 		self:RegisterShortTermEvents(
-			"UNIT_HEALTH_FREQUENT boss1"
+			"UNIT_HEALTH boss1"
 		)
 	end
 end
@@ -93,7 +93,7 @@ function mod:RAID_BOSS_EMOTE(msg, source)
 	end
 end
 
-function mod:UNIT_HEALTH_FREQUENT(uId)
+function mod:UNIT_HEALTH(uId)
 	if UnitHealth(uId) / UnitHealthMax(uId) <= 0.23 and self:GetUnitCreatureId(uId) == 22947 and not self.vb.prewarn_enrage then
 		self:UnregisterShortTermEvents()
 		self.vb.prewarn_enrage = true

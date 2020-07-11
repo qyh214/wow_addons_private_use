@@ -2185,6 +2185,24 @@ local function Priest_Options()
 			Message_Channels_Disabled = {["Whisper"] = true},
 			Valid_Tags = {'[SPELL]', '[LINK]'},
 		},
+		["Evangelism"] = {
+			Profile = 'Evangelism',
+			Name = GetSpellInfo(246287),
+			Desc = GetSpellDescription(246287),
+			Message_Amount = 1,
+			Message_Areas = {'Cast'},
+			Message_Channels_Disabled = {["Whisper"] = true},
+			Valid_Tags = {'[SPELL]', '[LINK]'},
+		},
+		["Rapture"] = {
+			Profile = 'Rapture',
+			Name = GetSpellInfo(47536),
+			Desc = GetSpellDescription(47536),
+			Message_Amount = 2,
+			Message_Areas = {'Start', 'End'},
+			Message_Channels_Disabled = {["Whisper"] = true},
+			Valid_Tags = {'[SPELL]', '[LINK]'},
+		},
 	}
 	return Spells
 end
