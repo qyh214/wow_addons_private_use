@@ -7,22 +7,21 @@ local UnitLevel = UnitLevel
 local UnitArmor = UnitArmor
 local PaperDollFrame_GetArmorReduction = PaperDollFrame_GetArmorReduction
 local ARMOR = ARMOR
-local armorString = ARMOR..": "
-local chanceString = "%.2f%%"
+local armorString = ARMOR..': '
+local chanceString = '%.2f%%'
 local STAT_CATEGORY_ATTRIBUTES = STAT_CATEGORY_ATTRIBUTES
 
 local displayString, lastPanel, effectiveArmor, _ = ''
 
 local function OnEvent(self)
-	_, effectiveArmor = UnitArmor("player")
+	_, effectiveArmor = UnitArmor('player')
 
 	self.text:SetFormattedText(displayString, armorString, effectiveArmor)
 	lastPanel = self
 end
 
-local function OnEnter(self)
-	DT:SetupTooltip(self)
-
+local function OnEnter()
+	DT.tooltip:ClearLines()
 	DT.tooltip:AddLine(L["Mitigation By Level: "])
 	DT.tooltip:AddLine(' ')
 
@@ -32,7 +31,7 @@ local function OnEnter(self)
 		DT.tooltip:AddDoubleLine(playerlvl,format(chanceString, armorReduction),1,1,1)
 		playerlvl = playerlvl - 1
 	end
-	local lv = UnitLevel("target")
+	local lv = UnitLevel('target')
 	if lv and lv > 0 and (lv > playerlvl + 3 or lv < playerlvl) then
 		local armorReduction = PaperDollFrame_GetArmorReduction(effectiveArmor, lv)
 		DT.tooltip:AddDoubleLine(lv, format(chanceString, armorReduction),1,1,1)
@@ -42,12 +41,10 @@ local function OnEnter(self)
 end
 
 local function ValueColorUpdate(hex)
-	displayString = strjoin("", "%s", hex, "%d|r")
+	displayString = strjoin('', '%s', hex, '%d|r')
 
-	if lastPanel ~= nil then
-		OnEvent(lastPanel)
-	end
+	if lastPanel then OnEvent(lastPanel) end
 end
 E.valueColorUpdateFuncs[ValueColorUpdate] = true
 
-DT:RegisterDatatext('Armor', STAT_CATEGORY_ATTRIBUTES, {"UNIT_STATS", "UNIT_RESISTANCES", "ACTIVE_TALENT_GROUP_CHANGED", "PLAYER_TALENT_UPDATE"}, OnEvent, nil, nil, OnEnter, nil, ARMOR)
+DT:RegisterDatatext('Armor', STAT_CATEGORY_ATTRIBUTES, {'UNIT_STATS', 'UNIT_RESISTANCES', 'ACTIVE_TALENT_GROUP_CHANGED', 'PLAYER_TALENT_UPDATE'}, OnEvent, nil, nil, OnEnter, nil, ARMOR)

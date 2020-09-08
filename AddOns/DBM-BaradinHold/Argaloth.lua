@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(139, "DBM-BaradinHold", nil, 74)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145601")
+mod:SetRevision("20200806141910")
 mod:SetCreatureID(47120)
 mod:SetEncounterID(1033)
-mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 
 mod:RegisterCombat("combat")

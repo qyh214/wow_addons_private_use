@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(317, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145601")
+mod:SetRevision("20200806141910")
 mod:SetCreatureID(55689)
 mod:SetEncounterID(1296)
-mod:SetZone()
 mod:SetUsedIcons(3, 4, 5, 6, 7, 8)
 --mod:SetModelSound("sound\\CREATURE\\HAGARA\\VO_DS_HAGARA_INTRO_01.OGG", "sound\\CREATURE\\HAGARA\\VO_DS_HAGARA_CRYSTALDEAD_05.OGG")
 

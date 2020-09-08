@@ -2,7 +2,7 @@
 ## Title: |cff1784d1ElvUI|r Enhanced (BfA)
 ## Author: Feraldin
 ## X-Credits: Instant, Tristimdorio (Omega1970), Azilroka, Crackpotx, Sortokk, Repooc, moresunders
-## Version: 3.4.6
+## Version: 3.4.7
 ## Notes: Plugin-Enhancements for |cff1784d1ElvUI|r.
 ## X-Category: Plugins
 ## URL: https://wow.curseforge.com/addons/elvui-enhanced-again/

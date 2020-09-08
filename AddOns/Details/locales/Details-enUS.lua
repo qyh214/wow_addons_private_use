@@ -467,7 +467,7 @@ L["STRING_OPTIONS_BAR_SPACING"] = "Spacing"
 L["STRING_OPTIONS_BAR_SPACING_DESC"] = "Gap size between each bar."
 L["STRING_OPTIONS_BAR_TEXTURE_DESC"] = "Texture used on the top of the bar."
 L["STRING_OPTIONS_BARLEFTTEXTCUSTOM"] = "Custom Text Enabled"
-L["STRING_OPTIONS_BARLEFTTEXTCUSTOM_DESC"] = "When enabled, left text is formated following the rules in the box."
+L["STRING_OPTIONS_BARLEFTTEXTCUSTOM_DESC"] = "Use a custom  text, edit the text by clicking the the button below."
 L["STRING_OPTIONS_BARLEFTTEXTCUSTOM2"] = ""
 L["STRING_OPTIONS_BARLEFTTEXTCUSTOM2_DESC"] = [=[|cFFFFFF00{data1}|r: generally represents the player position number.
 
@@ -508,14 +508,14 @@ L["STRING_OPTIONS_BARSTART"] = "Bar Start After Icon"
 L["STRING_OPTIONS_BARSTART_DESC"] = [=[When disabled the top texture starts at the icon left side instead of the right
 
 This is useful when using an icon pack with transparent areas.]=]
-L["STRING_OPTIONS_BARUR_ANCHOR"] = "Fast Updates:"
+L["STRING_OPTIONS_BARUR_ANCHOR"] = "Fast Updates"
 L["STRING_OPTIONS_BARUR_DESC"] = "When enabled, DPS and HPS values are updated just a little bit faster than usual."
 L["STRING_OPTIONS_BG_ALL_ALLY"] = "Show All"
 L["STRING_OPTIONS_BG_ALL_ALLY_DESC"] = [=[When enabled, enemy players are also shown when the window is in Group Mode.
 
 |cFFFFFF00Important|r: changes are applied after the next time entering combat.]=]
 L["STRING_OPTIONS_BG_ANCHOR"] = "Battlegrounds:"
-L["STRING_OPTIONS_BG_UNIQUE_SEGMENT"] = "Unique Segment"
+L["STRING_OPTIONS_BG_UNIQUE_SEGMENT"] = "One Segment Battleground"
 L["STRING_OPTIONS_BG_UNIQUE_SEGMENT_DESC"] = "One segment is created on the begining of the battleground and last until it ends."
 L["STRING_OPTIONS_CAURAS"] = "Collect Auras"
 L["STRING_OPTIONS_CAURAS_DESC"] = [=[Enable capture of:
@@ -746,7 +746,7 @@ L["STRING_OPTIONS_INSTANCE_DELETE_DESC"] = [=[Remove a window permanently.
 Your game screen may reload during the erase process.]=]
 L["STRING_OPTIONS_INSTANCE_SKIN"] = "Skin"
 L["STRING_OPTIONS_INSTANCE_SKIN_DESC"] = "Modify window appearance based on a skin theme."
-L["STRING_OPTIONS_INSTANCE_STATUSBAR_ANCHOR"] = "Statusbar:"
+L["STRING_OPTIONS_INSTANCE_STATUSBAR_ANCHOR"] = "Statusbar"
 L["STRING_OPTIONS_INSTANCE_STATUSBARCOLOR"] = "Color and Transparency"
 L["STRING_OPTIONS_INSTANCE_STATUSBARCOLOR_DESC"] = [=[Select the color used by the statusbar.
 
@@ -1062,7 +1062,7 @@ L["STRING_OPTIONS_SAVELOAD_PNAME"] = "Name"
 L["STRING_OPTIONS_SAVELOAD_REMOVE"] = "Erase"
 L["STRING_OPTIONS_SAVELOAD_RESET"] = "Load Default Skin"
 L["STRING_OPTIONS_SAVELOAD_SAVE"] = "save"
-L["STRING_OPTIONS_SAVELOAD_SKINCREATED"] = "Skin created."
+L["STRING_OPTIONS_SAVELOAD_SKINCREATED"] = "skin saved."
 L["STRING_OPTIONS_SAVELOAD_STD_DESC"] = [=[Set the current appearance as Standard Skin.
 
 This skin is applied on all new windows created.]=]
@@ -1105,8 +1105,8 @@ L["STRING_OPTIONS_SKIN_ELVUI_BUTTON3_DESC"] = [=[Modify tooltip's:
 Border Color to: |cFFFFFF00Transparent|r.]=]
 L["STRING_OPTIONS_SKIN_EXTRA_OPTIONS_ANCHOR"] = "Skin Options:"
 L["STRING_OPTIONS_SKIN_LOADED"] = "skin successfully loaded."
-L["STRING_OPTIONS_SKIN_PRESETS_ANCHOR"] = "Save Current Settings as Custom Skin:"
-L["STRING_OPTIONS_SKIN_PRESETSCONFIG_ANCHOR"] = "Manage Saved Custom Skins:"
+L["STRING_OPTIONS_SKIN_PRESETS_ANCHOR"] = "Save Skin:"
+L["STRING_OPTIONS_SKIN_PRESETSCONFIG_ANCHOR"] = "Saved Skins:"
 L["STRING_OPTIONS_SKIN_REMOVED"] = "skin removed."
 L["STRING_OPTIONS_SKIN_RESET_TOOLTIP"] = "Reset Tooltip Border"
 L["STRING_OPTIONS_SKIN_RESET_TOOLTIP_DESC"] = "Set the tooltip's border color and texture to default."
@@ -1379,7 +1379,7 @@ L["STRING_OPTIONSMENU_DATACOLLECT"] = "Data Collector"
 L["STRING_OPTIONSMENU_DATAFEED"] = "Data Feed"
 L["STRING_OPTIONSMENU_DISPLAY"] = "Display"
 L["STRING_OPTIONSMENU_DISPLAY_DESC"] = "Overall basic adjustments and quick window control."
-L["STRING_OPTIONSMENU_LEFTMENU"] = "Title Bar: General"
+L["STRING_OPTIONSMENU_LEFTMENU"] = "Title Bar"
 L["STRING_OPTIONSMENU_MISC"] = "Miscellaneous"
 L["STRING_OPTIONSMENU_PERFORMANCE"] = "Performance Tweaks"
 L["STRING_OPTIONSMENU_PLUGINS"] = "Plugins Management"
@@ -1389,13 +1389,15 @@ L["STRING_OPTIONSMENU_RIGHTMENU"] = "-- x -- x --"
 L["STRING_OPTIONSMENU_ROWMODELS"] = "Bars: Advanced"
 L["STRING_OPTIONSMENU_ROWSETTINGS"] = "Bars: General"
 L["STRING_OPTIONSMENU_ROWTEXTS"] = "Bars: Texts"
-L["STRING_OPTIONSMENU_SKIN"] = "Skin Selection"
+L["STRING_OPTIONSMENU_SKIN"] = "Skins"
 L["STRING_OPTIONSMENU_SPELLS"] = "Spell Customization"
 L["STRING_OPTIONSMENU_SPELLS_CONSOLIDATE"] = "Consolidate common spells with the same name"
+L["STRING_OPTIONSMENU_TITLEBAR"] = "Title Bar"
 L["STRING_OPTIONSMENU_TITLETEXT"] = "Title Bar: Text"
 L["STRING_OPTIONSMENU_TOOLTIP"] = "Tooltips"
 L["STRING_OPTIONSMENU_WALLPAPER"] = "Window: Wallpaper"
 L["STRING_OPTIONSMENU_WINDOW"] = "Window: General"
+L["STRING_OPTIONSMENU_WINDOWBODY"] = "Window Body"
 L["STRING_OVERALL"] = "Overall"
 L["STRING_OVERHEAL"] = "Overheal"
 L["STRING_OVERHEALED"] = "Overhealed"

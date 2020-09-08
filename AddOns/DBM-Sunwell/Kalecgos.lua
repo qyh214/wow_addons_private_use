@@ -2,11 +2,10 @@ local mod	= DBM:NewMod("Kal", "DBM-Sunwell")
 local Kal 	= DBM:GetModByName("Kal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145731")
+mod:SetRevision("20200806142051")
 mod:SetCreatureID(24850)
 mod:SetEncounterID(724)
 mod:SetModelID(26628)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 

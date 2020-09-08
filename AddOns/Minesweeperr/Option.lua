@@ -1,12 +1,5 @@
-local _, _MS = ...
 local L = LibStub ("AceLocale-3.0"):GetLocale("Minesweeperr", true)
-
-_MS.UI.OPTION = {}
-
-local _U = _MS.UTILS
-local _OP = _MS.UI.OPTION
-local _CD = _MS.CONSTDATA
-local MS = _MS.addon
+local MS = Minesweeperr
 
 MS.optionsTable = { 
     name = "Minesweeperr",
@@ -90,7 +83,6 @@ function MS:setMainAchiID(info, newValue)
         newValue = 14145
     end
     self.db.profile.mainAchiID = newValue
-    _CD.mainAchiID = self.db.profile.mainAchiID
 end
 
 function MS:getChildAchi1ID(info)
@@ -103,7 +95,6 @@ function MS:setChildAchi1ID(info, newValue)
         newValue = 13781
     end
     self.db.profile.childAchi1ID = newValue
-    _CD.childAchi1ID = self.db.profile.childAchi1ID
 end
 
 function MS:getChildAchi2ID(info)
@@ -116,7 +107,6 @@ function MS:setChildAchi2ID(info, newValue)
         newValue = 13449
     end
     self.db.profile.childAchi2ID = newValue
-    _CD.childAchi2ID = self.db.profile.childAchi2ID
 end
 
 function MS:getChildAchi3ID(info)
@@ -129,7 +119,6 @@ function MS:setChildAchi3ID(info, newValue)
         newValue = 13080
     end
     self.db.profile.childAchi3ID = newValue
-    _CD.childAchi3ID = self.db.profile.childAchi3ID
 end
 
 function MS:getShowMinimap(info)

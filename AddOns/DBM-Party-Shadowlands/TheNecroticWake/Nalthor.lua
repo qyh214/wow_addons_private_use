@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(2396, "DBM-Party-Shadowlands", 1, 1182)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200528135243")
-mod:SetCreatureID(166945)
+mod:SetRevision("20200803045206")
+mod:SetCreatureID(162693)
 mod:SetEncounterID(2390)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 
@@ -18,7 +17,12 @@ mod:RegisterEventsInCombat(
 --	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
---TODO, verify comet of storm trigger
+--TODO, target scan dark exile to make it faster?
+--[[
+ability.id = 320772 and type = "begincast"
+ or (ability.id = 320788 or ability.id = 323730 or ability.id = 321894) and type = "cast"
+ or (ability.id = 321368 or ability.id = 321754) and type = "applybuff"
+--]]
 local warnIceboundAegis				= mod:NewTargetNoFilterAnnounce(321754, 4)
 local warnFrozenBinds				= mod:NewTargetNoFilterAnnounce(323730, 3)
 local warnDarkExile					= mod:NewTargetNoFilterAnnounce(321894, 3)
@@ -31,20 +35,19 @@ local yellFrozenBindsFades			= mod:NewShortYell(323730)
 local specWarnDarkExile				= mod:NewSpecialWarningYou(321894, nil, nil, nil, 1, 5)
 --local specWarnGTFO				= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
---local timerAvastyeCD				= mod:NewAITimer(13, 257316, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)
-local timerCometStormCD				= mod:NewAITimer(15.8, 320772, nil, nil, nil, 3)
-local timerIceboundAegisCD			= mod:NewAITimer(15.8, 321754, nil, nil, nil, 5, nil, DBM_CORE_L.DAMAGE_ICON)
-local timerFrozenBindsCD			= mod:NewAITimer(15.8, 323730, nil, nil, nil, 3, nil, DBM_CORE_L.MAGIC_ICON)
-local timerDarkExileCD				= mod:NewAITimer(15.8, 321894, nil, nil, nil, 3)
+local timerCometStormCD				= mod:NewCDTimer(24.2, 320772, nil, nil, nil, 3)
+local timerIceboundAegisCD			= mod:NewCDTimer(24.2, 321754, nil, nil, nil, 5, nil, DBM_CORE_L.DAMAGE_ICON)
+local timerFrozenBindsCD			= mod:NewCDTimer(24.2, 323730, nil, nil, nil, 3, nil, DBM_CORE_L.MAGIC_ICON)
+local timerDarkExileCD				= mod:NewCDTimer(44.9, 321894, nil, nil, nil, 3)
 local timerDarkExile				= mod:NewTargetTimer(50, 321894, nil, nil, nil, 5)
 
 mod:AddInfoFrameOption(321754, true)
 
 function mod:OnCombatStart(delay)
-	timerCometStormCD:Start(1-delay)
-	timerIceboundAegisCD:Start(1-delay)
-	timerFrozenBindsCD:Start(1-delay)
-	timerDarkExileCD:Start(1-delay)
+	timerFrozenBindsCD:Start(8.9-delay)--SUCCESS
+	timerIceboundAegisCD:Start(11.7-delay)
+	timerCometStormCD:Start(16.5-delay)
+	timerDarkExileCD:Start(28.2-delay)--SUCCESS
 end
 
 function mod:OnCombatEnd()
@@ -90,10 +93,10 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellFrozenBinds:Yell()
 			yellFrozenBindsFades:Countdown(spellId)
 		elseif self:CheckNearby(16, args.destName) and not DBM:UnitDebuff("player", spellId) then
-			specWarnFrozenBindsNear:CombinedShow(0.3, args.destName)
-			specWarnFrozenBindsNear:ScheduleVoice(0.3, "runaway")
+			specWarnFrozenBindsNear:CombinedShow(0.5, args.destName)
+			specWarnFrozenBindsNear:ScheduleVoice(0.5, "runaway")
 		else
-			warnFrozenBinds:CombinedShow(0.3, args.destName)
+			warnFrozenBinds:CombinedShow(0.5, args.destName)
 		end
 	elseif spellId == 323198 then
 		timerDarkExile:Start(50, args.destName)

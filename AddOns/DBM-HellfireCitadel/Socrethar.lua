@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(1427, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145633")
+mod:SetRevision("20200806142006")
 mod:SetCreatureID(92330)
 mod:SetEncounterID(1794)
-mod:SetZone()
 mod:SetUsedIcons(1)
 --mod.respawnTime = 20
 
@@ -146,16 +145,16 @@ function mod:ChargeTarget(targetname, uId)
 	if self.Options.HudMapOnCharge then
 		local currentTank = self:GetCurrentTank(90296)
 		if currentTank then
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(182051, "party", targetname, 0.35, 4, nil, nil, nil, 0.5, nil, false):Appear():SetLabel(targetname, nil, nil, nil, nil, nil, 0.8, nil, -13, 8, nil)
+			DBM.HudMap:RegisterRangeMarkerOnPartyMember(182051, "party", targetname, 0.35, 4, nil, nil, nil, 0.5, nil, false):Appear():SetLabel(targetname, nil, nil, nil, nil, nil, 0.8, nil, -13, 8, nil)
 			if targetname == UnitName("player") then
-				DBMHudMap:AddEdge(1, 1, 0, 0.5, 4, currentTank, targetname, nil, nil, nil, nil, 125)
+				DBM.HudMap:AddEdge(1, 1, 0, 0.5, 4, currentTank, targetname, nil, nil, nil, nil, 125)
 			else
-				DBMHudMap:RegisterRangeMarkerOnPartyMember(182051, "party", UnitName("player"), 0.7, 4, nil, nil, nil, 1, nil, false):Appear()
-				DBMHudMap:AddEdge(1, 0, 0, 0.5, 4, currentTank, targetname, nil, nil, nil, nil, 125)
+				DBM.HudMap:RegisterRangeMarkerOnPartyMember(182051, "party", UnitName("player"), 0.7, 4, nil, nil, nil, 1, nil, false):Appear()
+				DBM.HudMap:AddEdge(1, 0, 0, 0.5, 4, currentTank, targetname, nil, nil, nil, nil, 125)
 			end
 		else--Old school
 			DBM:Debug("Tank Detection Failure in HudMapOnCharge", 2)
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(182051, "highlight", targetname, 5, 4, 1, 0, 0, 0.5, nil, true, 2):Pulse(0.5, 0.5)
+			DBM.HudMap:RegisterRangeMarkerOnPartyMember(182051, "highlight", targetname, 5, 4, 1, 0, 0, 0.5, nil, true, 2):Pulse(0.5, 0.5)
 		end
 	end
 	if self.Options.SetIconOnCharge then
@@ -201,7 +200,7 @@ function mod:OnCombatEnd()
 		DBM.RangeCheck:Hide()
 	end
 	if self.Options.HudMapOnOrb or self.Options.HudMapOnCharge then
-		DBMHudMap:Disable()
+		DBM.HudMap:Disable()
 	end
 end
 
@@ -384,7 +383,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnVolatileFelOrb:Show(args.destName)
 		end
 		if self.Options.HudMapOnOrb then
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(180221, "highlight", args.destName, 5, 20, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
+			DBM.HudMap:RegisterRangeMarkerOnPartyMember(180221, "highlight", args.destName, 5, 20, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 		end
 	elseif spellId == 190466 then
 		if args.sourceGUID == UnitGUID("player") then
@@ -403,7 +402,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		updateRangeFrame(self)
 	elseif spellId == 189627 then
 		if self.Options.HudMapOnOrb then
-			DBMHudMap:FreeEncounterMarkerByTarget(180221, args.destName)
+			DBM.HudMap:FreeEncounterMarkerByTarget(180221, args.destName)
 		end
 	elseif spellId == 190466 and args.sourceGUID == UnitGUID("player") then
 		playerInConstruct = false

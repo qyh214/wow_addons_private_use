@@ -1,12 +1,11 @@
 local mod	= DBM:NewMod("Illidan", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145731")
+mod:SetRevision("20200806142051")
 mod:SetCreatureID(22917)
 mod:SetEncounterID(609)
 mod:SetModelID(21135)
 mod:SetUsedIcons(8)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 

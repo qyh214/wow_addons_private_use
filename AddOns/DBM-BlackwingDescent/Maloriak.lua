@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(173, "DBM-BlackwingDescent", nil, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222203750")
+mod:SetRevision("20200806141910")
 mod:SetCreatureID(41378)
 mod:SetEncounterID(1025)
-mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 6, 7, 8)
 --mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_MaloriakIntro01.ogg", "Sound\\Creature\\Maloriak\\VO_BD_Maloriak_Event05.ogg")
 --Long: Maloriak, try not to lose to these mortals. Semicompetent help is SO hard to create.

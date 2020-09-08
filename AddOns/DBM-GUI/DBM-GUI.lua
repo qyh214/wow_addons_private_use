@@ -490,7 +490,7 @@ do
 			for charname, charTable in pairs(_G[addon.modId:gsub("-", "") .. "_AllSavedVars"] or {}) do
 				for _, optionTable in pairs(charTable) do
 					if type(optionTable) == "table" then
-						for i = 0, 3 do
+						for i = 0, 4 do
 							if optionTable[i] then
 								tinsert(modProfileDropdown, {
 									text	= (i == 0 and charname .. " (" .. ALL.. ")") or charname .. " (" .. SPECIALIZATION .. i .. "-" .. (charTable["talent" .. i] or "") .. ")",
@@ -562,7 +562,6 @@ do
 			end)
 
 			function DBM_GUI:dbm_modProfilePanel_refresh()
-				resetButton:GetScript("OnShow")()
 				copyModProfile:GetScript("OnShow")()
 				copyModSoundProfile:GetScript("OnShow")()
 				copyModNoteProfile:GetScript("OnShow")()
@@ -679,6 +678,8 @@ do
 						-- Set header text.
 						top1header:SetText(PLAYER_DIFFICULTY1)
 						top2header:SetText(PLAYER_DIFFICULTY_TIMEWALKER)
+						Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10 - (L.FontHeight * 6 * singleline))
+						area.frame:SetHeight(area.frame:GetHeight() + L.FontHeight * 6)
 					else
 						-- (Normal)
 						statsType = 2 -- Fix for BC instance
@@ -689,10 +690,10 @@ do
 						top1value1:SetPoint("TOPLEFT", top1text1, "TOPLEFT", 80, 0)
 						top1value2:SetPoint("TOPLEFT", top1text2, "TOPLEFT", 80, 0)
 						top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
+						Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10 - (L.FontHeight * 5 * singleline))
+						area.frame:SetHeight(area.frame:GetHeight() + L.FontHeight * 5)
 					end
 					-- Set Dims
-					Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10 - (L.FontHeight * 5 * singleline))
-					area.frame:SetHeight(area.frame:GetHeight() + L.FontHeight * 6)
 					singleline = singleline + 1
 				elseif mod.addon.type == "PARTY" or mod.addon.type == "SCENARIO" then -- If party or scenario instance have no heroic, we should use oneFormat.
 					statsType = 1
@@ -1044,6 +1045,9 @@ do
 							-- Set header text.
 							top1header:SetText(PLAYER_DIFFICULTY1)
 							top2header:SetText(PLAYER_DIFFICULTY_TIMEWALKER)
+							-- Set Dims
+							Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10 - (L.FontHeight * 6 * singleline))
+							area.frame:SetHeight(area.frame:GetHeight() + L.FontHeight * 6)
 						else
 							-- (Normal)
 							-- Like one format, but for specific mods within a pack, such as cataclysm world bosses
@@ -1056,10 +1060,10 @@ do
 							top1value3:SetPoint("TOPLEFT", top1text3, "TOPLEFT", 80, 0)
 							-- Set header text.
 							top1header:SetText(PLAYER_DIFFICULTY1)
+							-- Set Dims
+							Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10 - (L.FontHeight * 5 * singleline))
+							area.frame:SetHeight(area.frame:GetHeight() + L.FontHeight * 5)
 						end
-						-- Set Dims
-						Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10 - (L.FontHeight * 6 * singleline))
-						area.frame:SetHeight(area.frame:GetHeight() + L.FontHeight * 6)
 						singleline = singleline + 1
 					elseif mod.onlyHeroic then -- Some special BC, Wrath, Cata bosses
 						if mod.addon.hasTimeWalker then

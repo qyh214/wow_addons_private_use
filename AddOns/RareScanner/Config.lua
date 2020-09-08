@@ -690,10 +690,10 @@ local function GetFilterOptions()
 		local searchNpcByZoneID = function(zoneID, npcName)
 			if (zoneID) then
 				for k, v in pairs(private.dbglobal.rare_names[GetLocale()]) do 
-					if (private.ZONE_IDS[k]) then
+					if (private.NPC_INFO[k]) then
 						local tempName = v
 						if (npcName) then
-							if (((type(private.ZONE_IDS[k].zoneID) == "table" and (RS_Set(private.ZONE_IDS[k].zoneID)[zoneID] or (private.SUBZONES_IDS[zoneID] and RS_tContains(private.SUBZONES_IDS[zoneID],RS_Set(private.ZONE_IDS[k].zoneID))))) or private.ZONE_IDS[k].zoneID == zoneID or (private.SUBZONES_IDS[zoneID] and RS_tContains(private.SUBZONES_IDS[zoneID],private.ZONE_IDS[k].zoneID))) and RS_tContains(v,npcName)) then
+							if (((type(private.NPC_INFO[k].zoneID) == "table" and (RS_Set(private.NPC_INFO[k].zoneID)[zoneID] or (private.SUBZONES_IDS[zoneID] and RS_tContains(private.SUBZONES_IDS[zoneID],RS_Set(private.NPC_INFO[k].zoneID))))) or private.NPC_INFO[k].zoneID == zoneID or (private.SUBZONES_IDS[zoneID] and RS_tContains(private.SUBZONES_IDS[zoneID],private.NPC_INFO[k].zoneID))) and RS_tContains(v,npcName)) then
 								local i = 2
 								local sameNPC = false
 								while (filter_options.args.rareFilters.values[tempName]) do
@@ -711,7 +711,7 @@ local function GetFilterOptions()
 								end
 							end
 						else
-							if ((type(private.ZONE_IDS[k].zoneID) == "table" and (RS_Set(private.ZONE_IDS[k].zoneID)[zoneID] or (private.SUBZONES_IDS[zoneID] and RS_tContains(private.SUBZONES_IDS[zoneID],RS_Set(private.ZONE_IDS[k].zoneID))))) or private.ZONE_IDS[k].zoneID == zoneID or (private.SUBZONES_IDS[zoneID] and RS_tContains(private.SUBZONES_IDS[zoneID],private.ZONE_IDS[k].zoneID))) then
+							if ((type(private.NPC_INFO[k].zoneID) == "table" and (RS_Set(private.NPC_INFO[k].zoneID)[zoneID] or (private.SUBZONES_IDS[zoneID] and RS_tContains(private.SUBZONES_IDS[zoneID],RS_Set(private.NPC_INFO[k].zoneID))))) or private.NPC_INFO[k].zoneID == zoneID or (private.SUBZONES_IDS[zoneID] and RS_tContains(private.SUBZONES_IDS[zoneID],private.NPC_INFO[k].zoneID))) then
 								local i = 2
 								local sameNPC = false
 								while (filter_options.args.rareFilters.values[tempName]) do

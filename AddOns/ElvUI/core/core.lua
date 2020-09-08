@@ -4,7 +4,7 @@ local E, L, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, Profi
 
 local _G = _G
 local tonumber, pairs, ipairs, error, unpack, select, tostring = tonumber, pairs, ipairs, error, unpack, select, tostring
-local strjoin, twipe, tinsert, tremove, tContains = strjoin, wipe, tinsert, tremove, tContains
+local strsplit, strjoin, twipe, tinsert, tremove, tContains = strsplit, strjoin, wipe, tinsert, tremove, tContains
 local format, find, strrep, strlen, sub, gsub = format, strfind, strrep, strlen, strsub, gsub
 local assert, type, pcall, xpcall, next, print = assert, type, pcall, xpcall, next, print
 local rawget, rawset, setmetatable = rawget, rawset, setmetatable
@@ -19,6 +19,7 @@ local hooksecurefunc = hooksecurefunc
 local InCombatLockdown = InCombatLockdown
 local GetAddOnEnableState = GetAddOnEnableState
 local UnitFactionGroup = UnitFactionGroup
+local DisableAddOn = DisableAddOn
 local IsInGroup = IsInGroup
 local IsInGuild = IsInGuild
 local IsInRaid = IsInRaid
@@ -183,7 +184,7 @@ do
 end
 
 function E:Print(...)
-	(_G[E.db.general.messageRedirect] or _G.DEFAULT_CHAT_FRAME):AddMessage(strjoin('', E.media.hexvaluecolor or '|cff00b3ff', 'ElvUI:|r ', ...)) -- I put DEFAULT_CHAT_FRAME as a fail safe.
+	(E.db and _G[E.db.general.messageRedirect] or _G.DEFAULT_CHAT_FRAME):AddMessage(strjoin('', E.media.hexvaluecolor or '|cff00b3ff', 'ElvUI:|r ', ...)) -- I put DEFAULT_CHAT_FRAME as a fail safe.
 end
 
 function E:GrabColorPickerValues(r, g, b)
@@ -311,7 +312,6 @@ function E:UpdateMedia()
 
 	--Value Color
 	local value = E.db.general.valuecolor
-
 	if E:CheckClassColor(value.r, value.g, value.b) then
 		value = E:ClassColor(E.myclass, true)
 		E.db.general.valuecolor.r = value.r
@@ -319,9 +319,19 @@ function E:UpdateMedia()
 		E.db.general.valuecolor.b = value.b
 	end
 
+	--Chat Tab Selector Color
+	local selectorColor = E.db.chat.tabSelectorColor
+	if E:CheckClassColor(selectorColor.r, selectorColor.g, selectorColor.b) then
+		selectorColor = E:ClassColor(E.myclass, true)
+		E.db.chat.tabSelectorColor.r = selectorColor.r
+		E.db.chat.tabSelectorColor.g = selectorColor.g
+		E.db.chat.tabSelectorColor.b = selectorColor.b
+	end
+
 	E.media.hexvaluecolor = E:RGBToHex(value.r, value.g, value.b)
 	E.media.rgbvaluecolor = {value.r, value.g, value.b}
 
+	-- Chat Panel Background Texture
 	local LeftChatPanel, RightChatPanel = _G.LeftChatPanel, _G.RightChatPanel
 	if LeftChatPanel and LeftChatPanel.tex and RightChatPanel and RightChatPanel.tex then
 		LeftChatPanel.tex:SetTexture(E.db.chat.panelBackdropNameLeft)
@@ -470,7 +480,7 @@ end
 function E:UpdateFontTemplates()
 	for text in pairs(E.texts) do
 		if text then
-			text:FontTemplate(text.font, text.fontSize, text.fontStyle)
+			text:FontTemplate(text.font, text.fontSize, text.fontStyle, true)
 		else
 			E.texts[text] = nil
 		end
@@ -491,66 +501,105 @@ function E:UpdateStatusBars()
 	end
 end
 
-function E:IncompatibleAddOn(addon, module)
-	E.PopupDialogs.INCOMPATIBLE_ADDON.button1 = addon
-	E.PopupDialogs.INCOMPATIBLE_ADDON.button2 = 'ElvUI '..module
-	E.PopupDialogs.INCOMPATIBLE_ADDON.addon = addon
-	E.PopupDialogs.INCOMPATIBLE_ADDON.module = module
-	E:StaticPopup_Show('INCOMPATIBLE_ADDON', addon, module)
+do
+	local cancel = function(popup)
+		DisableAddOn(popup.addon)
+		ReloadUI()
+	end
+
+	function E:IncompatibleAddOn(addon, module, info)
+		local popup = E.PopupDialogs.INCOMPATIBLE_ADDON
+		popup.button2 = info.name or module
+		popup.button1 = addon
+		popup.module = module
+		popup.addon = addon
+		popup.accept = info.accept
+		popup.cancel = info.cancel or cancel
+
+		E:StaticPopup_Show('INCOMPATIBLE_ADDON', popup.button1, popup.button2)
+	end
 end
 
 function E:IsAddOnEnabled(addon)
 	return GetAddOnEnableState(E.myname, addon) == 2
 end
 
-function E:CheckIncompatible()
-	if E.global.ignoreIncompatible then return end
-
-	if E.private.chat.enable then
-		if E:IsAddOnEnabled('Prat-3.0') then
-			E:IncompatibleAddOn('Prat-3.0', 'Chat')
-		end
-		if E:IsAddOnEnabled('Chatter') then
-			E:IncompatibleAddOn('Chatter', 'Chat')
-		end
-	end
-
-	if E.private.nameplates.enable then
-		if E:IsAddOnEnabled('TidyPlates') then
-			E:IncompatibleAddOn('TidyPlates', 'NamePlates')
-		end
-		if E:IsAddOnEnabled('Aloft') then
-			E:IncompatibleAddOn('Aloft', 'NamePlates')
-		end
-		if E:IsAddOnEnabled('Healers-Have-To-Die') then
-			E:IncompatibleAddOn('Healers-Have-To-Die', 'NamePlates')
-		end
-		if E:IsAddOnEnabled('Plater') then
-			E:IncompatibleAddOn('Plater', 'NamePlates')
-		end
-	end
-
-	if E.private.actionbar.enable then
-		if E:IsAddOnEnabled('Bartender4') then
-			E:IncompatibleAddOn('Bartender4', 'ActionBar')
+function E:IsIncompatible(module, addons)
+	for _, addon in ipairs(addons) do
+		if E:IsAddOnEnabled(addon) then
+			E:IncompatibleAddOn(addon, module, addons.info)
+			return true
 		end
 	end
 end
 
-function E:CopyTable(currentTable, defaultTable)
-	if type(currentTable) ~= 'table' then currentTable = {} end
+do
+	local ADDONS = {
+		ActionBar = {
+			info = {
+				enabled = function() return E.private.actionbar.enable end,
+				accept = function() E.private.actionbar.enable = false; ReloadUI() end,
+				name = 'ElvUI ActionBars'
+			},
+			'Bartender4',
+			'Dominos'
+		},
+		Chat = {
+			info = {
+				enabled = function() return E.private.chat.enable end,
+				accept = function() E.private.chat.enable = false; ReloadUI() end,
+				name = 'ElvUI Chat'
+			},
+			'Prat-3.0',
+			'Chatter',
+			'Glass'
+		},
+		NamePlates = {
+			info = {
+				enabled = function() return E.private.nameplates.enable end,
+				accept = function() E.private.nameplates.enable = false; ReloadUI() end,
+				name = 'ElvUI NamePlates'
+			},
+			'TidyPlates',
+			'Healers-Have-To-Die',
+			'Kui_Nameplates',
+			'Plater',
+			'Aloft'
+		}
+	}
 
-	if type(defaultTable) == 'table' then
-		for option, value in pairs(defaultTable) do
-			if type(value) == 'table' then
-				value = E:CopyTable(currentTable[option], value)
-			end
-
-			currentTable[option] = value
+	E.INCOMPATIBLE_ADDONS = ADDONS -- let addons have the ability to alter this list to trigger our popup if they want
+	function E:AddIncompatible(module, addonName)
+		if ADDONS[module] then
+			tinsert(ADDONS[module], addonName)
+		else
+			print(module, 'is not in the incompatibility list.')
 		end
 	end
 
-	return currentTable
+	function E:CheckIncompatible()
+		if E.global.ignoreIncompatible then return end
+
+		for module, addons in pairs(ADDONS) do
+			if addons[1] and addons.info.enabled() and E:IsIncompatible(module, addons) then
+				break
+			end
+		end
+	end
+end
+
+function E:CopyTable(current, default)
+	if type(current) ~= 'table' then
+		current = {}
+	end
+
+	if type(default) == 'table' then
+		for option, value in pairs(default) do
+			current[option] = (type(value) == 'table' and E:CopyTable(current[option], value)) or value
+		end
+	end
+
+	return current
 end
 
 function E:RemoveEmptySubTables(tbl)
@@ -1474,6 +1523,25 @@ function E:DBConversions()
 			local enabled = E.db.unitframe.units[unit].healPrediction
 			E.db.unitframe.units[unit].healPrediction = {}
 			E.db.unitframe.units[unit].healPrediction.enable = enabled
+		else
+			local healPrediction = E.db.unitframe.units[unit].healPrediction
+			if healPrediction.reversedAbsorbs ~= nil then -- convert the newer setting if it existed
+				healPrediction.reversedAbsorbs = nil
+				healPrediction.absorbStyle = 'REVERSED'
+
+				-- clear extras
+				healPrediction.showAbsorbAmount = nil
+				healPrediction.showOverAbsorbs = nil
+			elseif healPrediction.showAbsorbAmount ~= nil then -- convert the old setting into the new wrapped setting
+				healPrediction.showAbsorbAmount = nil
+				healPrediction.absorbStyle = 'WRAPPED'
+
+				-- clear extras
+				healPrediction.showOverAbsorbs = nil
+			elseif healPrediction.showOverAbsorbs ~= nil then -- convert the over absorb toggle into the new setting
+				healPrediction.absorbStyle = 'NORMAL'
+				healPrediction.showOverAbsorbs = nil
+			end
 		end
 	end
 
@@ -1642,20 +1710,24 @@ function E:Initialize()
 	twipe(E.global)
 	twipe(E.private)
 
-	E.myguid = UnitGUID('player')
+	local playerGUID = UnitGUID('player')
+	local _, serverID = strsplit('-', playerGUID)
+	E.serverID = tonumber(serverID)
+	E.myguid = playerGUID
+
 	E.data = E.Libs.AceDB:New('ElvDB', E.DF, true)
 	E.data.RegisterCallback(E, 'OnProfileChanged', 'StaggeredUpdateAll')
 	E.data.RegisterCallback(E, 'OnProfileCopied', 'StaggeredUpdateAll')
 	E.data.RegisterCallback(E, 'OnProfileReset', 'OnProfileReset')
 	E.charSettings = E.Libs.AceDB:New('ElvPrivateDB', E.privateVars)
 	E.charSettings.RegisterCallback(E, 'OnProfileChanged', ReloadUI)
+	E.charSettings.RegisterCallback(E, 'OnProfileCopied', ReloadUI)
 	E.charSettings.RegisterCallback(E, 'OnProfileReset', 'OnPrivateProfileReset')
 	E.private = E.charSettings.profile
 	E.global = E.data.global
 	E.db = E.data.profile
 	E.Libs.DualSpec:EnhanceDatabase(E.data, 'ElvUI')
 
-	E:CheckIncompatible()
 	E:DBConversions()
 	E:UIScale()
 	E:BuildPrefixValues()

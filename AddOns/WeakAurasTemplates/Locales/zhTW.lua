@@ -48,7 +48,8 @@ local L = WeakAuras.L
 	L["Debuffs"] = "減益 DEBUFF/DOT"
 	L["Enchants"] = "附魔"
 	L["General"] = "一般"
-	L["General Azerite Traits"] = "一般艾澤萊特長"
+	--[[Translation missing --]]
+	L["General Azerite Traits"] = "General Azerite Traits"
 	L["Health"] = "血量"
 	L["Highlight while active, red when out of range."] = "作用時顯著標示，超出範圍時變成紅色。"
 	L["Highlight while active."] = "作用時顯著標示。"
@@ -70,7 +71,8 @@ local L = WeakAuras.L
 	L["Only shows the aura when the ability is ready to use."] = "只有在技能準備好可以使用時才顯示提醒效果。"
 	L["Pet alive"] = "寵物活著"
 	L["Pet Behavior"] = "寵物動作"
-	L["PvP Azerite Traits"] = "PvP 艾澤萊特長"
+	--[[Translation missing --]]
+	L["PvP Azerite Traits"] = "PvP Azerite Traits"
 	L["PvP Talents"] = "PVP 天賦"
 	L["PVP Trinkets (Aura)"] = "PVP 飾品 (光環)"
 	L["PVP Trinkets (CD)"] = "PVP 飾品 (冷卻)"
@@ -106,7 +108,8 @@ local L = WeakAuras.L
 	L["Show Only if on Cooldown"] = "只有在冷卻中時顯示"
 	L["Show Totem and Charge Information"] = "顯示圖騰和次數資訊"
 	L["slow debuff"] = "緩速減益"
-	L["Specific Azerite Traits"] = "專用艾澤萊特長"
+	--[[Translation missing --]]
+	L["Specific Azerite Traits"] = "Specific Azerite Traits"
 	L["Stance"] = "姿勢/形態"
 	L["stun debuff"] = "暈眩減益"
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "監控次數和機率觸發，觸發時顯著標示，超出範圍時變成紅色，資源不足時變成藍色。"

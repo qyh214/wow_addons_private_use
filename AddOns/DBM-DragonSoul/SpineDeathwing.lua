@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(318, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145601")
+mod:SetRevision("20200806141910")
 mod:SetCreatureID(53879)
 mod:SetEncounterID(1291)
-mod:SetZone()
 mod:SetUsedIcons(6, 5, 4, 3, 2, 1)
 --mod:SetModelSound("sound\\CREATURE\\Deathwing\\VO_DS_DEATHWING_BACKEVENT_01.OGG", "sound\\CREATURE\\Deathwing\\VO_DS_DEATHWING_BACKSLAY_01.OGG")
 

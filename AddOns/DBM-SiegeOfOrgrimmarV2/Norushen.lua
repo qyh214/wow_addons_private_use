@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(866, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145716")
+mod:SetRevision("20200806142037")
 mod:SetCreatureID(72276)
 --mod:SetEncounterID(1624)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 mod.syncThreshold = 1

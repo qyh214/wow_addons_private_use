@@ -9,10 +9,6 @@ L:SetGeneralLocalization{
 	name = "The Prophet Skeram"
 }
 
-L:SetOptionLocalization{
-	SetIconOnMC		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(785)
-}
-
 ----------------
 -- Three Bugs --
 ----------------
@@ -115,7 +111,8 @@ L:SetOptionLocalization{
 }
 L:SetMiscLocalization{
 	Eye			= "Eye of C'Thun",
-	Weakened 	= "weaken"
+	Weakened 	= "weaken",
+	NotValid	= "AQ40 partially cleared. %s optional bosses remain."
 }
 ----------------
 -- Ouro --
@@ -138,4 +135,13 @@ L:SetOptionLocalization{
 	TimerSubmerge		= "Show timer for submerge",
 	WarnEmerge			= "Show warning for emerge",
 	TimerEmerge			= "Show timer for emerge"
+}
+
+----------------
+-- AQ40 Trash --
+----------------
+L = DBM:GetModLocalization("AQ40Trash")
+
+L:SetGeneralLocalization{
+	name = "AQ40 Trash"
 }

@@ -1,10 +1,10 @@
-lightweight tag 899ac439a17c19a799d30a6a2a0e2faf5cc215e1 DetailsRetail.8.3.0.7348.141
+lightweight tag bc04237981dbf14e110b7081dd6d764c19a3e34d DetailsRetail.8.3.0.7356.141
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Mon Jul 6 11:27:35 2020 -0300
+Date:	Tue Aug 11 18:05:37 2020 -0300
 
-commit 899ac439a17c19a799d30a6a2a0e2faf5cc215e1
+commit bc04237981dbf14e110b7081dd6d764c19a3e34d
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon Jul 6 11:27:35 2020 -0300
+Date:   Tue Aug 11 18:05:37 2020 -0300
 
-    Fixed an issue affecting the Auto Hide for some users
+    Making sure the merge trash is enabled on new installations
 

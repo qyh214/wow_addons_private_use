@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(1122, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145633")
+mod:SetRevision("20200806142006")
 mod:SetCreatureID(76865)--No need to add beasts to this. It's always main boss that's engaged first and dies last.
 mod:SetEncounterID(1694)
-mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
 mod.respawnTime = 29.5
 
@@ -157,7 +156,7 @@ function mod:SuperheatedTarget(targetname, uId)
 	end
 	if self.Options.HudMapOnBreath then
 		--Static marker, breath doesn't move once a target is picked. it's aimed at static location player WAS
-		DBMHudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 6.5, 1, 0, 0, 0.5, nil, 1):Pulse(0.5, 0.5)
+		DBM.HudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 6.5, 1, 0, 0, 0.5, nil, 1):Pulse(0.5, 0.5)
 	end
 end
 
@@ -169,7 +168,7 @@ function mod:BreathTarget(targetname, uId)
 	end
 	if self.Options.HudMapOnBreath then
 		--Static marker, breath doesn't move once a target is picked. it's aimed at static location player WAS
-		DBMHudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 6.5, 1, 0, 0, 0.5, nil, 1):Pulse(0.5, 0.5)
+		DBM.HudMap:RegisterStaticMarkerOnPartyMember(154989, "highlight", targetname, 5, 6.5, 1, 0, 0, 0.5, nil, 1):Pulse(0.5, 0.5)
 	end
 end
 
@@ -204,7 +203,7 @@ function mod:OnCombatEnd()
 		DBM.RangeCheck:Hide()
 	end
 	if self.Options.HudMapOnBreath then
-		DBMHudMap:Disable()
+		DBM.HudMap:Disable()
 	end
 end
 

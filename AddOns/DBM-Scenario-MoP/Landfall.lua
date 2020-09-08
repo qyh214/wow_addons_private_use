@@ -1,8 +1,7 @@
 local mod	= DBM:NewMod("Landfall", "DBM-Scenario-MoP")--Alliance : 590, Horde : 595
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222213340")
-mod:SetZone()
+mod:SetRevision("20200806142037")
 
 mod:RegisterCombat("scenario", 1103, 1102)
 

@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod("SoOTrash", "DBM-SiegeOfOrgrimmarV2")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222213340")
+mod:SetRevision("20200806142037")
 --mod:SetModelID(47785)
-mod:SetZone()
 
 mod.isTrashMod = true
 

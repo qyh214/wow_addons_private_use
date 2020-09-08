@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(861, "DBM-Pandaria", nil, 322, 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200110163536")
+mod:SetRevision("20200806142037")
 mod:SetCreatureID(72057)
 mod:SetReCombatTime(20, 10)
-mod:SetZone()
 mod:SetUsedIcons(8, 7, 6)
 
 mod:RegisterCombat("combat_yell", L.Pull)

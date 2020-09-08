@@ -7,7 +7,7 @@ local UnitXP, UnitXPMax = UnitXP, UnitXPMax
 local IsXPUserDisabled, GetXPExhaustion = IsXPUserDisabled, GetXPExhaustion
 local GetExpansionLevel = GetExpansionLevel
 local MAX_PLAYER_LEVEL_TABLE = MAX_PLAYER_LEVEL_TABLE
-local displayString = ""
+local displayString = ''
 
 local function OnEvent(self)
 	if IsXPUserDisabled() then
@@ -55,11 +55,10 @@ local function OnEvent(self)
 	end
 
 	self.text:SetText(displayString)
-	-- self.text:SetFormattedText()
 end
 
-local function OnEnter(self)
-	DT:SetupTooltip(self)
+local function OnEnter()
+	DT.tooltip:ClearLines()
 
 	local cur, max = UnitXP('player'), UnitXPMax('player')
 	local rested = GetXPExhaustion()

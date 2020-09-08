@@ -1157,11 +1157,11 @@ WeakAuras.load_prototype = {
       desc = constants.nameRealmFilterDesc,
     },
     {
-      name = "namerealmblack",
-      display = L["Blacklisted Player Name/Realm"],
+      name = "ignoreNameRealm",
+      display = L["|cFFFF0000Not|r Player Name/Realm"],
       type = "string",
-      test = "not nameRealmBlacklistChecker:Check(player, realm)",
-      preamble = "local nameRealmBlacklistChecker = WeakAuras.ParseNameCheck(%q)",
+      test = "not nameRealmIgnoreChecker:Check(player, realm)",
+      preamble = "local nameRealmIgnoreChecker = WeakAuras.ParseNameCheck(%q)",
       desc = constants.nameRealmFilterDesc,
     },
     {
@@ -5864,17 +5864,19 @@ WeakAuras.event_prototypes = {
       local ret = [[
         local unit = %s
         local ok = true
-        local aggro, status, threatpct, rawthreatpct, threatvalue
+        local aggro, status, threatpct, rawthreatpct, threatvalue, threattotal
         if unit then
           aggro, status, threatpct, rawthreatpct, threatvalue = WeakAuras.UnitDetailedThreatSituation('player', unit)
+          threattotal = (threatvalue or 0) * 100 / (threatpct ~= 0 and threatpct or 1)
         else
           status = UnitThreatSituation('player')
           aggro = status == 2 or status == 3
-          threatpct, rawthreatpct, threatvalue = 100, 100, 0
+          threatpct, rawthreatpct, threatvalue, threattotal = 100, 100, 0, 100
         end
       ]];
       return ret:format(trigger.threatUnit and trigger.threatUnit ~= "none" and "[["..trigger.threatUnit.."]]" or "nil");
     end,
+    canHaveDuration = true,
     statesParameter = "one",
     args = {
       {
@@ -5890,12 +5892,16 @@ WeakAuras.event_prototypes = {
         name = "status",
         display = L["Status"],
         type = "select",
-        values = "unit_threat_situation_types"
+        values = "unit_threat_situation_types",
+        store = true,
+        conditionType = "select"
       },
       {
         name = "aggro",
         display = L["Aggro"],
-        type = "tristate"
+        type = "tristate",
+        store = true,
+        conditionType = "bool",
       },
       {
         name = "threatpct",
@@ -5927,14 +5933,14 @@ WeakAuras.event_prototypes = {
       {
         name = "value",
         hidden = true,
-        init = "threatpct",
+        init = "threatvalue",
         store = true,
         test = "true"
       },
       {
         name = "total",
         hidden = true,
-        init = "100",
+        init = "threattotal",
         store = true,
         test = "true"
       },
@@ -7061,15 +7067,23 @@ WeakAuras.event_prototypes = {
     },
     name = L["Queued Action"],
     init = function(trigger)
+      trigger.spellName = trigger.spellName or 0
+      local spellName
+      if trigger.use_exact_spellName then
+        spellName = trigger.spellName
+      else
+        spellName = type(trigger.spellName) == "number" and GetSpellInfo(trigger.spellName) or trigger.spellName
+      end
       local ret = [=[
-        local spellid = select(7, GetSpellInfo(%q))
+        local spellname = %q
+        local spellid = select(7, GetSpellInfo(spellname))
         local button
         if spellid then
             local slotList = C_ActionBar.FindSpellActionButtons(spellid)
             button = slotList and slotList[1]
         end
       ]=]
-      return ret:format(trigger.spellName or "")
+      return ret:format(spellName)
     end,
     args = {
       {
@@ -7078,6 +7092,7 @@ WeakAuras.event_prototypes = {
         display = L["Spell"],
         type = "spell",
         test = "true",
+        showExactOption = true,
       },
       {
         hidden = true,
@@ -7249,7 +7264,7 @@ WeakAuras.dynamic_texts = {
       end
     end,
     func = function(duration, state, totalPrecision)
-      if state.progressType ~= "timed" then
+      if not state or state.progressType ~= "timed" then
         return duration
       end
       if type(duration) ~= "number" then
@@ -7282,6 +7297,7 @@ WeakAuras.dynamic_texts = {
   },
   ["n"] = {
     get = function(state)
+      if not state then return "" end
       return state.name or state.id or "", true
     end,
     func = function(v)
@@ -7290,6 +7306,7 @@ WeakAuras.dynamic_texts = {
   },
   ["i"] = {
     get = function(state)
+      if not state then return "" end
       return state.icon or "Interface\\Icons\\INV_Misc_QuestionMark"
     end,
     func = function(v)

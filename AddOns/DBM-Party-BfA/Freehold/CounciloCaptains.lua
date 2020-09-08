@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(2093, "DBM-Party-BfA", 2, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200602212246")
+mod:SetRevision("20200803045206")
 mod:SetCreatureID(126845, 126847, 126848)--Captain Jolly, Captain Raoul, Captain Eudora
 mod:SetEncounterID(2094)
-mod:SetZone()
 mod:DisableRegenDetection()
 mod:SetMinSyncRevision(20190806000000)--2019, 08, 06
 
@@ -12,7 +11,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 258338 256589 257117 267522 272884 267533 272902 265088 264608 265168 256979",
-	"SPELL_CAST_SUCCESS 258381 265088 264608",
+	"SPELL_CAST_SUCCESS 258381",
 	"SPELL_AURA_APPLIED 265056 278467",
 	"SPELL_DAMAGE 272397",
 	"SPELL_MISSED 272397",
@@ -26,8 +25,6 @@ local warnTappedKeg					= mod:NewSpellAnnounce(272884, 1)
 local warnChainShot					= mod:NewSpellAnnounce(272902, 1)
 local warnPowderShot				= mod:NewTargetNoFilterAnnounce(256979, 3)
 --Announce Brews
-local warnConfidenceBrew			= mod:NewSpellAnnounce(265088, 1)--Confidence-Boosting Freehold Brew
-local warnInvigoratingBrew			= mod:NewSpellAnnounce(264608, 1)--Invigorating Freehold Brew
 local warnGoodBrew					= mod:NewAnnounce("warnGoodBrew", 1, 265088)
 local warnCausticBrew				= mod:NewCastAnnounce(265168, 4)
 
@@ -189,12 +186,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnGrapeShot:Show()
 		specWarnGrapeShot:Play("stilldanger")
 		timerGrapeShotCD:Start()
-	elseif spellId == 265088 or spellId == 264608 then
-		if spellId == 265088 then
-			warnConfidenceBrew:Show()
-		else
-			warnInvigoratingBrew:Show()
-		end
 	end
 end
 

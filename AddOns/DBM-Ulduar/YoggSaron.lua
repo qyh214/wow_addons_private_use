@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("YoggSaron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200530203003")
+mod:SetRevision("20200806143902")
 mod:SetCreatureID(33288)
 mod:SetEncounterID(1143)
 mod:SetModelID(28817)
@@ -79,7 +79,7 @@ function mod:OnCombatStart(delay)
 	table.wipe(brainLinkTargets)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(SanityBuff)
-		DBM.InfoFrame:Show(6, "playerdebuffstacks", 63050, 2)--Sorted lowest first (highest first is default of arg not given)
+		DBM.InfoFrame:Show(30, "playerdebuffstacks", 63050, 2)--Sorted lowest first (highest first is default of arg not given)
 	end
 end
 

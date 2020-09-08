@@ -21,7 +21,7 @@ WIM.AddLocale("zhCN", {
     ["Unknown"] = "未知",
     ["Click to update..."] = "点击更新...",
     ["Usage"] = "使用",
-    
+
     ["state_resting"] = "休息",
     ["state_combat"] = "战斗",
     ["state_pvp"] = "PVP",
@@ -29,13 +29,13 @@ WIM.AddLocale("zhCN", {
     ["state_party"] = "组队",
     ["state_raid"] = "团队",
     ["state_other"] = "一般 (其他)",
-    
+
     ["<Shift-Click> to close window."] = "<Shift-左键> 关闭视窗",
-    
+
     ["A new version of WIM is available!\nYou can download the latest version by going to:\n\n http://www.wimaddon.com"] = "目前已经有新版的 WIM!\n您可以到http://www.wimaddon.com 下载新版本",
-    
+
     ["Options"] = "选项",
-    
+
     ["Icon Position"] = "小图示/按钮位置",
     ["Font Size"] = "字型大小",
     ["Window Scale (Percent)"] = "缩放视窗(百分比)",
@@ -49,7 +49,7 @@ WIM.AddLocale("zhCN", {
     ["Invalid Alias!"] = "无效的别名",
     ["Invalid Keyword/Phrase!"] = "无效的关键字/片词",
     ["Keyword/Phrase is already used!"] = "关键字/片词，已经被使用",
-    
+
     ["Day"] = "日",
     ["Week"] = "周",
     ["Month"] = "月",
@@ -61,10 +61,10 @@ WIM.AddLocale("zhCN", {
     ["Ignore"] = "忽略",
     ["Block"] = "封锁",
     ["Enable WIM"] = "开启 WIM",
-    
+
     ["Auto Close Friends after:"] = "好友自动关闭时间:",
     ["Auto Close Non-Friends after:"] = "非好友自动关闭时间:",
-    
+
     ["Display"] = "显示",
     ["Incoming Messages"] = "收到讯息",
     ["Outgoing Messages"] = "发出讯息",
@@ -81,14 +81,14 @@ WIM.AddLocale("zhCN", {
     ["Requires /who querying."] = "请输入 /who 查询",
     ["Enable window fading effects."] = "开启视窗淡化效果",
     ["Enable window animations."] = "开启视窗动态效果",
-    
+
     ["Display minimap icon."] = "显示小地图按钮",
-    
+
     ["General"] = "一般",
     ["History"] = "聊天记录",
     ["Filters"] = "过滤条件",
     ["Plugins"] = "插件",
-    
+
     ["Auto focus when window is shown."] = "当对话视窗出现，自动跳到最上层/获得焦点",
     ["Preserve focus after sending messages."] = "送出讯息後，仍将对话视窗保留在最上层/焦点状态",
     ["Display tooltips."] = "显示小秘诀",
@@ -106,7 +106,7 @@ WIM.AddLocale("zhCN", {
     ["Display emoticons."] = "显示心情符号",
     ["Display URLs as item links."] = "显示网址上的物品连结",
     ["Display floating item links."] = "直接显示物品连结",
-    
+
     ["Cascade windows."] = "视窗层叠显示",
     ["Direction:"] = "方向:",
     ["Tabs"] = "标签列",
@@ -117,7 +117,7 @@ WIM.AddLocale("zhCN", {
     ["Recent Activity"] = "最近使用",
     ["Keep windows on top of your UI."] = "保持对话视窗在介面的最上层",
 
-    
+
     -- Class Names --
     ["Druid"] = "德鲁伊",
     ["Hunter"] = "猎人",
@@ -129,7 +129,7 @@ WIM.AddLocale("zhCN", {
     ["Warlock"] = "术士",
     ["Warrior"] = "战士",
     ["Death Knight"] = "死亡骑士",
-    
+
     -- Female Class Names --
     ["DruidF"] = "Druid",
     ["HunterF"] = "Hunter",
@@ -141,14 +141,14 @@ WIM.AddLocale("zhCN", {
     ["WarlockF"] = "Warlock",
     ["WarriorF"] = "Warrior",
     ["Death KnightF"] = "Death Knight",
-    
+
     ["Game Master"] = "游戏管理者",
-    
+
     -- WIM.lua --
     ["Toggle WIM 'On' and 'Off'."] = "开启/关闭 WIM",
     ["Toggle Debugging Mode 'On' and 'Off'."] = "开启/关闭 Debugging 模式",
     ["WIM is currently running. To access WIM's wide array of options type:"] = "WIM 已载入。请进入设定页选择样式:",
-    
+
     -- Filters.lua --
     ["Whispers Sent by Addons"] = "由插件所发出的密语",
     ["WhisperSelect Part 1"] = "密语选择 1",
@@ -176,7 +176,7 @@ WIM.AddLocale("zhCN", {
     ["Cancel"] = "取消",
     ["Edit Filter"] = "编辑过滤条件",
     ["Add Filter"] = "增加过滤条件",
-    
+
     -- History.lua --
     ["WIM History Button"] = "WIM 对话纪录按钮",
     ["Clicking the %s button on the message window will show that user's history in WIM's History Viewer."] = "按下对话视窗的 %s 按钮将会显示使用者对话纪录。",
@@ -195,18 +195,18 @@ WIM.AddLocale("zhCN", {
     ["WIM History Viewer can be accessed any time by typing:"] = "WIM 对话纪录检视可以随时透过下列指令开启:",
     ["WIM History Viewer"] = "检视 WIM 对话纪录",
     ["Display history viewer."] = "显示对话纪录",
-    
+
     -- ldb.lua --
     ["No New Messages"] = "没有新的讯息",
-    
+
     -- Menu.lua --
     ["Whispers"] = "密语",
     ["Chat"] = "聊天讯息",
-    
+
     -- Negotiate.lua --
     ["WIM Update Available!"] = "WIM 已有新的更新!",
     ["There is a newer version of WIM available for download. You can download it at %s."] = "目前已经有新版的WIM!\n您可以到 %s 下载新版本",
-    
+
     -- ShortcutBar.lua --
     --["Location"] = "玩家位置",
     ["Player Location"] = "玩家位置",
@@ -217,19 +217,19 @@ WIM.AddLocale("zhCN", {
     ["Add Friend"] = "加入好友",
     ["Ignore User"] = "加入黑名单",
     ["Are you sure you want to\nignore %s?"] = "您确定您要忽略 %s",
-    
+
     -- Tutorials.lua --
     ["Display WIM tips"] = "显示 WIM 小提示",
-    
+
     -- W2W.lua --
     ["%s is typing..."] = "%s 正在输入讯息...",
     ["W2W Profile"] = "W2W 设定",
     ["Talent Spec"] = "天赋资讯",
-    
+
     -- WhisperEngine.lua --
     ["Whisper Received!"] = "收到密语!",
     ["You received a whisper which was hidden due to your current activity. You can change how whispers behave in WIM's options by typing"] = "您收到一个密语但因为您现在的活动而被隐藏。您可以变更 WIM 的密语设定。",
-    
+
     -- Clear.lua --
     ["You are about to clear all of WIM's history!"] = "你即将删除所有的 WIM 对话纪录",
     ["This action will reload your user interface."] = "这个动作将重新载入你的使用者介面",
@@ -237,17 +237,17 @@ WIM.AddLocale("zhCN", {
     ["You are about to restore WIM's filters to it's default settings!"] = "你即将把 WIM 的过滤选项恢复成预设值!",
     ["Usage"] = "使用",
     ["Clear various WIM data."] = "清除所有 WIM 资料",
-    
+
     -- SlashHandler.lua --
     ["WIM Slash Commands"] = "WIM 指令",
     ["To see a list of available WIM slash commands type:"] = "显示可用的 WIM 指令:",
     ["Display available slash commands."] = "显示可用的 WIM 指令",
     ["Reload User Interface."] = "重新载入使用者介面",
-    
+
     -- TabHandler.lua --
     ["Manipulating Tabs"] = "操作群组标签",
     ["You can <Shift-Click> a tab and drag it out into it's own window."] = "您可以 <shift-左键> 一个群组标签然後将它拖曳到属於它的视窗。",
-    
+
     -- WindowHandler.lua --
     ["Window Resized!"] = "视窗尺寸已改变",
     ["If you want all windows to be this size, you can set the default window size within WIM's options."] = "若您想要将所有视窗变为此尺寸，您可以至WIM设定选单去对预设视窗做设定。",
@@ -262,14 +262,14 @@ WIM.AddLocale("zhCN", {
     ["Default"] = "预设",
     ["%s is Away From Keyboard: %s"] = "%s 目前暂离: %s",
     ["%s does not wish to be disturbed: %s"] = "%s 目前不愿被打扰: %s",
-    
+
     -- Options.lua --
     ["Display WIM's options."] = "显示 WIM 设定选单",
     ["Resetting WIM will clear all of your settings!"] = "重设 WIM 将会清除您所有的设定!",
     ["Reset all options to default."] = "将所有设定恢复为预设值",
-    
+
     -- CoreOptions --
-    ["Created by:"] = "作者：",
+    ["Created By:"] = "作者：",
     ["Special Thanks:"] = "特别感谢：",
     ["Welcome!"] = "欢迎！",
     ["Enable WIM"] = "启用 WIM",
@@ -381,7 +381,7 @@ WIM.AddLocale("zhCN", {
     ["Allow others to see my talent spec."] = "让其他人看见我的天赋资讯",
     ["Window Strata:"] = "视窗层级:",
     ["Unlock from Minimap"] = "解锁小地图按钮",
-    
+
     -- TabManagement.lua --
     ["Tab Management"] = "标签管理",
     ["Automatically manage your open windows and place them into appropriate tab groups."] = "WIM 会将您的密语对话视窗自动放到适合的群组",
@@ -418,5 +418,5 @@ WIM.AddLocale("zhCN", {
 	["Subtlety"] = "敏锐",
 	["Survival"] = "生存技能",
 	["Unholy"] = "邪恶",
-    
+
 });

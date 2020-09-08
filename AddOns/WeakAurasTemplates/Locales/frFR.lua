@@ -50,7 +50,8 @@ local L = WeakAuras.L
 	L["Debuffs"] = "Affaiblissements"
 	L["Enchants"] = "Enchantements"
 	L["General"] = "Général"
-	L["General Azerite Traits"] = "Traits Azéritiques Généraux"
+	--[[Translation missing --]]
+	L["General Azerite Traits"] = "General Azerite Traits"
 	L["Health"] = "Vie"
 	L["Highlight while active, red when out of range."] = "Mettre en surbrillance pendant qu'il est actif, rouge quand hors de portée."
 	L["Highlight while active."] = "Mettez en surbrillance pendant qu 'il est actif."
@@ -73,7 +74,8 @@ local L = WeakAuras.L
 	L["Only shows the aura when the ability is ready to use."] = "Only shows the aura when the ability is ready to use."
 	L["Pet alive"] = "Familier vivant"
 	L["Pet Behavior"] = "Comportement du Familier"
-	L["PvP Azerite Traits"] = "Traits Azéritiques JcJ"
+	--[[Translation missing --]]
+	L["PvP Azerite Traits"] = "PvP Azerite Traits"
 	L["PvP Talents"] = "Talents JcJ"
 	L["PVP Trinkets (Aura)"] = "Bijoux JcJ (Aura)"
 	L["PVP Trinkets (CD)"] = "Bijou JcJ (Recharge)"
@@ -119,7 +121,8 @@ local L = WeakAuras.L
 	L["Show Totem and Charge Information"] = "Afficher les Informations du Totem et de Charge"
 	--[[Translation missing --]]
 	L["slow debuff"] = "slow debuff"
-	L["Specific Azerite Traits"] = "Traits Azéritiques Spécéfiques"
+	--[[Translation missing --]]
+	L["Specific Azerite Traits"] = "Specific Azerite Traits"
 	L["Stance"] = "Posture"
 	--[[Translation missing --]]
 	L["stun debuff"] = "stun debuff"

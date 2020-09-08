@@ -1171,6 +1171,7 @@ function WeakAuras.CreateTemplateView(frame)
       triggers = createTriggersFor(item, subType);
     end
 
+    data.triggers = {}
     for i, v in pairs(triggers) do
       data.triggers[i] = data.triggers[i] or {};
       data.triggers[i].trigger = {};
@@ -1465,12 +1466,12 @@ function WeakAuras.CreateTemplateView(frame)
     local function handle(data, item, subType)
       replaceTrigger(data, item, subType);
       replaceCondition(data, item, subType);
-      WeakAuras.optionTriggerChoices[data.id] = 1;
       newView:CancelClose();
       WeakAuras.Add(data);
+      WeakAuras.ClearAndUpdateOptions(data.id)
+      WeakAuras.FillOptions()
       WeakAuras.NewDisplayButton(data);
       WeakAuras.UpdateThumbnail(data);
-      WeakAuras.SetIconNames(data);
       WeakAuras.UpdateDisplayButton(data);
     end
     if (data.controlledChildren) then
@@ -1491,12 +1492,12 @@ function WeakAuras.CreateTemplateView(frame)
       local prevNumTriggers = #data.triggers;
       addTrigger(data, item, subType);
       addCondition(data, item, subType, prevNumTriggers);
-      WeakAuras.optionTriggerChoices[data.id] = prevNumTriggers;
       newView:CancelClose();
       WeakAuras.Add(data);
+      WeakAuras.ClearAndUpdateOptions(data.id)
+      WeakAuras.FillOptions()
       WeakAuras.NewDisplayButton(data);
       WeakAuras.UpdateThumbnail(data);
-      WeakAuras.SetIconNames(data);
       WeakAuras.UpdateDisplayButton(data);
     end
     if (data.controlledChildren) then

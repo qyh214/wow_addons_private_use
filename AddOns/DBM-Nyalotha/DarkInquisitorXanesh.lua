@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(2377, "DBM-Nyalotha", nil, 1180)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200610172832")
+mod:SetRevision("20200803045206")
 mod:SetCreatureID(156575)
 mod:SetEncounterID(2328)
-mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 mod:SetHotfixNoticeRev(20200128000000)--2020, 1, 28
 mod:SetMinSyncRevision(20200128000000)
@@ -124,10 +123,6 @@ function mod:OnCombatStart(delay)
 		timerSoulFlayCD:Start(18.5-delay, 1)--SUCCESS
 		timerTormentCD:Start(20.3, 1)
 		timerVoidRitualCD:Start(61.8-delay, 1)
-	end
-	if self.Options.InfoFrame then
-		DBM.InfoFrame:SetHeader(OVERVIEW)
-		DBM.InfoFrame:Show(8, "function", updateInfoFrame, false, false)
 	end
 	berserkTimer:Start(900-delay)
 	if UnitIsGroupLeader("player") and not self:IsLFR() then

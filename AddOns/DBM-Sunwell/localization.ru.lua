@@ -55,20 +55,8 @@ L:SetGeneralLocalization{
 	name = "Бруталл"
 }
 
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
-	BurnIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(46394),
-	BurnWhisper		= "Send whisper to $spell:46394 targets (requires Raid Leader)"--Translate
-}
-
 L:SetMiscLocalization{
-	Pull			= "О, а вот и новые агнцы идут на заклание!",
-	BurnWhisper		= "Burn on you!"--Translate
+	Pull			= "О, а вот и новые агнцы идут на заклание!"
 }
 
 --------------

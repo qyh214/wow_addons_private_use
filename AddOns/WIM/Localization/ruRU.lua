@@ -21,7 +21,7 @@ WIM.AddLocale("ruRU", {
 	["Unknown"] = "Неизвестно",
 	["Click to update..."] = "Кликните для обновления...",
 	["Usage"] = "Используется",
-    
+
 	["state_resting"] = "Отдыхает",
 	["state_combat"] = "В бою",
 	["state_pvp"] = "ПВП",
@@ -29,13 +29,13 @@ WIM.AddLocale("ruRU", {
 	["state_party"] = "В групповом инстансе",
 	["state_raid"] = "В рейдовом инстансе",
 	["state_other"] = "Обычный (Другое)",
-    
+
 	["<Shift-Click> to close window."] = "<Shift-Клик> для закрытия окна.",
-    
+
 	["A new version of WIM is available!\nYou can download the latest version by going to:\n\n http://www.wimaddon.com"] = "Доступна новая версия WIM!\nВы можете скачать её с сайта:\n\n http://www.wimaddon.com",
-    
+
 	["Options"] = "Настройки",
-    
+
 	["Icon Position"] = "Позиция иконки",
 	["Font Size"] = "Размер шрифта",
 	["Window Scale (Percent)"] = "Масштаб окна (процент)",
@@ -49,7 +49,7 @@ WIM.AddLocale("ruRU", {
 	["Invalid Alias!"] = "Неверный псевдоним!",
 	["Invalid Keyword/Phrase!"] = "Неверное ключевое слово/фраза!",
 	["Keyword/Phrase is already used!"] = "Ключевое слово/фраза уже используются!",
-    
+
 	["Day"] = "День",
 	["Week"] = "Неделя",
 	["Month"] = "Месяц",
@@ -61,10 +61,10 @@ WIM.AddLocale("ruRU", {
 	["Ignore"] = "Игнорировать",
 	["Block"] = "Блокировать",
 	["Enable WIM"] = "Включить WIM",
-    
+
 	["Auto Close Friends after:"] = "Авто закрытие друзей после:",
 	["Auto Close Non-Friends after:"] = "Авто закрытие остальных после:",
-    
+
 	["Display"] = "Отображение",
 	["Incoming Messages"] = "Входящий шепот",
 	["Outgoing Messages"] = "Исходящий шепот",
@@ -81,14 +81,14 @@ WIM.AddLocale("ruRU", {
 	["Requires /who querying."] = "Требуется запрос /who.",
 	["Enable window fading effects."] = "Включить затухание.",
 	["Enable window animations."] = "Включить анимацию.",
-    
+
 	["Display minimap icon."] = "Отображать иконку у мини-карты.",
-	
+
 	["General"] = "Основное",
 	["History"] = "История",
 	["Filters"] = "Фильтры",
 	["Plugins"] = "Плагины",
-	
+
 	["Auto focus when window is shown."] = "Авто фокус окна при открытии.",
 	["Preserve focus after sending messages."] = "Сохранять фокус после отправки сообщения.",
 	["Display tooltips."] = "Отображать подсказки.",
@@ -114,9 +114,9 @@ WIM.AddLocale("ruRU", {
 	["Alphabetical"] = "По алфавиту",
 	["Recent Activity"] = "По активности",
 	["Keep windows on top of your UI."] = "Сохранять окно поверх вашего UI.",
-	
+
 	["Enable/Disable addon messages."] = "Включение/отключения сообщений модификаций.",
-    
+
     -- Class Names --
 	["Druid"] = "Друид",
 	["Hunter"] = "Охотник",
@@ -128,7 +128,7 @@ WIM.AddLocale("ruRU", {
 	["Warlock"] = "Чернокнижник",
 	["Warrior"] = "Воин",
 	["Death Knight"] = "Рыцарь cмерти",
-    
+
     -- Female Class Names --
 	["DruidF"] = "Друид",
 	["HunterF"] = "Охотница",
@@ -140,14 +140,14 @@ WIM.AddLocale("ruRU", {
 	["WarlockF"] = "Чернокнижница",
 	["WarriorF"] = "Воин",
 	["Death KnightF"] = "Рыцарь cмерти",
-    
+
 	["Game Master"] = "ГМ",
-	
+
 	-- WIM.lua --
 	["Toggle WIM 'On' and 'Off'."] = "Вкл/Выкл WIM",
 	["Toggle Debugging Mode 'On' and 'Off'."] = "Вкл/Выкл режим отладки",
 	["WIM is currently running. To access WIM's wide array of options type:"] = "WIM в настоящее время уже запущен. Для открытия настроек введите",
-    
+
     -- Filters.lua --
 	["Whispers Sent by Addons"] = "Шопот высылаемый аддонами",
 	["WhisperSelect Part 1"] = "WhisperSelect Part 1",
@@ -175,7 +175,7 @@ WIM.AddLocale("ruRU", {
 	["Cancel"] = "Отмена",
 	["Edit Filter"] = "Править фильтр",
 	["Add Filter"] = "Добавить фильтр",
-    
+
     -- History.lua --
 	["WIM History Button"] = "Кнопка истории",
 	["Clicking the %s button on the message window will show that user's history in WIM's History Viewer."] = "Кликните по %s кнопке в окне сообщения для отображения истории переписки с данным персонажем в просмотре истории.",
@@ -194,18 +194,18 @@ WIM.AddLocale("ruRU", {
 	["WIM History Viewer can be accessed any time by typing:"] = "Доступ к просмотру истории можете получить введя команду:",
 	["WIM History Viewer"] = "WIM просмотр истории",
 	["Display history viewer."] = "Показывать просмотр истории",
-    
+
     -- ldb.lua --
 	["No New Messages"] = "Пусто",
-    
+
     -- Menu.lua --
 	["Whispers"] = "Сообщения",
 	["Chat"] = "Чат",
-    
+
     -- Negotiate.lua --
 	["WIM Update Available!"] = "Доступно обновление WIMа!",
 	["There is a newer version of WIM available for download. You can download it at %s."] = "Новая версия WIMа доступна для скачивания. Вы её можете скачать с %s.",
-    
+
     -- ShortcutBar.lua --
 	["Player Location"] = "Местонахождение персонажа",
 	["Unknown"] = "Неизвестно",
@@ -217,20 +217,20 @@ WIM.AddLocale("ruRU", {
 	["Are you sure you want to\nignore %s?"] = "Вы уверены что вы хотите добавить\nперсонажа %s в черный список?",
     ["Right-Click for profile links..."] = "[Правый-Клик] - ссылка на профиль...",
     ["Profile Links"] = "Ссылка на профиль",
-    
+
     -- Tutorials.lua --
 	["Display WIM tips"] = "Отображать подсказки WIMа",
-    
+
     -- W2W.lua --
 	["%s is typing..."] = "%s печатает..",
 	["W2W Profile"] = "Профиль W2W",
     ["Talent Spec"] = "Таланты",
-    
+
     -- WhisperEngine.lua --
 	["Whisper Received!"] = "Входящее сообщение!",
 	["You received a whisper which was hidden due to your current activity. You can change how whispers behave in WIM's options by typing"] = "Вы получили шепот, который был скрыт за счет текущей деятельности. Вы можете изменить параметры поведения шепота в WIMе, набрав",
 	["Recently Sent Messages"] = "Недавно отосланные сообщения",
-    
+
     -- Clear.lua --
 	["You are about to clear all of WIM's history!"] = "Вы собираетесь удалить всю историю WIMа!",
 	["This action will reload your user interface."] = "Данное действие перезагрузит ваш интерфейс.",
@@ -238,17 +238,17 @@ WIM.AddLocale("ruRU", {
 	["You are about to restore WIM's filters to it's default settings!"] = "Вы собираетесь восстановить настройки фильтров WIMа на настройки по умолчанию!",
 	["Usage"] = "Использование",
 	["Clear various WIM data."] = "Очистка различных данных WIMа.",
-    
+
     -- SlashHandler.lua --
 	["WIM Slash Commands"] = "WIM слеш команды",
 	["To see a list of available WIM slash commands type:"] = "Для просмотра списка доступных команд введите:",
 	["Display available slash commands."] = "Отображать доступные слеш команды",
 	["Reload User Interface."] = "Перезагрузить интерфейс",
-    
+
     -- TabHandler.lua --
 	["Manipulating Tabs"] = "Управление закладками",
 	["You can <Shift-Click> a tab and drag it out into it's own window."] = "Вы можете нажать <Shift-Клик> на закладку и вытащить её в отдельное окно.",
-    
+
     -- WindowHandler.lua --
 	["Window Resized!"] = "Изменён размер окна!",
 	["If you want all windows to be this size, you can set the default window size within WIM's options."] = "Если вы хотите чтобы все окна имели данный размер, вы можете установить размер по умолчанию в настройках WIM'а.",
@@ -265,16 +265,16 @@ WIM.AddLocale("ruRU", {
 	["%s does not wish to be disturbed: %s"] = "%s в режиме \"не беспокоить\": %s",
 	["Right-Mouse Click!"] = "Кликните правой кнопкой мыши!",
 	["There might be useful tools hidden under the message box. Right-Click to see them!"] = "Полезные инструменты могут быть скрыты под окном. Кликните правой кнопкой мыши чтобы увидеть их!",
-    
-    
+
+
     -- Options.lua --
 	["Display WIM's options."] = "Отображает настройки WIMа",
 	["Resetting WIM will clear all of your settings!"] = "Сброс WIMа обнулит все ваши настройки!",
 	["Reset all options to default."] = "Сброс всех настроек на стандартные значения.",
-    
+
     -- CoreOptions --
 	["Bracket names."] = "Заключать имена в скобки.",
-	["Created by:"] = "Создатель:",
+	["Created By:"] = "Создатель:",
 	["Special Thanks:"] = "Отдельно спасибо:",
 	["Welcome!"] = "Добро пожаловать!",
 	["Enable WIM"] = "Включить WIM",
@@ -314,7 +314,7 @@ WIM.AddLocale("ruRU", {
 	["Right"] = "Вправо",
 	["Cascade overlapping windows."] = "Каскад окон с наложением.",
 	["Ignore arrow keys in message box."] = "Игнорировать кнопки передвижения в строке ввода.",
-	["Allow <ESC> to hide windows."] = "Позволить скрывать окно клавишей <ESC>.", 
+	["Allow <ESC> to hide windows."] = "Позволить скрывать окно клавишей <ESC>.",
 	["Display Settings"] = "Настройки отображения",
 	["Configure general window display settings."] = "Настройки отображения основного окна.",
 	["Window Skin:"] = "Шкурка окна:",
@@ -393,7 +393,7 @@ WIM.AddLocale("ruRU", {
     ["Colorize names."] = "Окраска имён.",
     ["Clamp window to screen."] = "Фиксировать окно на экране.",
 	["Group with whisper windows."] = "Групировать с окном шопота.", --??
-    
+
     -- TabManagement.lua --
 	["Tab Management"] = "Управление закладками",
 	["Automatically manage your open windows and place them into appropriate tab groups."] = "Автоматическое управление открытыми окнами и помещение их в соответствующие вкладки групп.",
@@ -402,8 +402,8 @@ WIM.AddLocale("ruRU", {
 	["Place guild members in their own group."] = "Помещать членов гильдии в отдельную группу.",
 	["Does not apply to windows already opened."] = "Не применять если окно уже открыто.",
 	["Automatically group chat windows."] = "Автоматически группировать окна чата.",
-	
-        
+
+
     -- Talent Specs --
     ["Affliction"] = "Колдовство",
 	["Arcane"] = "Тайная магия",
@@ -432,28 +432,28 @@ WIM.AddLocale("ruRU", {
 	["Subtlety"] = "Скрытность",
 	["Survival"] = "Выживание",
 	["Unholy"] = "Нечестивость",
-	
+
     -- ChangeLog.lua --
     ["Change Log"] = "Список изменений",
     ["View WIM's change log."] = "Просмотр списка изменений WIM'а",
 	["Available For Download!"] = "Доступно для скачивания!",
-	
+
     -- Filters.lua --
     ["Show Alert"] = "Показ уведомления",
     ["WIM has blocked a message from %s."] = "WIM заблокировал сообщение от персонажа: %s.",
     ["View Blocked Message"] = "Просмотр заблокированного сообщения",
     ["Blocked Message"] = "Заблокированное сообщение",
-	
+
     -- MinimapIcon.lua
     ["Show Unread Messages"] = "Показать непрочитанные сообщения",
     ["Show All Windows"] = "Показать все окна",
     ["Hide All Windows"] = "Скрыть все окна",
-    
+
     --Emoticons.lua
     ["Also"] = "Также",
     ["More"] = "Еще",
     ["Emoticons"] = "Смайлики",
-	
+
 	--Expose.lua
     ["Your conversations have been hidden in order to clear your screen while in combat. To disable this feature type"] = "Ваши диалоги были скрыты, чтобы очистить экран в то время как в находитесь в бою. Чтобы отключить эту функцию введите",
     ["Expose"] = "Экспонировка",
@@ -464,7 +464,7 @@ WIM.AddLocale("ruRU", {
     ["Show Border"] = "Показать рамку",
     ["Animation Direction:"] = "Направления анимации:",
     ["Delay if I am typing a message."] = "Откладывать, если я печатаю сообщение.",
-	
+
     --ChatEngine.lua
     ["WIM will manage this chat type within its own message windows."] = "WIM будет управлять данным типом чата в рамках своего окна сообщений.",
     ["Show Minimap Alerts"] = "Оповещения у мини-карты",
@@ -489,15 +489,15 @@ WIM.AddLocale("ruRU", {
 	["Sensitivity"] = "Чувствительность",
     ["Enable WorldFrame Click Detection."] = "Включить обнаружение клика на мировом фрейме.",
     ["The UI must be reloaded in order to disable this module fully. Reload UI now?"] = "Для полного отключения данного модуля, требуется перезагрузить пользовательский интерфейс. Перезагрузить UI теперь?",
-	
+
     --OffScreenTracker.lua
     ["WIM Window Off Screen"] = "Окно WIM за экраном",
     ["Click to reposition."] = "Кликните для смены расположения.",
-    
+
 	--Misc
     ["WIM has detected that you are playing on a private server. Some servers can not process ChatAddonMessages. Would you like to enable them anyway?"] = "WIM обнаружил, что вы играете на частном сервере. Некоторые серверы не могут обрабатывать ChatAddonMessages. Хотите включить их все равно?",
-    
+
 	["Last Activity"] = "По последней активности",
 	["Window Created"] = "По созданию окна",
-	
+
 });

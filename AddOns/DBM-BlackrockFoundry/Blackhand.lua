@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(959, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145633")
+mod:SetRevision("20200806142006")
 mod:SetCreatureID(77325)--68168
 mod:SetEncounterID(1704)
-mod:SetZone()
 mod:SetUsedIcons(3, 2, 1)
 mod.respawnTime = 29.5
 
@@ -100,7 +99,6 @@ local UnitName, UnitClass, UnitPowerMax = UnitName, UnitClass, UnitPowerMax
 local markTargets = {}
 local slagTargets = {}
 local mortarsWarned = {}
-local DBMHudMap = DBMHudMap
 local tankFilter
 local yellMFD2 = mod:NewYell(156096, L.customMFDSay, true, false)
 local yellSlag2 = mod:NewYell(157000, L.customSlagSay, true, false)
@@ -280,7 +278,7 @@ function mod:OnCombatEnd()
 		DBM.RangeCheck:Hide()
 	end
 	if self.Options.HudMapOnMFD then
-		DBMHudMap:Disable()
+		DBM.HudMap:Disable()
 	end
 	if self.Options.InfoFrame then--Only tanks in phase 1
 		DBM.InfoFrame:Hide()
@@ -390,7 +388,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetSortedIcon(1.5, args.destName, 1, expectedMFDCount)
 		end
 		if self.Options.HudMapOnMFD then
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 5, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
+			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 5, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 		end
 	elseif spellId == 157000 then--Non Tank Version
 		if self:AntiSpam(5, 4) then
@@ -463,7 +461,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 156096 then
 		if self.Options.HudMapOnMFD then
-			DBMHudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
+			DBM.HudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
 		end
 		timerImpalingThrow:Stop()
 		if self.Options.SetIconOnMarked then

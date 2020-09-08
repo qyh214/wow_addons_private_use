@@ -1,10 +1,13 @@
-lightweight tag 460587da98473f84899136591d3ed822e681a751 v8.3.0.397
+lightweight tag 2423a6b3bad9dd8bb0d33525c5c4daf86dc6302d v8.3.0.398
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Sun Jun 28 20:35:53 2020 -0300
+Date:	Mon Jul 20 16:31:03 2020 -0300
 
-commit 460587da98473f84899136591d3ed822e681a751
+commit 2423a6b3bad9dd8bb0d33525c5c4daf86dc6302d
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Sun Jun 28 20:35:53 2020 -0300
+Date:   Mon Jul 20 16:31:03 2020 -0300
 
-    major framework update and minor bug fix
+    Revamp on how the addon work with TomTom
+    
+    The tracker for world quests won't hide when using TomTom, instead now there's a green arrow to to click to show the tomtom arrow.
+    When tracking a new quest this arrow is shown automatically tracking the new quest.
 

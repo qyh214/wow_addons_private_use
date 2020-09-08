@@ -78,7 +78,7 @@ Archivist comes prepackaged with some basic store types, both for your convenien
 In most use cases, you will want to embed Archivist, so that your addon's archive does not intersect with that of any other addon. Embedding the Archivist into your addon is very similar, but a few more steps are needed. First, create an archive addon:
 
 ```lua
-## Interface: 80300
+##Interface: 90000
 ## Title: MyArchive
 ## LoadOnDemand: 1
 ## SavedVariables: MyArchiveSaved

@@ -1,11 +1,10 @@
 local mod	= DBM:NewMod("Tidewalker", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200518210032")
+mod:SetRevision("20200806142051")
 mod:SetCreatureID(21213)
 mod:SetEncounterID(627)
 mod:SetModelID(20739)
-mod:SetZone()
 mod:SetUsedIcons(5, 6, 7, 8)
 
 mod:RegisterCombat("combat")

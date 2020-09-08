@@ -1,7 +1,6 @@
 -- French localization file for frFR.
 local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "frFR")
 
-L["|cFFff3333Warning|r: |cFF999999[mana:x]|r tags will |cFFff3333NOT|r return anything on classes which have mana as an additional power, unless it's the additional power."] = true
 L["# Displayed Auras"] = "Auras affichées"
 L["%s and then %s"] = "%s et alors %s"
 L["|cffFF0000Warning:|r Click the arrow on the dropdown box to see a list of spells."] = true
@@ -66,9 +65,9 @@ L["Always Show Realm"] = true
 L["An X offset (in pixels) to be used when anchoring new frames."] = "Un décalage X (en pixels) à utiliser lors d'un ancrage d'une nouvelle fenêtre."
 L["An Y offset (in pixels) to be used when anchoring new frames."] = "Un décalage Y (en pixels) à utiliser lors d'un ancrage d'une nouvelle fenêtre."
 L["Anchor Point"] = "Point d'ancrage"
-L["ANCHOR_CURSOR_LEFT"] = true
-L["ANCHOR_CURSOR_RIGHT"] = true
-L["ANCHOR_CURSOR"] = true
+L["CURSOR_LEFT"] = true
+L["CURSOR_RIGHT"] = true
+L["CURSOR"] = true
 L["Announce Interrupts"] = "Annoncer les interruptions"
 L["Announce when you interrupt a spell to the specified chat channel."] = "Annonce quand vous interrompez un sort dans le canal de chat spécifié."
 L["Any"] = true
@@ -570,6 +569,7 @@ L["Hide Below Max Level"] = true
 L["Hide Both"] = "Masquer les deux"
 L["Hide Castbar text. Useful if your power height is very low or if you use power offset."] = true
 L["Hide Cooldown Bling"] = "Masquer l'effet du temps de recharge"
+L["Hide Copy Button"] = true
 L["Hide Delay"] = true
 L["Hide Error Text"] = "Cacher les textes d'erreurs"
 L["Hide Frame"] = true
@@ -730,7 +730,6 @@ L["LeftChatDataPanel"] = "Fenêtre de discussion à gauche"
 L["LeftMiniPanel"] = "Minicarte à gauche"
 L["LEVEL_BOSS"] = "Set level to -1 for boss units or set to 0 to disable."
 L["LF Guild Frame"] = "Recherche de Guilde"
-L["LFG Icons"] = "Icône LFR"
 L["LFG Queue"] = "Outil raid"
 L["Limit the number of rows or columns."] = "Limiter le nombre de lignes ou de colonnes."
 L["Link to the latest development version."] = true
@@ -847,8 +846,8 @@ L["Number of repeat characters while in combat before the chat editbox is automa
 L["Number of time in seconds to scroll down to the bottom of the chat window if you are not scrolled down completely."] = "Temps en secondes pour faire défiler vers le bas de la fenêtre de discussion si vous ne l'avez pas fait défiler jusqu'en bas."
 L["Objective Frame Height"] = "Hauteur du cadre d'objectif"
 L["Off Cooldown"] = true
-L["Off Tank Bad Transtion"] = true
-L["Off Tank Good Transtion"] = true
+L["Off Tank Bad Transition"] = true
+L["Off Tank Good Transition"] = true
 L["Off Tank"] = true
 L["Offset of the powerbar to the healthbar, set to 0 to disable."] = "Décalage de la barre de pouvoir à la barre de vie, mettre 0 pour désactiver."
 L["Offset position for text."] = "Décalage de la position du texte."

@@ -49,6 +49,7 @@ local frame = LGF.GetUnitFrame(unit , options)
 - ignorePlayerFrame : boolean (default true)
 - ignoreTargetFrame : boolean (default true)
 - ignoreTargettargetFrame : boolean (default true)
+- ignorePartyTargetFrame : boolean (default true)
 - playerFrames : array, default :
 
 ```Lua
@@ -82,6 +83,14 @@ local frame = LGF.GetUnitFrame(unit , options)
     "ElvUF_TargetTarget",
     "TargetTargetFrame",
     "oUF_TukuiTargetTarget",
+}
+```
+
+- ignorePartyTargetFrame : array, default :
+
+```Lua
+{
+    "SUFChildpartytarget",
 }
 ```
 

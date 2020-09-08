@@ -1,10 +1,16 @@
-lightweight tag ff61bddb8f41d942ffaaeb81e48f4344b372ea53 1.36
+lightweight tag beee8cc9531697c7f16049293fd7e7e6959a0263 1.37
 Author:	Bernhard Saumweber <b.saumweber@gmail.com>
-Date:	Sat Apr 18 16:59:55 2020 +0200
+Date:	Sun Aug 23 12:15:06 2020 +0200
 
-commit ff61bddb8f41d942ffaaeb81e48f4344b372ea53
+commit beee8cc9531697c7f16049293fd7e7e6959a0263
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Sat Apr 18 16:59:55 2020 +0200
+Date:   Sun Aug 23 12:15:06 2020 +0200
 
-    Set version to release version: 1.36
+    Added Raider.IO dungeon aliases tos, yard and work. Changed Tomb of Sargeras from tos to tosg.
+
+commit e607e7fdae5b595100e5ec8b41f656a10da3a5d5
+Author: Bernhard Saumweber <b.saumweber@gmail.com>
+Date:   Sat Apr 18 17:00:29 2020 +0200
+
+    Set version to next release version: 1.37
 

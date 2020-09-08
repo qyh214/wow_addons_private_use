@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod("BrawlRumble", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200528135243")
+mod:SetRevision("20200803045206")
 mod:SetModelID(28649)
-mod:SetZone()
 
 mod:RegisterEvents(
 	"SPELL_AURA_APPLIED 228855 229593"

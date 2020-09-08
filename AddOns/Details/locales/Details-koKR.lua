@@ -84,8 +84,7 @@ L["STRING_CLICK_REPORT_LINE2"] = "|cFFFFCC22Shift+클릭|r: |cFFFFEE00창 모드
 L["STRING_CLOSEALL"] = "모든 창이 닫혔습니다, 다시 열려면 '/details show'를 입력하세요."
 L["STRING_COLOR"] = "색상"
 L["STRING_COMMAND_LIST"] = "명령어 목록"
---[[Translation missing --]]
---[[ L["STRING_CONTEXT"] = ""--]] 
+L["STRING_CONTEXT"] = "상황 정보"
 L["STRING_COOLTIP_NOOPTIONS"] = "옵션 없음"
 L["STRING_CREATEAURA"] = "오라 만들기"
 L["STRING_CRITICAL_HITS"] = "치명타 및 극대화 적중"
@@ -290,8 +289,7 @@ L["STRING_INFO_TUTORIAL_COMPARISON1"] = "|cFFFFDD00비교|r 탭을 클릭하면 
 L["STRING_INSTANCE_CHAT"] = "인스턴스 대화"
 L["STRING_INSTANCE_LIMIT"] = "최대 창 갯수에 도달했습니다, 옵션 창에서 이 제한 갯수를 변경할 수 있습니다. 또한 창 메뉴에서 닫혀진 창(#)을 다시 열 수 있습니다."
 L["STRING_INTERFACE_OPENOPTIONS"] = "옵션 창 열기"
---[[Translation missing --]]
---[[ L["STRING_INVERT_RULE"] = ""--]] 
+L["STRING_INVERT_RULE"] = "반전 규칙"
 L["STRING_ISA_PET"] = "소환수에 의한 행동"
 L["STRING_KEYBIND_BOOKMARK"] = "북마크"
 L["STRING_KEYBIND_BOOKMARK_NUMBER"] = "북마크 #%s"
@@ -606,8 +604,7 @@ L["STRING_OPTIONS_COMBAT_ALPHA_5"] = "인스턴스 밖에 있을 때"
 L["STRING_OPTIONS_COMBAT_ALPHA_6"] = "인스턴스 안에 있을 때"
 L["STRING_OPTIONS_COMBAT_ALPHA_7"] = "공격대 디버그"
 L["STRING_OPTIONS_COMBAT_ALPHA_8"] = "전장"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_COMBAT_ALPHA_9"] = ""--]] 
+L["STRING_OPTIONS_COMBAT_ALPHA_9"] = "신화+"
 L["STRING_OPTIONS_COMBAT_ALPHA_DESC"] = [=[전투 상태가 창 투명도를 어떻게 변경할 지 선택하세요.
 
 |cFFFFFF00변경 없음|r: 투명도를 변경하지 않습니다.
@@ -1385,10 +1382,14 @@ L["STRING_OPTIONSMENU_ROWTEXTS"] = "바: 문자"
 L["STRING_OPTIONSMENU_SKIN"] = "스킨 선택"
 L["STRING_OPTIONSMENU_SPELLS"] = "주문 사용자 설정"
 L["STRING_OPTIONSMENU_SPELLS_CONSOLIDATE"] = "같은 이름의 공통 주문 통합"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONSMENU_TITLEBAR"] = ""--]] 
 L["STRING_OPTIONSMENU_TITLETEXT"] = "제목 바: 문자"
 L["STRING_OPTIONSMENU_TOOLTIP"] = "툴팁"
 L["STRING_OPTIONSMENU_WALLPAPER"] = "창: 배경화면"
 L["STRING_OPTIONSMENU_WINDOW"] = "창: 일반"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONSMENU_WINDOWBODY"] = ""--]] 
 L["STRING_OVERALL"] = "종합"
 L["STRING_OVERHEAL"] = "초과 치유"
 L["STRING_OVERHEALED"] = "초과 치유됨"

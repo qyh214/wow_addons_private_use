@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(198, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145601")
+mod:SetRevision("20200806141910")
 mod:SetCreatureID(52409)
 mod:SetEncounterID(1203)
-mod:SetZone()
 mod:SetHotfixNoticeRev(20191212000000)--2019, 12, 12
 mod:SetMinSyncRevision(20191212000000)--2019, 12, 12
 mod:SetUsedIcons(1, 2)

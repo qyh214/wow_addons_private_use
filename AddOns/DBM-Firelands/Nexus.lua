@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod("NexusLegendary", "DBM-Firelands")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145601")
+mod:SetRevision("20200806141910")
 mod:SetCreatureID(53472)
 mod:SetModelID(32230)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 

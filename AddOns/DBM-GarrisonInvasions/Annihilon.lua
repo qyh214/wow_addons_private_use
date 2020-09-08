@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod("Annihilon", "DBM-GarrisonInvasions")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814112014")
+mod:SetRevision("20200806142006")
 mod:SetCreatureID(90802)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 mod:SetMinCombatTime(15)
@@ -42,7 +41,7 @@ end
 
 function mod:OnCombatEnd()
 	if self.Options.HudMapOnMC then
-		DBMHudMap:Disable()
+		DBM.HudMap:Disable()
 	end
 end
 
@@ -55,7 +54,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnTwistMind:Play("findmc")
 		end
 		if self.Options.HudMapOnMC then
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 5, 30, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
+			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 5, 30, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 		end
 	end
 end
@@ -64,7 +63,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if spellId == 180950 then
 		if self.Options.HudMapOnMC then
-			DBMHudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
+			DBM.HudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
 		end
 	end
 end

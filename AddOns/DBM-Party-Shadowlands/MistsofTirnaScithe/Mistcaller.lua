@@ -1,61 +1,64 @@
 local mod	= DBM:NewMod(2402, "DBM-Party-Shadowlands", 3, 1184)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200528135243")
---mod:SetCreatureID(126983)--Maybe 164501?
+mod:SetRevision("20200820003837")
+mod:SetCreatureID(164501)
 mod:SetEncounterID(2392)
-mod:SetZone()
+mod:SetUsedIcons(1, 2, 3, 4)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 321471 321834 321873 321828",
+	"SPELL_CAST_START 336499 321834 321873 321828 321669",
 	"SPELL_AURA_APPLIED 321891 321828",
-	"SPELL_AURA_REMOVED 321891"
+	"SPELL_AURA_REMOVED 321891 336499"
 --	"SPELL_CAST_SUCCESS",
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
 --	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
---https://shadowlands.wowhead.com/npc=165108/illusionary-clone Clones
---TODO, improve dodgeball warnings if the target scan is successful
-local warnGuessingGame				= mod:NewCastAnnounce(321471, 3)
+--TODO, timers still a mess, it'll be difficult too fix them until live, because WCL lacks ability to search for non M+ dungeons
+--[[
+(ability.id = 321834 or ability.id = 321873 or ability.id = 321828) and type = "begincast"
+ or ability.id = 336499
+ or ability.id = 321669 and type = "begincast"
+--]]
+local warnGuessingGame				= mod:NewCastAnnounce(336499, 4)
+local warnGuessingGameOver			= mod:NewEndAnnounce(321873, 1)
 local warnFreezeTag					= mod:NewCastAnnounce(321873, 3)
-local warnFixate					= mod:NewTargetNoFIlterAnnounce(321891, 3)
+local warnFixate					= mod:NewTargetNoFilterAnnounce(321891, 2)
+local warnPattyCake					= mod:NewTargetNoFilterAnnounce(321828, 3)
 
 local specWarnDodgeBall				= mod:NewSpecialWarningDodge(321834, nil, nil, nil, 2, 2)
-local yellDodgeBall					= mod:NewYell(321834)
 local specWarnFixate				= mod:NewSpecialWarningRun(321891, nil, nil, nil, 4, 2)
-local specWarnPattyCakes			= mod:NewSpecialWarningYou(321828, nil, nil, nil, 1, 2)
+local specWarnPattyCake				= mod:NewSpecialWarningInterrupt(321828, nil, nil, nil, 1, 2)
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
-local timerGuessingGameCD			= mod:NewAITimer(13, 321471, nil, nil, nil, 6)
-local timerDodgeBallCD				= mod:NewAITimer(13, 321834, nil, nil, nil, 3)
-local timerFreezeTagCD				= mod:NewAITimer(13, 321873, nil, nil, nil, 3)
-local timerPattyCakesCD				= mod:NewAITimer(13, 321828, nil, nil, nil, 3)
+---Seems all timers are 45, including dodge ball, except when it isn't
+local timerDodgeBallCD				= mod:NewCDTimer(16.2, 321834, nil, nil, nil, 3)--16-45
+local timerFreezeTagCD				= mod:NewCDTimer(44.9, 321873, nil, nil, nil, 3)
+local timerPattyCakeCD				= mod:NewCDTimer(45.0, 321828, nil, nil, nil, 3)
 
 mod:AddNamePlateOption("NPAuraOnFixate", 321891)
+mod:AddSetIconOption("SetIconOnAdds", "ej21691", true, true, {1, 2, 3, 4})
 
-function mod:BallTarget(targetname, uId)
-	if not targetname then return end
-	if targetname == UnitName("player") then
-		yellDodgeBall:Yell()
-	end
-	DBM:AddMsg("BallTarget returned: "..targetname.." Report if accurate or inaccurate to DBM Author")
-end
+local seenAdds = {}
+mod.vb.addIcon = 1
 
 function mod:OnCombatStart(delay)
-	timerGuessingGameCD:Start(1-delay)
-	timerDodgeBallCD:Start(1-delay)
-	timerFreezeTagCD:Start(1-delay)
-	timerPattyCakesCD:Start(1-delay)
+	table.wipe(seenAdds)
+	self.vb.addIcon = 1
+	timerDodgeBallCD:Start(8.1-delay)
+	timerPattyCakeCD:Start(13.4-delay)
+	timerFreezeTagCD:Start(18.4-delay)--Sometimes cast is skipped?
 	if self.Options.NPAuraOnFixate then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
 end
 
 function mod:OnCombatEnd()
+	table.wipe(seenAdds)
 	if self.Options.NPAuraOnFixate then
 		DBM.Nameplate:Hide(true, nil, nil, nil, true, true)
 	end
@@ -63,19 +66,31 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 321471 then
+	if spellId == 336499 then
+		self.vb.addIcon = 1
 		warnGuessingGame:Show()
-		timerGuessingGameCD:Start()
-	elseif spellId == 321834 then
+	elseif spellId == 321834 and self:AntiSpam(8, 1) then
 		specWarnDodgeBall:Show()
-		specWarnDodgeBall:Play("shockwave")
-		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "BallTarget", 0.1, 6)
-		timerDodgeBallCD:Start()
+		specWarnDodgeBall:Play("farfromline")
+		--timerDodgeBallCD:Start()--Outside of first case, rest are too chaotic
 	elseif spellId == 321873 then
 		warnFreezeTag:Show()
-		timerFreezeTagCD:Start()
+--		timerFreezeTagCD:Start()
 	elseif spellId == 321828 then
-		timerPattyCakesCD:Start()
+		if self:IsTanking("player", "boss1", nil, nil, nil, true) then
+			--Only target of spell can interrupt it
+			specWarnPattyCake:Show(args.sourceName)
+			specWarnPattyCake:Play("kickcast")
+		end
+		timerPattyCakeCD:Start()
+	elseif spellId == 321669 then
+		if not seenAdds[args.sourceGUID] then
+			seenAdds[args.sourceGUID] = true
+			if self.Options.SetIconOnAdds then--Only use up to 5 icons
+				self:ScanForMobs(args.sourceGUID, 2, self.vb.addIcon, 1, 0.2, 12)
+			end
+			self.vb.addIcon = self.vb.addIcon + 1
+		end
 	end
 end
 
@@ -101,10 +116,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnFixate:Show(args.destName)
 		end
 	elseif spellId == 321828 then
-		if args:IsPlayer() then
-			specWarnPattyCakes:Show()
-			specWarnPattyCakes:Play("targetyou")
-		end
+		warnPattyCake:Show(args.destName)
 	end
 end
 
@@ -116,6 +128,8 @@ function mod:SPELL_AURA_REMOVED(args)
 				DBM.Nameplate:Hide(true, args.sourceGUID, spellId)
 			end
 		end
+	elseif spellId == 336499 then
+		warnGuessingGameOver:Show()
 	end
 end
 

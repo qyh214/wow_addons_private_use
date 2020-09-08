@@ -2,8 +2,7 @@
 local mod	= DBM:NewMod("d1963", "DBM-Challenges", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200418180002")
-mod:SetZone()
+mod:SetRevision("20200806141828")
 mod.onlyNormal = true
 
 mod:RegisterCombat("scenario", 2162)

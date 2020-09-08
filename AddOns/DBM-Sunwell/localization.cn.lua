@@ -55,20 +55,8 @@ L:SetGeneralLocalization{
 	name = "布鲁塔卢斯"
 }
 
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
-	BurnIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(46394),
-	BurnWhisper		= "Send whisper to $spell:46394 targets (requires Raid Leader)"--Translate
-}
-
 L:SetMiscLocalization{
-	Pull			= "啊，又来了一群小绵羊！",
-	BurnWhisper		= "你正在燃烧！"
+	Pull			= "啊，又来了一群小绵羊！"
 }
 
 --------------

@@ -1,7 +1,6 @@
 -- Italian localization file for enUS and enGB.
 local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "itIT")
 
-L["|cFFff3333Warning|r: |cFF999999[mana:x]|r tags will |cFFff3333NOT|r return anything on classes which have mana as an additional power, unless it's the additional power."] = true
 L["# Displayed Auras"] = true
 L["%s and then %s"] = true
 L["|cffFF0000Warning:|r Click the arrow on the dropdown box to see a list of spells."] = true
@@ -66,9 +65,9 @@ L["Always Show Realm"] = true
 L["An X offset (in pixels) to be used when anchoring new frames."] = true
 L["An Y offset (in pixels) to be used when anchoring new frames."] = true
 L["Anchor Point"] = true
-L["ANCHOR_CURSOR_LEFT"] = true
-L["ANCHOR_CURSOR_RIGHT"] = true
-L["ANCHOR_CURSOR"] = true
+L["CURSOR_LEFT"] = true
+L["CURSOR_RIGHT"] = true
+L["CURSOR"] = true
 L["Announce Interrupts"] = true
 L["Announce when you interrupt a spell to the specified chat channel."] = true
 L["Any"] = true
@@ -571,6 +570,7 @@ L["Hide Below Max Level"] = true
 L["Hide Both"] = true
 L["Hide Castbar text. Useful if your power height is very low or if you use power offset."] = true
 L["Hide Cooldown Bling"] = true
+L["Hide Copy Button"] = true
 L["Hide Delay"] = true
 L["Hide Error Text"] = true
 L["Hide Frame"] = true
@@ -731,7 +731,6 @@ L["LeftChatDataPanel"] = "Left Chat"
 L["LeftMiniPanel"] = "Minimap Left"
 L["LEVEL_BOSS"] = "Set level to -1 for boss units or set to 0 to disable."
 L["LF Guild Frame"] = true
-L["LFG Icons"] = true
 L["LFG Queue"] = true
 L["Limit the number of rows or columns."] = true
 L["Link to the latest development version."] = true
@@ -849,8 +848,8 @@ L["Number of repeat characters while in combat before the chat editbox is automa
 L["Number of time in seconds to scroll down to the bottom of the chat window if you are not scrolled down completely."] = true
 L["Objective Frame Height"] = true
 L["Off Cooldown"] = true
-L["Off Tank Bad Transtion"] = true
-L["Off Tank Good Transtion"] = true
+L["Off Tank Bad Transition"] = true
+L["Off Tank Good Transition"] = true
 L["Off Tank"] = true
 L["Offset of the powerbar to the healthbar, set to 0 to disable."] = true
 L["Offset position for text."] = true

@@ -69,6 +69,8 @@ local L = WeakAuras.L
 	L["A Unit ID (e.g., party1)."] = "Un Unit ID (p.es., party1)"
 	L["Actions"] = "Azioni"
 	--[[Translation missing --]]
+	L["Add"] = "Add"
+	--[[Translation missing --]]
 	L["Add %s"] = "Add %s"
 	--[[Translation missing --]]
 	L["Add a new display"] = "Add a new display"
@@ -87,7 +89,6 @@ local L = WeakAuras.L
 	L["Add to group %s"] = "Aggiungi al gruppo %s"
 	L["Add to new Dynamic Group"] = "Aggiungi ad un nuovo Gruppo Dinamico"
 	L["Add to new Group"] = "Aggiungi ad un nuoco Gruppo"
-	L["Add Trigger"] = "Aggiungi Innesco"
 	L["Addon"] = "Add-on"
 	L["Addons"] = "Add-ons"
 	L["Advanced"] = "Avanzate"
@@ -156,14 +157,6 @@ local L = WeakAuras.L
 	L["Bar Inner"] = "Bar Inner"
 	L["Bar Texture"] = "Texture della Barra"
 	L["Big Icon"] = "Icone Grandi"
-	--[[Translation missing --]]
-	L["Blacklisted Aura Name"] = "Blacklisted Aura Name"
-	--[[Translation missing --]]
-	L["Blacklisted Exact Spell ID(s)"] = "Blacklisted Exact Spell ID(s)"
-	--[[Translation missing --]]
-	L["Blacklisted Name(s)"] = "Blacklisted Name(s)"
-	--[[Translation missing --]]
-	L["Blacklisted Spell ID"] = "Blacklisted Spell ID"
 	L["Blend Mode"] = "Modalità di Fusione"
 	L["Blue Rune"] = "Runa Blu"
 	L["Blue Sparkle Orb"] = "Sfera Luccicante Blu"
@@ -200,8 +193,6 @@ local L = WeakAuras.L
 	L["Children:"] = "Children:"
 	--[[Translation missing --]]
 	L["Choose"] = "Choose"
-	--[[Translation missing --]]
-	L["Choose Trigger"] = "Choose Trigger"
 	--[[Translation missing --]]
 	L["Choose whether the displayed icon is automatic or defined manually"] = "Choose whether the displayed icon is automatic or defined manually"
 	--[[Translation missing --]]
@@ -327,8 +318,6 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Delete Entry"] = "Delete Entry"
 	--[[Translation missing --]]
-	L["Delete Trigger"] = "Delete Trigger"
-	--[[Translation missing --]]
 	L["Desaturate"] = "Desaturate"
 	--[[Translation missing --]]
 	L["Description Text"] = "Description Text"
@@ -362,8 +351,6 @@ local L = WeakAuras.L
 	L["Done"] = "Done"
 	--[[Translation missing --]]
 	L["Don't skip this Version"] = "Don't skip this Version"
-	--[[Translation missing --]]
-	L["Down"] = "Down"
 	--[[Translation missing --]]
 	L["Drag to move"] = "Drag to move"
 	--[[Translation missing --]]
@@ -539,6 +526,8 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Group Member Count"] = "Group Member Count"
 	--[[Translation missing --]]
+	L["Group Options"] = "Group Options"
+	--[[Translation missing --]]
 	L["Group Role"] = "Group Role"
 	--[[Translation missing --]]
 	L["Group Scale"] = "Group Scale"
@@ -622,6 +611,14 @@ Supports multiple entries, separated by commas
 	L["Ignore self"] = "Ignore self"
 	--[[Translation missing --]]
 	L["Ignored"] = "Ignored"
+	--[[Translation missing --]]
+	L["Ignored Aura Name"] = "Ignored Aura Name"
+	--[[Translation missing --]]
+	L["Ignored Exact Spell ID(s)"] = "Ignored Exact Spell ID(s)"
+	--[[Translation missing --]]
+	L["Ignored Name(s)"] = "Ignored Name(s)"
+	--[[Translation missing --]]
+	L["Ignored Spell ID"] = "Ignored Spell ID"
 	--[[Translation missing --]]
 	L["Import"] = "Import"
 	--[[Translation missing --]]
@@ -726,8 +723,6 @@ Supports multiple entries, separated by commas
 	L["Move Up"] = "Move Up"
 	--[[Translation missing --]]
 	L["Multiple Displays"] = "Multiple Displays"
-	--[[Translation missing --]]
-	L["Multiple Triggers"] = "Multiple Triggers"
 	--[[Translation missing --]]
 	L["Multiselect ignored tooltip"] = "Multiselect ignored tooltip"
 	--[[Translation missing --]]
@@ -1189,6 +1184,8 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Trigger %s"] = "Trigger %s"
 	--[[Translation missing --]]
+	L["Trigger Combination"] = "Trigger Combination"
+	--[[Translation missing --]]
 	L["True"] = "True"
 	--[[Translation missing --]]
 	L["Type"] = "Type"
@@ -1210,8 +1207,6 @@ Supports multiple entries, separated by commas
 	L["UnitName Filter"] = "UnitName Filter"
 	--[[Translation missing --]]
 	L["Unlike the start or finish animations, the main animation will loop over and over until the display is hidden."] = "Unlike the start or finish animations, the main animation will loop over and over until the display is hidden."
-	--[[Translation missing --]]
-	L["Up"] = "Up"
 	--[[Translation missing --]]
 	L["Update %s by %s"] = "Update %s by %s"
 	--[[Translation missing --]]

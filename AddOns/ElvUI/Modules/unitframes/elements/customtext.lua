@@ -7,14 +7,16 @@ function UF:Configure_CustomTexts(frame)
 	local frameDB = frame.db
 
 	--Make sure CustomTexts are hidden if they don't exist in current profile
-	for name, object in pairs(frame.customTexts) do
-		if not frameDB.customTexts or not frameDB.customTexts[name] then
-			object:Hide()
+	if frame.customTexts then
+		for name, object in pairs(frame.customTexts) do
+			if not frameDB.customTexts or not frameDB.customTexts[name] then
+				object:Hide()
+			end
 		end
 	end
 
 	if frameDB.customTexts then
-		local font = UF.LSM:Fetch("font", UF.db.font)
+		local font = UF.LSM:Fetch('font', UF.db.font)
 		for name in pairs(frameDB.customTexts) do
 			local object = frame.customTexts[name]
 			if not object then
@@ -23,17 +25,19 @@ function UF:Configure_CustomTexts(frame)
 
 			local db, tagFont = frameDB.customTexts[name]
 			if db.font then
-				tagFont = UF.LSM:Fetch("font", db.font)
+				tagFont = UF.LSM:Fetch('font', db.font)
 			end
 
 			local attachPoint = self:GetObjectAnchorPoint(frame, db.attachTextTo)
 			object:FontTemplate(tagFont or font, db.size or UF.db.fontSize, db.fontOutline or UF.db.fontOutline)
 			object:SetJustifyH(db.justifyH or 'CENTER')
 			object:ClearAllPoints()
-			object:Point(db.justifyH or 'CENTER', attachPoint, db.justifyH or 'CENTER', db.xOffset, db.yOffset)
+			object:SetPoint(db.justifyH or 'CENTER', attachPoint, db.justifyH or 'CENTER', db.xOffset, db.yOffset)
 
-			if db.attachTextTo == "Power" then
+			if db.attachTextTo == 'Power' and frame.Power then
 				object:SetParent(frame.Power.RaisedElementParent)
+			elseif db.attachTextTo == 'AdditionalPower' and frame.AdditionalPower then
+				object:SetParent(frame.AdditionalPower.RaisedElementParent)
 			else
 				object:SetParent(frame.RaisedElementParent)
 			end

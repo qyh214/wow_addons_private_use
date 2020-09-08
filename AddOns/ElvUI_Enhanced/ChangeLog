@@ -1,3 +1,6 @@
+3.4.7
+* Removed support for extra data text, since you can now do this from ElvUI itself.
+
 3.4.6
 * Updated for ElvUI 11.42 (Thanks Cilraaz)
 

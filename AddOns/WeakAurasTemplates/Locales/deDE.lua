@@ -175,7 +175,8 @@ local L = WeakAuras.L
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
 	--[[Translation missing --]]
 	L["slow debuff"] = "slow debuff"
-	L["Specific Azerite Traits"] = "Spezifische Azerit Traits"
+	--[[Translation missing --]]
+	L["Specific Azerite Traits"] = "Specific Azerite Traits"
 	L["Stance"] = "Haltung"
 	--[[Translation missing --]]
 	L["stun debuff"] = "stun debuff"

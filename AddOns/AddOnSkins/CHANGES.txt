@@ -1,63 +1,16 @@
-Changes since tag 4.411
+lightweight tag 4fbc9fb1cb1f49833c1ff21bf0c7e439cb141c0a 4.44
+Author:	Azilroka <darktemplar9900@yahoo.com>
+Date:	Sun Jul 12 20:34:46 2020 -0500
 
-commit 6e407b4af13c9650982ce87c7d03e8ba46fb1418
+commit 4fbc9fb1cb1f49833c1ff21bf0c7e439cb141c0a
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sat Jul 4 14:22:31 2020 -0500
+Date:   Sun Jul 12 20:34:46 2020 -0500
 
-    Some small tweaks
+    4.44
 
-commit e83fe4b4878a9c6b09098cb93deb72d0b1596c0a
-Author: Repooc <tjcooper1982@gmail.com>
-Date:   Mon Jun 8 19:41:11 2020 -0400
-
-    comment out offending, not able to test on classic
-
-commit 1f8936d6a61cb89a0ac06058fcd3ea5c6176cb5f
+commit e04d0736a1d7ecb05b429e49d1045824e67636a0
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun May 10 12:17:19 2020 -0500
+Date:   Sun Jul 12 20:26:56 2020 -0500
 
-    Yoda
-
-commit 1f8936d6a61cb89a0ac06058fcd3ea5c6176cb5f
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun May 10 12:17:19 2020 -0500
-
-    Yoda
-
-commit 18b703b2eac462f020e2260f55c55aab4dbcb445
-Author: Simpy <kodi03466@hotmail.com>
-Date:   Thu Apr 30 00:42:42 2020 -0400
-
-    pls dont hurt me for this <3 c:
-
-commit 8b34de89dacc637d53ba41763c050f31996c645a
-Author: Clutch <lockerzmodding@gmail.com>
-Date:   Wed Apr 29 15:54:59 2020 +0000
-
-    Update to support new NovaWorldBuffs
-
-commit 95587441965e9f3e3454e520c6dd7785f52edcd6
-Author: Rhyster <lyx@lyx.es>
-Date:   Wed Apr 29 06:56:04 2020 +0000
-
-    Premade Groups Filter v1.36
-
-commit 95587441965e9f3e3454e520c6dd7785f52edcd6
-Author: Rhyster <lyx@lyx.es>
-Date:   Wed Apr 29 06:56:04 2020 +0000
-
-    Premade Groups Filter v1.36
-
-commit 1b2c72dc765e4918d1dd01f3cfa1ed41b053dc4c
-Author: Cameron Weaver (Clutch) <lockerzmodding@gmail.com>
-Date:   Tue Apr 28 19:42:28 2020 -0400
-
-    Add: NovaWorldBuffs skin
-
-commit 9431ac19bda2b055918eefb35ecf63a27427e817
-Author: Clutch <lockerzmodding@gmail.com>
-Date:   Sun Apr 5 13:34:31 2020 +0000
-
-    skin LibSimpleFrame-Mod-1.0
-    This adds support for NauticusClassic and any other addons that use the library.
+    This was right. I forgot I didn't remove the identifiers
 

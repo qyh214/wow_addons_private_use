@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(1203, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145633")
+mod:SetRevision("20200806142006")
 mod:SetCreatureID(77557, 77231, 77477)
 mod:SetEncounterID(1695)
-mod:SetZone()
 mod:SetBossHPInfoToHighest()
 mod:SetUsedIcons(5, 4, 3, 2, 1)
 --mod:SetModelSound("sound\\creature\\marak\\vo_60_ironmaidens_marak_08.ogg", "sound\\creature\\marak\\vo_60_ironmaidens_marak_08.ogg")
@@ -218,7 +217,7 @@ end
 function mod:OnCombatEnd()
 	self:UnregisterShortTermEvents()
 	if self.Options.HudMapOnRapidFire or self.Options.HudMapOnBloodRitual then
-		DBMHudMap:Disable()
+		DBM.HudMap:Disable()
 	end
 end
 
@@ -358,7 +357,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if (noFilter or not playerOnBoat) then
 			if self.Options.HudMapOnBloodRitual then
-				DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3.5, 7, 1, 0, 0, 0.5, nil, true, 2):Pulse(0.5, 0.5)
+				DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3.5, 7, 1, 0, 0, 0.5, nil, true, 2):Pulse(0.5, 0.5)
 			end
 			if args:IsPlayer() then
 				yellBloodRitual:Yell()
@@ -388,7 +387,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					warnRapidFire:Show(self.vb.rapidfire, args.destName)
 				end
 				if self.Options.HudMapOnRapidFire then
-					DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 5, 9, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
+					DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 5, 9, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 				end
 			end
 		end
@@ -410,12 +409,12 @@ function mod:SPELL_AURA_REMOVED(args)
 	if spellId == 159724 and self.Options.SetIconOnBloodRitual and not self:IsLFR() then
 		self:SetIcon(args.destName, 0)
 		if self.Options.HudMapOnBloodRitual then
-			DBMHudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
+			DBM.HudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
 		end
 	elseif spellId == 158010 and self.Options.SetIconOnHeartSeeker and not self:IsLFR() then
 		self:SetIcon(args.destName, 0)
 	elseif spellId == 156631 and self.Options.HudMapOnRapidFire then
-		DBMHudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
+		DBM.HudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
 	end
 end
 
@@ -565,7 +564,7 @@ function mod:CHAT_MSG_ADDON(prefix, msg, channel, targetName)
 				warnRapidFire:Show(self.vb.rapidfire, targetName)
 			end
 			if self.Options.HudMapOnRapidFire then
-				DBMHudMap:RegisterRangeMarkerOnPartyMember(156631, "highlight", targetName, 5, 12, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
+				DBM.HudMap:RegisterRangeMarkerOnPartyMember(156631, "highlight", targetName, 5, 12, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 			end
 		end
 	end

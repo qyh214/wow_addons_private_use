@@ -1,12 +1,12 @@
-tag 67aebe07e9183c56ca262103692a649933098055 3.4.6
+tag 58b43195ad792dc801015ed9e5a5c15cd27c264b 3.4.7
 Author:	Bocky <nick@bocky.nl>
-Date:	Fri Jul 10 14:18:08 2020 +0200
+Date:	Mon Aug 31 10:26:25 2020 +0200
 
-ElvUI fix
+Removed support for extra data text
 
-commit 318cbcdf0cd2c0cf25a38c0cbddfae22eec461a6
+commit 712965263f95f6bfd1089d4bdc9693c9ef7b3b7c
 Author: Nick <git@bockmeulen.nl>
-Date:   Fri Jul 10 14:17:43 2020 +0200
+Date:   Mon Aug 31 10:25:17 2020 +0200
 
-    remove beta
+    removed extra datatext support
 

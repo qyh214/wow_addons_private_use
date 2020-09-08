@@ -139,5 +139,6 @@ private.LOOT_QUEST_IDS = {
 	[173956] = 58234; --Questionable Sourcing
 	[174356] = 58010; --More Bits, More Bits!
 	[175015] = 58812; --Meat Alternatives
+	[168906] = 56086; --blueprint holographic digitalization relay
 	
 }

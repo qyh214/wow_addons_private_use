@@ -1,5 +1,6 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local TT = E:GetModule('Tooltip')
+local AB = E:GetModule('ActionBars')
 local Skins = E:GetModule('Skins')
 
 local _G = _G
@@ -108,17 +109,17 @@ function TT:GameTooltip_SetDefaultAnchor(tt, parent)
 		if TT.db.healthBar.statusPosition == 'BOTTOM' then
 			if tt.StatusBar.anchoredToTop then
 				tt.StatusBar:ClearAllPoints()
-				tt.StatusBar:Point('TOPLEFT', tt, 'BOTTOMLEFT', E.Border, -(E.Spacing * 3))
-				tt.StatusBar:Point('TOPRIGHT', tt, 'BOTTOMRIGHT', -E.Border, -(E.Spacing * 3))
-				tt.StatusBar.text:Point('CENTER', tt.StatusBar, 0, 0)
+				tt.StatusBar:SetPoint('TOPLEFT', tt, 'BOTTOMLEFT', E.Border, -(E.Spacing * 3))
+				tt.StatusBar:SetPoint('TOPRIGHT', tt, 'BOTTOMRIGHT', -E.Border, -(E.Spacing * 3))
+				tt.StatusBar.text:SetPoint('CENTER', tt.StatusBar, 0, 0)
 				tt.StatusBar.anchoredToTop = nil
 			end
 		else
 			if not tt.StatusBar.anchoredToTop then
 				tt.StatusBar:ClearAllPoints()
-				tt.StatusBar:Point('BOTTOMLEFT', tt, 'TOPLEFT', E.Border, (E.Spacing * 3))
-				tt.StatusBar:Point('BOTTOMRIGHT', tt, 'TOPRIGHT', -E.Border, (E.Spacing * 3))
-				tt.StatusBar.text:Point('CENTER', tt.StatusBar, 0, 0)
+				tt.StatusBar:SetPoint('BOTTOMLEFT', tt, 'TOPLEFT', E.Border, (E.Spacing * 3))
+				tt.StatusBar:SetPoint('BOTTOMRIGHT', tt, 'TOPRIGHT', -E.Border, (E.Spacing * 3))
+				tt.StatusBar.text:SetPoint('CENTER', tt.StatusBar, 0, 0)
 				tt.StatusBar.anchoredToTop = true
 			end
 		end
@@ -142,22 +143,22 @@ function TT:GameTooltip_SetDefaultAnchor(tt, parent)
 		tt:ClearAllPoints()
 		if (not E:HasMoverBeenMoved('TooltipMover')) then
 			if ElvUI_ContainerFrame and ElvUI_ContainerFrame:IsShown() then
-				tt:Point('BOTTOMRIGHT', ElvUI_ContainerFrame, 'TOPRIGHT', 0, 18)
+				tt:SetPoint('BOTTOMRIGHT', ElvUI_ContainerFrame, 'TOPRIGHT', 0, 18)
 			elseif RightChatPanel:GetAlpha() == 1 and RightChatPanel:IsShown() then
-				tt:Point('BOTTOMRIGHT', RightChatPanel, 'TOPRIGHT', 0, 18)
+				tt:SetPoint('BOTTOMRIGHT', RightChatPanel, 'TOPRIGHT', 0, 18)
 			else
-				tt:Point('BOTTOMRIGHT', RightChatPanel, 'BOTTOMRIGHT', 0, 18)
+				tt:SetPoint('BOTTOMRIGHT', RightChatPanel, 'BOTTOMRIGHT', 0, 18)
 			end
 		else
 			local point = E:GetScreenQuadrant(TooltipMover)
 			if point == 'TOPLEFT' then
-				tt:Point('TOPLEFT', TooltipMover, 'BOTTOMLEFT', 1, -4)
+				tt:SetPoint('TOPLEFT', TooltipMover, 'BOTTOMLEFT', 1, -4)
 			elseif point == 'TOPRIGHT' then
-				tt:Point('TOPRIGHT', TooltipMover, 'BOTTOMRIGHT', -1, -4)
+				tt:SetPoint('TOPRIGHT', TooltipMover, 'BOTTOMRIGHT', -1, -4)
 			elseif point == 'BOTTOMLEFT' or point == 'LEFT' then
-				tt:Point('BOTTOMLEFT', TooltipMover, 'TOPLEFT', 1, 18)
+				tt:SetPoint('BOTTOMLEFT', TooltipMover, 'TOPLEFT', 1, 18)
 			else
-				tt:Point('BOTTOMRIGHT', TooltipMover, 'TOPRIGHT', -1, 18)
+				tt:SetPoint('BOTTOMRIGHT', TooltipMover, 'TOPRIGHT', -1, 18)
 			end
 		end
 	end
@@ -169,7 +170,7 @@ function TT:RemoveTrashLines(tt)
 		local tiptext = _G['GameTooltipTextLeft'..i]
 		local linetext = tiptext:GetText()
 
-		if(linetext == _G.PVP or linetext == _G.FACTION_ALLIANCE or linetext == _G.FACTION_HORDE) then
+		if linetext == _G.PVP or linetext == _G.FACTION_ALLIANCE or linetext == _G.FACTION_HORDE then
 			tiptext:SetText('')
 			tiptext:Hide()
 		end
@@ -180,7 +181,7 @@ function TT:GetLevelLine(tt, offset)
 	if tt:IsForbidden() then return end
 	for i = offset, tt:NumLines() do
 		local tipLine = _G['GameTooltipTextLeft'..i]
-		local tipText = tipLine and tipLine.GetText and tipLine:GetText() and strlower(tipLine:GetText())
+		local tipText = tipLine and tipLine:GetText() and strlower(tipLine:GetText())
 		if tipText and (strfind(tipText, LEVEL1) or strfind(tipText, LEVEL2)) then
 			return tipLine
 		end
@@ -655,13 +656,18 @@ function TT:SetStyle(tt)
 	tt:SetBackdropColor(r, g, b, TT.db.colorAlpha)
 end
 
-function TT:MODIFIER_STATE_CHANGED(_, key)
-	if key == 'LSHIFT' or key == 'RSHIFT' or key == 'LCTRL' or key == 'RCTRL' or key == 'LALT' or key == 'RALT' then
+function TT:MODIFIER_STATE_CHANGED()
+	if not GameTooltip:IsForbidden() and GameTooltip:IsShown() then
 		local owner = GameTooltip:GetOwner()
-		local notOnAuras = not (owner and owner.UpdateTooltip)
-		if notOnAuras and UnitExists('mouseover') then
+		if owner == _G.UIParent and UnitExists('mouseover') then
 			GameTooltip:SetUnit('mouseover')
+		elseif owner and owner:GetParent() == _G.SpellBookSpellIconsFrame then
+			AB.SpellButtonOnEnter(owner, nil, GameTooltip)
 		end
+	end
+
+	if _G.ElvUISpellBookTooltip:IsShown() then
+		AB:UpdateSpellBookTooltip()
 	end
 end
 
@@ -701,7 +707,16 @@ function TT:GameTooltip_OnTooltipSetSpell(tt)
 	local _, id = tt:GetSpell()
 	if not id then return end
 
-	tt:AddLine(format('|cFFCA3C3C%s|r %d', _G.ID, id))
+	local ID = format('|cFFCA3C3C%s|r %d', _G.ID, id)
+	for i = 3, tt:NumLines() do
+		local line = _G[format('GameTooltipTextLeft%d', i)]
+		local text = line and line:GetText()
+		if text and strfind(text, ID) then
+			return -- this is called twice on talents for some reason?
+		end
+	end
+
+	tt:AddLine(ID)
 	tt:Show()
 end
 
@@ -749,7 +764,7 @@ end
 function TT:RepositionBNET(frame, _, anchor)
 	if anchor ~= _G.BNETMover then
 		frame:ClearAllPoints()
-		frame:Point(_G.BNETMover.anchorPoint or 'TOPLEFT', _G.BNETMover, _G.BNETMover.anchorPoint or 'TOPLEFT');
+		frame:SetPoint(_G.BNETMover.anchorPoint or 'TOPLEFT', _G.BNETMover, _G.BNETMover.anchorPoint or 'TOPLEFT');
 	end
 end
 
@@ -791,24 +806,6 @@ function TT:SetTooltipFonts()
 	end
 end
 
---This changes the growth direction of the toast frame depending on position of the mover
-local function PostBNToastMove(mover)
-	local x, y = mover:GetCenter();
-	local screenHeight = E.UIParent:GetTop();
-	local screenWidth = E.UIParent:GetRight()
-
-	local anchorPoint
-	if (y > (screenHeight / 2)) then
-		anchorPoint = (x > (screenWidth/2)) and 'TOPRIGHT' or 'TOPLEFT'
-	else
-		anchorPoint = (x > (screenWidth/2)) and 'BOTTOMRIGHT' or 'BOTTOMLEFT'
-	end
-	mover.anchorPoint = anchorPoint
-
-	_G.BNToastFrame:ClearAllPoints()
-	_G.BNToastFrame:Point(anchorPoint, mover)
-end
-
 function TT:Initialize()
 	TT.db = E.db.tooltip
 
@@ -818,19 +815,14 @@ function TT:Initialize()
 		TT.MountIDs[select(2, C_MountJournal_GetMountInfoByID(mountID))] = mountID
 	end
 
-	_G.BNToastFrame:Point('TOPRIGHT', _G.MMHolder, 'BOTTOMRIGHT', 0, -10)
-	E:CreateMover(_G.BNToastFrame, 'BNETMover', L["BNet Frame"], nil, nil, PostBNToastMove)
-	_G.BNToastFrame.mover:SetSize(_G.BNToastFrame:GetSize())
-	TT:SecureHook(_G.BNToastFrame, 'SetPoint', 'RepositionBNET')
-
 	if E.private.tooltip.enable ~= true then return end
 	TT.Initialized = true
 
 	GameTooltip.StatusBar = GameTooltipStatusBar
-	GameTooltip.StatusBar:Height(TT.db.healthBar.height)
+	GameTooltip.StatusBar:SetHeight(TT.db.healthBar.height)
 	GameTooltip.StatusBar:SetScript('OnValueChanged', nil) -- Do we need to unset this?
 	GameTooltip.StatusBar.text = GameTooltip.StatusBar:CreateFontString(nil, 'OVERLAY')
-	GameTooltip.StatusBar.text:Point('CENTER', GameTooltip.StatusBar, 0, 0)
+	GameTooltip.StatusBar.text:SetPoint('CENTER', GameTooltip.StatusBar, 0, 0)
 	GameTooltip.StatusBar.text:FontTemplate(E.Libs.LSM:Fetch('font', TT.db.healthBar.font), TT.db.healthBar.fontSize, TT.db.healthBar.fontOutline)
 
 	--Tooltip Fonts
@@ -843,8 +835,8 @@ function TT:Initialize()
 	TT:SetTooltipFonts()
 
 	local GameTooltipAnchor = CreateFrame('Frame', 'GameTooltipAnchor', E.UIParent)
-	GameTooltipAnchor:Point('BOTTOMRIGHT', _G.RightChatToggleButton, 'BOTTOMRIGHT')
-	GameTooltipAnchor:Size(130, 20)
+	GameTooltipAnchor:SetPoint('BOTTOMRIGHT', _G.RightChatToggleButton, 'BOTTOMRIGHT')
+	GameTooltipAnchor:SetSize(130, 20)
 	GameTooltipAnchor:SetFrameLevel(GameTooltipAnchor:GetFrameLevel() + 400)
 	E:CreateMover(GameTooltipAnchor, 'TooltipMover', L["Tooltip"], nil, nil, nil, nil, nil, 'tooltip,general')
 
@@ -862,6 +854,7 @@ function TT:Initialize()
 	TT:SecureHookScript(GameTooltip, 'OnTooltipSetItem', 'GameTooltip_OnTooltipSetItem')
 	TT:SecureHookScript(GameTooltip, 'OnTooltipSetUnit', 'GameTooltip_OnTooltipSetUnit')
 	TT:SecureHookScript(GameTooltip.StatusBar, 'OnValueChanged', 'GameTooltipStatusBar_OnValueChanged')
+	TT:SecureHookScript(_G.ElvUISpellBookTooltip, 'OnTooltipSetSpell', 'GameTooltip_OnTooltipSetSpell')
 	TT:RegisterEvent('MODIFIER_STATE_CHANGED')
 
 	--Variable is localized at top of file, then set here when we're sure the frame has been created

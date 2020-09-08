@@ -5,13 +5,13 @@ local L = DBM_GUI_L
 
 L.TranslationByPrefix		= "번역: "
 L.TranslationBy 			= "Elnarfim"
-L.Website					= "디스코드 채널 |cFF73C2FBhttps://discord.gg/deadlybossmods|r를 방문해 보세요. 트위터 팔로우 @deadlybossmods 또는 @MysticalOS"
+L.Website					= "디스코드 채널 |cFF73C2FBhttps://discord.gg/DF5mffk|r를 방문해 보세요. 트위터 팔로우 @deadlybossmods 또는 @MysticalOS"
 L.WebsiteButton				= "웹사이트"
 
 L.OTabBosses	= "보스"--Deprecated and will be deleted once tabs no longer use this
-L.OTabRaids		= "레이드와 PVP"--Raids & PVP
-L.OTabDungeons	= "던전과 시나리오"--Dungeons and group/solo Scenarios (MoP, Proving Grounds, Visions, Torghast, etc)
-L.OTabPlugins	= "플러그인"
+L.OTabRaids		= "레이드"--Raids & PVP
+L.OTabDungeons	= "파티/1인"--1-5 person content (Dungeons, MoP Scenarios, World Events, Brawlers, Proving Grounds, Visions, Torghast, etc)
+L.OTabPlugins	= "핵심 플러그인"
 L.OTabAbout		= "소개"
 
 L.TabCategory_Options		= "일반 설정"
@@ -358,7 +358,7 @@ L.Area_AutoLogging			= "자동 전투 기록 설정"
 L.AutologBosses				= "블리자드 전투 로그를 사용해 자동으로 던전/레이드 기록"
 L.AdvancedAutologBosses		= "Transcriptor를 사용해 자동으로 던전/레이드 기록"
 L.RecordOnlyBosses			= "보스만 기록 (모든 일반몹은 제외됩니다. 보스 전투 시작 물약과 ENCOUNTER_START 이벤트를 기록하고 싶으면 '/dbm pull' 명령어를 사용하세요)"
-L.LogOnlyNonTrivial			= "주요 콘텐츠만 기록 (공격대 찾기/던전/시나리오/구 확장팩 제외)"
+L.LogOnlyNonTrivial			= "주요 콘텐츠만 기록 (최신 확장팩 일반 이상 레이드와 신화+ 던전)"
 --
 L.Area_3rdParty				= "써드파티 애드온 설정"
 L.ShowBBOnCombatStart		= "전투 시작시 Big Brother 버프 검사 실행"

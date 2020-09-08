@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(331, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200530005524")
+mod:SetRevision("20200806141910")
 mod:SetCreatureID(55294)
 mod:SetEncounterID(1297)
-mod:SetZone()
 --mod:SetModelSound("sound\\CREATURE\\ULTRAXION\\VO_DS_ULTRAXION_INTRO_01.OGG", "sound\\CREATURE\\ULTRAXION\\VO_DS_ULTRAXION_AGGRO_01.OGG")
 
 mod:RegisterCombat("combat")

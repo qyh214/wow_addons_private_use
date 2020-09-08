@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(1154, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145633")
+mod:SetRevision("20200806142006")
 mod:SetCreatureID(76809, 76806)--76809 foreman feldspar, 76806 heart of the mountain, 76809 Security Guard, 76810 Furnace Engineer, 76811 Bellows Operator, 76815 Primal Elementalist, 78463 Slag Elemental, 76821 Firecaller
 mod:SetEncounterID(1690)
-mod:SetZone()
 mod:SetUsedIcons(6, 5, 4, 3, 2, 1)
 mod.respawnTime = 10
 
@@ -47,26 +46,26 @@ local specWarnBomb				= mod:NewSpecialWarningMoveTo(155192, nil, DBM_CORE_L.AUTO
 local specWarnBellowsOperator	= mod:NewSpecialWarningSwitch("ej9650", "-Healer", nil, 2, nil, 2)
 local specWarnDeafeningRoar		= mod:NewSpecialWarningSpell(177756, "Tank")--Can't be dodged(was only dodgable on beta), was wrong warning for a long time. Also does a lot less damage than it did in beta too so not 3 anymore either.
 local specWarnRepair			= mod:NewSpecialWarningInterrupt(155179, "-Healer", nil, nil, nil, 2)
-local specWarnRuptureOn			= mod:NewSpecialWarningYou(156932, nil, nil, 2, 3)
-local specWarnRupture			= mod:NewSpecialWarningMove(156932, nil, nil, nil, nil, 2)
+local specWarnRuptureOn			= mod:NewSpecialWarningYou(156932, nil, nil, 2, 3, 2)
+local specWarnRupture			= mod:NewSpecialWarningMove(156932, nil, nil, nil, 1, 2)
 local yellRupture				= mod:NewYell(156932)
 --Phase 2
-local specWarnFixate			= mod:NewSpecialWarningYou(155196)
-local specWarnMeltYou			= mod:NewSpecialWarningYou(155225)
-local specWarnMeltNear			= mod:NewSpecialWarningClose(155225, false)
-local specWarnMelt				= mod:NewSpecialWarningMove(155223, nil, nil, nil, nil, 2)
+local specWarnFixate			= mod:NewSpecialWarningYou(155196, nil, nil, nil, 1, 2)
+local specWarnMeltYou			= mod:NewSpecialWarningYou(155225, nil, nil, nil, 1, 2)
+local specWarnMeltNear			= mod:NewSpecialWarningClose(155225, false, nil, nil, 1, 2)
+local specWarnMelt				= mod:NewSpecialWarningMove(155223, nil, nil, nil, 1, 2)
 local yellMelt					= mod:NewYell(155223)
-local specWarnCauterizeWounds	= mod:NewSpecialWarningInterrupt(155186, "-Healer")
-local specWarnPyroclasm			= mod:NewSpecialWarningInterrupt(156937, false)
-local specVolatileFire			= mod:NewSpecialWarningMoveAway(176121)
+local specWarnCauterizeWounds	= mod:NewSpecialWarningInterrupt(155186, "-Healer", nil, nil, 1, 2)
+local specWarnPyroclasm			= mod:NewSpecialWarningInterrupt(156937, false, nil, nil, 1, 2)
+local specVolatileFire			= mod:NewSpecialWarningMoveAway(176121, nil, nil, nil, 1, 2)
 local specWarnTwoVolatileFire	= mod:NewSpecialWarning("specWarnTwoVolatileFire", nil, nil, nil, 3)--A person with double volatile fire is extremely dangerous, they will kill everyone
 local yellVolatileFire			= mod:NewYell(176121)
-local specWarnShieldsDown		= mod:NewSpecialWarningSwitch("ej9655", "Dps")
-local specWarnEarthShield		= mod:NewSpecialWarningDispel(155173, "MagicDispeller")
-local specWarnSlagPool			= mod:NewSpecialWarningMove(155743)
+local specWarnShieldsDown		= mod:NewSpecialWarningSwitch("ej9655", "Dps", nil, nil, 1, 2)
+local specWarnEarthShield		= mod:NewSpecialWarningDispel(155173, "MagicDispeller", nil, nil, 1, 2)
+local specWarnSlagPool			= mod:NewSpecialWarningMove(155743, nil, nil, nil, 1, 8)
 --Phase 3
 local specWarnHeartoftheMountain= mod:NewSpecialWarningSwitch("ej10808", "Tank")
-local specWarnHeat				= mod:NewSpecialWarningStack(155242, nil, 2, nil, nil, nil, 2)
+local specWarnHeat				= mod:NewSpecialWarningStack(155242, nil, 2, nil, nil, nil, 6)
 local specWarnHeatOther			= mod:NewSpecialWarningTaunt(155242, nil, nil, nil, nil, 2)
 --All
 local specWarnBlast				= mod:NewSpecialWarningSoon(155209, nil, nil, nil, 2, 2)
@@ -342,7 +341,7 @@ function mod:OnCombatEnd()
 		DBM.RangeCheck:Hide()
 	end
 	if self.Options.HudMapOnBomb then
-		DBMHudMap:Disable()
+		DBM.HudMap:Disable()
 	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
@@ -354,8 +353,10 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 155186 and self:CheckInterruptFilter(args.sourceGUID) then
 		specWarnCauterizeWounds:Show(args.sourceName)
+		specWarnCauterizeWounds:Play("kickcast")
 	elseif spellId == 156937 and self:CheckInterruptFilter(args.sourceGUID) then
 		specWarnPyroclasm:Show(args.sourceName)
+		specWarnPyroclasm:Play("kickcast")
 	elseif spellId == 177756 and self:CheckTankDistance(args.sourceGUID, 40) and self:AntiSpam(3.5, 7) then
 		specWarnDeafeningRoar:Show()
 	end
@@ -382,7 +383,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:CheckTankDistance(args.sourceGUID, 40) and self.vb.phase == 1 then--Filter Works very poorly, probably because mob not a BOSS id. usually see ALL warnings and all HUDs :\
 			warnBomb:CombinedShow(1, args.destName)
 			if self.Options.HudMapOnBomb then
-				DBMHudMap:RegisterRangeMarkerOnPartyMember(155192, "highlight", args.destName, 5, debuffTime+0.5, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
+				DBM.HudMap:RegisterRangeMarkerOnPartyMember(155192, "highlight", args.destName, 5, debuffTime+0.5, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 			end
 		end
 		if args:IsPlayer() then
@@ -424,6 +425,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnFixate:CombinedShow(1, args.destName)
 		if args:IsPlayer() then
 			specWarnFixate:Show()
+			specWarnFixate:Play("targetyou")
 			--Open Range Frame for http://www.wowhead.com/spell=177744 (not in encounter journal but it's very important especially on mythic)
 			updateRangeFrame(self)
 		end
@@ -441,6 +443,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 158345 and self:AntiSpam(10, 3) then--Might be SPELL_CAST_SUCCESS instead.
 		specWarnShieldsDown:Show()
+		specWarnShieldsDown:Play("changetarget")
 		if self:IsDifficulty("normal") then--40 seconds on normal
 			timerShieldsDown:Start(40, args.destGUID)
 		elseif self:IsHeroic() then
@@ -510,6 +513,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnMeltYou:Play("runout")
 		elseif self:CheckNearby(8, args.destName) then
 			specWarnMeltNear:Show()
+			specWarnMeltNear:Play("runaway")
 		end
 	elseif spellId == 156934 then
 		--Increase to 50 should fix any rare issues not get timer if on same area as boss.
@@ -525,6 +529,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 155173 and args:IsDestTypeHostile() then
 		specWarnEarthShield:Show(args.destName)
+		specWarnEarthShield:Play("dispelboss")
 	elseif spellId == 155170 then
 		warnInfuriated:Show(args.destName)
 	end
@@ -536,7 +541,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
 	if args:IsSpellID(155192, 174716, 159558) then
 		if self.Options.HudMapOnBomb then
-			DBMHudMap:FreeEncounterMarkerByTarget(155192, args.destName)
+			DBM.HudMap:FreeEncounterMarkerByTarget(155192, args.destName)
 		end
 		if args:IsPlayer() then
 			timerBomb:Stop()

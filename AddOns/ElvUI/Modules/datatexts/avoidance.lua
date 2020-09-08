@@ -19,22 +19,22 @@ local STAT_CATEGORY_ENHANCEMENTS = STAT_CATEGORY_ENHANCEMENTS
 
 local displayString, lastPanel, targetlv, playerlv
 local basemisschance, leveldifference, dodge, parry, block, unhittable
-local AVD_DECAY_RATE, chanceString = 1.5, "%.2f%%"
+local AVD_DECAY_RATE, chanceString = 1.5, '%.2f%%'
 
 local function IsWearingShield()
-	local slotID = GetInventorySlotInfo("SecondaryHandSlot")
+	local slotID = GetInventorySlotInfo('SecondaryHandSlot')
 	local itemID = GetInventoryItemID('player', slotID)
 
 	if itemID then
 		local _, _, _, _, _, _, _, _, itemEquipLoc = GetItemInfo(itemID)
-		return itemEquipLoc == "INVTYPE_SHIELD"
+		return itemEquipLoc == 'INVTYPE_SHIELD'
 	end
 end
 
 local function OnEvent(self)
-	targetlv, playerlv = UnitLevel("target"), E.mylevel
+	targetlv, playerlv = UnitLevel('target'), E.mylevel
 
-	basemisschance = E.myrace == "NightElf" and 7 or 5
+	basemisschance = E.myrace == 'NightElf' and 7 or 5
 	if targetlv == -1 then
 		leveldifference = 3
 	elseif targetlv > playerlv then
@@ -63,7 +63,7 @@ local function OnEvent(self)
 	if parry <= 0 then parry = 0 end
 	if block <= 0 then block = 0 end
 
-	if E.myclass == "DRUID" and GetBonusBarOffset() == 3 then
+	if E.myclass == 'DRUID' and GetBonusBarOffset() == 3 then
 		parry = 0
 		numAvoidances = numAvoidances - 1
 	end
@@ -86,38 +86,28 @@ local function OnEvent(self)
 	lastPanel = self
 end
 
-local function OnEnter(self)
-	DT:SetupTooltip(self)
+local function OnEnter()
+	DT.tooltip:ClearLines()
 
-	if targetlv > 1 then
-		DT.tooltip:AddDoubleLine(L["Avoidance Breakdown"], strjoin("", " (", L["lvl"], " ", targetlv, ")"))
-	elseif targetlv == -1 then
-		DT.tooltip:AddDoubleLine(L["Avoidance Breakdown"], strjoin("", " (", BOSS, ")"))
-	else
-		DT.tooltip:AddDoubleLine(L["Avoidance Breakdown"], strjoin("", " (", L["lvl"], " ", playerlv, ")"))
-	end
-	DT.tooltip:AddLine' '
-	DT.tooltip:AddDoubleLine(DODGE_CHANCE, format(chanceString, dodge),1,1,1)
-	DT.tooltip:AddDoubleLine(PARRY_CHANCE, format(chanceString, parry),1,1,1)
-	DT.tooltip:AddDoubleLine(BLOCK_CHANCE, format(chanceString, block),1,1,1)
-	DT.tooltip:AddDoubleLine(MISS_CHANCE, format(chanceString, basemisschance),1,1,1)
+	local rightString = targetlv > 1 and strjoin('', ' (', L["lvl"], ' ', targetlv, ')') or targetlv == -1 and strjoin('', ' (', BOSS, ')') or strjoin('', ' (', L["lvl"], ' ', playerlv, ')')
+	DT.tooltip:AddDoubleLine(L["Avoidance Breakdown"], rightString)
 	DT.tooltip:AddLine(' ')
 
-	if unhittable > 0 then
-		DT.tooltip:AddDoubleLine(L["Unhittable:"], '+'..format(chanceString, unhittable), 1, 1, 1, 0, 1, 0)
-	else
-		DT.tooltip:AddDoubleLine(L["Unhittable:"], format(chanceString, unhittable), 1, 1, 1, 1, 0, 0)
-	end
+	DT.tooltip:AddDoubleLine(DODGE_CHANCE, format(chanceString, dodge), 1, 1, 1)
+	DT.tooltip:AddDoubleLine(PARRY_CHANCE, format(chanceString, parry), 1, 1, 1)
+	DT.tooltip:AddDoubleLine(BLOCK_CHANCE, format(chanceString, block), 1, 1, 1)
+	DT.tooltip:AddDoubleLine(MISS_CHANCE, format(chanceString, basemisschance), 1, 1, 1)
+	DT.tooltip:AddLine(' ')
+
+	DT.tooltip:AddDoubleLine(L["Unhittable:"], (unhittable > 0 and '+' or '')..format(chanceString, unhittable), 1, 1, 1, (unhittable < 0 and 1 or 0), (unhittable > 0 and 1 or 0), 0)
 	DT.tooltip:Show()
 end
 
 local function ValueColorUpdate(hex)
-	displayString = strjoin("", "%s", hex, "%.2f%%|r")
+	displayString = strjoin('', '%s', hex, '%.2f%%|r')
 
-	if lastPanel ~= nil then
-		OnEvent(lastPanel)
-	end
+	if lastPanel then OnEvent(lastPanel) end
 end
 E.valueColorUpdateFuncs[ValueColorUpdate] = true
 
-DT:RegisterDatatext('Avoidance', STAT_CATEGORY_ENHANCEMENTS, {"UNIT_TARGET", "UNIT_STATS", "UNIT_AURA", "ACTIVE_TALENT_GROUP_CHANGED", "PLAYER_TALENT_UPDATE", 'PLAYER_EQUIPMENT_CHANGED'}, OnEvent, nil, nil, OnEnter, nil, L["Avoidance Breakdown"])
+DT:RegisterDatatext('Avoidance', STAT_CATEGORY_ENHANCEMENTS, {'UNIT_TARGET', 'UNIT_STATS', 'UNIT_AURA', 'ACTIVE_TALENT_GROUP_CHANGED', 'PLAYER_TALENT_UPDATE', 'PLAYER_EQUIPMENT_CHANGED'}, OnEvent, nil, nil, OnEnter, nil, L["Avoidance Breakdown"])

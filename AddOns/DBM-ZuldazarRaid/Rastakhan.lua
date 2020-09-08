@@ -1,13 +1,9 @@
 local mod	= DBM:NewMod(2335, "DBM-ZuldazarRaid", 2, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200610150404")
+mod:SetRevision("20200803045206")
 mod:SetCreatureID(145616)--145644 Bwonsamdi
 mod:SetEncounterID(2272)
---mod:DisableESCombatDetection()
-mod:SetZone()
---mod:SetBossHPInfoToHighest()
---mod:SetUsedIcons(1, 2, 8)
 mod:SetHotfixNoticeRev(18336)
 --mod:SetMinSyncRevision(16950)
 --mod.respawnTime = 35
@@ -147,7 +143,7 @@ local infoframeTable = {}
 function mod:MeteorLeapTarget(targetname, uId, bossuid, scanningTime)
 	if not targetname then return end
 	if targetname == UnitName("player") then
-		specWarnMeteorLeap:Show(GROUP)
+		specWarnMeteorLeap:Show(DBM_CORE_L.ALLIES)
 		specWarnMeteorLeap:Play("gathershare")
 		yellMeteorLeap:Yell()
 		yellMeteorLeapFades:Countdown(5-scanningTime)

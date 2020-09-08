@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod("DSTrash", "DBM-DragonSoul")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143316")
+mod:SetRevision("20200806141910")
 mod:SetModelID(39378)
-mod:SetZone()
 mod.isTrashMod = true
 
 mod:RegisterEvents(
@@ -47,7 +46,9 @@ end
 
 function mod:BoulderTarget(sGUID)
 	if not IsInGroup() then--you are ALWAYS target
-		specWarnBoulder:Show()
+		if self:AntiSpam(3, 1) then
+			specWarnBoulder:Show()
+		end
 		return
 	end
 	local targetname = nil
@@ -60,13 +61,15 @@ function mod:BoulderTarget(sGUID)
 	if targetname and self:AntiSpam(1, targetname) then--Anti spam using targetname as an identifier, will prevent same target being announced double/tripple but NOT prevent multiple targets being announced at once :)
 		warnBoulder:Show(targetname)
 		if targetname == UnitName("player") then
-			specWarnBoulder:Show()
-			yellBoulder:Yell()
+			if self:AntiSpam(3, 1) then
+				specWarnBoulder:Show()
+				yellBoulder:Yell()
+			end
 		else
 			local uId = DBM:GetRaidUnitId(targetname)
 			if uId then
 				local inRange = DBM.RangeCheck:GetDistance("player", uId)
-				if inRange and inRange < 6 then--Guessed, unknown, spelltip isn't informative.
+				if self:AntiSpam(3, 1) and inRange and inRange < 6 then--Guessed, unknown, spelltip isn't informative.
 					specWarnBoulderNear:Show(targetname)
 				end
 			end
@@ -81,7 +84,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, _, _, _, overkill)
-	if spellId == 105579 and destGUID == UnitGUID("player") and self:AntiSpam(3) then
+	if spellId == 105579 and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
 		specWarnFlames:Show()
 	elseif (overkill or 0) > 0 then -- prevent to waste cpu. only pharse cid when event have overkill parameter.
 		local cid = self:GetCIDFromGUID(destGUID)
@@ -94,7 +97,7 @@ mod.SPELL_PERIODIC_DAMAGE = mod.SPELL_DAMAGE
 mod.RANGE_DAMAGE = mod.SPELL_DAMAGE
 
 function mod:SPELL_MISSED(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 105579 and destGUID == UnitGUID("player") and self:AntiSpam(3) then
+	if spellId == 105579 and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
 		specWarnFlames:Show()
 	end
 end

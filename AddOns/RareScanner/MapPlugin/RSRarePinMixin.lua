@@ -58,7 +58,7 @@ function RareScanner:SetUpMapPin(pin, npcID, npcInfo)
 	if (pin.isNpc) then
 		pin.name = RareScanner:GetNpcName(npcID)
 		local faction, _ = UnitFactionGroup("player")
-		if (private.ZONE_IDS[npcID] and private.ZONE_IDS[npcID].friendly and RS_tContains(private.ZONE_IDS[npcID].friendly, string.sub(faction, 1, 1))) then
+		if (private.NPC_INFO[npcID] and private.NPC_INFO[npcID].friendly and RS_tContains(private.NPC_INFO[npcID].friendly, string.sub(faction, 1, 1))) then
 			pin.isFriendlyNpc = true
 		end
 	elseif (pin.isContainer) then
@@ -371,7 +371,7 @@ function RSRarePinMixin:OnMouseEnter()
 	end
 	
 	-- Overlay
-	if (self.isNpc and private.ZONE_IDS[self.npcID] and (private.ZONE_IDS[self.npcID].overlay or type(private.ZONE_IDS[self.npcID].zoneID) == "table" and private.ZONE_IDS[self.npcID].zoneID[self.mapID] and private.ZONE_IDS[self.npcID].zoneID[self.mapID].overlay)) then
+	if (self.isNpc and private.NPC_INFO[self.npcID] and (private.NPC_INFO[self.npcID].overlay or type(private.NPC_INFO[self.npcID].zoneID) == "table" and private.NPC_INFO[self.npcID].zoneID[self.mapID] and private.NPC_INFO[self.npcID].zoneID[self.mapID].overlay)) then
 		line = tooltip:AddSeparator(1, 1)
 		line = tooltip:AddLine()
 		tooltip:SetCell(line, 1, self:TextColor(AL["MAP_TOOLTIP_SHOW_OVERLAY"], "00FF00"), nil, "LEFT", 10, nil, nil, nil, TOOLTIP_MAX_WIDTH)
@@ -427,15 +427,15 @@ function RSRarePinMixin:OnMouseDown(button)
 end
 
 function RSRarePinMixin:ShowOverlay()
-	if (private.ZONE_IDS[self.npcID]) then
-		if (private.ZONE_IDS[self.npcID].overlay) then
-			for i, coordinates in ipairs (private.ZONE_IDS[self.npcID].overlay) do
+	if (private.NPC_INFO[self.npcID]) then
+		if (private.NPC_INFO[self.npcID].overlay) then
+			for i, coordinates in ipairs (private.NPC_INFO[self.npcID].overlay) do
 				local x, y = strsplit("-", coordinates)
 				self:GetMap():AcquirePin("RSOverlayTemplate", tonumber(x), tonumber(y), self);
 			end
 			private.dbchar.overlayActive = self.npcID
-		elseif (type(private.ZONE_IDS[self.npcID].zoneID) == "table" and private.ZONE_IDS[self.npcID].zoneID[self.mapID] and private.ZONE_IDS[self.npcID].zoneID[self.mapID].overlay) then
-			for i, coordinates in ipairs (private.ZONE_IDS[self.npcID].zoneID[self.mapID].overlay) do
+		elseif (type(private.NPC_INFO[self.npcID].zoneID) == "table" and private.NPC_INFO[self.npcID].zoneID[self.mapID] and private.NPC_INFO[self.npcID].zoneID[self.mapID].overlay) then
+			for i, coordinates in ipairs (private.NPC_INFO[self.npcID].zoneID[self.mapID].overlay) do
 				local x, y = strsplit("-", coordinates)
 				self:GetMap():AcquirePin("RSOverlayTemplate", tonumber(x), tonumber(y), self);
 			end

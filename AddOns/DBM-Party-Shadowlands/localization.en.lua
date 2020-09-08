@@ -51,7 +51,7 @@ L:SetGeneralLocalization({
 --L= DBM:GetModLocalization(2423)
 
 -----------------------
--- Stradama Margrave --
+-- Margrave Stradama --
 -----------------------
 --L= DBM:GetModLocalization(2404)
 
@@ -80,7 +80,25 @@ L:SetGeneralLocalization({
 -----------------------
 -- Tred'ova --
 -----------------------
---L= DBM:GetModLocalization(2405)
+L= DBM:GetModLocalization(2405)
+
+L:SetWarningLocalization({
+	specWarnParasiticInfester	= "Parasitic Infester on YOU"
+})
+
+L:SetTimerLocalization{
+	timerParasiticInfesterCD	= "~Infester"
+}
+
+L:SetOptionLocalization({
+	specWarnParasiticInfester	= "Show special warning when you are affected by Parasitic Infester",
+	timerParasiticInfesterCD	= "Show timer for Parasitic Infester",
+	yellParasiticInfester		= "Yell when you are affected by Parasitic Infester"
+})
+
+L:SetMiscLocalization({
+	Infester					= "Infester"
+})
 
 ---------
 --Trash--

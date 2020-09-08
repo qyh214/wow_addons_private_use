@@ -44,10 +44,21 @@ local DTPanelOptions = {
 		name = L["Height"],
 		min = 12, max = E.screenheight, step = 1,
 	},
+	textJustify = {
+		order = 6,
+		type = 'select',
+		name = L["Text Justify"],
+		desc = L["Sets the font instance's horizontal text alignment style."],
+		values = {
+			CENTER = L["Center"],
+			LEFT = L["Left"],
+			RIGHT = L["Right"],
+		},
+	},
 	templateGroup = {
 		order = 10,
-		type = "multiselect",
-		name = L['Template'],
+		type = 'multiselect',
+		name = L["Template"],
 		sortByValue = true,
 		values = {
 			backdrop = L["Backdrop"],
@@ -58,26 +69,19 @@ local DTPanelOptions = {
 	},
 	strataAndLevel = {
 		order = 15,
-		type = "group",
+		type = 'group',
 		name = L["Strata and Level"],
 		guiInline = true,
 		args = {
 			frameStrata = {
 				order = 2,
-				type = "select",
+				type = 'select',
 				name = L["Frame Strata"],
-				values = {
-					BACKGROUND = "BACKGROUND",
-					LOW = "LOW",
-					MEDIUM = "MEDIUM",
-					HIGH = "HIGH",
-					DIALOG = "DIALOG",
-					TOOLTIP = "TOOLTIP",
-				},
+				values = C.Values.Strata,
 			},
 			frameLevel = {
 				order = 5,
-				type = "range",
+				type = 'range',
 				name = L["Frame Level"],
 				min = 1, max = 128, step = 1,
 			},
@@ -85,40 +89,39 @@ local DTPanelOptions = {
 	},
 	tooltip = {
 		order = 20,
-		type = "group",
+		type = 'group',
 		name = L["Tooltip"],
 		guiInline = true,
 		args = {
-			tooltipAnchor = {
-				order = 2,
-				type = "select",
-				name = L["Anchor"],
-				width = 'double',
-				values = {
-					ANCHOR_TOP = L["ANCHOR_TOP"],
-					ANCHOR_RIGHT = L["ANCHOR_RIGHT"],
-					ANCHOR_BOTTOM = L["ANCHOR_BOTTOM"],
-					ANCHOR_LEFT = L["ANCHOR_LEFT"],
-					ANCHOR_TOPRIGHT = L["ANCHOR_TOPRIGHT"],
-					ANCHOR_BOTTOMRIGHT = L["ANCHOR_BOTTOMRIGHT"],
-					ANCHOR_TOPLEFT = L["ANCHOR_TOPLEFT"],
-					ANCHOR_BOTTOMLEFT = L["ANCHOR_BOTTOMLEFT"],
-					ANCHOR_CURSOR = L["ANCHOR_CURSOR"],
-					ANCHOR_CURSOR_LEFT = L["ANCHOR_CURSOR_LEFT"],
-					ANCHOR_CURSOR_RIGHT = L["ANCHOR_CURSOR_RIGHT"],
-				},
-			},
 			tooltipXOffset = {
-				order = 2,
+				order = 1,
 				type = 'range',
 				name = L["X-Offset"],
 				min = -30, max = 30, step = 1,
 			},
 			tooltipYOffset = {
-				order = 3,
+				order = 2,
 				type = 'range',
 				name = L["Y-Offset"],
 				min = -30, max = 30, step = 1,
+			},
+			tooltipAnchor = {
+				order = 3,
+				type = 'select',
+				name = L["Anchor"],
+				values = {
+					ANCHOR_TOP = L["TOP"],
+					ANCHOR_RIGHT = L["RIGHT"],
+					ANCHOR_BOTTOM = L["BOTTOM"],
+					ANCHOR_LEFT = L["LEFT"],
+					ANCHOR_TOPRIGHT = L["TOPRIGHT"],
+					ANCHOR_BOTTOMRIGHT = L["BOTTOMRIGHT"],
+					ANCHOR_TOPLEFT = L["TOPLEFT"],
+					ANCHOR_BOTTOMLEFT = L["BOTTOMLEFT"],
+					ANCHOR_CURSOR = L["CURSOR"],
+					ANCHOR_CURSOR_LEFT = L["CURSOR_LEFT"],
+					ANCHOR_CURSOR_RIGHT = L["CURSOR_RIGHT"],
+				},
 			},
 		},
 	},
@@ -152,7 +155,7 @@ local function PanelGroup_Create(panel)
 			enable = {
 				order = 0,
 				type = 'toggle',
-				name = L['Enable'],
+				name = L["Enable"],
 			},
 			panelOptions = {
 				order = -1,
@@ -169,7 +172,7 @@ local function PanelGroup_Create(panel)
 					delete = {
 						order = -1,
 						type = 'execute',
-						name = L['Delete'],
+						name = L["Delete"],
 						width = 'full',
 						confirm = true,
 						func = function(info)
@@ -183,7 +186,7 @@ local function PanelGroup_Create(panel)
 					},
 					fonts = {
 						order = 10,
-						type = "group",
+						type = 'group',
 						name = L["Fonts"],
 						guiInline = true,
 						get = function(info)
@@ -197,7 +200,7 @@ local function PanelGroup_Create(panel)
 						end,
 						args = {
 							enable = {
-								type = "toggle",
+								type = 'toggle',
 								order = 1,
 								name = L["Enable"],
 								desc = L["This will override the global cooldown settings."],
@@ -218,7 +221,7 @@ local function PanelGroup_Create(panel)
 							},
 							fontOutline = {
 								order = 5,
-								type = "select",
+								type = 'select',
 								name = L["Font Outline"],
 								values = C.Values.FontFlags,
 							},
@@ -271,7 +274,7 @@ function DT:PanelLayoutOptions()
 				options[name].args.delete = {
 					order = -1,
 					type = 'execute',
-					name = L['Delete'],
+					name = L["Delete"],
 					func = function()
 						E.db.datatexts.panels[name] = nil
 						options[name] = nil
@@ -288,7 +291,7 @@ function DT:PanelLayoutOptions()
 						options[name].args[tostring(option)] = {
 							type = 'select',
 							order = option,
-							name = L[format("Position %d", option)],
+							name = L[format('Position %d', option)],
 							values = dts,
 							get = function(info) return E.db.datatexts.panels[name][tonumber(info[#info])] end,
 							set = function(info, value)
@@ -308,56 +311,56 @@ local function CreateCustomCurrencyOptions(currencyID)
 	if currency then
 		E.Options.args.datatexts.args.customCurrency.args[currency.NAME] = {
 			order = 1,
-			type = "group",
+			type = 'group',
 			name = currency.NAME,
 			guiInline = false,
 			args = {
 				displayStyle = {
 					order = 1,
-					type = "select",
+					type = 'select',
 					name = L["Display Style"],
 					get = function(info) return E.global.datatexts.customCurrencies[currencyID].DISPLAY_STYLE end,
 					set = function(info, value)
 						E.global.datatexts.customCurrencies[currencyID].DISPLAY_STYLE = value
-						DT:UpdateCustomCurrencySettings(currency.NAME, "DISPLAY_STYLE", value)
+						DT:UpdateCustomCurrencySettings(currency.NAME, 'DISPLAY_STYLE', value)
 						DT:LoadDataTexts()
 					end,
 					values = {
-						["ICON"] = L["Icons Only"],
-						["ICON_TEXT"] = L["Icons and Text"],
-						["ICON_TEXT_ABBR"] = L["Icons and Text (Short)"],
+						ICON = L["Icons Only"],
+						ICON_TEXT = L["Icons and Text"],
+						ICON_TEXT_ABBR = L["Icons and Text (Short)"],
 					},
 				},
 				showMax = {
 					order = 2,
-					type = "toggle",
+					type = 'toggle',
 					name = L["Current / Max"],
 					get = function(info) return E.global.datatexts.customCurrencies[currencyID].SHOW_MAX end,
 					set = function(info, value)
 						E.global.datatexts.customCurrencies[currencyID].SHOW_MAX = value
-						DT:UpdateCustomCurrencySettings(currency.NAME, "SHOW_MAX", value)
+						DT:UpdateCustomCurrencySettings(currency.NAME, 'SHOW_MAX', value)
 						DT:LoadDataTexts()
 					end,
 				},
 				useTooltip = {
 					order = 3,
-					type = "toggle",
+					type = 'toggle',
 					name = L["Use Tooltip"],
 					get = function(info) return E.global.datatexts.customCurrencies[currencyID].USE_TOOLTIP end,
 					set = function(info, value)
 						E.global.datatexts.customCurrencies[currencyID].USE_TOOLTIP = value
-						DT:UpdateCustomCurrencySettings(currency.NAME, "USE_TOOLTIP", value)
+						DT:UpdateCustomCurrencySettings(currency.NAME, 'USE_TOOLTIP', value)
 					end,
 				},
 				displayInMainTooltip = {
 					order = 4,
-					type = "toggle",
+					type = 'toggle',
 					name = L["Display In Main Tooltip"],
 					desc = L["If enabled, then this currency will be displayed in the main Currencies datatext tooltip."],
 					get = function(info) return E.global.datatexts.customCurrencies[currencyID].DISPLAY_IN_MAIN_TOOLTIP end,
 					set = function(info, value)
 						E.global.datatexts.customCurrencies[currencyID].DISPLAY_IN_MAIN_TOOLTIP = value
-						DT:UpdateCustomCurrencySettings(currency.NAME, "DISPLAY_IN_MAIN_TOOLTIP", value)
+						DT:UpdateCustomCurrencySettings(currency.NAME, 'DISPLAY_IN_MAIN_TOOLTIP', value)
 					end,
 				},
 			},
@@ -372,9 +375,9 @@ local function SetupCustomCurrencies()
 end
 
 E.Options.args.datatexts = {
-	type = "group",
+	type = 'group',
 	name = L["DataTexts"],
-	childGroups = "tab",
+	childGroups = 'tab',
 	order = 2,
 	get = function(info) return E.db.datatexts[info[#info]] end,
 	set = function(info, value) E.db.datatexts[info[#info]] = value; DT:LoadDataTexts() end,
@@ -383,12 +386,12 @@ E.Options.args.datatexts = {
 		spacer = ACH:Spacer(2),
 		general = {
 			order = 3,
-			type = "group",
+			type = 'group',
 			name = L["General"],
 			args = {
 				generalGroup = {
 					order = 2,
-					type = "group",
+					type = 'group',
 					guiInline = true,
 					name = L["General"],
 					args = {
@@ -400,13 +403,13 @@ E.Options.args.datatexts = {
 						},
 						noCombatClick = {
 							order = 6,
-							type = "toggle",
+							type = 'toggle',
 							name = L["Block Combat Click"],
 							desc = L["Blocks all click events while in combat."],
 						},
 						noCombatHover = {
 							order = 7,
-							type = "toggle",
+							type = 'toggle',
 							name = L["Block Combat Hover"],
 							desc = L["Blocks datatext tooltip from showing in combat."],
 						},
@@ -419,7 +422,7 @@ E.Options.args.datatexts = {
 					name = L["Fonts"],
 					args = {
 						font = {
-							type = "select", dialogControl = 'LSM30_Font',
+							type = 'select', dialogControl = 'LSM30_Font',
 							order = 1,
 							name = L["Font"],
 							values = AceGUIWidgetLSMlists.font,
@@ -427,32 +430,32 @@ E.Options.args.datatexts = {
 						fontSize = {
 							order = 2,
 							name = L["FONT_SIZE"],
-							type = "range",
+							type = 'range',
 							min = 4, max = 212, step = 1,
 						},
 						fontOutline = {
 							order = 3,
 							name = L["Font Outline"],
 							desc = L["Set the font outline."],
-							type = "select",
+							type = 'select',
 							values = C.Values.FontFlags,
 						},
 						wordWrap = {
 							order = 4,
-							type = "toggle",
+							type = 'toggle',
 							name = L["Word Wrap"],
 						},
 					},
 				},
 				currencies = {
 					order = 4,
-					type = "group",
+					type = 'group',
 					guiInline = true,
 					name = L["CURRENCY"],
 					args = {
 						displayedCurrency = {
 							order = 2,
-							type = "select",
+							type = 'select',
 							name = L["Displayed Currency"],
 							get = function(info) return E.db.datatexts.currencies.displayedCurrency end,
 							set = function(info, value) E.db.datatexts.currencies.displayedCurrency = value; DT:LoadDataTexts() end,
@@ -461,15 +464,15 @@ E.Options.args.datatexts = {
 						},
 						displayStyle = {
 							order = 3,
-							type = "select",
+							type = 'select',
 							name = L["Currency Format"],
 							get = function(info) return E.db.datatexts.currencies.displayStyle end,
 							set = function(info, value) E.db.datatexts.currencies.displayStyle = value; DT:LoadDataTexts() end,
-							hidden = function() return (E.db.datatexts.currencies.displayedCurrency == "GOLD") or (E.db.datatexts.currencies.displayedCurrency == "BACKPACK") end,
+							hidden = function() return (E.db.datatexts.currencies.displayedCurrency == 'GOLD') or (E.db.datatexts.currencies.displayedCurrency == 'BACKPACK') end,
 							values = {
-								["ICON"] = L["Icons Only"],
-								["ICON_TEXT"] = L["Icons and Text"],
-								["ICON_TEXT_ABBR"] = L["Icons and Text (Short)"],
+								ICON = L["Icons Only"],
+								ICON_TEXT = L["Icons and Text"],
+								ICON_TEXT_ABBR = L["Icons and Text (Short)"],
 							},
 						},
 						goldFormat = {
@@ -477,15 +480,15 @@ E.Options.args.datatexts = {
 							type = 'select',
 							name = L["Gold Format"],
 							desc = L["The display format of the money text that is shown in the gold datatext and its tooltip."],
-							hidden = function() return (E.db.datatexts.currencies.displayedCurrency ~= "GOLD") end,
+							hidden = function() return (E.db.datatexts.currencies.displayedCurrency ~= 'GOLD') end,
 							values = {
-								['SMART'] = L["Smart"],
-								['FULL'] = L["Full"],
-								['SHORT'] = L["SHORT"],
-								['SHORTINT'] = L["Short (Whole Numbers)"],
-								['CONDENSED'] = L["Condensed"],
-								['BLIZZARD'] = L["Blizzard Style"],
-								['BLIZZARD2'] = L["Blizzard Style"].." 2",
+								SMART = L["Smart"],
+								FULL = L["Full"],
+								SHORT = L["SHORT"],
+								SHORTINT = L["Short (Whole Numbers)"],
+								CONDENSED = L["Condensed"],
+								BLIZZARD = L["Blizzard Style"],
+								BLIZZARD2 = L["Blizzard Style"]..' 2',
 							},
 						},
 						goldCoins = {
@@ -493,13 +496,13 @@ E.Options.args.datatexts = {
 							type = 'toggle',
 							name = L["Show Coins"],
 							desc = L["Use coin icons instead of colored text."],
-							hidden = function() return (E.db.datatexts.currencies.displayedCurrency ~= "GOLD") end,
+							hidden = function() return (E.db.datatexts.currencies.displayedCurrency ~= 'GOLD') end,
 						},
 					},
 				},
 				time = {
 					order = 6,
-					type = "group",
+					type = 'group',
 					name = L["Time"],
 					guiInline = true,
 					args = {
@@ -523,13 +526,13 @@ E.Options.args.datatexts = {
 				},
 				durability = {
 					order = 8,
-					type = "group",
+					type = 'group',
 					name = L["Durability"],
 					guiInline = true,
 					args = {
 						percThreshold = {
 							order = 1,
-							type = "range",
+							type = 'range',
 							name = L["Flash Threshold"],
 							desc = L["The durability percent that the datatext will start flashing.  Set to -1 to disable"],
 							min = -1, max = 99, step = 1,
@@ -548,7 +551,7 @@ E.Options.args.datatexts = {
 				newPanel = {
 					order = 0,
 					type = 'group',
-					name = ColorizeName(L['New Panel'], '33ff33'),
+					name = ColorizeName(L["New Panel"], '33ff33'),
 					get = function(info) return E.global.datatexts.newPanelInfo[info[#info]] end,
 					set = function(info, value) E.global.datatexts.newPanelInfo[info[#info]] = value end,
 					args = {
@@ -556,18 +559,19 @@ E.Options.args.datatexts = {
 							order = 0,
 							type = 'input',
 							width = 'full',
-							name = L['Name'],
+							name = L["Name"],
 							validate = function(_, value)
-								return E.global.datatexts.customPanels[value] and L['Name Taken'] or true
+								return E.global.datatexts.customPanels[value] and L["Name Taken"] or true
 							end,
 						},
 						add = {
 							order = 1,
 							type = 'execute',
-							name = L['Add'],
+							name = L["Add"],
 							width = 'full',
 							hidden = function()
-								return E.global.datatexts.newPanelInfo.name == ''
+								local name = E.global.datatexts.newPanelInfo.name
+								return not name or name == ''
 							end,
 							func = function()
 								local name = E.global.datatexts.newPanelInfo.name
@@ -589,7 +593,7 @@ E.Options.args.datatexts = {
 					},
 				},
 				LeftChatDataPanel = {
-					type = "group",
+					type = 'group',
 					name = ColorizeName(L["Datatext Panel (Left)"], 'cccccc'),
 					desc = L["Display data panels below the chat, used for datatexts."],
 					order = 2,
@@ -598,7 +602,7 @@ E.Options.args.datatexts = {
 					args = {
 						enable = {
 							order = 0,
-							name = L['Enable'],
+							name = L["Enable"],
 							type = 'toggle',
 							set = function(info, value)
 								E.db.datatexts.panels[info[#info - 1]][info[#info]] = value
@@ -607,7 +611,10 @@ E.Options.args.datatexts = {
 									_G.HideLeftChat()
 								end
 
-								Chat:UpdateEditboxAnchors()
+								if E.private.chat.enable then
+									Chat:UpdateEditboxAnchors()
+								end
+
 								Layout:ToggleChatPanels()
 								Layout:SetDataPanelStyle()
 								DT:UpdatePanelInfo('LeftChatDataPanel')
@@ -616,12 +623,12 @@ E.Options.args.datatexts = {
 						backdrop = {
 							order = 5,
 							name = L["Backdrop"],
-							type = "toggle",
+							type = 'toggle',
 						},
 						border = {
 							order = 6,
 							name = L["Border"],
-							type = "toggle",
+							type = 'toggle',
 						},
 						panelTransparency = {
 							order = 7,
@@ -631,7 +638,7 @@ E.Options.args.datatexts = {
 					},
 				},
 				RightChatDataPanel = {
-					type = "group",
+					type = 'group',
 					name = ColorizeName(L["Datatext Panel (Right)"], 'cccccc'),
 					desc = L["Display data panels below the chat, used for datatexts."],
 					order = 3,
@@ -640,7 +647,7 @@ E.Options.args.datatexts = {
 					args = {
 						enable = {
 							order = 0,
-							name = L['Enable'],
+							name = L["Enable"],
 							type = 'toggle',
 							set = function(info, value)
 								E.db.datatexts.panels[info[#info - 1]][info[#info]] = value
@@ -649,7 +656,10 @@ E.Options.args.datatexts = {
 									_G.HideRightChat()
 								end
 
-								Chat:UpdateEditboxAnchors()
+								if E.private.chat.enable then
+									Chat:UpdateEditboxAnchors()
+								end
+
 								Layout:ToggleChatPanels()
 								Layout:SetDataPanelStyle()
 								DT:UpdatePanelInfo('RightChatDataPanel')
@@ -658,12 +668,12 @@ E.Options.args.datatexts = {
 						backdrop = {
 							order = 5,
 							name = L["Backdrop"],
-							type = "toggle",
+							type = 'toggle',
 						},
 						border = {
 							order = 6,
 							name = L["Border"],
-							type = "toggle",
+							type = 'toggle',
 						},
 						panelTransparency = {
 							order = 7,
@@ -673,21 +683,25 @@ E.Options.args.datatexts = {
 					},
 				},
 				MinimapPanel = {
-					type = "group",
+					type = 'group',
 					name = ColorizeName(L["Minimap Panels"], 'cccccc'),
 					desc = L["Display minimap panels below the minimap, used for datatexts."],
 					get = function(info) return E.db.datatexts.panels.MinimapPanel[info[#info]] end,
 					set = function(info, value) E.db.datatexts.panels.MinimapPanel[info[#info]] = value DT:UpdatePanelInfo('MinimapPanel') end,
+					hidden = function() return not E.private.general.minimap.enable end,
 					order = 4,
 					args = {
 						enable = {
 							order = 0,
-							name = L['Enable'],
+							name = L["Enable"],
 							type = 'toggle',
 							set = function(info, value)
 								E.db.datatexts.panels[info[#info - 1]][info[#info]] = value
 								DT:UpdatePanelInfo('MinimapPanel')
-								Minimap:UpdateSettings()
+
+								if E.private.general.minimap.enable then
+									Minimap:UpdateSettings()
+								end
 							end,
 						},
 						numPoints = {
@@ -699,12 +713,12 @@ E.Options.args.datatexts = {
 						backdrop = {
 							order = 6,
 							name = L["Backdrop"],
-							type = "toggle",
+							type = 'toggle',
 						},
 						border = {
 							order = 7,
 							name = L["Border"],
-							type = "toggle",
+							type = 'toggle',
 						},
 						panelTransparency = {
 							order = 8,
@@ -717,13 +731,13 @@ E.Options.args.datatexts = {
 		},
 		friends = {
 			order = 5,
-			type = "group",
+			type = 'group',
 			name = L["FRIENDS"],
 			args = {
 				description = ACH:Description(L["Hide specific sections in the datatext tooltip."], 1),
 				hideGroup1 = {
 					order = 2,
-					type = "multiselect",
+					type = 'multiselect',
 					name = L["Hide by Status"],
 					get = function(info, key) return E.db.datatexts.friends[key] end,
 					set = function(info, key, value) E.db.datatexts.friends[key] = value; DT:LoadDataTexts() end,
@@ -734,37 +748,37 @@ E.Options.args.datatexts = {
 				},
 				hideGroup2 = {
 					order = 2,
-					type = "multiselect",
+					type = 'multiselect',
 					name = L["Hide by Application"],
 					get = function(info, key) return E.db.datatexts.friends['hide'..key] end,
 					set = function(info, key, value) E.db.datatexts.friends['hide'..key] = value; DT:LoadDataTexts() end,
 					sortByValue = true,
 					values = {
-						['WoW'] = "World of Warcraft",
-						['App'] = "App",
-						['BSAp'] = L["Mobile"],
-						['D3'] = "Diablo 3",
-						['WTCG'] = "Hearthstone",
-						['Hero'] = "Heroes of the Storm",
-						['Pro'] = "Overwatch",
-						['S1'] = "Starcraft",
-						['S2'] = "Starcraft 2",
-						['VIPR'] = "COD: Black Ops 4",
-						['ODIN'] = "COD: Modern Warfare",
-						['LAZR'] = "COD: Modern Warfare 2",
+						WoW = 'World of Warcraft',
+						App = 'App',
+						BSAp = L["Mobile"],
+						D3 = 'Diablo 3',
+						WTCG = 'Hearthstone',
+						Hero = 'Heroes of the Storm',
+						Pro = 'Overwatch',
+						S1 = 'Starcraft',
+						S2 = 'Starcraft 2',
+						VIPR = 'COD: Black Ops 4',
+						ODIN = 'COD: Modern Warfare',
+						LAZR = 'COD: Modern Warfare 2',
 					},
 				},
 			},
 		},
 		customCurrency = {
 			order = 6,
-			type = "group",
+			type = 'group',
 			name = L["Custom Currency"],
 			args = {
 				description = ACH:Description(L["This allows you to create a new datatext which will track the currency with the supplied currency ID. The datatext can be added to a panel immediately after creation."], 0),
 				add = {
 					order = 1,
-					type = "select",
+					type = 'select',
 					name = L["Add Currency"],
 					width = 'double',
 					set = function(info, value)
@@ -785,7 +799,7 @@ E.Options.args.datatexts = {
 				},
 				delete = {
 					order = 2,
-					type = "select",
+					type = 'select',
 					width = 'double',
 					name = L["DELETE"],
 					set = function(info, value)
@@ -814,8 +828,8 @@ E.Options.args.datatexts = {
 }
 
 E:CopyTable(E.Options.args.datatexts.args.panels.args.newPanel.args, DTPanelOptions)
-E.Options.args.datatexts.args.panels.args.newPanel.args.templateGroup.get = function(info, key) return E.global.datatexts.newPanelInfo[key] end
-E.Options.args.datatexts.args.panels.args.newPanel.args.templateGroup.set = function(info, key, value) E.global.datatexts.newPanelInfo[key] = value end
+E.Options.args.datatexts.args.panels.args.newPanel.args.templateGroup.get = function(_, key) return E.global.datatexts.newPanelInfo[key] end
+E.Options.args.datatexts.args.panels.args.newPanel.args.templateGroup.set = function(_, key, value) E.global.datatexts.newPanelInfo[key] = value end
 
 DT:PanelLayoutOptions()
 SetupCustomCurrencies()

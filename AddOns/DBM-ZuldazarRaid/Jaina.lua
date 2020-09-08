@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(2343, "DBM-ZuldazarRaid", 3, 1176)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200610151551")
+mod:SetRevision("20200803045206")
 mod:SetCreatureID(146409)
 mod:SetEncounterID(2281)
-mod:SetZone()
 mod:SetUsedIcons(1, 2, 3)
 mod:SetHotfixNoticeRev(18363)
 --mod:SetMinSyncRevision(16950)
@@ -475,7 +474,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 	elseif spellId == 287490 then
-		warnFrozenSolid:CombinedShow(0.5, args.destName)
+		warnFrozenSolid:CombinedShow(1.5, args.destName)
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId) and not args:IsPlayer() then
 			specWarnIceBlockTaunt:Show(args.destName)

@@ -69,9 +69,9 @@ function RSMinimapPinMixin:ShowOverlay()
 		self.overlayFramesPool = CreateFramePool("FRAME", Minimap, "RSMinimapPinTemplate");
 	end
 	
-	if (private.ZONE_IDS[self.npcID]) then
-		if (private.ZONE_IDS[self.npcID].overlay) then
-			for i, coordinates in ipairs (private.ZONE_IDS[self.npcID].overlay) do
+	if (private.NPC_INFO[self.npcID]) then
+		if (private.NPC_INFO[self.npcID].overlay) then
+			for i, coordinates in ipairs (private.NPC_INFO[self.npcID].overlay) do
 				local x, y = strsplit("-", coordinates)
 				local pin = self.overlayFramesPool:Acquire()
 				pin.npcID = self.npcID
@@ -80,8 +80,8 @@ function RSMinimapPinMixin:ShowOverlay()
 				HBD_Pins:AddMinimapIconMap(self, pin, self.mapID, tonumber(x), tonumber(y), false, false)
 			end
 			private.dbchar.overlayActive = self.npcID
-		elseif (type(private.ZONE_IDS[self.npcID].zoneID) == "table" and private.ZONE_IDS[self.npcID].zoneID[self.mapID] and private.ZONE_IDS[self.npcID].zoneID[self.mapID].overlay) then
-			for i, coordinates in ipairs (private.ZONE_IDS[self.npcID].zoneID[self.mapID].overlay) do
+		elseif (type(private.NPC_INFO[self.npcID].zoneID) == "table" and private.NPC_INFO[self.npcID].zoneID[self.mapID] and private.NPC_INFO[self.npcID].zoneID[self.mapID].overlay) then
+			for i, coordinates in ipairs (private.NPC_INFO[self.npcID].zoneID[self.mapID].overlay) do
 				local x, y = strsplit("-", coordinates)
 				local pin = self.overlayFramesPool:Acquire()
 				pin.npcID = self.npcID

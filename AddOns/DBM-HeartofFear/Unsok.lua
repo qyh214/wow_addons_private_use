@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(737, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222213340")
+mod:SetRevision("20200806142037")
 mod:SetCreatureID(62511)
 mod:SetEncounterID(1499)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 

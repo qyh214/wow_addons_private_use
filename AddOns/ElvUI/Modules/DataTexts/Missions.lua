@@ -27,7 +27,7 @@ local C_QuestLog_IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
 local C_IslandsQueue_GetIslandsWeeklyQuestID = C_IslandsQueue.GetIslandsWeeklyQuestID
 local GetMaxLevelForExpansionLevel = GetMaxLevelForExpansionLevel
 local GetQuestObjectiveInfo = GetQuestObjectiveInfo
-local GetServerTime = GetServerTime
+local SecondsToTime = SecondsToTime
 local IsAltKeyDown = IsAltKeyDown
 
 local GARRISON_LANDING_NEXT = GARRISON_LANDING_NEXT
@@ -49,19 +49,18 @@ local LE_GARRISON_TYPE_6_0 = LE_GARRISON_TYPE_6_0
 local LE_GARRISON_TYPE_7_0 = LE_GARRISON_TYPE_7_0
 local LE_GARRISON_TYPE_8_0 = LE_GARRISON_TYPE_8_0
 local RESEARCH_TIME_LABEL = RESEARCH_TIME_LABEL
-local DATE_COMPLETED = DATE_COMPLETED:gsub('(%%s)', '|cFF33FF33%1|r') -- "Completed: |cFF33FF33%s|r"
+local DATE_COMPLETED = DATE_COMPLETED:gsub('(%%s)', '|cFF33FF33%1|r') -- 'Completed: |cFF33FF33%s|r'
 local TALENTS = TALENTS
 
-local BODYGUARD_LEVEL_XP_FORMAT = L["Rank"] .. " %d (%d/%d)"
-local EXPANSION_NAME5 = EXPANSION_NAME5 -- "Warlords of Draenor"
-local EXPANSION_NAME6 = EXPANSION_NAME6 -- "Legion"
-local EXPANSION_NAME7 = EXPANSION_NAME7 -- "Battle for Azeroth"
+local BODYGUARD_LEVEL_XP_FORMAT = L["Rank"] .. ' %d (%d/%d)'
+local EXPANSION_NAME5 = EXPANSION_NAME5 -- 'Warlords of Draenor'
+local EXPANSION_NAME6 = EXPANSION_NAME6 -- 'Legion'
+local EXPANSION_NAME7 = EXPANSION_NAME7 -- 'Battle for Azeroth'
 
 local MAIN_CURRENCY = 1560
 local NAZJATAR_MAP_ID = 1355
-local iconString = "|T%s:16:16:0:0:64:64:4:60:4:60|t"
+local iconString = '|T%s:16:16:0:0:64:64:4:60:4:60|t'
 local numMissions = 0
-local HOUR = 3600
 
 local Widget_IDs = {
 	Alliance = {
@@ -116,9 +115,7 @@ local function AddInProgressMissions(garrisonType)
 			if timeLeft and timeLeft == 0 then
 				DT.tooltip:AddDoubleLine(mission.name, GOAL_COMPLETED, r, g, b, GREEN_FONT_COLOR:GetRGB())
 			else
-				local time, _, _, remainder = E:GetTimeInfo(timeLeft, 0, HOUR)
-				local id = timeLeft and timeLeft > HOUR and 8 or 7
-				DT.tooltip:AddDoubleLine(mission.name, format(E.TimeFormats[id][1], time, remainder), r, g, b, 1, 1, 1)
+				DT.tooltip:AddDoubleLine(mission.name, SecondsToTime(timeLeft), r, g, b, 1, 1, 1)
 			end
 		end
 	else
@@ -133,12 +130,15 @@ local function AddFollowerInfo(garrisonType)
 
 	if #info > 0 then
 		DT.tooltip:AddLine(' ')
-		DT.tooltip:AddLine(FOLLOWERLIST_LABEL_TROOPS) -- "Troops"
+		DT.tooltip:AddLine(FOLLOWERLIST_LABEL_TROOPS) -- 'Troops'
 		for _, followerShipments in ipairs(info) do
 			local name, _, _, shipmentsReady, shipmentsTotal, _, _, timeleftString = C_Garrison_GetLandingPageShipmentInfoByContainerID(followerShipments)
-			if (name and shipmentsReady and shipmentsTotal) then
-				timeleftString = (timeleftString and " "..timeleftString) or ""
-				DT.tooltip:AddDoubleLine(name, format(GARRISON_LANDING_SHIPMENT_COUNT, shipmentsReady, shipmentsTotal)..timeleftString, 1, 1, 1)
+			if name and shipmentsReady and shipmentsTotal then
+				if timeleftString then
+					DT.tooltip:AddDoubleLine(name, format(GARRISON_LANDING_SHIPMENT_COUNT, shipmentsReady, shipmentsTotal) .. ' ' .. format(GARRISON_LANDING_NEXT,timeleftString), 1, 1, 1, 1, 1, 1)
+				else
+					DT.tooltip:AddDoubleLine(name, format(GARRISON_LANDING_SHIPMENT_COUNT, shipmentsReady, shipmentsTotal), 1, 1, 1, 1, 1, 1)
+				end
 			end
 		end
 	end
@@ -160,11 +160,11 @@ local function AddTalentInfo(garrisonType)
 				local _, _, tree = C_Garrison_GetTalentTreeInfoForID(treeID)
 				for _, talent in ipairs(tree) do
 					if talent.isBeingResearched or talent.id == completeTalentID then
-						DT.tooltip:AddLine(RESEARCH_TIME_LABEL) -- "Research Time:"
+						DT.tooltip:AddLine(RESEARCH_TIME_LABEL) -- 'Research Time:'
 						if talent.researchTimeRemaining and talent.researchTimeRemaining == 0 then
 							DT.tooltip:AddDoubleLine(talent.name, GOAL_COMPLETED, 1, 1, 1, GREEN_FONT_COLOR:GetRGB())
 						else
-							DT.tooltip:AddDoubleLine(talent.name, E:GetTimeInfo(talent.researchTimeRemaining), 1, 1, 1, 1, 1, 1)
+							DT.tooltip:AddDoubleLine(talent.name, SecondsToTime(talent.researchTimeRemaining), 1, 1, 1, 1, 1, 1)
 						end
 					end
 				end
@@ -183,8 +183,8 @@ local function AddInfo(id)
 	return format('%s %s', icon, BreakUpLargeNumbers(num))
 end
 
-local function OnEnter(self)
-	DT:SetupTooltip(self)
+local function OnEnter()
+	DT.tooltip:ClearLines()
 
 	DT.tooltip:AddLine(EXPANSION_NAME7, 1, .5, 0)
 	DT.tooltip:AddDoubleLine(L["Mission(s) Report:"], AddInfo(1560), nil, nil, nil, 1, 1, 1)
@@ -205,15 +205,15 @@ local function OnEnter(self)
 				r1, g1, b1 = 1, 1, 1
 			end
 
-			DT.tooltip:AddLine(" ")
-			DT.tooltip:AddLine(ISLANDS_HEADER .. ":")
+			DT.tooltip:AddLine(' ')
+			DT.tooltip:AddLine(ISLANDS_HEADER .. ':')
 			DT.tooltip:AddDoubleLine(ISLANDS_QUEUE_FRAME_TITLE, text, 1, 1, 1, r1, g1, b1)
 		end
 	end
 
 	local widgetGroup = Widget_IDs[E.myfaction]
 	if E.MapInfo.mapID == NAZJATAR_MAP_ID and widgetGroup and C_QuestLog_IsQuestFlaggedCompleted(widgetGroup[1]) then
-		DT.tooltip:AddLine(" ")
+		DT.tooltip:AddLine(' ')
 		DT.tooltip:AddLine(L["Nazjatar Follower XP"])
 
 		for i = 2, 4 do
@@ -237,22 +237,20 @@ local function OnEnter(self)
 		AddInProgressMissions(LE_FOLLOWER_TYPE_GARRISON_7_0)
 		AddFollowerInfo(LE_GARRISON_TYPE_7_0)
 
-		local serverTime = GetServerTime()
-
-		-- "Loose Work Orders" (i.e. research, equipment)
+		-- 'Loose Work Orders' (i.e. research, equipment)
 		wipe(info)
 		info = C_Garrison_GetLooseShipments(LE_GARRISON_TYPE_7_0)
 		if #info > 0 then
-			DT.tooltip:AddLine(CAPACITANCE_WORK_ORDERS) -- "Work Orders"
+			DT.tooltip:AddLine(CAPACITANCE_WORK_ORDERS) -- 'Work Orders'
 
 			for _, looseShipments in ipairs(info) do
-				local name, _, _, shipmentsReady, shipmentsTotal, timeStart, duration, timeleftString = C_Garrison_GetLandingPageShipmentInfoByContainerID(looseShipments)
+				local name, _, _, shipmentsReady, shipmentsTotal, _, _, timeleftString = C_Garrison_GetLandingPageShipmentInfoByContainerID(looseShipments)
 				if name then
-					local timeLeft = duration - (serverTime - timeStart)
-					local time, _, _, remainder = E:GetTimeInfo(timeLeft, 0, HOUR)
-					local id = timeLeft and timeLeft > HOUR and 8 or 7
-					timeleftString = (timeleftString and " "..format(GARRISON_LANDING_NEXT,format(E.TimeFormats[id][1], time, remainder))) or ""
-					DT.tooltip:AddDoubleLine(name, format(GARRISON_LANDING_SHIPMENT_COUNT, shipmentsReady, shipmentsTotal)..timeleftString, 1, 1, 1, 1, 1, 1)
+					if timeleftString then
+						DT.tooltip:AddDoubleLine(name, format(GARRISON_LANDING_SHIPMENT_COUNT, shipmentsReady, shipmentsTotal) .. ' ' .. format(GARRISON_LANDING_NEXT,timeleftString), 1, 1, 1, 1, 1, 1)
+					else
+						DT.tooltip:AddDoubleLine(name, format(GARRISON_LANDING_SHIPMENT_COUNT, shipmentsReady, shipmentsTotal), 1, 1, 1, 1, 1, 1)
+					end
 				end
 			end
 		end
@@ -275,24 +273,25 @@ local function OnEnter(self)
 		if #info > 0 then
 			local AddLine = true
 			for _, buildings in ipairs(info) do
-				local name, _, _, shipmentsReady, shipmentsTotal, timeStart, duration, timeleftString = C_Garrison_GetLandingPageShipmentInfo(buildings.buildingID)
+				local name, _, _, shipmentsReady, shipmentsTotal, _, _, timeleftString = C_Garrison_GetLandingPageShipmentInfo(buildings.buildingID)
 				if name and shipmentsTotal then
 					if AddLine then
 						DT.tooltip:AddLine(' ')
 						DT.tooltip:AddLine(L["Building(s) Report:"])
 						AddLine = false
 					end
-					local timeLeft = duration - (serverTime - timeStart)
-					local time, _, _, remainder = E:GetTimeInfo(timeLeft, 0, HOUR)
-					local id = timeLeft and timeLeft > HOUR and 8 or 7
-					timeleftString = (timeleftString and " "..format(GARRISON_LANDING_NEXT,format(E.TimeFormats[id][1], time, remainder))) or ""
-					DT.tooltip:AddDoubleLine(name, format(GARRISON_LANDING_SHIPMENT_COUNT, shipmentsReady, shipmentsTotal)..timeleftString, 1, 1, 1, 1, 1, 1)
+
+					if timeleftString then
+						DT.tooltip:AddDoubleLine(name, format(GARRISON_LANDING_SHIPMENT_COUNT, shipmentsReady, shipmentsTotal) .. ' ' .. format(GARRISON_LANDING_NEXT,timeleftString), 1, 1, 1, 1, 1, 1)
+					else
+						DT.tooltip:AddDoubleLine(name, format(GARRISON_LANDING_SHIPMENT_COUNT, shipmentsReady, shipmentsTotal), 1, 1, 1, 1, 1, 1)
+					end
 				end
 			end
 		end
 	else
 		DT.tooltip:AddLine(' ')
-		DT.tooltip:AddLine("Hold Shift - Show Previous Expansion", .66, .66, .66)
+		DT.tooltip:AddLine('Hold Shift - Show Previous Expansion', .66, .66, .66)
 	end
 
 	DT.tooltip:Show()
@@ -301,9 +300,8 @@ end
 local function OnClick(self)
 	if InCombatLockdown() then _G.UIErrorsFrame:AddMessage(E.InfoColor.._G.ERR_NOT_IN_COMBAT) return end
 
-	DT.tooltip:Hide()
 	DT:SetEasyMenuAnchor(DT.EasyMenu, self)
-	_G.EasyMenu(menuList, DT.EasyMenu, nil, nil, nil, "MENU")
+	_G.EasyMenu(menuList, DT.EasyMenu, nil, nil, nil, 'MENU')
 end
 
 local function OnEvent(self, event, ...)

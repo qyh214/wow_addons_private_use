@@ -3,30 +3,28 @@ if not WeakAuras.IsCorrectVersion() then return end
 local SharedMedia = LibStub("LibSharedMedia-3.0");
 local L = WeakAuras.L;
 
-if WeakAuras.IsClassic() then return end -- Models disabled for classic
-
 local function createOptions(parentData, data, index, subIndex)
   local options = {
     __title = L["Model %s"]:format(subIndex),
     __order = 1,
     __up = function()
       if (WeakAuras.ApplyToDataOrChildData(parentData, WeakAuras.MoveSubRegionUp, index, "subbarmodel")) then
-        WeakAuras.ReloadOptions2(parentData.id, parentData)
+        WeakAuras.ClearAndUpdateOptions(parentData.id)
       end
     end,
     __down = function()
       if (WeakAuras.ApplyToDataOrChildData(parentData, WeakAuras.MoveSubRegionDown, index, "subbarmodel")) then
-        WeakAuras.ReloadOptions2(parentData.id, parentData)
+        WeakAuras.ClearAndUpdateOptions(parentData.id)
       end
     end,
     __duplicate = function()
       if (WeakAuras.ApplyToDataOrChildData(parentData, WeakAuras.DuplicateSubRegion, index, "subbarmodel")) then
-        WeakAuras.ReloadOptions2(parentData.id, parentData)
+        WeakAuras.ClearAndUpdateOptions(parentData.id)
       end
     end,
     __delete = function()
       if (WeakAuras.ApplyToDataOrChildData(parentData, WeakAuras.DeleteSubRegion, index, "subbarmodel")) then
-        WeakAuras.ReloadOptions2(parentData.id, parentData)
+        WeakAuras.ClearAndUpdateOptions(parentData.id)
       end
     end,
     bar_model_visible = {
@@ -39,7 +37,15 @@ local function createOptions(parentData, data, index, subIndex)
       type = "input",
       width = WeakAuras.normalWidth,
       name = L["Model"],
-      order =  10
+      order =  10,
+      hidden = WeakAuras.IsClassic()
+    },
+    model_path = {
+      type = "input",
+      width = WeakAuras.normalWidth,
+      name = L["Model"],
+      order =  10.5,
+      hidden = not WeakAuras.IsClassic()
     },
     chooseModel = {
       type = "execute",

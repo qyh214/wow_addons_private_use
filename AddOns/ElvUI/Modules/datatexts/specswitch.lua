@@ -23,8 +23,8 @@ local LOOT_SPECIALIZATION_DEFAULT = LOOT_SPECIALIZATION_DEFAULT
 local C_SpecializationInfo_GetAllSelectedPvpTalentIDs = C_SpecializationInfo.GetAllSelectedPvpTalentIDs
 
 local displayString, lastPanel, active = ''
-local activeString = strjoin("", "|cff00FF00" , _G.ACTIVE_PETS, "|r")
-local inactiveString = strjoin("", "|cffFF0000", _G.FACTION_INACTIVE, "|r")
+local activeString = strjoin('', '|cff00FF00' , _G.ACTIVE_PETS, '|r')
+local inactiveString = strjoin('', '|cffFF0000', _G.FACTION_INACTIVE, '|r')
 local menuList = {
 	{ text = SELECT_LOOT_SPECIALIZATION, isTitle = true, notCheckable = true },
 	{ checked = function() return GetLootSpecialization() == 0 end, func = function() SetLootSpecialization(0) end },
@@ -33,8 +33,6 @@ local menuList = {
 local specList = {
 	{ text = _G.SPECIALIZATION, isTitle = true, notCheckable = true },
 }
-
-DT.SPECIALIZATION_CACHE = {}
 
 local mainIcon = '|T%s:16:16:0:0:64:64:4:60:4:60|t'
 local function OnEvent(self)
@@ -75,11 +73,11 @@ local function AddTexture(texture)
 	return texture and format(listIcon, texture) or ''
 end
 
-local function OnEnter(self)
-	DT:SetupTooltip(self)
+local function OnEnter()
+	DT.tooltip:ClearLines()
 
 	for i, info in ipairs(DT.SPECIALIZATION_CACHE) do
-		DT.tooltip:AddLine(strjoin(" ", format(displayString, info.name), AddTexture(info.icon), (i == active and activeString or inactiveString)), 1, 1, 1)
+		DT.tooltip:AddLine(strjoin(' ', format(displayString, info.name), AddTexture(info.icon), (i == active and activeString or inactiveString)), 1, 1, 1)
 	end
 
 	DT.tooltip:AddLine(' ')
@@ -126,7 +124,6 @@ local function OnEnter(self)
 	DT.tooltip:AddLine(L["|cffFFFFFFLeft Click:|r Change Talent Specialization"])
 	DT.tooltip:AddLine(L["|cffFFFFFFShift + Left Click:|r Show Talent Specialization UI"])
 	DT.tooltip:AddLine(L["|cffFFFFFFRight Click:|r Change Loot Specialization"])
-
 	DT.tooltip:Show()
 end
 
@@ -134,10 +131,9 @@ local function OnClick(self, button)
 	local specIndex = GetSpecialization()
 	if not specIndex then return end
 
-	if button == "LeftButton" then
-		DT.tooltip:Hide()
+	if button == 'LeftButton' then
 		if not _G.PlayerTalentFrame then
-			_G.LoadAddOn("Blizzard_TalentUI")
+			_G.LoadAddOn('Blizzard_TalentUI')
 		end
 		if IsShiftKeyDown() then
 			if not _G.PlayerTalentFrame:IsShown() then
@@ -147,25 +143,22 @@ local function OnClick(self, button)
 			end
 		else
 			DT:SetEasyMenuAnchor(DT.EasyMenu, self)
-			_G.EasyMenu(specList, DT.EasyMenu, nil, nil, nil, "MENU")
+			_G.EasyMenu(specList, DT.EasyMenu, nil, nil, nil, 'MENU')
 		end
 	else
-		DT.tooltip:Hide()
 		local _, specName = GetSpecializationInfo(specIndex)
 		menuList[2].text = format(LOOT_SPECIALIZATION_DEFAULT, specName)
 
 		DT:SetEasyMenuAnchor(DT.EasyMenu, self)
-		_G.EasyMenu(menuList, DT.EasyMenu, nil, nil, nil, "MENU")
+		_G.EasyMenu(menuList, DT.EasyMenu, nil, nil, nil, 'MENU')
 	end
 end
 
 local function ValueColorUpdate()
-	displayString = strjoin("", "|cffFFFFFF%s:|r ")
+	displayString = strjoin('', '|cffFFFFFF%s:|r ')
 
-	if lastPanel ~= nil then
-		OnEvent(lastPanel)
-	end
+	if lastPanel then OnEvent(lastPanel) end
 end
 E.valueColorUpdateFuncs[ValueColorUpdate] = true
 
-DT:RegisterDatatext('Talent/Loot Specialization', nil, {"CHARACTER_POINTS_CHANGED", "PLAYER_TALENT_UPDATE", "ACTIVE_TALENT_GROUP_CHANGED", "PLAYER_LOOT_SPEC_UPDATED"}, OnEvent, nil, OnClick, OnEnter, nil, L["Talent/Loot Specialization"])
+DT:RegisterDatatext('Talent/Loot Specialization', nil, {'CHARACTER_POINTS_CHANGED', 'PLAYER_TALENT_UPDATE', 'ACTIVE_TALENT_GROUP_CHANGED', 'PLAYER_LOOT_SPEC_UPDATED'}, OnEvent, nil, OnClick, OnEnter, nil, L["Talent/Loot Specialization"])

@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(1161, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222221214")
+mod:SetRevision("20200806142006")
 mod:SetCreatureID(76877)
 mod:SetEncounterID(1691)
-mod:SetZone()
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
 mod.respawnTime = 29.5
 
@@ -62,7 +61,6 @@ do
 		end
 	end
 end
-local DBMHudMap = DBMHudMap
 local hudEnabled = false--Only to avoid calling self.Options.HudMapOnShatter 20x in under a second when shatter goes out (20x SPELL_AURA_APPLIED events)
 --Tables used for better sync/recover. Slice count synced, then user preference "just works"
 local mythicSoakOrder3Group = {
@@ -142,7 +140,7 @@ function mod:OnCombatEnd()
 	end
 	if hudEnabled then
 		hudEnabled = false
-		DBMHudMap:Disable()
+		DBM.HudMap:Disable()
 	end
 end
 
@@ -228,7 +226,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnPetrifyingSlam:Play("scatter")
 		end
 		if hudEnabled then
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "timer", args.destName, 8, 10, 0, 1, 0, 0.6, nil, nil, 4):Appear():RegisterForAlerts():Rotate(360, 9.5)
+			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "timer", args.destName, 8, 10, 0, 1, 0, 0.6, nil, nil, 4):Appear():RegisterForAlerts():Rotate(360, 9.5)
 		end
 	elseif spellId == 155539 then
 		self.vb.rampage = true
@@ -256,7 +254,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			DBM.RangeCheck:Hide()
 		end
 		if hudEnabled then
-			DBMHudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
+			DBM.HudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
 		end
 	elseif spellId == 155539 then
 		specWarnRampageEnded:Show()

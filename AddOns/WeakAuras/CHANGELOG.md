@@ -1,14 +1,14 @@
-# [2.17.11](https://github.com/WeakAuras/WeakAuras2/tree/2.17.11) (2020-07-09)
+# [2.18.4](https://github.com/WeakAuras/WeakAuras2/tree/2.18.4) (2020-09-04)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/2.17.10...2.17.11)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/2.18.3...2.18.4)
 
 ## Highlights
 
- - Fixes the "combine matches per unit" regression 
+ - Update lib 
 
 ## Commits
 
-InfusOnWoW (1):
+Stanzilla (1):
 
-- BuffTrigger2: Fix "Combine matches per Unit" regression
+- Ignore .DS_Store
 

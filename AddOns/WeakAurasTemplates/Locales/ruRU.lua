@@ -49,7 +49,8 @@ local L = WeakAuras.L
 	L["Debuffs"] = "Дебаффы"
 	L["Enchants"] = "Чары"
 	L["General"] = "Общие"
-	L["General Azerite Traits"] = "Общие азеритовые таланты"
+	--[[Translation missing --]]
+	L["General Azerite Traits"] = "General Azerite Traits"
 	L["Health"] = "Здоровье"
 	--[[Translation missing --]]
 	L["Highlight while active, red when out of range."] = "Highlight while active, red when out of range."
@@ -77,7 +78,8 @@ local L = WeakAuras.L
 	L["Only shows the aura when the ability is ready to use."] = "Only shows the aura when the ability is ready to use."
 	L["Pet alive"] = "Питомец жив"
 	L["Pet Behavior"] = "Поведение питомца"
-	L["PvP Azerite Traits"] = "Азеритовые PvP таланты"
+	--[[Translation missing --]]
+	L["PvP Azerite Traits"] = "PvP Azerite Traits"
 	L["PvP Talents"] = "PvP таланты"
 	--[[Translation missing --]]
 	L["PVP Trinkets (Aura)"] = "PVP Trinkets (Aura)"
@@ -132,7 +134,8 @@ local L = WeakAuras.L
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
 	--[[Translation missing --]]
 	L["slow debuff"] = "slow debuff"
-	L["Specific Azerite Traits"] = "Специальные азеритовые таланты"
+	--[[Translation missing --]]
+	L["Specific Azerite Traits"] = "Specific Azerite Traits"
 	--[[Translation missing --]]
 	L["Stance"] = "Stance"
 	--[[Translation missing --]]

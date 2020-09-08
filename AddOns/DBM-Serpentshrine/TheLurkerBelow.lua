@@ -1,11 +1,10 @@
 local mod	= DBM:NewMod("LurkerBelow", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145731")
+mod:SetRevision("20200806142051")
 mod:SetCreatureID(21217)
 mod:SetEncounterID(624)
 mod:SetModelID(20216)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 

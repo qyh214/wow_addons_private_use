@@ -1,4 +1,4 @@
-local internalVersion = 32;
+local internalVersion = 33;
 
 -- Lua APIs
 local insert = table.insert
@@ -1501,6 +1501,9 @@ function WeakAuras.CreatePvPTalentCache()
 end
 
 function WeakAuras.CountWagoUpdates()
+  if not (WeakAurasCompanion and WeakAurasCompanion.slugs) then
+    return 0
+  end
   local WeakAurasSaved = WeakAurasSaved
   local updatedSlugs, updatedSlugsCount = {}, 0
   for id, aura in pairs(WeakAurasSaved.displays) do
@@ -2260,6 +2263,7 @@ if not WeakAuras.IsClassic() then
   loadFrame:RegisterEvent("PET_BATTLE_OPENING_START");
   loadFrame:RegisterEvent("PET_BATTLE_CLOSE");
   loadFrame:RegisterEvent("VEHICLE_UPDATE");
+  loadFrame:RegisterEvent("UPDATE_VEHICLE_ACTIONBAR")
   loadFrame:RegisterEvent("UPDATE_OVERRIDE_ACTIONBAR");
   loadFrame:RegisterEvent("CHALLENGE_MODE_COMPLETED")
   loadFrame:RegisterEvent("CHALLENGE_MODE_START")
@@ -4016,28 +4020,28 @@ function WeakAuras.Modernize(data)
 
   -- Introduced in June 2020 in Bfa
   if data.internalVersion < 31 then
-    local whitelist
-    local blacklist
+    local allowedNames
+    local ignoredNames
     if data.load.use_name == true and data.load.name then
-      whitelist = data.load.name
+      allowedNames = data.load.name
     elseif data.load.use_name == false and data.load.name then
-      blacklist = data.load.name
+      ignoredNames = data.load.name
     end
 
     if data.load.use_realm == true and data.load.realm then
-      whitelist = (whitelist or "") .. "-" .. data.load.realm
+      allowedNames = (allowedNames or "") .. "-" .. data.load.realm
     elseif data.load.use_realm == false and data.load.realm then
-      blacklist = (blacklist or "") .. "-" .. data.load.realm
+      ignoredNames = (ignoredNames or "") .. "-" .. data.load.realm
     end
 
-    if whitelist then
+    if allowedNames then
       data.load.use_namerealm = true
-      data.load.namerealm = whitelist
+      data.load.namerealm = allowedNames
     end
 
-    if blacklist then
+    if ignoredNames then
       data.load.use_namerealmblack = true
-      data.load.namerealmblack = blacklist
+      data.load.namerealmblack = ignoredNames
     end
 
     data.load.use_name = nil
@@ -4101,6 +4105,31 @@ function WeakAuras.Modernize(data)
       end
     end
   end
+
+  -- Introduced in July 2020 in Bfa
+  if data.internalVersion < 33 then
+    data.load.use_ignoreNameRealm = data.load.use_namerealmblack
+    data.load.ignoreNameRealm = data.load.namerealmblack
+    data.load.use_namerealmblack = nil
+    data.load.namerealmblack = nil
+
+    -- trigger.useBlackExactSpellId and trigger.blackauraspellids
+    if data.triggers then
+      for triggerId, triggerData in ipairs(data.triggers) do
+        triggerData.trigger.useIgnoreName = triggerData.trigger.useBlackName
+        triggerData.trigger.ignoreAuraNames = triggerData.trigger.blackauranames
+        triggerData.trigger.useIgnoreExactSpellId = triggerData.trigger.useBlackExactSpellId
+        triggerData.trigger.ignoreAuraSpellids = triggerData.trigger.blackauraspellids
+
+        triggerData.trigger.useBlackName = nil
+        triggerData.trigger.blackauranames = nil
+        triggerData.trigger.useBlackExactSpellId = nil
+        triggerData.trigger.blackauraspellids = nil
+      end
+    end
+
+  end
+
 
   for _, triggerSystem in pairs(triggerSystems) do
     triggerSystem.Modernize(data);
@@ -7429,12 +7458,22 @@ function WeakAuras.FindUnusedId(prefix)
 end
 
 function WeakAuras.SetModel(frame, model_path, model_fileId, isUnit, isDisplayInfo)
-  if isDisplayInfo then
-    pcall(frame.SetDisplayInfo, frame, tonumber(model_fileId))
-  elseif isUnit then
-    pcall(frame.SetUnit, frame, model_fileId)
+  if WeakAuras.IsClassic() then
+    if isDisplayInfo then
+      pcall(frame.SetDisplayInfo, frame, tonumber(model_path))
+    elseif isUnit then
+      pcall(frame.SetUnit, frame, model_path)
+    else
+      pcall(frame.SetModel, frame, model_path)
+    end
   else
-    pcall(frame.SetModel, frame, tonumber(model_fileId))
+    if isDisplayInfo then
+      pcall(frame.SetDisplayInfo, frame, tonumber(model_fileId))
+    elseif isUnit then
+      pcall(frame.SetUnit, frame, model_fileId)
+    else
+      pcall(frame.SetModel, frame, tonumber(model_fileId))
+    end
   end
 end
 
@@ -7556,6 +7595,7 @@ end
 
 local ownRealm = select(2, UnitFullName("player"))
 function WeakAuras.UnitNameWithRealm(unit)
+  ownRealm = ownRealm or select(2, UnitFullName("player"))
   local name, realm = UnitFullName(unit)
   return name or "", realm or ownRealm or ""
 end

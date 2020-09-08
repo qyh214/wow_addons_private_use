@@ -5,12 +5,6 @@ local L
 ---------------------------
 --L= DBM:GetModLocalization(2393)
 
---L:SetOptionLocalization({
---})
-
---L:SetMiscLocalization({
---})
-
 ---------------------------
 --  Altimor the Huntsman --
 ---------------------------
@@ -19,7 +13,12 @@ local L
 ---------------------------
 --  Hungering Destroyer --
 ---------------------------
---L= DBM:GetModLocalization(2428)
+L= DBM:GetModLocalization(2428)
+
+L:SetOptionLocalization({
+	SortDesc 				= "Sort $spell:334755 Infoframe by highest debuff stack (instead of lowest).",
+	ShowTimeNotStacks		= "Show time remaining on $spell:334755 Infoframe instead of stack count."
+})
 
 ---------------------------
 --  Artificer Xy'Mox --
@@ -34,7 +33,18 @@ local L
 ---------------------------
 --  Lady Inerva Darkvein --
 ---------------------------
---L= DBM:GetModLocalization(2420)
+L= DBM:GetModLocalization(2420)
+
+L:SetTimerLocalization{
+	timerDesiresContainer		= "Desires full",
+	timerBottledContainer		= "Bottled full",
+	timerSinsContainer			= "Sins full",
+	timerConcentrateContainer	= "Concentrate full"
+}
+
+L:SetOptionLocalization({
+	timerContainers				= "Show timer that will show container fill progress and time remaining until full"
+})
 
 ---------------------------
 --  The Council of Blood --
@@ -54,7 +64,12 @@ local L
 ---------------------------
 --  Sire Denathrius --
 ---------------------------
---L= DBM:GetModLocalization(2424)
+L= DBM:GetModLocalization(2424)
+
+L:SetMiscLocalization({
+	CrimsonSpawn	= "Crimson Cabalists answer the call of Denathrius."
+})
+
 
 -------------
 --  Trash  --

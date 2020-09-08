@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(2411, "DBM-Party-Shadowlands", 4, 1185)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200528135243")
---mod:SetCreatureID(126983)
+mod:SetRevision("20200803045206")
+mod:SetCreatureID(165410)
 mod:SetEncounterID(2403)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 
@@ -20,13 +19,13 @@ mod:RegisterEventsInCombat(
 )
 
 --TODO, DBM need to do anything for Vessel of Atonement? Maybe have fixate warning be MoveTo?
---TODO, transcriptor log to get actual castof spectral maybe? only event i see in combat log is add popping out of players
+--TODO, transcriptor log to get actual cast of spectral maybe? only event i see in combat log is add popping out of players
 --[[
 (ability.id = 323552) and type = "begincast"
  or ability.id = 323597
+ or ability.id = 323538 and type = "begincast"
 --]]
-local warnSpecralProcession			= mod:NewCastAnnounce(323597, 3)
-local warnFixate					= mod:NewTargetAnnounce(323650, 4)
+local warnFixate					= mod:NewTargetNoFilterAnnounce(323650, 4)
 
 local specWarnFixate				= mod:NewSpecialWarningYou(323650, nil, nil, nil, 3, 2)
 local yellFixate					= mod:NewYell(323650)
@@ -34,10 +33,12 @@ local specWarnBoltofPower			= mod:NewSpecialWarningInterrupt(323538, false, nil,
 local specWarnVolleyofPower			= mod:NewSpecialWarningInterrupt(323552, "HasInterrupt", nil, nil, 1, 2)
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
-local timerVolleyofPowerCD				= mod:NewCDTimer(12, 323552, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)--12-18
+local timerVolleyofPowerCD				= mod:NewCDTimer(14, 323552, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)--12-20
 local timerSpectralProcessionCD			= mod:NewCDTimer(20.6, 323597, nil, nil, nil, 1)
 
 mod:AddNamePlateOption("NPAuraOnFixate", 323650, true)
+
+--local vesselName = DBM:GetSpellInfo(323848)
 
 function mod:OnCombatStart(delay)
 	timerVolleyofPowerCD:Start(12-delay)
@@ -72,7 +73,6 @@ end
 function mod:SPELL_SUMMON(args)
 	local spellId = args.spellId
 	if spellId == 323597 then
-		warnSpecralProcession:Show()
 		timerSpectralProcessionCD:Start()
 	end
 end

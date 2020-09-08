@@ -59,7 +59,8 @@ local L = WeakAuras.L
 	L["Debuffs"] = "약화 효과"
 	L["Enchants"] = "마법부여"
 	L["General"] = "일반"
-	L["General Azerite Traits"] = "일반 아제라이트 특성"
+	--[[Translation missing --]]
+	L["General Azerite Traits"] = "General Azerite Traits"
 	L["Health"] = "생명력"
 	--[[Translation missing --]]
 	L["Highlight while active, red when out of range."] = "Highlight while active, red when out of range."
@@ -89,7 +90,8 @@ local L = WeakAuras.L
 	L["Only shows the aura when the ability is ready to use."] = "능력을 사용할 준비가 되었을 때 그 효과만 표시합니다."
 	L["Pet alive"] = "소환수 생존"
 	L["Pet Behavior"] = "소환수 행동"
-	L["PvP Azerite Traits"] = "PvP 아제라이트 특성"
+	--[[Translation missing --]]
+	L["PvP Azerite Traits"] = "PvP Azerite Traits"
 	L["PvP Talents"] = "명예 특성"
 	L["PVP Trinkets (Aura)"] = "PVP 장신구 (효과)"
 	L["PVP Trinkets (CD)"] = "PVP 장신구 (재사용 대기시간)"
@@ -141,9 +143,9 @@ local L = WeakAuras.L
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
 	--[[Translation missing --]]
 	L["slow debuff"] = "slow debuff"
-	L["Specific Azerite Traits"] = "특정 아제라이트 특성"
 	--[[Translation missing --]]
-	L["Stance"] = "Stance"
+	L["Specific Azerite Traits"] = "Specific Azerite Traits"
+	L["Stance"] = "태세"
 	--[[Translation missing --]]
 	L["stun debuff"] = "stun debuff"
 	--[[Translation missing --]]

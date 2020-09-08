@@ -104,19 +104,23 @@ function RareScanner:AddPin(npcID, npcInfo, mapID, dataProviderMixin)
 	local npcInfoBak = nil
 	
 	-- If its an npc that can show up in more than one place, we adjust its data so it displays in other available places
-	if (npcInfo.mapID ~= mapID and private.ZONE_IDS[npcID] and type(private.ZONE_IDS[npcID].zoneID) == "table") then
-		for zoneID, zoneInfo in pairs (private.ZONE_IDS[npcID].zoneID) do
-			if (zoneID == mapID) then
-				npcInfoBak = {}
-				npcInfoBak.coordX = private.dbglobal.rares_found[npcID].coordX
-				npcInfoBak.coordY = private.dbglobal.rares_found[npcID].coordY
-				npcInfoBak.mapID = private.dbglobal.rares_found[npcID].mapID
-				npcInfoBak.artID = private.dbglobal.rares_found[npcID].artID
-				npcInfo.mapID = mapID
-				npcInfo.coordX = zoneInfo.x
-				npcInfo.coordY = zoneInfo.y
-				npcInfo.artID = { C_Map.GetMapArtID(mapID) }
-				break;
+	local npcMultiZone = false
+	if (private.NPC_INFO[npcID] and type(private.NPC_INFO[npcID].zoneID) == "table") then
+		npcMultiZone = true
+		if (npcInfo.mapID ~= mapID) then
+			for zoneID, zoneInfo in pairs (private.NPC_INFO[npcID].zoneID) do
+				if (zoneID == mapID) then
+					npcInfoBak = {}
+					npcInfoBak.coordX = private.dbglobal.rares_found[npcID].coordX
+					npcInfoBak.coordY = private.dbglobal.rares_found[npcID].coordY
+					npcInfoBak.mapID = private.dbglobal.rares_found[npcID].mapID
+					npcInfoBak.artID = private.dbglobal.rares_found[npcID].artID
+					npcInfo.mapID = mapID
+					npcInfo.coordX = zoneInfo.x
+					npcInfo.coordY = zoneInfo.y
+					npcInfo.artID = { C_Map.GetMapArtID(mapID) }
+					break;
+				end
 			end
 		end
 	end
@@ -134,15 +138,15 @@ function RareScanner:AddPin(npcID, npcInfo, mapID, dataProviderMixin)
 	end
 	
 	-- If the map is in a different phase
-	if ((npcInfo.artID and not RS_tContains(npcInfo.artID, C_Map.GetMapArtID(mapID))) or (private.ZONE_IDS[npcID] and not RS_tContains(private.ZONE_IDS[npcID].artID, C_Map.GetMapArtID(mapID)))) then
+	if ((npcInfo.artID and not RS_tContains(npcInfo.artID, C_Map.GetMapArtID(mapID))) or (not npcMultiZone and private.NPC_INFO[npcID] and not RS_tContains(private.NPC_INFO[npcID].artID, C_Map.GetMapArtID(mapID)))) then
 		--RareScanner:PrintDebugMessage("DEBUG: Ignorado por pertenecer a una fase del mapa distinta a la actual")
 		return false
 	end
 
 	-- If the NPC belongs to an invasion/asault/event and its not active
-	if (private.ZONE_IDS[npcID] and private.ZONE_IDS[npcID].zoneQuestId and RS_tContains(C_QuestLog.GetActiveThreatMaps(), mapID)) then
+	if (private.NPC_INFO[npcID] and private.NPC_INFO[npcID].zoneQuestId and RS_tContains(C_QuestLog.GetActiveThreatMaps(), mapID)) then
 		local active = false
-		for i, questID in ipairs(private.ZONE_IDS[npcID].zoneQuestId) do
+		for i, questID in ipairs(private.NPC_INFO[npcID].zoneQuestId) do
 			if (C_TaskQuest.IsActive(questID) or C_QuestLog.IsQuestFlaggedCompleted(questID)) then
 				active = true
 				break
@@ -194,7 +198,7 @@ function RareScanner:AddPin(npcID, npcInfo, mapID, dataProviderMixin)
 		
 		-- If friendly and filtered dont show
 		local faction, _ = UnitFactionGroup("player")
-		if (private.ZONE_IDS[npcID] and private.ZONE_IDS[npcID].friendly and not private.db.map.displayFriendlyNpcIcons and RS_tContains(private.ZONE_IDS[npcID].friendly, string.sub(faction, 1, 1))) then
+		if (private.NPC_INFO[npcID] and private.NPC_INFO[npcID].friendly and not private.db.map.displayFriendlyNpcIcons and RS_tContains(private.NPC_INFO[npcID].friendly, string.sub(faction, 1, 1))) then
 			--RareScanner:PrintDebugMessage("DEBUG: Ignorado porque este NPC es amistoso")
 			return false
 		end
@@ -281,7 +285,7 @@ function RareScanner:AddPin(npcID, npcInfo, mapID, dataProviderMixin)
 	-- If WorldMap pin
 	if (dataProviderMixin) then
 		local pin = dataProviderMixin:GetMap():AcquirePin("RSRarePinTemplate", npcID, npcInfo);
-		
+
 		-- Adds overlay if active
 		if (private.dbchar.overlayActive and private.dbchar.overlayActive == npcID) then
 			pin:ShowOverlay()

@@ -1,7 +1,6 @@
 -- Korean localization file for koKR.
 local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "koKR")
 
-L["|cFFff3333Warning|r: |cFF999999[mana:x]|r tags will |cFFff3333NOT|r return anything on classes which have mana as an additional power, unless it's the additional power."] = true
 L["# Displayed Auras"] = "표시되는 효과 갯수"
 L["%s and then %s"] = "%s 이후 %s"
 L["|cffFF0000Warning:|r Click the arrow on the dropdown box to see a list of spells."] = true
@@ -66,9 +65,9 @@ L["Always Show Realm"] = true
 L["An X offset (in pixels) to be used when anchoring new frames."] = "기준 프레임에서 가로로 얼마만큼 떨어져 있을지를 결정합니다."
 L["An Y offset (in pixels) to be used when anchoring new frames."] = "기준 프레임에서 세로로 얼마만큼 떨어져 있을지를 결정합니다."
 L["Anchor Point"] = "기준점"
-L["ANCHOR_CURSOR_LEFT"] = true
-L["ANCHOR_CURSOR_RIGHT"] = true
-L["ANCHOR_CURSOR"] = true
+L["CURSOR_LEFT"] = true
+L["CURSOR_RIGHT"] = true
+L["CURSOR"] = true
 L["Announce Interrupts"] = "차단 성공시 알림"
 L["Announce when you interrupt a spell to the specified chat channel."] = "주문 차단에 성공하면 여기에서 설정한 채널로 차단성공을 알립니다."
 L["Any"] = true
@@ -569,6 +568,7 @@ L["Hide Below Max Level"] = true
 L["Hide Both"] = "둘 다 숨기기"
 L["Hide Castbar text. Useful if your power height is very low or if you use power offset."] = true
 L["Hide Cooldown Bling"] = "재사용 깜빡임 끄기"
+L["Hide Copy Button"] = true
 L["Hide Delay"] = "숨김 지연"
 L["Hide Error Text"] = "전투중 에러 숨기기"
 L["Hide Frame"] = "프레임 숨김"
@@ -729,7 +729,6 @@ L["LeftChatDataPanel"] = "좌측 패널 정보문자 탭"
 L["LeftMiniPanel"] = "미니맵 왼쪽 정보문자"
 L["LEVEL_BOSS"] = "Set level to -1 for boss units or set to 0 to disable."
 L["LF Guild Frame"] = "길드 찾기 창"
-L["LFG Icons"] = "역할 아이콘 표시"
 L["LFG Queue"] = "파티찾기 표시기"
 L["Limit the number of rows or columns."] = "표시줄 수를 제한해 최종적으로 보여줄 오라의 총 개수를 제한합니다."
 L["Link to the latest development version."] = true
@@ -846,8 +845,8 @@ L["Number of repeat characters while in combat before the chat editbox is automa
 L["Number of time in seconds to scroll down to the bottom of the chat window if you are not scrolled down completely."] = "대화창의 스크롤이 맨 아래가 아니라면 이 값 만큼 시간이 지났을 때 맨 아래로 자동 스크롤링 됩니다."
 L["Objective Frame Height"] = "퀘스트프레임 세로길이"
 L["Off Cooldown"] = true
-L["Off Tank Bad Transtion"] = true
-L["Off Tank Good Transtion"] = true
+L["Off Tank Bad Transition"] = true
+L["Off Tank Good Transition"] = true
 L["Off Tank"] = true
 L["Offset of the powerbar to the healthbar, set to 0 to disable."] = "디자인 설정을 무시하고 자원바를 생명력바 뒤로 겹친 후, 드러남 정도를 결정합니다.|n|n0으로 설정하면 겹치지 않고 디자인 설정대로 배치합니다."
 L["Offset position for text."] = "위치 기준점에서부터 얼마나 떨어진 곳에 문자를 배치할지 결정합니다."

@@ -646,8 +646,8 @@ function CF_ExtractTellTarget(editBox, msg, chatType)
 		--Keep pulling off everything after the last space until we either have something on the AutoComplete list or
 		-- -- only a single word is left.
 		while (string.find(target, "%s")) do
-		--Pull off everything after the last space.
-			target = string.match(target, "(.+)%s+[^%s]*");
+			--Pull off everything after the last space.
+			target = string.match(target, "(%S+)%s+[^%s]*");
 			target = _G.Ambiguate(target, "none")
 			if (_G.GetAutoCompleteResults(target, 1, 0, tellTargetExtractionAutoComplete.include,
 				tellTargetExtractionAutoComplete.exclude, 1, nil, true)) then

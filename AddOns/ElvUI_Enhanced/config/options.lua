@@ -40,48 +40,6 @@ local function GetAllEquipmentSets()
 	return sets
 end
 
-function EO:DataTextOptions()
-	local EDT = E:GetModule('ExtraDataTexts')
-
-	E.Options.args.datatexts.args.panels.args.actionbar1 = {
-		order = 30,
-		name = ColorizeSettingName(L['Actionbar1DataPanel']),
-		type = 'toggle',
-		set = function(info, value) 
-			E.db.datatexts[ info[#info] ] = value
-			EDT:ToggleSettings(1)
-		end,
-	}
-	
-	E.Options.args.datatexts.args.panels.args.actionbar3 = {
-		order = 31,
-		name = ColorizeSettingName(L['Actionbar3DataPanel']),
-		type = 'toggle',
-		set = function(info, value) 
-			E.db.datatexts[ info[#info] ] = value
-			EDT:ToggleSettings(3)
-		end,
-	}
-	
-	E.Options.args.datatexts.args.panels.args.actionbar5 = {
-		order = 32,
-		name = ColorizeSettingName(L['Actionbar5DataPanel']),
-		type = 'toggle',
-		set = function(info, value) 
-			E.db.datatexts[ info[#info] ] = value
-			EDT:ToggleSettings(5)
-		end,
-	}
-
-	E.Options.args.datatexts.args.panels.args.spacer = {
-		order = 33,
-		type = "description",
-		name = "\n",
-	}
-end
-
-
-
 function EO:EquipmentOptions()
 	local EQ = E:GetModule('Equipment')
 	local PD = E:GetModule('PaperDoll')
@@ -769,7 +727,6 @@ function EO:WatchFrame()
 end
 
 function EO:GetOptions()
-	EO:DataTextOptions()
 	EO:EquipmentOptions()
 	EO:MapOptions()
 	EO:MiscOptions()

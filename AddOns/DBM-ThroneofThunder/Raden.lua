@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(831, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190625143417")
+mod:SetRevision("20200806142037")
 mod:SetCreatureID(69473)--69888
 mod:SetEncounterID(1580, 1581)
-mod:SetZone()
 mod:SetUsedIcons(2, 1)
 
 mod:RegisterCombat("combat")

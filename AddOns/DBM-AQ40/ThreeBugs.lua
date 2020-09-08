@@ -1,42 +1,49 @@
 local mod	= DBM:NewMod("ThreeBugs", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145731")
+mod:SetRevision("20200715000716")
 mod:SetCreatureID(15544, 15511, 15543)
 mod:SetEncounterID(710)
 mod:SetModelID(15657)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_SUCCESS 26580",
-	"SPELL_AURA_APPLIED 26580",
+	"SPELL_CAST_SUCCESS 26580 25812",
 	"SPELL_CAST_START 25807",
 	"UNIT_DIED"
 )
 
 local warnFear			= mod:NewSpellAnnounce(26580, 2)
+local warnToxicVolley	= mod:NewSpellAnnounce(25812, 2, nil, false)
 local warnHeal			= mod:NewCastAnnounce(25807, 3)
 
 local specWarnHeal		= mod:NewSpecialWarningInterrupt(25807, "HasInterrupt", nil, nil, 1, 2)
+local specWarnGTFO		= mod:NewSpecialWarningGTFO(25786, nil, nil, nil, 1, 8)
 
+--"Toxic Volley-25812-npc:15511 = pull:11.8, 13.6, 16.8, 34.1, 14.8, 7.3, 8.3, 12.1, 15.8, 9.7, 19.6, 9.8", -- [12]
 local timerFearCD		= mod:NewCDTimer(20.5, 26580, nil, nil, nil, 2)
-local timerFear			= mod:NewBuffActiveTimer(8, 26580, nil, nil, nil, 2)
-local timerHeal			= mod:NewCastTimer(2, 25807, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)
 
 function mod:OnCombatStart(delay)
 	timerFearCD:Start(10-delay)
-end
-
-function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 26580 and self:AntiSpam() then
-		timerFearCD:Start()
+	if self:IsDifficulty("event40") or not self:IsTrivial(75) then--Only want to warn if it's a threat
+		self:RegisterShortTermEvents(
+			"SPELL_AURA_APPLIED 25786",
+			"SPELL_PERIODIC_DAMAGE 25786",
+			"SPELL_PERIODIC_MISSED 25786"
+		)
 	end
 end
 
-function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 26580 and self:AntiSpam() then
+function mod:OnCombatEnd()
+	self:UnregisterShortTermEvents()
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	if args.spellId == 26580 and self:AntiSpam(3, 1) then
 		warnFear:Show()
-		timerFear:Start()
+		timerFearCD:Start()
+	elseif args.spellId == 25812 then
+		warnToxicVolley:Show()
 	end
 end
 
@@ -48,9 +55,23 @@ function mod:SPELL_CAST_START(args)
 		else
 			warnHeal:Show()
 		end
-		timerHeal:Start()
 	end
 end
+
+function mod:SPELL_AURA_APPLIED(args)
+	if args.spellId == 25786 and args:IsPlayer() and self:AntiSpam(3, 2) then
+		specWarnGTFO:Show(args.spellName)
+		specWarnGTFO:Play("watchfeet")
+	end
+end
+
+function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId, spellName)
+	if spellId == 25786 and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
+		specWarnGTFO:Show(spellName)
+		specWarnGTFO:Play("watchfeet")
+	end
+end
+mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)

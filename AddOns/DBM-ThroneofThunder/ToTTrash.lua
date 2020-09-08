@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod("ToTTrash", "DBM-ThroneofThunder")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145716")
+mod:SetRevision("20200806142037")
 mod:SetModelID(47785)
-mod:SetZone()
 
 mod.isTrashMod = true
 

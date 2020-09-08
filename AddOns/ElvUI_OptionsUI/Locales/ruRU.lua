@@ -1,7 +1,6 @@
 -- Russian localization file for ruRU.
 local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "ruRU")
 
-L["|cFFff3333Warning|r: |cFF999999[mana:x]|r tags will |cFFff3333NOT|r return anything on classes which have mana as an additional power, unless it's the additional power."] = true
 L["# Displayed Auras"] = "Кол-во аур"
 L["%s and then %s"] = "%s, а затем %s"
 L["|cffFF0000Warning:|r Click the arrow on the dropdown box to see a list of spells."] = true
@@ -66,9 +65,9 @@ L["Always Show Realm"] = "Всегда отображать сервер"
 L["An X offset (in pixels) to be used when anchoring new frames."] = "Отступ по оси X (в пикселях) при фиксации новой рамки."
 L["An Y offset (in pixels) to be used when anchoring new frames."] = "Отступ по оси Y (в пикселях) при фиксации новой рамки."
 L["Anchor Point"] = "Точка фиксации"
-L["ANCHOR_CURSOR_LEFT"] = "Слева"
-L["ANCHOR_CURSOR_RIGHT"] = "Справа"
-L["ANCHOR_CURSOR"] = "По центру"
+L["CURSOR_LEFT"] = "Слева"
+L["CURSOR_RIGHT"] = "Справа"
+L["CURSOR"] = "По центру"
 L["Announce Interrupts"] = "Объявлять о прерываниях"
 L["Announce when you interrupt a spell to the specified chat channel."] = "Объявлять о прерванных Вами заклинаниях в указанный канал чата."
 L["Any"] = "Любой"
@@ -569,6 +568,7 @@ L["Hide Below Max Level"] = "Скрывать до максимального у
 L["Hide Both"] = "Скрыть оба"
 L["Hide Castbar text. Useful if your power height is very low or if you use power offset."] = "Скрывать текст полосы заклинаний. Полезно, если у вас выставлена очень малая высота полосы или используется сдвиг ресурса."
 L["Hide Cooldown Bling"] = "Скрыть вспышку восстановления"
+L["Hide Copy Button"] = true
 L["Hide Delay"] = "Задержка скрытия"
 L["Hide Error Text"] = "Прятать сообщения об ошибках"
 L["Hide Frame"] = "Скрыть рамку"
@@ -729,7 +729,6 @@ L["LeftChatDataPanel"] = "Левая панель чата"
 L["LeftMiniPanel"] = "Миникарта, слева"
 L["LEVEL_BOSS"] = "Установите на -1 для боссов или 0 для отключения."
 L["LF Guild Frame"] = "Поиск гильдии"
-L["LFG Icons"] = "Иконки роли"
 L["LFG Queue"] = "Очередь"
 L["Limit the number of rows or columns."] = "Определяет максимальное количество рядов/столбцов."
 L["Link to the latest development version."] = "Ссылка на последнюю девелоперскую версию."
@@ -846,8 +845,8 @@ L["Number of repeat characters while in combat before the chat editbox is automa
 L["Number of time in seconds to scroll down to the bottom of the chat window if you are not scrolled down completely."] = "Время в секундах, через которое чат автоматически покрутится вниз до конца, если Вы не сделаете это вручную."
 L["Objective Frame Height"] = "Высота списка заданий"
 L["Off Cooldown"] = "не восстанавливается"
-L["Off Tank Bad Transtion"] = "Второй танк: плохой переход"
-L["Off Tank Good Transtion"] = "Второй танк: хороший переход"
+L["Off Tank Bad Transition"] = "Второй танк: плохой переход"
+L["Off Tank Good Transition"] = "Второй танк: хороший переход"
 L["Off Tank"] = "На втором танке"
 L["Offset of the powerbar to the healthbar, set to 0 to disable."] = "Смещение полосы ресурсов относительно полосы здоровья. Установите на 0 для отключения."
 L["Offset position for text."] = "Отступ для текста."

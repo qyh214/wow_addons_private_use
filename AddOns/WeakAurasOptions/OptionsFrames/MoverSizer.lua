@@ -51,7 +51,7 @@ local function moveOnePxl(direction)
           WeakAuras.Add(parentData)
         end
       end
-      WeakAuras.ReloadOptions(data.id)
+      WeakAuras.FillOptions()
     end
   end
 end
@@ -614,7 +614,7 @@ local function ConstructMoverSizer(parent)
           WeakAuras.Add(parentData)
         end
       end
-      AceConfigDialog:Open("WeakAuras", parent.container)
+      WeakAuras.FillOptions()
       WeakAuras.Animate("display", data, "main", data.animation.main, WeakAuras.regions[data.id].region, false, nil, true)
       -- hide alignment lines
       frame.lineY:Hide()
@@ -669,7 +669,7 @@ local function ConstructMoverSizer(parent)
           region:ResetPosition()
           WeakAuras.Add(data, nil, true)
           frame:ScaleCorners(region:GetWidth(), region:GetHeight())
-          AceConfigDialog:Open("WeakAuras", parent.container)
+          WeakAuras.FillOptions()
         end)
 
         mover.align = BuildAlignLines(mover)
@@ -734,7 +734,7 @@ local function ConstructMoverSizer(parent)
         end
         frame.text:Hide()
         frame:SetScript("OnUpdate", nil)
-        AceConfigDialog:Open("WeakAuras", parent.container)
+        WeakAuras.FillOptions()
         WeakAuras.Animate("display", data, "main", data.animation.main, WeakAuras.regions[data.id].region, false, nil, true)
         -- hide alignment lines
         frame.lineY:Hide()
@@ -945,7 +945,7 @@ local function ConstructMoverSizer(parent)
               frame.lineX:SetStartPoint("BOTTOMLEFT", UIParent, 0, v)
               frame.lineX:SetEndPoint("BOTTOMRIGHT", UIParent, 0, v)
               frame.lineX:Show()
-              mover.alignYFrom = ctrlDown and "CENTER" or (top >= v - 5 and top <= v + 5) and "TOP" or "BOTTOM"
+              mover.alignYFrom = (ctrlDown and "CENTER" or (top >= v - 5 and top <= v + 5) and "TOP" or "BOTTOM")
                 or (reverse and ((top >= v - 5 and top <= v + 5) and "TOP" or "BOTTOM")) -- top side first
                 or (not reverse and ((bottom >= v - 5 and bottom <= v + 5) and "BOTTOM" or "TOP")) -- bottom side first
               mover.alignYOf = v

@@ -1,13 +1,15 @@
 local mod	= DBM:NewMod("Brutallus", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200806142051")
 mod:SetCreatureID(24882)
 mod:SetEncounterID(725)
+mod:DisableESCombatDetection()--ES fires for the RP event that has nothing to do with engaging boss
 mod:SetModelID(22711)
 mod:SetMinSyncRevision(441)--Block bad pulls from old versions
-mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
+mod:SetHotfixNoticeRev(20200726000000)--2020, 7, 26
+mod:SetMinSyncRevision(20200726000000)--2020, 7, 26
 
 mod:RegisterCombat("yell", L.Pull)
 mod.disableHealthCombat = true
@@ -34,8 +36,8 @@ local timerBurnCD		= mod:NewCDTimer(20, 46394, nil, nil, nil, 3)
 
 local berserkTimer		= mod:NewBerserkTimer(360)
 
-mod:AddBoolOption("BurnIcon", true)
-mod:AddBoolOption("RangeFrame", true)
+mod:AddSetIconOption("BurnIcon", 46394, true, false, {1, 2, 3, 4, 5, 6, 7, 8})
+mod:AddRangeFrameOption(46394, 4)
 
 mod.vb.burnIcon = 8
 local debuffName = DBM:GetSpellInfo(46394)

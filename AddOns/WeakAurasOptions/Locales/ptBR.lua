@@ -67,6 +67,8 @@ local L = WeakAuras.L
 	L["A Unit ID (e.g., party1)."] = "A Unit ID (e.g., party1)."
 	L["Actions"] = "Ações"
 	--[[Translation missing --]]
+	L["Add"] = "Add"
+	--[[Translation missing --]]
 	L["Add %s"] = "Add %s"
 	L["Add a new display"] = "Adicionar um novo display"
 	L["Add Condition"] = "Adicionar condição"
@@ -85,7 +87,6 @@ local L = WeakAuras.L
 	L["Add to group %s"] = "Adicionar ao grupo %s"
 	L["Add to new Dynamic Group"] = "Adicionar a um novo Grupo Dinâmico"
 	L["Add to new Group"] = "Adicionar a um novo Grupo"
-	L["Add Trigger"] = "Adicionar Gatilho"
 	L["Addon"] = "Addon"
 	L["Addons"] = "Addons"
 	L["Advanced"] = "Avançado"
@@ -174,14 +175,6 @@ WeakAuras → Opções → Opções ]=]
 	L["Bar Texture"] = "Textura da barra"
 	L["Big Icon"] = "Ícone Grande"
 	--[[Translation missing --]]
-	L["Blacklisted Aura Name"] = "Blacklisted Aura Name"
-	--[[Translation missing --]]
-	L["Blacklisted Exact Spell ID(s)"] = "Blacklisted Exact Spell ID(s)"
-	--[[Translation missing --]]
-	L["Blacklisted Name(s)"] = "Blacklisted Name(s)"
-	--[[Translation missing --]]
-	L["Blacklisted Spell ID"] = "Blacklisted Spell ID"
-	--[[Translation missing --]]
 	L["Blend Mode"] = "Blend Mode"
 	--[[Translation missing --]]
 	L["Blue Rune"] = "Blue Rune"
@@ -221,7 +214,6 @@ WeakAuras → Opções → Opções ]=]
 	L["Check On..."] = "Verificar..."
 	L["Children:"] = "Criança:"
 	L["Choose"] = "Escolher"
-	L["Choose Trigger"] = "Escolher o gatilho"
 	L["Choose whether the displayed icon is automatic or defined manually"] = "Escolher se o ícone mostrado é automático ou definido manualmente"
 	--[[Translation missing --]]
 	L["Class"] = "Class"
@@ -277,7 +269,8 @@ WeakAuras → Opções → Opções ]=]
 	L["Copy settings..."] = "Copiar configurações"
 	--[[Translation missing --]]
 	L["Copy to all auras"] = "Copy to all auras"
-	L["Copy URL"] = "Copiar URL"
+	--[[Translation missing --]]
+	L["Copy URL"] = "Copy URL"
 	L["Count"] = "Contar"
 	--[[Translation missing --]]
 	L["Counts the number of matches over all units."] = "Counts the number of matches over all units."
@@ -323,7 +316,6 @@ WeakAuras → Opções → Opções ]=]
 	L["Delete children and group"] = "Delete children and group"
 	--[[Translation missing --]]
 	L["Delete Entry"] = "Delete Entry"
-	L["Delete Trigger"] = "Apagar gatilho"
 	L["Desaturate"] = "Descolorir"
 	L["Description Text"] = "Texto Descritivo"
 	--[[Translation missing --]]
@@ -348,8 +340,6 @@ WeakAuras → Opções → Opções ]=]
 	L["Done"] = "Done"
 	--[[Translation missing --]]
 	L["Don't skip this Version"] = "Don't skip this Version"
-	--[[Translation missing --]]
-	L["Down"] = "Down"
 	--[[Translation missing --]]
 	L["Drag to move"] = "Drag to move"
 	--[[Translation missing --]]
@@ -505,6 +495,8 @@ Supports multiple entries, separated by commas
 	L["Group key"] = "Group key"
 	L["Group Member Count"] = "Contagem dos membros do grupo"
 	--[[Translation missing --]]
+	L["Group Options"] = "Group Options"
+	--[[Translation missing --]]
 	L["Group Role"] = "Group Role"
 	--[[Translation missing --]]
 	L["Group Scale"] = "Group Scale"
@@ -583,6 +575,14 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Ignore self"] = "Ignore self"
 	L["Ignored"] = "Ignorado"
+	--[[Translation missing --]]
+	L["Ignored Aura Name"] = "Ignored Aura Name"
+	--[[Translation missing --]]
+	L["Ignored Exact Spell ID(s)"] = "Ignored Exact Spell ID(s)"
+	--[[Translation missing --]]
+	L["Ignored Name(s)"] = "Ignored Name(s)"
+	--[[Translation missing --]]
+	L["Ignored Spell ID"] = "Ignored Spell ID"
 	L["Import"] = "Importar"
 	L["Import a display from an encoded string"] = "Importar um display de um string codificado"
 	--[[Translation missing --]]
@@ -676,7 +676,6 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Move Up"] = "Move Up"
 	L["Multiple Displays"] = "Múltiplos displays"
-	L["Multiple Triggers"] = "Múltiplos gatilhos"
 	--[[Translation missing --]]
 	L["Multiselect ignored tooltip"] = "Multiselect ignored tooltip"
 	--[[Translation missing --]]
@@ -1088,6 +1087,8 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Trigger %s"] = "Trigger %s"
 	--[[Translation missing --]]
+	L["Trigger Combination"] = "Trigger Combination"
+	--[[Translation missing --]]
 	L["True"] = "True"
 	--[[Translation missing --]]
 	L["Type"] = "Type"
@@ -1109,8 +1110,6 @@ Supports multiple entries, separated by commas
 	L["UnitName Filter"] = "UnitName Filter"
 	--[[Translation missing --]]
 	L["Unlike the start or finish animations, the main animation will loop over and over until the display is hidden."] = "Unlike the start or finish animations, the main animation will loop over and over until the display is hidden."
-	--[[Translation missing --]]
-	L["Up"] = "Up"
 	--[[Translation missing --]]
 	L["Update %s by %s"] = "Update %s by %s"
 	--[[Translation missing --]]

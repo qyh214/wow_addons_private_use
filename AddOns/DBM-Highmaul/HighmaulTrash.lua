@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod("HighmaulTrash", "DBM-Highmaul")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814112014")
+mod:SetRevision("20200806142006")
 --mod:SetModelID(47785)
-mod:SetZone()
 
 mod.isTrashMod = true
 

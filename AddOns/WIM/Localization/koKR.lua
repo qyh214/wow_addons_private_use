@@ -21,7 +21,7 @@ WIM.AddLocale("koKR", {
     ["Unknown"] = "알 수 없음",
     ["Click to update..."] = "클릭 - 위치 정보 갱신",
     ["Usage"] = "사용",
-    
+
     ["state_resting"] = "대도시",
     ["state_combat"] = "전투중",
     ["state_pvp"] = "전장",
@@ -29,13 +29,13 @@ WIM.AddLocale("koKR", {
     ["state_party"] = "파티",
     ["state_raid"] = "레이드",
     ["state_other"] = "일반 (기타)",
-    
+
     ["<Shift-Click> to close window."] = "<Shift-Click> 창 닫기",
-    
+
     ["A new version of WIM is available!\nYou can download the latest version by going to:\n\n http://www.wimaddon.com"] = "새로운 버전의 WIM이 확인되었습니다!\n가장 최신의 버전을 다운로드 하려면 사이트로 이동하세요:\n\n http://www.wimaddon.com 또는 http://wow.somegate.com",
-    
+
     ["Options"] = "옵션",
-    
+
     ["Icon Position"] = "아이콘 위치",
     ["Font Size"] = "글자 크기",
     ["Window Scale (Percent)"] = "창 크기 (%)",
@@ -49,7 +49,7 @@ WIM.AddLocale("koKR", {
     ["Invalid Alias!"] = "오류: 별명이 정확하지 않습니다.!",
     ["Invalid Keyword/Phrase!"] = "오류: 키워드/어구가 정확하지 않습니다.!",
     ["Keyword/Phrase is already used!"] = "오류: 이미 사용 중인 키워드/어구 입니다.!",
-    
+
     ["Day"] = "하루",
     ["Week"] = "일주일",
     ["Month"] = "한 달",
@@ -61,10 +61,10 @@ WIM.AddLocale("koKR", {
     ["Ignore"] = "무시",
     ["Block"] = "차단",
     ["Enable WIM"] = "WIM 사용",
-    
+
     ["Auto Close Friends after:"] = "친구와의 대화창 자동 종료 :",
     ["Auto Close Non-Friends after:"] = "친구 이외의 대화창 자동 종료 :",
-    
+
     ["Display"] = "대화창 설정",
     ["Incoming Messages"] = "받은 메세지",
     ["Outgoing Messages"] = "보낸 메세지",
@@ -81,14 +81,14 @@ WIM.AddLocale("koKR", {
     ["Requires /who querying."] = "/who 질의 포함",
     ["Enable window fading effects."] = "창 투명화 효과 기능",
     ["Enable window animations."] = "창 애니메이션 기능",
-    
+
     ["Display minimap icon."] = "미니맵 아이콘 표시",
-    
+
     ["General"] = "일반",
     ["History"] = "대화기록",
     ["Filters"] = "필터",
     ["Plugins"] = "플러그인",
-    
+
     ["Auto focus when window is shown."] = "대화창 팝업 시 자동으로 커서를 입력창에 위치",
     ["Preserve focus after sending messages."] = "메시지 전송 후 입력창에 커서 유지",
     ["Display tooltips."] = "툴팁을 표시합니다.",
@@ -106,7 +106,7 @@ WIM.AddLocale("koKR", {
     ["Display emoticons."] = "이모티콘을 표시합니다.",
     ["Display URLs as item links."] = "웹 링크를 표시합니다.",
     ["Display floating item links."] = "아이템 링크를 표시합니다.",
-    
+
     ["Cascade windows."] = "대화창 계단식 배열 사용",
     ["Direction:"] = "방향:",
     ["Tabs"] = "탭",
@@ -114,7 +114,7 @@ WIM.AddLocale("koKR", {
     ["Alphabetical"] = "가나다순",
     ["Recent Activity"] = "최근 대화 순",
     ["Keep windows on top of your UI."] = "대화창을 항상 위에 표시",
-    
+
     -- Class Names --
     ["Druid"] = "드루이드",
     ["Hunter"] = "사냥꾼",
@@ -126,7 +126,7 @@ WIM.AddLocale("koKR", {
     ["Warlock"] = "흑마법사",
     ["Warrior"] = "전사",
     ["Death Knight"] = "죽음의 기사",
-    
+
     -- Female Class Names --
     ["DruidF"] = "드루이드",
     ["HunterF"] = "사냥꾼",
@@ -138,14 +138,14 @@ WIM.AddLocale("koKR", {
     ["WarlockF"] = "흑마법사",
     ["WarriorF"] = "전사",
     ["Death KnightF"] = "죽음의 기사",
-    
+
     ["Game Master"] = "GM",
-    
+
     -- WIM.lua --
     ["Toggle WIM 'On' and 'Off'."] = "WIM을 켜고 끕니다.",
     ["Toggle Debugging Mode 'On' and 'Off'."] = "WIM 디버그모드를 켜고 끕니다.",
     ["WIM is currently running. To access WIM's wide array of options type:"] = "현재 WIM이 사용중입니다. 사용할 수 있는 WIM의 옵션 :",
-    
+
     -- Filters.lua --
     ["Whispers Sent by Addons"] = "애드온을 통해 귓속말",
     ["WhisperSelect Part 1"] = "귓속말 대상자 선택 파트 1",
@@ -173,7 +173,7 @@ WIM.AddLocale("koKR", {
     ["Cancel"] = "취소",
     ["Edit Filter"] = "조건 수정",
     ["Add Filter"] = "조건 추가",
-    
+
     -- History.lua --
     ["WIM History Button"] = "WIM 대화기록 버튼",
     ["Clicking the %s button on the message window will show that user's history in WIM's History Viewer."] = "Clicking the %s button on the message window will show that user's history in WIM's History Viewer.",
@@ -192,18 +192,18 @@ WIM.AddLocale("koKR", {
     ["WIM History Viewer can be accessed any time by typing:"] = "WIM History Viewer can be accessed any time by typing:",
     ["WIM History Viewer"] = "WIM 대화기록 보기창",
     ["Display history viewer."] = "대화기록 보기창 보기",
-    
+
     -- ldb.lua --
     ["No New Messages"] = "새로운 메세지가 없습니다.",
-    
+
     -- Menu.lua --
     ["Whispers"] = "귓속말",
     ["Chat"] = "대화",
-    
+
     -- Negotiate.lua --
     ["WIM Update Available!"] = "WIM 업데이트가 있습니다.",
     ["There is a newer version of WIM available for download. You can download it at %s."] = "There is a newer version of WIM available for download. You can download it at %s.",
-    
+
     -- ShortcutBar.lua --
     ["Player Location"] = "현재 위치",
     ["Unknown"] = "알 수 없음",
@@ -213,19 +213,19 @@ WIM.AddLocale("koKR", {
     ["Add Friend"] = "친구 추가",
     ["Ignore User"] = "차단 설정",
     ["Are you sure you want to\nignore %s?"] = "당신은 %s 의 차단을 원합니까?",
-    
+
     -- Tutorials.lua --
     ["Display WIM tips"] = "WIM 팁 보여주기",
-    
+
     -- W2W.lua --
     ["%s is typing..."] = "%s님이 타이핑 중...",
     ["W2W Profile"] = "W2W(WIM to WIM) 프로필",
-    ["Talent Spec"] = "특성 스팩",	
-    
+    ["Talent Spec"] = "특성 스팩",
+
     -- WhisperEngine.lua --
     ["Whisper Received!"] = "귓속말 받기",
     ["You received a whisper which was hidden due to your current activity. You can change how whispers behave in WIM's options by typing"] = "You received a whisper which was hidden due to your current activity. You can change how whispers behave in WIM's options by typing",
-    
+
     -- Clear.lua --
     ["You are about to clear all of WIM's history!"] = "당신은 모든 WIM 대화기록을 삭제합니다!",
     ["This action will reload your user interface."] = "이 선택은 유저 인터페이스를 재시작 한 후에 실행됩니다.",
@@ -233,17 +233,17 @@ WIM.AddLocale("koKR", {
     ["You are about to restore WIM's filters to it's default settings!"] = "WIM 필터설정을 기본값으로 돌립니다!",
     ["Usage"] = "사용",
     ["Clear various WIM data."] = "WIM 데이타 삭제",
-    
+
     -- SlashHandler.lua --
     ["WIM Slash Commands"] = "WIM /명령어",
     ["To see a list of available WIM slash commands type:"] = "To see a list of available WIM slash commands type:",
     ["Display available slash commands."] = "사용 가능한 명령어 보기",
     ["Reload User Interface."] = "유저 인터페이스 재시작",
-    
+
     -- TabHandler.lua --
     ["Manipulating Tabs"] = "Manipulating Tabs",
     ["You can <Shift-Click> a tab and drag it out into it's own window."] = "You can <Shift-Click> a tab and drag it out into it's own window.",
-    
+
     -- WindowHandler.lua --
     ["Window Resized!"] = "창 크기 수정!",
     ["If you want all windows to be this size, you can set the default window size within WIM's options."] = "If you want all windows to be this size, you can set the default window size within WIM's options.",
@@ -258,14 +258,14 @@ WIM.AddLocale("koKR", {
     ["Default"] = "기본값",
     ["%s is Away From Keyboard: %s"] = "%s는 현재 화면 앞에 존재하지 않습니다: %s",
     ["%s does not wish to be disturbed: %s"] = "%s does not wish to be disturbed: %s",
-    
+
     -- Options.lua --
     ["Display WIM's options."] = "WIM 옵션 보기",
     ["Resetting WIM will clear all of your settings!"] = "당신의 WIM 모든설정을 삭제합니다.",
     ["Reset all options to default."] = "초기화",
-    
+
     -- CoreOptions --
-    ["Created by:"] = "제작자:",
+    ["Created By:"] = "제작자:",
     ["Special Thanks:"] = "고마운분:",
     ["Welcome!"] = "환영합니다!",
     ["Enable WIM"] = "WIM 사용",
@@ -374,10 +374,10 @@ WIM.AddLocale("koKR", {
     ["Play special sound for friends."] = "친구의 메세지가 도착할 경우 효과음 재생",
     ["Play special sound for guild members."] = "길드원의 메세지가 도착할 경우 효과음 재생",
     ["Play sound when a whisper is sent."] = "메시지 보낼 때 효과음 재생",
-    ["Allow others to see my talent spec."] = "자신의 특성을 볼 수 있도록 허용.",	
+    ["Allow others to see my talent spec."] = "자신의 특성을 볼 수 있도록 허용.",
     ["Window Strata:"] = "윈도우 층레벨",
-    ["Unlock from Minimap"] = "미니맵 위치 잠금 풀기",    
-    
+    ["Unlock from Minimap"] = "미니맵 위치 잠금 풀기",
+
     -- TabManagement.lua --
     ["Tab Management"] = "탭 관리",
     ["Automatically manage your open windows and place them into appropriate tab groups."] = "Automatically manage your open windows and place them into appropriate tab groups.",
@@ -385,7 +385,7 @@ WIM.AddLocale("koKR", {
     ["Place friends in their own group."] = "Place friends in their own group.",
     ["Place guild members in their own group."] = "Place guild members in their own group.",
     ["Does not apply to windows already opened."] = "Does not apply to windows already opened.",
-    
+
 	   -- Talent Specs --
     ["Affliction"] = "고통",
     ["Arcane"] = "비전",
@@ -414,11 +414,11 @@ WIM.AddLocale("koKR", {
     ["Subtlety"] = true,
     ["Survival"] = true,
     ["Unholy"] = "부정",
-    
+
     -- ChangeLog.lua --
     ["Change Log"] = "바뀐 부분",
     ["View WIM's change log."] = "WIM 바뀐 부분 보기",
-    
+
     -- Filters.lua --
     ["Show Alert"] = "경고 보기",
     ["WIM has blocked a message from %s."] = "%s 의 메세지를 WIM이 차단하였습니다.",

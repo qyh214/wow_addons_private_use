@@ -164,6 +164,12 @@ WeakAuras.format_types = {
         values = WeakAuras.big_number_types,
         hidden = hidden
       })
+      addOption(symbol .. "_big_number_space", {
+        type = "description",
+        name = "",
+        width = WeakAuras.normalWidth,
+        hidden = hidden
+      })
     end,
     CreateFormatter = function(symbol, get)
       local format = get(symbol .. "_big_number_format", "AbbreviateNumbers")
@@ -238,6 +244,7 @@ WeakAuras.format_types = {
         min = 1,
         max = 20,
         hidden = hidden,
+        step = 1,
         disabled = function()
           return not get(symbol .. "_abbreviate")
         end
@@ -254,7 +261,7 @@ WeakAuras.format_types = {
       local abbreviateFunc
       if color == "class" then
         colorFunc = function(unit, text)
-          if UnitPlayerControlled(unit) then
+          if unit and UnitPlayerControlled(unit) then
             return GetClassColoredTextForUnit(unit, text)
           end
           return text
@@ -262,9 +269,14 @@ WeakAuras.format_types = {
       end
 
       if realm == "never" then
-        nameFunc = UnitName
+        nameFunc = function(unit)
+          return unit and UnitName(unit)
+        end
       elseif realm == "star" then
         nameFunc = function(unit)
+          if not unit then
+            return ""
+          end
           local name, realm = UnitName(unit)
           if realm then
             return name .. "*"
@@ -273,6 +285,9 @@ WeakAuras.format_types = {
         end
       elseif realm == "differentServer" then
         nameFunc = function(unit)
+          if not unit then
+            return ""
+          end
           local name, realm = UnitName(unit)
           if realm then
             return name .. "-" .. realm
@@ -281,6 +296,9 @@ WeakAuras.format_types = {
         end
       elseif realm == "always" then
         nameFunc = function(unit)
+          if not unit then
+            return ""
+          end
           local name, realm = WeakAuras.UnitNameWithRealm(unit)
           return name .. "-" .. realm
         end
@@ -365,7 +383,11 @@ WeakAuras.format_types = {
       local abbreviateFunc
       if color == "class" then
         colorFunc = function(class, text)
-          return RAID_CLASS_COLORS[class]:WrapTextInColorCode(text)
+          if class then
+            return RAID_CLASS_COLORS[class]:WrapTextInColorCode(text)
+          else
+            return text
+          end
         end
       end
 
@@ -1459,6 +1481,14 @@ WeakAuras.texture_types = {
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\target_indicator.tga"] = "Target Indicator",
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\target_indicator_glow.tga"] = "Target Indicator Glow",
     ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\arrows_target.tga"] = "Arrows Target",
+
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Circle_AlphaGradient_In.tga"] = "Circle Alpha Gradient In",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Circle_AlphaGradient_Out.tga"] = "Circle Alpha Gradient Out",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Ring_10px.tga"] = "Ring 10px",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Ring_20px.tga"] = "Ring 20px",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Ring_30px.tga"] = "Ring 30px",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Ring_40px.tga"] = "Ring 40px",
+    ["Interface\\AddOns\\WeakAuras\\Media\\Textures\\Square_AlphaGradient.tga"] = "Square Alpha Gradient",
   },
   ["Sparks"] = {
     ["130877"] = "Blizzard Spark",
@@ -2254,14 +2284,14 @@ WeakAuras.absorb_modes = {
 
 WeakAuras.mythic_plus_affixes = {}
 
-local mythic_plus_blacklist = {
+local mythic_plus_ignorelist = {
   [1] = true,
   [15] = true
 }
 
 if not WeakAuras.IsClassic() then
   for i = 1, 255 do
-    local r = not mythic_plus_blacklist[i] and C_ChallengeMode.GetAffixInfo(i)
+    local r = not mythic_plus_ignorelist[i] and C_ChallengeMode.GetAffixInfo(i)
     if r then
       WeakAuras.mythic_plus_affixes[i] = r
     end

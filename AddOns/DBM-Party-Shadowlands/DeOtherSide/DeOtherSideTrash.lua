@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod("DeOtherSideTrash", "DBM-Party-Shadowlands", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200605175350")
+mod:SetRevision("20200803045206")
 --mod:SetModelID(47785)
-mod:SetZone()
 
 mod.isTrashMod = true
 

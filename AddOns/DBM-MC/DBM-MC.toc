@@ -20,8 +20,7 @@
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
 ## X-Curse-Project-ID: 16442
 ## X-WoWI-ID: 11700
-## Version: r673
-
+## Version: r674
 localization.en.lua
 localization.es.lua
 localization.ru.lua
@@ -29,6 +28,7 @@ localization.de.lua
 localization.kr.lua
 localization.tw.lua
 localization.cn.lua
+MCTrash.lua
 Lucifron.lua
 Magmadar.lua
 Gehennas.lua

@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(1391, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145633")
+mod:SetRevision("20200806143035")
 mod:SetCreatureID(89890)
 mod:SetEncounterID(1777)
-mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
 mod.respawnTime = 30
 
@@ -140,15 +139,15 @@ local function warnSeeds(self)
 		end
 		if self.Options.HudMapOnSeeds then
 			if i == 1 then--Yellow to match Star
-				DBMHudMap:RegisterRangeMarkerOnPartyMember(181508, "star", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
+				DBM.HudMap:RegisterRangeMarkerOnPartyMember(181508, "star", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
 			elseif i == 2 then--Orange to match Circle
-				DBMHudMap:RegisterRangeMarkerOnPartyMember(181508, "circle", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
+				DBM.HudMap:RegisterRangeMarkerOnPartyMember(181508, "circle", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
 			elseif i == 3 then--Purple to match Diamond
-				DBMHudMap:RegisterRangeMarkerOnPartyMember(181508, "diamond", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
+				DBM.HudMap:RegisterRangeMarkerOnPartyMember(181508, "diamond", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
 			elseif i == 4 then--Green to match Triangle
-				DBMHudMap:RegisterRangeMarkerOnPartyMember(181508, "triangle", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
+				DBM.HudMap:RegisterRangeMarkerOnPartyMember(181508, "triangle", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
 			else--White to match  Moon
-				DBMHudMap:RegisterRangeMarkerOnPartyMember(181508, "moon", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
+				DBM.HudMap:RegisterRangeMarkerOnPartyMember(181508, "moon", targetName, 3, 13, 1, 1, 1, 0.5, nil, true):Pulse(0.5, 0.5)
 			end
 		end
 	end
@@ -167,7 +166,7 @@ local function delayModCheck(self)
 	if IsInRaid() and not IsPartyLFG() then--Future proof in case solo/not in a raid
 		for i = 1, GetNumGroupMembers() do
 			local uId = "raid"..i
-			if UnitIsGroupLeader(uId, LE_PARTY_CATEGORY_HOME) then
+			if UnitIsGroupLeader(uId, 1) then
 				if self:CheckBigWigs(DBM:GetUnitFullName(uId)) then
 					leaderHasBW = true
 				end
@@ -221,7 +220,7 @@ function mod:OnCombatEnd()
 		DBM.RangeCheck:Hide()
 	end
 	if self.Options.HudMapOnSeeds then
-		DBMHudMap:Disable()
+		DBM.HudMap:Disable()
 	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:Hide()
@@ -352,7 +351,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:SetIcon(args.destName, 0)
 		end
 		if self.Options.HudMapOnSeeds then
-			DBMHudMap:FreeEncounterMarkerByTarget(181508, args.destName)
+			DBM.HudMap:FreeEncounterMarkerByTarget(181508, args.destName)
 		end
 	elseif spellId == 179667 then--Disarmed removed (armed)
 		self.vb.FissureCount = 0

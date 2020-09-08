@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod("Gaur", "DBM-GarrisonInvasions")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190814112014")
+mod:SetRevision("20200806142006")
 mod:SetCreatureID(90943)
-mod:SetZone()
 
 mod:RegisterCombat("combat")
 mod:SetMinCombatTime(15)

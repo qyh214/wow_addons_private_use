@@ -47,6 +47,8 @@ local L = WeakAuras.L
 	L["A Unit ID (e.g., party1)."] = [=[Введите идентификатор единицы (UID, Unit ID).
 Например: party4, raid7, arena3, boss2, nameplate6, target, focus, pet и др.]=]
 	L["Actions"] = "Действия"
+	--[[Translation missing --]]
+	L["Add"] = "Add"
 	L["Add %s"] = "%s"
 	L["Add a new display"] = "Добавить новую индикацию"
 	L["Add Condition"] = "Добавить условие"
@@ -60,7 +62,6 @@ local L = WeakAuras.L
 	L["Add to group %s"] = "Добавить в группу %s"
 	L["Add to new Dynamic Group"] = "Добавить в новую динамическую группу"
 	L["Add to new Group"] = "Добавить в новую группу"
-	L["Add Trigger"] = "Добавить триггер"
 	L["Addon"] = "Аддон"
 	L["Addons"] = "Аддоны"
 	L["Advanced"] = "Комплексный подход"
@@ -94,7 +95,8 @@ local L = WeakAuras.L
 	L["Animations"] = "Анимация"
 	L["Any of"] = "ИЛИ (любое условие)"
 	L["Apply Template"] = "Применить шаблон"
-	L["Arc Length"] = "Угол дуги"
+	--[[Translation missing --]]
+	L["Arc Length"] = "Arc Length"
 	L["Arcane Orb"] = "Чародейский шар"
 	L["At a position a bit left of Left HUD position."] = "Немного левее позиции левого HUD"
 	L["At a position a bit left of Right HUD position"] = "Немного правее позиции правого HUD"
@@ -125,10 +127,6 @@ local L = WeakAuras.L
 	L["Bar Inner"] = "Bar Inner"
 	L["Bar Texture"] = "Текстура полосы"
 	L["Big Icon"] = "Большая иконка"
-	L["Blacklisted Aura Name"] = "Исключаемое название эффекта"
-	L["Blacklisted Exact Spell ID(s)"] = "Исключить ID заклинания"
-	L["Blacklisted Name(s)"] = "Исключить название"
-	L["Blacklisted Spell ID"] = "Исключаемый ID заклинания"
 	L["Blend Mode"] = "Режим наложения"
 	L["Blue Rune"] = "Синяя руна"
 	L["Blue Sparkle Orb"] = "Синий искрящийся шар"
@@ -155,7 +153,6 @@ local L = WeakAuras.L
 	L["Check On..."] = "Проверять..."
 	L["Children:"] = "Индикации:"
 	L["Choose"] = "Выбрать"
-	L["Choose Trigger"] = "Выберите триггер"
 	L["Choose whether the displayed icon is automatic or defined manually"] = "Выберите, будет ли иконка задана автоматически или вручную"
 	L["Class"] = "Класс"
 	--[[Translation missing --]]
@@ -195,7 +192,8 @@ local L = WeakAuras.L
 	L["Copy"] = "Копировать"
 	L["Copy settings..."] = "Копировать настройки из ..."
 	L["Copy to all auras"] = "Копировать во все индикации"
-	L["Copy URL"] = "Копировать строку URL"
+	--[[Translation missing --]]
+	L["Copy URL"] = "Copy URL"
 	L["Count"] = "Количество"
 	L["Counts the number of matches over all units."] = "Сравнение с количеством совпадений для всех единиц."
 	L["Creating buttons: "] = "Создание кнопок:"
@@ -232,7 +230,6 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Delete all"] = "Удалить всё"
 	L["Delete children and group"] = "Удалить индикации и группу"
 	L["Delete Entry"] = "Удалить запись"
-	L["Delete Trigger"] = "Удалить триггер"
 	L["Desaturate"] = "Обесцветить"
 	L["Description Text"] = "Текст описания"
 	L["Determines how many entries can be in the table."] = "Определяет, сколько записей может быть в таблице."
@@ -250,7 +247,6 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Do not group this display"] = "Не группировать эту индикацию"
 	L["Done"] = "Выполнено"
 	L["Don't skip this Version"] = "Не пропускать эту версию"
-	L["Down"] = "Переместить вниз"
 	L["Drag to move"] = "Перетащите для перемещения"
 	L["Duplicate"] = "Дублировать"
 	L["Duplicate All"] = "Дублировать все"
@@ -381,6 +377,8 @@ Supports multiple entries, separated by commas
 	L["Group Icon"] = "Иконка группы"
 	L["Group key"] = "Ключ группы"
 	L["Group Member Count"] = "Кол-во участников"
+	--[[Translation missing --]]
+	L["Group Options"] = "Group Options"
 	L["Group Role"] = "Роль в группе"
 	L["Group Scale"] = "Масштаб группы"
 	L["Group Settings"] = "Настройки группы"
@@ -426,6 +424,14 @@ Supports multiple entries, separated by commas
 	L["Ignore Self"] = "Не учитывать себя"
 	L["Ignore self"] = "Не учитывать себя"
 	L["Ignored"] = "Игнорируется"
+	--[[Translation missing --]]
+	L["Ignored Aura Name"] = "Ignored Aura Name"
+	--[[Translation missing --]]
+	L["Ignored Exact Spell ID(s)"] = "Ignored Exact Spell ID(s)"
+	--[[Translation missing --]]
+	L["Ignored Name(s)"] = "Ignored Name(s)"
+	--[[Translation missing --]]
+	L["Ignored Spell ID"] = "Ignored Spell ID"
 	L["Import"] = "Импорт"
 	L["Import a display from an encoded string"] = "Импортировать индикацию из закодированной строки"
 	L["Inner"] = "Внутри"
@@ -442,7 +448,8 @@ Supports multiple entries, separated by commas
 	L["Left"] = "Слева"
 	L["Left 2 HUD position"] = "Позиция 2-го левого HUD"
 	L["Left HUD position"] = "Позиция левого HUD"
-	L["Legacy Aura Trigger"] = "Триггер устаревшего типа"
+	--[[Translation missing --]]
+	L["Legacy Aura Trigger"] = "Legacy Aura Trigger"
 	L["Length"] = "Длина"
 	--[[Translation missing --]]
 	L["Limit"] = "Limit"
@@ -480,7 +487,6 @@ Supports multiple entries, separated by commas
 	L["Move this display up in its group's order"] = "Переместить индикацию вверх в порядке элементов группы"
 	L["Move Up"] = "Переместить вверх"
 	L["Multiple Displays"] = "Несколько индикаций"
-	L["Multiple Triggers"] = "Несколько триггеров"
 	L["Multiselect ignored tooltip"] = [=[
 |cFFFF0000Ничего|r - |cFF777777Одно|r - |cFF777777Несколько|r
 Этот параметр не определяет, когда индикация должна быть загружена]=]
@@ -604,7 +610,8 @@ Supports multiple entries, separated by commas
 	L["Set Parent to Anchor"] = "Назначить родителем"
 	--[[Translation missing --]]
 	L["Set Thumbnail Icon"] = "Set Thumbnail Icon"
-	L["Set tooltip description"] = "Описание подсказки"
+	--[[Translation missing --]]
+	L["Set tooltip description"] = "Set tooltip description"
 	--[[Translation missing --]]
 	L["Sets the anchored frame as the aura's parent, causing the aura to inherit attributes such as visibility and scale."] = "Sets the anchored frame as the aura's parent, causing the aura to inherit attributes such as visibility and scale."
 	L["Settings"] = "Параметры"
@@ -700,7 +707,8 @@ Supports multiple entries, separated by commas
 	L["Then "] = "Тогда "
 	L["Thickness"] = "Толщина"
 	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "Добавляет строки %tooltip, %tooltip1, %tooltip2 и %tooltip3 к специальным кодам отображения динамической информации в тексте."
-	L["This aura has legacy aura trigger(s). Convert them to the new system to benefit from enhanced performance and features"] = "Индикация содержит триггеры Аура устаревшего (legacy) типа. Преобразуйте их в новую версию, чтобы воспользоваться улучшенной производительностью и расширенными возможностями"
+	--[[Translation missing --]]
+	L["This aura has legacy aura trigger(s). Convert them to the new system to benefit from enhanced performance and features"] = "This aura has legacy aura trigger(s). Convert them to the new system to benefit from enhanced performance and features"
 	L["This display is currently loaded"] = "Эта индикация загружена"
 	L["This display is not currently loaded"] = "Эта индикация не загружена"
 	L["This region of type \"%s\" is not supported."] = "Регион типа \"%s\" не поддерживается."
@@ -735,6 +743,8 @@ Supports multiple entries, separated by commas
 	L["Trigger"] = "Триггер"
 	L["Trigger %d"] = "Триггер %d"
 	L["Trigger %s"] = "Триггер %s"
+	--[[Translation missing --]]
+	L["Trigger Combination"] = "Trigger Combination"
 	L["True"] = "Истина"
 	L["Type"] = "Тип"
 	L["Ungroup"] = "Разгруппировать"
@@ -750,7 +760,6 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["UnitName Filter"] = "UnitName Filter"
 	L["Unlike the start or finish animations, the main animation will loop over and over until the display is hidden."] = "В отличие от начальной или конечной анимации, основная зациклена и будет повторяться пока индикация не пропадет."
-	L["Up"] = "Переместить вверх"
 	L["Update %s by %s"] = "Обновить %s (автор %s)"
 	L["Update Custom Text On..."] = "Обновление текста, заданного с помощью функции, происходит"
 	L["Update in Group"] = "Доступно обновление"

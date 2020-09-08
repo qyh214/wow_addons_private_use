@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(1153, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145633")
+mod:SetRevision("20200806142006")
 mod:SetCreatureID(79015)
 mod:SetEncounterID(1723)
-mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 3, 2, 1)--Don't know total number of icons needed yet
 --Could not find sound path on internet
 
@@ -140,7 +139,7 @@ function mod:OnCombatEnd()
 		DBM.Arrow:Hide()
 	end
 	if self.Options.HudMapOnMC or self.Options.HudMapForFel then
-		DBMHudMap:Disable()
+		DBM.HudMap:Disable()
 	end
 end
 
@@ -265,7 +264,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetSortedIcon(1, args.destName, 8, nil, true)--TODO, find out number of targets and add
 		end
 		if self.Options.HudMapOnMC then
-			DBMHudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3.5, 0, 1, 0, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
+			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3.5, 0, 1, 0, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
 		end--]]
 	elseif spellId == 172895 then
 		warnExpelMagicFel:CombinedShow(0.5, args.destName)
@@ -277,7 +276,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				lastX, LastY = UnitPosition("player")
 				self:Schedule(7, returnPosition, self)
 				if self.Options.HudMapForFel then
-					DBMHudMap:RegisterStaticMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 12, 0, 1, 0, 0.5, nil, nil, 4):Pulse(0.5, 0.5)
+					DBM.HudMap:RegisterStaticMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 12, 0, 1, 0, 0.5, nil, nil, 4):Pulse(0.5, 0.5)
 				end
 			end
 		end
@@ -298,7 +297,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:SetIcon(args.destName, 0)
 		end
 		if self.Options.HudMapOnMC then
-			DBMHudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
+			DBM.HudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
 		end--]]
 	elseif spellId == 172895 then
 		if args:IsPlayer() then
@@ -307,7 +306,7 @@ function mod:SPELL_AURA_REMOVED(args)
 				DBM.Arrow:Hide()
 			end
 			if self.Options.HudMapForFel then
-				DBMHudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
+				DBM.HudMap:FreeEncounterMarkerByTarget(spellId, args.destName)
 			end
 		end
 		if self.Options.SetIconOnFel then

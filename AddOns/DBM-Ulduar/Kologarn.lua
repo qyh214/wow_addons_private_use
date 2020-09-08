@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kologarn", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200530203003")
+mod:SetRevision("20200701022758")
 mod:SetCreatureID(32930)--, 32933, 32934
 mod:SetEncounterID(1137)
 mod:SetModelID(28638)
@@ -13,7 +13,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 64003",
 	"SPELL_AURA_APPLIED 64290 64292 64002 63355",
-	"SPELL_AURA_APPLIED_DOSE 64002",
+	"SPELL_AURA_APPLIED_DOSE 64002 63355",
 	"SPELL_AURA_REMOVED 64290 64292",
 	"SPELL_DAMAGE 63783 63982 63346 63976",
 	"SPELL_MISSED 63783 63982 63346 63976",
@@ -23,8 +23,8 @@ mod:RegisterEventsInCombat(
 )
 
 local warnFocusedEyebeam		= mod:NewTargetNoFilterAnnounce(63346, 4)
-local warnGrip					= mod:NewTargetAnnounce(64292, 2)
-local warnCrunchArmor			= mod:NewTargetAnnounce(64002, 2)
+local warnGrip					= mod:NewTargetNoFilterAnnounce(64292, 2)
+local warnCrunchArmor			= mod:NewStackAnnounce(64002, 2, nil, "Tank|Healer")
 
 local specWarnCrunchArmor2		= mod:NewSpecialWarningStack(64002, nil, 2, nil, 2, 1, 6)
 local specWarnEyebeam			= mod:NewSpecialWarningRun(63346, nil, nil, nil, 4, 2)
@@ -43,16 +43,16 @@ mod:AddSetIconOption("SetIconOnGripTarget", 64292, true, false, {7, 6, 5})
 mod:AddSetIconOption("SetIconOnEyebeamTarget", 63346, true, false, {8})
 
 mod.vb.disarmActive = false
-local gripTargets = {}
+--local gripTargets = {}
 
 local function armReset(self)
 	self.vb.disarmActive = false
 end
 
-local function GripAnnounce(self)
-	warnGrip:Show(table.concat(gripTargets, "<, >"))
-	table.wipe(gripTargets)
-end
+--local function GripAnnounce(self)
+--	warnGrip:Show(table.concat(gripTargets, "<, >"))
+--	table.wipe(gripTargets)
+--end
 
 function mod:OnCombatStart(delay)
 	timerNextSmash:Start(10-delay)
@@ -69,31 +69,32 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(64290, 64292) then
 		if self.Options.SetIconOnGripTarget then
-			self:SetIcon(args.destName, 8 - #gripTargets, 10)
+			--self:SetIcon(args.destName, 8 - #gripTargets, 10)
+			self:SetIcon(args.destName, 8, 10)
 		end
-		table.insert(gripTargets, args.destName)
+		--[[table.insert(gripTargets, args.destName)
 		self:Unschedule(GripAnnounce)
 		if #gripTargets >= 3 then
 			GripAnnounce(self)
 		else
 			self:Schedule(0.3, GripAnnounce, self)
-		end
+		end--]]
+		warnGrip:Show(args.destName)
 	elseif args:IsSpellID(64002, 63355) then	-- Crunch Armor
-        warnCrunchArmor:Show(args.destName)
-    end
-end
-
-function mod:SPELL_AURA_APPLIED_DOSE(args)
-	if args.spellId == 64002 then		        -- Crunch Armor (25-man only)
-		warnCrunchArmor:Show(args.destName)
-        if args.amount >= 2 then
-            if args:IsPlayer() then
-                specWarnCrunchArmor2:Show(args.amount)
-                specWarnCrunchArmor2:Play("stackhigh")
-            end
+		local amount = args.amount or 1
+		if amount >= 2 then
+			if args:IsPlayer() then
+				specWarnCrunchArmor2:Show(amount)
+				specWarnCrunchArmor2:Play("stackhigh")
+			else
+				warnCrunchArmor:Show(args.destName, amount)
+			end
+		else
+			warnCrunchArmor:Show(args.destName, amount)
 		end
 	end
 end
+mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args:IsSpellID(64290, 64292) then

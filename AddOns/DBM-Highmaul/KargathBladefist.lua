@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(1128, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145633")
+mod:SetRevision("20200806142006")
 mod:SetCreatureID(78714)
 mod:SetEncounterID(1721)
-mod:SetZone()
 --mod:SetUsedIcons(7)
 --mod:SetModelSound("sound\\creature\\kargath\\VO_60_HMR_KARGATH_INTRO1.ogg", "sound\\creature\\kargath\\VO_60_HMR_KARGATH_SPELL2.ogg")
 
