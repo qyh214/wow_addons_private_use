@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kil", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142051")
+mod:SetRevision("20200927230831")
 mod:SetCreatureID(25315)
 mod:SetEncounterID(729)
 mod:SetModelID(23200)
@@ -142,7 +142,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerDartCD:Cancel()
 			timerBombCD:Cancel()
 			timerBlueOrb:Start()
-			timerDartCD:Start(59)
+			timerDartCD:Start(48.7)
 			timerBombCD:Start(77)
 		elseif self.vb.phase == 4 then
 			warnPhase4:Show()

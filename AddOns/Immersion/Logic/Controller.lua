@@ -8,7 +8,7 @@
 -------------------------------------------------
 -- Initialization
 -------------------------------------------------
-local NPC, _, L = ImmersionFrame, ...
+local NPC, API, _, L = ImmersionFrame, ImmersionAPI, ...
 local HANDLE, KEY
 do 
 	-- list of functions existing on the HANDLE
@@ -30,7 +30,7 @@ do
 
 	-- For programming convenience, set all these functions to no-op
 	-- if ConsolePort isn't loaded, since they won't be doing anything useful.
-	if not ConsolePort then
+	if (not ConsolePortUIHandle) then
 		local function noop() end
 		for _, funcID in ipairs(HANDLE_functions) do
 			NPC[funcID] = noop
@@ -200,10 +200,10 @@ local ControllerInput = { -- return true when propagating
 			CompleteQuest()
 		end
 	end;
-	[KEY.TRIANGLE] = function(self) CloseGossip() CloseQuest() end;
-	[KEY.OPTIONS] = function(self) CloseGossip() CloseQuest() end;
-	[KEY.CENTER] = function(self) CloseGossip() CloseQuest() end;
-	[KEY.SHARE] = function(self) CloseGossip() CloseQuest() end;
+	[KEY.TRIANGLE] = function(self) API:CloseGossip() API:CloseQuest() end;
+	[KEY.OPTIONS] = function(self) API:CloseGossip() API:CloseQuest() end;
+	[KEY.CENTER] = function(self) API:CloseGossip() API:CloseQuest() end;
+	[KEY.SHARE] = function(self) API:CloseGossip() API:CloseQuest() end;
 -------------------------------------------------
 } -----------------------------------------------
 -------------------------------------------------
@@ -303,7 +303,7 @@ function Selector:GetNextButton(index, delta)
 		local modifier = delta
 		while true do
 			local key = index + delta
-			if key < 1 or key > self.Threshold then
+			if key < 1 or key > self:GetMaxIndex() then
 				return self.Active[self.index]
 			end
 			if self.Active[key] then
@@ -328,8 +328,6 @@ end
 function Selector:OnHide()
 	
 end
-
-
 
 L.Mixin(Inspector, Selector)
 L.Mixin(Titles, Selector)
@@ -419,5 +417,4 @@ hooksecurefunc(L.TooltipMixin, 'OnLeave', function(self)
 end)
 
 -- Titles
-Titles.Threshold = NUMGOSSIPBUTTONS
 Titles.HintText = ACCEPT

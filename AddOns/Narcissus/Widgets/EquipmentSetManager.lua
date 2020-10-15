@@ -1147,7 +1147,7 @@ function NarciEquipmentSetButtonMixin:OnEnter()
     --Stats Preview
     if self.setID then
         local c, h, m, v = self.statsTable.crit, self.statsTable.haste, self.statsTable.mastery, self.statsTable.versatility;
-        Narci:AnimateRadarChart(c, h, m, v);
+        Narci_RadarChartFrame:AnimateValue(c, h, m, v);
         SetEnhancements(c, h, m, v);
     end
     HighlightRelevantSlots(self.statsTable.IncludedSlots);
@@ -1226,13 +1226,6 @@ function NarciEquipmentSetButtonMixin:OnEvent(event,...)
     end
 end
 
---[[
-    GetSpecializationRole(specIndex)    "DAMAGER", "TANK", "HEALER"
-
-    Test Commands:
-    /run Narci:AnimateRadarChart(0,0,0,0)
-/run Narci_EquipmentSetManager:InitializeOptionalSetButton(TV);Narci_EquipmentSetManager:InitializeOptionalSetButton(TV2, 0);Narci_EquipmentSetManager:InitializeOptionalSetButton(TV3, 3);
---]]
 
 function ESM:Open()
     --PlaySound(138542);    --136114
@@ -1263,7 +1256,7 @@ function ESM:Close()
         FadeFrame(Narci_RadarChartFrame, 0.35, "OUT");
     end
 
-    Narci.AnimateRadarChart();
+    Narci_RadarChartFrame:AnimateValue();
     Narci.RefreshAllStats();
 
     HideIconSelector();

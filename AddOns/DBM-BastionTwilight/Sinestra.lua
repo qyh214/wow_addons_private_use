@@ -1,7 +1,9 @@
 local mod	= DBM:NewMod(168, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806141910")
+mod.statTypes = "heroic,heroic25"
+
+mod:SetRevision("20200912041323")
 mod:SetCreatureID(45213)
 mod:SetEncounterID(1082, 1083)--Muiti encounter id. need to verify.
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -20,7 +22,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_MISSED",
 	"UNIT_DIED"
 )
-mod.onlyHeroic = true
 
 local warnBreath			= mod:NewSpellAnnounce(90125, 3)
 local warnOrbSoon			= mod:NewAnnounce("WarnOrbSoon", 3, 92852, true, nil, true)--Still on by default but no longer plays it's own sounds

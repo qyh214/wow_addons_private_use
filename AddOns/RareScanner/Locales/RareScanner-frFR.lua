@@ -1,4 +1,4 @@
-﻿-- Locale
+-- Locale
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0");
 local AL = AceLocale:NewLocale("RareScanner", "frFR", false);
 

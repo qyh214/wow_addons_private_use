@@ -1,4 +1,5 @@
 if not WeakAuras.IsCorrectVersion() then return end
+local AddonName, OptionsPrivate = ...
 
 -- Lua APIs
 local tinsert, tremove, wipe = table.insert, table.remove, wipe
@@ -17,19 +18,18 @@ local WeakAuras = WeakAuras
 local L = WeakAuras.L
 local ADDON_NAME = "WeakAurasOptions";
 
-local dynFrame = WeakAuras.dynFrame;
-WeakAuras.transmitCache = {};
-
 local displayButtons = {};
 WeakAuras.displayButtons = displayButtons;
 
-local aceOptions = {}
-WeakAuras.aceOptions = aceOptions
-
-local loaded = WeakAuras.loaded;
 local spellCache = WeakAuras.spellCache;
 local savedVars = {};
-WeakAuras.savedVars = savedVars;
+OptionsPrivate.savedVars = savedVars;
+
+OptionsPrivate.expanderAnchors = {}
+OptionsPrivate.expanderButtons = {}
+
+local collapsedOptions = {}
+local collapsed = {} -- magic value
 
 local tempGroup = {
   id = {"tempGroup"},
@@ -44,9 +44,9 @@ local tempGroup = {
   xOffset = 0,
   yOffset = 0
 };
-WeakAuras.tempGroup = tempGroup;
+OptionsPrivate.tempGroup = tempGroup;
 
-function WeakAuras.DuplicateAura(data, newParent)
+function OptionsPrivate.DuplicateAura(data, newParent)
   local base_id = data.id .. " "
   local num = 2
 
@@ -64,8 +64,7 @@ function WeakAuras.DuplicateAura(data, newParent)
     num = num + 1
   end
 
-  local newData = {}
-  WeakAuras.DeepCopy(data, newData)
+  local newData = CopyTable(data)
   newData.id = new_id
   newData.parent = nil
   newData.uid = WeakAuras.GenerateUniqueID()
@@ -98,7 +97,7 @@ function WeakAuras.DuplicateAura(data, newParent)
       local button = WeakAuras.GetDisplayButton(parentData.id)
       button.callbacks.UpdateExpandButton()
       WeakAuras.UpdateDisplayButton(parentData)
-      WeakAuras.ClearOptions(parentData.id)
+      OptionsPrivate.ClearOptions(parentData.id)
     end
   end
   return newData.id
@@ -160,7 +159,7 @@ AceGUI:RegisterLayout("ButtonsScrollLayout", function(content, children, skipLay
   end
 end)
 
-function WeakAuras.MultipleDisplayTooltipDesc()
+function OptionsPrivate.MultipleDisplayTooltipDesc()
   local desc = {{L["Multiple Displays"], L["Temporary Group"]}};
   for index, id in pairs(tempGroup.controlledChildren) do
     desc[index + 1] = {" ", id};
@@ -222,7 +221,7 @@ loadedFrame:SetScript("OnEvent", function(self, event, addon)
   end
 end);
 
-function WeakAuras.MultipleDisplayTooltipMenu()
+function OptionsPrivate.MultipleDisplayTooltipMenu()
   local frame = frame;
   local menu = {
     {
@@ -233,6 +232,9 @@ function WeakAuras.MultipleDisplayTooltipMenu()
           id = WeakAuras.FindUnusedId(tempGroup.controlledChildren[1].." Group"),
           regionType = "group",
         };
+
+        WeakAuras.DeepMixin(data, WeakAuras.data_stub)
+        data.internalVersion = WeakAuras.InternalVersion()
         WeakAuras.Add(data);
         WeakAuras.NewDisplayButton(data);
 
@@ -242,7 +244,7 @@ function WeakAuras.MultipleDisplayTooltipMenu()
           childData.parent = data.id;
           WeakAuras.Add(data);
           WeakAuras.Add(childData);
-          WeakAuras.ClearOptions(childData.id)
+          OptionsPrivate.ClearOptions(childData.id)
         end
 
         for index, id in pairs(data.controlledChildren) do
@@ -267,6 +269,8 @@ function WeakAuras.MultipleDisplayTooltipMenu()
           regionType = "dynamicgroup",
         };
 
+        WeakAuras.DeepMixin(data, WeakAuras.data_stub)
+        data.internalVersion = WeakAuras.InternalVersion()
         WeakAuras.Add(data);
         WeakAuras.NewDisplayButton(data);
 
@@ -307,10 +311,10 @@ function WeakAuras.MultipleDisplayTooltipMenu()
 
         for index, id in ipairs(toDuplicate) do
           local childData = WeakAuras.GetData(id);
-          duplicated[index] = WeakAuras.DuplicateAura(childData);
+          duplicated[index] = OptionsPrivate.DuplicateAura(childData);
         end
 
-        WeakAuras.ClearPicks();
+        OptionsPrivate.ClearPicks();
         frame:PickDisplayBatch(duplicated);
       end
     },
@@ -332,7 +336,7 @@ function WeakAuras.MultipleDisplayTooltipMenu()
             parents[childData.parent] = true;
           end
         end
-        WeakAuras.ConfirmDelete(toDelete, parents)
+        OptionsPrivate.ConfirmDelete(toDelete, parents)
       end
     },
     {
@@ -363,59 +367,18 @@ function WeakAuras.MultipleDisplayTooltipMenu()
   return menu;
 end
 
-function WeakAuras.DeleteOption(data, massDelete)
-  local id = data.id;
-  local parentData;
-  if(data.parent) then
-    parentData = db.displays[data.parent];
-  end
-
-  if(data.controlledChildren) then
-    for index, childId in pairs(data.controlledChildren) do
-      local childButton = displayButtons[childId];
-      if(childButton) then
-        childButton:SetGroup();
-      end
-      local childData = db.displays[childId];
-      if(childData) then
-        childData.parent = nil;
-      end
-    end
-  end
-
-  WeakAuras.CollapseAllClones(id);
-  WeakAuras.ClearOptions(id)
-
-  frame:ClearPicks();
-  WeakAuras.Delete(data);
-
-  if(displayButtons[id])then
-    frame.buttonsScroll:DeleteChild(displayButtons[id]);
-    displayButtons[id] = nil;
-  end
-
-  if(parentData and parentData.controlledChildren and not massDelete) then
-    for index, childId in pairs(parentData.controlledChildren) do
-      local childButton = displayButtons[childId];
-      if(childButton) then
-        childButton:SetGroupOrder(index, #parentData.controlledChildren);
-      end
-    end
-    WeakAuras.Add(parentData);
-    WeakAuras.ClearAndUpdateOptions(parentData.id);
-    WeakAuras.UpdateDisplayButton(parentData);
-  end
-end
-
 StaticPopupDialogs["WEAKAURAS_CONFIRM_DELETE"] = {
   text = "",
   button1 = L["Delete"],
   button2 = L["Cancel"],
   OnAccept = function(self)
     if self.data then
+      OptionsPrivate.massDelete = true
       for _, auraData in pairs(self.data.toDelete) do
-        WeakAuras.DeleteOption(auraData, true)
+        WeakAuras.Delete(auraData)
       end
+      OptionsPrivate.massDelete = false
+
       if self.data.parents then
         for id in pairs(self.data.parents) do
           local parentData = WeakAuras.GetData(id)
@@ -451,7 +414,7 @@ StaticPopupDialogs["WEAKAURAS_CONFIRM_DELETE"] = {
   preferredindex = STATICPOPUP_NUMDIALOGS,
 }
 
-function WeakAuras.ConfirmDelete(toDelete, parents)
+function OptionsPrivate.ConfirmDelete(toDelete, parents)
   if toDelete then
     local warningForm = L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"]
     StaticPopupDialogs["WEAKAURAS_CONFIRM_DELETE"].text = warningForm:format(#toDelete)
@@ -467,7 +430,101 @@ function WeakAuras.OptionsFrame()
   end
 end
 
-function WeakAuras.ToggleOptions(msg)
+local function AfterScanForLoads()
+  if(frame) then
+    if (frame:IsVisible()) then
+      WeakAuras.SortDisplayButtons(nil, true);
+    else
+      frame.needsSort = true;
+    end
+  end
+end
+
+local function OnAboutToDelete(event, uid, id, parentUid, parentId)
+  local data = OptionsPrivate.Private.GetDataByUID(uid)
+  if(data.controlledChildren) then
+    for index, childId in pairs(data.controlledChildren) do
+      local childButton = displayButtons[childId];
+      if(childButton) then
+        childButton:SetGroup();
+      end
+      local childData = db.displays[childId];
+      if(childData) then
+        childData.parent = nil;
+      end
+    end
+  end
+
+  OptionsPrivate.Private.CollapseAllClones(id);
+  OptionsPrivate.ClearOptions(id)
+
+  frame:ClearPicks();
+
+  if(displayButtons[id])then
+    frame.buttonsScroll:DeleteChild(displayButtons[id]);
+    displayButtons[id] = nil;
+  end
+
+  collapsedOptions[id] = nil
+end
+
+local function OnDelete(event, uid, id, parentUid, parentId)
+  local parentData = OptionsPrivate.Private.GetDataByUID(parentUid)
+  if(parentData and parentData.controlledChildren and not OptionsPrivate.massDelete) then
+    for index, childId in pairs(parentData.controlledChildren) do
+      local childButton = displayButtons[childId];
+      if(childButton) then
+        childButton:SetGroupOrder(index, #parentData.controlledChildren)
+      end
+    end
+    WeakAuras.ClearAndUpdateOptions(parentData.id)
+    WeakAuras.UpdateDisplayButton(parentData)
+  end
+end
+
+local function OnRename(event, uid, oldid, newid)
+  local data = OptionsPrivate.Private.GetDataByUID(uid)
+
+  WeakAuras.displayButtons[newid] = WeakAuras.displayButtons[oldid];
+  WeakAuras.displayButtons[newid]:SetData(data)
+  WeakAuras.displayButtons[oldid] = nil;
+  OptionsPrivate.ClearOptions(oldid)
+
+  WeakAuras.displayButtons[newid]:SetTitle(newid);
+
+  collapsedOptions[newid] = collapsedOptions[oldid]
+  collapsedOptions[oldid] = nil
+
+  if(data.controlledChildren) then
+    for index, childId in pairs(data.controlledChildren) do
+      WeakAuras.displayButtons[childId]:SetGroup(newid)
+    end
+  end
+
+  OptionsPrivate.SetGrouping()
+  WeakAuras.SortDisplayButtons()
+  WeakAuras.PickDisplay(newid)
+end
+
+function WeakAuras.ToggleOptions(msg, Private)
+  if not Private then
+    return
+  end
+  if not OptionsPrivate.Private then
+    OptionsPrivate.Private = Private
+    OptionsPrivate.Private:RegisterCallback("AuraWarningsUpdated", function(event, uid)
+      local id = OptionsPrivate.Private.UIDtoID(uid)
+      if displayButtons[id] then
+        -- The button does not yet exists if a new aura is created
+        displayButtons[id]:UpdateWarning()
+      end
+    end)
+
+    OptionsPrivate.Private:RegisterCallback("ScanForLoads", AfterScanForLoads)
+    OptionsPrivate.Private:RegisterCallback("AboutToDelete", OnAboutToDelete)
+    OptionsPrivate.Private:RegisterCallback("Rename", OnRename)
+  end
+
   if(frame and frame:IsVisible()) then
     WeakAuras.HideOptions();
   elseif (InCombatLockdown()) then
@@ -475,75 +532,6 @@ function WeakAuras.ToggleOptions(msg)
     reopenAfterCombat = true;
   else
     WeakAuras.ShowOptions(msg);
-  end
-end
-
-function WeakAuras.UpdateCloneConfig(data)
-  if(WeakAuras.CanHaveClones(data)) then
-    local cloneRegion = WeakAuras.EnsureClone(data.id, 1);
-    cloneRegion:Expand();
-
-    cloneRegion = WeakAuras.EnsureClone(data.id, 2);
-    cloneRegion:Expand();
-  end
-end
-
-function WeakAuras.ShowOptions(msg)
-  local firstLoad = not(frame);
-  WeakAuras.Pause();
-  WeakAuras.SetFakeStates()
-
-  WeakAuras.spellCache.Build()
-
-  if (firstLoad) then
-    frame = WeakAuras.CreateFrame();
-    frame.buttonsScroll.frame:Show();
-    WeakAuras.LayoutDisplayButtons(msg);
-  end
-  frame.buttonsScroll.frame:Show();
-
-  if (frame.needsSort) then
-    WeakAuras.SortDisplayButtons();
-    frame.needsSort = nil;
-  end
-
-  frame:Show();
-
-  if (WeakAuras.mouseFrame) then
-    WeakAuras.mouseFrame:OptionsOpened();
-  end
-
-  if (WeakAuras.personalRessourceDisplayFrame) then
-    WeakAuras.personalRessourceDisplayFrame:OptionsOpened();
-  end
-
-  if not(firstLoad) then
-    -- Show what was last shown
-    WeakAuras.PauseAllDynamicGroups();
-    for id, button in pairs(displayButtons) do
-      if (button:GetVisibility() > 0) then
-        button:PriorityShow(button:GetVisibility());
-      end
-    end
-    WeakAuras.ResumeAllDynamicGroups();
-  end
-
-  if (frame.pickedDisplay) then
-    if (WeakAuras.IsPickedMultiple()) then
-      local children = {}
-      for k,v in pairs(tempGroup.controlledChildren) do
-        children[k] = v
-      end
-      frame:PickDisplayBatch(children);
-    else
-      WeakAuras.PickDisplay(frame.pickedDisplay);
-    end
-  else
-    frame:NewAura();
-  end
-
-  if (frame.window == "codereview") then
-    frame.codereview:Close();
   end
 end
 
@@ -561,13 +549,27 @@ function WeakAuras.IsOptionsOpen()
   end
 end
 
-function WeakAuras.GetSortedOptionsLists()
+local function EnsureDisplayButton(data)
+  local id = data.id;
+  if not(displayButtons[id]) then
+    displayButtons[id] = AceGUI:Create("WeakAurasDisplayButton");
+    if(displayButtons[id]) then
+      displayButtons[id]:SetData(data);
+      displayButtons[id]:Initialize();
+      displayButtons[id]:UpdateWarning()
+    else
+      print("|cFF8800FFWeakAuras|r: Error creating button for", id);
+    end
+  end
+end
+
+local function GetSortedOptionsLists()
   local loadedSorted, unloadedSorted = {}, {};
   local to_sort = {};
   for id, data in pairs(db.displays) do
     if(data.parent) then
     -- Do nothing; children will be added later
-    elseif(loaded[id]) then
+  elseif(OptionsPrivate.Private.loaded[id]) then
       tinsert(to_sort, id);
     end
   end
@@ -587,7 +589,7 @@ function WeakAuras.GetSortedOptionsLists()
   for id, data in pairs(db.displays) do
     if(data.parent) then
     -- Do nothing; children will be added later
-    elseif not(loaded[id]) then
+    elseif not(OptionsPrivate.Private.loaded[id]) then
       tinsert(to_sort, id);
     end
   end
@@ -606,13 +608,13 @@ function WeakAuras.GetSortedOptionsLists()
   return loadedSorted, unloadedSorted;
 end
 
-function WeakAuras.LayoutDisplayButtons(msg)
+local function LayoutDisplayButtons(msg)
   local total = 0;
   for _,_ in pairs(db.displays) do
     total = total + 1;
   end
 
-  local loadedSorted, unloadedSorted = WeakAuras.GetSortedOptionsLists();
+  local loadedSorted, unloadedSorted = GetSortedOptionsLists();
 
   frame:SetLoadProgressVisible(true)
   --frame.buttonsScroll:AddChild(frame.newButton);
@@ -627,13 +629,10 @@ function WeakAuras.LayoutDisplayButtons(msg)
     for index, id in pairs(unloadedSorted) do
       local data = WeakAuras.GetData(id);
       if(data) then
-        WeakAuras.EnsureDisplayButton(data);
+        EnsureDisplayButton(data);
         WeakAuras.UpdateDisplayButton(data);
 
         frame.buttonsScroll:AddChild(displayButtons[data.id]);
-        if(WeakAuras.regions[data.id].region.SetStacks) then
-          WeakAuras.regions[data.id].region:SetStacks(1);
-        end
 
         if (num % 50 == 0) then
           frame.buttonsScroll:ResumeLayout()
@@ -652,10 +651,10 @@ function WeakAuras.LayoutDisplayButtons(msg)
     frame.buttonsScroll:PerformLayout()
     WeakAuras.SortDisplayButtons(msg);
 
-    WeakAuras.PauseAllDynamicGroups();
+    OptionsPrivate.Private.PauseAllDynamicGroups();
     if (WeakAuras.IsOptionsOpen()) then
       for id, button in pairs(displayButtons) do
-        if(loaded[id] ~= nil) then
+        if(OptionsPrivate.Private.loaded[id] ~= nil) then
           button:PriorityShow(1);
         end
         if WeakAurasCompanion and not button.data.parent then
@@ -664,7 +663,7 @@ function WeakAuras.LayoutDisplayButtons(msg)
         end
       end
     end
-    WeakAuras.ResumeAllDynamicGroups();
+    OptionsPrivate.Private.ResumeAllDynamicGroups();
 
     frame:SetLoadProgressVisible(false)
   end
@@ -675,15 +674,11 @@ function WeakAuras.LayoutDisplayButtons(msg)
     for index, id in pairs(loadedSorted) do
       local data = WeakAuras.GetData(id);
       if(data) then
-        WeakAuras.EnsureDisplayButton(data);
+        EnsureDisplayButton(data);
         WeakAuras.UpdateDisplayButton(data);
 
         local button = displayButtons[data.id]
         frame.buttonsScroll:AddChild(button);
-        if(WeakAuras.regions[data.id].region.SetStacks) then
-          WeakAuras.regions[data.id].region:SetStacks(1);
-        end
-
         num = num + 1;
       end
 
@@ -699,14 +694,77 @@ function WeakAuras.LayoutDisplayButtons(msg)
     end
 
     local co2 = coroutine.create(func2);
-    dynFrame:AddAction("LayoutDisplayButtons2", co2);
+    OptionsPrivate.Private.dynFrame:AddAction("LayoutDisplayButtons2", co2);
   end
 
   local co1 = coroutine.create(func1);
-  dynFrame:AddAction("LayoutDisplayButtons1", co1);
+  OptionsPrivate.Private.dynFrame:AddAction("LayoutDisplayButtons1", co1);
 end
 
-function WeakAuras.UpdateOptions()
+function WeakAuras.ShowOptions(msg)
+  local firstLoad = not(frame);
+  OptionsPrivate.Private.Pause();
+  OptionsPrivate.Private.SetFakeStates()
+
+  WeakAuras.spellCache.Build()
+
+  if (firstLoad) then
+    frame = OptionsPrivate.CreateFrame();
+    frame.buttonsScroll.frame:Show();
+    LayoutDisplayButtons(msg);
+  end
+  frame.buttonsScroll.frame:Show();
+
+  if (frame.needsSort) then
+    WeakAuras.SortDisplayButtons();
+    frame.needsSort = nil;
+  end
+
+  frame:Show();
+
+  if (OptionsPrivate.Private.mouseFrame) then
+    OptionsPrivate.Private.mouseFrame:OptionsOpened();
+  end
+
+  if (OptionsPrivate.Private.personalRessourceDisplayFrame) then
+    OptionsPrivate.Private.personalRessourceDisplayFrame:OptionsOpened();
+  end
+
+  if not(firstLoad) then
+    -- Show what was last shown
+    OptionsPrivate.Private.PauseAllDynamicGroups();
+    for id, button in pairs(displayButtons) do
+      if (button:GetVisibility() > 0) then
+        button:PriorityShow(button:GetVisibility());
+      end
+    end
+    OptionsPrivate.Private.ResumeAllDynamicGroups();
+  end
+
+  if (frame.pickedDisplay) then
+    if (OptionsPrivate.IsPickedMultiple()) then
+      local children = {}
+      for k,v in pairs(tempGroup.controlledChildren) do
+        children[k] = v
+      end
+      frame:PickDisplayBatch(children);
+    else
+      WeakAuras.PickDisplay(frame.pickedDisplay);
+    end
+  else
+    frame:NewAura();
+  end
+
+  if (frame.window == "codereview") then
+    frame.codereview:Close();
+  end
+
+  if firstLoad then
+    frame:ShowTip()
+  end
+end
+
+function OptionsPrivate.UpdateOptions()
   frame:UpdateOptions()
 end
 
@@ -714,7 +772,7 @@ function WeakAuras.ClearAndUpdateOptions(id, clearChildren)
   frame:ClearAndUpdateOptions(id, clearChildren)
 end
 
-function WeakAuras.ClearOptions(id)
+function OptionsPrivate.ClearOptions(id)
   frame:ClearOptions(id)
 end
 
@@ -722,53 +780,27 @@ function WeakAuras.FillOptions()
   frame:FillOptions()
 end
 
-function WeakAuras.GetSubOptions(id, subOption)
-  return frame:GetSubOptions(id, subOption)
-end
-
-function WeakAuras.EnsureOptions(data, subOption)
+function OptionsPrivate.EnsureOptions(data, subOption)
   return frame:EnsureOptions(data, subOption)
 end
 
-function WeakAuras.GetPickedDisplay()
+function OptionsPrivate.GetPickedDisplay()
   return frame:GetPickedDisplay()
 end
 
-function WeakAuras.GetSpellTooltipText(id)
-  local tooltip = WeakAuras.GetHiddenTooltip();
-  tooltip:SetSpellByID(id);
-  local lines = { tooltip:GetRegions() };
-  local i = 1;
-  local tooltipText = "";
-  while(lines[i]) do
-    if(lines[i]:GetObjectType() == "FontString") then
-      if(lines[i]:GetText()) then
-        if(tooltipText == "") then
-          tooltipText = lines[i]:GetText();
-        else
-          tooltipText = tooltipText.." - "..lines[i]:GetText();
-        end
-      end
-    end
-    i = i + 1;
-  end
-  tooltipText = tooltipText or L["No tooltip text"];
-  return tooltipText;
-end
-
-function WeakAuras.OpenTextEditor(...)
+function OptionsPrivate.OpenTextEditor(...)
   frame.texteditor:Open(...);
 end
 
-function WeakAuras.ExportToString(id)
+function OptionsPrivate.ExportToString(id)
   frame.importexport:Open("export", id);
 end
 
-function WeakAuras.ExportToTable(id)
+function OptionsPrivate.ExportToTable(id)
   frame.importexport:Open("table", id);
 end
 
-function WeakAuras.ImportFromString()
+function OptionsPrivate.ImportFromString()
   frame.importexport:Open("import");
 end
 
@@ -777,15 +809,15 @@ function WeakAuras.CloseImportExport()
   frame.importexport:Close();
 end
 
-function WeakAuras.ConvertDisplay(data, newType)
+function OptionsPrivate.ConvertDisplay(data, newType)
   local id = data.id;
   local visibility = displayButtons[id]:GetVisibility();
   displayButtons[id]:PriorityHide(0);
 
   WeakAuras.regions[id].region:Collapse();
-  WeakAuras.CollapseAllClones(id);
+  OptionsPrivate.Private.CollapseAllClones(id);
 
-  WeakAuras.Convert(data, newType);
+  OptionsPrivate.Private.Convert(data, newType);
   displayButtons[id]:SetViewRegion(WeakAuras.regions[id].region);
   displayButtons[id]:Initialize();
   displayButtons[id]:PriorityShow(visibility);
@@ -793,14 +825,14 @@ function WeakAuras.ConvertDisplay(data, newType)
   frame:FillOptions();
   WeakAuras.UpdateDisplayButton(data);
   WeakAuras.SetMoverSizer(id)
-  WeakAuras.ResetMoverSizer();
+  OptionsPrivate.ResetMoverSizer();
   WeakAuras.SortDisplayButtons()
 end
 
 function WeakAuras.NewDisplayButton(data)
   local id = data.id;
-  WeakAuras.ScanForLoads({[id] = true});
-  WeakAuras.EnsureDisplayButton(db.displays[id]);
+  OptionsPrivate.Private.ScanForLoads({[id] = true});
+  EnsureDisplayButton(db.displays[id]);
   WeakAuras.UpdateDisplayButton(db.displays[id]);
   frame.buttonsScroll:AddChild(displayButtons[id]);
   WeakAuras.SortDisplayButtons();
@@ -816,14 +848,14 @@ function WeakAuras.UpdateGroupOrders(data)
   end
 end
 
-function WeakAuras.UpdateButtonsScroll()
-  if WeakAuras.IsOptionsProcessingPaused() then return end
+function OptionsPrivate.UpdateButtonsScroll()
+  if OptionsPrivate.Private.IsOptionsProcessingPaused() then return end
   frame.buttonsScroll:DoLayout()
 end
 
 local previousFilter;
 function WeakAuras.SortDisplayButtons(filter, overrideReset, id)
-  if (WeakAuras.IsOptionsProcessingPaused()) then
+  if (OptionsPrivate.Private.IsOptionsProcessingPaused()) then
     return;
   end
   local recenter = false;
@@ -872,8 +904,8 @@ function WeakAuras.SortDisplayButtons(filter, overrideReset, id)
         local group = child:GetGroup();
         if(group) then
           -- In a Group
-          if(loaded[group]) then
-            if(loaded[id]) then
+          if(OptionsPrivate.Private.loaded[group]) then
+            if(OptionsPrivate.Private.loaded[id]) then
               child:EnableLoaded();
             else
               child:DisableLoaded();
@@ -884,8 +916,8 @@ function WeakAuras.SortDisplayButtons(filter, overrideReset, id)
           end
         else
           -- Top Level
-          if(loaded[id] ~= nil) then
-            if(loaded[id]) then
+          if(OptionsPrivate.Private.loaded[id] ~= nil) then
+            if(OptionsPrivate.Private.loaded[id]) then
               child:EnableLoaded();
             else
               child:DisableLoaded();
@@ -943,8 +975,8 @@ function WeakAuras.SortDisplayButtons(filter, overrideReset, id)
       ) then
       local group = child:GetGroup();
       if(group) then
-        if not(loaded[group]) then
-          if(loaded[id]) then
+        if not(OptionsPrivate.Private.loaded[group]) then
+          if(OptionsPrivate.Private.loaded[id]) then
             child:EnableLoaded();
           else
             child:DisableLoaded();
@@ -954,7 +986,7 @@ function WeakAuras.SortDisplayButtons(filter, overrideReset, id)
           tinsert(children[group], id);
         end
       else
-        if(loaded[id] == nil) then
+        if(OptionsPrivate.Private.loaded[id] == nil) then
           child:DisableLoaded();
           visible[id] = true
           tinsert(to_sort, child);
@@ -1003,17 +1035,8 @@ function WeakAuras.SortDisplayButtons(filter, overrideReset, id)
   end
 end
 
-WeakAuras.afterScanForLoads = function()
-  if(frame) then
-    if (frame:IsVisible()) then
-      WeakAuras.SortDisplayButtons(nil, true);
-    else
-      frame.needsSort = true;
-    end
-  end
-end
 
-function WeakAuras.IsPickedMultiple()
+function OptionsPrivate.IsPickedMultiple()
   if(frame.pickedDisplay == tempGroup) then
     return true;
   else
@@ -1021,7 +1044,7 @@ function WeakAuras.IsPickedMultiple()
   end
 end
 
-function WeakAuras.IsDisplayPicked(id)
+function OptionsPrivate.IsDisplayPicked(id)
   if(frame.pickedDisplay == tempGroup) then
     for index, childId in pairs(tempGroup.controlledChildren) do
       if(id == childId) then
@@ -1036,32 +1059,32 @@ end
 
 function WeakAuras.PickDisplay(id, tab, noHide)
   frame:PickDisplay(id, tab, noHide)
-  WeakAuras.UpdateButtonsScroll()
+  OptionsPrivate.UpdateButtonsScroll()
 end
 
-function WeakAuras.PickAndEditDisplay(id)
+function OptionsPrivate.PickAndEditDisplay(id)
   frame:PickDisplay(id);
   displayButtons[id].callbacks.OnRenameClick();
-  WeakAuras.UpdateButtonsScroll()
+  OptionsPrivate.UpdateButtonsScroll()
 end
 
-function WeakAuras.ClearPick(id)
+function OptionsPrivate.ClearPick(id)
   frame:ClearPick(id);
 end
 
-function WeakAuras.ClearPicks()
+function OptionsPrivate.ClearPicks()
   frame:ClearPicks();
 end
 
-function WeakAuras.PickDisplayMultiple(id)
+function OptionsPrivate.PickDisplayMultiple(id)
   frame:PickDisplayMultiple(id);
 end
 
-function WeakAuras.PickDisplayMultipleShift(target)
+function OptionsPrivate.PickDisplayMultipleShift(target)
   if (frame.pickedDisplay) then
     -- get first aura selected
     local first;
-    if (WeakAuras.IsPickedMultiple()) then
+    if (OptionsPrivate.IsPickedMultiple()) then
       first = tempGroup.controlledChildren[#tempGroup.controlledChildren];
     else
       first = frame.pickedDisplay;
@@ -1128,8 +1151,8 @@ function WeakAuras.GetDisplayButton(id)
   end
 end
 
-function WeakAuras.AddDisplayButton(data)
-  WeakAuras.EnsureDisplayButton(data);
+function OptionsPrivate.AddDisplayButton(data)
+  EnsureDisplayButton(data);
   WeakAuras.UpdateDisplayButton(data);
   frame.buttonsScroll:AddChild(displayButtons[data.id]);
   if(WeakAuras.regions[data.id] and WeakAuras.regions[data.id].region.SetStacks) then
@@ -1137,20 +1160,7 @@ function WeakAuras.AddDisplayButton(data)
   end
 end
 
-function WeakAuras.EnsureDisplayButton(data)
-  local id = data.id;
-  if not(displayButtons[id]) then
-    displayButtons[id] = AceGUI:Create("WeakAurasDisplayButton");
-    if(displayButtons[id]) then
-      displayButtons[id]:SetData(data);
-      displayButtons[id]:Initialize();
-    else
-      print("|cFF8800FFWeakAuras|r: Error creating button for", id);
-    end
-  end
-end
-
-function WeakAuras.SetGrouping(data)
+function OptionsPrivate.SetGrouping(data)
   if (frame.pickedDisplay == tempGroup and #tempGroup.controlledChildren > 0 and data) then
     local children = {};
     -- set grouping for selected buttons
@@ -1172,7 +1182,7 @@ function WeakAuras.SetGrouping(data)
   end
 end
 
-function WeakAuras.Ungroup(data)
+function OptionsPrivate.Ungroup(data)
   if (frame.pickedDisplay == tempGroup and #tempGroup.controlledChildren > 0) then
     for index, childId in ipairs(tempGroup.controlledChildren) do
       local button = WeakAuras.GetDisplayButton(childId);
@@ -1185,7 +1195,7 @@ function WeakAuras.Ungroup(data)
   WeakAuras.FillOptions()
 end
 
-function WeakAuras.SetDragging(data, drop)
+function OptionsPrivate.SetDragging(data, drop)
   WeakAuras_DropDownMenu:Hide()
   if (frame.pickedDisplay == tempGroup and #tempGroup.controlledChildren > 0) then
     local children = {};
@@ -1210,14 +1220,14 @@ function WeakAuras.SetDragging(data, drop)
   end
 end
 
-function WeakAuras.DropIndicator()
+function OptionsPrivate.DropIndicator()
   local indicator = frame.dropIndicator
   if not indicator then
     indicator = CreateFrame("Frame", "WeakAuras_DropIndicator")
     indicator:SetHeight(4)
     indicator:SetFrameStrata("FULLSCREEN")
 
-    local texture = indicator:CreateTexture(nil, "FULLSCREEN")
+    local texture = indicator:CreateTexture(nil, "ARTWORK")
     texture:SetBlendMode("ADD")
     texture:SetAllPoints(indicator)
     texture:SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-Tab-Highlight")
@@ -1242,8 +1252,6 @@ function WeakAuras.UpdateDisplayButton(data)
     if WeakAurasCompanion and button:IsGroup() then
       button:RefreshUpdate()
     end
-    -- TODO: remove this once legacy aura trigger is removed
-    button:RefreshBT2UpgradeIcon()
   end
 end
 
@@ -1256,20 +1264,20 @@ function WeakAuras.UpdateThumbnail(data)
   button:UpdateThumbnail()
 end
 
-function WeakAuras.OpenTexturePicker(data, field, textures, stopMotion)
-  frame.texturePicker:Open(data, field, textures, stopMotion);
+function OptionsPrivate.OpenTexturePicker(data, parentData, field, textures, stopMotion)
+  frame.texturePicker:Open(data, parentData, field, textures, stopMotion);
 end
 
-function WeakAuras.OpenIconPicker(data, field, groupIcon)
+function OptionsPrivate.OpenIconPicker(data, field, groupIcon)
   frame.iconPicker:Open(data, field, groupIcon);
 end
 
-function WeakAuras.OpenModelPicker(data, field, parentData)
+function OptionsPrivate.OpenModelPicker(data, field, parentData)
   if not(IsAddOnLoaded("WeakAurasModelPaths")) then
     local loaded, reason = LoadAddOn("WeakAurasModelPaths");
     if not(loaded) then
       reason = string.lower("|cffff2020" .. _G["ADDON_" .. reason] .. "|r.")
-      print(WeakAuras.printPrefix .. "ModelPaths could not be loaded, the addon is " .. reason);
+      WeakAuras.prettyPrint("ModelPaths could not be loaded, the addon is " .. reason);
       WeakAuras.ModelPaths = {};
     end
     frame.modelPicker.modelTree:SetTree(WeakAuras.ModelPaths);
@@ -1290,7 +1298,7 @@ function WeakAuras.OpenTriggerTemplate(data, targetId)
     local loaded, reason = LoadAddOn("WeakAurasTemplates");
     if not(loaded) then
       reason = string.lower("|cffff2020" .. _G["ADDON_" .. reason] .. "|r.")
-      print(WeakAuras.printPrefix .. "Templates could not be loaded, the addon is " .. reason);
+      WeakAuras.prettyPrint("Templates could not be loaded, the addon is " .. reason);
       return;
     end
     frame.newView = WeakAuras.CreateTemplateView(frame);
@@ -1299,7 +1307,7 @@ function WeakAuras.OpenTriggerTemplate(data, targetId)
   frame.newView:Open(data);
 end
 
-function WeakAuras.ResetMoverSizer()
+function OptionsPrivate.ResetMoverSizer()
   if(frame and frame.mover and frame.moversizer and frame.mover.moving.region and frame.mover.moving.data) then
     frame.moversizer:SetToRegion(frame.mover.moving.region, frame.mover.moving.data);
   end
@@ -1322,63 +1330,9 @@ function WeakAuras.GetMoverSizerId()
   return frame.moversizer:GetCurrentId()
 end
 
-function WeakAuras.ShowCloneDialog(data)
-  if(
-    not(
-    data.parent
-    and WeakAuras.GetData(data.parent)
-    and WeakAuras.GetData(data.parent).regionType == "dynamicgroup"
-    )
-    and not(odb.preventCloneDialog)
-    ) then
-    StaticPopupDialogs["WEAKAURAS_CLONE_OPTION_ENABLED"] = {
-      text = L["Clone option enabled dialog"],
-      button1 = L["Yes"],
-      button2 = L["No"],
-      button3 = L["Never"],
-      OnAccept = function()
-        local parentData = {
-          id = WeakAuras.FindUnusedId(data.id.." Group"),
-          regionType = "dynamicgroup",
-        };
-        WeakAuras.Add(parentData);
-        WeakAuras.NewDisplayButton(parentData);
-
-        tinsert(parentData.controlledChildren, data.id);
-        data.parent = parentData.id;
-        WeakAuras.Add(parentData);
-        WeakAuras.Add(data);
-
-        local button = WeakAuras.GetDisplayButton(data.id);
-        button:SetGroup(parentData.id, true);
-        button:SetGroupOrder(1, #parentData.controlledChildren);
-
-        local parentButton = WeakAuras.GetDisplayButton(parentData.id);
-        parentButton.callbacks.UpdateExpandButton();
-        WeakAuras.UpdateDisplayButton(parentData);
-        WeakAuras.ClearAndUpdateOptions(parentData.id);
-        WeakAuras.SortDisplayButtons();
-        parentButton:Expand();
-      end,
-      OnCancel = function()
-      -- do nothing
-      end,
-      OnAlt = function()
-        odb.preventCloneDialog = true
-      end,
-      hideOnEscape = true,
-      whileDead = true,
-      timeout = 0,
-      preferredindex = STATICPOPUP_NUMDIALOGS
-    };
-
-    StaticPopup_Show("WEAKAURAS_CLONE_OPTION_ENABLED");
-  end
-end
-
 local function AddDefaultSubRegions(data)
   data.subRegions = data.subRegions or {}
-  for type, subRegionData in pairs(WeakAuras.subRegionTypes) do
+  for type, subRegionData in pairs(OptionsPrivate.Private.subRegionTypes) do
     if subRegionData.addDefaultsForNewAura then
       subRegionData.addDefaultsForNewAura(data)
     end
@@ -1391,9 +1345,9 @@ function WeakAuras.NewAura(sourceData, regionType, targetId)
   end
   local new_id = WeakAuras.FindUnusedId("New")
   local data = {id = new_id, regionType = regionType, uid = WeakAuras.GenerateUniqueID()}
-  WeakAuras.DeepCopy(WeakAuras.data_stub, data);
+  WeakAuras.DeepMixin(data, WeakAuras.data_stub);
   if (sourceData) then
-    WeakAuras.DeepCopy(sourceData, data);
+    WeakAuras.DeepMixin(data, sourceData);
   end
   data.internalVersion = WeakAuras.InternalVersion();
   WeakAuras.validate(data, WeakAuras.regionTypes[regionType].default);
@@ -1425,17 +1379,17 @@ function WeakAuras.NewAura(sourceData, regionType, targetId)
         WeakAuras.Add(group.data);
         WeakAuras.NewDisplayButton(data);
         WeakAuras.UpdateGroupOrders(group.data);
-        WeakAuras.ClearOptions(group.data.id);
+        OptionsPrivate.ClearOptions(group.data.id);
         WeakAuras.UpdateDisplayButton(group.data);
         group.callbacks.UpdateExpandButton();
         group:Expand();
         group:ReloadTooltip();
-        WeakAuras.PickAndEditDisplay(data.id);
+        OptionsPrivate.PickAndEditDisplay(data.id);
       else
         -- move source into the top-level list
         WeakAuras.Add(data);
         WeakAuras.NewDisplayButton(data);
-        WeakAuras.PickAndEditDisplay(data.id);
+        OptionsPrivate.PickAndEditDisplay(data.id);
       end
     else
       error("Calling 'WeakAuras.NewAura' with invalid groupId. Reload your UI to fix the display list.")
@@ -1444,14 +1398,12 @@ function WeakAuras.NewAura(sourceData, regionType, targetId)
     -- move source into the top-level list
     WeakAuras.Add(data);
     WeakAuras.NewDisplayButton(data);
-    WeakAuras.PickAndEditDisplay(data.id);
+    OptionsPrivate.PickAndEditDisplay(data.id);
   end
 end
 
-local collapsedOptions = {}
-local collapsed = {} -- magic value
-WeakAuras.collapsedOptions = collapsedOptions
-function WeakAuras.ResetCollapsed(id, namespace)
+
+function OptionsPrivate.ResetCollapsed(id, namespace)
   if id then
     if namespace and collapsedOptions[id] then
       collapsedOptions[id][namespace] = nil
@@ -1461,7 +1413,7 @@ function WeakAuras.ResetCollapsed(id, namespace)
   end
 end
 
-function WeakAuras.IsCollapsed(id, namespace, path, default)
+function OptionsPrivate.IsCollapsed(id, namespace, path, default)
   local tmp = collapsedOptions[id]
   if tmp == nil then return default end
 
@@ -1485,7 +1437,7 @@ function WeakAuras.IsCollapsed(id, namespace, path, default)
   end
 end
 
-function WeakAuras.SetCollapsed(id, namespace, path, v)
+function OptionsPrivate.SetCollapsed(id, namespace, path, v)
   collapsedOptions[id] = collapsedOptions[id] or {}
   collapsedOptions[id][namespace] = collapsedOptions[id][namespace] or {}
   if type(path) ~= "table" then
@@ -1501,7 +1453,7 @@ function WeakAuras.SetCollapsed(id, namespace, path, v)
   end
 end
 
-function WeakAuras.MoveCollapseDataUp(id, namespace, path)
+function OptionsPrivate.MoveCollapseDataUp(id, namespace, path)
   collapsedOptions[id] = collapsedOptions[id] or {}
   collapsedOptions[id][namespace] = collapsedOptions[id][namespace] or {}
   if type(path) ~= "table" then
@@ -1517,7 +1469,7 @@ function WeakAuras.MoveCollapseDataUp(id, namespace, path)
   end
 end
 
-function WeakAuras.MoveCollapseDataDown(id, namespace, path)
+function OptionsPrivate.MoveCollapseDataDown(id, namespace, path)
   collapsedOptions[id] = collapsedOptions[id] or {}
   collapsedOptions[id][namespace] = collapsedOptions[id][namespace] or {}
   if type(path) ~= "table" then
@@ -1533,7 +1485,7 @@ function WeakAuras.MoveCollapseDataDown(id, namespace, path)
   end
 end
 
-function WeakAuras.RemoveCollapsed(id, namespace, path)
+function OptionsPrivate.RemoveCollapsed(id, namespace, path)
   local data = collapsedOptions[id] and collapsedOptions[id][namespace]
   if not data then
     return
@@ -1562,7 +1514,7 @@ function WeakAuras.RemoveCollapsed(id, namespace, path)
   end
 end
 
-function WeakAuras.InsertCollapsed(id, namespace, path, value)
+function OptionsPrivate.InsertCollapsed(id, namespace, path, value)
   local data = collapsedOptions[id] and collapsedOptions[id][namespace]
   if not data then
     return
@@ -1595,16 +1547,8 @@ function WeakAuras.InsertCollapsed(id, namespace, path, value)
   data[insertPoint] = {[collapsed] = value}
 end
 
-function WeakAuras.RenameCollapsedData(oldid, newid)
-  collapsedOptions[newid] = collapsedOptions[oldid]
-  collapsedOptions[oldid] = nil
-end
 
-function WeakAuras.DeleteCollapsedData(id)
-  collapsedOptions[id] = nil
-end
-
-function WeakAuras.AddTextFormatOption(input, withHeader, get, addOption, hidden, setHidden)
+function OptionsPrivate.AddTextFormatOption(input, withHeader, get, addOption, hidden, setHidden)
   local headerOption
   if withHeader then
     headerOption =  {
@@ -1616,10 +1560,13 @@ function WeakAuras.AddTextFormatOption(input, withHeader, get, addOption, hidden
         setHidden(not hidden())
       end,
       image = function()
-        return hidden() and "Interface\\AddOns\\WeakAuras\\Media\\Textures\\edit" or "Interface\\AddOns\\WeakAuras\\Media\\Textures\\editdown"
+        return hidden() and "collapsed" or "expanded"
       end,
-      imageWidth = 24,
-      imageHeight = 24
+      imageWidth = 15,
+      imageHeight = 15,
+      arg = {
+        expanderName = tostring(addOption)
+      }
     }
     addOption("header", headerOption)
   else
@@ -1628,7 +1575,7 @@ function WeakAuras.AddTextFormatOption(input, withHeader, get, addOption, hidden
 
 
   local seenSymbols = {}
-  WeakAuras.ParseTextStr(input, function(symbol)
+  OptionsPrivate.Private.ParseTextStr(input, function(symbol)
     if not seenSymbols[symbol] then
       local triggerNum, sym = string.match(symbol, "(.+)%.(.+)")
       sym = sym or symbol
@@ -1646,19 +1593,33 @@ function WeakAuras.AddTextFormatOption(input, withHeader, get, addOption, hidden
           type = "select",
           name = L["Format"],
           width = WeakAuras.normalWidth,
-          values = WeakAuras.format_types_display,
+          values = OptionsPrivate.Private.format_types_display,
           hidden = hidden,
           reloadOptions = true
         })
 
         local selectedFormat = get(symbol .. "_format")
-        if (WeakAuras.format_types[selectedFormat]) then
-          WeakAuras.format_types[selectedFormat].AddOptions(symbol, hidden, addOption, get)
+        if (OptionsPrivate.Private.format_types[selectedFormat]) then
+          OptionsPrivate.Private.format_types[selectedFormat].AddOptions(symbol, hidden, addOption, get)
         end
         seenSymbols[symbol] = true
       end
     end
   end)
+
+  if withHeader then
+    addOption("header_anchor",
+    {
+      type = "description",
+      name = "",
+      control = "WeakAurasExpandAnchor",
+      arg = {
+        expanderName = tostring(addOption)
+      }
+    }
+
+  )
+  end
 
   if not next(seenSymbols) and withHeader then
     headerOption.hidden = true

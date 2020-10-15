@@ -68,7 +68,6 @@ L["S_MAPBAR_OPTIONSMENU_SOUNDENABLED"] = "Habilitar sonido"
 --[[Translation missing --]]
 --[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = ""--]] 
 L["S_MAPBAR_OPTIONSMENU_STATUSBARANCHOR"] = "Anclar arriba"
-L["S_MAPBAR_OPTIONSMENU_TOMTOM_WPPERSISTENT"] = "Punto de ruta persistente"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_CURRENTZONE"] = "Zona actual solamente"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_SCALE"] = "Escala de seguimiento: %s"
 L["S_MAPBAR_OPTIONSMENU_TRACKERCONFIG"] = "Configuración de seguimiento"

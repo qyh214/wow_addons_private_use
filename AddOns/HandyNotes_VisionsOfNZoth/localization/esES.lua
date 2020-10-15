@@ -1,13 +1,22 @@
+--Spanish Localization by (EU) Krovikan-Minahonda
+
 local ADDON_NAME, _ = ...
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "esES", false, true)
 if not L then return end
+
+-------------------------------------------------------------------------------
+----------------------------------- GENERAL -----------------------------------
+-------------------------------------------------------------------------------
+
+L["context_menu_title"] = "HandyNotes: Visiones de N'Zoth"
+L["options_title"] = "Visiones de N'Zoth"
 
 -------------------------------------------------------------------------------
 ------------------------------------ ULDUM ------------------------------------
 -------------------------------------------------------------------------------
 
 L["uldum"] = "Uldum"
-L["uldum_intro_note"] = "Completa la cadena de misiones introductorias para desbloquear los monstruos raros, tesoros y misiones de asalto en Uldum."
+L["uldum_intro_note"] = "Completa la cadena de misiones introductorias para desbloquear los raros, tesoros y misiones de asalto en Uldum."
 
 L["aqir_flayer"] = "Comparte lugar de aparición con Trabajador Colmen'Ashi y Segador aqir."
 L["aqir_titanus"] = "Comparte lugar de aparición con Goliat aqir."
@@ -42,14 +51,14 @@ L["amathet_reliquary"] = "Relicario Amathet"
 L["cursed_relic"] = "Requiere una Reliquia Maldita"
 L["tolvir_relic"] = "Requiere una Reliquia de los Tol'vir"
 
-L["options_toggle_alpaca_uldum"] = "Alpaca de pelaje primaveral"
-L["options_toggle_alpaca_uldum_desc"] = "Mostrar las localizaciones donde aparecen los Arbustos Garsahl y las Alpacas Amigables."
-L["options_toggle_assault_events"] = "Eventos del Asalto"
-L["options_toggle_assault_events_desc"] = "Mostrar las localizaciones de los posibles eventos de asalto."
-L["options_toggle_coffers"] = "Alijos Cerrados"
-L["options_toggle_coffers_desc"] = "Muestra las localizaciones de los alijos cerrados (despojables una vez por asalto)."
+L["options_icons_alpaca_uldum"] = "Alpaca de pelaje primaveral"
+L["options_icons_alpaca_uldum_desc"] = "Muestra las localizaciones donde aparecen los Arbustos Garsahl y las Alpacas Amigables."
+L["options_icons_assault_events"] = "Eventos del Asalto"
+L["options_icons_assault_events_desc"] = "Muestra las localizaciones de los posibles eventos del asalto."
+L["options_icons_coffers"] = "Alijos Cerrados"
+L["options_icons_coffers_desc"] = "Muestra las localizaciones de los alijos cerrados (despojables una vez por asalto)."
 
-L["ambush_settlers"] = "Mata oleadas de bichos hasta que acabe el evento."
+L["ambush_settlers"] = "Mata oleadas de enemigos hasta que acabe el evento."
 L["burrowing_terrors"] = "Salta encima de los Escarabajos Excavadores para aplastarlos."
 L["call_of_void"] = "Haz click para purificar el Pilón del Ritual."
 L["combust_cocoon"] = "Lanza las bombas de fuego a las crisálidas del techo."
@@ -66,7 +75,7 @@ L["solar_collector"] = "Enciende los cinco cristales de poder en todos los lados
 L["summoning_ritual"] = "Mata a los acólitos y cierra el portal de invocación. Tras completar el evento cierto número de veces, aparecerán tres raros aleatorios aldrededor de Neferset."
 L["titanus_egg"] = "Destruye el Huevo de Titanus y mata el Titanus Joven."
 L["unearthed_keeper"] = "Destruye al Centinela Desenterrado."
-L["virnall_front"] = "Mata oleadas de bichos hasta que aparezca Menepthah el Belisario."
+L["virnall_front"] = "Mata oleadas de enemigos hasta que aparezca Menepthah el Belisario."
 L["voidflame_ritual"] = "Apaga todas las velas tocadas por el Vacío."
 
 L["beacon_of_sun_king"] = "Gira los rayos de las tres estatuas hacia el orbe."
@@ -74,14 +83,14 @@ L["engine_of_ascen"] = "Mueve las cuatro estatuas hasta interceptar los rayos."
 L["lightblade_training"] = "Mata Instructores y Siervos hasta que aparezca Kames, Hoja del Alba."
 L["raiding_fleet"] = "Quema todos los botes usando la antorcha de la misión."
 L["slave_camp"] = "Abre todos las jaulas cercanas."
-L["unsealed_tomb"] = "Protege a Heru de las oleadas de bichos."
+L["unsealed_tomb"] = "Protege a Heru de las oleadas de enemigos."
 
 -------------------------------------------------------------------------------
 ------------------------------------ VALE -------------------------------------
 -------------------------------------------------------------------------------
 
 L["vale"] = "Valle de la Flor Eterna"
-L["vale_intro_note"] = "Completa la cadena de misiones introductorias para desbloquear los monstruos raros, tesoros y misiones de asalto en Valle de la Flor Eterna."
+L["vale_intro_note"] = "Completa la cadena de misiones introductorias para desbloquear los raros, tesoros y misiones de asalto en el Valle de la Flor Eterna."
 
 L["big_blossom_mine"] = "Está dentro de la Mina de la Gran Flor. La entrada está al noreste."
 L["guolai"] = "Está dentro de las Salas Guo-Lai."
@@ -110,23 +119,23 @@ L["empowered_demo"] = "Cierra todos los relicarios de espíritus."
 L["empowered_wagon"] = "Coge las Municiones del Shadopan y colócalas bajo el Carro de Guerra Potenciado."
 L["feeding_grounds"] = "Destruye las cámaras de suspensión y los receptáculos de ámbar."
 L["font_corruption"] = "Gira las estatuas de los Mogu hasta que ambos rayos lleguen a cada lado de la consola. Entonces, haz click en ella."
-L["goldbough_guardian"] = "Protege al Jefe Ramaoro de las oleadas de bichos."
+L["goldbough_guardian"] = "Protege al Jefe Ramaoro de las oleadas de enemigos."
 L["infested_statue"] = "Arranca los Ojos crispados hasta llevarlos a 15 metros de la estatua."
 L["kunchong_incubator"] = "Destruye todos los generadores del campo de fuerza."
-L["mantid_hatch"] = "Coge los Lanzallamas del Shadopan y destruye los incubadores de larvas."
+L["mantid_hatch"] = "Coge los Lanzallamas del Shadopan y destruye las incubadoras de larvas."
 L["mending_monstro"] = "Destruye los cristales de Ámbar de Alivio."
 L["mystery_sacro"] = "Haz click en todas las Lápidas Sospechosas y mata al Alma Ululante."
 L["noodle_cart"] = "Defiende a Chin mientras arregla su carro."
-L["protect_stout"] = "Protege la cueva de las oleadas de bichos."
+L["protect_stout"] = "Protege la cueva de las oleadas de enemigos."
 L["pulse_mound"] = "Mata los tentáculos y ojos de alrededor y entonces, mata al Bubón Viviente."
 L["ravager_hive"] = "Destruye todas las colmenas del árbol."
 L["ritual_wakening"] = "Mata a los Heraldo Klaxxi."
 L["serpent_binding"] = "Mata los Subyugadores Zan-Tien y después a Haofeng."
-L["stormchosen_arena"] = "Mata todos los bichos de la arena y después al General del Clan."
+L["stormchosen_arena"] = "Mata todos los enemigos de la arena y después al General del Clan."
 L["swarm_caller"] = "Destruye el pilón Invocador de Enjambre."
-L["vault_of_souls"] = "Haz click en la urna y destruye a todas las estatuas."
+L["vault_of_souls"] = "Haz click en la urna y destruye todas las estatuas."
 L["void_conduit"] = "Haz click en el Conducto del Vacío y aplasta los ojos del suelo hasta que te saque fuera."
-L["war_banner"] = "Quema los estandartes y mata oleadas de bichos hasta que aparezca el comandante."
+L["war_banner"] = "Quema los estandartes y mata oleadas de enemigos hasta que aparezca el comandante."
 L["weighted_artifact"] = "Coge el Jarrón Extrañamente Pesado y vuelve por donde has venido para ponerlo en el Artefacto Mogu Pesado. Si te atonta una estatua se te caerá el Jarrón Extrañamente Pesado."
 
 -------------------------------------------------------------------------------
@@ -147,22 +156,22 @@ Rojo => Azul
 ]]
 
 L["bear_spirit"] = "Espíritu de Oso"
-L["bear_spirit_note"] = "Mata el Espíritu de Alfombra de Oso Enfadado Y todas las oleadas de bichos para ganar un buff de 10% de celeridad."
-L["buffs_change"] = "Los buffs disponibles cambian en cada pasada. Si el edificio está cerrados o el NPC/objeto no está, es que el buff no está en esa pasada."
+L["bear_spirit_note"] = "Mata el Espíritu de Alfombra de Oso Enfadado y todas las oleadas de enemigos para conseguir un buff de 10% de celeridad."
+L["buffs_change"] = "Los buffs disponibles cambian en cada pasada. Si el edificio está cerrado o el NPC/objeto no está, es que el buff no está en esa pasada."
 L["clear_sight"] = "Requiere Visión Clara rango %d."
 L["craggle"] = "Deja un juguete en el suelo (como el Conjunto de Trenes de Juguete) para distraerlo mientras sus robots siguen patrullando. Cuando estén suficientemente separados, mata los robots y después a Chichón Perinola."
 L["empowered"] = "Potenciado"
 L["empowered_note"] = "Atraviesa el laberinto de minas hasta el piso superior y súbete encima de la Mina de Beneficio Experimental para conseguir un buff de 10% de daño incrementado."
 L["enriched"] = "Enriquecido"
-L["enriched_note"] = "Mata el Banco de Hermandad Desatendido para conseguir un buff de 10% de crítico."
+L["enriched_note"] = "Mata al Banco de Hermandad Desatendido para conseguir un buff de 10% de crítico."
 L["ethereal_essence"] = "Esencia Etérea"
-L["ethereal_essence_note"] = "Mata a Tejedor de Distorsión Dushar para un buff de 10% de crítico."
+L["ethereal_essence_note"] = "Mata a Tejedor de Distorsión Dushar para conseguir un buff de 10% de crítico."
 L["ethereal_note"] = "Consigue cristales naranjas escondidos a lo largo de la visión y llévaselos a este NPC para conseguir Recuerdos adicionales. Hay un total de 10 cristales, 2 en cada zona.\n\n|cFF00FF00¡No olvides despojar el cofre!|r"
 L["heroes_bulwark"] = "Baluarte de Héroes"
-L["heroes_bulwark_note"] = "Mata a Gamon dentro de la taberna para un buff de 10% de vida."
+L["heroes_bulwark_note"] = "Mata a Gamon dentro de la taberna para conseguir un buff de 10% de vida."
 L["horrific_visions"] = "Visiones Horripilantes"
 L["inside_building"] = "Dentro de un edificio."
-L["mailbox"] = "Buzón de Correo"
+L["mailbox"] = "Buzón de Correos"
 L["mail_muncher"] = "Cuando se abre, existe la probabilidad de que aparezca el raro Zampacorreos."
 L["morgan_pestle"] = "Morgan Mortero"
 L["odd_crystal"] = "Cristal Extraño"
@@ -171,9 +180,9 @@ L["requited_bulwark_note"] = "Mata a Agustus Moulaine para conseguir un buff de 
 L["shave_kit"] = "Equipo de Afeitado de Ricitos"
 L["shave_kit_note"] = "Dentro de la peluquería. Despoja la caja que hay encima de la mesa."
 L["smiths_strength"] = "Fuerza del Herrero"
-L["smiths_strength_note"] = "Mata a Naros en la choza de la herrería  para obtener un buff de 10% de daño incrementado."
+L["smiths_strength_note"] = "Mata a Naros en la choza de la herrería  para conseguir un buff de 10% de daño incrementado."
 L["spirit_of_wind"] = "Espíritu del Viento"
-L["spirit_of_wind_note"] = "Mata a Bwemba para obtener un buff de 10% de celeridad y de velocidad de movimiento."
+L["spirit_of_wind_note"] = "Mata a Bwemba para conseguir un buff de 10% de celeridad y de velocidad de movimiento."
 L["void_skull"] = "Calavera tocada por el Vacío"
 L["void_skull_note"] = "Haz click en la calavera del suelo para despojar el juguete."
 L["yelmak"] = "Yelmak"
@@ -208,14 +217,16 @@ L["c_underneath_bridge"] = "Debajo del puente."
 L["c_walkway_corner"] = "En una esquina de la pasarela superior."
 L["c_walkway_platform"] = "En una plataforma sobre la pasarela superior."
 
-L["options_toggle_visions_buffs"] = "Buffs"
-L["options_toggle_visions_buffs_desc"] = "Mostrar localizaciones de eventos que garantizan buffs de daño durante 1 hora."
-L["options_toggle_visions_chest_desc"] = "Mostrar localizaciones posibles de cofres dentro de las visiones horripilantes."
-L["options_toggle_visions_crystals"] = "Cristales Extraños"
-L["options_toggle_visions_crystals_desc"] = "Mostrar localizaciones posibles de cristales extraños dentro de las visiones horripilantes."
-L["options_toggle_visions_mail"] = "Buzones"
-L["options_toggle_visions_mail_desc"] = "Mostrar localizaciones de buzones para la montura del Zampacorreos."
-L["options_toggle_visions_misc_desc"] = "Mostrar localizaciones de raros, juguetes, pociones y del etéreo dentro de las visiones horripilantes."
+L["options_icons_visions_buffs"] = "Buffs"
+L["options_icons_visions_buffs_desc"] = "Muestra las localizaciones de eventos que garantizan buffs de daño durante 1 hora."
+L["options_icons_visions_chest"] = "Cofres"
+L["options_icons_visions_chest_desc"] = "Muestra las localizaciones posibles de cofres dentro de las visiones horripilantes."
+L["options_icons_visions_crystals"] = "Cristales Extraños"
+L["options_icons_visions_crystals_desc"] = "Muestra las localizaciones posibles de cristales extraños dentro de las visiones horripilantes."
+L["options_icons_visions_mail"] = "Buzones"
+L["options_icons_visions_mail_desc"] = "Muestra las localizaciones de buzones para la montura del Zampacorreos."
+L["options_icons_visions_misc"] = "Miscelánea"
+L["options_icons_visions_misc_desc"] = "Muestra las localizaciones de raros, juguetes, pociones y del etéreo dentro de las visiones horripilantes."
 
 -------------------------------------------------------------------------------
 ----------------------------------- VOLDUN ------------------------------------
@@ -223,137 +234,5 @@ L["options_toggle_visions_misc_desc"] = "Mostrar localizaciones de raros, juguet
 
 L["voldun"] = "Vol'dun"
 L["elusive_alpaca"] = "Alimenta a la alpaca con Mezcla de Lechugas Costeras para aprenderla como montura. Aparece durante 10 minutos en una localización y después tiene un largo tiempo de reaparición."
-L["options_toggle_alpaca_voldun_desc"] = "Muestra las localizaciones de aparición de la Pezuñapresta Esquiva."
-L["options_toggle_alpaca_voldun"] = "Pezuñapresta Esquiva"
-
--------------------------------------------------------------------------------
------------------------------------- GEAR -------------------------------------
--------------------------------------------------------------------------------
-
-L["cloth"] = "Tela"
-L["leather"] = "Cuero"
-L["mail"] = "Malla"
-L["plate"] = "Placas"
-
-L["1h_mace"] = "1m Maza"
-L["1h_sword"] = "1m Espada"
-L["1h_axe"] = "1m Hacha"
-L["2h_mace"] = "2m Maza"
-L["2h_axe"] = "2m Hacha"
-L["2h_sword"] = "2m Espada"
-L["shield"] = "Escudo"
-L["dagger"] = "Daga"
-L["staff"] = "Bastón"
-L["fist"] = "Puño"
-L["polearm"] = "Arma de asta"
-L["bow"] = "Arco"
-L["gun"] = "Arma de fuego"
-L["wand"] = "Varita"
-L["crossbow"] = "Ballesta"
-L["offhand"] = "Mano Izquierda"
-L["warglaives"] = "Glaive"
-
-L["ring"] = "Anillo"
-L["amulet"] = "Amuleto"
-L["cloak"] = "Capa"
-L["trinket"] = "Abalorio"
-
--------------------------------------------------------------------------------
----------------------------------- TOOLTIPS -----------------------------------
--------------------------------------------------------------------------------
-
-L["retrieving"] = "Recuperando el enlace del elemento ..."
-L["in_cave"] = "En una cueva."
-L["in_small_cave"] = "En una cueva pequeña."
-L["in_water_cave"] = "En una cueva submarina."
-L["in_water"] = "Bajo el agua."
-L["weekly"] = "Semanal"
-L["normal"] = "Normal"
-L["hard"] = "Difícil"
-L["mount"] = "Montura"
-L["pet"] = "Mascota"
-L["toy"] = "Juguete"
-L["completed"] = "Terminado"
-L["incomplete"] = "Incompleto"
-L["known"] = "Conocido"
-L["missing"] = "Desconocido"
-L["unobtainable"] = "No se puede obtener"
-L["unlearnable"] = "No se puede aprender"
-
--------------------------------------------------------------------------------
---------------------------------- CONTEXT MENU --------------------------------
--------------------------------------------------------------------------------
-
-L["context_menu_title"] = "HandyNotes Visions of N'Zoth"
-L["context_menu_add_tomtom"] = "Agregar a TomTom"
-L["context_menu_hide_node"] = "Ocultar este nodo"
-L["context_menu_restore_hidden_nodes"] = "Restaurar todos los nodos ocultos"
-
--------------------------------------------------------------------------------
------------------------------------ OPTIONS -----------------------------------
--------------------------------------------------------------------------------
-
-L["options_title"] = "Visions of N'Zoth"
-
------------------------------------- ICONS ------------------------------------
-
-L["options_icon_settings"] = "Configuración de Iconos"
-L["options_icons_treasures"] = "Iconos de Tesoro"
-L["options_icons_assaultevents"] = "Iconos de los Eventos de los Asaltos"
-L["options_icons_rares"] = "Iconos de los Raros"
-L["options_icons_caves"] = "Iconos de Cueva"
-L["options_icons_pet_battles"] = "Iconos de duelo de mascotas"
-L["options_icons_other"] = "Otros Iconos"
-L["options_scale"] = "Escala"
-L["options_scale_desc"] = "1 = 100%"
-L["options_opacity"] = "Opacidad"
-L["options_opacity_desc"] = "0 = transparente, 1 = opaco"
-
----------------------------------- VISIBILITY ---------------------------------
-
-L["options_visibility_settings"] = "Visibilidad"
-L["options_general_settings"] = "General"
-L["options_toggle_looted_rares"] = "Mostrar siempre todos los raros"
-L["options_toggle_looted_rares_desc"] = "Mostrar cada raro estén despojados o no"
-L["options_toggle_looted_treasures"] = "Tesoros ya despojados"
-L["options_toggle_looted_treasures_desc"] = "Mostrar todos los tesoros estén despojados o no"
-L["options_toggle_hide_done_rare"] = "Ocultar el raro si todo el botín se conoce"
-L["options_toggle_hide_done_rare_desc"] = "Ocultar todos los raros a los que se les conozca el botín."
-L["options_toggle_hide_minimap"] = "Ocultar todos los iconos sobre el minimapa"
-L["options_toggle_hide_minimap_desc"] = "Oculta todos los iconos de este addon sobre el minimapa y los muestra solamente sobre el mapa principal."
-L["options_restore_hidden_nodes"] = "Volver a mostrar los nodos escondidos"
-L["options_restore_hidden_nodes_desc"] = "Vuelve a mostrar todos los nodos escondidos usando el menú contextual con click-derecho."
-
-L["options_toggle_battle_pets_desc"] = "Mostrar las localizaciones de los instructores de mascotas y NPCs."
-L["options_toggle_battle_pets"] = "Mascotas de combate"
-L["options_toggle_caves_desc"] = "Mostrar entradas de cuevas para otros nodos."
-L["options_toggle_caves"] = "Cuevas"
-L["options_toggle_chests_desc"] = "Mostrar la localización de los cofres (despojables diariamente)."
-L["options_toggle_chests"] = "Cofres"
-L["options_toggle_misc"] = "Miscelánea"
-L["options_toggle_npcs"] = "NPCs"
-L["options_toggle_rares_desc"] = "Mostrar las localizaciones de los NPCs raros."
-L["options_toggle_rares"] = "Raros"
-L["options_toggle_supplies_desc"] = "Mostrar todas las localizaciones posibles para los cajones de suministros de guerra."
-L["options_toggle_supplies"] = "Localizaciones de Suministros de guerra"
-L["options_toggle_treasures"] = "Tesoros"
-
----------------------------------- TOOLTIP ---------------------------------
-
-L["options_tooltip_settings"] = "Tooltip"
-L["options_tooltip_settings_desc"] = "Tooltip"
-L["options_toggle_show_loot"] = "Mostrar el botín"
-L["options_toggle_show_loot_desc"] = "Agregar la información de botín al toolip"
-L["options_toggle_show_notes"] = "Mostrar las Notas"
-L["options_toggle_show_notes_desc"] = "Agregar las notas útiles al tooltip cuando esté disponible"
-
---------------------------------- DEVELOPMENT ---------------------------------
-
-L["options_dev_settings"] = "Desarrollo"
-L["options_dev_settings_desc"] = "Opciones de Desarrollo"
-L["options_toggle_show_debug_map"] = "Debug IDs del Mapa"
-L["options_toggle_show_debug_map_desc"] = "Muestra información de debug para los mapas"
-L["options_toggle_show_debug_quest"] = "Debug IDs de las Misiones"
-L["options_toggle_show_debug_quest_desc"] = "Muestra información de debug para los cambios de las misiones"
-L["options_toggle_force_nodes"] = "Forzar Nodos"
-L["options_toggle_force_nodes_desc"] = "Forzar el mostrar todos los nodos"
+L["options_icons_alpaca_voldun_desc"] = "Muestra las localizaciones de aparición de la Pezuñapresta Esquiva."
+L["options_icons_alpaca_voldun"] = "Pezuñapresta Esquiva"

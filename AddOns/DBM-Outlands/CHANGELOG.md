@@ -1,24 +1,32 @@
 # <DBM> Outlands
 
-## [r674](https://github.com/DeadlyBossMods/DBM-BCVanilla/tree/r674) (2020-08-06)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-BCVanilla/compare/r673...r674) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BCVanilla/releases)
+## [r675](https://github.com/DeadlyBossMods/DBM-BCVanilla/tree/r675) (2020-10-13)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-BCVanilla/compare/r674...r675) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BCVanilla/releases)
 
-- Handful of AQ40 syncs from classic to retail  
-- Disable LE and NUM\_LE in all luachecks  
-- Purge all unnesseary SetZone calls  
-- AQ40 sync from Classic. (#4)  
-    Co-authored-by: Adam <MysticalOS@users.noreply.github.com>  
-- Disable ENCOUNTER\_START on brutalis, it's broken on blizzards end  
-    Block syncs from old versions to ensure fix holds  
-    While in mod, updated range check and icon options to modern objects  
-- Merge pull request #3 from Molkree/patch-1  
-    Update localization.ru.lua  
-- Remove gender specific part of string  
-- Update localization.ru.lua  
-- Fix optional bosses checking the CORRECT value  
-- Add missing string  
-- Fix typos  
-- Synced several changes from classic versions of raids to retail versions, including adding support for all 3 enabled speed clears (but those will only work with dbm-core alpha for now)  
-- Sync some classic stuff to retail  
-- Fixes  
-- Sync Kurinnaxx improvements with retail AQ20  
+- Bump TOCS  
+- Sync timer change to retail AQ40 as well  
+- Fixed reported KJ timer at least, but may be others that are wrong. this fight will need futher review with each phase dragged out longer  
+    Closes #8  
+- Tweak a shade timer  
+    Added netherspites encounter ID, which was missing for some reason.  
+- remove evocation timer from curator. It's not timer based it's some kind of power gain based relative to number of active adds. Because of this, and because there is no boss1 unit ID, it'd be pain in ass to track.  
+- Shave 10 seconds off a timer  
+- Merge pull request #7 from DeadlyBossMods/stats  
+    Fix stat types for some TBC raids  
+- Fix stat types for some TBC raids  
+- Fix last  
+- Updates to Maiden and Prince to improve accuracy  
+- Fixed Tempest keep missing minexpansion  
+- Merge pull request #6 from DeadlyBossMods/stats  
+    Stats  
+- MinExpansion  
+- Stats (#5)  
+- Merge branch 'master' of github.com:DeadlyBossMods/DBM-BCVanilla  
+- StatTypes for BCVanilla  
+- Changed nef add counter to every 5 instead of every 3 when above 15 adds. switches back to 3 below 15  
+- Syncs from classic  
+- Sync Visc updates  
+- Sync viscidus infoframe addition with classic, but make it debug only until retail hit counters can be fine tuned/verified  
+- Further syncing to classic changes for AQ40  
+- Fixed missed spellName to spellId for retail  
+- Sync a few classic changes over to retail AQ40 and AQ20  

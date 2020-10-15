@@ -170,14 +170,12 @@ L.BIG_WIGS						= "BigWigs"
 
 L.UPDATEREMINDER_HEADER		= "La tua versione di Deadly Boss Mods e' obsoleta.\n La Versione %s (%s) e' disponibile per il download su Curse/Twitch, WoWI o da deadlybossmods.com"
 L.UPDATEREMINDER_FOOTER		= "Premi " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  .. " per copiare il link di download negli appunti."
-L.UPDATEREMINDER_FOOTER		= "Premi " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  .. " per copiare il link negli appunti."
+L.UPDATEREMINDER_FOOTER_GENERIC		= "Premi " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  .. " per copiare il link negli appunti."
 
 L.UPDATEREMINDER_DISABLE			= "AVVISO: A causa della notevole obsolescenza, Deadly Boss Mods è stato forzatamente disabilitato e non può essere utilizzato fino all'aggiornamento. Questo per assicurarsi che vecchio e incompatibile codice non causi problemi a te e al tuo gruppo."
-L.UPDATEREMINDER_NODISABLE		= "AVVISO: La tua installazione di Deadly Boss Mods è nettamente obsoleta. Anche se hai disabilitato le notifiche di aggiornamento, questo messaggio appare dopo un certo periodo e non può essere disabilitato. E' ALTAMENTE consigliato l'aggiornamento."
 L.UPDATEREMINDER_HOTFIX			= "La versione DBM in uso ha problemi con il combattimento di questo boss che sono stati corretti con l'ultima versione aggiornata"
 L.UPDATEREMINDER_HOTFIX_ALPHA	= "La versione DBM in uso ha problemi con il combattimento di questo boss che sono stati corretti con la prossima versione in arrivo (o nella versione alfa)"
 L.UPDATEREMINDER_MAJORPATCH		= "AVVISO: Data l'obsolescenza di Deadly Boss Mods, DBM è stato disabilitato fino ad aggiornamento, trattandosi di una patch maggiore. Questo è per assicurarsi che il vecchio e incompatibile codice non causi problemi a te o al tuo gruppo. Assicurati di scaricare una nuova versione da deadlybossmods.com, Curse/Twitch o WoWI il prima possibile."
-L.UPDATEREMINDER_TESTVERSION		= "AVVISO: Stai utilizzando una versione di Deadly Boss Mods non prevista per questa versione del gioco. Assicurati di scaricare la versione appropriata per il tuo client di gioco da deadlybossmods.com, Curse/Twitch o WoWI."
 L.VEM							= "AVVISO: Stai eseguento sia Deadly Boss Mods che Voice Encounter Mods. DBM non funzionerà con questa configurazione e quindi non verrà caricato."
 L.OUTDATEDPROFILES					= "AVVISO: DBM-Profiles è incompatibile con questa versione di DBM. Deve essere rimosso per utilizzare DBM, per evitare conflitti."
 L.DPMCORE						= "AVVISO: Deadly PvP mods è discontinuato e incompatibile con questa versione di DBM. Deve essere rimosso per utilizzare DBM, per evitare conflitti."
@@ -188,8 +186,8 @@ L.RETAIL_ONLY					= "AVVISO: Questa versione di DBM è da utilizzare con l'ultim
 
 L.MOVABLE_BAR				= "Trascinami!"
 
--- L.PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h ti ha mandato un Timer DBM: '%2$s'\n|HDBM:cancella:%2$s:nil|h|cff3588ff[Cancella questo Timer]|r|h  |HDBM:ignora:%2$s:%1$s|h|cff3588ff[Ignora timer da %1$s]|r|h"
-L.PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h ti ha inviato un temporizzatore DBM"
+L.PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h ti ha mandato un Timer DBM: '%2$s'\n|HDBM:cancella:%2$s:nil|h|cff3588ff[Cancella questo Timer]|r|h  |HDBM:ignora:%2$s:%1$s|h|cff3588ff[Ignora timer da %1$s]|r|h"
+--L.PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h ti ha inviato un temporizzatore DBM"
 L.PIZZA_CONFIRM_IGNORE			= "Sei sicuro di voler ignorare i Timer DMB da %s per questa sessione?"
 L.PIZZA_ERROR_USAGE				= "Uso: /dbm [broadcast] timer <time> <text>"
 
@@ -598,8 +596,8 @@ L.INSTANCE_INFO_STATS_DENIED		= "Hanno rifiutato la richiesta: %s"
 L.INSTANCE_INFO_STATS_AWAY		= "In pausa: %s"
 L.INSTANCE_INFO_STATS_NO_RESPONSE	= "Nessuna versione di DBM installata: %s"
 L.INSTANCE_INFO_RESULTS			= "Risultati della Scansione ID di Incursione. Guarda che le istanze potrebbero essere riportate piu' volte se ci sono dei client di gioco localizzati nella tua incursione."
--- L.INSTANCE_INFO_SHOW_RESULTS		= "Players yet to respond: %s\n|HDBM:showRaidIdResults|h|cff3588ff[Show results now]|r|h"
-L.INSTANCE_INFO_SHOW_RESULTS		= "Giocatori in attesa di risposta: %s"
+L.INSTANCE_INFO_SHOW_RESULTS		= "Players yet to respond: %s\n|HDBM:showRaidIdResults|h|cff3588ff[Show results now]|r|h"
+--L.INSTANCE_INFO_SHOW_RESULTS		= "Giocatori in attesa di risposta: %s"
 
 L.LAG_CHECKING				= "Analisi Latenza incursione..."
 L.LAG_HEADER					= "Deadly Boss Mods - Risultati Latenza"

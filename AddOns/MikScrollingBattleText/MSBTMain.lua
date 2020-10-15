@@ -106,7 +106,7 @@ local SPELLID_AUTOSHOT = 75
 -- Spell names.
 local SPELL_BLINK					= GetSkillName(1953)
 --local SPELL_BLIZZARD				= GetSkillName(10)
-local SPELL_BLOOD_STRIKE			= GetSkillName(60945)
+local SPELL_BLOOD_STRIKE			= WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and GetSkillName(60945)
 --local SPELL_BLOOD_STRIKE_OFF_HAND	= GetSkillName(66215)
 --local SPELL_HELLFIRE				= GetSkillName(1949)
 --local SPELL_HURRICANE				= GetSkillName(16914)
@@ -1135,6 +1135,9 @@ local function ParserEventsHandler(parserEvent)
 		if ((eventType == "dispel" or eventType == "interrupt" or (eventType == "miss" and parserEvent.missType == "RESIST")) and parserEvent.extraSkillID) then
 			_, _, effectTexture = GetSpellInfo(parserEvent.extraSkillID)
 		end
+		if (not effectTexture and effectName) then
+			_, _, effectTexture = GetSpellInfo(effectName)
+		end
 	end
 
 	-- Event is not eligible to be merged so just display it now without processing the impossible fields.
@@ -1498,7 +1501,7 @@ ignoreAuras[SPELL_BLINK] = true
 ignoreAuras[SPELL_RAIN_OF_FIRE] = true
 
 -- Get localized off-hand trailer and convert to a lua search pattern.
-if (SPELL_BLOOD_STRIKE ~= UNKNOWN) then
+if (SPELL_BLOOD_STRIKE and SPELL_BLOOD_STRIKE ~= UNKNOWN) then
 	--offHandTrailer = string_gsub(SPELL_BLOOD_STRIKE_OFF_HAND, SPELL_BLOOD_STRIKE, "")
 	offHandPattern = string_gsub(SPELL_BLOOD_STRIKE, "([%^%(%)%.%[%]%*%+%-%?])", "%%%1")
 end

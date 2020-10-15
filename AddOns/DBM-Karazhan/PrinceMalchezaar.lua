@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Prince", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145731")
+mod:SetRevision("20200918015832")
 mod:SetCreatureID(15690)
 mod:SetEncounterID(661)
 mod:SetModelID(19274)
@@ -9,10 +9,12 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 30852",
-	"SPELL_AURA_APPLIED 30854 30898 39095 30843",
+	"SPELL_CAST_SUCCESS 30843",
+	"SPELL_AURA_APPLIED 30854 30898 39095 30843 30859",
 	"CHAT_MSG_MONSTER_YELL"
 )
 
+--TODO, improve phase change timer updates, I don't really feel like it right now
 local warningNovaCast			= mod:NewCastAnnounce(30852, 3)
 local warningInfernal			= mod:NewSpellAnnounce(37277, 2)
 local warningEnfeeble			= mod:NewTargetNoFilterAnnounce(30843, 4)
@@ -24,31 +26,17 @@ local warningSWP				= mod:NewTargetNoFilterAnnounce(30898, 2, nil, "RemoveMagic"
 local specWarnEnfeeble			= mod:NewSpecialWarningYou(37277, nil, nil, nil, 3, 2)
 local specWarnNova				= mod:NewSpecialWarningRun(30852, "Melee", nil, nil, 4, 2)
 
-local timerNovaCD				= mod:NewNextTimer(30, 30852, nil, nil, nil, 2)
-local timerNextInfernal			= mod:NewCDTimer(45, 37277, nil, nil, nil, 1)
+local timerNovaCD				= mod:NewCDTimer(18.1, 30852, nil, nil, nil, 2)--18.1-30
+local timerNextInfernal			= mod:NewCDTimer(45, 37277, nil, nil, nil, 1)--Spawning
+local timerHellfire				= mod:NewCDTimer(14.5, 30859, nil, nil, nil, 3)--Landing/activating Hellfire
 local timerEnfeebleCD			= mod:NewNextTimer(30, 30843, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)
 local timerEnfeeble				= mod:NewBuffFadesTimer(9, 30843)
 
 mod.vb.phase = 1
-mod.vb.firstInfernal = false
-local enfeebleTargets = {}
-
-local function showEnfeebleWarning()
-	warningEnfeeble:Show(table.concat(enfeebleTargets, "<, >"))
-	timerEnfeebleCD:Start()
-	table.wipe(enfeebleTargets)
-end
-
-local function Infernals(self)
-	warningInfernal:Show()
-	timerNextInfernal:Start(self.vb.phase == 3 and 22.5 or 45)
-end
 
 function mod:OnCombatStart(delay)
 	self.vb.phase = 1
-	self.vb.firstInfernal = false
-	timerNextInfernal:Start(40-delay)
-	table.wipe(enfeebleTargets)
+	timerNextInfernal:Start(14.5-delay)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -59,7 +47,13 @@ function mod:SPELL_CAST_START(args)
 		else
 			warningNovaCast:Show()
 		end
-		timerNovaCD:Start()
+		timerNovaCD:Start(self.vb.phase == 3 and 18.1 or 30)
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	if args.spellId == 30843 then
+		timerEnfeebleCD:Start()
 	end
 end
 
@@ -69,34 +63,36 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args.spellId == 39095 then
 		warningAmpMagic:Show(args.destName)
 	elseif args.spellId == 30843 then
-		enfeebleTargets[#enfeebleTargets + 1] = args.destName
+		warningEnfeeble:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			timerEnfeeble:Start()
 			specWarnEnfeeble:Show()
 			specWarnEnfeeble:Play("targetyou")
 		end
-		self:Unschedule(showEnfeebleWarning)
-		self:Schedule(0.3, showEnfeebleWarning)
+	elseif args.spellId == 30859 and not args:IsDestTypePlayer() then--Hellfire applied to Infernals
+		warningInfernal:Show()
+		-- (during TBC there was like a 5 second delay between landing and gaining hellfire, but at some point they changed it to gain instantly
+		--If this changes on classic TBC, this will probably need adjustment
 	end
 end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.DBM_PRINCE_YELL_INF1 or msg == L.DBM_PRINCE_YELL_INF2 then
-		self:Schedule(18.5, Infernals, self)--Infernal actually spawns 18.5sec after yell.
-		if not self.vb.firstInfernal then
-			timerNextInfernal:Start(18.5)
-			self.vb.firstInfernal = true
-		end
-		if self.vb.phase == 3 then
-			timerNextInfernal:Update(3.5, 22.5)--we attempt to update bars to show 18.5sec left. this will more than likely error out, it's not tested.
-		else
-			timerNextInfernal:Update(26.5, 45)--we attempt to update bars to show 18.5sec left. this will more than likely error out, it's not tested.
-		end
+		timerHellfire:Start(14.5)
+		timerNextInfernal:Start(self.vb.phase == 3 and 19.3 or 44.7)
 	elseif msg == L.DBM_PRINCE_YELL_P3 then
 		self.vb.phase = 3
 		warnPhase3:Show()
+		timerNovaCD:Stop()
+		timerNextInfernal:Stop()
+		timerEnfeebleCD:Stop()
+		timerNovaCD:Start(19.2)
+		--"<326.45 01:12:48> [DBM_Announce] Stage 3#136116#stage#3#Prince#false", -- [759]
+		--"<366.46 01:13:28> [CHAT_MSG_MONSTER_YELL] You face not Malchezaar alone, but the legions I command!#Prince Malchezaar#####0#0##0#163#nil#0#false#false#false#false", -- [883]
+		timerNextInfernal:Start(40)
 	elseif msg == L.DBM_PRINCE_YELL_P2 then
 		self.vb.phase = 2
 		warnPhase2:Show()
+		--Doesn't seem to affect any timers.
 	end
 end

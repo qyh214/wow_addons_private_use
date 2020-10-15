@@ -42,7 +42,7 @@ local OTF = ObjectiveTrackerFrame
 local overlay
 local overlayShown = false
 
-local _, numQuests = GetNumQuestLogEntries()
+local _, numQuests = C_QuestLog.GetNumQuestLogEntries()
 
 local OverlayFrameUpdate, OverlayFrameHide, GetModulesOptionsTable, MoveModule, SetSharedColor, IsSpecialLocale	-- functions
 
@@ -109,15 +109,7 @@ local defaults = {
 		soundQuest = true,
 		soundQuestComplete = "KT - Default",
 
-		modulesOrder = {
-			"SCENARIO_CONTENT_TRACKER_MODULE",
-			"UI_WIDGET_TRACKER_MODULE",
-			"AUTO_QUEST_POPUP_TRACKER_MODULE",
-			"QUEST_TRACKER_MODULE",
-			"BONUS_OBJECTIVE_TRACKER_MODULE",
-			"WORLD_QUEST_TRACKER_MODULE",
-			"ACHIEVEMENT_TRACKER_MODULE"
-		},
+		modulesOrder = KT.BLIZZARD_MODULES,
 
 		addonMasque = false,
 		addonPetTracker = false,
@@ -940,6 +932,7 @@ local options = {
 							end,
 							set = function()
 								db.qiActiveButtonBindingShow = not db.qiActiveButtonBindingShow
+								KTF.ActiveFrame:Hide()
 								KT.ActiveButton:Update()
 							end,
 							order = 5.5,
@@ -1219,9 +1212,7 @@ local options = {
 							width = 1.05,
 							confirm = true,
 							confirmText = warning,
-							disabled = function()
-								return not IsAddOnLoaded("PetTracker")
-							end,
+							disabled = true,
 							set = function()
 								db.addonPetTracker = not db.addonPetTracker
 								if PetTracker.sets then
@@ -1354,6 +1345,8 @@ function KT:SetupOptions()
 	db = self.db.profile
 	dbChar = self.db.char
 
+	db.addonPetTracker = false
+
 	general.sec2.args.classBorder.name = general.sec2.args.classBorder.name:format(self.RgbToHex(self.classColor))
 
 	general.sec7.args.messageOutput = self:GetSinkAce3OptionsDataTable()
@@ -1451,8 +1444,6 @@ function GetModulesOptionsTable()
 			text = text.." *"
 		elseif module == "UI_WIDGET_TRACKER_MODULE" then
 			text = "[ "..ZONE.." ]"
-		elseif module == "AUTO_QUEST_POPUP_TRACKER_MODULE" then
-			text = "Popup "..text
 		end
 
 		defaultModule = OTF.MODULES_UI_ORDER[i]
@@ -1461,8 +1452,6 @@ function GetModulesOptionsTable()
 			defaultText = defaultText.." *"
 		elseif defaultModule == UI_WIDGET_TRACKER_MODULE then
 			defaultText = "[ "..ZONE.." ]"
-		elseif defaultModule == AUTO_QUEST_POPUP_TRACKER_MODULE then
-			defaultText = "Popup "..defaultText
 		end
 
 		args["pos"..i] = {

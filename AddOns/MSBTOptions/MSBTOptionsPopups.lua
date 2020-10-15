@@ -116,7 +116,7 @@ end
 -- Creates a new generic popup.
 -- ****************************************************************************
 local function CreatePopup()
-	local frame = CreateFrame("Frame", nil, UIParent)
+	local frame = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 	frame:Hide()
 	frame:EnableMouse(true)
 	frame:SetMovable(true)
@@ -1540,7 +1540,7 @@ local function CreateScrollAreaMoverFrame(scrollArea)
 	local moverFrames = popupFrames.scrollAreaConfigFrame.moverFrames
 
 	if (not moverFrames[scrollArea]) then
-		local frame = CreateFrame("FRAME", nil, UIParent)
+		local frame = CreateFrame("FRAME", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 		frame:Hide()
 		frame:SetMovable(true)
 		frame:EnableMouse(true)
@@ -2667,8 +2667,8 @@ local function EditConditionButtonOnClick(this)
 
 	EraseTable(tempConfig)
 	tempConfig.conditionType = frame.eventConditions[line.conditionNum]
-	tempConfig.conditionRelation = frame.eventConditions[line.conditionNum+1]
-	tempConfig.conditionValue = frame.eventConditions[line.conditionNum+2]
+	tempConfig.conditionRelation = frame.eventConditions[line.conditionNum + 1]
+	tempConfig.conditionValue = frame.eventConditions[line.conditionNum + 2]
 	tempConfig.availableConditions = conditionData and conditionData.availableConditions
 	tempConfig.saveHandler = SaveMainEventCondition
 	tempConfig.saveArg1 = line.conditionNum
@@ -2697,7 +2697,7 @@ local function CreateMainEventConditionsLine(this)
 	button:SetPoint("LEFT", frame, "LEFT", 0, 0)
 	button:SetClickHandler(EditConditionButtonOnClick)
 	frame.editConditionButton = button
-	controls[#controls+1] = button
+	controls[#controls + 1] = button
 
 	-- Delete condition button.
 	button = MSBTControls.CreateIconButton(frame, "Delete")
@@ -2767,7 +2767,7 @@ local function CreateMainEvent()
 			local conditionData = popupFrames.triggerFrame.eventConditionData[id]
 			if (conditionData and conditionData.defaultConditions and conditionData.defaultConditions ~= "") then
 				for conditionEntry in string.gmatch(conditionData.defaultConditions .. ";;", "(.-);;") do
-					frame.eventConditions[#frame.eventConditions+1] = ConvertType(conditionEntry)
+					frame.eventConditions[#frame.eventConditions + 1] = ConvertType(conditionEntry)
 				end
 			end
 			UpdateMainEventConditions()
@@ -2778,7 +2778,7 @@ local function CreateMainEvent()
 	end
 	dropdown:Sort()
 	frame.mainEventDropdown = dropdown
-	controls[#controls+1] = dropdown
+	controls[#controls + 1] = dropdown
 
 
 	-- Trigger conditions label.
@@ -2808,7 +2808,7 @@ local function CreateMainEvent()
 			tempConfig.conditionValue = conditionValue or ""
 			tempConfig.availableConditions = conditionData and conditionData.availableConditions
 			tempConfig.saveHandler = SaveMainEventCondition
-			tempConfig.saveArg1 = #frame.eventConditions+1
+			tempConfig.saveArg1 = #frame.eventConditions + 1
 			tempConfig.parentFrame = frame
 			tempConfig.anchorFrame = this
 			tempConfig.anchorPoint = "BOTTOMLEFT"
@@ -2818,7 +2818,7 @@ local function CreateMainEvent()
 			ShowTriggerCondition(tempConfig)
 		end
 	)
-	controls[#controls+1] = button
+	controls[#controls + 1] = button
 
 	-- Main event conditions listbox.
 	local listbox = MSBTControls.CreateListbox(frame)
@@ -2827,7 +2827,7 @@ local function CreateMainEvent()
 	listbox:SetCreateLineHandler(CreateMainEventConditionsLine)
 	listbox:SetDisplayHandler(DisplayMainEventConditionsLine)
 	frame.conditionsListbox = listbox
-	controls[#controls+1] = listbox
+	controls[#controls + 1] = listbox
 
 
 

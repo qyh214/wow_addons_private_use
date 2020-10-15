@@ -7,6 +7,10 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
+	--[[Translation missing --]]
+	L["<70% Mana"] = "<70% Mana"
+	--[[Translation missing --]]
+	L[">70% Mana"] = ">70% Mana"
 	L["Abilities"] = "능력"
 	L["Ability Charges"] = "능력 충전량"
 	L["Add Triggers"] = "활성 조건 추가"
@@ -15,6 +19,8 @@ local L = WeakAuras.L
 	L["Always show the aura, highlight it if debuffed."] = "효과를 항상 표시하고, 약화 효과면 강조합니다."
 	L["Always show the aura, turns grey if on cooldown."] = "효과를 항상 표시하고 재사용 대기중이면 회색으로 변합니다."
 	L["Always show the aura, turns grey if the debuff not active."] = "효과를 항상 표시하고, 약화 효과가 활성화되어 있지 않으면 회색으로 바뀝니다."
+	--[[Translation missing --]]
+	L["Always shows highlights if enchant missing."] = "Always shows highlights if enchant missing."
 	L["Always shows the aura, grey if buff not active."] = "효과를 항상 표시하고, 강화 효과가 활성화되어 있지 않으면 회색으로 바뀝니다."
 	L["Always shows the aura, highlight it if buffed."] = "효과를 항상 표시하고, 강화 효과면 강조합니다."
 	--[[Translation missing --]]
@@ -44,6 +50,8 @@ local L = WeakAuras.L
 	L["Basic Show On Ready"] = "Basic Show On Ready"
 	L["Bloodlust/Heroism"] = "피의 욕망/영웅심"
 	L["buff"] = "강화 효과"
+	--[[Translation missing --]]
+	L["Buff on Other"] = "Buff on Other"
 	L["Buffs"] = "강화 효과"
 	L["Cancel"] = "취소"
 	L["Cast"] = "시전"
@@ -52,15 +60,11 @@ local L = WeakAuras.L
 	L["Charge and Duration Tracking"] = "충전량 및 지속시간 추적"
 	L["Charge Tracking"] = "충전량 추적"
 	L["cooldown"] = "재사용 대기시간"
-	L["Cooldown"] = "재사용 대기시간"
 	L["Cooldown Tracking"] = "재사용 대기시간 추적"
 	L["Create Auras"] = "효과 생성"
 	L["debuff"] = "약화 효과"
 	L["Debuffs"] = "약화 효과"
-	L["Enchants"] = "마법부여"
 	L["General"] = "일반"
-	--[[Translation missing --]]
-	L["General Azerite Traits"] = "General Azerite Traits"
 	L["Health"] = "생명력"
 	--[[Translation missing --]]
 	L["Highlight while active, red when out of range."] = "Highlight while active, red when out of range."
@@ -77,30 +81,26 @@ local L = WeakAuras.L
 	L["Hold CTRL to create multiple auras at once"] = "한 번에 여러 효과를 만드려면 CTRL 키를 누르세요"
 	L["Keeps existing triggers intact"] = "활성 조건 그대로 유지"
 	L["Next"] = "다음"
-	--[[Translation missing --]]
-	L["On Procc Trinkets (Aura)"] = "On Procc Trinkets (Aura)"
-	--[[Translation missing --]]
-	L["On Use Trinkets (Aura)"] = "On Use Trinkets (Aura)"
-	--[[Translation missing --]]
-	L["On Use Trinkets (CD)"] = "On Use Trinkets (CD)"
 	L["Only show the aura if the target has the debuff."] = "대상에 약화 효과가 있는 경우 그 효과만 표시합니다."
 	L["Only show the aura when the item is on cooldown."] = "아이템이 재사용 대기 중일 때 그 효과만 표시합니다."
+	--[[Translation missing --]]
+	L["Only shows if the weapon is enchanted."] = "Only shows if the weapon is enchanted."
+	--[[Translation missing --]]
+	L["Only shows if the weapon is not enchanted."] = "Only shows if the weapon is not enchanted."
 	L["Only shows the aura if the target has the buff."] = "대상에 강화 효과가 있는 경우 그 효과만 표시합니다."
 	L["Only shows the aura when the ability is on cooldown."] = "능력이 재사용 대기 중일 때 그 효과만 표시합니다."
 	L["Only shows the aura when the ability is ready to use."] = "능력을 사용할 준비가 되었을 때 그 효과만 표시합니다."
 	L["Pet alive"] = "소환수 생존"
 	L["Pet Behavior"] = "소환수 행동"
-	--[[Translation missing --]]
-	L["PvP Azerite Traits"] = "PvP Azerite Traits"
 	L["PvP Talents"] = "명예 특성"
-	L["PVP Trinkets (Aura)"] = "PVP 장신구 (효과)"
-	L["PVP Trinkets (CD)"] = "PVP 장신구 (재사용 대기시간)"
 	L["Replace all existing triggers"] = "모든 활성 조건 교체"
 	L["Replace Triggers"] = "활성 조건 교체"
 	L["Resources"] = "자원"
 	L["Resources and Shapeshift Form"] = "자원과 태세 변환"
 	L["Runes"] = "룬"
 	L["Shapeshift Form"] = "태세 변환"
+	--[[Translation missing --]]
+	L["Show Always, Glow on Missing"] = "Show Always, Glow on Missing"
 	--[[Translation missing --]]
 	L["Show Charges and Check Usable"] = "Show Charges and Check Usable"
 	--[[Translation missing --]]
@@ -135,16 +135,18 @@ local L = WeakAuras.L
 	L["Show Cooldown and Proc Tracking"] = "Show Cooldown and Proc Tracking"
 	L["Show Cooldown and Totem Information"] = "재사용 대기시간 및 토템 정보 표시"
 	--[[Translation missing --]]
+	L["Show if Enchant Missing"] = "Show if Enchant Missing"
+	--[[Translation missing --]]
 	L["Show on Ready"] = "Show on Ready"
 	L["Show Only if Buffed"] = "있는 강화 효과만 표시"
 	L["Show Only if Debuffed"] = "있는 약화 효과만 표시"
+	--[[Translation missing --]]
+	L["Show Only if Enchanted"] = "Show Only if Enchanted"
 	L["Show Only if on Cooldown"] = "재사용 대기 중일 때만 표시"
 	--[[Translation missing --]]
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
 	--[[Translation missing --]]
 	L["slow debuff"] = "slow debuff"
-	--[[Translation missing --]]
-	L["Specific Azerite Traits"] = "Specific Azerite Traits"
 	L["Stance"] = "태세"
 	--[[Translation missing --]]
 	L["stun debuff"] = "stun debuff"

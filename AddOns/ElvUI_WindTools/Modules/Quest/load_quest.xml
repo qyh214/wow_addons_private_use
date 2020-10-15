@@ -1,9 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file='config.lua'/>
-	<Script file='ObjectiveProgress.lua'/>
 	<Script file='ObjectiveTracker.lua'/>
-	<Script file='QuestAnnouncment.lua'/>
-	<Script file='DisableTalkingHead.lua'/>
-	<Script file='TrackReputation.lua'/>
 	<Script file='ParagonReputation.lua'/>
+	<Script file='SwitchButtons.lua'/>
+	<Script file='TurnIn.lua'/>
 </Ui>

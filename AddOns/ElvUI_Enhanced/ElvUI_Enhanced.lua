@@ -4,7 +4,7 @@ local ENH = E:NewModule('ENH', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0')
 ENH.version = GetAddOnMetadata("ElvUI_Enhanced", "Version")
 
 E.PopupDialogs["VERSION_MISMATCH"] = {
-	text = L["Your version of ElvUI is to old (required v11 or higher). Please, download the latest version from tukui.org."],
+	text = L["Your version of ElvUI is to old (required v11.52 or higher). Please, download the latest version from tukui.org."],
 	button1 = CLOSE,
 	timeout = 0,
 	whileDead = 1,	
@@ -12,7 +12,7 @@ E.PopupDialogs["VERSION_MISMATCH"] = {
 }
 
 --Showing warning message about too old versions of ElvUI
-if tonumber(E.version) < 11.42 then
+if tonumber(E.version) < 11.52 then
 	E:StaticPopup_Show("VERSION_MISMATCH")
 end
 

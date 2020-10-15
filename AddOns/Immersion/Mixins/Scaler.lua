@@ -75,7 +75,7 @@ function AdjustMixin:GetAdjustableChildren()
 	return pairs(adjustable)
 end
 
-function AdjustMixin:AdjustToChildren()
+function AdjustMixin:AdjustToChildren(xPad, yPad)
 	self:SetSize(1, 1)
 	for _, child in self:GetAdjustableChildren() do
 		child:AdjustToChildren()
@@ -100,10 +100,10 @@ function AdjustMixin:AdjustToChildren()
 		end
 	end
 	if top and bottom then
-		self:SetHeight(abs( top - bottom ))
+		self:SetHeight(abs( top - bottom ) + (yPad or 0))
 	end
 	if left and right then
-		self:SetWidth(abs( right - left ))
+		self:SetWidth(abs( right - left ) + (xPad or 0))
 	end
 	return self:GetSize()
 end

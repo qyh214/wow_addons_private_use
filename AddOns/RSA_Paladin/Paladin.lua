@@ -249,11 +249,11 @@ function RSA_Paladin:OnEnable()
 			[184662] = { -- SHIELD OF VENGEANCE
 				profile = 'ShieldOfVengeance'
 			},
-			[204150] = { -- AEGIS OF LIGHT
+			--[[[204150] = { -- AEGIS OF LIGHT
 				profile = 'AegisOfLight',
 				tracker = 2,
 				targetIsMe = 1
-			},
+			},]]--
 			[209202] = { -- Eye Of Tyr
 				profile = 'EyeOfTyr',
 				tracker = 2,
@@ -334,12 +334,12 @@ function RSA_Paladin:OnEnable()
 				profile = 'ShieldOfVengeance',
 				section = 'End'
 			},
-			[204150] = { -- AEGIS OF LIGHT
+			--[[[204150] = { -- AEGIS OF LIGHT
 				profile = 'AegisOfLight',
 				section = 'End',
 				tracker = 1,
 				targetIsMe = 1
-			},
+			},]]--
 			[209202] = { -- Eye Of Tyr
 				profile = 'EyeOfTyr',
 				section = 'End',
@@ -400,12 +400,6 @@ function RSA_Paladin:OnEnable()
 	}
 	RSA.MonitorConfig(MonitorConfig_Paladin, UnitGUID('player'))
 	local MonitorAndAnnounce = RSA.MonitorAndAnnounce
-	local RSA_DivineGuardian = false
-	local RSA_GoaKTimer = CreateFrame('Frame', 'RSA:GoaKTimer') -- Because GoaK (Prot) has no event for end message.
-	local GoaKTimeElapsed = 0.0
-	local ArdentDefenderHealed = false
-	local ResTarget = L["Unknown"]
-	local Ressed
 	local function Paladin_Spells()
 		local timestamp, event, hideCaster, sourceGUID, source, sourceFlags, sourceRaidFlag, destGUID, dest, destFlags, destRaidFlags, spellID, spellName, spellSchool, missType, overheal, ex3, ex4, ex5, ex6, ex7, ex8 = CombatLogGetCurrentEventInfo()
 		if RSA.AffiliationMine(sourceFlags) then

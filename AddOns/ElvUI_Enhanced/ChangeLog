@@ -1,3 +1,11 @@
+3.5.0
+* Ready for 9.0
+* Fix minimapbuttonbar for 9.0
+* Fix raidmarkerbar for 9.0
+* Fix minimaplocation for 9.0
+* GPS in targetframe en focursframe for 9.0
+* Thanks Cilraaz for the help!
+
 3.4.7
 * Removed support for extra data text, since you can now do this from ElvUI itself.
 

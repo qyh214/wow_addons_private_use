@@ -11,6 +11,13 @@ local UIFrameFadeOut = UIFrameFadeOut;
 local PlaySound = PlaySound;
 local _, _, _, tocversion = GetBuildInfo();
 
+local strtrim = strtrim;
+local match = string.match;
+local gsub = string.gsub;
+local sub = string.sub;
+
+local LANGUAGE = GetLocale();
+
 ------------------------
 --Redirect API for 9.0--
 ------------------------
@@ -32,11 +39,60 @@ else
     end
 end
 
+ExpansionTransitionBackdropTemplateMixin = {};
+
+if BackdropTemplateMixin then
+    ExpansionTransitionBackdropTemplateMixin = CreateFromMixins(BackdropTemplateMixin);
+end
+
+--GetSlotVisualID
+if not TransmogLocationMixin then
+    function NarciAPI_GetSlotVisualID(slotID)
+        if slotID == 2 or (slotID > 10 and slotID < 15) then
+            return -1, -1;
+        end
+
+        local baseSourceID, baseVisualID, appliedSourceID, appliedVisualID, _, _, _, hideVisual = C_Transmog.GetSlotVisualInfo(slotID, 0);
+        if ( hideVisual ) then
+            return 0, 0;
+        elseif ( appliedSourceID == 0 ) then    --NO_TRANSMOG_SOURCE_ID
+            return baseSourceID, baseVisualID;
+        else
+            return appliedSourceID, appliedVisualID;
+        end
+    end
+else
+    function NarciAPI_GetSlotVisualID(slotID)
+        if slotID == 2 or (slotID > 10 and slotID < 15) then
+            return -1, -1;
+        end
+        
+        local itemLocation = ItemLocation:CreateFromEquipmentSlot(slotID)
+        if not itemLocation or not C_Item.DoesItemExist(itemLocation) then
+            return -1, -1;
+        end
+
+        local transmogLocation = CreateFromMixins(TransmogLocationMixin);
+        local transmogType = 0;
+        local modification = 0;
+        transmogLocation:Set(slotID, transmogType, modification);
+
+        local baseSourceID, baseVisualID, appliedSourceID, appliedVisualID, appliedCategoryID, pendingSourceID, pendingVisualID, pendingCategoryID, hasPendingUndo, _, itemSubclass = C_Transmog.GetSlotVisualInfo(transmogLocation);
+        
+        if ( appliedSourceID == 0 ) then	--NO_TRANSMOG_SOURCE_ID
+            appliedSourceID = baseSourceID;
+            appliedVisualID = baseVisualID;
+        end
+        return appliedSourceID, appliedVisualID;
+    end
+end
+
+
 --------------------
 ----API Datebase----
 --------------------
 local SlotIDtoName = {
-    --[SlotID] = {InventorySlotName, Localized Name, SlotID}
+    --[slotID] = {InventorySlotName, Localized Name, invType, textureID}    --GetInventorySlotInfo("SlotName")
     [1] = {"HeadSlot", HEADSLOT, INVTYPE_HEAD},
     [2] = {"NeckSlot", NECKSLOT, INVSLOT_NECK},
     [3] = {"ShoulderSlot", SHOULDERSLOT, INVTYPE_SHOULDER},
@@ -57,6 +113,14 @@ local SlotIDtoName = {
     [18]= {"AmmoSlot", RANGEDSLOT, INVSLOT_RANGED},
     [19]= {"TabardSlot", TABARDSLOT, INVTYPE_TABARD},
 }
+
+for slotID, info in pairs(SlotIDtoName) do
+    _, info[4] = GetInventorySlotInfo(info[1]);
+end
+
+function NarciAPI_GetSlotLocalizedName(slotID)
+    return SlotIDtoName[slotID][2], SlotIDtoName[slotID][4]
+end
 
 Narci.SlotIDtoName = SlotIDtoName;
 -----------------------------------------------------
@@ -174,6 +238,7 @@ function GetArtifactVisualModID(colorID)
     itemLink = "\124cffe5cc80\124Hitem:".. itemID .."::::::::120::16777472::2:::"..colorID..":::::::::::::\124h[".. (sourceInfo.name or "") .."]\124h\124r"
     DEFAULT_CHAT_FRAME:AddMessage(itemLink)
 end
+
 
 -----Color API------
 Narci_GlobalColorIndex = 0;
@@ -297,6 +362,12 @@ AssignColor:SetScript("OnEvent", function(self)
     end)
 end);
 ----------------------------------------------------------------------
+function NarciAPI_ConvertHexColorToRGB(hexColor)
+    local r = tonumber(sub(hexColor, 1, 2), 16) / 255;
+    local g = tonumber(sub(hexColor, 3, 4), 16) / 255;
+    local b = tonumber(sub(hexColor, 5, 6), 16) / 255;
+    return {r, g, b}
+end
 
 Narci_FontColor = {
     ["Brown"] = {0.85098, 0.80392, 0.70588, "|cffd9cdb4"},
@@ -352,6 +423,40 @@ function NarciAPI_GetBorderTexture()
         return (BorderTexture[index] or BorderTexture["Bright"]), BorderTexture[index]["Minimap"], index
     end
 end
+
+
+local GemBorderTexture = {
+	[0]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot",			--Empty
+	[1]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Unique",	--Kraken's Eye
+	[2]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Green",
+	[3]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Unique",	--Prismatic	
+	[4]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Unique",	--Meta
+	[5]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Orange",	--Orange
+	[6]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Purple",
+    [7]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Yellow",	--Yellow	
+	[8]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Blue",		--Blue
+	[9]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Yellow",	--Empty
+	[10] = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Red",		--Red
+	[11] = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot",			--Artifact
+}
+
+
+--Some gems require you to assign colors manually
+--itemID, itemType, itemSubType, itemEquipLoc, icon, itemClassID, itemSubClassID = GetItemInfoInstant(itemID or "itemString" or "itemName" or "itemLink") 
+local function GetGemBorderTexture(itemID, itemSubClassID)
+    local index = itemSubClassID or 0;
+    if itemID == 153714 then
+        index = 10;     --Red EXP bonus
+    elseif itemID == 153715 or itemID == 169220 then
+        index = 2;      --Movement Speed
+    elseif itemID == 168636 or itemID == 168637 or itemID == 168638 or
+    itemID == 153707 or itemID == 153708 or itemID == 153709 then
+        index = 1;      --Primary
+    end
+    return index, GemBorderTexture[index]
+end
+
+Narci.GetGemBorderTexture = GetGemBorderTexture;
 
 --------------------
 ------Item API------
@@ -576,7 +681,7 @@ function NarciAPI_GetItemRank(itemLink, statName)
     local fontstring = _G["NarciVirtualTooltip".."TextLeft"..2];
     fontstring = fontstring:GetText() or "";
     fontstring = strtrim(fontstring, "|r");
-    local rank = string.match(fontstring, "%d+", -2) or "";
+    local rank = match(fontstring, "%d+", -2) or "";
 
     if statName then
         local stats = GetItemStats(itemLink) or {};
@@ -586,12 +691,42 @@ function NarciAPI_GetItemRank(itemLink, statName)
     end
 end
 
-local strtrim = strtrim;
-local gsub = gsub;
+-----String API------
+
+function NarciAPI_DeformatString(str, patterns)
+    if not str then return end
+
+    local patternType = type(patterns);
+    if patternType == "string" then
+        patterns = gsub(patterns, "%(", "%%%(");
+        patterns = gsub(patterns, "%)", "%%%)");
+        patterns = gsub(patterns, "%%d", "%%d+");
+        patterns = gsub(patterns, "%%s", "(.+)");
+        return match(str, patterns)
+    elseif patternType == "table" then
+        local pattern;
+        local result = {};
+        --print(str)
+        for i = 1, #patterns do
+            pattern = patterns[i];
+            pattern = gsub(pattern, "%(", "%%%(");
+            pattern = gsub(pattern, "%)", "%%%)");
+            pattern = gsub(pattern, "%%d", "%%d+");
+            pattern = gsub(pattern, "%%s", "(.+)");
+            result = { match(str, pattern) };
+            --print(pattern)
+            if #result ~= 0 then
+                return unpack(result);
+            end
+        end
+        return str;
+    end
+end
+
 local greyFont = "|cff959595";
 local leftBrace = "%(";
 local rightBrace = "%)";
-if (GetLocale() == "zhCN") or (GetLocale() == "zhTW") then
+if (LANGUAGE == "zhCN") or (LANGUAGE == "zhTW") then
     leftBrace = "（"
     rightBrace = "）"
 end
@@ -849,7 +984,7 @@ function NarciAPI_OptimizeBorderThickness(self)
         local point, relativeTo, relativePoint, xOfs, yOfs = self:GetPoint()
 
         local uiScale = self:GetEffectiveScale(); 
-        --local scale = string.match(GetCVar( "gxWindowedResolution" ), "%d+x(%d+)" );
+        --local scale = match(GetCVar( "gxWindowedResolution" ), "%d+x(%d+)" );
         --local rate = 768/scale/uiScale;
         --local _, screenHeight = GetPhysicalScreenSize();
         local rate = (768/screenHeight)/uiScale
@@ -881,23 +1016,22 @@ function NarciAPI_SliderWithSteps_OnLoad(self)
     self.Marks = {};
     local width = self:GetWidth();
     local step = self:GetValueStep();
-    local sliderMin, sliderMax = self:GetMinMaxValues()
+    local sliderMin, sliderMax = self:GetMinMaxValues();
     local range = sliderMax - sliderMin;
     local num_Gap = math.floor((range / step) + 0.5);
     if num_Gap == 0 then return; end;
     local tex;
     local markOffset = 5;
     width = width - 2*markOffset
-    --print(self:GetName().." "..(num_Gap + 1))
     for i=1, (num_Gap + 1) do
         tex = self:CreateTexture(nil, "BACKGROUND", nil, 1);
-        --tex:SetAllPoints()
-        tex:SetSize(2, 10)
-        tex:SetColorTexture(0.3, 0.3, 0.3, 1)
-        --print((i-1)*width/num_Gap)
-        tex:SetPoint("LEFT", self, "LEFT", markOffset + (i-1)*width/num_Gap, 0)
+        tex:SetSize(2, 10);
+        tex:SetColorTexture(0.3, 0.3, 0.3, 1);
+        tex:SetPoint("LEFT", self, "LEFT", markOffset + (i-1)*width/num_Gap, 0);
         tinsert(self.Marks, tex);
     end
+
+    --self.VirtualThumb:SetTexture("Interface/AddOns/Narcissus/Art/BasicShapes/Diamond", nil, nil, "TRILINEAR");
 end
 
 
@@ -997,12 +1131,13 @@ end
 -----Smooth Scroll-----
 local min = math.min;
 local max = math.max;
+local abs = math.abs;
 local minOffset = 2;
 local function SmoothScrollContainer_OnUpdate(self, elapsed)
 	local delta = self.delta;
     local scrollBar = self.scrollBar;
     local value = scrollBar:GetValue();
-    local step = max(abs(value - self.endValue)*(self.timeRatio) , self.minOffset);		--if the step (Δy) is too small, the fontstring will jitter.
+    local step = max(abs(value - self.endValue)*(self.speedRatio) , self.minOffset);		--if the step (Δy) is too small, the fontstring will jitter.
     local remainedStep;
     if ( delta == 1 ) then
         --Up
@@ -1010,6 +1145,9 @@ local function SmoothScrollContainer_OnUpdate(self, elapsed)
         if - remainedStep <= ( self.minOffset) then
             self:Hide();
             scrollBar:SetValue(min(self.maxVal, self.endValue));
+            if self.onScrollFinishedFunc then
+                self.onScrollFinishedFunc();
+            end
         else
             scrollBar:SetValue(max(0, value - step));
         end
@@ -1018,6 +1156,9 @@ local function SmoothScrollContainer_OnUpdate(self, elapsed)
         if remainedStep <= ( self.minOffset) then
             self:Hide();
             scrollBar:SetValue(min(self.maxVal, self.endValue));
+            if self.onScrollFinishedFunc then
+                self.onScrollFinishedFunc();
+            end
         else
             scrollBar:SetValue(min(self.maxVal, value + step));
         end
@@ -1025,65 +1166,108 @@ local function SmoothScrollContainer_OnUpdate(self, elapsed)
 end
 
 local function NarciAPI_SmoothScroll_OnMouseWheel(self, delta, stepSize)
-	if ( not self.scrollBar:IsVisible() ) then
-		return;
-	end
+    if ( not self.scrollBar:IsVisible() ) then
+        if self.parentScrollFunc then
+            self.parentScrollFunc(delta);
+        else
+            return;
+        end
+    end
+    
     local ScrollContainer = self.SmoothScrollContainer; 
 	local stepSize = stepSize or self.stepSize or self.buttonHeight;
 
     ScrollContainer.stepSize = stepSize;
-	ScrollContainer.maxVal = self.range
+	ScrollContainer.maxVal = self.range;
 
-	self.scrollBar:SetValueStep(0.01);
+	--self.scrollBar:SetValueStep(0.01);
 	ScrollContainer.delta = delta;
 
-	local Current = self.scrollBar:GetValue();
-	if not((Current == 0 and delta > 0) or (Current == self.range and delta < 0 )) then
-		ScrollContainer:Show()
+	local current = self.scrollBar:GetValue();
+    if not((current <= 0.1 and delta > 0) or (current >= self.range - 0.1 and delta < 0 )) then
+        ScrollContainer:Show()
+    else
+        return;
 	end
 	
     local deltaRatio = ScrollContainer.deltaRatio or 1;
+    if IsShiftKeyDown() then
+        deltaRatio = 2 * deltaRatio;
+    end
+
     local endValue = min(max(0, ScrollContainer.endValue - delta*deltaRatio*self.buttonHeight), self.range);
     ScrollContainer.endValue = endValue;
+    
     if self.positionFunc then
-        self.positionFunc(endValue);
+        local isTop = endValue <= 0.1;
+        local isBottom = endValue >= self.range - 0.1;
+        self.positionFunc(endValue, delta, self.scrollBar, isTop, isBottom);
     end
 end
 
-function NarciAPI_SmoothScroll_Initialization(self, updatedList, updateFunc, deltaRatio, timeRatio, minOffset, positionFunc)     --self=ListScrollFrame
-    self.update = updateFunc;
-    self.positionFunc = positionFunc;
-    self.updatedList = UpdatedList;
-
-    local parentName = self:GetName();
+function NarciAPI_SmoothScroll_Initialization(scrollFrame, updatedList, updateFunc, deltaRatio, speedRatio, minOffset, positionFunc, onScrollFinishedFunc)     --self=ListScrollFrame
+    if updateFunc then
+        scrollFrame.update = updateFunc;
+    end
+    if positionFunc then
+        scrollFrame.positionFunc = positionFunc;
+    end
+    if updatedList then
+        scrollFrame.updatedList = updatedList;
+    end
+    
+    local parentName = scrollFrame:GetName();
     local frameName = parentName and (parentName .. "SmoothScrollContainer") or nil;
     
-    local SmoothScrollContainer = CreateFrame("Frame", frameName, self);
+    local SmoothScrollContainer = CreateFrame("Frame", frameName, scrollFrame);
     SmoothScrollContainer:Hide();
     
-    local scale = string.match(GetCVar( "gxWindowedResolution" ), "%d+x(%d+)" );
-    local uiScale = self:GetEffectiveScale(); 
+    local scale = match(GetCVar( "gxWindowedResolution" ), "%d+x(%d+)" );
+    local uiScale = scrollFrame:GetEffectiveScale(); 
     --local pixel = 768/scale/uiScale;
     --local _, screenHeight = GetPhysicalScreenSize();
     local pixel = (768/screenHeight)/uiScale;
-    self.scrollBar:SetValueStep(0.001);
+    
+    local scrollBar = scrollFrame.scrollBar;
+    scrollBar:SetValue(0);
+    scrollBar:SetValueStep(0.001);
+    
     SmoothScrollContainer.stepSize = 0;
     SmoothScrollContainer.delta = 0;
     SmoothScrollContainer.animationDuration = 0;
     SmoothScrollContainer.endValue = 0;
 	SmoothScrollContainer.maxVal = 0;
     SmoothScrollContainer.deltaRatio = deltaRatio or 1;
-    SmoothScrollContainer.timeRatio = timeRatio or 1;
+    SmoothScrollContainer.speedRatio = speedRatio or 0.5;
     SmoothScrollContainer.minOffset = minOffset or pixel;
-    SmoothScrollContainer.scrollBar = self.scrollBar;
+    SmoothScrollContainer.scrollBar = scrollFrame.scrollBar;
     SmoothScrollContainer:SetScript("OnUpdate", SmoothScrollContainer_OnUpdate);
     SmoothScrollContainer:SetScript("OnShow", function(self)
         self.endValue = self:GetParent().scrollBar:GetValue();
     end);
 
-    self.SmoothScrollContainer = SmoothScrollContainer;
+    scrollFrame.SmoothScrollContainer = SmoothScrollContainer;
 
-    self:SetScript("OnMouseWheel", NarciAPI_SmoothScroll_OnMouseWheel);  --a position-related function
+    scrollFrame:SetScript("OnMouseWheel", NarciAPI_SmoothScroll_OnMouseWheel);  --a position-related function
+
+    if onScrollFinishedFunc then
+        SmoothScrollContainer.onScrollFinishedFunc = onScrollFinishedFunc;
+    end
+end
+
+function NarciAPI_ApplySmoothScrollToScrollFrame(scrollFrame, deltaRatio, speedRatio, positionFunc, buttonHeight, range, parentScrollFunc, onScrollFinishedFunc)
+    scrollFrame.buttonHeight = buttonHeight or math.floor(scrollFrame:GetHeight() + 0.5);
+    scrollFrame.range = range or 0;
+    scrollFrame.scrollBar:SetMinMaxValues(0, range or 0)
+    scrollFrame.scrollBar:SetScript("OnValueChanged", function(self, value)
+        scrollFrame:SetVerticalScroll(value);
+    end)
+    NarciAPI_SmoothScroll_Initialization(scrollFrame, nil, nil, deltaRatio, speedRatio, nil, positionFunc, onScrollFinishedFunc);
+    scrollFrame.parentScrollFunc = parentScrollFunc;
+end
+
+function NarciAPI_ApplySmoothScrollToBlizzardUI(scrollFrame, deltaRatio, speedRatio, positionFunc)
+    NarciAPI_SmoothScroll_Initialization(scrollFrame, nil, nil, deltaRatio, speedRatio, nil, positionFunc);
 end
 
 -----Create A List of Button----
@@ -1157,7 +1341,7 @@ function Narci_LanguageDetector(string)
 		elseif (c >= 240 and c <= 244) then
 			shift = 4	--Unknown invalid
 		end
-		local char = string.sub(str, i, i+shift-1)
+		local char = sub(str, i, i+shift-1)
 		i = i + shift
 	end
 	return "RM"
@@ -1283,6 +1467,7 @@ DelayedTP:SetScript("OnHide", function(self)
     self.TotalTime = 0;
     --self.ScanTime = 0;
 end)
+
 DelayedTP:SetScript("OnUpdate", function(self, elapsed)
     self.TotalTime = self.TotalTime + elapsed;
     --self.ScanTime = self.ScanTime + elapsed;
@@ -1335,35 +1520,55 @@ function NarciAPI_RunDelayedFunction(frame, delay, func)
         DelayedFunc:Show();
     end
 end
------Alert Frame-----
-NarciAlertFrameMixin = {};
 
-local function CreateErrorAnimation(frame)
+-----Alert Frame-----
+if BackdropTemplateMixin then
+    NarciAlertFrameMixin = CreateFromMixins(BackdropTemplateMixin);
+else
+    NarciAlertFrameMixin = {};
+end
+
+function NarciAlertFrameMixin:AddShakeAnimation(frame)
     if frame.animError then return; end;
 
-    local ag = frame:CreateAnimationGroup()    
-    local a1 = ag:CreateAnimation("Translation")
+    local ag = frame:CreateAnimationGroup();
+    local a1 = ag:CreateAnimation("Translation");
     a1:SetOrder(1);
     a1:SetOffset(4, 0);
     a1:SetDuration(0.05);
-    local a2 = ag:CreateAnimation("Translation")
+    local a2 = ag:CreateAnimation("Translation");
     a2:SetOrder(2);
     a2:SetOffset(-8, 0);
     a2:SetDuration(0.1);
-    local a3 = ag:CreateAnimation("Translation")
+    local a3 = ag:CreateAnimation("Translation");
     a3:SetOrder(3);
     a3:SetOffset(8, 0);
     a3:SetDuration(0.1);
-    local a4 = ag:CreateAnimation("Translation")
+    local a4 = ag:CreateAnimation("Translation");
     a4:SetOrder(4);
     a4:SetOffset(-4, 0);
     a4:SetDuration(0.05);
+
+    ag:SetScript("OnPlay", function()
+        PlaySound(138528);      --Mechagon_HK8_Lockon
+    end);
 
     frame.animError = ag;
 end
 
 function NarciAlertFrameMixin:SetAnchor(frame, offsetY, AddErrorAnimation)
-    frame:RegisterEvent("UI_ERROR_MESSAGE");
+    if frame.RegisterErrorEvent then
+        frame:RegisterErrorEvent();
+        After(0.5, function()
+            frame:UnregisterErrorEvent();
+        end)
+    else
+        frame:RegisterEvent("UI_ERROR_MESSAGE");
+        After(0.5, function()
+            frame:UnregisterEvent("UI_ERROR_MESSAGE");
+        end)
+    end
+
 	self:Hide();
     self:ClearAllPoints();
     self:SetScale(Narci_Character:GetEffectiveScale())
@@ -1373,19 +1578,14 @@ function NarciAlertFrameMixin:SetAnchor(frame, offsetY, AddErrorAnimation)
     self.anchor = frame;
 
     if AddErrorAnimation then
-        CreateErrorAnimation(frame);
+        self:AddShakeAnimation(frame);
     end
-
-    After(0.5, function()
-		frame:UnregisterEvent("UI_ERROR_MESSAGE");
-    end)
 end
 
 function NarciAlertFrameMixin:AddMessage(msg, UseErrorAnimation)
     self.Text:SetText(msg);
     self:SetHeight(self.Background:GetHeight());
     UIFrameFadeIn(self, 0.2, self:GetAlpha(), 1);
-    PlaySound(138528);      --Mechagon_HK8_Lockon
     local anchorFrame = self.anchor;
     if anchorFrame then
         if anchorFrame.animError and UseErrorAnimation then
@@ -1479,7 +1679,7 @@ function NarciAPI_SmoothFluid(bar, newHeight, newLevel, r, g, b)
 
 	if newLevel == oldLevel then
 		FluidAnim:SetScript("OnUpdate", FluidLevel);
-        FluidAnim.d = math.max( math.abs(h - FluidAnim.endHeight) / 84 , 0.35); 
+        FluidAnim.d = max( abs(h - FluidAnim.endHeight) / 84 , 0.35); 
         bar:SetColorTexture(r, g, b);
 	elseif newLevel < oldLevel then
 		FluidAnim:SetScript("OnUpdate", FluidDown);
@@ -1703,6 +1903,7 @@ end
 --Time
 --C_DateAndTime.GetCurrentCalendarTime
 
+
 local ActorIDByRace = {
     --local GenderID = UnitSex(unit);   2 Male 3 Female
 	--[raceID] = {male actorID, female actorID, bustOffsetZ_M, bustOffsetZ_F},
@@ -1725,6 +1926,22 @@ local ActorIDByRace = {
     [36] = {495, 498},		-- Mag'har
     [37] = {929, 931},      -- Mechagnome
 }
+
+--Re-check this↑ table every major patch
+--[[
+function Narci_GetActorByTag(raceName, gender)
+    raceName = string.lower(raceName);
+    
+    local playerRaceActor;
+    if gender == 1 then
+        playerRaceActor = raceName.."-".."male";
+    else
+        playerRaceActor = raceName.."-".."female";
+    end
+    
+    return DressUpFrame.ModelScene:GetActorByTag(playerRaceActor);
+end
+--]]
 
 local ZoomDistanceByRace = {
     --[raceID] = {male Zoom, female Zoom, bustOffsetZ_M, bustOffsetZ_F},
@@ -1847,6 +2064,22 @@ function NarciAPI_GetActorInfoByUnit(unit)
 end
 
 
+NarciModelSceneActorMixin = CreateFromMixins(ModelSceneActorMixin);
+
+function NarciModelSceneActorMixin:OnAnimFinished()
+    if self.oneShot then
+        --self:Hide();
+        if self.finalSequence then
+            self:SetAnimation(0, 0, 0, self.finalSequence);
+        else
+            self:Hide();
+        end
+    end
+    if self.onfinishedCallback then
+        self.onfinishedCallback();
+    end
+end
+
 
 function NarciAPI_SetupModelScene(modelScene, modelFileID, zoomDistance, view, actorIndex, UseTransit)
     local pi = math.pi;
@@ -1864,7 +2097,8 @@ function NarciAPI_SetupModelScene(modelScene, modelFileID, zoomDistance, view, a
     if not actor then
         local actorID = 156;    --effect    C_ModelInfo.GetModelSceneActorInfoByID(156)
         local actorInfo = C_ModelInfo.GetModelSceneActorInfoByID(actorID);
-        actor = model:AcquireAndInitializeActor(actorInfo);
+        --actor = model:AcquireAndInitializeActor(actorInfo);
+        actor = model:CreateActor(nil, "NarciModelSceneActorTemplate");
         actor:SetYaw(pi);
         model[actorTag] = actor;
 
@@ -1875,8 +2109,9 @@ function NarciAPI_SetupModelScene(modelScene, modelFileID, zoomDistance, view, a
             model:SetFrameLevel(20);
         end
     end
-    
-    local cameraTag = "NarciUI";
+
+
+    --local cameraTag = "NarciUI";
     local camera = model.narciCamera;
     if not camera then
         camera = CameraRegistry:CreateCameraByType("OrbitCamera");
@@ -1995,7 +2230,7 @@ local function ParserButton_GetCursor(self)
     elseif not IsCorruptedItem(itemLink) then
         local frame = self:GetParent();
         frame.ItemName:SetText("Not a Corrupted Item");
-        local itemString = string.match(itemLink, "item:([%-?%d:]+)");
+        local itemString = match(itemLink, "item:([%-?%d:]+)");
         frame.ItemString:SetText(itemString);
 
         After(2, function()
@@ -2008,7 +2243,7 @@ local function ParserButton_GetCursor(self)
     self.itemLink = itemLink;
 
     local itemName, _, itemQuality, itemLevel, _, _, _, _, itemEquipLoc, itemIcon = GetItemInfo(itemLink);
-    local itemString = string.match(itemLink, "item:([%-?%d:]+)");
+    local itemString = match(itemLink, "item:([%-?%d:]+)");
     local supposedEffect, corruptionID = NarciAPI_GetCorruptedItemAffix(itemLink);
     local hasGem = NarciAPI_IsItemSocketable(itemLink);
     local enchantID = GetItemEnchant(itemLink);
@@ -2073,7 +2308,7 @@ function Narci_ItemParser_OnLoad(self)
     self.ItemButton:SetScript("OnClick", ParserButton_GetCursor);
     self.ItemButton:SetScript("OnEnter", ParserButton_ShowTooltip);
 
-    local locale = GetLocale();
+    local locale = LANGUAGE;
     local version, build, date, tocversion = GetBuildInfo();
 
     self.ClientInfo:SetText(locale.."  "..version.."."..build.."  "..NARCI_VERSION_INFO);
@@ -2348,6 +2583,15 @@ function NarciBridge_EncodeItemlist(itemlist, unitInfo)
 end
 
 
+--------------------
+-----Play Voice-----
+--------------------
+function NarciAPI_InitializeModelLight(model)
+    --Model: DressUpModel/Cinematic Model/...
+    --Not ModelScene
+    model:SetLight(true, false, - 0.44699833180028 ,  0.72403680806459 , -0.52532198881773, 0.8, 172/255, 172/255, 172/255, 1, 0.8, 0.8, 0.8);
+end
+
 ----------------------------
 ----UI Animation Generic----
 ----------------------------
@@ -2362,12 +2606,54 @@ function NarciAPI_CreateAnimationFrame(duration)
     return frame;
 end
 
+function NarciAPI_CreateFadingFrame(parentObject)
+    local animFade = NarciAPI_CreateAnimationFrame(0.2);
+    animFade.timeFactor = 1;
+    parentObject.animFade = animFade;
+    animFade:SetScript("OnUpdate", function(frame, elapsed)
+        local alpha = frame.fromAlpha;
+        alpha = alpha + frame.timeFactor * elapsed;
+        frame.fromAlpha = alpha;
+        if alpha >= 1 then
+            alpha = 1;
+            frame:Hide();
+        elseif alpha <= 0 then
+            alpha = 0;
+            frame:Hide();
+        end
+        parentObject:SetAlpha(alpha);
+    end);
+    
+    function parentObject:FadeOut(duration)
+        duration = duration or 0.15;
+        local alpha = parentObject:GetAlpha();
+        animFade.fromAlpha = alpha;
+        animFade.timeFactor = -1/duration;
+        if alpha ~= 0 then
+            animFade:Show();
+        end
+    end
+    
+    function parentObject:FadeIn(duration)
+        duration = duration or 0.2;
+        local alpha = parentObject:GetAlpha();
+        animFade.fromAlpha = alpha;
+        animFade.timeFactor = 1/duration;
+        parentObject:Show();
+        if alpha ~= 1 then
+            animFade:Show();
+        end
+    end
+
+    return animFade
+end
+
 
 
 ----------------------------
 -------Frame Template-------
 ----------------------------
-NarciFrameMixin = {};
+NarciFrameMixin = CreateFromMixins(ExpansionTransitionBackdropTemplateMixin);
 
 function NarciFrameMixin:ShowFrame(state)
     self:SetShown(state);
@@ -2382,9 +2668,16 @@ function NarciFrameMixin:HideFrame()
     self:ShowFrame(false);
 end
 
+function NarciFrameMixin:ToggleFrame()
+    if self:IsShown() then
+        self:ShowFrame(false);
+    else
+        self:ShowFrame(true);
+    end
+end
+
 function NarciFrameMixin:SetHeaderText(text, r, g, b)
     self.Header:SetText(text);
-
     self.Header:SetTextColor(r or 0.4, g or 0.4, b or 0.4);
 end
 
@@ -2431,7 +2724,565 @@ function NarciFrameMixin:HideWhenParentIsHidden(state)
 end
 
 
+-------------------------------------------
+local FadeFrame = NarciAPI_FadeFrame;
+local DelayedFadeIn = NarciAPI_CreateAnimationFrame(1);
+DelayedFadeIn:SetScript("OnUpdate", function(self, elapsed)
+    self.total = self.total + elapsed;
+    if self.total >= self.duration then
+        self:Hide();
+        if self.anchor == GetMouseFocus() then
+            FadeFrame(self.object, 0.25, "IN");
+        end
+    end
+end);
 
+NarciHotkeyNotificationMixin = {};
+
+function NarciHotkeyNotificationMixin:SetKey(hotkey, mouseButton, text, alwaysShown)
+    local ICON_HEIGHT = 20;
+    self.alwaysShown = alwaysShown;
+    self.Label:SetText(text);
+    local width = self.Label:GetWidth();
+    if alwaysShown then
+        self:SetAlpha(1);
+    else
+        self:SetAlpha(0);
+    end
+    
+    if hotkey then
+        self.KeyIcon:SetTexture("Interface/AddOns/Narcissus/Art/Keyboard/Key", nil, nil, "TRILINEAR");
+        self.KeyIcon:Show();
+        self.KeyLabel:SetText(hotkey);
+        self.KeyLabel:SetShadowColor(0, 0, 0);
+        self.KeyLabel:SetShadowOffset(0, 1.4);
+
+        local texWidth;
+        if string.len(hotkey) > 5 then
+            texWidth = 146;
+            self.KeyIcon:SetTexCoord(0, texWidth/256, 0.5, 1);
+            print("Long")
+        else
+            texWidth = 118;
+            self.KeyIcon:SetTexCoord(0, texWidth/256, 0, 0.5);
+        end
+        self.KeyIcon:SetSize(texWidth/64*ICON_HEIGHT, ICON_HEIGHT);
+        width = width + texWidth/64*ICON_HEIGHT;
+    end
+
+    if mouseButton then
+        self.key = mouseButton;
+        self.MouseIcon:SetTexture("Interface/AddOns/Narcissus/Art/Keyboard/Mouse", nil, nil, "TRILINEAR");
+        self.MouseIcon:Show();
+        self.MouseIcon:SetSize(ICON_HEIGHT, ICON_HEIGHT);
+        if mouseButton == "LeftButton" then
+            self.MouseIcon:SetTexCoord(0, 0.25, 0, 1);
+        elseif mouseButton == "RightButton" then
+            self.MouseIcon:SetTexCoord(0.25, 0.5, 0, 1);
+            self.enableListener = true;
+        elseif mouseButton == "MiddleButton" then
+            self.MouseIcon:SetTexCoord(0.5, 0.75, 0, 1);
+        elseif mouseButton == "MouseWheel" then
+            self.MouseIcon:SetTexCoord(0.75, 1, 0, 1);
+        end
+
+        if hotkey then
+            self.KeyIcon:ClearAllPoints();
+            self.KeyIcon:SetPoint("RIGHT", self.MouseIcon, "LEFT", 0, 0);
+            width = width + ICON_HEIGHT;
+        end
+    end
+
+    self:SetWidth(width);
+end
+
+function NarciHotkeyNotificationMixin:ShowTooltip()
+    DelayedFadeIn:Hide();
+    DelayedFadeIn.anchor = GetMouseFocus();
+    DelayedFadeIn.object = self;
+    DelayedFadeIn:Show();
+end
+
+function NarciHotkeyNotificationMixin:FadeIn()
+    DelayedFadeIn:Hide();
+    FadeFrame(self, 0.25, "IN");
+end
+
+function NarciHotkeyNotificationMixin:FadeOut()
+    DelayedFadeIn:Hide();
+    FadeFrame(self, 0.25, "OUT");
+end
+
+function NarciHotkeyNotificationMixin:OnShow()
+    if self.enableListener then
+        self:RegisterEvent("GLOBAL_MOUSE_UP");
+    end
+end
+
+function NarciHotkeyNotificationMixin:OnHide()
+    if not self.alwaysShown then
+        DelayedFadeIn:Hide();
+        self:Hide();
+        self:SetAlpha(0);
+    end
+    
+    if self.enableListener then
+        self:UnregisterEvent("GLOBAL_MOUSE_UP");
+    end
+end
+
+function NarciHotkeyNotificationMixin:OnEvent(event, key)
+    if key == self.key then
+        self:UnregisterEvent("GLOBAL_MOUSE_UP");
+        self:FadeOut();
+    end
+end
+
+
+NarciQuickFavoriteButtonMixin = {};
+
+function NarciQuickFavoriteButtonMixin:SetIconSize(size)
+    self.iconSize = size;
+    self.Icon:SetSize(size, size);
+    self.Bling:SetSize(size, size);
+    self.Icon:SetTexCoord(0.5, 0.75, 0.25, 0.5);
+    self.favTooltip = Narci.L["Favorites Add"];
+    self.unfavTooltip = Narci.L["Favorites Remove"];
+    self.isFav = false;
+end
+
+function NarciQuickFavoriteButtonMixin:SetFavorite(isFavorite)
+    if isFavorite then
+        self.isFav = true;
+        self.Icon:SetTexCoord(0.75, 1, 0.25, 0.5);
+        self.Icon:SetAlpha(1);
+    else
+        self.isFav = false;
+        self.Icon:SetTexCoord(0.5, 0.75, 0.25, 0.5);
+        self.Icon:SetAlpha(0.4);
+    end
+end
+
+function NarciQuickFavoriteButtonMixin:PlayVisual()
+    self:StopAnimating();
+    if self.isFav then
+        self.Icon:SetTexCoord(0.75, 1, 0.25, 0.5);
+        self.parent.Star:Show();
+        self.Bling.animIn:Play();
+    else
+        self.Icon:SetTexCoord(0.5, 0.75, 0.25, 0.5);
+        self.parent.Star:Hide();
+    end
+end
+
+function NarciQuickFavoriteButtonMixin:OnEnter()
+    self.Icon:SetAlpha(1);
+    if self.isFav then
+        NarciTooltip:NewText(self.unfavTooltip, nil, nil, 1);
+    else
+        NarciTooltip:NewText(self.favTooltip, nil, nil, 1);
+    end
+end
+
+function NarciQuickFavoriteButtonMixin:OnLeave()
+    NarciTooltip:FadeOut();
+    if not self.isFav then
+        self.Icon:SetAlpha(0.6);
+    end
+end
+
+function NarciQuickFavoriteButtonMixin:OnHide()
+    self:StopAnimating();
+end
+
+function NarciQuickFavoriteButtonMixin:OnMouseDown()
+    self.Icon:SetSize(self.iconSize - 2, self.iconSize - 2);
+    NarciTooltip:FadeOut();
+end
+
+function NarciQuickFavoriteButtonMixin:OnMouseUp()
+    self.Icon:SetSize(self.iconSize, self.iconSize);
+end
+
+function NarciQuickFavoriteButtonMixin:OnDoubleClick()
+    
+end
+
+
+-----------------------------------------------------------
+NarciDarkRoundButtonMixin = {};
+
+function NarciDarkRoundButtonMixin:OnLoad()
+    self.Background:SetTexture("Interface\\AddOns\\Narcissus\\Art\\Buttons\\Button-Round", nil, nil, "TRILINEAR");
+end
+
+function NarciDarkRoundButtonMixin:SetLabelText(label)
+    self.Label:SetText("");
+    self.Label:SetText(label);
+    local textWidth = self.Label:GetWidth();
+    self.effectiveWidth = math.floor( self:GetWidth() + textWidth + 2 + 2);
+end
+
+function NarciDarkRoundButtonMixin:Initialize(groupIndex, label, tooltip, onClickFunc)
+    self:SetLabelText(label);
+
+    if tooltip then
+        self.tooltip = tooltip;
+    end
+
+    if groupIndex then
+        self.groupIndex = groupIndex;
+        local parent = self:GetParent();
+        if not parent.buttonGroups then
+            parent.buttonGroups = {};
+        end
+        if not parent.buttonGroups[groupIndex] then
+            parent.buttonGroups[groupIndex] = {};
+        end
+        tinsert(parent.buttonGroups[groupIndex], self);
+    end
+
+    if onClickFunc then
+        self.onClickFunc = onClickFunc;
+    end
+end
+
+function NarciDarkRoundButtonMixin:GetEffectiveWidth()
+    return self.effectiveWidth or self:GetWidth()
+end
+
+function NarciDarkRoundButtonMixin:GetGroupEffectiveWidth()
+    if self.groupIndex then
+        local buttons = self:GetParent().buttonGroups[self.groupIndex];
+        local width = 0;
+        local maxWidth = 0;
+        for i = 1, #buttons do
+            width = buttons[i]:GetEffectiveWidth();
+            if width > maxWidth then
+                maxWidth = width;
+            end
+        end
+        return maxWidth
+    else
+        return self:GetEffectiveWidth();
+    end
+end
+
+function NarciDarkRoundButtonMixin:Select()
+    self.SelectedIcon:Show();
+    self.isSelected = true;
+end
+
+function NarciDarkRoundButtonMixin:Deselect()
+    self.SelectedIcon:Hide();
+    self.isSelected = nil;
+end
+
+function NarciDarkRoundButtonMixin:UpdateVisual()
+    if self.groupIndex then
+        local buttons = self:GetParent().buttonGroups[self.groupIndex];
+        for i = 1, #buttons do
+            buttons[i]:Deselect()
+        end
+    end
+    self:Select();
+end
+
+function NarciDarkRoundButtonMixin:OnClick()
+    self:UpdateVisual();
+    if self.onClickFunc then
+        self.onClickFunc();
+    end
+end
+
+function NarciDarkRoundButtonMixin:OnMouseDown()
+    self.PushedHighlight:Show();
+end
+
+function NarciDarkRoundButtonMixin:OnMouseUp()
+    self.PushedHighlight:Hide();
+end
+
+function NarciDarkRoundButtonMixin:UpdateGroupHitBox()
+    if self.groupIndex then
+        local maxWidth = self:GetGroupEffectiveWidth();
+        local buttons = self:GetParent().buttonGroups[self.groupIndex];
+        for i = 1, #buttons do
+            buttons[i]:SetHitRectInsets(0, buttons[i]:GetWidth() - maxWidth, 0, 0);
+        end
+        return maxWidth
+    end
+end
+
+
+NarciDarkSquareButtonMixin = {};
+
+function NarciDarkSquareButtonMixin:OnLoad()
+    self.Background:SetTexture("Interface\\AddOns\\Narcissus\\Art\\Buttons\\Button-RoundedSquare", nil, nil, "TRILINEAR");
+end
+
+function NarciDarkSquareButtonMixin:Initialize(groupIndex, icon, texCoord, tooltip, onClickFunc)
+    if tooltip then
+        self.tooltip = tooltip;
+    end
+
+    if icon then
+        self.Icon:SetTexture(icon, nil, nil, "TRILINEAR");
+        if texCoord then
+            self.Icon:SetTexCoord( unpack(texCoord) );
+        end
+    end
+
+    if groupIndex then
+        self.groupIndex = groupIndex;
+        local parent = self:GetParent();
+        if not parent.buttonGroups then
+            parent.buttonGroups = {};
+        end
+        if not parent.buttonGroups[groupIndex] then
+            parent.buttonGroups[groupIndex] = {};
+        end
+        tinsert(parent.buttonGroups[groupIndex], self);
+    end
+
+    if onClickFunc then
+        self.onClickFunc = onClickFunc;
+    end
+end
+
+function NarciDarkSquareButtonMixin:OnClick()
+    self:UpdateVisual();
+    if self.onClickFunc then
+        self.onClickFunc();
+    end
+end
+
+function NarciDarkSquareButtonMixin:UpdateVisual()
+    if self.groupIndex then
+        local button;
+        local buttons = self:GetParent().buttonGroups[self.groupIndex];
+        for i = 1, #buttons do
+            button = buttons[i];
+            if self ~= button then
+                button.Background:SetTexCoord(0, 0.25, 0, 1);
+                button.Icon:SetAlpha(0.5);
+                button.isSelected = nil;
+            end
+        end
+    end
+    self.Background:SetTexCoord(0.25, 0.5, 0, 1);
+    self.Icon:SetAlpha(1);
+    self.isSelected = true;
+end
+
+function NarciDarkSquareButtonMixin:OnEnter()
+    self.Icon:SetAlpha(1);
+end
+
+function NarciDarkSquareButtonMixin:OnLeave()
+    if not self.isSelected then
+        self.Icon:SetAlpha(0.5);
+    end
+end
+
+function NarciDarkSquareButtonMixin:OnMouseDown()
+    self.PushedHighlight:Show();
+end
+
+function NarciDarkSquareButtonMixin:OnMouseUp()
+    self.PushedHighlight:Hide();
+end
+
+-----------------------------------------------------------
+--Clipboard
+NarciClipboardMixin = {};
+
+function NarciClipboardMixin:OnLoad()
+    self.Tooltip:SetText(Narci.L["Copied"]);
+end
+
+function NarciClipboardMixin:SetText(text)
+    self.EditBox:SetText(text);
+end
+
+function NarciClipboardMixin:SetFocus()
+    self.EditBox:SetFocus();
+end
+
+function NarciClipboardMixin:ClearFocus()
+    self.EditBox:ClearFocus();
+end
+
+function NarciClipboardMixin:ShowClipboard()
+    self:Show();
+    self.EditBox:Show();
+    self:StopAnimating();
+    self.Tooltip:SetAlpha(0);
+end
+
+function NarciClipboardMixin:ReAnchorTooltipToObject(object)
+    if object then
+        self.Tooltip:ClearAllPoints();
+        self.Tooltip:SetPoint("CENTER", object, "CENTER", 0, 0);
+    end
+end
+
+
+NarciNonEditableEditBoxMixin = {};
+
+function NarciNonEditableEditBoxMixin:OnLoad()
+
+end
+
+function NarciNonEditableEditBoxMixin:SelectText()
+    self:SetCursorPosition(0);
+    self:HighlightText();
+end
+
+function NarciNonEditableEditBoxMixin:OnHide()
+    self:StopAnimating();
+end
+
+function NarciNonEditableEditBoxMixin:Quit()
+    self:ClearFocus();
+    if self.onQuitFunc then
+        self.onQuitFunc();
+    end
+end
+
+function NarciNonEditableEditBoxMixin:OnTextChanged(isUserInput)
+    if isUserInput then
+        self:Quit();
+    end
+end
+
+function NarciNonEditableEditBoxMixin:OnKeyDown(key, down)
+    local keys = CreateKeyChordString(key);
+    if keys == "CTRL-C" or key == "COMMAND-C" then
+        self.hasCopied = true;
+        After(0, function()
+            self:GetParent().Tooltip.good:Play();
+            self:Hide();
+        end);
+    end
+end
+
+
+-----------------------------------------------------------
+NarciLanguageUtil = {};
+NarciLanguageUtil.wowheadLinkPrefix = {
+    ["default"] = "www",
+    ["deDE"] = "de",
+    ["esES"] = "es",
+    ["esMX"] = "es",
+    ["frFR"] = "fr",
+    ["itIT"] = "it",
+    ["ptBR"] = "pt",
+    ["ruRU"] = "ru",
+    ["koKR"] = "ko",
+    ["zhCN"] = "cn",
+    ["zhTW"] = "cn",
+};
+
+NarciLanguageUtil.wowheadLinkPrefix.primary = NarciLanguageUtil.wowheadLinkPrefix[LANGUAGE] or "www";
+
+function NarciLanguageUtil:GetWowheadLink(specificLanguage)
+    local prefix;
+    if specificLanguage then
+        prefix = self.wowheadLinkPrefix[ tostring(specificLanguage) ] or "www";
+    else
+        prefix = self.wowheadLinkPrefix.primary;
+    end
+    return ( "https://".. prefix .. ".wowhead.com/");
+end
+
+-----------------------------------------------------------
+NarciChainAnimationMixin = {};
+
+function NarciChainAnimationMixin:Initialize(size, isLinked)
+    local offset = 4;
+    local unchainedOffset = 8;
+    local side = 24;
+    local tex = "Interface\\AddOns\\Narcissus\\Art\\Widgets\\LightSetup\\Chain";
+
+    self:SetScale(size / side);
+    self.isLinked = isLinked;
+
+    self.chains = {
+        self.UpTop, self.DownTop, self.UpBottom, self.DownBottom,
+    }
+    self.unchains = {
+        self.ChainShardUp, self.ChainShardDown, self.UpBroken, self.DownBroken
+    }
+
+    for i = 1, #self.chains do
+        self.chains[i]:SetTexture(tex, nil, nil, "TRILINEAR");
+        self.chains[i]:SetSize(side, side);
+        if i % 2 == 1 then
+            self.chains[i]:SetPoint("CENTER", self, "CENTER", offset, offset);
+        else
+            self.chains[i]:SetPoint("CENTER", self, "CENTER", -offset, -offset);
+        end
+    end
+    
+    self.UpBroken:SetSize(side, side);
+    self.UpBroken:SetTexture(tex, nil, nil, "TRILINEAR");
+    self.UpBroken:SetPoint("CENTER", self, "CENTER", unchainedOffset, unchainedOffset);
+    self.DownBroken:SetSize(side, side);
+    self.DownBroken:SetTexture(tex, nil, nil, "TRILINEAR");
+    self.DownBroken:SetPoint("CENTER", self, "CENTER", -unchainedOffset, -unchainedOffset);
+
+    local tex2 = "Interface\\AddOns\\Narcissus\\Art\\Widgets\\LightSetup\\ChainShard";
+    self.ChainShardUp:SetSize(side/2, side/2);
+    self.ChainShardUp:SetTexture(tex2, nil, nil, "TRILINEAR");
+    self.ChainShardDown:SetSize(side/2, side/2);
+    self.ChainShardDown:SetTexture(tex2, nil, nil, "TRILINEAR");
+
+    local tex3 = "Interface\\AddOns\\Narcissus\\Art\\Widgets\\LightSetup\\ChainWave";
+    self.WaveExpand:SetSize(side/2, side/2);
+    self.WaveExpand:SetTexture(tex3, nil, nil, "TRILINEAR");
+
+    for i = 1, #self.chains do
+        self.chains[i]:SetShown(isLinked);
+    end
+    for i = 1, #self.unchains do
+        self.unchains[i]:SetShown(not isLinked);
+    end
+end
+
+function NarciChainAnimationMixin:Switch()
+    self:StopAnimating();
+    local isLinked = not self.isLinked;
+    self.isLinked = isLinked;
+    if isLinked then
+        for i = 1, #self.unchains do
+            self.unchains[i]:Hide();
+        end
+        for i = 1, #self.chains do
+            self.chains[i]:Show();
+            self.chains[i].Link:Play();
+        end
+    else
+        for i = 1, #self.unchains do
+            self.unchains[i]:Show();
+            self.unchains[i].Unlink:Play();
+        end
+        for i = 1, #self.chains do
+            self.chains[i]:Hide();
+        end
+        self.WaveExpand.Unlink:Play();
+    end
+
+    if not self.isPlayingSound then
+        self.isPlayingSound = true;
+        After(0.5, function() self.isPlayingSound = nil end);
+        if isLinked then
+            PlaySound(1188, "SFX", false);
+        else
+            PlaySound(112052, "SFX", false);
+        end
+    end
+end
 
 --[[
 function TestFX(modelFileID, zoomDistance, view)

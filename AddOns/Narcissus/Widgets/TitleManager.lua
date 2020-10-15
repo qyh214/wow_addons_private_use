@@ -1,5 +1,5 @@
-local abs = math.abs
---local L = Narci.L
+local abs = math.abs;
+local L = Narci.L;
 local ColorTable = Narci_ColorTable;
 local ColorIndex = Narci_GlobalColorIndex;
 -----------------------------
@@ -15,6 +15,7 @@ local function BuildTitlesDB(object)
 end
 
 local TitlesDB = BuildTitlesDB(Narci_CharacterTitlesTable);
+
 -----------------------------
 -------Sorting Function------
 -----------------------------
@@ -58,12 +59,12 @@ end
 local function Narci_GetKnownTitles(sortMethod)
 	local playerTitles = {};
 	local numRare = 0;
-	local titleCount = 2;
-	local playerTitle = false;	
+	local titleCount = 2;	
 	local tempName = 0;
 	local CurrentTitle = -1;
 	local numPVP, numPVE, numACHV, numREPU, numEVENT = 0, 0, 0, 0, 0;
-	local category, rarity;
+	local category, rarity;	
+	local isPlayerTitle;
 	playerTitles[1] = { };
 	-- reserving space for None so it doesn't get sorted out of the top position
 	playerTitles[1].name = "       ";
@@ -73,8 +74,8 @@ local function Narci_GetKnownTitles(sortMethod)
 
 	for i = 1, GetNumTitles() do
 		if ( IsTitleKnown(i) ) then
-			tempName, playerTitle = GetTitleName(i);
-			if ( tempName and playerTitle ) then
+			tempName, isPlayerTitle = GetTitleName(i);
+			if ( tempName and isPlayerTitle ) then
 				playerTitles[titleCount] = playerTitles[titleCount] or { };
 				playerTitles[titleCount].name = strtrim(tempName);
 				playerTitles[titleCount].id = i;
@@ -86,6 +87,7 @@ local function Narci_GetKnownTitles(sortMethod)
 					category = "achv";
 					rarity = 0;
 				end
+				
 				playerTitles[titleCount].category = category;
 				playerTitles[titleCount].rarity = rarity;
 				if category == "pvp" then
@@ -104,6 +106,15 @@ local function Narci_GetKnownTitles(sortMethod)
 					numRare = numRare + 1;
 				end
 				titleCount = titleCount + 1;
+			end
+		end
+
+		--------------------------
+		--Debug Get unlogged title
+		if false and not TitlesDB[i] then
+			tempName, isPlayerTitle = GetTitleName(i);
+			if tempName and isPlayerTitle then
+				print("Unlogged Title #"..i..": "..tempName);
 			end
 		end
 	end
@@ -135,7 +146,7 @@ end
 --Derivative from Blizzard: HybridScrollFrame_CreateButtons
 
 local function NarciAPI_BuildScrollFrame(self, buttonTemplate, initialOffsetX, initialOffsetY, initialPoint, initialRelative, offsetX, offsetY, point, relativePoint)
-	local scrollChild = self.scrollChild;
+	local ScrollChild = self.ScrollChild;
 	local button, buttonHeight, buttons, numButtons;
 
 	local parentName = self:GetName();
@@ -152,9 +163,9 @@ local function NarciAPI_BuildScrollFrame(self, buttonTemplate, initialOffsetX, i
 		buttons = self.buttons;
 		buttonHeight = buttons[1]:GetHeight();
 	else
-		button = CreateFrame("BUTTON", buttonName and (buttonName .. 1) or nil, scrollChild, buttonTemplate);
+		button = CreateFrame("BUTTON", buttonName and (buttonName .. 1) or nil, ScrollChild, buttonTemplate);
 		buttonHeight = button:GetHeight();
-		button:SetPoint(initialPoint, scrollChild, initialRelative, initialOffsetX, initialOffsetY);
+		button:SetPoint(initialPoint, ScrollChild, initialRelative, initialOffsetX, initialOffsetY);
 		buttons = {}
 		if button.BackgroundColor then
 			button.BackgroundColor:SetGradient("HORIZONTAL", 0, 0 ,0, 0.2, 0.2, 0.2);
@@ -167,7 +178,7 @@ local function NarciAPI_BuildScrollFrame(self, buttonTemplate, initialOffsetX, i
 	local numButtons = math.ceil(self:GetHeight() / buttonHeight) + 1;
 
 	for i = #buttons + 1, numButtons do
-		button = CreateFrame("BUTTON", buttonName and (buttonName .. i) or nil, scrollChild, buttonTemplate);
+		button = CreateFrame("BUTTON", buttonName and (buttonName .. i) or nil, ScrollChild, buttonTemplate);
 		button:SetPoint(point, buttons[i-1], relativePoint, offsetX, offsetY);
 		if button.BackgroundColor then
 			if i % 2 ==1 then
@@ -179,14 +190,14 @@ local function NarciAPI_BuildScrollFrame(self, buttonTemplate, initialOffsetX, i
 		tinsert(buttons, button);
 	end
 
-	scrollChild:SetWidth(self:GetWidth())
-	scrollChild:SetHeight(numButtons * buttonHeight);
+	ScrollChild:SetWidth(self:GetWidth());
+	ScrollChild:SetHeight(numButtons * buttonHeight);
 	self:SetVerticalScroll(0);
 	self:UpdateScrollChildRect();
 
 	self.buttons = buttons;
 	local scrollBar = self.scrollBar;
-	scrollBar:SetMinMaxValues(0, numButtons * buttonHeight)
+	scrollBar:SetMinMaxValues(0, numButtons * buttonHeight);
 	scrollBar.buttonHeight = buttonHeight;
 	scrollBar:SetValueStep(buttonHeight);
 	scrollBar:SetStepsPerPage(numButtons - 2);
@@ -222,14 +233,14 @@ local function SmoothScrollFrame_Update(self, totalHeight, displayedHeight)
 
 	self.range = range;
 	self.totalHeight = totalHeight;
-	self.scrollChild:SetHeight(displayedHeight);
+	self.ScrollChild:SetHeight(displayedHeight);
 	self:UpdateScrollChildRect();
 end
 
 --Derivative from Blizzard: HybridScrollFrame_Update
-function Narci_TitileManager_UpdateList()
+local function Narci_TitileManager_UpdateList()
 	local scrollFrame = Narci_TitleManager.ListScrollFrame;
-	local List = scrollFrame.updatedList
+	local List = scrollFrame.updatedList;
 	local offset = HybridScrollFrame_GetOffset(scrollFrame);
 	local buttons = scrollFrame.buttons;
 
@@ -239,7 +250,7 @@ function Narci_TitileManager_UpdateList()
 		scrollFrame.scrollBar.thumbTexture:SetHeight(max((320*2/numList), 8))
 	end
 
-	for i=1, #buttons do
+	for i= 1, #buttons do
 		local button = buttons[i];
 		local displayIndex = i + offset;
 		if ( displayIndex <= numList ) then
@@ -275,6 +286,7 @@ function Narci_TitileManager_UpdateList()
 			button:SetEnabled(false);
 		end
 	end
+	
 	local totalHeight = numList * buttons[1]:GetHeight();
 	SmoothScrollFrame_Update(scrollFrame, totalHeight, scrollFrame:GetHeight());
 end
@@ -305,7 +317,7 @@ local function CreateSliderTextureAndLabel()
 	local numTotal = CategoryNumDetails.sum or 1;
 	local slider = Narci_TitleManager.ListScrollFrame.scrollBar;
 	local sliderHeight = Narci_TitleManager_ListScrollFrame:GetHeight() or 0;
-	local scrollChildHeight = numTotal * 20 --Title Button Height;
+	local ScrollChildHeight = numTotal * 20 --Title Button Height;
 	local baseHeight = Narci_TitleManager.ListScrollFrame:GetHeight() or 1;
 	local offsetX = 2;
 	local width = 2;
@@ -318,7 +330,7 @@ local function CreateSliderTextureAndLabel()
 	local Tex = slider:CreateTexture(TexName.."1", "BACKGROUND");
 	local Texs = {};
 	local buttonName = "NarciTitleSliderLabel";
-	local button = CreateFrame("BUTTON", buttonName.."1", slider, "TitleCategoryLabelTemplate");
+	local button = CreateFrame("BUTTON", buttonName.."1", slider, "NarciTitleCategoryLabelTemplate");
 	local buttonHeight = button:GetHeight();
 	local buttons = {};
 	local num = CategoryNumDetails[1][1] or 0;
@@ -359,7 +371,7 @@ local function CreateSliderTextureAndLabel()
 			Tex:SetPoint("BOTTOM", slider, "BOTTOM", 0, 0)
 		end
 
-		button = CreateFrame("BUTTON", buttonName..i, slider, "TitleCategoryLabelTemplate");
+		button = CreateFrame("BUTTON", buttonName..i, slider, "NarciTitleCategoryLabelTemplate");
 		button:SetPoint("TOPLEFT", Tex, "TOPRIGHT", offsetX, 0)
 		button.Label:SetText(num.." "..CategoryNumDetails[i][2]);
 
@@ -401,6 +413,7 @@ local function HideSliderLabel()
 		slider.buttons[i]:SetShown(flag);
 	end
 end
+
 --Initialize
 local playerTitles_SortedByAlphabet = {};
 local playerTitles_SortedByCategory = {};
@@ -437,14 +450,13 @@ function Narci_TitleManager_Filter_OnClick(self)
 	HideSliderLabel();
 	Narci_TitleManager.ListScrollFrame.scrollBar:SetValue(0);
 end
------------------------------
-------AAA Smooth Scroll------
------------------------------
-local NarciAPI_SmoothScroll_Initialization = NarciAPI_SmoothScroll_Initialization;
 
+-----------------------------
+-----Create Smooth Scroll----
+-----------------------------
 function Narci_TitleManager_ListScrollFrame_OnLoad(self)
     self:EnableMouse(true);
-    NarciAPI_BuildScrollFrame(self, "OptionalTitleTemplate", 0, 0, nil, nil, 0, 0);
+    NarciAPI_BuildScrollFrame(self, "NarciOptionalTitleTemplate", 0, 0, nil, nil, 0, 0);
 	NarciAPI_SmoothScroll_Initialization(self, playerTitles, Narci_TitileManager_UpdateList, 3, 0.2)
 end
 
@@ -473,12 +485,10 @@ local TitleManagerHeight = 320 + 20;
 local AnimDuration = 0.4;
 --/run Narci_TitleFrame_AnimFrame:Show()
 function Narci_TitleFrame_AnimFrame_OnUpdate(self, elapsed)
-	local height, alpha;
-	local t = self.TimeSinceLastUpdate;
-	local targetFrame = Narci_TitleManager;
-	local blackFrame = Narci_TitleFrameBlackScreen;
+	local t = self.t;
 
-	if self.OppoDirection then
+	local height, alpha;
+	if self.isCollapsed then
 		height = outSine(t, self.startHeight, 0 - self.startHeight, AnimDuration);
 		alpha = outSine(t, self.startAlpha, 0 - self.startAlpha, AnimDuration);
 	else
@@ -486,34 +496,34 @@ function Narci_TitleFrame_AnimFrame_OnUpdate(self, elapsed)
 		alpha = outSine(t, self.startAlpha, 1 - self.startAlpha, AnimDuration);
 	end
 
-	targetFrame:SetHeight(height);
-	blackFrame:SetAlpha(alpha);
+	self.TitleManager:SetHeight(height);
+	self.BlackScreen:SetAlpha(alpha);
 
 	if t >= AnimDuration then
-		if self.OppoDirection then
-			targetFrame:SetHeight(0);
-			blackFrame:SetAlpha(0);
+		if self.isCollapsed then
+			self.TitleManager:SetHeight(0);
+			self.BlackScreen:SetAlpha(0);
 		else
-			targetFrame:SetHeight(TitleManagerHeight);
-			blackFrame:SetAlpha(1);
+			self.TitleManager:SetHeight(TitleManagerHeight);
+			self.BlackScreen:SetAlpha(1);
 		end
 
 		self:Hide();
 		return;
 	end
 
-	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
+	self.t = self.t + elapsed;
 end
 
 local function ShowTitleMangerTooltip(self, elapsed)
 	self.counter = self.counter + elapsed;
 	if self.counter > 0.8 then
 		local tooltipFrame = self.Tooltip;
-		local titleFrame = PlayerInfoFrame.Miscellaneous;
+		local titleFrame = Narci_PlayerInfoFrame.Miscellaneous;
 		if self.IsOn then
-			tooltipFrame:SetText(NARCI_TITLE_MANAGER_CLOSE);
+			tooltipFrame:SetText(L["Close Title Manager"]);
 		else
-			tooltipFrame:SetText(NARCI_TITLE_MANAGER_OPEN);
+			tooltipFrame:SetText(L["Open Title Manager"]);
 		end
 		UIFrameFadeIn(tooltipFrame, 0.25, tooltipFrame:GetAlpha(), 1);
 		UIFrameFadeOut(titleFrame, 0.15, titleFrame:GetAlpha(), 0);
@@ -523,7 +533,7 @@ local function ShowTitleMangerTooltip(self, elapsed)
 	end
 end
 
-function Narci_TitleManager_Switch_TooltipCountDown(self)
+local function Narci_TitleManager_Switch_TooltipCountDown(self)
 	self:SetScript("OnUpdate", ShowTitleMangerTooltip);
 end
 
@@ -560,26 +570,25 @@ local function SetTitleSourceTooltip()
 	end
 end
 
-local TooltipDelay = 0.6
 local function Narci_TitleManager_Title_TooltipCountDown(self, elapsed)
-	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
-	if  self.TimeSinceLastUpdate > TooltipDelay then
-		self:SetScript("OnUpdate", function() end);
-		if Narci_TitleManager_Switch.IsOn then
+	self.t = self.t + elapsed;
+	if  self.t > 0.6 then
+		self:SetScript("OnUpdate", function(self) end);
+		if self.switch.IsOn then
 			UIFrameFadeIn(self:GetParent(), 0.25, self:GetParent():GetAlpha(), 1);
 		end
 		self:Hide()
 	end
 end
 
-function OptionalTitle_OnEnter(self)
+function Narci_OptionalTitle_OnEnter(self)
 	local id = self.buttonID;
 	--print(id)
 	--print(TitlesDB[id][3])
 	local tooltipFrame = Narci_TitleManager_TitleTooltip;
 
 	if tooltipFrame:GetAlpha() ~= 1 then
-		tooltipFrame.AnimFrame.TimeSinceLastUpdate = 0;
+		tooltipFrame.AnimFrame.t = 0;
 		tooltipFrame.AnimFrame:SetScript("OnUpdate", Narci_TitleManager_Title_TooltipCountDown);
 	end
 
@@ -596,8 +605,76 @@ function OptionalTitle_OnEnter(self)
 			tooltipFrame:SetPoint("TOPRIGHT", self, "TOPLEFT", -8, 0);
 			tooltipFrame.AnimFrame:Show();
 		else
-			tooltipFrame:SetAlpha(0)
+			tooltipFrame:SetAlpha(0);
 			tooltipFrame.AnimFrame:Hide();
 		end
 	end
+end
+
+NarciTitleManagerSwitchMixin = CreateFromMixins(ExpansionTransitionBackdropTemplateMixin);
+
+function NarciTitleManagerSwitchMixin:OnLoad()
+	self.IsOn = false;
+	self.counter = 0;
+	Narci_TitleManager_TitleTooltip.AnimFrame.switch = self;
+
+	local backdropInfo = {
+		edgeFile = "Interface\\AddOns\\Narcissus\\Art\\Tooltip\\Tooltip-Border-White",
+		tile = true,
+		tileEdge = true,
+		tileSize = 12,
+		edgeSize = 12,
+	}
+	self:SetBackdrop(backdropInfo);
+end
+
+function NarciTitleManagerSwitchMixin:OnClick()
+	self.IsOn = not self.IsOn;
+	local animFrame = Narci_TitleFrame_AnimFrame;
+	animFrame:Hide()
+	if self.IsOn then
+		Narci_TitleFrame:Show()
+		animFrame.isCollapsed = false;
+		self.Tooltip:SetText(L["Close Title Manager"]);
+	else
+		animFrame.isCollapsed = true;
+		self.Tooltip:SetText(L["Open Title Manager"]);
+
+		Narci_TitleManager_TitleTooltip.AnimFrame:Hide();
+		UIFrameFadeOut(Narci_TitleManager_TitleTooltip, 0.15, Narci_TitleManager_TitleTooltip:GetAlpha(), 0);
+	end
+	animFrame:Show();
+
+	self:SetScript("OnUpdate",function() end);
+	self.counter = 0;
+end
+
+function NarciTitleManagerSwitchMixin:OnEnter()
+	Narci_TitleManager_TitleTooltip.AnimFrame:Hide();
+	UIFrameFadeIn(self, 0.15, self:GetAlpha(), 1);
+	Narci_TitleManager_Switch_TooltipCountDown(self);
+end
+
+function NarciTitleManagerSwitchMixin:OnLeave()
+	UIFrameFadeOut(self, 0.25, self:GetAlpha(), 0);
+	self.counter = 0;
+	self:SetScript("OnUpdate",function() end);
+	UIFrameFadeOut(self.Tooltip, 0.15, self.Tooltip:GetAlpha(), 0);
+	local titleFrame = Narci_PlayerInfoFrame.Miscellaneous;
+	UIFrameFadeIn(titleFrame, 0.25, titleFrame:GetAlpha(), 1);
+end
+
+function NarciTitleManagerSwitchMixin:OnShow()
+	local manager = Narci_TitleManager;
+	manager:SetHeight(0);
+	Narci_TitleFrame_AnimFrame:Hide();
+	Narci_TitleFrame.BlackScreen:SetAlpha(0);
+	manager.ListScrollFrame.scrollBar:SetValue(40);   --workaround
+	manager.ListScrollFrame.scrollBar:SetValue(0);
+	Narci_TitleManager_TitleTooltip:Show();
+end
+
+function NarciTitleManagerSwitchMixin:OnHide()
+	self:SetAlpha(0);
+	self.counter = 0;
 end

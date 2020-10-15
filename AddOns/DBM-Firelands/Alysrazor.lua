@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(194, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806141910")
+mod:SetRevision("20200918144529")
 mod:SetCreatureID(52530)
 mod:SetEncounterID(1206)
 --mod:SetModelSound("Sound\\Creature\\ALYSRAZOR\\VO_FL_ALYSRAZOR_AGGRO.ogg", "Sound\\Creature\\ALYSRAZOR\\VO_FL_ALYSRAZOR_TRANSITION_02.ogg")
@@ -66,8 +66,7 @@ local PowerLevel = DBM:GetSpellInfo(98734)
 function mod:OnCombatStart(delay)
 	if self:IsHeroic() then
 		timerFieryVortexCD:Start(243-delay)--Probably not right.
-		timerCataclysmCD:Start(32-delay)
-		timerHatchEggs:Start(42-delay)
+		timerCataclysmCD:Start(30.4-delay)
 		timerFirestormCD:Start(94-delay)
 		warnFirestormSoon:Schedule(84-delay)
 		timerHatchEggs:Start(37-delay)

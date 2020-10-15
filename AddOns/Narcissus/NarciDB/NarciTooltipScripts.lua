@@ -1,33 +1,22 @@
-
 NarciTooltipMixin = {};
 
 local TP = NarciTooltipMixin;
 local GetMouseFocus = GetMouseFocus;
 local IsMouseButtonDown = IsMouseButtonDown;
-local UIFrameFadeIn = UIFrameFadeIn;
-local UIFrameFadeOut = UIFrameFadeOut;
-local FadeFrame = NarciAPI_FadeFrame;
 local max = math.max;
 local sin = math.sin;
 local pi = math.pi;
-local After = C_Timer.After
+local After = C_Timer.After;
 -----------------------------------
 local tooltipAnchor, pointerOffsetX, pointerOffsetY, isHorizontal;
 local pendingText, pendingTexture;
 local callbackFunc;
-local minSize = 48;
-local textInset = 18;
-local animDuration = 0.4;
+local MIN_SIZE = 48;
+local TEXT_PADDING = 18;
+local DEFAULT_DELAY = 0.6;
+local DEFAULT_POINTER_OFFSET = -8;
+local FIXED_WIDTH = 270;
 local delayDuration = 0.6;
-local DefaultDelay = 0.6;
-local DefaultPointerOffset = -8;
-local fixedWidth = 270;
------------------------------------
-
--------------LibEasing-------------
-local function outSine(t, b, c, d)
-	return c * sin(t / d * (pi / 2)) + b
-end
 -----------------------------------
 
 local PATH_PREFIX = "Interface/AddOns/Narcissus/Guide/IMG/";
@@ -43,10 +32,13 @@ local Images = {
 
 
 -----------------------------------
+local AutoClose = CreateFrame("Frame");
+AutoClose:Hide();
+
 local Timer = CreateFrame("Frame");
 
 Timer:Hide();
-Timer.TimeSinceLastUpdate = 0;
+Timer.t = 0;
 
 local function FadeInTooltip()
     local tooltip = NarciTooltip;
@@ -62,7 +54,7 @@ local function FadeInTooltip()
     end
 
     local offsetX = pointerOffsetX or 0;
-    local offsetY = pointerOffsetY or DefaultPointerOffset;
+    local offsetY = pointerOffsetY or DEFAULT_POINTER_OFFSET;
 
     if isHorizontal then
         tooltip:SetPoint("RIGHT", tooltipAnchor, "LEFT", offsetX, offsetY);
@@ -77,7 +69,7 @@ local function FadeInTooltip()
     end
     
     After(0, function()
-        UIFrameFadeIn(tooltip, 0.12, 0, 1);
+        tooltip:FadeIn(0.12);
     end);
 end
 
@@ -87,16 +79,21 @@ local function DelayedEntrance(self, elapsed)
         return;
     end
 
-    self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
-    if self.TimeSinceLastUpdate >= delayDuration then
+    self.t = self.t + elapsed;
+    if self.t >= delayDuration then
         self:Hide();
         FadeInTooltip();
     end
 end
 
 Timer:SetScript("OnUpdate", DelayedEntrance);
+
+Timer:SetScript("OnShow", function()
+    AutoClose:Show();
+end);
+
 Timer:SetScript("OnHide", function(self)
-    self.TimeSinceLastUpdate = 0;
+    self.t = 0;
 end)
 
 local function SetSingleLine()
@@ -148,8 +145,22 @@ local function GetIconFile(anchorFrame)
     return texs;
 end
 
+AutoClose:SetScript("OnShow", function(self)
+    self:RegisterEvent("GLOBAL_MOUSE_DOWN");
+end)
+
+AutoClose:SetScript("OnHide", function(self)
+    self:UnregisterEvent("GLOBAL_MOUSE_DOWN");
+end)
+
+AutoClose:SetScript("OnEvent", function(self)
+    self:Hide();
+    Timer:Hide();
+    NarciTooltip:FadeOut(0.15);
+end)
 -----------------------------------
 function TP:OnHide()
+    AutoClose:Hide();
     Timer:Hide();
     self:ClearAllPoints();
     self.Pointer:ClearAllPoints();
@@ -164,31 +175,28 @@ end
 function TP:OnLoad()
     self.IsSignleLine = true;
     self.Scale = 1;
+    local animFade = NarciAPI_CreateFadingFrame(self);
 end
 
 function TP:OnSizeChanged(width, height)
-    self:SetSize(max(minSize, width), max(minSize, height));
+    self:SetSize(max(MIN_SIZE, width), max(MIN_SIZE, height));
     local insetHeight = self.inset:GetHeight();
     self.Icon:SetSize(insetHeight, insetHeight);
 end
 
 function TP:OnShow()
+    AutoClose:Show();
     if self.IsSignleLine then
         local textWidth, textHeight = self.Text0:GetSize();
-        self:SetSize(textWidth + 2*textInset, textHeight + 2*textInset);
+        self:SetSize(textWidth + 2*TEXT_PADDING, textHeight + 2*TEXT_PADDING);
     else
-        self:SetWidth(fixedWidth);
-        self.Guide:SetHeight(fixedWidth / 2 + 12);
-        local height = (self.Header:GetHeight() + self.Text1:GetHeight() + 2 * (textInset - 6) + 24 + 4 + 1);
+        self:SetWidth(FIXED_WIDTH);
+        self.Guide:SetHeight(FIXED_WIDTH / 2 + 12);
+        local height = (self.Header:GetHeight() + self.Text1:GetHeight() + 2 * (TEXT_PADDING - 6) + 24 + 4 + 1);
         self:SetHeight(height);
     end
 end
 
-function TP:FadeOut()
-    if self:IsShown() then
-        UIFrameFadeOut(self, 0.2, self:GetAlpha(), 0);
-    end
-end
 
 function TP:JustHide()
     self:Hide();
@@ -198,11 +206,10 @@ end
 
 function TP:NewText(texts, offsetX, offsetY, delay, horizontal)
     Timer:Hide();
-    --UIFrameFadeOut(self, 0.2, self:GetAlpha(), 0);
     tooltipAnchor = GetMouseFocus();
     if not tooltipAnchor or tooltipAnchor == WorldFrame or not texts then return; end;
     pointerOffsetX, pointerOffsetY = offsetX, offsetY;
-    delayDuration = delay or DefaultDelay;
+    delayDuration = delay or DEFAULT_DELAY;
     isHorizontal = horizontal;
     pendingText = texts;
     pendingTexture = GetIconFile(tooltipAnchor);

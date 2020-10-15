@@ -1,4 +1,4 @@
-## Interface: 80300
+## Interface: 90001
 ## Title: RSA [|c50C41F3BDeath Knight|r]
 ## Notes: RSA Death Knight Module. This is needed to announce Death Knight Spells.
 ## Author: Raeli

@@ -1,4 +1,5 @@
 if not WeakAuras.IsCorrectVersion() then return end
+local AddonName, OptionsPrivate = ...
 
 -- Lua APIs
 local pairs, rad = pairs, rad
@@ -438,7 +439,7 @@ local function ConstructModelPicker(frame)
   return group
 end
 
-function WeakAuras.ModelPicker(frame)
+function OptionsPrivate.ModelPicker(frame)
   modelPicker = modelPicker or ConstructModelPicker(frame)
   return modelPicker
 end

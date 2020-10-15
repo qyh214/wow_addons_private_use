@@ -914,7 +914,7 @@ L.Export = "내보내기"
 PH.ExportInfo = "* Excel이나 Google Docs에 사용하기 위해"
 L.S_Strata = "프레임 우선순위"
 
-L.senable = "사용"
+L.Enable = "사용"
 
 L.minimaptooltiplmp = "클릭 - 메인 창"
 L.minimaptooltiprmp = "오른쪽 클릭 - 메뉴 열기"

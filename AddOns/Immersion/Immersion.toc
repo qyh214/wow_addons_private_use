@@ -1,7 +1,7 @@
-## Interface: 80300
+## Interface: 90001
 ## Title: Immersion
 ## Notes: Immersive replacement for quest & gossip
-## Version: 1.2.3
+## Version: 1.2.5
 ## Author: Sebastian Lindfors
 ## SavedVariables: ImmersionSetup
 ## OptionalDeps: ConsolePort
@@ -15,13 +15,13 @@ Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
 Libs\AceGUI-3.0\AceGUI-3.0.xml
 Libs\AceConfig-3.0\AceConfig-3.0.xml
 
-# Extra stuff & config
-Extras.lua
-Config.lua
-
 # Compatibility scripts
 Compat.lua
 Interface.lua
+
+# Extra stuff & config
+Utils.lua
+Config.lua
 
 # Mixins
 Mixins\Scaler.lua
@@ -41,5 +41,6 @@ Display\Fademgr.lua
 # Logic
 Logic\Logic.lua
 Logic\Events.lua
+Logic\Inspector.lua
 Logic\Controller.lua
 Logic\Toast.lua

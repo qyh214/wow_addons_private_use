@@ -31,6 +31,8 @@ local DisableControls = MSBTPopups.DisableControls
 -- Local references to various variables for faster access.
 local fonts = MSBTMedia.fonts
 
+local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+
 
 -------------------------------------------------------------------------------
 -- Private constants.
@@ -710,12 +712,14 @@ local function GeneralTab_Populate()
 		controls.enableBlizzardDamage:SetChecked(true)
 		currentProfile.enableBlizzardDamage = true
 	end
-	if GetCVar("floatingCombatTextCombatHealing") == "0" then
-		controls.enableBlizzardHealing:SetChecked(false)
-		currentProfile.enableBlizzardHealing = false
-	else
-		controls.enableBlizzardHealing:SetChecked(true)
-		currentProfile.enableBlizzardHealing = true
+	if not IsClassic then
+		if GetCVar("floatingCombatTextCombatHealing") == "0" then
+			controls.enableBlizzardHealing:SetChecked(false)
+			currentProfile.enableBlizzardHealing = false
+		else
+			controls.enableBlizzardHealing:SetChecked(true)
+			currentProfile.enableBlizzardHealing = true
+		end
 	end
 	controls.stickyCritsCheckbox:SetChecked(not currentProfile.stickyCritsDisabled)
 	controls.enableSoundsCheckbox:SetChecked(not currentProfile.soundsDisabled)
@@ -844,25 +848,26 @@ local function GeneralTab_Create()
 	controls.enableBlizzardDamage = checkbox
 
 	-- Enable Blizzard healing.
-	checkbox = MSBTControls.CreateCheckbox(tabFrame)
-	objLocale = L.CHECKBOXES["enableBlizzardHealing"]
-	checkbox:Configure(28, objLocale.label, objLocale.tooltip)
-	checkbox:SetPoint("TOPLEFT", controls.enableBlizzardDamage, "BOTTOMLEFT", 0, 0)
-	checkbox:SetClickHandler(
-		function (this, isChecked)
-			if InCombatLockdown() then
-				return
+	if not IsClassic then
+		checkbox = MSBTControls.CreateCheckbox(tabFrame)
+		objLocale = L.CHECKBOXES["enableBlizzardHealing"]
+		checkbox:Configure(28, objLocale.label, objLocale.tooltip)
+		checkbox:SetPoint("TOPLEFT", controls.enableBlizzardDamage, "BOTTOMLEFT", 0, 0)
+		checkbox:SetClickHandler(
+			function (this, isChecked)
+				if InCombatLockdown() then
+					return
+				end
+				MSBTProfiles.SetOption(nil, "enableBlizzardHealing", not isChecked)
+				if isChecked then
+					SetCVar("floatingCombatTextCombatHealing", 1)
+				else
+					SetCVar("floatingCombatTextCombatHealing", 0)
+				end
 			end
-			MSBTProfiles.SetOption(nil, "enableBlizzardHealing", not isChecked)
-			if isChecked then
-				SetCVar("floatingCombatTextCombatHealing", 1)
-			else
-				SetCVar("floatingCombatTextCombatHealing", 0)
-			end
-		end
-	)
-	controls.enableBlizzardHealing = checkbox
-
+		)
+		controls.enableBlizzardHealing = checkbox
+	end
 
 	-- Profile dropdown.
 	local dropdown = MSBTControls.CreateDropdown(tabFrame)
@@ -3663,7 +3668,7 @@ local function LootAlertsTab_Create()
 
 	-- Item quality checkboxes.
 	local anchor = fontString
-	for quality = LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_EPIC do
+	for quality = LE_ITEM_QUALITY_POOR or Enum.ItemQuality.Poor, LE_ITEM_QUALITY_EPIC or Enum.ItemQuality.Epic do
 		local checkbox = MSBTControls.CreateCheckbox(tabFrame)
 		local label = _G["ITEM_QUALITY" .. quality .. "_DESC"]
 		local color = ITEM_QUALITY_COLORS[quality]
@@ -3775,7 +3780,7 @@ local function LootAlertsTab_OnShow()
 
 
 	-- Item qualities.
-	for quality = LE_ITEM_QUALITY_POOR, LE_ITEM_QUALITY_EPIC do
+	for quality = LE_ITEM_QUALITY_POOR or Enum.ItemQuality.Poor, LE_ITEM_QUALITY_EPIC or Enum.ItemQuality.Epic do
 		controls["quality" .. quality .. "Checkbox"]:SetChecked(not currentProfile.qualityExclusions[quality])
 	end
 

@@ -11,6 +11,7 @@ function AS:ArkInventory()
 			local name = subframe:GetName()
 			if name then
 				if _G[name..'ArkBorder'] then AS:Kill(_G[name..'ArkBorder']) end
+				if subframe.ArkBorder then AS:Kill(subframe.ArkBorder) end
 				if _G[name..'Background'] then AS:Kill(_G[name..'Background']) end
 			end
 			AS:SkinFrame(subframe)
@@ -22,6 +23,7 @@ function AS:ArkInventory()
 		local mainframe = ArkInventory.Frame_Main_Get(loc_id):GetName()
 		local f = _G[mainframe..ArkInventory.Const.Frame.Search.Name..'Filter']
 		local b = _G[mainframe..ArkInventory.Const.Frame.Search.Name..'Clear']
+
 		if f then
 			AS:SkinEditBox(f)
 			local bd = f.backdrop or f.Backdrop or nil
@@ -32,6 +34,7 @@ function AS:ArkInventory()
 				bd:SetBackdropBorderColor(bbc.r, bbc.g, bbc.b, bbc.a or 1)
 			end
 		end
+
 		if b then
 			AS:SkinButton(b)
 			b:SetNormalTexture([[Interface\Buttons\UI-GroupLoot-Pass-Up]])
@@ -46,6 +49,7 @@ function AS:ArkInventory()
 			local name = bar:GetName()
 			if _G[name..'ArkBorder'] then AS:Kill(_G[name..'ArkBorder']) end
 			if _G[name..'Background'] then AS:Kill(_G[name..'Background']) end
+			if bar.ArkBorder then AS:Kill(bar.ArkBorder) end
 			bar.IsSkinned = true
 		end
 
@@ -55,7 +59,7 @@ function AS:ArkInventory()
 			bar:SetBackdropBorderColor(1, 0, 0, 1)
 			bar:SetBackdropColor(1, 0, 0, .1)
 		else
-			bar:SetBackdropBorderColor(_G[bar:GetName()..'ArkBorder']:GetBackdropBorderColor())
+			bar:SetBackdropBorderColor((bar.ArkBorder or _G[bar:GetName()..'ArkBorder']):GetBackdropBorderColor())
 		end
 	end)
 
@@ -68,7 +72,7 @@ function AS:ArkInventory()
 
 	hooksecurefunc(ArkInventory, 'Frame_Item_Update_Border', function(frame)
 		if not ArkInventory.ValidFrame(frame, true) then return end
-		local obj = _G[frame:GetName()..'ArkBorder']
+		local obj = frame.ArkBorder or _G[frame:GetName()..'ArkBorder']
 		if not obj then return end
 		AS:Kill(obj)
 
@@ -77,6 +81,7 @@ function AS:ArkInventory()
 		frame:SetBackdropColor(unpack(AS.BorderColor))
 		AS:SkinTexture(frame.icon)
 		frame:SetNormalTexture(nil)
+
 		if _G[frame:GetName()] == ARKINV_Frame1ChangerWindowBag1 then
 			ARKINV_Frame1ChangerWindowBag1IconTexture:SetTexture('interface\\icons\\inv_misc_bag_07_green')
 			AS:SkinTexture(ARKINV_Frame1ChangerWindowBag1IconTexture)

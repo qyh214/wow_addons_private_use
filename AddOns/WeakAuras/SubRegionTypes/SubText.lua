@@ -1,4 +1,5 @@
 if not WeakAuras.IsCorrectVersion() then return end
+local AddonName, Private = ...
 
 local SharedMedia = LibStub("LibSharedMedia-3.0");
 local L = WeakAuras.L;
@@ -245,7 +246,7 @@ local function modify(parent, region, parentData, data, first)
   if first then
     local containsCustomText = false
     for index, subRegion in ipairs(parentData.subRegions) do
-      if subRegion.type == "subtext" and WeakAuras.ContainsCustomPlaceHolder(subRegion.text_text) then
+      if subRegion.type == "subtext" and Private.ContainsCustomPlaceHolder(subRegion.text_text) then
         containsCustomText = true
         break
       end
@@ -260,7 +261,7 @@ local function modify(parent, region, parentData, data, first)
   end
 
   local UpdateText
-  if data.text_text and WeakAuras.ContainsAnyPlaceHolders(data.text_text) then
+  if data.text_text and Private.ContainsAnyPlaceHolders(data.text_text) then
     local getter = function(key, default)
       local fullKey = "text_text_format_" .. key
       if data[fullKey] == nil then
@@ -268,10 +269,10 @@ local function modify(parent, region, parentData, data, first)
       end
       return data[fullKey]
     end
-    local formatters = WeakAuras.CreateFormatters(data.text_text, getter)
+    local formatters = Private.CreateFormatters(data.text_text, getter)
     UpdateText = function()
       local textStr = data.text_text or ""
-      textStr = WeakAuras.ReplacePlaceHolders(textStr, parent, nil, false, formatters)
+      textStr = Private.ReplacePlaceHolders(textStr, parent, nil, false, formatters)
 
       if text:GetFont() then
         text:SetText(WeakAuras.ReplaceRaidMarkerSymbols(textStr))
@@ -284,12 +285,12 @@ local function modify(parent, region, parentData, data, first)
   if first and parent.customTextFunc then
     if UpdateText then
       Update = function()
-        parent.values.custom = WeakAuras.RunCustomTextFunc(parent, parent.customTextFunc)
+        parent.values.custom = Private.RunCustomTextFunc(parent, parent.customTextFunc)
         UpdateText()
       end
     else
       Update = function()
-        parent.values.custom = WeakAuras.RunCustomTextFunc(parent, parent.customTextFunc)
+        parent.values.custom = Private.RunCustomTextFunc(parent, parent.customTextFunc)
       end
     end
   else
@@ -297,25 +298,25 @@ local function modify(parent, region, parentData, data, first)
   end
 
   local TimerTick
-  if WeakAuras.ContainsPlaceHolders(data.text_text, "p") then
+  if Private.ContainsPlaceHolders(data.text_text, "p") then
     TimerTick = UpdateText
   end
 
   local FrameTick
   if parent.customTextFunc and parentData.customTextUpdate == "update" then
     if first then
-      if WeakAuras.ContainsCustomPlaceHolder(data.text_text) then
+      if Private.ContainsCustomPlaceHolder(data.text_text) then
         FrameTick = function()
-          parent.values.custom = WeakAuras.RunCustomTextFunc(parent, parent.customTextFunc)
+          parent.values.custom = Private.RunCustomTextFunc(parent, parent.customTextFunc)
           UpdateText()
         end
       else
         FrameTick = function()
-          parent.values.custom = WeakAuras.RunCustomTextFunc(parent, parent.customTextFunc)
+          parent.values.custom = Private.RunCustomTextFunc(parent, parent.customTextFunc)
         end
       end
     else
-      if WeakAuras.ContainsCustomPlaceHolder(data.text_text) then
+      if Private.ContainsCustomPlaceHolder(data.text_text) then
         FrameTick = UpdateText
       end
     end
@@ -381,7 +382,7 @@ local function modify(parent, region, parentData, data, first)
         selfPoint = anchorPoint:sub(7)
       elseif anchorPoint:sub(1, 6) == "OUTER_" then
         anchorPoint = anchorPoint:sub(7)
-        selfPoint = WeakAuras.inverse_point_types[anchorPoint] or "CENTER"
+        selfPoint = Private.inverse_point_types[anchorPoint] or "CENTER"
       else
         selfPoint = "CENTER"
       end
@@ -392,9 +393,9 @@ local function modify(parent, region, parentData, data, first)
       elseif selfPoint:sub(1, 6) == "INNER_" then
         selfPoint = selfPoint:sub(7)
       end
-      selfPoint = WeakAuras.point_types[selfPoint] and selfPoint or "CENTER"
+      selfPoint = Private.point_types[selfPoint] and selfPoint or "CENTER"
     else
-      selfPoint = WeakAuras.inverse_point_types[data.text_anchorPoint or "CENTER"] or "CENTER"
+      selfPoint = Private.inverse_point_types[data.text_anchorPoint or "CENTER"] or "CENTER"
     end
   end
 

@@ -221,6 +221,9 @@ L["Toggle 3D Model"] = "显示3D模型";
 L["Toggle Model Mask"] = "模型蒙版";
 L["Show Color Sliders"] = "显示色彩滑杆";
 L["Show Color Presets"] = "显示色彩预设";
+L["Keep Current Form"] = "按住"..NARCI_MODIFIER_ALT.."以保持变身形态";
+L["Race Change Tooltip"] = "改变种族";
+L["Sex Change Tooltip"] = "改变性别";
 
 --Spell Visual Browser--
 L["Visuals"] = "法术效果";
@@ -317,6 +320,36 @@ L["Corruption Effect Format3"] = "|cffffffff%s|r 伤害\n|cffffffff%s%%|r 最大
 L["Corruption Effect Format4"] = "被彼岸之物击中会立刻触发其余效果";
 L["Corruption Effect Format5"] = "|cffffffff%s%%|r 受到的伤害和治疗改变";
 
+--Text Overlay Frame
+L["Text Overlay Button Tooltip1"] = "简易聊天气泡";
+L["Text Overlay Button Tooltip2"] = "高级聊天气泡";
+L["Text Overlay Button Tooltip3"] = "Talking Head";
+L["Text Overlay Button Tooltip4"] = "悬浮字幕";
+L["Text Overlay Button Tooltip5"] = "黑条字幕";
+L["Visibility"] = "可见性";
+
+--Achievement Frame--
+L["Incomplete First"] = "未完成在前";
+L["Earned First"] = "已完成在前";
+L["Settings"] = "设置";
+L["Next Prev Card"] = "前一项/后一项";
+L["Track"] = "追踪";   --Track achievements
+
+
+--Barbershop--
+L["Save New Look"] = "保存外观";
+L["No Available Slot"] = "保存栏位已满";
+L["Look Saved"] = "已保存";
+L["Cannot Save Forms"] = "不支持形态";
+L["Profiles"] = "存档管理";
+L["Save Notify"] = "提示你保存新外观";
+L["Show Randomize Button"] = "显示随机外观按钮";
+L["Coins Spent"] = "支出";
+L["Locations"] = "地点";
+L["Location"] = "地点";
+L["Visits"] = "访问次数";
+L["Duration"] = "时长";
+
 --Tutorial--
 L["Alert"] = "警告";
 L["Race Change"] = "种族/性别变更";
@@ -338,39 +371,33 @@ L["Guide Minimap Button Headline"] = "小地图按钮";
 L["Guide Minimap Button Line1"] = "此按钮现在可以被其他插件控制。\n你可以在偏好设定中更改这一选项，改动可能需要重载界面才能生效。"
 
 --Splash--
-NARCI_SPELL_VISUALS = "法术视觉效果";
-NARCI_PATCH_NOTES = "v1.0.7 Patch Notes";
-NARCI_SPLASH_CLOSE_AND_CONTINUE = "关闭此窗口并继续";
-NARCI_SPLASH_SOUNDS_GREAT_BYE = "听上去不错。一会儿见！";
-NARCI_TRY_IT_NOW = "点击这里以启用...";
-NARCI_DISABLE_IT_NOW = "点击这里以禁用...";
-    --Patch-specific
-    NARCI_DRESSING_ROOM_ENABLED_BY_DEFAULT = "|cff7cc576已默认开启。|r "..NARCI_DISABLE_IT_NOW;
-    NARCI_DRESSING_ROOM_DISABLED = "|cffff5050已禁用。|r 需要重载UI才能使设置生效。 你可以在偏好设定-拓展功能中重新启用它。";
-    NARCI_CAMERA_SAFE_MODE_ENABLED_BY_DEFAULT = "|cff7cc576已默认开启，因为你没有在使用DynamicCam插件。|r\n"..NARCI_DISABLE_IT_NOW;
-    NARCI_CAMERA_SAFE_MODE_DISABLED_BY_DEFAULT = "|cffff5050已默认关闭，因为你正在使用DynamicCam插件。|r\n"..NARCI_TRY_IT_NOW;
-    NARCI_CAMERA_SAFE_MODE_ENABLED = "|cff7cc576已启用。|r 你可以在偏好设定-镜头中关闭它。";
-    NARCI_CAMERA_SAFE_MODE_DISABLED = "|cffff5050已禁用。|r 你可以在偏好设定-镜头中启用它。";
-    --
-NARCI_SHOW_DETAILS = "+ Show details...";
-NARCI_SPLASH_HEADER3 = "其他";
-NARCI_SPLASH_MESSAGE0 = "|cffd9cdb41. 你现在可以在场景里应用独特的效果了。|r\n你可以为演员添加法术或者其他道具，甚至可以控制场景中的天气。点击模型控制面板左下角的按钮即可展开选项。"
-NARCI_SPLASH_MESSAGE1 = format("|cffd9cdb42. 翻转模型和细微缩放|r\n你可以按住%s和鼠标左键来让模型演Y轴旋转；或是按住%s和鼠标右键来进行细微缩放。", NARCI_MODIFIER_ALT, NARCI_MODIFIER_ALT);
-NARCI_SPLASH_MESSAGE2 = "|cffd9cdb4可通过点击右上方的六边形按钮（也是显示你最高物品等级的地方）来展开这个功能。";
-NARCI_SPLASH_MESSAGE3 = "|cffd9cdb41. 现在AFK画面会在你移动或者进入战斗时自动退出。\n2. 试衣间增强又恢复了工作。|r";
-
-
-L["Show Whats New"] = "显示欢迎界面";
 NARCI_SPLASH_WHATS_NEW_FORMAT = "Narcissus %s ".."更新内容";
-NARCI_SPLASH_HEADER1 = "NPC浏览器";
-NARCI_SPLASH_HEADER2 = "杂项";
-NARCI_SPLASH_INTERACTIVE_TEXT1 = NARCI_COLOR_GREY_85.."合影模式|r\n- 你现在可以随时随地添加NPC模型，不再需要先在游戏中找到他。\n- 你可以从已分类的列表中选择，或是按姓名或ID进行搜索。\n\n" ..NARCI_COLOR_GREY_85.."NPC信息(可选)|r\n- 在你的鼠标在目标身上悬停时，找到其他与其同姓的NPC。\n- 可以在NPC姓名版或鼠标提示上显示其在其他语言中的译名。";
-NARCI_SPLASH_INTERACTIVE_TEXT2 = NARCI_COLOR_GREY_85.."";
-NARCI_SPLASH_INTERACTIVE_TEXT3 = NARCI_COLOR_GREY_85.."AFK画面|r\n保持站立这一功能已变为可选。\n\n"..NARCI_COLOR_GREY_85.."截图质量|r\n- 不再强制将截图质量设置为10。\n- 偏好设定中新增一个截图质量滑杆。\n\n"..NARCI_COLOR_GREY_85.."腐蚀模块|r\n- 修复了与Corruption Tooltip部分功能不兼容的问题。\n- 更新了腐化之眼的伤害计算公式。新公式为：\n(0.5*腐蚀值+ 15) * HP";
+L["Splash Category1"] = "照片模式";
+L["Splash Content1 Name"] = "添加文字";
+L["Splash Content1 Description"] = "-你可以在合影模式中创建聊天气泡，talking heads和字幕。";
+L["Splash Content2 Name"] = "动画面板";
+L["Splash Content2 Description"] = "-你可以搜索和收藏动画ID。\n-有些动画ID包含多种动作,现在你也可以进行选择了。";
+L["Splash Content3 Name"] = "地面阴影";
+L["Splash Content3 Description"] = "-新增加了一种放射状阴影，它在某些场景下会更加真实。";
+L["Splash Category2"] = "理发店";
+L["Splash Content4 Name"] = "理发店增强";
+L["Splash Content4 Description"] = "-你可以保存外观。\n-每个角色拥有20个保存栏位(男女各10个)。\n-一些统计功能？";
+L["Splash Category3"] = "成就";
+L["Splash Content5 Name"] = "成就面板";
+L["Splash Content5 Description"] = "-独立的成就面板。\n-可以方便地在相关成就间切换。\n-左键拖拽一项成就即可生成一张悬浮的成就卡片。\n-更加流畅，更少卡顿。";
+L["Splash Category4"] = "其他";
+L["Splash Content6 Name"] = "镜头运动";
+L["Splash Content6 Description"] = "-在你游戏期间第二次使用Narcissus角色面板时，镜头会瞬间移动到预设位置。";
+L["Splash Content7 Name"] = "最佳画质";
+L["Splash Content7 Description"] = "如果你的系统支持的话，你可以一键将光线追踪阴影暂时调制最佳。";
+L["Splash Content8 Name"] = "小地图按钮";
+L["Splash Content8 Description"] = "按住Shift并拖动此按钮可使其脱离小地图。";
+
+L["Flavored Text"] = "在主城内的优格沙龙使用美容美发服务即可享受10‰折扣，仅限今天！";
 
 --Project Details--
 NARCI_ALL_PROJECTS = "全部项目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2020.4.26|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2020.10.13|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾泽拉斯上的不同景点，并收集各种故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沉浸式角色面板；你最好的截图助手。"
 

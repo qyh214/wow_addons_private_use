@@ -289,7 +289,7 @@ local function NewFrame(data)
 	frame.button:SetPoint("CENTER")
 	frame.button:Hide()
 
-	frame.shine = CreateFrame('Frame')
+	frame.shine = CreateFrame('Frame', nil, frame, 'BackdropTemplate')
 	frame.shine:SetBackdrop({edgeFile = 'Interface\\TutorialFrame\\UI-TutorialFrame-CalloutGlow', edgeSize = 16})
 	for i = 1, frame.shine:GetNumRegions() do
 		select(i, frame.shine:GetRegions()):SetBlendMode('ADD')

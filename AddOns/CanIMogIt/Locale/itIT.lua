@@ -1,4 +1,4 @@
-L = {}
+local L = {}
 --[[Translation missing --]]
 --[[ L["(Experimental)"] = ""--]] 
 L["Adds tooltips to items showing if you have learned a transmog appearance."] = "Aggiunge un suggerimento, sull'oggetto che stai osservando, se è stato memorizzato nella tua collezione di aspetti."

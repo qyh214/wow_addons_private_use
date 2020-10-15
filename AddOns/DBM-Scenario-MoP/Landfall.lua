@@ -1,7 +1,9 @@
 local mod	= DBM:NewMod("Landfall", "DBM-Scenario-MoP")--Alliance : 590, Horde : 595
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod.statTypes = "normal"
+
+mod:SetRevision("20200912131657")
 
 mod:RegisterCombat("scenario", 1103, 1102)
 
@@ -9,7 +11,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"UNIT_DIED"
 )
-mod.onlyNormal = true
 
 local warnDivineStorm		= mod:NewSpellAnnounce(135404, 4, nil, "Melee")
 local warnDivineLight		= mod:NewSpellAnnounce(135403, 4)

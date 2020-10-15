@@ -75,8 +75,6 @@ local TakenOutFrames = {
 }
 --]]
 
-local DefaultTooltip = GameTooltip;
-
 local function TakeOutFromUIParent(frame, FrameStrata, bool) --take out frames from UIParent, so they will still be visible when UI is hidden
 	local effectiveScale = UIParent:GetEffectiveScale();
 	FrameStrata = FrameStrata or "MEDIUM";
@@ -94,6 +92,7 @@ local function TakeOutFromUIParent(frame, FrameStrata, bool) --take out frames f
 	end
 end
 
+local DefaultTooltip;
 function Narci_ShowButtonTooltip(self)
 	DefaultTooltip:Hide();
 	DefaultTooltip:SetOwner(self, "ANCHOR_NONE");
@@ -129,9 +128,6 @@ Workflow: (RP Addon) TotalRP
 	PlayerFrame
 	TargetFrame
 
-local sources = WardrobeCollectionFrame_GetSortedAppearanceSources(self.visualInfo.visualID);
-
-/console test_cameraOverShoulder 
 
 --]]
 -- For all easing functions:
@@ -172,32 +168,32 @@ local function linear(t, b, c, d)
 	return c * t / d + b
 end
 
-local function outSine(t, b, c, d)
-	return c * sin(t / d * (pi / 2)) + b
+local function outSine(t, b, e, d)
+	return (e - b) * sin(t / d * (pi / 2)) + b
 end
 
-local function inOutSine(t, b, c, d)
-	return -c / 2 * (cos(pi * t / d) - 1) + b
+local function inOutSine(t, b, e, d)
+	return (b - e) / 2 * (cos(pi * t / d) - 1) + b
 end
 
 --------------------------------
 local UIPA = CreateFrame("Frame");	--UIParentAlphaAnimation
 UIPA:Hide()
 UIPA.TimeSinceLastUpdate = 0;
-UIPA.TotalTime = 0;
+UIPA.totalTime = 0;
 local function UIParent_AnimIn(self, elapsed)
 	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed
-	self.TotalTime = self.TotalTime + elapsed;
+	self.totalTime = self.totalTime + elapsed;
 	if self.TimeSinceLastUpdate < 0.06 then
 		return;
 	else
 		self.TimeSinceLastUpdate = 0;
 	end
 	
-	local alpha = linear(self.TotalTime, self.StartAlpha, self.EndAlpha - self.StartAlpha, 0.5);
+	local alpha = linear(self.totalTime, self.startAlpha, self.endAlpha - self.startAlpha, 0.5);
 
-	if self.TotalTime >= 0.5 then
-		alpha = self.EndAlpha;
+	if self.totalTime >= 0.5 then
+		alpha = self.endAlpha;
 		self:Hide();
 	end
 
@@ -206,12 +202,12 @@ end
 
 
 UIPA:SetScript("OnShow", function(self)
-	self.StartAlpha = UIParent:GetAlpha();
+	self.startAlpha = UIParent:GetAlpha();
 end);
 UIPA:SetScript("OnUpdate", UIParent_AnimIn);
 UIPA:SetScript("OnHide", function(self)
 	self.TimeSinceLastUpdate = 0;
-	self.TotalTime = 0;
+	self.totalTime = 0;
 end);
 
 
@@ -219,18 +215,40 @@ end);
 -----------CVar Backup----------
 --------------------------------
 ConsoleExec( "pitchlimit 88");
-local CVar_Temp = {};
---CVar_Temp.YawSpeed = GetCVar("cameraYawMoveSpeed");							--Discarded due to new method
-CVar_Temp.OverShoulder = GetCVar("test_cameraOverShoulder");
-CVar_Temp.ActioncamState = tonumber(GetCVar("test_cameraDynamicPitch"));		--No CVar directly shows the current state of ActionCam. Check this CVar for the moment. 1~On  2~Off
-CVar_Temp.MusicVolume = GetCVar("Sound_MusicVolume");
-CVar_Temp.ZoomLevel = 2;
+
+local CVarTemp = {};
+
+function CVarTemp:BackUp()
+	self.ZoomLevel = GetCameraZoom();
+	self.DynamicPitch = tonumber(GetCVar("test_cameraDynamicPitch"));
+	self.OverShoulder = GetCVar("test_cameraOverShoulder");
+	self.MusicVolume = GetCVar("Sound_MusicVolume");
+	self.CameraViewBlendStyle = GetCVar("cameraViewBlendStyle");
+end
+
+function CVarTemp:BackUpDynamicCam()
+	self.DynmicCamShoulderOffsetZoomUpperBound = DynamicCam.db.profile.shoulderOffsetZoom.lowerBound;	--New
+	DynamicCam.db.profile.shoulderOffsetZoom.lowerBound = 0;
+end
+
+function CVarTemp:RestoreDynamicCam()
+	DynamicCam.db.profile.shoulderOffsetZoom.lowerBound = self.DynmicCamShoulderOffsetZoomUpperBound;
+end
+
+local function GetKeepActionCam()
+	return CVarTemp.isDynamicCamLoaded or Narci.keepActionCam
+end
+
+CVarTemp.OverShoulder = GetCVar("test_cameraOverShoulder");
+CVarTemp.DynamicPitch = tonumber(GetCVar("test_cameraDynamicPitch"));		--No CVar directly shows the current state of ActionCam. Check this CVar for the moment. 1~On  2~Off
+CVarTemp.MusicVolume = GetCVar("Sound_MusicVolume");
+CVarTemp.ZoomLevel = 2;
 
 local ZoomFactor = {};
 ZoomFactor.Time = 1.5;			--1.5 outSine
 --ZoomFactor.Amplifier = 0.65; 	--0.65
 ZoomFactor.EndSpeedBasic = 0.004;	--yawmovespeed 180
-ZoomFactor.StartSpeedBasic = 1.0;	--yawmovespeed 180
+ZoomFactor.StartSpeedBasic = 1.05;	--yawmovespeed 180
 ZoomFactor.EndSpeed = 0.005;	--yawmovespeed 180
 ZoomFactor.StartSpeed = 1.0;	--yawmovespeed 180 outSine 1.4 
 ZoomFactor.SpeedFactor = 180/GetCVar("cameraYawMoveSpeed");
@@ -442,36 +460,36 @@ local function ModifyCameraForShapeshifter()
 end
 
 
-local Smooth_Shoulder = CreateFrame("Frame");
-Smooth_Shoulder.t = 0;
-Smooth_Shoulder.duration = 1;
-Smooth_Shoulder:Hide();
+local SmoothShoulder = CreateFrame("Frame");
+SmoothShoulder.t = 0;
+SmoothShoulder.duration = 1;
+SmoothShoulder:Hide();
 
-local function Smooth_Shoulder_Update(self, elapsed)
-	self.t = self.t + elapsed
-	local Value = outSine(self.t, self.StartPoint, self.EndPoint - self.StartPoint, self.duration) --0.11 NE
+local function SmoothShoulder_Update(self, elapsed)
+	self.t = self.t + elapsed;
+	local value = outSine(self.t, self.StartPoint, self.EndPoint, self.duration);
 
 	if self.t >= self.duration then
-		Value = self.EndPoint;
+		value = self.EndPoint;
 		self:Hide();
 	end
 
-	SetCVar("test_cameraOverShoulder", Value);
+	SetCVar("test_cameraOverShoulder", value);
 end
 
 
-Smooth_Shoulder:SetScript("OnShow", function(self)
+SmoothShoulder:SetScript("OnShow", function(self)
 	self.StartPoint = GetCVar("test_cameraOverShoulder");
 end);
-Smooth_Shoulder:SetScript("OnUpdate", Smooth_Shoulder_Update);
-Smooth_Shoulder:SetScript("OnHide", function(self)
+SmoothShoulder:SetScript("OnUpdate", SmoothShoulder_Update);
+SmoothShoulder:SetScript("OnHide", function(self)
 	self.t = 0
 end);
 
-local function Smooth_ShoulderCVar(EndPoint)
-	Smooth_Shoulder:Hide();
-	Smooth_Shoulder.EndPoint = EndPoint;
-	Smooth_Shoulder:Show();
+local function SmoothShoulderCVar(EndPoint)
+	SmoothShoulder:Hide();
+	SmoothShoulder.EndPoint = EndPoint;
+	SmoothShoulder:Show();
 end
 
 local UpdateShoulderCVar = {};
@@ -481,12 +499,53 @@ function UpdateShoulderCVar:Start(increment)
 		self.pauseUpdate = true;
 		After(0.1, function()    -- Execute after 0.1s
 			self.pauseUpdate = nil;
-			Smooth_ShoulderCVar(self.zoom * Shoulder_Factor1 + Shoulder_Factor2 + MogMode_Offset);
+			SmoothShoulderCVar(self.zoom * Shoulder_Factor1 + Shoulder_Factor2 + MogMode_Offset);
 		end)
 	end
 	self.zoom = self.zoom + increment;
 end
 
+local duration_Lock = 1.5;
+local duration_Translation = 0.8;
+
+function LeftLineAnimFrame_OnUpdate(self, elapsed)
+	local EndPoint = self.EndPoint;
+	local offSet;
+	local t = self.TimeSinceLastUpdate;
+	local frame = self:GetParent();
+	offSet = outSine(t, EndPoint - 120, EndPoint , duration_Translation);
+
+	if t >= duration_Translation then
+		offSet = EndPoint;
+		After(0, function()
+			self:Hide();
+		end);
+	end
+	frame:SetPoint(self.AnchorPoint, offSet, 0);
+	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
+end
+
+function RightLineAnimFrame_OnUpdate(self, elapsed)
+	local StartPoint = self.StartPoint;
+	local EndPoint = self.EndPoint;
+	local offSet;
+	local t = self.TimeSinceLastUpdate;
+	local frame = self:GetParent();
+	offSet = outSine(t, StartPoint, EndPoint, duration_Translation);
+	
+	if t >= duration_Translation then
+		offSet = EndPoint;
+		self:Hide();
+		After(0, function()
+			self:Hide();
+		end);
+	end
+	frame:SetPoint(self.AnchorPoint, offSet, 0);
+	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
+end
+
+---Camera
+--[[
 hooksecurefunc("CameraZoomIn", function(increment)
 	if OpenViaClick and (xmogMode ~= 1) then
 		UpdateShoulderCVar:Start(-increment);
@@ -494,13 +553,18 @@ hooksecurefunc("CameraZoomIn", function(increment)
 end)
 
 hooksecurefunc("CameraZoomOut", function(increment)
-	if OpenViaClick  and (xmogMode ~= 1)then
+	if OpenViaClick and (xmogMode ~= 1)then
 		UpdateShoulderCVar:Start(increment);
 	end
 end)
+--]]
+
+local SetCorruptionBackground;
+local CameraContainer = {};
 
 
-function Narci:CameraZoomIn(EndPoint)
+
+function CameraContainer:ZoomIn(EndPoint)
 	local goal = EndPoint or ZoomFactor.Goal;
 	ZoomFactor.Current = GetCameraZoom();
 	if ZoomFactor.Current >= goal then
@@ -510,87 +574,169 @@ function Narci:CameraZoomIn(EndPoint)
 	end
 end
 
-local function SmoothYaw(self, elapsed)
-	self.t = self.t + elapsed;
+function CameraContainer:OnCameraChanged()
+	print(ZoomInValue)
+	if not self.pauseUpdate then
+		self.pauseUpdate = true;
+		After(0.05, function()
+			self:ZoomIn(ZoomInValue);
+			self.pauseUpdate = nil;
+		end);
+	end
+end
+
+function CameraContainer:SetBlend(enable)
+	local divisor;
+	if enable then
+		--Smooth
+		duration_Lock = 1.5;
+		duration_Translation = 0.8;
+		divisor = 20;
+	else
+		--Instant
+		duration_Lock = 0.4;
+		duration_Translation = 0.4;
+		divisor = 80;
+	end
+
+	for k, slot in pairs(statTable) do
+		local delay = (slot:GetID())/divisor;
+		if slot.animIn then
+			slot.animIn.A2:SetStartDelay(delay);
+		end
+	end
+
+	for k, slot in pairs(statTable_Short) do
+		local delay = (slot:GetID())/divisor;
+		slot.animIn.A2:SetStartDelay(delay);
+	end
+
+	Narci_RadarChartFrame.animIn.A2:SetStartDelay(9/divisor);
+	self.blend = enable;
+end
+
+CameraContainer.smoothYaw = NarciAPI_CreateAnimationFrame(1.5);
+CameraContainer.smoothYaw:SetScript("OnUpdate", function(frame, elapsed)
+	frame.total = frame.total + elapsed;
 	local factor = ZoomFactor;
-	local speed = inOutSine(self.t, factor.StartSpeed, factor.EndSpeed - factor.StartSpeed, 1.5);
+	local speed = inOutSine(frame.total, factor.StartSpeed, factor.EndSpeed, 1.5);
 	MoveViewRightStart(speed);
 	
-	if self.t >= 1.5 then
+	if frame.total >= 1.5 then
 		if not IsPlayerMoving() then
 			MoveViewRightStart(factor.EndSpeed);
 		else
 			MoveViewRightStop();
 		end
-		self.t = 0;
-		self:Hide();
+		frame:Hide();
 	end
-end
-
-local SY = CreateFrame("Frame");
-SY.t = 0;
-SY:Hide();
-SY:SetScript("OnUpdate", SmoothYaw); --SmoothYaw
-SY:SetScript("OnHide", function(self)
-	self.t = 0
 end);
 
---[[
-local function SmoothZoom_Update(self, elapsed)
-	self.TimeSinceLastUpdate_Zoom = self.TimeSinceLastUpdate_Zoom + elapsed
-	local x = self.TimeSinceLastUpdate_Zoom;
-	local t = 3;
-	local EndDistance = ZoomFactor.Goal;
-	local goal = 5.5;
-	ZoomFactor.Current = GetCameraZoom();
-	local speed = (ZoomFactor.Current- goal-1)*inOutSine(self.TimeSinceLastUpdate_Zoom, 1,  -1, t) --0.11 NE
-	if speed > 0 then
-		MoveViewInStart(speed);
-	else
-		MoveViewOutStart(-speed);
-	end
-	
-	if self.TimeSinceLastUpdate_Zoom >= t then
-		MoveViewInStop()
-		self.TimeSinceLastUpdate_Zoom = 0;
-		self:Hide();
-	end
-end
 
-local SZ = CreateFrame("Frame","SmoothZoomContainer");
-SZ.TimeSinceLastUpdate_Zoom = 0
-SZ:Hide();
-SZ:SetScript("OnUpdate", SmoothZoom_Update);
-SZ:SetScript("OnHide", function(self)
-	self.TimeSinceLastUpdate_Zoom = 0
-end);
---]]
-
-local function SmoothPitch_Update(self, elapsed)
-	self.TimeSinceLastUpdate_Pitch = self.TimeSinceLastUpdate_Pitch + elapsed
-	local x = self.TimeSinceLastUpdate_Pitch;
-	local t = 1.65;
+CameraContainer.smoothPitch = NarciAPI_CreateAnimationFrame(1.65);
+CameraContainer.smoothPitch:SetScript("OnUpdate", function(frame, elapsed)
+	frame.total = frame.total + elapsed
+	local x = frame.total;
 	local EndDistance = ZoomFactor.Goal;
-	local PL = tostring(outSine(self.TimeSinceLastUpdate_Pitch, 88,  -88, t));
+	local PL = tostring(outSine(frame.total, 88,  0, frame.duration));
 	ConsoleExec( "pitchlimit "..PL)
-	if self.TimeSinceLastUpdate_Pitch >= t then
+	if frame.total >= frame.duration then
 		--ConsoleExec( "pitchlimit 0");
 		ConsoleExec( "pitchlimit 88");
-		self.TimeSinceLastUpdate_Pitch = 0;
-		self:Hide();
+		frame:Hide();
+	end
+end);
+
+
+function CameraContainer:InstantZoomIn()
+	SetCVar("cameraViewBlendStyle", 2);
+	SetView(4);
+
+	ConsoleExec( "pitchlimit 0");
+	After(0, function()
+		ConsoleExec( "pitchlimit 88");
+	end)
+	
+	local zoom = ZoomInValue or GetCameraZoom();
+	local shoulderOffset = zoom * Shoulder_Factor1 + Shoulder_Factor2 + MogMode_Offset;
+	SetCVar("test_cameraOverShoulder", shoulderOffset);		--CameraZoomIn(0.0)	--Smooth
+	
+	self:ZoomIn(ZoomInValue);
+	
+	self:ShowFrame();
+	SetUIVisibility(false);
+	if not IsPlayerMoving() and NarcissusDB.CameraOrbit then
+		MoveViewRightStart(ZoomFactor.EndSpeed);
+	end
+
+	After(0.4, function()
+		SetCorruptionBackground();
+	end)
+end
+
+function CameraContainer:HideUI()
+	if UIParent:IsShown() then
+		UIPA.endAlpha = 0;
+		UIPA:Show();
+	end
+
+	After(0.5, function()
+		SetUIVisibility(false); 		--Same as pressing Alt + Z
+		SetCorruptionBackground();
+		After(0.3, function()
+			UIParent:SetAlpha(1);
+		end)
+	end)
+end
+
+function CameraContainer:Enter()
+	SetCVar("test_cameraDynamicPitch", 1);
+
+	if self.blend then
+		if NarcissusDB.CameraOrbit and not IsPlayerMoving() and not IsMounted() then
+			self.smoothYaw:Show();
+			SetView(2);	
+		end
+
+		if not IsFlying("player") then
+			self.smoothPitch:Show();
+		end
+		
+		After(0.1, function()
+			self:ZoomIn(ZoomInValue);
+			After(0.8, function()
+				self:ShowFrame();
+			end)
+		end)
+
+		self:HideUI();
+	else
+		if not self.hasInitialized then
+			self.smoothYaw:Show();
+			SetView(2);
+			self.smoothPitch:Show();
+			After(0.1, function()
+				self:ZoomIn(ZoomInValue);
+				After(0.8, function()
+					self:ShowFrame();
+				end)
+			end)
+			After(1, function()
+				if not IsMounted() then
+					self.hasInitialized = true;
+					SaveView(4);
+				end
+			end)
+			self:HideUI();
+		else
+			self:InstantZoomIn();
+		end
 	end
 end
 
-local SP = CreateFrame("Frame","SmoothPitchContainer");
-SP.TimeSinceLastUpdate_Pitch = 0;
-SP:Hide();
-SP:SetScript("OnShow", function(self)
-	self.TimeSinceLastUpdate_Pitch = 0
-end);
-SP:SetScript("OnUpdate", SmoothPitch_Update);
-SP:SetScript("OnHide", function(self)
-	self.TimeSinceLastUpdate_Pitch = 0
-end);
+function CameraContainer:Pitch()
+	self.smoothPitch:Show();
+end
 ------------------------------
 
 local function ExitFunc()
@@ -600,28 +746,32 @@ local function ExitFunc()
 	NarciPlayerModelFrame1.xmogMode = 0;
 	ACL:Hide();
 	MoveViewRightStop();
-	if CVar_Temp.ActioncamState ~= 1 or not Narci.keepActionCam then		--Restore the acioncam state
+	if not GetKeepActionCam() then		--(not CVarTemp.isDynamicCamLoaded and CVarTemp.DynamicPitch == 0) or not Narci.keepActionCam
 		SetCVar("test_cameraDynamicPitch", 0);								--Note: "test_cameraDynamicPitch" may cause camera to jitter while reseting the player's view
-		Smooth_ShoulderCVar(0);
+		SmoothShoulderCVar(0);
 		After(1, function()
 			ConsoleExec( "actioncam off" );
 			MoveViewRightStop();
 		end)
 	else
-		Smooth_ShoulderCVar(CVar_Temp.OverShoulder);
+		--Restore the acioncam state
+		SmoothShoulderCVar(CVarTemp.OverShoulder);
+		SetCVar("test_cameraDynamicPitch", CVarTemp.DynamicPitch);
 		After(1, function()
 			MoveViewRightStop();
 		end)
 	end
-		
-	ConsoleExec( "pitchlimit 88")
+
+	ConsoleExec( "pitchlimit 88");
 	
 	FadeFrame(Narci_Vignette, 0.5, "OUT");
-	Narci_Attribute.animOut:Play();
+	if Narci_Attribute:IsVisible() then
+		Narci_Attribute.animOut:Play();
+	end
 	UIParent:SetAlpha(0);
 	After(0.1, function()
-		UIPA.StartAlpha = 0;
-		UIPA.EndAlpha = 1;
+		UIPA.startAlpha = 0;
+		UIPA.endAlpha = 1;
 		UIPA:Show();
 		SetUIVisibility(true);
 		--UIFrameFadeIn(UIParent, 0.5, 0, 1);	--cause frame rate drop
@@ -630,12 +780,12 @@ local function ExitFunc()
 		if CameraFollowStyle == "0" then		--workaround for auto-following
 			SetView(5);
 		else
-			ResetView(2);
-			ResetView(5);
-			Narci:CameraZoomIn(CVar_Temp.ZoomLevel);
+			SetView(2);
+			CameraContainer:ZoomIn(CVarTemp.ZoomLevel);
 		end
+		SetCVar("cameraViewBlendStyle", CVarTemp.CameraViewBlendStyle);
 	end)	
-	Narci_Attribute:Show();
+	--Narci_Attribute:Show();
 
 	Narci.isActive = false;
 	Narci.isAFK = false;
@@ -657,32 +807,18 @@ local function SetDate()
 end
 --]]
 
-local function BeginZoomingIn()
-	CVar_Temp.ZoomLevel = GetCameraZoom();
-	SetCVar("test_cameraDynamicPitch", 1)
-	if NarcissusDB.CameraOrbit and not IsPlayerMoving() and not IsMounted() then
-		SY:Show();
-		SetView(2);	
-	end
-
-	if not IsFlying("player") then
-		SP:Show();
-	end
-	
-	After(0.1, function()
-		Narci:CameraZoomIn(ZoomInValue)
-	end)
-end
 
 function Narci:EmergencyStop()
 	print("Camera has been reset.");
 	UIParent:SetAlpha(1);
 	MoveViewRightStop();
 	MoveViewLeftStop();
+	ResetView(4);
 	ResetView(5);
 	ConsoleExec( "pitchlimit 88");
-	CVar_Temp.OverShoulder = 0;
+	CVarTemp.OverShoulder = 0;
 	SetCVar("test_cameraOverShoulder", 0);
+	SetCVar("cameraViewBlendStyle", 1);
 	ConsoleExec( "actioncam off" );
 	Narci_ModelContainer:Hide();
 	Narci_ModelSettings:Hide();
@@ -696,13 +832,323 @@ function Narci:EmergencyStop()
 	ACL:Hide();
 end
 
-function Narci_MinimapButton_OnPostClick(self, button, down)
+
+NarciMinimapButtonMixin = {};
+
+function NarciMinimapButtonMixin:CreatePanel()
+	local Panel = self.Panel;
+	local button;
+	local buttons = {};
+
+	local LOCALIZED_NAMES = {L["Photo Mode"], DRESSUP_FRAME, "Wardrobe (WIP)", ACHIEVEMENT_BUTTON};	-- CHARACTER_BUTTON, "Character Info" "Dressing Room" "Achievements"
+	local frameNames = {};
+	frameNames[4] = "Narci_Achievement";
+
+	local func = {
+		Narci_OpenGroupPhoto,
+		
+		function()
+			DressUpFrame_Show(DressUpFrame);
+			Narci_UpdateDressingRoom();
+		end,
+
+		nil,	--Narci_Outfit:Open();
+
+		function()
+			Narci_AchievementFrame:SetShown(not Narci_AchievementFrame:IsShown());
+		end
+	};
+
+	local numButtons = #LOCALIZED_NAMES;
+
+	local BUTTON_HEIGHT = 24;
+	local offsetY = BUTTON_HEIGHT * (numButtons - 1) / 2;
+	local middleHeight = 48 + (numButtons - 4) * BUTTON_HEIGHT;
+	local button1OffsetY = offsetY - middleHeight/2 + BUTTON_HEIGHT/2
+	local buttonFrameLevel = Panel:GetFrameLevel() + 1;
+
+	local ClipFrame = Panel.ClipFrame;
+	ClipFrame:SetFrameLevel(buttonFrameLevel + 1);
+	ClipFrame:ClearAllPoints();
+	ClipFrame:SetPoint("CENTER", Panel.Middle, "CENTER", 0, offsetY);
+	ClipFrame.Highlight:SetTexture("Interface/AddOns/Narcissus/Art/Minimap/Panel", nil, nil, "TRILINEAR");
+	ClipFrame.PushedHighlight:SetTexture("Interface/AddOns/Narcissus/Art/Minimap/Panel", nil, nil, "TRILINEAR");
+
+	local animHighlight = NarciAPI_CreateAnimationFrame(0.25);
+	animHighlight.object = ClipFrame;
+
+	Panel:SetHeight(numButtons * BUTTON_HEIGHT + self:GetHeight());
+	Panel:SetScript("OnLeave", function(frame)
+		if not frame:IsMouseOver() then
+			self:ShowPopup(false);
+		end
+	end)
+	Panel:SetScript("OnHide", function(frame)
+		frame:SetAlpha(0);
+		frame:Hide();
+		animHighlight:Hide();
+		ClipFrame:SetPoint("CENTER", Panel.Middle, "CENTER", 0, offsetY);
+		ClipFrame:Hide();
+		self:UnregisterEvent("GLOBAL_MOUSE_DOWN");
+	end)
+
+	-----------------------------------------------------------
+
+	animHighlight:SetScript("OnUpdate", function(frame, elapsed)
+		frame.total = frame.total + elapsed;
+		local y = inOutSine(frame.total, frame.fromY, frame.toY, frame.duration);
+		if frame.total >= frame.duration then
+			y = frame.toY;
+			frame:Hide();
+		end
+		frame.object:SetPoint("CENTER", Panel.Middle, "CENTER", 0, y);
+	end);
+
+	self.lastIndex = 1;
+	local function UpdateHighlight(buttonIndex)
+		ClipFrame:Show();
+		if animHighlight:IsShown() then
+			local newDirection;
+			if buttonIndex > self.lastIndex then
+				newDirection = -1;
+			else
+				newDirection = 1;
+			end
+			if newDirection ~= self.lastDirection then
+				animHighlight:Hide();
+				local _;
+				_, _, _, _, animHighlight.fromY = ClipFrame:GetPoint();
+			else
+				--animHighlight.total = animHighlight.total / 2;
+			end
+		else
+			local _;
+			_, _, _, _, animHighlight.fromY = ClipFrame:GetPoint();
+		end
+		animHighlight.toY = offsetY - (buttonIndex - 1)*24;
+		animHighlight:Show();
+	end
+
+	function self:IsInBound()
+		for i = 1, numButtons do
+			if buttons[i]:IsMouseOver() then
+				return true
+			end
+		end
+		return false
+	end
+
+	-----------------------------------------------------------
+	local panelEntrance = NarciAPI_CreateAnimationFrame(0.25);
+	self.panelEntrance = panelEntrance;
+	panelEntrance.object = Panel.Middle;
+	Panel.Middle:SetHeight(middleHeight);
+	panelEntrance.toHeight = middleHeight;
+
+	local pow = math.pow;
+	local function outQuart(t, b, e, d)
+		t = t / d - 1
+		return (b - e) * (pow(t, 4) - 1) + b
+	end
+
+	panelEntrance:SetScript("OnUpdate", function(frame, elapsed)
+		frame.total = frame.total + elapsed;
+		local height = outSine(frame.total, frame.fromHeight, frame.toHeight, frame.duration);
+		local buttonDistance = outSine(frame.total, 12, 0, frame.duration);
+		local alpha = min(Panel:GetAlpha() + elapsed/frame.duration, 1);
+		if frame.total >= frame.duration then
+			height = frame.toHeight;
+			buttonDistance = 0;
+			alpha = 1;
+			frame:Hide();
+		end
+		frame.object:SetHeight(height);
+		for i = 1, numButtons do
+			if i == 1 then
+				buttons[i]:SetPoint("TOP", Panel.Middle, "TOP", 0, button1OffsetY + buttonDistance);
+			else
+				buttons[i]:SetPoint("TOP", buttons[i - 1], "BOTTOM", 0, buttonDistance * sqrt(i));
+			end
+		end
+		Panel:SetAlpha(alpha);
+	end)
+
+	Panel:SetScript("OnShow", function()
+		panelEntrance.total = 0;
+		if panelEntrance:IsShown() then
+			panelEntrance.fromHeight = Panel:GetHeight();
+		else
+			panelEntrance.fromHeight = 1;
+			panelEntrance:Show();
+		end
+	end)
+	-----------------------------------------------------------
+	local function OnEnter(button)
+		if not ClipFrame:IsShown() then
+			FadeFrame(ClipFrame, 0.2, "IN");
+		end
+		if button:IsEnabled() then
+			UpdateHighlight(button.index);
+		end
+		SetCursor("Interface/CURSOR/Item.blp");
+	end
+
+	local function OnLeave(button)
+		if not self:IsInBound() then
+			FadeFrame(ClipFrame, 0.2, "OUT");
+			ResetCursor();
+		end
+		if not Panel:IsMouseOver() then
+			self:ShowPopup(false);
+		end
+	end
+
+	
+	local function OnMouseDown()
+		ClipFrame.PushedHighlight:Show();
+	end
+
+	local function OnMouseUp()
+		ClipFrame.PushedHighlight:Hide();
+	end
+
+	for i = 1, numButtons do
+		local frameName = frameNames[i];
+		if frameName then
+			frameName = frameName.."_MinimapButton";
+		end
+		button = CreateFrame("Button", frameName, Panel, "NarciMinimapPanelButton");
+		tinsert(buttons, button);
+		button:SetFrameLevel(buttonFrameLevel);
+		button.BlackText:SetText(LOCALIZED_NAMES[i]);
+		button.WhiteText:SetText(LOCALIZED_NAMES[i]);
+		button.BlackText:SetParent(ClipFrame);
+		button.index = i;
+		button.func = func[i];
+
+		if i == 1 then
+			button:SetPoint("TOP", Panel.Middle, "TOP", 0, button1OffsetY);
+		else
+			button:SetPoint("TOP", buttons[i - 1], "BOTTOM", 0, 0);
+			--button:SetPoint("TOP", Panel.Middle, "TOP", 0, offsetY - middleHeight/2 + BUTTON_HEIGHT/2 - BUTTON_HEIGHT * (i - 1) );
+		end
+
+		button:SetScript("OnEnter", OnEnter);
+		button:SetScript("OnLeave", OnLeave);
+		button:SetScript("OnMouseDown", OnMouseDown);
+		button:SetScript("OnMouseUp", OnMouseUp);
+		button:SetScript("OnClick", function(frame)
+			self:ShowPopup(false);
+			if frame.func then
+				frame.func();
+			end
+		end);
+
+		if not func[i] then
+			button:Disable();
+		end
+	end
+
+	self.buttons = buttons;
+end
+
+function NarciMinimapButtonMixin:OnLoad()
+	self:RegisterForClicks("LeftButtonUp","RightButtonUp","MiddleButtonUp");
+	self:RegisterForDrag("LeftButton");
+	self.endAlpha = 1;
+
+	self:CreatePanel();
+
+	--Create Popup Delay
+	local delay = NarciAPI_CreateAnimationFrame(0.35);	--Mouseover Delay
+	self.onEnterDelay = delay;
+	delay:SetScript("OnUpdate", function(frame, elapsed)
+		frame.total = frame.total + elapsed;
+		if frame.total >= frame.duration then
+			if self:IsMouseOver() then
+				self:ShowPopup(true);
+			end
+			frame:Hide();
+		end
+	end)
+
+	local tooltip = self.TooltipFrame;
+	tooltip.Left:SetVertexColor(0.686, 0.914, 0.996);
+	tooltip.Middle:SetVertexColor(0.686, 0.914, 0.996);
+	tooltip.Right:SetVertexColor(0.686, 0.914, 0.996);
+end
+
+function NarciMinimapButtonMixin:IsAnchoredToMinimap()
+	local D = Minimap:GetWidth() / 2 + 12;
+	local x0, y0 = Minimap:GetCenter(); 
+	local x1, y1 = self:GetCenter();
+	local d = sqrt( (x1 - x0)^2 + (y1 - y0)^2 );
+	if d <= D then
+		return true;
+	else
+		return false;
+	end
+end
+
+function NarciMinimapButtonMixin:SetTooltipText(text)
+	local tooltip = self.TooltipFrame;
+	tooltip.Description:SetText(text);
+	local textWidth = tooltip.Description:GetWidth();
+	tooltip:SetWidth(max(32, textWidth + 8));
+	tooltip:ClearAllPoints();
+
+	local scale = UIParent:GetEffectiveScale();
+	local x, y = self:GetCenter();
+	y = y + 36;
+	tooltip:SetPoint("CENTER", UIParent, "BOTTOMLEFT", x*scale, y*scale);
+	tooltip:Show();
+end
+
+function NarciMinimapButtonMixin:StartRepositioning()
+	self:ShowPopup(false);
+	self:StopMovingOrSizing();
+	self.DraggingFrame:Hide();
+	self.TooltipFrame:Hide();
+	self:ClearAllPoints();
+	if not IsShiftKeyDown() and self:IsAnchoredToMinimap() then
+		self:SetTooltipText("Hold Shift for free move");
+		self.DraggingFrame:Show();
+		NarcissusDB.AnchorToMinimap = true;
+	else
+		self:StartMoving();
+		NarcissusDB.AnchorToMinimap = false;
+	end
+	self:RegisterEvent("MODIFIER_STATE_CHANGED");
+end
+
+function NarciMinimapButtonMixin:OnDragStart()
+	self:StartRepositioning();
+end
+
+function NarciMinimapButtonMixin:OnDragStop()
+	self.DraggingFrame:Hide();
+	self:StopMovingOrSizing();
+	self:SetUserPlaced(true);
+	if self:IsMouseOver() then
+		self:OnEnter();
+	end
+	self:UnregisterEvent("MODIFIER_STATE_CHANGED");
+	self.TooltipFrame:Hide();
+end
+
+function NarciMinimapButtonMixin:PostClick(button, down)
 	if button == "MiddleButton" then
 		Narci:EmergencyStop();
 	end
 end
 
-function Narci_MinimapButton_OnClick(self, button, down)
+function NarciMinimapButtonMixin:OnMouseDown()
+	self.onEnterDelay:Hide();
+end
+
+function NarciMinimapButtonMixin:OnClick(button, down)
+	self.onEnterDelay:Hide();
+
 	if button == "MiddleButton" then
 		return;
 	elseif button == "RightButton" then
@@ -715,13 +1161,14 @@ function Narci_MinimapButton_OnClick(self, button, down)
 			Narci_OpenGroupPhoto();
 			GameTooltip:Hide();
 			self:Disable();
-			After(1.5, function()
+			After(duration_Lock, function()
 				self:Enable()
 			end)
 		end
 		return;
 	end
 	
+	--"LeftButton"
 	if IsShiftKeyDown() then
 		DressUpFrame_Show(DressUpFrame);
 		Narci_UpdateDressingRoom();
@@ -733,14 +1180,17 @@ function Narci_MinimapButton_OnClick(self, button, down)
 	self:Disable();	
 	Narci_Open();
 
-	After(1.5, function()
+	After(duration_Lock, function()
 		self:Enable();
 	end)
 end
 
-function Narci_MinimapButton_OnEnter(self)
-	if not NarcissusDB.ShowMinimapButton then return; end
+function NarciMinimapButtonMixin:SetIconScale(scale)
+	self.Background:SetScale(scale);
+end
 
+function NarciMinimapButtonMixin:OnEnter()
+	--[[
 	GameTooltip:SetOwner(self, "ANCHOR_NONE");
 	GameTooltip:SetPoint("TOPRIGHT", self, "BOTTOM", 0, 0);
 	GameTooltip:SetText(NARCI_GRADIENT);
@@ -773,16 +1223,83 @@ function Narci_MinimapButton_OnEnter(self)
 	GameTooltip:AddDoubleLine(NARCI_VERSION_INFO, NARCI_DEVELOPER_INFO, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8);
 	GameTooltip:AddLine("https://wow.curseforge.com/projects/narcissus", 0.5, 0.5, 0.5, false);
 
-	self.Color:Show();
-	UIFrameFadeIn(self.Color, 0.2, self.Color:GetAlpha(), 1);
-	UIFrameFadeIn(self, 0.2, self:GetAlpha(), 1);
-	SetCursor("Interface/CURSOR/Item.blp");
-
 	GameTooltip:Show();
+	--]]
+	if IsMouseButtonDown() or not NarcissusDB.ShowMinimapButton then return; end
+
+	if not IsShiftKeyDown()  then
+		self.onEnterDelay:Show();
+	end
+	self:ShowMouseMotionVisual(true);
+end
+
+function NarciMinimapButtonMixin:ShowMouseMotionVisual(visible)
+	if not self:IsShown() then return end;
+	if visible then
+		SetCursor("Interface/CURSOR/Item.blp");
+		self.Color:Show();
+		self:SetIconScale(1.1);
+		UIFrameFadeIn(self.Color, 0.2, self.Color:GetAlpha(), 1);
+		UIFrameFadeIn(self, 0.2, self:GetAlpha(), 1);
+	else
+		ResetCursor();
+		UIFrameFadeOut(self.Color, 0.2, self.Color:GetAlpha(), 0);
+		UIFrameFadeOut(self, 0.2, self:GetAlpha(), self.endAlpha);
+		self:SetIconScale(1);
+	end
+end
+
+function NarciMinimapButtonMixin:PlayBling()
+	self.Bling:Show();
+	self.Bling.animScale:Play();
+end
+
+function NarciMinimapButtonMixin:OnLeave()
+	GameTooltip:Hide();
+	if self.DraggingFrame:IsShown() then
+		return;
+	end
+	if self:IsShown() then
+		if not (self.Panel:IsMouseOver() and self.Panel:IsShown() ) then
+			self:ShowPopup(false);
+		end
+	else
+		self.Color:SetAlpha(0);
+	end
+end
+
+function NarciMinimapButtonMixin:OnHide()
+	self:ShowPopup(false);
+	self.Panel.ClipFrame:Hide();
+	self:UnregisterEvent("MODIFIER_STATE_CHANGED");
+end
+
+function NarciMinimapButtonMixin:ShowPopup(visible)
+	if visible then
+		self.Panel:Show();
+		self:RegisterEvent("GLOBAL_MOUSE_DOWN");
+	else
+		FadeFrame(self.Panel, 0.15, "OUT");
+		self:ShowMouseMotionVisual(false);
+		self.onEnterDelay:Hide();
+		self.panelEntrance:Hide();
+		self:UnregisterEvent("GLOBAL_MOUSE_DOWN");
+	end
+end
+
+function NarciMinimapButtonMixin:OnEvent(event)
+	if event == "GLOBAL_MOUSE_DOWN" then
+		if not self:IsInBound() then
+			self:ShowPopup(false);
+		end
+	elseif event == "MODIFIER_STATE_CHANGED" then
+		if self:IsDragging() then
+			self:StartRepositioning();
+		end
+	end
 end
 
 -- Derivative from [[LibDBIcon-1.0]]
-
 local minimapShapes = {
 	["ROUND"] = {true, true, true, true},
 	["SQUARE"] = {false, false, false, false},
@@ -801,7 +1318,7 @@ local minimapShapes = {
 }
 
 local RadialOffset = 10;	--minimapbutton offset
-local function Narci_MinimapButton_UpdateAngle(radian)
+local function MinimapButton_UpdateAngle(radian)
 	local x, y, q = cos(radian), sin(radian), 1;
 	if x < 0 then q = q + 1 end
 	if y > 0 then q = q + 2 end
@@ -821,8 +1338,11 @@ local function Narci_MinimapButton_UpdateAngle(radian)
 end
 
 function Narci_MinimapButton_OnLoad(self)
-	local radian = NarcissusDB.MinimapButton.Position;
-	Narci_MinimapButton_UpdateAngle(radian);
+	if NarcissusDB.AnchorToMinimap then
+		Narci_MinimapButton:ClearAllPoints();
+		local radian = NarcissusDB.MinimapButton.Position;
+		MinimapButton_UpdateAngle(radian);
+	end
 end
 
 function Narci_MinimapButton_DraggingFrame_OnUpdate()
@@ -835,38 +1355,12 @@ function Narci_MinimapButton_DraggingFrame_OnUpdate()
 	px, py = px / scale, py / scale;
 	radian = math.atan2(py - my, px - mx);
 
-	Narci_MinimapButton_UpdateAngle(radian);
+	MinimapButton_UpdateAngle(radian);
 	NarcissusDB.MinimapButton.Position = radian;
 end
 
+
 ---------------End of derivation---------------
-
-function Narci_ItemSlotButton_OnEnter(self, direction)
-	UIFrameFadeIn(self.Highlight, 0.15, self.Highlight:GetAlpha(), 1);
-	if IsAltKeyDown() and not TransmogMode then
-		Narci_EquipmentFlyout_Show(self, self:GetID());
-		Narci_EquipmentFlyoutFrame.Arrow:Show();
-	end
-
-	if Narci_EquipmentFlyoutFrame:IsShown() then
-		Narci_Comparison_SetComparison(Narci_EquipmentFlyoutFrame.BaseItem, self);
-		return;
-	end
-
-	DefaultTooltip:SetOwner(self, "ANCHOR_NONE");
-	if direction == "left" then
-		DefaultTooltip:SetPoint("TOPRIGHT", self, "TOPLEFT", 10, -20);
-	else
-		DefaultTooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", -10, -20);
-	end
-	if (self.hyperlink) then
-		DefaultTooltip:SetHyperlink(self.hyperlink);
-		DefaultTooltip:Show();
-		return;
-	end
-	local hasItem, hasCooldown, repairCost = DefaultTooltip:SetInventoryItem("player", self:GetID(), nil, true);
-	DefaultTooltip:Show()
-end
 
 local BorderTexture = NarciAPI_GetBorderTexture();
 
@@ -932,19 +1426,6 @@ local function SetCoolDown(self)
 	end
 end
 
-local function GetSlotVisualID(slotId)
-	if slotId == 2 or (slotId > 10 and slotId < 15) then
-		return -1, -1;
-	end
-	local baseSourceID, baseVisualID, appliedSourceID, appliedVisualID, _, _, _, hideVisual = C_Transmog.GetSlotVisualInfo(slotId, 0);
-	if ( hideVisual ) then
-		return 0, 0;
-	elseif ( appliedSourceID == NO_TRANSMOG_SOURCE_ID ) then
-		return baseSourceID, baseVisualID;
-	else
-		return appliedSourceID, appliedVisualID;
-	end
-end
 
 local function SetItemSocketingFramePosition(self)		--Let ItemSocketingFrame appear on the side of the slot
 	if ItemSocketingFrame then																		
@@ -955,7 +1436,7 @@ local function SetItemSocketingFramePosition(self)		--Let ItemSocketingFrame app
 			return;
 		end
 		ItemSocketingFrame:ClearAllPoints();
-		if self.IsRight then
+		if self.isRight then
 			ItemSocketingFrame:SetPoint("TOPRIGHT", self, "TOPLEFT", 4, 0);
 		else
 			ItemSocketingFrame:SetPoint("TOPLEFT", self, "TOPRIGHT", -4, 0);
@@ -975,43 +1456,6 @@ local function ShowOrHideEquiment(self)
 	end
 end
 
-function Narci_ItemSlotButton_OnClick(self, button)
-	ClearCursor();
-	Narci_AlertFrame_Autohide:SetAnchor(self, -24, true);
-	if ( IsModifiedClick() ) then
-		if IsAltKeyDown() and button == "LeftButton" then
-			local action = EquipmentManager_UnequipItemInSlot(self:GetID())
-			if action then
-				EquipmentManager_RunAction(action)
-			end
-			return;
-		elseif IsShiftKeyDown() and button == "LeftButton" then
-			if self.hyperlink then
-				SendChatMessage(self.hyperlink)
-			end
-			--ShareHyperLink()
-		else
-			PaperDollItemSlotButton_OnModifiedClick(self, button);
-			
-			TakeOutFromUIParent(AzeriteEmpoweredItemUI, "MEDIUM", true);
-			TakeOutFromUIParent(AzeriteEssenceUI, "MEDIUM", true);
-			TakeOutFromUIParent(ItemSocketingFrame, "MEDIUM", true);
-			TakeOutFromUIParent(ArtifactFrame, "MEDIUM", true);
-			SetItemSocketingFramePosition(self);
-		end
-	else
-		if button == "LeftButton" then
-			if TransmogMode then	--Undress an item from player model while in Xmog Mode
-				ShowOrHideEquiment(self);
-			else	
-				Narci_EquipmentFlyout_Show(self, self:GetID());
-			end
-		elseif button == "RightButton" then
-		--	UseInventoryItem(self:GetID());
-		end
-	end
-end
-
 local function IsItemEnchantable(self, slotID)
 	if slotID == 11 or slotID == 12 or
 		slotID == 16 or slotID == 17 then
@@ -1023,7 +1467,7 @@ local function IsItemEnchantable(self, slotID)
 	end
 end
 
-local RuneLetterTable = {
+local RunicLetters = {
 	["crit"] = "ᚲ\nᚱ\nᛁ",	  --CRI
 	["haste"] = "ᚼ\nᛆ\nᛋ",	 --HAS
 	["mastery"] = "ᛘ\nᛋ\nᛐ", --MST
@@ -1057,7 +1501,7 @@ local function DisplayRuneSlot(self, slotID, itemQuality, itemLink)
 	if EnchantID ~= 0 then
 		self.RuneSlot.RuneLetter:Show();
 		if EnchantInfo[EnchantID] then
-			self.RuneSlot.RuneLetter:SetText(RuneLetterTable[ EnchantInfo[EnchantID][1] ])
+			self.RuneSlot.RuneLetter:SetText(RunicLetters[ EnchantInfo[EnchantID][1] ])
 			self.RuneSlot.spellID = EnchantInfo[EnchantID][3]
 		end
 	else
@@ -1128,14 +1572,6 @@ local function AssignDelay(id, forced)
 	end;
 end
 
-function Narci_ItemSlotButton_SetUseItem(self)
-	local slotName = strsub(self:GetName(), 7);
-	local slotId, textureName = GetInventorySlotInfo(slotName)
-	self:SetID(slotId);
-	self:SetAttribute("type2", "item")
-	self:SetAttribute("item", slotId)
-end
-
 local function GetTraitsIcon(itemLocation)
     if not itemLocation then return; end
     local TierInfos = C_AzeriteEmpoweredItem.GetAllTierInfo(itemLocation);
@@ -1168,9 +1604,14 @@ local function GetTraitsIcon(itemLocation)
     return TraitIcons, isRightSpec;
 end
 
+
+local GetSlotVisualID = NarciAPI_GetSlotVisualID;
 local GetGemBorderTexture = Narci.GetGemBorderTexture;
 
-function Narci_ItemSlotButton_OnLoad(self)
+NarciEquipmentSlotMixin = {};
+
+--Narci_ItemSlotButton_OnLoad(self)
+function NarciEquipmentSlotMixin:Refresh()
 	self:RegisterForDrag("LeftButton");
 	self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 	SetCoolDown(self);
@@ -1253,7 +1694,6 @@ function Narci_ItemSlotButton_OnLoad(self)
 			itemName = sourceInfo.name; 																							--sourceitemName
 			--local _, sourceID = C_TransmogCollection.GetItemInfo(sourceInfo.itemID, sourceInfo.itemModID)							--appearanceID, sourceID
 			itemQuality = sourceInfo.quality or 12;																					--sourceitemQuality
-			--itemIcon = GetItemIcon(sourceInfo.itemID); 																				--sourceitemIcon
 			itemIcon = C_TransmogCollection.GetSourceIcon(appliedSourceID);
 			local _, _, _, hex = GetItemQualityColor(itemQuality);
 			_, self.hyperlink = GetItemInfo(sourceInfo.itemID);
@@ -1420,13 +1860,13 @@ function Narci_ItemSlotButton_OnLoad(self)
 			if corruption then
 				local Affix = GetCorruptedItemAffix(itemLink);
 				if Affix then
-					if self.IsRight then
+					if self.isRight then
 						effectiveLvl = Affix.."  |cff946dd1"..corruption.."|r  "..effectiveLvl;
 					else
 						effectiveLvl = effectiveLvl.."  "..Affix.."  |cff946dd1"..corruption.."|r";
 					end
 				else
-					if self.IsRight then
+					if self.isRight then
 						effectiveLvl = "|cff946dd1"..corruption.."|r  "..effectiveLvl;
 					else
 						effectiveLvl = effectiveLvl.."  |cff946dd1"..corruption.."|r";
@@ -1467,7 +1907,6 @@ function Narci_ItemSlotButton_OnLoad(self)
 	--Gem Slot--
 	self:StopAnimating();
 	if GemName ~= nil then
-		--self.GemSlot:Show()
 		if GemLink then
 			--local _, _, _, _, _, _, _, _, _, GemIcon, _, _, itemSubClassID = GetItemInfo(GemLink);
 			local id, _, _, _, GemIcon, _, itemSubClassID = GetItemInfoInstant(GemLink);
@@ -1487,7 +1926,6 @@ function Narci_ItemSlotButton_OnLoad(self)
 			self.GemSlot:Show();
 		end
 	else
-		--self.GemSlot:Hide();
 		if self:IsVisible() then
 			self.GemSlot.animOut:Play();
 		else
@@ -1530,7 +1968,22 @@ function Narci_ItemSlotButton_OnLoad(self)
 	--self.GradientBackground:SetHeight(self.Name:GetHeight() + self.ItemLevel:GetHeight() + 18);
 end
 
-function Narci_ItemSlotButton_OnEvent(self, event, ...)
+function NarciEquipmentSlotMixin:OnLoad()
+	local slotName = strsub(self:GetName(), 7);
+	local slotId, textureName = GetInventorySlotInfo(slotName);
+	self:SetID(slotId);
+	self:SetAttribute("type2", "item");
+	self:SetAttribute("item", slotId);
+
+	if self:GetParent() then
+		if not self:GetParent().slotTable then
+			self:GetParent().slotTable = {}
+		end
+		tinsert(self:GetParent().slotTable, self)
+	end
+end
+
+function NarciEquipmentSlotMixin:OnEvent(event, ...)
 	if event == "BAG_UPDATE_COOLDOWN" then
 		SetCoolDown(self);
 	elseif event == "MODIFIER_STATE_CHANGED" then
@@ -1555,23 +2008,102 @@ function Narci_ItemSlotButton_OnEvent(self, event, ...)
 	end
 end
 
-function Narci_ItemSlotButton_OnShow(self)
+
+function NarciEquipmentSlotMixin:OnShow()
 	SetCoolDown(self)
 	self:RegisterEvent("BAG_UPDATE_COOLDOWN");
 end
 
-function Narci_ItemSlotButton_OnLeave(self)
+function NarciEquipmentSlotMixin:OnEnter()
+	self:RegisterEvent("MODIFIER_STATE_CHANGED");
+
+	UIFrameFadeIn(self.Highlight, 0.15, self.Highlight:GetAlpha(), 1);
+	if IsAltKeyDown() and not TransmogMode then
+		Narci_EquipmentFlyout_Show(self, self:GetID());
+		Narci_EquipmentFlyoutFrame.Arrow:Show();
+	end
+
+	if Narci_EquipmentFlyoutFrame:IsShown() then
+		Narci_Comparison_SetComparison(Narci_EquipmentFlyoutFrame.BaseItem, self);
+		return;
+	end
+
+	DefaultTooltip:SetOwner(self, "ANCHOR_NONE");
+
+	if self.isRight then
+		DefaultTooltip:SetPoint("TOPRIGHT", self, "TOPLEFT", 10, -20);
+	else
+		DefaultTooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", -10, -20);
+	end
+
+	if (self.hyperlink) then
+		DefaultTooltip:SetHyperlink(self.hyperlink);
+		DefaultTooltip:Show();
+		return;
+	end
+
+	local hasItem, hasCooldown, repairCost = DefaultTooltip:SetInventoryItem("player", self:GetID(), nil, true);
+	DefaultTooltip:Show();
+	if hasItem then
+		DefaultTooltip.HotkeyFrame:FadeIn();
+	end
+end
+
+function NarciEquipmentSlotMixin:OnLeave()
 	self:UnregisterEvent("MODIFIER_STATE_CHANGED");
 	UIFrameFadeOut(self.Highlight, 0.25, 1, 0);
 	Narci:HideButtonTooltip();
 end
 
-function Narci_ItemSlotButton_OnHide(self)
+function NarciEquipmentSlotMixin:OnHide()
 	self:UnregisterEvent("BAG_UPDATE_COOLDOWN");
 	self.Highlight:Hide();
 	self.Highlight:SetAlpha(0);
 end
 
+function NarciEquipmentSlotMixin:PostClick(button)
+	ClearCursor();
+	if ( IsModifiedClick() ) then
+		if IsAltKeyDown() and button == "LeftButton" then
+			local action = EquipmentManager_UnequipItemInSlot(self:GetID())
+			if action then
+				EquipmentManager_RunAction(action)
+			end
+			return;
+		elseif IsShiftKeyDown() and button == "LeftButton" then
+			if self.hyperlink then
+				SendChatMessage(self.hyperlink)
+			end
+			--ShareHyperLink()
+		else
+			PaperDollItemSlotButton_OnModifiedClick(self, button);
+			
+			TakeOutFromUIParent(AzeriteEmpoweredItemUI, "MEDIUM", true);
+			TakeOutFromUIParent(AzeriteEssenceUI, "MEDIUM", true);
+			TakeOutFromUIParent(ItemSocketingFrame, "MEDIUM", true);
+			TakeOutFromUIParent(ArtifactFrame, "MEDIUM", true);
+			SetItemSocketingFramePosition(self);
+		end
+	else
+		if button == "LeftButton" then
+			if TransmogMode then	--Undress an item from player model while in Xmog Mode
+				ShowOrHideEquiment(self);
+			else	
+				Narci_EquipmentFlyout_Show(self, self:GetID());
+			end
+		elseif button == "RightButton" then
+			Narci_AlertFrame_Autohide:SetAnchor(self, -24, true);
+		end
+	end
+end
+
+function NarciEquipmentSlotMixin:RegisterErrorEvent()
+	self:RegisterEvent("UI_ERROR_MESSAGE");
+end
+
+function NarciEquipmentSlotMixin:UnregisterErrorEvent()
+	self:UnregisterEvent("UI_ERROR_MESSAGE");
+end
 ------------------------------------------------------------------
 ----The following codes are derivated from PapaerDollFrame.lua----
 ------------------------------------------------------------------
@@ -1716,7 +2248,7 @@ local function SetHaste(self)
 end
 
 local function MasteryFrame_OnEnter(self)
-	SetRadarVertexSize(self, 15);
+	self:GetParent():SetVertexSize(self, 15);
 
 	DefaultTooltip:SetOwner(self, "ANCHOR_NONE");
 
@@ -1815,16 +2347,16 @@ local function SetLeech(self)
 
 	--self:Show();
 
-	local PercentageText = string.format(Format_Digit, lifesteal).."%"
+	local PercentageText = string.format(Format_Digit, lifesteal).."%";
 	self.Label:SetText(STAT_LIFESTEAL);
 	self.Value:SetText(PercentageText);
 	if lifesteal == 0 then
-		self.Label:SetAlpha(Irrelevant_Attribute_Alpha)
-		self.Value:SetAlpha(Irrelevant_Attribute_Alpha)
+		self.Label:SetAlpha(Irrelevant_Attribute_Alpha);
+		self.Value:SetAlpha(Irrelevant_Attribute_Alpha);
 		self.animIn.A2:SetToAlpha(1);
 	else
-		self.Label:SetAlpha(1)
-		self.Value:SetAlpha(1)
+		self.Label:SetAlpha(1);
+		self.Value:SetAlpha(1);
 		self.animIn.A2:SetToAlpha(1);
 	end
 end
@@ -1863,17 +2395,17 @@ local function SetSpeed(self)
 
 	--self:Show();
 
-	local PercentageText = string.format(Format_Digit, speed).."%"
+	local PercentageText = string.format(Format_Digit, speed).."%";
 	self.Label:SetText(STAT_SPEED);
 	self.Value:SetText(PercentageText);
 
 	if speed == 0 then
-		self.Label:SetAlpha(Irrelevant_Attribute_Alpha)
-		self.Value:SetAlpha(Irrelevant_Attribute_Alpha)
+		self.Label:SetAlpha(Irrelevant_Attribute_Alpha);
+		self.Value:SetAlpha(Irrelevant_Attribute_Alpha);
 		self.animIn.A2:SetToAlpha(1);
 	else
-		self.Label:SetAlpha(1)
-		self.Value:SetAlpha(1)
+		self.Label:SetAlpha(1);
+		self.Value:SetAlpha(1);
 		self.animIn.A2:SetToAlpha(1);
 	end
 end
@@ -1946,6 +2478,7 @@ local function SetMovementSpeed(self)
 end
 
 local function SetStatTooltipText(self)
+	DefaultTooltip:ClearAllPoints();
 	DefaultTooltip:SetOwner(self, "ANCHOR_NONE");
 	DefaultTooltip:SetText(self.tooltip);
 	if ( self.tooltip2 ) then
@@ -2206,7 +2739,7 @@ end
 
 Narci.Corruption = -1;
 Narci.corruptionResistance = -1;
-local function SetCorruptionBackground()
+function SetCorruptionBackground()	--Private
 	local frame = Narci_IlvlInfoFrame.IlvlButtonCenter;
 	local frame3 = Narci_IlvlInfoFrame.IlvlButtonRight;
 	local percentage	--Set the bar(Fluid) height in the Tube
@@ -2384,7 +2917,7 @@ local function CharacterInfoFrame_OnLoad(NewLevel)
 
 	local className, englishClass, _ = UnitClass("player");
 	local _, _, _, rgbHex = GetClassColor(englishClass);
-	local frame = PlayerInfoFrame;
+	local frame = Narci_PlayerInfoFrame;
 	if currentSpecName ~= nil then
 		if TitleName ~= nil then
 			frame.Miscellaneous:SetText(TitleName.."  |  ".."|cFFFFD100"..level.."|r  ".." ".."|c"..rgbHex..currentSpecName.." "..className.."|r");
@@ -2399,7 +2932,7 @@ end
 local function RefreshSlot(SlotId)
 	if slotTable[SlotId] then
 		After(AssignDelay(SlotId), function()
-			Narci_ItemSlotButton_OnLoad(slotTable[SlotId]);
+			slotTable[SlotId]:Refresh();
 		end)
 	end
 end
@@ -2455,43 +2988,6 @@ local function CacheSourceInfo(slotId)
 		end
 	end
 end
-
---[[
-local SlotLabelStyle = true;
-
-function SetSlotLabelStyle(self)
-
-	if SlotLabelStyle then
-		for i=1, #slotTable do
-			if slotTable[i] then
-				slotTable[i].GradientBackground:Hide();
-				slotTable[i].GradientBackground:SetAlpha(0);
-				slotTable[i].Name:Hide();
-				local text = slotTable[i].ItemLevel:GetText();
-				slotTable[i].ItemLevel:Hide();
-				slotTable[i].IlvlCenter.ItemLevelCenter:SetText(text);
-				slotTable[i].IlvlCenter:Show();
-			end
-		end
-	else
-		for i=1, #slotTable do
-			if slotTable[i] then
-				slotTable[i].GradientBackground:Show();
-				slotTable[i].GradientBackground:SetAlpha(1);
-				slotTable[i].Name:Show();
-				slotTable[i].ItemLevel:Show();
-				slotTable[i].IlvlCenter:Hide();
-			end
-		end
-	end
-	if SlotLabelStyle then
-		self.icon:SetTexCoord(0, 0.5, 0, 1)
-	else
-		self.icon:SetTexCoord(0.5, 1, 0, 1)
-	end
-	SlotLabelStyle = not SlotLabelStyle;
-end
---]]
 
 local function GetPrimaryStatsNum()
 	local _, Strength, _, _ = UnitStat("player", 1);
@@ -2959,7 +3455,9 @@ local function SortedbyIlvl(a,b)
 	return tonumber(a.Level)> tonumber(b.Level)
 end
 
-function Narci_ItemFlyoutButton_OnClick(self)
+NarciEquipmentFlyoutButtonMixin = {};
+
+function NarciEquipmentFlyoutButtonMixin:OnClick()
 	local action = EquipmentManager_EquipItemByLocation(self.location, self.id)
 	if action then
 		Narci_AlertFrame_Autohide:SetAnchor(self, -24, true);
@@ -2971,6 +3469,32 @@ function Narci_ItemFlyoutButton_OnClick(self)
 	end)
 end
 
+function NarciEquipmentFlyoutButtonMixin:OnLeave()
+	UIFrameFadeOut(self.Highlight, 0.25, 1, 0);
+	Narci:HideButtonTooltip();
+end
+
+function NarciEquipmentFlyoutButtonMixin:OnEnter()
+	UIFrameFadeIn(self.Highlight, 0.15, self.Highlight:GetAlpha(), 1);
+	Narci_Comparison_SetComparison(self.itemLocation, self);
+end
+
+function NarciEquipmentFlyoutButtonMixin:OnEvent(event, msg)
+	local frame = Narci_AlertFrame_Autohide;
+	frame.Text:SetText(msg)
+	frame:SetHeight(frame.Background:GetHeight())
+	UIFrameFadeIn(frame, 0.2, frame:GetAlpha(), 1);
+	self:UnregisterEvent("UI_ERROR_MESSAGE");
+end
+
+function NarciEquipmentFlyoutButtonMixin:RegisterErrorEvent()
+	self:RegisterEvent("UI_ERROR_MESSAGE");
+end
+
+function NarciEquipmentFlyoutButtonMixin:UnregisterErrorEvent()
+	self:UnregisterEvent("UI_ERROR_MESSAGE");
+end
+
 function Narci_FlyoutBlack_OnUpdate(self, elapsed)
 	local alpha;
 	local t = self.TimeSinceLastUpdate;
@@ -2978,9 +3502,9 @@ function Narci_FlyoutBlack_OnUpdate(self, elapsed)
 	local AnimDuration = 0.25;
 
 	if self.OppoDirection then
-		alpha = outSine(t, self.startAlpha, 0 - self.startAlpha, AnimDuration);
+		alpha = outSine(t, self.startAlpha, 0, AnimDuration);
 	else
-		alpha = outSine(t, self.startAlpha, 1 - self.startAlpha, AnimDuration);
+		alpha = outSine(t, self.startAlpha, 1, AnimDuration);
 	end
 
 	blackFrame:SetAlpha(alpha);
@@ -3006,8 +3530,8 @@ local function Narci_EquipmentFlyout_CreateButton()
 	local buttonAnchor = frame.buttonFrame;
 	local numButtons = #buttons;
 
-	local button = CreateFrame("Button", "Narci_EquipmentFlyoutFrameButton" .. numButtons + 1, buttonAnchor, "AAAEquipmentFlyoutButtonTemplate");
-	button:SetFrameStrata("DIALOG")
+	local button = CreateFrame("Button", "Narci_EquipmentFlyoutFrameButton" .. numButtons + 1, buttonAnchor, "NarciEquipmentFlyoutButtonTemplate");
+	button:SetFrameStrata("DIALOG");
 	local pos = numButtons/perRow;
 	if pos == 0 then
 		button:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0);
@@ -3095,7 +3619,7 @@ function Narci_EquipmentFlyout_Show(self, slotID)
 	Narci_BuildFlyout();
 	flyout:SetParent(self);
 	flyout:ClearAllPoints();
-	if self.IsRight then
+	if self.isRight then
 		flyout:SetPoint("TOPRIGHT", self, "TOPLEFT", 0, 0);			--EquipmentFlyout's Position
 	else
 		flyout:SetPoint("TOPLEFT", self, "TOPRIGHT", 0, 0);
@@ -3238,8 +3762,7 @@ local function SetColorThemeBasedOnMapID()
 			Narci_GlobalColorIndex = 0;
 		end
 	end
-	Narci:SetRadarColor();
-	--print("mapID: "..mapID.." ColorIndex: "..ColorIndex)
+	Narci_RadarChartFrame:SetColor();
 end
 
 function Narci_Pref_ColorTheme(index)
@@ -3248,7 +3771,7 @@ function Narci_Pref_ColorTheme(index)
 	Narci_GlobalColorIndex = ColorIndex;
 	Narci_Attribute:Hide();
 	Narci_Attribute:Show();
-	Narci:SetRadarColor();
+	Narci_RadarChartFrame:SetColor();
 end
 
 local function SetWidgetColor(frame)
@@ -3266,37 +3789,67 @@ local function SetWidgetColor(frame)
 	frame:SetColorTexture(r, g, b);
 end
 
-function SetRadarVertexSize(self, size)
-	local name = self:GetName()
-	local Frame = Narci_RadarChartFrame;
-	if name == "ADCrit" then
-		Frame.P1:SetSize(size, size);
-	elseif name == "ADHaste" then
-		Frame.P2:SetSize(size, size);
-	elseif name == "ADMastery" then
-		Frame.P3:SetSize(size, size);
-	elseif name == "ADVersatility" then
-		Frame.P4:SetSize(size, size);
+---------------------------------------------
+local RadarChart;
+NarciRadarChartMixin = {}
+
+function NarciRadarChartMixin:OnLoad()
+	RadarChart = self;
+
+	local circleTex = "Interface\\AddOns\\Narcissus\\Art\\Widgets\\RadarChart\\Radar-Vertex";
+	local filter = "TRILINEAR";
+	local tex;
+	local texs = {};
+	for i = 1, 4 do
+		tex = self:CreateTexture(nil, "OVERLAY", nil, 2);
+		tinsert(texs, tex);
+		tex:SetSize(12, 12);
+		tex:SetTexture(circleTex, nil, nil, filter);
 	end
+
+	self.vertexes = texs;
 end
 
-function Narci:SetRadarColor()
-	local Frame = Narci_RadarChartFrame
-	SetWidgetColor(Frame.MaskedBackground)
-	SetWidgetColor(Frame.MaskedBackground2)
-	SetWidgetColor(Frame.MaskedLine1)
-	SetWidgetColor(Frame.MaskedLine2)
-	SetWidgetColor(Frame.MaskedLine3)
-	SetWidgetColor(Frame.MaskedLine4)
+function NarciRadarChartMixin:OnShow()
+	self.MaskedBackground:SetAlpha(0.4);
+	self.MaskedBackground2:SetAlpha(0.4);
 end
 
-function Narci:SetRadarChart(c, h, m, v, ManuallyInPutSum)
+function NarciRadarChartMixin:OnHide()
+	self:StopAnimating();
+end
+
+function NarciRadarChartMixin:SetVertexSize(attribute, size)
+	local name = attribute:GetName()
+	local vertex;
+	if name == "ADCrit" then
+		vertex = self.vertexes[1];
+	elseif name == "ADHaste" then
+		vertex = self.vertexes[2];
+	elseif name == "ADMastery" then
+		vertex = self.vertexes[3];
+	elseif name == "ADVersatility" then
+		vertex = self.vertexes[4];
+	end
+	vertex:SetSize(size, size);
+end
+
+function NarciRadarChartMixin:SetColor()
+	SetWidgetColor(self.MaskedBackground)
+	SetWidgetColor(self.MaskedBackground2)
+	SetWidgetColor(self.MaskedLine1)
+	SetWidgetColor(self.MaskedLine2)
+	SetWidgetColor(self.MaskedLine3)
+	SetWidgetColor(self.MaskedLine4)
+end
+
+function NarciRadarChartMixin:SetValue(c, h, m, v, ManuallyInPutSum)
 	--c, h, m, v: Input manually or use combat ratings
 	local deg = math.deg;
 	local rad = math.rad;
 	local atan2 = math.atan2;
 	local sqrt = math.sqrt;
-	local Radar = Narci_RadarChartFrame;
+	local Radar = self;
 
 	local chartWidth = 96 / 2;	--In half
 	local _, rating = GetEffectiveCrit();										--		|	p1(x1,y1)	  Line4		p3(x3,y3)
@@ -3389,10 +3942,10 @@ function Narci:SetRadarChart(c, h, m, v, ManuallyInPutSum)
 		ma1 = rad(-89);
 	end
 
-	Radar.P1:SetPoint("CENTER", x1, y1);
-	Radar.P2:SetPoint("CENTER", x2, y2);
-	Radar.P3:SetPoint("CENTER", x3, y3);
-	Radar.P4:SetPoint("CENTER", x4, y4);
+	Radar.vertexes[1]:SetPoint("CENTER", x1, y1);
+	Radar.vertexes[2]:SetPoint("CENTER", x2, y2);
+	Radar.vertexes[3]:SetPoint("CENTER", x3, y3);
+	Radar.vertexes[4]:SetPoint("CENTER", x4, y4);
 
 	Radar.Mask1:SetRotation(ma1);
 	Radar.Mask2:SetRotation(ma2);
@@ -3455,9 +4008,9 @@ function Narci:SetRadarChart(c, h, m, v, ManuallyInPutSum)
 	Radar.n1, Radar.n2, Radar.n3, Radar.n4 = Crit, Haste, Mastery, Versatility;
 end
 
-function Narci:AnimateRadarChart(c, h, m, v)
+function NarciRadarChartMixin:AnimateValue(c, h, m, v)
 	--Update the radar chart using animation
-	local Radar = Narci_RadarChartFrame;
+	local Radar = self;
 	local UpdateFrame = Radar.UpdateFrame;
 	if not UpdateFrame then
 		UpdateFrame = CreateFrame("Frame", nil, Radar, "NarciUpdateFrameTemplate");
@@ -3483,17 +4036,17 @@ function Narci:AnimateRadarChart(c, h, m, v)
 		sum = math.max(e1 + e2 + e3 + e4 , 5500);	--Status Sum for 8.3 Raid
 	end
 
-	local function UpdateFunc(self, elapsed)
-		local t = self.TimeSinceLastUpdate;
-		local v1 = outSine(t, s1, e1 - s1 , duration);
-		local v2 = outSine(t, s2, e2 - s2 , duration);
-		local v3 = outSine(t, s3, e3 - s3 , duration);
-		local v4 = outSine(t, s4, e4 - s4 , duration);
-		Narci:SetRadarChart(v1, v2, v3, v4, sum);
-		self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
+	local function UpdateFunc(frame, elapsed)
+		local t = frame.TimeSinceLastUpdate;
+		local v1 = outSine(t, s1, e1, duration);
+		local v2 = outSine(t, s2, e2, duration);
+		local v3 = outSine(t, s3, e3, duration);
+		local v4 = outSine(t, s4, e4, duration);
+		Radar:SetValue(v1, v2, v3, v4, sum);
+		frame.TimeSinceLastUpdate = frame.TimeSinceLastUpdate + elapsed;
 		if t >= duration then
-			Narci:SetRadarChart(e1, e2, e3, e4, sum);
-			self:Hide();
+			Radar:SetValue(e1, e2, e3, e4, sum);
+			frame:Hide();
 		end
 	end
 
@@ -3502,7 +4055,6 @@ function Narci:AnimateRadarChart(c, h, m, v)
 	UpdateFrame:Show();
 end
 
-local SetRadarChart = Narci.AnimateRadarChart;
 
 function Pref_SetBackgroundColor(self)
 	local FrameID = self:GetID() or 0;
@@ -3621,7 +4173,7 @@ Narci.RefreshAllStats = RefreshAllStats;
 
 local function PlayAttributeAnimation()
 	if not NarcissusDB.DetailedIlvlInfo then
-		Narci.AnimateRadarChart();
+		RadarChart:AnimateValue();
 		return
 	end
 	local anim;
@@ -3720,17 +4272,17 @@ local function AssignFrame()
 end
 
 function Narci_AliasButton_OnClick(self)
-	local editBox = PlayerInfoFrame.PlayerName;
+	local editBox = Narci_PlayerInfoFrame.PlayerName;
 	NarcissusDB_PC.UseAlias = not NarcissusDB_PC.UseAlias;
 
 	if NarcissusDB_PC.UseAlias then
-		self.Label:SetText(NARCI_ALIAS_USE_PLAYER_NAME)
+		self.Label:SetText(L["Use Player Name"])
 		editBox:Enable()
 		editBox:SetFocus();
 		editBox:SetText(NarcissusDB_PC.PlayerAlias or UnitName("player"))
 		editBox:HighlightText();
 	else
-		self.Label:SetText(NARCI_ALIAS_USE_ALIAS)
+		self.Label:SetText(L["Use Alias"])
 
 		local text = strtrim(editBox:GetText());
 		editBox:SetText(text);
@@ -3755,13 +4307,13 @@ local function MusicIO_Update(self, elapsed)
 	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed
 	local volume;
 	if self.State then
-		volume = math.max((self.TimeSinceLastUpdate/2), CVar_Temp.MusicVolume)
+		volume = math.max((self.TimeSinceLastUpdate/2), CVarTemp.MusicVolume)
 	else
-		volume = math.max((self.StartVolume - self.TimeSinceLastUpdate/2), CVar_Temp.MusicVolume)
+		volume = math.max((self.StartVolume - self.TimeSinceLastUpdate/2), CVarTemp.MusicVolume)
 	end
 	SetCVar("Sound_MusicVolume",volume)
 
-	if (self.State and volume >= 1) or ((not self.State) and volume <= tonumber(CVar_Temp.MusicVolume)) then
+	if (self.State and volume >= 1) or ((not self.State) and volume <= tonumber(CVarTemp.MusicVolume)) then
 		self:Hide()
 		self.TimeSinceLastUpdate = 0;
 	end
@@ -3790,13 +4342,19 @@ end
 function Narci_Open()
 	if not OpenViaClick then
 		if InCombatLockdown() then
+			--[[
+				--Can't open the default character pane either
+			ShowUIPanel(CharacterFrame);
+			local subFrame = _G["PaperDollFrame"];
+			if not subFrame:IsShown() then
+				ToggleCharacter("PaperDollFrame");
+			end
+			--]]
 			return;
 		end
 		OpenViaClick = true;
-		CVar_Temp.ActioncamState = tonumber(GetCVar("test_cameraDynamicPitch"));
-		CVar_Temp.OverShoulder = GetCVar("test_cameraOverShoulder");
-		CVar_Temp.MusicVolume = GetCVar("Sound_MusicVolume");
-		SaveView(5)
+		CVarTemp:BackUp();
+		SaveView(5);
 		ModifyCameraForShapeshifter();
 		xmogMode = 0;
 		MogMode_Offset = 0;
@@ -3810,36 +4368,20 @@ function Narci_Open()
 
 		Narci_PhotoModeController:Show();
 		Narci_XmogButton:Enable();
-		BeginZoomingIn();
 
 		DefaultTooltip:SetScale(UIParent:GetEffectiveScale() or 1);
 
 		After(0, function()
-			RefreshAllSlot();
-			Narci:SetRadarChart(0,0,0,0,1);
+			CameraContainer:Enter();
+			RadarChart:SetValue(0,0,0,0,1);
 			Narci_LetterboxAnimation();
 			local Vignette = Narci_Vignette;
 			Vignette.VignetteLeft:SetAlpha(VignetteAlpha);
 			Vignette.VignetteRight:SetAlpha(VignetteAlpha);
 			Vignette.VignetteRightSmall:SetAlpha(0);
-			UIFrameFadeIn(Vignette, 1, Vignette:GetAlpha(), 1);
+			UIFrameFadeIn(Vignette, 0.5, Vignette:GetAlpha(), 1);
 			Vignette.VignetteRight.animIn:Play();
 			Vignette.VignetteLeft.animIn:Play();
-
-			if UIParent:IsShown() then
-				UIPA.EndAlpha = 0;
-				UIPA:Show();
-			end
-			SetCVar("test_cameraDynamicPitchSmartPivotCutoffDist", 10);
-
-			After(0.5, function()
-				SetUIVisibility(false); 		--Same as pressing Alt + Z
-				SetCorruptionBackground();
-			end)
-
-			After(0.8, function()
-				UIParent:SetAlpha(1);
-			end)
 		end)
 		
 		Narci.EnableAutoUpdate = true;
@@ -3896,39 +4438,29 @@ function Narci_OpenGroupPhoto()
 		if InCombatLockdown() then
 			return;
 		end
-		ModifyCameraForShapeshifter();
-		CVar_Temp.ZoomLevel = GetCameraZoom();
-		SetCVar("test_cameraDynamicPitch", 1)
 		OpenViaClick = true;
+		CVarTemp:BackUp();
+		SaveView(5);
+		ModifyCameraForShapeshifter();
+		SetCVar("test_cameraDynamicPitch", 1)
+
 		local xmogMode_Temp = NarcissusDB.DefaultLayout;
 		NarcissusDB.DefaultLayout = 2;
-
-		if not Narci_PhotoModeButton.IsOn then
-			Narci_PhotoModeButton:Click();
-		end
 
 		Narci_XmogButton:Enable();
 		Narci_XmogButton:Click();
 
-		--Narci_ActorPanelExpandButton_OnClick(Narci_ExpandButton)
 		After(0.4, function()
 			NarcissusDB.DefaultLayout = xmogMode_Temp;
 		end)
-		
-		CVar_Temp.ActioncamState = tonumber(GetCVar("test_cameraDynamicPitch"));
-		CVar_Temp.OverShoulder = GetCVar("test_cameraOverShoulder");
-		CVar_Temp.MusicVolume = GetCVar("Sound_MusicVolume");
-		SaveView(5)
 		
 		local speedFactor = 180/(GetCVar("cameraYawMoveSpeed") or 180);
 		ZoomFactor.EndSpeed = speedFactor*ZoomFactor.EndSpeedBasic;
 		ZoomFactor.StartSpeed = speedFactor*ZoomFactor.StartSpeedBasic;
 		Narci_FlyoutBlack:SetAlpha(0);
 		ACL:Show();
-
-		Narci_PhotoModeController:Show();
 		
-		SP:Show();	
+		CameraContainer:Pitch();
 
 		DefaultTooltip:SetScale(UIParent:GetEffectiveScale() or 1);
 
@@ -3938,40 +4470,46 @@ function Narci_OpenGroupPhoto()
 			Vignette.VignetteLeft:SetAlpha(VignetteAlpha);
 			Vignette.VignetteRight:SetAlpha(VignetteAlpha);
 			Vignette.VignetteRightSmall:SetAlpha(0);
-			UIFrameFadeIn(Vignette, 1, Vignette:GetAlpha(), 1);
+			UIFrameFadeIn(Vignette, 0.8, Vignette:GetAlpha(), 1);
 			Vignette.VignetteRight.animIn:Play();
 			Vignette.VignetteLeft.animIn:Play();
 
 			if UIParent:IsShown() then
-				UIPA.EndAlpha = 0;
+				UIPA.endAlpha = 0;
 				UIPA:Show();
 			end
 
-			SetCVar("test_cameraDynamicPitchSmartPivotCutoffDist", 10);
+			After(0, function()
+				if not Narci_PhotoModeButton.IsOn then
+					Narci_PhotoModeButton:Click();
+				end
+				Narci_PhotoModeController:Show();
 
-			After(0.5, function()
-				SetUIVisibility(false); 		--Same as pressing Alt + Z
-			end)
+				After(0.5, function()
+					SetUIVisibility(false); 		--Same as pressing Alt + Z
 
-			After(0.8, function()
-				UIParent:SetAlpha(1);
+					After(0.3, function()
+						UIParent:SetAlpha(1);
+					end)
+				end)
 			end)
 		end)
+		
 		Narci.isActive = true;
 	end
 end
 
 function Narci_AliasButton_SetState()
-	local editBox = PlayerInfoFrame.PlayerName;
+	local editBox = Narci_PlayerInfoFrame.PlayerName;
 	local button = Narci_AliasButton;
 
 	if NarcissusDB_PC.UseAlias then
 		editBox:Enable();
 		editBox:SetText((NarcissusDB_PC.PlayerAlias or UnitName("player")));
-		button.Label:SetText(NARCI_ALIAS_USE_PLAYER_NAME);
+		button.Label:SetText(L["Use Player Name"]);
 	else
 		editBox:Disable();
-		button.Label:SetText(NARCI_ALIAS_USE_ALIAS);
+		button.Label:SetText(L["Use Alias"]);
 	end
 
 	local LetterNum = editBox:GetNumLetters()
@@ -4036,7 +4574,7 @@ function CameraControlBarThumb_OnClick(self, button, down)
 		CameraOffsetControlBar.PosRadian = 0;
 	end)
 	local Zoom = GetCameraZoom()
-	Smooth_ShoulderCVar(Shoulder_Factor1*Zoom + Shoulder_Factor2)
+	SmoothShoulderCVar(Shoulder_Factor1*Zoom + Shoulder_Factor2)
 	self:GetParent().Thumb.Reading:SetText(string.format(0))
 end
 
@@ -4161,6 +4699,7 @@ local PhotoMode_Cvar_GraphicsList = {
 	--["graphicsLightingQuality"] = 3,
 	["lightMode"] = 2,
 	["MSAAQuality"] = 4,	--4 is invalid. But used for backup
+	["shadowrt"] = -1,		--invalid
 }
 
 ---Hide Names and Bubbles---
@@ -4304,26 +4843,26 @@ function XmogButtonPopUp_OnShow(self)
 end
 
 function XmogButtonPopUp_OnLoad(self)
-	self.CopyButton.Label:SetText(NARCI_COPY_TEXTS)
-	self.ModeButton.Background:SetColorTexture(0.06, 0.06, 0.06, 0.8)
-	self.ModeButton.Label:SetText(NARCI_LAYOUT)
-	self.ModeButton.Option:SetText(NARCI_LAYOUT_SYMMETRY)
-	self.ModelToggle.Label:SetText(NARCI_3DMODEL)
-	SetWidgetColor(self.ModeButton.Option)
+	self.CopyButton.Label:SetText(L["Copy Texts"]);
+	self.ModeButton.Background:SetColorTexture(0.06, 0.06, 0.06, 0.8);
+	self.ModeButton.Label:SetText(L["Layout"]);
+	self.ModeButton.Option:SetText(L["Symmetry"]);
+	self.ModelToggle.Label:SetText(NARCI_3DMODEL);
+	SetWidgetColor(self.ModeButton.Option);
 
-	local SyntaxButton = self.CopyButton.GearTexts
-	SyntaxButton.PlainText.Background:SetColorTexture(0.06, 0.06, 0.06, 0.8)
-	SyntaxButton.BBSCode.Background:SetColorTexture(0.06, 0.06, 0.06, 0.8)
-	SyntaxButton.Markdown.Background:SetColorTexture(0.06, 0.06, 0.06, 0.8)
-	SyntaxButton.PlainText.Label:SetText(NARCI_SYNTAX_PLAIN_TEXT)
-	SyntaxButton.BBSCode.Label:SetText(NARCI_SYNTAX_BBCODE)
-	SyntaxButton.Markdown.Label:SetText(NARCI_SYNTAX_MARKDOWN)
+	local SyntaxButton = self.CopyButton.GearTexts;
+	SyntaxButton.PlainText.Background:SetColorTexture(0.06, 0.06, 0.06, 0.8);
+	SyntaxButton.BBSCode.Background:SetColorTexture(0.06, 0.06, 0.06, 0.8);
+	SyntaxButton.Markdown.Background:SetColorTexture(0.06, 0.06, 0.06, 0.8);
+	SyntaxButton.PlainText.Label:SetText(L["Plain Text"]);
+	SyntaxButton.BBSCode.Label:SetText(L["BB Code"]);
+	SyntaxButton.Markdown.Label:SetText(L["Markdown"]);
 
 end
 
 local function HidePlayerModel()
 	if (not Narci_ModelContainer:IsVisible()) or (NarcissusDB.AlwaysShowModel) then	return; end
-	PlayerModelAnimOut:Show()
+	Narci_PlayerModelAnimOut:Show()
 	After(0.4, function()
 		FadeFrame(NarciPlayerModelFrame1, 0.5 , "OUT")
 	end)
@@ -4333,42 +4872,44 @@ local function UseXmogLayout(index)
 	if index == 1 then
 		xmogMode = 1;
 		NarciPlayerModelFrame1.xmogMode = 1;
-		Narci_XmogButtonPopUp_ModeButton.Option:SetText(NARCI_LAYOUT_SYMMETRY)
-		SP:Show()
-		HidePlayerModel()
-		Smooth_Shoulder.EndPoint = 0.01;
-		Smooth_Shoulder:Show()
+		Narci_XmogButtonPopUp_ModeButton.Option:SetText(L["Asymmetry"]);
+		CameraContainer:Pitch();
+		HidePlayerModel();
+		SmoothShoulder.EndPoint = 0.01;
+		SmoothShoulder:Show();
 		Narci_GuideLineFrame.VirtualLineRight.AnimFrame.EndPoint = -80;
-		Narci_GuideLineFrame.VirtualLineRight.AnimFrame:Show()
-		Smooth_ShoulderCVar(0.01)
+		Narci_GuideLineFrame.VirtualLineRight.AnimFrame:Show();
+		SmoothShoulderCVar(0.01);
 		Narci_XmogButtonPopUp_ModeButton.ShowModel = false;
 
 		if NarcissusDB.AlwaysShowModel then
 			NarciModel_RightGradient:Hide();
 			ModelVignetteRightSmall:Hide();
 			if not NarciPlayerModelFrame1:IsVisible() then
-				Narci_PlayerModelAnimIn:Show()
+				Narci_PlayerModelAnimIn:Show();
 			end
 		end
 	elseif index == 2 then
 		xmogMode = 2;
 		MogMode_Offset = 0.2;
 		NarciPlayerModelFrame1.xmogMode = 2;
-		FadeFrame(NarciModel_RightGradient, 0.5, "IN")
-		Narci_XmogButtonPopUp_ModeButton.Option:SetText(NARCI_LAYOUT_ASYMMETRY)
+		if Narci_Character:IsVisible() then
+			FadeFrame(NarciModel_RightGradient, 0.5, "IN");
+		end
+		Narci_XmogButtonPopUp_ModeButton.Option:SetText(L["Symmetry"]);
 		if not NarciPlayerModelFrame1:IsVisible() then
-			Narci_PlayerModelAnimIn:Show()
+			Narci_PlayerModelAnimIn:Show();
 		end
 		ModelVignetteRightSmall:Show();
-		Narci_GuideLineFrame.VirtualLineRight.AnimFrame.EndPoint = -600
-		Narci_GuideLineFrame.VirtualLineRight.AnimFrame:Show()
+		Narci_GuideLineFrame.VirtualLineRight.AnimFrame.EndPoint = -600;
+		Narci_GuideLineFrame.VirtualLineRight.AnimFrame:Show();
 		Narci_XmogButtonPopUp_ModeButton.ShowModel = true;
 		After(0, function()
 			if not IsMounted() then
-				SmoothPitchContainer:Show()
-				Narci:CameraZoomIn(ZoomInValue_XmogMode)	--ajust by raceID
+				CameraContainer:Pitch();
+				CameraContainer:ZoomIn(ZoomInValue_XmogMode);	--ajust by raceID
 			else
-				Narci:CameraZoomIn(8)	--ajust by raceID
+				CameraContainer:ZoomIn(8);	--ajust by raceID
 			end
 		end)
 	end
@@ -4409,7 +4950,7 @@ local function ActiveXmogMode()
 			Narci_GuideLineFrame.VirtualLineRight.AnimFrame:Show()
 			FadeFrame(Narci_Attribute, 0.5, "IN")
 			local Zoom = GetCameraZoom()
-			Smooth_ShoulderCVar(Shoulder_Factor1*Zoom + Shoulder_Factor2)
+			SmoothShoulderCVar(Shoulder_Factor1*Zoom + Shoulder_Factor2)
 		end
 		FadeFrame(Narci_XmogNameFrame, 0.2, "OUT")
 		ShowAttributeButton(true);
@@ -4443,11 +4984,11 @@ function XmogButton_OnClick(self)
 		PopUp.AnimFrame.EndPointY = -20;
 		if Narci_ModelContainer:IsVisible() then
 			if OpenViaClick then
-				SmoothPitchContainer:Show()
+				CameraContainer:Pitch();
 			else
-				Smooth_ShoulderCVar(0)
+				SmoothShoulderCVar(0)
 			end
-			PlayerModelAnimOut:Show()
+			Narci_PlayerModelAnimOut:Show()
 			After(0.4, function()
 				FadeFrame(NarciPlayerModelFrame1, 0.5 , "OUT")
 			end)
@@ -4472,7 +5013,7 @@ function XmogButton_OnClick(self)
 		PopUp.AnimFrame.OppoDirection = false		
 		PopUp.AnimFrame:Show();
 		PopUp.AnimFrame.EndPointY = 8;
-		Narci_XmogNameFrame.PlayerName:SetText(PlayerInfoFrame.PlayerName:GetText())
+		Narci_XmogNameFrame.PlayerName:SetText(Narci_PlayerInfoFrame.PlayerName:GetText())
 		self.tooltip = {L["Xmog Button"], L["Xmog Button Tooltip Close"]};
 	end
 	
@@ -4488,8 +5029,8 @@ end
 
 function XmogName_OnLoad()
 	local Frame = Narci_XmogNameFrame;
-	Narci_SetPlayerName(Frame)
-	local currentSpec = GetSpecialization()
+	Narci_SetPlayerName(Frame);
+	local currentSpec = GetSpecialization();
 	if not currentSpec then
 	   return;
 	end
@@ -4505,21 +5046,21 @@ function XmogName_OnLoad()
 
 	if IsSpellKnown(76273) or IsSpellKnown(106904) or IsSpellKnown(202782) or IsSpellKnown(76275) then
 		--ArmorType = "Leather"
-		Token = 159300
+		Token = 159300;
 	elseif IsSpellKnown(76250) or IsSpellKnown(76272) then
 		--ArmorType = "Mail"
-		Token = 159371
+		Token = 159371;
 	elseif IsSpellKnown(76276) or IsSpellKnown(76277) or IsSpellKnown(76279) then
 		--ArmorType = "Cloth"
-		Token = 159243
+		Token = 159243;
 	elseif IsSpellKnown(76271) or IsSpellKnown(76282) or IsSpellKnown(76268) then
 		--ArmorType = "Plate"
-		Token = 159418
+		Token = 159418;
 	end
 
-	local _, _, ArmorType = GetItemInfoInstant(Token)
+	local _, _, ArmorType = GetItemInfoInstant(Token);
 	--Leather 76273		Mail 76250		Cloth 76276	76279	Plate 76271 76282
-	ArmorType = ArmorType or "ArmorType"
+	ArmorType = ArmorType or "ArmorType";
 	Frame.Miscellaneous:SetText("|cFFFFD100"..ArmorType.."|r".."  |  ".."|c"..rgbHex..currentSpecName.." "..className.."|r");
 end
 
@@ -4537,8 +5078,8 @@ end
 
 local function CopyTexts(type, subType)
 	local texts = Narci_XmogNameFrame.PlayerName:GetText() or "My Transmog";
-	local type = type or "TEXT"
-	local subType = subType or "Wowhead"
+	local type = type or "TEXT";
+	local subType = subType or "Wowhead";
 	local showItemID = Narci_XmogButtonPopUp.CopyButton.showItemID or false;
 	local source;
 	if type == "TEXT" then
@@ -4546,7 +5087,7 @@ local function CopyTexts(type, subType)
 		for i=1, #xmogTable do
 			local index =  xmogTable[i][1]
 			if slotTable[index] and slotTable[index].Name:GetText() then
-				local text = "|cFFFFD100"..xmogTable[i][2]..":|r "..(slotTable[index].Name:GetText() or " ")
+				local text = "|cFFFFD100"..xmogTable[i][2]..":|r "..(slotTable[index].Name:GetText() or " ");
 
 				if showItemID and slotTable[index].itemID then
 					text = text.." |cFFacacac"..slotTable[index].itemID.."|r";
@@ -4640,7 +5181,7 @@ local WebsiteTable = {
 	--[4] = {"Vanion", "Interface/AddOns/Narcissus/Art/Logos/Vanion"},
 }
 
-function WebsiteButton_OnLoad(self)
+function Narci_WebsiteButton_OnLoad(self)
 	local index = self:GetID() or 2;
 	if WebsiteTable[index] then
 		self.NormalTex:SetTexture(WebsiteTable[index][2]);
@@ -4852,7 +5393,7 @@ function EmoteButtonPopUp_AnimFrame_OnUpdate(self, elapsed)
 	local offSet;
 	local t = self.TimeSinceLastUpdate;
 	local frame = self:GetParent();
-	offSet = outSine(t, StartPoint, EndPoint - StartPoint , duration)
+	offSet = outSine(t, StartPoint, EndPoint, duration)
 	frame:SetPoint(self.AnchorPoint, self.relativeTo, self.relativePoint, self.EndPoint, offSet);
 	if not self.OppoDirection then
 		frame:SetAlpha(2*t/duration);
@@ -4962,6 +5503,7 @@ function TopQualityButton_OnClick(self)
 		PhotoMode_RestoreCvar(PhotoMode_Cvar_GraphicsBackup);
 		self.Icon:SetTexCoord(0, 0.5, 0, 1);
 		FadeFrame(TopQualityButton_MSAASlider, 0.25, "OUT");
+		TopQualityButton_RayTracingToggle:FadeOut();
 		self.tooltip = {L["TopQuality Button"], L["TopQuality Button Tooltip Open"] .. "\n|cff6b6b6b"..L["HideTexts Button Tooltip Special"]};
 	else
 		PlayCheckSound(self, true)
@@ -4969,6 +5511,7 @@ function TopQualityButton_OnClick(self)
 		PhotoMode_RestoreCvar(PhotoMode_Cvar_GraphicsList);
 		self.Icon:SetTexCoord(0.5, 1, 0, 1);
 		FadeFrame(TopQualityButton_MSAASlider, 0.25, "IN");
+		TopQualityButton_RayTracingToggle:FadeIn();
 		self.tooltip = {L["TopQuality Button"], L["TopQuality Button Tooltip Close"] .. "\n|cff6b6b6b"..L["HideTexts Button Tooltip Special"]};
 	end
 
@@ -4993,7 +5536,7 @@ function TopQualityButton_MSAASlider_OnValueChanged(self, value, userInput)
 			end
 			valueText = "|cfffced00"..valueText;
 		else
-			valueText = "|cffee3224"..OFF;
+			valueText = "|cffee3224".."OFF";
 		end
 		self.KeyLabel2:SetText(MULTISAMPLE_ANTI_ALIASING.." "..valueText)
 		if value ~=0 then
@@ -5004,77 +5547,48 @@ function TopQualityButton_MSAASlider_OnValueChanged(self, value, userInput)
 	end
 end
 
-function Narci_Vignette_OnFinished()
+function CameraContainer:ShowFrame()
 	local GuideLineFrame = Narci_GuideLineFrame;
 	local VirtualLineRight = GuideLineFrame.VirtualLineRight;
+	VirtualLineRight.AnimFrame:Hide();
+	VirtualLineRight:SetPoint("RIGHT", - 404, 0);
 	GuideLineFrame.VirtualLineLeft:SetPoint("LEFT", 0, 0);
-	local _, _, _, offsetX = VirtualLineRight:GetPoint();
 	if TransmogMode then
-		--VirtualLineRight:SetPoint("RIGHT", -15, 0);
-		--VirtualLineRight.AnimFrame.StartPoint = -15
-		VirtualLineRight.AnimFrame.StartPoint = offsetX;
 		FadeFrame(Narci_Attribute, 0.4, "OUT")
 	else
-		
-		--VirtualLineRight.AnimFrame.StartPoint = offsetX -- -10;
-		VirtualLineRight.AnimFrame.StartPoint = offsetX
-		VirtualLineRight.AnimFrame.EndPoint = GuideLineFrame.VirtualLineRight.AnimFrame.EndPointBAK
-		FadeFrame(Narci_Attribute, 0.4, "Forced_IN")
+		VirtualLineRight.AnimFrame.EndPoint = GuideLineFrame.VirtualLineRight.AnimFrame.EndPointBAK;
+		FadeFrame(Narci_Attribute, 0.4, "Forced_IN");
 	end
+	VirtualLineRight.AnimFrame:Show();
+	GuideLineFrame.VirtualLineLeft.AnimFrame:Show();
+	
 	RefreshAllStats();
 	PlayAttributeAnimation();
-	FadeFrame(Narci_Character, 0.6, "Forced_IN")
-	VirtualLineRight.AnimFrame:Show()
-	GuideLineFrame.VirtualLineLeft.AnimFrame:Show()
-	After(0.3, function()
-		PlayIlvlInfoAnimation()	
+	After(0, function()
+		FadeFrame(Narci_Character, 0.6, "Forced_IN");
+		After(0.3, function()
+			PlayIlvlInfoAnimation();
+		end)
+
+		--SetCVar("test_cameraDynamicPitchSmartPivotCutoffDist", 10);
 	end)
+
 	Narci_SnowEffect(true);
 end
 
+
 ----------------------------
-local EndWidth = 220;
-function PhotoModeController_UpdateFrame_OnUpdate(self, elapsed)
-	local radian, offSet;
-	local t = self.TimeSinceLastUpdate;
-	local IsOn = self:GetParent().Switch.IsOn;
 
-	if IsOn then
-		radian = outSine(t, self.StartDegree, 1.25*pi - self.StartDegree, 0.6)
-		offSet = outSine(t, self.StartOffSet, EndWidth - self.StartOffSet, 0.6)
-	else
-		radian = outSine(t, self.StartDegree, 2*pi - self.StartDegree, 0.6)
-		offSet = outSine(t, self.StartOffSet, 40 - self.StartOffSet, 0.6)
-	end
-	self:GetParent().Switch.Ring:SetRotation(radian)
-	self:GetParent().Bar:SetWidth(offSet)
-	if t >= 0.6 then	--duration_Controller
-		if IsOn then
-			self:GetParent().Switch.Ring:SetRotation(1.25*pi)
-			self:GetParent().Bar:SetWidth(EndWidth)
-			PhotoModeControllerBar:SetClipsChildren(false)
-		else
-			self:GetParent().Switch.Ring:SetRotation(2*pi)
-			self:GetParent().Bar:SetWidth(40)
-			PhotoModeControllerBar:SetClipsChildren(true)
-		end
-		self:Hide()
-		self.TimeSinceLastUpdate = 0;
-		return;
-	end
-	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
-end
-
-local duration_FlyIn = 0.4;
+local DURATION_FLY_IN = 0.4;
 function PhotoModeController_AnimFrame_OnUpdate(self, elapsed)
-	local duration = duration_FlyIn;
+	local duration = DURATION_FLY_IN;
 	local EndPoint = self.EndPointY;
 	local StartPoint = self.StartPointY;
 	local offSet, alpha;
 	local t = self.TimeSinceLastUpdate;
 	local frame = self:GetParent();
-	offSet = outSine(t, StartPoint, EndPoint - StartPoint , duration);
-	alpha = outSine(t, self.fromAlpha, self.toAlpha - self.fromAlpha , duration);
+	offSet = outSine(t, StartPoint, EndPoint, duration);
+	alpha = outSine(t, self.fromAlpha, self.toAlpha, duration);
 	frame:SetPoint(self.AnchorPoint, self.relativeTo, self.relativePoint, self.EndPoint, offSet);
 	frame:SetAlpha(alpha)
 
@@ -5083,7 +5597,7 @@ function PhotoModeController_AnimFrame_OnUpdate(self, elapsed)
 		if not self.OppoDirection then
 			frame:SetAlpha(self.toAlpha);
 			frame:Show();
-			PhotoModeControllerBar:SetAlpha(1)
+			PhotoModeControllerBar:SetAlpha(1);
 		else
 			frame:SetAlpha(0);
 			frame:Hide();
@@ -5099,45 +5613,6 @@ function PhotoModeController_AnimFrame_OnHide(self)
 	self.TimeSinceLastUpdate = 0;
 end
 
-
-local duration_Translation = 0.8;
-
-function LeftLineAnimFrame_OnUpdate(self, elapsed)
-	local EndPoint = self.EndPoint;
-	local offSet;
-	local t = self.TimeSinceLastUpdate;
-	local frame = self:GetParent();
-	offSet = outSine(t, EndPoint - 120, 120 , duration_Translation);
-
-	if t >= duration_Translation then
-		offSet = EndPoint;
-		After(0, function()
-			self:Hide();
-		end);
-	end
-	frame:SetPoint(self.AnchorPoint, offSet, 0);
-	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
-end
-
-function RightLineAnimFrame_OnUpdate(self, elapsed)
-	local StartPoint = self.StartPoint;
-	local EndPoint = self.EndPoint;
-	local offSet;
-	local t = self.TimeSinceLastUpdate;
-	local frame = self:GetParent();
-	offSet = outSine(t, StartPoint, EndPoint - StartPoint, duration_Translation);
-	
-	if t >= duration_Translation then
-		offSet = EndPoint;
-		self:Hide();
-		After(0, function()
-			self:Hide();
-		end);
-	end
-	frame:SetPoint(self.AnchorPoint, offSet, 0);
-	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
-end
-
 function IlvlButtonLeftAnimFrame_OnUpdate(self, elapsed)
 	local StartPoint = self.StartPoint;
 	local EndPoint = 24;
@@ -5147,19 +5622,19 @@ function IlvlButtonLeftAnimFrame_OnUpdate(self, elapsed)
 	local frame = self:GetParent();
 
 	if not self.OppoDirection then
-		offSet = outSine(t, StartPoint, EndPoint - StartPoint , duration_FlyIn);
+		offSet = outSine(t, StartPoint, EndPoint , DURATION_FLY_IN);
 		frame:SetPoint(self.AnchorPoint, self.relativeTo, self.relativePoint, offSet, 0);
 
-		if t >= duration_FlyIn then
+		if t >= DURATION_FLY_IN then
 			frame:SetPoint(self.AnchorPoint, self.relativeTo, self.relativePoint, EndPoint, 0);
 			self:Hide()
 			return;
 		end
 	else
-		offSet = outSine(t, StartPoint, Distance - StartPoint, duration_FlyIn);
+		offSet = outSine(t, StartPoint, Distance, DURATION_FLY_IN);
 		frame:SetPoint(self.AnchorPoint, self.relativeTo, self.relativePoint, offSet, 0);
 
-		if t >= duration_FlyIn then
+		if t >= DURATION_FLY_IN then
 			frame:SetPoint(self.AnchorPoint, self.relativeTo, self.relativePoint, Distance, 0);
 			self:Hide();
 			frame:Hide();
@@ -5179,19 +5654,19 @@ function IlvlButtonRightAnimFrame_OnUpdate(self, elapsed)
 	local frame = self:GetParent();
 
 	if not self.OppoDirection then	
-		offSet = outSine(t, StartPoint , EndPoint - StartPoint, duration_FlyIn)
+		offSet = outSine(t, StartPoint , EndPoint, DURATION_FLY_IN)
 		frame:SetPoint(self.AnchorPoint, self.relativeTo, self.relativePoint, offSet, 0);
 
-		if t >= duration_FlyIn then
+		if t >= DURATION_FLY_IN then
 			frame:SetPoint(self.AnchorPoint, self.relativeTo, self.relativePoint, EndPoint, 0);
 			self:Hide()
 			return;
 		end
 	else
-		offSet = outSine(t, StartPoint, -Distance - StartPoint , duration_FlyIn)
+		offSet = outSine(t, StartPoint, -Distance, DURATION_FLY_IN)
 		frame:SetPoint(self.AnchorPoint, self.relativeTo, self.relativePoint, offSet, 0);
 
-		if t >= duration_FlyIn then
+		if t >= DURATION_FLY_IN then
 			frame:SetPoint(self.AnchorPoint, self.relativeTo, self.relativePoint, -Distance, 0);
 			self:Hide();
 			frame:Hide();
@@ -5225,13 +5700,56 @@ graphicsDepthEffects 4
 graphicsLightingQuality 3
 --]]
 
+
 ------Photo Mode Switch------
 
-function SwitchMode_OnClick(self, key)
+function PhotoModeController_OnLoad(self)
+	local animRotation = NarciAPI_CreateAnimationFrame(0.6);
+	self.animRotation = animRotation;
+
+	animRotation:SetScript("OnUpdate", function(frame, elapsed)
+		local t = frame.total;
+		frame.total = t + elapsed;
+		local radian = outSine(t, frame.fromRadian, frame.toRadian, frame.duration);
+		local width = outSine(t, frame.fromWidth, frame.toWidth, frame.duration);
+		if frame.total >= frame.duration then
+			radian = frame.toRadian;
+			width = frame.toWidth;
+			frame:Hide();
+			if self.Switch.IsOn then
+				self.Bar:SetClipsChildren(false);
+			else
+				self.Bar:SetClipsChildren(true);
+			end
+		end
+		self.Switch.Ring:SetRotation(radian);
+		self.Bar:SetWidth(width);
+	end)
+
+	animRotation:SetScript("OnShow", function(frame)
+		frame.fromRadian = self.Switch.Ring:GetRotation();
+		frame.fromWidth = self.Bar:GetWidth();
+	end)
+
+	self.Switch.Ring:SetRotation(2*pi);
+end
+
+function Narci_PhotoModeButton_OnClick(self, key)
 	self.IsOn = not self.IsOn;
-	self:GetParent().PhotoModeController_UpdateFrame.TimeSinceLastUpdate = 0;
-	self:GetParent().PhotoModeController_UpdateFrame:Hide();
-	self:GetParent().PhotoModeController_UpdateFrame:Show();
+	local updateFrame = self:GetParent().animRotation;
+	updateFrame:Hide();
+	local barWidth = self:GetParent().Bar:GetWidth();
+	if self.IsOn then
+		updateFrame.duration = min(0.6, sqrt(0.4 * (220 - barWidth)/180) );
+		updateFrame.toRadian = 1.25*pi;
+		updateFrame.toWidth = 220;
+	else
+		updateFrame.duration = min(0.6, sqrt(0.4 * (barWidth - 40)/180) );
+		updateFrame.toRadian = 2*pi;
+		updateFrame.toWidth = 40;
+	end
+	updateFrame:Show();
+	
 	if self.IsOn then
 		self.Icon:SetTexCoord(0.25, 0.5, 0.75, 1);
 		PhotoModeControllerBar:SetAlpha(1)
@@ -5273,17 +5791,17 @@ function PhotoModeController_OnShow(self)
 	self:RegisterEvent("PLAYER_LOGOUT");
 	self:SetScript("OnEvent",function()
 		PhotoModeController_Disable();
-		SetCVar("Sound_MusicVolume", CVar_Temp.MusicVolume);
-		if CVar_Temp.ActioncamState ~= 1 then		--Restore the acioncam state
+		SetCVar("Sound_MusicVolume", CVarTemp.MusicVolume);
+		if CVarTemp.DynamicPitch ~= 1 then		--Restore the acioncam state
 			SetCVar("test_cameraDynamicPitch", 0);
 			ConsoleExec( "actioncam off");
 		end
 		ResetView(5);
 	end)
 
-	self.PhotoModeController_AnimFrame:Hide()
-	self.PhotoModeController_AnimFrame.EndPointY = "10"
-	self.PhotoModeController_AnimFrame.OppoDirection = false
+	self.PhotoModeController_AnimFrame:Hide();
+	self.PhotoModeController_AnimFrame.EndPointY = "10";
+	self.PhotoModeController_AnimFrame.OppoDirection = false;
 	self.PhotoModeController_AnimFrame:Show()
 
 	SetColorThemeBasedOnMapID();
@@ -5297,6 +5815,7 @@ hooksecurefunc("SetUIVisibility", function(bool)
 				Narci_HideTextsButton:Click();
 			end
 			local frame = Narci_PhotoModeController;
+			frame.ExitButton:Show();
 			if not frame:IsShown() then
 				frame:Show();
 				frame.PhotoModeController_AnimFrame.OppoDirection = false;
@@ -5306,7 +5825,7 @@ hooksecurefunc("SetUIVisibility", function(bool)
 		if not bool then
 			local frame = Narci_PhotoModeController;
 			if not frame:IsShown() then
-				CVar_Temp.OverShoulder = GetCVar("test_cameraOverShoulder");
+				CVarTemp.OverShoulder = GetCVar("test_cameraOverShoulder");
 			end
 			frame.PhotoModeController_AnimFrame.toAlpha = 0;
 			frame:Show();
@@ -5317,36 +5836,40 @@ hooksecurefunc("SetUIVisibility", function(bool)
 			end
 			
 			Narci_XmogButton:Disable();
+			frame.ExitButton:Hide();
 		else
 			--When player closes the full-screen world map, SetUIVisibility(true) fires twice, and WorldMapFrame:IsShown() returns true and false.
 			--Thus, use this VisibilityTracker instead to check if WorldMapFrame has been closed recently.
 			--WorldMapFrame.VisibilityTracker.state
 			if Narci_Character:IsShown() then return; end
-			Smooth_ShoulderCVar(CVar_Temp.OverShoulder);
-			if not Narci.keepActionCam then
+			SmoothShoulderCVar(CVarTemp.OverShoulder);
+			if not GetKeepActionCam() then
 				After(0.6, function()
 					ConsoleExec( "actioncam off" );
 				end)
 			end
 			local frame = Narci_PhotoModeController;
-			frame.PhotoModeController_AnimFrame:Hide();
-			frame.PhotoModeController_AnimFrame.OppoDirection = true;
-			frame.PhotoModeController_AnimFrame.EndPointY = "-80";
-			frame.PhotoModeController_AnimFrame:Show();
-			CameraOffsetControlBar.Thumb:SetPoint("CENTER", 0, 0);
+			if frame:IsShown() then
+				frame.PhotoModeController_AnimFrame:Hide();
+				frame.PhotoModeController_AnimFrame.OppoDirection = true;
+				frame.PhotoModeController_AnimFrame.EndPointY = "-80";
+				frame.PhotoModeController_AnimFrame:Show();
+				CameraOffsetControlBar.Thumb:SetPoint("CENTER", 0, 0);
+			end
 		end
 	end
 
 end)
 
-SLASH_NARCI1 = "/narci"
-SLASH_NARCI2 = "/narcissus"
+SLASH_NARCI1 = "/narci";
+SLASH_NARCI2 = "/narcissus";
 SlashCmdList["NARCI"] = function(Msg)
 	local msg = strlower(Msg);
 	if msg == "" then
 		Narci_MinimapButton:Click();
 	elseif msg == "minimap" then
 		Narci_MinimapButton:Show();
+		Narci_MinimapButton:PlayBling();
 		NarcissusDB.ShowMinimapButton = true;
 		print("Minimap button has been re-enabled.");
 	elseif msg == "itemlist" then
@@ -5504,7 +6027,7 @@ ASC:Hide()
 local function InitializeAnimationContainer(frame, SequenceInfo, TargetFrame)
 	frame.OppoDirection = false;
 	frame.TimeSinceLastUpdate = 0
-	frame.TotalTime = 0;
+	frame.totalTime = 0;
 	frame.Index = 1;
 	frame.Pending = false;
 	frame.IsPlaying = false;	
@@ -5513,7 +6036,7 @@ local function InitializeAnimationContainer(frame, SequenceInfo, TargetFrame)
 end
 
 local function AnimationContainer_OnHide(self)
-	self.TotalTime = 0;
+	self.totalTime = 0;
 	self.TimeSinceLastUpdate = 0;
 	self.OppoDirection = not self.OppoDirection
 	if self.Index <= 0 then
@@ -5529,7 +6052,7 @@ local function Controller_AnimationSequence_OnUpdate(self, elapsed)
 	end
 
 	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
-	self.TotalTime = self.TotalTime + elapsed;
+	self.totalTime = self.totalTime + elapsed;
 	
 	if self.TimeSinceLastUpdate >= 0.01666 then
 		self.TimeSinceLastUpdate = 0;
@@ -5585,8 +6108,8 @@ local function Generic_AnimationSequence_OnUpdate(self, elapsed)
 		return;
 	end
 
-	self.TotalTime = self.TotalTime + elapsed;
-	if (not self.OppoDirection and self.TotalTime < self.Delay) and (not self.IsPlaying) then
+	self.totalTime = self.totalTime + elapsed;
+	if (not self.OppoDirection and self.totalTime < self.Delay) and (not self.IsPlaying) then
 		return;
 	elseif not self.IsPlaying then
 		if not self.OppoDirection then		--box closing
@@ -5653,8 +6176,8 @@ function CameraControlBar_ResetPosition_AnimFrame_OnUpdate(self, elapsed)
 		t = 0.5
 	end
 
-	local Value_Angle = outSine(self.TimeSinceLastUpdate, StartAngle, EndAngle - StartAngle, t)
-	local Value_X = outSine(self.TimeSinceLastUpdate, StartX, EndX - StartX, t)
+	local Value_Angle = outSine(self.TimeSinceLastUpdate, StartAngle, EndAngle, t)
+	local Value_X = outSine(self.TimeSinceLastUpdate, StartX, EndX, t)
 	RotateShaftNode(Value_Angle)
 	CameraControllerThumb:SetPoint("CENTER", Value_X, 0);
 
@@ -5759,7 +6282,7 @@ local raceList = {	--For 3D Portait on the top-left
 		},
 }
 
-function PortraitPieces_OnLoad(self)
+function Narci_PortraitPieces_OnLoad(self)
 	local unit = "player";
 	local a1, a2, a3;
 	local ModelPieces = self.Pieces;
@@ -5789,8 +6312,8 @@ function PortraitPieces_OnLoad(self)
 
 	local model;
 	if raceList[raceID] and raceList[raceID][GenderID] then
-		if FigureModelReference then
-			FigureModelReference:SetPoint("CENTER", raceList[raceID][GenderID][1], raceList[raceID][GenderID][2])
+		if Narci_FigureModelReference then
+			Narci_FigureModelReference:SetPoint("CENTER", raceList[raceID][GenderID][1], raceList[raceID][GenderID][2])
 		end
 
 		for i = 1, #ModelPieces do
@@ -5828,11 +6351,8 @@ function PortraitPieces_OnLoad(self)
 		model:UndressSlot(3);
 		model:UndressSlot(16);
 		model:UndressSlot(17);
-		--model:ApplySpellVisualKit(58897, false);	--Xmas Candy Mouth
-		--model:TryOn(80593);	--Xmas Hat 80593 Red 80594 Green
 	end
 end
-
 
 ACL:RegisterEvent("ADDON_LOADED");
 ACL:RegisterEvent("PLAYER_ENTERING_WORLD");
@@ -5856,13 +6376,13 @@ ACL:SetScript("OnEvent",function(self,event,...)
 		self:UnregisterEvent("ADDON_LOADED");
 		AssignFrame();
 		Narci_AliasButton_SetState();
-		Narci_SetActiveBorderTexture();
 		ShowDetailedIlvlInfo();
 		Narci:InitializeCameraFactors();
 		After(2, function()
 			Narci_MinimapButton_OnLoad();
+			Narci_SetActiveBorderTexture();
 			RefreshAllStats();
-			Narci:SetRadarChart(0,0,0,0,1);
+			RadarChart:SetValue(0,0,0,0,1);
 			XmogName_OnLoad();
 		end)
 
@@ -5872,7 +6392,10 @@ ACL:SetScript("OnEvent",function(self,event,...)
 		local HeartSerialNumber = strsub(UnitGUID("player"), 8, 15);
 		HeartofAzeroth_AnimFrame.SN:SetText("No."..HeartSerialNumber)
 		
+		CameraContainer:SetBlend(false);
+		
 	elseif event == "LOADING_SCREEN_DISABLED" then
+		self:UnregisterEvent("LOADING_SCREEN_DISABLED");
 		Narci_MinimapButton:Disable();			--Disable minimap button while caching
 		After(2, function()
 			CacheSourceInfo();
@@ -5888,12 +6411,56 @@ ACL:SetScript("OnEvent",function(self,event,...)
 			Narci_MinimapButton:Enable();
 			Narci_MinimapButton:SetMotionScriptsWhileDisabled(false)
 		end)
-		self:UnregisterEvent("LOADING_SCREEN_DISABLED");
+
 	elseif event == "PLAYER_ENTERING_WORLD" then
+		self:UnregisterEvent("PLAYER_ENTERING_WORLD");
+		SetCVar("CameraKeepCharacterCentered", 0);
 		DefaultTooltip = CreateFrame("GameTooltip", "NarciGameTooltip", nil, "GameTooltipTemplate");
 		DefaultTooltip:SetIgnoreParentScale(true);
 		DefaultTooltip:SetIgnoreParentAlpha(true);
+		local HotkeyFrame = CreateFrame("Frame", nil, Narci_Attribute, "NarciHotkeyNotificationTemplate");
+		HotkeyFrame:SetKey(NARCI_MODIFIER_ALT, "LeftButton", "Swamp items");
+		HotkeyFrame:SetPoint("BOTTOM", DefaultTooltip, "TOP", -2, 8);
+		HotkeyFrame:SetFrameStrata("TOOLTIP");
+		HotkeyFrame:SetIgnoreParentScale(true);
+		DefaultTooltip.HotkeyFrame = HotkeyFrame;
+		DefaultTooltip:HookScript("OnHide", function()
+			HotkeyFrame:FadeOut();
+		end)
+
 		CharacterInfoFrame_OnLoad();
+
+		if IsAddOnLoaded("DynamicCam") then
+			CVarTemp.isDynamicCamLoaded = true;
+			
+			--Check validity
+			if not (DynamicCam.BlockShoulderOffsetZoom and DynamicCam.AllowShoulderOffsetZoom) then return end;
+			hooksecurefunc("Narci_Open", function()
+				if OpenViaClick then
+					DynamicCam:BlockShoulderOffsetZoom();
+				else
+					DynamicCam:AllowShoulderOffsetZoom();
+				end
+			end)
+			hooksecurefunc("Narci_OpenGroupPhoto", function()
+				DynamicCam:BlockShoulderOffsetZoom();
+			end)
+				
+		end
+
+		After(1.7, function()
+			hooksecurefunc("CameraZoomIn", function(increment)
+				if OpenViaClick and (xmogMode ~= 1) then
+					UpdateShoulderCVar:Start(-increment);
+				end
+			end)
+			
+			hooksecurefunc("CameraZoomOut", function(increment)
+				if OpenViaClick and (xmogMode ~= 1)then
+					UpdateShoulderCVar:Start(increment);
+				end
+			end)
+		end)
 	elseif event == "PLAYER_EQUIPMENT_CHANGED" then
 		local InventorySlotId, isItem = ...;
 		CacheSourceInfo(InventorySlotId)
@@ -5945,23 +6512,22 @@ ACL:SetScript("OnEvent",function(self,event,...)
 			end
 
 			if Narci_Character:IsShown() then
-				SetRadarChart();
+				RadarChart:AnimateValue();
 			end
 		end
 	elseif event == "PLAYER_TARGET_CHANGED" then
-		RefreshStats(9) 		--Damage Reduction
+		RefreshStats(9); 		--Damage Reduction
 	elseif event == "UNIT_MODEL_CHANGED" then
 		local unit = ...;
 		if unit == "player" then
-			NarciPlayerModelFrame1:Dress()
+			NarciPlayerModelFrame1:Dress();
 		end
 	elseif event == "UPDATE_SHAPESHIFT_FORM" then
 		ModifyCameraForShapeshifter();
-		Narci:CameraZoomIn(ZoomInValue);
-		--print("Shape shift")
+		CameraContainer:OnCameraChanged();
 	elseif event == "PLAYER_MOUNT_DISPLAY_CHANGED" then
 		ModifyCameraForMounts();
-		Narci:CameraZoomIn(ZoomInValue);
+		CameraContainer:OnCameraChanged();
 	elseif event == "PLAYER_REGEN_DISABLED" then
 		Narci_Character:Hide();
 		if Narci.isAFK and Narci.isActive then
@@ -6136,20 +6702,27 @@ function Narci_SetActiveBorderTexture()
 end
 
 function Narci_GuideLineFrame_OnSizing(self, offset)
+	local W;
 	local W0, H = WorldFrame:GetSize();
-	if not (W0 and H) or H == 0 then return; end;
-	local offset = offset or 0;
-	local W = math.min(H / 9 * 16, W0);
-	W = math.floor(W + 0.5);
-	--print("Original: "..W0.." Calculated: "..W);
-	self:SetWidth(W - offset);
+	if (W0 and H) and H ~= 0 then
+		self:ClearAllPoints();
+		self:SetPoint("TOP", UIParent, "TOP", 0, 0);
+		self:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 0);
+		local offset = offset or 0;
+		W = math.min(H / 9 * 16, W0);
+		W = math.floor(W + 0.5);
+		--print("Original: "..W0.." Calculated: "..W);
+		self:SetWidth(W - offset);
+	else
+		W = self:GetWidth();
+	end
 
 	local C = W*0.618;
 
 	self.VirtualLineRight:SetPoint("RIGHT", C - W +32, 0);
 	self.VirtualLineRight.EndPointBAK = C - W +32;
 
-	local AnimFrame = self.VirtualLineRight.AnimFrame
+	local AnimFrame = self.VirtualLineRight.AnimFrame;
 	AnimFrame.OppoDirection = false;
 	AnimFrame.TimeSinceLastUpdate = 0;
 
@@ -6161,3 +6734,127 @@ function Narci:SetReferenceFrameOffset(offset)
 	--A positive offset expands the reference frame.
 	Narci_GuideLineFrame_OnSizing(Narci_GuideLineFrame, -offset);
 end
+
+
+NarciRayTracingToggleMixin = {};
+
+function NarciRayTracingToggleMixin:SetVisual(level)
+	if level and level > 0 then
+		self.Label:SetText("|cffd9d9d9RTX|r ".. level);
+		self.Fill:SetWidth(level * 42/3);
+		self.Fill:Show();
+	else
+		self.Label:SetText("|cffd9d9d9RTX|r OFF");
+		self.Fill:Hide();
+	end
+end
+
+function NarciRayTracingToggleMixin:SetLevel(level)
+	level = tonumber(level) or 0;
+	if level > 3 then
+		level = 3;
+	end
+	self:SetVisual(level);
+	SetCVar("shadowrt", level);
+end
+
+function NarciRayTracingToggleMixin:Restore()
+	if self.oldValue then
+		self:SetLevel(self.oldValue);
+	end
+end
+
+function NarciRayTracingToggleMixin:OnClick()
+	self.IsOn = not self.IsOn;
+	if self.IsOn then
+		self:SetLevel(3);
+	else
+		self:Restore();
+	end
+end
+
+function NarciRayTracingToggleMixin:OnShow()
+	local level = tonumber(GetCVar("shadowrt"));
+	self.oldValue = level;
+	self:SetVisual(level);
+end
+
+function NarciRayTracingToggleMixin:OnHide()
+	self.IsOn = false;
+end
+
+function NarciRayTracingToggleMixin:OnEnter()
+	self.Fill:SetAlpha(1);
+	self.Background:SetAlpha(1);
+end
+
+function NarciRayTracingToggleMixin:OnLeave()
+	self.Fill:SetAlpha(0.5);
+	self.Background:SetAlpha(0.5);
+end
+
+function NarciRayTracingToggleMixin:OnLoad()
+	local validity;
+	if Advanced_RTShadowQualityDropDown then
+		validity = true;
+	end
+	local info = { GetToolTipInfo(1, 4, "shadowrt", 0, 1, 2, 3) };
+	for i = 1, #info do
+		if info[i] ~= 0 then
+			validity = validity and false;
+			break;
+		end
+	end
+	
+	self.isValid = validity;
+	if not validity then
+		self:Hide();
+		self:Disable();
+		TopQualityButton_MSAASlider:SetPoint("TOPLEFT", Narci_XmogButton, "BOTTOMLEFT", 4, -12);
+	end
+end
+
+function NarciRayTracingToggleMixin:FadeIn()
+	if self.isValid then
+		FadeFrame(TopQualityButton_RayTracingToggle, 0.25, "IN");
+	end
+end
+
+function NarciRayTracingToggleMixin:FadeOut()
+	if self.isValid then
+		FadeFrame(TopQualityButton_RayTracingToggle, 0.25, "OUT");
+	end
+end
+
+function NarciAPI_ToggleRayTracing()
+	local level = tonumber( GetCVar("shadowRt") );
+	if level ~= 3 then
+		level = 3;
+	elseif level > 0 then
+		level = 0;
+	end
+	SetCVar("shadowrt", level);
+end
+
+--[[
+	C_BarberShop.GetAvailableCustomizations();
+	/run BarberShopFrame:SetPropagateKeyboardInput(true)
+	CharCustomizeFrame:SetCustomizationChoice
+    hooksecurefunc(CharCustomizeFrame, "SetCustomizationChoice", function(optionID, choiceID) print("Set ",optionID, choiceID) end)
+	hooksecurefunc(CharCustomizeFrame, "PreviewCustomizationChoice", function(optionID, choiceID) print("Preview ", optionID, choiceID) end)
+	Blizzard_CharacterCustomize
+	Blizzard_BarbershopUI
+
+	slotID shoulder ~ 3
+	C_Transmog.SetPending(self.transmogLocation, sourceID, self.activeCategory);
+
+	WardrobeCollectionFrame.ItemsCollectionFrame:SelectVisual()
+	/run WardrobeCollectionFrame.ItemsCollectionFrame.RightShoulderCheckbox:Show();
+
+	/run GetMouseFocus().transmogLocation = TransmogUtil.GetTransmogLocation(3, 0, 0)	--96875
+
+	New APIs:
+	CenterCamera();
+
+	/run CenterCamera();
+--]]

@@ -1054,7 +1054,7 @@ local function CreateSlider(parent)
 	slider:SetHeight(30)
 
 	-- Create slider.
-	local sliderFrame = CreateFrame("Slider", nil, slider)
+	local sliderFrame = CreateFrame("Slider", nil, slider, BackdropTemplateMixin and "BackdropTemplate")
 	sliderFrame:SetOrientation("HORIZONTAL")
 	sliderFrame:SetThumbTexture("Interface\\Buttons\\UI-SliderBar-Button-Horizontal")
 	sliderFrame:SetPoint("LEFT")
@@ -1400,7 +1400,7 @@ end
 -- Creates the listbox frame that dropdowns use.
 -- ****************************************************************************
 local function Dropdown_CreateListboxFrame(parent)
-	dropdownListboxFrame = CreateFrame("Frame", nil, parent)
+	dropdownListboxFrame = CreateFrame("Frame", nil, parent, BackdropTemplateMixin and "BackdropTemplate")
 	dropdownListboxFrame:EnableMouse(true)
 	dropdownListboxFrame:SetToplevel(true)
 	dropdownListboxFrame:SetFrameStrata("FULLSCREEN_DIALOG")

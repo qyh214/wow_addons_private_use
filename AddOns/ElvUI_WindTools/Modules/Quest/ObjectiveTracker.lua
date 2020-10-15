@@ -1,625 +1,248 @@
--- 原创模块
-local E, L, V, P, G = unpack(ElvUI); -- Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
-local S = E:GetModule('Skins')
-local LSM = LibStub("LibSharedMedia-3.0")
-local WT = E:GetModule("WindTools")
-local OT = E:NewModule('Wind_ObjectiveTacker', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0');
+local W, F, E, L = unpack(select(2, ...))
+local OT = W:NewModule("ObjectiveTracker", "AceHook-3.0", "AceEvent-3.0")
+
 local _G = _G
-local _
+local abs = abs
+local format = format
+local floor = floor
+local ipairs = ipairs
+local min = min
+local pairs = pairs
+local strmatch = strmatch
+local tonumber = tonumber
 
--- QuickQuest, by p3lim
--- Import from NDui
-local strmatch = string.match
-local tonumber, next = tonumber, next
-local quests, choiceQueue = {}
+local IsAddOnLoaded = IsAddOnLoaded
+local ObjectiveTracker_Update = ObjectiveTracker_Update
 
-local ignoreQuestNPC = {
-    [88570] = true, -- Fate-Twister Tiklal
-    [87391] = true, -- Fate-Twister Seress
-    [111243] = true, -- Archmage Lan'dalock
-    [108868] = true, -- Hunter's order hall
-    [101462] = true, -- Reaves
-    [43929] = true, -- 4000
-    [14847] = true, -- DarkMoon
-    [119388] = true, -- 酋长哈顿
-    [114719] = true, -- 商人塞林
-    [121263] = true, -- 大技师罗姆尔
-    [126954] = true, -- 图拉扬
-    [124312] = true, -- 图拉扬
-    [103792] = true, -- 格里伏塔
-    [101880] = true, -- 泰克泰克
-    [141584] = true, -- 祖尔温
-    [142063] = true, -- 特兹兰
-    [143388] = true, -- 德鲁扎
-    [98489] = true, -- 海难俘虏
-    [135690] = true, -- 亡灵舰长
-    [105387] = true, -- 安杜斯
-    [93538] = true, -- 达瑞妮斯
-    [154534] = true, -- 大杂院阿畅
-    [150987] = true, -- 肖恩·维克斯, 斯坦索姆
-    [150563] = true, -- 斯卡基特, 麦卡贡订单日常
-    [143555] = true -- 山德·希尔伯曼, 祖达萨PVP军需官
+local SystemCache = {
+    TitleNormalColor = {
+        r = _G.OBJECTIVE_TRACKER_COLOR["Header"].r,
+        g = _G.OBJECTIVE_TRACKER_COLOR["Header"].g,
+        b = _G.OBJECTIVE_TRACKER_COLOR["Header"].b
+    },
+    TitleHighlightColor = {
+        r = _G.OBJECTIVE_TRACKER_COLOR["HeaderHighlight"].r,
+        g = _G.OBJECTIVE_TRACKER_COLOR["HeaderHighlight"].g,
+        b = _G.OBJECTIVE_TRACKER_COLOR["HeaderHighlight"].b
+    }
 }
 
-local ignoreGossipNPC = {
-    -- Bodyguards
-    [86945] = true, -- Aeda Brightdawn (Horde)
-    [86933] = true, -- Vivianne (Horde)
-    [86927] = true, -- Delvar Ironfist (Alliance)
-    [86934] = true, -- Defender Illona (Alliance)
-    [86682] = true, -- Tormmok
-    [86964] = true, -- Leorajh
-    [86946] = true, -- Talonpriest Ishaal
+local classColor = _G.RAID_CLASS_COLORS[E.myclass]
 
-    -- Sassy Imps
-    [95139] = true,
-    [95141] = true,
-    [95142] = true,
-    [95143] = true,
-    [95144] = true,
-    [95145] = true,
-    [95146] = true,
-    [95200] = true,
-    [95201] = true,
-
-    -- Misc NPCs
-    [79740] = true, -- Warmaster Zog (Horde)
-    [79953] = true, -- Lieutenant Thorn (Alliance)
-    [84268] = true, -- Lieutenant Thorn (Alliance)
-    [84511] = true, -- Lieutenant Thorn (Alliance)
-    [84684] = true, -- Lieutenant Thorn (Alliance)
-    [117871] = true, -- War Councilor Victoria (Class Challenges @ Broken Shore)
-    [155101] = true, -- 元素精华融合器
-    [155261] = true, -- 肖恩·维克斯, 斯坦索姆
-    [150122] = true, -- 荣耀堡法师
-    [150131] = true -- 萨尔玛法师
+local color = {
+    start = {
+        r = 1.000,
+        g = 0.647,
+        b = 0.008
+    },
+    complete = {
+        r = 0.180,
+        g = 0.835,
+        b = 0.451
+    }
 }
 
-local rogueClassHallInsignia = {
-    [97004] = true, -- "Red" Jack Findle
-    [96782] = true, -- Lucian Trias
-    [93188] = true -- Mongar
-}
+local function GetProgressColor(progress)
+    local r = (color.complete.r - color.start.r) * progress + color.start.r
+    local g = (color.complete.g - color.start.g) * progress + color.start.g
+    local b = (color.complete.r - color.start.b) * progress + color.start.b
 
-local followerAssignees = {
-    [138708] = true, -- 半兽人迦罗娜
-    [135614] = true -- 马迪亚斯·肖尔大师
-}
+    -- 色彩亮度补偿
+    local addition = 0.35
+    r = min(r + abs(0.5 - progress) * addition, r)
+    g = min(g + abs(0.5 - progress) * addition, g)
+    b = min(b + abs(0.5 - progress) * addition, b)
 
-local darkmoonNPC = {
-    [57850] = true, -- Teleportologist Fozlebub
-    [55382] = true, -- Darkmoon Faire Mystic Mage (Horde)
-    [54334] = true -- Darkmoon Faire Mystic Mage (Alliance)
-}
+    return {r = r, g = g, b = b}
+end
 
-local itemBlacklist = {
-    -- Inscription weapons
-    [31690] = 79343, -- Inscribed Tiger Staff
-    [31691] = 79340, -- Inscribed Crane Staff
-    [31692] = 79341, -- Inscribed Serpent Staff
+function OT:ChangeQuestHeaderStyle()
+    local frame = _G.ObjectiveTrackerFrame.MODULES
+    if not self.db or not frame then
+        return
+    end
 
-    -- Darkmoon Faire artifacts
-    [29443] = 71635, -- Imbued Crystal
-    [29444] = 71636, -- Monstrous Egg
-    [29445] = 71637, -- Mysterious Grimoire
-    [29446] = 71638, -- Ornate Weapon
-    [29451] = 71715, -- A Treatise on Strategy
-    [29456] = 71951, -- Banner of the Fallen
-    [29457] = 71952, -- Captured Insignia
-    [29458] = 71953, -- Fallen Adventurer's Journal
-    [29464] = 71716, -- Soothsayer's Runes
-
-    -- Tiller Gifts
-    ["progress_79264"] = 79264, -- Ruby Shard
-    ["progress_79265"] = 79265, -- Blue Feather
-    ["progress_79266"] = 79266, -- Jade Cat
-    ["progress_79267"] = 79267, -- Lovely Apple
-    ["progress_79268"] = 79268, -- Marsh Lily
-
-    -- Garrison scouting missives
-    ["38180"] = 122424, -- Scouting Missive: Broken Precipice
-    ["38193"] = 122423, -- Scouting Missive: Broken Precipice
-    ["38182"] = 122418, -- Scouting Missive: Darktide Roost
-    ["38196"] = 122417, -- Scouting Missive: Darktide Roost
-    ["38179"] = 122400, -- Scouting Missive: Everbloom Wilds
-    ["38192"] = 122404, -- Scouting Missive: Everbloom Wilds
-    ["38194"] = 122420, -- Scouting Missive: Gorian Proving Grounds
-    ["38202"] = 122419, -- Scouting Missive: Gorian Proving Grounds
-    ["38178"] = 122402, -- Scouting Missive: Iron Siegeworks
-    ["38191"] = 122406, -- Scouting Missive: Iron Siegeworks
-    ["38184"] = 122413, -- Scouting Missive: Lost Veil Anzu
-    ["38198"] = 122414, -- Scouting Missive: Lost Veil Anzu
-    ["38177"] = 122403, -- Scouting Missive: Magnarok
-    ["38190"] = 122399, -- Scouting Missive: Magnarok
-    ["38181"] = 122421, -- Scouting Missive: Mok'gol Watchpost
-    ["38195"] = 122422, -- Scouting Missive: Mok'gol Watchpost
-    ["38185"] = 122411, -- Scouting Missive: Pillars of Fate
-    ["38199"] = 122409, -- Scouting Missive: Pillars of Fate
-    ["38187"] = 122412, -- Scouting Missive: Shattrath Harbor
-    ["38201"] = 122410, -- Scouting Missive: Shattrath Harbor
-    ["38186"] = 122408, -- Scouting Missive: Skettis
-    ["38200"] = 122407, -- Scouting Missive: Skettis
-    ["38183"] = 122416, -- Scouting Missive: Socrethar's Rise
-    ["38197"] = 122415, -- Scouting Missive: Socrethar's Rise
-    ["38176"] = 122405, -- Scouting Missive: Stonefury Cliffs
-    ["38189"] = 122401, -- Scouting Missive: Stonefury Cliffs
-
-    -- Misc
-    [31664] = 88604 -- Nat's Fishing Journal
-}
-
-local ignoreProgressNPC = {
-    [119388] = true,
-    [127037] = true,
-    [126954] = true,
-    [124312] = true,
-    [141584] = true,
-    [326027] = true, -- 运输站回收生成器DX-82
-    [150563] = true -- 斯卡基特, 麦卡贡订单日常
-}
-
-local cashRewards = {
-    [45724] = 1e5, -- Champion's Purse
-    [64491] = 2e6, -- Royal Reward
-
-    -- Items from the Sixtrigger brothers quest chain in Stormheim
-    [138127] = 15, -- Mysterious Coin, 15 copper
-    [138129] = 11, -- Swatch of Priceless Silk, 11 copper
-    [138131] = 24, -- Magical Sprouting Beans, 24 copper
-    [138123] = 15, -- Shiny Gold Nugget, 15 copper
-    [138125] = 16, -- Crystal Clear Gemstone, 16 copper
-    [138133] = 27 -- Elixir of Endless Wonder, 27 copper
-}
-
-local function GetNPCID() return tonumber(string.match(UnitGUID('npc') or '', 'Creature%-.-%-.-%-.-%-.-%-(.-)%-')) end
-
-local function IsTrackingHidden()
-    for index = 1, GetNumTrackingTypes() do
-        local name, _, active = GetTrackingInfo(index)
-        if (name == (MINIMAP_TRACKING_TRIVIAL_QUESTS or MINIMAP_TRACKING_HIDDEN_QUESTS)) then return active end
+    for i = 1, #frame do
+        local modules = frame[i]
+        if modules and modules.Header and modules.Header.Text then
+            F.SetFontWithDB(modules.Header.Text, self.db.header)
+        end
     end
 end
 
-local function GetAvailableGossipQuestInfo(index)
-    local name, level, isTrivial, frequency, isRepeatable, isLegendary, isIgnored =
-        select(((index * 7) - 7) + 1, GetGossipAvailableQuests())
-    return name, level, isTrivial, isIgnored, isRepeatable, frequency == 2, frequency == 3, isLegendary
+function OT:HandleTitleText(text)
+    F.SetFontWithDB(text, self.db.title)
+    local height = text:GetStringHeight() + 2
+    if height ~= text:GetHeight() then
+        text:SetHeight(height)
+    end
 end
 
-local function GetActiveGossipQuestInfo(index)
-    local name, level, isTrivial, isComplete, isLegendary, isIgnored =
-        select(((index * 6) - 6) + 1, GetGossipActiveQuests())
-    return name, level, isTrivial, isIgnored, isComplete, isLegendary
-end
+function OT:HandleInfoText(text)
+    self:ColorfulProgression(text)
+    F.SetFontWithDB(text, self.db.info)
+    text:SetHeight(text:GetStringHeight())
 
-local function AttemptAutoComplete(event)
-    if (GetNumAutoQuestPopUps() > 0) then
-        if (UnitIsDeadOrGhost("player")) then
-            OT:RegisterEvent("PLAYER_REGEN_ENABLED")
-            return
-        end
+    local line = text:GetParent()
+    local dash = line.Dash or line.Icon
 
-        local questID, popUpType = GetAutoQuestPopUp(1)
-        local _, _, worldQuest = GetQuestTagInfo(questID)
-        if not worldQuest then
-            if (popUpType == "OFFER") then
-                ShowQuestOffer(GetQuestLogIndexByID(questID))
-            else
-                ShowQuestComplete(GetQuestLogIndexByID(questID))
-            end
-        end
+    if self.db.noDash and dash then
+        dash:Hide()
+        text:ClearAllPoints()
+        text:Point("TOPLEFT", dash, "TOPLEFT", 0, 0)
     else
-        C_Timer.After(1, AttemptAutoComplete)
-    end
-
-    if (event == "PLAYER_REGEN_ENABLED") then OT:UnregisterEvent("PLAYER_REGEN_ENABLED") end
-end
-
-local function GetQuestLogQuests(onlyComplete)
-    wipe(quests)
-
-    for index = 1, GetNumQuestLogEntries() do
-        local title, _, _, isHeader, _, isComplete, _, questID = GetQuestLogTitle(index)
-        if (not isHeader) then
-            if (onlyComplete and isComplete or not onlyComplete) then quests[title] = questID end
+        if dash.SetText then
+            F.SetFontWithDB(dash, self.db.info)
         end
-    end
-
-    return quests
-end
-
-function OT:QUEST_GREETING()
-    local npcID = GetNPCID()
-    if (ignoreQuestNPC[npcID]) then return end
-
-    local active = GetNumActiveQuests()
-    if (active > 0) then
-        local logQuests = GetQuestLogQuests(true)
-        for index = 1, active do
-            local name, complete = GetActiveTitle(index)
-            if (complete) then
-                local questID = logQuests[name]
-                if (not questID) then
-                    SelectActiveQuest(index)
-                else
-                    local _, _, worldQuest = GetQuestTagInfo(questID)
-                    if (not worldQuest) then SelectActiveQuest(index) end
-                end
-            end
-        end
-    end
-
-    local available = GetNumAvailableQuests()
-    if (available > 0) then
-        for index = 1, available do
-            local isTrivial, _, _, _, isIgnored = GetAvailableQuestInfo(index)
-            if ((not isTrivial and not isIgnored) or IsTrackingHidden()) then SelectAvailableQuest(index) end
-        end
+        dash:Show()
+        text:ClearAllPoints()
+        text:Point("TOPLEFT", dash, "TOPRIGHT", 0, 0)
     end
 end
 
-function OT:GOSSIP_SHOW()
-    local npcID = GetNPCID()
-    if (ignoreQuestNPC[npcID]) then return end
-
-    local active = GetNumGossipActiveQuests()
-    if (active > 0) then
-        local logQuests = GetQuestLogQuests(true)
-        for index = 1, active do
-            local name, _, _, _, complete = GetActiveGossipQuestInfo(index)
-            if (complete) then
-                local questID = logQuests[name]
-                if (not questID) then
-                    SelectGossipActiveQuest(index)
-                else
-                    local _, _, worldQuest = GetQuestTagInfo(questID)
-                    if (not worldQuest) then SelectGossipActiveQuest(index) end
-                end
-            end
-        end
+function OT:ChangeQuestFontStyle(_, block)
+    if not self.db or not block then
+        return
     end
 
-    local available = GetNumGossipAvailableQuests()
-    if (available > 0) then
-        for index = 1, available do
-            local _, _, trivial, ignored = GetAvailableGossipQuestInfo(index)
-            if ((not trivial and not ignored) or IsTrackingHidden()) then
-                SelectGossipAvailableQuest(index)
-            elseif (trivial and npcID == 64337) then
-                SelectGossipAvailableQuest(index)
-            end
-        end
+    if block.HeaderText then
+        self:HandleTitleText(block.HeaderText)
     end
 
-    if (rogueClassHallInsignia[npcID]) then return SelectGossipOption(1) end
-
-    if (available == 0 and active == 0) then
-        if GetNumGossipOptions() == 1 then
-            if (npcID == 57850) then return SelectGossipOption(1) end
-
-            local _, instance, _, _, _, _, _, mapID = GetInstanceInfo()
-            if (instance ~= "raid" and not ignoreGossipNPC[npcID] and not (instance == "scenario" and mapID == 1626)) then
-                local _, type = GetGossipOptions()
-                if (type == "gossip") then
-                    SelectGossipOption(1)
-                    return
-                end
-            end
-        elseif followerAssignees[npcID] and GetNumGossipOptions() > 1 then
-            return SelectGossipOption(1)
-        end
-    end
-end
-
-function OT:GOSSIP_CONFIRM()
-    local npcID = GetNPCID()
-    if (npcID and darkmoonNPC[npcID]) then
-        local dialog = StaticPopup_FindVisible("GOSSIP_CONFIRM")
-        StaticPopup_OnClick(dialog, 1)
-    end
-end
-
-function OT:QUEST_DETAIL() if (not QuestGetAutoAccept()) then AcceptQuest() end end
-
-function OT:QUEST_ACCEPT_CONFIRM() AcceptQuest() end
-
-function OT:QUEST_ACCEPTED() if (QuestFrame:IsShown() and QuestGetAutoAccept()) then CloseQuest() end end
-
-function OT:QUEST_ITEM_UPDATE() if (choiceQueue and OT[choiceQueue]) then OT[choiceQueue]() end end
-
-function OT:QUEST_PROGRESS()
-    if (IsQuestCompletable()) then
-        local id, _, worldQuest = GetQuestTagInfo(GetQuestID())
-        if id == 153 or worldQuest then return end
-        local npcID = GetNPCID()
-        if ignoreProgressNPC[npcID] then return end
-
-        local requiredItems = GetNumQuestItems()
-        if (requiredItems > 0) then
-            for index = 1, requiredItems do
-                local link = GetQuestItemLink("required", index)
-                if (link) then
-                    local id = tonumber(strmatch(link, "item:(%d+)"))
-                    for _, itemID in next, itemBlacklist do if (itemID == id) then return end end
-                else
-                    choiceQueue = "QUEST_PROGRESS"
-                    return
-                end
-            end
-        end
-
-        CompleteQuest()
-    end
-end
-
-function OT:QUEST_COMPLETE()
-    -- Blingtron 6000 only!
-    local npcID = GetNPCID()
-    if npcID == 43929 or npcID == 77789 then return end
-
-    local choices = GetNumQuestChoices()
-    if (choices <= 1) then
-        GetQuestReward(1)
-    elseif (choices > 1) then
-        local bestValue, bestIndex = 0
-
-        for index = 1, choices do
-            local link = GetQuestItemLink("choice", index)
-            if (link) then
-                local _, _, _, _, _, _, _, _, _, _, value = GetItemInfo(link)
-                value = cashRewards[tonumber(strmatch(link, "item:(%d+):"))] or value
-
-                if (value > bestValue) then bestValue, bestIndex = value, index end
-            else
-                choiceQueue = "QUEST_COMPLETE"
-                return GetQuestItemInfo("choice", index)
-            end
-        end
-
-        local button = bestIndex and QuestInfoRewardsFrame.RewardButtons[bestIndex]
-        if button then QuestInfoItem_OnClick(button) end
-    end
-end
-
-function OT:PLAYER_LOGIN() AttemptAutoComplete("PLAYER_LOGIN") end
-
-function OT:QUEST_AUTOCOMPLETE() AttemptAutoComplete("QUEST_AUTOCOMPLETE") end
-
-function OT:PLAYER_REGEN_ENABLED() AttemptAutoComplete("PLAYER_REGEN_ENABLED") end
-
-function OT:CreateSwitchButton()
-    if self.SwitchButton then return end
-
-    local holder = _G.ObjectiveFrameHolder
-    local button = CreateFrame("Frame", nil, UIParent)
-
-    button:SetHeight(20)
-    button:SetWidth(60)
-    button.text = button:CreateFontString(nil, "OVERLAY")
-    button.text:FontTemplate()
-    button:SetScript("OnMouseDown", function(self, mouseButton)
-        if mouseButton == 'LeftButton' then
-            OT.db.auto_turn_in.auto = not OT.db.auto_turn_in.auto
-            OT:RefreshAutoTurnIn()
-            OT:RefreshSwitchButton()
-        end
-    end)
-
-    button:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 250)
-    self.SwitchButton = button
-end
-
-function OT:RefreshAutoTurnIn()
-    if self.db.auto_turn_in.auto then
-        self:RegisterEvent("QUEST_GREETING")
-        self:RegisterEvent("GOSSIP_SHOW")
-        self:RegisterEvent("GOSSIP_CONFIRM")
-        self:RegisterEvent("QUEST_DETAIL")
-        self:RegisterEvent("QUEST_ACCEPT_CONFIRM")
-        self:RegisterEvent("QUEST_ACCEPTED")
-        self:RegisterEvent("QUEST_ITEM_UPDATE")
-        self:RegisterEvent("QUEST_PROGRESS")
-        self:RegisterEvent("QUEST_COMPLETE")
-        self:RegisterEvent("PLAYER_LOGIN")
-        self:RegisterEvent("QUEST_AUTOCOMPLETE")
-    else
-        self:UnregisterEvent("QUEST_GREETING")
-        self:UnregisterEvent("GOSSIP_SHOW")
-        self:UnregisterEvent("GOSSIP_CONFIRM")
-        self:UnregisterEvent("QUEST_DETAIL")
-        self:UnregisterEvent("QUEST_ACCEPT_CONFIRM")
-        self:UnregisterEvent("QUEST_ACCEPTED")
-        self:UnregisterEvent("QUEST_ITEM_UPDATE")
-        self:UnregisterEvent("QUEST_PROGRESS")
-        self:UnregisterEvent("QUEST_COMPLETE")
-        self:UnregisterEvent("PLAYER_LOGIN")
-        self:UnregisterEvent("QUEST_AUTOCOMPLETE")
-        self:UnregisterEvent("PLAYER_REGEN_ENABLED")
-    end
-end
-
-function OT:RefreshSwitchButton()
-    local sbdb = self.db.auto_turn_in.switch_button
-
-    -- 按钮显隐操作
-    local fade = _G.ObjectiveTrackerFrame.collapsed and sbdb.fade_with_objective_tracker
-
-    if not InCombatLockdown() then
-        if sbdb.enabled and not fade then
-            self.SwitchButton:Show()
+    if block.currentLine then
+        if block.currentLine.objectiveKey == 0 then -- 世界任务标题
+            self:HandleTitleText(block.currentLine.Text)
         else
-            self.SwitchButton:Hide()
-            return
+            self:HandleInfoText(block.currentLine.Text)
         end
     end
+end
 
-    self.SwitchButton.text:FontTemplate(LSM:Fetch('font', sbdb.font), sbdb.size, sbdb.style)
-    self.SwitchButton.text:SetPoint("CENTER", 0, 0)
+function OT:ScenarioObjectiveBlock_UpdateCriteria()
+    if _G.ScenarioObjectiveBlock then
+        local childs = {_G.ScenarioObjectiveBlock:GetChildren()}
+        for _, child in pairs(childs) do
+            if child.Text then
+                self:HandleInfoText(child.Text)
+            end
+        end
+    end
+end
 
-    local button_width = self.SwitchButton.text:GetStringWidth() + 2
-    local button_height = self.SwitchButton.text:GetStringHeight() + 2
-    self.SwitchButton:SetSize(button_width, button_height)
+function OT:ColorfulProgression(text)
+    if not self.db or not text then
+        return
+    end
 
-    if self.db.auto_turn_in.auto then
-        self.SwitchButton.text:SetText(WT:ColorStrWithPack(sbdb.enabled_text, sbdb.enabled_color))
+    local info = text:GetText()
+    if not info then
+        return
+    end
+
+    local current, required, details = strmatch(info, "^(%d-)/(%d-) (.+)")
+    if not (current and required and details) then
+        return
+    end
+
+    local oldHeight = text:GetHeight()
+    local progress = tonumber(current) / tonumber(required)
+
+    if self.db.colorfulProgress then
+        info = F.CreateColorString(current .. "/" .. required, GetProgressColor(progress))
+        info = info .. " " .. details
+    end
+
+    if self.db.percentage then
+        local percentage = format("[%.f%%]", progress * 100)
+        if self.db.colorfulPercentage then
+            percentage = F.CreateColorString(percentage, GetProgressColor(progress))
+        end
+        info = info .. " " .. percentage
+    end
+
+    text:SetText(info)
+end
+
+function OT:ChangeQuestTitleColor()
+    if not IsAddOnLoaded("Blizzard_ObjectiveTracker") then
+        return
+    end
+
+    local config = self.db.titleColor
+    if not config then
+        return
+    end
+
+    if config.enable and self.db.enable then
+        _G.OBJECTIVE_TRACKER_COLOR["Header"] = {
+            r = config.classColor and classColor.r or config.customColorNormal.r,
+            g = config.classColor and classColor.g or config.customColorNormal.g,
+            b = config.classColor and classColor.b or config.customColorNormal.b
+        }
+
+        _G.OBJECTIVE_TRACKER_COLOR["HeaderHighlight"] = {
+            r = config.classColor and classColor.r or config.customColorHighlight.r,
+            g = config.classColor and classColor.g or config.customColorHighlight.g,
+            b = config.classColor and classColor.b or config.customColorHighlight.b
+        }
+
+        self.titleColorChanged = true
+    elseif (not config.enable or not self.db.enable) and self.titleColorChanged then
+        _G.OBJECTIVE_TRACKER_COLOR["Header"] = {
+            r = SystemCache["TitleNormalColor"].r,
+            g = SystemCache["TitleNormalColor"].g,
+            b = SystemCache["TitleNormalColor"].b
+        }
+
+        _G.OBJECTIVE_TRACKER_COLOR["HeaderHighlight"] = {
+            r = SystemCache["TitleHighlightColor"].r,
+            g = SystemCache["TitleHighlightColor"].g,
+            b = SystemCache["TitleHighlightColor"].b
+        }
+
+        self.titleColorChanged = false
+    end
+
+    ObjectiveTracker_Update()
+end
+
+function OT:UpdateTextWidth()
+    if self.db.noDash then
+        _G.OBJECTIVE_TRACKER_TEXT_WIDTH = _G.OBJECTIVE_TRACKER_LINE_WIDTH - 12
     else
-        self.SwitchButton.text:SetText(WT:ColorStrWithPack(sbdb.disabled_text, sbdb.disabled_color))
+        _G.OBJECTIVE_TRACKER_TEXT_WIDTH = _G.OBJECTIVE_TRACKER_LINE_WIDTH - _G.OBJECTIVE_TRACKER_DASH_WIDTH - 12
     end
-end
-
-function OT:ChangeFonts()
-    local function setHeader()
-        local frame = _G.ObjectiveTrackerFrame.MODULES
-        if frame then
-            for i = 1, #frame do
-                local modules = frame[i]
-                if modules then
-                    local text = modules.Header.Text
-                    if OT.db.title then
-                        text:FontTemplate(LSM:Fetch('font', OT.db.header.font), OT.db.header.size, OT.db.header.style)
-                    end
-                end
-            end
-        end
-    end
-
-    local function SetBonusText()
-        local module = _G.BONUS_OBJECTIVE_TRACKER_MODULE
-        if (not module) or (not module.usedBlocks) then return end
-        for _, block in pairs(module.usedBlocks) do
-            if not block.hasWindSkin then
-                local contents = block.ScrollContents
-                if not contents then return end
-                local lines = {contents:GetChildren()}
-                for index, line in pairs(lines) do
-                    if line and line.Text and OT.db and OT.db.info and OT.db.title then
-                        if index == 1 then
-                            line.Text:FontTemplate(LSM:Fetch('font', OT.db.title.font), OT.db.title.size, OT.db.title.style)
-                        else
-                            line.Text:FontTemplate(LSM:Fetch('font', OT.db.info.font), OT.db.info.size, OT.db.info.style)
-                        end
-                    end
-                end
-                block.hasWindSkin = true
-            end
-        end
-    end
-
-    local function setText(self, block)
-        local text = block.HeaderText
-        if text then
-            if OT.db.title then
-                text:FontTemplate(LSM:Fetch('font', OT.db.title.font), OT.db.title.size, OT.db.title.style)
-            end
-            for objectiveKey, line in pairs(block.lines) do
-                if OT.db.info then
-                    line.Text:FontTemplate(LSM:Fetch('font', OT.db.info.font), OT.db.info.size, OT.db.info.style)
-                end
-            end
-        end
-        SetBonusText()
-    end
-
-    local function hookWQText(self)
-        for _, block in pairs(WORLD_QUEST_TRACKER_MODULE.usedBlocks) do
-            for objectiveKey, line in pairs(block.lines) do
-                if objectiveKey == 0 then
-                    if OT.db.title then
-                        line.Text:FontTemplate(LSM:Fetch('font', OT.db.title.font), OT.db.title.size, OT.db.title.style)
-                    end
-                elseif objectiveKey then
-                    if OT.db.info then
-                        line.Text:FontTemplate(LSM:Fetch('font', OT.db.info.font), OT.db.info.size, OT.db.info.style)
-                    end
-                end
-            end
-        end
-    end
-
-    local function hookScenarioText(self)
-        local s = _G.ScenarioObjectiveBlock
-        if s and s.lines then
-            for k, v in pairs(s.lines) do
-                if v.Text and OT.db and OT.db.info then
-                    v.Text:FontTemplate(LSM:Fetch('font', OT.db.info.font), OT.db.info.size, OT.db.info.style)
-                end
-            end
-        end
-    end
-
-    hooksecurefunc(QUEST_TRACKER_MODULE, "SetBlockHeader", setText)
-    hooksecurefunc(WORLD_QUEST_TRACKER_MODULE, "Update", hookWQText)
-    hooksecurefunc(SCENARIO_CONTENT_TRACKER_MODULE, "Update", hookScenarioText)
-    hooksecurefunc("ObjectiveTracker_Update", setHeader)
-
-    hooksecurefunc("ScenarioBlocksFrame_SetupStageBlock", function(scenarioCompleted)
-        ScenarioStageBlock.CompleteLabel:FontTemplate(LSM:Fetch('font', OT.db.title.font), nil, OT.db.title.style)
-    end)
-
-    hooksecurefunc("ScenarioStage_CustomizeBlock", function(stageBlock, scenarioType, widgetSetID, textureKitID)
-        if stageBlock.Stage and OT.db and OT.db.title then
-            stageBlock.Stage:FontTemplate(LSM:Fetch('font', OT.db.title.font), OT.db.title.size, OT.db.title.style)
-        end
-    end)
-end
-
-function OT:ChangeColors()
-    if not IsAddOnLoaded("Blizzard_ObjectiveTracker") then return end
-
-    -- Title color
-    if self.db.title.color.enabled then
-        local db = self.db.title.color
-        local class_color = _G.RAID_CLASS_COLORS[E.myclass]
-
-        local cr = db.class_color and class_color.r or db.custom_color.r
-        local cg = db.class_color and class_color.g or db.custom_color.g
-        local cb = db.class_color and class_color.b or db.custom_color.b
-        _G.OBJECTIVE_TRACKER_COLOR["Header"] = {r = cr, g = cg, b = cb}
-
-        local cr = db.class_color and class_color.r or db.custom_color_highlight.r
-        local cg = db.class_color and class_color.g or db.custom_color_highlight.g
-        local cb = db.class_color and class_color.b or db.custom_color_highlight.b
-        _G.OBJECTIVE_TRACKER_COLOR["HeaderHighlight"] = {r = cr, g = cg, b = cb}
-    end
-end
-
-function OT:PLAYER_ENTERING_WORLD()
-    self:UnregisterEvent("PLAYER_ENTERING_WORLD")
-    C_Timer.After(.5, function() OT:RefreshSwitchButton() end)
 end
 
 function OT:Initialize()
-    if not E.db.WindTools.Quest["Objective Tracker"].enabled then return end
-    if not IsAddOnLoaded("Blizzard_ObjectiveTracker") then return end
+    self.db = E.private.WT.quest.objectiveTracker
+    if not self.db.enable then
+        return
+    end
 
-    self.db = E.db.WindTools.Quest["Objective Tracker"]
-    tinsert(WT.UpdateAll, function()
-        OT.db = E.db.WindTools.Quest["Objective Tracker"]
-        OT:ChangeColors()
-        OT:CreateSwitchButton()
-        OT:RefreshAutoTurnIn()
-        OT:RefreshSwitchButton()
-    end)
+    self:UpdateTextWidth()
 
-    self:ChangeFonts()
-    self:ChangeColors()
+    if not self.Initialized then
+        local trackerModules = {
+            _G.UI_WIDGET_TRACKER_MODULE,
+            _G.BONUS_OBJECTIVE_TRACKER_MODULE,
+            _G.WORLD_QUEST_TRACKER_MODULE,
+            _G.CAMPAIGN_QUEST_TRACKER_MODULE,
+            _G.QUEST_TRACKER_MODULE,
+            _G.ACHIEVEMENT_TRACKER_MODULE
+        }
 
-    self:CreateSwitchButton()
-    E:CreateMover(self.SwitchButton, "Wind_TurnInSwitchButton", L["Auto Turn In Button"], nil, nil, nil,
-                  'WINDTOOLS,ALL', function() return OT.db.auto_turn_in.switch_button.enabled; end)
+        for _, module in pairs(trackerModules) do
+            self:SecureHook(module, "AddObjective", "ChangeQuestFontStyle")
+        end
 
-    WT.UpdateSwitchButton = function() OT:RefreshSwitchButton() end
+        self:SecureHook("ObjectiveTracker_Update", "ChangeQuestHeaderStyle")
+        self:SecureHook(_G.SCENARIO_CONTENT_TRACKER_MODULE, "UpdateCriteria", "ScenarioObjectiveBlock_UpdateCriteria")
 
-    hooksecurefunc(_G.ObjectiveTrackerFrame.BlocksFrame, "Show", function() OT:RefreshSwitchButton() end)
-    hooksecurefunc(_G.ObjectiveTrackerFrame.BlocksFrame, "Hide", function() OT:RefreshSwitchButton() end)
+        self.Initialized = true
+    end
 
-    self:RefreshAutoTurnIn()
-    self:RefreshSwitchButton()
-
-    self:RegisterEvent("PLAYER_ENTERING_WORLD")
-
+    self:ChangeQuestTitleColor()
 end
 
-local function InitializeCallback() OT:Initialize() end
-
-E:RegisterModule(OT:GetName(), InitializeCallback)
+W:RegisterModule(OT:GetName())

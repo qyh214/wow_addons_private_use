@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod("TwinEmpsAQ", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806150215")
+mod:SetRevision("20200828175831")
 mod:SetCreatureID(15276, 15275)
 mod:SetEncounterID(715)
 mod:SetModelID(15778)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED 799 800 26613",
+	"SPELL_AURA_APPLIED 799 800 26613 26607",
 	"SPELL_CAST_SUCCESS 802 804"--26613
 )
 
@@ -19,6 +19,7 @@ local warnExplodeBug		= mod:NewSpellAnnounce(804, 2, nil, false)
 local warnMutateBug			= mod:NewSpellAnnounce(802, 2, nil, false)
 
 local specWarnStrike		= mod:NewSpecialWarningDefensive(26613, nil, nil, nil, 1, 2)
+local specWarnGTFO			= mod:NewSpecialWarningGTFO(26607, nil, nil, nil, 8, 2)
 
 local timerTeleport			= mod:NewCDTimer(29.2, 800, nil, nil, nil, 6, nil, nil, true, 1, 4)
 local timerExplodeBugCD		= mod:NewCDTimer(4.9, 804, nil, false, nil, 1)--4.9-9
@@ -45,6 +46,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnStrike:Show(args.destName)
 		end
+	elseif args.spellId == 26607 and args:IsPlayer() and not self:IsTrivial(80) then
+		specWarnGTFO:Show(args.spellName)
+		specWarnGTFO:Play("watchfeet")
 	end
 end
 

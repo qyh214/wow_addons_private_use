@@ -1,16 +1,10 @@
-lightweight tag 4fbc9fb1cb1f49833c1ff21bf0c7e439cb141c0a 4.44
+lightweight tag bfb11fd405f2440defdea7cc922f181007d091a1 4.45
 Author:	Azilroka <darktemplar9900@yahoo.com>
-Date:	Sun Jul 12 20:34:46 2020 -0500
+Date:	Wed Oct 14 18:59:00 2020 -0500
 
-commit 4fbc9fb1cb1f49833c1ff21bf0c7e439cb141c0a
+commit bfb11fd405f2440defdea7cc922f181007d091a1
 Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Jul 12 20:34:46 2020 -0500
+Date:   Wed Oct 14 18:59:00 2020 -0500
 
-    4.44
-
-commit e04d0736a1d7ecb05b429e49d1045824e67636a0
-Author: Azilroka <darktemplar9900@yahoo.com>
-Date:   Sun Jul 12 20:26:56 2020 -0500
-
-    This was right. I forgot I didn't remove the identifiers
+    4.45
 

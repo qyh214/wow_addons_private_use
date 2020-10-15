@@ -1,0 +1,14 @@
+524
+573 Aiming squat
+856 --Left Fist Chest
+1193 -- Right Fist Chest
+1257 Chat
+1529 Talk
+1530
+1865 Grumpy
+2625
+
+14110 Listen?
+15722 Walking Yawning
+10687 Shocked
+--/run ACTOR:PlayAnimationKit(573, true)

@@ -97,24 +97,39 @@ L:SetGeneralLocalization{
 }
 L:SetWarningLocalization{
 	WarnEyeTentacle			= "Tentáculo ocular",
-	WarnWeakened			= "C'Thun vulnerable",
-	SpecWarnWeakened		= "¡C'Thun vulnerable!"
+	WarnClawTentacle2		= "Tentáculo Garral",
+	WarnGiantEyeTentacle	= "Tentáculo ocular gigante",
+	WarnGiantClawTentacle	= "Tentáculo garral gigante",
+	WarnWeakened			= "C'Thun débil",
+	SpecWarnWeakened		= "¡C'Thun está débil!"
 }
 L:SetTimerLocalization{
 	TimerEyeTentacle		= "Siguiente Tentáculo ocular",
-	TimerWeakened			= "Vulnerabilidad termina"
+	TimerClawTentacle		= "Siguiente Tentáculo Garral",
+	TimerGiantEyeTentacle	= "Siguiente Tentáculo ocular gigante",
+	TimerGiantClawTentacle	= "Siguiente Tentáculo garral gigante",
+	TimerWeakened			= "Debilidad termina"
 }
 L:SetOptionLocalization{
 	WarnEyeTentacle			= "Mostrar aviso cuando aparezca un Tentáculo ocular",
-	WarnWeakened			= "Mostrar aviso cuando C'Thun se vuelva vulnerable",
-	SpecWarnWeakened		= "Mostrar aviso especial cuando C'Thun se vuelva vulnerable",
+	WarnClawTentacle2		= "Mostrar aviso cuando aparezca un Tentáculo Garral",
+	WarnGiantEyeTentacle	= "Mostrar aviso cuando aparezca un Tentáculo ocular gigante",
+	WarnGiantClawTentacle	= "Mostrar aviso cuando aparezca un Tentáculo garral gigante",
+	WarnWeakened			= "Mostrar aviso cuando C'Thun se vuelva débil",
+	SpecWarnWeakened		= "Mostrar aviso especial cuando C'Thun se vuelva débil",
 	TimerEyeTentacle		= "Mostrar temporizador para el siguiente Tentáculo ocular",
-	TimerWeakened			= "Mostrar temporizador para la duración de la vulnerabilidad de C'Thun",
+	TimerClawTentacle		= "Mostrar temporizador para el siguiente Tentáculo Garral",
+	TimerGiantEyeTentacle	= "Mostrar temporizador para el siguiente Tentáculo ocular gigante",
+	TimerGiantClawTentacle	= "Mostrar temporizador para el siguiente Tentáculo garral gigante",
+	TimerWeakened			= "Mostrar temporizador para la duración de la debilidad de C'Thun",
 	RangeFrame				= "Mostrar marco de distancia (10 m)"
 }
 L:SetMiscLocalization{
+	Stomach		= "Estómago de C'Thun",
 	Eye			= "Ojo de C'Thun",
-	Weakened 	= "está débil!"
+	FleshTent	= "Tentáculo de carne",
+	Weakened 	= "está débil!",
+	NotValid	= "AQ40 parcialmente limpiado. Quedan %s jefes opcionales."
 }
 ----------------
 -- Ouro --

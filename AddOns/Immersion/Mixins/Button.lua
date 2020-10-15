@@ -1,13 +1,13 @@
-local Button, _, L = {}, ...
+local Button, API, _, L = {}, ImmersionAPI, ...
 L.ButtonMixin = Button
 
 ----------------------------------
-function Button:ActiveQuest() SelectActiveQuest(self:GetID()) end
-function Button:AvailableQuest() SelectAvailableQuest(self:GetID()) end
+function Button:ActiveQuest()    API:SelectActiveQuest(self:GetID())          end
+function Button:AvailableQuest() API:SelectAvailableQuest(self:GetID())       end
 ----------------------------------
-function Button:Gossip() SelectGossipOption(self:GetID()) end
-function Button:Active() SelectGossipActiveQuest(self:GetID()) end
-function Button:Available() SelectGossipAvailableQuest(self:GetID()) end
+function Button:Gossip()         API:SelectGossipOption(self:GetID())         end
+function Button:Active()         API:SelectGossipActiveQuest(self:GetID())    end
+function Button:Available()      API:SelectGossipAvailableQuest(self:GetID()) end
 ----------------------------------
 
 function Button:OnClick()
@@ -74,10 +74,20 @@ function Button:SetHeight(height, force)
 end
 
 ----------------------------------
+function Button:SetType(type)
+	assert(self[type], 'Type of interaction is not defined.')
+	self.type = type
+end
 
-function Button:SetIcon(texture)
-	self.Icon:SetVertexColor(1, 1, 1)
-	self.Icon:SetTexture(texture)
+function Button:SetIcon(texture, vertex, atlas)
+	vertex = vertex or 1
+	self.Icon:SetVertexColor(vertex, vertex, vertex)
+	if atlas then
+		self.Icon:SetAtlas(texture)
+	else
+		self.Icon:SetTexture(texture)
+	end
+
 end
 
 function Button:SetGossipQuestIcon(texture, vertex)
@@ -115,13 +125,16 @@ function Button:Init(id)
 		top and 'TOP' or 'BOTTOM',
 		0, 0,
 	}
-
+	----------------------------------
 	self:SetPoint(unpack(self.anchor))
 	----------------------------------
 	self.Counter:SetText(id < 10 and id or '')
 	----------------------------------
 	self:RegisterForDrag('LeftButton', 'RightButton')
 	self:OnShow()
+	----------------------------------
+	L.SetBackdrop(self.Overlay, L.Backdrops.GOSSIP_NORMAL)
+	L.SetBackdrop(self.Hilite,  L.Backdrops.GOSSIP_HILITE)
 	----------------------------------
 	self.Init = nil
 end

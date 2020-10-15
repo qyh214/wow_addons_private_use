@@ -315,6 +315,35 @@ L["Corruption Effect Format3"] = "|cffffffff%s|r 傷害\n|cffffffff%s%%|r 生命
 L["Corruption Effect Format4"] = "被異界之物擊中會立刻觸發其余負面效果";
 L["Corruption Effect Format5"] = "|cffffffff%s%%|r 受到的傷害和治療改變";
 
+--Text Overlay Frame
+L["Text Overlay Button Tooltip1"] = "簡易聊天氣泡";
+L["Text Overlay Button Tooltip2"] = "進階聊天氣泡";
+L["Text Overlay Button Tooltip3"] = "Talking Head";
+L["Text Overlay Button Tooltip4"] = "懸浮字幕";
+L["Text Overlay Button Tooltip5"] = "黑條字幕";
+L["Visibility"] = "可見性";
+
+--Achievement Frame--
+L["Incomplete First"] = "未完成在前";
+L["Earned First"] = "已完成在前";
+L["Settings"] = "設置";
+L["Next Prev Card"] = "前壹項/後壹項";
+L["Track"] = "追蹤";   --Track achievements
+
+--Barbershop--
+L["Save New Look"] = "保存外觀";
+L["No Available Slot"] = "保存欄位已滿";
+L["Look Saved"] = "已保存";
+L["Cannot Save Forms"] = "不支持形態";
+L["Profiles"] = "存檔管理";
+L["Save Notify"] = "提示妳保存新外觀";
+L["Show Randomize Button"] = "顯示隨機外觀按鈕";
+L["Coins Spent"] = "支出";
+L["Locations"] = "地點";
+L["Location"] = "地點";
+L["Visits"] = "訪問次數";
+L["Duration"] = "時長";
+
 --Tutorial--
 L["Alert"] = "警告";
 L["Race Change"] = "種族/性別變更";
@@ -343,39 +372,31 @@ L["Minimap button has been hidden. You may type /Narci minimap to re-enable it."
 L["Minimap button has been re-enabled."] = "小地圖按鈕已經重新啟用。"
 
 --Splash--
-NARCI_SPELL_VISUALS = "法術視覺效果";
-NARCI_SPLASH_CLOSE_AND_CONTINUE = "關閉此窗口並繼續";
-NARCI_SPLASH_SOUNDS_GREAT_BYE = "聽上去不錯。待會兒見！";
-NARCI_TRY_IT_NOW = "點擊這裏以啟用...";
-NARCI_DISABLE_IT_NOW = "點擊這裏以禁用...";
-    --Patch-specific
-    NARCI_DRESSING_ROOM_ENABLED_BY_DEFAULT = "|cff7cc576已默認開啟。|r "..NARCI_DISABLE_IT_NOW;
-    NARCI_DRESSING_ROOM_DISABLED = "|cffff5050已禁用。|r 需要重載UI才能使設置生效。 妳可以在偏好設定-拓展功能中重新啟用它。";
-    NARCI_CAMERA_SAFE_MODE_ENABLED_BY_DEFAULT = "|cff7cc576已默認開啟，因為妳沒有在使用DynamicCam插件。|r\n"..NARCI_DISABLE_IT_NOW;
-    NARCI_CAMERA_SAFE_MODE_DISABLED_BY_DEFAULT = "|cffff5050已默認關閉，因為妳正在使用DynamicCam插件。|r\n"..NARCI_TRY_IT_NOW;
-    NARCI_CAMERA_SAFE_MODE_ENABLED = "|cff7cc576已啟用。|r 妳可以在偏好設定-鏡頭中關閉它。";
-    NARCI_CAMERA_SAFE_MODE_DISABLED = "|cffff5050已禁用。|r 妳可以在偏好設定-鏡頭中啟用它。";
-    --
-NARCI_SHOW_DETAILS = "+ Show details...";
-NARCI_SPLASH_HEADER1 = "視覺效果和模組控制";
-NARCI_SPLASH_HEADER2 = "套裝管理員";
-NARCI_SPLASH_HEADER3 = "其他";
-NARCI_SPLASH_MESSAGE0 = "|cffd9cdb41. 妳現在可以在場景裏應用獨特的效果了。|r\n妳可以為演員添加法術或者其他道具，甚至可以控制場景中的天氣。點擊模組控制面板左下角的按鈕即可展開選項。"
-NARCI_SPLASH_MESSAGE1 = format("|cffd9cdb42. 翻轉模組和細微縮放|r\n妳可以按住%s和滑鼠左鍵來讓模組演Y軸旋轉；或是按住%s和滑鼠右鍵來進行細微縮放。", NARCI_MODIFIER_ALT, NARCI_MODIFIER_ALT);
-NARCI_SPLASH_MESSAGE2 = "|cffd9cdb4可通過點擊右上方的六邊形按鈕（也是顯示妳最高物品等級的地方）來展開這個功能。";
-NARCI_SPLASH_MESSAGE3 = "|cffd9cdb41. 現在AFK畫面會在妳移動或者進入戰鬥時自動退出。\n2. 試衣間增強又恢復了工作。|r";
-
-L["Show Whats New"] = "顯示歡迎界面";
-NARCI_SPLASH_WHATS_NEW_FORMAT = "Narcissus %s ".."更新內容";
-NARCI_SPLASH_HEADER1 = "NPC瀏覽器";
-NARCI_SPLASH_HEADER2 = "雜項";
-NARCI_SPLASH_INTERACTIVE_TEXT1 = NARCI_COLOR_GREY_85.."合影模式|r\n- 妳現在可以隨時隨地添加NPC模型，不再需要先在遊戲中找到他。\n- 妳可以從已分類的列表中選擇，或是按姓名或ID進行搜索。\n\n" ..NARCI_COLOR_GREY_85.."NPC信息(可選)|r\n- 在妳的鼠標在目標身上懸停時，找到其他與其同姓的NPC。\n- 可以在NPC姓名版或鼠標提示上顯示其在其他語言中的譯名。";
-NARCI_SPLASH_INTERACTIVE_TEXT2 = NARCI_COLOR_GREY_85.."";
-NARCI_SPLASH_INTERACTIVE_TEXT3 = NARCI_COLOR_GREY_85.."AFK畫面|r\n保持站立這壹功能已變為可選。\n\n"..NARCI_COLOR_GREY_85.."截圖質量|r\n- 不再強制將截圖質量設置為10。\n- 偏好設定中新增壹個截圖質量滑桿。\n\n"..NARCI_COLOR_GREY_85.."腐化模塊|r\n- 修復了與Corruption Tooltip部分功能不兼容的問題。\n- 更新了腐化之眼的傷害計算公式。新公式為：\n(0.5*腐化值+ 15) * HP";
+NARCI_SPLASH_WHATS_NEW_FORMAT = "Narcissus %s ".."更新内容";
+L["Splash Category1"] = "照片模式";
+L["Splash Content1 Name"] = "添加文字";
+L["Splash Content1 Description"] = "-妳可以在合影模式中創建聊天氣泡，talking heads和字幕。";
+L["Splash Content2 Name"] = "動畫面板";
+L["Splash Content2 Description"] = "-妳可以搜索和收藏動畫ID。\n-有些動畫ID包含多種動作,現在妳也可以進行選擇了。";
+L["Splash Content3 Name"] = "地面陰影";
+L["Splash Content3 Description"] = "-新增加了壹種放射狀陰影，它在某些場景下會更加真實。";
+L["Splash Category2"] = "理發店";
+L["Splash Content4 Name"] = "理發店增強";
+L["Splash Content4 Description"] = "-妳可以保存外觀。\n-每個角色擁有20個保存欄位(男女各10個)。\n-壹些統計功能？";
+L["Splash Category3"] = "成就";
+L["Splash Content5 Name"] = "成就面板";
+L["Splash Content5 Description"] = "-獨立的成就面板。\n-可以方便地在相關成就間切換。\n-左鍵拖拽壹項成就即可生成壹張懸浮的成就卡片。\n-更加流暢，更少卡頓。";
+L["Splash Category4"] = "其他";
+L["Splash Content6 Name"] = "鏡頭運動";
+L["Splash Content6 Description"] = "-在妳遊戲期間第二次使用Narcissus角色面板時，鏡頭會瞬間移動到預設位置。";
+L["Splash Content7 Name"] = "最佳畫質";
+L["Splash Content7 Description"] = "如果妳的系統支持的話，妳可以壹鍵將光線追蹤陰影暫時調制最佳。";
+L["Splash Content8 Name"] = "小地圖按鈕";
+L["Splash Content8 Description"] = "按住Shift並拖動此按鈕可使其脫離小地圖。";
 
 --Project Details--
 NARCI_ALL_PROJECTS = "全部項目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2020.4.26|r\n\n感謝妳使用此插件！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2020.10.13|r\n\n感謝妳使用此插件！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾澤拉斯上的不同景點，並收集各種故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沈浸式角色面板；妳最好的截圖助手。"
 

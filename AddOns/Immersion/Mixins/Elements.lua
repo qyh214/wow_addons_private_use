@@ -90,7 +90,7 @@ end
 
 function Elements:UpdateBoundaries()
 	self:AdjustToChildren()
-	return self:AdjustToChildren()
+	return self:AdjustToChildren(8, 8)
 end
 
 function Elements:Reset()

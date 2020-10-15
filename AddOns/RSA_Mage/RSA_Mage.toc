@@ -1,4 +1,4 @@
-## Interface: 80300
+## Interface: 90001
 ## Title: RSA [|c544AAAFFMage|r]
 ## Notes: RSA Mage Module. This is needed to announce Mage Spells.
 ## Author: Raeli

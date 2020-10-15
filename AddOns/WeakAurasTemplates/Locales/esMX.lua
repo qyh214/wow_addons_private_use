@@ -8,6 +8,10 @@ local L = WeakAuras.L
 
 -- WeakAuras/Templates
 	--[[Translation missing --]]
+	L["<70% Mana"] = "<70% Mana"
+	--[[Translation missing --]]
+	L[">70% Mana"] = ">70% Mana"
+	--[[Translation missing --]]
 	L["Abilities"] = "Abilities"
 	L["Ability Charges"] = "Cargas de habilidad"
 	L["Add Triggers"] = "Agregar desencadenadores"
@@ -20,6 +24,8 @@ local L = WeakAuras.L
 	L["Always show the aura, turns grey if on cooldown."] = "Always show the aura, turns grey if on cooldown."
 	--[[Translation missing --]]
 	L["Always show the aura, turns grey if the debuff not active."] = "Always show the aura, turns grey if the debuff not active."
+	--[[Translation missing --]]
+	L["Always shows highlights if enchant missing."] = "Always shows highlights if enchant missing."
 	--[[Translation missing --]]
 	L["Always shows the aura, grey if buff not active."] = "Always shows the aura, grey if buff not active."
 	--[[Translation missing --]]
@@ -53,6 +59,8 @@ local L = WeakAuras.L
 	L["Basic Show On Ready"] = "Basic Show On Ready"
 	L["Bloodlust/Heroism"] = "Sed de sangre/Heroísmo"
 	L["buff"] = "beneficio"
+	--[[Translation missing --]]
+	L["Buff on Other"] = "Buff on Other"
 	L["Buffs"] = "Beneficios"
 	L["Cancel"] = "Cancelar"
 	L["Cast"] = "Lanzar hechizo"
@@ -66,18 +74,13 @@ local L = WeakAuras.L
 	L["Charge Tracking"] = "Charge Tracking"
 	L["cooldown"] = "enfriamiento"
 	--[[Translation missing --]]
-	L["Cooldown"] = "Cooldown"
-	--[[Translation missing --]]
 	L["Cooldown Tracking"] = "Cooldown Tracking"
 	--[[Translation missing --]]
 	L["Create Auras"] = "Create Auras"
 	--[[Translation missing --]]
 	L["debuff"] = "debuff"
 	L["Debuffs"] = "Perjuicios"
-	L["Enchants"] = "Encantamientos"
 	L["General"] = "General"
-	--[[Translation missing --]]
-	L["General Azerite Traits"] = "General Azerite Traits"
 	L["Health"] = "Salud"
 	--[[Translation missing --]]
 	L["Highlight while active, red when out of range."] = "Highlight while active, red when out of range."
@@ -99,15 +102,13 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Next"] = "Next"
 	--[[Translation missing --]]
-	L["On Procc Trinkets (Aura)"] = "On Procc Trinkets (Aura)"
-	--[[Translation missing --]]
-	L["On Use Trinkets (Aura)"] = "On Use Trinkets (Aura)"
-	--[[Translation missing --]]
-	L["On Use Trinkets (CD)"] = "On Use Trinkets (CD)"
-	--[[Translation missing --]]
 	L["Only show the aura if the target has the debuff."] = "Only show the aura if the target has the debuff."
 	--[[Translation missing --]]
 	L["Only show the aura when the item is on cooldown."] = "Only show the aura when the item is on cooldown."
+	--[[Translation missing --]]
+	L["Only shows if the weapon is enchanted."] = "Only shows if the weapon is enchanted."
+	--[[Translation missing --]]
+	L["Only shows if the weapon is not enchanted."] = "Only shows if the weapon is not enchanted."
 	--[[Translation missing --]]
 	L["Only shows the aura if the target has the buff."] = "Only shows the aura if the target has the buff."
 	--[[Translation missing --]]
@@ -116,19 +117,15 @@ local L = WeakAuras.L
 	L["Only shows the aura when the ability is ready to use."] = "Only shows the aura when the ability is ready to use."
 	L["Pet alive"] = "Mascota viva"
 	L["Pet Behavior"] = "Comportamiento de la mascota"
-	--[[Translation missing --]]
-	L["PvP Azerite Traits"] = "PvP Azerite Traits"
 	L["PvP Talents"] = "JcJ - Talentos"
-	--[[Translation missing --]]
-	L["PVP Trinkets (Aura)"] = "PVP Trinkets (Aura)"
-	--[[Translation missing --]]
-	L["PVP Trinkets (CD)"] = "PVP Trinkets (CD)"
 	L["Replace all existing triggers"] = "Reemplazar todos los desencadenadores existentes"
 	L["Replace Triggers"] = "Reemplazar desencadenadores"
 	L["Resources"] = "Recursos"
 	L["Resources and Shapeshift Form"] = "Recursos y cambios de forma"
 	L["Runes"] = "Runas"
 	L["Shapeshift Form"] = "Cambiar de forma"
+	--[[Translation missing --]]
+	L["Show Always, Glow on Missing"] = "Show Always, Glow on Missing"
 	--[[Translation missing --]]
 	L["Show Charges and Check Usable"] = "Show Charges and Check Usable"
 	--[[Translation missing --]]
@@ -170,19 +167,21 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Show Cooldown and Totem Information"] = "Show Cooldown and Totem Information"
 	--[[Translation missing --]]
+	L["Show if Enchant Missing"] = "Show if Enchant Missing"
+	--[[Translation missing --]]
 	L["Show on Ready"] = "Show on Ready"
 	--[[Translation missing --]]
 	L["Show Only if Buffed"] = "Show Only if Buffed"
 	--[[Translation missing --]]
 	L["Show Only if Debuffed"] = "Show Only if Debuffed"
 	--[[Translation missing --]]
+	L["Show Only if Enchanted"] = "Show Only if Enchanted"
+	--[[Translation missing --]]
 	L["Show Only if on Cooldown"] = "Show Only if on Cooldown"
 	--[[Translation missing --]]
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
 	--[[Translation missing --]]
 	L["slow debuff"] = "slow debuff"
-	--[[Translation missing --]]
-	L["Specific Azerite Traits"] = "Specific Azerite Traits"
 	--[[Translation missing --]]
 	L["Stance"] = "Stance"
 	--[[Translation missing --]]

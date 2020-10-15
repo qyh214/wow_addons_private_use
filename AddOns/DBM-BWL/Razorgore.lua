@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod("Razorgore", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200714235226")
+mod:SetRevision("20200905140155")
 mod:SetCreatureID(12435, 99999)--Bogus detection to prevent invalid kill detection if razorgore happens to die in phase 1
 mod:SetEncounterID(610)--BOSS_KILL is valid, but ENCOUNTER_END is not
 mod:DisableEEKillDetection()--So disable only EE
 mod:SetModelID(10115)
-mod:SetHotfixNoticeRev(20200714000000)--2020, July, 14th
-mod:SetMinSyncRevision(20200714000000)--2020, July, 14th
+mod:SetHotfixNoticeRev(20200904000000)--2020, September, 4th
+mod:SetMinSyncRevision(20200904000000)--2020, September, 4th
 
 mod:RegisterCombat("yell", L.YellPull)
 mod:SetWipeTime(180)--guesswork
@@ -47,7 +47,7 @@ function mod:OnCombatStart(delay)
 		self.vb.firstEngageTime = GetServerTime()
 		if self.Options.FastestClear and self.Options.SpeedClearTimer then
 			--Custom bar creation that's bound to core, not mod, so timer doesn't stop when mod stops it's own timers
-			DBM.Bars:CreateBar(self.Options.FastestClear, DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT, "136106")
+			DBM.Bars:CreateBar(self.Options.FastestClear, DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT, 136106)
 		end
 	end
 end
@@ -106,8 +106,8 @@ end
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 12435 then
-		if self.vb.phase == 2 then--Only trigger kill for unit_died if he dies in phase 2, otherwise it's an auto wipe.
+	if cid == 12435 then--Only trigger kill for unit_died if he dies in phase 2 with everyone alive, otherwise it's an auto wipe.
+		if DBM:NumRealAlivePlayers() > 0 and self.vb.phase == 2 then
 			DBM:EndCombat(self)
 		else
 			DBM:EndCombat(self, true)--Pass wipe arg end combat

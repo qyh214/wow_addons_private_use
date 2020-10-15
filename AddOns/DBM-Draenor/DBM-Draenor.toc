@@ -1,4 +1,4 @@
-﻿## Interface: 80300
+﻿## Interface: 90001
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Draenor|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Draenor|r
@@ -13,15 +13,16 @@
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: WOD
-## X-DBM-Mod-Has-Single-Format: 1
+## X-DBM-StatTypes: normal
 ## X-DBM-Mod-World-Boss: 1
 ## X-DBM-Mod-Sort: 604
 ## X-DBM-Mod-MapID: 1116, 1159, 1331, 1158, 1153, 1152, 1330, 1160, 1154, 1464
 ## X-DBM-Mod-LoadCID: 83746, 81535, 81252, 94015
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
+## X-DBM-Mod-MinExpansion: 5
 ## X-Curse-Project-ID: 101956
 ## X-WoWI-ID: 24535
-## Version: r51
+## Version: r52
 
 localization.br.lua
 localization.en.lua

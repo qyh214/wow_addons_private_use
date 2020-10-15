@@ -50,7 +50,9 @@ local DefaultValue = {
     ["CorruptionTooltip"] = false,
     ["CorruptionTooltipModel"] = true,
     ["UseEscapeButton"] = true,                     --Use Escape button to exit
-    ["IndependentMinimapButton"] = false,           --Set Minimap Button Parent to Minimap or UIParent
+    ["IndependentMinimapButton"] = true,           --Set Minimap Button Parent to Minimap or UIParent; Handle by other addons like MBB
+    ["CameraTransition"] = true,                    --Camera moves smoothly bewtween presets
+    ["AnchorToMinimap"] = true,                     --Anchor the mini button to Minimap
 
     --Internal Hotkey
     ["SearchRelativesHotkey"] = "TAB",              --The key you press to begin/cycle relative search
@@ -66,14 +68,22 @@ local CreatureDatabaseOptions = {
     ["Languages"] = {},                             --Enabled localized names on tooltip
 };
 
+local AchievementOptions = {
+    ["Scale"] = 1,
+    ["Theme"] = 1,
+    ["IncompleteFirst"] = true,
+    ["UsedAsPrimary"] = true,
+};
+
 local TutorialInclude = {
-    "SpellVisualBrowser", "EquipmentSetManager", "Movement", "ExitConfirmation", "IndependentMinimapButton",
+    "SpellVisualBrowser", "EquipmentSetManager", "Movement", "ExitConfirmation",    --"IndependentMinimapButton"
     "NPCBrowserEntance", "NPCBrowser", 
 };
 
 local function Initialize_NarcissusDB()
     NarcissusDB = NarcissusDB or {};                            --Account-wide Variables
     NarciCreatureOptions = NarciCreatureOptions or {};          --Creature Database
+    NarciAchievementOptions = NarciAchievementOptions or {};    --Achievement Settings
     NarcissusDB_PC = NarcissusDB_PC or {};                      --Character-specific Variables
     NarcissusDB_PC.EquipmentSetDB = NarcissusDB_PC.EquipmentSetDB or {};
 
@@ -109,6 +119,16 @@ local function Initialize_NarcissusDB()
             NarciCreatureOptions[k] = v;
         end
     end
+
+    ---------------------
+    --Achievement Data---
+    ---------------------
+    for k, v in pairs(AchievementOptions) do
+        if NarciAchievementOptions[k] == nil then
+            NarciAchievementOptions[k] = v;
+        end
+    end
+
 
     ---------------------
     ----Per Character----

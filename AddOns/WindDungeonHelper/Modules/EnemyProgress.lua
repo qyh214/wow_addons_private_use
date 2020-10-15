@@ -1,72 +1,73 @@
-local AddOnName, WDH = ...
-local L, B, C, DB = WDH.L, WDH.Base, WDH.Config, WDH.DataBase
-local EP = WDH:NewModule("EnemyProgress", "AceHook-3.0", "AceEvent-3.0")
+local W, F, L = unpack(select(2, ...))
+local EP = W:NewModule("EnemyProgress", "AceHook-3.0")
 local LOP = LibStub("LibObjectiveProgress-1.0")
 
-DB.defaults.profile.modules.EnemyProgress = {
-	enable = false,
-}
+local _G = _G
 
-C.ModulesOrder.EnemyProgress = 21
-C.ModulesOption.EnemyProgress = {
-    name = L["Enemy Progress"],
-	type = "group",
-	childGroups = "tree",
-    args = {
-		general = {
-			order = 1,
-			name = L["General"],
-			type = "group",
-			inline = true,
-			args = {
-				enable = {
-					order = 1,
-					name = L["Enable"],
-					desc = L["Enables / disables the module"],
-					type = "toggle",
-					width = "full",
-					set = function(info,value)
-						EP.db.enable = value
-						if EP.db.enable then EP:Enable() else EP:Disable() end
-					end,
-					get = function(info) return EP.db.enable end
-				},
-			}
-		},
-    }
-}
+local floor = floor
+local format = format
+local next = next
+local select = select
+local tonumber = tonumber
+local tostring = tostring
 
-function EP.OnTooltipSetUnit(TT)
-    if not EP.db.enable or not TT or not TT.NumLines or TT:NumLines() == 0 then return end
+local GameTooltip = _G.GameTooltip
+local IsAddOnLoaded = IsAddOnLoaded
+local UnitGUID = UnitGUID
 
-    local name, unit = TT:GetUnit()
-    if not unit then return end
+local C_QuestLog_GetInfo = C_QuestLog.GetInfo
+local C_QuestLog_GetLogIndexForQuestID = C_QuestLog.GetLogIndexForQuestID
 
-    local GUID = UnitGUID(unit)
-    if not GUID or GUID == "" then return end
-
-    local npcID = select(6, ("-"):split(GUID))
-    if not npcID or npcID == "" then return end
-
-    local weightsTable = LOP:GetNPCWeightByCurrentQuests(tonumber(npcID))
-    if not weightsTable then return end
-
-    for questID, npcWeight in next, weightsTable do
-        local questTitle = C_TaskQuest.GetQuestInfoByQuestID(questID)
-        for j = 1, TT:NumLines() do
-            if _G["GameTooltipTextLeft" .. j] and _G["GameTooltipTextLeft" .. j]:GetText() == questTitle then
-                _G["GameTooltipTextLeft" .. j]:SetText(_G["GameTooltipTextLeft" .. j]:GetText() .. " - " .. tostring(math.floor((npcWeight * 100) + 0.5) / 100) .. "%")
-            end
-        end
-    end
+local function CheckElvUIWindTools()
+	if IsAddOnLoaded("ElvUI_WindTools") then
+		local E = _G.ElvUI and _G.ElvUI[1]
+		if E and E.private.WT.tooltips.objectiveProgress then
+			return true
+		end
+	end
 end
 
-function EP:OnInitialize()
-    self.Version = B.Version
-    self.db = DB.profile.modules.EnemyProgress
-    GameTooltip:HookScript("OnTooltipSetUnit", EP.OnTooltipSetUnit)
+function EP:AddObjectiveProgress(tt)
+	if not tt or not tt.NumLines or tt:NumLines() == 0 or CheckElvUIWindTools() then
+		return
+	end
+
+	local name, unit = tt:GetUnit()
+	local GUID = unit and UnitGUID(unit)
+	local npcID = GUID and select(6, ("-"):split(GUID))
+
+	if not npcID or npcID == "" then
+		return
+	end
+
+	local weightsTable = LOP:GetNPCWeightByCurrentQuests(tonumber(npcID))
+	if not weightsTable then
+		return
+	end
+
+	for questID, npcWeight in next, weightsTable do
+		local info = C_QuestLog_GetInfo(C_QuestLog_GetLogIndexForQuestID(questID))
+		for i = 1, tt:NumLines() do
+			local text = _G["GameTooltipTextLeft" .. i]
+			if text and text:GetText() == info.title then
+				text:SetText(text:GetText() .. format(" + %s%%", F.Round(npcWeight, self.db.accuracy)))
+			end
+		end
+	end
 end
 
-function EP:RefreshOption()
-	LibStub("AceConfigRegistry-3.0"):NotifyChange("WindDungeonHelper")
+function EP:ProfileUpdate()
+	self.db = W.db.enemyProgress
+
+	if self.db and self.db.enable then
+		if not self:IsHooked(GameTooltip, "OnTooltipSetUnit") then
+			self:SecureHookScript(GameTooltip, "OnTooltipSetUnit", "AddObjectiveProgress")
+		end
+	else
+		if self:IsHooked(GameTooltip, "OnTooltipSetUnit") then
+			self:Unhook(GameTooltip, "OnTooltipSetUnit")
+		end
+	end
 end
+
+EP.OnInitialize = EP.ProfileUpdate

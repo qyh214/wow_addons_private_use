@@ -1,4 +1,4 @@
-﻿## Interface: 80300
+﻿## Interface: 90001
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Ruins of Ahn'Qiraj|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Ruinen von Ahn'Qiraj|r
@@ -13,13 +13,14 @@
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: Classic
-## X-DBM-Mod-Has-Single-Format: 1
+## X-DBM-StatTypes: normal
 ## X-DBM-Mod-MapID: 509
 ## X-DBM-Mod-Sort: 1103
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
+## X-DBM-Mod-MinExpansion: 0
 ## X-Curse-Project-ID: 16442
 ## X-WoWI-ID: 11700
-## Version: r674
+## Version: r675
 
 localization.en.lua
 localization.de.lua
@@ -28,6 +29,7 @@ localization.ru.lua
 localization.kr.lua
 localization.tw.lua
 localization.cn.lua
+AQ20Trash.lua
 Kurinnaxx.lua
 Rajaxx.lua
 Moam.lua

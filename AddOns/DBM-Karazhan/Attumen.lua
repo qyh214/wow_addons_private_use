@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Attumen", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145731")
+mod:SetRevision("20200923212038")
 mod:SetCreatureID(16151, 16152)--15550
 mod:SetEncounterID(652)
 mod:SetModelID(16416)
@@ -30,7 +30,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnKnockdown:Show()
 	elseif args.spellId == 29833 then
 		warningCurse:Show()
-		timerCurseCD:Start(self.vb.phase == 2 and 41 or 27)
+		timerCurseCD:Start(self.vb.phase == 2 and 30.5 or 27)
 	end
 end
 

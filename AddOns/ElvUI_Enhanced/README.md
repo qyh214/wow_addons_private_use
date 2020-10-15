@@ -1,8 +1,8 @@
 # Important Notice
-Since version 3.2.3-beta1 you need at least ElvUI version 10.62 or higher for the addon to work.
+Since version 3.5.0 you need atleast ElvUI version 10.52 or higher for the addon to work.
 
 # General Information
-This is a continuation of ElvUI Enhanced (Abandoned http://wow.curseforge.com/addons/elvui-enhanced/). Updated for BFA.
+This is a continuation of ElvUI Enhanced (Abandoned http://wow.curseforge.com/addons/elvui-enhanced/). Now updated for Patch 9.0 and Shadowlands.
 
 If you find any bugs or features that are not working please let me know by creating a ticket: https://github.com/nickbock/ElvUI_Enhanced_Again/issues
 
@@ -16,7 +16,6 @@ Please Note: This add-on will not function without ElvUI installed. You can down
 - Automatic role detection for battleground and party/raid groups.
 - Automatic selection of highest vendor value quest rewards (you can still pick another if you like).
 ## Data Texts
-- Fully configurable extra datatext panels attached to the bottom of the three main actionbars.
 - Target Range data text module displaying the range to your currently selected target.
 - Item Level data text for a quick glance at your currently equipped item levels.
 - Quick datatext configuration by CTRL-ALT-RightClick on any datatext panel.
@@ -27,9 +26,6 @@ Please Note: This add-on will not function without ElvUI installed. You can down
 - Location information above minimap with coordinates.
 - Mini map buttons can be skinned and placed on their own bar that can be moved around.
 - Hide mini map during combat (disabled by default).
- ## ~~Nameplates~~ [Disabled for now]
-- ~~Threat percentage on nameplates for target, mouseover and boss nameplates.~~
-- ~~Target by count on nameplate for the number of party / raid members targetting that unit.~~
 ## Raiding
 - Raid Marker Bar for quickly placing target and world markers.
 ## Tool tip

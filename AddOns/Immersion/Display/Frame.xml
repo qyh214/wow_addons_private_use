@@ -206,26 +206,8 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame parentKey="Overlay" alpha="1" setAllPoints="true">
-				<Backdrop edgeFile="Interface\AddOns\Immersion\Textures\Edge_Gossip_Normal.blp">
-					<EdgeSize>
-						<AbsValue val="8"/>
-					</EdgeSize>
-					<BackgroundInsets>
-						<AbsInset left="5" right="5" top="-10" bottom="7"/>
-					</BackgroundInsets>
-				</Backdrop>
-			</Frame>
-			<Frame parentKey="Hilite" alpha="0.01" setAllPoints="true">
-				<Backdrop edgeFile="Interface\AddOns\Immersion\Textures\Edge_Gossip_Hilite.blp">
-					<EdgeSize>
-						<AbsValue val="8"/>
-					</EdgeSize>
-					<BackgroundInsets>
-						<AbsInset left="5" right="5" top="5" bottom="6"/>
-					</BackgroundInsets>
-				</Backdrop>
-			</Frame>
+			<Frame parentKey="Overlay" alpha="1" setAllPoints="true"/>
+			<Frame parentKey="Hilite" alpha="0.01" setAllPoints="true"/>
 		</Frames>
 		<HighlightTexture parentKey="HighlightTexture" file="Interface\PVPFrame\PvPMegaQueue" alphaMode="ADD">
 			<TexCoords left="0.00195313" right="0.63867188" top="0.70703125" bottom="0.76757813"/>
@@ -234,14 +216,6 @@
 				<Anchor point="BOTTOMRIGHT" x="0" y="4"/>
 			</Anchors>
 		</HighlightTexture>
-		<Backdrop bgFile="Interface\AddOns\Immersion\Textures\Backdrop_Gossip.tga" edgeFile="Interface\AddOns\Immersion\Textures\Edge_Gossip_BG.blp">
-			<EdgeSize>
-				<AbsValue val="8"/>
-			</EdgeSize>
-			<BackgroundInsets>
-				<AbsInset left="2" right="2" top="8" bottom="8"/>
-			</BackgroundInsets>
-		</Backdrop>
 		<Scripts>
 			<OnLoad>
 				self:SetFontString(self.Label);
@@ -251,16 +225,7 @@
 
 	<GameTooltip name="ImmersionItemTooltipTemplate" inherits="GameTooltipTemplate" virtual="true" hidden="true">
 		<Frames>
-			<Frame parentKey="Hilite" alpha="0.01" setAllPoints="true">
-				<Backdrop edgeFile="Interface\AddOns\Immersion\Textures\Edge_Gossip_Hilite.blp">
-					<EdgeSize>
-						<AbsValue val="8"/>
-					</EdgeSize>
-					<BackgroundInsets>
-						<AbsInset left="5" right="5" top="5" bottom="6"/>
-					</BackgroundInsets>
-				</Backdrop>
-			</Frame>
+			<Frame parentKey="Hilite" alpha="0.01" setAllPoints="true"/>
 			<Frame parentKey="Icon">
 				<Size x="70" y="65"/>
 				<Anchors>
@@ -299,8 +264,9 @@
 			</Button>
 		</Frames>
 		<Scripts>
-			<OnLoad>
-				self.shoppingTooltips = GameTooltip.shoppingTooltips;	self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b);
+			<OnLoad inherit="append">
+				self.shoppingTooltips = GameTooltip.shoppingTooltips;
+				self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b);
 				self:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b);
 			</OnLoad>
 		</Scripts>
@@ -358,56 +324,6 @@
 						</Layers>
 					</Frame>
 				</Frames>
-				<Scripts>
-					<OnLoad>
-						-- add tables for column frames, used when drawing qItems as tooltips
-						self.Choices.Columns = {};
-						self.Extras.Columns = {};
-						self.Active = {};
-
-						self.parent = self:GetParent();
-						self.ignoreRegions = true;
-						self:EnableMouse(true);
-
-						-- set parent/strata on load; main frame keeps table key, strata correctly draws over everything else.
-						self:SetParent(UIParent);
-						self:SetFrameStrata('FULLSCREEN_DIALOG');
-
-						self.Items = {};
-						self:SetScale(1.1);
-
-						local r, g, b = GetClassColor(select(2, UnitClass("player")));
-						self.Background:SetColorTexture(1, 1, 1);
-						self.Background:SetGradientAlpha("VERTICAL", 0, 0, 0, 0.75, r / 5, g / 5, b / 5, 0.75);
-
-						self.tooltipFramePool = CreateFramePool("GameTooltip", self, "ImmersionItemTooltipTemplate", function(self, obj) obj:Hide(); end);
-						self.tooltipFramePool.creationFunc = function(framePool)
-							local index = #framePool.inactiveObjects + framePool.numActiveObjects + 1
-							return CreateFrame(framePool.frameType, "Immersion"..framePool.frameType..index, framePool.parent, framePool.frameTemplate);
-						end;
-					</OnLoad>
-					<OnShow>
-						self.parent.TalkBox:Dim();
-						self.tooltipFramePool:ReleaseAll();
-					</OnShow>
-					<OnHide>
-						self.parent.TalkBox:Undim();
-						self.tooltipFramePool:ReleaseAll();
-						wipe(self.Active);
-
-						-- Reset columns
-						for _, column in ipairs(self.Choices.Columns) do
-							column.lastItem = nil
-							column:SetSize(1, 1)
-							column:Hide()
-						end
-						for _, column in ipairs(self.Extras.Columns) do
-							column.lastItem = nil
-							column:SetSize(1, 1)
-							column:Hide()
-						end
-					</OnHide>
-				</Scripts>
 			</Frame>
 			<Frame parentKey="TitleButtons" useParentLevel="true">
 				<Size x="300" y="0"/>
@@ -445,7 +361,7 @@
 							<Frame parentKey="Content" name="ImmersionContentFrame">
 								<Size x="570" y="403"/>
 								<Anchors>
-									<Anchor point="TOPLEFT" x="32" y="-32"/>
+									<Anchor point="TOPLEFT" x="24" y="-16"/>
 								</Anchors>
 								<Frames>
 
@@ -485,14 +401,14 @@
 									<Frame parentKey="RewardsFrame" hidden="true">
 										<Size x="285" y="10" />
 										<Anchors>
-											<Anchor point="CENTER" />
+											<Anchor point="CENTER"/>
 										</Anchors>
 										<Layers>
 											<Layer level="BACKGROUND">
 												<FontString parentKey="Header" inherits="QuestTitleFont" text="QUEST_REWARDS" justifyH="LEFT">
 													<Size x="285" y="0"/>
 													<Anchors>
-														<Anchor point="TOPLEFT"/>
+														<Anchor point="TOPLEFT" y="-4"/>
 													</Anchors>
 												</FontString>
 												<FontString parentKey="ItemChooseText" inherits="SystemFont_Shadow_Med2" text="REWARD_CHOICES" hidden="true" justifyH="LEFT">

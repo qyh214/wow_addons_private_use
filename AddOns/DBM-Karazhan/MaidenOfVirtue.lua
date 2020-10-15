@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Maiden", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145731")
+mod:SetRevision("20200918015608")
 mod:SetCreatureID(16457)
 mod:SetEncounterID(654)
 mod:SetModelID(16198)
@@ -19,13 +19,13 @@ local warningHolyFire		= mod:NewTargetNoFilterAnnounce(29522, 2)
 --local specWarnHolyFire		= mod:NewSpecialWarningMoveAway(29522, nil, nil, nil, 1, 2)
 
 local timerRepentance		= mod:NewBuffActiveTimer(12.6, 29511, nil, nil, nil, 2)
-local timerRepentanceCD		= mod:NewCDTimer(45, 29511, nil, nil, nil, 6)
+local timerRepentanceCD		= mod:NewCDTimer(30.3, 29511, nil, nil, nil, 6)--30.3-49
 local timerHolyFire			= mod:NewTargetTimer(12, 29522, nil, nil, nil, 5, nil, DBM_CORE_L.MAGIC_ICON)
 
 mod:AddRangeFrameOption(10, 29522)
 
 function mod:OnCombatStart(delay)
-	timerRepentanceCD:Start(35-delay)
+	timerRepentanceCD:Start(28-delay)--28-35
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(10)
 	end

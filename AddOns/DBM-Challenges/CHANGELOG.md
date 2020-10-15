@@ -1,9 +1,12 @@
 # <DBM> Challenges
 
-## [r132](https://github.com/DeadlyBossMods/DBM-Challenges/tree/r132) (2020-08-06)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Challenges/compare/r131...r132) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Challenges/releases)
+## [r133](https://github.com/DeadlyBossMods/DBM-Challenges/tree/r133) (2020-10-13)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Challenges/compare/r132...r133) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Challenges/releases)
 
-- Disable LE and NUM\_LE in all luachecks  
-- Purge all unnesseary SetZone calls  
-- Remove this from source  
-- Update luacheck  
+- Bump TOC  
+- Merge pull request #7 from DeadlyBossMods/stats  
+- Merge branch 'master' into stats  
+- MinExpansion  
+- Merge pull request #6 from DeadlyBossMods/stats  
+- Merge branch 'master' into stats  
+- Stats  

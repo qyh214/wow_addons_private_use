@@ -1,14 +1,15 @@
-# [2.18.4](https://github.com/WeakAuras/WeakAuras2/tree/2.18.4) (2020-09-04)
+# [3.0.1](https://github.com/WeakAuras/WeakAuras2/tree/3.0.1) (2020-10-14)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/2.18.3...2.18.4)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.0.0...3.0.1)
 
 ## Highlights
 
- - Update lib 
+ - bug fixes 
 
 ## Commits
 
-Stanzilla (1):
+InfusOnWoW (2):
 
-- Ignore .DS_Store
+- Fix Weapon Enchant trigger
+- Fix texture atlases on progress textures
 

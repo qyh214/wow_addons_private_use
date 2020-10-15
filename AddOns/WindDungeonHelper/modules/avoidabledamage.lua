@@ -1,323 +1,41 @@
 -- Based on ElitismHelper
-local AddOnName, WDH = ...
-local L, B, C, DB = WDH.L, WDH.Base, WDH.Config, WDH.DataBase
-local gsub = string.gsub
-local SendChatMessage = SendChatMessage
+local W, F, L, P = unpack(select(2, ...))
+local AD = W:NewModule("AvoidableDamage", "AceHook-3.0", "AceEvent-3.0")
+
+local format = format
+local gsub = gsub
+local pairs = pairs
+local sort = sort
+local tinsert = tinsert
+local wipe = wipe
+
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
+local GetRealmName = GetRealmName
+local GetSpellLink = GetSpellLink
+local GetUnitName = GetUnitName
 local IsInGroup = IsInGroup
 local IsInRaid = IsInRaid
+local SendChatMessage = SendChatMessage
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned
+local UnitHealthMax = UnitHealthMax
 local UnitIsGroupLeader = UnitIsGroupLeader
 local UnitIsPlayer = UnitIsPlayer
-local GetUnitName = GetUnitName
-local GetRealmName = GetRealmName
+
+local C_ChatInfo_GetRegisteredAddonMessagePrefixes = C_ChatInfo.GetRegisteredAddonMessagePrefixes
+local C_ChatInfo_RegisterAddonMessagePrefix = C_ChatInfo.RegisterAddonMessagePrefix
 local C_ChatInfo_SendAddonMessage = C_ChatInfo.SendAddonMessage
-local AD = WDH:NewModule("AvoidableDamage", "AceHook-3.0", "AceEvent-3.0")
+local C_Timer_After = C_Timer.After
 
-DB.defaults.profile.modules.AvoidableDamage = {
-    enable = true,
-    notification = {
-        enable = true,
-        compatible = true,
-        outputmode = "party",
-        threshold = 30,
-        unit = "western",
-        accuracy = 1
-    },
-    rank = {
-        enable = true,
-        worst = false,
-        custom_worst = L["Need improve"]
-    },
-    custom = {
-        enable = false,
-        warningMsg = L["%name% got hit by %spell%."],
-        stacksMsg = L["%name% got hit by %spell%. %stack% Stacks."],
-        spellMsg = L["%name% got hit by %spell% for %damage% (%percent%)."]
-    }
-}
-
-C.ModulesOrder.AvoidableDamage = 20
-
-C.ModulesOption.AvoidableDamage = {
-    name = L["Avoidable Damage"],
-    type = "group",
-    childGroups = "tree",
-    args = {
-        general = {
-            order = 1,
-            name = L["General"],
-            type = "group",
-            inline = true,
-            args = {
-                enable = {
-                    order = 1,
-                    name = L["Enable"],
-                    desc = L["Enables / disables the module"],
-                    type = "toggle",
-                    width = "full",
-                    set = function(info, value)
-                        AD.db.enable = value
-                        AD:ToggleModule()
-                        C_Timer.After(1, function() return AD:RefreshOption() end)
-                    end,
-                    get = function(info) return AD.db.enable end
-                },
-                activeUser = {
-                    order = 2,
-                    type = "description",
-                    width = "full",
-                    hidden = function(info) return not AD.db.enable end,
-                    name = function()
-                        return AD.activeUser and B.ColorString(L["Active announcer"], 0, 1, 0.59) .. ": " ..
-                                   AD.activeUser
-                    end
-                }
-            }
-        },
-        notification = {
-            order = 2,
-            name = L["Notifications"],
-            type = "group",
-            inline = true,
-            hidden = function() return not AD.db.enable end,
-            args = {
-                enable = {
-                    order = 11,
-                    name = L["Damage notifications"],
-                    desc = L["Enables / disables damage notifications"],
-                    type = "toggle",
-                    set = function(info, value) AD.db.notification.enable = value end,
-                    get = function(info) return AD.db.notification.enable end
-                },
-                threshold = {
-                    order = 12,
-                    name = L["Damage threshold"],
-                    desc = L["If the sum of damage over threshold, WDH will notify you."],
-                    type = "range",
-                    disabled = function(info) return not AD.db.notification.enable end,
-                    min = 1,
-                    max = 100,
-                    step = 1,
-                    set = function(info, value)
-                        AD.db.notification.threshold = value;
-                        AD.hardMinPct = AD.db.notification.threshold
-                    end,
-                    get = function(info) return AD.db.notification.threshold end
-                },
-                outputmode = {
-                    order = 13,
-                    name = L["Messeage Output"],
-                    desc = L["Define output channel"],
-                    disabled = function(info) return not AD.db.notification.enable end,
-                    type = "select",
-                    set = function(info, value) AD.db.notification.outputmode = value end,
-                    get = function(info) return AD.db.notification.outputmode end,
-                    values = {
-                        ["self"] = L["Self(Chat Frame)"],
-                        ["party"] = L["Party"],
-                        ["emote"] = L["Emote"],
-                        ["none"] = L["None"]
-                    }
-                },
-                unit = {
-                    order = 14,
-                    name = L["Numeral System"],
-                    disabled = function(info) return not AD.db.notification.enable end,
-                    type = "select",
-                    set = function(info, value) AD.db.notification.unit = value end,
-                    get = function(info) return AD.db.notification.unit end,
-                    values = {["western"] = L["Western - k"], ["asia"] = L["Asia - W"]}
-                },
-                accuracy = {
-                    order = 15,
-                    name = L["Damage accuracy"],
-                    type = "range",
-                    disabled = function(info) return not AD.db.notification.enable end,
-                    min = 0,
-                    max = 5,
-                    step = 1,
-                    set = function(info, value) AD.db.notification.accuracy = value end,
-                    get = function(info) return AD.db.notification.accuracy end
-                },
-                compatible = {
-                    order = 16,
-                    name = L["Be compatible with ElitismHelper"],
-                    desc = L["Use 'ElitismHelper' as addon message prefix."],
-                    disabled = function(info) return not AD.db.notification.enable end,
-                    type = "toggle",
-                    width = "full",
-                    get = function(info) return AD.db.notification.compatible end,
-                    set = function(info, value)
-                        AD.db.notification.compatible = value
-                        AD:UnregisterEvent("CHAT_MSG_ADDON")
-                        AD:SetAddonMessagePrefix()
-                        AD.activeUser = nil
-                        AD.allUsers = {}
-                        if AD.db.enable then
-                            AD:RegisterEvent("CHAT_MSG_ADDON")
-                            if IsInGroup() then
-                                AD:SendAddonMessage("VREQ")
-                            else
-                                AD.activeUser = AD.playerUser
-                            end
-                            C_Timer.After(2, function() return AD:RefreshOption() end)
-                        end
-                    end
-                }
-            }
-        },
-        rank = {
-            order = 3,
-            name = L["Ranking"],
-            type = "group",
-            inline = true,
-            hidden = function() return not AD.db.enable end,
-            args = {
-                enable = {
-                    order = 16,
-                    name = L["Enable"],
-                    desc = L["Enables / disables ranking after dungeon completed."],
-                    type = "toggle",
-                    set = function(info, value) AD.db.rank.enable = value end,
-                    get = function(info) return AD.db.rank.enable end
-                },
-                worst = {
-                    order = 17,
-                    name = L["The worst player"],
-                    desc = L["Enables / disables show the worst player in ranking."],
-                    type = "toggle",
-                    set = function(info, value) AD.db.rank.worst = value end,
-                    get = function(info) return AD.db.rank.worst end
-                },
-                worst_custom = {
-                    order = 18,
-                    type = "input",
-                    hidden = function(info) return not AD.db.rank.worst end,
-                    name = L["The worst player text"],
-                    get = function(info) return AD.db.rank.custom_worst end,
-                    set = function(info, value) AD.db.rank.custom_worst = value end
-                },
-                worst_custom_default = {
-                    order = 19,
-                    name = L["Defaults"],
-                    hidden = function(info) return not AD.db.rank.worst end,
-                    type = "execute",
-                    func = function()
-                        AD.db.rank.custom_worst = DB.defaults.profile.modules.AvoidableDamage.rank.custom_worst
-                    end
-                },
-                worst_example = {
-                    order = 20,
-                    type = "description",
-                    hidden = function(info) return not AD.db.rank.worst end,
-                    name = function()
-                        return B.ColorString(L["Example"]) .. ": " .. AD.db.rank.custom_worst .. ": " .. AD.playerUser
-                    end
-                }
-            }
-        },
-        customization = {
-            order = 4,
-            name = L["Customization"],
-            type = "group",
-            inline = true,
-            hidden = function() return not AD.db.enable end,
-            disabled = function() return not AD.db.custom.enable end,
-            args = {
-                enable = {
-                    order = 41,
-                    name = L["Enable"],
-                    type = "toggle",
-                    disabled = false,
-                    set = function(info, value)
-                        AD.db.custom.enable = value;
-                        AD:SetNotificationText()
-                    end,
-                    get = function(info) return AD.db.custom.enable end
-                },
-                default = {
-                    order = 42,
-                    name = L["Defaults"],
-                    type = "execute",
-                    func = function()
-                        AD.db.custom.warningMsg = DB.defaults.profile.modules.AvoidableDamage.custom.warningMsg
-                        AD.db.custom.stacksMsg = DB.defaults.profile.modules.AvoidableDamage.custom.stacksMsg
-                        AD.db.custom.spellMsg = DB.defaults.profile.modules.AvoidableDamage.custom.spellMsg
-                    end
-                },
-                warning = {
-                    order = 43,
-                    type = "input",
-                    width = "full",
-                    name = L["Warning message text"],
-                    desc = function() return AD.Tips end,
-                    get = function(info) return AD.db.custom.warningMsg end,
-                    set = function(info, value)
-                        AD.db.custom.warningMsg = value;
-                        AD:SetNotificationText()
-                    end
-                },
-                warningex = {
-                    order = 44,
-                    type = "description",
-                    name = function()
-                        return B.ColorString(L["Example"]) .. ": " ..
-                                   AD:GenerateOutput(AD.db.custom.warningMsg, AD.playerUser, GetSpellLink(257274))
-                    end
-                },
-                stack = {
-                    order = 45,
-                    type = "input",
-                    name = L["Stack message text"],
-                    desc = function() return AD.Tips end,
-                    width = 'full',
-                    get = function(info) return AD.db.custom.stacksMsg end,
-                    set = function(info, value)
-                        AD.db.custom.stacksMsg = value;
-                        AD:SetNotificationText()
-                    end
-                },
-                stackgex = {
-                    order = 46,
-                    type = "description",
-                    name = function()
-                        return B.ColorString(L["Example"]) .. ": " ..
-                                   AD:GenerateOutput(AD.db.custom.stacksMsg, AD.playerUser, GetSpellLink(257274), 3)
-                    end
-                },
-                spell = {
-                    order = 47,
-                    type = "input",
-                    name = L["Spell message text"],
-                    desc = function() return AD.Tips end,
-                    width = 'full',
-                    get = function(info) return AD.db.custom.spellMsg end,
-                    set = function(info, value)
-                        AD.db.custom.spellMsg = value;
-                        AD:SetNotificationText()
-                    end
-                },
-                spellex = {
-                    order = 48,
-                    type = "description",
-                    name = function()
-                        return B.ColorString(L["Example"]) .. ": " ..
-                                   AD:GenerateOutput(AD.db.custom.spellMsg, AD.playerUser, GetSpellLink(257274), nil,
-                                                     AD:GenerateNumber(25000), "18%%")
-                    end
-                }
-            }
-        }
-    }
-}
+local LE_PARTY_CATEGORY_HOME = LE_PARTY_CATEGORY_HOME
+local LE_PARTY_CATEGORY_INSTANCE = LE_PARTY_CATEGORY_INSTANCE
 
 local Spells = {
+    -- [257274] = 20, -- Debug
     -- Affixes
     [209862] = 20, -- Volcanic Plume (Environment)
     [226512] = 20, -- Sanguine Ichor (Environment)
     [288694] = 20, -- Shadow Smash (Season 2)
     [288858] = 20, -- Expel Soul (Season 2)
-
     -- Freehold
     [272046] = 20, --- Dive Bomb (Sharkbait)
     [257426] = 20, --- Brutal Backhand (Irontide Enforcer)
@@ -336,7 +54,6 @@ local Spells = {
     [258779] = 20, --- Sea Spout (Irontide Oarsman)
     [274400] = 20, --- Duelist Dash (Cutwater Duelist)
     [257274] = 20, --- Vile Coating (Environment)
-
     -- Shrine of the Storm
     [264560] = 20, --- Choking Brine (Aqualing)
     [267899] = 20, --- Hindering Cleave (Brother Ironhull)
@@ -350,7 +67,6 @@ local Spells = {
     [268059] = 20, --- Anchor of Binding (Tidesage Spiritualist)
     [264155] = 20, --- Surging Rush (Aqu'sirr)
     [267841] = 20, --- Blowback (Galecaller Faye)
-
     -- Siege of Boralus
     [256627] = 20, --- Slobber Knocker (Scrimshaw Enforcer)
     [256663] = 20, --- Burning Tar (Blacktar Bomber)
@@ -373,7 +89,6 @@ local Spells = {
     [276068] = 20, --- Tidal Surge (Hadal Darkfathom)
     [261565] = 20, --- Crashing Tide (Hadal Darkfathom)
     [277535] = 20, --- Viq'Goth's Wrath (Viq'Goth)
-
     -- Tol Dagor
     [257785] = 20, --- Flashing Daggers
     [256976] = 20, --- Ignition (Knight Captain Valyri)
@@ -386,7 +101,6 @@ local Spells = {
     -- import from ElitismHelper
     [257119] = 20, --- Sand Trap (The Sand Queen)
     [256710] = 20, --- Burning Arsenal (Knight Captain Valyri)
-
     -- Waycrest Manor
     [260569] = 20, --- Wildfire (Soulbound Goliath)
     [265407] = 20, --- Dinner Bell (Banquet Steward)
@@ -403,7 +117,6 @@ local Spells = {
     [278849] = 20, --- Uproot (Coven Thornshaper)
     [264040] = 20, --- Uprooted Thorns (Coven Thornshaper)
     [265757] = 20, --- Splinter Spike (Matron Bryndle)
-
     -- Atal'Dazar
     [253666] = 20, --- Fiery Bolt (Dazar'ai Juggernaught)
     [257692] = 20, --- Tiki Blaze (Environment)
@@ -416,7 +129,6 @@ local Spells = {
     -- import from ElitismHelper
     [258723] = 20, --- Grotesque Pool (Renaimated Honor Guard)
     [255567] = 20, --- Frenzied Charge (T'lonja)
-
     -- King's Rest
     [265914] = 20, --- Molten Gold (The Golden Serpent)
     [266191] = 20, --- Whirling Axe (Council of Tribes)
@@ -436,7 +148,6 @@ local Spells = {
     [270514] = 20, --- Ground Crush (Spectral Brute)
     [268419] = 20, --- Gale Slash (King Dazar)
     [268796] = 20, --- Impaling Spear (King Dazar)
-
     -- The MOTHERLODE!!
     [257371] = 20, --- Gas Can (Mechanized Peace Keeper)
     [262287] = 20, --- Concussion Charge (Mech Jockey / Venture Co. Skyscorcher)
@@ -458,7 +169,6 @@ local Spells = {
     [258628] = 20, --- Resonant Quake (Earthrager)
     [271583] = 20, --- Black Powder Special (Mines near the track)
     [269831] = 20, --- Toxic Sludge (Oil Environment)
-
     -- Temple of Sethraliss
     [268851] = 20, --- Lightning Shield (Adderis)
     [273225] = 20, --- Volley (Sandswept Marksman)
@@ -475,7 +185,6 @@ local Spells = {
     [272696] = 20, --- Lightning in a Bottle (Crazed Incubator)
     [264763] = 20, --- Spark (Static-charged Dervish)
     [279014] = 20, --- Cardiac Shock (Avatar, Environment)
-
     -- Underrot
     [264757] = 20, --- Sanguine Feast (Elder Leaxa)
     [265542] = 20, --- Rotten Bile (Fetid Maggot)
@@ -490,7 +199,6 @@ local Spells = {
     [259720] = 20, --- Upheaval (Sporecaller Zancha)
     [270108] = 20, --- Rotting Spore (Unbound Abomination)
     [270108] = 20, --- Rotting Spore (Unbound Abomination)
-
     -- from ElitismHelper and https://nga.178.com/read.php?&tid=15265896&pid=396636585&to=1
     -- Mechagon Workshop
     [294128] = 20, --- Rocket Barrage (Rocket Tonk)
@@ -512,7 +220,6 @@ local Spells = {
     [285454] = 20, -- 机械师闪流，脉冲榴弹
     [291915] = 20, -- 国王，等离子球
     [291856] = 20, -- 国王，离子校正
-
     -- Mechagon Junkyard
     -- from ElitismHelper and https://nga.178.com/read.php?&tid=15265896&pid=396636585&to=1
     [300816] = 20, --- Slimewave (Slime Elemental)
@@ -538,7 +245,6 @@ local Spells = {
     [302384] = 20, -- 飞机，静电释放
     [296522] = 20, -- 飞机，自毁
     [296150] = 20, -- 飞机，喷涌冲击
-
     --- Awakened Lieutenant
     [240448] = 20, -- 震荡
     [314387] = 20, -- 秒t怪菌毯
@@ -546,366 +252,380 @@ local Spells = {
     [314467] = 20, --- Volatile Rupture (Voidweaver Mal'thir)
     [314565] = 20 --- Defiled Ground (Blood of the Corruptor)
 }
-local SpellsNoTank = {
-    -- Freehold
 
-    -- Shrine of the Storm
-
+local SpellsNotTank = {
     -- Siege of Boralus
     [268230] = 20, --- Crimson Swipe (Ashvane Deckhand)
-
     -- Tol Dagor
     [258864] = 20, --- Suppression Fire (Ashvane Marine/Spotter)
-
     -- Waycrest Manor
     [263905] = 20, --- Marking Cleave (Heartsbane Runeweaver)
     [265372] = 20, ---	Shadow Cleave (Enthralled Guard)
     [271174] = 20, --- Retch (Pallid Gorger)
-
     -- Atal'Dazar
 
     -- King's Rest
     [270289] = 20, --- Purification Beam (Purification Construct)
-
     -- The MOTHERLODE!!
     [268846] = 20, --- Echo Blade (Weapons Tester)
     [263105] = 20, --- Blowtorch (Feckless Assistant)
     [263583] = 20, --- Broad Slash (Taskmaster Askari)
-
     -- Temple of Sethraliss
     [255741] = 20, --- Cleave (Scaled Krolusk Rider)
-
     -- Underrot
     [272457] = 20, --- Shockwave (Sporecaller Zancha)
     [260793] = 20 --- Indigestion (Cragmaw the Infested)
 }
+
 local Auras = {
     -- Freehold
     [274516] = true, -- Slippery Suds
     [274389] = true, -- Rat Traps (Vermin Trapper)
-
     -- Shrine of the Storm
     [268391] = true, -- Mental Assault (Abyssal Cultist)
     [276268] = true, -- Heaving Blow (Shrine Templar)
     [269104] = true, -- Explosive Void (Lord Stormsong)
     [267956] = true, -- Zap (Jellyfish)
-
     -- Siege of Boralus
     [257292] = true, -- Heavy Slash (Kul Tiran Vanguard)
     [272874] = true, -- Trample (Ashvane Commander)
     [257169] = true, -- Fear
-
     -- Tol Dagor
     [257119] = true, -- Sand Trap (The Sand Queen)
     [256474] = true, -- Heartstopper Venom (Overseer Korgus)
-
     -- Waycrest Manor
     [265352] = true, -- Toad Blight (Toad)
     [278468] = true, -- Freezing Trap
-
     -- Atal'Dazar
     [255371] = true, -- Terrifying Visage (Rezan)
-
     -- King's Rest
     [270003] = true, -- Suppression Slam (Animated Guardian)
     [270931] = true, -- Darkshot
     [268796] = true, -- (Kind Dazar)
-
     -- The MOTHERLODE!!
 
     -- Temple of Sethraliss
     [263914] = true, -- Blinding Sand (Merektha)
     [269970] = true, -- Blinding Sand (Merektha)
-
     -- Underrot
     [272609] = true, -- Maddening Gaze (Faceless Corrupter)
-
     -- Mechagon Workshop
     [293986] = true, --- Sonic Pulse (Blastatron X-80)
     [294863] = true, -- 机械师，烈油之泉
     [285440] = true, -- 机械师，烈焰火炮
-
     -- Mechaton Junkyard
     [398529] = true, -- Gooped (Gunker)
     [300659] = true, -- Consuming Slime (Toxic Monstrosity)
     [298124] = true, -- 冈克，束缚粘液
     [298259] = true -- 冈克，束缚粘液
 }
-local AurasNoTank = {}
 
-local function compareDamage(a, b) return a["value"] > b["value"] end
+local AurasNotTank = {}
+
+local warningMessage
+local stacksMessage
+local spellMessage
+
+local allUsers = {}
+local timers = {}
+local timerData = {}
+local combinedFails = {}
+
+local activeUser
+local playerName = GetUnitName("player", true) .. "-" .. gsub(GetRealmName(), " ", "")
+
+local function SortTable(t)
+    sort(
+        t,
+        function(a, b)
+            return a.value > b.value
+        end
+    )
+end
+
+function AD:SetNotificationText()
+    if self.db.custom.enable then
+        warningMessage = self.db.custom.warningMessage
+        stacksMessage = self.db.custom.stacksMessage
+        spellMessage = self.db.custom.spellMessage
+    else
+        warningMessage = P.avoidableDamage.custom.warningMessage
+        stacksMessage = P.avoidableDamage.custom.stacksMessage
+        spellMessage = P.avoidableDamage.custom.spellMessage
+    end
+end
+
+function AD:GenerateOutput(text, name, spell, stack, damage, percent)
+    text = gsub(text, "%%name%%", name)
+    text = gsub(text, "%%spell%%", spell)
+
+    if stack then
+        text = gsub(text, "%%stack%%", stack)
+    end
+
+    if damage then
+        text = gsub(text, "%%damage%%", damage)
+    end
+
+    if percent then
+        percent = F.Round(percent, self.db.notification.accuracy)
+        text = gsub(text, "%%percent%%", format("%s%%%%", percent))
+    end
+    return text
+end
+
+function AD:GenerateNumber(amount)
+    if self.db.notification.unit == "ASIA" then
+        if amount > 10000 then
+            return F.Round(amount / 10000, self.db.notification.accuracy) .. L["[UNIT] W"]
+        else
+            return amount
+        end
+    elseif self.db.notification.unit == "WESTERN" then
+        if amount > 1000 then
+            return F.Round(amount / 1000, self.db.notification.accuracy) .. L["[UNIT] K"]
+        else
+            return amount
+        end
+    end
+    return amount
+end
+
+function AD:SetAddonMessagePrefix()
+    -- compatible mode
+    self.prefix = self.db.compatible and "ElitismHelper" or W.AddonMsgPrefix
+
+    if self.db.compatible then
+        local registeredPrefixs = C_ChatInfo_GetRegisteredAddonMessagePrefixes()
+
+        for _, registeredPrefix in pairs(registeredPrefixs) do
+            if self.prefix == registeredPrefix then
+                return
+            end
+        end
+
+        C_ChatInfo_RegisterAddonMessagePrefix(self.prefix)
+    end
+end
+
+function AD:SendAddonMessage(message)
+    if IsInGroup(LE_PARTY_CATEGORY_HOME) and not IsInRaid() then
+        C_ChatInfo_SendAddonMessage(self.prefix, message, "PARTY")
+    end
+end
+
+function AD:SendChatMessage(message)
+    if not self.db.notification.enable or activeUser ~= playerName then
+        return
+    end
+
+    if self.db.notification.channel == "SELF" then
+        print(message)
+    elseif self.db.notification.channel == "PARTY" and IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+        SendChatMessage(message, "PARTY")
+    elseif self.db.notification.channel == "EMOTE" and IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+        SendChatMessage(": " .. message, "EMOTE")
+    end
+end
+
+function AD:SpellDamage(dstName, spellID, damageAmount)
+    if not UnitIsPlayer(dstName) then
+        return
+    end
+
+    local isTank = UnitGroupRolesAssigned(dstName) == "TANK"
+
+    if Spells[spellID] or (SpellsNotTank[spellID] and not isTank) then
+        -- Initialize TimerData and CombinedFails for Timer shot
+        if timerData[dstName] == nil then
+            timerData[dstName] = {}
+        end
+
+        if combinedFails[dstName] == nil then
+            combinedFails[dstName] = 0
+        end
+
+        -- Add this event to TimerData / CombinedFails
+        combinedFails[dstName] = combinedFails[dstName] + damageAmount
+        if timerData[dstName][spellID] == nil then
+            timerData[dstName][spellID] = damageAmount
+        else
+            timerData[dstName][spellID] = timerData[dstName][spellID] + damageAmount
+        end
+
+        -- If there is no timer yet, start one with this event
+        if timers[dstName] == nil then
+            timers[dstName] = true
+            C_Timer_After(
+                4,
+                function()
+                    self:SpellDamageAnnouncer(dstName)
+                end
+            )
+        end
+    end
+end
+
+function AD:SpellDamageAnnouncer(player)
+    local spellLinks = ""
+    local totalDamage = 0
+
+    for spellID, damage in pairs(timerData[player]) do
+        spellLinks = spellLinks .. GetSpellLink(spellID) .. " "
+        totalDamage = totalDamage + damage
+    end
+
+    timerData[player] = nil
+    timers[player] = nil
+
+    local playerMaxHealth = UnitHealthMax(player)
+    local damageText = self:GenerateNumber(totalDamage)
+    local percentage = totalDamage / playerMaxHealth * 100
+
+    if self.db.notification.enable and percentage >= self.db.notification.threshold then
+        self:SendChatMessage(self:GenerateOutput(spellMessage, player, spellLinks, nil, damageText, percentage))
+    end
+end
+
+function AD:AuraApply(dstName, spellID, auraAmount)
+    if not UnitIsPlayer(dstName) or not self.db.notification.enable then
+        return
+    end
+
+    local isTank = UnitGroupRolesAssigned(dstName) == "TANK"
+
+    if Auras[spellID] or (AurasNotTank[spellID] and not isTank) then
+        if auraAmount then
+            self:SendChatMessage(self:GenerateOutput(stacksMessage, dstName, GetSpellLink(spellID), auraAmount))
+        else
+            self:SendChatMessage(self:GenerateOutput(warningMessage, dstName, GetSpellLink(spellID)))
+        end
+    end
+end
+
+function AD:ResetAuthority()
+    wipe(allUsers)
+    activeUser = nil
+
+    if IsInGroup(LE_PARTY_CATEGORY_HOME) then
+        self:SendAddonMessage("VREQ")
+    else
+        activeUser = playerName
+    end
+end
+
+function AD:ResetStatistic()
+    wipe(combinedFails)
+    wipe(timerData)
+    wipe(timers)
+end
+
+function AD:CHALLENGE_MODE_COMPLETED()
+    self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+
+    if self.db.rank.enable then
+        return
+    end
+
+    if #combinedFails == 0 then
+        self:SendChatMessage(L["No failure damage was taken this run."])
+        return
+    end
+
+    self:SendChatMessage(L["Amount of failure damage:"])
+
+    local damageTable = {}
+    for name, damage in pairs(combinedFails) do
+        tinsert(damageTable, {key = name, value = damage})
+    end
+
+    SortTable(damageTable)
+
+    for index, data in pairs(damageTable) do
+        self:SendChatMessage(format("%d. %s %s", index, data.key, self:GenerateNumber(data["value"])))
+    end
+
+    if self.db.rank.worst then
+        self:SendChatMessage("------------------------")
+        self:SendChatMessage(format("%s: %s", self.db.rank.customWorst, damageTable[1].key))
+    end
+
+    self:ResetStatistic()
+end
+
+function AD:CHALLENGE_MODE_START()
+    self:SendChatMessage(L["[WDH] Avoidable damage notification enabled, glhf!"])
+    self:ResetStatistic()
+    self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+end
+
+function AD:CHAT_MSG_ADDON(_, prefix, message, channel, sender)
+    if prefix ~= self.prefix then
+        return
+    end
+
+    if message == "VREQ" then
+        self:SendAddonMessage("VANS")
+    elseif message:match("^VANS") then
+        allUsers[sender] = true
+        for userName in pairs(allUsers) do
+            if activeUser == nil then
+                activeUser = userName
+            end
+            if userName < activeUser then
+                activeUser = userName
+            end
+        end
+    end
+end
+
+function AD:COMBAT_LOG_EVENT_UNFILTERED()
+    local _, type, _, _, _, _, _, _, destName, _, _, spellId, _, _, info15, info16, info17 =
+        CombatLogGetCurrentEventInfo()
+    local eventPrefix, eventSuffix = type:match("^(.-)_?([^_]*)$")
+    if (eventPrefix:match("^SPELL") or eventPrefix:match("^RANGE")) and eventSuffix == "DAMAGE" then
+        self:SpellDamage(destName, spellId, info15)
+    elseif eventPrefix:match("^SPELL") and eventSuffix == "MISSED" then
+        if info17 then
+            self:SpellDamage(destName, spellId, info17)
+        end
+    elseif type == "SPELL_AURA_APPLIED" then
+        self:AuraApply(destName, spellId)
+    elseif type == "SPELL_AURA_APPLIED_DOSE" then
+        self:AuraApply(destName, spellId, info16)
+    end
+end
 
 function AD:OnInitialize()
-    self.Version = B.Version
-    self.db = DB.profile.modules.AvoidableDamage
-    self.activeUser = nil
-    self.playerUser = GetUnitName("player", true) .. "-" .. GetRealmName():gsub(" ", "")
-    self.allUsers = {}
-    self.Timers = {}
-    self.TimerData = {}
-    self.CombinedFails = {}
-    self.hardMinPct = self.db.notification.threshold
-
-    self.Tips = L["Tips"] .. ": \n" .. B.ColorString("%name%") .. " = " .. L["Player Name"] .. "\n" ..
-                    B.ColorString("%spell%") .. " = " .. L["Spell Link"] .. "\n" .. B.ColorString("%stack%") .. " = " ..
-                    L["Aura Stacks"] .. "\n" .. B.ColorString("%damage%") .. " = " .. L["Damage"] .. "\n" ..
-                    B.ColorString("%percent%") .. " = " .. L["Percent"]
+    self.db = W.db.avoidableDamage
 
     self:SetAddonMessagePrefix()
     self:SetNotificationText()
-    self:RebuildTable()
-    self:ToggleModule()
+    self:ProfileUpdate()
 end
 
-function AD:ToggleModule()
+function AD:ProfileUpdate()
+    self.db = W.db.avoidableDamage
+
     if self.db.enable then
+        self:ResetAuthority()
         self:RegisterEvent("CHAT_MSG_ADDON")
-        self:RegisterEvent("GROUP_ROSTER_UPDATE")
-        self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+        self:RegisterEvent("GROUP_ROSTER_UPDATE", "ResetAuthority")
+        self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "ResetAuthority")
         self:RegisterEvent("CHALLENGE_MODE_START")
         self:RegisterEvent("CHALLENGE_MODE_COMPLETED")
+        self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     else
         self:UnregisterEvent("CHAT_MSG_ADDON")
         self:UnregisterEvent("GROUP_ROSTER_UPDATE")
         self:UnregisterEvent("ZONE_CHANGED_NEW_AREA")
         self:UnregisterEvent("CHALLENGE_MODE_START")
         self:UnregisterEvent("CHALLENGE_MODE_COMPLETED")
+        self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+        self:ResetStatistic()
     end
 end
 
-function AD:RefreshOption() LibStub("AceConfigRegistry-3.0"):NotifyChange("WindDungeonHelper") end
-
----------------------------------------
--- Chat function
-function AD:SetAddonMessagePrefix()
-    -- work with ElitismHelper
-    self.prefix = self.db.notification.compatible and "ElitismHelper" or B.AddonMsgPrefix
-
-    if self.db.notification.compatible then
-        local registeredPrefixTable = C_ChatInfo.GetRegisteredAddonMessagePrefixes()
-
-        for i, v in pairs(registeredPrefixTable) do
-            -- if registered, quit
-            if self.prefix == v then return end
-        end
-
-        local regStatus = C_ChatInfo.RegisterAddonMessagePrefix(self.prefix)
-        -- if register failed
-        if debug and not regStatus then print("prefix error") end
-    end
-end
-
-function AD:SendAddonMessage(message)
-    if IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and not IsInRaid() then
-        if self.db.notification.outputmode == "party" or self.db.notification.outputmode == "emote" then
-            C_ChatInfo_SendAddonMessage(self.prefix, message, "PARTY")
-        end
-    end
-end
-
-function AD:SendChatMessage(message)
-    if not self.db.notification.enable or self.activeUser ~= self.playerUser then return end
-    if self.db.notification.outputmode == "none" then return end
-    if self.db.notification.outputmode == "self" then
-        print(message)
-    elseif self.db.notification.outputmode == "party" and IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
-        SendChatMessage(message, "PARTY")
-    elseif self.db.notification.outputmode == "emote" and IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
-        SendChatMessage(": " .. message, "EMOTE")
-    end
-end
-
-function AD:SetNotificationText()
-    local db = self.db.custom
-    self.warningMsg = db.enable and db.warningMsg or L["%name% got hit by %spell%."]
-    self.stacksMsg = db.enable and db.stacksMsg or L["%name% got hit by %spell%. %stack% Stacks."]
-    self.spellMsg = db.enable and db.spellMsg or L["%name% got hit by %spell% for %damage% (%percent%)."]
-end
-
-function AD:GenerateOutput(str, name, spell, stack, damage, percent)
-    local new = gsub(str, "%%name%%", name)
-    new = gsub(new, "%%spell%%", spell)
-    if stack then new = gsub(new, "%%stack%%", stack) end
-    if damage then new = gsub(new, "%%damage%%", damage) end
-    if percent then new = gsub(new, "%%percent%%", percent) end
-    return new
-end
-
-function AD:GenerateNumber(amount)
-    if self.db.notification.unit == "western" then
-        return B.Round(amount / 1000, self.db.notification.accuracy) .. L["unit_k"]
-    elseif self.db.notification.unit == "asia" then
-        return B.Round(amount / 10000, self.db.notification.accuracy) .. L["unit_W"]
-    end
-end
----------------------------------------
--- Notification
-function AD:SpellDamage(timestamp, eventType, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId,
-                        spellName, spellSchool, aAmount)
-    if (Spells[spellId] or (SpellsNoTank[spellId] and UnitGroupRolesAssigned(dstName) ~= "TANK")) and
-        UnitIsPlayer(dstName) then
-        -- Initialize TimerData and CombinedFails for Timer shot
-        if self.TimerData[dstName] == nil then self.TimerData[dstName] = {} end
-        if self.CombinedFails[dstName] == nil then self.CombinedFails[dstName] = 0 end
-
-        -- Add this event to TimerData / CombinedFails
-        self.CombinedFails[dstName] = self.CombinedFails[dstName] + aAmount
-        if self.TimerData[dstName][spellId] == nil then
-            self.TimerData[dstName][spellId] = aAmount
-        else
-            self.TimerData[dstName][spellId] = self.TimerData[dstName][spellId] + aAmount
-        end
-
-        -- If there is no timer yet, start one with this event
-        if self.Timers[dstName] == nil then
-            self.Timers[dstName] = true
-            C_Timer.After(4, function() return self:SpellDamageAnnouncer(dstName) end)
-        end
-    end
-end
-
-function AD:SpellDamageAnnouncer(user)
-    local spellLink = ""
-    local amount = 0
-    local minPct = math.huge
-    for k, v in pairs(self.TimerData[user]) do
-        spellLink = spellLink .. GetSpellLink(k) .. " "
-        local spellMinPct = nil
-        if Spells[k] then
-            spellMinPct = Spells[k]
-        elseif SpellsNoTank[k] then
-            spellMinPct = SpellsNoTank[k]
-        end
-        if spellMinPct ~= nil and spellMinPct < minPct then minPct = spellMinPct end
-        amount = amount + v
-    end
-    self.TimerData[user] = nil
-    self.Timers[user] = nil
-    local userMaxHealth = UnitHealthMax(user)
-    local msgAmount = self:GenerateNumber(amount)
-    local pct = Round(amount / userMaxHealth * 100)
-
-    if pct >= self.hardMinPct and pct >= minPct and self.db.notification.enable then
-        self:SendChatMessage(self:GenerateOutput(self.spellMsg, user, spellLink, nil, msgAmount, pct .. "%%"))
-    end
-end
-
-function AD:SwingDamage(timestamp, eventType, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, aAmount) end
-
-function AD:AuraApply(timestamp, eventType, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName,
-                      spellSchool, auraType, auraAmount)
-    if (Auras[spellId] or (AurasNoTank[spellId] and UnitGroupRolesAssigned(dstName) ~= "TANK")) and
-        UnitIsPlayer(dstName) then
-        if self.db.notification.enable then
-            if auraAmount then
-                self:SendChatMessage(self:GenerateOutput(self.stacksMsg, dstName, GetSpellLink(spellId), auraAmount))
-            else
-                self:SendChatMessage(self:GenerateOutput(self.warningMsg, dstName, GetSpellLink(spellId)))
-            end
-        end
-    end
-end
-
-function AD:RebuildTable()
-    self.allUsers = {}
-    self.activeUser = nil
-
-    if IsInGroup() then
-        self:SendAddonMessage("VREQ")
-    else
-        self.activeUser = self.playerUser
-    end
-end
-
----------------------------------------
--- Event Binding
-function AD:GROUP_ROSTER_UPDATE(event, ...) self:RebuildTable() end
-
-function AD:ZONE_CHANGED_NEW_AREA(event, ...) self:RebuildTable() end
-
-function AD:CHALLENGE_MODE_COMPLETED(event, ...)
-    self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-    if not self.db.rank.enable or not self.db.enable then return end
-    local count = 0
-    for _ in pairs(self.CombinedFails) do count = count + 1 end
-    if count == 0 then
-        self:SendChatMessage(L["No failure damage was taken this run."])
-        return
-    else
-        self:SendChatMessage(L["Amount of failure damage:"])
-    end
-    local u = {}
-    for k, v in pairs(self.CombinedFails) do table.insert(u, {key = k, value = v}) end
-    table.sort(u, compareDamage)
-
-    local failure_damage = -1
-    local name = "someone"
-
-    for k, v in pairs(u) do
-        if failure_damage == -1 then
-            failure_damage = v["value"]
-            name = v["key"]
-        else
-            if v["value"] > failure_damage then name = v["key"] end
-        end
-        self:SendChatMessage(k .. ". " .. v["key"] .. " " .. self:GenerateNumber(v["value"]))
-    end
-
-    self.CombinedFails = {}
-
-    if self.db.rank.worst then
-        local worst = self.db.rank.worst and self.db.rank.custom_worst or L["Need improve"]
-        self:SendChatMessage("------------------------")
-        self:SendChatMessage(worst .. ": " .. name)
-    end
-end
-
-function AD:CHALLENGE_MODE_START(event, ...)
-    if not self.db.enable then return end
-    self.CombinedFails = {}
-    self:SendChatMessage(L["[WDH] Avoidable damage notification enabled, glhf!"])
-    self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-end
-
-function AD:CHAT_MSG_ADDON(event, ...)
-    local prefix, message, channel, sender = select(1, ...)
-    if prefix ~= self.prefix then return end
-    if message == "VREQ" then
-        self:SendAddonMessage("VANS;" .. AD.Version)
-    elseif message:match("^VANS") then
-        self.allUsers[sender] = message
-        for k, v in pairs(self.allUsers) do
-            if UnitIsGroupLeader(k) or self.activeUser == nil or k < self.activeUser then self.activeUser = k end
-        end
-    end
-end
-
-function AD:COMBAT_LOG_EVENT_UNFILTERED(event, ...)
-    local timestamp, eventType, hideCaster, srcGUID, srcName, srcFlags, srcFlags2, dstGUID, dstName, dstFlags, dstFlags2 =
-        CombatLogGetCurrentEventInfo(); -- Those arguments appear for all combat event variants.
-    local eventPrefix, eventSuffix = eventType:match("^(.-)_?([^_]*)$");
-    if (eventPrefix:match("^SPELL") or eventPrefix:match("^RANGE")) and eventSuffix == "DAMAGE" then
-        local spellId, spellName, spellSchool, sAmount, aOverkill, sSchool, sResisted, sBlocked, sAbsorbed, sCritical,
-              sGlancing, sCrushing, sOffhand, _ = select(12, CombatLogGetCurrentEventInfo())
-        self:SpellDamage(timestamp, eventType, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId,
-                         spellName, spellSchool, sAmount)
-    elseif eventPrefix:match("^SWING") and eventSuffix == "DAMAGE" then
-        local aAmount, aOverkill, aSchool, aResisted, aBlocked, aAbsorbed, aCritical, aGlancing, aCrushing, aOffhand, _ =
-            select(12, CombatLogGetCurrentEventInfo())
-        self:SwingDamage(timestamp, eventType, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, aAmount)
-    elseif eventPrefix:match("^SPELL") and eventSuffix == "MISSED" then
-        local spellId, spellName, spellSchool, missType, isOffHand, mAmount = select(12, CombatLogGetCurrentEventInfo())
-        if mAmount then
-            self:SpellDamage(timestamp, eventType, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId,
-                             spellName, spellSchool, mAmount)
-        end
-    elseif eventType == "SPELL_AURA_APPLIED" then
-        local spellId, spellName, spellSchool, auraType = select(12, CombatLogGetCurrentEventInfo())
-        self:AuraApply(timestamp, eventType, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName,
-                       spellSchool, auraType)
-    elseif eventType == "SPELL_AURA_APPLIED_DOSE" then
-        local spellId, spellName, spellSchool, auraType, auraAmount = select(12, CombatLogGetCurrentEventInfo())
-        self:AuraApply(timestamp, eventType, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName,
-                       spellSchool, auraType, auraAmount)
-    end
+function AD:GetActiveUser()
+    return activeUser
 end

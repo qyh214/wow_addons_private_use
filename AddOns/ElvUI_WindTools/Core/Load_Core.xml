@@ -1,0 +1,8 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file='Functions.lua'/>
+	<Script file='Animation.lua'/>
+	<Script file='Core.lua'/>
+	<Script file='Developer.lua'/>
+	<Script file='Options.lua'/>
+	<Include file='Changelog\Load_Changelog.xml'/>
+</Ui>

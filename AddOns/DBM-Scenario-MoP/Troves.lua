@@ -1,7 +1,9 @@
 local mod	= DBM:NewMod("d620", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod.statTypes = "normal"
+
+mod:SetRevision("20200912131657")
 
 mod:RegisterCombat("scenario", 1135)
 
@@ -10,7 +12,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 139812",
 	"UNIT_AURA player"
 )
-mod.onlyNormal = true
 
 local warnStoneSmash		= mod:NewCastAnnounce(139777, 3, nil, nil, false)
 

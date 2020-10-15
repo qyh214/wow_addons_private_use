@@ -5,10 +5,10 @@ gpsRestricted = nil
 function UF:Construct_Unit_GPS(frame, unit)
 	if not frame then return end
 
-	local gps = CreateFrame("Frame", nil, frame)
+	local gps = CreateFrame("Frame", nil, frame, 'BackdropTemplate')
 	gps:SetTemplate("Transparent")
 	gps:EnableMouse(false)
-	gps:SetFrameLevel(frame:GetFrameLevel() + 10)
+	gps:SetFrameLevel(frame:GetFrameLevel() + 100)
 	gps:Size(48, 13)
 	gps:SetAlpha(.7)
 
@@ -24,7 +24,8 @@ function UF:Construct_Unit_GPS(frame, unit)
 	UF:Configure_FontString(gps.Text)
 
 	gps.unit = unit
-	gps:Hide()
+	--gps:Hide()
+	gps:Show()
 	
 	frame.gps = gps
 

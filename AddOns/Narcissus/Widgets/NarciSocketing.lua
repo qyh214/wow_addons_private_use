@@ -431,7 +431,7 @@ function Narci_GemButton_OnEnter(self)
 	tooltip:SetParent(self);
 	tooltip:SetFrameStrata("TOOLTIP");
 
-	if self:GetParent().IsRight then
+	if self:GetParent().isRight then
 		tooltip:SetPoint("TOPRIGHT", self, "TOPLEFT", 1, 10);
 	else
 		tooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", -1, 10);
@@ -442,7 +442,7 @@ function Narci_GemButton_OnEnter(self)
 end
 
 function Narci_GemButton_OnLeave()
-	FadeFrame(Narci_GearEnhancement_Tooltip, 0.4, "OUT")
+    FadeFrame(Narci_GearEnhancement_Tooltip, 0.25, "OUT");
 end
 
 function Narci_ItemSocketing_Close()
@@ -474,7 +474,7 @@ function Narci_GemSlot_OnClick(self)
         GemFrame:SetPoint("CENTER", self, "CENTER");
         GemFrame.GemBorder:SetTexture(self.GemBorder:GetTexture());
         GemFrame.GemIcon:SetTexture(self.GemIcon:GetTexture());
-        if self.IsRight then
+        if self.isRight then
             frame:SetPoint("TOPRIGHT", self, "TOPLEFT", 1 ,10);
             GemFrame.GemBorder:SetTexCoord(1, 0, 0, 1);
             GemFrame.Bling:SetTexCoord(0.5, 0, 0, 1);
@@ -490,7 +490,6 @@ function Narci_GemSlot_OnClick(self)
         GemFrame:SetFrameStrata("TOOLTIP");
         GemFrame:Show();
         ShowFlyoutBlack(true);
-        FadeFrame(Narci_GearEnhancement_Tooltip, 0.2, "OUT");
     end
     Narci:HideButtonTooltip();
 end

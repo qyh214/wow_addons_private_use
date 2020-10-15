@@ -1,7 +1,10 @@
 # HandyNotes
 
-## [v1.5.10](https://github.com/Nevcairiel/HandyNotes/tree/v1.5.10) (2020-04-27)
-[Full Changelog](https://github.com/Nevcairiel/HandyNotes/compare/v1.5.9...v1.5.10)
+## [v1.6.0](https://github.com/Nevcairiel/HandyNotes/tree/v1.6.0) (2020-10-13)
+[Full Changelog](https://github.com/Nevcairiel/HandyNotes/compare/v1.5.10...v1.6.0) [Previous Releases](https://github.com/Nevcairiel/HandyNotes/releases)
 
-- Update ToC  
-- Add fallbacks for plugins that don't provide scale or alpha  
+- Update TOC for 9.0  
+- Update Classic TOC  
+- Migrate to GitHub Actions  
+- Add Shadowlands to the continent list  
+- Use BackdropTemplate on WoW 9.0  

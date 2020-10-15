@@ -3,7 +3,15 @@
 
 local FILLED_BAR_HEIGHT = 75;
 
-local CorruptionEffectInfo = {};
+--Though contents will be localized\overwritten after login, I save these in case there's a bandwidth congestion caused by intalling too much addons.
+local CorruptionEffectInfo = {
+    [1] = {["name"] = "Grasping Tendrils", ["description"] = "Taking damage has a chance to reduce your movement speed for 5 sec. The magnitude of the snare increases with further Corruption."},
+    [2] = {["name"] = "Eye of Corruption", ["description"] = "Your spells and abilities have a chance to summon an Eye of Corruption for 8 sec. The Eye inflicts increasing Shadow damage to you every 2 sec while you remain in range."},
+    [3] = {["name"] = "Grand Delusions", ["description"] = "Taking damage has a chance to summon a Thing From Beyond, which pursues you for 8 sec. Its speed increases with further Corruption."},
+    [4] = {["name"] = "Cascading Disaster", ["description"] = "If you are struck by the Thing From Beyond, you will be immediately afflicted by Grasping Tendrils and Eye of Corruption."},
+    [5] = {["name"] = "Inevitable Doom", ["description"] = "All damage taken is magnified and healing received is reduced, increasing with further Corruption."},
+};
+
 local oldCorruptionLevel;
 
 local L = Narci.L;
@@ -996,18 +1004,23 @@ end
 
 
 local function GetCorruptionDescription(corruptionSpells)
-    local spellID, description;
+    local spellID, name, description;
     local IsSpellCached = C_Spell.IsSpellDataCached;
     for i = 1, #corruptionSpells do
         spellID = corruptionSpells[i];
-        if IsSpellCached(spellID) and not CorruptionEffectInfo[i] then
-            CorruptionEffectInfo[i] = {};
-            CorruptionEffectInfo[i].name = GetSpellInfo(spellID);
+        if IsSpellCached(spellID) and not CorruptionEffectInfo[i].isLocalized then
+            CorruptionEffectInfo[i].isLocalized = true;
+
+            name = GetSpellInfo(spellID);
+            if name and name ~= "" then
+                CorruptionEffectInfo[i].name = name;
+            end
             
             description = GetSpellDescription(spellID);
-            description = string.gsub(description, "\n.+", "");
-            --print(description)
-            CorruptionEffectInfo[i].description = description;
+            if description and description ~= "" then
+                description = string.gsub(description, "\n.+", "");
+                CorruptionEffectInfo[i].description = description;
+            end
         else
             corruptionSpells.iteration = corruptionSpells.iteration + 1;
             if corruptionSpells.iteration <= 8 then
@@ -1015,7 +1028,7 @@ local function GetCorruptionDescription(corruptionSpells)
                 C_Timer.After(0.2, function()
                     GetCorruptionDescription(corruptionSpells);
                 end)
-                return;
+                return
             else
                 InitializeCorruptionTooltip();
             end
@@ -1082,8 +1095,4 @@ Initialize:SetScript("OnEvent", function(self, event, ...)
     C_Timer.After(0.5, function()
         GetCorruptionDescription(corruptionSpells);
     end)
-
-    local spellID = ...;
-    --print(spellID)
-    --print(GetSpellInfo(spellID));
 end)

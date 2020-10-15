@@ -1,5 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
 	<Include file="AvoidableDamage.lua"/>
 	<Include file="EnemyProgress.lua"/>
-	<Include file="LFGGroupInfo.lua"/>
+	<Include file="GroupInfo.lua"/>
+	<Include file="QuickKeystone.lua"/>
 </Ui>

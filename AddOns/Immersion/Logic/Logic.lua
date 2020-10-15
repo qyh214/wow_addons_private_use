@@ -46,16 +46,12 @@ end
 
 function NPC:IsGossipAvailable(ignoreAutoSelect)
 	-- if there is only a non-gossip option, then go to it directly
-	if 	(GetNumGossipAvailableQuests() == 0) and 
-		(GetNumGossipActiveQuests() == 0) and 
-		(GetNumGossipOptions() == 1) and
-		not ForceGossip() then
+	if 	(API:GetNumGossipAvailableQuests() == 0) and 
+		(API:GetNumGossipActiveQuests() == 0) and 
+		(API:GetNumGossipOptions() == 1) and
+		not API:ForceGossip() then
 		----------------------------
-		local text, gossipType = GetGossipOptions()
-		if ( gossipType ~= 'gossip' ) then
-			if not ignoreAutoSelect then
-				SelectGossipOption(1)
-			end
+		if API:CanAutoSelectGossip(ignoreAutoSelect) then
 			return false
 		end
 	end
@@ -83,7 +79,7 @@ function NPC:IsQuestAutoAccepted(questStartItemID)
 		if AddAutoQuestPopUp(questID, 'OFFER') then
 			PlayAutoAcceptQuestSound()
 		end
-		CloseQuest()
+		API:CloseQuest()
 		return true
 	end
 
@@ -94,7 +90,7 @@ function NPC:IsQuestAutoAccepted(questStartItemID)
 		if AddAutoQuestPopUp(questID, 'OFFER') then
 			PlayAutoAcceptQuestSound()
 		end
-		CloseQuest()
+		API:CloseQuest()
 		return true
 	end
 end
@@ -118,6 +114,7 @@ function NPC:IsSpeechFinished()
 	return self.TalkBox.TextFrame.Text:IsFinished()
 end
 
+-- hack to figure out if event is related to quests
 function NPC:IsObstructingQuestEvent(forceEvent)
 	local event = forceEvent or self.lastEvent or ''
 	return ( event:match('^QUEST') and event ~= 'QUEST_ACCEPTED' )
@@ -129,9 +126,9 @@ function NPC:HandleGossipQuestOverlap(event)
 	-- events need to be checked so that an NPC interaction is correctly transitioned.
 	if (type(event) == 'string') then
 		if ( event == 'GOSSIP_SHOW' ) then
-		--	CloseQuest()
+		--	API:CloseQuest()
 		elseif self:IsObstructingQuestEvent(event) then
-			CloseGossip()
+			API:CloseGossip()
 		end
 	end
 end
@@ -347,9 +344,9 @@ function NPC:PlayOutro(optionFrameOpen)
 end
 
 function NPC:ForceClose(optionFrameOpen)
-	CloseGossip()
-	CloseQuest()
-	CloseItemText()
+	API:CloseGossip()
+	API:CloseQuest()
+	API:CloseItemText()
 	self:PlayOutro(optionFrameOpen)
 end
 
@@ -363,9 +360,9 @@ local inputs = {
 		if ( not self:IsModifierDown() and text:GetNumRemaining() > 1 and text:IsSequence() ) then
 			text:ForceNext()
 		elseif ( self.lastEvent == 'GOSSIP_SHOW' and numActive < 1 ) then
-			CloseGossip()
+			API:CloseGossip()
 		elseif ( self.lastEvent == 'GOSSIP_SHOW' and numActive == 1 ) then
-			SelectGossipOption(1)
+			API:SelectGossipOption(1)
 		elseif ( numActive > 1 ) then
 			self:SelectBestOption()
 		else
@@ -376,8 +373,8 @@ local inputs = {
 		self.TalkBox.TextFrame.Text:RepeatTexts()
 	end,
 	goodbye = function(self)
-		CloseGossip()
-		CloseQuest()
+		API:CloseGossip()
+		API:CloseQuest()
 	end,
 	number = function(self, id)
 		if self.hasItems then
@@ -599,7 +596,7 @@ function TalkBox:OnLeftClick()
 		if text:GetNumRemaining() > 1 and text:IsSequence() then
 			text:ForceNext()
 		else
-			CloseItemText()
+			API:CloseItemText()
 		end
 	-- Progress quest to completion
 	elseif self.lastEvent == 'QUEST_PROGRESS' then

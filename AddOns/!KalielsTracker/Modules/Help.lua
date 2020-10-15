@@ -44,14 +44,14 @@ local function SetupTutorials()
 	T.RegisterTutorial(helpName, {
 		savedvariable = KT.db.global,
 		key = "helpTutorial",
-		title = KT.title.." |cffffffffv"..KT.version.."|r",
+		title = KT.title.." |cffffffff"..KT.version.."|r",
 		icon = helpPath.."KT_logo",
 		font = "Fonts\\FRIZQT__.TTF",
 		width = 552,
 		imageHeight = 256,
 		{	-- 1
 			image = helpPath.."help_kaliels-tracker",
-			text = cTitle..KT.title.."|r is based on default Blizzard Objective Tracker and improves him.\n\n"..
+			text = cTitle..KT.title.."|r is improved default Blizzard Objective Tracker.\n\n"..
 					"Some features:\n"..
 					"- Change tracker position\n"..
 					"- Expand / Collapse tracker relative to selected position (direction)\n"..
@@ -90,7 +90,7 @@ local function SetupTutorials()
 			image = helpPath.."help_quest-title-tags",
 			imageHeight = 128,
 			text = cTitle.."Quest title tags|r\n\n"..
-					"At the start of quest titles you see tags like this |cffff8000[100|cff00b3ffhc!|cffff8000]|r.\n"..
+					"At the start of quest titles you see tags like this |cffff8000[100|r|cff00b3ffhc!|r|cffff8000]|r.\n"..
 					"Tags are also in quest titles inside Quest Log.\n\n"..
 					"|cff00b3ff!|r|T:14:3|t "..cDots..".......|r Daily quest|T:14:121|t|cff00b3ffr|r "..cDots..".......|r Raid quest\n"..
 					"|cff00b3ff!!|r "..cDots.."......|r Weekly quest|T:14:108|t|cff00b3ffr10|r "..cDots.."...|r 10-man raid quest\n"..
@@ -197,13 +197,15 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |cffffffff3.2.3|r\n\n"..
-					"- FIXED - Filters - hidden quests (by Blizzard) are not skipped during filtering\n"..
-					"- UPDATED - Addon support - PetTracker 8.3.8 (compatible with 8.3.1+)\n"..
-					"- UPDATED - Addon support - TomTom v80300-1.1.3\n"..
-					"- UPDATED - Addon support - ElvUI 11.49, RealUI 2.2.1, SyncUI 8.3.0.3\n\n"..
+			text = cTitle.."         What's NEW in version |r|cffffffff4.0.0|r\n\n"..
+					"- ADDED - Support for WoW 9.0\n"..
+					"- UPDATED - Addon support - TomTom v90001-1.1.5\n"..
+					"- UPDATED - Addon support - ElvUI 12.00, Tukui 20.00\n"..
+					"- Support for addon PetTracker is temporary disabled.\n"..
+					"- Support for UI addons updated partially.\n"..
+					"- Some Libs are modified - I'm waiting for an update.\n\n"..
 
-                    cTitle.."WoW 8.3.0 - Known issues w/o solution|r\n"..
+                    cTitle.."WoW 9.0.1 - Known issues w/o solution|r\n"..
                     "- Clicking on tracked quests or achievements has no response during combat.\n"..
                     "- Header buttons Q and A don't work during combat.\n\n"..
 
@@ -231,8 +233,8 @@ local function SetupTutorials()
 					self[i].shineLeft = db.hdrOtherButtons and -55 or -15
 				end
 			elseif i == 3 then
-				local questID, _ = GetQuestWatchInfo(1)
-				local block = QUEST_TRACKER_MODULE.usedBlocks[questID]
+				local questID = C_QuestLog.GetQuestIDForQuestWatchIndex(1)
+				local block = QUEST_TRACKER_MODULE:GetExistingBlock(questID)
 				if block then
 					self[i].shine = block
 				end
@@ -241,11 +243,10 @@ local function SetupTutorials()
 			elseif i == 6 then
 				self[i].shine = KTF.ActiveButton
 			elseif i == 10 then
-				for j=1, GetNumQuestWatches() do
-					local questID = GetQuestWatchInfo(j)
-					local hasLocalPOI = select(16, GetQuestWatchInfo(j))
-					local block = QUEST_TRACKER_MODULE.usedBlocks[questID]
-					if block and (hasLocalPOI or block.questCompleted) then
+				for j=1, C_QuestLog.GetNumQuestWatches() do
+					local questID = C_QuestLog.GetQuestIDForQuestWatchIndex(j)
+					local block = QUEST_TRACKER_MODULE:GetExistingBlock(questID)
+					if block and (QuestHasPOIInfo(questID) or block.questCompleted) then
 						self[i].shine = QuestPOI_FindButton(ObjectiveTrackerFrame.BlocksFrame, questID)
 						break
 					end

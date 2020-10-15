@@ -593,7 +593,7 @@ function Narci_Comparison_SetComparison(itemLocation, self)
         if IsCorruptedItem(itemLink) then   --Corrupted Items
             str = str.."|cff959595"..ITEM_MOD_CORRUPTION.."|r "..stats.corruption;
             local corruptionDiff = stats.corruption - baseStats.corruption;
-            if corruptionDiff > 0 then
+            if corruptionDiff >= 0 then
                 corruptionDiff = "+"..corruptionDiff;
             end
             str = str.." ("..corruptionDiff..")";

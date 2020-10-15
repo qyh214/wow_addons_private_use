@@ -1,0 +1,17 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<!-- Core -->
+	<Script file='Core.lua'/>
+	<!-- Authority Module -->
+	<Script file='Authority.lua'/>
+	<!-- Submodule -->
+	<Script file='Events.lua'/>
+	<Script file='CombatResurrection.lua'/>
+	<Script file='Goodbye.lua'/>
+	<Script file='Interrupt.lua'/>
+	<Script file='Quest.lua'/>
+	<Script file='ResetInstance.lua'/>
+	<Script file='Taunt.lua'/>
+	<Script file='ThanksForResurrection.lua'/>
+	<Script file='ThreatTransfer.lua'/>
+	<Script file='Utility.lua'/>
+</Ui>

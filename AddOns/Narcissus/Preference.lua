@@ -1,8 +1,8 @@
 local L = Narci.L;
-
+--NARCI_NEW_ENTRY_PREFIX
 local TabNames = { 
     NARCI_INTERFACE, NARCI_SHORTCUTS, NARCI_THEME, NARCI_EFFECTS, NARCI_CAMERA, NARCI_TRANSMOG,
-    NARCI_NEW_ENTRY_PREFIX..L["Photo Mode"], L["Corruption System"], NARCI_NEW_ENTRY_PREFIX..L["NPC"], NARCI_NEW_ENTRY_PREFIX..NARCI_EXTENSIONS, 
+    L["Photo Mode"], L["Corruption System"], L["NPC"], NARCI_EXTENSIONS, 
 };  --Credits and About will be inserted later
 
 local FadeFrame = NarciAPI_FadeFrame;
@@ -18,7 +18,7 @@ local Color_Alert = "|cfffced00";    --252 237 0
 local Color_Alert_r = 252/255;
 local Color_Alert_g = 237/255;
 local Color_Alert_b = 0;
-local bindAction = "CLICK Narci_MinimapButton:LeftButton";
+local BIND_ACTION = "CLICK Narci_MinimapButton:LeftButton";
 local OptimizeBorderThickness = NarciAPI_OptimizeBorderThickness;
 local Narci_LetterboxAnimation = NarciAPI_LetterboxAnimation;
 local floor = math.floor;
@@ -93,9 +93,9 @@ end
 function Narci_ItemNameSizeSlider_OnValueChanged(self, value, userInput)
     self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
     if value ~= self.oldValue then
-        self.oldValue = value
-        self.KeyLabel:SetText(value)
-        SetItemNameTextSize(value)
+        self.oldValue = value;
+        self.KeyLabel:SetText(value);
+        SetItemNameTextSize(value);
     end
 end
 
@@ -234,9 +234,9 @@ local function CameraOrbitSwitch_SetState(self)
 	local state = Settings.CameraOrbit;
     self.Tick:SetShown(state);
     if state then
-        self.Description:SetText(NARCI_CAMERA_ORBIT_ENABLED_DESCRIPTION);
+        self.Description:SetText(L["Orbit Camera Description On"]);
     else
-        self.Description:SetText(NARCI_CAMERA_ORBIT_DISABLED_DESCRIPTION);
+        self.Description:SetText(L["Orbit Camera Description Off"]);
     end
 end
 
@@ -248,6 +248,16 @@ function Narci_CameraOrbitSwitch_OnClick(self)
     else
         MoveViewRightStop();
         MoveViewLeftStop();
+    end
+end
+
+local function CameraTransition_SetState(self)
+    local state = Settings.CameraTransition;
+    self.Tick:SetShown(state);
+    if state then
+        self.Description:SetText();
+    else
+        self.Description:SetText();
     end
 end
 
@@ -335,6 +345,7 @@ local function MinimapButtonSwitch_SetState(self)
     if state then
         FadeFrame(self:GetParent().MinimapParentSwitch, 0.25, "Forced_IN");
         FadeFrame(self:GetParent().FadeOutSwitch, 0.25, "Forced_IN");
+        Narci_MinimapButton:PlayBling();
     else
         self:GetParent().MinimapParentSwitch:SetShown(state);
         self:GetParent().FadeOutSwitch:SetShown(state);
@@ -376,7 +387,7 @@ function Narci_DoubleTapSwitch_OnShow(self)
 end
 
 local function ClearAllBinding()
-    local key1, key2 = GetBindingKey(bindAction);
+    local key1, key2 = GetBindingKey(BIND_ACTION);
     if key1 then
         SetBinding(key1, nil, 1)
     end
@@ -400,13 +411,13 @@ local function ShouldConfirmKey(self)
     else
         self.key = key;
         local action = GetBindingAction(key);
-        if action and action ~= "" and action~=bindAction then
+        if action and action ~= "" and action ~= BIND_ACTION then
             self.Description:SetText(Color_Alert..NARCI_OVERRIDE.." "..GetBindingName(action).." ?");
             self.Highlight:SetColorTexture(Color_Alert_r, Color_Alert_g, Color_Alert_b);
             return true;
         else
             ClearAllBinding();
-            if SetBinding(key, bindAction, 1) then
+            if SetBinding(key, BIND_ACTION, 1) then
                 self.Description:SetText(Color_Good..KEY_BOUND);
                 self.Highlight:SetColorTexture(Color_Good_r, Color_Good_g, Color_Good_b);
                 self.ConfirmButton:Hide();
@@ -444,14 +455,14 @@ local function ExitKeyBinding(self)
         BindingAlertTimer = C_Timer.NewTimer(4, function()
             UIFrameFadeOut(self.Highlight, 0.5, self.Highlight:GetAlpha(), 0);
             UIFrameFadeOut(self.Description, 0.5, self.Description:GetAlpha(), 0);
-            self.Value:SetText(GetBindingKey(bindAction) or NOT_BOUND); 
+            self.Value:SetText(GetBindingKey(BIND_ACTION) or NOT_BOUND); 
         end)
     else
         self.ConfirmButton:Show();
         BindingAlertTimer = C_Timer.NewTimer(6, function()
             UIFrameFadeOut(self.Highlight, 0.5, self.Highlight:GetAlpha(), 0);
             UIFrameFadeOut(self.Description, 0.5, self.Description:GetAlpha(), 0);
-            self.Value:SetText(GetBindingKey(bindAction) or NOT_BOUND)
+            self.Value:SetText(GetBindingKey(BIND_ACTION) or NOT_BOUND)
             self.ConfirmButton:Hide();
         end)       
     end
@@ -462,7 +473,12 @@ local function Narci_KeybindingButton_OnKeydown(self, key)
         ExitKeyBinding(self);
         return;
     end
-    local KeyText = CreateKeyChordString(key);
+    local KeyText;
+    if CreateKeyChordStringUsingMetaKeyState then   --Shadowlands
+        KeyText = CreateKeyChordStringUsingMetaKeyState(key);
+    else
+        KeyText = CreateKeyChordString(key);
+    end
     self.Value:SetText(KeyText);
     self.key = KeyText;
     if not IsKeyPressIgnoredForBinding(key) then
@@ -509,7 +525,7 @@ end
 function Narci_KeybindingButton_OnShow(self)
     OptimizeBorderThickness(self);
     self.Value:SetText(GetBindingKey("CLICK Narci_MinimapButton:LeftButton") or NOT_BOUND);
-    self.action = bindAction;
+    self.action = BIND_ACTION;
 end
 
 local function Narci_Pref_SetItemNameTextWidth(width)
@@ -859,7 +875,7 @@ local function MinimapButtonParentSwitch_SetState(self)
         MinimapButton:ClearAllPoints();
         MinimapButton:SetParent(UIParent);
         MinimapButton:SetFrameLevel(60);
-        Narci_MinimapButton_OnLoad();
+        --Narci_MinimapButton_OnLoad();
     else
         MinimapButton:SetParent(Minimap);
     end
@@ -868,7 +884,7 @@ end
 
 function Narci_MinimapButtonParentSwitch_OnClick(self)
     Settings.IndependentMinimapButton = not Settings.IndependentMinimapButton;
-    MinimapButtonParentSwitch_SetState(self)
+    MinimapButtonParentSwitch_SetState(self);
 end
 
 local function LoadOnDemandSwitch_SetState(self)
@@ -995,7 +1011,7 @@ end
 local UpdateLanguageOptionButtons;    --function
 
 local function UpdateSelectedLanguage()
-    button = CreatureTab.SelectLanguage;
+    local button = CreatureTab.SelectLanguage;
     local enabledLanguages;
     local numEnabled = 0;
 
@@ -1083,7 +1099,7 @@ end
 
 
 -------------------------------------------------------------
-----------------Preference ScrollBar Animation---------------
+----------------Preference scrollBar Animation---------------
 -------------------------------------------------------------
 local function BuildTabNames()
     --For Ultra Wide Monitor--
@@ -1103,7 +1119,6 @@ end
 
 --/run local W, H = WorldFrame:GetSize(); print(floor((W / H) * 9 + 0.25)..":9")
 local ScreenRatio, MaxOffset = BuildTabNames();
-local SmoothScroll_Initialization = NarciAPI_SmoothScroll_Initialization;
 local TotalTab = #TabNames;
 local TabHeight = 1;
 local TotalHeight = 0;
@@ -1160,7 +1175,7 @@ function Narci_Preference_ScrollFrame_OnLoad(self)
     --self.scrollBar:SetValue(0)
     self.range = MaxScroll;
 
-    SmoothScroll_Initialization(self, nil, nil, 1/(TotalTab), 0.2);
+    NarciAPI_SmoothScroll_Initialization(self, nil, nil, 1/(TotalTab), 0.2);
     self.scrollBar:SetScript("OnValueChanged", ScrollBar_OnValueChanged);
 end
 
@@ -1274,7 +1289,7 @@ local function CreateLanguageOptions(parent, anchor)
 
     local languageInfo;
     for i = 1, #LANGUAGES do
-        button = CreateFrame("Button", nil, LanguageOptions, "NarciCheckButtonTemplate");
+        button = CreateFrame("Button", nil, LanguageOptions, "NarciCheckBoxTemplate");
         numButton = numButton + 1;
         tinsert(buttons, button);
         if numButton == 1 then
@@ -1365,6 +1380,8 @@ function Narci_Preference_OnLoad(self)
     local Tabs = self.ListScrollFrame.scrollChild;
     local tab;
 
+    Tabs.Tab5.Cate1:SetText(L["Camera Movement"]);
+    
     --Corruption Tab
     local EyeColors = {{245, 127, 32}, {240, 25, 255}, {140, 218, 205}, {64, 155, 208}};
     local function EyeColorButton_OnClick(self)
@@ -1516,7 +1533,7 @@ end
 -----Credits-----
 -----------------
 local function SetCreditList()
-   local RawList = {"Adam Stribley", "Elexys", "Ben Ashley", "Valnoressa", "Andrew Phoenix", "Solanya", "Stephen Berry", "Erik Shafer", "Mccr Karl", "Nantangitan", "Blastflight", "Psyloken", "Ellypse", "Victor Torres", "Pierre-Yves Bertolus"};
+   local RawList = {"Elexys", "Adam Stribley", "Ben Ashley", "Solanya", "Andrew Phoenix", "Erik Shafer", "Nantangitan", "Blastflight", "Valnoressa", "Stephen Berry", "Mccr Karl", "Pierre-Yves Bertolus", "Christian Williamson", "Tzutzu", "Psyloken", "Ellypse", "Victor Torres", "Lars Norberg"};
    local LeftList, MidList, RightList = {}, {}, {};
    local mod = mod;
    local index;

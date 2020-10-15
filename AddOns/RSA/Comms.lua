@@ -42,9 +42,11 @@ end
 function RSA.OnVersionCheckReceived(addon, prefix, message, channel, sender)
 	local revision = tonumber(string.match(message,"%d+"))
 	local releaseType = string.match(message,"%a+") or 0
-	local mine = releasePriority[RSA.db.global.releaseType]
-	local theirs = releasePriority[releaseType]
+	local mine = releasePriority[string.lower(RSA.db.global.releaseType)]
+	local theirs = releasePriority[string.lower(releaseType)]
 
+	if not mine then return end
+	if not theirs then return end
 	if mine < theirs then return end -- Don't warn on more recent development versions if we're on a more stable release type.
 	if sender == UnitName('player') then return end -- Don't compare with self.
 	if (tonumber(RSA.db.global.revision) < revision) and not RSA.Comm.OutOfDateMessage then -- Someone else has a newer version

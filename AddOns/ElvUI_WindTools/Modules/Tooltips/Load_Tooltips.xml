@@ -1,0 +1,10 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<!-- Core -->
+	<Script file='Core.lua'/>
+	<!-- Submodule -->
+	<Script file='GroupInfo.lua'/>
+	<Script file='HealthBar.lua'/>
+	<Script file='Icons.lua'/>
+	<Script file='ObjectiveProgress.lua'/>
+	<Script file='Progression.lua'/>
+</Ui>

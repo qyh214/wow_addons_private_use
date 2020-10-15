@@ -1,6 +1,7 @@
 local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local MB = E:NewModule('MinimapButtons', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0');
-
+local LO = E:GetModule('Layout')
+local Skins = E:GetModule('Skins')
 -- Based on Square Minimap Buttons
 -- Original authors:  Azilroka, Sinaris
 -- Updated for WOD & Legion by Feraldin
@@ -162,6 +163,7 @@ function MB:SkinButton(frame)
 	if name == "GRM_MinimapButton" then frame.GRM_MinimapButtonBorder:Hide() end
 	
 	if not frame.isSkinned then
+		Mixin(frame, BackdropTemplateMixin)
 		frame:HookScript('OnEnter', OnEnter)
 		frame:HookScript('OnLeave', OnLeave)
 		frame:HookScript('OnClick', MB.DelayedUpdateLayout)
@@ -390,25 +392,21 @@ function MB:StartSkinning()
 end
 
 function MB:CreateFrames()
-	minimapButtonBarAnchor = CreateFrame("Frame", "MinimapButtonBarAnchor", E.UIParent)
-
+	minimapButtonBarAnchor = CreateFrame("Frame", "MinimapButtonBarAnchor", E.UIParent, 'BackdropTemplate')
 	minimapButtonBarAnchor:Point("TOPRIGHT", RightMiniPanel, "BOTTOMRIGHT", 0, -2)
-
 	minimapButtonBarAnchor:Size(200, 32)
 	minimapButtonBarAnchor:SetFrameStrata("BACKGROUND")
 	
 	E:CreateMover(minimapButtonBarAnchor, "MinimapButtonAnchor", L["Minimap Button Bar"])
 
-	minimapButtonBar = CreateFrame("Frame", "MinimapButtonBar", E.UIParent)
+	minimapButtonBar = CreateFrame("Frame", "MinimapButtonBar", E.UIParent, 'BackdropTemplate')
 	minimapButtonBar:SetFrameStrata('LOW')
 	minimapButtonBar:CreateBackdrop('Transparent')
 	minimapButtonBar:ClearAllPoints()
 	minimapButtonBar:SetPoint("CENTER", minimapButtonBarAnchor, "CENTER", 0, 0)
 	minimapButtonBar:SetScript("OnEnter", OnEnter)
 	minimapButtonBar:SetScript("OnLeave", OnLeave)
-
 	minimapButtonBar.backdrop:SetAllPoints()
-
 	self:ChangeMouseOverSetting()
 	self:SkinMinimapButtons()
 end

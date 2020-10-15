@@ -148,6 +148,14 @@ local function DeathKnight()
 				},
 				SmartGroup = true,
 			},
+			GorefiendsGrasp = {
+				Messages = {
+					Cast = {"[LINK] activated!"},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+			},
 			DeathGrip = {
 				Messages = {
 					Cast = {"Death Gripped [TARGET]!"},
@@ -2313,6 +2321,16 @@ local function Warrior()
 				},
 			},
 			Intercept = {
+				Messages = {
+					Start = {"[LINK] cast on [TARGET]!"},
+					End = {"[LINK] on [TARGET] has ended!"},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+				Whisper = true,
+			},
+			Intervene = {
 				Messages = {
 					Start = {"[LINK] cast on [TARGET]!"},
 					End = {"[LINK] on [TARGET] has ended!"},

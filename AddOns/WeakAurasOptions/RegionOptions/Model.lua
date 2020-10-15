@@ -1,4 +1,5 @@
 if not WeakAuras.IsCorrectVersion() then return end
+local AddonName, OptionsPrivate = ...
 
 local L = WeakAuras.L;
 
@@ -30,7 +31,7 @@ local function createOptions(id, data)
       name = L["Choose"],
       order = 2,
       func = function()
-        WeakAuras.OpenModelPicker(data);
+        OptionsPrivate.OpenModelPicker(data);
       end,
       hidden = function() return data.modelIsUnit end
     },
@@ -216,13 +217,13 @@ local function createOptions(id, data)
     }
   end
 
-  for k, v in pairs(WeakAuras.commonOptions.BorderOptions(id, data, nil, nil, 70)) do
+  for k, v in pairs(OptionsPrivate.commonOptions.BorderOptions(id, data, nil, nil, 70)) do
     options[k] = v
   end
 
   return {
     model = options,
-    position = WeakAuras.commonOptions.PositionOptions(id, data, nil, nil, nil),
+    position = OptionsPrivate.commonOptions.PositionOptions(id, data, nil, nil, nil),
   };
 end
 

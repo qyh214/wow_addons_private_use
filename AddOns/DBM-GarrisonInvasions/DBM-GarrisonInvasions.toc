@@ -1,4 +1,4 @@
-﻿## Interface: 80300
+﻿## Interface: 90001
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Garrison Invasions|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0주둔지 침공|r
@@ -13,7 +13,7 @@
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: OTHER
 ## X-DBM-Mod-Category: WOD
-## X-DBM-Mod-Has-Single-Format: 1
+## X-DBM-StatTypes: normal
 ## X-DBM-Mod-Name: Garrison Invasions
 ## X-DBM-Mod-Name-zhTW: 要塞入侵
 ## X-DBM-Mod-Name-koKR: 주둔지 침공
@@ -22,9 +22,10 @@
 ## X-DBM-Mod-MapID: 1159, 1331, 1158, 1153, 1152, 1330, 1116, 1160, 1154
 ## X-DBM-Mod-Sort: 605
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
+## X-DBM-Mod-MinExpansion: 5
 ## X-Curse-Project-ID: 101956
 ## X-WoWI-ID: 24535
-## Version: r51
+## Version: r52
 
 localization.en.lua
 localization.fr.lua

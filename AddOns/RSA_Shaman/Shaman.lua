@@ -30,7 +30,7 @@ function RSA.Resurrect(_, _, target, _, caster)
 	full_destName,dest = RSA.RemoveServerNames(dest)
 	local spellinfo = GetSpellInfo(spell)
 	local spelllinkinfo = GetSpellLink(spell)
-	RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = dest,}
+	RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = dest,}
 	if message ~= '' then
 		if RSA.db.profile.Shaman.Spells.AncestralSpirit.Local == true then
 			RSA.Print_LibSink(string.gsub(message, '.%a+.', RSA.String_Replace))
@@ -39,10 +39,10 @@ function RSA.Resurrect(_, _, target, _, caster)
 			RSA.Print_Yell(string.gsub(message, '.%a+.', RSA.String_Replace))
 		end
 		if RSA.db.profile.Shaman.Spells.AncestralSpirit.Whisper == true and dest ~= pName then
-			RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = L["You"],}
+			RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = L["You"],}
 			RSA.Print_Whisper(message, full_destName, RSA.Replacements, dest)
 			--RSA.Print_Whisper(string.gsub(message, '.%a+.', RSA.String_Replace), full_destName)
-			RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = dest,}
+			RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = dest,}
 		end
 		if RSA.db.profile.Shaman.Spells.AncestralSpirit.CustomChannel.Enabled == true then
 			RSA.Print_Channel(string.gsub(message, '.%a+.', RSA.String_Replace), RSA.db.profile.Shaman.Spells.AncestralSpirit.CustomChannel.Channel)
@@ -273,7 +273,7 @@ function RSA_Shaman:OnEnable()
 	}
 	RSA.MonitorConfig(MonitorConfig_Shaman, UnitGUID('player'))
 	local MonitorAndAnnounce = RSA.MonitorAndAnnounce
-	local ResTarget = L["Unknown"]
+	local ResTarget = L['Unknown']
 	local Ressed
 	local function Shaman_Spells()
 		local timestamp, event, hideCaster, sourceGUID, source, sourceFlags, sourceRaidFlag, destGUID, dest, destFlags, destRaidFlags, spellID, spellName, spellSchool, missType, overheal, ex3, ex4, ex5, ex6, ex7, ex8 = CombatLogGetCurrentEventInfo()
@@ -283,10 +283,10 @@ function RSA_Shaman:OnEnable()
 				if spellName == ReminderSpell and (dest == pName or dest == nil) then
 					RSA.Reminder:SetScript('OnUpdate', nil)
 					if RSA.db.profile.Reminders.RemindChannels.Chat == true then
-						RSA.Print_Self(ReminderSpell .. L[" Refreshed!"])
+						RSA.Print_Self(ReminderSpell .. L[' Refreshed!'])
 					end
 					if RSA.db.profile.Reminders.RemindChannels.RaidWarn == true then
-						RSA.Print_Self_RW(ReminderSpell .. L[" Refreshed!"])
+						RSA.Print_Self_RW(ReminderSpell .. L[' Refreshed!'])
 					end
 				end
 			end -- BUFF REMINDER
@@ -331,7 +331,7 @@ function RSA_Shaman:OnEnable()
 				local spellinfo = GetSpellInfo(157153)
 				local spelllinkinfo = GetSpellLink(157153)
 				local full_destName,dest = RSA.RemoveServerNames(dest)
-				RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = dest, ["[AMOUNT]"] = missType + overheal}
+				RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = dest, ['[AMOUNT]'] = missType + overheal}
 				local messagemax = #RSA.db.profile.Shaman.Spells.Cloudburst.Messages.Heal
 				if messagemax == 0 then return end
 				local messagerandom = math.random(messagemax)
@@ -344,9 +344,9 @@ function RSA_Shaman:OnEnable()
 						RSA.Print_Yell(string.gsub(message, '.%a+.', RSA.String_Replace))
 					end
 					if RSA.db.profile.Shaman.Spells.Cloudburst.Whisper == true and dest ~= pName then
-						RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = L["You"],}
+						RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = L['You'],}
 						RSA.Print_Whisper(message, full_destName, RSA.Replacements, dest)
-						RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = dest,}
+						RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = dest,}
 					end
 					if RSA.db.profile.Shaman.Spells.Cloudburst.CustomChannel.Enabled == true then
 						RSA.Print_Channel(string.gsub(message, '.%a+.', RSA.String_Replace), RSA.db.profile.Shaman.Spells.Cloudburst.CustomChannel.Channel)
@@ -379,7 +379,7 @@ function RSA_Shaman:OnEnable()
 			Protection_Cast = false
 			local spellinfo = GetSpellInfo(207399)
 			local spelllinkinfo = GetSpellLink(207399)
-			RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = source,}
+			RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = source,}
 			local messagemax = #RSA.db.profile.Shaman.Spells.AncestralProtection.Messages.Cast
 			if messagemax == 0 then return end
 			local messagerandom = math.random(messagemax)
@@ -413,7 +413,7 @@ function RSA_Shaman:OnEnable()
 		if event == 'SPELL_CAST_SUCCESS' and sourceGUID == LightningSurge_GUID and spellID == 118905 then -- Lightning Surge Totem
 			local spellinfo = GetSpellInfo(118905)
 			local spelllinkinfo = GetSpellLink(118905)
-			RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo,}
+			RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo,}
 			local messagemax = #RSA.db.profile.Shaman.Spells.LightningSurge.Messages.Cast
 			if messagemax == 0 then return end
 			local messagerandom = math.random(messagemax)
@@ -452,7 +452,7 @@ function RSA_Shaman:OnEnable()
 			local extraspellinfo = GetSpellInfo(spellID)
 			local extraspellinfolink = GetSpellLink(spellID)
 			local full_sourceName,sourceName = RSA.RemoveServerNames(source)
-			RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = sourceName, ["[AMOUNT]"] = ex8, ["[TARLINK]"] = extraspellinfolink, ["[TARSPELL]"] = extraspellinfo,}
+			RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = sourceName, ['[AMOUNT]'] = ex8, ['[TARLINK]'] = extraspellinfolink, ['[TARSPELL]'] = extraspellinfo,}
 			local messagemax = #RSA.db.profile.Shaman.Spells.GroundingTotem.Messages.DamageAbsorb
 			if messagemax == 0 then return end
 			local messagerandom = math.random(messagemax)
@@ -491,7 +491,7 @@ function RSA_Shaman:OnEnable()
 			local extraspellinfo = GetSpellInfo(spellID)
 			local extraspellinfolink = GetSpellLink(spellID)
 			local full_sourceName,sourceName = RSA.RemoveServerNames(source)
-			RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = sourceName, ["[TARLINK]"] = extraspellinfolink, ["[TARSPELL]"] = extraspellinfo,}
+			RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = sourceName, ['[TARLINK]'] = extraspellinfolink, ['[TARSPELL]'] = extraspellinfo,}
 			local messagemax = #RSA.db.profile.Shaman.Spells.GroundingTotem.Messages.EffectAbsorb
 			if messagemax == 0 then return end
 			local messagerandom = math.random(messagemax)
@@ -526,7 +526,7 @@ function RSA_Shaman:OnEnable()
 		if event == 'SPELL_AURA_REMOVED' and sourceGUID == LightningSurge_GUID and spellID == 118905 then -- Lightning Surge Totem
 			local spellinfo = GetSpellInfo(118905)
 			local spelllinkinfo = GetSpellLink(118905)
-			RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo,}
+			RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo,}
 			LightningCounter = LightningCounter -1
 			local messagemax = #RSA.db.profile.Shaman.Spells.LightningSurge.Messages.End
 			if messagemax == 0 then return end
@@ -562,7 +562,7 @@ function RSA_Shaman:OnEnable()
 			if destGUID == SpiritLink_GUID then -- Spirit Link Totem UNIT_DIED
 				local spellinfo = GetSpellInfo(98008)
 				local spelllinkinfo = GetSpellLink(98008)
-				RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo,}
+				RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo,}
 				local messagemax = #RSA.db.profile.Shaman.Spells.SpiritLink.Messages.End
 				if messagemax == 0 then return end
 				local messagerandom = math.random(messagemax)
@@ -596,7 +596,7 @@ function RSA_Shaman:OnEnable()
 			if destGUID == TremorTotem_GUID then -- Tremor Totem UNIT_DIED
 				local spellinfo = GetSpellInfo(8143)
 				local spelllinkinfo = GetSpellLink(8143)
-				RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo,}
+				RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo,}
 				local messagemax = #RSA.db.profile.Shaman.Spells.TremorTotem.Messages.End
 				if messagemax == 0 then return end
 				local messagerandom = math.random(messagemax)
@@ -630,7 +630,7 @@ function RSA_Shaman:OnEnable()
 			if destGUID == WindRush_GUID then -- WindRushTotem UNIT_DIED
 				local spellinfo = GetSpellInfo(192077)
 				local spelllinkinfo = GetSpellLink(192077)
-				RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo,}
+				RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo,}
 				local messagemax = #RSA.db.profile.Shaman.Spells.WindRushTotem.Messages.End
 				if messagemax == 0 then return end
 				local messagerandom = math.random(messagemax)
@@ -664,7 +664,7 @@ function RSA_Shaman:OnEnable()
 			if destGUID == EarthGrab_GUID then -- Earth Grab Totem UNIT_DIED
 				local spellinfo = GetSpellInfo(51485)
 				local spelllinkinfo = GetSpellLink(51485)
-				RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo,}
+				RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo,}
 				local messagemax = #RSA.db.profile.Shaman.Spells.EarthGrabTotem.Messages.End
 				if messagemax == 0 then return end
 				local messagerandom = math.random(messagemax)
@@ -700,7 +700,7 @@ function RSA_Shaman:OnEnable()
 				local spellinfo = GetSpellInfo(207495)
 				local spelllinkinfo = GetSpellLink(207495)
 				local full_destName,dest = RSA.RemoveServerNames(dest)
-				RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = dest,}
+				RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = dest,}
 				local messagemax = #RSA.db.profile.Shaman.Spells.AncestralProtection.Messages.End
 				if messagemax == 0 then return end
 				local messagerandom = math.random(messagemax)
@@ -713,10 +713,10 @@ function RSA_Shaman:OnEnable()
 						RSA.Print_Yell(string.gsub(message, '.%a+.', RSA.String_Replace))
 					end
 					if RSA.db.profile.Shaman.Spells.AncestralProtection.Whisper == true and dest ~= pName then
-						RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = L["You"],}
+						RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = L["You"],}
 						--RSA.Print_Whisper(string.gsub(message, '.%a+.', RSA.String_Replace), full_destName)
 						RSA.Print_Whisper(message, full_destName, RSA.Replacements, dest)
-						RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = dest,}
+						RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = dest,}
 					end
 					if RSA.db.profile.Shaman.Spells.AncestralProtection.CustomChannel.Enabled == true then
 						RSA.Print_Channel(string.gsub(message, '.%a+.', RSA.String_Replace), RSA.db.profile.Shaman.Spells.AncestralProtection.CustomChannel.Channel)
@@ -740,7 +740,7 @@ function RSA_Shaman:OnEnable()
 			if destGUID == EarthenShield_GUID then -- Earthen Shield Totem UNIT_DIED
 				local spellinfo = GetSpellInfo(198838)
 				local spelllinkinfo = GetSpellLink(198838)
-				RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo}
+				RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo}
 				local messagemax = #RSA.db.profile.Shaman.Spells.EarthenShieldTotem.Messages.End
 				if messagemax == 0 then return end
 				local messagerandom = math.random(messagemax)
@@ -774,7 +774,7 @@ function RSA_Shaman:OnEnable()
 			if destGUID == Grounding_GUID then -- Grounding Totem UNIT_DIED
 				local spellinfo = GetSpellInfo(204336)
 				local spelllinkinfo = GetSpellLink(204336)
-				RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[AMOUNT]"] = GroundingCounter, }
+				RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[AMOUNT]'] = GroundingCounter, }
 				local messagemax = #RSA.db.profile.Shaman.Spells.GroundingTotem.Messages.End
 				if messagemax == 0 then return end
 				local messagerandom = math.random(messagemax)

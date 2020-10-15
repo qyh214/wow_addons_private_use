@@ -25,50 +25,62 @@ To enable all development settings and functionality:
 
 local function BootstrapDevelopmentEnvironment()
     -- Add development settings to the UI
-    ns.options.args.DevelopmentGroup = {
-        type = "group",
-        order = 30,
+    ns.options.args.GeneralTab.args.DevelopmentHeader = {
+        type = "header",
         name = L["options_dev_settings"],
-        desc = L["options_dev_settings_desc"],
-        inline = true,
-        args = {
-            show_debug_map = {
-                type = "toggle",
-                arg = "show_debug_map",
-                name = L["options_toggle_show_debug_map"],
-                desc = L["options_toggle_show_debug_map_desc"],
-                order = 1,
-            },
-            show_debug_quest = {
-                type = "toggle",
-                arg = "show_debug_quest",
-                name = L["options_toggle_show_debug_quest"],
-                desc = L["options_toggle_show_debug_quest_desc"],
-                order = 2,
-            },
-            force_nodes = {
-                type = "toggle",
-                arg = "force_nodes",
-                name = L["options_toggle_force_nodes"],
-                desc = L["options_toggle_force_nodes_desc"],
-                order = 3,
-            }
-        }
+        order = 100,
     }
+    ns.options.args.GeneralTab.args.show_debug_map = {
+        type = "toggle",
+        arg = "show_debug_map",
+        name = L["options_toggle_show_debug_map"],
+        desc = L["options_toggle_show_debug_map_desc"],
+        order = 101,
+    }
+    ns.options.args.GeneralTab.args.show_debug_quest = {
+        type = "toggle",
+        arg = "show_debug_quest",
+        name = L["options_toggle_show_debug_quest"],
+        desc = L["options_toggle_show_debug_quest_desc"],
+        order = 102,
+    }
+    ns.options.args.GeneralTab.args.force_nodes = {
+        type = "toggle",
+        arg = "force_nodes",
+        name = L["options_toggle_force_nodes"],
+        desc = L["options_toggle_force_nodes_desc"],
+        order = 103,
+    }
+
+    -- Register all addons objects for the CTRL+ALT handler
+    local plugins = "HandyNotes_ZarPlugins"
+    if _G[plugins] == nil then _G[plugins] = {} end
+    _G[plugins][#_G[plugins] + 1] = ns
+
+    -- Initialize a history for quest ids so we still have a record after /reload
+    if _G[ADDON_NAME.."DB"]['quest_id_history'] == nil then
+        _G[ADDON_NAME.."DB"]['quest_id_history'] = {}
+    end
+    local history = _G[ADDON_NAME.."DB"]['quest_id_history']
 
     -- Print debug messages for each quest ID that is flipped
     local QTFrame = CreateFrame('Frame', ADDON_NAME.."QT")
     local lastCheck = GetTime()
     local quests = {}
+    local changed = {}
     local max_quest_id = 100000
-    C_Timer.After(1, function ()
+
+    local function DebugQuest(...)
+        if ns:GetOpt('show_debug_quest') then ns.Debug(...) end
+    end
+
+    C_Timer.After(2, function ()
         -- Give some time for quest info to load in before we start
-        for id = 0, max_quest_id do quests[id] = IsQuestFlaggedCompleted(id) end
+        for id = 0, max_quest_id do quests[id] = C_QuestLog.IsQuestFlaggedCompleted(id) end
         QTFrame:SetScript('OnUpdate', function ()
-            if GetTime() - lastCheck > 1 then
-                local changed = {}
+            if GetTime() - lastCheck > 1 and ns:GetOpt('show_debug_quest') then
                 for id = 0, max_quest_id do
-                    local s = IsQuestFlaggedCompleted(id)
+                    local s = C_QuestLog.IsQuestFlaggedCompleted(id)
                     if s ~= quests[id] then
                         changed[#changed + 1] = {'Quest', id, 'changed:', tostring(quests[id]), '=>', tostring(s)}
                         quests[id] = s
@@ -78,38 +90,48 @@ local function BootstrapDevelopmentEnvironment()
                     -- changing zones will sometimes cause thousands of quest
                     -- ids to flip state, we do not want to report on those
                     for i, args in ipairs(changed) do
-                        ns.debugQuest(unpack(args))
+                        table.insert(history, 1, args)
+                        DebugQuest(unpack(args))
+                    end
+                end
+                if #history > 100 then
+                    for i = #history, 101, -1 do
+                        history[i] = nil
                     end
                 end
                 lastCheck = GetTime()
+                wipe(changed)
             end
         end)
-        ns.debugQuest('Quest IDs are now being tracked')
+        DebugQuest('Quest IDs are now being tracked')
     end)
 
-    -- Listen for LCTRL + LALT when the world map is open to display nodes
-    -- that have already been cleared by quest ids.
+    -- Listen for LCTRL + LALT when the map is open to force display nodes
     local IQFrame = CreateFrame('Frame', ADDON_NAME.."IQ", WorldMapFrame)
     local groupPins = WorldMapFrame.pinPools.GroupMembersPinTemplate
     IQFrame:SetPropagateKeyboardInput(true)
     IQFrame:SetScript('OnKeyDown', function (_, key)
-        if not ns.ignore_quests and (key == 'LCTRL' or key == 'LALT') then
-            if IsLeftControlKeyDown() and IsLeftAltKeyDown() then
-                IQFrame:SetPropagateKeyboardInput(false)
-                ns.ignore_quests = true
-                ns.addon:Refresh()
-
-                -- Hide player pins on the map
-                groupPins:GetNextActive():Hide()
+        if (key == 'LCTRL' or key == 'LALT') and IsLeftControlKeyDown() and IsLeftAltKeyDown() then
+            IQFrame:SetPropagateKeyboardInput(false)
+            for i, _ns in ipairs(_G[plugins]) do
+                if not _ns.dev_force then
+                    _ns.dev_force = true
+                    _ns.addon:Refresh()
+                end
             end
+            -- Hide player pins on the map
+            groupPins:GetNextActive():Hide()
         end
     end)
     IQFrame:SetScript('OnKeyUp', function (_, key)
-        if ns.ignore_quests and (key == 'LCTRL' or key == 'LALT') then
+        if key == 'LCTRL' or key == 'LALT' then
             IQFrame:SetPropagateKeyboardInput(true)
-            ns.ignore_quests = false
-            ns.addon:Refresh()
-
+            for i, _ns in ipairs(_G[plugins]) do
+                if _ns.dev_force then
+                    _ns.dev_force = false
+                    _ns.addon:Refresh()
+                end
+            end
             -- Show player pins on the map
             groupPins:GetNextActive():Show()
         end
@@ -118,21 +140,34 @@ end
 
 -------------------------------------------------------------------------------
 
-local function debug(...)
-    if (ns.addon.db.profile.development) then print(...) end
+-- Debug function that iterates over each pin template and removes it from the
+-- map. This is helpful for determining which template a pin is coming from.
+
+local hidden = {}
+_G[ADDON_NAME..'RemovePins'] = function ()
+    for k, v in pairs(WorldMapFrame.pinPools) do
+        if not hidden[k] then
+            hidden[k] = true
+            print('Removing pin template:', k)
+            WorldMapFrame:RemoveAllPinsByTemplate(k)
+            return
+        end
+    end
 end
 
-local function debugMap(...)
-    if (ns.addon.db.profile.show_debug_map) then print(...) end
+-------------------------------------------------------------------------------
+
+function ns.Debug(...)
+    if ns:GetOpt('development') then print(ns.color.Blue('DEBUG:'), ...) end
 end
 
-local function debugQuest(...)
-    if (ns.addon.db.profile.show_debug_quest) then print(...) end
+function ns.Warn(...)
+    if ns:GetOpt('development') then print(ns.color.Orange('WARN:'), ...) end
 end
 
-ns.debug = debug
-ns.debugMap = debugMap
-ns.debugQuest = debugQuest
+function ns.Error(...)
+    if ns:GetOpt('development') then print(ns.color.Red('ERROR:'), ...) end
+end
 
 -------------------------------------------------------------------------------
 

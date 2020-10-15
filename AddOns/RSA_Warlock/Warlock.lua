@@ -237,7 +237,7 @@ function RSA_Warlock:OnEnable()
 					end
 					local full_destName,dest = RSA.RemoveServerNames(dest)
 					spellinfo = GetSpellInfo(spell) spelllinkinfo = GetSpellLink(spell)
-					RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = dest,}
+					RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = dest,}
 					if message ~= '' then
 						if RSA.db.profile.Warlock.Spells.Soulstone.Local == true then
 							RSA.Print_LibSink(string.gsub(message, '.%a+.', RSA.String_Replace))
@@ -246,9 +246,9 @@ function RSA_Warlock:OnEnable()
 							RSA.Print_Yell(string.gsub(message, '.%a+.', RSA.String_Replace))
 						end
 						if RSA.db.profile.Warlock.Spells.Soulstone.Whisper == true and dest ~= pName then
-							RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = L["You"],}
+							RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = L["You"],}
 							RSA.Print_Whisper(message, full_destName, RSA.Replacements, dest)
-							RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = dest,}
+							RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = dest,}
 						end
 						if RSA.db.profile.Warlock.Spells.Soulstone.CustomChannel.Enabled == true then
 							RSA.Print_Channel(string.gsub(message, '.%a+.', RSA.String_Replace), RSA.db.profile.Warlock.Spells.Soulstone.CustomChannel.Channel)

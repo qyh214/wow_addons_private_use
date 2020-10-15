@@ -1,8 +1,8 @@
-## Interface: 80300
-## Title: |cff1784d1ElvUI|r Enhanced (BfA)
+## Interface: 90001
+## Title: |cff1784d1ElvUI|r Enhanced (Shadowlands)
 ## Author: Feraldin
 ## X-Credits: Instant, Tristimdorio (Omega1970), Azilroka, Crackpotx, Sortokk, Repooc, moresunders
-## Version: 3.4.7
+## Version: 3.5.0
 ## Notes: Plugin-Enhancements for |cff1784d1ElvUI|r.
 ## X-Category: Plugins
 ## URL: https://wow.curseforge.com/addons/elvui-enhanced-again/

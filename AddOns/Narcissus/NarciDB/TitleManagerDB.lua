@@ -406,15 +406,36 @@ Narci_CharacterTitlesTable =
     [657] = {"pve", 0, "of the Deeps", 405, 13638}, --Undersea Usurper
     [658] = {"achv", 0, "Sparking", 406, }, --
     [659] = {"achv", 1, "Azeroth's Champion", 407, 13779}, --
-    [661] = {"pve", 5, "Famed Slayer of Azshara", 408, 13788}, --Azshara HoF
+    [660] = {"achv", 1, "Pilgrim the Mallet Bearer", 408, },   --
+    [661] = {"pve", 5, "Famed Slayer of Azshara", 409, 13788}, --Azshara HoF
 
     [662] = {"achv", 0, "Renowned Explorer", 410, }, --Recruit friends
     [664] = {"achv", 0, "Veteran of the Fourth War", 412, 13924}, --War Campaign
     [665] = {"pvp", 5, "Notorious Gladiator", 411, 13957},  --BFA S4
+    [666] = {"pvp", 5, "As Themselves", 413, 13957},  --??
     [667] = {"pvp", 3, "Servant of N'Zoth", 414, 14191},  --Use the N'lyeth then slay 10 Alliance players without dying
-    [668] = {"pve", 0, "Minion of Mayhem", 415, },  --??
+    [668] = {"achv", 0, "Minion of Mayhem", 415, 14020},  --Pet Battle Challenge: Blackrock Depths and talk to Tasha Riley
     [669] = {"pve", 5, "Famed Slayer of N'Zoth", 416, 14072},  --
     [670] = {"pve", 5, "the Uncorrupted", 417, 14055},  --Mythic: N'Zoth the Corruptor
     [671] = {"pve", 5, "the Awakened", 418, 14144},  --10+ Keystone S4
     [672] = {"pve", 1, "the Faceless One", 419, 14140},  --Horrific Visions Mad World
+
+    --Shadowlands
+    [676] = {"achv", 1, "Cryptkeeper", 423, 14277},     --The Accuser's Avowed
+    [678] = {"achv", 1, "Hand of the Archon", 425, },
+    [679] = {"achv", 1, "Baron", 426, },
+    [680] = {"achv", 1, "Baroness", 427, },
+    [681] = {"achv", 1, "Winter's Envoy", 428, },
+    [682] = {"achv", 1, "Count", 429, },
+    [683] = {"achv", 1, "Countess", 430, },
+    [684] = {"pvp", 1, "Deathbringer", 424, 14520},
+    [685] = {"achv", 1, "the Proud", 431, },
+    [686] = {"pve", 5, "Sinbreaker", 432, 14365},   --Mythic: Sire Denathrius
+    [687] = {"achv", 1, "the Party Herald", 433, 14682},
+    [688] = {"pvp", 5, "Sinful Gladiator", 434, },
+    [689] = {"achv", 1, "Fun Guy Fun Gal", 435, },
+    [690] = {"achv", 1, "the Avowed", 436, },
+    [691] = {"achv", 1, "Abominable", 437, },
+    [692] = {"achv", 1, "Spirestalker", 438, 14568},
+    [693] = {"achv", 1, "the Ascended", 439, },
 }

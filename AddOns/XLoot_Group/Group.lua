@@ -482,20 +482,20 @@ function addon.AlertFrameHook(alert)
 			name:SetPoint('LEFT', alert.Icon, 'RIGHT', 10, -6)
 		end
 		if opt.alert_skin then
-			local overlay = CreateFrame('Frame', nil, alert)
+			local overlay = CreateFrame('Frame', nil, alert, BackdropTemplateMixin and "BackdropTemplate")
 			overlay:SetPoint('TOPLEFT', 11, -11)
 			overlay:SetPoint('BOTTOMRIGHT', -11, 11)
 			overlay:SetFrameLevel(alert:GetFrameLevel())
 			elements.overlay = overlay
 			Skinner:Skin(overlay, 'alert')
 			if opt.alert_background then
-				local backdrop = CreateFrame('Frame', nil, alert)
+				local backdrop = CreateFrame('Frame', nil, alert, BackdropTemplateMixin and "BackdropTemplate")
 				backdrop:SetAllPoints(overlay)
 				backdrop:SetFrameLevel(alert:GetFrameLevel()-1)
 				overlay.gradient:SetParent(backdrop)
 			end
 
-			local icon_frame = CreateFrame('Frame', nil, alert)
+			local icon_frame = CreateFrame('Frame', nil, alert, BackdropTemplateMixin and "BackdropTemplate")
 			icon_frame:SetPoint('CENTER', alert.Icon, 'CENTER', 0, 0)
 			icon_frame:SetWidth(alert.Icon:GetWidth() + 4)
 			icon_frame:SetHeight(alert.Icon:GetHeight() + 4)
@@ -581,7 +581,7 @@ function addon.BonusRollFrame_Show()
 		frame.scale_mod = 0.9 -- Anchor's scale modifier
 		if opt.bonus_skin then
 			frame.Background:Hide()
-			local overlay = CreateFrame('Frame', nil, frame)
+			local overlay = CreateFrame('Frame', nil, frame, BackdropTemplateMixin and "BackdropTemplate")
 			overlay:SetAllPoints()
 			overlay:SetFrameLevel(frame:GetFrameLevel()-1)
 			Skinner:Skin(overlay, 'bonus')
@@ -930,7 +930,7 @@ do
 		frame:SetScript('OnClick', self.OnClick)
 		
 		-- Overlay (For skin border)
-		local overlay = CreateFrame('frame', nil, frame)
+		local overlay = CreateFrame('frame', nil, frame, BackdropTemplateMixin and "BackdropTemplate")
 		overlay:SetFrameLevel(frame:GetFrameLevel())
 		overlay:SetAllPoints()
 		frame.overlay = overlay

@@ -1,8 +1,8 @@
-﻿-- LibStub is a simple versioning stub meant for use in Libraries.  http://rift.curseforge.com/addons/libstub/ for more info
+-- $Id: LibStub.lua 103 2014-10-16 03:02:50Z mikk $
+-- LibStub is a simple versioning stub meant for use in Libraries.  http://www.wowace.com/addons/libstub/ for more info
 -- LibStub is hereby placed in the Public Domain
 -- Credits: Kaelten, Cladhaire, ckknight, Mikk, Ammo, Nevcairiel, joshborke
--- Port to Rift by Myrroddin/Lorandii
-local LIBSTUB_MAJOR, LIBSTUB_MINOR = "LibStub", 1  -- NEVER MAKE THIS AN SVN REVISION! IT NEEDS TO BE USABLE IN ALL REPOS!
+local LIBSTUB_MAJOR, LIBSTUB_MINOR = "LibStub", 2  -- NEVER MAKE THIS AN SVN REVISION! IT NEEDS TO BE USABLE IN ALL REPOS!
 local LibStub = _G[LIBSTUB_MAJOR]
 
 -- Check to see is this version of the stub is obsolete
@@ -19,7 +19,7 @@ if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 	-- returns empty library object or old library object if upgrade is needed
 	function LibStub:NewLibrary(major, minor)
 		assert(type(major) == "string", "Bad argument #2 to `NewLibrary' (string expected)")
-		minor = assert(tonumber(string.match(minor, "%d+")), "Minor version must either be a number or contain a number.")
+		minor = assert(tonumber(strmatch(minor, "%d+")), "Minor version must either be a number or contain a number.")
 		
 		local oldminor = self.minors[major]
 		if oldminor and oldminor >= minor then return nil end

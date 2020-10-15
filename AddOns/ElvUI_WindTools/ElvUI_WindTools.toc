@@ -1,20 +1,22 @@
-## Interface: 80300
-## Author: houshuu, Someblu
-## Version: 1.6.6
-## Title: |cff1784d1ElvUI|r |cffffffffWind|r|cff00aaffTools|r
-## Title-zhTW: |cff1784d1ElvUI|r |cffffffffWind|r|cff00aaff工具箱|r
-## Title-zhCN: |cff1784d1ElvUI|r |cffffffffWind|r|cff00aaff工具箱|r
-## Notes: Collection of useful features for ElvUI.
-## Notes-zhTW: 為 ElvUI 提供的各種小功能整合包。
-## Notes-zhCN: 适用于 ElvUI 的各种小功能集合。
+## Interface: 90001
+## Author: fang2hou
+## Version: 2.00
+## Title: |cff1784d1ElvUI|r |cff45aaf2W|r|cff4795efi|r|cff4a80ecn|r|cff498aedd|r|cff469ff0T|r|cff60b1e8o|r|cff98c0d5o|r|cffc1ccc6l|r|cffc1ccc6s|r
+## Title-zhCN: |cff1784d1ElvUI|r |cff45aaf2W|r|cff4795efi|r|cff4a80ecn|r|cff498aedd|r |cff469ff0工|r|cffA8D0E5具|r|cffdedede箱|r
+## Title-zhTW: |cff1784d1ElvUI|r |cff45aaf2W|r|cff4795efi|r|cff4a80ecn|r|cff498aedd|r |cff469ff0工|r|cffA8D0E5具|r|cffdedede箱|r
+## Notes: Customizable enhancements for ElvUI.
+## Notes-zhCN: 用于 ElvUI 的可自定义增强.
+## Notes-zhTW: 用於 ElvUI 的可自定增強.
 ## RequiredDeps: ElvUI
-## DefaultState: enabled
+## OptionalDeps: Blizzard_PetJournal, SharedMedia
+## X-Curse-Project-ID: 300361
+## X-WoWI-ID: 25687
 
-## X-Website: http://bbs.ngacn.cc/read.php?tid=12142815
-## X-Feedback: https://github.com/fang2hou/ElvUI_WindTools/issues
-
-Libs\load_libs.xml
-MasqueSkin\load_masqueskin.xml
-Locales\load_locales.xml
-core.lua
-Modules\load_modules.xml
+Libraries\Load_Libraries.xml
+Initialize.lua
+Locales\Load_Locales.xml
+Media\Load_Media.xml
+Settings\Load_Settings.xml
+Core\Load_Core.xml
+Modules\Load_Modules.xml
+Options\Load_Options.xml

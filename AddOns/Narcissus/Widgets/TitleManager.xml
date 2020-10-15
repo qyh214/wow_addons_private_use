@@ -1,6 +1,6 @@
 <Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
 	<Script file="TitleManager.lua"/>
-    <Button name="OptionalTitleTemplate" registerForClicks="LeftButtonUp, RightButtonUp" virtual="true">
+    <Button name="NarciOptionalTitleTemplate" registerForClicks="LeftButtonUp, RightButtonUp" virtual="true">
 		<Size>
 			<AbsDimension  y="20"/>
 		</Size>
@@ -35,7 +35,7 @@
             </Layer>
             
             <Layer level="OVERLAY" textureSubLevel="1">
-                <Texture file="Interface\AddOns\Narcissus\Art\Tooltip\Hexagram" parentKey="Star" alphaMode="NORMAL" hidden="true">
+                <Texture parentKey="Star" alphaMode="NORMAL" hidden="true">
                     <Size x="12" y="12"/>
                     <Anchors>
                         <Anchor point="CENTER" relativeKey="$parent" relativePoint="LEFT" x="10" y="0"/>
@@ -44,7 +44,8 @@
             </Layer>
             
         </Layers>
-		<ButtonText name="$parentTitleText" inherits="ItemLevelMedium" justifyH="LEFT" maxLines="1" parentKey="Name">
+		<ButtonText inherits="NarciFontNormal10" justifyH="LEFT" maxLines="1" parentKey="Name">
+            <Color r="0.8" g="0.8" b="0.8" a="1"/>
             <Anchors>
                 <Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="20" y="0"/>
                 <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-16" y="0"/>
@@ -52,37 +53,36 @@
 		</ButtonText>
 	
         <Scripts>
+            <OnLoad>
+                self.Star:SetTexture("Interface/AddOns/Narcissus/Art/Tooltip/Hexagram", nil, nil, "TRILINEAR");
+            </OnLoad>
             <OnClick function="Narci_TitleToken_OnClick"/>
             <OnEnter>
                 self.HighlightColor:Show();
-                OptionalTitle_OnEnter(self);
+                self.Name:SetTextColor(1, 1, 1, 1);
+                Narci_OptionalTitle_OnEnter(self);
             </OnEnter>
             <OnLeave>
+                self.Name:SetTextColor(0.8, 0.8, 0.8, 1);
                 self.HighlightColor:Hide();
             </OnLeave>
             <OnShow function="Narci_TitleFrame_SetColorTheme"/>
         </Scripts>
     </Button>
 
-    <Button name="TitleCategoryLabelTemplate" virtual="true">
+    <Button name="NarciTitleCategoryLabelTemplate" virtual="true">
 		<Size>
 			<AbsDimension x="100" y="16"/>
 		</Size>
         <Layers>
             <Layer level="OVERLAY">
-                <FontString parentKey="Label" inherits="ItemLevelMedium" justifyH="LEFT" justifyV="TOP" text="Label">
+                <FontString parentKey="Label" inherits="NarciFontNormal10" justifyH="LEFT" justifyV="TOP" text="Label">
                     <Size x="0" y="0"/>
                     <Color r="1" g="1" b="1" a="0.5"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" x="4" y="0"/>
                     </Anchors>
                 </FontString>
-                <Texture file="Interface\AddOns\Narcissus\Art\Tooltip\Diamond" parentKey="Pointer" hidden="true">
-                    <Size x="14" y="14"/>
-                    <Anchors>
-                        <Anchor point="CENTER" relativeKey="$parent" relativePoint="TOPLEFT" x="0" y="0"/>
-                    </Anchors>
-                </Texture>
             </Layer>
         </Layers>
         <Scripts>
@@ -107,13 +107,13 @@
         </Scripts>
     </Button>
 
-    <Frame name="Narci_TitleFrame" parent="PlayerInfoFrame" frameLevel="18" hidden="true">
+    <Frame name="Narci_TitleFrame" parent="Narci_PlayerInfoFrame" frameLevel="18" hidden="true">
         <Size x="196" y="320"/>
         <Anchors>
             <Anchor point="TOP" relativePoint="BOTTOM" y="-8"/>
         </Anchors>
         <Frames>
-            <Frame name="$parentBlackScreen" setAllPoints="true" parentKey="BlackScreen" Alpha="0">
+            <Frame setAllPoints="true" parentKey="BlackScreen" Alpha="0">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="UIParent" relativePoint="TOPLEFT" x="0" y="0"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="UIParent" relativePoint="BOTTOMRIGHT" x="0" y="0" />
@@ -183,9 +183,9 @@
                                 <Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="-10" y="0"/>
                             </Anchors>
                         </FontString>
-                        <FontString parentKey="Description" inherits="ItemLevelMedium" justifyH="LEFT" justifyV="TOP" text="Description" spacing="2">
+                        <FontString parentKey="Description" inherits="NarciFontNormal10" justifyH="LEFT" justifyV="TOP" text="Description" spacing="2">
                             <Size x="180" y="0"/>
-                            <Color r="1" g="1" b="1" a="1"/>
+                            <Color r="0.8" g="0.8" b="0.8" a="1"/>
                             <Anchors>
                                 <Anchor point="TOPLEFT" relativeKey="$parent.Title" relativePoint="BOTTOMLEFT" x="0" y="-2"/>
                             </Anchors>
@@ -205,7 +205,7 @@
                         </Texture>
                     </Layer>
                     <Layer level="OVERLAY">
-                         <Texture file="Interface\AddOns\Narcissus\Art\Tooltip\Diamond" alphaMode="NORMAL" hidden="false">
+                         <Texture parentKey="Pointer" alphaMode="NORMAL" hidden="false">
                             <Size x="14" y="14"/>
                             <Anchors>
                                 <Anchor point="CENTER" relativeKey="$parent.Background" relativePoint="TOPRIGHT" x="-2" y="-10"/>
@@ -231,11 +231,12 @@
                 <Scripts>
                     <OnLoad>
                         self.AchivementID = 1208;
+                        self.Pointer:SetTexture("Interface/AddOns/Narcissus/Art/Tooltip/Diamond", nil, nil, "TRILINEAR");
                     </OnLoad>
                 </Scripts>
             </Frame>
 
-            <Frame name="Narci_TitleManager" hidden="false" clipChildren="true" frameLevel="22"><!--/run Narci_TitleManager:SetClipsChildren(false)-->
+            <Frame name="Narci_TitleManager" hidden="false" clipChildren="true" frameLevel="22"> <!--/run Narci_TitleManager:SetClipsChildren(false)-->
                 <Size x="380" y="0"/>   <!--0-->
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOP" x="-98" y="0"/><!--half of ListScrollFrame's width-->
@@ -260,7 +261,7 @@
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeKey="$parent$" relativePoint="TOPLEFT" x="0" y="-1"/>
                         </Anchors>
-                        <ButtonText name="$parentSortMethod" parentKey="Method" inherits="ItemLevelMedium" justifyH="RIGHT" maxLines="1" text="CATEGORY">
+                        <ButtonText name="$parentSortMethod" parentKey="Method" inherits="NarciFontNormal10" justifyH="RIGHT" maxLines="1" text="CATEGORY">
                             <Size x="100" y="20"/>
                             <Color r="0.25" g="0.78" b="0.92" a="1"/>
                             <Anchors>
@@ -269,20 +270,20 @@
                         </ButtonText>
                         <Layers>
                             <Layer level="OVERLAY">
-                                <FontString parentKey="Label" inherits="ItemLevelMedium" justifyH="LEFT" justifyV="MIDDLE" text="COMPACT_UNIT_FRAME_PROFILE_SORTBY">
+                                <FontString parentKey="Label" inherits="NarciFontNormal10" justifyH="LEFT" justifyV="MIDDLE" text="COMPACT_UNIT_FRAME_PROFILE_SORTBY">
                                     <Size X="0" y="20"/>
                                     <Color r="1" g="1" b="1" a="1"/>                            
                                     <Anchors>
                                         <Anchor point="LEFT" x="10" y="0"/>
                                     </Anchors>
                                 </FontString>
-                                <Texture file="Interface\AddOns\Narcissus\Art\Tooltip\Hexagram" parentKey="Star" hidden="true">
+                                <Texture parentKey="Star" hidden="true">
                                     <Size x="12" y="12"/>
                                     <Anchors>
                                         <Anchor point="LEFT" relativeKey="$parent.Label" relativePoint="RIGHT" x="10" y="0"/>
                                     </Anchors>
                                 </Texture>
-                                <FontString parentKey="numRare" inherits="ItemLevelMedium" justifyH="LEFT" justifyV="MIDDLE" text="1208" hidden="true">
+                                <FontString parentKey="numRare" inherits="NarciFontNormal10" justifyH="LEFT" justifyV="MIDDLE" text="1208" hidden="true">
                                     <Size X="0" y="20"/>
                                     <Color r="1" g="1" b="1" a="1"/>                            
                                     <Anchors>
@@ -322,6 +323,9 @@
                             </Layer>                
                         </Layers>
                         <Scripts>
+                            <OnLoad>
+                                self.Star:SetTexture("Interface/AddOns/Narcissus/Art/Tooltip/Hexagram", nil, nil, "TRILINEAR");
+                            </OnLoad>
                             <OnEnter>
                                 Narci_TitleManager_TitleTooltip.AnimFrame:Hide()
                                 UIFrameFadeOut(Narci_TitleManager_TitleTooltip, 0.15, Narci_TitleManager_TitleTooltip:GetAlpha(), 0);
@@ -339,7 +343,7 @@
                             <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="0" y="-21"/>
                         </Anchors>
                         <ScrollChild>
-                            <Frame name="$parentScrollChild" parentKey="scrollChild">
+                            <Frame name="$parentScrollChild" parentKey="ScrollChild">
                                 <Scripts>
                                     <OnLoad function="HybridScrollFrameScrollChild_OnLoad"/>
                                 </Scripts>
@@ -372,8 +376,6 @@
                                         Narci_TitleManager_TitleTooltip.AnimFrame:Hide()
                                         self.thumbTexture:SetColorTexture(1, 1, 1);
                                         UIFrameFadeOut(Narci_TitleManager_TitleTooltip, 0.15, Narci_TitleManager_TitleTooltip:GetAlpha(), 0);
-                                        
-                                        --Narci_TitleFrame_AnimFrame:Hide();
                                     </OnEnter>
                                     <OnLeave>
                                         if not self.IsMouseDown then
@@ -427,7 +429,7 @@
                         </Anchors>
                         <Layers>
                             <Layer level="OVERLAY" textureSubLevel="4">
-                                <!--Left for overlapping scrollchild-->
+                                <!--Left for overlapping ScrollChild-->
                             </Layer>
                         </Layers>
                     </Frame>
@@ -435,16 +437,23 @@
             </Frame>
 
 
-            <Frame name="Narci_TitleFrame_AnimFrame" parentKey="AnimFrame" inherits="NarciAnimContainerFrame">
+            <Frame name="Narci_TitleFrame_AnimFrame" parentKey="AnimFrame">
                 <Scripts>
+                    <OnLoad>
+                        self.t = 0;
+                        self.TitleManager = Narci_TitleManager;
+                        self.BlackScreen = self:GetParent().BlackScreen;
+                    </OnLoad>
                     <OnUpdate function="Narci_TitleFrame_AnimFrame_OnUpdate"/>
                     <OnShow>
                         self:GetParent():Show();
-                        self.startHeight = Narci_TitleManager:GetHeight();
-                        self.startAlpha = Narci_TitleFrameBlackScreen:GetAlpha();
-                        Narci_TitleFrameBlackScreen:Show();
-                        --DoEmote("Read", "none");
+                        self.startHeight = self.TitleManager:GetHeight();
+                        self.startAlpha = self.BlackScreen:GetAlpha();
+                        self.BlackScreen:Show();
                     </OnShow>
+                    <OnHide>
+                        self.t = 0;
+                    </OnHide>
                 </Scripts>
             </Frame>
         </Frames>
@@ -456,7 +465,7 @@
         </Scripts>
     </Frame>
 
-    <Button name="Narci_TitleManager_Switch" parent="PlayerInfoFrame" Alpha="0">
+    <Button name="Narci_TitleManager_Switch" parent="Narci_PlayerInfoFrame" Alpha="0" mixin="NarciTitleManagerSwitchMixin">
         <Size x="200" y="20"/>
         <Anchors>
             <Anchor point="TOPLEFT" relativeKey="$parent.Miscellaneous" relativePoint="TOPLEFT" x="-8" y="8"/>
@@ -465,17 +474,6 @@
         <HitRectInsets>
             <AbsInset left="-10" right="-10" top="4" bottom="0"/>
         </HitRectInsets>
-		<Backdrop edgeFile="Interface\AddOns\Narcissus\Art\Tooltip\Tooltip-Border-White" tile="true">
-			<EdgeSize>
-				<AbsValue val="12"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="12"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="-16" right="-16" top="-16" bottom="-16"/>
-			</BackgroundInsets>
-		</Backdrop>
         <Layers>
             <Layer level="OVERLAY">
                 <FontString parentKey="Tooltip" inherits="AAAPlayerInfo" justifyH="CENTER" justifyV="MIDDLE" text="Open Title Manager" Alpha="0">
@@ -488,55 +486,12 @@
             </Layer>
         </Layers>
         <Scripts>
-            <OnLoad>
-                self.IsOn = false;
-                self.counter = 0;
-            </OnLoad>
-            <OnClick>
-                self.IsOn = not self.IsOn;
-                Narci_TitleFrame_AnimFrame:Hide()
-                if self.IsOn then
-                    Narci_TitleFrame:Show()
-                    Narci_TitleFrame_AnimFrame.OppoDirection = false;
-                    self.Tooltip:SetText(NARCI_TITLE_MANAGER_CLOSE);
-                else
-                    Narci_TitleFrame_AnimFrame.OppoDirection = true;
-                    self.Tooltip:SetText(NARCI_TITLE_MANAGER_OPEN);
-
-                    Narci_TitleManager_TitleTooltip.AnimFrame:Hide();
-                    UIFrameFadeOut(Narci_TitleManager_TitleTooltip, 0.15, Narci_TitleManager_TitleTooltip:GetAlpha(), 0);
-                end
-                Narci_TitleFrame_AnimFrame:Show();
-
-                self:SetScript("OnUpdate",function() end);
-                self.counter = 0;
-            </OnClick>
-            <OnEnter>
-                Narci_TitleManager_TitleTooltip.AnimFrame:Hide()
-                UIFrameFadeIn(self, 0.15, self:GetAlpha(), 1);
-                Narci_TitleManager_Switch_TooltipCountDown(self);
-            </OnEnter>
-            <OnLeave>
-                UIFrameFadeOut(self, 0.25, self:GetAlpha(), 0)
-                self.counter = 0;
-                self:SetScript("OnUpdate",function() end);
-                UIFrameFadeOut(self.Tooltip, 0.15, self.Tooltip:GetAlpha(), 0)
-                local titleFrame = PlayerInfoFrame.Miscellaneous;
-                UIFrameFadeIn(titleFrame, 0.25, titleFrame:GetAlpha(), 1)
-            </OnLeave>
-            <OnHide>
-                self:SetAlpha(0);
-                self.counter = 0;    
-            </OnHide>
-            <OnShow>
-                Narci_TitleManager:SetHeight(0);
-                Narci_TitleFrame_AnimFrame:Hide();
-                Narci_TitleFrame_AnimFrame.TimeSinceLastUpdate = 0;
-                Narci_TitleFrameBlackScreen:SetAlpha(0);
-                Narci_TitleManager_ListScrollFrame.scrollBar:SetValue(40)   --workaround
-                Narci_TitleManager_ListScrollFrame.scrollBar:SetValue(0)
-                Narci_TitleManager_TitleTooltip:Show();
-            </OnShow>
+            <OnLoad method="OnLoad"/>
+            <OnClick method="OnClick"/>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
+            <OnShow method="OnShow"/>
+            <OnHide method="OnHide"/>
         </Scripts>
     </Button>
 </Ui>

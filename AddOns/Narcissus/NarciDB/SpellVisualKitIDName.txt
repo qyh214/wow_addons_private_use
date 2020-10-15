@@ -1,29 +1,3 @@
-110  48  87 29 --Gun
-29  --BOW
-48  --Gun Idle
-19      --2H
-51      --Cast 53
-320     --lean
-1330     --Heart
-263     --Monk Idle
-300     --Hover
-178     --2H
-732     --Zen
-882 892     --Shadow
-966     --Arti 1H
-1076    --Monk Idle
-1240  1242  --Ready 
-124 --cast release
-135 --Swim
-193 --Hover Hands down
-646 --cast two hand
-878 --Hover Cast
-702 Monk Dragon
-1002 Rogue Spin
-1122 Blast
-66 Salute
-778 592 604 Waiter
-
 120270  8.2.5
 105518  8.0.1
 94942   7.3.5
@@ -40,7 +14,7 @@ Spell Visual Kit ID
 /run NarciPlayerModelFrame1:SetAnimation(1262,3)
 
 ----------------------------------------------
-Game Crush IDs:
+Game Crash IDs:
 23254 ~ 23256 ~ 23263 
 
 
@@ -55,7 +29,169 @@ Attachment ID:
 
 
 365680 Light bulb
+108563 Coin Rain Small
 ----------------------------------------------
+136850
+136777 Bastion Crates 136784
+136333 Mushroom right hand red glow
+136231 Big Bone
+136227 Birds and nest
+136132 Water breath
+136086 Blue fire breath
+135771 bat Torch
+135748 Rope gadget
+135685 Grey Transparent 135686
+135387 Poster and nail
+135370 Green bubbles ground
+135358 Torch Blue
+135285 Pit Ground
+135282 Negative Blue 135283
+135232 Magnify gadget?
+135188 Flute Fae 136263 Left hand
+135179 Huge Swords
+135162 Hit Teeth
+135045 Sword with body effect
+134868 Acid Pool
+134799 Brew helmet
+134798 Mug New
+134788 Floating Books
+134772 Fae  Weapon back
+134728 lotus blooming
+134701 Holy Huge
+134600 Pedant Glow
+134544 Fae Effect huge
+134447 Fae Trumpet 134453 Left  134454
+134434 Umbralla Venthy
+134421 Blackhole chest
+134407 Shadow left hand 134426 right
+134405 Red light
+134380 Orange Transparent Body
+134361 Two Mooses?
+134337 Great Healing Leaves
+134334 Bastion Precast Medium
+133970 Chicken Head
+133810 Body Inky
+133661 Imps Warlock
+133506 Hunter Pets  133508 133510 133513 133516 133570 133571 133572 133579 133580 133584 133585 133608 133610 133612 133614 133625 133627 133632 133804
+133439 Dark violet Transparent body 133713 Cyan
+133340 Fire precast slow burn
+133226 Otter Head
+133205 Blue Transparent Body effect 133443
+133114 Bomb Fusing
+133029 Barrel Hold 1210
+132911 Arcane Precast Full body
+132838 Drain Soul Maw
+132804 Bucket
+132802 Hit Front Chest
+132715 Kyrian Crate 1208
+132711 Soul NPC
+132679 Arcane Precast
+132557 Giant Bubble
+132547 Shield Magic
+132521 3 Totems Lightning Shield   132521 Draenei   132522 Dwarf    132523 Pandaren     132530 Tauren   132533 Kultiran     132546 Goblin       132556 Darkiron     132559 Zandalari    132560 Highmountain     132561 Vulpera      132562 Maghar  132918 Orc
+132471 Star shimmer chest
+132457 Exposion Feathers
+132378 Conjure Shadow
+132369 Bone Shield
+132367 Phenix Guitar
+132358 Flute front 1326
+132357 Steward Flute
+132350 Spirit Form
+132336 Green Precast dim
+132299 Green Slender Vial Left hand
+132269 Green Vial Right hand
+132226 Demonic Book gadget 132228 No spell effect
+132220 Reven Precast Darkhole
+132202 Cloud Spirit Cone Large
+132141 Bat Back Tank 134439
+132128 Leaves healing 132244
+132112 Some wine right hand
+132106 Dessert Tower
+131903 Giant Fae Seed Back
+131869 Necro Precast left hand drip
+131810 Precast Blue Dark
+131800 Death Water? Left hand cast
+131787 Army of Death
+131709 Night Fae Ground effect
+131676 Harp Night Fae
+131556 Monster Custume
+131209 Necro Precast
+131172 Detailed Floating Tome
+131167 Vivid Green body
+131036 Hat with plumage
+131017 Fae Night Dark moon?
+130927 gadget
+130893 Bastion Body swirl
+130826 Fae Seed Left hand
+130783 Tornado Body
+130588 Bright Drain? Cylindar
+130529 Fae Body
+130507 Magnet Mine Right hand
+130476 Fae Wing
+130475 Fae Shield
+130473 Shadow Dome Down
+130373 Reven Blood sphere body
+130303 Hammer dust
+130197 Fae Body Aura
+130045 Tea Set Ground
+129917 Harp
+129912 Reven Bat Nail? Pen?
+129859 Necro Vial
+129842 Drust Precast
+129792 Bucket Back
+131214 Giant Glass of Wine Reven 131948 Two cups
+129753 
+129686 Saber Weapon
+129637 Purple body contour
+129631 Broom
+129627 Fae Cast Huge 129628
+129626 Night Fae Ground Light
+129619 Night Fae Body effect 129624
+129602 Necro Precast Blink 129603
+129566 Seeds Raid on the back
+129564 Maw Precast 129565 Left Hand
+129559 Night Fae Body errupt
+129615 Night fae Butterfly?
+129350 Necro Hammer Nail
+129340 Reven Precast    129342
+129337 Reven Precast Medium Red Sphere
+129325 Bastion Body Spell
+129277 Spiritual Transparent
+129198 Reven Pen? Nail
+129149 Bastion Hammer
+129148 Reven Offhand Lantern
+129140 Necro Sword?
+129138 Squiral Head
+129121 Lich King Bolvar
+129019 Night Fae Spell
+128953 Long Axe Back
+128945 Necro Precast 128991 129132
+128942 Archangle Weapon
+
+128921 Scroll
+128779 Light Balls
+128756 Tri Arti
+128757 Night Fae
+128741 B
+128681 Spiritual Body
+128659
+128635 Sha? Necro? 128868
+128591 Mark
+128604 Bastion Precast 129460
+128594 Bastion Body Transparent
+128586 Reven Body shower
+128579 Red Body Transparent     128639 Outline
+124082 Blue vertex 124273
+124026 Revendeth Blood Hearthstone
+123929 High Rez Torch
+123909 Ore cart
+123898 123933 Giant Plate Revendeth? 128643
+123621 Shield And Stab
+122564 Worm on a Dagger
+111290 Squid Head Merciless One
+
+
+
 121971 Beam Long
 122148 Beam Only Forward 121990 Shower
 122435

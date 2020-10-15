@@ -1,26 +1,22 @@
-## Interface: 80300
+## Interface: 90001
 ## Author: houshuu
-## Version: 1.4.0
-## Title: |cff0288d1W|r|cff039be5i|r|cff03a9f4n|r|cff29b6f6d|r Dungeon Helper
-## Title-zhCN: |cff039be5W|r|cff03a9f4i|r|cff29b6f6n|r|cff4fc3f7d|r 地下城助手
-## Title-zhTW: |cff039be5W|r|cff03a9f4i|r|cff29b6f6n|r|cff4fc3f7d|r 地城助手
+## Version: 1.4.1
+## Title: |cff30b5ffW|r|cff29abfdi|r|cff23a2fcn|r|cff1c98fad|r |cff1182f7D|r|cff0c75f5u|r|cff0768f3n|r|cff0f69f2g|r|cff2a7ef4e|r|cff4594f5o|r|cff60a9f6n|r |cffa9d2faH|r|cffd0e6fce|r|cfff7fafel|r|cffffffffp|r|cffffffffe|r|cffffffffr|r
+## Title-zhCN: |cff30b5ffW|r|cff23a3fci|r|cff1691f9n|r|cff0e79f6d|r |cff3889f4地|r|cff6bb2f7下|r|cffb5d8fb城|r|cffffffff助|r|cffffffff手|r
+## Title-zhTW: |cff30b5ffW|r|cff22a1fci|r|cff148bf9n|r|cff0b71f4d|r |cff54a0f6地|r|cff9ccbf9城|r|cffeef6fe助|r|cffffffff手|r
 ## Notes: Help you fight in dungeon easier.
 ## Notes-zhCN: 帮助你在地下城中的战斗更加简单。
 ## Notes-zhTW: 幫助你在地城中的戰鬥更加簡單。
-## DefaultState: enabled
 ## SavedVariables: WindDungeonHelperDB
+## OptionalDeps: ElvUI_WindTools
+## X-Curse-Project-ID: 304072
+## X-WoWI-ID: 25532
 
-## X-Website: https://wow.curseforge.com/projects/wind-dungeon-helper
-## X-Feedback: https://github.com/fang2hou/WindDungeonHelper/issues
-
-# Library
-Libs\Load_Libs.xml
-
-# Localization
+Libraries\Load_Libraries.xml
 Locales\Load_Locales.xml
-
-# Initialize
-Init.lua
-
-# Module
+Initialize.lua
+Media\Load_Media.xml
+Settings\Load_Settings.xml
+Core\Load_Core.xml
 Modules\Load_Modules.xml
+Options\Load_Options.xml

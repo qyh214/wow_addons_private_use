@@ -1,31 +1,35 @@
 local _, L = ...
-local NPC = L.frame
+local NPC, API = L.frame, ImmersionAPI
 ----------------------------------
 -- Events
 ----------------------------------
-function NPC:GOSSIP_SHOW(...)
-	self:UpdateTalkingHead(GetUnitName('npc'), GetGossipText(), 'GossipGossip')
+function NPC:GOSSIP_SHOW(customGossipHandler)
+	if customGossipHandler then
+		-- handled by CustomGossipFrameManager
+		return
+	end
+	self:UpdateTalkingHead(API:GetUnitName('npc'), API:GetGossipText(), 'GossipGossip')
 	if self:IsGossipAvailable() then
 		self:PlayIntro('GOSSIP_SHOW')
 	end
 end
 
 function NPC:GOSSIP_CLOSED(...)
-	CloseGossip()
+	API:CloseGossip()
 	self:PlayOutro()
 	L.ClickedTitleCache = nil
 end
 
 function NPC:QUEST_GREETING(...)
 	self:PlayIntro('QUEST_GREETING')
-	self:UpdateTalkingHead(GetUnitName('questnpc') or GetUnitName('npc'), GetGreetingText(), 'AvailableQuest')
+	self:UpdateTalkingHead(API:GetUnitName('questnpc') or API:GetUnitName('npc'), API:GetGreetingText(), 'AvailableQuest')
 end
 
 function NPC:QUEST_PROGRESS(...) -- special case, doesn't use QuestInfo
 	self:PlayIntro('QUEST_PROGRESS')
 	self:AddHint('CROSS', CONTINUE)
-	self:ToggleHintState('CROSS', IsQuestCompletable())
-	self:UpdateTalkingHead(GetTitleText(), GetProgressText(), IsQuestCompletable() and 'ActiveQuest' or 'IncompleteQuest')
+	self:ToggleHintState('CROSS', API:IsQuestCompletable())
+	self:UpdateTalkingHead(API:GetTitleText(), API:GetProgressText(), API:IsQuestCompletable() and 'ActiveQuest' or 'IncompleteQuest')
 	local elements = self.TalkBox.Elements
 	local hasItems = elements:ShowProgress('Stone')
 	elements:UpdateBoundaries()
@@ -40,13 +44,13 @@ end
 
 function NPC:QUEST_COMPLETE(...)
 	self:PlayIntro('QUEST_COMPLETE')
-	self:UpdateTalkingHead(GetTitleText(), GetRewardText(), 'ActiveQuest')
+	self:UpdateTalkingHead(API:GetTitleText(), API:GetRewardText(), 'ActiveQuest')
 	self:AddQuestInfo('QUEST_REWARD')
 	self:AddHint('CROSS', COMPLETE_QUEST)
 end
 
 function NPC:QUEST_FINISHED(...)
-	CloseQuest()
+	API:CloseQuest()
 	self:PlayOutro()
 --	if self:IsGossipAvailable(true) then
 --		self:OnEvent('GOSSIP_SHOW')
@@ -60,7 +64,7 @@ function NPC:QUEST_DETAIL(...)
 		return
 	end
 	self:PlayIntro('QUEST_DETAIL')
-	self:UpdateTalkingHead(GetTitleText(), GetQuestText(), 'AvailableQuest')
+	self:UpdateTalkingHead(API:GetTitleText(), API:GetQuestText(), 'AvailableQuest')
 	self:AddQuestInfo('QUEST_DETAIL')
 	self:AddHint('CROSS', ACCEPT)
 end
@@ -129,7 +133,7 @@ function NPC:NAME_PLATE_UNIT_REMOVED()
 	return self.lastEvent
 end
 
-function NPC:SUPER_TRACKED_QUEST_CHANGED(questID)
-	self:PlaySuperTrackedQuestToast(questID)
+function NPC:SUPER_TRACKING_CHANGED()
+	self:PlaySuperTrackedQuestToast(ImmersionAPI:GetSuperTrackedQuestID())
 	return self.lastEvent
 end

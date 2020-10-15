@@ -1,6 +1,6 @@
-## Interface: 80300
+## Interface: 90001
 ## Plain Title: Narcissus
-## Version: 1.0.9a
+## Version: 1.1.0
 
 ## Title: |cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r
 
@@ -9,8 +9,8 @@
 ## Notes-zhTW: 為展示和分享而生的沈浸式角色界面|n|cff959595命令: /Narci|r
 
 ## Author: Peterodox
-## SavedVariables: NarcissusDB, NarciCreatureOptions
-## SavedVariablesPerCharacter: NarcissusDB_PC
+## SavedVariables: NarcissusDB, NarciCreatureOptions, NarciAchievementOptions, NarciStatisticsDB, NarciDevToolOutput
+## SavedVariablesPerCharacter: NarcissusDB_PC, NarciStatisticsDB_PC
 
 
 Font\FontSettings.xml
@@ -30,29 +30,36 @@ Widgets\NarciSocketing.xml
 Narcissus.xml
 Preference.xml
 
-Widgets\ExitConfirmationDialog.xml
 Widgets\EquipmentComparisonFlyout.xml
 Widgets\TitleManager.xml
 Widgets\EquipmentSetManager.xml
 
-Widgets\PlayerModel.xml
-Widgets\SpellVisualBrowser.xml
-Widgets\NPCBrowser.xml
+Modules\PhotoMode\PhotoMode.xml
+Modules\PhotoMode\SpellVisualBrowser.xml
+Modules\PhotoMode\NPCBrowser.xml
+Modules\PhotoMode\AnimationBrowser.xml
+Modules\PhotoMode\ExitConfirmationDialog.xml
+Modules\PhotoMode\SpeechBalloon.xml
 
 widgets\AFKMode.lua
-##widgets\ScreenshotInfo.xml
+widgets\ScreenshotInfo.xml
 ##widgets\Messi.lua
 widgets\AR.xml
 widgets\AdvancedDressingRoom.xml
 widgets\Splash.xml
 
+Modules\Achievement\Achievement.xml
+Modules\Statistics\Core.lua
+Modules\ModuleManager\ModuleManager.lua
+
 Filters\CameraEffect.xml
 Filters\Letterbox.xml
 
-ModelFileID.lua
-
 Guide\Guide.xml
 
+
+## Modules\Outfit\ItemTooltip.xml
+## Modules\Outfit\Outfit.xml
 
 ##Expansion Limited
 widgets\CorruptionSystem.xml

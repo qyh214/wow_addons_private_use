@@ -1,4 +1,4 @@
-L = {}
+local L = {}
 L["(Experimental)"] = "(Expérimental)"
 L["Adds tooltips to items showing if you have learned a transmog appearance."] = "Ajoute une infobulle aux objets, indiquant si vous en avez appris l'apparence de transmogrification."
 L["Also shows a summary in the Appearance Sets UI of how many pieces of a transmog set you have collected."] = "Montre également un résumé dans l'interface de sets d'apparences du nombre de pièces d'un set de transmogrification que vous avez collecté."

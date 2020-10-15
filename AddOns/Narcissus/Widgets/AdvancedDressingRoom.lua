@@ -1125,8 +1125,8 @@ function NarciDressingRoomItemButtonMixin:OnClick(button)
                 PlaySound(39672, "SFX");
             end
             C_TransmogCollection.SetIsAppearanceFavorite(self.appearanceID, state);
-            print("appearanceID: ".. (self.appearanceID or "") );
-            print("sourceID: ".. (self.sourceID or "") );
+            --print("appearanceID: ".. (self.appearanceID or "") );
+            --print("sourceID: ".. (self.sourceID or "") );
         end
     end
 end

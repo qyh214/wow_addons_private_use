@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NightbaneRaid", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417010011")
+mod:SetRevision("20200923220929")
 mod:SetCreatureID(17225)
 mod:SetEncounterID(662)
 mod:SetModelID(18062)
@@ -62,6 +62,7 @@ end
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.DBM_NB_YELL_AIR then
 		WarnAir:Show()
+		timerAirPhase:Stop()
 		timerAirPhase:Start()
 	elseif msg == L.DBM_NB_YELL_GROUND or msg == L.DBM_NB_YELL_GROUND2 then--needed. because if you deal more 25% damage in air phase, air phase repeated and shroten. So need to update exact ground phase.
 		timerAirPhase:Update(43, 57)

@@ -1,7 +1,9 @@
 local mod	= DBM:NewMod("d511", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod.statTypes = "normal"
+
+mod:SetRevision("20200912131657")
 
 mod:RegisterCombat("scenario", 1031)
 
@@ -9,7 +11,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START"
 --	"SPELL_AURA_REMOVED"
 )
-mod.onlyNormal = true
 
 local warnFlameWall		= mod:NewSpellAnnounce(123966, 4)
 

@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Netherspite", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200329212634")
+mod:SetRevision("20200923223027")
 mod:SetCreatureID(15689)
+mod:SetEncounterID(659)
 mod:SetModelID(15363)
 mod:RegisterCombat("combat")
 

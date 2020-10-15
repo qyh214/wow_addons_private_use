@@ -1,4 +1,5 @@
 if not WeakAuras.IsCorrectVersion() then return end
+local AddonName, Private = ...
 
 local SharedMedia = LibStub("LibSharedMedia-3.0");
 local L = WeakAuras.L;
@@ -102,6 +103,14 @@ end
 local function create()
   local subRegion = CreateFrame("FRAME", nil, UIParent)
   subRegion:SetClipsChildren(true)
+  subRegion:SetScript("OnSizeChanged", function(self, w,h )
+    -- WORKAROUND clipping being broken on the SL beta with some setups with bars of zero width
+    if self:GetWidth() < 1 or self:GetHeight() < 1 then
+      self:Hide()
+    else
+      self:Show()
+    end
+  end)
 
   return subRegion
 end

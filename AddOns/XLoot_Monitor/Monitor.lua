@@ -332,7 +332,7 @@ do
 	end
 
 	function addon.CreateRow()
-		local frame = CreateFrame("Button", nil, UIParent)
+		local frame = CreateFrame("Button", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 		frame:SetFrameLevel(anchor:GetFrameLevel())
 		frame:SetHeight(24)
 		frame:SetWidth(250)
@@ -347,7 +347,7 @@ do
 		frame:SetScript("OnLeave", OnLeave)
 
 		-- Item icon (For skin border)
-		local icon_frame = CreateFrame("Frame", nil, frame)
+		local icon_frame = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")
 		icon_frame:SetWidth(28)
 		icon_frame:SetHeight(28)
 		addon:Skin(icon_frame, "item")

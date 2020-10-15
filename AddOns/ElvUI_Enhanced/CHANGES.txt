@@ -1,12 +1,24 @@
-tag 58b43195ad792dc801015ed9e5a5c15cd27c264b 3.4.7
+tag 56083397f810bc8bda43091a6fb2bd4c4df34561 3.5.0
 Author:	Bocky <nick@bocky.nl>
-Date:	Mon Aug 31 10:26:25 2020 +0200
+Date:	Wed Oct 14 08:56:39 2020 +0200
 
-Removed support for extra data text
+3.5.0
+* Ready for 9.0
+* Fix minimapbuttonbar for 9.0
+* Fix raidmarkerbar for 9.0
+* Fix minimaplocation for 9.0
+* GPS in targetframe en focursframe for 9.0
+* Thanks Cilraaz for the help!wq
 
-commit 712965263f95f6bfd1089d4bdc9693c9ef7b3b7c
+commit da0a3c4b9c095fddb8812298985bba27340ead58
 Author: Nick <git@bockmeulen.nl>
-Date:   Mon Aug 31 10:25:17 2020 +0200
+Date:   Wed Oct 14 08:55:48 2020 +0200
 
-    removed extra datatext support
+    Update readme and toc
+
+commit 84fbd54fd01938b6901801bca8df358ad87c8952
+Author: Nick <git@bockmeulen.nl>
+Date:   Mon Oct 5 21:45:31 2020 +0200
+
+    update toc and changelog
 

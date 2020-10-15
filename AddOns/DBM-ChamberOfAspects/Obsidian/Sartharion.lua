@@ -1,7 +1,9 @@
 local mod	= DBM:NewMod("Sartharion", "DBM-ChamberOfAspects", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142023")
+mod.statTypes = "normal,normal25"
+
+mod:SetRevision("20200912041819")
 mod:SetCreatureID(28860)
 mod:SetEncounterID(1090)
 mod:SetModelID(27035)
@@ -14,7 +16,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_DAMAGE 59128",
 	"RAID_BOSS_EMOTE"
 )
-mod.onlyNormal = true
 
 local warnShadowFissure	    = mod:NewSpellAnnounce(59127, 4, nil, nil, nil, nil, nil, 2)
 local warnTenebron          = mod:NewAnnounce("WarningTenebron", 2, 61248, false)

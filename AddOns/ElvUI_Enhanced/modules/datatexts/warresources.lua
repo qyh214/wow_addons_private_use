@@ -25,15 +25,15 @@ local COMPLETE = COMPLETE
 local WAR_FOLLOWERS = WAR_FOLLOWERS
 local GARRISON_LANDING_SHIPMENT_COUNT = GARRISON_LANDING_SHIPMENT_COUNT
 local GARRISON_TALENT_ORDER_ADVANCEMENT = GARRISON_TALENT_ORDER_ADVANCEMENT
-local LE_FOLLOWER_TYPE_GARRISON_8_0 = LE_FOLLOWER_TYPE_GARRISON_8_0
-local LE_GARRISON_TYPE_8_0 = LE_GARRISON_TYPE_8_0
+local LE_FOLLOWER_TYPE_GARRISON_8_0 = Enum.GarrisonFollowerType.FollowerType_8_0
+local LE_GARRISON_TYPE_8_0 = Enum.GarrisonType.Type_8_0
 local WAR_MISSIONS = WAR_MISSIONS
 
 --Global variables that we don't cache, list them here for mikk's FindGlobals script
 -- GLOBALS: GarrisonLandingPage
 
 local GARRISON_CURRENCY = 1560
-local GARRISON_ICON = format("|T%s:16:16:0:0:64:64:4:60:4:60|t", select(3, GetCurrencyInfo(GARRISON_CURRENCY)))
+local GARRISON_ICON = format("|T%s:16:16:0:0:64:64:4:60:4:60|t", C_CurrencyInfo.GetCurrencyInfo(GARRISON_CURRENCY).iconFileID)
 
 local function sortFunction(a, b)
 	return a.missionEndTime < b.missionEndTime
@@ -95,41 +95,17 @@ local function OnEnter(self, _, noUpdate)
 		end
 	end
 
---[[	-- "Loose Work Orders" (i.e. research, equipment)
-	local looseShipments = C_Garrison_GetLooseShipments(LE_GARRISON_TYPE_8_0)
-	local hasLoose = false
-	if (looseShipments) then
-		for i = 1, #looseShipments do
-			local name, _, _, shipmentsReady, shipmentsTotal = C_Garrison_GetLandingPageShipmentInfoByContainerID(looseShipments[i])
-			if ( name and shipmentsReady and shipmentsTotal ) then
-				if(hasLoose == false) then
-					if not firstLine then
-						DT.tooltip:AddLine(" ")
-					end
-					firstLine = false
-					DT.tooltip:AddLine(CAPACITANCE_WORK_ORDERS) -- "Work Orders"
-					hasLoose = true
-				end
-
-				DT.tooltip:AddDoubleLine(name, format(GARRISON_LANDING_SHIPMENT_COUNT, shipmentsReady, shipmentsTotal), 1, 1, 1)
-			end
-		end
-	end--]]
-
 	-- Talents
 	local talentTreeIDs = C_Garrison_GetTalentTreeIDsByClassID(LE_GARRISON_TYPE_8_0, E.myClassID);
 	local hasTalent = false
 	if (talentTreeIDs) then
 		-- this is a talent that has completed, but has not been seen in the talent UI yet.
 		local completeTalentID = C_Garrison_GetCompleteTalent(LE_GARRISON_TYPE_8_0);
-		for _, treeID in ipairs(talentTreeIDs) do
-			local _, _, tree = C_Garrison_GetTalentTreeInfoForID(treeID);
-			for _, talent in ipairs(tree) do
+		for treeIndex, treeID in ipairs(talentTreeIDs) do
+			local treeInfo = C_Garrison.GetTalentTreeInfo(treeID);
+			for talentIndex, talent in ipairs(treeInfo.talents) do
 				local showTalent = false;
-				if (talent.isBeingResearched) then
-					showTalent = true;
-				end
-				if (talent.id == completeTalentID) then
+				if talent.isBeingResearched or talent.id == completeTalentID then
 					showTalent = true;
 				end
 				if (showTalent) then
@@ -178,7 +154,7 @@ local function OnEvent(self, event)
 		return
 	end
 
-	local _, numGarrisonResources = GetCurrencyInfo(GARRISON_CURRENCY)
+	local numGarrisonResources = C_CurrencyInfo.GetCurrencyInfo(GARRISON_CURRENCY).quantity
 	self.text:SetFormattedText("%s %s", GARRISON_ICON, numGarrisonResources)
 end
 

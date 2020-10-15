@@ -1,4 +1,4 @@
-## Interface: 80300
+## Interface: 90001
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Ulduar|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Ульдуар|r
@@ -13,14 +13,14 @@
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: WotLK
-## X-DBM-Mod-Has-Single-Format: 1
-## X-DBM-Mod-Has-TimeWalker: 1
+## X-DBM-StatTypes: normal,timewalker
 ## X-DBM-Mod-MapID: 603
 ## X-DBM-Mod-Sort: 903
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
+## X-DBM-Mod-MinExpansion: 2
 ## X-Curse-Project-ID: 43970
 ## X-WoWI-ID: 21522
-## Version: r295
+## Version: r296
 
 localization.en.lua
 localization.de.lua

@@ -265,8 +265,8 @@ L["STRING_GUILDDAMAGERANK_PLAYERBASE_PLAYER"] = "Игрок"
 L["STRING_GUILDDAMAGERANK_PLAYERBASE_RAID"] = "Все игроки"
 L["STRING_GUILDDAMAGERANK_RAID"] = "Рейд"
 L["STRING_GUILDDAMAGERANK_ROLE"] = "Роль"
-L["STRING_GUILDDAMAGERANK_SHOWHISTORY"] = "Показать историю"
-L["STRING_GUILDDAMAGERANK_SHOWRANK"] = "Показать ранг гильдии"
+L["STRING_GUILDDAMAGERANK_SHOWHISTORY"] = "историю"
+L["STRING_GUILDDAMAGERANK_SHOWRANK"] = "ранг гильдии"
 L["STRING_GUILDDAMAGERANK_SYNCBUTTONTEXT"] = "Синхронизация с гильдией"
 L["STRING_GUILDDAMAGERANK_TUTORIAL_DESC"] = [=[Details! хранит урон и исцеление с каждого босса, с которым сражалась ваша гильдия.
 

@@ -147,7 +147,11 @@ L:SetGeneralLocalization({
 -----------------------
 -- Kin-Tara --
 -----------------------
---L= DBM:GetModLocalization(2399)
+L= DBM:GetModLocalization(2399)
+
+L:SetMiscLocalization({
+	Flight	= "Your doom takes flight!"
+})
 
 -----------------------
 -- Ventunax --
@@ -162,7 +166,11 @@ L:SetGeneralLocalization({
 -----------------------
 -- Devos, Paragon of Doubt --
 -----------------------
---L= DBM:GetModLocalization(2412)
+L= DBM:GetModLocalization(2412)
+
+L:SetMiscLocalization({
+	RunThrough	= "This spear shall pierce your heart!"
+})
 
 ---------
 --Trash--
@@ -224,7 +232,7 @@ L:SetGeneralLocalization({
 --L= DBM:GetModLocalization(2409)
 
 -----------------------
--- Dealer G'exa --
+-- Dealer Xy'exa --
 -----------------------
 --L= DBM:GetModLocalization(2398)
 

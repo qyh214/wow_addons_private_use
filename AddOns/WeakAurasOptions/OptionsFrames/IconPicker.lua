@@ -1,4 +1,5 @@
 if not WeakAuras.IsCorrectVersion() then return end
+local AddonName, OptionsPrivate = ...
 
 -- Lua APIs
 local pairs  = pairs
@@ -201,7 +202,7 @@ local function ConstructIconPicker(frame)
   return group
 end
 
-function WeakAuras.IconPicker(frame)
+function OptionsPrivate.IconPicker(frame)
   iconPicker = iconPicker or ConstructIconPicker(frame)
   return iconPicker
 end

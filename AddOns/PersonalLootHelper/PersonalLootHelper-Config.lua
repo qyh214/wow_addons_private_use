@@ -130,7 +130,7 @@ function PLH_CreateOptionsPanel()
 		"always show all items"
 	}
 
-	local ilvlThresholdMenu = CreateFrame('Button', 'ilvlThresholdMenu', configFrame, 'MSA_DropDownMenuTemplate')
+	local ilvlThresholdMenu = MSA_DropDownMenu_Create('ilvlThresholdMenu', configFrame)
 	ilvlThresholdMenu:SetPoint('LEFT', ilvlThresholdLabel, 'RIGHT', -5, 0)
 
 	local function ilvlThresholdMenu_OnClick(self, arg1, arg2, checked)
@@ -214,7 +214,7 @@ function PLH_CreateOptionsPanel()
 		insets = { left = 4, right = 4, top = 4, bottom = 4 }
 	}
 
-	local whisperMessageEditBoxBorder = CreateFrame('Frame', nil, whisperMessageEditBox)
+	local whisperMessageEditBoxBorder = CreateFrame('Frame', nil, whisperMessageEditBox, BackdropTemplateMixin and "BackdropTemplate");
 	whisperMessageEditBoxBorder:SetWidth(whisperMessageEditBox:GetWidth() + 5)
 	whisperMessageEditBoxBorder:SetHeight(whisperMessageEditBox:GetHeight() + 5)
 	whisperMessageEditBoxBorder:SetPoint('CENTER', whisperMessageEditBox, 'CENTER')

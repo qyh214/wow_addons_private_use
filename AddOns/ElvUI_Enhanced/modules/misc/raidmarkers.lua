@@ -16,7 +16,7 @@ local layouts = {
 
 function RM:CreateButtons()
 	for k, layout in ipairs(layouts) do
-		local button = CreateFrame("Button", ("RaidMarkerBarButton%d"):format(k), self.frame, "SecureActionButtonTemplate")
+		local button = CreateFrame("Button", ("RaidMarkerBarButton%d"):format(k), self.frame, "SecureActionButtonTemplate, BackdropTemplate")
 		button:SetHeight(self.db.buttonSize)
 		button:SetWidth(self.db.buttonSize)
 		button:SetTemplate('Transparent')
@@ -140,7 +140,7 @@ end
 function RM:Initialize()
 	self.db = E.private.general.raidmarkerbar
 	
-	self.frame = CreateFrame("Frame", "RaidMarkerBar", E.UIParent, "SecureHandlerStateTemplate")
+	self.frame = CreateFrame("Frame", "RaidMarkerBar", E.UIParent, "SecureHandlerStateTemplate, BackdropTemplate")
 	self.frame:SetResizable(false)
 	self.frame:SetClampedToScreen(true)
 	self.frame:SetFrameStrata('LOW')

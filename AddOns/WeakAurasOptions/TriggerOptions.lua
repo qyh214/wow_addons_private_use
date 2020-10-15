@@ -1,20 +1,21 @@
+if not WeakAuras.IsCorrectVersion() then return end
+local AddonName, OptionsPrivate = ...
 
 local L = WeakAuras.L
 
-local removeFuncs = WeakAuras.commonOptions.removeFuncs
-local replaceNameDescFuncs = WeakAuras.commonOptions.replaceNameDescFuncs
-local replaceImageFuncs = WeakAuras.commonOptions.replaceImageFuncs
-local replaceValuesFuncs = WeakAuras.commonOptions.replaceValuesFuncs
-local disabledAll = WeakAuras.commonOptions.CreateDisabledAll("trigger")
-local hiddenAll = WeakAuras.commonOptions.CreateHiddenAll("trigger")
-local getAll = WeakAuras.commonOptions.CreateGetAll("trigger")
-local setAll = WeakAuras.commonOptions.CreateSetAll("trigger", getAll)
-local executeAll = WeakAuras.commonOptions.CreateExecuteAll("trigger")
+local removeFuncs = OptionsPrivate.commonOptions.removeFuncs
+local replaceNameDescFuncs = OptionsPrivate.commonOptions.replaceNameDescFuncs
+local replaceImageFuncs = OptionsPrivate.commonOptions.replaceImageFuncs
+local replaceValuesFuncs = OptionsPrivate.commonOptions.replaceValuesFuncs
+local disabledAll = OptionsPrivate.commonOptions.CreateDisabledAll("trigger")
+local hiddenAll = OptionsPrivate.commonOptions.CreateHiddenAll("trigger")
+local getAll = OptionsPrivate.commonOptions.CreateGetAll("trigger")
+local setAll = OptionsPrivate.commonOptions.CreateSetAll("trigger", getAll)
+local executeAll = OptionsPrivate.commonOptions.CreateExecuteAll("trigger")
 
-local flattenRegionOptions = WeakAuras.commonOptions.flattenRegionOptions
-local fixMetaOrders = WeakAuras.commonOptions.fixMetaOrders
+local flattenRegionOptions = OptionsPrivate.commonOptions.flattenRegionOptions
+local fixMetaOrders = OptionsPrivate.commonOptions.fixMetaOrders
 
-local subevent_actual_prefix_types = WeakAuras.subevent_actual_prefix_types;
 local spellCache = WeakAuras.spellCache
 
 local function union(table1, table2)
@@ -41,9 +42,9 @@ local function GetGlobalOptions(data)
       order = 2,
       values = function()
         if #data.triggers > 1 then
-          return WeakAuras.trigger_require_types;
+          return OptionsPrivate.Private.trigger_require_types;
         else
-          return  WeakAuras.trigger_require_types_one;
+          return  OptionsPrivate.Private.trigger_require_types_one;
         end
       end,
       get = function()
@@ -66,14 +67,14 @@ local function GetGlobalOptions(data)
       order = 2.3,
       values = function()
         local vals = {};
-        vals[WeakAuras.trigger_modes.first_active] = L["Dynamic information from first active trigger"];
+        vals[OptionsPrivate.Private.trigger_modes.first_active] = L["Dynamic information from first active trigger"];
         for i = 1, #data.triggers do
           vals[i] = L["Dynamic information from Trigger %i"]:format(i);
         end
         return vals;
       end,
       get = function()
-        return data.triggers.activeTriggerMode or WeakAuras.trigger_modes.first_active;
+        return data.triggers.activeTriggerMode or OptionsPrivate.Private.trigger_modes.first_active;
       end,
       set = function(info, v)
         data.triggers.activeTriggerMode = v;
@@ -88,7 +89,7 @@ local function GetGlobalOptions(data)
   local function hideTriggerCombiner()
     return not (data.triggers.disjunctive == "custom")
   end
-  WeakAuras.commonOptions.AddCodeOption(globalTriggerOptions, data, L["Custom"], "custom_trigger_combination", "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Code-Blocks#custom-activation",
+  OptionsPrivate.commonOptions.AddCodeOption(globalTriggerOptions, data, L["Custom"], "custom_trigger_combination", "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Code-Blocks#custom-activation",
                           2.4, hideTriggerCombiner, {"triggers", "customTriggerLogic"}, false);
 
   return {
@@ -96,28 +97,60 @@ local function GetGlobalOptions(data)
   }
 end
 
+local collapsedId = {}
+local maxTriggerNumForExpand = 0
+
 local function AddOptions(allOptions, data)
   allOptions = union(allOptions, GetGlobalOptions(data))
 
   local triggerOptions = {}
   for index, trigger in ipairs(data.triggers) do
-    local triggerSystemOptionsFunction = trigger.trigger.type and WeakAuras.triggerTypesOptions[trigger.trigger.type]
+    local triggerSystemOptionsFunction = trigger.trigger.type and OptionsPrivate.Private.triggerTypesOptions[trigger.trigger.type]
     if (triggerSystemOptionsFunction) then
       triggerOptions = union(triggerOptions, triggerSystemOptionsFunction(data, index))
     else
       local options = {};
-      WeakAuras.commonOptions.AddCommonTriggerOptions(options, data, index)
-      WeakAuras.AddTriggerMetaFunctions(options, data, index)
+      OptionsPrivate.commonOptions.AddCommonTriggerOptions(options, data, index)
+      OptionsPrivate.AddTriggerMetaFunctions(options, data, index)
       triggerOptions = union(triggerOptions, {
           ["trigger." .. index .. ".unknown"] = options
       })
     end
   end
 
+  triggerOptions["addTriggerOption"] = {
+    __title = L["Add Trigger"],
+    __order = 5000,
+    __withoutheader = true,
+    __topLine = true,
+    __collapsed = false,
+    addTrigger = {
+      type = "execute",
+      width = WeakAuras.normalWidth,
+      name = L["Add Trigger"],
+      order = 1,
+      func = function()
+        tinsert(data.triggers,
+          {
+            trigger =
+            {
+              type = "aura2"
+            },
+            untrigger = {
+            }
+          })
+        WeakAuras.Add(data)
+        OptionsPrivate.SetCollapsed(collapsedId, "trigger", #data.triggers, false)
+        maxTriggerNumForExpand = max(maxTriggerNumForExpand, #data.triggers)
+        WeakAuras.ClearAndUpdateOptions(data.id)
+      end
+    }
+  }
+
   return union(allOptions, triggerOptions)
 end
 
-function WeakAuras.GetTriggerOptions(data)
+function OptionsPrivate.GetTriggerOptions(data)
   local allOptions = {}
   if data.controlledChildren then
     for index, childId in pairs(data.controlledChildren) do
@@ -221,21 +254,26 @@ local function moveTriggerDownImpl(data, i)
   return true;
 end
 
-function WeakAuras.AddTriggerMetaFunctions(options, data, triggernum)
+function OptionsPrivate.ClearTriggerExpandState()
+  for i = 1, maxTriggerNumForExpand do
+    OptionsPrivate.SetCollapsed(collapsedId, "trigger", i, nil)
+  end
+  maxTriggerNumForExpand = 0
+end
+
+function OptionsPrivate.AddTriggerMetaFunctions(options, data, triggernum)
   options.__title = L["Trigger %s"]:format(triggernum)
   options.__order = triggernum * 10
-  options.__add = function()
-    tinsert(data.triggers,
-      {
-        trigger =
-        {
-          type = "aura2"
-        },
-        untrigger = {
-        }
-      })
-    WeakAuras.Add(data)
-    WeakAuras.ClearAndUpdateOptions(data.id)
+  options.__collapsed = #data.triggers > 1
+  options.__isCollapsed = function()
+    return OptionsPrivate.IsCollapsed(collapsedId, "trigger", triggernum, #data.triggers > 1)
+  end
+  options.__setCollapsed = function(info, button, secondCall)
+    if not secondCall then
+      local isCollapsed = OptionsPrivate.IsCollapsed(collapsedId, "trigger", triggernum, #data.triggers > 1)
+      OptionsPrivate.SetCollapsed(collapsedId, "trigger", triggernum, not isCollapsed)
+      maxTriggerNumForExpand = max(maxTriggerNumForExpand, triggernum)
+    end
   end
   options.__up =
   {
@@ -245,6 +283,7 @@ function WeakAuras.AddTriggerMetaFunctions(options, data, triggernum)
     func = function()
       if (moveTriggerDownImpl(data, triggernum - 1)) then
         WeakAuras.Add(data);
+        OptionsPrivate.MoveCollapseDataUp(collapsedId, "trigger", {triggernum})
         WeakAuras.ClearAndUpdateOptions(data.id);
       end
     end
@@ -257,6 +296,7 @@ function WeakAuras.AddTriggerMetaFunctions(options, data, triggernum)
     func = function()
       if (moveTriggerDownImpl(data, triggernum)) then
         WeakAuras.Add(data);
+        OptionsPrivate.MoveCollapseDataDown(collapsedId, "trigger", {triggernum})
         WeakAuras.ClearAndUpdateOptions(data.id);
       end
     end
@@ -273,10 +313,26 @@ function WeakAuras.AddTriggerMetaFunctions(options, data, triggernum)
     end,
     func = function()
       if #data.triggers > 1 then
-        tremove(data.triggers, triggernum)
-        DeleteConditionsForTrigger(data, triggernum);
-        WeakAuras.Add(data)
-        WeakAuras.ClearAndUpdateOptions(data.id)
+        StaticPopupDialogs["WEAKAURAS_CONFIRM_TRIGGER_DELETE"] = {
+          text = L["You are about to delete a trigger. |cFFFF0000This cannot be undone!|r Would you like to continue?"],
+          button1 = L["Delete"],
+          button2 = L["Cancel"],
+          OnAccept = function()
+            tremove(data.triggers, triggernum)
+            DeleteConditionsForTrigger(data, triggernum)
+            WeakAuras.Add(data)
+            OptionsPrivate.RemoveCollapsed(collapsedId, "trigger", {triggernum})
+            WeakAuras.ClearAndUpdateOptions(data.id)
+            WeakAuras.FillOptions()
+          end,
+          OnCancel = function()
+            -- no-op
+          end,
+          showAlert = true,
+          whileDead = true,
+          preferredindex = STATICPOPUP_NUMDIALOGS,
+        }
+        StaticPopup_Show("WEAKAURAS_CONFIRM_TRIGGER_DELETE")
       end
     end
   }

@@ -96,36 +96,37 @@ L:SetGeneralLocalization{
 }
 L:SetWarningLocalization{
 	WarnEyeTentacle			= "눈 달린 촉수",
---	WarnClawTentacle		= "발톱 촉수",
---	WarnGiantEyeTentacle	= "거대한 눈달린 촉수",
---	WarnGiantClawTentacle	= "거대한 발톱 촉수",
-	WarnWeakened			= "크툰 약화",
-	SpecWarnWeakened		= "크툰 약화 - 지금 공격!"
+	WarnClawTentacle2		= "갈고리 촉수",
+	TimerGiantEyeTentacle		= "눈 달린 거대한 촉수",
+	TimerGiantClawTentacle		= "거대한 발톱 촉수",
+	SpecWarnWeakened		= "쑨 약화됨!"
 }
 L:SetTimerLocalization{
-	TimerEyeTentacle		= "다음 눈 달린 촉수",
---	TimerGiantEyeTentacle	= "다음 거대한 눈 달린 촉수",
---	TimerClawTentacle		= "다음 발톱 촉수",
---	TimerGiantClawTentacle	= "다음 거대한 발톱 촉수",
-	TimerWeakened			= "크툰 약화 종료"
+	TimerEyeTentacle		= "눈 달린 촉수",
+	TimerClawTentacle		= "갈고리 촉수",
+	TimerGiantEyeTentacle		= "눈 달린 거대한 촉수",
+	TimerGiantClawTentacle		= "거대한 발톱 촉수",
+	TimerWeakened			= "쑨 약화 종료"
 }
 L:SetOptionLocalization{
-	WarnEyeTentacle			= "눈 달린 촉수 알림 보기",
---	WarnClawTentacle		= "발톱 촉수 알림 보기",
---	WarnGiantEyeTentacle	= "거대한 눈 달린 촉수 알림 보기",
---	WarnGiantClawTentacle	= "거대한 발톱 촉수 알림 보기",
-	WarnWeakened			= "크툰 약화 알림 보기",
-	SpecWarnWeakened		= "크툰 약화 특수 경고 보기",
-	TimerEyeTentacle		= "다음 눈 달린 촉수 바 보기",
---	TimerGiantEyeTentacle	= "다음 거대한 눈 달린 촉수 바 보기",
---	TimerClawTentacle		= "다음 발톱 촉수 바 보기",
---	TimerGiantClawTentacle	= "다음 거대한 발톱 촉수 바 보기",
-	TimerWeakened			= "크툰 약화 유지시간 바 보기",
-	RangeFrame				= "거리 창 보기(10m)"
+	WarnEyeTentacle			= "눈 달린 촉수 경고 보기",
+	WarnClawTentacle2		= "갈고리 촉수 경고 보기",
+	WarnGiantEyeTentacle		= "눈 달린 거대한 촉수 경고 보기",
+	WarnGiantClawTentacle		= "거대한 발톱 촉수 경고 보기",
+	SpecWarnWeakened		= "보스 약화시 특수 경고 보기",
+	TimerEyeTentacle		= "다음 눈 달린 촉수 타이머 바 보기",
+	TimerClawTentacle		= "다음 갈고리 촉수 타이머 바 보기",
+	TimerGiantEyeTentacle		= "다음 눈 달린 거대한 촉수 타이머 바 보기",
+	TimerGiantClawTentacle		= "다음 거대한 발톱 촉수 타이머 바 보기",
+	TimerWeakened			= "보스 약화 지속시간 타이머 바 보기",
+	RangeFrame				= "거리 창 보기 (10m)"
 }
 L:SetMiscLocalization{
-	Eye			= "크툰의 눈",
-	Weakened 	= "약해집니다!"
+	Stomach		= "뱃속",
+	Eye			= "쑨의 눈",
+	FleshTent	= "식인 촉수",--Localized so it shows on frame in users language, not senders
+	Weakened 	= "약해집니다!",
+	NotValid	= "안퀴40 레이드를 일부만 클리어 했습니다. 부차적인 네임드가 %s마리 남아있습니다."
 }
 ----------------
 -- Ouro --

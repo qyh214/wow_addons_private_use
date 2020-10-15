@@ -1,4 +1,4 @@
-## Interface: 80300
+## Interface: 90001
 ## Title: RSA [|c51cfff00Demon Hunter|r]
 ## Notes: RSA Demon Hunter Module. This is needed to announce Demon Hunter Spells.
 ## Author: Raeli

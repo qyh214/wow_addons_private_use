@@ -1,6 +1,8 @@
 --Storyline by EllypseCelwe [Quest AddOn]
 --Modify Lights
 
+if true then return end
+
 local function SetModelLight(model, horizontalAngle, verticalAngle)
     local rad, sin, cos = math.rad, math.sin, math.cos;
     local r1, r2 = rad(horizontalAngle), rad(verticalAngle);

@@ -209,7 +209,7 @@
             <Layer level="OVERLAY">
                 <Texture inherits="NarciTopShadowTemplate"/>
 
-				<FontString parentKey="Header" inherits="AAAStatusNameMedium" justifyH="CENTER" justifyV="MIDDLE" text="NARCI_PREFERENCE">
+				<FontString parentKey="Header" inherits="NarciFontMedium12" justifyH="CENTER" justifyV="MIDDLE" text="NARCI_PREFERENCE">
 					<Size x="0" y="0"/>
                     <Color r="0.4" g="0.4" b="0.4" a="1"/>
 					<Anchors>
@@ -219,22 +219,11 @@
             </Layer>
         </Layers>
         <Frames>
-            <Frame>
+            <Frame inherits="NarciFrameWithShadowTemplate">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="-11" y="31"/>
                     <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="11" y="-11"/>
                 </Anchors>
-                <Backdrop edgeFile="Interface\AddOns\Narcissus\Art\Tooltip\Tooltip-White-Border" tile="true">
-                    <EdgeSize>
-                        <AbsValue val="24"/>
-                    </EdgeSize>
-                    <TileSize>
-                        <AbsValue val="24"/>
-                    </TileSize>
-                    <BackgroundInsets>
-                        <AbsInset left="0" right="0" top="0" bottom="0"/>
-                    </BackgroundInsets>
-                </Backdrop>
             </Frame>
 
             <Frame parentKey="LoveContainer" clipChildren="true" Alpha="1">
@@ -349,7 +338,7 @@
                                             </OnLoad>
                                         </Scripts>
                                     </Slider>
-                                    <Button name="Narci_TruncateSwitch" inherits="NarciCheckButtonTemplate">
+                                    <Button name="Narci_TruncateSwitch" inherits="NarciCheckBoxTemplate">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate2" relativePoint="LEFT" x="18" y="-112"/>
                                         </Anchors>
@@ -361,7 +350,7 @@
                                             <OnClick function="Narci_TruncateSwitch_OnClick"/>
                                         </Scripts>
                                     </Button>
-                                    <Button name="Narci_DetailedStatsSwitch" inherits="NarciCheckButtonTemplate">
+                                    <Button name="Narci_DetailedStatsSwitch" inherits="NarciCheckBoxTemplate">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate3" relativePoint="LEFT" x="18" y="-24"/>
                                         </Anchors>
@@ -399,7 +388,7 @@
                                 </Layers>                           
                                 <Frames>
 
-                                    <Button name="Narci_MinimapButtonSwitch" inherits="NarciCheckButtonTemplate" parentKey="MinimapSwitch">
+                                    <Button name="Narci_MinimapButtonSwitch" inherits="NarciCheckBoxTemplate" parentKey="MinimapSwitch">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate1" relativePoint="LEFT" x="18" y="-24"/>
                                         </Anchors>
@@ -413,7 +402,7 @@
                                         </Scripts>
                                     </Button>
 
-                                    <Button name="Narci_MinimapButtonParentSwitch" inherits="NarciCheckButtonTemplate" parentKey="MinimapParentSwitch">
+                                    <Button name="Narci_MinimapButtonParentSwitch" inherits="NarciCheckBoxTemplate" parentKey="MinimapParentSwitch">
                                         <Anchors>
                                             <Anchor point="TOPLEFT" relativeKey="$parent.MinimapSwitch" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
                                         </Anchors>
@@ -426,7 +415,7 @@
                                         </Scripts>
                                     </Button>
 
-                                    <Button name="Narci_FadeOutSwitch" inherits="NarciCheckButtonTemplate" parentKey="FadeOutSwitch">
+                                    <Button name="Narci_FadeOutSwitch" inherits="NarciCheckBoxTemplate" parentKey="FadeOutSwitch">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate1" relativePoint="LEFT" x="200" y="-24"/>
                                         </Anchors>
@@ -464,7 +453,7 @@
                                         </Scripts>
                                     </Button>
 
-                                    <Button name="Narci_DoubleTapSwitch" inherits="NarciCheckButtonTemplate" parentKey="DoubleTap">
+                                    <Button name="Narci_DoubleTapSwitch" inherits="NarciCheckBoxTemplate" parentKey="DoubleTap">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate2" relativePoint="LEFT" x="18" y="-24"/>
                                         </Anchors>
@@ -489,7 +478,7 @@
                                         </Scripts>
                                     </Button>
 
-                                    <Button name="Narci_EscapeSwitch" inherits="NarciCheckButtonTemplate">
+                                    <Button name="Narci_EscapeSwitch" inherits="NarciCheckBoxTemplate">
                                         <Anchors>
                                             <Anchor point="TOPLEFT" relativeKey="$parent.DoubleTap" relativePoint="BOTTOMLEFT" x="0" y="-96"/>
                                         </Anchors>
@@ -550,7 +539,7 @@
                                     </Layer>
                                 </Layers>                           
                                 <Frames>
-                                    <Button inherits="NarciCheckButtonTemplate" parentKey="Theme1" id="1">
+                                    <Button inherits="NarciCheckBoxTemplate" parentKey="Theme1" id="1">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate1" relativePoint="LEFT" x="32" y="-34"/>
                                         </Anchors>
@@ -566,7 +555,7 @@
                                             <OnClick function="Narci_BorderThemeButton_OnClick"/>
                                         </Scripts>
                                     </Button>
-                                    <Button inherits="NarciCheckButtonTemplate" parentKey="Theme2" id="2">
+                                    <Button inherits="NarciCheckBoxTemplate" parentKey="Theme2" id="2">
                                         <Anchors>
                                             <Anchor point="TOP" relativeKey="$parent.Theme1" relativePoint="BOTTOM" x="0" y="-16"/>
                                         </Anchors>
@@ -580,7 +569,7 @@
                                         </Scripts>
                                     </Button>
 
-                                    <Button inherits="NarciCheckButtonTemplate" parentKey="Tooltip1" id="1">
+                                    <Button inherits="NarciCheckBoxTemplate" parentKey="Tooltip1" id="1">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate2" relativePoint="LEFT" x="32" y="-34"/>
                                         </Anchors>
@@ -596,7 +585,7 @@
                                             <OnClick function="Narci_TooltipThemeButton_OnClick"/>
                                         </Scripts>
                                     </Button>
-                                    <Button inherits="NarciCheckButtonTemplate" parentKey="Tooltip2" id="2">
+                                    <Button inherits="NarciCheckBoxTemplate" parentKey="Tooltip2" id="2">
                                         <Anchors>
                                             <Anchor point="TOP" relativeKey="$parent.Tooltip1" relativePoint="BOTTOM" x="0" y="-16"/>
                                         </Anchors>
@@ -665,7 +654,7 @@
                                             </OnLoad>
                                         </Scripts>
                                     </Slider>
-                                    <Button name="Narci_GrainEffectSwitch" inherits="NarciCheckButtonTemplate">
+                                    <Button name="Narci_GrainEffectSwitch" inherits="NarciCheckBoxTemplate">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate1" relativePoint="LEFT" x="18" y="-112"/>
                                         </Anchors>
@@ -677,7 +666,7 @@
                                             <OnClick function="Narci_GrainEffectSwitch_OnClick"/>
                                         </Scripts>
                                     </Button>
-                                    <Button name="Narci_WeatherEffectSwitch" inherits="NarciCheckButtonTemplate">
+                                    <Button name="Narci_WeatherEffectSwitch" inherits="NarciCheckBoxTemplate">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate1" relativePoint="LEFT" x="200" y="-112"/>
                                         </Anchors>
@@ -690,7 +679,7 @@
                                         </Scripts>
                                     </Button>
 
-                                    <Button name="Narci_LetterboxEffectSwitch" inherits="NarciCheckButtonTemplate" parentKey="Letterbox">
+                                    <Button name="Narci_LetterboxEffectSwitch" inherits="NarciCheckBoxTemplate" parentKey="Letterbox">
                                         <HitRectInsets>
                                             <AbsInset left="-4" right="-84" top="-4" bottom="-4"/>
                                         </HitRectInsets>
@@ -732,7 +721,7 @@
                                         </Scripts>
                                     </Slider>
 
-                                    <Button name="Narci_FadeMusicSwitch" inherits="NarciCheckButtonTemplate">
+                                    <Button name="Narci_FadeMusicSwitch" inherits="NarciCheckBoxTemplate">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate2" relativePoint="LEFT" x="18" y="-24"/>
                                         </Anchors>
@@ -754,7 +743,7 @@
                                 </Anchors>
                                 <Layers>
                                     <Layer>
-                                        <FontString parentKey="Cate1" inherits="NarciPrefFontCategory" justifyH="LEFT" justifyV="TOP" text="NARCI_CAMERA_MOVEMENT">
+                                        <FontString parentKey="Cate1" inherits="NarciPrefFontCategory" justifyH="LEFT" justifyV="TOP">
                                             <Size x="0" y="0"/>
                                             <Anchors>
                                                     <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="28" y="-20"/>
@@ -763,7 +752,7 @@
                                     </Layer>
                                 </Layers>                           
                                 <Frames>
-                                    <Button name="Narci_CameraOrbitSwitch" inherits="NarciCheckButtonTemplate" parentKey="Orbit">
+                                    <Button name="Narci_CameraOrbitSwitch" inherits="NarciCheckBoxTemplate" parentKey="Orbit">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate1" relativePoint="LEFT" x="18" y="-24"/>
                                         </Anchors>
@@ -780,19 +769,19 @@
                                         <Scripts>
                                             <OnLoad>
                                                 self.IsOn = false;
-                                                self.Label:SetText(NARCI_CAMERA_ORBIT)
+                                                self.Label:SetText(Narci.L["Orbit Camera"])
                                             </OnLoad>
                                             <OnClick function="Narci_CameraOrbitSwitch_OnClick"/>
                                         </Scripts>
                                     </Button>
 
-                                    <Button name="Narci_CameraSafeSwitch" inherits="NarciCheckButtonTemplate" parentKey="CameraSafe">
+                                    <Button name="Narci_CameraSafeSwitch" inherits="NarciCheckBoxTemplate" parentKey="CameraSafe">
                                         <Anchors>
                                             <Anchor point="TOPLEFT" relativeKey="$parent.Orbit" relativePoint="BOTTOMLEFT" x="0" y="-60"/>
                                         </Anchors>
                                         <Layers>
                                             <Layer level="OVERLAY">
-                                                <FontString inherits="NarciNonInteractiveFont" justifyH="LEFT" justifyV="TOP" parentKey="Description" ignoreParentScale="true" Alpha="1" spacing="2" text="NARCI_CAMERA_SAFE_MODE_DESCRIPTION">
+                                                <FontString inherits="NarciNonInteractiveFont" justifyH="LEFT" justifyV="TOP" parentKey="Description" ignoreParentScale="true" Alpha="1" spacing="2">
                                                     <Size x="270" y="0"/>
                                                     <Anchors>
                                                         <Anchor point="TOPLEFT" relativeKey="$parent.Label" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
@@ -803,11 +792,12 @@
                                         <Scripts>
                                             <OnLoad>
                                                 self.IsOn = false;
-                                                self.Label:SetText(NARCI_CAMERA_SAFE_MODE);
+                                                self.Label:SetText(Narci.L["Camera Safe Mode"]);
+                                                self.Description:SetText(Narci.L["Camera Safe Mode Description"]);
                                             </OnLoad>
                                             <OnShow>
                                                 if IsAddOnLoaded("DynamicCam") then
-                                                    self.Description:SetText(NARCI_CAMERA_SAFE_MODE_DESCRIPTION.."\n"..NARCI_CAMERA_SAFE_MODE_DESCRIPTION_EXTRA);
+                                                    self.Description:SetText(Narci.L["Camera Safe Mode Description"].."\n".. Narci.L["Camera Safe Mode Description Extra"]);
                                                     self.Tick:Hide();
                                                     self:Disable();
                                                 end
@@ -817,7 +807,7 @@
                                         </Scripts>
                                     </Button>
 
-                                    <Button name="Narci_BustShotSwitch" inherits="NarciCheckButtonTemplate">
+                                    <Button name="Narci_BustShotSwitch" inherits="NarciCheckBoxTemplate">
                                         <Anchors>
                                             <Anchor point="TOPLEFT" relativeKey="$parent.CameraSafe" relativePoint="BOTTOMLEFT" x="0" y="-60"/>
                                         </Anchors>
@@ -880,7 +870,7 @@
                                     </Layer>
                                 </Layers>                           
                                 <Frames>
-                                    <Button name="Narci_DefalutLayoutButton1" inherits="NarciCheckButtonTemplate" parentKey="Layout1" id="1">
+                                    <Button name="Narci_DefalutLayoutButton1" inherits="NarciCheckBoxTemplate" parentKey="Layout1" id="1">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate1" relativePoint="LEFT" x="18" y="-24"/>
                                         </Anchors>
@@ -896,7 +886,7 @@
                                             <OnClick function="Narci_LayoutButtonButton_OnClick"/>
                                         </Scripts>
                                     </Button>
-                                    <Button name="Narci_DefalutLayoutButton2" inherits="NarciCheckButtonTemplate" parentKey="Layout2" id="2">
+                                    <Button name="Narci_DefalutLayoutButton2" inherits="NarciCheckBoxTemplate" parentKey="Layout2" id="2">
                                         <Anchors>
                                             <Anchor point="TOP" relativeKey="$parent.Layout1" relativePoint="BOTTOM" x="0" y="-16"/>
                                         </Anchors>
@@ -909,7 +899,7 @@
                                             <OnClick function="Narci_LayoutButtonButton_OnClick"/>
                                         </Scripts>
                                     </Button>
-                                    <Button name="Narci_DefalutLayoutButton3" inherits="NarciCheckButtonTemplate" parentKey="Layout3" id="3">
+                                    <Button name="Narci_DefalutLayoutButton3" inherits="NarciCheckBoxTemplate" parentKey="Layout3" id="3">
                                         <Anchors>
                                             <Anchor point="TOP" relativeKey="$parent.Layout2" relativePoint="BOTTOM" x="0" y="-16"/>
                                         </Anchors>
@@ -923,7 +913,7 @@
                                         </Scripts>
                                     </Button>
 
-                                    <Button name="Narci_AlwaysShowModelSwitch" inherits="NarciCheckButtonTemplate" parentKey="AlwaysShowModel">
+                                    <Button name="Narci_AlwaysShowModelSwitch" inherits="NarciCheckBoxTemplate" parentKey="AlwaysShowModel">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate2" relativePoint="LEFT" x="18" y="-24"/>
                                         </Anchors>
@@ -935,7 +925,7 @@
                                             <OnClick function="Narci_AlwaysShowModelSwitch_OnClick"/>
                                         </Scripts>
                                     </Button>
-                                    <Button name="Narci_FullBodySwitch" inherits="NarciCheckButtonTemplate" parentKey="FullBody">
+                                    <Button name="Narci_FullBodySwitch" inherits="NarciCheckBoxTemplate" parentKey="FullBody">
                                         <Anchors>
                                             <Anchor point="TOP" relativeKey="$parent.AlwaysShowModel" relativePoint="BOTTOM" x="0" y="-16"/>
                                         </Anchors>
@@ -958,7 +948,7 @@
                                         </Scripts>
                                     </Button>
 
-                                    <Button name="Narci_UseEntranceVisualSwitch" inherits="NarciCheckButtonTemplate" parentKey="Entrance">
+                                    <Button name="Narci_UseEntranceVisualSwitch" inherits="NarciCheckBoxTemplate" parentKey="Entrance">
                                         <Anchors>
                                             <Anchor point="TOP" relativeKey="$parent.FullBody" relativePoint="BOTTOM" x="0" y="-32"/>
                                         </Anchors>
@@ -1025,7 +1015,7 @@
                                         <Scripts>
                                             <OnValueChanged function="Narci_SceenshotQualitySlider_OnValueChanged"/>
                                             <OnLoad>
-                                                self.Label:SetText(NARCI_NEW_ENTRY_PREFIX.. Narci.L["Sceenshot Quality"]); 
+                                                self.Label:SetText(Narci.L["Sceenshot Quality"]); 
                                                 self.Description:SetText(Narci.L["Screenshot Quality Description"]);
                                                 NarciAPI_SliderWithSteps_OnLoad(self);
                                             </OnLoad>
@@ -1056,7 +1046,7 @@
                                         </Scripts>
                                     </Slider>
 
-                                    <Button name="Narci_ExitConfirmSwitch" inherits="NarciCheckButtonTemplate">
+                                    <Button name="Narci_ExitConfirmSwitch" inherits="NarciCheckBoxTemplate">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate2" relativePoint="LEFT" x="18" y="-64"/>
                                         </Anchors>
@@ -1106,7 +1096,7 @@
                                     </Layer>
                                 </Layers>
                                 <Frames>
-                                    <Button parentKey="CorruptionBarToggle" inherits="NarciCheckButtonTemplate" name="Narci_CorruptionBarSwitch">
+                                    <Button parentKey="CorruptionBarToggle" inherits="NarciCheckBoxTemplate" name="Narci_CorruptionBarSwitch">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate2" relativePoint="LEFT" x="18" y="-24"/>
                                         </Anchors>
@@ -1129,7 +1119,7 @@
                                         </Scripts>
                                     </Button>
 
-                                    <Button parentKey="CorruptionTooltipToggle" inherits="NarciCheckButtonTemplate" name="Narci_CorruptionTooltipToggle">
+                                    <Button parentKey="CorruptionTooltipToggle" inherits="NarciCheckBoxTemplate" name="Narci_CorruptionTooltipToggle">
                                         <Anchors>
                                             <Anchor point="TOP" relativeKey="$parent.CorruptionBarToggle" relativePoint="BOTTOM" x="0" y="-48"/>
                                         </Anchors>
@@ -1181,7 +1171,7 @@
                                     </Layer>
                                 </Layers>
                                 <Frames>
-                                    <Button name="Narci_LoadOnDemandSwitch" inherits="NarciCheckButtonTemplate" parentKey="LoadOnDemand">
+                                    <Button name="Narci_LoadOnDemandSwitch" inherits="NarciCheckBoxTemplate" parentKey="LoadOnDemand">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate1" relativePoint="LEFT" x="18" y="-24"/>
                                         </Anchors>
@@ -1207,7 +1197,7 @@
                                         </Scripts>
                                     </Button>
 
-                                    <Button name="Narci_FindRelativesSwitch" inherits="NarciCheckButtonTemplate" parentKey="FindRelatives">
+                                    <Button name="Narci_FindRelativesSwitch" inherits="NarciCheckBoxTemplate" parentKey="FindRelatives">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate2" relativePoint="LEFT" x="18" y="-24"/>
                                         </Anchors>
@@ -1248,7 +1238,7 @@
                                         </Scripts>
                                     </Button>
 
-                                    <Button name="Narci_TranslateNameSwitch" inherits="NarciCheckButtonTemplate" parentKey="Translator">
+                                    <Button name="Narci_TranslateNameSwitch" inherits="NarciCheckBoxTemplate" parentKey="Translator">
                                         <Anchors>
                                             <Anchor point="TOP" relativeKey="$parent.FindRelatives" relativePoint="BOTTOM" x="0" y="-36"/>
                                         </Anchors>
@@ -1273,7 +1263,7 @@
                                         </Scripts>
                                     </Button>
 
-                                    <Button inherits="NarciCheckButtonTemplate" parentKey="OnTooltip" id="1">
+                                    <Button inherits="NarciCheckBoxTemplate" parentKey="OnTooltip" id="1">
                                         <Anchors>
                                             <Anchor point="TOPLEFT" relativeKey="$parent.Translator.Description" relativePoint="BOTTOMLEFT" x="1" y="-11.2"/>
                                         </Anchors>
@@ -1286,7 +1276,7 @@
                                         </Scripts>
                                     </Button>
                                     
-                                    <Button inherits="NarciCheckButtonTemplate" parentKey="OnNamePlate" id="2">
+                                    <Button inherits="NarciCheckBoxTemplate" parentKey="OnNamePlate" id="2">
                                         <Anchors>
                                             <Anchor point="TOP" relativeKey="$parent.OnTooltip" relativePoint="BOTTOM" x="0" y="-16"/>
                                         </Anchors>
@@ -1336,7 +1326,7 @@
                                         </Frames>
                                     </Button>
 
-                                    <Button inherits="NarciCheckButtonTemplate" parentKey="SelectLanguage">
+                                    <Button inherits="NarciCheckBoxTemplate" parentKey="SelectLanguage">
                                         <Anchors>
                                             <Anchor point="TOP" relativeKey="$parent.OnNamePlate" relativePoint="BOTTOM" x="0" y="-48"/>
                                         </Anchors>
@@ -1399,7 +1389,7 @@
                                     </Layer>
                                 </Layers>                           
                                 <Frames>
-                                    <Button name="Narci_AFKScreenSwitch" inherits="NarciCheckButtonTemplate" parentKey="AFK">
+                                    <Button name="Narci_AFKScreenSwitch" inherits="NarciCheckBoxTemplate" parentKey="AFK">
                                         <Anchors>
                                             <Anchor point="LEFT" relativeKey="$parent.Cate1" relativePoint="LEFT" x="18" y="-24"/>
                                         </Anchors>
@@ -1422,7 +1412,7 @@
                                         </Scripts>
                                     </Button>
 
-                                    <Button name="Narci_AFKAutoStandSwitch" inherits="NarciCheckButtonTemplate" parentKey="AutoStand">
+                                    <Button name="Narci_AFKAutoStandSwitch" inherits="NarciCheckBoxTemplate" parentKey="AutoStand">
                                         <Anchors>
                                             <Anchor point="TOPLEFT" relativeKey="$parent.AFK.Description" relativePoint="BOTTOMLEFT" x="1" y="-11.2"/>
                                         </Anchors>
@@ -1439,14 +1429,14 @@
                                         <Scripts>
                                             <OnLoad>
                                                 self.IsOn = false;
-                                                self.Label:SetText(NARCI_NEW_ENTRY_PREFIX.. Narci.L["Keep Standing"]);
+                                                self.Label:SetText(Narci.L["Keep Standing"]);
                                                 self.Description:SetText(Narci.L["Keep Standing Description"]);
                                             </OnLoad>
                                             <OnClick function="Narci_AFKAutoStand_OnClick"/>
                                         </Scripts>
                                     </Button>
 
-                                    <Button name="Narci_GemManagerSwitch" inherits="NarciCheckButtonTemplate" parentKey="Gemma">
+                                    <Button name="Narci_GemManagerSwitch" inherits="NarciCheckBoxTemplate" parentKey="Gemma">
                                         <Anchors>
                                             <Anchor point="TOPLEFT" relativeKey="$parent.AFK" relativePoint="BOTTOMLEFT" x="0" y="-124"/>
                                         </Anchors>
@@ -1468,7 +1458,7 @@
                                             <OnClick function="Narci_GemManagerSwitch_OnClick"/>
                                         </Scripts>
                                     </Button>
-                                    <Button name="Narci_DressingRoomSwitch" inherits="NarciCheckButtonTemplate">
+                                    <Button name="Narci_DressingRoomSwitch" inherits="NarciCheckBoxTemplate">
                                         <Anchors>
                                             <Anchor point="TOPLEFT" relativeKey="$parent.Gemma" relativePoint="BOTTOMLEFT" x="0" y="-50"/>
                                         </Anchors>
@@ -1562,7 +1552,7 @@
                                                 <Anchor point="TOPLEFT" relativeKey="$parent.PatronListMid" relativePoint="TOPRIGHT" x="20"/>
                                             </Anchors>
                                         </FontString>                                   
-                                        <FontString parentKey="Cate2" inherits="NarciPrefFontCategory" justifyH="LEFT" justifyV="TOP" text="Data Support">
+                                        <FontString parentKey="Cate2" inherits="NarciPrefFontCategory" justifyH="LEFT" justifyV="TOP" text="Acknowledgement">
                                             <Size x="0" y="0"/>
                                             <Anchors>
                                                 <Anchor point="CENTER" relativeKey="$parent" relativePoint="BOTTOM" y="100"/>
@@ -1698,7 +1688,7 @@
                                         </Layers>
                                         <Scripts>
                                             <OnLoad>
-                                                self.Text:SetText(Narci.L["Show Whats New"]);
+                                                self.Text:SetText(SPLASH_BASE_HEADER);
                                             </OnLoad>
                                             <OnEnter>
                                                 self.Text:SetTextColor(0.88, 0.88, 0.88);

@@ -71,7 +71,6 @@ L["S_MAPBAR_OPTIONSMENU_SOUNDENABLED"] = "Habilitar som"
 --[[Translation missing --]]
 --[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = ""--]] 
 L["S_MAPBAR_OPTIONSMENU_STATUSBARANCHOR"] = "Ancorar ao topo"
-L["S_MAPBAR_OPTIONSMENU_TOMTOM_WPPERSISTENT"] = "Ponto persistente"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_CURRENTZONE"] = "Apenas zona atual"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_SCALE"] = "Escala do rastreador: %s"
 L["S_MAPBAR_OPTIONSMENU_TRACKERCONFIG"] = "Ajustes do rastreador"

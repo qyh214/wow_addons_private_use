@@ -1,6 +1,6 @@
-## Interface: 80300
+## Interface: 90001
 ## Title: Personal Loot Helper
-## Version: 2.21
+## Version: 2.23
 ## SavedVariables: PLH_META, PLH_PREFS, PLH_STATS
 ## Notes: Simplifies trading of personal loot with other group members.
 ## Author: Madone-Zul'Jin

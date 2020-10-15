@@ -1,4 +1,4 @@
-﻿## Interface: 80300
+﻿## Interface: 90001
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Azeroth (Classic)|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Azeroth (Classic)|r
@@ -12,7 +12,7 @@
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: Classic
 ## X-DBM-Mod-World-Boss: 1
-## X-DBM-Mod-Has-Single-Format: 1
+## X-DBM-StatTypes: normal
 ## X-DBM-Mod-Name: Azeroth (Classic)
 ## X-DBM-Mod-Name-deDE: Azeroth (Classic)
 ## X-DBM-Mod-Name-zhTW: 艾澤拉斯 (經典)
@@ -21,9 +21,10 @@
 ## X-DBM-Mod-MapID: 0, 1
 ## X-DBM-Mod-LoadCID: 121820,121818,121911,121912,121913,121821,14889,14888,14887,14890,12397,6109
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
+## X-DBM-Mod-MinExpansion: 0
 ## X-Curse-Project-ID: 16442
 ## X-WoWI-ID: 11700
-## Version: r674
+## Version: r675
 
 localization.en.lua
 localization.de.lua

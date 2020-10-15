@@ -1141,7 +1141,7 @@ private.NPC_INFO = {
 	[92508] = { zoneID = 534, artID = { 551 }, x = 0.636, y = 0.812, overlay = { "0.63-0.81" }, displayID = 63082, questID = { 38604 } }; --Gloomtalon
 	[92941] = { zoneID = 534, artID = { 551 }, x = 0.33200002, y = 0.35799998, overlay = { "0.32-0.35","0.33-0.35" }, displayID = 62142, questID = { 38709 } }; --Gorabosh
 	[91695] = { zoneID = 534, artID = { 551 }, x = 0.47599998, y = 0.412, overlay = { "0.45-0.42","0.46-0.40","0.46-0.4","0.46-0.42","0.47-0.42","0.47-0.39","0.47-0.41","0.47-0.40" }, displayID = 62706, questID = { 38400 } }; --Grand Warlock Nethekurse
-	[93057] = { zoneID = 534, artID = { 551 }, x = 0.16, y = 0.592, overlay = { "0.16-0.59" }, displayID = 62816, questID = { 38757,38750 } }; --Grannok
+	[93057] = { zoneID = 534, artID = { 551 }, x = 0.16, y = 0.592, overlay = { "0.16-0.59" }, displayID = 62816, questID = { 38750 } }; --Grannok
 	[90094] = { zoneID = 534, artID = { 551 }, x = 0.396, y = 0.32599998, overlay = { "0.39-0.32" }, displayID = 61867, questID = { 39046 } }; --Harbormaster Korak
 	[90777] = { zoneID = 534, artID = { 551 }, x = 0.22600001, y = 0.4, overlay = { "0.20-0.37","0.20-0.40","0.20-0.41","0.20-0.38","0.20-0.39","0.21-0.40","0.22-0.37","0.22-0.39","0.22-0.4" }, displayID = 62123, questID = { 38028 } }; --High Priest Ikzan
 	[90429] = { zoneID = 534, artID = { 551 }, x = 0.316, y = 0.726, overlay = { "0.30-0.71","0.30-0.72","0.31-0.71","0.31-0.72" }, displayID = 62118, questID = { 38026 } }; --Imp-Master Valessa
@@ -1697,7 +1697,10 @@ private.NPC_INFO = {
 	[132701] = { zoneID = 863, artID = { 888 }, x = 0.35599998, y = 0.336, overlay = { "0.35-0.32","0.35-0.33" }, weeklyReset = true, displayID = 82592, questID = { 52181 } }; --T'zane
 	[140163] = { zoneID = 942, artID = { 967 }, x = 0.83199996, y = 0.496, overlay = { "0.83-0.49" }, weeklyReset = true, displayID = 84332 }; --Warbringer Yenajz
 	[138279] = { zoneID = 895, artID = { 920 }, x = 0.85400003, y = 0.43400002, overlay = { "0.85-0.43" }, displayID = 85796, questID = { 54953 } }; --Adhara White
-	[140474] = { zoneID = 942, artID = { 967 }, x = 0.5936, y = 0.5421, overlay = { "0.59-0.54" }, displayID = 86696 }; --Adherent of the Abyss
+	[140474] = { zoneID = {
+					[942] = { x = 0.4585, y = 0.3617, artID = { 967 }, overlay = { "0.45-0.36" } };
+					[1182] = { x = 0.5929, y = 0.5485, artID = { 1155 },overlay = { "0.59-0.54" } };
+			  },  displayID = 86696, questID = { 53428,53429 } }; --Adherent of the Abyss
 	[135852] = { zoneID = 864, artID = { 889 }, x = 0.506, y = 0.812, overlay = { "0.50-0.81" }, displayID = 76667, questID = { 51058 } }; --Ak'tar
 	[125250] = { zoneID = 863, artID = { 888 }, x = 0.67800003, y = 0.296, overlay = { "0.67-0.29" }, displayID = 78396, questID = { 48063 } }; --Ancient Jawbreaker
 	[137824] = { zoneID = 896, artID = { 921 }, x = 0.292, y = 0.688, overlay = { "0.29-0.68" }, displayID = 85538, questID = { 51470 } }; --Arclight
@@ -2240,7 +2243,7 @@ private.NPC_INFO = {
 	[158632] = { zoneID = {
 					[1527] = { x = 0.71800005, y = 0.77, overlay = { "0.43-0.28","0.44-0.28","0.44-0.30","0.45-0.26","0.45-0.30","0.46-0.39","0.46-0.34","0.46-0.43","0.46-0.29","0.46-0.31","0.46-0.33","0.46-0.35","0.46-0.40","0.46-0.42","0.46-0.45","0.46-0.41","0.46-0.36","0.46-0.38","0.47-0.36","0.47-0.39","0.47-0.42","0.47-0.28","0.47-0.30","0.47-0.32","0.47-0.44","0.47-0.27","0.47-0.43","0.47-0.29","0.47-0.37","0.47-0.4","0.47-0.41","0.48-0.30","0.48-0.34","0.48-0.43","0.48-0.27","0.48-0.35","0.48-0.45","0.48-0.26","0.48-0.32","0.48-0.28","0.48-0.36","0.49-0.33","0.49-0.41","0.49-0.27","0.49-0.35","0.49-0.42","0.5-0.42","0.5-0.44","0.5-0.45","0.50-0.28","0.50-0.29","0.50-0.30","0.50-0.35","0.50-0.46","0.50-0.27","0.50-0.43","0.50-0.47","0.50-0.44","0.51-0.45","0.51-0.46","0.51-0.51","0.51-0.30","0.51-0.49","0.51-0.32","0.51-0.48","0.51-0.5","0.51-0.50","0.52-0.34","0.52-0.31","0.52-0.30","0.52-0.35","0.53-0.33","0.53-0.50","0.53-0.31","0.53-0.48","0.53-0.51","0.53-0.32","0.53-0.34","0.54-0.47","0.54-0.22","0.54-0.46","0.54-0.49","0.54-0.5","0.54-0.52","0.54-0.53","0.55-0.24","0.55-0.31","0.55-0.34","0.55-0.49","0.55-0.51","0.55-0.20","0.55-0.22","0.55-0.23","0.55-0.26","0.55-0.27","0.55-0.28","0.55-0.29","0.55-0.48","0.55-0.32","0.56-0.29","0.56-0.53","0.56-0.54","0.56-0.18","0.56-0.33","0.56-0.34","0.56-0.17","0.56-0.32","0.56-0.35","0.56-0.28","0.56-0.52","0.57-0.31","0.57-0.51","0.57-0.53","0.57-0.29","0.57-0.44","0.57-0.56","0.57-0.57","0.57-0.73","0.57-0.80","0.57-0.21","0.57-0.22","0.57-0.32","0.57-0.46","0.57-0.72","0.57-0.74","0.57-0.78","0.57-0.83","0.57-0.13","0.57-0.30","0.57-0.54","0.57-0.76","0.57-0.20","0.57-0.85","0.58-0.26","0.58-0.54","0.58-0.58","0.58-0.61","0.58-0.82","0.58-0.21","0.58-0.24","0.58-0.46","0.58-0.64","0.58-0.65","0.58-0.68","0.58-0.70","0.58-0.71","0.58-0.74","0.58-0.77","0.58-0.81","0.58-0.18","0.58-0.19","0.58-0.22","0.58-0.40","0.58-0.47","0.58-0.48","0.58-0.49","0.58-0.56","0.58-0.59","0.58-0.66","0.58-0.78","0.58-0.80","0.58-0.84","0.58-0.41","0.58-0.42","0.58-0.57","0.58-0.69","0.58-0.7","0.58-0.72","0.58-0.75","0.58-0.76","0.58-0.79","0.58-0.44","0.58-0.51","0.58-0.60","0.59-0.17","0.59-0.26","0.59-0.51","0.59-0.63","0.59-0.74","0.59-0.21","0.59-0.29","0.59-0.44","0.59-0.81","0.59-0.32","0.59-0.33","0.59-0.36","0.59-0.39","0.59-0.48","0.59-0.49","0.59-0.53","0.59-0.54","0.59-0.45","0.59-0.85","0.59-0.31","0.59-0.34","0.59-0.47","0.59-0.50","0.6-0.53","0.6-0.82","0.60-0.29","0.60-0.31","0.60-0.36","0.60-0.37","0.60-0.41","0.60-0.51","0.60-0.78","0.60-0.35","0.60-0.39","0.60-0.42","0.60-0.56","0.60-0.58","0.60-0.80","0.60-0.33","0.60-0.49","0.60-0.52","0.60-0.54","0.60-0.60","0.60-0.77","0.60-0.79","0.60-0.85","0.60-0.40","0.61-0.36","0.61-0.40","0.61-0.76","0.61-0.83","0.61-0.14","0.61-0.35","0.61-0.50","0.61-0.41","0.61-0.15","0.61-0.34","0.61-0.78","0.61-0.37","0.61-0.8","0.62-0.77","0.62-0.80","0.62-0.38","0.62-0.37","0.62-0.39","0.62-0.79","0.62-0.81","0.63-0.41","0.63-0.81","0.63-0.77","0.63-0.64","0.63-0.65","0.63-0.78","0.64-0.64","0.64-0.66","0.64-0.8","0.64-0.77","0.64-0.67","0.64-0.65","0.65-0.65","0.65-0.69","0.65-0.77","0.65-0.79","0.65-0.76","0.65-0.67","0.65-0.73","0.65-0.68","0.65-0.75","0.66-0.75","0.66-0.66","0.66-0.69","0.66-0.78","0.66-0.72","0.66-0.74","0.67-0.69","0.67-0.77","0.67-0.78","0.67-0.70","0.67-0.72","0.67-0.75","0.67-0.73","0.67-0.71","0.67-0.76","0.68-0.75","0.68-0.69","0.68-0.71","0.68-0.77","0.68-0.70","0.68-0.74","0.69-0.76","0.69-0.71","0.69-0.73","0.70-0.76","0.70-0.75","0.70-0.78","0.70-0.74","0.70-0.77","0.71-0.75","0.71-0.76","0.71-0.77" } };
 					[1530] = { x = 0.872, y = 0.432, overlay = { "0.4-0.39","0.4-0.40","0.40-0.4","0.41-0.45","0.41-0.39","0.41-0.40","0.41-0.38","0.42-0.41","0.42-0.45","0.42-0.42","0.42-0.40","0.43-0.37","0.43-0.42","0.43-0.43","0.43-0.46","0.43-0.38","0.43-0.40","0.43-0.41","0.43-0.44","0.43-0.47","0.44-0.38","0.44-0.47","0.44-0.39","0.44-0.41","0.44-0.45","0.45-0.36","0.45-0.39","0.45-0.43","0.45-0.40","0.45-0.42","0.45-0.45","0.45-0.41","0.46-0.38","0.46-0.47","0.46-0.37","0.46-0.40","0.46-0.39","0.46-0.41","0.47-0.4","0.47-0.41","0.47-0.36","0.47-0.37","0.47-0.46","0.47-0.40","0.49-0.37","0.53-0.43","0.53-0.39","0.54-0.39","0.54-0.40","0.55-0.40","0.55-0.42","0.55-0.41","0.56-0.43","0.56-0.42","0.56-0.59","0.57-0.31","0.57-0.43","0.57-0.58","0.57-0.41","0.57-0.59","0.57-0.27","0.57-0.42","0.57-0.56","0.57-0.57","0.58-0.27","0.58-0.40","0.58-0.59","0.58-0.60","0.58-0.61","0.59-0.31","0.59-0.57","0.59-0.59","0.59-0.60","0.59-0.6","0.59-0.27","0.59-0.62","0.6-0.28","0.6-0.32","0.6-0.56","0.60-0.29","0.60-0.35","0.60-0.42","0.60-0.58","0.60-0.31","0.60-0.34","0.60-0.57","0.60-0.59","0.60-0.28","0.60-0.33","0.60-0.54","0.60-0.60","0.61-0.32","0.61-0.34","0.61-0.43","0.61-0.55","0.61-0.56","0.61-0.60","0.61-0.28","0.61-0.61","0.62-0.32","0.62-0.57","0.62-0.58","0.62-0.59","0.62-0.28","0.63-0.35","0.63-0.34","0.63-0.28","0.63-0.59","0.63-0.57","0.64-0.34","0.64-0.48","0.64-0.5","0.64-0.61","0.64-0.44","0.64-0.51","0.64-0.49","0.64-0.54","0.65-0.28","0.65-0.22","0.65-0.44","0.65-0.45","0.65-0.46","0.65-0.53","0.65-0.54","0.65-0.26","0.65-0.33","0.65-0.27","0.65-0.56","0.65-0.39","0.65-0.48","0.65-0.52","0.66-0.32","0.66-0.34","0.66-0.44","0.66-0.47","0.66-0.48","0.66-0.26","0.66-0.39","0.66-0.22","0.66-0.35","0.66-0.45","0.66-0.54","0.66-0.25","0.66-0.27","0.66-0.53","0.66-0.23","0.66-0.37","0.66-0.55","0.67-0.27","0.67-0.29","0.67-0.34","0.67-0.24","0.67-0.30","0.67-0.35","0.67-0.47","0.67-0.53","0.67-0.23","0.67-0.33","0.67-0.37","0.67-0.46","0.67-0.36","0.67-0.32","0.67-0.44","0.68-0.24","0.68-0.3","0.68-0.30","0.68-0.25","0.68-0.29","0.68-0.33","0.68-0.26","0.68-0.27","0.68-0.28","0.68-0.45","0.68-0.32","0.68-0.42","0.68-0.46","0.69-0.21","0.69-0.44","0.69-0.45","0.69-0.23","0.69-0.24","0.69-0.31","0.69-0.32","0.69-0.46","0.69-0.47","0.69-0.25","0.69-0.22","0.69-0.30","0.69-0.28","0.7-0.24","0.7-0.46","0.7-0.47","0.70-0.26","0.70-0.27","0.70-0.31","0.70-0.47","0.70-0.48","0.71-0.47","0.71-0.27","0.71-0.25","0.71-0.46","0.72-0.46","0.73-0.27","0.74-0.28","0.76-0.51","0.76-0.49","0.77-0.45","0.77-0.50","0.77-0.47","0.78-0.53","0.78-0.45","0.78-0.5","0.78-0.51","0.78-0.52","0.78-0.54","0.79-0.46","0.79-0.43","0.79-0.45","0.79-0.48","0.79-0.50","0.79-0.51","0.79-0.52","0.79-0.54","0.79-0.55","0.79-0.49","0.8-0.45","0.8-0.49","0.8-0.54","0.80-0.45","0.80-0.42","0.80-0.43","0.80-0.47","0.80-0.48","0.80-0.44","0.80-0.49","0.81-0.46","0.81-0.52","0.81-0.41","0.81-0.44","0.81-0.50","0.81-0.53","0.81-0.48","0.81-0.51","0.81-0.54","0.81-0.49","0.82-0.51","0.82-0.50","0.82-0.44","0.82-0.52","0.83-0.46","0.83-0.47","0.83-0.49","0.84-0.45","0.84-0.47","0.84-0.48","0.84-0.50","0.84-0.52","0.84-0.46","0.84-0.51","0.85-0.50","0.85-0.51","0.86-0.5","0.87-0.43" } };
-			  }, displayID = 92232, questID = { 58691 } }; --Corrupted Fleshbeast
+			  }, displayID = 92232, zoneQuestId = { 56064, 57157 }, questID = { 58691 } }; --Corrupted Fleshbeast
 	[151995] = { zoneID = 1527, artID = { 1343 }, x = 0.806, y = 0.47599998, overlay = { "0.77-0.46","0.78-0.45","0.79-0.45","0.80-0.46","0.80-0.47" }, displayID = 91333, zoneQuestId = { 55350 }, questID = { 55502 } }; --Hik-ten the Taskmaster
 	[160968] = { zoneID = 1530, artID = { 1342 }, x = 0.176, y = 0.126, overlay = { "0.16-0.12","0.17-0.11","0.17-0.12" }, displayID = 94433, zoneQuestId = { 57008 }, questID = { 58295 } }; --Jade Colossus
 	[152657] = { zoneID = 1527, artID = { 1343 }, x = 0.68, y = 0.368, overlay = { "0.64-0.36","0.65-0.36","0.65-0.38","0.66-0.34","0.66-0.38","0.67-0.32","0.67-0.33","0.67-0.34","0.67-0.38","0.67-0.35","0.67-0.37","0.68-0.36" }, displayID = 4689, zoneQuestId = { 55350 }, questID = { 55682 } }; --Tat the Bonechewer
@@ -2297,7 +2300,7 @@ private.NPC_INFO = {
 	[159087] = { zoneID = {
 				[1530] = { x = 0.916, y = 0.458, overlay = { "0.62-0.48","0.62-0.49","0.62-0.50","0.62-0.52","0.62-0.53","0.63-0.50","0.63-0.53","0.63-0.48","0.63-0.52","0.63-0.54","0.63-0.49","0.64-0.51","0.64-0.53","0.64-0.54","0.64-0.52","0.70-0.39","0.70-0.41","0.70-0.4","0.70-0.30","0.71-0.26","0.71-0.28","0.71-0.38","0.71-0.44","0.71-0.35","0.71-0.41","0.71-0.36","0.71-0.56","0.72-0.26","0.72-0.29","0.72-0.43","0.72-0.55","0.72-0.45","0.72-0.24","0.72-0.25","0.72-0.56","0.72-0.36","0.72-0.44","0.73-0.28","0.73-0.25","0.73-0.26","0.73-0.29","0.73-0.55","0.73-0.58","0.73-0.27","0.73-0.30","0.74-0.29","0.74-0.58","0.75-0.43","0.75-0.34","0.75-0.56","0.76-0.54","0.76-0.57","0.77-0.55","0.77-0.59","0.77-0.39","0.77-0.41","0.77-0.58","0.78-0.38","0.78-0.55","0.78-0.56","0.78-0.39","0.81-0.42","0.81-0.43","0.82-0.44","0.82-0.45","0.82-0.42","0.85-0.44","0.85-0.43","0.85-0.45","0.86-0.46","0.87-0.43","0.87-0.45","0.88-0.43","0.88-0.45","0.88-0.44","0.89-0.44","0.89-0.46","0.89-0.47","0.9-0.46","0.90-0.45","0.90-0.46","0.90-0.44","0.90-0.48","0.91-0.45" } };
 				[1527] = { x = 0.85400003, y = 0.59400004, overlay = { "0.13-0.69","0.31-0.73","0.36-0.81","0.39-0.26","0.4-0.17","0.41-0.21","0.42-0.24","0.42-0.26","0.43-0.26","0.44-0.27","0.46-0.28","0.47-0.29","0.49-0.31","0.50-0.33","0.52-0.37","0.52-0.39","0.52-0.43","0.52-0.38","0.52-0.41","0.52-0.42","0.52-0.90","0.53-0.38","0.54-0.44","0.54-0.45","0.55-0.39","0.55-0.38","0.56-0.25","0.56-0.24","0.56-0.39","0.56-0.40","0.56-0.44","0.56-0.49","0.56-0.23","0.56-0.4","0.56-0.46","0.56-0.20","0.56-0.48","0.57-0.17","0.57-0.35","0.57-0.46","0.57-0.27","0.57-0.37","0.57-0.4","0.57-0.36","0.58-0.17","0.58-0.31","0.58-0.52","0.58-0.34","0.58-0.53","0.58-0.30","0.59-0.14","0.59-0.54","0.59-0.56","0.59-0.58","0.59-0.60","0.59-0.68","0.59-0.78","0.59-0.57","0.59-0.63","0.59-0.75","0.59-0.6","0.6-0.59","0.60-0.83","0.61-0.63","0.61-0.89","0.61-0.81","0.62-0.73","0.62-0.75","0.63-0.67","0.63-0.76","0.63-0.77","0.64-0.70","0.64-0.69","0.65-0.74","0.65-0.70","0.75-0.79","0.84-0.55","0.85-0.59" } };
-			  }, displayID = 91925, questID = { 57834 } }; --Corrupted Bonestripper
+			  }, displayID = 91925, zoneQuestId = { 56064, 57157 }, questID = { 57834 } }; --Corrupted Bonestripper
 	[160825] = { zoneID = 1530, artID = { 1342 }, x = 0.198, y = 0.74, overlay = { "0.19-0.73","0.19-0.74" }, displayID = 93289, zoneQuestId = { 57728 }, questID = { 58300 } }; --Amber-Shaper Esh'ri
 	[158491] = { zoneID = 1527, artID = { 1343 }, x = 0.532, y = 0.708, overlay = { "0.44-0.78","0.44-0.77","0.45-0.76","0.46-0.75","0.46-0.73","0.46-0.74","0.46-0.72","0.47-0.73","0.48-0.73","0.48-0.72","0.49-0.71","0.49-0.69","0.51-0.69","0.51-0.68","0.53-0.68","0.53-0.70" }, displayID = 92662, zoneQuestId = { 57157 }, questID = { 57662 } }; --Falconer Amenophis
 	[160810] = { zoneID = 1530, artID = { 1342 }, x = 0.29799998, y = 0.536, overlay = { "0.28-0.52","0.29-0.51","0.29-0.52","0.29-0.53" }, displayID = 93279, zoneQuestId = { 57728 }, questID = { 58299 } }; --Harbinger Il'koxik
@@ -2346,4 +2349,365 @@ private.NPC_INFO = {
 	[152922] = { zoneID = 1462, artID = { 1276 }, x = 0.63, y = 0.57, overlay = { "0.63-0.56","0.63-0.57" }, displayID = 92480, questID = { 57387 } }; --Data Anomaly
 	[152923] = { zoneID = 1462, artID = { 1276 }, x = 0.632, y = 0.576, overlay = { "0.63-0.56","0.63-0.57" }, displayID = 92478, questID = { 57385 } }; --Data Anomaly
 	[153486] = { zoneID = 1462, artID = { 1276 }, x = 0.63, y = 0.57, overlay = { "0.62-0.56","0.63-0.57" }, displayID = 92483, questID = { 57389 } }; --Data Anomaly
+	
+	-- Rares Shadowlands
+	[174066] = { zoneID = 118, artID = { 123 }, x = 0.344, y = 0.685, overlay = { "0.34-0.68" }, resetTimer = 1200, displayID = 16174, questID = { 62344 } }; --Patchwerk
+	[174051] = { zoneID = 118, artID = { 123 }, x = 0.583, y = 0.394, overlay = { "0.58-0.39" }, resetTimer = 1200, displayID = 26352, questID = { 62329 } }; --Trollgore
+	[174060] = { zoneID = 118, artID = { 123 }, x = 0.54, y = 0.447, overlay = { "0.54-0.44" }, resetTimer = 1200, displayID = 30857, questID = { 62338 } }; --Prince Keleseth
+	[174055] = { zoneID = 118, artID = { 123 }, x = 0.582, y = 0.834, overlay = { "0.58-0.83" }, resetTimer = 1200, displayID = 30973, questID = { 62333 } }; --Marwyn
+	[174067] = { zoneID = 118, artID = { 123 }, x = 0.316, y = 0.705, overlay = { "0.31-0.70" }, resetTimer = 1200, displayID = 16590, questID = { 62345 } }; --Noth the Plaguebringer
+	[174065] = { zoneID = 118, artID = { 123 }, x = 0.497, y = 0.327, overlay = { "0.49-0.32" }, resetTimer = 1200, displayID = 31165, questID = { 62343 } }; --Blood Queen Lana'thel
+	[161530] = { zoneID = 0, displayID = 94633 }; --Cloudtail
+	[174063] = { zoneID = 118, artID = { 123 }, x = 0.511, y = 0.785, overlay = { "0.51-0.78" }, resetTimer = 1200, displayID = 30893, questID = { 62341 } }; --Lady Deathwhisper
+	[174064] = { zoneID = 118, artID = { 123 }, x = 0.571, y = 0.303, overlay = { "0.57-0.30" }, resetTimer = 1200, displayID = 30881, questID = { 62342 } }; --Professor Putricide
+	[174058] = { zoneID = 118, artID = { 123 }, x = 0.707, y = 0.384, overlay = { "0.70-0.38" }, resetTimer = 1200, displayID = 30226, questID = { 62336 } }; --Bronjahm <Godfather of Souls>
+	[174053] = { zoneID = 118, artID = { 123 }, x = 0.793, y = 0.606, overlay = { "0.79-0.60" }, resetTimer = 1200, displayID = 27072, questID = { 62331 } }; --The Prophet Tharon'ja
+	[174059] = { zoneID = 118, artID = { 123 }, x = 0.648, y = 0.221, overlay = { "0.64-0.22" }, resetTimer = 1200, displayID = 29837, questID = { 62337 } }; --The Black Knight
+	[174050] = { zoneID = 118, artID = { 123 }, x = 0.675, y = 0.58, overlay = { "0.67-0.58" }, resetTimer = 1200, displayID = 27394, questID = { 62328 } }; --Krik'thir the Gatewatcher
+	[174057] = { zoneID = 118, artID = { 123 }, x = 0.472, y = 0.661, overlay = { "0.47-0.66" }, resetTimer = 1200, displayID = 30277, questID = { 62335 } }; --Scourgelord Tyrannus
+	[174054] = { zoneID = 118, artID = { 123 }, x = 0.502, y = 0.879, overlay = { "0.50-0.87" }, resetTimer = 1200, displayID = 30972, questID = { 62332 } }; --Falric
+	[174049] = { zoneID = 118, artID = { 123 }, x = 0.296, y = 0.622, overlay = { "0.29-0.62" }, resetTimer = 1200, displayID = 30856, questID = { 62327 } }; --Prince Taldaram
+	[174052] = { zoneID = 118, artID = { 123 }, x = 0.778, y = 0.661, overlay = { "0.77-0.66" }, resetTimer = 1200, displayID = 26292, questID = { 62330 } }; --Novos the Summoner
+	[174061] = { zoneID = 118, artID = { 123 }, x = 0.524, y = 0.526, overlay = { "0.52-0.52" }, resetTimer = 1200, displayID = 26351, questID = { 62339 } }; --Ingvar the Plunderer
+	[174062] = { zoneID = 118, artID = { 123 }, x = 0.578, y = 0.561, overlay = { "0.57-0.56" }, resetTimer = 1200, displayID = 27418, questID = { 62340 } }; --Skadi the Ruthless
+	[174048] = { zoneID = 118, artID = { 123 }, x = 0.442, y = 0.491, overlay = { "0.44-0.49" }, resetTimer = 1200, displayID = 27407, questID = { 62326 } }; --Elder Nadox
+	[174056] = { zoneID = 118, artID = { 123 }, x = 0.586, y = 0.725, overlay = { "0.58-0.72" }, resetTimer = 1200, displayID = 30843, questID = { 62334 } }; --Forgemaster Garfrost
+	[158659] = { zoneID = 0, displayID = 92534 }; --Herculon <Aspirant Assessor>
+	[161528] = { zoneID = 0, displayID = 94632 }; --Aethon
+	[161529] = { zoneID = 0, displayID = 94634 }; --Nemaeus
+	[162586] = { zoneID = 0, displayID = 96481 }; --Tahonta
+	[161527] = { zoneID = 0, displayID = 94631 }; --Sigilback
+	[162588] = { zoneID = 0, displayID = 94882 }; --Gristlebeak
+	[160985] = { zoneID = 0, displayID = 94437 }; --Nikara the Reborn
+	[170548] = { zoneID = 0, displayID = 94295 }; --Sundancer
+	[163538] = { zoneID = 0, displayID = 95170 }; --The Tarragrue
+	[162727] = { zoneID = 0, displayID = 48061 }; --Bubbleblood
+	[157312] = { zoneID = 0, displayID = 96717 }; --Oily Invertebrate
+	[162797] = { zoneID = 0, displayID = 97219 }; --Deepscar <Pit Hound>
+	[169503] = { zoneID = 0, displayID = 94195 }; --Deifir the Untamed
+	[162741] = { zoneID = 0, displayID = 97217 }; --Gieger <Experimental Construct>
+	[166993] = { zoneID = 0, displayID = 96391 }; --Huntmaster Petrus
+	[160882] = { zoneID = 0, displayID = 94421 }; --Nikara Blackheart
+	[159886] = { zoneID = 0, displayID = 96755 }; --Sister Chelicerae
+	[171040] = { zoneID = 0, displayID = 94227 }; --Xixin the Ravening
+	[171189] = { zoneID = 0, displayID = 92192 }; --Bookkeeper Mnemis
+	[160557] = { zoneID = 0, displayID = 94297 }; --Mystra <The Ancient Steed>
+	[164391] = { zoneID = 0, displayID = 95115 }; --Old Ardeite
+	[170834] = { zoneID = 0, displayID = 93445 }; --Champion of Purity
+	[171255] = { zoneID = 0, displayID = 97524 }; --Echo of Aella <Hand of Courage>
+	[156676] = { zoneID = 0, displayID = 86424 }; --Ogre Overseer
+	[162767] = { zoneID = 0, displayID = 79162 }; --Pesticide
+	[160675] = { zoneID = 0, displayID = 94369 }; --Scrivener Lenua
+	[164415] = { zoneID = 0, displayID = 96776 }; --Skuld Vit
+	[167721] = { zoneID = 0, displayID = 95201 }; --The Slumbering Emperor
+	[160721] = { zoneID = 0, displayID = 94310 }; --Fallen Acolyte Erisne
+	[159985] = { zoneID = 0, displayID = 92663 }; --Herculon
+	[159753] = { zoneID = 0, displayID = 92246 }; --Ravenomous
+	[162669] = { zoneID = 0, displayID = 96375 }; --Devour'us
+	[165290] = { zoneID = 0, displayID = 92703 }; --Harika the Horrid
+	[170439] = { zoneID = 0, displayID = 94295 }; --Sundancer
+	[171041] = { zoneID = 0, displayID = 94229 }; --Worldfeaster Chronn
+	[171731] = { zoneID = 0, displayID = 94529 }; --Sineater
+	[155779] = { zoneID = 0, displayID = 94408 }; --Tomb Burster <Dread Crawler Queen>
+	[163460] = { zoneID = 0, displayID = 95126 }; --Dionae
+	[167851] = { zoneID = 0, displayID = 94204 }; --Egg-Tender Leh'go
+	[171013] = { zoneID = 0, displayID = 94225 }; --Embodied Hunger
+	[166139] = { zoneID = 0, displayID = 93962 }; --Glimmerdust, As Kil'jaeden <of The Burning Legion>
+	[159363] = { zoneID = 0, displayID = 93909 }; --Nemea
+	[162528] = { zoneID = 0, displayID = 98589 }; --Smorgas the Feaster
+	[152612] = { zoneID = 0, displayID = 92418 }; --Subjugator Klontzas
+	[167078] = { zoneID = 0, displayID = 96395 }; --Wingflayer the Cruel
+	[170659] = { zoneID = 0, displayID = 93463 }; --Basilofos, King of the Hill
+	[159221] = { zoneID = 0, displayID = 76876 }; --Bleakmane
+	[156142] = { zoneID = 0, displayID = 65973 }; --Seeker of Souls
+	[162819] = { zoneID = 0, displayID = 93242 }; --Warbringer Mal'Korak
+	[160788] = { zoneID = 0, displayID = 92629 }; --Zurdun <The Dark Watcher>
+	[152517] = { zoneID = 0, displayID = 90427 }; --Deadsoul Lifetaker
+	[160736] = { zoneID = 0, displayID = 94379 }; --First Talon Syndaal
+	[166016] = { zoneID = 0, displayID = 96087 }; --Gnarlwood
+	[172523] = { zoneID = 0, displayID = 92416 }; --Houndmaster Vasanok
+	[161105] = { zoneID = 0, displayID = 94450 }; --Indomitable Schmitd
+	[160337] = { zoneID = 0, displayID = 94228 }; --Jedu <The Final Doom>
+	[166308] = { zoneID = 0, displayID = 96240 }; --Plaguemuck
+	[164789] = { zoneID = 0, displayID = 95553 }; --Silkskimmer
+	[166582] = { zoneID = 0, displayID = 90424 }; --Skira the Revenant
+	[162818] = { zoneID = 0, displayID = 96452 }; --Wartusk
+	[166393] = { zoneID = 0, displayID = 91695 }; --Amalgamation of Filth
+	[162658] = { zoneID = 0, displayID = 94941 }; --Dark Cathedral
+	[173238] = { zoneID = 0, displayID = 98490 }; --Deadsoul Strider
+	[168148] = { zoneID = 0, displayID = 96471 }; --Drolkrad
+	--[165234] = { zoneID = 0, displayID = 65204 }; --Jaxaar
+	[159196] = { zoneID = 0, displayID = 92704 }; --Kir'rik the Drinker
+	[165152] = { zoneID = 0, displayID = 90426 }; --Leeched Soul
+	[164064] = { zoneID = 0, displayID = 92781 }; --Obolos <Prime Adjutant>
+	[172577] = { zoneID = 0, displayID = 96312 }; --Orophea
+	[166001] = { zoneID = 0, displayID = 96062 }; --Shadeweaver
+	[159323] = { zoneID = 0, displayID = 93165 }; --Stoneward Trampler
+	[172182] = { zoneID = 0, displayID = 97879 }; --Venthyr Provocateur
+	[165223] = { zoneID = 0, displayID = 95689 }; --Vy'nix the Feaster
+	[157964] = { zoneID = 0, displayID = 94397 }; --Adjutant Dekaris
+	[156158] = { zoneID = 0, displayID = 93906 }; --Adjutant Felipos
+	[159374] = { zoneID = 0, displayID = 93915 }; --Aegeus Cloudshearer
+	[159507] = { zoneID = 0, displayID = 93953 }; --Al'ximir
+	[160836] = { zoneID = 0, displayID = 92418 }; --Anduris <The Chains of Woe>
+	[170417] = { zoneID = 0, displayID = 88739 }; --Animated Stygia
+	[164239] = { zoneID = 0, displayID = 94229 }; --Anomalous Worldeater
+	[170301] = { zoneID = 0, displayID = 90429 }; --Apholeias, Herald of Loss
+	[165686] = { zoneID = 0, displayID = 95209 }; --Ashen Amalgamation
+	[147199] = { zoneID = 0, displayID = 22773 }; --Atrivar the Cursed
+	[164526] = { zoneID = 0, displayID = 95588 }; --Blargus the Stone-Carver
+	[170228] = { zoneID = 0, displayID = 94814 }; --Bone Husk
+	[165451] = { zoneID = 0, displayID = 97321 }; --Bonecrunch
+	[160587] = { zoneID = 0, displayID = 94406 }; --Bonespinner
+	[157311] = { zoneID = 0, displayID = 70785 }; --Burnblister
+	[159450] = { zoneID = 0, displayID = 93912 }; --Callie the Nightmaiden
+	[170835] = { zoneID = 0, displayID = 93190 }; --Champion of Courage
+	[170836] = { zoneID = 0, displayID = 96730 }; --Champion of Humility
+	[170832] = { zoneID = 0, displayID = 97392 }; --Champion of Loyalty
+	[170833] = { zoneID = 0, displayID = 97393 }; --Champion of Wisdom
+	[171317] = { zoneID = 0, displayID = 97472 }; --Conjured Death
+	[160588] = { zoneID = 0, displayID = 94407 }; --Corpsebreeder
+	[171010] = { zoneID = 0, displayID = 92677 }; --Corrupted Clawguard
+	[171705] = { zoneID = 0, displayID = 97758 }; --Court Crusher
+	[168693] = { zoneID = 0, displayID = 94400 }; --Cyrixia <The Willbreaker>
+	[158782] = { zoneID = 0, displayID = 93778 }; --Daniela Darkwhisper
+	[160770] = { zoneID = 0, displayID = 92781 }; --Darithis the Bleak
+	[173134] = { zoneID = 0, displayID = 92664 }; --Darksworn Goliath
+	--[155870] = { zoneID = 0, displayID = 92500 }; --Dechorias <Punisher of the Weak>
+	[164238] = { zoneID = 0, displayID = 94195 }; --Deifir the Untamed
+	[162323] = { zoneID = 0, displayID = 94835 }; --Discarded
+	[159522] = { zoneID = 0, displayID = 93965 }; --Dreamthief
+	[171708] = { zoneID = 0, displayID = 97759 }; --Drezgruda <The Fifth Talon>
+	[170774] = { zoneID = 0, displayID = 96828 }; --Eketra <The Impaler>
+	[169827] = { zoneID = 0, displayID = 90424 }; --Ekphoras, Herald of Grief
+	[159436] = { zoneID = 0, displayID = 93890 }; --Elagea
+	[160861] = { zoneID = 0, displayID = 94280 }; --Essence of Loss
+	[160865] = { zoneID = 0, displayID = 94527 }; --Excrutiating Thoughts
+	[170303] = { zoneID = 0, displayID = 90427 }; --Exos, Herald of Domination
+	[162394] = { zoneID = 0, displayID = 92779 }; --Extricator Vlavios
+	[171216] = { zoneID = 0, displayID = 94305 }; --Fallen Aspirant Eolis
+	[159189] = { zoneID = 0, displayID = 93808 }; --Fallen One
+	[159995] = { zoneID = 0, displayID = 92663 }; --Fist of the Paragons
+	[160731] = { zoneID = 0, displayID = 94380 }; --General Kaal
+	[159207] = { zoneID = 0, displayID = 94769 }; --Gizzak the Snatcher
+	[159949] = { zoneID = 0, displayID = 92192 }; --Gleaming Challenger
+	[160866] = { zoneID = 0, displayID = 94276 }; --Gluttonous
+	[164107] = { zoneID = 0, displayID = 41946 }; --Gormtamer Tizo
+	[157145] = { zoneID = 0, displayID = 91889 }; --Gravitas
+	[163531] = { zoneID = 0, displayID = 95201 }; --Great Duskflutter
+	[160332] = { zoneID = 0, displayID = 93853 }; --Gruux
+	[157149] = { zoneID = 0, displayID = 92703 }; --Heartseeker
+	[159364] = { zoneID = 0, displayID = 93910 }; --High Courier Taelica
+	[165786] = { zoneID = 0, displayID = 97721 }; --High Inquisitor Vetar
+	[159480] = { zoneID = 0, displayID = 93930 }; --Hopo
+	[170414] = { zoneID = 0, displayID = 88583 }; --Howling Spectre
+	[164112] = { zoneID = 0, displayID = 98601 }; --Humon'gozz
+	[163054] = { zoneID = 0, displayID = 95073 }; --Hunt-Captain Korayn
+	[156237] = { zoneID = 0, displayID = 94919 }; --Imperator Dara
+	[173114] = { zoneID = 0, displayID = 18722 }; --Invasive Decayfly
+	[159375] = { zoneID = 0, displayID = 93914 }; --Karan <The Sword of Hope>
+	[160777] = { zoneID = 0, displayID = 94397 }; --Karija <The Wings of Death>
+	[165287] = { zoneID = 0, displayID = 95718 }; --Keepwatcher
+	[159234] = { zoneID = 0, displayID = 93830 }; --Keridin
+	[172186] = { zoneID = 0, displayID = 97444 }; --Knockerbock <"Premier" Party Supplies>
+	[158783] = { zoneID = 0, displayID = 93777 }; --Lady Sybelle
+	[160943] = { zoneID = 0, displayID = 53875 }; --Lava Wyrm
+	[159534] = { zoneID = 0, displayID = 93973 }; --Li'sshiss
+	[159197] = { zoneID = 0, displayID = 92703 }; --Lifeleech
+	[163525] = { zoneID = 0, displayID = 95200 }; --Lightseeker
+	[161891] = { zoneID = 0, displayID = 94703 }; --Lord Mortegore
+	[163005] = { zoneID = 0, displayID = 97777 }; --Many-Voiced Horror
+	[159433] = { zoneID = 0, displayID = 93889 }; --Mateos
+	[159515] = { zoneID = 0, displayID = 93964 }; --Moonberry
+	[158761] = { zoneID = 0, displayID = 93622 }; --Mordai Darkwhisper
+	[162849] = { zoneID = 0, displayID = 92410 }; --Morguliax <Lord of Decapitation>
+	[160771] = { zoneID = 0, displayID = 92781 }; --Morticar the Soul-Binder
+	[159193] = { zoneID = 0, displayID = 93815 }; --Mucktooth
+	[159379] = { zoneID = 0, displayID = 93881 }; --Nadia
+	[163496] = { zoneID = 0, displayID = 95195 }; --Niya
+	[166146] = { zoneID = 0, displayID = 95232 }; --Niya, As Xavius <Some Kind of Evil Sylvar>
+	[160018] = { zoneID = 0, displayID = 92677 }; --Oathbreaker
+	[160792] = { zoneID = 0, displayID = 93157 }; --Oblivion-Seeker
+	[159184] = { zoneID = 0, displayID = 93811 }; --Prince Vrand <House of Dust>
+	--[161072] = { zoneID = 0, displayID = 94279 }; --Pure Arrogance
+	[159039] = { zoneID = 0, displayID = 93623 }; --Rare Elite Template
+	[159032] = { zoneID = 0, displayID = 93623 }; --Rare Elite Template
+	[159031] = { zoneID = 0, displayID = 93622 }; --Rare Template
+	[159057] = { zoneID = 0, displayID = 93622 }; --Rare Template
+	[171327] = { zoneID = 0, displayID = 96773 }; --Reekmonger
+	[160776] = { zoneID = 0, displayID = 94400 }; --Rynhild <Grasp of the Maw>
+	[160834] = { zoneID = 0, displayID = 92415 }; --Shade-Hunter Kavrok
+	[170634] = { zoneID = 0, displayID = 92780 }; --Shadeweaver Zeris
+	[163056] = { zoneID = 0, displayID = 95072 }; --Sharian
+	[162481] = { zoneID = 0, displayID = 94868 }; --Sinstone Hoarder
+	[159950] = { zoneID = 0, displayID = 92193 }; --Skystormer
+	[153667] = { zoneID = 0, displayID = 91878 }; --Slagbelt
+	[159501] = { zoneID = 0, displayID = 93945 }; --Slimegut
+	[159500] = { zoneID = 0, displayID = 93948 }; --Sludgehook the Tenderizer
+	[160393] = { zoneID = 0, displayID = 94233 }; --Soulstalker Doina
+	[160385] = { zoneID = 0, displayID = 94233 }; --Soulstalker Doina
+	[165893] = { zoneID = 0, displayID = 16170 }; --Spirit of the Damned
+	[162630] = { zoneID = 0, displayID = 94936 }; --Stitched One
+	--[160940] = { zoneID = 0, displayID = 62199 }; --Storm Giant Boss
+	[171540] = { zoneID = 0, displayID = 90580 }; --Swollen Experiment
+	[159984] = { zoneID = 0, displayID = 92664 }; --Tectis
+	[159525] = { zoneID = 0, displayID = 93971 }; --Thalanil
+	[170731] = { zoneID = 0, displayID = 97237 }; --Thanassos <Death's Voice>
+	[149040] = { zoneID = 0, displayID = 40301 }; --The Spiritweaver
+	[160331] = { zoneID = 0, displayID = 93853 }; --Thirstlurker
+	[165444] = { zoneID = 0, displayID = 95791 }; --Toxigrow
+	[165227] = { zoneID = 0, displayID = 95696 }; --Tricky Tommith
+	[171405] = { zoneID = 0, displayID = 95695 }; --Tricky Trik
+	[164213] = { zoneID = 0, displayID = 95378 }; --Urdo the Invulerable
+	[160855] = { zoneID = 0, displayID = 94415 }; --Usula <The Consumer>
+	[168647] = { zoneID = 0, displayID = 96087 }; --Valfir the Unrelenting
+	[159451] = { zoneID = 0, displayID = 93911 }; --Valiana Skyshadow
+	[165441] = { zoneID = 0, displayID = 95796 }; --Vashiri Darkthief
+	[159456] = { zoneID = 0, displayID = 93916 }; --Vasilios the Truth-Breaker
+	[160551] = { zoneID = 0, displayID = 93756 }; --Velix <The Great Huntress>
+	--[163452] = { zoneID = 0, displayID = 64908 }; --Vinyeti <Vignette Placeholder>
+	--[158574] = { zoneID = 0, displayID = 64908 }; --Vinyeti
+	[161481] = { zoneID = 0, displayID = 22174 }; --Vinyeti <Vignette Placeholder>
+	[160765] = { zoneID = 0, displayID = 92412 }; --Vol'kalar <Champion of Agony>
+	[160835] = { zoneID = 0, displayID = 92418 }; --Warden Kas'volar
+	[159483] = { zoneID = 0, displayID = 93929 }; --Wiltix the Loyal
+	[172384] = { zoneID = 0, displayID = 80465 }; --Withered Emberbloom
+	[160821] = { zoneID = 0, displayID = 94402 }; --Worldedge Gorger
+	[170385] = { zoneID = 0, displayID = 94278 }; --Writhing Misery
+	[159457] = { zoneID = 0, displayID = 93913 }; --Xandar <The Sword of Vengeance>
+	[172890] = { zoneID = 0, displayID = 97777 }; --Yero the Skittish
+	[172862] = { zoneID = 0, displayID = 94426 }; --Yero the Skittish
+	--[165233] = { zoneID = 0, displayID = 65203 }; --Zakarias
+	[160328] = { zoneID = 0, displayID = 94227 }; --Zyxua
+	[164388] = { zoneID = 0, displayID = 69223 }; --Amalgamation of Light
+	[170434] = { zoneID = 0, displayID = 94868 }; --Amalgamation of Sin
+	[166135] = { zoneID = 0, displayID = 94474 }; --Astra, As Azshara <An Infamous Queen>
+	[166576] = { zoneID = 0, displayID = 95209 }; --Azgar
+	[160833] = { zoneID = 0, displayID = 92415 }; --Barithur <Assassin of Souls>
+	[173136] = { zoneID = 0, displayID = 98171 }; --Blightsmasher
+	[172180] = { zoneID = 0, displayID = 95785 }; --Blustery Boil
+	[166292] = { zoneID = 0, displayID = 96261 }; --Bog Beast
+	[157310] = { zoneID = 0, displayID = 95844 }; --Boneslurp
+	[157833] = { zoneID = 0, displayID = 97331 }; --Borr-Geth
+	[159105] = { zoneID = 0, displayID = 94041 }; --Collector Kash
+	[164212] = { zoneID = 0, displayID = 95381 }; --Commander Bonescythe
+	[159194] = { zoneID = 0, displayID = 93108 }; --Crystal-Tooth
+	[152500] = { zoneID = 0, displayID = 97777 }; --Deadsoul Amalgam
+	[171011] = { zoneID = 0, displayID = 96574 }; --Demi the Relic Hoarder
+	[163240] = { zoneID = 0, displayID = 95115 }; --Downfeather
+	[152508] = { zoneID = 0, displayID = 93213 }; --Dusky Tremorbeast
+	[163229] = { zoneID = 0, displayID = 97941 }; --Dustbrawl
+	[166588] = { zoneID = 0, displayID = 96338 }; --Dying Breath
+	[163238] = { zoneID = 0, displayID = 95115 }; --Eldercaw the Patriarch
+	[160080] = { zoneID = 0, displayID = 94150 }; --Elydorea <The Great Terrapin>
+	[172164] = { zoneID = 0, displayID = 82239 }; --Ember Skyterror
+	[165206] = { zoneID = 0, displayID = 93853 }; --Endlurker
+	[154330] = { zoneID = 0, displayID = 92779 }; --Eternas the Tormentor
+	[161310] = { zoneID = 0, displayID = 94521 }; --Executioner Adrastia
+	[155483] = { zoneID = 0, displayID = 95199 }; --Faeleaf Shimmerwing
+	[166521] = { zoneID = 0, displayID = 94229 }; --Famu the Infinite
+	[159496] = { zoneID = 0, displayID = 98029 }; --Forgemaster Madalav
+	[159492] = { zoneID = 0, displayID = 93938 }; --Foul-Tongue Cyrlix
+	[160079] = { zoneID = 0, displayID = 94151 }; --Gemshell
+	[159231] = { zoneID = 0, displayID = 93831 }; --General Draven
+	[159992] = { zoneID = 0, displayID = 92664 }; --Gildbreaker <Paragon's End>
+	[165365] = { zoneID = 0, displayID = 94200 }; --Gorm Monstrosity
+	--[162486] = { zoneID = 0, displayID = 92780 }; --Jael the Soul Warden
+	[171741] = { zoneID = 0, displayID = 97766 }; --Kedu <The Final Fate>
+	[173293] = { zoneID = 0, displayID = 94614 }; --Lady Audat
+	[156340] = { zoneID = 0, displayID = 97750 }; --Larionrider Orstus
+	[162627] = { zoneID = 0, displayID = 94913 }; --Leatherhide
+	[158760] = { zoneID = 0, displayID = 93623 }; --Lord Chamberlain
+	[170048] = { zoneID = 0, displayID = 95669 }; --Manifestation of Wrath
+	[172524] = { zoneID = 0, displayID = 96556 }; --Mawrat Brood Mother
+	[165053] = { zoneID = 0, displayID = 95696 }; --Mymaen
+	[159383] = { zoneID = 0, displayID = 93880 }; --Nikolaos
+	[160014] = { zoneID = 0, displayID = 92676 }; --Pureheart
+	[159056] = { zoneID = 0, displayID = 93622 }; --Rare Template
+	[159038] = { zoneID = 0, displayID = 93622 }; --Rare Template
+	[160562] = { zoneID = 0, displayID = 93622 }; --REUSE
+	[167724] = { zoneID = 0, displayID = 19530 }; --Rotbriar Changeling
+	[162628] = { zoneID = 0, displayID = 94928 }; --Rotclaw the Pestilent
+	[166140] = { zoneID = 0, displayID = 95055 }; --Senthii, As Gul'dan <From an Alternate Timeline>
+	[163004] = { zoneID = 0, displayID = 97777 }; --Shrieking Chorus
+	[160857] = { zoneID = 0, displayID = 94416 }; --Sire Ladinas <The Lightrazed>
+	[171749] = { zoneID = 0, displayID = 97769 }; --Sloppy
+	[173191] = { zoneID = 0, displayID = 92415 }; --Soulstalker V'lara
+	[160311] = { zoneID = 0, displayID = 94202 }; --Spitscar the Flesh-Melter
+	[147200] = { zoneID = 0, displayID = 36891 }; --The Shambler
+	[162180] = { zoneID = 0, displayID = 95830 }; --Thread Mistress Leeda
+	[160783] = { zoneID = 0, displayID = 93213 }; --Valioc
+	[165000] = { zoneID = 0, displayID = 93213 }; --Valioc
+	[161825] = { zoneID = 0, displayID = 55139 }; --Vinyeti <Vignette Placeholder>
+	[158060] = { zoneID = 0, displayID = 55139 }; --Vinyeti <Vignette Placeholder>
+	[162631] = { zoneID = 0, displayID = 94937 }; --Vulgor <The Iron Amalgamation>
+	[173080] = { zoneID = 0, displayID = 96338 }; --Wandering Death
+	[160760] = { zoneID = 0, displayID = 92412 }; --Warden Skoldus
+	[166684] = { zoneID = 0, displayID = 92411 }; --Warden Skoldus
+	[164147] = { zoneID = 0, displayID = 81163 }; --Wrigglemortis
+	[159195] = { zoneID = 0, displayID = 93166 }; --Ancient Bristleback
+	[171211] = { zoneID = 0, displayID = 97513 }; --Aspirant Eolis
+	[170932] = { zoneID = 0, displayID = 95116 }; --Cloudfeather Patriarch
+	[160592] = { zoneID = 0, displayID = 93471 }; --Coatylis
+	[171014] = { zoneID = 0, displayID = 94640 }; --Collector Astorestes
+	[157058] = { zoneID = 0, displayID = 96437 }; --Corspecutter Moroc
+	[170623] = { zoneID = 0, displayID = 97349 }; --Dark Watcher
+	[164477] = { zoneID = 0, displayID = 96777 }; --Deathbinder Hroth
+	[160050] = { zoneID = 0, displayID = 93496 }; --Eldenwing
+	[156339] = { zoneID = 0, displayID = 97749 }; --Eliminator Sotiros
+	[171009] = { zoneID = 0, displayID = 92664 }; --Enforcer Aegeon
+	[166710] = { zoneID = 0, displayID = 94737 }; --Executioner Aatron
+	[160552] = { zoneID = 0, displayID = 93760 }; --Fleetpaw
+	[157307] = { zoneID = 0, displayID = 88651 }; --Gelloh
+	[156134] = { zoneID = 0, displayID = 97041 }; --Ghastly Charger
+	[166142] = { zoneID = 0, displayID = 93962 }; --Glimmerdust, As Jaina <A Magic Ice Princess>
+	[160310] = { zoneID = 0, displayID = 94203 }; --Gnashmaw the Broodqueen
+	[169823] = { zoneID = 0, displayID = 94207 }; --Gorm Behemoth
+	[163188] = { zoneID = 0, displayID = 94190 }; --Gormboar
+	[167464] = { zoneID = 0, displayID = 96483 }; --Grand Arcanist Dimitri
+	[166679] = { zoneID = 0, displayID = 95369 }; --Hopecrusher
+	[160787] = { zoneID = 0, displayID = 92629 }; --Horgul, Hound of Darkness
+	[160448] = { zoneID = 0, displayID = 96274 }; --Hunter Vivanna <The Wild Hunt>
+	[160640] = { zoneID = 0, displayID = 93068 }; --Innervus
+	[160549] = { zoneID = 0, displayID = 94287 }; --Ironhoof
+	[162314] = { zoneID = 0, displayID = 94756 }; --Lord Mortegore
+	[164093] = { zoneID = 0, displayID = 70936 }; --Macabre
+	[160782] = { zoneID = 0, displayID = 93213 }; --Malakas <The Endless Shadow>
+	[166138] = { zoneID = 0, displayID = 93332 }; --Mi'kai, As Argus, the Unmaker <A Corrupted World Soul>
+	[162759] = { zoneID = 0, displayID = 54317 }; --Moregorger
+	[164547] = { zoneID = 0, displayID = 93787 }; --Mystic Rainbowhorn
+	[160051] = { zoneID = 0, displayID = 93462 }; --Nemaeus
+	[162690] = { zoneID = 0, displayID = 94945 }; --Nerissa Heartless
+	[168149] = { zoneID = 0, displayID = 94297 }; --Night Mare
+	[156986] = { zoneID = 0, displayID = 92831 }; --Ogre Taskmaster
+	[159539] = { zoneID = 0, displayID = 93976 }; --Oranomonos the Everbranching
+	[167726] = { zoneID = 0, displayID = 55772 }; --Rootwrithe
+	[168147] = { zoneID = 0, displayID = 98584 }; --Sabreil the Bonecleaver
+	[172521] = { zoneID = 0, displayID = 96828 }; --Sanngror the Torturer
+	[158406] = { zoneID = 0, displayID = 93547 }; --Scunner
+	[166398] = { zoneID = 0, displayID = 92416 }; --Soulforger Rhovus
+	[160392] = { zoneID = 0, displayID = 94233 }; --Soulstalker Doina
+	[171451] = { zoneID = 0, displayID = 96776 }; --Soultwister Cero
+	[159503] = { zoneID = 0, displayID = 98018 }; --Stonefist
+	[170302] = { zoneID = 0, displayID = 90429 }; --Talaporas, Herald of Pain
+	[159493] = { zoneID = 0, displayID = 96073 }; --Thel'naz the Bonespeaker
+	[171008] = { zoneID = 0, displayID = 94277 }; --Unstable Memory
+	[160556] = { zoneID = 0, displayID = 94292 }; --Windmane
+	[160321] = { zoneID = 0, displayID = 93791 }; --Brighthide
+	[157308] = { zoneID = 0, displayID = 92611 }; --Corrupted Sediment
+	[162711] = { zoneID = 0, displayID = 83605 }; --Deadly Dapperling
+	[166145] = { zoneID = 0, displayID = 94430 }; --Dreamweaver, As N'Zoth <An Eldritch Abomination>
+	[171688] = { zoneID = 0, displayID = 86207 }; --Faeflayer
+	[163370] = { zoneID = 0, displayID = 94201 }; --Gormbore
+	[160052] = { zoneID = 0, displayID = 93464 }; --Great Kingmane
+	[168135] = { zoneID = 0, displayID = 94297 }; --Night Mare
+	[161857] = { zoneID = 0, displayID = 25468 }; --Nirvaska the Summoner
+	[157294] = { zoneID = 0, displayID = 85116 }; --Pulsing Leech
+	[173051] = { zoneID = 0, displayID = 97235 }; --Suppressor Xelors
+	[160059] = { zoneID = 0, displayID = 94146 }; --Taskmaster Xox <Master Taskmaster>
+	[165253] = { zoneID = 0, displayID = 93077 }; --Tollkeeper Varaboss
+	[157309] = { zoneID = 0, displayID = 48942 }; --Violet Mistake
+	[170995] = { zoneID = 0, displayID = 96452 }; --Warbringer Mal'korak
+	[157125] = { zoneID = 0, displayID = 94813 }; --Zargox the Reborn
+	[174108] = { zoneID = 0, displayID = 97852 }; --Necromantic Anomaly
 }

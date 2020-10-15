@@ -1,12 +1,12 @@
 ---------------------------------------------
 ---- Raeli's Spell Announcer Mage Module ----
 ---------------------------------------------
-local RSA = LibStub("AceAddon-3.0"):GetAddon("RSA")
-local L = LibStub("AceLocale-3.0"):GetLocale("RSA")
-local RSA_Mage = RSA:NewModule("Mage")
+local RSA = LibStub('AceAddon-3.0'):GetAddon('RSA')
+local L = LibStub('AceLocale-3.0'):GetLocale('RSA')
+local RSA_Mage = RSA:NewModule('Mage')
 
 function RSA_Mage:OnInitialize()
-	if RSA.db.profile.General.Class == "MAGE" then
+	if RSA.db.profile.General.Class == 'MAGE' then
 		RSA_Mage:SetEnabledState(true)
 	else
 		RSA_Mage:SetEnabledState(false)
@@ -14,10 +14,10 @@ function RSA_Mage:OnInitialize()
 end -- End OnInitialize
 function RSA_Mage:OnEnable()
 	RSA.db.profile.Modules.Mage = true -- Set state to loaded, to know if we should announce when a spell is refreshed.
-	local pName = UnitName("player")
+	local pName = UnitName('player')
 	local Config_Polymorph = { -- POLYMORPH
 		profile = 'Polymorph',
-		section = "Cast",
+		section = 'Cast',
 		replacements = { TARGET = 1 }
 	}
 	local Config_Polymorph_End = { -- POLYMORPH
@@ -28,7 +28,7 @@ function RSA_Mage:OnEnable()
 	local Config_Polymorph_Missed = { -- POLYMORPH
 		profile = 'Polymorph',
 		section = 'Resist',
-		immuneSection = "Immune",
+		immuneSection = 'Immune',
 		replacements = { TARGET = 1 }
 	}
 	local Config_Portals = { -- Portals
@@ -40,13 +40,13 @@ function RSA_Mage:OnEnable()
 	}
 	local Config_Counterspell = { -- Counterspell
 		profile = 'Counterspell',
-		section  = "Interrupt",
-		replacements = { TARGET = 1, extraSpellName = "[TARSPELL]", extraSpellLink = "[TARLINK]" }
+		section  = 'Interrupt',
+		replacements = { TARGET = 1, extraSpellName = '[TARSPELL]', extraSpellLink = '[TARLINK]' }
 	}
 	local Config_Counterspell_Missed = { -- Counterspell
 		profile = 'Counterspell',
 		section = 'Resist',
-		immuneSection = "Immune",
+		immuneSection = 'Immune',
 		replacements = { TARGET = 1, MISSTYPE = 1 },
 	}
 	local MonitorConfig_Mage = {
@@ -127,15 +127,15 @@ function RSA_Mage:OnEnable()
 		SPELL_STOLEN = {
 			[30449] = { -- SPELL STEAL
 				profile = 'Spellsteal',
-				section = "Cast",
-				replacements = { TARGET = 1, extraSpellName = "[AURA]", extraSpellLink = "[AURALINK]" }
+				section = 'Cast',
+				replacements = { TARGET = 1, extraSpellName = '[AURA]', extraSpellLink = '[AURALINK]' }
 			}
 		},
 		SPELL_DISPEL = {
 			[475] = { -- Remove Curse
 				profile = 'RemoveCurse',
-				section = "Dispel",
-				replacements = { TARGET = 1, extraSpellName = "[AURA]", extraSpellLink = "[AURALINK]" }
+				section = 'Dispel',
+				replacements = { TARGET = 1, extraSpellName = '[AURA]', extraSpellLink = '[AURALINK]' }
 			},
 		},
 		SPELL_HEAL = {
@@ -172,7 +172,7 @@ function RSA_Mage:OnEnable()
 		SPELL_SUMMON = {
 			[113724] = { -- RING OF FROST
 				profile = 'RingOfFrost',
-				section = "Cast",
+				section = 'Cast',
 			}
 		},
 		SPELL_INTERRUPT = {
@@ -189,21 +189,21 @@ function RSA_Mage:OnEnable()
 			[30449] = {-- SPELL STEAL
 				profile = 'Spellsteal',
 				section = 'Resist',
-				immuneSection = "Immune",
+				immuneSection = 'Immune',
 				replacements = { TARGET = 1, MISSTYPE = 1 },
 			},
 		},
 	}
-	RSA.MonitorConfig(MonitorConfig_Mage, UnitGUID("player"))
+	RSA.MonitorConfig(MonitorConfig_Mage, UnitGUID('player'))
 	local MonitorAndAnnounce = RSA.MonitorAndAnnounce
 	local spellinfo,spelllinkinfo,extraspellinfo,extraspellinfolink,missinfo
 	local function Mage_Spells()
 		local timestamp, event, hideCaster, sourceGUID, source, sourceFlags, sourceRaidFlag, destGUID, dest, destFlags, destRaidFlags, spellID, spellName, spellSchool, missType, overheal, ex3, ex4, ex5, ex6, ex7, ex8 = CombatLogGetCurrentEventInfo()
 		if RSA.AffiliationMine(sourceFlags) then
-			if (event == "SPELL_CAST_SUCCESS" and RSA.db.profile.Modules.Reminders_Loaded == true) then -- Reminder Refreshed
+			if (event == 'SPELL_CAST_SUCCESS' and RSA.db.profile.Modules.Reminders_Loaded == true) then -- Reminder Refreshed
 				local ReminderSpell = RSA.db.profile.Mage.Reminders.SpellName
 				if spellName == ReminderSpell and (dest == pName or dest == nil) then
-					RSA.Reminder:SetScript("OnUpdate", nil)
+					RSA.Reminder:SetScript('OnUpdate', nil)
 					if RSA.db.profile.Reminders.RemindChannels.Chat == true then
 						RSA.Print_Self(ReminderSpell .. L[" Refreshed!"])
 					end
@@ -212,11 +212,11 @@ function RSA_Mage:OnEnable()
 					end
 				end
 			end -- BUFF REMINDER
-			MonitorAndAnnounce(self, "player", timestamp, event, hideCaster, sourceGUID, source, sourceFlags, sourceRaidFlag, destGUID, dest, destFlags, destRaidFlags, spellID, spellName, spellSchool, missType, overheal, ex3, ex4, ex5, ex6, ex7, ex8)
+			MonitorAndAnnounce(self, 'player', timestamp, event, hideCaster, sourceGUID, source, sourceFlags, sourceRaidFlag, destGUID, dest, destFlags, destRaidFlags, spellID, spellName, spellSchool, missType, overheal, ex3, ex4, ex5, ex6, ex7, ex8)
 		end -- IF SOURCE IS PLAYER
 	end -- END ENTIRELY
-	RSA.CombatLogMonitor:SetScript("OnEvent", Mage_Spells)
+	RSA.CombatLogMonitor:SetScript('OnEvent', Mage_Spells)
 end -- END ON ENABLED
 function RSA_Mage:OnDisable()
-	RSA.CombatLogMonitor:SetScript("OnEvent", nil)
+	RSA.CombatLogMonitor:SetScript('OnEvent', nil)
 end

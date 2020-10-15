@@ -1,7 +1,7 @@
-## Interface: 80300
+## Interface: 90001
 ## Title: Kaliel's Tracker
 ## Notes: Improved Blizzard Objective Tracker
-## Version: 3.2.3
+## Version: 4.0.0
 ## Author: Kaliel (Marouan Sabbagh)
 
 ## SavedVariables: KalielsTrackerDB
@@ -10,6 +10,7 @@
 
 Libs.xml
 Media.lua
+Constants.lua
 Utils.lua
 
 KalielsTracker.lua

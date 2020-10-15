@@ -45,6 +45,7 @@ function RSA_Hunter:OnEnable()
 			[159931] = Config_Ress, -- Crane Gift of Chi-Ji
 		},
 		SPELL_DISPEL = {
+			[19801] = Config_Tranq, -- Tranquilizing Shot
 			[264263] = Config_Tranq, -- Bat Sonic Blast
 			[264264] = Config_Tranq, -- Nether Ray Nether Shock
 			[264028] = Config_Tranq, -- Crane Chi-Ji's Tranquility

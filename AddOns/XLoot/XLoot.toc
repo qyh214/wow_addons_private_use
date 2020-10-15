@@ -1,7 +1,7 @@
-## Interface: 80200
+## Interface: 90001
 ## Title: XLoot
 ## Notes: Core module for Loot and Looting-related UI improvements
-## Version: 8.2-1
+## Version: 9.0-2
 ## Author: Xuerian
 ## X-Category: Inventory
 ## X-Name: XLoot
@@ -19,4 +19,5 @@ skins.lua
 SKIN_TWEAKS.lua
 stacks.lua
 helpers.lua
+
 

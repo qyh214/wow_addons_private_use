@@ -126,8 +126,15 @@ end
 function Titles:GetButton(index)
 	local button = self.Buttons[index]
 	if not button then
-		button = CreateFrame('Button', _ .. 'TitleButton' .. index, self, 'ImmersionTitleButtonTemplate')
-		L.Mixin(button, L.ButtonMixin, L.ScalerMixin)
+		button = L.Create({
+			type     = 'Button',
+			name     = 'TitleButton',
+			index    = index,
+			parent   = self,
+			inherit  = 'ImmersionTitleButtonTemplate',
+			mixins   = {L.ButtonMixin, L.ScalerMixin},
+			backdrop = L.Backdrops.GOSSIP_TITLE_BG,
+		})
 		button:Init(index)
 		self.Buttons[index] = button
 	end
@@ -174,82 +181,66 @@ function Titles:GOSSIP_SHOW()
 	self.idx = 1
 	self.type = 'Gossip'
 	self:Show()
-	self:UpdateAvailableQuests(GetGossipAvailableQuests())
-	self:UpdateActiveQuests(GetGossipActiveQuests())
-	self:UpdateGossipOptions(GetGossipOptions())
+	self:UpdateAvailableQuests(API:GetGossipAvailableQuests())
+	self:UpdateActiveQuests(API:GetGossipActiveQuests())
+	self:UpdateGossipOptions(API:GetGossipOptions())
 	for i = self.idx, #self.Buttons do
 		self.Buttons[i]:Hide()
 	end
 	self:UpdateActive()
 end
 
-function Titles:UpdateAvailableQuests(...)
-	local titleIndex = 1
-	for i = 1, select('#', ...), API:GetAvailableQuestIterator() do
+function Titles:UpdateAvailableQuests(data)
+	for i, quest in ipairs(data) do
 		local button = self:GetButton(self.idx)
-		local 	titleText, level, isTrivial, frequency, 
-				isRepeatable, isLegendary = select(i, ...)
 		----------------------------------
-		local qType = ( isTrivial and TRIVIAL_QUEST_DISPLAY )
-		button:SetFormattedText(qType or NORMAL_QUEST_DISPLAY, titleText)
+		local typeOfQ = (quest.isTrivial and TRIVIAL_QUEST_DISPLAY)
+		button:SetFormattedText(typeOfQ or NORMAL_QUEST_DISPLAY, quest.title)
 		----------------------------------
-		local icon = ( isLegendary and 'AvailableLegendaryQuestIcon' ) or
-					( frequency == LE_QUEST_FREQUENCY_DAILY and 'DailyQuestIcon') or
-					( frequency == LE_QUEST_FREQUENCY_WEEKLY and 'DailyQuestIcon' ) or
-					( isRepeatable and 'DailyActiveQuestIcon' ) or
-					( 'AvailableQuestIcon' )
-		button:SetGossipQuestIcon(icon, qType and 0.5)
+		local icon, useAtlas = API:GetQuestIconOffer(quest)
+		button:SetIcon(icon, typeOfQ and 0.5, useAtlas)
+		----------------------------------
 		button:SetPriority(P_AVAILABLE_QUEST)
 		----------------------------------
-		button:SetID(titleIndex)
+		button:SetID(i)
 		button.type = 'Available'
 		----------------------------------
 		self.idx = self.idx + 1
-		titleIndex = titleIndex + 1
 	end
 end
 
-function Titles:UpdateActiveQuests(...)
-	local titleIndex = 1
-	local numActiveQuestData = select("#", ...)
-	self.hasActiveQuests = (numActiveQuestData > 0)
-	for i = 1, numActiveQuestData, API:GetActiveQuestIterator() do
+function Titles:UpdateActiveQuests(data)
+	self.hasActiveQuests = (#data > 0)
+	for i, quest in ipairs(data) do
 		local button = self:GetButton(self.idx)
-		local 	titleText, level, isTrivial, 
-				isComplete, isLegendary = select(i, ...)
 		----------------------------------
-		local qType = ( isTrivial and TRIVIAL_QUEST_DISPLAY )
-		button:SetFormattedText(qType or NORMAL_QUEST_DISPLAY, titleText)
+		local typeOfQ = (quest.isTrivial and TRIVIAL_QUEST_DISPLAY)
+		button:SetFormattedText(typeOfQ or NORMAL_QUEST_DISPLAY, quest.title)
 		----------------------------------
-		local icon = ( isComplete and isLegendary and 'ActiveLegendaryQuestIcon') or
-					( isComplete and 'ActiveQuestIcon' ) or
-					( 'InCompleteQuestIcon' )
-		button:SetGossipQuestIcon(icon, qType and 0.5)
-		button:SetPriority(isComplete and P_COMPLETE_QUEST or P_INCOMPLETE_QUEST)
+		local icon, useAtlas = API:GetQuestIconActive(quest)
+		button:SetIcon(icon, typeOfQ and 0.5, useAtlas)
 		----------------------------------
-		button:SetID(titleIndex)
-		button.type = 'Active'
+		button:SetPriority(quest.isComplete and P_COMPLETE_QUEST or P_INCOMPLETE_QUEST)
+		----------------------------------
+		button:SetID(i)
+		button:SetType('Active')
 		----------------------------------
 		self.idx = self.idx + 1
-		titleIndex = titleIndex + 1
 	end
 end
 
-function Titles:UpdateGossipOptions(...)
-	local titleIndex = 1
-	for i=1, select('#', ...), API:GetGossipOptionIterator() do
+function Titles:UpdateGossipOptions(data)
+	for i, option in ipairs(data) do
 		local button = self:GetButton(self.idx)
-		local titleText, icon = select(i, ...)
 		----------------------------------
-		button:SetText(titleText)
-		button:SetGossipIcon(icon)
+		button:SetText(option.name)
+		button:SetGossipIcon(option.type)
 		button:SetPriority(P_AVAILABLE_GOSSIP)
 		----------------------------------
-		button:SetID(titleIndex)
-		button.type = 'Gossip'
+		button:SetID(i)
+		button:SetType('Gossip')
 		----------------------------------
 		self.idx = self.idx + 1
-		titleIndex = titleIndex + 1
 	end
 end
 

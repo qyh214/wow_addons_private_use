@@ -668,6 +668,7 @@ end
 --[[ FUNCTIONS TO CHECK IF ITEM IS EQUIPPABLE ]]--
 
 local function IsTrinketUsable(item, role)
+	--[[
 	local itemLink = select(2, GetItemInfo(item))
 	local itemID = string.match(itemLink, 'item:(%d+):')
 
@@ -678,6 +679,8 @@ local function IsTrinketUsable(item, role)
 	else
 		return false
 	end
+	]]--
+	return true		-- trinkets are technically usable by any role; if a healer wants to use a dps trinket, a dps wants to use a tank trinket, or whatever, that's fine
 end
 
 -- Returns false if the character cannot use the item.

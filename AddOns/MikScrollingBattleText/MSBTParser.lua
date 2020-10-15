@@ -642,7 +642,7 @@ local function CreateCaptureFuncs()
 		ENVIRONMENTAL_DAMAGE = function (p, ...) p.eventType, p.hazardType, p.amount, p.overkillAmount, p.damageType, p.resistAmount, p.blockAmount, p.absorbAmount, p.isCrit, p.isGlancing, p.isCrushing = "environmental", ... end,
 
 		-- Power events.
-		SPELL_ENERGIZE = function (p, ...) p.eventType, p.isGain, p.skillID, p.skillName, p.skillSchool, p.amount, p.overEnergized, p.powerType = "power", true, ... end,
+		SPELL_ENERGIZE = function (p, ...) p.eventType, p.isGain, p.skillID, p.skillName, p.skillSchool, p.amount, p.overEnergized, p.powerType = "power", true, ... p.amount = floor(p.amount * 10 + 0.5) / 10 end,
 		SPELL_DRAIN = function (p, ...) p.eventType, p.isDrain, p.skillID, p.skillName, p.skillSchool, p.amount, p.powerType, p.extraAmount = "power", true, ... end,
 		SPELL_LEECH = function (p, ...) p.eventType, p.isLeech, p.skillID, p.skillName, p.skillSchool, p.amount, p.powerType, p.extraAmount = "power", true, ... end,
 
@@ -888,7 +888,9 @@ local function Enable()
 	-- Register additional events for unit and class map processing.
 	eventFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
 	eventFrame:RegisterEvent("UNIT_PET")
-	eventFrame:RegisterEvent("ARENA_OPPONENT_UPDATE")
+	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		eventFrame:RegisterEvent("ARENA_OPPONENT_UPDATE")
+	end
 	eventFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
 	eventFrame:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
 

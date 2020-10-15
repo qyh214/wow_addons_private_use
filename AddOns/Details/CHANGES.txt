@@ -1,10 +1,26 @@
-lightweight tag bc04237981dbf14e110b7081dd6d764c19a3e34d DetailsRetail.8.3.0.7356.141
-Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Tue Aug 11 18:05:37 2020 -0300
+Changes since tag DetailsRetail.8.3.0.7356.141
 
-commit bc04237981dbf14e110b7081dd6d764c19a3e34d
+commit 530a825358b0f98aa22b2132a61a18402c07bec7
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Tue Aug 11 18:05:37 2020 -0300
+Date:   Mon Oct 5 15:03:38 2020 -0300
 
-    Making sure the merge trash is enabled on new installations
+    More development on combat packaging
+
+commit 99fc7dde4f6706d9a0ecaad00e381e3f5310a8fe
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Sun Oct 4 19:32:16 2020 -0300
+
+    Development of combat packager to send combat data over comms
+
+commit 39e4abb2c110cf97bf8549b3cf8bb09752359612
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Fri Sep 11 21:12:06 2020 -0300
+
+    Lib Updates
+
+commit eabba12e08d0118da9b8cbaacbba5e55fa59da26
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Fri Aug 21 13:24:00 2020 -0300
+
+    Fix window showing bck after 10seconds of /de hide
 
