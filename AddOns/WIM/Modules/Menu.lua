@@ -84,12 +84,12 @@ local function createButton(parent)
     button.text:SetPoint("LEFT"); button.text:SetPoint("RIGHT");
     button:GetHighlightTexture():ClearAllPoints();
     button:GetHighlightTexture():SetAllPoints();
-    
+
     button.status = createStatusIcon(button);
     button.status:SetPoint("LEFT", button, "RIGHT", 0, -1);
     button.close = createCloseButton(button);
     button.close:SetPoint("LEFT", button.status, "RIGHT", 2, 0);
-    
+
     button:SetScript("OnClick", function(self, b)
 			local forceShow = true
 			if db.pop_rules[self.win.type].obeyAutoFocusRules then
@@ -131,12 +131,21 @@ end
 
 local function createGroup(title, list, maxButtons, showNone)
     groupCount = groupCount + 1;
-    local group = CreateFrame("Frame", "WIM3MenuGroup"..groupCount, _G.WIM3Menu);
-    -- set backdrop
-    group:SetBackdrop({bgFile = "Interface\\AddOns\\"..addonTocName.."\\Modules\\Textures\\Menu_bg",
-        edgeFile = "Interface\\AddOns\\"..addonTocName.."\\Modules\\Textures\\Menu", 
-        tile = true, tileSize = 32, edgeSize = 32, 
-        insets = { left = 32, right = 32, top = 32, bottom = 32 }});
+	-- Changes for Patch 9.0.1 - Shadowlands, retail and classic
+	local group = CreateFrame("Frame", "WIM3MenuGroup"..groupCount, _G.WIM3Menu, isShadowlands and "BackdropTemplate");
+
+    -- set backdrop - changes for Patch 9.0.1 - Shadowlands, retail and classic
+    group.backdropInfo = {bgFile = "Interface\\AddOns\\"..addonTocName.."\\Modules\\Textures\\Menu_bg",
+        edgeFile = "Interface\\AddOns\\"..addonTocName.."\\Modules\\Textures\\Menu",
+        tile = true, tileSize = 32, edgeSize = 32,
+        insets = { left = 32, right = 32, top = 32, bottom = 32 }};
+
+	if not isShadowlands then
+		group:SetBackdrop(group.backdropInfo);
+	else
+		group:ApplyBackdrop();
+	end
+
     group.list = list;
     group.title = CreateFrame("Frame", group:GetName().."Title", group);
     group.title:SetHeight(17);
@@ -241,7 +250,7 @@ local function createMenu()
     menu.groups[2] = createGroup(L["Chat"], lists.chat, maxButtons.chat, false);
     menu.groups[2]:SetPoint("TOPLEFT", menu.groups[1], "BOTTOMLEFT", 0, 25);
     menu.groups[2]:SetPoint("TOPRIGHT", menu.groups[1], "BOTTOMRIGHT", 0, 25);
-    
+
     menu.Refresh = function(self)
             local groupHeight = 0;
             local groupWidth = 0;
@@ -253,7 +262,7 @@ local function createMenu()
             self:SetHeight(groupHeight);
             self:SetWidth(groupWidth);
         end
-        
+
     menu:SetScript("OnUpdate", function(self)
             if(isMouseOver()) then
                 self.mouseStamp = _G.time();
@@ -267,7 +276,7 @@ local function createMenu()
             self.mouseStamp = _G.time();
             _G.CloseDropDownMenus();
         end);
-        
+
     return menu;
 end
 

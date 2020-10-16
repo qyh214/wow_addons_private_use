@@ -25,7 +25,7 @@ setfenv(1, WIM);
     - CreateSlider(parent, title, minText, maxText, min, max, step, dbTree, varName, valChanged) returns Slider
     - CreateColorPicker(parent, title, dbTree, varName, valChanged) returns Frame
     - CreateButton(parent, title, fun) returns Button
-    
+
     Frame Modifying Tools:
     - WIM.options.AddFramedBackdrop(theFrame)
 ]]
@@ -125,12 +125,21 @@ end
 
 
 local function CreateSlider(parent, title, minText, maxText, min, max, step, dbTree, varName, valChanged)
-    local s = CreateFrame("Slider", parent:GetName()..statObject("Slider"), parent);
-    -- set backdrop
-    s:SetBackdrop({bgFile = "Interface\\Buttons\\UI-SliderBar-Background", 
-        edgeFile = "Interface\\Buttons\\UI-SliderBar-Border", 
-        tile = true, tileSize = 8, edgeSize = 8, 
-        insets = { left = 3, right = 3, top = 6, bottom = 6 }});
+	-- Changes to Patch 9.0.1 - Shadowlands, retail and classic
+	local s = CreateFrame("Slider", parent:GetName()..statObject("Slider"), parent, isShadowlands and "BackdropTemplate");
+
+    -- set backdrop -changes to Patch 9.0.1 - Shadowlands, retail and classic
+    s.backdropInfo = {bgFile = "Interface\\Buttons\\UI-SliderBar-Background",
+        edgeFile = "Interface\\Buttons\\UI-SliderBar-Border",
+        tile = true, tileSize = 8, edgeSize = 8,
+        insets = { left = 3, right = 3, top = 6, bottom = 6 }};
+
+	if not isShadowlands then
+		s:SetBackdrop(s.backdropInfo);
+	else
+		s:ApplyBackdrop();
+	end
+
     s:SetHeight(17);
     s:SetPoint("LEFT");
     s:SetPoint("RIGHT", -75, 0);
@@ -152,7 +161,7 @@ local function CreateSlider(parent, title, minText, maxText, min, max, step, dbT
     s.valText:SetText("");
     s:SetValueStep(step);
     s:SetScript("OnValueChanged", function(self)
-        if not self._onsetting then   -- is single threaded 
+        if not self._onsetting then   -- is single threaded
             self._onsetting = true
             self:SetValue(self:GetValue())
             value = self:GetValue()     -- cant use original 'value' parameter
@@ -284,7 +293,7 @@ local function CreateCheckButton(parent, title, dbTree, varName, tooltip, valCha
                 end
             end
         end
-        
+
     if(parent.isCheckButton) then
         cb:SetScale(.90);
         if(#parent.children == 0) then
@@ -312,17 +321,17 @@ local function CreateCheckButtonMenu(parent, title, dbTree, varName, tooltip, va
     cbm.menu:SetPoint("LEFT", cbm:GetWidth()-2, 0);
     cbm.menu.itemList = itemList;
     cbm.menu.dropdown = options.createDropDownFrame();
-    
+
     cbm.text:ClearAllPoints(); cbm.text:SetPoint("LEFT", cbm.menu, "RIGHT");
     -- some hooks to enherit disabled functionality.
     local Enable, Disable = cbm.Enable, cbm.Disable;
     cbm.Enable = function(...) cbm.menu:Enable(); Enable(...); end
     cbm.Disable = function(...) cbm.menu:Disable();  Disable(...); end
-    
+
     local function clickFunc(self, ...)
         dbTree2[varName2] = self.value;
     end
-    
+
     -- now the menu work...
     cbm.menu:SetScript("OnClick", function(self, button)
             _G.PlaySound(1115);
@@ -478,31 +487,31 @@ local function setButton(self, info)
     self:ClearButton();
     local invisibleButton = _G[self:GetName().."InvisibleButton"];
     local normalText = _G[self:GetName().."NormalText"];
-    
+
     -- set default values
     self:Enable();
     self:SetDisabledFontObject(_G.GameFontDisableSmallLeft);
     invisibleButton:Hide();
-    
+
     -- If not clickable then disable the button and set it white
 	if ( info.notClickable ) then
 		info.disabled = 1;
 		self:SetDisabledFontObject(_G.GameFontHighlightSmallLeft);
 	end
-        
+
     -- Set the text color and disable it if its a title
 	if ( info.isTitle ) then
 		info.disabled = 1;
 		self:SetDisabledFontObject(_G.GameFontNormalSmallLeft);
 	end
-        
+
     -- Disable the button if disabled and turn off the color code
 	if ( info.disabled ) then
 		self:Disable();
 		invisibleButton:Show();
 		info.colorCode = nil;
 	end
-    
+
     self:SetText(info.text or "");
 
     -- Pass through attributes
@@ -522,9 +531,9 @@ local function setButton(self, info)
 	else
 		self.value = nil;
 	end
-        
+
         local checked = info.checked;
-        
+
         -- If not checkable move everything over to the left to fill in the gap where the check would be
 	normalText:ClearAllPoints();
 	if ( info.notCheckable ) then
@@ -539,7 +548,7 @@ local function setButton(self, info)
                     checked = true;
                 end
 	end
-        
+
     -- Checked can be a function now
 	if ( type(checked) == "function" ) then
 		checked = checked();
@@ -572,25 +581,35 @@ function options.createDropDownFrame()
         -- don't create more than once.
         return dropDownFrame;
     end
-    local f = CreateFrame("Button", "WIM_DropDownFrame", _G.UIParent);
-    f:Hide();
+	-- Changes to Patch 9.0.1 - Shadowlands, retail and classic
+	local f = CreateFrame("Button", "WIM_DropDownFrame", _G.UIParent, isShadowlands and "BackdropTemplate");
+
+	f:Hide();
     f:SetFrameStrata("TOOLTIP");
     f:SetPoint("CENTER");
     f:SetWidth(100);
     f:SetHeight(300);
     f:EnableMouseWheel(1);
-    f:SetBackdrop( { 
-        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
-        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, 
+	-- Changes to Patch 9.0.1 - Shadowlands, retail and classic
+    f.backdropInfo = {
+        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16,
         insets = { left = 5, right = 5, top = 5, bottom = 5 }
-    });
+    };
+
+	if not isShadowlands then
+		f:SetBackdrop(f.backdropInfo);
+	else
+		f:ApplyBackdrop();
+	end
+
     f:SetBackdropBorderColor(_G.TOOLTIP_DEFAULT_COLOR.r, _G.TOOLTIP_DEFAULT_COLOR.g, _G.TOOLTIP_DEFAULT_COLOR.b);
     f:SetBackdropColor(_G.TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, _G.TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, _G.TOOLTIP_DEFAULT_BACKGROUND_COLOR.b);
-    
+
     f.testString = f:CreateFontString(f:GetName().."TestString", "OVERLAY", "GameFontNormalSmallLeft");
     f.testString:SetPoint("TOPLEFT");
     f.testString:Hide();
-    
+
     --create scroll bar
     f.scroll = CreateFrame("Slider", f:GetName().."Slider", f);
     f.scroll.bg = f.scroll:CreateTexture(nil, "BACKGROUND");
@@ -612,7 +631,7 @@ function options.createDropDownFrame()
     f.scroll:SetScript("OnValueChanged", function(self)
         self:GetParent():Refresh();
     end);
-    
+
     -- create buttons
     f.buttons = {};
     for i=1, dropDownButtonCount do
@@ -636,7 +655,7 @@ function options.createDropDownFrame()
             end
         end);
     end
-    
+
     -- actions
     f.ClearButtons = clearButtons;
     -- this call is made to reconfigure buttons.
@@ -666,7 +685,7 @@ function options.createDropDownFrame()
         -- set appropriate height
         self.buttonsShown = _G.math.min(#self.list, #self.buttons);
         self:SetHeight((self.buttonsShown * self.buttons[1]:GetHeight()) + 18);
-        
+
         -- set appropriate width
         local maxWidth, tIndex = 20;
         for index, tbl in pairs(self.list) do
@@ -686,11 +705,11 @@ function options.createDropDownFrame()
                 self.buttons[i]:Show();
             end
         end
-        
+
         self:Refresh();
         return self; -- allow for Chained actions;
     end
-    
+
     f.ToggleDropDownMenu = function(self, parent, point, relativePoint, xOffset, yOffset)
         if(f.prevParent == parent) then
             f.prevParent = nil;
@@ -711,7 +730,7 @@ function options.createDropDownFrame()
         f.prevParent = parent;
         f:Show();
     end
-    
+
     f:SetScript("OnClick", function(self) self:Hide(); end);
     f:SetScript("OnEnter", _G.UIDropDownMenu_StopCounting);
     f:SetScript("OnLeave", _G.UIDropDownMenu_StartCounting);
@@ -721,7 +740,7 @@ function options.createDropDownFrame()
         self.prevParent = nil;
     end);
     f:SetScript("OnMouseWheel", DropDown_OnMouseWheel);
-    
+
     dropDownFrame = f;
     return f;
 end

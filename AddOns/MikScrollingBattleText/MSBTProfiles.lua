@@ -1345,7 +1345,7 @@ if IsClassic then
 				fontSize		= 26,
 				soundFile		= "MSBT Low Mana",
 				classes			= "DRUID,MAGE,PALADIN,PRIEST,SHAMAN,WARLOCK",
-				mainEvents		= "UNIT_POWER{powerType;;eq;;0;;unitID;;eq;;player;;threshold;;lt;;35}",
+				mainEvents		= "UNIT_POWER_UPDATE{powerType;;eq;;0;;unitID;;eq;;player;;threshold;;lt;;35}",
 				exceptions		= "recentlyFired;;lt;;5",
 			},
 			MSBT_TRIGGER_LOW_PET_HEALTH = {
@@ -2809,7 +2809,7 @@ else
 				fontSize		= 26,
 				soundFile		= "MSBT Low Mana",
 				classes			= "DRUID,MAGE,PALADIN,PRIEST,SHAMAN,WARLOCK",
-				mainEvents		= "UNIT_POWER{powerType;;eq;;0;;unitID;;eq;;player;;threshold;;lt;;35}",
+				mainEvents		= "UNIT_POWER_UPDATE{powerType;;eq;;0;;unitID;;eq;;player;;threshold;;lt;;35}",
 				exceptions		= "recentlyFired;;lt;;5",
 			},
 			MSBT_TRIGGER_LOW_PET_HEALTH = {

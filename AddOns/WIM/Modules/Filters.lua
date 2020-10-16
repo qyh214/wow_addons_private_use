@@ -416,7 +416,9 @@ end
 -- Options UI
 
 local function createFilterFrame()
-    local win = CreateFrame("Frame", "WIM3_FilterFrame", _G.UIParent);
+	-- Changes for Patch 9.0.1 - Shadowlands, retail and classic
+	local win = CreateFrame("Frame", "WIM3_FilterFrame", _G.UIParent, isShadowlands and "BackdropTemplate");
+
     win:Hide();
     win.filter = {};
     -- set size and position
@@ -424,11 +426,17 @@ local function createFilterFrame()
     win:SetHeight(390);
     win:SetPoint("CENTER");
 
-    -- set backdrop
-    win:SetBackdrop({bgFile = "Interface\\AddOns\\"..addonTocName.."\\Sources\\Options\\Textures\\Frame_Background",
+    -- set backdrop - changes for Patch 9.0.1 - Shadowlands, retail and classic
+    win.backdropInfo = {bgFile = "Interface\\AddOns\\"..addonTocName.."\\Sources\\Options\\Textures\\Frame_Background",
         edgeFile = "Interface\\AddOns\\"..addonTocName.."\\Sources\\Options\\Textures\\Frame",
         tile = true, tileSize = 64, edgeSize = 64,
-        insets = { left = 64, right = 64, top = 64, bottom = 64 }});
+        insets = { left = 64, right = 64, top = 64, bottom = 64 }};
+
+	if not isShadowlands then
+		win:SetBackdrop(win.backdropInfo);
+	else
+		win:ApplyBackdrop();
+	end
 
     -- set basic frame properties
     win:SetClampedToScreen(true);
@@ -615,12 +623,22 @@ local function createFilterFrame()
     win.level:SetPoint("RIGHT", -30, 0)
     win.level:Hide();
     options.AddFramedBackdrop(win.level);
-    win.level.slider = CreateFrame("Slider", win.level:GetName().."Slider", win.level);
-    -- set backdrop
-    win.level.slider:SetBackdrop({bgFile = "Interface\\Buttons\\UI-SliderBar-Background",
+
+	-- Changes for Patch 9.0.1 - Shadowlands, retail and classic
+	win.level.slider = CreateFrame("Slider", win.level:GetName().."Slider", win.level, isShadowlands and "BackdropTemplate");
+
+    -- set backdrop - changes for Patch 9.0.1 - Shadowlands, retail and classic
+    win.level.slider.backdropInfo = {bgFile = "Interface\\Buttons\\UI-SliderBar-Background",
         edgeFile = "Interface\\Buttons\\UI-SliderBar-Border",
         tile = true, tileSize = 8, edgeSize = 8,
-        insets = { left = 3, right = 3, top = 6, bottom = 6 }});
+        insets = { left = 3, right = 3, top = 6, bottom = 6 }};
+
+	if not isShadowlands then
+		win.level.slider:SetBackdrop(win.level.slider.backdropInfo);
+	else
+		win.level.slider:ApplyBackdrop();
+	end
+
     win.level.slider:SetHeight(17);
     --win.level.slider:SetPoint("CENTER");
     win.level.slider:SetPoint("TOPLEFT", 20, -30);

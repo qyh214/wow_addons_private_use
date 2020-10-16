@@ -87,7 +87,7 @@ local function HandleCurrency(parserEvent)
 		local _
 		itemName, numAmount, itemTexture, _, _, totalMax, _, itemQuality = GetCurrencyInfo(itemLink)
 	else
-		local currency = C_CurrencyInfo.GetCurrencyInfo(itemLink)
+		local currency = C_CurrencyInfo.GetCurrencyInfoFromLink(itemLink)
 		itemName, numAmount, itemTexture, totalMax, itemQuality = currency.name, currency.quantity, currency.iconFileID, currency.maxQuantity, currency.quality
 	end
 

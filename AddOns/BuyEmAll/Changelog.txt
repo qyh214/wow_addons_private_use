@@ -1,4 +1,9 @@
-﻿v3.5.7
+﻿v3.5.8
+-BuyEmAll now supports Shadowlands
+-BuyEmAll now uses the new CurrencyInfo API introduced in Shadowlands
+-Fixed a small issue where the calculated amount of buyable items was wrong when buying a currency with another currency.
+
+v3.5.7
 -Internal optimalisation for recognizing unique items
 -optimized code throughout the addon for better performance and a smaller footprint
 

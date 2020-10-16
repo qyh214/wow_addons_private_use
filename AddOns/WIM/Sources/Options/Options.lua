@@ -36,21 +36,27 @@ local function getCategoryIndexByName(cat)
 end
 
 local function createOptionsFrame()
-    -- create frame object
-    options.frame = CreateFrame("Frame", "WIM3_Options", _G.UIParent);
+    -- create frame object - changes to Patch 9.0.1 - Shadowlands, retail and classic
+	options.frame = CreateFrame("Frame", "WIM3_Options", _G.UIParent, isShadowlands and "BackdropTemplate");
     local win = options.frame;
     win:Hide(); -- hide initially, scripts aren't loaded yet.
-    
+
     -- set size and position
     win:SetWidth(600);
     win:SetHeight(500);
     win:SetPoint("CENTER");
-    
-    -- set backdrop
-    win:SetBackdrop({bgFile = "Interface\\AddOns\\"..addonTocName.."\\Sources\\Options\\Textures\\Frame_Background", 
-        edgeFile = "Interface\\AddOns\\"..addonTocName.."\\Sources\\Options\\Textures\\Frame", 
-        tile = true, tileSize = 64, edgeSize = 64, 
-        insets = { left = 64, right = 64, top = 64, bottom = 64 }});
+
+    -- set backdrop - changes to Patch 9.0.1 - Shadowlands, retail and classic
+    win.backdropInfo = {bgFile = "Interface\\AddOns\\"..addonTocName.."\\Sources\\Options\\Textures\\Frame_Background",
+        edgeFile = "Interface\\AddOns\\"..addonTocName.."\\Sources\\Options\\Textures\\Frame",
+        tile = true, tileSize = 64, edgeSize = 64,
+        insets = { left = 64, right = 64, top = 64, bottom = 64 }};
+
+	if not isShadowlands then
+		win:SetBackdrop(win.backdropInfo);
+	else
+		win:ApplyBackdrop();
+	end
 
     -- set basic frame properties
     win:SetClampedToScreen(true);
@@ -65,14 +71,14 @@ local function createOptionsFrame()
     win:SetScript("OnHide", function(self) _G.PlaySound(851); options.OnHide(self); end);
     win:SetScript("OnDragStart", function(self) self:StartMoving(); end);
     win:SetScript("OnDragStop", function(self) self:StopMovingOrSizing(); end);
-    
+
     -- create and set title bar text
     win.title = win:CreateFontString(win:GetName().."Title", "OVERLAY", "ChatFontNormal");
     win.title:SetPoint("TOPLEFT", 50 , -20);
     local font = win.title:GetFont();
     win.title:SetFont(font, 16, "");
     win.title:SetText(L["WIM (WoW Instant Messenger)"].." v"..version);
-    
+
     -- create close button
     win.close = CreateFrame("Button", win:GetName().."Close", win);
     win.close:SetWidth(18); win.close:SetHeight(18);
@@ -82,8 +88,8 @@ local function createOptionsFrame()
     win.close:SetScript("OnClick", function(self)
             self:GetParent():Hide();
         end);
-    
-    
+
+
     -- create navigation menu
     win.nav = CreateFrame("Frame", win:GetName().."Nav", win);
     win.nav.bg = win.nav:CreateTexture(win.nav:GetName().."BG", "BACKGROUND");
@@ -100,7 +106,7 @@ local function createOptionsFrame()
     win.nav.sub:Hide();
     win.nav.sub.buttons = {};
     win.nav.sub:SetScript("OnShow", function(self) options.UpdateSubCategories(self); end);
-    
+
     -- create container frame
     win.container = CreateFrame("Frame", win:GetName().."Container", win);
     win.container.bg = win.container:CreateTexture(win.container:GetName().."BG", "BACKGROUND");
@@ -109,7 +115,7 @@ local function createOptionsFrame()
     win.container:SetPoint("TOPLEFT", win.nav, "TOPRIGHT", 10, -2);
     win.container:SetPoint("BOTTOMLEFT", win.nav, "BOTTOMRIGHT", 10, 2);
     win.container:SetPoint("RIGHT", win, -25, 0);
-    
+
     win.Enable = function(self)
         self:SetAlpha(1);
         self.disableFrame:Hide();
@@ -117,7 +123,7 @@ local function createOptionsFrame()
         win:SetFrameStrata("DIALOG");
         win.disableFrame:SetFrameStrata("DIALOG");
     end
-    
+
     win.Disable = function(self)
         self:SetAlpha(.5);
         self.disableFrame:Show();
