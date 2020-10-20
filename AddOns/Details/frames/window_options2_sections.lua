@@ -53,6 +53,14 @@ function Details.options.SetCurrentInstanceAndRefresh(instance)
     end
 end
 
+function Details.options.UpdateAutoHideSettings(instance)
+    for contextId, line in ipairs(_G.DetailsOptionsWindowTab13.AutoHideOptions) do --tab13 = automation settings
+        line.enabledCheckbox:SetValue(instance.hide_on_context[contextId].enabled)
+        line.reverseCheckbox:SetValue(instance.hide_on_context[contextId].inverse)
+        line.alphaSlider:SetValue(instance.hide_on_context[contextId].value)
+    end
+end
+
 function Details.options.RefreshInstances(instance)
     if (instance) then
         Details:InstanceGroupCall(instance, "InstanceRefreshRows")
@@ -85,6 +93,7 @@ local editInstanceSetting = function(instance, funcName, ...)
     else
         local keyName =  funcName
         local value1, value2, value3 = ...
+
         if (value2 == nil) then
             if (isGroupEditing()) then
                 Details:InstanceGroupEditSetting(instance, keyName, value1)
@@ -1115,7 +1124,7 @@ do
                 type = "toggle",
                 get = function() return currentInstance.row_info.fast_ps_update end,
                 set = function (self, fixedparam, value)
-                    editInstanceSetting(currentInstance, "fast_ps_update", value)
+                    editInstanceSetting(currentInstance, "row_info", "fast_ps_update", value)
                     afterUpdate()
                 end,
                 name = Loc ["STRING_OPTIONS_BARUR_ANCHOR"],
@@ -2057,9 +2066,9 @@ do
                 desc = Loc ["STRING_OPTIONS_HIDE_ICON_DESC"],
             },
 
-            {--button attacht to right
+            {--button attach to right
                 type = "toggle",
-                get = function() return currentInstance.menu_anchor.side and 2 or 1 end,
+                get = function() return currentInstance.menu_anchor.side == 2 and true or false end,
                 set = function (self, fixedparam, value)
                     editInstanceSetting(currentInstance, "LeftMenuAnchorSide", value and 2 or 1)
                     afterUpdate()
@@ -2068,11 +2077,11 @@ do
                 desc = Loc ["STRING_OPTIONS_MENU_ANCHOR_DESC"],
             },
 
-            {--plugins button attacht to right
+            {--plugins button attach to right
                 type = "toggle",
-                get = function() return currentInstance.plugins_grow_direction and 2 or 1 end,
+                get = function() return currentInstance.plugins_grow_direction == 2 and true or false end,
                 set = function (self, fixedparam, value)
-                    editInstanceSetting(currentInstance, "plugins_grow_direction", value)
+                    editInstanceSetting(currentInstance, "plugins_grow_direction", value and 2 or 1)
                     editInstanceSetting(currentInstance, "ToolbarMenuSetButtons")
                     afterUpdate()
                 end,
@@ -2167,7 +2176,7 @@ do
 
             {--encounter time
                 type = "toggle",
-                get = function() return currentInstance.attribute_text.show_timer and true end,
+                get = function() return currentInstance.attribute_text.show_timer and true or false end,
                 set = function (self, fixedparam, value)
                     editInstanceSetting(currentInstance, "AttributeMenu", nil, nil, nil, nil, nil, nil, nil, nil, value)
                     afterUpdate()
@@ -2525,7 +2534,7 @@ do
             
             {--stretch button on top side
                 type = "toggle",
-                get = function() return currentInstance.stretch_button_side and 1 or 2 end,
+                get = function() return currentInstance.stretch_button_side == 1 and true or false end,
                 set = function (self, fixedparam, value)
                     editInstanceSetting(currentInstance, "StretchButtonAnchor", value and 1 or 2)
                     afterUpdate()
@@ -3552,7 +3561,7 @@ do
 end
 
 
--- ~10 tooltips
+-- ~10 ~tooltips
 do
     local buildSection = function(sectionFrame)
 
@@ -3825,12 +3834,12 @@ do
 
             {--number system
                 type = "select",
-                get = function() return _detalhes.numerical_system end,
+                get = function() return _detalhes.tooltip.abbreviation end,
                 values = function()
                     return buildAbbreviationMenu()
                 end,
-                name = Loc ["STRING_NUMERALSYSTEM"],
-                desc = Loc ["STRING_NUMERALSYSTEM_DESC"],
+                name = Loc ["STRING_OPTIONS_PS_ABBREVIATE"],
+                desc = Loc ["STRING_OPTIONS_PS_ABBREVIATE_DESC"],
             },
 
             {--maximize method
@@ -3945,7 +3954,7 @@ do
         end
 
 		local onSelectTimeAbbreviation = function (_, _, abbreviationtype)
-			_detalhes.minimap.text_format = abbreviationtype
+			_detalhes.tooltip.abbreviation = abbreviationtype
 			_detalhes:BrokerTick()
 			afterUpdate()
 		end
@@ -4073,7 +4082,7 @@ do
 end
 
 
-do
+do --~wallpaper
     local buildSection = function(sectionFrame)
 
 		--> callback from the image editor
@@ -4396,7 +4405,7 @@ do
 
             {--enable wallpaper
                 type = "toggle",
-                get = function() return _detalhes.ilevel:IsTrackerEnabled() end,
+                get = function() return currentInstance.wallpaper.enabled end,
                 set = function (self, fixedparam, value)
 
                     currentInstance.wallpaper.enabled = value
@@ -4478,7 +4487,7 @@ do
     tinsert(Details.optionsSection, buildSection)
 end
 
-do
+do -- ~automation ~auto hide
     local buildSection = function(sectionFrame)
 
     --> auto switch options
@@ -4834,7 +4843,7 @@ do
 		header3Label:SetPoint("topleft", sectionFrame, "topleft", right_start_at + 140, yyy)
 		header4Label:SetPoint("topleft", sectionFrame, "topleft", right_start_at + 270, yyy)
 
-		local onEnableHideContext = function(self, contextId, value)
+        local onEnableHideContext = function(self, contextId, value)
             editInstanceSetting(currentInstance, "hide_on_context", contextId, "enabled", value)
             editInstanceSetting(currentInstance, "AdjustAlphaByContext")
             afterUpdate()
@@ -4894,7 +4903,7 @@ do
 			sectionFrame.AutoHideOptions[i] = line
         end
 
-    
+        Details.options.UpdateAutoHideSettings(currentInstance)
     end
 
     tinsert(Details.optionsSection, buildSection)

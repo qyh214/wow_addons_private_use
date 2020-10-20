@@ -17,8 +17,67 @@ local C_CVar_GetCVar = C_CVar.GetCVar
 local C_CVar_GetCVarBool = C_CVar.GetCVarBool
 local C_CVar_SetCVar = C_CVar.SetCVar
 
-options.cvars = {
+options.general = {
     order = 1,
+    type = "group",
+    name = L["General"],
+    args = {
+        pauseToSlash = {
+            order = 1,
+            type = "toggle",
+            name = L["Pause to slash"],
+            desc = L["Just for Chinese and Korean players"],
+            get = function(info)
+                return E.private.WT.misc[info[#info]]
+            end,
+            set = function(info, value)
+                E.private.WT.misc[info[#info]] = value
+                E:StaticPopup_Show("PRIVATE_RL")
+            end
+        },
+        saveArtifact = {
+            order = 2,
+            type = "toggle",
+            name = L["Save Artifact"],
+            desc = L["Allow you to save outfits even if the artifact in it."],
+            get = function(info)
+                return E.private.WT.misc[info[#info]]
+            end,
+            set = function(info, value)
+                E.private.WT.misc[info[#info]] = value
+                E:StaticPopup_Show("PRIVATE_RL")
+            end
+        },
+        noKanjiMath = {
+            order = 3,
+            type = "toggle",
+            name = L["Math Without Kanji"],
+            desc = L["Use alphabet rather than kanji (Only for Chinese players)"],
+            get = function(info)
+                return E.private.WT.misc[info[#info]]
+            end,
+            set = function(info, value)
+                E.private.WT.misc[info[#info]] = value
+                E:StaticPopup_Show("PRIVATE_RL")
+            end
+        },
+        disableTalkingHead = {
+            order = 4,
+            type = "toggle",
+            name = L["Disable Talking Head"],
+            desc = L["Disable Blizzard Talking Head."],
+            get = function(info)
+                return E.db.WT.misc[info[#info]]
+            end,
+            set = function(info, value)
+                E.db.WT.misc[info[#info]] = value
+            end
+        }
+    }
+}
+
+options.cvars = {
+    order = 2,
     type = "group",
     name = L["CVars Editor"],
     get = function(info)
@@ -156,7 +215,7 @@ options.cvars = {
 }
 
 options.moveFrames = {
-    order = 2,
+    order = 4,
     type = "group",
     name = L["Move Frames"],
     get = function(info)
@@ -227,43 +286,8 @@ options.moveFrames = {
     }
 }
 
-options.transmog = {
-    order = 3,
-    type = "group",
-    name = L["Transmog"],
-    args = {
-        desc = {
-            order = 1,
-            type = "group",
-            inline = true,
-            name = L["Description"],
-            args = {
-                feature = {
-                    order = 1,
-                    type = "description",
-                    name = L["This module focus on enhancement of transmog."],
-                    fontSize = "medium"
-                }
-            }
-        },
-        saveArtifact = {
-            order = 2,
-            type = "toggle",
-            name = L["Save Artifact"],
-            desc = L["Allow you to save outfits even if the artifact in it."],
-            get = function(info)
-                return E.private.WT.misc[info[#info]]
-            end,
-            set = function(info, value)
-                E.private.WT.misc[info[#info]] = value
-                E:StaticPopup_Show("PRIVATE_RL")
-            end
-        }
-    }
-}
-
 options.mute = {
-    order = 3,
+    order = 5,
     type = "group",
     name = L["Mute"],
     args = {
@@ -320,79 +344,8 @@ do
     end
 end
 
-options.pauseToSlash = {
-    order = 5,
-    type = "group",
-    name = L["Pause to slash"],
-    args = {
-        desc = {
-            order = 1,
-            type = "group",
-            inline = true,
-            name = L["Description"],
-            args = {
-                feature = {
-                    order = 1,
-                    type = "description",
-                    name = L[
-                        "This module works with Chinese and Korean, it will correct the text to slash when you input Pause."
-                    ],
-                    fontSize = "medium"
-                }
-            }
-        },
-        pauseToSlash = {
-            order = 2,
-            type = "toggle",
-            name = L["Enable"],
-            desc = L["Pause to slash (Just for Chinese and Korean players)"],
-            get = function(info)
-                return E.private.WT.misc[info[#info]]
-            end,
-            set = function(info, value)
-                E.private.WT.misc[info[#info]] = value
-                E:StaticPopup_Show("PRIVATE_RL")
-            end
-        }
-    }
-}
-
-options.disableTalkingHead = {
-    order = 6,
-    type = "group",
-    name = L["Disable Talking Head"],
-    args = {
-        desc = {
-            order = 1,
-            type = "group",
-            inline = true,
-            name = L["Description"],
-            args = {
-                feature = {
-                    order = 1,
-                    type = "description",
-                    name = L["Enable this module will disable Blizzard Talking Head."],
-                    fontSize = "medium"
-                }
-            }
-        },
-        disableTalkingHead = {
-            order = 2,
-            type = "toggle",
-            name = L["Enable"],
-            desc = L["Stop talking."],
-            get = function(info)
-                return E.private.WT.misc[info[#info]]
-            end,
-            set = function(info, value)
-                E.private.WT.misc[info[#info]] = value
-            end
-        }
-    }
-}
-
 options.tags = {
-    order = 7,
+    order = 6,
     type = "group",
     name = L["Tags"],
     args = {
@@ -522,7 +475,7 @@ do
 end
 
 options.gameBar = {
-    order = 8,
+    order = 7,
     type = "group",
     name = L["Game Bar"],
     get = function(info)
@@ -637,8 +590,18 @@ options.gameBar = {
                 GB:UpdateTime()
             end,
             args = {
-                fadeTime = {
+                mouseOver = {
                     order = 1,
+                    type = "toggle",
+                    name = L["Mouse Over"],
+                    desc = L["Show the bar only mouse hovered the area."],
+                    set = function(info, value)
+                        E.db.WT.misc.gameBar[info[#info]] = value
+                        GB:UpdateBar()
+                    end
+                },
+                fadeTime = {
+                    order = 2,
                     type = "range",
                     name = L["Fade Time"],
                     desc = L["The animation speed."],
@@ -647,7 +610,7 @@ options.gameBar = {
                     step = 0.01
                 },
                 normal = {
-                    order = 2,
+                    order = 3,
                     type = "group",
                     name = L["Color"] .. " - " .. L["Normal"],
                     inline = true,
@@ -683,7 +646,7 @@ options.gameBar = {
                     }
                 },
                 hover = {
-                    order = 3,
+                    order = 4,
                     type = "group",
                     name = L["Color"] .. " - " .. L["Hover"],
                     inline = true,
@@ -719,7 +682,7 @@ options.gameBar = {
                     }
                 },
                 additionalText = {
-                    order = 4,
+                    order = 5,
                     type = "group",
                     name = L["Additional Text"],
                     inline = true,
@@ -772,9 +735,63 @@ options.gameBar = {
                             order = 5,
                             type = "toggle",
                             name = L["Slow Mode"],
-                            desc = L["Update the additional text every 10 seconds rather than every 1 second such that the used memory will be lower."]
+                            desc = L[
+                                "Update the additional text every 10 seconds rather than every 1 second such that the used memory will be lower."
+                            ]
                         },
+                        font = {
+                            order = 6,
+                            type = "group",
+                            name = L["Font Setting"],
+                            inline = true,
+                            get = function(info)
+                                return E.db.WT.misc.gameBar.additionalText[info[#info - 1]][info[#info]]
+                            end,
+                            set = function(info, value)
+                                E.db.WT.misc.gameBar.additionalText[info[#info - 1]][info[#info]] = value
+                                GB:UpdateButtons()
+                            end,
+                            args = {
+                                name = {
+                                    order = 1,
+                                    type = "select",
+                                    dialogControl = "LSM30_Font",
+                                    name = L["Font"],
+                                    values = LSM:HashTable("font")
+                                },
+                                style = {
+                                    order = 2,
+                                    type = "select",
+                                    name = L["Outline"],
+                                    values = {
+                                        NONE = L["None"],
+                                        OUTLINE = L["OUTLINE"],
+                                        MONOCHROME = L["MONOCHROME"],
+                                        MONOCHROMEOUTLINE = L["MONOCROMEOUTLINE"],
+                                        THICKOUTLINE = L["THICKOUTLINE"]
+                                    }
+                                },
+                                size = {
+                                    order = 3,
+                                    name = L["Size"],
+                                    type = "range",
+                                    min = 5,
+                                    max = 60,
+                                    step = 1
+                                }
+                            }
+                        }
                     }
+                },
+                visibility = {
+                    order = 6,
+                    type = "input",
+                    name = L["Visibility"],
+                    set = function(info, value)
+                        E.db.WT.misc.gameBar[info[#info]] = value
+                        GB:UpdateBar()
+                    end,
+                    width = "full"
                 }
             }
         },
@@ -809,8 +826,14 @@ options.gameBar = {
                     type = "toggle",
                     name = L["Flash"]
                 },
-                interval = {
+                alwaysSystemInfo = {
                     order = 5,
+                    type = "toggle",
+                    name = L["Always Show Info"],
+                    desc = L["The system information will be always shown rather than showing only being hovered."]
+                },
+                interval = {
+                    order = 6,
                     type = "range",
                     name = L["Interval"],
                     desc = L["The interval of updating."],

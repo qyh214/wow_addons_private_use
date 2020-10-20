@@ -10,11 +10,10 @@ local pairs=pairs
 local format=format
 local strsplit=strsplit
 local select=select
-local GetCurrencyInfo=GetCurrencyInfo
 local generated
 local GARRISON_CURRENCY=GARRISON_CURRENCY
 local GARRISON_SHIP_OIL_CURRENCY=GARRISON_SHIP_OIL_CURRENCY
-local GARRISON_FOLLOWER_MAX_LEVEL=GARRISON_FOLLOWER_MAX_LEVEL
+local GARRISON_FOLLOWER_MAX_LEVEL=45
 local LE_FOLLOWER_TYPE_GARRISON_6_0=LE_FOLLOWER_TYPE_GARRISON_6_0
 local LE_FOLLOWER_TYPE_SHIPYARD_6_2=LE_FOLLOWER_TYPE_SHIPYARD_6_2
 local LE_FOLLOWER_TYPE_GARRISON_7_0=LE_FOLLOWER_TYPE_GARRISON_7_0
@@ -31,7 +30,7 @@ local UpgradeButtons={}
 local pool={}
 function module:OnInitialize(...)
 	if not ns.GHF then return end -- Waiting to be late initialized by init routine
-	OHFFollowerTab=OrderHallMissionFrame.FollowerTab -- Contains model view	
+	OHFFollowerTab=OrderHallMissionFrame.FollowerTab -- Contains model view
 	if GetAddOnEnableState(UnitName("player"),"OrderHallCommander") > 0 then
 		ns.ignoreHall=true
 		return
@@ -137,8 +136,8 @@ function module:AcquireButton()
 		b:SetSize(40,40)
 		b.Icon:SetSize(40,40)
 		b:EnableMouse(true)
-		b:RegisterForClicks("LeftButtonDown")	
-	end		
+		b:RegisterForClicks("LeftButtonDown")
+	end
 	tinsert(UpgradeButtons,b)
 	return b
 end
@@ -170,17 +169,17 @@ function module:RefreshUpgrades(model,followerID,displayID,showWeapon)
 	if follower.iLevel <850 then
 		for _,id in pairs(addon:GetData("Upgrades")) do
 			previous=self:RenderUpgradeButton(id,previous)
-		end	
+		end
 	end
 	if follower.isMaxLevel and  follower.quality ~=LE_ITEM_QUALITY_EPIC then
 		for _,id in pairs(addon:GetData("Xp")) do
 			previous=self:RenderUpgradeButton(id,previous)
-		end	
+		end
 	end
 	if follower.quality >=LE_ITEM_QUALITY_RARE then
 		for _,id in pairs(addon:GetData("Equipment")) do
 			previous=self:RenderUpgradeButton(id,previous)
-		end	
+		end
 	end
 end
 function module:RenderUpgradeButton(id,previous)
@@ -195,14 +194,14 @@ function module:RenderUpgradeButton(id,previous)
 		end
 		previous=b
 		b.itemID=id
-		b:SetAttribute("item",select(2,GetItemInfo(id)))		
+		b:SetAttribute("item",select(2,GetItemInfo(id)))
 		GarrisonMissionFrame_SetItemRewardDetails(b)
 		b.Quantity:SetFormattedText("%d",qt)
 		b.Quantity:SetTextColor(C.Yellow())
 		b.Quantity:Show()
 		b:Show()
 		return b
-end 
+end
 function module:Setup(this,...)
 --[===[@debug@
 print("Doing one time initialization for",this:GetName(),...)
@@ -338,12 +337,12 @@ function addon:SetBackdrop(frame,r,g,b)
 	g=g or 0
 	b=b or 0
    frame:SetBackdrop({
-         bgFile = "Interface/Tooltips/UI-Tooltip-Background", 
-         edgeFile = "Interface/Tooltips/UI-Tooltip-Border", 
-         tile = true, tileSize = 16, edgeSize = 16, 
+         bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+         edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+         tile = true, tileSize = 16, edgeSize = 16,
          insets = { left = 4, right = 4, top = 4, bottom =   4}
       }
-   )	
+   )
    frame:SetBackdropColor(r,g,b,1)
 end
 do

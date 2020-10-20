@@ -87,7 +87,7 @@ local initFrames
 local defaultSavedVars = {
 	global = {
         toolbarExpanded = true,
-        currentSeason = 5,
+        currentSeason = 4,
 		currentExpansion = 3,
         scale = 1,
         enemyForcesFormat = 2,
@@ -197,13 +197,12 @@ do
         end
     end
     function MDT.PLAYER_ENTERING_WORLD(self, addon)
-        --dirty hack to initialize Blizzard_ChallengesUI properly
+        --initialize Blizzard_ChallengesUI
         C_Timer.After(1,function()
-        --    PVEFrame_ToggleFrame("ChallengesFrame")
-        --    PVEFrame_ToggleFrame("GroupFinderFrame")
-        --    PVEFrame_ToggleFrame()
-            --TODO: fix the green number
-            --LoadAddOn("Blizzard_ChallengesUI")
+            LoadAddOn("Blizzard_ChallengesUI")
+            C_MythicPlus.RequestCurrentAffixes()
+            C_MythicPlus.RequestMapInfo()
+            C_MythicPlus.RequestRewards()
         end)
         self:UnregisterEvent("PLAYER_ENTERING_WORLD")
     end
@@ -3549,6 +3548,7 @@ function MDT:MakeCustomColorFrame(frame)
         end
         MDT:SetPresetColorPaletteInfo()
         MDT:ColorAllPulls()
+        MDT:DrawAllHulls()
         frame.CustomColorFrame:ReleaseChildren()
         frame.CustomColorFrame:Release()
         MDT:MakeCustomColorFrame(frame)
@@ -3573,6 +3573,7 @@ function MDT:MakeCustomColorFrame(frame)
                 db.colorPaletteInfo.customPaletteValues[i] = {r,g,b}
                 MDT:SetPresetColorPaletteInfo()
                 MDT:ColorAllPulls()
+                MDT:DrawAllHulls()
             end)
         frame.CustomColorFrame:AddChild(ColorPicker[i])
     end
@@ -3597,6 +3598,7 @@ function MDT:MakeAutomaticColorsFrame(frame)
         if value == true then
             frame.toggleForceColorBlindMode:SetDisabled(false)
             MDT:ColorAllPulls()
+            MDT:DrawAllHulls()
             MDT.main_frame.AutomaticColorsCogwheel:SetImage("Interface\\AddOns\\MythicDungeonTools\\Textures\\helpIconRnbw")
         else
             frame.toggleForceColorBlindMode:SetDisabled(true)
@@ -3613,7 +3615,7 @@ function MDT:MakeAutomaticColorsFrame(frame)
 		db.colorPaletteInfo.forceColorBlindMode = value
         MDT:SetPresetColorPaletteInfo()
         MDT:ColorAllPulls()
-
+        MDT:DrawAllHulls()
 	end)
     frame.automaticColorsFrame:AddChild(frame.toggleForceColorBlindMode)
 
@@ -3625,14 +3627,13 @@ function MDT:MakeAutomaticColorsFrame(frame)
         if value == 6 then
             db.colorPaletteInfo.colorPaletteIdx = value
             MDT:OpenCustomColorsDialog()
-            MDT:SetPresetColorPaletteInfo()
-            MDT:ColorAllPulls()
         else
             MDT.main_frame.automaticColorsFrame.CustomColorFrame:Hide()
             db.colorPaletteInfo.colorPaletteIdx = value
-            MDT:SetPresetColorPaletteInfo()
-            MDT:ColorAllPulls()
         end
+        MDT:SetPresetColorPaletteInfo()
+        MDT:ColorAllPulls()
+        MDT:DrawAllHulls()
     end)
     frame.automaticColorsFrame:AddChild(frame.PaletteSelectDropdown)
 
@@ -3650,6 +3651,7 @@ function MDT:MakeAutomaticColorsFrame(frame)
         end
         MDT:SetPresetColorPaletteInfo()
         MDT:ColorAllPulls()
+        MDT:DrawAllHulls()
     end)
     frame.automaticColorsFrame:AddChild(frame.button)
 

@@ -14,13 +14,18 @@ local kpairs=addon:GetKpairs()
 local format=format
 local strsplit=strsplit
 local select=select
-local GetCurrencyInfo=GetCurrencyInfo
 local generated
 local GARRISON_CURRENCY=GARRISON_CURRENCY
 local GARRISON_SHIP_OIL_CURRENCY=GARRISON_SHIP_OIL_CURRENCY
-local GARRISON_FOLLOWER_MAX_LEVEL=GARRISON_FOLLOWER_MAX_LEVEL
-local LE_FOLLOWER_TYPE_GARRISON_6_0=LE_FOLLOWER_TYPE_GARRISON_6_0
-local LE_FOLLOWER_TYPE_SHIPYARD_6_2=LE_FOLLOWER_TYPE_SHIPYARD_6_2
+local GARRISON_FOLLOWER_MAX_LEVEL=40
+local LE_FOLLOWER_TYPE_GARRISON_6_0=Enum.GarrisonFollowerType.FollowerType_6_0
+local LE_FOLLOWER_TYPE_SHIPYARD_6_2=Enum.GarrisonFollowerType.FollowerType_6_2
+local LE_FOLLOWER_TYPE_GARRISON_7_0=Enum.GarrisonFollowerType.FollowerType_7_0
+local LE_FOLLOWER_TYPE_GARRISON_8_0=Enum.GarrisonFollowerType.FollowerType_8_0
+local LE_GARRISON_TYPE_6_0=Enum.GarrisonType.Type_6_0
+local LE_GARRISON_TYPE_6_2=Enum.GarrisonType.Type_6_2
+local LE_GARRISON_TYPE_7_0=Enum.GarrisonType.Type_7_0
+local LE_GARRISON_TYPE_8_0=Enum.GarrisonType.Type_8_0
 local GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY=GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY[LE_FOLLOWER_TYPE_SHIPYARD_6_2]
 local module=addon:NewSubClass('ShipYard') --#Module
 local GameTooltip=GameTooltip
@@ -171,7 +176,7 @@ function module:HookedGarrisonShipyardMap_SetupBonus(missionList,frame,mission)
 	if not addendum then
 		if mission.inProgress then return end
 		i=i+1
-		addendum=CreateFrame("Frame",nil,frame)
+		addendum=CreateFrame("Frame",nil,frame,"BackdropTemplate")
 		addendum:SetPoint("TOP",frame,"BOTTOM",0,10)
 --[===[@debug@
 		addendum:EnableMouse(true)
@@ -209,7 +214,7 @@ function module:HookedGarrisonShipyardMap_SetupBonus(missionList,frame,mission)
 		return
 	end
 	if cost and currency then
-		local _,available=GetCurrencyInfo(currency)
+		local available=C_CurrencyInfo.GetCurrencyInfo(currency)['quantity']
 		if cost>available then
 			addendum:SetBackdropBorderColor(1,0,0)
 		else
@@ -309,7 +314,7 @@ print("Doing one time initialization for",this:GetName(),...)
 
 	GSF.FollowerStatusInfo=GSF.BorderFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	GSF.ResourceInfo=GSF.BorderFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-	GSF.ResourceFormat="|TInterface\\Icons\\garrison_oil:0|t %s " .. GetCurrencyInfo(GARRISON_SHIP_OIL_CURRENCY)
+	GSF.ResourceFormat="|TInterface\\Icons\\garrison_oil:0|t %s " .. C_CurrencyInfo.GetCurrencyInfo(GARRISON_SHIP_OIL_CURRENCY)['name']
 	GSF.ResourceInfo:SetPoint("TOPLEFT",5,0)
 	GSF.ResourceInfo:SetHeight(25)
 	GSF.FollowerStatusInfo:SetPoint("TOPRIGHT",-30,0)
@@ -386,7 +391,7 @@ function module:EventCHAT_MSG_CURRENCY(event)
 end
 function module:RefreshCurrency()
 	if GSF:IsVisible() then
-		local qt=select(2,GetCurrencyInfo(GARRISON_SHIP_OIL_CURRENCY))
+		local qt=C_CurrencyInfo.GetCurrencyInfo(GARRISON_SHIP_OIL_CURRENCY)['quantity']
 		GSF.ResourceInfo:SetFormattedText(GSF.ResourceFormat,qt)
 		if qt > 1000 then
 			GSF.ResourceInfo:SetTextColor(C.Green())

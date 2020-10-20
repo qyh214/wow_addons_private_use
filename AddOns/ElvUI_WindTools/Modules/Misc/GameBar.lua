@@ -19,6 +19,7 @@ local tostring = tostring
 local type = type
 local unpack = unpack
 
+local BNGetNumFriends = BNGetNumFriends
 local CreateFrame = CreateFrame
 local EncounterJournal_LoadUI = EncounterJournal_LoadUI
 local GetGameTime = GetGameTime
@@ -26,16 +27,19 @@ local GetItemCooldown = GetItemCooldown
 local GetItemIcon = GetItemIcon
 local GetNumGuildMembers = GetNumGuildMembers
 local GetTime = GetTime
+local GuildFrame_LoadUI = GuildFrame_LoadUI
 local HideUIPanel = HideUIPanel
 local InCombatLockdown = InCombatLockdown
 local IsAddOnLoaded = IsAddOnLoaded
 local IsInGuild = IsInGuild
 local IsModifierKeyDown = IsModifierKeyDown
+local RegisterStateDriver = RegisterStateDriver
 local ResetCPUUsage = ResetCPUUsage
 local Screenshot = Screenshot
 local ShowUIPanel = ShowUIPanel
 local SpellBookFrame = SpellBookFrame
 local TalentFrame_LoadUI = TalentFrame_LoadUI
+local ToggleAchievementFrame = ToggleAchievementFrame
 local ToggleAllBags = ToggleAllBags
 local ToggleCalendar = ToggleCalendar
 local ToggleCharacter = ToggleCharacter
@@ -46,6 +50,9 @@ local ToggleGuildFinder = ToggleGuildFinder
 local ToggleGuildFrame = ToggleGuildFrame
 local ToggleTimeManager = ToggleTimeManager
 
+local C_BattleNet_GetFriendAccountInfo = C_BattleNet.GetFriendAccountInfo
+local C_BattleNet_GetFriendGameAccountInfo = C_BattleNet.GetFriendGameAccountInfo
+local C_BattleNet_GetFriendNumGameAccounts = C_BattleNet.GetFriendNumGameAccounts
 local C_FriendList_GetNumFriends = C_FriendList.GetNumFriends
 local C_FriendList_GetNumOnlineFriends = C_FriendList.GetNumOnlineFriends
 local C_Garrison_GetCompleteMissions = C_Garrison.GetCompleteMissions
@@ -61,6 +68,8 @@ local IconString = "|T%s:16:18:0:0:64:64:4:60:7:57"
 local LeftButtonIcon = "|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:13:11:0:-1:512:512:12:66:230:307|t"
 local RightButtonIcon = "|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:13:11:0:-1:512:512:12:66:333:410|t"
 local ScrollButtonIcon = "|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:13:11:0:-1:512:512:12:66:127:204|t"
+
+local GargageCollectionCounter = 0
 
 local Heartstones = {
     6948, -- 爐石
@@ -115,12 +124,38 @@ local function AddDoubleLineForItem(itemID, prefix)
     )
 end
 
+-- 假的数据面板! 为了 event 函数不报错
+
+local VirtualDTEvent = {
+    Friends = nil,
+    Guild = "GUILD_ROSTER_UPDATE"
+}
+
+local VirtualDT = {
+    Friends = {
+        text = {
+            SetFormattedText = E.noop
+        }
+    },
+    Guild = {
+        text = {
+            SetFormattedText = E.noop,
+            SetText = E.noop
+        },
+        GetScript = function()
+            return E.noop
+        end
+    }
+}
+
 local ButtonTypes = {
     ACHIEVEMENTS = {
         name = L["Achievements"],
         icon = W.Media.Icons.barAchievements,
         click = {
-            LeftButton = ToggleAchievementFrame
+            LeftButton = function()
+                ToggleAchievementFrame(false)
+            end
         },
         tooltips = {
             L["Achievements"]
@@ -134,6 +169,18 @@ local ButtonTypes = {
         },
         tooltips = "Bags"
     },
+    BLIZZARD_SHOP = {
+        name = L["Blizzard Shop"],
+        icon = W.Media.Icons.barBlizzardShop,
+        click = {
+            LeftButton = function()
+                _G.StoreMicroButton:Click()
+            end
+        },
+        tooltips = {
+            L["Blizzard Shop"]
+        }
+    },
     CHARACTER = {
         name = L["Character"],
         icon = W.Media.Icons.barCharacter,
@@ -144,6 +191,18 @@ local ButtonTypes = {
         },
         tooltips = {
             L["Character"]
+        }
+    },
+    COLLECTIONS = {
+        name = L["Collections"],
+        icon = W.Media.Icons.barCollections,
+        click = {
+            LeftButton = function()
+                ToggleCollectionsJournal(1)
+            end
+        },
+        tooltips = {
+            L["Collections"]
         }
     },
     ENCOUNTER_JOURNAL = {
@@ -171,7 +230,26 @@ local ButtonTypes = {
             end
         },
         additionalText = function()
-            local number = C_FriendList_GetNumOnlineFriends()
+            local number = C_FriendList_GetNumOnlineFriends() or 0
+            local numBNOnlineFriend = select(2, BNGetNumFriends())
+
+            for i = 1, numBNOnlineFriend do
+                local accountInfo = C_BattleNet_GetFriendAccountInfo(i)
+                if accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.isOnline then
+                    local numGameAccounts = C_BattleNet_GetFriendNumGameAccounts(i)
+                    if numGameAccounts and numGameAccounts > 0 then
+                        for j = 1, numGameAccounts do
+                            local gameAccountInfo = C_BattleNet_GetFriendGameAccountInfo(i, j)
+                            if gameAccountInfo.clientProgram and gameAccountInfo.clientProgram == "WoW" then
+                                number = number + 1
+                            end
+                        end
+                    elseif accountInfo.gameAccountInfo.clientProgram == "WoW" then
+                        number = number + 1
+                    end
+                end
+            end
+
             return number > 0 and number or ""
         end,
         tooltips = "Friends"
@@ -196,6 +274,13 @@ local ButtonTypes = {
                 else
                     ToggleGuildFinder()
                 end
+            end,
+            RightButton = function()
+                if not _G.GuildFrame then
+                    GuildFrame_LoadUI()
+                end
+
+                ToggleFrame(_G.GuildFrame)
             end
         },
         additionalText = function()
@@ -342,6 +427,25 @@ function GB:ConstructBar()
     local bar = CreateFrame("Frame", "WTGameBar", E.UIParent)
     bar:Size(800, 60)
     bar:Point("TOP", 0, -20)
+    bar:SetFrameStrata("DIALOG")
+
+    bar:SetScript(
+        "OnEnter",
+        function(bar)
+            if self.db and self.db.mouseOver then
+                E:UIFrameFadeIn(bar, self.db.fadeTime, bar:GetAlpha(), 1)
+            end
+        end
+    )
+
+    bar:SetScript(
+        "OnLeave",
+        function(bar)
+            if self.db and self.db.mouseOver then
+                E:UIFrameFadeOut(bar, self.db.fadeTime, bar:GetAlpha(), 0)
+            end
+        end
+    )
 
     local middlePanel = CreateFrame("Button", "WTGameBarMiddlePanel", bar, "SecureActionButtonTemplate")
     middlePanel:Size(81, 50)
@@ -384,6 +488,16 @@ function GB:ConstructBar()
     )
 end
 
+function GB:UpdateBar()
+    if self.db and self.db.mouseOver then
+        self.bar:SetAlpha(0)
+    else
+        self.bar:SetAlpha(1)
+    end
+
+    RegisterStateDriver(self.bar, "visibility", self.db.visibility)
+end
+
 function GB:ConstructTimeArea()
     local colon = self.bar.middlePanel:CreateFontString(nil, "OVERLAY")
     colon:Point("CENTER")
@@ -415,7 +529,7 @@ function GB:ConstructTimeArea()
     local text = self.bar.middlePanel:CreateFontString(nil, "OVERLAY")
     text:Point("TOP", self.bar, "BOTTOM", 0, -5)
     F.SetFontWithDB(text, self.db.additionalText.font)
-    text:SetAlpha(0)
+    text:SetAlpha(self.db.time.alwaysSystemInfo and 1 or 0)
     self.bar.middlePanel.text = text
 
     self.bar.middlePanel:Size(self.db.timeAreaWidth, self.db.timeAreaHeight)
@@ -432,15 +546,32 @@ function GB:ConstructTimeArea()
 
     DT.RegisteredDataTexts["System"].onUpdate(self.bar.middlePanel, 10)
 
+    if self.db.time.alwaysSystemInfo then
+        self.alwaysSystemInfoTimer =
+            C_Timer_NewTicker(
+            1,
+            function()
+                DT.RegisteredDataTexts["System"].onUpdate(self.bar.middlePanel, 10)
+            end
+        )
+    end
+
     self:HookScript(
         self.bar.middlePanel,
         "OnEnter",
         function(panel)
+            if self.db and self.db.mouseOver then
+                E:UIFrameFadeIn(self.bar, self.db.fadeTime, self.bar:GetAlpha(), 1)
+            end
+
             DT.RegisteredDataTexts["System"].onUpdate(panel, 10)
 
             E:UIFrameFadeIn(panel.hourHover, self.db.fadeTime, panel.hourHover:GetAlpha(), 1)
             E:UIFrameFadeIn(panel.minutesHover, self.db.fadeTime, panel.minutesHover:GetAlpha(), 1)
-            E:UIFrameFadeIn(panel.text, self.db.fadeTime, panel.text:GetAlpha(), 1)
+
+            if not self.db.time.alwaysSystemInfo then
+                E:UIFrameFadeIn(panel.text, self.db.fadeTime, panel.text:GetAlpha(), 1)
+            end
 
             DT.tooltip:SetOwner(panel.text, "ANCHOR_BOTTOM", 0, -5)
 
@@ -480,9 +611,14 @@ function GB:ConstructTimeArea()
         self.bar.middlePanel,
         "OnLeave",
         function(panel)
+            if self.db and self.db.mouseOver then
+                E:UIFrameFadeOut(self.bar, self.db.fadeTime, self.bar:GetAlpha(), 0)
+            end
             E:UIFrameFadeOut(panel.hourHover, self.db.fadeTime, panel.hourHover:GetAlpha(), 0)
             E:UIFrameFadeOut(panel.minutesHover, self.db.fadeTime, panel.minutesHover:GetAlpha(), 0)
-            E:UIFrameFadeOut(panel.text, self.db.fadeTime, panel.text:GetAlpha(), 0)
+            if not self.db.time.alwaysSystemInfo then
+                E:UIFrameFadeOut(panel.text, self.db.fadeTime, panel.text:GetAlpha(), 0)
+            end
 
             DT.RegisteredDataTexts["System"].onLeave()
             DT.tooltip:Hide()
@@ -555,10 +691,13 @@ end
 
 function GB:UpdateTime()
     local panel = self.bar.middlePanel
+    if not panel or not self.db then
+        return
+    end
 
     local hour, min
 
-    if self.db and self.db.time then
+    if self.db.time then
         if self.db.time.localTime then
             hour = self.db.time.twentyFour and date("%H") or date("%I")
             min = date("%M")
@@ -568,6 +707,8 @@ function GB:UpdateTime()
             hour = format("%02d", hour)
             min = format("%02d", min)
         end
+    else
+        return
     end
 
     panel.hour:SetFormattedText(panel.hour.format, hour)
@@ -596,10 +737,32 @@ function GB:UpdateTimeArea()
         E:StopFlash(panel.colon)
     end
 
+    if self.db.time.alwaysSystemInfo then
+        DT.RegisteredDataTexts["System"].onUpdate(panel, 10)
+        panel.text:SetAlpha(1)
+        if not self.alwaysSystemInfoTimer or self.alwaysSystemInfoTimer:IsCancelled() then
+            self.alwaysSystemInfoTimer =
+                C_Timer_NewTicker(
+                1,
+                function()
+                    DT.RegisteredDataTexts["System"].onUpdate(panel, 10)
+                end
+            )
+        end
+    else
+        panel.text:SetAlpha(0)
+        if self.alwaysSystemInfoTimer and not self.alwaysSystemInfoTimer:IsCancelled() then
+            self.alwaysSystemInfoTimer:Cancel()
+        end
+    end
+
     self:UpdateTime()
 end
 
 function GB:ButtonOnEnter(button)
+    if self.db and self.db.mouseOver then
+        E:UIFrameFadeIn(self.bar, self.db.fadeTime, self.bar:GetAlpha(), 1)
+    end
     E:UIFrameFadeIn(button.hoverTex, self.db.fadeTime, button.hoverTex:GetAlpha(), 1)
     if button.tooltips then
         DT.tooltip:SetOwner(button, "ANCHOR_BOTTOM", 0, -10)
@@ -615,6 +778,10 @@ function GB:ButtonOnEnter(button)
             DT.tooltip:Show()
         elseif type(button.tooltips) == "string" then
             local DTModule = DT.RegisteredDataTexts[button.tooltips]
+
+            if VirtualDT[button.tooltips] and DTModule.eventFunc then
+                DTModule.eventFunc(VirtualDT[button.tooltips], VirtualDTEvent[button.tooltips])
+            end
 
             if DTModule and DTModule.onEnter then
                 DTModule.onEnter()
@@ -633,6 +800,9 @@ function GB:ButtonOnEnter(button)
 end
 
 function GB:ButtonOnLeave(button)
+    if self.db and self.db.mouseOver then
+        E:UIFrameFadeOut(self.bar, self.db.fadeTime, self.bar:GetAlpha(), 0)
+    end
     E:UIFrameFadeOut(button.hoverTex, self.db.fadeTime, button.hoverTex:GetAlpha(), 0)
     DT.tooltip:Hide()
     if button.tooltipsLeave then
@@ -756,6 +926,11 @@ function GB:UpdateButton(button, config)
                     button.additionalTextFormat,
                     config.additionalText and config.additionalText() or ""
                 )
+                GargageCollectionCounter = GargageCollectionCounter + 1
+                if GargageCollectionCounter > 30 then
+                    collectgarbage("collect")
+                    GargageCollectionCounter = 0
+                end
             end
         )
         button.additionalText:ClearAllPoints()
@@ -905,6 +1080,7 @@ function GB:Initialize()
     self:UpdateTimeArea()
     self:UpdateButtons()
     self:UpdateLayout()
+    self:UpdateBar()
     self:RegisterEvent("PLAYER_ENTERING_WORLD")
 
     self.Initialized = true
@@ -925,6 +1101,7 @@ function GB:ProfileUpdate()
             self:UpdateTime()
             self:UpdateButtons()
             self:UpdateLayout()
+            self:UpdateBar()
         else
             if InCombatLockdown() then
                 self:RegisterEvent("PLAYER_REGEN_ENABLED")
@@ -936,6 +1113,7 @@ function GB:ProfileUpdate()
     else
         if self.Initialized then
             self.bar:Hide()
+            self.bar:UnregisterStateDriver(self.bar, "visibility")
         end
     end
 end

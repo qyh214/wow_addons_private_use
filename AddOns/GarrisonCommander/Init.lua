@@ -54,8 +54,13 @@ ns.GSF=_G.GarrisonShipyardFrame
 ns.GMFMissions=ns.GMF.MissionTab.MissionList
 ns.GSFMissions=ns.GSF.MissionTab.MissionList
 _G.GARRISON_FOLLOWER_MAX_ITEM_LEVEL = _G.GARRISON_FOLLOWER_MAX_ITEM_LEVEL or 675
+local NavalDomination={
+	Alliance=39068,
+	Horde=39246
+}
 ns.quests={}
-GetQuestsCompleted(ns.quests)
+ns.quests[NavalDomination.Alliance]=C_QuestLog.IsQuestFlaggedCompleted(NavalDomination.Alliance)
+ns.quests[NavalDomination.Horde]=C_QuestLog.IsQuestFlaggedCompleted(NavalDomination.Horde)
 function addon:EventQUEST_TURNED_IN(event,quest,item,gold)
 	ns.quests[quest]=true
 end

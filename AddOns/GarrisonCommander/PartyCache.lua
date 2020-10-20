@@ -60,7 +60,7 @@ local ID,maxFollowers,members,ignored,threats=0,1,{},{},{}
 function party:Open(missionID,followers)
 	maxFollowers=followers
 	ID=missionID
-	local enemies=select(8,G.GetMissionInfo(ID))
+	local enemies=G.GetMissionDeploymentInfo(ID)['enemies']
 	if (type(enemies)=="table") then
 		for enemy,data in pairs(enemies) do
 			for menace,more in pairs(data.mechanics) do

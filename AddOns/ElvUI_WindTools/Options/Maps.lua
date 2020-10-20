@@ -4,6 +4,9 @@ local LSM = E.Libs.LSM
 local MB = W:GetModule("MinimapButtons")
 local WC = W:GetModule("WhoClicked")
 local RM = W:GetModule("RectangleMinimap")
+local WM = W:GetModule("WorldMap")
+
+local format = format
 
 options.whoClicked = {
     order = 1,
@@ -299,7 +302,7 @@ options.minimapButtons = {
                     type = "range",
                     name = L["Backdrop Spacing"],
                     desc = L["The spacing between the backdrop and the buttons."],
-                    min = 1,
+                    min = 0,
                     max = 30,
                     step = 1
                 },
@@ -374,7 +377,7 @@ options.minimapButtons = {
                     type = "range",
                     name = L["Button Spacing"],
                     desc = L["The spacing between buttons."],
-                    min = 1,
+                    min = 0,
                     max = 30,
                     step = 1
                 }
@@ -431,7 +434,16 @@ options.worldMap = {
                 feature = {
                     order = 1,
                     type = "description",
-                    name = L["This module will help you to reveal and resize maps."],
+                    name = function()
+                        if WM.StopRunning then
+                            return format(
+                                "|cffff0000" .. L["Because of %s, this module will not be loaded."] .. "|r",
+                                WM.StopRunning
+                            )
+                        else
+                            return L["This module will help you to reveal and resize maps."]
+                        end
+                    end,
                     fontSize = "medium"
                 }
             }

@@ -12,7 +12,8 @@ local function SetSlotFilter(self, bagID, slotID)
 
     if f.FilterHolder.active and self.Bags[bagID] and self.Bags[bagID][slotID] then
         local link = GetContainerItemLink(bagID, slotID);
-        if not link or f.FilterHolder[f.FilterHolder.active].filter(link, select(12, GetItemInfo(link))) then
+        local location = { bagID = bagID, slotIndex = slotID };
+        if not link or f.FilterHolder[f.FilterHolder.active].filter(location, link, select(12, GetItemInfo(link))) then
             self.Bags[bagID][slotID].searchOverlay:Hide();
         else
             self.Bags[bagID][slotID].searchOverlay:Show();
@@ -69,7 +70,7 @@ local function AddFilterButtons(f, isBank)
         if not f.FilterHolder[i] then
             local name, icon, func = unpack(filter);
 
-            f.FilterHolder[i] = CreateFrame('CheckButton', nil, f.FilterHolder);
+            f.FilterHolder[i] = CreateFrame('CheckButton', nil, f.FilterHolder, 'BackdropTemplate');
             f.FilterHolder[i]:SetTemplate('Default', true);
             f.FilterHolder[i]:StyleButton();
             f.FilterHolder[i]:SetNormalTexture('');
@@ -108,19 +109,19 @@ local function AddMenuButton(isBank)
     local f = B:GetContainerFrame(isBank);
     
     if not f or f.FilterHolder then return; end
-    f.FilterHolder = CreateFrame('Button', nil, f);
+    f.FilterHolder = CreateFrame('Button', nil, f, 'BackdropTemplate');
     f.FilterHolder:Point('BOTTOMLEFT', f, 'TOPLEFT', 0, 1);
     f.FilterHolder:SetTemplate('Transparent');
     f.FilterHolder:Hide();
     
-    f.filterButton = CreateFrame('Button', nil, f.holderFrame);
+    f.filterButton = CreateFrame('Button', nil, f.holderFrame, 'BackdropTemplate');
     f.filterButton:SetSize(16 + E.Border, 16 + E.Border);
     f.filterButton:SetTemplate();
     f.filterButton:SetPoint("RIGHT", f.sortButton, "LEFT", -5, 0);
-    f.filterButton:SetNormalTexture("Interface\\ICONS\\ACHIEVEMENT_GUILDPERK_BOUNTIFULBAGS");
+    f.filterButton:SetNormalTexture('Interface/ICONS/ACHIEVEMENT_GUILDPERK_BOUNTIFULBAGS');
     f.filterButton:GetNormalTexture():SetTexCoord(unpack(E.TexCoords));
     f.filterButton:GetNormalTexture():SetInside();
-    f.filterButton:SetPushedTexture("Interface\\ICONS\\ACHIEVEMENT_GUILDPERK_BOUNTIFULBAGS");
+    f.filterButton:SetPushedTexture('Interface/ICONS/ACHIEVEMENT_GUILDPERK_BOUNTIFULBAGS');
     f.filterButton:GetPushedTexture():SetTexCoord(unpack(E.TexCoords));
     f.filterButton:GetPushedTexture():SetInside();
     f.filterButton:StyleButton(nil, true);
@@ -155,7 +156,6 @@ do
     L.Quest = AUCTION_CATEGORY_QUEST_ITEMS;
     L.BattlePets = AUCTION_CATEGORY_BATTLE_PETS;
     L.Enhancement = AUCTION_CATEGORY_ITEM_ENHANCEMENT;
-    L.Power = ARTIFACT_POWER;
 
     L.All = ALL;
     L.Equipment = L.Weapon .. ' & ' .. L.Armor;
@@ -163,41 +163,40 @@ do
     
     U.Filters = {
         { L.All, 'Interface/Icons/INV_Misc_EngGizmos_17', 
-          function(link, type, subType) 
+          function(location, link, type, subType) 
               return true;
           end
         },
         { L.Equipment, 'Interface/Icons/INV_Chest_Chain_04', 
-          function(link, type, subType) 
-              return type == LE_ITEM_CLASS_ARMOR or type == LE_ITEM_CLASS_WEAPON; 
+          function(location, link, type, subType) 
+              return type == LE_ITEM_CLASS_ARMOR or 
+                     type == LE_ITEM_CLASS_WEAPON; 
           end
         },
         { L.Consumable, 'Interface/Icons/INV_Potion_93', 
-          function(link, type, subType) 
+          function(location, link, type, subType) 
               return type == LE_ITEM_CLASS_CONSUMABLE;
           end
         },
         { L.Quest, 'Interface/QuestFrame/UI-QuestLog-BookIcon',
-          function(link, type, subType)
+          function(location, link, type, subType)
               return type == LE_ITEM_CLASS_QUESTITEM;
           end
         },
         { L.TradeGood, 'Interface/Icons/INV_Fabric_Silk_02',
-          function(link, type, subType)
+          function(location, link, type, subType)
               return type == LE_ITEM_CLASS_TRADEGOODS or 
-                type == LE_ITEM_CLASS_RECIPE or type == LE_ITEM_CLASS_GEM or 
-                type == LE_ITEM_CLASS_ITEM_ENHANCEMENT or type == LE_ITEM_CLASS_GLYPH;
-          end
-        },
-        { L.Power, 'Interface/Icons/INV_Artifact_XP01',
-          function(link, type, subType)
-              return type == LE_ITEM_CLASS_CONSUMABLE and link:find(":8388608:");
+                     type == LE_ITEM_CLASS_RECIPE or 
+                     type == LE_ITEM_CLASS_GEM or 
+                     type == LE_ITEM_CLASS_ITEM_ENHANCEMENT or 
+                     type == LE_ITEM_CLASS_GLYPH;
           end
         },
         { L.Misc, 'Interface/Icons/INV_Misc_Rune_01',
-          function(link, type, subType)
+          function(location, link, type, subType)
               return type == LE_ITEM_CLASS_MISCELLANEOUS or
-                type == LE_ITEM_CLASS_BATTLEPET or type == LE_ITEM_CLASS_CONTAINER;
+                     type == LE_ITEM_CLASS_BATTLEPET or 
+                     type == LE_ITEM_CLASS_CONTAINER;
           end
         },
     };

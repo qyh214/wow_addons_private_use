@@ -1,7 +1,7 @@
 --- Main methods directly available in your addon
--- @classmod lib
+-- @module lib
 -- @author Alar of Runetotem
--- @release 52
+-- @release 56
 -- @set sort=true
 -- @usage
 -- -- Create a new addon this way:
@@ -11,7 +11,7 @@
 local me, ns = ...
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):12:")) -- Always check line number in regexp and file
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 52
+local MINOR_VERSION = 56
 local LibStub=LibStub
 local dprint=function() end
 local encapsulate  = function ()
@@ -42,9 +42,11 @@ local tostring=tostring
 local tremove=tremove
 local _G=_G -- Unmodified env
 --@debug@
--- Checking packager behaviour
+-- Should not appear
 --@end-debug@
-
+--@do-not-package@
+-- THIS SHOULD NOT APPEAR
+--@end-do-not-package@
 local lib=obj --#Lib
 function lib:Info()
 	print(MAJOR_VERSION,MINOR_VERSION,' loaded from ',__FILE__)
@@ -406,6 +408,39 @@ function lib:NewSubModule(name,...)
 end
 function lib:NewSubClass(name)
 	return self:NewSubModule(name,self)
+end
+--- Compatibility
+-- @section compatibility
+
+--- Compatibility: Emulates removed C_Garrison.GetMissionInfo
+--  @tparam integer id Mission ID
+--  @treturn list location,xp,environment,environmentDesc,environmentTexture,locTextureKit,isExhausting,enemies
+function lib:GetMissionInfo(id)
+  local t=C_Garrison.GetMissionDeploymentInfo(id)
+  return
+    t.location,
+    t.xp,
+    t.environment,
+    t.environmentDesc,
+    t.environmentTexture,
+    t.locTextureKit,
+    t.isExhausting,
+    t.enemies
+end
+--- Compatibility: Emulates renamed and modified GetCurrencyInfo
+--  @tparam integer id Currency identifier
+--  @treturn list name,quantity,iconFiledID,quantityEarnedThisWeek,maxWeeklyQuantiti,maxQuantity,discovered,quality
+function lib:GetCurrencyInfo(id)
+  local t=C_CurrencyInfo.GetCurrencyInfo(id)
+  return
+    t.name,
+    t.quantity,
+    t.iconFileID,
+    t.quantityEarnedThisWeek,
+    t.maxWeeklyQuantiti,
+    t.maxQuantity,
+    t.discovered,
+    t.quality
 end
 
 --- Returns a closure to call a method as simple local function

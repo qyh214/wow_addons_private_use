@@ -7,10 +7,8 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
-	--[[Translation missing --]]
-	L["<70% Mana"] = "<70% Mana"
-	--[[Translation missing --]]
-	L[">70% Mana"] = ">70% Mana"
+	L["<70% Mana"] = "<70% 마나"
+	L[">70% Mana"] = ">70% 마나"
 	L["Abilities"] = "능력"
 	L["Ability Charges"] = "능력 충전량"
 	L["Add Triggers"] = "활성 조건 추가"
@@ -66,18 +64,13 @@ local L = WeakAuras.L
 	L["Debuffs"] = "약화 효과"
 	L["General"] = "일반"
 	L["Health"] = "생명력"
-	--[[Translation missing --]]
-	L["Highlight while active, red when out of range."] = "Highlight while active, red when out of range."
-	--[[Translation missing --]]
-	L["Highlight while active."] = "Highlight while active."
-	--[[Translation missing --]]
-	L["Highlight while buffed, red when out of range."] = "Highlight while buffed, red when out of range."
+	L["Highlight while active, red when out of range."] = "활성화 된 동안 강조, 사정거리를 벗어나면 붉은색으로 표시"
+	L["Highlight while active."] = "활성화된 동안 강조합니다."
+	L["Highlight while buffed, red when out of range."] = "강화 효과가 있는 동안 강조, 사정거리를 벗어나면 붉은색으로 표시"
 	L["Highlight while buffed."] = "강화 효과가 있는 동안 강조합니다."
-	--[[Translation missing --]]
-	L["Highlight while debuffed, red when out of range."] = "Highlight while debuffed, red when out of range."
+	L["Highlight while debuffed, red when out of range."] = "약화 효과가 있는 동안 강조, 사정거리를 벗어나면 붉은색으로 표시"
 	L["Highlight while debuffed."] = "약화 효과가 있는 동안 강조합니다."
-	--[[Translation missing --]]
-	L["Highlight while spell is active."] = "Highlight while spell is active."
+	L["Highlight while spell is active."] = "주문이 활성화 되어 있는 동안 강조"
 	L["Hold CTRL to create multiple auras at once"] = "한 번에 여러 효과를 만드려면 CTRL 키를 누르세요"
 	L["Keeps existing triggers intact"] = "활성 조건 그대로 유지"
 	L["Next"] = "다음"

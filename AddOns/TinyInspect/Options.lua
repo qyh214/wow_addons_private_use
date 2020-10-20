@@ -66,7 +66,6 @@ local options = {
         { key = "Bank" },
         { key = "Merchant" },
         { key = "Trade" },
-        { key = "Auction" },
         { key = "AltEquipment" },
         { key = "GuildBank" },
         { key = "GuildNews" },

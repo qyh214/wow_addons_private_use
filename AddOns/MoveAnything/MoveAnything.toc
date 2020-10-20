@@ -1,13 +1,13 @@
-## Interface: 80300
+## Interface: 90001
 ## Title: MoveAnything
-## Version: 17.1.0
+## Version: 18.0.1
 ## Author: Wagthaa
 ## Notes: Move, scale, hide and adjust transparency of just about any screen element in the game.
 ## DefaultState: Enabled
 ## SavedVariables: MADB
 
 Libs\LibStub\LibStub.lua
-Libs\UIDropDownMenu\UIDropDownMenu.xml
+Libs\MSA-DropDownMenu-1.0\MSA-DropDownMenu-1.0.lua
 
 Localizations\Localization.br.lua
 Localizations\Localization.cn.lua

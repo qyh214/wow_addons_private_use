@@ -1,6 +1,7 @@
 local W, F, E, L = unpack(select(2, ...))
 local S = W:GetModule("Skins")
 local ES = E:GetModule("Skins")
+local MF = W:GetModule("MoveFrames")
 
 local _G = _G
 local pairs = pairs
@@ -52,6 +53,13 @@ do
             F.SetFontOutline(frame.spectext, E.db.general.font)
         end
 
+        for i = 1, 20 do
+            if frame["item" .. i] then
+                F.SetFontOutline(frame["item" .. i].itemString, E.db.general.font)
+                F.SetFontOutline(frame["item" .. i].levelString, "Montserrat")
+            end
+        end
+
         local inspectFrameHolder = CreateFrame("Frame", nil, parent)
         inspectFrameHolder:Point("TOPLEFT", frame, "TOPLEFT", 0, -1)
         inspectFrameHolder:Point("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 1)
@@ -76,8 +84,14 @@ do
             end
         )
 
+        if MF and MF.db and MF.db.moveBlizzardFrames then
+            MF:HandleFrame(inspectFrameHolder, parent.MoveFrame or parent)
+            frame.MoveFrame = inspectFrameHolder.MoveFrame
+        end
+
         inspectFrameHolder:Show()
         parent.inspectFrameHolder = inspectFrameHolder
+        frame:SetParent(inspectFrameHolder)
     end
 end
 
@@ -153,8 +167,14 @@ do
             end
         )
 
+        if MF and MF.db and MF.db.moveBlizzardFrames then
+            local parent = frame:GetParent()
+            MF:HandleFrame(statsFrameHolder, parent.MoveFrame or parent)
+        end
+
         statsFrameHolder:Show()
         frame.statsFrameHolder = statsFrameHolder
+        statsFrame:SetParent(statsFrameHolder)
 
         self:SecureHook(
             statsFrame,
@@ -176,6 +196,9 @@ function S:TinyInspect()
 
     if _G.ShowInspectItemListFrame then
         self:SecureHook("ShowInspectItemListFrame", "TinyInspect_SkinListPanel")
+    end
+
+    if _G.ShowInspectItemStatsFrame then
         self:SecureHook("ShowInspectItemStatsFrame", "TinyInspect_SkinStatsPanel")
     end
 end

@@ -4,7 +4,7 @@ local L = MySlot.L
 local RegEvent = MySlot.regevent
 
 
-local f = CreateFrame("Frame", nil, UIParent)
+local f = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
 f:SetWidth(650)
 f:SetHeight(600)
 f:SetBackdrop({
@@ -173,7 +173,7 @@ end
 
 RegEvent("ADDON_LOADED", function()
     do
-        local t = CreateFrame("Frame", nil, f)
+        local t = CreateFrame("Frame", nil, f, BackdropTemplateMixin and "BackdropTemplate" or nil)
         t:SetWidth(600)
         t:SetHeight(400)
         t:SetPoint("TOPLEFT", f, 25, -75)
@@ -398,6 +398,20 @@ RegEvent("ADDON_LOADED", function()
 
     end
 
+end)
+
+RegEvent("ADDON_LOADED", function()
+    local ldb = LibStub("LibDataBroker-1.1")
+    local icon = LibStub("LibDBIcon-1.0")
+    icon:Register("Myslot", ldb:NewDataObject("Myslot", {
+            icon = "Interface\\MacroFrame\\MacroFrame-Icon",
+            OnClick = function()
+                f:SetShown(not f:IsShown())
+            end,
+            OnTooltipShow = function(tooltip)
+                tooltip:AddLine(L["Myslot"])
+            end,
+        }),  { hide = false })
 end)
 
 SlashCmdList["MYSLOT"] = function(msg, editbox)

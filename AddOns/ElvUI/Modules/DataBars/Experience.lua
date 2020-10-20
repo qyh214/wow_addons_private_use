@@ -13,8 +13,6 @@ local IsPlayerAtEffectiveMaxLevel = IsPlayerAtEffectiveMaxLevel
 local C_QuestLog_GetNumQuestLogEntries = C_QuestLog.GetNumQuestLogEntries
 local C_QuestLog_GetQuestIDForLogIndex = C_QuestLog.GetQuestIDForLogIndex
 local C_QuestLog_ReadyForTurnIn = C_QuestLog.ReadyForTurnIn
-local C_QuestLog_SetSelectedQuest = C_QuestLog.SetSelectedQuest
-local C_QuestLog_ShouldShowQuestRewards = C_QuestLog.ShouldShowQuestRewards
 local C_QuestLog_GetQuestsOnMap = C_QuestLog.GetQuestsOnMap
 local UnitXP, UnitXPMax = UnitXP, UnitXPMax
 
@@ -25,13 +23,9 @@ local QuestLogXP = 0
 function DB:ExperienceBar_CheckQuests(questID, completedOnly)
 	if not questID then return end
 
-	C_QuestLog_SetSelectedQuest(questID)
-
-	if C_QuestLog_ShouldShowQuestRewards(questID) then
-		local isCompleted = C_QuestLog_ReadyForTurnIn(questID)
-		if completedOnly and isCompleted or (not completedOnly and not isCompleted) then
-			QuestLogXP = QuestLogXP + GetQuestLogRewardXP()
-		end
+	local isCompleted = C_QuestLog_ReadyForTurnIn(questID)
+	if not completedOnly or isCompleted then
+		QuestLogXP = QuestLogXP + GetQuestLogRewardXP(questID)
 	end
 end
 
@@ -211,6 +205,7 @@ end
 function DB:ExperienceBar()
 	local Experience = DB:CreateBar('ElvUI_ExperienceBar', 'Experience', DB.ExperienceBar_Update, DB.ExperienceBar_OnEnter, DB.ExperienceBar_OnClick, {'BOTTOM', E.UIParent, 'BOTTOM', 0, 43})
 	Experience.barTexture:SetDrawLayer('ARTWORK', 4)
+	DB:CreateBarBubbles(Experience)
 
 	local Rested = CreateFrame('StatusBar', 'ElvUI_ExperienceBar_Rested', Experience.holder)
 	Rested:SetStatusBarTexture(DB.db.customTexture and LSM:Fetch('statusbar', DB.db.statusbar) or E.media.normTex)

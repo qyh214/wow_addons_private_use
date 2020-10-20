@@ -3136,8 +3136,7 @@ L["Applies the best armor upgrade"] = "Применяет лучшее обно�
 L["Applies the best weapon set"] = "Применяет лучший набор оружия"
 L["Applies the best weapon upgrade"] = "Применяет лучшее обновление оружия"
 L["Archaelogy"] = "Археология"
---[[Translation missing --]]
---[[ L["Artifact shown value is the base value without considering knowledge multiplier"] = ""--]] 
+L["Artifact shown value is the base value without considering knowledge multiplier"] = "Показанное значение артефакта является базовым значением без учета множителя знаний"
 L["Attempting %s"] = "Пытаемся %s"
 L["Base Chance"] = "Базовай шанс"
 L["Better parties available in next future"] = "Более лучшие группы станут доступны в ближайшее время"
@@ -3168,8 +3167,7 @@ L["Consider again"] = "Вновь рассмотреть"
 L["Cost reduced"] = "Стоимость уменьшена"
 L["Could not fulfill mission, aborting"] = "Невозможно заполнить группы для задания. Отменяем"
 L["Counter kill Troops"] = "Парировать смерть отрядов"
---[[Translation missing --]]
---[[ L["Customization options (non mission related)"] = ""--]] 
+L["Customization options (non mission related)"] = "Параметры настройки (не связанные с миссией)"
 L["Disable blacklisting"] = "Запретить добавление в чёрный список"
 L["Disable if you dont want the full Garrison Commander Header."] = "Отключите, если вы не хотите полный заголовок Garrison Commander."
 L["Disables automatic population of mission page screen. You can also press control while clicking to disable it for a single mission"] = "Отключает автоматическое заполнение экрана страницы миссии. Вы также можете нажать кнопку управления, чтобы отключить его для одной миссии"

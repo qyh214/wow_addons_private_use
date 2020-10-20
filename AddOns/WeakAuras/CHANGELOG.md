@@ -1,6 +1,6 @@
-# [3.0.1](https://github.com/WeakAuras/WeakAuras2/tree/3.0.1) (2020-10-14)
+# [3.0.4](https://github.com/WeakAuras/WeakAuras2/tree/3.0.4) (2020-10-19)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.0.0...3.0.1)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.0.3...3.0.4)
 
 ## Highlights
 
@@ -8,8 +8,15 @@
 
 ## Commits
 
-InfusOnWoW (2):
+InfusOnWoW (1):
 
-- Fix Weapon Enchant trigger
-- Fix texture atlases on progress textures
+- Fix texture picker for ticks
+
+Stanzilla (1):
+
+- Revert back to upstream LibSpellRange
+
+mrbuds (1):
+
+- Fix error with old versions of OmniCC
 

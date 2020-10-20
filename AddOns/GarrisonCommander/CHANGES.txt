@@ -1,24 +1,18 @@
-tag b1eb6f3c2daa13daa9e3c5a4e9ab42bd61626c60 3.2.4
-Author:	Giovanni Gargani <g.gargani@hu-care.com>
-Date:	Fri Jan 17 22:05:33 2020 +0100
+tag f7d7376d8ba276463edc2ab194e0c23669af9138 3.3.0
+Author:	Giovanni G <19211824+alar77@users.noreply.github.com>
+Date:	Sun Oct 18 00:47:41 2020 +0200
 
-Toc 80300
+9.0.1
 
-commit f2db4bf0cd13afbcb596c88c88b5b0ceb35610e9
-Author: Giovanni Gargani <g.gargani@hu-care.com>
-Date:   Fri Jan 17 22:05:08 2020 +0100
+commit 6d110e49ab95fb4c12d4803dbdcf1d02fb474bd9
+Author: Giovanni G <19211824+alar77@users.noreply.github.com>
+Date:   Sun Oct 18 00:42:08 2020 +0200
 
-    toc bump
+    9.0.1 Version
 
-commit c9874a4570f91271007568a94e053a03672d0305
-Author: Giovanni Gargani <g.gargani@hu-care.com>
-Date:   Fri Jan 17 22:04:20 2020 +0100
+commit 9a6ee973f76fe99da6ea38b14597ce89c699f2bd
+Author: Giovanni G <19211824+alar77@users.noreply.github.com>
+Date:   Fri Oct 16 23:27:59 2020 +0200
 
-    Toc 80300
-
-commit 79c8fa6beeda7d083074969aca85c664157a8c30
-Author: Giovanni Gargani <g.gargani@hu-care.com>
-Date:   Fri Jan 17 22:03:30 2020 +0100
-
-    Toc bump
+    TOC Bump
 

@@ -298,7 +298,7 @@ local function GMCLayer()
 	end
 	---@function [parent=#GMCLayer]
 	local function Constructor()
-		local frame=CreateFrame("Frame")
+		local frame=CreateFrame("Frame",nil,nil,"BackdropTemplate")
 		local title=frame:CreateFontString(nil, "BACKGROUND", "GameFontNormalHugeBlack")
 		title:SetJustifyH("CENTER")
 		title:SetJustifyV("CENTER")

@@ -38,8 +38,6 @@ local format=format
 local table=table
 local math=math
 local GetQuestResetTime=GetQuestResetTime
-local CalendarGetDate=CalendarGetDate
-local CalendarGetAbsMonth=CalendarGetAbsMonth
 local GameTooltip=GameTooltip
 local pairs=pairs
 local select=select
@@ -48,7 +46,6 @@ local NEXT=NEXT
 local NONE=C(NONE,"Red")
 local DONE=C(DONE,"Green")
 local NEED=C(NEED,"Red")
-local IsQuestFlaggedCompleted=IsQuestFlaggedCompleted
 local CAPACITANCE_SHIPMENT_COUNT=CAPACITANCE_SHIPMENT_COUNT -- "%d of %d Work Orders Available";
 local CAPACITANCE_SHIPMENT_READY=CAPACITANCE_SHIPMENT_READY -- "Work Order ready for pickup!";
 local CAPACITANCE_START_WORK_ORDER=CAPACITANCE_START_WORK_ORDER -- "Start Work Order";
@@ -67,14 +64,14 @@ KEY_BUTTON1="Shift " .. KEY_BUTTON1
 KEY_BUTTON2="Shift " .. KEY_BUTTON2
 local EMPTY=EMPTY -- "Empty"
 local GARRISON_CACHE=GARRISON_CACHE
-local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0
-local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2
-local LE_FOLLOWER_TYPE_GARRISON_7_0=_G.LE_FOLLOWER_TYPE_GARRISON_7_0
-local LE_FOLLOWER_TYPE_GARRISON_8_0=_G.LE_FOLLOWER_TYPE_GARRISON_8_0
-local LE_GARRISON_TYPE_6_0=_G.LE_GARRISON_TYPE_6_0
-local LE_GARRISON_TYPE_6_2=_G.LE_GARRISON_TYPE_6_2
-local LE_GARRISON_TYPE_7_0=_G.LE_GARRISON_TYPE_7_0
-local LE_GARRISON_TYPE_8_0=_G.LE_GARRISON_TYPE_8_0
+local LE_FOLLOWER_TYPE_GARRISON_6_0=Enum.GarrisonFollowerType.FollowerType_6_0
+local LE_FOLLOWER_TYPE_SHIPYARD_6_2=Enum.GarrisonFollowerType.FollowerType_6_2
+local LE_FOLLOWER_TYPE_GARRISON_7_0=Enum.GarrisonFollowerType.FollowerType_7_0
+local LE_FOLLOWER_TYPE_GARRISON_8_0=Enum.GarrisonFollowerType.FollowerType_8_0
+local LE_GARRISON_TYPE_6_0=Enum.GarrisonType.Type_6_0
+local LE_GARRISON_TYPE_6_2=Enum.GarrisonType.Type_6_2
+local LE_GARRISON_TYPE_7_0=Enum.GarrisonType.Type_7_0
+local LE_GARRISON_TYPE_8_0=Enum.GarrisonType.Type_8_0
 local dbversion=1
 local frequency=5
 local ldbtimer=nil
@@ -196,7 +193,7 @@ end
 function addon:CheckDateReset()
 	local oldToday=today
 	local reset=GetQuestResetTime()
-	local t= C_Calendar.GetDate()
+	local t= C_DateAndTime.GetCurrentCalendarTime()
 	local day=t.monthDay
 	local year=t.year
 	local month=t.month
@@ -422,7 +419,7 @@ function addon:DelayedInit()
 	end
 end
 function addon:GetImprovedCacheSize()
-	if IsQuestFlaggedCompleted(37485) then
+	if C_QuestLog.IsQuestFlaggedCompleted(37485) then
 		return 1000 -- Arakkoa item
 --[[
 	elseif IsQuestFlaggedCompleted(38445) then

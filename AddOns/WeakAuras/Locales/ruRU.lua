@@ -1020,6 +1020,8 @@ L["Thickness"] = "Толщина"
 L["Third"] = "Третье"
 L["Third Value of Tooltip Text"] = "Третье значение из текста подсказки"
 L["This aura contains custom Lua code."] = "Индикация содержит пользовательский код Lua."
+--[[Translation missing --]]
+L["This aura has legacy aura trigger(s), which are no longer supported."] = "This aura has legacy aura trigger(s), which are no longer supported."
 L["This aura was created with a newer version of WeakAuras."] = "Индикация была создана в новой версии WeakAuras."
 --[[Translation missing --]]
 L["This aura was created with the Classic version of World of Warcraft."] = "This aura was created with the Classic version of World of Warcraft."

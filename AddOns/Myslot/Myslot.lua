@@ -17,7 +17,7 @@ local MYSLOT_ALLOW_VER = {MYSLOT_VER, 24, 23, 22}
 
 -- local MYSLOT_IS_DEBUG = true
 local MYSLOT_LINE_SEP = IsWindowsClient() and "\r\n" or "\n"
-local MYSLOT_MAX_ACTIONBAR = 120
+local MYSLOT_MAX_ACTIONBAR = 132
 
 -- {{{ SLOT TYPE
 local MYSLOT_SPELL = _MySlot.Slot.SlotType.SPELL
@@ -351,6 +351,12 @@ function MySlot:Import(text, opt)
     return msg
 end
 
+local function UnifyCRLF(text)
+    text = string.gsub(text, "\r", "")
+    text = string.gsub(text, "\n", MYSLOT_LINE_SEP)
+    return text
+end
+
 -- {{{ FindOrCreateMacro
 function MySlot:FindOrCreateMacro(macroInfo)
     if not macroInfo then
@@ -363,6 +369,7 @@ function MySlot:FindOrCreateMacro(macroInfo)
         
         local name, _, body = GetMacroInfo(i)
         if name then
+            body = UnifyCRLF(body)
             localMacro[ name .. "_" .. body ] = i
             localMacro[ body ] = i
         end
@@ -373,8 +380,9 @@ function MySlot:FindOrCreateMacro(macroInfo)
     local name = macroInfo["name"]
     local icon = macroInfo["icon"]
     local body = macroInfo["body"]
+    body = UnifyCRLF(body)
 
-    local localIndex = localMacro[ name .. "_" .. body ] or localMacro[ body ]
+    local localIndex = localMacro[ name .. "_" .. body] or localMacro[ body ]
 
     if localIndex then
         return localIndex
@@ -439,15 +447,6 @@ function MySlot:RecoverData(msg, opt)
             end
         end
     end
-
-    -- removed in 6.0 
-    for _, companionsType in pairs({"CRITTER"}) do
-        for i =1,GetNumCompanions(companionsType) do
-            local _,_,spellId = GetCompanionInfo( companionsType, i)
-            spells[MYSLOT_SPELL .. "_" .. spellId] = {i, companionsType, "companions"}
-        end
-    end
-
 
     for _, p in pairs({GetProfessions()}) do
         local _, _, _, _, numSpells, spelloffset = GetProfessionInfo(p)

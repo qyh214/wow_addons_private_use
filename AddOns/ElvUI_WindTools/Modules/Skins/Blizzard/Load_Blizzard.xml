@@ -20,6 +20,7 @@
 	<Script file='Friends.lua'/>
 	<Script file='Garrison.lua'/>
 	<Script file='Gossip.lua'/>
+	<Script file='Guild.lua'/>
 	<Script file='GuildBank.lua'/>
 	<Script file='Help.lua'/>
 	<Script file='InputMethodEditor.lua'/>
@@ -37,6 +38,7 @@
 	<Script file='Misc.lua'/>
 	<Script file='ObjectiveTracker.lua'/>
 	<Script file='OrderHall.lua'/>
+	<Script file='PetBattle.lua'/>
 	<Script file='PlayerChoice.lua'/>
 	<Script file='Quest.lua'/>
 	<Script file='RaidInfo.lua'/>
@@ -44,6 +46,7 @@
 	<Script file='ScrappingMachine.lua'/>
 	<Script file='SpellBook.lua'/>
 	<Script file='StaticPopup.lua'/>
+	<Script file='SubscriptionInterstitial.lua'/>
 	<Script file='Talent.lua'/>
 	<Script file='TalkingHead.lua'/>
 	<Script file='Taxi.lua'/>

@@ -72,6 +72,7 @@ AddMedia("nga", "NGA.tga", "Icons")
 AddMedia("barAchievements", "GameBar\\Achievements.tga", "Icons")
 AddMedia("barBags", "GameBar\\Bags.tga", "Icons")
 AddMedia("barCharacter", "GameBar\\Character.tga", "Icons")
+AddMedia("barCollections", "GameBar\\Collections.tga", "Icons")
 AddMedia("barEncounterJournal", "GameBar\\EncounterJournal.tga", "Icons")
 AddMedia("barFriends", "GameBar\\Friends.tga", "Icons")
 AddMedia("barGroupFinder", "GameBar\\GroupFinder.tga", "Icons")
@@ -81,28 +82,29 @@ AddMedia("barOptions", "GameBar\\Options.tga", "Icons")
 AddMedia("barPetJournal", "GameBar\\PetJournal.tga", "Icons")
 AddMedia("barMissionReports", "GameBar\\MissionReports.tga", "Icons")
 AddMedia("barScreenShot", "GameBar\\ScreenShot.tga", "Icons")
+AddMedia("barBlizzardShop", "GameBar\\BlizzardShop.tga", "Icons")
 AddMedia("barSpellBook", "GameBar\\SpellBook.tga", "Icons")
 AddMedia("barTalents", "GameBar\\Talents.tga", "Icons")
 AddMedia("barToyBox", "GameBar\\ToyBox.tga", "Icons")
 
 do
-	local Region = 128
-
-	if GetLocale() == "zhCN" then
-		Region = 4
+	local locale = GetLocale()
+	if LSM["LOCALE_BIT_" .. locale] then
+		local region = LSM["LOCALE_BIT_" .. locale]
+		LSM:Register("font", "Accidental Presidency (en)", MediaPath .. "Fonts\\AccidentalPresidency.ttf", region)
+		LSM:Register("font", "Montserrat (en)", MediaPath .. "Fonts\\Montserrat-ExtraBold.ttf", region)
+		LSM:Register("font", "Roadway (en)", MediaPath .. "Fonts\\Roadway.ttf", region)
+		W.CompatibleFont = true
+	else
+		LSM:Register("font", "Accidental Presidency", MediaPath .. "Fonts\\AccidentalPresidency.ttf", LSM.LOCALE_BIT_western)
+		LSM:Register("font", "Montserrat", MediaPath .. "Fonts\\Montserrat-ExtraBold.ttf", LSM.LOCALE_BIT_western)
+		LSM:Register("font", "Roadway", MediaPath .. "Fonts\\Roadway.ttf", LSM.LOCALE_BIT_western)
+		W.CompatibleFont = false
 	end
-
-	if GetLocale() == "zhTW" then
-		Region = 8
-	end
-
-	LSM:Register("font", "Accidental Presidency", MediaPath .. "Fonts\\AccidentalPresidency.ttf", Region)
-	LSM:Register("font", "Montserrat", MediaPath .. "Fonts\\Montserrat-ExtraBold.ttf", Region)
-	LSM:Register("font", "Roadway", MediaPath .. "Fonts\\Roadway.ttf", Region)
-
-	LSM:Register("statusbar", "WindTools Glow", MediaPath .. "Textures\\StatusbarGlow.tga")
-	LSM:Register("statusbar", "WindTools Flat", MediaPath .. "Textures\\StatusbarFlat.blp")
-
-	LSM:Register("sound", "OnePlus Light", MediaPath .. "Sounds\\OnePlusLight.ogg")
-	LSM:Register("sound", "OnePlus Surprise", MediaPath .. "Sounds\\OnePlusSurprise.ogg")
 end
+
+LSM:Register("statusbar", "WindTools Glow", MediaPath .. "Textures\\StatusbarGlow.tga")
+LSM:Register("statusbar", "WindTools Flat", MediaPath .. "Textures\\StatusbarFlat.blp")
+
+LSM:Register("sound", "OnePlus Light", MediaPath .. "Sounds\\OnePlusLight.ogg")
+LSM:Register("sound", "OnePlus Surprise", MediaPath .. "Sounds\\OnePlusSurprise.ogg")

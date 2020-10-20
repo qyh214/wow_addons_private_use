@@ -3,8 +3,8 @@ local DB = E:GetModule('DataBars')
 local LSM = E.Libs.LSM
 
 local _G = _G
-local unpack = unpack
-local pairs, select = pairs, select
+local unpack, select = unpack, select
+local pairs, ipairs = pairs, ipairs
 local CreateFrame = CreateFrame
 local GetInstanceInfo = GetInstanceInfo
 local IsPlayerAtEffectiveMaxLevel = IsPlayerAtEffectiveMaxLevel
@@ -39,7 +39,7 @@ function DB:CreateBar(name, key, updateFunc, onEnter, onClick, points)
 	bar:Hide()
 
 	bar.barTexture = bar:GetStatusBarTexture()
-	bar.text = bar:CreateFontString(nil, 'OVERLAY')
+	bar.text = bar:CreateFontString(nil, 'OVERLAY', nil, 7)
 	bar.text:FontTemplate()
 	bar.text:Point('CENTER')
 
@@ -50,6 +50,38 @@ function DB:CreateBar(name, key, updateFunc, onEnter, onClick, points)
 	DB.StatusBars[key] = bar
 
 	return bar
+end
+
+function DB:CreateBarBubbles(bar)
+	if bar.bubbles then return end
+
+	bar.bubbles = {}
+
+	for i = 1, 19 do
+		bar.bubbles[i] = bar:CreateTexture(nil, 'OVERLAY', nil, 0)
+		bar.bubbles[i]:SetColorTexture(0, 0, 0)
+	end
+end
+
+function DB:UpdateBarBubbles(bar)
+	if not bar.bubbles then return end
+
+	local width, height = bar.db.width, bar.db.height
+	local vertical = bar:GetOrientation() ~= 'HORIZONTAL'
+	local bubbleWidth, bubbleHeight = vertical and (width - 2) or 1, vertical and 1 or (height - 2)
+	local offset = (vertical and height or width) / 20
+
+	for i, bubble in ipairs(bar.bubbles) do
+		bubble:ClearAllPoints()
+		bubble:SetSize(bubbleWidth, bubbleHeight)
+		bubble:SetShown(bar.db.showBubbles)
+
+		if vertical then
+			bubble:Point('TOP', bar, 'BOTTOM', 0, offset * i)
+		else
+			bubble:Point('RIGHT', bar, 'LEFT', offset * i, 0)
+		end
+	end
 end
 
 function DB:UpdateAll()
@@ -95,6 +127,8 @@ function DB:UpdateAll()
 				child:SetReverseFill(reverseFill)
 			end
 		end
+
+		DB:UpdateBarBubbles(bar)
 	end
 
 	DB:PvPCheck()
@@ -115,6 +149,8 @@ function DB:CombatCheck(event)
 	for _, bar in pairs(DB.StatusBars) do
 		if bar.db.enable and bar.db.hideInCombat then
 			bar:SetShown(notInCombat)
+			bar.holder:SetShown(notInCombat)
+
 			if notInCombat and bar.Update then
 				bar:Update()
 			end

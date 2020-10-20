@@ -10,8 +10,14 @@ local GSFMissions=GarrisonMissionFrameMissions
 local GARRISON_CURRENCY=GARRISON_CURRENCY
 local GARRISON_SHIP_OIL_CURRENCY=_G.GARRISON_SHIP_OIL_CURRENCY
 local SEAL_CURRENCY=994
-local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0 -- 1
-local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2 -- 2
+local LE_FOLLOWER_TYPE_GARRISON_6_0=Enum.GarrisonFollowerType.FollowerType_6_0
+local LE_FOLLOWER_TYPE_SHIPYARD_6_2=Enum.GarrisonFollowerType.FollowerType_6_2
+local LE_FOLLOWER_TYPE_GARRISON_7_0=Enum.GarrisonFollowerType.FollowerType_7_0
+local LE_FOLLOWER_TYPE_GARRISON_8_0=Enum.GarrisonFollowerType.FollowerType_8_0
+local LE_GARRISON_TYPE_6_0=Enum.GarrisonType.Type_6_0
+local LE_GARRISON_TYPE_6_2=Enum.GarrisonType.Type_6_2
+local LE_GARRISON_TYPE_7_0=Enum.GarrisonType.Type_7_0
+local LE_GARRISON_TYPE_8_0=Enum.GarrisonType.Type_8_0
 local pairs=pairs
 local format=format
 local strsplit=strsplit
@@ -158,7 +164,7 @@ function module:MissionComplete(this,button,skiprescheck)
 		end
 		local stop
 		for id,qt in pairs(wasted) do
-			local name,current,_,_,_,cap=GetCurrencyInfo(id)
+			local name,current,_,_,_,cap=addon:GetCurrencyInfo(id)
 			--[===[@debug@
 			print(name,current,qt,cap)
 			--@end-debug@]===]
@@ -267,7 +273,7 @@ function module:MissionAutoComplete(event,ID,arg1,arg2,arg3,arg4,...)
 				step=0
 				currentMission.state=0
 				currentMission.goldMultiplier=currentMission.goldMultiplier or 1
-				currentMission.xp=select(2,G.GetMissionInfo(currentMission.missionID))
+				currentMission.xp=G.GetMissionDeploymentInfo(currentMission.missionID)['xp']
 				report:AddMissionButton(currentMission,addon:GetParty(currentMission.missionID),currentMission.successChance,"report")
 			end
 			if (step==0) then
@@ -345,7 +351,7 @@ function module:MissionsPrintResults(success)
 			report:AddIconText(v.icon,GetMoneyString(v.qt))
 		else
 			-- Other currency reward
-			report:AddIconText(v.icon,GetCurrencyLink(k,v.qt))
+			report:AddIconText(v.icon,C_CurrencyInfo.GetCurrencyLink(k,v.qt))
 		end
 	end
 	local items=new()

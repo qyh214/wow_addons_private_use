@@ -14,12 +14,18 @@ local tinsert=tinsert
 local tContains=tContains
 local wipe=wipe
 local Mbase = {}
-local GARRISON_FOLLOWER_MAX_LEVEL=GARRISON_FOLLOWER_MAX_LEVEL
+local GARRISON_FOLLOWER_MAX_LEVEL=40
 local format=format
 local tostring=tostring
 local GetItemInfo=GetItemInfo
-local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0
-local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2
+local LE_FOLLOWER_TYPE_GARRISON_6_0=Enum.GarrisonFollowerType.FollowerType_6_0
+local LE_FOLLOWER_TYPE_SHIPYARD_6_2=Enum.GarrisonFollowerType.FollowerType_6_2
+local LE_FOLLOWER_TYPE_GARRISON_7_0=Enum.GarrisonFollowerType.FollowerType_7_0
+local LE_FOLLOWER_TYPE_GARRISON_8_0=Enum.GarrisonFollowerType.FollowerType_8_0
+local LE_GARRISON_TYPE_6_0=Enum.GarrisonType.Type_6_0
+local LE_GARRISON_TYPE_6_2=Enum.GarrisonType.Type_6_2
+local LE_GARRISON_TYPE_7_0=Enum.GarrisonType.Type_7_0
+local LE_GARRISON_TYPE_8_0=Enum.GarrisonType.Type_8_0
 local maxrank=_G.GARRISON_FOLLOWER_MAX_UPGRADE_QUALITY[LE_FOLLOWER_TYPE_GARRISON_6_0]*1000+GARRISON_FOLLOWER_MAX_LEVEL
 local module=addon:NewSubClass('FollowerCache') --#module
 local cache={} --#cache
@@ -262,12 +268,12 @@ function addon:GetCache(followerTypeID)
 	return module.caches[followerTypeID]
 end
 function addon:GMCBusy(followerID,value)
-	if not followerID then 
+	if not followerID then
 		GMCUsedFollowersCount=0
-		wipe(GMCUsedFollowers) 
-		return 
+		wipe(GMCUsedFollowers)
+		return
 	end
-	if value and not GMCUsedFollowers[followerID] then 
+	if value and not GMCUsedFollowers[followerID] then
 		GMCUsedFollowers[followerID]=true
 		GMCUsedFollowersCount=GMCUsedFollowersCount+1
 	end

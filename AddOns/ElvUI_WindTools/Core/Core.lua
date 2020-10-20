@@ -3,12 +3,14 @@ local W, F, E, L, V, P, G = unpack(select(2, ...))
 local format = format
 local pairs = pairs
 local pcall = pcall
+local print = print
 local strsub = strsub
 local tinsert = tinsert
 
 local GetCVarBool = GetCVarBool
 local GetLocale = GetLocale
 local GetMaxLevelForPlayerExpansion = GetMaxLevelForPlayerExpansion
+local InCombatLockdown = InCombatLockdown
 local ScriptErrorsFrame_OnError = ScriptErrorsFrame_OnError
 
 -- 一些常量
@@ -65,6 +67,42 @@ function W.UpdateModules()
         local module = W:GetModule(moduleName)
         if module.ProfileUpdate then
             pcall(module.ProfileUpdate, module)
+        end
+    end
+end
+
+E.PopupDialogs.WINDTOOLS_OPEN_CHANGELOG = {
+    text = format(L["Welcome to %s %s!"], L["WindTools"], W.Version),
+    button1 = L["Open Changelog"],
+    button2 = CANCEL,
+    OnAccept = function(self)
+        E.global.WT.Version = W.Version
+        E:ToggleOptionsUI("WindTools,information,changelog")
+    end,
+    hideOnEscape = 1
+}
+
+-- 检查安装版本, 提示更新记录
+function W:CheckInstalledVersion()
+    if not InCombatLockdown() then
+        if not E.global.WT.Version or E.global.WT.Version ~= W.Version then
+            E:StaticPopup_Show("WINDTOOLS_OPEN_CHANGELOG")
+        else
+            local icon = F.GetIconString(W.Media.Textures.smallLogo, 14)
+            print(
+                format(
+                    icon ..
+                        " " ..
+                            L["%s %s Loaded."] ..
+                                " " .. L["You can send your suggestions or bugs via %s, %s, %s, and the thread in %s."],
+                    L["WindTools"],
+                    W.Version,
+                    L["QQ Group"],
+                    L["Discord"],
+                    L["Github"],
+                    L["NGA.cn"]
+                )
+            )
         end
     end
 end

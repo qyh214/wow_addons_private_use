@@ -16,9 +16,17 @@ local addon=addon
 local GBF=GarrisonBuildingFrame
 local GBFMap=GBF.MapFrame
 local CreateFrame=CreateFrame
-local GARRISON_FOLLOWER_MAX_LEVEL=GARRISON_FOLLOWER_MAX_LEVEL
+local GARRISON_FOLLOWER_MAX_LEVEL=40
 local new,del=ns.new,ns.del
 local module=addon:NewSubClass("BuildingPage") --#module
+local LE_FOLLOWER_TYPE_GARRISON_6_0=Enum.GarrisonFollowerType.FollowerType_6_0
+local LE_FOLLOWER_TYPE_SHIPYARD_6_2=Enum.GarrisonFollowerType.FollowerType_6_2
+local LE_FOLLOWER_TYPE_GARRISON_7_0=Enum.GarrisonFollowerType.FollowerType_7_0
+local LE_FOLLOWER_TYPE_GARRISON_8_0=Enum.GarrisonFollowerType.FollowerType_8_0
+local LE_GARRISON_TYPE_6_0=Enum.GarrisonType.Type_6_0
+local LE_GARRISON_TYPE_6_2=Enum.GarrisonType.Type_6_2
+local LE_GARRISON_TYPE_7_0=Enum.GarrisonType.Type_7_0
+local LE_GARRISON_TYPE_8_0=Enum.GarrisonType.Type_8_0
 function module:OnInitialize()
 	--module:SafeHookScript(GBFMap,"OnShow","AddFollowersToMap")
 	module:SafeSecureHook("GarrisonBuildingList_Show","AddCheckBox")
@@ -69,7 +77,7 @@ function module:AddFollowerToPlot(plot)
 			info.level=level
 			info.portraitIconID=portraitIconID
 			info.displayID=portraitIconID
-			info.followerTypeID=_G.LE_FOLLOWER_TYPE_GARRISON_6_0
+			info.followerTypeID=LE_FOLLOWER_TYPE_GARRISON_6_0
 			GMF:SetFollowerPortrait(frame.PortraitFrame, info, false)
 			frame.PortraitFrame.Empty:Hide()
 			del(info)

@@ -11,9 +11,15 @@ local tcontains=tContains
 local wipe=wipe
 local GARRISON_CURRENCY=GARRISON_CURRENCY
 local GARRISON_SHIP_OIL_CURRENCY=GARRISON_SHIP_OIL_CURRENCY
-local GARRISON_FOLLOWER_MAX_LEVEL=GARRISON_FOLLOWER_MAX_LEVEL
-local LE_FOLLOWER_TYPE_GARRISON_6_0=_G.LE_FOLLOWER_TYPE_GARRISON_6_0
-local LE_FOLLOWER_TYPE_SHIPYARD_6_2=_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2
+local GARRISON_FOLLOWER_MAX_LEVEL=40
+local LE_FOLLOWER_TYPE_GARRISON_6_0=Enum.GarrisonFollowerType.FollowerType_6_0
+local LE_FOLLOWER_TYPE_SHIPYARD_6_2=Enum.GarrisonFollowerType.FollowerType_6_2
+local LE_FOLLOWER_TYPE_GARRISON_7_0=Enum.GarrisonFollowerType.FollowerType_7_0
+local LE_FOLLOWER_TYPE_GARRISON_8_0=Enum.GarrisonFollowerType.FollowerType_8_0
+local LE_GARRISON_TYPE_6_0=Enum.GarrisonType.Type_6_0
+local LE_GARRISON_TYPE_6_2=Enum.GarrisonType.Type_6_2
+local LE_GARRISON_TYPE_7_0=Enum.GarrisonType.Type_7_0
+local LE_GARRISON_TYPE_8_0=Enum.GarrisonType.Type_8_0
 local GMF=GMF
 local GSF=GSF
 local GMFMissions=GMFMissions
@@ -224,7 +230,7 @@ function module:AddExtraData(mission)
 	if mission.missionID == dbg then print("Final gold",mission.gold) DevTools_Dump(mission.moreClasses)end
 --@end-debug@]===]
 	if not mission.class then mission.class="other" end
-	local xp=select(2,G.GetMissionInfo(mission.missionID))
+	local xp=G.GetMissionDeploymentInfo(mission.missionID)['xp']
 	if not mission.xp or mission.xp==0 then mission.xp=xp end
 	mission.globalXp=tonumber(mission.xp) or 0 + tonumber(mission.xpBonus) or 0
 end
@@ -409,7 +415,7 @@ local function isValid(self)
 	for i=1,#self.list do
 		local id=self.list[i]
 		if id < 10000 then
-			print(GetCurrencyInfo(id))
+			print(self:GetCurrencyInfo(id))
 		else
 			print(GetItemInfo(id))
 		end
@@ -430,11 +436,11 @@ local function newMissionType(key,name,icon,maxable,mat,func,...)
 end
 classes[LE_FOLLOWER_TYPE_GARRISON_6_0]={
 	newMissionType('xp',L['Follower experience'],'XPBonus_icon',false,false,nil,0),
-	newMissionType('resources',GetCurrencyInfo(GARRISON_CURRENCY),'inv_garrison_resource',true,true,nil,-GARRISON_CURRENCY),
-	newMissionType('oil',GetCurrencyInfo(GARRISON_SHIP_OIL_CURRENCY),'garrison_oil',true,true,isOilMission,128316),
+	newMissionType('resources',C_CurrencyInfo.GetCurrencyInfo(GARRISON_CURRENCY)['name'],'inv_garrison_resource',true,true,nil,-GARRISON_CURRENCY),
+	newMissionType('oil',C_CurrencyInfo.GetCurrencyInfo(GARRISON_SHIP_OIL_CURRENCY)['name'],'garrison_oil',true,true,isOilMission,128316),
 	newMissionType('rush',L['Rush orders'],'INV_Scroll_12',false,false,nil,122595,122594,122596,122592,122590,122593,122591,122576),
-	newMissionType('apexis',GetCurrencyInfo(823),'inv_apexis_draenor',false,false,nil,-823),
-	newMissionType('seal',GetCurrencyInfo(994),'ability_animusorbs',false,false,nil,-994),
+	newMissionType('apexis',C_CurrencyInfo.GetCurrencyInfo(823)['name'],'inv_apexis_draenor',false,false,nil,-823),
+	newMissionType('seal',C_CurrencyInfo.GetCurrencyInfo(994)['name'],'ability_animusorbs',false,false,nil,-994),
 	newMissionType('gold',BONUS_ROLL_REWARD_MONEY,'inv_misc_coin_01',false,false,nil,0),
 	newMissionType('followerUpgrade',L['Follower equipment set or upgrade'],'Garrison_ArmorUpgrade',false,false,nil,0),
 	newMissionType('primalspirit',L['Reagents'],'6BF_Explosive_shard',false,false,nil,118472,120945,113261,113262,113263,113264),
@@ -449,8 +455,8 @@ classes[LE_FOLLOWER_TYPE_GARRISON_6_0]={
 classes[LE_FOLLOWER_TYPE_SHIPYARD_6_2]={
 	newMissionType('xp',L['Follower experience'],'XPBonus_icon',false,false,nil,0),
 	newMissionType('rush',L['Rush orders'],'INV_Scroll_12',false,false,nil,122595,122594,122596,122592,122590,122593,122591,122576),
-	newMissionType('apexis',GetCurrencyInfo(823),'inv_apexis_draenor',false,false,nil,-823),
-	newMissionType('seal',GetCurrencyInfo(994),'ability_animusorbs',false,false,nil,-994),
+	newMissionType('apexis',C_CurrencyInfo.GetCurrencyInfo(823)['name'],'inv_apexis_draenor',false,false,nil,-823),
+	newMissionType('seal',C_CurrencyInfo.GetCurrencyInfo(994)['name'],'ability_animusorbs',false,false,nil,-994),
 	newMissionType('gold',BONUS_ROLL_REWARD_MONEY,'inv_misc_coin_01',false,false,nil,0),
 	newMissionType('followerUpgrade',L['Follower equipment set or upgrade'],'Garrison_ArmorUpgrade',false,false,nil,0),
 	newMissionType('primalspirit',L['Reagents'],'6BF_Explosive_shard',false,false,nil,118472,120945,113261,113262,113263,113264),

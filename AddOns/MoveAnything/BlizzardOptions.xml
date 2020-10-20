@@ -52,6 +52,7 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
+						self:ApplyBackdrop()
 						_G[self:GetName().."Text"]:SetText("# of rows")
 						_G[self:GetName().."High"]:SetText("100")
 						_G[self:GetName().."Low"]:SetText("2")
@@ -64,9 +65,9 @@
 				</Scripts>
 			</Slider>
 
-			<Button name="MAOptProfileDropDown" inherits="Lib_UIDropDownMenuTemplate" id="1">
+			<Frame name="MAOptProfileFrame">
 				<Size>
-					<AbsDimension x="220" y="16"/>
+					<AbsDimension x="200" y="16"/>
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="MAOptRowsSlider" relativePoint="BOTTOMLEFT">
@@ -76,20 +77,20 @@
 					</Anchor>
 				</Anchors>
 				<Scripts>
-					<OnShow>
-						Lib_UIDropDownMenu_SetWidth(self, 150)
-					</OnShow>
+					<OnLoad>
+						MovAny:ProfileDropdownOnLoad(self)
+					</OnLoad>
 				</Scripts>
-			</Button>
+			</Frame>
 
 			<Button name="MAOptProfileRename" inherits="MAButtonTemplate" text="R">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="MAOptProfileDropDown" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="MAOptProfileFrame" relativePoint="TOPRIGHT">
 						<Offset>
-							<AbsDimension x="0" y="-2"/>
+							<AbsDimension x="40" y="-2"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -173,7 +174,7 @@
 
 			<CheckButton name="MAOptAlwaysShowNudger" inherits="MACheckButtonTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="MAOptProfileDropDown" relativePoint="BOTTOMLEFT">
+					<Anchor point="TOPLEFT" relativeTo="MAOptProfileFrame" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension x="-5" y="-15"/>
 						</Offset>

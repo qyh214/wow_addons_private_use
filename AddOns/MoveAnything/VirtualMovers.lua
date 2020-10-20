@@ -1600,7 +1600,7 @@ MovAny.lVirtualMovers = {
 	BasicActionButtonsMover = {
 		w = 498,
 		h = 38,
-		relPoint = {"BOTTOMLEFT", "MainMenuBarArtFrame", "BOTTOMLEFT", 8, 3},
+		relPoint = {"BOTTOMLEFT", "MainMenuBarArtFrameBackground", "BOTTOMLEFT", 8, 4},
 		protected = true,
 		excludes = "BasicActionButtonsVerticalMover",
 		prefix = "ActionButton",
@@ -1610,7 +1610,7 @@ MovAny.lVirtualMovers = {
 			child:ClearAllPoints()
 			if self.prefix == nil then
 				if not self.lastChild then
-					child:SetPoint("LEFT", self, "LEFT")
+					child:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT")
 				else
 					child:SetPoint("LEFT", self.lastChild, "RIGHT", 6, 0)
 				end
@@ -1621,23 +1621,23 @@ MovAny.lVirtualMovers = {
 		OnMAReleaseChild = function(self, index, child, prefix)
 			child:ClearAllPoints()
 			if child == self.firstChild then
-				child:SetPoint("BOTTOMLEFT", "MainMenuBarArtFrame", "BOTTOMLEFT", 546, 2)
+				child:SetPoint("BOTTOMLEFT", "MainMenuBarArtFrameBackground", "BOTTOMLEFT", 546, 2)
 			else
-				child:SetPoint("BOTTOMLEFT", prefix, "BOTTOMRIGHT", -2, 0)
+				child:SetPoint("BOTTOMLEFT", self.lastChild, "BOTTOMRIGHT", -2, 0)
 			end
 		end,
 		OnMAHook = function(self)
-			local b, bab
-			ActionButton1:ClearAllPoints()
-			if ActionButton1.MASetPoint then
-				ActionButton1:MASetPoint("LEFT", self, "LEFT")
+			local b = _G["ActionButton1"]
+			b:ClearAllPoints()
+			if b.MASetPoint then
+				b:MASetPoint("BOTTOMLEFT", self, "BOTTOMLEFT")
 			else
-				ActionButton1:SetPoint("LEFT", self, "LEFT")
+				b:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT")
 			end
 			ActionBarUpButton:ClearAllPoints()
-			ActionBarUpButton:SetPoint("TOPLEFT", "ActionButton12", "TOPRIGHT", 0, 7)
+			ActionBarUpButton:SetPoint("TOPLEFT", _G["ActionButton12"], "TOPRIGHT", 4, 0)
 			ActionBarDownButton:ClearAllPoints()
-			ActionBarDownButton:SetPoint("BOTTOMLEFT", "ActionButton12", "BOTTOMRIGHT", 0, -9)
+			ActionBarDownButton:SetPoint("TOPLEFT", ActionBarUpButton, "BOTTOMLEFT", 0, 0)
 			for i = 1, 12, 1 do
 				b = _G["ActionButton"..i]
 				if i > 1 then
@@ -1653,26 +1653,88 @@ MovAny.lVirtualMovers = {
 			if not MovAny:IsModified("ActionBarDownButton") then
 				tinsert(self.attachedChildren, ActionBarDownButton)
 			end
-			MovAny:LockPoint(ActionButton1)
+			MovAny:LockPoint(b)
 		end,
 		OnMAPostReset = function(self)
 			MovAny:UnlockPoint(ActionButton1)
 			local b = _G["ActionButton1"]
 			b:ClearAllPoints()
 			if b.MASetPoint then
-				b:MASetPoint("BOTTOMLEFT", "MainMenuBarArtFrame", "BOTTOMLEFT", 8, 4)
+				b:MASetPoint("BOTTOMLEFT", "MainMenuBarArtFrameBackground", "BOTTOMLEFT", 8, 4)
 			else
-				b:SetPoint("BOTTOMLEFT", "MainMenuBarArtFrame", "BOTTOMLEFT", 8, 4)
+				b:SetPoint("BOTTOMLEFT", "MainMenuBarArtFrameBackground", "BOTTOMLEFT", 8, 4)
 			end
 			ActionBarUpButton:ClearAllPoints()
-			ActionBarUpButton:SetPoint("CENTER", "MainMenuBarArtFrame", "TOPLEFT", 522, -22)
+			ActionBarUpButton:SetPoint("TOPLEFT", _G["ActionButton12"], "TOPRIGHT", 4, 0)
 			ActionBarDownButton:ClearAllPoints()
-			ActionBarDownButton:SetPoint("CENTER", "MainMenuBarArtFrame", "TOPLEFT", 522, -42)
+			ActionBarDownButton:SetPoint("TOPLEFT", ActionBarUpButton, "BOTTOMLEFT", 0, 0)
 			for i = 2, 12, 1 do
 				b = _G[ "ActionButton"..i ]
 				b:ClearAllPoints()
-				b:SetPoint("LEFT", "ActionButton"..(i-1), "RIGHT", 6, 0)
+				b:SetPoint("LEFT", "ActionButton"..(i - 1), "RIGHT", 6, 0)
 				b:SetScale(1)
+			end
+		end,
+		OnMAScale = function(self, scale)
+			if type(scale) ~= "number" then
+				return
+			end
+			for i = 1, 12 do
+				_G["ActionButton"..i]:SetScale(scale)
+			end
+			ActionBarDownButton:SetScale(scale)
+			ActionBarUpButton:SetScale(scale)
+		end
+	},
+	BasicActionButtonsVerticalMover = {
+		w = 38,
+		h = 475,
+		relPoint = {"BOTTOMLEFT", "MainMenuBarArtFrameBackground", "BOTTOMLEFT", 8, 4},
+		protected = true,
+		excludes = "BasicActionButtonsMover",
+		OnMAHook = function(self)
+			local b
+			b = _G["ActionButton1"]
+			b:ClearAllPoints()
+			if b.MASetPoint then
+				b:MASetPoint("TOP", self, "TOP")
+			else
+				b:SetPoint("TOP", self, "TOP")
+			end
+			for i = 1, 12, 1 do
+				b = _G[ "ActionButton"..i ]
+				tinsert(self.attachedChildren, _G[ "ActionButton"..i ])
+				if i > 1 then
+					b:ClearAllPoints()
+					b:SetPoint("TOP", "ActionButton"..(i-1), "BOTTOM", 0, -2)
+				end
+				b.MAParent = self
+			end
+			tinsert(self.attachedChildren, ActionBarUpButton)
+			tinsert(self.attachedChildren, ActionBarDownButton)
+			ActionBarUpButton:ClearAllPoints()
+			ActionBarUpButton:SetPoint("TOPLEFT", _G["ActionButton12"], "TOPRIGHT", 4, 0)
+			ActionBarDownButton:ClearAllPoints()
+			ActionBarDownButton:SetPoint("TOPLEFT", ActionBarUpButton, "BOTTOMLEFT", 0, 0)
+		end,
+		OnMAPostReset = function(self)
+			local b
+			b = _G["ActionButton1"]
+			b:ClearAllPoints()
+			if b.MASetPoint then
+				b:MASetPoint("BOTTOMLEFT", "MainMenuBarArtFrameBackground", "BOTTOMLEFT", 8, 4)
+			else
+				b:SetPoint("BOTTOMLEFT", "MainMenuBarArtFrameBackground", "BOTTOMLEFT", 8, 4)
+			end
+			ActionBarUpButton:ClearAllPoints()
+			ActionBarUpButton:SetPoint("TOPLEFT", _G["ActionButton12"], "TOPRIGHT", 4, 0)
+			ActionBarDownButton:ClearAllPoints()
+			ActionBarDownButton:SetPoint("TOPLEFT", ActionBarUpButton, "BOTTOMLEFT", 0, 0)
+			for i = 2, 12, 1 do
+				b = _G[ "ActionButton"..i ]
+				b.MAParent = BasicActionButtonsMover
+				b:ClearAllPoints()
+				b:SetPoint("LEFT", "ActionButton"..(i-1), "RIGHT", 6, 0)
 			end
 		end,
 		OnMAScale = function(self, scale)
@@ -1715,7 +1777,7 @@ MovAny.lVirtualMovers = {
 			end
 		end,
 		OnMAHook = function(self)
-			local b, bab
+			local b
 			OverrideActionBarButton1:ClearAllPoints()
 			if OverrideActionBarButton1.MASetPoint then
 				OverrideActionBarButton1:MASetPoint("LEFT", self, "LEFT")
@@ -1749,68 +1811,6 @@ MovAny.lVirtualMovers = {
 		end,
 		OnMAScale = ScaleChildren,
 		OnMAPreReset = ResetChildren
-	},
-	BasicActionButtonsVerticalMover = {
-		w = 38,
-		h = 475,
-		relPoint = {"BOTTOMLEFT", "MainMenuBarArtFrame", "BOTTOMLEFT", 8, 4},
-		protected = true,
-		excludes = "BasicActionButtonsMover",
-		OnMAHook = function(self)
-			local b
-			b = _G["ActionButton1"]
-			b:ClearAllPoints()
-			if b.MASetPoint then
-				b:MASetPoint("TOP", self, "TOP")
-			else
-				b:SetPoint("TOP", self, "TOP")
-			end
-			for i = 1, 12, 1 do
-				b = _G[ "ActionButton"..i ]
-				tinsert(self.attachedChildren, _G[ "ActionButton"..i ])
-				if i > 1 then
-					b:ClearAllPoints()
-					b:SetPoint("TOP", "ActionButton"..(i-1), "BOTTOM", 0, -2)
-				end
-				b.MAParent = self
-			end
-			tinsert(self.attachedChildren, ActionBarUpButton)
-			tinsert(self.attachedChildren, ActionBarDownButton)
-			ActionBarUpButton:ClearAllPoints()
-			ActionBarUpButton:SetPoint("TOPLEFT", "ActionButton12", "BOTTOMLEFT", -8, 4)
-			ActionBarDownButton:ClearAllPoints()
-			ActionBarDownButton:SetPoint("TOPRIGHT", "ActionButton12", "BOTTOMRIGHT", 8, 4)
-		end,
-		OnMAPostReset = function(self)
-			local b
-			b = _G["ActionButton1"]
-			b:ClearAllPoints()
-			if b.MASetPoint then
-				b:MASetPoint("BOTTOMLEFT", "MainMenuBarArtFrame", "BOTTOMLEFT", 8, 4)
-			else
-				b:SetPoint("BOTTOMLEFT", "MainMenuBarArtFrame", "BOTTOMLEFT", 8, 4)
-			end
-			ActionBarUpButton:ClearAllPoints()
-			ActionBarUpButton:SetPoint("CENTER", "MainMenuBarArtFrame", "TOPLEFT", 522, -22)
-			ActionBarDownButton:ClearAllPoints()
-			ActionBarDownButton:SetPoint("CENTER", "MainMenuBarArtFrame", "TOPLEFT", 522, -42)
-			for i = 2, 12, 1 do
-				b = _G[ "ActionButton"..i ]
-				b.MAParent = BasicActionButtonsMover
-				b:ClearAllPoints()
-				b:SetPoint("LEFT", "ActionButton"..(i-1), "RIGHT", 6, 0)
-			end
-		end,
-		OnMAScale = function(self, scale)
-			if type(scale) ~= "number" then
-				return
-			end
-			for i = 1, 12 do
-				_G["ActionButton"..i]:SetScale(scale)
-			end
-			ActionBarDownButton:SetScale(scale)
-			ActionBarUpButton:SetScale(scale)
-		end
 	},
 	PetActionButtonsMover = {
 		w = 375,

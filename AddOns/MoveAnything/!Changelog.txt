@@ -1,7 +1,9 @@
-**Issues**
-* Toggling the modified Raid Frame Manager in combat causing taints.
-* Reseting bags while the bag is not opened won't reset it's scale to default.
+**18.0.1**
+* Fixed sizing and scaling.
 
+**18.0.0**
+* Initial support for 9.0.1.
+* Swapped out dropdown library.
 
 **17.1.0**
 * Updated for 8.3.0.

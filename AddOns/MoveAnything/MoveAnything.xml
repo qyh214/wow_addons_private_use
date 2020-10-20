@@ -150,26 +150,28 @@
 		<Size>
 			<AbsDimension x="8" y="8"/>
 		</Size>
-		<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="4"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="4"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="1" right="1" top="1" bottom="1"/>
-			</BackgroundInsets>
-		</Backdrop>
 		<Scripts>
 			<OnLoad>
+				self.background = CreateFrame("Frame", "Backdrop"..self:GetName(), self, "BackdropTemplate")
+				self.background:SetBackdrop(
+					{
+						bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+						edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+						tile = true,
+						tileSize = 4,
+						edgeSize = 4,
+						insets = { left = 1, right = 1, top = 1, bottom = 1, },
+					})
+				self.background:SetBackdropColor(0, 0, 0, 1)
+				self.background:SetBackdropBorderColor(.8, .8, .8, 1)
+				self.background:SetAllPoints()
+
 				local anchorto, anchor = MovAny:SizingAnchor(self)
-				self:SetPoint(anchor, self:GetParent(), anchorto, 0, 0)
-				self:SetBackdropColor(0, 0, 0, 1)
-				self:SetBackdropBorderColor(.8, .8, .8, 1)
+				self:ClearAllPoints()
+				self:SetPoint(anchor)
 			</OnLoad>
 			<OnShow>
-				self:SetFrameLevel(self:GetParent():GetFrameLevel()+2)
+				self:SetFrameLevel(self:GetParent():GetFrameLevel() + 2)
 			</OnShow>
 			<OnMouseDown>
 				local button = GetMouseButtonClicked()
@@ -230,8 +232,9 @@
 		<Scripts>
 			<OnLoad>
 				self.neverShowTooltip = true
-				_G[ self:GetName().."Backdrop" ]:SetBackdropColor(.8, .8, .8, .7)
-				_G[ self:GetName().."Backdrop" ]:SetBackdropBorderColor(1, 1, 1, 1)
+				self.background = CreateFrame("Frame", self:GetName().."Backdrop", self, "BackdropTemplate")
+				self.background:SetBackdropColor(.8, .8, .8, .7)
+				self.background:SetBackdropBorderColor(1, 1, 1, 1)
 			</OnLoad>
 			<OnUpdate>
 				if self.tagged and self.infoShown and self.moving then
@@ -336,17 +339,21 @@
 		</Scripts>
 		<Frames>
 			<Frame name="$parentBackdrop" setAllPoints="true" enableMouse="false">
-				<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<EdgeSize>
-						<AbsValue val="8"/>
-					</EdgeSize>
-					<TileSize>
-						<AbsValue val="16"/>
-					</TileSize>
-					<BackgroundInsets>
-						<AbsInset left="3" right="3" top="3" bottom="3"/>
-					</BackgroundInsets>
-				</Backdrop>
+				<Scripts>
+					<OnLoad>
+						self.background = CreateFrame("Frame", nil, self, "BackdropTemplate")
+						self.background:SetAllPoints()
+						self.background:SetBackdrop(
+							{
+								bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+								edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+								tile = true,
+								tileSize = 16,
+								edgeSize = 8,
+								insets = { left = 3, right = 3, top = 3, bottom = 3, },
+							})
+					</OnLoad>
+				</Scripts>
 				<Layers>
 					<Layer level="ARTWORK">
 						<FontString name="$parentMovingFrameName" inherits="GameFontNormal">
@@ -409,21 +416,22 @@
 				<Anchors>
 					<Anchor point="LEFT"/>
 				</Anchors>
-				<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-					<EdgeSize>
-						<AbsValue val="12"/>
-					</EdgeSize>
-					<TileSize>
-						<AbsValue val="16"/>
-					</TileSize>
-					<BackgroundInsets>
-						<AbsInset left="2" right="2" top="2" bottom="2"/>
-					</BackgroundInsets>
-				</Backdrop>
 				<Scripts>
 					<OnLoad>
-						self:SetBackdropColor(.03, .03, .03)
-						self:SetBackdropBorderColor(.4, .4, .4)
+						self.background = CreateFrame("Frame", nil, self, "BackdropTemplate")
+						self.background:SetAllPoints()
+						self.background:SetBackdrop(
+							{
+								bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+								edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+								tile = true,
+								tileSize = 16,
+								edgeSize = 12,
+								insets = { left = 2, right = 2, top = 2, bottom = 2, },
+							})
+						self.background:SetFrameLevel(self:GetFrameLevel())
+						self.background:SetBackdropColor(.03, .03, .03)
+						self.background:SetBackdropBorderColor(.4, .4, .4)
 					</OnLoad>
 				</Scripts>
 			</Frame>
@@ -522,17 +530,6 @@
 			</Anchor>
 		</Anchors>
 		<TitleRegion setAllPoints="true"/>
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset left="11" right="12" top="12" bottom="11"/>
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32"/>
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="32"/>
-			</EdgeSize>
-		</Backdrop>
 		<Layers>
 			<Layer level="ARTWORK">
 				<Texture name="$parentFrameHeader" file="Interface\DialogFrame\UI-DialogBox-Header">
@@ -855,21 +852,22 @@
 								</Offset>
 							</Anchor>
 						</Anchors>
-						<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-							<EdgeSize>
-								<AbsValue val="12"/>
-							</EdgeSize>
-							<TileSize>
-								<AbsValue val="16"/>
-							</TileSize>
-							<BackgroundInsets>
-								<AbsInset left="2" right="2" top="2" bottom="2"/>
-							</BackgroundInsets>
-						</Backdrop>
 						<Scripts>
 							<OnLoad>
-								self:SetBackdropColor(.1, .1, .1)
-								self:SetBackdropBorderColor(.4, .4, .4)
+								self.background = CreateFrame("Frame", nil, self, "BackdropTemplate")
+								self.background:SetAllPoints()
+								self.background:SetBackdrop(
+									{
+										bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+										edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+										tile = true,
+										tileSize = 16,
+										edgeSize = 12,
+										insets = { left = 2, right = 2, top = 2, bottom = 2, },
+									})
+								self.background:SetFrameLevel(self:GetFrameLevel())
+								self.background:SetBackdropColor(.1, .1, .1)
+								self.background:SetBackdropBorderColor(.4, .4, .4)
 							</OnLoad>
 						</Scripts>
 					</Frame>
@@ -878,6 +876,19 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
+				self.background = CreateFrame("Frame", nil, self, "BackdropTemplate")
+				self.background:SetAllPoints()
+				self.background:SetBackdrop(
+					{
+						bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+						edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+						tile = true,
+						tileSize = 32,
+						edgeSize = 32,
+						insets = { left = 11, right = 12, top = 12, bottom = 11, },
+					})
+      			self.background:SetFrameLevel(self:GetFrameLevel())
+
 				self:EnableMouse(true)
 				self:SetMovable(true)
 				self:RegisterForDrag("LeftButton")
@@ -934,17 +945,6 @@
 				<Offset><AbsDimension x="0" y="-20"/></Offset>
 			</Anchor>
 		</Anchors>
-		<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="4"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="8"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="2" right="2" top="2" bottom="2"/>
-			</BackgroundInsets>
-		</Backdrop>
 		<Layers>
 			<Layer level="ARTWORK">
 				<FontString name="$parentTitle" inherits="GameFontNormal">
@@ -1155,12 +1155,25 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
+				self.background = CreateFrame("Frame", nil, self, "BackdropTemplate")
+				self.background:SetAllPoints()
+				self.background:SetBackdrop(
+					{
+						bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+						edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+						tile = true,
+						tileSize = 8,
+						edgeSize = 4,
+						insets = { left = 2, right = 2, top = 2, bottom = 2, },
+					})
+				self.background:SetBackdropColor(0, 0, 0, .75)
+				self.background:SetBackdropBorderColor(0, 0, 0, .75)
+				self.background:SetFrameLevel(self:GetFrameLevel())
+
 				self.neverShowTooltip = true
 				self:EnableMouse(true)
 				self:SetMovable(true)
 				self:RegisterForDrag("LeftButton")
-				self:SetBackdropColor(0,0,0,.75)
-				self:SetBackdropBorderColor(0,0,0,.75)
 				_G[ self:GetName().."InfoLabel"]:SetAlpha(.8)
 			</OnLoad>
 			<OnDragStart>

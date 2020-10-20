@@ -114,7 +114,7 @@ function MovAny:CreateFrameEditor(id, name)
 	end
 
 	local fn = "MA_FE"..id
-	local fe = CreateFrame("Frame", fn, UIParent)
+	local fe = CreateFrame("Frame", fn, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 
 	fe:SetSize(650, 495)
 	fe:SetFrameStrata("DIALOG")
@@ -138,9 +138,9 @@ function MovAny:CreateFrameEditor(id, name)
 
 	--MovAny.API:SyncElement("MA_FEMover")
 
-	local pointDropDownButton = CreateFrame("Button", fn.."Point", fe, "Lib_UIDropDownMenuTemplate")
+	local pointDropDownButton = MSA_DropDownMenu_Create(fn.."Point", fe)
 	local pointFunc = function(self)
-		Lib_UIDropDownMenu_SetSelectedValue(pointDropDownButton, self.value)
+		MSA_DropDownMenu_SetSelectedValue(pointDropDownButton, self.value)
 
 		fe:VerifyOpt()
 		local updateEditor
@@ -164,20 +164,20 @@ function MovAny:CreateFrameEditor(id, name)
 		local info, text, value
 		for _, infoTab in pairs(MovAny.DDMPointList) do
 			text, value = unpack(infoTab)
-			info = Lib_UIDropDownMenu_CreateInfo()
+			info = MSA_DropDownMenu_CreateInfo()
 			info.text = text
 			info.value = value
 			info.func = pointFunc
 			if point == infoTab.value then
 				info.checked = true
 			end
-			Lib_UIDropDownMenu_AddButton(info)
+			MSA_DropDownMenu_AddButton(info)
 		end
 	end
 
-	local relPointDropDownButton = CreateFrame("Button", fn.."RelPoint", fe, "Lib_UIDropDownMenuTemplate")
+	local relPointDropDownButton = MSA_DropDownMenu_Create(fn.."RelPoint", fe)
 	local relPointFunc = function(self)
-		Lib_UIDropDownMenu_SetSelectedValue(relPointDropDownButton, self.value)
+		MSA_DropDownMenu_SetSelectedValue(relPointDropDownButton, self.value)
 
 		fe:VerifyOpt()
 		if not fe.opt.orgPos and fe.editFrame then
@@ -197,12 +197,12 @@ function MovAny:CreateFrameEditor(id, name)
 		local info, text, value
 		for _, infoTab in pairs(MovAny.DDMPointList) do
 			text, value = unpack(infoTab)
-			info = Lib_UIDropDownMenu_CreateInfo()
+			info = MSA_DropDownMenu_CreateInfo()
 			info.text = text
 			info.value = value
 			info.func = relPointFunc
 			info.checked = nil
-			Lib_UIDropDownMenu_AddButton(info)
+			MSA_DropDownMenu_AddButton(info)
 		end
 	end
 
@@ -501,8 +501,8 @@ function MovAny:CreateFrameEditor(id, name)
 	pointDropDownButton:SetID(1)
 	--pointDropDownButton:SetScript("OnClick", dropDownClickFunc)
 	pointDropDownButton:SetPoint("TOPLEFT", pointLabel, "TOPRIGHT", -12, 3)
-	Lib_UIDropDownMenu_Initialize(pointDropDownButton, pointDropDown_MenuInit)
-	Lib_UIDropDownMenu_SetWidth(pointDropDownButton, 100)
+	MSA_DropDownMenu_Initialize(pointDropDownButton, pointDropDown_MenuInit)
+	MSA_DropDownMenu_SetWidth(pointDropDownButton, 100)
 
 
 	local pointResetButton = CreateFrame("Button", fn.."PointResetButton", fe, "MAButtonTemplate")
@@ -522,8 +522,8 @@ function MovAny:CreateFrameEditor(id, name)
 		end
 		p = p[1]
 		if fe.opt and fe.opt.pos and fe.opt.pos[1] ~= p then
-			Lib_UIDropDownMenu_Initialize(pointDropDownButton, pointDropDown_MenuInit)
-			Lib_UIDropDownMenu_SetSelectedValue(pointDropDownButton, p)
+			MSA_DropDownMenu_Initialize(pointDropDownButton, pointDropDown_MenuInit)
+			MSA_DropDownMenu_SetSelectedValue(pointDropDownButton, p)
 			fe.opt.pos[1] = p
 			fe:WritePoint()
 		end
@@ -540,8 +540,8 @@ function MovAny:CreateFrameEditor(id, name)
 	relPointDropDownButton:SetID(2)
 	--relPointDropDownButton:SetScript("OnClick", dropDownClickFunc)
 	relPointDropDownButton:SetPoint("TOPLEFT", relPointLabel, "TOPRIGHT", -12, 3)
-	Lib_UIDropDownMenu_Initialize(relPointDropDownButton, relPointDropDown_MenuInit)
-	Lib_UIDropDownMenu_SetWidth(relPointDropDownButton, 100)
+	MSA_DropDownMenu_Initialize(relPointDropDownButton, relPointDropDown_MenuInit)
+	MSA_DropDownMenu_SetWidth(relPointDropDownButton, 100)
 
 
 	local relPointResetButton = CreateFrame("Button", fn.."RelPointResetButton", fe, "MAButtonTemplate")
@@ -561,8 +561,8 @@ function MovAny:CreateFrameEditor(id, name)
 		end
 		p = p[3]
 		if fe.opt and fe.opt.pos and fe.opt.pos[3] ~= p then
-			Lib_UIDropDownMenu_Initialize(relPointDropDownButton, relPointDropDown_MenuInit)
-			Lib_UIDropDownMenu_SetSelectedValue(relPointDropDownButton, p)
+			MSA_DropDownMenu_Initialize(relPointDropDownButton, relPointDropDown_MenuInit)
+			MSA_DropDownMenu_SetSelectedValue(relPointDropDownButton, p)
 			fe.opt.pos[3] = p
 			fe:WritePoint()
 		end
@@ -1721,12 +1721,11 @@ function MovAny:CreateFrameEditor(id, name)
 	strataLabel:SetPoint("TOPLEFT", layersResetButton, "TOPRIGHT", 30, 0)
 	strataLabel:SetText("Strata:")
 
-	local strataDropDownButton = CreateFrame("Button", fn.."Strata", fe, "Lib_UIDropDownMenuTemplate")
+	local strataDropDownButton = MSA_DropDownMenu_Create(fn.."Strata", fe)
 	strataDropDownButton:SetID(3)
-	--strataDropDownButton:SetScript("OnClick", dropDownClickFunc)
 
 	local strataFunc = function(self)
-		Lib_UIDropDownMenu_SetSelectedValue(strataDropDownButton, self.value)
+		MSA_DropDownMenu_SetSelectedValue(strataDropDownButton, self.value)
 
 		local opt = fe:VerifyOpt()
 		if opt.frameStrata ~= self.value then
@@ -1762,7 +1761,7 @@ function MovAny:CreateFrameEditor(id, name)
 		local info, text, value
 		for _, infoTab in pairs(MovAny.DDMStrataList) do
 			text, value = unpack(infoTab)
-			info = Lib_UIDropDownMenu_CreateInfo()
+			info = MSA_DropDownMenu_CreateInfo()
 			info.text = text
 			info.value = value
 			info.func = strataFunc
@@ -1771,16 +1770,13 @@ function MovAny:CreateFrameEditor(id, name)
 			if frameStrata == infoTab.value then
 				info.checked = true
 			end
-			Lib_UIDropDownMenu_AddButton(info)
+			MSA_DropDownMenu_AddButton(info)
 		end
 	end
 
 	strataDropDownButton:SetPoint("TOPLEFT", strataLabel, "TOPRIGHT", -12, 1)
-	Lib_UIDropDownMenu_Initialize(strataDropDownButton, strataDropDown_MenuInit)
-	Lib_UIDropDownMenu_SetWidth(strataDropDownButton, 130)
-	--[[trataDropDownButton:SetScript("OnClick", function()
-		Lib_ToggleDropDownMenu(1, nil, nil, strataDropDownButton, 0, 0, nil, strataDropDownButton)
-	end)]]
+	MSA_DropDownMenu_Initialize(strataDropDownButton, strataDropDown_MenuInit)
+	MSA_DropDownMenu_SetWidth(strataDropDownButton, 130)
 
 	local strataResetButton = CreateFrame("Button", fn.."StrataResetButton", fe, "MAButtonTemplate")
 	strataResetButton:SetSize(20, 20)
@@ -1795,7 +1791,7 @@ function MovAny:CreateFrameEditor(id, name)
 		end
 
 
-		if strataDropDownButton:GetText() ~= fs then
+		if MSA_DropDownMenu_GetSelectedName(strataDropDownButton) ~= fs then
 			if editFrame and not opt.disabled then
 				if not InCombatLockdown() or not MovAny:IsProtected(editFrame) then
 					editFrame:SetFrameStrata(fs)
@@ -1813,8 +1809,8 @@ function MovAny:CreateFrameEditor(id, name)
 			end
 			opt.frameStrata = fs
 
-			Lib_UIDropDownMenu_Initialize(strataDropDownButton, strataDropDown_MenuInit)
-			Lib_UIDropDownMenu_SetSelectedValue(strataDropDownButton, fs)
+			MSA_DropDownMenu_Initialize(strataDropDownButton, strataDropDown_MenuInit)
+			MSA_DropDownMenu_SetSelectedValue(strataDropDownButton, fs)
 
 			opt.orgFrameStrata = nil
 			opt.frameStrata = nil
@@ -2109,12 +2105,12 @@ function MovAny:CreateFrameEditor(id, name)
 		else
 			p = {"TOPLEFT", "UIParent", "TOPLEFT", 0, 0}
 		end
-		Lib_UIDropDownMenu_Initialize(pointDropDownButton, pointDropDown_MenuInit)
-		Lib_UIDropDownMenu_SetSelectedValue(pointDropDownButton, p[1] or "TOPLEFT")
+		MSA_DropDownMenu_Initialize(pointDropDownButton, pointDropDown_MenuInit)
+		MSA_DropDownMenu_SetSelectedValue(pointDropDownButton, p[1] or "TOPLEFT")
 
 		local relPoint = p[3] or p[1] or "TOPLEFT"
-		Lib_UIDropDownMenu_Initialize(relPointDropDownButton, relPointDropDown_MenuInit)
-		Lib_UIDropDownMenu_SetSelectedValue(relPointDropDownButton, relPoint)
+		MSA_DropDownMenu_Initialize(relPointDropDownButton, relPointDropDown_MenuInit)
+		MSA_DropDownMenu_SetSelectedValue(relPointDropDownButton, relPoint)
 
 		local relativeTo = "UIParent"
 		if p[2] then
@@ -2297,11 +2293,11 @@ function MovAny:CreateFrameEditor(id, name)
 			strataLabel:Show()
 			strataDropDownButton:Show()
 			local frameStrata = (opt and opt.frameStrata) or (editFrame and editFrame:GetFrameStrata()) or nil
-			Lib_UIDropDownMenu_Initialize(strataDropDownButton, strataDropDown_MenuInit)
+			MSA_DropDownMenu_Initialize(strataDropDownButton, strataDropDown_MenuInit)
 			if frameStrata then
-				Lib_UIDropDownMenu_SetSelectedValue(strataDropDownButton, frameStrata)
+				MSA_DropDownMenu_SetSelectedValue(strataDropDownButton, frameStrata)
 			else
-				Lib_UIDropDownMenu_SetSelectedValue(strataDropDownButton, "BACKGROUND")
+				MSA_DropDownMenu_SetSelectedValue(strataDropDownButton, "BACKGROUND")
 			end
 			strataResetButton:Show()
 		else
@@ -2758,12 +2754,12 @@ function MovAny:CreateFrameEditor(id, name)
 			else
 				p = {"TOPLEFT", "UIParent", "TOPLEFT", 0, 0}
 			end
-			Lib_UIDropDownMenu_Initialize(pointDropDownButton, pointDropDown_MenuInit)
-			Lib_UIDropDownMenu_SetSelectedValue(pointDropDownButton, p[1] or "TOPLEFT")
+			MSA_DropDownMenu_Initialize(pointDropDownButton, pointDropDown_MenuInit)
+			MSA_DropDownMenu_SetSelectedValue(pointDropDownButton, p[1] or "TOPLEFT")
 
 			local relPoint = p[3] or p[1] or "TOPLEFT"
-			Lib_UIDropDownMenu_Initialize(relPointDropDownButton, relPointDropDown_MenuInit)
-			Lib_UIDropDownMenu_SetSelectedValue(relPointDropDownButton, relPoint)
+			MSA_DropDownMenu_Initialize(relPointDropDownButton, relPointDropDown_MenuInit)
+			MSA_DropDownMenu_SetSelectedValue(relPointDropDownButton, relPoint)
 
 			local relativeTo = "UIParent"
 			if p[2] then

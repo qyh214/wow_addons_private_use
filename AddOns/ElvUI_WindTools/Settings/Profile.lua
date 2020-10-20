@@ -313,6 +313,7 @@ P.item = {
         bar1 = {
             enable = true,
             mouseOver = false,
+            numButtons = 12,
             backdrop = true,
             backdropSpacing = 3,
             buttonWidth = 35,
@@ -321,7 +322,7 @@ P.item = {
             anchor = "TOPLEFT",
             spacing = 3,
             countFont = {
-                name = "Montserrat",
+                name = "Montserrat" .. ((W.CompatibleFont and " (en)" or "")),
                 size = 12,
                 style = "OUTLINE",
                 xOffset = 0,
@@ -333,7 +334,7 @@ P.item = {
                 }
             },
             bindFont = {
-                name = "Montserrat",
+                name = "Montserrat" .. ((W.CompatibleFont and " (en)" or "")),
                 size = 12,
                 style = "OUTLINE",
                 xOffset = 0,
@@ -349,6 +350,7 @@ P.item = {
         bar2 = {
             enable = true,
             mouseOver = false,
+            numButtons = 12,
             backdrop = true,
             backdropSpacing = 3,
             buttonWidth = 35,
@@ -357,7 +359,7 @@ P.item = {
             anchor = "TOPLEFT",
             spacing = 3,
             countFont = {
-                name = "Montserrat",
+                name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
                 size = 12,
                 style = "OUTLINE",
                 xOffset = 0,
@@ -369,7 +371,7 @@ P.item = {
                 }
             },
             bindFont = {
-                name = "Montserrat",
+                name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
                 size = 12,
                 style = "OUTLINE",
                 xOffset = 0,
@@ -385,6 +387,7 @@ P.item = {
         bar3 = {
             enable = false,
             mouseOver = false,
+            numButtons = 12,
             backdrop = true,
             backdropSpacing = 3,
             buttonWidth = 35,
@@ -393,7 +396,7 @@ P.item = {
             anchor = "TOPLEFT",
             spacing = 3,
             countFont = {
-                name = "Montserrat",
+                name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
                 size = 12,
                 style = "OUTLINE",
                 xOffset = 0,
@@ -405,7 +408,7 @@ P.item = {
                 }
             },
             bindFont = {
-                name = "Montserrat",
+                name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
                 size = 12,
                 style = "OUTLINE",
                 xOffset = 0,
@@ -568,7 +571,8 @@ P.social = {
         removeBrackets = true,
         roleIconSize = 16,
         roleIconStyle = "SUNUI",
-        removeRealm = true
+        removeRealm = true,
+        customAbbreviation = {}
     },
     emote = {
         enable = true,
@@ -688,7 +692,7 @@ P.unitFrames = {
                 offsetX = 0,
                 offsetY = 0,
                 font = {
-                    name = "Montserrat",
+                    name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
                     size = 12,
                     style = "OUTLINE"
                 }
@@ -711,7 +715,7 @@ P.unitFrames = {
                 offsetX = 0,
                 offsetY = 0,
                 font = {
-                    name = "Montserrat",
+                    name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
                     size = 12,
                     style = "OUTLINE"
                 }
@@ -734,7 +738,7 @@ P.unitFrames = {
                 offsetX = 0,
                 offsetY = 0,
                 font = {
-                    name = "Montserrat",
+                    name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
                     size = 12,
                     style = "OUTLINE"
                 }
@@ -757,7 +761,7 @@ P.unitFrames = {
                 offsetX = 0,
                 offsetY = 0,
                 font = {
-                    name = "Montserrat",
+                    name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
                     size = 12,
                     style = "OUTLINE"
                 }
@@ -780,7 +784,7 @@ P.unitFrames = {
                 offsetX = 0,
                 offsetY = 0,
                 font = {
-                    name = "Montserrat",
+                    name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
                     size = 12,
                     style = "OUTLINE"
                 }
@@ -803,7 +807,7 @@ P.unitFrames = {
                 offsetX = 0,
                 offsetY = 0,
                 font = {
-                    name = "Montserrat",
+                    name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
                     size = 12,
                     style = "OUTLINE"
                 }
@@ -813,8 +817,10 @@ P.unitFrames = {
 }
 
 P.misc = {
+    disableTalkingHead = false,
     gameBar = {
         enable = true,
+        mouseOver = false,
         backdrop = true,
         backdropSpacing = 5,
         timeAreaWidth = 110,
@@ -826,13 +832,15 @@ P.misc = {
         hoverColor = "CLASS",
         customNormalColor = {r = 1, g = 1, b = 1},
         customHoverColor = {r = 0, g = 0.659, b = 1},
+        visibility = "[petbattle] hide; show",
         time = {
             localTime = true,
             twentyFour = true,
             flash = true,
             interval = 10,
+            alwaysSystemInfo = false,
             font = {
-                name = "Montserrat",
+                name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
                 size = 25,
                 style = "OUTLINE"
             }
@@ -848,7 +856,7 @@ P.misc = {
             x = 3,
             y = -3,
             font = {
-                name = "Montserrat",
+                name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
                 size = 12,
                 style = "OUTLINE"
             }

@@ -4,7 +4,9 @@ local ES = E:GetModule("Skins")
 local SB = W:NewModule("SwitchButtons", "AceHook-3.0", "AceEvent-3.0")
 
 local _G = _G
+
 local CreateFrame = CreateFrame
+local RegisterStateDriver = RegisterStateDriver
 
 function SB:CreateButton(text)
     if not self.db or not self.bar then
@@ -13,16 +15,17 @@ function SB:CreateButton(text)
 
     local button = CreateFrame("CheckButton", nil, self.bar, "UICheckButtonTemplate")
     ES:HandleCheckBox(button)
-    if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow  then
+    if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow then
         S:CreateShadow(button.backdrop)
     end
 
     button.originalText = text
     button.text = button:CreateFontString()
-    button.text:Point("LEFT", button, "RIGHT", 0, 0)
     F.SetFontWithDB(button.text, self.db.font)
     button.text:SetText(F.CreateColorString(button.originalText, self.db.font.color))
     button.text:SetJustifyV("MIDDLE")
+    button.text:SetJustifyH("LEFT")
+    button.text:Point("LEFT", button, "RIGHT")
 
     return button
 end
@@ -152,11 +155,14 @@ function SB:CreateBar()
     frame:CreateBackdrop("Transparent")
     frame:ClearAllPoints()
     frame:SetPoint("CENTER", self.barAnchor, "CENTER", 0, 0)
+
+    RegisterStateDriver(frame, "visibility", "[petbattle] hide; show")
+
     self.bar = frame
 
     self:UpdateLayout()
 
-    if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow  then
+    if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow then
         S:CreateShadow(self.bar.backdrop)
     end
 
@@ -219,7 +225,9 @@ function SB:ProfileUpdate()
         end
 
         if self.db.announcement then
-            self.bar.announcement:SetChecked(E.db.WT.announcement.quest.enable)
+            self.bar.announcement:SetChecked(
+                E.db.WT.announcement.quest.enable and not E.db.WT.announcement.quest.paused
+            )
         end
 
         if self.db.turnIn then

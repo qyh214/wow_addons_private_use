@@ -1,4 +1,4 @@
-## Interface: 80000
+## Interface: 90001
 ## Title: Multishot
 ## Author: dlui & dridzt, melcaracara
 ## Version: 3.2.1

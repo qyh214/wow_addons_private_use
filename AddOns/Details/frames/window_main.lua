@@ -2636,6 +2636,7 @@ local function button_stretch_scripts (baseframe, backgrounddisplay, instancia)
 		instancia.rowframe:SetFrameStrata ("TOOLTIP")
 		
 		local _r, _g, _b, _a = baseframe:GetBackdropColor()
+
 		gump:GradientEffect ( baseframe, "frame", _r, _g, _b, _a, _r, _g, _b, 0.9, 1.5)
 		if (instancia.wallpaper.enabled) then
 			_r, _g, _b = baseframe.wallpaper:GetVertexColor()
@@ -6915,6 +6916,7 @@ function _detalhes:ChangeSkin (skin_name)
 	local this_skin = _detalhes.skins [skin_name]
 
 	if (not this_skin) then
+		Details:Msg("error 0x4546", skin_name)
 		skin_name = _detalhes.default_skin_to_use
 		this_skin = _detalhes.skins [skin_name]
 	end
@@ -7753,7 +7755,10 @@ function _detalhes:AttributeMenu (enabled, pos_x, pos_y, font, size, color, side
 		shadow = self.attribute_text.shadow
 	end
 	
-	if (type (timer_encounter) ~= "boolean") then
+	if (type(self.attribute_text.show_timer) ~= "boolean") then
+		self.attribute_text.show_timer = true
+	end
+	if (type(timer_encounter) ~= "boolean") then
 		timer_encounter = self.attribute_text.show_timer
 	end
 	
