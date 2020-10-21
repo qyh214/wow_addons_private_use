@@ -8,11 +8,13 @@ local collectgarbage = collectgarbage
 local date = date
 local floor = floor
 local format = format
+local gsub = gsub
 local ipairs = ipairs
 local max = max
 local mod = mod
 local pairs = pairs
 local select = select
+local strfind = strfind
 local tinsert = tinsert
 local tonumber = tonumber
 local tostring = tostring
@@ -49,6 +51,7 @@ local ToggleFriendsFrame = ToggleFriendsFrame
 local ToggleGuildFinder = ToggleGuildFinder
 local ToggleGuildFrame = ToggleGuildFrame
 local ToggleTimeManager = ToggleTimeManager
+local UnregisterStateDriver = UnregisterStateDriver
 
 local C_BattleNet_GetFriendAccountInfo = C_BattleNet.GetFriendAccountInfo
 local C_BattleNet_GetFriendGameAccountInfo = C_BattleNet.GetFriendGameAccountInfo
@@ -69,7 +72,8 @@ local LeftButtonIcon = "|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:13:11:0:-1
 local RightButtonIcon = "|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:13:11:0:-1:512:512:12:66:333:410|t"
 local ScrollButtonIcon = "|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:13:11:0:-1:512:512:12:66:127:204|t"
 
-local GargageCollectionCounter = 0
+local friendOnline = gsub(_G.ERR_FRIEND_ONLINE_SS, "\124Hplayer:%%s\124h%[%%s%]\124h", "")
+local friendOffline = gsub(_G.ERR_FRIEND_OFFLINE_S, "%%s", "")
 
 local Heartstones = {
     6948, -- 爐石
@@ -85,9 +89,9 @@ local Heartstones = {
     166747, -- 啤酒節狂歡者的爐石
     168907, -- 全像數位化爐石
     172179, -- 永恆旅人的爐石
-    180290, -- 暗夜妖精的爐石
-    182773, -- 死靈領主爐石
-    184353 -- 琪瑞安族爐石
+    -- 180290, -- 暗夜妖精的爐石
+    -- 182773, -- 死靈領主爐石
+    -- 184353 -- 琪瑞安族爐石
 }
 
 local HeartstonesTable
@@ -100,6 +104,11 @@ local function AddDoubleLineForItem(itemID, prefix)
     prefix = prefix and prefix .. " " or ""
 
     local name = HeartstonesTable[tostring(itemID)]
+
+    if not name then
+        return
+    end
+
     local texture = GetItemIcon(itemID)
     local icon = format(IconString .. ":255:255:255|t", texture)
     local startTime, duration = GetItemCooldown(itemID)
@@ -252,7 +261,22 @@ local ButtonTypes = {
 
             return number > 0 and number or ""
         end,
-        tooltips = "Friends"
+        tooltips = "Friends",
+        events = {
+            "BN_FRIEND_ACCOUNT_ONLINE",
+            "BN_FRIEND_ACCOUNT_OFFLINE",
+            "BN_FRIEND_INFO_CHANGED",
+            "FRIENDLIST_UPDATE",
+            "CHAT_MSG_SYSTEM"
+        },
+        eventHandler = function(button, event, message)
+            if event == "CHAT_MSG_SYSTEM" then
+                if not (strfind(message, friendOnline) or strfind(message, friendOffline)) then
+                    return
+                end
+            end
+            button.additionalText:SetFormattedText(button.additionalTextFormat, button.additionalTextFunc())
+        end
     },
     GROUP_FINDER = {
         name = L["Group Finder"],
@@ -286,7 +310,14 @@ local ButtonTypes = {
         additionalText = function()
             return IsInGuild() and select(2, GetNumGuildMembers()) or ""
         end,
-        tooltips = "Guild"
+        tooltips = "Guild",
+        events = {
+            "GUILD_ROSTER_UPDATE",
+            "PLAYER_GUILD_UPDATE"
+        },
+        eventHandler = function(button, event, message)
+            button.additionalText:SetFormattedText(button.additionalTextFormat, button.additionalTextFunc())
+        end
     },
     HOME = {
         name = L["Home"],
@@ -418,6 +449,19 @@ local ButtonTypes = {
         }
     }
 }
+
+function GB:ShowAdvancedTimeTooltip(panel)
+    DT.RegisteredDataTexts["Time"].onEnter()
+    DT.RegisteredDataTexts["Time"].onLeave()
+    -- DT.tooltip:ClearLines()
+    -- DT.tooltip:SetText(L["Time"])
+    -- DT.tooltip:AddLine("\n", 1, 1, 1)
+    -- DT.tooltip:AddLine(LeftButtonIcon .. " " .. L["Calendar"], 1, 1, 1)
+    -- DT.tooltip:AddLine(RightButtonIcon .. " " .. L["Time Manager"], 1, 1, 1)
+    -- DT.tooltip:AddLine("\n")
+    -- DT.tooltip:AddLine(L["(Modifer Click) Collect Garbage"], unpack(E.media.rgbvaluecolor))
+    -- DT.tooltip:Show()
+end
 
 function GB:ConstructBar()
     if self.bar then
@@ -588,14 +632,7 @@ function GB:ConstructTimeArea()
                     end
                 )
             else
-                DT.tooltip:ClearLines()
-                DT.tooltip:SetText(L["Time"])
-                DT.tooltip:AddLine("\n", 1, 1, 1)
-                DT.tooltip:AddLine(LeftButtonIcon .. " " .. L["Calendar"], 1, 1, 1)
-                DT.tooltip:AddLine(RightButtonIcon .. " " .. L["Time Manager"], 1, 1, 1)
-                DT.tooltip:AddLine("\n")
-                DT.tooltip:AddLine(L["(Modifer Click) Collect Garbage"], unpack(E.media.rgbvaluecolor))
-                DT.tooltip:Show()
+                self:ShowAdvancedTimeTooltip(panel)
                 self.tooltipTimer =
                     C_Timer_NewTicker(
                     1,
@@ -906,6 +943,17 @@ function GB:UpdateButton(button, config)
     button.hoverTex:SetVertexColor(r, g, b)
 
     -- 设定额外文字
+
+    if button.registeredEvents then
+        for _, event in pairs(button.registeredEvents) do
+            button:UnregisterEvent(event)
+        end
+    end
+
+    button:SetScript("OnEvent", nil)
+    button.registeredEvents = nil
+    button.additionalTextFunc = nil
+
     if button.additionalTextTimer and not button.additionalTextTimer:IsCancelled() then
         button.additionalTextTimer:Cancel()
     end
@@ -918,21 +966,27 @@ function GB:UpdateButton(button, config)
             config.additionalText and config.additionalText() or ""
         )
 
-        button.additionalTextTimer =
-            C_Timer_NewTicker(
-            self.db.additionalText.slowMode and 10 or 1,
-            function()
-                button.additionalText:SetFormattedText(
-                    button.additionalTextFormat,
-                    config.additionalText and config.additionalText() or ""
-                )
-                GargageCollectionCounter = GargageCollectionCounter + 1
-                if GargageCollectionCounter > 30 then
-                    collectgarbage("collect")
-                    GargageCollectionCounter = 0
-                end
+        if config.events and config.eventHandler then
+            button:SetScript("OnEvent", config.eventHandler)
+            button.additionalTextFunc = config.additionalText
+            button.registeredEvents = {}
+            for _, event in pairs(config.events) do
+                button:RegisterEvent(event)
+                tinsert(button.registeredEvents, event)
             end
-        )
+        else
+            button.additionalTextTimer =
+                C_Timer_NewTicker(
+                self.db.additionalText.slowMode and 10 or 1,
+                function()
+                    button.additionalText:SetFormattedText(
+                        button.additionalTextFormat,
+                        config.additionalText and config.additionalText() or ""
+                    )
+                end
+            )
+        end
+
         button.additionalText:ClearAllPoints()
         button.additionalText:Point(self.db.additionalText.anchor, self.db.additionalText.x, self.db.additionalText.y)
         F.SetFontWithDB(button.additionalText, self.db.additionalText.font)
@@ -1112,8 +1166,8 @@ function GB:ProfileUpdate()
         end
     else
         if self.Initialized then
+            UnregisterStateDriver(self.bar, "visibility")
             self.bar:Hide()
-            self.bar:UnregisterStateDriver(self.bar, "visibility")
         end
     end
 end

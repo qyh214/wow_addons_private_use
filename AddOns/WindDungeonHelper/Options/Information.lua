@@ -176,7 +176,7 @@ O.information = {
                             "WIND_DUNGEON_HELPER_EDITBOX",
                             L["Wind Dungeon Helper"] .. " - " .. L["QQ Group"],
                             nil,
-                            "306069019"
+                            "336069019"
                         )
                     end,
                     width = 0.7

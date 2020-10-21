@@ -146,6 +146,10 @@ function CT:UpdateRoleIcons()
     local pack = self.db.enable and self.db.roleIconStyle or "DEFAULT"
     local sizeString = self.db.enable and format(":%d:%d", self.db.roleIconSize, self.db.roleIconSize) or ":16:16"
 
+    if pack ~= "DEFAULT" and pack ~= "BLIZZARD" then
+        sizeString = sizeString and (sizeString..":0:0:64:64:2:62:0:58")
+    end
+
     if pack == "FFXIV" then
         roleIcons = {
             TANK = E:TextureString(W.Media.Icons.ffxivTank, sizeString),
@@ -171,6 +175,16 @@ function CT:UpdateRoleIcons()
             TANK = E:TextureString(W.Media.Icons.sunUITank, sizeString),
             HEALER = E:TextureString(W.Media.Icons.sunUIHealer, sizeString),
             DAMAGER = E:TextureString(W.Media.Icons.sunUIDPS, sizeString)
+        }
+
+        _G.INLINE_TANK_ICON = roleIcons.TANK
+        _G.INLINE_HEALER_ICON = roleIcons.HEALER
+        _G.INLINE_DAMAGER_ICON = roleIcons.DAMAGER
+    elseif pack == "LYNUI" then
+        roleIcons = {
+            TANK = E:TextureString(W.Media.Icons.lynUITank, sizeString),
+            HEALER = E:TextureString(W.Media.Icons.lynUIHealer, sizeString),
+            DAMAGER = E:TextureString(W.Media.Icons.lynUIDPS, sizeString)
         }
 
         _G.INLINE_TANK_ICON = roleIcons.TANK

@@ -70,9 +70,9 @@ local function showRealDate(curseDate)
 end
 
 DBM = {
-	Revision = parseCurseDate("20201013224412"),
-	DisplayVersion = "9.0.1", -- the string that is shown as version
-	ReleaseRevision = releaseDate(2020, 10, 13, 1) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	Revision = parseCurseDate("20201020205835"),
+	DisplayVersion = "9.0.2", -- the string that is shown as version
+	ReleaseRevision = releaseDate(2020, 10, 20) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -474,7 +474,7 @@ local dataBroker
 local voiceSessionDisabled = false
 local handleSync
 
-local fakeBWVersion, fakeBWHash = 184, "2219ff0"--184.3
+local fakeBWVersion, fakeBWHash = 185, "2568767"--185.3
 local bwVersionResponseString = "V^%d^%s"
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
 
@@ -1601,6 +1601,7 @@ do
 				"PLAYER_SPECIALIZATION_CHANGED",
 				"PARTY_INVITE_REQUEST",
 				"LOADING_SCREEN_DISABLED",
+				"LOADING_SCREEN_ENABLED",
 				"SCENARIO_COMPLETED"
 			)
 			if RolePollPopup:IsEventRegistered("ROLE_POLL_BEGIN") then
@@ -1919,7 +1920,7 @@ do
 
 	function scheduleRepeat(time, spellId, func, mod, self, ...)
 		--Loops until debuff is gone
-		if DBM:UnitAura("player", spellId) then
+		if DBM:UnitAura("player", spellId) then--GetPlayerAuraBySpellID
 			func(...)--Probably not going to work, this is going to need to get a lot more hacky
 			schedule(time or 2, scheduleRepeat, time, spellId, func, mod, self, ...)
 		end
@@ -4182,6 +4183,20 @@ do
 		end
 	end
 
+	function DBM:LOADING_SCREEN_ENABLED()
+		--TimerTracker Cleanup, required to work around logic code blizzard put into TimerTracker for /countdown timers
+		--TimerTracker is hard coded that if a type 3 timer exists, to give it prio over type 1 and type 2. This causes the M+ timer not to show, even if only like 0.01 sec was left on the /countdown
+		--We want to avoid situations where players start a 10 second timer, but click keystone with fractions of a second left, preventing them from seeing the M+ timer
+		if not DBM.Options.DontShowPTCountdownText then
+			for _, tttimer in pairs(TimerTracker.timerList) do
+				if tttimer.type == 3 and not tttimer.isFree then
+					FreeTimerTrackerTimer(tttimer)
+					break
+				end
+			end
+		end
+	end
+
 	function DBM:LoadModsOnDemand(checkTable, checkValue)
 		self:Debug("LoadModsOnDemand fired")
 		for _, v in ipairs(self.AddOns) do
@@ -4349,11 +4364,6 @@ do
 		if DBM.Options.RecordOnlyBosses and #inCombat == 0 then
 			DBM:StopLogging()
 		end
-	end
-
-	local function restoreTimerTrackerSounds()
-		SOUNDKIT.UI_BATTLEGROUND_COUNTDOWN_TIMER = 25477
-		SOUNDKIT.UI_BATTLEGROUND_COUNTDOWN_FINISHED = 25478
 	end
 
 	local syncHandlers = {}
@@ -4526,10 +4536,17 @@ do
 		if not DBM.Options.DontShowPT2 then--and DBM.Bars:GetBar(L.TIMER_PULL)
 			dummyMod.timer:Stop()
 		end
+		local timerTrackerRunning = false
 		if not DBM.Options.DontShowPTCountdownText then
-			TimerTracker_OnEvent(TimerTracker, "PLAYER_ENTERING_WORLD")--easiest way to nil out timers on TimerTracker frame. This frame just has no actual star/stop functions
-			DBM:Unschedule(restoreTimerTrackerSounds)
-			restoreTimerTrackerSounds()
+			for _, tttimer in pairs(TimerTracker.timerList) do
+				if not tttimer.isFree then--Timer event running
+					if tttimer.type == 3 then--Its a pull timer event, this is one we cancel before starting a new pull timer
+						FreeTimerTrackerTimer(tttimer)
+					else--Verify that a TimerTracker event NOT started by DBM isn't running, if it is, prevent executing new TimerTracker events below
+						timerTrackerRunning = true
+					end
+				end
+			end
 		end
 		dummyMod.text:Cancel()
 		if timer == 0 then return end--"/dbm pull 0" will strictly be used to cancel the pull timer (which is why we let above part of code run but not below)
@@ -4538,30 +4555,19 @@ do
 			dummyMod.timer:Start(timer, L.TIMER_PULL)
 		end
 		if not DBM.Options.DontShowPTCountdownText then
-			--Start A TimerTracker timer by tricking it to start a BG timer
-			TimerTracker_OnEvent(TimerTracker, "START_TIMER", 1, timer, timer)
-			--Set default timer sound globals to fake values
-			SOUNDKIT.UI_BATTLEGROUND_COUNTDOWN_TIMER = 999999
-			SOUNDKIT.UI_BATTLEGROUND_COUNTDOWN_FINISHED = 999999
-			--But schedule method to restore the globals when timer ends
-			DBM:Unschedule(restoreTimerTrackerSounds)
-			DBM:Schedule(timer+3, restoreTimerTrackerSounds)
-			--Find the timer object DBM just created and hack our own changes into it.
-			local timerObject
-			for _, b in pairs(TimerTracker.timerList) do
-				if b.type == 1 and not b.isFree then
-					timerObject = b
-					break
-				end
-			end
-			if timerObject then
-				--Set end texture to nothing to eliminate pvp logo/hourglass
-				timerObject.GoTexture:SetTexture("")
-				timerObject.GoTextureGlow:SetTexture("")
-				--We don't want the PVP bar, we only want timer text
-				if timer > 10 then
-					--timerObject.startNumbers:Play()
-					timerObject.bar:Hide()
+			if not timerTrackerRunning then--if a TimerTracker event is running not started by DBM, block creating one of our own (object gets buggy if it has 2+ events running)
+				--Start A TimerTracker timer using the new countdown type 3 type (ie what C_PartyInfo.DoCountdown triggers, but without sending it to entire group)
+				TimerTracker_OnEvent(TimerTracker, "START_TIMER", 3, timer, timer)
+				--Find the timer object DBM just created and hack our own changes into it.
+				for _, tttimer in pairs(TimerTracker.timerList) do
+					if tttimer.type == 3 and not tttimer.isFree then
+						--We don't want the PVP bar, we only want timer text
+						if timer > 10 then
+							--b.startNumbers:Play()
+							tttimer.bar:Hide()
+						end
+						break
+					end
 				end
 			end
 		end
@@ -6214,7 +6220,12 @@ do
 				if dummyMod then--stop pull timer
 					dummyMod.text:Cancel()
 					dummyMod.timer:Stop()
-					TimerTracker_OnEvent(TimerTracker, "PLAYER_ENTERING_WORLD")
+					for _, tttimer in pairs(TimerTracker.timerList) do
+						if tttimer.type == 3 and not tttimer.isFree then
+							FreeTimerTrackerTimer(tttimer)
+							break
+						end
+					end
 				end
 				local bigWigs = _G["BigWigs"]
 				if bigWigs and bigWigs.db.profile.raidicon and not self.Options.DontSetIcons and self:GetRaidRank() > 0 then--Both DBM and bigwigs have raid icon marking turned on.
@@ -7010,27 +7021,18 @@ do
 	function DBM:SendPVPTimers(target)
 		self:Debug("SendPVPTimers requested by "..target, 2)
 		local spamForTarget = spamProtection[target] or 0
+		local time = GetTime()
 		-- just try to clean up the table, that should keep the hash table at max. 4 entries or something :)
 		for k, v in pairs(spamProtection) do
-			if GetTime() - v >= 1 then
+			if time - v >= 1 then
 				spamProtection[k] = nil
 			end
 		end
-		if GetTime() - spamForTarget < 1 then -- just to prevent players from flooding this on purpose
+		if time - spamForTarget < 1 then -- just to prevent players from flooding this on purpose
 			return
 		end
-		spamProtection[target] = GetTime()
-		local mod
-		--Acquire correct pvp mod for zone we are in
-		if LastInstanceMapID == 529 or LastInstanceMapID == 1681 or LastInstanceMapID == 2107 or LastInstanceMapID == 2177 then--Arathi
-			mod = self:GetModByName("z2107")
-		elseif LastInstanceMapID == 30 or LastInstanceMapID == 2197 then--Alteract Valley
-			mod = self:GetModByName("z30")
-		elseif LastInstanceMapID == 566 or LastInstanceMapID == 968 then--Eye of the Storm
-			mod = self:GetModByName("z566")
-		else--Any other BG we can just use current MapID as mod ID
-			mod = self:GetModByName("z"..tostring(LastInstanceMapID))
-		end
+		spamProtection[target] = time
+		local mod = self:GetModByName("PvPGeneral")
 		if mod then
 			self:SendTimerInfo(mod, target)
 		end
@@ -11906,7 +11908,7 @@ end
 
 function bossModPrototype:SetRevision(revision)
 	revision = parseCurseDate(revision or "")
-	if not revision or revision == "20201013224412" then
+	if not revision or revision == "20201020205835" then
 		-- bad revision: either forgot the svn keyword or using github
 		revision = DBM.Revision
 	end

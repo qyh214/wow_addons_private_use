@@ -1,46 +1,10 @@
-lightweight tag aeb424d5182c86f959f6d69a109ad892241b7e08 v5.4.0
+lightweight tag c1c40eb176fca97a3cf3fba163058cbc6680e118 v5.4.1
 Author:	Boshi Lian <farmer1992@gmail.com>
-Date:	Sat Oct 17 08:23:07 2020 -0700
+Date:	Tue Oct 20 03:14:49 2020 -0700
 
-commit 635acba8205b8b300004568b77044a7d9adb0f1d
-Author: Richard Fein <git@rfein.com>
-Date:   Fri Jul 31 00:30:55 2020 -0400
-
-    Update toc version
-
-commit 635acba8205b8b300004568b77044a7d9adb0f1d
-Author: Richard Fein <git@rfein.com>
-Date:   Fri Jul 31 00:30:55 2020 -0400
-
-    Update toc version
-
-commit 635acba8205b8b300004568b77044a7d9adb0f1d
-Author: Richard Fein <git@rfein.com>
-Date:   Fri Jul 31 00:30:55 2020 -0400
-
-    Update toc version
-
-commit 9a2680fb8f8ff6b6ced066213bc24aa9fa0628ad
-Author: Richard Fein <git@rfein.com>
-Date:   Thu Jul 30 08:13:54 2020 -0400
-
-    Fix SetBackdrop errors in Shadowlands beta
-
-commit 873ef5623b88676d48e95934c1526d26ebda4056
+commit c1c40eb176fca97a3cf3fba163058cbc6680e118
 Author: Boshi Lian <farmer1992@gmail.com>
-Date:   Tue May 5 20:16:08 2020 -0700
+Date:   Tue Oct 20 03:14:49 2020 -0700
 
-    minimap icon
-
-commit 4d4b0e0b2c5e99e266e0a67d4b9e3546846c32bb
-Author: Boshi Lian <farmer1992@gmail.com>
-Date:   Tue Apr 7 10:31:48 2020 -0700
-
-    fix nil
-
-commit 0b7ebac3ebd663b41ee993c7e703eff24d36f658
-Author: Boshi Lian <farmer1992@gmail.com>
-Date:   Tue Mar 31 17:40:41 2020 -0700
-
-    try to unify crlf
+    minimap now configable
 

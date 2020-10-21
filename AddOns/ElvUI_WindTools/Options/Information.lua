@@ -92,7 +92,7 @@ options.help = {
                 ["4"] = {
                     order = 4,
                     type = "description",
-                    name = "MouJiaoZi"
+                    name = "MouJiaoZi: 某餃子"
                 },
                 ["5"] = {
                     order = 5,
@@ -108,6 +108,11 @@ options.help = {
                     order = 7,
                     type = "description",
                     name = "keludechu"
+                },
+                ["8"] = {
+                    order = 8,
+                    type = "description",
+                    name = "asdf12303116"
                 }
             }
         },
@@ -166,7 +171,7 @@ options.help = {
                     name = L["QQ Group"],
                     image = W.Media.Icons.qq,
                     func = function()
-                        E:StaticPopup_Show("WINDTOOLS_EDITBOX", nil, nil, "306069019")
+                        E:StaticPopup_Show("WINDTOOLS_EDITBOX", nil, nil, "336069019")
                     end,
                     width = 0.7
                 },
@@ -782,7 +787,7 @@ options.reset = {
                             },
                             ["WT"] = {
                                 ["misc"] = {
-                                    ["noKanjiMath"] = true,
+                                    ["noKanjiMath"] = false,
                                     ["gameBar"] = {
                                         ["home"] = {
                                             ["left"] = "172179"
