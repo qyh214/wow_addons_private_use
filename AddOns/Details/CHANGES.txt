@@ -1,46 +1,17 @@
-lightweight tag 4cf0bf3484d0bf890976d66675a3745097ced6d0 DetailsRetail.9.0.1.7930.143
+lightweight tag 93a7a8cc693b42caa38efd99a4aad87129a71aba DetailsRetail.9.0.1.7950.144
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Mon Oct 19 13:11:13 2020 -0300
+Date:	Tue Nov 3 20:55:19 2020 -0300
 
-commit 4cf0bf3484d0bf890976d66675a3745097ced6d0
+commit 93a7a8cc693b42caa38efd99a4aad87129a71aba
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon Oct 19 13:11:13 2020 -0300
+Date:   Tue Nov 3 20:55:19 2020 -0300
 
-    fix
-
-commit 6e7414fb6b58a5b05ca86c3114b5d75938a59cc8
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Sat Oct 17 17:15:29 2020 -0300
-
-    fix
-
-commit c42a35657dfbc99a0e1e41f21c7e08ee0308ccfc
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Fri Oct 16 19:51:44 2020 -0300
-
-    8.3.0 > 9.0.1
-
-commit 530a825358b0f98aa22b2132a61a18402c07bec7
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon Oct 5 15:03:38 2020 -0300
-
-    More development on combat packaging
-
-commit 99fc7dde4f6706d9a0ecaad00e381e3f5310a8fe
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Sun Oct 4 19:32:16 2020 -0300
-
-    Development of combat packager to send combat data over comms
-
-commit 39e4abb2c110cf97bf8549b3cf8bb09752359612
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Fri Sep 11 21:12:06 2020 -0300
-
-    Lib Updates
-
-commit eabba12e08d0118da9b8cbaacbba5e55fa59da26
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Fri Aug 21 13:24:00 2020 -0300
-
-    Fix window showing bck after 10seconds of /de hide
+    Added the baseline for the Coach Mode feature
+    
+    - Added the command '/details coach' to  enabled coach mode, need to be raid leader and all members must have details up to date.
+    - Fixed Tiny Threat not showing threat.
+    - Fixed annoucement interrupt toggle enable was reseting on logon.
+    - Added container_spells:GetOrCreateSpell(id, shouldCreate, token)
+    - Added Details:GetRaidLeader(), return the RL name.
+    - Framework update.
 

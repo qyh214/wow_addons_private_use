@@ -11,7 +11,7 @@ P.announcement = {
         raidWarning = false,
         text = L["%player% casted %spell% -> %target%"],
         channel = {
-            solo = "EMOTE",
+            solo = "NONE",
             party = "PARTY",
             instance = "INSTANCE_CHAT",
             raid = "RAID"
@@ -51,7 +51,7 @@ P.announcement = {
         }
     },
     quest = {
-        enable = true,
+        enable = false,
         paused = true,
         includeDetails = true,
         channel = {
@@ -91,7 +91,7 @@ P.announcement = {
         }
     },
     taunt = {
-        enable = true,
+        enable = false,
         player = {
             player = {
                 enable = true,
@@ -99,7 +99,7 @@ P.announcement = {
                 successText = L["I taunted %target% successfully!"],
                 failedText = L["I failed on taunting %target%!"],
                 channel = {
-                    solo = "EMOTE",
+                    solo = "NONE",
                     party = "PARTY",
                     instance = "INSTANCE_CHAT",
                     raid = "RAID"
@@ -110,7 +110,7 @@ P.announcement = {
                 successText = L["My %pet_role% %pet% taunted %target% successfully!"],
                 failedText = L["My %pet_role% %pet% failed on taunting %target%!"],
                 channel = {
-                    solo = "EMOTE",
+                    solo = "NONE",
                     party = "PARTY",
                     instance = "INSTANCE_CHAT",
                     raid = "RAID"
@@ -161,7 +161,7 @@ P.announcement = {
         raidWarning = false,
         text = L["%player% casted %spell% -> %target%"],
         channel = {
-            solo = "EMOTE",
+            solo = "NONE",
             party = "PARTY",
             instance = "INSTANCE_CHAT",
             raid = "RAID"
@@ -170,7 +170,7 @@ P.announcement = {
     utility = {
         enable = true,
         channel = {
-            solo = "SELF",
+            solo = "NONE",
             party = "PARTY",
             instance = "INSTANCE_CHAT",
             raid = "RAID"
@@ -266,6 +266,7 @@ P.combat = {
     raidMarkers = {
         enable = true,
         mouseOver = false,
+        tooltip = true,
         visibility = "DEFAULT",
         backdrop = true,
         backdropSpacing = 3,
@@ -283,6 +284,10 @@ P.combat = {
 }
 
 P.item = {
+    contacts = {
+        enable = true,
+        defaultPage = "ALTS"
+    },
     delete = {
         enable = true,
         delKey = true,
@@ -313,6 +318,10 @@ P.item = {
         bar1 = {
             enable = true,
             mouseOver = false,
+            globalFade = false,
+            fadeTime = 0.3,
+            alphaMin = 0,
+            alphaMax = 1,
             numButtons = 12,
             backdrop = true,
             backdropSpacing = 3,
@@ -322,7 +331,7 @@ P.item = {
             anchor = "TOPLEFT",
             spacing = 3,
             countFont = {
-                name = "Montserrat" .. ((W.CompatibleFont and " (en)" or "")),
+                name = F.GetCompatibleFont("Montserrat"),
                 size = 12,
                 style = "OUTLINE",
                 xOffset = 0,
@@ -334,7 +343,7 @@ P.item = {
                 }
             },
             bindFont = {
-                name = "Montserrat" .. ((W.CompatibleFont and " (en)" or "")),
+                name = F.GetCompatibleFont("Montserrat"),
                 size = 12,
                 style = "OUTLINE",
                 xOffset = 0,
@@ -350,6 +359,10 @@ P.item = {
         bar2 = {
             enable = true,
             mouseOver = false,
+            globalFade = false,
+            fadeTime = 0.3,
+            alphaMin = 0,
+            alphaMax = 1,
             numButtons = 12,
             backdrop = true,
             backdropSpacing = 3,
@@ -359,7 +372,7 @@ P.item = {
             anchor = "TOPLEFT",
             spacing = 3,
             countFont = {
-                name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
+                name = F.GetCompatibleFont("Montserrat"),
                 size = 12,
                 style = "OUTLINE",
                 xOffset = 0,
@@ -371,7 +384,7 @@ P.item = {
                 }
             },
             bindFont = {
-                name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
+                name = F.GetCompatibleFont("Montserrat"),
                 size = 12,
                 style = "OUTLINE",
                 xOffset = 0,
@@ -387,6 +400,10 @@ P.item = {
         bar3 = {
             enable = false,
             mouseOver = false,
+            globalFade = false,
+            fadeTime = 0.3,
+            alphaMin = 0,
+            alphaMax = 1,
             numButtons = 12,
             backdrop = true,
             backdropSpacing = 3,
@@ -396,7 +413,7 @@ P.item = {
             anchor = "TOPLEFT",
             spacing = 3,
             countFont = {
-                name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
+                name = F.GetCompatibleFont("Montserrat"),
                 size = 12,
                 style = "OUTLINE",
                 xOffset = 0,
@@ -408,7 +425,7 @@ P.item = {
                 }
             },
             bindFont = {
-                name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
+                name = F.GetCompatibleFont("Montserrat"),
                 size = 12,
                 style = "OUTLINE",
                 xOffset = 0,
@@ -420,6 +437,28 @@ P.item = {
                 }
             },
             include = "CUSTOM"
+        }
+    },
+    inspect = {
+        enable = true,
+        player = true,
+        inspect = true,
+        stats = true,
+        playerOnInspect = true,
+        levelText = {
+            name = F.GetCompatibleFont("Montserrat"),
+            size = 17,
+            style = "OUTLINE"
+        },
+        equipText = {
+            name = E.db.general.font,
+            size = 13,
+            style = "OUTLINE"
+        },
+        statsText = {
+            name = E.db.general.font,
+            size = 13,
+            style = "OUTLINE"
         }
     }
 }
@@ -658,6 +697,7 @@ P.quest = {
         darkmoon = true,
         followerAssignees = true,
         rogueClassHallInsignia = true,
+        modifierKeyPause = true,
         customIgnoreNPCs = {}
     }
 }
@@ -692,7 +732,7 @@ P.unitFrames = {
                 offsetX = 0,
                 offsetY = 0,
                 font = {
-                    name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
+                    name = F.GetCompatibleFont("Montserrat"),
                     size = 12,
                     style = "OUTLINE"
                 }
@@ -715,7 +755,7 @@ P.unitFrames = {
                 offsetX = 0,
                 offsetY = 0,
                 font = {
-                    name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
+                    name = F.GetCompatibleFont("Montserrat"),
                     size = 12,
                     style = "OUTLINE"
                 }
@@ -738,7 +778,7 @@ P.unitFrames = {
                 offsetX = 0,
                 offsetY = 0,
                 font = {
-                    name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
+                    name = F.GetCompatibleFont("Montserrat"),
                     size = 12,
                     style = "OUTLINE"
                 }
@@ -761,7 +801,7 @@ P.unitFrames = {
                 offsetX = 0,
                 offsetY = 0,
                 font = {
-                    name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
+                    name = F.GetCompatibleFont("Montserrat"),
                     size = 12,
                     style = "OUTLINE"
                 }
@@ -784,7 +824,7 @@ P.unitFrames = {
                 offsetX = 0,
                 offsetY = 0,
                 font = {
-                    name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
+                    name = F.GetCompatibleFont("Montserrat"),
                     size = 12,
                     style = "OUTLINE"
                 }
@@ -807,7 +847,7 @@ P.unitFrames = {
                 offsetX = 0,
                 offsetY = 0,
                 font = {
-                    name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
+                    name = F.GetCompatibleFont("Montserrat"),
                     size = 12,
                     style = "OUTLINE"
                 }
@@ -818,6 +858,7 @@ P.unitFrames = {
 
 P.misc = {
     disableTalkingHead = false,
+    skipCutScene = false,
     gameBar = {
         enable = true,
         mouseOver = false,
@@ -833,6 +874,7 @@ P.misc = {
         customNormalColor = {r = 1, g = 1, b = 1},
         customHoverColor = {r = 0, g = 0.659, b = 1},
         visibility = "[petbattle] hide; show",
+        tooltipsAnchor = "ANCHOR_BOTTOM",
         time = {
             localTime = true,
             twentyFour = true,
@@ -840,7 +882,7 @@ P.misc = {
             interval = 10,
             alwaysSystemInfo = false,
             font = {
-                name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
+                name = F.GetCompatibleFont("Montserrat"),
                 size = 25,
                 style = "OUTLINE"
             }
@@ -856,7 +898,7 @@ P.misc = {
             x = 3,
             y = -3,
             font = {
-                name = "Montserrat" .. (W.CompatibleFont and " (en)" or ""),
+                name = F.GetCompatibleFont("Montserrat"),
                 size = 12,
                 style = "OUTLINE"
             }

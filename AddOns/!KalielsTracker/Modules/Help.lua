@@ -18,11 +18,11 @@ local helpName = "help"
 local helpNumPages = 11
 local cTitle = "|cffffd200"
 local cBold = "|cff00ffe3"
-local cNew = "|cff00ff00"
 local cWarning = "|cffff7f00"
 local cDots = "|cff808080"
 local offs = "\n|T:1:9|t"
 local beta = "|cffff7fff[Beta]|r"
+local new = "|cffff7fff[NEW]|r"
 
 local KTF = KT.frame
 
@@ -112,6 +112,7 @@ local function SetupTutorials()
 					cTitle.."Dynamic filter|r - automatically adding quests/achievements to tracker by criterion (e.g. \"|cff00ff00Auto|r Zone\") "..
 					"and continuously changing them. This type doesn't allow add/remove items by hand."..
 					"When is some Dynamic filter active, header button is green |T"..mediaPath.."UI-KT-HeaderButtons:14:14:-1:2:32:64:16:30:32:46:0:255:0|t.\n\n"..
+					"|cff009bffFavorites|r - Quests or Achievements now you can mark as favorites and then filter according to them.\n\n"..
 					"For Achievements can change searched categories, it will affect the outcome of the filter.\n\n"..
 					"This menu displays other options affecting the content of the tracker (e.g. options for addon PetTracker).",
 			textY = 16,
@@ -157,7 +158,7 @@ local function SetupTutorials()
 		},
 		{	-- 7
 			image = helpPath.."help_tracker-modules",
-			text = cTitle.."Order of Modules|r "..beta.."\n\n"..
+			text = cTitle.."Order of Modules|r\n\n"..
 					"Allows to change the order of modules inside the tracker. Supports all modules including external (e.g. PetTracker).",
 			shine = KTF,
 			shineTop = 5,
@@ -197,13 +198,13 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |r|cffffffff4.0.0|r\n\n"..
-					"- ADDED - Support for WoW 9.0\n"..
-					"- UPDATED - Addon support - TomTom v90001-1.1.5\n"..
-					"- UPDATED - Addon support - ElvUI 12.00, Tukui 20.00\n"..
-					"- Support for addon PetTracker is temporary disabled.\n"..
-					"- Support for UI addons updated partially.\n"..
-					"- Some Libs are modified - I'm waiting for an update.\n\n"..
+			text = cTitle.."         What's NEW in version |r|cffffffff4.2.4|r\n\n"..
+					"|TInterface\\Scenarios\\LegionInvasion:41:42:-4:0:512:512:314:373:144:206|t Special gift - |cffff7fffIcecrown Rare Monitor|r\n\n"..
+					"- UPDATED - Icecrown Rare Monitor - Rares now spawn every 10 minutes"..
+					offs.."(update for EU / NA zones)\n\n"..
+
+					"|cffff0000Take a look Options and configure Rare Monitor correctly!|r\n"..
+					"Now you don't need add UTC offset to field \"Timer Correction\". This field now use only for cosmetic time correction.\n\n"..
 
                     cTitle.."WoW 9.0.1 - Known issues w/o solution|r\n"..
                     "- Clicking on tracked quests or achievements has no response during combat.\n"..
@@ -240,8 +241,6 @@ local function SetupTutorials()
 				end
 			elseif i == 5 then
 				self[i].shine = KTF.Buttons
-			elseif i == 6 then
-				self[i].shine = KTF.ActiveButton
 			elseif i == 10 then
 				for j=1, C_QuestLog.GetNumQuestWatches() do
 					local questID = C_QuestLog.GetQuestIDForQuestWatchIndex(j)

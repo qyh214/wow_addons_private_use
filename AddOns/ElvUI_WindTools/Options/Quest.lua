@@ -6,13 +6,9 @@ local SB = W:GetModule("SwitchButtons")
 local OT = W:GetModule("ObjectiveTracker")
 
 local pairs = pairs
-local print = print
 local tonumber = tonumber
 local tostring = tostring
 
-local UnitExists = UnitExists
-local UnitName = UnitName
-local UnitPlayerControlled = UnitPlayerControlled
 local ObjectiveTracker_Update = ObjectiveTracker_Update
 local ReputationFrame_Update = ReputationFrame_Update
 
@@ -324,6 +320,7 @@ options.turnIn = {
             name = L["Enable"],
             set = function(info, value)
                 E.db.WT.quest.turnIn[info[#info]] = value
+                TI:ProfileUpdate()
                 SB:ProfileUpdate()
             end,
             width = "full"
@@ -379,14 +376,21 @@ options.turnIn = {
                 return not E.db.WT.quest.turnIn.enable
             end,
             args = {
-                description = {
+                modifierKeyPause = {
                     order = 1,
+                    type = "toggle",
+                    name = L["Pause On Press"],
+                    desc = L["Pause the automation by pressing a modifier key."],
+                    width = "full"
+                },
+                description = {
+                    order = 2,
                     type = "description",
-                    name = L["If you add the NPC into the list, all automation will do not work for it."],
+                    name = "\n" .. L["If you add the NPC into the list, all automation will do not work for it."],
                     width = "full"
                 },
                 list = {
-                    order = 2,
+                    order = 3,
                     type = "select",
                     name = L["Ignore List"],
                     get = function()
@@ -405,28 +409,16 @@ options.turnIn = {
                     end
                 },
                 addButton = {
-                    order = 3,
+                    order = 4,
                     type = "execute",
                     name = L["Add Target"],
                     desc = L["Make sure you select the NPC as your target."],
                     func = function()
-                        if not UnitExists("target") then
-                            print(L["Target is not exists."])
-                            return
-                        end
-                        if UnitPlayerControlled("target") then
-                            print(L["Target is not an NPC."])
-                            return
-                        end
-                        local npcID = TI:GetNPCID("target")
-                        if npcID then
-                            local list = E.db.WT.quest.turnIn.customIgnoreNPCs
-                            list[npcID] = UnitName("target")
-                        end
+                        TI:AddTargetToBlacklist()
                     end
                 },
                 deleteButton = {
-                    order = 4,
+                    order = 5,
                     type = "execute",
                     name = L["Delete"],
                     desc = L["Delete the selected NPC."],
@@ -648,8 +640,9 @@ options.paragonReputation = {
                     name = L["Format"],
                     type = "select",
                     values = {
-                        RAGON = L["Paragon"] .. " (100/10000)",
+                        PARAGON = L["Paragon"] .. " (100/10000)",
                         EXALTED = L["Exalted"] .. " (100/10000)",
+                        PARAGONPLUS = L["Paragon"] .. " x 1" .. " (100/10000)",
                         CURRENT = "100 (100/10000)",
                         VALUE = "100/10000",
                         DEFICIT = "9900"

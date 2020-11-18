@@ -7,6 +7,7 @@ local format = format
 local next = next
 local pairs = pairs
 local tinsert = tinsert
+local type = type
 local xpcall = xpcall
 
 local AceGUI
@@ -18,6 +19,7 @@ S.addonsToLoad = {} -- 等待插件载入后执行的美化函数表
 S.nonAddonsToLoad = {} -- 毋须等待插件的美化函数表
 S.updateProfile = {} -- 配置更新后的更新表
 S.aceWidgets = {}
+S.enteredLoad = {}
 
 --[[
     查询是否符合开启条件
@@ -68,11 +70,14 @@ function S:CreateShadow(frame, size, r, g, b, force)
     g = g or E.private.WT.skins.color.g or 0
     b = b or E.private.WT.skins.color.b or 0
 
+    size = size or 4
+    size = size + E.private.WT.skins.increasedSize or 0
+
     local shadow = CreateFrame("Frame", nil, frame, "BackdropTemplate")
     shadow:SetFrameStrata(frame:GetFrameStrata())
     shadow:SetFrameLevel(frame:GetFrameLevel() or 1)
-    shadow:SetOutside(frame, size or 4, size or 4)
-    shadow:SetBackdrop({edgeFile = LSM:Fetch("border", "ElvUI GlowBorder"), edgeSize = E:Scale(size or 5)})
+    shadow:SetOutside(frame, size, size)
+    shadow:SetBackdrop({edgeFile = LSM:Fetch("border", "ElvUI GlowBorder"), edgeSize = size + 1})
     shadow:SetBackdropColor(r, g, b, 0)
     shadow:SetBackdropBorderColor(r, g, b, 0.618)
 
@@ -84,21 +89,40 @@ end
     创建阴影于 ElvUI 美化背景
     @param {object} frame 窗体
 ]]
-function S:CreateBackdropShadow(frame)
-    if not E.private.WT.skins.shadow then
-        return
-    end
-
+function S:CreateBackdropShadow(frame, defaultTemplate)
     if not frame or frame.windStyle then
         return
     end
 
     if frame.backdrop then
-        frame.backdrop:SetTemplate("Transparent")
-        self:CreateShadow(frame.backdrop)
+        if not defaultTemplate then
+            frame.backdrop:SetTemplate("Transparent")
+        end
+        if E.private.WT.skins.shadow then
+            self:CreateShadow(frame.backdrop)
+        end
         frame.windStyle = true
-    else
-        F.DebugMessage(S, format("[1]无法找到 %s 的ElvUI美化背景！", frame:GetName() or "无名框体"))
+    elseif frame.CreateBackdrop and not self:IsHooked(frame, "CreateBackdrop") then
+        self:SecureHook(
+            frame,
+            "CreateBackdrop",
+            function()
+                if self:IsHooked(frame, "CreateBackdrop") then
+                    self:Unhook(frame, "CreateBackdrop")
+                end
+                if frame.backdrop then
+                    if not defaultTemplate then
+                        frame.backdrop:SetTemplate("Transparent")
+                    end
+                    if E.private.WT.skins.shadow then
+                        if E.private.WT.skins.shadow then
+                            self:CreateShadow(frame.backdrop)
+                        end
+                    end
+                    frame.windStyle = true
+                end
+            end
+        )
     end
 end
 
@@ -108,7 +132,7 @@ end
     @param {object} frame 窗体
     @param {string} [tried=20] 尝试次数
 ]]
-function S:CreateBackdropShadowAfterElvUISkins(frame, tried)
+function S:TryCreateBackdropShadow(frame, tried)
     if not frame or frame.windStyle then
         return
     end
@@ -126,11 +150,9 @@ function S:CreateBackdropShadowAfterElvUISkins(frame, tried)
             E:Delay(
                 0.1,
                 function()
-                    self:CreateBackdropShadowAfterElvUISkins(frame, tried - 1)
+                    self:TryCreateBackdropShadow(frame, tried - 1)
                 end
             )
-        else
-            F.DebugMessage(S, format("[2]无法找到 %s 的ElvUI美化背景！", frame:GetName()))
         end
     end
 end
@@ -144,7 +166,7 @@ function S:ReskinTab(tab)
         F.SetFontOutline(_G[tab:GetName() .. "Text"])
     end
 
-    self:CreateBackdropShadowAfterElvUISkins(tab)
+    self:CreateBackdropShadow(tab)
 end
 
 --[[
@@ -157,6 +179,14 @@ function S:SetTransparentBackdrop(frame)
     else
         frame:CreateBackdrop("Transparent")
     end
+end
+
+--[[
+    游戏系统输出错误
+    @param {string} err 错误
+]]
+local function errorhandler(err)
+    return _G.geterrorhandler()(err)
 end
 
 --[[
@@ -189,7 +219,35 @@ function S:AddCallbackForAddon(addonName, func)
         addon = self.addonsToLoad[addonName]
     end
 
+    if type(func) == "string" then
+        func = self[func]
+    end
+
     tinsert(addon, func or self[addonName])
+end
+
+--[[
+    注册进入游戏后执行的回调
+    @param {string} name 函数名
+    @param {function} [func=S.name] 回调函数
+]]
+function S:AddCallbackForEnterWorld(name, func)
+    tinsert(self.enteredLoad, func or self[name])
+end
+
+--[[
+    根据进入游戏事件唤起回调
+    @param {string} addonName 插件名
+]]
+function S:PLAYER_ENTERING_WORLD()
+    if not E.initialized or not E.private.WT.skins.enable then
+        return
+    end
+
+    for index, func in next, self.enteredLoad do
+        xpcall(func, errorhandler, self)
+        self.enteredLoad[index] = nil
+    end
 end
 
 --[[
@@ -199,14 +257,6 @@ end
 ]]
 function S:AddCallbackForUpdate(name, func)
     tinsert(self.updateProfile, func or self[name])
-end
-
---[[
-    游戏系统输出错误
-    @param {string} err 错误
-]]
-local function errorhandler(err)
-    return _G.geterrorhandler()(err)
 end
 
 --[[
@@ -237,7 +287,7 @@ function S:ADDON_LOADED(_, addonName)
     end
 end
 
-function S:UpdateWidgetEarly(AceGUI)
+function S:ReskinWidgets(AceGUI)
     for name, oldFunc in pairs(AceGUI.WidgetRegistry) do
         S:UpdateWidget(AceGUI, name, oldFunc)
     end
@@ -249,26 +299,34 @@ function S:UpdateWidget(lib, name, oldFunc)
         self.aceWidgets[name] = nil
     end
 end
+do
+    local alreadyWidgetHooked = false
+    local alreadyDialogSkined = false
+    function S:LibStub_NewLibrary(_, major)
+        if major == "AceGUI-3.0" and not alreadyWidgetHooked then
+            AceGUI = _G.LibStub("AceGUI-3.0")
+            self:ReskinWidgets(AceGUI)
+            self:SecureHook(AceGUI, "RegisterWidgetType", "UpdateWidget")
+            alreadyWidgetHooked = true
+        elseif major == "AceConfigDialog-3.0" and not alreadyDialogSkined then
+            self:AceConfigDialog()
+            alreadyDialogSkined = true
+        end
+    end
 
-function S:LibStub_NewLibrary(_, major)
-    if major == "AceGUI-3.0" then
-        if self:IsHooked(_G.LibStub, "NewLibrary") then
-            self:Unhook(_G.LibStub, "NewLibrary")
+    function S:HookEarly()
+        local AceGUI = _G.LibStub("AceGUI-3.0")
+        if AceGUI and not alreadyWidgetHooked then
+            self:ReskinWidgets(AceGUI)
+            self:SecureHook(AceGUI, "RegisterWidgetType", "UpdateWidget")
+            alreadyWidgetHooked = true
         end
 
-        AceGUI = _G.LibStub("AceGUI-3.0")
-        S:UpdateWidgetEarly(AceGUI)
-        self:SecureHook(AceGUI, "RegisterWidgetType", "UpdateWidget")
-    end
-end
-
-function S:Hook_Ace3()
-    local AceGUI = _G.LibStub("AceGUI-3.0")
-    if AceGUI then
-        S:UpdateWidgetEarly(AceGUI)
-        self:SecureHook(AceGUI, "RegisterWidgetType", "UpdateWidget")
-    else
-        self:SecureHook(_G.LibStub, "NewLibrary", "LibStub_NewLibrary")
+        local AceConfigDialog = _G.LibStub("AceConfigDialog-3.0")
+        if AceConfigDialog and not alreadyDialogSkined then
+            self:AceConfigDialog()
+            alreadyDialogSkined = true
+        end
     end
 end
 
@@ -277,6 +335,45 @@ function S:DisableAddOnSkin(key)
         local AS = _G.AddOnSkins[1]
         if AS and AS.db[key] then
             AS:SetOption(key, false)
+        end
+    end
+end
+
+function S:CreateShadowModule(frame)
+    if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow then
+        self:CreateShadow(frame)
+    end
+end
+
+do
+    local isLoaded
+    local MER
+    local MERS
+
+    local function IsMerathilisUILoaded()
+        if isLoaded == nil then
+            isLoaded = IsAddOnLoaded("ElvUI_MerathilisUI")
+        end
+
+        if isLoaded then
+            MER = _G.ElvUI_MerathilisUI and _G.ElvUI_MerathilisUI[1]
+            MERS = MER and MER:GetModule("MER_Skins")
+        end
+
+        return isLoaded
+    end
+
+    function S:MerathilisUISkin(frame)
+        if E.private.WT.skins.merathilisUISkin and IsMerathilisUILoaded() then
+            if frame.Styling then
+                frame:Styling()
+            end
+        end
+    end
+
+    function S:MerathilisUITab(tab)
+        if E.private.WT.skins.merathilisUISkin and IsMerathilisUILoaded() and MERS then
+            MERS:ReskinTab(tab)
         end
     end
 end
@@ -299,7 +396,8 @@ function S:Initialize()
         end
     end
 
-    self:Hook_Ace3()
+    self:HookEarly()
+    self:SecureHook(_G.LibStub, "NewLibrary", "LibStub_NewLibrary")
 
     -- 去除羊皮纸
     if E.private.WT.skins.removeParchment then
@@ -308,4 +406,5 @@ function S:Initialize()
 end
 
 S:RegisterEvent("ADDON_LOADED")
+S:RegisterEvent("PLAYER_ENTERING_WORLD")
 W:RegisterModule(S:GetName())

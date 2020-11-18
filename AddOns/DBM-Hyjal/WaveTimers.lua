@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("HyjalWaveTimers", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200221204848")
+mod:SetRevision("20201105045757")
 
 mod:RegisterEvents(
 	"GOSSIP_SHOW",
@@ -33,19 +33,22 @@ function mod:GOSSIP_SHOW()
 	if not GetRealZoneText() == L.HyjalZoneName then return end
 	local target = UnitName("target")
 	if target == L.Thrall or target == L.Jaina then
-		local selection = GetGossipOptions()
-		if selection == L.RageGossip then
-			boss = 1
-			self:SendSync("boss", 1)
-		elseif selection == L.AnetheronGossip then
-			boss = 2
-			self:SendSync("boss", 2)
-		elseif selection == L.KazrogalGossip then
-			boss = 3
-			self:SendSync("boss", 3)
-		elseif selection == L.AzgalorGossip then
-			boss = 4
-			self:SendSync("boss", 4)
+		local table = C_GossipInfo.GetOptions()
+		if table[1] and table[1].name then
+			local selection = table[1].name
+			if selection == L.RageGossip then
+				boss = 1
+				self:SendSync("boss", 1)
+			elseif selection == L.AnetheronGossip then
+				boss = 2
+				self:SendSync("boss", 2)
+			elseif selection == L.KazrogalGossip then
+				boss = 3
+				self:SendSync("boss", 3)
+			elseif selection == L.AzgalorGossip then
+				boss = 4
+				self:SendSync("boss", 4)
+			end
 		end
 	end
 end

@@ -2,6 +2,28 @@ if (true) then
     --return
 end
 
+--[[
+    search '~10' to go directly to tooltips settings
+
+    ~01 - display
+    ~02 - skins
+    ~03 - bars general
+    ~04 - bars texts
+    ~05 - title bar
+    ~06 - body setings
+    ~07 - status bar
+    ~08 - plugins
+    ~09 - profiles
+    ~10 - tooltips
+    ~11 - datafeed
+    ~12 - wallpaper
+    ~13 - automation
+    ~14 - raid tools
+    ~15 - broadcaster
+    ~16 - custom spells
+    ~17 - charts data
+--]]
+
 
 local Details = _G.Details
 local DF = _G.DetailsFramework
@@ -574,6 +596,16 @@ do
                 --icontexcoords = {160/512, 179/512, 142/512, 162/512},
                 name = "Reset Nickname",
                 desc = "Reset Nickname",
+            },
+            {--ignore nicknames
+                type = "toggle",
+                get = function() return _detalhes.ignore_nicktag end,
+                set = function (self, fixedparam, value)
+                    _detalhes.ignore_nicktag = value
+                    afterUpdate()
+                end,
+                name = Loc ["STRING_OPTIONS_IGNORENICKNAME"],
+                desc = Loc ["STRING_OPTIONS_IGNORENICKNAME_DESC"],
             },
 
             {type = "blank"},
@@ -1864,20 +1896,37 @@ do
             return fontTable
         end
 
-        --> attribute text font
-            local on_select_attribute_font = function (self, instance, fontName)
-                editInstanceSetting(currentInstance, "AttributeMenu", nil, nil, nil, fontName)
-                afterUpdate()
+    --> attribute text font
+        local on_select_attribute_font = function (self, instance, fontName)
+            editInstanceSetting(currentInstance, "AttributeMenu", nil, nil, nil, fontName)
+            afterUpdate()
+        end
+        
+        local build_font_menu = function()
+            local fonts = {}
+            for name, fontPath in pairs (SharedMedia:HashTable ("font")) do 
+                fonts [#fonts+1] = {value = name, label = name, icon = font_select_icon, texcoord = font_select_texcoord, onclick = on_select_attribute_font, font = fontPath, descfont = name, desc = "Our thoughts strayed constantly\nAnd without boundary\nThe ringing of the division bell had began."}
             end
-            
-            local build_font_menu = function()
-                local fonts = {}
-                for name, fontPath in pairs (SharedMedia:HashTable ("font")) do 
-                    fonts [#fonts+1] = {value = name, label = name, icon = font_select_icon, texcoord = font_select_texcoord, onclick = on_select_attribute_font, font = fontPath, descfont = name, desc = "Our thoughts strayed constantly\nAnd without boundary\nThe ringing of the division bell had began."}
-                end
-                table.sort (fonts, function (t1, t2) return t1.label < t2.label end)
-                return fonts
-            end
+            table.sort (fonts, function (t1, t2) return t1.label < t2.label end)
+            return fonts
+        end
+
+    --> icon set menu
+        local on_select_icon_set = function(self, instance, texturePath)
+            editInstanceSetting(currentInstance, "toolbar_icon_file", texturePath)
+            editInstanceSetting(currentInstance, "ChangeSkin")
+            afterUpdate()
+        end
+        
+        local buildIconStyleMenu = function()
+            local iconMenu = {
+                {value = "Interface\\AddOns\\Details\\images\\toolbar_icons", label = "Set 1", icon = "Interface\\AddOns\\Details\\images\\toolbar_icons", texcoord = {0, 0.125, 0, 1}, onclick = on_select_icon_set},
+                {value = "Interface\\AddOns\\Details\\images\\toolbar_icons_shadow", label = "Set 2", icon = "Interface\\AddOns\\Details\\images\\toolbar_icons_shadow", texcoord = {0, 0.125, 0, 1}, onclick = on_select_icon_set},
+                {value = "Interface\\AddOns\\Details\\images\\toolbar_icons_2", label = "Set 3", icon = "Interface\\AddOns\\Details\\images\\toolbar_icons_2", texcoord = {0, 0.125, 0, 1}, onclick = on_select_icon_set},
+                {value = "Interface\\AddOns\\Details\\images\\toolbar_icons_2_shadow", label = "Set 4", icon = "Interface\\AddOns\\Details\\images\\toolbar_icons_2_shadow", texcoord = {0, 0.125, 0, 1}, onclick = on_select_icon_set},
+            }
+            return iconMenu
+        end
 
     local buttonWidth = 25
 
@@ -1976,6 +2025,16 @@ do
                 icontexcoords = {160/256, 192/256, 0, 1},
             },
 
+            {--icon set icon style
+                type = "select",
+                get = function() return currentInstance.toolbar_icon_file end,
+                values = function()
+                    return buildIconStyleMenu()
+                end,
+                name = "Icon Set",
+                desc = "Icon Set",
+            },
+
             {--title bar icons size
                 type = "range",
                 get = function() return currentInstance.menu_icons_size end,
@@ -2031,17 +2090,6 @@ do
                 step = 1,
                 name = Loc ["STRING_OPTIONS_MENU_Y"],
                 desc = Loc ["STRING_OPTIONS_MENU_X_DESC"],
-            },
-
-            {--icon shadows
-                type = "toggle",
-                get = function() return currentInstance.menu_icons.shadow end,
-                set = function (self, fixedparam, value)
-                    editInstanceSetting(currentInstance, "ToolbarMenuSetButtonsOptions", nil, value)
-                    afterUpdate()
-                end,
-                name = Loc ["STRING_OPTIONS_MENUS_SHADOW"],
-                desc = Loc ["STRING_OPTIONS_MENUS_SHADOW_DESC"],
             },
 
             {--icons desaturated
@@ -3937,6 +3985,7 @@ do
 end
 
 
+-- ~11 ~datafeed
 do
     local buildSection = function(sectionFrame)
 
@@ -4082,7 +4131,8 @@ do
 end
 
 
-do --~wallpaper
+-- ~12 ~wallpaper
+do
     local buildSection = function(sectionFrame)
 
 		--> callback from the image editor
@@ -4487,7 +4537,9 @@ do --~wallpaper
     tinsert(Details.optionsSection, buildSection)
 end
 
-do -- ~automation ~auto hide
+
+-- ~13 ~automation ~auto hide
+do
     local buildSection = function(sectionFrame)
 
     --> auto switch options
@@ -4910,6 +4962,7 @@ do -- ~automation ~auto hide
 end
 
 
+-- ~14 ~raidtools ~tools
 do --raid tools
     local buildSection = function(sectionFrame)
 
@@ -5079,7 +5132,7 @@ do --raid tools
 
             {--auto current segment
                 type = "toggle",
-                get = function() return currentInstance.auto_current end,
+                get = function() return Details.announce_interrupts.enabled end,
                 set = function (self, fixedparam, value)
                     if (value) then
                         _detalhes:EnableInterruptAnnouncer()
@@ -5364,6 +5417,7 @@ do --raid tools
 end
 
 
+-- ~15 ~broadcaster
 do
     local buildSection = function(sectionFrame)
 
@@ -5601,6 +5655,7 @@ do
 end
 
 
+-- ~16 ~customspells ~spells
 do
     local buildSection = function(sectionFrame)
 
@@ -5760,6 +5815,7 @@ do
 end
 
 
+-- ~17 ~charts data
 do
     local buildSection = function(sectionFrame)
 

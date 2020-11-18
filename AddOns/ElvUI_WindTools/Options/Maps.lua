@@ -451,8 +451,7 @@ options.worldMap = {
         enable = {
             order = 2,
             type = "toggle",
-            name = L["Enable"],
-            width = "full"
+            name = L["Enable"]
         },
         reveal = {
             order = 3,
@@ -460,8 +459,28 @@ options.worldMap = {
             name = L["Remove Fog"],
             desc = L["Remove Fog of War from your world map."]
         },
-        scale = {
+        Waypoint = {
             order = 4,
+            type = "group",
+            inline = true,
+            name = L["Waypoint"],
+            args = {
+                autoTrackWaypoint = {
+                    order = 1,
+                    type = "toggle",
+                    name = L["Auto Track Waypoint"],
+                    desc = L["Auto track the waypoint after setting."]
+                },
+                rightClickToClear = {
+                    order = 2,
+                    type = "toggle",
+                    name = L["Right Click To Clear"],
+                    desc = L["Right click the waypoint to clear it."]
+                }
+            }
+        },
+        scale = {
+            order = 5,
             type = "group",
             inline = true,
             name = L["Scale"],

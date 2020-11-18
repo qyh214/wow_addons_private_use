@@ -787,12 +787,12 @@ PMAI:SetScript("OnShow", function(self)		--PlayerModelAnimIn
 	model:RefreshUnit();
 	model.isPlayer = true;
 	model.hasRaceChanged = false;
-	local ZoomMode;
-	if NarcissusDB.ShowFullBody then
-		ZoomMode = 2;	--Full body
-	else
-		ZoomMode = 1;
-	end
+	local ZoomMode = 2;
+	--if NarcissusDB.ShowFullBody then
+	--	ZoomMode = 2;	--Full body
+	--else
+	--	ZoomMode = 1;
+	--end
 	AssignModelPositionTable();
 	local zoomLevel = TranslateValue[ZoomMode][1] or 0.05;
 	defaultY = TranslateValue[ZoomMode][2] or 0.4;
@@ -1334,7 +1334,7 @@ function Narci_LayerButton_OnLoad(self)
 		AlphaButton.tooltip = L["Toggle Text Mask"];
 	elseif ID == 2 then
 		--3D Model Visibility
-		self.Label:SetText(NARCI_3DMODEL);
+		self.Label:SetText(L["3D Model"]);
 		self:SetScript("OnClick", PlayerModelLayerButton_OnClick);
 		self:SetScript("OnShow", function(self)
 			HighlightButton(self, true);
@@ -1590,17 +1590,6 @@ function Narci_Model_HidePlayer_OnClick(self)
 	self.IsOn = not self.IsOn;
 	ConsoleExec( "showPlayer");
 	HighlightButton(self, self.IsOn);
-end
-
-function NarciModelControl_AnimationSlider_OnValueChanged(self, value, isUserInput)
-    self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
-	if value ~= self.oldValue then
-		if not self:IsShown() then return; end
-		self.oldValue = value
-		local id = AnimationIDEditBox:GetNumber();
-		local model = ModelFrames[activeModelIndex];
-		model:Freeze(id, model.variationID or 0, value);
-    end
 end
 
 function Narci_ModelShadow_SizeSlider_OnValueChanged(self, value, isUserInput)
@@ -1964,8 +1953,7 @@ function NarciAnimationIDEditboxMixin:OnEnterPressed()
 	model.animationID = id;
 
 	if model.isPaused then
-		model:Freeze(id, nil, 1);
-		NarciModelControl_AnimationSlider:SetValue(1);
+		NarciModelControl_AnimationSlider:SetValue(0, true);
 	else
 		model:PlayAnimation(id);
 	end
@@ -2074,7 +2062,13 @@ function NarciAnimationVariationSphereMixin:OnClick(button)
 
 	---Update Model Animation
 	local model = ModelFrames[activeModelIndex];
-	model:PlayAnimation( AnimationIDEditBox:GetNumber() , newVariationID );
+	local animationID = AnimationIDEditBox:GetNumber();
+	if model.isPaused then
+		model.variationID = newVariationID;
+		NarciModelControl_AnimationSlider:SetValue(model.freezedFrame or 0, true);
+	else
+		model:PlayAnimation(animationID, newVariationID);
+	end
 end
 
 function NarciAnimationVariationSphereMixin:OnMouseDown()
@@ -2187,7 +2181,7 @@ function NarciModelControl_PauseAnimationButton_OnClick(self, button)
 	AnimationIDEditBox:ClearFocus();
 	local model = ModelFrames[activeModelIndex]
 	local id = AnimationIDEditBox:GetNumber();
-	model:Freeze(id, nil, 1);
+	model:Freeze(id, nil, model.freezedFrame or 0);
 	if button == "RightButton" then
 		PauseAllModel(true);
 	end
@@ -2641,8 +2635,8 @@ local function SetActiveModel(index)
 	end
 
 	local model = ModelFrames[activeModelIndex];
-	Narci.ActiveModel = model;
 	if not model then return; end;
+	Narci.ActiveModel = model;
 	model:EnableMouse(true);
 	model:EnableMouseWheel(true);
 	model:MakeCurrentCameraCustom();
@@ -2682,6 +2676,7 @@ local function SetActiveModel(index)
 	--Update Play/Pause Button
 	if model.isPaused then
 		DisablePlayButton();
+		NarciModelControl_AnimationSlider:SetValue(model.freezedFrame or 0, true)
 	else
 		DisablePauseButton();
 	end
@@ -2695,7 +2690,7 @@ function Narci_ModelIndexButton_OnClick(self, button)
 	local ID = self:GetID();
 	local playBling = true;
 	local model = ModelFrames[ID];
-	local buttons = self:GetParent().buttons
+	local buttons = self:GetParent().buttons;
 
 	if not self.HasModel then
 		local isPlayer = UnitIsPlayer(unit);
@@ -2714,6 +2709,7 @@ function Narci_ModelIndexButton_OnClick(self, button)
 					model = CreateFrame("CinematicModel", "NarciNPCModelFrame"..ID, Narci_ModelContainer, "Narci_NPCModelFrame_Template");
 					SetIndexButtonBorder(self, 2, false);
 				end
+				NarciModelControl_AnimationSlider:ResetValueVisual();
 			end
 			if isPlayer then
 				SetIndexButtonBorder(self, 1, false);
@@ -2833,7 +2829,7 @@ function NarciGenericModelMixin:Freeze(animationID, variationID, animationFrame)
 	self:FreezeAnimation(animationID, variationID, animationFrame);
 	self.animationID = animationID;
 	self.isPaused = true;
-	self.freezedFrame = animationFrame or 1;
+	self.freezedFrame = animationFrame or 0;
 end
 
 function NarciGenericModelMixin:PlayAnimation(animationID, variationID)
@@ -3219,6 +3215,7 @@ local function CreateAndSelectNewActor(actorIndex, unit, isVirtual)
 			else
 				model = CreateFrame("DressUpModel", "NarciPlayerModelFrame"..ID, Narci_ModelContainer, "Narci_CharacterModelFrame_Template");
 			end
+			NarciModelControl_AnimationSlider:ResetValueVisual();
 		end
 
 		model:SetUnit(unit);
@@ -3633,6 +3630,7 @@ local function RemoveActor(actorIndex)
 		model.weapons = nil;
 		model.isAnimationCached = nil;
 		model.GroundShadow:Hide();
+		model.freezedFrame = 0;
 	end
 
 	SetIndexButtonBorder(button, -1);
@@ -4122,10 +4120,7 @@ function Narci_ActorPanelExpandButton_OnClick(self)
 		Narci_SlotLayerButton:Click();
 	end
 
-	if NarcissusDB.UseExitConfirmation then
-		--Ask for confirmation when exiting the addon
-		Narci.showExitConfirm = true;
-	end
+	Narci.showExitConfirm = true;
 end
 
 
@@ -4281,6 +4276,12 @@ ScreenshotListener:SetScript("OnEvent",function(self,event,...)
 		After(1, function()
 			CacheModel();
 		end)
+
+		NarciModelControl_AnimationSlider.onValueChangedFunc = function(value)
+			local id = AnimationIDEditBox:GetNumber();
+			local model = ModelFrames[activeModelIndex];
+			model:Freeze(id, model.variationID or 0, value);
+		end
 	end
 end)
 
@@ -4366,16 +4367,3 @@ Patch	SpellVisualKit max ID
 
 /run PrimaryPlayerModel:SetLight(true, false, -pi/4, pi/4, 0, 1, 1, 1, 1, 500, 10, 10, 10);
 --]]
-
-function GetNumValidAnimations()
-	local id = 0;
-	local total = 0;
-	local model = NarciPlayerModelFrame1;
-	while id < animationID_Max do
-		if model:HasAnimation(id) then
-			total = total + 1;
-		end
-		id = id + 1;
-	end
-	return total
-end

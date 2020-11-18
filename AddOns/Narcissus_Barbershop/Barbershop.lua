@@ -67,127 +67,128 @@ end
 
 ----------------------------------------------------------------------------------------------------
 local CAMERA_PROFILES_BY_RACE = {
-    --cameraDistance, modelPosZ, modelFacing, translationX, translationY
+    --modelX, modelY, modelZ, facing
     bloodelf = {
-        male = {0.4746, -0.89, 0.52, 12, -2},
-        female = {0.3789, -0.73, 0.35, -4, -11},
+        male = {3.38, 0.07, -1.88, 0.43},
+        female = {3.54, -0.02, -1.75, 0.35},
     },
 
     voidelf = {
-        male = {0.4746, -0.89, 0.52, 12, -2},
-        female = {0.3789, -0.73, 0.35, -4, -11},
+        male = {3.38, 0.07, -1.88, 0.43},
+        female = {3.54, -0.02, -1.75, 0.35},
     },
 
     draenei = {
-        male = {0.8901, -1.26, 0.26, -15, 0},
-        female = {0.5045, -1.15, 0.17, -9, -2},
+        male = {2.94, -0.19, -2.24, 0.43},
+        female = {3.40, -0.09, -2.14, 0.35},
     },
 
     lightforgeddraenei = {
-        male = {0.8901, -1.26, 0.26, -15, 0},
-        female = {0.5045, -1.15, 0.17, -9, -2},
+        male = {2.94, -0.19, -2.24, 0.43},
+        female = {3.40, -0.09, -2.14, 0.35},
     },
 
     dwarf = {
-        male = {0.6159, -0.36, 0.35, -10, 0},
-        female = {0.4700, -0.37, 0.35, -2, 0}, 
+        male = {3.24, -0.08, -1.34, 0.44},
+        female = {3.43, -0.02, -1.34, 0.44}, 
     },
 
     darkirondwarf = {
-        male = {0.6159, -0.36, 0.35, -10, 0},
-        female = {0.4700, -0.37, 0.35, -2, 0}, 
+        male = {3.24, -0.08, -1.34, 0.44},
+        female = {3.43, -0.02, -1.34, 0.44}, 
     },
 
     gnome = {
-        male = {0.6314, 0.05, 0.35, 1, 0},
-        female = {0.5308, 0.08, 0.35, -8, 1},
+        male = {3.23, -0.01, -0.92, 0.43},
+        female = {3.37, -0.07, -0.9, 0.43},
     },
 
     mechagnome = {
-        male = {0.6114, 0.05, 0.35, -6, -1},
-        female = {0.5308, 0.08, 0.35, -8, 1},
+        male = {3.23, -0.05, -0.93, 0.43},
+        female = {3.37, -0.07, -0.9, 0.43},
     },
 
     goblin = {
-        male = {0.6111, -0.14, 0.44, 1, 8},
-        female = {0.4870, -0.17, 0.35, -2, 1},
+        male = {3.24, 0, -1.08, 0.43},
+        female = {3.40, -0.03, -1.14, 0.43},
     },
 
     human = {
-        male = {0.5022, -0.89, 0.35, -6, 1},
-        female = {0.4023, -0.78, 0.35, -4, 3}, 
+        male = {3.38, -0.04, -1.87, 0.35},
+        female = {3.51, -0.025, -1.745, 0.43},
     },
 
     kultiran = {
-        male = {0.7641, -1.3, 0.35, -4, -6},
-        female = {0.5337, -1.18, 0.35, -1, -9},
+        male = {3.06, -0.05, -2.32, 0.43},
+        female = {3.34, -0.01, -2.21, 0.43},
     },
 
     nightborne = {
-        male = {0.4956, -1.27, 0.35, 2, 0},
-        female = {0.4869, -1.14, 0.44, 11, 7},
+        male = {3.37, 0.01, -2.26, 0.35},
+        female = {3.40, 0.05, -2.09, 0.43},
     },
 
     nightelf = {
-        male = {0.5822, -1.23, 0.2618, -5, 0},
-        female = {0.4947, -1.10, 0.35, -9, -1}, 
+        male = {3.26, -0.07, -2.21, 0.43},
+        female = {3.38, -0.06, -2.09, 0.43},
     },
 
     orc = {
-        male = {0.9786, -0.77, 0.35, -10, -13},
-        female = {0.3394, -0.83, 0.26, -1, -13},
+        male = {2.79, -0.06, -1.84, 0.35},
+        female = {3.59, -0.02, -1.87, 0.35},
     },
 
     uprightorc = {
-        male = {0.7386, -1.11, 0.35, -2, 0},
-        female = {0.3394, -0.83, 0.26, -1, -13},
+        male = {3.11, -0.02, -2.08, 0.35},
+        female = {3.59, -0.02, -1.87, 0.35},
     },
 
     magharorc = {
-        male = {0.7386, -1.11, 0.35, -2, 0},
-        female = {0.3394, -0.83, 0.26, -1, -13},
+        male = {3.11, -0.02, -2.08, 0.35},
+        female = {3.59, -0.02, -1.87, 0.35},
     },
 
     pandaren = {
-        male = {0.6794, -1.11, 0.35, -10, -2},
-        female = {0.7218, -0.88, 0.35, -16, -11},
+        male = {3.14, -0.11, -2.11, 0.43},
+        female = {3.1, -0.16, -1.95, 0.43},
     },
 
     tauren = {
-        male = {1.7576, -1.21, 0.26, -15, -1},
-        female = {0.9619, -1.36, 0.26, -20, -9},
+        male = {1.97, -0.35, -2.2, 0.43},
+        female = {2.86, -0.35, -2.4, 0.52},
     },
 
     highmountaintauren = {
-        male = {1.7576, -1.21, 0.26, -15, -1},
-        female = {0.9619, -1.36, 0.26, -20, -9},
+        male = {1.97, -0.35, -2.2, 0.43},
+        female = {2.86, -0.35, -2.4, 0.52},
     },
 
     troll = {
-        male = {1.0407, -1.04, 0.26, -16, 0},
-        female = {0.4632, -1.18, 0.35, 9, -8},
+        male = {2.79, -0.19, -2.01, 0.43},
+        female = {3.43, 0.035, -2.19, 0.35},
     },
 
     scourge = {
-        male = {0.5227, -0.6, 0.44, 6, -4},
-        female = {0.4951, -0.67, 0.35, -6, -4},
+        male = {3.37, 0.03, -1.6, 0.43},
+        female = {3.39, -0.035, -1.665, 0.43},
     },
 
     vulpera = {
-        male = {0.5656, -0.12, 0.26, -5, 3},
-        female = {0.5656, -0.12, 0.26, -4, 3},
+        male = {3.33, -0.05, -1.09, 0.26},
+        female = {3.33, -0.04, -1.09, 0.26},
     },
 
     worgen = {
-        male = {1.2944, -0.66, 0.35, -16, -37},
-        female = {0.7886, -1.19, 0.52, -4, -4},
+        male = {2.41, -0.18, -1.93, 0.43},
+        female = {3.06, -0.04, -2.19, 0.52},
     },
 
     zandalaritroll = {
-        male = {0.7352, -1.62, 0.61, 6, 7},
-        female = {0.5245, -1.53, 0.52, 3, -1},
+        male = {3.16, 0.05, -2.55, 0.52},
+        female = {3.35, 0.04, -2.51, 0.44},
     },
 };
+
 
 local WORGEN_HUMAN_FORM_ID = 220;   --custom
 local MAX_SAVES = 10;
@@ -401,43 +402,33 @@ local function GetWorgenCameraProfile(model)
     end
 end
 
-local function UpdatePortraitCamera(model)
-    local cameraDistance, modelPosZ, modelFacing, translationX, translationY = unpack(ACTIVE_CAMERA_PROFILE);
-    if cameraDistance then
+local function UpdatePortraitCameraGeneric(model, profile)
+    if not profile then
+        profile = ACTIVE_CAMERA_PROFILE;
+    end
+    if not profile then return end;
+
+    local modelX, modelY, modelZ, modelFacing = unpack(profile);
+    if modelFacing then
         model:MakeCurrentCameraCustom();
-        local cameraPitch = pi/2;
-        model:SetCameraTarget(0, 0, 0.8);
-        model:SetCameraPosition(cameraDistance*sin(cameraPitch), 0, cameraDistance*cos(cameraPitch) + 0.8);
         model:SetFacing(modelFacing);
-        model:SetViewTranslation(translationX, translationY);
-        model:SetPosition(0, 0, modelPosZ);
+        model:SetPosition(modelX, modelY, modelZ);
+        local cameraX, cameraY, cameraZ = model:TransformCameraSpaceToModelSpace(4, 0, 0);
+        local targetX, targetY, targetZ = model:TransformCameraSpaceToModelSpace(0, 0, 0);
+        model:SetCameraPosition(cameraX, cameraY, cameraZ);
+        model:SetCameraTarget(targetX, targetY, targetZ);
+        return true
     end
 end
 
+local UpdatePortraitCamera = UpdatePortraitCameraGeneric;
+
 local function UpdatePortraitCameraForOrc(model)
-    local cameraDistance, modelPosZ, modelFacing, translationX, translationY = unpack( GetOrcCameraProfile(model) );
-    if cameraDistance then
-        model:MakeCurrentCameraCustom();
-        local cameraPitch = pi/2;
-        model:SetCameraTarget(0, 0, 0.8);
-        model:SetCameraPosition(cameraDistance*sin(cameraPitch), 0, cameraDistance*cos(cameraPitch) + 0.8);
-        model:SetFacing(modelFacing);
-        model:SetViewTranslation(translationX, translationY);
-        model:SetPosition(0, 0, modelPosZ);
-    end
+    UpdatePortraitCameraGeneric(model, GetOrcCameraProfile(model))
 end
 
 local function UpdatePortraitCameraForWorgen(model)
-    local cameraDistance, modelPosZ, modelFacing, translationX, translationY = unpack( GetWorgenCameraProfile(model) );
-    if cameraDistance then
-        model:MakeCurrentCameraCustom();
-        local cameraPitch = pi/2;
-        model:SetCameraTarget(0, 0, 0.8);
-        model:SetCameraPosition(cameraDistance*sin(cameraPitch), 0, cameraDistance*cos(cameraPitch) + 0.8);
-        model:SetFacing(modelFacing);
-        model:SetViewTranslation(translationX, translationY);
-        model:SetPosition(0, 0, modelPosZ);
-    end
+    UpdatePortraitCameraGeneric(model, GetWorgenCameraProfile(model))
 end
 
 local IS_PLAYER_WORGEN, IS_HUMAN_FORM = false, false;
@@ -453,6 +444,9 @@ DataProvider.worgenFemaleButtonOrder = {};
 
 function DataProvider:GetCurrentSelection(customizationData, generateDescription)
     customizationData = customizationData or C_BarberShop.GetAvailableCustomizations();
+    if not customizationData then
+        return
+    end
     local numCatetroy = #customizationData;
     local options, optionName, optionID, cuurentChoiceIndex, choice, choiceName, choiceID;
     local selectedOptions = {};
@@ -603,7 +597,7 @@ function DataProvider:LoadData()
         self.numWorgenFemales = numFemales;
         raceAtlasMale = GetRaceAtlas("worgen", "male", useHiRez);
         raceAtlasFemale = GetRaceAtlas("worgen", "female", useHiRez);
-
+        --NarciDevReferencePortrait:SetAtlas(raceAtlasFemale);
         SetUpSavedLooksButton(WorgenMaleButtons, maleDB, raceAtlasMale);
         SetUpSavedLooksButton(WorgenFemaleButtons, femaleDB, raceAtlasFemale);
     end
@@ -639,6 +633,9 @@ end
 
 function DataProvider:IsNewLooksUnique()
     local newLooks, generatedDescription = DataProvider:GetCurrentSelection();
+    if not newLooks then
+        return
+    end
     local checkOnly = true;
     local isUnique = self:CheckAndSaveLooks(newLooks, nil, checkOnly);
     return isUnique
@@ -1384,7 +1381,7 @@ function NarciBarberShopEditButtonMixin:OnLoad()
     self.Icon:SetTexCoord(0.25, 0.5, 0, 1);
     self.Icon:SetVertexColor(0.66, 0.66, 0.66);
     self.Ring:SetVertexColor(0.66, 0.66, 0.66);
-    self.Tooltip:SetText("Edit Name");
+    self.Tooltip:SetText(L["Edit Name"]);
 end
 
 function NarciBarberShopEditButtonMixin:SetParentObject(object)
@@ -1435,7 +1432,7 @@ function NarciBarberShopDeleteButtonMixin:OnLoad()
     self.Ring:SetVertexColor(0.85, 0, 0);
     self.SemiCircleRight:SetVertexColor(0.85, 0, 0);
     self.SemiCircleLeft:SetVertexColor(0.85, 0, 0);
-    self.Tooltip:SetText("Delete Look");
+    self.Tooltip:SetText(L["Delete Look"]);
     self.Tooltip:SetTextColor(1, 0.31, 0.31);
 end
 
@@ -2340,7 +2337,7 @@ EventListener:SetScript("OnEvent", function(self, event, ...)
         local name = ...;
         --Blizzard_CharacterCustomize
         --Blizzard_BarbershopUI
-        if name == "Narcissus_Barbershop" then
+        if name == "Narcissus_Barbershop" then --Narcissus_Barbershop
             self:UnregisterEvent(event);
             if not IsAddOnLoaded("Blizzard_BarbershopUI") then
                 print("Narcissus Error: Blizzard_BarbershopUI not loaded!");
@@ -2639,19 +2636,14 @@ local function CreateTabs(frame)
     end
 end
 
-NarciBarberShopSettingsMixin = {};
+NarciBarberShopSettingsMixin = CreateFromMixins(NarciChamferedFrameMixin);
 
 function NarciBarberShopSettingsMixin:OnLoad()
     SettingFrame = self;
-    self.BackgroundAtlas = {
-        self.BackgroundTopLeft, self.BackgroundTop, self.BackgroundTopRight,
-        self.BackgroundMiddleLeft, self.BackgroundMiddle, self.BackgroundMiddleRight,
-        self.BackgroundBottomLeft, self.BackgroundBottom, self.BackgroundBottomRight,
-    };
-
-    local v = 0.2;
     
-    self:SetBorderColor(v);
+    local v = 0.2;
+    self:SetBorderColor(v, v, v, 1);
+    self:SetBackgroundColor(0, 0, 0, 1);
     self.Divider:SetVertexColor(v, v, v);
     self.ScrollFrame.scrollBar.Background:SetVertexColor(v, v, v);
 
@@ -2665,12 +2657,6 @@ function NarciBarberShopSettingsMixin:OnLoad()
     local range = 120;
 
     NarciAPI_ApplySmoothScrollToScrollFrame(self.ScrollFrame, deltaRatio, speedRatio, positionFunc, buttonHeight, range);
-end
-
-function NarciBarberShopSettingsMixin:SetBorderColor(v)
-    for i = 1, #self.BackgroundAtlas do
-        self.BackgroundAtlas[i]:SetVertexColor(v, v, v);
-    end
 end
 
 function NarciBarberShopSettingsMixin:Initialize()
@@ -2762,6 +2748,8 @@ end
 NarciDevToolPortraitMixin = {};
 
 function NarciDevToolPortraitMixin:OnLoad()
+    if true then return end;
+    
     local Model = self.Model;
     Model:SetUnit("player");
     Model:SetKeepModelOnHide(true);
@@ -2803,13 +2791,41 @@ function NarciDevToolPortraitMixin:OnLoad()
     end)
     --]]
 
+
+
+    self.ModelXButton:SetScript("OnClick", function(frame, button)
+        local delta = frame.delta;
+        if button == "RightButton" then
+            delta = - delta;
+        end
+        if IsShiftKeyDown() then
+            delta = 16 * delta;
+        end
+        local x, y, z = Model:GetPosition();
+        Model:SetPosition(x + delta, y, z);
+        frame.Value:SetText( round(x + delta, 2) );
+    end)
+
+    self.ModelYButton:SetScript("OnClick", function(frame, button)
+        local delta = frame.delta;
+        if button == "RightButton" then
+            delta = - delta;
+        end
+        if IsShiftKeyDown() then
+            delta = 16 * delta;
+        end
+        local x, y, z = Model:GetPosition();
+        Model:SetPosition(x, y + delta, z);
+        frame.Value:SetText( round(y + delta, 2) );
+    end)
+
     self.ModelZButton:SetScript("OnClick", function(frame, button)
         local delta = frame.delta;
         if button == "RightButton" then
             delta = - delta;
         end
         if IsShiftKeyDown() then
-            delta = 4 * delta;
+            delta = 16 * delta;
         end
         local x, y, z = Model:GetPosition();
         Model:SetPosition(x, y, z + delta);
@@ -2866,8 +2882,8 @@ function NarciDevToolPortraitMixin:OnShow()
     Model:MakeCurrentCameraCustom();
     self.cameraDistance = Model:GetCameraDistance();
     self.cameraPitch = pi/2;
-    Model:SetCameraPosition( self.cameraDistance*sin(self.cameraPitch), 0, self.cameraDistance*cos(self.cameraPitch) + 0.8);
-    Model:SetCameraTarget(0, 0, 0.8);
+    --Model:SetCameraPosition( self.cameraDistance*sin(self.cameraPitch), 0, self.cameraDistance*cos(self.cameraPitch) + 0.8);
+    --Model:SetCameraTarget(0, 0, 0.8);
     Model:SetPosition(0, 0, 0);
     self.FacingButton.Value:SetText(Model:GetFacing());
     self.DistanceButton.Value:SetText(self.cameraDistance);
@@ -2878,20 +2894,24 @@ end
 
 function NarciDevToolPortraitMixin:LoadProfile(race, sex)
     local Model = self.Model;
+    Model:RefreshUnit();
+    Model:SetAnimation(0, 0);
+    Model:SetPaused(true);
     Model:MakeCurrentCameraCustom();
-    local cameraDistance, modelPosZ, modelFacing, translationX, translationY = unpack(ACTIVE_CAMERA_PROFILE);
-    local cameraPitch = pi/2;
-    Model:SetCameraTarget(0, 0, 0.8);
-    Model:SetCameraPosition(cameraDistance*sin(cameraPitch), 0, cameraDistance*cos(cameraPitch) + 0.8);
-    Model:SetFacing(modelFacing);
-    Model:SetViewTranslation(translationX, translationY);
-    Model:SetPosition(0, 0, modelPosZ);
-    self.OffsetXButton.Value:SetText(translationX);
-    self.OffsetYButton.Value:SetText(translationY);
-    self.cameraDistance = cameraDistance;
-    self.facing = modelFacing;
+    if not UpdatePortraitCamera(Model) then
+        Model:SetFacing(0.52);
+        local modelX, modelY, modelZ = 3.4, -0.07, -2.09;
+        Model:SetPosition(modelX, modelY, modelZ);
+    end
+    local cameraX, cameraY, cameraZ = Model:TransformCameraSpaceToModelSpace(4, 0, 0);
+    local targetX, targetY, targetZ = Model:TransformCameraSpaceToModelSpace(0, 0, 0);
+    Model:SetCameraTarget(targetX, targetY, targetZ);
+    Model:SetCameraPosition(cameraX, cameraY, cameraZ);
+    local modelFacing = Model:GetFacing();
+    local modelPosX, modelPosY, modelPosZ = Model:GetPosition();
+    self.ModelXButton.Value:SetText(modelPosX);
+    self.ModelYButton.Value:SetText(modelPosY);
     self.ModelZButton.Value:SetText(modelPosZ);
-    self.DistanceButton.Value:SetText(cameraDistance);
     self.FacingButton.Value:SetText(modelFacing);
 end
 

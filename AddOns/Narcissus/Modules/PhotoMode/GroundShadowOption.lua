@@ -1,3 +1,4 @@
+local L = Narci.L;
 local FadeFrame = NarciAPI_FadeFrame;
 
 local pow = math.pow;
@@ -130,15 +131,15 @@ end
 function NarciGroundShadowOptionMixin:OnLoad()
     local texFile = "Interface\\AddOns\\Narcissus\\Art\\Widgets\\LightSetup\\ShadowStyleIcon";
     local data1 = {
-        ["header"] = "Shadow",
+        ["header"] = L["Shadow"],
         ["buttonsPerRow"] = 2,
         [1] = {texFile, {0, 0.25, 0, 1}, nil, function() self:SelectShadowStyle(1) end},
         [2] = {texFile, {0.25, 0.5, 0, 1}, nil, function() self:SelectShadowStyle(2) end},
     }
     local data2 = {
-        ["header"] = "Light Source",
-        [1] = {"Independent", nil, function() self:EnableLightControl(false) end},
-        [2] = {"Interconnected", nil, function() self:EnableLightControl(true) end},
+        ["header"] = L["Light Source"],
+        [1] = {L["Light Source Independent"], nil, function() self:EnableLightControl(false) end},
+        [2] = {L["Light Source Interconnected"], nil, function() self:EnableLightControl(true) end},
     }
 
     local totalWidth = 384;
@@ -193,10 +194,10 @@ function NarciGroundShadowOptionMixin:OnLoad()
 
 
     --Toggle
-    Toggle = self:GetParent().GroundShadowOptionToggle;
+    local Toggle = self:GetParent().GroundShadowOptionToggle;
     self.Toggle = Toggle;
 
-    Toggle.Label:SetText("Show More options");
+    Toggle.Label:SetText(L["Show More options"]);
     local toggleWidth = Toggle.Label:GetWidth()
     Toggle:SetWidth( math.max(toggleWidth + 12, 80) );
     Toggle:SetScript("OnEnter", function(button)
@@ -211,12 +212,12 @@ function NarciGroundShadowOptionMixin:OnLoad()
         self:UpdateSliderVisibility();
         --self:SetShown(state);
         if state then
-            button.Label:SetText("Show Less Options");
+            button.Label:SetText(L["Show Less Options"]);
             --button.Arrow:SetTexCoord(0, 1, 0, 1);
             button.Arrow.flyOutUp:Play();
             self:FlyIn(true);
         else
-            button.Label:SetText("Show More options");
+            button.Label:SetText(L["Show More options"]);
             --button.Arrow:SetTexCoord(0, 1, 1, 0);
             button.Arrow.flyOutDown:Play();
             self:FlyIn(false);

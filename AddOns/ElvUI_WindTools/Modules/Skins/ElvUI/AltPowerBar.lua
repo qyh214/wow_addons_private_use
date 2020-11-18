@@ -14,12 +14,8 @@ function S:ElvUI_AltPowerBar()
     if not bar then
         return
     end
-
-    bar.backdrop:SetTemplate("Transparent")
-    self:CreateShadow(bar.backdrop)
-
-    bar.text:ClearAllPoints()
-    bar.text:Point("CENTER", 0, -1)
+    
+    self:CreateBackdropShadow(bar)
 end
 
 S:AddCallback("ElvUI_AltPowerBar")

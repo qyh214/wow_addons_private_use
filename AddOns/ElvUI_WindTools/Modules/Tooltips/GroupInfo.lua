@@ -7,7 +7,11 @@ local _G = _G
 local format = format
 local pairs = pairs
 local sort = sort
+local type = type
 local wipe = wipe
+
+local IsAddOnLoaded = IsAddOnLoaded
+local LibStub = LibStub
 
 local C_LFGList_GetSearchResultInfo = C_LFGList.GetSearchResultInfo
 local C_LFGList_GetSearchResultMemberInfo = C_LFGList.GetSearchResultMemberInfo
@@ -37,7 +41,7 @@ local function GetIconString(role, mode)
     return format(template, UF.RoleIconTextures[role])
 end
 
-function T:AddGroupInfo(tooltip, resultID)
+function T:AddGroupInfo(tooltip, resultID, isMeetingStone)
     local config = E.db.WT.tooltips.groupInfo
     if not config or not config.enable then
         return
@@ -116,13 +120,48 @@ function T:AddGroupInfo(tooltip, resultID)
 
     wipe(cache)
 
-    tooltip:ClearAllPoints()
-    tooltip:SetPoint("TOPLEFT", _G.LFGListFrame, "TOPRIGHT", 10, 0)
+    if not isMeetingStone then
+        tooltip:ClearAllPoints()
+        tooltip:SetPoint("TOPLEFT", _G.LFGListFrame, "TOPRIGHT", 10, 0)
+    end
     tooltip:Show()
 end
 
 function T:GroupInfo()
+    if IsAddOnLoaded("PremadeGroupsFilter") then
+        if _G.PremadeGroupsFilter and _G.PremadeGroupsFilter.Debug then
+            _G.PremadeGroupsFilter.Debug.OnLFGListSearchEntryOnEnter = E.noop
+        end
+    end
+
     T:SecureHook("LFGListUtil_SetSearchEntryTooltip", "AddGroupInfo")
+
+    -- Meeting Stone Hook
+    if IsAddOnLoaded("MeetingStone") then
+        local NetEaseEnv = LibStub("NetEaseEnv-1.0")
+        if NetEaseEnv then
+            local NEG
+            for k in pairs(NetEaseEnv._NSInclude) do
+                if type(k) == "table" then
+                    NEG = k
+                end
+            end
+
+            if NEG and NEG.MainPanel then
+                T:SecureHook(
+                    NEG.MainPanel,
+                    "OpenActivityTooltip",
+                    function(panel, activity, tooltip)
+                        local id = activity and activity:GetID()
+                        tooltip = tooltip or panel.GameTooltip
+                        if tooltip and id then
+                            T:AddGroupInfo(tooltip, id, true)
+                        end
+                    end
+                )
+            end
+        end
+    end
 end
 
 T:AddCallback("GroupInfo")

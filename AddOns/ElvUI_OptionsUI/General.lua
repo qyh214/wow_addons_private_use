@@ -73,23 +73,31 @@ E.Options.args.general = {
 					desc = L["Attempt to support eyefinity/nvidia surround."],
 					type = 'toggle',
 					get = function(info) return E.global.general.eyefinity end,
-					set = function(info, value) E.global.general.eyefinity = value; E:StaticPopup_Show('GLOBAL_RL') end
+					set = function(info, value) E.global.general.eyefinity = value; E:StaticPopup_Show('GLOBAL_RL') end,
+				},
+				ultrawide = {
+					order = 10,
+					name = L["Ultrawide Support"],
+					desc = L["Attempts to center UI elements in a 16:9 format for ultrawide monitors"],
+					type = 'toggle',
+					get = function(info) return E.global.general.ultrawide end,
+					set = function(info, value) E.global.general.ultrawide = value; E:StaticPopup_Show('GLOBAL_RL') end,
 				},
 				autoAcceptInvite = {
-					order = 10,
+					order = 11,
 					name = L["Accept Invites"],
 					desc = L["Automatically accept invites from guild/friends."],
 					type = 'toggle',
 				},
 				autoRoll = {
-					order = 11,
+					order = 12,
 					name = L["Auto Greed/DE"],
 					desc = L["Automatically select greed or disenchant (when available) on green quality items. This will only work if you are the max level."],
 					type = 'toggle',
 					disabled = function() return not E.private.general.lootRoll end
 				},
 				autoTrackReputation = {
-					order = 12,
+					order = 13,
 					name = L["Auto Track Reputation"],
 					type = 'toggle',
 				},
@@ -201,28 +209,75 @@ E.Options.args.general = {
 						E:SetSmoothingAmount(value)
 					end,
 				},
-				UIScale = {
-					order = 28,
-					type = 'range',
-					name = L["UI_SCALE"],
-					min = 0.1, max = 1.25, step = 0.000000000000001,
-					softMin = 0.40, softMax = 1.15, bigStep = 0.01,
-					get = function(info) return E.global.general.UIScale end,
-					set = function(info, value)
-						E.global.general.UIScale = value
-						if not IsMouseButtonDown() then
-							E:PixelScaleChanged()
-						end
-					end
-				},
-				AutoScale = {
-					order = 29,
-					type = 'execute',
-					name = L["Auto Scale"],
-					func = function()
-						E.global.general.UIScale = E:PixelBestSize()
-						E:PixelScaleChanged()
-					end,
+				scaling = {
+					order = 50,
+					type = 'group',
+					inline = true,
+					name = L["UI Scale"],
+					get = function(info) end,
+					set = function(info, value) end,
+					args = {
+						UIScale = {
+							order = 1,
+							type = 'range',
+							name = L["UI_SCALE"],
+							min = 0.1, max = 1.25, step = 0.000000000000001,
+							softMin = 0.40, softMax = 1.15, bigStep = 0.01,
+							get = function(info) return E.global.general.UIScale end,
+							set = function(info, value)
+								E.global.general.UIScale = value
+
+								if not IsMouseButtonDown() then
+									E:PixelScaleChanged()
+									E:StaticPopup_Show('PRIVATE_RL')
+								end
+							end
+						},
+						ScaleSmall = {
+							order = 2,
+							type = 'execute',
+							name = _G.SMALL,
+							customWidth = 100,
+							func = function()
+								E.global.general.UIScale = .6
+								E:PixelScaleChanged()
+								E:StaticPopup_Show('PRIVATE_RL')
+							end,
+						},
+						ScaleMedium = {
+							order = 3,
+							type = 'execute',
+							name = _G.TIME_LEFT_MEDIUM,
+							customWidth = 100,
+							func = function()
+								E.global.general.UIScale = .7
+								E:PixelScaleChanged()
+								E:StaticPopup_Show('PRIVATE_RL')
+							end,
+						},
+						ScaleLarge = {
+							order = 4,
+							type = 'execute',
+							name = _G.LARGE,
+							customWidth = 100,
+							func = function()
+								E.global.general.UIScale = .8
+								E:PixelScaleChanged()
+								E:StaticPopup_Show('PRIVATE_RL')
+							end,
+						},
+						ScaleAuto = {
+							order = 5,
+							type = 'execute',
+							name = L["Auto Scale"],
+							customWidth = 100,
+							func = function()
+								E.global.general.UIScale = E:PixelBestSize()
+								E:PixelScaleChanged()
+								E:StaticPopup_Show('PRIVATE_RL')
+							end,
+						},
+					},
 				},
 				totems = {
 					order = 55,
@@ -308,7 +363,8 @@ E.Options.args.general = {
 									name = L["FONT_SIZE"],
 									desc = L["Set the font size for everything in UI. Note: This doesn't effect somethings that have their own seperate options (UnitFrame Font, Datatext Font, ect..)"],
 									type = 'range',
-									min = 4, max = 32, step = 1,
+									min = 6, max = 64, step = 1,
+									softMin = 8, softMax = 32,
 									set = function(info, value) E.db.general[info[#info]] = value; E:UpdateMedia(); E:UpdateFontTemplates(); end,
 								},
 								fontStyle = {
@@ -332,6 +388,14 @@ E.Options.args.general = {
 									desc = L["Replaces the default Blizzard fonts on various panels and frames with the fonts chosen in the Media section of the ElvUI Options. NOTE: Any font that inherits from the fonts ElvUI usually replaces will be affected as well if you disable this. Enabled by default."],
 									get = function(info) return E.private.general[info[#info]] end,
 									set = function(info, value) E.private.general[info[#info]] = value; E:StaticPopup_Show('PRIVATE_RL'); end,
+								},
+								unifiedBlizzFonts = {
+									order = 6,
+									type = 'toggle',
+									name = L["Unified Font Sizes"],
+									desc = L["This setting mimics the older style of Replace Blizzard Fonts, with a more static unified font sizing."],
+									get = function(info) return E.private.general[info[#info]] end,
+									set = function(info, value) E.private.general[info[#info]] = value; E:UpdateBlizzardFonts() end,
 								},
 							},
 						},
@@ -442,6 +506,17 @@ E.Options.args.general = {
 							get = function(info) return E.db.unitframe.thinBorders end,
 							set = function(info, value)
 								E.db.unitframe.thinBorders = value
+								E:StaticPopup_Show('CONFIG_RL')
+							end,
+						},
+						npThinBorders = {
+							order = 2,
+							name = L["Nameplate Thin Borders"],
+							desc = L["Use thin borders on certain nameplate elements."],
+							type = 'toggle',
+							get = function(info) return E.db.nameplates.thinBorders end,
+							set = function(info, value)
+								E.db.nameplates.thinBorders = value
 								E:StaticPopup_Show('CONFIG_RL')
 							end,
 						},
@@ -651,7 +726,7 @@ E.Options.args.general = {
 							order = 2,
 							name = L["FONT_SIZE"],
 							type = 'range',
-							min = 6, max = 22, step = 1,
+							min = 6, max = 24, step = 1,
 						},
 						fontOutline = {
 							order = 3,
@@ -764,7 +839,7 @@ E.Options.args.general = {
 					name = L["Durability Scale"],
 					min = 0.5, max = 8, step = 0.5,
 					get = function(info) return E.db.general.durabilityScale end,
-					set = function(info, value) E.db.general.durabilityScale = value; E:StaticPopup_Show('PRIVATE_RL') end,
+					set = function(info, value) E.db.general.durabilityScale = value; Blizzard:UpdateDurabilityScale() end,
 				},
 				commandBarSetting = {
 					order = 12,
@@ -835,7 +910,7 @@ E.Options.args.general = {
 									order = 2,
 									type = 'range',
 									name = L["FONT_SIZE"],
-									min = 4, max = 40, step = 1,
+									min = 4, max = 42, step = 1,
 								},
 								itemLevelFontOutline = {
 									order = 3,
@@ -921,7 +996,7 @@ E.Options.args.general = {
 							order = 4,
 							type = 'range',
 							name = L["FONT_SIZE"],
-							min = 4, max = 212, step = 1,
+							min = 6, max = 64, step = 1,
 						},
 						chatBubbleFontOutline = {
 							order = 5,

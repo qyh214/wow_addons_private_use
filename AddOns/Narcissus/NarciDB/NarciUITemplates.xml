@@ -74,7 +74,7 @@
 				</Texture>
 			</Layer>
 			<Layer level="OVERLAY" textureSubLevel="4">
-				<FontString inherits="AAAStatusNameMedium" justifyH="CENTER" justifyV="MIDDLE" parentKey="HeaderText">
+				<FontString inherits="NarciFontMedium12" justifyH="CENTER" justifyV="MIDDLE" parentKey="HeaderText">
 					<Size x="0" y="0"/>
 					<Color r="0.4" g="0.4" b="0.4" a="1"/>
 					<Anchors>
@@ -187,19 +187,6 @@
 				</Scripts>
 			</Frame>
 		</Frames>
-	</Frame>
-
-	<Frame name="NarciSquareBorderTemplate" virtual="true" useParentLevel="true" parentKey="Border" ignoreParentScale="false">
-		<Anchors>
-			<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
-			<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT"/>
-		</Anchors>
-		<Layers>
-			<Layer>
-				<Texture file="Interface\AddOns\Narcissus\Art\BasicShapes\Square-WhiteBorder" Alpha="0" parentKey="Highlight" snapToPixelGrid="false" texelSnappingBias="0.0"/>
-				<Texture file="Interface\AddOns\Narcissus\Art\BasicShapes\Square-GreyBorder" Alpha="1" parentKey="Normal" snapToPixelGrid="false" texelSnappingBias="0.0"/>		
-			</Layer>
-		</Layers>
 	</Frame>
 
 	<Frame name="NarciFrameDispersiveShadowBorderTemplate" virtual="true" mixin="ExpansionTransitionBackdropTemplateMixin">
@@ -403,7 +390,7 @@
 	</Texture>
 
 	<Slider name="NarciHorizontalSliderTemplate" orientation="HORIZONTAL" enableMouse="true" virtual="true">
-		<Size x="200" y="6"/>
+		<Size x="160" y="6"/>
 		<HitRectInsets>
 			<AbsInset left="-4" right="-4" top="-8" bottom="-8"/>
 		</HitRectInsets>
@@ -449,8 +436,8 @@
 						<Anchor point="LEFT" relativeKey="$parent" relativePoint="RIGHT" x="6" y="0"/>
 					</Anchors>
 				</FontString>
-				<FontString parentKey="Label" inherits="NarciPrefFontWhiteMild" justifyH="RIGHT" justifyV="CENTER" text="Label">
-					<Size x="0" y="0"/>
+				<FontString parentKey="Label" inherits="NarciPrefFontWhiteMild" justifyH="RIGHT" justifyV="CENTER" text="Label" spacing="2" maxLines="2">
+					<Size x="100" y="0"/>
 					<Anchors>
 						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="LEFT" x="-12" y="0"/>
 					</Anchors>
@@ -669,56 +656,50 @@
 		</Scripts>
 	</Button>
 
-	<Button name="NarciCheckBoxTemplate" virtual="true" mixin="NarciUIMixin">
-		<Size>
-			<AbsDimension x="14" y="14"/>
-		</Size>
+	<Button name="NarciCheckBoxTemplate" virtual="true">
+		<Size x="12.0" y="12.0"/>
 		<HitRectInsets>
 			<AbsInset left="-4" right="-120" top="-4" bottom="-4"/>
 		</HitRectInsets>
 		<Layers>
 			<Layer level="BACKGROUND" textureSubLevel="2">
 				<Texture setAllPoints="true">
-					<Color r="0" g="0" b="0" a="0"/>
+					<Color r="0" g="0" b="0" a="0.9"/>
+					<Size x="12.0" y="12.0"/>
+					<Anchors>
+						<Anchor point="TOPLEFT"/>
+					</Anchors>
 				</Texture>
+			</Layer>
+			<Layer level="BORDER">
+				<Texture file="Interface\AddOns\Narcissus\Art\BasicShapes\Square-GreyBorder" Alpha="1" parentKey="NormalBorder" snapToPixelGrid="false" texelSnappingBias="0.0">
+					<Size x="12.0" y="12.0"/>
+					<Anchors>
+						<Anchor point="TOPLEFT"/>
+					</Anchors>
+				</Texture>		
 			</Layer>
 			<Layer level="OVERLAY" textureSubLevel="4">
 				<FontString inherits="NarciPrefFontWhiteMild" justifyH="LEFT" justifyV="MIDDLE" parentKey="Label">
-					<Size x="0" y="0"/>
+					<Size x="0" y="12.0"/>
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPRIGHT" x="8" y="0"/>
+						<Anchor point="LEFT" relativeKey="$parent.NormalBorder" relativePoint="RIGHT" x="4" y="0"/>
 					</Anchors>
 				</FontString>
 				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Arrows\Tick" parentKey="Tick" hidden="true">
+					<Size x="12.0" y="12.0"/>
 					<Anchors>
-						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="0" y="-0"/>
-						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-0" y="0"/>
+						<Anchor point="TOPLEFT"/>
 					</Anchors>
 				</Texture>
 			</Layer>
 		</Layers>
-		<Frames>
-			<Frame inherits="NarciSquareBorderTemplate"/>
-		</Frames>
-		<Scripts>
-			<OnLoad>
-				self.IsOn = false;
-			</OnLoad>
-			<OnClick>
-				self.IsOn = not self.IsOn;
-				if self.IsOn then
-					self.Tick:Show();
-				else
-					self.Tick:Hide();
-				end
-			</OnClick>
-			<OnEnter>
-				self:Highlight(true);
-			</OnEnter>
-			<OnLeave>
-				self:Highlight(false);
-			</OnLeave>
-		</Scripts>
+		<HighlightTexture file="Interface\AddOns\Narcissus\Art\BasicShapes\Square-WhiteBorder" parentKey="Highlight" snapToPixelGrid="false" texelSnappingBias="0.0">
+			<Size x="12.0" y="12.0"/>
+			<Anchors>
+				<Anchor point="TOPLEFT"/>
+			</Anchors>
+		</HighlightTexture>
 	</Button>
 
 	<Button name="NarciConfirmButtonTemplate" hidden="true" virtual="true">
@@ -783,6 +764,7 @@
 	</Button>
 
 	<Button name="NarciBindingButtonTemplate" virtual="true" registerForClicks="LeftButtonUp, RightButtonUp">
+		<Size x="120" y="16"/>
 		<HitRectInsets>
 			<AbsInset left="-4" right="-4" top="-4" bottom="-4"/>
 		</HitRectInsets>
@@ -834,8 +816,9 @@
 				</Texture>
 			</Layer>
 		</Layers>
-		<ButtonText inherits="NarciPrefFontWhiteLabel" justifyH="CENTER" justifyV="MIDDLE" parentKey="Value" text="NOT_BOUND">
+		<ButtonText inherits="NarciPrefFontWhiteMild" justifyH="CENTER" justifyV="MIDDLE" parentKey="Value" text="NOT_BOUND">
 			<Size x="0" y="0"/>
+			<Color r="1" g="1" b="1"/>
 			<Anchors>
 				<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
 			</Anchors>
@@ -869,7 +852,7 @@
 		</Scripts>
 	</Button>
 
-	<Button name="NarciGenricKeyBindingButtonTemplate" inherits="NarciBindingButtonTemplate" mixin="NarciGenericKeyBindingButtonMixin" virtual="true">
+	<Button name="NarciInternalKeyBindingButtonTemplate" inherits="NarciBindingButtonTemplate" mixin="NarciGenericKeyBindingButtonMixin" virtual="true">
 		<Animations>
 			<AnimationGroup parentKey="Timer">
 				<Scale duration="1.7" order="1"/>
@@ -934,7 +917,7 @@
 				</Texture>
             </Layer>
 			<Layer level="OVERLAY">
-				<FontString parentKey="Text" inherits="AAAItemLevel" justifyH="CENTER" justifyV="MIDDLE">
+				<FontString parentKey="Text" inherits="NarciFontNormal10White" justifyH="CENTER" justifyV="MIDDLE">
 					<Color r="0.88" g="0.88" b="0.88"/>
 					<Anchors>
 						<Anchor point="CENTER"/>
@@ -1313,9 +1296,8 @@
             <Layer level="OVERLAY">
                 <Texture inherits="NarciTopShadowTemplate"/>
 
-				<FontString parentKey="Header" inherits="AAAStatusNameMedium" justifyH="CENTER" justifyV="MIDDLE">
+				<FontString parentKey="Header" inherits="NarciPrefFontGrey9" justifyH="CENTER" justifyV="MIDDLE" maxLines="1">
 					<Size x="0" y="0"/>
-                    <Color r="0.4" g="0.4" b="0.4" a="1"/>
 					<Anchors>
 						<Anchor point="LEFT" relativeKey="$parent.HeaderBackground" relativePoint="LEFT" x="4" y="0"/>
 						<Anchor point="RIGHT" relativeKey="$parent.HeaderBackground" relativePoint="RIGHT" x="-4" y="0"/>
@@ -1938,6 +1920,149 @@
 		</Scripts>
 	</Frame>
 	
+	<Frame name="NarciChamferedFrameTemplate" mixin="NarciChamferedFrameMixin" virtual="true">
+		<Layers>
+			<Layer level="BACKGROUND" textureSubLevel="-1">
+				<Texture parentKey="BackgroundTopLeft" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBackground">
+					<Size x="16" y="16"/>
+					<TexCoords left="0" right="0.0625" top="0" bottom="0.125"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="BackgroundTopRight" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBackground">
+					<Size x="16" y="16"/>
+					<TexCoords left="0.9375" right="1" top="0" bottom="0.125"/>
+					<Anchors>
+						<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="BackgroundTop" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBackground">
+					<Size y="16"/>
+					<TexCoords left="0.0625" right="0.9375" top="0" bottom="0.125"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.BackgroundTopLeft" relativePoint="TOPRIGHT"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BackgroundTopRight" relativePoint="BOTTOMLEFT"/>
+					</Anchors>
+				</Texture>
+
+				<Texture parentKey="BackgroundBottomLeft" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBackground">
+					<Size x="16" y="16"/>
+					<TexCoords left="0" right="0.0625" top="0.875" bottom="1"/>
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="BackgroundBottomRight" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBackground">
+					<Size x="16" y="16"/>
+					<TexCoords left="0.9375" right="1" top="0.875" bottom="1"/>
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="BackgroundBottom" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBackground">
+					<Size y="16"/>
+					<TexCoords left="0.0625" right="0.9375" top="0.875" bottom="1"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.BackgroundBottomLeft" relativePoint="TOPRIGHT"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BackgroundBottomRight" relativePoint="BOTTOMLEFT"/>
+					</Anchors>
+				</Texture>
+
+				<Texture parentKey="BackgroundMiddleLeft" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBackground">
+					<TexCoords left="0" right="0.0625" top="0.125" bottom="0.875"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.BackgroundTopLeft" relativePoint="BOTTOMLEFT"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BackgroundBottomLeft" relativePoint="TOPRIGHT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="BackgroundMiddleRight" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBackground">
+					<TexCoords left="0.9375" right="1" top="0.125" bottom="0.875"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.BackgroundTopRight" relativePoint="BOTTOMLEFT"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BackgroundBottomRight" relativePoint="TOPRIGHT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="BackgroundMiddle" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBackground">
+					<TexCoords left="0.0625" right="0.9375" top="0.125" bottom="0.875"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.BackgroundMiddleLeft" relativePoint="TOPRIGHT"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BackgroundMiddleRight" relativePoint="BOTTOMLEFT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="BACKGROUND" textureSubLevel="0">
+				<Texture parentKey="BorderTopLeft" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBorder">
+					<Size x="16" y="16"/>
+					<TexCoords left="0" right="0.0625" top="0" bottom="0.125"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPLEFT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="BorderTopRight" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBorder">
+					<Size x="16" y="16"/>
+					<TexCoords left="0.9375" right="1" top="0" bottom="0.125"/>
+					<Anchors>
+						<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="BorderTop" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBorder">
+					<Size y="16"/>
+					<TexCoords left="0.0625" right="0.9375" top="0" bottom="0.125"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.BorderTopLeft" relativePoint="TOPRIGHT"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BorderTopRight" relativePoint="BOTTOMLEFT"/>
+					</Anchors>
+				</Texture>
+
+				<Texture parentKey="BorderBottomLeft" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBorder">
+					<Size x="16" y="16"/>
+					<TexCoords left="0" right="0.0625" top="0.875" bottom="1"/>
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="BorderBottomRight" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBorder">
+					<Size x="16" y="16"/>
+					<TexCoords left="0.9375" right="1" top="0.875" bottom="1"/>
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="BorderBottom" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBorder">
+					<Size y="16"/>
+					<TexCoords left="0.0625" right="0.9375" top="0.875" bottom="1"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.BorderBottomLeft" relativePoint="TOPRIGHT"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BorderBottomRight" relativePoint="BOTTOMLEFT"/>
+					</Anchors>
+				</Texture>
+
+				<Texture parentKey="BorderMiddleLeft" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBorder">
+					<TexCoords left="0" right="0.0625" top="0.125" bottom="0.875"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.BorderTopLeft" relativePoint="BOTTOMLEFT"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BorderBottomLeft" relativePoint="TOPRIGHT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="BorderMiddleRight" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBorder">
+					<TexCoords left="0.9375" right="1" top="0.125" bottom="0.875"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.BorderTopRight" relativePoint="BOTTOMLEFT"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BorderBottomRight" relativePoint="TOPRIGHT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="BorderMiddle" file="Interface\AddOns\Narcissus\Art\Frames\ChamferedBorder">
+					<TexCoords left="0.0625" right="0.9375" top="0.125" bottom="0.875"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.BorderMiddleLeft" relativePoint="TOPRIGHT"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BorderMiddleRight" relativePoint="BOTTOMLEFT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Frame>
+
     <Frame name="Narci_ItemParser" frameStrata="HIGH" level="11" movable="true" enableMouse="true" clampedToScreen="true" hidden="true" Alpha="1">
         <Size x="300" y="400"/>
         <Anchors>

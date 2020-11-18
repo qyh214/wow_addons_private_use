@@ -1,4 +1,4 @@
-## Interface: 90001
+## Interface: 90002
 ## Title: RSA [|c608245abWarlock|r]
 ## Notes: RSA Warlock Module. This is needed to announce Warlock Spells.
 ## Author: Raeli

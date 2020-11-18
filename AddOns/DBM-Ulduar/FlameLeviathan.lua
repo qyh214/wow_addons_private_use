@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("FlameLeviathan", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200530203003")
+mod:SetRevision("20201031012201")
 
 mod:SetCreatureID(33113)
 mod:SetEncounterID(1132)
@@ -77,7 +77,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_SUMMON(args)
-	if args.spellId == 62907 then		-- Ward of Life spawned (Creature id: 34275)
+	if args.spellId == 62907 and self:AntiSpam(3, 1) then		-- Ward of Life spawned (Creature id: 34275)
 		warnWardofLife:Show()
 	end
 end

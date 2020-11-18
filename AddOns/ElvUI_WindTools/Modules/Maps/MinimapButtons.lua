@@ -4,13 +4,23 @@ local S = W:GetModule("Skins")
 local MM = E:GetModule("Minimap")
 
 local _G = _G
-local tinsert, type, pairs, select = tinsert, type, pairs, select
-local ceil, floor, min, strlen, strsub, strfind = ceil, floor, min, strlen, strsub, strfind
-local UIFrameFadeIn, UIFrameFadeOut = UIFrameFadeIn, UIFrameFadeOut
-local CreateFrame, InCombatLockdown = CreateFrame, InCombatLockdown
+local ceil = ceil
+local floor = floor
+local min = min
+local pairs = pairs
+local select = select
+local strfind = strfind
+local strlen = strlen
+local strsub = strsub
+local tinsert = tinsert
+local type = type
+local unpack = unpack
+
+local CreateFrame = CreateFrame
 local GetSpellInfo = GetSpellInfo
-local RegisterStateDriver, UnregisterStateDriver = RegisterStateDriver, UnregisterStateDriver
-local C_Timer_After = C_Timer.After
+local InCombatLockdown = InCombatLockdown
+local RegisterStateDriver = RegisterStateDriver
+local UnregisterStateDriver = UnregisterStateDriver
 
 -- 忽略列表
 local IgnoreList = {
@@ -57,6 +67,10 @@ local whiteList = {
 	"LibDBIcon"
 }
 
+local acceptedFrames = {
+	"BagSync_MinimapButton"
+}
+
 local moveButtons = {}
 
 function MB:ResetGarrisonSize()
@@ -67,12 +81,79 @@ function MB:ResetGarrisonSize()
 	_G.GarrisonLandingPageMinimapButton:Size(self.db.buttonSize)
 end
 
+function MB:SetButtonMouseOver(button, frame, rawhook)
+	if not frame.HookScript then
+		return
+	end
+
+	local function ButtonOnEnter()
+		if button.backdrop.SetBackdropBorderColor then
+			button.backdrop:SetBackdropBorderColor(
+				E.db.general.valuecolor.r,
+				E.db.general.valuecolor.g,
+				E.db.general.valuecolor.b
+			)
+		end
+		if not self.db.mouseOver then
+			return
+		end
+		E:UIFrameFadeIn(self.bar, (1 - self.bar:GetAlpha()) * 0.382, self.bar:GetAlpha(), 1)
+	end
+
+	local function ButtonOnLeave()
+		if button.backdrop.SetBackdropBorderColor then
+			button.backdrop:SetBackdropBorderColor(unpack(E.media.bordercolor))
+		end
+		if not self.db.mouseOver then
+			return
+		end
+		E:UIFrameFadeOut(self.bar, self.bar:GetAlpha() * 0.382, self.bar:GetAlpha(), 0)
+	end
+
+	if not rawhook then
+		frame:HookScript("OnEnter", ButtonOnEnter)
+		frame:HookScript("OnLeave", ButtonOnLeave)
+	else
+		local OriginalOnEnter = frame:GetScript("OnEnter") or E.noop
+		local OriginalOnLeave = frame:GetScript("OnLeave") or E.noop
+		frame:SetScript(
+			"OnEnter",
+			function()
+				OriginalOnEnter(frame)
+				ButtonOnEnter()
+			end
+		)
+		frame:SetScript(
+			"OnLeave",
+			function()
+				OriginalOnLeave(frame)
+				ButtonOnLeave()
+			end
+		)
+	end
+end
+
 function MB:SkinButton(frame)
 	if not self.db.calendar then
 		tinsert(IgnoreList.full, "GameTimeFrame")
 	end
 
-	if frame == nil or frame:GetName() == nil or (frame:GetObjectType() ~= "Button") or not frame:IsVisible() then
+	if frame == nil or frame:GetName() == nil or not frame:IsVisible() then
+		return
+	end
+	local tmp
+	local frameType = frame:GetObjectType()
+	if frameType == "Button" then
+		tmp = 1
+	elseif frameType == "Frame" then
+		for _, f in pairs(acceptedFrames) do
+			if frame:GetName() == f then
+				tmp = 2
+				break
+			end
+		end
+	end
+	if not tmp then
 		return
 	end
 
@@ -105,7 +186,7 @@ function MB:SkinButton(frame)
 		end
 	end
 
-	if name ~= "GarrisonLandingPageMinimapButton" then
+	if name ~= "GarrisonLandingPageMinimapButton" and tmp ~= 2 then
 		frame:SetPushedTexture(nil)
 		frame:SetDisabledTexture(nil)
 		frame:SetHighlightTexture(nil)
@@ -132,10 +213,21 @@ function MB:SkinButton(frame)
 
 	if name == "GRM_MinimapButton" then
 		frame.GRM_MinimapButtonBorder:Hide()
+		frame:SetPushedTexture(nil)
+		frame:SetHighlightTexture(nil)
+		frame.SetPushedTexture = E.noop
+		frame.SetHighlightTexture = E.noop
+		if frame:HasScript("OnEnter") then
+			self:SetButtonMouseOver(frame, frame, true)
+			frame.OldSetScript = frame.SetScript
+			frame.SetScript = E.noop
+		end
 	end
 
 	if not frame.isSkinned then
-		frame:HookScript("OnClick", self.DelayedUpdateLayout)
+		if tmp ~= 2 then
+			frame:HookScript("OnClick", self.DelayedUpdateLayout)
+		end
 		for _, region in pairs({frame:GetRegions()}) do
 			local original = {}
 			original.Width, original.Height = frame:GetSize()
@@ -165,10 +257,17 @@ function MB:SkinButton(frame)
 				if t and type(t) ~= "number" and (t:find("Border") or t:find("Background") or t:find("AlphaMask")) then
 					region:SetTexture(nil)
 				else
+					if name == "BagSync_MinimapButton" then
+						region:SetTexture("Interface\\AddOns\\BagSync\\media\\icon")
+					end
+
+					if name ~= "Narci_MinimapButton" then
+						region:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+					end
 					region:ClearAllPoints()
 					region:Point("TOPLEFT", frame, "TOPLEFT", 2, -2)
 					region:Point("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 2)
-					region:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+
 					region:SetDrawLayer("ARTWORK")
 					if (name == "GameTimeFrame") then
 						if t == [[Interface\Calendar\UI-Calendar-Button]] then
@@ -206,33 +305,19 @@ function MB:SkinButton(frame)
 
 		frame:CreateBackdrop("Tranparent")
 		if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow then
-			S:CreateShadow(frame)
+			S:CreateBackdropShadow(frame)
 		end
 
-		frame:HookScript(
-			"OnEnter",
-			function()
-				if not self.db.mouseOver then
-					return
-				end
-				UIFrameFadeIn(self.bar, 0.2, self.bar:GetAlpha(), 1)
-				if frame.SetBackdropBorderColor then
-					frame:SetBackdropBorderColor(.7, .7, 0)
+		self:SetButtonMouseOver(frame, frame)
+
+		if name == "Narci_MinimapButton" then
+			self:SetButtonMouseOver(frame, frame.Panel)
+			for _, child in pairs {frame.Panel:GetChildren()} do
+				if child.SetScript and not child.Highlight then
+					self:SetButtonMouseOver(frame, child, true)
 				end
 			end
-		)
-		frame:HookScript(
-			"OnLeave",
-			function()
-				if not self.db.mouseOver then
-					return
-				end
-				UIFrameFadeOut(self.bar, 0.2, self.bar:GetAlpha(), 0)
-				if frame.SetBackdropBorderColor then
-					frame:SetBackdropBorderColor(0, 0, 0)
-				end
-			end
-		)
+		end
 
 		tinsert(moveButtons, name)
 
@@ -242,12 +327,7 @@ end
 
 function MB.DelayedUpdateLayout()
 	if MB.db.orientation ~= "NOANCHOR" then
-		C_Timer_After(
-			.1,
-			function()
-				MB:UpdateLayout()
-			end
-		)
+		E:Delay(1, MB.UpdateLayout, MB)
 	end
 end
 
@@ -345,9 +425,9 @@ function MB:UpdateLayout()
 
 		if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow then
 			if not self.db.backdrop then
-				frame.shadow:Show()
+				frame.backdrop.shadow:Show()
 			else
-				frame.shadow:Hide()
+				frame.backdrop.shadow:Hide()
 			end
 		end
 
@@ -412,14 +492,14 @@ function MB:UpdateMouseOverConfig()
 		self.bar:SetScript(
 			"OnEnter",
 			function(self)
-				UIFrameFadeIn(self, 0.2, self:GetAlpha(), 1)
+				E:UIFrameFadeIn(self, (1 - self:GetAlpha()) * 0.382, self:GetAlpha(), 1)
 			end
 		)
 
 		self.bar:SetScript(
 			"OnLeave",
 			function(self)
-				UIFrameFadeOut(self, 0.2, self:GetAlpha(), 0)
+				E:UIFrameFadeOut(self, self:GetAlpha() * 0.382, self:GetAlpha(), 0)
 			end
 		)
 
@@ -432,14 +512,8 @@ function MB:UpdateMouseOverConfig()
 end
 
 function MB:StartSkinning()
-	MB:UnregisterEvent("ADDON_LOADED")
-
-	C_Timer_After(
-		5,
-		function()
-			MB:SkinMinimapButtons()
-		end
-	)
+	self:UnregisterEvent("ADDON_LOADED")
+	E:Delay(5, self.SkinMinimapButtons, self)
 end
 
 function MB:CreateFrames()
@@ -461,9 +535,8 @@ function MB:CreateFrames()
 
 	self:SkinMinimapButtons()
 
-	if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow then
-		S:CreateShadow(self.bar.backdrop)
-	end
+	S:CreateShadowModule(self.bar.backdrop)
+	S:MerathilisUISkin(self.bar.backdrop)
 
 	E:CreateMover(
 		self.barAnchor,
@@ -475,7 +548,8 @@ function MB:CreateFrames()
 		"ALL,WINDTOOLS",
 		function()
 			return E.private.WT.maps.minimapButtons.enable
-		end
+		end,
+		"WindTools,maps,minimapButtons"
 	)
 end
 
@@ -489,8 +563,9 @@ function MB:SetUpdateHook()
 end
 
 function MB:PLAYER_ENTERING_WORLD()
-	self:SetUpdateHook()
 	self:UnregisterEvent("PLAYER_ENTERING_WORLD")
+	self:SetUpdateHook()
+	E:Delay(1, self.SkinMinimapButtons, self)
 end
 
 function MB:Initialize()

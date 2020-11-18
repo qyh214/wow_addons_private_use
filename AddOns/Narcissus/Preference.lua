@@ -1,8 +1,8 @@
 local L = Narci.L;
 --NARCI_NEW_ENTRY_PREFIX
 local TabNames = { 
-    NARCI_INTERFACE, NARCI_SHORTCUTS, NARCI_THEME, NARCI_EFFECTS, NARCI_CAMERA, NARCI_TRANSMOG,
-    L["Photo Mode"], L["Corruption System"], L["NPC"], NARCI_EXTENSIONS, 
+    L["Interface"], NARCI_NEW_ENTRY_PREFIX..L["Shortcuts"], L["Themes"], L["Effects"], NARCI_NEW_ENTRY_PREFIX..L["Camera"], L["Transmog"],
+    L["Photo Mode"], L["NPC"], L["Extensions"], 
 };  --Credits and About will be inserted later
 
 local FadeFrame = NarciAPI_FadeFrame;
@@ -23,7 +23,7 @@ local OptimizeBorderThickness = NarciAPI_OptimizeBorderThickness;
 local Narci_LetterboxAnimation = NarciAPI_LetterboxAnimation;
 local floor = math.floor;
 
-local CreatureTab;
+local MainFrame, CreatureTab;
 local Settings, CreatureSettings;
 
 local textLanguage = GetLocale();
@@ -31,53 +31,8 @@ if textLanguage == "enGB" then
     textLanguage = "enUS";
 end
 
-local function SetLetterboxEffectAlert()
-    local selectedRatio = Settings.LetterboxRatio;
-    local UIScale = Settings.GlobalScale;
-    local recommendedScale;
-    UIScale = floor(UIScale*10 + 0.5)/10;
-    if selectedRatio == 2 then
-        recommendedScale = 0.8;
-    elseif selectedRatio == 2.35 then
-        recommendedScale = 0.7;
-    else
-        recommendedScale = 0.7;
-    end
 
-    if UIScale > recommendedScale then
-        Narci_LetterboxEffectSwitch_Description:SetText(string.format(NARCI_LETTERBOX_EFFECT_ALERT2, recommendedScale, UIScale));
-        Narci_LetterboxEffectSwitch_Description:Show();
-    else
-        Narci_LetterboxEffectSwitch_Description:Hide();
-    end
-end
-
---- Set Item Name Font Height ---
-function Narci_Pref_SetItemNameTextSize(height)
-    local slotTable = Narci_Character.slotTable;
-    if not (slotTable and Settings) then
-        return;
-    end
-
-    local Height = tonumber(height) or ItemName_DefaultHeight or 10;
-    local font = slotTable[1].Name:GetFont();
-
-    Settings.FontHeightItemName = Height;
-    local slot;
-    for i=1, #slotTable do
-        slot = slotTable[i];
-		if slot then
-            slot.Name:SetFont(font, Height);
-            slot.GradientBackground:SetHeight(slot.Name:GetHeight() + slot.ItemLevel:GetHeight() + 18);
-		end
-    end
-end
-
---GetBindingText("U", "KEY_")
---command name = GetBindingAction("U")
---GetBindingName(GetBindingAction("U"))
-local SetItemNameTextSize = Narci_Pref_SetItemNameTextSize;
-
+--Interface
 local function SetFrameScale(scale)
 	local scale = tonumber(scale) or 1;
 
@@ -90,275 +45,204 @@ local function SetFrameScale(scale)
 	end
 end
 
-function Narci_ItemNameSizeSlider_OnValueChanged(self, value, userInput)
-    self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
-    if value ~= self.oldValue then
-        self.oldValue = value;
-        self.KeyLabel:SetText(value);
-        SetItemNameTextSize(value);
+local function SetLetterboxEffectAlert()
+    local selectedRatio = Settings.LetterboxRatio;
+    local uiScale = Settings.GlobalScale;
+    local recommendedScale;
+    uiScale = floor(uiScale*10 + 0.5)/10;
+    if selectedRatio == 2 then
+        recommendedScale = 0.8;
+    elseif selectedRatio == 2.35 then
+        recommendedScale = 0.7;
+    else
+        recommendedScale = 0.7;
     end
-end
 
-function Narci_GlobalScaleSlider_OnValueChanged(self, value, userInput)
-    self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
-    if value ~= self.oldValue then
-        self.oldValue = value;
-        value = floor(value*10 +0.5)/10;
-        self.KeyLabel:SetText(string.format("%.1f", value));
-        SetFrameScale(value);
-        SetLetterboxEffectAlert();
-    end
-end
-
-function Narci_ModelPanelScaleSlider_OnValueChanged(self, value, userInput)
-    self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
-    if value ~= self.oldValue then
-        self.oldValue = value;
-        value = floor(value*10 +0.5)/10;
-        self.KeyLabel:SetText(string.format("%.1f", value));
-        Narci_ModelSettings:SetScale(value);
-        Settings.ModelPanelScale = value;
-    end
-end
-
-function Narci_SceenshotQualitySlider_OnValueChanged(self, value, userInput)
-    self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
-    if value ~= self.oldValue then
-        self.oldValue = value;
-        value = floor(value*10 +0.5)/10;
-        self.KeyLabel:SetText(value);
-        if userInput then
-            SetCVar("screenshotQuality", value);
+    if Narci_LetterboxToggle then
+        if uiScale > recommendedScale then
+            Narci_LetterboxToggle.Description:SetText(string.format(L["Letterbox Alert2"], recommendedScale, uiScale));
+            if Settings.LetterboxEffect then
+                Narci_LetterboxToggle.Description:Show();
+            end
+        else
+            Narci_LetterboxToggle.Description:Hide();
         end
     end
 end
 
-local function GrainEffectSwitch_SetState(self)
-	local state = Settings.EnableGrainEffect;
-	--FullScreenFilterGrain:SetShown(state);
-    --FullScreenFilterGrain2:SetShown(state);
-    if state then
-        FadeFrame(FullScreenFilterGrain, 0.5, "IN");
-        FadeFrame(FullScreenFilterGrain2, 0.5, "IN");
-    else
-		FadeFrame(FullScreenFilterGrain, 0.5, "OUT");
-		FadeFrame(FullScreenFilterGrain2, 0.5, "OUT");
-    end
-	self.Tick:SetShown(state);
-end
-
-function Narci_GrainEffectSwitch_OnClick(self)
-	Settings.EnableGrainEffect = not Settings.EnableGrainEffect;
-	GrainEffectSwitch_SetState(self);
-end
-
-local function SmoothMusicVolume(state)
-    Narci_MusicInOut:Hide()
-    Narci_MusicInOut.State = state
-    Narci_MusicInOut:Show()
-end
-
-local function FadeMusicSwitch_SetState(self)
-    local state = Settings.FadeMusic;
-	self.Tick:SetShown(state);
-end
-
-function Narci_FadeMusicSwitch_OnClick(self)
-	Settings.FadeMusic = not Settings.FadeMusic;
-	local state = Settings.FadeMusic;
-    SmoothMusicVolume(state);
-    self.Tick:SetShown(state);
-end
-
-local function WeatherSwitch_SetState(self)
-	local state = Settings.WeatherEffect;
-	self.Tick:SetShown(state);
-end
-
-function Narci_WeatherEffectSwitch_OnClick(self)
-	Settings.WeatherEffect = not Settings.WeatherEffect;
-    WeatherSwitch_SetState(self);
-    if Settings.WeatherEffect then
-        Narci_SnowEffect(true);
-    else
-        Narci_SnowEffect(false);
-    end
-end
-
-local function LetterboxEffectSwitch_SetState(self, key)
-	local state = key or Settings.LetterboxEffect;
-    self.Tick:SetShown(state);
-    if state then
-        FadeFrame(Narci_LetterboxRatioSlider, 0.25, "Forced_IN");
-    else
-        Narci_LetterboxRatioSlider:SetShown(state);
-    end
+local function GlobalScaleSlider_OnValueChanged(self, value)
+    value = floor(value*10 +0.5)/10;
+    self.KeyLabel:SetText(string.format("%.1f", value));
+    SetFrameScale(value);
     SetLetterboxEffectAlert();
 end
 
-function Narci_LetterboxEffectSwitch_OnClick(self)
-    Settings.LetterboxEffect = not Settings.LetterboxEffect;
-    local state = Settings.LetterboxEffect;
-    LetterboxEffectSwitch_SetState(self, state)
-    if state then
-        Narci_LetterboxAnimation();
-    else
-        Narci_LetterboxAnimation("OUT");
+
+local function SetItemNameTextSize(self, height)
+    local slotTable = Narci_Character.slotTable;
+    if not (slotTable and Settings) then
+        return;
+    end
+
+    height = tonumber(height) or ItemName_DefaultHeight or 10;
+    self.KeyLabel:SetText(height);
+
+    local font = slotTable[1].Name:GetFont();
+
+    Settings.FontHeightItemName = height;
+    local slot;
+    for i=1, #slotTable do
+        slot = slotTable[i];
+		if slot then
+            slot.Name:SetFont(font, height);
+            slot.GradientBackground:SetHeight(slot.Name:GetHeight() + slot.ItemLevel:GetHeight() + 18);
+		end
     end
 end
 
-function Narci_LetterboxRatioSlider_OnValueChanged(self, value, userInput)
-    self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
-    if value ~= self.oldValue then
-        local effectiveValue;
-        if value == 1 then
-            effectiveValue = 2.35;
-        elseif value == 0 then
-            effectiveValue = 2;
-        else
-            effectiveValue = 2.35;
+local function SetItemNameTextWidth(width)
+    local slotTable = Narci_Character.slotTable;
+    if not (slotTable and Settings) then
+        return;
+    end
+
+    local Width = tonumber(width) or 200;
+    Settings.ItemNameWidth = Width;
+
+    if Width == 200 then
+        Width = 1208;
+    end
+    
+    local slot;
+    for i=1, #slotTable do
+        slot = slotTable[i];
+        if slot then
+            slot.Name:SetWidth(Width);
+            slot.ItemLevel:SetWidth(Width);
+            slot.GradientBackground:SetHeight(slot.Name:GetHeight() + slot.ItemLevel:GetHeight() + 18);
         end
-        Settings.LetterboxRatio = effectiveValue;
-        self.KeyLabel2:SetText(effectiveValue.." : 1")
-        self.oldValue = value
-        
-        SetLetterboxEffectAlert();
-        if not Narci_ScreenMask_Initialize() then
-            self.Description:SetText(NARCI_LETTERBOX_EFFECT_ALERT1)
-            self.Description:Show();
+    end
+end
+
+local function ItemNameWidthSlider_OnValueChanged(self, value)
+    local _, maxValue = self:GetMinMaxValues();
+    if value < maxValue then
+        self.KeyLabel:SetText(value);
+        SetItemNameTextWidth(value);
+    else
+        self.KeyLabel:SetText(UNLIMITED);
+        SetItemNameTextWidth(200);
+    end
+end
+
+local function SetItemNameTextTruncated(self, state)
+    local slotTable = Narci_Character.slotTable;
+    if (not slotTable) then
+        return;
+    end
+
+    local State = state or false;
+    local MaxLines =2;
+    if State then
+        MaxLines = 1;
+    end
+    
+    local slot;
+    for i=1, #slotTable do
+        slot = slotTable[i];
+        if slot then
+            slot.Name:SetMaxLines(MaxLines);
+            slot.ItemLevel:SetMaxLines(MaxLines);
+            slot.Name:SetWidth(slot.Name:GetWidth()+1)
+            slot.Name:SetWidth(slot.Name:GetWidth()-1)
+            slot.ItemLevel:SetWidth(slot.Name:GetWidth()+1)
+            slot.ItemLevel:SetWidth(slot.Name:GetWidth()-1)
+            slot.GradientBackground:SetHeight(slot.Name:GetHeight() + slot.ItemLevel:GetHeight() + 18);
         end
     end
 end
 
-local function CameraOrbitSwitch_SetState(self)
-	local state = Settings.CameraOrbit;
-    self.Tick:SetShown(state);
-    if state then
-        self.Description:SetText(L["Orbit Camera Description On"]);
-    else
-        self.Description:SetText(L["Orbit Camera Description Off"]);
-    end
+local function ShowDetailedIlvlInfo(self, state)
+	local frame = Narci_IlvlInfoFrame;
+	local frame1, frame2 = frame.IlvlButtonLeft, frame.IlvlButtonRight;
+	if state then
+		frame1.AnimFrame:Hide();
+		frame2.AnimFrame:Hide();
+		frame1.AnimFrame:Show();
+		frame2.AnimFrame:Show();
+		frame1:Show();
+		frame2:Show();
+        FadeFrame(Narci_DetailedStatFrame, 0.5, "IN");
+        FadeFrame(Narci_RadarChartFrame, 0.5, "IN");
+		FadeFrame(Narci_ConciseStatFrame, 0.5, "OUT");
+	else
+		frame1.AnimFrame:Hide();
+		frame2.AnimFrame:Hide();
+		frame1.AnimFrame:Show();
+		frame2.AnimFrame:Show();
+        FadeFrame(Narci_DetailedStatFrame, 0.5, "OUT");
+        FadeFrame(Narci_RadarChartFrame, 0.5, "OUT");
+		FadeFrame(Narci_ConciseStatFrame, 0.5, "IN");
+	end
 end
 
-function Narci_CameraOrbitSwitch_OnClick(self)
-    Settings.CameraOrbit = not Settings.CameraOrbit;
-    CameraOrbitSwitch_SetState(self)
-    if Settings.CameraOrbit then
-        MoveViewRightStart(0.005*180/GetCVar("cameraYawMoveSpeed"));
-    else
-        MoveViewRightStop();
-        MoveViewLeftStop();
-    end
-end
 
-local function CameraTransition_SetState(self)
-    local state = Settings.CameraTransition;
-    self.Tick:SetShown(state);
-    if state then
-        self.Description:SetText();
-    else
-        self.Description:SetText();
-    end
-end
-
-local function CameraSafeSwitch_SetState(self)
-    local state = Settings.CameraSafeMode;
-    if IsAddOnLoaded("DynamicCam") then
-        state = false;
-    end
-    Narci.keepActionCam = not state;
-    self.Tick:SetShown(state);
-end
-
-function Narci_CameraSafeSwitch_OnClick(self)
-    Settings.CameraSafeMode = not Settings.CameraSafeMode;
-    CameraSafeSwitch_SetState(self);
-end
-
-local function UnToggleElvUIAFK()
-    local E, L, V, P, G = unpack(ElvUI);
-    E.db.general.afk = false;
-    --local AFK = E:GetModule('AFK')
-    --AFK:Toggle()
-end
-
-local function AFKScreenSwitch_SetState(self)
-    local state = Settings.AFKScreen;
-    self.Tick:SetShown(state);
-    if state then
-        if IsAddOnLoaded("ElvUI") then
-            self.Description:SetText(NARCI_AFK_SCREEN_DESCRIPTION.." "..NARCI_AFK_SCREEN_DESCRIPTION_EXTRA);
-            UnToggleElvUIAFK();
-        else
-            self.Description:SetText(NARCI_AFK_SCREEN_DESCRIPTION);
-        end
-
-        FadeFrame(self:GetParent().AutoStand, 0.25, "Forced_IN");
-        self:GetParent().Gemma:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -124);
-    else
-        self.Description:SetText(NARCI_AFK_SCREEN_DESCRIPTION);
-
-        self:GetParent().AutoStand:Hide();
-        self:GetParent().Gemma:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -50);
-    end
-end
-
-function Narci_AFKScreenSwitch_OnClick(self)
-    Settings.AFKScreen = not Settings.AFKScreen;
-    AFKScreenSwitch_SetState(self);
-end
-
-local function AFKAutoStand_SetState(self)
-    self.Tick:SetShown(Settings.AFKAutoStand);
-end
-
-function Narci_AFKAutoStand_OnClick(self)
-    Settings.AFKAutoStand = not Settings.AFKAutoStand;
-    AFKAutoStand_SetState(self);
-end
-
-local function GemManagerSwitch_SetState(self)
-    local state = Settings.GemManager;
-    self.Tick:SetShown(state);
-end
-
-function Narci_GemManagerSwitch_OnClick(self)
-    Settings.GemManager = not Settings.GemManager;
-    GemManagerSwitch_SetState(self);
-end
-
-local function DressingRoomSwitch_SetState(self)
-    local state = Settings.DressingRoom;
-    self.Tick:SetShown(state);
-end
-
-function Narci_DressingRoomSwitch_OnClick(self)
-    Settings.DressingRoom = not Settings.DressingRoom;
-    DressingRoomSwitch_SetState(self);
-    self.Description:SetText(NARCI_DRESSING_ROOM_DESCRIPTION.."\n"..NARCI_REQUIRE_RELOAD);
-end
-
-local function MinimapButtonSwitch_SetState(self)
-    local state = Settings.ShowMinimapButton;
-    self.Tick:SetShown(state);
+--Shortcuts
+local function MinimapButtonSwitch_SetState(self, state)
     Narci_MinimapButton:SetShown(state);
     if state then
-        FadeFrame(self:GetParent().MinimapParentSwitch, 0.25, "Forced_IN");
-        FadeFrame(self:GetParent().FadeOutSwitch, 0.25, "Forced_IN");
+        for i = 1, #self.childButtons do
+            FadeFrame(self.childButtons[i], 0.25, "Forced_IN");
+        end
         Narci_MinimapButton:PlayBling();
     else
-        self:GetParent().MinimapParentSwitch:SetShown(state);
-        self:GetParent().FadeOutSwitch:SetShown(state);
+        for i = 1, #self.childButtons do
+            self.childButtons[i]:Hide();
+        end
     end
 end
 
-function Narci_MinimapButtonSwitch_OnClick(self)
-    Settings.ShowMinimapButton = not Settings.ShowMinimapButton;
-    MinimapButtonSwitch_SetState(self);
+local function MinimapButtonSwitch_OnShow(self)
+    local state = Settings.ShowMinimapButton;
+    if state then
+        for i = 1, #self.childButtons do
+            self.childButtons[i]:Show();
+            self.childButtons[i]:SetAlpha(1);
+        end
+    else
+        for i = 1, #self.childButtons do
+            self.childButtons[i]:Hide();
+        end
+    end
 end
 
-function Narci_MinimapButtonSwitch_OnShow(self)
-    MinimapButtonSwitch_SetState(self);
+local function ModulePanelSwitch_SetState(self, state)
+    Narci_MinimapButton.showPanelOnMouseOver = state;
+end
+
+local function MinimapButtonParentSwitch_SetState(self, state)
+    local MinimapButton = Narci_MinimapButton;
+    if state then
+        MinimapButton:ClearAllPoints();
+        MinimapButton:SetParent(Narci_MinimapButtonContainer);
+        MinimapButton:SetFrameLevel(62);
+        MinimapButton:SetFrameStrata("HIGH");
+    else
+        MinimapButton:SetParent(Minimap);
+        MinimapButton:SetFrameStrata("MEDIUM");
+        MinimapButton:SetFrameLevel(62);
+    end
+end
+
+local function FadeOutSwitch_SetState(self, state)
+    local button = Narci_MinimapButton;
+    if state then
+        button.EndAlpha = 0.2;
+        button:SetAlpha(0.2);
+    else
+        button.EndAlpha = 1;
+        button:SetAlpha(1);
+    end
 end
 
 local function DoubleTapSwitch_SetState(self)
@@ -371,9 +255,9 @@ function Narci_DoubleTapSwitch_OnClick(self)
     DoubleTapSwitch_SetState(self);
 end
 
-function Narci_DoubleTapSwitch_OnShow(self)
+local function DoubleTapSwitch_OnShow(self)
     local HotKey1, HotKey2 = GetBindingKey("TOGGLECHARACTER0");
-    local Text1 = ENABLE.." "..NARCI_DOUBLE_TAP;
+    local Text1 = L["Double Tap"];
     if HotKey1 then
         Text2 = "|cFFFFD100("..HotKey1..")|r";
         if HotKey2 then
@@ -385,6 +269,7 @@ function Narci_DoubleTapSwitch_OnShow(self)
     end
     self.Label:SetText(Text1);
 end
+
 
 local function ClearAllBinding()
     local key1, key2 = GetBindingKey(BIND_ACTION);
@@ -468,7 +353,7 @@ local function ExitKeyBinding(self)
     end
 end
 
-local function Narci_KeybindingButton_OnKeydown(self, key)
+local function PrimaryKeybindingButton_OnKeydown(self, key)
     if key == "ESCAPE" or key == "SPACE" or key == "ENTER"then
         ExitKeyBinding(self);
         return;
@@ -486,7 +371,7 @@ local function Narci_KeybindingButton_OnKeydown(self, key)
     end
 end
 
-function Narci_KeybindingButton_OnClick(self, button)
+local function PrimaryKeybindingButton_OnClick(self, button)
     if BindingAlertTimer then
         BindingAlertTimer:Cancel();
     end
@@ -513,7 +398,7 @@ function Narci_KeybindingButton_OnClick(self, button)
         self.Value:SetShadowColor(1, 1, 1);
         self.Value:SetShadowOffset(0.6, -0.6);
         self:SetPropagateKeyboardInput(false);
-        self:SetScript("OnKeyDown", Narci_KeybindingButton_OnKeydown);
+        self:SetScript("OnKeyDown", PrimaryKeybindingButton_OnKeydown);
         self:SetScript("OnKeyUp", function(self)
             ExitKeyBinding(self)
         end);
@@ -522,119 +407,661 @@ function Narci_KeybindingButton_OnClick(self, button)
     end
 end
 
-function Narci_KeybindingButton_OnShow(self)
-    OptimizeBorderThickness(self);
-    self.Value:SetText(GetBindingKey("CLICK Narci_MinimapButton:LeftButton") or NOT_BOUND);
-    self.action = BIND_ACTION;
+local function PrimaryKeybindingButton_OnShow(self)
+    self.Value:SetText(GetBindingKey(BIND_ACTION) or NOT_BOUND);
 end
 
-local function Narci_Pref_SetItemNameTextWidth(width)
-    local slotTable = Narci_Character.slotTable;
-    if not (slotTable and Settings) then
-        return;
-    end
-
-    local Width = tonumber(width) or 200;
-    Settings.ItemNameWidth = Width;
-
-    if Width == 200 then
-        Width = 1208;
-    end
-    
-    local slot;
-    for i=1, #slotTable do
-        slot = slotTable[i];
-        if slot then
-            slot.Name:SetWidth(Width);
-            slot.ItemLevel:SetWidth(Width);
-            slot.GradientBackground:SetHeight(slot.Name:GetHeight() + slot.ItemLevel:GetHeight() + 18);
-        end
+local function SetUseEcapeButtonForExit(self, state)
+    if state then
+        Narci_PhotoModeController.KeyListener.EscapeKey = "ESCAPE";
+        self.Description:SetText(L["Use Escape Button Description1"]);
+    else
+        Narci_PhotoModeController.KeyListener.EscapeKey = "HELLOWORLD";
+        self.Description:SetText(L["Use Escape Button Description2"]);
     end
 end
 
-function Narci_ItemNameWidthSlider_OnValueChanged(self, value, userInput)
-    self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
-    if value ~= self.oldValue then
-        local _, maxValue = self:GetMinMaxValues();
-        self.oldValue = value
-        if value < maxValue then
-            self.KeyLabel:SetText(value)
-            Narci_Pref_SetItemNameTextWidth(value)
+
+--Themes
+local function BorderThemeButton_OnClick(self, theme)
+    if theme == "Bright" then
+        self:GetParent().Preview:SetTexCoord(0.5, 1, 0, 1);
+        if Settings.BorderTheme ~= "Bright" then
+            Settings.BorderTheme = "Bright";
         else
-            self.KeyLabel:SetText(UNLIMITED)
-            Narci_Pref_SetItemNameTextWidth(200)
+            return;
+        end
+    elseif theme == "Dark" then
+        self:GetParent().Preview:SetTexCoord(0, 0.5, 0, 1);
+        if Settings.BorderTheme ~= "Dark" then
+            Settings.BorderTheme = "Dark";
+        else
+            return;
+        end
+    end
+    Narci_SetActiveBorderTexture();
+end
+
+local function TooltipThemeButton_OnClick(self, theme)
+    if theme == "Bright" then
+        self:GetParent().Preview2:SetTexCoord(0, 1, 0.5, 1);
+        if Settings.TooltipTheme ~= "Bright" or not self.isInitialized then
+            self.isInitialized = true;
+            Settings.TooltipTheme = "Bright";
+        else
+            return;
+        end
+        NarciTooltip:SetColorTheme(1);
+    elseif theme == "Dark" then
+        self:GetParent().Preview2:SetTexCoord(0, 1, 0, 0.5);
+        if Settings.TooltipTheme ~= "Dark" or not self.isInitialized then
+            self.isInitialized = true;
+            Settings.TooltipTheme = "Dark";
+        else
+            return;
+        end
+        NarciTooltip:SetColorTheme(0);
+    end
+end
+
+
+--Effects
+local function VignetteStrengthSlider_OnValueChanged(self, value)
+    value = floor( value * 10 + 0.5) / 10;
+    Settings[self.dbKey] = value;
+    self.KeyLabel:SetText(string.format("%.1f", value));
+    Narci_Pref_SetVignetteStrength();
+end
+
+local function GrainEffectSwitch_SetState(self, state)
+	--FullScreenFilterGrain:SetShown(state);
+    --FullScreenFilterGrain2:SetShown(state);
+    if state then
+        FadeFrame(FullScreenFilterGrain, 0.5, "IN");
+        FadeFrame(FullScreenFilterGrain2, 0.5, "IN");
+    else
+		FadeFrame(FullScreenFilterGrain, 0.5, "OUT");
+		FadeFrame(FullScreenFilterGrain2, 0.5, "OUT");
+    end
+end
+
+local function WeatherSwitch_SetState(self, state)
+    if state then
+        Narci_SnowEffect(true);
+    else
+        Narci_SnowEffect(false);
+    end
+end
+
+function Narci_WeatherEffectSwitch_OnClick(self)
+	Settings.WeatherEffect = not Settings.WeatherEffect;
+    WeatherSwitch_SetState(self);
+    if Settings.WeatherEffect then
+        Narci_SnowEffect(true);
+    else
+        Narci_SnowEffect(false);
+    end
+end
+
+local function LetterboxEffectSwitch_OnShow()
+    if Settings.LetterboxEffect then
+        Narci_LetterboxRatioSlider:Show();
+        Narci_LetterboxRatioSlider:SetAlpha(1);
+    else
+        Narci_LetterboxRatioSlider:Hide();
+    end
+end
+
+local function LetterboxEffectSwitch_SetState(self, state)
+    if state then
+        if Narci_LetterboxRatioSlider then
+            FadeFrame(Narci_LetterboxRatioSlider, 0.25, "Forced_IN");
+        end
+        if self:IsVisible() then
+            Narci_LetterboxAnimation();
+        end
+    else
+        if Narci_LetterboxRatioSlider then
+            Narci_LetterboxRatioSlider:SetShown(state);
+        end
+        if self:IsVisible() then
+            Narci_LetterboxAnimation("OUT");
+        end
+    end
+    SetLetterboxEffectAlert();
+    self.Description:SetShown(state);
+end
+
+local function LetterboxRatioSlider_OnValueChanged(self, value)
+    local effectiveValue;
+    if value > 2.34 then
+        effectiveValue = 2.35;
+    elseif value > 1.9 then
+        effectiveValue = 2;
+    else
+        effectiveValue = 2.35;
+    end
+
+    Settings.LetterboxRatio = effectiveValue;
+    self.KeyLabel:Hide();
+    self.KeyLabel2:Show();
+    self.KeyLabel2:SetText(effectiveValue.." : 1");
+    
+    SetLetterboxEffectAlert();
+    if not Narci_ScreenMask_Initialize() then
+        Narci_LetterboxToggle.Description:SetText(L["Letterbox Alert1"]);
+        Narci_LetterboxToggle:Show();
+    end
+end
+
+local function SmoothMusicVolume(state)
+    Narci_MusicInOut:Hide()
+    Narci_MusicInOut.State = state;
+    Narci_MusicInOut:Show()
+end
+
+local function FadeMusicSwitch_SetState(self, state)
+    if self:IsVisible() then
+        SmoothMusicVolume(state);
+    end
+end
+
+
+--Camera
+local function CameraTransitionSwitch_SetState(self, state)
+    Narci.CameraContainer:SetBlend(state);
+    if state then
+        self.Description:SetText(L["Camera Transition Description On"]);
+    else
+        self.Description:SetText(L["Camera Transition Description Off"]);
+    end
+end
+
+local function CameraOrbitSwitch_SetState(self, state)
+    if state then
+        self.Description:SetText(L["Orbit Camera Description On"]);
+    else
+        self.Description:SetText(L["Orbit Camera Description Off"]);
+    end
+
+    if self:IsVisible() then
+        if Settings.CameraOrbit then
+            MoveViewRightStart(0.005*180/GetCVar("cameraYawMoveSpeed"));
+        else
+            MoveViewRightStop();
+            MoveViewLeftStop();
         end
     end
 end
 
-local function Narci_Pref_SetItemNameTextTruncated(state)
-    local slotTable = Narci_Character.slotTable;
-    if (not slotTable) then
-        return;
+
+local function CameraSafeSwitch_SetState(self, state)
+    local state = Settings.CameraSafeMode;
+    if IsAddOnLoaded("DynamicCam") then
+        state = false;
+    end
+    Narci.keepActionCam = not state;
+end
+
+local function CameraSafeSwitch_OnShow(self)
+    if IsAddOnLoaded("DynamicCam") then
+        self.Description:SetText(L["Camera Safe Mode Description"].."\n".. L["Camera Safe Mode Description Extra"]);
+        self.Tick:Hide();
+        self:Disable();
+    else
+        self.Description:SetText(L["Camera Safe Mode Description"]);
+    end
+    self:SetScript("OnShow", nil);
+end
+
+local function BustShotSwitch_SetState(self, state)
+    Narci:InitializeCameraFactors();
+    if state then
+        self:GetParent().Preview:SetTexCoord(0, 0.5, 0, 0.75);
+    else
+        self:GetParent().Preview:SetTexCoord(0.5, 1, 0, 0.75);
+    end
+end
+
+
+--Transmog
+local function LayoutButtonButton_SetState(self, id)
+    if id == 1 then
+        self:GetParent().Preview:SetTexCoord(0, 0.4443359375, 0, 0.5);
+    elseif id == 2 then
+        self:GetParent().Preview:SetTexCoord(0, 0.4443359375, 0.5, 1);
+    elseif id == 3 then
+        self:GetParent().Preview:SetTexCoord(0.5556640625, 1, 0, 0.5);
+    end
+end
+
+local function AlwaysShowModelSwitch_SetState(self, state)
+    local xmogButton = Narci_AlwaysShowModelButton;
+    if xmogButton then
+        xmogButton.IsOn = state;
+        xmogButton.Tick:SetShown(state);
+    end
+end
+
+local function EntranceVisualSwitch_SetState(self, state)
+    Narci:SetUseEntranceVisual();
+end
+
+
+--Photo Mode
+local function SceenshotQualitySlider_OnValueChanged(self, value, userInput)
+    value = floor(value * 10 + 0.5) / 10;
+    self.KeyLabel:SetText(value);
+    if userInput then
+        SetCVar("screenshotQuality", value);
+    end
+end
+
+local function ModelPanelScaleSlider_OnValueChanged(self, value, userInput)
+    value = floor(value * 10 + 0.5) / 10;
+    self.KeyLabel:SetText(string.format("%.1f", value));
+    Narci_ModelSettings:SetScale(value);
+    Settings.ModelPanelScale = value;
+end
+
+local function InteractiveAreaSlider_OnLoad(self)
+    local function OnValueChanged(self, value)
+        self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
+        if value ~= self.oldValue then
+            self.oldValue = value;
+            value = floor(value);
+            Narci:ShrinkModelHitRect(value);
+            Settings.ShrinkArea = value;
+            if value > 0 then
+                value = -value;
+            end
+            self.KeyLabel:SetText(value);
+
+            local frame = Narci_ModelInteractiveArea;
+            frame.InOut:Stop();
+            frame.InOut:Play();
+            frame:Show();
+        end
     end
 
-    local State = state or false;
-    local MaxLines =2;
-    if State then
-        MaxLines = 1;
+    local W = floor( (WorldFrame:GetWidth()) *(1/3 - 1/8) + 0.5);
+    self:SetMinMaxValues(0, W);
+    self:SetValueStep(W/8);
+    self.Label:SetText(L["Interactive Area"]);
+    self:SetScript("OnValueChanged", OnValueChanged);
+    NarciAPI_SliderWithSteps_OnLoad(self);
+    self:SetValue(Settings.ShrinkArea);
+    Narci_ModelInteractiveArea:Hide();
+end
+
+local Structure = {
+    {Category = "Interface", localizedName = L["Interface"], layout = {
+        { name = "uiScale", type = "header", localizedName = UI_SCALE, },
+        { name = "GlobalScale", type = "slider", localizedName = ALL, minValue = 0.7, maxValue = 1, valueStep = 0.1, valueFunc = GlobalScaleSlider_OnValueChanged},
+        { name = "ItemNames", type = "header", localizedName = ITEM_NAMES, },
+        { name = "FontHeightItemName", type = "slider", localizedName = FONT_SIZE, minValue = 10, maxValue = 12, valueStep = 1, valueFunc = SetItemNameTextSize},
+        { name = "ItemNameWidth", type = "slider", localizedName = L["Text Width"], minValue = 100, maxValue = 200, valueStep = 20, valueFunc = ItemNameWidthSlider_OnValueChanged},
+        { name = "TruncateText", type = "checkbox", localizedName = L["Truncate Text"], valueFunc = SetItemNameTextTruncated},
+        { name = "StatSheet", type = "header", localizedName = L["Stat Sheet"], },
+        { name = "DetailedIlvlInfo", type = "checkbox", localizedName = L["Show Detailed Stats"], valueFunc = ShowDetailedIlvlInfo},
+    }},
+
+    {Category = "Shortcuts", localizedName = L["Shortcuts"], layout = {
+        { name = "MinimapButton", type = "header", localizedName = L["Minimap Button"], },
+        { name = "ShowMinimapButton", type = "checkbox", localizedName = ENABLE, valueFunc = MinimapButtonSwitch_SetState, onShowFunc = MinimapButtonSwitch_OnShow, parentButton = true, },
+        { name = "ShowModulePanelOnMouseOver", type = "checkbox", localizedName = NARCI_NEW_ENTRY_PREFIX..L["Show Module Panel Gesture"], valueFunc = ModulePanelSwitch_SetState, childButton = true,},
+        { name = "IndependentMinimapButton", type = "checkbox", localizedName = L["Independent Minimap Button"], valueFunc = MinimapButtonParentSwitch_SetState, childButton = true, },
+        { name = "FadeButton", type = "checkbox", localizedName = L["Fade Out"], description = L["Fade Out Description"], valueFunc = FadeOutSwitch_SetState, childButton = true, },
+        { name = "Space", type = "space", height = -16},
+        { name = "HotkeyHeader", type = "header", localizedName = L["Hotkey"], },
+        { name = "EnableDoubleTap", type = "checkbox", localizedName = L["Double Tap"], description = L["Double Tap Description"], onShowFunc = DoubleTapSwitch_OnShow},
+        { name = "HotkeyButton", type = "keybinding", localizedName = KEY_BINDING, onClickFunc = PrimaryKeybindingButton_OnClick, onShowFunc = PrimaryKeybindingButton_OnShow},
+        { name = "UseEscapeButton", type = "checkbox", localizedName = L["Use Escape Button"], description = L["Use Escape Button Description1"], valueFunc = SetUseEcapeButtonForExit},
+    }},
+
+    {Category = "Themes", localizedName = L["Themes"], layout = {
+        { name = "BorderThemeHeader", type = "header", localizedName = L["Border Theme Header"], },
+        { name = "BorderTheme", type = "radio", localizedName = L["Border Theme Bright"], valueFunc = BorderThemeButton_OnClick, optionValue = "Bright", groupIndex = 1 },
+        { name = "BorderTheme", type = "radio", localizedName = L["Border Theme Dark"], valueFunc = BorderThemeButton_OnClick, optionValue = "Dark", groupIndex = 1 },
+        { name = "Space", type = "space", height = 20},
+        { name = "TooltipThemeHeader", type = "header", localizedName = L["Tooltip Color"], },
+        { name = "TooltipTheme", type = "radio", localizedName = L["Border Theme Bright"], valueFunc = TooltipThemeButton_OnClick, optionValue = "Bright", groupIndex = 2 },
+        { name = "TooltipTheme", type = "radio", localizedName = L["Border Theme Dark"], valueFunc = TooltipThemeButton_OnClick, optionValue = "Dark", groupIndex = 2 },
+    }},
+
+    {Category = "Effects", localizedName = L["Effects"], layout = {
+        { name = "FilterHeader", type = "header", localizedName = L["Image Filter"], },
+        { name = "VignetteStrength", type = "slider", localizedName = L["Vignette Strength"], minValue = 0, maxValue = 1, valueStep = 0.1, valueFunc = VignetteStrengthSlider_OnValueChanged },
+        { name = "FilterDescription", type = "subheader", localizedName = L["Image Filter Description"], },
+        { name = "EnableGrainEffect", type = "checkbox", localizedName = L["Grain Effect"], valueFunc = GrainEffectSwitch_SetState },
+        { name = "WeatherEffect", type = "checkbox", localizedName = L["Weather Effect"], valueFunc = WeatherSwitch_SetState },
+        { name = "LetterboxEffect", type = "checkbox", localizedName = L["Letterbox"], description = " ", globalName = "Narci_LetterboxToggle", valueFunc = LetterboxEffectSwitch_SetState, onShowFunc = LetterboxEffectSwitch_OnShow },
+        { name = "LetterboxRatio", type = "slider", localizedName = L["Letterbox Ratio"], globalName = "Narci_LetterboxRatioSlider", offsetX = 80, offsetY = 40, width = 40, minValue = 2.0, maxValue = 2.350, valueStep = 2, valueFunc = LetterboxRatioSlider_OnValueChanged },
+        { name = "SoundHeader", type = "header", localizedName = SOUND, },
+        { name = "FadeMusic", type = "checkbox", localizedName = L["Fade Music"], valueFunc = FadeMusicSwitch_SetState },
+    }},
+
+    {Category = "Camera", localizedName = L["Camera"], layout = {
+        { name = "CameraMovementHeader", type = "header", localizedName = L["Camera Movement"], },
+        { name = "CameraTransition", type = "checkbox", localizedName = NARCI_NEW_ENTRY_PREFIX..L["Camera Transition"], description = L["Camera Transition Description Off"], valueFunc = CameraTransitionSwitch_SetState },
+        { name = "CameraOrbit", type = "checkbox", localizedName = L["Orbit Camera"], description = L["Orbit Camera Description On"], valueFunc = CameraOrbitSwitch_SetState },
+        { name = "CameraSafeMode", type = "checkbox", localizedName = L["Camera Safe Mode"], description = "\n\n", valueFunc = CameraSafeSwitch_SetState, onShowFunc = CameraSafeSwitch_OnShow, },
+        { name = "UseBustShot", type = "checkbox", localizedName = L["Use Bust Shot"], valueFunc = BustShotSwitch_SetState },
+    }},
+
+    {Category = "Transmog", localizedName = L["Transmog"], layout = {
+        { name = "CameraMovementHeader", type = "header", localizedName = L["Default Layout"], },
+        { name = "DefaultLayout", type = "radio", localizedName = L["Transmog Layout1"], valueFunc = LayoutButtonButton_SetState, optionValue = 1, groupIndex = 1 },
+        { name = "DefaultLayout", type = "radio", localizedName = L["Transmog Layout2"], valueFunc = LayoutButtonButton_SetState, optionValue = 2, groupIndex = 1 },
+        { name = "DefaultLayout", type = "radio", localizedName = L["Transmog Layout3"], valueFunc = LayoutButtonButton_SetState, optionValue = 3, groupIndex = 1 },
+        { name = "ModelHeader", type = "header", localizedName = L["3D Model"], },
+        { name = "AlwaysShowModel", type = "checkbox", localizedName = L["Always Show Model"], globalName = "Narci_AlwaysShowModelToggle", valueFunc = AlwaysShowModelSwitch_SetState },
+        { name = "UseEntranceVisual", type = "checkbox", localizedName = L["Entrance Visual"], description = L["Entrance Visual Description"], valueFunc = EntranceVisualSwitch_SetState },
+    }},
+
+    {Category = "PhotoMode", localizedName = L["Photo Mode"], layout = {
+        { name = "CameraMovementHeader", type = "header", localizedName = L["General"], },
+        { name = "screenshotQuality", type = "slider", localizedName = L["Sceenshot Quality"], isCVar = true, minValue = 1, maxValue = 10, valueStep = 1, valueFunc = SceenshotQualitySlider_OnValueChanged },
+        { name = "QualityDescription", type = "subheader", localizedName = L["Screenshot Quality Description"], },
+        { name = "Space", type = "space", height = 32},
+        { name = "ModelPanelScale", type = "slider", localizedName = L["Panel Scale"], minValue = 0.8, maxValue = 1, valueStep = 0.10, valueFunc = ModelPanelScaleSlider_OnValueChanged },
+        { name = "ShrinkArea", type = "slider", localizedName = L["Interactive Area"], onLoadFunc = InteractiveAreaSlider_OnLoad },
+    }},
+};
+
+local function CreateSettingFrame(tabContainer)
+    local PADDING_LEFT = 16;
+    local PADDING_CHECKBOX = 34;
+    local PADDING_SLIDER = 112;
+    for i = 1, #Structure do
+        local tab = tabContainer["Tab"..i];
+        if not tab then return end;
+
+        local category = Structure[i];
+        local layout = category.layout;
+        local tabHeight = 0;
+        local parentButton;
+        for j = 1, #layout do
+            local data = layout[j];
+            local type = data.type;
+            local widget;
+            --print(data.name)
+            local globalName = data.globalName;
+            if type == "header" then
+                tabHeight = tabHeight + 16;
+                widget = tab:CreateFontString(globalName, "OVERLAY", "NarciPrefFontGrey9");
+                widget:SetPoint("TOPLEFT", tab, "TOPLEFT", PADDING_LEFT, -tabHeight);
+                widget:SetText(data.localizedName);
+                tabHeight = tabHeight + 24;
+
+            elseif type == "subheader" then
+                widget = tab:CreateFontString(globalName, "OVERLAY", "NarciPrefFontGreyThin9");
+                widget:SetPoint("TOPLEFT", tab, "TOPLEFT", PADDING_CHECKBOX, -tabHeight);
+                widget:SetText(data.localizedName);
+                widget:SetWidth(280);
+                tabHeight = tabHeight + 24;
+
+            elseif type == "slider" then
+                widget = CreateFrame("Slider", globalName, tab, "NarciPreferenceHorizontalSliderTemplate");
+                local offsetY = (data.offsetY or 0);
+                widget:SetPoint("TOPLEFT", tab, "TOPLEFT", PADDING_SLIDER + (data.offsetX or 0), -tabHeight + offsetY);
+                if data.width then
+                    widget:SetWidth(data.width);
+                end
+                if data.onLoadFunc then
+                    data.onLoadFunc(widget);
+                else
+                    widget:SetUp(data.localizedName, data.minValue, data.maxValue, data.valueStep, data.name, data.valueFunc, data.isCVar);
+                end
+                tabHeight = tabHeight + 36 - offsetY;
+
+            elseif type == "checkbox" then
+                widget = CreateFrame("Button", globalName, tab, "NarciPreferenceCheckBoxTemplate");
+                widget:SetPoint("TOPLEFT", tab, "TOPLEFT", PADDING_CHECKBOX, -tabHeight);
+                if data.parentButton then
+                    parentButton = widget;
+                    widget.childButtons = {};
+                elseif data.childButton then
+                    widget:SetPoint("TOPLEFT", tab, "TOPLEFT", PADDING_CHECKBOX + 18, -tabHeight);
+                    if parentButton then
+                        tinsert(parentButton.childButtons, widget);
+                    end
+                end
+                if data.onShowFunc then
+                    widget:SetScript("OnShow", data.onShowFunc);
+                end
+                local extraHeight = widget:SetUp(data.localizedName, data.description, data.name, data.valueFunc);
+                tabHeight = tabHeight + extraHeight + 24;
+
+            elseif type == "radio" then
+                widget = CreateFrame("Button", globalName, tab, "NarciPreferenceRadioButtonTemplate");
+                widget:SetPoint("TOPLEFT", tab, "TOPLEFT", PADDING_CHECKBOX, -tabHeight);
+                local extraHeight = widget:SetUp(data.localizedName, data.description, data.name, data.optionValue, data.valueFunc, data.groupIndex);
+                tabHeight = tabHeight + extraHeight + 24;
+
+            elseif type == "keybinding" then
+                widget = CreateFrame("Button", globalName, tab, "NarciBindingButtonTemplate");
+                tabHeight = tabHeight + 6;
+                widget:SetPoint("TOPLEFT", tab, "TOPLEFT", 168, -tabHeight);
+                widget:SetScript("OnClick", data.onClickFunc);
+                widget:SetScript("OnShow", data.onShowFunc);
+                widget.Label:SetText(data.localizedName);
+                OptimizeBorderThickness(widget);
+                tabHeight = tabHeight + 36;
+                
+            elseif type == "space" then
+                tabHeight = tabHeight + (data.height or 0);
+            end
+        end
+    end
+
+    --wipe(Structure)
+end
+
+
+
+--GetBindingText("U", "KEY_")
+--command name = GetBindingAction("U")
+--GetBindingName(GetBindingAction("U"))
+
+
+NarciPreferenceSliderMixin = {};
+
+
+function NarciPreferenceSliderMixin:SetUp(labelText, minValue, maxValue, valueStep, dbKey, valueFunc, isCVar)
+    self.Label:SetText(labelText);
+    self.valueFunc = valueFunc;
+    self.dbKey = dbKey;
+    if minValue and maxValue and valueStep then
+        self:SetMinMaxValues(minValue, maxValue);
+        self:SetValueStep(valueStep);
+        NarciAPI_SliderWithSteps_OnLoad(self);  --Draw Markers
+        OptimizeBorderThickness(self);
+    end
+    if valueFunc then
+        if isCVar then
+            self:SetValue(GetCVar(dbKey) or 0);
+            self:SetScript("OnShow", function()
+                self:SetValue(GetCVar(dbKey) or 0);
+            end)
+        else
+            self:SetValue(Settings[dbKey]);
+        end
+    end
+end
+
+function NarciPreferenceSliderMixin:OnValueChanged(value, userInput)
+    self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0);
+    if value ~= self.oldValue then
+        self.oldValue = value;
+        if self.valueFunc then
+            --Change setting value in this function
+            self.valueFunc(self, value, userInput);
+        end
+    end
+end
+
+NarciPreferenceCheckBoxMixin = {};
+
+function NarciPreferenceCheckBoxMixin:SetUp(labelText, description, dbKey, valueFunc)
+    self.Label:SetText(labelText);
+    self.valueFunc = valueFunc;
+    self.dbKey = dbKey;
+    local state =  Settings[dbKey];
+    self.Tick:SetShown(state);
+    local textWidth = math.max(floor(self.Label:GetWidth() + 0.5) + 16, 80);
+    local textHeight = floor(self.Label:GetHeight() + 0.5);
+    self:SetSize(textWidth, textHeight);
+
+    local extraHeight = 0;
+    if description then
+        self.Description = self:CreateFontString(nil, "OVERLAY", "NarciPreferenceDescriptionTemplate");
+        self.Description:SetText(description);
+        extraHeight = extraHeight + self.Description:GetHeight() + 8;
+    end
+    if valueFunc then
+        valueFunc(self, state);
+    end
+
+    return extraHeight
+end
+
+function NarciPreferenceCheckBoxMixin:OnClick()
+    local state = not Settings[self.dbKey];
+    Settings[self.dbKey] = state;
+    self.Tick:SetShown(state);
+    if self.valueFunc then
+        self.valueFunc(self, state);
+    end
+end
+
+NarciPreferenceRadioButtonMixin = {};
+
+function NarciPreferenceRadioButtonMixin:SetUp(labelText, description, dbKey, optionValue, valueFunc, groupIndex)
+    self.Label:SetText(labelText);
+    self.valueFunc = valueFunc;
+    self.dbKey = dbKey;
+    self.optionValue = optionValue;
+    local textWidth = math.max(floor(self.Label:GetWidth() + 0.5) + 16, 80);
+    local textHeight = floor(self.Label:GetHeight() + 0.5);
+    self:SetSize(textWidth, textHeight);
+
+    if groupIndex then
+        self.groupIndex = groupIndex;
+        local parent = self:GetParent();
+        if not parent.buttonGroups then
+            parent.buttonGroups = {};
+        end
+        if not parent.buttonGroups[groupIndex] then
+            parent.buttonGroups[groupIndex] = {};
+        end
+        tinsert(parent.buttonGroups[groupIndex], self);
+    end
+    local extraHeight = textHeight - 14;
+    if description then
+        self.Description = self:CreateFontString(nil, "OVERLAY", "NarciPreferenceDescriptionTemplate");
+        self.Description:SetText(description);
+        extraHeight = extraHeight + self.Description:GetHeight();
+        
+    end
+    if valueFunc then
+        if optionValue == Settings[dbKey] then
+            self:Click();
+        end
     end
     
-    local slot;
-    for i=1, #slotTable do
-        slot = slotTable[i];
-        if slot then
-            slot.Name:SetMaxLines(MaxLines);
-            slot.ItemLevel:SetMaxLines(MaxLines);
-            slot.Name:SetWidth(slot.Name:GetWidth()+1)
-            slot.Name:SetWidth(slot.Name:GetWidth()-1)
-            slot.ItemLevel:SetWidth(slot.Name:GetWidth()+1)
-            slot.ItemLevel:SetWidth(slot.Name:GetWidth()-1)
-            slot.GradientBackground:SetHeight(slot.Name:GetHeight() + slot.ItemLevel:GetHeight() + 18);
-        end
+    return extraHeight
+end
+
+function NarciPreferenceRadioButtonMixin:OnClick()
+    if self.valueFunc then
+        self.valueFunc(self, self.optionValue);
     end
-end
-
-local function TruncateSwitch_SetState(self)
-    local state = Settings.TruncateText;
-    Narci_Pref_SetItemNameTextTruncated(state)   
-	self.Tick:SetShown(state);
-end
-
-function Narci_TruncateSwitch_OnClick(self)
-	Settings.TruncateText = not Settings.TruncateText;
-	TruncateSwitch_SetState(self)
-end
-
-local function ExitConfirmSwitch_SetState(self)
-    local state = Settings.UseExitConfirmation;
-    if not state then
-        if Narci.showExitConfirm then
-            Narci.showExitConfirm = false;
-        end
+    Settings[self.dbKey] = self.optionValue;
+    local buttonGroup = self:GetParent().buttonGroups[self.groupIndex];
+    for i = 1, #buttonGroup do
+        buttonGroup[i].Tick:Hide();
     end
-	self.Tick:SetShown(state);
+    self.Tick:Show();
 end
 
-function Narci_ExitConfirmSwitch_OnClick(self)
-    Settings.UseExitConfirmation = not Settings.UseExitConfirmation;
-    ExitConfirmSwitch_SetState(self)
+
+
+
+
+
+
+
+local function UnToggleElvUIAFK()
+    local E, L, V, P, G = unpack(ElvUI);
+    E.db.general.afk = false;
+    --local AFK = E:GetModule('AFK')
+    --AFK:Toggle()
 end
 
-local function BustShotSwitch_SetState(self)
-    local state = Settings.UseBustShot;
+local function AFKScreenSwitch_SetState(self)
+    local state = Settings.AFKScreen;
     self.Tick:SetShown(state);
     if state then
-        self.Preview:SetTexCoord(0, 0.5, 0, 0.75);
+        if IsAddOnLoaded("ElvUI") then
+            self.Description:SetText(L["AFK Screen Description Extra"].." "..L["AFK Screen Description Extra"]);
+            UnToggleElvUIAFK();
+        else
+            self.Description:SetText(L["AFK Screen Description"]);
+        end
+
+        FadeFrame(self:GetParent().AutoStand, 0.25, "Forced_IN");
+        self:GetParent().Gemma:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -90);
     else
-        self.Preview:SetTexCoord(0.5, 1, 0, 0.75);
+        self.Description:SetText(L["AFK Screen Description"]);
+
+        self:GetParent().AutoStand:Hide();
+        self:GetParent().Gemma:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -50);
     end
 end
 
-function Narci_BustShotSwitch_OnClick(self)
-    Settings.UseBustShot = not Settings.UseBustShot;
-    BustShotSwitch_SetState(self);
-    Narci:InitializeCameraFactors();
+function Narci_AFKScreenSwitch_OnClick(self)
+    Settings.AFKScreen = not Settings.AFKScreen;
+    AFKScreenSwitch_SetState(self);
 end
+
+local function AFKAutoStand_SetState(self)
+    self.Tick:SetShown(Settings.AFKAutoStand);
+end
+
+function Narci_AFKAutoStand_OnClick(self)
+    Settings.AFKAutoStand = not Settings.AFKAutoStand;
+    AFKAutoStand_SetState(self);
+end
+
+local function GemManagerSwitch_SetState(self)
+    local state = Settings.GemManager;
+    self.Tick:SetShown(state);
+end
+
+function Narci_GemManagerSwitch_OnClick(self)
+    Settings.GemManager = not Settings.GemManager;
+    GemManagerSwitch_SetState(self);
+end
+
+local function DressingRoomSwitch_SetState(self)
+    local state = Settings.DressingRoom;
+    self.Tick:SetShown(state);
+end
+
+function Narci_DressingRoomSwitch_OnClick(self)
+    Settings.DressingRoom = not Settings.DressingRoom;
+    DressingRoomSwitch_SetState(self);
+    self.Description:SetText(NARCI_DRESSING_ROOM_DESCRIPTION.."\n"..NARCI_REQUIRE_RELOAD);
+end
+
+
+
+
+
+
+
+
 
 local function RestoreClickFunc()
     local button = Narci_MinimapButton;
@@ -649,243 +1076,13 @@ local function RestoreClickFunc()
     button:EnableMouse(true);
 end
 
-local function FadeOutSwitch_SetState(self)
-    local state = Settings.FadeButton;
-    local button = Narci_MinimapButton;
-    self.Tick:SetShown(state);
-    if state then
-        button.EndAlpha = 0.2;
-        button:SetAlpha(0.2);
-    else
-        button.EndAlpha = 1;
-        button:SetAlpha(1);
-    end
-end
+
 
 function Narci_FadeOutSwitch_OnClick(self)
 	Settings.FadeButton = not Settings.FadeButton;
 	FadeOutSwitch_SetState(self);
 end
 
-function Narci_PreferenceButton_OnClick(self)
-    local state = not Narci_Preference:IsShown();
-    if state then
-        FadeFrame(Narci_Preference, 0.2, "IN");
-    else
-        FadeFrame(Narci_Preference, 0.2, "OUT");
-    end
-end
-
-local function ShowSelfTick(self)
-    local buttons = self:GetParent().buttons
-    for i=1, #buttons do
-        buttons[i].Tick:Hide();
-    end
-    self.Tick:Show();
-end
-
-function Narci_BorderThemeButton_OnClick(self)
-    local id = self:GetID();
-    if id == 1 then
-        if Settings.BorderTheme ~= "Bright" then
-            Settings.BorderTheme = "Bright";
-        else
-            return;
-        end
-        self:GetParent().Preview:SetTexCoord(0.5, 1, 0, 1);
-    elseif id == 2 then
-        if Settings.BorderTheme ~= "Dark" then
-            Settings.BorderTheme = "Dark";
-        else
-            return;
-        end
-        self:GetParent().Preview:SetTexCoord(0, 0.5, 0, 1);
-    end
-    ShowSelfTick(self);
-    Narci_SetActiveBorderTexture();
-end
-
-local function SetBorderThemeState()
-    local theme = Settings.BorderTheme;
-    if theme == "Bright" then
-        NarciPref_Themes.Theme1.Tick:Show();
-        NarciPref_Themes.Preview:SetTexCoord(0.5, 1, 0, 1);
-    elseif theme == "Dark" then
-        NarciPref_Themes.Theme2.Tick:Show();
-        NarciPref_Themes.Preview:SetTexCoord(0, 0.5, 0, 1);
-    end
-end
-
-function Narci_TooltipThemeButton_OnClick(self)
-    local id = self:GetID();
-    if id == 1 then
-        if Settings.TooltipTheme ~= "Bright" then
-            Settings.TooltipTheme = "Bright";
-        else
-            return;
-        end
-        self:GetParent().Tooltip2.Tick:Hide();
-        self:GetParent().Preview2:SetTexCoord(0, 1, 0.5, 1);
-        NarciTooltip:SetColorTheme(1);
-    elseif id == 2 then
-        if Settings.TooltipTheme ~= "Dark" then
-            Settings.TooltipTheme = "Dark";
-        else
-            return;
-        end
-        self:GetParent().Tooltip1.Tick:Hide();
-        self:GetParent().Preview2:SetTexCoord(0, 1, 0, 0.5);
-        NarciTooltip:SetColorTheme(0);
-    end
-    self.Tick:Show();
-end
-
-local function SetTooltipThemeState()
-    local theme = Settings.TooltipTheme;
-    if theme == "Bright" then
-        NarciPref_Themes.Tooltip1.Tick:Show();
-        NarciPref_Themes.Preview2:SetTexCoord(0, 1, 0.5, 1);
-        NarciTooltip:SetColorTheme(1);
-    elseif theme == "Dark" then
-        NarciPref_Themes.Tooltip2.Tick:Show();
-        NarciPref_Themes.Preview2:SetTexCoord(0, 1, 0, 0.5);
-        NarciTooltip:SetColorTheme(0);
-    end
-end
-
-local SetVignetteStrength = Narci_Pref_SetVignetteStrength;
-function Narci_VignetteStrengthSlider_OnValueChanged(self, value, userInput)
-    self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
-    if value ~= self.oldValue then
-        self.oldValue = value
-        self.KeyLabel:SetText(string.format("%.1f", floor(value*10 +0.5)/10))
-        Settings.VignetteStrength = value;
-        SetVignetteStrength()
-    end
-end
-
-local function SetFullBodySwitchState(self)
-    local state = Settings.ShowFullBody;
-    self.Tick:SetShown(state);
-    if state then
-        self:GetParent().Preview2:SetTexCoord(0, 0.5, 0, 1);
-    else
-        self:GetParent().Preview2:SetTexCoord(0.5, 1, 0, 1);
-    end
-end
-
-function Narci_FullBodySwitch_OnClick(self)
-    Settings.ShowFullBody = not Settings.ShowFullBody;
-    SetFullBodySwitchState(self)
-end
-
-local function AlwaysShowModelSwitch_SetState(self)
-    local state = Settings.AlwaysShowModel;
-    self.Tick:SetShown(state);
-    Narci_AlwaysShowModelButton.Tick:SetShown(state);
-    Narci_AlwaysShowModelButton.IsOn = state;
-end
-
-function Narci_AlwaysShowModelSwitch_OnClick(self)
-    Settings.AlwaysShowModel = not Settings.AlwaysShowModel;
-    AlwaysShowModelSwitch_SetState(self);
-end
-
-function Narci:ShowDetailedIlvlInfo()
-    local state = Settings.DetailedIlvlInfo;
-	local frame = Narci_IlvlInfoFrame;
-	local frame1, frame2 = frame.IlvlButtonLeft, frame.IlvlButtonRight;
-	if state then
-		frame1.AnimFrame:Hide();
-		frame2.AnimFrame:Hide();
-		frame1.AnimFrame:Show();
-		frame2.AnimFrame:Show();
-		frame1:Show();
-		frame2:Show();
-        FadeFrame(Narci_DetailedStatFrame, 0.5, "IN");
-        FadeFrame(Narci_RadarChartFrame, 0.5, "IN");
-		FadeFrame(Narci_ConciseStatFrame, 0.5, "OUT");
-	else
-		frame1.AnimFrame:Hide();
-		frame2.AnimFrame:Hide();
-		frame1.AnimFrame:Show();
-		frame2.AnimFrame:Show();
-        FadeFrame(Narci_DetailedStatFrame, 0.5, "OUT");
-        FadeFrame(Narci_RadarChartFrame, 0.5, "OUT");
-		FadeFrame(Narci_ConciseStatFrame, 0.5, "IN");
-	end
-end
-
-local function DetailedStatsSwitch_SetState(self)
-    local state = Settings.DetailedIlvlInfo;
-    self.Tick:SetShown(state);
-end
-
-function Narci_DetailedStatsSwitch_OnClick(self)
-    Settings.DetailedIlvlInfo = not Settings.DetailedIlvlInfo;
-    DetailedStatsSwitch_SetState(self);
-    Narci:ShowDetailedIlvlInfo();
-end
-
-local function EntranceVisualSwitch_SetState(self)
-    local state = Settings.UseEntranceVisual;
-    self.Tick:SetShown(state);
-    Narci:SetUseEntranceVisual();
-end
-
-function Narci_EntranceVisualSwitch_OnClick(self)
-    Settings.UseEntranceVisual = not Settings.UseEntranceVisual;
-    EntranceVisualSwitch_SetState(self);
-end
-
-local function CorruptionBarSwitch_SetState(self)
-    local state = Settings.CorruptionBar;
-    self.Tick:SetShown(state);
-    if state then
-        Narci_CorruptionBar:Show();
-    else
-        Narci_CorruptionBar:Hide();
-    end
-end
-
-function Narci_CorruptionBarSwitch_OnClick(self)
-    Settings.CorruptionBar = not Settings.CorruptionBar;
-    CorruptionBarSwitch_SetState(self)
-end
-
-local function SetUseEcapeButtonForExit(self)
-    local state = Settings.UseEscapeButton;
-    if state then
-        Narci_PhotoModeController.KeyListener.EscapeKey = "ESCAPE";
-    else
-        Narci_PhotoModeController.KeyListener.EscapeKey = "HELLOWORLD";
-    end
-    self.Tick:SetShown(state);
-end
-
-function Narci_EscapeSwitch_OnClick(self)
-    Settings.UseEscapeButton = not Settings.UseEscapeButton;
-    SetUseEcapeButtonForExit(self);
-end
-
-local function MinimapButtonParentSwitch_SetState(self)
-    local state = Settings.IndependentMinimapButton;
-    local MinimapButton = Narci_MinimapButton;
-    if state then
-        MinimapButton:ClearAllPoints();
-        MinimapButton:SetParent(UIParent);
-        MinimapButton:SetFrameLevel(60);
-        --Narci_MinimapButton_OnLoad();
-    else
-        MinimapButton:SetParent(Minimap);
-    end
-    self.Tick:SetShown(not state);
-end
-
-function Narci_MinimapButtonParentSwitch_OnClick(self)
-    Settings.IndependentMinimapButton = not Settings.IndependentMinimapButton;
-    MinimapButtonParentSwitch_SetState(self);
-end
 
 local function LoadOnDemandSwitch_SetState(self)
     if self:IsEnabled() then
@@ -902,9 +1099,21 @@ local function LoadOnDemandSwitch_SetState(self)
     end
 end
 
-function Narci_LoadOnDemandSwitch_OnClick(self)
+local function LoadOnDemandSwitch_OnClick(self)
     CreatureSettings.LoadOnDemand = not CreatureSettings.LoadOnDemand;
     LoadOnDemandSwitch_SetState(self)
+end
+
+local function LoadOnDemandSwitch_OnLoad(self)
+    self.Label:SetText(L["Load on Demand"]);
+    self.lockedText = L["Load on Demand Description Disabled"];
+    self.enabledText = L["Load on Demand Description On"];
+    self.disabledText = L["Load on Demand Description Off"];
+
+    self:SetScript("OnDisable", LoadOnDemandSwitch_SetState);
+    self:SetScript("OnEnable", LoadOnDemandSwitch_SetState);
+    self:SetScript("OnClick", LoadOnDemandSwitch_OnClick);
+    LoadOnDemandSwitch_SetState(self);
 end
 
 local function LockDatabaseToggle()
@@ -917,7 +1126,7 @@ local function IsCreatureDatabaseLoaded(needReload, language)
         return true
     else
         if needReload then
-            ReloadNotes:Show();
+            Narci_LoadOnDemandNotes:Show();
         end
         return false
     end
@@ -1105,6 +1314,7 @@ local function BuildTabNames()
     --For Ultra Wide Monitor--
     local ScreenRatio, maxOffset;
     local W0, H = WorldFrame:GetSize();
+    --W0 = 1792
     if (W0 and H) and H ~= 0 and (W0 / H) > (16.01 / 9) then     --No resizing option on 16:9 or lower
         local W = H / 9 * 16;
         maxOffset = floor( (W0 - W)/2 + 0.5);
@@ -1112,7 +1322,7 @@ local function BuildTabNames()
         ScreenRatio = floor((W0 / H) * 9 + 0.25);
     end
     tinsert(TabNames, L["Credits"]);
-    tinsert(TabNames, NARCI_ABOUT);
+    tinsert(TabNames, L["About"]);
 
     return ScreenRatio, maxOffset;
 end
@@ -1122,12 +1332,11 @@ local ScreenRatio, MaxOffset = BuildTabNames();
 local TotalTab = #TabNames;
 local TabHeight = 1;
 local TotalHeight = 0;
+local MaxScroll = 0;
 local floor = floor;
 local SelectedColorAlpha = 0.6;
 local currentTab = 1;
 local function UpdateTabBackgroundColor(self)
-    --local scrollBar = Narci_Preference.ListScrollFrame.scrollBar;
-    --if Narci_Preference.TabButtonFrame
     local buttons = Narci_Preference.TabButtonFrame.buttons;
     local scrollBarValue = self:GetValue();
     local currentValue = TotalTab - (TotalHeight - scrollBarValue)/TabHeight + 1;
@@ -1172,11 +1381,19 @@ function Narci_Preference_ScrollFrame_OnLoad(self)
     self.scrollBar:SetValueStep(0.001);
     self.buttonHeight = TotalHeight + 2;
     self.scrollBar.buttonHeight = TotalHeight;
-    --self.scrollBar:SetValue(0)
     self.range = MaxScroll;
 
     NarciAPI_SmoothScroll_Initialization(self, nil, nil, 1/(TotalTab), 0.2);
     self.scrollBar:SetScript("OnValueChanged", ScrollBar_OnValueChanged);
+end
+
+local function TabButton_OnClick(self)
+    MainFrame:ScrollToTab(self:GetID());
+    local buttons = self:GetParent().buttons;
+    for i=1, #buttons do
+        buttons[i].SelectedColor:SetAlpha(0);
+    end
+    self.SelectedColor:SetAlpha(SelectedColorAlpha);
 end
 
 local function BuildTabButtonList(self, buttonTemplate, buttonNameTable, initialOffsetX, initialOffsetY, initialPoint, initialRelative, offsetX, offsetY, point, relativePoint)
@@ -1198,7 +1415,8 @@ local function BuildTabButtonList(self, buttonTemplate, buttonNameTable, initial
 		buttons = self.buttons;
 		buttonHeight = buttons[1]:GetHeight();
 	else
-		button = CreateFrame("BUTTON", buttonName and (buttonName .. 1) or nil, self, buttonTemplate);
+        button = CreateFrame("BUTTON", buttonName and (buttonName .. 1) or nil, self, buttonTemplate);
+        button:SetScript("OnClick", TabButton_OnClick);
 		buttonHeight = button:GetHeight();
         button:SetPoint(initialPoint, self, initialRelative, initialOffsetX, initialOffsetY);
         button:SetID(0);
@@ -1210,7 +1428,8 @@ local function BuildTabButtonList(self, buttonTemplate, buttonNameTable, initial
 	local numButtons = #buttonNameTable;
 
 	for i = 2, numButtons do
-		button = CreateFrame("BUTTON", buttonName and (buttonName .. i) or nil, self, buttonTemplate);
+        button = CreateFrame("BUTTON", buttonName and (buttonName .. i) or nil, self, buttonTemplate);
+        button:SetScript("OnClick", TabButton_OnClick);
         button:SetID(i-1);
         button.Name:SetText(buttonNameTable[i])
         if i == numButtons then         --About Tab
@@ -1282,7 +1501,8 @@ local function CreateLanguageOptions(parent, anchor)
 
     local LanguageOptions = CreateFrame("Frame", "Narci_LanguageOptions", parent, "NarciFrameTemplate");
     parent.LanguageOptions = LanguageOptions;
-    
+    LanguageOptions:SetSize(64, 64);
+    LanguageOptions:SetPoint("TOPLEFT", anchor, "TOPLEFT", 0, 0);
     LanguageOptions:SetHeaderText("Language");
     LanguageOptions:SetRelativeFrameLevel(3);
     LanguageOptions:HideWhenParentIsHidden(true);
@@ -1295,7 +1515,7 @@ local function CreateLanguageOptions(parent, anchor)
         if numButton == 1 then
             numRow = numRow + 1;
             numColumn = numColumn + 1;
-            button:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", OFFSET_START, -18);
+            button:SetPoint("TOPLEFT", LanguageOptions, "TOPLEFT", OFFSET_START, -18);
         elseif numButton % MAX_ROW == 1 then
             button:SetPoint("LEFT", buttons[numButton - MAX_ROW], "LEFT", OFFSET_X, 0);
         else
@@ -1316,7 +1536,7 @@ local function CreateLanguageOptions(parent, anchor)
     end
 
     local width = floor((button.Label:GetRight() - buttons[1]:GetLeft())/0.72 );
-    LanguageOptions:SetSizeAndAnchor(width, 200, "TOPLEFT", anchor, "BOTTOMLEFT", 0, 0);
+    LanguageOptions:SetSizeAndAnchor(width, 200, "TOPLEFT", anchor, "BOTTOMLEFT", 0, 80);
     
     function UpdateLanguageOptionButtons()
         local button;
@@ -1376,180 +1596,57 @@ local function OffsetSetting_EditBox_OnHide(self)
 end
 
 
-function Narci_Preference_OnLoad(self)
-    local Tabs = self.ListScrollFrame.scrollChild;
-    local tab;
 
-    Tabs.Tab5.Cate1:SetText(L["Camera Movement"]);
-    
-    --Corruption Tab
-    local EyeColors = {{245, 127, 32}, {240, 25, 255}, {140, 218, 205}, {64, 155, 208}};
-    local function EyeColorButton_OnClick(self)
-        NarciAPI_SetEyeballColor(self.ID);
-    end
+--local ColorTable = Narci_ColorTable;
 
-    tab = Tabs.CorruptionTab;
-    tab.Cate1:SetText(L["Eye Color"]);
-    tab.Cate2:SetText(L["Blizzard UI"]);
-    tab.ColorButtons = {};
-    local buttons = tab.ColorButtons;
-    local button;
-    for i = 1, #EyeColors do
-        button = CreateFrame("Button", nil, tab, "NarciPreferenceColorButtonTemplate")
-        if i == 1 then
-            button:SetPoint("LEFT", tab.Cate1, "LEFT", 40, -40);
-        else
-            button:SetPoint("LEFT", buttons[i - 1], "RIGHT", 9, 0);
-        end
-        local Color = EyeColors[i];
-        button.ID = i;
-        button:SetScript("OnClick", EyeColorButton_OnClick);
-        button:SetColor(Color[1], Color[2], Color[3]);
-        tinsert(buttons, button);
-    end
-
-    --Ultra-wide Optimization
-    if ScreenRatio then
-        local function MoveBaselineSlider_OnLoad(self)
-            self:GetParent().Cate1:SetText(L["Ultra-wide Optimization"]);
-            self.Label:SetText(L["Baseline Offset"]);
-            self.Description:SetText(string.format(L["Ultra-wide Tooltip"], ScreenRatio));
-            --print("Max Offset: "..MaxOffset);
-            self:SetMinMaxValues(0, MaxOffset);
-            self:SetValueStep(MaxOffset);   --Disabled
-            NarciAPI_SliderWithSteps_OnLoad(self);
-        end
-
-        local function OnValueChanged(self, value)
-            self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
-            if value ~= self.oldValue then
-                self.oldValue = value;
-                value = floor(value)
-                self.KeyLabel:SetText(value);
-                Narci:SetReferenceFrameOffset(value);
-                Settings.BaseLineOffset = value;
-            end
-        end
-        MoveBaselineSlider_OnLoad(Narci_MoveBaselineSlider);
-        Narci_MoveBaselineSlider:SetScript("OnValueChanged", OnValueChanged)
-    else
-        Tabs.CreditTab:ClearAllPoints();
-        Tabs.CreditTab:SetPoint("TOPLEFT", Tabs.ExtensionTab, "BOTTOMLEFT", 0, 0);
-        Tabs.CreditTab:SetPoint("TOPRIGHT", Tabs.ExtensionTab, "BOTTOMRIGHT", 0, 0);
-        Tabs.UltraWideSettings:Hide();
-    end
-
-
-
-    --Creature Database Tab
-    CreatureTab = Tabs.CreatureTab;
-    tab = CreatureTab;
-    tab.Cate1:SetText(L["Database"]);
-    tab.Cate2:SetText(L["Creature Tooltip"]);
-    tab.LoadOnDemand:SetScript("OnDisable", LoadOnDemandSwitch_SetState);
-    tab.LoadOnDemand:SetScript("OnEnable", LoadOnDemandSwitch_SetState);
-    local OffsetSetting = tab.OnNamePlate.OffsetSetting;
-    OffsetSetting.Label:SetText(L["Y Offset"]);
-    OffsetSetting:SetScript("OnShow", OffsetSetting_OnShow);
-    OffsetSetting:SetScript("OnClick", OffsetSetting_OnClick);
-    local EditBox = OffsetSetting.EditBox;
-    EditBox:SetScript("OnHide", OffsetSetting_EditBox_OnHide);
-    EditBox:SetScript("OnEnterPressed", OffsetSetting_EditBox_Confirm);
-    EditBox:SetScript("OnSpacePressed", OffsetSetting_EditBox_Confirm);
-
-    ReloadNotes = tab.Notes;
-
-    CreateLanguageOptions(tab, tab.Translator);
-
-    --Build Tab Buttons
-    BuildTabButtonList(self.TabButtonFrame, "Narci_TapButtonTemplate", TabNames, 0, -12);
-end
-
-local ColorTable = Narci_ColorTable;
-
+--[[
 function Narci_SetTabButtonColorTheme(self)
-    --New options get highlighted, so this doesn't fit any more
     local ColorIndex = Narci_GlobalColorIndex;
 	local R, G, B = ColorTable[ColorIndex][1], ColorTable[ColorIndex][2], ColorTable[ColorIndex][3];
 	local r, g, b = R/255, G/255 ,B/255;
 	self.HighlightColor:SetColorTexture(r, g, b);
 	self.SelectedColor:SetColorTexture(r, g, b);
 end
+--]]
 
-function Narci_TapButton_OnClick(self)
-    Narci_Preference_ScrollBar:SetValue(self:GetID()*TabHeight)
-    local buttons = self:GetParent().buttons;
-    for i=1, #buttons do
-        buttons[i].SelectedColor:SetAlpha(0);
-    end
-    self.SelectedColor:SetAlpha(SelectedColorAlpha);
-end
 
-function Narci_LayoutButtonButton_OnClick(self)
-    local id = self:GetID();
-    Settings.DefaultLayout = id;
-    if id == 1 then
-        self:GetParent().Preview:SetTexCoord(0, 0.4443359375, 0, 0.5);
-    elseif id == 2 then
-        self:GetParent().Preview:SetTexCoord(0, 0.4443359375, 0.5, 1);
-    elseif id == 3 then
-        self:GetParent().Preview:SetTexCoord(0.5556640625, 1, 0, 0.5);
-    end
-    ShowSelfTick(self);
-    Settings.DefaultLayout = id;
-end
 
-local function InteractiveAreaSlider_OnLoad(self)
-    local function OnValueChanged(self, value)
-        self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
-        if value ~= self.oldValue then
-            self.oldValue = value;
-            value = floor(value);
-            Narci:ShrinkModelHitRect(value);
-            Settings.ShrinkArea = value;
-            if value > 0 then
-                value = -value;
-            end
-            self.KeyLabel:SetText(value);
 
-            local frame = Narci_ModelInteractiveArea;
-            frame.InOut:Stop();
-            frame.InOut:Play();
-            frame:Show();
-        end
-    end
 
-    local W = floor( (WorldFrame:GetWidth()) *(1/3 - 1/8) + 0.5);
-    self:SetMinMaxValues(0, W);
-    self:SetValueStep(W/8);
-    self.Label:SetText(L["Interactive Area"]);
-    self:SetScript("OnValueChanged", OnValueChanged);
-    NarciAPI_SliderWithSteps_OnLoad(self);
-    self:SetValue(Settings.ShrinkArea);
-    Narci_ModelInteractiveArea:Hide();
-end
+
+
 
 -----------------
 -----Credits-----
 -----------------
 local function SetCreditList()
-   local RawList = {"Elexys", "Adam Stribley", "Ben Ashley", "Solanya", "Andrew Phoenix", "Erik Shafer", "Nantangitan", "Blastflight", "Valnoressa", "Stephen Berry", "Mccr Karl", "Pierre-Yves Bertolus", "Christian Williamson", "Tzutzu", "Psyloken", "Ellypse", "Victor Torres", "Lars Norberg"};
-   local LeftList, MidList, RightList = {}, {}, {};
-   local mod = mod;
-   local index;
-   for i = 1, #RawList do
-        index = mod(i, 3);
-        if index == 1 then
-            tinsert(LeftList, RawList[i]);
-        elseif index == 2 then
-            tinsert(MidList, RawList[i]);
-        else
-            tinsert(RightList, RawList[i]);
-        end
-   end
+    local ACIVE_COLOR = "|cffd9ccb4";
+    local ACTIVE_PATRONS = {"Elexys", "Ben Ashley", "Andrew Phoenix", "Solanya", "Erik Shafer", "Nantangitan", "Blastflight", "Pierre-Yves Bertolus", "Adrien Le Texier", "Lars Norberg",  "Ernaldo Kalaja", "Alex Boehm"};
+    local FORMER_PATRONS = {"Adam Stribley", "Valnoressa", "Ellypse", "Stephen Berry", "Mccr Karl", "Christian Williamson", "Tzutzu", "Psyloken", "Victor Torres", }
+    local RawList = {};
+    for i = 1, #ACTIVE_PATRONS do
+        tinsert(RawList, ACIVE_COLOR.. ACTIVE_PATRONS[i] .."|r");
+    end
+    for i = 1, #FORMER_PATRONS do
+        tinsert(RawList, FORMER_PATRONS[i]);
+    end
 
-   local LEFT, MID, RIGHT;
-   for i = 1, #LeftList do
+    local LeftList, MidList, RightList = {}, {}, {};
+    local mod = mod;
+    local index;
+    for i = 1, #RawList do
+            index = mod(i, 3);
+            if index == 1 then
+                tinsert(LeftList, RawList[i]);
+            elseif index == 2 then
+                tinsert(MidList, RawList[i]);
+            else
+                tinsert(RightList, RawList[i]);
+            end
+    end
+
+    local LEFT, MID, RIGHT;
+    for i = 1, #LeftList do
         if i == 1 then
             LEFT = LeftList[i];
             if MidList[i] then
@@ -1567,12 +1664,14 @@ local function SetCreditList()
                 end
             end
         end
-   end
+    end
 
-   local CreditList = Narci_CreditList;
-   CreditList.PatronListLeft:SetText(LEFT);
-   CreditList.PatronListMid:SetText(MID);
-   CreditList.PatronListRight:SetText(RIGHT);
+    local CreditList = Narci_CreditList;
+    CreditList.PatronListLeft:SetText(LEFT);
+    CreditList.PatronListMid:SetText(MID);
+    CreditList.PatronListRight:SetText(RIGHT);
+
+    CreditList.ExtraList:SetText(L["Credit List Extra"]);
 end
 
 local function Narci_InsertHeart()
@@ -1618,66 +1717,181 @@ function Narci_CreditList_OnFinished(self)
 end
 
 ----------------------------------------------------
+NarciPreferenceMixin = CreateFromMixins(NarciChamferedFrameMixin);
+
+function NarciPreferenceMixin:OnLoad()
+    MainFrame = self;
+    local v = 0.2;
+    self:SetBorderColor(v, v, v);
+    self:SetBackgroundColor(0.07, 0.07, 0.08, 0.95);
+    self:SetOffset(10);
+
+    --Create Settings
+    local Tabs = self.ScrollFrame.scrollChild;
+    local tab;
+
+    Tabs.ExtensionTab.Cate1:SetText(L["Extensions"]);
+
+    --Ultra-wide Optimization
+    if ScreenRatio then
+        local function MoveBaselineSlider_OnLoad(slider)
+            slider:GetParent().Cate1:SetText(L["Ultra-wide Optimization"]);
+            slider.Label:SetText(L["Baseline Offset"]);
+            slider.Description:SetText(string.format(L["Ultra-wide Tooltip"], ScreenRatio));
+            slider:SetMinMaxValues(0, MaxOffset);
+            slider:SetValueStep(MaxOffset/8);   --Disabled
+            NarciAPI_SliderWithSteps_OnLoad(slider);
+        end
+
+        local function OnValueChanged(slider, value)
+            slider.VirtualThumb:SetPoint("CENTER", slider.Thumb, "CENTER", 0, 0)
+            if value ~= slider.oldValue then
+                slider.oldValue = value;
+                value = floor(value)
+                slider.KeyLabel:SetText(value);
+                Narci:SetReferenceFrameOffset(value);
+                Settings.BaseLineOffset = value;
+            end
+        end
+        MoveBaselineSlider_OnLoad(Narci_MoveBaselineSlider);
+        Narci_MoveBaselineSlider:SetScript("OnValueChanged", OnValueChanged)
+    else
+        Tabs.CreditTab:ClearAllPoints();
+        Tabs.CreditTab:SetPoint("TOPLEFT", Tabs.ExtensionTab, "BOTTOMLEFT", 0, 0);
+        Tabs.CreditTab:SetPoint("TOPRIGHT", Tabs.ExtensionTab, "BOTTOMRIGHT", 0, 0);
+        Tabs.UltraWideSettings:Hide();
+    end
+
+    --Creature Database Tab
+    CreatureTab = Tabs.CreatureTab;
+    tab = CreatureTab;
+    tab.Cate1:SetText(L["Database"]);
+    tab.Cate2:SetText(L["Creature Tooltip"]);
+
+    local OffsetSetting = tab.OnNamePlate.OffsetSetting;
+    OffsetSetting.Label:SetText(L["Y Offset"]);
+    OffsetSetting:SetScript("OnShow", OffsetSetting_OnShow);
+    OffsetSetting:SetScript("OnClick", OffsetSetting_OnClick);
+    local EditBox = OffsetSetting.EditBox;
+    EditBox:SetScript("OnHide", OffsetSetting_EditBox_OnHide);
+    EditBox:SetScript("OnEnterPressed", OffsetSetting_EditBox_Confirm);
+    EditBox:SetScript("OnSpacePressed", OffsetSetting_EditBox_Confirm);
+
+    CreateLanguageOptions(tab, tab.Translator);
+
+    --Build Tab Buttons
+    BuildTabButtonList(self.TabButtonFrame, "Narci_TabButtonTemplate", TabNames, 0, -12);
+end
+
+function NarciPreferenceMixin:OnShow()
+    Narci_PreferenceButton:LockHighlight();
+end
+
+function NarciPreferenceMixin:OnHide()
+    self:Hide();
+    self:SetAlpha(0);
+    Narci_PreferenceButton:UnlockHighlight();
+end
+
+function NarciPreferenceMixin:OnMouseWheel()
+
+end
+
+function NarciPreferenceMixin:ScrollToTab(index)
+    self.ScrollFrame.scrollBar:SetValue(index * TabHeight);
+end
+
+function NarciPreferenceMixin:ResetAnchor()
+    if self.anchorTo ~= "narcissus" then
+        self.anchorTo = "narcissus";
+        self:ClearAllPoints();
+        self:SetParent(Narci_Vignette);
+        self:SetScale(1);
+        self:SetFrameStrata("DIALOG");
+        self:SetPoint("CENTER", Narci_VirtualLineCenter, "CENTER", 0, 0);
+        self.CloseButton:Show();
+        self:SetBorderColor(0.2, 0.2, 0.2);
+        self:SetBackgroundColor(0.07, 0.07, 0.08, 0.95);
+    end
+end
+
+function NarciPreferenceMixin:AnchorToInterfaceOptions()
+    if self.anchorTo ~= "blizzard" then
+        self.anchorTo = "blizzard";
+        self:ClearAllPoints();
+        local Panel = Narci_InterfaceOptionsPanel;
+        local Container = InterfaceOptionsFramePanelContainer;
+        local containerWidth = Container:GetWidth();
+        local uiScale = Container:GetEffectiveScale();
+        if containerWidth and uiScale then
+            self:SetScale(uiScale * containerWidth / 500);
+        end
+        self:SetParent(Container);
+        self:SetPoint("BOTTOMLEFT", Container, "BOTTOMLEFT", 2, 2);
+        self.CloseButton:Hide();
+        self:SetBorderColor(0, 0, 0, 0);
+        self:SetBackgroundColor(0, 0, 0, 0);
+    end
+    self:Show();
+    self:SetAlpha(1);
+end
+
+function NarciPreferenceMixin:Toggle()
+    local state = not self:IsShown();
+    if state then
+        FadeFrame(Narci_Preference, 0.15, "IN");
+    else
+        FadeFrame(Narci_Preference, 0.2, "OUT");
+    end
+end
+
+
+function Narci_PreferenceButton_OnClick(self)
+    MainFrame:ResetAnchor();
+    MainFrame:Toggle();
+end
+
+----------------------------------------------------
 local function InitializePreference()
     Settings, CreatureSettings = NarcissusDB, NarciCreatureOptions;
 
-    SetBorderThemeState();
-    SetTooltipThemeState();
+    local ScrollFrame = Narci_Preference.ScrollFrame;
+    CreateSettingFrame(ScrollFrame.scrollChild);
+
     UpdateLanguageOptionButtons();
-    SetFrameScale(Settings.GlobalScale);
-    Narci_ModelSettings:SetScale(Settings.ModelPanelScale or 1);
-    GrainEffectSwitch_SetState(Narci_GrainEffectSwitch);
-    WeatherSwitch_SetState(Narci_WeatherEffectSwitch);
-    LetterboxEffectSwitch_SetState(Narci_LetterboxEffectSwitch);
-    CameraOrbitSwitch_SetState(Narci_CameraOrbitSwitch);
-    CameraSafeSwitch_SetState(Narci_CameraSafeSwitch);
-    MinimapButtonSwitch_SetState(Narci_MinimapButtonSwitch);
-    DoubleTapSwitch_SetState(Narci_DoubleTapSwitch);
-    TruncateSwitch_SetState(Narci_TruncateSwitch);
-    DetailedStatsSwitch_SetState(Narci_DetailedStatsSwitch);
-    FadeOutSwitch_SetState(Narci_FadeOutSwitch);
-    FadeMusicSwitch_SetState(Narci_FadeMusicSwitch);
-    SetFullBodySwitchState(Narci_FullBodySwitch);
-    AlwaysShowModelSwitch_SetState(Narci_AlwaysShowModelSwitch);
+
+    --Using Old Method --Will be changed in the future
     AFKScreenSwitch_SetState(Narci_AFKScreenSwitch);
     AFKAutoStand_SetState(Narci_AFKAutoStandSwitch);
     GemManagerSwitch_SetState(Narci_GemManagerSwitch);
     DressingRoomSwitch_SetState(Narci_DressingRoomSwitch);
-    EntranceVisualSwitch_SetState(Narci_UseEntranceVisualSwitch);
-    ExitConfirmSwitch_SetState(Narci_ExitConfirmSwitch);
-    BustShotSwitch_SetState(Narci_BustShotSwitch);
-    CorruptionBarSwitch_SetState(Narci_CorruptionBarSwitch);
-    SetUseEcapeButtonForExit(Narci_EscapeSwitch);
-    MinimapButtonParentSwitch_SetState(Narci_MinimapButtonParentSwitch);
-    LoadOnDemandSwitch_SetState(Narci_LoadOnDemandSwitch);
     TranslatorSwitch_SetState(Narci_TranslateNameSwitch);
     FindRelativesSwitch_SetState(Narci_FindRelativesSwitch);
     TranslationPositionButton_SetState();
     UpdateSelectedLanguage();
-    --CorruptionTooltipToggle_SetState(Narci_CorruptionTooltipSwitch);  --Status set in CorruptionSystem.lua
-
-    Narci_VignetteStrengthSlider:SetValue(Settings.VignetteStrength);
-    Narci_GlobalScaleSlider:SetValue(Settings.GlobalScale);
-    Narci_ModelPanelScaleSlider:SetValue(Settings.ModelPanelScale);
-    Narci_ItemNameSizeSlider:SetValue(Settings.FontHeightItemName);
-    Narci_ItemNameWidthSlider:SetValue(Settings.ItemNameWidth);
-    Narci_AlwaysShowModelButton.Tick:SetShown(Settings.AlwaysShowModel);
-
-    local value0;
-    if Settings.LetterboxRatio == 2 then
-        value0 = 0;
-    else
-        value0 = 1;
-    end
-    Narci_LetterboxRatioSlider:SetValue(value0);
-
-    _G["Narci_DefalutLayoutButton"..Settings.DefaultLayout]:Click();
-
-    InteractiveAreaSlider_OnLoad(Narci_InteractiveAreaSlider);
-    NarciAPI_SetEyeballColor(Settings.EyeColor);
-
+    LoadOnDemandSwitch_OnLoad(Narci_LoadOnDemandSwitch);
     --Ultra-wide
     Narci_MoveBaselineSlider:SetValue(Settings.BaseLineOffset);
+
+
+    --Create UI on Interface Options Panel (ESC-Interface)
+    local Panel = Narci_InterfaceOptionsPanel;
+    Panel.name = "Narcissus";
+    Panel.Header:SetText(L["Preferences"]);
+    Panel.Description:SetText(L["Interface Options Tab Description"]);
+
+    InterfaceOptions_AddCategory(Panel);
+    
+    
+    Panel:HookScript("OnShow", function(self)
+        if self:IsVisible() then
+            MainFrame:AnchorToInterfaceOptions();
+        end
+    end);
+    
+    Panel:HookScript("OnHide", function(self)
+        MainFrame:Hide();
+    end)
 end
 
 local Initialize = CreateFrame("Frame");
@@ -1686,7 +1900,6 @@ Initialize:SetScript("OnEvent",function(self,event,...)
     if event == "PLAYER_ENTERING_WORLD" then
         self:UnregisterEvent("PLAYER_ENTERING_WORLD");
         InitializePreference();
-        SetItemNameTextSize(Settings.FontHeightItemName);
         SetCreditList();
     end
 end)

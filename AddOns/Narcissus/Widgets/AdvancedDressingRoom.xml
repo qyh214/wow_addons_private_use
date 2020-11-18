@@ -107,7 +107,7 @@
 				</Texture>
             </Layer>
             <Layer level="ARTWORK" textureSubLevel="3">
-				<FontString inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="MIDDLE" parentKey="Label">
+				<FontString inherits="NarciFontMedium12" justifyH="LEFT" justifyV="MIDDLE" parentKey="Label">
 					<Color r="1" g="1" b="1" a="0.8"/>
 					<Anchors>
 						<Anchor point="LEFT" relativeKey="$parent.Icon" relativePoint="RIGHT" x="-2" y="0"/>
@@ -236,7 +236,7 @@
 						<Anchors>
 							<Anchor point="BOTTOMLEFT" relativeKey="$parent.CopyButton" relativePoint="TOPLEFT" x="8" y="10"/>
 						</Anchors>
-						<FontString justifyH="LEFT" justifyV="TOP" inherits="AAAStatusNameMedium" spacing="2">
+						<FontString justifyH="LEFT" justifyV="TOP" inherits="NarciFontMedium12" spacing="2">
 							<Color r="0.88" g="0.88" b="0.88"/>
 						</FontString>
 						<Layers>					
@@ -289,7 +289,7 @@
 												<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Background" relativePoint="BOTTOMRIGHT"/>
 											</Anchors>
 										</Texture>									
-										<FontString inherits="AAAStatusNameMedium" justifyH="CENTER" justifyV="MIDDLE" parentKey="Label" text="Item ID">
+										<FontString inherits="NarciFontMedium12" justifyH="CENTER" justifyV="MIDDLE" parentKey="Label" text="Item ID">
 											<Color r="1" g="1" b="1"/>
 											<Anchors>
 												<Anchor point="CENTER"/>
@@ -377,7 +377,7 @@
 						</Anchors>
 						<Layers>
 							<Layer>				
-								<FontString parentKey="Tooltip" inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="MIDDLE" Alpha="0">
+								<FontString parentKey="Tooltip" inherits="NarciFontMedium12" justifyH="LEFT" justifyV="MIDDLE" Alpha="0">
 									<Anchors>
 										<Anchor point="LEFT" relativeKey="$parent.Label" relativePoint="LEFT" x="0"/>
 									</Anchors>
@@ -441,7 +441,7 @@
 								<Anchors>
 									<Anchor point="BOTTOMLEFT" relativeKey="$parent.CopyButton" relativePoint="TOPLEFT" x="8" y="10"/>
 								</Anchors>
-								<FontString justifyH="LEFT" justifyV="MIDDLE" inherits="AAAStatusNameMedium">
+								<FontString justifyH="LEFT" justifyV="MIDDLE" inherits="NarciFontMedium12">
 									<Color r="0.88" g="0.88" b="0.88"/>
 								</FontString>
 								<Layers>

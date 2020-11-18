@@ -59,6 +59,7 @@ local function debug(...)
   if not ... then return end
   if type(...) == "table" then
     print("|cff33ff99" .. ADDON_NAME .. ":|r")
+    LoadAddOn("Blizzard_DebugTools")
     DevTools_Dump(...)
   else
     print("|cff33ff99" .. ADDON_NAME .. ":|r", ...)

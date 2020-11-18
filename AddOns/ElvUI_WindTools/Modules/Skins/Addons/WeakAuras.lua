@@ -96,13 +96,37 @@ function S:ProfilingWindow_UpdateButtons(frame)
 end
 
 local function Skin_WeakAuras(f, fType)
-    -- 来源于 NDui
+    -- Modified from NDui WeakAuras Skins
+    -- 1. Use ElvUI Skins functions
+    -- 2. Fix the TexCoords
     if fType == "icon" then
         if not f.windStyle then
-            f.icon:SetTexCoord(unpack(E.TexCoords))
-            f.icon.SetTexCoord = E.noop
+            f.icon.SetTexCoordOld = f.icon.SetTexCoord
+            f.icon.SetTexCoord = function(self, ULx, ULy, LLx, LLy, URx, URy, LRx, LRy)
+                local cLeft, cRight, cTop, cDown
+                if URx and URy and LRx and LRy then
+                    cLeft, cRight, cTop, cDown = ULx, LRx, ULy, LRy
+                else
+                    cLeft, cRight, cTop, cDown = ULx, ULy, LLx, LLy
+                end
+
+                local left, right, top, down = unpack(E.TexCoords)
+                if cLeft == 0 or cRight == 0 or cTop == 0 or cDown == 0 then
+                    local width, height = cRight - cLeft, cDown - cTop
+                    if width == height then
+                        self:SetTexCoordOld(left, right, top, down)
+                    elseif width > height then
+                        self:SetTexCoordOld(left, right, top + cTop * (right - left), top + cDown * (right - left))
+                    else
+                        self:SetTexCoordOld(left + cLeft * (down - top), left + cRight * (down - top), top, down)
+                    end
+                else
+                    self:SetTexCoordOld(cLeft, cRight, cTop, cDown)
+                end
+            end
+            f.icon:SetTexCoord(f.icon:GetTexCoord())
             f:CreateBackdrop()
-            S:CreateShadow(f.backdrop)
+            S:CreateBackdropShadow(f, true)
             f.backdrop.Center:StripTextures()
             f.backdrop:SetFrameLevel(0)
             f.backdrop.icon = f.icon
@@ -123,7 +147,7 @@ local function Skin_WeakAuras(f, fType)
             f:CreateBackdrop()
             f.backdrop.Center:StripTextures()
             f.backdrop:SetFrameLevel(0)
-            S:CreateShadow(f.backdrop)
+            S:CreateBackdropShadow(f, true)
             f.icon:SetTexCoord(unpack(E.TexCoords))
             f.icon.SetTexCoord = E.noop
             f.iconFrame:SetAllPoints(f.icon)
@@ -137,6 +161,11 @@ end
 function S:WeakAuras()
     if not E.private.WT.skins.enable or not E.private.WT.skins.addons.weakAuras then
         return
+    end
+
+    -- Handle the options region type registration
+    if _G.WeakAuras and _G.WeakAuras.RegisterRegionOptions then
+        self:RawHook(_G.WeakAuras, "RegisterRegionOptions", "WeakAuras_RegisterRegionOptions")
     end
 
     local regionTypes = _G.WeakAuras.regionTypes

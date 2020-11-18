@@ -982,6 +982,15 @@ local function Monk()
 					Channel = "",
 				},
 			},
+			CelestialBrew = {
+				Messages = {
+					Start = {"[LINK] activated!"},
+					End = {"[LINK] faded!"},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+			},
 			SpearHandStrike = {
 				Messages = {
 					Interrupt = {"Interrupted [TARGET]'s [TARLINK]!"},

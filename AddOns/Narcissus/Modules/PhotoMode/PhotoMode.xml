@@ -334,7 +334,7 @@
 				</Texture>
 				<Texture parentKey="Icon" file="Interface\AddOns\Narcissus\Art\Widgets\LightSetup\Icons">
 					<TexCoords left="0.75" right="1" top="0" bottom="0.5"/>
-                    <Size x="34" y="34"/>
+                    <Size x="32" y="32"/>
 					<Anchors>
 						<Anchor point="CENTER" relativePoint="LEFT" x="-13.5" y="0"/>
 					</Anchors>
@@ -1515,7 +1515,7 @@
 								end
 							</OnLeave>
 							<OnLoad>
-								self.Label:SetText(NARCI_GROUP_PHOTO);
+								self.Label:SetText(Narci.L["Group Photo"]);
 								self.Label:SetTextColor(0.25, 0.78, 0.92);
 							</OnLoad>
 							<OnClick function="Narci_ActorPanelExpandButton_OnClick"/>
@@ -2787,16 +2787,15 @@
 									<OnMouseWheel method="OnMouseWheel"/>
 								</Scripts>
 							</EditBox>
-
-							<Slider inherits="NarciModelSliderTemplate" name="NarciModelControl_AnimationSlider" valueStep="1" obeyStepOnDrag="true" defaultValue="1" minValue="1" maxValue="2000" parentKey="AnimFrameSlider" hidden="true">
+							<Frame inherits="NarciUncappedSliderTemplate" name="NarciModelControl_AnimationSlider" parentKey="AnimFrameSlider" hidden="true">
 								<Anchors>
-									<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-8" y="-2"/>
+									<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-10" y="-2"/>
 								</Anchors>
 								<Animations>
 									<AnimationGroup parentKey="animIn">
 										<Translation offsetY="12" duration="0" order="1"/>
 										<Alpha fromAlpha="0" toAlpha="1" duration="0.15" order="2"/>
-										<Translation offsetY="-12" duration="0.15" order="2"/>
+										<Translation offsetY="-12" duration="0.2" order="2" smoothing="OUT"/>
 									</AnimationGroup>
 									<AnimationGroup parentKey="animOut">
 										<Alpha fromAlpha="1" toAlpha="0" duration="0.25" order="1"/>
@@ -2809,20 +2808,15 @@
 									</AnimationGroup>
 								</Animations>
 								<Scripts>
-									<OnLoad>
-										self.Icon:SetTexCoord(0.5, 0.75, 0, 0.5);
-									</OnLoad>
 									<OnShow>
 										self.animIn:Play();
 									</OnShow>
-									<OnValueChanged function="NarciModelControl_AnimationSlider_OnValueChanged"/>
 									<OnHide>
 										self:Hide();
 										self:StopAnimating();
 									</OnHide>
 								</Scripts>
-							</Slider>
-
+							</Frame>
 							<Button parentKey="Pause" inherits="Narci_Model_AnimationControlButtonTemplate" hidden="false" name="NarciModelControl_PauseAnimationButton">
 								<Anchors>
 									<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="0"/>
@@ -3110,8 +3104,8 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
-								self.Label:SetText(NARCI_LAYOUT_3)
-								self.tooltip = {NARCI_LAYOUT_3, Narci.L["Compact Mode Tooltip"]}
+								self.Label:SetText(Narci.L["Transmog Layout3"])
+								self.tooltip = {Narci.L["Transmog Layout3"], Narci.L["Compact Mode Tooltip"]}
 								self.GuideIndex = 5;
 							</OnLoad>
 							<OnShow>

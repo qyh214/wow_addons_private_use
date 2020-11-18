@@ -9,14 +9,14 @@ local NUM_PET_ACTION_SLOTS = NUM_PET_ACTION_SLOTS
 local NUM_ACTIONBAR_BUTTONS = NUM_ACTIONBAR_BUTTONS
 
 function S:ElvUI_ActionBar_SkinBar(bar, type)
-    if not (bar and bar.backdrop) then
+    if not (E.private.WT.skins.shadow and bar and bar.backdrop) then
         return
     end
 
     if E.private.WT.skins.elvui.actionBarsBackdrop then
         if bar.db.backdrop then
             if not bar.backdrop.shadow then
-                self:CreateShadow(bar.backdrop)
+                self:CreateBackdropShadow(bar, true)
             end
             bar.backdrop.shadow:Show()
         else
@@ -30,17 +30,17 @@ function S:ElvUI_ActionBar_SkinBar(bar, type)
         if type == "PLAYER" then
             for i = 1, NUM_ACTIONBAR_BUTTONS do
                 local button = bar.buttons[i]
-                self:CreateShadow(button.backdrop)
+                self:CreateBackdropShadow(button, true)
             end
         elseif type == "PET" then
             for i = 1, NUM_PET_ACTION_SLOTS do
                 local button = _G["PetActionButton" .. i]
-                self:CreateShadow(button.backdrop)
+                self:CreateBackdropShadow(button, true)
             end
         elseif type == "STANCE" then
             for i = 1, NUM_STANCE_SLOTS do
                 local button = _G["ElvUI_StanceBarButton" .. i]
-                self:CreateShadow(button.backdrop)
+                self:CreateBackdropShadow(button, true)
             end
         end
     end
@@ -83,6 +83,7 @@ function S:ElvUI_ActionBars()
     if not (E.private.actionbar.enable and E.private.WT.skins.elvui.enable) then
         return
     end
+
     if not (E.private.WT.skins.elvui.actionBarsButton or E.private.WT.skins.elvui.actionBarsBackdrop) then
         return
     end
@@ -118,22 +119,43 @@ function S:ElvUI_ActionBars()
     end
 
     -- 离开载具
-    self:CreateShadow(_G.MainMenuBarVehicleLeaveButton)
+    do
+        local button =  _G.MainMenuBarVehicleLeaveButton
+        self:CreateBackdropShadow(button, true)
+        local tex = button:GetNormalTexture()
+        if tex then
+            tex:SetTexture(W.Media.Textures.arrowDown)
+            tex:SetTexCoord(0, 1, 0, 1)
+            tex:SetVertexColor(1, 1, 1)
+        end
 
+        tex = button:GetPushedTexture()
+        if tex then
+            tex:SetTexture(W.Media.Textures.arrowDown)
+            tex:SetTexCoord(0, 1, 0, 1)
+            tex:SetVertexColor(1, 0, 0)
+        end
+
+        tex = button:GetHighlightTexture()
+        if tex then
+            tex:SetTexture(nil)
+            tex:Hide()
+        end
+    end
     -- 额外动作条
     for i = 1, _G.ExtraActionBarFrame:GetNumChildren() do
         local button = _G["ExtraActionButton" .. i]
-        if button and button.backdrop then
-            self:CreateShadow(button.backdrop)
-        end
+        self:CreateBackdropShadow(button.backdrop, true)
     end
 
-    -- 按键绑定
-    if _G.ElvUIBindPopupWindow then
-        self:ElvUI_ActionBar_LoadKeyBinder()
-    else
-        self:SecureHook(AB, "LoadKeyBinder", "ElvUI_ActionBar_LoadKeyBinder")
-    end
+    -- Flyout
+    self:SecureHook(
+        AB,
+        "SetupFlyoutButton",
+        function(_, button)
+            self:CreateBackdropShadow(button, true)
+        end
+    )
 end
 
 S:AddCallback("ElvUI_ActionBars")

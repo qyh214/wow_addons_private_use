@@ -3036,7 +3036,7 @@ local function SearchByID(id)
 
     Tooltip:SetOwner(UIParent, "ANCHOR_NONE");
     Tooltip:SetHyperlink(format("unit:Creature-0-0-0-0-%d", id));
-    name = Tooltip.lineName:GetText();
+    local name = Tooltip.lineName:GetText();
 
     if name and name ~= "" then
         SetCreaturePreview(id);

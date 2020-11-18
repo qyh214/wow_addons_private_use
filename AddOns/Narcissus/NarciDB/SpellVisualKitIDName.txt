@@ -55,7 +55,7 @@ Attachment ID:
 134799 Brew helmet
 134798 Mug New
 134788 Floating Books
-134772 Fae  Weapon back
+134772 Fae Weapon back
 134728 lotus blooming
 134701 Holy Huge
 134600 Pedant Glow

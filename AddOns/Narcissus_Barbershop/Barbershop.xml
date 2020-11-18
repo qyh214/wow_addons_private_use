@@ -633,82 +633,12 @@
 				</Scripts>
 			</Button>
 			
-			<Frame parentKey="SettingFrame" frameStrata="HIGH" frameLevel="12" mixin="NarciBarberShopSettingsMixin" hidden="true" ignoreParentAlpha="true" enableMouse="true">
+			<Frame parentKey="SettingFrame" frameStrata="HIGH" frameLevel="12" mixin="NarciBarberShopSettingsMixin" inherits="NarciChamferedFrameTemplate" hidden="true" ignoreParentAlpha="true" enableMouse="true">
 				<Size x="392" y="200"/>
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeKey="$parent.SettingButton" relativePoint="BOTTOMRIGHT" x="-4" y="-5"/>
 				</Anchors>
 				<Layers>
-					<Layer level="BACKGROUND">
-						<Texture parentKey="BackgroundTopLeft" file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\SettingBackground">
-							<Size x="16" y="16"/>
-							<TexCoords left="0" right="0.0625" top="0" bottom="0.125"/>
-							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="TOPLEFT"/>
-							</Anchors>
-						</Texture>
-						<Texture parentKey="BackgroundTopRight" file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\SettingBackground">
-							<Size x="16" y="16"/>
-							<TexCoords left="0.9375" right="1" top="0" bottom="0.125"/>
-							<Anchors>
-								<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT"/>
-							</Anchors>
-						</Texture>
-						<Texture parentKey="BackgroundTop" file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\SettingBackground">
-							<Size y="16"/>
-							<TexCoords left="0.0625" right="0.9375" top="0" bottom="0.125"/>
-							<Anchors>
-								<Anchor point="TOPLEFT" relativeKey="$parent.BackgroundTopLeft" relativePoint="TOPRIGHT"/>
-								<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BackgroundTopRight" relativePoint="BOTTOMLEFT"/>
-							</Anchors>
-						</Texture>
-
-						<Texture parentKey="BackgroundBottomLeft" file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\SettingBackground">
-							<Size x="16" y="16"/>
-							<TexCoords left="0" right="0.0625" top="0.875" bottom="1"/>
-							<Anchors>
-								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT"/>
-							</Anchors>
-						</Texture>
-						<Texture parentKey="BackgroundBottomRight" file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\SettingBackground">
-							<Size x="16" y="16"/>
-							<TexCoords left="0.9375" right="1" top="0.875" bottom="1"/>
-							<Anchors>
-								<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
-							</Anchors>
-						</Texture>
-						<Texture parentKey="BackgroundBottom" file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\SettingBackground">
-							<Size y="16"/>
-							<TexCoords left="0.0625" right="0.9375" top="0.875" bottom="1"/>
-							<Anchors>
-								<Anchor point="TOPLEFT" relativeKey="$parent.BackgroundBottomLeft" relativePoint="TOPRIGHT"/>
-								<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BackgroundBottomRight" relativePoint="BOTTOMLEFT"/>
-							</Anchors>
-						</Texture>
-
-						<Texture parentKey="BackgroundMiddleLeft" file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\SettingBackground">
-							<TexCoords left="0" right="0.0625" top="0.125" bottom="0.875"/>
-							<Anchors>
-								<Anchor point="TOPLEFT" relativeKey="$parent.BackgroundTopLeft" relativePoint="BOTTOMLEFT"/>
-								<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BackgroundBottomLeft" relativePoint="TOPRIGHT"/>
-							</Anchors>
-						</Texture>
-						<Texture parentKey="BackgroundMiddleRight" file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\SettingBackground">
-							<TexCoords left="0.9375" right="1" top="0.125" bottom="0.875"/>
-							<Anchors>
-								<Anchor point="TOPLEFT" relativeKey="$parent.BackgroundTopRight" relativePoint="BOTTOMLEFT"/>
-								<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BackgroundBottomRight" relativePoint="TOPRIGHT"/>
-							</Anchors>
-						</Texture>
-						<Texture parentKey="BackgroundMiddle" file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\SettingBackground">
-							<TexCoords left="0.0625" right="0.9375" top="0.125" bottom="0.875"/>
-							<Anchors>
-								<Anchor point="TOPLEFT" relativeKey="$parent.BackgroundMiddleLeft" relativePoint="TOPRIGHT"/>
-								<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BackgroundMiddleRight" relativePoint="BOTTOMLEFT"/>
-							</Anchors>
-						</Texture>
-					</Layer>
-
 					<Layer level="ARTWORK">
 						<Texture parentKey="Divider" file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\VerticleLine">
 							<Size x="8" y="180"/>
@@ -873,7 +803,7 @@
 		</Anchors>
 		<Layers>
 			<Layer level="ARTWORK">
-				<Texture name="NarciDevReferencePortrait" parentKey="Portrait" desaturated="false" hidden="true">
+				<Texture name="NarciDevReferencePortrait" parentKey="Portrait" desaturated="false" hidden="false">
 					<Size x="60" y="60"/>
 					<Anchors>
 						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="LEFT" x="-4"/>
@@ -912,7 +842,7 @@
 				</Layers>
 			</PlayerModel>
 
-			<Button inherits="NarciDevToolSquareButtonTemplate" parentKey="DistanceButton">
+			<Button inherits="NarciDevToolSquareButtonTemplate" parentKey="DistanceButton" hidden="true">
 				<KeyValues>
 					<KeyValue key="delta" value="0.02" type="number"/>
 					<KeyValue key="labelText" value="Zoom" type="string"/>
@@ -930,13 +860,32 @@
 					<Anchor point="TOP" relativeKey="$parent.DistanceButton" relativePoint="BOTTOM" x="0" y="-2"/>
 				</Anchors>
 			</Button-->
+
+			<Button inherits="NarciDevToolSquareButtonTemplate" parentKey="ModelXButton">
+				<KeyValues>
+					<KeyValue key="delta" value="0.01" type="number"/>
+					<KeyValue key="labelText" value="Model PosX" type="string"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="TOP" relativeKey="$parent.DistanceButton" relativePoint="TOP" x="0" y="0"/>
+				</Anchors>
+			</Button>
+			<Button inherits="NarciDevToolSquareButtonTemplate" parentKey="ModelYButton">
+				<KeyValues>
+					<KeyValue key="delta" value="0.01" type="number"/>
+					<KeyValue key="labelText" value="Model PosY" type="string"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="TOP" relativeKey="$parent.ModelXButton" relativePoint="BOTTOM" x="0" y="-2"/>
+				</Anchors>
+			</Button>
 			<Button inherits="NarciDevToolSquareButtonTemplate" parentKey="ModelZButton">
 				<KeyValues>
 					<KeyValue key="delta" value="0.01" type="number"/>
 					<KeyValue key="labelText" value="Model PosZ" type="string"/>
 				</KeyValues>
 				<Anchors>
-					<Anchor point="TOP" relativeKey="$parent.DistanceButton" relativePoint="BOTTOM" x="0" y="-2"/>
+					<Anchor point="TOP" relativeKey="$parent.ModelYButton" relativePoint="BOTTOM" x="0" y="-2"/>
 				</Anchors>
 			</Button>
 			<Button inherits="NarciDevToolSquareButtonTemplate" parentKey="FacingButton">
@@ -948,7 +897,7 @@
 					<Anchor point="TOP" relativeKey="$parent.ModelZButton" relativePoint="BOTTOM" x="0" y="-2"/>
 				</Anchors>
 			</Button>
-			<Button inherits="NarciDevToolSquareButtonTemplate" parentKey="OffsetXButton">
+			<Button inherits="NarciDevToolSquareButtonTemplate" parentKey="OffsetXButton" hidden="true">
 				<KeyValues>
 					<KeyValue key="delta" value="1" type="number"/>
 					<KeyValue key="labelText" value="Offset X" type="string"/>
@@ -957,7 +906,7 @@
 					<Anchor point="TOP" relativeKey="$parent.FacingButton" relativePoint="BOTTOM" x="0" y="-2"/>
 				</Anchors>
 			</Button>
-			<Button inherits="NarciDevToolSquareButtonTemplate" parentKey="OffsetYButton">
+			<Button inherits="NarciDevToolSquareButtonTemplate" parentKey="OffsetYButton" hidden="true">
 				<KeyValues>
 					<KeyValue key="delta" value="1" type="number"/>
 					<KeyValue key="labelText" value="Offset Y" type="string"/>
@@ -967,7 +916,7 @@
 				</Anchors>
 			</Button>
 
-			<Button inherits="NarciDevToolSquareButtonTemplate" parentKey="ReloadButton">
+			<Button inherits="NarciDevToolSquareButtonTemplate" parentKey="ReloadButton" hidden="false">
 				<KeyValues>
 					<KeyValue key="delta" value="1" type="number"/>
 					<KeyValue key="labelText" value="Load Profile" type="string"/>

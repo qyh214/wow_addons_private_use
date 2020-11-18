@@ -21,11 +21,19 @@ function S:LookingForGroupFrames()
     }
 
     for _, frame in pairs(frames) do
-        self:CreateShadow(frame)
+        self:CreateBackdropShadow(frame)
     end
 
     for i = 1, 3 do
         self:ReskinTab(_G["PVEFrameTab" .. i])
+    end
+
+    if _G.LFDQueueFrameRandomScrollFrameChildFrame then
+        local frame = _G.LFDQueueFrameRandomScrollFrameChildFrame
+        F.SetFontOutline(frame.title, E.db.general.font)
+        F.SetFontOutline(frame.description, E.db.general.font)
+        F.SetFontOutline(frame.rewardsLabel, E.db.general.font)
+        F.SetFontOutline(frame.rewardsDescription, E.db.general.font)
     end
 end
 

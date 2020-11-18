@@ -1,4 +1,4 @@
-local currentVersion = 10100;
+local currentVersion = 10103;
 local lastMajorVersion = 10100;
 local _, _, _, tocversion = GetBuildInfo();
 tocversion = tonumber(tocversion);

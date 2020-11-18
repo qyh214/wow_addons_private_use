@@ -223,11 +223,6 @@ function M:Update_ZoneText()
 	Minimap.location:SetTextColor(M:GetLocTextColor())
 end
 
-function M:PLAYER_REGEN_ENABLED()
-	self:UnregisterEvent('PLAYER_REGEN_ENABLED')
-	self:UpdateSettings()
-end
-
 do
 	local isResetting
 	local function ResetZoom()
@@ -248,26 +243,22 @@ end
 
 function M:UpdateSettings()
 	if not E.private.general.minimap.enable then return end
-	if InCombatLockdown() then
-		self:RegisterEvent('PLAYER_REGEN_ENABLED')
-		return
-	end
 
 	E.MinimapSize = E.db.general.minimap.size or Minimap:GetWidth()
 
 	local MinimapPanel, MMHolder = _G.MinimapPanel, _G.MMHolder
 	MinimapPanel:SetShown(E.db.datatexts.panels.MinimapPanel.enable)
 
-	local borderWidth, borderHeight = E.PixelMode and 2 or 6, E.PixelMode and 2 or 8
-	local panelSize, joinPanel = (MinimapPanel:IsShown() and MinimapPanel:GetHeight()) or (E.PixelMode and 1 or -1), 1
-	local height, width = E.MinimapSize + (panelSize - joinPanel), E.MinimapSize
-	MMHolder:Size(width + borderWidth, height + borderHeight)
-	_G.MinimapMover:Size(width + borderWidth, height + borderHeight)
-
 	local mmOffset = E.PixelMode and 1 or 3
 	Minimap:ClearAllPoints()
 	Minimap:Point('TOPRIGHT', MMHolder, 'TOPRIGHT', -mmOffset, -mmOffset)
 	Minimap:Size(E.MinimapSize, E.MinimapSize)
+
+	local mWidth, mHeight = Minimap:GetSize()
+	local bWidth, bHeight = E:Scale(E.PixelMode and 2 or 6), E:Scale(E.PixelMode and 2 or 8)
+	local panelSize, joinPanel = (MinimapPanel:IsShown() and MinimapPanel:GetHeight()) or E:Scale(E.PixelMode and 1 or -1), E:Scale(1)
+	local HEIGHT, WIDTH = mHeight + (panelSize - joinPanel), mWidth
+	MMHolder:SetSize(WIDTH + bWidth, HEIGHT + bHeight)
 
 	Minimap.location:Width(E.MinimapSize)
 	if E.db.general.minimap.locationText ~= 'SHOW' then
@@ -368,10 +359,6 @@ function M:Initialize()
 	Minimap:Point('TOPRIGHT', mmholder, 'TOPRIGHT', -E.Border, -E.Border)
 	Minimap:HookScript('OnEnter', function(mm) if E.db.general.minimap.locationText == 'MOUSEOVER' then mm.location:Show() end end)
 	Minimap:HookScript('OnLeave', function(mm) if E.db.general.minimap.locationText == 'MOUSEOVER' then mm.location:Hide() end end)
-
-	--Fix spellbook taint
-	ShowUIPanel(_G.SpellBookFrame)
-	HideUIPanel(_G.SpellBookFrame)
 
 	Minimap.location = Minimap:CreateFontString(nil, 'OVERLAY')
 	Minimap.location:FontTemplate(nil, nil, 'OUTLINE')

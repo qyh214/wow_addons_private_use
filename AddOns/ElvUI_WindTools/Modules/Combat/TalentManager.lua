@@ -16,12 +16,16 @@ local unpack = unpack
 local CreateFrame = CreateFrame
 local EasyMenu = EasyMenu
 local GameTooltip = _G.GameTooltip
+local GetItemIcon = GetItemIcon
 local GetSpecialization = GetSpecialization
 local GetSpecializationInfo = GetSpecializationInfo
 local GetTalentInfo = GetTalentInfo
 local GetTalentTierInfo = GetTalentTierInfo
 local IsAddOnLoaded = IsAddOnLoaded
+local Item = Item
 local LearnTalents = LearnTalents
+
+local C_Timer_After = C_Timer.After
 
 local ACCEPT = _G.ACCEPT
 local CANCEL = _G.CANCEL
@@ -31,6 +35,7 @@ function TM:ADDON_LOADED(_, addon)
     if addon == "Blizzard_TalentUI" then
         self:UnregisterEvent("ADDON_LOADED")
         self:BuildFrame()
+        self:UpdateItemButtons()
     end
 end
 
@@ -251,6 +256,115 @@ function TM:SetButtonTooltip(button)
     GameTooltip:Show()
 end
 
+function TM:CreateItemButton(parent, itemID, itemName, width, height)
+    local button = CreateFrame("Button", nil, parent, "SecureActionButtonTemplate, BackdropTemplate")
+    button:Size(width, height or width)
+    button:SetTemplate("Default")
+    button:SetClampedToScreen(true)
+    button:SetAttribute("type", "item")
+    button:SetAttribute("item", itemName)
+    button:EnableMouse(true)
+    button:RegisterForClicks("AnyUp")
+
+    local tex = button:CreateTexture(nil, "OVERLAY", nil)
+    tex:Point("TOPLEFT", button, "TOPLEFT", 1, -1)
+    tex:Point("BOTTOMRIGHT", button, "BOTTOMRIGHT", -1, 1)
+    tex:SetTexCoord(unpack(E.TexCoords))
+    tex:SetTexture(GetItemIcon(itemID))
+
+    button.tex = tex
+    button:StyleButton()
+
+    S:CreateShadow(button, nil, 0, 0.659, 1, true)
+    button.shadow:Hide()
+
+    button:SetScript(
+        "OnEnter",
+        function()
+            button.shadow:Show()
+            GameTooltip:SetOwner(button, "ANCHOR_BOTTOMRIGHT")
+            GameTooltip:SetItemByID(itemID)
+            GameTooltip:Show()
+        end
+    )
+
+    button:SetScript(
+        "OnLeave",
+        function()
+            button.shadow:Hide()
+            GameTooltip:Hide()
+        end
+    )
+
+    return button
+end
+
+function TM:UpdateItemButtons()
+    if self.db and self.db.itemButtons then
+        if not self.itemButtons then
+            self.itemButtons = {}
+            local frame = _G.PlayerTalentFrameTalents
+            local item1 = Item:CreateFromItemID(141446)
+            local item2 = Item:CreateFromItemID(153646)
+            item1:ContinueOnItemLoad(
+                function()
+                    self.itemButtons[1] = self:CreateItemButton(frame, 141446, item1:GetItemName(), 36)
+                    if not (_G.PlayerTalentFrame and _G.PlayerTalentFrame.backdrop) then
+                        C_Timer_After(
+                            1,
+                            function()
+                                if _G.PlayerTalentFrame and _G.PlayerTalentFrame.backdrop then
+                                    self.itemButtons[1]:Point(
+                                        "TOPLEFT",
+                                        _G.PlayerTalentFrame.backdrop,
+                                        "TOPLEFT",
+                                        79,
+                                        -31
+                                    )
+                                end
+                            end
+                        )
+                    else
+                        self.itemButtons[1]:Point("TOPLEFT", _G.PlayerTalentFrame.backdrop, "TOPLEFT", 79, -31)
+                    end
+                end
+            )
+            item2:ContinueOnItemLoad(
+                function()
+                    self.itemButtons[2] = self:CreateItemButton(frame, 153646, item2:GetItemName(), 36)
+                    if not (_G.PlayerTalentFrame and _G.PlayerTalentFrame.backdrop) then
+                        C_Timer_After(
+                            1,
+                            function()
+                                if _G.PlayerTalentFrame and _G.PlayerTalentFrame.backdrop then
+                                    self.itemButtons[2]:Point(
+                                        "TOPLEFT",
+                                        _G.PlayerTalentFrame.backdrop,
+                                        "TOPLEFT",
+                                        121,
+                                        -31
+                                    )
+                                end
+                            end
+                        )
+                    else
+                        self.itemButtons[2]:Point("TOPLEFT", _G.PlayerTalentFrame.backdrop, "TOPLEFT", 121, -31)
+                    end
+                end
+            )
+        end
+        for _, button in pairs(self.itemButtons) do
+            button:Show()
+        end
+    else
+        if self.itemButtons then
+            for _, button in pairs(self.itemButtons) do
+                button:Hide()
+            end
+        end
+    end
+end
+
 function TM:BuildFrame()
     if not IsAddOnLoaded("Blizzard_TalentUI") then
         self:RegisterEvent("ADDON_LOADED")
@@ -265,9 +379,8 @@ function TM:BuildFrame()
 
     frame:EnableMouse(true)
 
-    if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow then
-        S:CreateShadow(frame.backdrop)
-    end
+    S:CreateShadowModule(frame.backdrop)
+    S:MerathilisUISkin(frame.backdrop)
 
     -- 专精图标
     local tex = frame:CreateTexture(nil, "ARTWORK")
@@ -508,6 +621,11 @@ function TM:PLAYER_SPECIALIZATION_CHANGED(_, unit)
     end
 end
 
+function TM:PLAYER_ENTERING_WORLD()
+    self:UpdatePlayerInfo()
+    self:UpdateSetButtons()
+end
+
 function TM:Initialize()
     self.db = E.private.WT.combat.talentManager
     if not self.db.enable then
@@ -518,6 +636,7 @@ function TM:Initialize()
     self:UpdatePlayerInfo()
     self:BuildFrame()
 
+    self:RegisterEvent("PLAYER_ENTERING_WORLD")
     self:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
 end
 

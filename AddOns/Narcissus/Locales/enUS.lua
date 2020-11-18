@@ -5,7 +5,7 @@ local L = Narci.L
 NARCI_GRADIENT = "|cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r"
 MYMOG_GRADIENT = "|cffA236EFM|cff9448F1y |cff865BF2T|cff786DF4r|cff6A80F6a|cff5D92F7n|cff4FA4F9s|cff41B7FAm|cff33C9FCo|cff32c9fbg|r"
 
-NARCI_VERSION_INFO = "1.1.0";
+NARCI_VERSION_INFO = "1.1.0c";
 NARCI_DEVELOPER_INFO = "Designed by Peterodox";
 
 NARCI_NEW_ENTRY_PREFIX = "|cff40C7EB";
@@ -30,6 +30,7 @@ if IsMacClient() then
     NARCI_SHORTCUTS_COPY = "Command+C";
 end
 
+L["Swap items"] = "Swap items";
 L["Press Copy"] = NARCI_COLOR_GREY_70.. "Press |r".. NARCI_SHORTCUTS_COPY.. NARCI_COLOR_GREY_70 .." to Copy";
 L["Copied"] = NARCI_COLOR_GREEN_MILD.. "Link Copied";
 
@@ -63,9 +64,9 @@ L["TopQuality Button Tooltip Close"] = "Restore your graphics settings.";
 
 --Special Source--
 L["Heritage Armor"] = "Heritage Armor";
-ITEMSOURCE_SECRETFINDING = "Secret Finding";
+L["Secret Finding"] = "Secret Finding";
 
-HEART_QUOTE_1 = "what is essential is invisible to the eye.";
+NARCI_HEART_QUOTE_1 = "what is essential is invisible to the eye.";
 
 --Title Manager--
 L["Open Title Manager"] = "Open Title Manager";
@@ -78,7 +79,7 @@ L["Use Player Name"] = "Switch to "..CALENDAR_PLAYER_NAME;
 L["Minimap Tooltip Double Click"] = "Double-tap";
 L["Minimap Tooltip Left Click"] = "Left-click|r";
 L["Minimap Tooltip To Open"] = "|cffffffffOpen "..CHARACTER_INFO;
-L["Minimap Tooltip Enter Photo Mode"] = "|cffffffffEnter photo mode";
+L["Minimap Tooltip Module Panel"] = "|cffffffffOpen Module Panel";
 L["Minimap Tooltip Right Click"] = "Right-click";
 L["Minimap Tooltip Shift Left Click"] = "Shift + Left-click";
 L["Minimap Tooltip Shift Right Click"] = "Shift + Right-click";
@@ -93,68 +94,68 @@ L["Layout"] = "Layout";
 L["Symmetry"] = "Symmetry";
 L["Asymmetry"] = "Asymmetry";
 L["Copy Texts"] = "Copy Texts";
-NARCI_SYNTAX = "Syntax";
+L["Syntax"] = "Syntax";
 L["Plain Text"] = "Plain Text";
 L["BB Code"] = "BB Code";
 L["Markdown"] = "Markdown";
 L["Export Includes"] = "Export Includes...";
 NARCI_ITEM_ID = "Item ID";
 
-NARCI_3DMODEL = "3D Model";
+L["3D Model"] = "3D Model";
 NARCI_EQUIPMENTSLOTS = "Equipment Slots";
 
 --Preferences--
-NARCI_PREFERENCE = "Preferences-PH";
-NARCI_INTERFACE = "Interface";
-NARCI_THEME = "Themes";
-NARCI_EFFECTS = "Effects";
-NARCI_CAMERA = "Camera";
-NARCI_TRANSMOG = "Transmog";
+
 NARCI_PHOTO_MODE = L["Photo Mode"];
-NARCI_EXTENSIONS = "Extensions";
-L["Credits"] = "Credits";
-NARCI_ABOUT = "About";
-NARCI_PREFERENCE_TOOLTIP = "Click to open Preference Frame.";
-NARCI_TRUNCATE_TEXT = "Truncate Text";
-NARCI_ATTRIBUTE_FRAME = "Stat Sheet";
-NARCI_TEXT_WIDTH = "Text Width";
-NARCI_HOTKEY = "Hotkey";
-NARCI_DOUBLE_TAP = "Double-tap";
-NARCI_DOUBLE_TAP_DESCRIPTION = "Double-tap the key bound to Character Pane to open Narcissus."
 NARCI_OVERRIDE = "Override";
 NARCI_INVALID_KEY = "Invalid key combination.";
-NARCI_MINIMAP_BUTTON = "Minimap Button";
-NARCI_SHORTCUTS = "Shortcuts";
-NARCI_FILTERS = "Filters";
-NARCI_FILTERS_DESCRIPTION = "All filters except vignette will be disabled in transmog mode.";
-NARCI_GRAIN_EFFECT = "Grain Effect";
-NARCI_FADEOUT = "Fade Out on Mouseout";
-NARCI_FADEOUT_DESCRIPTION = "Button fades out when you move the cursor out of it.";
-NARCI_FADE_MUSIC = "Fade Music In/Out";
-NARCI_VIGNETTE_STRENGTH = "Vignette Strength";
-NARCI_WEATHER_EFFECT = "Weather Effect";
-NARCI_LETTERBOX_EFFECT = "Letterbox";
-NARCI_LETTERBOX_RATIO = "Ratio"
-NARCI_LETTERBOX_EFFECT_ALERT1 = "The aspect ratio of your monitor exceeds the selected ratio!"
-NARCI_LETTERBOX_EFFECT_ALERT2 = "It is recommend to set the UI Scale to %0.1f\n(the current scale is %0.1f)"
-NARCI_DEFAULT_LAYOUT = "Default Layout";
-NARCI_LAYOUT_1 = "Symmetry, 1 Model";
-NARCI_LAYOUT_2 = "2 Models";
-NARCI_LAYOUT_3 = "Compact Mode";
-NARCI_BORDER_THEME = "Border Theme";
-NARCI_BORDER_THEME_BRIGHT = "Bright";
-NARCI_BORDER_THEME_DARK = "Dark";
-NARCI_ALWAYS_SHOW_MODEL = "Always Show Model";
-NARCI_SHOW_FULL_BODY = "Show Full Body";
-NARCI_AFK_SCREEN_DESCRIPTION = "Automatically open Narcissus when yo go AFK.";
-NARCI_AFK_SCREEN_DESCRIPTION_EXTRA = "This will override ElvUI AFK Mode.";
-NARCI_GEMMA = "\"Gemma\"";
-NARCI_GEMMY_DESCRIPTION = "Show a list of gems when socketing an item.";
-NARCI_DRESSING_ROOM = "Dressing Room"
-NARCI_DRESSING_ROOM_DESCRIPTION = "Bigger dressing room pane with the abilities to view and copy other players' item lists and generate Wowhead dressing room links.";
 NARCI_REQUIRE_RELOAD = NARCI_COLOR_RED_MILD.. "UI reload is required.|r";
-NARCI_PREFERENCE_GENERAL = "General";   --General options
 
+L["Preferences"] = "Preferences";
+L["Preferences Tooltip"] = "Click to open Preferences Panel.";
+L["Extensions"] = "Extensions";
+L["About"] = "About";
+L["Image Filter"] = "Filters";    --Image filter
+L["Image Filter Description"] = "All filters except vignette will be disabled in transmog mode.";
+L["Grain Effect"] = "Grain Effect";
+L["Fade Music"] = "Fade Music In/Out";
+L["Vignette Strength"] = "Vignette Strength";
+L["Weather Effect"] = "Weather Effect";
+L["Letterbox"] = "Letterbox";
+L["Letterbox Ratio"] = "Ratio";
+L["Letterbox Alert1"] = "The aspect ratio of your monitor exceeds the selected ratio!"
+L["Letterbox Alert2"] = "It is recommend to set the UI Scale to %0.1f\n(the current scale is %0.1f)"
+L["Default Layout"] = "Default Layout";
+L["Transmog Layout1"] = "Symmetry, 1 Model";
+L["Transmog Layout2"] = "2 Models";
+L["Transmog Layout3"] = "Compact Mode";
+L["Always Show Model"] = "Show 3D Model While Using Symmetry Layout";
+L["AFK Screen Description"] = "Automatically open Narcissus when yo go AFK.";
+L["AFK Screen Description Extra"] = "This will override ElvUI AFK Mode.";
+L["Gemma"] = "\"Gemma\"";   --Don't translate
+L["Gemma Description"] = "Show a list of gems when socketing an item.";
+L["Dressing Room"] = "Dressing Room"
+L["Dressing Room Description"] = "Bigger dressing room pane with the abilities to view and copy other players' item lists and generate Wowhead dressing room links.";
+L["General"] = "General";   --General options
+L["Interface"] = "Interface";
+L["Shortcuts"] = "Shortcuts";
+L["Themes"] = "Themes";
+L["Effects"] = "Effects";   --UI effect
+L["Camera"] = "Camera";
+L["Transmog"] = "Transmog";
+L["Credits"] = "Credits";
+L["Border Theme Header"] = "Border Theme";
+L["Border Theme Bright"] = "Bright";
+L["Border Theme Dark"] = "Dark";
+L["Text Width"] = "Text Width";
+L["Truncate Text"] = "Truncate Text";
+L["Stat Sheet"] = "Stat Sheet";
+L["Minimap Button"] = "Minimap Button";
+L["Fade Out"] = "Fade Out On Mouseout";
+L["Fade Out Description"] = "Button fades out when you move the cursor out of it.";
+L["Hotkey"] = "Hotkey";
+L["Double Tap"] = "Enable Double-tap";
+L["Double Tap Description"] = "Double-tap the key bound to Character Pane to open Narcissus.";
 L["Show Detailed Stats"] = "Show Detailed Stats";
 L["Tooltip Color"] = "Tooltip Color";
 L["Entrance Visual"] = "Entrance Visual";
@@ -173,8 +174,10 @@ L["Item Socketing Tooltip"] = "Double-click to embed";
 L["No Available Gem"] = "|cffd8d8d8No available gem|r";
 L["Use Bust Shot"] = "Use Bust Shot";
 L["Use Escape Button"] = "Esc Key";
-L["Use Escape Button Description"] = "Press the Escape key to exit.\nOr exit by clicking the hidden X button on the top-right of your screen.";
-L["Handled by Other Addons"] = "Handled by Other Addons";
+L["Use Escape Button Description1"] = "Press the Escape key to exit.";
+L["Use Escape Button Description2"] = "Exit by clicking the hidden X button on the top-right of your screen.";
+L["Show Module Panel Gesture"] = "Show Module Panel On Mouseover";
+L["Independent Minimap Button"] = "Unaffected By Other Addons";
 L["AFK Screen"] = "AFK Screen";
 L["Keep Standing"] = "Keep Standing";
 L["Keep Standing Description"] = "Cast /stand every now and then when you go AFK. This will not prevent AFK logout.";
@@ -203,11 +206,15 @@ L["Sceenshot Quality"] = "Sceenshot Quality";
 L["Screenshot Quality Description"] = "Higher quality results in bigger file size.";
 L["Camera Movement"] = "Camera Movement";
 L["Orbit Camera"] = "Orbit Camera";
-L["Orbit Camera Description On"] = "When you open this addon, the camera will be rotated to your front and begin orbiting.";
-L["Orbit Camera Description Off"] = "When you open this addon, the camera will be zoomed in without rotation";
+L["Orbit Camera Description On"] = "When you open this character panel, the camera will be rotated to your front and begin orbiting.";
+L["Orbit Camera Description Off"] = "When you open this character panel, the camera will be zoomed in without rotation";
 L["Camera Safe Mode"] = "Camera Safe Mode";
 L["Camera Safe Mode Description"] = "Fully disable ActionCam feature after closing this addon.";
 L["Camera Safe Mode Description Extra"] = "Untoggled because you are using DynamicCam."
+L["Camera Transition"] = "Camera Transition";
+L["Camera Transition Description On"] = "Camera will move smoothly to the predetermined position when you open this character panel.";
+L["Camera Transition Description Off"] = "Camera transition becomes instant. Starts from the second time you use this character panel.\nInstant transition will override camera preset #4.";
+L["Interface Options Tab Description"] = "You can also access the this panel by clicking the gear button next to the toolbar on the bottom left of your screen while using Narcissus.";
 
 --Model Control--
 NARCI_HOLD_WEAPON = "Draw Weapon";
@@ -218,13 +225,13 @@ NARCI_SPELLCASTING = "Spellcasting";
 NARCI_ANIMATION_ID = "Animation ID";
 NARCI_LINK_LIGHT_SETTINGS = "Link Light Sources";
 NARCI_LINK_MODEL_SCALE = "Link Model Scales";
-NARCI_GROUP_PHOTO = "Group Photo";
 NARCI_GROUP_PHOTO_AVAILABLE = "Now available in Narcissus";
 NARCI_GROUP_PHOTO_NOTIFICATION = "Please select a target.";
 NARCI_GROUP_PHOTO_STATUS_HIDDEN = "Hidden";
 NARCI_DIRECTIONAL_AMBIENT_LIGHT = "Directional/Ambient Light";
 NARCI_DIRECTIONAL_AMBIENT_LIGHT_TOOLTIP = "Switch between\n- Directional light that can be blocked by object and cast shadow\n- Ambient light that influences the entire model";
 
+L["Group Photo"] = "Group Photo";
 L["Reset"] = "Reset";
 L["Actor Index"] = "Index";
 L["Move To Font"] = "|cff40c7ebFront|r";
@@ -251,13 +258,19 @@ L["Show Color Presets"] = "Show color presets";
 L["Keep Current Form"] = "Hold "..NARCI_MODIFIER_ALT.." to keep shapeshift form.";
 L["Race Change Tooltip"] = "Change to another playerable race";
 L["Sex Change Tooltip"] = "Change sex";
+L["Show More options"] = "Show More options";
+L["Show Less Options"] = "Show Less Options";
+L["Shadow"] = "Shadow";
+L["Light Source"] = "Light Source";
+L["Light Source Independent"] = "Independent";
+L["Light Source Interconnected"] = "Interconnected";
 
 
 --Animation Browser--
 L["Animation"] = "Animation";
 L["Animation Tooltip"] = "Browse, search animations";
 L["Animation Variation"] = "Animation Variation";
-
+L["Reset Slider"] = "Reset to zero";
 
 
 --Spell Visual Browser--
@@ -347,7 +360,6 @@ L["Corruption Bar Description"] = "Enable the corruption bar next to the Charact
 L["Corruption Debuff Tooltip"] = "Debuff Tooltip";
 L["Corruption Debuff Tooltip Description"] = "Replace the default negative effects tooltip with its numeric counterpart.";
 L["No Corrupted Item"] = "You haven't equipped any corrupted item.";
-L["Total Corruption Format"] = CORRUPTION_TOOLTIP_LINE.." - "..CORRUPTION_RESISTANCE_TOOLTIP_LINE.." = ".."%s";
 
 L["Crit Gained"] = CRIT_ABBR.." Gained";
 L["Haste Gained"] = STAT_HASTE.." Gained";
@@ -376,12 +388,17 @@ L["Text Overlay Button Tooltip5"] = "Black Bar Subtitle";
 L["Visibility"] = "Visibility";
 
 --Achievement Frame--
+L["Use Achievement Panel"] = "Use As Primary Achievement Panel";
+L["Use Achievement Panel Description"] = "Replace the default achievement toast. Enable tooltip enhancement. Click tracked achievements to open this panel.";
 L["Incomplete First"] = "Incomplete First";
 L["Earned First"] = "Earned First";
 L["Settings"] = "Settings";
 L["Next Prev Card"] = "Next/Prev Card";
 L["Track"] = "Track";   --Track achievements
-
+L["Show Unearned Mark"] = "Show Unearned Mark";
+L["Show Unearned Mark Description"] = "Mark the achievements that were not earned by me with a red X.";
+L["Show Dates"] = "Show Dates";
+L["Hide Dates"] = "Hide Dates";
 
 --Barbershop--
 L["Save New Look"] = "Save New Look";
@@ -396,6 +413,8 @@ L["Locations"] = "Locations";
 L["Location"] = "Location";
 L["Visits"] = "Visits";     --number of visits
 L["Duration"] = "Duration";
+L["Edit Name"] = "Edit Name";
+L["Delete Look"] = "Delete Look\n(Click and Hold)";
 
 --Tutorial--
 L["Alert"] = "Warning";
@@ -410,15 +429,16 @@ L["Guide History Headline"] = "History Panel";
 L["Guide History Line1"] = "At most 5 recently applied visuals can retain here. You can select one and delete it by clicking the Remove button on the right end.";
 L["Guide Refresh Line1"] = "Use this button to remove all unapplied spell visuals. Those that were in the history panel will be reapplied.";
 L["Guide Input Headline"] = "Manual Input";
-L["Guide Input Line1"] = "You may also input a SpellVisualKitID yourself. As of 8.3, Its cap is around 124,000.\nYou can use your mousewheel to try the next/previous ID.\nVery few IDs can crash the game.";
+L["Guide Input Line1"] = "You may also input a SpellVisualKitID yourself. As of 9.0, Its cap is around 155,000.\nYou can use your mousewheel to try the next/previous ID.\nVery few IDs can crash the game.";
 L["Guide Equipment Manager Line1"] = "Double-click: Use a set\nRight-click: Edit a set.\n\nThis button's previous function has been moved to Preferences.";
 L["Guide Model Control Headline"] = "Model Control";
 L["Guide Model Control Line1"] = format("This model shares the same mouse actions you use in the dressing room, plus:\n\n1.Hold %s and Left Button: Rotate model around Y-axis.\n2.Hold %s and Right Button: Execute scrubby zoom.", NARCI_MODIFIER_ALT, NARCI_MODIFIER_ALT);
 L["Guide Minimap Button Headline"] = "Minimap Button";
-L["Guide Minimap Button Line1"] = "Narcissus minimap button can now be handled by other addons.\nYou can change this option in the Preferences pane. It may require a UI reload."
+L["Guide Minimap Button Line1"] = "Narcissus minimap button can now be handled by other addons.\nYou can change this option in the Preferences Panel. It may require a UI reload."
 L["Guide NPC Entrance Line1"] = "You can add any NPC into your scene."
 L["Guide NPC Browser Line1"] = "Notable NPCs are listed in the catalog below.\nYou can also search for ANY creatures by name or ID.\nNotice that the first time you use the search function this login, it could take a few seconds to build the search table and your screen might freeze as well.\nYou may untoggle the \"Load on Demand\" option in the Preference Pane so that the database will be constructed right after you log in.";
 
+    
 --Splash--
 NARCI_SPLASH_WHATS_NEW_FORMAT = "What's New in Narcissus %s";
 
@@ -448,14 +468,14 @@ L["Flavored Text"] = "Visit any Yogg Salon in major cities today to recieve a 10
 
 --Project Details--
 NARCI_ALL_PROJECTS = "All Projects";
-NARCI_PROJECT_DETAILS = "|cFFFFD100Developer: Peterodox\nRelease Date: October 13, 2020|r\n\nThank you for trying this add-on! If you have any issues, suggestions, ideas, please leave a comment on the curseforge page or contact me on...";
-NARCI_PROJECT_AAA_TITLE = "|cff008affA|cff0d8ef2z|cff1a92e5e|cff2696d9r|cff339acco|cff409ebft|cff4da1b2h |cff59a5a6A|cff66a999d|cff73ad8cv|cff7fb180e|cff8cb573n|cff99b966t|cffa6bd59u|cffb2c14dr|cffbfc440e |cffccc833A|cffd9cc26l|cffe5d01ab|cfff2d40du|cffffd800m";
+NARCI_PROJECT_DETAILS = "|cFFFFD100Developer: Peterodox\nRelease Date: October 26, 2020|r\n\nThank you for trying this add-on! If you have any issues, suggestions, ideas, please leave a comment on the curseforge page or contact me on...";
+NARCI_PROJECT_AAA_TITLE = "|cff008affA|cff0d8ef2z|cff1a92e5e|cff2696d9r|cff339acco|cff409ebft|cff4da1b2h |cff59a5a6A|cff66a999d|cff73ad8cv|cff7fb180e|cff8cb573n|cff99b966t|cffa6bd59u|cffb2c14dr|cffbfc440e |cffccc833A|cffd9cc26l|cffe5d01ab|cfff2d40du|cffffd800m|r";
 NARCI_PROJECT_AAA_SUMMARY = "Explore places of interest and collect lores and photos from all across Azeroth.|cff636363";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "An immersive character pane and your ultimate screenshot tool.";
 
 
 --Credits--
-NARCI_CREDITS_EXTRA = "Marlamin | WoW.tools\nKeyboardturner | Avid Bug Finder(Generator)\nHubbotu | Translator - Russian";
+L["Credit List Extra"] = "Marlamin | WoW.tools\nKeyboardturner | Avid Bug Finder(Generator)\nHubbotu | Translator - Russian\nMeorawr | Wondrous Wisdomball";
 
 --Conversation--
 L["Q1"] = "What is this?";
@@ -466,4 +486,4 @@ L["Q5"] = "One more thing, could you promise me no more pranks?";
 L["A1"] = "Apparently, this is an exit confirmation dialog. It pops up when you try to exit group photo mode by pressing hotkey.";
 L["A2"] = "Ha, that's what she said.";
 L["A3"] = "Fine...fine..."
-L["A4"] = "Just open the Preferences then go Photo Mode. You won't miss it.";
+L["A4"] = "Sorry, you can't. It's for safety you know.";

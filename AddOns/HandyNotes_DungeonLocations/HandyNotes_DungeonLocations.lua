@@ -117,7 +117,8 @@ do
 
 		local state, value = next(data, prestate)
 
-		if value then
+		while value do
+			--print(t.minimapUpdate, value.showInZone)
 			local alpha
 			
 			local allLocked = true
@@ -143,7 +144,7 @@ do
 			end
 			
 			--print('Minimap', t.minimapUpdate, legionInstancesDiscovered[value.id])
-			if not legionInstancesDiscovered[value.id] and db.show[value.type] or t.minimapUpdate then
+			if t.minimapUpdate or value.showInZone then
 			 return state, nil, icon, db.zoneScale, alpha
 			end
 			state, value = next(data, state)
@@ -603,6 +604,7 @@ nodes[15] = { -- Badlands
   id = 239,
   type = "Dungeon",
   hideOnMinimap = true,
+  showInZone = true,
  }, -- Uldaman (Secondary Entrance)
 }
 minimap[15] = { -- Badlands
@@ -670,6 +672,7 @@ nodes[23] = { -- EasternPlaguelands
   id = 236,
   lfgid = 274,
   type = "Dungeon", -- Stratholme Service Entrance
+  showInZone = true,
  },
 }
 nodes[69] = { -- Feralas
@@ -677,7 +680,8 @@ nodes[69] = { -- Feralas
   id = 230,
   lfgid = 34,
   type = "Dungeon",
-  --hideOnContinent = true,
+  showInZone = true,
+  hideOnContinent = true,
  }, -- Dire Maul, probably dire maul east
  [60403070] = {
   id = 230,
@@ -685,6 +689,7 @@ nodes[69] = { -- Feralas
   type = "Dungeon",
   hideOnContinent = true,
   hideOnMinimap = true,
+  showInZone = true,
  }, -- Dire Maul West (probably) One spot between the two actual entrances
  -- Captial Gardens, 60.3 31.3; 60.4 30.7; 60.3 30.1; 429
  -- North Maybe?, 62.5 24.9; 
@@ -693,12 +698,14 @@ nodes[69] = { -- Feralas
   lfgid = 38,
   type = "Dungeon",
   hideOnContinent = true,
+  showInZone = true,
  }, -- Dire Maul, probaly dire maul north
  [77053693] = {
   id = 230,
   lfgid = 34,
   type = "Dungeon",
   hideOnContinent = true,
+  showInZone = true,
  }, -- Dire Maul (at Lariss Pavillion)
 }
 nodes[85] = { -- Orgrimmar

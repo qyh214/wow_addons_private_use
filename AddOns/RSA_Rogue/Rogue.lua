@@ -18,7 +18,7 @@ function RSA_Rogue:OnEnable()
 	local MonitorConfig_Rogue = {
 		player_profile = RSA.db.profile.Rogue,
 		SPELL_DISPEL = {
-			[248744] = { -- Shiv
+			[5938] = { -- Shiv
 				profile = 'Shiv',
 				section = 'Dispel',
 				replacements = { TARGET = 1, extraSpellName = '[AURA]', extraSpellLink = '[AURALINK]' }

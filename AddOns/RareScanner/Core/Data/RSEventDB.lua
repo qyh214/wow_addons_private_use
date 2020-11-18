@@ -5,6 +5,8 @@ local ADDON_NAME, private = ...
 
 local RSEventDB = private.NewLib("RareScannerEventDB")
 
+-- RareScanner libraries
+local RSConstants = private.ImportLib("RareScannerConstants")
 
 ---============================================================================
 -- Completed events database
@@ -20,7 +22,7 @@ function RSEventDB.IsEventCompleted(eventID)
 	if (eventID and private.dbchar.events_completed[eventID]) then
 		return true;
 	end
-	
+
 	return false
 end
 
@@ -32,7 +34,7 @@ function RSEventDB.GetEventCompletedRespawnTime(eventID)
 	if (RSEventDB.IsEventCompleted(eventID)) then
 		return private.dbchar.events_completed[eventID]
 	end
-	
+
 	return 0
 end
 
@@ -65,7 +67,7 @@ function RSEventDB.GetInternalEventInfo(eventID)
 	if (eventID) then
 		return private.EVENT_INFO[eventID]
 	end
-	
+
 	return nil
 end
 
@@ -76,7 +78,7 @@ function RSEventDB.IsInternalEventInMap(eventID, mapID)
 			return true;
 		end
 	end
-	
+
 	return false;
 end
 
@@ -125,7 +127,7 @@ function RSEventDB.InitEventNamesDB()
 	if (not private.dbglobal.event_names) then
 		private.dbglobal.event_names = {}
 	end
-	
+
 	if (not private.dbglobal.event_names[GetLocale()]) then
 		private.dbglobal.event_names[GetLocale()] = {}
 	end
@@ -141,6 +143,6 @@ function RSEventDB.GetEventName(eventID)
 	if (eventID and private.dbglobal.event_names[GetLocale()][eventID]) then
 		return private.dbglobal.event_names[GetLocale()][eventID]
 	end
-	
+
 	return nil
 end

@@ -230,7 +230,7 @@ function CB:UpdateBar()
     -- 建立普通频道条
     for _, name in ipairs(normalChannelsIndex) do
         local db = self.db.channels[name]
-        local show = db.enable
+        local show = db and db.enable
 
         if show and self.db.autoHide then -- 自动隐藏功能
             if checkFunctions[name] then
@@ -543,7 +543,8 @@ function CB:Initialize()
         "ALL,WINDTOOLS",
         function()
             return CB.db.enable
-        end
+        end,
+        "WindTools,social,chatBar"
     )
 
     if self.db.autoHide then

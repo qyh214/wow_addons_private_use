@@ -118,7 +118,7 @@ end
 local function SortedByID(a, b) return a > b; end
 table.sort(GemIDList, SortedByID);
 
-GemCountList = {};
+local GemCountList = {};
 local buttonHeight = 48 --buttons[1] and buttons[1]:GetHeight()
 local buttonsPerPage = 4;
 local hasCounted = false;   --Only calculate once, until a Socketing succeed event fires
@@ -264,7 +264,7 @@ local function GetBagPosition(itemID)
     end
 end
 
-function AutoSocket(slotID, GemID)
+local function AutoSocket(slotID, GemID)
     --local item = Item:CreateFromItemID(itemID)
     ClearCursor()
     if not slotID or not GemID then return; end

@@ -156,6 +156,7 @@ do
     L.Quest = AUCTION_CATEGORY_QUEST_ITEMS;
     L.BattlePets = AUCTION_CATEGORY_BATTLE_PETS;
     L.Enhancement = AUCTION_CATEGORY_ITEM_ENHANCEMENT;
+    L.New = NEW ;
 
     L.All = ALL;
     L.Equipment = L.Weapon .. ' & ' .. L.Armor;
@@ -199,6 +200,11 @@ do
                      type == LE_ITEM_CLASS_CONTAINER;
           end
         },
+        { L.New, 'Interface/PaperDollInfoFrame/UI-GearManager-ItemIntoBag', -- Achievement_Guild_DoctorIsIn.blp Spell_ChargePositive.blp UI_Mission_ItemUpgrade.blp 
+          function(location, link, type, subType)
+             return C_NewItems.IsNewItem(location.bagID, location.slotIndex);
+          end
+      }
     };
        
     U.numFilters = #U.Filters;

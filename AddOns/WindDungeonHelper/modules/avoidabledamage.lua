@@ -467,6 +467,10 @@ function AD:SpellDamage(dstName, spellID, damageAmount)
 end
 
 function AD:SpellDamageAnnouncer(player)
+    if not timerData[player] then
+        return
+    end
+    
     local spellLinks = ""
     local totalDamage = 0
 
@@ -523,11 +527,16 @@ end
 function AD:CHALLENGE_MODE_COMPLETED()
     self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
-    if self.db.rank.enable then
+    if not self.db.rank.enable then
         return
     end
 
-    if #combinedFails == 0 then
+    local count = 0
+    for _ in pairs(combinedFails) do
+        count = count + 1
+    end
+
+    if count == 0 then
         self:SendChatMessage(L["No failure damage was taken this run."])
         return
     end
@@ -546,7 +555,7 @@ function AD:CHALLENGE_MODE_COMPLETED()
     end
 
     if self.db.rank.worst then
-        self:SendChatMessage("------------------------")
+        self:SendChatMessage("-----------------------")
         self:SendChatMessage(format("%s: %s", self.db.rank.customWorst, damageTable[1].key))
     end
 

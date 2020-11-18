@@ -32,17 +32,13 @@ if (true) then
 	--return - nah, not today
 end
 
-
 local WorldQuestTracker = WorldQuestTrackerAddon
 local ff = WorldQuestTrackerFinderFrame
 local rf = WorldQuestTrackerRareFrame
 
-
-
 -- 219978
 -- /run SetSuperTrackedQuestID(44033);
 -- TaskPOI_OnClick
- 
 
 
 local GameCooltip = GameCooltip2
@@ -66,13 +62,6 @@ local GetQuestTimeLeftMinutes = C_TaskQuest.GetQuestTimeLeftMinutes
 local MapRangeClamped = DF.MapRangeClamped
 local FindLookAtRotation = DF.FindLookAtRotation
 local GetDistance_Point = DF.GetDistance_Point
-
---importing FindLookAtRotation
-if (not FindLookAtRotation) then
-	FindLookAtRotation = function (_, x1, y1, x2, y2)
-		return atan2 (y2 - y1, x2 - x1) + pi
-	end
-end
 
 local _
 
@@ -649,10 +638,15 @@ end
 		local title, factionID = GetQuestInfoByQuestID(questID)
 
 		local tagInfo = C_QuestLog.GetQuestTagInfo(questID)
+		if (not tagInfo) then
+			WorldQuestTracker:Msg("no tag info for quest:", questID, title)
+			return
+		end
+		
 		local tagID = tagInfo.tagID
 		local tagName = tagInfo.tagName
 		local worldQuestType = tagInfo.worldQuestType
-		local rarity = tagInfo.rarity
+		local rarity = tagInfo.quality
 		local isElite = tagInfo.isElite
 		--local quality = tagInfo.quality
 
@@ -890,7 +884,12 @@ local tutorial_four = function()
 end
 
 function WorldQuestTracker.ShowTutorialAlert()
-	
+
+	if (true) then
+		--disabled tutorials for 9.0.1, due to "MicroButtonAlertTemplate" being nil, need to replace with the new animation
+		return
+	end
+
 	WorldQuestTracker.db.profile.TutorialPopupID = WorldQuestTracker.db.profile.TutorialPopupID or 1
 	
 	--WorldQuestTracker.db.profile.TutorialPopupID = 3
@@ -906,31 +905,26 @@ function WorldQuestTracker.ShowTutorialAlert()
 			WorldQuestTracker.TutorialAlertOnHold = true
 			return
 		end
-		
-		if (GetExpansionLevel() == 6 or UnitLevel ("player") == 110) then --legion
-			WorldMapFrame:SetMapID (WorldQuestTracker.MapData.ZoneIDs.BROKENISLES)
-		elseif (GetExpansionLevel() == 7 or UnitLevel ("player") == 120) then --bfa
-			WorldMapFrame:SetMapID (WorldQuestTracker.MapData.ZoneIDs.KULTIRAS)
-		end
-		
+
+		WorldMapFrame:SetMapID (WorldQuestTracker.MapData.ZoneIDs.KULTIRAS)
 		WorldQuestTracker.UpdateWorldQuestsOnWorldMap (true)
 		
-		C_Timer.After (4, tutorial_one)
+		--C_Timer.After (4, tutorial_one)
 		return
 		
 	elseif (WorldQuestTracker.db.profile.TutorialPopupID == 2) then
 	
-		C_Timer.After (.5, tutorial_two)
+		--C_Timer.After (.5, tutorial_two)
 		return
 
 	elseif (WorldQuestTracker.db.profile.TutorialPopupID == 3) then
 	
-		C_Timer.After (.5, tutorial_three)
+		--C_Timer.After (.5, tutorial_three)
 		return
 		
 	elseif (WorldQuestTracker.db.profile.TutorialPopupID == 4) then
 	
-		C_Timer.After (.5, tutorial_four)
+		--C_Timer.After (.5, tutorial_four)
 		return
 		
 	end

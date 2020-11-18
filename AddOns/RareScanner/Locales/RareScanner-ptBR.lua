@@ -26,8 +26,6 @@ if AL then
 	AL["DISPLAY_BUTTON_CONTAINERS"] = "Alterna mostrando o botão para tesouro/baú"
 	AL["DISPLAY_BUTTON_CONTAINERS_DESC"] = "Alterna mostrando o botão de tesouro/baú. Não afeta o som de alarme nem os alertas de chat"
 	AL["DISPLAY_BUTTON_DESC"] = "Quando desativado, deixa de mostrar o botão e a miniatura. Não afeta o som de alarme nem as mensagens de chat"
-	AL["DISPLAY_LOG_WINDOW"] = "Mostra a janela de log"
-	AL["DISPLAY_LOG_WINDOW_DESC"] = "Quando desativado, a janela de registos (janela de log) não aparecerá novamente. "
 	AL["DISPLAY_LOOT_ON_MAP"] = "Mostra o loot nas dicas de contexto (tooltips) do mapa"
 	AL["DISPLAY_LOOT_ON_MAP_DESC"] = "Alterna mostrando o loot de PNJ/recipientes nas dicas de contexto (tooltips) que aparecem quando você move o mouse sobre os ícones"
 	AL["DISPLAY_LOOT_PANEL"] = "Mostrar barra de saque (loot)"
@@ -40,6 +38,7 @@ if AL then
 	AL["DISPLAY_MINIATURE_DESC"] = "Quando desativado, a miniatura não aparecerá novamente. "
 	AL["DISPLAY_OPTIONS"] = "Mostrar opções"
 	AL["DUNGEONS_SCENARIOS"] = "Masmorras/Cenários"
+	AL["ENABLE_MARKER"] = "Alternar o marcador de destino"
 	AL["ENABLE_SCAN_CONTAINERS"] = "Ativa a busca de tesouros ou baús"
 	AL["ENABLE_SCAN_CONTAINERS_DESC"] = "Quando ativado, aparecerá um aviso visual e sonoro cada vez que um tesouro ou baú apareça no seu minimapa."
 	AL["ENABLE_SCAN_EVENTS"] = "Ativar a busca de eventos"
@@ -53,6 +52,7 @@ if AL then
 	AL["ENABLE_SEARCHING_RARE_TOOLTIP"] = "Habilita alertas de busca para este PNJ raro"
 	AL["ENABLED_SEARCHING_RARE"] = "Habilitou a busca deste PNJ raro: "
 	AL["EVENT"] = "Evento"
+	AL["EXPEDITION_ISLANDS"] = "Ilhas de expedições"
 	AL["FILTER"] = "Filtros de PNJ"
 	AL["FILTER_CONTINENT"] = "Continente/Categoria"
 	AL["FILTER_CONTINENT_DESC"] = "Nome de continente ou categoria"
@@ -68,9 +68,6 @@ if AL then
 	AL["GENERAL_OPTIONS"] = "Opções gerais"
 	AL["JUST_SPAWNED"] = "%s acabou de aparecer. Olhe seu mapa!"
 	AL["LEFT_BUTTON"] = "Botão esquerdo"
-	AL["LOG_WINDOW_AUTOHIDE"] = "Oculta automaticamente botões de PNJ logueados"
-	AL["LOG_WINDOW_AUTOHIDE_DESC"] = "Esconde cada botão de PNJ após o tempo selecionado (em minutos). Se você selecionar zero minutos, os botões permanecerão até que feche a janela de log, ou até que atinja o número máximo de botões (nesse caso, o mais antigo será substituído)."
-	AL["LOG_WINDOW_OPTIONS"] = "Opções de janela de log"
 	AL["LOOT_CATEGORY_FILTERED"] = "Filtro ativo para a categoria/subcategoria: %s/%s. Você pode desativar este filtro clicando novamente no ícone de loot (saque) ou através do menu do addon RareScanner"
 	AL["LOOT_CATEGORY_FILTERS"] = "Filtros de Categoria"
 	AL["LOOT_CATEGORY_FILTERS_DESC"] = "Filtra o saque (loot) mostrado pela categoria"
@@ -116,11 +113,10 @@ if AL then
 	AL["MAP_TOOLTIP_ACHIEVEMENT"] = "Este é um objetivo da conquista %s"
 	AL["MAP_TOOLTIP_ALREADY_KILLED"] = "Este PNJ foi assassinado. Reinício em: %s"
 	AL["MAP_TOOLTIP_ALREADY_OPENED"] = "Este recipiente já está aberto. Reinício em: %s"
-	AL["MAP_TOOLTIP_CONTAINER_LOOTED"] = "Shift-Clique-esquerdo para determinar como looteado (saqueado). "
+	AL["MAP_TOOLTIP_CONTAINER_LOOTED"] = "Alt-Shift-Clique-esquerdo para determinar como looteado (saqueado). "
 	AL["MAP_TOOLTIP_DAYS"] = "dias"
-	AL["MAP_TOOLTIP_EVENT_DONE"] = "Shift-clique-esquerdo para determinar como completado"
-	AL["MAP_TOOLTIP_IGNORE_ICON"] = "Shift-Clique-esquerdo para esconder este ícone indefinidamente, se não era suposto aparecer aqui.  "
-	AL["MAP_TOOLTIP_KILLED"] = "Shift-Clique-esquerdo para determinar como morto"
+	AL["MAP_TOOLTIP_EVENT_DONE"] = "Alt-Shift-clique-esquerdo para determinar como completado"
+	AL["MAP_TOOLTIP_KILLED"] = "Alt-Shift-Clique-esquerdo para determinar como morto"
 	AL["MAP_TOOLTIP_NOT_FOUND"] = "Ainda não tinha visto este PNJ e ninguém o tinha partilhado com você"
 	AL["MAP_TOOLTIP_SEEN"] = "Visto anteriormente: %s"
 	AL["MESSAGE_OPTIONS"] = "Opções de mensagens "
@@ -164,6 +160,8 @@ if AL then
 	AL["TOOLTIP_TOP"] = "Lado superior"
 	AL["UNKNOWN"] = "Desconhecido"
 	AL["UNKNOWN_TARGET"] = "Objetivo desconhecido"
+	AL["ZONE_1332"] = "%s (Front de Guerra)"
+	AL["ZONE_943"] = "%s (Front de Guerra)"
 	AL["ZONES_FILTER"] = "Filtros de zonas"
 	AL["ZONES_FILTERS_SEARCH_DESC"] = "Escreva o nome da zona para filtrar na lista de baixo"
 
@@ -174,6 +172,6 @@ if AL then
 		[9997] = "Masmorras/Cenários"; --Dungeons/Scenarios
 		[9996] = "Raides"; --Raids
 		[9995] = "Desconhecido"; --Unknown
-		[9994] = "Expedition islands"; --Expedition islands
+		[9994] = "Ilhas de expedições"; --Expedition islands
 	}
 end

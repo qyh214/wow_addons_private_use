@@ -36,6 +36,10 @@ local TargetToWorld = {
 }
 
 function RM:UpdateBar()
+	if not self.bar then
+		return
+	end
+
 	if not self.db.enable then
 		self.bar:Hide()
 		return
@@ -129,7 +133,7 @@ function RM:ToggleSettings()
 		self:UnregisterEvent("PLAYER_REGEN_ENABLED")
 	end
 
-	if not self.db.enable then
+	if self.bar and not self.db.enable then
 		UnregisterStateDriver(self.bar, "visibility")
 		self.bar:Hide()
 		return
@@ -139,27 +143,29 @@ function RM:ToggleSettings()
 	self:UpdateBar()
 
 	-- 注册团队状况显隐
-	RegisterStateDriver(
-		self.bar,
-		"visibility",
-		self.db.visibility == "DEFAULT" and "[noexists, nogroup] hide; show" or
-			self.db.visibility == "ALWAYS" and "[noexists, nogroup] show; show" or
-			"[group] show; hide"
-	)
+	if self.bar and self.db and self.db.visibility then
+		RegisterStateDriver(
+			self.bar,
+			"visibility",
+			self.db.visibility == "DEFAULT" and "[noexists, nogroup] hide; show" or
+				self.db.visibility == "ALWAYS" and "[petbattle] hide; show" or
+				"[group] show; [petbattle] hide; hide"
+		)
+	end
 
 	-- 鼠标显隐
 	if self.db.mouseOver then
 		self.bar:SetScript(
 			"OnEnter",
 			function(self)
-				UIFrameFadeIn(self, 0.2, self:GetAlpha(), 1)
+				self:SetAlpha(1)
 			end
 		)
 
 		self.bar:SetScript(
 			"OnLeave",
 			function(self)
-				UIFrameFadeOut(self, 0.2, self:GetAlpha(), 0)
+				self:SetAlpha(0)
 			end
 		)
 
@@ -176,7 +182,7 @@ function RM:CreateBar()
 		return
 	end
 
-	local frame = CreateFrame("Frame", nil, E.UIParent)
+	local frame = CreateFrame("Frame", nil, E.UIParent, "SecureHandlerStateTemplate")
 	frame:Point("BOTTOMRIGHT", _G.RightChatPanel, "TOPRIGHT", -1, 3)
 	frame:SetFrameStrata("DIALOG")
 	self.barAnchor = frame
@@ -195,7 +201,7 @@ function RM:CreateBar()
 	self:ToggleSettings()
 
 	if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow then
-		S:CreateShadow(self.bar.backdrop)
+		S:CreateBackdropShadow(self.bar)
 	end
 
 	E:CreateMover(
@@ -208,7 +214,8 @@ function RM:CreateBar()
 		"ALL,WINDTOOLS",
 		function()
 			return E.db.WT.combat.raidMarkers.enable
-		end
+		end,
+		"WindTools,combat,raidMarkers"
 	)
 end
 
@@ -271,26 +278,16 @@ function RM:CreateButtons()
 		elseif i == 11 then -- 开怪倒数
 			tex:SetTexture("Interface\\Icons\\Spell_unused2")
 			tex:SetTexCoord(0.25, 0.8, 0.2, 0.75)
+			button:SetAttribute("type*", "macro")
 			if IsAddOnLoaded("BigWigs") then
-				button:SetAttribute("type*", "macro")
 				button:SetAttribute("macrotext1", "/pull " .. RM.db.countDownTime)
 				button:SetAttribute("macrotext2", "/pull 0")
 			elseif IsAddOnLoaded("DBM-Core") then
-				button:SetAttribute("type*", "macro")
 				button:SetAttribute("macrotext1", "/dbm pull " .. RM.db.countDownTime)
 				button:SetAttribute("macrotext2", "/dbm pull 0")
 			else
-				button:SetAttribute("type*", "click")
-				button:SetScript(
-					"OnClick",
-					function(_, button)
-						if button == "LeftButton" then
-							C_PartyInfo_DoCountdown(RM.db.countDownTime)
-						elseif button == "RightButton" then
-							C_PartyInfo_DoCountdown(-1)
-						end
-					end
-				)
+				button:SetAttribute("macrotext1", _G.SLASH_COUNTDOWN1 .. " " .. RM.db.countDownTime)
+				button:SetAttribute("macrotext2", _G.SLASH_COUNTDOWN1 .. " " .. -1)
 			end
 		end
 
@@ -328,10 +325,12 @@ function RM:CreateButtons()
 			function(self)
 				local icon = F.GetIconString(W.Media.Textures.smallLogo, 14)
 				self:SetBackdropBorderColor(.7, .7, 0)
-				GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
-				GameTooltip:SetText(tooltipTitle .. " " .. icon)
-				GameTooltip:AddLine(tooltipText, 1, 1, 1)
-				GameTooltip:Show()
+				if RM.db.tooltip then
+					GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
+					GameTooltip:SetText(tooltipTitle .. " " .. icon)
+					GameTooltip:AddLine(tooltipText, 1, 1, 1)
+					GameTooltip:Show()
+				end
 			end
 		)
 
@@ -339,7 +338,9 @@ function RM:CreateButtons()
 			"OnLeave",
 			function(self)
 				self:SetBackdropBorderColor(0, 0, 0)
-				GameTooltip:Hide()
+				if RM.db.tooltip then
+					GameTooltip:Hide()
+				end
 			end
 		)
 
@@ -350,7 +351,7 @@ function RM:CreateButtons()
 				if not self.db.mouseOver then
 					return
 				end
-				UIFrameFadeIn(self.bar, 0.2, self.bar:GetAlpha(), 1)
+				self.bar:SetAlpha(1)
 				button:SetBackdropBorderColor(.7, .7, 0)
 			end
 		)
@@ -361,7 +362,7 @@ function RM:CreateButtons()
 				if not self.db.mouseOver then
 					return
 				end
-				UIFrameFadeOut(self.bar, 0.2, self.bar:GetAlpha(), 0)
+				self.bar:SetAlpha(0)
 				button:SetBackdropBorderColor(0, 0, 0)
 			end
 		)

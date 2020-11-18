@@ -53,7 +53,7 @@ local abbrList = {
 
 local function AddItemInfo(Hyperlink)
     local id = strmatch(Hyperlink, "Hitem:(%d-):")
-    if (not id) then
+    if not id then
         return
     end
     id = tonumber(id)
@@ -61,10 +61,9 @@ local function AddItemInfo(Hyperlink)
     -- 获取物品实际等级
     if CL.db.level or CL.db.slot then
         local text, level, extraname, slot
-        local link = strmatch(Hyperlink, "|H(.-)|h")
         ItemLevelTooltip:SetOwner(_G.UIParent, "ANCHOR_NONE")
         ItemLevelTooltip:ClearLines()
-        ItemLevelTooltip:SetHyperlink(link)
+        ItemLevelTooltip:SetHyperlink(Hyperlink)
 
         if CL.db.level then
             for i = 2, 5 do
@@ -72,7 +71,7 @@ local function AddItemInfo(Hyperlink)
                 if leftText then
                     text = leftText:GetText() or ""
                     level = strmatch(text, ItemLevelPattern)
-                    if (level) then
+                    if level then
                         break
                     end
                 end
@@ -108,13 +107,13 @@ local function AddItemInfo(Hyperlink)
             end
         end
 
-        if (level and extraname) then
+        if level and extraname then
             Hyperlink = Hyperlink:gsub("|h%[(.-)%]|h", "|h[" .. level .. ":%1:" .. extraname .. "]|h")
-        elseif (level and slot) then
+        elseif level and slot then
             Hyperlink = Hyperlink:gsub("|h%[(.-)%]|h", "|h[" .. level .. "-" .. slot .. ":%1]|h")
-        elseif (level) then
+        elseif level then
             Hyperlink = Hyperlink:gsub("|h%[(.-)%]|h", "|h[" .. level .. ":%1]|h")
-        elseif (slot) then
+        elseif slot then
             Hyperlink = Hyperlink:gsub("|h%[(.-)%]|h", "|h[" .. slot .. ":%1]|h")
         end
     end
@@ -131,14 +130,14 @@ end
 local function AddSpellInfo(Hyperlink)
     -- 法术图标
     local id = strmatch(Hyperlink, "Hspell:(%d-):")
-    if (not id) then
+    if not id then
         return
     end
 
     if CL.db.icon then
         local texture = GetSpellTexture(tonumber(id))
         local icon = format(IconString .. ":255:255:255|t", texture)
-        Hyperlink = icon .. " " .. Hyperlink
+        Hyperlink = icon .. " |cff71d5ff" .. Hyperlink .. "|r" -- I dk why the color is needed, but worked!
     end
 
     return Hyperlink
@@ -147,7 +146,7 @@ end
 local function AddEnchantInfo(Hyperlink)
     -- 附魔图标
     local id = strmatch(Hyperlink, "Henchant:(%d-)\124")
-    if (not id) then
+    if not id then
         return
     end
 
@@ -163,7 +162,7 @@ end
 local function AddPvPTalentInfo(Hyperlink)
     -- PVP 天赋
     local id = strmatch(Hyperlink, "Hpvptal:(%d-)|")
-    if (not id) then
+    if not id then
         return
     end
 
@@ -179,7 +178,7 @@ end
 local function AddTalentInfo(Hyperlink)
     -- 天赋
     local id = strmatch(Hyperlink, "Htalent:(%d-)|")
-    if (not id) then
+    if not id then
         return
     end
 
@@ -194,28 +193,17 @@ end
 
 function CL:Filter(event, msg, ...)
     if CL.db.enable then
-        msg = msg:gsub("(|Hitem:%d+:.-|h.-|h)", AddItemInfo)
-        msg = msg:gsub("(|Hspell:%d+:%d+|h.-|h)", AddSpellInfo)
-        msg = msg:gsub("(|Henchant:%d+|h.-|h)", AddEnchantInfo)
-        msg = msg:gsub("(|Htalent:%d+|h.-|h)", AddTalentInfo)
-        msg = msg:gsub("(|Hpvptal:%d+|h.-|h)", AddPvPTalentInfo)
+        msg = gsub(msg, "(|Hitem:%d+:.-|h.-|h)", AddItemInfo)
+        msg = gsub(msg, "(|Hspell:%d+:%d+|h.-|h)", AddSpellInfo)
+        msg = gsub(msg, "(|Henchant:%d+|h.-|h)", AddEnchantInfo)
+        msg = gsub(msg, "(|Htalent:%d+|h.-|h)", AddTalentInfo)
+        msg = gsub(msg, "(|Hpvptal:%d+|h.-|h)", AddPvPTalentInfo)
     end
     return false, msg, ...
 end
 
-function CL:PLAYER_ENTERING_WORLD()
-    if _G.TinyInspectDB and self.db.compatibile then
-        _G.TinyInspectDB.EnableItemLevel = false
-        _G.TinyInspectDB.ShowItemBorder = false
-        _G.TinyInspectDB.ShowItemSlotString = false
-        _G.TinyInspectDB.EnableItemLevelChat = false
-    end
-end
-
 function CL:Initialize()
     self.db = E.db.WT.social.chatLink
-
-    self:RegisterEvent("PLAYER_ENTERING_WORLD")
 
     ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", self.Filter)
     ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", self.Filter)
@@ -230,7 +218,6 @@ function CL:Initialize()
     ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", self.Filter)
     ChatFrame_AddMessageEventFilter("CHAT_MSG_BATTLEGROUND", self.Filter)
     ChatFrame_AddMessageEventFilter("CHAT_MSG_LOOT", self.Filter)
-
     self.Initialized = true
 end
 

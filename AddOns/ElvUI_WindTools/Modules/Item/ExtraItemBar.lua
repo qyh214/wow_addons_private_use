@@ -1,6 +1,7 @@
 local W, F, E, L = unpack(select(2, ...))
 local EB = W:NewModule("ExtraItemsBar", "AceEvent-3.0")
 local S = W:GetModule("Skins")
+local AB = E:GetModule("ActionBars")
 
 local _G = _G
 local ceil = ceil
@@ -31,6 +32,8 @@ local GetQuestLogSpecialItemInfo = GetQuestLogSpecialItemInfo
 local InCombatLockdown = InCombatLockdown
 local IsItemInRange = IsItemInRange
 local IsUsableItem = IsUsableItem
+local RegisterStateDriver = RegisterStateDriver
+local UnregisterStateDriver = UnregisterStateDriver
 
 local C_QuestLog_GetNumQuestLogEntries = C_QuestLog.GetNumQuestLogEntries
 
@@ -232,9 +235,7 @@ function EB:CreateButton(name, barDB)
 
     button:StyleButton()
 
-    if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow then
-        S:CreateShadow(button)
-    end
+    S:CreateShadowModule(button)
 
     return button
 end
@@ -309,9 +310,25 @@ function EB:SetUpButton(button, questItemData, slotID)
         "OnEnter",
         function(self)
             local bar = self:GetParent()
-            if EB.db["bar" .. bar.id].mouseOver then
-                E:UIFrameFadeIn(bar, 0.2, bar:GetAlpha(), 1)
+            local barDB = EB.db["bar" .. bar.id]
+            if not bar or not barDB then
+                return
             end
+
+            if barDB.globalFade then
+                if AB.fadeParent and not AB.fadeParent.mouseLock then
+                    E:UIFrameFadeIn(AB.fadeParent, 0.2, AB.fadeParent:GetAlpha(), 1)
+                end
+            elseif barDB.mouseOver then
+                local alphaCurrent = bar:GetAlpha()
+                E:UIFrameFadeIn(
+                    bar,
+                    barDB.fadeTime * (barDB.alphaMax - alphaCurrent) / (barDB.alphaMax - barDB.alphaMin),
+                    alphaCurrent,
+                    barDB.alphaMax
+                )
+            end
+
             GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 0, -2)
             GameTooltip:ClearLines()
 
@@ -329,9 +346,25 @@ function EB:SetUpButton(button, questItemData, slotID)
         "OnLeave",
         function(self)
             local bar = self:GetParent()
-            if EB.db["bar" .. bar.id].mouseOver then
-                E:UIFrameFadeOut(bar, 0.2, bar:GetAlpha(), 0)
+            local barDB = EB.db["bar" .. bar.id]
+            if not bar or not barDB then
+                return
             end
+
+            if barDB.globalFade then
+                if AB.fadeParent and not AB.fadeParent.mouseLock then
+                    E:UIFrameFadeOut(AB.fadeParent, 0.2, AB.fadeParent:GetAlpha(), 1 - AB.db.globalFadeAlpha)
+                end
+            elseif barDB.mouseOver then
+                local alphaCurrent = bar:GetAlpha()
+                E:UIFrameFadeOut(
+                    bar,
+                    barDB.fadeTime * (alphaCurrent - barDB.alphaMin) / (barDB.alphaMax - barDB.alphaMin),
+                    alphaCurrent,
+                    barDB.alphaMin
+                )
+            end
+
             GameTooltip:Hide()
         end
     )
@@ -412,7 +445,8 @@ function EB:CreateBar(id)
         "ALL,WINDTOOLS",
         function()
             return EB.db.enable and barDB.enable
-        end
+        end,
+        "WindTools,item,extraItemBar"
     )
 
     -- 建立条
@@ -441,7 +475,13 @@ function EB:CreateBar(id)
         "OnEnter",
         function(self)
             if barDB.mouseOver then
-                E:UIFrameFadeIn(self, 0.2, self:GetAlpha(), 1)
+                local alphaCurrent = bar:GetAlpha()
+                E:UIFrameFadeIn(
+                    bar,
+                    barDB.fadeTime * (barDB.alphaMax - alphaCurrent) / (barDB.alphaMax - barDB.alphaMin),
+                    alphaCurrent,
+                    barDB.alphaMax
+                )
             end
         end
     )
@@ -450,7 +490,13 @@ function EB:CreateBar(id)
         "OnLeave",
         function(self)
             if barDB.mouseOver then
-                E:UIFrameFadeOut(self, 0.2, self:GetAlpha(), 0)
+                local alphaCurrent = bar:GetAlpha()
+                E:UIFrameFadeOut(
+                    bar,
+                    barDB.fadeTime * (alphaCurrent - barDB.alphaMin) / (barDB.alphaMax - barDB.alphaMin),
+                    alphaCurrent,
+                    barDB.alphaMin
+                )
             end
         end
     )
@@ -474,6 +520,10 @@ function EB:UpdateBar(id)
     end
 
     if not self.db.enable or not barDB.enable then
+        if bar.register then
+            UnregisterStateDriver(bar, "visibility")
+            bar.register = false
+        end
         bar:Hide()
         return
     end
@@ -494,50 +544,42 @@ function EB:UpdateBar(id)
                 for _, potionID in pairs(potions) do
                     local count = GetItemCount(potionID)
                     if count and count > 0 and not self.db.blackList[potionID] then
-                        if not self.db.blackList[potionID] then
-                            self:SetUpButton(bar.buttons[buttonID], {itemID = potionID})
-                            self:UpdateButtonSize(bar.buttons[buttonID], barDB)
-                            buttonID = buttonID + 1
-                        end
+                        self:SetUpButton(bar.buttons[buttonID], {itemID = potionID})
+                        self:UpdateButtonSize(bar.buttons[buttonID], barDB)
+                        buttonID = buttonID + 1
                     end
                 end
             elseif module == "FLASK" then -- 更新药剂
                 for _, flaskID in pairs(flasks) do
                     local count = GetItemCount(flaskID)
-                    if count and count > 0 and not self.db.blackList[flaskID] then
-                        if not self.db.blackList[flaskID] then
-                            self:SetUpButton(bar.buttons[buttonID], {itemID = flaskID})
-                            self:UpdateButtonSize(bar.buttons[buttonID], barDB)
-                            buttonID = buttonID + 1
-                        end
+                    if count and count > 0 and not self.db.blackList[flaskID] and buttonID <= barDB.numButtons then
+                        self:SetUpButton(bar.buttons[buttonID], {itemID = flaskID})
+                        self:UpdateButtonSize(bar.buttons[buttonID], barDB)
+                        buttonID = buttonID + 1
                     end
                 end
             elseif module == "BANNER" then -- 更新战旗
                 for _, bannerID in pairs(banners) do
                     local count = GetItemCount(bannerID)
-                    if count and count > 0 and not self.db.blackList[bannerID] then
-                        if not self.db.blackList[bannerID] then
-                            self:SetUpButton(bar.buttons[buttonID], {itemID = bannerID})
-                            bar.buttons[buttonID]:Size(barDB.buttonWidth, barDB.buttonHeight)
-                            buttonID = buttonID + 1
-                        end
+                    if count and count > 0 and not self.db.blackList[bannerID] and buttonID <= barDB.numButtons then
+                        self:SetUpButton(bar.buttons[buttonID], {itemID = bannerID})
+                        bar.buttons[buttonID]:Size(barDB.buttonWidth, barDB.buttonHeight)
+                        buttonID = buttonID + 1
                     end
                 end
             elseif module == "UTILITY" then -- 更新实用工具
                 for _, utilityID in pairs(utilities) do
                     local count = GetItemCount(utilityID)
-                    if count and count > 0 and not self.db.blackList[utilityID] then
-                        if not self.db.blackList[utilityID] then
-                            self:SetUpButton(bar.buttons[buttonID], {itemID = utilityID})
-                            self:UpdateButtonSize(bar.buttons[buttonID], barDB)
-                            buttonID = buttonID + 1
-                        end
+                    if count and count > 0 and not self.db.blackList[utilityID] and buttonID <= barDB.numButtons then
+                        self:SetUpButton(bar.buttons[buttonID], {itemID = utilityID})
+                        self:UpdateButtonSize(bar.buttons[buttonID], barDB)
+                        buttonID = buttonID + 1
                     end
                 end
             elseif module == "EQUIP" then -- 更新装备物品
                 for _, slotID in pairs(equipmentList) do
                     local itemID = GetInventoryItemID("player", slotID)
-                    if itemID and not self.db.blackList[itemID] then
+                    if itemID and not self.db.blackList[itemID] and buttonID <= barDB.numButtons then
                         self:SetUpButton(bar.buttons[buttonID], nil, slotID)
                         self:UpdateButtonSize(bar.buttons[buttonID], barDB)
                         buttonID = buttonID + 1
@@ -546,7 +588,7 @@ function EB:UpdateBar(id)
             elseif module == "CUSTOM" then -- 更新自定义列表
                 for _, itemID in pairs(self.db.customList) do
                     local count = GetItemCount(itemID)
-                    if count and count > 0 and not self.db.blackList[itemID] then
+                    if count and count > 0 and not self.db.blackList[itemID] and buttonID <= barDB.numButtons then
                         self:SetUpButton(bar.buttons[buttonID], {itemID = itemID})
                         self:UpdateButtonSize(bar.buttons[buttonID], barDB)
                         buttonID = buttonID + 1
@@ -558,6 +600,10 @@ function EB:UpdateBar(id)
 
     -- 隐藏其余按钮
     if buttonID == 1 then
+        if bar.register then
+            UnregisterStateDriver(bar, "visibility")
+            bar.register = false
+        end
         bar:Hide()
         return
     end
@@ -634,6 +680,10 @@ function EB:UpdateBar(id)
         button.bind:Point("TOPRIGHT", button, "TOPRIGHT", barDB.bindFont.xOffset, barDB.bindFont.yOffset)
     end
 
+    if not bar.register then
+        RegisterStateDriver(bar, "visibility", "[petbattle]hide;show")
+        bar.register = true
+    end
     bar:Show()
 
     -- 切换阴影
@@ -657,10 +707,19 @@ function EB:UpdateBar(id)
         end
     end
 
-    if barDB.mouseOver then
-        bar:SetAlpha(0)
-    else
+    bar.alphaMin = barDB.alphaMin
+    bar.alphaMax = barDB.alphaMax
+
+    if barDB.globalFade then
         bar:SetAlpha(1)
+        bar:GetParent():SetParent(AB.fadeParent)
+    else
+        if barDB.mouseOver then
+            bar:SetAlpha(barDB.alphaMin)
+        else
+            bar:SetAlpha(barDB.alphaMax)
+        end
+        bar:GetParent():SetParent(E.UIParent)
     end
 end
 
@@ -685,9 +744,8 @@ function EB:CreateAll()
 
     for i = 1, 3 do
         self:CreateBar(i)
-        if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow then
-            S:CreateShadow(self.bars[i].backdrop)
-        end
+        S:CreateShadowModule(self.bars[i].backdrop)
+        S:MerathilisUISkin(self.bars[i].backdrop)
     end
 end
 

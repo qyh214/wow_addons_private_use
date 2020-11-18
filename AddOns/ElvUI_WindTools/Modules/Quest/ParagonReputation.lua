@@ -71,7 +71,12 @@ local PARAGON_QUEST_ID = {
 	[54458] = {2160, 166295}, --Proudmoore Admiralty
 	[54457] = {2162, 166294}, --Storm's Wake
 	[54454] = {2159, 166300}, --The 7th Legion
-	[55976] = {2400, 169939} --Waveblade Ankoan
+	[55976] = {2400, 169939}, --Waveblade Ankoan
+	--Shadowlands
+	[61100] = {2413, 180648}, --Court of Harvesters
+	[61097] = {2407, 180647}, --The Ascended
+	[61095] = {2410, 180646}, --The Undying Army
+	[61098] = {2465, 180649} --The Wild Hunt
 }
 
 function PR:ColorWatchbar(bar)
@@ -198,7 +203,7 @@ function PR:CreateToast()
 	-- [Toast] Create Background Texture
 	toast:CreateBackdrop("Transparent")
 	if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow and toast.backdrop then
-		S:CreateShadow(toast.backdrop)
+		S:CreateBackdropShadow(toast)
 	end
 
 	-- [Toast] Create Title Text
@@ -220,16 +225,14 @@ function PR:CreateToast()
 	PR.toast = toast
 end
 
-function PR:QUEST_ACCEPTED(event, ...)
-	local questIndex, questID = ...
-
-	if PR.db.toast.enable and PARAGON_QUEST_ID[questID] then
+function PR:QUEST_ACCEPTED(event, questID)
+	if self.db.toast.enable and PARAGON_QUEST_ID[questID] then
 		local name = GetFactionInfoByID(PARAGON_QUEST_ID[questID][1])
-		local text = GetQuestLogCompletionText(questIndex)
+		local text = GetQuestLogCompletionText(C_QuestLog_GetLogIndexForQuestID(questID))
 		if ACTIVE_TOAST then
 			WAITING_TOAST[#WAITING_TOAST + 1] = {name, text} --Toast is already active, put this info on the line.
 		else
-			PR:ShowToast(name, text)
+			self:ShowToast(name, text)
 		end
 	end
 end
@@ -306,6 +309,10 @@ function PR:ChangeReputationBars()
 							format(REPUTATION_PROGRESS_FORMAT, BreakUpLargeNumbers(value), BreakUpLargeNumbers(threshold)) ..
 								FONT_COLOR_CODE_CLOSE
 
+					local count = floor(currentValue / threshold)
+					if hasRewardPending then
+						count = count - 1
+					end
 					if PR.db.text == "PARAGON" then
 						factionStanding:SetText(L["Paragon"])
 						factionRow.standingText = L["Paragon"]
@@ -315,6 +322,14 @@ function PR:ChangeReputationBars()
 					elseif PR.db.text == "CURRENT" then
 						factionStanding:SetText(BreakUpLargeNumbers(value))
 						factionRow.standingText = BreakUpLargeNumbers(value)
+					elseif PR.db.text == "PARAGONPLUS" then
+						if count > 0 then
+							factionStanding:SetText(L["Paragon"] .. " x " .. count)
+							factionRow.standingText = (L["Paragon"] .. " x " .. count)
+						else
+							factionStanding:SetText(L["Paragon"] .. " + ")
+							factionRow.standingText = (L["Paragon"] .. " + ")
+						end
 					elseif PR.db.text == "VALUE" then
 						factionStanding:SetText(" " .. BreakUpLargeNumbers(value) .. " / " .. BreakUpLargeNumbers(threshold))
 						factionRow.standingText = (" " .. BreakUpLargeNumbers(value) .. " / " .. BreakUpLargeNumbers(threshold))
@@ -332,10 +347,6 @@ function PR:ChangeReputationBars()
 						factionRow.rolloverText = nil
 					end
 					if factionIndex == GetSelectedFaction() and _G.ReputationDetailFrame:IsShown() then
-						local count = floor(currentValue / threshold)
-						if hasRewardPending then
-							count = count - 1
-						end
 						if count > 0 then
 							_G.ReputationDetailFactionName:SetText(name .. " |cffffffffx" .. count .. "|r")
 						end
@@ -376,7 +387,8 @@ function PR:Initialize()
 		"WINDTOOLS,ALL",
 		function()
 			return PR.db.toast.enable
-		end
+		end,
+		"WindTools,quest,paragonReputation"
 	)
 
 	self.initialized = true

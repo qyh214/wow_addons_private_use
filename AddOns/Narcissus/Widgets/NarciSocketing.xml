@@ -55,13 +55,13 @@
 								<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="8"/>
 							</Anchors>
 						</Texture>
-						<FontString inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="BOTTOM" hidden="false" parentKey="Bonus">
+						<FontString inherits="NarciFontMedium12" justifyH="LEFT" justifyV="BOTTOM" hidden="false" parentKey="Bonus">
 							<Color r="1" g="1" b="1"/>
 							<Anchors>
 								<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="LEFT" x="25" y="1"/>
 							</Anchors>
 						</FontString>
-						<FontString inherits="AAAItemLevel" justifyH="LEFT" justifyV="TOP" hidden="false" parentKey="ItemName">
+						<FontString inherits="NarciFontNormal10White" justifyH="LEFT" justifyV="TOP" hidden="false" parentKey="ItemName">
 							<Color r="1" g="1" b="1"/>
 							<Anchors>
 								<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="LEFT" x="25" y="-3"/>
@@ -224,13 +224,13 @@
 						<Anchor point="CENTER" relativeKey="$parent.CountBackground" relativePoint="CENTER" x="2" y="-1"/>
 					</Anchors>
 				</FontString>
-				<FontString inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="BOTTOM" hidden="false" parentKey="Bonus">
+				<FontString inherits="NarciFontMedium12" justifyH="LEFT" justifyV="BOTTOM" hidden="false" parentKey="Bonus">
 					<Color r="1" g="1" b="1"/>
 					<Anchors>
 						<Anchor point="BOTTOMLEFT" relativeKey="$parent.Border0" relativePoint="RIGHT" x="5" y="1"/>
 					</Anchors>
 				</FontString>
-				<FontString inherits="AAAItemLevel" justifyH="LEFT" justifyV="TOP" hidden="false" parentKey="ItemName">
+				<FontString inherits="NarciFontNormal10White" justifyH="LEFT" justifyV="TOP" hidden="false" parentKey="ItemName">
 					<Color r="1" g="1" b="1"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeKey="$parent.Border0" relativePoint="RIGHT" x="5" y="-3"/>

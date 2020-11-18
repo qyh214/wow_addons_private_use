@@ -674,7 +674,6 @@ local function UpdateCorruptionTooltip()
             frame.Entry5:Disable();
         end
     else
-        COLOR = "|cffa59bb5";   --Purple
         slowBy = 0;
         damageModifier = 0;
         radius = 5;
@@ -971,8 +970,6 @@ function Narci:SetUseCorruptionTooltip()
         end
     end
 
-    Narci_CorruptionTooltipToggle.Tick:SetShown(state);
-
     --Fix Compatible Issue with DejaCharacterStats
     if not NarcissusDB.CorruptionBar then return end
 
@@ -1075,7 +1072,6 @@ Initialize:SetScript("OnEvent", function(self, event, ...)
 
     Narci:SetUseCorruptionTooltip();
 
-    Narci_CorruptionTooltipToggle:SetScript("OnClick", CorruptionTooltipSwitch_OnClick);
 
     --Cache Negative Corruption Effect Info
     local corruptionSpells = {

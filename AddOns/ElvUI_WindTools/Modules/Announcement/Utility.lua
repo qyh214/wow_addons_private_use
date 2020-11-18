@@ -1,8 +1,8 @@
 local W, F, E, L = unpack(select(2, ...))
 local A = W:GetModule("Announcement")
 
-local gsub, tostring = gsub, tostring
-local UnitInRaid, UnitInParty = UnitInRaid, UnitInParty
+local gsub = gsub
+local tostring = tostring
 local GetSpellLink = GetSpellLink
 local InCombatLockdown = InCombatLockdown
 
@@ -61,6 +61,7 @@ local FeastList = {
     [276972] = true, -- 神秘大鍋
     [286050] = true, -- 血潤盛宴
     [297048] = true, -- 超澎湃饗宴
+    [298861] = true, -- 強效神秘大鍋
     [308458] = true, -- 意外可口盛宴
     [308462] = true -- 暴食享樂盛宴
 }
@@ -143,7 +144,7 @@ function A:Utility(event, sourceName, spellId)
         return
     end
 
-    if sourceName ~= E.myname and not UnitInRaid(sourceName) and not UnitInParty(sourceName) then
+    if not self:PlayerIsInGroup(sourceName) then
         return
     end
 

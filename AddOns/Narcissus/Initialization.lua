@@ -11,7 +11,6 @@ local DefaultValue = {
     ["DetailedIlvlInfo"] = true,
     ["IsSortedByCategory"] = true,
     ["EnableGrainEffect"] = false,
-    ["ShowMinimapButton"] = true,
     ["FontHeightItemName"] = 10,
     ["GlobalScale"] = 0.8,
     ["AutoColorTheme"] = true,
@@ -26,10 +25,9 @@ local DefaultValue = {
     ["FadeButton"] = false,
     ["WeatherEffect"] = true,
     ["VignetteStrength"] = 0.5,
-    ["FadeMusic"] = true,
+    ["FadeMusic"] = false,
     ["AlwaysShowModel"] = false,
     ["DefaultLayout"] = 2,
-    ["ShowFullBody"] = true,
     ["LetterboxEffect"] = false,
     ["LetterboxRatio"] = 2.35,
     ["AFKScreen"] = false,
@@ -40,22 +38,27 @@ local DefaultValue = {
     ["DressingRoomIncludeItemID"] = false,          --Show Item ID in the clipboard
     ["UseEntranceVisual"] = true,
     ["ModelPanelScale"] = 1,
-    ["UseExitConfirmation"] = true,                 --Show exit confirmation dialog upon leaving group photo mode
     ["BaseLineOffset"] = 0,                         --Ultra-wide
     ["ShrinkArea"] = 0,                             --Reduce the width of the area where you can control the model
     ["AutoPlayAnimation"] = true,                   --Play recommended animation when clicking a spell visual entry
-    ["UseBustShot"] = true,                         --Zoom in to the upper torso
     ["EyeColor"] = 1,                               --Corruption Indicator Orange
     ["CorruptionBar"] = true,
     ["CorruptionTooltip"] = false,
     ["CorruptionTooltipModel"] = true,
     ["UseEscapeButton"] = true,                     --Use Escape button to exit
-    ["IndependentMinimapButton"] = true,           --Set Minimap Button Parent to Minimap or UIParent; Handle by other addons like MBB
-    ["CameraTransition"] = true,                    --Camera moves smoothly bewtween presets
+    ["ShowMinimapButton"] = true,
+    ["ShowModulePanelOnMouseOver"] = true,          --Mouseover to show Module panel while mouseover minimap button
+    ["IndependentMinimapButton"] = false,           --Set Minimap Button Parent to Minimap or UIParent; Handle by other addons like MBB
     ["AnchorToMinimap"] = true,                     --Anchor the mini button to Minimap
+    ["CameraTransition"] = true,                    --(2nd you use the Character Pane) Camera moves smoothly bewtween presets
+    ["UseBustShot"] = true,                         --Zoom in to the upper torso
 
     --Internal Hotkey
     ["SearchRelativesHotkey"] = "TAB",              --The key you press to begin/cycle relative search
+    
+    --Deprecated
+    --["UseExitConfirmation"] = true,               --Show exit confirmation dialog upon leaving group photo mode
+    --["ShowFullBody"] = true,                      --Show entire body in Xmog Mode
 };
 
 local CreatureDatabaseOptions = {
@@ -69,10 +72,11 @@ local CreatureDatabaseOptions = {
 };
 
 local AchievementOptions = {
+    ["UseAsDefault"] = false,
     ["Scale"] = 1,
     ["Theme"] = 1,
     ["IncompleteFirst"] = true,
-    ["UsedAsPrimary"] = true,
+    ["ShowRedMark"] = false,                        --Mark achievement that was not earned by me with a red cross
 };
 
 local TutorialInclude = {

@@ -14,21 +14,7 @@ local tonumber = tonumber
 local IsAddOnLoaded = IsAddOnLoaded
 local ObjectiveTracker_Update = ObjectiveTracker_Update
 
-local SystemCache = {
-    TitleNormalColor = {
-        r = _G.OBJECTIVE_TRACKER_COLOR["Header"].r,
-        g = _G.OBJECTIVE_TRACKER_COLOR["Header"].g,
-        b = _G.OBJECTIVE_TRACKER_COLOR["Header"].b
-    },
-    TitleHighlightColor = {
-        r = _G.OBJECTIVE_TRACKER_COLOR["HeaderHighlight"].r,
-        g = _G.OBJECTIVE_TRACKER_COLOR["HeaderHighlight"].g,
-        b = _G.OBJECTIVE_TRACKER_COLOR["HeaderHighlight"].b
-    }
-}
-
 local classColor = _G.RAID_CLASS_COLORS[E.myclass]
-
 local color = {
     start = {
         r = 1.000,
@@ -41,6 +27,42 @@ local color = {
         b = 0.451
     }
 }
+
+local function SetTextColorHook(text)
+    if not text.windHooked then
+        local SetTextColorOld = text.SetTextColor
+        text.SetTextColor = function(self, r, g, b, a)
+            if
+                r == _G.OBJECTIVE_TRACKER_COLOR["Header"].r and g == _G.OBJECTIVE_TRACKER_COLOR["Header"].g and
+                    b == _G.OBJECTIVE_TRACKER_COLOR["Header"].b
+             then
+                if OT.db and OT.db.enable and OT.db.titleColor and OT.db.titleColor.enable then
+                    r = OT.db.titleColor.classColor and classColor.r or OT.db.titleColor.customColorNormal.r
+                    g = OT.db.titleColor.classColor and classColor.g or OT.db.titleColor.customColorNormal.g
+                    b = OT.db.titleColor.classColor and classColor.b or OT.db.titleColor.customColorNormal.b
+                end
+            elseif
+                r == _G.OBJECTIVE_TRACKER_COLOR["HeaderHighlight"].r and
+                    g == _G.OBJECTIVE_TRACKER_COLOR["HeaderHighlight"].g and
+                    b == _G.OBJECTIVE_TRACKER_COLOR["HeaderHighlight"].b
+             then
+                if OT.db and OT.db.enable and OT.db.titleColor and OT.db.titleColor.enable then
+                    r = OT.db.titleColor.classColor and classColor.r or OT.db.titleColor.customColorHighlight.r
+                    g = OT.db.titleColor.classColor and classColor.g or OT.db.titleColor.customColorHighlight.g
+                    b = OT.db.titleColor.classColor and classColor.b or OT.db.titleColor.customColorHighlight.b
+                end
+            end
+            SetTextColorOld(self, r, g, b, a)
+        end
+        text:SetTextColor(
+            _G.OBJECTIVE_TRACKER_COLOR["Header"].r,
+            _G.OBJECTIVE_TRACKER_COLOR["Header"].g,
+            _G.OBJECTIVE_TRACKER_COLOR["Header"].b,
+            1
+        )
+        text.windHooked = true
+    end
+end
 
 local function GetProgressColor(progress)
     local r = (color.complete.r - color.start.r) * progress + color.start.r
@@ -76,6 +98,7 @@ function OT:HandleTitleText(text)
     if height ~= text:GetHeight() then
         text:SetHeight(height)
     end
+    SetTextColorHook(text)
 end
 
 function OT:HandleInfoText(text)
@@ -168,54 +191,14 @@ function OT:ColorfulProgression(text)
     text:SetText(info)
 end
 
-function OT:ChangeQuestTitleColor()
-    if not IsAddOnLoaded("Blizzard_ObjectiveTracker") then
-        return
-    end
-
-    local config = self.db.titleColor
-    if not config then
-        return
-    end
-
-    if config.enable and self.db.enable then
-        _G.OBJECTIVE_TRACKER_COLOR["Header"] = {
-            r = config.classColor and classColor.r or config.customColorNormal.r,
-            g = config.classColor and classColor.g or config.customColorNormal.g,
-            b = config.classColor and classColor.b or config.customColorNormal.b
-        }
-
-        _G.OBJECTIVE_TRACKER_COLOR["HeaderHighlight"] = {
-            r = config.classColor and classColor.r or config.customColorHighlight.r,
-            g = config.classColor and classColor.g or config.customColorHighlight.g,
-            b = config.classColor and classColor.b or config.customColorHighlight.b
-        }
-
-        self.titleColorChanged = true
-    elseif (not config.enable or not self.db.enable) and self.titleColorChanged then
-        _G.OBJECTIVE_TRACKER_COLOR["Header"] = {
-            r = SystemCache["TitleNormalColor"].r,
-            g = SystemCache["TitleNormalColor"].g,
-            b = SystemCache["TitleNormalColor"].b
-        }
-
-        _G.OBJECTIVE_TRACKER_COLOR["HeaderHighlight"] = {
-            r = SystemCache["TitleHighlightColor"].r,
-            g = SystemCache["TitleHighlightColor"].g,
-            b = SystemCache["TitleHighlightColor"].b
-        }
-
-        self.titleColorChanged = false
-    end
-
-    ObjectiveTracker_Update()
-end
-
-function OT:UpdateTextWidth()
-    if self.db.noDash then
-        _G.OBJECTIVE_TRACKER_TEXT_WIDTH = _G.OBJECTIVE_TRACKER_LINE_WIDTH - 12
-    else
-        _G.OBJECTIVE_TRACKER_TEXT_WIDTH = _G.OBJECTIVE_TRACKER_LINE_WIDTH - _G.OBJECTIVE_TRACKER_DASH_WIDTH - 12
+do
+    local dash = _G.OBJECTIVE_TRACKER_DASH_WIDTH
+    function OT:UpdateTextWidth()
+        if self.db.noDash then
+            _G.OBJECTIVE_TRACKER_DASH_WIDTH = 0
+        else
+            _G.OBJECTIVE_TRACKER_DASH_WIDTH = dash
+        end
     end
 end
 
@@ -247,7 +230,18 @@ function OT:Initialize()
         self.Initialized = true
     end
 
-    self:ChangeQuestTitleColor()
+    E:Delay(
+        1,
+        function()
+            for _, child in pairs {_G.ObjectiveTrackerBlocksFrame:GetChildren()} do
+                if child and child.HeaderText then
+                    SetTextColorHook(child.HeaderText)
+                end
+            end
+        end
+    )
+
+    ObjectiveTracker_Update()
 end
 
 W:RegisterModule(OT:GetName())

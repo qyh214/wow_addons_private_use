@@ -64,7 +64,7 @@
 					<Color r="1" g="1" b="1" a="1"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="4" y="-4"/>
-						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-4" y="4"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-4" y="3"/>
 					</Anchors>
 				</Texture>
 			</Layer>

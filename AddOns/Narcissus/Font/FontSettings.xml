@@ -71,6 +71,24 @@
 		</Member>
 	</FontFamily>
 
+	<FontFamily name="NarciFontThin9" virtual="true">
+		<Member alphabet="roman">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Regular.ttf" height="10"/>
+		</Member>
+		<Member alphabet="korean">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Regular.otf" height="9"/>
+		</Member>
+		<Member alphabet="simplifiedchinese">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Regular.otf" height="9"/>
+		</Member>
+		<Member alphabet="traditionalchinese">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Regular.otf" height="9"/>
+		</Member>
+		<Member alphabet="russian">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSans-Medium.ttf" height="10"/>
+		</Member>
+	</FontFamily>
+
 	<FontFamily name="NarciFontThin8" virtual="true">
 		<Member alphabet="roman">
 			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Regular.ttf" height="9"/>
@@ -135,59 +153,6 @@
 				<Shadow>
 					<Offset>
 						<AbsDimension x="0.6" y="-0.6"/>
-					</Offset>
-					<Color r="0" g="0" b="0"/>
-				</Shadow>
-			</Font>
-		</Member>
-	</FontFamily>
-
-	<FontFamily name="NarciPointedFont9" virtual="true">
-		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\SemplicitaPro-Semibold.otf" height="9">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="1.2" y="-1.2"/>
-					</Offset>
-					<Color r="0" g="0" b="0"/>
-				</Shadow>
-			</Font>
-		</Member>
-		<Member alphabet="korean">
-			<Font font="Interface\AddOns\Narcissus\Font\SemplicitaPro-Semibold.otf" height="9">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="1.2" y="-1.2"/>
-					</Offset>
-					<Color r="0" g="0" b="0"/>
-				</Shadow>
-			</Font>
-		</Member>
-		<Member alphabet="simplifiedchinese">
-			<Font font="Interface\AddOns\Narcissus\Font\SemplicitaPro-Semibold.otf" height="9">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="1.2" y="-1.2"/>
-					</Offset>
-					<Color r="0" g="0" b="0"/>
-				</Shadow>
-			</Font>
-		</Member>
-		<Member alphabet="traditionalchinese">
-			<Font font="Interface\AddOns\Narcissus\Font\SemplicitaPro-Semibold.otf" height="9">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="1.2" y="-1.2"/>
-					</Offset>
-					<Color r="0" g="0" b="0"/>
-				</Shadow>
-			</Font>
-		</Member>
-		<Member alphabet="russian">
-			<Font font="Interface\AddOns\Narcissus\Font\SemplicitaPro-Semibold.otf" height="9">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="1.2" y="-1.2"/>
 					</Offset>
 					<Color r="0" g="0" b="0"/>
 				</Shadow>
@@ -506,112 +471,6 @@
 				<Shadow>
 					<Offset>
 						<AbsDimension x="1" y="-1"/>
-					</Offset>
-					<Color r="0" g="0" b="0"/>
-				</Shadow>
-			</Font>
-		</Member>
-	</FontFamily>
-
-	<FontFamily name="NarciFontNumber12" virtual="true">
-		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="1" y="-1"/>
-					</Offset>
-					<Color r="0" g="0" b="0" a="1"/>
-				</Shadow>
-			</Font>
-		</Member>
-		<Member alphabet="korean">
-			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="1" y="-1"/>
-					</Offset>
-					<Color r="0" g="0" b="0" a="0.6"/>
-				</Shadow>
-			</Font>
-		</Member>
-		<Member alphabet="simplifiedchinese">
-			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="1" y="-1"/>
-					</Offset>
-					<Color r="0" g="0" b="0" a="0.6"/>
-				</Shadow>
-			</Font>
-		</Member>
-		<Member alphabet="traditionalchinese">
-			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="1" y="-1"/>
-					</Offset>
-					<Color r="0" g="0" b="0" a="0.6"/>
-				</Shadow>
-			</Font>
-		</Member>
-		<Member alphabet="russian">
-			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="1" y="-1"/>
-					</Offset>
-					<Color r="0" g="0" b="0" a="0.6"/>
-				</Shadow>
-			</Font>
-		</Member>
-	</FontFamily>
-
-	<FontFamily name="NarciFontNumber24" virtual="true">
-		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="24">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="2" y="-2"/>
-					</Offset>
-					<Color r="0" g="0" b="0"/>
-				</Shadow>
-			</Font>
-		</Member>
-		<Member alphabet="korean">
-			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="24">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="2" y="-2"/>
-					</Offset>
-					<Color r="0" g="0" b="0"/>
-				</Shadow>
-			</Font>
-		</Member>
-		<Member alphabet="simplifiedchinese">
-			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="24">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="2" y="-2"/>
-					</Offset>
-					<Color r="0" g="0" b="0"/>
-				</Shadow>
-			</Font>
-		</Member>
-		<Member alphabet="traditionalchinese">
-			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="24">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="2" y="-2"/>
-					</Offset>
-					<Color r="0" g="0" b="0"/>
-				</Shadow>
-			</Font>
-		</Member>
-		<Member alphabet="russian">
-			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="24">
-				<Shadow>
-					<Offset>
-						<AbsDimension x="2" y="-2"/>
 					</Offset>
 					<Color r="0" g="0" b="0"/>
 				</Shadow>
@@ -954,47 +813,50 @@
 		<Color r="1" g="1" b="1"/>
 	</Font>
 
-	<Font name="AAAItemLevel" inherits="NarciFontNormal10" virtual="true">
+	<Font name="NarciFontNormal10White" inherits="NarciFontNormal10" virtual="true">
 		<Color r="1" g="1" b="1"/>
 	</Font>
 
-	<Font name="AAAIvlHeadLine" inherits="NarciPointedFont9" virtual="true">
-		<Color r="1" g="1" b="1"/>
+	<Font name="NarciFontSemplicita9" font="Interface\AddOns\Narcissus\Font\SemplicitaPro-Semibold.otf" height="9" virtual="true">
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1.2" y="-1.2"/>
+			</Offset>
+			<Color r="0" g="0" b="0"/>
+		</Shadow>
 	</Font>
 
-	<Font name="AAAStatusNameMedium" inherits="NarciFontMedium12" virtual="true">
-
+	<Font name="NarciFontNumber12" font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12">
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1"/>
+			</Offset>
+			<Color r="0" g="0" b="0" a="1"/>
+		</Shadow>
 	</Font>
 
-	<Font name="AAAStatusNumber" inherits="NarciFontStatusNumber" virtual="true">
-
+	<Font name="NarciFontNumber24" font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="24">
+		<Shadow>
+			<Offset>
+				<AbsDimension x="2" y="-2"/>
+			</Offset>
+			<Color r="0" g="0" b="0"/>
+		</Shadow>
 	</Font>
 
-	<Font name="AAAIlvlSmall" inherits="NarciFontNumber12" virtual="true">
-
-	</Font>
-
-	<Font name="AAAIlvlLarge" inherits="NarciFontNumber24" virtual="true">
-
-	</Font>
-
-	<Font name="AAAPlayerName" inherits="NarciFontMedium24" virtual="true">
-
-	</Font>
-
-	<Font name="AAAPlayerInfo" inherits="NarciFontPlayerInfo" virtual="true" height="12"> 
-
-	</Font>
-
-	<Font name="NarciPrefFontCategory" inherits="NarciMenuFont" virtual="true">
+	<Font name="NarciPrefFontGrey9" inherits="NarciFontNormal9" virtual="true">
 		<Color r="0.42" g="0.42" b="0.42"/>
 	</Font>
 
+	<Font name="NarciPrefFontGreyThin9" inherits="NarciFontThin9" virtual="true">
+		<Color r="0.42" g="0.42" b="0.42"/>
+	</Font>
+	
 	<Font name="NarciPrefFontWhiteLabel" inherits="NarciMenuFont" virtual="true">
 		<Color r="1" g="1" b="1"/>
 	</Font>
 
-	<Font name="NarciPrefFontWhiteMild" inherits="NarciMenuFont" virtual="true">
+	<Font name="NarciPrefFontWhiteMild" inherits="NarciFontNormal9" virtual="true">
 		<Color r="0.72" g="0.72" b="0.72"/>
 	</Font>
 

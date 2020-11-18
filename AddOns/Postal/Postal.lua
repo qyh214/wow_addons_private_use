@@ -327,6 +327,14 @@ function Postal.Menu(self, level)
 	elseif level == 2 then
 		if UIDROPDOWNMENU_MENU_VALUE == "OpenSpeed" then
 			local speed = Postal.db.profile.OpenSpeed
+			for i = 0, 0 do
+				local s = 0
+				info.text = format("%0.2f", s)
+				info.func = Postal.SetOpenSpeed
+				info.checked = s == speed
+				info.arg1 = s
+				UIDropDownMenu_AddButton(info, level)
+			end
 			for i = 0, 13 do
 				local s = 0.3 + i*0.05
 				info.text = format("%0.2f", s)
@@ -450,7 +458,7 @@ function Postal:CreateAboutFrame()
 		aboutFrame.editBox = Chatter:GetModule("Chat Copy").editBox
 	end
 	if not aboutFrame or not aboutFrame.editBox then
-		aboutFrame = CreateFrame("Frame", "PostalAboutFrame", UIParent)
+		aboutFrame = CreateFrame("Frame", "PostalAboutFrame", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 		tinsert(UISpecialFrames, "PostalAboutFrame")
 		aboutFrame:SetBackdrop({
 			bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]],
@@ -509,9 +517,9 @@ function Postal.About()
 		tinsert(t, "")
 	end
 	tinsert(t, "-----")
-	tinsert(t, L["Please post bugs or suggestions on the curseforge Postal page |cFF00FFFFhttps://www.curseforge.com/wow/addons/postal/issues|r. When posting bugs, indicate your locale and Postal's version number v%s."]:format(version))
+	tinsert(t, L["Please post bugs or suggestions at the CurseForge forums thread at |cFF00FFFFhttp://www.curseforge.com/wow/addons/postal/issues|r. When posting bugs, indicate your locale and Postal's version number v%s."]:format(version))
 	tinsert(t, "")
-	tinsert(t, "- Abaton (Wyrmrest Accord US Alliance)")
+	tinsert(t, "- Xinhuan (Blackrock/Barthilas US Alliance)")
 	tinsert(t, "")
 	Postal.aboutFrame.editBox:SetText(table.concat(t, "\n"))
 	Postal.aboutFrame:Show()

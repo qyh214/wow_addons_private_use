@@ -491,7 +491,7 @@ local function GetOptionsTable_Auras(auraType, updateFunc, groupName, numUnits)
 				order = 8,
 				name = L["Spacing"],
 				type = 'range',
-				min = 0, max = 20, step = 1,
+				min = -1, max = 20, step = 1,
 			},
 			attachTo = {
 				type = 'select',
@@ -769,7 +769,7 @@ local function BuffIndicator_ApplyToAll(info, value, profileSpecific)
 	end
 end
 
-local function GetOptionsTable_AuraWatch(updateFunc, groupName, numGroup)
+local function GetOptionsTable_AuraWatch(updateFunc, groupName, numGroup, subGroup)
 	local config = {
 		type = 'group',
 		name = L["Buff Indicator"],
@@ -798,10 +798,12 @@ local function GetOptionsTable_AuraWatch(updateFunc, groupName, numGroup)
 				type = 'execute',
 				name = L["Configure Auras"],
 				func = function()
-					if E.db.unitframe.units[groupName].buffIndicator.profileSpecific then
-						E:SetToFilterConfig('Buff Indicator (Profile)')
+					if groupName == 'pet' then
+						E:SetToFilterConfig('Aura Indicator (Pet)')
+					elseif E.db.unitframe.units[groupName].buffIndicator.profileSpecific then
+						E:SetToFilterConfig('Aura Indicator (Profile)')
 					else
-						E:SetToFilterConfig('Buff Indicator')
+						E:SetToFilterConfig('Aura Indicator (Class)')
 					end
 				end,
 			},
@@ -840,6 +842,12 @@ local function GetOptionsTable_AuraWatch(updateFunc, groupName, numGroup)
 			}
 		},
 	}
+
+	if subGroup then
+		config.inline = true
+		config.get = function(info) return E.db.unitframe.units[groupName][subGroup].buffIndicator[info[#info]] end
+		config.set = function(info, value) E.db.unitframe.units[groupName][subGroup].buffIndicator[info[#info]] = value; updateFunc(UF, groupName, numGroup) end
+	end
 
 	return config
 end
@@ -1026,17 +1034,52 @@ local function GetOptionsTable_Castbar(hasTicks, updateFunc, groupName, numUnits
 						get = function(info) return E.db.unitframe.units[groupName].castbar[info[#info]] end,
 						set = function(info, value) E.db.unitframe.units[groupName].castbar[info[#info]] = value; updateFunc(UF, groupName, numUnits) end,
 						args = {
-							xOffsetText = {
+							enable = {
 								order = 1,
+								type = 'toggle',
+								name = L["Custom Font"],
+								get = function(info) return E.db.unitframe.units[groupName].castbar.customTextFont[info[#info]] end,
+								set = function(info, value) E.db.unitframe.units[groupName].castbar.customTextFont[info[#info]] = value; updateFunc(UF, groupName, numUnits) end,
+							},
+							font = {
+								order = 2,
+								type = 'select',
+								dialogControl = 'LSM30_Font',
+								name = L["Font"],
+								values = _G.AceGUIWidgetLSMlists.font,
+								get = function(info) return E.db.unitframe.units[groupName].castbar.customTextFont[info[#info]] end,
+								set = function(info, value) E.db.unitframe.units[groupName].castbar.customTextFont[info[#info]] = value; updateFunc(UF, groupName, numUnits) end,
+								disabled = function() return not E.db.unitframe.units[groupName].castbar.customTextFont.enable end
+							},
+							fontSize = {
+								order = 3,
+								type = 'range',
+								name = L["Font Size"],
+								min = 6, max = 64, step = 1,
+								get = function(info) return E.db.unitframe.units[groupName].castbar.customTextFont[info[#info]] end,
+								set = function(info, value) E.db.unitframe.units[groupName].castbar.customTextFont[info[#info]] = value; updateFunc(UF, groupName, numUnits) end,
+								disabled = function() return not E.db.unitframe.units[groupName].castbar.customTextFont.enable end
+							},
+							fontStyle = {
+								order = 4,
+								type = 'select',
+								name = L["Font Outline"],
+								values = C.Values.FontFlags,
+								get = function(info) return E.db.unitframe.units[groupName].castbar.customTextFont[info[#info]] end,
+								set = function(info, value) E.db.unitframe.units[groupName].castbar.customTextFont[info[#info]] = value; updateFunc(UF, groupName, numUnits) end,
+								disabled = function() return not E.db.unitframe.units[groupName].castbar.customTextFont.enable end
+							},
+							xOffsetText = {
+								order = 4,
 								type = 'range',
 								name = L["X-Offset"],
-								min = -100, max = 100, step = 1,
+								min = -500, max = 500, step = 1,
 							},
 							yOffsetText = {
-								order = 2,
+								order = 5,
 								type = 'range',
 								name = L["Y-Offset"],
-								min = -50, max = 50, step = 1,
+								min = -500, max = 500, step = 1,
 							},
 						},
 					},
@@ -1048,17 +1091,52 @@ local function GetOptionsTable_Castbar(hasTicks, updateFunc, groupName, numUnits
 						get = function(info) return E.db.unitframe.units[groupName].castbar[info[#info]] end,
 						set = function(info, value) E.db.unitframe.units[groupName].castbar[info[#info]] = value; updateFunc(UF, groupName, numUnits) end,
 						args = {
-							xOffsetTime = {
+							enable = {
 								order = 1,
+								type = 'toggle',
+								name = L["Custom Font"],
+								get = function(info) return E.db.unitframe.units[groupName].castbar.customTimeFont[info[#info]] end,
+								set = function(info, value) E.db.unitframe.units[groupName].castbar.customTimeFont[info[#info]] = value; updateFunc(UF, groupName, numUnits) end,
+							},
+							font = {
+								order = 2,
+								type = 'select',
+								dialogControl = 'LSM30_Font',
+								name = L["Font"],
+								values = _G.AceGUIWidgetLSMlists.font,
+								get = function(info) return E.db.unitframe.units[groupName].castbar.customTimeFont[info[#info]] end,
+								set = function(info, value) E.db.unitframe.units[groupName].castbar.customTimeFont[info[#info]] = value; updateFunc(UF, groupName, numUnits) end,
+								disabled = function() return not E.db.unitframe.units[groupName].castbar.customTimeFont.enable end
+							},
+							fontSize = {
+								order = 3,
+								type = 'range',
+								name = L["Font Size"],
+								min = 6, max = 64, step = 1,
+								get = function(info) return E.db.unitframe.units[groupName].castbar.customTimeFont[info[#info]] end,
+								set = function(info, value) E.db.unitframe.units[groupName].castbar.customTimeFont[info[#info]] = value; updateFunc(UF, groupName, numUnits) end,
+								disabled = function() return not E.db.unitframe.units[groupName].castbar.customTimeFont.enable end
+							},
+							fontStyle = {
+								order = 4,
+								type = 'select',
+								name = L["Font Outline"],
+								values = C.Values.FontFlags,
+								get = function(info) return E.db.unitframe.units[groupName].castbar.customTimeFont[info[#info]] end,
+								set = function(info, value) E.db.unitframe.units[groupName].castbar.customTimeFont[info[#info]] = value; updateFunc(UF, groupName, numUnits) end,
+								disabled = function() return not E.db.unitframe.units[groupName].castbar.customTimeFont.enable end
+							},
+							xOffsetTime = {
+								order = 4,
 								type = 'range',
 								name = L["X-Offset"],
-								min = -100, max = 100, step = 1,
+								min = -500, max = 500, step = 1,
 							},
 							yOffsetTime = {
-								order = 2,
+								order = 5,
 								type = 'range',
 								name = L["Y-Offset"],
-								min = -50, max = 50, step = 1,
+								min = -500, max = 500, step = 1,
 							},
 						},
 					},
@@ -1113,19 +1191,119 @@ local function GetOptionsTable_Castbar(hasTicks, updateFunc, groupName, numUnits
 						order = 5,
 						type = 'range',
 						name = L["X-Offset"],
-						min = -300, max = 300, step = 1,
+						min = -500, max = 500, step = 1,
 						disabled = function() return E.db.unitframe.units[groupName].castbar.iconAttached end,
 					},
 					iconYOffset = {
 						order = 6,
 						type = 'range',
 						name = L["Y-Offset"],
-						min = -300, max = 300, step = 1,
+						min = -500, max = 500, step = 1,
 						disabled = function() return E.db.unitframe.units[groupName].castbar.iconAttached end,
 					},
 				},
 			},
 			strataAndLevel = GetOptionsTable_StrataAndFrameLevel(updateFunc, groupName, numUnits, 'castbar'),
+			customColor = {
+				order = 21,
+				type = 'group',
+				name = L["Custom Color"],
+				inline = true,
+				get = function(info)
+					if info.type == 'color' then
+						local c = E.db.unitframe.units[groupName].castbar.customColor[info[#info]]
+						local d = P.unitframe.units[groupName].castbar.customColor[info[#info]]
+						return c.r, c.g, c.b, c.a, d.r, d.g, d.b, 1.0
+					else
+						return E.db.unitframe.units[groupName].castbar.customColor[info[#info]]
+					end
+				end,
+				set = function(info, ...)
+					if info.type == 'color' then
+						local r, g, b, a = ...
+						local c = E.db.unitframe.units[groupName].castbar.customColor[info[#info]]
+						c.r, c.g, c.b, c.a = r, g, b, a
+					else
+						local value = ...
+						E.db.unitframe.units[groupName].castbar.customColor[info[#info]] = value;
+					end
+
+					updateFunc(UF, groupName, numUnits)
+				end,
+				args = {
+					enable = {
+						order = 1,
+						type = 'toggle',
+						name = L["Enable"],
+					},
+					transparent = {
+						order = 2,
+						type = 'toggle',
+						name = L["Transparent"],
+						desc = L["Make textures transparent."],
+						disabled = function() return not E.db.unitframe.units[groupName].castbar.customColor.enable end,
+					},
+					invertColors = {
+						order = 3,
+						type = 'toggle',
+						name = L["Invert Colors"],
+						desc = L["Invert foreground and background colors."],
+						disabled = function() return not E.db.unitframe.units[groupName].castbar.customColor.enable or not E.db.unitframe.units[groupName].castbar.customColor.transparent end,
+					},
+					spacer1 = ACH:Spacer(4, 'full'),
+					useClassColor = {
+						order = 5,
+						type = 'toggle',
+						name = L["Class Color"],
+						desc = L["Color castbar by the class of the unit's class."],
+						disabled = function() return not E.db.unitframe.units[groupName].castbar.customColor.enable end,
+					},
+					useReactionColor = {
+						order = 5,
+						type = 'toggle',
+						name = L["Reaction Color"],
+						desc = L["Color castbar by the reaction of the unit to the player."],
+						disabled = function() return not E.db.unitframe.units[groupName].castbar.customColor.enable or (groupName == 'player' or groupName == 'pet') end,
+					},
+					useCustomBackdrop = {
+						order = 6,
+						type = 'toggle',
+						name = L["Custom Backdrop"],
+						desc = L["Use the custom backdrop color instead of a multiple of the main color."],
+						disabled = function() return not E.db.unitframe.units[groupName].castbar.customColor.enable end,
+					},
+					spacer2 = ACH:Spacer(7, 'full'),
+					colorBackdrop = {
+						order = 8,
+						type = 'color',
+						name = L["Custom Backdrop"],
+						desc = L["Use the custom backdrop color instead of a multiple of the main color."],
+						disabled = function()
+							return not E.db.unitframe.units[groupName].castbar.customColor.enable or not E.db.unitframe.units[groupName].castbar.customColor.useCustomBackdrop
+						end,
+						hasAlpha = true,
+					},
+					color = {
+						order = 9,
+						name = L["Interruptible"],
+						type = 'color',
+						disabled = function() return not E.db.unitframe.units[groupName].castbar.customColor.enable end,
+					},
+					colorNoInterrupt = {
+						order = 10,
+						name = L["Non-Interruptible"],
+						type = 'color',
+						disabled = function() return not E.db.unitframe.units[groupName].castbar.customColor.enable end,
+					},
+					spacer3 = ACH:Spacer(11, 'full'),
+					colorInterrupted = {
+						name = L["Interrupted"],
+						order = 12,
+						type = 'color',
+						disabled = function() return not E.db.unitframe.units[groupName].castbar.customColor.enable end,
+					},
+				},
+			},
 		},
 	}
 
@@ -1377,7 +1555,7 @@ local function CreateCustomTextGroup(unit, objectName)
 				order = 5,
 				name = L["FONT_SIZE"],
 				type = 'range',
-				min = 4, max = 212, step = 1,
+				min = 6, max = 64, step = 1,
 			},
 			fontOutline = {
 				order = 6,
@@ -2317,7 +2495,7 @@ local function GetOptionsTable_RaidDebuff(updateFunc, groupName)
 				order = 6,
 				type = 'range',
 				name = L["FONT_SIZE"],
-				min = 7, max = 212, step = 1,
+				min = 6, max = 64, step = 1,
 			},
 			fontOutline = {
 				order = 7,
@@ -3511,7 +3689,7 @@ E.Options.args.unitframe = {
 									name = L["FONT_SIZE"],
 									desc = L["Set the font size for unitframes."],
 									type = 'range',
-									min = 4, max = 212, step = 1,
+									min = 6, max = 64, step = 1,
 									set = function(info, value) E.db.unitframe[info[#info]] = value; UF:Update_FontStrings() end,
 								},
 								fontOutline = {
@@ -4702,6 +4880,44 @@ E.Options.args.unitframe.args.individualUnits.args.player = {
 				},
 			},
 		},
+		PartyIndicator = {
+			type = 'group',
+			name = L["Party Indicator"],
+			get = function(info) return E.db.unitframe.units.player.partyIndicator[info[#info]] end,
+			set = function(info, value) E.db.unitframe.units.player.partyIndicator[info[#info]] = value; UF:CreateAndUpdateUF('player'); end,
+			args = {
+				enable = {
+					order = 2,
+					type = 'toggle',
+					name = L["Enable"],
+				},
+				scale = {
+					order = 3,
+					type = 'range',
+					name = L["Scale"],
+					isPercent = true,
+					min = 0.5, max = 1.5, step = 0.01,
+				},
+				xOffset = {
+					order = 6,
+					type = 'range',
+					name = L["X-Offset"],
+					min = -100, max = 100, step = 1,
+				},
+				yOffset = {
+					order = 7,
+					type = 'range',
+					name = L["Y-Offset"],
+					min = -100, max = 100, step = 1,
+				},
+				anchorPoint = {
+					order = 9,
+					type = 'select',
+					name = L["Anchor Point"],
+					values = positionValues,
+				},
+			},
+		},
 		pvpText = {
 			type = 'group',
 			name = L["PvP Text"],
@@ -4865,7 +5081,7 @@ E.Options.args.unitframe.args.individualUnits.args.targettarget = {
 		infoPanel = GetOptionsTable_InformationPanel(UF.CreateAndUpdateUF, 'targettarget'),
 		name = GetOptionsTable_Name(UF.CreateAndUpdateUF, 'targettarget'),
 		portrait = GetOptionsTable_Portrait(UF.CreateAndUpdateUF, 'targettarget'),
-		power = GetOptionsTable_Power(false, UF.CreateAndUpdateUF, 'targettarget'),
+		power = GetOptionsTable_Power(true, UF.CreateAndUpdateUF, 'targettarget'),
 		raidicon = GetOptionsTable_RaidIcon(UF.CreateAndUpdateUF, 'targettarget'),
 	},
 }
@@ -4923,7 +5139,7 @@ E.Options.args.unitframe.args.individualUnits.args.targettargettarget = {
 		infoPanel = GetOptionsTable_InformationPanel(UF.CreateAndUpdateUF, 'targettargettarget'),
 		name = GetOptionsTable_Name(UF.CreateAndUpdateUF, 'targettargettarget'),
 		portrait = GetOptionsTable_Portrait(UF.CreateAndUpdateUF, 'targettargettarget'),
-		power = GetOptionsTable_Power(false, UF.CreateAndUpdateUF, 'targettargettarget'),
+		power = GetOptionsTable_Power(true, UF.CreateAndUpdateUF, 'targettargettarget'),
 		raidicon = GetOptionsTable_RaidIcon(UF.CreateAndUpdateUF, 'targettargettarget'),
 	},
 }
@@ -4986,7 +5202,7 @@ E.Options.args.unitframe.args.individualUnits.args.focus = {
 		infoPanel = GetOptionsTable_InformationPanel(UF.CreateAndUpdateUF, 'focus'),
 		name = GetOptionsTable_Name(UF.CreateAndUpdateUF, 'focus'),
 		portrait = GetOptionsTable_Portrait(UF.CreateAndUpdateUF, 'focus'),
-		power = GetOptionsTable_Power(false, UF.CreateAndUpdateUF, 'focus'),
+		power = GetOptionsTable_Power(true, UF.CreateAndUpdateUF, 'focus'),
 		raidicon = GetOptionsTable_RaidIcon(UF.CreateAndUpdateUF, 'focus'),
 	},
 }
@@ -5038,7 +5254,7 @@ E.Options.args.unitframe.args.individualUnits.args.focustarget = {
 		customText = GetOptionsTable_CustomText(UF.CreateAndUpdateUF, 'focustarget'),
 		health = GetOptionsTable_Health(false, UF.CreateAndUpdateUF, 'focustarget'),
 		infoPanel = GetOptionsTable_InformationPanel(UF.CreateAndUpdateUF, 'focustarget'),
-		power = GetOptionsTable_Power(false, UF.CreateAndUpdateUF, 'focustarget'),
+		power = GetOptionsTable_Power(true, UF.CreateAndUpdateUF, 'focustarget'),
 		name = GetOptionsTable_Name(UF.CreateAndUpdateUF, 'focustarget'),
 		portrait = GetOptionsTable_Portrait(UF.CreateAndUpdateUF, 'focustarget'),
 		fader = GetOptionsTable_Fader(UF.CreateAndUpdateUF, 'focustarget'),
@@ -5098,7 +5314,7 @@ E.Options.args.unitframe.args.individualUnits.args.pet = {
 		customText = GetOptionsTable_CustomText(UF.CreateAndUpdateUF, 'pet'),
 		health = GetOptionsTable_Health(false, UF.CreateAndUpdateUF, 'pet'),
 		infoPanel = GetOptionsTable_InformationPanel(UF.CreateAndUpdateUF, 'pet'),
-		power = GetOptionsTable_Power(false, UF.CreateAndUpdateUF, 'pet'),
+		power = GetOptionsTable_Power(true, UF.CreateAndUpdateUF, 'pet'),
 		name = GetOptionsTable_Name(UF.CreateAndUpdateUF, 'pet'),
 		portrait = GetOptionsTable_Portrait(UF.CreateAndUpdateUF, 'pet'),
 		fader = GetOptionsTable_Fader(UF.CreateAndUpdateUF, 'pet'),
@@ -5163,7 +5379,7 @@ E.Options.args.unitframe.args.individualUnits.args.pettarget = {
 		infoPanel = GetOptionsTable_InformationPanel(UF.CreateAndUpdateUF, 'pettarget'),
 		name = GetOptionsTable_Name(UF.CreateAndUpdateUF, 'pettarget'),
 		portrait = GetOptionsTable_Portrait(UF.CreateAndUpdateUF, 'pettarget'),
-		power = GetOptionsTable_Power(false, UF.CreateAndUpdateUF, 'pettarget'),
+		power = GetOptionsTable_Power(true, UF.CreateAndUpdateUF, 'pettarget'),
 	},
 }
 
@@ -5440,6 +5656,7 @@ E.Options.args.unitframe.args.groupUnits.args.party = {
 						},
 					},
 				},
+				buffIndicator = GetOptionsTable_AuraWatch(UF.CreateAndUpdateHeaderGroup, 'party', nil, 'petsGroup'),
 			},
 		},
 		targetsGroup = {

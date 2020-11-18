@@ -14,10 +14,14 @@ local xpcall = xpcall
 local C_ChatInfo_SendAddonMessage = C_ChatInfo.SendAddonMessage
 local IsEveryoneAssistant = IsEveryoneAssistant
 local IsInGroup = IsInGroup
+local IsInInstance = IsInInstance
 local IsInRaid = IsInRaid
+local IsPartyLFG = IsPartyLFG
 local SendChatMessage = SendChatMessage
 local UnitIsGroupAssistant = UnitIsGroupAssistant
 local UnitIsGroupLeader = UnitIsGroupLeader
+local UnitInParty = UnitInParty
+local UnitInRaid = UnitInRaid
 
 local LE_PARTY_CATEGORY_INSTANCE = LE_PARTY_CATEGORY_INSTANCE
 local LE_PARTY_CATEGORY_HOME = LE_PARTY_CATEGORY_HOME
@@ -34,23 +38,30 @@ function A:SendMessage(text, channel, raid_warning, whisper_target)
     if channel == "NONE" then
         return
     end
-    -- 聊天框输出
+
+    -- Change channel if it is protected by Blizzard
+    if channel == "YELL" or channel == "SAY" then
+        if not IsInInstance() then
+            channel = "SELF"
+        end
+    end
+
     if channel == "SELF" then
         _G.ChatFrame1:AddMessage(text)
         return
     end
-    -- 密语
+
     if channel == "WHISPER" then
         if whisper_target then
             SendChatMessage(text, channel, nil, whisper_target)
         end
         return
     end
-    -- 表情频道前置冒号以优化显示
+
     if channel == "EMOTE" then
         text = ": " .. text
     end
-    -- 如果允许团队警告
+
     if channel == "RAID" and raid_warning and IsInRaid(LE_PARTY_CATEGORY_HOME) then
         if UnitIsGroupLeader("player") or UnitIsGroupAssistant("player") or IsEveryoneAssistant() then
             channel = "RAID_WARNING"
@@ -66,7 +77,7 @@ end
     @return {string} 频道
 ]]
 function A:GetChannel(channelDB)
-    if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) or IsInRaid(LE_PARTY_CATEGORY_INSTANCE) then
+    if IsPartyLFG() or IsInGroup(LE_PARTY_CATEGORY_INSTANCE) or IsInRaid(LE_PARTY_CATEGORY_INSTANCE) then
         return channelDB.instance
     elseif IsInRaid(LE_PARTY_CATEGORY_HOME) then
         return channelDB.raid
@@ -97,6 +108,14 @@ function A:GetPetInfo(petName)
     end
 
     return nil, nil
+end
+
+function A:PlayerIsInGroup(name)
+    if name and (name == E.myname or UnitInRaid(name) or UnitInParty(name)) then
+        return true
+    end
+
+    return false
 end
 
 function A:Initialize()

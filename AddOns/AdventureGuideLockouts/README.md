@@ -10,6 +10,6 @@ The add-on allows players to check lockouts at a glance by placing information t
 
 Adventure Guide Lockouts is a fork and continuation of [Adventure Guide Saved Instances](https://wow.curseforge.com/projects/adventure-guide-saved-instances).
 
-To help and contribute to the add-on, open an issue on [GitHub](https://github.com/Meivyn/AdventureGuideLockouts/issues) when a bug is discovered so it could be fixed as soon as possible. Your help is really appreciated.
+To help and contribute to the add-on, open an issue on [GitHub](https://github.com/Meivyn/AdventureGuideLockouts/issues) when a bug is discovered, so it could be fixed as soon as possible. Your help is really appreciated.
 
-Special thanks to the owner of [wago.io](https://wago.io/) for all his precious help.
+Special thanks to the former author of [wago.io](https://wago.io/) for all his precious help.

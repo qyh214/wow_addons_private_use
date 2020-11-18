@@ -3,6 +3,7 @@ local options = W.options.misc.args
 local LSM = E.Libs.LSM
 local M = W:GetModule("Misc")
 local MF = W:GetModule("MoveFrames")
+local CT = W:GetModule("ChatText")
 local GB = W:GetModule("GameBar")
 
 local format = format
@@ -21,45 +22,31 @@ options.general = {
     order = 1,
     type = "group",
     name = L["General"],
+    get = function(info)
+        return E.private.WT.misc[info[#info]]
+    end,
+    set = function(info, value)
+        E.private.WT.misc[info[#info]] = value
+        E:StaticPopup_Show("PRIVATE_RL")
+    end,
     args = {
         pauseToSlash = {
             order = 1,
             type = "toggle",
             name = L["Pause to slash"],
-            desc = L["Just for Chinese and Korean players"],
-            get = function(info)
-                return E.private.WT.misc[info[#info]]
-            end,
-            set = function(info, value)
-                E.private.WT.misc[info[#info]] = value
-                E:StaticPopup_Show("PRIVATE_RL")
-            end
+            desc = L["Just for Chinese and Korean players"]
         },
         saveArtifact = {
             order = 2,
             type = "toggle",
             name = L["Save Artifact"],
-            desc = L["Allow you to save outfits even if the artifact in it."],
-            get = function(info)
-                return E.private.WT.misc[info[#info]]
-            end,
-            set = function(info, value)
-                E.private.WT.misc[info[#info]] = value
-                E:StaticPopup_Show("PRIVATE_RL")
-            end
+            desc = L["Allow you to save outfits even if the artifact in it."]
         },
         noKanjiMath = {
             order = 3,
             type = "toggle",
             name = L["Math Without Kanji"],
-            desc = L["Use alphabet rather than kanji (Only for Chinese players)"],
-            get = function(info)
-                return E.private.WT.misc[info[#info]]
-            end,
-            set = function(info, value)
-                E.private.WT.misc[info[#info]] = value
-                E:StaticPopup_Show("PRIVATE_RL")
-            end
+            desc = L["Use alphabet rather than kanji (Only for Chinese players)"]
         },
         disableTalkingHead = {
             order = 4,
@@ -71,6 +58,15 @@ options.general = {
             end,
             set = function(info, value)
                 E.db.WT.misc[info[#info]] = value
+            end
+        },
+        skipCutScene = {
+            order = 5,
+            type = "toggle",
+            name = L["Skip Cut Scene"],
+            set = function(info, value)
+                E.private.WT.misc[info[#info]] = value
+                M:SkipCutScene()
             end
         }
     }
@@ -252,18 +248,27 @@ options.moveFrames = {
         moveBlizzardFrames = {
             order = 1,
             type = "toggle",
-            name = L["Enable"]
+            name = L["Enable"],
+            disabled = function()
+                return MF.StopRunning
+            end
         },
         moveElvUIBags = {
             order = 2,
             type = "toggle",
-            name = L["Move ElvUI Bags"]
+            name = L["Move ElvUI Bags"],
+            disabled = function()
+                return MF.StopRunning
+            end
         },
         remember = {
             order = 3,
             type = "group",
             inline = true,
             name = L["Remember Positions"],
+            disabled = function()
+                return MF.StopRunning
+            end,
             args = {
                 rememberPositions = {
                     order = 1,
@@ -280,6 +285,19 @@ options.moveFrames = {
                     func = function()
                         E.private.WT.misc.framePositions = {}
                     end
+                },
+                notice = {
+                    order = 999,
+                    type = "description",
+                    name = format(
+                        "|cffff0000%s|r %s",
+                        L["Notice"],
+                        format(
+                            L["%s may cause some frames to get messed, but you can use %s button to reset frames."],
+                            L["Remember Positions"],
+                            "|cff3498db" .. L["Clear History"] .. "|r"
+                        )
+                    )
                 }
             }
         }
@@ -590,24 +608,51 @@ options.gameBar = {
                 GB:UpdateTime()
             end,
             args = {
-                mouseOver = {
+                bar = {
                     order = 1,
-                    type = "toggle",
-                    name = L["Mouse Over"],
-                    desc = L["Show the bar only mouse hovered the area."],
-                    set = function(info, value)
-                        E.db.WT.misc.gameBar[info[#info]] = value
-                        GB:UpdateBar()
-                    end
-                },
-                fadeTime = {
-                    order = 2,
-                    type = "range",
-                    name = L["Fade Time"],
-                    desc = L["The animation speed."],
-                    min = 0,
-                    max = 3,
-                    step = 0.01
+                    type = "group",
+                    name = L["Bar"],
+                    inline = true,
+                    args = {
+                        mouseOver = {
+                            order = 1,
+                            type = "toggle",
+                            name = L["Mouse Over"],
+                            desc = L["Show the bar only mouse hovered the area."],
+                            set = function(info, value)
+                                E.db.WT.misc.gameBar[info[#info]] = value
+                                GB:UpdateBar()
+                            end
+                        },
+                        fadeTime = {
+                            order = 2,
+                            type = "range",
+                            name = L["Fade Time"],
+                            desc = L["The animation speed."],
+                            min = 0,
+                            max = 3,
+                            step = 0.01
+                        },
+                        tooltipsAnchor = {
+                            order = 3,
+                            type = "select",
+                            name = L["Tooltip Anchor"],
+                            values = {
+                                ANCHOR_TOP = L["TOP"],
+                                ANCHOR_BOTTOM = L["BOTTOM"]
+                            }
+                        },
+                        visibility = {
+                            order = 4,
+                            type = "input",
+                            name = L["Visibility"],
+                            set = function(info, value)
+                                E.db.WT.misc.gameBar[info[#info]] = value
+                                GB:UpdateBar()
+                            end,
+                            width = "full"
+                        }
+                    }
                 },
                 normal = {
                     order = 3,
@@ -782,16 +827,6 @@ options.gameBar = {
                             }
                         }
                     }
-                },
-                visibility = {
-                    order = 6,
-                    type = "input",
-                    name = L["Visibility"],
-                    set = function(info, value)
-                        E.db.WT.misc.gameBar[info[#info]] = value
-                        GB:UpdateBar()
-                    end,
-                    width = "full"
                 }
             }
         },
@@ -979,3 +1014,201 @@ do
         end
     }
 end
+
+local SampleStrings = {}
+do
+    local icons = ""
+    icons = icons .. E:TextureString(W.Media.Icons.ffxivTank, ":16:16") .. " "
+    icons = icons .. E:TextureString(W.Media.Icons.ffxivHealer, ":16:16") .. " "
+    icons = icons .. E:TextureString(W.Media.Icons.ffxivDPS, ":16:16")
+    SampleStrings.ffxiv = icons
+
+    icons = ""
+    icons = icons .. E:TextureString(W.Media.Icons.hexagonTank, ":16:16") .. " "
+    icons = icons .. E:TextureString(W.Media.Icons.hexagonHealer, ":16:16") .. " "
+    icons = icons .. E:TextureString(W.Media.Icons.hexagonDPS, ":16:16")
+    SampleStrings.hexagon = icons
+
+    icons = ""
+    icons = icons .. E:TextureString(CT.cache.elvuiRoleIconsPath.Tank, ":16:16:0:0:64:64:2:56:2:56") .. " "
+    icons = icons .. E:TextureString(CT.cache.elvuiRoleIconsPath.Healer, ":16:16:0:0:64:64:2:56:2:56") .. " "
+    icons = icons .. E:TextureString(CT.cache.elvuiRoleIconsPath.DPS, ":16:16")
+    SampleStrings.elvui = icons
+
+    icons = ""
+    icons = icons .. E:TextureString(W.Media.Icons.sunUITank, ":16:16") .. " "
+    icons = icons .. E:TextureString(W.Media.Icons.sunUIHealer, ":16:16") .. " "
+    icons = icons .. E:TextureString(W.Media.Icons.sunUIDPS, ":16:16")
+    SampleStrings.sunui = icons
+
+    icons = ""
+    icons = icons .. E:TextureString(W.Media.Icons.lynUITank, ":16:16") .. " "
+    icons = icons .. E:TextureString(W.Media.Icons.lynUIHealer, ":16:16") .. " "
+    icons = icons .. E:TextureString(W.Media.Icons.lynUIDPS, ":16:16")
+    SampleStrings.lynui = icons
+end
+
+options.lfgList = {
+    order = 8,
+    type = "group",
+    name = L["LFG List"],
+    get = function(info)
+        return E.private.WT.misc.lfgList[info[#info]]
+    end,
+    set = function(info, value)
+        E.private.WT.misc.lfgList[info[#info]] = value
+        E:StaticPopup_Show("PRIVATE_RL")
+    end,
+    args = {
+        desc = {
+            order = 1,
+            type = "group",
+            inline = true,
+            name = L["Description"],
+            args = {
+                feature = {
+                    order = 1,
+                    type = "description",
+                    name = L["Reskinning the role icons."],
+                    fontSize = "medium"
+                }
+            }
+        },
+        enable = {
+            order = 2,
+            type = "toggle",
+            name = L["Enable"]
+        },
+        icon = {
+            order = 3,
+            type = "group",
+            name = L["Icon"],
+            disabled = function()
+                return not E.private.WT.misc.lfgList.enable
+            end,
+            get = function(info)
+                return E.private.WT.misc.lfgList.icon[info[#info]]
+            end,
+            set = function(info, value)
+                E.private.WT.misc.lfgList.icon[info[#info]] = value
+                E:StaticPopup_Show("PRIVATE_RL")
+            end,
+            args = {
+                reskin = {
+                    order = 1,
+                    type = "toggle",
+                    name = L["Reskin Icon"],
+                    desc = L["Change role icons."]
+                },
+                pack = {
+                    order = 2,
+                    type = "select",
+                    name = L["Style"],
+                    desc = L["Change the icons indicate the role."],
+                    hidden = function()
+                        return not E.private.WT.misc.lfgList.icon.reskin
+                    end,
+                    values = {
+                        SQUARE = L["Square"],
+                        HEXAGON = SampleStrings.hexagon,
+                        FFXIV = SampleStrings.ffxiv,
+                        SUNUI = SampleStrings.sunui,
+                        LYNUI = SampleStrings.lynui,
+                        DEFAULT = SampleStrings.elvui
+                    }
+                },
+                border = {
+                    order = 3,
+                    type = "toggle",
+                    name = L["Border"]
+                },
+                size = {
+                    order = 4,
+                    type = "range",
+                    name = L["Size"],
+                    min = 1,
+                    max = 20,
+                    step = 1
+                },
+                alpha = {
+                    order = 5,
+                    type = "range",
+                    name = L["Alpha"],
+                    min = 0,
+                    max = 1,
+                    step = 0.01
+                }
+            }
+        },
+        line = {
+            order = 4,
+            type = "group",
+            name = L["Line"],
+            disabled = function()
+                return not E.private.WT.misc.lfgList.enable
+            end,
+            get = function(info)
+                return E.private.WT.misc.lfgList.line[info[#info]]
+            end,
+            set = function(info, value)
+                E.private.WT.misc.lfgList.line[info[#info]] = value
+                E:StaticPopup_Show("PRIVATE_RL")
+            end,
+            args = {
+                enable = {
+                    order = 1,
+                    type = "toggle",
+                    name = L["Enable"],
+                    desc = L["Add a line in class color."]
+                },
+                tex = {
+                    order = 2,
+                    type = "select",
+                    name = L["Texture"],
+                    dialogControl = "LSM30_Statusbar",
+                    values = LSM:HashTable("statusbar")
+                },
+                width = {
+                    order = 4,
+                    type = "range",
+                    name = L["Width"],
+                    min = 1,
+                    max = 20,
+                    step = 1
+                },
+                height = {
+                    order = 4,
+                    type = "range",
+                    name = L["Height"],
+                    min = 1,
+                    max = 20,
+                    step = 1
+                },
+                offsetX = {
+                    order = 5,
+                    type = "range",
+                    name = L["X-Offset"],
+                    min = -20,
+                    max = 20,
+                    step = 1
+                },
+                offsetY = {
+                    order = 6,
+                    type = "range",
+                    name = L["Y-Offset"],
+                    min = -20,
+                    max = 20,
+                    step = 1
+                },
+                alpha = {
+                    order = 7,
+                    type = "range",
+                    name = L["Alpha"],
+                    min = 0,
+                    max = 1,
+                    step = 0.01
+                }
+            }
+        }
+    }
+}

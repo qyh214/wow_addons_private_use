@@ -8,8 +8,8 @@ function S:Blizzard_Calendar()
         return
     end
 
-    self:CreateShadow(_G.CalendarFrame)
-    self:CreateShadow(_G.CalendarViewHolidayFrame)
+    self:CreateBackdropShadow(_G.CalendarFrame)
+    self:CreateBackdropShadow(_G.CalendarViewHolidayFrame)
 end
 
 S:AddCallbackForAddon("Blizzard_Calendar")

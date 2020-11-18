@@ -4,66 +4,67 @@ local S = W:GetModule("Skins")
 
 local _G = _G
 local gsub = gsub
+local hooksecurefunc = hooksecurefunc
 local pairs = pairs
 local strfind = strfind
+local tinsert = tinsert
+local type = type
 local unpack = unpack
+local wipe = wipe
 
 local IsAddOnLoaded = IsAddOnLoaded
 
-local C_Timer_After = C_Timer.After
+local buttons = {}
+local expandButtons = {}
 
-local function TryHandleButtonAfter(name, times)
-    times = times or 0
-    if times > 10 then
-        return
-    end
-
-    local handled = false
-
-    for i = 1, 2 do
-        if _G[name .. i] then
-            ES:HandleButton(_G[name .. i])
-            handled = true
+local function RemoveBorder(frame)
+    for _, region in pairs {frame:GetRegions()} do
+        if region:GetObjectType() == "Texture" and region:GetTexture() == "Interface\\BUTTONS\\UI-Quickslot2" then
+            region:Kill()
         end
-    end
-
-    if not handled then
-        times = times + 1
-        C_Timer_After(
-            .01,
-            function()
-                TryHandleButtonAfter(name, times)
-            end
-        )
     end
 end
 
-local function TryHandleTextureAfter(name, times)
-    times = times or 0
-    if times > 10 then
-        return
-    end
-
-    local handled = false
-
-    if _G[name] then
-        for _, child in pairs {_G[name]:GetChildren()} do
-            if child.model or child.texture or child.mask or child.region or child.defaultIcon then
-                local firstRegion = child:GetRegions()
-                firstRegion:SetTexture("")
-                handled = true
-            end
+function S:WeakAuras_RegisterRegionOptions(name, createFunction, icon, displayName, createThumbnail, ...)
+    if type(icon) == "function" then
+        local OldIcon = icon
+        icon = function()
+            local f = OldIcon()
+            RemoveBorder(f)
+            return f
         end
     end
 
-    if not handled then
-        times = times + 1
-        C_Timer_After(
-            .05,
-            function()
-                TryHandleTextureAfter(name, times)
+    if type(createThumbnail) == "function" then
+        local OldCreateThumbnail = createThumbnail
+        createThumbnail = function()
+            local f = OldCreateThumbnail()
+            RemoveBorder(f)
+            return f
+        end
+    end
+
+    self.hooks[_G.WeakAuras]["RegisterRegionOptions"](name, createFunction, icon, displayName, createThumbnail, ...)
+end
+
+local function ReskinNormalButton(button, next)
+    if button.Left and button.Middle and button.Right and button.Text then
+        ES:HandleButton(button)
+    end
+    if next then
+        for _, child in pairs {button:GetChildren()} do
+            if child:GetObjectType() == "Button" then
+                ReskinNormalButton(child)
             end
-        )
+        end
+    end
+end
+
+local function ReskinChildButton(frame)
+    for _, child in pairs {frame:GetChildren()} do
+        if child:GetObjectType() == "Button" then
+            ReskinNormalButton(child, true)
+        end
     end
 end
 
@@ -87,8 +88,26 @@ function S:WeakAurasMultiLineEditBox(Constructor)
         widget.frame.backdrop:Point("TOPLEFT", widget.scrollFrame, "TOPLEFT", -5, 2)
         widget.frame.backdrop:Point("BOTTOMRIGHT", widget.scrollFrame, "BOTTOMRIGHT", 0, 0)
 
-        local expandButtonName = gsub(widget.button:GetName(), "Button", "ExpandButton")
-        TryHandleButtonAfter(expandButtonName)
+        local onShow = widget.frame:GetScript("OnShow")
+        widget.frame:SetScript(
+            "OnShow",
+            function(frame)
+                onShow(frame)
+                if frame.windStyle then
+                    return
+                end
+                local self = frame.obj
+                local option = self.userdata.option
+                local numExtraButtons = 0
+                if option and option.arg and option.arg.extraFunctions then
+                    numExtraButtons = #option.arg.extraFunctions
+                    for i = 1, #option.arg.extraFunctions do
+                        ES:HandleButton(self.extraButtons[i])
+                    end
+                end
+                frame.windStyle = true
+            end
+        )
         return widget
     end
 
@@ -103,11 +122,28 @@ function S:WeakAurasDisplayButton(Constructor)
     local function SkinedConstructor()
         local widget = Constructor()
         ES:HandleButton(widget.frame)
-        widget.frame.backdrop:SetFrameLevel(widget.frame:GetFrameLevel())
         widget.frame.background:SetAlpha(0)
+        widget.frame.backdrop:SetFrameLevel(widget.frame:GetFrameLevel())
+        widget.frame.backdrop.color = {widget.frame.backdrop.Center:GetVertexColor()}
+        hooksecurefunc(
+            widget.frame.background,
+            "Hide",
+            function()
+                widget.frame.backdrop.Center:SetVertexColor(1, 0, 0, 0.3)
+            end
+        )
+        hooksecurefunc(
+            widget.frame.background,
+            "Show",
+            function()
+                widget.frame.backdrop.Center:SetVertexColor(unpack(widget.frame.backdrop.color))
+            end
+        )
         widget.icon:SetTexCoord(unpack(E.TexCoords))
-        TryHandleTextureAfter(widget.frame:GetName())
         ES:HandleEditBox(widget.renamebox)
+        widget.frame.highlight:SetTexture(E.media.blankTex)
+        widget.frame.highlight:SetVertexColor(1, 1, 1, 0.15)
+        widget.frame.highlight:SetInside()
         return widget
     end
 
@@ -128,7 +164,6 @@ function S:WeakAurasNewButton(Constructor)
         widget.icon:Size(35)
         widget.icon:ClearAllPoints()
         widget.icon:Point("LEFT", widget.frame, "LEFT", 3, 0)
-        TryHandleTextureAfter(widget.frame:GetName())
         return widget
     end
 
@@ -141,28 +176,54 @@ function S:WeakAuras_ShowOptions()
         return
     end
 
-    -- 建立新的背景
-    frame.LeftEdge:Kill()
-    frame.TopEdge:Kill()
-    frame.RightEdge:Kill()
-    frame.BottomEdge:Kill()
-    frame.TopLeftCorner:Kill()
-    frame.TopRightCorner:Kill()
-    frame.BottomLeftCorner:Kill()
-    frame.BottomRightCorner:Kill()
-    frame.Center:Kill()
+    -- Remove background
+    frame:SetBackdrop(nil)
     frame:CreateBackdrop("Transparent")
-    S:CreateShadow(frame)
+    self:CreateBackdropShadow(frame)
 
-    -- 尺寸修改图标位置位移
+    for _, region in pairs {frame:GetRegions()} do
+        if region:GetObjectType() == "Texture" then
+            region:SetTexture(nil)
+            region.SetTexture = E.noop
+        end
+    end
+
+    -- Buttons
+    -- ReskinExpandButtons()
+
+    for _, child in pairs {frame:GetChildren()} do
+        if child:GetObjectType() == "Button" then
+            ReskinNormalButton(child, true)
+        elseif child:GetObjectType() == "Frame" then
+            ReskinChildButton(child)
+            ReskinNormalButton(child, true)
+        end
+    end
+
+    -- Change position of resize buttons
     frame.bottomLeftResizer:ClearAllPoints()
     frame.bottomLeftResizer:Point("BOTTOMLEFT", frame, "BOTTOMLEFT", -5, -5)
     frame.bottomRightResizer:ClearAllPoints()
     frame.bottomRightResizer:Point("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 5, -5)
 
-    for _, region in pairs {frame:GetRegions()} do
-        if region.GetTexture then
-            region:StripTextures()
+    -- Filter editbox
+    if _G.WeakAurasFilterInput then
+        local inputBox = _G.WeakAurasFilterInput
+        local rightPart
+        ES:HandleEditBox(inputBox)
+        for i = 1, inputBox:GetNumPoints() do
+            local point, relativeFrame = inputBox:GetPoint(i)
+            if point == "RIGHT" then
+                rightPart = relativeFrame
+                break
+            end
+        end
+        if rightPart then
+            inputBox:SetHeight(inputBox:GetHeight() + 3)
+            inputBox:ClearAllPoints()
+            inputBox:Point("TOP", frame, "TOP", 0, -43)
+            inputBox:Point("LEFT", frame, "LEFT", 18, 0)
+            inputBox:Point("RIGHT", rightPart, "LEFT", -2, 0)
         end
     end
 
@@ -170,18 +231,40 @@ function S:WeakAuras_ShowOptions()
         local numRegions = child:GetNumRegions()
         local numChildren = child:GetNumChildren()
 
-        if numRegions == 1 then -- 标题
+        if numRegions == 1 then
+            local recognized = false
+
             local firstRegion = child:GetRegions()
             local text = firstRegion.GetText and firstRegion:GetText()
-            if text and strfind(text, "^WeakAuras%s%d") then
+            if text and strfind(text, "^WeakAuras%s%d") then -- Title
                 child:SetFrameLevel(3)
                 child:CreateBackdrop()
-                S:CreateShadow(child.backdrop)
+                S:CreateBackdropShadow(child, true)
                 F.SetFontOutline(firstRegion)
+                recognized = true
+            end
+
+            if not recognized then
+                if child:GetNumPoints() == 3 then
+                    local point, _, relativePoint, xOfs, yOfs = child:GetPoint(1)
+                    if point == "TOP" and relativePoint == "TOP" and xOfs == 0 and yOfs == -46 then
+                        for _, subchild in pairs {child:GetChildren()} do
+                            if subchild.obj and subchild.backdrop then -- top panel backdrop
+                                subchild.backdrop:Hide()
+                            end
+                        end
+                    end
+                end
             end
         end
 
-        if numRegions == 3 and numChildren == 1 and child.PixelSnapDisabled then -- 右上按钮
+        if numChildren == 2 then
+            if child.obj and child.backdrop then -- bottom panel backdrop
+                child.backdrop:Hide()
+            end
+        end
+
+        if numRegions == 3 and numChildren == 1 and child.PixelSnapDisabled then -- Top right buttons(close & collapse)
             for _, region in pairs {child:GetRegions()} do
                 region:StripTextures()
             end
@@ -250,6 +333,18 @@ function S:WeakAuras_ShowOptions()
         end
     end
 
+    -- Snippets Frame
+    local snippetsFrame = _G.WeakAurasSnippets
+    if snippetsFrame then
+        snippetsFrame:ClearAllPoints()
+        snippetsFrame:Point("TOPLEFT", frame, "TOPRIGHT", 5, 0)
+        snippetsFrame:Point("BOTTOMLEFT", frame, "BOTTOMRIGHT", 5, 0)
+        snippetsFrame:StripTextures()
+        snippetsFrame:CreateBackdrop("Transparent")
+        self:CreateBackdropShadow(snippetsFrame)
+        ReskinChildButton(snippetsFrame)
+    end
+
     frame.windStyle = true
 end
 
@@ -272,15 +367,7 @@ function S:WeakAuras_TextEditor()
         return
     end
 
-    frame.TopEdge:Kill()
-    frame.LeftEdge:Kill()
-    frame.RightEdge:Kill()
-    frame.BottomEdge:Kill()
-    frame.TopLeftCorner:Kill()
-    frame.TopRightCorner:Kill()
-    frame.BottomLeftCorner:Kill()
-    frame.BottomRightCorner:Kill()
-    frame.Center:Kill()
+    frame:SetBackdrop(nil)
     frame:CreateBackdrop("Transparent")
     S:CreateShadow(frame)
 

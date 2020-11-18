@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.3.5
+
+- Updated for Shadowlands
+
 ## v1.3.4
 
 - Fixed an issue that sometimes caused an error for some people when exiting an instance

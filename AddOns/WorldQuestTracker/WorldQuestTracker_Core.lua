@@ -821,12 +821,8 @@ WorldQuestTracker.OnToggleWorldMap = function (self)
 				AllianceWorldQuestButton.Highlight:SetPoint ("center")
 				
 				AllianceWorldQuestButton:SetScript ("OnClick", function()
-					if (GetExpansionLevel() == 6 or UnitLevel ("player") == 50) then --legion
-						WorldMapFrame:SetMapID (WorldQuestTracker.MapData.ZoneIDs.BROKENISLES)
-						
-					elseif (GetExpansionLevel() == 7) then --bfa
+					if (UnitLevel("player") <= 50) then --bfa
 						WorldMapFrame:SetMapID (WorldQuestTracker.MapData.ZoneIDs.KULTIRAS)
-						--WorldQuestTracker.DoAnimationsOnWorldMapWidgets = true
 						WorldQuestTracker.UpdateWorldQuestsOnWorldMap (true)
 					end
 					WorldQuestTracker.AllianceWorldQuestButton_Click = GetTime()
@@ -854,12 +850,8 @@ WorldQuestTracker.OnToggleWorldMap = function (self)
 				HordeWorldQuestButton.Highlight:SetPoint ("center")
 				
 				HordeWorldQuestButton:SetScript ("OnClick", function()
-					if (GetExpansionLevel() == 6 or UnitLevel ("player") == 50) then --legion
-						WorldMapFrame:SetMapID (WorldQuestTracker.MapData.ZoneIDs.BROKENISLES)
-						
-					elseif (GetExpansionLevel() == 7) then --bfa
+					if (UnitLevel("player") <= 50) then --bfa
 						WorldMapFrame:SetMapID (WorldQuestTracker.MapData.ZoneIDs.ZANDALAR)
-						--WorldQuestTracker.DoAnimationsOnWorldMapWidgets = true
 						WorldQuestTracker.UpdateWorldQuestsOnWorldMap (true)
 					end
 					WorldQuestTracker.HordeWorldQuestButton_Click = GetTime()
@@ -2902,6 +2894,7 @@ WorldQuestTracker.OnToggleWorldMap = function (self)
 							
 							local colorByRarity = ""
 
+							--[=[
 							if (rarity  == LE_WORLD_QUEST_QUALITY_EPIC) then
 								colorByRarity = "FFC845F9"
 							elseif (rarity  == LE_WORLD_QUEST_QUALITY_RARE) then
@@ -2909,6 +2902,9 @@ WorldQuestTracker.OnToggleWorldMap = function (self)
 							else
 								colorByRarity = "FFFFFFFF"
 							end
+							--]=]
+
+							colorByRarity = "FFFFFFFF"
 							
 							local timeLeft = ((questInfo.expireAt - time()) / 60) --segundos / 60
 							local color
@@ -4199,14 +4195,6 @@ WorldQuestTracker.OnToggleWorldMap = function (self)
 					GameCooltip:AddLine (L["S_ENABLED"], "", 2)
 					GameCooltip:AddMenu (2, options_on_click, "tomtom-enabled", not WorldQuestTracker.db.profile.tomtom.enabled)
 					if (WorldQuestTracker.db.profile.tomtom.enabled) then
-						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
-					else
-						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)
-					end
-					
-					GameCooltip:AddLine (L["S_MAPBAR_OPTIONSMENU_TOMTOM_WPPERSISTENT"], "", 2)
-					GameCooltip:AddMenu (2, options_on_click, "tomtom-persistent", not WorldQuestTracker.db.profile.tomtom.persistent)
-					if (WorldQuestTracker.db.profile.tomtom.persistent) then
 						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-CheckBox-Check]], 2, 1, 16, 16)
 					else
 						GameCooltip:AddIcon ([[Interface\BUTTONS\UI-AutoCastableOverlay]], 2, 1, 16, 16, .4, .6, .4, .6)

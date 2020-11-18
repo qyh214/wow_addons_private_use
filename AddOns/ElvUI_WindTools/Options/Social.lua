@@ -581,14 +581,8 @@ options.chatLink = {
             type = "toggle",
             name = L["Enable"]
         },
-        compatibile = {
-            order = 2,
-            type = "toggle",
-            name = L["Compatibile"],
-            desc = format(L["Compatibile with %s."], L["TinyInspect"])
-        },
         general = {
-            order = 3,
+            order = 2,
             type = "group",
             inline = true,
             name = L["Additional Information"],
@@ -1335,7 +1329,7 @@ options.filter = {
             order = 2,
             type = "toggle",
             name = L["Profanity Filter"],
-            desc = L["Unblock the setting of profanity filter. [CN Server]"],
+            desc = L["Enable this option will unblock the setting of profanity filter. [CN Server]"],
             disabled = function()
                 return not E.db.WT.social.filter.enable
             end

@@ -1,32 +1,29 @@
 local BACKGROUND_INSET = 3.5;
 local TEXT_INSET = 16;
+local SPEECH_BALLOON_MIN_SIZE = 16;
 local SIMPLE_BALLON_MIN_SIZE = 40;
 
-local TEST_QUOTE = "Gul'dan what have you done? I am... so weak..."     --"Your foolish crusade ends here, mortals. The legion comes and with it this world breathes its dying breath!";
-local PATH_PREFIX = "Interface\\AddOns\\Narcissus\\Art\\Modules\\PhotoMode\\";
-
+local TEXTURE_PATH_PREFIX = "Interface\\AddOns\\Narcissus\\Art\\Modules\\PhotoMode\\SpeechBalloon\\";
 local backdropInfo = {
     white = {
-        edgeFile = PATH_PREFIX.. "SpeechBalloon-White",
+        edgeFile = TEXTURE_PATH_PREFIX.. "SpeechBalloon-White",
         tile = true,
         tileSize = 24,
         edgeSize = 24,
         tailSize = 40,
-        tailFile = PATH_PREFIX.. "Tail-White",
+        tailFile = TEXTURE_PATH_PREFIX.. "Tail-White",
     },
 
     black = {
-        edgeFile = PATH_PREFIX.. "SpeechBalloon-Black",
+        edgeFile = TEXTURE_PATH_PREFIX.. "SpeechBalloon-Black",
         tile = true,
         tileSize = 24,
         edgeSize = 24,
         tailSize = 40,
-        tailFile = PATH_PREFIX.. "Tail-Black",
+        tailFile = TEXTURE_PATH_PREFIX.. "Tail-Black",
     },
 };
 
-local TEXTURE_PATH_PREFIX = "Interface\\AddOns\\Narcissus\\Art\\Modules\\PhotoMode\\SpeechBalloon\\";
-local SPEECH_BALLOON_MIN_SIZE = 16;
 --------------------------------------------------------------
 local max = math.max;
 local min = math.min;

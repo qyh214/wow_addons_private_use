@@ -1,12 +1,11 @@
-# <DBM> Draenor
+# <DBM> World Bosses (WoD)
 
-## [r52](https://github.com/DeadlyBossMods/DBM-WoD/tree/r52) (2020-10-13)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r51...r52) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WoD/releases)
+## [r53](https://github.com/DeadlyBossMods/DBM-WoD/tree/r53) (2020-11-17)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r52...r53) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WoD/releases)
 
-- Bump TOCS  
-- Merge pull request #2 from DeadlyBossMods/stats  
-    MinExpansion  
-- MinExpansion  
-- Merge pull request #1 from DeadlyBossMods/stats  
-- Forgot lfr  
-- stats  
+- bump toc  
+- Somehow this didn't get deleted  
+- Combined Draenor and garrison invasion mods into a single addon. Has a down side of no longer being loading mouseover load on demand for draenor world bosses, but still a net gain for cleanup and consolidation of outdoor content mods.  
+- Merge pull request #3 from Molkree/patch-1  
+    Fix accidental find and replace  
+- Fix accidental find and replace  

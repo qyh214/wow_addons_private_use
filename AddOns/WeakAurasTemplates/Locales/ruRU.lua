@@ -85,9 +85,9 @@ local L = WeakAuras.L
 	L["Replace all existing triggers"] = "Заменяет все существующие триггеры"
 	L["Replace Triggers"] = "Заменить триггеры"
 	L["Resources"] = "Ресурсы"
-	L["Resources and Shapeshift Form"] = "Форма Друида и ресурсы"
+	L["Resources and Shapeshift Form"] = "Ресурсы и облики друида"
 	L["Runes"] = "Руны"
-	L["Shapeshift Form"] = "Форма Друида"
+	L["Shapeshift Form"] = "Облик друида"
 	--[[Translation missing --]]
 	L["Show Always, Glow on Missing"] = "Show Always, Glow on Missing"
 	--[[Translation missing --]]
@@ -138,8 +138,7 @@ local L = WeakAuras.L
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
 	--[[Translation missing --]]
 	L["slow debuff"] = "slow debuff"
-	--[[Translation missing --]]
-	L["Stance"] = "Stance"
+	L["Stance"] = "Стойка"
 	--[[Translation missing --]]
 	L["stun debuff"] = "stun debuff"
 	--[[Translation missing --]]

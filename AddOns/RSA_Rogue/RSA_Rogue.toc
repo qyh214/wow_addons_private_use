@@ -1,4 +1,4 @@
-## Interface: 90001
+## Interface: 90002
 ## Title: RSA [|c58FFDD00Rogue|r]
 ## Notes: RSA Rogue Module. This is needed to announce Rogue Spells.
 ## Author: Raeli

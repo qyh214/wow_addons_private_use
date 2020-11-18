@@ -1,4 +1,4 @@
-## Interface: 90001
+## Interface: 90002
 ## Title: RSA [|c53ABD473Hunter|r]
 ## Notes: RSA Hunter Module. This is needed to announce Hunter Spells.
 ## Author: Raeli

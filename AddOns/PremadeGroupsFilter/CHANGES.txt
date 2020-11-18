@@ -1,16 +1,16 @@
-lightweight tag 6cf51307fa908713e4a8cb5084723990cea7dd1e 1.38
+lightweight tag fb94df04fc0ad9ea9d805fca2c1dbae80b5de529 2.0.1
 Author:	Bernhard Saumweber <b.saumweber@gmail.com>
-Date:	Sun Sep 20 22:12:32 2020 +0200
+Date:	Tue Nov 3 22:14:49 2020 +0100
 
-commit 6cf51307fa908713e4a8cb5084723990cea7dd1e
+commit fb94df04fc0ad9ea9d805fca2c1dbae80b5de529
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Sun Sep 20 22:12:32 2020 +0200
+Date:   Tue Nov 3 22:14:49 2020 +0100
 
-    Compatibility with new RaiderIO Client version (also still backwards compatible to CurseForge version); fixes #34
+    Release version 2.0.1
 
-commit d7c8d10bd9259dbd5dc7f2a26f37fbef0c13d3fd
+commit 2425e15d8b9e06adde31f6e82ab67f0c7a863d18
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Sun Aug 23 12:16:31 2020 +0200
+Date:   Tue Nov 3 22:14:29 2020 +0100
 
-    Set version to next release version: 1.38
+    Fixed Russian translation thanks to Hollicsh
 

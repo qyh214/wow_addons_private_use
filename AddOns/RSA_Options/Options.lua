@@ -1469,7 +1469,7 @@ local function Mage_Options()
 			Message_Channels_Disabled = {["Whisper"] = true},
 			Valid_Tags = {'[SPELL]', '[LINK]'},
 		},
-		[10] = {
+		["IceBlock"] = {
 			Profile = 'IceBlock',
 			Name = GetSpellInfo(45438),
 			Desc = GetSpellDescription(45438),
@@ -1478,7 +1478,7 @@ local function Mage_Options()
 			Message_Channels_Disabled = {["Whisper"] = true},
 			Valid_Tags = {'[SPELL]', '[LINK]'},
 		},
-		[10] = {
+		["SlowFall"] = {
 			Profile = 'SlowFall',
 			Name = GetSpellInfo(130),
 			Desc = GetSpellDescription(130),
@@ -1660,6 +1660,15 @@ local function Monk_Options()
 			Desc = GetSpellDescription(119381),
 			Message_Amount = 1,
 			Message_Areas = {'Cast'},
+			Message_Channels_Disabled = {["Whisper"] = true},
+			Valid_Tags = {'[SPELL]', '[LINK]'},
+		},
+		['CelestialBrew'] = {
+			Profile = 'CelestialBrew',
+			Name = GetSpellInfo(322507),
+			Desc = GetSpellDescription(322507),
+			Message_Amount = 2,
+			Message_Areas = {'Start', 'End'},
 			Message_Channels_Disabled = {["Whisper"] = true},
 			Valid_Tags = {'[SPELL]', '[LINK]'},
 		},
@@ -2285,8 +2294,8 @@ local function Rogue_Options()
 		},
 		["Shiv"] = {
 			Profile = 'Shiv',
-			Name = GetSpellInfo(248744),
-			Desc = GetSpellDescription(248744),
+			Name = GetSpellInfo(5938),
+			Desc = GetSpellDescription(5938),
 			Message_Amount = 1,
 			Message_Areas = {'Dispel'},
 			Message_Channels_Disabled = {["Whisper"] = true},
@@ -3222,7 +3231,7 @@ local function Spell_Options(NonClass)
 	}
 	for i,v in pairs(Spells) do
 		if Spells[i] then
-			if not Spells[i].Name then print(Spells[i].Profile) else
+			if not Spells[i].Name then error('The following spell profile is causing an issue in RSA: ' .. Spells[i].Profile) else
 				Options.args[Spells[i].Name] = {
 					name = function()
 						if Spells[i].Race then

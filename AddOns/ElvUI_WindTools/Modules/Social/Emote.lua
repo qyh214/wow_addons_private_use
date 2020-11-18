@@ -1,6 +1,7 @@
 local W, F, E, L, _, _, G = unpack(select(2, ...))
 local CE = W:NewModule("Emote", "AceHook-3.0", "AceTimer-3.0")
-local S = E:GetModule("Skins")
+local S = W:GetModule("Skins")
+local ES = E:GetModule("Skins")
 
 local _G = _G
 local ceil = ceil
@@ -125,8 +126,9 @@ function CE:CreateInterface()
     _G.WTCustomEmoteFrameDialogBG:Hide()
     frame:StripTextures()
     frame:CreateBackdrop("Transparent")
-    frame:CreateShadow()
-    S:HandleCloseButton(_G.WTCustomEmoteFrameClose)
+    S:CreateShadowModule(frame.backdrop)
+    S:MerathilisUISkin(frame.backdrop)
+    ES:HandleCloseButton(_G.WTCustomEmoteFrameClose)
 
     -- 定位
     frame:SetWidth(column * (width + space) + 24)
@@ -227,7 +229,7 @@ function CE:CreateInterface()
     self.EmoteSelector = frame
 
     E:CreateMover(
-        self.EmoteSelector,
+        frame,
         "WTCustomEmoteFrameMover",
         L["Emote Selector"],
         nil,
@@ -236,7 +238,8 @@ function CE:CreateInterface()
         "ALL,WINDTOOLS",
         function()
             return self.db.enable
-        end
+        end,
+        "WindTools,social,emote"
     )
 end
 

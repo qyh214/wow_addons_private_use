@@ -1,6 +1,6 @@
 ## Interface: 90001
 ## Plain Title: Narcissus
-## Version: 1.1.0
+## Version: 1.1.0c
 
 ## Title: |cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r
 
@@ -34,6 +34,7 @@ Widgets\EquipmentComparisonFlyout.xml
 Widgets\TitleManager.xml
 Widgets\EquipmentSetManager.xml
 
+Modules\PhotoMode\Widgets.xml
 Modules\PhotoMode\PhotoMode.xml
 Modules\PhotoMode\SpellVisualBrowser.xml
 Modules\PhotoMode\NPCBrowser.xml

@@ -68,5 +68,14 @@ AddOn.worldBosses = {
       { encounterID = 2381, questID = 55466 }, -- Vuk'laz the Earthbreaker
       { encounterID = 2378, questID = 58705 }  -- Grand Empress Shek'zara
     }
+  },
+  {
+    instanceID = 1192,                         -- Shadowlands
+    encounters = {
+      { encounterID = 2430, questID = 61813 }, -- Valinor, the Light of Eons
+      { encounterID = 2431, questID = 61816 }, -- Mortanis
+      { encounterID = 2432, questID = 61815 }, -- Oranomonos the Everbranching
+      { encounterID = 2433, questID = 60532 }  -- Nurgash Muckformed
+    }
   }
 }

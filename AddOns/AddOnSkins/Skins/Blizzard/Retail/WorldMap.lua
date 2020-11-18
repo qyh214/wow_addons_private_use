@@ -210,8 +210,8 @@ function AS:Blizzard_Quest()
 	QuestLogPopupDetailFrame.ShowMapButton:SetSize(QuestLogPopupDetailFrame.ShowMapButton:GetWidth() - 30, QuestLogPopupDetailFrame.ShowMapButton:GetHeight() - 5)
 
 	hooksecurefunc("QuestFrame_ShowQuestPortrait", function(QuestFrame, parentFrame, portrait, text, name, x, y)
-		QuestNPCModel:ClearAllPoints()
-		QuestNPCModel:SetPoint("TOPLEFT", QuestFrame, "TOPRIGHT", x + 10, y)
+		QuestModelScene:ClearAllPoints()
+		QuestModelScene:SetPoint("TOPLEFT", QuestFrame, "TOPRIGHT", x + 10, y)
 	end)
 
 	--Spell Rewards
@@ -363,7 +363,7 @@ function AS:Blizzard_Quest()
 		end)
 
 		hooksecurefunc('QuestInfo_ShowRequiredMoney', function()
-			local requiredMoney = GetQuestLogRequiredMoney()
+			local requiredMoney = C_QuestLog.GetRequiredMoney()
 			if requiredMoney > 0 then
 				if requiredMoney > GetMoney() then
 					QuestInfoRequiredMoneyText:SetTextColor(0.6, 0.6, 0.6)
@@ -419,7 +419,10 @@ function AS:Blizzard_WorldMap()
 
 	AS:SkinBackdropFrame(WorldMapFrame)
 	AS:CreateShadow(WorldMapFrame.Backdrop)
+
+	AS:StripTextures(WorldMapFrame.BorderFrame, true)
 	AS:SkinCloseButton(WorldMapFrame.BorderFrame.CloseButton)
+
 	AS:Kill(WorldMapFrame.BorderFrame.Tutorial)
 
 	AS:StripTextures(WorldMapFrame.NavBar)
@@ -432,13 +435,6 @@ function AS:Blizzard_WorldMap()
 	AS:SkinMaxMinFrame(WorldMapFrame.BorderFrame.MaximizeMinimizeFrame)
 	AS:SkinArrowButton(WorldMapFrame.SidePanelToggle.CloseButton, 'left')
 	AS:SkinArrowButton(WorldMapFrame.SidePanelToggle.OpenButton, 'right')
-
-	AS:SkinDropDownBox(WorldMapFrame.overlayFrames[1])
-
-	AS:StripTextures(WorldMapFrame.overlayFrames[2])
-	WorldMapFrame.overlayFrames[2].Icon:SetTexture([[Interface\Minimap\Tracking\None]])
-	WorldMapFrame.overlayFrames[2]:SetHighlightTexture([[Interface\Minimap\Tracking\None]], "ADD")
-	WorldMapFrame.overlayFrames[2]:GetHighlightTexture():SetAllPoints()
 
 	QuestMapFrame.VerticalSeparator:Hide()
 
@@ -455,6 +451,8 @@ function AS:Blizzard_WorldMap()
 	AS:StripTextures(QuestMapFrame.DetailsFrame.CompleteQuestFrame)
 
 	AS:SetTemplate(QuestMapFrame.QuestsFrame.StoryTooltip, "Transparent")
+
+	AS:SkinDropDownBox(WorldMapFrame.overlayFrames[1])
 
 	AS:SkinBackdropFrame(QuestScrollFrame.DetailFrame)
 	QuestScrollFrame.Contents.Separator.Divider:Hide()

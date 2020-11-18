@@ -1,4 +1,4 @@
-## Interface: 90001
+## Interface: 90002
 ## Title: RSA [|c590055FFShaman|r]
 ## Notes: RSA Shaman Module. This is needed to announce Shaman Spells.
 ## Author: Raeli

@@ -41,6 +41,7 @@ function S:WorldMapFrame()
 	-- Quest Frames
 	local QuestMapFrame = _G.QuestMapFrame
 	QuestMapFrame.VerticalSeparator:Hide()
+	QuestMapFrame:SetScript('OnHide', nil) -- This script would taint the Quest Objective Tracker Button, so unsetting it ~Simpy
 
 	if E.private.skins.parchmentRemoverEnable then
 		QuestMapFrame.DetailsFrame:StripTextures(true)
@@ -69,7 +70,6 @@ function S:WorldMapFrame()
 	QuestScrollFrame.DetailFrame.backdrop:SetFrameLevel(1)
 	QuestScrollFrame.DetailFrame.backdrop:Point('TOPLEFT', QuestScrollFrame.DetailFrame, 'TOPLEFT', 3, 1)
 	QuestScrollFrame.DetailFrame.backdrop:Point('BOTTOMRIGHT', QuestScrollFrame.DetailFrame, 'BOTTOMRIGHT', -2, -7)
-	QuestMapFrame.Background:SetInside(QuestScrollFrame.DetailFrame.backdrop)
 
 	SkinHeaders(QuestScrollFrame.Contents.StoryHeader)
 	S:HandleScrollBar(QuestScrollFrameScrollBar, 3, 3)
@@ -84,6 +84,7 @@ function S:WorldMapFrame()
 	QuestMapFrame.DetailsFrame.ShareButton:SetFrameLevel(5)
 	S:HandleButton(QuestMapFrame.DetailsFrame.TrackButton, true)
 	QuestMapFrame.DetailsFrame.TrackButton:SetFrameLevel(5)
+	QuestMapFrame.DetailsFrame.TrackButton:Width(95)
 	S:HandleButton(QuestMapFrame.DetailsFrame.CompleteQuestFrame.CompleteButton, true)
 
 	local CampaignOverview = QuestMapFrame.CampaignOverview
@@ -102,6 +103,8 @@ function S:WorldMapFrame()
 
 	S:HandleNextPrevButton(WorldMapFrame.SidePanelToggle.CloseButton, 'left')
 	S:HandleNextPrevButton(WorldMapFrame.SidePanelToggle.OpenButton, 'right')
+	WorldMapFrame.SidePanelToggle.CloseButton.backdrop:SetFrameLevel(WorldMapFrame.SidePanelToggle.CloseButton:GetFrameLevel())
+	WorldMapFrame.SidePanelToggle.OpenButton.backdrop:SetFrameLevel(WorldMapFrame.SidePanelToggle.OpenButton:GetFrameLevel())
 
 	S:HandleCloseButton(WorldMapFrame.BorderFrame.CloseButton)
 	S:HandleMaxMinFrame(WorldMapFrame.BorderFrame.MaximizeMinimizeFrame)

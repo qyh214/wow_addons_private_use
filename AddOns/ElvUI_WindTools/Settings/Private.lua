@@ -3,6 +3,7 @@ local W, F, E, L, V, P, G = unpack(select(2, ...))
 V.combat = {
 	talentManager = {
 		enable = true,
+		itemButtons = true,
 		sets = {}
 	}
 }
@@ -11,6 +12,8 @@ V.maps = {
 	worldMap = {
 		enable = true,
 		reveal = true,
+		autoTrackWaypoint = true,
+		rightClickToClear = true,
 		scale = {
 			enable = true,
 			size = 1.24
@@ -35,9 +38,10 @@ V.misc = {
 	saveArtifact = true,
 	pauseToSlash = true,
 	noKanjiMath = false,
+	skipCutScene = false,
 	moveBlizzardFrames = true,
 	moveElvUIBags = true,
-	rememberPositions = true,
+	rememberPositions = false,
 	framePositions = {},
 	tags = true,
 	mute = {
@@ -45,6 +49,25 @@ V.misc = {
 		mount = {
 			[63796] = false,
 			[229385] = false
+		}
+	},
+	lfgList = {
+		enable = true,
+		icon = {
+			reskin = true,
+			pack = "SQUARE",
+			size = 16,
+			border = false,
+			alpha = 1
+		},
+		line = {
+			enable = true,
+			tex = "WindTools Glow",
+			width = 16,
+			height = 3,
+			offsetX = 0,
+			offsetY = -1,
+			alpha = 1
 		}
 	}
 }
@@ -84,19 +107,43 @@ V.skins = {
 	enable = true,
 	windtools = true,
 	removeParchment = true,
+	merathilisUISkin = true,
 	shadow = true,
+	increasedSize = 0,
 	color = {
 		r = 0,
 		g = 0,
 		b = 0
 	},
+	ime = {
+		label = {
+			name = F.GetCompatibleFont("Montserrat"),
+			size = 14,
+			style = "OUTLINE"
+		},
+		candidate = {
+			name = E.db.general.font,
+			size = E.db.general.fontSize,
+			style = "OUTLINE"
+		}
+	},
+	errorMessage = {
+		name = E.db.general.font,
+		size = 15,
+		style = "OUTLINE"
+	},
 	addons = {
 		ace3 = true,
+		azerothAutoPilot = true,
 		bigWigs = true,
+		bigWigsQueueTimer = true,
 		bugSack = true,
 		hekili = true,
 		immersion = true,
-		rematch = false,
+		meetingStone = true,
+		premadeGroupsFilter = true,
+		rehack = true,
+		rematch = true,
 		tinyInspect = true,
 		weakAuras = true,
 		weakAurasOptions = true
@@ -107,14 +154,19 @@ V.skins = {
 		addonManager = true,
 		adventureMap = true,
 		alerts = true,
+		artifact = true,
 		auctionHouse = true,
+		azerite = true,
 		azeriteEssence = true,
+		azeriteRespec = true,
 		barberShop = true,
+		binding = true,
 		blackMarket = true,
 		calendar = true,
 		challenges = true,
 		channels = true,
 		character = true,
+		chromieTime = true,
 		collections = true,
 		communities = true,
 		debugTools = true,
@@ -230,5 +282,6 @@ V.unitFrames = {
 }
 
 V.core = {
-	debugMode = false
+	debugMode = false,
+	compatibilityCheck = true
 }

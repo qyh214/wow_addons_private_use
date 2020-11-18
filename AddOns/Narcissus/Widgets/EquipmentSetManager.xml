@@ -243,7 +243,7 @@
 				</Texture>
             </Layer>
 			<Layer level="OVERLAY" textureSubLevel="2">
-				<FontString inherits="AAAStatusNameMedium" justifyH="CENTER" justifyV="MIDDLE" parentKey="Ilvl" text="N/A">
+				<FontString inherits="NarciFontMedium12" justifyH="CENTER" justifyV="MIDDLE" parentKey="Ilvl" text="N/A">
 					<Size x="40" y="24"/>
                     <Color r="0" g="0" b="0"/>
 					<Shadow>
@@ -256,13 +256,13 @@
 						<Anchor point="CENTER" relativeKey="$parent.IlvlBackground" relativePoint="CENTER" x="0" y="-0.5"/>
 					</Anchors>
 				</FontString>
-				<FontString inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="MIDDLE" parentKey="Enhancement" text="Enchancements">
+				<FontString inherits="NarciFontMedium12" justifyH="LEFT" justifyV="MIDDLE" parentKey="Enhancement" text="Enchancements">
 					<Size x="150" y="24"/>
 					<Anchors>
 						<Anchor point="LEFT" relativeKey="$parent.IlvlBackground" relativePoint="RIGHT" x="6" y="0"/>
 					</Anchors>
 				</FontString>
-				<FontString inherits="AAAStatusNameMedium" justifyH="RIGHT" justifyV="MIDDLE" parentKey="Health" text="HP">
+				<FontString inherits="NarciFontMedium12" justifyH="RIGHT" justifyV="MIDDLE" parentKey="Health" text="HP">
 					<Color r="0.65" g="0.65" b="0.65"/>
 					<Size y="24"/>
 					<Anchors>
@@ -283,7 +283,7 @@
 					<AbsInset left="-4" right="-6" top="-6" bottom="-6"/>
 				</HitRectInsets>
 				<Size x="140" y="12"/>
-				<FontString inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="MIDDLE"/>
+				<FontString inherits="NarciFontMedium12" justifyH="LEFT" justifyV="MIDDLE"/>
 				<Anchors>
 					<Anchor point="LEFT" relativeKey="$parent.Bar1" relativePoint="LEFT" x="56" y="-0.5"/>
 				</Anchors>
@@ -563,7 +563,7 @@
 				</Texture>
 			</Layer>
 		</Layers>
-		<ButtonText inherits="AAAStatusNameMedium" justifyH="CENTER" justifyV="MIDDLE" parentKey="Text" text="Update Item">
+		<ButtonText inherits="NarciFontMedium12" justifyH="CENTER" justifyV="MIDDLE" parentKey="Text" text="Update Item">
 			<Color r="1" g="1" b="1"/>
 			<Anchors>
 				<Anchor point="LEFT" relativeKey="$parent.Background" relativePoint="LEFT" x="4"/>
@@ -820,7 +820,7 @@
 				</Texture>			
 			</Layer>
 			<Layer level="OVERLAY">
-				<FontString inherits="AAAStatusNameMedium" justifyH="CENTER" justifyV="MIDDLE" parentKey="Header" text="NARCI_ICON_SELECTOR">
+				<FontString inherits="NarciFontMedium12" justifyH="CENTER" justifyV="MIDDLE" parentKey="Header" text="NARCI_ICON_SELECTOR">
 					<Color r="0.4" g="0.4" b="0.4"/>
 					<Anchors>
 						<Anchor point="LEFT" relativeKey="$parent.Background" relativePoint="LEFT" x="4"/>

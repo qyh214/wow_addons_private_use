@@ -313,6 +313,12 @@ AS.Options = {
 			get = function(info) return AS:CheckOption(info[#info]) end,
 			set = function(info, value) AS:SetOption(info[#info], value) AS.NeedReload = true end,
 			args = {
+				elvuiUsers = {
+					type = 'header',
+					name = 'DO NOT ENABLE THESE WITH ElvUI Skins turned on.',
+					hidden = not AS:CheckAddOn('ElvUI'),
+					order = 0
+				},
 				enableAll = {
 					order = 1,
 					type = 'execute',

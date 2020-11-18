@@ -1,15 +1,15 @@
 # Special Thanks
-- Blazeflack
 - Merathilis
-- Benik
 - siweia
+- Repooc
 - loudsoul
-- Simpy
 - Azilroka
+- Blazeflack
+- Simpy
+- Benik
 - Haste
 - Tukz
 - Elv
-- Repooc
 
 # Sites
 - [https://www.wowhead.com/](https://www.wowhead.com/)
@@ -22,6 +22,12 @@
     - PodVibe @ CurseForge
 - Deutsche (deDE)
     - imna1975 @ CurseForge
+    - Merathilis
+- 한국어 (koKR)
+    - 헬리오스의방패<주부월드> @ 불타는 군단
+    - 불광불급옹<주부월드> @ 불타는 군단
+    - 다크어쌔신<주부월드> @ 불타는 군단
+    - 크림슨프릴<주부월드> @ 불타는 군단
 
 # Codes
 - Announcement
@@ -91,9 +97,18 @@
 - Extra Items Bar
     - cadcamzy (EUI)
 
+- Inpect
+    - loudsoul (TinyInspect)
+
 # Medias
+- 迷时鸟 @ NGA.cn
+    - Media/Texture/Illustration
+
 - Iconfont (Alibaba)
     - Media/Icons/GameBar
+    - Media/Icons/List.tga
+    - Media/Icons/Favorite.tga
+    - Media/Textures/ArrowDown.tga
 
 - Ferous Media (Ferous)
     - Media/Texture/Vignetting.tga

@@ -73,6 +73,7 @@ local function PreShow(self)
     self:SetPosition(data.model_z, data.model_x, data.model_y);
     self:SetFacing(0);
   end
+  self:SetModelAlpha(self.region.alpha)
 end
 
 local function CreateModel()
@@ -84,6 +85,7 @@ end
 -- Keep the two model apis separate
 local poolOldApi = CreateObjectPool(CreateModel)
 local poolNewApi = CreateObjectPool(CreateModel)
+
 
 local function AcquireModel(region, data)
   local pool = data.api and poolNewApi or poolOldApi
@@ -135,18 +137,63 @@ local function ReleaseModel(model)
   Private.barmodels[model] = false
 end
 
+local funcs = {
+  SetVisible = function(self, visible)
+    self.visible = visible
+    self:UpdateVisible()
+  end,
+  SetAlpha = function(self, alpha)
+    if self.model then
+      self.model:SetModelAlpha(alpha)
+    end
+    self.alpha = alpha
+  end,
+  AlphaChanged = function(self)
+    self:SetAlpha(self.alpha)
+  end,
+  UpdateVisible = function(self)
+    local effectiveVisible = self.parent_visible and self.visible and not self.toosmall
+    if effectiveVisible then
+      if not self.model then
+        self.model = AcquireModel(self, self.data)
+        self.model:SetModelAlpha(self.alpha)
+        self.model.region = self
+      end
+    else
+      if self.model then
+        ReleaseModel(self.model)
+        self.model = nil
+      end
+    end
+  end,
+  PreShow = function(self)
+    self.parent_visible = true
+    self:UpdateVisible()
+  end,
+  PreHide = function(self)
+    self.parent_visible = false
+    self:UpdateVisible()
+  end,
+  OnSizeChanged = function(self)
+    -- WORKAROUND clipping being broken on the SL beta with some setups with bars of zero width
+    if self:GetWidth() < 1 or self:GetHeight() < 1 then
+      self.toosmall = true
+    else
+      self.toosmall = false
+    end
+    self:UpdateVisible()
+  end
+}
+
 local function create()
   local subRegion = CreateFrame("FRAME", nil, UIParent)
   subRegion:SetClipsChildren(true)
-  subRegion:SetScript("OnSizeChanged", function(self, w,h )
-    -- WORKAROUND clipping being broken on the SL beta with some setups with bars of zero width
-    if self:GetWidth() < 1 or self:GetHeight() < 1 then
-      self:Hide()
-    else
-      self:Show()
-    end
-  end)
 
+  for k, v in pairs(funcs) do
+    subRegion[k] = v
+  end
+
+  subRegion:SetScript("OnSizeChanged", subRegion.OnSizeChanged)
   return subRegion
 end
 
@@ -158,33 +205,7 @@ local function onRelease(subRegion)
   subRegion:Hide()
 end
 
-local funcs = {
-  SetVisible = function(self, visible)
-    self.visible = visible
-    if visible then
-      if not self.model then
-        self.model = AcquireModel(self, self.data)
-        self.model:SetModelAlpha(self.alpha)
-      end
-      self:Show()
-    else
-      self:Hide()
-      if self.model then
-        ReleaseModel(self.model)
-        self.model = nil
-      end
-    end
-  end,
-  SetAlpha = function(self, alpha)
-    if self.model then
-      self.model:SetModelAlpha(alpha)
-    end
-    self.alpha = alpha
-  end,
-  AlphaChanged = function(self)
-    self:SetAlpha(self.alpha)
-  end
-}
+
 
 local function modify(parent, region, parentData, data, first)
   if region.model then
@@ -208,14 +229,12 @@ local function modify(parent, region, parentData, data, first)
     region:SetAllPoints(parent)
   end
 
-  for k, v in pairs(funcs) do
-    region[k] = v
-  end
-
   region:SetAlpha(data.bar_model_alpha)
   region:SetVisible(data.bar_model_visible)
 
   parent.subRegionEvents:AddSubscriber("AlphaChanged", region)
+  parent.subRegionEvents:AddSubscriber("PreShow", region)
+  parent.subRegionEvents:AddSubscriber("PreHide", region)
 end
 
 local function supports(regionType)

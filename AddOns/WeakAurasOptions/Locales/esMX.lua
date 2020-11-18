@@ -174,6 +174,10 @@ Si la duración de la animación es |cFF00CC0010%|r, y el disparador del aura es
 	L["At a position a bit left of Left HUD position."] = "Un poco a la izquierda de la posición de la visualización frontal (HUD) a la izquierda"
 	L["At a position a bit left of Right HUD position"] = "Un poco a la izquierda de la posición de la visualización frontal (HUD) a la derecha"
 	L["At the same position as Blizzard's spell alert"] = "En la misma posición que la alerta de hechizos de Blizzard"
+	--[[Translation missing --]]
+	L[ [=[Aura is
+Off Screen]=] ] = [=[Aura is
+Off Screen]=]
 	L["Aura Name"] = "Nombre de aura"
 	--[[Translation missing --]]
 	L["Aura Name Pattern"] = "Aura Name Pattern"
@@ -181,13 +185,11 @@ Si la duración de la animación es |cFF00CC0010%|r, y el disparador del aura es
 	L["Aura(s)"] = "Aura(s)"
 	--[[Translation missing --]]
 	L["Author Options"] = "Author Options"
-	L["Auto"] = "Automático"
 	--[[Translation missing --]]
 	L["Auto-Clone (Show All Matches)"] = "Auto-Clone (Show All Matches)"
 	L["Auto-cloning enabled"] = "Auto-clonación activada"
 	--[[Translation missing --]]
 	L["Automatic"] = "Automatic"
-	L["Automatic Icon"] = "Icono automático"
 	--[[Translation missing --]]
 	L["Automatic length"] = "Automatic length"
 	L["Backdrop Color"] = "Color de fondo"
@@ -197,15 +199,13 @@ Si la duración de la animación es |cFF00CC0010%|r, y el disparador del aura es
 	--[[Translation missing --]]
 	L["Background"] = "Background"
 	L["Background Color"] = "Color de fondo"
+	--[[Translation missing --]]
+	L["Background Inner"] = "Background Inner"
 	L["Background Offset"] = "Desplazamiento del fondo"
 	L["Background Texture"] = "Textura de fondo"
-	--[[Translation missing --]]
-	L["Bar"] = "Bar"
 	L["Bar Alpha"] = "Transparencia de la barra"
 	L["Bar Color"] = "Color de la barra"
 	L["Bar Color Settings"] = "Propiedades del color de la barra"
-	--[[Translation missing --]]
-	L["Bar Inner"] = "Bar Inner"
 	L["Bar Texture"] = "Textura de la barra"
 	L["Big Icon"] = "Icono grande"
 	L["Blend Mode"] = "Modo de mezcla"
@@ -249,7 +249,6 @@ Si la duración de la animación es |cFF00CC0010%|r, y el disparador del aura es
 	L["Check out our wiki for a large collection of examples and snippets."] = "Check out our wiki for a large collection of examples and snippets."
 	L["Children:"] = "Dependientes:"
 	L["Choose"] = "Elegir"
-	L["Choose whether the displayed icon is automatic or defined manually"] = "Elije si el icono es automático o si se define manualmente"
 	--[[Translation missing --]]
 	L["Class"] = "Class"
 	--[[Translation missing --]]
@@ -305,6 +304,8 @@ Si la duración de la animación es |cFF00CC0010%|r, y el disparador del aura es
 	L["Copy settings..."] = "Copy settings..."
 	--[[Translation missing --]]
 	L["Copy to all auras"] = "Copy to all auras"
+	--[[Translation missing --]]
+	L["Could not parse '%s'. Expected a table."] = "Could not parse '%s'. Expected a table."
 	L["Count"] = "Contar"
 	--[[Translation missing --]]
 	L["Counts the number of matches over all units."] = "Counts the number of matches over all units."
@@ -374,7 +375,6 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Disallow Entry Reordering"] = "Disallow Entry Reordering"
 	L["Discrete Rotation"] = "Rotación discreta"
 	L["Display"] = "Mostrar"
-	L["Display Icon"] = "Mostrar icono"
 	--[[Translation missing --]]
 	L["Display Name"] = "Display Name"
 	L["Display Text"] = "Mostrar texto"
@@ -458,6 +458,10 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Fade In"] = "Fundir"
 	L["Fade Out"] = "Difuminar"
 	--[[Translation missing --]]
+	L["Fallback"] = "Fallback"
+	--[[Translation missing --]]
+	L["Fallback Icon"] = "Fallback Icon"
+	--[[Translation missing --]]
 	L["False"] = "False"
 	--[[Translation missing --]]
 	L["Fetch Affected/Unaffected Names"] = "Fetch Affected/Unaffected Names"
@@ -467,6 +471,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Filter by Group Role"] = "Filter by Group Role"
 	--[[Translation missing --]]
 	L["Filter by Nameplate Type"] = "Filter by Nameplate Type"
+	--[[Translation missing --]]
+	L["Filter by Raid Role"] = "Filter by Raid Role"
 	--[[Translation missing --]]
 	L[ [=[Filter formats: 'Name', 'Name-Realm', '-Realm'.
 
@@ -590,6 +596,8 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	--[[Translation missing --]]
 	L["Icon Settings"] = "Icon Settings"
 	--[[Translation missing --]]
+	L["Icon Source"] = "Icon Source"
+	--[[Translation missing --]]
 	L["If"] = "If"
 	--[[Translation missing --]]
 	L["If checked, then the user will see a multi line edit box. This is useful for inputting large amounts of text."] = "If checked, then the user will see a multi line edit box. This is useful for inputting large amounts of text."
@@ -644,6 +652,10 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	L["Invalid Spell ID"] = "Invalid Spell ID"
 	--[[Translation missing --]]
 	L["Invalid Spell Name/ID/Link"] = "Invalid Spell Name/ID/Link"
+	--[[Translation missing --]]
+	L["Invalid type for '%s'. Expected 'bool', 'number', 'select', 'string', 'timer' or 'elapsedTimer'."] = "Invalid type for '%s'. Expected 'bool', 'number', 'select', 'string', 'timer' or 'elapsedTimer'."
+	--[[Translation missing --]]
+	L["Invalid type for property '%s' in 's'. Expected '%s'"] = "Invalid type for property '%s' in 's'. Expected '%s'"
 	L["Inverse"] = "Invertido"
 	--[[Translation missing --]]
 	L["Inverse Slant"] = "Inverse Slant"
@@ -671,6 +683,8 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	L["Lines & Particles"] = "Lines & Particles"
 	L["Load"] = "Cargar"
 	L["Loaded"] = "Cargado"
+	--[[Translation missing --]]
+	L["Lock Positions"] = "Lock Positions"
 	--[[Translation missing --]]
 	L["Loop"] = "Loop"
 	L["Low Mana"] = "Maná insuficiente"
@@ -740,6 +754,8 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["New Value"] = "New Value"
 	L["No Children"] = "Sin dependientes"
 	L["None"] = "Nada"
+	--[[Translation missing --]]
+	L["Not a table"] = "Not a table"
 	L["Not all children have the same value for this option"] = "No todos los dependientes contienen la misma configuración."
 	L["Not Loaded"] = "Sin cargar"
 	--[[Translation missing --]]
@@ -834,6 +850,8 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Purple Rune"] = "Runa morada"
 	L["Put this display in a group"] = "Colocar esta aura en un grupo"
 	L["Radius"] = "Radio"
+	--[[Translation missing --]]
+	L["Raid Role"] = "Raid Role"
 	L["Re-center X"] = "Centrar X"
 	L["Re-center Y"] = "Centrar Y"
 	--[[Translation missing --]]
@@ -973,6 +991,8 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Sound Channel"] = "Canal de sonido"
 	L["Sound File Path"] = "Ruta del fichero de sonido"
 	L["Sound Kit ID"] = "ID del kit de sonido"
+	--[[Translation missing --]]
+	L["Source"] = "Source"
 	L["Space"] = "Espacio"
 	L["Space Horizontally"] = "Espacio horizontal"
 	L["Space Vertically"] = "Espacio vertical"
@@ -1083,6 +1103,8 @@ Sólo un valor coincidente puede ser escogido.]=]
 	--[[Translation missing --]]
 	L["True"] = "True"
 	L["Type"] = "Tipo"
+	--[[Translation missing --]]
+	L["Type 'select' for '%s' requires a values member'"] = "Type 'select' for '%s' requires a values member'"
 	L["Ungroup"] = "Desagrupar"
 	L["Unit"] = "Unidad"
 	--[[Translation missing --]]
@@ -1097,6 +1119,8 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Unit Name Filter"] = "Unit Name Filter"
 	--[[Translation missing --]]
 	L["UnitName Filter"] = "UnitName Filter"
+	--[[Translation missing --]]
+	L["Unknown property '%s' found in '%s'"] = "Unknown property '%s' found in '%s'"
 	L["Unlike the start or finish animations, the main animation will loop over and over until the display is hidden."] = "Ignorar animaciones de inicio y final: la animación principal se repetirá hasta que el aura se oculte."
 	--[[Translation missing --]]
 	L["Update %s by %s"] = "Update %s by %s"

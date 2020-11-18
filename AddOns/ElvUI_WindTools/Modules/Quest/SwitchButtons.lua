@@ -7,18 +7,17 @@ local _G = _G
 
 local CreateFrame = CreateFrame
 local RegisterStateDriver = RegisterStateDriver
+local UnregisterStateDriver = UnregisterStateDriver
 
 function SB:CreateButton(text)
     if not self.db or not self.bar then
         return
     end
-
     local button = CreateFrame("CheckButton", nil, self.bar, "UICheckButtonTemplate")
     ES:HandleCheckBox(button)
     if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow then
-        S:CreateShadow(button.backdrop)
+        S:CreateBackdropShadow(button)
     end
-
     button.originalText = text
     button.text = button:CreateFontString()
     F.SetFontWithDB(button.text, self.db.font)
@@ -26,36 +25,43 @@ function SB:CreateButton(text)
     button.text:SetJustifyV("MIDDLE")
     button.text:SetJustifyH("LEFT")
     button.text:Point("LEFT", button, "RIGHT")
-
-    RegisterStateDriver(button, "visibility", "[petbattle] hide; show")
     return button
 end
 
-function SB:UpdateButton(button)
+function SB:UpdateButton(button, enable)
     if not self.db or not button then
         return
     end
 
-    F.SetFontWithDB(button.text, self.db.font)
+    if enable then
+        F.SetFontWithDB(button.text, self.db.font)
 
-    button.buttonSize = 0
+        button.buttonSize = 0
 
-    if self.db.font.size < 7 then
-        button:Size(16)
-        button.buttonSize = button.buttonSize + 16
-    elseif self.db.font.size <= 12 then
-        button:Size(self.db.font.size + 9)
-        button.buttonSize = self.db.font.size + 9
-    else
-        button:Size(self.db.font.size + 12)
-        button.buttonSize = self.db.font.size + 12
+        if self.db.font.size < 7 then
+            button:Size(16)
+            button.buttonSize = button.buttonSize + 16
+        elseif self.db.font.size <= 12 then
+            button:Size(self.db.font.size + 9)
+            button.buttonSize = self.db.font.size + 9
+        else
+            button:Size(self.db.font.size + 12)
+            button.buttonSize = self.db.font.size + 12
+        end
+
+        button.text:SetText(F.CreateColorString(button.originalText, self.db.font.color))
+        local checkedTexture = button:GetCheckedTexture()
+        checkedTexture:SetVertexColor(self.db.font.color.r, self.db.font.color.g, self.db.font.color.b)
+        button.buttonSize = button.buttonSize + button.text:GetStringWidth()
     end
 
-    button.text:SetText(F.CreateColorString(button.originalText, self.db.font.color))
-    local checkedTexture = button:GetCheckedTexture()
-    checkedTexture:SetVertexColor(self.db.font.color.r, self.db.font.color.g, self.db.font.color.b)
-    button.buttonSize = button.buttonSize + button.text:GetStringWidth()
-    button:Show()
+    if enable ~= button:IsShown() then
+        if enable then
+            button:Show()
+        else
+            button:Hide()
+        end
+    end
 end
 
 function SB:UpdateLayout()
@@ -65,49 +71,40 @@ function SB:UpdateLayout()
 
     local xOffset = 0
 
+    if not self.bar.announcement then
+        self.bar.announcement = self:CreateButton(L["[ABBR] Announcement"])
+        self.bar.announcement:SetScript(
+            "OnClick",
+            function()
+                E.db.WT.announcement.quest.paused = not self.bar.announcement:GetChecked()
+            end
+        )
+    end
+
+    if not self.bar.turnIn then
+        self.bar.turnIn = self:CreateButton(L["[ABBR] Turn In"])
+        self.bar.turnIn:SetScript(
+            "OnClick",
+            function()
+                E.db.WT.quest.turnIn.enable = self.bar.turnIn:GetChecked()
+                W:GetModule("TurnIn"):ProfileUpdate()
+            end
+        )
+    end
+
+    self:UpdateButton(self.bar.announcement, self.db.announcement)
+    self:UpdateButton(self.bar.turnIn, self.db.turnIn)
+
     if self.db.announcement then
-        if not self.bar.announcement then
-            self.bar.announcement = self:CreateButton(L["[ABBR] Announcement"])
-            self.bar.announcement:SetChecked(not E.db.WT.announcement.quest.paused)
-            self.bar.announcement:SetScript(
-                "OnClick",
-                function()
-                    E.db.WT.announcement.quest.paused = not self.bar.announcement:GetChecked()
-                end
-            )
-        end
-
-        self:UpdateButton(self.bar.announcement)
-
         self.bar.announcement:Point("LEFT", xOffset, 0)
         xOffset = xOffset + self.bar.announcement.buttonSize
-    else
-        if self.bar.announcement then
-            self.bar.announcement:Hide()
-        end
+        self.bar.announcement:SetChecked(E.db.WT.announcement.quest.enable and not E.db.WT.announcement.quest.paused)
     end
 
     if self.db.turnIn then
-        if not self.bar.turnIn then
-            self.bar.turnIn = self:CreateButton(L["[ABBR] Turn In"])
-            self.bar.turnIn:SetChecked(E.db.WT.quest.turnIn.enable)
-            self.bar.turnIn:SetScript(
-                "OnClick",
-                function()
-                    E.db.WT.quest.turnIn.enable = self.bar.turnIn:GetChecked()
-                    W:GetModule("TurnIn"):ProfileUpdate()
-                end
-            )
-        end
-
-        self:UpdateButton(self.bar.turnIn)
-
         self.bar.turnIn:Point("LEFT", xOffset, 0)
         xOffset = xOffset + self.bar.turnIn.buttonSize
-    else
-        if self.bar.turnIn then
-            self.bar.turnIn:Hide()
-        end
+        self.bar.turnIn:SetChecked(E.db.WT.quest.turnIn.enable)
     end
 
     if self.db.backdrop then
@@ -130,12 +127,9 @@ function SB:UpdateLayout()
 
     if xOffset ~= 0 then
         self.bar:Show()
-        self.barAnchor:Show()
         self.bar:Size(xOffset + 1, 20)
-        self.barAnchor:Size(xOffset + 1, 20)
     else
         self.bar:Hide()
-        self.barAnchor:Hide()
     end
 
     self:AutoHideWithObjectiveFrame()
@@ -146,28 +140,23 @@ function SB:CreateBar()
         return
     end
 
-    local frame = CreateFrame("Frame", nil, E.UIParent)
+    local frame = CreateFrame("Frame", "WTSwitchButtonsBar", E.UIParent)
     frame:Point("RIGHT", _G.ObjectiveFrameMover, "RIGHT", 0, -2)
-    frame:SetFrameStrata("BACKGROUND")
-    self.barAnchor = frame
-
-    frame = CreateFrame("Frame", nil, E.UIParent)
     frame:SetFrameStrata("LOW")
+    frame:SetFrameLevel(5)
     frame:CreateBackdrop("Transparent")
-    frame:ClearAllPoints()
-    frame:SetPoint("CENTER", self.barAnchor, "CENTER", 0, 0)
 
     self.bar = frame
 
     self:UpdateLayout()
 
     if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow then
-        S:CreateShadow(self.bar.backdrop)
+        S:CreateBackdropShadow(self.bar)
     end
 
     E:CreateMover(
-        self.barAnchor,
-        "WTSwitchButtonBarAnchor",
+        frame,
+        "WTSwitchButtonBarMover",
         L["Switch Buttons Bar"],
         nil,
         nil,
@@ -175,7 +164,8 @@ function SB:CreateBar()
         "ALL,WINDTOOLS",
         function()
             return E.db.WT.quest.switchButtons.enable
-        end
+        end,
+        "WindTools,quest,switchButtons"
     )
 end
 
@@ -185,10 +175,17 @@ function SB:AutoHideWithObjectiveFrame()
     end
 
     if self.db.hideWithObjectiveTracker then
+        if self.bar.visibilitySet then
+            UnregisterStateDriver(self.bar, "visibility")
+            self.bar.visibilitySet = false
+        end
         if _G.ObjectiveTrackerFrame.collapsed or not _G.ObjectiveTrackerFrame.HeaderMenu:IsShown() then
             self.bar:Hide()
             return
         end
+    elseif not self.bar.visibilitySet then
+        RegisterStateDriver(self.bar, "visibility", "[petbattle]hide;show")
+        self.bar.visibilitySet = true
     end
 
     self.bar:Show()
@@ -226,16 +223,6 @@ function SB:ProfileUpdate()
         else
             self:AutoHideWithObjectiveFrame()
             self:UpdateLayout()
-        end
-
-        if self.db.announcement then
-            self.bar.announcement:SetChecked(
-                E.db.WT.announcement.quest.enable and not E.db.WT.announcement.quest.paused
-            )
-        end
-
-        if self.db.turnIn then
-            self.bar.turnIn:SetChecked(E.db.WT.quest.turnIn.enable)
         end
     end
 end

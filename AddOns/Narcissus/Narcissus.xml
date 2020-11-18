@@ -166,7 +166,7 @@
 		</Scripts>
 	</Button>
 
-	<Button name="XmogModeButtonTemplate" inherits="WidgetButtonTemplate" virtual="true">
+	<Button name="NarciXmogModeButtonTemplate" inherits="WidgetButtonTemplate" virtual="true">
 		<Size>
 			<AbsDimension x="150" y="20"/>
 		</Size>
@@ -518,14 +518,14 @@
 					</Anchors>
 				</FontString>
 
-				<FontString inherits="AAAStatusNumber" justifyH="RIGHT" justifyV="MIDDLE" parentKey="Value" text="1208">
+				<FontString inherits="NarciFontStatusNumber" justifyH="RIGHT" justifyV="MIDDLE" parentKey="Value" text="1208">
 					<Size x="0" y="0"/>
 					<Anchors>
 						<Anchor point="RIGHT" relativeKey="$parent.GR" relativePoint="RIGHT" x="-15" y="0"/>
 					</Anchors>
 				</FontString>
 
-				<FontString inherits="AAAStatusNumber" justifyH="RIGHT" justifyV="MIDDLE" parentKey="ValueRating" text="1208" hidden="true">
+				<FontString inherits="NarciFontStatusNumber" justifyH="RIGHT" justifyV="MIDDLE" parentKey="ValueRating" text="1208" hidden="true">
 					<Size x="0" y="0"/>
 					<Anchors>
 						<Anchor point="RIGHT" relativeKey="$parent.Color" relativePoint="RIGHT" x="-10" y="0"/>
@@ -547,7 +547,7 @@
 		</Animations>
         <Scripts>
             <OnLoad>
-				AttributeTemplate_OnLoad(self);
+				Narci_AttributeFrame_OnLoad(self);
 				local delay = (self:GetID())/20;
 				self.animIn.A2:SetStartDelay(delay);
 			</OnLoad>
@@ -574,7 +574,7 @@
 					</Anchors>
 				</FontString>
 
-				<FontString inherits="AAAStatusNumber" justifyH="RIGHT" justifyV="MIDDLE" parentKey="Value" text="1208">
+				<FontString inherits="NarciFontStatusNumber" justifyH="RIGHT" justifyV="MIDDLE" parentKey="Value" text="1208">
 					<Size x="0" y="0"/>
 					<Anchors>
 						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-10" y="0"/>
@@ -597,7 +597,7 @@
 		</Animations>
         <Scripts>
             <OnLoad>
-				AttributeTemplate_OnLoad(self);
+				Narci_AttributeFrame_OnLoad(self);
 				local delay = (self:GetID())/20;
 				self.animIn.A2:SetStartDelay(delay);
 			</OnLoad>
@@ -649,14 +649,14 @@
 					</Anchors>
 				</FontString>
 
-				<FontString inherits="AAAStatusNumber" justifyH="LEFT" justifyV="MIDDLE" parentKey="Value" text="12.08%">
+				<FontString inherits="NarciFontStatusNumber" justifyH="LEFT" justifyV="MIDDLE" parentKey="Value" text="12.08%">
 					<Size x="0" y="0"/>
 					<Anchors>
 						<Anchor point="LEFT" relativeKey="$parent.Color" relativePoint="LEFT" x="10" y="0"/>
 					</Anchors>
 				</FontString>
 
-				<FontString inherits="AAAStatusNumber" justifyH="RIGHT" justifyV="MIDDLE" parentKey="ValueRating" text="1208">
+				<FontString inherits="NarciFontStatusNumber" justifyH="RIGHT" justifyV="MIDDLE" parentKey="ValueRating" text="1208">
 					<Size x="0" y="0"/>
 					<Anchors>
 						<Anchor point="RIGHT" relativeKey="$parent.Color" relativePoint="RIGHT" x="-11" y="0"/>
@@ -679,7 +679,7 @@
 		</Animations-->
         <Scripts>
             <OnLoad>
-				AttributeTemplate_OnLoad(self);
+				Narci_AttributeFrame_OnLoad(self);
 			</OnLoad>
 			<OnEnter>
 				Narci_ShowStatTooltip(self);
@@ -731,14 +731,14 @@
 					</Anchors>
 				</FontString>
 
-				<FontString inherits="AAAStatusNumber" justifyH="LEFT" justifyV="MIDDLE" parentKey="Value" text="12.08%">
+				<FontString inherits="NarciFontStatusNumber" justifyH="LEFT" justifyV="MIDDLE" parentKey="Value" text="12.08%">
 					<Size x="0" y="0"/>
 					<Anchors>
 						<Anchor point="LEFT" relativeKey="$parent.Color" relativePoint="LEFT" x="11" y="0"/>
 					</Anchors>
 				</FontString>
 
-				<FontString inherits="AAAStatusNumber" justifyH="RIGHT" justifyV="MIDDLE" parentKey="ValueRating" text="1208">
+				<FontString inherits="NarciFontStatusNumber" justifyH="RIGHT" justifyV="MIDDLE" parentKey="ValueRating" text="1208">
 					<Size x="0" y="0"/>
 					<Anchors>
 						<Anchor point="RIGHT" relativeKey="$parent.Color" relativePoint="RIGHT" x="-10" y="0"/>
@@ -761,7 +761,7 @@
 		</Animations-->
         <Scripts>
             <OnLoad>
-				AttributeTemplate_OnLoad(self);
+				Narci_AttributeFrame_OnLoad(self);
 			</OnLoad>
 			<OnEnter>
 				Narci_ShowStatTooltip(self);
@@ -833,7 +833,7 @@
 		</Animations>
         <Scripts>
             <OnLoad>
-				AttributeTemplate_OnLoad(self);
+				Narci_AttributeFrame_OnLoad(self);
 				local delay = (self:GetID())/20;
 				self.animIn.A2:SetStartDelay(delay);
 			</OnLoad>
@@ -1090,7 +1090,7 @@
 			<Frame parentKey="IlvlCenter"  hidden="true">
 				<Layers>
 					<Layer level="OVERLAY" textureSubLevel="3">
-						<FontString parentKey="ItemLevelCenter" inherits="AAAItemLevel" justifyH="CENTER" justifyV="MIDDLE" text="">
+						<FontString parentKey="ItemLevelCenter" inherits="NarciFontNormal10White" justifyH="CENTER" justifyV="MIDDLE" text="">
 							<Size x="0" y="0"/>
 							<Anchors>
 								<Anchor point="CENTER" relativeKey="$parent.$parent.Border" relativePoint="CENTER" x="0" y="-8"/>
@@ -1212,7 +1212,7 @@
 						</AnimationGroup>
 					</Animations>
 				</FontString>
-				<FontString parentKey="ItemLevel" inherits="AAAItemLevel" justifyH="LEFT" justifyV="TOP" text="355" maxLines="2">
+				<FontString parentKey="ItemLevel" inherits="NarciFontNormal10White" justifyH="LEFT" justifyV="TOP" text="355" maxLines="2">
 					<Size x="0" y="0"/>
 					<Anchors>
 						<Anchor point="BOTTOMLEFT" relativeKey="$parent.GradientBackground" relativePoint="BOTTOMLEFT" x="30" y="6"/>
@@ -1280,7 +1280,7 @@
 						</AnimationGroup>
 					</Animations>
 				</FontString>
-				<FontString parentKey="ItemLevel" inherits="AAAItemLevel" justifyH="RIGHT" justifyV="TOP" text="355" maxLines="2">
+				<FontString parentKey="ItemLevel" inherits="NarciFontNormal10White" justifyH="RIGHT" justifyV="TOP" text="355" maxLines="2">
 					<Size x="0" y="0"/>
 					<Anchors>
 						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.GradientBackground" relativePoint="BOTTOMRIGHT" x="-30" y="6"/>
@@ -1780,7 +1780,7 @@
 										</Texture>
 									</Layer>
 									<Layer level="OVERLAY">
-										<FontString parentKey="Reading" inherits="AAAPlayerInfo" justifyH="CENTER" justifyV="BOTTOM" text="0" hidden="true">
+										<FontString parentKey="Reading" inherits="NarciFontPlayerInfo" justifyH="CENTER" justifyV="BOTTOM" text="0" hidden="true">
 											<Size x="0" y="0"/>
 											<Anchors>
 												<Anchor point="TOP" relativeKey="$parent" relativePoint="BOTTOM" x="0" y="4"/>
@@ -2155,7 +2155,7 @@
 					</Button>
 				</Frames>
 				<Scripts>
-					<OnLoad function="EmoteButtonPopUp_OnLoad"/>
+					<OnLoad function="Narci_EmoteButtonPopUp_OnLoad"/>
 				</Scripts>
 			</Frame>
 
@@ -2178,7 +2178,7 @@
 						</Scripts>
 					</Button>
 
-					<Button inherits="XmogModeButtonTemplate" parentKey="ModeButton" id="2" name="Narci_XmogButtonPopUp_ModeButton">
+					<Button inherits="NarciXmogModeButtonTemplate" parentKey="ModeButton" id="2" name="Narci_XmogButtonPopUp_ModeButton">
 						<Anchors>
 							<Anchor point="TOP" relativeKey="$parent.ModelToggle" relativePoint="BOTTOM" x="0" y="0"/> <!--EndPoint 8-->
 						</Anchors>
@@ -2190,7 +2190,7 @@
 						</Scripts>
 					</Button>
 
-					<Button inherits="XmogModeButtonTemplate" parentKey="CopyButton" id="3">
+					<Button inherits="NarciXmogModeButtonTemplate" parentKey="CopyButton" id="3">
 						<Anchors>
 							<Anchor point="TOP" relativeKey="$parent.ModeButton" relativePoint="BOTTOM" x="0" y="0"/> <!--EndPoint 8-->
 						</Anchors>
@@ -2204,7 +2204,7 @@
 								self.IsOn = false;
 								self.showItemID = false;
 							</OnLoad>
-							<OnClick function="CopyButton_OnClick"/>
+							<OnClick function="Narci_CopyButton_OnClick"/>
 						</Scripts>
 						<Frames>
 							<EditBox parentKey="GearTexts" name="Narci_GearTexts" clipChildren="false" autoFocus="true" letters="661118" multiLine="true" clampedToScreen="false" hidden="true" Alpha="0" inherits="NarciEditBoxHideTooltipTemplate">
@@ -2338,7 +2338,7 @@
 										</Anchors>
 										<Scripts>
 											<OnLoad>
-												self.HeaderText:SetText(NARCI_SYNTAX)
+												self.HeaderText:SetText(Narci.L["Syntax"]);
 											</OnLoad>
 										</Scripts>
 									</Frame>	
@@ -2523,7 +2523,7 @@
 						</Texture>
 					</Layer>
 					<Layer level="OVERLAY">
-						<FontString parentKey="Miscellaneous" inherits="AAAPlayerInfo" justifyH="LEFT" justifyV="TOP" text="1208 Peterodox">
+						<FontString parentKey="ArmorString" inherits="NarciFontPlayerInfo" justifyH="LEFT" justifyV="TOP" text="1208 Peterodox">
 							<Size x="0" y="0"/>
 							<Anchors>
 								<Anchor point="TOPLEFT" relativeKey="$parent.BlackRight" relativePoint="TOPLEFT" x="26" y="-9"/>
@@ -2715,14 +2715,14 @@
 								</Texture>
 							</Layer>
 							<Layer level="ARTWORK">
-								<FontString parentKey="Quote" inherits="AAAItemLevel" justifyH="CENTER" justifyV="MIDDLE" text="HEART_QUOTE_1" Alpha="0">
+								<FontString parentKey="Quote" inherits="NarciFontNormal10White" justifyH="CENTER" justifyV="MIDDLE" text="NARCI_HEART_QUOTE_1" Alpha="0">
 									<Size x="86" y="0"/>
 									<Color r="0.8" g="0.8" b="0.8" a="1"/>
 									<Anchors>
 										<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="66" y="0"/>
 									</Anchors>
 								</FontString>
-								<FontString parentKey="SN" inherits="AAAItemLevel" justifyH="CENTER" justifyV="MIDDLE" text=" " Alpha="0">
+								<FontString parentKey="SN" inherits="NarciFontNormal10White" justifyH="CENTER" justifyV="MIDDLE" text=" " Alpha="0">
 									<Size x="0" y="0"/>
 									<Color r="0.4" g="0.4" b="0.4" a="1"/>
 									<Anchors>
@@ -2909,7 +2909,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="OVERLAY">
-						<FontString parentKey="Miscellaneous" inherits="AAAPlayerInfo" justifyH="CENTER" justifyV="BOTTOM" text="1208 Peterodox">
+						<FontString parentKey="Miscellaneous" inherits="NarciFontPlayerInfo" justifyH="CENTER" justifyV="BOTTOM" text="1208 Peterodox">
 							<Size x="0" y="0"/>
 							<Anchors>
 								<Anchor point="BOTTOM" relativeKey="$parent" relativePoint="BOTTOM" x="0" y="0"/>
@@ -3220,13 +3220,13 @@
 										</AnimationGroup>
 									</Animations>
 								</Texture>
-								<FontString parentKey="PlayerItemLvl" inherits="AAAIlvlLarge" justifyH="CENTER" justifyV="MIDDLE" text="N/A">
+								<FontString parentKey="PlayerItemLvl" inherits="NarciFontNumber24" justifyH="CENTER" justifyV="MIDDLE" text="N/A">
 									<Size x="0" y="0"/>
 									<Anchors>
 										<Anchor point="CENTER" relativeKey="$parent.Reference" relativePoint="CENTER" x="0" y="-4"/>
 									</Anchors>
 								</FontString>
-								<FontString inherits="AAAIvlHeadLine" justifyH="CENTER" justifyV="BOTTOM" text="MAX" parentKey="Header">
+								<FontString inherits="NarciFontSemplicita9" justifyH="CENTER" justifyV="BOTTOM" text="MAX" parentKey="Header">
 									<Size x="0" y="0"/>
 									<Anchors>
 										<Anchor point="BOTTOM" relativeKey="$parent.PlayerItemLvl" relativePoint="TOP" x="0" y="2"/>
@@ -3318,14 +3318,14 @@
 								</Texture>
 							</Layer>
 							<Layer level="BACKGROUND" textureSubLevel="2">
-								<FontString parentKey="PlayerItemLvlEquipped" inherits="AAAIlvlSmall" justifyH="CENTER" justifyV="MIDDLE" text="128" hidden="false">
+								<FontString parentKey="PlayerItemLvlEquipped" inherits="NarciFontNumber12" justifyH="CENTER" justifyV="MIDDLE" text="128" hidden="false">
 									<Size x="0" y="0"/>
 									<Anchors>
 										<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0"/>
 										<Anchor point="BOTTOM" relativeKey="$parent.$parent.IlvlButtonCenter.PlayerItemLvl" relativePoint="BOTTOM" y="3"/>
 									</Anchors>
 								</FontString>
-								<FontString inherits="AAAIvlHeadLine" justifyH="CENTER" justifyV="BOTTOM" text="EA" hidden="false">
+								<FontString inherits="NarciFontSemplicita9" justifyH="CENTER" justifyV="BOTTOM" text="EA" hidden="false">
 									<Size x="0" y="0"/>
 									<Anchors>
 										<Anchor point="BOTTOM" relativeKey="$parent.PlayerItemLvlEquipped" relativePoint="TOP" x="0" y="2"/>
@@ -3346,7 +3346,7 @@
 								self.tooltipLineOpen = Narci.L["Equipped Item Level Tooltip"];
 							</OnLoad>
 							<OnEnter>
-								self.tooltipHeadline = format(self.tooltipFormat, self.PlayerItemLvlEquipped:GetText())
+								self.tooltipHeadline = format(self.tooltipFormat, self.PlayerItemLvlEquipped:GetText());
 								Narci_ShowButtonTooltip(self);
 								UIFrameFadeIn(self.Highlight, 0.15, self.Highlight:GetAlpha(), 1);
 							</OnEnter>
@@ -3383,14 +3383,14 @@
 								</Texture>
 							</Layer>
 							<Layer level="BACKGROUND" textureSubLevel="2">
-								<FontString parentKey="Number" inherits="AAAIlvlSmall" justifyH="CENTER" justifyV="MIDDLE" text="N/A" hidden="false">
+								<FontString parentKey="Number" inherits="NarciFontNumber12" justifyH="CENTER" justifyV="MIDDLE" text="0" hidden="false">
 									<Size x="0" y="0"/>
 									<Anchors>
 										<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0"/>
 										<Anchor point="BOTTOM" relativeKey="$parent.$parent.IlvlButtonCenter.PlayerItemLvl" relativePoint="BOTTOM" y="3"/>
 									</Anchors>
 								</FontString>
-								<FontString inherits="AAAIvlHeadLine" justifyH="CENTER" justifyV="BOTTOM" text="MAX" hidden="false" parentKey="Header">
+								<FontString inherits="NarciFontSemplicita9" justifyH="CENTER" justifyV="BOTTOM" text="TC" hidden="false" parentKey="Header">
 									<Size x="0" y="0"/>
 									<Anchors>
 										<Anchor point="BOTTOM" relativeKey="$parent.Number" relativePoint="TOP" x="0" y="2"/>
@@ -3407,7 +3407,8 @@
 						</Frames>
 						<Scripts>
 							<OnLoad>
-
+								self.tooltipHeadline = format("Total Corruption");
+								self.tooltipLineOpen = Narci.L["No Corrupted Item"];
 							</OnLoad>
 							<OnEnter>
 								Narci_ShowButtonTooltip(self);
@@ -3422,10 +3423,6 @@
 							</OnHide>
 						</Scripts>
 					</Button>
-
-
-
-
 				</Frames>
 				<Scripts>
 
@@ -4369,7 +4366,7 @@
 		</Scripts>
 	</Frame>
 
-	<Button name="NarciMinimapPanelButton" virtual="true" motionScriptsWhileDisabled="true">
+	<Button name="NarciMinimapPanelButtonTemplate" virtual="true" motionScriptsWhileDisabled="true">
 		<Size x="128" y="24"/>
 		<Layers>
 			<Layer level="OVERLAY">
@@ -4396,7 +4393,20 @@
 		</Scripts>
 	</Button>
 
-    <Button name="Narci_MinimapButton" parent="Minimap" enableMouse="true" movable="true" hidden="true" frameStrata="HIGH" frameLevel="62" ignoreParentAlpha="false" clampedToScreen="true" motionScriptsWhileDisabled="false" mixin="NarciMinimapButtonMixin">
+	<Frame name="Narci_MinimapButtonContainer" parent="UIParent" frameStrata="HIGH">
+		<Size x="8" y="8"/>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<Scripts>
+			<OnLoad>
+				Minimap:HookScript("OnHide", function() self:Hide() end);
+				Minimap:HookScript("OnShow", function() self:Show() end);
+			</OnLoad>
+		</Scripts>
+	</Frame>
+
+    <Button name="Narci_MinimapButton" parent="Narci_MinimapButtonContainer" enableMouse="true" movable="true" hidden="true" frameStrata="HIGH" frameLevel="62" ignoreParentAlpha="false" clampedToScreen="true" motionScriptsWhileDisabled="false" useParentLevel="false" mixin="NarciMinimapButtonMixin">
 		<Size>
 			<AbsDimension x="36" y="36"/>
 		</Size>

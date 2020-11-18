@@ -9,6 +9,7 @@ if IsMacClient() then
     NARCI_MODIFIER_ALT = "Option键";  --Mac OS
 end
 
+L["Swap items"] = "替换装备";
 L["Movement Speed"] = STAT_MOVEMENT_SPEED;
 L["Damage Reduction Percentage"] = COMBAT_TEXT_SHOW_RESISTANCES_TEXT;
 
@@ -41,20 +42,22 @@ L["TopQuality Button Tooltip Open"] = "将画面设置中的所有选项都调�
 L["TopQuality Button Tooltip Close"] = "点击以恢复先前的画质设置";
 
 L["Heritage Armor"] = "传承护甲";
-ITEMSOURCE_SECRETFINDING = "解密活动"
+L["Secret Finding"] = "解密活动";
 
 HEART_QUOTE_1 = "最本质的东西，是无法用肉眼看见的";
 
-NARCI_TITLE_MANAGER_OPEN = "展开头衔列表";
-NARCI_TITLE_MANAGER_CLOSE = "收起头衔列表";
+--Title Manager--
+L["Open Title Manager"] = "展开头衔列表";
+L["Close Title Manager"] = "收起头衔列表";
 
-NARCI_ALIAS_USE_ALIAS = "使用化名";
-NARCI_ALIAS_USE_PLAYER_NAME = "使用本名";
+--Alias--
+L["Use Alias"] = "使用化名";
+L["Use Player Name"] = "使用本名";
 
 L["Minimap Tooltip Double Click"] = "双击";
 L["Minimap Tooltip Left Click"] = "左键|r";
 L["Minimap Tooltip To Open"] = "|cffffffff打开装备界面";
-L["Minimap Tooltip Enter Photo Mode"] = "|cffffffff进入拍照模式";
+L["Minimap Tooltip Module Panel"] = "|cffffffff显示组件面板";
 L["Minimap Tooltip Right Click"] = "右键";
 L["Minimap Tooltip Shift Left Click"] = "Shift + 左键";
 L["Minimap Tooltip Shift Right Click"] = "Shift + 右键";
@@ -65,76 +68,75 @@ L["Corrupted Item Parser"] = "|cffffffff打开腐蚀物品链接解析器|r";
 L["Toggle Dressing Room"] = "|cffffffff打开"..DRESSUP_FRAME.."|r";
 
 NARCI_CLIPBOARD = "剪切板";
-NARCI_LAYOUT = "布局";
-NARCI_LAYOUT_SYMMETRY = "对称";
-NARCI_LAYOUT_ASYMMETRY = "非对称";
-NARCI_COPY_TEXTS = "复制文本";
-NARCI_SYNTAX = "语法";
-NARCI_SYNTAX_PLAIN_TEXT = "纯文本";
-NARCI_SYNTAX_BBCODE = "BB Code";
-NARCI_SYNTAX_MARKDOWN = "Markdown";
-NARCI_EXPORT_INCLUDES = "在导出中包含...";
+L["Layout"] = "布局";
+L["Symmetry"] = "对称";
+L["Asymmetry"] = "非对称";
+L["Copy Texts"] = "复制文本";
+L["Syntax"] = "语法";
+L["Plain Text"] = "纯文本";
+L["BB Code"] = "BB Code";
+L["Markdown"] = "Markdown";
+L["Export Includes"] = "在导出中包含...";
 NARCI_ITEM_ID = "物品ID";
 
-NARCI_3DMODEL = "3D模型";
+L["3D Model"] = "3D模型";
 NARCI_EQUIPMENTSLOTS = "装备栏位";
 
 --偏好设定--
-NARCI_INTERFACE = "界面";
-NARCI_THEME = "主题";
-NARCI_CAMERA = "镜头";
-NARCI_EFFECTS = "效果";
-NARCI_TRANSMOG = "幻化";
-NARCI_EXTENSIONS = "拓展功能";
+L["Interface"] = "界面";
+L["Themes"] = "主题";
+L["Camera"] = "镜头";
+L["Effects"] = "效果";
+L["Transmog"] = "幻化";
+L["Extensions"] = "拓展功能";
 L["Credits"] = "致谢";
-NARCI_ABOUT = "关于"
-NARCI_PREFERENCE_TOOLTIP = "打开偏好设定。";
-NARCI_TRUNCATE_TEXT = "截断文字";
-NARCI_ATTRIBUTE_FRAME = "属性栏";
-NARCI_SHOW_DETAILED_STATS = "显示详细信息";
-NARCI_TEXT_WIDTH = "文本宽度";
-NARCI_HOTKEY = "快捷键";
-NARCI_DOUBLE_TAP = "双击";
-NARCI_DOUBLE_TAP_DESCRIPTION = "连按两下打开角色面板的快捷键来打开此插件。"
+L["About"] = "关于"
+L["Preferences"] = "偏好设定";
+L["Preferences Tooltip"] = "打开偏好设定。";
+L["Truncate Text"] = "截断文字";
+L["Stat Sheet"] = "属性栏";
+L["Show Detailed Stats"] = "显示更多属性";
+L["Text Width"] = "文本宽度";
+L["Hotkey"] = "快捷键";
+L["Double Tap"] = "启用双击";
+L["Double Tap Description"] = "连按两下打开角色面板的快捷键来打开此插件。"
 NARCI_OVERRIDE = "是否覆盖";
 NARCI_INVALID_KEY = "无效的组合键";
-NARCI_MINIMAP_BUTTON = "小地图按钮";
-NARCI_SHORTCUTS = "快捷方式";
-NARCI_FILTERS = "滤镜";
-NARCI_FILTERS_DESCRIPTION = "除暗角以外的所有滤镜都会在幻化模式被暂时禁用。";
-NARCI_GRAIN_EFFECT = "颗粒效果";
-NARCI_PREFERENCE = "偏好设定-PH";
-NARCI_CAMERA_MOVEMENT = "镜头运动";
-NARCI_CAMERA_ORBIT = "环绕镜头";
-NARCI_CAMERA_ORBIT_ENABLED_DESCRIPTION = "当你打开此插件时，镜头会自动旋转到角色面前并开始环绕。";
-NARCI_CAMERA_ORBIT_DISABLED_DESCRIPTION = "当你打开此插件时，镜头只会被拉近不会有任何旋转。";
-NARCI_CAMERA_SAFE_MODE = "镜头安全模式";
-NARCI_CAMERA_SAFE_MODE_DESCRIPTION = "在关闭此插件后彻底关闭ActionCam功能。";
-NARCI_CAMERA_SAFE_MODE_DESCRIPTION_EXTRA = "已禁用因为你正在使用DynamicCam插件。";
-NARCI_FADEOUT = "淡化图标";
-NARCI_FADEOUT_DESCRIPTION = "在你将鼠标从小地图按钮上移出后，它的透明度会自动降低。";
-NARCI_FADE_MUSIC = "淡入/淡出音乐";
-NARCI_VIGNETTE_STRENGTH = "暗角强度";
-NARCI_WEATHER_EFFECT = "天气效果";
-NARCI_LETTERBOX_EFFECT = "宽荧幕效果";
-NARCI_LETTERBOX_RATIO = "宽高比";
-NARCI_LETTERBOX_EFFECT_ALERT1 = "你屏幕的宽高比超过了所选比例。";
-NARCI_LETTERBOX_EFFECT_ALERT2 = "建议将UI缩放比设置为%0.1f\n(当前缩放比为%0.1f)";
-NARCI_DEFAULT_LAYOUT = "默认布局";
-NARCI_LAYOUT_1 = "对称，显示人物";
-NARCI_LAYOUT_2 = "人物及模型";
-NARCI_LAYOUT_3 = "紧凑模式";
-NARCI_BORDER_THEME = "边框主题";
-NARCI_BORDER_THEME_BRIGHT = "明亮";
-NARCI_BORDER_THEME_DARK = "灰暗";
-NARCI_ALWAYS_SHOW_MODEL = "总是显示3D模型";
-NARCI_SHOW_FULL_BODY = "显示全身";
-NARCI_AFK_SCREEN_DESCRIPTION = "在你的人物暂离后自动打开Narcissus。";
-NARCI_AFK_SCREEN_DESCRIPTION_EXTRA = "勾选此选项将覆盖ElvUI的AFK模式。";
-NARCI_GEMMA = "\"Gemma\"";
-NARCI_GEMMY_DESCRIPTION = "在你为一件物品镶嵌宝石时，显示可用的宝石列表。"
-NARCI_DRESSING_ROOM = "试衣间"
-NARCI_DRESSING_ROOM_DESCRIPTION = "增大试衣间窗口大小，并使你能够通过试衣间浏览、复制其他玩家的幻化调料包。";
+L["Minimap Button"] = "小地图按钮";
+L["Shortcuts"] = "快捷方式";
+L["Image Filter"] = "滤镜";
+L["Image Filter Description"] = "除暗角以外的所有滤镜都会在幻化模式被暂时禁用。";
+L["Grain Effect"] = "颗粒效果";
+L["Camera Movement"] = "镜头运动";
+L["Orbit Camera"] = "环绕镜头";
+L["Orbit Camera Description On"] = "当你打开此插件时，镜头会自动旋转到角色面前并开始环绕。";
+L["Orbit Camera Description Off"] = "当你打开此插件时，镜头只会被拉近不会有任何旋转。";
+L["Camera Safe Mode"] = "镜头安全模式";
+L["Camera Safe Mode Description"] = "在关闭此插件后彻底关闭ActionCam功能。";
+L["Camera Safe Mode Description Extra"] = "已禁用因为你正在使用DynamicCam插件。";
+L["Fade Out"] = "淡化图标";
+L["Fade Out Description"] = "在你将鼠标从小地图按钮上移出后，降低其透明度。";
+L["Fade Music"] = "淡入/淡出音乐";
+L["Vignette Strength"] = "暗角强度";
+L["Weather Effect"] = "天气效果";
+L["Letterbox"] = "宽荧幕效果";
+L["Letterbox Ratio"] = "宽高比";
+L["Letterbox Alert1"] = "你屏幕的宽高比超过了所选比例。";
+L["Letterbox Alert2"] = "建议将UI缩放比设置为%0.1f\n(当前缩放比为%0.1f)";
+L["Default Layout"] = "默认布局";
+L["Transmog Layout1"] = "对称，显示人物";
+L["Transmog Layout2"] = "人物及模型";
+L["Transmog Layout3"] = "紧凑模式";
+L["Border Theme Header"] = "边框主题";
+L["Border Theme Bright"] = "明亮";
+L["Border Theme Dark"] = "灰暗";
+L["Always Show Model"] = "在使用对称布局时显示3D模型";
+L["AFK Screen Description"] = "在你的人物暂离后自动打开Narcissus。";
+L["AFK Screen Description Extra"] = "勾选此选项将覆盖ElvUI的AFK模式。";
+L["Gemma"] = "\"Gemma\"";
+L["Gemma Description"] = "在你为一件物品镶嵌宝石时，显示可用的宝石列表。"
+L["Dressing Room"] = "试衣间"
+L["Dressing Room Description"] = "增大试衣间窗口大小，并使你能够通过试衣间浏览、复制其他玩家的幻化调料包。";
 NARCI_REQUIRE_RELOAD = "|cffff5050需要重载UI才能使设置生效。|r";
 L["Show Detailed Stats"] = "显示详尽的属性信息";
 L["Tooltip Color"] = "小提示颜色";
@@ -154,8 +156,10 @@ L["Item Socketing Tooltip"] = "双击左键进行镶嵌";
 L["No Available Gem"] = "|cffd8d8d8没有可镶嵌的宝石|r";
 L["Use Bust Shot"] = "使用半身像";
 L["Use Escape Button"] = "Esc键";
-L["Use Escape Button Description"] = "按下Esc键来退出插件。或者点击屏幕右上角隐藏的X按钮。";
-L["Handled by Other Addons"] = "受其他插件控制";
+L["Use Escape Button Description1"] = "按下Esc键来退出插件。";
+L["Use Escape Button Description2"] = "点击屏幕右上角的X按钮来退出插件。";
+L["Show Module Panel Gesture"] = "鼠标悬停时显示模块面板";
+L["Independent Minimap Button"] = "不受其他插件控制";
 L["AFK Screen"] = "AFK画面";
 L["Keep Standing"] = "保持站立";
 L["Keep Standing Description"] = "当你AFK后定时使用/站立表情。此选项不会中断自动登出。"
@@ -182,6 +186,11 @@ L["Name Plate"] = "姓名板";
 L["Y Offset"] = "纵向偏移";
 L["Sceenshot Quality"] = "截图质量";
 L["Screenshot Quality Description"] = "更高的截图质量会增加图片体积。";
+L["General"] = "通用设置";
+L["Camera Transition"] = "镜头过渡";
+L["Camera Transition Description On"] = "当你打开角色面板时镜头会平滑地运动到预设位置。";
+L["Camera Transition Description Off"] = "镜头转换变为瞬时。此效果将在你第二次使用角色面板时开始生效。\n此效果会占用镜头预设#4。";
+L["Interface Options Tab Description"] = "你也可以点击位于屏幕左下角Narcissus工具栏右端的小齿轮按钮来打开偏好设置。";
 
 --模型控制面板--
 NARCI_HOLD_WEAPON = "握住武器";
@@ -192,12 +201,13 @@ NARCI_SPELLCASTING = "施法动作";
 NARCI_ANIMATION_ID = "动画ID";
 NARCI_LINK_LIGHT_SETTINGS = "关联灯光设置";
 NARCI_LINK_MODEL_SCALE = "关联模型比例";
-NARCI_GROUP_PHOTO = "合影模式";
 NARCI_GROUP_PHOTO_AVAILABLE = "现已加入Narcissus插件";
 NARCI_GROUP_PHOTO_NOTIFICATION = "请选择一个目标。";
 NARCI_GROUP_PHOTO_STATUS_HIDDEN = "隐藏";
 NARCI_DIRECTIONAL_AMBIENT_LIGHT = "平行光/环境光";
 NARCI_DIRECTIONAL_AMBIENT_LIGHT_TOOLTIP = "在以下两种灯光间切换：\n- 可以被模型遮挡并投射阴影的平行光\n- 影响整个模型表面的环境光";
+
+L["Group Photo"] = "合影模式";
 L["Reset"] = "重置";
 L["Actor Index"] = "序号";
 L["Move To Font"] = "|cff40c7eb顶层|r";
@@ -224,6 +234,19 @@ L["Show Color Presets"] = "显示色彩预设";
 L["Keep Current Form"] = "按住"..NARCI_MODIFIER_ALT.."以保持变身形态";
 L["Race Change Tooltip"] = "改变种族";
 L["Sex Change Tooltip"] = "改变性别";
+L["Show More options"] = "显示更多选项";
+L["Show Less Options"] = "隐藏更多选项";
+L["Shadow"] = "阴影";
+L["Light Source"] = "光源";
+L["Light Source Independent"] = "独立";
+L["Light Source Interconnected"] = "关联";
+
+
+--Animation Browser--
+L["Animation"] = "角色动画";
+L["Animation Tooltip"] = "浏览和搜索动画";
+L["Animation Variation"] = "子类型";
+L["Reset Slider"] = "重置为零";
 
 --Spell Visual Browser--
 L["Visuals"] = "法术效果";
@@ -301,6 +324,7 @@ L["Corruption Bar"] = "腐蚀条";
 L["Corruption Bar Description"] = "在角色信息旁边显示腐蚀条。";
 L["Corruption Debuff Tooltip"] = "Debuff提示";
 L["Corruption Debuff Tooltip Description"] = "将默认的描述性的Debuff提示替换为数值型提示。";
+L["No Corrupted Item"] = "你没有装备任何腐蚀物品。";
 
 L["Crit Gained"] = "爆击获取";
 L["Haste Gained"] = STAT_HASTE.."获取";
@@ -329,12 +353,17 @@ L["Text Overlay Button Tooltip5"] = "黑条字幕";
 L["Visibility"] = "可见性";
 
 --Achievement Frame--
+L["Use Achievement Panel"] = "设为首选成就面板";
+L["Use Achievement Panel Description"] = "替代默认成就弹窗。点击正在追踪的成就来打开此面板。";
 L["Incomplete First"] = "未完成在前";
 L["Earned First"] = "已完成在前";
 L["Settings"] = "设置";
-L["Next Prev Card"] = "前一项/后一项";
+L["Next Prev Card"] = "前项/后项";
 L["Track"] = "追踪";   --Track achievements
-
+L["Show Unearned Mark"] = "显示未获取符号";
+L["Show Unearned Mark Description"] = "用红叉标记不是由当前角色获得的成就。";
+L["Show Dates"] = "显示日期";
+L["Hide Dates"] = "隐藏日期";
 
 --Barbershop--
 L["Save New Look"] = "保存外观";
@@ -349,6 +378,8 @@ L["Locations"] = "地点";
 L["Location"] = "地点";
 L["Visits"] = "访问次数";
 L["Duration"] = "时长";
+L["Edit Name"] = "修改名称";
+L["Delete Look"] = "长按删除";
 
 --Tutorial--
 L["Alert"] = "警告";
@@ -363,7 +394,7 @@ L["Guide History Headline"] = "历史记录面板";
 L["Guide History Line1"] = "至多5个被应用的效果会出现在这里。你可以选中一个，然后按右端的删除按钮将它移除。";
 L["Guide Refresh Line1"] = "点击此按钮可以移除所有未被应用的效果。储存在你历史记录面板中的效果会被重新应用。";
 L["Guide Input Headline"] = "人工输入";
-L["Guide Input Line1"] = "你也可以自行输入SpellVisualKitID。截至8.3版本，这个ID的上限约为124,000。\n你可以用鼠标滚轮来快速预览上/下一个ID。\n有极少的ID可能会导致游戏报错。";
+L["Guide Input Line1"] = "你也可以自行输入SpellVisualKitID。截至9.0版本，这个ID的上限约为155,000。\n你可以用鼠标滚轮来快速预览上/下一个ID。\n有极少的ID可能会导致游戏报错。";
 L["Guide Equipment Manager Line1"] = "双击：使用套装\n右击：编辑套装";
 L["Guide Model Control Headline"] = "模型控制";
 L["Guide Model Control Line1"] = format("你可以用控制试衣间的鼠标行为来控制此模型。此外，你还可以：\n\n1.按住%s和鼠标左键来改变俯仰角。\n2.按住%s和鼠标右键来进行细微缩放。", NARCI_MODIFIER_ALT, NARCI_MODIFIER_ALT);
@@ -397,7 +428,7 @@ L["Flavored Text"] = "在主城内的优格沙龙使用美容美发服务即可�
 
 --Project Details--
 NARCI_ALL_PROJECTS = "全部项目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2020.10.13|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2020.10.26|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾泽拉斯上的不同景点，并收集各种故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沉浸式角色面板；你最好的截图助手。"
 

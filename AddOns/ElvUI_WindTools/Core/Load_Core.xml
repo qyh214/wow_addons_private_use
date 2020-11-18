@@ -2,7 +2,9 @@
 	<Script file='Functions.lua'/>
 	<Script file='Animation.lua'/>
 	<Script file='Core.lua'/>
+	<Script file='Compatibility.lua'/>
 	<Script file='Developer.lua'/>
 	<Script file='Options.lua'/>
+	<Script file='Profiles.lua'/>
 	<Include file='Changelog\Load_Changelog.xml'/>
 </Ui>

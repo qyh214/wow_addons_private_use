@@ -245,15 +245,6 @@ local function Response(index, delay)
                 PlaySFX(111367);
                 UIFrameFadeIn(str, 0.25, 0, 1);
                 
-                --Open Preferences
-                if index == 4 then
-                    local Pref = Narci_Preference;
-                    if not Pref:IsShown() then
-                        UIFrameFadeIn(Pref, 0.25, 0, 1);
-                        Pref.TabButtonFrame.buttons[7]:Click();
-                    end
-                end
-                
                 if index == 3 then
                     C_Timer.After(2, function()
                         PlayClampAnimation();

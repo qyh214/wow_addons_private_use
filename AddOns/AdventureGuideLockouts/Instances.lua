@@ -132,5 +132,14 @@ AddOn.instances = {
   [2070] = 1176, -- Battle of Dazar'alor
   [2096] = 1177, -- Crucible of Storms
   [2164] = 1179, -- The Eternal Palace
-  [2217] = 1180  -- Ny'alotha, the Waking City
+  [2217] = 1180, -- Ny'alotha, the Waking City
+  [2291] = 1188, -- De Other Side
+  [2287] = 1185, -- Halls of Atonement
+  [2290] = 1184, -- Mists of Tirna Scithe
+  [2289] = 1183, -- Plaguefall
+  [2284] = 1189, -- Sanguine Depths
+  [2285] = 1186, -- Spires of Ascension
+  [2286] = 1182, -- The Necrotic Wake
+  [2293] = 1187, -- Theater of Pain
+  [2296] = 1190  -- Castle Nathria
 }

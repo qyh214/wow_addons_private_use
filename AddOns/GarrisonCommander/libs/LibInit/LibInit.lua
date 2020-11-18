@@ -1,7 +1,7 @@
 --- Main methods directly available in your addon
 -- @module lib
 -- @author Alar of Runetotem
--- @release 60
+-- @release 62
 -- @set sort=true
 -- @usage
 -- -- Create a new addon this way:
@@ -11,7 +11,7 @@
 local me, ns = ...
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):12:")) -- Always check line number in regexp and file
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 60
+local MINOR_VERSION = 62
 local LibStub=LibStub
 local dprint=function() end
 local encapsulate  = function ()
@@ -41,12 +41,6 @@ local strconcat=strconcat
 local tostring=tostring
 local tremove=tremove
 local _G=_G -- Unmodified env
---[===[@debug@
--- Should not appear
---@end-debug@]===]
---@do-not-package@
--- THIS SHOULD NOT APPEAR
---@end-do-not-package@
 local lib=obj --#Lib
 function lib:Info()
 	print(MAJOR_VERSION,MINOR_VERSION,' loaded from ',__FILE__)
@@ -158,13 +152,8 @@ local new, del, add, recursivedel,copy, cached, stats
 do
 	local meta={__metatable="RECYCLE"}
 	local pool = lib.pool
---[===[@debug@
-	local newcount, delcount,createdcount= 0,0,0
---@end-debug@]===]
+
 	function new(t)
---[===[@debug@
-		newcount = newcount + 1
---@end-debug@]===]
 		if type(t)=="table" then
 			local rc=pcall(setmetatable,t,meta)
 			return t
@@ -175,9 +164,6 @@ do
 			pool[t] = nil
 			return t
 		else
---[===[@debug@
-			createdcount = createdcount + 1
---@end-debug@]===]
 			return setmetatable({},meta)
 		end
 	end
@@ -189,9 +175,6 @@ do
 		return c
 	end
 	function del(t)
---[===[@debug@
-		delcount = delcount + 1
---@end-debug@]===]
 		if getmetatable(t)==meta then
 			wipe(t)
 			pool[t] = true
@@ -199,9 +182,6 @@ do
 	end
 	function recursivedel(t,level)
 		level=level or 0
---[===[@debug@
-		delcount = delcount + 1
---@end-debug@]===]
 		for k,v in pairs(t) do
 			if type(v)=="table" and getmetatable(v) == "RECYCLE" then
 				if level < 2 then
@@ -221,19 +201,9 @@ do
 		end
 		return n
 	end
---[===[@debug@
-	function stats()
-		print("Created:",createdcount)
-		print("Aquired:",newcount)
-		print("Released:",delcount)
-		print("Cached:",cached())
-	end
---@end-debug@]===]
---@non-debug@
 	function stats()
 		return
 	end
---@end-non-debug@
 end
 --- Get a new table from the recycle pool
 -- Preferred usage is assigning to a local via wrap function
@@ -799,7 +769,7 @@ local function loadOptionsTable(self)
 				func="Gui",
 				guiHidden=true,
 			},
---[===[@debug@
+--[===[
 			help = {
 				name="HELP",
 				desc="Show help",
@@ -815,7 +785,7 @@ local function loadOptionsTable(self)
 				guiHidden=true,
 				cmdHidden=true,
 			},
---@end-debug@]===]
+]===]
 			silent = {
 				name="SILENT",
 				desc="Eliminates startup messages",
@@ -1546,7 +1516,6 @@ function lib:AddSubCmd(flag,method,name,description,input)
 	name=name or flag
 	description=description or name
 	local group=getgroup(self)
-	debug("AddSubCmd " .. flag .. " for " .. method)
 	local t={
 		func=method,
 		name=name,

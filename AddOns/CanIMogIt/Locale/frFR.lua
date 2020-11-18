@@ -23,9 +23,13 @@ L["Cannot learn: Soulbound"] = "Ne peut être appris : Lié"
 --[[Translation missing --]]
 --[[ L["Center"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["Changes saved!"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Database migrated to:"] = ""--]] 
 L["Database Scanning chat messages"] = "Messages de scan de la base de donnée dans le chat"
 L["Debug Tooltip"] = "Infobulle de débug"
+--[[Translation missing --]]
+--[[ L["Default"] = ""--]] 
 L["Detailed information for debug purposes. Use this when sending bug reports."] = "Informations détaillées à des fins de debug. À utiliser lors de l'envoi de rapports de bugs."
 --[[Translation missing --]]
 --[[ L["Does not affect Quests or Adventure Journal."] = ""--]] 
@@ -72,6 +76,8 @@ L["Shows the icon directly on the item in your bag."] = "Affiche l'icône sur l'
 --[[ L["Top"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Top Left"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Top Right"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Top Right (default)"] = ""--]] 
 L["Transmoggable Items Only"] = "Objets pouvant être transmogrifiés uniquement"

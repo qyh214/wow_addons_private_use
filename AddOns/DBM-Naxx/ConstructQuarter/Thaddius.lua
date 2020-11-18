@@ -2,7 +2,7 @@
 local mod	= DBM:NewMod("Thaddius", "DBM-Naxx", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200624154403")
+mod:SetRevision("20201025000431")
 mod:SetCreatureID(15928)
 mod:SetEncounterID(1120)
 mod:SetModelID(16137)
@@ -26,9 +26,7 @@ local timerNextShift		= mod:NewNextTimer(30, 28089, nil, nil, nil, 2, nil, DBM_C
 local timerShiftCast		= mod:NewCastTimer(3, 28089, nil, nil, nil, 2)
 local timerThrow			= mod:NewNextTimer(20.6, 28338, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)
 
-mod:AddBoolOption("ArrowsEnabled", false, "Arrows")
-mod:AddBoolOption("ArrowsRightLeft", false, "Arrows")
-mod:AddBoolOption("ArrowsInverse", false, "Arrows")
+mod:AddDropdownOption("ArrowsEnabled", {"Never", "TwoCamp", "ArrowsRightLeft", "ArrowsInverse"}, "Never", "misc")
 
 local currentCharge
 mod.vb.phase = 1
@@ -75,23 +73,19 @@ function mod:UNIT_AURA()
 		lastShift = 0
 		if charge == currentCharge then
 			warnChargeNotChanged:Show()
-			if self.Options.ArrowsEnabled and self.Options.ArrowsRightLeft then
-				if self.Options.ArrowsInverse then
-					self:ShowLeftArrow()
-				else
-					self:ShowRightArrow()
-				end
+			if self.Options.ArrowsEnabled == "ArrowsInverse" then
+				self:ShowLeftArrow()
+			elseif self.Options.ArrowsEnabled == "ArrowsRightLeft" then
+				self:ShowRightArrow()
 			end
 		else
 			warnChargeChanged:Show(charge)
-			if self.Options.ArrowsEnabled then
-				if self.Options.ArrowsRightLeft and self.Options.ArrowsInverse then
-					self:ShowRightArrow()
-				elseif self.Options.ArrowsRightLeft then
-					self:ShowLeftArrow()
-				elseif currentCharge then
-					self:ShowUpArrow()
-				end
+			if self.Options.ArrowsEnabled == "ArrowsInverse" then
+				self:ShowRightArrow()
+			elseif self.Options.ArrowsEnabled == "ArrowsRightLeft" then
+				self:ShowLeftArrow()
+			elseif self.Options.ArrowsEnabled == "TwoCamp" then
+				self:ShowUpArrow()
 			end
 		end
 		currentCharge = charge

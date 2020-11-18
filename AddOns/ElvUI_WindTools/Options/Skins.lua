@@ -5,6 +5,8 @@ local S = W:GetModule("Skins")
 
 local pairs = pairs
 
+local IsAddOnLoaded = IsAddOnLoaded
+
 options.desc = {
     order = 1,
     type = "group",
@@ -49,8 +51,22 @@ options.general = {
             type = "toggle",
             name = L["Enable"]
         },
-        general = {
+        merathilisUISkin = {
             order = 2,
+            type = "toggle",
+            name = format(L["Use %s Skins"], L["MerathilisUI"]),
+            desc = format(
+                "%s\n|cffff0000%s|r: %s",
+                format(L["Add skins for all modules inside %s with %s functions."], L["WindTools"], L["MerathilisUI"]),
+                L["Notice"],
+                format(L["It doesn't means that the %s Skins will not be applied."], L["WindTools"])
+            ),
+            hidden = function()
+                return not IsAddOnLoaded("ElvUI_MerathilisUI")
+            end
+        },
+        general = {
+            order = 3,
             type = "group",
             name = L["General"],
             inline = true,
@@ -71,7 +87,7 @@ options.general = {
             }
         },
         shadow = {
-            order = 3,
+            order = 4,
             type = "group",
             name = L["Shadow"],
             inline = true,
@@ -84,8 +100,17 @@ options.general = {
                     type = "toggle",
                     name = L["Enable"]
                 },
-                color = {
+                increasedSize = {
                     order = 2,
+                    type = "range",
+                    name = L["Increase Size"],
+                    desc = L["Make shadow thicker."],
+                    min = 0,
+                    max = 10,
+                    step = 1
+                },
+                color = {
+                    order = 3,
                     type = "color",
                     name = L["Shadow Color"],
                     hasAlpha = false,
@@ -143,8 +168,142 @@ options.general = {
     }
 }
 
-options.blizzard = {
+options.font = {
     order = 3,
+    type = "group",
+    name = L["Font"],
+    args = {
+        errorMessage = {
+            order = 1,
+            type = "group",
+            inline = true,
+            name = L["Error Mesage"],
+            get = function(info)
+                return E.private.WT.skins.errorMessage[info[#info]]
+            end,
+            set = function(info, value)
+                E.private.WT.skins.errorMessage[info[#info]] = value
+                E:StaticPopup_Show("PRIVATE_RL")
+            end,
+            args = {
+                name = {
+                    order = 1,
+                    type = "select",
+                    dialogControl = "LSM30_Font",
+                    name = L["Font"],
+                    values = LSM:HashTable("font")
+                },
+                style = {
+                    order = 2,
+                    type = "select",
+                    name = L["Outline"],
+                    values = {
+                        NONE = L["None"],
+                        OUTLINE = L["OUTLINE"],
+                        MONOCHROME = L["MONOCHROME"],
+                        MONOCHROMEOUTLINE = L["MONOCROMEOUTLINE"],
+                        THICKOUTLINE = L["THICKOUTLINE"]
+                    }
+                },
+                size = {
+                    order = 3,
+                    name = L["Size"],
+                    type = "range",
+                    min = 5,
+                    max = 60,
+                    step = 1
+                }
+            }
+        },
+        imeLabel = {
+            order = 2,
+            type = "group",
+            inline = true,
+            name = L["Input Method Editor"] .. " - " .. L["Label"],
+            get = function(info)
+                return E.private.WT.skins.ime.label[info[#info]]
+            end,
+            set = function(info, value)
+                E.private.WT.skins.ime.label[info[#info]] = value
+                E:StaticPopup_Show("PRIVATE_RL")
+            end,
+            args = {
+                name = {
+                    order = 1,
+                    type = "select",
+                    dialogControl = "LSM30_Font",
+                    name = L["Font"],
+                    values = LSM:HashTable("font")
+                },
+                style = {
+                    order = 2,
+                    type = "select",
+                    name = L["Outline"],
+                    values = {
+                        NONE = L["None"],
+                        OUTLINE = L["OUTLINE"],
+                        MONOCHROME = L["MONOCHROME"],
+                        MONOCHROMEOUTLINE = L["MONOCROMEOUTLINE"],
+                        THICKOUTLINE = L["THICKOUTLINE"]
+                    }
+                },
+                size = {
+                    order = 3,
+                    name = L["Size"],
+                    type = "range",
+                    min = 5,
+                    max = 60,
+                    step = 1
+                }
+            }
+        },
+        imeCandidate = {
+            order = 3,
+            type = "group",
+            inline = true,
+            name = L["Input Method Editor"] .. " - " .. L["Candidate"],
+            get = function(info)
+                return E.private.WT.skins.ime.candidate[info[#info]]
+            end,
+            set = function(info, value)
+                E.private.WT.skins.ime.candidate[info[#info]] = value
+                E:StaticPopup_Show("PRIVATE_RL")
+            end,
+            args = {
+                name = {
+                    order = 1,
+                    type = "select",
+                    dialogControl = "LSM30_Font",
+                    name = L["Font"],
+                    values = LSM:HashTable("font")
+                },
+                style = {
+                    order = 2,
+                    type = "select",
+                    name = L["Outline"],
+                    values = {
+                        NONE = L["None"],
+                        OUTLINE = L["OUTLINE"],
+                        MONOCHROME = L["MONOCHROME"],
+                        MONOCHROMEOUTLINE = L["MONOCROMEOUTLINE"],
+                        THICKOUTLINE = L["THICKOUTLINE"]
+                    }
+                },
+                size = {
+                    order = 3,
+                    name = L["Size"],
+                    type = "range",
+                    min = 5,
+                    max = 60,
+                    step = 1
+                }
+            }
+        }
+    }
+}
+
+options.blizzard = {
+    order = 4,
     type = "group",
     name = L["Blizzard"],
     get = function(info)
@@ -213,20 +372,40 @@ options.blizzard = {
             type = "toggle",
             name = L["Alert Frames"]
         },
+        artifact = {
+            order = 10,
+            type = "toggle",
+            name = L["Artifact"]
+        },
         auctionHouse = {
             order = 10,
             type = "toggle",
             name = L["Auction House"]
+        },
+        azerite = {
+            order = 10,
+            type = "toggle",
+            name = L["Azerite"]
         },
         azeriteEssence = {
             order = 10,
             type = "toggle",
             name = L["Azerite Essence"]
         },
+        azeriteRespec = {
+            order = 10,
+            type = "toggle",
+            name = L["Azerite Respec"]
+        },
         barberShop = {
             order = 10,
             type = "toggle",
             name = L["Barber Shop"]
+        },
+        binding = {
+            order = 10,
+            type = "toggle",
+            name = L["Binding"]
         },
         blackMarket = {
             order = 10,
@@ -252,6 +431,11 @@ options.blizzard = {
             order = 10,
             type = "toggle",
             name = L["Character"]
+        },
+        chromieTime = {
+            order = 10,
+            type = "toggle",
+            name = L["Chromie Time"]
         },
         collections = {
             order = 10,
@@ -480,7 +664,7 @@ for key, value in pairs(options.blizzard.args) do
 end
 
 options.elvui = {
-    order = 4,
+    order = 5,
     type = "group",
     name = L["ElvUI"],
     get = function(info)
@@ -635,8 +819,9 @@ for key, value in pairs(options.elvui.args) do
     end
 end
 
+-- If the skin is in development, add this: .." |cffff0000["..L["Test"].."]|r"
 options.addons = {
-    order = 5,
+    order = 6,
     type = "group",
     name = L["Addons"],
     get = function(info)
@@ -651,7 +836,7 @@ options.addons = {
     end,
     args = {
         enableAll = {
-            order = 0,
+            order = 1,
             type = "execute",
             name = L["Enable All"],
             func = function()
@@ -662,7 +847,7 @@ options.addons = {
             end
         },
         disableAll = {
-            order = 1,
+            order = 2,
             type = "execute",
             name = L["Disable All"],
             func = function()
@@ -672,8 +857,27 @@ options.addons = {
                 E:StaticPopup_Show("PRIVATE_RL")
             end
         },
+        descGroup = {
+            order = 3,
+            type = "group",
+            name = " ",
+            inline = true,
+            args = {
+                desc = {
+                    order = 1,
+                    type = "description",
+                    name = format(
+                        "|cffff0000%s|r %s",
+                        L["Notice"],
+                        L["Skins only work if you installed and loaded the addon."]
+                    ),
+                    width = "full",
+                    fontSize = "medium"
+                }
+            }
+        },
         betterOption = {
-            order = 2,
+            order = 9,
             type = "description",
             name = " ",
             width = "full"
@@ -683,10 +887,20 @@ options.addons = {
             type = "toggle",
             name = L["Ace3"]
         },
+        azerothAutoPilot = {
+            order = 10,
+            type = "toggle",
+            name = L["Azeroth Auto Pilot"]
+        },
         bigWigs = {
             order = 10,
             type = "toggle",
             name = L["BigWigs"]
+        },
+        bigWigsQueueTimer = {
+            order = 10,
+            type = "toggle",
+            name = L["BigWigs Queue Timer"]
         },
         bugSack = {
             order = 10,
@@ -703,11 +917,25 @@ options.addons = {
             type = "toggle",
             name = L["Immersion"]
         },
+        meetingStone = {
+            order = 10,
+            type = "toggle",
+            name = L["NetEase Meeting Stone"]
+        },
+        premadeGroupsFilter = {
+            order = 10,
+            type = "toggle",
+            name = L["Premade Groups Filter"]
+        },
+        rehack = {
+            order = 10,
+            type = "toggle",
+            name = L["REHack"]
+        },
         rematch = {
             order = 10,
             type = "toggle",
-            name = L["Rematch"],
-            hidden = true,
+            name = L["Rematch"]
         },
         tinyInspect = {
             order = 10,

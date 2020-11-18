@@ -16,6 +16,12 @@ Supports multiple entries, separated by commas
 
 Supports multiple entries, separated by commas
 ]=]
+--[[Translation missing --]]
+L[ [=[
+
+Supports multiple entries, separated by commas]=] ] = [=[
+
+Supports multiple entries, separated by commas]=]
 L["%s - %i. Trigger"] = "%s - %i. Innesco"
 L["%s - Alpha Animation"] = "%s - Animazione  Alpha"
 L["%s - Color Animation"] = "%s - Animazione Colore"
@@ -58,6 +64,8 @@ L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "|cffeda55
 --[[Translation missing --]]
 L["|cffeda55fRight-Click|r to toggle performance profiling window."] = "|cffeda55fRight-Click|r to toggle performance profiling window."
 L["|cffeda55fShift-Click|r to pause addon execution."] = "|cffeda55fShift Click|r per mettere in pausa l'addon."
+--[[Translation missing --]]
+L["|cFFFF0000Not|r Item Bonus Id Equipped"] = "|cFFFF0000Not|r Item Bonus Id Equipped"
 --[[Translation missing --]]
 L["|cFFFF0000Not|r Player Name/Realm"] = "|cFFFF0000Not|r Player Name/Realm"
 --[[Translation missing --]]
@@ -184,8 +192,6 @@ L["Back and Forth"] = "Avanti e indietro"
 --[[Translation missing --]]
 L["Background"] = "Background"
 L["Background Color"] = "Colore Sfondo"
---[[Translation missing --]]
-L["Bar"] = "Bar"
 L["Bar Color"] = "Colore Barra"
 --[[Translation missing --]]
 L["Baron Geddon"] = "Baron Geddon"
@@ -240,7 +246,7 @@ L["Can be used for e.g. checking if \"boss1target\" is the same as \"player\"."]
 --[[Translation missing --]]
 L["Cancel"] = "Cancel"
 --[[Translation missing --]]
-L["Can't schedule timer with %i, due to a World of Warcraft Bug with high computer uptime. (Uptime: %i). Please restart your Computer."] = "Can't schedule timer with %i, due to a World of Warcraft Bug with high computer uptime. (Uptime: %i). Please restart your Computer."
+L["Can't schedule timer with %i, due to a World of Warcraft bug with high computer uptime. (Uptime: %i). Please restart your computer."] = "Can't schedule timer with %i, due to a World of Warcraft bug with high computer uptime. (Uptime: %i). Please restart your computer."
 L["Cast"] = "Cast"
 --[[Translation missing --]]
 L["Cast Bar"] = "Cast Bar"
@@ -446,6 +452,8 @@ L["Durability Damage All"] = "Durability Damage All"
 --[[Translation missing --]]
 L["Dynamic"] = "Dynamic"
 --[[Translation missing --]]
+L["Dynamic Information"] = "Dynamic Information"
+--[[Translation missing --]]
 L["Ease In"] = "Ease In"
 --[[Translation missing --]]
 L["Ease In and Out"] = "Ease In and Out"
@@ -510,6 +518,8 @@ L["Equipped"] = "Equipped"
 --[[Translation missing --]]
 L["Error"] = "Error"
 --[[Translation missing --]]
+L["Error Frame"] = "Error Frame"
+--[[Translation missing --]]
 L["Error not receiving display information from %s"] = "Error not receiving display information from %s"
 --[[Translation missing --]]
 L[ [=['ERROR: Anchoring %s': 
@@ -547,6 +557,10 @@ L["Fade In"] = "Fade In"
 L["Fade Out"] = "Fade Out"
 --[[Translation missing --]]
 L["Fail Alert"] = "Fail Alert"
+--[[Translation missing --]]
+L["Fallback"] = "Fallback"
+--[[Translation missing --]]
+L["Fallback Icon"] = "Fallback Icon"
 --[[Translation missing --]]
 L["False"] = "False"
 --[[Translation missing --]]
@@ -612,6 +626,8 @@ L["From"] = "From"
 L["Frost Resistance"] = "Frost Resistance"
 --[[Translation missing --]]
 L["Full"] = "Full"
+--[[Translation missing --]]
+L["Full Bar"] = "Full Bar"
 --[[Translation missing --]]
 L["Full/Empty"] = "Full/Empty"
 --[[Translation missing --]]
@@ -715,13 +731,7 @@ L["Hybrid"] = "Hybrid"
 --[[Translation missing --]]
 L["Icon"] = "Icon"
 --[[Translation missing --]]
-L["Icon Color"] = "Icon Color"
---[[Translation missing --]]
-L["Icon Desaturate"] = "Icon Desaturate"
---[[Translation missing --]]
-L["Icon Visible"] = "Icon Visible"
---[[Translation missing --]]
-L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/wa2!"] = "If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/wa2!"
+L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"] = "If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"
 --[[Translation missing --]]
 L["Ignore Dead"] = "Ignore Dead"
 --[[Translation missing --]]
@@ -1159,6 +1169,8 @@ L["Player Character"] = "Player Character"
 --[[Translation missing --]]
 L["Player Class"] = "Player Class"
 --[[Translation missing --]]
+L["Player Covenant"] = "Player Covenant"
+--[[Translation missing --]]
 L["Player Effective Level"] = "Player Effective Level"
 --[[Translation missing --]]
 L["Player Experience"] = "Player Experience"
@@ -1228,6 +1240,8 @@ L["Radius"] = "Radius"
 L["Ragnaros"] = "Ragnaros"
 --[[Translation missing --]]
 L["Raid"] = "Raid"
+--[[Translation missing --]]
+L["Raid Role"] = "Raid Role"
 --[[Translation missing --]]
 L["Raid Warning"] = "Raid Warning"
 --[[Translation missing --]]
@@ -1411,6 +1425,20 @@ L["Silithid Royalty"] = "Silithid Royalty"
 --[[Translation missing --]]
 L["Simple"] = "Simple"
 --[[Translation missing --]]
+L["Since Apply"] = "Since Apply"
+--[[Translation missing --]]
+L["Since Apply/Refresh"] = "Since Apply/Refresh"
+--[[Translation missing --]]
+L["Since Charge Gain"] = "Since Charge Gain"
+--[[Translation missing --]]
+L["Since Charge Lost"] = "Since Charge Lost"
+--[[Translation missing --]]
+L["Since Ready"] = "Since Ready"
+--[[Translation missing --]]
+L["Since Stack Gain"] = "Since Stack Gain"
+--[[Translation missing --]]
+L["Since Stack Lost"] = "Since Stack Lost"
+--[[Translation missing --]]
 L["Size & Position"] = "Size & Position"
 --[[Translation missing --]]
 L["Slide from Bottom"] = "Slide from Bottom"
@@ -1439,6 +1467,8 @@ L["Sound"] = "Sound"
 --[[Translation missing --]]
 L["Sound by Kit ID"] = "Sound by Kit ID"
 --[[Translation missing --]]
+L["Source"] = "Source"
+--[[Translation missing --]]
 L["Source GUID"] = "Source GUID"
 --[[Translation missing --]]
 L["Source In Group"] = "Source In Group"
@@ -1463,11 +1493,7 @@ L["Space"] = "Space"
 --[[Translation missing --]]
 L["Spacing"] = "Spacing"
 --[[Translation missing --]]
-L["Spark Color"] = "Spark Color"
---[[Translation missing --]]
-L["Spark Height"] = "Spark Height"
---[[Translation missing --]]
-L["Spark Width"] = "Spark Width"
+L["Spark"] = "Spark"
 --[[Translation missing --]]
 L["Spec Role"] = "Spec Role"
 --[[Translation missing --]]
@@ -1691,6 +1717,8 @@ L["Transmission error"] = "Transmission error"
 --[[Translation missing --]]
 L["Trigger"] = "Trigger"
 --[[Translation missing --]]
+L["Trigger %i"] = "Trigger %i"
+--[[Translation missing --]]
 L["Trigger 1"] = "Trigger 1"
 --[[Translation missing --]]
 L["Trigger State Updater (Advanced)"] = "Trigger State Updater (Advanced)"
@@ -1745,7 +1773,7 @@ L["Update Auras"] = "Update Auras"
 --[[Translation missing --]]
 L["Usage:"] = "Usage:"
 --[[Translation missing --]]
-L["Use /wa minimap to show the minimap icon again"] = "Use /wa minimap to show the minimap icon again"
+L["Use /wa minimap to show the minimap icon again."] = "Use /wa minimap to show the minimap icon again."
 --[[Translation missing --]]
 L["Use Custom Color"] = "Use Custom Color"
 --[[Translation missing --]]
@@ -1766,6 +1794,8 @@ L["Version: "] = "Version: "
 L["Viscidus"] = "Viscidus"
 --[[Translation missing --]]
 L["Visibility"] = "Visibility"
+--[[Translation missing --]]
+L["Visible"] = "Visible"
 --[[Translation missing --]]
 L["War Mode Active"] = "War Mode Active"
 --[[Translation missing --]]

@@ -115,6 +115,9 @@ function RSA_Monk:OnEnable()
 			[120954] = {-- FORTIFYING BREW
 				profile = 'FortifyingBrew',
 			},
+			[322507] = {
+				profile = 'CelestialBrew',
+			},
 			[115078] = {-- PARALYSIS
 				profile = 'Paralysis',
 				replacements = { TARGET = 1 },
@@ -153,6 +156,10 @@ function RSA_Monk:OnEnable()
 			},
 			[120954] = {-- FORTIFYING BREW
 				profile = 'FortifyingBrew',
+				section = 'End',
+			},
+			[322507] = {
+				profile = 'CelestialBrew',
 				section = 'End',
 			},
 			[115078] = {-- PARALYSIS

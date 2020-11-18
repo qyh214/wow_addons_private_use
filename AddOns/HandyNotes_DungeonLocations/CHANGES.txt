@@ -1,10 +1,9 @@
 ------------------------------------------------------------------------
-r110 | Caliaha | 2020-01-29 03:49:18 +0000 (Wed, 29 Jan 2020) | 2 lines
+r116 | Caliaha | 2020-11-09 05:00:24 +0000 (Mon, 09 Nov 2020) | 2 lines
 Changed paths:
    M /trunk/HandyNotes_DungeonLocations.lua
-   M /trunk/HandyNotes_DungeonLocations.toc
 
-Added new nodes to vale and uldum
+Fixed lua error
 
 ------------------------------------------------------------------------
 

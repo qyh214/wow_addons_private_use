@@ -160,7 +160,7 @@ function NarciAchievementAlertFrame_OnClick(self, button, down)
         return;
     end
     
-    NarciAchievement_LocateAchievement(id);
+    Narci_AchievementFrame:LocateAchievement(id);
 end
 
 
@@ -336,7 +336,7 @@ end
             return
         end
 
-        NarciAchievement_LocateAchievement(self.id);
+        Narci_AchievementFrame:LocateAchievement(self.id);
     end
 
     function NarciAchievementAlertMixin:ConvertAnchor()
@@ -504,7 +504,7 @@ end
             return
         end
 
-        NarciAchievement_LocateAchievement(self.id);
+        Narci_AchievementFrame:LocateAchievement(self.id);
         self:ResetCheck();
         self:PlayCheckAnimation();
     end

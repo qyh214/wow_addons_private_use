@@ -34,9 +34,6 @@ Returns whether the trigger can have a duration.
 GetOverlayInfo(data, triggernum)
 Returns a table containing the names of all overlays
 
-CanHaveAuto(data, triggernum)
-Returns whether the icon can be automatically selected.
-
 CanHaveClones(data)
 Returns whether the trigger can have clones.
 
@@ -1676,6 +1673,8 @@ do
   local spellCharges = {};
   local spellChargesMax = {};
   local spellCounts = {}
+  local spellChargeGainTime = {}
+  local spellChargeLostTime = {}
 
   local items = {};
   local itemCdDurs = {};
@@ -1775,9 +1774,9 @@ do
 
   local function FetchSpellCooldown(self, id)
     if self.duration[id] and self.expirationTime[id] then
-      return self.expirationTime[id] - self.duration[id], self.duration[id]
+      return self.expirationTime[id] - self.duration[id], self.duration[id], self.readyTime[id]
     end
-    return 0, 0
+    return 0, 0, nil
   end
 
   local function HandleSpell(self, id, startTime, duration)
@@ -1805,6 +1804,7 @@ do
         if self.expirationTime[id] and self.expirationTime[id] > endTime and self.expirationTime[id] ~= 0 then
           self.duration[id] = 0
           self.expirationTime[id] = 0
+          self.readyTime[id] = time
           changed = true
           nowReady = true
         end
@@ -1824,6 +1824,12 @@ do
       nowReady = endTime == 0
     end
 
+    if duration == 0 then
+      self.readyTime[id] = time
+    else
+      self.readyTime[id] = nil
+    end
+
     RecheckHandles:Schedule(endTime, id)
     return changed, nowReady
   end
@@ -1832,6 +1838,7 @@ do
     local cd = {
       duration = {},
       expirationTime = {},
+      readyTime = {},
       handles = {}, -- Share handles, and use lowest time to schedule
       HandleSpell = HandleSpell,
       FetchSpellCooldown = FetchSpellCooldown
@@ -1908,19 +1915,19 @@ do
     if (not spellKnown[id] and not ignoreSpellKnown) then
       return;
     end
-    local startTime, duration, gcdCooldown;
+    local startTime, duration, gcdCooldown, readyTime
     if track == "charges" then
-      startTime, duration = spellCdsCharges:FetchSpellCooldown(id)
+      startTime, duration, readyTime = spellCdsCharges:FetchSpellCooldown(id)
     elseif track == "cooldown" then
       if ignoreRuneCD then
-        startTime, duration = spellCdsOnlyCooldownRune:FetchSpellCooldown(id)
+        startTime, duration, readyTime = spellCdsOnlyCooldownRune:FetchSpellCooldown(id)
       else
-        startTime, duration = spellCdsOnlyCooldown:FetchSpellCooldown(id)
+        startTime, duration, readyTime = spellCdsOnlyCooldown:FetchSpellCooldown(id)
       end
     elseif (ignoreRuneCD) then
-      startTime, duration = spellCdsRune:FetchSpellCooldown(id)
+      startTime, duration, readyTime = spellCdsRune:FetchSpellCooldown(id)
     else
-      startTime, duration = spellCds:FetchSpellCooldown(id)
+      startTime, duration, readyTime = spellCds:FetchSpellCooldown(id)
     end
 
     if (showgcd) then
@@ -1931,14 +1938,14 @@ do
       end
     end
 
-    return startTime, duration, gcdCooldown;
+    return startTime, duration, gcdCooldown, readyTime
   end
 
   function WeakAuras.GetSpellCharges(id, ignoreSpellKnown)
     if (not spellKnown[id] and not ignoreSpellKnown) then
       return;
     end
-    return spellCharges[id], spellChargesMax[id], spellCounts[id];
+    return spellCharges[id], spellChargesMax[id], spellCounts[id], spellChargeGainTime[id], spellChargeLostTime[id]
   end
 
   function WeakAuras.GetItemCooldown(id, showgcd)
@@ -2155,6 +2162,15 @@ do
     spellCharges[id] = charges;
     spellChargesMax[id] = maxCharges;
     spellCounts[id] = spellCount
+    if chargesDifference ~= 0 then
+      if chargesDifference > 0 then
+        spellChargeGainTime[id] = time
+        spellChargeLostTime[id] = nil
+      else
+        spellChargeGainTime[id] = nil
+        spellChargeLostTime[id] = time
+      end
+    end
 
     local changed = false
     local spellId = select(7, GetSpellInfo(id))
@@ -2451,10 +2467,16 @@ do
     spellActivationFrame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE");
     spellActivationFrame:SetScript("OnEvent", function(self, event, spell)
       Private.StartProfileSystem("generictrigger");
-      if (spellActivationSpells[spell]) then
-        spellActivationSpellsCurrent[spell] = (event == "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW");
-        WeakAuras.ScanEvents("WA_UPDATE_OVERLAY_GLOW", spell);
+      local spellName = GetSpellInfo(spell)
+      if (spellActivationSpells[spell] or spellActivationSpells[spellName]) then
+        local active = (event == "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW")
+        spellActivationSpellsCurrent[spell] = active
+        spellActivationSpellsCurrent[spellName] = active
+        if not WeakAuras.IsPaused() then
+          WeakAuras.ScanEvents("WA_UPDATE_OVERLAY_GLOW", spell)
+        end
       end
+
       Private.StopProfileSystem("generictrigger");
     end);
   end
@@ -2490,6 +2512,7 @@ function WeakAuras.WatchUnitChange(unit)
     watchUnitChange = CreateFrame("FRAME");
     watchUnitChange.unitChangeGUIDS = {}
     watchUnitChange.unitRoles = {}
+    watchUnitChange.unitRaidRole = {}
     watchUnitChange.inRaid = IsInRaid()
     watchUnitChange.nameplateFaction = {}
 
@@ -2497,6 +2520,8 @@ function WeakAuras.WatchUnitChange(unit)
     watchUnitChange:RegisterEvent("PLAYER_TARGET_CHANGED")
     if not WeakAuras.IsClassic() then
       watchUnitChange:RegisterEvent("PLAYER_FOCUS_CHANGED");
+    else
+      watchUnitChange:RegisterEvent("PLAYER_ROLES_ASSIGNED")
     end
     watchUnitChange:RegisterEvent("UNIT_TARGET");
     watchUnitChange:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT");
@@ -2528,7 +2553,6 @@ function WeakAuras.WatchUnitChange(unit)
       else
         local inRaid = IsInRaid()
         local inRaidChanged = inRaid ~= watchUnitChange.inRaid
-        local UnitGroupRolesAssigned = not WeakAuras.IsClassic() and UnitGroupRolesAssigned or function() return "DAMAGER" end
 
         for unit, guid in pairs(watchUnitChange.unitChangeGUIDS) do
           local newGuid = WeakAuras.UnitExistsFixed(unit) and UnitGUID(unit) or ""
@@ -2540,10 +2564,18 @@ function WeakAuras.WatchUnitChange(unit)
             if inRaidChanged then
               WeakAuras.ScanEvents("UNIT_CHANGED_" .. unit, unit)
             else
-              local newRole = UnitGroupRolesAssigned(unit)
-              if watchUnitChange.unitRoles[unit] ~= newRole then
-                watchUnitChange.unitRoles[unit] = newRole
-                WeakAuras.ScanEvents("UNIT_ROLE_CHANGED_" .. unit, unit)
+              if WeakAuras.IsClassic() then
+                local newRaidRole = WeakAuras.UnitRaidRole(unit)
+                if watchUnitChange.unitRaidRole[unit] ~= newRaidRole then
+                  watchUnitChange.unitRaidRole[unit] = newRaidRole
+                  WeakAuras.ScanEvents("UNIT_ROLE_CHANGED_" .. unit, unit)
+                end
+              else
+                local newRole = UnitGroupRolesAssigned(unit)
+                if watchUnitChange.unitRoles[unit] ~= newRole then
+                  watchUnitChange.unitRoles[unit] = newRole
+                  WeakAuras.ScanEvents("UNIT_ROLE_CHANGED_" .. unit, unit)
+                end
               end
             end
           end
@@ -3033,10 +3065,10 @@ do
   local oh = GetInventorySlotInfo("SecondaryHandSlot")
 
   local mh_name, mh_shortenedName, mh_exp, mh_dur, mh_charges, mh_EnchantID;
-  local mh_icon = GetInventoryItemTexture("player", mh);
+  local mh_icon = GetInventoryItemTexture("player", mh) or "Interface\\Icons\\INV_Misc_QuestionMark"
 
   local oh_name, oh_shortenedName, oh_exp, oh_dur, oh_charges, oh_EnchantID;
-  local oh_icon = GetInventoryItemTexture("player", oh);
+  local oh_icon = GetInventoryItemTexture("player", oh) or "Interface\\Icons\\INV_Misc_QuestionMark"
 
   local tenchFrame = nil
   WeakAuras.frames["Temporary Enchant Handler"] = tenchFrame;
@@ -3336,40 +3368,6 @@ function GenericTrigger.GetOverlayInfo(data, triggernum)
   return result;
 end
 
-function GenericTrigger.CanHaveAuto(data, triggernum)
-  -- Is also called on importing before conversion, so do a few checks
-  local trigger = data.triggers[triggernum].trigger
-
-  if (not trigger) then
-    return false;
-  end
-  if(
-    (
-    (
-    trigger.type == "event"
-    or trigger.type == "status"
-    )
-    and trigger.event
-    and Private.event_prototypes[trigger.event]
-    and (
-    Private.event_prototypes[trigger.event].iconFunc
-    or Private.event_prototypes[trigger.event].canHaveAuto
-    )
-    )
-    or (
-    trigger.type == "custom"
-    and ((
-    trigger.customIcon
-    and trigger.customIcon ~= ""
-    ) or trigger.custom_type == "stateupdate")
-    )
-    ) then
-    return true;
-  else
-    return false;
-  end
-end
-
 function GenericTrigger.CanHaveClones(data)
   return false;
 end
@@ -3513,6 +3511,27 @@ local commonConditions = {
   }
 }
 
+function Private.ExpandCustomVariables(variables)
+  -- Make the life of tsu authors easier, by automatically filling in the details for
+  -- expirationTime, duration, value, total, stacks, if those exists but aren't a table value
+  -- By allowing a short-hand notation of just variable = type
+  -- In addition to the long form of variable = { type = xyz, display = "desc"}
+  for k, v in pairs(commonConditions) do
+    if (variables[k] and type(variables[k]) ~= "table") then
+      variables[k] = v;
+    end
+  end
+
+  for k, v in pairs(variables) do
+    if (type(v) == "string") then
+      variables[k] = {
+        display = k,
+        type = v,
+      };
+    end
+  end
+end
+
 function GenericTrigger.GetTriggerConditions(data, triggernum)
   local trigger = data.triggers[triggernum].trigger
 
@@ -3550,7 +3569,7 @@ function GenericTrigger.GetTriggerConditions(data, triggernum)
       for _, v in pairs(Private.event_prototypes[trigger.event].args) do
         if (v.conditionType and v.name and v.display) then
           local enable = true;
-          if (v.enable) then
+          if (v.enable ~= nil) then
             if type(v.enable) == "function" then
               enable = v.enable(trigger);
             elseif type(v.enable) == "boolean" then
@@ -3628,25 +3647,7 @@ function GenericTrigger.GetTriggerConditions(data, triggernum)
         if (type(result)) ~= "table" then
           return nil;
         end
-        -- Make the life of tsu authors easier, by automatically filling in the details for
-        -- expirationTime, duration, value, total, stacks, if those exists but aren't a table value
-        -- By allowing a short-hand notation of just variable = type
-        -- In addition to the long form of variable = { type = xyz, display = "desc"}
-        for k, v in pairs(commonConditions) do
-          if (result[k] and type(result[k]) ~= "table") then
-            result[k] = v;
-          end
-        end
-
-        for k, v in pairs(result) do
-          if (type(v) == "string") then
-            result[k] = {
-              display = k,
-              type = v,
-            };
-          end
-        end
-
+        Private.ExpandCustomVariables(result)
         for k, v in pairs(result) do
           if (type(v) ~= "table") then
             result[k] = nil;
@@ -3806,12 +3807,14 @@ do
   end
 end
 
-WeakAuras.CheckForItemBonusId = function(id)
-  id = ":" .. tostring(id) .. ":"
-  for slot in pairs(Private.item_slot_types) do
-    local itemLink = GetInventoryItemLink('player', slot)
-    if itemLink and itemLink:find(id, 1, true) then
-      return true
+WeakAuras.CheckForItemBonusId = function(ids)
+  for id in tostring(ids):gmatch('([^,]+)') do
+    id = ":" .. tostring(id:trim()) .. ":"
+    for slot in pairs(Private.item_slot_types) do
+      local itemLink = GetInventoryItemLink('player', slot)
+      if itemLink and itemLink:find(id, 1, true) then
+        return true
+      end
     end
   end
   return false

@@ -13,7 +13,7 @@ local Color_Alert_r = 252/255;
 local Color_Alert_g = 237/255;
 local Color_Alert_b = 0;
 
-
+local L = Narci.L;
 local AchievementDB;
 
 local widgetObjects = {};
@@ -32,9 +32,30 @@ local WidgetStructure = {
     [1] = {
         name = "Narcissus Achievement (BETA)",
         widgets = {
-
             [1] = {
-                name = "UI Scale",
+                name = NARCI_NEW_ENTRY_PREFIX..L["Use Achievement Panel"],
+                type = "checkbox",
+                key = "UseAsDefault",
+                data = {
+                    default = false,
+                    func = function(self)
+                        local state = not AchievementDB.UseAsDefault;
+                        AchievementDB.UseAsDefault = state;
+                        self.Tick:SetShown(state);
+                        NarciAchievement_RedirectPrimaryAchievementFrame();
+                        if state then
+                            self.Description:SetText(L["Use Achievement Panel Description"]);
+                        else
+                            self.Description:SetText(NARCI_REQUIRE_RELOAD);
+                        end
+                    end,
+
+                    description = L["Use Achievement Panel Description"],
+                },
+            },
+
+            [2] = {
+                name = UI_SCALE,
                 type = "slider",
                 key = "Scale",
                 data = { minValue = 1, maxValue = 1.25, step = 0.05, default = 1, decimal = 0.01,
@@ -42,8 +63,8 @@ local WidgetStructure = {
                 },
             },
 
-            [2] = {
-                name = "Theme",
+            [3] = {
+                name = L["Themes"],
                 type = "radio",
                 key = "Theme",
                 data = {
@@ -54,43 +75,28 @@ local WidgetStructure = {
                 },
             },
 
-            [3] = {
-                name = "Hotkey",
+            [4] = {
+                name = L["Hotkey"],
                 type = "keybind",
                 data = {
                     
                 },
             },
-        },
-    },
 
-    [2] = {
-        name = "Blizzard UI",
-        widgets = {
-            [1] = {
-                name = REDIRECT_TOOLTIP,
-                type= "checkbox",
-                key="UsedAsPrimary",
+            [5] = {
+                name = NARCI_NEW_ENTRY_PREFIX..L["Show Unearned Mark"],
+                type = "checkbox",
+                key = "ShowRedMark",
                 data = {
-                    default = true,
+                    default = false,
                     func = function(self)
-                        AchievementDB.UsedAsPrimary = not AchievementDB.UsedAsPrimary;
-                        local state = AchievementDB.UsedAsPrimary;
+                        local state = not AchievementDB.ShowRedMark;
+                        AchievementDB.ShowRedMark = state;
                         self.Tick:SetShown(state);
-                        NarciAchievement_RedirectPrimaryAchievementFrame();
-                        if state then
-                            self.Label:SetText(REDIRECT_TOOLTIP);
-                        else
-                            self.Label:SetText(REDIRECT_TOOLTIP .."\n".. NARCI_REQUIRE_RELOAD);
-                        end
+                        Narci_AchievementFrame:ShowRedMark(state);
                     end,
 
-                    --[[
-                    onShowFunc = function(self)
-                        local state = self.Tick:IsShown();
-                        ShowOrHideWidgetGroup(2, 2, state);
-                    end
-                    --]]
+                    description = L["Show Unearned Mark Description"],
                 },
             },
         },
@@ -259,10 +265,13 @@ local function CreateWidget(parent, widgetData, offset, parentIndex, widgetIndex
     local element;
     local height;
 
+    local PADDING_X = 1;
+
     if type == "slider" then
         element = CreateFrame("Slider", nil, parent, "NarciLineSliderTemplate");
         tinsert(widgetGroup, element);
         if data.minValue and data.maxValue then
+            element:SetWidth(120);
             element:SetMinMaxValues(data.minValue, data.maxValue);
             element:SetObeyStepOnDrag(true);
             element:SetValueStep(data.step);
@@ -274,17 +283,17 @@ local function CreateWidget(parent, widgetData, offset, parentIndex, widgetIndex
             element:SetValue(defaultValue);
             element.Label:SetText(widgetData.name);
         end
-        element:SetPoint("TOPLEFT", parent, "TOPLEFT", 80, offset);
-        height = 30;
+        element:SetPoint("TOPLEFT", parent, "TOPLEFT", 60, offset - 8);
+        height = 46;
 
     elseif type == "radio" then
         local info;
         local elements = {};
         local numButtons = #data;
-        local header = parent:CreateFontString(nil, "OVERLAY", "NarciPrefFontCategory");
+        local header = parent:CreateFontString(nil, "OVERLAY", "NarciPrefFontGrey9");
         tinsert(widgetGroup, header);
         header:SetText(widgetData.name);
-        header:SetPoint("TOPLEFT", parent, "TOPLEFT", 16, offset);
+        header:SetPoint("TOPLEFT", parent, "TOPLEFT", PADDING_X, offset);
         local defaultValue = AchievementDB[widgetData.key] or data.default;
 
         for i = 1, numButtons do
@@ -295,7 +304,7 @@ local function CreateWidget(parent, widgetData, offset, parentIndex, widgetIndex
             element:Initialize(info.groupIndx, info.name);
             element:SetScript("OnClick", info.func);
             if i == 1 then
-                element:SetPoint("TOPLEFT", parent, "TOPLEFT", 16, offset -20);
+                element:SetPoint("TOPLEFT", parent, "TOPLEFT", PADDING_X, offset -20);
             else
                 element:SetPoint("TOPLEFT", elements[i - 1], "BOTTOMLEFT", 0, -4);
                 if i == numButtons then
@@ -315,7 +324,7 @@ local function CreateWidget(parent, widgetData, offset, parentIndex, widgetIndex
         element:SetScript("OnClick", data.func);
         element:SetScript("OnShow", data.onShowFunc);
         element.Label:SetText(widgetData.name);
-        element:SetPoint("TOPLEFT", parent, "TOPLEFT", 16, offset);
+        element:SetPoint("TOPLEFT", parent, "TOPLEFT", PADDING_X, offset);
 
         local defaultValue = AchievementDB[widgetData.key];
         element.Tick:SetShown(defaultValue);
@@ -323,13 +332,21 @@ local function CreateWidget(parent, widgetData, offset, parentIndex, widgetIndex
 
         height = 30;
 
+        if data.description then
+            element.Description = element:CreateFontString(nil, "OVERLAY", "NarciPreferenceDescriptionTemplate");
+            element.Description:SetWidth(200);
+            element.Description:SetText(data.description);
+            height = height + element.Description:GetHeight() + 8;
+        end
+        
+
     elseif type == "keybind" then
         element = CreateFrame("Button", nil, parent, "NarciBindingButtonTemplate");
         tinsert(widgetGroup, element);
         element:SetSize(78, 18);
         element.Label:SetText(widgetData.name);
         element:SetPoint("TOPLEFT", parent, "TOPLEFT", 80, offset);
-        height = 24;
+        height = 48;
 
         element:SetScript("OnClick", KeybindingButton_OnClick);
         element:SetScript("OnShow", KeybindingButton_OnShow);
@@ -343,6 +360,7 @@ local function CreateSettings(frame)
     local sectors = {};
     local sector;
     local widgets;
+    local startOffset = -24;
     for i = 1, #WidgetStructure do
         sector = CreateFrame("Frame", nil, frame);
         tinsert(sectors, sector);
@@ -354,7 +372,7 @@ local function CreateSettings(frame)
             sector:SetPoint("TOPRIGHT", sectors[i - 1], "BOTTOMRIGHT", 0, -36);
         end
 
-        local header = sector:CreateFontString(nil, "OVERLAY", "NarciPrefFontCategory");
+        local header = sector:CreateFontString(nil, "OVERLAY", "NarciPrefFontGrey9");
         header:SetText(WidgetStructure[i].name);
         header:SetJustifyH("LEFT");
         header:SetJustifyV("TOP");
@@ -362,17 +380,21 @@ local function CreateSettings(frame)
         header:SetPoint("TOPRIGHT", sector, "TOPRIGHT", 0, 0);
 
         widgets = WidgetStructure[i].widgets;
-        local startOffset = -30;
+
         for j = 1, #widgets do
             startOffset = startOffset + CreateWidget(sector, widgets[j], startOffset, i, j);
         end
-        sector:SetHeight( -startOffset);
+        sector:SetHeight(-startOffset);
     end
+    frame:SetHeight(4 -startOffset);
 end
 
 local function LoadSettings(self)
     CreateSettings(self);
-    self:SetHeaderText("Settings");
+    local v = 0.2;
+    self:SetBorderColor(v, v, v);
+    self:SetBackgroundColor(0.07, 0.07, 0.08, 0.95);
+    self:SetOffset(10);
     self:HideWhenParentIsHidden(true);
 end
 
@@ -380,8 +402,8 @@ local initialize = CreateFrame("Frame");
 initialize:RegisterEvent("PLAYER_ENTERING_WORLD");
 initialize:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_ENTERING_WORLD" then
+        self:UnregisterEvent(event);
         AchievementDB = NarciAchievementOptions;
-        
         C_Timer.After(1.3, function()
             LoadSettings(Narci_AchievementSettings);
         end)

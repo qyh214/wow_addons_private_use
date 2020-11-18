@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1394, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201013140345")
+mod:SetRevision("20201014112243")
 mod:SetCreatureID(90269)
 mod:SetEncounterID(1784)
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
@@ -10,11 +10,11 @@ mod.respawnTime = 39--Def less than 40 but much greater than 30. i have a video 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 180260 180004 180533 180608 190001",
+	"SPELL_CAST_START 180260 180004 180533 180608 180300",
 	"SPELL_CAST_SUCCESS 179986 179991 180600 180526",
 	"SPELL_AURA_APPLIED 182459 185241 180166 180164 185237 185238 180526 180025 180000",
 	"SPELL_AURA_APPLIED_DOSE 180000",
-	"SPELL_AURA_REMOVED 182459 185241 180526 190001",
+	"SPELL_AURA_REMOVED 182459 185241 180526 180300",
 	"SPELL_PERIODIC_DAMAGE 180604",
 	"SPELL_ABSORBED 180604",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
@@ -22,7 +22,7 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_START boss2 boss3 boss4"
 )
 
---(ability.id = 180260 or ability.id = 180004 or ability.id = 180025 or ability.id = 180608 or ability.id = 190001 or ability.id = 180533) and type = "begincast" or (ability.id = 179986 or ability.id = 179991 or ability.id = 180600 or ability.id = 180526) and type = "cast" or (ability.id = 182459 or ability.id = 185241 or ability.id = 180166 or ability.id = 185237) and type = "applydebuff" or ability.id = 180000 and not type = "removedebuff"
+--(ability.id = 180260 or ability.id = 180004 or ability.id = 180025 or ability.id = 180608 or ability.id = 180300 or ability.id = 180533) and type = "begincast" or (ability.id = 179986 or ability.id = 179991 or ability.id = 180600 or ability.id = 180526) and type = "cast" or (ability.id = 182459 or ability.id = 185241 or ability.id = 180166 or ability.id = 185237) and type = "applydebuff" or ability.id = 180000 and not type = "removedebuff"
 --All
 local warnEdictofCondemnation				= mod:NewTargetCountAnnounce(182459, 3)
 local warnTouchofHarm						= mod:NewTargetAnnounce(180166, 3, nil, "Healer")--Todo, split new cast and jump into two different warnings?
@@ -48,7 +48,7 @@ local specWarnSealofDecayOther				= mod:NewSpecialWarningTaunt(180000, nil, nil,
 local specWarnAnnihilatingStrike			= mod:NewSpecialWarningYou(180260)
 local specWarnAnnihilatingStrikeNear		= mod:NewSpecialWarningClose(180260)
 local yellAnnihilatingStrike				= mod:NewYell(180260)
-local specWarnInfernalTempest				= mod:NewSpecialWarningCount(190001, nil, nil, nil, 2, 2)
+local specWarnInfernalTempest				= mod:NewSpecialWarningCount(180300, nil, nil, nil, 2, 2)
 ----Ancient Enforcer
 local specWarnAncientEnforcer				= mod:NewSpecialWarningSwitch("ej11155", "-Healer", nil, nil, 1, 2)
 local specWarnEnforcersOnslaught			= mod:NewSpecialWarningDodge(180004, "Tank", nil, 2, 1, 5)
@@ -72,7 +72,7 @@ local timerEdictofCondemnationCD			= mod:NewNextCountTimer(60, 182459, 57377, ni
 local timerTouchofHarmCD					= mod:NewNextCountTimer(45, 180166, nil, "Healer", nil, 3, nil, DBM_CORE_L.HEALER_ICON)
 mod:AddTimerLine(SCENARIO_STAGE:format(1))--Stage One: Oppression
 local timerAnnihilatingStrikeCD				= mod:NewNextCountTimer(10, 180260, 92214, nil, nil, 3, nil, nil, nil, 1, 3)--"Flame Strike" short name
-local timerInfernalTempestCD				= mod:NewNextCountTimer(10, 190001, nil, nil, nil, 2, nil, nil, nil, 2, 4)
+local timerInfernalTempestCD				= mod:NewNextCountTimer(10, 180300, nil, nil, nil, 2, nil, nil, nil, 2, 4)
 ----Ancient Enforcer
 local timerEnforcersOnslaughtCD				= mod:NewCDTimer(18, 180004, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
 mod:AddTimerLine(SCENARIO_STAGE:format(2))--Stage Two: Contempt
@@ -183,7 +183,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnGaveloftheTyrant:Show(self.vb.gavelCount)
 		specWarnGaveloftheTyrant:Play("carefly")
 		timerBulwarkoftheTyrantCD:Start(nil, 1)
-	elseif spellId == 190001 then
+	elseif spellId == 180300 then
 		self.vb.infernalTempestCount = self.vb.infernalTempestCount + 1
 		specWarnInfernalTempest:Show(self.vb.infernalTempestCount)
 		specWarnInfernalTempest:Play("watchstep")
@@ -335,7 +335,7 @@ function mod:SPELL_AURA_REMOVED(args)
 				DBM.RangeCheck:Show(5, debuffFilter)
 			end
 		end
-	elseif spellId == 190001 and self.Options.RangeFrame then
+	elseif spellId == 180300 and self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
 end

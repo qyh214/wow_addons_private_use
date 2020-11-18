@@ -1,9 +1,10 @@
 local W, F, E, L = unpack(select(2, ...))
-local WM = W:NewModule("WorldMap", "AceHook-3.0")
+local WM = W:NewModule("WorldMap", "AceEvent-3.0", "AceHook-3.0")
 
 local _G = _G
 local ceil = ceil
 local collectgarbage = collectgarbage
+local gsub = gsub
 local ipairs = ipairs
 local mod = mod
 local pairs = pairs
@@ -15,8 +16,11 @@ local IsAddOnLoaded = IsAddOnLoaded
 local MapCanvasScrollControllerMixin_GetCursorPosition = MapCanvasScrollControllerMixin.GetCursorPosition
 
 local C_MapExplorationInfo_GetExploredMapTextures = C_MapExplorationInfo.GetExploredMapTextures
+local C_Map_ClearUserWaypoint = C_Map.ClearUserWaypoint
 local C_Map_GetMapArtID = C_Map.GetMapArtID
 local C_Map_GetMapArtLayers = C_Map.GetMapArtLayers
+local C_Map_HasUserWaypoint = C_Map.HasUserWaypoint
+local C_SuperTrack_SetSuperTrackedUserWaypoint = C_SuperTrack.SetSuperTrackedUserWaypoint
 local C_Timer_After = C_Timer.After
 
 -- 每张地图的结构如下: (可通过数据挖掘 WorldMapOverlay 及 WorldMapOverlayTile 两个表获取)
@@ -2122,7 +2126,7 @@ local RevealDatabase = {
         ["487:419:1656:1228"] = "3719468, 3719469, 3719470, 3719471",
         ["502:321:975:961"] = "3719429, 3719430, 3719431, 3719432",
         ["572:338:1101:1815"] = "3719484, 3719485, 3719486, 3719487, 3719488, 3719489",
-        ["749:486:1582:204"] = "3719401, 3719405, 3719406, 3719407, 3719408, 3719409",
+        ["749:786:1582:204"] = "3719401, 3719405, 3719406, 3719407, 3719408, 3719409, 3719410, 3719411, 3719412, 3719402, 3719403, 3719404",
         ["763:854:1568:1575"] = "3719490, 3719494, 3719500, 3719501, 3719502, 3719503, 3719504, 3719505, 3719506, 3719491, 3719492, 3719493"
     },
     [1453] = {
@@ -2557,6 +2561,17 @@ function WM:Reveal()
         return
     end
 
+    -- Exclude some areas; Thanks Leatrix_Maps
+    if E.myfraction == "Alliance" then
+        RevealDatabase[556]["223:279:194:0"] = gsub(RevealDatabase[556]["223:279:194:0"], "1037663", "")
+    elseif E.myfraction == "Horde" then
+        RevealDatabase[542]["267:257:336:327"] = gsub(RevealDatabase[542]["267:257:336:327"], "1003342", "")
+    end
+
+    RevealDatabase[521] = nil -- Throne of Thunder
+    RevealDatabase[1176] = nil -- The Dredge (Darkshore)
+    RevealDatabase[67]["453:340:0:0"] = nil -- Veiled Sea (Darkshore)
+
     for pin in _G.WorldMapFrame:EnumeratePinsByTemplate("MapExplorationPinTemplate") do
         self:SecureHook(pin, "RefreshOverlays", "HandleMap")
     end
@@ -2577,6 +2592,41 @@ function WM:Scale()
     end
 end
 
+function WM:HookPin()
+    if not self.db or not self.db.rightClickToClear then
+        return
+    end
+
+    local EnumerateAllPins = _G.WorldMapFrame:EnumerateAllPins()
+    local pin = EnumerateAllPins()
+    while pin do
+        if pin.pinTemplate and pin.pinTemplate == "WaypointLocationPinTemplate" then
+            if not self:IsHooked(pin, "OnMouseClickAction") then
+                self:SecureHook(
+                    pin,
+                    "OnMouseClickAction",
+                    function(_, button)
+                        if button == "RightButton" then
+                            C_Map_ClearUserWaypoint()
+                        end
+                    end
+                )
+            end
+            break
+        end
+        pin = EnumerateAllPins()
+    end
+end
+
+function WM:USER_WAYPOINT_UPDATED()
+    if C_Map_HasUserWaypoint() then
+        if self.db and self.db.autoTrackWaypoint then
+            E:Delay(0.1, C_SuperTrack_SetSuperTrackedUserWaypoint, true)
+        end
+        E:Delay(0.15, self.HookPin, self)
+    end
+end
+
 function WM:Initialize()
     if IsAddOnLoaded("Mapster") then
         self.StopRunning = "Mapster"
@@ -2591,6 +2641,14 @@ function WM:Initialize()
 
     self:Scale()
     self:Reveal()
+
+    if self.db.rightClickToClear then
+        self:SecureHook(_G.WorldMapFrame, "Show", "HookPin")
+    end
+
+    if self.db.autoTrackWaypoint or self.db.rightClickToClear then
+        self:RegisterEvent("USER_WAYPOINT_UPDATED")
+    end
 end
 
 W:RegisterModule(WM:GetName())

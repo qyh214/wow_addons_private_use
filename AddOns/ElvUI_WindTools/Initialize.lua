@@ -11,8 +11,6 @@ local tonumber = tonumber
 
 local GetAddOnMetadata = GetAddOnMetadata
 
-local C_Timer_After = C_Timer.After
-
 -- 注册 Wind 工具箱为 Ace3 插件
 local W = AceAddon:NewAddon(addonName, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0", "AceHook-3.0")
 
@@ -40,6 +38,7 @@ W.Modules = {}
 W.Modules.Misc = W:NewModule("Misc", "AceHook-3.0", "AceEvent-3.0")
 W.Modules.Skins = W:NewModule("Skins", "AceHook-3.0", "AceEvent-3.0", "AceTimer-3.0")
 W.Modules.Tooltip = W:NewModule("Tooltips", "AceHook-3.0", "AceEvent-3.0")
+W.Modules.MoveFrames = W:NewModule("MoveFrames", "AceEvent-3.0", "AceHook-3.0")
 
 -- 注册 ElvUI 模块
 function W:Initialize()
@@ -53,24 +52,20 @@ function W:Initialize()
 end
 
 do
-    local Entered = false
+    local firstTime = false
+    local checked = false
     function W:PLAYER_ENTERING_WORLD()
-        if Entered then
-            C_Timer_After(
-                10,
-                function()
-                    W:CheckInstalledVersion()
-                end
-            )
-            Entered = true
+        if not firstTime then
+            E:Delay(7, self.CheckInstalledVersion, self)
+            firstTime = true
         end
 
-        C_Timer_After(
-            1,
-            function()
-                collectgarbage("collect")
-            end
-        )
+        if not (checked or _G.ElvUIInstallFrame) then
+            self:CheckCompatibility()
+            checked = true
+        end
+
+        E:Delay(1, collectgarbage, "collect")
     end
 end
 

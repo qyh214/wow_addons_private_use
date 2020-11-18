@@ -52,7 +52,7 @@ function Postal_BlackBook:OnEnable()
 		self:RawHookScript(SendMailNameEditBox, "OnChar")
 	end
 	self:HookScript(SendMailNameEditBox, "OnEditFocusGained")
-	self:RawHook("AutoComplete_Update", true)
+	self:SecureHook("AutoComplete_Update")
 	self:RegisterEvent("MAIL_SHOW")
 	self:RegisterEvent("PLAYER_ENTERING_WORLD", "AddAlt")
 
@@ -211,9 +211,9 @@ function Postal_BlackBook:OnEditFocusGained(editbox, ...)
 	SendMailNameEditBox:HighlightText()
 end
 
-function Postal_BlackBook:AutoComplete_Update(editBox, editBoxText, utf8Position, ...)
-	if editBox ~= SendMailNameEditBox or not Postal.db.profile.BlackBook.DisableBlizzardAutoComplete then
-		self.hooks["AutoComplete_Update"](editBox, editBoxText, utf8Position, ...)
+function Postal_BlackBook:AutoComplete_Update(parent, text, cursorPosition)
+	if parent == SendMailNameEditBox and Postal.db.profile.BlackBook.DisableBlizzardAutoComplete then
+		AutoComplete_HideIfAttachedTo(parent)
 	end
 end
 
@@ -357,9 +357,9 @@ end
 
 function Postal_BlackBook:SortAndCountNumFriends()
 	wipe(sorttable)
-	local numFriends = GetNumFriends()
+	local numFriends = C_FriendList.GetNumFriends()
 	for i = 1, numFriends do
-		sorttable[i] = GetFriendInfo(i)
+		sorttable[i] = C_FriendList.GetFriendInfoByIndex(i).name
 	end
 
 	-- removed lines causing issues

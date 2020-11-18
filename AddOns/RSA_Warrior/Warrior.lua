@@ -59,11 +59,11 @@ function RSA_Warrior:OnEnable()
 				tracker = 2,
 				linkID = 46968
 			},]]--
-			--[[[147833] = { -- INTERCEPT
-				profile = 'Intercept',
+			[147833] = { -- INTERCEPT
+				profile = 'Intervene',
 				replacements = { TARGET = 1 },
-				linkID = 198758
-			},]]--
+				linkID = 3411
+			},
 			[3411] = {
 				profile = 'Intervene',
 				replacements = { TARGET = 1 },
@@ -123,12 +123,12 @@ function RSA_Warrior:OnEnable()
 				tracker = 1,
 				linkID = 46968
 			},]]--
-			--[[[147833] = { -- INTERCEPT
-				profile = 'Intercept',
+			[147833] = {
+				profile = 'Intervene',
 				replacements = { TARGET = 1 },
 				section = 'End',
-				linkID = 198758
-			},]]--
+				linkID = 3411
+			},
 			[3411] = {
 				profile = 'Intervene',
 				replacements = { TARGET = 1 },

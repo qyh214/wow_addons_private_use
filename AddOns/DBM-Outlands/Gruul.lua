@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Gruul", "DBM-Outlands")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 204 $"):sub(12, -3))
+mod:SetRevision("20201103194435")
 mod:SetCreatureID(19044)
 mod:SetEncounterID(650)
 mod:SetModelID(18698)

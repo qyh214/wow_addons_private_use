@@ -245,7 +245,8 @@ function AS:CreateBackdrop(Frame, Template, Texture)
 
 	local Parent = Frame.IsObjectType and Frame:IsObjectType('Texture') and Frame:GetParent() or Frame
 
-	local Backdrop = CreateFrame('Frame', nil, Parent, 'BackdropTemplate')
+	local Backdrop = CreateFrame('Frame', nil, Parent)
+	if not Backdrop.SetBackdrop then _G.Mixin(Backdrop, _G.BackdropTemplateMixin) end
 	AS:SetOutside(Backdrop, Frame)
 	AS:SetTemplate(Backdrop, Template, Texture)
 
@@ -261,7 +262,8 @@ end
 function AS:CreateShadow(Frame, NoRegister, Inverted)
 	if (not AS:CheckOption('Shadows')) or Frame.Shadow then return end
 
-	local Shadow = CreateFrame('Frame', nil, Frame, 'BackdropTemplate')
+	local Shadow = CreateFrame('Frame', nil, Frame)
+	if not Shadow.SetBackdrop then _G.Mixin(Shadow, _G.BackdropTemplateMixin) end
 	Shadow:SetFrameStrata(Frame:GetFrameStrata())
 
 	local FrameLevel = Frame:GetFrameLevel() > 1 and Frame:GetFrameLevel() or 1
@@ -380,15 +382,11 @@ function AS:SetTemplate(Frame, Template, Texture)
 
 	Frame:SetBackdrop({ edgeFile = AS.Blank, bgFile = Texture, edgeSize = 1 })
 
-	--AS:BuildPixelBorders(Frame)
-
-	--AS:SetBackdrop(frame, bgFile, edgeSize, insetLeft, insetRight, insetTop, insetBottom)
-	--AS:SetBackdrop(Frame, Texture, (AS:CheckOption('Theme') == 'TwoPixel' and AS.Mult*2 or AS.Mult))
-
 	if AS:CheckOption('Theme') == 'ThickBorder' or AS:CheckOption('Theme') == 'TwoPixel' then
 		for _, Inset in pairs({ 'InsideBorder', 'OutsideBorder' }) do
 			Frame[Inset] = CreateFrame('Frame', nil, Frame)
-			Frame[Inset]:SetBackdrop({ edgeFile = AS.Blank, bgFile = Texture, edgeSize = 1 })
+			if not Frame[Inset].SetBackdrop then _G.Mixin(Frame[Inset], _G.BackdropTemplateMixin) end
+			Frame[Inset]:SetBackdrop({ edgeFile = AS.Blank, edgeSize = 1 })
 			Frame[Inset]:SetBackdropBorderColor(0, 0, 0, 1)
 		end
 

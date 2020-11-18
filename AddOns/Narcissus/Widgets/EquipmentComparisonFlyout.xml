@@ -1,12 +1,12 @@
 <Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
 	<Script file="EquipmentComparisonFlyout.lua"/>
 
-	<FontString name="TooltipAttributeTemplate" inherits="AAAItemLevel" justifyH="LEFT" justifyV="TOP" virtual="true">
+	<FontString name="TooltipAttributeTemplate" inherits="NarciFontNormal10White" justifyH="LEFT" justifyV="TOP" virtual="true">
 		<Color r="1" g="0.96" b="0.41" a="1"/>
 	</FontString>
 
-	<FontString name="NarciNumberAlignedtoLeft" inherits="AAAItemLevel" justifyH="LEFT" justifyV="TOP" virtual="true"/>
-	<FontString name="NarciNumberAlignedtoRight" inherits="AAAItemLevel" justifyH="RIGHT" justifyV="TOP" virtual="true"/>
+	<FontString name="NarciNumberAlignedtoLeft" inherits="NarciFontNormal10White" justifyH="LEFT" justifyV="TOP" virtual="true"/>
+	<FontString name="NarciNumberAlignedtoRight" inherits="NarciFontNormal10White" justifyH="RIGHT" justifyV="TOP" virtual="true"/>
 
 	<GameTooltip name="RefVirtualTooltip" inherits="GameTooltipTemplate" parent="UIParent" enableMouse="false" toplevel="false" movable="false" frameStrata="LOW" scale="0.001" hidden="true" Alpha="0">
 		<Size>
@@ -119,7 +119,7 @@
 						<Anchor point="CENTER"/>
 					</Anchors>
 				</Texture>
-				<FontString inherits="AAAStatusNameMedium" justifyH="CENTER" justifyV="MIDDLE" hidden="true" parentKey="Level">
+				<FontString inherits="NarciFontMedium12" justifyH="CENTER" justifyV="MIDDLE" hidden="true" parentKey="Level">
 					<Color r="0.6" g="0.6" b="0.6"/>
 					<Anchors>
 						<Anchor point="CENTER"/>
@@ -194,7 +194,7 @@
 				</Texture>
             </Layer>
 			<Layer level="OVERLAY">
-				<FontString parentKey="Description" inherits="AAAItemLevel" justifyH="LEFT" justifyV="TOP" spacing="2" hidden="false">
+				<FontString parentKey="Description" inherits="NarciFontNormal10White" justifyH="LEFT" justifyV="TOP" spacing="2" hidden="false">
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="32" y="-24"/>
 						<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-12" y="12"/>
@@ -226,14 +226,14 @@
 				</Frames>
 				<Layers>
 					<Layer level="OVERLAY">
-						<FontString parentKey="Name1" inherits="AAAItemLevel" justifyH="LEFT" justifyV="TOP" spacing="2" text="Dagger in the Back">
+						<FontString parentKey="Name1" inherits="NarciFontNormal10White" justifyH="LEFT" justifyV="TOP" spacing="2" text="Dagger in the Back">
 							<Size y="0"/>
 							<Anchors>
 								<Anchor point="TOPLEFT" relativeKey="$parent.Trait1" relativePoint="BOTTOMLEFT" x="3" y="-12"/>
 								<Anchor point="RIGHT" relativeKey="$parent.$parent" relativePoint="RIGHT" x="-10"/>
 							</Anchors>
 						</FontString>
-						<FontString parentKey="Description1" inherits="AAAItemLevel" justifyH="LEFT" justifyV="TOP" spacing="2" maxLines="2" text="NARCI_TEST_TRAIT">
+						<FontString parentKey="Description1" inherits="NarciFontNormal10White" justifyH="LEFT" justifyV="TOP" spacing="2" maxLines="2" text="NARCI_TEST_TRAIT">
 							<Color r="0.9" g="0.8" b="0.5" a="1"/>
 							<Size y="24"/>
 							<Anchors>
@@ -241,14 +241,14 @@
 								<Anchor point="RIGHT" relativeKey="$parent.$parent" relativePoint="RIGHT" x="-10"/>
 							</Anchors>
 						</FontString>
-						<FontString parentKey="Name2" inherits="AAAItemLevel" justifyH="LEFT" justifyV="TOP" spacing="2" text="Dagger in the Back">
+						<FontString parentKey="Name2" inherits="NarciFontNormal10White" justifyH="LEFT" justifyV="TOP" spacing="2" text="Dagger in the Back">
 							<Size y="0"/>
 							<Anchors>
 								<Anchor point="TOPLEFT" relativeKey="$parent.Description1" relativePoint="BOTTOMLEFT" x="0" y="-8"/>
 								<Anchor point="RIGHT" relativeKey="$parent.$parent" relativePoint="RIGHT" x="-10"/>
 							</Anchors>
 						</FontString>
-						<FontString parentKey="Description2" inherits="AAAItemLevel" justifyH="LEFT" justifyV="TOP" spacing="2" maxLines="2" text="NARCI_TEST_TRAIT">
+						<FontString parentKey="Description2" inherits="NarciFontNormal10White" justifyH="LEFT" justifyV="TOP" spacing="2" maxLines="2" text="NARCI_TEST_TRAIT">
 							<Color r="0.9" g="0.8" b="0.5" a="1"/>
 							<Anchors>
 								<Anchor point="TOPLEFT" relativeKey="$parent.Name2" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
@@ -364,7 +364,7 @@
 					</Anchors>
 				</FontString>
 
-				<FontString inherits="AAAStatusNameMedium" justifyH="LEFT" justifyV="BOTTOM" parentKey="ItemName" text="ItemName" spacing="2">
+				<FontString inherits="NarciFontMedium12" justifyH="LEFT" justifyV="BOTTOM" parentKey="ItemName" text="ItemName" spacing="2">
 					<Size x="232" y="0"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeKey="$parent.Label" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
@@ -376,7 +376,7 @@
 					<Size x="8" y="8"/>
                 </Texture>
 
-				<FontString parentKey="PawnText" inherits="AAAItemLevel" justifyH="LEFT" justifyV="TOP" hidden="true" spacing="2">
+				<FontString parentKey="PawnText" inherits="NarciFontNormal10White" justifyH="LEFT" justifyV="TOP" hidden="true" spacing="2">
 					<Size x="228" y="0"/>
 					<Anchors>
 						<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT" x="14" y="13"/>

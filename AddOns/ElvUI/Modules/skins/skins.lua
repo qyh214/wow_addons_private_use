@@ -886,6 +886,7 @@ end
 
 function S:HandleFollowerListOnUpdateDataFunc(Buttons, numButtons, offset, numFollowers)
 	if not Buttons or (not numButtons or numButtons == 0) or not offset or not numFollowers then return end
+
 	for i = 1, numButtons do
 		local button = Buttons[i]
 		local index = offset + i -- adjust index
@@ -893,7 +894,11 @@ function S:HandleFollowerListOnUpdateDataFunc(Buttons, numButtons, offset, numFo
 		if button then
 			local fl = button.Follower
 			if (index <= numFollowers) and not button.backdrop then
-				button:CreateBackdrop()
+				if button.mode == 'CATEGORY' then
+					button:CreateBackdrop('Transparent')
+				else
+					button:CreateBackdrop('NoBackdrop')
+				end
 
 				if button.Category then
 					button.Category:ClearAllPoints()
@@ -909,16 +914,17 @@ function S:HandleFollowerListOnUpdateDataFunc(Buttons, numButtons, offset, numFo
 					fl.BusyFrame:SetAllPoints()
 
 					local hl = fl:GetHighlightTexture()
-					hl:SetColorTexture(0.9, 0.8, 0.1, 0.3)
-					hl:ClearAllPoints()
-					hl:Point('TOPLEFT', 1, -1)
-					hl:Point('BOTTOMRIGHT', -1, 1)
+					hl:SetColorTexture(0.9, 0.9, 0.9, 0.25)
+					hl:SetAllPoints()
 
 					if fl.Counters then
 						for y = 1, #fl.Counters do
 							local counter = fl.Counters[y]
 							if counter and not counter.backdrop then
 								counter:CreateBackdrop()
+								counter.backdrop:SetAllPoints()
+								counter.backdrop:SetFrameLevel(counter:GetFrameLevel())
+
 								if counter.Border then
 									counter.Border:SetTexture()
 								end
@@ -939,20 +945,18 @@ function S:HandleFollowerListOnUpdateDataFunc(Buttons, numButtons, offset, numFo
 				end
 			end
 
-			if fl then
-				if fl.Selection and fl.backdrop then
-					if fl.Selection:IsShown() then
-						fl.backdrop:SetBackdropColor(0.9, 0.8, 0.1, 0.3)
-					else
-						fl.backdrop:SetBackdropColor(0, 0, 0, .25)
-					end
+			if fl and fl.Selection and fl.backdrop then
+				if fl.Selection:IsShown() then
+					fl.backdrop:SetBackdropColor(0.9, 0.8, 0.1, 0.25)
+				else
+					fl.backdrop:SetBackdropColor(0, 0, 0, 0.5)
 				end
+			end
 
-				if fl.PortraitFrame and fl.PortraitFrame.quality then
-					local color = ITEM_QUALITY_COLORS[fl.PortraitFrame.quality]
-					if color and fl.PortraitFrame.backdrop then
-						fl.PortraitFrame.backdrop:SetBackdropBorderColor(color.r, color.g, color.b)
-					end
+			if fl and fl.PortraitFrame and fl.PortraitFrame.quality then
+				local color = ITEM_QUALITY_COLORS[fl.PortraitFrame.quality]
+				if color and fl.PortraitFrame.backdrop then
+					fl.PortraitFrame.backdrop:SetBackdropBorderColor(color.r, color.g, color.b)
 				end
 			end
 		end
@@ -965,32 +969,19 @@ function S:HandleFollowerListOnUpdateData(frame)
 		return -- Only hook this frame if both Garrison and Orderhall skins are enabled because it's shared.
 	end
 
-	if S.FollowerListUpdateDataFrames[frame] ~= nil then return end -- make sure we don't double hook `GarrisonLandingPageFollowerList`
-	S.FollowerListUpdateDataFrames[frame] = 0 -- use this variable to reduce calls to HandleFollowerListOnUpdateDataFunc
+	if S.FollowerListUpdateDataFrames[frame] then return end -- make sure we don't double hook `GarrisonLandingPageFollowerList`
+	S.FollowerListUpdateDataFrames[frame] = true
 
-	local FollowerListUpdateDataLastOffset = nil
 	hooksecurefunc(_G[frame], 'UpdateData', function(dataFrame)
 		if not S.FollowerListUpdateDataFrames[frame] or (not dataFrame or not dataFrame.listScroll) then return end
+		local buttons, list = dataFrame.listScroll.buttons, dataFrame.followersList
 		local offset = _G.HybridScrollFrame_GetOffset(dataFrame.listScroll)
-		local Buttons = dataFrame.listScroll.buttons
-		local followersList = dataFrame.followersList
 
-		-- store the offset so we can bypass the updateData delay
-		if FollowerListUpdateDataLastOffset ~= offset then
-			FollowerListUpdateDataLastOffset = offset
-		else -- this will delay the function call until every other call
-			S.FollowerListUpdateDataFrames[frame] = S.FollowerListUpdateDataFrames[frame] + 1
-			-- this is mainly to prevent two calls when you add or remove a follower to a mission
-			if S.FollowerListUpdateDataFrames[frame] < 2 then return end
-		end
-
-		S.FollowerListUpdateDataFrames[frame] = 0 -- back to zero because we call it
-		S:HandleFollowerListOnUpdateDataFunc(Buttons, Buttons and #Buttons, offset, followersList and #followersList)
+		S:HandleFollowerListOnUpdateDataFunc(buttons, buttons and #buttons, offset, list and #list)
 	end)
 end
 
 -- Shared Template on LandingPage/Orderhall-/Garrison-FollowerList
--- 9.0 Shadowland: Needs Update
 local ReplacedRoleTex = {
 	['Adventures-Tank'] = 'Soulbinds_Tree_Conduit_Icon_Protect',
 	['Adventures-Healer'] = 'ui_adv_health',
@@ -1213,7 +1204,22 @@ function S:SkinStatusBarWidget(widgetFrame)
 end
 
 -- For now see the function below
-function S:SkinDoubleStatusBarWidget()
+function S:SkinDoubleStatusBarWidget(widgetFrame)
+	if not widgetFrame.LeftBar or not widgetFrame.RightBar then return end
+
+	for _, bar in pairs({widgetFrame.LeftBar, widgetFrame.RightBar}) do
+		if not bar.backdrop then
+			bar:CreateBackdrop('Transparent')
+
+			bar.BG:SetAlpha(0)
+			bar.BorderLeft:SetAlpha(0)
+			bar.BorderRight:SetAlpha(0)
+			bar.BorderCenter:SetAlpha(0)
+			bar.Spark:SetAlpha(0)
+			bar.SparkGlow:SetAlpha(0)
+			bar.BorderGlow:SetAlpha(0)
+		end
+	end
 end
 
 function S:SkinIconTextAndBackgroundWidget()
@@ -1230,10 +1236,9 @@ end
 
 function S:SkinTextWithStateWidget(widgetFrame)
 	local text = widgetFrame.Text
+	if not text then return end
 
-	if text then
-		text:SetTextColor(1, 1, 1)
-	end
+	text:SetTextColor(1, 1, 1)
 end
 
 function S:SkinHorizontalCurrenciesWidget()
@@ -1312,8 +1317,9 @@ end
 
 function S:SkinWidgetContainer(widgetContainer)
 	for _, child in ipairs({widgetContainer:GetChildren()}) do
-		if S.WidgetSkinningFuncs[child.widgetType] then
-			S[S.WidgetSkinningFuncs[child.widgetType]](S, child)
+		local typeFunc = S.WidgetSkinningFuncs[child.widgetType]
+		if typeFunc and S[typeFunc] then
+			S[typeFunc](S, child)
 		end
 	end
 end
@@ -1425,67 +1431,14 @@ function S:Initialize()
 		end
 	end
 
-	do -- Credits ShestakUI
-		hooksecurefunc(_G.UIWidgetTemplateCaptureBarMixin, 'Setup', function(info)
-			info.LeftLine:SetAlpha(0)
-			info.RightLine:SetAlpha(0)
-			info.BarBackground:SetAlpha(0)
-			info.Glow1:SetAlpha(0)
-			info.Glow2:SetAlpha(0)
-			info.Glow3:SetAlpha(0)
-
-			info.LeftBar:SetTexture(E.media.normTex)
-			info.NeutralBar:SetTexture(E.media.normTex)
-			info.RightBar:SetTexture(E.media.normTex)
-
-			info.LeftBar:SetVertexColor(0.2, 0.6, 1)
-			info.NeutralBar:SetVertexColor(0.8, 0.8, 0.8)
-			info.RightBar:SetVertexColor(0.9, 0.2, 0.2)
-
-			if not info.backdrop then
-				info:CreateBackdrop()
-				info.backdrop:Point('TOPLEFT', info.LeftBar, -2, 2)
-				info.backdrop:Point('BOTTOMRIGHT', info.RightBar, 2, -2)
-			end
-		end)
-
-		local frame = CreateFrame('Frame')
-		frame:RegisterEvent('PLAYER_ENTERING_WORLD')
-		frame:RegisterEvent('UPDATE_ALL_UI_WIDGETS')
-		frame:SetScript('OnEvent', function()
-			for _, widgetFrame in pairs(_G.UIWidgetTopCenterContainerFrame.widgetFrames) do
-				if widgetFrame.widgetType == _G.Enum.UIWidgetVisualizationType.DoubleStatusBar then
-					for _, bar in pairs({widgetFrame.LeftBar, widgetFrame.RightBar}) do
-						if not bar.IsSkinned then
-							bar.BG:SetAlpha(0)
-							bar.BorderLeft:SetAlpha(0)
-							bar.BorderRight:SetAlpha(0)
-							bar.BorderCenter:SetAlpha(0)
-							bar.Spark:SetAlpha(0)
-							bar.SparkGlow:SetAlpha(0)
-							bar.BorderGlow:SetAlpha(0)
-
-							bar:CreateBackdrop('Transparent')
-
-							bar.IsSkinned = true
-						end
-					end
-				end
-			end
-		end)
-	end
-
-	--[[hooksecurefunc('TriStateCheckbox_SetState', function(_, checkButton)
-		if checkButton.forceSaturation then
-			local tex = checkButton:GetCheckedTexture()
-			if checkButton.state == 2 then
-				tex:SetDesaturated(false)
-				tex:SetVertexColor(unpack(E.media.rgbvaluecolor))
-			elseif checkButton.state == 1 then
-				tex:SetVertexColor(0.6, 0.6, 0.6)
-			end
+	local frame = CreateFrame('Frame')
+	frame:RegisterEvent('PLAYER_ENTERING_WORLD')
+	frame:RegisterEvent('UPDATE_ALL_UI_WIDGETS')
+	frame:SetScript('OnEvent', function()
+		for _, widget in pairs(_G.UIWidgetTopCenterContainerFrame.widgetFrames) do
+			S:SkinWidgetContainer(widget)
 		end
-	end)]]
+	end)
 end
 
 -- Keep this outside, it's used for skinning addons before ElvUI load

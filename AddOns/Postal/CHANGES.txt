@@ -1,8 +1,24 @@
 ------------------------------------------------------------------------
-r413 | the_original_manbot | 2020-01-15 16:37:21 +0000 (Wed, 15 Jan 2020) | 1 line
+r431 | Zimzarina | 2020-11-04 06:15:03 +0000 (Wed, 04 Nov 2020) | 2 lines
 Changed paths:
+   M /trunk/Modules/BlackBook.lua
    M /trunk/Postal.toc
 
-version number update after testing features
+Backed out temporary interface version number additions as this did not help the incorrect game version showing up in WOW download addon tools.
+Found a new solution to address issue #231 that leaves "Deactivate Blizz Auto-complete" working.  So both issues #231 and #236 are now fixed.
+------------------------------------------------------------------------
+r430 | Zimzarina | 2020-11-03 04:18:59 +0000 (Tue, 03 Nov 2020) | 1 line
+Changed paths:
+   M /trunk/Postal.lua
+
+Implemented feature request to have a minimum opening delay (Issue #129).
+------------------------------------------------------------------------
+r429 | Zimzarina | 2020-11-02 22:18:31 +0000 (Mon, 02 Nov 2020) | 2 lines
+Changed paths:
+   M /trunk/Modules/Express.lua
+   M /trunk/Postal.toc
+
+An attempt to fix the issue where download tools show postal as for game version 8.3.0.
+KyrosKrane discovered a performance improvement for express mail sending described in issue #230.  I have incorporated KyrosKrane performance improvement into this build.
 ------------------------------------------------------------------------
 

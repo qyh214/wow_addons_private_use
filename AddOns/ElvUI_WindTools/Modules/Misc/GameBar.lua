@@ -11,6 +11,7 @@ local format = format
 local gsub = gsub
 local ipairs = ipairs
 local max = max
+local min = min
 local mod = mod
 local pairs = pairs
 local select = select
@@ -22,44 +23,44 @@ local type = type
 local unpack = unpack
 
 local BNGetNumFriends = BNGetNumFriends
+local CloseAllWindows = CloseAllWindows
+local CloseMenus = CloseMenus
 local CreateFrame = CreateFrame
-local EncounterJournal_LoadUI = EncounterJournal_LoadUI
+local CreateFromMixins = CreateFromMixins
 local GetGameTime = GetGameTime
 local GetItemCooldown = GetItemCooldown
 local GetItemIcon = GetItemIcon
 local GetNumGuildMembers = GetNumGuildMembers
 local GetTime = GetTime
-local GuildFrame_LoadUI = GuildFrame_LoadUI
 local HideUIPanel = HideUIPanel
 local InCombatLockdown = InCombatLockdown
 local IsAddOnLoaded = IsAddOnLoaded
 local IsInGuild = IsInGuild
 local IsModifierKeyDown = IsModifierKeyDown
+local ItemMixin = ItemMixin
+local PlaySound = PlaySound
 local RegisterStateDriver = RegisterStateDriver
 local ResetCPUUsage = ResetCPUUsage
 local Screenshot = Screenshot
 local ShowUIPanel = ShowUIPanel
 local SpellBookFrame = SpellBookFrame
-local TalentFrame_LoadUI = TalentFrame_LoadUI
 local ToggleAchievementFrame = ToggleAchievementFrame
 local ToggleAllBags = ToggleAllBags
 local ToggleCalendar = ToggleCalendar
 local ToggleCharacter = ToggleCharacter
-local ToggleCollectionsJournal = ToggleCollectionsJournal
-local ToggleFrame = ToggleFrame
 local ToggleFriendsFrame = ToggleFriendsFrame
-local ToggleGuildFinder = ToggleGuildFinder
-local ToggleGuildFrame = ToggleGuildFrame
+local ToggleSpellBook = ToggleSpellBook
 local ToggleTimeManager = ToggleTimeManager
 local UnregisterStateDriver = UnregisterStateDriver
 
 local C_BattleNet_GetFriendAccountInfo = C_BattleNet.GetFriendAccountInfo
 local C_BattleNet_GetFriendGameAccountInfo = C_BattleNet.GetFriendGameAccountInfo
 local C_BattleNet_GetFriendNumGameAccounts = C_BattleNet.GetFriendNumGameAccounts
+local C_CVar_GetCVar = C_CVar.GetCVar
+local C_CVar_SetCVar = C_CVar.SetCVar
 local C_FriendList_GetNumFriends = C_FriendList.GetNumFriends
 local C_FriendList_GetNumOnlineFriends = C_FriendList.GetNumOnlineFriends
 local C_Garrison_GetCompleteMissions = C_Garrison.GetCompleteMissions
-local C_Item_GetItemNameByID = C_Item.GetItemNameByID
 local C_Timer_After = C_Timer.After
 local C_Timer_NewTicker = C_Timer.NewTicker
 
@@ -77,6 +78,9 @@ local friendOffline = gsub(_G.ERR_FRIEND_OFFLINE_S, "%%s", "")
 
 local Heartstones = {
     6948, -- 爐石
+    54452, -- 以太傳送門
+    64488, -- 旅店老闆的女兒
+    93672, -- 黑暗之門
     110560, -- 要塞爐石
     140192, -- 達拉然爐石
     141605, -- 飛行管理員的哨子
@@ -88,7 +92,7 @@ local Heartstones = {
     166746, -- 吞火者的爐石
     166747, -- 啤酒節狂歡者的爐石
     168907, -- 全像數位化爐石
-    172179, -- 永恆旅人的爐石
+    172179 -- 永恆旅人的爐石
     -- 180290, -- 暗夜妖精的爐石
     -- 182773, -- 死靈領主爐石
     -- 184353 -- 琪瑞安族爐石
@@ -161,10 +165,8 @@ local ButtonTypes = {
     ACHIEVEMENTS = {
         name = L["Achievements"],
         icon = W.Media.Icons.barAchievements,
-        click = {
-            LeftButton = function()
-                ToggleAchievementFrame(false)
-            end
+        macro = {
+            LeftButton = _G.SLASH_ACHIEVEMENTUI1
         },
         tooltips = {
             L["Achievements"]
@@ -195,7 +197,11 @@ local ButtonTypes = {
         icon = W.Media.Icons.barCharacter,
         click = {
             LeftButton = function()
-                ToggleCharacter("PaperDollFrame")
+                if not InCombatLockdown() then
+                    ToggleCharacter("PaperDollFrame")
+                else
+                    _G.UIErrorsFrame:AddMessage(E.InfoColor .. _G.ERR_NOT_IN_COMBAT)
+                end
             end
         },
         tooltips = {
@@ -205,26 +211,22 @@ local ButtonTypes = {
     COLLECTIONS = {
         name = L["Collections"],
         icon = W.Media.Icons.barCollections,
-        click = {
-            LeftButton = function()
-                ToggleCollectionsJournal(1)
-            end
+        macro = {
+            LeftButton = "/click CollectionsJournalCloseButton\n/click CollectionsMicroButton\n/click CollectionsJournalTab1",
+            RightButton = "/run CollectionsJournal_LoadUI()\n/click MountJournalSummonRandomFavoriteButton"
         },
         tooltips = {
-            L["Collections"]
+            L["Collections"],
+            "\n",
+            LeftButtonIcon .. " " .. L["Show Collections"],
+            RightButtonIcon .. " " .. L["Random Favorite Mount"]
         }
     },
     ENCOUNTER_JOURNAL = {
         name = L["Encounter Journal"],
         icon = W.Media.Icons.barEncounterJournal,
-        click = {
-            LeftButton = function()
-                if not IsAddOnLoaded("Blizzard_EncounterJournal") then
-                    EncounterJournal_LoadUI()
-                end
-
-                ToggleFrame(_G.EncounterJournal)
-            end
+        macro = {
+            LeftButton = "/click EJMicroButton"
         },
         tooltips = {
             L["Encounter Journal"]
@@ -235,7 +237,11 @@ local ButtonTypes = {
         icon = W.Media.Icons.barFriends,
         click = {
             LeftButton = function()
-                ToggleFriendsFrame(1)
+                if not InCombatLockdown() then
+                    ToggleFriendsFrame(1)
+                else
+                    _G.UIErrorsFrame:AddMessage(E.InfoColor .. _G.ERR_NOT_IN_COMBAT)
+                end
             end
         },
         additionalText = function()
@@ -278,11 +284,43 @@ local ButtonTypes = {
             button.additionalText:SetFormattedText(button.additionalTextFormat, button.additionalTextFunc())
         end
     },
+    GAMEMENU = {
+        name = L["Game Menu"],
+        icon = W.Media.Icons.barGameMenu,
+        click = {
+            LeftButton = function()
+                if not InCombatLockdown() then
+                    -- Open game menu | From ElvUI
+                    if not _G.GameMenuFrame:IsShown() then
+                        if _G.VideoOptionsFrame:IsShown() then
+                            _G.VideoOptionsFrameCancel:Click()
+                        elseif _G.AudioOptionsFrame:IsShown() then
+                            _G.AudioOptionsFrameCancel:Click()
+                        elseif _G.InterfaceOptionsFrame:IsShown() then
+                            _G.InterfaceOptionsFrameCancel:Click()
+                        end
+                        CloseMenus()
+                        CloseAllWindows()
+                        PlaySound(850) --IG_MAINMENU_OPEN
+                        ShowUIPanel(_G.GameMenuFrame)
+                    else
+                        PlaySound(854) --IG_MAINMENU_QUIT
+                        HideUIPanel(_G.GameMenuFrame)
+                    end
+                else
+                    _G.UIErrorsFrame:AddMessage(E.InfoColor .. _G.ERR_NOT_IN_COMBAT)
+                end
+            end
+        },
+        tooltips = {
+            L["Game Menu"]
+        }
+    },
     GROUP_FINDER = {
         name = L["Group Finder"],
         icon = W.Media.Icons.barGroupFinder,
-        click = {
-            LeftButton = ToggleLFDParentFrame
+        macro = {
+            LeftButton = "/click LFDMicroButton"
         },
         tooltips = {
             L["Group Finder"]
@@ -291,21 +329,9 @@ local ButtonTypes = {
     GUILD = {
         name = L["Guild"],
         icon = W.Media.Icons.barGuild,
-        click = {
-            LeftButton = function()
-                if IsInGuild() then
-                    ToggleGuildFrame()
-                else
-                    ToggleGuildFinder()
-                end
-            end,
-            RightButton = function()
-                if not _G.GuildFrame then
-                    GuildFrame_LoadUI()
-                end
-
-                ToggleFrame(_G.GuildFrame)
-            end
+        macro = {
+            LeftButton = "/click GuildMicroButton",
+            RightButton = "/script if not InCombatLockdown() then if not GuildFrame then GuildFrame_LoadUI() end ToggleFrame(GuildFrame) end"
         },
         additionalText = function()
             return IsInGuild() and select(2, GetNumGuildMembers()) or ""
@@ -374,13 +400,31 @@ local ButtonTypes = {
     PET_JOURNAL = {
         name = L["Pet Journal"],
         icon = W.Media.Icons.barPetJournal,
+        macro = {
+            LeftButton = "/click CollectionsJournalCloseButton\n/click CollectionsMicroButton\n/click CollectionsJournalTab2",
+            RightButton = "/run CollectionsJournal_LoadUI()\n/click PetJournalSummonRandomFavoritePetButton"
+        },
+        tooltips = {
+            L["Pet Journal"],
+            "\n",
+            LeftButtonIcon .. " " .. L["Show Pet Journal"],
+            RightButtonIcon .. " " .. L["Random Favorite Pet"]
+        }
+    },
+    PROFESSION = {
+        name = L["Profession"],
+        icon = W.Media.Icons.barProfession,
         click = {
             LeftButton = function()
-                ToggleCollectionsJournal(2)
+                if not InCombatLockdown() then
+                    ToggleSpellBook(_G.BOOKTYPE_PROFESSION)
+                else
+                    _G.UIErrorsFrame:AddMessage(E.InfoColor .. _G.ERR_NOT_IN_COMBAT)
+                end
             end
         },
         tooltips = {
-            L["Pet Journal"]
+            L["Profession"]
         }
     },
     SCREENSHOT = {
@@ -402,14 +446,8 @@ local ButtonTypes = {
     SPELLBOOK = {
         name = L["Spell Book"],
         icon = W.Media.Icons.barSpellBook,
-        click = {
-            LeftButton = function()
-                if not SpellBookFrame:IsShown() then
-                    ShowUIPanel(SpellBookFrame)
-                else
-                    HideUIPanel(SpellBookFrame)
-                end
-            end
+        macro = {
+            LeftButton = "/click SpellbookMicroButton"
         },
         tooltips = {
             L["Spell Book"]
@@ -418,19 +456,8 @@ local ButtonTypes = {
     TALENTS = {
         name = L["Talents"],
         icon = W.Media.Icons.barTalents,
-        click = {
-            LeftButton = function()
-                if not _G.PlayerTalentFrame then
-                    TalentFrame_LoadUI()
-                end
-
-                local PlayerTalentFrame = _G.PlayerTalentFrame
-                if not PlayerTalentFrame:IsShown() then
-                    ShowUIPanel(PlayerTalentFrame)
-                else
-                    HideUIPanel(PlayerTalentFrame)
-                end
-            end
+        macro = {
+            LeftButton = "/click TalentMicroButton"
         },
         tooltips = {
             L["Talents"]
@@ -439,16 +466,95 @@ local ButtonTypes = {
     TOY_BOX = {
         name = L["Toy Box"],
         icon = W.Media.Icons.barToyBox,
-        click = {
-            LeftButton = function()
-                ToggleCollectionsJournal(3)
-            end
+        macro = {
+            LeftButton = "/click CollectionsJournalCloseButton\n/click CollectionsMicroButton\n/click CollectionsJournalTab3"
         },
         tooltips = {
             L["Toy Box"]
         }
+    },
+    VOLUME = {
+        name = L["Volume"],
+        icon = W.Media.Icons.barVolume,
+        click = {
+            LeftButton = function()
+                local vol = C_CVar_GetCVar("Sound_MasterVolume")
+                vol = vol and tonumber(vol) or 0
+                C_CVar_SetCVar("Sound_MasterVolume", min(vol + 0.1, 1))
+            end,
+            RightButton = function()
+                local vol = C_CVar_GetCVar("Sound_MasterVolume")
+                vol = vol and tonumber(vol) or 0
+                C_CVar_SetCVar("Sound_MasterVolume", max(vol - 0.1, 0))
+            end
+        },
+        tooltips = function(button)
+            local vol = C_CVar_GetCVar("Sound_MasterVolume")
+            vol = vol and tonumber(vol) or 0
+            DT.tooltip:ClearLines()
+            DT.tooltip:SetText(L["Volume"] .. format(": %d%%", vol * 100))
+            DT.tooltip:AddLine("\n")
+            DT.tooltip:AddLine(LeftButtonIcon .. " " .. L["Increase the volume"] .. " (+10%)", 1, 1, 1)
+            DT.tooltip:AddLine(RightButtonIcon .. " " .. L["Decrease the volume"] .. " (-10%)", 1, 1, 1)
+            DT.tooltip:Show()
+
+            button.tooltipsUpdateTimer =
+                C_Timer_NewTicker(
+                0.3,
+                function()
+                    local vol = C_CVar_GetCVar("Sound_MasterVolume")
+                    vol = vol and tonumber(vol) or 0
+                    DT.tooltip:ClearLines()
+                    DT.tooltip:SetText(L["Volume"] .. format(": %d%%", vol * 100))
+                    DT.tooltip:AddLine("\n")
+                    DT.tooltip:AddLine(LeftButtonIcon .. " " .. L["Increase the volume"] .. " (+10%)", 1, 1, 1)
+                    DT.tooltip:AddLine(RightButtonIcon .. " " .. L["Decrease the volume"] .. " (-10%)", 1, 1, 1)
+                    DT.tooltip:Show()
+                end
+            )
+        end,
+        tooltipsLeave = function(button)
+            if button.tooltipsUpdateTimer and button.tooltipsUpdateTimer.Cancel then
+                button.tooltipsUpdateTimer:Cancel()
+            end
+        end
     }
 }
+
+-- Chinese player prefer to use Meeting Stone rather than Blizzard LFG
+if IsAddOnLoaded("MeetingStone") or IsAddOnLoaded("MeetingStonePlus") then
+    local NetEaseEnv = LibStub("NetEaseEnv-1.0")
+    local MeetingStone
+    for k in pairs(NetEaseEnv._NSInclude) do
+        if type(k) == "table" then
+            MeetingStone = k.Addon
+        end
+    end
+
+    ButtonTypes.GROUP_FINDER.macro = nil
+    ButtonTypes.GROUP_FINDER.click = {
+        LeftButton = function()
+            if not InCombatLockdown() then
+                _G.ToggleLFDParentFrame()
+            else
+                _G.UIErrorsFrame:AddMessage(E.InfoColor .. _G.ERR_NOT_IN_COMBAT)
+            end
+        end,
+        RightButton = function()
+            if not InCombatLockdown() then
+                MeetingStone:Toggle()
+            else
+                _G.UIErrorsFrame:AddMessage(E.InfoColor .. _G.ERR_NOT_IN_COMBAT)
+            end
+        end
+    }
+    ButtonTypes.GROUP_FINDER.tooltips = {
+        L["Group Finder"],
+        "\n",
+        LeftButtonIcon .. " " .. L["Group Finder"],
+        RightButtonIcon .. " " .. L["NetEase Meeting Stone"]
+    }
+end
 
 function GB:ShowAdvancedTimeTooltip(panel)
     DT.RegisteredDataTexts["Time"].onEnter()
@@ -471,7 +577,7 @@ function GB:ConstructBar()
     local bar = CreateFrame("Frame", "WTGameBar", E.UIParent)
     bar:Size(800, 60)
     bar:Point("TOP", 0, -20)
-    bar:SetFrameStrata("DIALOG")
+    bar:SetFrameStrata("MEDIUM")
 
     bar:SetScript(
         "OnEnter",
@@ -510,11 +616,12 @@ function GB:ConstructBar()
     rightPanel:CreateBackdrop("Transparent")
     bar.rightPanel = rightPanel
 
-    if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow then
-        S:CreateShadow(leftPanel.backdrop)
-        S:CreateShadow(middlePanel.backdrop)
-        S:CreateShadow(rightPanel.backdrop)
-    end
+    S:CreateShadowModule(leftPanel.backdrop)
+    S:CreateShadowModule(middlePanel.backdrop)
+    S:CreateShadowModule(rightPanel.backdrop)
+    S:MerathilisUISkin(leftPanel.backdrop)
+    S:MerathilisUISkin(middlePanel.backdrop)
+    S:MerathilisUISkin(rightPanel.backdrop)
 
     self.bar = bar
 
@@ -528,7 +635,8 @@ function GB:ConstructBar()
         "ALL,WINDTOOLS",
         function()
             return GB.db and GB.db.enable
-        end
+        end,
+        "WindTools,misc,gameBar"
     )
 end
 
@@ -617,7 +725,11 @@ function GB:ConstructTimeArea()
                 E:UIFrameFadeIn(panel.text, self.db.fadeTime, panel.text:GetAlpha(), 1)
             end
 
-            DT.tooltip:SetOwner(panel.text, "ANCHOR_BOTTOM", 0, -5)
+            if self.db.tooltipsAnchor == "ANCHOR_TOP" then
+                DT.tooltip:SetOwner(panel, "ANCHOR_TOP", 0, 10)
+            else
+                DT.tooltip:SetOwner(panel.text, "ANCHOR_BOTTOM", 0, -10)
+            end
 
             if IsModifierKeyDown() then
                 DT.RegisteredDataTexts["System"].eventFunc()
@@ -802,7 +914,12 @@ function GB:ButtonOnEnter(button)
     end
     E:UIFrameFadeIn(button.hoverTex, self.db.fadeTime, button.hoverTex:GetAlpha(), 1)
     if button.tooltips then
-        DT.tooltip:SetOwner(button, "ANCHOR_BOTTOM", 0, -10)
+        if self.db.tooltipsAnchor == "ANCHOR_TOP" then
+            DT.tooltip:SetOwner(button, "ANCHOR_TOP", 0, 20)
+        else
+            DT.tooltip:SetOwner(button, "ANCHOR_BOTTOM", 0, -10)
+        end
+
         if type(button.tooltips) == "table" then
             DT.tooltip:ClearLines()
             for index, line in ipairs(button.tooltips) do
@@ -890,8 +1007,12 @@ function GB:UpdateButton(button, config)
     button.tooltips = config.tooltips
     button.tooltipsLeave = config.tooltipsLeave
 
-    -- 按下动作
-    if config.click then
+    -- Click
+    if config.macro then
+        button:SetAttribute("type*", "macro")
+        button:SetAttribute("macrotext1", config.macro.LeftButton or "")
+        button:SetAttribute("macrotext2", config.macro.RightButton or config.macro.LeftButton or "")
+    elseif config.click then
         function button:Click(mouseButton)
             local func = mouseButton and config.click[mouseButton] or config.click.LeftButton
             func(GB.bar.middlePanel)
@@ -1090,9 +1211,14 @@ function GB:UpdateLayout()
 
     -- 更新移动区域尺寸
     local areaWidth = 20 + self.bar.middlePanel:GetWidth()
-    areaWidth = areaWidth + 2 * max(self.bar.leftPanel:GetWidth(), self.bar.rightPanel:GetWidth())
-    local areaHeight = max(self.bar.leftPanel:GetHeight(), self.bar.rightPanel:GetHeight())
-    areaHeight = max(areaHeight, self.bar.middlePanel:GetHeight())
+    local leftWidth = self.bar.leftPanel:IsShown() and self.bar.leftPanel:GetWidth() or 0
+    local rightWidth = self.bar.rightPanel:IsShown() and self.bar.rightPanel:GetWidth() or 0
+    areaWidth = areaWidth + 2 * max(leftWidth, rightWidth)
+
+    local areaHeight = self.bar.middlePanel:GetHeight()
+    local leftHeight = self.bar.leftPanel:IsShown() and self.bar.leftPanel:GetHeight() or 0
+    local rightHeight = self.bar.rightPanel:IsShown() and self.bar.rightPanel:GetHeight() or 0
+    areaHeight = max(max(leftHeight, rightHeight), areaHeight)
 
     self.bar:Size(areaWidth, areaHeight)
 end
@@ -1106,7 +1232,6 @@ function GB:PLAYER_ENTERING_WORLD()
     C_Timer_After(
         1,
         function()
-            self:UpdateHearthStoneTable()
             if InCombatLockdown() then
                 self:RegisterEvent("PLAYER_REGEN_ENABLED")
             else
@@ -1174,24 +1299,39 @@ end
 
 function GB:UpdateHomeButton()
     ButtonTypes.HOME.item = {
-        item1 = C_Item_GetItemNameByID(self.db.home.left),
-        item2 = C_Item_GetItemNameByID(self.db.home.right)
+        item1 = HeartstonesTable[self.db.home.left],
+        item2 = HeartstonesTable[self.db.home.right]
     }
 end
 
 function GB:UpdateHearthStoneTable()
     HeartstonesTable = {}
 
-    for _, id in pairs(Heartstones) do
-        HeartstonesTable[tostring(id)] = C_Item_GetItemNameByID(id)
+    local index = 0
+    local itemEngine = CreateFromMixins(ItemMixin)
+
+    local function GetNextHearthStoneInfo()
+        index = index + 1
+        if Heartstones[index] then
+            itemEngine:SetItemID(Heartstones[index])
+            itemEngine:ContinueOnItemLoad(
+                function()
+                    HeartstonesTable[tostring(Heartstones[index])] = itemEngine:GetItemName()
+                    GetNextHearthStoneInfo()
+                end
+            )
+        else
+            self:UpdateHomeButton()
+            if self.Initialized then
+                self:UpdateButtons()
+            end
+        end
     end
+
+    GetNextHearthStoneInfo()
 end
 
 function GB:GetHearthStoneTable()
-    if not HeartstonesTable then
-        self:UpdateHearthStoneTable()
-    end
-
     return HeartstonesTable
 end
 

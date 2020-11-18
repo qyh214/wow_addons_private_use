@@ -210,10 +210,6 @@ L:SetWarningLocalization({
 	WarningChargeNotChanged	= "Même polarité"
 })
 
-L:SetOptionCatLocalization({
-	Arrows					= "Flèches"
-})
-
 -----------------
 --  Razuvious  --
 -----------------

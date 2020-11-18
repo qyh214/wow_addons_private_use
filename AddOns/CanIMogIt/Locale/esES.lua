@@ -20,9 +20,13 @@ L["Cannot determine status on other characters."] = "No se puede determinar el e
 L["Cannot learn:"] = "No se puede aprender:"
 L["Cannot learn: Soulbound"] = "No se puede aprender: ligado al Alma"
 L["Center"] = "Centro"
+--[[Translation missing --]]
+--[[ L["Changes saved!"] = ""--]] 
 L["Database migrated to:"] = "Base de datos migrada a: "
 L["Database Scanning chat messages"] = "Mensajes de chat sobre escaneado de bases de datos"
 L["Debug Tooltip"] = "Depuración del Tooltip"
+--[[Translation missing --]]
+--[[ L["Default"] = ""--]] 
 L["Detailed information for debug purposes. Use this when sending bug reports."] = "Información detallada de depuración. Utilice esta opción para el envío de informes de errores."
 L["Does not affect Quests or Adventure Journal."] = "No afecta a Misiones o Guía de Aventuras"
 L["Equippable Items Only"] = "Sólo objetos equipables"
@@ -64,6 +68,8 @@ L["Shows the icon directly on the item in your bag."] = "Muestra directamente el
 --[[ L["Top"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Top Left"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Top Right"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Top Right (default)"] = ""--]] 
 L["Transmoggable Items Only"] = "Solo objetos transfigurables"

@@ -24,7 +24,7 @@ local RSTooltip = private.ImportLib("RareScannerTooltip")
 local SHADOWLANDS_PRE_PATCH_EVENT = true
 
 -- Next spawn timer
-local NEXT_RESPAWN = 1200 --20 minutes
+local NEXT_RESPAWN = 600 --10 minutes
 
 -- Icecrown rares order (pre-patch 9.0.1)
 local SHADOWLANDS_RARES_SPAWNING_ORDER = {174065,174064,174063,174062,174061,174060,174059,174058,174057,174056,174055,174054,174053,174052,174051,174050,174049,174048,174067,174066};
@@ -33,7 +33,7 @@ local function ShadowlandsPrePatch_CalculateSpawningTimers(npcID)
 	local nextSpawningNPC = nil
 	if (npcID and RSUtils.Contains(SHADOWLANDS_RARES_SPAWNING_ORDER, npcID)) then
 		private.dbglobal.shadowlandsSpawningTimers = {}
-		
+
 		local nextSpawning = time() + NEXT_RESPAWN
 		local initFound = false
 		for i, orderNpcID in ipairs (SHADOWLANDS_RARES_SPAWNING_ORDER) do
@@ -47,7 +47,7 @@ local function ShadowlandsPrePatch_CalculateSpawningTimers(npcID)
 				nextSpawning = nextSpawning + NEXT_RESPAWN
 			end
 		end
-		
+
 		for i, orderNpcID in ipairs (SHADOWLANDS_RARES_SPAWNING_ORDER) do
 			if (orderNpcID ~= npcID) then
 				if (not nextSpawningNPC) then
@@ -59,10 +59,10 @@ local function ShadowlandsPrePatch_CalculateSpawningTimers(npcID)
 				break
 			end
 		end
-		
+
 		private.dbglobal.shadowlandsSpawningTimers[npcID] = nextSpawning
 	end
-	
+
 	return nextSpawningNPC
 end
 
@@ -92,19 +92,19 @@ function RareScanner:ShadowlandsPrePatch_Initialize()
 	if (not SHADOWLANDS_PRE_PATCH_EVENT) then
 		return
 	end
-	
+
 	local original_SetVignetteFound = self.SetVignetteFound
 	function self:SetVignetteFound(vignetteID, isNavigating, npcID)
 		original_SetVignetteFound(self, vignetteID, isNavigating, npcID);
 		ShadowlandsPrePatch_CalculateSpawningTimers(npcID);
 	end
-	
+
 	local original_ProcessKillByZone = self.ProcessKillByZone
 	function self:ProcessKillByZone(npcID, zoneID, forzed)
 		original_ProcessKillByZone(self, npcID, zoneID, forzed)
 		ShadowlandsPrePatch_PrintNextSpawn(npcID)
 	end
-	
+
 	local original_AddSpecialEventsLines = RSTooltip.AddSpecialEventsLines
 	function RSTooltip.AddSpecialEventsLines(pin, tooltip)
 		original_AddSpecialEventsLines(self, pin, tooltip);

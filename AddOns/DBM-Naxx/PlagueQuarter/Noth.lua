@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod("Noth", "DBM-Naxx", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145648")
+mod:SetRevision("20201025001113")
 mod:SetCreatureID(15954)
 mod:SetEncounterID(1117)
 mod:SetModelID(16590)
 mod:RegisterCombat("combat_yell", L.Pull)
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_SUCCESS 29213 54835 29212",
+	"SPELL_CAST_SUCCESS 29213 54835 29212 29208",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
@@ -16,6 +16,7 @@ mod:RegisterEventsInCombat(
 local warnTeleportNow	= mod:NewAnnounce("WarningTeleportNow", 3, "135736")
 local warnTeleportSoon	= mod:NewAnnounce("WarningTeleportSoon", 1, "135736")
 local warnCurse			= mod:NewSpellAnnounce(29213, 2)
+local warnBlink			= mod:NewSpellAnnounce(29208, 3)
 
 local specWarnAdds		= mod:NewSpecialWarningAdds(29212, "-Healer", nil, nil, 1, 2)
 
@@ -28,6 +29,30 @@ mod.vb.teleCount = 0
 mod.vb.addsCount = 0
 mod.vb.curseCount = 0
 
+function mod:Balcony()
+	self.vb.teleCount = self.vb.teleCount + 1
+	self.vb.addsCount = 0
+	timerCurseCD:Stop()
+	timerAddsCD:Stop()
+	local timer
+	if self.vb.teleCount == 1 then
+		timer = 70
+		timerAddsCD:Start(5)--Always 5
+	elseif self.vb.teleCount == 2 then
+		timer = 97
+		timerAddsCD:Start(5)--Always 5
+	elseif self.vb.teleCount == 3 then
+		timer = 126
+		timerAddsCD:Start(5)--Always 5
+	else
+		timer = 55
+	end
+	timerTeleportBack:Start(timer)
+	warnTeleportSoon:Schedule(timer - 20)
+	warnTeleportNow:Show()
+--	self:ScheduleMethod(timer, "BackInRoom")
+end
+
 function mod:OnCombatStart(delay)
 	self.vb.teleCount = 0
 	self.vb.addsCount = 0
@@ -36,6 +61,7 @@ function mod:OnCombatStart(delay)
 	timerCurseCD:Start(9.5-delay)
 	timerTeleport:Start(90.8-delay)
 	warnTeleportSoon:Schedule(70.8-delay)
+	self:ScheduleMethod(90.8-delay, "Balcony")
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
@@ -47,27 +73,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 		elseif self.vb.curseCount < 2 then
 			timerCurseCD:Start()
 		end
-	elseif args.spellId == 29212 then--Cripple that's always cast when he teleports away
-		self.vb.teleCount = self.vb.teleCount + 1
-		self.vb.addsCount = 0
-		timerCurseCD:Stop()
-		timerAddsCD:Stop()
-		local timer
-		if self.vb.teleCount == 1 then
-			timer = 70
-			timerAddsCD:Start(5)--Always 5
-		elseif self.vb.teleCount == 2 then
-			timer = 97
-			timerAddsCD:Start(5)--Always 5
-		elseif self.vb.teleCount == 3 then
-			timer = 126
-			timerAddsCD:Start(5)--Always 5
-		else
-			timer = 55
-		end
-		timerTeleportBack:Start(timer)
-		warnTeleportSoon:Schedule(timer - 20)
-		warnTeleportNow:Show()
+--	elseif args.spellId == 29212 then--Cripple that's always cast when he teleports away
+
+	elseif args.spellId == 29208 then
+		warnBlink:Show()
 	end
 end
 
@@ -104,6 +113,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		else
 			timerCurseCD:Start(11)
 		end
+		self:ScheduleMethod(timer, "Balcony")
 	end
 end
 
@@ -119,7 +129,7 @@ function mod:OnSync(msg, targetname)
 			elseif self.vb.teleCount == 1 then--3 waves 34 then 47 seconds apart
 				if self.vb.addsCount == 1 then
 					timerAddsCD:Start(33.9)
-				else
+				elseif self.vb.addsCount == 1 then
 					timerAddsCD:Start(47.3)
 				end
 			elseif self.vb.teleCount == 2 then--30, 32, 32, 30

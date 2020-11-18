@@ -2,40 +2,57 @@ local W, F, E, L = unpack(select(2, ...))
 local TI = W:NewModule("TurnIn", "AceEvent-3.0")
 
 local _G = _G
-local strmatch, tonumber, next, select, tonumber, wipe = strmatch, tonumber, next, select, tonumber, wipe
+local format = format
+local next = next
+local select = select
+local strlen = strlen
+local strmatch = strmatch
+local strupper = strupper
+local tonumber = tonumber
+local wipe = wipe
+
+local AcceptQuest = AcceptQuest
+local CloseQuest = CloseQuest
+local CompleteQuest = CompleteQuest
+local GetAutoQuestPopUp = GetAutoQuestPopUp
 local GetInstanceInfo = GetInstanceInfo
-local GetNumTrackingTypes, GetTrackingInfo = GetNumTrackingTypes, GetTrackingInfo
-local GetNumAutoQuestPopUps, GetAutoQuestPopUp = GetNumAutoQuestPopUps, GetAutoQuestPopUp
-local UnitGUID, UnitIsDeadOrGhost = UnitGUID, UnitIsDeadOrGhost
-local AcceptQuest, CloseQuest, QuestGetAutoAccept = AcceptQuest, CloseQuest, QuestGetAutoAccept
-local ShowQuestOffer, ShowQuestComplete = ShowQuestOffer, ShowQuestComplete
+local GetItemInfo = GetItemInfo
+local GetNumAutoQuestPopUps = GetNumAutoQuestPopUps
+local GetNumQuestChoices = GetNumQuestChoices
+local GetNumQuestItems = GetNumQuestItems
+local GetNumTrackingTypes = GetNumTrackingTypes
+local GetQuestID = GetQuestID
+local GetQuestItemInfo = GetQuestItemInfo
+local GetQuestItemLink = GetQuestItemLink
+local GetQuestReward = GetQuestReward
+local GetTrackingInfo = GetTrackingInfo
+local IsModifierKeyDown = IsModifierKeyDown
+local IsQuestCompletable = IsQuestCompletable
+local QuestGetAutoAccept = QuestGetAutoAccept
+local QuestInfoItem_OnClick = QuestInfoItem_OnClick
+local ShowQuestComplete = ShowQuestComplete
+local ShowQuestOffer = ShowQuestOffer
 local StaticPopup_FindVisible = StaticPopup_FindVisible
 local StaticPopup_OnClick = StaticPopup_OnClick
-local IsQuestCompletable = IsQuestCompletable
-local GetQuestID = GetQuestID
-local GetNumQuestItems = GetNumQuestItems
-local GetNumQuestChoices = GetNumQuestChoices
-local GetQuestItemLink = GetQuestItemLink
-local CompleteQuest = CompleteQuest
-local GetQuestReward = GetQuestReward
-local GetItemInfo = GetItemInfo
-local GetQuestItemInfo = GetQuestItemInfo
-local QuestInfoItem_OnClick = QuestInfoItem_OnClick
+local UnitExists = UnitExists
+local UnitGUID = UnitGUID
+local UnitIsDeadOrGhost = UnitIsDeadOrGhost
+local UnitName = UnitName
+local UnitPlayerControlled = UnitPlayerControlled
 
+local C_GossipInfo_GetActiveQuests = C_GossipInfo.GetActiveQuests
+local C_GossipInfo_GetAvailableQuests = C_GossipInfo.GetAvailableQuests
+local C_GossipInfo_GetNumActiveQuests = C_GossipInfo.GetNumActiveQuests
+local C_GossipInfo_GetNumAvailableQuests = C_GossipInfo.GetNumAvailableQuests
+local C_GossipInfo_GetNumOptions = C_GossipInfo.GetNumOptions
+local C_GossipInfo_GetOptions = C_GossipInfo.GetOptions
+local C_GossipInfo_SelectActiveQuest = C_GossipInfo.SelectActiveQuest
+local C_GossipInfo_SelectAvailableQuest = C_GossipInfo.SelectAvailableQuest
+local C_GossipInfo_SelectOption = C_GossipInfo.SelectOption
 local C_QuestLog_GetInfo = C_QuestLog.GetInfo
 local C_QuestLog_GetLogIndexForQuestID = C_QuestLog.GetLogIndexForQuestID
 local C_QuestLog_GetNumQuestLogEntries = C_QuestLog.GetNumQuestLogEntries
 local C_QuestLog_GetQuestTagInfo = C_QuestLog.GetQuestTagInfo
-local C_GossipInfo_GetActiveQuests = C_GossipInfo.GetActiveQuests
-local C_GossipInfo_GetNumActiveQuests = C_GossipInfo.GetNumActiveQuests
-local C_GossipInfo_SelectActiveQuest = C_GossipInfo.SelectActiveQuest
-local C_GossipInfo_GetAvailableQuests = C_GossipInfo.GetAvailableQuests
-local C_GossipInfo_GetNumAvailableQuests = C_GossipInfo.GetNumAvailableQuests
-local C_GossipInfo_SelectAvailableQuest = C_GossipInfo.SelectAvailableQuest
-local C_GossipInfo_GetNumOptions = C_GossipInfo.GetNumOptions
-local C_GossipInfo_GetOptions = C_GossipInfo.GetOptions
-local C_GossipInfo_SelectOption = C_GossipInfo.SelectOption
-local C_Timer_After = C_Timer.After
 
 local quests, choiceQueue = {}
 
@@ -211,6 +228,10 @@ local function IsIgnored()
         return true
     end
 
+    if TI.db and TI.db.modifierKeyPause and IsModifierKeyDown() then
+        return true
+    end
+
     if TI.db and TI.db.customIgnoreNPCs and TI.db.customIgnoreNPCs[npcID] then
         return true
     end
@@ -219,27 +240,31 @@ local function IsIgnored()
 end
 
 local function AttemptAutoComplete(event)
-    if GetNumAutoQuestPopUps() > 0 then
+    if event == "PLAYER_REGEN_ENABLED" then
+        TI:UnregisterEvent("PLAYER_REGEN_ENABLED")
+    end
+
+    local numPopups = GetNumAutoQuestPopUps()
+    if numPopups > 0 then
         if UnitIsDeadOrGhost("player") then
             TI:RegisterEvent("PLAYER_REGEN_ENABLED")
             return
         end
 
-        local questID, popUpType = GetAutoQuestPopUp(1)
-        local tagInfo = C_QuestLog_GetQuestTagInfo(questID)
-        if not tagInfo or not tagInfo.worldQuestType then
-            if popUpType == "OFFER" then
-                ShowQuestOffer(C_QuestLog_GetLogIndexForQuestID(questID))
-            else
-                ShowQuestComplete(C_QuestLog_GetLogIndexForQuestID(questID))
+        for i = 1, numPopups do
+            local questID, popUpType = GetAutoQuestPopUp(i)
+            local tagInfo = C_QuestLog_GetQuestTagInfo(questID)
+            if not tagInfo or not tagInfo.worldQuestType then
+                if popUpType == "OFFER" then
+                    ShowQuestOffer(questID)
+                else
+                    ShowQuestComplete(questID)
+                end
             end
+            return
         end
     else
-        C_Timer_After(1, AttemptAutoComplete)
-    end
-
-    if event == "PLAYER_REGEN_ENABLED" then
-        TI:UnregisterEvent("PLAYER_REGEN_ENABLED")
+        E:Delay(1, AttemptAutoComplete)
     end
 end
 
@@ -478,9 +503,52 @@ function TI:PLAYER_REGEN_ENABLED()
     AttemptAutoComplete("PLAYER_REGEN_ENABLED")
 end
 
+function TI:AddTargetToBlacklist()
+    if not UnitExists("target") then
+        F.Print(L["Target is not exists."])
+        return
+    end
+    if UnitPlayerControlled("target") then
+        F.Print(L["Target is not an NPC."])
+        return
+    end
+    local npcID = self:GetNPCID("target")
+    if npcID then
+        local list = E.db.WT.quest.turnIn.customIgnoreNPCs
+        list[npcID] = UnitName("target")
+        F.Print(format(L["%s has been added to the ignore list."], list[npcID]))
+    end
+end
+
+_G.SLASH_WINDTOOLS_TURN_IN1 = "/wti"
+_G.SLASH_WINDTOOLS_TURN_IN2 = "/windturnin"
+_G.SLASH_WINDTOOLS_TURN_IN3 = "/windquestturnin"
+_G.SlashCmdList["WINDTOOLS_TURN_IN"] = function(msg)
+    if msg and strlen(msg) > 0 then
+        msg = strupper(msg)
+        if msg == "ON" or msg == "1" or msg == "TRUE" or msg == "ENABLE" then
+            TI.db.enable = true
+        elseif msg == "OFF" or msg == "0" or msg == "FALSE" or msg == "DISABLE" then
+            TI.db.enable = false
+        elseif msg == "ADDTARGET" or msg == "ADD" or msg == "IGNORE" or msg == "ADD TARGET" then
+            TI:AddTargetToBlacklist()
+            return
+        end
+    else
+        TI.db.enable = not TI.db.enable
+    end
+    TI:ProfileUpdate()
+    local SB = W:GetModule("SwitchButtons")
+    if SB then
+        SB:ProfileUpdate()
+    end
+
+    F.Print(format("%s %s", L["Turn In"], TI.db.enable and L["Enabled"] or L["Disabled"]))
+end
+
 function TI:Initialize()
     self.db = E.db.WT.quest.turnIn
-    if not self.db.enable or self.initialized then
+    if not self.db.enable or self.Initialized then
         return
     end
 
@@ -496,13 +564,13 @@ function TI:Initialize()
     self:RegisterEvent("PLAYER_LOGIN")
     self:RegisterEvent("QUEST_AUTOCOMPLETE")
 
-    self.initialized = true
+    self.Initialized = true
 end
 
 function TI:ProfileUpdate()
     self:Initialize()
 
-    if self.initialized and not self.db.enable then
+    if self.Initialized and not self.db.enable then
         self:UnregisterEvent("QUEST_GREETING")
         self:UnregisterEvent("GOSSIP_SHOW")
         self:UnregisterEvent("GOSSIP_CONFIRM")
@@ -515,7 +583,7 @@ function TI:ProfileUpdate()
         self:UnregisterEvent("PLAYER_LOGIN")
         self:UnregisterEvent("QUEST_AUTOCOMPLETE")
         self:UnregisterEvent("PLAYER_REGEN_ENABLED")
-        self.initialized = false
+        self.Initialized = false
     end
 end
 

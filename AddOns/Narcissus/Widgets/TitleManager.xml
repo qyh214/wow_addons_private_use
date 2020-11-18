@@ -175,7 +175,7 @@
                                 <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Icon" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
                             </Anchors>
                         </Texture>
-                        <FontString parentKey="Title" inherits="AAAPlayerInfo" justifyH="LEFT" justifyV="TOP" text="Title">
+                        <FontString parentKey="Title" inherits="NarciFontPlayerInfo" justifyH="LEFT" justifyV="TOP" text="Title">
                             <Size y="0"/>
                             <Color r="0.25" g="0.78" b="0.92" a="1"/>
                             <Anchors>
@@ -476,7 +476,7 @@
         </HitRectInsets>
         <Layers>
             <Layer level="OVERLAY">
-                <FontString parentKey="Tooltip" inherits="AAAPlayerInfo" justifyH="CENTER" justifyV="MIDDLE" text="Open Title Manager" Alpha="0">
+                <FontString parentKey="Tooltip" inherits="NarciFontPlayerInfo" justifyH="CENTER" justifyV="MIDDLE" text="Open Title Manager" Alpha="0">
                     <Size x="0" y="0"/>
                     <Color r="0.25" g="0.78" b="0.92" a="0"/>
                     <Anchors>
