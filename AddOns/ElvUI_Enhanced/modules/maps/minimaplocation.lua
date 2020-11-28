@@ -1,11 +1,11 @@
 local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
+local EEL = E:GetModule('ElvuiEnhancedAgain')
 local M = E:GetModule('Minimap')
+local ML = E:NewModule('MinimapLocation', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0');
 
---local GetPlayerMapPosition = GetPlayerMapPosition
+
 local init = false
 local cluster, panel, location, xMap, yMap
-local inRestrictedArea = false
-local mapID = C_Map.GetBestMapForUnit("player")
 
 local digits ={
 	[0] = { .5, '%.0f' },
@@ -13,42 +13,19 @@ local digits ={
 	[2] = { .1, '%.2f' },
 }
 
-local function setRestricted(zone)
-	if zone then
-		inRestrictedArea = true
-	end
-	xMap.text:SetText("N/A")
-	yMap.text:SetText("N/A")
-	return
-end
-
-local function getPos(zone)
-	local mapID = C_Map.GetBestMapForUnit("player")
-	if not mapID then 
-		setRestricted(zone)
-		return 
-	end
-	local pos = C_Map.GetPlayerMapPosition(mapID, "player")
-	if not pos then 
-		setRestricted(zone)
-		return 
-	end
-	inRestrictedArea = false
-	return pos 
-end
-
 local function UpdateLocation(self, elapsed)
-	if inRestrictedArea then return; end
+	--if inRestrictedArea then return; end
 	
 	location.elapsed = (location.elapsed or 0) + elapsed
-	if location.elapsed < digits[E.private.general.minimap.locationdigits][1] then return end
+	if location.elapsed < digits[E.db.eel.minimap.minimapcords.locationdigits][1] then return end
 
-	local pos = getPos()
-	if not pos then return end
-	xMap.pos, yMap.pos = pos:GetXY()
-
-	xMap.text:SetFormattedText(digits[E.private.general.minimap.locationdigits][2], xMap.pos * 100)
-	yMap.text:SetFormattedText(digits[E.private.general.minimap.locationdigits][2], yMap.pos * 100)
+	if E.MapInfo then
+		xMap.text:SetFormattedText(digits[E.db.eel.minimap.minimapcords.locationdigits][2], E.MapInfo.xText or 0)
+		yMap.text:SetFormattedText(digits[E.db.eel.minimap.minimapcords.locationdigits][2], E.MapInfo.yText or 0)
+	else
+		xMap.text:SetText("N/A")
+		yMap.text:SetText("N/A")
+	end
 
 	location.elapsed = 0
 end
@@ -117,17 +94,7 @@ local function ShowMinimap()
 	end
 end
 
-hooksecurefunc(M, 'Update_ZoneText', function()
-	location.text:SetTextColor(M:GetLocTextColor())
-	location.text:SetText(strsub(GetMinimapZoneText(),1,25))
-
-	getPos(1)
-
-end)
-
-hooksecurefunc(M, 'UpdateSettings', function()
-	if not E.private.general.minimap.enable then return end
-
+function ML:CreateFrame()
 	if not init then
 		init = true
 		CreateEnhancedMaplocation()
@@ -148,6 +115,7 @@ hooksecurefunc(M, 'UpdateSettings', function()
 	location:Width(holder:GetWidth() - 77)
 
 	local point, relativeTo, relativePoint, xOfs, yOfs = holder:GetPoint()
+
 	if E.db.general.minimap.locationText == 'ABOVE' then
 		holder:SetPoint(point, relativeTo, relativePoint, 0, -19)
 		holder:Height(holder:GetHeight() + 22)
@@ -158,4 +126,28 @@ hooksecurefunc(M, 'UpdateSettings', function()
 		panel:SetScript('OnUpdate', nil)
 		panel:Hide()
 	end
-end)
+end
+
+local function StartHooks()
+	hooksecurefunc(M, 'UpdateSettings', function()
+		if not E.private.general.minimap.enable then return end
+		ML:CreateFrame()
+	end)
+
+	hooksecurefunc(M, 'Update_ZoneText', function()
+		location.text:SetTextColor(M:GetLocTextColor())
+		location.text:SetText(strsub(GetMinimapZoneText(),1,25))
+	end)
+end
+
+function ML:Initialize()
+	if not EEL.initialized or not E.db.eel.minimap.minimapcords.enable or not E.private.general.minimap.enable then return end 
+	ML:CreateFrame()
+	StartHooks()
+	location.text:SetTextColor(M:GetLocTextColor())
+	location.text:SetText(strsub(GetMinimapZoneText(),1,25))
+end
+
+E:RegisterModule(ML:GetName())
+
+

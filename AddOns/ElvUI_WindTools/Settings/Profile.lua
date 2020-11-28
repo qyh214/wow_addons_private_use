@@ -354,7 +354,7 @@ P.item = {
                     b = 1
                 }
             },
-            include = "QUEST,BANNER,EQUIP"
+            include = "QUEST,BANNER,EQUIP,TORGHAST"
         },
         bar2 = {
             enable = true,
@@ -395,10 +395,10 @@ P.item = {
                     b = 1
                 }
             },
-            include = "POTION,FLASK,UTILITY"
+            include = "POTIONSL,FLASKSL,UTILITY"
         },
         bar3 = {
-            enable = false,
+            enable = true,
             mouseOver = false,
             globalFade = false,
             fadeTime = 0.3,
@@ -436,7 +436,7 @@ P.item = {
                     b = 1
                 }
             },
-            include = "CUSTOM"
+            include = "MAGEFOOD,FOODSL,CUSTOM"
         }
     },
     inspect = {
@@ -447,7 +447,7 @@ P.item = {
         playerOnInspect = true,
         levelText = {
             name = F.GetCompatibleFont("Montserrat"),
-            size = 17,
+            size = 13,
             style = "OUTLINE"
         },
         equipText = {
@@ -626,7 +626,8 @@ P.social = {
         useClassColor = true,
         textures = {
             game = "Modern",
-            status = "Square"
+            status = "Square",
+            factionIcon = false,
         },
         areaColor = {
             r = 1,
@@ -858,7 +859,6 @@ P.unitFrames = {
 
 P.misc = {
     disableTalkingHead = false,
-    skipCutScene = false,
     gameBar = {
         enable = true,
         mouseOver = false,
@@ -873,6 +873,7 @@ P.misc = {
         hoverColor = "CLASS",
         customNormalColor = {r = 1, g = 1, b = 1},
         customHoverColor = {r = 0, g = 0.659, b = 1},
+        notification = true,
         visibility = "[petbattle] hide; show",
         tooltipsAnchor = "ANCHOR_BOTTOM",
         time = {

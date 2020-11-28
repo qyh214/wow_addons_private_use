@@ -70,9 +70,9 @@ local function showRealDate(curseDate)
 end
 
 DBM = {
-	Revision = parseCurseDate("20201117162918"),
-	DisplayVersion = "9.0.4", -- the string that is shown as version
-	ReleaseRevision = releaseDate(2020, 11, 17) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	Revision = parseCurseDate("20201127042651"),
+	DisplayVersion = "9.0.6", -- the string that is shown as version
+	ReleaseRevision = releaseDate(2020, 11, 26) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -475,7 +475,7 @@ local dataBroker
 local voiceSessionDisabled = false
 local handleSync
 
-local fakeBWVersion, fakeBWHash = 185, "2568767"--185.3
+local fakeBWVersion, fakeBWHash = 188, "c3628da"--188.0
 local bwVersionResponseString = "V^%d^%s"
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
 
@@ -714,7 +714,7 @@ local function sendLoggedSync(prefix, msg)
 		elseif IsInGroup(1) then
 			C_ChatInfo.SendAddonMessageLogged("D4", prefix .. "\t" .. msg, "PARTY")
 		else--for solo raid
-			C_ChatInfo.SendAddonMessageLogged("D4", prefix .. "\t" .. msg, "WHISPER", playerName)
+			handleSync("SOLO", playerName, prefix, strsplit("\t", msg))
 		end
 	end
 end
@@ -726,6 +726,8 @@ local function SendWorldSync(self, prefix, msg, noBNet)
 		SendAddonMessage("D4", prefix.."\t"..msg, "RAID")
 	elseif IsInGroup(1) then
 		SendAddonMessage("D4", prefix.."\t"..msg, "PARTY")
+	else--for solo raid
+		handleSync("SOLO", playerName, prefix, strsplit("\t", msg))
 	end
 	if IsInGuild() then
 		SendAddonMessage("D4", prefix.."\t"..msg, "GUILD")--Even guild syncs send realm so we can keep antispam the same across realid as well.
@@ -1638,7 +1640,7 @@ do
 				"PLAYER_SPECIALIZATION_CHANGED",
 				"PARTY_INVITE_REQUEST",
 				"LOADING_SCREEN_DISABLED",
---				"LOADING_SCREEN_ENABLED",
+				"LOADING_SCREEN_ENABLED",
 				"SCENARIO_COMPLETED"
 			)
 			if RolePollPopup:IsEventRegistered("ROLE_POLL_BEGIN") then
@@ -4250,7 +4252,7 @@ do
 		end
 	end
 
---[[	function DBM:LOADING_SCREEN_ENABLED()
+	function DBM:LOADING_SCREEN_ENABLED()
 		--TimerTracker Cleanup, required to work around logic code blizzard put into TimerTracker for /countdown timers
 		--TimerTracker is hard coded that if a type 3 timer exists, to give it prio over type 1 and type 2. This causes the M+ timer not to show, even if only like 0.01 sec was left on the /countdown
 		--We want to avoid situations where players start a 10 second timer, but click keystone with fractions of a second left, preventing them from seeing the M+ timer
@@ -4262,7 +4264,7 @@ do
 				end
 			end
 		end
-	end--]]
+	end
 
 	function DBM:LoadModsOnDemand(checkTable, checkValue)
 		self:Debug("LoadModsOnDemand fired")
@@ -4603,7 +4605,7 @@ do
 		if not DBM.Options.DontShowPT2 then--and DBM.Bars:GetBar(L.TIMER_PULL)
 			dummyMod.timer:Stop()
 		end
---[[		local timerTrackerRunning = false
+		local timerTrackerRunning = false
 		if not DBM.Options.DontShowPTCountdownText then
 			for _, tttimer in pairs(TimerTracker.timerList) do
 				if not tttimer.isFree then--Timer event running
@@ -4614,14 +4616,14 @@ do
 					end
 				end
 			end
-		end--]]
+		end
 		dummyMod.text:Cancel()
 		if timer == 0 then return end--"/dbm pull 0" will strictly be used to cancel the pull timer (which is why we let above part of code run but not below)
 		DBM:FlashClientIcon()
 		if not DBM.Options.DontShowPT2 then
 			dummyMod.timer:Start(timer, L.TIMER_PULL)
 		end
---[[		if not DBM.Options.DontShowPTCountdownText then
+		if not DBM.Options.DontShowPTCountdownText then
 			if not timerTrackerRunning then--if a TimerTracker event is running not started by DBM, block creating one of our own (object gets buggy if it has 2+ events running)
 				--Start A TimerTracker timer using the new countdown type 3 type (ie what C_PartyInfo.DoCountdown triggers, but without sending it to entire group)
 				TimerTracker_OnEvent(TimerTracker, "START_TIMER", 3, timer, timer)
@@ -4637,7 +4639,7 @@ do
 					end
 				end
 			end
-		end--]]
+		end
 		if not DBM.Options.DontShowPTText then
 			if target then
 				dummyMod.text:Show(L.ANNOUNCE_PULL_TARGET:format(target, timer, sender))
@@ -6300,14 +6302,14 @@ do
 				if dummyMod then--stop pull timer
 					dummyMod.text:Cancel()
 					dummyMod.timer:Stop()
-					--[[if not DBM.Options.DontShowPTCountdownText then
+					if not DBM.Options.DontShowPTCountdownText then
 						for _, tttimer in pairs(TimerTracker.timerList) do
 							if tttimer.type == 3 and not tttimer.isFree then
 								FreeTimerTrackerTimer(tttimer)
 								break
 							end
 						end
-					end--]]
+					end
 				end
 				local bigWigs = _G["BigWigs"]
 				if bigWigs and bigWigs.db.profile.raidicon and not self.Options.DontSetIcons and self:GetRaidRank() > 0 then--Both DBM and bigwigs have raid icon marking turned on.
@@ -12108,7 +12110,7 @@ end
 
 function bossModPrototype:SetRevision(revision)
 	revision = parseCurseDate(revision or "")
-	if not revision or revision == "20201117162918" then
+	if not revision or revision == "20201127042651" then
 		-- bad revision: either forgot the svn keyword or using github
 		revision = DBM.Revision
 	end

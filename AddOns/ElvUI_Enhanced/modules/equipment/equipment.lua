@@ -1,9 +1,9 @@
-local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
+local E, L, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local EQ = E:NewModule('Equipment', 'AceHook-3.0', 'AceEvent-3.0');
-
+local EEL = E:GetModule('ElvuiEnhancedAgain')
 -- Based on ElvUI Improved Spec Switch Datatext
 -- Author: Lockslap
--- Updated for Legion/BtS by NickBock/Feraldin
+-- Updated for Legion/BtS by Tevoll
 
 local changingEquipmentSet = nil
 local join = string.join
@@ -41,23 +41,12 @@ function EQ:CheckForGearChange()
 
 	if not GetSpecializationInfo(1) then return end
 	if self.db.specialization.enable then
-		local set = currentSpec == 1 and self.db.spec1 or currentSpec == 2 and self.db.spec2 or currentSpec == 3 and self.db.spec3 or currentSpec == 4 and self.db.spec4
+		local set = currentSpec == 1 and self.db.specialization.spec1 or currentSpec == 2 and self.db.specialization.spec2 or currentSpec == 3 and self.db.specialization.spec3 or currentSpec == 4 and self.db.specialization.spec4
 		if set ~= "none" and set ~= activeSet then
 			changingEquipmentSet = set
 			local sID = C_EquipmentSet.GetEquipmentSetID(set)
 			C_EquipmentSet.UseEquipmentSet(sID)			
 		end
-	end
-end
-
-function EQ:UpdateTalentConfiguration()
-	if not E.Options.args.equipment then return end
-	local numSpecs = GetNumSpecializations(false, self.isPet);
-	local sex = self.isPet and UnitSex("pet") or UnitSex("player");
-
-	for i = 1, numSpecs do
-		local _, name, description, icon = GetSpecializationInfo(i, false, self.isPet, nil, sex);
-		E.Options.args.equipment.args.specialization.args["spec"..i].name = name
 	end
 end
 
@@ -68,20 +57,23 @@ function EQ:EquipmentSwapFinished()
 	end
 end
 
+--[[ function EQ:ToggleBattleground()
+	if self.db.battleground.enable then
+		self:RegisterEvent("PLAYER_ENTERING_WORLD", "CheckForGearChange")
+	end
+	if not self.db.battleground.enable then
+		self:UnregisterEvent("PLAYER_ENTERING_WORLD", "CheckForGearChange")
+	end
+end ]]
+
+
 function EQ:Initialize()
 	E.equipment = self
-	
-	self.db = E.private.equipment;
-	
+	self.db = E.private.eel.equipment;
 	self:RegisterEvent("PLAYER_ENTERING_WORLD", "CheckForGearChange")
 	self:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED", "CheckForGearChange")
-	
-	self:RegisterEvent("CHARACTER_POINTS_CHANGED", "UpdateTalentConfiguration")
-	self:RegisterEvent("PLAYER_TALENT_UPDATE", "UpdateTalentConfiguration")
-	
 	self:RegisterEvent("EQUIPMENT_SWAP_FINISHED", "EquipmentSwapFinished")
-	
-	self:UpdateTalentConfiguration()
+	-- EQ:ToggleBattleground()
 end
 
 E:RegisterModule(EQ:GetName())

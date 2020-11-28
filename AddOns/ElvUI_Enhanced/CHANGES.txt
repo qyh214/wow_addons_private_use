@@ -1,24 +1,12 @@
-tag 56083397f810bc8bda43091a6fb2bd4c4df34561 3.5.0
+tag 4e97efff5294d017f5f53282d58390cfbf0de63f 4.0.2
 Author:	Bocky <nick@bocky.nl>
-Date:	Wed Oct 14 08:56:39 2020 +0200
+Date:	Tue Nov 24 02:59:40 2020 +0100
 
-3.5.0
-* Ready for 9.0
-* Fix minimapbuttonbar for 9.0
-* Fix raidmarkerbar for 9.0
-* Fix minimaplocation for 9.0
-* GPS in targetframe en focursframe for 9.0
-* Thanks Cilraaz for the help!wq
+Bug fixed not showing equipment manager
 
-commit da0a3c4b9c095fddb8812298985bba27340ead58
+commit caf08cb7e07b2b137a3bdc5c422a9b598bcd9f9f
 Author: Nick <git@bockmeulen.nl>
-Date:   Wed Oct 14 08:55:48 2020 +0200
+Date:   Tue Nov 24 02:59:16 2020 +0100
 
-    Update readme and toc
-
-commit 84fbd54fd01938b6901801bca8df358ad87c8952
-Author: Nick <git@bockmeulen.nl>
-Date:   Mon Oct 5 21:45:31 2020 +0200
-
-    update toc and changelog
+    bug fix
 

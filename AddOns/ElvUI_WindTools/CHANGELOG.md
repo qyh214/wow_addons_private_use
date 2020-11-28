@@ -1,120 +1,112 @@
-# Version: 2.10
-2020/11/17 Released
+# Version: 2.13
+2020/11/28 Released
 ## ❗ Important
-- [Skins] Rewrite some core functions, please let me know if the skins not working properly.
+- [Move Frames] To avoid errors, Remember Position will no longer work on the encounter journal.
+- [Extra Item Bar] The default setting has been changed to only Shadowlands version for potions, flasks, and food, if you want to add the old items, change the item groups inside the bar setting.
 ## ✳️ New
-- [Skins] Add new skin for Rematch.
-- [World Map] Add new feature that auto-tracking the waypoint after setting.
-- [World Map] Add new feature that right clicking the waypoint to clear it.
-- [Raid Markers] Add new option for disabling tooltip.
+- [Objective Frame] Add new option for moving maw buff frame to right. Disabled by default.
+- [Objective Frame] Add new option for making header shorter. Enabled by default
+- [Skins] Add new skin for Blizzard Covenant Preview.
+- [Skins] Add new skin for Blizzard Covenant Renown.
+- [Skins] Add new skin for Blizzard Covenant Sanctum.
+- [Skins] Add new skin for Blizzard Soulbinds.
+- [Skins] Add new skin for Blizzard Anima Diversion.
+- [Extra Item Bar] Add new item group "TORGHAST" (Torghast Items).
+- [Extra Item Bar] Add new item group "MAGEFOOD" (Food crafted by mage).
 ## 💪 Improvement
-- [LFG List] Fix the bug that the line does not hide properly.
-- [Minimap Buttons] Handle Narcissus icon with the new style, you can disable handling in Narcissus configuration if you want.
-- [Skins] Optimize the performance of WeakAuras Options skins.
-- [Skins] Optimize Help skin.
-- [Skins] Optimize Achievement skin.
-- [Skins] Optimize Barbershop skin.
-- [Skins] Optimize Garrison skin.
-- [Skins] Optimize Friends skin.
-- [Skins] Optimize Communities skin.
-- [Skins] Optimize PVE frame skin.
-- [Skins] Optimize tooltips skin.
-- [Skins] Optimize WeakAura Options skin.
-- [Announcement] Change the default channel setting of solo to NONE.
-- [Announcement] Because the limitation of API, say and yell now will be convert to self when you not in the instance.
-- [Announcement] Do not announce actions from the player who is not in your party anymore.
-- [Announcement] Fix the bug that the module not work in LFG group.
-- [Extra Item Bar] Auto hide on pet battle.
-- [Switch Buttons] Even if not set to hide with objective tracker, the buttons will also hide on pet battle.
+- [Skins] Optimize the skins on Torghast ability choice.
+- [Skins] Optimize the skins on Blizzard Gossip Frame.
+- [Skins] Optimize the skins on Blizzard Quest Frame.
+- [Skins] Optimize the skins on Blizzard Death Recap Frame.
+- [Skins] Optimize the skins on Blizzard FlightMap Frame.
+- [Skins] Optimize the skins on ElvUI keybinding popup.
+- [Talent Manager] Fix the taint may occur when you toggle talent UI in combat
+- [Talent Manager] Now after gains the buff from the Kyrian Steward, the status icon will be updated.
+- [Rectangle Minimap] Optimize the display in Torghast.
+- [Reset] Update [Misc] - [General] resetting.
 
 ------
-# 版本: 2.10
-2020/11/17 发布
+# 版本: 2.13
+2020/11/28 发布
 ## ❗ 重要
-- [美化皮肤] 重写部分美化核心函数, 如果遇到问题请报告.
+- [移动框体] 为避免出错, 记住位置将不再作用于冒险指南.
+- [额外物品条] 现在默认设置为暗影国度版本的药水合剂和食物, 如果你想要旧版本的, 可以自行在每个条的设定中修改分类群组.
 ## ✳️ 新增
-- [美化皮肤] 添加了 Rematch 的美化.
-- [世界地图] 添加了标记后自动进行追踪功能.
-- [世界地图] 添加了右键标记清除功能.
-- [团队标记] 添加了隐藏鼠标提示的功能.
+- [任务列表] 提供一个显示爬塔 Buff 在右边的选项. 默认关闭
+- [任务列表] 提供一个缩写顶部的选项. 默认开启
+- [美化皮肤] 添加了盟约预览界面的美化.
+- [美化皮肤] 添加了盟约圣所界面的美化.
+- [美化皮肤] 添加了盟约名望界面的美化.
+- [美化皮肤] 添加了灵魂羁绊界面的美化.
+- [美化皮肤] 添加了心能传导器界面的美化.
+- [额外物品条] 添加了 "TORGHAST" (托加斯特道具) 物品分类.
+- [额外物品条] 添加了 "MAGEFOOD" (法师制造食物) 物品分类.
 ## 💪 改善
-- [预组队伍] 修复条显示不正确的问题.
-- [小地图图标] 以新风格兼容 Narcissus 图标, 如果你不喜欢可以在 Narcissus 设置中取消加入条.
-- [美化皮肤] 优化了 WeakAuras 设定美化的性能.
-- [美化皮肤] 优化了帮助框体的美化.
-- [美化皮肤] 优化了成就框体的美化.
-- [美化皮肤] 优化了理发店框体的美化.
-- [美化皮肤] 优化了要塞框体的美化.
-- [美化皮肤] 优化了好友界面的美化.
-- [美化皮肤] 优化了社区界面的美化.
-- [美化皮肤] 优化了 PVE 界面的美化.
-- [美化皮肤] 优化了鼠标提示的美化.
-- [美化皮肤] 优化了 WeakAuras 设定的美化.
-- [通告] 单人情况下部分设定默认不再通报.
-- [通告] 由于 API 限制, 说和大喊频道将会在不可用时自动转换为输出到聊天框.
-- [通告] 队伍中时不再通报非队伍成员的行为.
-- [通告] 修复随机队伍中不通报的问题.
-- [额外物品条] 宠物对战时自动隐藏.
-- [切换按钮] 就算不随任务列表自动显示隐藏, 也会在宠物对战时进行隐藏.
+- [美化皮肤] 优化了托加斯特能力选择界面的美化.
+- [美化皮肤] 优化了对话界面的美化.
+- [美化皮肤] 优化了任务界面的美化.
+- [美化皮肤] 优化了死亡回顾界面的美化.
+- [美化皮肤] 优化了飞行地图界面的美化.
+- [美化皮肤] 优化了 ElvUI 按键绑定界面的美化.
+- [天赋管家] 修复了战斗中打开可能造成的污染.
+- [天赋管家] 从格里恩誓约仆从获得天赋重置 Buff 时, 现在可以正确的更新状态图标了.
+- [矩形小地图] 优化了托加斯特内的显示.
+- [重置] 更新 [其他] - [一般设定] 重置.
 
 ------
-# 版本: 2.10
-2020/11/17 發布
+# 版本: 2.13
+2020/11/28 發布
 ## ❗ 重要
-- [美化皮膚] 重寫部分美化核心參數, 如果遇到問題請報告.
+- [移動框架] 為避免出錯, 記住位置將不再作用於地城導覽手冊.
+- [額外物品條] 現在默認設置為暗影之境版本的藥水藥劑和食物, 如果想要包括舊版本的, 可以自行在每個條的設定中修改分類群組.
 ## ✳️ 新增
-- [美化皮膚] 新增了 Rematch 的美化.
-- [世界地圖] 新增了標記後自動進行追蹤功能.
-- [世界地图] 新增了右鍵標記清除功能.
-- [團隊標記] 新增了隱藏浮動提示的功能.
+- [任務列表] 提供一個顯示爬塔 Buff 在右邊的選項. 默認關閉
+- [任務列表] 提供一個縮寫頂部的選項. 默認開啟
+- [美化皮膚] 新增了誓盟預覽介面的美化.
+- [美化皮膚] 新增了誓盟聖所介面的美化.
+- [美化皮膚] 新增了誓盟名望介面的美化.
+- [美化皮膚] 新增了魂絆介面的美化.
+- [美化皮膚] 新增了靈魄傳導器介面的美化.
+- [額外物品條] 新增了 "TORGHAST" (托迦司道具) 物品分組.
+- [額外物品條] 新增了 "MAGEFOOD" (法師製作食物) 物品分組.
 ## 💪 改善
-- [預組隊伍] 修復條顯示不正確的問題.
-- [小地圖圖標] 以新風格兼容 Narcissus 圖標, 如果你不喜歡可以在 Narcissus 設置中取消加入條.
-- [美化皮膚] 優化了 WeakAuras 設定美化的性能.
-- [美化皮膚] 優化了帮助框架美化.
-- [美化皮膚] 優化了成就框架美化.
-- [美化皮膚] 優化了理髮店框架美化.
-- [美化皮膚] 優化了要塞框架美化.
-- [美化皮膚] 優化了好友框架美化.
-- [美化皮膚] 優化了社群框架美化.
-- [美化皮膚] 優化了 PVE 框架美化.
-- [美化皮膚] 優化了浮動提示美化.
-- [美化皮膚] 優化了 WeakAuras 設定美化.
-- [通告] 單人情況下部分設定默認不再通報.
-- [通告] 由於 API 限制, 說和大喊頻道將會在不可用時自動轉換為輸出到聊天框.
-- [通告] 隊伍中時不再通報非隊伍成員的行為.
-- [通告] 修復隨機隊伍中不通報的問題.
-- [額外物品條] 寵物對戰時自動隱藏.
-- [切換按鍵] 就算不設定隨任務追蹤自動顯隱, 也會在寵物對戰時隱藏.
+- [美化皮膚] 優化了托迦司能力選擇介面的美化.
+- [美化皮膚] 優化了對話介面的美化.
+- [美化皮膚] 優化了任務介面的美化.
+- [美化皮膚] 優化了死亡回顧介面的美化.
+- [美化皮膚] 優化了飛行地圖介面的美化.
+- [美化皮膚] 優化了 ElvUI 按鍵綁定介面的美化.
+- [天賦管家] 修復了戰鬥中開啟可能造成的污染.
+- [天賦管家] 從琪瑞安誓盟僕從處獲得天賦重置 Buff 時, 現在可以正確的更新狀態圖示了.
+- [矩形小地圖] 優化了托迦司內的顯示.
+- [重置] 更新 [其他] - [一般设定] 重置.
 
 ------
-# 버전: 2.10
-2020/11/17 Released
+# 버전: 2.13
+2020/11/28 Released
 ## ❗ 중요 사항
-- [스킨] 일부 핵심 기능을 다시 작성하였습니다. 스킨이 제대로 작동하지 않는 경우 알려주세요.
+- [프레임 이동] 오류를 방지하기 위해 모험 안내서 창에서는 위치 기억이 사용되지 않습니다.
+- [아이템 바] 물약, 영약, 음식에 대한 기본 설정이 어둠 땅 버전으로만 변경되었습니다. 오래된 아이템을 추가하려면 바 설정에서 아이템 그룹을 변경하세요.
 ## ✳️ 신규 사항
-- [스킨] Rematch 애드온 스킨 추가.
-- [월드맵] 지도 핀을 배치하면 즉시 추적하여 화면에 표시하는 기능을 추가합니다.
-- [월드맵] 지도 핀을 마우스 오른쪽 클릭으로 삭제하는 기능을 추가합니다.
-- [공격대 징표] 툴팁을 비활성화하는 옵션을 추가합니다.
+- [퀘스트 추적기] 령 능력 버프 창을 오른쪽으로 열어주는 새로운 옵션을 추가합니다. 기본적으로 비활성화되어 있습니다.
+- [퀘스트 추적기] 제목을 약어로 표시하는 새로운 옵션을 추가합니다. 기본적으로 활성화되어 있습니다.
+- [스킨] 블리자드 성약단 공물 보기 스킨을 추가합니다.
+- [스킨] 블리자드 성약단 영예 스킨을 추가합니다.
+- [스킨] 블리자드 성약단 성소 스킨을 추가합니다.
+- [스킨] 블리자드 성약단 영혼결속 스킨을 추가합니다.
+- [스킨] 블리자드 령 전도체 스킨을 추가합니다.
+- [아이템 바] 새로운 아이템 그룹 "TORGHAST" (토르가스트 아이템)를 추가했습니다.
+- [아이템 바] 새로운 아이템 그룹 "MAGEFOOD" (마법사 창조 음식)를 추가했습니다.
 ## 💪 개선 사항
-- [파티 찾기 목록] 클래스 라인이 잘못 표시되는 문제를 수정합니다.
-- [미니맵 버튼 통합 바] 새로운 스타일의 Narcissus 아이콘과 호환되며 마음에 들지 않으면 Narcissus 설정에서 사용을 취소할 수 있습니다.
-- [스킨] 위크오라 옵션 스킨의 성능을 최적화합니다.
-- [Skins] 도움말 스킨 최적화.
-- [Skins] 업적 스킨 최적화.
-- [Skins] 미용실 스킨 최적화.
-- [Skins] 주둔지 스킨 최적화.
-- [스킨] 친구목록 스킨 최적화.
-- [스킨] 커뮤니티 스킨 최적화.
-- [스킨] PVE 프레임 스킨 최적화.
-- [스킨] 툴팁 스킨 최적화.
-- [스킨] 위크오라 옵션 스킨 최적화.
-- [알림] 솔로 플레이 상황에서 일부 설정은 기본적으로 알림을 받지 않도록 변경하였습니다.
-- [알림] API의 한계로 인하여 플레이어가 인스턴스에 있지 않을 때 일반, 외치기는 나에게(채팅창)으로 변환됩니다.
-- [알림] 같은 파티원이나 공격대원이 아닌 다른 플레이어의 행동은 알리지 않습니다.
-- [알림] 파티 찾기 그룹에서 모듈이 동작하지 않는 버그를 수정했습니다.
-- [아이템 바] 애완동물 대전시 자동으로 숨겨집니다.
-- [스위치 버튼] 자동 숨기기 옵션이 꺼져 있어도 애완동물 대전시에는 버튼이 숨겨집니다.
+- [스킨] 토르가스트 령 능력 선택 스킨을 최적화합니다.
+- [스킨] 블리자드 NPC 대화 창 스킨을 최적화합니다.
+- [스킨] 블리자드 퀘스트 프레임 스킨을 최적화합니다.
+- [스킨] 블리자드 죽은 원인 스킨을 최적화합니다.
+- [스킨] 블리자드 비행지도 스킨을 최적화합니다.
+- [스킨] ElvUI 단축키 팝업창 스킨을 최적화합니다.
+- [특성 관리자] 전투 중 특성 UI를 전환할 때 오류가 발생할 수 있는 문제를 수정하였습니다.
+- [특성 관리자] 이제 키리안 청지기에게 특성 변경 버프를 받을 때 상태 아이콘이 올바르게 업데이트됩니다.
+- [미니맵 비율 조정] 토르가스트에서 디스플레이를 최적화했습니다.
+- [리셋] 업데이트 [기타] - [일반] 재설정.
 
 ------

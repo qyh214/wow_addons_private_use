@@ -1,13 +1,12 @@
 -- German localisation file for deDE
-local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
-local L = AceLocale:NewLocale("ElvUI", "deDE")
+local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "deDE")
 if not L then return end
 
 -- Translation by: Kaltzifar
 
 -- Init
-L["ENH_LOGIN_MSG"] = "Sie verwenden |cff1784d1ElvUI Again|r |cffff8000|r Version %s%s|r."
-L["Your version of ElvUI is to old (required v11.52 or higher). Please, download the latest version from tukui.org."] = "Ihre Version von ElvUI ist zu alt (erforderlich v6.51 oder höher). Bitte laden Sie die neueste Version von tukui.org."
+L["ENH_LOGIN_MSG"] = "Sie verwenden |cff1784d1ElvUI Enhanced Again|r |cffff8000(Shadowlands)|r Version %s%s|r."
+L["MSG_EEL_ELV_OUTDATED"] = "Ihre Version von ElvUI ist älter als für die Verwendung mit |cff1784d1ElvUI Enhanced Lite|r |cffff8000(Shadowlands)|r empfohlen. Ihre Version ist |cff1784d1%.2f|r (empfohlen ist |cff1784d1%.2f|r. Bitte aktualisieren Sie Ihre ElvUI."
 
 -- Equipment
 L["Equipment"] = "Ausrüstung"

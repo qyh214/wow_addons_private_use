@@ -220,7 +220,6 @@ L["Blocked"] = "Geblockt"
 --[[Translation missing --]]
 L["Bloodlord Mandokir"] = "Bloodlord Mandokir"
 L["Border"] = "Rahmen"
-L["Border Color"] = "Rahmenfarbe"
 L["Boss"] = "Boss"
 L["Boss Emote"] = "Bossemote"
 L["Boss Whisper"] = "Bossflüstern"
@@ -1079,13 +1078,11 @@ L["Shazzrah"] = "Shazzrah"
 L["Shift-Click to resume addon execution."] = "Shift-Click to resume addon execution."
 L["Show"] = "Zeigen"
 L["Show Absorb"] = "Absorb zeigen"
-L["Show Border"] = "Rahmen anzeigen"
 --[[Translation missing --]]
 L["Show CD of Charge"] = "Show CD of Charge"
 L["Show Code"] = "Code zeigen"
 L["Show GCD"] = "GCD anzeigen"
 L["Show Global Cooldown"] = "Globale Abklingzeit anzeigen"
-L["Show Glow"] = "Leuchten anzeigen"
 L["Show Incoming Heal"] = "Eingehende Heilung zeigen"
 --[[Translation missing --]]
 L["Show On"] = "Show On"
@@ -1372,8 +1369,6 @@ L["Version: "] = "Version:"
 --[[Translation missing --]]
 L["Viscidus"] = "Viscidus"
 L["Visibility"] = "Sichtbarkeit"
---[[Translation missing --]]
-L["Visible"] = "Visible"
 --[[Translation missing --]]
 L["War Mode Active"] = "War Mode Active"
 --[[Translation missing --]]

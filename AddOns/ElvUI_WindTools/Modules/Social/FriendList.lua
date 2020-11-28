@@ -38,7 +38,7 @@ local GameIcons = {
     ["Alliance"] = {Default = BNet_GetClientTexture(BNET_CLIENT_WOW), Modern = MediaPath .. "GameIcons\\Alliance"},
     ["Horde"] = {Default = BNet_GetClientTexture(BNET_CLIENT_WOW), Modern = MediaPath .. "GameIcons\\Horde"},
     ["Neutral"] = {Default = BNet_GetClientTexture(BNET_CLIENT_WOW), Modern = MediaPath .. "GameIcons\\WoW"},
-    [BNET_CLIENT_WOW] = {Default = BNet_GetClientTexture(BNET_CLIENT_WOW), Modern = MediaPath .. "GameIcons\\WoW"},
+    [BNET_CLIENT_WOW] = {Default = BNet_GetClientTexture(BNET_CLIENT_WOW), Modern = MediaPath .. "GameIcons\\WoWSL"},
     [BNET_CLIENT_WOW .. "C"] = {
         Default = BNet_GetClientTexture(BNET_CLIENT_WOW),
         Modern = MediaPath .. "GameIcons\\WoW"
@@ -48,7 +48,7 @@ local GameIcons = {
     [BNET_CLIENT_SC] = {Default = BNet_GetClientTexture(BNET_CLIENT_SC), Modern = MediaPath .. "GameIcons\\SC"},
     [BNET_CLIENT_SC2] = {Default = BNet_GetClientTexture(BNET_CLIENT_SC2), Modern = MediaPath .. "GameIcons\\SC2"},
     [BNET_CLIENT_APP] = {Default = BNet_GetClientTexture(BNET_CLIENT_APP), Modern = MediaPath .. "GameIcons\\App"},
-    ["BSAp"] = {Default = BNet_GetClientTexture(BNET_CLIENT_APP), Modern = MediaPath .. "GameIcons\\MApp"},
+    ["BSAp"] = {Default = BNet_GetClientTexture(BNET_CLIENT_APP), Modern = MediaPath .. "GameIcons\\Mobile"},
     [BNET_CLIENT_HEROES] = {
         Default = BNet_GetClientTexture(BNET_CLIENT_HEROES),
         Modern = MediaPath .. "GameIcons\\HotS"
@@ -60,7 +60,7 @@ local GameIcons = {
     [BNET_CLIENT_COD] = {Default = BNet_GetClientTexture(BNET_CLIENT_COD), Modern = MediaPath .. "GameIcons\\COD"},
     [BNET_CLIENT_COD_BOCW] = {
         Default = BNet_GetClientTexture(BNET_CLIENT_COD_BOCW),
-        Modern = MediaPath .. "GameIcons\\COD"
+        Modern = MediaPath .. "GameIcons\\COD_CW"
     },
     [BNET_CLIENT_COD_MW] = {
         Default = BNet_GetClientTexture(BNET_CLIENT_COD_MW),
@@ -175,38 +175,40 @@ function FL:UpdateFriendButton(button)
     elseif button.buttonType == FRIENDS_BUTTON_TYPE_BNET and BNConnected() then
         -- 战网好友
         local friendAccountInfo = C_BattleNet_GetFriendAccountInfo(button.id)
-        realID = friendAccountInfo.accountName
+        if friendAccountInfo then
+            realID = friendAccountInfo.accountName
 
-        local gameAccountInfo = friendAccountInfo.gameAccountInfo
-        game = gameAccountInfo.clientProgram
+            local gameAccountInfo = friendAccountInfo.gameAccountInfo
+            game = gameAccountInfo.clientProgram
 
-        if gameAccountInfo.isOnline then
-            if friendAccountInfo.isAFK or gameAccountInfo.isGameAFK then
-                status = "AFK"
-            elseif friendAccountInfo.isDND or gameAccountInfo.isGameBusy then
-                status = "DND"
+            if gameAccountInfo.isOnline then
+                if friendAccountInfo.isAFK or gameAccountInfo.isGameAFK then
+                    status = "AFK"
+                elseif friendAccountInfo.isDND or gameAccountInfo.isGameBusy then
+                    status = "DND"
+                else
+                    status = "Online"
+                end
             else
-                status = "Online"
+                status = "Offline"
             end
-        else
-            status = "Offline"
-        end
 
-        -- 如果是魔兽正式服/怀旧服，进一步获取角色信息
-        if game == BNET_CLIENT_WOW then
-            name = gameAccountInfo.characterName or ""
-            level = gameAccountInfo.characterLevel or 0
-            faction = gameAccountInfo.factionName or nil
-            class = gameAccountInfo.className or ""
-            area = gameAccountInfo.areaName or ""
+            -- 如果是魔兽正式服/怀旧服，进一步获取角色信息
+            if game == BNET_CLIENT_WOW then
+                name = gameAccountInfo.characterName or ""
+                level = gameAccountInfo.characterLevel or 0
+                faction = gameAccountInfo.factionName or nil
+                class = gameAccountInfo.className or ""
+                area = gameAccountInfo.areaName or ""
 
-            if gameAccountInfo.wowProjectID == 2 then
-                game = BNET_CLIENT_WOW .. "C" -- 标注怀旧服好友
-                local serverStrings = {strsplit(" - ", gameAccountInfo.richPresence)}
-                server = serverStrings[#serverStrings] or BNET_FRIEND_TOOLTIP_WOW_CLASSIC
-                server = server .. "*"
-            else
-                server = gameAccountInfo.realmDisplayName or ""
+                if gameAccountInfo.wowProjectID == 2 then
+                    game = BNET_CLIENT_WOW .. "C" -- 标注怀旧服好友
+                    local serverStrings = {strsplit(" - ", gameAccountInfo.richPresence)}
+                    server = serverStrings[#serverStrings] or BNET_FRIEND_TOOLTIP_WOW_CLASSIC
+                    server = server .. "*"
+                else
+                    server = gameAccountInfo.realmDisplayName or ""
+                end
             end
         end
     end
@@ -254,7 +256,8 @@ function FL:UpdateFriendButton(button)
         end
 
         -- 游戏图标
-        local iconTex = GameIcons[faction or game][self.db.textures.game]
+        local iconGroup = self.db.textures.factionIcon and faction or game
+        local iconTex = GameIcons[iconGroup][self.db.textures.game]
         button.gameIcon:SetTexture(iconTex)
         button.gameIcon:Show() -- 普通角色好友暴雪隐藏了
 

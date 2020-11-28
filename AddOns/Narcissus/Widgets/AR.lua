@@ -26,25 +26,27 @@ local VirtualLineLeft = Narci_VirtualLineLeft;
 local _, _, _, rightBase = VirtualLineRight:GetPoint();
 local _, _, _, leftBase = VirtualLineLeft:GetPoint();
 
-local function UpdateReferenceLine(offset)
-    local ScaledOffset = offset * 5;    --Strengh
+local function UpdateReferenceLine(offset, multiplier)
+    local ScaledOffset = offset * multiplier;    --Strengh
     VirtualLineRight:ClearAllPoints();
     VirtualLineRight:SetPoint("RIGHT", rightBase + ScaledOffset, 0);
     VirtualLineLeft:ClearAllPoints();
     VirtualLineLeft:SetPoint("LEFT", leftBase + ScaledOffset, 0);
 end
 
+AR.UpdateReferenceLine = UpdateReferenceLine;
+
 local VLUF = CreateFrame("Frame", nil, NarciAR);    --VirtualLineUpdateFrame
 NarciAR.VirtualLineUpdateFrame = VLUF;
 VLUF:Hide();
 
 local function VLUF_OnLoad(self)
-    self.TimeSinceLastUpdate = 0;
+    self.t = 0;
     self.duration = 0.25;
 end
 
 local function VLUF_OnShow(self)
-    self.TimeSinceLastUpdate = 0;
+    self.t = 0;
     if TurningFrame.offset == 0 then
         self:Hide();
         return;
@@ -55,13 +57,13 @@ end
 
 local function VLUF_OnUpdate(self, elapsed)
 	local startOffset = TurningFrame.offset;
-    local offset = outSine(self.TimeSinceLastUpdate, startOffset, 0 - startOffset, self.duration);
-    self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
-    if self.TimeSinceLastUpdate >= self.duration then
+    local offset = outSine(self.t, startOffset, 0 - startOffset, self.duration);
+    self.t = self.t + elapsed;
+    if self.t >= self.duration then
         offset = 0;
         self:Hide();
     end
-    UpdateReferenceLine(offset);
+    UpdateReferenceLine(offset, 5);
     TurningFrame.offset = offset;
 end
 
@@ -93,7 +95,7 @@ local function Turning_OnUpdate(self, elapsed)
     local acceleration = (velocity - self.velocity) / elapsed;
     self.velocity = velocity;
     
-    UpdateReferenceLine(self.offset);
+    UpdateReferenceLine(self.offset, 5);
     if acceleration < self.threshhold and acceleration > -self.threshhold then
         --acceleration < 1 and acceleration ~=0 and acceleration > -1
         if self.offset ~=0 then
@@ -116,6 +118,37 @@ end
 TurningFrame:SetScript("OnUpdate", Turning_OnUpdate);
 TurningFrame:SetScript("OnHide", Turning_OnHide);
 TurningFrame:SetScript("OnShow", Turning_OnShow);
+
+
+--Gamepad
+local GamepadTurning = CreateFrame("Frame", nil, NarciAR);
+NarciAR.GamepadTurning = GamepadTurning;
+GamepadTurning:Hide();
+GamepadTurning.angle = 0;
+GamepadTurning.threshhold = 20;
+GamepadTurning.offset = 0;
+
+local function GamepadTurning_OnUpdate(self, elapsed)
+    local newOffset = self.newOffset;
+    if not newOffset then return; end;
+    self.offset = self.offset + (newOffset - self.offset)*10*elapsed;
+    if (newOffset == 0) and (self.offset > -0.01 and self.offset < 0.01) then
+        self.offset = 0;
+        self:Hide();
+    end
+    UpdateReferenceLine(self.offset, 20);
+    --print(self.offset);
+end
+
+GamepadTurning:SetScript("OnShow", Turning_OnShow);
+GamepadTurning:SetScript("OnUpdate", GamepadTurning_OnUpdate);
+
+function GamepadTurning:Start(joyStickOffsetX)
+    self.newOffset = joyStickOffsetX;
+    self:Show();
+end
+
+--Public
 --[[
 local function CalculateScale(zoom)
     return -0.1486*pow(zoom, 3) + 3.7573*pow(zoom, 2) - 32.864*zoom + 112.36
@@ -164,34 +197,34 @@ end)
 
 local ARFrame = CreateFrame("Frame", "NarciAR_UpdateFrame")
 ARFrame:Hide()
-ARFrame.TimeSinceLastUpdate = 0;
+ARFrame.t = 0;
 ARFrame.TotalTime = 0;
 local ZoomLevel, ScaleLevel;
 local function ARFrame_OnUpdate(self, elapsed)
-    self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed
+    self.t = self.t + elapsed
     ZoomLevel = GetCameraZoom()
     ScaleLevel= CalculateScale(ZoomLevel)/20
     UpdateScale(NarciAR, ScaleLevel)
-	if self.TimeSinceLastUpdate >= 2 then
+	if self.t >= 2 then
 		self:Hide();
 	end
 
 end
 
 local function ARFrame_OnHide(self)
-    self.TimeSinceLastUpdate = 0;
+    self.t = 0;
 end
 
 ARFrame:SetScript("OnUpdate", ARFrame_OnUpdate)
 ARFrame:SetScript("OnHide", ARFrame_OnHide)
 
 hooksecurefunc("CameraZoomIn", function(increment)
-    ARFrame.TimeSinceLastUpdate = 0;
+    ARFrame.t = 0;
     ARFrame:Show();
 end)
 
 hooksecurefunc("CameraZoomOut", function(increment)
-    ARFrame.TimeSinceLastUpdate = 0;
+    ARFrame.t = 0;
     ARFrame:Show();
 end)
 

@@ -3,6 +3,7 @@
 	<Script file='AddonManager.lua'/>
 	<Script file='AdventureMap.lua'/>
 	<Script file='Alerts.lua'/>
+	<Script file='AnimaDiversion.lua'/>
 	<Script file='Artifact.lua'/>
 	<Script file='AuctionHouse.lua'/>
 	<Script file='Azerite.lua'/>
@@ -18,6 +19,9 @@
 	<Script file='ChromieTime.lua'/>
 	<Script file='Collections.lua'/>
 	<Script file='Communities.lua'/>
+	<Script file='CovenantRenown.lua'/>
+	<Script file='CovenantPreview.lua'/>
+	<Script file='CovenantSanctum.lua'/>
 	<Script file='DebugTools.lua'/>
 	<Script file='DressingRoom.lua'/>
 	<Script file='EncounterJournal.lua'/>
@@ -49,6 +53,7 @@
 	<Script file='RaidInfo.lua'/>
 	<Script file='Scenario.lua'/>
 	<Script file='ScrappingMachine.lua'/>
+	<Script file='Soulbinds.lua'/>
 	<Script file='SpellBook.lua'/>
 	<Script file='StaticPopup.lua'/>
 	<Script file='SubscriptionInterstitial.lua'/>

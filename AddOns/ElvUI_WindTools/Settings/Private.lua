@@ -4,16 +4,39 @@ V.combat = {
 	talentManager = {
 		enable = true,
 		itemButtons = true,
+		pvpTalent = false,
+		statusIcon = true,
 		sets = {}
 	}
 }
 
 V.maps = {
+	instanceDifficulty = {
+		enable = false,
+		hideBlizzard = true,
+		font = {
+			name = E.db.general.font,
+			size = E.db.general.fontSize,
+			style = "OUTLINE"
+		}
+	},
+	superTracker = {
+		enable = true,
+		noLimit = false,
+		autoTrackWaypoint = true,
+		rightClickToClear = true,
+		distanceText = {
+			enable = true,
+			name = E.db.general.font,
+			size = E.db.general.fontSize + 2,
+			style = "OUTLINE",
+			color = {r = 1, g = 1, b = 1},
+			onlyNumber = false
+		}
+	},
 	worldMap = {
 		enable = true,
 		reveal = true,
-		autoTrackWaypoint = true,
-		rightClickToClear = true,
 		scale = {
 			enable = true,
 			size = 1.24
@@ -35,12 +58,14 @@ V.maps = {
 }
 
 V.misc = {
+	autoScreenshot = false,
 	saveArtifact = true,
 	pauseToSlash = true,
 	noKanjiMath = false,
 	skipCutScene = false,
 	moveBlizzardFrames = true,
 	moveElvUIBags = true,
+	moveSpeed = false,
 	rememberPositions = false,
 	framePositions = {},
 	tags = true,
@@ -79,10 +104,12 @@ V.quest = {
 		colorfulProgress = true,
 		percentage = false,
 		colorfulPercentage = false,
+		showMawBuffRight = false,
 		header = {
 			name = E.db.general.font,
 			size = E.db.general.fontSize + 2,
-			style = "OUTLINE"
+			style = "OUTLINE",
+			shortHeader = true,
 		},
 		title = {
 			name = E.db.general.font,
@@ -141,6 +168,7 @@ V.skins = {
 		hekili = true,
 		immersion = true,
 		meetingStone = true,
+		myslot = true,
 		premadeGroupsFilter = true,
 		rehack = true,
 		rematch = true,
@@ -154,6 +182,7 @@ V.skins = {
 		addonManager = true,
 		adventureMap = true,
 		alerts = true,
+		animaDiversion = true,
 		artifact = true,
 		auctionHouse = true,
 		azerite = true,
@@ -169,6 +198,9 @@ V.skins = {
 		chromieTime = true,
 		collections = true,
 		communities = true,
+		covenantRenown = true,
+		covenantPreview = true,
+		covenantSanctum = true,
 		debugTools = true,
 		dressingRoom = true,
 		encounterJournal = true,
@@ -198,6 +230,7 @@ V.skins = {
 		raidInfo = true,
 		scenario = true,
 		scrappingMachine = true,
+		soulbinds = true,
 		spellBook = true,
 		staticPopup = true,
 		subscriptionInterstitial = true,

@@ -152,13 +152,11 @@ L["S_TUTORIAL_WORLDBUTTONS"] = "Klicke hier, um zwischen den drei Typen der Übe
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Diese Schaltfläche öffnet die Karte der Verheerten Inseln."
 L["S_UNKNOWNQUEST"] = "Unbekannte Quest"
 L["S_WHATSNEW"] = "Was gibt's Neues?"
-L["S_WORLDBUTTONS_SHOW_NONE"] = "Übersicht ausblenden"
 L["S_WORLDBUTTONS_SHOW_TYPE"] = "Übersicht anzeigen"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "Nach Zone anordnen"
 L["S_WORLDBUTTONS_TOGGLE_QUESTS"] = "Quests ein-/ausblenden"
 L["S_WORLDMAP_QUESTLOCATIONS"] = "Questorte anzeigen"
 L["S_WORLDMAP_QUESTSUMMARY"] = "Questübersicht anzeigen"
-L["S_WORLDMAP_TOOGLEQUESTS"] = "Quests ein-/ausblenden"
 L["S_WORLDMAP_TOOLTIP_TRACKALL"] = "Alle Quests auf dieser Liste verfolgen"
 L["S_WORLDQUESTS"] = "Weltquests"
 

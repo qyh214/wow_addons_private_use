@@ -29,6 +29,7 @@ local ToggleHelpFrame = ToggleHelpFrame
 local ToggleLFDParentFrame = ToggleLFDParentFrame
 local hooksecurefunc = hooksecurefunc
 local Minimap = _G.Minimap
+local WorldMapFrame = _G.WorldMapFrame
 
 -- GLOBALS: GetMinimapShape
 
@@ -160,6 +161,13 @@ function M:SetupHybridMinimap()
 	MapCanvas:SetScript('OnMouseWheel', M.Minimap_OnMouseWheel)
 	MapCanvas:SetScript('OnMouseDown', M.MapCanvas_OnMouseDown)
 	MapCanvas:SetScript('OnMouseUp', E.noop)
+
+	_G.HybridMinimap.CircleMask:StripTextures()
+end
+
+function M:HideNonInstancePanels()
+	if InCombatLockdown() or not WorldMapFrame:IsShown() then return end
+	HideUIPanel(WorldMapFrame)
 end
 
 function M:ADDON_LOADED(_, addon)
@@ -169,6 +177,9 @@ function M:ADDON_LOADED(_, addon)
 		_G.FeedbackUIButton:Kill()
 	elseif addon == 'Blizzard_HybridMinimap' then
 		M:SetupHybridMinimap()
+	elseif addon == 'Blizzard_EncounterJournal' then
+		-- Since the default non-quest map is full screen, it overrides the showing of the encounter journal
+		hooksecurefunc('EJ_HideNonInstancePanels', M.HideNonInstancePanels)
 	end
 end
 
@@ -359,6 +370,11 @@ function M:Initialize()
 	Minimap:Point('TOPRIGHT', mmholder, 'TOPRIGHT', -E.Border, -E.Border)
 	Minimap:HookScript('OnEnter', function(mm) if E.db.general.minimap.locationText == 'MOUSEOVER' then mm.location:Show() end end)
 	Minimap:HookScript('OnLeave', function(mm) if E.db.general.minimap.locationText == 'MOUSEOVER' then mm.location:Hide() end end)
+
+	if Minimap.backdrop then -- level to hybrid maps fixed values
+		Minimap.backdrop:SetFrameLevel(99)
+		Minimap.backdrop:SetFrameStrata('BACKGROUND')
+	end
 
 	Minimap.location = Minimap:CreateFontString(nil, 'OVERLAY')
 	Minimap.location:FontTemplate(nil, nil, 'OUTLINE')

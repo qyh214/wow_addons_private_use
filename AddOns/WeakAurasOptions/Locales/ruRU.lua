@@ -165,6 +165,10 @@ Off Screen]=]
 	L["Can be a UID (e.g., party1)."] = [=[Введите идентификатор единицы (UID, Unit ID).
 Например: party4, raid7, arena3, boss2, nameplate6, target, focus, pet и др.]=]
 	L["Cancel"] = "Отмена"
+	--[[Translation missing --]]
+	L["Cast by Player Character"] = "Cast by Player Character"
+	--[[Translation missing --]]
+	L["Cast by Players"] = "Cast by Players"
 	L["Center"] = "Центр"
 	L["Chat Message"] = "Сообщение в чат"
 	L["Chat with WeakAuras experts on our Discord server."] = "Общайтесь со знатоками WeakAuras на нашем сервере Discord."
@@ -464,9 +468,11 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Invalid type for '%s'. Expected 'bool', 'number', 'select', 'string', 'timer' or 'elapsedTimer'."] = "Invalid type for '%s'. Expected 'bool', 'number', 'select', 'string', 'timer' or 'elapsedTimer'."
 	--[[Translation missing --]]
-	L["Invalid type for property '%s' in 's'. Expected '%s'"] = "Invalid type for property '%s' in 's'. Expected '%s'"
+	L["Invalid type for property '%s' in '%s'. Expected '%s'"] = "Invalid type for property '%s' in '%s'. Expected '%s'"
 	L["Inverse"] = "Инверсия"
 	L["Inverse Slant"] = "В обратную сторону"
+	--[[Translation missing --]]
+	L["Is Boss Debuff"] = "Is Boss Debuff"
 	L["Is Stealable"] = "Может быть украден"
 	L["Justify"] = "Выравнивание"
 	L["Keep Aspect Ratio"] = "Сохранять пропорции"
@@ -544,10 +550,14 @@ Supports multiple entries, separated by commas
 	L["Number of Entries"] = "Число записей"
 	L["Offer a guided way to create auras for your character"] = "Предлагаем пошаговый способ создания индикаций для вашего персонажа"
 	L["Offset by |cFFFF0000%s|r/|cFFFF0000%s|r"] = "; Смещение (%.4g, %.4g)"
+	--[[Translation missing --]]
+	L["Offset by 1px"] = "Offset by 1px"
 	L["Okay"] = "Ок"
 	L["On Hide"] = "При скрытии"
 	L["On Init"] = "При инициализации"
 	L["On Show"] = "При появлении"
+	--[[Translation missing --]]
+	L["Only Match auras cast by a player (not an npc)"] = "Only Match auras cast by a player (not an npc)"
 	L["Only match auras cast by people other than the player"] = "Эффекты, применённые другими людьми, но не игроком"
 	L["Only match auras cast by people other than the player or his pet"] = "Эффекты, применённые другими людьми, но не игроком или его питомцем"
 	L["Only match auras cast by the player"] = "Эффекты, применённые только игроком"

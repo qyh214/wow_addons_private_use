@@ -6,7 +6,7 @@ NarciSpellVisualBrowser = {};
 
 local NEW = "|cfff2f2f2";
 
-NarciSpellVisualBrowser.Catalogue = {
+local Pack0 = {
     --[[
         [Category Index] = { ["name"] = Category Name,
             [Subcategory Index] = { ["name"] = Subcategory Name,
@@ -605,7 +605,7 @@ NarciSpellVisualBrowser.Catalogue = {
 
     [5] = {["name"] = "Head",
         [1] = { ["name"] = "Pepes",
-            {52838, "Original", 1044996},
+            {49669, "Original", 1044996},
             {57227, "Pirate", 2055034},
             {57228, "Knight", 133833},
             {57229, "Ninja", 133143},
@@ -860,40 +860,329 @@ NarciSpellVisualBrowser.Catalogue = {
             
         },
     },
-}
+};
+
+
+local Pack1 = {
+    [1] = {["name"] = "Kyrian",
+        [1] = { ["name"] = "Minor Spells",
+            {124082, "Aether", 3528288},
+            {129460, "Aether L", 3528288},
+        },
+
+        [2] = { ["name"] = "Grand Spells",
+            {128241, "Channel", 3528283},
+            {135283, "Mono Blue", 3565449},
+            {130778, "Strike Trail", 3565450},
+            {141004, "Arcane", 135741},
+            {128986, "DH Impact", 3565443},
+            {137225, "Priest Nova", 3528287},
+            {132638, "Energy Swirl", 609815},
+        },
+
+        [3] = { ["name"] = "Body",
+            {137522, "Absorb", 3528289},
+            {129325, "Anima Flow", 3565447},
+            {127342, "Cleanse", 3854014},
+            {120480, "Blue Wing", 3536186},
+            {138192, "Golden Wing", 3536185},
+            {135506, "Warlock Impact", 3565452},
+            {140129, "Warlock Buff", 3566850},
+            {121462, "Pulse", 135781},
+        },
+
+        [4] = { ["name"] = "Items",
+            {135358, "Valkyr Torch", 3089628},
+            {129149, "Bastion Hammer", 3054888},
+            {132715, "Treasure Chest", 3753262},
+            {136777, "Crates", 1529273},
+            {137435, "Bottle Pink", 967526},
+            {138517, "Bottle Purple", 3566859},
+            {139717, "Steward Flute", 3586266, 580},
+        },
+        
+    },
+
+    [2] = {["name"] = "Venthyr",
+        [1] = { ["name"] = "Minor Spells",
+            {124026, "Anima Channel", 3528311},
+            {129342, "Anima Channel R", 3528311},
+            {132051, "Cloudy", 3528313},
+            {129337, "Spheres", 3528312},
+            {123325, "Red Hands", 3449581},
+        },
+        
+        [2] = { ["name"] = "Grand Spells",
+            {140182, "Strike Trail", 3565724},
+            {128080, "Scroll Channel", 1500878},
+        },
+
+        [3] = { ["name"] = "Chest",
+            {137129, "Entanglement", 3528310},
+            {130373, "Shared Suffering", 3565726},
+            {127818, "Strike", 3565727},
+            {123853, "Anima Orb", 3528312},
+        },
+
+        [4] = { ["name"] = "Ground",
+            {135583, "Ground State", 3528309},
+            {126850, "Red Mist", 3565716},
+        },
+        
+        [5] = { ["name"] = "Items",
+            {138527, "Parasol Left", 644385},
+            {137005, "Parasol Grey", 644385},
+            {137008, "Parasol Violet", 644385},
+            {139172, "Backpack", 133654},
+            {123929, "Torch", 1379180},
+            {129148, "Lantern", 3536206},
+            {138726, "Tea", 454051},  --138521
+            {131214, "Chalice 1R", 150094},
+            {125909, "Chalice 2R", 132809},
+            {136984, "Chalice 2L", 132809},
+            {134600, "Necklace", 3536084},
+            {129912, "Batty Stake", 3536126},
+            {132141, "Filled Tank", 3860424},
+            {138200, "Empty Tank", 3860424},
+            {128023, "Cage", 132598},
+            {136881, "Vampire Sword", 3734531},
+            {136909, "Explosive Trap", 133710},
+        },
+    },
+    
+    [3] = {["name"] = "Night Fae",
+        [1] = { ["name"] = "Minor Spells",
+            {129019, "Anima Precast", 3528280},
+            {129842, "Drust Precast", 2032589},
+        },
+
+        [2] = { ["name"] = "Grand Spells",
+            {132758, "Warrior", 3636851, 18},
+            {129627, "Anima Channel", 3528280},
+            {137485, "Erruption", 3528279},
+            {119793, "Beam", 3636845},
+        },
+
+        [3] = { ["name"] = "Chest",
+            {130476, "Faerie Wing", 3636837},
+            {129615, "Orbiting Butterfly", 3636837},
+            {129619, "Ardenweald Vine", 3528274},
+            {140824, "Shimmer", 3528275},
+            {129559, "Impact", 3528279},
+            {131525, "Wild Mark", 3636840},
+            {137106, "Wild Mark Above", 3636840},
+            {130475, "Encase", 3636841},
+            {130529, "Priest Vortex", 3636839},
+        },
+
+        [4] = { ["name"] = "Ground",
+            {137509, "Vertical Impact", 3528278},
+            {131531, "Hunter Impact", 3854013},
+            {137769, "Monk Rune", 3636842},
+            {135072, "Rogue Vanish", 135778},
+            {129626, "Ground Light", 3528277},
+            {137356, "Empowered Field", 3387974},
+            {134728, "Eonar Flower", 620828},
+        },
+        
+        [5] = { ["name"] = "Items",
+            {131676, "Harp", 3488376},
+            {130826, "Anima Seed", 3575389},
+            {139085, "Seed Back M", 3597165},
+            {131903, "Seed Back L", 3597165},
+            {132804, "Basket", 237271},
+            {138520, "Fae Bowl", 132804},
+            {134447, "Hunting Horn", 134213},
+            {138139, "Fae Scroll", 979574},
+            {138127, "Fae Book", 1500890},
+
+        },
+        
+    },
+
+    [4] = {["name"] = "Necrolords",
+        [1] = { ["name"] = "Minor Spells",
+            {129132, "Anima Precast", 3578231},
+            {128945, "Necro Channel", 2576097},
+            {128991, "Necro Channel L", 2576097},
+            {131410, "Slime Precast", 1500940},
+            {90805, "Lightning", 2576091},
+            {127325, "Globes", 2576084},
+            {131209, "Leech", 607512},
+        },
+
+        [2] = { ["name"] = "Grand Spells",  
+            {128134, "Druid Precast", 3578197},
+            {134033, "Rogue Precast", 3578230},
+            {127132, "Warrior Precast", 3578234},
+            {128679, "Mage Precast", 3578226},
+            {129243, "Paladin Swing", 3578227},
+            {137197, "Ground Channel", 3528293},
+        },
+
+        [3] = { ["name"] = "Body",
+            {128113, "Anima Flow", 3528290},
+            {136956, "Summon", 3578232},
+            {135370, "Toxic Bubbles", 132848},
+            {136878, "Slime Nova", 3459153},
+            {136974, "Necro Nova", 3591588},
+            {137029, "Teal Cloud", 2451605},
+            {139297, "Mushroom Clump", 651553},
+            {129059, "Warrior Buff", 3578234},
+            {126718, "Powerup", 3578228},
+            {134204, "Monk Nova", 895887},
+            {134097, "Flash", 132871},
+            {136683, "Anima Orb", 3528296},
+        },
+
+        [4] = { ["name"] = "Items",
+            {131556, "Monster Costume", 2492254},
+            {129350, "Blacksmith", 133049},
+            {129140, "Rune Blade", 3743119},
+            {136872, "Floating Book", 3615515},
+            {132226, "Book of Shadow", 354435},
+            {138522, "Vial R", 3536192},
+            {132299, "Vial L", 3536192},
+            {138523, "Lung Mushroom", 350558},
+            {137572, "Crystal", 3536204},
+        },
+        
+    },
+
+    [5] = {["name"] = "Mawsworn",
+        [1] = { ["name"] = "Minor Spells",
+            {129564, "Precast", 3528304},
+            {129565, "Precast L", 3528304},
+            {136893, "Maw Cast", 3528301},
+            {133875, "Soul Precast", 3566856},
+        },
+
+        [2] = { ["name"] = "Grand Spells",
+            {137686, "Drain Anima", 3528305},
+            {132838, "Drain Soul", 3528300},
+        },
+
+        [3] = { ["name"] = "Body",
+            {136891, "Anima Buff", 3528299},
+            {136882, "Maw Debuff", 3450573},
+            {136945, "Draw Power", 656551},
+            {136963, "Empowered Field", 3613631},
+            {136892, "Spirit Realm", 656550},
+        },
+
+    },
+
+    [6] = {["name"] = "Generic",
+        { ["name"] = "Minor Spells",
+            {127709, "Broker Precast", 3535741},
+            {129435, "Broker Cast", 3566856},
+            {131810, "Devourer Precast", 3566850},
+            {131869, "Fel Fire", 840404},
+            {133340, "Shivarra Fire", 463567},
+
+        },
+        
+        { ["name"] = "Grand Spells",
+            {132911, "Arcane Charge", 135739},
+            {134337, "Healing Leaves", 136074},
+            {134958, "Broker Portal", 526521},
+        },
+
+        { ["name"] = "Color Tone",
+            {132350, "Soul Blue", 3566850},
+            {128594, "Soul Pastel", 134551},
+            {138183, "Transparent Blue", 3752258},
+            {135685, "Transparent Dim", 1508490},
+            {137134, "Contour Red", 3565721},
+            {126978, "Contour Blue", 3636838},
+            {125445, "Tint Red", 132532},
+            {128020, "Tint Green", 132529},
+            {128579, "Mono Red", 876915},
+            {133810, "Mono Grey", 3180367},
+            {130890, "Blue Lines", 841379},
+        },
+
+        { ["name"] = "Head",
+            {133970, "Chicken", 2027866},
+            {52838, "Squirrel", 646782},
+            {138107, "Slime Cat Shoulder", 3732497},
+            {137538, "Birb Shoulder", 133707},
+            {134799, "Beer Hat", 591715},
+            {137783, "Masquerade", 1354190},
+            {137713, "Candle", 3536191},
+            {137782, "Cone Hat", 669448},
+            {138754, "Egg Shell", 294473},
+        },
+
+        { ["name"] = "Body",
+            {128779, "Revolving Flares", 136096},
+            {131017, "Dark Lunar", 1392545},
+            {130783, "Tornado", 236154},
+            {132457, "Soul Impact", 895888},
+            {132557, "Water Barrier", 132852},
+            {135162, "Bite", 132127},
+            {136935, "On Fire", 135826},
+            {136975, "Pressure Surge", 1320371},
+            {137076, "Green Dots", 463281},
+            {134469, "Devourer Rift", 3551336},
+            {138914, "Moon Beam", 1360764},
+            {133038, "Light", 574795},
+            {136982 ,"Nature\'s Vigil", 236764},
+            {137047, "Fear", 1022945},
+            {136086, "Frost Breath", 135781},
+        },
+
+        { ["name"] = "Items",
+            {129631, "Broom", 655994},
+            {132357, "Flute", 133942},
+            {132358, "Lute", 237540},
+            {138519, "Cakes", 237362},
+            {135232, "Magnifying Glass", 463555},
+            {135748, "Rope", 1119938},
+            {136333, "Mushroom", 451162},
+            
+        },
+
+    },
+};
+
+NarciSpellVisualBrowser.Catalogue = Pack0;
 
 local function BuildIconSearchingTable()
     local output = {};
     local subtable, deeptable, elements = {}, {}, {};
-    local Catalogue = NarciSpellVisualBrowser.Catalogue;
+    local packs = {Pack0, Pack1};
     local sum = 0;
-    for i = 1, #Catalogue do
-        subtable = Catalogue[i];
-        for j = 1, #subtable do
-            deeptable = subtable[j];
-            if deeptable then
-                for k = 1, #deeptable do
-                    elements = deeptable[k];
-                    output[ elements[1] ] = { elements[2], elements[3], elements[4] };      --[ID ] = {name, icon fileID, animation ID}
-                    sum = sum + 1;
+    for a = 1, #packs do
+        local data = packs[a];
+        for i = 1, #data do
+            subtable = data[i];
+            for j = 1, #subtable do
+                deeptable = subtable[j];
+                if deeptable then
+                    for k = 1, #deeptable do
+                        elements = deeptable[k];
+                        output[ elements[1] ] = { elements[2], elements[3], elements[4] };      --[ID] = {name, icon fileID, animation ID}
+                        sum = sum + 1;
 
-                    --Icon Check
-                    --[[
-                    if not elements[3] or elements[3] == 1 then
-                        print("Icon Missing: #"..elements[1]);
+                        --Icon Check
+                        --[[
+                        if not elements[3] or elements[3] == 1 then
+                            print("Icon Missing: #"..elements[1]);
+                        end
+                        --]]
                     end
-                    --]]
                 end
             end
         end
     end
-    --print(NARCI_GRADIENT.." Spells in Collection: "..sum)
+    --print("Spells in Collection: "..sum)
     return output;
 end
 
 local IconSearchTable = BuildIconSearchingTable();
 
-function Narci_GetSpellVisualKitInfo(id)
+local function GetSpellVisualKitInfo(id)
     local info = IconSearchTable[id];
     --print(id)
     if info then
@@ -902,5 +1191,24 @@ function Narci_GetSpellVisualKitInfo(id)
     else
         --print("No match")
         return "", 134400;                  --Question Icon
+    end
+end
+
+local function IsSpellVisualLogged(id)
+    if id and IconSearchTable[id] then
+        return true
+    else
+        return false
+    end
+end
+
+NarciSpellVisualBrowser.GetSpellVisualKitInfo = GetSpellVisualKitInfo;
+NarciSpellVisualBrowser.IsSpellVisualLogged = IsSpellVisualLogged;
+
+function NarciSpellVisualBrowser:GetPack(index)
+    if index == 1 then
+        return Pack1, "Shadowlands"
+    else
+        return Pack0, "Standard"
     end
 end

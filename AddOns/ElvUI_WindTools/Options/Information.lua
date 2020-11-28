@@ -29,43 +29,103 @@ options.help = {
     type = "group",
     name = L["Help"],
     args = {
-        description = {
+        contact = {
             order = 1,
-            type = "description",
-            fontSize = "medium",
-            name = format(
-                "%s\n\n%s\n\n%s\n\n%s\n\n%s\n%s\n\n",
-                format(L["Thank you for using %s!"], L["WindTools"]),
-                format(
-                    L[
-                        "%s is a plugin for ElvUI that consists of my original plugins and several plugins developed by other players."
-                    ],
-                    L["WindTools"]
-                ),
-                format(
-                    L[
-                        "In Shadowlands (9.0) pre-patch, %s has been rewritten, such that possibly there are bugs somewhere."
-                    ],
-                    L["WindTools"]
-                ),
-                format(
-                    L["You can send your suggestions or bugs via %s, %s, %s, and the thread in %s."],
-                    L["QQ Group"],
-                    L["Discord"],
-                    L["Github"],
-                    L["NGA.cn"]
-                ),
-                format(L["The localization of %s is community-driven."], L["WindTools"]),
-                format(
-                    L[
-                        "If you have an interest in translating %s or improving the quality of translation, I am glad to meet you in Discord."
-                    ],
-                    L["WindTools"]
-                )
-            )
+            type = "group",
+            inline = true,
+            name = L["Message From the Author"],
+            args = {
+                description = {
+                    order = 1,
+                    type = "description",
+                    fontSize = "medium",
+                    name = format(
+                        "%s\n\n%s\n\n%s\n\n%s\n\n%s\n%s",
+                        format(L["Thank you for using %s!"], L["WindTools"]),
+                        format(
+                            L[
+                                "%s is a plugin for ElvUI that consists of my original plugins and several plugins developed by other players."
+                            ],
+                            L["WindTools"]
+                        ),
+                        format(
+                            L[
+                                "In Shadowlands (9.0) pre-patch, %s has been rewritten, such that possibly there are bugs somewhere."
+                            ],
+                            L["WindTools"]
+                        ),
+                        format(
+                            L["You can send your suggestions or bugs via %s, %s, %s, and the thread in %s."],
+                            L["QQ Group"],
+                            L["Discord"],
+                            L["Github"],
+                            L["NGA.cn"]
+                        ),
+                        format(L["The localization of %s is community-driven."], L["WindTools"]),
+                        format(
+                            L[
+                                "If you have an interest in translating %s or improving the quality of translation, I am glad to meet you in Discord."
+                            ],
+                            L["WindTools"]
+                        )
+                    )
+                },
+                betterAlign = {
+                    order = 2,
+                    type = "description",
+                    fontSize = "medium",
+                    name = " ",
+                    width = "full"
+                },
+                nga = {
+                    order = 3,
+                    type = "execute",
+                    name = L["NGA.cn"],
+                    image = W.Media.Icons.nga,
+                    func = function()
+                        E:StaticPopup_Show("WINDTOOLS_EDITBOX", nil, nil, "https://bbs.nga.cn/read.php?tid=12142815")
+                    end,
+                    width = 0.7
+                },
+                discord = {
+                    order = 4,
+                    type = "execute",
+                    name = L["Discord"],
+                    image = W.Media.Icons.discord,
+                    func = function()
+                        E:StaticPopup_Show("WINDTOOLS_EDITBOX", nil, nil, discordURL)
+                    end,
+                    width = 0.7
+                },
+                qq = {
+                    order = 5,
+                    type = "execute",
+                    name = L["QQ Group"],
+                    image = W.Media.Icons.qq,
+                    func = function()
+                        E:StaticPopup_Show("WINDTOOLS_EDITBOX", nil, nil, "336069019")
+                    end,
+                    width = 0.7
+                },
+                github = {
+                    order = 6,
+                    type = "execute",
+                    name = L["Github"],
+                    image = W.Media.Icons.github,
+                    func = function()
+                        E:StaticPopup_Show(
+                            "WINDTOOLS_EDITBOX",
+                            nil,
+                            nil,
+                            "https://github.com/fang2hou/ElvUI_WindTools/issues"
+                        )
+                    end,
+                    width = 0.7
+                }
+            }
         },
         contributors = {
-            order = 2,
+            order = 3,
             name = L["Contributors (Github.com)"],
             type = "group",
             inline = true,
@@ -77,7 +137,7 @@ options.help = {
                         "%s: %s | %s",
                         "fang2hou",
                         E.InfoColor .. "houshuu" .. "|r",
-                        F.CreateClassColorString("Tabimonk @ " .. L["Shadowmoon"] .. "(TW)", "MONK")
+                        F.CreateClassColorString("Tabimonk @ " .. L["Shadowmoon"] .. " (TW)", "MONK")
                     )
                 },
                 ["2"] = {
@@ -88,7 +148,11 @@ options.help = {
                 ["3"] = {
                     order = 3,
                     type = "description",
-                    name = "mcc1"
+                    name = format(
+                        "%s: %s",
+                        "mcc1",
+                        F.CreateClassColorString("青楓殘月 @ " .. L["Lights Hope"] .. " (TW)", "MAGE")
+                    )
                 },
                 ["4"] = {
                     order = 4,
@@ -117,18 +181,18 @@ options.help = {
                         "%s: %s | %s",
                         "asdf12303116",
                         E.InfoColor .. "Chen" .. "|r",
-                        F.CreateClassColorString("一发径直入魂 @ " .. L["Burning Blade"] .. "(CN)", "HUNTER")
+                        F.CreateClassColorString("一发径直入魂 @ " .. L["Burning Blade"] .. " (CN)", "HUNTER")
                     )
                 },
                 ["9"] = {
                     order = 9,
                     type = "description",
-                    name = format("%s: %s", "ryanfys", "阿尔托利亜 @ " .. L["Demon Fall Canyon"] .. "(CN)")
+                    name = format("%s: %s", "ryanfys", "阿尔托利亜 @ " .. L["Demon Fall Canyon"] .. " (CN)")
                 }
             }
         },
         version = {
-            order = 3,
+            order = 4,
             name = L["Version"],
             type = "group",
             inline = true,
@@ -147,59 +211,6 @@ options.help = {
                     order = 3,
                     type = "description",
                     name = L["WoW Build"] .. ": " .. AddColor(format("%s (%s)", E.wowpatch, E.wowbuild))
-                }
-            }
-        },
-        contact = {
-            order = 4,
-            type = "group",
-            inline = true,
-            name = " ",
-            args = {
-                nga = {
-                    order = 1,
-                    type = "execute",
-                    name = L["NGA.cn"],
-                    image = W.Media.Icons.nga,
-                    func = function()
-                        E:StaticPopup_Show("WINDTOOLS_EDITBOX", nil, nil, "https://bbs.nga.cn/read.php?tid=12142815")
-                    end,
-                    width = 0.7
-                },
-                discord = {
-                    order = 2,
-                    type = "execute",
-                    name = L["Discord"],
-                    image = W.Media.Icons.discord,
-                    func = function()
-                        E:StaticPopup_Show("WINDTOOLS_EDITBOX", nil, nil, discordURL)
-                    end,
-                    width = 0.7
-                },
-                qq = {
-                    order = 3,
-                    type = "execute",
-                    name = L["QQ Group"],
-                    image = W.Media.Icons.qq,
-                    func = function()
-                        E:StaticPopup_Show("WINDTOOLS_EDITBOX", nil, nil, "336069019")
-                    end,
-                    width = 0.7
-                },
-                github = {
-                    order = 4,
-                    type = "execute",
-                    name = L["Github"],
-                    image = W.Media.Icons.github,
-                    func = function()
-                        E:StaticPopup_Show(
-                            "WINDTOOLS_EDITBOX",
-                            nil,
-                            nil,
-                            "https://github.com/fang2hou/ElvUI_WindTools/issues"
-                        )
-                    end,
-                    width = 0.7
                 }
             }
         },
@@ -390,7 +401,8 @@ do -- 插件代码
         },
         [L["Misc"]] = {
             "Warbaby (爱不易)",
-            "zaCade (FixTransmogOutfits)"
+            "zaCade (FixTransmogOutfits)",
+            "oyg123 @ NGA.cn"
         },
         [L["Paragon Reputation"]] = {
             "Fail (Paragon Reputation)"
@@ -427,6 +439,12 @@ do -- 插件代码
         },
         [L["Extra Items Bar"]] = {
             "cadcamzy (EUI)"
+        },
+        [L["Inspect"]] = {
+            "loudsoul (TinyInspect)"
+        },
+        [L["Instance Difficulty"]] = {
+            "Merathilis (ElvUI MerathilisUI)"
         }
     }
 
@@ -504,6 +522,9 @@ do -- 媒体文件
         },
         ["29ga @ www.iconfont.cn"] = {
             "Media/Icons/Chat.tga"
+        },
+        ["Sukiki情绪化 @ www.iconfont.cn"] = {
+            "Media/Icons/Rest.tga"
         },
         ["王乐城愚人云端 @ www.iconfont.cn"] = {
             "Media/Texture/WindToolsSmall.tga"
@@ -1048,38 +1069,23 @@ options.reset = {
             inline = true,
             name = AddColor(L["Maps"]),
             args = {
-                minimapButtons = {
+                superTracker = {
                     order = 1,
                     type = "execute",
-                    name = L["Minimap Buttons"],
+                    name = L["Super Tracker"],
                     func = function()
                         E:StaticPopup_Show(
                             "WINDTOOLS_RESET_MODULE",
-                            L["Minimap Buttons"],
+                            L["Super Tracker"],
                             nil,
                             function()
-                                E.private.WT.maps.minimapButtons = V.maps.minimapButtons
-                            end
-                        )
-                    end
-                },
-                rectangleMinimap = {
-                    order = 2,
-                    type = "execute",
-                    name = L["Rectangle Minimap"],
-                    func = function()
-                        E:StaticPopup_Show(
-                            "WINDTOOLS_RESET_MODULE",
-                            L["Rectangle Minimap"],
-                            nil,
-                            function()
-                                E.db.WT.maps.rectangleMinimap = P.maps.rectangleMinimap
+                                E.private.WT.maps.superTracker = V.maps.superTracker
                             end
                         )
                     end
                 },
                 whoClicked = {
-                    order = 3,
+                    order = 2,
                     type = "execute",
                     name = L["Who Clicked Minimap"],
                     func = function()
@@ -1093,8 +1099,38 @@ options.reset = {
                         )
                     end
                 },
-                worldMap = {
+                rectangleMinimap = {
+                    order = 3,
+                    type = "execute",
+                    name = L["Rectangle Minimap"],
+                    func = function()
+                        E:StaticPopup_Show(
+                            "WINDTOOLS_RESET_MODULE",
+                            L["Rectangle Minimap"],
+                            nil,
+                            function()
+                                E.db.WT.maps.rectangleMinimap = P.maps.rectangleMinimap
+                            end
+                        )
+                    end
+                },
+                minimapButtons = {
                     order = 4,
+                    type = "execute",
+                    name = L["Minimap Buttons"],
+                    func = function()
+                        E:StaticPopup_Show(
+                            "WINDTOOLS_RESET_MODULE",
+                            L["Minimap Buttons"],
+                            nil,
+                            function()
+                                E.private.WT.maps.minimapButtons = V.maps.minimapButtons
+                            end
+                        )
+                    end
+                },
+                worldMap = {
+                    order = 5,
                     type = "execute",
                     name = L["World Map"],
                     func = function()
@@ -1104,6 +1140,21 @@ options.reset = {
                             nil,
                             function()
                                 E.private.WT.maps.worldMap = V.maps.worldMap
+                            end
+                        )
+                    end
+                },
+                instanceDifficulty = {
+                    order = 6,
+                    type = "execute",
+                    name = L["Instance Difficulty"],
+                    func = function()
+                        E:StaticPopup_Show(
+                            "WINDTOOLS_RESET_MODULE",
+                            L["Super Tracker"],
+                            nil,
+                            function()
+                                E.private.WT.maps.instanceDifficulty = V.maps.instanceDifficulty
                             end
                         )
                     end
@@ -1496,8 +1547,11 @@ options.reset = {
                                 E.private.WT.misc.pauseToSlash = V.misc.pauseToSlash
                                 E.private.WT.misc.saveArtifact = V.misc.saveArtifact
                                 E.private.WT.misc.noKanjiMath = V.misc.noKanjiMath
+                                E.private.WT.misc.autoScreenshot = V.misc.autoScreenshot
+                                E.private.WT.misc.skipCutScene = V.misc.skipCutScene
+                                E.private.WT.misc.moveSpeed = V.misc.moveSpeed
+                                E.private.WT.misc.noKanjiMath = V.misc.noKanjiMath
                                 E.db.WT.misc.disableTalkingHead = P.misc.disableTalkingHead
-                                E.db.WT.misc.skipCutScene = P.misc.skipCutScene
                             end
                         )
                     end

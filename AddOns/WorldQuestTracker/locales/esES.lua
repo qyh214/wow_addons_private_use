@@ -150,14 +150,12 @@ L["S_TUTORIAL_TIMELEFT"] = "Indica el tiempo restante (+4 horas, +90 minutos, +3
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Este botón te lleva al mapa de las Islas Abruptas."
 L["S_UNKNOWNQUEST"] = "Misión desconocida"
 L["S_WHATSNEW"] = "¿Qué hay nuevo?"
-L["S_WORLDBUTTONS_SHOW_NONE"] = "Ocultar resumen"
 L["S_WORLDBUTTONS_SHOW_TYPE"] = "Mostrar resumen"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "Ordenar por zona"
 --[[Translation missing --]]
 --[[ L["S_WORLDBUTTONS_TOGGLE_QUESTS"] = ""--]] 
 L["S_WORLDMAP_QUESTLOCATIONS"] = "Mostrar las Localizaciones de las Misiones"
 L["S_WORLDMAP_QUESTSUMMARY"] = "Mostrar el Sumario de Misiones"
-L["S_WORLDMAP_TOOGLEQUESTS"] = "Alternar Misiones"
 L["S_WORLDMAP_TOOLTIP_TRACKALL"] = "seguir todas las misiones de esta lista"
 L["S_WORLDQUESTS"] = "Misiones del mundo"
 

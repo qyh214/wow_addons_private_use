@@ -17,5 +17,5 @@
 
     <!--Dev Tool-->
     
-    <Script file="DevTool.lua"/>
+    <!--Script file="DevTool.lua"/-->
 </Ui>

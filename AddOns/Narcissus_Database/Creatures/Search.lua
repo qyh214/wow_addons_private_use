@@ -37,7 +37,7 @@ if textLocale ~= "enUS" then
         if NarciCreatureInfo["enUS"] and id then
             return NarciCreatureInfo["enUS"][id]
         else
-            print("Not loaded")
+            --print("Not loaded")
         end
     end
 end

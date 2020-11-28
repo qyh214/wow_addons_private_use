@@ -7,10 +7,13 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
+	--[[Translation missing --]]
+	L[" Debuff"] = " Debuff"
 	L["<70% Mana"] = "<70% 마나"
 	L[">70% Mana"] = ">70% 마나"
 	L["Abilities"] = "능력"
-	L["Ability Charges"] = "능력 충전량"
+	--[[Translation missing --]]
+	L["Ability"] = "Ability"
 	L["Add Triggers"] = "활성 조건 추가"
 	L["Always Active"] = "항상 활성화"
 	L["Always Show"] = "항상 표시"
@@ -47,21 +50,41 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Basic Show On Ready"] = "Basic Show On Ready"
 	L["Bloodlust/Heroism"] = "피의 욕망/영웅심"
+	--[[Translation missing --]]
+	L["Bonded Buff"] = "Bonded Buff"
+	--[[Translation missing --]]
+	L["Buff"] = "Buff"
 	L["buff"] = "강화 효과"
 	--[[Translation missing --]]
 	L["Buff on Other"] = "Buff on Other"
 	L["Buffs"] = "강화 효과"
+	--[[Translation missing --]]
+	L["Build Up"] = "Build Up"
 	L["Cancel"] = "취소"
 	L["Cast"] = "시전"
 	L["Charge and Buff Tracking"] = "충전량 및 강화 효과 추적"
 	L["Charge and Debuff Tracking"] = "충전량 및 약화 효과 추적"
 	L["Charge and Duration Tracking"] = "충전량 및 지속시간 추적"
 	L["Charge Tracking"] = "충전량 추적"
+	--[[Translation missing --]]
+	L["Combustion Ready"] = "Combustion Ready"
+	--[[Translation missing --]]
+	L["Conduits"] = "Conduits"
+	--[[Translation missing --]]
+	L["Cooldown"] = "Cooldown"
 	L["cooldown"] = "재사용 대기시간"
 	L["Cooldown Tracking"] = "재사용 대기시간 추적"
 	L["Create Auras"] = "효과 생성"
+	--[[Translation missing --]]
+	L["Debuff"] = "Debuff"
 	L["debuff"] = "약화 효과"
 	L["Debuffs"] = "약화 효과"
+	--[[Translation missing --]]
+	L["Empowered Buff"] = "Empowered Buff"
+	--[[Translation missing --]]
+	L["Fire"] = "Fire"
+	--[[Translation missing --]]
+	L["Frost"] = "Frost"
 	L["General"] = "일반"
 	L["Health"] = "생명력"
 	L["Highlight while active, red when out of range."] = "활성화 된 동안 강조, 사정거리를 벗어나면 붉은색으로 표시"
@@ -73,6 +96,12 @@ local L = WeakAuras.L
 	L["Highlight while spell is active."] = "주문이 활성화 되어 있는 동안 강조"
 	L["Hold CTRL to create multiple auras at once"] = "한 번에 여러 효과를 만드려면 CTRL 키를 누르세요"
 	L["Keeps existing triggers intact"] = "활성 조건 그대로 유지"
+	--[[Translation missing --]]
+	L["Legendaries"] = "Legendaries"
+	--[[Translation missing --]]
+	L["Meteor Ready"] = "Meteor Ready"
+	--[[Translation missing --]]
+	L["Nature"] = "Nature"
 	L["Next"] = "다음"
 	L["Only show the aura if the target has the debuff."] = "대상에 약화 효과가 있는 경우 그 효과만 표시합니다."
 	L["Only show the aura when the item is on cooldown."] = "아이템이 재사용 대기 중일 때 그 효과만 표시합니다."
@@ -139,10 +168,16 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
 	--[[Translation missing --]]
+	L["Slow"] = "Slow"
+	--[[Translation missing --]]
 	L["slow debuff"] = "slow debuff"
 	L["Stance"] = "태세"
 	--[[Translation missing --]]
 	L["stun debuff"] = "stun debuff"
+	--[[Translation missing --]]
+	L["Stun Debuff"] = "Stun Debuff"
+	--[[Translation missing --]]
+	L["Totem"] = "Totem"
 	--[[Translation missing --]]
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."
 	--[[Translation missing --]]

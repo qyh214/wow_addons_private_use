@@ -231,8 +231,24 @@ local function GetGeneralOptions()
 			handler = RareScanner,
 			desc = AL["GENERAL_OPTIONS"],
 			args = {
-				scanRares = {
+				rescanTimer = {
 					order = 0,
+					type = "range",
+					name = AL["RESCAN_TIMER"],
+					desc = AL["RESCAN_TIMER_DESC"],
+					min	= 3,
+					max	= 60,
+					step = 1,
+					bigStep = 1,
+					get = function() return RSConfigDB.GetRescanTimer() end,
+					set = function(_, value)
+						RSConfigDB.SetRescanTimer(value)
+					end,
+					width = "full",
+					disabled = function() return (not RSConfigDB.IsShowingNpcs()) end,
+				},
+				scanRares = {
+					order = 1,
 					name = AL["ENABLE_SCAN_RARES"],
 					desc = AL["ENABLE_SCAN_RARES_DESC"],
 					type = "toggle",
@@ -243,7 +259,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				scanContainers = {
-					order = 1,
+					order = 2,
 					name = AL["ENABLE_SCAN_CONTAINERS"],
 					desc = AL["ENABLE_SCAN_CONTAINERS_DESC"],
 					type = "toggle",
@@ -254,7 +270,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				scanEvents = {
-					order = 2,
+					order = 3,
 					name = AL["ENABLE_SCAN_EVENTS"],
 					desc = AL["ENABLE_SCAN_EVENTS_DESC"],
 					type = "toggle",
@@ -265,7 +281,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				scanChatAlerts = {
-					order = 3,
+					order = 4,
 					name = AL["ENABLE_SCAN_CHAT"],
 					desc = AL["ENABLE_SCAN_CHAT_DESC"],
 					type = "toggle",
@@ -276,7 +292,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				scanGarrison = {
-					order = 4,
+					order = 5,
 					name = AL["ENABLE_SCAN_GARRISON_CHEST"],
 					desc = AL["ENABLE_SCAN_GARRISON_CHEST_DESC"],
 					type = "toggle",
@@ -287,7 +303,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				scanInstances = {
-					order = 5,
+					order = 6,
 					name = AL["ENABLE_SCAN_IN_INSTANCE"],
 					desc = AL["ENABLE_SCAN_IN_INSTANCE_DESC"],
 					type = "toggle",
@@ -298,7 +314,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				scanOnTaxi = {
-					order = 6,
+					order = 7,
 					name = AL["ENABLE_SCAN_ON_TAXI"],
 					desc = AL["ENABLE_SCAN_ON_TAXI_DESC"],
 					type = "toggle",
@@ -309,7 +325,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				scanWorldMapVignettes = {
-					order = 7,
+					order = 8,
 					name = AL["ENABLE_SCAN_WORLDMAP_VIGNETTES"],
 					desc = AL["ENABLE_SCAN_WORLDMAP_VIGNETTES_DESC"],
 					type = "toggle",
@@ -320,7 +336,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				showMaker = {
-					order = 8,
+					order = 9,
 					name = AL["ENABLE_MARKER"],
 					desc = AL["ENABLE_MARKER_DESC"],
 					type = "toggle",
@@ -331,7 +347,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				marker = {
-					order = 9,
+					order = 10,
 					type = "select",
 					dialogControl = 'RS_Markers',
 					name = AL["MARKER"],
@@ -345,12 +361,12 @@ local function GetGeneralOptions()
 					disabled = function() return not RSConfigDB.IsDisplayingMarkerOnTarget() end,
 				},
 				separatorIngameWaypoints = {
-					order = 10,
+					order = 11,
 					type = "header",
 					name = AL["INGAME_WAYPOINTS"],
 				},
 				enableIngameWaypoints = {
-					order = 11,
+					order = 12,
 					name = AL["ENABLE_WAYPOINTS_SUPPORT"],
 					desc = AL["ENABLE_WAYPOINTS_SUPPORT_DESC"],
 					type = "toggle",
@@ -361,7 +377,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				autoIngameWaypoints = {
-					order = 12,
+					order = 13,
 					name = AL["ENABLE_AUTO_WAYPOINTS"],
 					desc = AL["ENABLE_AUTO_WAYPOINTS_DESC"],
 					type = "toggle",
@@ -373,12 +389,12 @@ local function GetGeneralOptions()
 					disabled = function() return not RSConfigDB.IsWaypointsSupportEnabled() end,
 				},
 				separatorTomtomWaypoints = {
-					order = 13,
+					order = 14,
 					type = "header",
 					name = AL["TOMTOM_WAYPOINTS"],
 				},
 				enableTomtomSupport = {
-					order = 14,
+					order = 15,
 					name = AL["ENABLE_TOMTOM_SUPPORT"],
 					desc = AL["ENABLE_TOMTOM_SUPPORT_DESC"],
 					type = "toggle",
@@ -390,7 +406,7 @@ local function GetGeneralOptions()
 					disabled = function() return not TomTom end,
 				},
 				autoTomtomWaypoints = {
-					order = 15,
+					order = 16,
 					name = AL["ENABLE_AUTO_TOMTOM_WAYPOINTS"],
 					desc = AL["ENABLE_AUTO_TOMTOM_WAYPOINTS_DESC"],
 					type = "toggle",

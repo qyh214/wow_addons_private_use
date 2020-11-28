@@ -156,13 +156,11 @@ Click |cFFFFAA11Toggle Quests|r to hide quest locations.]=]
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "이 버튼을 누르면 부서진 섬 지도로 변경됩니다."
 L["S_UNKNOWNQUEST"] = "알 수 없는 퀘스트"
 L["S_WHATSNEW"] = "새 소식"
-L["S_WORLDBUTTONS_SHOW_NONE"] = "요약 숨기기"
 L["S_WORLDBUTTONS_SHOW_TYPE"] = "요약 보기"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "지역별 구분"
 L["S_WORLDBUTTONS_TOGGLE_QUESTS"] = "퀘스트 토글"
 L["S_WORLDMAP_QUESTLOCATIONS"] = "퀘스트 위치보기"
 L["S_WORLDMAP_QUESTSUMMARY"] = "퀘스트 요약 보기"
-L["S_WORLDMAP_TOOGLEQUESTS"] = "퀘스트 표시 전환"
 L["S_WORLDMAP_TOOLTIP_TRACKALL"] = "이 목록에있는 모든 퀘스트 추적"
 L["S_WORLDQUESTS"] = "전역 퀘스트"
 

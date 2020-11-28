@@ -163,13 +163,11 @@ Cliquez sur |cFFFFAA11Afficher les quêtes|r pour cacher les emplacements de qu�
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Ce bouton vous apporte la carte des îles brisées."
 L["S_UNKNOWNQUEST"] = "Quête inconnue"
 L["S_WHATSNEW"] = "Quoi de neuf ?"
-L["S_WORLDBUTTONS_SHOW_NONE"] = "Cacher le sommaire"
 L["S_WORLDBUTTONS_SHOW_TYPE"] = "Afficher le sommaire"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "Trier par zone"
 L["S_WORLDBUTTONS_TOGGLE_QUESTS"] = "Activer les quêtes"
 L["S_WORLDMAP_QUESTLOCATIONS"] = "Affiche les emplacements de quêtes"
 L["S_WORLDMAP_QUESTSUMMARY"] = "Affiche les résumés de quêtes "
-L["S_WORLDMAP_TOOGLEQUESTS"] = "Afficher les quêtes"
 L["S_WORLDMAP_TOOLTIP_TRACKALL"] = "suivre toutes les quêtes de cette liste"
 L["S_WORLDQUESTS"] = "Expéditions"
 

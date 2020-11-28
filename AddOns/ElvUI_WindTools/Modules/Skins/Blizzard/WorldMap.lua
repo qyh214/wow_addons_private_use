@@ -2,6 +2,7 @@ local W, F, E, L = unpack(select(2, ...))
 local S = W:GetModule("Skins")
 
 local _G = _G
+local hooksecurefunc = hooksecurefunc
 
 function S:WorldMapFrame()
     if not self:CheckDB("worldmap", "worldMap") then
@@ -29,6 +30,14 @@ function S:WorldMapFrame()
             QuestMapFrame.DetailsFrame.RewardsFrame:CreateBackdrop("Transparent")
         end
     end
+
+    hooksecurefunc(
+        _G.QuestSessionManager,
+        "NotifyDialogShow",
+        function(_, dialog)
+            self:CreateBackdropShadow(dialog)
+        end
+    )
 end
 
 S:AddCallback("WorldMapFrame")

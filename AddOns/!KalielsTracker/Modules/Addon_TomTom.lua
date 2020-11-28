@@ -109,6 +109,10 @@ local function SetWaypointTag(button, show)
 end
 
 local function AddWaypoint(questID, isSilent)
+	if C_QuestLog.IsQuestCalling(questID) then
+		return false
+	end
+
 	local title, mapID
 	local x, y, completed
 	if QuestUtils_IsQuestWorldQuest(questID) then
@@ -201,12 +205,11 @@ local function SetHooks()
 	
 	-- Blizzard
 	hooksecurefunc(C_SuperTrack, "SetSuperTrackedQuestID", function(questID)
-		if questID ~= superTrackedQuestID then
-			RemoveWaypoint(superTrackedQuestID)
-			if QuestUtils_IsQuestWatched(questID) or KT.activeTasks[questID] then
-				if AddWaypoint(questID) then
-					superTrackedQuestID = questID
-				end
+		local isSilet = (questID == superTrackedQuestID)
+		RemoveWaypoint(superTrackedQuestID)
+		if QuestUtils_IsQuestWatched(questID) or KT.activeTasks[questID] then
+			if AddWaypoint(questID, isSilet) then
+				superTrackedQuestID = questID
 			end
 		end
 	end)
@@ -243,7 +246,9 @@ local function SetHooks()
 	local bck_QuestPOI_GetButton = QuestPOI_GetButton
 	QuestPOI_GetButton = function(parent, questID, style, index)
 		local poiButton = bck_QuestPOI_GetButton(parent, questID, style, index)
-		SetWaypointTag(poiButton, questWaypoints[questID])
+		if poiButton then
+			SetWaypointTag(poiButton, questWaypoints[questID])
+		end
 		return poiButton
 	end
 

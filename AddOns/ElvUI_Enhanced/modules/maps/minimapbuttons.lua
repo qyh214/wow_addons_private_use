@@ -1,4 +1,5 @@
 local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
+local EEL = E:GetModule('ElvuiEnhancedAgain')
 local MB = E:NewModule('MinimapButtons', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0');
 local LO = E:GetModule('Layout')
 local Skins = E:GetModule('Skins')
@@ -58,39 +59,7 @@ local whiteList = {
 local moveButtons = {}
 local minimapButtonBarAnchor, minimapButtonBar
 
-local function print_r ( t )  
-    local print_r_cache={}
-    local function sub_print_r(t,indent)
-        if (print_r_cache[tostring(t)]) then
-            print(indent.."*"..tostring(t))
-        else
-            print_r_cache[tostring(t)]=true
-            if (type(t)=="table") then
-                for pos,val in pairs(t) do
-                    if (type(val)=="table") then
-                        print(indent.."["..pos.."] => "..tostring(t).." {")
-                        sub_print_r(val,indent..string.rep(" ",string.len(pos)+8))
-                        print(indent..string.rep(" ",string.len(pos)+6).."}")
-                    elseif (type(val)=="string") then
-                        print(indent.."["..pos..'] => "'..val..'"')
-                    else
-                        print(indent.."["..pos.."] => "..tostring(val))
-                    end
-                end
-            else
-                print(indent..tostring(t))
-            end
-        end
-    end
-    if (type(t)=="table") then
-        print(tostring(t).." {")
-        sub_print_r(t,"  ")
-        print("}")
-    else
-        sub_print_r(t,"  ")
-    end
-    print()
-end
+
 
 local function OnEnter(self)
 	if not E.minimapbuttons.db.mouseover or E.minimapbuttons.db.skinStyle == 'NOANCHOR' then return end
@@ -239,7 +208,7 @@ function MB:UpdateSkinStyle()
 			doreload = 1
 		end
 		if doreload == 1 then
-			E:StaticPopup_Show("PRIVATE_RL")
+			E:StaticPopup_Show("CONFIG_RL")
 		else 
 			self:UpdateLayout()
 		end
@@ -317,7 +286,7 @@ function MB:UpdateLayout()
 			frame:SetScript("OnDragStop", nil)
 			
 			frame:ClearAllPoints()
-			frame:SetFrameStrata("LOW")
+			frame:SetFrameStrata("HIGH")
 			frame:SetFrameLevel(20)
 			frame:Size(E.minimapbuttons.db.buttonSize)
 
@@ -393,15 +362,16 @@ end
 
 function MB:CreateFrames()
 	minimapButtonBarAnchor = CreateFrame("Frame", "MinimapButtonBarAnchor", E.UIParent, 'BackdropTemplate')
-	minimapButtonBarAnchor:Point("TOPRIGHT", RightMiniPanel, "BOTTOMRIGHT", 0, -2)
+	minimapButtonBarAnchor:Point('BOTTOM', Minimap, 'BOTTOMRIGHT', 0, -E.mult -54)
 	minimapButtonBarAnchor:Size(200, 32)
 	minimapButtonBarAnchor:SetFrameStrata("BACKGROUND")
-	
-	E:CreateMover(minimapButtonBarAnchor, "MinimapButtonAnchor", L["Minimap Button Bar"])
+
+	E:CreateMover(minimapButtonBarAnchor, "MinimapButtonAnchor", L["Minimap Button Bar"], nil, nil, nil, "ALL,ACTIONBARS,ELVUIEHANCED")
 
 	minimapButtonBar = CreateFrame("Frame", "MinimapButtonBar", E.UIParent, 'BackdropTemplate')
-	minimapButtonBar:SetFrameStrata('LOW')
+	minimapButtonBar:SetFrameStrata('MEDIUM')
 	minimapButtonBar:CreateBackdrop('Transparent')
+	minimapButtonBar:SetFrameLevel(2)
 	minimapButtonBar:ClearAllPoints()
 	minimapButtonBar:SetPoint("CENTER", minimapButtonBarAnchor, "CENTER", 0, 0)
 	minimapButtonBar:SetScript("OnEnter", OnEnter)
@@ -412,9 +382,10 @@ function MB:CreateFrames()
 end
 
 function MB:Initialize()
+	if not EEL.initialized or not E.db.eel.minimap.minimapbar.enable then return end
 	E.minimapbuttons = MB
-	E.minimapbuttons.db = E.private.general.minimapbar
-	if not E.minimapbuttons.db.skinButtons then return end
+	E.minimapbuttons.db = E.db.eel.minimap.minimapbar
+	
 	self:CreateFrames()
 end
 

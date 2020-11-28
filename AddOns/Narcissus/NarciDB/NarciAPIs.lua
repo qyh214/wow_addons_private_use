@@ -255,8 +255,27 @@ Narci_ColorTable = {
 	[6] = {156, 165, 153},	--Drustvar
 	[7] = { 42,  63,  79},	--Halls of Shadow
 
-    --Major City--
+
     --[UiMapID] = {r, g, b}
+    --Shadowlands
+    [1670] = {76, 86, 109},    --Oribos
+
+    [1533] = {197, 185, 172},	--Bastion
+    [1707] = {193, 199, 210},   --Elysian Hold
+    [1708] = {168, 188, 232},   --Sanctum of Binding
+
+    [1701] = {57, 66, 154},     --Heart of the Forest
+    [1565] = {57, 66, 154},     --Ardenweald
+    
+    [1536] = {25, 97, 85},      --Maldraxxus
+    [1698] = {25, 97, 85},      --Seat of the Primus
+
+    [1525] = {48, 96, 153},      --Revendreth
+
+    [1911] = {53, 80, 115},     --Torghast Entrance
+    [1912] = {53, 80, 115},     --Runecrafter
+
+    --Major City--
     [84]  = {129, 144, 155},	--Stormwind City
     
 	[85]  = {121,  52,  55},	--Orgrimmar
@@ -343,6 +362,7 @@ Narci_ColorTable = {
     --Frequently Visited
     [198]  = {78,  78,  78},    --Hyjal
 };
+
 
 -- 8.3 When Assault: N'Zoth is active, the map uses a different skybox (purple). This quest's location alters every week, so we need to re-index a color preset during the login
 local AssignColor = CreateFrame("Frame");
@@ -1135,7 +1155,8 @@ end
 local min = math.min;
 local max = math.max;
 local abs = math.abs;
-local minOffset = 2;
+local floor = math.floor;
+
 local function SmoothScrollContainer_OnUpdate(self, elapsed)
 	local delta = self.delta;
     local scrollBar = self.scrollBar;
@@ -1198,7 +1219,7 @@ local function NarciAPI_SmoothScroll_OnMouseWheel(self, delta, stepSize)
         deltaRatio = 2 * deltaRatio;
     end
 
-    local endValue = min(max(0, ScrollContainer.endValue - delta*deltaRatio*self.buttonHeight), self.range);
+    local endValue = floor( (100 * min(max(0, ScrollContainer.endValue - delta*deltaRatio*self.buttonHeight), self.range) + 0.5)/100 );
     ScrollContainer.endValue = endValue;
     
     if self.positionFunc then
@@ -1208,7 +1229,7 @@ local function NarciAPI_SmoothScroll_OnMouseWheel(self, delta, stepSize)
     end
 end
 
-function NarciAPI_SmoothScroll_Initialization(scrollFrame, updatedList, updateFunc, deltaRatio, speedRatio, minOffset, positionFunc, onScrollFinishedFunc)     --self=ListScrollFrame
+function NarciAPI_SmoothScroll_Initialization(scrollFrame, updatedList, updateFunc, deltaRatio, speedRatio, minOffset, positionFunc, onScrollFinishedFunc)
     if updateFunc then
         scrollFrame.update = updateFunc;
     end
@@ -1273,6 +1294,47 @@ function NarciAPI_ApplySmoothScrollToBlizzardUI(scrollFrame, deltaRatio, speedRa
     NarciAPI_SmoothScroll_Initialization(scrollFrame, nil, nil, deltaRatio, speedRatio, nil, positionFunc);
 end
 
+--Linear Scroll For Gamepad Control
+local LinearScrollUpdater = CreateFrame("Frame", "Narci_LinearScrollUpdater");
+LinearScrollUpdater:Hide();
+LinearScrollUpdater.value = 0;
+LinearScrollUpdater.distancePerSecond = 0;
+LinearScrollUpdater.multiplier = 1;
+LinearScrollUpdater:SetScript("OnUpdate", function(self, elapsed)
+    local newValue = self.value + self.distancePerSecond * self.multiplier * elapsed;
+    self.slider:SetValue(newValue);
+    self.value = newValue;
+    if newValue >= self.maxValue or newValue <= 0 then
+        self:Hide();
+    end
+    if self.accelerate then
+        self.multiplier = self.multiplier + elapsed;
+        if self.multiplier > 3 then
+            self.multiplier = 3;
+        end
+    end
+end);
+
+function LinearScrollUpdater:Start(scrollFrame, distancePerSecond, accelerate)
+    self:Hide();
+    local scrollBar = scrollFrame.scrollBar;
+    if not scrollBar then
+        return
+    end
+    self.slider = scrollBar;
+    self.multiplier = 1;
+    self.accelerate = accelerate;
+    self.value = scrollBar:GetValue();
+    self.distancePerSecond = distancePerSecond;
+    self.minValue, self.maxValue = scrollBar:GetMinMaxValues();
+    self:Show();
+    return not(self.value == self.maxValue or self.value == self.minValue)
+end
+
+function LinearScrollUpdater:Stop()
+    self:Hide();
+end
+
 -----Create A List of Button----
 function NarciAPI_BuildButtonList(self, buttonTemplate, buttonNameTable, initialOffsetX, initialOffsetY, initialPoint, initialRelative, offsetX, offsetY, point, relativePoint)
 	local button, buttonHeight, buttons, numButtons;
@@ -1327,7 +1389,7 @@ function Narci_LanguageDetector(string)
 		--print(c)
 		if (c > 0 and c <= 127)then
 			shift = 1
-		elseif c== 195 then
+		elseif c == 195 then
 			shift = 2	--Latin/Greek
 		elseif (c >= 208 and c <=211) then
 			shift = 2
@@ -2191,6 +2253,19 @@ function NarciAPI_SetupModelScene(modelScene, modelFileID, zoomDistance, view, a
     --]]
 end
 
+--[[
+    ScriptAnimatedEffectController:GetCurrentEffectID()
+
+/dump ScriptedAnimationEffectsUtil.GetEffectByID()    101 Center Rune Wind Cyan
+effect = {visual(fileID), visualScale, animationSpeed, ...}
+fileID, effectID:
+3483475 --Black Swirl 52
+984698  --Center Rune Wind Cyan 101
+3655832 --Circle Rune Effect 73
+3656114 --69
+--]]
+
+------------------------------------------------------------------------------
 local function ReAnchorFrame(frame)
     --maintain frame top position when changing its height
     local oldCenterX = frame:GetCenter();
@@ -2593,6 +2668,25 @@ function NarciAPI_InitializeModelLight(model)
     --Model: DressUpModel/Cinematic Model/...
     --Not ModelScene
     model:SetLight(true, false, - 0.44699833180028 ,  0.72403680806459 , -0.52532198881773, 0.8, 172/255, 172/255, 172/255, 1, 0.8, 0.8, 0.8);
+end
+
+
+--------------------
+--------Time--------
+--------------------
+function NarciAPI_FormatTime(seconds)
+    seconds = seconds or 0;
+
+    local hour = floor(seconds / 3600);
+    local minute = floor((seconds - 3600 * hour) / 60);
+    local second = mod(seconds, 60);
+    if hour > 0 then
+        return hour.."h "..minute.."m "..second.."s";
+    elseif minute > 0 then
+        return minute.."m "..second.."s";
+    else
+        return second.."s";
+    end
 end
 
 ----------------------------

@@ -68,6 +68,18 @@ options.general = {
                 E.private.WT.misc[info[#info]] = value
                 M:SkipCutScene()
             end
+        },
+        autoScreenshot = {
+            order = 6,
+            type = "toggle",
+            name = L["Auto Screenshot"],
+            desc = L["Screenshot after you earned an achievement automatically."]
+        },
+        moveSpeed = {
+            order = 7,
+            type = "toggle",
+            name = L["Move Speed"],
+            desc = L["Show move speed in character panel."]
         }
     }
 }
@@ -416,6 +428,14 @@ do
         noSign = {
             tag = "[power:percent-nosign]",
             text = L["The percentage of current power without percent sign"]
+        },
+        smart = {
+            tag = "[smart-power]",
+            text = L["Automatically select the best format of power (e.g. Rogue is 120, Mage is 100%)"]
+        },
+        smartNoSign = {
+            tag = "[smart-power-nosign]",
+            text = L["Automatically select the best format of power (e.g. Rogue is 120, Mage is 100)"]
         }
     }
 
@@ -624,8 +644,14 @@ options.gameBar = {
                                 GB:UpdateBar()
                             end
                         },
-                        fadeTime = {
+                        notification = {
                             order = 2,
+                            type = "toggle",
+                            name = L["Notification"],
+                            desc = L["Add an indicator icon to buttons."]
+                        },
+                        fadeTime = {
+                            order = 3,
                             type = "range",
                             name = L["Fade Time"],
                             desc = L["The animation speed."],
@@ -634,7 +660,7 @@ options.gameBar = {
                             step = 0.01
                         },
                         tooltipsAnchor = {
-                            order = 3,
+                            order = 4,
                             type = "select",
                             name = L["Tooltip Anchor"],
                             values = {
@@ -643,7 +669,7 @@ options.gameBar = {
                             }
                         },
                         visibility = {
-                            order = 4,
+                            order = 5,
                             type = "input",
                             name = L["Visibility"],
                             set = function(info, value)

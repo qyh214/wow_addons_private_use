@@ -145,6 +145,9 @@ local BlizzardFramesOnDemand = {
     ["Blizzard_Contribution"] = {
         "ContributionCollectionFrame"
     },
+    ["Blizzard_CovenantRenown"] = {
+        "CovenantRenownFrame"
+    },
     ["Blizzard_DeathRecap"] = {
         "DeathRecapFrame"
     },
@@ -229,6 +232,9 @@ local BlizzardFramesOnDemand = {
     ["Blizzard_ScrappingMachineUI"] = {
         "ScrappingMachineFrame"
     },
+    ["Blizzard_Soulbinds"] = {
+        "SoulbindViewer"
+    },
     ["Blizzard_SubscriptionInterstitialUI"] = {
         "SubscriptionInterstitialFrame"
     },
@@ -258,8 +264,24 @@ local BlizzardFramesOnDemand = {
     }
 }
 
+local ignoredList = {
+    ["EncounterJournal"] = true
+}
+
+function MF:IsIgnoredFrame(frame)
+    local name = frame:GetName()
+    if name and ignoredList[name] then
+        return true
+    end
+    return false
+end
+
 function MF:Remember(frame)
     if not frame.windFrameName or not self.db.rememberPositions then
+        return
+    end
+
+    if self:IsIgnoredFrame(frame) then
         return
     end
 
@@ -281,6 +303,10 @@ end
 
 function MF:Reposition(frame, anchorPoint, relativeFrame, relativePoint, offX, offY)
     if InCombatLockdown() then
+        return
+    end
+
+    if self:IsIgnoredFrame(frame) then
         return
     end
 

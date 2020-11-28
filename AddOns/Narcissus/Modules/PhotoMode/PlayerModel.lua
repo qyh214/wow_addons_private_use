@@ -1,3 +1,5 @@
+--/run Narci.ActiveModel:SetDisplayInfo(C_MountJournal.GetMountAllCreatureDisplayInfoByID(GetMouseFocus().mountID)[1].creatureDisplayID)
+--/run Narci.ActiveModel:TryOn(C_TransmogCollection.GetAppearanceSources(GetMouseFocus().visualInfo.visualID)[1].sourceID)
 local Narci = Narci;
 local L = Narci.L;
 local pi = math.pi;

@@ -129,11 +129,13 @@ AddMedia("barSpellBook", "GameBar/SpellBook.tga", "Icons")
 AddMedia("barTalents", "GameBar/Talents.tga", "Icons")
 AddMedia("barToyBox", "GameBar/ToyBox.tga", "Icons")
 AddMedia("barVolume", "GameBar/Volume.tga", "Icons")
+AddMedia("barNotification", "GameBar/Notification.tga", "Icons")
 
 AddMedia("buttonLock", "Button/Lock.tga", "Icons")
 AddMedia("buttonUnlock", "Button/Unlock.tga", "Icons")
 
 AddMedia("inspectGemBG", "InspectGemBG.blp", "Textures")
+AddMedia("exchange", "Exchange.tga", "Textures")
 AddMedia("illMurloc1", "Illustration/Murloc1.tga", "Textures")
 
 do

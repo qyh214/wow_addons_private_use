@@ -162,7 +162,7 @@
 		</Scripts>		
 	</Button>
 
-	<Button name="Narci_SpellVisualButtonTemplate" virtual="true" registerForClicks="LeftButtonUp, RightButtonUp">
+	<Button name="Narci_SpellVisualButtonSharedTemplate" virtual="true" registerForClicks="LeftButtonUp, RightButtonUp">
 		<Size x="116" y="16"/>
 		<ButtonText inherits="NarciPastelBrownFont" justifyH="LEFT" justifyV="MIDDLE" maxLines="1" text="Name" parentKey="ButtonText">
 			<Size x="104" y="0"/>
@@ -201,7 +201,7 @@
 		</Scripts>
 	</Button>
 
-	<Button name="Narci_SpellVisualCategoryButtonTemplate" inherits="Narci_SpellVisualButtonTemplate" virtual="true" frameLevel="2">
+	<Button name="Narci_SpellVisualCategoryButtonTemplate" inherits="Narci_SpellVisualButtonSharedTemplate" virtual="true" frameLevel="2">
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\SpellVisualBrowser\Panel" parentKey="Background">
@@ -213,7 +213,7 @@
 				</Texture>
 			</Layer>
 			<Layer level="BACKGROUND">
-				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\SpellVisualBrowser\Panel" parentKey="Divider" Alpha="0">
+				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\SpellVisualBrowser\Panel" parentKey="Divider" hidden="true">
 					<TexCoords left="0" right="0.228515625" top="0.970703125" bottom="1"/>
 					<Size x="126" y="6.67"/>
 					<Anchors>
@@ -228,6 +228,18 @@
 					<Anchors>
 						<Anchor point="RIGHT" relativePoint="RIGHT" x="-6"/>
 					</Anchors>
+				</FontString>
+				<FontString inherits="NarciPastelBrownFont" justifyH="RIGHT" justifyV="MIDDLE" maxLines="1" parentKey="Differential" text="">
+					<Size x="0" y="0"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeKey="$parent.Count" relativePoint="LEFT" x="-2"/>
+					</Anchors>
+					<Animations>
+						<AnimationGroup parentKey="FadeText" setToFinalAlpha="true">
+							<Alpha fromAlpha="0" toAlpha="1" duration="0.15" order="1"/>
+							<Alpha startDelay="2" fromAlpha="1" toAlpha="0" duration="1" order="2"/>
+						</AnimationGroup>
+					</Animations>
 				</FontString>
 			</Layer>
 		</Layers>
@@ -291,7 +303,7 @@
 		</Scripts>
 	</Button>
 
-	<Button name="Narci_SavedSpellVisualButtonTemplate" inherits="Narci_SpellVisualButtonTemplate" motionScriptsWhileDisabled="true" virtual="true">
+	<Button name="Narci_SavedSpellVisualButtonTemplate" inherits="Narci_SpellVisualButtonSharedTemplate" motionScriptsWhileDisabled="true" virtual="true">
 		<Layers>
 			<Layer level="ARTWORK">
 				<Texture setAllPoints="true" parentKey="Green" Alpha="0">
@@ -927,7 +939,7 @@
 						</Frames>
 					</Frame>
 
-					<Button parentKey="Preview">
+					<Button parentKey="Preview" mixin="NarciSpellVisualBrowserPreviewFrameMixin">
 						<Size x="96" y="96"/>
 						<HitRectInsets>
 							<AbsInset left="30" right="12" top="12" bottom="12"/>
@@ -942,7 +954,7 @@
 								</Texture>
 							</Layer>
 							<Layer level="ARTWORK" textureSubLevel="1">
-								<Texture setAllPoints="true" parentKey="BottomImage">
+								<Texture parentKey="BottomImage">
 									<Size x="84" y="84"/>
 									<Anchors>
 										<Anchor point="CENTER" relativePoint="CENTER"/>
@@ -950,7 +962,7 @@
 								</Texture>
 							</Layer>
 							<Layer level="ARTWORK" textureSubLevel="2">
-								<Texture setAllPoints="true" parentKey="TopImage" file="Interface\AddOns\Narcissus\Art\SpellVisualPreviews\StandardPack">
+								<Texture parentKey="TopImage" file="Interface\AddOns\Narcissus\Art\SpellVisualPreviews\Pack-Standard">
 									<Size x="84" y="84"/>
 									<Anchors>
 										<Anchor point="CENTER" relativePoint="CENTER"/>
@@ -984,30 +996,18 @@
 								</Texture>
 							</Layer>
 						</Layers>
-						<Frames>
-							<Frame inherits="NarciIDFrameTemplate" parentKey="IDFrame">
-								<Anchors>
-									<Anchor point="BOTTOM" parentKey="$parent" relativePoint="BOTTOM" x="6" y="6"/>
-								</Anchors>
-								<Scripts>
-									<OnLoad>
-										self.Label:SetText("Visual ID");
-									</OnLoad>
-								</Scripts>
-							</Frame>
-						</Frames>
+						<HighlightTexture file="Interface\AddOns\Narcissus\Art\Widgets\SpellVisualBrowser\PreviewHighlight" parentKey="Highlight" alphaMode="ADD">
+							<Size x="137" y="137"/>
+							<Anchors>
+								<Anchor point="CENTER" relativePoint="CENTER"/>
+							</Anchors>
+						</HighlightTexture>
 						<Scripts>
-							<OnLoad>
-								self.ShowID = false;
-							</OnLoad>
-							<OnClick>
-								self.ShowID = not self.ShowID;
-								local bool = self.ShowID;
-								self.IDFrame:SetShown(bool);
-							</OnClick>
-							<OnHide>
-								self:StopAnimating();
-							</OnHide>
+							<OnLoad method="OnLoad"/>
+							<OnHide method="OnHide"/>
+							<OnClick method="OnClick"/>
+							<OnEnter method="OnEnter"/>
+							<OnLeave method="OnLeave"/>
 						</Scripts>
 					</Button>
 

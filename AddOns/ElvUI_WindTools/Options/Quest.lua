@@ -64,8 +64,20 @@ options.objectiveTracker = {
             end,
             name = L["No Dash"]
         },
-        progress = {
+        showMawBuffRight = {
             order = 3,
+            type = "toggle",
+            name = L["Maw Buff On Right"],
+            disabled = function()
+                return not E.private.WT.quest.objectiveTracker.enable
+            end,
+            set = function(info, value)
+                E.private.WT.quest.objectiveTracker[info[#info]] = value
+                E:StaticPopup_Show("PRIVATE_RL")
+            end,
+        },
+        progress = {
+            order = 4,
             type = "group",
             inline = true,
             name = L["Progress"],
@@ -93,7 +105,7 @@ options.objectiveTracker = {
             }
         },
         titleColor = {
-            order = 4,
+            order = 5,
             type = "group",
             inline = true,
             name = L["Title Color"],
@@ -105,7 +117,7 @@ options.objectiveTracker = {
             end,
             set = function(info, value)
                 E.private.WT.quest.objectiveTracker.titleColor[info[#info]] = value
-                OT:ChangeQuestTitleColor()
+                E:StaticPopup_Show("PRIVATE_RL")
             end,
             args = {
                 enable = {
@@ -152,7 +164,7 @@ options.objectiveTracker = {
             }
         },
         header = {
-            order = 5,
+            order = 6,
             type = "group",
             inline = true,
             name = L["Header"],
@@ -193,11 +205,17 @@ options.objectiveTracker = {
                     min = 5,
                     max = 60,
                     step = 1
-                }
+                },
+                shortHeader = {
+                    order = 4,
+                    type = "toggle",
+                    name = L["Short Header"],
+                    desc = L["Use short name instead. e.g. Torghast, Tower of the Damned to Torghast."],
+                },
             }
         },
         title = {
-            order = 6,
+            order = 7,
             type = "group",
             inline = true,
             name = L["Title"],
@@ -242,7 +260,7 @@ options.objectiveTracker = {
             }
         },
         info = {
-            order = 7,
+            order = 8,
             type = "group",
             inline = true,
             name = L["Information"],
@@ -309,7 +327,11 @@ options.turnIn = {
                 feature = {
                     order = 1,
                     type = "description",
-                    name = L["Make quest acceptance and completion automatically."],
+                    name = format(
+                        "%s\n%s",
+                        L["Make quest acceptance and completion automatically."],
+                        L["Press modifier key (Shift, Ctrl, Alt) to stop the automation temporarily."]
+                    ),
                     fontSize = "medium"
                 }
             }

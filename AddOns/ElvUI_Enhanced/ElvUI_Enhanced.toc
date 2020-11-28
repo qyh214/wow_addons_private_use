@@ -1,29 +1,20 @@
-## Interface: 90001
-## Title: |cff1784d1ElvUI|r Enhanced (Shadowlands)
-## Author: Feraldin
-## X-Credits: Instant, Tristimdorio (Omega1970), Azilroka, Crackpotx, Sortokk, Repooc, moresunders
-## Version: 3.5.0
+## Interface: 90002
+## Title: |cff1784d1ElvUI|r Enhanced Again
+## Author: Tevoll
+## Version: 4.0.2
 ## Notes: Plugin-Enhancements for |cff1784d1ElvUI|r.
 ## X-Category: Plugins
-## URL: https://wow.curseforge.com/addons/elvui-enhanced-again/
-## X-Website: https://wow.curseforge.com/addons/elvui-enhanced-again/
+## URL: https://www.curseforge.com/wow/addons/elvui-enhanced-again
+## X-Website: https://www.curseforge.com/wow/addons/elvui-enhanced-again
 ## RequiredDeps: ElvUI
 ## DefaultState: Enabled
+## X-ElvVersion: 12.13
 
-## OptionalDeps: LibRangeCheck-2.0
-## X-Embeds: LibRangeCheck-2.0
-
-## X-Localizations: enUS, enGB, deDE, frFR, esES, esMX, zhCN, zhTW, koKR, ruRU
-## X-CompatibleLocales: enUS, enGB, deDE, frFR, esES, esMX, zhCN, zhTW, koKR, ruRU
-
-developer\load_developer.xml
-
-#@no-lib-strip@
 libs\load_libs.xml
-#@end-no-lib-strip@
-
 locales\load_locales.xml
-media\load_media.xml
+ElvUI_Enhanced.lua
 config\load_config.xml
 modules\load_modules.xml
-ElvUI_Enhanced.lua
+
+
+

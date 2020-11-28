@@ -131,12 +131,12 @@ Builder:SetScript("OnEvent", function(self, event, ...)
     end
     NarciDevToolOutput.parentAchievementData = {};
     outputTable = NarciDevToolOutput.parentAchievementData;
-
+    
     BuildCategories();
     After(0.5, function()
         BuildCategories(true);
         After(0.5, function()
-            Loader:LoadList(guildCategories);
+            Loader:LoadList(playerCategories);
         end);
     end);
 end);

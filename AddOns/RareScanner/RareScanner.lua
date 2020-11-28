@@ -945,7 +945,7 @@ function RareScanner:ProcessCompletedEvent(eventID, forzed)
 	-- Extracts quest id if we don't have it
 	-- Avoids shift-left-click events
 	if (not forzed) then
-		if ((not eventInternalInfo or not eventInternalInfo.questID) and not RSEventDB.GetEventQuestIdFound(containerID)) then
+		if ((not eventInternalInfo or not eventInternalInfo.questID) and not RSEventDB.GetEventQuestIdFound(eventID)) then
 			RSLogger:PrintDebugMessage(string.format("Evento [%s]. Buscando questID...", eventID))
 			RSQuestTracker.FindCompletedHiddenQuestID(eventID, function(eventID, newQuestID) RSEventDB.SetEventQuestIdFound(eventID, newQuestID) end)
 		else
@@ -953,7 +953,7 @@ function RareScanner:ProcessCompletedEvent(eventID, forzed)
 		end
 	end
 
-	RSGeneralDB.DeleteRecentlySeen(containerID)
+	RSGeneralDB.DeleteRecentlySeen(eventID)
 
 	-- Refresh minimap
 	if (not forzed) then
@@ -965,6 +965,10 @@ end
 function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 	local _, _, _, _, _, id, _ = strsplit("-", vignetteInfo.objectGUID);
 	local npcID = tonumber(id)
+	
+	if (not npcID) then
+		return
+	end
 
 	-- Check it it is an entity that use a vignette but it isn't a rare, event or treasure
 	if (RSUtils.Contains(RSConstants.INGNORED_VIGNETTES, npcID)) then
@@ -973,7 +977,7 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 
 	-- Check if we have already found this vignette in a short period of time
 	if (RareScanner:IsVignetteAlreadyFound(vignetteInfo.id, isNavigating, npcID)) then
-		RSLogger:PrintDebugMessage(string.format("La entidad [%s] se ignora porque se ha avisado de esta hace menos de 2 minutos", npcID))
+		RSLogger:PrintDebugMessage(string.format("La entidad [%s] se ignora porque se ha avisado de esta hace menos de %s minutos", npcID, RSConfigDB.GetRescanTimer()))
 		return
 	end
 
@@ -990,7 +994,7 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 	end
 
 	-- These NPCs are tagged with events
-	if (npcID == RSConstants.MYSTIC_RAINBOWHORN or npcID == RSConstants.DEATHBINDER_HROTH or npcID == RSConstants.BAEDOS) then
+	if (RSUtils.Contains(RSConstants.NPCS_WITH_EVENT_VIGNETTE, npcID)) then
 		vignetteInfo.atlasName = RSConstants.NPC_VIGNETTE
 	end
 
@@ -1088,8 +1092,6 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 				return
 			else
 				RareScanner:SetVignetteFound(vignetteInfo.id, false)
-
-				-- flashes the wow icon in windows bar
 				FlashClientIcon()
 				self:PlaySoundAlert(vignetteInfo.atlasName)
 				self:DisplayMessages(vignetteInfo.name)
@@ -1124,6 +1126,7 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 	-- show messages and play alarm
 	--------------------------------
 	if (not isNavigating) then
+		FlashClientIcon()
 		self:DisplayMessages(vignetteInfo.name)
 		self:PlaySoundAlert(vignetteInfo.atlasName)
 	end
@@ -1186,7 +1189,7 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 	end
 
 	-- timer to reset already found NPC
-	C_Timer.After(RSConstants.CLEAR_ALREADY_FOUND_VIGNETTE_TIMER, function()
+	C_Timer.After(RSConfigDB.GetRescanTimer() * 60, function()
 		RareScanner:RemoveVignetteFound(vignetteInfo.id, npcID)
 		RSMinimap.RefreshAllData(true)
 	end)
@@ -1197,6 +1200,7 @@ end
 
 function RareScanner:RemoveVignetteFound(vignetteID, npcID)
 	if (self.already_notified) then
+		RSLogger:PrintDebugMessage(string.format("RemoveVignetteFound[%s]", vignetteID))
 		self.already_notified[vignetteID] = nil
 		self.already_notified["NPC"..npcID] = nil
 	end
@@ -1208,6 +1212,7 @@ function RareScanner:SetVignetteFound(vignetteID, isNavigating, npcID)
 	end
 
 	if (not isNavigating) then
+		RSLogger:PrintDebugMessage(string.format("SetVignetteFound[%s]", vignetteID))
 		self.already_notified[vignetteID] = true
 
 		-- FIX Blubbery Blobule/Unstable Glob (NPCID = 160841/161407) multipoping
@@ -1805,6 +1810,11 @@ function RareScanner:InitializeDataBase()
 	local currentDbVersion = RSGeneralDB.GetDbVersion()
 	local databaseUpdated = currentDbVersion and currentDbVersion.version == RSConstants.CURRENT_DB_VERSION
 	if (not databaseUpdated) then
+		-- Disable scanning for world map icons after Shadowlands pre-patch
+		if (RSConstants.CURRENT_DB_VERSION == 30) then
+			RSLogger:PrintDebugMessage("Desactivado el escaner de iconos en el mapa del mundo en la versión 30")
+			RSConfigDB.SetScanningWorldMapVignettes(false)
+		end
 		UpdateRareNamesDB(); -- Internally calls to RefreshDatabaseData once its done
 	else
 		RefreshDatabaseData()

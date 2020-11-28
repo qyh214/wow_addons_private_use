@@ -155,13 +155,11 @@ L["S_TUTORIAL_WORLDBUTTONS"] = [=[Нажмите здесь, чтобы пере
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Эта кнопка открывает карту Расколотых островов."
 L["S_UNKNOWNQUEST"] = "Неизвестное задание"
 L["S_WHATSNEW"] = "Что нового?"
-L["S_WORLDBUTTONS_SHOW_NONE"] = "Скрыть сводку"
 L["S_WORLDBUTTONS_SHOW_TYPE"] = "Показать сводку"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "По территориям"
 L["S_WORLDBUTTONS_TOGGLE_QUESTS"] = "Вкл/Выкл - задания"
 L["S_WORLDMAP_QUESTLOCATIONS"] = "Показать местоположения заданий"
 L["S_WORLDMAP_QUESTSUMMARY"] = "Показать количество заданий"
-L["S_WORLDMAP_TOOGLEQUESTS"] = "Вкл/Выкл - Задания"
 L["S_WORLDMAP_TOOLTIP_TRACKALL"] = "отслеживать все задания в этом списке"
 L["S_WORLDQUESTS"] = "Локальные задания"
 

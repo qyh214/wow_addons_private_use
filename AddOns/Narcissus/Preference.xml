@@ -285,7 +285,16 @@
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="172" y="-138"/>
                                             </Anchors>
-                                        </Texture>                                     
+                                        </Texture>
+                                        <MaskTexture file="Interface\AddOns\Narcissus\Art\Preference\TooltipTheme-Mask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+                                            <Anchors>
+                                                <Anchor point="TOPLEFT" relativeKey="$parent.Preview2" relativePoint="TOPLEFT"/>
+                                                <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Preview2" relativePoint="BOTTOMRIGHT"/>
+                                            </Anchors>
+                                            <MaskedTextures>
+                                                <MaskedTexture childKey="Preview2"/>
+                                            </MaskedTextures>
+                                        </MaskTexture>
                                     </Layer>
                                 </Layers> 
                             </Frame>

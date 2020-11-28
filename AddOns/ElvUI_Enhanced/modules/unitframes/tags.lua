@@ -58,3 +58,17 @@ ElvUF.Tags.Methods['xthreatcolor'] = function(unit)
 		return '|cFF808080'
 	end
 end
+
+for textFormat in pairs(E.GetFormattedTextStyles) do
+    local tagTextFormat = strlower(gsub(textFormat, '_', '-'))
+    ElvUF.Tags.Events[format('mana:%s:onlyhealer', tagTextFormat)] = 'UNIT_POWER_FREQUENT UNIT_MAXPOWER UNIT_DISPLAYPOWER GROUP_ROSTER_UPDATE'
+    ElvUF.Tags.Methods[format('mana:%s:onlyhealer', tagTextFormat)] = function(unit)
+        local role = UnitGroupRolesAssigned(unit)
+        if role ~= "HEALER" then return end
+
+        local min = UnitPower(unit, SPELL_POWER_MANA)
+        if min ~= 0 and tagTextFormat ~= 'deficit' then
+            return E:GetFormattedText(textFormat, min, UnitPowerMax(unit, SPELL_POWER_MANA))
+        end
+    end
+end

@@ -1,4 +1,6 @@
 local BIND_ACTION = "CLICK Narci_Achievement_MinimapButton:LeftButton";
+_G["BINDING_NAME_CLICK ".."Narci_Achievement_MinimapButton:LeftButton"] = "Open Narcissus Achievement Panel";
+
 local FadeFrame = NarciAPI_FadeFrame;
 local Color_Good = "|cff7cc576";     --124 197 118
 local Color_Good_r = 124/255;

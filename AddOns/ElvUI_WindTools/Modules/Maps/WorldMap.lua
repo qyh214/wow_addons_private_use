@@ -16,21 +16,17 @@ local IsAddOnLoaded = IsAddOnLoaded
 local MapCanvasScrollControllerMixin_GetCursorPosition = MapCanvasScrollControllerMixin.GetCursorPosition
 
 local C_MapExplorationInfo_GetExploredMapTextures = C_MapExplorationInfo.GetExploredMapTextures
-local C_Map_ClearUserWaypoint = C_Map.ClearUserWaypoint
 local C_Map_GetMapArtID = C_Map.GetMapArtID
 local C_Map_GetMapArtLayers = C_Map.GetMapArtLayers
-local C_Map_HasUserWaypoint = C_Map.HasUserWaypoint
-local C_SuperTrack_SetSuperTrackedUserWaypoint = C_SuperTrack.SetSuperTrackedUserWaypoint
-local C_Timer_After = C_Timer.After
 
--- 每张地图的结构如下: (可通过数据挖掘 WorldMapOverlay 及 WorldMapOverlayTile 两个表获取)
+-- STRUCTURE: (do data mining on WorldMapOverlay and WorldMapOverlayTile tables)
 -- UiMapArtID = {
 --     TextureWidth:TextureHeight:offsetX:offsetY = WorldMapOverlayTileFileDataID
 --     ...
 -- }
 
--- 迷雾数据
--- 生成工具: https://github.com/fang2hou/WindToolsScripts/tree/master/MapOverlay
+-- Fog data
+-- Tool: https://github.com/fang2hou/WindToolsScripts/tree/master/MapOverlay
 local RevealDatabase = {
     [2] = {
         ["162:157:399:440"] = "440583",
@@ -2459,7 +2455,6 @@ local RevealDatabase = {
     }
 }
 
--- 用于储存显现的覆盖层
 local overlayTextures = {}
 
 function WM:HandleMap(map, fullUpdate)
@@ -2592,41 +2587,6 @@ function WM:Scale()
     end
 end
 
-function WM:HookPin()
-    if not self.db or not self.db.rightClickToClear then
-        return
-    end
-
-    local EnumerateAllPins = _G.WorldMapFrame:EnumerateAllPins()
-    local pin = EnumerateAllPins()
-    while pin do
-        if pin.pinTemplate and pin.pinTemplate == "WaypointLocationPinTemplate" then
-            if not self:IsHooked(pin, "OnMouseClickAction") then
-                self:SecureHook(
-                    pin,
-                    "OnMouseClickAction",
-                    function(_, button)
-                        if button == "RightButton" then
-                            C_Map_ClearUserWaypoint()
-                        end
-                    end
-                )
-            end
-            break
-        end
-        pin = EnumerateAllPins()
-    end
-end
-
-function WM:USER_WAYPOINT_UPDATED()
-    if C_Map_HasUserWaypoint() then
-        if self.db and self.db.autoTrackWaypoint then
-            E:Delay(0.1, C_SuperTrack_SetSuperTrackedUserWaypoint, true)
-        end
-        E:Delay(0.15, self.HookPin, self)
-    end
-end
-
 function WM:Initialize()
     if IsAddOnLoaded("Mapster") then
         self.StopRunning = "Mapster"
@@ -2641,14 +2601,6 @@ function WM:Initialize()
 
     self:Scale()
     self:Reveal()
-
-    if self.db.rightClickToClear then
-        self:SecureHook(_G.WorldMapFrame, "Show", "HookPin")
-    end
-
-    if self.db.autoTrackWaypoint or self.db.rightClickToClear then
-        self:RegisterEvent("USER_WAYPOINT_UPDATED")
-    end
 end
 
 W:RegisterModule(WM:GetName())

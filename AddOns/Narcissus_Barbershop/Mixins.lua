@@ -5,6 +5,7 @@ local floor = math.floor;
 local mod = mod;
 
 local L = Narci.L;
+local FormatTime = NarciAPI_FormatTime;
 
 NarciBarberShopStatsMoneyFrameMixin = {};
 
@@ -39,21 +40,6 @@ local function GetMapParentMapName(mapID, mapName)
         end
     else
         return mapName
-    end
-end
-
-local function FormatTime(seconds)
-    seconds = seconds or 0;
-
-    local hour = floor(seconds / 3600);
-    local minute = floor((seconds - 3600 * hour) / 60);
-    local second = mod(seconds, 60);
-    if hour > 0 then
-        return hour.."h "..minute.."m "..second.."s";
-    elseif minute > 0 then
-        return minute.."m "..second.."s";
-    else
-        return second.."s";
     end
 end
 

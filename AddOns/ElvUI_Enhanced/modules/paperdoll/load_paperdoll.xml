@@ -1,0 +1,4 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">	
+	<Script file='paperdoll.lua'/>
+	<Script file='o_paperdoll.lua'/>
+</Ui>

@@ -333,6 +333,9 @@
 
 	<Button name="NarciAchievementCategoryButtonTemplate" inherits="NarciAchievementCategoryButtonSharedTemplate" virtual="true" frameLevel="5">
 		<Size x="208" y="32"/>
+		<KeyValues>
+			<KeyValue key="fillWidth" value="198" type="number"/>
+		</KeyValues>
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture file="Interface\AddOns\Narcissus\Art\Modules\Achievement\DarkWood\CategoryButton" parentKey="background">
@@ -344,6 +347,9 @@
 
 	<Button name="NarciAchievementSubCategoryButtonTemplate" inherits="NarciAchievementCategoryButtonSharedTemplate" virtual="true">
 		<Size x="192" y="32"/>
+		<KeyValues>
+			<KeyValue key="fillWidth" value="182" type="number"/>
+		</KeyValues>
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture file="Interface\AddOns\Narcissus\Art\Modules\Achievement\DarkWood\SubCategoryButton" parentKey="background">
@@ -1711,7 +1717,6 @@
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeTo="UIParent" x="100" y="-104"/>
 		</Anchors>
-
 		<Frames>
 			<ScrollFrame parentKey="CategoryFrame" inherits="NarciAchievementCategoryContainerTemplate"/>
 
@@ -2917,9 +2922,7 @@
 		</Layers>
 
 		<Scripts>
-			<OnLoad>
-				self:RegisterForDrag("LeftButton");
-			</OnLoad>
+			<OnLoad method="OnLoad"/>
 			<OnDragStart>
 				self:StartMoving();
 			</OnDragStart>
@@ -2934,7 +2937,7 @@
   <ContainedAlertFrame name="NarciAchievementAlertFrameTemplate" parent="UIParent" hidden="true" frameStrata="DIALOG" virtual="true" inherits="AlertFrameTemplate">
 		<Size x="312" y="78"/>
 		<Anchors>
-		<Anchor point="BOTTOM" x="0" y="128"/>
+			<Anchor point="BOTTOM" x="0" y="128"/>
 		</Anchors>
 		<Animations>
 		<AnimationGroup parentKey="animIn">

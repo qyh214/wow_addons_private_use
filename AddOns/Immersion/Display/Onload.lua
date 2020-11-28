@@ -288,6 +288,19 @@ titles:SetUserPlaced(false)
 -- Hooks and hacks
 --------------------------------
 
+-- Handle custom gossip events (new in Shadowlands)
+if CustomGossipManagerMixin then
+	-- Only mixin the necessities
+	local mixin = CustomGossipManagerMixin
+	frame.RegisterHandler = mixin.RegisterHandler
+	frame.GetGossipHandler = mixin.GetHandler
+	mixin.OnLoad(frame)
+	-- Simplest solution to kill GossipFrame without spreading taint
+	if CustomGossipFrameManager then
+		CustomGossipFrameManager:UnregisterAllEvents()
+	end
+end
+
 -- Anchor the real talking head to the fake talking head,
 -- make it appear IN PLACE of the fake one if the fake one isn't shown.
 do 
@@ -375,13 +388,6 @@ do
 	elseif TalkingHead_LoadUI then -- Hook to the loading function.
 		hooksecurefunc('TalkingHead_LoadUI', HookTalkingHead)
 	end
-end
-
--- Handle custom gossip events 
--- Simplest solution to kill GossipFrame without spreading taint
--- to UIParent's frame manager. See CustomGossipManagerMixin
-if CustomGossipFrameManager then
-	GossipFrame_HandleShow = nop
 end
 
 do  -- Azerite Empowered Item UI

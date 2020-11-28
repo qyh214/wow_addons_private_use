@@ -21,6 +21,7 @@ local cBold = "|cff00ffe3"
 local cWarning = "|cffff7f00"
 local cDots = "|cff808080"
 local offs = "\n|T:1:9|t"
+local offs2 = "\n|T:1:18|t"
 local beta = "|cffff7fff[Beta]|r"
 local new = "|cffff7fff[NEW]|r"
 
@@ -146,8 +147,11 @@ local function SetupTutorials()
 					offs.."of the quest.\n"..
 					"- You can set "..cBold.."[key bind]|r to use quest item. Key set up in "..KT.title..
 					offs.."Options. Active Button uses the same key bind as the Extra Action Button.\n"..
-					"- Button is movable using some addons (e.g. Bartender4, MoveAnything)."..
-					offs.."For position change, move \"Extra Action Button\" resp. \"Extra Action Bar\".\n\n"..
+					"- Button is movable using:"..
+					offs.."  - own mover (free move) - see Options > section \"Quest item buttons\""..
+					offs2.."  > button \"Unlock\","..
+					offs.."  - some addons (move with Extra Action Button) - Bartender4, Dominos,"..
+					offs2.."  ElvUI, Tukui.\n\n"..
 					cWarning.."Warning:|r\n"..
 					"- Active Button works only for tracked quests.\n"..
 					"- When tracker is collapsed, Active Button feature is paused.",
@@ -198,15 +202,18 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |r|cffffffff4.2.4|r\n\n"..
-					"|TInterface\\Scenarios\\LegionInvasion:41:42:-4:0:512:512:314:373:144:206|t Special gift - |cffff7fffIcecrown Rare Monitor|r\n\n"..
-					"- UPDATED - Icecrown Rare Monitor - Rares now spawn every 10 minutes"..
-					offs.."(update for EU / NA zones)\n\n"..
+			text = cTitle.."         What's NEW in version |r|cffffffff4.2.8|r\n\n"..
+					"- FIXED - TomTom support - When support enabled, Calling quests generate"..
+					offs.."map loop and FPS drop\n\n"..
 
-					"|cffff0000Take a look Options and configure Rare Monitor correctly!|r\n"..
-					"Now you don't need add UTC offset to field \"Timer Correction\". This field now use only for cosmetic time correction.\n\n"..
+					cTitle.."What's NEW in version |r|cffffffff4.2.7|r\n\n"..
+					"- ADDED - Support for Jailer's Tower (Torghast)\n"..
+					"- FIXED - issue #504 - Error when clicking on Q/WQ POI on map, with TomTom"..
+					offs.."support enabled\n"..
+					"- FIXED - Active Button - Wrong position, when Zone Ability is active\n"..
+					"- UPDATED - Lib - MSA-DropDownMenu-1.0\n\n"..
 
-                    cTitle.."WoW 9.0.1 - Known issues w/o solution|r\n"..
+                    cTitle.."WoW 9.0.2 - Known issues w/o solution|r\n"..
                     "- Clicking on tracked quests or achievements has no response during combat.\n"..
                     "- Header buttons Q and A don't work during combat.\n\n"..
 

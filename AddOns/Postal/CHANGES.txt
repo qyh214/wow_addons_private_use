@@ -1,24 +1,44 @@
 ------------------------------------------------------------------------
-r431 | Zimzarina | 2020-11-04 06:15:03 +0000 (Wed, 04 Nov 2020) | 2 lines
+r439 | Zimzarina | 2020-11-18 21:24:46 +0000 (Wed, 18 Nov 2020) | 1 line
 Changed paths:
    M /trunk/Modules/BlackBook.lua
+
+Code cleanup
+------------------------------------------------------------------------
+r438 | Zimzarina | 2020-11-18 08:47:24 +0000 (Wed, 18 Nov 2020) | 1 line
+Changed paths:
+   M /trunk/Modules/BlackBook.lua
+
+Corrected unintentional format layout change for alts list.
+------------------------------------------------------------------------
+r437 | Zimzarina | 2020-11-17 17:14:21 +0000 (Tue, 17 Nov 2020) | 1 line
+Changed paths:
    M /trunk/Postal.toc
 
-Backed out temporary interface version number additions as this did not help the incorrect game version showing up in WOW download addon tools.
-Found a new solution to address issue #231 that leaves "Deactivate Blizz Auto-complete" working.  So both issues #231 and #236 are now fixed.
+toc update
 ------------------------------------------------------------------------
-r430 | Zimzarina | 2020-11-03 04:18:59 +0000 (Tue, 03 Nov 2020) | 1 line
+r436 | Zimzarina | 2020-11-17 06:32:04 +0000 (Tue, 17 Nov 2020) | 1 line
 Changed paths:
-   M /trunk/Postal.lua
+   M /trunk/Modules/BlackBook.lua
 
-Implemented feature request to have a minimum opening delay (Issue #129).
+SetClampedToScreen(true) for alts menus
 ------------------------------------------------------------------------
-r429 | Zimzarina | 2020-11-02 22:18:31 +0000 (Mon, 02 Nov 2020) | 2 lines
+r435 | Zimzarina | 2020-11-16 20:46:30 +0000 (Mon, 16 Nov 2020) | 1 line
 Changed paths:
-   M /trunk/Modules/Express.lua
-   M /trunk/Postal.toc
+   M /trunk/Modules/BlackBook.lua
 
-An attempt to fix the issue where download tools show postal as for game version 8.3.0.
-KyrosKrane discovered a performance improvement for express mail sending described in issue #230.  I have incorporated KyrosKrane performance improvement into this build.
+The alts list can also get to long to fit on the screen similar to the all alts list that was addressed in check-in 434.  This fixes the same issue for the alts list.  This is additional expansion on the issue #116.
+------------------------------------------------------------------------
+r434 | Zimzarina | 2020-11-15 07:57:29 +0000 (Sun, 15 Nov 2020) | 1 line
+Changed paths:
+   M /trunk/Modules/BlackBook.lua
+
+The all alts list can get long enough that it no longer fits on the screen and some of the alts in the list are therefore not accessible.  I have updated the all alts list to behave in a similar manner to the friends and guilds list which split into sub parts if the total list is greater then 25 characters.  The all alts list now behaves in the same manner.  This fixes issues #116.
+------------------------------------------------------------------------
+r433 | Zimzarina | 2020-11-13 15:15:01 +0000 (Fri, 13 Nov 2020) | 1 line
+Changed paths:
+   M /trunk/Modules/BlackBook.lua
+
+Restored Alt's list to filtering by faction (issue #238).
 ------------------------------------------------------------------------
 

@@ -19,6 +19,7 @@ local Color_Alert_r = 252/255;
 local Color_Alert_g = 237/255;
 local Color_Alert_b = 0;
 local BIND_ACTION = "CLICK Narci_MinimapButton:LeftButton";
+_G["BINDING_NAME_"..BIND_ACTION] = "Open Narcissus Character Panel";
 local OptimizeBorderThickness = NarciAPI_OptimizeBorderThickness;
 local Narci_LetterboxAnimation = NarciAPI_LetterboxAnimation;
 local floor = math.floor;
@@ -715,7 +716,7 @@ local Structure = {
         { name = "Space", type = "space", height = -16},
         { name = "HotkeyHeader", type = "header", localizedName = L["Hotkey"], },
         { name = "EnableDoubleTap", type = "checkbox", localizedName = L["Double Tap"], description = L["Double Tap Description"], onShowFunc = DoubleTapSwitch_OnShow},
-        { name = "HotkeyButton", type = "keybinding", localizedName = KEY_BINDING, onClickFunc = PrimaryKeybindingButton_OnClick, onShowFunc = PrimaryKeybindingButton_OnShow},
+        { name = "HotkeyButton", type = "keybinding", localizedName = KEY_BINDING, onClickFunc = PrimaryKeybindingButton_OnClick, onShowFunc = PrimaryKeybindingButton_OnShow, action = BIND_ACTION},
         { name = "UseEscapeButton", type = "checkbox", localizedName = L["Use Escape Button"], description = L["Use Escape Button Description1"], valueFunc = SetUseEcapeButtonForExit},
     }},
 
@@ -846,6 +847,9 @@ local function CreateSettingFrame(tabContainer)
                 widget:SetScript("OnClick", data.onClickFunc);
                 widget:SetScript("OnShow", data.onShowFunc);
                 widget.Label:SetText(data.localizedName);
+                if data.action then
+                    widget.action = data.action;
+                end
                 OptimizeBorderThickness(widget);
                 tabHeight = tabHeight + 36;
                 
@@ -984,11 +988,6 @@ function NarciPreferenceRadioButtonMixin:OnClick()
     end
     self.Tick:Show();
 end
-
-
-
-
-
 
 
 

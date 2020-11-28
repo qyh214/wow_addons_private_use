@@ -57,13 +57,7 @@ KT.frame = KTF
 -- Blizzard frame
 local OTF = ObjectiveTrackerFrame
 local OTFHeader = OTF.HeaderMenu
-
---OTF.BlocksFrame.PopupQuestHeader = CreateFrame("Frame", "PopupQuestHeader", OTF.BlocksFrame, "ObjectiveTrackerHeaderTemplate")
---AUTO_QUEST_POPUP_TRACKER_MODULE:SetHeader(OTF.BlocksFrame.PopupQuestHeader, TRACKER_HEADER_QUESTS, nil)
---AUTO_QUEST_POPUP_TRACKER_MODULE.blockOffsetX = -26
---AUTO_QUEST_POPUP_TRACKER_MODULE.blockOffsetY = -6
-
---QUEST_TRACKER_MODULE.lineTemplate = "KT_ObjectiveTrackerLineTemplate"
+local MawBuffs = ScenarioBlocksFrame.MawBuffsBlock.Container
 
 --------------
 -- Internal --
@@ -220,11 +214,13 @@ local function Init()
 	KT.stopUpdate = false
 	KT.inWorld = true
 
-	if dbChar.collapsed then
+	if not dbChar.collapsed then
 		ObjectiveTracker_MinimizeButton_OnClick()
 	end
 
 	C_Timer.After(0, function()
+		ObjectiveTracker_MinimizeButton_OnClick()
+
 		KT:SetQuestsHeaderText()
 		KT:SetAchievsHeaderText()
 
@@ -274,8 +270,14 @@ local function SetFrames()
 			if newStage == nil then
 				KT.inScenario = false
 			elseif not KT.inScenario then
-				KT.inScenario = true
-				KT:ToggleEmptyTracker(true)
+				C_Timer.After(0.1, function()  -- WTF
+					if IsInJailersTower() == nil or IsOnGroundFloorInJailersTower() == true then
+						KT.inScenario = false
+					else
+						KT.inScenario = true
+					end
+					KT:ToggleEmptyTracker(KT.inScenario)
+				end)
 			end
 			if not newStage then
 				local numSpells = ScenarioObjectiveBlock.numSpells or 0
@@ -395,8 +397,9 @@ local function SetFrames()
 			if db.frameScrollbar then
 				SetScrollbarPosition()
 			end
-			if self.value > 0 and self.value < OTF.height-db.maxHeight then
+			if self.value >= 0 and self.value < OTF.height-db.maxHeight then
 				MSA_CloseDropDownMenus()
+				MawBuffs.List:Hide()
 			end
 			_DBG("SCROLL ... "..self.value.." ... "..OTF.height.." - "..db.maxHeight)
 		end
@@ -436,6 +439,9 @@ local function SetFrames()
 	OTFHeader.Title:SetWidth(trackerWidth - 40)
 	OTFHeader.Title:SetWordWrap(false)
 	ScenarioBlocksFrame:SetWidth(243)
+	MawBuffs.List:SetParent(UIParent)
+	MawBuffs.List:SetFrameLevel(MawBuffs:GetFrameLevel() - 1)
+	HelpTip:Hide(MawBuffs, JAILERS_TOWER_BUFFS_TUTORIAL)
 
 	-- Other buttons
 	KT:ToggleOtherButtons()
@@ -545,10 +551,13 @@ local function SetHooks()
 			Default_UpdateModuleInfoTables()
 
 			SCENARIO_CONTENT_TRACKER_MODULE.blockOffset[SCENARIO_CONTENT_TRACKER_MODULE.blockTemplate][1] = -16
-			QUEST_TRACKER_MODULE.buttonOffsets[QUEST_TRACKER_MODULE.blockTemplate].groupFinder = { 2, 4 }
+			QUEST_TRACKER_MODULE.buttonOffsets[QUEST_TRACKER_MODULE.blockTemplate].useItem = { 3, 4 }
+			QUEST_TRACKER_MODULE.buttonOffsets[QUEST_TRACKER_MODULE.blockTemplate].groupFinder = { 2, 3 }
 			BONUS_OBJECTIVE_TRACKER_MODULE.blockPadding = 0
+			BONUS_OBJECTIVE_TRACKER_MODULE.buttonOffsets[BONUS_OBJECTIVE_TRACKER_MODULE.blockTemplate].useItem = { 0, 2 }
 			BONUS_OBJECTIVE_TRACKER_MODULE.buttonOffsets[BONUS_OBJECTIVE_TRACKER_MODULE.blockTemplate].groupFinder = { 2, 2 }
 			WORLD_QUEST_TRACKER_MODULE.blockPadding = 0
+			WORLD_QUEST_TRACKER_MODULE.buttonOffsets[WORLD_QUEST_TRACKER_MODULE.blockTemplate].useItem = { 0, 2 }
 			WORLD_QUEST_TRACKER_MODULE.buttonOffsets[WORLD_QUEST_TRACKER_MODULE.blockTemplate].groupFinder = { 2, 2 }
 
 			Init()
@@ -941,6 +950,25 @@ local function SetHooks()
 	end)
 	Default_SetFunctionChanged("FreeUnusedLines")
 
+	local function AddFixedTag(block, tag, buttonOffsetsTag)
+		if block.rightButton == tag then
+			return
+		end
+
+		tag:ClearAllPoints()
+
+		if block.rightButton then
+			tag:SetPoint("RIGHT", block.rightButton, "LEFT", -ObjectiveTracker_GetPaddingBetweenButtons(block), 0)
+		else
+			tag:SetPoint("TOPRIGHT", block, ObjectiveTracker_GetButtonOffsets(block, buttonOffsetsTag))
+		end
+
+		tag:Show()
+
+		block.rightButton = tag
+		block.lineWidth = block.lineWidth - tag:GetWidth() - ObjectiveTracker_GetPaddingBetweenButtons(block)
+	end
+
 	local function CreateFixedTag(block, x, y, anchor)
 		local tag = block.fixedTag
 		if not tag then
@@ -958,8 +986,12 @@ local function SetHooks()
 				tag.text:SetFont(LSM:Fetch("font", "Arial Narrow"), 13, "")
 				tag.text:SetPoint("CENTER", -0.5, 1)
 			end
-			tag:SetPoint(anchor or "TOPRIGHT", block, x, y)
-			tag:Show()
+			if not anchor then
+				AddFixedTag(block, tag, "useItem")
+			else
+				tag:SetPoint(anchor, block, x, y)
+				tag:Show()
+			end
 			block.fixedTag = tag
 		end
 
@@ -1062,6 +1094,7 @@ local function SetHooks()
 		local link, item, charges, showItemWhenComplete = KT.GetQuestLogSpecialItemInfo(questLogIndex)
 		if item and (not block.questCompleted or showItemWhenComplete) then
 			block.itemButton:Hide()
+			block.rightButton = block.groupFinderButton
 			CreateFixedTag(block, x, y)
 			local button = CreateFixedButton(block)
 			if not InCombatLockdown() then
@@ -1388,6 +1421,8 @@ local function SetHooks()
 		KTF.MinimizeButton:GetNormalTexture():SetTexCoord(0, 0.5, 0, 0.25)
 		OTFHeader.Title:Show()
 		MSA_CloseDropDownMenus()
+		MawBuffs.List:Hide()
+		HelpTip:Hide(UIParent, JAILERS_TOWER_BUFFS_TUTORIAL)
 	end
 
 	function ObjectiveTracker_Expand()  -- R
@@ -1399,6 +1434,7 @@ local function SetHooks()
 		KTF.MinimizeButton:GetNormalTexture():SetTexCoord(0, 0.5, 0.25, 0.5)
 		OTFHeader.Title:Hide()
 		MSA_CloseDropDownMenus()
+		MawBuffs:UpdateHelptip()
 	end
 
 	local bck_BonusObjectiveTracker_OnBlockAnimOutFinished = BonusObjectiveTracker_OnBlockAnimOutFinished
@@ -1445,7 +1481,9 @@ local function SetHooks()
 	local bck_QuestPOI_GetButton = QuestPOI_GetButton
 	QuestPOI_GetButton = function(parent, questID, style, index)
 		local poiButton = bck_QuestPOI_GetButton(parent, questID, style, index)
-		poiButton.Glow.SetShown = function() end
+		if poiButton then
+			poiButton.Glow.SetShown = function() end
+		end
 		return poiButton
 	end
 
@@ -1559,7 +1597,6 @@ local function SetHooks()
 		end
 
 		if ( mouseButton ~= "RightButton" ) then
-			MSA_CloseDropDownMenus();
 			if ( IsModifiedClick("QUESTWATCHTOGGLE") ) then
 				QuestObjectiveTracker_UntrackQuest(nil, block.id);
 			elseif IsModifiedClick(db.menuWowheadURLModifier) then
@@ -1645,7 +1682,6 @@ local function SetHooks()
 				ChatEdit_InsertLink(achievementLink);
 			end
 		elseif ( mouseButton ~= "RightButton" ) then
-			MSA_CloseDropDownMenus();
 			if ( not AchievementFrame ) then
 				AchievementFrame_LoadUI();
 			end
@@ -1711,7 +1747,6 @@ local function SetHooks()
 		local isThreatQuest = C_QuestLog.IsThreatQuest(questID);
 		if button == "LeftButton" then
 			if ( not ChatEdit_TryInsertQuestLinkForQuestID(questID) ) then
-				MSA_CloseDropDownMenus();
 				if IsShiftKeyDown() then
 					if QuestUtils_IsQuestWatched(questID) and not isThreatQuest then
 						BonusObjectiveTracker_UntrackWorldQuest(questID);
@@ -1777,6 +1812,45 @@ local function SetHooks()
 		self.module.title = self.Text:GetText()
 		KT:SetQuestsHeaderText()
 	end)
+
+	-- Torghast
+	MawBuffs:HookScript("OnClick", function(self, button)
+		HelpTip:Acknowledge(UIParent, JAILERS_TOWER_BUFFS_TUTORIAL)
+		if self.List:IsShown() then
+			self.List:ClearAllPoints()
+			if KTF.anchorLeft then
+				self.List:SetPoint("TOPLEFT", self, "TOPRIGHT", 15, 1)
+			else
+				self.List:SetPoint("TOPRIGHT", self, "TOPLEFT", -5, 1)
+			end
+		end
+	end)
+
+	MawBuffs.List:SetScript("OnShow", function(self)  -- R
+		self.button:SetPushedAtlas("jailerstower-animapowerbutton-normalpressed", true)
+		self.button:SetHighlightAtlas("jailerstower-animapowerbutton-highlight", true)
+		self.button:SetWidth(253)
+		self.button:SetButtonState("NORMAL")
+		self.button:SetPushedTextOffset(1.25, -1)
+		self.button:SetButtonState("PUSHED", true)
+	end)
+
+	function MawBuffs:UpdateHelptip()  -- R
+		if(not dbChar.collapsed and self.buffCount > 0 and not GetCVarBitfield("closedInfoFrames", LE_FRAME_TUTORIAL_9_0_JAILERS_TOWER_BUFFS)) then
+			local selectLocationHelpTipInfo = {
+				text = JAILERS_TOWER_BUFFS_TUTORIAL,
+				buttonStyle = HelpTip.ButtonStyle.Close,
+				cvarBitfield = "closedInfoFrames",
+				bitfieldFlag = LE_FRAME_TUTORIAL_9_0_JAILERS_TOWER_BUFFS,
+				targetPoint = HelpTip.Point.RightEdgeCenter,
+				autoEdgeFlipping = true,
+				useParentStrata = true,
+			}
+			HelpTip:Show(UIParent, selectLocationHelpTipInfo, self)
+		else
+			HelpTip:Hide(UIParent, JAILERS_TOWER_BUFFS_TUTORIAL)
+		end
+	end
 end
 
 --------------
@@ -1960,6 +2034,7 @@ function KT:SetText()
 end
 
 function KT:SaveHeader(module)
+	if not module.Header then return end
 	module.Header.Text:SetWidth(165)
 	module.Header.PlayAddAnimation = function() end
 	module.Header.LineGlow:Hide()
@@ -2305,7 +2380,7 @@ function KT:OnInitialize()
 	self.activeTasks = {}
 	self.inWorld = false
 	self.inInstance = IsInInstance()
-	self.inScenario = C_Scenario.IsInScenario()
+	self.inScenario = C_Scenario.IsInScenario() and not IsOnGroundFloorInJailersTower()
 	self.stopUpdate = true
 	self.questStateStopUpdate = false
 	self.locked = false
@@ -2316,7 +2391,7 @@ function KT:OnInitialize()
 	self:SetupOptions()
 	db = self.db.profile
 	dbChar = self.db.char
-	KT:Alert_ResetIncompatibleProfiles("4.0.0-beta.1")
+	KT:Alert_ResetIncompatibleProfiles("4.2.5")
 
 	-- Blizzard frame resets
 	OTF.IsUserPlaced = function() return true end
@@ -2346,11 +2421,11 @@ function KT:OnEnable()
 
 	self.QuestLog:Enable()
 	self.Filters:Enable()
-	if db.qiActiveButton then self.ActiveButton:Enable() end
 	if db.sIcecrownRares then self.IcecrownRares:Enable() end
 	if self.AddonPetTracker.isLoaded then self.AddonPetTracker:Enable() end
 	if self.AddonTomTom.isLoaded then self.AddonTomTom:Enable() end
 	self.AddonOthers:Enable()
+	if db.qiActiveButton then self.ActiveButton:Enable() end
 	self.Help:Enable()
 
 	if self.db.global.version ~= self.version then

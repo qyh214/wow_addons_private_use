@@ -419,17 +419,25 @@ options.talentManager = {
             type = "toggle",
             name = L["Enable"]
         },
-        itemButtons = {
+        pvpTalent = {
             order = 3,
             type = "toggle",
+            name = L["PvP Talents"]
+        },
+        itemButtons = {
+            order = 4,
+            type = "toggle",
             name = L["Item Buttons"],
-            set = function(_, value)
-                E.private.WT.combat.talentManager.itemButtons = value
-                TM:UpdateItemButtons()
-            end
+            desc = L["Add tomb and codex buttons."]
+        },
+        statusIcon = {
+            order = 5,
+            type = "toggle",
+            name = L["Status Icon"],
+            desc = L["Add an icon indicates the status of the permission of changing talents."]
         },
         clearSets = {
-            order = 4,
+            order = 6,
             type = "execute",
             name = L["Clear All Sets"],
             func = function()

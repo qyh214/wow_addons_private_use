@@ -8,16 +8,15 @@ local L = WeakAuras.L
 
 -- WeakAuras/Templates
 	--[[Translation missing --]]
-	L["<70% Mana"] = "<70% Mana"
+	L[" Debuff"] = " Debuff"
+	L["<70% Mana"] = "<70% de maná"
+	L[">70% Mana"] = ">70% de maná"
+	L["Abilities"] = "Habilidades"
 	--[[Translation missing --]]
-	L[">70% Mana"] = ">70% Mana"
-	--[[Translation missing --]]
-	L["Abilities"] = "Abilities"
-	L["Ability Charges"] = "Cargas de habilidad"
+	L["Ability"] = "Ability"
 	L["Add Triggers"] = "Agregar desencadenadores"
 	L["Always Active"] = "Siempre activo"
-	--[[Translation missing --]]
-	L["Always Show"] = "Always Show"
+	L["Always Show"] = "Siempre mostrar"
 	--[[Translation missing --]]
 	L["Always show the aura, highlight it if debuffed."] = "Always show the aura, highlight it if debuffed."
 	--[[Translation missing --]]
@@ -58,10 +57,16 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Basic Show On Ready"] = "Basic Show On Ready"
 	L["Bloodlust/Heroism"] = "Sed de sangre/Heroísmo"
+	--[[Translation missing --]]
+	L["Bonded Buff"] = "Bonded Buff"
+	--[[Translation missing --]]
+	L["Buff"] = "Buff"
 	L["buff"] = "beneficio"
 	--[[Translation missing --]]
 	L["Buff on Other"] = "Buff on Other"
 	L["Buffs"] = "Beneficios"
+	--[[Translation missing --]]
+	L["Build Up"] = "Build Up"
 	L["Cancel"] = "Cancelar"
 	L["Cast"] = "Lanzar hechizo"
 	--[[Translation missing --]]
@@ -72,14 +77,28 @@ local L = WeakAuras.L
 	L["Charge and Duration Tracking"] = "Charge and Duration Tracking"
 	--[[Translation missing --]]
 	L["Charge Tracking"] = "Charge Tracking"
+	--[[Translation missing --]]
+	L["Combustion Ready"] = "Combustion Ready"
+	--[[Translation missing --]]
+	L["Conduits"] = "Conduits"
+	--[[Translation missing --]]
+	L["Cooldown"] = "Cooldown"
 	L["cooldown"] = "enfriamiento"
 	--[[Translation missing --]]
 	L["Cooldown Tracking"] = "Cooldown Tracking"
 	--[[Translation missing --]]
 	L["Create Auras"] = "Create Auras"
 	--[[Translation missing --]]
+	L["Debuff"] = "Debuff"
+	--[[Translation missing --]]
 	L["debuff"] = "debuff"
 	L["Debuffs"] = "Perjuicios"
+	--[[Translation missing --]]
+	L["Empowered Buff"] = "Empowered Buff"
+	--[[Translation missing --]]
+	L["Fire"] = "Fire"
+	--[[Translation missing --]]
+	L["Frost"] = "Frost"
 	L["General"] = "General"
 	L["Health"] = "Salud"
 	--[[Translation missing --]]
@@ -99,6 +118,12 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Hold CTRL to create multiple auras at once"] = "Hold CTRL to create multiple auras at once"
 	L["Keeps existing triggers intact"] = "Desencadenadores intactos"
+	--[[Translation missing --]]
+	L["Legendaries"] = "Legendaries"
+	--[[Translation missing --]]
+	L["Meteor Ready"] = "Meteor Ready"
+	--[[Translation missing --]]
+	L["Nature"] = "Nature"
 	--[[Translation missing --]]
 	L["Next"] = "Next"
 	--[[Translation missing --]]
@@ -181,11 +206,17 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
 	--[[Translation missing --]]
+	L["Slow"] = "Slow"
+	--[[Translation missing --]]
 	L["slow debuff"] = "slow debuff"
 	--[[Translation missing --]]
 	L["Stance"] = "Stance"
 	--[[Translation missing --]]
 	L["stun debuff"] = "stun debuff"
+	--[[Translation missing --]]
+	L["Stun Debuff"] = "Stun Debuff"
+	--[[Translation missing --]]
+	L["Totem"] = "Totem"
 	--[[Translation missing --]]
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."
 	--[[Translation missing --]]

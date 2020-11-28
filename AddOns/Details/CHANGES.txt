@@ -1,17 +1,46 @@
-lightweight tag 93a7a8cc693b42caa38efd99a4aad87129a71aba DetailsRetail.9.0.1.7950.144
+lightweight tag ea9ad32a7f8f3f245a3d0f2dec6baf07a43f2bec DetailsRetail.9.0.2.8000.144
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Tue Nov 3 20:55:19 2020 -0300
+Date:	Mon Nov 23 17:03:08 2020 -0300
 
-commit 93a7a8cc693b42caa38efd99a4aad87129a71aba
+commit ea9ad32a7f8f3f245a3d0f2dec6baf07a43f2bec
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Tue Nov 3 20:55:19 2020 -0300
+Date:   Mon Nov 23 17:03:08 2020 -0300
 
-    Added the baseline for the Coach Mode feature
-    
-    - Added the command '/details coach' to  enabled coach mode, need to be raid leader and all members must have details up to date.
-    - Fixed Tiny Threat not showing threat.
-    - Fixed annoucement interrupt toggle enable was reseting on logon.
-    - Added container_spells:GetOrCreateSpell(id, shouldCreate, token)
-    - Added Details:GetRaidLeader(), return the RL name.
-    - Framework update.
+    Shaladownlands Launch
+
+commit 3d5095bd2cfbd4bc71615928507bca2c8e7942f8
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Wed Nov 4 12:02:52 2020 -0300
+
+    Fix for hardcoded localizations
+
+commit bbef2496c58795a9507691f2e8be00a88ffd49a6
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Wed Nov 4 11:04:43 2020 -0300
+
+    Coach feature update, moved check coach server to the top of the priority.
+
+commit 8f381f123597b95f11bddbd078a2ac5c984c5880
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Wed Nov 4 10:50:04 2020 -0300
+
+    More fixes and debug for the Coach feature
+
+commit f4d801ce1212433cd75c17c4add578b9527b7e84
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Wed Nov 4 10:19:40 2020 -0300
+
+    Use the sourceName from the comm callback instead of the player name from the com Data
+
+commit 7de3c46897d720e43f9d2aba84ed402a53758ef2
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Wed Nov 4 09:39:03 2020 -0300
+
+    Coach debug
+
+commit 84a6c8b9dcab5e0f8eda796b27385bbef338de08
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Wed Nov 4 09:22:59 2020 -0300
+
+    Adding again the option to remove enemy players from battlegrounds.
 

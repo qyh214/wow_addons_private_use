@@ -219,6 +219,14 @@ do
 	end
 end
 
+local function GetUIControlKey(button)
+	if ConsolePort.GetUIControlKey then
+		return ConsolePort:GetUIControlKey(GetBindingAction(button))
+	elseif ConsolePortUIHandle.GetUIControlBinding then
+		return ConsolePortUIHandle:GetUIControlBinding(button)
+	end
+end
+
 function NPC:ParseControllerCommand(button)
 	if controllerInterrupt then
 		-- Handle edge case when CP cursor should precede Immersion input.
@@ -234,7 +242,7 @@ function NPC:ParseControllerCommand(button)
 			return true
 		end
 		-- Handle every other case of possible controller inputs.
-		local keyID = ConsolePort:GetUIControlKey(GetBindingAction(button))
+		local keyID = GetUIControlKey(button)
 		local func = keyID and ControllerInput[keyID]
 		if func then
 			return not func(self)

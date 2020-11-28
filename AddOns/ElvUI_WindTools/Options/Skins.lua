@@ -372,6 +372,11 @@ options.blizzard = {
             type = "toggle",
             name = L["Alert Frames"]
         },
+        animaDiversion = {
+            order = 10,
+            type = "toggle",
+            name = L["Anima Diversion"]
+        },
         artifact = {
             order = 10,
             type = "toggle",
@@ -446,6 +451,21 @@ options.blizzard = {
             order = 10,
             type = "toggle",
             name = L["Communities"]
+        },
+        covenantRenown = {
+            order = 10,
+            type = "toggle",
+            name = L["Covenant Renown"]
+        },
+        covenantPreview = {
+            order = 10,
+            type = "toggle",
+            name = L["Covenant Preview"]
+        },
+        covenantSanctum = {
+            order = 10,
+            type = "toggle",
+            name = L["Covenant Sanctum"]
         },
         debugTools = {
             order = 10,
@@ -581,6 +601,11 @@ options.blizzard = {
             order = 10,
             type = "toggle",
             name = L["Scrapping Machine"]
+        },
+        soulbinds = {
+            order = 10,
+            type = "toggle",
+            name = L["Soulbinds"]
         },
         spellBook = {
             order = 10,
@@ -753,6 +778,11 @@ options.elvui = {
             type = "toggle",
             name = L["Chat Data Panels"]
         },
+        chatPanels = {
+            order = 10,
+            type = "toggle",
+            name = L["Chat Panels"]
+        },
         classBars = {
             order = 10,
             type = "toggle",
@@ -921,6 +951,11 @@ options.addons = {
             order = 10,
             type = "toggle",
             name = L["NetEase Meeting Stone"]
+        },
+        myslot = {
+            order = 10,
+            type = "toggle",
+            name = L["Myslot"]
         },
         premadeGroupsFilter = {
             order = 10,

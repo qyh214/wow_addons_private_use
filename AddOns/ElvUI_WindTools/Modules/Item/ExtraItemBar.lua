@@ -38,110 +38,254 @@ local UnregisterStateDriver = UnregisterStateDriver
 local C_QuestLog_GetNumQuestLogEntries = C_QuestLog.GetNumQuestLogEntries
 
 -- https://shadowlands.wowhead.com/potions/name:Potion/min-req-level:40#0+2+3+18
--- Wowhead 抓取后正则替换: ^"([0-9]{6})".* 到 [$1] = true
+-- Regex rule: ^"([0-9]{6})".* 到 [$1] = true
 
--- 药水 需求人物等级 40 级
+-- Potion (require level >= 40)
 local potions = {
+    5512, --治療石
+    177278, -- 寧靜之瓶
+    114124, --幽靈藥水
+    115531, --迴旋艾斯蘭藥水
+    116925, --舊式的自由行動藥水
+    118910, --打鬥者的德拉諾敏捷藥水
+    118911, --打鬥者的德拉諾智力藥水
+    118912, --打鬥者的德拉諾力量藥水
+    118913, --打鬥者的無底德拉諾敏捷藥水
+    118914, --打鬥者的無底德拉諾智力藥水
+    118915, --打鬥者的無底德拉諾力量藥水
+    127834, --上古治療藥水
+    127835, --上古法力藥水
+    127836, --上古活力藥水 P
+    127843, --致命恩典藥水
+    127844, --遠古戰役藥水
+    127845, --不屈藥水
+    127846, --脈流藥水
+    136569, --陳年的生命藥水
+    142117, --持久之力藥水
+    142325, --打鬥者上古治療藥水
+    142326, --打鬥者持久之力藥水
+    144396, --悍勇治療藥水
+    144397, --悍勇護甲藥水
+    144398, --悍勇怒氣藥水
+    152494, --濱海治療藥水
+    152495, --濱海法力藥水
+    152497, --輕足藥水
+    152503, --隱身藥水
+    152550, --海霧藥水
+    152557, --鋼膚藥水
+    152559, --死亡湧升藥水
+    152560, --澎湃鮮血藥水
+    152561, --回復藥水
+    152615, --暗星治療藥水
+    152619, --暗星法力藥水
+    163082, --濱海回春藥水
+    163222, --智力戰鬥藥水
+    163223, --敏捷戰鬥藥水
+    163224, --力量戰鬥藥水
+    163225, --耐力戰鬥藥水
+    167917, --鬥陣濱海治療藥水
+    167918, --鬥陣力量戰鬥藥水
+    167919, --鬥陣敏捷戰鬥藥水
+    167920, --鬥陣智力戰鬥藥水
+    168489, --精良敏捷戰鬥藥水
+    168498, --精良智力戰鬥藥水
+    168499, --精良耐力戰鬥藥水
+    168500, --精良力量戰鬥藥水
+    168501, --精良鋼膚藥水
+    168502, --重組藥水
+    168506, --凝神決心藥水
+    168529, --地緣強化藥水
+    169299, --無盡狂怒藥水
+    169300, --野性癒合藥水
+    169451, --深淵治療藥水
+    171263, --靈魂純淨藥水
+    171264, --靈視藥水
+    171266, --魂隱藥水
+    171267, --鬼靈治療藥水
+    171268, --鬼靈法力藥水
+    171269, --鬼靈活力藥水
+    171270, --鬼靈敏捷藥水
+    171271, --堅實暗影藥水
+    171272, --鬼靈清晰藥水
+    171273, --鬼靈智力藥水
+    171274, --鬼靈耐力藥水
+    171275, --鬼靈力量藥水
+    171349, --魅影之火藥水
+    171350, --神性覺醒藥水
+    171351, --死亡凝視藥水
+    171352, --強力驅邪藥水
+    171370, --幽魂迅捷藥水
+    176811, --靈魄獻祭藥水
+    183823, --暢行無阻藥水
+    184090 --導靈者之速藥水
+}
+-- Potion added in Shadowlands (require level >= 50)
+local potionsShadowlands = {
     5512, -- 治療石
-    176443, -- 消逝狂亂藥水
-    118915, -- 打鬥者的無底德拉諾力量藥水
-    118911, -- 打鬥者的德拉諾智力藥水
-    118913, -- 打鬥者的無底德拉諾敏捷藥水
-    118914, -- 打鬥者的無底德拉諾智力藥水
-    116925, -- 舊式的自由行動藥水
-    118910, -- 打鬥者的德拉諾敏捷藥水
-    118912, -- 打鬥者的德拉諾力量藥水
-    114124, -- 幽靈藥水
-    115531, -- 迴旋艾斯蘭藥水
-    127845, -- 不屈藥水
-    142117, -- 持久之力藥水
-    127844, -- 遠古戰役藥水
-    127834, -- 上古治療藥水
-    127835, -- 上古法力藥水
-    127843, -- 致命恩典藥水
-    127846, -- 脈流藥水
-    127836, -- 上古活力藥水
-    136569, -- 陳年的生命藥水
-    144396, -- 悍勇治療藥水
-    144397, -- 悍勇護甲藥水
-    144398, -- 悍勇怒氣藥水
-    152615, -- 暗星治療藥水
-    142326, -- 打鬥者持久之力藥水
-    142325, -- 打鬥者上古治療藥水
-    152619, -- 暗星法力藥水
-    169451, -- 深淵治療藥水
-    169299, -- 無盡狂怒藥水
-    152497, -- 輕足藥水
-    168498, -- 精良智力戰鬥藥水
-    152495, -- 濱海法力藥水
-    168500, -- 精良力量戰鬥藥水
-    168489, -- 精良敏捷戰鬥藥水
-    152494, -- 濱海治療藥水
-    168506, -- 凝神決心藥水
-    152561, -- 回復藥水
-    168529, -- 地緣強化藥水
-    163222, -- 智力戰鬥藥水
-    163223, -- 敏捷戰鬥藥水
-    152550, -- 海霧藥水
-    152503, -- 隱身藥水
-    152557, -- 鋼膚藥水
-    163224, -- 力量戰鬥藥水
-    152560, -- 澎湃鮮血藥水
-    169300, -- 野性癒合藥水
-    168501, -- 精良鋼膚藥水
-    168499, -- 精良耐力戰鬥藥水
-    163225, -- 耐力戰鬥藥水
-    152559, -- 死亡湧升藥水
-    163082, -- 濱海回春藥水
-    168502, -- 重組藥水
-    167917, -- 鬥陣濱海治療藥水
-    167920, -- 鬥陣智力戰鬥藥水
-    167918, -- 鬥陣力量戰鬥藥水
-    167919, -- 鬥陣敏捷戰鬥藥水
-    184090, -- 導靈者之速藥水
-    180771, -- 不尋常力量藥水
-    171267, -- 鬼靈治療藥水
-    171270, -- 鬼靈敏捷藥水
-    171351, -- 死亡凝視藥水
-    171273, -- 鬼靈智力藥水
-    171352, -- 強力驅邪藥水
-    171350, -- 神性覺醒藥水
-    171349, -- 魅影之火藥水
-    171266, -- 魂隱藥水
-    171272, -- 鬼靈清晰藥水
-    171268, -- 鬼靈法力藥水
-    176811, -- 靈魄獻祭藥水
-    171271, -- 堅實暗影藥水
-    171274, -- 鬼靈耐力藥水
-    171269, -- 鬼靈活力藥水
-    171275, -- 鬼靈力量藥水
-    171264, -- 靈視藥水
-    171263, -- 靈魂純淨藥水
-    171370, -- 幽魂迅捷藥水
-    183823, -- 暢行無阻藥水
-    180317, -- 靈性治療藥水
-    180318 -- 靈性法力藥水
+    177278, -- 寧靜之瓶
+    171263, --靈魂純淨藥水
+    171264, --靈視藥水
+    171266, --魂隱藥水
+    171267, --鬼靈治療藥水
+    171268, --鬼靈法力藥水
+    171269, --鬼靈活力藥水
+    171270, --鬼靈敏捷藥水
+    171271, --堅實暗影藥水
+    171272, --鬼靈清晰藥水
+    171273, --鬼靈智力藥水
+    171274, --鬼靈耐力藥水
+    171275, --鬼靈力量藥水
+    171349, --魅影之火藥水
+    171350, --神性覺醒藥水
+    171351, --死亡凝視藥水
+    171352, --強力驅邪藥水
+    171370, --幽魂迅捷藥水
+    176811, --靈魄獻祭藥水
+    183823, --暢行無阻藥水
+    184090 --導靈者之速藥水
 }
 
--- 药剂 需求人物等级 40 级
+-- Flasks (require level >= 40)
 local flasks = {
-    168652, -- 強效無盡深淵精煉藥劑
-    168654, -- 強效暗流精煉藥劑
-    168651, -- 強效洪流精煉藥劑
-    168655, -- 強效神秘精煉藥劑
-    152639, -- 無盡深淵精煉藥劑
-    168653, -- 強效遼闊地平線精煉藥劑
-    152638, -- 洪流精煉藥劑
-    152641, -- 暗流精煉藥劑
-    127848, -- 七魔精煉藥劑
-    127849, -- 無盡軍士精煉藥劑
-    127850, -- 萬道傷痕精煉藥劑
-    127847, -- 低語契約精煉藥劑
-    152640, -- 遼闊地平線精煉藥劑
-    127858, -- 靈魂精煉藥劑
-    162518, -- 神秘精煉藥劑
-    171276, -- 鬼靈威力精煉藥劑
-    171278 -- 鬼靈耐力精煉藥
+    127847, --低語契約精煉藥劑
+    127848, --七魔精煉藥劑
+    127849, --無盡軍士精煉藥劑
+    127850, --萬道傷痕精煉藥劑
+    127858, --靈魂精煉藥劑
+    152638, --洪流精煉藥劑
+    152639, --無盡深淵精煉藥劑
+    152640, --遼闊地平線精煉藥劑
+    152641, --暗流精煉藥劑
+    162518, --神秘精煉藥劑
+    168651, --強效洪流精煉藥劑
+    168652, --強效無盡深淵精煉藥劑
+    168653, --強效遼闊地平線精煉藥劑
+    168654, --強效暗流精煉藥劑
+    168655, --強效神秘精煉藥劑
+    171276, --鬼靈威力精煉藥劑
+    171278, --鬼靈耐力精煉藥劑
+    171280 --永恆精煉藥劑
+}
+
+-- Flasks added in Shadowlands (require level >= 50)
+local flasksShadowlands = {
+    171276, --鬼靈威力精煉藥劑
+    171278, --鬼靈耐力精煉藥劑
+    171280 --永恆精煉藥劑
+}
+
+local torghastItems = {
+    168207, --掠奪的靈魄能量球
+    170540, --飢餓的靈魄能量球
+    176331, --精華掩蔽藥水
+    176409, --活力虹吸精華
+    176443 --消逝狂亂藥水
+}
+
+-- Food (Crafted by cooking)
+local food = {
+    133557, --椒鹽火腿
+    133561, --酥炸蘚鰓鱸魚
+    133562, --醃漬風暴魟魚
+    133563, --法隆納氣泡飲
+    133564, --香料烤肋排
+    133565, --脈燒肋排
+    133566, --蘇拉瑪爾海陸大餐
+    133567, --梭子魚莫古嘎古
+    133568, --鯉香風暴魟魚
+    133569, --卓格巴風味鮭魚
+    133570, --飢腸盛宴
+    133571, --艾薩拉沙拉
+    133572, --夜裔精緻拼盤
+    133573, --種籽風味炸魚盤
+    133574, --魚卜魯特餐
+    133575, --風乾鯖魚肉
+    133576, --韃靼熊排
+    133577, --戰士雜煮
+    133578, --澎湃盛宴
+    133579, --蘇拉瑪爾豪宴
+    133681, --香脆培根
+    142334, --香料龍隼煎蛋捲
+    154881, --庫爾提拉米蘇
+    154882, --蜜汁烤後腿
+    154883, --鴉莓塔
+    154884, --沼澤炸魚薯條
+    154885, --蒙達吉
+    154886, --香料笛鯛
+    154887, --羅亞肉餅
+    154889, --燒烤鯰魚
+    154891, --調味腰內肉
+    156525, --艦上盛宴
+    156526, --豐盛的船長饗宴
+    163781, --禍心巫術香腸
+    165755, --蜂蜜餡餅
+    166240, --血潤盛宴
+    166343, --野莓麵包
+    166344, --精心調味的肉排和馬鈴薯
+    166804, --波拉勒斯血腸
+    168310, --機當勞的「大機克」
+    168312, --噴香燉魚
+    168313, --烘焙港口薯
+    168314, --比爾通肉乾
+    168315, --超澎湃饗宴
+    169280, --串烤鰻魚肉
+    172040, --奶油糖醃製肋排
+    172041, --刺鰭舒芙蕾佐炸物
+    172042, --意外可口盛宴
+    172043, --暴食享樂盛宴
+    172044, --肉桂燉骨魚
+    172045, --陰暗皇冠肉排凍
+    172046, --魚子醬餅乾
+    172047, --蜜糖鰤魚蛋糕
+    172048, --肉餡蘋果餃子
+    172049, --蘋果醬彩色餡餃
+    172050, --蜜汁銀鰓香腸
+    172051, --濃醬牛排
+    172060, --靜謐魂食
+    172061, --天使雞翅
+    172062, --燉煮腿肉
+    172063, --炸骨魚
+    172068, --醃肉奶昔
+    172069, --香蕉牛肉布丁
+    184682 --特大號香檸魚排
+}
+
+-- Food added in Shadowlands (Crafted by cooking)
+local foodShadowlands = {
+    172040, --奶油糖醃製肋排
+    172041, --刺鰭舒芙蕾佐炸物
+    172042, --意外可口盛宴
+    172043, --暴食享樂盛宴
+    172044, --肉桂燉骨魚
+    172045, --陰暗皇冠肉排凍
+    172046, --魚子醬餅乾
+    172047, --蜜糖鰤魚蛋糕
+    172048, --肉餡蘋果餃子
+    172049, --蘋果醬彩色餡餃
+    172050, --蜜汁銀鰓香腸
+    172051, --濃醬牛排
+    172060, --靜謐魂食
+    172061, --天使雞翅
+    172062, --燉煮腿肉
+    172063, --炸骨魚
+    172068, --醃肉奶昔
+    172069, --香蕉牛肉布丁
+    184682 --特大號香檸魚排
+}
+
+-- Food crafted by mage
+local conjuredManaFood = {
+    34062, --魔法法力軟餅
+    43518, --魔法法力派
+    43523, --魔法法力餡餅
+    65499, --魔法法力蛋糕
+    65500, --魔法法力餅乾
+    65515, --魔法法力布朗尼
+    65516, --魔法法力杯子蛋糕
+    65517, --魔法法力棒棒糖
+    80610, --魔法法力布丁
+    80618, --魔法法力甜餅
+    113509 --魔法法力餐包
 }
 
 -- 战旗
@@ -197,6 +341,19 @@ local UpdateAfterCombat = {
     [1] = false,
     [2] = false,
     [3] = false
+}
+
+local moduleList = {
+    ["POTION"] = potions,
+    ["POTIONSL"] = potionsShadowlands,
+    ["FLASK"] = flasks,
+    ["FLASKSL"] = flasksShadowlands,
+    ["TORGHAST"] = torghastItems,
+    ["FOOD"] = food,
+    ["FOODSL"] = foodShadowlands,
+    ["MAGEFOOD"] = conjuredManaFood,
+    ["BANNER"] = banners,
+    ["UTILITY"] = utilities
 }
 
 function EB:CreateButton(name, barDB)
@@ -454,7 +611,7 @@ function EB:CreateBar(id)
     bar.id = id
     bar:ClearAllPoints()
     bar:SetParent(anchor)
-    bar:SetPoint("CENTER", anchor, "CENTER", 0, 0)
+    bar:Point("CENTER", anchor, "CENTER", 0, 0)
     bar:Size(200, 40)
     bar:CreateBackdrop("Transparent")
     bar:SetFrameStrata("LOW")
@@ -530,48 +687,25 @@ function EB:UpdateBar(id)
 
     local buttonID = 1
 
+    local function AddButtons(list)
+        for _, itemID in pairs(list) do
+            local count = GetItemCount(itemID)
+            if count and count > 0 and not self.db.blackList[itemID] and buttonID <= barDB.numButtons then
+                self:SetUpButton(bar.buttons[buttonID], {itemID = itemID})
+                self:UpdateButtonSize(bar.buttons[buttonID], barDB)
+                buttonID = buttonID + 1
+            end
+        end
+    end
+
     for _, module in ipairs {strsplit("[, ]", barDB.include)} do
         if buttonID <= barDB.numButtons then
-            if module == "QUEST" then -- 更新任务物品
+            if moduleList[module] then
+                AddButtons(moduleList[module])
+            elseif module == "QUEST" then -- 更新任务物品
                 for _, data in pairs(questItemList) do
                     if not self.db.blackList[data.itemID] then
                         self:SetUpButton(bar.buttons[buttonID], data)
-                        self:UpdateButtonSize(bar.buttons[buttonID], barDB)
-                        buttonID = buttonID + 1
-                    end
-                end
-            elseif module == "POTION" then -- 更新药水
-                for _, potionID in pairs(potions) do
-                    local count = GetItemCount(potionID)
-                    if count and count > 0 and not self.db.blackList[potionID] then
-                        self:SetUpButton(bar.buttons[buttonID], {itemID = potionID})
-                        self:UpdateButtonSize(bar.buttons[buttonID], barDB)
-                        buttonID = buttonID + 1
-                    end
-                end
-            elseif module == "FLASK" then -- 更新药剂
-                for _, flaskID in pairs(flasks) do
-                    local count = GetItemCount(flaskID)
-                    if count and count > 0 and not self.db.blackList[flaskID] and buttonID <= barDB.numButtons then
-                        self:SetUpButton(bar.buttons[buttonID], {itemID = flaskID})
-                        self:UpdateButtonSize(bar.buttons[buttonID], barDB)
-                        buttonID = buttonID + 1
-                    end
-                end
-            elseif module == "BANNER" then -- 更新战旗
-                for _, bannerID in pairs(banners) do
-                    local count = GetItemCount(bannerID)
-                    if count and count > 0 and not self.db.blackList[bannerID] and buttonID <= barDB.numButtons then
-                        self:SetUpButton(bar.buttons[buttonID], {itemID = bannerID})
-                        bar.buttons[buttonID]:Size(barDB.buttonWidth, barDB.buttonHeight)
-                        buttonID = buttonID + 1
-                    end
-                end
-            elseif module == "UTILITY" then -- 更新实用工具
-                for _, utilityID in pairs(utilities) do
-                    local count = GetItemCount(utilityID)
-                    if count and count > 0 and not self.db.blackList[utilityID] and buttonID <= barDB.numButtons then
-                        self:SetUpButton(bar.buttons[buttonID], {itemID = utilityID})
                         self:UpdateButtonSize(bar.buttons[buttonID], barDB)
                         buttonID = buttonID + 1
                     end
@@ -586,19 +720,31 @@ function EB:UpdateBar(id)
                     end
                 end
             elseif module == "CUSTOM" then -- 更新自定义列表
-                for _, itemID in pairs(self.db.customList) do
-                    local count = GetItemCount(itemID)
-                    if count and count > 0 and not self.db.blackList[itemID] and buttonID <= barDB.numButtons then
-                        self:SetUpButton(bar.buttons[buttonID], {itemID = itemID})
-                        self:UpdateButtonSize(bar.buttons[buttonID], barDB)
-                        buttonID = buttonID + 1
-                    end
-                end
+                AddButtons(self.db.customList)
             end
         end
     end
 
-    -- 隐藏其余按钮
+    -- Resize bar
+    local numRows = ceil((buttonID - 1) / barDB.buttonsPerRow)
+    local numCols = buttonID > barDB.buttonsPerRow and barDB.buttonsPerRow or (buttonID - 1)
+    local newBarWidth = 2 * barDB.backdropSpacing + numCols * barDB.buttonWidth + (numCols - 1) * barDB.spacing
+    local newBarHeight = 2 * barDB.backdropSpacing + numRows * barDB.buttonHeight + (numRows - 1) * barDB.spacing
+    bar:Size(newBarWidth, newBarHeight)
+
+    -- Update anchor size
+    local numMoverRows = ceil(barDB.numButtons / barDB.buttonsPerRow)
+    local numMoverCols = barDB.buttonsPerRow
+    local newMoverWidth =
+        2 * barDB.backdropSpacing + numMoverCols * barDB.buttonWidth + (numMoverCols - 1) * barDB.spacing
+    local newMoverHeight =
+        2 * barDB.backdropSpacing + numMoverRows * barDB.buttonHeight + (numMoverRows - 1) * barDB.spacing
+    bar:GetParent():Size(newMoverWidth, newMoverHeight)
+
+    bar:ClearAllPoints()
+    bar:Point(barDB.anchor)
+
+    -- Hide buttons not in use
     if buttonID == 1 then
         if bar.register then
             UnregisterStateDriver(bar, "visibility")
@@ -613,25 +759,6 @@ function EB:UpdateBar(id)
             bar.buttons[hideButtonID]:Hide()
         end
     end
-
-    -- 计算新的条大小
-    local numRows = ceil((buttonID - 1) / barDB.buttonsPerRow)
-    local numCols = buttonID > barDB.buttonsPerRow and barDB.buttonsPerRow or (buttonID - 1)
-    local newBarWidth = 2 * barDB.backdropSpacing + numCols * barDB.buttonWidth + (numCols - 1) * barDB.spacing
-    local newBarHeight = 2 * barDB.backdropSpacing + numRows * barDB.buttonHeight + (numRows - 1) * barDB.spacing
-    bar:Size(newBarWidth, newBarHeight)
-
-    -- 移动框
-    local numMoverRows = ceil(barDB.numButtons / barDB.buttonsPerRow)
-    local numMoverCols = barDB.buttonsPerRow
-    local newMoverWidth =
-        2 * barDB.backdropSpacing + numMoverCols * barDB.buttonWidth + (numMoverCols - 1) * barDB.spacing
-    local newMoverHeight =
-        2 * barDB.backdropSpacing + numMoverRows * barDB.buttonHeight + (numMoverRows - 1) * barDB.spacing
-    bar:GetParent():Size(newMoverWidth, newMoverHeight)
-
-    bar:ClearAllPoints()
-    bar:Point(barDB.anchor)
 
     for i = 1, buttonID - 1 do
         -- 重新定位图标
@@ -686,7 +813,7 @@ function EB:UpdateBar(id)
     end
     bar:Show()
 
-    -- 切换阴影
+    -- Toggle shadow
     if barDB.backdrop then
         bar.backdrop:Show()
         if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow then

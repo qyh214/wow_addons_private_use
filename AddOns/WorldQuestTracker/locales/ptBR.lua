@@ -172,15 +172,12 @@ L["S_TUTORIAL_WORLDMAPBUTTON"] = "Este botão mostra o mapa das Ilhas Partidas."
 L["S_UNKNOWNQUEST"] = "Missão desconhecida"
 L["S_WHATSNEW"] = "O que tem de novo?"
 --[[Translation missing --]]
---[[ L["S_WORLDBUTTONS_SHOW_NONE"] = ""--]] 
---[[Translation missing --]]
 --[[ L["S_WORLDBUTTONS_SHOW_TYPE"] = ""--]] 
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "Ordenar por Zona"
 --[[Translation missing --]]
 --[[ L["S_WORLDBUTTONS_TOGGLE_QUESTS"] = ""--]] 
 L["S_WORLDMAP_QUESTLOCATIONS"] = "Mostrar local da quest"
 L["S_WORLDMAP_QUESTSUMMARY"] = "Mostrar resumo de quest"
-L["S_WORLDMAP_TOOGLEQUESTS"] = "Alternar Missões"
 --[[Translation missing --]]
 --[[ L["S_WORLDMAP_TOOLTIP_TRACKALL"] = ""--]] 
 L["S_WORLDQUESTS"] = "Missões Mundiais"

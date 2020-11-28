@@ -27,6 +27,7 @@ local RSUtils = private.ImportLib("RareScannerUtils")
 local RSTimeUtils = private.ImportLib("RareScannerTimeUtils")
 
 -- RareScanner service libraries
+local RSNotes = private.ImportLib("RareScannerNotes")
 local RSLoot = private.ImportLib("RareScannerLoot")
 
 --=====================================================
@@ -202,12 +203,10 @@ local function AddAchievementTooltip(tooltip, pin)
 end
 
 local function AddNotesTooltip(tooltip, pin)
-	if (AL[string.format("NOTE_%s", pin.POI.entityID)] ~= string.format("NOTE_%s", pin.POI.entityID)) then
+	local note = RSNotes.GetNote(pin.POI.entityID, pin.POI.mapID)
+	if (note) then
 		local line = tooltip:AddLine()
-		tooltip:SetCell(line, 1, RSUtils.TextColor(AL[string.format("NOTE_%s", pin.POI.entityID)], "FFFFCC"), nil, "LEFT", 10, nil, nil, nil, RSConstants.TOOLTIP_MAX_WIDTH)
-	elseif (AL[string.format("NOTE_%s_%s", pin.POI.entityID, pin.POI.mapID)] ~= string.format("NOTE_%s_%s", pin.POI.entityID, pin.POI.mapID)) then
-		local line = tooltip:AddLine()
-		tooltip:SetCell(line, 1, RSUtils.TextColor(AL[string.format("NOTE_%s_%s", pin.POI.entityID, pin.POI.mapID)], "FFFFCC"), nil, "LEFT", 10, nil, nil, nil, RSConstants.TOOLTIP_MAX_WIDTH)
+		tooltip:SetCell(line, 1, RSUtils.TextColor(note, "FFFFCC"), nil, "LEFT", 10, nil, nil, nil, RSConstants.TOOLTIP_MAX_WIDTH)
 	end
 end
 
@@ -244,12 +243,12 @@ local function AddLootTooltip(tooltip, pin)
 		-- Add loot to the tooltip
 		if (next(itemsIDsFiltered) ~= nil) then
 			local line = tooltip:AddLine()
-			tooltip:AddSeparator(1.11)
+			tooltip:AddSeparator(1)
 			line = tooltip:AddLine()
 
 			local j
 			for i, itemInfo in ipairs(itemsIDsFiltered) do
-				local itemID, itemLink, itemRarity, itemEquipLoc, iconFileDataID, itemClassID, itemSubClassID = itemInfo[1], itemInfo[2], itemInfo[3], itemInfo[4], itemInfo[5], itemInfo[6], itemInfo[7]
+				local itemLink, itemRarity, itemEquipLoc, iconFileDataID, itemClassID, itemSubClassID = RSGeneralDB.GetItemInfo(itemInfo[1])
 			
 				j = (i - floor(i/10) * 10)
 				if (j == 0) then
@@ -270,12 +269,10 @@ local function AddLootTooltip(tooltip, pin)
 
 			-- fill with white spaces
 			if (j < 9) then
-				for k=j+1, 10 do
-					tooltip:SetCell(line, k, "", nil, "CENTER", 1, nil, nil, nil, nil, 24, 24)
-				end
+				tooltip:SetCell(line, j+1, "", nil, "LEFT", 10-j, nil, nil, nil, nil, 24 * (10 - j), 24 * (10 - j))
 			end
 
-			tooltip:AddSeparator(1.11)
+			tooltip:AddSeparator(1)
 		end
 	end
 end
@@ -283,7 +280,6 @@ end
 local function AddStateTooltip(tooltip, pin)
 	-- Separator
 	local line = tooltip:AddLine()
-	line = tooltip:AddLine()
 
 	if ((pin.POI.isNpc and not pin.POI.isDead) or (pin.POI.isContainer and not pin.POI.isOpened) or (pin.POI.isEvent and not pin.POI.isCompleted)) then
 		local text
@@ -335,7 +331,7 @@ end
 
 local function AddGuideTooltip(tooltip, pin)
 	-- Guide
-	local guide = nil
+	local guide = false
 	if (pin.POI.isNpc) then
 		guide = RSGuideDB.GetNpcGuide(pin.POI.entityID)
 	elseif (pin.POI.isContainer) then
@@ -436,6 +432,19 @@ function RSTooltip.ShowSimpleTooltip(pin, parentTooltip)
 	if (RSConstants.DEBUG_MODE) then
 		line = tooltip:AddLine()
 		tooltip:SetCell(line, 1, RSUtils.TextColor(pin.POI.entityID, "FFFFCC"), nil, "LEFT", 10)
+		local hasQuestID = false
+		if (pin.POI.isNpc and RSNpcDB.GetNpcQuestIdFound(pin.POI.entityID) or (RSNpcDB.GetInternalNpcInfo(pin.POI.entityID) and RSNpcDB.GetInternalNpcInfo(pin.POI.entityID).questID)) then
+			hasQuestID = true
+		elseif (pin.POI.isContainer and RSContainerDB.GetContainerQuestIdFound(pin.POI.entityID) or (RSContainerDB.GetInternalContainerInfo(pin.POI.entityID) and RSContainerDB.GetInternalContainerInfo(pin.POI.entityID).questID)) then
+			hasQuestID = true
+		elseif (RSEventDB.GetEventQuestIdFound(pin.POI.entityID) or (RSEventDB.GetInternalEventInfo(pin.POI.entityID) and RSEventDB.GetInternalEventInfo(pin.POI.entityID).questID)) then
+			hasQuestID = true
+		end
+		
+		if (not hasQuestID) then
+			line = tooltip:AddLine()
+			tooltip:SetCell(line, 1, RSUtils.TextColor("No tiene QUESTID", "FF0000"), nil, "LEFT", 10)
+		end
 	end
 
 	-- Last time seen

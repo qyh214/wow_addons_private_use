@@ -347,7 +347,7 @@
 	end
 	
 	function _detalhes.network.Wipe_Call (player, realm, core_version, ...)
-		local chr_name = Ambiguate (player .. "-" .. realm, "none")
+		local chr_name = Ambiguate(player, "none")
 		if (UnitIsGroupLeader (chr_name)) then
 			if (UnitIsInMyGuild (chr_name)) then
 				_detalhes:CallWipe()
@@ -376,9 +376,17 @@
 			return
 		end
 
-		local sourcePlayer = Ambiguate(player .. "-" .. realm, "none")
+		if (_detalhes.debug) then
+			print("Details Coach Received Comm", player, realm, core_version, msgType, data)
+		end
+
+		local sourcePlayer = Ambiguate(player, "none")
+		
 		local playerName = UnitName("player")
 		if (playerName == sourcePlayer) then
+			if (_detalhes.debug) then
+				print("Details Coach Received Comm | RETURN | playerName == sourcePlayer", playerName , sourcePlayer)
+			end
 			return
 		end
 
@@ -409,6 +417,9 @@
 			Details.Coach.Server.CombatEnded()
 
 		elseif (msgType == "CS") then --Coach Start (raid leader notifying other members of the group)
+			if (_detalhes.debug) then
+				print("Details Coach received 'CE' a new coach is active, coach name:", sourcePlayer)
+			end
 			Details.Coach.Client.EnableCoach(sourcePlayer)
 
 		elseif (msgType == "CE") then --Coach End (raid leader notifying other members of the group)
@@ -418,7 +429,7 @@
 			if (UnitIsGroupLeader("player")) then
 				if (Details.Coach.Server.IsEnabled()) then
 					--update the current combat with new information
-					
+					Details.packFunctions.DeployUnpackedCombatData(data)
 				end
 			end
 		end
@@ -430,7 +441,7 @@
 	--guild sync A = received missing encounters, add them
 	
 	function _detalhes.network.GuildSync (player, realm, core_version, type, data)
-		local chr_name = Ambiguate (player .. "-" .. realm, "none")
+		local chr_name = Ambiguate(player, "none")
 		
 		if (UnitName ("player") == chr_name) then
 			return
@@ -562,9 +573,10 @@
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --> register comm
 
-	function _detalhes:CommReceived (_, data, _, source)
+	function _detalhes:CommReceived (commPrefix, data, channel, source)
 	
 		local prefix, player, realm, dversion, arg6, arg7, arg8, arg9 =  _select (2, _detalhes:Deserialize (data))
+		player = source
 		
 		if (_detalhes.debug) then
 			_detalhes:Msg ("(debug) network received:", prefix, "length:", string.len (data))

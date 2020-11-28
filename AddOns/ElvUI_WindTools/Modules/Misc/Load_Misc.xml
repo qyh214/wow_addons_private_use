@@ -1,9 +1,11 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
 	<!-- Core -->
-	<Script file='Misc.lua'/>
+	<Script file='Core.lua'/>
 	<!-- Submodule -->
+	<Script file='AutoScreenShot.lua'/>
 	<Script file='DisableTalkingHead.lua'/>
 	<Script file='Math.lua'/>
+	<Script file='MoveSpeed.lua'/>
 	<Script file='Mute.lua'/>
 	<Script file='PauseToSlash.lua'/>
 	<Script file='SkipCutScene.lua'/>

@@ -1175,7 +1175,7 @@ local function SetCategoryButtonProgress(button, numAchievements, numCompleted, 
             else
                 button.fill:Show();
                 button.fillEnd:Show();
-                button.fill:SetWidth(182 * percentage);
+                button.fill:SetWidth(button.fillWidth * percentage);
                 button.fill:SetTexCoord(0, percentage *  0.75, 0, 1);
                 button.progress:SetText(numCompleted .."/".. numAchievements);
             end
@@ -1241,7 +1241,7 @@ local function UpdateCategoryButtonProgress(button)
             button.fillEnd:Show();
 
             local percentage = totalCompleted / totalAchievements;
-            button.fill:SetWidth(198 * percentage);
+            button.fill:SetWidth(button.fillWidth * percentage);
             button.fill:SetTexCoord(0, percentage *  0.75, 0, 1);
             if percentage == 1 then
                 button.value:SetText("100");
@@ -3575,6 +3575,11 @@ end
 --------------------------------------------------------------------
 --Public
 NarciAchivementFrameMixin = {};
+
+function NarciAchivementFrameMixin:OnLoad()
+    self:RegisterForDrag("LeftButton");
+    self:SetAttribute("nodeignore", true);  --ConsolePort: Ignore this frame
+end
 
 function NarciAchivementFrameMixin:OnShow()
     if self.pendingCategoryID then

@@ -8,11 +8,14 @@ local L = WeakAuras.L
 
 -- WeakAuras/Templates
 	--[[Translation missing --]]
+	L[" Debuff"] = " Debuff"
+	--[[Translation missing --]]
 	L["<70% Mana"] = "<70% Mana"
 	--[[Translation missing --]]
 	L[">70% Mana"] = ">70% Mana"
 	L["Abilities"] = "Способности"
-	L["Ability Charges"] = "Заряды способности"
+	--[[Translation missing --]]
+	L["Ability"] = "Ability"
 	L["Add Triggers"] = "Добавить триггеры"
 	L["Always Active"] = "Всегда активный триггер"
 	L["Always Show"] = "Показывать всегда"
@@ -39,21 +42,41 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Basic Show On Ready"] = "Basic Show On Ready"
 	L["Bloodlust/Heroism"] = "Жажда крови / Героизм"
+	--[[Translation missing --]]
+	L["Bonded Buff"] = "Bonded Buff"
+	--[[Translation missing --]]
+	L["Buff"] = "Buff"
 	L["buff"] = "(бафф)"
 	--[[Translation missing --]]
 	L["Buff on Other"] = "Buff on Other"
 	L["Buffs"] = "Баффы"
+	--[[Translation missing --]]
+	L["Build Up"] = "Build Up"
 	L["Cancel"] = "Отмена"
 	L["Cast"] = "Применение заклинания (каст)"
 	L["Charge and Buff Tracking"] = "Отслеживание заряда и баффов"
 	L["Charge and Debuff Tracking"] = "Отслеживание зарядов и дебаффов"
 	L["Charge and Duration Tracking"] = "Отслеживание заряда и продолжительности"
 	L["Charge Tracking"] = "Отслеживание заряда"
+	--[[Translation missing --]]
+	L["Combustion Ready"] = "Combustion Ready"
+	--[[Translation missing --]]
+	L["Conduits"] = "Conduits"
+	--[[Translation missing --]]
+	L["Cooldown"] = "Cooldown"
 	L["cooldown"] = "(восстановление)"
 	L["Cooldown Tracking"] = "Отслеживание восстановления"
 	L["Create Auras"] = "Создать"
+	--[[Translation missing --]]
+	L["Debuff"] = "Debuff"
 	L["debuff"] = "дебафф"
 	L["Debuffs"] = "Дебаффы"
+	--[[Translation missing --]]
+	L["Empowered Buff"] = "Empowered Buff"
+	--[[Translation missing --]]
+	L["Fire"] = "Fire"
+	--[[Translation missing --]]
+	L["Frost"] = "Frost"
 	L["General"] = "Общие"
 	L["Health"] = "Здоровье"
 	--[[Translation missing --]]
@@ -68,6 +91,12 @@ local L = WeakAuras.L
 	L["Highlight while spell is active."] = "Highlight while spell is active."
 	L["Hold CTRL to create multiple auras at once"] = "Удерживайте Ctrl для создания нескольких индикаций"
 	L["Keeps existing triggers intact"] = "Сохраняет существующие триггеры нетронутыми"
+	--[[Translation missing --]]
+	L["Legendaries"] = "Legendaries"
+	--[[Translation missing --]]
+	L["Meteor Ready"] = "Meteor Ready"
+	--[[Translation missing --]]
+	L["Nature"] = "Nature"
 	L["Next"] = "Далее"
 	L["Only show the aura if the target has the debuff."] = "Показывает индикацию, только когда на цели есть дебафф."
 	L["Only show the aura when the item is on cooldown."] = "Показывает индикацию, только когда предмет восстанавливается."
@@ -137,10 +166,16 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
 	--[[Translation missing --]]
+	L["Slow"] = "Slow"
+	--[[Translation missing --]]
 	L["slow debuff"] = "slow debuff"
 	L["Stance"] = "Стойка"
 	--[[Translation missing --]]
 	L["stun debuff"] = "stun debuff"
+	--[[Translation missing --]]
+	L["Stun Debuff"] = "Stun Debuff"
+	--[[Translation missing --]]
+	L["Totem"] = "Totem"
 	--[[Translation missing --]]
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."
 	--[[Translation missing --]]

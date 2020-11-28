@@ -60,6 +60,7 @@
 - Misc
     - Warbaby (爱不易)
     - zaCade (FixTransmogOutfits)
+    - oyg123 @ NGA.cn
 
 - Paragon Reputation
     - Fail (Paragon Reputation)
@@ -97,8 +98,11 @@
 - Extra Items Bar
     - cadcamzy (EUI)
 
-- Inpect
+- Inspect
     - loudsoul (TinyInspect)
+
+- Instance Difficulty
+    - Merathilis (ElvUI MerathilisUI)
 
 # Medias
 - 迷时鸟 @ NGA.cn
@@ -155,6 +159,9 @@
 
 - 29ga @ www.iconfont.cn
     - Media/Icons/Chat.tga
+
+- Sukiki情绪化 @ www.iconfont.cn
+    - Media/Icons/Rest.tga
 
 - 王乐城愚人云端 @ www.iconfont.cn
     - Media/Texture/WindToolsSmall.tga

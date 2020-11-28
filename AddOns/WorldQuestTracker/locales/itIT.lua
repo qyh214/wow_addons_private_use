@@ -212,7 +212,6 @@ L["S_TUTORIAL_WORLDMAPBUTTON"] = "Questo pulsante mostra la mappa delle Isole Di
 L["S_UNKNOWNQUEST"] = "Missione Sconosciuta"
 --[[Translation missing --]]
 --[[ L["S_WHATSNEW"] = ""--]] 
-L["S_WORLDBUTTONS_SHOW_NONE"] = "Nascondi indice"
 --[[Translation missing --]]
 --[[ L["S_WORLDBUTTONS_SHOW_TYPE"] = ""--]] 
 --[[Translation missing --]]
@@ -223,8 +222,6 @@ L["S_WORLDBUTTONS_SHOW_NONE"] = "Nascondi indice"
 --[[ L["S_WORLDMAP_QUESTLOCATIONS"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_WORLDMAP_QUESTSUMMARY"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_WORLDMAP_TOOGLEQUESTS"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["S_WORLDMAP_TOOLTIP_TRACKALL"] = ""--]] 
 L["S_WORLDQUESTS"] = "Missioni Mondiali"

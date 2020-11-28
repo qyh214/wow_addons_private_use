@@ -1,10 +1,22 @@
-lightweight tag c1c40eb176fca97a3cf3fba163058cbc6680e118 v5.4.1
+lightweight tag 0eadf78b538cdb6e7ab37c5aff735c159ab737dc v5.4.2
 Author:	Boshi Lian <farmer1992@gmail.com>
-Date:	Tue Oct 20 03:14:49 2020 -0700
+Date:	Sun Nov 22 01:08:52 2020 -0800
 
-commit c1c40eb176fca97a3cf3fba163058cbc6680e118
+commit 0eadf78b538cdb6e7ab37c5aff735c159ab737dc
 Author: Boshi Lian <farmer1992@gmail.com>
-Date:   Tue Oct 20 03:14:49 2020 -0700
+Date:   Sun Nov 22 01:08:52 2020 -0800
 
-    minimap now configable
+    export via libstub
+
+commit 81e2918fa0c7e22455ecb34dfa1a7e5b582da7b0
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Sun Nov 22 00:32:39 2020 -0800
+
+    bump to
+
+commit 29086186265d61828b83d1e2f6c764105da61136
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Sun Nov 22 00:29:59 2020 -0800
+
+    fix equiipment set index
 

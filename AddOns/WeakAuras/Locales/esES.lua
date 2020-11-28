@@ -264,8 +264,6 @@ L["Bloodlord Mandokir"] = "Bloodlord Mandokir"
 --[[Translation missing --]]
 L["Border"] = "Border"
 --[[Translation missing --]]
-L["Border Color"] = "Border Color"
---[[Translation missing --]]
 L["Boss"] = "Boss"
 L["Boss Emote"] = "Jefe - Emoción"
 --[[Translation missing --]]
@@ -1257,8 +1255,6 @@ L["Show"] = "Mostrar"
 --[[Translation missing --]]
 L["Show Absorb"] = "Show Absorb"
 --[[Translation missing --]]
-L["Show Border"] = "Show Border"
---[[Translation missing --]]
 L["Show CD of Charge"] = "Show CD of Charge"
 --[[Translation missing --]]
 L["Show Code"] = "Show Code"
@@ -1266,8 +1262,6 @@ L["Show Code"] = "Show Code"
 L["Show GCD"] = "Show GCD"
 --[[Translation missing --]]
 L["Show Global Cooldown"] = "Show Global Cooldown"
---[[Translation missing --]]
-L["Show Glow"] = "Show Glow"
 --[[Translation missing --]]
 L["Show Incoming Heal"] = "Show Incoming Heal"
 --[[Translation missing --]]
@@ -1595,8 +1589,6 @@ L["Version: "] = "Version: "
 L["Viscidus"] = "Viscidus"
 --[[Translation missing --]]
 L["Visibility"] = "Visibility"
---[[Translation missing --]]
-L["Visible"] = "Visible"
 --[[Translation missing --]]
 L["War Mode Active"] = "War Mode Active"
 --[[Translation missing --]]

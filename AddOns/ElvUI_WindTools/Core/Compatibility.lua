@@ -414,6 +414,20 @@ function W:CheckCompatibility()
         "db.mui.misc.respec"
     )
 
+    self:CheckCompatibilityMerathilisUI(
+        L["Super Tracker"],
+        L["Super Tracker"],
+        "private.WT.maps.superTracker.enable",
+        "db.mui.maps.superTracker.enable"
+    )
+
+    self:CheckCompatibilityMerathilisUI(
+        L["Instance Difficulty"],
+        L["Raid Difficulty"],
+        "private.WT.maps.instanceDifficulty.enable",
+        "db.mui.maps.minimap.difficulty"
+    )
+
     -- S&L
     self:CheckCompatibilityShadowAndLight(
         L["Move Frames"],

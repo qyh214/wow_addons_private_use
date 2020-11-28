@@ -43,6 +43,7 @@ local UIFrameFadeIn = UIFrameFadeIn;
 local UIFrameFadeOut = UIFrameFadeOut;
 local FadeFrame = NarciAPI_FadeFrame;
 local UIParent = _G.UIParent;
+local EquipmentFlyoutFrame;
 
 function PlaceHolderFeature_OnLoad(self)
 	self.tooltipHeadline = "Button-PH";
@@ -639,8 +640,10 @@ CameraContainer.smoothPitch:SetScript("OnUpdate", function(frame, elapsed)
 	local PL = tostring(outSine(frame.total, 88,  0, frame.duration));
 	ConsoleExec( "pitchlimit "..PL)
 	if frame.total >= frame.duration then
-		--ConsoleExec( "pitchlimit 0");
-		ConsoleExec( "pitchlimit 88");
+		ConsoleExec( "pitchlimit 0");
+		After(0, function()
+			ConsoleExec( "pitchlimit 88");
+		end)
 		frame:Hide();
 	end
 end);
@@ -1184,6 +1187,24 @@ function NarciMinimapButtonMixin:OnClick(button, down)
 	After(duration_Lock, function()
 		self:Enable();
 	end)
+end
+
+function NarciMinimapButtonMixin:SetBackground(index)
+	if not index then
+		index = C_Covenants.GetActiveCovenantID();
+	end
+	local minimapTexture = "Interface/AddOns/Narcissus/Art/Minimap/LOGO-";
+	if index == 2 then
+		--Venthyr
+		minimapTexture = minimapTexture.."Brown";
+	elseif index == 4 then
+		--Necrolord
+		minimapTexture = minimapTexture.."Green";
+	else
+		minimapTexture = minimapTexture.."Cyan";
+	end
+	self.Background:SetTexture(minimapTexture);
+	self.Color:SetTexture(minimapTexture);
 end
 
 function NarciMinimapButtonMixin:SetIconScale(scale)
@@ -1995,7 +2016,7 @@ function NarciEquipmentSlotMixin:OnEvent(event, ...)
 	elseif event == "MODIFIER_STATE_CHANGED" then
 		local key, state = ...;
 		if ( key == "LALT" and self:IsMouseOver() ) then
-			local flyout = Narci_EquipmentFlyoutFrame
+			local flyout = EquipmentFlyoutFrame;
 			if state == 1 then
 				if flyout:IsShown() and flyout.slotID == self:GetID() then
 					flyout:Hide();
@@ -2020,26 +2041,43 @@ function NarciEquipmentSlotMixin:OnShow()
 	self:RegisterEvent("BAG_UPDATE_COOLDOWN");
 end
 
-function NarciEquipmentSlotMixin:OnEnter()
+function NarciEquipmentSlotMixin:ResetAnimation()
+	self.Icon.scaleUp:Stop();
+	self.Border.scaleUp:Stop();
+	self.HexMask.scaleUp:Stop();
+	self.Icon:SetScale(1);
+	self.Border:SetScale(1);
+	self.HexMask:SetScale(1);
+end
+
+function NarciEquipmentSlotMixin:OnEnter(motion, isGamepad)
 	self:RegisterEvent("MODIFIER_STATE_CHANGED");
 
-	UIFrameFadeIn(self.Highlight, 0.15, self.Highlight:GetAlpha(), 1);
-	if IsAltKeyDown() and not TransmogMode then
-		Narci_EquipmentFlyout_Show(self, self:GetID());
-		Narci_EquipmentFlyoutFrame.Arrow:Show();
+	
+	if isGamepad then
+		self.Icon.scaleUp:Play();
+		self.Border.scaleUp:Play();
+		self.HexMask.scaleUp:Play();
+	else
+		UIFrameFadeIn(self.Highlight, 0.15, self.Highlight:GetAlpha(), 1);
 	end
 
-	if Narci_EquipmentFlyoutFrame:IsShown() then
-		Narci_Comparison_SetComparison(Narci_EquipmentFlyoutFrame.BaseItem, self);
+	if IsAltKeyDown() and not TransmogMode then
+		Narci_EquipmentFlyout_Show(self, self:GetID());
+		EquipmentFlyoutFrame.Arrow:Show();
+	end
+
+	if EquipmentFlyoutFrame:IsShown() then
+		Narci_Comparison_SetComparison(EquipmentFlyoutFrame.BaseItem, self);
 		return;
 	end
 
 	DefaultTooltip:SetOwner(self, "ANCHOR_NONE");
 
 	if self.isRight then
-		DefaultTooltip:SetPoint("TOPRIGHT", self, "TOPLEFT", 10, -20);
+		DefaultTooltip:SetPoint("TOPRIGHT", self, "TOPLEFT", DefaultTooltip.offsetX, DefaultTooltip.offsetY);
 	else
-		DefaultTooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", -10, -20);
+		DefaultTooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", -DefaultTooltip.offsetX, DefaultTooltip.offsetY);
 	end
 
 	if (self.hyperlink) then
@@ -2049,22 +2087,36 @@ function NarciEquipmentSlotMixin:OnEnter()
 	end
 
 	local hasItem, hasCooldown, repairCost = DefaultTooltip:SetInventoryItem("player", self:GetID(), nil, true);
-	DefaultTooltip:Show();
-	if hasItem then
-		DefaultTooltip.HotkeyFrame:FadeIn();
+
+	if isGamepad then
+		DefaultTooltip:SetAlpha(0);
+		if self.isRight then
+			NarciAPI_ShowDelayedTooltip("TOPRIGHT", self, "TOPLEFT", DefaultTooltip.offsetX, DefaultTooltip.offsetY);
+		else
+			NarciAPI_ShowDelayedTooltip("TOPLEFT", self, "TOPRIGHT", -DefaultTooltip.offsetX, DefaultTooltip.offsetY);
+		end
+	else
+		DefaultTooltip:Show();
+		if hasItem then
+			DefaultTooltip.HotkeyFrame:FadeIn();
+		end
 	end
 end
 
 function NarciEquipmentSlotMixin:OnLeave()
 	self:UnregisterEvent("MODIFIER_STATE_CHANGED");
-	UIFrameFadeOut(self.Highlight, 0.25, 1, 0);
+	UIFrameFadeOut(self.Highlight, 0.25, self.Highlight:GetAlpha(), 0);
 	Narci:HideButtonTooltip();
+
+	self:ResetAnimation()
 end
 
 function NarciEquipmentSlotMixin:OnHide()
 	self:UnregisterEvent("BAG_UPDATE_COOLDOWN");
 	self.Highlight:Hide();
 	self.Highlight:SetAlpha(0);
+
+	self:ResetAnimation();
 end
 
 function NarciEquipmentSlotMixin:PostClick(button)
@@ -2618,7 +2670,7 @@ local InventorySlotIdTable = {
 --]]
 
 
-local function SetIlvlBackground(level)
+local function UpdateIlvlBackground(level)
 	level = level or UnitLevel("player");
 	local frame = Narci_IlvlInfoFrame.IlvlButtonCenter;
 	local frame2 = Narci_IlvlInfoFrame.IlvlButtonLeft;
@@ -2629,32 +2681,69 @@ local function SetIlvlBackground(level)
 	local maxIlvl = floor(avgItemLevel * 100 + 0.5) / 100
 	local EAvg = floor(avgItemLevelEquipped * 100 + 0.5) / 100;
 	frame2.PlayerItemLvlEquipped:SetText(EAvg);
+
 	local percentage	--Set the bar(Fluid) height in the Tube
 	local height;
 	local centerText, centerHeader;
 	local rightText, rightHeader;
 
 	frame.isCorrupted = false;
-	frame.Eyelid:Hide();
-	local ITEM_QUALITY_COLORS = ITEM_QUALITY_COLORS;
-	if level <= 15 then
-		frame.IvlBackground:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Solid\\HexagonSolid-Grey")
-		frame.Fluid:SetColorTexture(ITEM_QUALITY_COLORS[0].r, ITEM_QUALITY_COLORS[0].g, ITEM_QUALITY_COLORS[0].b);
-	elseif level <= 30 then
-		frame.IvlBackground:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Solid\\HexagonSolid-Green")
-		frame.Fluid:SetColorTexture(ITEM_QUALITY_COLORS[2].r, ITEM_QUALITY_COLORS[2].g, ITEM_QUALITY_COLORS[2].b);
-	elseif level <= 45 then
-		frame.IvlBackground:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Solid\\HexagonSolid-Blue")
-		frame.Fluid:SetColorTexture(ITEM_QUALITY_COLORS[3].r, ITEM_QUALITY_COLORS[3].g, ITEM_QUALITY_COLORS[3].b);
-	elseif level > 45 then
-		if avgItemLevel < 85 then
-			frame.IvlBackground:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Solid\\HexagonSolid-Blue")
-			frame.Fluid:SetColorTexture(ITEM_QUALITY_COLORS[3].r, ITEM_QUALITY_COLORS[3].g, ITEM_QUALITY_COLORS[3].b);
-		else
-			frame.IvlBackground:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Solid\\HexagonSolid-Purple")
-			frame.Fluid:SetColorTexture(ITEM_QUALITY_COLORS[4].r, ITEM_QUALITY_COLORS[4].g, ITEM_QUALITY_COLORS[4].b);
-		end
+	local r, g, b = 0.25, 0.25, 0.25;
+	local colorName, qualityIndex;
+	local covenantID;
+	if level >= 60 then
+		covenantID = C_Covenants.GetActiveCovenantID();
 	end
+	if covenantID and covenantID ~= 0 then
+		if covenantID == 1 then
+			colorName = "CovenantKyrian";
+			r, g, b = 0.76, 0.89, 0.94;
+		elseif covenantID == 2 then
+			colorName = "CovenantVenthyr";
+		elseif covenantID == 3 then
+			colorName = "CovenantNightFae";
+			r, g, b = 0.11, 0.42, 0.80;
+		else
+			colorName = "CovenantNecrolord";
+			r, g, b = 0, 0.63, 0.43;
+		end
+	else
+		if level <= 15 then
+			colorName = "Grey";
+			qualityIndex = 0;
+		elseif level <= 30 then
+			colorName = "Green";
+			qualityIndex = 2;
+		elseif level <= 45 then
+			colorName = "Blue";
+			qualityIndex = 3;
+		elseif level > 45 then
+			if avgItemLevel < 85 then
+				colorName = "Blue";
+				qualityIndex = 3;
+			else
+				colorName = "Purple";
+				qualityIndex = 4;
+			end
+		elseif level > 50 then
+			if avgItemLevel < 158 then
+				colorName = "Green";
+				qualityIndex = 2;
+			elseif avgItemLevel < 183 then
+				colorName = "Blue";
+				qualityIndex = 3;
+			else
+				colorName = "Purple";
+				qualityIndex = 4;
+			end
+		end
+		local ITEM_QUALITY_COLORS = ITEM_QUALITY_COLORS;
+		r = ITEM_QUALITY_COLORS[qualityIndex].r;
+		g = ITEM_QUALITY_COLORS[qualityIndex].g;
+		b = ITEM_QUALITY_COLORS[qualityIndex].b
+	end
+	frame.IvlBackground:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Solid\\"..colorName)
+	frame.Fluid:SetColorTexture(r, g, b);
 	frame.IvlBackground:SetTexCoord(0, 1, 0, 1);
 	percentage = math.ceil( (avgItemLevel - avgIvl)*100 );
 	centerText = avgIvl;
@@ -2677,9 +2766,24 @@ local function SetIlvlBackground(level)
 	frame.tooltip = format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_AVERAGE_ITEM_LEVEL).." "..maxIlvl;
 	frame.tooltip2 = HIGHLIGHT_FONT_COLOR_CODE .. STAT_AVERAGE_ITEM_LEVEL_TOOLTIP .. FONT_COLOR_CODE_CLOSE;
 	frame.tooltip3 = L["Toggle Equipment Set Manager"];
+
+	--Show Renown level
+	local renownLevel
+	if covenantID and covenantID ~= 0 then
+		renownLevel = C_CovenantSanctumUI.GetRenownLevel() or 0;
+		frame3.tooltipLineOpen = COVENANT_RENOWN_TUTORIAL_PROGRESS;
+	else
+		renownLevel = 0;
+		frame3.tooltipLineOpen = "You will be able to join a Covenant and progress Renown level once you reach 60.";
+	end
+	frame3.Header:SetText("RN");
+	frame3.tooltipHeadline = format(COVENANT_SANCTUM_LEVEL, renownLevel);
+	frame3.Number:SetText(renownLevel);
 end
 
-function Narci_SolidHexagonButton_OnEnter(self)
+NarciItemLevelHexagonMixin = {};
+
+function NarciItemLevelHexagonMixin:OnEnter()
 	UIFrameFadeIn(self.Highlight, 0.2, self.Highlight:GetAlpha(), 1);
 
 	--EquipmentSetManager
@@ -2703,18 +2807,44 @@ function Narci_SolidHexagonButton_OnEnter(self)
 		Narci_ShowStatTooltipDelayed(self);
 	end
 end
-function Narci:SetItemLevel()
-	--forced fresh
-	SetIlvlBackground();
+
+function NarciItemLevelHexagonMixin:OnMouseDown()
+	self.IvlBackground:SetPoint("CENTER", 0, -6);
+	if self.isCorrupted then
+		NarciAPI_FadeFrame(Narci_CorruptionTooltip, 0.2, "OUT");
+	end
 end
 
-local function CharacterInfoFrame_OnLoad(NewLevel)
+function NarciItemLevelHexagonMixin:OnMouseUp()
+	self.IvlBackground:SetPoint("CENTER", 0, 0);
+end
+
+function NarciItemLevelHexagonMixin:OnLeave()
+	UIFrameFadeOut(self.Highlight, 0.3, self.Highlight:GetAlpha(), 0);
+	Narci:HideButtonTooltip();
+end
+
+function NarciItemLevelHexagonMixin:OnClick()
+	self.onClickFunc(self);
+end
+
+function NarciItemLevelHexagonMixin:OnHide()
+	self.onHideFunc(self);
+end
+
+
+function NarciItemLevelHexagonMixin:ShowItemLevel()
+	--forced fresh
+	UpdateIlvlBackground();
+end
+
+local function CharacterInfoFrame_OnLoad(newLevel)
 	local TitleID = GetCurrentTitle();
 	local TitleName = GetTitleName(TitleID);
 	if TitleName ~= nil then
 		TitleName = strtrim(TitleName); --delete the space in Title
 	end
-	local level = NewLevel or UnitLevel("player");
+	local level = newLevel or UnitLevel("player");
 
 	local _, currentSpecName;
 	local currentSpec = GetSpecialization();
@@ -2735,7 +2865,7 @@ local function CharacterInfoFrame_OnLoad(NewLevel)
 		end
 	end
 
-	SetIlvlBackground(level);
+	UpdateIlvlBackground(level);
 end
 
 local function RefreshSlot(SlotId)
@@ -3266,26 +3396,32 @@ end
 
 NarciEquipmentFlyoutButtonMixin = {};
 
-function NarciEquipmentFlyoutButtonMixin:OnClick()
+function NarciEquipmentFlyoutButtonMixin:OnClick(button, down, isGamepad)
 	local action = EquipmentManager_EquipItemByLocation(self.location, self.id)
 	if action then
 		Narci_AlertFrame_Autohide:SetAnchor(self, -24, true);
 		EquipmentManager_RunAction(action)
 	end
 	self:Disable();
-	After(0.8, function()
-		self:Enable();
-	end)
+	if isGamepad then
+		EquipmentFlyoutFrame.gamepadButton = self;
+	end
 end
 
 function NarciEquipmentFlyoutButtonMixin:OnLeave()
 	UIFrameFadeOut(self.Highlight, 0.25, 1, 0);
 	Narci:HideButtonTooltip();
+	self:ResetAnimation();
 end
 
-function NarciEquipmentFlyoutButtonMixin:OnEnter()
+function NarciEquipmentFlyoutButtonMixin:OnEnter(motion, isGamepad)
 	UIFrameFadeIn(self.Highlight, 0.15, self.Highlight:GetAlpha(), 1);
 	Narci_Comparison_SetComparison(self.itemLocation, self);
+	if isGamepad then
+		self.Icon.scaleUp:Play();
+		self.Border.scaleUp:Play();
+		self.HexMask.scaleUp:Play();
+	end
 end
 
 function NarciEquipmentFlyoutButtonMixin:OnEvent(event, msg)
@@ -3294,6 +3430,15 @@ function NarciEquipmentFlyoutButtonMixin:OnEvent(event, msg)
 	frame:SetHeight(frame.Background:GetHeight())
 	UIFrameFadeIn(frame, 0.2, frame:GetAlpha(), 1);
 	self:UnregisterEvent("UI_ERROR_MESSAGE");
+end
+
+function NarciEquipmentFlyoutButtonMixin:ResetAnimation()
+	self.Icon.scaleUp:Stop();
+	self.Border.scaleUp:Stop();
+	self.HexMask.scaleUp:Stop();
+	self.Icon:SetScale(1);
+	self.Border:SetScale(1);
+	self.HexMask:SetScale(1);
 end
 
 function NarciEquipmentFlyoutButtonMixin:RegisterErrorEvent()
@@ -3333,13 +3478,13 @@ function Narci_FlyoutBlack_OnUpdate(self, elapsed)
 end
 
 local function Narci_EquipmentFlyout_CreateButton()
-	local frame = Narci_EquipmentFlyoutFrame
-	local perRow = EQUIPMENTFLYOUT_ITEMS_PER_ROW;
+	local frame = EquipmentFlyoutFrame
+	local perRow = 5.0;	--EQUIPMENTFLYOUT_ITEMS_PER_ROW
 	local buttons = frame.buttons;
 	local buttonAnchor = frame.buttonFrame;
 	local numButtons = #buttons;
 
-	local button = CreateFrame("Button", "Narci_EquipmentFlyoutFrameButton" .. numButtons + 1, buttonAnchor, "NarciEquipmentFlyoutButtonTemplate");
+	local button = CreateFrame("Button", "EquipmentFlyoutFrameButton" .. numButtons + 1, buttonAnchor, "NarciEquipmentFlyoutButtonTemplate");
 	button:SetFrameStrata("DIALOG");
 	local pos = numButtons/perRow;
 	if pos == 0 then
@@ -3399,7 +3544,7 @@ function Narci_EquipmentFlyoutFrame_OnEvent(self, event, ...)	--Hide Flyout if L
 	if ( event == "MODIFIER_STATE_CHANGED" ) then
 		local key, state = ...;
 		if ( key == "LALT" ) then
-			local flyout = Narci_EquipmentFlyoutFrame
+			local flyout = EquipmentFlyoutFrame
 			if state == 0 and flyout:IsShown() then
 				flyout:Hide()
 			end
@@ -3413,7 +3558,7 @@ function Narci_EquipmentFlyout_Show(self, slotID)
 		return;
 	end
 	
-	local flyout = Narci_EquipmentFlyoutFrame;
+	local flyout = EquipmentFlyoutFrame;
 	if (flyout.slotID == slotID or slotID == -1) and (not IsAltKeyDown()) then
 		flyout:Hide();
 		return;
@@ -3424,7 +3569,7 @@ function Narci_EquipmentFlyout_Show(self, slotID)
 		slotTable[flyout.slotID].RuneSlot:SetFrameLevel(level)
 		ShowLessInformation(slotTable[flyout.slotID], false);
 	end
-	flyout.slotID = slotID
+	flyout.slotID = slotID;
 	Narci_BuildFlyout();
 	flyout:SetParent(self);
 	flyout:ClearAllPoints();
@@ -3448,17 +3593,17 @@ function Narci_EquipmentFlyout_Show(self, slotID)
 	--Reposition Comparison Tooltip if it reaches the top of the screen--
 	local Tooltip = Narci_Comparison;
 	Tooltip:ClearAllPoints();
-	Tooltip:SetPoint("BOTTOMLEFT", "Narci_EquipmentFlyoutFrame", "TOPLEFT", 8, 12);
+	Tooltip:SetPoint("BOTTOMLEFT", EquipmentFlyoutFrame, "TOPLEFT", 8, 12);
 	if self:GetTop() > Tooltip:GetBottom() then
     	Tooltip:ClearAllPoints();
-    	Tooltip:SetPoint("TOPLEFT", "Narci_EquipmentFlyoutFrame", "BOTTOMLEFT", 8, -12);
+    	Tooltip:SetPoint("TOPLEFT", EquipmentFlyoutFrame, "BOTTOMLEFT", 8, -12);
 	end
-	Narci_Comparison_SetComparison(Narci_EquipmentFlyoutFrame.BaseItem, self);
+	Narci_Comparison_SetComparison(EquipmentFlyoutFrame.BaseItem, self);
 	Tooltip:Show();
 end
 
 function Narci_BuildFlyout(slotID)
-	local flyout = Narci_EquipmentFlyoutFrame;
+	local flyout = EquipmentFlyoutFrame;
 	local LoadItemData = C_Item.RequestLoadItemData;	--Cache Item Info
 
 	flyout:Show();
@@ -3496,28 +3641,38 @@ function Narci_BuildFlyout(slotID)
 	local numTotalItems = #itemDisplayTable_ilvl;
 	local buttonWidth, buttonHeight = Narci_HeadSlot:GetWidth(), Narci_HeadSlot:GetHeight();
 	buttonWidth, buttonHeight = math.floor(buttonWidth + 0.5), math.floor(buttonHeight + 0.5);
-	flyout:SetWidth(max(buttonWidth, math.min(numTotalItems, EQUIPMENTFLYOUT_ITEMS_PER_ROW)*buttonWidth))
+	flyout:SetWidth(max(buttonWidth, math.min(numTotalItems, 5.0)*buttonWidth))
 	--print(numTotalItems)
-	local numPageItems = min(numTotalItems, EQUIPMENTFLYOUT_ITEMS_PER_PAGE);
-	flyout:SetHeight(max(math.floor((numPageItems-1)/EQUIPMENTFLYOUT_ITEMS_PER_ROW + 1)*buttonHeight, buttonHeight))
+	local numPageItems = min(numTotalItems, 20.0);	--EQUIPMENTFLYOUT_ITEMS_PER_PAGE
+	flyout:SetHeight(max(math.floor((numPageItems-1)/5.0 + 1)*buttonHeight, buttonHeight))
 	local index = 1;
 	while #buttons < numPageItems do -- Create any buttons we need.
 		local button = Narci_EquipmentFlyout_CreateButton();
 	end
 	
-	for i=1, #buttons do
-		local button = buttons[i]
+	local gamepadButton = flyout.gamepadButton;
+	flyout.gamepadButton = nil;
+
+	for i = 1, #buttons do
+		local button = buttons[i];
 		if i <= numPageItems then
 			button.itemLocation = itemDisplayTable_ilvl[i].itemLocation;
 			button.location = itemDisplayTable_ilvl[i].location;
 			button.id = id;
-			Narci_EquipmentFlyout_DisplayButton(button)
+			Narci_EquipmentFlyout_DisplayButton(button);
 			button:Show();
-			button:SetSize(buttonWidth, buttonHeight)
+			button:SetSize(buttonWidth, buttonHeight);
+			button:Enable();
+			if button == gamepadButton then
+				Narci_Comparison_SetComparison(gamepadButton.itemLocation, gamepadButton);
+				Narci_GamepadOverlayContainer.SlotBorder:UpdateQualityColor(gamepadButton);
+			end
 		else
 			button:Hide();
 		end
 	end
+
+	flyout.numTotalItems = numTotalItems;
 end
 
 function Narci_EquipmentFlyout_DisplayButton(button)
@@ -3562,6 +3717,7 @@ local ColorIndex = Narci_GlobalColorIndex; --#ColorTable;		--Pick up color accor
 
 local function SetColorThemeBasedOnMapID()
 	local mapID = C_Map.GetBestMapForUnit("player");
+	--print("mapID:".. mapID)
 	if mapID and NarcissusDB.AutoColorTheme then
 		if ColorTable[mapID] then
 			ColorIndex = mapID;
@@ -3652,7 +3808,7 @@ function NarciRadarChartMixin:SetColor()
 	SetWidgetColor(self.MaskedLine4)
 end
 
-function NarciRadarChartMixin:SetValue(c, h, m, v, ManuallyInPutSum)
+function NarciRadarChartMixin:SetValue(c, h, m, v, manuallyInPutSum)
 	--c, h, m, v: Input manually or use combat ratings
 	local deg = math.deg;
 	local rad = math.rad;
@@ -3687,10 +3843,10 @@ function NarciRadarChartMixin:SetValue(c, h, m, v, ManuallyInPutSum)
 	Radar.MaskedBackground2:SetShown(v6);
 
 	--[[
-		--4500 9.0 Stat Sum Level 50
+		--4500 9.0 Stats Sum Level 50
 		Enchancements on ilvl 445 (Mythic Eternal Palace) Player Lvl 120
 		Neck 159 Weapon 25 Back 51 Wrist 28 Hands 37 Waist 36 Legs 50 Feet 37 Ring 89 Trinket 35	Max:696 + 12*7 ~= 800
-
+		Player Lvl 60 iLvl 233(Mythic Castle Nathria):	Back 82 Leg 141 Chest 141 Neck 214 Waist 105 Hand 105 Feet 105 Wrist 79 Ring 226 Shoulder 109  Head 146 Trinket 200 ~=1900
 
 		ilvl 240 (Mythic Antorus) Player Lvl 110
 		Head 87 Shoulder 64 Chest 88 Weapon 152 Back 49 Wrist 49 Hands 64 Waist 64 Legs 87 Feet 63 Ring 165 Trinket 62	Max ~= 1100
@@ -3700,7 +3856,7 @@ function NarciRadarChartMixin:SetValue(c, h, m, v, ManuallyInPutSum)
 		Weapon 4 Back 4 Wrist 4 Hands 6 Waist 6 Legs 8 Feet 6 Ring 5 Trinket 6	 ~= 60
 	--]]
 
-	local Sum = ManuallyInPutSum or 0;
+	local Sum = manuallyInPutSum or 0;
 	local maxNum = max(Crit + Haste + Mastery + Versatility, 1);
 	if maxNum > 0.95 * Sum then
 		Sum = maxNum;
@@ -3841,7 +3997,9 @@ function NarciRadarChartMixin:AnimateValue(c, h, m, v)
 	local playerLevel = UnitLevel("player");
 	local sum;
 	if playerLevel == 50 then
-		sum = max(e1 + e2 + e3 + e4 , 800);	--Status Sum for 8.3 Raid
+		sum = max(e1 + e2 + e3 + e4 , 800);		--Status Sum for 8.3 Raid
+	elseif playerLevel == 60 then
+		sum = max(e1 + e2 + e3 + e4 , 1880);	--Status Sum for 9.0 Raid
 	else
 		--sum = 31 * math.exp( 0.04 * UnitLevel("player")) + 40;
 		sum = (e1 + e2 + e3 + e4) * 1.5;
@@ -4244,7 +4402,7 @@ function Narci_Open()
 		if Narci_TitleManager_Switch.IsOn then
 			Narci_TitleManager_Switch:Click();
 		end
-		Narci_EquipmentFlyoutFrame:Hide();
+		EquipmentFlyoutFrame:Hide();
 		Narci_TitleManager_TitleTooltip:Hide();		--TitleManager
 		Narci_ModelSettings:Hide();
 
@@ -4767,7 +4925,7 @@ end
 function XmogButton_OnClick(self)
 	self.IsOn = not self.IsOn
 	MoveViewRightStop();
-	Narci_EquipmentFlyoutFrame:Hide();
+	EquipmentFlyoutFrame:Hide();
 	TransmogMode = not TransmogMode;
 	local PopUp = Narci_XmogButtonPopUp;
 	if not self.IsOn then
@@ -5671,8 +5829,8 @@ end)
 
 SLASH_NARCI1 = "/narci";
 SLASH_NARCI2 = "/narcissus";
-SlashCmdList["NARCI"] = function(Msg)
-	local msg = strlower(Msg);
+SlashCmdList["NARCI"] = function(msg)
+	msg = strlower(msg);
 	if msg == "" then
 		Narci_MinimapButton:Click();
 	elseif msg == "minimap" then
@@ -6166,11 +6324,13 @@ ACL:RegisterEvent("UNIT_NAME_UPDATE");
 ACL:RegisterEvent("PLAYER_EQUIPMENT_CHANGED");
 ACL:RegisterEvent("PLAYER_AVG_ITEM_LEVEL_UPDATE");
 ACL:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
-ACL:RegisterEvent("PLAYER_LEVEL_UP");
+ACL:RegisterEvent("PLAYER_LEVEL_CHANGED");
 ACL:RegisterEvent("LOADING_SCREEN_DISABLED");
 
 --These events might become deprecated in future expansions
 ACL:RegisterEvent("AZERITE_ESSENCE_ACTIVATED");
+ACL:RegisterEvent("COVENANT_CHOSEN");
+
 ACL:SetScript("OnEvent",function(self,event,...)
 	--print(event)
 		
@@ -6220,7 +6380,9 @@ ACL:SetScript("OnEvent",function(self,event,...)
 		UpdateXmogName();
 		SetCVar("CameraKeepCharacterCentered", 0);
 		--CameraContainer:SetBlend(NarcissusDB.CameraTransition);	--Load in Preference.lua
-		DefaultTooltip = CreateFrame("GameTooltip", "NarciGameTooltip", nil, "GameTooltipTemplate");
+		DefaultTooltip = CreateFrame("GameTooltip", "NarciGameTooltip", Narci_Character, "GameTooltipTemplate");
+		DefaultTooltip.offsetX = 6;
+		DefaultTooltip.offsetY = -18;
 		DefaultTooltip:SetIgnoreParentScale(true);
 		DefaultTooltip:SetIgnoreParentAlpha(true);
 		local HotkeyFrame = CreateFrame("Frame", nil, Narci_Attribute, "NarciHotkeyNotificationTemplate");
@@ -6232,9 +6394,8 @@ ACL:SetScript("OnEvent",function(self,event,...)
 		DefaultTooltip:HookScript("OnHide", function()
 			HotkeyFrame:FadeOut();
 		end)
-
-		CharacterInfoFrame_OnLoad();
-
+		EquipmentFlyoutFrame = Narci_EquipmentFlyoutFrame;
+		Narci_MinimapButton:SetBackground();
 		if IsAddOnLoaded("DynamicCam") then
 			CVarTemp.isDynamicCamLoaded = true;
 			
@@ -6254,6 +6415,8 @@ ACL:SetScript("OnEvent",function(self,event,...)
 		end
 
 		After(1.7, function()
+			CharacterInfoFrame_OnLoad();
+			
 			hooksecurefunc("CameraZoomIn", function(increment)
 				if OpenViaClick and (xmogMode ~= 1) then
 					UpdateShoulderCVar:Start(-increment);
@@ -6271,8 +6434,8 @@ ACL:SetScript("OnEvent",function(self,event,...)
 		CacheSourceInfo(InventorySlotId)
 		UseDelay = false;
 		RefreshSlot(InventorySlotId);
-		if Narci_EquipmentFlyoutFrame:IsShown() and Narci_EquipmentFlyoutFrame.slotID == InventorySlotId then
-			Narci_BuildFlyout(InventorySlotId)
+		if EquipmentFlyoutFrame:IsShown() and EquipmentFlyoutFrame.slotID == InventorySlotId then
+			Narci_BuildFlyout(InventorySlotId);
 		end
 		UseDelay = true;
 	elseif event == "AZERITE_ESSENCE_ACTIVATED" then
@@ -6281,12 +6444,16 @@ ACL:SetScript("OnEvent",function(self,event,...)
         if not self.isRefreshing then
             self.isRefreshing = true;
             After(0, function()    -- only want 1 update per 0.4s
-				SetIlvlBackground();
+				UpdateIlvlBackground();
 				After(0.4, function()
 					self.isRefreshing = nil;
 				end)
             end)
-        end
+		end
+	elseif event == "COVENANT_CHOSEN" then
+		local covenantID = ...;
+		UpdateIlvlBackground();
+		Narci_MinimapButton:SetBackground(covenantID);
 	elseif event == "UNIT_NAME_UPDATE" then
 		local UnitID = ...;
 		if UnitID == "player" then
@@ -6297,9 +6464,9 @@ ACL:SetScript("OnEvent",function(self,event,...)
 		CharacterInfoFrame_OnLoad();
 		UpdateXmogName(true);
 
-	elseif event == "PLAYER_LEVEL_UP" then
-		local NewLevel = ...;
-		CharacterInfoFrame_OnLoad(NewLevel)
+	elseif event == "PLAYER_LEVEL_CHANGED" then
+		local oldLevel, newLevel = ...;
+		CharacterInfoFrame_OnLoad(newLevel)
 
 	elseif ( event == "COMBAT_RATING_UPDATE" or
 			 event == "UNIT_MAXPOWER" or
@@ -6307,27 +6474,12 @@ ACL:SetScript("OnEvent",function(self,event,...)
 		-- don't refresh stats when equipment set manager is activated
 		RefreshAllStats();
 		if event == "COMBAT_RATING_UPDATE" then
-			if not self.pauseCorruption then
-				self.pauseCorruption = true;
-				After(0, function()    -- only want 1 update per 0.4s
-					SetIlvlBackground();
-					After(0.4, function()
-						self.pauseCorruption = nil;
-					end)
-				end)
-			end
-
 			if Narci_Character:IsShown() then
 				RadarChart:AnimateValue();
 			end
 		end
 	elseif event == "PLAYER_TARGET_CHANGED" then
 		RefreshStats(9); 		--Damage Reduction
-	elseif event == "UNIT_MODEL_CHANGED" then
-		local unit = ...;
-		if unit == "player" then
-			NarciPlayerModelFrame1:Dress();
-		end
 	elseif event == "UPDATE_SHAPESHIFT_FORM" then
 		ModifyCameraForShapeshifter();
 		CameraContainer:OnCameraChanged();
@@ -6486,10 +6638,26 @@ function Narci_SetActiveBorderTexture()
 	if IsAddOnLoaded("AzeriteUI") then
 		RadialOffset = 18;
 		minimapBackgroundSize = 48;
-		--if not IsAddOnLoaded("MBB") then
-		--	minimapBackgroundSize = 80;
-		--	minimapTexture = "Interface/AddOns/Narcissus/Art/Minimap/LOGO-Thick";
-		--end
+		--Skin Tooltip
+		--Background gets reset once gametooltip is hidden. Ask Goldpaw some day.
+		
+		local backdropInfo = {
+			bgFile = "Interface\\AddOns\\AddOns\\Narcissus\\Art\\Masks\\Full",
+			edgeFile = "Interface\\AddOns\\AzeriteUI\\media\\tooltip_border_hex",
+			tile = true,
+			tileEdge = true,
+			tileSize = 24,
+			edgeSize = 24,
+			insets = { left = 8, right = 8, top = 8, bottom = 8 },
+		};
+		DefaultTooltip.offsetX = 2;
+		DefaultTooltip.offsetY = -12;
+		DefaultTooltip:HookScript("OnShow", function(self)
+			self:SetBackdrop(backdropInfo);
+			self:SetPadding(8, 8, 8, 8);
+			self:SetBackdropColor(0, 0, 0, 0.9);
+		end)
+		
 	elseif IsAddOnLoaded("DiabolicUI") then
 		RadialOffset = 12;
 	elseif IsAddOnLoaded("GoldieSix") then
@@ -6504,8 +6672,6 @@ function Narci_SetActiveBorderTexture()
 	end
 
 	MinimapButton.Background:SetSize(minimapBackgroundSize, minimapBackgroundSize);	
-	MinimapButton.Background:SetTexture(minimapTexture);
-	MinimapButton.Color:SetTexture(minimapTexture);
 end
 
 function Narci_GuideLineFrame_OnSizing(self, offset)

@@ -18,8 +18,13 @@ function DC:Init()
     f:SetScript("OnEvent", function(self, event, ...)
         return DC[event](self,...)
     end)
+    DC:AddCollectedDataToEnemyTable()
+
+end
+
+function DC:AddCollectedDataToEnemyTable()
     --add spells/characteristics from db to dungeonEnemies
-    for i=15,24 do
+    for i=29,36 do
         if db.dataCollection[i] then
             for id,spells in pairs(db.dataCollection[i]) do
                 local enemies = MDT.dungeonEnemies[i]
@@ -47,9 +52,7 @@ function DC:Init()
                 end
             end
         end
-
     end
-
 end
 
 local trackedEvents = {
@@ -62,15 +65,16 @@ local trackedEvents = {
 }
 local characteristicsSpells = {
     ["Slow"] = {
-        [206760] = true; --Shadow's Grasp
+        [3409] = true; --Crippling Poison
+        [45524] = true; --Chains of Ice
     };
     ["Stun"] ={
         [1833] = true, --Cheap Shot
         [408] = true, --Kidney Shot
-        [199804] = true, --Between the Eyes
         [179057] = true, --Chaos Nova
         [119381] = true, --Leg Sweep
         [30283] = true, --Shadowfury
+        [108194] = true, --Asphyxiate
     },
     ["Sap"] ={
         [6770] = true,
@@ -101,6 +105,8 @@ local characteristicsSpells = {
     ["Root"] = {
         [122] = true, --Frost Nova
         [339] = true, --Entangling Roots
+        [102359] = true, --Mass Root
+        [117526] = true, --Binding Shot
     },
     ["Polymorph"] ={
         [161354] = true,
@@ -143,13 +149,13 @@ local characteristicsSpells = {
     ["Taunt"] ={
         [56222] = true, --Dark Command
         [355] = true, --Taunt
-        [281854] = true, --Torment DPS
         [185245] = true, --Torment
+        [116189] = true, --Provoke
     },
     ["Control Undead"] ={
         [111673] = true,
     },
-    ["Enslave Demon"] ={
+    ["Subjugate Demon"] ={
         [1098] = true,
     },
 }
@@ -174,7 +180,7 @@ function DC.COMBAT_LOG_EVENT_UNFILTERED(self,...)
         local unitType,_,serverId,instanceId,zoneId,id,spawnUid = strsplit("-", sourceGUID)
         id = tonumber(id)
         --dungeon
-        for i=15,26 do
+        for i=29,36 do
             local enemies = MDT.dungeonEnemies[i]
             --enemy
             for enemyIdx,enemy in pairs(enemies) do
@@ -193,8 +199,9 @@ function DC.COMBAT_LOG_EVENT_UNFILTERED(self,...)
     if subevent == "SPELL_AURA_APPLIED" then
         local unitType,_,serverId,instanceId,zoneId,id,spawnUid = strsplit("-", destGUID)
         id = tonumber(id)
+
         --dungeon
-        for i=15,26 do
+        for i=29,36 do
             local enemies = MDT.dungeonEnemies[i]
             --enemy
             for enemyIdx,enemy in pairs(enemies) do
@@ -208,11 +215,6 @@ function DC.COMBAT_LOG_EVENT_UNFILTERED(self,...)
                             enemy.characteristics[characteristic] = true
                         end
                     end
-                    if cmsTimeStamp then
-                        db.dataCollectionGUID[cmsTimeStamp] = db.dataCollectionGUID[cmsTimeStamp] or {}
-                        db.dataCollectionGUID[cmsTimeStamp][id] = db.dataCollectionGUID[cmsTimeStamp][id] or {}
-                        db.dataCollectionGUID[cmsTimeStamp][id][destGUID] = true
-                    end
                     break
                 end
 
@@ -222,6 +224,69 @@ function DC.COMBAT_LOG_EVENT_UNFILTERED(self,...)
     end
 
 
+end
+
+---Request users in party/raid to distribute their collected data
+function MDT:RequestDataCollectionUpdate()
+    local distribution = self:IsPlayerInGroup()
+    if not distribution then return end
+    MDTcommsObject:SendCommMessage(self.dataCollectionPrefixes.request, "0", distribution, nil, "ALERT")
+end
+
+---Distribute collected data to party/raid
+function DC:DistributeData()
+    local distribution = MDT:IsPlayerInGroup()
+    if not distribution then return end
+    --throttle to 1 sync every 5 minutes
+    if not DC.lastDistribution or DC.lastDistribution < GetTime() - 300 then
+        DC.lastDistribution = GetTime()
+        db = MDT:GetDB()
+        local package = {
+            [1] = db.dataCollection,
+            [2] = db.dataCollectionCC
+        }
+        local export = MDT:TableToString(package,false,5)
+        MDTcommsObject:SendCommMessage(MDT.dataCollectionPrefixes.distribute, export, distribution, nil, "BULK",nil,nil)
+    end
+end
+
+---Merge received collected data into own data collection
+function DC:MergeReceiveData(package)
+    db = MDT:GetDB()
+    local collection,collectionCC = unpack(package)
+    --db.dataCollection[dungeonIdx][npcId][spellId]
+    for dungeonIdx,npcs in pairs(collection) do
+        if not db.dataCollection[dungeonIdx] then
+            db.dataCollection[dungeonIdx] = npcs
+        else
+            for npcId,spells in pairs(npcs) do
+                if not db.dataCollection[dungeonIdx][npcId] then
+                    db.dataCollection[dungeonIdx][npcId] = spells
+                else
+                    for spellId,tracked in pairs(spells) do
+                        db.dataCollection[dungeonIdx][npcId][spellId] = true
+                    end
+                end
+            end
+        end
+    end
+    --db.dataCollectionCC[dungeonIdx][npcId][characteristic]
+    for dungeonIdx,npcs in pairs(collectionCC) do
+        if not db.dataCollectionCC[dungeonIdx] then
+            db.dataCollectionCC[dungeonIdx] = npcs
+        else
+            for npcId,characteristics in pairs(npcs) do
+                if not db.dataCollectionCC[dungeonIdx][npcId] then
+                    db.dataCollectionCC[dungeonIdx][npcId] = characteristics
+                else
+                    for characteristic,tracked in pairs(characteristics) do
+                        db.dataCollectionCC[dungeonIdx][npcId][characteristic] = true
+                    end
+                end
+            end
+        end
+    end
+    DC:AddCollectedDataToEnemyTable()
 end
 
 ---HealthTrack

@@ -4,4 +4,6 @@
 	<Script file='healglow.lua'/>
 	<Script file='tags.lua'/>	
 	<Include file='units\load_units.xml'/>
+	<Include file='groups\load_groups.xml'/>
+	<Include file='elements\load_elements.xml'/>
 </Ui>

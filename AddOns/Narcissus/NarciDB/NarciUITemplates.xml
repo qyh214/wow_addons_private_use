@@ -264,7 +264,8 @@
 					tileEdge = true,
 					tileSize = 24,
 					edgeSize = 24,
-				}
+				};
+				
 				self:SetBackdrop(backdropInfo);
 			</OnLoad>
 		</Scripts>
@@ -745,21 +746,21 @@
 				self.Background:SetColorTexture(0.9882, 0.9294, 0.0);
 				self.Background.bling:Play();
 			</OnLeave>
-				<OnClick>
-					local action = self:GetParent().action;
-					local key = self:GetParent().key;
-					if action and key then
-						if SetBinding(key, action, 1) then
-							local Color_Good_r = 124/255;
-							local Color_Good_g = 197/255;
-							local Color_Good_b = 118/255;
-							self:GetParent().Description:SetText("|cff7cc576"..KEY_BOUND)
-							self:GetParent().Highlight:SetColorTexture(Color_Good_r, Color_Good_g, Color_Good_b)
-							SaveBindings(1);    --account wide
-							self:Hide();
-						end
+			<OnClick>
+				local action = self:GetParent().action;
+				local key = self:GetParent().key;
+				if action and key then
+					if SetBinding(key, action, 1) then
+						local Color_Good_r = 124/255;
+						local Color_Good_g = 197/255;
+						local Color_Good_b = 118/255;
+						self:GetParent().Description:SetText("|cff7cc576"..KEY_BOUND)
+						self:GetParent().Highlight:SetColorTexture(Color_Good_r, Color_Good_g, Color_Good_b)
+						SaveBindings(1);    --account wide
+						self:Hide();
 					end
-				</OnClick>
+				end
+			</OnClick>
 		</Scripts>
 	</Button>
 

@@ -12,12 +12,9 @@ L[ [=[ Filter formats: 'Name', 'Name-Realm', '-Realm'.
 
 Supports multiple entries, separated by commas
 ]=] ] = "필터 형식: '이름', '이름-서버', '-서버'. 쉼표로 구분된 여러 항목 지원합니다"
---[[Translation missing --]]
 L[ [=[
 
-Supports multiple entries, separated by commas]=] ] = [=[
-
-Supports multiple entries, separated by commas]=]
+Supports multiple entries, separated by commas]=] ] = "쉼표로 구분된 여러 항목을 지원합니다"
 L["%s - %i. Trigger"] = "%s - %i. 활성 조건"
 L["%s - Alpha Animation"] = "%s - 투명도 애니메이션"
 L["%s - Color Animation"] = "%s - 색상 애니메이션"
@@ -47,15 +44,13 @@ L["%s Untrigger Function"] = "%s 비활성 조건 함수"
 L["* Suffix"] = "* 접미사"
 L["/wa help - Show this message"] = "/wa help - 이 메시지 보이기"
 L["/wa minimap - Toggle the minimap icon"] = "/wa minimap - 미니맵 아이콘 토글"
-L["/wa pprint - Show the results from the most recent profiling"] = "/wa pprint - 가장 최근의 프로필 결과 표시"
---[[Translation missing --]]
-L["/wa pstart - Start profiling. Optionally include a duration in seconds after which profiling automatically stops. To profile the next combat/encounter, pass a \"combat\" or \"encounter\" argument."] = "/wa pstart - Start profiling. Optionally include a duration in seconds after which profiling automatically stops. To profile the next combat/encounter, pass a \"combat\" or \"encounter\" argument."
-L["/wa pstop - Finish profiling"] = "/wa pstop - 프로필 종료"
+L["/wa pprint - Show the results from the most recent profiling"] = "/wa pprint - 가장 최근 프로파일링 결과 표시"
+L["/wa pstart - Start profiling. Optionally include a duration in seconds after which profiling automatically stops. To profile the next combat/encounter, pass a \"combat\" or \"encounter\" argument."] = "/wa pstart - 프로파일링을 시작합니다. 옵션으로 프로파일링이 자동으로 중지되는 시간(초)을 포함합니다. 다음 전투(combat)/교전(encounter)을 프로파일링하려면 인수로 combat이나 encounter를 넘기세요."
+L["/wa pstop - Finish profiling"] = "/wa pstop - 프로파일링 종료"
 L["/wa repair - Repair tool"] = "/wa repair - 복구 도구"
 L["|cffeda55fLeft-Click|r to toggle showing the main window."] = "|cffeda55f좌-클릭|r 으로 메인 창을 표시하거나 숨깁니다."
 L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "|cffeda55f중간-클릭|r 으로 미니맵 아이콘을 켜거나 끕니다."
---[[Translation missing --]]
-L["|cffeda55fRight-Click|r to toggle performance profiling window."] = "|cffeda55fRight-Click|r to toggle performance profiling window."
+L["|cffeda55fRight-Click|r to toggle performance profiling window."] = "|cffeda55f우-클릭|r 으로 성능 프로파일링 창을 켜고 끕니다."
 L["|cffeda55fShift-Click|r to pause addon execution."] = "|cffeda55f쉬프트-클릭|r 으로 애드온 실행을 일시 중지합니다."
 --[[Translation missing --]]
 L["|cFFFF0000Not|r Item Bonus Id Equipped"] = "|cFFFF0000Not|r Item Bonus Id Equipped"
@@ -179,7 +174,6 @@ L["Block against Target (%)"] = "대상의 막음(%)"
 L["Blocked"] = "방패 막기"
 L["Bloodlord Mandokir"] = "혈군주 만도키르"
 L["Border"] = "테두리"
-L["Border Color"] = "테두리 색상"
 L["Boss"] = "우두머리"
 L["Boss Emote"] = "우두머리 감정표현"
 L["Boss Whisper"] = "우두머리 귓속말"
@@ -489,8 +483,7 @@ L["Hostility"] = "적대성"
 L["Humanoid"] = "인간형"
 L["Hybrid"] = "복합"
 L["Icon"] = "아이콘"
---[[Translation missing --]]
-L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"] = "If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"
+L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"] = "추가 지원이 필요한 경우, GitHub에서 티켓을 열거나 Discord( https://discord.gg/weakauras )를 방문해 주세요!"
 L["Ignore Dead"] = "죽음 무시"
 L["Ignore Disconnected"] = "연결 끊김 무시"
 L["Ignore Rune CD"] = "룬 재사용 대기시간 무시"
@@ -663,7 +656,7 @@ L["No Children"] = "자식 없음"
 --[[Translation missing --]]
 L["No Extend"] = "No Extend"
 L["No Instance"] = "인스턴스가 아닐 때"
-L["No Profiling information saved."] = "프로필 정보가 저장되지 않았습니다."
+L["No Profiling information saved."] = "저장된 프로파일링 정보가 없습니다."
 L["None"] = "없음"
 L["Non-player Character"] = "NPC"
 L["Normal"] = "일반"
@@ -759,17 +752,14 @@ L["Power Type"] = "자원 유형"
 L["Precision"] = "Precision"
 L["Preset"] = "프리셋"
 L["Princess Huhuran"] = "공주 후후란"
---[[Translation missing --]]
-L["Print Profiling Results"] = "Print Profiling Results"
-L["Profiling already started."] = "프로필이 이미 시작되었습니다."
---[[Translation missing --]]
-L["Profiling automatically started."] = "Profiling automatically started."
-L["Profiling not running."] = "프로필이 실행되지 않습니다."
-L["Profiling started."] = "프로필이 시작되었습니다."
---[[Translation missing --]]
-L["Profiling started. It will end automatically in %d seconds"] = "Profiling started. It will end automatically in %d seconds"
-L["Profiling still running, stop before trying to print."] = "프로필이 여전히 실행 중이면 출력을 시작하기 전에 중지하십시오."
-L["Profiling stopped."] = "프로필이 중지되었습니다."
+L["Print Profiling Results"] = "프로파일링 결과 출력"
+L["Profiling already started."] = "프로파일링이 이미 시작되었습니다."
+L["Profiling automatically started."] = "프로파일링이 자동으로 시작되었습니다."
+L["Profiling not running."] = "프로파일링 실행 중이 아닙니다."
+L["Profiling started."] = "프로파일링이 시작되었습니다."
+L["Profiling started. It will end automatically in %d seconds"] = "프로파일링이 시작되었습니다. %d초 뒤에 자동으로 끝납니다."
+L["Profiling still running, stop before trying to print."] = "프로파일링이 아직 실행 중입니다. 출력하기 전에 중지하세요."
+L["Profiling stopped."] = "프로파일링이 중지되었습니다."
 L["Progress"] = "진행"
 L["Progress Total"] = "진행 현황"
 L["Progress Value"] = "진행 수치"
@@ -892,12 +882,10 @@ L["Shazzrah"] = "샤즈라"
 L["Shift-Click to resume addon execution."] = "쉬프트-클릭으로 애드온 실행을 다시 시작합니다."
 L["Show"] = "표시"
 L["Show Absorb"] = "흡수 표시"
-L["Show Border"] = "테두리 표시"
 L["Show CD of Charge"] = "충전량 재사용 대기시간 표시"
 L["Show Code"] = "코드 표시"
 L["Show GCD"] = "전역 재사용 대기시간 표시"
 L["Show Global Cooldown"] = "전역 재사용 대기시간 표시"
-L["Show Glow"] = "반짝임 표시"
 L["Show Incoming Heal"] = "받는 치유 표시"
 --[[Translation missing --]]
 L["Show On"] = "Show On"
@@ -1051,10 +1039,9 @@ L["Timed"] = "일정 시간"
 --[[Translation missing --]]
 L["Timer Id"] = "Timer Id"
 L["Toggle"] = "토글"
-L["Toggle List"] = "토글 리스트"
+L["Toggle List"] = "목록 토글"
 L["Toggle Options Window"] = "옵션창 토글"
---[[Translation missing --]]
-L["Toggle Performance Profiling Window"] = "Toggle Performance Profiling Window"
+L["Toggle Performance Profiling Window"] = "성능 프로파일링 창 토글"
 L["Tooltip"] = "툴팁"
 L["Tooltip Value 1"] = "툴팁 값 1"
 L["Tooltip Value 2"] = "툴팁 값 2"
@@ -1132,8 +1119,6 @@ L["Version: "] = "버전:"
 L["Viscidus"] = "비시디우스"
 --[[Translation missing --]]
 L["Visibility"] = "Visibility"
---[[Translation missing --]]
-L["Visible"] = "Visible"
 L["War Mode Active"] = "전쟁 모드 활성화"
 L["Warning"] = "경고"
 --[[Translation missing --]]
@@ -1143,8 +1128,7 @@ L["Warning: Name info is now available via %affected, %unaffected. Number of aff
 L["Warning: Tooltip values are now available via %tooltip1, %tooltip2, %tooltip3 instead of %s. This is not automatically adjusted."] = "경고: 툴팁 값은 이제 %tooltip1, %tooltip2, %tooltip3, %s 대신 사용할 수 있습니다. 이것은 자동으로 조정되지 않습니다.\""
 --[[Translation missing --]]
 L["WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."] = "WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."
---[[Translation missing --]]
-L["WeakAuras Profiling"] = "WeakAuras Profiling"
+L["WeakAuras Profiling"] = "WeakAuras 프로파일링"
 --[[Translation missing --]]
 L["WeakAuras Profiling Report"] = "WeakAuras Profiling Report"
 L["Weapon"] = "무기"
@@ -1164,12 +1148,10 @@ L["X-Offset"] = "X-좌표"
 L["Yell"] = "외침"
 L["Y-Offset"] = "Y-좌표"
 L["You already have this group/aura. Importing will create a duplicate."] = "이미 이 그룹/효과가 있습니다. 가져오기를 수행하면 복제본이 만들어집니다."
---[[Translation missing --]]
-L["Your next encounter will automatically be profiled."] = "Your next encounter will automatically be profiled."
+L["Your next encounter will automatically be profiled."] = "다음 교전은 자동으로 프로파일링됩니다."
 --[[Translation missing --]]
 L["Your next instance of combat will automatically be profiled."] = "Your next instance of combat will automatically be profiled."
---[[Translation missing --]]
-L["Your scheduled automatic profile has been cancelled."] = "Your scheduled automatic profile has been cancelled."
+L["Your scheduled automatic profile has been cancelled."] = "예약된 자동 프로파일이 취소되었습니다."
 --[[Translation missing --]]
 L["Your threat as a percentage of the tank's current threat."] = "Your threat as a percentage of the tank's current threat."
 --[[Translation missing --]]

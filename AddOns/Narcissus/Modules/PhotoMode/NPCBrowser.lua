@@ -991,8 +991,67 @@ local NPCInfo = {
     [136413] = {"", "lg", 9888},        --Syrawon the Dominus
     [102649] = {"", "p", 82296, {49340, 49340} },   --Lilian Voss
     [138287] = {"", "bk", 140415, {160500, 160501} },   --Lilian Voss Horde
-    --Archmage Modera
-    --Archmage Aethas Sunreaver
+
+    --Shadowlands
+    [165714] = {"", "b", 161885, {177089} },    --Kyrestia the Firstborne <Archon>
+    [167168] = {"", "y", 162051, {174413} },    --Devos <Paragon of Loyalty>
+    [167410] = {"", "p", 162051, {174415} },    --Devos Purple
+    [159929] = {"", "b", 168730, },             --Uther Kyrian Blue
+    [166668] = {"", "p", 168730, {173905} },    --Uther Kyrian Purple
+    [165716] = {"", "y", 168051, {174438} },    --Xandria <Paragon of Courage>
+    [166156] = {"", "y", 169715, {176074, 174433} },    --Thenios <Paragon of Wisdom>
+    [166153] = {"", "bp", 169328, {171130, 174429} },   --Vesiphone <Paragon of Purity>
+    [166609] = {"", "bp", 162228, {174424} },   --Chyrus <Paragon of Humility>
+    [165097] = {"", "bp", 159616, {182152} },   --Polemarch Adrestes
+    [165011] = {"", "bp", 160858, },            --Pelagos
+    [165042] = {"", "bp", 160091, {171132} },   --Kleia
+    [165248] = {"", "y", 158521, },             --Mikanikos <Forgelite Prime>
+
+    [165653] = {"", "bp", 169436},  --Winter Queen
+    [166909] = {"", "bp", 169689, {180024} }, --Lord Herne <The Wild Hunt>
+    [165249] = {"", "bp", 165162, {180071} },   --Hunt-Captain Korayn
+    [165250] = {"", "bp", 174884, {178119} },  --Ara'lon <The Wild Hunt>
+    [165218] = {"", "bp", 163204, {178119} }, --Niya
+    [165797] = {"", "bp", 159591},      --Lady Moonberry
+    [165567] = {"", "tt", 164362},      --Dreamweaver
+    [165246] = {"", "bp", 169665},      --Droman Tashmur
+    [171648] = {"", "g", 166417},       --Ysera
+
+    [165005] = {"", "r", 166196, },    --Sire Denathrius
+    [158653] = {"", "y", 166196, {178716} },    --Prince Renathal
+    [165291] = {"", "bk", 160308, {175939} },   --The Accuser <Harvester of Pride>
+    [165589] = {"", "o", 166196, {178716} },    --The Curator <Harvester of Avarice>
+    [165269] = {"", "bk", 160497, },    --The Countess <Harvester of Desire>
+    [165820] = {"", "bk", 163359, {178494} },   --The Tithelord <Harvester of Envy>
+    [165866] = {"", "bk", 160516, },    --The Stonewright <Harvester of Wrath>
+    [166442] = {"", "bk", 167241, {173724} },   --The Fearstalker <Harvester of Dread>
+    [165652] = {"", "r", 161346}, --Kael'thas
+    [170813] = {"", "r", 161346}, --Kael'thas Sunstrider <Lord of the Blood Elves>
+    [165864] = {"", "bk", 169130, {175847} },   --Nadjia the Mistblade
+    [165031] = {"", "bk", 163273, },            --Theotar <The Mad Duke>
+    [165676] = {"", "tt", 161345, {174639} },   --General Draven
+
+    [165182] = {"", "g", 154350, {105037, 105037} }, --Baroness Draka
+    [165417] = {"", "bk", 169153, {181255} },   --Alexandros Mograine <The Ashbringer>
+    [165819] = {"", "y", 168421, }, --Kel'Thuzad <Archlich>
+    [162549] = {"", "g", 169115, {156712} },   --Baroness Vashj <Matron of Spies>
+    [165966] = {"", "r", 167843, {32841} },    --Khaliiq <Vashj's Devoted>
+    [167748] = {"", "bk", 162237},  --Osbourne Black <Soul Warden>
+    [158007] = {"", "o", 168807, },    --Margrave Krexus
+    [165571] = {"", "bk", 164384, {176551} }, --Secutor Mevix <House of the Chosen>
+    [165333] = {"", "bk", 169700},    --Plague Deviser Marileth
+    [165210] = {"", "bk", 169669},  --Emeni <The Slaughter Daughter>
+    [165130] = {"", "bk", 168753, {174305, 174305} },  --Bonesmith Heirmir
+    
+    [165654] = {"", "tt", },    --The Arbitor
+    [167486] = {"", "tt", 164386},    --Tal-Inara <Honored Voice>
+    [167424] = {"", "o", 165485}, --Overseer Kah-Sher <Will of the Arbiter>
+    [163490] = {"", "bk", 165748, {177838}},    --Highlord Bolvar Fordragon <Knights of the Ebon Blade>
+
+    [171770] = {"", "tt", 169718},  --Ve'nari
+    [165799] = {"", "tt", },    --The Jailer **Sound
+    [171356] = {"", "tt", 171008},    --Runecarver
+    [164449] = {"", "tt", 139981},    --Sylvanas Windrunner **Sound
 
     --[] = {"", "", },
 };
@@ -1005,7 +1064,82 @@ local Catalogue = {
             }
         }
     --]]
-    [1] = {["name"] = "Human",
+
+    {["name"] = "Shadowlands",
+        [1] = {["name"] = "Bastion",
+            165714,    --Kyrestia the Firstborne <Archon>
+            167168,    --Devos <Paragon of Loyalty>
+            167410,    --Devos Purple
+            159929,    --Uther Kyrian Blue
+            166668,    --Uther Kyrian Purple
+            165716,    --Xandria <Paragon of Courage>
+            166156,    --Thenios <Paragon of Wisdom>
+            166153,    --Vesiphone <Paragon of Purity>
+            166609,    --Chyrus <Paragon of Humility>
+            165097,    --Polemarch Adrestes
+            165011,    --Pelagos
+            165042,    --Kleia
+            165248,    --Mikanikos <Forgelite Prime>
+        },
+
+        [2] = {["name"] = "Revendreth",
+            165005,     --Sire Denathrius
+            158653,     --Prince Renathal
+            165291,     --The Accuser <Harvester of Pride>
+            165589,     --The Curator <Harvester of Avarice>
+            165269,     --The Countess <Harvester of Desire>
+            165820,     --The Tithelord <Harvester of Envy>
+            165866,     --The Stonewright <Harvester of Wrath>
+            166442,     --The Fearstalker <Harvester of Dread>
+            165652,     --Kael'thas
+            170813,     --Kael'thas Sunstrider <Lord of the Blood Elves>
+            165864,     --Nadjia the Mistblade
+            165031,     --Theotar <The Mad Duke>
+            165676,     --General Draven
+        },
+
+        [3] = {["name"] = "Ardenweald",
+            165653,     --Winter Queen
+            166909,     --Lord Herne <The Wild Hunt>
+            165249,     --Hunt-Captain Korayn
+            165250,     --Ara'lon <The Wild Hunt>
+            165218,     --Niya
+            165797,     --Lady Moonberry
+            165567,     --Dreamweaver
+            165246,     --Droman Tashmur
+            171648,     --Ysera
+        },
+
+        [4] = {["name"] = "Maldraxxus",
+            165182,     --Baroness Draka
+            165417,     --Alexandros Mograine <The Ashbringer>
+            165819,     --Kel'Thuzad <Archlich>
+            162549,     --Baroness Vashj <Matron of Spies>
+            165966,     --Khaliiq <Vashj's Devoted>
+            167748,     --Osbourne Black <Soul Warden>
+            158007,     --Margrave Krexus
+            165571,     --Secutor Mevix <House of the Chosen>
+            165333,     --Plague Deviser Marileth
+            165210,     --Emeni <The Slaughter Daughter>
+            165130,     --Bonesmith Heirmir
+        },
+
+        [5] = {["name"] = "The Maw",
+            165799,     --The Jailer
+            171356,     --Runecarver
+            171770,     --Ve'nari
+            164449,     --Sylvanas Windrunner
+        },
+
+        [6] = {["name"] = "Oribos",
+            165654,     --The Arbitor
+            167486,     --Tal-Inara <Honored Voice>
+            167424,     --Overseer Kah-Sher <Will of the Arbiter>
+            163490,     --Bolvar
+        },
+    },
+
+    {["name"] = "Human",
         [1] = {["name"] = "Stormwind",
             115490,         --Prince Llane Wrynn
             11699,          --Varian Gladiator
@@ -1120,7 +1254,7 @@ local Catalogue = {
 
     },
 
-    [2] = {["name"] = "Elf",
+    {["name"] = "Elf",
         [1] = {["name"] = "Night Elf",
             22917,            --Illidan Stormrage <The Betrayer>
             55500,            --Illidan Stormrage  Well of Eternity
@@ -1216,7 +1350,7 @@ local Catalogue = {
         },
     },
 
-    [3] = {["name"] = "Tauren",
+    {["name"] = "Tauren",
         [1] = {["name"] = "Thunder Bluff",
             36648,     --Baine Bloodhoof <High Chieftain>
             149742,    --Tamaala Cairne's wife
@@ -1246,10 +1380,10 @@ local Catalogue = {
         },
     },
     
-
-    [4] = {["name"] = "Undead",
+    {["name"] = "Undead",
         [1] = {["name"] = "The Forsaken",
             44365,          --Lady Sylvanas Windrunner <Banshee Queen>
+            164449,         --Sylvanas Windrunner
             140176,         --Nathanos Blightcaller
             102649,         --Lilian Voss
             138287,         --Lilian Voss Horde
@@ -1282,6 +1416,7 @@ local Catalogue = {
         [3] = {["name"] = "Ebon Blade",
             95942,          --Bolvar Fordragon <The Lich King>
             146986,         --The Lich King red
+            163490,         --Bolvar
             26581,          --Koltira Deathweaver
             28444,          --Darion Mograine DK
             109000,         --King Thoras Trollbane
@@ -1300,7 +1435,7 @@ local Catalogue = {
         },
     },
 
-    [5] = {["name"] = "Gnome",
+    {["name"] = "Gnome",
         [1] = {["name"] = "Gnomeregan",
             96180,      --Gelbin
             90716,      --Gelbin's bot
@@ -1337,7 +1472,7 @@ local Catalogue = {
         },
     },
 
-    [6] = {["name"] = "Goblin",
+    {["name"] = "Goblin",
         [1] = {["name"] = "Goblin",
             35222,      --Trade Prince Gallywix
             152522,     --Gazlowe
@@ -1365,7 +1500,7 @@ local Catalogue = {
         },
     },
 
-    [7] = {["name"] = "Dragon",
+    {["name"] = "Dragon",
         [1] = {["name"] = "Black",
             55971,          --Deathwing <The Destroyer> Dragon
             33523,          --Neltharion <The Earthwarder>  Human
@@ -1423,7 +1558,7 @@ local Catalogue = {
         },
     },
 
-    [8] = {["name"] = "Elemental",
+    {["name"] = "Elemental",
         [1] = {["name"] = "Fire",
             11502,          --Ragnaros MC
             52409,          --Ragnaros with feet
@@ -1458,7 +1593,7 @@ local Catalogue = {
     },
 
 
-    [9] = {["name"] = "Dwarf",
+    {["name"] = "Dwarf",
         [1] = {["name"] = "Ironforge",
             96219,          --Modimus Anvilmar
             2784,           --King Magni Bronzebeard <Lord of Ironforge>
@@ -1484,7 +1619,7 @@ local Catalogue = {
         },
     },
 
-    [10] = {["name"] = "Orc",
+    {["name"] = "Orc",
         [1] = {["name"] = "Warsong",
             80747,         --Golmash Hellscream
             142275,        --Grommash Hellscream <Warchief of the Mag'har>
@@ -1566,7 +1701,7 @@ local Catalogue = {
     },
 
 
-    [11] = {["name"] = "Troll",
+    {["name"] = "Troll",
         [1] = {["name"] = "Darkspear",
             10540,          --Vol'jin
             131465,         --Rokhan new
@@ -1631,7 +1766,7 @@ local Catalogue = {
 
     },
 
-    [12] = {["name"] = "Interstellar",
+    {["name"] = "Interstellar",
         [1] = {["name"] = "Titans",
             125885,          --Aman'Thul
             126267,          --Eonar
@@ -1656,7 +1791,7 @@ local Catalogue = {
         },
     },
 
-    [13] = {["name"] = "Titan-forged",
+    {["name"] = "Titan-forged",
 
         [1] = {["name"] = "Watchers",
             119894,          --Odyn <Prime Designate>
@@ -1699,7 +1834,7 @@ local Catalogue = {
         },
     },
 
-    [14] = {["name"] = "Demon",
+    {["name"] = "Demon",
         [1] = {["name"] = "Demon Hunter",
             22917,      --Illidan Stormrage <The Betrayer>
             108571,     --Altruis the Sufferer
@@ -1770,7 +1905,7 @@ local Catalogue = {
     
     },
 
-    [15] = {["name"] = "Draenei",
+    {["name"] = "Draenei",
         [1] = {["name"] = "Argus",
             120533,         --Velen
             127880,         --Echo of Velen <The Triumvirate>
@@ -1802,7 +1937,7 @@ local Catalogue = {
         },
     },
 
-    [16] = {["name"] = "Draenor",
+    {["name"] = "Draenor",
         [1] = {["name"] = "Gronn",
             19044,          --Gruul the Dragonkiller
         },
@@ -1826,7 +1961,7 @@ local Catalogue = {
         },
     },
 
-    [17] = {["name"] = "Ancients",
+    {["name"] = "Ancients",
         [1] = {["name"] = "August Celestial",
             71952,            --Chi-Ji <The Red Crane>
             71953,            --Xuen <The White Tiger>
@@ -1848,7 +1983,7 @@ local Catalogue = {
         },
     },
 
-    [18] = {["name"] = "Void",
+    {["name"] = "Void",
         [1] = {["name"] = "Old Gods",
             33288,            --Yogg-Saron
             72228,            --Heart of Y'Shaarj
@@ -1902,7 +2037,7 @@ local Catalogue = {
         },
     },
 
-    [19] = {["name"] = "Pandaria",
+    {["name"] = "Pandaria",
         [1] = {["name"] = "Pandaren",
             73303,      --Emperor Shaohao
             54975,      --Aysa Cloudsinger
@@ -1926,7 +2061,7 @@ local Catalogue = {
         },
     },
 
-    [20] = {["name"] = "Zandalar",
+    {["name"] = "Zandalar",
         [1] = {["name"] = "Vulpera",
             123586,     --Kiro
             126848,     --Captain Eudora
@@ -1956,7 +2091,7 @@ local Catalogue = {
         },
     },
     --[[
-    [] = {["name"] = "",
+    {["name"] = "",
         [1] = {["name"] = "",
 
         },
@@ -3318,6 +3453,7 @@ local function BuildNPCList()
     end)
 end
 
+
 local Initialize = CreateFrame("Frame");
 Initialize:RegisterEvent("PLAYER_ENTERING_WORLD");
 Initialize:SetScript("OnEvent", function(self, event)
@@ -3329,7 +3465,6 @@ Initialize:SetScript("OnEvent", function(self, event)
         BrowserFrame:SetScript("OnHide", Narci_NPCBrowser_OnHide);
         LoadingIndicator = BrowserFrame.Container.LoadingIndicator;
         LoadingIndicator:Show();
-
         BuildNPCList();
         LoadFavorites();
     end
@@ -3419,10 +3554,11 @@ local function CreateVirtualTooltip(index)
     return VirtualTooltip
 end
 
-function GetExistNPC(_start, _end)
+function GetExistNPC(_endIndex)
     ResetOutputEditBox();
 
     local IDs = {};
+    local _start, _end = (_endIndex - 1)*1000 + 1, _endIndex*1000;
     local numLeft = _end - _start + 1;
 
     for i = 1, numLeft do
@@ -3460,7 +3596,7 @@ function GetExistNPC(_start, _end)
             print(_start.." to ".._end.." : "..numExist)
             table.sort(output, SortFunc);
             for _, v in pairs(output) do
-                OutPutText("|cffffffff".. v[1] .."|r|cffa6a6a6,  --".. v[2])
+                OutPutText("|cffffffff".. v[1] .."|r|cffa6a6a6,  --".. v[2].."|r")
             end
         end
     end
@@ -3533,7 +3669,7 @@ Utility:SetScript("OnEvent", function(self, event)
     OutputFrame:Show();
     OutputEditBox = OutputFrame.ScrollFrame.EditBox;
     local editBoxHeight = OutputEditBox:GetHeight();
-    CreateSmoothScroll(OutputFrame.ScrollFrame, editBoxHeight, 1, 0.5);
+    --CreateSmoothScroll(OutputFrame.ScrollFrame, editBoxHeight, 1, 0.5);
     OutputFrame.ScrollFrame.scrollBar:SetScript("OnValueChanged", function(self, value)
         self:GetParent():SetVerticalScroll(value);
     end)

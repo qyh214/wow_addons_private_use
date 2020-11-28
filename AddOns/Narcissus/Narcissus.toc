@@ -1,6 +1,6 @@
-## Interface: 90001
+## Interface: 90002
 ## Plain Title: Narcissus
-## Version: 1.1.0c
+## Version: 1.1.0e
 
 ## Title: |cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r
 
@@ -26,13 +26,14 @@ NarciDB\NarciTooltip.xml
 
 Bridge\Bridge.xml
 
-Widgets\NarciSocketing.xml
+Modules\CharacterFrame\ItemSocketing.xml
 Narcissus.xml
 Preference.xml
 
-Widgets\EquipmentComparisonFlyout.xml
-Widgets\TitleManager.xml
-Widgets\EquipmentSetManager.xml
+##Modules\CharacterFrame\Soulbinds.xml
+Modules\CharacterFrame\EquipmentComparisonFlyout.xml
+Modules\CharacterFrame\TitleManager.xml
+Modules\CharacterFrame\EquipmentSetManager.xml
 
 Modules\PhotoMode\Widgets.xml
 Modules\PhotoMode\PhotoMode.xml
@@ -51,6 +52,7 @@ widgets\Splash.xml
 
 Modules\Achievement\Achievement.xml
 Modules\Statistics\Core.lua
+##Modules\LoreBook\LoreBook.xml
 Modules\ModuleManager\ModuleManager.lua
 
 Filters\CameraEffect.xml
@@ -63,4 +65,3 @@ Guide\Guide.xml
 ## Modules\Outfit\Outfit.xml
 
 ##Expansion Limited
-widgets\CorruptionSystem.xml

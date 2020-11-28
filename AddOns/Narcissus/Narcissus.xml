@@ -513,6 +513,7 @@
 
 				<FontString inherits="NarciFontMedium12" justifyH="LEFT" justifyV="MIDDLE" parentKey="Label" text="Label">
 					<Size x="0" y="0"/>
+					<Color r="0.92" g="0.92" b="0.92"/>
 					<Anchors>
 						<Anchor point="LEFT" relativeKey="$parent.GL" relativePoint="LEFT" x="15" y="0"/>
 					</Anchors>
@@ -520,6 +521,7 @@
 
 				<FontString inherits="NarciFontStatusNumber" justifyH="RIGHT" justifyV="MIDDLE" parentKey="Value" text="1208">
 					<Size x="0" y="0"/>
+					<Color r="0.92" g="0.92" b="0.92"/>
 					<Anchors>
 						<Anchor point="RIGHT" relativeKey="$parent.GR" relativePoint="RIGHT" x="-15" y="0"/>
 					</Anchors>
@@ -527,6 +529,7 @@
 
 				<FontString inherits="NarciFontStatusNumber" justifyH="RIGHT" justifyV="MIDDLE" parentKey="ValueRating" text="1208" hidden="true">
 					<Size x="0" y="0"/>
+					<Color r="0.92" g="0.92" b="0.92"/>
 					<Anchors>
 						<Anchor point="RIGHT" relativeKey="$parent.Color" relativePoint="RIGHT" x="-10" y="0"/>
 					</Anchors>
@@ -569,6 +572,7 @@
 			<Layer level="OVERLAY">
 				<FontString inherits="NarciFontMedium12" justifyH="LEFT" justifyV="MIDDLE" parentKey="Label" text="Label">
 					<Size x="90" y="0"/>
+					<Color r="0.92" g="0.92" b="0.92"/>
 					<Anchors>
 						<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="10" y="0"/>
 					</Anchors>
@@ -576,6 +580,7 @@
 
 				<FontString inherits="NarciFontStatusNumber" justifyH="RIGHT" justifyV="MIDDLE" parentKey="Value" text="1208">
 					<Size x="0" y="0"/>
+					<Color r="0.92" g="0.92" b="0.92"/>
 					<Anchors>
 						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-10" y="0"/>
 					</Anchors>
@@ -644,6 +649,7 @@
 			<Layer level="OVERLAY">
 				<FontString inherits="NarciFontMedium12" justifyH="CENTER" justifyV="MIDDLE" parentKey="Label" text="Label">
 					<Size x="92" y="0"/>
+					<Color r="0.92" g="0.92" b="0.92"/>
 					<Anchors>
 						<Anchor point="CENTER" relativeKey="$parent.Black" relativePoint="CENTER" x="-1" y="0"/>  <!--Compensate for Radar's Border-->
 					</Anchors>
@@ -651,6 +657,7 @@
 
 				<FontString inherits="NarciFontStatusNumber" justifyH="LEFT" justifyV="MIDDLE" parentKey="Value" text="12.08%">
 					<Size x="0" y="0"/>
+					<Color r="0.92" g="0.92" b="0.92"/>
 					<Anchors>
 						<Anchor point="LEFT" relativeKey="$parent.Color" relativePoint="LEFT" x="10" y="0"/>
 					</Anchors>
@@ -658,6 +665,7 @@
 
 				<FontString inherits="NarciFontStatusNumber" justifyH="RIGHT" justifyV="MIDDLE" parentKey="ValueRating" text="1208">
 					<Size x="0" y="0"/>
+					<Color r="0.92" g="0.92" b="0.92"/>
 					<Anchors>
 						<Anchor point="RIGHT" relativeKey="$parent.Color" relativePoint="RIGHT" x="-11" y="0"/>
 					</Anchors>
@@ -980,6 +988,14 @@
 								</OnFinished>
 							</Scripts>
 						</AnimationGroup>
+						<AnimationGroup parentKey="scaleUp">
+							<Scale scaleX="1.150" scaleY="1.150" duration="0.12" order="1" smoothing="OUT"/>
+							<Scripts>
+								<OnFinished>
+									self:GetParent():SetScale(1.150);
+								</OnFinished>
+							</Scripts>
+						</AnimationGroup>
 					</Animations>
 				</Texture>
 			</Layer>
@@ -1015,6 +1031,14 @@
 								</OnFinished>
 							</Scripts>
 						</AnimationGroup>
+						<AnimationGroup parentKey="scaleUp">
+							<Scale scaleX="1.150" scaleY="1.150" duration="0.12" order="1" smoothing="OUT"/>
+							<Scripts>
+								<OnFinished>
+									self:GetParent():SetScale(1.150);
+								</OnFinished>
+							</Scripts>
+						</AnimationGroup>
 					</Animations>
 				</Texture>
 			</Layer>
@@ -1046,6 +1070,16 @@
 						<MaskedTexture childKey="Icon"/>
 						<MaskedTexture childKey="IconOverlay"/>
 					</MaskedTextures>
+					<Animations>
+						<AnimationGroup parentKey="scaleUp">
+							<Scale scaleX="1.150" scaleY="1.150" duration="0.12" order="1" smoothing="OUT"/>
+							<Scripts>
+								<OnFinished>
+									self:GetParent():SetScale(1.150);
+								</OnFinished>
+							</Scripts>
+						</AnimationGroup>
+					</Animations>
 				</MaskTexture>
 
 			</Layer>
@@ -1174,11 +1208,11 @@
         </Scripts>
     </Button>
 
-	<Button name="Narci_InteractiveGemSlot_Template" inherits="Narci_GemSlot_Template" virtual="true">
+	<Button name="Narci_InteractiveGemSlot_Template" inherits="Narci_GemSlot_Template" virtual="true" mixin="NarciGemSlotMixin">
 		<Scripts>
-			<OnEnter function="Narci_GemButton_OnEnter"/>
-			<OnLeave function="Narci_GemButton_OnLeave"/>
-			<OnClick function="Narci_GemSlot_OnClick"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnClick method="OnClick"/>
 		</Scripts>
 	</Button>
 
@@ -2911,6 +2945,7 @@
 					<Layer level="OVERLAY">
 						<FontString parentKey="Miscellaneous" inherits="NarciFontPlayerInfo" justifyH="CENTER" justifyV="BOTTOM" text="1208 Peterodox">
 							<Size x="0" y="0"/>
+							<Color r="0.92" g="0.92" b="0.92"/>
 							<Anchors>
 								<Anchor point="BOTTOM" relativeKey="$parent" relativePoint="BOTTOM" x="0" y="0"/>
 							</Anchors>
@@ -2925,7 +2960,9 @@
 						<Anchors>
 							<Anchor point="TOP" relativeKey="$parent" relativePoint="TOP" x="0" y="0"/>
 						</Anchors>
-						<FontString justifyH="CENTER" justifyV="TOP"/>
+						<FontString justifyH="CENTER" justifyV="TOP">
+							<Color r="0.92" g="0.92" b="0.92"/>
+						</FontString>
 						<Scripts>
 							<OnShow>
 								local LetterNum = self:GetNumLetters()
@@ -3086,7 +3123,7 @@
 					<Anchor point="TOP" relativeKey="$parent.PlayerInfo" relativePoint="BOTTOM" y="-24"/>
 				</Anchors>
 				<Frames>
-					<Button parentKey="IlvlButtonCenter">
+					<Button parentKey="IlvlButtonCenter" mixin="NarciItemLevelHexagonMixin">
 						<Size x="102" y="102"/>
 						<HitRectInsets>
 							<AbsInset left="10" right="10" top="10" bottom="10"/>
@@ -3096,7 +3133,7 @@
 						</Anchors>
 						<Layers>					
 							<Layer level="ARTWORK">
-								<Texture parentKey="IvlBackground" hidden="false" file="Interface\AddOns\Narcissus\Art\Solid\HexagonSolid-Purple">
+								<Texture parentKey="IvlBackground" hidden="false" file="Interface\AddOns\Narcissus\Art\Solid\Purple">
 									<Size x="80" y="80"/>
 									<Anchors>
 										<Anchor point="CENTER" relativeKey="$parent" x="0" y="0"/>
@@ -3139,46 +3176,6 @@
 									</MaskedTextures>
 								</MaskTexture>
 							</Layer>
-							<Layer level="ARTWORK" textureSubLevel="2">
-								<Texture file="Interface\AddOns\Narcissus\Art\Widgets\CorruptionSystem\Eyelid" hidden="true" parentKey="Eyelid" nounload="true">
-									<TexCoords left="0" right="0.125" top="0" bottom="1"/>
-									<Anchors>
-										<Anchor point="TOPLEFT" relativeKey="$parent.IvlBackground" relativePoint="TOPLEFT"/>
-										<Anchor point="BOTTOMRIGHT" relativeKey="$parent.IvlBackground" relativePoint="BOTTOMRIGHT"/>
-									</Anchors>
-									<Animations>
-										<AnimationGroup parentKey="Blink">
-											<Scale duration="0.02"/>
-											<Scripts>
-												<OnPlay>
-													self.s = self.s or 1;
-													local s = self.s;
-													if s > 8 then
-														s = 17 - s;
-													end
-													self:GetParent():SetTexCoord( (s-1)*0.125, s*0.125, 0, 1);
-												</OnPlay>
-												<OnFinished>
-													self.s = self.s + 1;
-													if self.s > 16 then
-														self.s = 1;
-													elseif self.s == 8 then
-														local t = self.texID;
-														self:GetParent():GetParent().IvlBackground:SetTexCoord( (t-1)*0.125, t*0.125, 0, 1);
-														self:Play();
-													else
-														self:Play();
-													end
-												</OnFinished>
-												<OnStop>
-													self.s = 1;
-													self:GetParent():SetTexCoord(0, 0.125, 0, 1);
-												</OnStop>
-											</Scripts>
-										</AnimationGroup>
-									</Animations>
-								</Texture>
-							</Layer>
 							<Layer level="BACKGROUND" textureSubLevel="3">
 								<Texture file="Interface\AddOns\Narcissus\Art\Widgets\ItemLevel\HexagonTube" hidden="false">
 									<TexCoords left="0.5625" right="1" top="0" bottom="0.55859375"/>
@@ -3189,7 +3186,7 @@
 								</Texture>
 							</Layer>
 							<Layer level="OVERLAY" textureSubLevel="2">
-								<Texture parentKey="TubeBorder" file="Interface\AddOns\Narcissus\Art\Widgets\ItemLevel\HexagonTube" >
+								<Texture parentKey="TubeBorder" file="Interface\AddOns\Narcissus\Art\Widgets\ItemLevel\HexagonTube">
 									<TexCoords left="0" right="0.5625" top="0" bottom="0.55859375"/>
 									<Size x="102" y="102"/>
 									<Anchors>
@@ -3268,30 +3265,13 @@
 							</Frame-->
 						</Frames>
 						<Scripts>
-							<OnMouseDown>
-								self.IvlBackground:SetPoint("CENTER", 0, -4);
-								if self.isCorrupted then
-									NarciAPI_FadeFrame(Narci_CorruptionTooltip, 0.2, "OUT");
-								end
-							</OnMouseDown>
-							<OnMouseUp>
-								self.IvlBackground:SetPoint("CENTER", 0, 0);
-							</OnMouseUp>							
-							<OnEnter function="Narci_SolidHexagonButton_OnEnter"/>
-							<OnLeave>
-								UIFrameFadeOut(self.Highlight, 0.3, self.Highlight:GetAlpha(), 0);
-								Narci:HideButtonTooltip();
-								if self.isCorrupted then
-									local corruptionTooltip = Narci_CorruptionTooltip;
-									if not corruptionTooltip:IsMouseOver(40, 0 ,0, 0) then
-										NarciAPI_FadeFrame(corruptionTooltip, 0.2, "OUT");
-									end
-								end
-							</OnLeave>
-							<!--See Widget/EquipmentManager.lua for OnClick function-->
-							<OnHide>
-								self:StopAnimating();
-							</OnHide>
+							<OnMouseDown method="OnMouseDown"/>
+							<OnMouseUp method="OnMouseUp"/>						
+							<OnEnter method="OnEnter"/>
+							<OnLeave method="OnLeave"/>
+							<!--See Widget/EquipmentManager.lua for OnClick&OnHide function-->
+							<OnClick method="OnClick"/>
+							<OnHide method="OnHide"/>
 						</Scripts>
 					</Button>
 
@@ -3407,8 +3387,7 @@
 						</Frames>
 						<Scripts>
 							<OnLoad>
-								self.tooltipHeadline = format("Total Corruption");
-								self.tooltipLineOpen = Narci.L["No Corrupted Item"];
+								self.tooltipHeadline = LANDING_PAGE_RENOWN_LABEL;
 							</OnLoad>
 							<OnEnter>
 								Narci_ShowButtonTooltip(self);
@@ -3494,7 +3473,7 @@
 				</Frames>
 			</Frame>
 
-			<Frame parentKey="RadarChart" name="Narci_RadarChartFrame" inherits="Narci_RadarTemplate" frameLevel="10" mixin="NarciRadarChartMixin">
+			<Frame name="Narci_RadarChartFrame" parentKey="RadarChart" inherits="Narci_RadarTemplate" frameLevel="10" mixin="NarciRadarChartMixin">
 				<Size>
 					<AbsDimension x="96" y="96"/>
 				</Size>

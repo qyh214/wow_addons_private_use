@@ -149,13 +149,11 @@ L["S_TUTORIAL_WORLDBUTTONS"] = "Clic aquí para alternar entre tres tipos de res
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Este botón lo llevara al mapa de las Islas quebradas."
 L["S_UNKNOWNQUEST"] = "Misión desconocida"
 L["S_WHATSNEW"] = "¿Qué hay de nuevo?"
-L["S_WORLDBUTTONS_SHOW_NONE"] = "Ocultar Resumen"
 L["S_WORLDBUTTONS_SHOW_TYPE"] = "Mostrar Resumen"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "Ordenar por Zona"
 L["S_WORLDBUTTONS_TOGGLE_QUESTS"] = "Mostrar/Ocultar Misiones"
 L["S_WORLDMAP_QUESTLOCATIONS"] = "Mostrar Ubicaciones de Misión"
 L["S_WORLDMAP_QUESTSUMMARY"] = "Mostrar Resumen de Misión"
-L["S_WORLDMAP_TOOGLEQUESTS"] = "Mostrar/Ocultar Misiones"
 L["S_WORLDMAP_TOOLTIP_TRACKALL"] = "seguir todas las misiones en esta lista"
 L["S_WORLDQUESTS"] = "Misiones de mundo"
 

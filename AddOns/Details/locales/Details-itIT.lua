@@ -1,54 +1,31 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("Details", "itIT") 
 if not L then return end 
 
---[[Translation missing --]]
---[[ L["ABILITY_ID"] = ""--]] 
+L["ABILITY_ID"] = "ID abilità"
 --[[Translation missing --]]
 --[[ L["STRING_"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ABSORBED"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ACTORFRAME_NOTHING"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ACTORFRAME_REPORTAT"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ACTORFRAME_REPORTOF"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ACTORFRAME_REPORTTARGETS"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ACTORFRAME_REPORTTO"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ACTORFRAME_SPELLDETAILS"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ACTORFRAME_SPELLSOF"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ACTORFRAME_SPELLUSED"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_AGAINST"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ALIVE"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ALPHA"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ANCHOR_BOTTOM"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ANCHOR_BOTTOMLEFT"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ANCHOR_BOTTOMRIGHT"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ANCHOR_LEFT"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ANCHOR_RIGHT"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ANCHOR_TOP"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ANCHOR_TOPLEFT"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ANCHOR_TOPRIGHT"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ASCENDING"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_ATACH_DESC"] = ""--]] 
+L["STRING_ABSORBED"] = "Assorbito"
+L["STRING_ACTORFRAME_NOTHING"] = "oops, non ci sono dati da riportare :("
+L["STRING_ACTORFRAME_REPORTAT"] = "a"
+L["STRING_ACTORFRAME_REPORTOF"] = "di"
+L["STRING_ACTORFRAME_REPORTTARGETS"] = "riporta per bersagli di"
+L["STRING_ACTORFRAME_REPORTTO"] = "riporta per"
+L["STRING_ACTORFRAME_SPELLDETAILS"] = "Dettagli dell'incantesimo"
+L["STRING_ACTORFRAME_SPELLSOF"] = "Incantesimi di"
+L["STRING_ACTORFRAME_SPELLUSED"] = "Tutti gli incantesimi usati"
+L["STRING_AGAINST"] = "contro"
+L["STRING_ALIVE"] = "Vivo"
+L["STRING_ALPHA"] = "Alfa"
+L["STRING_ANCHOR_BOTTOM"] = "In basso"
+L["STRING_ANCHOR_BOTTOMLEFT"] = "In basso a sinistra"
+L["STRING_ANCHOR_BOTTOMRIGHT"] = "In basso a destra"
+L["STRING_ANCHOR_LEFT"] = "Sinistra"
+L["STRING_ANCHOR_RIGHT"] = "Destra"
+L["STRING_ANCHOR_TOP"] = "In alto"
+L["STRING_ANCHOR_TOPLEFT"] = "In alto a sinistra"
+L["STRING_ANCHOR_TOPRIGHT"] = "In alto a destra"
+L["STRING_ASCENDING"] = "Ascendente"
+L["STRING_ATACH_DESC"] = "La finistra #%d fa un gruppo con la finestra #%d."
 --[[Translation missing --]]
 --[[ L["STRING_ATTRIBUTE_CUSTOM"] = ""--]] 
 --[[Translation missing --]]
@@ -2193,6 +2170,8 @@ L["STRING_MINITUTORIAL_OPTIONS_PANEL6"] = "Selezionare qui che finestra che si d
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONSMENU_SPELLS_CONSOLIDATE"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["STRING_OPTIONSMENU_TITLEBAR"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["STRING_OPTIONSMENU_TITLETEXT"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONSMENU_TOOLTIP"] = ""--]] 
@@ -2200,6 +2179,8 @@ L["STRING_MINITUTORIAL_OPTIONS_PANEL6"] = "Selezionare qui che finestra che si d
 --[[ L["STRING_OPTIONSMENU_WALLPAPER"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONSMENU_WINDOW"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONSMENU_WINDOWBODY"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["STRING_OVERALL"] = ""--]] 
 --[[Translation missing --]]

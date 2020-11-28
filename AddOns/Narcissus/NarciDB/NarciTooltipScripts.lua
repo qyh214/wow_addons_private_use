@@ -1,4 +1,4 @@
-NarciTooltipMixin = {};
+NarciTooltipMixin = CreateFromMixins(BackdropTemplateMixin);
 
 local TP = NarciTooltipMixin;
 local GetMouseFocus = GetMouseFocus;
@@ -30,6 +30,13 @@ local Images = {
     [7] =  PATH_PREFIX .. "LightSwitch",
 }
 
+local BackdropInfo = {
+    edgeFile = "Interface\\AddOns\\Narcissus\\Art\\Tooltip\\Tooltip-White-Border",
+    tile = true,
+    tileEdge = true,
+    tileSize = 24,
+    edgeSize = 24,
+};
 
 -----------------------------------
 local AutoClose = CreateFrame("Frame");
@@ -176,6 +183,9 @@ function TP:OnLoad()
     self.IsSignleLine = true;
     self.Scale = 1;
     local animFade = NarciAPI_CreateFadingFrame(self);
+
+    
+    self:SetBackdrop(BackdropInfo);
 end
 
 function TP:OnSizeChanged(width, height)
