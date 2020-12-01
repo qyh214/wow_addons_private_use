@@ -38,74 +38,37 @@ AFK离开状态（```/afk```）
 部分插件支持命令，例如/dbm，等等。其他插件可以在界面-插件里修改。
 
 ## 插件维护更新方式
-ElvUI下载地址：https://www.tukui.org/download.php?ui=elvui&changelog
-
-集合石插件：http://w.163.com/special/wowsocial/
+ElvUI：
+- 下载：https://www.tukui.org/download.php?ui=elvui&download
+- 更新历史：https://www.tukui.org/download.php?ui=elvui&changelog
 
 自动截图插件：http://bbs.ngacn.cc/read.php?tid=7534350
 
-TinyInspect、TinyTooltip：
-http://bbs.ngacn.cc/read.php?tid=10240957
-
-http://www.wowinterface.com/downloads/info24688-TinyTooltip-8.0-BFA.html
-
-http://www.wowinterface.com/downloads/info24689-TinyInspect-8.0-BFA.html
-
-SimpleChat：http://bbs.ngacn.cc/read.php?tid=9633520
-
-SkadaPlus：https://github.com/Yeatol/SkadaPlus
-
-SpeakinSpell：https://github.com/Toludin/SpeakinSpell
-
-Auctionlite：https://bbs.nga.cn/read.php?tid=17729131
+TinyInspect、TinyTooltip：http://bbs.ngacn.cc/read.php?tid=10240957
 
 其他单体插件可用curse客户端管理，curse客户端下载地址：https://www.curseforge.com/twitch-client
 
 ## WA字符串
-鱼人兑换：https://wago.io/6YhvXz76q
-
-~~死亡时-菜：https://wago.io/4wZS7eLDz~~
-
 鼠标跟踪：https://wago.io/SypUT-DPm
 
-腐蚀监控（腐蚀1触发的贪婪触须+腐蚀20的腐化之眼+腐蚀40点壮美幻象整合版 腐化之眼超3层有心跳触发壮美幻象有猫叫提示版本）：https://bbs.nga.cn/read.php?tid=20290774
-
-大幻象属性、debuff监控：https://wago.io/JxMRlFNNX
-
-大幻象宝箱监控：https://wago.io/XR0uk8e5a
-
-属性监控：
-
-https://wago.io/rJZgZUxn7
-
-https://bbs.nga.cn/read.php?tid=20616554
+属性监控：https://wago.io/rJZgZUxn7
 
 全职业中二语音：https://bbs.nga.cn/read.php?tid=20729857
 
-疯狂宣言饰品监控：https://wago.io/EXzf87WMc
-
-监控武器玛寇瓦，心灵切削者的buff灵光一闪：https://wago.io/M7sntgG04
-
 只狼特效：https://wago.io/sekirowa
 
-拍卖行显示腐蚀信息：https://wago.io/8Rr-Ski1F
+奶萨wa技能监控：https://wago.io/Rshaman_AfenarUI
 
-奶萨wa技能监控：https://bbs.nga.cn/read.php?tid=20612058
-
-不可言喻的真相监控：https://bbs.nga.cn//read.php?tid=20539121
+增强、元素萨满wa技能监控：https://wago.io/Afenar_Shaman
 
 蓝量报警：https://bbs.nga.cn/read.php?tid=21781278
 
-壮美幻象额外伤害报警：https://bbs.nga.cn/read.php?tid=22080232
+标记坦克和治疗：https://wago.io/QcIHcKjkP
 
-腐蚀兑换轮换表：https://wago.io/9Lkj_ajIJ
-
-## TMW字符串
-萨满祭司：https://bbs.nga.cn/read.php?tid=16216888
-
-永恒王宫：https://bbs.nga.cn/read.php?pid=337629614
-
-属性监视：https://bbs.nga.cn/read.php?tid=15007312
+暗影国度地下城与团队副本：
+- 地下城（中文）：https://wago.io/DtdLKK4XF  （来源： https://bbs.nga.cn/read.php?tid=23417528 ）
+- 地下城（英语原版）：https://wago.io/ZpDhyMJ9K
+- 纳斯利亚堡团队副本：https://wago.io/BYNw1h77H
 
 ## 一些有用的重要命令
 在游戏内聊天窗口输入，然后回车：
