@@ -175,6 +175,16 @@ local function DQE_SetCompatibility()
     end
 end
 
+-- MoveAnything
+local function MoveAnything_SetCompatibility()
+    if IsAddOnLoaded("MoveAnything") then
+        MovAny:ResetFrame("ObjectiveTrackerFrameMover")
+        MovAny:ResetFrame("ObjectiveTrackerFrameScaleMover")
+        MovAny.lVirtualMovers.ObjectiveTrackerFrameMover = nil
+        MovAny.lVirtualMovers.ObjectiveTrackerFrameScaleMover = nil
+    end
+end
+
 --------------
 -- External --
 --------------
@@ -200,6 +210,7 @@ function M:OnEnable()
     Aurora_SetCompatibility()
     Chinchilla_SetCompatibility()
     DQE_SetCompatibility()
+    MoveAnything_SetCompatibility()
 end
 
 -- Masque

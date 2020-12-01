@@ -1,10 +1,34 @@
-lightweight tag 1192f458724b95251416ce950ec46f1745b94c6f v9.0.2.412
+lightweight tag 98e3e9ca10c47da1e2fac8e218bce79bfe3d15a7 v9.0.2.413
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Fri Nov 27 15:03:46 2020 -0300
+Date:	Sun Nov 29 11:37:12 2020 -0300
 
-commit 1192f458724b95251416ce950ec46f1745b94c6f
+commit 98e3e9ca10c47da1e2fac8e218bce79bfe3d15a7
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Fri Nov 27 15:03:46 2020 -0300
+Date:   Sun Nov 29 11:37:12 2020 -0300
 
-    General round of fixes
+    Fixed tomtom icon overlaping tracker arrow, Fixed map pin button overlap with WQT interface, removed some prints
+
+commit 655ff29b12cd90cb4a25214f1a61d9842fa8dbc8
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Sun Nov 29 11:06:11 2020 -0300
+
+    remove prints
+
+commit 655ff29b12cd90cb4a25214f1a61d9842fa8dbc8
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Sun Nov 29 11:06:11 2020 -0300
+
+    remove prints
+
+commit c4afce36c35e476db9f5fc9a231f00b56e2dac3b
+Author: Nick <ntowle@gmail.com>
+Date:   Sun Nov 29 02:34:01 2020 -0500
+
+    retrieve rare name properly when defeating a tracked rare
+
+commit c4afce36c35e476db9f5fc9a231f00b56e2dac3b
+Author: Nick <ntowle@gmail.com>
+Date:   Sun Nov 29 02:34:01 2020 -0500
+
+    retrieve rare name properly when defeating a tracked rare
 

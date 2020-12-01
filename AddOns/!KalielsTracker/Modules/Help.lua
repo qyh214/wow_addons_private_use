@@ -202,16 +202,12 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |r|cffffffff4.2.8|r\n\n"..
-					"- FIXED - TomTom support - When support enabled, Calling quests generate"..
-					offs.."map loop and FPS drop\n\n"..
-
-					cTitle.."What's NEW in version |r|cffffffff4.2.7|r\n\n"..
-					"- ADDED - Support for Jailer's Tower (Torghast)\n"..
-					"- FIXED - issue #504 - Error when clicking on Q/WQ POI on map, with TomTom"..
-					offs.."support enabled\n"..
-					"- FIXED - Active Button - Wrong position, when Zone Ability is active\n"..
-					"- UPDATED - Lib - MSA-DropDownMenu-1.0\n\n"..
+			text = cTitle.."         What's NEW in version |r|cffffffff4.2.10|r\n\n"..
+					"- ADDED - Quests - Abandon Quest is in dropdown menu\n"..
+					"- FIXED - Active Button - Collisions with combination of some addons"..
+					offs.."(e.g. Bartender + MoveAnything + PitBull)\n"..
+					"- UPDATED - Quests - Remaining time (next to Zone) is displayed only for"..
+					offs.."Calling quests\n\n"..
 
                     cTitle.."WoW 9.0.2 - Known issues w/o solution|r\n"..
                     "- Clicking on tracked quests or achievements has no response during combat.\n"..
