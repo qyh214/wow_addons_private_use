@@ -4,7 +4,7 @@ wow_addons_private_use
 
 !KalielsTracker 任务列表美化、整理，主视图界面右侧
 
-Acamar auto-learning spam blocker
+Acamar auto-learning spam blocker【9.0暂不可用】
 
 AddOnSkins 插件皮肤统一（需配合elvui）
 
@@ -24,7 +24,7 @@ Details 战斗数据统计(替代skada)
 
 DejaCharacterStats 角色信息增强
 
-ElvUI ElvUI整合界面插件
+ElvUI&ElvUI_OptionsUI ElvUI整合界面插件
 
 ElvUI_BagFilter ElvUI的背包扩展插件
 
@@ -46,11 +46,15 @@ KeystoneHelper
 
 MikScrollingBattleText（MSBT战斗浮动信息，parrot替代品）
 
-MoveAnything 
+Minesweeperr【9.0暂不可用】
 
 Multishot 自动截图
 
 Myslot
+
+MSBT
+
+MythicDungeonTools
 
 Narcissus
 
@@ -62,11 +66,9 @@ PremadeGroupsFilter
 
 RareScanner
 
-RelicInspector 圣物提示
-
 RSA SpeakinSpell替代品
 
-TellMeWhen
+TellMeWhen【已被wa取代，即将彻底移除】
 
 TinyInspect 角色面板信息增强显示额外的装备展示、与TinyTooltip结合更好实现玩家等级显示
 
@@ -81,8 +83,3 @@ WindDungeonHelper
 WorldQuestTracker 世界任务插件
 
 XLoot 掉落美化
-
-Mythic Dungeon Tools
-
-Minesweeperr
-
