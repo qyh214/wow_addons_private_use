@@ -1955,8 +1955,8 @@ function addon:FillMissionPage(missionInfo)
 			stage.expires:SetDrawLayer(missionenv:GetDrawLayer())
 			stage.expires:SetPoint("TOPLEFT",missionenv,"BOTTOMLEFT")
 		end
-		stage.expires:SetFormattedText(GARRISON_MISSION_AVAILABILITY2,missionInfo.offerTimeRemaining or "")
-		stage.expires:SetTextColor(self:GetAgeColor(missionInfo.offerEndTime))
+		stage.expires:SetFormattedText(GARRISON_MISSION_AVAILABILITY2,missionInfo.offerTimeRemaining or _G.UNKNOWN)
+		stage.expires:SetTextColor(self:GetAgeColor(missionInfo.offerEndTime or 0 ))
 	else
 		stage.expires=stage.MissionSeen -- In order to anchor missionId
 	end

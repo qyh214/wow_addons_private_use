@@ -19,6 +19,7 @@ local helpNumPages = 11
 local cTitle = "|cffffd200"
 local cBold = "|cff00ffe3"
 local cWarning = "|cffff7f00"
+local cWarning2 = "|cffff0000"
 local cDots = "|cff808080"
 local offs = "\n|T:1:9|t"
 local offs2 = "\n|T:1:18|t"
@@ -202,12 +203,13 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |r|cffffffff4.2.10|r\n\n"..
-					"- ADDED - Quests - Abandon Quest is in dropdown menu\n"..
-					"- FIXED - Active Button - Collisions with combination of some addons"..
-					offs.."(e.g. Bartender + MoveAnything + PitBull)\n"..
-					"- UPDATED - Quests - Remaining time (next to Zone) is displayed only for"..
-					offs.."Calling quests\n\n"..
+			text = cTitle.."         What's NEW in version |r|cffffffff4.2.11|r\n\n"..
+					"- ADDED - Filters - filtering unfinished quests (opposite of completed)\n"..
+					"- FIXED - Active Button - wrong position when using ElvUI and MoveAnything"..
+					offs.."addons\n"..
+					"- UPDATED - Addon support - PetTracker 9.0.5\n"..
+					"- UPDATED - Addon support - ElvUI 12.16, Tukui 20.11\n"..
+					"- UPDATED - Libs\n\n"..
 
                     cTitle.."WoW 9.0.2 - Known issues w/o solution|r\n"..
                     "- Clicking on tracked quests or achievements has no response during combat.\n"..
@@ -216,10 +218,11 @@ local function SetupTutorials()
 					cTitle.."Issue reporting|r\n"..
 					"For reporting please use "..cBold.."Tickets|r instead of Comments on CurseForge.\n\n\n\n"..
 
-					cWarning.."Before reporting of errors, please deactivate other addons and make sure the bug is not caused by a collision with another addon.|r",
+					cWarning.."Before reporting of error, please deactivate all other addons and make sure the bug is not caused by a collision with another addon.|r\n\n"..
+					cWarning2.."All error reports with general information \"addon does not work\" or only with an error log without a description, I ignore|r ... Please don't waste my time.",
 			textY = -20,
 			editbox = "https://www.curseforge.com/wow/addons/kaliels-tracker/issues",
-			editboxBottom = 40,
+			editboxBottom = 75,
 			shine = KTF,
 			shineTop = 5,
 			shineBottom = -5,

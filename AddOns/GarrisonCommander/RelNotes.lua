@@ -22,6 +22,10 @@ self:Wiki([[
 == Silent mode ==
 typing /gac silent in chat will eliminate every chat message from GarrisonCommander
 ]])
+self:RelNotes(3,3,5,[[
+Toc: 9.0.2
+Fix: Possible Lua error while viewing mission list or mission page
+]])
 self:RelNotes(3,2,4,[[
 Feature: Toc 80300
 ]])
