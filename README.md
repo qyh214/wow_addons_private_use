@@ -53,7 +53,9 @@ TinyInspect、TinyTooltip：http://bbs.ngacn.cc/read.php?tid=10240957
 
 属性监控：https://wago.io/rJZgZUxn7
 
-全职业中二语音：https://bbs.nga.cn/read.php?tid=20729857
+全职业中二语音：
+- https://bbs.nga.cn/read.php?tid=20729857
+- https://bbs.nga.cn/read.php?tid=24380263
 
 只狼特效：https://wago.io/sekirowa
 
@@ -64,6 +66,8 @@ TinyInspect、TinyTooltip：http://bbs.ngacn.cc/read.php?tid=10240957
 蓝量报警：https://bbs.nga.cn/read.php?tid=21781278
 
 标记坦克和治疗：https://wago.io/QcIHcKjkP
+
+炉石：https://wago.io/0owZD6Av9
 
 暗影国度地下城与团队副本：
 - 地下城（中文）：https://wago.io/DtdLKK4XF  （来源： https://bbs.nga.cn/read.php?tid=23417528 ）
