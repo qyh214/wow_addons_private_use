@@ -46,7 +46,7 @@ ElvUI：
 
 TinyInspect、TinyTooltip：http://bbs.ngacn.cc/read.php?tid=10240957
 
-其他单体插件可用curse客户端管理，curse客户端下载地址：https://www.curseforge.com/twitch-client
+其他单体插件可用curse客户端管理，curse客户端下载地址：https://curseforge.overwolf.com
 
 ## WA字符串
 鼠标跟踪：https://wago.io/SypUT-DPm
