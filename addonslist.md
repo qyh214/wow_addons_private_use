@@ -4,13 +4,11 @@ wow_addons_private_use
 
 !KalielsTracker 任务列表美化、整理，主视图界面右侧
 
-Acamar auto-learning spam blocker【9.0暂不可用】
-
 AddOnSkins 插件皮肤统一（需配合elvui）
 
 AdvancedInterfaceOptions 额外界面设置、命令（被暴雪隐藏掉的命令、cvar）
 
-AdventureGuideLockouts 副本进度查看（shift+J的冒险指南上）
+AdventureGuideLockouts 副本进度查看（shift+J的冒险指南上，需要加载过期）
 
 AngryKeystones 大秘境钥石插件
 
@@ -40,15 +38,15 @@ HandyNotes
 
 HandyNotes_DungeonLocations
 
+HandyNotes_Shadowlands
+
 Immersion
 
 KeystoneHelper
 
 MikScrollingBattleText（MSBT战斗浮动信息，parrot替代品）
 
-Minesweeperr【9.0暂不可用】
-
-Multishot 自动截图
+Multishot 自动截图【社区修复版本】
 
 Myslot
 
@@ -67,8 +65,6 @@ PremadeGroupsFilter
 RareScanner
 
 RSA SpeakinSpell替代品
-
-TellMeWhen【已被wa取代，即将彻底移除】
 
 TinyInspect 角色面板信息增强显示额外的装备展示、与TinyTooltip结合更好实现玩家等级显示
 
