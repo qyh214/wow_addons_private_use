@@ -128,7 +128,7 @@
 	</Button>
 
 	<Button name="ImmersionQuestSpellTemplate" hidden="true" virtual="true">
-		<Size x="157" y="56"/>
+		<Size x="250" y="56"/>
 		<HitRectInsets left="0" right="0" top="0" bottom="14"/>
 		<Layers>
 			<Layer level="BACKGROUND">

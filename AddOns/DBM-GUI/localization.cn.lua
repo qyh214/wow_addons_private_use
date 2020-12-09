@@ -2,7 +2,7 @@
 -- yleaf(yaroot@gmail.com)
 -- sunlcy@NGA
 -- Mini Dragon(projecteurs@gmail.com)
--- Last update: 2020/09/09
+-- Last update: 2020/12/07
 
 if GetLocale() ~= "zhCN" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
@@ -30,13 +30,13 @@ L.BossModLoad_now 			= [[该模块尚未启动。
 当你进入相应副本时其会自动加载。
 你也可以点击开启模块按钮手动启动该模块。]]
 
-L.PosX 						= 'X坐标'
-L.PosY 						= 'Y坐标'
+L.PosX 						= "X坐标"
+L.PosY 						= "Y坐标"
 
-L.MoveMe					= '移动我'
-L.Button_OK 				= '确定'
-L.Button_Cancel 			= '取消'
-L.Button_LoadMod 			= '加载模块'
+L.MoveMe					= "移动我"
+L.Button_OK 				= "确定"
+L.Button_Cancel 			= "取消"
+L.Button_LoadMod 			= "加载模块"
 L.Mod_Enabled				= "开启模块"
 L.Mod_Reset					= "恢复默认设置"
 L.Reset 					= "重置"
@@ -74,6 +74,7 @@ L.Latency_Text				= "设定团队之间DBM最高延迟阈值：%d"
 L.Button_RangeFrame			= "显示/隐藏距离雷达框体"
 L.Button_InfoFrame			= "显示/隐藏信息框体"
 L.Button_TestBars			= "测试计时条"
+L.Button_MoveBars			= "移动计时条"
 L.Button_ResetInfoRange		= "重置信息/距离雷达框体"
 
 L.ModelOptions				= "3D模型选项"
@@ -82,10 +83,11 @@ L.ModelSoundOptions			= "为模型查看器设置声音选项"
 L.ModelSoundShort			= "短"
 L.ModelSoundLong			= "长"
 
-L.ResizeOptions			 	= "调整窗口大小"
-L.Button_ResetWindowSize	= "重置窗口大小"
-L.Editbox_WindowWidth		= "宽度"
-L.Editbox_WindowHeight		= "高度"
+L.ResizeOptions			 	= "调整窗口选项"
+L.ResizeInfo				= "您可以通过拖动右下角来调整GUI窗口大小"
+L.Button_ResetWindowSize	= "重置GUI窗口大小"
+L.Editbox_WindowWidth		= "GUI宽度"
+L.Editbox_WindowHeight		= "GUI高度"
 
 -- Panel: Extra Features
 L.Panel_ExtraFeatures		= "其他功能"

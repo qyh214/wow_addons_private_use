@@ -80,6 +80,12 @@ function RSA_Utilities:OnEnable()
 				sourceIsMe = true,
 				replacements = { TARGET = 1 }
 			},
+			[345130] = {
+				profile = 'EngineerRessBFA',
+				section = 'Cast',
+				sourceIsMe = true,
+				replacements = { TARGET = 1 }
+			},
 		},
 		SPELL_SUMMON = {
 			[22700] = configRepairBots, -- Field Repair Bot 74A
@@ -95,6 +101,7 @@ function RSA_Utilities:OnEnable()
 			[188036] = configCauldrons, -- Spirit Cauldron (Legion)
 			[276972] = configCauldrons, -- Mystical Cauldron (BfA)
 			[298861] = configCauldrons, -- Greater Mystical Cauldron (8.2)
+			[307157] = configCauldrons, -- Eternal Cauldron (Shadowlands)
 		},
 		SPELL_CAST_SUCCESS = {
 			[200205] = configRepairBots, -- Reaves Auto-Hammer mode
@@ -140,6 +147,12 @@ function RSA_Utilities:OnEnable()
 		},
 		UNIT_ACCEPTED_RESURRECT = { -- Fake event for resurrect tracking.
 			[265116] = {
+				profile = 'EngineerRessBFA',
+				section = 'AcceptedRess',
+				sourceIsMe = true,
+				replacements = { TARGET = 1 }
+			},
+			[345130] = {
 				profile = 'EngineerRessBFA',
 				section = 'AcceptedRess',
 				sourceIsMe = true,

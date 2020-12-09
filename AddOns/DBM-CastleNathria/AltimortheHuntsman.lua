@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2429, "DBM-CastleNathria", nil, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201013203549")
+mod:SetRevision("20201208155420")
 mod:SetCreatureID(165066)
 mod:SetEncounterID(2418)
 mod:SetUsedIcons(1, 2, 3)
@@ -88,7 +88,7 @@ local timerPetrifyingHowlCD						= mod:NewCDTimer(20.6, 334852, nil, nil, nil, 3
 mod:AddRangeFrameOption("5/6/10")
 --mod:AddInfoFrameOption(308377, true)
 mod:AddSetIconOption("SetIconOnSinSeeker", 335114, true, false, {1, 2, 3})--335111 335112 335113
---mod:AddSetIconOption("SetIconOnPierceSoul", 338609, true, true, {6, 7, 8})
+mod:AddSetIconOption("SetIconOnShades", 334757, true, true, {4, 5})
 --mod:AddNamePlateOption("NPAuraOnVolatileCorruption", 312595)
 
 mod.vb.phase = 1
@@ -174,6 +174,9 @@ function mod:SPELL_CAST_START(args)
 		specWarnShadesofBargast:Show()
 		specWarnShadesofBargast:Play("killmob")
 		timerShadesofBargastCD:Start()
+		if self.Options.SetIconOnShades then
+			self:ScanForMobs(171557, 1, 4, 2, 0.2, 15)--Start at 4 ascending up
+		end
 	elseif spellId == 334852 then
 		timerPetrifyingHowlCD:Start()
 	end

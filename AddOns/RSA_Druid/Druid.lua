@@ -99,6 +99,10 @@ function RSA_Druid:OnEnable()
 				profile = 'Innervate',
 				replacements = { TARGET = 1 }
 			},
+			[305497] = { -- Thorns PvP Talent
+				profile = 'Thorns',
+				replacements = { TARGET = 1 }
+			},
 			[192081] = { -- IRONFUR
 				profile = 'Ironfur'
 			},
@@ -150,6 +154,9 @@ function RSA_Druid:OnEnable()
 			[106951] = { -- Berserk
 				profile = 'Berserk',
 			},
+			[323764] = { -- Night Fae Convoke
+				profile = 'Convoke',
+			},
 		},
 		SPELL_AURA_REMOVED = {
 			[106898] = Config_StampedingRoar_End,
@@ -157,6 +164,11 @@ function RSA_Druid:OnEnable()
 			[77761] = Config_StampedingRoar_End,
 			[61336] = { -- SURVIVAL INSTINCTS
 				profile = 'SurvivalInstincts',
+				section = 'End'
+			},
+			[305497] = { -- Thorns PvP Talent
+				profile = 'Thorns',
+				replacements = { TARGET = 1 },
 				section = 'End'
 			},
 			[33891] = { -- TREE OF LIFE
@@ -230,6 +242,10 @@ function RSA_Druid:OnEnable()
 			[2637] = { -- Hibernate
 				profile = 'Hibernate',
 				replacements = { TARGET = 1 },
+				section = "End",
+			},
+			[323764] = { -- Night Fae Convoke
+				profile = 'Convoke',
 				section = "End",
 			},
 		},

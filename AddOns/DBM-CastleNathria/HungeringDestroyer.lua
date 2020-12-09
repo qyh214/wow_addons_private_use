@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2428, "DBM-CastleNathria", nil, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201013203549")
+mod:SetRevision("20201208155420")
 mod:SetCreatureID(164261)
 mod:SetEncounterID(2383)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -42,7 +42,7 @@ local specWarnEssenceSap						= mod:NewSpecialWarningStack(334755, false, 8, nil
 local specWarnConsume							= mod:NewSpecialWarningRun(334522, nil, nil, nil, 4, 2)
 local specWarnExpunge							= mod:NewSpecialWarningMoveAway(329725, nil, nil, nil, 1, 2)
 local specWarnVolatileEjection					= mod:NewSpecialWarningYou(334266, nil, nil, nil, 1, 2)
-local yellVolatileEjection						= mod:NewYell(334266)--Change to NewPosYell if it's ever added to combat log, can't be trusted as icon yell when relying on syncing
+local yellVolatileEjection						= mod:NewYell(334266, 202046)--ShortText "Beam". Change to NewPosYell if it's ever added to combat log, can't be trusted as icon yell when relying on syncing
 local specWarnGrowingHunger						= mod:NewSpecialWarningCount(332295, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.stack:format(12, 332295), nil, 1, 2)
 local specWarnGrowingHungerOther				= mod:NewSpecialWarningTaunt(332295, nil, nil, nil, 1, 2)
 local specWarnOverwhelm							= mod:NewSpecialWarningDefensive(329774, "Tank", nil, nil, 1, 2)
@@ -52,7 +52,7 @@ local specWarnOverwhelm							= mod:NewSpecialWarningDefensive(329774, "Tank", n
 local timerGluttonousMiasmaCD					= mod:NewCDCountTimer(23.8, 329298, nil, nil, nil, 3, nil, nil, nil, 1, 3)
 local timerConsumeCD							= mod:NewNextCountTimer(119.8, 334522, nil, nil, nil, 2)
 local timerExpungeCD							= mod:NewNextCountTimer(44.3, 329725, nil, nil, nil, 3)
-local timerVolatileEjectionCD					= mod:NewNextCountTimer(35.9, 334266, nil, nil, nil, 3)
+local timerVolatileEjectionCD					= mod:NewNextCountTimer(35.9, 334266, nil, nil, nil, 3)--maybe short this text too? 202046 for Beam
 local timerDesolateCD							= mod:NewNextCountTimer(59.8, 329455, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)
 local timerOverwhelmCD							= mod:NewCDTimer(11.9, 329774, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, 2, 3)
 
@@ -72,6 +72,7 @@ local playerEssenceSap, playerVolatile = false, false
 mod.vb.volatileIcon = 5
 mod.vb.volatileCast = 2
 mod.vb.miasmaCount = 0
+mod.vb.miasmaIcon = 2--Starting at 2 because 1 is reserved for melee
 mod.vb.expungeCount = 0
 mod.vb.consumeCount = 0
 mod.vb.desolateCount = 0
@@ -162,6 +163,7 @@ function mod:OnCombatStart(delay)
 	self.vb.consumeCount = 0
 	self.vb.desolateCount = 0
 	self.vb.miasmaCount = 0
+	self.vb.miasmaIcon = 2
 	timerGluttonousMiasmaCD:Start(3-delay, 1)--3-6?
 	if self:IsEasy() then
 		timerOverwhelmCD:Start(6.2-delay)
@@ -281,12 +283,22 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:AntiSpam(10, 3) then
 			table.wipe(GluttonousTargets)
 			self.vb.miasmaCount = self.vb.miasmaCount + 1
+			self.vb.miasmaIcon = 2
 			timerGluttonousMiasmaCD:Start(23.8, self.vb.miasmaCount+1)--Same in all difficulties
 		end
 		if not tContains(GluttonousTargets, args.destName) then
 			table.insert(GluttonousTargets, args.destName)
 		end
-		local icon = #GluttonousTargets
+		local icon
+		local uId = DBM:GetRaidUnitId(args.destName)
+		if self:IsMelee(uId, true) then
+			icon = 1
+			DBM:Debug("Melee Miasma found: "..args.destName, 2)
+		else
+			icon = self.vb.miasmaIcon
+			self.vb.miasmaIcon = self.vb.miasmaIcon + 1
+			DBM:Debug("Ranged Miasma found: "..args.destName, 2)
+		end
 		if args:IsPlayer() then
 			specWarnGluttonousMiasma:Show(self:IconNumToTexture(icon))
 			specWarnGluttonousMiasma:Play("mm"..icon)--or "targetyou"

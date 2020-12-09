@@ -276,7 +276,8 @@ P.combat = {
         modifier = "shift",
         readyCheck = true,
         countDown = true,
-        countDownTime = 5
+        countDownTime = 5,
+        inverse = false
     },
     quickKeystone = {
         enable = true
@@ -436,7 +437,7 @@ P.item = {
                     b = 1
                 }
             },
-            include = "MAGEFOOD,FOODSL,CUSTOM"
+            include = "MAGEFOOD,FOODVENDOR,FOODSL,CUSTOM"
         }
     },
     inspect = {

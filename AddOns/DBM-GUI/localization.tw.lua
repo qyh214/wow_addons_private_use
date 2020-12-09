@@ -23,13 +23,13 @@ L.BossModLoad_now 			= [[該模組尚未載入。
 當你進入相應副本時其會自動載入。
 你也可以點擊該按鈕手動載入該模組。]]
 
-L.PosX						= 'X座標'
-L.PosY						= 'Y座標'
+L.PosX						= "X座標"
+L.PosY						= "Y座標"
 
-L.MoveMe 					= '移動'
-L.Button_OK 				= '確定'
-L.Button_Cancel 			= '取消'
-L.Button_LoadMod 			= '載入模組'
+L.MoveMe 					= "移動"
+L.Button_OK 				= "確定"
+L.Button_Cancel 			= "取消"
+L.Button_LoadMod 			= "載入模組"
 L.Mod_Enabled				= "啟用首領模組"
 L.Mod_Reset					= "讀取預設值"
 L.Reset 					= "重置"
@@ -67,6 +67,7 @@ L.Latency_Text				= "設定最高延遲同步門檻:%d"
 L.Button_RangeFrame			= "顯示/隱藏距離監視器"
 L.Button_InfoFrame			= "顯示/隱藏訊息框架"
 L.Button_TestBars			= "測試計時條"
+L.Button_MoveBars			= "移動計時條"
 L.Button_ResetInfoRange		= "重置訊息/距離監視器"
 
 L.ModelOptions				= "3D模型預覽選項"
@@ -76,6 +77,7 @@ L.ModelSoundShort			= SHORT
 L.ModelSoundLong			= TOAST_DURATION_LONG
 
 L.ResizeOptions			 	= "尺寸調整選項"
+L.ResizeInfo				= "您可以通過點擊右下角並拖動來調整GUI的大小。"
 L.Button_ResetWindowSize	= "重設GUI視窗大小"
 L.Editbox_WindowWidth		= "GUI視窗寬度"
 L.Editbox_WindowHeight		= "GUI視窗高度"

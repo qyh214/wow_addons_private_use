@@ -1,12 +1,14 @@
 # <DBM> Challenges
 
-## [r135](https://github.com/DeadlyBossMods/DBM-Challenges/tree/r135) (2020-11-29)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Challenges/compare/r134...r135) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Challenges/releases)
+## [r136](https://github.com/DeadlyBossMods/DBM-Challenges/tree/r136) (2020-12-08)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Challenges/compare/r135...r136) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Challenges/releases)
 
-- pass the loose arg on START events in torghast mod  
-- Applied combat filters to all mob casts in torghast, to avoid situations where mobs fighting other mobs would cause some warnings to go off. Downside, this also has a chance to have warnings NOT go off if you or someone in your party isn't targetting the caster.  
-- Changed timer handling to work for any mob universally, in a very inefficient way.  
-- Added some new spells and first timers to Torghast mod  
-- Added 2 more warnings to torghast  
-- Added another spellId to fearsome howl  
-- Hard disable torghast statstics, period.  
+- Merge pull request #10 from DeadlyBossMods/arty  
+- Update Torghast.lua  
+- More st00f  
+- Merge pull request #9 from DeadlyBossMods/QartemisT-patch-1  
+    Two new spell trackings  
+- Two new spell trackings  
+    This is two main spells for the boss https://www.wowhead.com/npc=153174/watchers-of-death  
+- Kill withering interrupt timer for now since it's inconsistent between diff mobs that use it on top of whether or not previous cast was interrupted or not and how long spell lockout was (seems to affect timing of next cast). Probably not going to go omnotron defense level of effort into this timer.  
+- Added interrupt, dispel, and nameplate option for soul of mist  

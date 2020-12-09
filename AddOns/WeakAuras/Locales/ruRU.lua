@@ -297,6 +297,8 @@ L["Disease"] = "Болезнь"
 L["Dispel"] = "Рассеивание"
 L["Dispel Failed"] = "Рассеивание (неудача)"
 L["Display"] = "Отображение"
+--[[Translation missing --]]
+L["Displays the icon for the Legendary Power that matches this bonus id."] = "Displays the icon for the Legendary Power that matches this bonus id."
 L["Distance"] = "Расстояние"
 L["Dodge"] = "Уклонение"
 L["Dodge (%)"] = "Уклонение"
@@ -522,9 +524,17 @@ L["Item Bonus Id"] = "Item Bonus Id"
 L["Item Bonus Id Equipped"] = "Item Bonus Id Equipped"
 L["Item Count"] = "Количество предметов"
 L["Item Equipped"] = "Предмет надет"
+--[[Translation missing --]]
+L["Item Id"] = "Item Id"
 L["Item in Range"] = "В зоне действия"
+--[[Translation missing --]]
+L["Item Name"] = "Item Name"
 L["Item Set Equipped"] = "Комплект предметов надет"
 L["Item Set Id"] = "ID комплекта предметов"
+--[[Translation missing --]]
+L["Item Slot"] = "Item Slot"
+--[[Translation missing --]]
+L["Item Slot String"] = "Item Slot String"
 L["Item Type"] = "Тип предмета"
 L["Item Type Equipped"] = "Тип предмета надет"
 L["Jin'do the Hexxer"] = "Джин'до Проклинатель"
@@ -1042,6 +1052,8 @@ L["Usage:"] = "Доступные команды:"
 --[[Translation missing --]]
 L["Use /wa minimap to show the minimap icon again."] = "Use /wa minimap to show the minimap icon again."
 L["Use Custom Color"] = "Использовать свой цвет"
+--[[Translation missing --]]
+L["Use Legendary Power Icon"] = "Use Legendary Power Icon"
 L["Vaelastrasz the Corrupt"] = "Валестраз Порочный"
 L["Value"] = "Значение"
 L["Values/Remaining Time above this value are displayed as full progress."] = "Значения (или оставшееся время) выше указанного числа отображаются как полный прогресс."

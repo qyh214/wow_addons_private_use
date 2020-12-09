@@ -1,26 +1,34 @@
-# [3.1.2](https://github.com/WeakAuras/WeakAuras2/tree/3.1.2) (2020-11-22)
+# [3.1.3](https://github.com/WeakAuras/WeakAuras2/tree/3.1.3) (2020-12-09)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.1.1...3.1.2)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.1.2...3.1.3)
 
 ## Highlights
 
- bug fixes 
+ Bug fixes and tab space setting for code editor 
 
 ## Commits
 
-InfusOnWoW (9):
+InfusOnWoW (8):
 
-- Remove debug code
-- Models: Use more force in PreShowModels
-- Add a Class/Spec trigger
-- Duplicate Aura: Optimize this for big dynamic groups
-- Tweak Off-Screen Arrow
-- Options Thumbnails: Use fallback icon if set
-- Templates: Add Rupture Debuff to Sub Debuffs
-- Format Options: Keep the expand/collapse state separate
-- Information: Fix nil error with multi-selection
+- Make GCD trigger work on load
+- Fix Spell Known not updating while Options are open
+- Tmeplates: Fix talent load for Elemental Blast
+- Fix dynamic groups showing without visible children on login
+- Fix mass delete and a few unbalanced suspend/resume
+- Fix a few Classic issues
+- Fix Talent/Spec trigger
+- Fix BarModels showing after port
 
-cont1nuity (1):
+Stanzilla (2):
 
-- Adding support for Plater personal resource bar anchoring (#2614)
+- Update TOC for Classic Naxx Patch
+- sync classic pkgmeta with main
+
+asaka-wa (1):
+
+- add tab space setting (#2786)
+
+nullKomplex (1):
+
+- Improve Bonus Id trigger. (#2781)
 

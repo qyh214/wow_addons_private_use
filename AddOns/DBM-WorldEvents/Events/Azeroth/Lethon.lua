@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Lethon", "DBM-WorldEvents", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201031010726")
+mod:SetRevision("20201101175824")
 mod:SetCreatureID(121821)--121821 TW ID, 14888 classic ID
 --mod:SetModelID(17887)
 

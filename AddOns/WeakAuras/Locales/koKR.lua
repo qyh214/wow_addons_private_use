@@ -175,7 +175,7 @@ L["Blocked"] = "방패 막기"
 L["Bloodlord Mandokir"] = "혈군주 만도키르"
 L["Border"] = "테두리"
 L["Boss"] = "우두머리"
-L["Boss Emote"] = "우두머리 감정표현"
+L["Boss Emote"] = "우두머리 감정 표현"
 L["Boss Whisper"] = "우두머리 귓속말"
 L["Bottom"] = "아래"
 L["Bottom Left"] = "왼쪽 아래"
@@ -286,8 +286,7 @@ L["Destination Name"] = "대상 이름"
 L["Destination NPC Id"] = "대상 NPC Id"
 --[[Translation missing --]]
 L["Destination Object Type"] = "Destination Object Type"
---[[Translation missing --]]
-L["Destination Reaction"] = "Destination Reaction"
+L["Destination Reaction"] = "대상 반응"
 L["Destination Unit"] = "대상 유닛"
 --[[Translation missing --]]
 L["Disable Spell Known Check"] = "Disable Spell Known Check"
@@ -295,6 +294,8 @@ L["Disease"] = "질병"
 L["Dispel"] = "무효화"
 L["Dispel Failed"] = "무효화 실패"
 L["Display"] = "디스플레이"
+--[[Translation missing --]]
+L["Displays the icon for the Legendary Power that matches this bonus id."] = "Displays the icon for the Legendary Power that matches this bonus id."
 L["Distance"] = "거리"
 L["Dodge"] = "회피"
 L["Dodge (%)"] = "회피 (%)"
@@ -325,7 +326,7 @@ L["Edge"] = "Edge"
 L["Edge of Madness"] = "Edge of Madness"
 L["Elide"] = "생략"
 L["Elite"] = "정예"
-L["Emote"] = "감정표현"
+L["Emote"] = "감정 표현"
 --[[Translation missing --]]
 L["Emphasized"] = "Emphasized"
 --[[Translation missing --]]
@@ -412,8 +413,7 @@ L["Form"] = "형상"
 L["Format"] = "형식"
 --[[Translation missing --]]
 L["Formats |cFFFF0000%unit|r"] = "Formats |cFFFF0000%unit|r"
---[[Translation missing --]]
-L["Formats Player's |cFFFF0000%guid|r"] = "Formats Player's |cFFFF0000%guid|r"
+L["Formats Player's |cFFFF0000%guid|r"] = "플레이어의 |cFFFF0000%GUID|r 형식"
 --[[Translation missing --]]
 L["Forward"] = "Forward"
 --[[Translation missing --]]
@@ -540,9 +540,17 @@ L["Item Bonus Id"] = "아이템 보너스 ID"
 L["Item Bonus Id Equipped"] = "Item Bonus Id Equipped"
 L["Item Count"] = "아이템 갯수"
 L["Item Equipped"] = "아이템 착용"
+--[[Translation missing --]]
+L["Item Id"] = "Item Id"
 L["Item in Range"] = "범위 내의 아이템"
+--[[Translation missing --]]
+L["Item Name"] = "Item Name"
 L["Item Set Equipped"] = "아이템 세트 착용"
 L["Item Set Id"] = "아이템 세트 Id"
+--[[Translation missing --]]
+L["Item Slot"] = "Item Slot"
+--[[Translation missing --]]
+L["Item Slot String"] = "Item Slot String"
 --[[Translation missing --]]
 L["Item Type"] = "Item Type"
 --[[Translation missing --]]
@@ -734,8 +742,7 @@ L["Play"] = "재생"
 L["Player"] = "플레이어"
 L["Player Character"] = "플레이어 캐릭터"
 L["Player Class"] = "플레이어 직업"
---[[Translation missing --]]
-L["Player Covenant"] = "Player Covenant"
+L["Player Covenant"] = "플레이어 성약의 단"
 L["Player Effective Level"] = "플레이어 유효 레벨"
 L["Player Experience"] = "플레이어 경험치"
 L["Player Faction"] = "플레이어 진영"
@@ -920,8 +927,7 @@ L["Slide to Top"] = "위로 슬라이드"
 --[[Translation missing --]]
 L["Slider"] = "Slider"
 L["Small"] = "작음"
---[[Translation missing --]]
-L["Smart Group"] = "Smart Group"
+L["Smart Group"] = "스마트 그룹"
 L["Sound"] = "소리"
 L["Sound by Kit ID"] = "Kit ID로 소리 재생"
 --[[Translation missing --]]
@@ -933,8 +939,7 @@ L["Source NPC Id"] = "행위자 NPC Id"
 --[[Translation missing --]]
 L["Source Object Type"] = "Source Object Type"
 L["Source Raid Mark"] = "행위자 공격대 징표"
---[[Translation missing --]]
-L["Source Reaction"] = "Source Reaction"
+L["Source Reaction"] = "행위자 반응"
 L["Source Unit"] = "행위자 유닛"
 L["Source Unit Name/Realm"] = "행위자 유닛 이름/서버"
 L["Source: "] = "출처:"
@@ -1109,6 +1114,8 @@ L["Usage:"] = "사용법:"
 --[[Translation missing --]]
 L["Use /wa minimap to show the minimap icon again."] = "Use /wa minimap to show the minimap icon again."
 L["Use Custom Color"] = "사용자 설정 색상 사용"
+--[[Translation missing --]]
+L["Use Legendary Power Icon"] = "Use Legendary Power Icon"
 L["Vaelastrasz the Corrupt"] = "타락한 밸라스트라즈"
 L["Value"] = "값"
 L["Values/Remaining Time above this value are displayed as full progress."] = "이 값보다 큰 값/남은 시간은 전체 진행으로 표시됩니다."
@@ -1133,8 +1140,7 @@ L["WeakAuras Profiling"] = "WeakAuras 프로파일링"
 L["WeakAuras Profiling Report"] = "WeakAuras Profiling Report"
 L["Weapon"] = "무기"
 L["Weapon Enchant"] = "무기 마법부여"
---[[Translation missing --]]
-L["Weapon Enchant / Fishing Lure"] = "Weapon Enchant / Fishing Lure"
+L["Weapon Enchant / Fishing Lure"] = "무기 마법부여 / 낚시 미끼"
 L["What do you want to do?"] = "무엇을 하고 싶나요?"
 L["Whisper"] = "귓속말"
 L["Whole Area"] = "전체 영역"

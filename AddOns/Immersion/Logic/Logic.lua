@@ -15,6 +15,7 @@ function NPC:OnEvent(event, ...)
 	self.lastEvent = event
 	self.timeStamp = GetTime()
 	self:UpdateItems()
+	self:UpdateBackground()
 	return event
 end
 
@@ -158,7 +159,7 @@ function NPC:SetBackground(kit)
 	local backgroundFrame = self.TalkBox.BackgroundFrame;
 	local overlay = backgroundFrame.OverlayKit;
 
-	if kit then
+	if kit and not L('disablebgtextures') then
 		local backgroundAtlas = GetFinalNameFromTextureKit('QuestBG-%s', kit)
 		local atlasInfo = C_Texture.GetAtlasInfo(backgroundAtlas)
 		if atlasInfo then
@@ -172,6 +173,14 @@ function NPC:SetBackground(kit)
 				atlasInfo.topTexCoord, atlasInfo.bottomTexCoord + 0.035)
 			return
 		end
+	end
+end
+
+function NPC:UpdateBackground()
+	local theme = C_QuestLog.GetQuestDetailsTheme(GetQuestID())
+	local kit = theme and theme.background and theme.background:gsub('QuestBG%-', '')
+	if kit then
+		self:SetBackground(kit)
 	end
 end
 
@@ -651,6 +660,8 @@ function TalkBox:OnLeftClick()
 		else
 			ImmersionFrame:ForceClose()
 		end
+	else
+		ImmersionFrame:ForceClose()
 	end
 end
 

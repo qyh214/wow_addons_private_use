@@ -273,6 +273,8 @@ end
 talkbox:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
 talkbox:RegisterForDrag('LeftButton')
 talkbox.TextFrame.SpeechProgress:SetFont('Fonts\\MORPHEUS.ttf', 16, '')
+talkbox.TextFrame.SpeechProgress:SetShadowColor(0, 0, 0, 1)
+talkbox.TextFrame.SpeechProgress:SetShadowOffset(0, -1)
 
 ----------------------------------
 -- Set movable frames

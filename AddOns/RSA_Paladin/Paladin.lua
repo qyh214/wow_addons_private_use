@@ -246,6 +246,10 @@ function RSA_Paladin:OnEnable()
 				profile = 'Repentance',
 				replacements = { TARGET = 1 }
 			},
+			[10326] = { -- turn evil
+				profile = 'TurnEvil',
+				replacements = { TARGET = 1 }
+			},
 			[184662] = { -- SHIELD OF VENGEANCE
 				profile = 'ShieldOfVengeance'
 			},
@@ -330,6 +334,11 @@ function RSA_Paladin:OnEnable()
 				section = 'End',
 				replacements = { TARGET = 1 }
 			},
+			[10326] = { -- turn evil
+				profile = 'TurnEvil',
+				section = 'End',
+				replacements = { TARGET = 1 }
+			},
 			[184662] = { -- SHIELD OF VENGEANCE
 				profile = 'ShieldOfVengeance',
 				section = 'End'
@@ -380,6 +389,12 @@ function RSA_Paladin:OnEnable()
 			},
 			[20066] = { -- REPENTANCE
 				profile = 'Repentance',
+				section = 'Resist',
+				immuneSection = 'Immune',
+				replacements = { TARGET = 1, MISSTYPE = 1 }
+			},
+			[10326] = { -- turn evil
+				profile = 'TurnEvil',
 				section = 'Resist',
 				immuneSection = 'Immune',
 				replacements = { TARGET = 1, MISSTYPE = 1 }

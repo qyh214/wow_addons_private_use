@@ -343,6 +343,8 @@ L["Disease"] = "Maladie"
 L["Dispel"] = "Dissipation"
 L["Dispel Failed"] = "Dissipation échouée"
 L["Display"] = "Affichage"
+--[[Translation missing --]]
+L["Displays the icon for the Legendary Power that matches this bonus id."] = "Displays the icon for the Legendary Power that matches this bonus id."
 L["Distance"] = "Distance"
 L["Dodge"] = "Esquive"
 L["Dodge (%)"] = "Esquive (%)"
@@ -624,9 +626,17 @@ L["Item Bonus Id"] = "Item Bonus Id"
 L["Item Bonus Id Equipped"] = "Item Bonus Id Equipped"
 L["Item Count"] = "Nombre d'objets"
 L["Item Equipped"] = "Objet équipé"
+--[[Translation missing --]]
+L["Item Id"] = "Item Id"
 L["Item in Range"] = "Objet à Porté"
+--[[Translation missing --]]
+L["Item Name"] = "Item Name"
 L["Item Set Equipped"] = "Ensemble d'objets équipé"
 L["Item Set Id"] = "ID de l'Ensemble d'Equipement"
+--[[Translation missing --]]
+L["Item Slot"] = "Item Slot"
+--[[Translation missing --]]
+L["Item Slot String"] = "Item Slot String"
 --[[Translation missing --]]
 L["Item Type"] = "Item Type"
 --[[Translation missing --]]
@@ -1260,6 +1270,8 @@ L["Usage:"] = "Utilisation:"
 --[[Translation missing --]]
 L["Use /wa minimap to show the minimap icon again."] = "Use /wa minimap to show the minimap icon again."
 L["Use Custom Color"] = "Utiliser couleur personnalisée"
+--[[Translation missing --]]
+L["Use Legendary Power Icon"] = "Use Legendary Power Icon"
 --[[Translation missing --]]
 L["Vaelastrasz the Corrupt"] = "Vaelastrasz the Corrupt"
 --[[Translation missing --]]

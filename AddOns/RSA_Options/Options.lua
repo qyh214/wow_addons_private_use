@@ -1094,6 +1094,14 @@ local function Druid_Options()
 			Message_Areas = {'Start', 'End'},
 			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]'},
 		},
+		["Thorns"] = {
+			Profile = 'Thorns',
+			Name = GetSpellInfo(305497),
+			Desc = GetSpellDescription(305497),
+			Message_Amount = 2,
+			Message_Areas = {'Start', 'End'},
+			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]'},
+		},
 		["TreeOfLife"] = {
 			Profile = 'TreeOfLife',
 			Name = GetSpellInfo(33891),
@@ -1143,6 +1151,15 @@ local function Druid_Options()
 			Profile = 'Berserk',
 			Name = GetSpellInfo(106951),
 			Desc = GetSpellDescription(106951),
+			Message_Amount = 2,
+			Message_Areas = {'Start', 'End'},
+			Message_Channels_Disabled = {["Whisper"] = true},
+			Valid_Tags = {'[SPELL]', '[LINK]'},
+		},
+		["Convoke"] = {
+			Profile = 'Convoke',
+			Name = GetSpellInfo(323764),
+			Desc = GetSpellDescription(323764),
 			Message_Amount = 2,
 			Message_Areas = {'Start', 'End'},
 			Message_Channels_Disabled = {["Whisper"] = true},
@@ -1916,6 +1933,15 @@ local function Paladin_Options()
 			Message_Channels_Disabled = {["Whisper"] = true},
 			Valid_Tags = {'[SPELL]', '[LINK]'},
 		},
+		['TurnEvil'] = {
+			Profile = 'TurnEvil',
+			Name = GetSpellInfo(10326),
+			Desc = GetSpellDescription(10326),
+			Message_Amount = 3,
+			Message_Areas = {'Start', 'End', 'Immune'},
+			Message_Channels_Disabled = {["Whisper"] = true},
+			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]', '[MISSTYPE]'},
+		},
 	}
 	return Spells
 end
@@ -1981,6 +2007,14 @@ local function Priest_Options()
 			Message_Amount = 2,
 			Message_Areas = {'Start', 'End'},
 			Message_Channels_Disabled = {["Whisper"] = true},
+			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]'},
+		},
+		["PowerInfusion"] = {
+			Profile = 'PowerInfusion',
+			Name = GetSpellInfo(10060),
+			Desc = GetSpellDescription(10060),
+			Message_Amount = 2,
+			Message_Areas = {'Start', 'End'},
 			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]'},
 		},
 		["Chastise"] = {

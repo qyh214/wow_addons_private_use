@@ -80,8 +80,7 @@ local L = WeakAuras.L
 	L["Add Option"] = "옵션 추가"
 	L["Add Overlay"] = "오버레이 추가"
 	L["Add Property Change"] = "속성 변경 추가"
-	--[[Translation missing --]]
-	L["Add Snippet"] = "Add Snippet"
+	L["Add Snippet"] = "스니핏 추가"
 	L["Add Sub Option"] = "하위 옵션 추가"
 	L["Add to group %s"] = "그룹 %s에 추가"
 	L["Add to new Dynamic Group"] = "새 유동적 그룹에 추가"
@@ -181,10 +180,8 @@ Off Screen]=]
 	--[[Translation missing --]]
 	L["Can be a UID (e.g., party1)."] = "Can be a UID (e.g., party1)."
 	L["Cancel"] = "취소"
-	--[[Translation missing --]]
-	L["Cast by Player Character"] = "Cast by Player Character"
-	--[[Translation missing --]]
-	L["Cast by Players"] = "Cast by Players"
+	L["Cast by Player Character"] = "플레이어 캐릭터가 시전"
+	L["Cast by Players"] = "플레이어가 시전"
 	L["Center"] = "중앙"
 	L["Chat Message"] = "대화 메시지"
 	L["Chat with WeakAuras experts on our Discord server."] = "디스코드 서버에서 위크오라 전문가들과 대화"
@@ -471,8 +468,7 @@ Supports multiple entries, separated by commas
 	L["Icon Inset"] = "아이템 축소"
 	L["Icon Position"] = "아이콘 위치"
 	L["Icon Settings"] = "아이콘 설정"
-	--[[Translation missing --]]
-	L["Icon Source"] = "Icon Source"
+	L["Icon Source"] = "아이콘 출처"
 	--[[Translation missing --]]
 	L["If"] = "If"
 	L["If checked, then the user will see a multi line edit box. This is useful for inputting large amounts of text."] = "체크하면 넓은 편집툴이 표시됩니다. 많은 양의 텍스트를 입력 할 때 유용합니다."
@@ -506,6 +502,8 @@ Supports multiple entries, separated by commas
 	L["Ignored Spell ID"] = "무시된 주문 ID"
 	L["Import"] = "가져오기"
 	L["Import a display from an encoded string"] = "암호화된 문자열에서 디스플레이 가져오기"
+	--[[Translation missing --]]
+	L["Indent Size"] = "Indent Size"
 	L["Information"] = "정보"
 	L["Inner"] = "내부"
 	L["Invalid Item Name/ID/Link"] = "잘못된 아이템 이름/ID/링크"
@@ -607,8 +605,7 @@ Supports multiple entries, separated by commas
 	L["On Hide"] = "숨겨질 때"
 	L["On Init"] = "초기 실행 시"
 	L["On Show"] = "표시될 때"
-	--[[Translation missing --]]
-	L["Only Match auras cast by a player (not an npc)"] = "Only Match auras cast by a player (not an npc)"
+	L["Only Match auras cast by a player (not an npc)"] = "(NPC가 아닌) 플레이어가 시전한 효과와 일치할 때만"
 	L["Only match auras cast by people other than the player"] = "플레이어가 아닌 다른 사람이 시전한 효과와 일치할 때만"
 	L["Only match auras cast by people other than the player or his pet"] = "플레이어나 소환수 이외의 사람들이 시전한 효과와 일치할 때만"
 	L["Only match auras cast by the player"] = "플레이어가 시전한 효과와 일치할 때만"
@@ -646,8 +643,7 @@ Supports multiple entries, separated by commas
 	L["Position Settings"] = "위치 설정"
 	--[[Translation missing --]]
 	L["Preferred Match"] = "Preferred Match"
-	--[[Translation missing --]]
-	L["Premade Snippets"] = "Premade Snippets"
+	L["Premade Snippets"] = "미리 만들어진 스니핏"
 	L["Preset"] = "프리셋"
 	L["Press Ctrl+C to copy"] = "복사하려면 Ctrl+C를 누르세요"
 	L["Press Ctrl+C to copy the URL"] = "URL을 복사하려면 Ctrl+C를 누르세요"
@@ -742,7 +738,7 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Shows a stop motion textures"] = "Shows a stop motion textures"
 	L["Shows a texture that changes based on duration"] = "지속시간에 따라 변화하는 텍스쳐를 표시합니다"
-	L["Shows one or more lines of text, which can include dynamic information such as progress or stacks"] = "여러 줄의 문자를 표시합니다, 진행 시간 또는 중첩과 같은 여러 정보를 포함할 수 있습니다"
+	L["Shows one or more lines of text, which can include dynamic information such as progress or stacks"] = "진행 또는 중첩과 같은 동적 정보를 포함할 수 있는 여러 줄 문자를 표시합니다."
 	L["Simple"] = "단순"
 	L["Size"] = "크기"
 	L["Skip this Version"] = "이 버전 건너뛰기"
@@ -756,8 +752,7 @@ Supports multiple entries, separated by commas
 	L["Slider Step Size"] = "Slider Step Size"
 	L["Small Icon"] = "작은 아이콘"
 	L["Smooth Progress"] = "부드러운 진행"
-	--[[Translation missing --]]
-	L["Snippets"] = "Snippets"
+	L["Snippets"] = "스니핏"
 	--[[Translation missing --]]
 	L["Soft Max"] = "Soft Max"
 	--[[Translation missing --]]
@@ -863,10 +858,8 @@ Supports multiple entries, separated by commas
 	L["Unit Count"] = "유닛 수"
 	L["Unit Frame"] = "유닛 프레임"
 	L["Unit Frames"] = "유닛 프레임"
-	--[[Translation missing --]]
-	L["Unit Name Filter"] = "Unit Name Filter"
-	--[[Translation missing --]]
-	L["UnitName Filter"] = "UnitName Filter"
+	L["Unit Name Filter"] = "유닛 이름 필터"
+	L["UnitName Filter"] = "유닛명 필터"
 	--[[Translation missing --]]
 	L["Unknown property '%s' found in '%s'"] = "Unknown property '%s' found in '%s'"
 	L["Unlike the start or finish animations, the main animation will loop over and over until the display is hidden."] = "시작 또는 종료 애니메이션과 달리 메인 애니메이션은 디스플레이가 숨겨질 때까지 계속 반복됩니다."
@@ -917,8 +910,7 @@ Supports multiple entries, separated by commas
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "효과 %d개를 삭제하려고 합니다. |cFFFF0000이는 취소할 수 없습니다!|r 계속할까요?"
 	--[[Translation missing --]]
 	L["You are about to delete a trigger. |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "You are about to delete a trigger. |cFFFF0000This cannot be undone!|r Would you like to continue?"
-	--[[Translation missing --]]
-	L["Your Saved Snippets"] = "Your Saved Snippets"
+	L["Your Saved Snippets"] = "저장된 스니핏"
 	L["Z Offset"] = "Z 좌표"
 	L["Z Rotation"] = "Z 회전"
 	L["Zoom"] = "확대"

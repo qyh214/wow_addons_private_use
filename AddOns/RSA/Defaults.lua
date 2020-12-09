@@ -477,6 +477,15 @@ local function Druid()
 					Channel = "",
 				},
 			},
+			Thorns = {
+				Messages = {
+					Start = {"[LINK] cast on [TARGET]!"},
+					End = {"[LINK] on [TARGET] ended!"},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+			},
 			SkullBash = {
 				Messages = {
 					Interrupt = {"Interrupted [TARGET]'s [TARLINK]!"},
@@ -567,6 +576,15 @@ local function Druid()
 				},
 			},
 			Berserk = {
+				Messages = {
+					Start = {"[LINK] activated!"},
+					End = {"[LINK] faded!"},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+			},
+			Convoke = {
 				Messages = {
 					Start = {"[LINK] activated!"},
 					End = {"[LINK] faded!"},
@@ -1266,6 +1284,17 @@ local function Paladin()
 				},
 				SmartGroup = true,
 			},
+			TurnEvil = {
+				Messages = {
+					Start = {"[LINK] cast on [TARGET]!"},
+					End = {"[LINK] on [TARGET] has ended!"},
+					Immune = {"[TARGET] is immune to my [LINK]!"},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+				SmartGroup = true,
+			},
 			Rebuke = {
 				Messages = {
 					Interrupt = {"Interrupted [TARGET]'s [TARLINK]!"},
@@ -1469,6 +1498,16 @@ local function Priest()
 				},
 			},
 			ShackleUndead = {
+				Messages = {
+					Start = {"[LINK] cast on [TARGET]!"},
+					End = {"[LINK] on [TARGET] ended!"},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+				SmartGroup = true,
+			},
+			PowerInfusion = {
 				Messages = {
 					Start = {"[LINK] cast on [TARGET]!"},
 					End = {"[LINK] on [TARGET] ended!"},

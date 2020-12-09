@@ -125,6 +125,10 @@ function RSA_Priest:OnEnable()
 				profile = 'ShackleUndead',
 				replacements = { TARGET = 1 }
 			},
+			[10060] = {
+				profile = 'PowerInfusion',
+				replacements = { TARGET = 1 }
+			},
 			[15286] = {
 				profile = 'VampiricEmbrace',
 				replacements = { TARGET = 1 }
@@ -242,6 +246,11 @@ function RSA_Priest:OnEnable()
 			[200200] = Config_Chastise_End, -- Holy Word: Chastise with Censure talent
 			[15286] = {
 				profile = 'VampiricEmbrace',
+				section = 'End'
+			},
+			[10060] = {
+				profile = 'PowerInfusion',
+				replacements = { TARGET = 1 },
 				section = 'End'
 			},
 			[64843] = {

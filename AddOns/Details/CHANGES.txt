@@ -1,46 +1,58 @@
-lightweight tag ea9ad32a7f8f3f245a3d0f2dec6baf07a43f2bec DetailsRetail.9.0.2.8000.144
+lightweight tag 3af27dc7b1f252aadb99ecc29fd8a37387ae3447 DetailsRetail.9.0.2.8002.144
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Mon Nov 23 17:03:08 2020 -0300
+Date:	Sat Dec 5 17:30:55 2020 -0300
 
-commit ea9ad32a7f8f3f245a3d0f2dec6baf07a43f2bec
+commit 3af27dc7b1f252aadb99ecc29fd8a37387ae3447
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon Nov 23 17:03:08 2020 -0300
+Date:   Sat Dec 5 17:30:55 2020 -0300
 
-    Shaladownlands Launch
+    version up
 
-commit 3d5095bd2cfbd4bc71615928507bca2c8e7942f8
+commit 7ed1182376e05e34266ece303361558939776637
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Wed Nov 4 12:02:52 2020 -0300
+Date:   Sat Dec 5 15:13:18 2020 -0300
 
-    Fix for hardcoded localizations
+    Removed Multistrike leftovers, added extra attacks counter
 
-commit bbef2496c58795a9507691f2e8be00a88ffd49a6
+commit 162c088c7202bdea45bf5a04bacd384683a2cb33
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Wed Nov 4 11:04:43 2020 -0300
+Date:   Mon Nov 30 12:24:16 2020 -0300
 
-    Coach feature update, moved check coach server to the top of the priority.
+    Fixed reports to Battle.net friends; Fixes on Custom displays
 
-commit 8f381f123597b95f11bddbd078a2ac5c984c5880
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Wed Nov 4 10:50:04 2020 -0300
+commit 56384d66fcf4df68139e4c33fb69b84694d9c9a5
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Thu Nov 26 16:37:10 2020 -0600
 
-    More fixes and debug for the Coach feature
+    Remove custom icon
+    
+    Upon testing I couldn't get it to work atm. So I'm just removing it from the pull request.
 
-commit f4d801ce1212433cd75c17c4add578b9527b7e84
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Wed Nov 4 10:19:40 2020 -0300
+commit 56384d66fcf4df68139e4c33fb69b84694d9c9a5
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Thu Nov 26 16:37:10 2020 -0600
 
-    Use the sourceName from the comm callback instead of the player name from the com Data
+    Remove custom icon
+    
+    Upon testing I couldn't get it to work atm. So I'm just removing it from the pull request.
 
-commit 7de3c46897d720e43f9d2aba84ed402a53758ef2
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Wed Nov 4 09:39:03 2020 -0300
+commit d2bab21d7a334f5bd2cd610fe15a25f5515221fb
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Thu Nov 26 14:11:21 2020 -0600
 
-    Coach debug
+    GetClassColor custom actor support + Fix
+    
+    Allow for GetClassColor to return a custom color from custom actors. And fix the final else not returning anything.
 
-commit 84a6c8b9dcab5e0f8eda796b27385bbef338de08
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Wed Nov 4 09:22:59 2020 -0300
+commit 638cf0cc749080c16709ece4323df63d0fa718b1
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Thu Nov 26 14:09:40 2020 -0600
 
-    Adding again the option to remove enemy players from battlegrounds.
+    Allow for custom actors with a color.
+
+commit e1a33dc364c0db5dab1b0876c16e6319097a7fba
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Thu Nov 26 14:08:47 2020 -0600
+
+    Fix Search Error Detection, Allow custom actors
 

@@ -218,7 +218,7 @@ MDT.scaleMultiplier = {}
 --https://www.wowhead.com/affixes
 --lvl 4 affix, lvl 7 affix, tyrannical/fortified, seasonal affix
 local affixWeeks = {
-    [1] =  {[1]=0,[2]=0,[3]=0,[4]=0},
+    [1] =  {[1]=11,[2]=3,[3]=10,[4]=121}, -->>Bursting, Volcanic, Fortified
     [2] =  {[1]=0,[2]=0,[3]=0,[4]=0},
     [3] =  {[1]=0,[2]=0,[3]=0,[4]=0},
     [4] =  {[1]=0,[2]=0,[3]=0,[4]=0},
@@ -228,8 +228,8 @@ local affixWeeks = {
     [8] =  {[1]=7,[2]=4,[3]=9,[4]=121},  -->>Bolstering, Necrotic, Tyrannical
     [9] =  {[1]=124,[2]=122,[3]=10,[4]=121},   -->>Storming, Inspiring, Fortified
     [10] = {[1]=11,[2]=13,[3]=9,[4]=121},  -->>Bursting, Explosive, Tyrannical
-    [11] = {[1]=0,[2]=0,[3]=0,[4]=0},
-    [12] = {[1]=0,[2]=0,[3]=0,[4]=0},
+    [11] = {[1]=4,[2]=7,[3]=10,[4]=121},      -->>Sanguine, Grievous, Fortified
+    [12] = {[1]=6,[2]=14,[3]=9,[4]=121},   -->>Raging, Quaking, Tyrannical
 }
 
 local dungeonList = {

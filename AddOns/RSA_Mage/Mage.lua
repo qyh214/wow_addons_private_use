@@ -75,6 +75,7 @@ function RSA_Mage:OnEnable()
 			[224871] = Config_Portals, -- DALARAN BROKEN ISLES PORTAL
 			[281400] = Config_Portals, -- Boralus
 			[281402] = Config_Portals, -- Dazar'alor
+			[344597] = Config_Portals, -- Oribos
 			[3563] = Config_Teleport, -- Undercity
 			[3566] = Config_Teleport, -- Thunderbluff
 			[3561] = Config_Teleport, -- Stormwind
@@ -99,6 +100,7 @@ function RSA_Mage:OnEnable()
 			[193759] = Config_Teleport, -- Hall of the Guardian
 			[281404] = Config_Teleport, -- Dazar'alor
 			[281403] = Config_Teleport, -- Boralus
+			[344587] = Config_Teleport, -- Oribos
 			[190336] = { -- REFRESHMENT TABLE
 				profile = 'RefreshmentTable'
 			},

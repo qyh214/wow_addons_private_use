@@ -460,6 +460,8 @@ Supports multiple entries, separated by commas
 	L["Ignored Spell ID"] = "Исключаемый ID заклинания"
 	L["Import"] = "Импорт"
 	L["Import a display from an encoded string"] = "Импортировать индикацию из закодированной строки"
+	--[[Translation missing --]]
+	L["Indent Size"] = "Indent Size"
 	L["Information"] = "Информация"
 	L["Inner"] = "Внутри"
 	L["Invalid Item Name/ID/Link"] = "Неверное название, ссылка или ID предмета"
