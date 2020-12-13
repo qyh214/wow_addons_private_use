@@ -69,12 +69,20 @@ TinyInspect、TinyTooltip：http://bbs.ngacn.cc/read.php?tid=10240957
 
 炉石：https://wago.io/0owZD6Av9
 
+9.0低保查看：https://wago.io/sMLfbID4n
+
 暗影国度地下城与团队副本：
+### 目前使用：
+地下城和团队副本纳斯利亚堡：https://bbs.nga.cn/read.php?tid=24284671
+
+### 曾使用
 - 地下城（中文）：https://wago.io/DtdLKK4XF  （来源： https://bbs.nga.cn/read.php?tid=23417528 ）
 - 地下城（中文2）：https://wago.io/C0BHj134j
 - 地下城（英语原版）：https://wago.io/ZpDhyMJ9K
 - 纳斯利亚堡团队副本：https://wago.io/BYNw1h77H
 - 纳斯利亚堡团队副本（英语原版）：https://wago.io/slraid1
+- 地下城：https://bbs.nga.cn/read.php?tid=24565995
+- 纳斯利亚堡：https://bbs.nga.cn/read.php?tid=24558520
 
 盟约技能监视：
 - 通灵-血肉铸造：https://wago.io/0wQPMHfOa
