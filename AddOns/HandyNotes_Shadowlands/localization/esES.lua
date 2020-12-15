@@ -15,7 +15,7 @@ L["anima_channeled"] = "ánima canalizada a %s."
 --------------------------------- ARDENWEALD ----------------------------------
 -------------------------------------------------------------------------------
 
-L["deifir_note"] = "Monta en {npc=164238} que va dando vueltas en círculos y usa {spell:319566} y {spell:319575} para frenarlo o aturdirlo respectivamente."
+L["deifir_note"] = "Monta en {npc:164238} que va dando vueltas en círculos y usa {spell:319566} y {spell:319575} para frenarlo o aturdirlo respectivamente."
 L["faeflayer_note"] = "En una cueva pequeña oculta tras una cascada."
 L["gormtamer_tizo_note"] = "Mata Spriggans Conobarba en la Espesura Velo de Niebla hasta que aparezca {npc:164110} el cual tendrás que matar."
 L["humongozz_note"] = "Planta un {item:175247} en la Marga Húmeda para hacer aparecer un {npc:164122}. El champiñón cae de muchos enemigos de la zona."
@@ -35,12 +35,12 @@ Siempre aparecerá al norte de Tirna Vaal, así que pon tu {item:6948} allí y e
 
 |cffff4800¡|r|cffff9100P|r|cffffda00r|r|cffdaff00u|r|cff91ff00e|r|cff48ff00b|r|cff00ff00a|r |cff00ff91e|r|cff00ffdal|r |cff0091ffA|r|cff0048ffr|r|cff0000ffc|r|cff4800ffo|r |cffda00ffI|r|cffff00dar|r|cffff0091i|r|cffff0048s|r|cffff0000!|r
 ]]
-L["rootwrithe_note"] = "Haz click en las {npc:167928} hasta que aparezca el {npc=167726}."
+L["rootwrithe_note"] = "Haz click en las {npc:167928} hasta que aparezca el {npc:167726}."
 L["rotbriar_note"] = "Habla con {npc:171684} y comenzará a cantar. Tras algo de diálogo, aparecerá {npc:167724} cerca."
-L["slumbering_note"] = "Correr hacia la niebla te dormirá en pocos segundos y te alejará. Usa una bengala o una mascota con daño en área para sacar al {npc=167721} fuera de la niebla."
-L["skuld_vit_note"] = "En una cueva bloqueada por una barrera. Con el hechizo {spell:310143} de la curia de las Sílfides Nocturnas se podrá atravesar la barrera y entrar en la cueva. Una vez haya sido pulleado {npc=164415}, la barrera desaparecerá."
-L["valfir_note"] = "Haz click en la Semilla de Ánima Brillante a mitad de camino y usa la {spell:338045} para quitar el buff {spell:338038} de {npc=168647}."
-L["wrigglemortis_note"] = "Tira del {npc:164179} para sacarlo de la tierra y hacer aparecer al {npc=164147}."
+L["slumbering_note"] = "Correr hacia la niebla te dormirá en pocos segundos y te alejará. Usa una bengala o una mascota con daño en área para sacar al {npc:167721} fuera de la niebla."
+L["skuld_vit_note"] = "En una cueva bloqueada por una barrera. Con el hechizo {spell:310143} de la curia de las Sílfides Nocturnas se podrá atravesar la barrera y entrar en la cueva. Una vez haya sido pulleado {npc:164415}, la barrera desaparecerá."
+L["valfir_note"] = "Haz click en la Semilla de Ánima Brillante a mitad de camino y usa la {spell:338045} para quitar el buff {spell:338038} de {npc:168647}."
+L["wrigglemortis_note"] = "Tira del {npc:164179} para sacarlo de la tierra y hacer aparecer al {npc:164147}."
 
 L["night_mare_note"] = [[
 Viaja a Tirna Scithe y sigue el camino por la raíz, en el acantilado noroeste, hasta llegar a una vagoneta rota. Allí podrás despojar una {item:181243} en el suelo.
@@ -233,13 +233,13 @@ L["zolla_note"] = "Nos tomamos muy en serio nuestras defensas. Seamos grandes o 
 --------------------------------- MALDRAXXUS ----------------------------------
 -------------------------------------------------------------------------------
 
-L["chelicerae_note"] = "Destruye la {npc:159885} para activar a la {npc:159886}."
+L["chelicerae_note"] = "Destruye las {npc:159885} para activar a la {npc:159886}."
 L["deepscar_note"] = "Puede aparecer en varias entradas al Teatro del Dolor."
 L["forgotten_mementos"] = "Tira de la Cadena del Rastrillo en la cámara al oeste del tesoro para abrir la puerta."
 L["gieger_note"] = "Tira del {npc:162815} para activar a {npc:162741}."
 L["gristlebeak_note"] = "Rompe los {npc:162761} cercanos para provocar a {npc:162588}."
-L["leeda_note"] = "Mata a los dos {npc:162220} hasta que aparezca la {npc:162180}."
-L["nirvaska_note"] = "Soloa aparece cuando la misión del mundo {wq:Recordatorio Letal} está activa."
+L["leeda_note"] = "Mata a las dos {npc:162220} hasta que aparezca la {npc:162180}."
+L["nirvaska_note"] = "Sólo aparece cuando la misión del mundo {wq:Recordatorio Letal} está activa."
 L["sabriel_note"] = "Puede aparecer como uno de los campeones del Teatro del Dolor."
 L["schmitd_note"] = "Usa un {spell:313451} cercano para romper su escudo."
 L["taskmaster_xox_note"] = "Comparte el lugar de aparición con {npc:160204}, {npc:160230} y {npc:160226}."
@@ -247,7 +247,7 @@ L["theater_of_pain_note"] = "El primer boss que mates cada día tiene una probab
 L["zargox_the_reborn_note"] = [[
 Usa el {item:175841} encima de la {npc:157124}. Para conseguir el {item:175841} tienes que completar la misión {quest:57245} que da {npc:157076} y volver a hablar con él de nuevo.
 
-Si la {npc:157124} no está, reanima los {npc:157132} del aŕea hasta que aparezca.
+Si la {npc:157124} no está, reanima los {npc:157132} del área hasta que aparezca.
 ]]
 L["mixed_pool_note"] = [[
 Recoge ingredientes de los enemigos de alrededor y tíralos en la poza. Cuando hayan sido añadidos 30 ingredientes, aparecerá uno de los siete raros dependiendo de la combinación usada.
@@ -405,6 +405,7 @@ L["apholeias_note"] = "Con otros 3 jugadores, situaos en las esquinas de la plat
 L["dekaris_note"] = "Encima de una gran roca que sobresale."
 L["drifting_sorrow_note"] = "Mata {npc:175246} cerca del orbe flotante para activar el boss."
 L["ekphoras_note"] = "Con otros 3 jugadores, situaos en las esquinas de la plataforma y lanzad la {spell:330650} para hacer aparecer a {npc:169827}."
+L["gorged_shadehound_note"] = nil
 L["ikras_note"] = "Vuela alrededor del Bastión de la Perdición. Este es un buen sitio para pullearlo."
 L["orophea_note"] = "Coge el {spell:337143} al sureste y ofréceselo a {npc:172577} para que se active."
 L["sanngror_note"] = "Si no se puede atacar a {npc:172521}, espera hasta que no esté experimentando con las almas."

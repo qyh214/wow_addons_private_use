@@ -1,16 +1,16 @@
-lightweight tag be003444bd1ba1c7692c3a4a4c2bae3ef7bb7287 v1.3.5
+lightweight tag c701a3540ef3061f9cacfb9065f54d93462ef978 v1.3.7
 Author:	Meivyn <meivyn@live.ca>
-Date:	Sat Nov 7 16:15:35 2020 -0500
+Date:	Mon Dec 14 14:54:07 2020 -0500
 
-commit be003444bd1ba1c7692c3a4a4c2bae3ef7bb7287
+commit c701a3540ef3061f9cacfb9065f54d93462ef978
 Author: Meivyn <meivyn@live.ca>
-Date:   Sat Nov 7 16:15:35 2020 -0500
+Date:   Mon Dec 14 14:54:07 2020 -0500
 
-    update: v1.3.5
+    Actually don't hide it from the tooltip
 
-commit 9e00fd83bd030abcff67bae92cf58a64f0b98eab
+commit 4d9b45467a22d948fcecbd3d9a9d8861e5db741e
 Author: Meivyn <meivyn@live.ca>
-Date:   Sat Nov 7 16:12:57 2020 -0500
+Date:   Mon Dec 14 14:45:46 2020 -0500
 
-    update: new data from Shadowlands and README
+    Nurgash world quest has changed
 

@@ -54,18 +54,6 @@ local function error(err, debugTable)
   end
 end
 
-local function debug(...)
-  _G[ADDON_NAME] = _G[ADDON_NAME] or AddOn
-  if not ... then return end
-  if type(...) == "table" then
-    print("|cff33ff99" .. ADDON_NAME .. ":|r")
-    LoadAddOn("Blizzard_DebugTools")
-    DevTools_Dump(...)
-  else
-    print("|cff33ff99" .. ADDON_NAME .. ":|r", ...)
-  end
-end
-
 function AddOn:RequestWarfrontInfo()
   local stromgardeState = C_ContributionCollector_GetState(self.faction == "Horde" and 116 or 11)
   local darkshoreState = C_ContributionCollector_GetState(self.faction == "Horde" and 117 or 118)
@@ -199,7 +187,7 @@ function AddOn:GetWorldBossLockout(instanceIndex)
     elseif instanceIndex == 5 and encounterIndex == 8 then
       isAvailable = self.isDarkshoreAvailable
       isKilled = isKilled and isAvailable
-    elseif instanceIndex == 5 then
+    elseif instanceIndex >= 5 then
       isAvailable = C_TaskQuest_GetQuestTimeLeftMinutes(self.worldBosses[instanceIndex].encounters[encounterIndex].questID) ~= nil
     end
     tinsert(encounters, {

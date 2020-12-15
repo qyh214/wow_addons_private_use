@@ -1,16 +1,22 @@
-lightweight tag fb94df04fc0ad9ea9d805fca2c1dbae80b5de529 2.0.1
+lightweight tag fe909ce96e82c4038c8fa5f095049f31f30f37d5 2.0.2
 Author:	Bernhard Saumweber <b.saumweber@gmail.com>
-Date:	Tue Nov 3 22:14:49 2020 +0100
+Date:	Thu Dec 10 21:00:34 2020 +0100
 
-commit fb94df04fc0ad9ea9d805fca2c1dbae80b5de529
+commit fe909ce96e82c4038c8fa5f095049f31f30f37d5
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Tue Nov 3 22:14:49 2020 +0100
+Date:   Thu Dec 10 21:00:34 2020 +0100
 
-    Release version 2.0.1
+    Release version 2.0.2
 
-commit 2425e15d8b9e06adde31f6e82ab67f0c7a863d18
+commit 7eba9dd54ac3fc6660b7a9953c26c3e3c6a6b936
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Tue Nov 3 22:14:29 2020 +0100
+Date:   Thu Dec 10 20:56:42 2020 +0100
 
-    Fixed Russian translation thanks to Hollicsh
+    Fixed an issue where the `myrealm` keyword could cause an error; fixes #44
+
+commit 8ba31acc5dc69b1670b0c9b8c0b2878befd41a40
+Author: Bernhard Saumweber <b.saumweber@gmail.com>
+Date:   Thu Dec 10 20:38:36 2020 +0100
+
+    Added keywords plate, mail, leather and cloth for number of chars with this armor type; fixes #43
 

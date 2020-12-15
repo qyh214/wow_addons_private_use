@@ -14,6 +14,7 @@ V.maps = {
 	instanceDifficulty = {
 		enable = false,
 		hideBlizzard = true,
+		align = "LEFT",
 		font = {
 			name = E.db.general.font,
 			size = E.db.general.fontSize,
@@ -245,6 +246,7 @@ V.skins = {
 		trainer = true,
 		tutorial = true,
 		warboard = true,
+		weeklyRewards = true,
 		worldMap = true
 	},
 	elvui = {

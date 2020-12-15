@@ -257,6 +257,8 @@ L.RaidCheckHeadVantus = "Вантийская"
 L.RaidCheckOnlyRL = "Только для лидера рейда"
 L.RaidCheckSortByClass = "Сортировка по классам"
 L.RaidCheckReinforced = "Усиление %("
+L.RaidCheckOilSharpen = "Оружие заточено %("
+L.RaidCheckConsum = "Персональные иконки баффов при проверке готовности"
 
 L.marksbarstart = "Очистить"
 L.marksbardel = "Удалить"

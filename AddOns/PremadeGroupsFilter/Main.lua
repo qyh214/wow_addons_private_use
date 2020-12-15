@@ -199,6 +199,10 @@ end
 --- @generic V
 --- @param env table<string, V> environment to be prepared
 function PGF.InitClassRoleTypeKeywords(env)
+    env.cloth = 0
+    env.leather = 0
+    env.mail = 0
+    env.plate = 0
     env.ranged = 0
     env.ranged_strict = 0
     env.melees = 0
@@ -248,6 +252,10 @@ function PGF.PutSearchResultMemberInfos(resultID, searchResultInfo, env)
         local role, class = C_LFGList.GetSearchResultMemberInfo(resultID, i)
         local classPlural = class:lower() .. "s" -- plural form of the class in english
         env[classPlural] = env[classPlural] + 1
+        local armor = C.DPS_CLASS_TYPE[class].armor
+        if armor then
+            env[armor] = env[armor] + 1
+        end
         if role then
             local classRolePlural = C.ROLE_PREFIX[role] .. "_" .. class:lower() .. "s"
             local roleClassPlural = class:lower() .. "_" .. C.ROLE_SUFFIX[role]
@@ -317,7 +325,7 @@ function PGF.DoFilterSearchResults(results)
         env.heroic     = difficulty == C.HEROIC
         env.mythic     = difficulty == C.MYTHIC
         env.mythicplus = difficulty == C.MYTHICPLUS
-        env.myrealm = searchResultInfo.leaderName and searchResultInfo.leaderName ~= "" and not searchResultInfo.leaderName:find('-')
+        env.myrealm = searchResultInfo.leaderName and searchResultInfo.leaderName ~= "" and searchResultInfo.leaderName:find('-') == nil or false
         env.partialid = numPlayerDefeated > 0
         env.fullid = numPlayerDefeated > 0 and numPlayerDefeated == maxBosses
         env.noid = not env.partialid and not env.fullid

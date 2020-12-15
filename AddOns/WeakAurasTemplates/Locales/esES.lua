@@ -7,8 +7,7 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
-	--[[Translation missing --]]
-	L[" Debuff"] = " Debuff"
+	L[" Debuff"] = "Perjuicio"
 	--[[Translation missing --]]
 	L["<70% Mana"] = "<70% Mana"
 	--[[Translation missing --]]

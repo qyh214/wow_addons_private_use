@@ -1,4 +1,4 @@
---Mini Dragon <流浪者酒馆-Brilla@金色平原> 20201207
+--Mini Dragon <流浪者酒馆-Brilla@金色平原> 20201214
 --夏一可，暴雪娱乐
 
 if GetLocale() ~= "zhCN" then return end
@@ -54,7 +54,7 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization({
-	timerContainers				= "显示容器装满的进度与时间"
+	timerContainers2			= "显示容器装满的进度与时间"
 })
 
 ---------------------------
@@ -78,7 +78,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(2424)
 
 L:SetMiscLocalization({
-	CrimsonSpawn	= "赤红秘法师"--响应了德纳修斯大帝的号召
+	CrimsonSpawn	= "赤红秘法师回应了德纳修斯的召唤。"
 })
 
 

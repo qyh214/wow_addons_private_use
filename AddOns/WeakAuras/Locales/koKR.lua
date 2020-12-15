@@ -1111,8 +1111,7 @@ L["Up, then Left"] = "위로, 왼쪽으로"
 L["Up, then Right"] = "위로, 오른쪽으로"
 L["Update Auras"] = "효과 갱신"
 L["Usage:"] = "사용법:"
---[[Translation missing --]]
-L["Use /wa minimap to show the minimap icon again."] = "Use /wa minimap to show the minimap icon again."
+L["Use /wa minimap to show the minimap icon again."] = "/wa minimap 을 사용하여 미니맵 아이콘을 다시 표시합니다."
 L["Use Custom Color"] = "사용자 설정 색상 사용"
 --[[Translation missing --]]
 L["Use Legendary Power Icon"] = "Use Legendary Power Icon"

@@ -1,76 +1,72 @@
-# Version: 2.14
+# Version: 2.15
 TBD Released
 ## ✳️ New
-- [Extra Item Bar] Add the mount in Torghast.
-- [Extra Item Bar] Add new item group "FOODVENDOR" (food sold by vendors).
-- [Mute] Add an option for Blanchy.
+- [Misc] Add new feature and option of hiding crafter name.
+- [Skins] Add skin for weekly rewards.
+- [Instance Difficulty] Add a new option of text-align.
 ## 💪 Improvement
-- [Raid Marker] Now you can swap the functionality of normal click and click with modifier keys.
-- [Progression] Fix the statastic of Sanguine Depths.
-- [Extra Item Bar] Fix the text of food crafted by mage in item group tooltips.
-- [Skins] Optimize the skins on Pet Tooltip.
-- [Skins] Optimize the skins on LFD Ready Popup.
-- [Skins] Fix the icon in misson complate alerts.
-- [Chat Bar] Fix a potential bug.
-- [Turn In] Fix a potential bug.
-- [Game Bar] You can set Home button to wormhole generators now.
-- [Skip Cut Scene] The message will not show when level 60 character entering The Maw.
+- Amend some parts of the previous changelog.
+- [Announcement] Fix the bug that may occur after leaving from a group.
+- [Game Bar] Right-click Encounter Journal button now will open Weekly Rewards.
+- [Move Frame] Add support for weekly rewards.
+- [Skins] Fix a potential bug of Raid Utility skin.
+- [Skins] Optimize Mythic Dungeon Keystone skin.
+- [Extra Item Bar] UTILITY (utilities) category add some Shadowlands crafting items like armor kit.
+- [Extra Item Bar] Update Torghast item list.
+- [Inpect] Fix the Shadowlands enchant info. Thanks loudsoul.
 
 ------
-# 版本: 2.14
+# 版本: 2.15
 TBD 发布
 ## ✳️ 新增
-- [额外物品条] 添加了塔内坐骑.
-- [额外物品条] 添加了 "FOODVENDOR" (商人食物) 物品分类.
-- [静音] 添加了布兰契的选项.
+- [其他] 添加了隐藏制造者姓名的功能及选项.
+- [美化皮肤] 添加了每周奖励宝库的界面美化.
+- [副本难度] 添加了一个文字对齐选项.
 ## 💪 改善
-- [团队标记] 现在可以对调正常点击和修饰键点击的功能了.
-- [进度] 修复了赤红深渊的传奇击杀次数统计.
-- [额外物品条] 修复了设定时鼠标提示中法师制作食物的文本.
-- [美化皮肤] 优化了小宠物鼠标提示的美化.
-- [美化皮肤] 优化了 LFD 准备提示的美化.
-- [美化皮肤] 修复了盟约任务完成提示框体图标不显示的错误.
-- [聊天条] 修复了一个潛在的报错.
-- [交接] 修复了一个潛在的报错.
-- [游戏条] 现在可以设定家按钮为虫洞发生器了.
-- [跳过过场动画] 等级 60 的人物进入噬渊将不再提示无法跳过.
+- 修正了一些之前更新记录的文本.
+- [通告] 修复了在离队后可能出现的错误.
+- [游戏条] 右键冒险手册现在将会打开每周奖励宝库.
+- [移动框体] 添加了每周奖励宝库界面的支持.
+- [美化皮肤] 修复了团队工具皮肤可能造成的错误.
+- [美化皮肤] 优化了传奇钥石界面美化.
+- [额外物品条] UTILITY (实用工具) 分组新增了护甲片等暗影国度制作物品.
+- [额外物品条] 更新托加斯特物品列表.
+- [观察] 修复了暗影国度的附魔信息. 感谢 loudsoul
 
 ------
-# 版本: 2.14
+# 版本: 2.15
 TBD 發布
 ## ✳️ 新增
-- [額外物品條] 新增了塔內坐騎.
-- [額外物品條] 新增了 "FOODVENDOR" (商人食物) 物品分組.
-- [靜音] 新增了布蘭契的選項.
+- [其他] 新增了隱藏製作者姓名的功能及設定.
+- [美化皮膚] 新增了每週獎勵寶庫的界面美化.
+- [副本難度] 新增了一個文字對齊選項.
 ## 💪 改善
-- [團隊標記] 現在可以對調正常點擊和修飾鍵點擊的功能了.
-- [進度] 修復了血紅深淵的傳奇擊殺次數統計.
-- [額外物品條] 修復了設定時浮動提示中法師製造食物的文字.
-- [美化皮膚] 優化了小寵物浮動提示的美化.
-- [美化皮膚] 優化了 LFD 準備提示的美化.
-- [美化皮膚] 修復了誓盟任務完成提示框架圖示不顯示的錯誤.
-- [聊天條] 修復了一個潛在的錯誤.
-- [交接] 修復了一個潛在的錯誤.
-- [遊戲條] 現在可以設定按鈕為蟲洞產生器了.
-- [跳過過場動畫] 等級 60 的人物進入淵吼時將不再提示無法跳過.
+- 修正了一些之前的更新記錄的文本.
+- [通告] 修復了可能出現的離隊後錯誤.
+- [遊戲條] 右鍵地城導覽手冊按鍵現在將會開啟每週獎勵寶庫.
+- [移動框架] 支援每週獎勵寶庫介面.
+- [美化皮膚] 修復了團隊工具皮膚可能造成的錯誤.
+- [美化皮膚] 優化了傳奇鑰石介面美化.
+- [額外物品條] UTILITY (實用工具) 分組新增了護甲片等暗影之境製造物品.
+- [額外物品條] 更新托伽司物品列表.
+- [觀察] 修復了暗影之境的附魔訊息. 感謝 loudsoul
 
 ------
-# 버전: 2.14
+# 버전: 2.15
 TBD Released
 ## ✳️ 신규 사항
-- [아이템 바] 토르가스트 탈것 추가
-- [아이템 바] 새로운 아이템 그룹 "FOODVENDOR" (상인 판매 음식) 추가
-- [음소거] 블랑쉬에 관한 옵션을 추가하였습니다.
+- [Misc] Add new feature and option of hiding crafter name.
+- [스킨] 주간 보상 스킨 추가.
+- [인스턴스 난이도] 텍스트 정렬 옵션을 추가하였습니다.
 ## 💪 개선 사항
-- [공격대 징표] 이제 일반 클릭과 기능키와 함께 클릭할 때의 기능을 전환할 수 있습니다.
-- [진행 상태] 핏빛 심연의 통계치를 수정합니다.
-- [아이템 바] 아이템 그룹 툴팁에서 마법사 창조 음식 텍스트를 수정했습니다.
-- [스킨] 펫 툴팁 최적화.
-- [스킨] 던전 찾기 준비 확인 팝업 스킨 최적화.
-- [스킨] 성약단 임무 완료 시 상자 아이콘이 표시되지 않는 현상을 수정하였습니다.
-- [채팅 바] 잠재적인 버그를 수정하였습니다.
-- [자동 수락] 잠재적인 버그를 수정하였습니다.
-- [게임 바] 이제 홈 버튼을 웜홀 생성기로 설정할 수 있습니다.
-- [컷신 건너뛰기] 60 레벨 캐릭터는 나락에 들어갈 때 건너뛸 수 없다는 메시지가 표시되지 않습니다.
+- 이전 변경 로그의 일부 수정.
+- [알림] 파티를 떠난 후 발생할 수 있는 오류를 수정하였습니다.
+- [게임 바] 모험 안내서를 마우스 오른쪽 버튼으로 클릭하면 주간 보상 금고를 확인할 수 있습니다.
+- [프레임 이동] 주간 보상 (위대한 금고) 창을 이동할 수 있습니다.
+- [스킨] 공격대 도구 스킨의 잠재적인 버그를 수정하였습니다.
+- [스킨] 쐐기던전의 쐐기돌 스킨을 최적화하였습니다.
+- [아이템 바] UTILITY (유틸리티) 카테고리에 방어구 강화, 기름, 숫돌 같은 어둠땅 제작 아이템이 추가 되였습니다.
+- [아이템 바] 토르가스트 아이템 리스트 업데이트.
+- [살펴보기] 어둠땅 마법 부여 정보를 수정하였습니다. Thanks loudsoul.
 
 ------
