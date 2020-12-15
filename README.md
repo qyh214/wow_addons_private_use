@@ -49,6 +49,10 @@ TinyInspect、TinyTooltip：http://bbs.ngacn.cc/read.php?tid=10240957
 其他单体插件可用curse客户端管理，curse客户端下载地址：https://curseforge.overwolf.com
 
 ## WA字符串
+#### wa字符串总结和概述
+https://bbs.nga.cn/read.php?tid=24562077
+
+#### 使用的字符串
 鼠标跟踪：https://wago.io/SypUT-DPm
 
 属性监控：https://wago.io/rJZgZUxn7
@@ -72,10 +76,14 @@ TinyInspect、TinyTooltip：http://bbs.ngacn.cc/read.php?tid=10240957
 9.0低保查看：https://wago.io/sMLfbID4n
 
 暗影国度地下城与团队副本：
-### 目前使用：
 地下城和团队副本纳斯利亚堡：https://bbs.nga.cn/read.php?tid=24284671
 
-### 曾使用
+盟约技能监视：
+- 通灵-血肉铸造：https://wago.io/0wQPMHfOa
+
+奥利波斯WA图标指引：https://bbs.nga.cn/read.php?tid=24653400 （ 原版： https://wago.io/U7UFNotjr ）
+
+#### 曾使用的字符串
 - 地下城（中文）：https://wago.io/DtdLKK4XF  （来源： https://bbs.nga.cn/read.php?tid=23417528 ）
 - 地下城（中文2）：https://wago.io/C0BHj134j
 - 地下城（英语原版）：https://wago.io/ZpDhyMJ9K
@@ -83,9 +91,6 @@ TinyInspect、TinyTooltip：http://bbs.ngacn.cc/read.php?tid=10240957
 - 纳斯利亚堡团队副本（英语原版）：https://wago.io/slraid1
 - 地下城：https://bbs.nga.cn/read.php?tid=24565995
 - 纳斯利亚堡：https://bbs.nga.cn/read.php?tid=24558520
-
-盟约技能监视：
-- 通灵-血肉铸造：https://wago.io/0wQPMHfOa
 
 ## 一些有用的重要命令
 在游戏内聊天窗口输入，然后回车：
