@@ -48,6 +48,8 @@ TinyInspect、TinyTooltip：http://bbs.ngacn.cc/read.php?tid=10240957
 
 其他单体插件可用curse客户端管理，curse客户端下载地址：https://curseforge.overwolf.com
 
+wa字符串更新客户端：https://weakauras.wtf/
+
 ## WA字符串
 #### wa字符串总结和概述
 https://bbs.nga.cn/read.php?tid=24562077
@@ -77,6 +79,7 @@ https://bbs.nga.cn/read.php?tid=24562077
 
 暗影国度地下城与团队副本：
 地下城和团队副本纳斯利亚堡：https://bbs.nga.cn/read.php?tid=24284671
+地下城仙林迷雾迷宫wa：https://wago.io/hVLym_eLv
 
 盟约技能监视：
 - 通灵-血肉铸造：https://wago.io/0wQPMHfOa
