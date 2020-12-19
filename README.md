@@ -78,11 +78,14 @@ https://bbs.nga.cn/read.php?tid=24562077
 9.0低保查看：https://wago.io/sMLfbID4n
 
 暗影国度地下城与团队副本：
-地下城和团队副本纳斯利亚堡：https://bbs.nga.cn/read.php?tid=24284671
-地下城仙林迷雾迷宫wa：https://wago.io/hVLym_eLv
+- 地下城和团队副本纳斯利亚堡：https://bbs.nga.cn/read.php?tid=24284671
+- 地下城仙林迷雾迷宫wa：https://wago.io/hVLym_eLv
 
-盟约技能监视：
-- 通灵-血肉铸造：https://wago.io/0wQPMHfOa
+盟约技能监视：https://wago.io/Covenant
+
+盟约buff监视：https://wago.io/F1dMAfhui
+
+盟约指挥台成功率：https://wago.io/FTT0P82zx
 
 奥利波斯WA图标指引：https://bbs.nga.cn/read.php?tid=24653400 （ 原版： https://wago.io/U7UFNotjr ）
 
