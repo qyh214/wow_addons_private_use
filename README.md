@@ -89,6 +89,8 @@ https://bbs.nga.cn/read.php?tid=24562077
 
 奥利波斯WA图标指引：https://bbs.nga.cn/read.php?tid=24653400 （ 原版： https://wago.io/U7UFNotjr ）
 
+傲慢词缀全套监视：https://wago.io/prideful
+
 #### 曾使用的字符串
 - 地下城（中文）：https://wago.io/DtdLKK4XF  （来源： https://bbs.nga.cn/read.php?tid=23417528 ）
 - 地下城（中文2）：https://wago.io/C0BHj134j
