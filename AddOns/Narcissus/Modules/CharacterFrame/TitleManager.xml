@@ -355,12 +355,6 @@
                 </Frames>
             </Frame>
         </Frames>
-        <Scripts>
-            <OnShow>
-            </OnShow>
-            <OnHide>
-            </OnHide>
-        </Scripts>
     </Frame>
 
     <Button name="Narci_TitleManager_Switch" parent="Narci_PlayerInfoFrame" Alpha="0" mixin="NarciTitleManagerSwitchMixin">
@@ -390,6 +384,7 @@
             <OnLeave method="OnLeave"/>
             <OnShow method="OnShow"/>
             <OnHide method="OnHide"/>
+            <OnEvent method="OnEvent"/>
         </Scripts>
     </Button>
 </Ui>

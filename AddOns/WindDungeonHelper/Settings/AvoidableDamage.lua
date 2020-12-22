@@ -2,7 +2,6 @@ local W, F, L, P = unpack(select(2, ...))
 
 P.avoidableDamage = {
     enable = true,
-    compatible = true,
     notification = {
         enable = true,
         channel = "PARTY",

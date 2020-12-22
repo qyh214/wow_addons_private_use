@@ -1249,9 +1249,7 @@
 			<OnEnterPressed>
 				self:ClearFocus();
 			</OnEnterPressed>
-			<OnTextChanged>
-				NarciAPI_SmartEditBoxType(self);
-			</OnTextChanged>
+			<OnTextChanged function="NarciAPI_SmartEditBoxType"/>
 		</Scripts>		
 	</EditBox>
 

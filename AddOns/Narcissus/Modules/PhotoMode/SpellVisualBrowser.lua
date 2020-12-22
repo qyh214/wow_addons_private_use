@@ -1054,7 +1054,7 @@ end
 local MyCategoryButton;
 
 local function UpdateCategoryButtons()
-    frame = ListFrame.Category;
+    local frame = ListFrame.Category;
     if not frame.CategoryButtons then
         frame.CategoryButtons = {};
     end

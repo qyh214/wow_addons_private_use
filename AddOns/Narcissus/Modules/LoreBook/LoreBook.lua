@@ -36,9 +36,15 @@
     3 Test
 
     125 Shadowlands Campaign 0/2    Through the Shattered Sky/ Arrival in the Shadowlands
-
+    131 Threads of Fate 0/5
     126 The Looming Dark    Choose Covenant
+    
     114 Bastion 0/7 Eternity's Call Tidings of War
+    118 Blade of the Primus 0/7 Champion of Pain / The Empty Throne
+    124 The Groves of Ardenweald 0/8 Welcome to Ardenweald / Awaken the Dreamer
+    111 The Master of Revendreth 0/7 Welcome to Revendreth / The Master of Lies
+
+    113 Venthyr Campaign
     115 Art of War  Maldraxxus
 --]]
 
@@ -130,7 +136,8 @@ function DataProvider:FormatEntries(textEntries)
         return
     end
 
-    local headerText, rawText, tempTable;
+    local headerText = " ";
+    local rawText, tempTable;
     local index = 1;
     local uiOrder = 0;
     local comparisonMode = self.comparisonMode;
@@ -147,6 +154,7 @@ function DataProvider:FormatEntries(textEntries)
             self.headers[uiOrder] = headerText;
             index = 1;
         else
+            --print("Header: "..headerText);
             if headerText and self.contents[headerText] then
                 tempTable = {strsplit("\n", rawText)};
                 for j = 1, #tempTable do
@@ -155,7 +163,6 @@ function DataProvider:FormatEntries(textEntries)
                         if comparisonMode then
                             if not self.contents[headerText][index] then
                                 self.contents[headerText][index] = {text = tempTable[j], isNew = true};
-                                --print(headerText)
                                 NarciLoreAlert:SetUp(headerText, uiOrder);
                             end
                         else
@@ -595,7 +602,7 @@ end
 NarciLoreAlertMixin = {};
 
 function NarciLoreAlertMixin:OnLoad()
-    tinsert(UISpecialFrames, self:GetName());
+    --tinsert(UISpecialFrames, self:GetName());
 end
 
 function NarciLoreAlertMixin:OnHide()

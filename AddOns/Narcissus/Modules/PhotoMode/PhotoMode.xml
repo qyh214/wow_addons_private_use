@@ -703,7 +703,7 @@
 										<Anchor point="LEFT" relativeTo="Narci_VirtualLineRight" relativePoint="RIGHT" x="80" y="0"/>
 									</Anchors>
 								</Texture>
-								<Texture name="ModelVignetteRightSmall" parentKey="VignetteRightSmall" file="Interface\AddOns\Narcissus\Art\Vignetting\Vignetting-Left" Alpha="0.8" setAllPoints="false">
+								<Texture parentKey="VignetteRightSmall" file="Interface\AddOns\Narcissus\Art\Vignetting\Vignetting-Left" Alpha="0.8" setAllPoints="false">
 									<Size x="2000" y="800"/>
 									<TexCoords left="1" right="0" top="0" bottom="1"/>
 									<Anchors>
@@ -782,7 +782,7 @@
 	<Button name="Narci_Model_AnimationControlButtonTemplate" inherits="Narci_Model_PlayAnimationTemplate" virtual="true" hidden="false" registerForClicks="LeftButtonUp, RightButtonUp">
 		<Scripts>
 			<OnEnter>
-				NarciTooltip:ShowTooltip(self, 0, -10, 1);
+				NarciTooltip:ShowTooltip(self, 0, 0, 1);
 				self.Highlight:Show();
 			</OnEnter>
 			<OnLeave>
@@ -831,7 +831,7 @@
 
 		<Scripts>
 			<OnEnter>
-				NarciTooltip:ShowTooltip(self, 0, -12);
+				NarciTooltip:ShowTooltip(self);
 			</OnEnter>
 			<OnLeave>
 				NarciTooltip:FadeOut();
@@ -852,7 +852,7 @@
 		</NormalTexture>
 		<Scripts>
 			<OnEnter>
-				NarciTooltip:ShowTooltip(self, -2, -16);
+				NarciTooltip:ShowTooltip(self, -2, -4);
 			</OnEnter>
 			<OnLeave>
 				NarciTooltip:FadeOut();
@@ -916,11 +916,11 @@
 				<OnLoad function="Narci_LayerButton_OnLoad"/>
 				<OnEnter>
 					UIFrameFadeIn(self.Highlight, 0.2, self.Highlight:GetAlpha(), 1);
-					NarciTooltip:ShowTooltip(self, 0, -16);
+					NarciTooltip:ShowTooltip(self, 0, 0);
 				</OnEnter>
 				<OnLeave>
 					NarciTooltip:FadeOut();
-					if (self.IsOn) or self:IsMouseOver(-4, 4, 0, 0) then	return;	end;
+					if (self.IsOn) or self:IsMouseOver(-4, 4, 0, 0) then return; end;
 				</OnLeave>
 			</Scripts>
 	</Button>
@@ -1387,7 +1387,7 @@
 								self.PortaitAnchor:SetSize(54, 54);
 							</OnMouseUp>
 							<OnEnter>
-								NarciTooltip:ShowTooltip(self, 0, -11);
+								NarciTooltip:ShowTooltip(self);
 							</OnEnter>
 							<OnLeave>
 								NarciTooltip:FadeOut();
@@ -1474,7 +1474,7 @@
 								self.Highlight:SetSize(20, 20);
 							</OnMouseUp>
 							<OnEnter>
-								NarciTooltip:ShowTooltip(self, 0, -4);
+								NarciTooltip:ShowTooltip(self, 0, 8);
 							</OnEnter>
 							<OnLeave>
 								NarciTooltip:FadeOut();
@@ -2028,7 +2028,7 @@
 							</OnLoad>
 							<OnEnter>
 								self.Highlight:Show();
-								NarciTooltip:ShowTooltip(self, 0, -12);
+								NarciTooltip:ShowTooltip(self, 0, 0);
 							</OnEnter>
 							<OnLeave>
 								self.Highlight:Hide();
@@ -2646,7 +2646,7 @@
 									</OnLoad>
 									<OnEnter>
 										UIFrameFadeIn(self.Highlight, 0.2, self.Highlight:GetAlpha(), 1);
-										NarciTooltip:ShowTooltip(self, 0, -10, 1);
+										NarciTooltip:ShowTooltip(self, 0, 2, 1);
 									</OnEnter>
 									<OnLeave>
 										UIFrameFadeOut(self.Highlight, 0.2, self.Highlight:GetAlpha(), 0);
@@ -3033,7 +3033,7 @@
 									</OnLoad>
 									<OnEnter>
 										self.Highlight:Show();
-										NarciTooltip:ShowTooltip(self, 0, -12);
+										NarciTooltip:ShowTooltip(self);
 									</OnEnter>
 									<OnLeave>
 										NarciTooltip:FadeOut();

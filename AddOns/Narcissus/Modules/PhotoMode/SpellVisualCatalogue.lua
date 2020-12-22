@@ -864,7 +864,7 @@ local Pack0 = {
 
 
 local Pack1 = {
-    [1] = {["name"] = "Kyrian",
+    [1] = {["name"] = "Bastion",
         [1] = { ["name"] = "Minor Spells",
             {124082, "Aether", 3528288},
             {129460, "Aether L", 3528288},
@@ -903,7 +903,7 @@ local Pack1 = {
         
     },
 
-    [2] = {["name"] = "Venthyr",
+    [2] = {["name"] = "Revendreth",
         [1] = { ["name"] = "Minor Spells",
             {124026, "Anima Channel", 3528311},
             {129342, "Anima Channel R", 3528311},
@@ -950,7 +950,7 @@ local Pack1 = {
         },
     },
     
-    [3] = {["name"] = "Night Fae",
+    [3] = {["name"] = "Ardenweald",
         [1] = { ["name"] = "Minor Spells",
             {129019, "Anima Precast", 3528280},
             {129842, "Drust Precast", 2032589},
@@ -1000,7 +1000,7 @@ local Pack1 = {
         
     },
 
-    [4] = {["name"] = "Necrolords",
+    [4] = {["name"] = "Maldraxxus",
         [1] = { ["name"] = "Minor Spells",
             {129132, "Anima Precast", 3578231},
             {128945, "Necro Channel", 2576097},
@@ -1038,7 +1038,7 @@ local Pack1 = {
         [4] = { ["name"] = "Items",
             {131556, "Monster Costume", 2492254},
             {129350, "Blacksmith", 133049},
-            {129140, "Rune Blade", 3743119},
+            {129140, "Runeblade", 3743119},
             {136872, "Floating Book", 3615515},
             {132226, "Book of Shadow", 354435},
             {138522, "Vial R", 3536192},
@@ -1049,7 +1049,7 @@ local Pack1 = {
         
     },
 
-    [5] = {["name"] = "Mawsworn",
+    [5] = {["name"] = "The Maw",
         [1] = { ["name"] = "Minor Spells",
             {129564, "Precast", 3528304},
             {129565, "Precast L", 3528304},

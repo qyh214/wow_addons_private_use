@@ -211,7 +211,7 @@
 				</Anchors>		
 			</Frame>
 
-			<Frame name="$parentAzeriteTraits" parentKey="AzeriteTraits">
+			<Frame parentKey="AzeriteTraits">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
 					<Anchor pont="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT"/>
@@ -263,11 +263,6 @@
 				</Layers>
 				<Scripts>
 					<OnLoad function="Narci_CreateAzeriteTraitTooltip"/>
-					<OnLoad>
-						self.Traits = {};
-						tinsert(self.Traits, self.Trait1);
-						Narci_CreateAzeriteTraitTooltip(self);
-					</OnLoad>
 				</Scripts>
 			</Frame>
 		</Frames>

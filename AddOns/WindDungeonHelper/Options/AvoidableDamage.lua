@@ -49,30 +49,14 @@ O.avoidableDamage = {
                 W.db.avoidableDamage[info[#info]] = value
             end,
             args = {
-                compatible = {
-                    order = 1,
-                    type = "toggle",
-                    name = L["Compatible Mode"],
-                    desc = L["Be compatible with ElitismHelper"],
-                    set = function(info, value)
-                        W.db.avoidableDamage[info[#info]] = value
-                        AD:SetAddonMessagePrefix()
-                        if W.db.avoidableDamage.enable then
-                            AD:ResetAuthority()
-                            W:RefreshOptionsAfter(2)
-                        end
-                    end,
-                    width = 1.2
-                },
                 activeUser = {
-                    order = 2,
+                    order = 1,
                     type = "description",
                     name = function()
                         local text = F.CreateColorString(L["Active User"])
                         local activeUser = AD:GetActiveUser()
                         return text .. ": " .. activeUser
-                    end,
-                    width = 1.8
+                    end
                 }
             }
         },
@@ -312,7 +296,7 @@ O.avoidableDamage = {
                                 name,
                                 GetSpellLink(257274),
                                 nil,
-                                AD:GenerateNumber(12345),
+                                AD:FormatNumber(12345),
                                 87
                             )
                         return text

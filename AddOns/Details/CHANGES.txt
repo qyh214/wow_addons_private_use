@@ -1,58 +1,10 @@
-lightweight tag 3af27dc7b1f252aadb99ecc29fd8a37387ae3447 DetailsRetail.9.0.2.8002.144
+lightweight tag c8f090c9788203e2994af710404f983d7155fa54 DetailsRetail.9.0.2.8101.144
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Sat Dec 5 17:30:55 2020 -0300
+Date:	Mon Dec 21 14:33:56 2020 -0300
 
-commit 3af27dc7b1f252aadb99ecc29fd8a37387ae3447
+commit c8f090c9788203e2994af710404f983d7155fa54
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Sat Dec 5 17:30:55 2020 -0300
+Date:   Mon Dec 21 14:33:56 2020 -0300
 
-    version up
-
-commit 7ed1182376e05e34266ece303361558939776637
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Sat Dec 5 15:13:18 2020 -0300
-
-    Removed Multistrike leftovers, added extra attacks counter
-
-commit 162c088c7202bdea45bf5a04bacd384683a2cb33
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon Nov 30 12:24:16 2020 -0300
-
-    Fixed reports to Battle.net friends; Fixes on Custom displays
-
-commit 56384d66fcf4df68139e4c33fb69b84694d9c9a5
-Author: Flamanis <Flamanis@users.noreply.github.com>
-Date:   Thu Nov 26 16:37:10 2020 -0600
-
-    Remove custom icon
-    
-    Upon testing I couldn't get it to work atm. So I'm just removing it from the pull request.
-
-commit 56384d66fcf4df68139e4c33fb69b84694d9c9a5
-Author: Flamanis <Flamanis@users.noreply.github.com>
-Date:   Thu Nov 26 16:37:10 2020 -0600
-
-    Remove custom icon
-    
-    Upon testing I couldn't get it to work atm. So I'm just removing it from the pull request.
-
-commit d2bab21d7a334f5bd2cd610fe15a25f5515221fb
-Author: Flamanis <Flamanis@users.noreply.github.com>
-Date:   Thu Nov 26 14:11:21 2020 -0600
-
-    GetClassColor custom actor support + Fix
-    
-    Allow for GetClassColor to return a custom color from custom actors. And fix the final else not returning anything.
-
-commit 638cf0cc749080c16709ece4323df63d0fa718b1
-Author: Flamanis <Flamanis@users.noreply.github.com>
-Date:   Thu Nov 26 14:09:40 2020 -0600
-
-    Allow for custom actors with a color.
-
-commit e1a33dc364c0db5dab1b0876c16e6319097a7fba
-Author: Flamanis <Flamanis@users.noreply.github.com>
-Date:   Thu Nov 26 14:08:47 2020 -0600
-
-    Fix Search Error Detection, Allow custom actors
+    small bug fix
 

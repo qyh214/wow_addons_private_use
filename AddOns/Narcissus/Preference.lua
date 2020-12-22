@@ -37,7 +37,7 @@ end
 local function SetFrameScale(scale)
 	local scale = tonumber(scale) or 1;
 
-	Narci_PhotoModeController:SetScale(scale);
+	Narci_PhotoModeToolbar:SetScale(scale);
 	Narci_Character:SetScale(scale);
 	Narci_Attribute:SetScale(scale);
     NarciTooltip:SetCustomScale(scale);
@@ -85,18 +85,18 @@ local function SetItemNameTextSize(self, height)
         return;
     end
 
-    height = tonumber(height) or ItemName_DefaultHeight or 10;
+    height = tonumber(height) or 10;
     self.KeyLabel:SetText(height);
 
-    local font = slotTable[1].Name:GetFont();
+    local font, _, flag = slotTable[1].Name:GetFont();
 
     Settings.FontHeightItemName = height;
     local slot;
     for i=1, #slotTable do
         slot = slotTable[i];
 		if slot then
-            slot.Name:SetFont(font, height);
-            slot.GradientBackground:SetHeight(slot.Name:GetHeight() + slot.ItemLevel:GetHeight() + 18);
+            slot.Name:SetFont(font, height, flag);
+            slot:UpdateGradientSize();
 		end
     end
 end
@@ -164,8 +164,8 @@ local function SetItemNameTextTruncated(self, state)
 end
 
 local function ShowDetailedIlvlInfo(self, state)
-	local frame = Narci_IlvlInfoFrame;
-	local frame1, frame2 = frame.IlvlButtonLeft, frame.IlvlButtonRight;
+	local frame = Narci_ItemLevelFrame;
+	local frame1, frame2 = frame.LeftButton, frame.RightButton;
 	if state then
 		frame1.AnimFrame:Hide();
 		frame2.AnimFrame:Hide();
@@ -237,13 +237,14 @@ end
 
 local function FadeOutSwitch_SetState(self, state)
     local button = Narci_MinimapButton;
+    local alpha;
     if state then
-        button.EndAlpha = 0.2;
-        button:SetAlpha(0.2);
+        alpha = 0.25;
     else
-        button.EndAlpha = 1;
-        button:SetAlpha(1);
+        alpha = 1;
     end
+    button.endAlpha = alpha;
+    button:SetAlpha(alpha);
 end
 
 local function DoubleTapSwitch_SetState(self)
@@ -414,10 +415,10 @@ end
 
 local function SetUseEcapeButtonForExit(self, state)
     if state then
-        Narci_PhotoModeController.KeyListener.EscapeKey = "ESCAPE";
+        Narci_PhotoModeToolbar.KeyListener.EscapeKey = "ESCAPE";
         self.Description:SetText(L["Use Escape Button Description1"]);
     else
-        Narci_PhotoModeController.KeyListener.EscapeKey = "HELLOWORLD";
+        Narci_PhotoModeToolbar.KeyListener.EscapeKey = "HELLOWORLD";
         self.Description:SetText(L["Use Escape Button Description2"]);
     end
 end
@@ -471,7 +472,7 @@ local function VignetteStrengthSlider_OnValueChanged(self, value)
     value = floor( value * 10 + 0.5) / 10;
     Settings[self.dbKey] = value;
     self.KeyLabel:SetText(string.format("%.1f", value));
-    Narci_Pref_SetVignetteStrength();
+    Narci:UpdateVignetteStrength();
 end
 
 local function GrainEffectSwitch_SetState(self, state)
@@ -859,7 +860,7 @@ local function CreateSettingFrame(tabContainer)
         end
     end
 
-    --wipe(Structure)
+    wipe(Structure)
 end
 
 
@@ -1073,13 +1074,6 @@ local function RestoreClickFunc()
     button:SetFrameLevel(61);
     button:SetMovable(true);
     button:EnableMouse(true);
-end
-
-
-
-function Narci_FadeOutSwitch_OnClick(self)
-	Settings.FadeButton = not Settings.FadeButton;
-	FadeOutSwitch_SetState(self);
 end
 
 
@@ -1445,6 +1439,8 @@ local function BuildTabButtonList(self, buttonTemplate, buttonNameTable, initial
 
     self.buttons = buttons;
     buttons[1]:Click();
+
+    wipe(buttonNameTable);  --Reclaim space
 end
 
 local function LanguageOption_OnClick(self)
@@ -1620,8 +1616,8 @@ end
 -----------------
 local function SetCreditList()
     local ACIVE_COLOR = "|cffd9ccb4";
-    local ACTIVE_PATRONS = {"Elexys", "Ben Ashley", "Andrew Phoenix", "Solanya", "Erik Shafer", "Nantangitan", "Blastflight", "Pierre-Yves Bertolus", "Adrien Le Texier", "Lars Norberg",  "Ernaldo Kalaja", "Alex Boehm"};
-    local FORMER_PATRONS = {"Adam Stribley", "Valnoressa", "Ellypse", "Stephen Berry", "Mccr Karl", "Christian Williamson", "Tzutzu", "Psyloken", "Victor Torres", }
+    local ACTIVE_PATRONS = {"Elexys", "Ben Ashley", "Andrew Phoenix", "Solanya", "Erik Shafer", "Nantangitan", "Blastflight", "Pierre-Yves Bertolus", "Adrien Le Texier", "Lars Norberg",  "Ernaldo Kalaja", "Alex Boehm", "acein", "David Brooks", "Jesse Blick", "Webb", "heiteo",};
+    local FORMER_PATRONS = {"Adam Stribley", "Valnoressa", "Ellypse", "Stephen Berry", "Mccr Karl", "Christian Williamson", "Tzutzu", "Psyloken", "Victor Torres", "Nina Recchia", };
     local RawList = {};
     for i = 1, #ACTIVE_PATRONS do
         tinsert(RawList, ACIVE_COLOR.. ACTIVE_PATRONS[i] .."|r");

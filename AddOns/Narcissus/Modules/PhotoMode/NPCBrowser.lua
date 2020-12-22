@@ -353,7 +353,7 @@ Weapons
 --]]
 
 local NPCInfo = {
-    --[ID] = { {name, title}, colors, voice, {weapons} }
+    --[ID] = { customTitle, color, voice, {weapons} }
     [4968]   = {"", "b", 7216, {2177} },          --Lady Jaina Proudmoore <Ruler of Theramore>
     [64727]  = {"", "b", 34500, {2177} },         --Jaina Kirin Tor
     [120922] = {"Lord Admiral", "bp", 115285, {153575} },        --Jaina 8.0

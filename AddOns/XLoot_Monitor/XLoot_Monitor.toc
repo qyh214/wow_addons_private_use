@@ -1,7 +1,7 @@
 ## Interface: 90001
 ## Title: XLoot Monitor
 ## Notes: A graphical presentation of items looted by yourself and your group
-## Version: 9.0-2
+## Version: 9.0-6
 ## Author: Xuerian
 ## X-Category: Inventory
 

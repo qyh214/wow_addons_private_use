@@ -122,7 +122,9 @@ function DataProvider:GetKnownConduitItemLevel(itemID)
             local rank = data.conduitRank;
             local itemLevel = C_Soulbinds.GetConduitItemLevel(conduitID, rank);
             local description = self:GetConduitDescription(conduitID, rank);
-            return itemLevel, description;
+            return true, itemLevel, description;
+        else
+            return true
         end
     end
 end
@@ -655,22 +657,28 @@ end
 
 ----------------------------------------------
 --Conduit Tooltip
---[[
+
 local function AddComparisionByHyperlink(frame, link)
     if not link then return end;
     
     local itemID = strmatch(link, "item:(%d+):");
-    local knownLevel, description = DataProvider:GetKnownConduitItemLevel(itemID);
-    if knownLevel then
+    local isConduit, knownLevel, description = DataProvider:GetKnownConduitItemLevel(itemID);
+    if isConduit then
         frame:AddLine(" ");
-        frame:AddDoubleLine("Known", knownLevel, 1, 1, 1, 1, 1, 1);
-        if description then
-            frame:AddLine(description, nil, nil, nil, true);
+        if knownLevel then
+            frame:AddDoubleLine("Known", knownLevel, 1, 1, 1, 1, 1, 1);
+            if description then
+                frame:AddLine(description, nil, nil, nil, true);
+            end
+        else
+            frame:AddLine("Unlearned", nil, nil, nil, true);
+            print("New")
         end
         frame:Show();
     end
 end
 
+--[[
 hooksecurefunc(GameTooltip, "SetBagItem", function(frame, bag, slot)
     local _, link = frame:GetItem();
     AddComparisionByHyperlink(frame, link);
@@ -680,6 +688,12 @@ hooksecurefunc(GameTooltip, "SetHyperlink", function(frame, link)
     print(link)
     AddComparisionByHyperlink(frame, link);
 end)
+--]]
+
+GameTooltip:HookScript("OnTooltipSetItem", function(frame)
+    local _, link = frame:GetItem();
+    AddComparisionByHyperlink(frame, link);
+end);
 
 GameTooltip.ItemTooltip.Tooltip:HookScript("OnTooltipSetItem", function(frame)
     local _, link = frame:GetItem();

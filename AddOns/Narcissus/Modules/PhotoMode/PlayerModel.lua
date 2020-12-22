@@ -11,7 +11,7 @@ local tooltip = NarciTooltip;
 local FadeFrame = NarciAPI_FadeFrame;
 local UIFrameFadeIn = UIFrameFadeIn;
 local After = C_Timer.After;
-local LanguageDetector = Narci_LanguageDetector;
+local LanguageDetector = NarciAPI.LanguageDetector;
 local NarciSpellVisualBrowser = NarciSpellVisualBrowser;
 local Screenshot = Screenshot;	--This is an API: screen capture
 local updateThreshold = 2;
@@ -938,7 +938,7 @@ function Narci_Xmog_UseCompactMode(state)
 	local frame = PrimaryPlayerModel;
 	if state then
 		FadeFrame(frame.GuideFrame, 0.5, "IN");
-		ModelVignetteRightSmall:Show();
+		Narci_PlayerModelGuideFrame.VignetteRightSmall:Show();
 		UIFrameFadeOut(NarciModel_RightGradient, 0.5, NarciModel_RightGradient:GetAlpha(), 0)
 	else
 		FadeFrame(frame.GuideFrame, 0.5, "OUT");
@@ -1568,7 +1568,7 @@ function Narci_Model_VignetteSlider_OnValueChanged(self, value, isUserInput)
 		Narci_VignetteLeft:SetAlpha(value);
 		VignetteRightLarge:SetAlpha(value);
 		VignetteRightSmall:SetAlpha(value);
-		ModelVignetteRightSmall:SetAlpha(value);
+		Narci_PlayerModelGuideFrame.VignetteRightSmall:SetAlpha(value);
     end
 end
 
@@ -1844,7 +1844,7 @@ end
 function Narci_Model_CaptureButton_OnEnter(self)
 	if LayersToBeCaptured == -1 then
 		Narci_Model_CaptureButton.Value:SetText(NUM_CAPTURE);
-		tooltip:ShowTooltip(self, 0, -12);
+		tooltip:ShowTooltip(self);
 	end
 end
 
@@ -2035,7 +2035,7 @@ end
 
 function NarciAnimationVariationSphereMixin:OnEnter()
 	self.Icon:SetSize(14, 14);
-	NarciTooltip:ShowTooltip(self, 0, -10, 1);
+	NarciTooltip:ShowTooltip(self, 0, nil, 1);
 end
 
 function NarciAnimationVariationSphereMixin:OnLeave()
@@ -3860,7 +3860,7 @@ function Narci_ModelSettings_OnEnter(self)
 	if IsMouseButtonDown() then return end;
 	
 	HideGroundShadowControl();
-	Narci_PhotoModeController:SetAlpha(0);
+	Narci_PhotoModeToolbar:SetAlpha(0);
 	if not self.isFading then
 		UIFrameFadeIn(self, 0.2, self:GetAlpha(), 1);
 	end
@@ -4254,12 +4254,12 @@ ScreenshotListener:RegisterEvent("SCREENSHOT_SUCCEEDED")
 ScreenshotListener:RegisterEvent("PLAYER_ENTERING_WORLD");
 ScreenshotListener:SetScript("OnEvent",function(self,event,...)
 	if event == "SCREENSHOT_STARTED" then
-		Temps.Alpha1 = Narci_PhotoModeController:GetAlpha();
+		Temps.Alpha1 = Narci_PhotoModeToolbar:GetAlpha();
 		Temps.Alpha2 = SettingFrame:GetAlpha();
-		Narci_PhotoModeController:SetAlpha(0);
+		Narci_PhotoModeToolbar:SetAlpha(0);
 		SettingFrame:SetAlpha(0);
 	elseif event == "SCREENSHOT_SUCCEEDED" then
-		Narci_PhotoModeController:SetAlpha(Temps.Alpha1);
+		Narci_PhotoModeToolbar:SetAlpha(Temps.Alpha1);
 		SettingFrame:SetAlpha(Temps.Alpha2);
 		if LayersToBeCaptured >= 0  then
 			After(1.5, function()

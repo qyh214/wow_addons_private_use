@@ -2,10 +2,25 @@ local L = Narci.L;
 
 Narci_GemInfo = {
     --[ItemID] = {"Attribute", Amount},
+
+    ----9 SL----
+    [173127] = {"crit", 16},        --Deadly Jewel Cluster
+    [173128] = {"haste", 16},       --Quick Jewel Cluster
+    [173129] = {"versatility", 16}, --Versatile Jewel Cluster
+    [173130] = {"mastery", 16},     --Masterful Jewel Cluster
+
+    [173121] = {"crit", 12},        --Deadly Jewel Doublet
+    [173122] = {"haste", 12},       --Quick Jewel Doublet
+    [173123] = {"versatility", 12}, --Versatile Jewel Doublet
+    [173124] = {"mastery", 12},     --Masterful Jewel Doublet
+
+    [173125] = {"HP", 0},           --**Revitalizing Jewel Doublet
+    [173126] = {"MSPD", 0},         --**Straddling Jewel Doublet
+
     ----8 BFA----
-    [168636] = {"STR", 18},        --Leviathan's Eye of Strength
-    [168637] = {"AGI", 18},        --Leviathan's Eye of Agility
-    [168638] = {"INT", 18},        --Leviathan's Eye of Intellect
+    [168636] = {"STR", 7},        --Leviathan's Eye of Strength
+    [168637] = {"AGI", 7},        --Leviathan's Eye of Agility
+    [168638] = {"INT", 7},        --Leviathan's Eye of Intellect
 
     [168639] = {"crit", 7},        --Deadly Lava Lazuli
     [168640] = {"mastery", 7},     --Masterful Sea Currant
@@ -18,9 +33,9 @@ Narci_GemInfo = {
     [154128] = {"versatility", 6}, --Versatile Royal Quartz
     [154129] = {"mastery", 6},     --Masterful Tidal Amethyst
 
-    [153707] = {"STR", 12},         --Kraken's Eye of Strength
-    [153708] = {"AGI", 12},         --Kraken's Eye of Agility
-    [153709] = {"INT", 12},         --Kraken's Eye of Intellect
+    [153707] = {"STR", 6},         --Kraken's Eye of Strength
+    [153708] = {"AGI", 6},         --Kraken's Eye of Agility
+    [153709] = {"INT", 6},         --Kraken's Eye of Intellect
 
     [153710] = {"crit", 4},        --Deadly Solstone
     [153711] = {"haste", 4},       --Quick Golden Beryl
@@ -48,6 +63,37 @@ Narci_GemInfo = {
 
 Narci_EnchantInfo = {
     --[EnchantID] = {"Attribute", Amount, SpellID},  --need to be parsed from itemstring
+
+    ----9 SL----
+    ----Ring----
+    [6163] = {"crit", 12, 309612},          --Bargain of Critical Strike
+    [6165] = {"haste", 12, 309613},         --Bargain of Haste
+    [6167] = {"mastery", 12, 309614},       --Bargain of Mastery
+    [6169] = {"versatility", 12, 309615},   --Bargain of Versatility
+
+    [6164] = {"crit", 16, 309616},          --Tenet of Critical Strike
+    [6166] = {"haste", 16, 309617},         --Tenet of Haste
+    [6168] = {"mastery", 16, 309618},       --Tenet of Mastery
+    [6170] = {"versatility", 16, 309619},   --Tenet of Versatility
+
+    --Weapon
+    [6195] = {"haste", 0, 321535},          --Infra-green Reflex Sight
+    [6196] = {"crit", 0, 321536},           --Optical Target Embiggener
+    [6229] = {"STR", 0, 309627},            --Celestial Guidance    sometimes increase your <Primary Stat> by 5%
+    [6223] = {"AGI", 0, 309620},            --Lightless Force       send out a wave of Shadow energy in front of you
+    [6226] = {"INT", 0, 309621},            --Eternal Grace         healing on the target of your helpful spells and abilities
+    [6227] = {"STR", 0, 309622},            --Ascended Vigor        increase your healing received by 12% for 10 sec when taking damage
+    [6228] = {"AGI", 0, 309623},            --Sinful Revelation     reveal the sins of your target, causing them to suffer an additional 6% damage from you
+
+    --Chest
+    [6216] = {"AGI", 20, 323762},           --Sacred Stats      All Stats +20
+    [6230] = {"AGI", 30, 324773},           --Eternal Stats     All Stats +30
+    [6214] = {"AGI", 20, 323760},           --Eternal Skirmish  increase your Strength or Agility by 20 and give your auto-attacks and auto-shots a chance to deal additional shadow damage
+    [6213] = {"AGI", 20, 309535},           --Eternal Bulwark   +25 Armor & +20 Primary Stat
+    [6217] = {"INT", 20, 323761},           --Eternal Bounds    +20 Intellect & +6% Mana
+    [6265] = {"INT", 20, 342316},           --Eternal Insight   increase your Intellect by 20 and give your spells and abilities a chance to deal additional shadow damage
+
+
     ----8 BFA----
     ----Ring----
     [5938] = {"crit", 4, 255094},          --Seal of Critical Strike
@@ -119,6 +165,8 @@ Narci_EnchantInfo = {
 	local corruptionResistance = GetCorruptionResistance();
 	local totalCorruption = math.max(corruption - corruptionResistance, 0); 
 --]]
+
+--[[
 local Corruption_SpellIDs = {
     --[SpellID] = {Given Name, Rank, Itemlink ModID, TypeID}    TypeID: 1 ~ Percentage  2 ~ Constant
     --Passive
@@ -344,7 +392,7 @@ Initialize:SetScript("OnEvent", function(self, event, ...)
     end);
 end)
 
-
+--]]
 
 --[[
     -- Dev Tool --

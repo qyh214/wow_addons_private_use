@@ -22,7 +22,6 @@ AFK:SetScript("OnEvent",function(self,event,...)
                 end
             end)
             C_Timer.After(0.6, function()
-                Narci_PhotoModeController:SetAlpha(0);
                 if IsResting() then
                     DoEmote("Read", "none");
                 end
@@ -31,11 +30,50 @@ AFK:SetScript("OnEvent",function(self,event,...)
     end
 end)
 
---Override other AFK screens--
---Unused
 --[[
-local function NullifyEvent(frame)
-    if not frame then   return; end
-    frame:SetScript("OnEvent", function()   return; end);
+local Chat = CreateFrame("Frame");
+Chat.t = 0.08;
+
+local events = {"CHAT_MSG_SAY", "CHAT_MSG_YELL", "CHAT_MSG_MONSTER_SAY", "CHAT_MSG_MONSTER_YELL", };
+for i = 1, #events do
+    Chat:RegisterEvent(events[i]);
 end
+wipe(events)
+
+local GetAllChatBubbles = C_ChatBubbles.GetAllChatBubbles
+
+local pieceNames = {
+    "TopLeftCorner", "TopRightCorner", "BottomLeftCorner", "BottomRightCorner", "TopEdge", "BottomEdge", "LeftEdge", "RightEdge", "Center";
+}
+
+local function SkinBubble(frame)
+    BB = frame;
+    frame.Tail:Hide();
+    local piece;
+    for _, pieceName in pairs(pieceNames) do
+        piece = frame[pieceName];
+        if piece then
+            piece:Hide();
+        end
+    end
+end
+
+local function Skin_OnUpdate(self, elapsed)
+    self.t = self.t + elapsed;
+    if self.t >= 0.1 then
+        self.t = 0
+        for _, frame in pairs(GetAllChatBubbles()) do
+            local bubble = frame:GetChildren()
+            if bubble and not frame.narciReskin then
+                frame.narciReskin = true;
+                SkinBubble(bubble);
+            end
+        end
+    end
+end
+
+Chat:SetScript("OnEvent", function(self, event, ...)
+    print(event)
+    self:SetScript("OnUpdate", Skin_OnUpdate);
+end)
 --]]

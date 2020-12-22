@@ -194,6 +194,9 @@
 	end
 	
 	function _detalhes.network.Cloud_Request (player, realm, core_version, ...)
+		--deprecated | need to remove
+		if (true) then return end
+		
 		if (_detalhes.debug) then
 			_detalhes:Msg ("(debug)", player, _detalhes.host_of, _detalhes:CaptureIsAllEnabled(), core_version == _detalhes.realversion)
 		end
@@ -212,6 +215,9 @@
 	end
 	
 	function _detalhes.network.Cloud_Found (player, realm, core_version, ...)
+		--deprecated | need to remove
+		if (true) then return end
+
 		if (_detalhes.host_by) then
 			return
 		end
@@ -230,6 +236,9 @@
 	end
 	
 	function _detalhes.network.Cloud_DataRequest (player, realm, core_version, ...)
+		--deprecated | need to remove
+		if (true) then return end
+
 		if (not _detalhes.host_of) then
 			return
 		end
@@ -271,6 +280,9 @@
 	end
 	
 	function _detalhes.network.Cloud_DataReceived	(player, realm, core_version, ...)
+		--deprecated | need to remove
+		if (true) then return end
+
 		local atributo, atributo_name, data = player, realm, core_version
 		
 		local container = _detalhes.tabela_vigente [atributo]
@@ -338,6 +350,9 @@
 	end
 	
 	function _detalhes.network.Cloud_Equalize (player, realm, core_version, data)
+		--deprecated | need to remove
+		if (true) then return end
+
 		if (not _detalhes.in_combat) then
 			if (core_version ~= _detalhes.realversion) then
 				return
@@ -390,21 +405,8 @@
 			return
 		end
 
-		if (core_version ~= _detalhes.realversion) then
-			if (core_version > _detalhes.realversion) then
-				Details:Msg ("your Details! is out dated and cannot use Coach feature.")
-			end
-			return false
-		end
-
-		if (msgType == "CIEA") then --Coach Is Enabled Ask (regular player asked to raid leader)
-			--check if the player that received the msg is the raid leader
-			if (UnitIsGroupLeader("player")) then
-				return
-			end
-
-			--send the answer
-			Details:SendCommMessage(DETAILS_PREFIX_NETWORK, Details:Serialize(DETAILS_PREFIX_COACH, playerName, GetRealmName(), Details.realversion, "CIER", Details.Coach.Server.IsEnabled()), "WHISPER", sourcePlayer)
+		if (msgType == "CIEA") then --Is Coach Enabled Ask (regular player asked to raid leader)
+			Details.Coach.Server.CoachIsEnabled_Answer(sourcePlayer)
 
 		elseif (msgType == "CIER") then --Coach Is Enabled Response (regular player received a raid leader response)
 			local isEnabled = data
@@ -426,11 +428,14 @@
 			Details.Coach.Client.CoachEnd()
 
 		elseif (msgType == "CDT") then --Coach Data (a player in the raid sent to raid leader combat data)
-			if (UnitIsGroupLeader("player")) then
-				if (Details.Coach.Server.IsEnabled()) then
-					--update the current combat with new information
-					Details.packFunctions.DeployUnpackedCombatData(data)
-				end
+			if (Details.Coach.Server.IsEnabled()) then
+				--update the current combat with new information
+				Details.packFunctions.DeployPackedCombatData(data)
+			end
+
+		elseif (msgType == "CDD") then --Coach Death (a player in the raid sent to raid leader his death log)
+			if (Details.Coach.Server.IsEnabled()) then
+				Details.Coach.Server.AddPlayerDeath(sourcePlayer, data)
 			end
 		end
 	end

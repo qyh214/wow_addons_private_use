@@ -389,6 +389,8 @@ local function CreateSettings(frame)
         sector:SetHeight(-startOffset);
     end
     frame:SetHeight(4 -startOffset);
+
+    wipe(WidgetStructure);
 end
 
 local function LoadSettings(self)

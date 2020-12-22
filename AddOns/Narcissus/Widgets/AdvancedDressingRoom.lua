@@ -15,7 +15,8 @@ local ButtonOffsetY = 20;                           --Equipment slots
 local EmptySlotAlpha = 0.4;                         --Equipment slots
 ----------------------------------------------------------------------------------------
 local L = Narci.L;
-local PI = PI;
+local PI = math.pi;
+local After = C_Timer.After;
 local C_TransmogCollection = C_TransmogCollection;
 local GetTransmogItemInfo = C_TransmogCollection.GetItemInfo;
 local GetTransmogSourceInfo = C_TransmogCollection.GetSourceInfo;
@@ -25,7 +26,7 @@ local PlayerHasTransmog = C_TransmogCollection.PlayerHasTransmog;
 local IsNewAppearance = C_TransmogCollection.IsNewAppearance;
 local GetIllusionSourceInfo = C_TransmogCollection.GetIllusionSourceInfo;
 local IsFavorite = C_TransmogCollection.GetIsAppearanceFavorite;
-local IsAppearanceKnown = NarciAPI_IsAppearanceKnown;
+local IsAppearanceKnown = NarciAPI.IsAppearanceKnown;
 local FadeFrame = NarciAPI_FadeFrame;
 local SlotIDtoName = Narci.SlotIDtoName;
 
@@ -36,7 +37,6 @@ local OverrideWidth = math.floor(WidthHeitghtRatio * OverrideHeight + 0.5);
 
 local SlotFrameVisibility = true;            --If DressUp addon is loaded, hide our slot frame
 local UseTargetModel = true;                 --Replace your model with target's
-local isBarbershopOpen = false;
 
 local XmogSlotTable = {
 	[1] = {{5, INVTYPE_CHEST}, {15, INVTYPE_CLOAK}, {3, INVTYPE_SHOULDER}, {1, INVTYPE_HEAD}},		                    --Left 	**slotID for TABARD is 19
@@ -127,7 +127,8 @@ local function CreateSlotButton(frame)
     end
 
     frame.buttons = buttons;
-    --]]
+    
+    wipe(XmogSlotTable);
 end
 
 --------------------------------------------------
@@ -506,15 +507,6 @@ local function CopyTexts()
     NarciDressingRoom_GearTexts:SetText(strtrim(texts));
 end
 
-local function NarciBridge_DressUpFrame_OnModelLoaded(self)
-    if self:GetDisplayInfo() ~= 0 then      --If the current model in Dressing Room is not players', hide slot frame.
-        NarciBridge_DressUpFrame.SlotFrame:Hide();
-    else
-        NarciBridge_DressUpFrame_OnSizeChanged(NarciBridge_DressUpFrame);
-        ResetHiddenSlot()
-    end
-    print("loaded")
-end
 
 local function IsDressUpFrameMaximized()
     return (DressUpFrame.MaximizeMinimizeFrame and not DressUpFrame.MaximizeMinimizeFrame:IsMinimized())
@@ -523,8 +515,6 @@ end
 local PanningYOffsetForCurrentActor
 
 local function UpdateCameraPanningOffset()
-    if not isBarbershopOpen then return end
-
     local ModelScene = DressUpFrame.ModelScene;
     local offsets = ModelScene.panningYOffset
     local panningYOffset;
@@ -591,7 +581,7 @@ local function UpdateDressingRoomModel(unit)
     if updateScale then
         local modelInfo;
         modelInfo = GetActorInfoByUnit(modelUnit);
-        C_Timer.After(0.0,function()
+        After(0.0,function()
             ModelScene:InitializeActor(actor, modelInfo);   --Re-scale
         end);
     end
@@ -630,108 +620,6 @@ local function RefreshFavoriteState(appearanceID)
     end
 end
 
-local function NarciBridge_DressUpFrame_OnEvent(self, event, ...)
-    if event == "PLAYER_TARGET_CHANGED" then
-        if not isBarbershopOpen then
-            UpdateDressingRoomModel("target");
-        end
-    elseif event == "TRANSMOG_COLLECTION_UPDATED" then
-        local collectionIndex, modID, itemAppearanceID, reason = ...
-        if reason == "favorite" and itemAppearanceID then
-            RefreshFavoriteState(itemAppearanceID);
-        end
-    elseif event == "BARBER_SHOP_CLOSE" then
-        isBarbershopOpen = false;
-    elseif event == "INSPECT_READY" then
-        self:UnregisterEvent("INSPECT_READY")
-        C_Timer.After(0,function()
-            self.mainHandEnchant, self.offHandEnchant = DressUpSources(C_TransmogCollection.GetInspectSources());
-            GetDressingSource(self.mainHandEnchant, self.offHandEnchant);
-            if NarciDressingRoom_GearTexts:IsShown() then
-                CopyTexts();
-            end
-            ClearInspectPlayer();
-        end);
-    end
-end
-
-local function NarciBridge_DressUpFrame_OnSizeChanged(self, width, height)
-    --print(width.." x "..height);
-    if SlotFrameVisibility then
-        if IsDressUpFrameMaximized() then
-            self.SlotFrame:Show();
-        else
-            self.SlotFrame:Hide();
-        end
-
-        UpdateCameraPanningOffset();
-    else
-        self.SlotFrame:Hide();
-    end
-end
-
-local function NarciBridge_DressUpFrame_OnShow(self)
-    if self.mode ~= "visual" then return end;
-    
-    SetDressUpBackground("player", true);
-    self:RegisterEvent("PLAYER_TARGET_CHANGED");
-    self:RegisterEvent("TRANSMOG_COLLECTION_UPDATED");
-    self:RegisterEvent("BARBER_SHOP_CLOSE");
-    C_Timer.After(0, function()
-        GetDressingSource();
-    end)
-
-    if BarberShopFrame and BarberShopFrame:IsShown() then
-        isBarbershopOpen = true;
-        C_Timer.After(0, UpdateCameraPanningOffset);
-
-        if not self.isBarbershopHooked then
-            self.isBarbershopHooked = true;
-            if BarberShop_UpdateCost then
-                hooksecurefunc("BarberShop_UpdateCost", function()
-                    if isBarbershopOpen then
-                        C_Timer.After(0.1, function()
-                            UpdateDressingRoomModel("player");
-                        end)
-                    end
-                end)
-            end
-        end
-    end
-
-    --[[
-    C_Timer.After(0.1, function()
-        local playerActor = DressUpFrame.ModelScene:GetPlayerActor();
-        if not playerActor then return end;
-
-        playerActor:SetAnimationBlendOperation(2);  --LE_MODEL_OPERATION_ANIM
-        SetAnimationIDByUnit();
-        
-        if not playerActor.isActorHooked then
-            playerActor.isActorHooked = true;
-            playerActor.animationID = -1;
-            hooksecurefunc(playerActor, "SetSheathed", function(actor, state)
-                print(state)
-
-                local id = 0;
-                if state then
-                    if actor.animationID ~= 0 then
-                        id = 0;
-                        actor:SetAnimation(id, 0, 1, 0);
-                    end
-                else
-                    if actor.animationID ~= actor.unsheathedAnimationID then
-                        id = actor.unsheathedAnimationID;
-                        actor:SetAnimation(id, 0, 1, 0);
-                    end
-                end
-                actor.animationID = id;
-            end)
-        end
-    end)
-    --]]
-end
-
 local function ResetHiddenSlot()
     --print("Load model...")
     for i = 1, 19 do
@@ -744,13 +632,6 @@ end
 
 function NarciBridge_UpdateCharacterButton_OnClick(self)
     UpdateDressingRoomModel()
-end
-
-local function NarciBridge_DressUpFrame_OnHide(self)
-    self:UnregisterEvent("PLAYER_TARGET_CHANGED");
-    self:UnregisterEvent("TRANSMOG_COLLECTION_UPDATED");
-    self:UnregisterEvent("INSPECT_READY");
-    self.isActorHooked = false;
 end
 
 local function NarciBridge_MogIt_SaveButton_OnClick(self)
@@ -839,7 +720,7 @@ local function LinkEditBox_OnKeyDown(self, key)
     local keys = CreateKeyChordString(key);
     if keys == "CTRL-C" or key == "COMMAND-C" then
         self.hasCopied = true;
-        C_Timer.After(0.1, function()
+        After(0.1, function()
             --Texts won't be copied if hide immediately
             self:Hide();
         end);
@@ -848,11 +729,13 @@ end
 
 function Narci_UpdateDressingRoom()
     local frame = NarciBridge_DressUpFrame;
+    if not frame then return end;
+    
     frame.mode = "visual";
 
     if not frame.pauseUpdate then
         frame.pauseUpdate = true;
-        C_Timer.After(0, function()
+        After(0, function()
             if SlotFrameVisibility and IsDressUpFrameMaximized() then
                 frame.SlotFrame:Show();
                 frame.OptionFrame:Show();
@@ -877,16 +760,12 @@ local function NarciBridge_DressUpFrame_Initialize()
         return;
     end
 
-    local frame = CreateFrame("Frame", "NarciBridge_DressUpFrame", parentFrame, "NarciBridge_DressUpFrame_Template")
+    local frame = CreateFrame("Frame", "NarciBridge_DressUpFrame", parentFrame, "Narci_DressingRoomOverlay")
     CreateSlotButton(frame)
     NarciBridge_DressUpFrame_OnLoad(frame);
-    frame:SetScript("OnShow", NarciBridge_DressUpFrame_OnShow);
-    frame:SetScript("OnHide", NarciBridge_DressUpFrame_OnHide);
-    frame:SetScript("OnEvent", NarciBridge_DressUpFrame_OnEvent);
-    frame:SetScript("OnSizeChanged", NarciBridge_DressUpFrame_OnSizeChanged);
 
     local texName = parentFrame:GetName() and parentFrame:GetName().."BackgroundOverlay"
-    local tex = parentFrame:CreateTexture(texName, "BACKGROUND", "ModelBackground_Template", 2)
+    local tex = parentFrame:CreateTexture(texName, "BACKGROUND", "NarciDressingRoomBackgroundTemplate", 2)
 
     local ReScaleFrame = parentFrame.MaximizeMinimizeFrame;
     
@@ -1036,12 +915,12 @@ initialize:SetScript("OnEvent",function(self,event,...)
             NarciBridge_ItemListButton:SetPoint("BOTTOMLEFT", 4, 0);
         end
 
-        if IsAddOnLoaded("DressUp") then                                --DressUp: Hide our dressing room slot frame
+        if IsAddOnLoaded("DressUp") or IsAddOnLoaded("BetterWardrobe") then                                --DressUp: Hide our dressing room slot frame
             NarciBridge_DressUpFrame.SlotFrame:Hide();
             SlotFrameVisibility = false;
         end
     elseif event == "UI_SCALE_CHANGED" then
-        C_Timer.After(0.5, function()
+        After(0.5, function()
             OverrideHeight = math.floor(GetScreenHeight()*0.8 + 0.5);
             OverrideWidth = math.floor(WidthHeitghtRatio * OverrideHeight + 0.5);
             if IsDressUpFrameMaximized() then
@@ -1134,7 +1013,7 @@ end
 function NarciDressingRoomItemButtonMixin:OnDragStart()
     isMouseDown = true;
     hideAll = self.isHidden;
-    C_Timer.After(0.2, function()
+    After(0.2, function()
         if numDragThrough >= 5 and sharedActor then
             local buttons = NarciBridge_DressUpFrame.buttons;
             local button;
@@ -1149,7 +1028,7 @@ function NarciDressingRoomItemButtonMixin:OnDragStart()
                 end
                 self.isHidden = hideAll;
             end
-            C_Timer.After(0, function()
+            After(0, function()
                 GetDressingSource();
                 if NarciDressingRoom_GearTexts:IsShown() then
                     CopyTexts();
@@ -1164,6 +1043,65 @@ function NarciDressingRoomItemButtonMixin:OnDragStop()
     isMouseDown = false;
 end
 
+
+
+NarciDressingRoomOverlayMixin = {};
+
+function NarciDressingRoomOverlayMixin:OnShow()
+    if self.mode ~= "visual" then return end;
+
+    SetDressUpBackground("player", true);
+    self:RegisterEvent("PLAYER_TARGET_CHANGED");
+    self:RegisterEvent("TRANSMOG_COLLECTION_UPDATED");
+    self:RegisterEvent("BARBER_SHOP_CLOSE");
+    After(0, function()
+        GetDressingSource();
+    end)
+end
+
+function NarciDressingRoomOverlayMixin:OnHide()
+    self:UnregisterEvent("PLAYER_TARGET_CHANGED");
+    self:UnregisterEvent("TRANSMOG_COLLECTION_UPDATED");
+    self:UnregisterEvent("INSPECT_READY");
+    self.isActorHooked = false;
+end
+
+function NarciDressingRoomOverlayMixin:OnEvent(event, ...)
+    if event == "PLAYER_TARGET_CHANGED" then
+        UpdateDressingRoomModel("target");
+    elseif event == "TRANSMOG_COLLECTION_UPDATED" then
+        local collectionIndex, modID, itemAppearanceID, reason = ...
+        if reason == "favorite" and itemAppearanceID then
+            RefreshFavoriteState(itemAppearanceID);
+        end
+    elseif event == "INSPECT_READY" then
+        self:UnregisterEvent("INSPECT_READY")
+        After(0,function()
+            self.mainHandEnchant, self.offHandEnchant = DressUpSources(C_TransmogCollection.GetInspectSources());
+            GetDressingSource(self.mainHandEnchant, self.offHandEnchant);
+            if NarciDressingRoom_GearTexts:IsShown() then
+                CopyTexts();
+            end
+            ClearInspectPlayer();
+        end);
+    end
+end
+
+
+function NarciDressingRoomOverlayMixin:OnSizeChanged(width, height)
+    --print(width.." x "..height);
+    if SlotFrameVisibility then
+        if IsDressUpFrameMaximized() then
+            self.SlotFrame:Show();
+        else
+            self.SlotFrame:Hide();
+        end
+
+        UpdateCameraPanningOffset();
+    else
+        self.SlotFrame:Hide();
+    end
+end
 
 --[[
 hooksecurefunc("PanelTemplates_TabResize", function(tab, padding, absoluteSize, minWidth, maxWidth, absoluteTextSize)
@@ -1382,7 +1320,7 @@ end)
 function ModelSceneActorMixin:OnModelLoaded()
     self:MarkScaleDirty();
     self:SetAlpha(0);
-    C_Timer.After(0, function()
+    After(0, function()
         if self:IsShown() then
             print("Loaded")
             UIFrameFadeIn(self, 0.2, 0, 1)
@@ -1490,7 +1428,7 @@ hooksecurefunc(C_TransmogCollection, "SaveOutfit", function(name, sourceIDTable,
     CustomSet.name = name;
     customSources = sourceIDTable;
     if WardrobeCollectionFrame then
-        C_Timer.After(0, function()
+        After(0, function()
             local SetsCollectionFrame = WardrobeCollectionFrame.SetsCollectionFrame;
             SetsCollectionFrame:Hide();
             SetsCollectionFrame:Show();
@@ -1502,7 +1440,7 @@ hooksecurefunc("DressUpSources", function(appearanceSources, mainHandEnchant, of
     if not appearanceSources then
         return
     else
-        C_Timer.After(0.1, function()
+        After(0.1, function()
             GetDressingSource(mainHandEnchant, offHandEnchant);
         end)
     end

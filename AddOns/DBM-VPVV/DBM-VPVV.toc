@@ -6,7 +6,7 @@
 ## DefaultState: enabled
 ## RequiredDeps: DBM-Core
 ## Author: VV
-## Version: 9.0.2
+## Version: 9.0.3
 ## X-DBM-Voice: 1
 ## X-DBM-Voice-Name: VV(普通话女)
 ## X-DBM-Voice-ShortName: VV

@@ -5,13 +5,13 @@
 
     <Script file="NarciTooltipScripts.lua"/>
 
-	<Frame name="NarciTooltipTemplate" inherits="NarciFrameWithShadowTemplate" frameStrata="TOOLTIP" frameLevel="24" clampedToScreen="true" hidden="true" enableMouseMotion="false" ignoreParentScale="true" clipChildren="false" mixin="NarciTooltipMixin" Alpha="0" virtual="true">
+	<Frame name="NarciTooltipTemplate" frameStrata="TOOLTIP" frameLevel="24" clampedToScreen="true" hidden="true" enableMouseMotion="false" ignoreParentScale="true" clipChildren="false" mixin="NarciTooltipMixin" Alpha="0" virtual="true">
 		<Layers>
 			<Layer level="ART">
 				<Texture setAllPoints="true" parentKey="Gradient">
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent.inset" relativePoint="TOPLEFT"/>
-						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.inset" relativePoint="BOTTOMRIGHT"/>
+						<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT"/>
 					</Anchors>
 					<Color r="1" g="1" b="1" a="1"/>
 					<Gradient orientation="VERTICAL">
@@ -23,14 +23,14 @@
 			<Layer level="ART">
 				<Texture setAllPoints="true" parentKey="Icon" desaturated="true" Alpha="0.1" hidden="false" Scale="1.5">
 					<Anchors>
-						<Anchor point="RIGHT" relativeKey="$parent.inset" relativePoint="RIGHT" x="20"/>
+						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="20"/>
 					</Anchors>
 				</Texture>
 				<MaskTexture parentKey="IconMask" file="Interface\AddOns\Narcissus\Art\Tooltip\Icon-Mask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
                     <Anchors>
-						<Anchor point="TOP" relativeKey="$parent.inset" relativePoint="TOP"/>
-						<Anchor point="BOTTOM" relativeKey="$parent.inset" relativePoint="BOTTOM"/>
-						<Anchor point="RIGHT" relativeKey="$parent.inset" relativePoint="RIGHT" x="0"/>
+						<Anchor point="TOP" relativeKey="$parent" relativePoint="TOP"/>
+						<Anchor point="BOTTOM" relativeKey="$parent" relativePoint="BOTTOM"/>
+						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="0"/>
                     </Anchors>
 					<MaskedTextures>
 						<MaskedTexture childKey="Icon"/>
@@ -40,7 +40,7 @@
 					<Size x="16" y="16"/>
 					<TexCoords left="0.5" right="1" top="0" bottom="1"/>
 					<Anchors>
-						<Anchor point="CENTER" relativeKey="$parent.inset" relativePoint="BOTTOM" x="0" y="0.5"/>
+						<Anchor point="CENTER" relativeKey="$parent" relativePoint="BOTTOM" x="0" y="0.5"/>
 					</Anchors>				
 				</Texture>
 
@@ -48,7 +48,7 @@
 					<Size x="16" y="16"/>
 					<TexCoords left="0" right="1" top="0" bottom="0.5"/>
 					<Anchors>
-						<Anchor point="CENTER" relativeKey="$parent.inset" relativePoint="RIGHT"  x="-0.5" y="0"/>
+						<Anchor point="CENTER" relativeKey="$parent" relativePoint="RIGHT"  x="-0.5" y="0"/>
 					</Anchors>				
 				</Texture>
 			</Layer>
@@ -61,16 +61,16 @@
 
 				<FontString inherits="NarciTooltipHeaderFontSemibold" justifyH="LEFT" justifyV="MIDDLE" parentKey="Header">
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeKey="$parent.inset" relativePoint="TOPLEFT" x="12" y="-12"/>
-						<Anchor point="TOPRIGHT" relativeKey="$parent.inset" relativePoint="TOPRIGHT" x="-12" y="-12"/>
+						<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="12" y="-12"/>
+						<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="-12" y="-12"/>
 					</Anchors>
 				</FontString>
 
 				<FontString inherits="NarciTooltipDescriptionFontRegularWhite" justifyH="LEFT" justifyV="MIDDLE" parentKey="Text1">
 					<Anchors>
 						<Anchor point="TOP" relativeKey="$parent.Header" relativePoint="BOTTOM" y="-8"/>
-						<Anchor point="LEFT" relativeKey="$parent.inset" relativePoint="LEFT" x="12"/>
-						<Anchor point="RIGHT" relativeKey="$parent.inset" relativePoint="RIGHT" x="-12"/>
+						<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="12"/>
+						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-12"/>
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -78,24 +78,15 @@
 		<Frames>
 			<Frame parentKey="Guide" Alpha="0">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="TOPLEFT" y="-24"/>
-					<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" y="-24"/>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="TOPLEFT" y="0"/>
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" y="0"/>
 				</Anchors>
 				<Layers>
-					<Layer level="BACKGROUND">
-						<Texture setAllPoints="true" parentKey="inset" hidden="true">
-							<Color r="1" g="1" b="1" a="0"/>
-							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="11.5" y="-11.5"/>
-								<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-11.5" y="11.5"/>
-							</Anchors>
-						</Texture>
-					</Layer>
 					<Layer level="OVERLAY">
 						<Texture parentKey="Picture" nounload="true">
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeKey="$parent.inset" relativePoint="TOPLEFT"/>
-								<Anchor point="BOTTOMRIGHT" relativeKey="$parent.inset" relativePoint="BOTTOMRIGHT"/>
+								<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
+								<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT"/>
 							</Anchors>
 						</Texture>
 					</Layer>

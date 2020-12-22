@@ -1,6 +1,6 @@
 ## Interface: 90002
 ## Plain Title: Narcissus
-## Version: 1.1.0e
+## Version: 1.1.0f
 
 ## Title: |cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r
 
@@ -27,6 +27,7 @@ NarciDB\NarciTooltip.xml
 Bridge\Bridge.xml
 
 Modules\CharacterFrame\ItemSocketing.xml
+Modules\CharacterFrame\Attributes.xml
 Narcissus.xml
 Preference.xml
 
@@ -44,7 +45,7 @@ Modules\PhotoMode\ExitConfirmationDialog.xml
 Modules\PhotoMode\SpeechBalloon.xml
 
 widgets\AFKMode.lua
-widgets\ScreenshotInfo.xml
+##widgets\ScreenshotInfo.xml
 ##widgets\Messi.lua
 widgets\AR.xml
 widgets\AdvancedDressingRoom.xml

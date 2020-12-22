@@ -9,6 +9,7 @@ local GetItemInfo = GetItemInfo;
 local UIFrameFadeIn = UIFrameFadeIn;
 local UIFrameFadeOut = UIFrameFadeOut;
 local PlaySound = PlaySound;
+local unpack = unpack;
 local _, _, _, tocversion = GetBuildInfo();
 
 local strtrim = strtrim;
@@ -16,8 +17,9 @@ local match = string.match;
 local gsub = string.gsub;
 local sub = string.sub;
 
-local LANGUAGE = GetLocale();
+local TEXT_LOCALE = GetLocale();
 
+NarciAPI = {};
 ------------------------
 --Redirect API for 9.0--
 ------------------------
@@ -46,6 +48,7 @@ if BackdropTemplateMixin then
 end
 
 --GetSlotVisualID
+local NarciAPI_GetSlotVisualID;
 if not TransmogLocationMixin then
     function NarciAPI_GetSlotVisualID(slotID)
         if slotID == 2 or (slotID > 10 and slotID < 15) then
@@ -87,6 +90,7 @@ else
     end
 end
 
+NarciAPI.GetSlotVisualID = NarciAPI_GetSlotVisualID;
 
 --------------------
 ----API Datebase----
@@ -118,9 +122,11 @@ for slotID, info in pairs(SlotIDtoName) do
     _, info[4] = GetInventorySlotInfo(info[1]);
 end
 
+--[[
 function NarciAPI_GetSlotLocalizedName(slotID)
     return SlotIDtoName[slotID][2], SlotIDtoName[slotID][4]
 end
+--]]
 
 Narci.SlotIDtoName = SlotIDtoName;
 -----------------------------------------------------
@@ -164,8 +170,6 @@ local SpecialItemList = {
     [152333] = CommanderOfArgus,            --Lustrous Daybreak Aegis
     [152334] = CommanderOfArgus,            --Brilliant Eventide Aegis
     [152335] = CommanderOfArgus,            --Lustrous Eventide Aegis
-    [152336] = CommanderOfArgus,            --Lustrous Daybreak Blade
-    [152336] = CommanderOfArgus,            --Lustrous Daybreak Blade
     [152336] = CommanderOfArgus,            --Lustrous Daybreak Blade
     [152337] = CommanderOfArgus,            --Brilliant Daybreak Blade
     [152338] = CommanderOfArgus,            --Lustrous Eventide Blade
@@ -243,8 +247,7 @@ end
 
 
 -----Color API------
-Narci_GlobalColorIndex = 0;
-Narci_ColorTable = {
+local mapColors = {
     --[0] = { 35,  96, 147},	--default Blue  0.1372, 0.3765, 0.5765
     [0] = {78,  78,  78},   --Default Black
 	[1] = {121,  31,  35},	--Orgrimmar
@@ -333,7 +336,7 @@ Narci_ColorTable = {
     [249]  = {180,149, 121},    --Uldum Normal
     [1527] = {180,149, 121},    --Uldum Assault
     [390]  = {150, 117, 94},    --Eternal Blossoms Normal
-    [1530] = {150, 117, 94},    --Eternal Blossoms Assault
+    [1530] = {150, 117, 94},    --Eternal Blossoms Assault  --{105, 71, 156}
     ["NZ"] = {105, 71, 156},    --During Assault: N'Zoth Purple Skybox
 
     [1580] = {105, 71, 156},    --Ny'alotha - Vision of Destiny
@@ -363,33 +366,46 @@ Narci_ColorTable = {
     [198]  = {78,  78,  78},    --Hyjal
 };
 
+NarciThemeUtil = {};
+NarciThemeUtil.colorIndex = 0;
 
--- 8.3 When Assault: N'Zoth is active, the map uses a different skybox (purple). This quest's location alters every week, so we need to re-index a color preset during the login
-local AssignColor = CreateFrame("Frame");
-AssignColor:RegisterEvent("PLAYER_ENTERING_WORLD");
-AssignColor:SetScript("OnEvent", function(self)
-    self:UnregisterEvent("PLAYER_ENTERING_WORLD");
-    After(2, function()
-        local tag;
-        tag = HasQuestCompleted(57566);           --N'Zoth Assault Tracker (Uldum)    --/dump C_QuestLog.IsQuestFlaggedCompleted(57566)
-        if tag then
-            Narci_ColorTable[1527] = {105, 71, 156};
-            --print("N'Zoth in Uldum")
-        else
-            tag = HasQuestCompleted(57567);       --N'Zoth Assault Tracker (Vale)
-            if tag then
-                Narci_ColorTable[1530] = {105, 71, 156};
-            end
-        end
-    end)
-end);
+function NarciThemeUtil:GetColorTable()
+    local R, G, B = unpack(mapColors[self.colorIndex]);
+    return {R/255, G/255, B/255}
+end
+
+function NarciThemeUtil:GetColor()
+    local R, G, B = unpack(mapColors[self.colorIndex]);
+    return R/255, G/255, B/255
+end
+
+function NarciThemeUtil:GetColorIndex()
+    return self.colorIndex
+end
+
+function NarciThemeUtil:SetColorIndex(index)
+    if index and mapColors[index] then
+        self.colorIndex = index
+    else
+        self.colorIndex = 0;
+    end
+
+    return self:GetColorTable()
+end
+
 ----------------------------------------------------------------------
-function NarciAPI_ConvertHexColorToRGB(hexColor)
+local function NarciAPI_ConvertHexColorToRGB(hexColor, includeHex)
     local r = tonumber(sub(hexColor, 1, 2), 16) / 255;
     local g = tonumber(sub(hexColor, 3, 4), 16) / 255;
     local b = tonumber(sub(hexColor, 5, 6), 16) / 255;
-    return {r, g, b}
+    if includeHex then
+        return {r, g, b, hexColor};
+    else
+        return {r, g, b};
+    end
 end
+
+NarciAPI.ConvertHexColorToRGB = NarciAPI_ConvertHexColorToRGB;
 
 Narci_FontColor = {
     ["Brown"] = {0.85098, 0.80392, 0.70588, "|cffd9cdb4"},
@@ -400,6 +416,32 @@ Narci_FontColor = {
     ["Bad"] = {1, 0.3137, 0.3137, 0.3137, "|cffff5050"},
     ["Corrupt"] = {0.584, 0.428, 0.82, "|cff946dd1"},
 };
+
+local customQualityColors= {
+	[0] = "9d9d9d",	--Poor
+	[1] = "ffffff",	--Common
+	[2] = "1eff00",	--Uncommon
+	[3] = "699eff",	--Rare 0070dd 699eff
+	[4] = "b953ff",	--Epic a335ee
+	[5] = "ff8000",	--Legend
+	[6] = "e6cc80",	--Artifact
+	[7] = "00ccff",	--Heirloom
+	[8] = "00ccff",
+	[9] = "ffffff",
+};
+
+for index, hex in pairs(customQualityColors) do
+	customQualityColors[index] = NarciAPI_ConvertHexColorToRGB(hex, true);
+end
+
+local function GetCustomQualityColor(itemQuality)
+    if (not itemQuality) or (not customQualityColors[itemQuality]) then
+        itemQuality = 1;
+    end
+    return unpack(customQualityColors[itemQuality]);
+end
+
+NarciAPI.GetItemQualityColor = GetCustomQualityColor;
 
 local BorderTexture = {
     ["Bright"]  = {
@@ -437,7 +479,7 @@ local BorderTexture = {
     },
 }
 
-function NarciAPI_GetBorderTexture()
+local function NarciAPI_GetBorderTexture()
     local index = NarcissusDB and NarcissusDB.BorderTheme
     if not index then
         return BorderTexture["Bright"], BorderTexture["Bright"]["Minimap"], "Bright"
@@ -446,6 +488,7 @@ function NarciAPI_GetBorderTexture()
     end
 end
 
+NarciAPI.GetBorderTexture = NarciAPI_GetBorderTexture;
 
 local GemBorderTexture = {
 	[0]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot",			--Empty
@@ -465,7 +508,7 @@ local GemBorderTexture = {
 
 --Some gems require you to assign colors manually
 --itemID, itemType, itemSubType, itemEquipLoc, icon, itemClassID, itemSubClassID = GetItemInfoInstant(itemID or "itemString" or "itemName" or "itemLink") 
-local function GetGemBorderTexture(itemID, itemSubClassID)
+local function GetGemBorderTexture(itemSubClassID, itemID)
     local index = itemSubClassID or 0;
     if itemID == 153714 then
         index = 10;     --Red EXP bonus
@@ -475,19 +518,21 @@ local function GetGemBorderTexture(itemID, itemSubClassID)
     itemID == 153707 or itemID == 153708 or itemID == 153709 then
         index = 1;      --Primary
     end
-    return index, GemBorderTexture[index]
+    return GemBorderTexture[index], index
 end
 
-Narci.GetGemBorderTexture = GetGemBorderTexture;
+NarciAPI.GetGemBorderTexture = GetGemBorderTexture;
 
 --------------------
 ------Item API------
 --------------------
 
-function NarciAPI_GetItemEnchant(itemLink)
-    local _, _, _, linkType, linkID, EnchantID = strsplit(":|H", itemLink);
-    return tonumber(EnchantID) or 0;
+local function GetItemEnchant(itemLink)
+    local _, _, _, linkType, linkID, enchantID = strsplit(":|H", itemLink);
+    return tonumber(enchantID) or 0;
 end
+
+NarciAPI.GetItemEnchant = GetItemEnchant;
 
 local function IsHeritageArmor(itemID)
     if not itemID then
@@ -503,7 +548,7 @@ end
 
 local ITEMSOURCE_SECRETFINDING = Narci.L["Secret Finding"];
 
-function NarciAPI_IsSpecialItem(itemID, modID)
+local function NarciAPI_IsItemSourceSpecial(itemID, modID)
     if not itemID then
         return false;
     end
@@ -529,13 +574,16 @@ function NarciAPI_IsSpecialItem(itemID, modID)
     return false;
 end
 
+NarciAPI.IsItemSourceSpecial = NarciAPI_IsItemSourceSpecial;
+
 local PrimaryStatsList = {
 	[LE_UNIT_STAT_STRENGTH] = NARCI_STAT_STRENGTH,
 	[LE_UNIT_STAT_AGILITY] = NARCI_STAT_AGILITY,
 	[LE_UNIT_STAT_INTELLECT] = NARCI_STAT_INTELLECT,
 };
 
-function NarciAPI_GetPrimaryStats()
+
+local function NarciAPI_GetPrimaryStats()
     --Return name and value
 	local currentSpec = GetSpecialization() or 1;
     local _, _, _, _, _, primaryStat = GetSpecializationInfo(currentSpec);
@@ -545,7 +593,8 @@ function NarciAPI_GetPrimaryStats()
 	return name, value;
 end
 
-local GetItemEnchant = NarciAPI_GetItemEnchant;
+NarciAPI.GetPrimaryStats = NarciAPI_GetPrimaryStats;
+
 local GemInfo = Narci_GemInfo;
 local EnchantInfo = Narci_EnchantInfo;
 local DoesItemExist = C_Item.DoesItemExist;
@@ -620,24 +669,24 @@ function NarciAPI_GetItemStats(itemLocation)
         end
     end
 
-    local EnchantID = GetItemEnchant(itemLink)
-    if EnchantID ~= 0 and EnchantInfo[EnchantID] then
-        local EnchantInfo = EnchantInfo[EnchantID]
-        statsTable.EnchantPos = EnchantInfo[1];
-        if EnchantInfo[1] == "crit" then
-            statsTable.crit = statsTable.crit + EnchantInfo[2];
-        elseif EnchantInfo[1] == "haste" then
-            statsTable.haste = statsTable.haste + EnchantInfo[2];
-        elseif EnchantInfo[1] == "mastery" then
-            statsTable.mastery = statsTable.mastery + EnchantInfo[2];
-        elseif EnchantInfo[1] == "versatility" then
-            statsTable.versatility = statsTable.versatility + EnchantInfo[2];
-        elseif EnchantInfo[1] == "AGI" or EnchantInfo[1] == "STR" or EnchantInfo[1] == "INT" then
-            statsTable.prim = statsTable.prim + EnchantInfo[2];
+    local enchantID = GetItemEnchant(itemLink);
+    if enchantID ~= 0 and EnchantInfo[enchantID] then
+        local data = EnchantInfo[enchantID]
+        statsTable.EnchantPos = data[1];
+        if data[1] == "crit" then
+            statsTable.crit = statsTable.crit + data[2];
+        elseif data[1] == "haste" then
+            statsTable.haste = statsTable.haste + data[2];
+        elseif data[1] == "mastery" then
+            statsTable.mastery = statsTable.mastery + data[2];
+        elseif data[1] == "versatility" then
+            statsTable.versatility = statsTable.versatility + data[2];
+        elseif data[1] == "AGI" or data[1] == "STR" or data[1] == "INT" then
+            statsTable.prim = statsTable.prim + data[2];
             statsTable.EnchantPos = "prim";
         end
 
-        statsTable.EnchantSpellID = EnchantInfo[3];
+        statsTable.EnchantSpellID = data[3];
     end
 
     return statsTable;
@@ -660,7 +709,7 @@ TP:SetOwner(UIParent, 'ANCHOR_NONE');
 local SocketAction = ITEM_SOCKETABLE;
 local find = string.find;
 local SocketPath = "ItemSocketingFrame";
-function NarciAPI_IsItemSocketable(itemLink, SocketID)
+local function NarciAPI_IsItemSocketable(itemLink, SocketID)
     if not itemLink then return; end
     if not SocketID then SocketID = 1; end
     local gemName, gemLink = GetItemGem(itemLink, SocketID)
@@ -697,7 +746,9 @@ function NarciAPI_IsItemSocketable(itemLink, SocketID)
     return nil, nil;
 end
 
-function NarciAPI_GetItemRank(itemLink, statName)
+NarciAPI.IsItemSocketable = NarciAPI_IsItemSocketable;
+
+local function NarciAPI_GetItemRank(itemLink, statName)
     --Items that can get upgraded
     if not itemLink then return; end
     
@@ -715,8 +766,10 @@ function NarciAPI_GetItemRank(itemLink, statName)
     end
 end
 
------String API------
+NarciAPI.GetItemRank = NarciAPI_GetItemRank;
 
+-----String API------
+--[[
 function NarciAPI_DeformatString(str, patterns)
     if not str then return end
 
@@ -746,13 +799,14 @@ function NarciAPI_DeformatString(str, patterns)
         return str;
     end
 end
+--]]
 
 local greyFont = "|cff959595";
 local leftBrace = "%(";
 local rightBrace = "%)";
-if (LANGUAGE == "zhCN") or (LANGUAGE == "zhTW") then
-    leftBrace = "（"
-    rightBrace = "）"
+if (TEXT_LOCALE == "zhCN") or (TEXT_LOCALE == "zhTW") then
+    leftBrace = "（";
+    rightBrace = "）";
 end
 
 
@@ -760,7 +814,7 @@ local SOURCE_KNOWN = TRANSMOGRIFY_TOOLTIP_APPEARANCE_KNOWN;
 local APPEARANCE_KNOWN = TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN;
 local APPEARANCE_UNKNOWN = TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN;
 
-function NarciAPI_IsAppearanceKnown(itemLink)
+local function NarciAPI_IsAppearanceKnown(itemLink)
     --Need to correspond with C_TransmogCollection.PlayerHasTransmog
     if not itemLink then    return; end
     TP:SetHyperlink(itemLink);
@@ -783,6 +837,8 @@ function NarciAPI_IsAppearanceKnown(itemLink)
     return false;
 end
 
+NarciAPI.IsAppearanceKnown = NarciAPI_IsAppearanceKnown;
+
 local function trimComma(text)
     return strtrim(text, ":：");
 end
@@ -804,7 +860,7 @@ local _onUse = trimComma(onUse)
 local _onEquip = trimComma(onEquip)
 local _onProc = trimComma(onProc)
 
-function NarciAPI_GetItemExtraEffect(itemLink)
+local function NarciAPI_GetItemExtraEffect(itemLink)
     if not itemLink then    return; end
 
     TP:SetHyperlink(itemLink);
@@ -843,7 +899,9 @@ function NarciAPI_GetItemExtraEffect(itemLink)
     return category, output;
 end
 
-function NarciAPI_GetGemBonus(itemID)
+NarciAPI.GetItemExtraEffect = NarciAPI_GetItemExtraEffect;
+
+local function NarciAPI_GetGemBonus(itemID)
     --itemID: Gem's Item ID or hyperlink
     if not itemID then return; end
     if type(itemID) == "number" then
@@ -879,6 +937,9 @@ function NarciAPI_GetGemBonus(itemID)
     return output, level;
 end
 
+NarciAPI.GetGemBonus = NarciAPI_GetGemBonus;
+
+--Debug
 local function TestItemLinkAffix(from, to)
     local TP = TP;
     local max = max;
@@ -926,11 +987,12 @@ local function TestItemLinkAffix(from, to)
     end
     After(1, GetExtraInfo);
 end
+
 --------------------
 ---Formating API----
 --------------------
 
-function NarciAPI_FormatLargeNumbers(value)
+local function NarciAPI_FormatLargeNumbers(value)
     value = tonumber(value) or 0;
     local formatedNumber = ""
     if value >= 1000 and value < 1000000 then
@@ -943,6 +1005,7 @@ function NarciAPI_FormatLargeNumbers(value)
     return formatedNumber
 end
 
+NarciAPI.FormatLargeNumbers = NarciAPI_FormatLargeNumbers;
 
 --------------------
 ---Fade Frame API---
@@ -1336,6 +1399,7 @@ function LinearScrollUpdater:Stop()
 end
 
 -----Create A List of Button----
+--[[
 function NarciAPI_BuildButtonList(self, buttonTemplate, buttonNameTable, initialOffsetX, initialOffsetY, initialPoint, initialRelative, offsetX, offsetY, point, relativePoint)
 	local button, buttonHeight, buttons, numButtons;
 
@@ -1376,10 +1440,10 @@ function NarciAPI_BuildButtonList(self, buttonTemplate, buttonNameTable, initial
 
 	self.buttons = buttons;
 end
-
+--]]
 
 -----Language Adaptor-----
-function Narci_LanguageDetector(string)
+local function LanguageDetector(string)
 	local str = string
 	local len = strlen(str)
 	local i = 1
@@ -1412,6 +1476,7 @@ function Narci_LanguageDetector(string)
 	return "RM"
 end
 
+NarciAPI.LanguageDetector = LanguageDetector;
 --[[
 function LDTest(string)
 	local str = string
@@ -1437,8 +1502,7 @@ local JP = "ひらがな" --1-3 227 E3 Kana
 --print("Str is: "..language)
 --]]
 
-local LanguageDetector = Narci_LanguageDetector;
-local PlayerNameFont={
+local PlayerNameFont = {
 	["CN"] = "Interface\\AddOns\\Narcissus\\Font\\NotoSansCJKsc-Medium.otf",
 	["RM"] = "Interface\\AddOns\\Narcissus\\Font\\SemplicitaPro-Semibold.otf",
 	["RU"] = "Interface\\AddOns\\Narcissus\\Font\\NotoSans-Medium.ttf",
@@ -1446,14 +1510,14 @@ local PlayerNameFont={
 	["JP"] = "Interface\\AddOns\\Narcissus\\Font\\NotoSansCJKsc-Medium.otf",
 }
 
-local EditBoxFont={
+local EditBoxFont = {
 	["CN"] = {"Interface\\AddOns\\Narcissus\\Font\\NotoSansCJKsc-Medium.otf", 8},
 	["RM"] = {"Interface\\AddOns\\Narcissus\\Font\\SourceSansPro-Semibold.ttf", 9},
 	["RU"] = {"Interface\\AddOns\\Narcissus\\Font\\NotoSans-Medium.ttf", 8},
 	["KR"] = {"Interface\\AddOns\\Narcissus\\Font\\NotoSansCJKsc-Medium.otf", 8},
 	["JP"] = {"Interface\\AddOns\\Narcissus\\Font\\NotoSansCJKsc-Medium.otf", 8},
 }
---SetTextColor(0.85098, 0.80392, 0.70588)
+
 local function SmartFontType(self, height, fontTable)
 	local str = self:GetText();
 	local Language = LanguageDetector(str);
@@ -1473,17 +1537,21 @@ local function SmartEditBoxFont(self, extraHeight)
 	end
 end
 
-function NarciAPI_SmartFontType(self, height)
+local function NarciAPI_SmartFontType(self, height)
     SmartFontType(self, height, PlayerNameFont);
 end
+
+NarciAPI.SmartFontType = NarciAPI_SmartFontType;
 
 function NarciAPI_SmartEditBoxType(self, extraHeight)
     SmartEditBoxFont(self, extraHeight);
 end
 
+--[[
 function NarciAPI_EditBox_OnLanguageChanged(self, language)
     SmartEditBoxFont(self);
 end
+--]]
 
 -----Filter Shared Functions-----
 function NarciAPI_LetterboxAnimation(command)
@@ -1665,6 +1733,8 @@ end
 ------------------------
 --Filled Bar Animation--
 ------------------------
+--Corruption Bar
+--[[
 local cos = math.cos;
 local pi = math.pi;
 local function inOutSine(t, b, c, d)
@@ -1809,6 +1879,7 @@ function NarciAPI_SetEyeballColor(index)
 
     Narci:SetItemLevel();
 end
+--]]
 
 --------------------
 --UI 3D Animation---
@@ -2386,7 +2457,7 @@ function Narci_ItemParser_OnLoad(self)
     self.ItemButton:SetScript("OnClick", ParserButton_GetCursor);
     self.ItemButton:SetScript("OnEnter", ParserButton_ShowTooltip);
 
-    local locale = LANGUAGE;
+    local locale = TEXT_LOCALE;
     local version, build, date, tocversion = GetBuildInfo();
 
     self.ClientInfo:SetText(locale.."  "..version.."."..build.."  "..NARCI_VERSION_INFO);
@@ -2399,138 +2470,6 @@ function Narci_ItemParser_OnLoad(self)
     local tooltipScale = 0.8;
     self:SetScale(0.8);
     TP:SetScale(tooltipScale);
-end
-
------------------
------Utility-----
------------------
-local DistanceCalculator;
-local MovementListener;
-
-function NarciAPI_ActivateDistanceCalculator(calibrateDistance)
-    if not DistanceCalculator then
-        --Timer frame
-        DistanceCalculator = CreateFrame("Frame");
-        DistanceCalculator:Hide();
-        DistanceCalculator.basicSpeed = 0;
-
-        local function OnUpdate(self, elapsed)
-            self.t = self.t + elapsed;
-        end
-
-        DistanceCalculator:SetScript("OnShow", function(self)
-            self.t = 0;
-        end);
-
-        DistanceCalculator:SetScript("OnHide", function(self)
-            print(self.t);
-            if self.basicSpeed > 0 then
-                local d = self.basicSpeed * self.t;
-                d = math.floor(d * 100 + 0.5) / 100;
-                print("|cffFFF569"..d.." yd|r");
-            elseif self.t > 0.2 then
-                if self.calibrateDistance then
-                    self.basicSpeed = self.calibrateDistance / self.t;
-                    self.calibrateDistance = nil;
-                    print("Speed: ".. math.floor(self.basicSpeed * 100 + 0.5) / 100 .. " yd/s" );
-                else
-                    print("Speed Not Calibrated");
-                end
-            end
-            self.t = 0;
-        end);
-
-        DistanceCalculator:SetScript("OnUpdate", OnUpdate);
-
-        --Event listener
-        MovementListener = CreateFrame("Frame");
-        MovementListener:Hide();
-
-        MovementListener:SetScript("OnShow", function(self)
-            self:RegisterEvent("PLAYER_STARTED_MOVING");
-            self:RegisterEvent("PLAYER_STOPPED_MOVING");
-        end);
-
-        local function OnEvent(self, event)
-            if event == "PLAYER_STARTED_MOVING" then
-                DistanceCalculator:Show();
-            else
-                DistanceCalculator:Hide();
-            end
-        end
-
-        MovementListener:SetScript("OnEvent", OnEvent);
-
-        --Global
-        function NarciAPI_DeactivateDistanceCalculator()
-            MovementListener:Hide();
-            DistanceCalculator:Hide();
-        end
-    end
-
-    MovementListener:Show();
-
-    if calibrateDistance and type(calibrateDistance) == "number" and calibrateDistance >= 5 then
-        DistanceCalculator.basicSpeed = 0;
-        DistanceCalculator.calibrateDistance = calibrateDistance;
-    end
-end
-
-local Globals = {};
-local totalGlobals = 1;
-for k, v in pairs(_G) do
-    Globals[totalGlobals] = k;
-    totalGlobals = totalGlobals + 1;
-end
-
-local SEARCH_PER_FRAME = 240;
-local numLoop = 0;
-local numMatch = 0;
-local function SearchLoop(b, key)
-    local find = string.find;
-    local index;
-    for i = b, b + SEARCH_PER_FRAME  do
-        if Globals[i] then
-            index = i;
-
-            if find(Globals[i], key) then
-                numMatch = numMatch + 1;
-                
-                local t = type(_G[ Globals[i] ]);
-                if t == "number" or t == "string" then
-                    print("|cffffd200".. Globals[i].."|r = ".. (_G[Globals[i]] or "nil") );
-                else
-                    print("|cff808080"..t.." |cffffd200".. Globals[i]);
-                end
-            end
-        else
-            print("Search Completes ---------------")
-            print("Found ".. "|cffffd200".. numMatch .. "|r matches.")
-            numLoop = 0;
-            return
-        end
-    end
-    After(0, function()
-        SearchLoop(b + SEARCH_PER_FRAME + 1, key)
-    end)
-
-
-    numLoop = numLoop + 1;
-    if numLoop == 100 then
-        numLoop = 0;
-        print(math.floor(index / totalGlobals * 10000 + 0.5)/100 .. "% ----------------------------")
-    end
-end
-
-function Narci_SearchGlobalString(key)
-    if type(key) ~= "string" then
-        print("The key must be a string!");
-        return
-    end
-    numLoop = 0;
-    numMatch = 0;
-    local beginning = 1;
-    SearchLoop(beginning, key)
 end
 
 
@@ -2596,7 +2535,7 @@ local function EncodeLongValue(number)
     return str
 end
 
-function NarciBridge_EncodeItemlist(itemlist, unitInfo)
+local function EncodeItemlist(itemlist, unitInfo)
     if not itemlist or type(itemlist) ~= "table" or itemlist == {} then return ""; end
     --itemlist = {[slot] = {itemID, bonusID}}
 
@@ -2626,7 +2565,7 @@ function NarciBridge_EncodeItemlist(itemlist, unitInfo)
 
     local wowheadLink = "https://www.wowhead.com/dressing-room#s".. EncodeValue[raceID] .. EncodeValue[genderID] .. EncodeValue[classID] .. WOWHEAD_CUSTOMIZATION.. WOWHEAD_DELIMITER;
     
-    local segment, slot;
+    local segment, slot, item;
     local blanks = 0;
     for i = 1, #EquipmentOrderToCharacterSlot do
         --item = { itemID, bonusID }
@@ -2660,16 +2599,18 @@ function NarciBridge_EncodeItemlist(itemlist, unitInfo)
     return wowheadLink
 end
 
+NarciAPI.EncodeItemlist = EncodeItemlist;
 
 --------------------
------Play Voice-----
+----Model Widget----
 --------------------
-function NarciAPI_InitializeModelLight(model)
+local function NarciAPI_InitializeModelLight(model)
     --Model: DressUpModel/Cinematic Model/...
     --Not ModelScene
     model:SetLight(true, false, - 0.44699833180028 ,  0.72403680806459 , -0.52532198881773, 0.8, 172/255, 172/255, 172/255, 1, 0.8, 0.8, 0.8);
 end
 
+NarciAPI.InitializeModelLight = NarciAPI_InitializeModelLight;
 
 --------------------
 --------Time--------
@@ -3338,7 +3279,7 @@ NarciLanguageUtil.wowheadLinkPrefix = {
     ["zhTW"] = "cn",
 };
 
-NarciLanguageUtil.wowheadLinkPrefix.primary = NarciLanguageUtil.wowheadLinkPrefix[LANGUAGE] or "www";
+NarciLanguageUtil.wowheadLinkPrefix.primary = NarciLanguageUtil.wowheadLinkPrefix[TEXT_LOCALE] or "www";
 
 function NarciLanguageUtil:GetWowheadLink(specificLanguage)
     local prefix;

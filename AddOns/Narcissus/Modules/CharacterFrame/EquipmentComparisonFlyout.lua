@@ -1,42 +1,32 @@
 --Parent: Narci_EquipmentFlyoutFrame (Narcissus.xml)
 local EquipmentFlyoutFrame;
 local hasGapAdjusted = false;
-local STAMINA_STRING = SPELL_STAT3_NAME
+local STAMINA_STRING = SPELL_STAT3_NAME;
 local DefaultHeight_Comparison = 160;
 local DefaultHeight_StatsComparisonTemplate = 12;
 local Format_Digit = "%.2f";
 
-local BreakUpLargeNumbers = NarciAPI_FormatLargeNumbers --BreakUpLargeNumbers;
-local GetPrimaryStatsName = NarciAPI_GetPrimaryStatsName;
-local GetItemExtraEffect = NarciAPI_GetItemExtraEffect;
-local IsItemSocketable = NarciAPI_IsItemSocketable;
+local FormatLargeNumbers = NarciAPI.FormatLargeNumbers --BreakUpLargeNumbers;
+local GetItemExtraEffect = NarciAPI.GetItemExtraEffect;
+local IsItemSocketable = NarciAPI.IsItemSocketable;
 
 local DoesItemExist = C_Item.DoesItemExist;
 local GetItemLink = C_Item.GetItemLink;
 local GetItemIcon = C_Item.GetItemIcon;
 local GetItemName = C_Item.GetItemName;
 local GetItemQuality = C_Item.GetItemQuality;
+local GetCombatRating = GetCombatRating;
 
-local GemBorderTexture = {
-	[1]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Unique",
-	[2]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Green",
-	[3]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Unique",
-	[4]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Unique",
-	[5]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Orange",
-	[6]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Purple",
-    [7]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Yellow",
-	[8]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Blue",	
-	[9]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot",
-	[10] = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Unique",
-	[11] = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot",
-}
+local GetGemBorderTexture = NarciAPI.GetGemBorderTexture;
 
 local LocalizedSlotName = Narci.SlotIDtoName    --[SlotID] = {InventorySlotName, Localized Name, SlotID}                                                                            
 
 local CR_ConvertRatio = {      --Combat Rating number/percent
-    ["stamina"] = 20,              -- 1 stamina = 20 HP **At level 120
-}
-    
+    ["stamina"] = 20,              -- 1 stamina = 20 HP
+};
+
+local GetItemQualityColor = NarciAPI.GetItemQualityColor;
+
 local function SetCombatRatingRatio()
 	local mastery, bonusCoeff = GetMasteryEffect();
 	local masteryBonus = GetCombatRatingBonus(CR_MASTERY) * bonusCoeff;
@@ -222,7 +212,7 @@ local function DisplayComparison(key, name, number, baseNumber, ratio, CustomCol
         if name ~= STAMINA_STRING then
             Textframe.PctDiff:SetText(string.format(Format_Digit, ratio*differentialNumber).."%");
         else
-            Textframe.PctDiff:SetText(BreakUpLargeNumbers(ratio*differentialNumber));
+            Textframe.PctDiff:SetText(FormatLargeNumbers(ratio*differentialNumber));
         end
     else
         Textframe.PctDiff:SetText("");
@@ -257,7 +247,7 @@ local GetPowerInfo = C_AzeriteEmpoweredItem.GetPowerInfo;
 local IsPowerSelected = C_AzeriteEmpoweredItem.IsPowerSelected;
 local GetPowerText = C_AzeriteEmpoweredItem.GetPowerText;   --azeriteEmpoweredItemLocation, powerID, level
 local IsPowerAvailableForSpec = C_AzeriteEmpoweredItem.IsPowerAvailableForSpec;
-local TierInfos, azeritePowerDescription;
+local TierInfos;
 
 local function GetActiveTraits(itemLocation, itemButton)
     if not itemLocation then return; end
@@ -555,11 +545,12 @@ function Narci_Comparison_SetComparison(itemLocation, itemButton)
     --Gem check
     local GemName, GemLink = IsItemSocketable(itemLink)
     if GemName then
-        local itemSubClassID, icon = 9, nil;
+        local itemSubClassID = 9;
+        local id, icon;
         if GemLink then
-            _, _, _, _, icon, _, itemSubClassID = GetItemInfoInstant(GemLink);
+            id, _, _, _, icon, _, itemSubClassID = GetItemInfoInstant(GemLink);
         end
-        frame.GemSlot.GemBorder:SetTexture(GemBorderTexture[itemSubClassID]);
+        frame.GemSlot.GemBorder:SetTexture( GetGemBorderTexture(itemSubClassID, id) );
         frame.GemSlot.GemIcon:SetTexture(icon);
         frame.GemSlot:Show();
         frame.GemSlot.GemIcon:Show();
@@ -638,7 +629,6 @@ NT:RegisterEvent("PLAYER_ENTERING_WORLD");
 NT:RegisterEvent("PLAYER_LEVEL_UP");
 NT:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
 NT:RegisterEvent("AZERITE_ITEM_POWER_LEVEL_CHANGED");
-NT:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
 NT:SetScript("OnEvent",function(self,event,...)
     if event == "PLAYER_ENTERING_WORLD" then
         self:UnregisterEvent(event);
@@ -685,14 +675,14 @@ end
 
 
 function Narci_CreateAzeriteTraitTooltip(self)
+    self.Traits = { self.Trait1 };
     local maximumTraits = 5;
     local offset = 1;
     local startOffset = 8;
     local numButtons = 0;
-    local name = self:GetName();
     local trait;
     for i = 2, maximumTraits do
-        trait =  CreateFrame("Button", name .. i, self, "Narci_SubTooltip_Trait_Template");
+        trait = CreateFrame("Button", nil, self, "Narci_SubTooltip_Trait_Template");
         trait:SetPoint("LEFT", self.Traits[i-1], "RIGHT", offset, 0);
         tinsert(self.Traits, trait);
     end
@@ -700,7 +690,7 @@ end
 
 
 function Narci:GetCombatRatings()
-    local NA = "N/A"
+    local NA = "N/A";
     local crit = CR_ConvertRatio.crit;
     local haste = CR_ConvertRatio.haste;
     local mastery = CR_ConvertRatio.mastery;

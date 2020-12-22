@@ -62,7 +62,7 @@
 		</Scripts>
 	</Button>
 
-	<Texture name="ModelBackground_Template" parentKey="ModelBackgroundOverlay" atlas="dressingroom-background-warrior" virtual="true" Alpha="0">
+	<Texture name="NarciDressingRoomBackgroundTemplate" parentKey="ModelBackgroundOverlay" atlas="dressingroom-background-warrior" virtual="true" Alpha="0">
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeKey="$parent.ModelScene"/>
 			<Anchor point="BOTTOMRIGHT" relativeKey="$parent.ModelScene"/>
@@ -82,7 +82,7 @@
 		</Animations>
 	</Texture>
 
-    <Button name="NarciDressingRoomTabButton_Template" virtual="true" Alpha="1">
+    <Button name="NarciDressingRoomTabButtonTemplate" virtual="true" Alpha="1">
         <Size x="144" y="36"/>
 		<HitRectInsets>
 			<AbsInset left="0" right="-24" top="0" bottom="0"/>
@@ -133,7 +133,7 @@
 		</Scripts>
     </Button>
 
-	<Frame name="NarciBridge_DressUpFrame_Template" virtual="true" parentKey="NarciBridge">
+	<Frame name="Narci_DressingRoomOverlay" virtual="true" parentKey="NarciBridge" mixin="NarciDressingRoomOverlayMixin">
 		<Size x="0" y="0"/>
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
@@ -201,7 +201,7 @@
 					<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT"/>
 				</Anchors>
 				<Frames>
-					<Button name="NarciBridge_SaveToMogItButton" inherits="NarciDressingRoomTabButton_Template" hidden="true" parentKey="MogItButton">
+					<Button name="NarciBridge_SaveToMogItButton" inherits="NarciDressingRoomTabButtonTemplate" hidden="true" parentKey="MogItButton">
 						<Anchors>
 							<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="BOTTOMLEFT" x="4" y="0"/>
 						</Anchors>
@@ -214,7 +214,7 @@
 						</Scripts>
 					</Button>
 
-					<Button name="NarciBridge_ItemListButton" inherits="NarciDressingRoomTabButton_Template" hidden="false" parentKey="CopyButton">
+					<Button name="NarciBridge_ItemListButton" inherits="NarciDressingRoomTabButtonTemplate" hidden="false" parentKey="CopyButton">
 						<Anchors>
 							<Anchor point="BOTTOMLEFT" relativeKey="$parent.MogItButton" relativePoint="TOPLEFT" x="0" y="6"/>
 						</Anchors>
@@ -345,7 +345,7 @@
 						</Scripts>
 					</EditBox>
 
-					<Button inherits="NarciDressingRoomTabButton_Template" hidden="false" parentKey="TryOnButton" motionScriptsWhileDisabled="true">
+					<Button inherits="NarciDressingRoomTabButtonTemplate" hidden="false" parentKey="TryOnButton" motionScriptsWhileDisabled="true">
 						<Anchors>
 							<Anchor point="BOTTOMLEFT" relativeKey="$parent.CopyButton" relativePoint="TOPLEFT" x="0" y="24"/>
 						</Anchors>
@@ -371,7 +371,7 @@
 						</Scripts>
 					</Button>
 
-					<Button name="NarciBridge_ExternalLinkButton" inherits="NarciDressingRoomTabButton_Template" parentKey="ExternalLinkButton">
+					<Button name="NarciBridge_ExternalLinkButton" inherits="NarciDressingRoomTabButtonTemplate" parentKey="ExternalLinkButton">
 						<Anchors>
 							<Anchor point="BOTTOMLEFT" relativeKey="$parent.TryOnButton" relativePoint="TOPLEFT" x="0" y="48"/>
 						</Anchors>
@@ -513,6 +513,10 @@
 
 		</Frames>
 		<Scripts>
+			<OnShow method="OnShow"/>
+			<OnHide method="OnHide"/>
+			<OnEvent method="OnEvent"/>
+			<OnSizeChanged method="OnSizeChanged"/>
 		</Scripts>
 	</Frame>    
 </Ui>

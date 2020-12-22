@@ -125,7 +125,7 @@
         </Scripts>
     </Button>
 
-    <Button name="Narci_PreferenceButton" parent="Narci_PhotoModeController" inherits="Narci_RoundButtonTemplate">
+    <Button name="Narci_PreferenceButton" parent="Narci_PhotoModeToolbar" inherits="Narci_RoundButtonTemplate">
         <Anchors>
             <Anchor point="LEFT" relativeTo="PhotoModeControllerBar" relativePoint="RIGHT" x="0"/>
         </Anchors>
@@ -710,7 +710,7 @@
                                         <FontString parentKey="Cate2" inherits="NarciPrefFontGrey9" justifyH="LEFT" justifyV="TOP" text="Acknowledgement">
                                             <Size x="0" y="0"/>
                                             <Anchors>
-                                                <Anchor point="CENTER" relativeKey="$parent" relativePoint="BOTTOM" y="140"/>
+                                                <Anchor point="CENTER" relativeKey="$parent" relativePoint="BOTTOM" y="124"/>
                                             </Anchors>
                                         </FontString>
                                         <FontString parentKey="ExtraList" inherits="NarciPrefFontWhiteMild" justifyH="LEFT" justifyV="TOP" spacing="2">

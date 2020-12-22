@@ -31,6 +31,7 @@ local defaults = {
 		show_crafted = false,
 
 		show_totals = false,
+		totals_delay = 0.5,
 		use_altoholic = true,
 		show_ilvl = false,
 
@@ -113,13 +114,13 @@ function events.item(player, link, num)
 		end
 		local row = addon:AddRow(icon, (player and opt.fade_other or opt.fade_own), r, g, b)
 		local num = tonumber(num) or 1
-		local total = GetItemCount(link)
-		if opt.show_totals and opt.use_altoholic and Altoholic then
-			total = Altoholic:GetItemCount(Altoholic:GetIDFromLink(link))
+		row:SetTexts(player, num > 1 and ("%sx%d"):format(link, num) or link, nil, nr, ng, nb)
+		if opt.show_totals then
+			row.timeToTotal = opt.totals_delay
 		end
-		row:SetTexts(player, num > 1 and ("%sx%d"):format(link, num) or link, total + num, nr, ng, nb)
 		if opt.show_ilvl and level > 1 then
-			row.ilvl:SetText(level)
+			local ilvl = GetDetailedItemLevelInfo(link)
+			row.ilvl:SetText(ilvl)
 		end
 		row.item = link
 	elseif link and link:match("|Hbattlepet:") then -- Battlepets. Really?
@@ -137,10 +138,10 @@ function events.coin(coin_string, copper)
 end
 
 function events.currency(id, num)
-	if opt.show_currency and GetCurrencyInfo then
+	if opt.show_currency then
 		local num = tonumber(num) or 1
-		local name, total, icon = GetCurrencyInfo(id)
-		addon:AddRow(icon, opt.fade_own, 1, 1, 1, 1, 1, 1):SetTexts(nil,  num > 1 and ("%s x%d"):format(name, num) or name, total)
+		local c = C_CurrencyInfo.GetCurrencyInfo(id)
+		addon:AddRow(c.iconFileID, opt.fade_own, 1, 1, 1, 1, 1, 1):SetTexts(nil,  num > 1 and ("%s x%d"):format(c.name, num) or name, c.quantity)
 	end
 end
 
@@ -170,6 +171,25 @@ local timer = 0
 function addon.EframeUpdate(self, elapsed)
 	timer = timer + elapsed
 	for i,row in ipairs(stack) do
+		-- Deferred total calculation due to GetItemCount reliability
+		local ttt = row.timeToTotal
+		if ttt then
+			ttt = ttt - elapsed
+			if ttt <= 0 then
+				ttt = nil
+				local total
+				if opt.use_altoholic and Altoholic then
+					total = Altoholic:GetItemCount(Altoholic:GetIDFromLink(row.item))
+				else
+					total = GetItemCount(row.item)
+				end
+				if total and total > 1 then
+					row.total:SetText(numberize(total))
+				end
+			end
+			row.timeToTotal = ttt
+		end
+		-- Animation
 		local remaining = row.expires - timer
 		if remaining < 0 then
 			row:SetAlpha(0)
@@ -286,11 +306,8 @@ do
 		self.name:SetText(name and name.." " or nil)
 		self.text:SetText(text)
 		self.ilvl:SetText()
-		if not opt.show_totals or not total or total <= 1 then
-			self.total:SetText()
-		else
-			self.total:SetText(numberize(total))
-		end
+		-- Show total after 0.5 seconds to get a valid count
+		self.total:SetText()
 		self.name:SetVertexColor(nr or 1, ng or 1, nb or 1)
 		self.text:SetVertexColor(nr or 1, ng or 1, nb or 1)
 		if name then
@@ -411,6 +428,10 @@ local items = {
 	{ 72120 },
 	{ 2589 }
 }
+local currencies = {
+	81,
+	1728
+}
 for i,v in ipairs(items) do
 	GetItemInfo(v[1])
 end
@@ -445,7 +466,9 @@ local function test_coin(event, is_me)
 end
 
 local function test_currency(event)
-	addon.LOOT_EVENT('currency', event, 81, random_item_num(5))
+	for _,id in ipairs(currencies) do
+		addon.LOOT_EVENT('currency', event, id, random_item_num(5))
+	end
 end
 
 local function test_crafted(event)
@@ -484,6 +507,9 @@ local function queue_update(self, elapsed)
 		local time = GetTime()
 		for k,v in pairs(queue) do
 			if v[1] < time then
+				if v[3] then
+					print("Testing "..v[3])
+				end
 				v[2](select(3, unpack(v)))
 				queue[k] = nil
 			end

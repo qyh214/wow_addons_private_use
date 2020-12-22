@@ -1,6 +1,8 @@
 local abs = math.abs;
 local L = Narci.L;
-local ColorTable = Narci_ColorTable;
+local NarciThemeUtil = NarciThemeUtil;
+local floor = math.floor;
+local max = math.max;
 
 local TitleTooltip;
 
@@ -12,11 +14,12 @@ local function BuildTitlesDB(object)
     for key, value in pairs(object) do
         NewTable[value[4]] = {value[1], value[2], value[5]}; --value[3] is the title's name // value[4] is TitleID // value[5] is AchievementID;
         --i = i + 1;
-    end
+	end
     return NewTable;
 end
 
 local TitlesDB = BuildTitlesDB(Narci_CharacterTitlesTable);
+Narci_CharacterTitlesTable = nil;
 
 -----------------------------
 -------Sorting Function------
@@ -24,6 +27,8 @@ local TitlesDB = BuildTitlesDB(Narci_CharacterTitlesTable);
 local sortMethod = "Category";
 local function SortedByAlphabet(a, b) return a.name < b.name; end
 local function SortedByCategory(a, b)
+	local r;
+
 	if a.category == b.category then
 		if a.rarity == b.rarity then
 			r = a.name < b.name;
@@ -58,7 +63,7 @@ end
 --** Add a new sort func & Mark the current title in the table
 --** Also returns a table which tells how many titles you've got in each category
 
-local function Narci_GetKnownTitles(sortMethod)
+local function BuildTitleList(sortMethod)
 	local playerTitles = {};
 	local numRare = 0;
 	local titleCount = 2;	
@@ -176,7 +181,7 @@ local function CreateTitleOptions(self, buttonTemplate, initialOffsetX, initialO
 		tinsert(buttons, button);
 	end
 
-	self.buttonHeight = Round(buttonHeight) - offsetY;
+	self.buttonHeight = floor(buttonHeight + 0.5) - offsetY;
 
 	ScrollChild:SetWidth(self:GetWidth());
 	ScrollChild:SetHeight(numButtons * buttonHeight);
@@ -192,11 +197,10 @@ local function CreateTitleOptions(self, buttonTemplate, initialOffsetX, initialO
 	scrollBar:SetValue(0);
 
 	ScrollChild:SetScript("OnShow", function(ScrollChild)
-		local index = Narci_GlobalColorIndex;
+		local index = NarciThemeUtil:GetColorIndex();
 		if index ~= ScrollChild.index then
 			ScrollChild.index = index;
-			local R, G, B = ColorTable[index][1], ColorTable[index][2], ColorTable[index][3];
-			local r, g, b = R/255, G/255 ,B/255;
+			local r, g, b = NarciThemeUtil:GetColor()
 			for i = 1, #buttons do
 				buttons[i].HighlightColor:SetColorTexture(r, g, b);
 				buttons[i].SelectedColor:SetColorTexture(r, g, b);
@@ -210,9 +214,9 @@ local function SmoothScrollFrame_Update(self, totalHeight, displayedHeight)
 
 	if ( range > 0 and self.scrollBar ) then
 		local minVal, maxVal = self.scrollBar:GetMinMaxValues();
-		if ( math.floor(self.scrollBar:GetValue()) >= math.floor(maxVal) ) then
+		if ( floor(self.scrollBar:GetValue()) >= floor(maxVal) ) then
 			self.scrollBar:SetMinMaxValues(0, range)
-			if ( math.floor(self.scrollBar:GetValue()) ~= math.floor(range) ) then
+			if ( floor(self.scrollBar:GetValue()) ~= floor(range) ) then
 				self.scrollBar:SetValue(range);
 			else
 				HybridScrollFrame_SetOffset(self, range); -- If we've scrolled to the bottom, we need to recalculate the offset.
@@ -297,15 +301,13 @@ end
 --------Initialization-------
 -----------------------------
 
+local sortedList = {};
+local CategoryNumDetails = {};
+
 local function SortTitleList(method)
 	local scrollFrame = Narci_TitleManager.ScrollFrame;
-	if method == "Category" then
-		playerTitles_SortedByCategory, CategoryNumDetails = Narci_GetKnownTitles("Category");
-		scrollFrame.updatedList = playerTitles_SortedByCategory;
-	elseif method == "Alphabet" then
-		playerTitles_SortedByAlphabet, CategoryNumDetails = Narci_GetKnownTitles("Alphabet");
-		scrollFrame.updatedList = playerTitles_SortedByAlphabet;
-	end
+	sortedList, CategoryNumDetails = BuildTitleList(method);
+	scrollFrame.updatedList = sortedList;
 	TitileManager_UpdateList();
 end
 
@@ -314,7 +316,6 @@ local function CreateSliderTextureAndLabel()
 	if not CategoryNumDetails then
 		return;
 	end
-	local max = math.max;
 	local numTotal = CategoryNumDetails.sum or 1;
 	local slider = Narci_TitleManager.ScrollFrame.scrollBar;
 	local ScrollChildHeight = numTotal * 20 --Title Button Height;
@@ -413,11 +414,6 @@ local function HideSliderLabel()
 	end
 end
 
---Initialize
-local playerTitles_SortedByAlphabet = {};
-local playerTitles_SortedByCategory = {};
-local CategoryNumDetails = {};
-
 
 -----------------------------
 -----Create Smooth Scroll----
@@ -434,7 +430,7 @@ end
 function Narci_TitleManager_ScrollFrame_OnLoad(self)
     self:EnableMouse(true);
     CreateTitleOptions(self, "NarciTitleOptionTemplate", 0, 0, nil, nil, 0, 0);
-	NarciAPI_SmoothScroll_Initialization(self, playerTitles, TitileManager_UpdateList, 3, 0.2, nil, ScrollFrame_PositionFunc, ScrollFrame_OnScrollFinishedFunc);
+	NarciAPI_SmoothScroll_Initialization(self, nil, TitileManager_UpdateList, 3, 0.2, nil, ScrollFrame_PositionFunc, ScrollFrame_OnScrollFinishedFunc);
 
 	--Scrollbar methods
 	local scrollBar = self.scrollBar;
@@ -478,7 +474,6 @@ end
 
 -------------------
 local LIST_FULL_HEIGHT = 320 + 20;
-local AnimDuration = 0.4;
 
 local animList = NarciAPI_CreateAnimationFrame(0.5);
 
@@ -566,7 +561,7 @@ function NarciTitleOptionMixin:OnEnter()
 	--print(id)
 	--print(TitlesDB[id][3])
 
-	if not TitleTooltip.isPaused then
+	if TitlesDB[id] and not TitleTooltip.isPaused then
 		if not id or id == -1 then
 			TitleTooltip:FadeOut();
 		else
@@ -735,6 +730,7 @@ function NarciTitleManagerSwitchMixin:Close()
 		TitleTooltip:FadeOut();
 		self:SetScript("OnUpdate", nil);
 		self.counter = 0;
+		self:UnregisterEvent("GLOBAL_MOUSE_DOWN");
 	end
 end
 
@@ -745,12 +741,13 @@ function NarciTitleManagerSwitchMixin:OnClick()
 		Narci_TitleFrame:Show()
 		animList:Expand();
 		self.Tooltip:SetText(L["Close Title Manager"]);
+		self:RegisterEvent("GLOBAL_MOUSE_DOWN");
 	else
 		TitleTooltip.isPaused = true;
-		animList:Collapse()
+		animList:Collapse();
 		self.Tooltip:SetText(L["Open Title Manager"]);
-
 		TitleTooltip:FadeOut();
+		self:UnregisterEvent("GLOBAL_MOUSE_DOWN");
 	end
 
 	self:SetScript("OnUpdate", nil);
@@ -784,8 +781,19 @@ end
 function NarciTitleManagerSwitchMixin:OnHide()
 	self:SetAlpha(0);
 	self.counter = 0;
+	self:UnregisterEvent("GLOBAL_MOUSE_DOWN");
 end
 
+
+function NarciTitleManagerSwitchMixin:IsInBound()
+	return (Narci_TitleManager:IsMouseOver() or self:IsMouseOver() or TitleTooltip:IsMouseOver());
+end
+
+function NarciTitleManagerSwitchMixin:OnEvent(event)
+	if not self:IsInBound() then
+		self:Close();
+	end
+end
 
 local LoadSettings = CreateFrame("Frame");
 LoadSettings:RegisterEvent("PLAYER_ENTERING_WORLD");

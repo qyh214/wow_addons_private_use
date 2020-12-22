@@ -1,12 +1,20 @@
--- Based on ElitismHelper
+-- Modified from ElitismHelper
 local W, F, L, P = unpack(select(2, ...))
 local AD = W:NewModule("AvoidableDamage", "AceHook-3.0", "AceEvent-3.0")
 
+local assert = assert
 local format = format
 local gsub = gsub
+local math_pow = math.pow
 local pairs = pairs
+local print = print
+local select = select
 local sort = sort
+local strmatch = strmatch
+local strsplit = strsplit
 local tinsert = tinsert
+local tonumber = tonumber
+local type = type
 local wipe = wipe
 
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
@@ -14,8 +22,12 @@ local GetRealmName = GetRealmName
 local GetSpellLink = GetSpellLink
 local GetUnitName = GetUnitName
 local IsInGroup = IsInGroup
+local IsInInstance = IsInInstance
 local IsInRaid = IsInRaid
 local SendChatMessage = SendChatMessage
+local UnitBuff = UnitBuff
+local UnitDebuff = UnitDebuff
+local UnitGUID = UnitGUID
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned
 local UnitHealthMax = UnitHealthMax
 local UnitIsGroupLeader = UnitIsGroupLeader
@@ -24,323 +36,962 @@ local UnitIsPlayer = UnitIsPlayer
 local C_ChatInfo_GetRegisteredAddonMessagePrefixes = C_ChatInfo.GetRegisteredAddonMessagePrefixes
 local C_ChatInfo_RegisterAddonMessagePrefix = C_ChatInfo.RegisterAddonMessagePrefix
 local C_ChatInfo_SendAddonMessage = C_ChatInfo.SendAddonMessage
+local C_Map_GetBestMapForUnit = C_Map.GetBestMapForUnit
 local C_Timer_After = C_Timer.After
 
 local LE_PARTY_CATEGORY_HOME = LE_PARTY_CATEGORY_HOME
 local LE_PARTY_CATEGORY_INSTANCE = LE_PARTY_CATEGORY_INSTANCE
 
-local Spells = {
-    -- [257274] = 20, -- Debug
-    -- Affixes
-    [209862] = 20, -- Volcanic Plume (Environment)
-    [226512] = 20, -- Sanguine Ichor (Environment)
-    [288694] = 20, -- Shadow Smash (Season 2)
-    [288858] = 20, -- Expel Soul (Season 2)
-    -- Freehold
-    [272046] = 20, --- Dive Bomb (Sharkbait)
-    [257426] = 20, --- Brutal Backhand (Irontide Enforcer)
-    [258352] = 20, --- Grapeshot (Captain Eudora)
-    [256594] = 20, --- Barrel Smash (Captain Raoul)
-    [267523] = 20, --- Cutting Surge (Captain Jolly)
-    [272374] = 20, --- Whirlpool of Blades (Captain Jolly)
-    [272397] = 20, --- Whirlpool of Blades (Captain Jolly)
-    [256546] = 20, --- Shark Tornado
-    [257310] = 20, --- Cannon Barrage
-    [257757] = 20, --- Goin' Bananas (Bilge Rat Buccaneer)
-    [274389] = 20, --- Rat Traps (Vermin Trapper)
-    [257902] = 20, --- Shell Bounce (Ludwig Von Tortollan)
-    [258199] = 20, --- Ground Shatter (Irontide Crusher)
-    [276061] = 20, --- Boulder Throw (Irontide Crusher)
-    [258779] = 20, --- Sea Spout (Irontide Oarsman)
-    [274400] = 20, --- Duelist Dash (Cutwater Duelist)
-    [257274] = 20, --- Vile Coating (Environment)
-    -- Shrine of the Storm
-    [264560] = 20, --- Choking Brine (Aqualing)
-    [267899] = 20, --- Hindering Cleave (Brother Ironhull)
-    [268280] = 20, --- Tidal Pod (Tidesage Enforcer)
-    [276286] = 20, --- Slicing Hurricane (Environment)
-    [276292] = 20, --- Whirlign Slam (Ironhull Apprentice)
-    [267385] = 20, --- Tentacle Slam (Vol'zith the Whisperer)
-    -- import from ElitismHelper
-    [276268] = 20, --- Heaving Blow (Shrine Templar)
-    [267973] = 20, --- Wash Away (Temple Attendant)
-    [268059] = 20, --- Anchor of Binding (Tidesage Spiritualist)
-    [264155] = 20, --- Surging Rush (Aqu'sirr)
-    [267841] = 20, --- Blowback (Galecaller Faye)
-    -- Siege of Boralus
-    [256627] = 20, --- Slobber Knocker (Scrimshaw Enforcer)
-    [256663] = 20, --- Burning Tar (Blacktar Bomber)
-    [257431] = 20, --- Meat Hook (Chopper Redhook)
-    [275775] = 20, --- Savage Tempest (Irontide Raider)
-    [269029] = 20, --- Clear the Deck (Dread Captain Lockwood)
-    [272874] = 20, --- Trample (Ashvane Commander)
-    [272426] = 20, --- Sighted Artillery
-    [272140] = 20, --- Iron Volley
-    [257292] = 20, --- Heavy Slash (Irontide Cleaver)
-    [273681] = 20, --- Heavy Hitter (Chopper Redhook)
-    [257886] = 20, --- Brine Pool (Hadal Darkfathom)
-    -- import from ElitismHelper
-    [257069] = 20, --- Watertight Shell (Kul Tiran Wavetender)
-    [268260] = 20, --- Broadside (Ashvane Cannoneer)
-    [268443] = 20, --- Dread Volley (Dread Captain Lockwood)
-    [272713] = 20, --- Crushing Slam (Bilge Rat Demolisher)
-    [274941] = 20, --- Banana Rampage swirlies(Bilge Rat Buccaneer)
-    [257883] = 20, --- Break Water (Hadal Darkfathom)
-    [276068] = 20, --- Tidal Surge (Hadal Darkfathom)
-    [261565] = 20, --- Crashing Tide (Hadal Darkfathom)
-    [277535] = 20, --- Viq'Goth's Wrath (Viq'Goth)
-    -- Tol Dagor
-    [257785] = 20, --- Flashing Daggers
-    [256976] = 20, --- Ignition (Knight Captain Valyri)
-    [256955] = 20, --- Cinderflame (Knight Captain Valyri)
-    [256083] = 20, --- Cross Ignition (Overseer Korgus)
-    [263345] = 20, --- Massive Blast (Overseer Korgus)
-    [258864] = 20, --- Suppression Fire (Ashvane Marine/Spotter)
-    [258364] = 20, --- Fuselighter (Ashvane Flamecaster)
-    [259711] = 20, --- Lockdown (Ashvane Warden)
-    -- import from ElitismHelper
-    [257119] = 20, --- Sand Trap (The Sand Queen)
-    [256710] = 20, --- Burning Arsenal (Knight Captain Valyri)
-    -- Waycrest Manor
-    [260569] = 20, --- Wildfire (Soulbound Goliath)
-    [265407] = 20, --- Dinner Bell (Banquet Steward)
-    [264923] = 20, --- Tenderize (Raal the Gluttonous)
-    [264150] = 20, --- Shatter (Thornguard)
-    [271174] = 20, --- Retch (Pallid Gorger)
-    [268387] = 20, --- Contagious Remnants (Lord Waycrest)
-    [268308] = 20, --- Discordant Cadenza (Lady Waycrest
-    -- import from ElitismHelper
-    [264531] = 20, --- Shrapnel Trap (Maddened Survivalist)
-    [264476] = 20, --- Tracking Explosive (Crazed Marksman)
-    [264712] = 20, --- Rotten Expulsion (Raal the Gluttonous)
-    [272669] = 20, --- Burning Fists (Soulbound Goliath)
-    [278849] = 20, --- Uproot (Coven Thornshaper)
-    [264040] = 20, --- Uprooted Thorns (Coven Thornshaper)
-    [265757] = 20, --- Splinter Spike (Matron Bryndle)
-    -- Atal'Dazar
-    [253666] = 20, --- Fiery Bolt (Dazar'ai Juggernaught)
-    [257692] = 20, --- Tiki Blaze (Environment)
-    [255620] = 20, --- Festering Eruption (Reanimated Honor Guard)
-    [256959] = 20, --- Rotting Decay (Renaimated Honor Guard)
-    [250259] = 20, --- Toxic Leap
-    [250022] = 20, --- Echoes of Shadra (Echoes of Shadra)
-    [250585] = 20, --- Toxic Pool
-    [250036] = 20, --- Shadowy Remains
-    -- import from ElitismHelper
-    [258723] = 20, --- Grotesque Pool (Renaimated Honor Guard)
-    [255567] = 20, --- Frenzied Charge (T'lonja)
-    -- King's Rest
-    [265914] = 20, --- Molten Gold (The Golden Serpent)
-    [266191] = 20, --- Whirling Axe (Council of Tribes)
-    [270289] = 20, --- Purification Beam
-    [270503] = 20, --- Hunting Leap (Honored Raptor)
-    [271564] = 20, --- Embalming Fluid (Embalming Fluid)
-    [270485] = 20, --- Blooded Leap (Spectral Berserker)
-    [267639] = 20, --- Burn Corruption (Mchimba the Embalmer)
-    [270931] = 20, --- Darkshot
-    -- import from ElitismHelper
-    [270003] = 20, --- Suppression Slam (Animated Guardian)
-    [269932] = 20, --- Ghust Slash (Shadow-Borne Warrior)
-    [265781] = 20, --- Serpentine Gust (The Golden Serpent)
-    [270928] = 20, --- Bladestorm (King Timalji)
-    [270891] = 20, --- Channel Lightning (King Rahu'ai)
-    [270292] = 20, --- Purifying Flame (Purification Construct)
-    [270514] = 20, --- Ground Crush (Spectral Brute)
-    [268419] = 20, --- Gale Slash (King Dazar)
-    [268796] = 20, --- Impaling Spear (King Dazar)
-    -- The MOTHERLODE!!
-    [257371] = 20, --- Gas Can (Mechanized Peace Keeper)
-    [262287] = 20, --- Concussion Charge (Mech Jockey / Venture Co. Skyscorcher)
-    [268365] = 20, --- Mining Charge (Wanton Sapper)
-    [269313] = 20, --- Final Blast (Wanton Sapper)
-    [275907] = 20, --- Tectonic Smash
-    [259533] = 20, --- Azerite Catalyst (Rixxa Fluxflame)
-    [260103] = 20, --- Propellant Blast
-    [260279] = 20, --- Gattling Gun (Mogul Razdunk)
-    [276234] = 20, --- Micro Missiles
-    [270277] = 20, --- Big Red Rocket (Mogul Razdunk)
-    [271432] = 20, --- Test Missile (Venture Co. War Machine)
-    [262348] = 20, --- Mine Blast
-    [257337] = 20, --- Shocking Claw
-    [269092] = 20, --- Artillery Barrage (Ordnance Specialist)
-    -- import from ElitismHelper
-    [268417] = 20, --- Power Through (Azerite Extractor)
-    [268704] = 20, --- Furious Quake (Stonefury)
-    [258628] = 20, --- Resonant Quake (Earthrager)
-    [271583] = 20, --- Black Powder Special (Mines near the track)
-    [269831] = 20, --- Toxic Sludge (Oil Environment)
-    -- Temple of Sethraliss
-    [268851] = 20, --- Lightning Shield (Adderis)
-    [273225] = 20, --- Volley (Sandswept Marksman)
-    [264574] = 20, --- Power Shot (Sandswept Marksman)
-    [273995] = 20, --- Pyrrhic Blast (Crazed Incubator)
-    [264206] = 20, --- Burrow (Merektha)
-    [272657] = 20, --- Noxious Breath
-    [272658] = 20, --- Electrified Scales
-    [272821] = 20, --- Call Lightning (Stormcaller)
-    -- import from ElitismHelper
-    [263425] = 20, --- Arc Dash (Adderis)
-    [263573] = 20, --- Cyclone Strike (Adderis)
-    [272655] = 20, --- Scouring Sand (Mature Krolusk)
-    [272696] = 20, --- Lightning in a Bottle (Crazed Incubator)
-    [264763] = 20, --- Spark (Static-charged Dervish)
-    [279014] = 20, --- Cardiac Shock (Avatar, Environment)
-    -- Underrot
-    [264757] = 20, --- Sanguine Feast (Elder Leaxa)
-    [265542] = 20, --- Rotten Bile (Fetid Maggot)
-    [265019] = 20, --- Savage Cleave (Chosen Blood Matron)
-    [261498] = 20, --- Creeping Rot (Elder Leaxa)
-    [265665] = 20, --- Foul Sludge (Living Rot)
-    [265511] = 20, --- Spirit Drain (Spirit Drain Totem)
-    [272469] = 20, --- Abyssal Slam (Abyssal Reach)
-    [272609] = 20, --- Maddening Gaze (Faceless Corruptor)
-    -- import from ElitismHelper
-    [260312] = 20, --- Charge (Cragmaw the Infested)
-    [259720] = 20, --- Upheaval (Sporecaller Zancha)
-    [270108] = 20, --- Rotting Spore (Unbound Abomination)
-    [270108] = 20, --- Rotting Spore (Unbound Abomination)
-    -- from ElitismHelper and https://nga.178.com/read.php?&tid=15265896&pid=396636585&to=1
-    -- Mechagon Workshop
-    [294128] = 20, --- Rocket Barrage (Rocket Tonk)
-    [285020] = 20, --- Whirling Edge (The Platinum Pummeler)
-    [294291] = 20, --- Process Waste ()
-    [291930] = 20, --- Air Drop (K.U-J.0)
-    [294324] = 20, --- Mega Drill (Waste Processing Unit)
-    [293861] = 20, --- Anti-Personnel Squirrel (Anti-Personnel Squirrel)
-    [295168] = 20, --- Capacitor Discharge (Blastatron X-80)
-    [294954] = 20, --- Self-Trimming Hedge (Head Machinist Sparkflux)
-    [283422] = 20, -- 车+机器人，全速前进
-    [282945] = 20, -- 车+机器人，电锯
-    [285344] = 20, -- 车+机器人，埋设地雷
-    [291953] = 20, -- 狂犬，垃圾炸弹
-    [291946] = 20, -- 狂犬，喷射烈焰
-    [301299] = 20, -- 传送带，焚炉烈焰
-    [294015] = 20, -- 爆破金刚，发射高爆火箭
-    [293986] = 20, -- 爆破金刚，声波脉冲
-    [285454] = 20, -- 机械师闪流，脉冲榴弹
-    [291915] = 20, -- 国王，等离子球
-    [291856] = 20, -- 国王，离子校正
-    -- Mechagon Junkyard
-    -- from ElitismHelper and https://nga.178.com/read.php?&tid=15265896&pid=396636585&to=1
-    [300816] = 20, --- Slimewave (Slime Elemental)
-    [300188] = 20, --- Scrap Cannon (Weaponized Crawler)
-    [300427] = 20, --- Shockwave (Scrapbone Bully)
-    [294890] = 20, --- Gryro-Scrap (Malfunctioning Scrapbot)
-    [300129] = 20, --- Self-Destruct Protocol (Malfunctioning Scrapbot)
-    [300561] = 20, --- Explosion (Scrapbone Trashtosser)
-    [299475] = 20, --- B.O.R.K. (Scraphound)
-    [299535] = 20, --- Scrap Blast (Pistonhead Blaster)
-    [298940] = 20, --- Bolt Buster (Naeno Megacrash)
-    [297283] = 20, --- Cave In (King Gobbamak)
-    [300159] = 20, -- 重装拳机，旋翼风暴
-    [297835] = 20, -- 冈克，融合
-    [297985] = 20, -- 冈克，泼溅
-    [297834] = 20, -- 冈克，剧毒波浪
-    [299164] = 20, -- 男女，风驰电掣
-    [302681] = 20, -- 男女，超能跳电
-    [298849] = 20, -- 男女，电流滑步
-    [298571] = 20, -- 男女，燃尽
-    [301667] = 20, -- 麦卡贡骑兵，急速射击
-    [295536] = 20, -- 飞机，火炮冲击
-    [302384] = 20, -- 飞机，静电释放
-    [296522] = 20, -- 飞机，自毁
-    [296150] = 20, -- 飞机，喷涌冲击
-    --- Awakened Lieutenant
-    [240448] = 20, -- 震荡
-    [314387] = 20, -- 秒t怪菌毯
-    [314309] = 20, --- Dark Fury (Urg'roth, Breaker of Heroes)
-    [314467] = 20, --- Volatile Rupture (Voidweaver Mal'thir)
-    [314565] = 20 --- Defiled Ground (Blood of the Corruptor)
+local wprint = function()
+    return
+end
+--local wprint = print
+
+--------------------------------------------
+-- Authority
+--------------------------------------------
+AD.prefix = "WDH_AD"
+local myServerID, myPlayerUID, authorityCache
+
+function AD:InitializeAuthority()
+    local successfulRequest = C_ChatInfo_RegisterAddonMessagePrefix(self.prefix)
+    assert(successfulRequest, L["The addon message prefix registration is failed."])
+
+    local guidSplitted = {strsplit("-", UnitGUID("player"))}
+    myServerID = tonumber(guidSplitted[2], 10)
+    myPlayerUID = tonumber(guidSplitted[3], 16)
+end
+
+function AD:CheckAuthority(key)
+    if IsInGroup() then
+        if authorityCache.playerUID ~= myPlayerUID or authorityCache.serverID ~= myServerID then
+            return false
+        end
+    end
+
+    return true
+end
+
+do
+    local channelLevel = {
+        SELF = 0,
+        EMOTE = 1,
+        PARTY = 2
+    }
+
+    function AD:SendMyLevel()
+        if IsInGroup(LE_PARTY_CATEGORY_HOME) then
+            local level = self.db.notification.channel and channelLevel[self.db.notification.channel] or 0
+
+            -- If reload the ui, the data is cleared
+            if self.inRecording then
+                level = level + 100
+            end
+
+            local message = format("%s;%d;%d", level, myServerID, myPlayerUID)
+            C_ChatInfo_SendAddonMessage(self.prefix, message, "PARTY")
+        end
+    end
+end
+
+function AD:ReceiveLevel(message, sender)
+    if message == "RESET_AUTHORITY" then
+        self:UpdatePartyInfo()
+        return
+    end
+
+    local level, serverID, playerUID = strmatch(message, "^([0-9]-);([0-9]-);([0-9]+)")
+    level = tonumber(level)
+    serverID = tonumber(serverID)
+    playerUID = tonumber(playerUID)
+
+    if not authorityCache then
+        authorityCache = {
+            level = level,
+            serverID = serverID,
+            playerUID = playerUID,
+            name = sender
+        }
+        return
+    end
+
+    local needUpdate = false
+    if level > authorityCache.level then -- 等级比较
+        needUpdate = true
+    elseif level == authorityCache.level then
+        if serverID > authorityCache.serverID then -- 服务器 ID 比较
+            needUpdate = true
+        elseif serverID == authorityCache.serverID then
+            if playerUID > authorityCache.playerUID then -- 玩家 ID 比较
+                needUpdate = true
+            end
+        end
+    end
+
+    if needUpdate then
+        authorityCache.level = level
+        authorityCache.serverID = serverID
+        authorityCache.playerUID = playerUID
+        authorityCache.name = sender
+    end
+end
+
+function AD:CHAT_MSG_ADDON(_, prefix, message, channel, sender)
+    if prefix == self.prefix then
+        self:ReceiveLevel(message, sender)
+    end
+end
+
+do
+    local waitSend = false
+    function AD:UpdatePartyInfo()
+        if waitSend or not IsInGroup(LE_PARTY_CATEGORY_HOME) then
+            return
+        end
+
+        authorityCache = nil
+        waitSend = true
+
+        C_Timer_After(
+            0.5,
+            function()
+                if IsInGroup(LE_PARTY_CATEGORY_HOME) then
+                    AD:SendMyLevel()
+                end
+                waitSend = false
+            end
+        )
+    end
+end
+
+function AD:GetActiveUser()
+    return authorityCache and authorityCache.name or GetUnitName("player")
+end
+
+function AD:SendChatMessage(message)
+    if not self.db.notification.enable or not IsInGroup(LE_PARTY_CATEGORY_HOME) then
+        return
+    end
+
+    if authorityCache and authorityCache.playerUID ~= myPlayerUID then
+        return
+    end
+
+    if self.db.notification.channel == "SELF" then
+        print(message)
+    elseif self.db.notification.channel == "PARTY" and IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+        SendChatMessage(message, "PARTY")
+    elseif self.db.notification.channel == "EMOTE" and IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+        SendChatMessage(": " .. message, "EMOTE")
+    end
+end
+
+function AD:ResetAuthority()
+    if not IsInGroup() then
+        return
+    end
+
+    C_ChatInfo_SendAddonMessage(self.prefix, "RESET_AUTHORITY", "PARTY")
+end
+
+--------------------------------------------
+-- Database
+--------------------------------------------
+-- Types
+local MISTAKE = {
+    SPELL_DAMAGE = 1, -- 法術傷害
+    AURA = 2, -- 得到錯誤的效果
+    MELEE = 3 -- 近戰傷害
+}
+-- Data
+local MistakeData = {
+    ["General"] = {
+        -- Debug (死靈進門右轉法術怪)
+        -- {
+        --     -- 近戰攻擊
+        --     type = MISTAKE.MELEE,
+        --     npc = 166302
+        -- },
+        -- {
+        --     -- 汲取體液
+        --     type = MISTAKE.SPELL_DAMAGE,
+        --     spell = 334749
+        -- },
+        {
+            -- 火山煙流
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 209862
+        },
+        {
+            -- 膿血
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 226512
+        },
+        {
+            -- 地震
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 240448
+        },
+        {
+            -- 風暴
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 343520
+        },
+        {
+            -- 逞凶鬥狠 (第一賽季)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 342494
+        }
+    },
+    ["The Necrotic Wake"] = {
+        -- 小怪
+        {
+            -- 嚴寒尖刺
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 324391
+        },
+        {
+            -- 臟腑削切 (胖子)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 333477
+        },
+        -- [1] 荒骨
+        -- [2] 『收割者』亞瑪斯
+        {
+            -- 死靈吐息
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 333489
+        },
+        {
+            -- 死靈膿液
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 333492
+        },
+        -- [3] 縫補師縫肉
+        {
+            -- 肉鉤
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 327952
+        },
+        {
+            -- 防腐黏液 (腳下污水)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 320365
+        },
+        {
+            -- 防腐黏液 (腳下污水)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 320366
+        },
+        {
+            -- 劇毒迷霧
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 327100
+        },
+        {
+            -- 病態凝視 (追人)
+            type = MISTAKE.MELEE,
+            npc = 162689,
+            playerDebuff = 343556
+        },
+        -- [4] 『霜縛者』納爾索
+        {
+            -- 彗星風暴
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 320784
+        },
+        {
+            -- 鋒利碎冰 (大冰圈)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 328212
+        }
+    },
+    ["Theater of Pain"] = {
+        -- 小怪
+        {
+            -- 死靈箭雨
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 317367
+        },
+        {
+            -- 骸骨風暴
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 331224
+        },
+        {
+            -- 地面潰擊 (『毀壞者』黑文)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 332708
+        },
+        {
+            -- 迴旋刀刃 (『割碎者』奈克薩拉)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 337037
+        },
+        {
+            -- 死亡之風 (會被吹下平台)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 333297
+        },
+        {
+            -- 邪惡爆發 (腐臭肉囊 前後雙噴)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 330592
+        },
+        {
+            -- 邪惡爆發 (腐臭肉囊 前後雙噴)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 330608
+        },
+        {
+            -- 骸骨尖刺 (魂鑄削骨者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 331243
+        },
+        -- [1] 蔑視挑戰者
+        {
+            -- 灼熱死亡 (腳下圈)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 333292,
+            noPlayerDebuff = 333231
+        },
+        -- [2] 肉排
+        {
+            -- 搗肉猛擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 318406
+        },
+        {
+            -- 鋸齒劈砍 (被勾上)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323406
+        },
+        -- [3] 『未逝者』薩夫
+        {
+            -- 震耳衝擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 339415
+        },
+        {
+            -- 巨力猛劈
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 320729
+        },
+        {
+            -- 粉碎猛擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 317231
+        },
+        -- [4] 庫薩洛克
+        {
+            -- 幻魄寄生 (腳下圈)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 319765,
+            noPlayerDebuff = 319626
+        },
+        -- [5] 『不朽女皇』莫瑞莎
+        {
+            -- 黑暗破滅
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323681
+        },
+        {
+            -- 鬼魅衝鋒
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 339751
+        },
+        {
+            -- 屠殺殘影
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 339573
+        },
+        {
+            -- 戰鬥殘影
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 339550
+        }
+    },
+    ["Mists of Tirna Scithe"] = {
+        -- 小怪
+        {
+            -- 困惑花粉 (面前衝擊)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 321968
+        },
+        {
+            -- 刺藤爆發(佐司特斷枝者 緩速黑水)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 325027
+        },
+        {
+            -- 後背踢 (霧紗守護者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 331748
+        },
+        {
+            -- 長舌鞭笞 (青蛙怪)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 340300
+        },
+        {
+            -- 毒性分泌物 (青蛙怪)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 340304
+        },
+        {
+            -- 長矛亂舞
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 331721,
+            playerIsNotTank = true
+        },
+        -- [1] 英拉馬洛克
+        {
+            -- 靈魄之潭 (藍色污水)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323250
+        },
+        {
+            -- 困惑花粉 (面前衝擊)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323137
+        },
+        -- [2] 喚霧者
+        {
+            -- 拍蛋糕
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 321828
+        },
+        {
+            -- 躲避球
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 336759
+        },
+        {
+            -- 冰凍衝擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 321893
+        },
+        -- [3] 崔朵瓦
+        {
+            -- 酸液滴
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 326021
+        },
+        {
+            -- 消化酸
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 326309
+        },
+        {
+            -- 酸液噴吐
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 322655
+        }
+    },
+    ["Spires of Ascension"] = {
+        -- 小怪
+        {
+            -- 迅捷削切 (琪瑞安黑暗軍教官)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323786
+        },
+        {
+            -- 橫掃攻擊 (棄誓者先鋒)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 317943
+        },
+        {
+            -- 漸弱 (萊克西斯 左邊門神)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 336420
+        },
+        {
+            -- 衝擊 (棄誓者小隊長)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323740
+        },
+        {
+            -- 粉碎重擊 (棄誓者小隊長)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 336447
+        },
+        {
+            -- 強音 (棄誓者惡徒 4方向AoE)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 336444,
+            playerIsNotTank = true
+        },
+        -- [1] 金塔拉
+        {
+            -- 充能之矛
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 321034
+        },
+        {
+            -- 巨力斬擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 320966,
+            playerIsNotTank = true
+        },
+        {
+            -- 離子電漿
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 324662
+        },
+        {
+            -- 深度連結 (連線)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 331251
+        },
+        {
+            -- 淵染毒液 (午睡)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 317626
+        },
+        {
+            -- 弱化彈幕 (黑球)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 324370
+        },
+        -- [2] 溫圖納斯
+        {
+            -- 黑闇箭
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 324141
+        },
+        -- [3] 奧利菲翁
+        {
+            -- 蓄能踐踏
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 324608
+        },
+        -- [4]『猜疑楷模』德沃絲
+        {
+            -- 穿梭
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323943
+        },
+        {
+            -- 冥淵引爆
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 334625,
+            damageThreshold = 10000
+        }
+    },
+    ["De Other Side"] = {
+        -- 小怪
+        {
+            -- 黑暗蓮花 (延遲爆炸紫圈)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 328729
+        },
+        {
+            -- 黑暗爆發 (亡語者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 334051
+        },
+        {
+            -- 狂怒面具
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 342869
+        },
+        {
+            -- 狂怒面具
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 333790
+        },
+        {
+            -- 斬掠 (遠處旋風斬)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 333250
+        },
+        {
+            -- 噴灑精華 (哈卡之子 大紅圈)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323569
+        },
+        {
+            -- 近戰 (阿塔萊死亡行者的靈魂 追人)
+            type = MISTAKE.MELEE,
+            npc = 170483
+        },
+        {
+            -- 瘋狂鑽鑿 (損壞的鑽牙器 需卡視角)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 331933
+        },
+        {
+            -- 機械炸彈松鼠
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 320830
+        },
+        {
+            -- 靈魄星風暴 (去商人路上隨機出現的小圈)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 313236
+        },
+        -- [1]『奪魂者』哈卡
+
+        -- [2] 曼納斯頓夫婦
+        -- [3] 商人希夏
+        {
+            -- 爆炸裝置
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 320232
+        },
+        {
+            -- 位移衝擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 320723
+        },
+        -- [4] 繆薩拉
+        {
+            -- 星能雲霧
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 335000
+        },
+        {
+            -- 宇宙崩壞
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 325691
+        },
+        {
+            -- 破碎領域
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 327427
+        },
+        {
+            -- 死亡主宰
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 334913
+        }
+    },
+    ["Sanguine Depths"] = {
+        -- 小怪
+        {
+            -- 回音戳刺 (本體)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 320999
+        },
+        {
+            -- 回音戳刺 (鏡像)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 320991
+        },
+        {
+            -- 易爆陷阱 (恐怖神獵手)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 334563
+        },
+        {
+            -- 橫掃揮擊 (監護長賈夫臨 面前放風)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 334615
+        },
+        {
+            -- 斷魂削砍 (大石像鬼正面順劈)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 322429,
+            playerIsNotTank = true
+        },
+        {
+            -- 爆裂皮紙 (研究紀錄者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 334378
+        },
+        {
+            -- 峭岩裂石
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 322418
+        },
+        -- [1] 貪婪的奎西斯
+        -- [2] 處決者塔沃德
+        {
+            -- 罪觸靈魄
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 328494
+        },
+        {
+            -- 殘渣
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323573
+        },
+        -- [3] 總監督者貝莉亞
+        {
+            -- 苦痛狂嚎
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 325885
+        },
+        {
+            -- 滋長的猜忌
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 322212
+        },
+        -- [4] 凱厄將軍
+        {
+            -- 穿透殘影
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323810
+        },
+        {
+            -- 沉鬱疾風
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323810,
+            noPlayerBuff = 324092
+        }
+    },
+    ["Halls of Atonement"] = {
+        -- 小怪
+        {
+            -- 爆發折磨
+            -- TODO: Check this
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 327885
+        },
+        {
+            -- 致命推進 (墮落的暗刃兵)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 325523
+        },
+        {
+            -- 罪孽震盪 (哈奇厄斯裂片)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 326440
+        },
+        {
+            -- 急速射擊 (墮落的馴犬者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 325799
+        },
+        {
+            -- 岩石之息
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 346866,
+            playerIsNotTank = true
+        },
+        {
+            -- 強力揮擊 (石源魔斬擊者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 326997,
+            playerIsNotTank = true
+        },
+        -- [1]『罪污巨人』哈奇厄斯
+        {
+            -- 拋擲殘骸
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 322945
+        },
+        {
+            -- 玻璃裂片
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323001
+        },
+        {
+            -- 折射罪光
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 324044
+        },
+        -- [2] 艾可隆
+        {
+            -- 血腥洪流
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 319702
+        },
+        -- [3] 至高判決者阿利茲
+        -- [4] 宮務大臣
+        {
+            -- 念力碰撞
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323126
+        },
+        {
+            -- 念力猛襲
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 329113
+        }
+    },
+    ["Plaguefall"] = {
+        -- 小怪
+        {
+            -- 黏著寄生 (沼地怪幼體)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 335882
+        },
+        {
+            -- 振翅攻擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 330404
+        },
+        {
+            -- 腐臭膽汁 (噴湧軟泥)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 319120
+        },
+        {
+            -- 瘟疫炸彈 (路上炸彈)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 328501
+        },
+        {
+            -- 毒液池 (腐爛的血肉巨人)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 320072
+        },
+        {
+            -- 鋸齒脊刺 (荒蕪斷脊者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 320519
+        },
+        {
+            -- 膿瘡噴射 (荒蕪斷脊者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 318949
+        },
+        {
+            -- 嘔吐瘟疫
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 327233
+        },
+        -- [1] 葛洛格羅
+        {
+            -- 軟泥波
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 324667
+        },
+        {
+            -- 軟泥波
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 326242
+        },
+        -- [2] 伊克思博士
+        {
+            -- 黏液爆發
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 333808
+        },
+        {
+            -- 軟泥突擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 329217
+        },
+        -- [3] 多米娜‧毒刃
+        -- [4] 藩侯史特拉達瑪
+        {
+            -- 瘟疫撞擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 322475
+        },
+        {
+            -- 瘟疫泉源
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 330135
+        }
+    }
 }
 
-local SpellsNotTank = {
-    -- Siege of Boralus
-    [268230] = 20, --- Crimson Swipe (Ashvane Deckhand)
-    -- Tol Dagor
-    [258864] = 20, --- Suppression Fire (Ashvane Marine/Spotter)
-    -- Waycrest Manor
-    [263905] = 20, --- Marking Cleave (Heartsbane Runeweaver)
-    [265372] = 20, ---	Shadow Cleave (Enthralled Guard)
-    [271174] = 20, --- Retch (Pallid Gorger)
-    -- Atal'Dazar
+--------------------------------------------
+-- Triggers
+--------------------------------------------
 
-    -- King's Rest
-    [270289] = 20, --- Purification Beam (Purification Construct)
-    -- The MOTHERLODE!!
-    [268846] = 20, --- Echo Blade (Weapons Tester)
-    [263105] = 20, --- Blowtorch (Feckless Assistant)
-    [263583] = 20, --- Broad Slash (Taskmaster Askari)
-    -- Temple of Sethraliss
-    [255741] = 20, --- Cleave (Scaled Krolusk Rider)
-    -- Underrot
-    [272457] = 20, --- Shockwave (Sporecaller Zancha)
-    [260793] = 20 --- Indigestion (Cragmaw the Infested)
+do
+    local MapTable = {
+        [1663] = "Halls of Atonement",
+        [1664] = "Halls of Atonement",
+        [1665] = "Halls of Atonement",
+        [1666] = "The Necrotic Wake",
+        [1667] = "The Necrotic Wake",
+        [1668] = "The Necrotic Wake",
+        [1669] = "Mists of Tirna Scithe",
+        [1674] = "Plaguefall",
+        [1675] = "Sanguine Depths",
+        [1676] = "Sanguine Depths",
+        [1677] = "De Other Side",
+        [1678] = "De Other Side",
+        [1679] = "De Other Side",
+        [1680] = "De Other Side",
+        [1683] = "Theater of Pain",
+        [1684] = "Theater of Pain",
+        [1685] = "Theater of Pain",
+        [1686] = "Theater of Pain",
+        [1687] = "Theater of Pain",
+        [1692] = "Spires of Ascension",
+        [1693] = "Spires of Ascension",
+        [1694] = "Spires of Ascension",
+        [1695] = "Spires of Ascension",
+        [1697] = "Plaguefall"
+    }
+
+    function AD:GetCurrentDungeonName()
+        local mapID = C_Map_GetBestMapForUnit("player")
+        return mapID and MapTable[mapID]
+    end
+end
+
+local policy = {
+    spell = {},
+    aura = {},
+    melee = {}
 }
 
-local Auras = {
-    -- Freehold
-    [274516] = true, -- Slippery Suds
-    [274389] = true, -- Rat Traps (Vermin Trapper)
-    -- Shrine of the Storm
-    [268391] = true, -- Mental Assault (Abyssal Cultist)
-    [276268] = true, -- Heaving Blow (Shrine Templar)
-    [269104] = true, -- Explosive Void (Lord Stormsong)
-    [267956] = true, -- Zap (Jellyfish)
-    -- Siege of Boralus
-    [257292] = true, -- Heavy Slash (Kul Tiran Vanguard)
-    [272874] = true, -- Trample (Ashvane Commander)
-    [257169] = true, -- Fear
-    -- Tol Dagor
-    [257119] = true, -- Sand Trap (The Sand Queen)
-    [256474] = true, -- Heartstopper Venom (Overseer Korgus)
-    -- Waycrest Manor
-    [265352] = true, -- Toad Blight (Toad)
-    [278468] = true, -- Freezing Trap
-    -- Atal'Dazar
-    [255371] = true, -- Terrifying Visage (Rezan)
-    -- King's Rest
-    [270003] = true, -- Suppression Slam (Animated Guardian)
-    [270931] = true, -- Darkshot
-    [268796] = true, -- (Kind Dazar)
-    -- The MOTHERLODE!!
+local function GetIDByGUID(guid)
+    return tonumber(strmatch(guid or "", "Creature%-.-%-.-%-.-%-.-%-(.-)%-"))
+end
 
-    -- Temple of Sethraliss
-    [263914] = true, -- Blinding Sand (Merektha)
-    [269970] = true, -- Blinding Sand (Merektha)
-    -- Underrot
-    [272609] = true, -- Maddening Gaze (Faceless Corrupter)
-    -- Mechagon Workshop
-    [293986] = true, --- Sonic Pulse (Blastatron X-80)
-    [294863] = true, -- 机械师，烈油之泉
-    [285440] = true, -- 机械师，烈焰火炮
-    -- Mechaton Junkyard
-    [398529] = true, -- Gooped (Gunker)
-    [300659] = true, -- Consuming Slime (Toxic Monstrosity)
-    [298124] = true, -- 冈克，束缚粘液
-    [298259] = true -- 冈克，束缚粘液
-}
+function AD:CompilePolicy(policies)
+    for _, mistake in pairs(policies) do
+        if mistake.type == MISTAKE.SPELL_DAMAGE then
+            policy.spell[mistake.spell] = mistake
+        elseif mistake.type == MISTAKE.AURA then
+            policy.aura[mistake.aura] = mistake
+        elseif mistake.type == MISTAKE.MELEE then
+            policy.melee[mistake.npc] = mistake
+        end
+    end
+end
 
-local AurasNotTank = {}
+function AD:Compile()
+    policy = {
+        spell = {},
+        aura = {},
+        melee = {}
+    }
 
+    local mapName = self:GetCurrentDungeonName()
+    if not mapName or not MistakeData[mapName] then
+        return
+    end
+
+    self:CompilePolicy(MistakeData.General)
+    self:CompilePolicy(MistakeData[mapName])
+end
+
+--------------------------------------------
+-- Message Functions
+--------------------------------------------
 local warningMessage
 local stacksMessage
 local spellMessage
 
-local allUsers = {}
-local timers = {}
-local timerData = {}
-local combinedFails = {}
+function AD:FormatNumber(amount)
+    if not self.db or not self.db.notification then
+        return
+    end
 
-local activeUser
-local playerName = GetUnitName("player", true) .. "-" .. gsub(GetRealmName(), " ", "")
-
-local function SortTable(t)
-    sort(
-        t,
-        function(a, b)
-            return a.value > b.value
+    if self.db.notification.unit == "ASIA" then
+        if amount > math_pow(10, 4) then
+            return F.Round(amount / 10000, self.db.notification.accuracy) .. L["[UNIT] W"]
+        else
+            return amount
         end
-    )
+    elseif self.db.notification.unit == "WESTERN" then
+        if amount > math_pow(10, 3) then
+            return F.Round(amount / 1000, self.db.notification.accuracy) .. L["[UNIT] K"]
+        else
+            return amount
+        end
+    end
+
+    return amount
 end
 
 function AD:SetNotificationText()
@@ -371,106 +1022,189 @@ function AD:GenerateOutput(text, name, spell, stack, damage, percent)
         percent = F.Round(percent, self.db.notification.accuracy)
         text = gsub(text, "%%percent%%", format("%s%%%%", percent))
     end
+
     return text
 end
 
-function AD:GenerateNumber(amount)
-    if self.db.notification.unit == "ASIA" then
-        if amount > 10000 then
-            return F.Round(amount / 10000, self.db.notification.accuracy) .. L["[UNIT] W"]
-        else
-            return amount
+--------------------------------------------
+-- Statistic Functions
+--------------------------------------------
+local timers = {}
+local timerData = {}
+local combinedFails = {}
+
+local function SortTable(t)
+    sort(
+        t,
+        function(a, b)
+            return a.value > b.value
         end
-    elseif self.db.notification.unit == "WESTERN" then
-        if amount > 1000 then
-            return F.Round(amount / 1000, self.db.notification.accuracy) .. L["[UNIT] K"]
-        else
-            return amount
-        end
-    end
-    return amount
+    )
 end
 
-function AD:SetAddonMessagePrefix()
-    -- compatible mode
-    self.prefix = self.db.compatible and "ElitismHelper" or W.AddonMsgPrefix
+local function PlayerHasBuff(player, spellID)
+    for i = 1, 40 do
+        local debuffID = select(10, UnitBuff(player, i))
+        if debuffID == spellID then
+            return true
+        end
+    end
 
-    if self.db.compatible then
-        local registeredPrefixs = C_ChatInfo_GetRegisteredAddonMessagePrefixes()
+    return false
+end
 
-        for _, registeredPrefix in pairs(registeredPrefixs) do
-            if self.prefix == registeredPrefix then
-                return
+local function PlayerHasDebuff(player, spellID)
+    for i = 1, 40 do
+        local debuffID = select(10, UnitDebuff(player, i))
+        if debuffID == spellID then
+            return true
+        end
+    end
+
+    return false
+end
+
+function AD:COMBAT_LOG_EVENT_UNFILTERED()
+    local _, event, _, sourceGUID, _, _, _, _, destName, _, _, param12, _, _, param15, param16, param17 =
+        CombatLogGetCurrentEventInfo()
+
+    if not UnitIsPlayer(destName) then
+        return
+    end
+
+    local eventPrefix, eventSuffix = strmatch(event, "^(.-)_?([^_]*)$")
+
+    if (strmatch(eventPrefix, "^SPELL") or strmatch(eventSuffix, "^RANGE")) and eventSuffix == "DAMAGE" then
+        -- SPELL_DAMAGE | RANGE_DAMAGE | SPELL_PERIODIC_DAMAGE | SPELL_BUILDING_DAMAGE
+        -- spell: 12th
+        -- amount: 15th
+        self:GetHit_Spell(destName, param12, param15)
+    elseif eventPrefix == "SWING" and eventSuffix == "DAMAGE" then
+        -- SWING_DAMAGE
+        -- amount: 12th
+        self:GetHit_Swing(destName, sourceGUID, param12)
+    elseif eventPrefix:match("^SPELL") and eventSuffix == "MISSED" then
+        -- SPELL_MISSED | SPELL_PERIODIC_MISSED
+        -- spell: 12th
+        -- amountMissed: 17th
+        if param17 then
+            self:GetHit_Spell(destName, param12, param17)
+        end
+    elseif event == "SPELL_AURA_APPLIED" then
+        -- spell: 12th
+        -- amount: 16th
+        -- TODO
+    elseif event == "SPELL_AURA_APPLIED_DOSE" then
+    -- spell: 12th
+    -- amount: 16th
+    -- TODO
+    end
+end
+
+function AD:IsPolicyPassed(player, amount, data)
+    if data.noPlayerDebuff then
+        if type(data.noPlayerDebuff) == "number" then
+            if PlayerHasDebuff(player, data.noPlayerDebuff) then
+                return false
             end
         end
-
-        C_ChatInfo_RegisterAddonMessagePrefix(self.prefix)
     end
+
+    if data.noPlayerBuff then
+        if type(data.noPlayerBuff) == "number" then
+            if PlayerHasBuff(player, data.noPlayerBuff) then
+                return false
+            end
+        end
+    end
+
+    if data.playerIsNotTank then
+        if UnitGroupRolesAssigned(player) == "TANK" then
+            return false
+        end
+    end
+
+    if data.damageThreshold then
+        if amount < data.damageThreshold then
+            return false
+        end
+    end
+
+    return true
 end
 
-function AD:SendAddonMessage(message)
-    if IsInGroup(LE_PARTY_CATEGORY_HOME) and not IsInRaid() then
-        C_ChatInfo_SendAddonMessage(self.prefix, message, "PARTY")
-    end
-end
-
-function AD:SendChatMessage(message)
-    if not self.db.notification.enable or activeUser ~= playerName then
+function AD:GetHit_Spell(player, spellID, amount)
+    if not policy.spell[spellID] then
         return
     end
 
-    if self.db.notification.channel == "SELF" then
-        print(message)
-    elseif self.db.notification.channel == "PARTY" and IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
-        SendChatMessage(message, "PARTY")
-    elseif self.db.notification.channel == "EMOTE" and IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
-        SendChatMessage(": " .. message, "EMOTE")
-    end
-end
-
-function AD:SpellDamage(dstName, spellID, damageAmount)
-    if not UnitIsPlayer(dstName) then
+    if not self:IsPolicyPassed(player, amount, policy.spell[spellID]) then
         return
     end
 
-    local isTank = UnitGroupRolesAssigned(dstName) == "TANK"
+    if timerData[player] == nil then
+        timerData[player] = {}
+    end
 
-    if Spells[spellID] or (SpellsNotTank[spellID] and not isTank) then
-        -- Initialize TimerData and CombinedFails for Timer shot
-        if timerData[dstName] == nil then
-            timerData[dstName] = {}
-        end
+    if combinedFails[player] == nil then
+        combinedFails[player] = 0
+    end
 
-        if combinedFails[dstName] == nil then
-            combinedFails[dstName] = 0
-        end
+    combinedFails[player] = combinedFails[player] + amount
+    if timerData[player][spellID] == nil then
+        timerData[player][spellID] = amount
+    else
+        timerData[player][spellID] = timerData[player][spellID] + amount
+    end
 
-        -- Add this event to TimerData / CombinedFails
-        combinedFails[dstName] = combinedFails[dstName] + damageAmount
-        if timerData[dstName][spellID] == nil then
-            timerData[dstName][spellID] = damageAmount
-        else
-            timerData[dstName][spellID] = timerData[dstName][spellID] + damageAmount
-        end
+    self:AnnounceAfterSeconds(4, player)
+end
 
-        -- If there is no timer yet, start one with this event
-        if timers[dstName] == nil then
-            timers[dstName] = true
-            C_Timer_After(
-                4,
-                function()
-                    self:SpellDamageAnnouncer(dstName)
-                end
-            )
-        end
+function AD:GetHit_Swing(player, sourceGUID, amount)
+    local sourceID = GetIDByGUID(sourceGUID)
+    if not sourceID or not policy.melee[sourceID] then
+        return
+    end
+
+    if not self:IsPolicyPassed(player, amount, policy.melee[sourceID]) then
+        return
+    end
+
+    if not timerData[player] then
+        timerData[player] = {}
+    end
+
+    if not combinedFails[player] then
+        combinedFails[player] = 0
+    end
+    combinedFails[player] = combinedFails[player] + amount
+
+    if not timerData[player][6603] then
+        timerData[player][6603] = amount
+    else
+        timerData[player][6603] = timerData[player][6603] + amount
+    end
+
+    self:AnnounceAfterSeconds(4, player)
+end
+
+function AD:AnnounceAfterSeconds(sec, player)
+    if not timers[player] then
+        timers[player] = true
+        C_Timer_After(
+            sec,
+            function()
+                self:DamageAnnouncer(player)
+            end
+        )
     end
 end
 
-function AD:SpellDamageAnnouncer(player)
+function AD:DamageAnnouncer(player)
     if not timerData[player] then
         return
     end
-    
+
     local spellLinks = ""
     local totalDamage = 0
 
@@ -483,38 +1217,11 @@ function AD:SpellDamageAnnouncer(player)
     timers[player] = nil
 
     local playerMaxHealth = UnitHealthMax(player)
-    local damageText = self:GenerateNumber(totalDamage)
+    local damageText = self:FormatNumber(totalDamage)
     local percentage = totalDamage / playerMaxHealth * 100
 
     if self.db.notification.enable and percentage >= self.db.notification.threshold then
         self:SendChatMessage(self:GenerateOutput(spellMessage, player, spellLinks, nil, damageText, percentage))
-    end
-end
-
-function AD:AuraApply(dstName, spellID, auraAmount)
-    if not UnitIsPlayer(dstName) or not self.db.notification.enable then
-        return
-    end
-
-    local isTank = UnitGroupRolesAssigned(dstName) == "TANK"
-
-    if Auras[spellID] or (AurasNotTank[spellID] and not isTank) then
-        if auraAmount then
-            self:SendChatMessage(self:GenerateOutput(stacksMessage, dstName, GetSpellLink(spellID), auraAmount))
-        else
-            self:SendChatMessage(self:GenerateOutput(warningMessage, dstName, GetSpellLink(spellID)))
-        end
-    end
-end
-
-function AD:ResetAuthority()
-    wipe(allUsers)
-    activeUser = nil
-
-    if IsInGroup(LE_PARTY_CATEGORY_HOME) then
-        self:SendAddonMessage("VREQ")
-    else
-        activeUser = playerName
     end
 end
 
@@ -524,6 +1231,9 @@ function AD:ResetStatistic()
     wipe(timers)
 end
 
+--------------------------------------------
+-- Toggling
+--------------------------------------------
 function AD:CHALLENGE_MODE_COMPLETED()
     self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
@@ -551,7 +1261,7 @@ function AD:CHALLENGE_MODE_COMPLETED()
     SortTable(damageTable)
 
     for index, data in pairs(damageTable) do
-        self:SendChatMessage(format("%d. %s %s", index, data.key, self:GenerateNumber(data["value"])))
+        self:SendChatMessage(format("%d. %s %s", index, data.key, self:FormatNumber(data["value"])))
     end
 
     if self.db.rank.worst then
@@ -560,70 +1270,46 @@ function AD:CHALLENGE_MODE_COMPLETED()
     end
 
     self:ResetStatistic()
+    self.inRecording = nil
 end
 
 function AD:CHALLENGE_MODE_START()
-    self:SendChatMessage(L["[WDH] Avoidable damage notification enabled, glhf!"])
-    self:ResetStatistic()
-    self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-end
-
-function AD:CHAT_MSG_ADDON(_, prefix, message, channel, sender)
-    if prefix ~= self.prefix then
+    if not self:GetCurrentDungeonName() then
         return
     end
 
-    if message == "VREQ" then
-        self:SendAddonMessage("VANS")
-    elseif message:match("^VANS") then
-        allUsers[sender] = true
-        for userName in pairs(allUsers) do
-            if activeUser == nil then
-                activeUser = userName
-            end
-            if userName < activeUser then
-                activeUser = userName
-            end
-        end
-    end
-end
-
-function AD:COMBAT_LOG_EVENT_UNFILTERED()
-    local _, type, _, _, _, _, _, _, destName, _, _, spellId, _, _, info15, info16, info17 =
-        CombatLogGetCurrentEventInfo()
-    local eventPrefix, eventSuffix = type:match("^(.-)_?([^_]*)$")
-    if (eventPrefix:match("^SPELL") or eventPrefix:match("^RANGE")) and eventSuffix == "DAMAGE" then
-        self:SpellDamage(destName, spellId, info15)
-    elseif eventPrefix:match("^SPELL") and eventSuffix == "MISSED" then
-        if info17 then
-            self:SpellDamage(destName, spellId, info17)
-        end
-    elseif type == "SPELL_AURA_APPLIED" then
-        self:AuraApply(destName, spellId)
-    elseif type == "SPELL_AURA_APPLIED_DOSE" then
-        self:AuraApply(destName, spellId, info16)
-    end
+    self:SendChatMessage(L["[WDH] Avoidable damage notification enabled, glhf!"])
+    self:Compile()
+    self:ResetStatistic()
+    self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+    self.inRecording = true
 end
 
 function AD:OnInitialize()
-    self.db = W.db.avoidableDamage
-
-    self:SetAddonMessagePrefix()
-    self:SetNotificationText()
+    self:InitializeAuthority()
     self:ProfileUpdate()
+    self:SetNotificationText()
+end
+
+function AD:ZONE_CHANGED_NEW_AREA()
+    self:ResetAuthority()
+    self:Compile()
 end
 
 function AD:ProfileUpdate()
     self.db = W.db.avoidableDamage
 
     if self.db.enable then
-        self:ResetAuthority()
+        self:Compile()
+        self:UpdatePartyInfo()
         self:RegisterEvent("CHAT_MSG_ADDON")
         self:RegisterEvent("GROUP_ROSTER_UPDATE", "ResetAuthority")
-        self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "ResetAuthority")
+        self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
         self:RegisterEvent("CHALLENGE_MODE_START")
         self:RegisterEvent("CHALLENGE_MODE_COMPLETED")
-        self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+        if IsInInstance() then
+            self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+        end
     else
         self:UnregisterEvent("CHAT_MSG_ADDON")
         self:UnregisterEvent("GROUP_ROSTER_UPDATE")
@@ -633,8 +1319,4 @@ function AD:ProfileUpdate()
         self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
         self:ResetStatistic()
     end
-end
-
-function AD:GetActiveUser()
-    return activeUser
 end

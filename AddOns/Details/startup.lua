@@ -54,7 +54,9 @@ function Details:StartMeUp() --I'll never stop!
 			self:InitializePlaterIntegrationWindow()
 			self:InitializeMacrosWindow()
 
-			--self:InitializeCDTrackerWindow()
+			if (self.ocd_tracker.show_options) then
+				self:InitializeCDTrackerWindow()
+			end
 			
 		--custom window
 			self.custom = self.custom or {}
@@ -477,6 +479,9 @@ function Details:StartMeUp() --I'll never stop!
 		_detalhes.streamer_config.use_animation_accel = true
 	end
 
+	--shutdown pre-pot announcer
+	Details.announce_prepots.enabled = false
+
 	--Plater integration
 	C_Timer.After(2, function()
 		_detalhes:RefreshPlaterIntegration()
@@ -488,6 +493,8 @@ function Details:StartMeUp() --I'll never stop!
 	else
 		print ("|CFFFFFF00[Details!]: you're using Details! for RETAIL on Classic WOW, please get the classic version (Details! Damage Meter Classic WoW), if you need help see our Discord (/details discord).")
 	end
+
+	Details:InstallHook("HOOK_DEATH", Details.Coach.Client.SendMyDeath)
 
 	if (math.random(10) == 1) then
 		Details:Msg("use '/details me' macro to open the player breakdown for you!")

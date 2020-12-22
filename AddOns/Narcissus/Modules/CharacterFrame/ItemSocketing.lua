@@ -1,7 +1,7 @@
 local L = Narci.L;
-local ITEM_QUALITY_COLORS = ITEM_QUALITY_COLORS;
+local GetItemQualityColor = NarciAPI.GetItemQualityColor;
 local Narci_GemInfo = Narci_GemInfo;
-local GetGemBonus = NarciAPI_GetGemBonus; --(Gem's itemID or hyperlink)
+local GetGemBonus = NarciAPI.GetGemBonus; --(Gem's itemID or hyperlink)
 local max = math.max;
 local min = math.min;
 local floor = math.floor;
@@ -66,10 +66,10 @@ local ItemBorderTexture = {
     [10] = {0.625,  0.75},       --Red
 }
 
-local GetGemBorderTexture = Narci.GetGemBorderTexture
+local GetGemBorderTexture = NarciAPI.GetGemBorderTexture
 
-local function GetBorderTexCoord(itemID, itemSubClassID)
-    local index = GetGemBorderTexture(itemID, itemSubClassID);
+local function GetBorderTexCoord(itemSubClassID, itemID)
+    local _, index = GetGemBorderTexture(itemSubClassID, itemID);
     return ItemBorderTexture[index][1], ItemBorderTexture[index][2];
 end
 
@@ -206,7 +206,7 @@ local function DisplayButtons(itemCountList, disabledID, rootFrame, buttonTempla
             local _, _, _, _, icon, _, itemSubClassID = GetItemInfoInstant(itemID);
             local name = C_Item.GetItemNameByID(itemID);
             local quality = C_Item.GetItemQualityByID(itemID);
-            local r, g, b = ITEM_QUALITY_COLORS[quality].r, ITEM_QUALITY_COLORS[quality].g, ITEM_QUALITY_COLORS[quality].b;
+            local r, g, b = GetItemQualityColor(quality);
             button.r, button.g, button.b = r, g, b;
             button.GemID = itemID;
             button.ColorID = itemSubClassID;
@@ -218,7 +218,7 @@ local function DisplayButtons(itemCountList, disabledID, rootFrame, buttonTempla
             bonus, minLevel = GetGemBonus(itemID);
             button.Bonus:SetText(bonus);
 
-            texCoord1, texCoord2 = GetBorderTexCoord(itemID, itemSubClassID);
+            texCoord1, texCoord2 = GetBorderTexCoord(itemSubClassID, itemID);
             button.Border0:SetTexCoord(texCoord1, texCoord2, 0, 0.5);
             button.Border1:SetTexCoord(texCoord1, texCoord2, 0.5, 1);
             if itemID == disabledID or (minLevel and minLevel > SocektedItemLvl) then
@@ -266,10 +266,10 @@ local function AutoSocket(slotID, GemID)
 
     if not(bagID and slotIndex) then return; end
     PickupContainerItem(bagID, slotIndex);
-    SocketInventoryItem(slotID)
-    ClickSocketButton(1)
-    AcceptSockets()
-    ClearCursor()
+    SocketInventoryItem(slotID);
+    ClickSocketButton(1);
+    AcceptSockets();
+    ClearCursor();
     --CloseSocketInfo();
 end
 
@@ -319,13 +319,6 @@ function Narci_ItemSocketing_Succeed()
     end)
 end
 
-local function SetAlertFrame(anchor)
-    local frame = Narci_AlertFrame_Autohide;
-    frame:ClearAllPoints();
-    frame:SetScale(Narci_ItemSocketing_GemFrame:GetEffectiveScale())
-    frame:SetPoint("BOTTOM", anchor, "TOP", 0, 4)
-end
-
 NarciGemListButtonMixin = {};
 
 function NarciGemListButtonMixin:OnEnter()
@@ -357,7 +350,9 @@ function NarciGemListButtonMixin:OnDoubleClick()
 end
 
 function NarciGemListButtonMixin:OnMouseDown()
-    self.ButtonFill.animFill:Play();
+    if self:IsEnabled() then
+        self.ButtonFill.animFill:Play();
+    end
 end
 
 function NarciGemListButtonMixin:OnMouseUp()
@@ -441,7 +436,7 @@ function NarciGemSlotMixin:OnEnter()
         icon = 458977;
     end
 
-	local r, g, b = ITEM_QUALITY_COLORS[quality].r, ITEM_QUALITY_COLORS[quality].g, ITEM_QUALITY_COLORS[quality].b;
+	local r, g, b = GetItemQualityColor(quality);
 
 	tooltip.ArtFrame.Icon:SetTexture(icon);
 	tooltip.ArtFrame.ItemName:SetText(name);

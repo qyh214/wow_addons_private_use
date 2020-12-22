@@ -56,10 +56,11 @@ locales.koKR["Group"] = {
 }
 
 locales.esMX["Group"] = {
+	["alert_anchor"] = "Ventanas emergentes de botín",
 }
 
 locales.ruRU["Group"] = {
-	["alert_anchor"] = "Всплывающие фреймы добычи",
+	["alert_anchor"] = "Всплывающие фреймы добычи.",
 	["anchor"] = "Броски группы",
 	["undecided"] = "Не принял решения",
 }

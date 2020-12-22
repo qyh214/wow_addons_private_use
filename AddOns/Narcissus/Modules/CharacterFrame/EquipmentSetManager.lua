@@ -3,7 +3,7 @@ local ESM = Narci_EquipmentSetManager;
 local L = Narci.L;
 local EquipmentSetDB;   --NarcissusDB_PC.EquipmentSetDB
 local EquipmentSetManagerFrame;
-local Switch = Narci_IlvlInfoFrame.IlvlButtonCenter;
+local Switch = Narci_ItemLevelFrame.CenterButton;
 local maxTalentTiers = 7;
 local MaximumEquipmentSet = MAX_EQUIPMENT_SETS_PER_PLAYER;  --10
 local Format_Digit = "%.2f";
@@ -13,12 +13,14 @@ local PREFIX_GREY = "|cffa6a6a6";   --65% White
 local ICON_NEW_SET = "Interface\\AddOns\\Narcissus\\Art\\Widgets\\EquipmentSetManager\\NewSet";
 local SETBUTTON_HEIGHT = 48;
 
+local _;
 local FadeFrame = NarciAPI_FadeFrame;
 local UIFrameFadeIn = UIFrameFadeIn;
 local UIFrameFadeOut = UIFrameFadeOut;
 local GetItemStats = NarciAPI_GetItemStats;
-local SmartFontType = NarciAPI_SmartFontType;
+local SmartFontType = NarciAPI.SmartFontType;
 local DoesItemExist = C_Item.DoesItemExist;
+local C_EquipmentSet = C_EquipmentSet;
 local GetNumEquipmentSets = C_EquipmentSet.GetNumEquipmentSets;     --Returns the number of saved equipment sets.
 local GetItemLocations = C_EquipmentSet.GetItemLocations;
 local PickupEquipmentSet = C_EquipmentSet.PickupEquipmentSet;
@@ -30,7 +32,8 @@ local sin = math.sin;
 local cos = math.cos;
 local pi = math.pi;
 
-local _;
+local NarciThemeUtil = NarciThemeUtil;
+
 -----------------------------------------------------------------------------------
 --[[ LibEasing
 --
@@ -75,9 +78,12 @@ end
 local RepositionFrame = CreateFrame("Frame", nil, nil, "NarciUpdateFrameTemplate");
 RepositionFrame.IsOpen = false;
 RepositionFrame:Hide();
-RepositionFrame.duration = 0.5;
+RepositionFrame.duration = 0.35;
 local function RepositionFrame_OnShow(self)
-    self.point, self.relativeTo, self.relativePoint, _, self.StartPoint = ADPrimary:GetPoint();
+    if not self.anchorTo then
+        self.anchorTo = Narci_RadarChartFrame;
+    end
+    self.point, self.relativeTo, self.relativePoint, _, self.StartPoint = self.anchorTo:GetPoint();
 end
 
 local function UpdateEquipmentSetButtonPosition(parentOffset)
@@ -102,7 +108,7 @@ local function RepositionFrame_OnUpdate(self, elapsed)
 		self:Hide();
     end
 
-    ADPrimary:SetPoint(self.point, self.relativeTo, self.relativePoint, 0, offset);
+    self.anchorTo:SetPoint(self.point, self.relativeTo, self.relativePoint, 0, offset);
     UpdateEquipmentSetButtonPosition(offset);
 end
 
@@ -206,18 +212,13 @@ local function FadeInTalentIcons(button, action)
 end
 
 local function SetBackgroundColor(self)
-    local colors = Narci_ColorTable[Narci_GlobalColorIndex];
-    local R, G, B = colors[1], colors[2], colors[3];
-    local r, g, b = R/255, G/255, B/255;
+    local r, g, b = NarciThemeUtil:GetColor();
     self.Bar2:SetColorTexture(r, g, b, 0.75);
     self.Color:SetColorTexture(r, g, b, 0.75);
 end
 
 local function AnimateBackgroundColor(self)
-    local colors = Narci_ColorTable[Narci_GlobalColorIndex];
-    local R, G, B = colors[1], colors[2], colors[3];
-    local r, g, b = R/255, G/255, B/255;
-    local Black = 0.4;
+    local r, g, b = NarciThemeUtil:GetColor();
 
     self.Color:SetColorTexture(r, g, b, 0.75);
     self.BarColors = {r, g, b};
@@ -540,10 +541,10 @@ local function UpdateScrollRange()
     local TotalButton = math.min(savedSets + 1, MaximumEquipmentSet);
     local buttonHeight = SETBUTTON_HEIGHT;
     local TotalTab = math.max(TotalButton - 4, 1);
-    local MaxScroll = floor((TotalTab - 0.5) * buttonHeight + 0.5);
+    local MaxScroll = math.floor((TotalTab - 0.5) * buttonHeight + 0.5);
     frame.ListScrollFrame.range = MaxScroll;
     frame.ListScrollFrame.scrollBar:SetMinMaxValues(0, MaxScroll)
-    Switch.PlayerItemLvl:SetText(savedSets.."/"..MaximumEquipmentSet);
+    Switch.Level:SetText(savedSets.."/"..MaximumEquipmentSet);
     Switch.Header:SetText("SETS");
 end
 
@@ -590,20 +591,22 @@ local function SetEnhancements(c, h, m, v)
     local ConvertRatio = Narci.ConvertRatio;
     local table = {{c, "crit"}, {h, "haste"}, {m, "mastery"}, {v, "versatility"}};
     local stat = 0;
+    local percent = 0;
     local statBase = 0;
     local ratio = 0;
 	local ratingText;
-	local PercentageText;
+	local percentageText;
 	local key;
 	for i = 1, #table do
         key = table[i][2];
         stat = table[i][1];	                                                --rating
         statBase = ConvertRatio[key.."Base"];
         ratio = ConvertRatio[key] or ratio;
+        percent = math.max(0, stat * ratio + statBase);	                    --Convert a rating to percentage / + basic percent (example: 10% basic critical chance)
+        percentageText = string.format(Format_Digit, percent).."%";
+        key = string.gsub(key, "^%l", string.upper)
         Radar[key].ValueRating:SetText(stat);
-        stat = max(0, stat * ratio + statBase);	                    --Convert a rating to percentage / + basic percent (example: 10% basic critical chance)
-		PercentageText = string.format(Format_Digit, stat).."%";
-		Radar[key].Value:SetText(PercentageText);
+        Radar[key].Value:SetText(percentageText);
 	end   
 end
 
@@ -866,12 +869,11 @@ local function PlayHighlight(self)
     Highlight:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0);
     Highlight:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0);
 
-    local colors = Narci_ColorTable[Narci_GlobalColorIndex];
-    local R, G, B = colors[1], colors[2], colors[3];
-    local white = 0.4;
-    local r, g, b = R/255 + white, G/255 + white, B/255 + white;
-    Highlight.Color:SetColorTexture(r, g, b);
+    local r, g, b = NarciThemeUtil:GetColor();
+    local w = 0.4;
+    r, g, b = r + w, g + w, b + w;
 
+    Highlight.Color:SetColorTexture(r, g, b);
     Highlight.Color.animIn:Play();
 end
 
@@ -1011,7 +1013,7 @@ local function DeleteTimer_OnFinished(self)
         C_EquipmentSet.DeleteEquipmentSet(setID);
         WipeSetInfo(setID);
         local savedSets = GetNumEquipmentSets() or 0;
-        Switch.PlayerItemLvl:SetText(savedSets.."/"..MaximumEquipmentSet);
+        Switch.Level:SetText(savedSets.."/"..MaximumEquipmentSet);
         Switch.Header:SetText("SETS");
         HideIconSelector();
     end
@@ -1229,31 +1231,31 @@ end
 
 function ESM:Open()
     --PlaySound(138542);    --136114
-    Narci.EnableAutoUpdate = false;
+    Narci.refreshCombatRatings = false;
     ShouldUpdateEquipment = false;
     RepositionFrame.IsOpen = true;
     RepositionFrame:Hide();
     RepositionFrame.EndPoint = -24 - 72;
     RepositionFrame:Show();
-    FadeFrame(Narci_DetailedStatFrame, 0.35, "OUT");
-    FadeFrame(Narci_ConciseStatFrame, 0.35, "OUT");
-    FadeFrame(EquipmentSetManagerFrame, 0.25, "IN");
-    FadeFrame(Narci_RadarChartFrame, 0.5, "IN");
+    FadeFrame(Narci_DetailedStatFrame, 0.25, "OUT");
+    FadeFrame(Narci_ConciseStatFrame, 0.25, "OUT");
+    FadeFrame(EquipmentSetManagerFrame, 0.15, "IN");
+    FadeFrame(Narci_RadarChartFrame, 0.25, "IN");
     UpdateScrollRange();
 end
 
 function ESM:Close()
-    Narci.EnableAutoUpdate = true;
+    Narci.refreshCombatRatings = true;
     RepositionFrame.IsOpen = false;
     RepositionFrame:Hide();
     RepositionFrame.EndPoint = -24;
     RepositionFrame:Show();
     FadeFrame(EquipmentSetManagerFrame, 0.35, "OUT");
     if NarcissusDB.DetailedIlvlInfo then
-        FadeFrame(Narci_DetailedStatFrame, 0.5, "IN");
+        FadeFrame(Narci_DetailedStatFrame, 0.4, "IN");
     else
-        FadeFrame(Narci_ConciseStatFrame, 0.5, "IN");
-        FadeFrame(Narci_RadarChartFrame, 0.35, "OUT");
+        FadeFrame(Narci_ConciseStatFrame, 0.4, "IN");
+        FadeFrame(Narci_RadarChartFrame, 0.25, "OUT");
     end
 
     Narci_RadarChartFrame:AnimateValue();
@@ -1322,13 +1324,12 @@ local function IlvlButtonCenter_OnClick(self)
         Switch:ShowItemLevel();
         self.isSetManagerOpen = false;
     else
-        local colors = Narci_ColorTable[Narci_GlobalColorIndex];
-        local R, G, B = colors[1], colors[2], colors[3];
         local Overlay1 = EquipmentSetManagerFrame.ListScrollFrame.OverlayFrame1;
         local SaveItemButton =  Overlay1.SaveItem;
         local SaveTalentButton =  Overlay1.SaveTalent;
-        SaveItemButton.r, SaveItemButton.g, SaveItemButton.b = R/255, G/255, B/255;
-        SaveTalentButton.r, SaveTalentButton.g, SaveTalentButton.b = R/255, G/255, B/255;
+        local r, g, b = NarciThemeUtil:GetColor();
+        SaveItemButton.r, SaveItemButton.g, SaveItemButton.b = r, g, b;
+        SaveTalentButton.r, SaveTalentButton.g, SaveTalentButton.b = r, g, b;
         --[[
         --Shock wave animation : Disabled
         local white = 0.4;

@@ -1,12 +1,18 @@
-tag eae3d3b3746a70b9402cdbb898975693f573631d 9.0-2
+tag 1dfe20471cd990468c0e2f5c845fb2052902369d 9.0-6
 Author:	Xuerian <xuerian@gmail.com>
-Date:	Wed Oct 14 14:24:07 2020 -0400
+Date:	Tue Dec 15 20:32:56 2020 -0500
 
-Shadowlands (Curseforge packager bump)
+Fix currencies, itemlevels, item totals
 
-commit 7fb7e04ea07cc7e8f000d6717187e6cf2d451ce2
+commit d70aa346db03a48432fb1769ff89a0c38e783b31
 Author: Xuerian <xuerian@gmail.com>
-Date:   Wed Oct 14 14:22:34 2020 -0400
+Date:   Tue Dec 15 20:31:22 2020 -0500
 
-    Bump to get curseforge to package for SL
+    monitor: Expose itemlevel font size option
+
+commit 9b2f390f82665dd5bbde59ab20663f9dfb70f26b
+Author: Xuerian <xuerian@gmail.com>
+Date:   Tue Dec 15 20:31:09 2020 -0500
+
+    monitor: Add delay time option for totals calculation
 

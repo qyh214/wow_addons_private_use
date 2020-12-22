@@ -1,4 +1,4 @@
---[[ $Id: AceGUIWidget-DropDown.lua 1239 2020-09-20 10:22:02Z nevcairiel $ ]]--
+--[[ $Id$ ]]--
 local AceGUI = LibStub("AceGUI-3.0")
 
 -- Lua APIs
@@ -39,7 +39,7 @@ end
 
 do
 	local widgetType = "Dropdown-Pullout"
-	local widgetVersion = 5
+	local widgetVersion = 4
 
 	--[[ Static data ]]--
 
@@ -193,7 +193,12 @@ do
 
 		local height = 8
 		for i, item in pairs(items) do
-			item:SetPoint("TOP", itemFrame, "TOP", 0, -2 + (i - 1) * -16)
+			if i == 1 then
+				item:SetPoint("TOP", itemFrame, "TOP", 0, -2)
+			else
+				item:SetPoint("TOP", items[i-1].frame, "BOTTOM", 0, 1)
+			end
+
 			item:Show()
 
 			height = height + 16

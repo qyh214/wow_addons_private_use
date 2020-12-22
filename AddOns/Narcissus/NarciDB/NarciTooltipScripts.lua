@@ -12,22 +12,22 @@ local tooltipAnchor, pointerOffsetX, pointerOffsetY, isHorizontal;
 local pendingText, pendingTexture;
 local callbackFunc;
 local MIN_SIZE = 48;
-local TEXT_PADDING = 18;
+local TEXT_PADDING = 6;
 local DEFAULT_DELAY = 0.6;
-local DEFAULT_POINTER_OFFSET = -8;
-local FIXED_WIDTH = 270;
+local DEFAULT_POINTER_OFFSET = 4;
+local FIXED_WIDTH = 256;
 local delayDuration = 0.6;
 -----------------------------------
 
-local PATH_PREFIX = "Interface/AddOns/Narcissus/Guide/IMG/";
+local PATH_PREFIX = "Interface\\AddOns\\Narcissus\\Guide\\IMG\\";
 local Images = {
-    [1] =  PATH_PREFIX .. "HideTexts",
-    [2] =  PATH_PREFIX .. "TopQuality",
-    [3] =  PATH_PREFIX .. "GroundShadow",
-    [4] =  PATH_PREFIX .. "HidePlayer",
-    [5] =  PATH_PREFIX .. "CompactMode",
-    [6] =  PATH_PREFIX .. "SaveLayers",
-    [7] =  PATH_PREFIX .. "LightSwitch",
+    [1] = "HideTexts",
+    [2] = "TopQuality",
+    [3] = "GroundShadow",
+    [4] = "HidePlayer",
+    [5] = "CompactMode",
+    [6] = "SaveLayers",
+    [7] = "LightSwitch",
 }
 
 local BackdropInfo = {
@@ -65,12 +65,12 @@ local function FadeInTooltip()
 
     if isHorizontal then
         tooltip:SetPoint("RIGHT", tooltipAnchor, "LEFT", offsetX, offsetY);
-        tooltip.Pointer2:SetPoint("CENTER", tooltipAnchor, "LEFT", offsetX - 12);
+        tooltip.Pointer2:SetPoint("CENTER", tooltipAnchor, "LEFT", offsetX - 12, 0);
         tooltip.Pointer2:Show();
         tooltip.Pointer:Hide();
     else
         tooltip:SetPoint("BOTTOM", tooltipAnchor, "TOP", offsetX, offsetY);
-        tooltip.Pointer:SetPoint("CENTER", tooltipAnchor, "TOP", offsetX, offsetY + 12);
+        tooltip.Pointer:SetPoint("CENTER", tooltipAnchor, "TOP", offsetX, offsetY + 0.5);
         tooltip.Pointer:Show();
         tooltip.Pointer2:Hide();
     end
@@ -129,7 +129,7 @@ local function SetMultiLines()
     local index = tooltip.GuideIndex;
     if index then
         if Images[index] then
-            tooltip.Guide.Picture:SetTexture(Images[index]);
+            tooltip.Guide.Picture:SetTexture(PATH_PREFIX.. Images[index]);
             tooltip.Guide:SetAlpha(1);
         else
             tooltip.Guide:SetAlpha(0);
@@ -189,8 +189,8 @@ function TP:OnLoad()
 end
 
 function TP:OnSizeChanged(width, height)
-    self:SetSize(max(MIN_SIZE, width), max(MIN_SIZE, height));
-    local insetHeight = self.inset:GetHeight();
+    self:SetSize(max(MIN_SIZE, width), max(24, height));
+    local insetHeight = self:GetHeight();
     self.Icon:SetSize(insetHeight, insetHeight);
 end
 

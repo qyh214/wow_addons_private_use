@@ -1184,7 +1184,7 @@ local function SetCategoryButtonProgress(button, numAchievements, numCompleted, 
     button.progress:Show();
     button.percentSign:Hide();
     button.value:Hide();
-    button.numAchievements, button.numCompleted = totalAchievements, totalCompleted;
+    button.numAchievements, button.numCompleted = numAchievements, numCompleted;
 end
 
 local function UpdateCategoryButtonProgress(button)
@@ -2825,7 +2825,7 @@ end
 function DateUtil:GetPastDays(day, month, year)
     local diff = self:GetDifference(day, month, year);
     local day = floor(diff / 86400);
-    if day == 0 then
+    if day <= 0 then
         return "Today"
     elseif day == 1 then
         return "Yesterday"
@@ -2984,7 +2984,7 @@ local function CreateSummaryButtons()
         SummaryFrame.buttons = {};
     end
     local buttons = SummaryFrame.buttons;
-
+    local button;
     for i = 1, MAX_SUMMARY_ACHIEVEMENTS do
         button = buttons[i];
         if not button then
@@ -3324,7 +3324,6 @@ end
 
 
 --------------------------------------------------------
-
 --Start updating rendered area when dragging achievement scrollframe scrollbar
 local updateFrame = CreateFrame("Frame");
 updateFrame:Hide();
@@ -3585,6 +3584,9 @@ function NarciAchivementFrameMixin:OnShow()
     if self.pendingCategoryID then
         SelectCategory(self.pendingCategoryID);
         self.pendingCategoryID = nil;
+    elseif self.pendingUpdate then
+        self.pendingUpdate = nil;
+        UpdateSummaryFrame();
     end
 end
 
@@ -4001,7 +4003,11 @@ local function OnAchivementEarned(achievementID)
             else
                 MainFrame.pendingCategoryID = categoryID;
             end
+            return;
         end
+    end
+    if SummaryFrame:IsShown() then
+        MainFrame.pendingUpdate = true;
     end
 end
 
@@ -4117,7 +4123,6 @@ function NarciAchievementExtraTooltipMixin:OnClick(button)
         end
     end
 end
-
 
 -----------------------------------------------------------------------------
 function NarciAchievement_RedirectPrimaryAchievementFrame()

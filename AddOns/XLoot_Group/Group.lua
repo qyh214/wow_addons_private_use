@@ -297,7 +297,7 @@ function addon:START_LOOT_ROLL(id, length, uid, ongoing)
 
 	frame.text_bind:SetText(bop and '|cffff4422BoP' or '')
 	frame.text_loot:SetText(name)
-	local _, _, _, ilvl = GetItemInfo(link)
+	local ilvl = GetDetailedItemLevelInfo(link)
 	frame.text_ilvl:SetText(ilvl > 1 and ilvl or nil)
 
 	frame.text_loot:SetVertexColor(r, g, b)

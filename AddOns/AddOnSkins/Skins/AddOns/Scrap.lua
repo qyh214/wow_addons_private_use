@@ -4,28 +4,29 @@ if not AS:CheckAddOn('Scrap') then return end
 
 function AS:Scrap(event, addon)
 	if addon == 'Scrap_Merchant' or IsAddOnLoaded('Scrap_Merchant') then
-		local Button = Scrap.Merchant
-		if Button and not Button.IsSkinned then
-			Button:OnEnable()
-			AS:StyleButton(Button)
-			Button:SetTemplate('Default', true)
-			Button.border:SetTexture()
-			Button.icon:SetTexture('Interface/Addons/Scrap/Art/Enabled Icon')
-			Button.icon:SetAllPoints()
-			local numTabs = MerchantFrame.numTabs
-			for i = numTabs, 1, -1 do
-				local tab = _G[('MerchantFrameTab%d'):format(i)]
-				if tab then
-					if tab:GetText() == 'Scrap' then
-						AS:SkinTab(tab)
-						break
-					end
-				else
-					break
-				end
+		local function skinButton()
+			local Button = Scrap.Merchant
+			if Button and not Button.IsSkinned then
+				AS:StripTextures(Button, nil, true)
+				AS:SkinButton(Button)
+				Button.IsSkinned = true
 			end
-			Button.IsSkinned = true
+			if Button.border then Button.border:SetAlpha(0) end
+			if Button.icon then
+				AS:SkinTexture(Button.icon)
+				Button.icon:SetInside()
+				Button.icon:SetAlpha(1)
+			end
+			if MerchantFrameCoverTab then
+				AS:SkinTab(MerchantFrameCoverTab)
+				MerchantFrameCoverTab:SetFrameLevel(MerchantFrameTab1:GetFrameLevel()+3)
+			end
+			if ScrapVisualizer.tab then
+				AS:SkinTab(ScrapVisualizer.tab)
+			end
 		end
+
+		MerchantFrame:HookScript("OnUpdate", skinButton)
 
 		AS:SkinFrame(ScrapVisualizer, 'Default')
 		AS:StripTextures(ScrapVisualizerInset)

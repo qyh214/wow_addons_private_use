@@ -114,6 +114,7 @@ local function Initialize_NarcissusDB()
             NarcissusDB[k] = v;
         end
     end
+    DefaultValue = nil;
 
     ---------------------
     ----Creature Data----
@@ -123,6 +124,7 @@ local function Initialize_NarcissusDB()
             NarciCreatureOptions[k] = v;
         end
     end
+    CreatureDatabaseOptions = nil;
 
     ---------------------
     --Achievement Data---
@@ -132,7 +134,7 @@ local function Initialize_NarcissusDB()
             NarciAchievementOptions[k] = v;
         end
     end
-
+    AchievementOptions = nil;
 
     ---------------------
     ----Per Character----

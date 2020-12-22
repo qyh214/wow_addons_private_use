@@ -56,7 +56,7 @@
 							</Anchors>
 						</Texture>
 						<FontString inherits="NarciFontMedium12" justifyH="LEFT" justifyV="BOTTOM" hidden="false" parentKey="Bonus">
-							<Color r="1" g="1" b="1"/>
+							<Color r="0.92" g="0.92" b="0.92"/>
 							<Anchors>
 								<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="LEFT" x="25" y="1"/>
 							</Anchors>
@@ -247,7 +247,7 @@
 					</Anchors>
 				</FontString>
 				<FontString inherits="NarciFontMedium12Outline" justifyH="LEFT" justifyV="BOTTOM" hidden="false" parentKey="Bonus">
-					<Color r="1" g="1" b="1"/>
+					<Color r="0.92" g="0.92" b="0.92"/>
 					<Anchors>
 						<Anchor point="BOTTOMLEFT" relativeKey="$parent.Border0" relativePoint="RIGHT" x="5" y="1"/>
 					</Anchors>
