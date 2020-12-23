@@ -1,16 +1,10 @@
-lightweight tag c701a3540ef3061f9cacfb9065f54d93462ef978 v1.3.7
+lightweight tag 1e381305e094de6db1b18b16d22ef8bba7dabfc2 v1.3.8
 Author:	Meivyn <meivyn@live.ca>
-Date:	Mon Dec 14 14:54:07 2020 -0500
+Date:	Tue Dec 22 14:14:14 2020 -0500
 
-commit c701a3540ef3061f9cacfb9065f54d93462ef978
+commit 1e381305e094de6db1b18b16d22ef8bba7dabfc2
 Author: Meivyn <meivyn@live.ca>
-Date:   Mon Dec 14 14:54:07 2020 -0500
+Date:   Tue Dec 22 14:14:14 2020 -0500
 
-    Actually don't hide it from the tooltip
-
-commit 4d9b45467a22d948fcecbd3d9a9d8861e5db741e
-Author: Meivyn <meivyn@live.ca>
-Date:   Mon Dec 14 14:45:46 2020 -0500
-
-    Nurgash world quest has changed
+    Update Nurgash questID
 

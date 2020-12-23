@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2393, "DBM-CastleNathria", nil, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201217054451")
+mod:SetRevision("20201222060601")
 mod:SetCreatureID(164406)
 mod:SetEncounterID(2398)
 mod:SetUsedIcons(1, 2, 3)
@@ -148,7 +148,7 @@ function mod:SPELL_CAST_START(args)
 		timerBlindSwipeCD:Start()
 	elseif spellId == 342863 then
 		specWarnEchoingScreech:Show()
-		specWarnEchoingScreech:Play("defensive")
+		specWarnEchoingScreech:Play("watchstep")--Maybe shockwave?
 	elseif spellId == 345397 then
 		self.vb.waveCount = self.vb.waveCount + 1
 		warnWaveofBlood:Show(self.vb.waveCount)

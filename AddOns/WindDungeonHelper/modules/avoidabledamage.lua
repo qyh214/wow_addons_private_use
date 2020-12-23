@@ -606,6 +606,11 @@ local MistakeData = {
             spell = 333250
         },
         {
+            -- 劍刃風暴
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 332672
+        },
+        {
             -- 噴灑精華 (哈卡之子 大紅圈)
             type = MISTAKE.SPELL_DAMAGE,
             spell = 323569
@@ -621,6 +626,11 @@ local MistakeData = {
             spell = 331933
         },
         {
+            -- 織線 (無頭的顧客)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 332157
+        },
+        {
             -- 機械炸彈松鼠
             type = MISTAKE.SPELL_DAMAGE,
             spell = 320830
@@ -628,11 +638,20 @@ local MistakeData = {
         {
             -- 靈魄星風暴 (去商人路上隨機出現的小圈)
             type = MISTAKE.SPELL_DAMAGE,
-            spell = 313236
+            spell = 323136
         },
         -- [1]『奪魂者』哈卡
-
+        {
+            -- 鮮血彈幕
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323118
+        },
         -- [2] 曼納斯頓夫婦
+        {
+            -- 回音指尖極限雷射
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323992
+        },
         -- [3] 商人希夏
         {
             -- 爆炸裝置
@@ -1102,6 +1121,11 @@ function AD:COMBAT_LOG_EVENT_UNFILTERED()
 end
 
 function AD:IsPolicyPassed(player, amount, data)
+    -- Windwalker monk karma
+    if PlayerHasBuff(player, 125174) then
+        return false
+    end
+
     if data.noPlayerDebuff then
         if type(data.noPlayerDebuff) == "number" then
             if PlayerHasDebuff(player, data.noPlayerDebuff) then

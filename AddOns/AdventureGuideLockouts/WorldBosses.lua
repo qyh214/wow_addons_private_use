@@ -75,7 +75,7 @@ AddOn.worldBosses = {
       { encounterID = 2430, questID = 61813 }, -- Valinor, the Light of Eons
       { encounterID = 2431, questID = 61816 }, -- Mortanis
       { encounterID = 2432, questID = 61815 }, -- Oranomonos the Everbranching
-      { encounterID = 2433, questID = 00000 }  -- Nurgash Muckformed
+      { encounterID = 2433, questID = 61814 }  -- Nurgash Muckformed
     }
   }
 }
