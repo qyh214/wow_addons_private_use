@@ -1,0 +1,8 @@
+## Interface: 90001
+## Title: |cff0080ffMDGuildBest|r
+## Title-zhCN: |cff0080ffMDGuildBest|r 公会大秘记录
+## Title-zhTW: |cff0080ffMDGuildBest|r 公會大秘記錄
+## Author: Siweia
+## Version: 2.5
+
+Core.lua
