@@ -301,7 +301,6 @@ function UpdateFunc:Primary(object)
 			object.tooltip2 = STAT_NO_BENEFIT_TOOLTIP;
 		end
 	end
-
 end
 
 function UpdateFunc:Stamina(object)

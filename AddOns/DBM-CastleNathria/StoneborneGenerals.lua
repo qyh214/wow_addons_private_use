@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2425, "DBM-CastleNathria", nil, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201222040554")
+mod:SetRevision("20201228020925")
 mod:SetCreatureID(168112, 168113)
 mod:SetEncounterID(2417)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 mod:SetBossHPInfoToHighest()
-mod:SetHotfixNoticeRev(20201220000000)--2020, 12, 20
+mod:SetHotfixNoticeRev(20201222000000)--2020, 12, 22
 mod:SetMinSyncRevision(20201220000000)
 mod.respawnTime = 29
 
@@ -52,7 +52,7 @@ local warnReverberatingEruption					= mod:NewTargetCountAnnounce(344496, 3, nil,
 local warnCrystalize							= mod:NewTargetCountAnnounce(339690, 2, nil, nil, nil, nil, nil, nil, true)
 local warnPulverizingMeteor						= mod:NewTargetCountAnnounce(342544, 4, nil, nil, nil, nil, nil, nil, true)
 --Adds
-local warnStoneLegionGoliath					= mod:NewSpellAnnounce("ej22764", 2, 343273)
+local warnStoneLegionGoliath					= mod:NewSpellAnnounce("ej22777", 2, 343273)
 local warnVolatileAnimaInfusion					= mod:NewTargetNoFilterAnnounce(342655, 2, nil, false)
 local warnRavenousFeast							= mod:NewTargetCountAnnounce(343273, 3, nil, nil, nil, nil, nil, nil, true)
 local warnStonewrathExhaust						= mod:NewCastAnnounce(342722, 3)
@@ -95,9 +95,9 @@ local timerSerratedSwipeCD						= mod:NewCDCountTimer(21.8, 334929, nil, "Tank|H
 local timerCallShadowForcesCD					= mod:NewCDCountTimer(52, 342256, nil, nil, nil, 1, nil, DBM_CORE_L.MYTHIC_ICON)
 --General Grashaal
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(22288))
-local timerReverberatingEruptionCD				= mod:NewCDCountTimer(30, 344496, 138658, nil, nil, 3, nil, nil, true, 1, 3)--Short text "Eruption"
+local timerReverberatingEruptionCD				= mod:NewCDCountTimer(30, 344496, 138658, nil, 2, 3, nil, nil, true, 1)--Short text "Eruption"
 local timerSeismicUpheavalCD					= mod:NewCDCountTimer(25.1, 334498, nil, nil, nil, 3, nil, nil, true)
-local timerCrystalizeCD							= mod:NewCDCountTimer(55, 339690, nil, nil, nil, 5, nil, nil, true, 2, 3)--55 on mythic, 50 on non mythic
+local timerCrystalizeCD							= mod:NewCDCountTimer(55, 339690, nil, nil, 2, 5, nil, nil, true, 2)--55 on mythic, 50 on non mythic
 local timerStoneFistCD							= mod:NewCDCountTimer(18, 342425, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON, true)
 --Phasing
 local timerShatteringBlast						= mod:NewCastTimer(5, 332683, nil, nil, nil, 2)
@@ -211,16 +211,17 @@ end
 function mod:EruptionTarget(targetname, uId)
 	if not targetname then return end
 	if self:AntiSpam(4, targetname.."2") then
+		if self.Options.SetIconOnEruption2 then
+			self:SetIcon(targetname, 4, 5)--So icon clears 1 second after blast
+		end
 		if targetname == playerName then
 			specWarnReverberatingEruption:Show()
 			specWarnReverberatingEruption:Play("runout")
 			yellReverberatingEruption:Yell()
 			yellReverberatingEruptionFades:Countdown(3.97)--This scan method doesn't support scanningTime, but should be about right
+			playerEruption = self.vb.eruptionCount
 		else
 			warnReverberatingEruption:Show(self.vb.eruptionCount, targetname)
-		end
-		if self.Options.SetIconOnEruption2 then
-			self:SetIcon(targetname, 4, 5)--So icon clears 1 second after blast
 		end
 	end
 end
@@ -453,29 +454,32 @@ function mod:SPELL_AURA_APPLIED(args)
 			DBM.InfoFrame:UpdateTable(LacerationStacks)
 		end
 	elseif spellId == 334765 then
+		if self.Options.SetIconOnHeartRend then
+			self:SetIcon(args.destName, self.vb.HeartIcon)
+		end
 		if args:IsPlayer() then
 			specWarnHeartRend:Show()
 			specWarnHeartRend:Play("targetyou")
 		end
-		if self.Options.SetIconOnHeartRend then
-			self:SetIcon(args.destName, self.vb.HeartIcon)
-		end
 		self.vb.HeartIcon = self.vb.HeartIcon + 1
 		warnHeartRend:CombinedShow(0.3, self.vb.heartCount, args.destName)
 	elseif spellId == 333377 then
-		warnWickedBlade:CombinedShow(0.3, self.vb.bladeCount, args.destName)
 		local icon = self.vb.wickedBladeIcon
+		if self.Options.SetIconOnWickedBlade2 then
+			self:SetIcon(args.destName, icon, 5)
+		end
 		if args:IsPlayer() then
 			specWarnWickedBlade:Show(self:IconNumToTexture(icon))
 			specWarnWickedBlade:Play("mm"..icon)
 			yellWickedBlade:Yell(icon, icon, icon)
 			yellWickedBladeFades:Countdown(4, nil, icon)
 		end
-		if self.Options.SetIconOnWickedBlade2 then
-			self:SetIcon(args.destName, icon, 5)
-		end
+		warnWickedBlade:CombinedShow(0.3, self.vb.bladeCount, args.destName)
 		self.vb.wickedBladeIcon = self.vb.wickedBladeIcon + 1
 	elseif spellId == 339690 then
+		if self.Options.SetIconOnCrystalize then
+			self:SetIcon(args.destName, 5)
+		end
 		if args:IsPlayer() then
 			specWarnCrystalize:Show()
 			specWarnCrystalize:Play("targetyou")
@@ -486,9 +490,6 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnCrystalizeTarget:Play("gathershare")
 		else
 			warnCrystalize:Show(self.vb.crystalCount, args.destName)
-		end
-		if self.Options.SetIconOnCrystalize then
-			self:SetIcon(args.destName, 5)
 		end
 	elseif spellId == 342655 then
 		warnVolatileAnimaInfusion:Show(args.destName)
@@ -562,14 +563,14 @@ end
 
 function mod:RAID_BOSS_WHISPER(msg)
 	if msg:find("344496") and self:AntiSpam(4, playerName.."2") then--Eruption Backup (if scan fails)
+		if self.Options.SetIconOnEruption2 then
+			self:SetIcon(playerName, 4, 4.5)--So icon clears 1 second after
+		end
 		specWarnReverberatingEruption:Show()
 		specWarnReverberatingEruption:Play("runout")
 		yellReverberatingEruption:Yell()
 		yellReverberatingEruptionFades:Countdown(3.5)--A good 0.5 sec slower
 		playerEruption = self.vb.eruptionCount
-		if self.Options.SetIconOnEruption2 then
-			self:SetIcon(playerName, 4, 4.5)--So icon clears 1 second after
-		end
 	end
 end
 
@@ -577,10 +578,10 @@ function mod:OnTranscriptorSync(msg, targetName)
 	if msg:find("344496") and targetName then--Eruption Backup (if scan fails)
 		targetName = Ambiguate(targetName, "none")
 		if self:AntiSpam(4, targetName.."2") then--Same antispam as RAID_BOSS_WHISPER on purpose. if player got personal warning they don't need this one
-			warnReverberatingEruption:Show(targetName)
 			if self.Options.SetIconOnEruption2 then
 				self:SetIcon(targetName, 4, 4.5)--So icon clears 1 second after
 			end
+			warnReverberatingEruption:Show(targetName)
 		end
 	end
 end

@@ -56,7 +56,6 @@ Habla con {npc:171743}, el Director de Escena, para iniciar uno de los combates 
 
 Participa en los siete combates distintos para desbloquear la {item:180748} del {npc:163714}.
 ]]
-L["guldan"] = "Gul'dan"
 
 L["cache_of_the_moon"] = "Recoge las cinco herramientas perdidas de {npc:171360} en el Jardín de la Noche y combínalas para crear las {item:180753}. Dáselas y ella te lanzará {spell:334353}, permitiéndote ver el cofre."
 L["cache_of_the_night"] = "Recoge una {item:180656}, un {item:180654} y {item:180655} por toda la zona y combínalo todo para crear un {item:180652}."
@@ -120,7 +119,7 @@ Las motas se pueden recoger de los Botes de Ánima Agotados cercanos localizados
 
 |cFFFF8C00No puede ser derrotado durante la misión del mundo {wq:Asalto al Vestíbulo}.|r
 ]]
-L["nikara_note"] = "Con otros dos jugadores, haz click en el Incienso Antiguo para invocar a {npc:160882}."
+L["repair_note"] = "Con otros dos jugadores, haz click en el Incienso Antiguo para invocar a {npc:160895}."
 L["sotiros_orstus_note"] = "Haz click en la Campana Negra para invocar a los raros."
 L["sundancer_note"] = "Haz click en la estatua para conseguir el buff {spell:332309}. Usa entonces un {item:180445} para planear hasta {npc:170548} y montarlo."
 L["swelling_tear_note"] = "Haz click en la {npc:171012} para invocar a uno de los tres raros. Las Lágrimas pueden aparecer en varios sitios de la zona."
@@ -162,14 +161,14 @@ L["count_your_blessings_note"] = "Coloca una {item:178915} en el cuenco de tribu
 L["options_icons_blessings"] = "{achievement:14767}"
 L["options_icons_blessings_desc"] = "Muestra las localizaciones de los tributos para el logro {achievement:14767}."
 
-L["vesper_of_courage"] = "Campana de Vísceras del Coraje"
-L["vesper_of_humility"] = "Campana de Vísceras de la Humildad"
-L["vesper_of_loyalty"] = "Campana de Vísceras de la Lealtad"
-L["vesper_of_purity"] = "Campana de Vísceras de la Pureza"
-L["vesper_of_wisdom"] = "Campana de Vísceras de la Sabiduría"
-L["vespers_ascended_note"] = "Haz click en la campana de vísceras al mismo tiempo que en las otras cuatro campanas de vísceras para invocar a {npc:170899} en el Crisol del Aspirante."
+L["vesper_of_courage"] = "Campana de Vísperas del Coraje"
+L["vesper_of_humility"] = "Campana de Vísperas de la Humildad"
+L["vesper_of_loyalty"] = "Campana de Vísperas de la Lealtad"
+L["vesper_of_purity"] = "Campana de Vísperas de la Pureza"
+L["vesper_of_wisdom"] = "Campana de Vísperas de la Sabiduría"
+L["vespers_ascended_note"] = "Haz click en la campana de vísperas al mismo tiempo que en las otras cuatro campanas de vísperas para invocar a {npc:170899} en el Crisol del Aspirante."
 L["options_icons_vespers"] = "{achievement:14734}"
-L["options_icons_vespers_desc"] = "Muestra las localizaciones de las campanas de vísceras para el logro {achievement:14734}."
+L["options_icons_vespers_desc"] = "Muestra las localizaciones de las campanas de vísperas para el logro {achievement:14734}."
 
 L["anima_shard"] = "Fragmento de Ánima Perdido"
 L["anima_shard_61225"] = "En una plataforma inferior debajo del puente."
@@ -222,8 +221,13 @@ L["anima_shard_61297"] = "Detrás de un pilar de piedra.\n\n"..ns.color.Red('Den
 L["anima_shard_61298"] = "Reposa detrás de un sillón."
 L["anima_shard_61299"] = "Oculta detrás de una gran antorcha."
 L["anima_shard_61300"] = "En una repisa que cuelga sobre la fuente central."
+L["anima_shard_spires"] = "Tres fragmentos están dentro de la mazmorra Agujas de Ascensión."
 L["options_icons_anima_shard"] = "{achievement:14339}"
 L["options_icons_anima_shard_desc"] = "Muestra la localización de los 50 fragmentos de cristal de ánima perdidos para el logro {achievement:14339}."
+
+L["hymn_note"] = "Localiza los himnos en cada uno de los templos y consigue sus buffs para conseguir el logro."
+L["options_icons_hymns"] = "{achievement:14768}"
+L["options_icons_hymns_desc"] = "Muestra las localizaciones de los himnos para el logro {achievement:14768}."
 
 L["stratios_note"] = "Incluso las pequeñas batallas se deben librar con honor y cuidado. Presenta a tu equipo cuando lo tengas todo listo."
 L["thenia_note"] = "Qué llanuras más maravillosas. Un lugar glorioso para combatir. ¿Listo?"
@@ -290,27 +294,22 @@ L["spinebug_note"] = [[
 ]]
 
 L["oonar_sorrowbane_note"] = [[
-En el Teatro del Dolor, podrás encontrar a {item:180273} clavada en el suelo y el {item:181164} cogiéndola. |cFFFF8C00Antes de intentar tirar de ninguno, pon tu {item:6948} en {npc:161702} por el punto de vuelo.|r
-
-Para tirar del {item:181164} sin problemas:
-
-• Viaja a la Descomposición de Glutharn al este.
-• Come 4 {spell:327367} (debuff de 2 minutos).
-• Vuelve rápidamente al Teatro del Dolor con la {item:6948} y tira del brazo.
-
-Para tirar de {item:180273} sin problemas:
+En el Teatro del Dolor, podrás encontrar a {item:180273} clavada en el suelo y el {item:181164} cogiéndola. Para liberarla:
 
 • Compra 1 {item:182163} de {npc:171808} en Revendreth.
 • Compra 1 {item:180771} de {npc:166640} en Maldraxxus.
+• Compra 1 {item:181163} de {npc:169964} en Maldraxxus.
 • Consigue 2 acumulaciones de {spell:306272} de la misión del mundo {wq:Un par de baches en el camino} al oeste.
 • Come 4 {spell:327367} en la Descomposición de Glutharn.
-• Vuelve rápidamente al Teatro del Dolor con la {item:6948}, bébete ambas pociones y tira de la espada.
+• Usa rápidamente la {item:181163}, bebe ambas pociones y tira del brazo y la espada.
+
+Para tirar sólo del brazo, sólo hacen falta las {spell:327367}.
 ]]
 
 L["pet_cat"] = "¡Acaricia al maldito gato!"
 L["hairball"] = ns.color.Red("¡Sólo aparece en el Sagrario Purulento dentro de la mazmorra Bajapeste!")
 L["lime"] = "Reposa sobre el gran arco óseo."
-L["moldstopheles"] = "Corre alrededor de la parte posterior del tallo y salta en las plataformas con forma de champiñón. Para la última plataforma, usa una montura y salta en la esquina que rodea el tallo."
+L["moldstopheles"] = "Corre alrededor del tallo y salta hacia la pared para saltar en la plataforma con forma de champiñón. Salta otra y para la última, usa una montura y salta en la raíz que rodea el tallo del champiñón gigante."
 L["pus_in_boots"] = "Está debajo del puente."
 
 L["options_icons_slime_cat"] = "{achievement:14634}"
@@ -391,7 +390,7 @@ L["options_icons_fugitives_desc"] = "Muestra las localizaciones de las almas fug
 L["grand_inquisitor_note"] = "Entrega 10 {item:180451} al {npc:160248} para tener una oportunidad en esta piedra del pecado."
 L["high_inquisitor_note"] = "Entrega 250 {currency:1816} al {npc:160248} para tener una oportunidad en esta piedra del pecado."
 L["inquisitor_note"] = "Entrega 100 {currency:1816} al {npc:160248} para tener una oportunidad en esta piedra del pecado."
-L["options_icons_inquisitors"] = "{achievement:14276}"
+L["options_icons_inquisitors"] = "Inquisidores"
 L["options_icons_inquisitors_desc"] = "Muestra las localizaciones del inquisidor para el logro {achievement:14276}."
 
 -------------------------------------------------------------------------------
@@ -405,7 +404,7 @@ L["apholeias_note"] = "Con otros 3 jugadores, situaos en las esquinas de la plat
 L["dekaris_note"] = "Encima de una gran roca que sobresale."
 L["drifting_sorrow_note"] = "Mata {npc:175246} cerca del orbe flotante para activar el boss."
 L["ekphoras_note"] = "Con otros 3 jugadores, situaos en las esquinas de la plataforma y lanzad la {spell:330650} para hacer aparecer a {npc:169827}."
-L["gorged_shadehound_note"] = nil
+L["gorged_shadehound_note"] = "Sólo disponible durante el evento de {wq:Caza: Canes de sombras}."
 L["ikras_note"] = "Vuela alrededor del Bastión de la Perdición. Este es un buen sitio para pullearlo."
 L["orophea_note"] = "Coge el {spell:337143} al sureste y ofréceselo a {npc:172577} para que se active."
 L["sanngror_note"] = "Si no se puede atacar a {npc:172521}, espera hasta que no esté experimentando con las almas."
@@ -426,13 +425,12 @@ Combina los tres grabados para crear la {item:182329}, la cual puede ser usada p
 L["soul_well_note"] = "Atrapa la Estigia que sale del Pozo de Almas."
 L["obliterated_soul_shards_note"] = "Recoge {item:177834} en los puentes."
 
-L["animaflow_teleporter_note"] = "Actívalo para viajar directamente al Tremaculum."
+L["animaflow_teleporter_note"] = "Actívalo para viajar directamente a otros lugares de Las Fauces."
 L["chaotic_riftstone_note"] = "Activa el {spell:344157} para cruzar rápidamente por Las Fauces."
 L["venari_note"] = [[
 Usa {currency:1767} para comprar mejoras en Las Fauces y Torghast.
 
 |cFFFF8C00Las mejoras Compartidas en la Cuenta de Torghast se mostrarán como incompletas en los alters!|r
-|cFFFF8C00¡El estado de finalización se actualizará a continuación a medida que las desbloqueemos!|r
 ]]
 L["venari_upgrade"] = "Mejora de {npc:162804}"
 L["torghast"] = "Torghast"
@@ -445,6 +443,10 @@ L["Tentative"] = "Indecisa"
 L["stygian_cache"] = "Alijo de Estigia"
 L["stygian_cache_note"] = "¡Sólo una persona puede despojar el alijo cada vez que aparezca!"
 
+L["box_of_torments_note"] = "Abre los {npc:173837} bajo el Tremaculum."
+L["tormentors_notes_note"] = "Despoja el cuerpo del {npc:173811}."
+L["words_of_warden_note"] = "Examina el |cffffff00Trozo de Papel|r en la roca detrás de algunas ollas."
+
 L["options_icons_bonus_boss"] = "Élites de Bonificación"
 L["options_icons_bonus_boss_desc"] = "Muestra las localizaciones de los élites de bonificación."
 L["options_icons_bonus_event"] = "Eventos de Bonificación"
@@ -453,5 +455,7 @@ L["options_icons_riftstone"] = "{npc:174962}"
 L["options_icons_riftstone_desc"] = "Muestra las localizaciones de los teletransportadores de piedras de falla caóticas."
 L["options_icons_grapples"] = "{npc:176308}"
 L["options_icons_grapples_desc"] = "Muestra las localizaciones de los agarres para la mejora {item:184653}."
+L["options_icons_maw_lore"] = "Tradiciones de Las Fauces"
+L["options_icons_maw_lore_desc"] = "Muestra las localizaciones para las tradiciones de Las Fauces para el logro {achievement:14761}."
 L["options_icons_stygian_caches"] = "Alijos de Estigia"
 L["options_icons_stygian_caches_desc"] = "Muestra las localizaciones de los alijos con Estigia extra."

@@ -16,6 +16,7 @@ local strtrim = strtrim;
 local match = string.match;
 local gsub = string.gsub;
 local sub = string.sub;
+local strsplit = strsplit;
 
 local TEXT_LOCALE = GetLocale();
 
@@ -527,12 +528,12 @@ NarciAPI.GetGemBorderTexture = GetGemBorderTexture;
 ------Item API------
 --------------------
 
-local function GetItemEnchant(itemLink)
+local function GetItemEnchantID(itemLink)
     local _, _, _, linkType, linkID, enchantID = strsplit(":|H", itemLink);
     return tonumber(enchantID) or 0;
 end
 
-NarciAPI.GetItemEnchant = GetItemEnchant;
+NarciAPI.GetItemEnchantID = GetItemEnchantID;
 
 local function IsHeritageArmor(itemID)
     if not itemID then
@@ -669,7 +670,7 @@ function NarciAPI_GetItemStats(itemLocation)
         end
     end
 
-    local enchantID = GetItemEnchant(itemLink);
+    local enchantID = GetItemEnchantID(itemLink);
     if enchantID ~= 0 and EnchantInfo[enchantID] then
         local data = EnchantInfo[enchantID]
         statsTable.EnchantPos = data[1];
@@ -706,13 +707,12 @@ local TP = CreateFrame("GameTooltip", "NarciVirtualTooltip", nil, "GameTooltipTe
 TP:SetScript("OnLoad", GameTooltip_OnLoad);
 TP:SetOwner(UIParent, 'ANCHOR_NONE');
 
-local SocketAction = ITEM_SOCKETABLE;
 local find = string.find;
-local SocketPath = "ItemSocketingFrame";
-local function NarciAPI_IsItemSocketable(itemLink, SocketID)
+local function NarciAPI_IsItemSocketable(itemLink, socketID)
     if not itemLink then return; end
-    if not SocketID then SocketID = 1; end
-    local gemName, gemLink = GetItemGem(itemLink, SocketID)
+    if not socketID then socketID = 1; end
+
+    local gemName, gemLink = GetItemGem(itemLink, socketID)
     if gemName then
         return gemName, gemLink;
     end
@@ -767,6 +767,38 @@ local function NarciAPI_GetItemRank(itemLink, statName)
 end
 
 NarciAPI.GetItemRank = NarciAPI_GetItemRank;
+
+local ITEM_ENCHANT_FORMAT = gsub(ENCHANTED_TOOLTIP_LINE, "%%s", "(.+)");
+local function GetItemEnchantText(itemLink, colorized)
+    if not itemLink then return; end
+
+    TP:SetHyperlink(itemLink);
+    local num = TP:NumLines();
+    local str;
+    local enchantText;
+    local enchantFormat = ITEM_ENCHANT_FORMAT;
+    for i = 5, num do
+        str = _G["NarciVirtualTooltip".."TextLeft"..i];
+        if str then
+            str = str:GetText();
+            enchantText = match(str, enchantFormat);
+            if enchantText then
+                enchantText = strtrim(enchantText);
+                if enchantText ~= "" then
+                    --print(enchantText)
+                    if colorized then
+                        enchantText = "|cff5fbd6b"..enchantText.."|r";
+                    end
+                    return enchantText
+                end
+            end
+        else
+            return
+        end
+    end
+end
+
+NarciAPI.GetItemEnchantText = GetItemEnchantText;
 
 -----String API------
 --[[
@@ -1566,7 +1598,7 @@ function NarciAPI_LetterboxAnimation(command)
 		frame.TopMask.animOut:Play();
 	else
         if NarcissusDB.LetterboxEffect then
-            Narci_PhotoModeController.PhotoModeController_AnimFrame.toAlpha = 0
+            Narci_PhotoModeToolbar.PhotoModeControllerAnimFrame.toAlpha = 0
 			frame:Show();
 			frame.BottomMask.animIn:Play();
 			frame.TopMask.animIn:Play();
@@ -2395,7 +2427,7 @@ local function ParserButton_GetCursor(self)
     local itemString = match(itemLink, "item:([%-?%d:]+)");
     local supposedEffect, corruptionID = NarciAPI_GetCorruptedItemAffix(itemLink);
     local hasGem = NarciAPI_IsItemSocketable(itemLink);
-    local enchantID = GetItemEnchant(itemLink);
+    local enchantID = GetItemEnchantID(itemLink);
     local corruption = GetItemStats(itemLink)["ITEM_MOD_CORRUPTION"] or 0;
     local _, extraEffect = NarciAPI_GetItemExtraEffect(itemLink);
     local r, g, b = GetItemQualityColor(itemQuality);

@@ -1,18 +1,24 @@
-tag 1dfe20471cd990468c0e2f5c845fb2052902369d 9.0-6
+tag 4021b7d7ebabe1949973e6c0e85cd47a7c4f8d54 9.0-7
 Author:	Xuerian <xuerian@gmail.com>
-Date:	Tue Dec 15 20:32:56 2020 -0500
+Date:	Thu Dec 24 18:17:09 2020 -0500
 
-Fix currencies, itemlevels, item totals
+Fix singular currency gains in monitor
 
-commit d70aa346db03a48432fb1769ff89a0c38e783b31
+commit 503fe52e4530829c8936d84d8f05dc75ba33e60a
 Author: Xuerian <xuerian@gmail.com>
-Date:   Tue Dec 15 20:31:22 2020 -0500
+Date:   Thu Dec 24 18:15:41 2020 -0500
 
-    monitor: Expose itemlevel font size option
+    options: Escape fonts
 
-commit 9b2f390f82665dd5bbde59ab20663f9dfb70f26b
+commit b4254cb4ba1bb28665617f867e0410763705b9f8
 Author: Xuerian <xuerian@gmail.com>
-Date:   Tue Dec 15 20:31:09 2020 -0500
+Date:   Thu Dec 24 18:14:16 2020 -0500
 
-    monitor: Add delay time option for totals calculation
+    Monitor: Fix singular currency gains
+
+commit de50adfbce623e0692dd8ebadf216a88c9575b44
+Author: Xuerian <xuerian@gmail.com>
+Date:   Wed Dec 16 13:50:46 2020 -0500
+
+    monitor: Add gradients option
 

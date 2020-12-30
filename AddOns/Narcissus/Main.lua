@@ -17,7 +17,8 @@ local IS_OPENED = false;									--Addon was opened by clicking
 local MOG_MODE = false;
 local xmogMode = 0;											-- 0 off	1 "Texts Only" 	2 "Texts & Model"
 
-local GetItemEnchant = NarciAPI.GetItemEnchant;
+local GetItemEnchantID = NarciAPI.GetItemEnchantID;
+local GetItemEnchantText = NarciAPI.GetItemEnchantText;
 local EnchantInfo = Narci_EnchantInfo;						--Bridge/GearBonus.lua
 local IsItemSourceSpecial = NarciAPI.IsItemSourceSpecial;
 local Narci_LetterboxAnimation = NarciAPI_LetterboxAnimation;
@@ -368,7 +369,7 @@ ReIndexRaceID = nil;
 
 for raceKey, data in pairs(ZoomValuebyRaceID) do
 	local id = tonumber(raceKey);
-	if id and id ~= playerRaceID then
+	if id and id > 1 and id ~= playerRaceID then
 		ZoomValuebyRaceID[raceKey] = nil;
 	end
 end
@@ -1053,8 +1054,9 @@ function NarciMinimapButtonMixin:CreatePanel()
 			button:Disable();
 		end
 	end
-
 	self.buttons = buttons;
+	
+	self.CreatePanel = nil;
 end
 
 function NarciMinimapButtonMixin:OnLoad()
@@ -1377,9 +1379,7 @@ function Narci_MinimapButton_OnLoad(self)
 end
 
 function Narci_MinimapButton_DraggingFrame_OnUpdate()
-	local button = MiniButton;
 	local radian;
-
 	local mx, my = Minimap:GetCenter();
 	local px, py = GetCursorPosition();
 	local scale = Minimap:GetEffectiveScale();
@@ -1447,21 +1447,6 @@ end
 --]]
 
 local GetInventoryItemCooldown = GetInventoryItemCooldown;
-
-local function SetCoolDown(self)
-	local frame = self.CooldownFrame.Cooldown;
-	if frame then
-		local start, duration, enable = GetInventoryItemCooldown("player", self:GetID());
-		if enable and enable ~= 0 and start > 0 and duration > 0 then
-			frame:SetCooldown(start, duration);
-			frame:SetHideCountdownNumbers(false);
-			return true
-		else
-			frame:Clear();
-		end
-	end
-	return false
-end
 
 local function SetItemSocketingFramePosition(self)		--Let ItemSocketingFrame appear on the side of the slot
 	if ItemSocketingFrame then																		
@@ -1531,12 +1516,12 @@ local function DisplayRuneSlot(self, slotID, itemQuality, itemLink)
 		return;
 	end
 
-	local EnchantID = GetItemEnchant(itemLink)
-	if EnchantID ~= 0 then
+	local enchantID = GetItemEnchantID(itemLink);
+	if enchantID ~= 0 then
 		self.RuneSlot.RuneLetter:Show();
-		if EnchantInfo[EnchantID] then
-			self.RuneSlot.RuneLetter:SetText(RunicLetters[ EnchantInfo[EnchantID][1] ])
-			self.RuneSlot.spellID = EnchantInfo[EnchantID][3]
+		if EnchantInfo[enchantID] then
+			self.RuneSlot.RuneLetter:SetText(RunicLetters[ EnchantInfo[enchantID][1] ])
+			self.RuneSlot.spellID = EnchantInfo[enchantID][3]
 		end
 	else
 		self.RuneSlot.Background:SetTexture(RunePlateTexture[0])	--if the item is enchantable but unenchanted, set its texture to black
@@ -1645,7 +1630,6 @@ local GetItemQualityColor = NarciAPI.GetItemQualityColor;
 
 NarciEquipmentSlotMixin = {};
 
---Narci_ItemSlotButton_OnLoad(self)
 function NarciEquipmentSlotMixin:Refresh()
 	local _;
 	local slotID = self:GetID();
@@ -1654,6 +1638,7 @@ function NarciEquipmentSlotMixin:Refresh()
 	--local texture = CharacterHeadSlot.popoutButton.icon:GetTexture()
 	local itemLink = "";
 	local itemIcon, itemName, itemQuality, effectiveLvl, GemName, GemLink;
+	local borderTex;
 	local isAzeriteEmpoweredItem = false;		--3 Pieces	**likely to be changed in patch 8.2
 	local isAzeriteItem = false;				--Heart of Azeroth
 	--local isCorruptedItem = false; 
@@ -1765,6 +1750,16 @@ function NarciEquipmentSlotMixin:Refresh()
 					end
 				end
 				self.bonusID = bonusID;
+
+				if effectiveLvl == nil then
+					local _, sourceName = IsItemSourceSpecial(self.itemID);
+					effectiveLvl = sourceName or " ";
+				end
+
+				if slotID == 15 then
+					--Backslot
+					self.VFX:Hide();
+				end
 			else	--irrelevant slot
 				self.Icon:SetDesaturated(true);
 				itemQuality = 0;
@@ -1793,7 +1788,8 @@ function NarciEquipmentSlotMixin:Refresh()
 			itemName = C_Item.GetItemName(itemLocation);
 			itemQuality = C_Item.GetItemQuality(itemLocation);
 			effectiveLvl = C_Item.GetCurrentItemLevel(itemLocation);
-			
+			self.IlvlCenter.ItemLevelCenter:SetText(effectiveLvl);
+
 			if slotID == 13 or slotID == 14 then
 				local itemID = GetItemInfoInstant(itemLink);
 				if itemID == 167555 then	--Pocket-Sized Computation Device
@@ -1816,6 +1812,33 @@ function NarciEquipmentSlotMixin:Refresh()
 			else
 				--isCorruptedItem = IsCorruptedItem(itemLink);
 			end
+
+			if slotID == 15 then
+				--Backslot
+				local itemID = GetItemInfoInstant(itemLink);
+				if itemID == 169223 then 	--Ashjra'kamas, Shroud of Resolve Legendary Cloak
+					local rank, corruptionResistance = NarciAPI.GetItemRank(itemLink, "ITEM_MOD_CORRUPTION_RESISTANCE");
+					effectiveLvl = effectiveLvl.."  "..rank.."  |cFFFFD100"..corruptionResistance.."|r";
+					borderTex = BorderTexture.BlackDragon;
+					self.VFX:Show();
+				else
+					self.VFX:Hide();
+				end
+			end
+		
+			local enchantText = GetItemEnchantText(itemLink, true);
+			if enchantText then
+				if self.isRight then
+					effectiveLvl = enchantText.."  "..effectiveLvl;
+				else
+					effectiveLvl = effectiveLvl.."  "..enchantText;
+				end		
+			end
+	
+			--Enchant Frame--
+			if itemQuality then
+				DisplayRuneSlot(self, slotID, itemQuality, itemLink);
+			end
 		end
 	else
 		self:UntrackCooldown();
@@ -1831,8 +1854,7 @@ function NarciEquipmentSlotMixin:Refresh()
 	end
 
 	self.itemQuality = itemQuality;
-	self.IlvlCenter.ItemLevelCenter:SetText(effectiveLvl);
-	local borderTex;
+	
 	local Br, Bg, Bb = 1, 1, 1;
 	if itemQuality then --itemQuality sometimes return nil. This is a temporary solution
 		Br, Bg, Bb = GetItemQualityColor(itemQuality);
@@ -1912,33 +1934,7 @@ function NarciEquipmentSlotMixin:Refresh()
 		end
 	end
 	--]]
-
-	if slotID == 15 then
-		--Backslot
-		if MOG_MODE then
-			self.VFX:Hide();
-		else
-			local itemID = GetItemInfoInstant(itemLink);
-			if itemID == 169223 then 	--Ashjra'kamas, Shroud of Resolve Legendary Cloak
-				local rank, corruptionResistance = NarciAPI.GetItemRank(itemLink, "ITEM_MOD_CORRUPTION_RESISTANCE");
-				effectiveLvl = effectiveLvl.."  "..rank.."  |cFFFFD100"..corruptionResistance.."|r";
-				borderTex = BorderTexture.BlackDragon;
-				self.VFX:Show();
-			else
-				self.VFX:Hide();
-			end
-		end
-	end
-
-	if effectiveLvl == nil then
-		local _, sourceName = IsItemSourceSpecial(self.itemID);
-		effectiveLvl = sourceName or " ";
-	end
 	
-	--Enchant Frame--
-	if itemQuality and not MOG_MODE then
-		DisplayRuneSlot(self, slotID, itemQuality, itemLink);
-	end
 
 	--Gem Slot--
 	self:StopAnimating();
@@ -3228,16 +3224,17 @@ function NarciRadarChartMixin:AnimateValue(c, h, m, v)
 
 	local function UpdateFunc(frame, elapsed)
 		local t = frame.TimeSinceLastUpdate;
+		frame.TimeSinceLastUpdate = t + elapsed;
 		local v1 = outSine(t, s1, e1, duration);
 		local v2 = outSine(t, s2, e2, duration);
 		local v3 = outSine(t, s3, e3, duration);
 		local v4 = outSine(t, s4, e4, duration);
-		Radar:SetValue(v1, v2, v3, v4, sum);
-		frame.TimeSinceLastUpdate = frame.TimeSinceLastUpdate + elapsed;
+		
 		if t >= duration then
-			Radar:SetValue(e1, e2, e3, e4, sum);
+			v1, v2, v3, v4 = e1, e2, e3, e4;
 			frame:Hide();
 		end
+		Radar:SetValue(v1, v2, v3, v4, sum);
 	end
 
 	UpdateFrame:Hide();
@@ -3326,10 +3323,10 @@ function StatsUpdator:Instant()
 	if not StatsUpdator.pauseUpdate then
 		StatsUpdator.pauseUpdate = true;
 		After(0, function()
-			for i = 1, 12 do
+			for i = 1, 20 do
 				RefreshStats(i);
 			end
-			for i = 1, 20 do
+			for i = 1, 12 do
 				RefreshStats(i, "Concise");
 			end
 			StatsUpdator.pauseUpdate = nil;
@@ -3719,12 +3716,12 @@ end
 
 function CameraControlBar_DraggingFrame_OnUpdate(self)
 	local scale = self:GetParent():GetEffectiveScale();
-	local xpos, _ = GetCursorPosition() / scale;
+	local xpos = GetCursorPosition() / scale;
 	local xmin, xmax = self:GetParent():GetLeft() + 18 , self:GetParent():GetRight() - 18;
 
 	CameraOffsetControlBar.Range = xmax - xmin;
 
-	local xcenter, _ = self:GetParent():GetCenter();
+	local xcenter = self:GetParent():GetCenter();
 	local ofsx;
 	if xpos < xmin then
 		ofsx = xmin - xcenter;
@@ -5662,7 +5659,9 @@ EL:SetScript("OnEvent",function(self,event,...)
 
 	elseif ( event == "COMBAT_RATING_UPDATE" or
 			 event == "UNIT_MAXPOWER" or
-			 event == "UNIT_AURA") and Narci.refreshCombatRatings then
+			 event == "UNIT_STATS" or
+			 event == "UNIT_DAMAGE" or event == "UNIT_ATTACK_SPEED" or event == "UNIT_MAXHEALTH" or event == "UNIT_AURA"
+			) and Narci.refreshCombatRatings then
 		-- don't refresh stats when equipment set manager is activated
 		StatsUpdator:Instant();
 		if event == "COMBAT_RATING_UPDATE" then
@@ -5711,20 +5710,30 @@ EL:SetScript("OnEvent",function(self,event,...)
 end)
 
 function EL:ToggleDynamicEvents(state)
-	local dynamicEvents = {"PLAYER_TARGET_CHANGED", "COMBAT_RATING_UPDATE", "UNIT_AURA", "PLAYER_MOUNT_DISPLAY_CHANGED",
+	local dynamicEvents = {"PLAYER_TARGET_CHANGED", "COMBAT_RATING_UPDATE", "PLAYER_MOUNT_DISPLAY_CHANGED",
 	"PLAYER_STARTED_MOVING", "PLAYER_REGEN_DISABLED", "UNIT_MAXPOWER", "PLAYER_STARTED_TURNING", "PLAYER_STOPPED_TURNING",
-	"BAG_UPDATE_COOLDOWN",
+	"BAG_UPDATE_COOLDOWN", "UNIT_STATS",
 	};
-
+	local unitEvents = {"UNIT_DAMAGE", "UNIT_ATTACK_SPEED", "UNIT_MAXHEALTH", "UNIT_AURA"};
+	
 	if state then
 		for i = 1, #dynamicEvents do
-			self:RegisterEvent(dynamicEvents[i]);
+			self:RegisterUnitEvent(dynamicEvents[i]);
+		end
+		for i = 1, #unitEvents do
+			self:RegisterUnitEvent(unitEvents[i], "player");
 		end
 	else
 		for i = 1, #dynamicEvents do
 			self:UnregisterEvent(dynamicEvents[i]);
 		end
+		for i = 1, #unitEvents do
+			self:UnregisterEvent(unitEvents[i]);
+		end
 	end
+
+	dynamicEvents = nil;
+	unitEvents = nil;
 end
 
 EL:SetScript("OnShow",function(self)

@@ -53,6 +53,16 @@ end
 AD.prefix = "WDH_AD"
 local myServerID, myPlayerUID, authorityCache
 
+local function GetBestChannel()
+    if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) or IsInRaid(LE_PARTY_CATEGORY_INSTANCE) then
+        return "INSTANCE_CHAT"
+    elseif IsInRaid(LE_PARTY_CATEGORY_HOME) then
+        return "RAID"
+    elseif IsInGroup(LE_PARTY_CATEGORY_HOME) then
+        return "PARTY"
+    end
+end
+
 function AD:InitializeAuthority()
     local successfulRequest = C_ChatInfo_RegisterAddonMessagePrefix(self.prefix)
     assert(successfulRequest, L["The addon message prefix registration is failed."])
@@ -89,7 +99,7 @@ do
             end
 
             local message = format("%s;%d;%d", level, myServerID, myPlayerUID)
-            C_ChatInfo_SendAddonMessage(self.prefix, message, "PARTY")
+            C_ChatInfo_SendAddonMessage(self.prefix, message, GetBestChannel())
         end
     end
 end
@@ -180,7 +190,7 @@ function AD:SendChatMessage(message)
     if self.db.notification.channel == "SELF" then
         print(message)
     elseif self.db.notification.channel == "PARTY" and IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
-        SendChatMessage(message, "PARTY")
+        SendChatMessage(message, GetBestChannel())
     elseif self.db.notification.channel == "EMOTE" and IsInGroup() and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
         SendChatMessage(": " .. message, "EMOTE")
     end
@@ -191,7 +201,7 @@ function AD:ResetAuthority()
         return
     end
 
-    C_ChatInfo_SendAddonMessage(self.prefix, "RESET_AUTHORITY", "PARTY")
+    C_ChatInfo_SendAddonMessage(self.prefix, "RESET_AUTHORITY", GetBestChannel())
 end
 
 --------------------------------------------
@@ -241,6 +251,11 @@ local MistakeData = {
             -- 逞凶鬥狠 (第一賽季)
             type = MISTAKE.SPELL_DAMAGE,
             spell = 342494
+        },
+        {
+            -- 懷恨幽影 (惡意詞綴)
+            type = MISTAKE.MELEE,
+            npc = 174773
         }
     },
     ["The Necrotic Wake"] = {
@@ -399,11 +414,6 @@ local MistakeData = {
             -- 鬼魅衝鋒
             type = MISTAKE.SPELL_DAMAGE,
             spell = 339751
-        },
-        {
-            -- 屠殺殘影
-            type = MISTAKE.SPELL_DAMAGE,
-            spell = 339573
         },
         {
             -- 戰鬥殘影

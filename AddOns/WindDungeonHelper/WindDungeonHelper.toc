@@ -1,6 +1,6 @@
 ## Interface: 90002
 ## Author: houshuu
-## Version: 1.4.9
+## Version: 1.5.0
 ## Title: |cff30b5ffW|r|cff29abfdi|r|cff23a2fcn|r|cff1c98fad|r |cff1182f7D|r|cff0c75f5u|r|cff0768f3n|r|cff0f69f2g|r|cff2a7ef4e|r|cff4594f5o|r|cff60a9f6n|r |cffa9d2faH|r|cffd0e6fce|r|cfff7fafel|r|cffffffffp|r|cffffffffe|r|cffffffffr|r
 ## Title-zhCN: |cff30b5ffW|r|cff23a3fci|r|cff1691f9n|r|cff0e79f6d|r |cff3889f4地|r|cff6bb2f7下|r|cffb5d8fb城|r|cffffffff助|r|cffffffff手|r
 ## Title-zhTW: |cff30b5ffW|r|cff22a1fci|r|cff148bf9n|r|cff0b71f4d|r |cff54a0f6地|r|cff9ccbf9城|r|cffeef6fe助|r|cffffffff手|r

@@ -1,4 +1,4 @@
---Coutesy of Hubbotu. Thank you!    --Translator: Hubbotu as of 1.1.0a 
+--Coutesy of Hubbotu. Thank you!    --Translator: Hubbotu as of 1.1.0g
 
 if not (GetLocale() == "ruRU") then
     return;
@@ -292,7 +292,7 @@ L["Remove"] = "Удалить";
 L["Rename"] = "Переименовать";
 L["Refresh Model"] = "Обновить Модель";
 L["Toggle Browser"] = "Переключить заклинание визуального браузера";
-L["Next And Previous"] = "ЛКМ: Перейти к следующему\nПКМ: Перейти к предыдущем";
+L["Next And Previous"] = NARCI_MOUSE_BUTTON_ICON_1.."Перейти к следующему\n"..NARCI_MOUSE_BUTTON_ICON_2.."Перейти к предыдущему";
 L["New Favorite"] = "Новое в избранном";
 L["Favorites Add"] = "Добавить в избранное";
 L["Favorites Remove"] = "Удалить из избранного";
@@ -303,6 +303,7 @@ L["Delete Entry Singular"] = "Буду удалять запись %s";
 L["History Panel Note"] = "Примененные визуальные эффекты";
 L["Return"] = "Вернуться";
 L["Close"] = "Закрыть";
+L["Change Pack"] = "Изменить пакет";
 
 --Dressing Room--
 L["Favorited"] = "Избранное";
@@ -441,6 +442,7 @@ L["Guide Minimap Button Headline"] = "Кнопка на Миникарте";
 L["Guide Minimap Button Line1"] = "Кнопка Narcissus на миникарте теперь может быть обработана другими аддонами.\nВы можете изменить этот параметр в панели настроек. Это может потребовать перезагрузки интерфейса."
 L["Guide NPC Entrance Line1"] = "Доступ к этой новой функции находится здесь."
 L["Guide NPC Browser Line1"] = "Известные НПС перечислены в каталоге ниже.\nВы также можете искать любых существ по имени или по ID.\nОбратите внимание, что при первом использовании функции поиска это может занять несколько секунд для построения таблицы поиска, и ваш экран также может зависнуть.\nВы можете отменить \"Загрузка по требованию\" в панели настроек, чтобы база данных была создана сразу после входа в систему.";
+
 
 --Splash--
 NARCI_SPLASH_WHATS_NEW_FORMAT = "Что нового в Narcissus %s";

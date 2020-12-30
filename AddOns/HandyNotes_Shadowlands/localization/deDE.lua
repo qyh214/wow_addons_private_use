@@ -55,7 +55,6 @@ Sprich mit {npc:171743}, um eine der besonderen Begegnungen zu beginnen. Die Beg
 
 Nimm an allen sieben Begegnungen teil, um die {item:180748} von {npc:163714} freizuschalten.
 ]]
-L["guldan"] = "Gul'dan"
 
 L["cache_of_the_moon"] = "Sammel {npc:171360s} fünf verlorene Werkzeuge im Garten der Nacht und kombiniere diese zu {item:180753}. Bring dieses zu ihr zurück und sie wird dir die {spell:334353} gewähren, um die Truhe sehen zu können."
 L["cache_of_the_night"] = "Sammel {item:180656}, {item:180654} und {item:180655} aus der ganzen Zone und kombiniere diese zu einem {item:180652}."
@@ -119,7 +118,7 @@ Partikel können aus entleerten Animakanistern in der Nähe gesammelt werden, di
 
 |cFFFF8C00Kann nicht während der Weltquest {wq:Angriff auf die Vorhallen} besiegt werden.
 ]]
-L["nikara_note"] = "Klicke mit zwei anderen Spielern das Uralte Räucherwerk an, um ein Ritual zu beginnen, {npc:160882} zu beschwören."
+L["repair_note"] = "Klicke zum Beschwören mit zwei anderen Spielern das Uralte Räucherwerk an."
 L["sotiros_orstus_note"] = "Klicke zum Beschwören die Schwarze Glocke an."
 L["sundancer_note"] = "Klicke das Uralte Denkmal an, um den {spell:332309} zu erhalten und verwende einen {item:180445}, um zu ihm zu gleiten und aufzusitzen."
 L["swelling_tear_note"] = "Klicke den {npc:171012} an, um einen von drei Seltenen Gegnern zu beschwören. Risse können an mehreren Orten in der Zone erscheinen."
@@ -221,8 +220,13 @@ L["anima_shard_61297"] = "Hinter einer Steinsäule.\n\n"..ns.color.Red('Im Dunge
 L["anima_shard_61298"] = "Hinter einem Liegestuhl."
 L["anima_shard_61299"] = "Hinter einer großen Fackel versteckt."
 L["anima_shard_61300"] = "An der Kante des mittleren Brunnens."
+L["anima_shard_spires"] = "Drei Splitter befinden sich in dem Dungeon \"Die Spitzen des Aufstiegs\"."
 L["options_icons_anima_shard"] = "Splitterpartie"
 L["options_icons_anima_shard_desc"] = "Zeigt alle 50 verlorenen Animakristallsplitter für den Erfolg {achievement:14339} an."
+
+L["hymn_note"] = "Suche bei jedem Tempel nach den Hymnen, um den Stärkungszauber zu erhalten, der benötigt wird, um den Erfolg zu erringen."
+L["options_icons_hymns"] = "{achievement:14768}"
+L["options_icons_hymns_desc"] = "Zeigt die Hymnen für den Erfolg {achievement:14768} an."
 
 L["stratios_note"] = "Auch die kleinst Schlacht sollte mit Bedacht und Ehre geschlagen werden. Präsentiert Euer Team, wenn Ihr bereit seid."
 L["thenia_note"] = "Welch prachtvolle weite Ebene. Einfach wunderbar für einen Kampf. Seid ihr bereit?"
@@ -289,26 +293,17 @@ Oh schau! Ein {spell:343124}! Nähere dich ihm, tapferer Abenteurer, das ist sic
 ]]
 
 L["oonar_sorrowbane_note"] = [[
-Im Theater der Schmerzen, findest du im Boden steckend Kummerfluch und Oonars Arm daran befestigt.
-|cFFFF8C00Bevor du versuchst eines der beiden ab oder heraus zu ziehen, setzte deinen {item:6948} bei {npc:161702} nahe des Flugpunktes.|r
+Im Theater der Schmerzen, findest du {item:180273} im Boden stecken und {item:181164} sich daran festhalten.
+Um diese zu erhalten:
 
-Um {item:181164} ab zu ziehen:
+• Kaufe 1x {item:182163} von {npc:171808} in der Nähe des Nachtmarktes in Revendreth (51.0, 78.8).
+• Kaufe 1x {item:180771} von {npc:166640} in Maldraxxus (50.9, 53.2).
+• Kaufe 1x {item:181163} von {npc:169964} in Maldraxxus (53.1, 41.3).
+• Erhalte 2 Stapel {spell:306272} von der Weltquest {wq:Ein oder zwei Steine im Weg} im Westen (37.0, 46.9).
+• Iss 4x {spell:327367} in Glutherns Verfall (76.4, 56.7).
+• Benutze schnell die {item:181163}, trinke dann beide Tränke und zieh am Arm und dem Schwert.
 
-• Reise zu Glutherns Verfall (76.4, 56.7) im Osten.
-• Esse 4x {spell:327367} (2min debuff).
-• Benutze schnell deinen {item:6948} und zieh am Arm.
-
-Um {item:180273} heraus zu ziehen:
-
-• Kaufe 1x {item:182163} von {npc:171808} in der Nähe
-   des Nachtmarktes in Revendreth (51.0, 78.8).
-• Kaufe 1x {item:180771} von
-   {npc:166640} in Maldraxxus (50.9, 53.2).
-• Erhalte 2 Stapel {spell:306272} von der Weltquest
-   {wq:Ein oder zwei Steine im Weg} im Westen (37.0, 46.9).
-• Esse 4x {spell:327367} in Glutherns Verfall.
-• Benutze schnell deinen {item:6948}, trink beim
-   Schwert die beiden Tränke und ziehe an diesem.
+Um nur {item:181164} zu erhalten, wird 4x {spell:327367} benötigt.
 ]]
 
 L["pet_cat"] = "Streichel die verdammte Katze!"
@@ -409,7 +404,7 @@ L["apholeias_note"] = "Stelle dich mit drei anderen Spielern in die Ecken der Pl
 L["dekaris_note"] = "Auf einem großen hervorstehenden Felsen."
 L["drifting_sorrow_note"] = "Töte {npc:175246} in der Nähe der schwebenden Kugel, um den Boss zu aktivieren."
 L["ekphoras_note"] = "Stelle dich mit drei anderen Spielern in die Ecken der Plattform und wirkt {spell:330650}, um {npc:169827} zu beschwören."
-L["gorged_shadehound_note"] = nil
+L["gorged_shadehound_note"] = "Nur während dem Event {wq: Jagd: Schemenhunde} verfügbar."
 L["ikras_note"] = "Fliegt um die Verdammnisfestung herum. Das ist ein guter Platz ihn anzugreifen."
 L["orophea_note"] = "Hebe das {spell:337143} im Südosten auf und biete es {npc:172577} an, um sie zu aktivieren."
 L["sanngror_note"] = "\nWenn er gerade nicht angreifbar ist, dann warte bis er nicht mehr mit Seelen experimentiert."
@@ -430,13 +425,12 @@ Kombiniere alle drei Gravuren, um den {item:182329} herzustellen, welcher am Alt
 L["soul_well_note"] = "Fangt die aus dem Seelenbrunnen ausbrechende Stygia."
 L["obliterated_soul_shards_note"] = "Sammel Ausgelöschte Seelensplitter auf den Brücken."
 
-L["animaflow_teleporter_note"] = "Bei Aktivierung gelangst du direkt zum Tremaculum."
+L["animaflow_teleporter_note"] = "Bei Aktivierung gelangst du direkt an andere Orte im Schlund."
 L["chaotic_riftstone_note"] = "Bei Aktivierung reist du mit einem {spell:344157} schnell durch den Schlund."
 L["venari_note"] = [[
 Verwende {currency:1767} dazu, um dauerhafte Aufwertungen für den Schlund und Torghast freizuschalten.
 
 |cFFFF8C00Accountweite Aufwertungen für Torghast werden bei Twinks als unvollständig angezeigt!|r
-|cFFFF8C00Der Status für die Vervollständigung unten, wird aktualisiert, sobald wir sie freischalten!|r
 ]]
 L["venari_upgrade"] = "eine Aufwertung von {npc:162804}"
 L["torghast"] = "Torghast"
@@ -448,6 +442,11 @@ L["Tentative"] = "Unverbindlich"
 
 L["stygian_cache"] = "Stygische Truhe"
 L["stygian_cache_note"] = "Nur einen Spieler kann die Truhe plündern, wenn sie erscheint!"
+
+L["box_of_torments_note"] = "Öffne die {npc:173837} unter dem Tremaculum."
+L["tormentors_notes_note"] = "Plündere die Leiche von {npc:173811}."
+L["words_of_warden_note"] = "Untersuche die |cffffff00Papierfetzen|r auf einem Stein hinter einigen Töpfen."
+
 L["options_icons_bonus_boss"] = "Bonus Elitegegner"
 L["options_icons_bonus_boss_desc"] = "Zeigt die Positionen von Bonus Elitegegnern."
 L["options_icons_bonus_event"] = "Bonus Events"
@@ -456,5 +455,7 @@ L["options_icons_riftstone"] = "Chaotische Risssteine"
 L["options_icons_riftstone_desc"] = "Zeigt die Positionen von Chaotischen Risssteinen an."
 L["options_icons_grapples"] = "{npc:176308}"
 L["options_icons_grapples_desc"] = "Zeigt Greifhakenziele für die {item:184653} Aufwertung an."
+L["options_icons_maw_lore"] = "Mythen des Schlunds"
+L["options_icons_maw_lore_desc"] = "Zeigt die Mythen für den Erfolg {achievement:14761} an."
 L["options_icons_stygian_caches"] = "Stygische Truhen"
 L["options_icons_stygian_caches_desc"] = "Zeigt Truhen an, die zusätzliche Stygia enthalten."

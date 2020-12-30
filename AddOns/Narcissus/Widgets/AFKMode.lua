@@ -77,3 +77,14 @@ Chat:SetScript("OnEvent", function(self, event, ...)
     self:SetScript("OnUpdate", Skin_OnUpdate);
 end)
 --]]
+
+local EL = CreateFrame("Frame");
+local events = {"UNIT_SPELLCAST_SENT", };
+for i = 1, #events do
+    --EL:RegisterEvent(events[i])
+end
+
+EL:SetScript("OnEvent", function(self, event, ...)
+    print(event)
+    print(...)
+end);

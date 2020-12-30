@@ -1117,7 +1117,7 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame parentKey="IlvlCenter"  hidden="true">
+			<Frame parentKey="IlvlCenter" hidden="true">
 				<Layers>
 					<Layer level="OVERLAY" textureSubLevel="3">
 						<FontString parentKey="ItemLevelCenter" inherits="NarciFontNormal10White" justifyH="CENTER" justifyV="MIDDLE" text="">

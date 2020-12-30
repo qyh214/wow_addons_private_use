@@ -23,6 +23,7 @@ local defaults = {
 			y = UIParent:GetHeight() * .15,
 		},
 		name_width = 50,
+		gradients = false,
 
 		threshold_own = 2,
 		threshold_other = 3,
@@ -77,9 +78,10 @@ function addon:OnEnable()
 	eframe:RegisterEvent("MODIFIER_STATE_CHANGED")
 	-- Set up skins
 	XLoot:MakeSkinner(self, {
+		default = { gradient = opt.gradients },
 		anchor = { r = .4, g = .4, b = .4, a = .6, gradient = false },
 		anchor_pretty = { r = .6, g = .6, b = .6, a = .8 },
-		item = { backdrop = false },
+		item = { backdrop = false, gradient = opt.gradients },
 		item_highlight = { type = "highlight", layer = "overlay" },
 		row_highlight = { type = "highlight" }
 	})
@@ -141,7 +143,7 @@ function events.currency(id, num)
 	if opt.show_currency then
 		local num = tonumber(num) or 1
 		local c = C_CurrencyInfo.GetCurrencyInfo(id)
-		addon:AddRow(c.iconFileID, opt.fade_own, 1, 1, 1, 1, 1, 1):SetTexts(nil,  num > 1 and ("%s x%d"):format(c.name, num) or name, c.quantity)
+		addon:AddRow(c.iconFileID, opt.fade_own, 1, 1, 1, 1, 1, 1):SetTexts(nil,  num > 1 and ("%s x%d"):format(c.name, num) or c.name, c.quantity)
 	end
 end
 

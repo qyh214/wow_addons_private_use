@@ -106,6 +106,9 @@ L["options_opacity_desc"] = "0 = transparent, 1 = opaque"
 
 ---------------------------------- VISIBILITY ---------------------------------
 
+L["options_show_worldmap_button"] = nil
+L["options_show_worldmap_button_desc"] = nil
+
 L["options_visibility_settings"] = "Visibilité"
 L["options_general_settings"] = "Général"
 L["options_show_completed_nodes"] = "Afficher les noeuds complétés"
@@ -122,6 +125,17 @@ L["options_toggle_per_map_settings"] = nil
 L["options_toggle_per_map_settings_desc"] = nil
 L["options_restore_hidden_nodes"] = "Restaurer les nœuds cachés"
 L["options_restore_hidden_nodes_desc"] = "Restaure tous les nœuds cachés en utilisant le clic droit du menu contextuel" -- Need review
+
+L["options_rewards_settings"] = nil
+L["options_reward_types"] = nil
+L["options_mount_rewards"] = nil
+L["options_mount_rewards_desc"] = nil
+L["options_pet_rewards"] = nil
+L["options_pet_rewards_desc"] = nil
+L["options_toy_rewards"] = nil
+L["options_toy_rewards_desc"] = nil
+L["options_transmog_rewards"] = nil
+L["options_transmog_rewards_desc"] = nil
 
 L["options_icons_misc_desc"] = "Afficher les emplacements des nœuds divers"
 L["options_icons_misc"] = "Divers"
