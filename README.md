@@ -85,7 +85,7 @@ https://bbs.nga.cn/read.php?tid=24562077
 
 盟约buff监视：https://wago.io/F1dMAfhui
 
-盟约指挥台成功率：https://wago.io/FTT0P82zx
+拒绝陌生异常组队邀请：https://wago.io/APzRF_Xz0
 
 奥利波斯WA图标指引：https://bbs.nga.cn/read.php?tid=24653400 （ 原版： https://wago.io/U7UFNotjr ）
 
