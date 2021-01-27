@@ -16,6 +16,8 @@ BuyEmAll 批量购买物品增强（某些只能一个个买的物品，改进�
 
 CanIMogIt 幻化提示插件
 
+CovenantMissionHelper 盟约指挥台成功率随从插件
+
 DBM 首领报警及其语音包
 
 Details 战斗数据统计(替代skada)
@@ -45,6 +47,8 @@ Immersion 对话框美化
 KeystoneHelper 钥石辅助信息
 
 MikScrollingBattleText（MSBT战斗浮动信息，parrot替代品）
+
+MythicDungeonTools MDT大秘境路线规划
 
 Multishot 自动截图【社区修复版本】
 
