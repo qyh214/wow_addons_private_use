@@ -1,22 +1,10 @@
-lightweight tag 0eadf78b538cdb6e7ab37c5aff735c159ab737dc v5.4.2
+lightweight tag 40c5514fb822a6135b418c96a1487fa2572ca962 v5.5.1
 Author:	Boshi Lian <farmer1992@gmail.com>
-Date:	Sun Nov 22 01:08:52 2020 -0800
+Date:	Tue Jan 12 18:05:27 2021 -0800
 
-commit 0eadf78b538cdb6e7ab37c5aff735c159ab737dc
+commit 40c5514fb822a6135b418c96a1487fa2572ca962
 Author: Boshi Lian <farmer1992@gmail.com>
-Date:   Sun Nov 22 01:08:52 2020 -0800
+Date:   Tue Jan 12 18:05:27 2021 -0800
 
-    export via libstub
-
-commit 81e2918fa0c7e22455ecb34dfa1a7e5b582da7b0
-Author: Boshi Lian <farmer1992@gmail.com>
-Date:   Sun Nov 22 00:32:39 2020 -0800
-
-    bump to
-
-commit 29086186265d61828b83d1e2f6c764105da61136
-Author: Boshi Lian <farmer1992@gmail.com>
-Date:   Sun Nov 22 00:29:59 2020 -0800
-
-    fix equiipment set index
+    set max count to 50
 

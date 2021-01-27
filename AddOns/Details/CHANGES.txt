@@ -1,10 +1,10 @@
-lightweight tag 38f66a24de3a0f2682df2db897e70029374179e6 DetailsRetail.9.0.2.8102.144
+lightweight tag af14e0810659c5779cbe0fa7dee375c8208adfea DetailsRetail.9.0.2.8156.144
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Tue Dec 22 11:44:23 2020 -0300
+Date:	Thu Jan 21 17:52:08 2021 -0300
 
-commit 38f66a24de3a0f2682df2db897e70029374179e6
+commit af14e0810659c5779cbe0fa7dee375c8208adfea
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Tue Dec 22 11:44:23 2020 -0300
+Date:   Thu Jan 21 17:52:08 2021 -0300
 
-    More fixes
+    General fixes
 

@@ -1,0 +1,6 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <!--@no-lib-strip@-->
+    <Include file="AceEvent-3.0\AceEvent-3.0.xml"/>
+    <Include file="AceHook-3.0\AceHook-3.0.xml"/>
+    <!--@end-no-lib-strip@-->
+</Ui>

@@ -27,7 +27,7 @@ W.Changelog = {}
 
 -- 快捷键注册
 _G.BINDING_CATEGORY_ELVUI_WINDTOOLS = L["WindTools"]
-for i = 1, 3 do
+for i = 1, 5 do
     _G["BINDING_HEADER_WTEXTRAITEMSBAR" .. i] =
         F.CreateColorString(L["Extra Items Bar"] .. " " .. i, E.db.general.valuecolor)
     for j = 1, 12 do
@@ -87,7 +87,7 @@ function W:CheckInstalledVersion()
         if not E.global.WT.Version or E.global.WT.Version ~= W.Version then
             E:StaticPopup_Show("WINDTOOLS_OPEN_CHANGELOG")
             E.global.WT.Version = W.Version
-        else
+        elseif E.private.WT.core.loginMessage then
             local icon = F.GetIconString(W.Media.Textures.smallLogo, 14)
             print(
                 format(

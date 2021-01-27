@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2020, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2021, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -203,13 +203,15 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |r|cffffffff4.2.11|r\n\n"..
-					"- ADDED - Filters - filtering unfinished quests (opposite of completed)\n"..
-					"- FIXED - Active Button - wrong position when using ElvUI and MoveAnything"..
-					offs.."addons\n"..
-					"- UPDATED - Addon support - PetTracker 9.0.5\n"..
-					"- UPDATED - Addon support - ElvUI 12.16, Tukui 20.11\n"..
-					"- UPDATED - Libs\n\n"..
+			text = cTitle.."         What's NEW in version |r|cffffffff4.2.13|r\n\n"..
+					"- FIXED - Game freezing after long combat\n"..
+					"- FIXED - LUA Error after Accepting Quest, when active Auto Zone tracking"..
+					offs.."and active ElvUI\n"..
+					"- FIXED - Quest item buttons - visible during Pet Battles after some user actions\n"..
+					"- FIXED - Active Button - Quest item of selected Campaign Quest (with yellow"..
+					offs.."POI button) is not displayed\n"..
+					"- UPDATED - Options - added new Strata option \"BACKGROUND\"\n"..
+					"- UPDATED - Addon support - ElvUI 12.17, Tukui 20.14, SpartanUI 6.0.17\n\n"..
 
                     cTitle.."WoW 9.0.2 - Known issues w/o solution|r\n"..
                     "- Clicking on tracked quests or achievements has no response during combat.\n"..

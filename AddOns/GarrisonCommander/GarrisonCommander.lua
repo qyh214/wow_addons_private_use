@@ -2993,7 +2993,7 @@ function addon:AddIndicatorToButton(button,mission,missionID,bigscreen)
 	else
 		panel.Percent:SetJustifyV("BOTTOM")
 		panel.Percent:SetJustifyH("RIGHT")
-		panel.Age:SetFormattedText("Expires in \n%s",mission.offerTimeRemaining)
+		panel.Age:SetFormattedText("Expires in \n%s",mission.offerTimeRemaining or UNKNOWN)
 		panel.Age:SetTextColor(self:GetAgeColor(mission.offerEndTime))
 		panel.Age:Show()
 	end

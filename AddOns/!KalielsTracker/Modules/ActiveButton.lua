@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2020, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2021, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -70,8 +70,8 @@ local function ActiveFrame_Update()
 	if HasExtraActionBar() or #C_ZoneAbility.GetActiveAbilities() > 0 then
 		yOfs = yOfs + 100
 	end
-	KT:prot(activeFrame, "ClearAllPoints")
-	KT:prot(activeFrame, "SetPoint", point, relativeTo, relativePoint, xOfs, yOfs)
+	KT:prot("ClearAllPoints", activeFrame)
+	KT:prot("SetPoint", activeFrame, point, relativeTo, relativePoint, xOfs, yOfs)
 end
 
 local function ActiveFrame_Init()
@@ -121,7 +121,7 @@ local function SetFrames()
 					UpdateHotkey()
 				end
 			elseif event == "PET_BATTLE_OPENING_START" then
-				KT:prot(activeFrame, "Hide")
+				KT:prot("Hide", activeFrame)
 			elseif event == "PET_BATTLE_CLOSE" then
 				M:Update()
 			end
@@ -262,11 +262,11 @@ end
 
 local function SetHooks()
 	hooksecurefunc("ExtraActionBar_Update", function()
-		ActiveFrame_Update()
+		KT:protStop(ActiveFrame_Update)
 	end)
 
 	hooksecurefunc(ZoneAbilityFrame, "UpdateDisplayedZoneAbilities", function(self)
-		ActiveFrame_Update()
+		KT:protStop(ActiveFrame_Update)
 	end)
 
 	PetActionBarFrame:HookScript("OnUpdate", function(self, elapsed)
@@ -318,14 +318,15 @@ function M:Update(id)
 
 		if not dbChar.collapsed then
 			for questID, _ in pairs(KT.fixedButtons) do
+				if questID == C_SuperTrack.GetSuperTrackedQuestID() then
+					closestQuestID = questID
+					break
+				end
 				if QuestHasPOIInfo(questID) then
 					local distSqr, _ = C_QuestLog.GetDistanceSqToQuest(questID)
 					if distSqr and distSqr <= minDistSqr then
 						minDistSqr = distSqr
 						closestQuestID = questID
-					elseif questID == C_SuperTrack.GetSuperTrackedQuestID() then
-						closestQuestID = questID
-						break
 					end
 				end
 			end

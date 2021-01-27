@@ -21,6 +21,7 @@ module.db.tableFood = not ExRT.isClassic and {
 	[18192]=true,	[24799]=true,	[18194]=true,	[22730]=true,	[25661]=true,	[18141]=true,	[18125]=true,
 	[22790]=true,	[22789]=true,	[25804]=true,
 	[18222]=true,
+	[18125]=true,	[18141]=true,
 }
 module.db.StaminaFood = {[201638]=true,[259457]=true,[288075]=true,[288074]=true,[297119]=true,[297040]=true,}
 
@@ -173,10 +174,12 @@ if not ExRT.isClassic and UnitLevel'player' > 50 then
 	--Haste		Mastery		Crit		Versa		Int		Str 		Agi		Stam		Stam		Special
 	[308488]=30,	[308506]=30,	[308434]=30,	[308514]=30,	[327708]=20,	[327706]=20,	[327709]=20,	[308525]=30,	[327707]=30,	[308637]=30,
 	[308474]=18,	[308504]=18,	[308430]=18,	[308509]=18,	[327704]=18,	[327701]=18,	[327705]=18,	[327702]=18,	[308525]=18,
+									[341449]=20,
 	}
 	module.db.tableFoodIsBest = {
 	--Haste		Mastery		Crit		Versa		Int		Str 		Agi		Stam		Stam		Special
 	[308488]=30,	[308506]=30,	[308434]=30,	[308514]=30,	[327708]=30,	[327706]=30,	[327709]=30,	[308525]=30,	[327707]=30,	[308637]=30,
+									[341449]=30,
 	}
 	module.db.tableFood_headers = {0,18,30}
 
@@ -236,6 +239,7 @@ module.db.tableRunes = {[224001]=5,[270058]=6,[317065]=6,[347901]=18,}
 
 module.db.durability = {}
 module.db.oil = {}
+module.db.oil2 = {}
 module.db.kit = {}
 
 local IsSendFoodByMe,IsSendFlaskByMe,IsSendRunesByMe,IsSendBuffsByMe = nil
@@ -943,9 +947,9 @@ function module.options:Load()
 	self.consumablesCheckFrame:SetSize(688,145)
 	self.consumablesCheckFrame:SetPoint("TOP",0,-607)
 
-	ELib:DecorationLine(self):Point("BOTTOM",self.consumablesCheckFrame,"TOP",0,0):Point("LEFT",self):Point("RIGHT",self):Size(0,1)
+	self.consumablesCheckFrame.dl1 = ELib:DecorationLine(self):Point("BOTTOM",self.consumablesCheckFrame,"TOP",0,0):Point("LEFT",self):Point("RIGHT",self):Size(0,1)
 
-	self.consumablesFrameHeader = ELib:Text(self.optReadyCheckFrame,L.RaidCheckConsum):Point("BOTTOMLEFT",self.consumablesCheckFrame,"TOPLEFT",10,3):Bottom():Color()
+	self.consumablesFrameHeader = ELib:Text(self.consumablesCheckFrame,L.RaidCheckConsum):Point("BOTTOMLEFT",self.consumablesCheckFrame,"TOPLEFT",10,3):Bottom():Color()
 
 	self.chkReadyCheckFrameEnable = ELib:Check(self.consumablesCheckFrame,L.Enable,not VExRT.RaidCheck.DisableConsumables):Point(15,-5):AddColorState():OnClick(function(self) 
 		if self:GetChecked() then
@@ -1001,6 +1005,8 @@ function module.options:Load()
 		self.potionToChat.txt:Hide()
 		self.hs:Hide()
 		self.hsToChat:Hide()
+		self.consumablesCheckFrame:Hide()
+		self.consumablesCheckFrame.dl1:Hide()
 
 		self.optReadyCheckFrame:SetPoint("TOP",0,-50)
 	end
@@ -1118,6 +1124,7 @@ do
 				{GetSpellInfo(295623),33757},
 				{GetSpellInfo(194084),318038},
 				{L.RaidCheckOilSharpen,322762},
+				{L.RaidCheckOilSharpen2,322763},
 			}
 			for i=#oilTypes,1,-1 do
 				if not oilTypes[i][1] then
@@ -1126,26 +1133,37 @@ do
 			end
 		end
 
+		local oilMH, oilOH = 0, 0
+
 		for _,itemSlotID in pairs(OilSlots) do
 			inspectScantip:SetInventoryItem("player", itemSlotID)
 
 			for j=2, inspectScantip:NumLines() do
 				local tooltipLine = _G["ExRTRaidCheckScanningTooltipTextLeft"..j]
 				local text = tooltipLine:GetText()
+				local isBreak
 				if text and text ~= "" then
 					for i=1,#oilTypes do
 						if text:find("^"..oilTypes[i][1]) then
-							inspectScantip:ClearLines()
-							return oilTypes[i][2]
+							if itemSlotID == 16 then
+								oilMH = oilTypes[i][2]
+							elseif itemSlotID == 17 then
+								oilOH = oilTypes[i][2]
+							end
+							isBreak = true
+							break
 						end
 					end
+				end
+				if isBreak then
+					break
 				end
 			end
 
 			inspectScantip:ClearLines()
 		end
 
-		return 0
+		return oilMH, oilOH
 	end
 end
 
@@ -2058,9 +2076,10 @@ function module.frame:UpdateData(onlyLine)
 					end
 				end
 				if line.oil and not self.isTest then
-					local durTab, oil = module.db.oil[line.unit_name]
+					local durTab, oil, oil2 = module.db.oil[line.unit_name]
 					if durTab and (durTab.time + (line.rc_status ~= 4 and 60 or 600) > currTime) then
 						oil = durTab.oil
+						oil2 = module.db.oil2[line.unit_name]
 					end
 					if not oil then
 						line.oil.bigText:SetText("-")
@@ -2075,6 +2094,23 @@ function module.frame:UpdateData(onlyLine)
 						end
 						line.oil.texture:SetTexture(texture)
 						line.oil.tooltip = "spell:"..oil
+
+						if oil2 then
+							oil2 = oil2.oil
+							if oil2 ~= "0" then
+								local texture = select(3,GetSpellInfo(tonumber(oil2)))
+								if oil2 == "320798" then texture = 463543
+								elseif oil2 == "321389" then texture = 463544
+								elseif oil2 == "322762" then texture = 3528422
+								elseif oil2 == "322763" then texture = 3528423 
+								end
+								line.oil2.texture:SetTexture(texture)
+								line.oil2.tooltip = "spell:"..oil2
+								line.oil2:Show()
+	
+								line.oil:Point("CENTER",line.oilpointer,"CENTER",-(line.oil.size or 18)*(1/2),0)
+							end
+						end
 					end
 				end
 
@@ -2249,6 +2285,11 @@ function module.main:ADDON_LOADED()
 	if VExRT.RaidCheck.PotionCheck then
 		--module:RegisterEvents('COMBAT_LOG_EVENT_UNFILTERED')
 	end
+
+	if not VExRT.RaidCheck.WeaponEnch then
+		VExRT.RaidCheck.WeaponEnch = {}
+	end
+
 	module:RegisterEvents('READY_CHECK')
 
 	module:RegisterSlash()
@@ -2405,6 +2446,12 @@ function module:addonMessage(sender, prefix, type, ver, ...)
 							oil = val,
 						}
 						module.db.oil[shortName] = module.db.oil[sender]
+					elseif key == "OIL2" then
+						module.db.oil2[sender] = {
+							time = time(),
+							oil = val,
+						}
+						module.db.oil2[shortName] = module.db.oil2[sender]
 					end
 				end
 
@@ -2449,9 +2496,12 @@ function module:addonMessage(sender, prefix, type, ver, ...)
 				end
 				module.db.prevReqAntispam = currTime
 
+				local oilMH, oilOH = module:OilCheck()
+
 				ExRT.F.SendExMsg("raidcheck","DUR\t"..ExRT.V.."\t"..format("%.2f",module:DurabilityCheck())..
 					(not ExRT.isClassic and "\tKIT\t"..format("%d/%d",module:KitCheck()) or "")..
-					(not ExRT.isClassic and "\tOIL\t"..format("%d",module:OilCheck()) or "")
+					(not ExRT.isClassic and "\tOIL\t"..format("%d",oilMH) or "")..
+					(not ExRT.isClassic and "\tOIL2\t"..format("%d",oilOH) or "")
 				)
 			end
 		end
@@ -2487,7 +2537,27 @@ if (not ExRT.isClassic) and UnitLevel'player' >= 60 then
 	module.consumables:SetSize(consumables_size*5,consumables_size)
 	module.consumables:Hide()
 	module.consumables.buttons = {}
-	for i=1,5 do
+
+	local function ButtonOnEnter(self)
+		self:GetParent():SetAlpha(.7)
+	end
+	local function ButtonOnLeave(self)
+		self:GetParent():SetAlpha(1)
+	end
+
+	module.consumables.state = CreateFrame('Frame', nil, nil, 'SecureHandlerStateTemplate')
+	module.consumables.state:SetAttribute('_onstate-combat', [=[
+		if newstate == 'hide' then
+			for i=1,6 do
+				if i == 3 or i == 4 or i == 5 then
+					self:GetFrameRef("Button"..i):Hide()
+				end
+			end
+		end
+	]=])
+	RegisterStateDriver(module.consumables.state, 'combat', '[combat] hide')
+
+	for i=1,6 do
 		local button = CreateFrame("Frame",nil,module.consumables)
 		module.consumables.buttons[i] = button
 		button:SetSize(consumables_size,consumables_size)
@@ -2509,17 +2579,38 @@ if (not ExRT.isClassic) and UnitLevel'player' >= 60 then
 		button.count:SetPoint("BOTTOMRIGHT",button,"BOTTOMRIGHT",-1,1)
 		button.count:SetFont(button.timeleft:GetFont(),10,"OUTLINE")
 		--button.count:SetTextColor(0,1,0,1)
+
+		if i == 3 or i == 4 or i == 5 then
+			button.click = CreateFrame("Button",nil,button,"SecureActionButtonTemplate")
+			button.click:SetAllPoints()
+			button.click:Hide()
+			button.click:RegisterForClicks("AnyDown")
+			button.click:SetAttribute("type", "macro")
+	
+			button.click:SetScript("OnEnter",ButtonOnEnter)
+			button.click:SetScript("OnLeave",ButtonOnLeave)
+	
+			module.consumables.state:SetFrameRef("Button"..i, button.click)
+		end
 	
 		if i == 1 then
 			button.texture:SetTexture(136000)
+			module.consumables.buttons.food = button
 		elseif i == 2 then
 			button.texture:SetTexture(3566840)
+			module.consumables.buttons.flask = button
 		elseif i == 3 then
 			button.texture:SetTexture(3528447)
+			module.consumables.buttons.kit = button
 		elseif i == 4 then
 			button.texture:SetTexture(463543)
+			module.consumables.buttons.oil = button
 		elseif i == 5 then
+			button.texture:SetTexture(134078)
+			module.consumables.buttons.rune = button
+		elseif i == 6 then
 			button.texture:SetTexture(538745)
+			module.consumables.buttons.hs = button
 		end
 	end
 	
@@ -2531,105 +2622,230 @@ if (not ExRT.isClassic) and UnitLevel'player' >= 60 then
 		self:UnregisterAllEvents()
 		self:Hide()
 	end
-	module.consumables:SetScript("OnEvent",function(self,event)
+
+	local isElvUIFix
+
+	function module.consumables:Update()
+		if IsAddOnLoaded("ElvUI") and not isElvUIFix then
+			self:SetParent(ReadyCheckFrame)
+			self:ClearAllPoints()
+			self:SetPoint("BOTTOM",ReadyCheckFrame,"TOP",0,5)
+			isElvUIFix = true
+		end
+
+		local isWarlockInRaid
+		for _, name, subgroup, class, guid, rank, level, online, isDead, combatRole in ExRT.F.IterateRoster, ExRT.F.GetRaidDiffMaxGroup() do
+			if class == "WARLOCK" then
+				isWarlockInRaid = true
+				break
+			end
+		end
+		local totalButtons = 6
+		if isWarlockInRaid then
+			self.buttons.hs:Show()
+		else
+			self.buttons.hs:Hide()
+			totalButtons = totalButtons - 1
+		end
+		self:SetWidth(consumables_size*totalButtons)
+
+		for i=1,#self.buttons do
+			self.buttons[i].statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-NotReady")
+			self.buttons[i].timeleft:SetText("")
+			self.buttons[i].count:SetText("")
+			self.buttons[i].texture:SetDesaturated(true)
+		end
+
+		local LCG = LibStub("LibCustomGlow-1.0",true)
+
+		local now = GetTime()
+
+		local isFood, isRune
+
+		for i=1,60 do
+			local name,icon,count,dispelType,duration,expires,caster,isStealable,_,spellId = UnitAura("player", i, "HELPFUL")
+			if not spellId then
+				break
+			elseif module.db.tableFood[spellId] then
+				self.buttons.food.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
+				self.buttons.food.texture:SetDesaturated(false)
+				self.buttons.food.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((expires-now)/60))
+				isFood = true
+			elseif icon == 136000 and not isFood then
+				self.buttons.food.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
+				self.buttons.food.texture:SetDesaturated(false)
+				self.buttons.food.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((expires-now)/60))
+			elseif module.db.tableFlask[spellId] then
+				self.buttons.flask.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
+				self.buttons.flask.texture:SetDesaturated(false)
+				self.buttons.flask.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((expires-now)/60))
+			elseif module.db.tableRunes[spellId] then
+				self.buttons.rune.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
+				self.buttons.rune.texture:SetDesaturated(false)
+				self.buttons.rune.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((expires-now)/60))
+				isRune = true
+			end
+		end
+
+		local hsCount = GetItemCount(5512,false,true)
+		if hsCount and hsCount > 0 then
+			self.buttons.hs.count:SetFormattedText("%d",hsCount)
+			self.buttons.hs.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
+			self.buttons.hs.texture:SetDesaturated(false)
+		else
+			self.buttons.hs.count:SetText("0")
+		end
+
+
+		local kitCount = GetItemCount(172347,false,true)
+		local kitNow, kitMax, kitTimeLeft = module:KitCheck()
+		if kitNow > 0 then
+			self.buttons.kit.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
+			self.buttons.kit.texture:SetDesaturated(false)
+			if kitTimeLeft then
+				self.buttons.kit.timeleft:SetText(kitTimeLeft)
+			end
+		end
+		if kitCount and kitCount > 0 then
+			if not InCombatLockdown() then
+				local itemName = GetItemInfo(172347)
+				if itemName then
+					self.buttons.kit.click:SetAttribute("macrotext1", format("/stopmacro [combat]\n/use %s\n/use 5", itemName))
+					self.buttons.kit.click:Show()
+				else
+					self.buttons.kit.click:Hide()
+				end
+			end
+		else
+			if not InCombatLockdown() then
+				self.buttons.kit.click:Hide()
+			end
+		end
+		self.buttons.kit.count:SetFormattedText("%d",kitCount)
+		if LCG then
+			if kitCount and kitCount > 0 and kitNow == 0 then
+				LCG.PixelGlow_Start(self.buttons.kit)
+			else
+				LCG.PixelGlow_Stop(self.buttons.kit)
+			end
+		end
+
+		lastWeaponEnchantItem = lastWeaponEnchantItem or VExRT.RaidCheck.WeaponEnch[ExRT.SDB.charKey]
+
+		local hasMainHandEnchant, mainHandExpiration, mainHandCharges, mainHandEnchantID = GetWeaponEnchantInfo()
+		if hasMainHandEnchant then
+			self.buttons.oil.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
+			self.buttons.oil.texture:SetDesaturated(false)
+			self.buttons.oil.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil(mainHandExpiration/1000/60))
+
+			if mainHandEnchantID == 6190 then
+				lastWeaponEnchantItem = 171286
+			elseif mainHandEnchantID == 6188 then
+				lastWeaponEnchantItem = 171285
+			elseif mainHandEnchantID == 6200 then
+				lastWeaponEnchantItem = 171437
+			elseif mainHandEnchantID == 6198 then
+				lastWeaponEnchantItem = 171436
+			elseif mainHandEnchantID == 6201 then
+				lastWeaponEnchantItem = 171439
+			elseif mainHandEnchantID == 6199 then
+				lastWeaponEnchantItem = 171438
+			end
+		end
+		if lastWeaponEnchantItem == 171286 then
+			self.buttons.oil.texture:SetTexture(463544)
+		elseif lastWeaponEnchantItem == 171285 then
+			self.buttons.oil.texture:SetTexture(463543)
+		elseif lastWeaponEnchantItem == 171437 then
+			self.buttons.oil.texture:SetTexture(3528422)
+		elseif lastWeaponEnchantItem == 171436 then
+			self.buttons.oil.texture:SetTexture(3528424)
+		elseif lastWeaponEnchantItem == 171439 then
+			self.buttons.oil.texture:SetTexture(3528423)
+		elseif lastWeaponEnchantItem == 171438 then
+			self.buttons.oil.texture:SetTexture(3528425)
+		end
+
+		VExRT.RaidCheck.WeaponEnch[ExRT.SDB.charKey] = lastWeaponEnchantItem
+
+		if lastWeaponEnchantItem then
+			local oilCount = GetItemCount(lastWeaponEnchantItem,false,true)
+			self.buttons.oil.count:SetText(oilCount)
+			if oilCount and oilCount > 0 then
+				if not InCombatLockdown() then
+					local itemName = GetItemInfo(lastWeaponEnchantItem)
+					if itemName then
+						if mainHandExpiration and mainHandExpiration <= 300000 then
+							self.buttons.oil.click:SetAttribute("macrotext1", format("/stopmacro [combat]\n/use %s", itemName))
+						else
+							self.buttons.oil.click:SetAttribute("macrotext1", format("/stopmacro [combat]\n/use %s", itemName))
+						end
+						self.buttons.oil.click:Show()
+					else
+						self.buttons.oil.click:Hide()
+					end
+				end
+			else
+				if not InCombatLockdown() then
+					self.buttons.oil.click:Hide()
+				end
+			end
+
+			if LCG then
+				if oilCount and oilCount > 0 and (not hasMainHandEnchant or (mainHandExpiration and mainHandExpiration <= 300000)) then
+					LCG.PixelGlow_Start(self.buttons.oil)
+				else
+					LCG.PixelGlow_Stop(self.buttons.oil)
+				end
+			end
+		end
+
+		local runeCount = GetItemCount(181468,false,true)
+		if runeCount and runeCount > 0 then
+			self.buttons.rune.count:SetFormattedText("%d",runeCount)
+			if not InCombatLockdown() then
+				local itemName = GetItemInfo(181468)
+				if itemName then
+					self.buttons.rune.click:SetAttribute("macrotext1", format("/stopmacro [combat]\n/use %s", itemName))
+					self.buttons.rune.click:Show()
+				else
+					self.buttons.rune.click:Hide()
+				end
+			end
+		else
+			self.buttons.rune.count:SetText("0")
+			if not InCombatLockdown() then
+				self.buttons.rune.click:Hide()
+			end
+		end
+
+		if LCG then
+			if runeCount and runeCount > 0 and not isRune then
+				LCG.PixelGlow_Start(self.buttons.rune)
+			else
+				LCG.PixelGlow_Stop(self.buttons.rune)
+			end
+		end
+	end
+
+	module.consumables:SetScript("OnEvent",function(self,event,arg1)
 		if event == "READY_CHECK" then
-			local isWarlockInRaid
-			for _, name, subgroup, class, guid, rank, level, online, isDead, combatRole in ExRT.F.IterateRoster, ExRT.F.GetRaidDiffMaxGroup() do
-				if class == "WARLOCK" then
-					isWarlockInRaid = true
-					break
-				end
+			self:Update()
+			self:RegisterEvent("UNIT_AURA")
+			self:RegisterEvent("UNIT_INVENTORY_CHANGED")
+			C_Timer.After(40,function()
+				self:UnregisterEvent("UNIT_AURA")
+				self:UnregisterEvent("UNIT_INVENTORY_CHANGED")
+			end)
+		elseif event == "UNIT_AURA" then
+			if arg1 == "player" then
+				self:Update()
 			end
-			if isWarlockInRaid then
-				self.buttons[5]:Show()
-				self:SetWidth(consumables_size*5)
-			else
-				self.buttons[5]:Hide()
-				self:SetWidth(consumables_size*4)
-			end
-	
-			for i=1,5 do
-				self.buttons[i].statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-NotReady")
-				self.buttons[i].timeleft:SetText("")
-				self.buttons[i].count:SetText("")
-				self.buttons[i].texture:SetDesaturated(true)
-			end
-
-			local now = GetTime()
-	
-			for i=1,60 do
-				local name,icon,count,dispelType,duration,expires,caster,isStealable,_,spellId = UnitAura("player", i, "HELPFUL")
-				if not spellId then
-					break
-				elseif module.db.tableFood[spellId] then
-					self.buttons[1].statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
-					self.buttons[1].texture:SetDesaturated(false)
-					self.buttons[1].timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((expires-now)/60))
-					isFood = true
-				elseif icon == 136000 and not isFood then
-					self.buttons[1].statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
-					self.buttons[1].texture:SetDesaturated(false)
-					self.buttons[1].timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((expires-now)/60))
-				elseif module.db.tableFlask[spellId] then
-					self.buttons[2].statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
-					self.buttons[2].texture:SetDesaturated(false)
-					self.buttons[2].timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((expires-now)/60))
-				end
-			end
-
-			local hsCount = GetItemCount(5512,false,true)
-			if hsCount and hsCount > 0 then
-				self.buttons[5].count:SetFormattedText("%d",hsCount)
-				self.buttons[5].statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
-				self.buttons[5].texture:SetDesaturated(false)
-			else
-				self.buttons[5].count:SetText("0")
-			end
-
-
-			local kitCount = GetItemCount(172347,false,true)
-			local kitNow, kitMax, kitTimeLeft = module:KitCheck()
-			if kitNow > 0 then
-				self.buttons[3].statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
-				self.buttons[3].texture:SetDesaturated(false)
-				if kitTimeLeft then
-					self.buttons[3].timeleft:SetText(kitTimeLeft)
-				end
-			end
-			self.buttons[3].count:SetFormattedText("%d",kitCount)
-
-			local hasMainHandEnchant, mainHandExpiration, mainHandCharges, mainHandEnchantID = GetWeaponEnchantInfo()
-			if hasMainHandEnchant then
-				self.buttons[4].statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
-				self.buttons[4].texture:SetDesaturated(false)
-				self.buttons[4].timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil(mainHandExpiration/1000/60))
-
-				if mainHandEnchantID == 6190 then
-					if lastWeaponEnchantItem ~= 171286 then
-						self.buttons[4].texture:SetTexture(463544)
-					end
-					lastWeaponEnchantItem = 171286
-				elseif mainHandEnchantID == 6188 then
-					if lastWeaponEnchantItem ~= 171286 then
-						self.buttons[4].texture:SetTexture(463543)
-					end
-					lastWeaponEnchantItem = 171285
-				elseif mainHandEnchantID == 6200 then
-					if lastWeaponEnchantItem ~= 171286 then
-						self.buttons[4].texture:SetTexture(3528422)
-					end
-					lastWeaponEnchantItem = 171437
-				elseif mainHandEnchantID == 6198 then
-					if lastWeaponEnchantItem ~= 171286 then
-						self.buttons[4].texture:SetTexture(3528424)
-					end
-					lastWeaponEnchantItem = 171436
-				end
-			end
-
-			if lastWeaponEnchantItem then
-				local oilCount = GetItemCount(lastWeaponEnchantItem,false,true)
-				self.buttons[4].count:SetText(oilCount)
+		elseif event == "UNIT_INVENTORY_CHANGED" then
+			if arg1 == "player" then
+				C_Timer.After(.2,function()
+					self:Update()
+				end)
 			end
 		end
 	end)

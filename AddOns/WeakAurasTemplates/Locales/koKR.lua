@@ -11,8 +11,7 @@ local L = WeakAuras.L
 	L["<70% Mana"] = "<70% 마나"
 	L[">70% Mana"] = ">70% 마나"
 	L["Abilities"] = "능력"
-	--[[Translation missing --]]
-	L["Ability"] = "Ability"
+	L["Ability"] = "능력"
 	L["Add Triggers"] = "활성 조건 추가"
 	L["Always Active"] = "항상 활성화"
 	L["Always Show"] = "항상 표시"
@@ -34,16 +33,12 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Always shows the aura, turns blue on insufficient resources."] = "Always shows the aura, turns blue on insufficient resources."
 	L["Always shows the aura, turns blue when not usable."] = "효과를 항상 표시하고, 사용할 수 없을 때는 파란색으로 바뀝니다."
-	--[[Translation missing --]]
-	L["Always shows the aura, turns grey if on cooldown."] = "Always shows the aura, turns grey if on cooldown."
-	--[[Translation missing --]]
-	L["Always shows the aura, turns grey if the ability is not usable and red when out of range."] = "Always shows the aura, turns grey if the ability is not usable and red when out of range."
-	--[[Translation missing --]]
-	L["Always shows the aura, turns grey if the ability is not usable."] = "Always shows the aura, turns grey if the ability is not usable."
+	L["Always shows the aura, turns grey if on cooldown."] = "효과를 항상 표시하고, 재사용 대기 중이면 회색으로 바뀝니다."
+	L["Always shows the aura, turns grey if the ability is not usable and red when out of range."] = "효과를 항상 표시하고, 능력을 사용할 수 없으면 회색으로, 사거리를 벗어나면 빨간색으로 바뀝니다."
+	L["Always shows the aura, turns grey if the ability is not usable."] = "효과를 항상 표시하고, 능력을 사용할 수 없으면 회색으로 바뀝니다."
 	--[[Translation missing --]]
 	L["Always shows the aura, turns red when out of range, blue on insufficient resources."] = "Always shows the aura, turns red when out of range, blue on insufficient resources."
-	--[[Translation missing --]]
-	L["Always shows the aura, turns red when out of range."] = "Always shows the aura, turns red when out of range."
+	L["Always shows the aura, turns red when out of range."] = "효과를 항상 표시하고, 사거리를 벗어나면 빨간색으로 바뀝니다."
 	L["Back"] = "뒤로"
 	L["Basic Show On Cooldown"] = "재사용 대기 중 표시"
 	--[[Translation missing --]]
@@ -51,8 +46,7 @@ local L = WeakAuras.L
 	L["Bloodlust/Heroism"] = "피의 욕망/영웅심"
 	--[[Translation missing --]]
 	L["Bonded Buff"] = "Bonded Buff"
-	--[[Translation missing --]]
-	L["Buff"] = "Buff"
+	L["Buff"] = "강화 효과"
 	L["buff"] = "강화 효과"
 	--[[Translation missing --]]
 	L["Buff on Other"] = "Buff on Other"
@@ -68,8 +62,7 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Combustion Ready"] = "Combustion Ready"
 	L["Conduits"] = "도관"
-	--[[Translation missing --]]
-	L["Cooldown"] = "Cooldown"
+	L["Cooldown"] = "재사용 대기시간"
 	L["cooldown"] = "재사용 대기시간"
 	L["Cooldown Tracking"] = "재사용 대기시간 추적"
 	L["Create Auras"] = "효과 생성"
@@ -78,10 +71,8 @@ local L = WeakAuras.L
 	L["Debuffs"] = "약화 효과"
 	--[[Translation missing --]]
 	L["Empowered Buff"] = "Empowered Buff"
-	--[[Translation missing --]]
-	L["Fire"] = "Fire"
-	--[[Translation missing --]]
-	L["Frost"] = "Frost"
+	L["Fire"] = "화염"
+	L["Frost"] = "냉기"
 	L["General"] = "일반"
 	L["Health"] = "생명력"
 	L["Highlight while active, red when out of range."] = "활성화 된 동안 강조, 사정거리를 벗어나면 붉은색으로 표시"
@@ -93,12 +84,10 @@ local L = WeakAuras.L
 	L["Highlight while spell is active."] = "주문이 활성화 되어 있는 동안 강조"
 	L["Hold CTRL to create multiple auras at once"] = "한 번에 여러 효과를 만드려면 CTRL 키를 누르세요"
 	L["Keeps existing triggers intact"] = "활성 조건 그대로 유지"
-	--[[Translation missing --]]
-	L["Legendaries"] = "Legendaries"
+	L["Legendaries"] = "전설"
 	--[[Translation missing --]]
 	L["Meteor Ready"] = "Meteor Ready"
-	--[[Translation missing --]]
-	L["Nature"] = "Nature"
+	L["Nature"] = "자연"
 	L["Next"] = "다음"
 	L["Only show the aura if the target has the debuff."] = "대상에 약화 효과가 있는 경우 그 효과만 표시합니다."
 	L["Only show the aura when the item is on cooldown."] = "아이템이 재사용 대기 중일 때 그 효과만 표시합니다."
@@ -173,8 +162,7 @@ local L = WeakAuras.L
 	L["stun debuff"] = "stun debuff"
 	--[[Translation missing --]]
 	L["Stun Debuff"] = "Stun Debuff"
-	--[[Translation missing --]]
-	L["Totem"] = "Totem"
+	L["Totem"] = "토템"
 	--[[Translation missing --]]
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."
 	--[[Translation missing --]]

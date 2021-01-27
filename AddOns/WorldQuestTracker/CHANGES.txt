@@ -1,16 +1,10 @@
-lightweight tag e47b117c87f7e72bac5f021142ff1c0812e75b37 v9.0.2.415
+lightweight tag 778cfba35566707c44493931f2daa34bbb86be22 v9.0.2.416
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Sat Dec 12 18:13:42 2020 -0300
+Date:	Mon Jan 18 10:10:41 2021 -0300
 
-commit e47b117c87f7e72bac5f021142ff1c0812e75b37
+commit 778cfba35566707c44493931f2daa34bbb86be22
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Sat Dec 12 18:13:42 2020 -0300
+Date:   Mon Jan 18 10:10:41 2021 -0300
 
-    Framework update and new command /wqt test
-
-commit 6677049a7e63d96810bca89fad6fc16d392f2ffd
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Sat Dec 5 13:54:28 2020 -0300
-
-    Framework revision
+    Framework update and small bug fixes
 

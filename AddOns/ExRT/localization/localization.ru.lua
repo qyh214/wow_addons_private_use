@@ -259,6 +259,7 @@ L.RaidCheckSortByClass = "Сортировка по классам"
 L.RaidCheckReinforced = "Усиление %("
 L.RaidCheckOilSharpen = "Оружие заточено %("
 L.RaidCheckConsum = "Персональные иконки баффов при проверке готовности"
+L.RaidCheckOilSharpen2 = "Оружие утяжелено %("
 
 L.marksbarstart = "Очистить"
 L.marksbardel = "Удалить"

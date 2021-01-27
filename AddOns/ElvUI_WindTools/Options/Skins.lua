@@ -803,6 +803,11 @@ options.elvui = {
             type = "toggle",
             name = L["Data Bars"]
         },
+        dataPanels = {
+            order = 10,
+            type = "toggle",
+            name = L["Data Panels"]
+        },
         miniMap = {
             order = 10,
             type = "toggle",
@@ -961,6 +966,11 @@ options.addons = {
             order = 10,
             type = "toggle",
             name = L["Myslot"]
+        },
+        mythicDungeonTools = {
+            order = 10,
+            type = "toggle",
+            name = L["Mythic Dungeon Tools"]
         },
         premadeGroupsFilter = {
             order = 10,

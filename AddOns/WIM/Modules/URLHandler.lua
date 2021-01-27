@@ -26,12 +26,8 @@ armoryLinks = {
         url = "https://worldofwarcraft.com/{armeu/armus}/character/{realm-}/{user}"
     },
     {
-        title = "WoW-Heroes",
-        url = "http://www.wow-heroes.com/character/{eu/us}/{realm}/{user}/"
-    },
-    {
-		title = "Wowhead Profiler",
-		url = "http://www.wowhead.com/profile={eu/us}.{realm-}.{user}",
+				title = "Wowhead Profiler",
+				url = "http://www.wowhead.com/profile={eu/us}.{realm-}.{user}",
     },
     {
         title = "WoWProgress",
@@ -39,20 +35,25 @@ armoryLinks = {
     },
     {
         title = "AskMrRobot",
-        url = "http://www.askmrrobot.com/wow/player/{eu/us}/{realm}/{user}"
+        --url = "http://www.askmrrobot.com/wow/player/{eu/us}/{realm}/{user}"
+				url = "https://www.askmrrobot.com/optimizer#{eu/us}/{realm}/{user}"
     },
     {
         title = "Warcraftlogs",
         url = "https://www.warcraftlogs.com/character/{eu/us}/{realm}/{user}"
     },
-	{
+		{
         title = "Raider io",
         url = "https://raider.io/characters/{eu/us}/{realm}/{user}"
     },
     {
         title = "WoWTrack",
         url = "https://wowtrack.org/characters/{eu/us}/{realm}/{user}"
-    }
+    },
+		{
+				title = "Character Name",
+				url = "{user}"
+		}
 };
 
 -- patterns created by Sylvanaar & used in Prat
@@ -187,7 +188,7 @@ end
 local function displayURL(link)
     local theLink = "";
     if (string.len(link) > 4) and (string.sub(link,1,8) == "wim_url:") then
-	theLink = string.sub(link,9, string.len(link));
+			theLink = string.sub(link,9, string.len(link));
     end
     -- The following code was written by Sylvannar.
     _G.StaticPopupDialogs["WIM_SHOW_URL"] = {
@@ -201,7 +202,7 @@ local function displayURL(link)
         OnShow = function(self)
                 self = self or _G.this; -- tbc hack
                 local editBox = _G.getglobal(self:GetName().."WideEditBox") or _G.getglobal(self:GetName().."EditBox");
-                editBox:SetText(format(theLink));
+                editBox:SetText(theLink); --removed "format" becasue it cause errors on some character names it seems!
                 editBox:SetFocus();
                 editBox:HighlightText(0);
 

@@ -275,8 +275,7 @@ UNIT_POWER_UPDATE, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Delete children and group"] = "자식과 그룹 삭제"
 	L["Delete Entry"] = "항목 삭제"
 	L["Desaturate"] = "흑백"
-	--[[Translation missing --]]
-	L["Description"] = "Description"
+	L["Description"] = "설명"
 	--[[Translation missing --]]
 	L["Description Text"] = "Description Text"
 	--[[Translation missing --]]
@@ -372,10 +371,8 @@ UNIT_POWER_UPDATE, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Fetch Affected/Unaffected Names"] = "Fetch Affected/Unaffected Names"
 	L["Filter by Class"] = "직업별 필터"
 	L["Filter by Group Role"] = "그룹 역할별 필터"
-	--[[Translation missing --]]
-	L["Filter by Nameplate Type"] = "Filter by Nameplate Type"
-	--[[Translation missing --]]
-	L["Filter by Raid Role"] = "Filter by Raid Role"
+	L["Filter by Nameplate Type"] = "이름표 유형별 필터"
+	L["Filter by Raid Role"] = "공격대 역할별 필터"
 	L[ [=[Filter formats: 'Name', 'Name-Realm', '-Realm'.
 
 Supports multiple entries, separated by commas
@@ -437,8 +434,7 @@ Supports multiple entries, separated by commas
 	L["Group by Frame"] = "Group by Frame"
 	--[[Translation missing --]]
 	L["Group contains updates from Wago"] = "Group contains updates from Wago"
-	--[[Translation missing --]]
-	L["Group Description"] = "Group Description"
+	L["Group Description"] = "그룹 설명"
 	L["Group Icon"] = "그룹 아이콘"
 	L["Group key"] = "그룹 키"
 	L["Group Member Count"] = "그룹원 수"
@@ -591,8 +587,7 @@ Supports multiple entries, separated by commas
 	L["Not a table"] = "Not a table"
 	L["Not all children have the same value for this option"] = "모든 자식의 이 옵션 값이 같지 않습니다"
 	L["Not Loaded"] = "불러오지 않음"
-	--[[Translation missing --]]
-	L["Note: Automated Messages to SAY and YELL are blocked outside of Instances."] = "Note: Automated Messages to SAY and YELL are blocked outside of Instances."
+	L["Note: Automated Messages to SAY and YELL are blocked outside of Instances."] = "참고: 일반 대화 및 외치기에 대한 자동화된 메시지는 인스턴스 외부에서 차단됩니다."
 	--[[Translation missing --]]
 	L["Note: The legacy buff trigger is now permanently disabled. It will be removed in the near future."] = "Note: The legacy buff trigger is now permanently disabled. It will be removed in the near future."
 	L["Number of Entries"] = "항목 수"
@@ -657,8 +652,7 @@ Supports multiple entries, separated by commas
 	L["Purple Rune"] = "보라색 룬"
 	L["Put this display in a group"] = "이 디스플레이를 그룹에 넣기"
 	L["Radius"] = "반경"
-	--[[Translation missing --]]
-	L["Raid Role"] = "Raid Role"
+	L["Raid Role"] = "공격대 역할"
 	L["Re-center X"] = "내부 X 좌표"
 	L["Re-center Y"] = "내부 Y 좌표"
 	--[[Translation missing --]]

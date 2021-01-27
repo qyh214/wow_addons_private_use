@@ -8,27 +8,20 @@ local L = WeakAuras.L
 
 -- WeakAuras/Templates
 	L[" Debuff"] = "Perjuicio"
-	--[[Translation missing --]]
-	L["<70% Mana"] = "<70% Mana"
-	--[[Translation missing --]]
-	L[">70% Mana"] = ">70% Mana"
+	L["<70% Mana"] = "<70% de maná"
+	L[">70% Mana"] = ">70% de maná"
 	L["Abilities"] = "Habilidades"
-	--[[Translation missing --]]
-	L["Ability"] = "Ability"
-	--[[Translation missing --]]
-	L["Add Triggers"] = "Add Triggers"
+	L["Ability"] = "Habilidad"
+	L["Add Triggers"] = "Añadir disparadores"
 	L["Always Active"] = "Siempre activo"
 	L["Always Show"] = "Mostrar siempre"
 	L["Always show the aura, highlight it if debuffed."] = "Mostrar siempre el aura, resaltarla si hay perjuicios."
-	--[[Translation missing --]]
-	L["Always show the aura, turns grey if on cooldown."] = "Always show the aura, turns grey if on cooldown."
+	L["Always show the aura, turns grey if on cooldown."] = "Siempre muestra el aura, se vuelve gris si está en tiempo de reutilización."
 	L["Always show the aura, turns grey if the debuff not active."] = "Mostrar siempre el aura, se vuelve gris si el perjuicio no está activo."
-	--[[Translation missing --]]
-	L["Always shows highlights if enchant missing."] = "Always shows highlights if enchant missing."
+	L["Always shows highlights if enchant missing."] = "Siempre se muestra resplandeciente si no hay encantamiento."
 	L["Always shows the aura, grey if buff not active."] = "Muestra siempre el aura, se vuelve gris si el beneficio no está activo."
 	L["Always shows the aura, highlight it if buffed."] = "Muestra siempre el aura, la resalta si el beneficio está activo."
-	--[[Translation missing --]]
-	L["Always shows the aura, highlight when active, turns blue on insufficient resources."] = "Always shows the aura, highlight when active, turns blue on insufficient resources."
+	L["Always shows the aura, highlight when active, turns blue on insufficient resources."] = "Muestra siempre el aura, la resalta si está activa, se vuelve azul si no hay suficientes recursos."
 	--[[Translation missing --]]
 	L["Always shows the aura, highlight while proc is active, blue on insufficient resources."] = "Always shows the aura, highlight while proc is active, blue on insufficient resources."
 	--[[Translation missing --]]

@@ -75,7 +75,11 @@ V.misc = {
 		mount = {
 			[63796] = false,
 			[229385] = false,
-			[339588] = false
+			[339588] = false,
+			[312762] = false
+		},
+		other = {
+			["Tortollan"] = false
 		}
 	},
 	lfgList = {
@@ -171,6 +175,7 @@ V.skins = {
 		immersion = true,
 		meetingStone = true,
 		myslot = true,
+		mythicDungeonTools = true,
 		premadeGroupsFilter = true,
 		rehack = true,
 		rematch = true,
@@ -263,6 +268,7 @@ V.skins = {
 		classBars = true,
 		chatCopyFrame = true,
 		dataBars = true,
+		dataPanels = true,
 		miniMap = true,
 		option = true,
 		panels = true,
@@ -319,5 +325,6 @@ V.unitFrames = {
 
 V.core = {
 	debugMode = false,
-	compatibilityCheck = true
+	compatibilityCheck = true,
+	loginMessage = true
 }

@@ -4,5 +4,5 @@
 	<Script file="libs\LibDataBroker-1.1\LibDataBroker-1.1.lua"/>
 	<Script file="libs\LibDeflate\LibDeflate.lua"/>
 	<Script file="libs\LibGetFrame-1.0\LibGetFrame-1.0.lua"/>
-	<Script file="libs\LibButtonGlow-1.0\LibButtonGlow-1.0.lua"/>
+	<Script file="libs\LibCustomGlow-1.0\LibCustomGlow-1.0.lua"/>
 </Ui>

@@ -14,8 +14,7 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L[">70% Mana"] = ">70% Mana"
 	L["Abilities"] = "Fähigkeiten"
-	--[[Translation missing --]]
-	L["Ability"] = "Ability"
+	L["Ability"] = "Fähigkeit"
 	L["Add Triggers"] = "Auslöser hinzufügen"
 	L["Always Active"] = "Immer aktiv"
 	L["Always Show"] = "Immer anzeigen"

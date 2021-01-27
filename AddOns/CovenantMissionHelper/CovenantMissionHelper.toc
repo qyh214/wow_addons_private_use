@@ -1,0 +1,15 @@
+## Interface: 90002
+## Title: Covenant Mission Helper
+## Author: Kreolix
+## Version: 0.1
+
+DataTables.lua
+CovenantMissionHelper.lua
+Board.lua
+EventCollector.lua
+Spell.lua
+TargetManager.lua
+Unit.lua
+MetaBoard.lua
+UI.lua
+Checker.lua

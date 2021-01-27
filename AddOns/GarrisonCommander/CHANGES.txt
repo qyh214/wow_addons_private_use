@@ -1,13 +1,12 @@
-tag 1575ca5c98c1b2e2392581f6edd1ab20ce530136 3.3.5
+tag 55ff74dc8e11b82b4506ec5b04cf7c7bcc15b5e1 3.3.6
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Tue Dec 1 12:36:20 2020 +0100
+Date:	Sun Jan 10 12:23:59 2021 +0100
 
-Fix: Possible Lua error while viewing mission list or mission page
+Fix: Lua error for missons with no expiration time
 
-commit 3b305939abb3c40f9b8dbfa27f733718cb20a5bc
+commit 2ed69c29d9e8e2969a341c4aee9687be70700f5d
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Tue Dec 1 12:35:46 2020 +0100
+Date:   Sun Jan 10 12:23:12 2021 +0100
 
-    Toc: 9.0.2
-    Fix: Possible Lua error while viewing mission list or mission page
+    Fix lua error for missions with no expiration date
 

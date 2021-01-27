@@ -326,6 +326,7 @@ do
 			BWInterfaceFrame:Show()
 		end
 		CloseDropDownMenus() 
+		ELib.ScrollDropDown.Close()
 	end
 	function module:miniMapMenu()
 		if isAdded then
@@ -358,6 +359,7 @@ function ExRT.F:FightLog_OpenTab(tabID)
 	BWInterfaceFrame:Show()
 
 	CloseDropDownMenus()
+	ELib.ScrollDropDown.Close()
 end
 
 function module.options:Load()
@@ -5345,7 +5347,7 @@ function BWInterfaceFrameLoad()
 		for i=5,#AurasTab_Variables.buffsFilters do
 			AurasTab_Variables.buffsFilterStatus[i] = false
 		end
-		UpdateBuffPageDB()
+		UpdateBuffPageDB(true)
 		UpdateBuffsPage()
 	end,padding = 16}
 	do
@@ -5364,7 +5366,7 @@ function BWInterfaceFrameLoad()
 			if Activate[arg] then
 				AurasTab_ActivateAnyPage(unpack(Activate[arg]))
 			end
-			UpdateBuffPageDB()
+			UpdateBuffPageDB(true)
 			UpdateBuffsPage()
 		end
 		local function OnEnter(self,i)
@@ -5411,7 +5413,7 @@ function BWInterfaceFrameLoad()
 				func = OnClick,
 				checkFunc = function(self,checked)
 					AurasTab_Variables.buffsFilterStatus[i] = checked
-					UpdateBuffPageDB()
+					UpdateBuffPageDB(true)
 					UpdateBuffsPage()
 				end,
 				checkable = true,

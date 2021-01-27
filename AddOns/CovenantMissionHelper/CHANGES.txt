@@ -1,0 +1,255 @@
+commit 445fad2f7d21f2fa4a420a211ee14b7137193df2
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Mon Jan 25 01:00:23 2021 +0700
+
+    - Fixed: errors if unit have reflect spell
+
+commit 445fad2f7d21f2fa4a420a211ee14b7137193df2
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Mon Jan 25 01:00:23 2021 +0700
+
+    - Fixed: errors if unit have reflect spell
+
+commit 846d0f5c48ef19790fca58d1039362298145a484
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Mon Jan 25 00:33:09 2021 +0700
+
+    - Fixed: errors when you add Kyrian troops
+    - Fix target selection for 11 slot
+
+commit 62fe4ea1841baff9be37cedcb9fdc83099f95f14
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Sun Jan 24 16:45:19 2021 +0700
+
+    - Added "optimize" button
+    - Added icon that shows unit's level up
+    - "Adjacent ally" and "furthest enemy" mechanics choose target better
+    - Fixed: showed extra units in completed mission sometimes
+    - Fixed: when last unit died by DoT tick, it wasn't trigger finish mission
+
+commit 62fe4ea1841baff9be37cedcb9fdc83099f95f14
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Sun Jan 24 16:45:19 2021 +0700
+
+    - Added "optimize" button
+    - Added icon that shows unit's level up
+    - "Adjacent ally" and "furthest enemy" mechanics choose target better
+    - Fixed: showed extra units in completed mission sometimes
+    - Fixed: when last unit died by DoT tick, it wasn't trigger finish mission
+
+commit 39e2553fb85409fda27971c822ad8c4fe887076b
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Mon Jan 18 19:22:21 2021 +0700
+
+    fixed text format
+
+commit 39e2553fb85409fda27971c822ad8c4fe887076b
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Mon Jan 18 19:22:21 2021 +0700
+
+    fixed text format
+
+commit 5a358561cff076058f01cad67c49c5f791c53c52
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Mon Jan 18 18:48:46 2021 +0700
+
+    fixed text format
+
+commit 5a358561cff076058f01cad67c49c5f791c53c52
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Mon Jan 18 18:48:46 2021 +0700
+
+    fixed text format
+
+commit e63ad2f98c54810f17f8a88353fecec5f9a7a7b2
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Mon Jan 18 12:32:42 2021 +0700
+
+    - improved target selection, especially "all adjacent enemies"
+    - fixed DoT and HoT ticks
+    - fixed damage value calculation with damage modifier and additional damage buffs
+    - fixed reflect damage value calculation
+    - added units with irregular attack (range type unit who attack closest enemy)
+    - fixed bug: completed mission's result sometimes didn't cleared
+    - fixed bug: buffs sometimes removed earlier when it should
+    - refactored event system a bit, but I still should test it
+    - deleted excess hooks
+
+commit e63ad2f98c54810f17f8a88353fecec5f9a7a7b2
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Mon Jan 18 12:32:42 2021 +0700
+
+    - improved target selection, especially "all adjacent enemies"
+    - fixed DoT and HoT ticks
+    - fixed damage value calculation with damage modifier and additional damage buffs
+    - fixed reflect damage value calculation
+    - added units with irregular attack (range type unit who attack closest enemy)
+    - fixed bug: completed mission's result sometimes didn't cleared
+    - fixed bug: buffs sometimes removed earlier when it should
+    - refactored event system a bit, but I still should test it
+    - deleted excess hooks
+
+commit 15a373a0d4f2b9a957bbbf9ca0d4b331aafdb3ea
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Fri Jan 15 12:29:44 2021 +0700
+
+    Fix file order
+
+commit 4c540dc28ca847265c58ca4cabfcb022f0fcb1f5
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Fri Jan 15 11:59:59 2021 +0700
+
+    Add enum for target type
+
+commit 8923dc34c84b6ecc54447c82fc326e0bb55460e1
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Fri Jan 15 08:36:46 2021 +0700
+
+    Bugfix
+    - Change getTurnOrder method to old algorithm
+    - Stop spamming in chat
+    - Fix target selection
+
+commit 8923dc34c84b6ecc54447c82fc326e0bb55460e1
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Fri Jan 15 08:36:46 2021 +0700
+
+    Bugfix
+    - Change getTurnOrder method to old algorithm
+    - Stop spamming in chat
+    - Fix target selection
+
+commit f72f6c1e10a6929dac07d48f73df268ec91c4f79
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Fri Jan 15 08:34:11 2021 +0700
+
+    Fix calculation of total rest HP in completed mission
+
+commit 38695ef1c3609e4052ade3ad1436da56bec60647
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Fri Jan 15 08:32:22 2021 +0700
+
+    Missions with random abilities isn't calculate automatically now.
+    - Add new button for that missions, because simulation on every "allies HP update" event produce screen freeze.
+    - Increase the number of simulations for better prediction.
+
+commit 0a09dad94ac1e88b540e787813be9fca53453937
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Thu Jan 14 11:35:41 2021 +0700
+
+    Realise new features and moves UI code.
+    [+] Simulate fight many times if units have random abilities. Estimate success rate.
+    [+] Add total rest HP without auto-troop HP. It allow compare team setup much easier.
+    [*] Blizzard changed enemy turn order again. Fix it in addon.
+    [*] Fix some target selection bugs.
+    [+] Combat log correctly clear after complete mission.
+    [*] Fix DoT/HoT first tick.
+    
+    Internal changes:
+    [*] Check IsMissionOver only when unit died.
+    [+] Start to make log system as blizzard's system for comparing data in complete missions.
+    [*] Move frame creation code to separate file and make it more readable.
+    [+] Add hooks for complete mission.
+
+commit 0a09dad94ac1e88b540e787813be9fca53453937
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Thu Jan 14 11:35:41 2021 +0700
+
+    Realise new features and moves UI code.
+    [+] Simulate fight many times if units have random abilities. Estimate success rate.
+    [+] Add total rest HP without auto-troop HP. It allow compare team setup much easier.
+    [*] Blizzard changed enemy turn order again. Fix it in addon.
+    [*] Fix some target selection bugs.
+    [+] Combat log correctly clear after complete mission.
+    [*] Fix DoT/HoT first tick.
+    
+    Internal changes:
+    [*] Check IsMissionOver only when unit died.
+    [+] Start to make log system as blizzard's system for comparing data in complete missions.
+    [*] Move frame creation code to separate file and make it more readable.
+    [+] Add hooks for complete mission.
+
+commit 981f9fa6ffedee8401db015ae1212e39ed7e7b62
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Wed Jan 13 00:47:56 2021 +0700
+
+    Fix UI
+    [+] Now don't overlap my frame and blizzard frame
+    [*] Change some padding
+    [*] More place for alive units frame and less for combat log
+    [*] max frame width = 500
+
+commit 981f9fa6ffedee8401db015ae1212e39ed7e7b62
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Wed Jan 13 00:47:56 2021 +0700
+
+    Fix UI
+    [+] Now don't overlap my frame and blizzard frame
+    [*] Change some padding
+    [*] More place for alive units frame and less for combat log
+    [*] max frame width = 500
+
+commit 8ee5fd6de9afcebb833c0e2a79bb3feb3f2bc281
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Tue Jan 12 09:15:12 2021 +0700
+
+    Fix bugs
+    [*] target priority for closest enemy
+    [*] calculate reflect damage
+    [*] calculate damage multiplier
+
+commit 8ee5fd6de9afcebb833c0e2a79bb3feb3f2bc281
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Tue Jan 12 09:15:12 2021 +0700
+
+    Fix bugs
+    [*] target priority for closest enemy
+    [*] calculate reflect damage
+    [*] calculate damage multiplier
+
+commit 4c72cbad8fd2a23e0abec641964c2d2e647449ac
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Tue Jan 12 08:24:36 2021 +0700
+
+    [+] add reflect effect
+
+commit 0dbb026f5394acb6a4f12cb6b9d3f208432f315c
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Tue Jan 12 08:23:59 2021 +0700
+
+    [*] fix random target error
+
+commit 81faddbb4bb9e5883e29fd1ddb7278d3a82c2db2
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Sun Jan 10 22:56:18 2021 +0700
+
+    [*] change some target priority for closest enemy
+
+commit 81faddbb4bb9e5883e29fd1ddb7278d3a82c2db2
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Sun Jan 10 22:56:18 2021 +0700
+
+    [*] change some target priority for closest enemy
+
+commit 5c54f10ef019cc1a1e5c178352d34ecbba8edd35
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Sat Jan 9 22:05:34 2021 +0700
+
+    [*] fix unusual attack type
+    [*] change some target priority
+    [-] drop old combat result after completion mission
+
+commit 5c54f10ef019cc1a1e5c178352d34ecbba8edd35
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Sat Jan 9 22:05:34 2021 +0700
+
+    [*] fix unusual attack type
+    [*] change some target priority
+    [-] drop old combat result after completion mission
+
+commit 512d49d7e1956d4c47f8cfee1eeaf97e845c916c
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Fri Jan 8 14:51:40 2021 +0700
+
+    test commit
+

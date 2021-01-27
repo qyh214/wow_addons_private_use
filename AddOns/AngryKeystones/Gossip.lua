@@ -42,6 +42,8 @@ end
 
 function Mod:GOSSIP_SHOW()
 	local npcId = GossipNPCID()
+	if C_GossipInfo.GetNumOptions() ~= 1 then return end
+
 	if Addon.Config.autoGossip and IsInActiveChallengeMode() and not npcBlacklist[npcId] then
 		local options = C_GossipInfo.GetOptions()
 		for i = 1, C_GossipInfo.GetNumOptions() do

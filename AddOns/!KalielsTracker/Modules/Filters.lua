@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2020, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2021, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -275,6 +275,7 @@ local function Filter_Quests(self, spec, idx)
 	elseif spec == "zone" then
 		local mapID = KT.GetCurrentMapAreaID()
 		local zoneName = GetRealZoneText() or ""
+		local isOnMap = false
 		local isInZone = false
 		for i = 1, numEntries do
 			local questInfo = C_QuestLog.GetInfo(i)
@@ -285,12 +286,11 @@ local function Filter_Quests(self, spec, idx)
 						isInZone = (isInZone or
 								questInfo.title == "Heart of Azeroth" or  -- TODO: other languages
 								questInfo.title == "Visions of N'Zoth")   -- TODO: other languages
-					elseif mapID == 1620 then  -- SL - Torghast
-						isInZone = (isInZone or
-								questInfo.title == "Torghast, Tower of the Damned")  -- TODO: other languages
 					end
 				else
-					if not questInfo.isTask and (not questInfo.isBounty or C_QuestLog.IsComplete(questInfo.questID)) and (KT.questsCache[questInfo.questID].isCalling or questInfo.isOnMap or isInZone) then
+					isOnMap = (questInfo.isOnMap or
+							KT.QuestsCache_GetProperty(questInfo.questID, "startMapID") == mapID)
+					if not questInfo.isTask and (not questInfo.isBounty or C_QuestLog.IsComplete(questInfo.questID)) and (KT.QuestsCache_GetProperty(questInfo.questID, "isCalling") or isOnMap or isInZone) then
 						if KT.inInstance then
 							if IsInstanceQuest(questInfo.questID) or isInZone then
 								C_QuestLog.AddQuestWatch(questInfo.questID)
@@ -342,7 +342,9 @@ local function Filter_Quests(self, spec, idx)
 
 	C_QuestLog.SortQuestWatches()
 	ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_MODULE_QUEST)
-	QuestSuperTracking_ChooseClosestQuest()
+	if C_SuperTrack.GetSuperTrackedQuestID() == 0 then
+		QuestSuperTracking_ChooseClosestQuest()
+	end
 end
 
 local function Filter_Achievements(self, spec)
@@ -607,7 +609,7 @@ function DropDown_Initialize(self, level)
 		info.arg1 = "zone"
 		MSA_DropDownMenu_AddButton(info)
 
-		info.text = "Daily"
+		info.text = "Daily / Weekly"
 		info.arg1 = "daily"
 		MSA_DropDownMenu_AddButton(info)
 
@@ -799,25 +801,33 @@ local function SetFrames()
 				if not C_QuestLog.IsQuestTask(questID) and (not C_QuestLog.IsQuestBounty(questID) or C_QuestLog.IsComplete(questID)) and db.filterAuto[1] then
 					self:RegisterEvent("QUEST_POI_UPDATE")
 				end
-			elseif event == "QUEST_COMPLETE" then
-				local questID = GetQuestID()
-				RemoveFavorite("quests", questID)
 			elseif event == "QUEST_POI_UPDATE" then
 				KT.questStateStopUpdate = true
 				Filter_Quests(_, "zone")
 				KT.questStateStopUpdate = false
 				self:UnregisterEvent(event)
+			elseif event == "QUEST_COMPLETE" then
+				local questID = GetQuestID()
+				RemoveFavorite("quests", questID)
 			elseif event == "ACHIEVEMENT_EARNED" then
 				RemoveFavorite("achievements", arg1)
 			elseif event == "ZONE_CHANGED_NEW_AREA" then
-				C_Timer.After(0, function()
+				if not KT.IsInBetween() then
+					C_Timer.After(0, function()
+						if db.filterAuto[1] == "zone" then
+							Filter_Quests(_, "zone")
+						end
+						if db.filterAuto[2] == "zone" then
+							Filter_Achievements(_, "zone")
+						end
+					end)
+				end
+			elseif event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" then
+				if not KT.IsInBetween() then
 					if db.filterAuto[1] == "zone" then
 						Filter_Quests(_, "zone")
 					end
-					if db.filterAuto[2] == "zone" then
-						Filter_Achievements(_, "zone")
-					end
-				end)
+				end
 			end
 		end)
 	end
@@ -825,6 +835,8 @@ local function SetFrames()
 	eventFrame:RegisterEvent("QUEST_ACCEPTED")
 	eventFrame:RegisterEvent("QUEST_COMPLETE")
 	eventFrame:RegisterEvent("ACHIEVEMENT_EARNED")
+	eventFrame:RegisterEvent("ZONE_CHANGED")
+	eventFrame:RegisterEvent("ZONE_CHANGED_INDOORS")
 	eventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 
 	-- Filter button

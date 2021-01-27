@@ -1,6 +1,28 @@
 local GlobalAddonName, ExRT = ...
 
 ExRT.Options.Changelog = [=[
+v.4440
+* Note: increased performance for huge notes with timers
+* Visual Note: added pvp battlegrounds
+* Raid Groups: added import from spreadsheet string
+* Saving log: added option for autologging torghast
+* Minor fixes
+
+v.4440-Classic
+* Raid Groups: added import from spreadsheet string
+* Note: added {classunique:mage,priest}message{/classunique} syntax
+* Marks bar: fixed locked/unlocked option
+* Raid check: Blessed Sunfruit and Blessed Sunfruit Juice buffs
+* Minor fixes
+
+v.4420
+* Raid Inspect: fixed query stuck
+* Raid check: consumables on ready check are clickable now
+* Raid check: consumables on ready check: fix for elvui users
+* Raid cooldowns: fixed typhoon
+* Note: added {classunique:monk,priest}message{/classunique} syntax
+* Minor fixes
+
 v.4400
 * Raid check: added new food consumables
 * Raid check: added ap weapon buffs to ready check window

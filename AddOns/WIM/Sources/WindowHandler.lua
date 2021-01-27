@@ -1909,8 +1909,12 @@ RegisterWidgetTrigger("chat_display", "whisper,chat,w2w", "OnHyperlinkClick", fu
 	local t,n,i = string.split(":", link)
 	if n == myself then
 		return
-	end
-	_G.SetItemRef(link, text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""), button, self);
+        end
+        if link == "garrmission:weakauras" then
+                _G.SetItemRef(link, text, button, self);
+        else
+                _G.SetItemRef(link, text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""), button, self);
+        end
 end);
 --RegisterWidgetTrigger("chat_display", "whisper,chat,w2w","OnMessageScrollChanged", function(self) updateScrollBars(self:GetParent()); end);
 

@@ -5,26 +5,21 @@ local rowCount = 3
 
 local requestPartyKeystones
 
--- 1: Overflowing, 2: Skittish, 3: Volcanic, 4: Necrotic, 5: Teeming, 6: Raging, 7: Bolstering, 8: Sanguine, 9: Tyrannical, 10: Fortified, 11: Bursting, 12: Grievous, 13: Explosive, 14: Quaking
-local affixScheduleText = {
-	{"Fortified",	"Bolstering",	"Grievous"},
-	{"Tyrannical",	"Raging",	"Explosive"},
-	{"Fortified",	"Sanguine",	"Grievous"},
-	{"Tyrannical",	"Teeming",	"Volcanic"},
-	{"Fortified",	"Bolstering",	"Skittish"},
-	{"Tyrannical",	"Bursting",	"Necrotic"},
-	{"Fortified",	"Sanguine",	"Quaking"},
-	{"Tyrannical",	"Bolstering",	"Explosive"},
-	{"Fortified",	"Bursting",	"Volcanic"},
-	{"Tyrannical",	"Raging",	"Necrotic"},
-	{"Fortified",	"Teeming",	"Quaking"},
-	{"Tyrannical",	"Bursting",	"Skittish"}
+-- 1:Overflowing, 2:Skittish, 3:Volcanic, 4:Necrotic, 5:Teeming, 6:Raging, 7:Bolstering, 8:Sanguine, 9:Tyrannical, 10:Fortified, 11:Bursting, 12:Grievous, 13:Explosive, 14:Quaking, 16:Infested, 117: Reaping, 119:Beguiling 120:Awakened, 121:Prideful, 122:Inspiring, 123:Spiteful, 124:Storming
+local affixSchedule = {
+	[1] =  {[1]=11, [2]=3,  [3]=10}, --1 Bursting Volcanic Fortified
+	[2] =  {[1]=7,  [2]=124,[3]=9}, --2 Bolstering Storming Tyrannical
+	[3] =  {[1]=123,[2]=12, [3]=10}, --3 Spiteful Grievous Fortified
+	[4] =  {[1]=122,[2]=4,  [3]=9}, --4 Inspiring Necrotic Tyrannical
+	[5] =  {[1]=8,  [2]=14, [3]=10}, --5 Sanguine Quaking Fortified
+	[6] =  {[1]=6,  [2]=13, [3]=9}, --6 Raging Explosive Tyrannical
+	[7] =  {[1]=123,[2]=3,  [3]=10}, --7 Spiteful Volcanic Fortified
+	[8] =  {[1]=7,  [2]=4,  [3]=9}, --8 Bolstering Necrotic Tyrannical
+	[9] =  {[1]=122,[2]=124,[3]=10}, --9 Inspiring Storming Fortified
+	[10] = {[1]=11, [2]=13, [3]=9}, --10 Bursting Explosive Tyrannical
+	[11] = {[1]=8,  [2]=12, [3]=10}, --11 Sanguine Grievous Fortified
+	[12] = {[1]=6,  [2]=14, [3]=9}, --12 Raging Quaking Tyrannical
 }
-local affixScheduleKeys = {["Overflowing"]=1, ["Skittish"]=2, ["Volcanic"]=3, ["Necrotic"]=4, ["Teeming"]=5, ["Raging"]=6, ["Bolstering"]=7, ["Sanguine"]=8, ["Tyrannical"]=9, ["Fortified"]=10, ["Bursting"]=11, ["Grievous"]=12, ["Explosive"]=13, ["Quaking"]=14 }
-local affixSchedule = {}
-for i,v in ipairs(affixScheduleText) do
-	affixSchedule[i] = { affixScheduleKeys[v[1]], affixScheduleKeys[v[2]], affixScheduleKeys[v[3]] }
-end
 
 local affixScheduleUnknown = false
 local currentWeek

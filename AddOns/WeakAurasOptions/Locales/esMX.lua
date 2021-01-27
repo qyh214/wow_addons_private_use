@@ -13,37 +13,26 @@ local L = WeakAuras.L
 	L["% of Progress"] = "% de progreso"
 	L["%i auras selected"] = "%i auras seleccionados"
 	L["%i Matches"] = "%i coincidencias"
-	--[[Translation missing --]]
-	L["%s - Option #%i has the key %s. Please choose a different option key."] = "%s - Option #%i has the key %s. Please choose a different option key."
-	--[[Translation missing --]]
-	L["%s %s, Lines: %d, Frequency: %0.2f, Length: %d, Thickness: %d"] = "%s %s, Lines: %d, Frequency: %0.2f, Length: %d, Thickness: %d"
-	--[[Translation missing --]]
-	L["%s %s, Particles: %d, Frequency: %0.2f, Scale: %0.2f"] = "%s %s, Particles: %d, Frequency: %0.2f, Scale: %0.2f"
+	L["%s - Option #%i has the key %s. Please choose a different option key."] = "%s - La opción #%i tiene el código %s. Por favor selecciona un código diferente."
+	L["%s %s, Lines: %d, Frequency: %0.2f, Length: %d, Thickness: %d"] = "%s %s, Líneas: %d, Frecuencia: %0.2f, Longitud: %d, Espesor: %d"
+	L["%s %s, Particles: %d, Frequency: %0.2f, Scale: %0.2f"] = "%s %s, Partículas: %d, Frecuencia: %0.2f, Escala: %0.2f"
 	L["%s Alpha: %d%%"] = "%s Alfa: %d%%"
 	L["%s Color"] = "%s Color"
-	--[[Translation missing --]]
-	L["%s Default Alpha, Zoom, Icon Inset, Aspect Ratio"] = "%s Default Alpha, Zoom, Icon Inset, Aspect Ratio"
-	--[[Translation missing --]]
-	L["%s Inset: %d%%"] = "%s Inset: %d%%"
-	--[[Translation missing --]]
-	L["%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"] = "%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"
+	L["%s Default Alpha, Zoom, Icon Inset, Aspect Ratio"] = "%s Alfa por defecto, Zoom, Inserción de iconos, Relación de aspecto"
+	L["%s Inset: %d%%"] = "%s Inserción: %d%%"
+	L["%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"] = "%s no es un válido SubEvent para COMBAT_LOG_EVENT_UNFILTERED"
 	L["%s Keep Aspect Ratio"] = "%s Mantener relación de aspecto"
 	L["%s total auras"] = "%s auras en total"
 	L["%s Zoom: %d%%"] = "%s Zoom: %d%%"
 	L["%s, Border"] = "%s, Borde"
 	L["%s, Offset: %0.2f;%0.2f"] = "%s, Desplazamiento: %0.2f;%0.2f"
 	L["%s, offset: %0.2f;%0.2f"] = "%s, desplazamiento: %0.2f;%0.2f"
-	--[[Translation missing --]]
-	L["%s|cFFFF0000custom|r texture with |cFFFF0000%s|r blend mode%s%s"] = "%s|cFFFF0000custom|r texture with |cFFFF0000%s|r blend mode%s%s"
+	L["%s|cFFFF0000custom|r texture with |cFFFF0000%s|r blend mode%s%s"] = "%s|cFFFF0000textura personalizada|r con |cFFFF0000%s|r modo de mezcla%s%s"
 	L["(Right click to rename)"] = "(Clic derecho para cambiar el nombre)"
-	--[[Translation missing --]]
-	L["|c%02x%02x%02x%02xCustom Color|r"] = "|c%02x%02x%02x%02xCustom Color|r"
-	--[[Translation missing --]]
-	L["|cFFE0E000Note:|r This sets the description only on '%s'"] = "|cFFE0E000Note:|r This sets the description only on '%s'"
-	--[[Translation missing --]]
-	L["|cFFE0E000Note:|r This sets the URL on all selected auras"] = "|cFFE0E000Note:|r This sets the URL on all selected auras"
-	--[[Translation missing --]]
-	L["|cFFE0E000Note:|r This sets the URL on this group and all its members."] = "|cFFE0E000Note:|r This sets the URL on this group and all its members."
+	L["|c%02x%02x%02x%02xCustom Color|r"] = "|c%02x%02x%02x%02xColor personalizado|r"
+	L["|cFFE0E000Note:|r This sets the description only on '%s'"] = "|cFFE0E000Note:|r Esto establece la descripción solo en '%s'"
+	L["|cFFE0E000Note:|r This sets the URL on all selected auras"] = "|cFFE0E000Note:|r Esto establece la URL en todas las auras seleccionadas"
+	L["|cFFE0E000Note:|r This sets the URL on this group and all its members."] = "|cFFE0E000Note:|r Esto establece la URL en este grupo y todos sus miembros."
 	--[[Translation missing --]]
 	L["|cFFFF0000Automatic|r length"] = "|cFFFF0000Automatic|r length"
 	--[[Translation missing --]]
@@ -77,16 +66,13 @@ local L = WeakAuras.L
 	L["A 48x48 pixels icon"] = "Un icono de 48x48x píxeles"
 	L["A 64x64 pixels icon"] = "Un icono de 64x64 píxeles"
 	L["A group that dynamically controls the positioning of its children"] = "Un grupo que controla de manera dinámica la posición de sus dependientes"
-	--[[Translation missing --]]
-	L["A Unit ID (e.g., party1)."] = "A Unit ID (e.g., party1)."
+	L["A Unit ID (e.g., party1)."] = "Una ID de unidad (p. ej., grupo1)"
 	L["Actions"] = "Acciones"
 	L["Add"] = "Agregar"
 	L["Add %s"] = "Agrega %s"
 	L["Add a new display"] = "Agregar una nueva aura"
-	--[[Translation missing --]]
-	L["Add Condition"] = "Add Condition"
-	--[[Translation missing --]]
-	L["Add Entry"] = "Add Entry"
+	L["Add Condition"] = "Agregar condición"
+	L["Add Entry"] = "Agregar entrada"
 	--[[Translation missing --]]
 	L["Add Extra Elements"] = "Add Extra Elements"
 	--[[Translation missing --]]

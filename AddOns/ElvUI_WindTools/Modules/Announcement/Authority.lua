@@ -12,7 +12,6 @@ local IsInRaid = IsInRaid
 
 local C_ChatInfo_RegisterAddonMessagePrefix = C_ChatInfo.RegisterAddonMessagePrefix
 local C_ChatInfo_SendAddonMessage = C_ChatInfo.SendAddonMessage
-local C_Timer_After = C_Timer.After
 
 local LE_PARTY_CATEGORY_HOME = LE_PARTY_CATEGORY_HOME
 local LE_PARTY_CATEGORY_INSTANCE = LE_PARTY_CATEGORY_INSTANCE
@@ -36,10 +35,6 @@ local channelLevel = {
 
 -- 缓存最高权限
 local cache = {}
-
-function A:GetCache() -- TODO: 删除
-    return cache
-end
 
 local function GetBestChannel()
     if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) or IsInRaid(LE_PARTY_CATEGORY_INSTANCE) then
@@ -141,7 +136,7 @@ do
         cache = {}
 
         waitSend = true
-        C_Timer_After(
+        E:Delay(
             0.5,
             function()
                 if IsInGroup() then

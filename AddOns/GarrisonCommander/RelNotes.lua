@@ -22,6 +22,9 @@ self:Wiki([[
 == Silent mode ==
 typing /gac silent in chat will eliminate every chat message from GarrisonCommander
 ]])
+self:RelNotes(3,3,6,[[
+Fix: 84x ...rfaceGarrisonCommander\GarrisonCommander-3.3.5 90002.lua:2996: bad argument #2 to 'SetFormattedText' (string expected, got nil)
+]])
 self:RelNotes(3,3,5,[[
 Toc: 9.0.2
 Fix: Possible Lua error while viewing mission list or mission page

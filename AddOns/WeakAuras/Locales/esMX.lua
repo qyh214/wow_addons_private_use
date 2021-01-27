@@ -48,10 +48,8 @@ L["/wa pprint - Show the results from the most recent profiling"] = "/wa pprint 
 L["/wa pstart - Start profiling. Optionally include a duration in seconds after which profiling automatically stops. To profile the next combat/encounter, pass a \"combat\" or \"encounter\" argument."] = "/wa pstart: inicia perfilados. Opcionalmente, incluya una duración en segundos después de la cual perfilado se detiene automáticamente. Para perfilar el próximo combate/encuentro, pase un argumento de \"combate\" o \"encuentro\"."
 L["/wa pstop - Finish profiling"] = "/wa pstop - Finalizar perfilado"
 L["/wa repair - Repair tool"] = "/wa repair - Herramienta de reparación"
---[[Translation missing --]]
-L["|cffeda55fLeft-Click|r to toggle showing the main window."] = "|cffeda55fLeft-Click|r to toggle showing the main window."
---[[Translation missing --]]
-L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."
+L["|cffeda55fLeft-Click|r to toggle showing the main window."] = "|cffeda55fClic derecho|r para mostrar la ventana principal."
+L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "|cffeda55fClic central|r para mostrar/ocultar el icono del minimapa."
 --[[Translation missing --]]
 L["|cffeda55fRight-Click|r to toggle performance profiling window."] = "|cffeda55fRight-Click|r to toggle performance profiling window."
 --[[Translation missing --]]
@@ -65,21 +63,27 @@ L["|cFFffcc00Extra Options:|r %s"] = "|cFFffcc00Extra Options:|r %s"
 --[[Translation missing --]]
 L["|cFFffcc00Extra Options:|r None"] = "|cFFffcc00Extra Options:|r None"
 L["10 Man Raid"] = "Banda de 10 jugadores"
+--[[Translation missing --]]
+L["10 Player Raid (Heroic)"] = "10 Player Raid (Heroic)"
+--[[Translation missing --]]
+L["10 Player Raid (Normal)"] = "10 Player Raid (Normal)"
 L["20 Man Raid"] = "Banda de 20 jugadores"
 L["25 Man Raid"] = "Banda de 25 jugadores"
+--[[Translation missing --]]
+L["25 Player Raid (Heroic)"] = "25 Player Raid (Heroic)"
+--[[Translation missing --]]
+L["25 Player Raid (Normal)"] = "25 Player Raid (Normal)"
 L["40 Man Raid"] = "Banda de 40 jugadores"
+--[[Translation missing --]]
+L["40 Player Raid"] = "40 Player Raid"
 L["5 Man Dungeon"] = "Mazmorra de 5 jugadores"
 L["Abbreviate"] = "Abreviar"
---[[Translation missing --]]
-L["AbbreviateLargeNumbers (Blizzard)"] = "AbbreviateLargeNumbers (Blizzard)"
---[[Translation missing --]]
-L["AbbreviateNumbers (Blizzard)"] = "AbbreviateNumbers (Blizzard)"
+L["AbbreviateLargeNumbers (Blizzard)"] = "AbreviarNúmerosGrandes (Blizzard)"
+L["AbbreviateNumbers (Blizzard)"] = "AbreviarNúmeros (Blizzard)"
 L["Absorb"] = "Absorber"
---[[Translation missing --]]
-L["Absorb Display"] = "Absorb Display"
+L["Absorb Display"] = "Mostrar absorción"
 L["Absorbed"] = "Absorbido"
---[[Translation missing --]]
-L["Action Button Glow"] = "Action Button Glow"
+L["Action Button Glow"] = "Botón de acción resplandeciente"
 L["Action Usable"] = "Acción utilizable"
 L["Actions"] = "Acciones"
 L["Active"] = "Activo"
@@ -104,8 +108,7 @@ L["Alpha"] = "Alfa"
 L["Alternate Power"] = "Energía alternativa"
 L["Always"] = "Siempre"
 L["Always active trigger"] = "Activar siempre el desencadenador"
---[[Translation missing --]]
-L["Always include realm"] = "Always include realm"
+L["Always include realm"] = "Incluir siempre el reino"
 --[[Translation missing --]]
 L["Always True"] = "Always True"
 L["Amount"] = "Cantidad"
@@ -383,8 +386,6 @@ L["Dispel Failed"] = "Disipar - Fallido"
 --[[Translation missing --]]
 L["Display"] = "Display"
 --[[Translation missing --]]
-L["Displays the icon for the Legendary Power that matches this bonus id."] = "Displays the icon for the Legendary Power that matches this bonus id."
---[[Translation missing --]]
 L["Distance"] = "Distance"
 L["Dodge"] = "Esquivar"
 --[[Translation missing --]]
@@ -400,6 +401,14 @@ L["Down, then Right"] = "Down, then Right"
 L["Drain"] = "Drenar"
 --[[Translation missing --]]
 L["Dropdown Menu"] = "Dropdown Menu"
+--[[Translation missing --]]
+L["Dungeon (Heroic)"] = "Dungeon (Heroic)"
+--[[Translation missing --]]
+L["Dungeon (Mythic)"] = "Dungeon (Mythic)"
+--[[Translation missing --]]
+L["Dungeon (Normal)"] = "Dungeon (Normal)"
+--[[Translation missing --]]
+L["Dungeon (Timewalking)"] = "Dungeon (Timewalking)"
 --[[Translation missing --]]
 L["Dungeons"] = "Dungeons"
 L["Durability Damage"] = "Daño de durabilidad"
@@ -425,10 +434,6 @@ L["Elide"] = "Elide"
 --[[Translation missing --]]
 L["Elite"] = "Elite"
 L["Emote"] = "Emoción"
---[[Translation missing --]]
-L["Emphasized"] = "Emphasized"
---[[Translation missing --]]
-L["Emphasized option checked in BigWigs's spell options"] = "Emphasized option checked in BigWigs's spell options"
 L["Empty"] = "Vacío"
 --[[Translation missing --]]
 L["Enchant Applied"] = "Enchant Applied"
@@ -499,6 +504,10 @@ L["Fallback Icon"] = "Fallback Icon"
 L["False"] = "Falso"
 --[[Translation missing --]]
 L["Fankriss the Unyielding"] = "Fankriss the Unyielding"
+--[[Translation missing --]]
+L["Fetch Legendary Power"] = "Fetch Legendary Power"
+--[[Translation missing --]]
+L["Fetches the name and icon of the Legendary Power that matches this bonus id."] = "Fetches the name and icon of the Legendary Power that matches this bonus id."
 --[[Translation missing --]]
 L["Filter messages with format <message>"] = "Filter messages with format <message>"
 --[[Translation missing --]]
@@ -678,6 +687,8 @@ L["Instakill"] = "Muerte instantánea "
 L["Instance"] = "Instancia"
 --[[Translation missing --]]
 L["Instance Difficulty"] = "Instance Difficulty"
+--[[Translation missing --]]
+L["Instance Size Type"] = "Instance Size Type"
 L["Instance Type"] = "Tipo de instancia"
 --[[Translation missing --]]
 L["Instructor Razuvious"] = "Instructor Razuvious"
@@ -686,6 +697,10 @@ L["Insufficient Resources"] = "Insufficient Resources"
 --[[Translation missing --]]
 L["Intellect"] = "Intellect"
 L["Interrupt"] = "Interrumpir"
+--[[Translation missing --]]
+L["Interrupt School"] = "Interrupt School"
+--[[Translation missing --]]
+L["Interrupted School Text"] = "Interrupted School Text"
 L["Interruptible"] = "Se puede interrumpir"
 L["Inverse"] = "Invertido"
 --[[Translation missing --]]
@@ -696,6 +711,14 @@ L["Is Exactly"] = "Es exactamente"
 L["Is Moving"] = "Se está moviendo"
 L["Is Off Hand"] = "Está fuera de alcance"
 L["is useable"] = "se puede utilizar"
+--[[Translation missing --]]
+L["Island Expedition (Heroic)"] = "Island Expedition (Heroic)"
+--[[Translation missing --]]
+L["Island Expedition (Mythic)"] = "Island Expedition (Mythic)"
+--[[Translation missing --]]
+L["Island Expedition (Normal)"] = "Island Expedition (Normal)"
+--[[Translation missing --]]
+L["Island Expeditions (PvP)"] = "Island Expeditions (PvP)"
 --[[Translation missing --]]
 L["It might not work correctly on Classic!"] = "It might not work correctly on Classic!"
 --[[Translation missing --]]
@@ -755,6 +778,8 @@ L["Legacy Aura (disabled)"] = "Legacy Aura (disabled)"
 --[[Translation missing --]]
 L["Legacy Aura (disabled):"] = "Legacy Aura (disabled):"
 --[[Translation missing --]]
+L["Legacy Looking for Raid"] = "Legacy Looking for Raid"
+--[[Translation missing --]]
 L["Legacy RGB Gradient"] = "Legacy RGB Gradient"
 --[[Translation missing --]]
 L["Legacy RGB Gradient Pulse"] = "Legacy RGB Gradient Pulse"
@@ -769,6 +794,8 @@ L["Lines & Particles"] = "Lines & Particles"
 L["Load Conditions"] = "Load Conditions"
 --[[Translation missing --]]
 L["Loatheb"] = "Loatheb"
+--[[Translation missing --]]
+L["Looking for Raid"] = "Looking for Raid"
 --[[Translation missing --]]
 L["Loop"] = "Loop"
 L["Lost"] = "Perdido"
@@ -854,6 +881,8 @@ L["Movement Speed (%)"] = "Movement Speed (%)"
 --[[Translation missing --]]
 L["Movement Speed Rating"] = "Movement Speed Rating"
 L["Multi-target"] = "Objetivo múltiple"
+--[[Translation missing --]]
+L["Mythic Keystone"] = "Mythic Keystone"
 --[[Translation missing --]]
 L["Mythic+ Affix"] = "Mythic+ Affix"
 L["Name"] = "Nombre"
@@ -967,6 +996,14 @@ L["Party"] = "Grupo"
 L["Party Kill"] = "Muerte de grupo"
 --[[Translation missing --]]
 L["Patchwerk"] = "Patchwerk"
+--[[Translation missing --]]
+L["Path of Ascension: Courage"] = "Path of Ascension: Courage"
+--[[Translation missing --]]
+L["Path of Ascension: Humility"] = "Path of Ascension: Humility"
+--[[Translation missing --]]
+L["Path of Ascension: Loyalty"] = "Path of Ascension: Loyalty"
+--[[Translation missing --]]
+L["Path of Ascension: Wisdom"] = "Path of Ascension: Wisdom"
 L["Paused"] = "Pausado"
 L["Periodic Spell"] = "Hechizo periódico"
 L["Personal Resource Display"] = "Recurso personal de aura"
@@ -1043,6 +1080,14 @@ L["Radius"] = "Radio"
 --[[Translation missing --]]
 L["Ragnaros"] = "Ragnaros"
 L["Raid"] = "Banda"
+--[[Translation missing --]]
+L["Raid (Heroic)"] = "Raid (Heroic)"
+--[[Translation missing --]]
+L["Raid (Mythic)"] = "Raid (Mythic)"
+--[[Translation missing --]]
+L["Raid (Normal)"] = "Raid (Normal)"
+--[[Translation missing --]]
+L["Raid (Timewalking)"] = "Raid (Timewalking)"
 --[[Translation missing --]]
 L["Raid Role"] = "Raid Role"
 L["Raid Warning"] = "Advertencia de banda"
@@ -1136,6 +1181,10 @@ L["Say"] = "Decir"
 --[[Translation missing --]]
 L["Scale"] = "Scale"
 L["Scenario"] = "Escenario"
+--[[Translation missing --]]
+L["Scenario (Heroic)"] = "Scenario (Heroic)"
+--[[Translation missing --]]
+L["Scenario (Normal)"] = "Scenario (Normal)"
 L["Screen/Parent Group"] = "Pantalla/Grupo primario"
 --[[Translation missing --]]
 L["Second"] = "Second"
@@ -1240,6 +1289,8 @@ L["Spacing"] = "Espaciar"
 L["Spark"] = "Spark"
 --[[Translation missing --]]
 L["Spec Role"] = "Spec Role"
+--[[Translation missing --]]
+L["Specific Type"] = "Specific Type"
 L["Specific Unit"] = "Unidad específica"
 L["Spell"] = "Hechizo"
 L["Spell (Building)"] = "Hechizo (en curso)"
@@ -1390,6 +1441,8 @@ L["Top Left"] = "Superior izquierda"
 L["Top Right"] = "Superior derecha"
 L["Top to Bottom"] = "De arriba hacia abajo"
 --[[Translation missing --]]
+L["Torghast"] = "Torghast"
+--[[Translation missing --]]
 L["Total"] = "Total"
 L["Total Duration"] = "Duración total"
 --[[Translation missing --]]
@@ -1472,8 +1525,6 @@ L["Use /wa minimap to show the minimap icon again."] = "Use /wa minimap to show 
 --[[Translation missing --]]
 L["Use Custom Color"] = "Use Custom Color"
 --[[Translation missing --]]
-L["Use Legendary Power Icon"] = "Use Legendary Power Icon"
---[[Translation missing --]]
 L["Vaelastrasz the Corrupt"] = "Vaelastrasz the Corrupt"
 --[[Translation missing --]]
 L["Value"] = "Value"
@@ -1492,7 +1543,13 @@ L["Viscidus"] = "Viscidus"
 --[[Translation missing --]]
 L["Visibility"] = "Visibility"
 --[[Translation missing --]]
+L["Visions of N'Zoth"] = "Visions of N'Zoth"
+--[[Translation missing --]]
 L["War Mode Active"] = "War Mode Active"
+--[[Translation missing --]]
+L["Warfront (Heroic)"] = "Warfront (Heroic)"
+--[[Translation missing --]]
+L["Warfront (Normal)"] = "Warfront (Normal)"
 --[[Translation missing --]]
 L["Warning"] = "Warning"
 --[[Translation missing --]]

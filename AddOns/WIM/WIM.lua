@@ -15,7 +15,7 @@ setfenv(1, WIM);
 
 -- Core information
 addonTocName = "WIM";
-version = "3.8.15";
+version = "3.8.16";
 beta = false; -- flags current version as beta.
 debug = false; -- turn debugging on and off.
 useProtocol2 = true; -- test switch for new W2W Protocol. (Dev use only)
@@ -144,57 +144,63 @@ end
 --These should work in all files that use them since they are written to WIMs global namespace
 --Retail kind of has these for now, but won't forever, and classic is not expected to make same API restructuring, so this ugly mess is probably required forever
 function GetBNGetFriendInfo(friendIndex)
-	local accountInfo = _G.C_BattleNet and _G.C_BattleNet.GetFriendAccountInfo(friendIndex);
-	if accountInfo then
-		local wowProjectID = accountInfo.gameAccountInfo.wowProjectID or 0;
-		local clientProgram = accountInfo.gameAccountInfo.clientProgram ~= "" and accountInfo.gameAccountInfo.clientProgram or nil;
+	if not isShadowlands then--Classic
+		return _G.BNGetFriendInfo(friendIndex)
+	else
+		local accountInfo = _G.C_BattleNet.GetFriendAccountInfo(friendIndex);
+		if accountInfo then
+			local wowProjectID = accountInfo.gameAccountInfo.wowProjectID or 0;
+			local clientProgram = accountInfo.gameAccountInfo.clientProgram ~= "" and accountInfo.gameAccountInfo.clientProgram or nil;
 
-		return	accountInfo.bnetAccountID, accountInfo.accountName, accountInfo.battleTag, accountInfo.isBattleTagFriend,
+			return	accountInfo.bnetAccountID, accountInfo.accountName, accountInfo.battleTag, accountInfo.isBattleTagFriend,
 				accountInfo.gameAccountInfo.characterName, accountInfo.gameAccountInfo.gameAccountID, clientProgram,
 				accountInfo.gameAccountInfo.isOnline, accountInfo.lastOnlineTime, accountInfo.isAFK, accountInfo.isDND, accountInfo.customMessage, accountInfo.note, accountInfo.isFriend,
 				accountInfo.customMessageTime, wowProjectID, accountInfo.rafLinkType == _G.Enum.RafLinkType.Recruit, accountInfo.gameAccountInfo.canSummon, accountInfo.isFavorite, accountInfo.gameAccountInfo.isWowMobile;
-	else
-		return _G.BNGetFriendInfo(friendIndex)
+		end
 	end
 end
 
 function GetBNGetFriendInfoByID(id)
-	local accountInfo = _G.C_BattleNet and _G.C_BattleNet.GetAccountInfoByID(id);
-	if accountInfo then
-		local wowProjectID = accountInfo.gameAccountInfo.wowProjectID or 0;
-		local clientProgram = accountInfo.gameAccountInfo.clientProgram ~= "" and accountInfo.gameAccountInfo.clientProgram or nil;
+	if not isShadowlands then--Classic
+		return _G.BNGetFriendInfoByID(id)
+	else--Retail
+		local accountInfo = _G.C_BattleNet.GetAccountInfoByID(id) or {};
+		if accountInfo and accountInfo.gameAccountInfo then
+			local wowProjectID = accountInfo.gameAccountInfo.wowProjectID or 0;
+			local clientProgram = accountInfo.gameAccountInfo.clientProgram ~= "" and accountInfo.gameAccountInfo.clientProgram or nil;
 
-		return	accountInfo.bnetAccountID, accountInfo.accountName, accountInfo.battleTag, accountInfo.isBattleTagFriend,
+			return	accountInfo.bnetAccountID, accountInfo.accountName, accountInfo.battleTag, accountInfo.isBattleTagFriend,
 				accountInfo.gameAccountInfo.characterName, accountInfo.gameAccountInfo.gameAccountID, clientProgram,
 				accountInfo.gameAccountInfo.isOnline, accountInfo.lastOnlineTime, accountInfo.isAFK, accountInfo.isDND, accountInfo.customMessage, accountInfo.note, accountInfo.isFriend,
 				accountInfo.customMessageTime, wowProjectID, accountInfo.rafLinkType == _G.Enum.RafLinkType.Recruit, accountInfo.gameAccountInfo.canSummon, accountInfo.isFavorite, accountInfo.gameAccountInfo.isWowMobile;
-	else
-		return _G.BNGetFriendInfoByID(id)
+		end
 	end
 end
 
 function GetBNGetGameAccountInfo(toonId)
-	if isShadowlands then
-		local gameAccountInfo = _G.C_BattleNet.GetGameAccountInfoByID(toonId) or {}
-		local wowProjectID = gameAccountInfo.wowProjectID or 0;
-		local characterName = gameAccountInfo.characterName or "";
-		local realmName = gameAccountInfo.realmName or "";
-		local realmID = gameAccountInfo.realmID or 0;
-		local factionName = gameAccountInfo.factionName or "";
-		local raceName = gameAccountInfo.raceName or "";
-		local className = gameAccountInfo.className or "";
-		local areaName = gameAccountInfo.areaName or "";
-		local characterLevel = gameAccountInfo.characterLevel or "";
-		local richPresence = gameAccountInfo.richPresence or "";
-		local gameAccountID = gameAccountInfo.gameAccountID or 0;
-		local playerGuid = gameAccountInfo.playerGuid or 0;
-		return	gameAccountInfo.hasFocus, characterName, gameAccountInfo.clientProgram,
+	if not isShadowlands then--Classic
+		return _G.BNGetGameAccountInfo(toonId)
+	else--Retail
+		local gameAccountInfo = _G.C_BattleNet.GetGameAccountInfoByID(toonId)
+		if gameAccountInfo then
+			local wowProjectID = gameAccountInfo.wowProjectID or 0;
+			local characterName = gameAccountInfo.characterName or "";
+			local realmName = gameAccountInfo.realmName or "";
+			local realmID = gameAccountInfo.realmID or 0;
+			local factionName = gameAccountInfo.factionName or "";
+			local raceName = gameAccountInfo.raceName or "";
+			local className = gameAccountInfo.className or "";
+			local areaName = gameAccountInfo.areaName or "";
+			local characterLevel = gameAccountInfo.characterLevel or "";
+			local richPresence = gameAccountInfo.richPresence or "";
+			local gameAccountID = gameAccountInfo.gameAccountID or 0;
+			local playerGuid = gameAccountInfo.playerGuid or 0;
+			return	gameAccountInfo.hasFocus, characterName, gameAccountInfo.clientProgram,
 				realmName, realmID, factionName, raceName, className, "", areaName, characterLevel,
 				richPresence, nil, nil,
 				gameAccountInfo.isOnline, gameAccountID, nil, gameAccountInfo.isGameAFK, gameAccountInfo.isGameBusy,
 				playerGuid, wowProjectID, gameAccountInfo.isWowMobile
-	else
-		return _G.BNGetGameAccountInfo(toonId)
+		end
 	end
 end
 --End Compat wrappers for retail and classic to access same functions and expect same returns

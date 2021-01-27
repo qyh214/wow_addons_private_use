@@ -181,7 +181,8 @@ local torghastItems = {
     176331, --精華掩蔽藥水
     176409, --活力虹吸精華
     176443, --消逝狂亂藥水
-    168035 --淵喉污鼠韁繩
+    168035, --淵喉污鼠韁繩
+    174464 --鬼靈鞍具
 }
 
 -- Food (Crafted by cooking)
@@ -390,7 +391,8 @@ local utilities = {
     171438, --孔岩平衡石
     171439, --幽影平衡石
     172346, --荒寂護甲片
-    172347 --厚重荒寂護甲片
+    172347, --厚重荒寂護甲片
+    172233 --致命兇殘之鼓
 }
 
 -- 更新任务物品列表
@@ -572,16 +574,18 @@ function EB:SetUpButton(button, questItemData, slotID)
                 )
             end
 
-            GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 0, -2)
-            GameTooltip:ClearLines()
+            if barDB.tooltip then
+                GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 0, -2)
+                GameTooltip:ClearLines()
 
-            if self.slotID then
-                GameTooltip:SetInventoryItem("player", self.slotID)
-            else
-                GameTooltip:SetItemByID(self.itemID)
+                if self.slotID then
+                    GameTooltip:SetInventoryItem("player", self.slotID)
+                else
+                    GameTooltip:SetItemByID(self.itemID)
+                end
+
+                GameTooltip:Show()
             end
-
-            GameTooltip:Show()
         end
     )
 
@@ -644,7 +648,7 @@ function EB:UpdateButtonSize(button, barDB)
 end
 
 function EB:PLAYER_REGEN_ENABLED()
-    for i = 1, 3 do
+    for i = 1, 5 do
         if UpdateAfterCombat[i] then
             self:UpdateBar(i)
             UpdateAfterCombat[i] = false
@@ -937,7 +941,7 @@ function EB:UpdateBar(id)
 end
 
 function EB:UpdateBars()
-    for i = 1, 3 do
+    for i = 1, 5 do
         self:UpdateBar(i)
     end
 end
@@ -955,7 +959,7 @@ end
 function EB:CreateAll()
     self.bars = {}
 
-    for i = 1, 3 do
+    for i = 1, 5 do
         self:CreateBar(i)
         S:CreateShadowModule(self.bars[i].backdrop)
         S:MerathilisUISkin(self.bars[i].backdrop)
@@ -967,7 +971,7 @@ function EB:UpdateBinding()
         return
     end
 
-    for i = 1, 3 do
+    for i = 1, 5 do
         for j = 1, 12 do
             local button = self.bars[i].buttons[j]
             if button then

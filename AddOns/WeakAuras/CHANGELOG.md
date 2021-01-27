@@ -1,14 +1,20 @@
-# [3.1.4](https://github.com/WeakAuras/WeakAuras2/tree/3.1.4) (2020-12-09)
+# [3.1.9](https://github.com/WeakAuras/WeakAuras2/tree/3.1.9) (2021-01-26)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.1.3...3.1.4)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.1.8...3.1.9)
 
 ## Highlights
 
- Bug fix 
+ - bug fixes 
 
 ## Commits
 
-nullKomplex (1):
+InfusOnWoW (2):
 
-- Nil-check Bonus Id trigger (#2799)
+- Fix oversight in 7a3d5c762 breaking remaining time check for
+- Clamp tooltips to the screen
+
+Stanzilla (2):
+
+- master -> main
+- Create CODE_OF_CONDUCT.md
 
