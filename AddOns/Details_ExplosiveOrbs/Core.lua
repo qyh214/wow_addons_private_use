@@ -7,7 +7,7 @@ _G[addon] = Engine
 
 -- Lua functions
 local _G = _G
-local format, ipairs, pairs, select, strsplit, tonumber, type = format, ipairs, pairs, select, strsplit, tonumber, type
+local format, ipairs, pairs, select, strmatch, tonumber, type = format, ipairs, pairs, select, strmatch, tonumber, type
 local bit_band = bit.band
 
 -- WoW API / Variables
@@ -25,7 +25,7 @@ local Details = _G.Details
 -- GLOBALS: ExplosiveOrbsLog
 
 EO.debug = false
-EO.orbID = '120651' -- Explosive
+EO.orbID = 120651 -- Explosive
 EO.CustomDisplay = {
     name = L["Explosive Orbs"],
     icon = 2175503,
@@ -138,7 +138,7 @@ end
 
 function Engine:RequireOrbName()
     if not EO.orbName then
-        EO.orbName = Details:GetSourceFromNpcId(tonumber(EO.orbID))
+        EO.orbName = Details:GetSourceFromNpcId(EO.orbID)
     end
     return EO.orbName
 end
@@ -151,11 +151,15 @@ function EO:Debug(...)
     end
 end
 
+function EO:ParseNPCID(unitGUID)
+    return tonumber(strmatch(unitGUID or '', 'Creature%-.-%-.-%-.-%-.-%-(.-)%-') or '')
+end
+
 local function targetChanged(self, _, unitID)
     local targetGUID = UnitGUID(unitID .. 'target')
     if not targetGUID then return end
 
-    local npcID = select(6, strsplit('-', targetGUID))
+    local npcID = EO:ParseNPCID(targetGUID)
     if npcID == EO.orbID then
         -- record pet's target to its owner
         EO:RecordTarget(UnitGUID(self.unitID), targetGUID)
@@ -168,7 +172,7 @@ function EO:COMBAT_LOG_EVENT_UNFILTERED()
         subEvent == 'SPELL_DAMAGE' or subEvent == 'RANGE_DAMAGE' or subEvent == 'SWING_DAMAGE' or
         subEvent == 'SPELL_PERIODIC_DAMAGE' or subEvent == 'SPELL_BUILDING_DAMAGE'
     ) then
-        local npcID = select(6, strsplit('-', destGUID))
+        local npcID = self:ParseNPCID(destGUID)
         if npcID == self.orbID then
             if bit_band(sourceFlag, COMBATLOG_OBJECT_TYPE_PET) > 0 then
                 -- source is pet, don't track guardian which is automaton

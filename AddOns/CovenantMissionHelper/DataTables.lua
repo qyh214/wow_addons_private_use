@@ -114,10 +114,10 @@ DataTables.TargetPriorityByType = {
         [0] = {5, 6, 10, 7, 9, 11, 8, 12},
         [1] = {6, 7, 11, 8, 10, 12, 5, 9},
         [2] = {5, 6, 9, 10, 7, 11, 8, 12},
-        [3] = {6, 7, 5, 10, 11, 8, 9, 12}, -- not sure
+        [3] = {6, 7, 5, 9, 10, 11, 8, 12}, -- not sure
         [4] = {7, 8, 6, 11, 10, 12, 5, 9}, -- not sure
         [5] = {2, 0, 3, 1, 4},
-        [6] = {2, 3, 0, 4, 1},
+        [6] = {2, 3, 0, 1, 4},
         [7] = {3, 4, 2, 0, 1},
         [8] = {4, 3, 1, 2, 0}, -- not sure
         [9] = {2, 3, 0, 1, 4},
@@ -137,7 +137,7 @@ DataTables.TargetPriorityByType = {
         [8] = {2, 0, 1, 3, 4},
         [9] = {4, 1, 0, 3, 2}, -- not sure
         [10] = {1, 0, 4, 2, 3}, -- not sure
-        [11] = {0, 2, 1, 3, 4}, -- not sure
+        [11] = {0, 1, 2, 3, 4}, -- not sure
         [12] = {2, 0, 1, 3, 4} -- not sure
     }
 }
@@ -319,4372 +319,4394 @@ DataTables.UnusualAttackType = {
 DataTables.SpellEffects = {
 	[1] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 1,
+			['Period'] = 0,
 			['Points'] = 350,
 			['SpellID'] = 1,
-			['EffectIndex'] = 0,
-			['TargetType'] = 24,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 1
+			['TargetType'] = 24
 		}
 	},
 	[2] = {
 		[1] = {
+			['Effect'] = 19,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 2,
+			['Period'] = 2,
 			['Points'] = 0.2,
 			['SpellID'] = 2,
-			['EffectIndex'] = 0,
-			['TargetType'] = 22,
-			['Period'] = 2,
-			['Flags'] = 1,
-			['Effect'] = 19,
-			['ID'] = 2
+			['TargetType'] = 22
 		},
 		[2] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 120,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 2,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 4,
-			['ID'] = 120
+			['TargetType'] = 1
 		}
 	},
 	[3] = {
 		[1] = {
+			['Effect'] = 2,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 3,
+			['Period'] = 0,
 			['Points'] = 45.2,
 			['SpellID'] = 3,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 2,
-			['ID'] = 3
+			['TargetType'] = 1
 		},
 		[2] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 4,
+			['Period'] = 0,
 			['Points'] = 90.4,
 			['SpellID'] = 3,
-			['EffectIndex'] = 1,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 1,
-			['ID'] = 4
+			['TargetType'] = 3
 		}
 	},
 	[4] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 7,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 4,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 7
+			['TargetType'] = 3
 		},
 		[2] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 8,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 4,
-			['EffectIndex'] = 1,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 8
+			['TargetType'] = 3
 		}
 	},
 	[5] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 9,
+			['Period'] = 0,
 			['Points'] = 0.1,
 			['SpellID'] = 5,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 9
+			['TargetType'] = 7
 		}
 	},
 	[6] = {
 		[1] = {
-			['Points'] = 0.5,
-			['SpellID'] = 6,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 3,
-			['ID'] = 10
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 10,
+			['Period'] = 0,
+			['Points'] = 0.6,
+			['SpellID'] = 6,
+			['TargetType'] = 17
 		}
 	},
 	[7] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 11,
+			['Period'] = 0,
 			['Points'] = 0.1,
 			['SpellID'] = 7,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 11
+			['TargetType'] = 3
 		}
 	},
 	[8] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 12,
+			['Period'] = 0,
 			['Points'] = 10,
 			['SpellID'] = 8,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 12
+			['TargetType'] = 3
 		}
 	},
 	[9] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 13,
+			['Period'] = 0,
 			['Points'] = 0.05,
 			['SpellID'] = 9,
-			['EffectIndex'] = 0,
-			['TargetType'] = 6,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 4,
-			['ID'] = 13
+			['TargetType'] = 6
 		}
 	},
 	[10] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 14,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 10,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 3,
-			['ID'] = 14
+			['TargetType'] = 3
 		},
 		[2] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 15,
+			['Period'] = 0,
 			['Points'] = 0.03,
 			['SpellID'] = 10,
-			['EffectIndex'] = 1,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 7,
-			['ID'] = 15
+			['TargetType'] = 7
 		},
 		[3] = {
+			['Effect'] = 8,
+			['EffectIndex'] = 2,
+			['Flags'] = 0,
+			['ID'] = 16,
+			['Period'] = 0,
 			['Points'] = 0.01,
 			['SpellID'] = 10,
-			['EffectIndex'] = 2,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 8,
-			['ID'] = 16
+			['TargetType'] = 1
 		}
 	},
 	[11] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 17,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 11,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 17
+			['TargetType'] = 3
 		}
 	},
 	[12] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 18,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 12,
-			['EffectIndex'] = 0,
-			['TargetType'] = 6,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 18
+			['TargetType'] = 6
 		}
 	},
 	[13] = {
 		[1] = {
+			['Effect'] = 2,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 19,
+			['Period'] = 0,
 			['Points'] = 10,
 			['SpellID'] = 13,
-			['EffectIndex'] = 0,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 2,
-			['ID'] = 19
+			['TargetType'] = 2
 		}
 	},
 	[14] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 20,
+			['Period'] = 0,
 			['Points'] = 0.1,
 			['SpellID'] = 14,
-			['EffectIndex'] = 0,
-			['TargetType'] = 6,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 20
+			['TargetType'] = 6
 		}
 	},
 	[15] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 21,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 15,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 21
+			['TargetType'] = 5
 		}
 	},
 	[16] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 22,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 16,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 22
+			['TargetType'] = 5
 		}
 	},
 	[17] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 23,
+			['Period'] = 0,
 			['Points'] = 0.1,
 			['SpellID'] = 17,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 23
+			['TargetType'] = 7
 		},
 		[2] = {
+			['Effect'] = 2,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 24,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 17,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 2,
-			['ID'] = 24
+			['TargetType'] = 1
 		}
 	},
 	[18] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 26,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 18,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 26
+			['TargetType'] = 15
 		},
 		[2] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 27,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 18,
-			['EffectIndex'] = 1,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 27
+			['TargetType'] = 15
 		},
 		[3] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 2,
+			['Flags'] = 1,
+			['ID'] = 28,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 18,
-			['EffectIndex'] = 2,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 28
+			['TargetType'] = 15
 		}
 	},
 	[19] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 29,
+			['Period'] = 0,
 			['Points'] = 1.5,
 			['SpellID'] = 19,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 29
+			['TargetType'] = 3
 		}
 	},
 	[20] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 30,
+			['Period'] = 0,
 			['Points'] = 0.7,
 			['SpellID'] = 20,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 30
+			['TargetType'] = 17
 		}
 	},
 	[21] = {
 		[1] = {
-			['Points'] = 0.15,
-			['SpellID'] = 21,
-			['EffectIndex'] = 0,
-			['TargetType'] = 6,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 8,
-			['ID'] = 31
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 31,
+			['Period'] = 0,
+			['Points'] = 0.25,
+			['SpellID'] = 21,
+			['TargetType'] = 6
 		}
 	},
 	[22] = {
 		[1] = {
-			['Points'] = 0.5,
-			['SpellID'] = 22,
-			['EffectIndex'] = 0,
-			['TargetType'] = 9,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 3,
-			['ID'] = 32
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 32,
+			['Period'] = 0,
+			['Points'] = 0.9,
+			['SpellID'] = 22,
+			['TargetType'] = 9
 		},
 		[2] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 33,
+			['Period'] = 0,
 			['Points'] = 0.1,
 			['SpellID'] = 22,
-			['EffectIndex'] = 1,
-			['TargetType'] = 9,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 7,
-			['ID'] = 33
+			['TargetType'] = 9
 		}
 	},
 	[23] = {
 		[1] = {
+			['Effect'] = 10,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 34,
+			['Period'] = 0,
 			['Points'] = 11,
 			['SpellID'] = 23,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 10,
-			['ID'] = 34
+			['TargetType'] = 1
 		},
 		[2] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 92,
+			['Period'] = 0,
 			['Points'] = 0.1,
 			['SpellID'] = 23,
-			['EffectIndex'] = 1,
-			['TargetType'] = 11,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 7,
-			['ID'] = 92
+			['TargetType'] = 11
 		}
 	},
 	[24] = {
 		[1] = {
-			['Points'] = 1.5,
-			['SpellID'] = 24,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 3,
-			['ID'] = 35
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 35,
+			['Period'] = 0,
+			['Points'] = 1.8,
+			['SpellID'] = 24,
+			['TargetType'] = 5
 		},
 		[2] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 36,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 24,
-			['EffectIndex'] = 1,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 36
+			['TargetType'] = 2
 		}
 	},
 	[25] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 37,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 25,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 37
+			['TargetType'] = 15
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 38,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 25,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 12,
-			['ID'] = 38
+			['TargetType'] = 1
 		}
 	},
 	[26] = {
 		[1] = {
-			['Points'] = 0.25,
-			['SpellID'] = 26,
-			['EffectIndex'] = 0,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 4,
-			['ID'] = 39
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 39,
+			['Period'] = 0,
+			['Points'] = 1,
+			['SpellID'] = 26,
+			['TargetType'] = 2
 		},
 		[2] = {
+			['Effect'] = 18,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 40,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 26,
-			['EffectIndex'] = 1,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 18,
-			['ID'] = 40
+			['TargetType'] = 2
 		}
 	},
 	[27] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 41,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 27,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 41
+			['TargetType'] = 3
 		}
 	},
 	[28] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 42,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 28,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 42
+			['TargetType'] = 3
 		}
 	},
 	[29] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 43,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 29,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 43
+			['TargetType'] = 3
 		}
 	},
 	[30] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 44,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 30,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 44
+			['TargetType'] = 3
 		}
 	},
 	[31] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 45,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 31,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 45
+			['TargetType'] = 3
 		}
 	},
 	[32] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 46,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 32,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 46
+			['TargetType'] = 3
 		}
 	},
 	[33] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 47,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 33,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 47
+			['TargetType'] = 3
 		}
 	},
 	[34] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 48,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 34,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 48
+			['TargetType'] = 7
 		}
 	},
 	[35] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 49,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 35,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 49
+			['TargetType'] = 7
 		}
 	},
 	[36] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 50,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 36,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 50
+			['TargetType'] = 7
 		}
 	},
 	[37] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 51,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 37,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 51
+			['TargetType'] = 7
 		}
 	},
 	[38] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 52,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 38,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 52
+			['TargetType'] = 7
 		}
 	},
 	[39] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 53,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 39,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 53
+			['TargetType'] = 7
 		}
 	},
 	[40] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 54,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 40,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 54
+			['TargetType'] = 7
 		}
 	},
 	[41] = {
 		[1] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 55,
+			['Period'] = 0,
 			['Points'] = 0.25,
 			['SpellID'] = 41,
-			['EffectIndex'] = 0,
-			['TargetType'] = 9,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 7,
-			['ID'] = 55
+			['TargetType'] = 9
 		}
 	},
 	[42] = {
 		[1] = {
+			['Effect'] = 16,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 56,
+			['Period'] = 0,
 			['Points'] = 0.1,
 			['SpellID'] = 42,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 16,
-			['ID'] = 56
+			['TargetType'] = 1
 		}
 	},
 	[43] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 57,
+			['Period'] = 0,
 			['Points'] = 0.25,
 			['SpellID'] = 43,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 57
+			['TargetType'] = 5
 		},
 		[2] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 58,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 43,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 58
+			['TargetType'] = 1
 		}
 	},
 	[44] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 59,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 44,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 59
+			['TargetType'] = 3
 		},
 		[2] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 60,
+			['Period'] = 0,
 			['Points'] = 0.25,
 			['SpellID'] = 44,
-			['EffectIndex'] = 1,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 60
+			['TargetType'] = 3
 		}
 	},
 	[45] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 61,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 45,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 61
+			['TargetType'] = 5
 		},
 		[2] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 62,
+			['Period'] = 0,
 			['Points'] = 0.25,
 			['SpellID'] = 45,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 62
+			['TargetType'] = 1
 		}
 	},
 	[46] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 63,
+			['Period'] = 0,
 			['Points'] = -0.1,
 			['SpellID'] = 46,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 63
+			['TargetType'] = 1
 		},
 		[2] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 64,
+			['Period'] = 0,
 			['Points'] = -0.1,
 			['SpellID'] = 46,
-			['EffectIndex'] = 1,
-			['TargetType'] = 16,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 64
+			['TargetType'] = 16
 		}
 	},
 	[47] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 65,
+			['Period'] = 0,
 			['Points'] = -0.2,
 			['SpellID'] = 47,
-			['EffectIndex'] = 0,
-			['TargetType'] = 6,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 65
+			['TargetType'] = 6
 		}
 	},
 	[48] = {
 		[1] = {
+			['Effect'] = 10,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 66,
+			['Period'] = 0,
 			['Points'] = 0,
 			['SpellID'] = 48,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 10,
-			['ID'] = 66
+			['TargetType'] = 1
 		},
 		[2] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 67,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 48,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 67
+			['TargetType'] = 1
 		}
 	},
 	[49] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 68,
+			['Period'] = 0,
 			['Points'] = 0.33,
 			['SpellID'] = 49,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 68
+			['TargetType'] = 17
 		}
 	},
 	[50] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 69,
+			['Period'] = 0,
 			['Points'] = 1.2,
 			['SpellID'] = 50,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 69
+			['TargetType'] = 5
 		}
 	},
 	[51] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 70,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 51,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 70
+			['TargetType'] = 15
 		}
 	},
 	[52] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 71,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 52,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 71
+			['TargetType'] = 17
 		}
 	},
 	[53] = {
 		[1] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 72,
+			['Period'] = 2,
 			['Points'] = 0.1,
 			['SpellID'] = 53,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 2,
-			['Flags'] = 1,
-			['Effect'] = 7,
-			['ID'] = 72
+			['TargetType'] = 7
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 73,
+			['Period'] = 2,
 			['Points'] = -0.2,
 			['SpellID'] = 53,
-			['EffectIndex'] = 1,
-			['TargetType'] = 7,
-			['Period'] = 2,
-			['Flags'] = 1,
-			['Effect'] = 12,
-			['ID'] = 73
+			['TargetType'] = 7
 		}
 	},
 	[54] = {
 		[1] = {
-			['Points'] = 0.45,
-			['SpellID'] = 54,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 3,
-			['ID'] = 74
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 74,
+			['Period'] = 0,
+			['Points'] = 0.9,
+			['SpellID'] = 54,
+			['TargetType'] = 3
 		},
 		[2] = {
-			['Points'] = 0.45,
-			['SpellID'] = 54,
-			['EffectIndex'] = 1,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 3,
-			['ID'] = 75
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 75,
+			['Period'] = 0,
+			['Points'] = 0.9,
+			['SpellID'] = 54,
+			['TargetType'] = 5
 		}
 	},
 	[55] = {
 		[1] = {
-			['Points'] = 0.3,
-			['SpellID'] = 55,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 3,
-			['ID'] = 76
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 76,
+			['Period'] = 0,
+			['Points'] = 1.5,
+			['SpellID'] = 55,
+			['TargetType'] = 15
 		}
 	},
 	[56] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 77,
+			['Period'] = 0,
 			['Points'] = 1.25,
 			['SpellID'] = 56,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 77
+			['TargetType'] = 5
 		}
 	},
 	[57] = {
 		[1] = {
-			['Points'] = 0.4,
-			['SpellID'] = 57,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 7,
-			['ID'] = 78
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 78,
+			['Period'] = 0,
+			['Points'] = 1,
+			['SpellID'] = 57,
+			['TargetType'] = 3
 		}
 	},
 	[58] = {
 		[1] = {
-			['Points'] = 0.5,
-			['SpellID'] = 58,
-			['EffectIndex'] = 0,
-			['TargetType'] = 9,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 3,
-			['ID'] = 79
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 79,
+			['Period'] = 0,
+			['Points'] = 0.7,
+			['SpellID'] = 58,
+			['TargetType'] = 9
 		}
 	},
 	[59] = {
 		[1] = {
-			['Points'] = 0.4,
-			['SpellID'] = 59,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 3,
-			['ID'] = 80
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 80,
+			['Period'] = 0,
+			['Points'] = 0.5,
+			['SpellID'] = 59,
+			['TargetType'] = 17
 		}
 	},
 	[60] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 81,
+			['Period'] = 0,
 			['Points'] = 0.4,
 			['SpellID'] = 60,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 81
+			['TargetType'] = 5
 		}
 	},
 	[61] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 82,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 61,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 82
+			['TargetType'] = 3
 		}
 	},
 	[62] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 83,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 62,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 83
+			['TargetType'] = 15
 		}
 	},
 	[63] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 84,
+			['Period'] = 0,
 			['Points'] = 0.6,
 			['SpellID'] = 63,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 84
+			['TargetType'] = 7
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 85,
+			['Period'] = 0,
 			['Points'] = -0.2,
 			['SpellID'] = 63,
-			['EffectIndex'] = 1,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 85
+			['TargetType'] = 7
 		}
 	},
 	[64] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 86,
+			['Period'] = 0,
 			['Points'] = 1.5,
 			['SpellID'] = 64,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 86
+			['TargetType'] = 7
 		}
 	},
 	[65] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 87,
+			['Period'] = 0,
 			['Points'] = 0.65,
 			['SpellID'] = 65,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 87
+			['TargetType'] = 3
 		}
 	},
 	[66] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 88,
+			['Period'] = 0,
 			['Points'] = 1.5,
 			['SpellID'] = 66,
-			['EffectIndex'] = 0,
-			['TargetType'] = 13,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 88
+			['TargetType'] = 13
 		}
 	},
 	[67] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 89,
+			['Period'] = 0,
 			['Points'] = 1.2,
 			['SpellID'] = 67,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 89
+			['TargetType'] = 5
 		}
 	},
 	[68] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 90,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 68,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 90
+			['TargetType'] = 15
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 91,
+			['Period'] = 0,
 			['Points'] = -0.8,
 			['SpellID'] = 68,
-			['EffectIndex'] = 1,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 91
+			['TargetType'] = 15
 		}
 	},
 	[69] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 95,
+			['Period'] = 2,
 			['Points'] = 50,
 			['SpellID'] = 69,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 2,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 95
+			['TargetType'] = 1
 		},
 		[2] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 96,
+			['Period'] = 2,
 			['Points'] = 0.2,
 			['SpellID'] = 69,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 2,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 96
+			['TargetType'] = 1
 		},
 		[3] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 2,
+			['Flags'] = 0,
+			['ID'] = 97,
+			['Period'] = 0,
 			['Points'] = 50,
 			['SpellID'] = 69,
-			['EffectIndex'] = 2,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 1,
-			['ID'] = 97
+			['TargetType'] = 1
 		},
 		[4] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 3,
+			['Flags'] = 0,
+			['ID'] = 98,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 69,
-			['EffectIndex'] = 3,
-			['TargetType'] = 0,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 3,
-			['ID'] = 98
+			['TargetType'] = 0
 		}
 	},
 	[71] = {
 		[1] = {
+			['Effect'] = 2,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 99,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 71,
-			['EffectIndex'] = 0,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 2,
-			['ID'] = 99
+			['TargetType'] = 2
 		}
 	},
 	[72] = {
 		[1] = {
-			['Points'] = 1.5,
-			['SpellID'] = 72,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 3,
-			['ID'] = 100
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 100,
+			['Period'] = 0,
+			['Points'] = 2,
+			['SpellID'] = 72,
+			['TargetType'] = 3
 		},
 		[2] = {
-			['Points'] = 0.3,
-			['SpellID'] = 72,
-			['EffectIndex'] = 1,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 3,
-			['ID'] = 101
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 101,
+			['Period'] = 0,
+			['Points'] = 0.4,
+			['SpellID'] = 72,
+			['TargetType'] = 17
 		}
 	},
 	[73] = {
 		[1] = {
-			['Points'] = 0.75,
-			['SpellID'] = 73,
-			['EffectIndex'] = 0,
-			['TargetType'] = 13,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 3,
-			['ID'] = 102
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 102,
+			['Period'] = 0,
+			['Points'] = 1,
+			['SpellID'] = 73,
+			['TargetType'] = 13
 		}
 	},
 	[74] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 103,
+			['Period'] = 0,
 			['Points'] = -0.4,
 			['SpellID'] = 74,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 103
+			['TargetType'] = 1
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 104,
+			['Period'] = 0,
 			['Points'] = -0.4,
 			['SpellID'] = 74,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 104
+			['TargetType'] = 1
 		}
 	},
 	[75] = {
 		[1] = {
-			['Points'] = 1,
-			['SpellID'] = 75,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 3,
-			['ID'] = 105
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 105,
+			['Period'] = 0,
+			['Points'] = 1.5,
+			['SpellID'] = 75,
+			['TargetType'] = 5
 		}
 	},
 	[76] = {
 		[1] = {
-			['Points'] = 1.5,
-			['SpellID'] = 76,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 3,
-			['ID'] = 106
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 106,
+			['Period'] = 0,
+			['Points'] = 2.25,
+			['SpellID'] = 76,
+			['TargetType'] = 5
 		}
 	},
 	[77] = {
 		[1] = {
+			['Effect'] = 19,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 107,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 77,
-			['EffectIndex'] = 0,
-			['TargetType'] = 6,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 19,
-			['ID'] = 107
+			['TargetType'] = 6
 		}
 	},
 	[78] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 108,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 78,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 108
+			['TargetType'] = 15
 		}
 	},
 	[79] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 109,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 79,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 109
+			['TargetType'] = 7
 		},
 		[2] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 110,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 79,
-			['EffectIndex'] = 1,
-			['TargetType'] = 6,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 110
+			['TargetType'] = 6
 		}
 	},
 	[80] = {
 		[1] = {
-			['Points'] = 0.6,
-			['SpellID'] = 80,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 3,
-			['ID'] = 111
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 111,
+			['Period'] = 0,
+			['Points'] = 1.2,
+			['SpellID'] = 80,
+			['TargetType'] = 5
 		},
 		[2] = {
-			['Points'] = 0.2,
-			['SpellID'] = 80,
-			['EffectIndex'] = 1,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
 			['Effect'] = 7,
-			['ID'] = 112
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 112,
+			['Period'] = 0,
+			['Points'] = 0.4,
+			['SpellID'] = 80,
+			['TargetType'] = 5
 		}
 	},
 	[81] = {
 		[1] = {
+			['Effect'] = 15,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 113,
+			['Period'] = 0,
 			['Points'] = 3,
 			['SpellID'] = 81,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 15,
-			['ID'] = 113
+			['TargetType'] = 1
 		}
 	},
 	[82] = {
 		[1] = {
+			['Effect'] = 16,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 114,
+			['Period'] = 0,
 			['Points'] = 0.25,
 			['SpellID'] = 82,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 16,
-			['ID'] = 114
+			['TargetType'] = 1
 		}
 	},
 	[83] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 115,
+			['Period'] = 0,
 			['Points'] = 1.2,
 			['SpellID'] = 83,
-			['EffectIndex'] = 0,
-			['TargetType'] = 9,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 115
+			['TargetType'] = 9
 		}
 	},
 	[84] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 116,
+			['Period'] = 0,
 			['Points'] = -1,
 			['SpellID'] = 84,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 116
+			['TargetType'] = 7
 		}
 	},
 	[85] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 117,
+			['Period'] = 0,
 			['Points'] = -50,
 			['SpellID'] = 85,
-			['EffectIndex'] = 0,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 117
+			['TargetType'] = 2
 		}
 	},
 	[86] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 118,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 86,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 118
+			['TargetType'] = 3
 		}
 	},
 	[87] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 119,
+			['Period'] = 0,
 			['Points'] = 0.6,
 			['SpellID'] = 87,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 119
+			['TargetType'] = 17
 		}
 	},
 	[88] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 121,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 88,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 121
+			['TargetType'] = 1
 		},
 		[2] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 123,
+			['Period'] = 0,
 			['Points'] = 0.4,
 			['SpellID'] = 88,
-			['EffectIndex'] = 1,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 123
+			['TargetType'] = 7
 		}
 	},
 	[89] = {
 		[1] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 0,
+			['Flags'] = 3,
+			['ID'] = 124,
+			['Period'] = 1,
 			['Points'] = 0.4,
 			['SpellID'] = 89,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 1,
-			['Flags'] = 3,
-			['Effect'] = 7,
-			['ID'] = 124
+			['TargetType'] = 5
 		}
 	},
 	[90] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 125,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 90,
-			['EffectIndex'] = 0,
-			['TargetType'] = 8,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 125
+			['TargetType'] = 8
 		}
 	},
 	[91] = {
 		[1] = {
+			['Effect'] = 11,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 126,
+			['Period'] = 0,
 			['Points'] = -0.6,
 			['SpellID'] = 91,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 11,
-			['ID'] = 126
+			['TargetType'] = 5
 		}
 	},
 	[92] = {
 		[1] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 0,
+			['Flags'] = 3,
+			['ID'] = 127,
+			['Period'] = 1,
 			['Points'] = 0.4,
 			['SpellID'] = 92,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 1,
-			['Flags'] = 3,
-			['Effect'] = 7,
-			['ID'] = 127
+			['TargetType'] = 17
 		}
 	},
 	[93] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 128,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 93,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 128
+			['TargetType'] = 3
 		},
 		[2] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 129,
+			['Period'] = 0,
 			['Points'] = 0.8,
 			['SpellID'] = 93,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 129
+			['TargetType'] = 1
 		}
 	},
 	[94] = {
 		[1] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 130,
+			['Period'] = 1,
 			['Points'] = 0.3,
 			['SpellID'] = 94,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 1,
-			['Flags'] = 1,
-			['Effect'] = 7,
-			['ID'] = 130
+			['TargetType'] = 15
 		}
 	},
 	[95] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 131,
+			['Period'] = 0,
 			['Points'] = 1.2,
 			['SpellID'] = 95,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 131
+			['TargetType'] = 5
 		},
 		[2] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 132,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 95,
-			['EffectIndex'] = 1,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 132
+			['TargetType'] = 17
 		}
 	},
 	[96] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 133,
+			['Period'] = 0,
 			['Points'] = 0.4,
 			['SpellID'] = 96,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 133
+			['TargetType'] = 5
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 134,
+			['Period'] = 0,
 			['Points'] = -0.2,
 			['SpellID'] = 96,
-			['EffectIndex'] = 1,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 134
+			['TargetType'] = 5
 		}
 	},
 	[97] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 135,
+			['Period'] = 0,
 			['Points'] = 0.9,
 			['SpellID'] = 97,
-			['EffectIndex'] = 0,
-			['TargetType'] = 11,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 135
+			['TargetType'] = 11
 		}
 	},
 	[98] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 136,
+			['Period'] = 0,
 			['Points'] = 1.2,
 			['SpellID'] = 98,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 136
+			['TargetType'] = 5
 		}
 	},
 	[99] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 137,
+			['Period'] = 0,
 			['Points'] = 1.4,
 			['SpellID'] = 99,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 137
+			['TargetType'] = 15
 		}
 	},
 	[100] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 138,
+			['Period'] = 0,
 			['Points'] = 0.4,
 			['SpellID'] = 100,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 138
+			['TargetType'] = 1
 		}
 	},
 	[101] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 139,
+			['Period'] = 0,
 			['Points'] = 0.6,
 			['SpellID'] = 101,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 139
+			['TargetType'] = 3
 		},
 		[2] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 140,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 101,
-			['EffectIndex'] = 1,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 140
+			['TargetType'] = 3
 		}
 	},
 	[102] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 141,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 102,
-			['EffectIndex'] = 0,
-			['TargetType'] = 13,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 141
+			['TargetType'] = 13
 		}
 	},
 	[103] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 142,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 103,
-			['EffectIndex'] = 0,
-			['TargetType'] = 22,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 142
+			['TargetType'] = 22
 		}
 	},
 	[104] = {
 		[1] = {
+			['Effect'] = 2,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 143,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 104,
-			['EffectIndex'] = 0,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 2,
-			['ID'] = 143
+			['TargetType'] = 2
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 144,
+			['Period'] = 0,
 			['Points'] = -0.1,
 			['SpellID'] = 104,
-			['EffectIndex'] = 1,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 144
+			['TargetType'] = 2
 		}
 	},
 	[105] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 145,
+			['Period'] = 0,
 			['Points'] = -0.1,
 			['SpellID'] = 105,
-			['EffectIndex'] = 0,
-			['TargetType'] = 6,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 145
+			['TargetType'] = 6
 		}
 	},
 	[106] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 146,
+			['Period'] = 0,
 			['Points'] = 0.4,
 			['SpellID'] = 106,
-			['EffectIndex'] = 0,
-			['TargetType'] = 9,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 146
+			['TargetType'] = 9
 		}
 	},
 	[107] = {
 		[1] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 0,
+			['Flags'] = 3,
+			['ID'] = 147,
+			['Period'] = 0,
 			['Points'] = 0.4,
 			['SpellID'] = 107,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 3,
-			['Effect'] = 7,
-			['ID'] = 147
+			['TargetType'] = 7
 		},
 		[2] = {
+			['Effect'] = 20,
+			['EffectIndex'] = 1,
+			['Flags'] = 3,
+			['ID'] = 148,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 107,
-			['EffectIndex'] = 1,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 3,
-			['Effect'] = 20,
-			['ID'] = 148
+			['TargetType'] = 3
 		}
 	},
 	[108] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 149,
+			['Period'] = 0,
 			['Points'] = 0.4,
 			['SpellID'] = 108,
-			['EffectIndex'] = 0,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 149
+			['TargetType'] = 2
 		},
 		[2] = {
+			['Effect'] = 18,
+			['EffectIndex'] = 1,
+			['Flags'] = 2,
+			['ID'] = 150,
+			['Period'] = 0,
 			['Points'] = 0.1,
 			['SpellID'] = 108,
-			['EffectIndex'] = 1,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 2,
-			['Effect'] = 18,
-			['ID'] = 150
+			['TargetType'] = 2
 		}
 	},
 	[109] = {
 		[1] = {
+			['Effect'] = 16,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 151,
+			['Period'] = 0,
 			['Points'] = 0.6,
 			['SpellID'] = 109,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 16,
-			['ID'] = 151
+			['TargetType'] = 1
 		}
 	},
 	[110] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 152,
+			['Period'] = 0,
 			['Points'] = 0.4,
 			['SpellID'] = 110,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 152
+			['TargetType'] = 1
 		}
 	},
 	[111] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 153,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 111,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 153
+			['TargetType'] = 15
 		}
 	},
 	[112] = {
 		[1] = {
+			['Effect'] = 19,
+			['EffectIndex'] = 0,
+			['Flags'] = 3,
+			['ID'] = 154,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 112,
-			['EffectIndex'] = 0,
-			['TargetType'] = 8,
-			['Period'] = 0,
-			['Flags'] = 3,
-			['Effect'] = 19,
-			['ID'] = 154
+			['TargetType'] = 8
 		}
 	},
 	[113] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 155,
+			['Period'] = 0,
 			['Points'] = 1.2,
 			['SpellID'] = 113,
-			['EffectIndex'] = 0,
-			['TargetType'] = 11,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 155
+			['TargetType'] = 11
 		}
 	},
 	[114] = {
 		[1] = {
+			['Effect'] = 2,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 156,
+			['Period'] = 0,
 			['Points'] = 0.6,
 			['SpellID'] = 114,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 2,
-			['ID'] = 156
+			['TargetType'] = 1
 		}
 	},
 	[115] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 157,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 115,
-			['EffectIndex'] = 0,
-			['TargetType'] = 9,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 157
+			['TargetType'] = 9
 		}
 	},
 	[116] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 158,
+			['Period'] = 0,
 			['Points'] = 1.2,
 			['SpellID'] = 116,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 158
+			['TargetType'] = 3
 		}
 	},
 	[117] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 159,
+			['Period'] = 0,
 			['Points'] = 0.4,
 			['SpellID'] = 117,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 159
+			['TargetType'] = 15
 		}
 	},
 	[118] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 160,
+			['Period'] = 0,
 			['Points'] = 2,
 			['SpellID'] = 118,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 160
+			['TargetType'] = 5
 		}
 	},
 	[119] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 161,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 119,
-			['EffectIndex'] = 0,
-			['TargetType'] = 11,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 161
+			['TargetType'] = 11
 		}
 	},
 	[120] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 162,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 120,
-			['EffectIndex'] = 0,
-			['TargetType'] = 20,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 12,
-			['ID'] = 162
+			['TargetType'] = 20
 		}
 	},
 	[121] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 163,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 121,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 12,
-			['ID'] = 163
+			['TargetType'] = 7
 		}
 	},
 	[122] = {
 		[1] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 164,
+			['Period'] = 3,
 			['Points'] = 0.3,
 			['SpellID'] = 122,
-			['EffectIndex'] = 0,
-			['TargetType'] = 21,
-			['Period'] = 3,
-			['Flags'] = 1,
-			['Effect'] = 7,
-			['ID'] = 164
+			['TargetType'] = 21
 		}
 	},
 	[123] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 165,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 123,
-			['EffectIndex'] = 0,
-			['TargetType'] = 14,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 165
+			['TargetType'] = 14
 		}
 	},
 	[124] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 166,
+			['Period'] = 0,
 			['Points'] = 0.6,
 			['SpellID'] = 124,
-			['EffectIndex'] = 0,
-			['TargetType'] = 9,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 166
+			['TargetType'] = 9
 		}
 	},
 	[125] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 167,
+			['Period'] = 0,
 			['Points'] = 0.6,
 			['SpellID'] = 125,
-			['EffectIndex'] = 0,
-			['TargetType'] = 20,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 167
+			['TargetType'] = 20
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 168,
+			['Period'] = 1,
 			['Points'] = -0.5,
 			['SpellID'] = 125,
-			['EffectIndex'] = 1,
-			['TargetType'] = 0,
-			['Period'] = 1,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 168
+			['TargetType'] = 0
 		}
 	},
 	[126] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 169,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 126,
-			['EffectIndex'] = 0,
-			['TargetType'] = 14,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 169
+			['TargetType'] = 14
 		}
 	},
 	[127] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 170,
+			['Period'] = 0,
 			['Points'] = 0.6,
 			['SpellID'] = 127,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 170
+			['TargetType'] = 15
 		}
 	},
 	[128] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 171,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 128,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 171
+			['TargetType'] = 17
 		}
 	},
 	[129] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 172,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 129,
-			['EffectIndex'] = 0,
-			['TargetType'] = 6,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 172
+			['TargetType'] = 6
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 173,
+			['Period'] = 1,
 			['Points'] = 0.5,
 			['SpellID'] = 129,
-			['EffectIndex'] = 1,
-			['TargetType'] = 6,
-			['Period'] = 1,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 173
+			['TargetType'] = 6
 		}
 	},
 	[130] = {
 		[1] = {
+			['Effect'] = 16,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 174,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 130,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 16,
-			['ID'] = 174
+			['TargetType'] = 1
 		}
 	},
 	[131] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 175,
+			['Period'] = 0,
 			['Points'] = 1.5,
 			['SpellID'] = 131,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 175
+			['TargetType'] = 17
 		}
 	},
 	[132] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 176,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 132,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 176
+			['TargetType'] = 15
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 177,
+			['Period'] = 1,
 			['Points'] = -0.25,
 			['SpellID'] = 132,
-			['EffectIndex'] = 1,
-			['TargetType'] = 15,
-			['Period'] = 1,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 177
+			['TargetType'] = 15
 		}
 	},
 	[133] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 178,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 133,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 178
+			['TargetType'] = 17
 		},
 		[2] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 179,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 133,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 179
+			['TargetType'] = 1
 		}
 	},
 	[134] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 180,
+			['Period'] = 0,
 			['Points'] = 0.25,
 			['SpellID'] = 134,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 14,
-			['ID'] = 180
+			['TargetType'] = 7
 		}
 	},
 	[135] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 181,
+			['Period'] = 0,
 			['Points'] = 3,
 			['SpellID'] = 135,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 181
+			['TargetType'] = 17
 		}
 	},
 	[136] = {
 		[1] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 182,
+			['Period'] = 3,
 			['Points'] = 1.5,
 			['SpellID'] = 136,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 3,
-			['Flags'] = 1,
-			['Effect'] = 7,
-			['ID'] = 182
+			['TargetType'] = 3
 		}
 	},
 	[137] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 183,
+			['Period'] = 0,
 			['Points'] = 0.25,
 			['SpellID'] = 137,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 183
+			['TargetType'] = 1
 		}
 	},
 	[138] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 184,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 138,
-			['EffectIndex'] = 0,
-			['TargetType'] = 9,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 184
+			['TargetType'] = 9
 		}
 	},
 	[139] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 185,
+			['Period'] = 0,
 			['Points'] = 4,
 			['SpellID'] = 139,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 185
+			['TargetType'] = 17
 		}
 	},
 	[140] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 186,
+			['Period'] = 0,
 			['Points'] = 0.6,
 			['SpellID'] = 140,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 186
+			['TargetType'] = 17
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 187,
+			['Period'] = 0,
 			['Points'] = -0.1,
 			['SpellID'] = 140,
-			['EffectIndex'] = 1,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 187
+			['TargetType'] = 17
 		}
 	},
 	[141] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 188,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 141,
-			['EffectIndex'] = 0,
-			['TargetType'] = 6,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 188
+			['TargetType'] = 6
 		}
 	},
 	[142] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 189,
+			['Period'] = 0,
 			['Points'] = 0.7,
 			['SpellID'] = 142,
-			['EffectIndex'] = 0,
-			['TargetType'] = 10,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 189
+			['TargetType'] = 10
 		}
 	},
 	[143] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 190,
+			['Period'] = 2,
 			['Points'] = 0.25,
 			['SpellID'] = 143,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 2,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 190
+			['TargetType'] = 1
 		}
 	},
 	[144] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 191,
+			['Period'] = 0,
 			['Points'] = -0.75,
 			['SpellID'] = 144,
-			['EffectIndex'] = 0,
-			['TargetType'] = 22,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 191
+			['TargetType'] = 22
 		}
 	},
 	[145] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 192,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 145,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 192
+			['TargetType'] = 3
 		}
 	},
 	[146] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 193,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 146,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 193
+			['TargetType'] = 5
 		}
 	},
 	[147] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 194,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 147,
-			['EffectIndex'] = 0,
-			['TargetType'] = 22,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 194
+			['TargetType'] = 22
 		}
 	},
 	[148] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 195,
+			['Period'] = 0,
 			['Points'] = 1.25,
 			['SpellID'] = 148,
-			['EffectIndex'] = 0,
-			['TargetType'] = 14,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 195
+			['TargetType'] = 14
 		}
 	},
 	[149] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 196,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 149,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 196
+			['TargetType'] = 15
 		}
 	},
 	[150] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 197,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 150,
-			['EffectIndex'] = 0,
-			['TargetType'] = 11,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 197
+			['TargetType'] = 11
 		}
 	},
 	[151] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 198,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 151,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 198
+			['TargetType'] = 3
 		}
 	},
 	[152] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 199,
+			['Period'] = 0,
 			['Points'] = 2,
 			['SpellID'] = 152,
-			['EffectIndex'] = 0,
-			['TargetType'] = 22,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 199
+			['TargetType'] = 22
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 200,
+			['Period'] = 1,
 			['Points'] = 0.5,
 			['SpellID'] = 152,
-			['EffectIndex'] = 1,
-			['TargetType'] = 22,
-			['Period'] = 1,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 200
+			['TargetType'] = 22
 		}
 	},
 	[153] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 201,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 153,
-			['EffectIndex'] = 0,
-			['TargetType'] = 11,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 201
+			['TargetType'] = 11
 		}
 	},
 	[154] = {
 		[1] = {
+			['Effect'] = 16,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 202,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 154,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 16,
-			['ID'] = 202
+			['TargetType'] = 1
 		}
 	},
 	[155] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 203,
+			['Period'] = 0,
 			['Points'] = -0.75,
 			['SpellID'] = 155,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 203
+			['TargetType'] = 7
 		}
 	},
 	[156] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 204,
+			['Period'] = 0,
 			['Points'] = 0.4,
 			['SpellID'] = 156,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 204
+			['TargetType'] = 7
 		}
 	},
 	[157] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 205,
+			['Period'] = 0,
 			['Points'] = 0.8,
 			['SpellID'] = 157,
-			['EffectIndex'] = 0,
-			['TargetType'] = 9,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 205
+			['TargetType'] = 9
 		}
 	},
 	[158] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 206,
+			['Period'] = 0,
 			['Points'] = 3,
 			['SpellID'] = 158,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 206
+			['TargetType'] = 17
 		}
 	},
 	[159] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 207,
+			['Period'] = 2,
 			['Points'] = -0.25,
 			['SpellID'] = 159,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 2,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 207
+			['TargetType'] = 7
 		}
 	},
 	[160] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 208,
+			['Period'] = 0,
 			['Points'] = 2,
 			['SpellID'] = 160,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 208
+			['TargetType'] = 7
 		}
 	},
 	[161] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 209,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 161,
-			['EffectIndex'] = 0,
-			['TargetType'] = 6,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 209
+			['TargetType'] = 6
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 210,
+			['Period'] = 0,
 			['Points'] = 0.25,
 			['SpellID'] = 161,
-			['EffectIndex'] = 1,
-			['TargetType'] = 6,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 210
+			['TargetType'] = 6
 		}
 	},
 	[162] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 211,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 162,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 211
+			['TargetType'] = 7
 		}
 	},
 	[163] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 212,
+			['Period'] = 0,
 			['Points'] = 4,
 			['SpellID'] = 163,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 212
+			['TargetType'] = 7
 		}
 	},
 	[164] = {
 		[1] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 0,
+			['Flags'] = 3,
+			['ID'] = 213,
+			['Period'] = 3,
 			['Points'] = 2,
 			['SpellID'] = 164,
-			['EffectIndex'] = 0,
-			['TargetType'] = 11,
-			['Period'] = 3,
-			['Flags'] = 3,
-			['Effect'] = 7,
-			['ID'] = 213
+			['TargetType'] = 11
 		}
 	},
 	[165] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 214,
+			['Period'] = 0,
 			['Points'] = 3,
 			['SpellID'] = 165,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 214
+			['TargetType'] = 3
 		}
 	},
 	[166] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 215,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 166,
-			['EffectIndex'] = 0,
-			['TargetType'] = 21,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 215
+			['TargetType'] = 21
 		},
 		[2] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 216,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 166,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 216
+			['TargetType'] = 1
 		}
 	},
 	[167] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 217,
+			['Period'] = 0,
 			['Points'] = 1.5,
 			['SpellID'] = 167,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 217
+			['TargetType'] = 5
 		}
 	},
 	[168] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 218,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 168,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 218
+			['TargetType'] = 3
 		}
 	},
 	[169] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 219,
+			['Period'] = 0,
 			['Points'] = 0.65,
 			['SpellID'] = 169,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 219
+			['TargetType'] = 3
 		},
 		[2] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 1,
+			['Flags'] = 3,
+			['ID'] = 220,
+			['Period'] = 3,
 			['Points'] = 0.5,
 			['SpellID'] = 169,
-			['EffectIndex'] = 1,
-			['TargetType'] = 3,
-			['Period'] = 3,
-			['Flags'] = 3,
-			['Effect'] = 7,
-			['ID'] = 220
+			['TargetType'] = 3
 		}
 	},
 	[170] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 221,
+			['Period'] = 0,
 			['Points'] = 0.6,
 			['SpellID'] = 170,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 221
+			['TargetType'] = 15
 		}
 	},
 	[171] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 222,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 171,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 222
+			['TargetType'] = 5
 		}
 	},
 	[172] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 223,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 172,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 223
+			['TargetType'] = 15
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 224,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 172,
-			['EffectIndex'] = 1,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 224
+			['TargetType'] = 15
 		}
 	},
 	[173] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 225,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 173,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 225
+			['TargetType'] = 5
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 226,
+			['Period'] = 0,
 			['Points'] = -0.25,
 			['SpellID'] = 173,
-			['EffectIndex'] = 1,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 226
+			['TargetType'] = 5
 		}
 	},
 	[174] = {
 		[1] = {
+			['Effect'] = 16,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 227,
+			['Period'] = 0,
 			['Points'] = 0.4,
 			['SpellID'] = 174,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 16,
-			['ID'] = 227
+			['TargetType'] = 1
 		}
 	},
 	[175] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 228,
+			['Period'] = 0,
 			['Points'] = 1.2,
 			['SpellID'] = 175,
-			['EffectIndex'] = 0,
-			['TargetType'] = 19,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 228
+			['TargetType'] = 19
 		}
 	},
 	[176] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 229,
+			['Period'] = 0,
 			['Points'] = 0.25,
 			['SpellID'] = 176,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 229
+			['TargetType'] = 7
 		}
 	},
 	[177] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 230,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 177,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 230
+			['TargetType'] = 3
 		}
 	},
 	[178] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 231,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 178,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 231
+			['TargetType'] = 5
 		},
 		[2] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 232,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 178,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 232
+			['TargetType'] = 1
 		}
 	},
 	[179] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 233,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 179,
-			['EffectIndex'] = 0,
-			['TargetType'] = 6,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 233
+			['TargetType'] = 6
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 234,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 179,
-			['EffectIndex'] = 1,
-			['TargetType'] = 6,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 234
+			['TargetType'] = 6
 		}
 	},
 	[180] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 235,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 180,
-			['EffectIndex'] = 0,
-			['TargetType'] = 20,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 235
+			['TargetType'] = 20
 		}
 	},
 	[181] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 236,
+			['Period'] = 0,
 			['Points'] = 1.5,
 			['SpellID'] = 181,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 236
+			['TargetType'] = 17
 		}
 	},
 	[182] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 237,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 182,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 237
+			['TargetType'] = 7
 		}
 	},
 	[183] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 238,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 183,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 238
+			['TargetType'] = 15
 		}
 	},
 	[184] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 239,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 184,
-			['EffectIndex'] = 0,
-			['TargetType'] = 11,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 239
+			['TargetType'] = 11
 		}
 	},
 	[185] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 240,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 185,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 240
+			['TargetType'] = 7
 		}
 	},
 	[186] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 241,
+			['Period'] = 0,
 			['Points'] = 2,
 			['SpellID'] = 186,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 241
+			['TargetType'] = 15
 		}
 	},
 	[187] = {
 		[1] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 0,
+			['Flags'] = 3,
+			['ID'] = 242,
+			['Period'] = 2,
 			['Points'] = 0.5,
 			['SpellID'] = 187,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 2,
-			['Flags'] = 3,
-			['Effect'] = 7,
-			['ID'] = 242
+			['TargetType'] = 7
 		}
 	},
 	[188] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 243,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 188,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 243
+			['TargetType'] = 3
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 244,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 188,
-			['EffectIndex'] = 1,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 244
+			['TargetType'] = 3
 		}
 	},
 	[189] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 245,
+			['Period'] = 0,
 			['Points'] = 2,
 			['SpellID'] = 189,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 245
+			['TargetType'] = 3
 		}
 	},
 	[190] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 246,
+			['Period'] = 0,
 			['Points'] = 1.5,
 			['SpellID'] = 190,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 246
+			['TargetType'] = 15
 		}
 	},
 	[191] = {
 		[1] = {
+			['Effect'] = 1,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 247,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 191,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 1,
-			['ID'] = 247
+			['TargetType'] = 7
 		},
 		[2] = {
+			['Effect'] = 2,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 248,
+			['Period'] = 0,
 			['Points'] = 0.1,
 			['SpellID'] = 191,
-			['EffectIndex'] = 1,
-			['TargetType'] = 6,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 2,
-			['ID'] = 248
+			['TargetType'] = 6
 		}
 	},
 	[192] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 249,
+			['Period'] = 0,
 			['Points'] = 1.6,
 			['SpellID'] = 192,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 249
+			['TargetType'] = 5
 		}
 	},
 	[193] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 250,
+			['Period'] = 0,
 			['Points'] = 3,
 			['SpellID'] = 193,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 250
+			['TargetType'] = 15
 		},
 		[2] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 251,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 193,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 251
+			['TargetType'] = 1
 		}
 	},
 	[194] = {
 		[1] = {
+			['Effect'] = 19,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 252,
+			['Period'] = 0,
 			['Points'] = 0.4,
 			['SpellID'] = 194,
-			['EffectIndex'] = 0,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 19,
-			['ID'] = 252
+			['TargetType'] = 2
 		},
 		[2] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 253,
+			['Period'] = 0,
 			['Points'] = -0.2,
 			['SpellID'] = 194,
-			['EffectIndex'] = 1,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 14,
-			['ID'] = 253
+			['TargetType'] = 2
 		},
 		[3] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 2,
+			['Flags'] = 1,
+			['ID'] = 254,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 194,
-			['EffectIndex'] = 2,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 254
+			['TargetType'] = 1
 		}
 	},
 	[195] = {
 		[1] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 0,
+			['Flags'] = 3,
+			['ID'] = 255,
+			['Period'] = 1,
 			['Points'] = 0.8,
 			['SpellID'] = 195,
-			['EffectIndex'] = 0,
-			['TargetType'] = 11,
-			['Period'] = 1,
-			['Flags'] = 3,
-			['Effect'] = 7,
-			['ID'] = 255
+			['TargetType'] = 11
 		}
 	},
 	[196] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 256,
+			['Period'] = 0,
 			['Points'] = 1.2,
 			['SpellID'] = 196,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 256
+			['TargetType'] = 3
 		},
 		[2] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 257,
+			['Period'] = 0,
 			['Points'] = 0.9,
 			['SpellID'] = 196,
-			['EffectIndex'] = 1,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 257
+			['TargetType'] = 3
 		},
 		[3] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 2,
+			['Flags'] = 1,
+			['ID'] = 258,
+			['Period'] = 0,
 			['Points'] = 0.6,
 			['SpellID'] = 196,
-			['EffectIndex'] = 2,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 258
+			['TargetType'] = 3
 		},
 		[4] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 3,
+			['Flags'] = 1,
+			['ID'] = 259,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 196,
-			['EffectIndex'] = 3,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 259
+			['TargetType'] = 3
 		}
 	},
 	[197] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 260,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 197,
-			['EffectIndex'] = 0,
-			['TargetType'] = 8,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 260
+			['TargetType'] = 8
 		}
 	},
 	[198] = {
 		[1] = {
+			['Effect'] = 13,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 261,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 198,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 13,
-			['ID'] = 261
+			['TargetType'] = 1
 		},
 		[2] = {
+			['Effect'] = 16,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 262,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 198,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 16,
-			['ID'] = 262
+			['TargetType'] = 1
 		}
 	},
 	[199] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 263,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 199,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 263
+			['TargetType'] = 15
 		}
 	},
 	[200] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 264,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 200,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 264
+			['TargetType'] = 3
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 265,
+			['Period'] = 1,
 			['Points'] = -0.5,
 			['SpellID'] = 200,
-			['EffectIndex'] = 1,
-			['TargetType'] = 3,
-			['Period'] = 1,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 265
+			['TargetType'] = 3
 		}
 	},
 	[201] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 266,
+			['Period'] = 0,
 			['Points'] = 2,
 			['SpellID'] = 201,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 266
+			['TargetType'] = 17
 		}
 	},
 	[202] = {
 		[1] = {
+			['Effect'] = 9,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 267,
+			['Period'] = 0,
 			['Points'] = 2,
 			['SpellID'] = 202,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 9,
-			['ID'] = 267
+			['TargetType'] = 7
 		}
 	},
 	[203] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 268,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 203,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 268
+			['TargetType'] = 15
 		}
 	},
 	[204] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 269,
+			['Period'] = 0,
 			['Points'] = 1.5,
 			['SpellID'] = 204,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 269
+			['TargetType'] = 3
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 270,
+			['Period'] = 2,
 			['Points'] = -0.5,
 			['SpellID'] = 204,
-			['EffectIndex'] = 1,
-			['TargetType'] = 3,
-			['Period'] = 2,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 270
+			['TargetType'] = 3
 		}
 	},
 	[205] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 271,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 205,
-			['EffectIndex'] = 0,
-			['TargetType'] = 14,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 271
+			['TargetType'] = 14
 		}
 	},
 	[206] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 272,
+			['Period'] = 0,
 			['Points'] = 1.5,
 			['SpellID'] = 206,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 272
+			['TargetType'] = 3
 		}
 	},
 	[207] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 273,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 207,
-			['EffectIndex'] = 0,
-			['TargetType'] = 13,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 273
+			['TargetType'] = 13
 		}
 	},
 	[208] = {
 		[1] = {
+			['Effect'] = 9,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 274,
+			['Period'] = 0,
 			['Points'] = 2,
 			['SpellID'] = 208,
-			['EffectIndex'] = 0,
-			['TargetType'] = 21,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 9,
-			['ID'] = 274
+			['TargetType'] = 21
 		}
 	},
 	[209] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 275,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 209,
-			['EffectIndex'] = 0,
-			['TargetType'] = 21,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 275
+			['TargetType'] = 21
 		}
 	},
 	[210] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 276,
+			['Period'] = 0,
 			['Points'] = 2,
 			['SpellID'] = 210,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 276
+			['TargetType'] = 7
 		}
 	},
 	[211] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 277,
+			['Period'] = 0,
 			['Points'] = 1.5,
 			['SpellID'] = 211,
-			['EffectIndex'] = 0,
-			['TargetType'] = 11,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 277
+			['TargetType'] = 11
 		}
 	},
 	[212] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 278,
+			['Period'] = 0,
 			['Points'] = 2,
 			['SpellID'] = 212,
-			['EffectIndex'] = 0,
-			['TargetType'] = 19,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 278
+			['TargetType'] = 19
 		}
 	},
 	[213] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 279,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 213,
-			['EffectIndex'] = 0,
-			['TargetType'] = 10,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 279
+			['TargetType'] = 10
 		}
 	},
 	[214] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 280,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 214,
-			['EffectIndex'] = 0,
-			['TargetType'] = 11,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 280
+			['TargetType'] = 11
 		}
 	},
 	[215] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 281,
+			['Period'] = 0,
 			['Points'] = 3,
 			['SpellID'] = 215,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 281
+			['TargetType'] = 3
 		}
 	},
 	[216] = {
 		[1] = {
+			['Effect'] = 10,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 282,
+			['Period'] = 0,
 			['Points'] = 3,
 			['SpellID'] = 216,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 10,
-			['ID'] = 282
+			['TargetType'] = 1
 		}
 	},
 	[217] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 283,
+			['Period'] = 0,
 			['Points'] = 2,
 			['SpellID'] = 217,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 283
+			['TargetType'] = 17
 		}
 	},
 	[218] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 284,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 218,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 284
+			['TargetType'] = 1
 		}
 	},
 	[219] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 285,
+			['Period'] = 0,
 			['Points'] = 2,
 			['SpellID'] = 219,
-			['EffectIndex'] = 0,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 285
+			['TargetType'] = 2
 		},
 		[2] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 286,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 219,
-			['EffectIndex'] = 1,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 286
+			['TargetType'] = 2
 		}
 	},
 	[220] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 287,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 220,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 287
+			['TargetType'] = 15
 		}
 	},
 	[221] = {
 		[1] = {
+			['Effect'] = 10,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 288,
+			['Period'] = 0,
 			['Points'] = 1.5,
 			['SpellID'] = 221,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 10,
-			['ID'] = 288
+			['TargetType'] = 1
 		}
 	},
 	[222] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 289,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 222,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 289
+			['TargetType'] = 3
 		},
 		[2] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 1,
+			['Flags'] = 3,
+			['ID'] = 290,
+			['Period'] = 2,
 			['Points'] = 0.3,
 			['SpellID'] = 222,
-			['EffectIndex'] = 1,
-			['TargetType'] = 3,
-			['Period'] = 2,
-			['Flags'] = 3,
-			['Effect'] = 7,
-			['ID'] = 290
+			['TargetType'] = 3
 		}
 	},
 	[223] = {
 		[1] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 291,
+			['Period'] = 1,
 			['Points'] = 0.1,
 			['SpellID'] = 223,
-			['EffectIndex'] = 0,
-			['TargetType'] = 23,
-			['Period'] = 1,
-			['Flags'] = 1,
-			['Effect'] = 7,
-			['ID'] = 291
+			['TargetType'] = 23
 		}
 	},
 	[224] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 292,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 224,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 292
+			['TargetType'] = 15
 		}
 	},
 	[225] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 293,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 225,
-			['EffectIndex'] = 0,
-			['TargetType'] = 11,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 293
+			['TargetType'] = 11
 		}
 	},
 	[226] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 294,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 226,
-			['EffectIndex'] = 0,
-			['TargetType'] = 11,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 294
+			['TargetType'] = 11
 		}
 	},
 	[227] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 295,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 227,
-			['EffectIndex'] = 0,
-			['TargetType'] = 20,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 3,
-			['ID'] = 295
+			['TargetType'] = 20
 		}
 	},
 	[228] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 296,
+			['Period'] = 0,
 			['Points'] = 10,
 			['SpellID'] = 228,
-			['EffectIndex'] = 0,
-			['TargetType'] = 23,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 296
+			['TargetType'] = 23
 		}
 	},
 	[229] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 297,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 229,
-			['EffectIndex'] = 0,
-			['TargetType'] = 21,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 297
+			['TargetType'] = 21
 		}
 	},
 	[230] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 298,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 230,
-			['EffectIndex'] = 0,
-			['TargetType'] = 24,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 298
+			['TargetType'] = 24
 		}
 	},
 	[231] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 299,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 231,
-			['EffectIndex'] = 0,
-			['TargetType'] = 20,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 299
+			['TargetType'] = 20
 		}
 	},
 	[232] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 300,
+			['Period'] = 3,
 			['Points'] = -0.5,
 			['SpellID'] = 232,
-			['EffectIndex'] = 0,
-			['TargetType'] = 20,
-			['Period'] = 3,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 300
+			['TargetType'] = 20
 		}
 	},
 	[233] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 301,
+			['Period'] = 0,
 			['Points'] = 1.5,
 			['SpellID'] = 233,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 301
+			['TargetType'] = 3
 		}
 	},
 	[234] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 302,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 234,
-			['EffectIndex'] = 0,
-			['TargetType'] = 21,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 302
+			['TargetType'] = 21
 		}
 	},
 	[235] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 303,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 235,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 303
+			['TargetType'] = 5
 		}
 	},
 	[236] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 304,
+			['Period'] = 2,
 			['Points'] = -0.5,
 			['SpellID'] = 236,
-			['EffectIndex'] = 0,
-			['TargetType'] = 6,
-			['Period'] = 2,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 304
+			['TargetType'] = 6
 		}
 	},
 	[237] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 305,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 237,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 305
+			['TargetType'] = 15
 		}
 	},
 	[238] = {
 		[1] = {
+			['Effect'] = 9,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 306,
+			['Period'] = 0,
 			['Points'] = 2,
 			['SpellID'] = 238,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 9,
-			['ID'] = 306
+			['TargetType'] = 7
 		}
 	},
 	[239] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 307,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 239,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 307
+			['TargetType'] = 17
 		}
 	},
 	[240] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 308,
+			['Period'] = 0,
 			['Points'] = 0.25,
 			['SpellID'] = 240,
-			['EffectIndex'] = 0,
-			['TargetType'] = 13,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 308
+			['TargetType'] = 13
 		}
 	},
 	[241] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 309,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 241,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 309
+			['TargetType'] = 5
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 310,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 241,
-			['EffectIndex'] = 1,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 310
+			['TargetType'] = 5
 		}
 	},
 	[242] = {
 		[1] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 311,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 242,
-			['EffectIndex'] = 0,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 311
+			['TargetType'] = 2
 		},
 		[2] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 312,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 242,
-			['EffectIndex'] = 1,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 312
+			['TargetType'] = 2
 		}
 	},
 	[243] = {
 		[1] = {
+			['Effect'] = 9,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 313,
+			['Period'] = 0,
 			['Points'] = 0,
 			['SpellID'] = 243,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 9,
-			['ID'] = 313
+			['TargetType'] = 7
 		},
 		[2] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 314,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 243,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 314
+			['TargetType'] = 1
 		}
 	},
 	[244] = {
 		[1] = {
+			['Effect'] = 19,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 315,
+			['Period'] = 0,
 			['Points'] = 2,
 			['SpellID'] = 244,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 19,
-			['ID'] = 315
+			['TargetType'] = 1
 		},
 		[2] = {
+			['Effect'] = 20,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 316,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 244,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 20,
-			['ID'] = 316
+			['TargetType'] = 1
 		},
 		[3] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 2,
+			['Flags'] = 1,
+			['ID'] = 317,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 244,
-			['EffectIndex'] = 2,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 317
+			['TargetType'] = 3
 		}
 	},
 	[245] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 318,
+			['Period'] = 0,
 			['Points'] = 1.2,
 			['SpellID'] = 245,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 318
+			['TargetType'] = 3
 		}
 	},
 	[246] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 319,
+			['Period'] = 0,
 			['Points'] = 1.5,
 			['SpellID'] = 246,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 319
+			['TargetType'] = 3
 		}
 	},
 	[247] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 320,
+			['Period'] = 0,
 			['Points'] = 0.1,
 			['SpellID'] = 247,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 320
+			['TargetType'] = 3
 		},
 		[2] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 321,
+			['Period'] = 0,
 			['Points'] = 0.2,
 			['SpellID'] = 247,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 321
+			['TargetType'] = 1
 		}
 	},
 	[248] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 322,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 248,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 322
+			['TargetType'] = 3
 		},
 		[2] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 323,
+			['Period'] = 1,
 			['Points'] = 0.15,
 			['SpellID'] = 248,
-			['EffectIndex'] = 1,
-			['TargetType'] = 3,
-			['Period'] = 1,
-			['Flags'] = 1,
-			['Effect'] = 7,
-			['ID'] = 323
+			['TargetType'] = 3
 		}
 	},
 	[249] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 324,
+			['Period'] = 0,
 			['Points'] = 0.6,
 			['SpellID'] = 249,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 324
+			['TargetType'] = 3
 		},
 		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 325,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 249,
-			['EffectIndex'] = 1,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 325
+			['TargetType'] = 3
 		}
 	},
 	[250] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 326,
+			['Period'] = 0,
 			['Points'] = 0.8,
 			['SpellID'] = 250,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 326
+			['TargetType'] = 5
 		}
 	},
 	[251] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 327,
+			['Period'] = 0,
 			['Points'] = -0.2,
 			['SpellID'] = 251,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 327
+			['TargetType'] = 7
 		}
 	},
 	[252] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 328,
+			['Period'] = 0,
 			['Points'] = 0.6,
 			['SpellID'] = 252,
-			['EffectIndex'] = 0,
-			['TargetType'] = 9,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 328
+			['TargetType'] = 9
 		},
 		[2] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 1,
+			['Flags'] = 0,
+			['ID'] = 329,
+			['Period'] = 0,
 			['Points'] = 0.25,
 			['SpellID'] = 252,
-			['EffectIndex'] = 1,
-			['TargetType'] = 9,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 329
+			['TargetType'] = 9
 		}
 	},
 	[253] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 330,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 253,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 330
+			['TargetType'] = 15
 		}
 	},
 	[254] = {
 		[1] = {
+			['Effect'] = 16,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 331,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 254,
-			['EffectIndex'] = 0,
-			['TargetType'] = 22,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 16,
-			['ID'] = 331
+			['TargetType'] = 22
 		}
 	},
 	[255] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 332,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 255,
-			['EffectIndex'] = 0,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 332
+			['TargetType'] = 2
 		}
 	},
 	[256] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 333,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 256,
-			['EffectIndex'] = 0,
-			['TargetType'] = 11,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 333
+			['TargetType'] = 11
 		}
 	},
 	[257] = {
 		[1] = {
+			['Effect'] = 10,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 334,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 257,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 10,
-			['ID'] = 334
+			['TargetType'] = 1
 		}
 	},
 	[258] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 335,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 258,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 335
+			['TargetType'] = 3
 		},
 		[2] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 1,
+			['Flags'] = 3,
+			['ID'] = 336,
+			['Period'] = 3,
 			['Points'] = 0.5,
 			['SpellID'] = 258,
-			['EffectIndex'] = 1,
-			['TargetType'] = 3,
-			['Period'] = 3,
-			['Flags'] = 3,
-			['Effect'] = 7,
-			['ID'] = 336
+			['TargetType'] = 3
 		}
 	},
 	[259] = {
 		[1] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 337,
+			['Period'] = 3,
 			['Points'] = 0.3,
 			['SpellID'] = 259,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 3,
-			['Flags'] = 1,
-			['Effect'] = 7,
-			['ID'] = 337
+			['TargetType'] = 3
 		}
 	},
 	[260] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 338,
+			['Period'] = 3,
 			['Points'] = 1.5,
 			['SpellID'] = 260,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 3,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 338
+			['TargetType'] = 5
 		}
 	},
 	[261] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 339,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 261,
-			['EffectIndex'] = 0,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 339
+			['TargetType'] = 2
 		}
 	},
 	[262] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 340,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 262,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 340
+			['TargetType'] = 15
 		}
 	},
 	[263] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 341,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 263,
-			['EffectIndex'] = 0,
-			['TargetType'] = 11,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 341
+			['TargetType'] = 11
 		}
 	},
 	[264] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 342,
+			['Period'] = 0,
 			['Points'] = 3,
 			['SpellID'] = 264,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 342
+			['TargetType'] = 5
 		}
 	},
 	[265] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 343,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 265,
-			['EffectIndex'] = 0,
-			['TargetType'] = 13,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 343
+			['TargetType'] = 13
 		}
 	},
 	[266] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 344,
+			['Period'] = 0,
 			['Points'] = 10,
 			['SpellID'] = 266,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 344
+			['TargetType'] = 3
 		}
 	},
 	[267] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 345,
+			['Period'] = 0,
 			['Points'] = 1.5,
 			['SpellID'] = 267,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 345
+			['TargetType'] = 5
 		}
 	},
 	[268] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 346,
+			['Period'] = 0,
 			['Points'] = -0.3,
 			['SpellID'] = 268,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 346
+			['TargetType'] = 15
 		}
 	},
 	[269] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 347,
+			['Period'] = 0,
 			['Points'] = 1.2,
 			['SpellID'] = 269,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 347
+			['TargetType'] = 15
 		}
 	},
 	[270] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 348,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 270,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 348
+			['TargetType'] = 3
 		}
 	},
 	[271] = {
 		[1] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 349,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 271,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 7,
-			['ID'] = 349
+			['TargetType'] = 5
 		}
 	},
 	[272] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 350,
+			['Period'] = 0,
 			['Points'] = 1.5,
 			['SpellID'] = 272,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 350
+			['TargetType'] = 5
 		}
 	},
 	[273] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 351,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 273,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 351
+			['TargetType'] = 3
 		}
 	},
 	[274] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 352,
+			['Period'] = 0,
 			['Points'] = 1.2,
 			['SpellID'] = 274,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 352
+			['TargetType'] = 15
 		}
 	},
 	[275] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 353,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 275,
-			['EffectIndex'] = 0,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 353
+			['TargetType'] = 2
 		}
 	},
 	[276] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 354,
+			['Period'] = 0,
 			['Points'] = 0.25,
 			['SpellID'] = 276,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 354
+			['TargetType'] = 5
 		},
 		[2] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 1,
+			['Flags'] = 3,
+			['ID'] = 355,
+			['Period'] = 3,
 			['Points'] = 0.5,
 			['SpellID'] = 276,
-			['EffectIndex'] = 1,
-			['TargetType'] = 5,
-			['Period'] = 3,
-			['Flags'] = 3,
-			['Effect'] = 7,
-			['ID'] = 355
+			['TargetType'] = 5
 		}
 	},
 	[277] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 356,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 277,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 356
+			['TargetType'] = 1
 		}
 	},
 	[278] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 357,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 278,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 357
+			['TargetType'] = 5
 		}
 	},
 	[279] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 358,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 279,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 358
+			['TargetType'] = 17
 		}
 	},
 	[280] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 359,
+			['Period'] = 0,
 			['Points'] = 2.5,
 			['SpellID'] = 280,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 359
+			['TargetType'] = 15
 		}
 	},
 	[281] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 360,
+			['Period'] = 3,
 			['Points'] = 1.5,
 			['SpellID'] = 281,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 3,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 360
+			['TargetType'] = 5
 		}
 	},
 	[282] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 361,
+			['Period'] = 0,
 			['Points'] = 10,
 			['SpellID'] = 282,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 361
+			['TargetType'] = 3
 		}
 	},
 	[283] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 362,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 283,
-			['EffectIndex'] = 0,
-			['TargetType'] = 13,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 362
+			['TargetType'] = 13
 		}
 	},
 	[284] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 363,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 284,
-			['EffectIndex'] = 0,
-			['TargetType'] = 22,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 363
+			['TargetType'] = 22
 		}
 	},
 	[285] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 364,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 285,
-			['EffectIndex'] = 0,
-			['TargetType'] = 7,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 364
+			['TargetType'] = 7
 		}
 	},
 	[286] = {
 		[1] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 365,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 286,
-			['EffectIndex'] = 0,
-			['TargetType'] = 2,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 12,
-			['ID'] = 365
+			['TargetType'] = 2
 		}
 	},
 	[287] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 366,
+			['Period'] = 0,
 			['Points'] = -0.5,
 			['SpellID'] = 287,
-			['EffectIndex'] = 0,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 366
+			['TargetType'] = 1
 		}
 	},
 	[288] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 367,
+			['Period'] = 0,
 			['Points'] = 0.6,
 			['SpellID'] = 288,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 367
+			['TargetType'] = 17
 		}
 	},
 	[289] = {
 		[1] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 0,
+			['Flags'] = 3,
+			['ID'] = 368,
+			['Period'] = 3,
 			['Points'] = 1,
 			['SpellID'] = 289,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 3,
-			['Flags'] = 3,
-			['Effect'] = 7,
-			['ID'] = 368
+			['TargetType'] = 5
 		}
 	},
 	[290] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 369,
+			['Period'] = 3,
 			['Points'] = 1.5,
 			['SpellID'] = 290,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 3,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 369
+			['TargetType'] = 5
 		}
 	},
 	[291] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 370,
+			['Period'] = 3,
 			['Points'] = 1,
 			['SpellID'] = 291,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 3,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 370
+			['TargetType'] = 15
 		}
 	},
 	[292] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 371,
+			['Period'] = 0,
 			['Points'] = 0.5,
 			['SpellID'] = 292,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 371
+			['TargetType'] = 3
 		},
 		[2] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 372,
+			['Period'] = 0,
 			['Points'] = 0.75,
 			['SpellID'] = 292,
-			['EffectIndex'] = 1,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 372
+			['TargetType'] = 3
 		}
 	},
 	[293] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 373,
+			['Period'] = 0,
 			['Points'] = 0.6,
 			['SpellID'] = 293,
-			['EffectIndex'] = 0,
-			['TargetType'] = 15,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 373
+			['TargetType'] = 15
 		}
 	},
 	[294] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 374,
+			['Period'] = 0,
 			['Points'] = 2,
 			['SpellID'] = 294,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 374
+			['TargetType'] = 3
 		}
 	},
 	[295] = {
 		[1] = {
+			['Effect'] = 14,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 375,
+			['Period'] = 2,
 			['Points'] = 0.5,
 			['SpellID'] = 295,
-			['EffectIndex'] = 0,
-			['TargetType'] = 3,
-			['Period'] = 2,
-			['Flags'] = 0,
-			['Effect'] = 14,
-			['ID'] = 375
+			['TargetType'] = 3
 		}
 	},
 	[296] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 376,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 296,
-			['EffectIndex'] = 0,
-			['TargetType'] = 17,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 376
+			['TargetType'] = 17
 		}
 	},
 	[297] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 377,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 297,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 377
+			['TargetType'] = 5
 		},
 		[2] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 378,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 297,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 378
+			['TargetType'] = 1
 		}
 	},
 	[298] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 379,
+			['Period'] = 0,
 			['Points'] = 1,
 			['SpellID'] = 298,
-			['EffectIndex'] = 0,
-			['TargetType'] = 21,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 379
+			['TargetType'] = 21
 		},
 		[2] = {
+			['Effect'] = 4,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 380,
+			['Period'] = 0,
 			['Points'] = 0.3,
 			['SpellID'] = 298,
-			['EffectIndex'] = 1,
-			['TargetType'] = 1,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 4,
-			['ID'] = 380
+			['TargetType'] = 1
 		}
 	},
 	[299] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 381,
+			['Period'] = 0,
 			['Points'] = 2,
 			['SpellID'] = 299,
-			['EffectIndex'] = 0,
-			['TargetType'] = 5,
-			['Period'] = 0,
-			['Flags'] = 1,
-			['Effect'] = 3,
-			['ID'] = 381
+			['TargetType'] = 5
 		}
 	},
 	[300] = {
 		[1] = {
+			['Effect'] = 7,
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 383,
+			['Period'] = 1,
 			['Points'] = 0.05,
 			['SpellID'] = 300,
-			['EffectIndex'] = 0,
-			['TargetType'] = 23,
-			['Period'] = 1,
-			['Flags'] = 1,
-			['Effect'] = 7,
-			['ID'] = 383
+			['TargetType'] = 23
 		}
 	},
 	[301] = {
 		[1] = {
+			['Effect'] = 3,
+			['EffectIndex'] = 0,
+			['Flags'] = 0,
+			['ID'] = 384,
+			['Period'] = 0,
 			['Points'] = 0.1,
 			['SpellID'] = 301,
-			['EffectIndex'] = 0,
-			['TargetType'] = 20,
-			['Period'] = 0,
-			['Flags'] = 0,
+			['TargetType'] = 20
+		}
+	},
+	[302] = {
+		[1] = {
 			['Effect'] = 3,
-			['ID'] = 384
+			['EffectIndex'] = 0,
+			['Flags'] = 1,
+			['ID'] = 385,
+			['Period'] = 2,
+			['Points'] = 0.2,
+			['SpellID'] = 302,
+			['TargetType'] = 7
+		},
+		[2] = {
+			['Effect'] = 12,
+			['EffectIndex'] = 1,
+			['Flags'] = 1,
+			['ID'] = 386,
+			['Period'] = 0,
+			['Points'] = -0.2,
+			['SpellID'] = 302,
+			['TargetType'] = 7
 		}
 	}
 }

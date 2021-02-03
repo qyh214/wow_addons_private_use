@@ -5,7 +5,7 @@ local DBM = DBM
 local GetPlayerFactionGroup = GetPlayerFactionGroup or UnitFactionGroup -- Classic Compat fix
 local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
-mod:SetRevision("20210124083458")
+mod:SetRevision("20210128233825")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 mod:RegisterEvents(
 	"ZONE_CHANGED_NEW_AREA",
@@ -292,7 +292,7 @@ do
 	local C_UIWidgetManager, TimerTracker, IsInInstance = C_UIWidgetManager, TimerTracker, IsInInstance
 	local FACTION_ALLIANCE = FACTION_ALLIANCE
 	local flagTimer			= mod:NewTimer(12, "TimerFlag", "132483") -- Interface\\icons\\inv_banner_02.blp
-	local remainingTimer	= mod:NewTimer(0, "TimerRemaining", GetPlayerFactionGroup("player") == "Alliance" and "132486" or "132485") -- Interface\\Icons\\INV_BannerPVP_02.blp || Interface\\Icons\\INV_BannerPVP_01.blp
+	local remainingTimer	= mod:NewTimer(120, "TimerRemaining", GetPlayerFactionGroup("player") == "Alliance" and "132486" or "132485") -- Interface\\Icons\\INV_BannerPVP_02.blp || Interface\\Icons\\INV_BannerPVP_01.blp
 	local vulnerableTimer, timerShadow, timerDamp
 	if not isClassic then
 		vulnerableTimer	= mod:NewNextTimer(60, 46392)
@@ -308,6 +308,9 @@ do
 				for _, bar in ipairs(TimerTracker.timerList) do
 					bar.bar:Hide()
 				end
+			end
+			if not timeSeconds or type(timeSeconds) ~= "number" or timeSeconds < 1 then
+				DBM:Debug("Uh oh, START_TIMER returned an invalid value: " .. (timeSeconds or "nil"))
 			end
 			if not remainingTimer:IsStarted() then
 				remainingTimer:Start(timeSeconds)

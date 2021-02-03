@@ -1,10 +1,16 @@
-lightweight tag af14e0810659c5779cbe0fa7dee375c8208adfea DetailsRetail.9.0.2.8156.144
+lightweight tag c72cdea178e70dcacaef42aefae12753de93f758 DetailsRetail.9.0.2.8192b.144
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Thu Jan 21 17:52:08 2021 -0300
+Date:	Fri Jan 29 14:28:54 2021 -0300
 
-commit af14e0810659c5779cbe0fa7dee375c8208adfea
+commit c72cdea178e70dcacaef42aefae12753de93f758
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Thu Jan 21 17:52:08 2021 -0300
+Date:   Fri Jan 29 14:28:54 2021 -0300
 
-    General fixes
+    Fix the enoucnter table not found bug from latest version
+
+commit a128d8b0c06f5c51cad219d0ff39bbf417bc493a
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Fri Jan 29 11:17:46 2021 -0300
+
+    Removed raidinfo for old raids
 

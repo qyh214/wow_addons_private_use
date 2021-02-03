@@ -162,7 +162,7 @@ function Unit:getDamageMultiplier(targetUnit)
     end
 
     for _, value in pairs(buffs) do
-        multiplier = multiplier + value
+        multiplier = multiplier * (1 + value)
         if value > 0 then positive_multiplier = positive_multiplier * (1 + value) end
     end
 

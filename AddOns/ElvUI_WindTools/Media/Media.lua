@@ -145,17 +145,21 @@ do
 		LSM:Register("font", "Accidental Presidency (en)", MediaPath .. "Fonts/AccidentalPresidency.ttf", region)
 		LSM:Register("font", "Montserrat (en)", MediaPath .. "Fonts/Montserrat-ExtraBold.ttf", region)
 		LSM:Register("font", "Roadway (en)", MediaPath .. "Fonts/Roadway.ttf", region)
+		LSM:Register("font", "Homespun (en)", "Interface/Addons/ElvUI/Media/Fonts/Homespun.ttf", region)
+		LSM:Register("font", "ContinuumMedium (en)", "Interface/Addons/ElvUI/Media/Fonts/ContinuumMedium.ttf", region)
 		W.CompatibleFont = true
 	else
 		LSM:Register("font", "Accidental Presidency", MediaPath .. "Fonts/AccidentalPresidency.ttf", LSM.LOCALE_BIT_western)
 		LSM:Register("font", "Montserrat", MediaPath .. "Fonts/Montserrat-ExtraBold.ttf", LSM.LOCALE_BIT_western)
 		LSM:Register("font", "Roadway", MediaPath .. "Fonts/Roadway.ttf", LSM.LOCALE_BIT_western)
+		LSM:Register("font", "Visitor", MediaPath .. "Fonts/Visitor.ttf", LSM.LOCALE_BIT_western)
 		W.CompatibleFont = false
 	end
 end
 
 LSM:Register("statusbar", "WindTools Glow", MediaPath .. "Textures/StatusbarGlow.tga")
 LSM:Register("statusbar", "WindTools Flat", MediaPath .. "Textures/StatusbarFlat.blp")
+LSM:Register("statusbar", "WindTools Light", MediaPath .. "Textures/StatusbarLight.tga")
 
 LSM:Register("sound", "OnePlus Light", MediaPath .. "Sounds/OnePlusLight.ogg")
 LSM:Register("sound", "OnePlus Surprise", MediaPath .. "Sounds/OnePlusSurprise.ogg")

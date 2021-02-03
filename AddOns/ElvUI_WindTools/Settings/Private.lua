@@ -288,8 +288,11 @@ V.tooltips = {
 		enable = true,
 		raids = {
 			enable = true,
-			["Castle Nathria"] = true,
-			["Ny'alotha, The Waking City"] = true
+			["Castle Nathria"] = true
+		},
+		special = {
+			enable = true,
+			["Shadowlands Keystone Master: Season One"] = true
 		},
 		mythicDungeons = {
 			enable = true,

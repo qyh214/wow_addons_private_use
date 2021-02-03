@@ -9,7 +9,7 @@ P.announcement = {
         enable = true,
         onlySourceIsPlayer = false,
         raidWarning = false,
-        text = L["%player% casted %spell% -> %target%"],
+        text = L["%player% cast %spell% -> %target%"],
         channel = {
             solo = "NONE",
             party = "PARTY",
@@ -159,7 +159,7 @@ P.announcement = {
         forceSourceIsPlayer = true,
         forceDestIsPlayer = false,
         raidWarning = false,
-        text = L["%player% casted %spell% -> %target%"],
+        text = L["%player% cast %spell% -> %target%"],
         channel = {
             solo = "NONE",
             party = "PARTY",
@@ -216,7 +216,7 @@ P.announcement = {
                 enable = true,
                 includePlayer = true,
                 raidWarning = false,
-                text = L["%player% casted %spell%, today's special is Anchovy Pie!"]
+                text = L["%player% cast %spell%, today's special is Anchovy Pie!"]
             },
             feasts = {
                 enable = true,
@@ -242,6 +242,13 @@ P.announcement = {
                 raidWarning = false,
                 text = L["%player% opened %spell%!"]
             }
+        }
+    },
+    keystone = {
+        enable = true,
+        text = L["My new keystone is %keystone%."],
+        channel = {
+            party = "PARTY"
         }
     }
 }
@@ -315,7 +322,9 @@ P.item = {
     extraItemsBar = {
         enable = true,
         customList = {},
-        blackList = {},
+        blackList = {
+            [183040] = true
+        },
         bar1 = {
             enable = true,
             mouseOver = false,
@@ -356,7 +365,7 @@ P.item = {
                     b = 1
                 }
             },
-            include = "QUEST,BANNER,EQUIP,TORGHAST"
+            include = "QUEST,BANNER,EQUIP,TORGHAST,OPENABLE"
         },
         bar2 = {
             enable = true,

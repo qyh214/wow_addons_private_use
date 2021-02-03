@@ -46,7 +46,6 @@ local BlizzardFrames = {
     "ReportCheatingDialog",
     "SpellBookFrame",
     "SplashFrame",
-    "StackSplitFrame",
     "TabardFrame",
     "TaxiFrame",
     "TradeFrame",
@@ -170,7 +169,8 @@ local BlizzardFramesOnDemand = {
         "GarrisonRecruitSelectFrame",
         "GarrisonShipyardFrame",
         "OrderHallMissionFrame",
-        "BFAMissionFrame"
+        "BFAMissionFrame",
+        "CovenantMissionFrame"
     },
     ["Blizzard_GMChatUI"] = {
         "GMChatStatusFrame"

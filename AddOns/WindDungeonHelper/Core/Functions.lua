@@ -1,10 +1,13 @@
 local W, F, L, P, O = unpack(select(2, ...))
 
+local _G = _G
+
 local format = format
 local print = print
 local select = select
 local type = type
 
+local CreateFrame = CreateFrame
 local GetClassColor = GetClassColor
 
 local function RGBToHex(r, g, b)

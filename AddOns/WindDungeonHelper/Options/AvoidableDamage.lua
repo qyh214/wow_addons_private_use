@@ -70,6 +70,8 @@ O.avoidableDamage = {
             end,
             set = function(info, value)
                 W.db[info[#info - 2]][info[#info - 1]][info[#info]] = value
+                AD:ResetAuthority()
+                W:RefreshOptionsAfter(1)
             end,
             args = {
                 enable = {

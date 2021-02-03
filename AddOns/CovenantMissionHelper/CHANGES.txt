@@ -1,3 +1,27 @@
+commit 46a6b1886ad35a4ff289fd3d410d06f246a1c079
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Sat Jan 30 09:10:58 2021 +0700
+
+    Blizzard changed spell damage of some Ventyr and Kyrian followers
+
+commit 46a6b1886ad35a4ff289fd3d410d06f246a1c079
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Sat Jan 30 09:10:58 2021 +0700
+
+    Blizzard changed spell damage of some Ventyr and Kyrian followers
+
+commit 9a64e0dcac0ad8374838ca6e697404c4cecce580
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Thu Jan 28 14:27:58 2021 +0700
+
+    Reverted last change of damage modifier's calculation
+
+commit 9a64e0dcac0ad8374838ca6e697404c4cecce580
+Author: Kreolix <kreolix@yandex.ru>
+Date:   Thu Jan 28 14:27:58 2021 +0700
+
+    Reverted last change of damage modifier's calculation
+
 commit 445fad2f7d21f2fa4a420a211ee14b7137193df2
 Author: Kreolix <kreolix@yandex.ru>
 Date:   Mon Jan 25 01:00:23 2021 +0700

@@ -10,11 +10,13 @@ local pairs = pairs
 local print = print
 local select = select
 local sort = sort
+local strjoin = strjoin
 local strmatch = strmatch
 local strsplit = strsplit
 local tinsert = tinsert
 local tonumber = tonumber
 local type = type
+local unpack = unpack
 local wipe = wipe
 
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
@@ -319,6 +321,11 @@ local MistakeData = {
             spell = 317367
         },
         {
+            -- 噁心爆發 (染疫嘔泥者死亡綠圈)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 321041
+        },
+        {
             -- 骸骨風暴
             type = MISTAKE.SPELL_DAMAGE,
             spell = 331224
@@ -327,6 +334,17 @@ local MistakeData = {
             -- 地面潰擊 (『毀壞者』黑文)
             type = MISTAKE.SPELL_DAMAGE,
             spell = 332708
+        },
+        {
+            -- 蠻橫跳躍 (『殘暴者』多奇格)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 342125
+        },
+        {
+            -- TODO: 和上面技能應該只有一個是對的
+            -- 蠻橫跳躍 (『殘暴者』多奇格)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 342126
         },
         {
             -- 迴旋刀刃 (『割碎者』奈克薩拉)
@@ -720,6 +738,11 @@ local MistakeData = {
             playerIsNotTank = true
         },
         {
+            -- 粉碎打擊 (深淵看守者, 坦克可以通過離開近戰區域躲避)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 335308
+        },
+        {
             -- 爆裂皮紙 (研究紀錄者)
             type = MISTAKE.SPELL_DAMAGE,
             spell = 334378
@@ -768,12 +791,6 @@ local MistakeData = {
     ["Halls of Atonement"] = {
         -- 小怪
         {
-            -- 爆發折磨
-            -- TODO: Check this
-            type = MISTAKE.SPELL_DAMAGE,
-            spell = 327885
-        },
-        {
             -- 致命推進 (墮落的暗刃兵)
             type = MISTAKE.SPELL_DAMAGE,
             spell = 325523
@@ -809,7 +826,8 @@ local MistakeData = {
         {
             -- 玻璃裂片
             type = MISTAKE.SPELL_DAMAGE,
-            spell = 323001
+            spell = 323001,
+            playerIsNotTank = true
         },
         {
             -- 折射罪光
@@ -823,6 +841,11 @@ local MistakeData = {
             spell = 319702
         },
         -- [3] 至高判決者阿利茲
+        {
+            -- 靈魂泉
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 338013
+        },
         -- [4] 宮務大臣
         {
             -- 念力碰撞
@@ -833,6 +856,16 @@ local MistakeData = {
             -- 念力猛襲
             type = MISTAKE.SPELL_DAMAGE,
             spell = 329113
+        },
+        {
+            -- 釋放磨難
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323236
+        },
+        {
+            -- 爆發折磨
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 327885
         }
     },
     ["Plaguefall"] = {
@@ -1057,6 +1090,7 @@ end
 local timers = {}
 local timerData = {}
 local combinedFails = {}
+local meleeNPCs = {}
 
 local function SortTable(t)
     sort(
@@ -1090,7 +1124,7 @@ local function PlayerHasDebuff(player, spellID)
 end
 
 function AD:COMBAT_LOG_EVENT_UNFILTERED()
-    local _, event, _, sourceGUID, _, _, _, _, destName, _, _, param12, _, _, param15, param16, param17 =
+    local _, event, _, sourceGUID, sourceName, _, _, _, destName, _, _, param12, _, _, param15, param16, param17 =
         CombatLogGetCurrentEventInfo()
 
     if not UnitIsPlayer(destName) then
@@ -1107,7 +1141,7 @@ function AD:COMBAT_LOG_EVENT_UNFILTERED()
     elseif eventPrefix == "SWING" and eventSuffix == "DAMAGE" then
         -- SWING_DAMAGE
         -- amount: 12th
-        self:GetHit_Swing(destName, sourceGUID, param12)
+        self:GetHit_Swing(destName, sourceGUID, sourceName, param12)
     elseif eventPrefix:match("^SPELL") and eventSuffix == "MISSED" then
         -- SPELL_MISSED | SPELL_PERIODIC_MISSED
         -- spell: 12th
@@ -1190,7 +1224,7 @@ function AD:GetHit_Spell(player, spellID, amount)
     self:AnnounceAfterSeconds(4, player)
 end
 
-function AD:GetHit_Swing(player, sourceGUID, amount)
+function AD:GetHit_Swing(player, sourceGUID, sourceName, amount)
     local sourceID = GetIDByGUID(sourceGUID)
     if not sourceID or not policy.melee[sourceID] then
         return
@@ -1214,6 +1248,11 @@ function AD:GetHit_Swing(player, sourceGUID, amount)
     else
         timerData[player][6603] = timerData[player][6603] + amount
     end
+
+    if not meleeNPCs[player] then
+        meleeNPCs[player] = {}
+    end
+    meleeNPCs[player][sourceName] = true
 
     self:AnnounceAfterSeconds(4, player)
 end
@@ -1239,12 +1278,21 @@ function AD:DamageAnnouncer(player)
     local totalDamage = 0
 
     for spellID, damage in pairs(timerData[player]) do
-        spellLinks = spellLinks .. GetSpellLink(spellID) .. " "
+        if spellID == 6603 then
+            local names = {}
+            for name in pairs(meleeNPCs[player]) do
+                tinsert(names, name)
+            end
+            spellLinks = spellLinks .. GetSpellLink(spellID) .. "(" .. strjoin(",", unpack(names)) .. ") "
+        else
+            spellLinks = spellLinks .. GetSpellLink(spellID) .. " "
+        end
         totalDamage = totalDamage + damage
     end
 
     timerData[player] = nil
     timers[player] = nil
+    meleeNPCs[player] = nil
 
     local playerMaxHealth = UnitHealthMax(player)
     local damageText = self:FormatNumber(totalDamage)
@@ -1259,6 +1307,7 @@ function AD:DamageAnnouncer(player)
 end
 
 function AD:ResetStatistic()
+    wipe(meleeNPCs)
     wipe(combinedFails)
     wipe(timerData)
     wipe(timers)

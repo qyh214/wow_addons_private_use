@@ -1,6 +1,8 @@
 local W, F, L, _, O = unpack(select(2, ...))
 local MH = W:GetModule("MDTHelper")
 
+local ReloadUI = ReloadUI
+
 O.mdtHelper = {
     order = 6,
     name = L["MDT Helper"],

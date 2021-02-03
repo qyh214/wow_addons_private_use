@@ -10,8 +10,8 @@ A.EventList = {
     "COMBAT_LOG_EVENT_UNFILTERED",
     "GROUP_ROSTER_UPDATE",
     "LFG_COMPLETION_REWARD",
-    "QUEST_LOG_UPDATE",
-    "ZONE_CHANGED_NEW_AREA"
+    "PLAYER_ENTERING_WORLD",
+    "QUEST_LOG_UPDATE"
 }
 
 -- CHAT_MSG_SYSTEM: text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, unused, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox, supressRaidIcons
@@ -49,8 +49,13 @@ function A:LFG_COMPLETION_REWARD()
     self:Goodbye()
 end
 
+function A:PLAYER_ENTERING_WORLD()
+    E:Delay(2, self.Keystone, self, "PLAYER_ENTERING_WORLD")
+end
+
 function A:CHALLENGE_MODE_COMPLETED()
     self:Goodbye()
+    E:Delay(2, self.Keystone, self, "CHALLENGE_MODE_COMPLETED")
 end
 
 -- TODO: SCENARIO_COMPLETED 场景完成事件
@@ -67,9 +72,5 @@ function A:CHAT_MSG_ADDON(_, prefix, text)
 end
 
 function A:GROUP_ROSTER_UPDATE()
-    self:ResetAuthority()
-end
-
-function A:ZONE_CHANGED_NEW_AREA()
     self:ResetAuthority()
 end

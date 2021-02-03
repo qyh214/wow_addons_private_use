@@ -33,8 +33,7 @@ local compareGUID
 local cache = {}
 
 local tiers = {
-    "Castle Nathria",
-    "Ny'alotha, The Waking City"
+    "Castle Nathria"
 }
 
 local levels = {
@@ -64,10 +63,6 @@ local locales = {
     ["Castle Nathria"] = {
         short = L["[ABBR] Castle Nathria"],
         full = L["Castle Nathria"]
-    },
-    ["Ny'alotha, The Waking City"] = {
-        short = L["[ABBR] Ny'alotha, The Waking City"],
-        full = L["Ny'alotha, The Waking City"]
     },
     ["The Necrotic Wake"] = {
         short = L["[ABBR] The Necrotic Wake"],
@@ -100,68 +95,14 @@ local locales = {
     ["Sanguine Depths"] = {
         short = L["[ABBR] Sanguine Depths"],
         full = L["Sanguine Depths"]
+    },
+    ["Shadowlands Keystone Master: Season One"] = {
+        short = L["[ABBR] Shadowlands Keystone Master: Season One"],
+        full = L["Shadowlands Keystone Master: Season One"]
     }
 }
 
 local raidAchievements = {
-    ["Ny'alotha, The Waking City"] = {
-        ["Mythic"] = {
-            14082,
-            14094,
-            14098,
-            14105,
-            14110,
-            14115,
-            14120,
-            14211,
-            14126,
-            14130,
-            14134,
-            14138
-        },
-        ["Heroic"] = {
-            14080,
-            14093,
-            14097,
-            14104,
-            14109,
-            14114,
-            14119,
-            14210,
-            14125,
-            14129,
-            14133,
-            14137
-        },
-        ["Normal"] = {
-            14079,
-            14091,
-            14096,
-            14102,
-            14108,
-            14112,
-            14118,
-            14208,
-            14124,
-            14128,
-            14132,
-            14136
-        },
-        ["Raid Finder"] = {
-            14078,
-            14089,
-            14095,
-            14101,
-            14107,
-            14111,
-            14117,
-            14207,
-            14123,
-            14127,
-            14131,
-            14135
-        }
-    },
     ["Castle Nathria"] = {
         ["Mythic"] = {
             14421,
@@ -225,6 +166,10 @@ local dungeonAchievements = {
     ["Sanguine Depths"] = 14205
 }
 
+local specialAchievements = {
+    ["Shadowlands Keystone Master: Season One"] = 14532
+}
+
 local function GetLevelColoredString(level, short)
     local color = "ff8000"
 
@@ -248,12 +193,39 @@ local function GetBossKillTimes(guid, achievementID)
     return tonumber(func(achievementID), 10) or 0
 end
 
+local function GetAchievementInfoByID(guid, achievementID)
+    local completed, month, day, year
+    if guid == E.myguid then
+        completed, month, day, year = select(4, GetAchievementInfo(achievementID))
+    else
+        completed, month, day, year = GetAchievementComparisonInfo(achievementID)
+    end
+    return completed, month, day, year
+end
+
 local function UpdateProgression(guid, faction)
     local db = E.private.WT.tooltips.progression
 
     cache[guid] = cache[guid] or {}
     cache[guid].info = cache[guid].info or {}
     cache[guid].timer = GetTime()
+
+    -- 成就
+    if db.special.enable then
+        for name, achievementID in pairs(specialAchievements) do
+            if db.special[name] then
+                local completed, month, day, year = GetAchievementInfoByID(guid, 14532)
+                local completedString = "|cff888888" .. L["Not Completed"] .. "|r"
+                if completed then
+                    completedString = gsub(L["%month%-%day%-%year%"], "%%month%%", month)
+                    completedString = gsub(completedString, "%%day%%", day)
+                    completedString = gsub(completedString, "%%year%%", 2000 + year)
+                end
+                cache[guid].info.special = {}
+                cache[guid].info.special[name] = completedString
+            end
+        end
+    end
 
     -- 团本
     if db.raids.enable then
@@ -316,6 +288,26 @@ local function SetProgressionInfo(guid, tt)
         local found = false
 
         if leftTipText then
+            if db.special.enable then -- 成就
+                for name, achievementID in pairs(specialAchievements) do
+                    if db.special[name] then
+                        if strfind(leftTipText, locales[name].short) then
+                            local rightTip = _G["GameTooltipTextRight" .. i]
+                            leftTip:SetText(locales[name].short .. ":")
+                            rightTip:SetText(cache[guid].info.special[name])
+                            updated = true
+                            found = true
+                            break
+                        end
+                        if found then
+                            break
+                        end
+                    end
+                end
+            end
+
+            found = false
+
             if db.raids.enable then -- 团本进度
                 for _, tier in ipairs(tiers) do
                     if db.raids[tier] then
@@ -366,6 +358,18 @@ local function SetProgressionInfo(guid, tt)
     end
 
     local icon = F.GetIconString(W.Media.Textures.smallLogo, 12)
+
+    if db.special.enable then -- 成就
+        tt:AddLine(" ")
+        for name, achievementID in pairs(specialAchievements) do
+            if db.special[name] then
+                local left = format("%s:", locales[name].short)
+                local right = cache[guid].info.special[name]
+
+                tt:AddDoubleLine(left, right, nil, nil, nil, 1, 1, 1)
+            end
+        end
+    end
 
     if db.raids.enable then -- 团本进度
         tt:AddLine(" ")

@@ -29,6 +29,7 @@ local GetItemInfo = GetItemInfo
 local GetItemQualityColor = GetItemQualityColor
 local GetQuestLogSpecialItemCooldown = GetQuestLogSpecialItemCooldown
 local GetQuestLogSpecialItemInfo = GetQuestLogSpecialItemInfo
+local GetTime = GetTime
 local InCombatLockdown = InCombatLockdown
 local IsItemInRange = IsItemInRange
 local IsUsableItem = IsUsableItem
@@ -55,7 +56,7 @@ local potions = {
     118915, --打鬥者的無底德拉諾力量藥水
     127834, --上古治療藥水
     127835, --上古法力藥水
-    127836, --上古活力藥水 P
+    127836, --上古活力藥水
     127843, --致命恩典藥水
     127844, --遠古戰役藥水
     127845, --不屈藥水
@@ -182,6 +183,7 @@ local torghastItems = {
     176409, --活力虹吸精華
     176443, --消逝狂亂藥水
     168035, --淵喉污鼠韁繩
+    170499, --淵喉巡者韁繩
     174464 --鬼靈鞍具
 }
 
@@ -368,14 +370,14 @@ local conjuredManaFood = {
 
 -- 战旗
 local banners = {
-    63359, -- 合作旌旗
-    64400, -- 合作旌旗
-    64398, -- 團結軍旗
-    64401, -- 團結軍旗
-    64399, -- 協調戰旗
-    64402, -- 協調戰旗
-    18606, -- 聯盟戰旗
-    18607 -- 部落戰旗
+    18606, --聯盟戰旗
+    18607, --部落戰旗
+    63359, --合作旌旗
+    64398, --團結軍旗
+    64399, --協調戰旗
+    64400, --合作旌旗
+    64401, --團結軍旗
+    64402 --協調戰旗
 }
 
 -- 实用工具
@@ -393,6 +395,93 @@ local utilities = {
     172346, --荒寂護甲片
     172347, --厚重荒寂護甲片
     172233 --致命兇殘之鼓
+}
+
+local openableItems = {
+    171209, --沾血的袋子
+    171210, --一袋自然的恩賜
+    171211, --汎希爾的錢包
+    174652, --一袋被遺忘的傳家寶
+    178040, --濃縮的冥魄
+    178078, --重生之靈寶箱
+    178128, --裝滿亮晶晶寶物的袋子
+    178513, --週年慶禮物
+    178965, --小型的園丁袋子
+    178966, --園丁的袋子
+    178967, --大型的園丁袋子
+    178968, --每週的園丁袋子
+    180085, --琪瑞安紀念品
+    180355, --華麗聖盒
+    180378, --鍛造大師的箱子
+    180379, --精緻紡織地毯
+    180380, --精細網織品
+    180386, --草藥師小袋
+    180442, --一袋罪孽石
+    180646, --不死軍團補給品
+    180647, --晉升者補給品
+    180648, --收割者廷衛補給品
+    180649, --曠野獵者補給品
+    180875, --馬車貨物
+    180974, --學徒的袋子
+    180975, --熟工的袋子
+    180976, --專家的袋子
+    180977, --靈魂看管者的袋子
+    180979, --專家的大型袋子
+    180980, --熟工的大型袋子
+    180981, --學徒的大型袋子
+    180983, --專家滿載的袋子
+    180984, --熟工滿載的袋子
+    180985, --學徒滿載的袋子
+    180988, --熟工滿溢的袋子
+    180989, --學徒滿溢的袋子
+    181372, --晉升者的獻禮
+    181475, --林地看守者的獎賞
+    181476, --曠野獵者的獻禮
+    181556, --廷衛的獻禮
+    181557, --廷衛的大禮
+    181732, --野心家獻禮
+    181733, --盡責者獻禮
+    181741, --楷模的獻禮
+    181767, --小錢包
+    182590, --爬藤蠕動的零錢包
+    182591, --覆藤灌能紅寶石
+    183699, --特選材料
+    183701, --淨化儀式材料
+    183702, --自然光采
+    183703, --骸骨工匠背袋
+    184045, --收割者廷衛的軍稅
+    184046, --不死軍團武器箱
+    184047, --晉升者武器箱
+    184048, --曠野獵者武器袋
+    184158, --黏黏的死靈魟魚卵
+    184395, --死亡冒險者的儲藏箱
+    184444, --晉升之路補給
+    184522, --協力朦朧布包
+    184589, --藥水袋
+    184630, --冒險者布料箱
+    184631, --冒險者附魔箱
+    184632, --勇士魚類箱
+    184633, --勇士肉類箱
+    184634, --冒險者草藥箱
+    184635, --冒險者礦石箱
+    184636, --冒險者皮革箱
+    184637, --英雄肉類箱
+    184638, --英雄魚類箱
+    184639, --勇士布料箱
+    184640, --勇士皮革箱
+    184641, --勇士礦石箱
+    184642, --勇士草藥箱
+    184643, --勇士附魔箱
+    184644, --英雄布料箱
+    184645, --英雄皮革箱
+    184646, --英雄礦石箱
+    184647, --英雄草藥箱
+    184648, --英雄附魔箱
+    184811, --阿特米德的恩賜
+    184812, --阿波隆的恩賜
+    184843, --回收的補給物資
+    184868, --納撒亞寶物箱
+    184869 --納撒亞寶物箱
 }
 
 -- 更新任务物品列表
@@ -441,7 +530,8 @@ local moduleList = {
     ["FOODVENDOR"] = foodShadowlandsVendor,
     ["MAGEFOOD"] = conjuredManaFood,
     ["BANNER"] = banners,
-    ["UTILITY"] = utilities
+    ["UTILITY"] = utilities,
+    ["OPENABLE"] = openableItems
 }
 
 function EB:CreateButton(name, barDB)
@@ -946,14 +1036,43 @@ function EB:UpdateBars()
     end
 end
 
+do
+    local lastUpdateTime = 0
+    function EB:UNIT_INVENTORY_CHANGED()
+        local now = GetTime()
+        if now - lastUpdateTime < 0.25 then
+            return
+        end
+        lastUpdateTime = now
+        UpdateQuestItemList()
+        UpdateEquipmentList()
+
+        self:UpdateBars()
+    end
+end
+
 function EB:UpdateQuestItem()
     UpdateQuestItemList()
     self:UpdateBars()
 end
 
-function EB:UpdateEquipment()
-    UpdateEquipmentList()
-    self:UpdateBars()
+do
+    local InUpdating = false
+    function EB:ITEM_LOCKED()
+        if InUpdating then
+            return
+        end
+
+        InUpdating = true
+        E:Delay(
+            1,
+            function()
+                UpdateEquipmentList()
+                self:UpdateBars()
+                InUpdating = false
+            end
+        )
+    end
 end
 
 function EB:CreateAll()
@@ -999,7 +1118,8 @@ function EB:Initialize()
     self:UpdateBars()
     self:UpdateBinding()
 
-    self:RegisterEvent("UNIT_INVENTORY_CHANGED", "UpdateEquipment")
+    self:RegisterEvent("UNIT_INVENTORY_CHANGED")
+    self:RegisterEvent("ITEM_LOCKED")
     self:RegisterEvent("BAG_UPDATE_DELAYED", "UpdateBars")
     self:RegisterEvent("ZONE_CHANGED", "UpdateBars")
     self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "UpdateBars")
