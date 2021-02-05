@@ -95,8 +95,7 @@ https://bbs.nga.cn/read.php?tid=24562077
 
 奶萨水盾、土盾提示：
 - 原版：https://bbs.nga.cn/read.php?tid=24506536
-- 自用版大地之盾：https://wago.io/hFamVlx5h
-- 自用版水之护盾：https://wago.io/ilCFbJbvB
+- 自用大地之盾+水之护盾整合版：https://wago.io/9YVsyrNgm
 
 ## 一些有用的重要命令
 在游戏内聊天窗口输入，然后回车：
