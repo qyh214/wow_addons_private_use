@@ -93,9 +93,20 @@ https://bbs.nga.cn/read.php?tid=24562077
 
 傲慢词缀全套监视：https://wago.io/prideful
 
+震荡词缀打断判断：https://wago.io/OYG84YE0x
+
+怨毒目标：https://wago.io/NPWlnnxt1
+
+暴怒魔法效果提示：https://wago.io/r2QBcOnlT
+
 奶萨水盾、土盾提示：
 - 原版：https://bbs.nga.cn/read.php?tid=24506536
 - 自用大地之盾+水之护盾整合版：https://wago.io/9YVsyrNgm
+
+Nnoggie大秘境技能CD监视升级版&自制团队CD监视，带技能激活发光监控的技能CD监视：https://bbs.nga.cn/read.php?tid=20621492
+- ZenTracker后端模块：https://wago.io/r14U746B7
+- 小队CD监控前端：https://wago.io/ZRvyWuoub
+- 团队CD监控前端：https://wago.io/0mlLc0qxd
 
 ## 一些有用的重要命令
 在游戏内聊天窗口输入，然后回车：
