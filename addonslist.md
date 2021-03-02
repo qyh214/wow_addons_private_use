@@ -16,8 +16,6 @@ BuyEmAll 批量购买物品增强（某些只能一个个买的物品，改进�
 
 CanIMogIt 幻化提示插件
 
-CovenantMissionHelper 盟约指挥台成功率随从插件
-
 DBM 首领报警及其语音包
 
 Details 战斗数据统计(替代skada)
@@ -45,6 +43,10 @@ HandyNotes_Shadowlands 地图稀有、宝箱、事件查看基础=暗影国度�
 Immersion 对话框美化
 
 KeystoneHelper 钥石辅助信息
+
+LibGroupInSpecT-1.1 用于wa监控队友技能的后端插件
+
+MDT 大秘境线路计算规划
 
 MikScrollingBattleText（MSBT战斗浮动信息，parrot替代品）
 
@@ -81,3 +83,5 @@ WindDungeonHelper  友尽插件，大米队友失误报告
 WorldQuestTracker 世界任务插件
 
 XLoot 掉落美化
+
+VenturePlan 盟约指挥台任务指派成功率插件
