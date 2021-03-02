@@ -50,11 +50,13 @@ TinyInspect、TinyTooltip：http://bbs.ngacn.cc/read.php?tid=10240957
 
 wa字符串更新客户端：https://weakauras.wtf/
 
+wa和插件也可以用类似的统一管理客户端管理，例如：https://github.com/ajour/ajour
+
 ## WA字符串
 #### wa字符串总结和概述
 https://bbs.nga.cn/read.php?tid=24562077
 
-#### 使用的字符串
+#### 目前使用的字符串
 鼠标跟踪：https://wago.io/SypUT-DPm
 
 属性监控：https://wago.io/rJZgZUxn7
@@ -97,7 +99,7 @@ https://bbs.nga.cn/read.php?tid=24562077
 
 怨毒目标：https://wago.io/NPWlnnxt1
 
-暴怒魔法效果提示：https://wago.io/r2QBcOnlT
+暴怒魔法效果提示（怪物buff驱散提示）：https://wago.io/r2QBcOnlT
 
 奶萨水盾、土盾提示：
 - 原版：https://bbs.nga.cn/read.php?tid=24506536
