@@ -120,6 +120,10 @@ function RSA_Hunter:OnEnable()
 				linkID = 109248,
 				tracker = 1
 			},
+			[328837] = {
+				profile = 'WildSpirit',
+				section = 'End',
+			}
 		},
 		SPELL_CAST_SUCCESS = {
 			[187650] = Config_FreezingTrap,
@@ -147,6 +151,10 @@ function RSA_Hunter:OnEnable()
 				section = 'Cast',
 				replacements = { TARGET = 1 }
 			},
+			[328231] = {
+				profile = 'WildSpirit',
+				section = 'Placed',
+			}
 		},
 		SPELL_INTERRUPT = {
 			[147362] = { -- COUNTER SHOT

@@ -47,8 +47,8 @@ function AS:Blizzard_Others()
 
 	for i = 1, 4 do
 		local Popup = _G["StaticPopup"..i]
-
-		AS:SkinFrame(Popup, nil, true)
+		Popup:StripTextures()
+		AS:SkinFrame(Popup)
 
 		for j = 1, 4 do
 			AS:SkinButton(Popup['button'..j])
@@ -81,7 +81,7 @@ function AS:Blizzard_Others()
 	AS:SkinButton(ReadyCheckFrameNoButton)
 
 	AS:SkinBackdropFrame(GameMenuFrame)
-	AS:SkinBackdropFrame(GameMenuFrame.Header)
+	AS:StripTextures(GameMenuFrame.Header)
 	for i = 1, GameMenuFrame:GetNumRegions() do
 		local Region = select(i, GameMenuFrame:GetRegions())
 		if Region.IsObjectType and Region:IsObjectType('FontString') then

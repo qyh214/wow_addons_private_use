@@ -13,5 +13,4 @@
 <Include file="Libs\AceConfig-3.0\AceConfig-3.0.xml"/>
 <Include file="Libs\LibSink-2.0\LibSink-2.0.lua"/>
 <Include file="Libs\LibDualSpec-1.0\LibDualSpec-1.0.lua"/>
-<Include file="Libs\LibResInfo-1.0\LibResInfo-1.0.lua"/>
 </Ui>

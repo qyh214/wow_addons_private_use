@@ -29,4 +29,4 @@ Notes
 -----
 **TODO:**
 * Possibly localize in more languages.
-* Continue to improve N'Zoth Visions scenarios with more warnings and improved timers
+* Continue to improve Torghast with more warnings and improved timers

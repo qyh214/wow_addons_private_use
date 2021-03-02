@@ -738,7 +738,7 @@ do
 	local mt = {__index = barPrototype}
 
 	function DBT:CreateBar(timer, id, icon, huge, small, color, isDummy, colorType, inlineIcon, keep, fade, countdown, countdownMax)
-		if timer <= 0 then return end
+		if not timer or type(timer) == "string" or timer <= 0 then return end
 		if (self.numBars or 0) >= 15 and not isDummy then return end
 		--Most efficient place to block it, nil colorType instead of checking option every update
 		if not self.options.ColorByType then colorType = nil end
@@ -929,9 +929,7 @@ function barPrototype:Pause()
 	self.ftimer = nil
 	self:Update(0)
 	self.paused = true
-	if self.moving == "enlarge" then
-		self:ResetAnimations()
-	end
+	self:ResetAnimations()--Force move paused bars to small bars
 end
 
 function barPrototype:Resume()
@@ -945,17 +943,18 @@ function barPrototype:SetElapsed(elapsed)
 	--Force reset animation and move it back to the small anchor since time was added to bar
 	if (self.enlarged or self.moving == "enlarge") and not (self.timer <= enlargeTime) then
 		self:ResetAnimations()
-		DBM:Debug("ResetAnimations firing for a a bar :Update() call that is shrinking a bar", 2)
+		DBM:Debug("ResetAnimations firing with a value of "..elapsed.." for a bar :Update() call that is shrinking a bar", 2)
 	--Bar was small, or moving from small to large when time was removed
 	--Also force reset animation but this time move it from small anchor into large one
 	elseif (not self.enlarged or self.moving == "enlarge") and (self.timer <= enlargeTime) then
 		self:ResetAnimations(true)
-		DBM:Debug("ResetAnimations firing for a a bar :Update() call that is enlarging a bar", 2)
+		DBM:Debug("ResetAnimations firing with a value of "..elapsed.." for a bar :Update() call that is enlarging a bar", 2)
 	--Not even I'm 100% sure what this part is, tied to bar sorting obviouosly but what's this actually do?
 	elseif self.owner.options.Sort and self.moving ~= "enlarge" and self.moving ~= "move" then
 		local group = self.enlarged and self.owner.hugeBars or self.owner.smallBars
 		group:Remove(self)
 		group:Append(self)
+		DBM:Debug("ResetAnimations firing with a value of "..elapsed.." for a bar :Update() call that is sorting bars", 3)
 	end
 	self:Update(0)
 end
@@ -1011,7 +1010,8 @@ function barPrototype:Update(elapsed)
 	local spark = _G[frame_name.."BarSpark"]
 	local timer = _G[frame_name.."BarTimer"]
 	local obj = self.owner
-	self.timer = self.timer - elapsed
+	local paused = self.paused
+	self.timer = self.timer - (paused and 0 or elapsed)
 	local timerValue = self.timer
 	local totaltimeValue = self.totalTime
 	local barOptions = obj.options
@@ -1022,7 +1022,7 @@ function barPrototype:Update(elapsed)
 	local colorCount = self.colorType
 	local enlargeHack = (self.dummyEnlarge or colorCount == 7 and barOptions.Bar7ForceLarge) and true or false
 	local enlargeTime = barOptions.EnlargeBarTime or 11
-	local isEnlarged = self.enlarged
+	local isEnlarged = self.enlarged and not paused
 	local fillUpBars = isEnlarged and barOptions.FillUpLargeBars or not isEnlarged and barOptions.FillUpBars
 	local ExpandUpwards = isEnlarged and barOptions.ExpandUpwardsLarge or not isEnlarged and barOptions.ExpandUpwards
 	if barOptions.DynamicColor and not self.color then
@@ -1082,7 +1082,7 @@ function barPrototype:Update(elapsed)
 	elseif isFadingIn then
 		self.fadingIn = nil
 	end
-	if timerValue <= 7.75 and not self.flashing and barOptions.FlashBar then
+	if timerValue <= 7.75 and not self.flashing and barOptions.FlashBar and not paused then
 		self.flashing = true
 		self.ftimer = 0
 	elseif self.flashing and timerValue > 7.75 then
@@ -1154,7 +1154,7 @@ function barPrototype:Update(elapsed)
 		obj.hugeBars:Append(self)
 		self:ApplyStyle()
 	end
-	if (timerValue <= enlargeTime) and not self.small and not isEnlarged and isMoving ~= "enlarge" and obj:GetOption("HugeBarsEnabled") then
+	if not paused and (timerValue <= enlargeTime) and not self.small and not isEnlarged and isMoving ~= "enlarge" and obj:GetOption("HugeBarsEnabled") then
 		self:RemoveFromList()
 		self:Enlarge()
 	end
@@ -1515,7 +1515,7 @@ function barPrototype:SetPosition()
 end
 
 function barPrototype:MoveToNextPosition()
-	if self.moving == "enlarge" then return end
+	if self.moving == "enlarge" or not self.frame then return end
 	local newAnchor = (self.prev and self.prev.frame) or (self.enlarged and self.owner.secAnchor) or self.owner.mainAnchor
 	local oldX = self.frame:GetRight() - self.frame:GetWidth()/2
 	local oldY = self.frame:GetTop()

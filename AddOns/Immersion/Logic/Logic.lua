@@ -164,7 +164,7 @@ function NPC:SetBackground(kit)
 		local atlasInfo = C_Texture.GetAtlasInfo(backgroundAtlas)
 		if atlasInfo then
 			overlay:Show()
-			overlay:SetGradientAlpha('HORIZONTAL', 1, 1, 1, 0, 1, 1, 1, 1)
+			overlay:SetGradientAlpha('HORIZONTAL', 1, 1, 1, 0, 1, 1, 1, 0.5)
 
 			overlay:SetSize(atlasInfo.width, atlasInfo.height)
 			overlay:SetTexture(atlasInfo.file)
@@ -614,24 +614,21 @@ function TalkBox:OnDragStop()
 
 	point = point:sub(1,1) .. point:sub(2):lower()
 
+	-- convert center point to bottom
 	if ( point == 'Center' ) then
 		point = 'Bottom'
-
-		local cX = self:GetCenter()
-
-		x = ( cX * self:GetScale() ) - ( GetScreenWidth() / 2 ) 
+		-- calculate the horz offset from the center of the screen
+		x = ( self:GetCenter() * ImmersionFrame:GetScale() ) - ( GetScreenWidth() / 2 )
 		y = self:GetBottom()
-
 	end
+	
 	local isBottom = point == 'Bottom'
-
 	if isBottom then
 		y = y - (self.extraY or 0)
 	end
 
 	self:ClearAllPoints()
-	self.offsetX = x
-	self.offsetY = y
+	self.offsetX, self.offsetY = x, y
 
 	L.Set('boxpoint', point)
 	L.Set('boxoffsetX', x)

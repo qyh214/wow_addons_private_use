@@ -86,6 +86,12 @@ function RSA_Utilities:OnEnable()
 				sourceIsMe = true,
 				replacements = { TARGET = 1 }
 			},
+			[348477] = {
+				profile = 'EngineerRessBFA',
+				section = 'Cast',
+				sourceIsMe = true,
+				replacements = { TARGET = 1 }
+			},
 		},
 		SPELL_SUMMON = {
 			[22700] = configRepairBots, -- Field Repair Bot 74A
@@ -141,6 +147,8 @@ function RSA_Utilities:OnEnable()
 			[259410] = configFeasts, -- Bountiful Captain's Feast (BfA)
 			[286050] = configFeasts, -- Sanguinated Feast (BfA)
 			[297048] = configFeasts, -- Famine Evaluator And Snack Table (8.2)
+			[308458] = configFeasts, -- Surprisingly Palatable Feast (SL)
+			[308462] = configFeasts, -- Feast of Gluttonous Hedonism (SL)
 			[178207] = configDrums, -- Drums of Fury (WoD)
 			[230935] = configDrums, -- Drums of the Mountain (Legion)
 			[256740] = configDrums, -- Drums of the Maelstrom (BfA)
@@ -153,6 +161,12 @@ function RSA_Utilities:OnEnable()
 				replacements = { TARGET = 1 }
 			},
 			[345130] = {
+				profile = 'EngineerRessBFA',
+				section = 'AcceptedRess',
+				sourceIsMe = true,
+				replacements = { TARGET = 1 }
+			},
+			[348477] = {
 				profile = 'EngineerRessBFA',
 				section = 'AcceptedRess',
 				sourceIsMe = true,
@@ -174,7 +188,7 @@ function RSA_Utilities:OnEnable()
 			local timestamp, event, hideCaster, sourceGUID, source, sourceFlags, sourceRaidFlag, destGUID, dest, destFlags, destRaidFlags, spellID, spellName, spellSchool, missType, overheal, ex3, ex4, ex5, ex6, ex7, ex8 = CombatLogGetCurrentEventInfo()
 			if RSA.AffiliationGroup(sourceFlags) then
 				if event == 'SPELL_RESURRECT' then
-					if spellID == 265116 and RSA.AffiliationMine(sourceFlags) then
+					if (spellID == 265116 or spellID == 345130 or spellID == 348477) and RSA.AffiliationMine(sourceFlags) then
 						EngineerRessBFA_Target = dest
 						RSA_Utilities.CombatLogMonitor:RegisterEvent('UNIT_HEALTH')
 

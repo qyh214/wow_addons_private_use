@@ -5,7 +5,7 @@ local DBM = DBM
 local GetPlayerFactionGroup = GetPlayerFactionGroup or UnitFactionGroup -- Classic Compat fix
 local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
-mod:SetRevision("20210128233825")
+mod:SetRevision("20210221215230")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 mod:RegisterEvents(
 	"ZONE_CHANGED_NEW_AREA",
@@ -292,7 +292,8 @@ do
 	local C_UIWidgetManager, TimerTracker, IsInInstance = C_UIWidgetManager, TimerTracker, IsInInstance
 	local FACTION_ALLIANCE = FACTION_ALLIANCE
 	local flagTimer			= mod:NewTimer(12, "TimerFlag", "132483") -- Interface\\icons\\inv_banner_02.blp
-	local remainingTimer	= mod:NewTimer(120, "TimerRemaining", GetPlayerFactionGroup("player") == "Alliance" and "132486" or "132485") -- Interface\\Icons\\INV_BannerPVP_02.blp || Interface\\Icons\\INV_BannerPVP_01.blp
+	local startTimer		= mod:NewTimer(120, "TimerStart", GetPlayerFactionGroup("player") == "Alliance" and "132486" or "132485") -- Interface\\Icons\\INV_BannerPVP_02.blp || Interface\\Icons\\INV_BannerPVP_01.blp
+	local remainingTimer	= mod:NewTimer(780, "TimerRemaining", GetPlayerFactionGroup("player") == "Alliance" and "132486" or "132485") -- Interface\\Icons\\INV_BannerPVP_02.blp || Interface\\Icons\\INV_BannerPVP_01.blp
 	local vulnerableTimer, timerShadow, timerDamp
 	if not isClassic then
 		vulnerableTimer	= mod:NewNextTimer(60, 46392)
@@ -303,7 +304,7 @@ do
 	function mod:START_TIMER(timerType, timeSeconds)
 		if timerType ~= 1 then return end--don't run this code if a player started the timer, we only want type 1 events (PVP)
 		local _, instanceType = IsInInstance()
-		if (instanceType == "pvp" or instanceType == "arena" or instanceType == "scenario") and self.Options.TimerRemaining then
+		if not self.Options.TimerRemaining or (instanceType ~= "pvp" and instanceType ~= "arena" and instanceType ~= "scenario") then
 			if TimerTracker then
 				for _, bar in ipairs(TimerTracker.timerList) do
 					bar.bar:Hide()
@@ -311,24 +312,23 @@ do
 			end
 			if not timeSeconds or type(timeSeconds) ~= "number" or timeSeconds < 1 then
 				DBM:Debug("Uh oh, START_TIMER returned an invalid value: " .. (timeSeconds or "nil"))
+			elseif not startTimer:IsStarted() then
+				startTimer:Update(timeSeconds, 120)
 			end
-			if not remainingTimer:IsStarted() then
-				remainingTimer:Start(timeSeconds)
-			end
-		end
-		self:Schedule(timeSeconds + 1, function()
-			if not isClassic and instanceType == "arena" then
-				timerShadow:Start()
-				timerDamp:Start()
-			end
-			local info = C_UIWidgetManager.GetIconAndTextWidgetVisualizationInfo(6)
-			if info and info.state == 1 and self.Options.TimerRemaining then
-				local minutes, seconds = info.text:match("(%d+):(%d+)")
-				if minutes and seconds then
-					remainingTimer:Update(119 - tonumber(seconds) - (tonumber(minutes) * 60), 120)
+			self:Schedule(timeSeconds + 1, function()
+				if not isClassic and instanceType == "arena" then
+					timerShadow:Start()
+					timerDamp:Start()
 				end
-			end
-		end, self)
+				local info = C_UIWidgetManager.GetIconAndTextWidgetVisualizationInfo(6)
+				if info and info.state == 1 and self.Options.TimerRemaining then
+					local minutes, seconds = info.text:match("(%d+):(%d+)")
+					if minutes and seconds then
+						remainingTimer:Update(119 - tonumber(seconds) - (tonumber(minutes) * 60), 120)
+					end
+				end
+			end, self)
+		end
 	end
 
 	local function updateflagcarrier(_, msg)
@@ -373,9 +373,9 @@ do
 	local FACTION_HORDE, FACTION_ALLIANCE = FACTION_HORDE, FACTION_ALLIANCE
 	local winTimer = mod:NewTimer(30, "TimerWin", GetPlayerFactionGroup("player") == "Alliance" and "132486" or "132485") -- Interface\\Icons\\INV_BannerPVP_02.blp || Interface\\Icons\\INV_BannerPVP_01.blp
 	local resourcesPerSec = {
-		[3] = {1e-300, 1, 3, 4}, -- Gilneas
-		[4] = {1e-300, 2, 3, 4, 12--[[Data seems to suggest this, will need to confirm if win timers line up]]}, -- TempleOfKotmogu/EyeOfTheStorm
-		[5] = {1e-300, 2, 3, 4, 7, 1000--[[Unknown]]} -- Arathi/Deepwind
+		[3] = {1e-300, 0.5, 1.5, 2}, -- Gilneas
+		[4] = {1e-300, 1, 1.5, 2, 6}, -- TempleOfKotmogu/EyeOfTheStorm
+		[5] = {1e-300, 1, 1.5, 2, 3.5, 30--[[Unknown]]} -- Arathi/Deepwind
 	}
 
 	if isClassic then
@@ -593,7 +593,12 @@ do
 						capTimer:Stop(infoName)
 						objectivesStore[infoName] = (atlasName and atlasName or infoTexture)
 						if not ignoredAtlas[subscribedMapID] and (isAllyCapping or isHordeCapping) then
-							capTimer:Start(C_AreaPoiInfo.GetAreaPOITimeLeft and C_AreaPoiInfo.GetAreaPOITimeLeft(areaPOIID) and C_AreaPoiInfo.GetAreaPOITimeLeft(areaPOIID) * 60 or overrideTimers[subscribedMapID] or 60, infoName)
+							local timeSeconds = C_AreaPoiInfo.GetAreaPOITimeLeft and C_AreaPoiInfo.GetAreaPOITimeLeft(areaPOIID) and C_AreaPoiInfo.GetAreaPOITimeLeft(areaPOIID) * 60 or overrideTimers[subscribedMapID] or 60
+							if not timeSeconds or type(timeSeconds) ~= "number" or timeSeconds < 1 then
+								DBM:Debug("Uh oh, AREA_POS_UPDATED returned an invalid value: " .. (timeSeconds or "nil"))
+							else
+								capTimer:Start(timeSeconds, infoName)
+							end
 							if isAllyCapping then
 								capTimer:SetColor({r=0, g=0, b=1}, infoName)
 								capTimer:UpdateIcon("132486", infoName) -- Interface\\Icons\\INV_BannerPVP_02.blp

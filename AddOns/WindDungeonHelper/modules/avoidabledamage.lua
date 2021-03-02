@@ -81,13 +81,23 @@ do
         PARTY = 2
     }
 
-    function AD:SendMyLevel()
+    function AD:SendMyLevel(force)
+        if not self.db then
+            return
+        end
+
         if IsInGroup() then
             local level = self.db.notification.channel and channelLevel[self.db.notification.channel] or 0
 
             -- If reload the ui, the data is cleared
             if self.inRecording then
                 level = level + 100
+            end
+
+            if level ~= 0 and force then
+                if authorityCache then
+                    level = authorityCache.level + 1
+                end
             end
 
             local message = format("%s;%d;%d", level, myServerID, myPlayerUID)
@@ -303,9 +313,14 @@ local MistakeData = {
         },
         -- [4] 『霜縛者』納爾索
         {
-            -- 彗星風暴
+            -- 彗星風暴 (楼上的)
             type = MISTAKE.SPELL_DAMAGE,
             spell = 320784
+        },
+        {
+            -- 彗星風暴 (楼下的)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 321956
         },
         {
             -- 鋒利碎冰 (大冰圈)
@@ -736,11 +751,6 @@ local MistakeData = {
             type = MISTAKE.SPELL_DAMAGE,
             spell = 322429,
             playerIsNotTank = true
-        },
-        {
-            -- 粉碎打擊 (深淵看守者, 坦克可以通過離開近戰區域躲避)
-            type = MISTAKE.SPELL_DAMAGE,
-            spell = 335308
         },
         {
             -- 爆裂皮紙 (研究紀錄者)
@@ -1372,13 +1382,19 @@ function AD:CHALLENGE_MODE_START()
 end
 
 function AD:OnInitialize()
-    self:InitializeAuthority()
-    self:ProfileUpdate()
-    self:SetNotificationText()
+    AD:InitializeAuthority()
+    AD:ProfileUpdate()
+    AD:SetNotificationText()
+    self:RegisterEvent("PLAYER_ENTERING_WORLD")
+end
+
+function AD:PLAYER_ENTERING_WORLD(event, isLogin, isReload)
+    if isLogin or isReload then
+        self:ResetAuthority()
+    end
 end
 
 function AD:ZONE_CHANGED_NEW_AREA()
-    self:ResetAuthority()
     self:Compile()
 end
 

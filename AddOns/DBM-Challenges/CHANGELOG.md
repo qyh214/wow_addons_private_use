@@ -1,19 +1,9 @@
 # <DBM> Challenges
 
-## [r137](https://github.com/DeadlyBossMods/DBM-Challenges/tree/r137) (2021-01-05)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Challenges/compare/r136...r137) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Challenges/releases)
+## [r138](https://github.com/DeadlyBossMods/DBM-Challenges/tree/r138) (2021-02-16)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Challenges/compare/r137...r138) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Challenges/releases)
 
-- Remove mess sourcetree left  
-- no message  
-- The threat level of these abilities was diminished when they were nerfed couple weeks back  
-- Bit cleaner stuff (#14)  
-- ANOTHER fear spell... (#13)  
-- unimportant things  
-- Ci updates from master (#12)  
-- Merge pull request #11 from DeadlyBossMods/arty2  
-    More torghast abilities for coldheart wing  
-- More torghast abilities for coldheart wing  
-- Update CI  
+- Add 3 more spells to torghast  
+- LuaCheck cleanup (#16)  
 - Update README.md  
-- Delete .travis.yml  
-- Create ci.yml  
+- More inner flame spell ID's (#15)  

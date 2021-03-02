@@ -15,6 +15,7 @@ L["anima_channeled"] = "%s mit Anima versorgt."
 
 L["deifir_note"] = "Reite auf {npc:164238} und verwende die Fähigkeiten {spell:319566} und {spell:319575}, um ihn zu verlangsamen und zu betäuben."
 L["faeflayer_note"] = "In einer kleinen Höhle, versteckt hinter einem Wasserfall."
+L["gormbore_note"] = nil
 L["gormtamer_tizo_note"] = "Töte Borstenzapfen Kobolde im Nebelschleierdickicht, bis {npc:164110} erscheint."
 L["humongozz_note"] = "Pflanze einen {item:175247} in den feuchten Lehm, um einen {npc:164122} erscheinen zu lassen. Der Pilz wird von mehreren Gegnern in diesem Gebiet fallen gelassen."
 L["lehgo_note"] = "Zerstöre Zitternde Gormeier und töte |CFFFFFF00Wütende Eipfleger|r bis {npc:167851} erscheint. In einer Höhle. (Eingang nach Südosten (58.5, 31.9))." --{npc:171827}
@@ -118,6 +119,7 @@ Partikel können aus entleerten Animakanistern in der Nähe gesammelt werden, di
 
 |cFFFF8C00Kann nicht während der Weltquest {wq:Angriff auf die Vorhallen} besiegt werden.
 ]]
+L["reekmonger_note"] = "Töte beim Tempel des Mutes solange Gegner, bis im Chat von {npc:171327} ein Emote erscheint und er landet."
 L["repair_note"] = "Klicke zum Beschwören mit zwei anderen Spielern das Uralte Räucherwerk an."
 L["sotiros_orstus_note"] = "Klicke zum Beschwören die Schwarze Glocke an."
 L["sundancer_note"] = "Klicke das Uralte Denkmal an, um den {spell:332309} zu erhalten und verwende einen {item:180445}, um zu ihm zu gleiten und aufzusitzen."
@@ -243,6 +245,7 @@ L["gieger_note"] = "Ziehe an {npc:162815}, um {npc:162741} zu aktivieren."
 L["gristlebeak_note"] = "Zerbrich jedes {npc:162761} in der Nähe, daraufhin wird {npc:162588} zu euch herunter geflogen kommen."
 L["leeda_note"] = "Töte die zwei {npc:162220} bis {npc:162180} erscheint."
 L["nirvaska_note"] = "Erscheint nur, wenn die Weltquest {wq:Tödliche Erinnerung} aktiv ist."
+L["ravenomous_note"] = nil
 L["sabriel_note"] = "Kann als einer der Champions im Theater der Schmerzen auftreten."
 L["schmitd_note"] = "Benutze nahegelegene {spell:313451}, um sein Schild zu brechen."
 L["taskmaster_xox_note"] = "Teilt sich einen spawn mit {npc:160204}, {npc:160230} und {npc:160226}."
@@ -329,6 +332,7 @@ L["amalgamation_of_sin_note"] = "Wähle bei der Weltquest {wq:Ruft Eure Sünden 
 L["bog_beast_note"] = "Hat eine Chance zu erscheinen, wenn während der Weltquest {wq:Losgeschmuddelt} auf einen {npc:166206} {item:177880} angewendet wird."
 L["endlurker_note"] = "Klicke den Animapflock neben {npc:165229s} Leiche (65.4, 60.0) an und verwende den {spell:321826} an einem Schimmerndem Riss."
 L["executioner_aatron_note"] = "Töte die drei {npc:166715} in der Nähe, um die {spell:324872} zu entfernen."
+L["executioner_adrastia_note"] = nil
 L["famu_note"] = "Sprich mit {npc:166483}, um das Event auszulösen."
 L["grand_arcanist_dimitri_note"] = "Töte die vier |CFFFFFF00Verhüllten Ritualisten|r, um {npc:167464} freizulassen." --{npc:167467}
 L["harika_note"] = "Plündere den {item:176397} in Schauerkuppe, dann gib {npc:165327} den Bolzen und sage ihm, er soll {npc:165290} vom Himmel holen."
@@ -404,7 +408,6 @@ L["apholeias_note"] = "Stelle dich mit drei anderen Spielern in die Ecken der Pl
 L["dekaris_note"] = "Auf einem großen hervorstehenden Felsen."
 L["drifting_sorrow_note"] = "Töte {npc:175246} in der Nähe der schwebenden Kugel, um den Boss zu aktivieren."
 L["ekphoras_note"] = "Stelle dich mit drei anderen Spielern in die Ecken der Plattform und wirkt {spell:330650}, um {npc:169827} zu beschwören."
-L["gorged_shadehound_note"] = "Nur während dem Event {wq: Jagd: Schemenhunde} verfügbar."
 L["ikras_note"] = "Fliegt um die Verdammnisfestung herum. Das ist ein guter Platz ihn anzugreifen."
 L["orophea_note"] = "Hebe das {spell:337143} im Südosten auf und biete es {npc:172577} an, um sie zu aktivieren."
 L["sanngror_note"] = "\nWenn er gerade nicht angreifbar ist, dann warte bis er nicht mehr mit Seelen experimentiert."

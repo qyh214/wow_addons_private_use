@@ -3,7 +3,7 @@ if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
 end
 local mod	= DBM:NewMod("z1803", "DBM-PvP")
 
-mod:SetRevision("20201228165807")
+mod:SetRevision("20210211132233")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 mod:RegisterEvents("ZONE_CHANGED_NEW_AREA")
 
@@ -60,10 +60,13 @@ do
 			local vignette = C_VignetteInfo.GetVignetteInfo(vignetteids[i])
 			if vignette and vignette.vignetteGUID then
 				local poss = C_VignetteInfo.GetVignettePosition(vignette.vignetteGUID, 907)
-				if not poss then
+				if not poss or poss.x == 0 or poss.y == 0 then
 					return
 				end
 				local pos = round(poss.x) .. ":" .. round(poss.y)
+				if not azeriteNames[pos] then
+					DBM:Debug(("Found azerite at position unknown: %d, %d"):format(poss.x, poss.y))
+				end
 				checkedThisRound[pos] = true
 				if not knownAzerite[pos] then
 					knownAzerite[pos] = true

@@ -108,6 +108,14 @@ function AS:BigWigs(event, addon)
 				end
 			end
 
+			bar.candyBarLabel:ClearAllPoints()
+			bar.candyBarLabel:Point("LEFT", bar, "LEFT", 2, AS:AdjustForTheme(12))
+			bar.candyBarLabel:Point("RIGHT", bar, "RIGHT", -2, AS:AdjustForTheme(12))
+
+			bar.candyBarDuration:ClearAllPoints()
+			bar.candyBarDuration:Point("LEFT", bar, "LEFT", 2, AS:AdjustForTheme(12))
+			bar.candyBarDuration:Point("RIGHT", bar, "RIGHT", -2, AS:AdjustForTheme(12))
+
 			bd:Show()
 			if AS:CheckOption('Theme') == 'ThickBorder' or AS:CheckOption('Theme') == 'TwoPixel' then
 				bd.InsideBorder:SetShown(AS:CheckOption('Theme') == 'ThickBorder' or AS:CheckOption('Theme') == 'TwoPixel')
@@ -115,8 +123,7 @@ function AS:BigWigs(event, addon)
 			end
 		end
 
-		local BigWigsBars = BigWigs:GetPlugin('Bars')
-		BigWigsBars:RegisterBarStyle('AddOnSkins', {
+		BigWigsAPI:RegisterBarStyle('AddOnSkins', {
 			apiVersion = 1, version = 10,
 			barSpacing = 3,
 			barHeight = 20,
@@ -124,7 +131,7 @@ function AS:BigWigs(event, addon)
 			BarStopped = function(bar) FreeStyle(bar) end,
 			GetStyleName = function() return 'AddOnSkins' end,
 		})
-		BigWigsBars:RegisterBarStyle('AddOnSkins Half-Bar', {
+		BigWigsAPI:RegisterBarStyle('AddOnSkins Half-Bar', {
 			apiVersion = 1, version = 10,
 			barSpacing = 13,
 			barHeight = 10,

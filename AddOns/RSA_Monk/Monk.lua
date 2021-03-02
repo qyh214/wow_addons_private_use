@@ -3,7 +3,6 @@
 ---------------------------------------------
 local RSA = LibStub('AceAddon-3.0'):GetAddon('RSA')
 local L = LibStub('AceLocale-3.0'):GetLocale('RSA')
-local LRI = LibStub('LibResInfo-1.0',true)
 local RSA_Monk = RSA:NewModule('Monk')
 
 local spellinfo,spelllinkinfo
@@ -16,53 +15,7 @@ function RSA_Monk:OnInitialize()
 	end
 end
 
-function RSA.Resurrect(_, _, target, _, caster)
-	if caster ~= 'player' then return end
-	local dest = UnitName(target)
-	local pName = UnitName('player')
-	local spell = 115178
-	local messagemax = #RSA.db.profile.Monk.Spells.Resuscitate.Messages.Start
-	if messagemax == 0 then return end
-	local messagerandom = math.random(messagemax)
-	local message = RSA.db.profile.Monk.Spells.Resuscitate.Messages.Start[messagerandom]
-	local full_destName
-	full_destName,dest = RSA.RemoveServerNames(dest)
-	spellinfo = GetSpellInfo(spell) spelllinkinfo = GetSpellLink(spell)
-	RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = dest,}
-	if message ~= '' then
-		if RSA.db.profile.Monk.Spells.Resuscitate.Local == true then
-			RSA.Print_LibSink(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-		if RSA.db.profile.Monk.Spells.Resuscitate.Yell == true then
-			RSA.Print_Yell(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-		if RSA.db.profile.Monk.Spells.Resuscitate.Whisper == true and dest ~= pName then
-			RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = L["You"],}
-			RSA.Print_Whisper(message, full_destName, RSA.Replacements, dest)
-			RSA.Replacements = {['[SPELL]'] = spellinfo, ['[LINK]'] = spelllinkinfo, ['[TARGET]'] = dest,}
-		end
-		if RSA.db.profile.Monk.Spells.Resuscitate.CustomChannel.Enabled == true then
-			RSA.Print_Channel(string.gsub(message, '.%a+.', RSA.String_Replace), RSA.db.profile.Monk.Spells.Resuscitate.CustomChannel.Channel)
-		end
-		if RSA.db.profile.Monk.Spells.Resuscitate.Say == true then
-			RSA.Print_Say(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-		if RSA.db.profile.Monk.Spells.Resuscitate.SmartGroup == true then
-			RSA.Print_SmartGroup(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-		if RSA.db.profile.Monk.Spells.Resuscitate.Party == true then
-			if RSA.db.profile.Monk.Spells.Resuscitate.SmartGroup == true and GetNumGroupMembers() == 0 then return end
-				RSA.Print_Party(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-		if RSA.db.profile.Monk.Spells.Resuscitate.Raid == true then
-			if RSA.db.profile.Monk.Spells.Resuscitate.SmartGroup == true and GetNumGroupMembers() > 0 then return end
-			RSA.Print_Raid(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-	end
-end
-
 function RSA_Monk:OnEnable()
-	if LRI then LRI.RegisterCallback(RSA, 'LibResInfo_ResCastStarted', 'Resurrect') end
 	RSA.db.profile.Modules.Monk = true -- Set state to loaded, to know if we should announce when a spell is refreshed.
 	local pName = UnitName('player')
 	local Config_Detox = {
@@ -82,6 +35,11 @@ function RSA_Monk:OnEnable()
 		SPELL_CAST_START = {
 			[212051] = { -- REAWAKEN
 				profile = 'Reawaken'
+			},
+			[115178] = { -- Resuscitate
+				profile = 'Resuscitate',
+				section = 'Start',
+				replacements = { TARGET = 1 },
 			},
 		},
 		SPELL_CAST_SUCCESS = {
@@ -296,5 +254,4 @@ end
 
 function RSA_Monk:OnDisable()
 	RSA.CombatLogMonitor:SetScript('OnEvent', nil)
-	if LRI then LRI.UnregisterAllCallbacks(RSA) end
 end

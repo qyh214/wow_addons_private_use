@@ -3,7 +3,6 @@
 ------------------------------------------------
 local RSA = LibStub('AceAddon-3.0'):GetAddon('RSA')
 local L = LibStub('AceLocale-3.0'):GetLocale('RSA')
-local LRI = LibStub('LibResInfo-1.0',true)
 local RSA_Paladin = RSA:NewModule('Paladin')
 
 local spellinfo,spelllinkinfo,extraspellinfo,extraspellinfolink,missinfo
@@ -19,54 +18,8 @@ function RSA_Paladin:OnInitialize()
 	end
 end
 
-function RSA.Resurrect(_, _, target, _, caster)
-	if caster ~= 'player' then return end
-	local dest = UnitName(target)
-	local pName = UnitName('player')
-	local spell = 7328
-	local messagemax = #RSA.db.profile.Paladin.Spells.Redemption.Messages.Start
-	if messagemax == 0 then return end
-	local messagerandom = math.random(messagemax)
-	local message = RSA.db.profile.Paladin.Spells.Redemption.Messages.Start[messagerandom]
-	local full_destName
-	full_destName,dest = RSA.RemoveServerNames(dest)
-	spellinfo = GetSpellInfo(spell) spelllinkinfo = GetSpellLink(spell)
-	RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = dest,}
-	if message ~= '' then
-		if RSA.db.profile.Paladin.Spells.Redemption.Local == true then
-			RSA.Print_LibSink(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-		if RSA.db.profile.Paladin.Spells.Redemption.Yell == true then
-			RSA.Print_Yell(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-		if RSA.db.profile.Paladin.Spells.Redemption.Whisper == true and dest ~= pName then
-			RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = L["You"],}
-			RSA.Print_Whisper(message, full_destName, RSA.Replacements, dest)
-			--RSA.Print_Whisper(string.gsub(message, '.%a+.', RSA.String_Replace), full_destName)
-			RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = dest,}
-		end
-		if RSA.db.profile.Paladin.Spells.Redemption.CustomChannel.Enabled == true then
-			RSA.Print_Channel(string.gsub(message, '.%a+.', RSA.String_Replace), RSA.db.profile.Paladin.Spells.Redemption.CustomChannel.Channel)
-		end
-		if RSA.db.profile.Paladin.Spells.Redemption.Say == true then
-			RSA.Print_Say(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-		if RSA.db.profile.Paladin.Spells.Redemption.SmartGroup == true then
-			RSA.Print_SmartGroup(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-		if RSA.db.profile.Paladin.Spells.Redemption.Party == true then
-			if RSA.db.profile.Paladin.Spells.Redemption.SmartGroup == true and GetNumGroupMembers() == 0 then return end
-				RSA.Print_Party(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-		if RSA.db.profile.Paladin.Spells.Redemption.Raid == true then
-			if RSA.db.profile.Paladin.Spells.Redemption.SmartGroup == true and GetNumGroupMembers() > 0 then return end
-			RSA.Print_Raid(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-	end
-end
-
 local function FinalStandCheck() -- Checks if we announce Divine Shield or Final Stand.
-	local _,_,_,selected = GetTalentInfo(5,2,1) -- Row 5 (1-7), Column 2 (1-3), Always 1 (Final Stand)
+	local _,_,_,selected = GetTalentInfo(7,3,1) -- Row 7 (1-7), Column 3 (1-3)
 	local talents = RSA.Talents()
 	if selected == true and talents == 2 then -- 1 Holy, 2 Protection, 3 Retribution
 		Config_DivineShield = {
@@ -97,7 +50,6 @@ end
 RSA.FinalStandCheck = FinalStandCheck -- Set the function globally so RSA_Options can force an update when the setting is changed.
 
 function RSA_Paladin:OnEnable()
-	if LRI then LRI.RegisterCallback(RSA, 'LibResInfo_ResCastStarted', 'Resurrect') end
 	RSA.db.profile.Modules.Paladin = true -- Set state to loaded, to know if we should announce when a spell is refreshed.
 	local pName = UnitName('player')
 	local Config_AvengingWrath = { -- AVENGING WRATH
@@ -147,6 +99,13 @@ function RSA_Paladin:OnEnable()
 		section = 'End',
 		replacements = { TARGET = 1 }
 	}
+	local Config_DivineSteed = { -- Divine Steed
+		profile = 'DivineSteed'
+	}
+	local Config_DivineSteed_End = { -- Divine Steed
+		profile = 'DivineSteed',
+		section = 'End'
+	}
 	MonitorConfig_Paladin = {
 		player_profile = RSA.db.profile.Paladin,
 		SPELL_DISPEL = {
@@ -176,6 +135,11 @@ function RSA_Paladin:OnEnable()
 		SPELL_CAST_START = {
 			[212056] = { -- ABSOLUTION
 				profile = 'Absolution',
+			},
+			[7328] = { -- Redemption
+				profile = 'Redemption',
+				section = 'Start',
+				replacements = { TARGET = 1 },
 			},
 		},
 		SPELL_CAST_SUCCESS = {
@@ -272,6 +236,15 @@ function RSA_Paladin:OnEnable()
 				profile = 'TyrsDeliverance',
 				targetIsMe = 1
 			},
+			[276112] = Config_DivineSteed, --Divine Steed
+			[254473] = Config_DivineSteed, --Divine Steed
+			[276111] = Config_DivineSteed, --Divine Steed
+			[254474] = Config_DivineSteed, --Divine Steed
+			[221887] = Config_DivineSteed, --Divine Steed
+			[254472] = Config_DivineSteed, --Divine Steed
+			[254471] = Config_DivineSteed, --Divine Steed
+			[221885] = Config_DivineSteed, --Divine Steed
+			[221886] = Config_DivineSteed, --Divine Steed
 		},
 		SPELL_AURA_REMOVED = {
 			[31884] = Config_AvengingWrath_End, -- AVENGING WRATH
@@ -367,6 +340,15 @@ function RSA_Paladin:OnEnable()
 				section = 'End',
 				targetIsMe = 1
 			},
+			[276112] = Config_DivineSteed_End, --Divine Steed
+			[254473] = Config_DivineSteed_End, --Divine Steed
+			[276111] = Config_DivineSteed_End, --Divine Steed
+			[254474] = Config_DivineSteed_End, --Divine Steed
+			[221887] = Config_DivineSteed_End, --Divine Steed
+			[254472] = Config_DivineSteed_End, --Divine Steed
+			[254471] = Config_DivineSteed_End, --Divine Steed
+			[221885] = Config_DivineSteed_End, --Divine Steed
+			[221886] = Config_DivineSteed_End, --Divine Steed
 		},
 		SPELL_INTERRUPT = {
 			[96231] = { -- REBUKE
@@ -444,5 +426,4 @@ end
 function RSA_Paladin:OnDisable()
 	RSA.CombatLogMonitor:SetScript('OnEvent', nil)
 	RSA.TalentMon:SetScript('OnEvent', nil)
-	if LRI then LRI.UnregisterAllCallbacks(RSA) end
 end

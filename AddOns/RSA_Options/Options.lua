@@ -700,6 +700,15 @@ local Options = {
 	},
 }
 
+--[[local function GetSpell(spellID)
+	if not GetSpellInfo(spellID) then
+		print(spellID .. ' is invalid.')
+	else
+		return GetSpellInfo(spellID)
+end]]--
+
+--local GetSpellInfo = GetSpell
+
 local function DeathKnight_Options()
 	local Spells = {
 		['Army'] = {
@@ -1399,6 +1408,15 @@ local function Hunter_Options()
 			Message_Areas = {'Cast'},
 			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]',},
 		},
+		['WildSpirit'] = {
+			Profile = 'WildSpirit',
+			Name = GetSpellInfo(328231),
+			Desc = GetSpellDescription(328231),
+			Message_Amount = 2,
+			Message_Areas = {'Placed', 'End'},
+			Message_Channels_Disabled = {["Whisper"] = true},
+			Valid_Tags = {'[SPELL]', '[LINK]'},
+		},
 	}
 	return Spells
 end
@@ -1511,6 +1529,14 @@ local function Mage_Options()
 			Message_Areas = {'Dispel'},
 			Message_Channels_Disabled = {["Whisper"] = true},
 			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]', '[AURA]', '[AURALINK]'},
+		},
+		["FocusMagic"] = {
+			Profile = 'FocusMagic',
+			Name = GetSpellInfo(321358),
+			Desc = GetSpellDescription(321358),
+			Message_Amount = 1,
+			Message_Areas = {'Start'},
+			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]'},
 		},
 	}
 	return Spells
@@ -1942,6 +1968,14 @@ local function Paladin_Options()
 			Message_Channels_Disabled = {["Whisper"] = true},
 			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]', '[MISSTYPE]'},
 		},
+        ['DivineSteed'] = {
+            Profile = 'DivineSteed',
+            Name = GetSpellInfo(190784),
+            Desc = GetSpellDescription(190784),
+            Message_Amount = 2,
+            Message_Areas = {'Start', 'End'},
+            Valid_Tags = {'[SPELL]', '[LINK]'},
+        },
 	}
 	return Spells
 end
@@ -2227,6 +2261,15 @@ local function Priest_Options()
 			Desc = GetSpellDescription(47536),
 			Message_Amount = 2,
 			Message_Areas = {'Start', 'End'},
+			Message_Channels_Disabled = {["Whisper"] = true},
+			Valid_Tags = {'[SPELL]', '[LINK]'},
+		},
+		["SpiritShell"] = {
+			Profile = 'SpiritShell',
+			Name = GetSpellInfo(109964),
+			Desc = GetSpellDescription(109964),
+			Message_Amount = 2,
+			Message_Areas = {'Cast', 'End'},
 			Message_Channels_Disabled = {["Whisper"] = true},
 			Valid_Tags = {'[SPELL]', '[LINK]'},
 		},
@@ -2561,6 +2604,15 @@ local function Shaman_Options()
 			Profile = 'EarthGrabTotem',
 			Name = GetSpellInfo(51485),
 			Desc = GetSpellDescription(51485),
+			Message_Amount = 2,
+			Message_Areas = {'Placed', 'End'},
+			Message_Channels_Disabled = {["Whisper"] = true},
+			Valid_Tags = {'[SPELL]', '[LINK]'},
+		},
+		["ManaTide"] = {
+			Profile = 'ManaTide',
+			Name = GetSpellInfo(16191),
+			Desc = GetSpellDescription(16191),
 			Message_Amount = 2,
 			Message_Areas = {'Placed', 'End'},
 			Message_Channels_Disabled = {["Whisper"] = true},
@@ -3066,7 +3118,7 @@ local function Utilities_Options()
 		["Feasts"] = {
 			Profile = 'Feasts',
 			Name = L['Feasts'],
-			Desc = GetSpellDescription(259410),
+			Desc = GetSpellDescription(308462),
 			Message_Amount = 1,
 			Message_Areas = {'Placed'},
 			Message_Channels_Disabled = {["Whisper"] = true},
@@ -3092,8 +3144,8 @@ local function Utilities_Options()
 		},
 		["EngineerRessBFA"] = {
 			Profile = 'EngineerRessBFA',
-			Name = GetSpellInfo(265116),
-			Desc = GetSpellDescription(265116),
+			Name = GetSpellInfo(348477),
+			Desc = GetSpellDescription(348477),
 			Message_Amount = 2,
 			Message_Areas = {'Cast','AcceptedRess'},
 			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]'},
@@ -3563,20 +3615,6 @@ local function Spell_Options(NonClass)
 			else
 				Options.args[Spells[i].Name].args[Spells[i].Message_Areas[k]].args.List_Description.name = '\n'.. L["You have %d messages for this section."]:format(#Messages)..L[" RSA will choose a message from this section at random, if you wish to remove a message, delete the contents and press enter. If no messages exist, nothing will be announced for this section."]
 			end
-
-
-			if Spells[i].Requirements then
-				for r=1,#Spells[i].Requirements do
-					if Spells[i].Requirements[r] == 'LRI' and k == 2 then -- k == 2 means it's the second message. The second message for resses in RSA is always the end message.
-					local LRI = LibStub('LibResInfo-1.0',true)
-					if not LRI then
-						Options.args[Spells[i].Name].args[Spells[i].Message_Areas[k]].args.List_Description.name = L["This section requires LibResInfo-1.0 to work. As you don't have it, nothing from this section will announce."]
-					end
-					end
-				end
-			end
-
-
 
 			for l=1,#Messages do
 				Options.args[Spells[i].Name].args[Spells[i].Message_Areas[k]].args[tostring(l)] = {

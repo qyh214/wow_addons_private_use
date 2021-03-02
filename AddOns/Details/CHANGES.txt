@@ -1,16 +1,46 @@
-lightweight tag c72cdea178e70dcacaef42aefae12753de93f758 DetailsRetail.9.0.2.8192b.144
+lightweight tag c8b02a5a38f94d935a4d2b7a1773c79fecccf12c DetailsRetail.9.0.2.8246.144
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Fri Jan 29 14:28:54 2021 -0300
+Date:	Wed Feb 17 14:01:53 2021 -0300
 
-commit c72cdea178e70dcacaef42aefae12753de93f758
+commit c8b02a5a38f94d935a4d2b7a1773c79fecccf12c
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Fri Jan 29 14:28:54 2021 -0300
+Date:   Wed Feb 17 14:01:53 2021 -0300
 
-    Fix the enoucnter table not found bug from latest version
+    Changelog for version 8246
+    
+    Added healing done to Coach feature (in testing).
+    Ignore Forgeborne Reveries healing done (Necrolords ability).
+    Arena enemy deaths now are shown in the Deaths display.
+    Guild statistics data has been wiped, this system had a major improvement overall.
+    Fixed 'Clear Overall Data' on Logout which wasn't clearing.
 
-commit a128d8b0c06f5c51cad219d0ff39bbf417bc493a
+commit 8b3165a8308550312f8aea6b1a920dc2f643eee6
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Fri Jan 29 11:17:46 2021 -0300
+Date:   Wed Feb 17 11:51:19 2021 -0300
 
-    Removed raidinfo for old raids
+    Ignore Forgeborne Reveries healing done
+
+commit 85038b0fece5ceddb7dc4a793df585cc38e0e0fd
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Thu Feb 11 11:39:12 2021 -0300
+
+    Added arena enemy deaths
+
+commit ada1552c9c0316f14267d37bc25c924ac4ff1bf7
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Wed Feb 10 13:45:15 2021 -0300
+
+    Added healing done to Coach
+
+commit d0c44e6b4364e8db7e9c723136138bc73c93637e
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Wed Feb 10 13:05:08 2021 -0300
+
+    Fixed Coach feature giving error when clicking a player bar
+
+commit c371a1a8e33105b587fe1057bf36bef2d9140903
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Wed Feb 10 13:04:28 2021 -0300
+
+    Fixed Clear Overall Data on Logout
 

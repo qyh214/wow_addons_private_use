@@ -26,10 +26,10 @@ local function SkinItem(item)
 	if item.Icon and not item.backdrop then
 		item.Icon:SetTexCoord(unpack(AS.TexCoords))
 		AS:CreateBackdrop(item)
+		AS:StyleButton(item)
 		item.Backdrop:SetAllPoints()
 		item.EmptySlot:Hide()
 		AS:SetInside(item.Icon, item.Backdrop)
-		--S:HandleIconBorder(item.IconBorder, item.backdrop) -- h a l p
 	end
 end
 
@@ -43,10 +43,21 @@ local function SetOutsideText(editbox, backdrop, width, height)
 	for i=1, editbox:GetNumRegions() do
 		local region = select(i, editbox:GetRegions())
 		if region and region:IsObjectType('FontString') then
-			--backdrop:SetOutside(region, width, height) -- h a l p
+			backdrop:SetOutside(region, width, height) -- h a l p
 			break
 		end
 	end
+end
+
+local function SkinMoneyInput(editbox, height)
+	local backdrop = editbox.Backdrop -- reference it before change, so it doesnt try to use InputBox backdrop
+	if editbox.labelText == 'Quantity' then
+		editbox = editbox.InputBox
+		editbox:StripTextures()
+	end
+
+	editbox:SetHeight(height)
+	SetOutsideText(editbox, backdrop, 6)
 end
 
 local function SkinMainFrames()
@@ -88,6 +99,8 @@ local function SkinMainFrames()
 	AS:SetOutside(selling.BagListing.ScrollFrame, selling.BagListing)
 	AS:SetOutside(selling.BagListing.ScrollFrame.Backdrop, selling.BagListing, 5, 5)
 
+	AS:SkinButton(list.ExportCSV)
+
 	AS:SkinDropDownBox(list.ListDropdown, 250)
 
 	-- handle sell item icon
@@ -121,9 +134,18 @@ local function SkinMainFrames()
 		config.ScanButton
 	}
 
+	local tabs = {
+		selling.HistoryTabsContainer.RealmHistoryTab,
+		selling.HistoryTabsContainer.YourHistoryTab
+	}
+
 	for _, button in ipairs(buttons) do
 		AS:SkinButton(button)
 		--button.Backdrop:SetFrameLevel(button:GetFrameLevel()) -- h a l p
+	end
+
+	for _, tab in ipairs(tabs) do
+		AS:SkinTab(tab)
 	end
 
 	local scrollbars = {
@@ -132,7 +154,8 @@ local function SkinMainFrames()
 		list.ScrollList.ScrollFrame.scrollBar,
 		list.ResultsListing.ScrollFrame.scrollBar,
 		selling.CurrentItemListing.ScrollFrame.scrollBar,
-		selling.HistoricalPriceListing.ScrollFrame.scrollBar
+		selling.HistoricalPriceListing.ScrollFrame.scrollBar,
+		selling.ResultsListing.ScrollFrame.scrollBar,
 	}
 
 	for _, scrollbar in ipairs(scrollbars) do
@@ -166,30 +189,23 @@ local function SkinMainFrames()
 	for _, editbox in ipairs(editboxes) do
 		AS:SkinEditBox(editbox)
 
-		local quantity = editbox.labelText == 'Quantity'
-		if editbox.iconAtlas or quantity then -- Money Input (Buyout Price) and Quantity
-			local backdrop = editbox.Backdrop -- reference it before change, so it doesnt try to use InputBox backdrop
-			if quantity then
-				editbox = editbox.InputBox
-				AS:StripTextures(editbox)
-			end
-
-			editbox:SetHeight(28)
-			SetOutsideText(editbox, backdrop, 6)
+		if editbox.iconAtlas or editbox.labelText == 'Quantity' then
+			SkinMoneyInput(editbox, 28)
 		elseif editbox.InputBox then
-			AS:StripTextures(editbox.InputBox)
+			editbox.InputBox:StripTextures()
 			editbox.Backdrop:SetAllPoints(editbox.InputBox)
 		end
 	end
 
 	selling.SaleItemFrame.MaxButton:ClearAllPoints()
-	selling.SaleItemFrame.MaxButton:SetPoint('LEFT', selling.SaleItemFrame.Quantity.backdrop, 'RIGHT', 5, 0)
+	selling.SaleItemFrame.MaxButton:SetPoint('LEFT', selling.SaleItemFrame.Quantity.Backdrop, 'RIGHT', 5, 0)
 
 	local headers = {
 		{ frame = list.ResultsListing.HeaderContainer, x = -20, y = -1 },
 		cancelling.ResultsListing.HeaderContainer,
 		selling.CurrentItemListing.HeaderContainer,
-		selling.HistoricalPriceListing.HeaderContainer
+		selling.HistoricalPriceListing.HeaderContainer,
+		selling.ResultsListing.HeaderContainer,
 	}
 
 	for _, header in ipairs(headers) do
@@ -216,7 +232,7 @@ local function SkinMainFrames()
 	end
 
 	-- create list backdrop
-	for i=1, list.ScrollList:GetNumRegions() do
+	for i = 1, list.ScrollList:GetNumRegions() do
 		local region = select(i, list.ScrollList:GetRegions())
 		if region:IsObjectType('Texture') and region:GetTexture() == 3054898 then
 			AS:StripTextures(region)
@@ -240,21 +256,31 @@ local function SkinOptions()
 	}
 
 	for _, frame in ipairs(options) do
-		for _, child in ipairs({frame:GetChildren()}) do
-			if child.CheckBox then AS:SkinCheckBox(child.CheckBox) end
-			if child.DropDown then AS:SkinDropDownBox(child.DropDown) end
-
-			if child.InputBox then
+		for i = 1, frame:GetNumChildren() do
+			local child = select(i, frame:GetChildren())
+			if child.CheckBox then
+				AS:SkinCheckBox(child.CheckBox)
+			elseif child.DropDown then
+				AS:SkinDropDownBox(child.DropDown)
+			elseif child.InputBox then
 				AS:SkinEditBox(child.InputBox)
 				SetOutsideText(child.InputBox, child.InputBox.Backdrop, 6, 6)
-			end
-
-			if child.radioButtons then
+			elseif child.MoneyInput then
+				for x = 1, child.MoneyInput:GetNumChildren() do
+					local box = select(x, child.MoneyInput:GetChildren())
+					if box and box.iconAtlas then
+						AS:SkinEditBox(box)
+						SkinMoneyInput(box, 30)
+					end
+				end
+			elseif child.radioButtons then
 				for _, duration in ipairs(child.radioButtons) do
 					if duration.RadioButton then
 						AS:SkinRadioButton(duration.RadioButton)
 					end
 				end
+			elseif child.Middle and strmatch(child.Middle:GetTexture(), 'UI%-Panel%-Button') then
+				AS:SkinButton(child)
 			end
 		end
 	end
@@ -286,10 +312,6 @@ local function SkinImportExport()
 	AS:CreateBackdrop(copy)
 	AS:CreateBackdrop(import)
 	AS:CreateBackdrop(export)
-
-	AS:StripTextures(copy)
-	AS:StripTextures(import)
-	AS:StripTextures(export)
 
 	AS:SkinScrollBar(copy.ScrollFrame.ScrollBar)
 	AS:SkinScrollBar(import.ScrollFrame.ScrollBar)

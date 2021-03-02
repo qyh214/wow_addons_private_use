@@ -3,7 +3,6 @@
 ----------------------------------------------
 local RSA = LibStub("AceAddon-3.0"):GetAddon("RSA")
 local L = LibStub("AceLocale-3.0"):GetLocale("RSA")
-local LRI = LibStub("LibResInfo-1.0",true)
 local RSA_Druid = RSA:NewModule("Druid")
 
 function RSA_Druid:OnInitialize()
@@ -17,7 +16,6 @@ end
 local spellinfo,spelllinkinfo,extraspellinfo,extraspellinfolink,missinfo
 
 function RSA_Druid:OnEnable()
-	--if LRI then LRI.RegisterCallback(RSA, "LibResInfo_ResCastStarted", "Resurrect") end
 	RSA.db.profile.Modules.Druid = true -- Set state to loaded, to know if we should announce when a spell is refreshed.
 	local pName = UnitName("player")
 	local Config_StampedingRoar = { -- STAMPEDING ROAR
@@ -444,5 +442,4 @@ end
 function RSA_Druid:OnDisable()
 	RSA.CombatLogMonitor:SetScript("OnEvent", nil)
 	RSA.ResMon:SetScript("OnEvent", nil)
-	if LRI then LRI.UnregisterAllCallbacks(RSA) end
 end

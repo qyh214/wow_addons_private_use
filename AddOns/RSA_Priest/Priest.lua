@@ -3,7 +3,6 @@
 -----------------------------------------------
 local RSA = LibStub('AceAddon-3.0'):GetAddon('RSA')
 local L = LibStub('AceLocale-3.0'):GetLocale('RSA')
-local LRI = LibStub('LibResInfo-1.0',true)
 local RSA_Priest = RSA:NewModule('Priest')
 
 local spellinfo,spelllinkinfo,extraspellinfo,extraspellinfolink,missinfo,GSTarget
@@ -16,54 +15,7 @@ function RSA_Priest:OnInitialize()
 	end
 end
 
-function RSA.Resurrect(_, _, target, _, caster)
-	if caster ~= 'player' then return end
-	local dest = UnitName(target)
-	local pName = UnitName('player')
-	local spell = 2006
-	local messagemax = #RSA.db.profile.Priest.Spells.Resurrection.Messages.Start
-	if messagemax == 0 then return end
-	local messagerandom = math.random(messagemax)
-	local message = RSA.db.profile.Priest.Spells.Resurrection.Messages.Start[messagerandom]
-	local full_destName
-	full_destName,dest = RSA.RemoveServerNames(dest)
-	spellinfo = GetSpellInfo(spell) spelllinkinfo = GetSpellLink(spell)
-	RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = dest,}
-	if message ~= '' then
-		if RSA.db.profile.Priest.Spells.Resurrection.Local == true then
-			RSA.Print_LibSink(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-		if RSA.db.profile.Priest.Spells.Resurrection.Yell == true then
-			RSA.Print_Yell(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-		if RSA.db.profile.Priest.Spells.Resurrection.Whisper == true and dest ~= pName then
-			RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = L["You"],}
-			--RSA.Print_Whisper(string.gsub(message, '.%a+.', RSA.String_Replace), full_destName)
-			RSA.Print_Whisper(message, full_destName, RSA.Replacements, dest)
-			RSA.Replacements = {["[SPELL]"] = spellinfo, ["[LINK]"] = spelllinkinfo, ["[TARGET]"] = dest,}
-		end
-		if RSA.db.profile.Priest.Spells.Resurrection.CustomChannel.Enabled == true then
-			RSA.Print_Channel(string.gsub(message, '.%a+.', RSA.String_Replace), RSA.db.profile.Priest.Spells.Resurrection.CustomChannel.Channel)
-		end
-		if RSA.db.profile.Priest.Spells.Resurrection.Say == true then
-			RSA.Print_Say(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-		if RSA.db.profile.Priest.Spells.Resurrection.SmartGroup == true then
-			RSA.Print_SmartGroup(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-		if RSA.db.profile.Priest.Spells.Resurrection.Party == true then
-			if RSA.db.profile.Priest.Spells.Resurrection.SmartGroup == true and GetNumGroupMembers() == 0 then return end
-				RSA.Print_Party(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-		if RSA.db.profile.Priest.Spells.Resurrection.Raid == true then
-			if RSA.db.profile.Priest.Spells.Resurrection.SmartGroup == true and GetNumGroupMembers() > 0 then return end
-			RSA.Print_Raid(string.gsub(message, '.%a+.', RSA.String_Replace))
-		end
-	end
-end
-
 function RSA_Priest:OnEnable()
-	if LRI then LRI.RegisterCallback(RSA, 'LibResInfo_ResCastStarted', 'Resurrect') end
 	RSA.db.profile.Modules.Priest = true -- Set state to loaded, to know if we should announce when a spell is refreshed.
 	local pName = UnitName('player')
 	local Config_MC = { -- Mind Control and Dominant Mind shadow talent
@@ -164,6 +116,11 @@ function RSA_Priest:OnEnable()
 				profile = 'MassDispel',
 				section = 'Start',
 			},
+			[2006] = { -- Resurrection
+				profile = 'Resurrection',
+				section = 'Start',
+				replacements = { TARGET = 1 },
+			},
 		},
 		SPELL_CAST_SUCCESS = {
 			[586] = Config_Fade, -- Fade
@@ -235,6 +192,10 @@ function RSA_Priest:OnEnable()
 			[246287] = {
 				profile = 'Evangelism',
 				section = 'Cast'
+			},
+			[109964] = {
+				profile = 'SpiritShell',
+				section = 'Cast',
 			},
 		},
 		SPELL_AURA_REMOVED = {
@@ -318,6 +279,10 @@ function RSA_Priest:OnEnable()
 			},
 			[47536] = {
 				profile = 'Rapture',
+				section = 'End',
+			},
+			[109964] = {
+				profile = 'SpiritShell',
 				section = 'End',
 			},
 		},
@@ -584,5 +549,4 @@ end
 
 function RSA_Priest:OnDisable()
 	RSA.CombatLogMonitor:SetScript('OnEvent', nil)
-	if LRI then LRI.UnregisterAllCallbacks(RSA) end
 end

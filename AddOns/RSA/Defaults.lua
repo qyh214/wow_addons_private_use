@@ -838,6 +838,15 @@ local function Hunter()
 				Whisper = true,
 				SmartGroup = true,
 			},
+			WildSpirit = {
+				Messages = {
+					Placed = {"[LINK] activated!"},
+					End = {"[LINK] faded!"},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+			},
 		},
 	}
 	return Hunter
@@ -944,6 +953,15 @@ local function Mage()
 				Messages = {
 					Start = {"[LINK] cast on [TARGET]!"},
 					End = {"[LINK] on [TARGET] ended!"},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+				Whisper = true,
+			},
+			FocusMagic = {
+				Messages = {
+					Start = {"[LINK] cast on [TARGET]!"},
 				},
 				CustomChannel = {
 					Channel = "",
@@ -1431,6 +1449,16 @@ local function Paladin()
 					Channel = "",
 				},
 			},
+            DivineSteed = {
+				Messages = {
+					Start = {"[LINK] activated!"},
+					End = {"[LINK] faded!"},
+					Disabled = "",
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+			},
 		},
 	}
 	return Paladin
@@ -1735,6 +1763,15 @@ local function Priest()
 			Evangelism = {
 				Messages = {
 					Cast = {"[LINK] activated!"},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+			},
+			SpiritShell = {
+				Messages = {
+					Cast = {"[LINK] activated!"},
+					End = {"[LINK] faded!"},
 				},
 				CustomChannel = {
 					Channel = "",
@@ -2097,6 +2134,15 @@ local function Shaman()
 				},
 			},
 			EarthGrabTotem = {
+				Messages = {
+					Placed = {"[LINK] placed!"},
+					End = {"[LINK] faded!"},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+			},
+			ManaTide = {
 				Messages = {
 					Placed = {"[LINK] placed!"},
 					End = {"[LINK] faded!"},

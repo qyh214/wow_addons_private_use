@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2403, "DBM-Party-Shadowlands", 2, 1183)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210127004858")
+mod:SetRevision("20210128202945")
 mod:SetCreatureID(164967)
 mod:SetEncounterID(2384)
 
@@ -56,7 +56,7 @@ mod.vb.lungeCount = 0
 function mod:OnCombatStart(delay)
 	self.vb.lungeCount = 0
 	--TODO, fine tune start timers, they are approximations using first MELEE swing of boss since WCL lacked proper start event for encounter
-	timerSlimeInjectionCD:Start(10.9-delay)
+	timerSlimeInjectionCD:Start(9.7-delay)--Too much variation on initial timer, if it acts up again it's being deleted
 	timerSlimeLungeCD:Start(33.2-delay)
 --	timerPestilenceSurgeCD:Start(40-delay)
 	if self.Options.RangeFrame then

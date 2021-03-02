@@ -1,8 +1,14 @@
 # <DBM> PvP
 
-## [r114](https://github.com/DeadlyBossMods/DBM-PvP/tree/r114) (2021-01-28)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-PvP/compare/r113...r114) [Previous Releases](https://github.com/DeadlyBossMods/DBM-PvP/releases)
+## [r116](https://github.com/DeadlyBossMods/DBM-PvP/tree/r116) (2021-02-21)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-PvP/compare/r115...r116) [Previous Releases](https://github.com/DeadlyBossMods/DBM-PvP/releases)
 
-- Debug on START\_TIMER to check for invalid values. (#77)  
-    * Debug on START\_TIMER to check for invalid values.  
-    Also give remainingTimer a better default value of 120 than 0  
+- Update PvPGeneral.lua (#85)  
+- Ignore invalid positions. (#84)  
+- Update PvPGeneral.lua (#83)  
+    * Update PvPGeneral.lua  
+    * Update localization.en.lua  
+- Bug fixes with remaining timer. (#82)  
+    * Update localization.en.lua  
+    * Update PvPGeneral.lua  
+- Update SeethingShore.lua (#81)  

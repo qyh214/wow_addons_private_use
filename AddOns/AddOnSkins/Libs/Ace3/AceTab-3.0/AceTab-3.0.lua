@@ -2,7 +2,7 @@
 -- Note: This library is not yet finalized.
 -- @class file
 -- @name AceTab-3.0
--- @release $Id$
+-- @release $Id: AceTab-3.0.lua 1202 2019-05-15 23:11:22Z nevcairiel $
 
 local ACETAB_MAJOR, ACETAB_MINOR = 'AceTab-3.0', 9
 local AceTab, oldminor = LibStub:NewLibrary(ACETAB_MAJOR, ACETAB_MINOR)

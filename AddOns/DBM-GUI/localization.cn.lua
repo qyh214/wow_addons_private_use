@@ -1,7 +1,7 @@
 -- Diablohu(diablohudream@gmail.com)
 -- yleaf(yaroot@gmail.com)
 -- sunlcy@NGA
--- Mini Dragon <流浪者酒馆-Brilla@金色平原> 20210108
+-- Mini Dragon <流浪者酒馆-Brilla@金色平原> 20210202
 
 if GetLocale() ~= "zhCN" then return end
 if not DBM_GUI_L then DBM_GUI_L = {} end
@@ -109,8 +109,7 @@ L.RecordOnlyBosses			= "只记录团队BOSS数据 (不记录其他数据，使�
 L.LogOnlyNonTrivial			= "只记录团队Boss，而不记录随机团队/5人本/场景战役"
 --
 L.Area_3rdParty				= "第三方插件选项"
-L.ShowBBOnCombatStart		= "战斗开始时使用Big Brother的buff检测"
-L.BigBrotherAnnounceToRaid	= "报告Big Brother的检测结果给团队"
+L.oRA3AnnounceConsumables	= "在战斗开始时通告oRA3消耗品检查"
 L.Area_Invite				= "组队邀请选项"
 L.AutoAcceptFriendInvite	= "自动接受来自好友列表里的好友的组队邀请"
 L.AutoAcceptGuildInvite		= "自动接受同公会成员的组队邀请"

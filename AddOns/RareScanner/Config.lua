@@ -38,6 +38,14 @@ private.SOUNDS = {
 	["Level Up"] = "Interface\\AddOns\\RareScanner\\Media\\levelup2-4.ogg",
 }
 
+private.CHANNELS = {
+	["Master"] = "Master",
+	["SFX"] = "SFX",
+	["Music"] = "Music",
+	["Ambience"] = "Ambience",
+	["Dialog"] = "Dialog",
+}
+
 private.MARKERS = {
 	["Star"] = "Interface\\TARGETINGFRAME\\UI-RaidTargetingIcon_1",
 	["Circle"] = "Interface\\TARGETINGFRAME\\UI-RaidTargetingIcon_2",
@@ -326,7 +334,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				scanOnPetBattle = {
-					order = 7,
+					order = 8,
 					name = AL["ENABLE_SCAN_ON_PET_BATTLE"],
 					desc = AL["ENABLE_SCAN_ON_PET_BATTLE_DESC"],
 					type = "toggle",
@@ -337,7 +345,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				scanWorldMapVignettes = {
-					order = 8,
+					order = 9,
 					name = AL["ENABLE_SCAN_WORLDMAP_VIGNETTES"],
 					desc = AL["ENABLE_SCAN_WORLDMAP_VIGNETTES_DESC"],
 					type = "toggle",
@@ -348,7 +356,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				showMaker = {
-					order = 9,
+					order = 10,
 					name = AL["ENABLE_MARKER"],
 					desc = AL["ENABLE_MARKER_DESC"],
 					type = "toggle",
@@ -359,7 +367,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				marker = {
-					order = 10,
+					order = 11,
 					type = "select",
 					dialogControl = 'RS_Markers',
 					name = AL["MARKER"],
@@ -373,12 +381,12 @@ local function GetGeneralOptions()
 					disabled = function() return not RSConfigDB.IsDisplayingMarkerOnTarget() end,
 				},
 				separatorIngameWaypoints = {
-					order = 11,
+					order = 12,
 					type = "header",
 					name = AL["INGAME_WAYPOINTS"],
 				},
 				enableIngameWaypoints = {
-					order = 12,
+					order = 13,
 					name = AL["ENABLE_WAYPOINTS_SUPPORT"],
 					desc = AL["ENABLE_WAYPOINTS_SUPPORT_DESC"],
 					type = "toggle",
@@ -389,7 +397,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				autoIngameWaypoints = {
-					order = 13,
+					order = 14,
 					name = AL["ENABLE_AUTO_WAYPOINTS"],
 					desc = AL["ENABLE_AUTO_WAYPOINTS_DESC"],
 					type = "toggle",
@@ -401,12 +409,12 @@ local function GetGeneralOptions()
 					disabled = function() return not RSConfigDB.IsWaypointsSupportEnabled() end,
 				},
 				separatorTomtomWaypoints = {
-					order = 14,
+					order = 15,
 					type = "header",
 					name = AL["TOMTOM_WAYPOINTS"],
 				},
 				enableTomtomSupport = {
-					order = 15,
+					order = 16,
 					name = AL["ENABLE_TOMTOM_SUPPORT"],
 					desc = AL["ENABLE_TOMTOM_SUPPORT_DESC"],
 					type = "toggle",
@@ -418,7 +426,7 @@ local function GetGeneralOptions()
 					disabled = function() return not TomTom end,
 				},
 				autoTomtomWaypoints = {
-					order = 16,
+					order = 17,
 					name = AL["ENABLE_AUTO_TOMTOM_WAYPOINTS"],
 					desc = AL["ENABLE_AUTO_TOMTOM_WAYPOINTS_DESC"],
 					type = "toggle",
@@ -511,6 +519,19 @@ local function GetSoundOptions()
 						RSConfigDB.SetSoundVolume(value)
 					end,
 					width = "full",
+					disabled = function() return RSConfigDB.IsPlayingSound() and RSConfigDB.IsPlayingObjectsSound() end,
+				},
+				channel = {
+					order = 6,
+					type = "select",
+					name = AL["SOUND_CHANNEL"],
+					desc = AL["SOUND_CHANNEL_DESC"],
+					values = private.CHANNELS,
+					get = function() return RSConfigDB.GetSoundChannel() end,
+					set = function(_, value)
+						RSConfigDB.SetSoundChannel(value)
+					end,
+					width = "normal",
 					disabled = function() return RSConfigDB.IsPlayingSound() and RSConfigDB.IsPlayingObjectsSound() end,
 				}
 			},
@@ -2093,7 +2114,41 @@ local function GetLootFilterOptions()
 						},
 					},
 					disabled = function() return (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
-				}
+				},
+				tooltips = {
+					type = "group",
+					order = 6,
+					name = AL["MAP_TOOLTIPS"],
+					handler = RareScanner,
+					desc = AL["MAP_TOOLTIPS"],
+					args = {
+						commands = {
+							order = 1,
+							type = "toggle",
+							name = AL["MAP_TOOLTIPS_COMMANDS"],
+							desc = AL["MAP_TOOLTIPS_COMMANDS_DESC"],
+							get = function() return RSConfigDB.IsShowingLootTooltipsCommands() end,
+							set = function(_, value)
+								RSConfigDB.SetShowingLootTooltipsCommands(value)
+							end,
+							width = "full",
+							disabled = function() return (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
+						},
+						canImogit = {
+							order = 2,
+							type = "toggle",
+							name = AL["LOOT_TOOLTIPS_CANIMOGIT"],
+							desc = AL["LOOT_TOOLTIPS_CANIMOGIT_DESC"],
+							get = function() return RSConfigDB.IsShowingLootCanimogitTooltip() end,
+							set = function(_, value)
+								RSConfigDB.SetShowingLootCanimogitTooltip(value)
+							end,
+							width = "full",
+							disabled = function() return (not CanIMogIt or (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap())) end,
+						}
+					},
+					disabled = function() return (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
+				},
 			},
 		}
 		

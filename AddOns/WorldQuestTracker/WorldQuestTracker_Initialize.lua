@@ -207,7 +207,14 @@ do
 			tracker_show_time = false,
 			tracker_textsize = 12,
 
-			talking_heads = {},
+			talking_heads_heard = {},
+			talking_heads_torgast = true,
+			talking_heads_dungeon = true,
+			talking_heads_raid = true,
+			talking_heads_openworld = true,
+
+			flymaster_tracker_frame_pos = {},
+			flymaster_tracker_enabled = true,
 			
 			show_faction_frame = true,
 			

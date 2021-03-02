@@ -17,6 +17,7 @@ L["anima_channeled"] = "anima canalisé vers %s."
 
 L["deifir_note"] = "Faites tourner le rare en cercle et utilisez {spell:319566}  et {spell:319575} pour le ralentir et l'étourdir."
 L["faeflayer_note"] = "Dans une petite grotte cachée derrière une chute d'eau."
+L["gormbore_note"] = nil
 L["gormtamer_tizo_note"] = "Tuez des Lutins Poil-de-pin dans le Maquis Voile-de-Brume jusqu'à ce que {npc:164110} apparaisse."
 L["humongozz_note"] = "Plantez un {item:175247} dans le Terreau humide pour y faire apparaître un {npc:164122}. Le champignon peut être récupéré sur de nombreux monstres de la zone."
 L["lehgo_note"] = "Détruisez les œufs de Gorm frémissants et tuez des {npc:171827} jusqu'à ce qu'il apparaisse. Dans une grotte (entrée au sud-est dans les Terriers poussiéreux)."
@@ -119,6 +120,7 @@ Les Granules peuvent être collectées à partir de Bidons d'Anima épuisés sit
 
 |cFFFF8C00Ne peut être vaincu lors de l'expédition {wq:Assaut sur le vestibule}.|r
 ]]
+L["reekmonger_note"] = "Tuez des ennemis dans le Temple du Courage jusqu'à ce que {npc:171327} lance une émote dans le chat et atterrisse."
 L["repair_note"] = "Avec deux autres joueurs, cliquez sur l'encens antique pour l'invoquer."
 L["sotiros_orstus_note"] = "Cliquez sur la Cloche noire pour invoquer les rares."
 L["sundancer_note"] = "Cliquez sur la statue pour obtenir le buff {spell:332309}, puis utilisez un {item:180445} pour planer jusqu'au rare et le monter."
@@ -244,6 +246,7 @@ L["gieger_note"] = "Tirez sur le {npc:162815} pour activer le rare."
 L["gristlebeak_note"] = "Brisez tout les {npc:162761} à proximité pour affronter le rare."
 L["leeda_note"] = "Tuez les deux {npc:162220} jusqu'à ce que le rare apparaisse."
 L["nirvaska_note"] = "N'apparaît que lorsque l'expédition {wq:Rappel Mortel} est active."
+L["ravenomous_note"] = "Écrasez les {npc:159901s} neutres dans la zone, jusqu'à ce que le rare apparaisse."
 L["sabriel_note"] = "Peut apparaître comme l'un des champions du Théâtre de la souffrance."
 L["schmitd_note"] = "Utilisez la {spell:313451} proche pour briser son bouclier."
 L["taskmaster_xox_note"] = "Partage son apparition avec {npc:160204}, {npc:160230} et {npc:160226}."
@@ -292,21 +295,16 @@ Oh, regardez ! Une {spell:343124} ! Approchez-vous, courageux aventurier, ce n'e
 ]]
 
 L["oonar_sorrowbane_note"] = [[
-Dans le Théâtre de la souffrance, vous trouverez Fléau-de-chagrin coincé dans le sol et le Bras d'Oonar qui y est attaché. |cFFFF8C00Avant de tenter de tirer l'un ou l'autre, réglez votre {item:6948} sur {npc:161702} près du point de vol.|r
+Dans le Théâtre de la souffrance, vous trouverez {item:180273} coincé dans le sol et le {item:181164} qui y est attaché. Pour les libérer :
 
-Pour extraire {item:181164} en toute sécurité :
-
-• Voyagez vers la Deliquescense de Glutharn à l'est.
-• Mangez 4x {spell:327367} (debuff de 2min).
-• Utilisez rapidement votre pierre de foyer et tirez sur le bras.
-
-Pour extraire {item:180273} en toute sécurité :
-
-• Achetez 1 {item:182163} auprès de {npc:171808} à Revendreth.
+• Achetez 1 {item:182163} à {npc:171808} à Revendreth.
 • Achetez 1 {item:180771} à {npc:166640} à Maldraxxus.
+• Achetez 1 {item:181163} à {npc:169964} à Maldraxxus.
 • Obtenez 2 charges de {spell:306272} de l'expédition {wq:Quelques accidents de parcours} à l'ouest.
-• Mangez 4x {spell:327367} dans la Deliquescense de Glutharn.
-• Utilisez rapidement votre pierre de foyer, buvez les deux potions et tirez sur l'épée.
+• Mangez 4x {spell:327367} à la Deliquescense de Glutharn.
+• Utilisez rapidement le {item:181163}, buvez les deux potions et tirez sur l'épée ainsi que le bras.
+
+Pour retirer seulement le bras, seuls quatre 4x {spell:327367} sont nécessaires.
 ]]
 
 L["pet_cat"] = "Caressez ce satané chat !"
@@ -332,6 +330,7 @@ L["amalgamation_of_sin_note"] = "Lors de l'expédition {wq:Invocation de vices},
 L["bog_beast_note"] = "A une chance d'apparaître pendant l'expédition {wq:Bourbe à gogo} après avoir utilisé {item:177880} sur une {npc:166206}."
 L["endlurker_note"] = "Cliquez sur le Pieu d'Anima près du cadavre de {npc:165229} et utilisez {spell:321826} au sommet de la Faille chatoyante."
 L["executioner_aatron_note"] = "Tuez les trois PNJ proches {npc:166715} pour retirer {spell:324872}."
+L["executioner_adrastia_note"] = nil
 L["famu_note"] = "Parlez à {npc:166483} pour déclencher l'événement."
 L["grand_arcanist_dimitri_note"] = "Tuez les quatre PNJ {npc:167467} pour libérer le rare."
 L["harika_note"] = "À Combeffroi, à l'ouest, procurez-vous un {item:176397}, puis donnez le carreau à {npc:165327} et dites-lui de faire tomber le rare."
@@ -411,7 +410,6 @@ L["apholeias_note"] = "Avec 3 autres joueurs, placez-vous sur les coins de la pl
 L["dekaris_note"] = "Au sommet d'un gros rocher en saillie."
 L["drifting_sorrow_note"] = "Tuez des {npc:175246s} près de l'orbe flottante pour activer le boss."
 L["ekphoras_note"] = "Avec 3 autres joueurs, placez-vous sur les coins de la plateforme et lancez {spell:330650} pour invoquer le rare."
-L["gorged_shadehound_note"] = "Disponible seulement pendant l'événement {wq:chasse : molosses d’ombre}."
 L["ikras_note"] = "Vole autour du Fort de la Perdition. C'est un bon endroit pour l'attirer."
 L["orophea_note"] = "Ramassez {spell:337143} au sud-est et proposez-le à {npc:172577} pour l'activer."
 L["sanngror_note"] = "S'il n'est pas attaquable, attendez qu'il n'expérimente plus sur des âmes."
