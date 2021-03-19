@@ -82,6 +82,7 @@ https://bbs.nga.cn/read.php?tid=24562077
 暗影国度地下城与团队副本：
 - 地下城和团队副本纳斯利亚堡：https://bbs.nga.cn/read.php?tid=24284671
 - 地下城仙林迷雾迷宫wa：https://wago.io/hVLym_eLv
+- 地下城仙林迷雾全自动导航（需要配合前面一个wa完成前2个迷宫）：https://wago.io/16cF_58a5
 
 盟约技能监视：https://wago.io/Covenant
 
