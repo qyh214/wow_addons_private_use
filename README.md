@@ -102,6 +102,8 @@ https://bbs.nga.cn/read.php?tid=24562077
 
 暴怒魔法效果提示（怪物buff驱散提示）：https://wago.io/r2QBcOnlT
 
+大秘境-死疽词缀警告-奶妈用：https://wago.io/p1ilh7DKv
+
 奶萨水盾、土盾提示：
 - 原版：https://bbs.nga.cn/read.php?tid=24506536
 - 自用大地之盾+水之护盾整合版：https://wago.io/9YVsyrNgm
