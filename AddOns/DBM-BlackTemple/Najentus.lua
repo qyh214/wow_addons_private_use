@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Najentus", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142051")
+mod:SetRevision("20210119194113")
 mod:SetCreatureID(22887)
 mod:SetEncounterID(601)
 mod:SetModelID(21174)
@@ -26,7 +26,7 @@ local timerShield		= mod:NewCDTimer(56, 39872, nil, nil, nil, 5)
 local berserkTimer		= mod:NewBerserkTimer(480)
 
 mod:AddSetIconOption("SpineIcon", 39837)
-mod:AddInfoFrameOption(39872, true)
+mod:AddInfoFrameOption(39878, true)
 mod:AddRangeFrameOption("8")
 
 function mod:OnCombatStart(delay)
@@ -36,9 +36,9 @@ function mod:OnCombatStart(delay)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(8)
 	end
-	if self.Options.InfoFrame and not self:IsTrivial(80) then
+	if self.Options.InfoFrame and not self:IsTrivial() then
 		DBM.InfoFrame:SetHeader(L.HealthInfo)
-		DBM.InfoFrame:Show(5, "health", 8800)
+		DBM.InfoFrame:Show(5, "health", 1800)
 	end
 end
 

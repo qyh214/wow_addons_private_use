@@ -76,14 +76,15 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame parentKey="Guide" Alpha="0">
+			<Frame parentKey="ShadowFrame" inherits="BackdropTemplate"/>
+			<Frame parentKey="Guide" hidden="true">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="TOPLEFT" y="0"/>
 					<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" y="0"/>
 				</Anchors>
 				<Layers>
 					<Layer level="OVERLAY">
-						<Texture parentKey="Picture" nounload="true">
+						<Texture parentKey="Picture">
 							<Anchors>
 								<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
 								<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT"/>

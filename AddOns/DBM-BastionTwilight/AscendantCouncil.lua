@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(158, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806141910")
+mod:SetRevision("20210130180947")
 mod:SetCreatureID(43686, 43687, 43688, 43689, 43735)
 mod:SetEncounterID(1028)
 mod:SetUsedIcons(3, 4, 5, 6, 7, 8)
@@ -613,7 +613,7 @@ function mod:OnSync(msg, boss)
 			timerFlameStrikeCD:Start(28)
 		end
 		timerQuakeCD:Start()
-		self:Schedule(3, checkSearingWinds)
+		self:Schedule(3, checkSearingWinds, self)
 	elseif msg == "PhaseTransition" and self:IsInCombat() then
 		self:Unschedule(checkSearingWinds)
 		self:Unschedule(checkGrounded)

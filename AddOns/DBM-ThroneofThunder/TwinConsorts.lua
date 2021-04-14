@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(829, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20210119194055")
 mod:SetCreatureID(68905, 68904)--Lu'lin 68905, Suen 68904
 mod:SetEncounterID(1560)
 mod:SetBossHPInfoToHighest()
@@ -147,7 +147,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 137408 then
 		local amount = args.amount or 1
-		local threatamount = self:IsTrivial(100) and 6 or 2
+		local threatamount = self:IsTrivial() and 6 or 2
 		timerFanOfFlames:Start(args.destName)
 		timerFanOfFlamesCD:Start()
 		if args:IsPlayer() then

@@ -264,12 +264,23 @@ function NP:ScalePlate(nameplate, scale, targetPlate)
 	end
 end
 
+function NP:PostUpdateAllElements(event)
+	if self == _G.ElvNP_Test or self.widgetsOnly then return end -- skip test and widget plates
+
+	if event and (event == 'ForceUpdate' or not NP.StyleFilterEventFunctions[event]) then
+		NP:StyleFilterUpdate(self, event)
+		self.StyleFilterBaseAlreadyUpdated = nil -- keep after StyleFilterUpdate
+	end
+
+	if event == 'NAME_PLATE_UNIT_ADDED' and self.isTarget then
+		NP:SetupTarget(self)
+	end
+end
+
 function NP:StylePlate(nameplate)
 	nameplate:ClearAllPoints()
 	nameplate:Point('CENTER')
 	nameplate:SetScale(E.global.general.UIScale)
-
-	nameplate.StyleFilterChanges = {}
 
 	nameplate.RaisedElement = NP:Construct_RaisedELement(nameplate)
 	nameplate.Health = NP:Construct_Health(nameplate)
@@ -296,6 +307,7 @@ function NP:StylePlate(nameplate)
 	nameplate.Cutaway = NP:Construct_Cutaway(nameplate)
 
 	NP:Construct_Auras(nameplate)
+	NP:StyleFilterEvents(nameplate) -- prepare the watcher
 
 	if E.myclass == 'DEATHKNIGHT' then
 		nameplate.Runes = NP:Construct_Runes(nameplate)
@@ -304,6 +316,8 @@ function NP:StylePlate(nameplate)
 	end
 
 	NP.Plates[nameplate] = nameplate:GetName()
+
+	hooksecurefunc(nameplate, 'UpdateAllElements', NP.PostUpdateAllElements)
 end
 
 function NP:UpdatePlate(nameplate, updateBase)
@@ -313,20 +327,12 @@ function NP:UpdatePlate(nameplate, updateBase)
 	NP:Update_QuestIcons(nameplate)
 
 	local db = NP:PlateDB(nameplate)
-	local sf = NP:StyleFilterChanges(nameplate)
-	if not db.enable then
-		NP:DisablePlate(nameplate)
+	if db.nameOnly or not db.enable then
+		NP:DisablePlate(nameplate, db.enable and db.nameOnly)
 
-		if nameplate.RaisedElement:IsShown() then
+		if not db.enable and nameplate.RaisedElement:IsShown() then
 			nameplate.RaisedElement:Hide()
 		end
-
-		if nameplate == _G.ElvNP_Test then
-			nameplate.Castbar:SetAlpha(0)
-			nameplate.ClassPower:SetAlpha(0)
-		end
-	elseif sf.Visibility or sf.NameOnly or db.nameOnly then
-		NP:DisablePlate(nameplate, sf.NameOnly or (db.nameOnly and not sf.Visibility))
 
 		if nameplate == _G.ElvNP_Test then
 			nameplate.Castbar:SetAlpha(0)
@@ -360,12 +366,6 @@ function NP:UpdatePlate(nameplate, updateBase)
 	else
 		NP:Update_Health(nameplate, true) -- this will only reset the ouf vars so it won't hold stale threat ones
 	end
-
-	if nameplate.isTarget and nameplate ~= _G.ElvNP_Test then
-		NP:SetupTarget(nameplate, nil, true)
-	end
-
-	NP:StyleFilterEvents(nameplate)
 end
 
 NP.DisableInNotNameOnly = {
@@ -395,7 +395,7 @@ elseif E.myclass == 'MONK' then
 	tinsert(NP.DisableElements, 'Stagger')
 end
 
-function NP:DisablePlate(nameplate, nameOnly)
+function NP:DisablePlate(nameplate, nameOnly, nameOnlySF)
 	for _, element in ipairs(NP.DisableElements) do
 		if nameplate:IsElementEnabled(element) then
 			nameplate:DisableElement(element)
@@ -403,8 +403,8 @@ function NP:DisablePlate(nameplate, nameOnly)
 	end
 
 	if nameOnly then
-		NP:Update_Tags(nameplate)
-		NP:Update_Highlight(nameplate)
+		NP:Update_Tags(nameplate, nameOnlySF)
+		NP:Update_Highlight(nameplate, nameOnlySF)
 
 		-- The position values here are forced on purpose.
 		nameplate.Name:ClearAllPoints()
@@ -424,6 +424,10 @@ function NP:DisablePlate(nameplate, nameOnly)
 
 		nameplate.Title:ClearAllPoints()
 		nameplate.Title:Point('TOP', nameplate.Name, 'BOTTOM', 0, -2)
+
+		if nameplate.isTarget then
+			NP:SetupTarget(nameplate, true)
+		end
 	else
 		for _, element in ipairs(NP.DisableInNotNameOnly) do
 			if nameplate:IsElementEnabled(element) then
@@ -433,33 +437,39 @@ function NP:DisablePlate(nameplate, nameOnly)
 	end
 end
 
+function NP:GetClassAnchor()
+	local TCP = _G.ElvNP_TargetClassPower
+	return TCP.realPlate or TCP
+end
+
 function NP:SetupTarget(nameplate, removed)
 	if not NP.db.units then return end
 
 	local TCP = _G.ElvNP_TargetClassPower
 	local cp = NP.db.units.TARGET.classpower
 
-	local db = NP:PlateDB(nameplate)
-	local sf = NP:StyleFilterChanges(nameplate)
+	if removed or not nameplate or not cp.enable then
+		TCP.realPlate = nil
+	else
+		local db = NP:PlateDB(nameplate)
+		TCP.realPlate = not db.nameOnly and nameplate or nil
+	end
 
-	TCP.realPlate = (cp.enable and not (removed or sf.NameOnly or db.nameOnly) and nameplate) or nil
-
-	local moveToPlate = TCP.realPlate or TCP
-
+	local anchor = NP:GetClassAnchor()
 	if TCP.ClassPower then
-		TCP.ClassPower:SetParent(moveToPlate)
+		TCP.ClassPower:SetParent(anchor)
 		TCP.ClassPower:ClearAllPoints()
-		TCP.ClassPower:Point('CENTER', moveToPlate, 'CENTER', cp.xOffset, cp.yOffset)
+		TCP.ClassPower:Point('CENTER', anchor, 'CENTER', cp.xOffset, cp.yOffset)
 	end
+
 	if TCP.Runes then
-		TCP.Runes:SetParent(moveToPlate)
+		TCP.Runes:SetParent(anchor)
 		TCP.Runes:ClearAllPoints()
-		TCP.Runes:Point('CENTER', moveToPlate, 'CENTER', cp.xOffset, cp.yOffset)
-	end
-	if TCP.Stagger then
-		TCP.Stagger:SetParent(moveToPlate)
+		TCP.Runes:Point('CENTER', anchor, 'CENTER', cp.xOffset, cp.yOffset)
+	elseif TCP.Stagger then
+		TCP.Stagger:SetParent(anchor)
 		TCP.Stagger:ClearAllPoints()
-		TCP.Stagger:Point('CENTER', moveToPlate, 'CENTER', cp.xOffset, cp.yOffset)
+		TCP.Stagger:Point('CENTER', anchor, 'CENTER', cp.xOffset, cp.yOffset)
 	end
 end
 
@@ -522,15 +532,7 @@ function NP:PLAYER_ENTERING_WORLD(_, initLogin, isReload)
 	end
 end
 
-function NP:ConfigureAll(skipUpdate)
-	if E.private.nameplates.enable ~= true then return end
-	NP:StyleFilterConfigure() -- keep this at the top
-	NP:SetNamePlateClickThrough()
-	NP:SetNamePlateSizes()
-	NP:PLAYER_REGEN_ENABLED()
-	NP:UpdateTargetPlate(_G.ElvNP_TargetClassPower)
-	NP:Update_StatusBars()
-
+function NP:ToggleStaticPlate()
 	local playerEnabled = NP.db.units.PLAYER.enable
 	local isStatic = NP.db.units.PLAYER.useStaticPosition
 
@@ -546,15 +548,20 @@ function NP:ConfigureAll(skipUpdate)
 	end
 
 	NP:SetCVar('nameplateShowSelf', (isStatic or not playerEnabled) and 0 or 1)
+end
 
+function NP:ConfigurePlates(init)
 	NP.SkipFading = true
 
 	if _G.ElvNP_Test:IsEnabled() then
 		NP:NamePlateCallBack(_G.ElvNP_Test, 'NAME_PLATE_UNIT_ADDED')
 	end
 
-	if skipUpdate then -- since this is a fake plate, we actually need to trigger this always
-		NP:NamePlateCallBack(_G.ElvNP_Player, (isStatic and playerEnabled) and 'NAME_PLATE_UNIT_ADDED' or 'NAME_PLATE_UNIT_REMOVED', 'player')
+	local staticEvent = (NP.db.units.PLAYER.enable and NP.db.units.PLAYER.useStaticPosition) and 'NAME_PLATE_UNIT_ADDED' or 'NAME_PLATE_UNIT_REMOVED'
+	if init then -- since this is a fake plate, we actually need to trigger this always
+		NP:NamePlateCallBack(_G.ElvNP_Player, staticEvent, 'player')
+
+		_G.ElvNP_Player.StyleFilterBaseAlreadyUpdated = nil
 		_G.ElvNP_Player:UpdateAllElements('ForceUpdate')
 	else -- however, these only need to happen when changing options
 		for nameplate in pairs(NP.Plates) do
@@ -567,17 +574,32 @@ function NP:ConfigureAll(skipUpdate)
 			end
 
 			if nameplate == _G.ElvNP_Player then
-				NP:NamePlateCallBack(_G.ElvNP_Player, (isStatic and playerEnabled) and 'NAME_PLATE_UNIT_ADDED' or 'NAME_PLATE_UNIT_REMOVED', 'player')
+				NP:NamePlateCallBack(_G.ElvNP_Player, staticEvent, 'player')
 			else
-				nameplate.previousType = nil -- we still need a full update
+				nameplate.previousType = nil -- keep over the callback, we still need a full update
 				NP:NamePlateCallBack(nameplate, 'NAME_PLATE_UNIT_ADDED')
 			end
 
+			nameplate.StyleFilterBaseAlreadyUpdated = nil
 			nameplate:UpdateAllElements('ForceUpdate')
 		end
 	end
 
 	NP.SkipFading = nil
+end
+
+function NP:ConfigureAll(init)
+	if E.private.nameplates.enable ~= true then return end
+
+	NP:StyleFilterConfigure() -- keep this at the top
+	NP:SetNamePlateClickThrough()
+	NP:SetNamePlateSizes()
+	NP:PLAYER_REGEN_ENABLED()
+	NP:UpdateTargetPlate(_G.ElvNP_TargetClassPower)
+	NP:Update_StatusBars()
+
+	NP:ConfigurePlates(init) -- keep before toggle static
+	NP:ToggleStaticPlate()
 end
 
 function NP:PlateFade(nameplate, timeToFade, startAlpha, endAlpha)
@@ -604,11 +626,75 @@ function NP:UpdatePlateGUID(nameplate, guid)
 	NP.PlateGUID[nameplate.unitGUID] = (guid and nameplate) or nil
 end
 
-function NP:NamePlateCallBack(nameplate, event, unit)
-	if event == 'NAME_PLATE_UNIT_ADDED' or (event == 'UNIT_FACTION' and nameplate) then
-		local updateBase = NP:StyleFilterClear(nameplate) -- keep this at the top
+function NP:UpdatePlateType(nameplate)
+	if nameplate == _G.ElvNP_Test then return end
 
-		unit = unit or nameplate.unit
+	if nameplate.isMe then
+		nameplate.frameType = 'PLAYER'
+
+		if NP.db.units.PLAYER.enable then
+			NP.PlayerNamePlateAnchor:ClearAllPoints()
+			NP.PlayerNamePlateAnchor:SetParent(NP.db.units.PLAYER.useStaticPosition and _G.ElvNP_Player or nameplate)
+			NP.PlayerNamePlateAnchor:SetAllPoints(NP.db.units.PLAYER.useStaticPosition and _G.ElvNP_Player or nameplate)
+			NP.PlayerNamePlateAnchor:Show()
+		end
+	elseif nameplate.isPVPSanctuary then
+		nameplate.frameType = 'FRIENDLY_PLAYER'
+	elseif not nameplate.isEnemy and (not nameplate.reaction or nameplate.reaction > 4) then -- keep as: not isEnemy, dont switch to isFriend
+		nameplate.frameType = (nameplate.isPlayer and 'FRIENDLY_PLAYER') or 'FRIENDLY_NPC'
+	else
+		nameplate.frameType = (nameplate.isPlayer and 'ENEMY_PLAYER') or 'ENEMY_NPC'
+	end
+end
+
+function NP:UpdatePlateSize(nameplate)
+	if nameplate.frameType == 'PLAYER' then
+		nameplate.width, nameplate.height = NP.db.plateSize.personalWidth, NP.db.plateSize.personalHeight
+	elseif nameplate.frameType == 'FRIENDLY_PLAYER' or nameplate.frameType == 'FRIENDLY_NPC' then
+		nameplate.width, nameplate.height = NP.db.plateSize.friendlyWidth, NP.db.plateSize.friendlyHeight
+	else
+		nameplate.width, nameplate.height = NP.db.plateSize.enemyWidth, NP.db.plateSize.enemyHeight
+	end
+
+	nameplate:Size(nameplate.width, nameplate.height)
+end
+
+function NP:UpdatePlateBase(nameplate)
+	if nameplate == _G.ElvNP_Test then
+		NP:UpdatePlate(nameplate, true)
+	elseif nameplate == _G.ElvNP_Player then
+		NP:UpdatePlate(nameplate, true)
+
+		nameplate.StyleFilterBaseAlreadyUpdated = true
+	else
+		local update = nameplate.frameType ~= nameplate.previousType
+		NP:UpdatePlate(nameplate, update)
+
+		nameplate.StyleFilterBaseAlreadyUpdated = update
+		nameplate.previousType = nameplate.frameType
+	end
+end
+
+function NP:NamePlateCallBack(nameplate, event, unit)
+	if event == 'UNIT_FACTION' then
+		if nameplate.widgetsOnly then return end
+
+		nameplate.faction = UnitFactionGroup(unit)
+		nameplate.reaction = UnitReaction('player', unit) -- Player Reaction
+		nameplate.repReaction = UnitReaction(unit, 'player') -- Reaction to Player
+		nameplate.isFriend = UnitIsFriend('player', unit)
+		nameplate.isEnemy = UnitIsEnemy('player', unit)
+
+		NP:UpdatePlateType(nameplate)
+		NP:UpdatePlateSize(nameplate)
+		NP:UpdatePlateBase(nameplate)
+
+		NP:StyleFilterUpdate(nameplate, event) -- keep this after UpdatePlateBase
+		nameplate.StyleFilterBaseAlreadyUpdated = nil -- keep after StyleFilterUpdate
+	elseif event == 'PLAYER_TARGET_CHANGED' then -- we need to check if nameplate exists in here
+		NP:SetupTarget(nameplate) -- pass it, even as nil here
+	elseif event == 'NAME_PLATE_UNIT_ADDED' then
+		if not unit then unit = nameplate.unit end
 
 		nameplate.blizzPlate = nameplate:GetParent().UnitFrame
 		nameplate.className, nameplate.classFile, nameplate.classID = UnitClass(unit)
@@ -633,36 +719,8 @@ function NP:NamePlateCallBack(nameplate, event, unit)
 			NP:UpdatePlateGUID(nameplate, nameplate.unitGUID)
 		end
 
-		NP:StyleFilterSetVariables(nameplate) -- sets: isTarget, isTargetingMe, isFocused
-
-		if nameplate ~= _G.ElvNP_Test then
-			if nameplate.isMe then
-				nameplate.frameType = 'PLAYER'
-
-				if NP.db.units.PLAYER.enable then
-					NP.PlayerNamePlateAnchor:ClearAllPoints()
-					NP.PlayerNamePlateAnchor:SetParent(NP.db.units.PLAYER.useStaticPosition and _G.ElvNP_Player or nameplate)
-					NP.PlayerNamePlateAnchor:SetAllPoints(NP.db.units.PLAYER.useStaticPosition and _G.ElvNP_Player or nameplate)
-					NP.PlayerNamePlateAnchor:Show()
-				end
-			elseif nameplate.isPVPSanctuary then
-				nameplate.frameType = 'FRIENDLY_PLAYER'
-			elseif not nameplate.isEnemy and (not nameplate.reaction or nameplate.reaction > 4) then -- keep as: not isEnemy, dont switch to isFriend
-				nameplate.frameType = (nameplate.isPlayer and 'FRIENDLY_PLAYER') or 'FRIENDLY_NPC'
-			else
-				nameplate.frameType = (nameplate.isPlayer and 'ENEMY_PLAYER') or 'ENEMY_NPC'
-			end
-		end
-
-		if nameplate.frameType == 'PLAYER' then
-			nameplate.width, nameplate.height = NP.db.plateSize.personalWidth, NP.db.plateSize.personalHeight
-		elseif nameplate.frameType == 'FRIENDLY_PLAYER' or nameplate.frameType == 'FRIENDLY_NPC' then
-			nameplate.width, nameplate.height = NP.db.plateSize.friendlyWidth, NP.db.plateSize.friendlyHeight
-		else
-			nameplate.width, nameplate.height = NP.db.plateSize.enemyWidth, NP.db.plateSize.enemyHeight
-		end
-
-		nameplate:Size(nameplate.width, nameplate.height)
+		NP:UpdatePlateType(nameplate)
+		NP:UpdatePlateSize(nameplate)
 
 		if nameplate.widgetsOnly then
 			NP:DisablePlate(nameplate)
@@ -684,19 +742,15 @@ function NP:NamePlateCallBack(nameplate, event, unit)
 				nameplate.RaisedElement:Show()
 			end
 
-			if nameplate == _G.ElvNP_Player or nameplate == _G.ElvNP_Test then
-				NP:UpdatePlate(nameplate, true)
-			else
-				NP:UpdatePlate(nameplate, updateBase or (nameplate.frameType ~= nameplate.previousType))
-				nameplate.previousType = nameplate.frameType
-			end
+			NP:UpdatePlateBase(nameplate)
+
+			NP:StyleFilterEventWatch(nameplate) -- fire up the watcher
+			NP:StyleFilterSetVariables(nameplate) -- sets: isTarget, isTargetingMe, isFocused
 		end
 
-		if NP.db.fadeIn and (event == 'NAME_PLATE_UNIT_ADDED' and nameplate.frameType ~= 'PLAYER') and not NP.SkipFading then
+		if (NP.db.fadeIn and not NP.SkipFading) and nameplate.frameType ~= 'PLAYER' then
 			NP:PlateFade(nameplate, 1, 0, 1)
 		end
-
-		NP:StyleFilterUpdate(nameplate, event) -- keep this at the end
 	elseif event == 'NAME_PLATE_UNIT_REMOVED' then
 		if nameplate ~= _G.ElvNP_Test then
 			if nameplate.frameType == 'PLAYER' then
@@ -704,8 +758,8 @@ function NP:NamePlateCallBack(nameplate, event, unit)
 			end
 
 			if nameplate.isTarget then
-				NP:SetupTarget(nameplate, true)
 				NP:ScalePlate(nameplate, 1, true)
+				NP:SetupTarget(nameplate, true)
 			end
 		end
 
@@ -713,7 +767,10 @@ function NP:NamePlateCallBack(nameplate, event, unit)
 			NP:UpdatePlateGUID(nameplate)
 		end
 
-		if nameplate.widgetsOnly and nameplate.widgetContainer then -- Place Widget Back on Blizzard Plate
+		if not nameplate.widgetsOnly then
+			NP:StyleFilterEventWatch(nameplate, true) -- shut down the watcher
+			NP:StyleFilterClearVariables(nameplate)
+		elseif nameplate.widgetContainer then -- Place Widget Back on Blizzard Plate
 			nameplate.widgetContainer:SetParent(nameplate.blizzPlate)
 			nameplate.widgetContainer:ClearAllPoints()
 			nameplate.widgetContainer:SetPoint('TOP', nameplate.blizzPlate.castBar, 'BOTTOM')
@@ -723,10 +780,6 @@ function NP:NamePlateCallBack(nameplate, event, unit)
 		nameplate.Health.cur = nil -- cutaway
 		nameplate.Power.cur = nil -- cutaway
 		nameplate.npcID = nil -- just cause
-
-		NP:StyleFilterClearVariables(nameplate) -- keep this at the end
-	elseif event == 'PLAYER_TARGET_CHANGED' then -- we need to check if nameplate exists in here
-		NP:SetupTarget(nameplate) -- pass it, even as nil here
 	end
 end
 

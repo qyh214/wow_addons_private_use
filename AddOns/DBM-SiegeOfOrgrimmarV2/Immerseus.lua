@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(852, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20210212020310")
 mod:SetCreatureID(71543)
 mod:SetEncounterID(1602)
 mod:SetReCombatTime(45)--Lets just assume he has same bug as tsulong in advance and avoid problems
@@ -72,7 +72,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerShaResidue:Start()
 	elseif spellId == 143524 and args:IsPlayer() then
 		timerPurifiedResidue:Start()
-	elseif spellId == 143297 and args:IsPlayer() and self:AntiSpam(2, 1) and not self:IsTrivial(100) then
+	elseif spellId == 143297 and args:IsPlayer() and self:AntiSpam(2, 1) and not self:IsTrivial() then
 		specWarnShaSplash:Show()
 		specWarnShaSplash:Play("runaway")
 	elseif spellId == 143574 then
@@ -112,7 +112,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 		timerBreathCD:Start(14)
 		timerSwirlCD:Start(24)
 		if self:IsMythic() then
-			timerSwellingCorruptionCD:Start(17)
+			timerSwellingCorruptionCD:Start(14.4)
 		end
 	elseif msg:find("spell:143020") then--split
 		warnSplit:Show()

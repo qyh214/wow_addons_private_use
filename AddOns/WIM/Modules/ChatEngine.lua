@@ -1570,7 +1570,7 @@ end
 
 local function createUserList()
 	-- Changes for Patch 9.0.1 - Shadowlands, retail and classic
-	local win = _G.CreateFrame("Frame", "WIM3_ChatUserList", WIM.WindowParent, isShadowlands and "BackdropTemplate");
+	local win = _G.CreateFrame("Frame", "WIM3_ChatUserList", WIM.WindowParent, isTBC and "BackdropTemplate");
 
     win:EnableMouse(true);
     win:Hide();
@@ -1581,7 +1581,7 @@ local function createUserList()
         tile = true, tileSize = 32, edgeSize = 32,
         insets = { left = 32, right = 32, top = 32, bottom = 32 }};
 
-	if not isShadowlands then
+	if not isTBC then
 		win:SetBackdrop(win.backdropInfo);
 	else
 		win:ApplyBackdrop();

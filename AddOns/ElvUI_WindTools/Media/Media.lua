@@ -42,22 +42,21 @@ do
 end
 
 do
-	
-    function F.GetRoleTexCoord(role)
+	function F.GetRoleTexCoord(role)
 		if role == "TANK" then
-			return .32/9.03, 2.04/9.03, 2.65/9.03, 4.3/9.03
+			return .32 / 9.03, 2.04 / 9.03, 2.65 / 9.03, 4.3 / 9.03
 		elseif role == "DPS" or role == "DAMAGER" then
-			return 2.68/9.03, 4.4/9.03, 2.65/9.03, 4.34/9.03
+			return 2.68 / 9.03, 4.4 / 9.03, 2.65 / 9.03, 4.34 / 9.03
 		elseif role == "HEALER" then
-			return 2.68/9.03, 4.4/9.03, .28/9.03, 1.98/9.03
+			return 2.68 / 9.03, 4.4 / 9.03, .28 / 9.03, 1.98 / 9.03
 		elseif role == "LEADER" then
-			return .32/9.03, 2.04/9.03, .28/9.03, 1.98/9.03
+			return .32 / 9.03, 2.04 / 9.03, .28 / 9.03, 1.98 / 9.03
 		elseif role == "READY" then
-			return 5.1/9.03, 6.76/9.03, .28/9.03, 1.98/9.03
+			return 5.1 / 9.03, 6.76 / 9.03, .28 / 9.03, 1.98 / 9.03
 		elseif role == "PENDING" then
-			return 5.1/9.03, 6.76/9.03, 2.65/9.03, 4.34/9.03
+			return 5.1 / 9.03, 6.76 / 9.03, 2.65 / 9.03, 4.34 / 9.03
 		elseif role == "REFUSE" then
-			return 2.68/9.03, 4.4/9.03, 5.02/9.03, 6.7/9.03
+			return 2.68 / 9.03, 4.4 / 9.03, 5.02 / 9.03, 6.7 / 9.03
 		end
 	end
 
@@ -143,16 +142,15 @@ do
 	if LSM["LOCALE_BIT_" .. locale] then
 		local region = LSM["LOCALE_BIT_" .. locale]
 		LSM:Register("font", "Accidental Presidency (en)", MediaPath .. "Fonts/AccidentalPresidency.ttf", region)
-		LSM:Register("font", "Montserrat (en)", MediaPath .. "Fonts/Montserrat-ExtraBold.ttf", region)
+		LSM:Register("font", "Montserrat (en)", MediaPath .. "Fonts/Montserrat.ttf", region)
 		LSM:Register("font", "Roadway (en)", MediaPath .. "Fonts/Roadway.ttf", region)
 		LSM:Register("font", "Homespun (en)", "Interface/Addons/ElvUI/Media/Fonts/Homespun.ttf", region)
 		LSM:Register("font", "ContinuumMedium (en)", "Interface/Addons/ElvUI/Media/Fonts/ContinuumMedium.ttf", region)
 		W.CompatibleFont = true
 	else
 		LSM:Register("font", "Accidental Presidency", MediaPath .. "Fonts/AccidentalPresidency.ttf", LSM.LOCALE_BIT_western)
-		LSM:Register("font", "Montserrat", MediaPath .. "Fonts/Montserrat-ExtraBold.ttf", LSM.LOCALE_BIT_western)
+		LSM:Register("font", "Montserrat", MediaPath .. "Fonts/Montserrat.ttf", LSM.LOCALE_BIT_western)
 		LSM:Register("font", "Roadway", MediaPath .. "Fonts/Roadway.ttf", LSM.LOCALE_BIT_western)
-		LSM:Register("font", "Visitor", MediaPath .. "Fonts/Visitor.ttf", LSM.LOCALE_BIT_western)
 		W.CompatibleFont = false
 	end
 end

@@ -498,6 +498,13 @@ function W:CheckCompatibility()
         "db.mui.maps.minimap.difficulty"
     )
 
+    self:CheckCompatibilityMerathilisUI(
+       L["Talent Manager"],
+       L["Talent Manager"],
+       "private.WT.combat.talentManager.enable",
+       "db.mui.talents.talentManager.enable"
+    )
+
     -- S&L
     self:CheckCompatibilityShadowAndLight(
         L["Move Frames"],
@@ -527,6 +534,7 @@ function W:CheckCompatibility()
         "private.sle.skins.objectiveTracker.enable"
     )
 
+    -- mMediaTag
     self:CheckCompatibilitymMediaTag(
         format("%s-%s", L["Tooltips"], L["Icon"]),
         L["Tooltip Icons"],

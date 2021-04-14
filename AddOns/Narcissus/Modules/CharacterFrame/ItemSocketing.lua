@@ -1,6 +1,5 @@
 local L = Narci.L;
 local GetItemQualityColor = NarciAPI.GetItemQualityColor;
-local Narci_GemInfo = Narci_GemInfo;
 local GetGemBonus = NarciAPI.GetGemBonus; --(Gem's itemID or hyperlink)
 local max = math.max;
 local min = math.min;
@@ -37,20 +36,6 @@ local function GetBagPosition(itemLink)
         end
     end
 end
-
-local GemBorderTexture = {
-	[1]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Unique",
-	[2]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Green",
-	[3]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Unique",
-	[4]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Unique",
-	[5]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Orange",
-	[6]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Purple",
-    [7]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Yellow",
-	[8]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Blue",	
-	[9]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot",
-	[10] = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Unique",
-	[11] = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot",
-}
 --]]
 
 local ItemBorderTexture = {
@@ -66,7 +51,7 @@ local ItemBorderTexture = {
     [10] = {0.625,  0.75},       --Red
 }
 
-local GetGemBorderTexture = NarciAPI.GetGemBorderTexture
+local GetGemBorderTexture = NarciAPI.GetGemBorderTexture;
 
 local function GetBorderTexCoord(itemSubClassID, itemID)
     local _, index = GetGemBorderTexture(itemSubClassID, itemID);
@@ -74,10 +59,12 @@ local function GetBorderTexCoord(itemSubClassID, itemID)
 end
 
 local function ShowFlyoutBlack(bool)
+    --Narci_FlyoutBlack.Black:SetColorTexture(28/255, 32/255, 40/255, 0.5);
     if Narci_EquipmentFlyoutFrame:IsShown() then return; end
-	Narci_FlyoutBlack.AnimFrame:Hide();
-	Narci_FlyoutBlack.AnimFrame.OppoDirection = not bool;
-	Narci_FlyoutBlack.AnimFrame:Show();
+    local frame = Narci_FlyoutBlack;
+	frame.AnimFrame:Hide();
+	frame.AnimFrame.OppoDirection = not bool;
+	frame.AnimFrame:Show();
 end
 
 local GemIDList, GemTypesByID = {}, {};
@@ -110,9 +97,9 @@ local function StatAbbreviationToFullForm(abbr)
     return abbr;
 end
 
-for GemID, info in pairs(Narci_GemInfo) do
-    tinsert(GemIDList, GemID);
-    GemTypesByID[GemID] = StatAbbreviationToFullForm(info[1]);
+for gemID, info in pairs(Narci_GemInfo) do
+    tinsert(GemIDList, gemID);
+    GemTypesByID[gemID] = StatAbbreviationToFullForm(info[1]);
 end
 
 local function SortedByID(a, b) return a > b; end
@@ -121,11 +108,10 @@ table.sort(GemIDList, SortedByID);
 local GemCountList = {};
 local BUTTON_HEIGHT = 48 --buttons[1] and buttons[1]:GetHeight()
 local NUM_BUTTONS_PER_PAGE = 4;
-local hasCounted = false;   --Only calculate once, until a Socketing succeed event fires
-local function GetTypeCount(CheckList)
+local function GetTypeCount(referenceList)
     local count = 0;
     local i = 0;
-    for k, itemID in pairs(CheckList) do
+    for k, itemID in pairs(referenceList) do
         count = GetItemCount(itemID);
         if count ~= 0 then
             i = i + 1;
@@ -134,15 +120,15 @@ local function GetTypeCount(CheckList)
     return i;
 end
 
-local function GetMatchCount(CheckList, OutputList)
-    wipe(OutputList);
+local function GetMatchCount(referenceList, outputList)
+    wipe(outputList);
     local count = 0;
     local i = 1;
     local types = {};
-    for k, itemID in pairs(CheckList) do
+    for k, itemID in pairs(referenceList) do
         count = GetItemCount(itemID);
         if count ~= 0 then
-            OutputList[i] = {itemID, count};
+            outputList[i] = {itemID, count};
             if i < 3 then
                 tinsert(types, GemTypesByID[itemID] );
             end
@@ -151,6 +137,10 @@ local function GetMatchCount(CheckList, OutputList)
     end
     
     return (i - 1), types[1], types[2]
+end
+
+local function RefreshAvailableGems()
+    GetMatchCount(GemIDList, GemCountList);
 end
 
 local function AjustShadowHeight(frame, numButtons)
@@ -170,12 +160,12 @@ local function AjustShadowHeight(frame, numButtons)
     end
 end
 
-local SocektedItemLvl = 1208;    --the ilvl of the item that's currently being socketed
+local SOCKETED_ITEM_LEVEL = 1208;    --the ilvl of the item that's currently being socketed
 local function DisplayButtons(itemCountList, disabledID, rootFrame, buttonTemplate)
-    local texCoord1, texCoord2, button, itemID, count, bonus, minLevel;
+    local button, itemID, count;
     local rootFrame = rootFrame or Narci_ItemSocketing;
     local scrollchild = rootFrame.ScrollFrame.scrollChild or Narci_ItemSocketing.ScrollFrame.scrollChild;
-    local buttonTemplate = buttonTemplate or "Narci_GearEnhancement_Template"
+    local buttonTemplate = buttonTemplate or "Narci_GearEnhancement_Template";
     if not rootFrame.buttons then
         rootFrame.buttons = {};
     end
@@ -203,32 +193,7 @@ local function DisplayButtons(itemCountList, disabledID, rootFrame, buttonTempla
         else
             itemID = itemCountList[i][1];
             count = itemCountList[i][2];
-            local _, _, _, _, icon, _, itemSubClassID = GetItemInfoInstant(itemID);
-            local name = C_Item.GetItemNameByID(itemID);
-            local quality = C_Item.GetItemQualityByID(itemID);
-            local r, g, b = GetItemQualityColor(quality);
-            button.r, button.g, button.b = r, g, b;
-            button.GemID = itemID;
-            button.ColorID = itemSubClassID;
-            button.ItemName:SetText(name);
-            button.Icon:SetTexture(icon);
-            button.Icon2:SetTexture(icon);
-            button.Icon3:SetTexture(icon);
-            button.Count:SetText(count);
-            bonus, minLevel = GetGemBonus(itemID);
-            button.Bonus:SetText(bonus);
-
-            texCoord1, texCoord2 = GetBorderTexCoord(itemSubClassID, itemID);
-            button.Border0:SetTexCoord(texCoord1, texCoord2, 0, 0.5);
-            button.Border1:SetTexCoord(texCoord1, texCoord2, 0.5, 1);
-            if itemID == disabledID or (minLevel and minLevel > SocektedItemLvl) then
-                --Irrelevent Item Alpha
-                button.ItemName:SetTextColor(0.44, 0.44, 0.44, 1);
-                button:Disable();
-            else
-                button.ItemName:SetTextColor(r, g, b, 1);
-                button:Enable();
-            end
+            button:SetItem(itemID, count, disabledID);
             button:Show();
         end
     end
@@ -237,15 +202,13 @@ local function DisplayButtons(itemCountList, disabledID, rootFrame, buttonTempla
     local ScrollFrame = rootFrame.ScrollFrame;
 
     local range = max( (numGems- NUM_BUTTONS_PER_PAGE - 0.35)*BUTTON_HEIGHT, 0);
-    local numButtons = NUM_ACTIVE_BUTTONS;
-
     local scrollBar = ScrollFrame.scrollBar;
     scrollBar:SetMinMaxValues(0, range);
     ScrollFrame.range = range;
     scrollBar:SetShown(range ~= 0);
-    local TotalButtons = min(numGems, NUM_BUTTONS_PER_PAGE + 0.4);
-    rootFrame:SetHeight(TotalButtons*BUTTON_HEIGHT);
-    AjustShadowHeight(rootFrame, TotalButtons);
+    local totalButtons = min(numGems, NUM_BUTTONS_PER_PAGE + 0.4);
+    rootFrame:SetHeight(totalButtons*BUTTON_HEIGHT);
+    AjustShadowHeight(rootFrame, totalButtons);
 end
 
 local function GetBagPosition(itemID)
@@ -258,11 +221,11 @@ local function GetBagPosition(itemID)
     end
 end
 
-local function AutoSocket(slotID, GemID)
+local function AutoSocket(slotID, gemID)
     --local item = Item:CreateFromItemID(itemID)
-    ClearCursor()
-    if not slotID or not GemID then return; end
-    local bagID, slotIndex = GetBagPosition(GemID);
+    ClearCursor();
+    if not slotID or not gemID then return; end
+    local bagID, slotIndex = GetBagPosition(gemID);
 
     if not(bagID and slotIndex) then return; end
     PickupContainerItem(bagID, slotIndex);
@@ -298,7 +261,6 @@ function Narci_ItemSocketing_ScrollFrame_OnLoad(self)
     self.buttonHeight = TotalHeight;
     self.range = MaxScroll;
     self.scrollBar:SetScript("OnValueChanged", function(self, value)
-        --HybridScrollFrame_SetOffset(self:GetParent(), value);
         self:GetParent():SetVerticalScroll(value);
         UpdateInnerShadowStates(self);
     end)
@@ -315,8 +277,8 @@ function Narci_ItemSocketing_Succeed()
     C_Timer.After(0.25, function()
         local slot = Narci_ItemSocketing.anchorSlot;
         slot:Refresh();
-        hasCounted = false;
-    end)
+    end);
+    RefreshAvailableGems();
 end
 
 NarciGemListButtonMixin = {};
@@ -340,7 +302,7 @@ function NarciGemListButtonMixin:ConfirmSocketing()
 
     Narci_ItemSocketing:RegisterEvent("UI_ERROR_MESSAGE");
     Narci_AlertFrame_Autohide:SetAnchor(Narci_ItemSocketing_GemFrame, -14, true);
-    AutoSocket(slotID, self.GemID);
+    AutoSocket(slotID, self.gemID);
 end
 
 function NarciGemListButtonMixin:OnDoubleClick()
@@ -357,6 +319,44 @@ end
 
 function NarciGemListButtonMixin:OnMouseUp()
     self.ButtonFill.animFill:Stop();
+end
+
+function NarciGemListButtonMixin:InsertGem()
+    if not self.gemID then return; end
+    ClearCursor();
+    local bagID, slotIndex = GetBagPosition(self.gemID);
+    if not(bagID and slotIndex) then return; end
+    PickupContainerItem(bagID, slotIndex);
+    ClickSocketButton(1)
+    ClearCursor();
+end
+
+function NarciGemListButtonMixin:SetItem(itemID, quantity, disabledID)
+    local _, _, _, _, icon, _, itemSubClassID = GetItemInfoInstant(itemID);
+    local name = C_Item.GetItemNameByID(itemID);
+    self.gemID = itemID;
+    self.ItemName:SetText(name);
+    self.Icon:SetTexture(icon);
+    self.Icon2:SetTexture(icon);
+    self.Icon3:SetTexture(icon);
+    self.Count:SetText(quantity);
+    local bonus, minLevel = GetGemBonus(itemID);
+    self.Bonus:SetText(bonus);
+
+    local texCoord1, texCoord2 = GetBorderTexCoord(itemSubClassID, itemID);
+    self.Border0:SetTexCoord(texCoord1, texCoord2, 0, 0.5);
+    self.Border1:SetTexCoord(texCoord1, texCoord2, 0.5, 1);
+
+    if itemID == disabledID or (minLevel and minLevel > SOCKETED_ITEM_LEVEL) then
+        --Irrelevent Item Alpha
+        self.ItemName:SetTextColor(0.44, 0.44, 0.44, 1);
+        self:Disable();
+    else
+        local quality = C_Item.GetItemQualityByID(itemID);
+        local r, g, b = GetItemQualityColor(quality);
+        self.ItemName:SetTextColor(r, g, b, 1);
+        self:Enable();
+    end
 end
 
 --------------------------------------
@@ -424,23 +424,26 @@ function NarciGemSlotMixin:OnEnter()
         tooltip.OtherGems:Hide();
     end
 
+    local ItemName = tooltip.ArtFrame.ItemName;
+    ItemName:ClearAllPoints();
     local _, bonus, name, quality, icon;
+
     if link then
         bonus = GetGemBonus(link);
         name, _, quality, _, _, _, _, _, _, icon = GetItemInfo(link);
+        ItemName:SetPoint("TOPLEFT", tooltip.ArtFrame, "LEFT", 25, -3);
     else
-        bonus = text or L["No Available Gem"];
-        tooltip.OtherGems:Hide();
         name = EMPTY;
         quality = 0;
         icon = 458977;
+        ItemName:SetPoint("LEFT", tooltip.ArtFrame, "LEFT", 25, 0);
     end
 
 	local r, g, b = GetItemQualityColor(quality);
 
 	tooltip.ArtFrame.Icon:SetTexture(icon);
-	tooltip.ArtFrame.ItemName:SetText(name);
-	tooltip.ArtFrame.ItemName:SetTextColor(r, g, b);
+	ItemName:SetText(name);
+	ItemName:SetTextColor(r, g, b);
 	tooltip.ArtFrame.Bonus:SetText(bonus);
 
 	tooltip:ClearAllPoints();
@@ -471,9 +474,9 @@ function NarciGemSlotMixin:OnClick()
         ShowFlyoutBlack(false);
         HideUIPanel(ItemSocketingFrame);
     else
-        SocektedItemLvl= self.ItemLevel;
+        SOCKETED_ITEM_LEVEL= self.ItemLevel;
         if self.numGems == 0 then return; end;
-        DisplayButtons(GemCountList, self.ItemID);
+        DisplayButtons(GemCountList, self.itemID);
         frame:ClearAllPoints();
         GemFrame:ClearAllPoints();
         --local scale = self:GetEffectiveScale();
@@ -543,26 +546,15 @@ function Narci_ItemSocketing_OnEvent(self, event, ...)
     C_Timer.After(0.6, function()
         for i = 1, #buttons do
             button = buttons[i]
-            id = button.GemID
+            id = button.gemID
             if not id then return; end
             count = GetItemCount(id);
             button.Count:SetText(count);
             if count == 0 then
-                --Irrelevent Item Alpha
                 button:Disable();
             end
         end
     end)
-end
-
-function Narci_OptionalGems_OnClick(self)
-    if not self.GemID then return; end
-    ClearCursor();
-    local bagID, slotIndex = GetBagPosition(self.GemID);
-    if not(bagID and slotIndex) then return; end
-    PickupContainerItem(bagID, slotIndex);
-    ClickSocketButton(1)
-    ClearCursor();
 end
 
 hooksecurefunc("SocketInventoryItem", function(slot)
@@ -575,20 +567,22 @@ end)
 
 hooksecurefunc("ItemSocketingFrame_LoadUI", function(name)
     if not Narci_Character or Narci_Character:IsShown() or not NarcissusDB or not NarcissusDB.GemManager then return; end
-    local frame;
-    if not Narci_ItemSocketing_ForBlizzardUI then
+
+    local frame = Narci_ItemSocketing_ForBlizzardUI;
+    if not frame then
         frame = CreateFrame("Frame", "Narci_ItemSocketing_ForBlizzardUI", ItemSocketingFrame, "Narci_ItemSocketing_ForBlizzardUI_Template")
     end
-    frame = Narci_ItemSocketing_ForBlizzardUI;
+
     if frame:IsShown() then return; end
-    GetMatchCount(GemIDList, GemCountList)
+    RefreshAvailableGems();
+
     if #GemCountList == 0 then return; end
     DisplayButtons(GemCountList, 1208, frame, "Narci_OptionalGems_Template")
     C_Timer.After(0.5, function()
         currentSocketingItemGemID = GetCurrentGemID(currentSocketingItemLink)
         DisplayButtons(GemCountList, currentSocketingItemGemID, frame, "Narci_OptionalGems_Template")
     end)
-    frame:SetAlpha(1)
+    frame:SetAlpha(1);
     frame:ClearAllPoints();
     frame:SetPoint("TOPLEFT", ItemSocketingFrame, "TOPRIGHT", 4 ,0)
     local UIScale = UIParent:GetEffectiveScale()

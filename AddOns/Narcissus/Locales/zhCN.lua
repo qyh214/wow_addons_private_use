@@ -191,6 +191,7 @@ L["Camera Transition"] = "镜头过渡";
 L["Camera Transition Description On"] = "当你打开角色面板时镜头会平滑地运动到预设位置。";
 L["Camera Transition Description Off"] = "镜头转换变为瞬时。此效果将在你第二次使用角色面板时开始生效。\n此效果会占用镜头预设#4。";
 L["Interface Options Tab Description"] = "你也可以点击位于屏幕左下角Narcissus工具栏右端的小齿轮按钮来打开偏好设置。";
+L["Conduit Tooltip"] = "显示更高级别的导灵器效果";
 
 --模型控制面板--
 NARCI_HOLD_WEAPON = "握住武器";
@@ -313,6 +314,8 @@ L["Don't Update Items"] = "不要更新装备";
 L["Update Talents"] = "更新天赋";
 L["Don't Update Talents"] = "不要更新天赋";
 L["Old Icon"] = "旧图标";
+L["NavBar Saved Sets"] = "已保存";
+L["NavBar Incomplete Sets"] = "不完整";
 NARCI_ICON_SELECTOR = "图标列表";
 NARCI_DELETE_SET_WITH_LONG_CLICK = "删除此套装\n|cff808080(按住左键)|r";
 
@@ -428,7 +431,7 @@ L["Flavored Text"] = "在主城内的优格沙龙使用美容美发服务即可�
 
 --Project Details--
 NARCI_ALL_PROJECTS = "全部项目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2020.10.26|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2021.03.20|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾泽拉斯上的不同景点，并收集各种故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沉浸式角色面板；你最好的截图助手。"
 

@@ -374,7 +374,7 @@ do
                     afterUpdate()
                 end,
                 min = 1,
-                max = 30,
+                max = 40,
                 step = 1,
                 name = Loc ["STRING_OPTIONS_MAXSEGMENTS"],
                 desc = Loc ["STRING_OPTIONS_MAXSEGMENTS_DESC"],
@@ -388,7 +388,7 @@ do
                     afterUpdate()
                 end,
                 min = 1,
-                max = 30,
+                max = 40,
                 step = 1,
                 name = Loc ["STRING_OPTIONS_SEGMENTSSAVE"],
                 desc = Loc ["STRING_OPTIONS_SEGMENTSSAVE_DESC"],
@@ -656,7 +656,7 @@ do
 
         }
 
-        DF:BuildMenu(sectionFrame, sectionOptions, startX, startY-20, heightSize, true, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template)
+        DF:BuildMenu(sectionFrame, sectionOptions, startX, startY-20, heightSize+20, true, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template)
     end
 
     tinsert(Details.optionsSection, buildSection) --optionsSection is declared on boot.lua
@@ -4977,6 +4977,32 @@ do
         end
 
         Details.options.UpdateAutoHideSettings(currentInstance)
+
+        --> profile by spec
+        
+        --[=[]]
+        local spec1Table = {}
+        local playerSpecs = DF.ClassSpecIds [select (2, UnitClass("player"))]
+        for specID, _ in pairs (playerSpecs) do
+            local spec_id, specName, spec_description, spec_icon = GetSpecializationInfoByID(specID)
+            tinsert (spec1Table, {
+                type = "select",
+                get = function() 
+                    local specProfile = Details.profile_by_spec[specID]
+                    return specProfile
+                end,
+                values = function()
+                    local t = {}
+                    for profileName in pairs (__profiles) do
+                        t[#t+1] = profileName
+                    end
+                    return t
+                end,
+                name = specName,
+                desc = specName,
+            })
+        end
+        --]=]
     end
 
     tinsert(Details.optionsSection, buildSection)
@@ -6254,6 +6280,7 @@ do
     tinsert(Details.optionsSection, buildSection)
 end
 
+-- ~18 - mythic dungeon section
 do
     local buildSection = function(sectionFrame)
 

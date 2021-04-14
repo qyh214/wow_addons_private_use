@@ -2517,7 +2517,7 @@ local function SetUpOverlayFrame()
     end)
     VisibilityButton:SetScript("OnEnter", function(self)
         self.Highlight:Show();
-        NarciTooltip:ShowTooltip(self, 0, -10, 1);
+        NarciTooltip:ShowTooltip(self, 0, 0, 1);
     end)
     VisibilityButton:SetScript("OnLeave", function(self)
         self.Highlight:Hide();

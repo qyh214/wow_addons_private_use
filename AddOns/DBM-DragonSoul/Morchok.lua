@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(311, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806141910")
+mod:SetRevision("20210119193946")
 mod:SetCreatureID(55265)
 mod:SetEncounterID(1292)
 --mod:SetModelSound("sound\\CREATURE\\MORCHOK\\VO_DS_MORCHOK_EVENT_04.OGG", "sound\\CREATURE\\MORCHOK\\VO_DS_MORCHOK_ORB_01.OGG")
@@ -191,7 +191,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self.Options.RangeFrame and not self:IsDifficulty("lfr25") then
 			DBM.RangeCheck:Show(5)
 		end
-		if not self:IsTrivial(90) then--Only register damage events during vortex (when black blood is out) and only if it's not trivial
+		if not self:IsTrivial() then--Only register damage events during vortex (when black blood is out) and only if it's not trivial
 			self:RegisterShortTermEvents(
 				"SPELL_DAMAGE 103785",
 				"SPELL_MISSED 103785"

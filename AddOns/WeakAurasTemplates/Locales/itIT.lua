@@ -34,6 +34,8 @@ local L = WeakAuras.L
 	L["Always shows the aura, turns grey if the ability is not usable."] = "Mostra sempre l'aura, diventa grigia se l'abilità non è utilizzabile."
 	L["Always shows the aura, turns red when out of range, blue on insufficient resources."] = "Mostra sempre l'aura, diventa rossa quando fuori portata, blu se la risorsa è insufficiente."
 	L["Always shows the aura, turns red when out of range."] = "Mostra sempre l'aura,, diventa rossa quando fuori portata."
+	--[[Translation missing --]]
+	L["Always shows the aura."] = "Always shows the aura."
 	L["Back"] = "Indietro"
 	L["Basic Show On Cooldown"] = "Semplice Mostra in Ricarica"
 	--[[Translation missing --]]
@@ -128,6 +130,8 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Only shows the aura when the ability is ready to use."] = "Only shows the aura when the ability is ready to use."
 	--[[Translation missing --]]
+	L["Other cooldown"] = "Other cooldown"
+	--[[Translation missing --]]
 	L["Pet alive"] = "Pet alive"
 	--[[Translation missing --]]
 	L["Pet Behavior"] = "Pet Behavior"
@@ -141,6 +145,8 @@ local L = WeakAuras.L
 	L["Resources"] = "Resources"
 	--[[Translation missing --]]
 	L["Resources and Shapeshift Form"] = "Resources and Shapeshift Form"
+	--[[Translation missing --]]
+	L["Rogue cooldown"] = "Rogue cooldown"
 	--[[Translation missing --]]
 	L["Runes"] = "Runes"
 	--[[Translation missing --]]
@@ -225,4 +231,6 @@ local L = WeakAuras.L
 	L["Unknown Item"] = "Unknown Item"
 	--[[Translation missing --]]
 	L["Unknown Spell"] = "Unknown Spell"
+	--[[Translation missing --]]
+	L["Warrior cooldown"] = "Warrior cooldown"
 

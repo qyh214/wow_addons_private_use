@@ -30,12 +30,7 @@ L:SetOptionLocalization({
 ---------------------------
 --  Artificer Xy'Mox --
 ---------------------------
-L= DBM:GetModLocalization(2418)
-
-L:SetMiscLocalization({
-	Phase2			= "이 유물을 써 보고 싶어서 숨이 멎을 뻔했답니다! 뭐, 당신네는 진짜로 멎겠지만.",
-	Phase3			= "보기만큼 치명적인 물건이어야 할 텐데!",
-})
+--L= DBM:GetModLocalization(2418)
 
 ---------------------------
 --  Sun King's Salvation/Kael'thas --
@@ -80,12 +75,7 @@ L:SetOptionLocalization({
 ---------------------------
 --  Sire Denathrius --
 ---------------------------
-L= DBM:GetModLocalization(2424)
-
-L:SetMiscLocalization({
-	CrimsonSpawn	= "진홍의 밀사가 데나트리우스 대영주의 부름에 응합니다."
-})
-
+--L= DBM:GetModLocalization(2424)
 
 -------------
 --  Trash  --

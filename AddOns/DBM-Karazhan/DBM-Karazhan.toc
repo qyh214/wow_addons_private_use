@@ -1,8 +1,9 @@
-﻿## Interface: 90002
+## Interface: 90005
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Karazhan|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0카라잔|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0卡拉贊|r
+## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Каражан|r
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
 ## SavedVariables: DBMKarazhan_AllSavedVars
@@ -17,7 +18,7 @@
 ## X-DBM-Mod-MinExpansion: 1
 ## X-Curse-Project-ID: 16442
 ## X-WoWI-ID: 11700
-## Version: r678
+## Version: r679
 
 localization.en.lua
 localization.de.lua

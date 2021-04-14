@@ -1,7 +1,6 @@
 local Narci = Narci;
 local NarciAnimationInfo = NarciAnimationInfo;
-local FadeFrame = NarciAPI_FadeFrame;
-local UIFrameFadeIn = UIFrameFadeIn;
+local FadeFrame = NarciFadeUI.Fade;
 
 local After = C_Timer.After;
 
@@ -50,7 +49,7 @@ delayedAction:SetScript("OnUpdate", function(self, elapsed)
 end)
 
 local function AnimationButton_OnEnter(self)
-    UIFrameFadeIn(self.Highlight, 0.12, self.Highlight:GetAlpha(), 1);
+    FadeFrame(self.Highlight, 0.12, 1);
 
     delayedAction:Hide();
     delayedAction.object = self;
@@ -329,7 +328,7 @@ function NarciAnimationBrowserMixin:Open()
     animExpand.fromHeight = self:GetHeight();
     animExpand.toHeight = 150;      --Full Height
     animExpand:Show();
-    FadeFrame(self, 0.2, "IN");
+    FadeFrame(self, 0.2, 1);
     self.ExpandArrow:SetTexCoord(0, 1, 0, 1);
 end
 
@@ -338,7 +337,7 @@ function NarciAnimationBrowserMixin:Close()
     animExpand.fromHeight = self:GetHeight();
     animExpand.toHeight = 8;        --Collapsed Height
     animExpand:Show();
-    FadeFrame(self, 0.25, "OUT");
+    FadeFrame(self, 0.25, 0);
     self.ExpandArrow:SetTexCoord(0, 1, 1, 0);
 end
 

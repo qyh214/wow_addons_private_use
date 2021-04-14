@@ -133,7 +133,7 @@
 		</Scripts>
     </Button>
 
-	<Frame name="Narci_DressingRoomOverlay" virtual="true" parentKey="NarciBridge" mixin="NarciDressingRoomOverlayMixin">
+	<Frame name="Narci_DressingRoomOverlay" virtual="true" parentKey="NarciDressingRoomOverlay" mixin="NarciDressingRoomOverlayMixin" propagateKeyboardInput="true">
 		<Size x="0" y="0"/>
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
@@ -512,7 +512,8 @@
 			</Frame>
 
 		</Frames>
-		<Scripts>
+		<Scripts>	
+			<OnLoad method="OnLoad"/>
 			<OnShow method="OnShow"/>
 			<OnHide method="OnHide"/>
 			<OnEvent method="OnEvent"/>

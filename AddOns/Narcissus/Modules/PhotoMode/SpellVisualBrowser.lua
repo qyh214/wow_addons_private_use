@@ -11,9 +11,7 @@ local FREQUENTLY_USED_BUTTON_TOOLTIP_DELAY = 1;
 
 local Narci = Narci;
 local L = Narci.L;
-local FadeFrame = NarciAPI_FadeFrame;
-local UIFrameFadeIn = UIFrameFadeIn;
-local UIFrameFadeOut = UIFrameFadeOut;
+local FadeFrame = NarciFadeUI.Fade;
 local After = C_Timer.After;
 local BrowserFrame, ListFrame, PreviewFrame, HistoryFrame, Tab1, ListScrollBar, HistoryButtonFrame, QuickFavoriteButton, SuggestionFrame, HomeButton;
 local NumEffectiveButtons = 0;
@@ -170,11 +168,11 @@ function Narci_ToggleSpellVisualBrowser(self)
         newWidth = MODEL_SETTINGS_FRAME_WIDTH + 218;
         newOffsetY = 0;
         newOffsetX = BROWSER_ANCHOR_OFFSET_EXPANED_X;
-        FadeFrame(BrowserFrame, 0.15, "IN");
-        UIFrameFadeOut(self.Background, 0.15, 1, 0);
-        UIFrameFadeOut(self.Label, 0.15, 1, 0);
+        FadeFrame(BrowserFrame, 0.15, 1);
+        FadeFrame(self.Background, 0.15, 0);
+        FadeFrame(self.Label, 0.15, 0);
         After(0.25, function()
-            FadeFrame(BrowserFrame.ExpandableFrames, 0.25, "IN");
+            FadeFrame(BrowserFrame.ExpandableFrames, 0.25, 1);
         end);
 
         self:SetWidth(24);
@@ -182,9 +180,9 @@ function Narci_ToggleSpellVisualBrowser(self)
         newWidth = MODEL_SETTINGS_FRAME_WIDTH;
         newOffsetX = BROWSER_ANCHOR_OFFSET_COLLAPSED_X;
         newOffsetY = -40;
-        FadeFrame(BrowserFrame.ExpandableFrames, 0.15, "OUT");
+        FadeFrame(BrowserFrame.ExpandableFrames, 0.15, 0);
         After(0.15, function()
-            FadeFrame(BrowserFrame, 0.25, "OUT");
+            FadeFrame(BrowserFrame, 0.25, 0);
         end);
 
         self:SetWidth(58);
@@ -202,8 +200,8 @@ function Narci_ToggleSpellVisualBrowser(self)
         ExpandAnim.duration2 = 0.25;
         After(0.2, function()
             ExpandAnim:Show();
-            UIFrameFadeIn(self.Background, 0.15, 0, 1);
-            UIFrameFadeIn(self.Label, 0.15, 0, 1);
+            FadeFrame(self.Background, 0.15, 1);
+            FadeFrame(self.Label, 0.15, 1);
         end);
     end
 end
@@ -234,7 +232,7 @@ local function GoToTab(index)
     SwipeAnim.endOffset = (1 - index) * TAB_WIDTH;
     SwipeAnim:Show();
     if index ~= 1 then
-        FadeFrame(HomeButton, 0.2, "IN");
+        FadeFrame(HomeButton, 0.2, 1);
         HomeButton.CurrentTabIndex = index;
         PreviewFrame:Disable();
     else
@@ -315,18 +313,18 @@ local function UpdateInnerShadowStates(scrollBar, newMax, smoothing)
         scrollBar.TopShadow:SetAlpha(1);
     else
         if ( currValue >= maxVal - 12) then
-            FadeFrame(scrollBar.BottomShadow, 0.2, "OUT");
+            FadeFrame(scrollBar.BottomShadow, 0.2, 0);
         else
             if not scrollBar.BottomShadow:IsShown() then
-                FadeFrame(scrollBar.BottomShadow, 0.2, "Forced_IN");
+                FadeFrame(scrollBar.BottomShadow, 0.2, 1);
             end
         end
         
         if ( currValue <= minVal + 12) then
-            FadeFrame(scrollBar.TopShadow, 0.2, "OUT");
+            FadeFrame(scrollBar.TopShadow, 0.2, 0);
         else
             if not scrollBar.TopShadow:IsShown() then
-                FadeFrame(scrollBar.TopShadow, 0.2, "Forced_IN");
+                FadeFrame(scrollBar.TopShadow, 0.2, 1);
 
             end
         end
@@ -416,7 +414,7 @@ InsertAnim:SetScript("OnShow", function(self)
             self.button3 = nil;
         end
     end
-    UIFrameFadeIn(NewButton, 0.12, 0, 1);
+    FadeFrame(NewButton, 0.12, 1);
     NewButton.animIn:Play();
 end);
 
@@ -508,8 +506,8 @@ local function SmoothInsert(visualID, textureID, visualName)
     button.name = visualName;
     InsertAnim:Show();
     AddToHistory(visualID);
-    FadeFrame(HistoryFrame.Note, 0.25, "OUT");
-    FadeFrame(HistoryFrame.Label, 0.15, "IN");
+    FadeFrame(HistoryFrame.Note, 0.25, 0);
+    FadeFrame(HistoryFrame.Label, 0.15, 1);
 
     if model.isVirtual then
         --Rewrite model index button's tooltip
@@ -656,13 +654,11 @@ local function SubcategoryButton_OnClick(self)
     self.collapsed = not self.collapsed;
     local tabHeight;
     if self.collapsed then
-        --UIFrameFadeOut(self.Drawer, 0.15, 1, 0);
-        FadeFrame(self.Drawer, 0.15, "OUT");
+        FadeFrame(self.Drawer, 0.15, 0);
         self.Icon:SetTexCoord(0, 1, 0, 1);
         tabHeight = 16;
     else
-        --UIFrameFadeIn(self.Drawer, 0.2, 0, 1);
-        FadeFrame(self.Drawer, 0.2, "IN");
+        FadeFrame(self.Drawer, 0.2, 1);
         self.Icon:SetTexCoord(0, 1, 1, 0);
         tabHeight = 16 * (self.childNum + 1);
     end
@@ -751,16 +747,16 @@ end
 -------------------------------------------------
 local function ShowHighlight(self)
     PreviewTimer.LastID = self.visualID;
-    UIFrameFadeIn(self.Highlight, 0.12, self.Highlight:GetAlpha(), 1);
+    FadeFrame(self.Highlight, 0.12,  1);
 end
 
 local function HideHighlight(self)
-    UIFrameFadeOut(self.Highlight, 0.2, self.Highlight:GetAlpha(), 0);
+    FadeFrame(self.Highlight, 0.2, 0);
 end
 
 local function HideHighlightAndClearID(self)
     PreviewTimer.LastID = nil;
-    UIFrameFadeOut(self.Highlight, 0.2, self.Highlight:GetAlpha(), 0);
+    FadeFrame(self.Highlight, 0.2, 0);
 end
 
 local function SubcategoryButton_OnEnter(self)
@@ -1149,7 +1145,7 @@ end
 local function HistoryButton_OnLeave(self)
     BrowserFrame.HistoryTooltip:Hide();
     if self.selected then return; end;
-    UIFrameFadeOut(self.Icon, 0.2, self.Icon:GetAlpha(), 0.6);
+    FadeFrame(self.Icon, 0.2, 0.6);
 end
 
 local function CreateHistoryButtonFrame(self)
@@ -1360,7 +1356,7 @@ local function HistoryButton_RemoveAll()
         button  = buttons[i];
         button.Border:SetTexCoord(0, 0.25, 0, 1);
         After( (i - 1)/10, function()
-            FadeFrame(buttons[i], 0.25, "OUT");
+            FadeFrame(buttons[i], 0.25, 0);
         end);
     end  
 end
@@ -1540,7 +1536,7 @@ local function FavoritePopUp_Confirm()
     local ID = tonumber(BrowserFrame.ExpandableFrames.EditBox:GetText());
     AddToFavorites(ID, EditBox:GetText());
     EditBox:ClearFocus();
-    FadeFrame(PopUp, 0.25, "OUT");
+    FadeFrame(PopUp, 0.25, 0);
 
     local Star = PopUp:GetParent().FavoriteButton;
     Star.Icon:SetTexCoord(0.25, 0.5, 0, 1);
@@ -1556,7 +1552,7 @@ end
 
 local function FavoritePopUp_Cancel()
     local PopUp = Narci_SpellVisualBrowser_PopUpFrame;
-    FadeFrame(PopUp, 0.25, "OUT");
+    FadeFrame(PopUp, 0.25, 0);
 
     local Star = PopUp:GetParent().FavoriteButton;
     Star.Icon:SetTexCoord(0, 0.25, 0, 1);
@@ -1575,7 +1571,7 @@ local function FavoriteButton_OnClick(self)
             BrowserFrame.ArtFrame.Bling.animIn:Play();
             local index = MyCategoryButton.Count:GetText() + 1;
             PopUp.HiddenFrame.EditBox:SetText("Custom Visual " .. index);
-            FadeFrame(PopUp, 0.15, "IN");
+            FadeFrame(PopUp, 0.15, 1);
         else
             FavoritePopUp_Confirm();
         end
@@ -1687,7 +1683,7 @@ end
 
 local function HomeButton_OnClick(self)
     GoToTab(1);
-    FadeFrame(self, 0.2, "OUT");
+    FadeFrame(self, 0.2, 0);
     if self.CurrentTabIndex == 3 then
         --If you just go back from My Favorites, start removing selected favorites
         local numDeleted, numLeft = StartRemovingFavorites();

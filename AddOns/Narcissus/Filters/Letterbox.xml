@@ -13,9 +13,9 @@
 						<Anchor point="BOTTOMRIGHT" relativeTo="UIParent" relativePoint="BOTTOMRIGHT"/>
 					</Anchors>
 					<Animations>
-						<AnimationGroup parentKey="animIn" smoothing="IN_OUT">
+						<AnimationGroup parentKey="animIn">
 							<Translation parentKey="StartPosition" offsetY="0" duration="0" order="1"/>
-							<Translation parentKey="Translation" offsetY="0" duration="0" order="2"/>
+							<Translation parentKey="Translation" offsetY="0" duration="0" order="2" smoothing="OUT"/>
 							<Scripts>
 								<OnPlay>
 									self:GetParent():Show();
@@ -25,7 +25,7 @@
 								</OnFinished>
 							</Scripts>
 						</AnimationGroup>
-						<AnimationGroup parentKey="animOut" smoothing="IN_OUT">
+						<AnimationGroup parentKey="animOut">
 							<Translation parentKey="Translation" offsetY="0" duration="0" order="1"/>
 							<Scripts>
 								<OnPlay>
@@ -45,16 +45,16 @@
 						<Anchor point="TOPRIGHT" relativeTo="UIParent" relativePoint="TOPRIGHT"/>
 					</Anchors>
 					<Animations>
-						<AnimationGroup parentKey="animIn" smoothing="IN_OUT">
+						<AnimationGroup parentKey="animIn">
 							<Translation parentKey="StartPosition" offsetY="0" duration="0" order="1"/>
-							<Translation parentKey="Translation" offsetY="0" duration="0" order="2"/>
+							<Translation parentKey="Translation" offsetY="0" duration="0" order="2" smoothing="OUT"/>
 							<Scripts>
 								<OnPlay>
 									self:GetParent():Show();
 								</OnPlay>
 							</Scripts>
 						</AnimationGroup>
-						<AnimationGroup parentKey="animOut" smoothing="IN_OUT">
+						<AnimationGroup parentKey="animOut">
 							<Translation parentKey="Translation" offsetY="0" duration="0" order="1"/>
 							<Scripts>
 								<OnFinished>

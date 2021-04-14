@@ -604,13 +604,26 @@ function atributo_misc:DeadAtualizarBarra (morte, whichRowLine, colocacao, insta
 			esta_barra.icone_classe:SetTexture (instancia.row_info.spec_file)
 			esta_barra.icone_classe:SetTexCoord (_unpack (_detalhes.class_specs_coords [spec]))
 		else
-			esta_barra.icone_classe:SetTexture (instancia.row_info.icon_file)
-			esta_barra.icone_classe:SetTexCoord (_unpack (CLASS_ICON_TCOORDS [morte[4]]))
+			if (CLASS_ICON_TCOORDS [morte[4]]) then
+				esta_barra.icone_classe:SetTexture (instancia.row_info.icon_file)
+				esta_barra.icone_classe:SetTexCoord (_unpack (CLASS_ICON_TCOORDS [morte[4]]))
+			else
+				local texture, l, r, t, b = Details:GetUnknownClassIcon()
+				esta_barra.icone_classe:SetTexture(texture)
+				esta_barra.icone_classe:SetTexCoord(l, r, t, b)
+			end
 		end
 	else
-		esta_barra.icone_classe:SetTexture (instancia.row_info.icon_file)
-		esta_barra.icone_classe:SetTexCoord (_unpack (CLASS_ICON_TCOORDS [morte[4]]))
+		if (CLASS_ICON_TCOORDS [morte[4]]) then
+			esta_barra.icone_classe:SetTexture (instancia.row_info.icon_file)
+			esta_barra.icone_classe:SetTexCoord (_unpack (CLASS_ICON_TCOORDS [morte[4]]))
+		else
+			local texture, l, r, t, b = Details:GetUnknownClassIcon()
+			esta_barra.icone_classe:SetTexture(texture)
+			esta_barra.icone_classe:SetTexCoord(l, r, t, b)
+		end
 	end
+	
 	esta_barra.icone_classe:SetVertexColor (1, 1, 1)
 	
 	if (esta_barra.mouse_over and not instancia.baseframe.isMoving) then --> precisa atualizar o tooltip
@@ -1117,7 +1130,11 @@ function atributo_misc:ToolTipDispell (instancia, numero, barra)
 --> habilidade usada para dispelar
 	local meus_dispells = {}
 	for _spellid, _tabela in _pairs (habilidades) do
-		meus_dispells [#meus_dispells+1] = {_spellid, _math_floor (_tabela.dispell)}
+		if (_tabela.dispell) then
+			meus_dispells [#meus_dispells+1] = {_spellid, _math_floor (_tabela.dispell)} --_math_floor valor é nil, uma magia na tabela de dispel, sem dispel?
+		else
+			Details:Msg("D! table.dispell is invalid. spellId:", _spellid)
+		end
 	end
 	_table_sort (meus_dispells, _detalhes.Sort2)
 	

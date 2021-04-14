@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Supremus", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142051")
+mod:SetRevision("20210119194113")
 mod:SetCreatureID(22898)
 mod:SetEncounterID(602)
 mod:SetModelID(21145)
@@ -37,7 +37,7 @@ local function ScanTarget(self)
 	if target then
 		if self.vb.lastTarget ~= target then
 			self.vb.lastTarget = target
-			if UnitIsUnit(uId, "player") and not self:IsTrivial(85) then
+			if UnitIsUnit(uId, "player") and not self:IsTrivial() then
 				specWarnFixate:Show()
 				specWarnFixate:Play("justrun")
 				specWarnFixate:ScheduleVoice(1, "keepmove")
@@ -56,7 +56,7 @@ function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
 	timerPhase:Start(-delay, L.Kite)
 	self.vb.lastTarget = "None"
-	if not self:IsTrivial(85) then--Only warning that uses these events is remorseless winter and that warning is completely useless spam for level 90s.
+	if not self:IsTrivial() then--Only warning that uses these events is remorseless winter and that warning is completely useless spam for level 90s.
 		self:RegisterShortTermEvents(
 			"SPELL_DAMAGE 40265 42052",
 			"SPELL_MISSED 40265 42052"
@@ -75,7 +75,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 41951 then
 		if self.vb.lastTarget ~= args.destName then
 			self.vb.lastTarget = args.destName
-			if args:IsPlayer() and not self:IsTrivial(85) then
+			if args:IsPlayer() and not self:IsTrivial() then
 				specWarnFixate:Show()
 				specWarnFixate:Play("justrun")
 				specWarnFixate:ScheduleVoice(1, "keepmove")
@@ -90,10 +90,10 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 40265 and destGUID == UnitGUID("player") and self:AntiSpam(4, 1) and not self:IsTrivial(85) then
+	if spellId == 40265 and destGUID == UnitGUID("player") and self:AntiSpam(4, 1) and not self:IsTrivial() then
 		specWarnMolten:Show()
 		specWarnMolten:Play("runaway")
-	elseif spellId == 42052 and destGUID == UnitGUID("player") and self:AntiSpam(4, 2) and not self:IsTrivial(85) then
+	elseif spellId == 42052 and destGUID == UnitGUID("player") and self:AntiSpam(4, 2) and not self:IsTrivial() then
 		specWarnVolcano:Show()
 		specWarnVolcano:Play("runaway")
 	end
@@ -109,7 +109,7 @@ function mod:RAID_BOSS_EMOTE(msg)
 		if self.vb.lastTarget ~= "None" then
 			self:SetIcon(self.vb.lastTarget, 0)
 		end
-		if self:IsMelee() and not self:IsTrivial(85) then
+		if self:IsMelee() and not self:IsTrivial() then
 			--Melee Dps Not technically fixated but melee should run out at start of kite phase in case chosen.
 			--Tank should run out because boss actually fixates tank for couple seconds before choosing new target.
 			specWarnFixate:Show()

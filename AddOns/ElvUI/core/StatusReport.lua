@@ -7,7 +7,6 @@ local next, pairs, tinsert = next, pairs, tinsert
 local CreateFrame = CreateFrame
 local GetAddOnInfo = GetAddOnInfo
 local GetCVarBool = GetCVarBool
-local GetLocale = GetLocale
 local GetNumAddOns = GetNumAddOns
 local GetRealZoneText = GetRealZoneText
 local GetSpecialization = GetSpecialization
@@ -231,8 +230,8 @@ function E:CreateStatusFrame()
 	StatusFrame.Section1.Content.Line3.Text:SetFormattedText('Recommended Scale: |cff4beb2c%s|r', E:PixelBestSize())
 	StatusFrame.Section1.Content.Line4.Text:SetFormattedText('UI Scale Is: |cff4beb2c%s|r', E.global.general.UIScale)
 	StatusFrame.Section2.Content.Line1.Text:SetFormattedText('Version of WoW: |cff4beb2c%s (build %s)|r', E.wowpatch, E.wowbuild)
-	StatusFrame.Section2.Content.Line2.Text:SetFormattedText('Client Language: |cff4beb2c%s|r', GetLocale())
-	StatusFrame.Section2.Content.Line5.Text:SetFormattedText('Using Mac Client: |cff4beb2c%s|r', (E.isMacClient == true and 'Yes' or 'No'))
+	StatusFrame.Section2.Content.Line2.Text:SetFormattedText('Client Language: |cff4beb2c%s|r', E.locale)
+	StatusFrame.Section2.Content.Line5.Text:SetFormattedText('Using Mac Client: |cff4beb2c%s|r', E.isMacClient and 'Yes' or 'No')
 	StatusFrame.Section3.Content.Line1.Text:SetFormattedText('Faction: |cff4beb2c%s|r', E.myfaction)
 	StatusFrame.Section3.Content.Line2.Text:SetFormattedText('Race: |cff4beb2c%s|r', E.myrace)
 	StatusFrame.Section3.Content.Line3.Text:SetFormattedText('Class: |cff4beb2c%s|r', EnglishClassName[E.myclass])
@@ -280,7 +279,7 @@ function E:UpdateStatusFrame()
 	PluginSection.Header.Text:SetFormattedText('%sPlugins|r', valueColor)
 
 	local verWarning = E.recievedOutOfDateMessage and 'ff3333' or E.shownUpdatedWhileRunningPopup and 'ff9933'
-	StatusFrame.Section1.Content.Line1.Text:SetFormattedText('Version of ElvUI: |cff%s%s|r', verWarning or '33ff33', E.version)
+	StatusFrame.Section1.Content.Line1.Text:SetFormattedText('Version of ElvUI: |cff%s%.2f|r', verWarning or '33ff33', E.version)
 
 	local addons, plugins = E:AreOtherAddOnsEnabled()
 	StatusFrame.Section1.Content.Line2.Text:SetFormattedText('Other AddOns Enabled: |cff%s|r', (not addons and plugins and 'ff9933Plugins') or (addons and 'ff3333Yes') or '33ff33No')

@@ -312,7 +312,7 @@
 		</Scripts>
 	</ScrollFrame>
 
-	<Frame name="Narci_NPCBrowser" hidden="true" parent="Narci_ModelSettings" frameLevel="80">
+	<Frame name="Narci_NPCBrowser" hidden="true" parent="Narci_ModelSettings" frameLevel="80" mixin="NarciNPCBrowserMixin">
 		<Size x="192" y="208"/>
 		<Layers>
 			<!--Layer level="OVERLAY">

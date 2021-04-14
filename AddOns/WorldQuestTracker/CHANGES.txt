@@ -1,10 +1,16 @@
-lightweight tag 4dcb628d3e816d8b75a4a27b62d73b1a24606638 v9.0.2.419
+tag 926fbcc1f9141fe300ea506a6d312ac9b4f44ffd v9.0.5.422
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Wed Feb 17 13:58:21 2021 -0300
+Date:	Tue Mar 16 17:11:38 2021 -0300
 
-commit 4dcb628d3e816d8b75a4a27b62d73b1a24606638
+commit 244bd3b10d64cf827ab458e68ec291bdaccc6213
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Wed Feb 17 13:58:21 2021 -0300
+Date:   Tue Mar 16 17:11:15 2021 -0300
 
-    Flight master frame is now smaller, the arrow is brighter, a close button has been added
+    ToC Update
+
+commit 373b657937093dad2325a1123ddf8ce07674c9ff
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Tue Mar 16 17:09:03 2021 -0300
+
+    Changing some phrases to make features more clear
 

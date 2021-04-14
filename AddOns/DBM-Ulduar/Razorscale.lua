@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Razorscale", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145648")
+mod:SetRevision("20210119194038")
 mod:SetCreatureID(33186)
 mod:SetEncounterID(1139)
 mod:SetModelID(28787)
@@ -111,7 +111,7 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if (spellId == 64733 or spellId == 64704) and destGUID == UnitGUID("player") and self:AntiSpam() and not self:IsTrivial(100) then
+	if (spellId == 64733 or spellId == 64704) and destGUID == UnitGUID("player") and self:AntiSpam() and not self:IsTrivial() then
 		specWarnDevouringFlame:Show()
 		specWarnDevouringFlame:Play("runaway")
 	end

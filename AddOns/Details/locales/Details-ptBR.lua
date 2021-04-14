@@ -1471,6 +1471,7 @@ L["STRING_RIGHTCLICK_TYPEVALUE"] = "botão direito para digitar o valor"
 L["STRING_SCORE_BEST"] = "você fez |cFFFFFF00%d|r, você bateu seu recorde, parabéns!"
 L["STRING_SCORE_NOTBEST"] = [=[você fez |cFFFFFF00%d|r, seu recorde é |cFFFFFF00%d|r em %d com %d de item level.
 ]=]
+L["STRING_SCRIPTS_TITLE"] = "Menu de opções à esquerda, chamado de \"Monitores personalizados\" no passado"
 L["STRING_SEE_BELOW"] = "veja abaixo"
 L["STRING_SEGMENT"] = "Segmento"
 L["STRING_SEGMENT_EMPTY"] = "este segmento esta vazio"

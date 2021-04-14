@@ -9,27 +9,24 @@ end
 T.Util, T.L, T.LT = U, L, nil
 
 local overdesc = {
-	[91]=L"Reduces the damage dealt by the furthest enemy by 1 for three turns.",
-	[85]=L"Reduces the damage taken by the closest ally by 5000% for two turns.",
-	[198]={L"For two turns, reduces the damage dealt by incoming attacks by 1 and retaliates for {}.", "thornsATK"},
-	[52]={L"Inflicts {} damage to all enemies at range.", "damageATK"},
-	[125]={L"Inflicts {} damage to a random enemy.", "damageATK"},
-	[229]=L"Reduces all damage taken by a random ally by 50%. Forever.",
-	[301]={L"Every other turn, a random enemy is attacked for {}% of their maximum health.", "damagePerc"},
-	[227]={L"Every other turn, a random enemy is attacked for {}% of their maximum health.", "damagePerc"},
-	[25]={L"Inflicts {} damage to all enemies in melee, and increases own damage dealt by 20% for three turns.", "damageATK"},
+	[ 25]={L"Inflicts {} damage to all enemies in melee, and increases own damage dealt by 20% for three turns.", "damageATK"},
+	[ 52]={L"Inflicts {} damage to all enemies at range.", "damageATK"},
+	[ 85]=L"Reduces the damage taken by the closest ally by 5000% for two turns.",
+	[107]={L"Debuffs all enemies, dealing {1} damage this turn and during each of the next three turns. Additionally, increases all damage taken by the nearest enemy by {2} for three turns.", "damageATK", "plusDamageTakenATK"},
 	[121]={L"Reduces all enemies' damage dealt by {}% during the next turn.", "modDamageDealt"},
-	[107]={L"Debuffs all enemies, dealing {} damage this turn and during each of the next three turns.", "damageATK",
-	       L"Increases all damage taken by the nearest enemy by {} for three turns.", "plusDamageTakenATK"},
-	[194]={L"Increases damage dealt by the closest ally by {} for two turns.", "plusDamageDealtATK",
-	       L"Reduces all damage taken by the closest ally by {}% for two turns.", "modDamageTaken",
-	       L"Inflicts {} damage to self.","damageATK"},
-	[242]={L"Heals the closest ally for {}.", "healATK",
-	       L"Increases all damage taken by the closest ally by {}% for two turns.", "modDamageTaken"},
+	[125]={L"Inflicts {} damage to a random enemy.", "damageATK"},
+	[194]={L"Buffs the closest ally, increasing all damage dealt by {1}% and reducing all damage taken by {2}% for two turns. Inflicts {3} damage to self.", "plusDamageDealtATK", "modDamageTaken", "damageATK"},
+	[227]={L"Every other turn, a random enemy is attacked for {}% of their maximum health.", "damagePerc"},
+	[242]={L"Heals the closest ally for {1}, and increases all damage taken by the ally by {2}% for two turns.", "healATK", "modDamageTaken"},
 	[251]={L"Reduces all enemies' damage dealt by {}% for two turns.", "modDamageDealt"},
+	[223]={L"Debuffs all enemies, dealing {1} damage during each of the next {2} turns. Multiple applications of this effect overlap.", "eDamage", "duration1"},
+	[300]={L"Debuffs all enemies, dealing {1} damage during each of the next {2} turns. Multiple applications of this effect overlap.", "eDamage", "duration1"},
+	[301]={L"Every other turn, a random enemy is attacked for {}% of their maximum health.", "damagePerc"},
 }
-local overdescUnscaledKeys = {damagePerc=1, modDamageDealt=1, modDamageTaken=1}
-local covenFastHealingTalentID = {1078, 1081, 1075, 1084}
+local CLOCK_ICON do
+	local ai = C_Texture.GetAtlasInfo("auctionhouse-icon-clock")
+	CLOCK_ICON = ("|T%s:0:0:0:-0.5:%d:%d:%d:%d:%d:%d:%%d:%%d:%%d|t "):format(ai.file, 2048, 2048, ai.leftTexCoord*2048, ai.rightTexCoord*2048, ai.topTexCoord*2048, ai.bottomTexCoord*2048)
+end
 
 local GetMaskBoard do
 	local b, u, om = {}, {curHP=1}
@@ -80,7 +77,8 @@ local GetBlipWidth do
 end
 local function FormatSpellPulse(si)
 	local t = si.type
-	local on, off = "|TInterface/Minimap/PartyRaidBlipsV2:8:8:0:0:64:32:0:20:0:20:255:120:0|t", "|TInterface/Minimap/PartyRaidBlipsV2:8:8:0:0:64:32:0:20:0:20:80:80:80|t"
+	local bm = "|TInterface/Minimap/PartyRaidBlipsV2:8:8:0:0:64:32:0:20:0:20:%s|t"
+	local on, off = bm:format("255:120:0"), bm:format("80:80:80")
 	if t == "heal" or t == "nuke" or t == "nukem" or (si.duration and si.duration <= 1 and si.echo) then
 		if si.echo then
 			return on .. (off):rep(si.echo-1) .. on
@@ -88,17 +86,54 @@ local function FormatSpellPulse(si)
 	elseif (t == "heal" or t == "nuke") and (si.duration and si.duration > 1) then
 		return on .. (off):rep(si.duration-1)
 	elseif t == "aura" then
-		local r, p = (si.noFirstTick or si.period) and off or on, si.period or 1
+		local r, p = (si.noFirstTick or si.period) and (si.damageATK1 and bm:format("255:220:0") or off) or on, si.period or 1
 		for i=2, si.duration do
 			r = r .. (i % p == 0 and on or off)
 		end
 		return r
 	end
 end
+local FormatAbilityDescriptionOverride do
+	local overdescUnscaledKeys = {damagePerc=1, modDamageDealt=1, modDamageTaken=1}
+	local function getSpellData(si, vk)
+		local vv = si and si[vk]
+		for i=1,si and not vv and #si or 0 do
+			vv = vv or si[i][vk]
+		end
+		return vv
+	end
+	local function getSpellValue(si, vk, atk, ms)
+		if vk == "eDamage" and ms and si.cATKb and si.cATKa and si.damageATK then
+			return math.floor((si.cATKa+si.cATKb*ms)*si.damageATK/100)
+		elseif vk == "duration1" then
+			local vv = getSpellData(si, "duration")
+			return vv and (vv - 1)
+		end
+		local vv = getSpellData(si, vk)
+		if vv then
+			return overdescUnscaledKeys[vk] and (vv < 0 and -vv or vv) or atk and math.floor(vv*(atk or -1)/100)
+		end
+	end
+	local repl = {}
+	local function getReplacement(k)
+		return repl[k ~= "" and (k+0) or 1]
+	end
+	function FormatAbilityDescriptionOverride(si, od, atk, ms)
+		for i=2, #od do
+			local rv = getSpellValue(si, od[i], atk, ms) or "??"
+			repl[i-1] = rv
+		end
+		for i=#repl, #od, -1 do
+			repl[i] = nil
+		end
+		return (od[1]:gsub("{(%d*)}", getReplacement))
+	end
+end
 
 do -- Tentative Groups
 	local groups, followerMissionID = {}, {}
 	local autoTroops = {["0xFFFFFFFFFFFFFFFF"]=1, ["0xFFFFFFFFFFFFFFFE"]=1}
+	local healthyCompanions = {}
 	function EV:GARRISON_MISSION_NPC_CLOSED()
 		groups, followerMissionID = {}, {}
 	end
@@ -145,15 +180,16 @@ do -- Tentative Groups
 	end
 	function U.StoreMissionGroup(mid, gt, disbandGroups)
 		if gt and next(gt) ~= nil then
-			for _, v in pairs(gt) do
+			local gn = {}
+			for k, v in pairs(gt) do
 				U.ReleaseTentativeFollower(v, disbandGroups, true)
-			end
-			groups[mid] = gt
-			for _, v in pairs(gt) do
+				gn[k] = v
 				if not autoTroops[v] then
 					followerMissionID[v] = mid
+					healthyCompanions[v] = nil
 				end
 			end
+			groups[mid] = gn
 			EV("I_TENTATIVE_GROUPS_CHANGED")
 		elseif gt == nil and groups[mid] then
 			for _, v in pairs(groups[mid]) do
@@ -213,16 +249,29 @@ do -- Tentative Groups
 			U.SendMissionGroup(mid, g)
 		end
 	end
+	function U.SendTentativeGroup(mid)
+		local g = groups[mid]
+		if g then
+			U.SendMissionGroup(mid, g)
+		end
+	end
 	local function nextTent(_, k)
 		local mid, g = next(groups, k)
 		if mid then
-			local nt = 0
+			local nt, zeroHealth = 0, false
 			for i=0,4 do
-				if autoTroops[g[i]] then
+				local fid = g[i]
+				if autoTroops[fid] then
 					nt = nt + 1
+				elseif fid and not zeroHealth then
+					if healthyCompanions[fid] or C_Garrison.GetFollowerAutoCombatStats(fid).currentHealth ~= 0 then
+						healthyCompanions[fid] = true
+					else
+						zeroHealth = true
+					end
 				end
 			end
-			return mid, nt
+			return mid, nt, zeroHealth
 		end
 	end
 	function U.EnumerateTentativeGroups()
@@ -281,6 +330,10 @@ do -- startQueue
 		local ng, oql = {}, startQueueLength
 		for i=0,4 do
 			ng[i] = g[i]
+			local acs = g[i] and C_Garrison.GetFollowerAutoCombatStats(g[i])
+			if acs and acs.currentHealth == 0 then
+				return
+			end
 		end
 		startQueue[mid], startQueueLength = ng, oql + (startQueue[mid] and 0 or 1)
 		if oql == 0 then
@@ -289,9 +342,114 @@ do -- startQueue
 		EV("I_MISSION_QUEUE_CHANGED")
 	end
 end
+do -- delayStart
+	local delayedStart, delayTime = {}, nil
+	local stickHandle, stickLast, stickNext
+	local function checkStart()
+		local now = GetTime()
+		if delayTime and now >= delayTime then
+			delayTime = nil
+			for k in pairs(delayedStart) do
+				U.SendTentativeGroup(k)
+				delayedStart[k] = nil
+			end
+			EV("I_DELAYED_START_UPDATE")
+		elseif delayTime then
+			C_Timer.After(math.max(0.005,delayTime-now), checkStart)
+		end
+	end
+	local function tick()
+		if not (delayTime and stickNext) then
+			return
+		end
+		local now = GetTime()
+		if stickNext > now then
+			C_Timer.After(math.max(0.005, stickNext-now), tick)
+		else
+			stickHandle, stickLast = nil
+			local wp, h = PlaySound(158565)
+			if wp then
+				stickHandle, stickLast = h, now
+			end
+			stickNext = nil
+		end
+	end
+	local function cancelTicking()
+		if stickHandle and stickLast and GetTime()-stickLast < 1 then
+			StopSound(stickHandle)
+			stickHandle, stickNext = nil
+		end
+	end
+	local function startTicking(now)
+		cancelTicking()
+		stickNext = now
+		tick()
+		stickNext = now+1
+		C_Timer.After(1.01, tick)
+	end
+	function U.HasDelayedStartMissions()
+		return not not delayTime
+	end
+	function U.ClearDelayedStartMissions()
+		wipe(delayedStart)
+		cancelTicking()
+		delayTime = nil
+		EV("I_DELAYED_START_UPDATE")
+	end
+	function U.StartMissionWithDelay(mid, g)
+		local mi, now = C_Garrison.GetBasicMissionInfo(mid), GetTime()
+		if mi then
+			U.StoreMissionGroup(mid, g, true)
+			if mi.offerEndTime and (mi.offerEndTime-now) <= 4 then
+				U.SendTentativeGroup(mid)
+			else
+				delayedStart[mid], delayTime = true, now+2
+				C_Timer.After(2.01, checkStart)
+				startTicking(now)
+				EV("I_DELAYED_START_UPDATE")
+				return true
+			end
+		end
+	end
+	function U.ClearDelayedStartMission(mid)
+		delayedStart[mid] = nil
+		if next(delayedStart) == nil then
+			delayTime = nil
+			cancelTicking()
+		end
+		EV("I_DELAYED_START_UPDATE")
+	end
+	function U.IsMissionStartingSoon(mid)
+		return not not delayedStart[mid]
+	end
+	function EV:I_TENTATIVE_GROUPS_CHANGED()
+		local changed = false
+		for k in pairs(delayedStart) do
+			if not U.MissionHasTentativeGroup(k) then
+				changed, delayedStart[k] = true, nil
+			end
+		end
+		if changed then
+			if next(delayedStart) == nil then
+				delayTime = nil
+			end
+			EV("I_DELAYED_START_UPDATE")
+		end
+	end
+	function EV:GARRISON_MISSION_NPC_CLOSED()
+		if delayTime then
+			delayTime = nil
+			for k in pairs(delayedStart) do
+				delayedStart[k] = nil
+			end
+			EV("I_DELAYED_START_UPDATE")
+		end
+	end
+end
 do -- completeQueue
 	local curStack, curState, curIndex
 	local completionStep, lastAction, delayIndex, delayMID
+	local xpTable
 	local function After(t, f)
 		if t == 0 then
 			securecall(f)
@@ -324,7 +482,7 @@ do -- completeQueue
 	local function delayDone()
 		local os = curState
 		if os == "ABORT" or os == "DONE" then
-			curState, curStack, curIndex, delayMID, delayIndex = nil
+			curState, curStack, curIndex, delayMID, delayIndex, xpTable = nil
 			EV("I_COMPLETE_QUEUE_UPDATE", os)
 		end
 	end
@@ -336,6 +494,27 @@ do -- completeQueue
 			et = et .. " " .. tostring(e and e.missionID or "?") .. (e and e.skipped and "S" or "") .. (e and e.failed and "F" or "")
 		end
 		return et .. ")"
+	end
+	local function addFollowerInfo(mi, followers, didWin)
+		local xpGain = mi.xp or 0
+		local fa = {}
+		for i=1, didWin and mi.rewards and #mi.rewards or 0 do
+			xpGain = xpGain + (mi.rewards[i].followerXP or 0)
+		end
+		for i=1,#followers do
+			local fi = C_Garrison.GetFollowerMissionCompleteInfo(followers[i].followerID)
+			local xp = (fi.currentXP or 0) + xpGain
+			if not fi.isTroop and (fi.maxXP or 0) > 0 and xp >= fi.maxXP then
+				xpTable = xpTable or C_Garrison.GetFollowerXPTable(123)
+				local nl = fi.level
+				repeat
+					nl, xp = nl + 1, xp - xpTable[nl]
+				until nl < 60 and xp < (xpTable[nl] or 1e6)
+				fi.newLevel, fi.xpToNextLevel = nl, xpTable[nl] and (xpTable[nl]-xp) or nil
+			end
+			fa[i] = fi
+		end
+		mi.followerInfo = fa
 	end
 	function completionStep(ev, ...)
 		if not curState then return end
@@ -357,25 +536,33 @@ do -- completeQueue
 				delayOpen(... ~= "IMMEDIATE" and 0.2)
 			end
 		elseif curState == "COMPLETE" and ev == "GARRISON_MISSION_COMPLETE_RESPONSE" then
-			local mid, cc, ok, _brOK, _fd, acr = ...
-			if mid ~= mi.missionID and not cc then return end
-			if not (acr and acr.combatLog and #acr.combatLog > 0) then return end
-			if mid == mi.missionID or securecall(error, whineAboutUnexpectedState("Unexpected mission completion", mid, (cc and "C" or "c") .. (ok and "K" or "k")), 2) then
-				if ok then
-					curState = "BONUS"
-				else
-					mi.failed, curState, curIndex = cc and true or nil, "NEXT", curIndex + 1
+			local mid, cc, ok, _brOK, followers, acr = ...
+			if mid ~= mi.missionID then return end
+			if not (acr and acr.combatLog and #acr.combatLog > 0) then
+				C_Garrison.RegenerateCombatLog(mid)
+				return
+			elseif cc == false and ok == false then
+				local bi = C_Garrison.GetBasicMissionInfo(mid)
+				if not (bi and bi.completed) then
+					return
 				end
-				if ok then
-					delayIndex, delayMID = curIndex, mi.missionID
-					delayRoll(0.2)
-				else
-					-- Awkward: need other GMCR handlers to finish before a certain IMCS handler runs
-					C_Timer.After(0, function()
-						EV("I_MISSION_COMPLETION_STEP", mid, false, mi)
-					end)
-					After(0.45, delayStep)
-				end
+				cc, ok = true, acr.winner
+			end
+			addFollowerInfo(mi, followers, acr.winner)
+			if ok then
+				curState = "BONUS"
+			else
+				mi.failed, curState, curIndex = cc and true or nil, "NEXT", curIndex + 1
+			end
+			if ok then
+				delayIndex, delayMID = curIndex, mi.missionID
+				delayRoll(0.2)
+			else
+				-- Awkward: need other GMCR handlers to finish before a certain IMCS handler runs
+				C_Timer.After(0, function()
+					EV("I_MISSION_COMPLETION_STEP", mid, false, mi)
+				end)
+				After(0.45, delayStep)
 			end
 		elseif curState == "BONUS" and ev == "GARRISON_MISSION_BONUS_ROLL_COMPLETE" then
 			local mid, ok = ...
@@ -421,10 +608,6 @@ function U.GetTimeStringFromSeconds(sec, shorter, roundUp, disallowSeconds)
 		return (shorter and COOLDOWN_DURATION_DAYS or INT_GENERAL_DURATION_DAYS):format(h(sec/84600))
 	end
 end
-function U.GetCompanionRecoveryTime(missingShare)
-	local fastHealing = C_Garrison.GetTalentInfo(covenFastHealingTalentID[C_Covenants.GetActiveCovenantID()] or 1075)
-	return missingShare * (fastHealing and fastHealing.researched and 49600 or 60000)
-end
 function U.SetFollowerInfo(GameTooltip, info, autoCombatSpells, autoCombatantStats, mid, boardIndex, boardMask, showHealthFooter)
 	local mhp, hp, atk, role, aat, level
 	autoCombatantStats = autoCombatantStats or info and (info.followerID and C_Garrison.GetFollowerAutoCombatStats(info.followerID) or info.autoCombatantStats)
@@ -443,6 +626,8 @@ function U.SetFollowerInfo(GameTooltip, info, autoCombatSpells, autoCombatantSta
 	local atype = U.FormatTargetBlips(GetTargetMask(T.KnownSpells[aat], boardIndex, boardMask), boardMask, " ")
 	if atype == "" then
 		atype = aat == 11 and " " .. L"(melee)" or aat == 15 and " " .. L"(ranged)" or ""
+	else
+		atype = "  " .. atype
 	end
 	GameTooltip:AddLine("|A:ui_adv_health:20:20|a" .. (hp and BreakUpLargeNumbers(hp) or "???") .. (mhp and mhp ~= hp and ("|cffa0a0a0/|r" .. BreakUpLargeNumbers(mhp)) or "").. "  |A:ui_adv_atk:20:20|a" .. (atk and BreakUpLargeNumbers(atk) or "???") .. "|cffa8a8a8" .. atype, 1,1,1)
 	if info and info.isMaxLevel == false and info.xp and info.levelXP and info.level and not info.isAutoTroop then
@@ -467,10 +652,10 @@ function U.SetFollowerInfo(GameTooltip, info, autoCombatSpells, autoCombatantSta
 		end
 	end
 
-	if showHealthFooter and info and info.status ~= GARRISON_FOLLOWER_ON_MISSION and autoCombatantStats and autoCombatantStats.currentHealth < autoCombatantStats.maxHealth then
-		local rt = U.GetCompanionRecoveryTime(1 - (autoCombatantStats.currentHealth/autoCombatantStats.maxHealth))
+	if showHealthFooter and info and info.status ~= GARRISON_FOLLOWER_ON_MISSION and autoCombatantStats and autoCombatantStats.currentHealth < autoCombatantStats.maxHealth and autoCombatantStats.minutesHealingRemaining then
+		local t = " " .. U.GetTimeStringFromSeconds(autoCombatantStats.minutesHealingRemaining*60, false, true, true)
 		GameTooltip:AddLine(" ")
-		GameTooltip:AddLine("|cffffd926" .. (L"Full recovery in %s"):format(U.GetTimeStringFromSeconds(rt, false, true, true)), 1, 0.85, 0.15, 1)
+		GameTooltip:AddLine("|cffffd926" .. CLOCK_ICON:format(255, 0.85*255, 0.15*255) .. ADVENTURES_FOLLOWER_HEAL_TIME:format(t):gsub("  +", " "), 1, 0.85, 0.15, 1)
 	end
 
 	GameTooltip:Show()
@@ -539,24 +724,14 @@ function U.GetAbilityGuide(spellID, boardIndex, boardMask, padHeight)
 	end
 	return guideLine
 end
-function U.GetAbilityDescriptionOverride(spellID, atk)
+function U.GetAbilityDescriptionOverride(spellID, atk, ms)
 	local si = T.KnownSpells[spellID]
 	if si and si.type == "nop" then
 		return L"It does nothing."
 	end
 	local od = overdesc[spellID]
 	if type(od) == "table" then
-		local o
-		for i=1, #od, 2 do
-			local vk = od[i+1]
-			local vv = si and si[vk]
-			for i=1,si and not vv and #si or 0 do
-				vv = vv or si[i][vk]
-			end
-			local rv = vv and (overdescUnscaledKeys[vk] and (vv < 0 and -vv or vv) or atk and math.floor(vv*(atk or -1)/100)) or ""
-			o = (i > 1 and o .. " " or "") .. od[i]:gsub("{}", rv)
-		end
-		od = o
+		od = FormatAbilityDescriptionOverride(si, od, atk, ms)
 	end
 	return od
 end

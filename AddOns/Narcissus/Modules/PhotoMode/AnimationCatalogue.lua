@@ -1511,6 +1511,8 @@ local officialAnimationName = {
 	[0] = "Stand",
 }
 
+local NUM_ANIMATIONS = #officialAnimationName;
+
 local synonyms = {
 	--key must be capitalized
 	["Rifle"] = "gun crossbow",
@@ -1627,7 +1629,6 @@ for id, name in pairs(officialAnimationName) do
 
 	--Colorize
 	colorizedName[id] = ColorizeString(name);
-
 	
 	--Concatenate Synonyms
 	local names = { split(name) };
@@ -1816,7 +1817,7 @@ function NarciAnimationInfo:SearchByName(str)
 
     for i = 1, #subTable do
 		id = subTable[i];
-		if id <= 1483 then
+		if id <= NUM_ANIMATIONS then
 			name = officialAnimationName[id];
 			if model:HasAnimation(id) then
 				nameTemp = lower(name);

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Festergut", "DBM-Icecrown", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145648")
+mod:SetRevision("20210119194038")
 mod:SetCreatureID(36626)
 mod:SetEncounterID(1097)
 mod:SetModelID(31006)
@@ -154,7 +154,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		local amount = args.amount or 1
 		warnInhaledBlight:Show(args.destName, amount)
 		if amount >= 3 then
-			if not self:IsTrivial(100) then
+			if not self:IsTrivial() then
 				specWarnInhaled3:Show(amount)
 				specWarnInhaled3:Play("defensive")
 			end

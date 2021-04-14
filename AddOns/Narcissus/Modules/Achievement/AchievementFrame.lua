@@ -24,8 +24,8 @@ local GetRewardItemID = C_AchievementInfo.GetRewardItemID;
 local GetPreviousAchievement = GetPreviousAchievement;
 local GetNextAchievement = GetNextAchievement;
 local SetFocusedAchievement = SetFocusedAchievement;    --Requset guild achievement progress from server, will fire "CRITERIA_UPDATE" after calling GetAchievementCriteriaInfo()
-local FadeFrame = NarciAPI_FadeFrame;
-local GetParentAchievementID = NarciAPI_GetParentAchievementID;
+local FadeFrame = NarciFadeUI.Fade;
+local GetParentAchievementID = NarciAPI.GetParentAchievementID;
 local L = Narci.L;
 
 local function linear(t, b, e, d)
@@ -153,6 +153,12 @@ DataProvider.id2Button = {};
 DataProvider.currentCategory = 0;
 DataProvider.isTrackedAchievements = {};
 DataProvider.trackedAchievements = {};
+
+function DataProvider:ClearCache()
+    wipe(self.categoryCache);
+    wipe(self.achievementCache);
+    collectgarbage("collect");
+end
 
 function DataProvider:GetCategoryInfo(id, index)
     if not self.categoryCache[id] then
@@ -1308,11 +1314,11 @@ local function CategoryButton_OnClick(button, mouse)
     local isExpanded = not button.expanded;
     if expandedHeight ~= 32 then
         if (mouse == "RightButton" or DataProvider.currentCategory == button.id) and (not isExpanded) then
-            FadeFrame(button.drawer, 0.15, "OUT");
+            FadeFrame(button.drawer, 0.15, 0);
             animExpand:Set(button.box, 32);
             button.expanded = nil;
         else
-            FadeFrame(button.drawer, 0.2, "IN");
+            FadeFrame(button.drawer, 0.2, 1);
             animExpand:Set(button.box, expandedHeight);
             button.expanded = true;
             if mouse ~= "RightButton" then
@@ -2596,7 +2602,7 @@ function NarciAchievementSearchBoxMixin:OnLoad()
     end)
 
 
-    --- 
+    ---
     local ClipFrame = self.ClipFrame;
 
 
@@ -3446,6 +3452,15 @@ local function InitializeFrame(frame)
     tinsert(UISpecialFrames, frame:GetName());
     frame:Hide();
     frame:SetAlpha(1);
+
+    --Reclaim Temp
+    wipe(CategoryStructure);
+    CategoryStructure = nil;
+    CreateCategoryButtons = nil;
+    CreateAchievementButtons = nil;
+    CreateSummaryButtons = nil;
+    CreateTabButtons = nil;
+    InitializeFrame = nil;
 end
 
 -----------------------------------------
@@ -3917,73 +3932,46 @@ end
 
 -------------------------------------------------------------------------------------
 --Redirect Blizzard Achievement to Narcissus Achievement Frame
-local hasOverwritten = false;
+local Original_OnBlockHeaderClick = ACHIEVEMENT_TRACKER_MODULE.OnBlockHeaderClick;
+local Original_OpenAchievementFrameToAchievement = OpenAchievementFrameToAchievement;
 
-local function RestoreFunctions()
-    hasOverwritten = false;
-
-    function OpenAchievementFrameToAchievement(achievementID)
-        if ( not AchievementFrame ) then
-            AchievementFrame_LoadUI();
+local function OnBlockHeaderClick(_, block, mouseButton)
+    if ( IsModifiedClick("CHATLINK") and ChatEdit_GetActiveWindow() ) then
+        local achievementLink = GetAchievementLink(block.id);
+        if ( achievementLink ) then
+            ChatEdit_InsertLink(achievementLink);
         end
-        if ( not AchievementFrame:IsShown() ) then
-            AchievementFrame_ToggleAchievementFrame();
-        end
-        AchievementFrame_SelectAchievement(achievementID);
-    end
-
-    function ACHIEVEMENT_TRACKER_MODULE:OnBlockHeaderClick(block, mouseButton)
-        if ( IsModifiedClick("CHATLINK") and ChatEdit_GetActiveWindow() ) then
-            local achievementLink = GetAchievementLink(block.id);
-            if ( achievementLink ) then
-                ChatEdit_InsertLink(achievementLink);
-            end
-        elseif ( mouseButton ~= "RightButton" ) then
-            CloseDropDownMenus();
-            if ( not AchievementFrame ) then
-                AchievementFrame_LoadUI();
-            end
-            if ( IsModifiedClick("QUESTWATCHTOGGLE") ) then
-                AchievementObjectiveTracker_UntrackAchievement(_, block.id);
-            elseif ( not AchievementFrame:IsShown() ) then
-                AchievementFrame_ToggleAchievementFrame();
-                AchievementFrame_SelectAchievement(block.id);
-            else
-                if ( AchievementFrameAchievements.selection ~= block.id ) then
-                    AchievementFrame_SelectAchievement(block.id);
-                else
-                    AchievementFrame_ToggleAchievementFrame();
-                end
-            end	
+    elseif ( mouseButton ~= "RightButton" ) then
+        if ( IsModifiedClick("QUESTWATCHTOGGLE") ) then
+            ToggleTracking(block.id);
         else
-            ObjectiveTracker_ToggleDropDown(block, AchievementObjectiveTracker_OnOpenDropDown);
+            local clickAgainToClose = true;
+            MainFrame:LocateAchievement(block.id, clickAgainToClose);
         end
+    else
+        ObjectiveTracker_ToggleDropDown(block, AchievementObjectiveTracker_OnOpenDropDown);
     end
 end
 
-local function OverrideFunctions()
-    hasOverwritten = true;
+local RedirectFrame = {};
+RedirectFrame.hasOverwritten = false;
 
-    function OpenAchievementFrameToAchievement(achievementID)
-        MainFrame:LocateAchievement(achievementID);
+function RedirectFrame:RestoreFunctions()
+    if self.hasOverwritten then
+        self.hasOverwritten = false;
+        OpenAchievementFrameToAchievement = Original_OpenAchievementFrameToAchievement;
+        ACHIEVEMENT_TRACKER_MODULE.OnBlockHeaderClick = Original_OnBlockHeaderClick;
     end
+end
 
-    function ACHIEVEMENT_TRACKER_MODULE:OnBlockHeaderClick(block, mouseButton)
-        if ( IsModifiedClick("CHATLINK") and ChatEdit_GetActiveWindow() ) then
-            local achievementLink = GetAchievementLink(block.id);
-            if ( achievementLink ) then
-                ChatEdit_InsertLink(achievementLink);
-            end
-        elseif ( mouseButton ~= "RightButton" ) then
-            if ( IsModifiedClick("QUESTWATCHTOGGLE") ) then
-                ToggleTracking(block.id);
-            else
-                local clickAgainToClose = true;
-                MainFrame:LocateAchievement(block.id, clickAgainToClose);
-            end
-        else
-            ObjectiveTracker_ToggleDropDown(block, AchievementObjectiveTracker_OnOpenDropDown);
+function RedirectFrame:OverrideFunctions()
+    if not self.hasOverwritten then
+        self.hasOverwritten = true;
+        function OpenAchievementFrameToAchievement(achievementID)
+            MainFrame:LocateAchievement(achievementID);
         end
+
+        ACHIEVEMENT_TRACKER_MODULE.OnBlockHeaderClick = OnBlockHeaderClick;
     end
 end
 
@@ -4016,6 +4004,7 @@ end
 local strsub = strsub;
 local strsplit = strsplit;
 
+local IS_TOOLTIP_HOOKED = false;
 local ENABLE_TOOLTIP = false;
 local tooltipButtons = {};
 
@@ -4056,6 +4045,9 @@ local function InsertTooltipButton(tooltipFrame, buttonIndex, achievementID, com
 end
 
 local function HookAchievementTooltip()
+    if IS_TOOLTIP_HOOKED then return end;
+    IS_TOOLTIP_HOOKED = true;
+    
     hooksecurefunc(ItemRefTooltip, "SetHyperlink", function(self, link)
         if not ENABLE_TOOLTIP then return end;
 
@@ -4127,16 +4119,12 @@ end
 -----------------------------------------------------------------------------
 function NarciAchievement_RedirectPrimaryAchievementFrame()
     if NarciAchievementOptions.UseAsDefault then
-        if not hasOverwritten then
-            OverrideFunctions();
-            HookAchievementTooltip()
-        end
+        RedirectFrame:OverrideFunctions();
+        HookAchievementTooltip()
         ENABLE_TOOLTIP = true;
         NarciAchievementAlertSystem:Enable();
     else
-        if hasOverwritten then
-            RestoreFunctions();
-        end
+        RedirectFrame:RestoreFunctions();
         ENABLE_TOOLTIP = false;
         NarciAchievementAlertSystem:Disable();
     end
@@ -4146,7 +4134,7 @@ local initialize = CreateFrame("Frame");
 initialize:RegisterEvent("PLAYER_ENTERING_WORLD");
 initialize:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_ENTERING_WORLD" then
-        self:UnregisterEvent("PLAYER_ENTERING_WORLD");
+        self:UnregisterEvent(event);
         DataProvider:GetTrackedAchievements();
         self:RegisterEvent("TRACKED_ACHIEVEMENT_LIST_CHANGED");
         self:RegisterEvent("ADDON_LOADED");
@@ -4164,7 +4152,7 @@ initialize:SetScript("OnEvent", function(self, event, ...)
     elseif event == "ADDON_LOADED" then
         local name = ...;
         if name == "Blizzard_AchievementUI" then
-            self:UnregisterEvent("ADDON_LOADED");
+            self:UnregisterEvent(event);
             NarciAchievement_RedirectPrimaryAchievementFrame();
         end
 

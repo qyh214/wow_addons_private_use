@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1433, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142006")
+mod:SetRevision("20201208155637")
 mod:SetCreatureID(90316)
 mod:SetEncounterID(1788)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
@@ -132,14 +132,14 @@ local function showChakram(self)
 		local uId = DBM:GetRaidUnitId(name)
 		if not uId then return end--Prevent errors if person leaves group
 		if self:IsMeleeDps(uId) then--Melee
-			melee = chakramTargets[i]
-			DBM:Debug("Melee Chakram found: "..melee, 2)
+			melee = name
+			DBM:Debug("Melee Chakram found: "..name, 2)
 		elseif self:IsTanking(uId, "boss1") then--Tank
-			tank = chakramTargets[i]
-			DBM:Debug("Tank Chakram found: "..tank, 2)
+			tank = name
+			DBM:Debug("Tank Chakram found: "..name, 2)
 		else--Ranged
-			ranged = chakramTargets[i]
-			DBM:Debug("Ranged Chakram found: "..ranged, 2)
+			ranged = name
+			DBM:Debug("Ranged Chakram found: "..name, 2)
 		end
 	end
 	if ranged and melee and tank then

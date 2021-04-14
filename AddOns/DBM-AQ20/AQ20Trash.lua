@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("AQ20Trash", "DBM-AQ20", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200828175831")
+mod:SetRevision("20210119194113")
 mod:SetModelID(15741)-- Qiraji Gladiator
 mod:SetMinSyncRevision(20200710000000)--2020, 7, 10
 
@@ -27,7 +27,7 @@ do-- Anubisath Plague/Explode - keep in sync - AQ40/AQ40Trash.lua AQ20/AQ20Trash
 
 	-- aura applied didn't seem to catch the reflects and other buffs
 	function mod:SPELL_AURA_APPLIED(args)
-		if args.spellId == 22997 and not self:IsTrivial(80) then
+		if args.spellId == 22997 and not self:IsTrivial() then
 			if args:IsPlayer() then
 				specWarnPlague:Show()
 				specWarnPlague:Play("runout")
@@ -38,7 +38,7 @@ do-- Anubisath Plague/Explode - keep in sync - AQ40/AQ40Trash.lua AQ20/AQ20Trash
 			else
 				warnPlague:Show(args.destName)
 			end
-		elseif args.spellId == 25698 and not self:IsTrivial(80) then
+		elseif args.spellId == 25698 and not self:IsTrivial() then
 			specWarnExplode:Show()
 			specWarnExplode:Play("justrun")
 		elseif args.spellId == 26079 then
@@ -63,7 +63,7 @@ do-- Anubisath Reflect - keep in sync - AQ40/AQ40Trash.lua AQ20/AQ20Trash.lua
 
 	local playerGUID = UnitGUID("player")
 	function mod:SPELL_MISSED(sourceGUID, _, _, _, destGUID, destName, _, _, _, _, spellSchool, missType)
-		if (missType == "REFLECT" or missType == "DEFLECT") and sourceGUID == playerGUID and not self:IsTrivial(80) then
+		if (missType == "REFLECT" or missType == "DEFLECT") and sourceGUID == playerGUID and not self:IsTrivial() then
 			if (spellSchool == 32 or spellSchool == 16) and self:AntiSpam(3, 1) then
 				specWarnShadowFrostReflect:Show(destName)
 				specWarnShadowFrostReflect:Play("stopattack")

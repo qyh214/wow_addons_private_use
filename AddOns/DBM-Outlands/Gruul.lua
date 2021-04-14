@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Gruul", "DBM-Outlands")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201103194435")
+mod:SetRevision("20210119194113")
 mod:SetCreatureID(19044)
 mod:SetEncounterID(650)
 mod:SetModelID(18698)
@@ -67,7 +67,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if amount == 3 then--First silence is 15 seconds after 3rd growth.
 			timerSilenceCD:Start(15)
 		end
-	elseif args.spellId == 36240 and args:IsPlayer() and not self:IsTrivial(85) then--Cave In
+	elseif args.spellId == 36240 and args:IsPlayer() and not self:IsTrivial() then--Cave In
 		specWarnCaveIn:Show()
 		specWarnCaveIn:Play("runaway")
 	end

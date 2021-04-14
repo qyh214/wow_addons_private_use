@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(832, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20210119194055")
 mod:SetCreatureID(68397)--Diffusion Chain Conduit 68696, Static Shock Conduit 68398, Bouncing Bolt conduit 68698, Overcharge conduit 68697
 mod:SetEncounterID(1579)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)--All icons can be used, because if a pillar is level 3, it puts out 4 debuffs on 25 man (if both are level 3, then you will have 8)
@@ -372,9 +372,9 @@ end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 135153 and destGUID == UnitGUID("player") and self:AntiSpam(1.5, 4) and not self:IsTrivial(110) then
+	if spellId == 135153 and destGUID == UnitGUID("player") and self:AntiSpam(1.5, 4) and not self:IsTrivial() then
 		specWarnCrashingThunder:Show()
-	elseif spellId == 137176 and destGUID == UnitGUID("player") and self:AntiSpam(3, 5) and not self:IsTrivial(110) then
+	elseif spellId == 137176 and destGUID == UnitGUID("player") and self:AntiSpam(3, 5) and not self:IsTrivial() then
 		specWarnOverloadedCircuits:Show()
 	end
 end

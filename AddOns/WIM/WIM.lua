@@ -15,11 +15,13 @@ setfenv(1, WIM);
 
 -- Core information
 addonTocName = "WIM";
-version = "3.8.16";
+version = "3.9.0";
 beta = false; -- flags current version as beta.
 debug = false; -- turn debugging on and off.
 useProtocol2 = true; -- test switch for new W2W Protocol. (Dev use only)
-isShadowlands = (select(4, _G.GetBuildInfo()) >= 90000);
+local buildNumber = select(4, _G.GetBuildInfo())
+isShadowlands = buildNumber >= 90001;
+isTBC = buildNumber >= 20501
 
 -- is Private Server?
 --[[isPrivateServer = not (string.match(_G.GetCVar("realmList"), "worldofwarcraft.com$")
@@ -81,7 +83,7 @@ local function initialize()
         --querie guild roster
         if( _G.IsInGuild() ) then
 			-- H.Sch. - ReglohPri - this is deprecated -> GuildRoster() - changed to C_GuildInfo.GuildRoster()
-			if (select(4, _G.GetBuildInfo()) <= 19999) then
+			if not isShadowlands then
 				--for classic
 				_G.GuildRoster();
 			else
@@ -161,7 +163,7 @@ function GetBNGetFriendInfo(friendIndex)
 end
 
 function GetBNGetFriendInfoByID(id)
-	if not isShadowlands then--Classic
+	if not isShadowlands then--Classic/TBC
 		return _G.BNGetFriendInfoByID(id)
 	else--Retail
 		local accountInfo = _G.C_BattleNet.GetAccountInfoByID(id) or {};
@@ -178,7 +180,7 @@ function GetBNGetFriendInfoByID(id)
 end
 
 function GetBNGetGameAccountInfo(toonId)
-	if not isShadowlands then--Classic
+	if not isShadowlands then--Classic/TBC
 		return _G.BNGetGameAccountInfo(toonId)
 	else--Retail
 		local gameAccountInfo = _G.C_BattleNet.GetGameAccountInfoByID(toonId)

@@ -1,22 +1,8 @@
 ------------------------------------------------------------------------
-r443 | Zimzarina | 2021-02-11 19:04:06 +0000 (Thu, 11 Feb 2021) | 1 line
+r445 | Zimzarina | 2021-03-11 17:09:57 +0000 (Thu, 11 Mar 2021) | 1 line
 Changed paths:
    M /trunk/Postal.toc
 
-
-------------------------------------------------------------------------
-r442 | Zimzarina | 2021-02-09 06:50:17 +0000 (Tue, 09 Feb 2021) | 1 line
-Changed paths:
-   M /trunk/Modules/Express.lua
-
-When the express feature ctrl-clicking was used to bulk mail similar items no check was made if one of the matching items was soulbound before attempting to place it in mail.  This resulted in a user error.  This change fixes issue #241.
-------------------------------------------------------------------------
-r441 | Zimzarina | 2020-11-21 14:54:14 +0000 (Sat, 21 Nov 2020) | 1 line
-Changed paths:
-   M /trunk/Modules/OpenAll.lua
-   M /trunk/Modules/Select.lua
-   M /trunk/Postal.lua
-
-In patch 8.3.0 the mailbox size was increased from 50 to 100.  Postal now updated for this change.
+TOC Update.
 ------------------------------------------------------------------------
 

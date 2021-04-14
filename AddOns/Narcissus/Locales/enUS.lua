@@ -5,7 +5,7 @@ local L = Narci.L
 NARCI_GRADIENT = "|cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r"
 MYMOG_GRADIENT = "|cffA236EFM|cff9448F1y |cff865BF2T|cff786DF4r|cff6A80F6a|cff5D92F7n|cff4FA4F9s|cff41B7FAm|cff33C9FCo|cff32c9fbg|r"
 
-NARCI_VERSION_INFO = "1.1.0g";
+NARCI_VERSION_INFO = "1.1.1";
 NARCI_DEVELOPER_INFO = "Designed by Peterodox";
 
 NARCI_NEW_ENTRY_PREFIX = "|cff40C7EB";
@@ -169,7 +169,7 @@ L["Ultra-wide"] = "Ultra-wide";
 L["Ultra-wide Optimization"] = "Ultra-wide Optimization";
 L["Baseline Offset"] = "Baseline Offset";
 L["Ultra-wide Tooltip"] = "You can see this option because you are using a %s:9 monitor.";
-L["Interactive Area"] = "Interactive Area";
+L["Interactive Area"] = "Interactable  Area";
 L["Item Socketing Tooltip"] = "Double-click to embed";
 L["No Available Gem"] = "|cffd8d8d8No available gem|r";
 L["Use Bust Shot"] = "Use Bust Shot";
@@ -215,6 +215,8 @@ L["Camera Transition"] = "Camera Transition";
 L["Camera Transition Description On"] = "Camera will move smoothly to the predetermined position when you open this character panel.";
 L["Camera Transition Description Off"] = "Camera transition becomes instant. Starts from the second time you use this character panel.\nInstant transition will override camera preset #4.";
 L["Interface Options Tab Description"] = "You can also access the this panel by clicking the gear button next to the toolbar on the bottom left of your screen while using Narcissus.";
+L["Soulbinds"] = COVENANT_PREVIEW_SOULBINDS;
+L["Conduit Tooltip"] = "Effects of Higher Ranks";
 
 --Model Control--
 NARCI_HOLD_WEAPON = "Draw Weapon";
@@ -349,6 +351,8 @@ L["Don't Update Items"] = "Don't Update Items";
 L["Update Talents"] = "Update Talents";
 L["Don't Update Talents"] = "Don't Update Talents";
 L["Old Icon"] = "Old Icon";
+L["NavBar Saved Sets"] = "Saved";   --A Saved Equipment Set
+L["NavBar Incomplete Sets"] = INCOMPLETE;
 NARCI_ICON_SELECTOR = "Icon Selector";
 NARCI_DELETE_SET_WITH_LONG_CLICK = "Delete Set\n|cff808080(click and hold)|r";
 
@@ -469,7 +473,7 @@ L["Flavored Text"] = "Visit any Yogg Salon in major cities today to recieve a 10
 
 --Project Details--
 NARCI_ALL_PROJECTS = "All Projects";
-NARCI_PROJECT_DETAILS = "|cFFFFD100Developer: Peterodox\nRelease Date: December 20, 2020|r\n\nThank you for trying this add-on! If you have any issues, suggestions, ideas, please leave a comment on the curseforge page or contact me on...";
+NARCI_PROJECT_DETAILS = "|cFFFFD100Developer: Peterodox\nRelease Date: March 20, 2020|r\n\nThank you for trying this add-on! If you have any issues, suggestions, ideas, please leave a comment on the curseforge page or contact me on...";
 NARCI_PROJECT_AAA_TITLE = "|cff008affA|cff0d8ef2z|cff1a92e5e|cff2696d9r|cff339acco|cff409ebft|cff4da1b2h |cff59a5a6A|cff66a999d|cff73ad8cv|cff7fb180e|cff8cb573n|cff99b966t|cffa6bd59u|cffb2c14dr|cffbfc440e |cffccc833A|cffd9cc26l|cffe5d01ab|cfff2d40du|cffffd800m|r";
 NARCI_PROJECT_AAA_SUMMARY = "Explore places of interest and collect lores and photos from all across Azeroth.|cff636363";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "An immersive character pane and your ultimate screenshot tool.";

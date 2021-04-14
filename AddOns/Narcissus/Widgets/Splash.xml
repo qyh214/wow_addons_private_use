@@ -30,7 +30,7 @@
                     <Animations>
                         <AnimationGroup parentKey="scaleIn" smoothing="OUT">
                             <Scale scaleX="1" scaleY="0.2" duration="0" order="1"/>
-                            <Scale scaleX="1" scaleY="5" duration="0.25" order="2"/>
+                            <Scale scaleX="1" scaleY="5" duration="0.25" order="2" smoothing="OUT"/>
                             <Scripts>
                                 <OnFinished>
                                     UIFrameFadeIn(self:GetParent().HiddenFrame, 0.2, 0, 1);

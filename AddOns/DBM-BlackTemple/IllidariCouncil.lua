@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Council", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142051")
+mod:SetRevision("20210119194113")
 mod:SetCreatureID(22949, 22950, 22951, 22952)
 mod:SetEncounterID(608)
 mod:SetModelID(21416)
@@ -52,19 +52,19 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.PoisonIcon then
 			self:SetIcon(args.destName, 1)
 		end
-	elseif spellId == 41481 and args:IsPlayer() and self:AntiSpam(3, 1) and not self:IsTrivial(85) then
+	elseif spellId == 41481 and args:IsPlayer() and self:AntiSpam(3, 1) and not self:IsTrivial() then
 		 specWarnFlame:Show()
 		 specWarnFlame:Play("runaway")
-	elseif spellId == 41482 and args:IsPlayer() and self:AntiSpam(3, 2) and not self:IsTrivial(85) then
+	elseif spellId == 41482 and args:IsPlayer() and self:AntiSpam(3, 2) and not self:IsTrivial() then
 		 specWarnBlizzard:Show()
 		 specWarnBlizzard:Play("runaway")
-	elseif spellId == 41541 and args:IsPlayer() and self:AntiSpam(3, 3) and not self:IsTrivial(85) then
+	elseif spellId == 41541 and args:IsPlayer() and self:AntiSpam(3, 3) and not self:IsTrivial() then
 		 specWarnConsecration:Show()
 		 specWarnConsecration:Play("runaway")
 	elseif spellId == 41476 then
 		warnVanish:Show(args.destName)
 		timerVanish:Start(args.destName)
-	elseif spellId == 41475 and not self:IsTrivial(85) then
+	elseif spellId == 41475 and not self:IsTrivial() then
 		specWarnShield:Show(args.destName)
 		specWarnShield:Play("stopattack")
 		timerShield:Start(args.destName)

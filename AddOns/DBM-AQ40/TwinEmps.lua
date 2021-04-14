@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TwinEmpsAQ", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200828175831")
+mod:SetRevision("20210119194113")
 mod:SetCreatureID(15276, 15275)
 mod:SetEncounterID(715)
 mod:SetModelID(15778)
@@ -39,14 +39,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(799, 800) and self:AntiSpam(5, 1) then
 		warnTeleport:Show()
 		timerTeleport:Start()
-	elseif args.spellId == 26613 and not self:IsTrivial(80) then
+	elseif args.spellId == 26613 and not self:IsTrivial() then
 		if args:IsPlayer() then
 			specWarnStrike:Show()
 			specWarnStrike:Play("defensive")
 		else
 			warnStrike:Show(args.destName)
 		end
-	elseif args.spellId == 26607 and args:IsPlayer() and not self:IsTrivial(80) then
+	elseif args.spellId == 26607 and args:IsPlayer() and not self:IsTrivial() then
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
 	end

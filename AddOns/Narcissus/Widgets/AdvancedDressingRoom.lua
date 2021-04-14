@@ -8,7 +8,7 @@ end
 --]]
 
 ----------------------------------------------------------------------------------------
-local defaultWidth, defaultHeight = 450, 545;       --BLZ dressing room size
+local DEFAULT_WIDTH, DEFAULT_HEIGHT = 450, 545;       --BLZ dressing room size
 local FrameAlpha_OnMoving = 0;                      --Currently Disabled
 local buttonWidth, buttonGap = 54, 16;              --Equipment slots
 local ButtonOffsetY = 20;                           --Equipment slots
@@ -30,10 +30,10 @@ local IsAppearanceKnown = NarciAPI.IsAppearanceKnown;
 local FadeFrame = NarciAPI_FadeFrame;
 local SlotIDtoName = Narci.SlotIDtoName;
 
-local WidthHeitghtRatio = defaultWidth/defaultHeight;
-local FirstButtonOffset = 0.5*(buttonWidth + buttonGap);
-local OverrideHeight = math.floor(GetScreenHeight()*0.8 + 0.5);
-local OverrideWidth = math.floor(WidthHeitghtRatio * OverrideHeight + 0.5);
+local WIDTH_HEIGHT_RATIO = DEFAULT_WIDTH/DEFAULT_HEIGHT;
+local RIRST_BUTTON_OFFSET = 0.5*(buttonWidth + buttonGap);
+local OVERRIDE_HEIGHT = math.floor(GetScreenHeight()*0.8 + 0.5);
+local OVERRIDE_WIDTH = math.floor(WIDTH_HEIGHT_RATIO * OVERRIDE_HEIGHT + 0.5);
 
 local SlotFrameVisibility = true;            --If DressUp addon is loaded, hide our slot frame
 local UseTargetModel = true;                 --Replace your model with target's
@@ -48,81 +48,83 @@ local XmogSlotTable = {
 
 local GetActorInfoByUnit = NarciAPI_GetActorInfoByUnit;
 
+--Frames:
+local DressingRoomOverlayFrame;
+
 local function CreateSlotButton(frame)
-    local strupper = strupper;
     local buttonName = "AdvancedDressUpFrameSlotButton";
     local buttonTemplate = "NarciRectangularItemButtonTemplate";
     local offsetX = 0;
     local buttonParent = frame.SlotFrame;
     local button, buttons = nil, {};
     local slotID = 6;                   --Start From Column 2, #2, Waist
-    button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate)
-    button:SetPoint("BOTTOMLEFT", buttonParent, "BOTTOM", -FirstButtonOffset, ButtonOffsetY);
+    button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate);
+    button:SetPoint("BOTTOMLEFT", buttonParent, "BOTTOM", -RIRST_BUTTON_OFFSET, ButtonOffsetY);
     button:SetID(slotID)
     buttons[slotID] = button;
 
-    slotID = 10                         --Left to the Waist :Hands 10
-    button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate)
+    slotID = 10;                         --Left to the Waist :Hands 10
+    button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate);
     button:SetPoint("RIGHT", buttons[6], "LEFT", -offsetX, 0);
-    button:SetID(slotID)
+    button:SetID(slotID);
     buttons[slotID] = button;
 
     local lastSlotID = 6;
     for _, v in pairs(XmogSlotTable[2]) do
         slotID = v[1];
-        button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate)
+        button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate);
         button:SetPoint("LEFT", buttons[lastSlotID], "RIGHT", offsetX, 0);
         button:SetID(slotID)
         buttons[slotID] = button;
         lastSlotID = slotID;
     end
 
-    slotID = 9                         --Column 1 Right end :Wrist 9
-    button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate)
+    slotID = 9;                         --Column 1 Right end :Wrist 9
+    button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate);
     button:SetPoint("RIGHT", buttons[10], "LEFT", -offsetX - buttonGap, 0);
-    button:SetID(slotID)
+    button:SetID(slotID);
     buttons[slotID] = button;
     lastSlotID = slotID;
 
     for _, v in pairs(XmogSlotTable[1]) do
         slotID = v[1];
-        button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate)
+        button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate);
         button:SetPoint("RIGHT", buttons[lastSlotID], "LEFT", offsetX, 0);
         button:SetID(slotID)
         buttons[slotID] = button;
         lastSlotID = slotID;
     end
 
-    slotID = 16                         --Column 3 Left end :Main Hand 16
-    button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate)
+    slotID = 16;                         --Column 3 Left end :Main Hand 16
+    button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate);
     button:SetPoint("LEFT", buttons[8], "RIGHT", offsetX + buttonGap, 0);
-    button:SetID(slotID)
+    button:SetID(slotID);
     buttons[slotID] = button;
 
-    slotID = 17                         --Column 3 Right end :Off Hand 17
-    button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate)
+    slotID = 17;                         --Column 3 Right end :Off Hand 17
+    button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate);
     button:SetPoint("LEFT", buttons[16], "RIGHT", offsetX, 0);
-    button:SetID(slotID)
+    button:SetID(slotID);
     buttons[slotID] = button;
 
     
-    slotID = 4                         --Column 4 Left end :Shirt 4
-    button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate)
+    slotID = 4;                         --Column 4 Left end :Shirt 4
+    button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate);
     button:SetPoint("LEFT", buttons[17], "RIGHT", offsetX + buttonGap, 0);
-    button:SetID(slotID)
+    button:SetID(slotID);
     buttons[slotID] = button;
 
-    slotID = 19                         --Column 4 Left end :Shirt Tabard
-    button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate)
+    slotID = 19;                         --Column 4 Left end :Shirt Tabard
+    button = CreateFrame("BUTTON", buttonName..slotID, buttonParent, buttonTemplate);
     button:SetPoint("LEFT", buttons[4], "RIGHT", offsetX, 0);
-    button:SetID(slotID)
+    button:SetID(slotID);
     buttons[slotID] = button;
     
-    local textureName, butID;
+    local textureName, buttonID;
     for _, but in pairs(buttons) do
-        butID = but:GetID();
+        buttonID = but:GetID();
         
-        _, textureName = GetInventorySlotInfo((SlotIDtoName[butID][1]))
+        _, textureName = GetInventorySlotInfo((SlotIDtoName[buttonID][1]));
         but.SlotIcon:SetTexture(textureName)
     end
 
@@ -375,8 +377,8 @@ local function SetDressUpBackground(unit, instant)
 end
 
 local function GetDressingSource(mainHandEnchant, offHandEnchant)
-    local buttons = NarciBridge_DressUpFrame.buttons;
-    local button, appliedSourceID, icon, hasMog, hyperlink, unformatedHyperlink, itemName, itemID, bonusID, sourceTextColorized, isIllusionCollected, illusionHyperlink;
+    local buttons = DressingRoomOverlayFrame.buttons;
+    local button, appliedSourceID, appearanceID, icon, hasMog, hyperlink, unformatedHyperlink, itemName, itemID, bonusID, sourceTextColorized, isIllusionCollected, illusionHyperlink;
     local enchantID;
     wipe(newSet.items)
     wipe(ItemList)
@@ -431,7 +433,7 @@ local function GetDressingSource(mainHandEnchant, offHandEnchant)
     end
 end
 
-local function NarciBridge_DressUpFrame_OnLoad(self)
+local function DressingRoomOverlayFrame_OnLoad(self)
     self:SetParent(DressUpFrame);
     self:GetParent():SetMovable(true);
     self:GetParent():RegisterForDrag("LeftButton");
@@ -465,8 +467,8 @@ local function DressUpSources(appearanceSources, mainHandEnchant, offHandEnchant
                 playerActor:TryOn(appearanceSources[i]);
 			end
         end
-        if NarciBridge_DressUpFrame.buttons[i] then
-            NarciBridge_DressUpFrame.buttons[i].isHidden = false;
+        if DressingRoomOverlayFrame.buttons[i] then
+            DressingRoomOverlayFrame.buttons[i].isHidden = false;
         end
 	end
 
@@ -536,7 +538,7 @@ local IsCurrentModelPlayer = false;
 
 local function UpdateDressingRoomModel(unit)
     unit = unit or "player";
-    local NarciBridge = NarciBridge_DressUpFrame;
+    local NarciBridge = DressingRoomOverlayFrame;
     if not UnitExists(unit) then
         return
     elseif not UnitIsPlayer(unit) or not CanInspect(unit, false) then
@@ -581,9 +583,11 @@ local function UpdateDressingRoomModel(unit)
     if updateScale then
         local modelInfo;
         modelInfo = GetActorInfoByUnit(modelUnit);
-        After(0.0,function()
-            ModelScene:InitializeActor(actor, modelInfo);   --Re-scale
-        end);
+        if modelInfo then
+            After(0.0,function()
+                ModelScene:InitializeActor(actor, modelInfo);   --Re-scale
+            end);
+        end
     end
 
     --Update Unsheathed Animation
@@ -591,7 +595,7 @@ local function UpdateDressingRoomModel(unit)
 end
 
 local function RefreshFavoriteState(appearanceID)
-    local buttons = NarciBridge_DressUpFrame.buttons;
+    local buttons = DressingRoomOverlayFrame.buttons;
     local state;
     for slot, button in pairs(buttons) do
         if button.appearanceID and button.appearanceID == appearanceID then
@@ -623,9 +627,9 @@ end
 local function ResetHiddenSlot()
     --print("Load model...")
     for i = 1, 19 do
-        if NarciBridge_DressUpFrame.buttons[i] then
-            NarciBridge_DressUpFrame.buttons[i].isHidden = false;
-            NarciBridge_DressUpFrame.buttons[i].sourceID = nil;
+        if DressingRoomOverlayFrame.buttons[i] then
+            DressingRoomOverlayFrame.buttons[i].isHidden = false;
+            DressingRoomOverlayFrame.buttons[i].sourceID = nil;
         end
     end
 end
@@ -691,13 +695,12 @@ local function TryOnButton_OnClick(self)
     UpdateDressingRoomModel("target");
 end
 
-local EncodeItemlist = NarciBridge_EncodeItemlist;
 local function GetWowHeadDressingRoomURL()
     local itemList = {};
     for k, v in pairs(ItemList) do
         itemList[k] = {v[3], v[4]};
     end
-    return EncodeItemlist(itemList, UnitInfo)
+    return NarciAPI.EncodeItemlist(itemList, UnitInfo)
 end
 
 local function ExternalLinkButton_OnClick(self)
@@ -717,7 +720,7 @@ local function LinkEditBox_OnTextChanged(self, isUserInput)
 end
 
 local function LinkEditBox_OnKeyDown(self, key)
-    local keys = CreateKeyChordString(key);
+    local keys = CreateKeyChordStringUsingMetaKeyState(key);
     if keys == "CTRL-C" or key == "COMMAND-C" then
         self.hasCopied = true;
         After(0.1, function()
@@ -728,7 +731,7 @@ local function LinkEditBox_OnKeyDown(self, key)
 end
 
 function Narci_UpdateDressingRoom()
-    local frame = NarciBridge_DressUpFrame;
+    local frame = DressingRoomOverlayFrame;
     if not frame then return end;
     
     frame.mode = "visual";
@@ -751,7 +754,32 @@ end
 
 local Narci_UpdateDressingRoom = Narci_UpdateDressingRoom;
 
-local function NarciBridge_DressUpFrame_Initialize()
+function Narci_ShowDressingRoom()
+    local frame = DressUpFrame;
+    --derivated from Blizzard DressUpFrames.lua / DressUpFrame_Show
+    if ( not frame:IsShown() or frame.mode ~= "player") then
+		frame.mode = "player";
+		frame.ResetButton:SetShown(true);
+        frame.MaximizeMinimizeFrame:Maximize(true);
+        if InCombatLockdown() then
+            frame:Show();
+            DressingRoomOverlayFrame:ListenEscapeKey(true);
+        else
+            ShowUIPanel(frame);
+        end
+		frame.ModelScene:ClearScene();
+		frame.ModelScene:SetViewInsets(0, 0, 0, 0);
+		frame.ModelScene:TransitionToModelSceneID(290, CAMERA_TRANSITION_TYPE_IMMEDIATE, CAMERA_MODIFICATION_TYPE_DISCARD, true);
+		
+		local sheatheWeapons = false;
+		local autoDress = true;
+		local itemModifiedAppearanceIDs = nil;
+        SetupPlayerForModelScene(frame.ModelScene, itemModifiedAppearanceIDs, sheatheWeapons, autoDress);
+        Narci_UpdateDressingRoom();
+	end
+end
+
+local function DressingRoomOverlayFrame_Initialize()
     if not (NarcissusDB and NarcissusDB.DressingRoom) then return; end;
     
     local parentFrame = DressUpFrame;
@@ -760,9 +788,9 @@ local function NarciBridge_DressUpFrame_Initialize()
         return;
     end
 
-    local frame = CreateFrame("Frame", "NarciBridge_DressUpFrame", parentFrame, "Narci_DressingRoomOverlay")
+    local frame = CreateFrame("Frame", "DressingRoomOverlayFrame", parentFrame, "Narci_DressingRoomOverlay")
     CreateSlotButton(frame)
-    NarciBridge_DressUpFrame_OnLoad(frame);
+    DressingRoomOverlayFrame_OnLoad(frame);
 
     local texName = parentFrame:GetName() and parentFrame:GetName().."BackgroundOverlay"
     local tex = parentFrame:CreateTexture(texName, "BACKGROUND", "NarciDressingRoomBackgroundTemplate", 2)
@@ -771,7 +799,7 @@ local function NarciBridge_DressUpFrame_Initialize()
     
     if ReScaleFrame then
         local function OnMaximize(frame)
-            frame:GetParent():SetSize(OverrideWidth, OverrideHeight);   --Override DressUpFrame Resize Mixin
+            frame:GetParent():SetSize(OVERRIDE_WIDTH, OVERRIDE_HEIGHT);   --Override DressUpFrame Resize Mixin
             UpdateUIPanelPositions(frame);
         end
         ReScaleFrame:SetOnMaximizedCallback(OnMaximize);
@@ -805,7 +833,7 @@ local function NarciBridge_DressUpFrame_Initialize()
     --]]
 
     local function SetDressingRoomMode(mode, link)
-        local frame = NarciBridge_DressUpFrame;
+        local frame = DressingRoomOverlayFrame;
         if frame then
             frame.mode = mode;
             --frame.link = link;
@@ -883,19 +911,19 @@ initialize:SetScript("OnEvent",function(self,event,...)
         local name = ...;
         if name == "Narcissus" then
             self:UnregisterEvent("ADDON_LOADED");
-            NarciBridge_DressUpFrame_Initialize();
+            DressingRoomOverlayFrame_Initialize();
         end
     elseif event == "PLAYER_ENTERING_WORLD" then
         UseTargetModel = NarcissusDB.DressingRoomUseTargetModel;
         local _;
         _, PanningYOffsetForCurrentActor = GetActorInfoByUnit("player");
 
-        if not NarciBridge_DressUpFrame then
+        if not DressingRoomOverlayFrame then
             self:UnregisterAllEvents();
             return
         end
 
-        local TryOnButton = NarciBridge_DressUpFrame.OptionFrame.TryOnButton;
+        local TryOnButton = DressingRoomOverlayFrame.OptionFrame.TryOnButton;
         TryOnButton:SetScript("OnClick", TryOnButton_OnClick);
         if UseTargetModel then   --true
             TryOnButton.Label:SetText(L["Use Target Model"]);
@@ -916,19 +944,20 @@ initialize:SetScript("OnEvent",function(self,event,...)
         end
 
         if IsAddOnLoaded("DressUp") or IsAddOnLoaded("BetterWardrobe") then                                --DressUp: Hide our dressing room slot frame
-            NarciBridge_DressUpFrame.SlotFrame:Hide();
+            DressingRoomOverlayFrame.SlotFrame:Hide();
             SlotFrameVisibility = false;
         end
     elseif event == "UI_SCALE_CHANGED" then
         After(0.5, function()
-            OverrideHeight = math.floor(GetScreenHeight()*0.8 + 0.5);
-            OverrideWidth = math.floor(WidthHeitghtRatio * OverrideHeight + 0.5);
+            OVERRIDE_HEIGHT = math.floor(GetScreenHeight()*0.8 + 0.5);
+            OVERRIDE_WIDTH = math.floor(WIDTH_HEIGHT_RATIO * OVERRIDE_HEIGHT + 0.5);
             if IsDressUpFrameMaximized() then
-                DressUpFrame:SetSize(OverrideWidth, OverrideHeight)
+                DressUpFrame:SetSize(OVERRIDE_WIDTH, OVERRIDE_HEIGHT)
             end
         end)
     end
 end);
+
 
 --Item Button--
 NarciDressingRoomItemButtonMixin = {};
@@ -1015,7 +1044,7 @@ function NarciDressingRoomItemButtonMixin:OnDragStart()
     hideAll = self.isHidden;
     After(0.2, function()
         if numDragThrough >= 5 and sharedActor then
-            local buttons = NarciBridge_DressUpFrame.buttons;
+            local buttons = DressingRoomOverlayFrame.buttons;
             local button;
             for k, v in pairs(buttons) do
                 button = v;
@@ -1047,6 +1076,10 @@ end
 
 NarciDressingRoomOverlayMixin = {};
 
+function NarciDressingRoomOverlayMixin:OnLoad()
+    DressingRoomOverlayFrame = self;
+end
+
 function NarciDressingRoomOverlayMixin:OnShow()
     if self.mode ~= "visual" then return end;
 
@@ -1059,11 +1092,24 @@ function NarciDressingRoomOverlayMixin:OnShow()
     end)
 end
 
+function NarciDressingRoomOverlayMixin:ListenEscapeKey(state)
+    if state then
+        self:SetScript("OnKeyDown", function(frame, key, down)
+            if key == "ESCAPE" then
+                DressUpFrame:Hide();
+            end
+        end)
+    else
+        self:SetScript("OnKeyDown", nil);
+    end
+end
+
 function NarciDressingRoomOverlayMixin:OnHide()
     self:UnregisterEvent("PLAYER_TARGET_CHANGED");
     self:UnregisterEvent("TRANSMOG_COLLECTION_UPDATED");
     self:UnregisterEvent("INSPECT_READY");
     self.isActorHooked = false;
+    self:ListenEscapeKey(false);
 end
 
 function NarciDressingRoomOverlayMixin:OnEvent(event, ...)
@@ -1097,7 +1143,7 @@ function NarciDressingRoomOverlayMixin:OnSizeChanged(width, height)
             self.SlotFrame:Hide();
         end
 
-        UpdateCameraPanningOffset();
+        --UpdateCameraPanningOffset();
     else
         self.SlotFrame:Hide();
     end
@@ -1147,7 +1193,7 @@ ReleaseAllActors()
 2921871 Gillvanas ModelFileID 93312(DisplayID)  Finduin 2924741/93311 animation 217
 A1:SetAnimation(217,1,0.5,0)
 9331 Gnome
-/run NarciBridge_DressUpFrame.SlotFrame:Hide();
+/run DressingRoomOverlayFrame.SlotFrame:Hide();
 
 function DressUpMountLink(link)
 	if( link ) then

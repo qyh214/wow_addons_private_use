@@ -1,12 +1,12 @@
-tag 55ff74dc8e11b82b4506ec5b04cf7c7bcc15b5e1 3.3.6
+tag 89cd83b9012a3a164151c5e2b01ca66c911fa8a5 3.3.7
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Sun Jan 10 12:23:59 2021 +0100
+Date:	Sat Mar 13 15:58:26 2021 +0100
 
-Fix: Lua error for missons with no expiration time
+Toc update
 
-commit 2ed69c29d9e8e2969a341c4aee9687be70700f5d
+commit 8d033b4ab0d248e6cfb44afbff9f208265f1c332
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Sun Jan 10 12:23:12 2021 +0100
+Date:   Sat Mar 13 15:03:27 2021 +0100
 
-    Fix lua error for missions with no expiration date
+    Toc update to 90005
 

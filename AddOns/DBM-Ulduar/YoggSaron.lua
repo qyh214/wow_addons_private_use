@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("YoggSaron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806143902")
+mod:SetRevision("20210120231753")
 mod:SetCreatureID(33288)
 mod:SetEncounterID(1143)
 mod:SetModelID(28817)
@@ -120,7 +120,7 @@ function mod:SPELL_CAST_START(args)
 		timerCastDeafeningRoar:Start()
 		specWarnDeafeningRoar:Show()
 		specWarnDeafeningRoar:Play("silencesoon")
-	elseif args.spellId == 63138 and not self:IsTrivial(85) then		--Sara's Fervor
+	elseif args.spellId == 63138 and not self:IsTrivial() then		--Sara's Fervor
 		self:BossTargetScanner(args.sourceGUID, "FervorTarget", 0.1, 12, true, nil, nil, nil, true)
 	end
 end
@@ -128,11 +128,11 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 64144 and self:GetUnitCreatureId(args.sourceGUID) == 33966 then
 		warnCrusherTentacleSpawned:Show()
-	elseif args.spellId == 64465 then
+	elseif args.spellId == 64465 and self:AntiSpam(3, 4) then
 		timerEmpower:Start()
 		timerEmpowerDuration:Start()
 		warnEmpowerSoon:Schedule(40)
-	elseif args:IsSpellID(64167, 64163) then	-- Lunatic Gaze
+	elseif args:IsSpellID(64167, 64163) and self:AntiSpam(3, 3) then	-- Lunatic Gaze
 		timerLunaricGaze:Start()
 		brainportal:Start(60)
 		warnBrainPortalSoon:Schedule(55)

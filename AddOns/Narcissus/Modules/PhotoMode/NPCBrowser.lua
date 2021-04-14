@@ -312,7 +312,7 @@ function Narci_ToggleNPCBrowser(self, state)
         local index = PopUp.Index;
         NarciPhotoModeAPI.CreateEmptyModelForNPCBrowser(index);     --Defined in PlayerModel.lua
         targetModelIndex = index;
-
+        BrowserFrame:Init();
     else
         ToggleBrowser(false);
         SetPanelAlpha(1, true);
@@ -3033,7 +3033,8 @@ local function NPCBrowser_OnLoad(self)
     SearchBox = HeaderFrame.SearchBox;
     SearchTrigger = HeaderFrame.SearchTrigger;
     DeleteTextButton = HeaderFrame.DeleteTextButton;
-
+    LoadingIndicator = self.Container.LoadingIndicator;
+    
     CreateSmoothScroll(EntryTab, NPC_BUTTON_HEIGHT, NUM_BUTTONS_PER_PAGE, 2, UpdateRenderAreaEntry);
     CreateCoverButton();
     CreateSmoothScroll(CategoryTab, COVER_BUTTON_HEIGHT, NUM_COVER_ROW_PER_PAGE, 1);
@@ -3442,17 +3443,29 @@ local function BuildNPCList()
             if numLeft > 0 then
                 After(0, GetNameRecursively);
             else
-                LoadingIndicator.Progress:SetText("");
-                LoadingIndicator:Hide();
                 NPCBrowser_OnLoad(BrowserFrame);
                 LoadTexture();
+                LoadingIndicator.Progress:SetText("");
+                LoadingIndicator:Hide();
             end
         end
 
         GetNameRecursively();
     end)
+    LoadFavorites();
 end
 
+
+NarciNPCBrowserMixin = {};
+
+function NarciNPCBrowserMixin:Init()
+    if not self.isLoaded then
+        self.isLoaded = true;
+        LoadingIndicator = self.Container.LoadingIndicator;
+        LoadingIndicator:Show();
+        BuildNPCList();
+    end
+end
 
 local Initialize = CreateFrame("Frame");
 Initialize:RegisterEvent("PLAYER_ENTERING_WORLD");
@@ -3463,10 +3476,7 @@ Initialize:SetScript("OnEvent", function(self, event)
         BrowserFrame = Narci_NPCBrowser;
         BrowserFrame:SetSize(BROWSER_SHRINK_WIDTH, BROWSER_SHRINK_HEIGHT);
         BrowserFrame:SetScript("OnHide", Narci_NPCBrowser_OnHide);
-        LoadingIndicator = BrowserFrame.Container.LoadingIndicator;
-        LoadingIndicator:Show();
-        BuildNPCList();
-        LoadFavorites();
+        --BuildNPCList();
     end
 end)
 

@@ -1,6 +1,8 @@
 local Kal 	= DBM:GetModByName("Kal")
 local L		= Kal:GetLocalizedStrings()
 
+local DBMKalFrameDrag, DBMKalFrameDragTitle = _G["DBMKalFrameDrag"], _G["DBMKalFrameDragTitle"] -- Provided by KalecgosFrame.xml
+
 function Kal:InitializeMenu()
 	local info1 = UIDropDownMenu_CreateInfo()
 	info1.text = L.name

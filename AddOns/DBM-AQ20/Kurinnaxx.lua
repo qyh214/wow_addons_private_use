@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kurinnaxx", "DBM-AQ20", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200618151138")
+mod:SetRevision("20210119194113")
 mod:SetCreatureID(15348)
 mod:SetEncounterID(718)
 mod:SetModelID(15742)
@@ -44,7 +44,7 @@ function mod:SPELL_CREATE(args)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 25646 and not self:IsTrivial(80) then
+	if args.spellId == 25646 and not self:IsTrivial() then
 		local amount = args.amount or 1
 		timerWound:Start(args.destName)
 		if amount >= 5 then

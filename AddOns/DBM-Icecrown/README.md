@@ -1,3 +1,6 @@
+[![Build Status](https://github.com/DeadlyBossMods/DBM-WotLK/workflows/CI/badge.svg)](https://github.com/DeadlyBossMods/DBM-WotLK/actions?workflow=CI)
+[![DeadlyBossMods on Discord](https://img.shields.io/badge/discord-DeadlyBossMods-738bd7.svg?style=flat)](https://discord.gg/DeadlyBossMods) 
+
 <p><img src="https://media.forgecdn.net/attachments/76/25/patreon-medium-button.png" width="408" height="80" /></p>
 <p><a href="https://www.patreon.com/deadlybossmods">https://www.patreon.com/deadlybossmods</a></p>
 <h2 id="w-wot-lk-boss-mods-for-dbm"><strong>WotLK boss mods for DBM</strong></h2>

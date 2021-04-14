@@ -590,7 +590,7 @@
 	<Frame name="Narci_EquipmentSetManagerFrame" parent="Narci_Attribute" hidden="true" Alpha="0">
 		<Size x="320" y="216"/>
 		<Anchors>
-			<Anchor point="TOP" relativeTo="Narci_ItemLevelFrame" relativePoint="BOTTOM" x="0" y="-24"/>
+			<Anchor point="TOP" relativeTo="Narci_ItemLevelFrame" relativePoint="BOTTOM" x="0" y="-98"/>
 		</Anchors>
 		<Layers>
 			<Layer level="BACKGROUND">

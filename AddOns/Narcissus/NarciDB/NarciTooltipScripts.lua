@@ -103,6 +103,21 @@ Timer:SetScript("OnHide", function(self)
     self.t = 0;
 end)
 
+local function UpdateShadowAnchor(tooltip, hasGuidePicture)
+    local ShadowFrame = tooltip.ShadowFrame;
+    if ShadowFrame then
+        local offset = 11;
+        ShadowFrame:ClearAllPoints();
+        if hasGuidePicture then
+            ShadowFrame:SetPoint("TOPLEFT", tooltip.Guide, "TOPLEFT", -offset, offset);
+            ShadowFrame:SetPoint("BOTTOMRIGHT", tooltip, "BOTTOMRIGHT", offset, -offset);
+        else
+            ShadowFrame:SetPoint("TOPLEFT", tooltip, "TOPLEFT", -offset, offset);
+            ShadowFrame:SetPoint("BOTTOMRIGHT", tooltip, "BOTTOMRIGHT", offset, -offset);
+        end
+    end
+end
+
 local function SetSingleLine()
     local tooltip = NarciTooltip;
     tooltip.IsSignleLine = true;
@@ -112,7 +127,8 @@ local function SetSingleLine()
     TextObject:SetSize(0, 0);
     TextObject:Show();
     TextObject:SetText(pendingText);
-    tooltip.Guide:SetAlpha(0);
+    tooltip.Guide:Hide();
+    UpdateShadowAnchor(tooltip);
 end
 
 local function SetMultiLines()
@@ -126,16 +142,19 @@ local function SetMultiLines()
     tooltip.Text1:Show();
     tooltip.Header:SetText(pendingText[1]);
     tooltip.Text1:SetText(pendingText[2]);
-    local index = tooltip.GuideIndex;
+    local index = tooltip.guideIndex;
     if index then
         if Images[index] then
             tooltip.Guide.Picture:SetTexture(PATH_PREFIX.. Images[index]);
-            tooltip.Guide:SetAlpha(1);
+            tooltip.Guide:Show();
+            UpdateShadowAnchor(tooltip, true);
         else
-            tooltip.Guide:SetAlpha(0);
+            tooltip.Guide:Hide();
+            UpdateShadowAnchor(tooltip);
         end
     else
-        tooltip.Guide:SetAlpha(0);
+        tooltip.Guide:Hide();
+        UpdateShadowAnchor(tooltip);
     end
 end
 
@@ -185,7 +204,8 @@ function TP:OnLoad()
     local animFade = NarciAPI_CreateFadingFrame(self);
 
     
-    self:SetBackdrop(BackdropInfo);
+    self.ShadowFrame:SetBackdrop(BackdropInfo);
+    self.ShadowFrame:SetFrameLevel(self:GetFrameLevel() - 1);
 end
 
 function TP:OnSizeChanged(width, height)
@@ -201,7 +221,7 @@ function TP:OnShow()
         self:SetSize(textWidth + 2*TEXT_PADDING, textHeight + 2*TEXT_PADDING);
     else
         self:SetWidth(FIXED_WIDTH);
-        self.Guide:SetHeight(FIXED_WIDTH / 2 + 12);
+        self.Guide:SetHeight(FIXED_WIDTH / 2);
         local height = (self.Header:GetHeight() + self.Text1:GetHeight() + 2 * (TEXT_PADDING - 6) + 24 + 4 + 1);
         self:SetHeight(height);
     end
@@ -223,7 +243,7 @@ function TP:NewText(texts, offsetX, offsetY, delay, horizontal)
     isHorizontal = horizontal;
     pendingText = texts;
     pendingTexture = GetIconFile(tooltipAnchor);
-    self.GuideIndex = tooltipAnchor.GuideIndex;
+    self.guideIndex = tooltipAnchor.guideIndex;
     After(0, function()
         Timer:Show();
         if type(texts) == "string" then

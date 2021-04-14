@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Aran", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200923223027")
+mod:SetRevision("20210307032518")
 mod:SetCreatureID(16524)
 mod:SetEncounterID(658)
 mod:SetModelID(16621)
@@ -24,7 +24,7 @@ local warningChains			= mod:NewTargetNoFilterAnnounce(29991, 2)
 
 local specWarnFlameWreath	= mod:NewSpecialWarning("DBM_ARAN_DO_NOT_MOVE", nil, nil, nil, 3, 2)
 local specWarnArcane		= mod:NewSpecialWarningRun(29973, nil, nil, nil, 4, 7)
-local specWarnBlizzard		= mod:NewSpecialWarningMove(29951, nil, nil, nil, 1, 2)
+local specWarnBlizzard		= mod:NewSpecialWarningGTFO(29951, nil, nil, nil, 1, 6)
 
 local timerSpecial			= mod:NewTimer(28.9, "timerSpecial", "132866", nil, nil, 2)
 local timerFlameCast		= mod:NewCastTimer(5, 30004, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)
@@ -55,7 +55,7 @@ function mod:OnCombatStart(delay)
 	self.vb.flameWreathIcon = 8
 	table.wipe(WreathTargets)
 	self.vb.mobIcon = 1
-	if not self:IsTrivial(85) then
+	if not self:IsTrivial() then
 		self:RegisterShortTermEvents(
 			"SPELL_PERIODIC_DAMAGE 29951",
 			"SPELL_PERIODIC_MISSED 29951"
@@ -125,10 +125,10 @@ function mod:SPELL_SUMMON(args)
 	end
 end
 
-function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
+function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
 	if spellId == 29951 and destGUID == UnitGUID("player") and self:AntiSpam(2.5, 2) then
-		specWarnBlizzard:Show()
-		specWarnBlizzard:Play("runaway")
+		specWarnBlizzard:Show(spellName)
+		specWarnBlizzard:Play("watchfeet")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE

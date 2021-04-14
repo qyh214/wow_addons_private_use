@@ -37,7 +37,7 @@ end
 
 local function createOptionsFrame()
     -- create frame object - changes to Patch 9.0.1 - Shadowlands, retail and classic
-	options.frame = CreateFrame("Frame", "WIM3_Options", _G.UIParent, isShadowlands and "BackdropTemplate");
+	options.frame = CreateFrame("Frame", "WIM3_Options", _G.UIParent, isTBC and "BackdropTemplate");
     local win = options.frame;
     win:Hide(); -- hide initially, scripts aren't loaded yet.
 
@@ -52,7 +52,7 @@ local function createOptionsFrame()
         tile = true, tileSize = 64, edgeSize = 64,
         insets = { left = 64, right = 64, top = 64, bottom = 64 }};
 
-	if not isShadowlands then
+	if not isTBC then
 		win:SetBackdrop(win.backdropInfo);
 	else
 		win:ApplyBackdrop();

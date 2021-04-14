@@ -181,6 +181,11 @@ L["Y Offset"] = "縱向偏移";
 L["Sceenshot Quality"] = "截圖質量";
 L["Screenshot Quality Description"] = "更高的截圖質量會增加圖片大小。";
 L["General"] = "通用設定";
+L["Camera Transition"] = "鏡頭過渡";
+L["Camera Transition Description On"] = "當你打開角色面板時鏡頭會平滑地運動到預設位置。";
+L["Camera Transition Description Off"] = "鏡頭轉換變為瞬時。此效果將在你第二次使用角色面板時開始生效。\n此效果會占用鏡頭預設#4。";
+L["Interface Options Tab Description"] = "你也可以點擊位於屏幕左下角Narcissus工具欄右端的小齒輪按鈕來打開偏好設置。";
+L["Conduit Tooltip"] = "顯示更高級別的靈印效果";
 
 --Model Control--
 NARCI_HOLD_WEAPON = "握住武器";
@@ -300,6 +305,8 @@ L["Don't Update Items"] = "不要更新裝備";
 L["Update Talents"] = "更新天賦";
 L["Don't Update Talents"] = "不要更新天賦";
 L["Old Icon"] = "舊圖示";
+L["NavBar Saved Sets"] = "已保存";
+L["NavBar Incomplete Sets"] = "不完整";
 NARCI_ICON_SELECTOR = "圖示清單";
 NARCI_DELETE_SET_WITH_LONG_CLICK = "刪除此套裝\n|cff808080(按住左鍵)|r";
 
@@ -421,7 +428,7 @@ L["Splash Content8 Description"] = "按住Shift並拖動此按鈕可使其脫離
 
 --Project Details--
 NARCI_ALL_PROJECTS = "全部項目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100模組作者: Peterodox\n更新日期: 2020.10.26|r\n\n感謝妳使用此模組！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100模組作者: Peterodox\n更新日期: 2021.03.20|r\n\n感謝妳使用此模組！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾澤拉斯上的不同景點，並收集各種故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沈浸式角色面板；妳最好的截圖助手。"
 

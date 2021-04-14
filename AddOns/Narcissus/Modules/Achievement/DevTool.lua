@@ -136,7 +136,7 @@ Builder:SetScript("OnEvent", function(self, event, ...)
     After(0.5, function()
         BuildCategories(true);
         After(0.5, function()
-            Loader:LoadList(playerCategories);
+            Loader:LoadList(guildCategories);
         end);
     end);
 end);

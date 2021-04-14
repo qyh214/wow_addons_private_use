@@ -1,7 +1,8 @@
 local pi = math.pi;
 local endFacing = -pi/8;
 local sin = math.sin;
-local C_Timer = C_Timer;
+local After = C_Timer.After;
+local PlaySound = PlaySound;
 
 local function outSine(t, b, c, d)
 	return c * sin(t / d * (pi / 2)) + b
@@ -37,11 +38,11 @@ local function Entrance_DH(self, elapsed)
 		self.Trigger = false;
 		ModelFrame:SetAnimation(39, 1)
 		ModelFrame:MakeCurrentCameraCustom();
-		C_Timer.After(0, function()
+		After(0, function()
 			ModelFrame:ApplySpellVisualKit(79517, true);
 			--ModelFrame:ApplySpellVisualKit(40277, true);
 		end);
-		C_Timer.After(0.9, function()
+		After(0.9, function()
 			ModelFrame:SetAnimation(804, 1)
 		end);
 	end
@@ -62,11 +63,11 @@ local function Entrance_Mage(self, elapsed)
 	elseif self.Trigger then
 		self.Trigger = false;
 		ModelFrame:MakeCurrentCameraCustom();
-		C_Timer.After(0, function()
+		After(0, function()
 			ModelFrame:ApplySpellVisualKit(68828, true);
 			ModelFrame:ApplySpellVisualKit(68661, true);	--65750 Blast
 		end);
-		C_Timer.After(1.1, function()
+		After(1.1, function()
 			ModelFrame:SetAnimation(804, 1)
 		end);
 	end
@@ -87,21 +88,21 @@ local function Entrance_Warlock(self, elapsed)
 	elseif self.Trigger then
 		self.Trigger = false;
 		ModelFrame:FreezeAnimation(1056, 0, 1);
-		C_Timer.After(0, function()
-			ModelFrame:ApplySpellVisualKit(82709, true);
-			C_Timer.After(1, function()
+		After(0, function()
+			ModelFrame:ApplySpellVisualKit(71357, true);
+			After(1, function()
 				ModelFrame:SetAlpha(0);
 			end);
 		end);
-		C_Timer.After(1.8, function()
+		After(1.8, function()
 			PlaySFX(139198);
 			ModelFrame:SetAnimation(55);
-			C_Timer.After(0.1, function()
+			After(0.1, function()
 				ModelFrame:SetAlpha(1)
 				ModelFrame:ApplySpellVisualKit(86545, true);
 			end)
 
-			C_Timer.After(1, function()
+			After(1, function()
 				ModelFrame:SetAnimation(804, 1);
 			end);
 		end);
@@ -124,15 +125,15 @@ local function Entrance_Rogue(self, elapsed)
 	elseif self.Trigger then
 		self.Trigger = false;
 		ModelFrame:MakeCurrentCameraCustom();
-		C_Timer.After(0, function()
+		After(0, function()
             ModelFrame:ApplySpellVisualKit(105866, true);
 		end);
 		--[[
-		C_Timer.After(0.3, function()
+		After(0.3, function()
             ModelFrame:ApplySpellVisualKit(105969, true);	--FPS drop
 		end);
 		--]]
-		C_Timer.After(0.8, function()
+		After(0.8, function()
 			ModelFrame:SetAnimation(804, 1)
 		end);
 	end
@@ -153,11 +154,11 @@ local function Entrance_Priest(self, elapsed)
 	elseif self.Trigger then
 		self.Trigger = false;
 		ModelFrame:MakeCurrentCameraCustom();
-		C_Timer.After(0, function()
+		After(0, function()
 			ModelFrame:ApplySpellVisualKit(41593, true);
 			ModelFrame:ApplySpellVisualKit(44806, true);	--10875
 		end);
-		C_Timer.After(0.6, function()
+		After(0.6, function()
 			ModelFrame:SetAnimation(804, 1)
 		end);
 	end
@@ -178,14 +179,14 @@ local function Entrance_DK(self, elapsed)
 	elseif self.Trigger then
 		self.Trigger = false;
 		ModelFrame:MakeCurrentCameraCustom();
-		C_Timer.After(0, function()
+		After(0, function()
             ModelFrame:ApplySpellVisualKit(57627, true);
             ModelFrame:ApplySpellVisualKit(57287, true);
         end);
-		C_Timer.After(0.8, function()
+		After(0.8, function()
             ModelFrame:SetAnimation(142, 1);
         end);
-		C_Timer.After(2, function()
+		After(2, function()
 			ModelFrame:SetAnimation(804, 1)
 		end);
 	end
@@ -218,12 +219,12 @@ local function Entrance_Monk(self, elapsed)
 	elseif self.Trigger then
 		self.Trigger = false;
 		ModelFrame:ApplySpellVisualKit(70520, true);	--Cloud
-		C_Timer.After(0.8, function()
+		After(0.8, function()
 			ModelFrame:ApplySpellVisualKit(65638, true);	--65217
 			ModelFrame:SetAnimation(116, 1);
 			PlaySFX(32858)
 		end)
-		C_Timer.After(1.6, function()
+		After(1.6, function()
             ModelFrame:SetAnimation(804, 1);
         end);
 	end
@@ -251,14 +252,14 @@ local function Entrance_Warrior(self, elapsed)
 		
 		ModelFrame:SetAnimation(39, 1)
 		ModelFrame:MakeCurrentCameraCustom();
-		C_Timer.After(0, function()
+		After(0, function()
 			PlaySFX(76938)
 		end);
-		C_Timer.After(0.2, function()
+		After(0.2, function()
 			ModelFrame:ApplySpellVisualKit(77753, true);	--shockwave
 			ModelFrame:ApplySpellVisualKit(113504, true)
         end);
-		C_Timer.After(0.8, function()
+		After(0.8, function()
 			ModelFrame:SetAnimation(804, 1)
 		end);
 	end
@@ -284,19 +285,19 @@ local function Entrance_Shaman(self, elapsed)
         self.Trigger = false;
 		ModelFrame:ApplySpellVisualKit(100019, true);	--74261 Thunder
 		ModelFrame:SetAnimation(115, 1)
-		C_Timer.After(0.2, function()
+		After(0.2, function()
             ModelFrame:SetAnimation(116, 1)
         end);
-		C_Timer.After(1.4, function()
+		After(1.4, function()
             ModelFrame:SetAnimation(804, 1);
         end);
 	end
 end
 
 local function Entrance_Druid(self, elapsed)
-	local ModelFrame = NarciPlayerModelFrame1
-	self.t = self.t + elapsed
-	local turnTime = 0.1
+	local ModelFrame = NarciPlayerModelFrame1;
+	self.t = self.t + elapsed;
+	local turnTime = 0.1;
 	local t = 0.25;
 	if self.t >= t then
 		self.t = 0;
@@ -312,11 +313,11 @@ local function Entrance_Druid(self, elapsed)
 		ModelFrame:ApplySpellVisualKit(id, true);
 		ModelFrame:ApplySpellVisualKit(82209, true);	--81597
 		ModelFrame:ApplySpellVisualKit(81597, true);
-		C_Timer.After(0.2, function()
+		After(0.2, function()
             ModelFrame:SetAnimation(142, 1);
         end);
-		C_Timer.After(2, function()
-			ModelFrame:SetAnimation(804, 1)
+		After(2, function()
+			ModelFrame:SetAnimation(804, 1);
 		end);
 	end
 end
@@ -336,14 +337,14 @@ local function Entrance_Paladin(self, elapsed)
 	elseif self.Trigger then
 		self.Trigger = false;
 		ModelFrame:MakeCurrentCameraCustom();
-		C_Timer.After(0, function()
+		After(0, function()
 			ModelFrame:ApplySpellVisualKit(109802, true);
 			ModelFrame:ApplySpellVisualKit(105334, true);
         end);
-		C_Timer.After(0.8, function()
+		After(0.8, function()
             ModelFrame:SetAnimation(142, 1);
         end);
-		C_Timer.After(2, function()
+		After(2, function()
 			ModelFrame:SetAnimation(804, 1)
 		end);
 	end
@@ -376,17 +377,17 @@ local function Entrance_Hunter(self, elapsed)
 	elseif self.Trigger then
 		self.Trigger = false;
 		ModelFrame:ApplySpellVisualKit(11212, true);	
-		C_Timer.After(0.2, function()
+		After(0.2, function()
 			ModelFrame:SetAnimation(113);
 		end)
-		C_Timer.After(1.8, function()
+		After(1.8, function()
 			ModelFrame:SetAnimation(804, 1);
 		end)
 		ModelFrame:MakeCurrentCameraCustom();
 	end
 end
 
-Narci.Narci_ClassEntrance = {
+Narci.ClassEntranceVisuals = {
     --[[
             1
                 Warrior 	WARRIOR
@@ -426,7 +427,7 @@ Narci.Narci_ClassEntrance = {
 	[10]  = {2.5, false, -pi/2, 732, Entrance_Monk, 32860},
 	[11]  = {false, false, false, 141, Entrance_Druid, 86938},
     [12] = {false, 2, false, 38, Entrance_DH, 119406},	--62730 Spell_DH_ImmolationAura_Cast
-	
+
 	--Test Override
 	--[4]  = {false, false, false, 55, Entrance_Warlock, 116927},
 };

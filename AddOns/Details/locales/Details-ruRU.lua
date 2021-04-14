@@ -1489,6 +1489,7 @@ L["STRING_RIGHTCLICK_CLOSE_SHORT"] = "Правый щелчок, чтобы за
 L["STRING_RIGHTCLICK_TYPEVALUE"] = "правый щелчок, чтобы ввести значение"
 L["STRING_SCORE_BEST"] = "вы набрали |cFFFFFF00%s|r, это ваши лучшие очки, поздравляю!"
 L["STRING_SCORE_NOTBEST"] = "ваши очки |cFFFFFF00%s|r, ваш лучший результат был |cFFFFFF00%s|r на %s с %d уровнем предметов."
+L["STRING_SCRIPTS_TITLE"] = "Скрипты"
 L["STRING_SEE_BELOW"] = "смотреть ниже"
 L["STRING_SEGMENT"] = "Сегмент"
 L["STRING_SEGMENT_EMPTY"] = "этот сегмент пуст"
@@ -1573,7 +1574,7 @@ L["STRING_UNLOCK"] = [=[Разгруппировать окна
  в этой кнопке]=]
 L["STRING_UNLOCK_WINDOW"] = "разблокировать"
 L["STRING_UPTADING"] = "обновление"
-L["STRING_VERSION_AVAILABLE"] = "Вышла новая версия, скачать её можно из приложения Twitch либо с сайта Curse."
+L["STRING_VERSION_AVAILABLE"] = "Доступна новая версия, загрузите ее из приложения или веб-сайта Curse Forge."
 L["STRING_VERSION_UPDATE"] = "новая версия: что изменилось? щелкните сюда"
 L["STRING_VOIDZONE_TOOLTIP"] = "Урон и время"
 L["STRING_WAITPLUGIN"] = [=[ожидание

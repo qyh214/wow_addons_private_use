@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(853, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20210118141752")
 mod:SetCreatureID(71152, 71153, 71154, 71155, 71156, 71157, 71158, 71160, 71161)
 mod:SetEncounterID(1593)
 mod:DisableESCombatDetection()
@@ -360,7 +360,7 @@ local function delayMonsterEmote(target)
 			end
 		elseif calculatedShape == "Bomb" then
 			for _, spellname in ipairs(BombDebuffs) do
-				local _, _, _, count = UnitDebuff("player", spellname)
+				local _, _, count = DBM:UnitDebuff("player", spellname)
 				if count then--Found
 					criteriaMatched = true
 					break

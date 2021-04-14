@@ -1,6 +1,6 @@
 
 local major = "LibRaidStatus-1.0"
-local CONST_LIB_VERSION = 14
+local CONST_LIB_VERSION = 15
 LIB_RAID_STATUS_CAN_LOAD = false
 
 --declae the library within the LibStub
@@ -14,7 +14,6 @@ LIB_RAID_STATUS_CAN_LOAD = false
 
 --default values
     raidStatusLib.inGroup = false
-    raidStatusLib.CanReceiveComms = false
 
     --print failures (when the function return an error) results to chat
     local CONST_DIAGNOSTIC_ERRORS = false
@@ -50,8 +49,19 @@ LIB_RAID_STATUS_CAN_LOAD = false
         end
     end
 
+    local isTimewalkWoW = function()
+        local gameVersion = GetBuildInfo()
+        if (gameVersion:match("%d") == "1" or gameVersion:match("%d") == "2") then
+            return true
+        end
+    end
+
     --return the current specId of the player
     function raidStatusLib.GetPlayerSpecId()
+        if (isTimewalkWoW()) then
+            return 0
+        end
+
         local spec = GetSpecialization()
         if (spec) then
             local specId = GetSpecializationInfo(spec)
@@ -128,7 +138,7 @@ LIB_RAID_STATUS_CAN_LOAD = false
 
     --return true if the lib is allowed to receive comms from other players
     function raidStatusLib.IsCommAllowed()
-        return raidStatusLib.CanReceiveComms
+        return IsInGroup() or IsInRaid()
     end
 
     --stract some indexes of a table
@@ -497,7 +507,7 @@ LIB_RAID_STATUS_CAN_LOAD = false
                 --the group has changed, trigger a long timer to send full data
                 --as the timer is unique, a new change to the group will replace and refresh the time
                 --using random time, players won't trigger all at the same time
-                local randomTime = 4.0 + math.random(1.0, 4.5)
+                local randomTime = 1.0 + math.random(1.0, 5.5)
                 raidStatusLib.Schedules.NewUniqueTimer(randomTime, raidStatusLib.mainControl.SendFullData, "mainControl", "sendFullData_Schedule")
             end
         end,
@@ -542,8 +552,12 @@ LIB_RAID_STATUS_CAN_LOAD = false
     eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
     eventFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
     eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+
     --eventFrame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
-    eventFrame:RegisterEvent("PLAYER_TALENT_UPDATE")
+    if (not isTimewalkWoW()) then
+        eventFrame:RegisterEvent("PLAYER_TALENT_UPDATE")
+    end
+    
     eventFrame:RegisterEvent("PLAYER_DEAD")
     eventFrame:RegisterEvent("PLAYER_ALIVE")
     eventFrame:RegisterEvent("PLAYER_UNGHOST")
@@ -551,8 +565,6 @@ LIB_RAID_STATUS_CAN_LOAD = false
     eventFrame:SetScript("OnEvent", function(self, event, ...)
         eventFunctions[event](...)
     end)
-
-
 
 --------------------------------------------------------------------------------------------------------------------------------
 --> ~main ~control
@@ -581,7 +593,6 @@ LIB_RAID_STATUS_CAN_LOAD = false
         --the game client is fully loadded and all information is available
         if (raidStatusLib.IsInGroup()) then
             raidStatusLib.Schedules.NewUniqueTimer(1.0, raidStatusLib.mainControl.SendFullData, "mainControl", "sendFullData_Schedule")
-            raidStatusLib.CanReceiveComms = true
         end
     end
 
@@ -589,7 +600,6 @@ LIB_RAID_STATUS_CAN_LOAD = false
         --the player entered in a group
         --schedule to send data
         raidStatusLib.Schedules.NewUniqueTimer(1.0, raidStatusLib.mainControl.SendFullData, "mainControl", "sendFullData_Schedule")
-        raidStatusLib.CanReceiveComms = true
     end
 
     raidStatusLib.mainControl.OnLeftGroup = function()
@@ -603,7 +613,6 @@ LIB_RAID_STATUS_CAN_LOAD = false
         table.wipe(raidStatusLib.mainControl.playerAliveStatus)
 
         --toggle off comms
-        raidStatusLib.CanReceiveComms = false
     end
 
     raidStatusLib.mainControl.OnPlayerDeath = function()
@@ -1102,8 +1111,13 @@ end)
         end
 
         --item level
-            local _, itemLevel = GetAverageItemLevel()
-            itemLevel = floor(itemLevel)
+            local itemLevel
+            if (_G.GetAverageItemLevel) then
+                local _, _itemLevel = GetAverageItemLevel()
+                itemLevel = floor(_itemLevel)
+            else
+                itemLevel = 0
+            end
 
         --repair status
             local gearDurability = raidStatusLib.gearManager.GetGearDurability()
@@ -1346,6 +1360,12 @@ end
 
 function raidStatusLib.playerInfoManager.GetPlayerFullInfo()
     local playerInfo = {}
+
+    if (isTimewalkWoW()) then
+        --indexes: specId, renown, covenant, talent, conduits
+        --return a placeholder table
+        return {0, 0, 0, {0, 0, 0, 0, 0, 0, 0}, {0, 0}}
+    end
 
     --spec
     local specId = 0

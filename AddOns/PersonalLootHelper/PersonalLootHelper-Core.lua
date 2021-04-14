@@ -33,6 +33,11 @@ Known Bugs:
 		
 CHANGELOG:
 
+20210316 - 2.27
+	9.0.5 version update
+	Fix checkboxes on config screen
+	Fix saving of "announce trades" configuration option
+	
 20201117 - 2.25
     Fix issue of PLH not prompting when items can be traded.  Thank you to RubioTwitch for identifying the fix!!
 	

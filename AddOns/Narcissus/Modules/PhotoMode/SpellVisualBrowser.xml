@@ -1279,16 +1279,19 @@
 				self.tooltip = Narci.L["Toggle Browser"];
 				self.Label:SetText(Narci.L["Visuals"]);
 				self:SetParent(Narci_ModelSettings.BasicPanel);
+				self.parentObject = Narci_ModelSettings;
 			</OnLoad>
 			<OnEnter>
 				NarciTooltip:ShowTooltip(self);
 				self.Background:SetTexCoord(0, 0.42578125, 0.21875, 0.4375);
 				self.RightArrow:SetTexCoord(0.7734375, 1, 0.21875, 0.4375);
+				self.parentObject:OnEnter();
 			</OnEnter>
 			<OnLeave>
 				NarciTooltip:FadeOut();
 				self.Background:SetTexCoord(0, 0.42578125, 0, 0.21875);
 				self.RightArrow:SetTexCoord(0.7734375, 1, 0, 0.21875);
+				self.parentObject:OnLeave();
 			</OnLeave>
 			<OnClick function="Narci_ToggleSpellVisualBrowser"/>
 			<OnDoubleClick>

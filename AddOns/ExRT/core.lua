@@ -1,8 +1,8 @@
---	04.02.2021
+--	02.04.2021
 
 local GlobalAddonName, ExRT = ...
 
-ExRT.V = 4460
+ExRT.V = 4520
 ExRT.T = "R"
 
 ExRT.OnUpdate = {}		--> таймеры, OnUpdate функции
@@ -34,11 +34,14 @@ do
 	local expansion,majorPatch,minorPatch = (version or "3.0.0"):match("^(%d+)%.(%d+)%.(%d+)")
 	ExRT.clientVersion = (expansion or 0) * 10000 + (majorPatch or 0) * 100 + (minorPatch or 0)
 end
-if ExRT.clientVersion < 30000 then
+if ExRT.clientVersion < 20000 then
 	ExRT.isClassic = true
 	ExRT.T = "Classic"
-end
-if ExRT.clientVersion >= 90000 then
+elseif ExRT.clientVersion < 30000 then
+	ExRT.isClassic = true	--temp
+	ExRT.isBC = true
+	ExRT.T = "BC"
+elseif ExRT.clientVersion >= 90000 then
 	ExRT.is90 = true
 end
 -------------> smart DB <-------------
@@ -57,7 +60,7 @@ end
 ExRT.GDB = {}
 -------------> upvalues <-------------
 local pcall, unpack, pairs, coroutine, assert = pcall, unpack, pairs, coroutine, assert
-local GetTime, IsEncounterInProgress = GetTime, IsEncounterInProgress
+local GetTime, IsEncounterInProgress, CombatLogGetCurrentEventInfo = GetTime, IsEncounterInProgress, CombatLogGetCurrentEventInfo
 local SendAddonMessage, strsplit = C_ChatInfo.SendAddonMessage, strsplit
 local C_Timer_NewTicker, debugprofilestop = C_Timer.NewTicker, debugprofilestop
 
@@ -73,7 +76,6 @@ ExRT.NULL = {}
 ExRT.NULLfunc = function() end
 ---------------> Modules <---------------
 ExRT.mod = {}
-ExRT.mod.__index = ExRT.mod
 
 do
 	local function mod_LoadOptions(this)
@@ -88,12 +90,12 @@ do
 	local function mod_Options_CreateTitle(self)
 		self.title = ExRT.lib:Text(self,self.name,20):Point(15,6):Top()
 	end
-	function ExRT.mod:New(moduleName,localizatedName,disableOptions)
+	function ExRT:New(moduleName,localizatedName,disableOptions)
 		if ExRT.A[moduleName] then
 			return false
 		end
 		local self = {}
-		setmetatable(self, ExRT.mod)
+		for k,v in pairs(ExRT.mod) do self[k] = v end
 		
 		if not disableOptions then
 			self.options = ExRT.Options:Add(moduleName,localizatedName)
@@ -131,12 +133,10 @@ do
 		
 		return self
 	end
-
-	ExRT.New = ExRT.mod.New
 end
 
 function ExRT.mod:Event(event,...)
-	self[event](self,...)
+	return self[event](self,...)
 end
 if ExRT.T == "DU" then
 	local ExRTDebug = ExRT.Debug
@@ -151,16 +151,76 @@ function ExRT.mod:HookEvent(event)
 	self.eventsCounter[event] = self.eventsCounter[event] and self.eventsCounter[event] + 1 or 1
 end
 
+local CLEUFrame = CreateFrame("Frame")
+local CLEUList = {}
+CLEUFrame.CLEUList = CLEUList
+local CLEUListToUnreg = {}
+local CLEUModuleToList = {}
+CLEUFrame.CLEUModuleToList = CLEUModuleToList
+local CLEUListLen = 0
+
+local function CLEU_OnEvent()
+	local timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,
+		val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13
+				= CombatLogGetCurrentEventInfo()
+
+	for i=1,CLEUListLen do
+		CLEUList[i](timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13)
+	end
+end
+
+local function CLEU_OnEvent_Unreg()
+	for f,_ in pairs(CLEUListToUnreg) do
+		for j=1,#CLEUList do
+			if CLEUList[j] == f then
+				tremove(CLEUList, j)
+				break
+			end
+		end
+	end
+	wipe(CLEUListToUnreg)
+
+	CLEUListLen = #CLEUList
+	if CLEUListLen == 0 then
+		CLEUFrame:UnregisterEvent('COMBAT_LOG_EVENT_UNFILTERED')
+	end
+
+	CLEUFrame:SetScript("OnEvent",CLEU_OnEvent)
+	CLEU_OnEvent()
+end
+
+
+CLEUFrame:SetScript("OnEvent",CLEU_OnEvent)
+ExRT.CLEUFrame = CLEUFrame
 
 function ExRT.mod:RegisterEvents(...)
 	for i=1,select("#", ...) do
 		local event = select(i,...)
 		if event ~= "COMBAT_LOG_EVENT_UNFILTERED" then
-			self.main:RegisterEvent(event)
-		else
+			if not ExRT.isClassic then
+				self.main:RegisterEvent(event)
+			else
+				pcall(self.main.RegisterEvent,self.main,event)
+			end
+		elseif self.CLEUNotInList then
 			if not self.CLEU then self.CLEU = CreateFrame("Frame") end
 			self.CLEU:SetScript("OnEvent",self.main.COMBAT_LOG_EVENT_UNFILTERED)
 			self.CLEU:RegisterEvent('COMBAT_LOG_EVENT_UNFILTERED')
+		else
+			if CLEUModuleToList[self] then
+				for j=1,#CLEUList do
+					if CLEUList[j] == CLEUModuleToList[self] then
+						CLEUList[j] = self.main.COMBAT_LOG_EVENT_UNFILTERED
+						break
+					end
+				end
+			else
+				CLEUListLen = #CLEUList + 1
+				CLEUList[CLEUListLen] = self.main.COMBAT_LOG_EVENT_UNFILTERED
+			end
+			CLEUFrame:RegisterEvent('COMBAT_LOG_EVENT_UNFILTERED')
+			
+			CLEUModuleToList[self] = self.main.COMBAT_LOG_EVENT_UNFILTERED
 		end
 		self.main.events[event] = true
 		ExRT.F.dprint(self.name,'RegisterEvent',event)
@@ -171,47 +231,26 @@ function ExRT.mod:UnregisterEvents(...)
 	for i=1,select("#", ...) do
 		local event = select(i,...)
 		if event ~= "COMBAT_LOG_EVENT_UNFILTERED" then
-			self.main:UnregisterEvent(event)
-		else
+			if not ExRT.isClassic then
+				self.main:UnregisterEvent(event)
+			else
+				pcall(self.main.UnregisterEvent,self.main,event)
+			end
+		elseif self.CLEUNotInList then
 			if self.CLEU then
 				self.CLEU:SetScript("OnEvent",nil)
 				self.CLEU:UnregisterAllEvents()
 			end
+		else
+			if CLEUModuleToList[self] then
+				CLEUListToUnreg[ CLEUModuleToList[self] ] = true
+				CLEUModuleToList[self] = nil
+
+				CLEUFrame:SetScript("OnEvent",CLEU_OnEvent_Unreg)
+			end
 		end
 		self.main.events[event] = nil
 		ExRT.F.dprint(self.name,'UnregisterEvent',event)
-	end
-end
-if ExRT.isClassic then
-	function ExRT.mod:RegisterEvents(...)
-		for i=1,select("#", ...) do
-			local event = select(i,...)
-			if event ~= "COMBAT_LOG_EVENT_UNFILTERED" then
-				pcall(self.main.RegisterEvent,self.main,event)
-			else
-				if not self.CLEU then self.CLEU = CreateFrame("Frame") end
-				self.CLEU:SetScript("OnEvent",self.main.COMBAT_LOG_EVENT_UNFILTERED)
-				self.CLEU:RegisterEvent('COMBAT_LOG_EVENT_UNFILTERED')
-			end
-			self.main.events[event] = true
-			ExRT.F.dprint(self.name,'RegisterEvent',event)
-		end
-	end
-	
-	function ExRT.mod:UnregisterEvents(...)
-		for i=1,select("#", ...) do
-			local event = select(i,...)
-			if event ~= "COMBAT_LOG_EVENT_UNFILTERED" then
-				pcall(self.main.UnregisterEvent,self.main,event)
-			else
-				if self.CLEU then
-					self.CLEU:SetScript("OnEvent",nil)
-					self.CLEU:UnregisterAllEvents()
-				end
-			end
-			self.main.events[event] = nil
-			ExRT.F.dprint(self.name,'UnregisterEvent',event)
-		end
 	end
 end
 
@@ -220,34 +259,6 @@ function ExRT.mod:RegisterUnitEvent(...)
 	local event = ...
 	self.main.events[event] = true
 	ExRT.F.dprint(self.name,'RegisterUnitEvent',event)
-end
-
-do
-	local Timers_modulesNames = {}
-	function ExRT.mod:RegisterTimer()
-		local pos = nil
-		for i=1,#Timers_modulesNames do
-			if Timers_modulesNames[i] == self.name then
-				pos = i
-				break
-			end
-		end
-		if not pos then
-			pos = #ExRT.OnUpdate + 1
-			Timers_modulesNames[pos] = self.name
-		end
-		ExRT.OnUpdate[ pos ] = self
-	end
-	
-	function ExRT.mod:UnregisterTimer()
-		for i=1,#Timers_modulesNames do
-			if Timers_modulesNames[i] == self.name then
-				tremove(Timers_modulesNames,i)
-				tremove(ExRT.OnUpdate,i)
-				break
-			end
-		end
-	end
 end
 
 function ExRT.mod:RegisterSlash()
@@ -264,14 +275,6 @@ end
 
 function ExRT.mod:UnregisterAddonMessage()
 	ExRT.OnAddonMessage[self.name] = nil
-end
-
-function ExRT.mod:RegisterEgg()
-	ExRT.Eggs[self.name] = self
-end
-
-function ExRT.mod:UnregisterEgg()
-	ExRT.Eggs[self.name] = nil
 end
 
 function ExRT.mod:RegisterMiniMapMenu()
@@ -447,6 +450,40 @@ local function DisableVersionCheckCallback()
 	isVersionCheckCallback = nil
 end
 
+-------------> Callbacks <-------------
+
+local callbacks = {}
+function ExRT.F:RegisterCallback(eventName, func)
+	if not callbacks[eventName] then
+		callbacks[eventName] = {}
+	end
+	tinsert(callbacks[eventName], func)
+end
+function ExRT.F:UnregisterCallback(eventName, func)
+	if not callbacks[eventName] then
+		return
+	end
+	for i=1,#callbacks[eventName] do
+		if callbacks[eventName][i] == func then
+			tremove(callbacks[eventName], i)
+			break
+		end
+	end
+end
+
+local function CallbackErrorHandler(err)
+	print ("Callback Error", err)
+end
+
+function ExRT.F:FireCallback(eventName, ...)
+	if not callbacks[eventName] then
+		return
+	end
+	for _,func in pairs(callbacks[eventName]) do
+		xpcall(func, CallbackErrorHandler, eventName, ...)
+	end
+end
+
 ---------------> Slash <---------------
 
 SlashCmdList["exrtSlash"] = function (arg)
@@ -575,8 +612,11 @@ end)
 do
 	local encounterTime,isEncounter = 0,nil
 	local ExRT_OnUpdate = ExRT.OnUpdate
+	local ExRT_OnUpdate_Pos = {}
+	local ExRT_OnUpdate_Len = 0
+	local ListToUnreg = {}
 	local frameElapsed = 0
-	function ExRT.frame:OnUpdate(elapsed)
+	local function OnUpdate(self,elapsed)
 		frameElapsed = frameElapsed + elapsed
 		if frameElapsed > reloadTimer then
 			if not isEncounter and IsEncounterInProgress() then
@@ -586,11 +626,9 @@ do
 				isEncounter = nil
 			end
 			
-			for i=1,#ExRT_OnUpdate do
-				local mod = ExRT_OnUpdate[i]
-				if mod then
-					mod:timer(frameElapsed)
-				end
+			for i=1,ExRT_OnUpdate_Len do
+				local d = ExRT_OnUpdate[i]
+				d[1](d[2],frameElapsed)
 			end
 			frameElapsed = 0
 		end
@@ -612,29 +650,44 @@ do
 		end
 		]]
 	end
-	
-	if ExRT.T == "DU" then
-		local ExRTDebug = ExRT.Debug
-		function ExRT.frame:OnUpdate(elapsed)
-			frameElapsed = frameElapsed + elapsed
-			if frameElapsed > reloadTimer then
-				if not isEncounter and IsEncounterInProgress() then
-					isEncounter = true
-					encounterTime = GetTime()
-				elseif isEncounter and not IsEncounterInProgress() then
-					isEncounter = nil
+	ExRT.frame.OnUpdate = OnUpdate
+
+	local function OnUpdate_Unreg(self,elapsed)
+		for f,_ in pairs(ListToUnreg) do
+			for j=1,#ExRT_OnUpdate do
+				if ExRT_OnUpdate[j] == f then
+					tremove(ExRT_OnUpdate, j)
+					break
 				end
-				
-				for i=1,#ExRT_OnUpdate do
-					local mod = ExRT_OnUpdate[i]
-					if mod then
-						local dt = debugprofilestop()
-						mod:timer(frameElapsed)
-						ExRTDebug[#ExRTDebug+1] = {debugprofilestop() - dt,mod.name,"Timer"}
-					end
-				end
-				frameElapsed = 0
 			end
+		end
+		wipe(ListToUnreg)
+	
+		ExRT_OnUpdate_Len = #ExRT_OnUpdate
+	
+		ExRT.frame:SetScript("OnUpdate",OnUpdate)
+		OnUpdate(self,elapsed)	
+	end
+
+
+	function ExRT.mod:RegisterTimer()
+		if ExRT_OnUpdate_Pos[self] then
+			ExRT_OnUpdate_Pos[self][1] = self.timer
+			return
+		end
+
+		local pos = #ExRT_OnUpdate + 1
+		ExRT_OnUpdate_Len = pos
+		ExRT_OnUpdate[pos] = {self.timer,self}
+		ExRT_OnUpdate_Pos[self] = ExRT_OnUpdate[pos]
+	end
+	
+	function ExRT.mod:UnregisterTimer()
+		local f = ExRT_OnUpdate_Pos[self]
+		if f then
+			ListToUnreg[ f ] = true
+			ExRT.frame:SetScript("OnUpdate", OnUpdate_Unreg)
+			ExRT_OnUpdate_Pos[self] = nil
 		end
 	end
 	

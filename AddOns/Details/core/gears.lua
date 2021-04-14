@@ -14,7 +14,7 @@ local ItemUpgradeInfo = LibStub ("LibItemUpgradeInfo-1.0")
 local ItemUpgradeInfo
 local LibGroupInSpecT
 
-if (DetailsFramework.IsClassicWow()) then
+if (DetailsFramework.IsTimewalkWoW()) then
 	ItemUpgradeInfo = false
 	LibGroupInSpecT = false
 end
@@ -1960,7 +1960,7 @@ function ilvl_core:CalcItemLevel (unitid, guid, shout)
 		local spec
 		local talents = {}
 		
-		if (not DetailsFramework.IsClassicWow()) then
+		if (not DetailsFramework.IsTimewalkWoW()) then
 			spec = GetInspectSpecialization (unitid)
 			if (spec and spec ~= 0) then
 				_detalhes.cached_specs [guid] = spec
@@ -2328,9 +2328,12 @@ end
 function Details:CompressData (data, dataType)
 	local LibDeflate = LibStub:GetLibrary ("LibDeflate")
 	local LibAceSerializer = LibStub:GetLibrary ("AceSerializer-3.0")
-	
+
+	--check if there isn't funtions in the data to export
+	local dataCopied = DetailsFramework.table.copytocompress({}, data)
+
 	if (LibDeflate and LibAceSerializer) then
-		local dataSerialized = LibAceSerializer:Serialize (data)
+		local dataSerialized = LibAceSerializer:Serialize (dataCopied)
 		if (dataSerialized) then
 			local dataCompressed = LibDeflate:CompressDeflate (dataSerialized, {level = 9})
 			if (dataCompressed) then

@@ -1,14 +1,6 @@
 # <DBM> PvP
 
-## [r116](https://github.com/DeadlyBossMods/DBM-PvP/tree/r116) (2021-02-21)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-PvP/compare/r115...r116) [Previous Releases](https://github.com/DeadlyBossMods/DBM-PvP/releases)
+## [r120](https://github.com/DeadlyBossMods/DBM-PvP/tree/r120) (2021-04-03)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-PvP/compare/r119...r120) [Previous Releases](https://github.com/DeadlyBossMods/DBM-PvP/releases)
 
-- Update PvPGeneral.lua (#85)  
-- Ignore invalid positions. (#84)  
-- Update PvPGeneral.lua (#83)  
-    * Update PvPGeneral.lua  
-    * Update localization.en.lua  
-- Bug fixes with remaining timer. (#82)  
-    * Update localization.en.lua  
-    * Update PvPGeneral.lua  
-- Update SeethingShore.lua (#81)  
+- Actually fix #94 by not completely reregistering bg events every time a player dies (which will trigger loading screens where the zone does not change). Similar to how DBM-Core handles it  

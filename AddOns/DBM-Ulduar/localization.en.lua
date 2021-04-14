@@ -123,7 +123,7 @@ L:SetTimerLocalization{
 }
 
 L:SetWarningLocalization{
-	WarnPhase2Soon			= "Phase 2 soon",
+	WarnPhase2Soon			= "Stage 2 soon",
 	warnStarLow				= "Collapsing Star is low"
 }
 
@@ -131,7 +131,7 @@ L:SetOptionLocalization{
 	WarningPhasePunch		= "Announce Phase Punch targets",
 	NextCollapsingStar		= "Show timer for next Collapsing Star",
 	TimerCombatStart		= "Show timer for start of combat",
-	WarnPhase2Soon			= "Show pre-warning for Phase 2 (at ~23%)",
+	WarnPhase2Soon			= "Show pre-warning for Stage 2 (at ~23%)",
 	warnStarLow				= "Show special warning when Collapsing Star is low (at ~25%)"
 }
 
@@ -298,15 +298,15 @@ L:SetWarningLocalization{
 
 L:SetTimerLocalization{
 	TimerHardmode	= "Hard mode - Self-destruct",
-	TimeToPhase2	= "Phase 2",
-	TimeToPhase3	= "Phase 3",
-	TimeToPhase4	= "Phase 4"
+	TimeToPhase2	= "Stage 2",
+	TimeToPhase3	= "Stage 3",
+	TimeToPhase4	= "Stage 4"
 }
 
 L:SetOptionLocalization{
-	TimeToPhase2			= "Show timer for Phase 2",
-	TimeToPhase3			= "Show timer for Phase 3",
-	TimeToPhase4			= "Show timer for Phase 4",
+	TimeToPhase2			= "Show timer for Stage 2",
+	TimeToPhase3			= "Show timer for Stage 3",
+	TimeToPhase4			= "Show timer for Stage 4",
 	MagneticCore			= "Announce Magnetic Core looters",
 	WarnBombSpawn			= "Show warning for Bomb Bots",
 	TimerHardmode			= "Show timer for hard mode"

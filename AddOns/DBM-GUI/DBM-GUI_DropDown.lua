@@ -43,7 +43,7 @@ tabFrame1List:SetScript("OnVerticalScroll", function(self, offset)
 	tabFrame1.offset = math.floor((offset / 16) + 0.5)
 	tabFrame1:Refresh()
 end)
-if BackdropTemplateMixin then
+if DBM:IsShadowlands() then
 	Mixin(tabFrame1List, BackdropTemplateMixin)
 end
 tabFrame1List:SetBackdropBorderColor(0.6, 0.6, 0.6, 0.6)
@@ -267,7 +267,7 @@ function DBM_GUI:CreateDropdown(title, values, vartype, var, callfunc, width, he
 		end)
 	elseif vartype and vartype == "DBT" then
 		dropdown:SetScript("OnShow", function()
-			dropdown:SetSelectedValue(DBM.Bars:GetOption(var))
+			dropdown:SetSelectedValue(DBT.Options[var])
 		end)
 	elseif vartype then
 		dropdown:SetScript("OnShow", function()

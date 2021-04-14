@@ -405,6 +405,8 @@ L["Heart Guardian"] = "Guardiano del Cuore"
 L["Heartsbane Runeweaver"] = "Tessirune Frangicuore"
 L["Heartsbane Soulcharmer"] = "Ammalianime Frangicuore"
 L["Heartsbane Vinetwister"] = "Torciradici Frangicuore"
+--[[Translation missing --]]
+--[[ L["Heavin the Breaker"] = ""--]] 
 L["Heavy Scrapbot"] = "Scartobot Pesante"
 L["Helmouth Cliffs"] = "Alture degli Helmunn"
 L["helpPlateDungeon"] = "Personalizza opzioni spedizione"
@@ -598,6 +600,8 @@ L["Nalthor the Rimebinder"] = "Nalthor il Vincolabrina"
 L["Nar'zudah"] = "Nar'zudah"
 L["Necrotic"] = "Necrosi"
 L["Nefarious Darkspeaker"] = "Oratore Oscuro Nefasto"
+--[[Translation missing --]]
+--[[ L["Nekthara the Mangler"] = ""--]] 
 L["Neltharion's Lair"] = "Antro di Neltharion"
 L["Neltharion's Lair Sublevel"] = "Antro di Neltharion"
 L["Netherspace"] = "Spaziofatuo"
@@ -706,6 +710,8 @@ L["Red, Green and Blue"] = "Rosso, verde e blu"
 L["Redo"] = "Ripeti"
 L["Refreshment Vendor"] = "Mercante di Rinfreschi"
 L["Regal Mistdancer"] = "Danzanebbia Regale"
+--[[Translation missing --]]
+--[[ L["Rek the Hardened"] = ""--]] 
 L["Relentless"] = "Implacabilità"
 L["Remnant of Fury"] = "Residuo della Furia"
 L["Rename"] = "Rinomina"

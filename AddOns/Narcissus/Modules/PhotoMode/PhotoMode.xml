@@ -410,6 +410,12 @@
 						</MaskTexture>
 					</Layer>
 				</Layers>
+				<Scripts>
+					<OnLoad>
+						self.Shadow:SetVertexColor(0, 0, 0);
+						self.RadialShadow:SetVertexColor(0, 0, 0);
+					</OnLoad>
+				</Scripts>
 			</Frame>
 			<Frame setAllPoints="true" parentKey="Option" Alpha="0" mixin="ExpansionTransitionBackdropTemplateMixin">
 				<Anchors>
@@ -606,6 +612,20 @@
 	</DressUpModel>	
 
 	<CinematicModel name="Narci_NPCModelFrame_Template" inherits="Narci_CharacterModelFrame_Template" virtual="true"/>
+
+	<Button name="Narci_ColorPickerToggleTemplate" inherits="NarciDarkSquareButtonTemplate" virtual="true" parentKey="ColorPickerButton">
+		<Layers>
+			<Layer level="OVERLAY">
+				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\ColorPicker\Icon">
+					<TexCoords left="0" right="0.5" top="0" bottom="1"/>
+					<Size x="14" y="14"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Button>
 
 	<Frame name="Narci_FullScreenAlphaChannel" hidden="true" setAllPoints="true" frameStrata="LOW" Alpha="0">
 		<Anchors>
@@ -1074,15 +1094,15 @@
 					</Anchors>
 					<Animations>
 						<AnimationGroup parentKey="Bling" smoothing="IN_OUT">
-							<Alpha fromAlpha="1" toAlpha="0" duration="0.3" order="1"/>
-							<Alpha fromAlpha="0.2" toAlpha="1" duration="0.4" order="2"/>
+							<Alpha fromAlpha="0.6" toAlpha="0" duration="0.3" order="1"/>
+							<Alpha fromAlpha="0" toAlpha="0.6" duration="0.4" order="2"/>
 						</AnimationGroup>
 					</Animations>
 				</Texture>
 			</Layer>
 		</Layers>
 		<Frames>
-			<Button parentKey="Thumb" registerForDrag="LeftButton">
+			<Button parentKey="Thumb">
 				<Size>
 					<AbsDimension x="24" y="24"/>
 				</Size>
@@ -1269,7 +1289,7 @@
 		</Layers>
 	</Button>
 
-	<Frame name="Narci_ModelSettings" frameLevel="1" frameStrata="DIALOG" hidden="true" clampedToScreen="false" Alpha="0" movable="true" clipChildren="false">
+	<Frame name="Narci_ModelSettings" frameLevel="1" frameStrata="DIALOG" hidden="true" clampedToScreen="false" Alpha="0" movable="true" clipChildren="false" mixin="NarciModelSettingsMixin">
 		<Size>
 			<AbsDimension x="440" y="310"/>
 		</Size>
@@ -1518,7 +1538,7 @@
 								self.Label:SetText(Narci.L["Group Photo"]);
 								self.Label:SetTextColor(0.25, 0.78, 0.92);
 							</OnLoad>
-							<OnClick function="Narci_ActorPanelExpandButton_OnClick"/>
+							<OnClick function="Narci_GroupPhotoToggle_OnClick"/>
 						</Scripts>
 					</Button>
 
@@ -2024,7 +2044,7 @@
 						<Scripts>
 							<OnLoad>
 								self.tooltip = {NARCI_DIRECTIONAL_AMBIENT_LIGHT, NARCI_DIRECTIONAL_AMBIENT_LIGHT_TOOLTIP};
-								self.GuideIndex = 7;
+								self.guideIndex = 7;
 							</OnLoad>
 							<OnEnter>
 								self.Highlight:Show();
@@ -3054,7 +3074,7 @@
 								self.Label:SetText(Narci.L["Ground Shadow"])
 								self.IsOn = false;
 								self.tooltip = {Narci.L["Ground Shadow"], Narci.L["Ground Shadow Tooltip"]};
-								self.GuideIndex = 3;
+								self.guideIndex = 3;
 							</OnLoad>
 							<OnHide function="Narci_GroundShadowToggle_OnHide"/>
 							<OnClick function="Narci_GroundShadowToggle_OnClick"/>
@@ -3075,7 +3095,7 @@
 							<OnLoad>
 								self.Label:SetText(Narci.L["Hide Player"]);
 								self.tooltip = {Narci.L["Hide Player"], Narci.L["Hide Player Tooltip"]};
-								self.GuideIndex = 4;
+								self.guideIndex = 4;
 							</OnLoad>
 							<OnShow>
 								self.IsOn = false;
@@ -3106,7 +3126,7 @@
 							<OnLoad>
 								self.Label:SetText(Narci.L["Transmog Layout3"])
 								self.tooltip = {Narci.L["Transmog Layout3"], Narci.L["Compact Mode Tooltip"]}
-								self.GuideIndex = 5;
+								self.guideIndex = 5;
 							</OnLoad>
 							<OnShow>
 								self.IsOn = false;
@@ -3216,6 +3236,10 @@
 				</Layers>
 			</Button>
 
+			<Button inherits="Narci_ColorPickerToggleTemplate">
+
+			</Button>
+			
 			<Frame name="Narci_GroundShadowOption" parentKey="GroundShadowOption" setAllPoints="true" hidden="true" clampedToScreen="true" mixin="NarciGroundShadowOptionMixin">
 				<Size x="12" y="8"/>
 				<Layers>
@@ -3225,50 +3249,24 @@
 						</Texture-->
 					</Layer>
 				</Layers>
+				<Frames>
+
+				</Frames>
 				<Scripts>
 					<OnLoad method="OnLoad"/>
 				</Scripts>
 			</Frame>
 
+
+
 		</Frames>
-		<Animations>
-			<AnimationGroup parentKey="FadeIn" setToFinalAlpha="true">
-				<Alpha fromAlpha="0" toAlpha="1" duration="0.5" parentKey="A1"/>
-				<Scripts>
-					<OnPlay>
-						self:GetParent().isFading = true;
-					</OnPlay>
-					<OnFinished>
-						self:GetParent().isFading = nil;
-					</OnFinished>
-				</Scripts>
-			</AnimationGroup>
-		</Animations>
 		<Scripts>
-			<OnLoad function="Narci_ModelSettings_OnLoad"/>
-			<OnHide function="Narci_ModelSettings_OnHide"/>
-			<OnDragStart>
-				self:StartMoving();
-			</OnDragStart>
-			<OnDragStop>
-				self:StopMovingOrSizing();
-			</OnDragStop>
-			<OnLeave>
-				if self:IsMouseOver(24, -24, -36, 24) or Narci_SpellVisualBrowser:IsMouseOver(0, 0, 0, 0) or Narci_TextOverlay:IsMouseOver(0, 0, 0, 0) or IsMouseButtonDown() then return end
-				UIFrameFadeOut(self, 0.2, self:GetAlpha(), 0)
-			</OnLeave>
-			<OnEnter function="Narci_ModelSettings_OnEnter"/>
-			<OnShow>
-				self:RegisterEvent("MODIFIER_STATE_CHANGED");		
-			</OnShow>
-			<OnEvent>
-				local key, down = ...;
-				if key == "LSHIFT" and down == 1 then
-					if not IsMouseButtonDown() then
-						self:SetAlpha(1);
-					end
-				end
-			</OnEvent>
+			<OnLoad method="OnLoad"/>
+			<OnHide method="OnHide"/>
+			<OnDragStart method="OnDragStart"/>
+			<OnDragStop method="OnDragStop"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
 		</Scripts>
 	</Frame>
 

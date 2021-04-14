@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Sindragosa", "DBM-Icecrown", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145648")
+mod:SetRevision("20210119194038")
 mod:SetCreatureID(36853)
 mod:SetEncounterID(1105)
 mod:SetModelID(30362)
@@ -223,7 +223,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			self:Schedule(0.3, warnUnchainedTargets, self)
 		end
-	elseif args.spellId == 70106 and not self:IsTrivial(100) then	--Chilled to the bone (melee)
+	elseif args.spellId == 70106 and not self:IsTrivial() then	--Chilled to the bone (melee)
 		if args:IsPlayer() then
 			timerChilledtotheBone:Start()
 			if (args.amount or 1) >= 4 then
@@ -233,7 +233,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				warnChilledtotheBone:Show(args.amount or 1)
 			end
 		end
-	elseif args.spellId == 69766 and not self:IsTrivial(100) then	--Instability (casters)
+	elseif args.spellId == 69766 and not self:IsTrivial() then	--Instability (casters)
 		if args:IsPlayer() then
 			timerInstability:Start()
 			if (args.amount or 1) >= 4 then
@@ -273,7 +273,7 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 70117 then--Icy Grip Cast, not blistering cold, but adds an extra 1sec to the warning
-		if not self:IsTrivial(100) then
+		if not self:IsTrivial() then
 			specWarnBlisteringCold:Show()
 			specWarnBlisteringCold:Play("runout")
 		end

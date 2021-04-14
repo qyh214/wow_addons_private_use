@@ -434,8 +434,6 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
 	L["Entry limit"] = "Entry limit"
 	--[[Translation missing --]]
 	L["Entry Name Source"] = "Entry Name Source"
-	--[[Translation missing --]]
-	L["Event"] = "Event"
 	L["Event Type"] = "Tipo de Evento"
 	--[[Translation missing --]]
 	L["Event(s)"] = "Event(s)"
@@ -1019,7 +1017,7 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Shows a progress bar with name, timer, and icon"] = "Muestra una barra de progreso con nombres, temporizadores, y icono"
 	L["Shows a spell icon with an optional cooldown overlay"] = "Muestra un icono como aura con máscaras opcionales"
 	--[[Translation missing --]]
-	L["Shows a stop motion textures"] = "Shows a stop motion textures"
+	L["Shows a stop motion texture"] = "Shows a stop motion texture"
 	L["Shows a texture that changes based on duration"] = "Muestra una textura que cambia con el tiempo"
 	L["Shows one or more lines of text, which can include dynamic information such as progress or stacks"] = "Muestra una o varias lineas de texto, capaz de contener información cambiante como acumulaciones y/o progresos"
 	--[[Translation missing --]]
@@ -1080,8 +1078,6 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Start Collapsed"] = "Start Collapsed"
 	--[[Translation missing --]]
 	L["Start of %s"] = "Start of %s"
-	--[[Translation missing --]]
-	L["Status"] = "Status"
 	L["Stealable"] = "Puede Robarse"
 	--[[Translation missing --]]
 	L["Step Size"] = "Step Size"

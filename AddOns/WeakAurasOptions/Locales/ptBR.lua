@@ -378,7 +378,6 @@ Off Screen]=] ] = "Aura está fora da tela"
 	L["Entry limit"] = "Entry limit"
 	--[[Translation missing --]]
 	L["Entry Name Source"] = "Entry Name Source"
-	L["Event"] = "Evento"
 	L["Event Type"] = "Tipo de evento"
 	L["Event(s)"] = "Evento(s)"
 	--[[Translation missing --]]
@@ -959,7 +958,7 @@ Supports multiple entries, separated by commas
 	L["Shows a progress bar with name, timer, and icon"] = "Mostrar uma barra de progresso com nome, temporizador e ícone"
 	L["Shows a spell icon with an optional cooldown overlay"] = "Mostrar um ícone de feitiço com o opcional do tempo de recarga sobreposto"
 	--[[Translation missing --]]
-	L["Shows a stop motion textures"] = "Shows a stop motion textures"
+	L["Shows a stop motion texture"] = "Shows a stop motion texture"
 	L["Shows a texture that changes based on duration"] = "Mostrar uma textura que muda com base na duração"
 	L["Shows one or more lines of text, which can include dynamic information such as progress or stacks"] = "Mostra uma ou mais linhas de texto, que podem incluir informações dinâmicas tal como progresso ou quantidades"
 	--[[Translation missing --]]
@@ -1021,8 +1020,6 @@ Supports multiple entries, separated by commas
 	L["Start Collapsed"] = "Start Collapsed"
 	--[[Translation missing --]]
 	L["Start of %s"] = "Start of %s"
-	--[[Translation missing --]]
-	L["Status"] = "Status"
 	--[[Translation missing --]]
 	L["Stealable"] = "Stealable"
 	--[[Translation missing --]]

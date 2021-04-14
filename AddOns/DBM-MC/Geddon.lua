@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Geddon", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200218153056")
+mod:SetRevision("20210119194113")
 mod:SetCreatureID(12056)
 mod:SetEncounterID(668)
 mod:SetModelID(12129)
@@ -51,7 +51,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnBomb:Show()
 			specWarnBomb:Play("runout")
-			if self:IsDifficulty("event40") or not self:IsTrivial(75) then
+			if self:IsDifficulty("event40") or not self:IsTrivial() then
 				yellBomb:Yell()
 				yellBombFades:Countdown(20475)
 			end
@@ -79,7 +79,7 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 19695 then
-		if self:IsDifficulty("event40") or not self:IsTrivial(75) then
+		if self:IsDifficulty("event40") or not self:IsTrivial() then
 			specWarnInferno:Show()
 			specWarnInferno:Play("aesoon")
 		else

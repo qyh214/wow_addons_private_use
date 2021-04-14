@@ -18,6 +18,7 @@
 local LibStub=LibStub
 local libinit,MINOR_VERSION = LibStub("LibInit")
 if not libinit then return end
+local C=libinit:GetColorTable()
 
 local GetTime=GetTime
 local GameTooltip=GameTooltip
@@ -104,12 +105,16 @@ local function SetUp(father,widgetType,message,tooltip,maxwidth)
 	frame:SetScript("OnEnter",tooltip and OnTooltip or nil)
 	frame:SetScript("OnLeave",function() GameTooltip:Hide() end)
 	frame.SetObj=function(self,obj) self.obj=obj end
+	frame.SetCurrent=function(self,value)
+
+	end
 	maxwidth=maxwidth or 140
 	frame:SetWidth(maxwidth)
 	frame.message=message
 	frame.tooltip=tooltip
 	frame.maxwidth=maxwidth
 	frame.widgetType=widgetType
+	frame.father=father
 	return frame,name
 end
 --- Creates a slider.
@@ -126,6 +131,7 @@ end
 function factory:Slider(father,min,max,current,...)
 	local frame,name=SetUp(father,"Slider",...)
 	local sl = CreateFrame('Slider',name, frame, 'OptionsSliderTemplate')
+	frame.sl=sl
 	frame:SetHeight(50)
 	--sl:SetHeight(20)
 	sl:SetOrientation('HORIZONTAL')
@@ -156,7 +162,7 @@ function factory:Slider(father,min,max,current,...)
 	frame.lastvalue=max+1 -- makes sure that first update fires
 	local function OnChange(self,value) end
 	function frame:SetValue(value)
-		sl:SetValue(value)
+		sl:SetValue(value or -1)
 	end
 	function frame:SetStep(value)
 		sl:SetStep(value)
@@ -235,6 +241,20 @@ function factory:Checkbox(father,current,...)
 	function frame:SetOnChange(func) self.CustomOnChange=func end
 	return frame
 end
+--- Creates a laben
+--
+-- @tparam frame father Parent frame to use
+-- @tparam string text String with description
+-- @tparam[opt] string color name (passed to colorize) defaults to yellow
+-- @treturn widget label widget object
+--
+function factory:Label(father,text,color)
+  color=color or "yellow"
+  text=text or "label"
+  local f=father:CreateFontString(father, "OVERLAY", "GameTooltipText")
+  f:SetText(C(text,color))
+  return f
+end
 --- Creates a buttom.
 --
 -- @tparam frame father Parent frame to use
@@ -248,7 +268,9 @@ function factory:Button(father,...)
 	bt:SetText(bt.message)
 	bt:SetWidth(bt.maxwidth)
 	truncate(bt:GetFontString(),bt.maxwidth)
-
+  function bt:SetValue(value)
+  bt:SetText(value)
+  end
 	function bt:SetOnChange(func)
 		if type(func)=="function" then
 			bt:SetScript("OnClick",func)
@@ -274,7 +296,6 @@ end
 	local frame,name=SetUp(father,"Dropdown",...)
 	frame:SetHeight(50)
 	frame:SetWidth(frame.maxwidth)
-	frame.SetOnChange=function() end
 	local dd=MSA_DropDownMenu_Create(name, frame)
 	dd:SetPoint("BOTTOMLEFT")
 	dd:SetPoint("BOTTOMRIGHT")
@@ -327,6 +348,11 @@ end
 	end
 	function frame:OnChange(value) end
 	function frame:SetOnChange(func) frame.OnChange=func end
+	function frame:SetValue(value)
+	 MSA_DropDownMenu_SetSelectedValue(dd, value)
+	 MSA_DropDownMenu_SetText(dd, dd.list[value]);
+	end
+
 	return frame
 end
 -- These functions directly map to variables
@@ -347,19 +373,19 @@ function factory:Option(addon,father,flag,maxwidth)
 	if not info then error("factory:Option() Not existent " ..flag,2) end
 	local f=father
 	local w
-	local tipo=info.type
+	local tipo=strlower(info.type)
 	info.maxwidth=maxwidth
-	if (tipo=="toggle") then
+	if (tipo=="toggle" or tipo =="checkbox") then
 		w=self:Checkbox(f,addon:ToggleGet(flag,tipo),info)
 		w:SetOnChange(ToggleSet)
-	elseif( tipo=="select") then
+	elseif( tipo=="select" or tipo=="dropdown") then
 		w=self:DropDown(f,addon:ToggleGet(flag,tipo),info.values,info)
 		w:SetOnChange(ToggleSet)
-	elseif (tipo=="range") then
+	elseif (tipo=="range" or tipo=="slider") then
 		w=self:Slider(f,info.min,info.max,addon:ToggleGet(flag,info.type),info)
 		w:SetStep(info.step)
 		w:SetOnChange(ToggleSet)
-	elseif (tipo=="execute") then
+	elseif (tipo=="execute" or tipo=="button") then
 		w=self:Button(f,info)
 		w:SetOnChange(info.func)
 	end
@@ -370,6 +396,111 @@ function factory:Option(addon,father,flag,maxwidth)
 	return w
 end
 factory.Dropdown=factory.DropDown -- compatibility
+do
+  local function SetTop(self,value)
+    self._TOP=value
+  end
+  local function SetTitle(self,value)
+    self.TitleText:SetText(value)
+    pino=value
+  end
+  local function SetOnChange(self,name,value)
+    self._WIDGETS[name]:SetOnChange(value)
+  end
+  local function SetValue(self,name,value)
+    self._DATA[name]=value
+    self._WIDGETS[name]:SetValue(value)
+  end
+  local function GetValue(self,name)
+    DevTools_Dump(self._DATA)
+    if name then
+      return self._DATA[name]
+    else
+      return self._DATA
+    end
+  end
+  local function AddChild(self,name,o)
+    local x,y=o:GetSize()
+    if self:GetWidth() < x *self._COLUMNS then self:SetWidth(x * self._COLUMNS + 20) end
+    o._ME=name
+    o:ClearAllPoints()
+    o:SetParent(self)
+    o:SetPoint("TOP",0,-1 * self._TOP)
+    if (o.SetOnChange) then
+      o:SetOnChange(function(self,value) self.father._DATA[self._ME]=value end)
+    end
+    self._TOP=self._TOP + y + 5
+    self._WIDGETS[name]=o
+    if self:GetHeight() < self._TOP then self:SetHeight(self._TOP) end
+  end
+--- Quickly creates an option panel
+-- Add widgets whith addChild method
+-- @tparam frame father Parent frame to use
+-- @tparam[opt] boolean!table movable true for movabke or a table witl listf attributes default false
+-- @tparam[opt] number columns defailt 1
+-- @tparam[opt] number width defauld 1 (panel will be resized to biggest child)
+-- @usage
+--      local factory=self:GetFactory()
+--      local t=factory:Panel(parentFrame,false)
+--      t:ClearAllPoints()
+--      local x,y=0,-23
+--      t:SetPoint("TOPLEFT",x,y)
+--      t:SetPoint("TOPRIGHT",x,y)
+--      t:SetPoint("BOTTOMLEFT")
+--      t:SetPoint("BOTTOMRIGHT")
+--      t:AddChild('c',factory:DropDown(t,'DEMONHUNTER',classes,CLASS,CHOOSE .. ' ' .. CLASS))
+--      t:AddChild('l',factory:Slider(t,1,maxLevel,maxLevel,LEVEL,CHOOSE .. ' ' .. LEVEL))
+--      t:AddChild('f',factory:DropDown(t,thisFaction,factions,CHOOSE .. ' ' .. FACTION))
+--      t:AddChild('p1',factory:DropDown(t,UNKNOWN,professions,PROFESSIONS_FIRST_PROFESSION,CHOOSE .. ' ' .. PROFESSIONS_FIRST_PROFESSION))
+--      t:AddChild('p2',factory:DropDown(t,UNKNOWN,professions,PROFESSIONS_SECOND_PROFESSION,CHOOSE .. ' ' .. PROFESSIONS_SECOND_PROFESSION))
+--      t:AddChild('a',factory:Checkbox(t,false,ITEM_ACCOUNTBOUND,L["This toon can receive Account Bound items"]))
+--      t:AddChild('b',factory:Button(t,SAVE))
+--      -- Add an onchange function to the button
+--      t:SetOnChange('b',function(self,value)
+--        -- father is tyhe panel widget
+--        local answer=self.father:GetValue()
+--        -- answer is an object wich contains the currenv value of eery wuidget indexed bty its handle (first parameter to addchild)
+--        t:Hide()
+--      end)
+  function factory:Panel(father,movable,columns,width)
+    local template = "BasicFrameTemplateWithInset"
+    columns=columns or 1
+    width=width or 1
+    if type(movable)=='table' then
+      columns=movable.columns or columns
+      width=movable.width or width
+      -- add more options here
+      movable=movable.movable
+    end
+    local t=CreateFrame("Frame",nil,father,template)
+    t._DATA={}
+    t._WIDGETS={}
+    t._COLUMNS=columns
+    t:SetFrameStrata("DIALOG")
+    t:SetWidth(width)
+    t:SetHeight(30)
+    t:ClearAllPoints()
+    t:SetPoint("CENTER",0,0)
+    t.AddChild=AddChild
+    t.SetTop=SetTop
+    t.SetValue=SetValue
+    t.GetValue=GetValue
+    t.SetOnChange=SetOnChange
+    t.SetTitle=SetTitle
+    t.Reset=function(self) wipe(self._DATA) end
+    t:SetTop(27)
+    if movable then
+      t:SetMovable(true)
+      t:EnableMouse(true)
+      t:RegisterForDrag("LeftButton")
+      t:SetScript("OnDragStart",function(self) self:StartMoving() end )
+      t:SetScript("OnDragStop",function(self) self:StopMovingOrSizing() end )
+    end
+
+    return t
+  end
+end
 libinit:_SetFactory(factory)
 
-
+-- @section Panel
+-- @method AddChild(handle,widget)

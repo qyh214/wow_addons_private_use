@@ -33,6 +33,8 @@ local L = WeakAuras.L
 	L["Always shows the aura, turns grey if the ability is not usable."] = "Всегда показывает ауру, становится серым, если способность нельзя использовать."
 	L["Always shows the aura, turns red when out of range, blue on insufficient resources."] = "Всегда показывает ауру, становится красным вне зоны действия, синим при недостаточных ресурсах."
 	L["Always shows the aura, turns red when out of range."] = "Всегда показывает индикацию; становится красной, если цель вне зоны действия."
+	--[[Translation missing --]]
+	L["Always shows the aura."] = "Always shows the aura."
 	L["Back"] = "Назад"
 	L["Basic Show On Cooldown"] = "Показать восстановление"
 	--[[Translation missing --]]
@@ -92,6 +94,7 @@ local L = WeakAuras.L
 	L["Only shows the aura when the ability is on cooldown."] = "Показывает индикацию, только когда способность восстанавливается."
 	--[[Translation missing --]]
 	L["Only shows the aura when the ability is ready to use."] = "Only shows the aura when the ability is ready to use."
+	L["Other cooldown"] = "(восстановление, остальные)"
 	L["Pet alive"] = "Питомец жив"
 	L["Pet Behavior"] = "Поведение питомца"
 	L["PvP Talents"] = "PvP таланты"
@@ -99,22 +102,17 @@ local L = WeakAuras.L
 	L["Replace Triggers"] = "Заменить триггеры"
 	L["Resources"] = "Ресурсы"
 	L["Resources and Shapeshift Form"] = "Ресурсы и облики друида"
+	L["Rogue cooldown"] = "(восстановление, разбойник)"
 	L["Runes"] = "Руны"
 	L["Shapeshift Form"] = "Облик друида"
-	--[[Translation missing --]]
-	L["Show Always, Glow on Missing"] = "Show Always, Glow on Missing"
-	--[[Translation missing --]]
-	L["Show Charges and Check Usable"] = "Show Charges and Check Usable"
-	--[[Translation missing --]]
-	L["Show Charges with Proc Tracking"] = "Show Charges with Proc Tracking"
-	--[[Translation missing --]]
-	L["Show Charges with Range Tracking"] = "Show Charges with Range Tracking"
-	--[[Translation missing --]]
-	L["Show Charges with Usable Check"] = "Show Charges with Usable Check"
+	L["Show Always, Glow on Missing"] = "Показывать всегда, сверкать при отсутствии"
+	L["Show Charges and Check Usable"] = "Показать заряды и проверить доступность"
+	L["Show Charges with Proc Tracking"] = "Показать заряды с отслеживанием срабатывания"
+	L["Show Charges with Range Tracking"] = "Показать заряды с отслеживанием дистанции"
+	L["Show Charges with Usable Check"] = "Показать заряды с проверкой доступности"
 	L["Show Cooldown and Buff"] = "Показать восстановление и бафф"
 	L["Show Cooldown and Buff and Check for Target"] = "Показать восстановление, бафф и проверку зоны действия"
-	--[[Translation missing --]]
-	L["Show Cooldown and Buff and Check Usable"] = "Show Cooldown and Buff and Check Usable"
+	L["Show Cooldown and Buff and Check Usable"] = "Показать восстановление, бафф и проверку доступности"
 	L["Show Cooldown and Check for Target"] = "Показать восстановление и проверку зоны действия"
 	--[[Translation missing --]]
 	L["Show Cooldown and Check for Target & Proc Tracking"] = "Show Cooldown and Check for Target & Proc Tracking"
@@ -165,4 +163,5 @@ local L = WeakAuras.L
 	L["Tracks the charge and the duration of spell, highlight while the spell is active, blue on insufficient resources."] = "Tracks the charge and the duration of spell, highlight while the spell is active, blue on insufficient resources."
 	L["Unknown Item"] = "Неизвестный предмет"
 	L["Unknown Spell"] = "Неизвестное заклинание"
+	L["Warrior cooldown"] = "(восстановление, воин)"
 

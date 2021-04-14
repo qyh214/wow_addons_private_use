@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Huhuran", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201011193640")
+mod:SetRevision("20210119194113")
 mod:SetCreatureID(15509)
 mod:SetEncounterID(714)
 mod:SetModelID(15739)
@@ -87,7 +87,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerStingCD:Stop()
 		timerEnrageCD:Stop()
 		timerPoisonCD:Stop()
-	elseif args.spellId == 26050 and not self:IsTrivial(80) then
+	elseif args.spellId == 26050 and not self:IsTrivial() then
 		local amount = args.amount or 1
 		timerAcid:Start(args.destName)
 		if amount >= 10 then

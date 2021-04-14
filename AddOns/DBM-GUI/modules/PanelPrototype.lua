@@ -308,7 +308,7 @@ do
 			else
 				frame = self:CreateDropdown(nil, sounds, mod, modvar .. "SWSound", function(value)
 					mod.Options[modvar .. "SWSound"] = value
-					DBM:PlaySpecialWarningSound(value)
+					DBM:PlaySpecialWarningSound(value, true)
 				end, 22, 25, button)
 				frame:ClearAllPoints()
 				frame:SetPoint("LEFT", button, "RIGHT", -20, 2)
@@ -407,10 +407,10 @@ do
 		end
 		if dbtvar then
 			button:SetScript("OnShow", function(self)
-				button:SetChecked(DBM.Bars:GetOption(dbtvar))
+				button:SetChecked(DBT.Options[dbtvar])
 			end)
 			button:SetScript("OnClick", function(self)
-				DBM.Bars:SetOption(dbtvar, not DBM.Bars:GetOption(dbtvar))
+				DBT:SetOption(dbtvar, not DBT.Options[dbtvar])
 			end)
 		end
 		if globalvar and _G[globalvar] ~= nil then

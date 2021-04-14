@@ -1,7 +1,7 @@
 ##Interface: 90000
 ## Title: Archivist
 ## Author: emptyrivers
-## Version: 7a29987
+## Version: v1.0.6
 ## Notes: Flexible data archive.
 ## SavedVariables: ACHV_DB
 ## X-Curse-Project-ID: 354259

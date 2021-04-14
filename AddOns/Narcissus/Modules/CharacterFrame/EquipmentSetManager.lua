@@ -1,35 +1,37 @@
 Narci_EquipmentSetManager = {};
+
 local ESM = Narci_EquipmentSetManager;
 local L = Narci.L;
 local EquipmentSetDB;   --NarcissusDB_PC.EquipmentSetDB
 local EquipmentSetManagerFrame;
 local Switch = Narci_ItemLevelFrame.CenterButton;
 local maxTalentTiers = 7;
-local MaximumEquipmentSet = MAX_EQUIPMENT_SETS_PER_PLAYER;  --10
+local MAX_SETS = MAX_EQUIPMENT_SETS_PER_PLAYER or 10;  --10
 local Format_Digit = "%.2f";
 local PREFIX_RED = "|cffff5050";
 local PREFIX_YELLOW = "|cFFFFD100";
 local PREFIX_GREY = "|cffa6a6a6";   --65% White
 local ICON_NEW_SET = "Interface\\AddOns\\Narcissus\\Art\\Widgets\\EquipmentSetManager\\NewSet";
+local ICON_SELECTED = "  |TInterface\\AddOns\\Narcissus\\Art\\Widgets\\Arrows\\Tick:12:12:0:0:64:64:0:64:0:64|t";
 local SETBUTTON_HEIGHT = 48;
 
 local _;
-local FadeFrame = NarciAPI_FadeFrame;
-local UIFrameFadeIn = UIFrameFadeIn;
-local UIFrameFadeOut = UIFrameFadeOut;
+local FadeFrame = NarciFadeUI.Fade;
 local GetItemStats = NarciAPI_GetItemStats;
 local SmartFontType = NarciAPI.SmartFontType;
+local GetAllSelectedTalentIDsAndIcons = NarciAPI.GetAllSelectedTalentIDsAndIcons;
 local DoesItemExist = C_Item.DoesItemExist;
 local C_EquipmentSet = C_EquipmentSet;
 local GetNumEquipmentSets = C_EquipmentSet.GetNumEquipmentSets;     --Returns the number of saved equipment sets.
 local GetItemLocations = C_EquipmentSet.GetItemLocations;
-local PickupEquipmentSet = C_EquipmentSet.PickupEquipmentSet;
 local GetEquipmentSetInfo = C_EquipmentSet.GetEquipmentSetInfo;
 local UnpackLocation = EquipmentManager_UnpackLocation;
 local GetItemInventoryType = C_Item.GetItemInventoryType;
 
+local After = C_Timer.After;
 local sin = math.sin;
 local cos = math.cos;
+local max = math.max;
 local pi = math.pi;
 
 local NarciThemeUtil = NarciThemeUtil;
@@ -52,7 +54,29 @@ local function inOutSine(t, b, c, d)
 	return -c / 2 * (cos(pi * t / d) - 1) + b
 end
 -----------------------------------------------------------------------------------
+local DataProvider = {};
 
+function DataProvider:SetNumMissingSets(numMissing)
+    if numMissing < 0 then
+        if not self.numMissing then
+            self.numMissing = 0;
+        else
+            self.numMissing = max(0, self.numMissing - 1);
+        end
+    else
+        self.numMissing = numMissing;
+    end
+    return self.numMissing;
+end
+
+function DataProvider:GetNumMissingSets()
+    if not self.numMissing then
+        self.numMissing = 0;
+        return 0
+    else
+        return self.numMissing;
+    end
+end
 
 local function GetMaxAndKey(table)
     --Get the biggest and 2nd biggest number in a table and their keys --/dump GetMaxAndKey({1,128,129,126})
@@ -64,11 +88,19 @@ local function GetMaxAndKey(table)
         if not max1 then
             max1 = v;
             key1 = k;
-        elseif table[k] > max1 then
+        elseif not max2 then
+            max2 = v;
+            key2 = k;
+        end
+
+        if table[k] > max1 then
             max2 = max1;
             key2 = key1;
             max1 = v;
             key1 = k;
+        elseif max2 and table[k] > max2 then
+            max2 = v;
+            key2 = k
         end
     end
 
@@ -76,7 +108,7 @@ local function GetMaxAndKey(table)
 end
 
 local RepositionFrame = CreateFrame("Frame", nil, nil, "NarciUpdateFrameTemplate");
-RepositionFrame.IsOpen = false;
+RepositionFrame.isOpen = false;
 RepositionFrame:Hide();
 RepositionFrame.duration = 0.35;
 local function RepositionFrame_OnShow(self)
@@ -98,12 +130,12 @@ local function UpdateEquipmentSetButtonPosition(parentOffset)
 end
 
 local function RepositionFrame_OnUpdate(self, elapsed)
-	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed
+	self.t = self.t + elapsed
 	local EndPoint = self.EndPoint;
 	local StartPoint = self.StartPoint;
-	local offset = outSine(self.TimeSinceLastUpdate, StartPoint, EndPoint - StartPoint, self.duration);
+	local offset = outSine(self.t, StartPoint, EndPoint - StartPoint, self.duration);
 
-	if self.TimeSinceLastUpdate >= self.duration then
+	if self.t >= self.duration then
 		offset = EndPoint;
 		self:Hide();
     end
@@ -124,33 +156,6 @@ for k, v in pairs(SlotIDtoName) do
 end
 --]]
 ----------------------------------------------------------------------------------
-local function GetAllSelectedTalentIDsAndIcons()
-    local talentInfo = {}
-    local MaxTiers = GetMaxTalentTier();    --based on the character's level
-    local talentGroup = GetActiveSpecGroup();
-    local _, _, classID = UnitClass("player");
-    talentInfo.classID = classID;
-
-    if not talentGroup then
-        talentInfo.talentGroup = false;
-        return;
-    else
-        talentInfo.talentGroup = talentGroup;
-    end
-
-    local column, talentID, iconTexture, selected;
-    for tier = 1, MaxTiers do
-        _, column = GetTalentTierInfo(tier, talentGroup);
-        if column then
-            talentID, _, iconTexture, selected = GetTalentInfo(tier, column, talentGroup);
-            talentInfo[tier] = {talentID, iconTexture};
-        else
-            talentInfo[tier] = {false, 134400};     --Question Mark Icon
-        end
-    end
-
-    return talentInfo
-end
 
 local function LoadSetInfo(SetButton, SetName)
     local equipmentSetID = SetButton.setID;
@@ -159,12 +164,14 @@ local function LoadSetInfo(SetButton, SetName)
     local texs = SetButton.texs;
     local icon;
     local SetInfo = EquipmentSetDB[equipmentSetID];
+    local tier = 1;
     if SetInfo and SetName == SetInfo[1] then
         local SavedTalents = SetInfo[2];
         for i = #SavedTalents, 1, -1 do
-            icon = SavedTalents[i][2];
+            icon = SavedTalents[tier][2];
             texs[i]:SetTexture(icon);
             texs[i]:Show();
+            tier = tier + 1;
         end
     end
 end
@@ -185,9 +192,6 @@ local function WipeSetInfo(setID)
 end
 
 
-
-ESM.GetAllSelectedTalentIDsAndIcons = GetAllSelectedTalentIDsAndIcons;
-
 local function AsignTalentIcons(button)    --/run Narci_EquipmentSetManager:AsignTalentIcons(TV)
     local texs = button.texs;
     local talentInfo = GetAllSelectedTalentIDsAndIcons();
@@ -196,7 +200,7 @@ local function AsignTalentIcons(button)    --/run Narci_EquipmentSetManager:Asig
 
     local index = 1;
     for i = tiers, 1, -1 do
-        texs[index]:SetTexture(talentInfo[i][2]);
+        texs[index]:SetTexture(talentInfo[i].texture);
         texs[index]:Show();
         index = index + 1;
     end
@@ -205,9 +209,9 @@ end
 local function FadeInTalentIcons(button, action)
     local texFrame = button.texFrame;
     if action then
-        UIFrameFadeIn(texFrame, 0.15, texFrame:GetAlpha(), 1);
+        FadeFrame(texFrame, 0.15, 1);
     else
-        UIFrameFadeOut(texFrame, 0.2, texFrame:GetAlpha(), 0.4);
+        FadeFrame(texFrame, 0.2, 0.4);
     end
 end
 
@@ -457,7 +461,7 @@ local function InitializeOptionalSetButton(frame, equipmentSetID, avgItemLevel) 
     frame.iconID = iconFileID;
     frame.SetName:SetText(name);
     frame.SetName:Disable();
-    C_Timer.After(0, function()
+    After(0, function()
         SmartFontType(frame.SetName);   
     end)
 
@@ -482,7 +486,9 @@ local function InitializeOptionalSetButton(frame, equipmentSetID, avgItemLevel) 
 
     frame.Ilvl:SetText(ilvl);
 
-    if numLost > 0 then
+    local isItemMissing = numLost > 0;
+    frame.hasMissingItem = isItemMissing;
+    if isItemMissing then
         if numLost == 1 then
             statString = L["1 Missing Item"];
         else
@@ -511,6 +517,8 @@ local function InitializeOptionalSetButton(frame, equipmentSetID, avgItemLevel) 
     frame.TalentAnchor:SetPoint("RIGHT", frame.Bar1, "TOPRIGHT", 0, -12);
     frame:Show();
     --print("setID: "..setID)
+
+    return isItemMissing
 end
 
 local UpdateEquipmentNum;
@@ -520,13 +528,13 @@ local ShouldUpdateTalent = false;
 local function ShowOrHideSettings(self, visibility, useAnimation)
     if useAnimation then
         if visibility then
-            FadeFrame(self.ConfirmButton, 0.15, "IN");
-            FadeFrame(self.CancelButton, 0.15, "IN");
-            FadeFrame(self.DeleteButton, 0.15, "IN");        
+            FadeFrame(self.ConfirmButton, 0.15, 1);
+            FadeFrame(self.CancelButton, 0.15, 1);
+            FadeFrame(self.DeleteButton, 0.15, 1);        
         else
-            FadeFrame(self.DeleteButton, 0.15, "OUT");
-            FadeFrame(self.ConfirmButton, 0.15, "OUT");
-            FadeFrame(self.CancelButton, 0.15, "OUT");
+            FadeFrame(self.DeleteButton, 0.15, 0);
+            FadeFrame(self.ConfirmButton, 0.15, 0);
+            FadeFrame(self.CancelButton, 0.15, 0);
         end
     else
         self.DeleteButton:SetShown(visibility);
@@ -538,14 +546,16 @@ end
 local function UpdateScrollRange()
     local frame = EquipmentSetManagerFrame;
     local savedSets = GetNumEquipmentSets() or 0;
-    local TotalButton = math.min(savedSets + 1, MaximumEquipmentSet);
+    local TotalButton = math.min(savedSets + 1, MAX_SETS);
     local buttonHeight = SETBUTTON_HEIGHT;
-    local TotalTab = math.max(TotalButton - 4, 1);
+    local TotalTab = max(TotalButton - 4, 1);
     local MaxScroll = math.floor((TotalTab - 0.5) * buttonHeight + 0.5);
     frame.ListScrollFrame.range = MaxScroll;
     frame.ListScrollFrame.scrollBar:SetMinMaxValues(0, MaxScroll)
-    Switch.Level:SetText(savedSets.."/"..MaximumEquipmentSet);
+    --[[
+    Switch.Level:SetText(savedSets.."/"..MAX_SETS);
     Switch.Header:SetText("SETS");
+    --]]
 end
 
 local function InitializeEquipmentSetManager()
@@ -559,12 +569,21 @@ local function InitializeEquipmentSetManager()
     local setID;
     local totalSets = GetNumEquipmentSets();
     local avgItemLevel = GetAverageItemLevel();
-    for i = 1, MaximumEquipmentSet do
+    local isItemMissing;
+    local numMissing = 0;
+    for i = 1, MAX_SETS do
         setID = SetIDs[i];
         button = buttons[i];
         if setID then
-            InitializeOptionalSetButton(button, setID, avgItemLevel);
+            isItemMissing = InitializeOptionalSetButton(button, setID, avgItemLevel);
             ShowOrHideSettings(button, false, true);
+            if isItemMissing then
+                if numMissing then
+                    numMissing = numMissing + 1;
+                else
+                    numMissing = 1;
+                end
+            end
         else
             button.setID = nil;
             button.SetIcon.Icon:SetTexture(ICON_NEW_SET);
@@ -581,6 +600,9 @@ local function InitializeEquipmentSetManager()
         button:SetID(i);
         button:SetHeight(SETBUTTON_HEIGHT);
     end
+
+    DataProvider:SetNumMissingSets(numMissing);
+    Narci_NavBar:UpdateSets(totalSets, numMissing);
 end
 
 local function SetEnhancements(c, h, m, v)
@@ -602,7 +624,7 @@ local function SetEnhancements(c, h, m, v)
         stat = table[i][1];	                                                --rating
         statBase = ConvertRatio[key.."Base"];
         ratio = ConvertRatio[key] or ratio;
-        percent = math.max(0, stat * ratio + statBase);	                    --Convert a rating to percentage / + basic percent (example: 10% basic critical chance)
+        percent = max(0, stat * ratio + statBase);	                    --Convert a rating to percentage / + basic percent (example: 10% basic critical chance)
         percentageText = string.format(Format_Digit, percent).."%";
         key = string.gsub(key, "^%l", string.upper)
         Radar[key].ValueRating:SetText(stat);
@@ -636,10 +658,10 @@ local function InitializeScripts()
     local function ChangeColorAndText(self)
         if self.IsOn then
             self.Background:SetColorTexture(self.r, self.g, self.b);
-            self:SetText(self.EnabledText);
+            self:SetText(self.EnabledText.. ICON_SELECTED);
         else
             self.Background:SetColorTexture(0.2, 0.2, 0.2);
-            self:SetText(PREFIX_GREY .. self.DisabledText);
+            self:SetText(PREFIX_GREY .. self.EnabledText);
         end
     end
 
@@ -675,6 +697,7 @@ end
 NarciEquipmentSetButtonMixin = {};
 
 local function NarciEquipmentSetButton_AnimFrame_OnShow(self)
+    local _;
     local SetButton = self:GetParent();
     self.StartHeight = SetButton.Bar1:GetHeight();
     _, _ , _, self.StartX = SetButton.TalentAnchor:GetPoint();
@@ -682,7 +705,7 @@ local function NarciEquipmentSetButton_AnimFrame_OnShow(self)
 end
 
 local function NarciEquipmentSetButton_AnimFrame_OnUpdate(self, elapsed)
-    local t = self.TimeSinceLastUpdate;
+    local t = self.t;
     local delay = self.Delay;
     local height = inOutSine(t, self.StartHeight, self.EndHeight - self.StartHeight , 0.25);
     local offset;
@@ -706,7 +729,7 @@ local function NarciEquipmentSetButton_AnimFrame_OnUpdate(self, elapsed)
     --parent.SetName:SetHeight(10 + height/12)
     --parent.SetName:SetFont(self.fontName, 10 + height/12);
 
-	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
+	self.t = self.t + elapsed;
 end
 
 local function ShowFlyoutBlack(bool)
@@ -765,7 +788,7 @@ local function ShowIconSelector(SetButton)
         end
     end
     Selector:SetPoint("BOTTOMRIGHT", Narci_EquipmentSetManagerFrame, "BOTTOMLEFT", -4, 0);
-    FadeFrame(Selector, 0.15, "IN");
+    FadeFrame(Selector, 0.15, 1);
     ShowFlyoutBlack(true);
     return specName, specIcon;
 end
@@ -784,7 +807,7 @@ end
 local function ExpandButton(self)
     local AnimFrame = self.AnimFrame;
     AnimFrame:Hide();
-    UIFrameFadeOut(self.Highlight, 0.15, self.Highlight:GetAlpha(), 0);
+    FadeFrame(self.Highlight, 0.15, 0);
     AnimFrame.EndHeight = SETBUTTON_HEIGHT;
     AnimFrame.EndX = 140;
     AnimFrame.Delay = 0;
@@ -796,9 +819,9 @@ local function ExpandButton(self)
     local Overlay1 = ListScrollFrame.OverlayFrame1;
     local Overlay2 = ListScrollFrame.OverlayFrame2;
 
-    FadeFrame(ESM.IconSelector, 0.15, "IN");
-    FadeFrame(Overlay1, 0.15, "IN");
-    FadeFrame(Overlay2, 0.15, "IN");
+    FadeFrame(ESM.IconSelector, 0.15, 1);
+    FadeFrame(Overlay1, 0.15, 1);
+    FadeFrame(Overlay2, 0.15, 1);
     AnimFrame:Show();
 end
 
@@ -880,8 +903,8 @@ end
 local function ShowNewSetButton()
     local savedSets = GetNumEquipmentSets();
     local buttons = ESM.buttons;
-    if savedSets < MaximumEquipmentSet then
-        FadeFrame(buttons[savedSets + 1], 0.35, "Forced_IN");
+    if savedSets < MAX_SETS then
+        FadeFrame(buttons[savedSets + 1], 0.35, 1, 0);
     end
     UpdateScrollRange();
 end
@@ -907,7 +930,7 @@ local function CreateNewSet(self)
     self.SetName:SetText(specName);
     self.SetName:HighlightText();
 
-    UIFrameFadeOut(self.Highlight, 0.15, self.Highlight:GetAlpha(), 0);
+    FadeFrame(self.Highlight, 0.15, 0);
     SetToEditMode(self, true, false);
 
     self:SetIconWithTransition(specIcon, specName);
@@ -946,9 +969,15 @@ local function ConfirmButton_OnClick(self)
 
         LoadSetInfo(SetButton, name);
 
-        C_Timer.After(0.25, function()
+        After(0.25, function()
             isDuplicatedSet = false;
             InitializeOptionalSetButton(SetButton, setID);
+            if not SetButton.hasMissingItem then
+                DataProvider:SetNumMissingSets(-1);
+            end
+            local numMissing = DataProvider:GetNumMissingSets();
+            local savedSets = GetNumEquipmentSets();
+            Narci_NavBar:UpdateSets(savedSets, numMissing);
         end)
     else
         if type(icon) == "number" then
@@ -957,7 +986,7 @@ local function ConfirmButton_OnClick(self)
             C_EquipmentSet.CreateEquipmentSet(name);
         end
 
-        C_Timer.After(0.25, function()
+        After(0.25, function()
             IgnoreSlotsForSave(4);
             IgnoreSlotsForSave(19);
             local NewSetID = GetEquipmentSetIDByName(name);
@@ -972,6 +1001,14 @@ local function ConfirmButton_OnClick(self)
 
     SetButton.SetName:ClearFocus();
     PlayBling(SetButton);
+
+    DataProvider:SetNumMissingSets(-1)
+    if SetButton.hasMissingItem then
+        DataProvider.numMissing = DataProvider.numMissing + 1;
+    end
+    local savedSets = GetNumEquipmentSets();
+    local numMissing = DataProvider:GetNumMissingSets();
+    Narci_NavBar:UpdateSets(savedSets, numMissing);
 end
 
 local function CancelButton_OnClick(self)
@@ -1013,9 +1050,18 @@ local function DeleteTimer_OnFinished(self)
         C_EquipmentSet.DeleteEquipmentSet(setID);
         WipeSetInfo(setID);
         local savedSets = GetNumEquipmentSets() or 0;
-        Switch.Level:SetText(savedSets.."/"..MaximumEquipmentSet);
-        Switch.Header:SetText("SETS");
         HideIconSelector();
+
+        --[[
+        Switch.Level:SetText(savedSets.."/"..MAX_SETS);
+        Switch.Header:SetText("SETS");
+        --]]
+
+        if not SetButton.hasMissingItem then
+            DataProvider:SetNumMissingSets(-1);
+        end
+        local numMissing = DataProvider:GetNumMissingSets();
+        Narci_NavBar:UpdateSets(savedSets, numMissing);
     end
 end
 
@@ -1030,16 +1076,16 @@ local function RepositionButton(deletedButton)
     local ID = deletedButton:GetID();
     
     --Re-index
-    for i = ID, (MaximumEquipmentSet - 1) do
+    for i = ID, (MAX_SETS - 1) do
         buttons[i] = buttons[i + 1];
     end
-    buttons[MaximumEquipmentSet] = deletedButton;
+    buttons[MAX_SETS] = deletedButton;
 
     --Reposition
     local button = buttons[ID];
     deletedButton:ClearAllPoints();
     button:ClearAllPoints();
-    deletedButton:SetPoint("TOP", buttons[MaximumEquipmentSet - 1], "BOTTOM", 0, 0);
+    deletedButton:SetPoint("TOP", buttons[MAX_SETS - 1], "BOTTOM", 0, 0);
 
     if ID == 1 then
         button:SetPoint("TOP", deletedButton:GetParent(), "TOP", 0, 0);
@@ -1049,7 +1095,7 @@ local function RepositionButton(deletedButton)
 end
 
 local function NarciEquipmentSetButton_EraseFrame_OnUpdate(self, elapsed)
-    local t = self.TimeSinceLastUpdate;
+    local t = self.t;
     local height = inOutSine(t, SETBUTTON_HEIGHT, 0.001 - SETBUTTON_HEIGHT , 0.4);
     if t >= 0.4 then
         height = 0.001;
@@ -1057,10 +1103,10 @@ local function NarciEquipmentSetButton_EraseFrame_OnUpdate(self, elapsed)
         local SetButton = self:GetParent();
         ShowOrHideSettings(SetButton, false, true);
         RepositionButton(SetButton);
-        C_Timer.After(0.2, InitializeEquipmentSetManager);
+        After(0.2, InitializeEquipmentSetManager);
     end
     self:GetParent():SetHeight(height);
-	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed;
+	self.t = self.t + elapsed;
 end
 
 function NarciEquipmentSetButtonMixin:OnLoad()
@@ -1104,6 +1150,11 @@ function NarciEquipmentSetButtonMixin:OnLoad()
     self.DeleteButton.Fill.Timer:SetScript("OnPlay", DeleteTimer_OnPlay);
     self.DeleteButton.Fill.Timer:SetScript("OnFinished", DeleteTimer_OnFinished);
     self.SetIcon:SetScript("PostClick", SetIcon_OnPostClick);
+
+    self.Highlight:SetAlpha(0);
+
+    self:SetScript("OnLoad", nil);
+    self.OnLoad = nil;
 end
 
 function NarciEquipmentSetButtonMixin:SetIconWithTransition(iconFileID, iconName)
@@ -1143,7 +1194,7 @@ end
 
 function NarciEquipmentSetButtonMixin:OnEnter()
     if self.SetName:HasFocus() then return; end;
-    UIFrameFadeIn(self.Highlight, 0.15, self.Highlight:GetAlpha(), 0.15);
+    FadeFrame(self.Highlight, 0.5, 0.15);
     FadeInTalentIcons(self, true);
 
     --Stats Preview
@@ -1160,7 +1211,7 @@ function NarciEquipmentSetButtonMixin:OnEnter()
     if not anchorTo or anchorTo ~= self then
         shadow:ClearAllPoints();
         shadow:SetPoint("CENTER", self, "CENTER", 0 , 0);
-        UIFrameFadeIn(shadow, 0.15, 0, 0.6);
+        FadeFrame(shadow, 0.25, 0.6, 0);
     end
 
     --Show Tooltip
@@ -1171,7 +1222,7 @@ function NarciEquipmentSetButtonMixin:OnLeave()
     if self:IsMouseOver() and EquipmentSetManagerFrame:IsMouseOver() then
         return
     end
-    UIFrameFadeOut(self.Highlight, 0.3, self.Highlight:GetAlpha(), 0);
+    FadeFrame(self.Highlight, 1, 0);
     FadeInTalentIcons(self, false);
     HighlightRelevantSlots();
     local shadow = EquipmentSetManagerFrame.ArtFrame.Shadow;
@@ -1202,7 +1253,7 @@ end
 
 function NarciEquipmentSetButtonMixin:OnDragStart()
     if not self.setID or type(self.setID) ~= "number" then return; end;
-    PickupEquipmentSet(self.setID);
+    C_EquipmentSet.PickupEquipmentSet(self.setID);
 end
 
 function NarciEquipmentSetButtonMixin:OnEvent(event,...)
@@ -1214,54 +1265,18 @@ function NarciEquipmentSetButtonMixin:OnEvent(event,...)
         self:UnregisterEvent("EQUIPMENT_SWAP_FINISHED");
         if result then
             HighlightRelevantSlots();
-            C_Timer.After(0.2, InitializeEquipmentSetManager);
+            After(0.2, InitializeEquipmentSetManager);
             ResetAllBackgroundColor();
             PlayHighlight(self);
             AnimateBackgroundColor(self);   --Succeed
         else
-            FadeFrame(self.RedOverlay, 0.1, "IN");
-            C_Timer.After(0.5, function()
-                FadeFrame(self.RedOverlay, 0.45, "OUT");
+            FadeFrame(self.RedOverlay, 0.1, 1);
+            After(0.5, function()
+                FadeFrame(self.RedOverlay, 0.45, 0);
             end)
             self.animError:Play();      --Failed to change set
         end
     end
-end
-
-
-function ESM:Open()
-    --PlaySound(138542);    --136114
-    Narci.refreshCombatRatings = false;
-    ShouldUpdateEquipment = false;
-    RepositionFrame.IsOpen = true;
-    RepositionFrame:Hide();
-    RepositionFrame.EndPoint = -24 - 72;
-    RepositionFrame:Show();
-    FadeFrame(Narci_DetailedStatFrame, 0.25, "OUT");
-    FadeFrame(Narci_ConciseStatFrame, 0.25, "OUT");
-    FadeFrame(EquipmentSetManagerFrame, 0.15, "IN");
-    FadeFrame(Narci_RadarChartFrame, 0.25, "IN");
-    UpdateScrollRange();
-end
-
-function ESM:Close()
-    Narci.refreshCombatRatings = true;
-    RepositionFrame.IsOpen = false;
-    RepositionFrame:Hide();
-    RepositionFrame.EndPoint = -24;
-    RepositionFrame:Show();
-    FadeFrame(EquipmentSetManagerFrame, 0.35, "OUT");
-    if NarcissusDB.DetailedIlvlInfo then
-        FadeFrame(Narci_DetailedStatFrame, 0.4, "IN");
-    else
-        FadeFrame(Narci_ConciseStatFrame, 0.4, "IN");
-        FadeFrame(Narci_RadarChartFrame, 0.25, "OUT");
-    end
-
-    Narci_RadarChartFrame:AnimateValue();
-    Narci.RefreshAllStats();
-
-    HideIconSelector();
 end
 
 local function CreateEquipmentSetButtons(self)
@@ -1269,7 +1284,7 @@ local function CreateEquipmentSetButtons(self)
     local button;
     local buttons = {};
     
-    for i = 1 , MaximumEquipmentSet do
+    for i = 1 , MAX_SETS do
         button = CreateFrame("Button", nil, ScrollChild, "NarciEquipmentSetButtonTemplate");    --"NarciEquipmentSetButton"..i
         if i == 1 then
             button:SetPoint("TOP", ScrollChild, "TOP", 0, 0);
@@ -1301,26 +1316,47 @@ end
 
 function Narci_EquipmentSetManager_ScrollFrame_OnLoad(self)
     local buttonHeight = SETBUTTON_HEIGHT;
-    local TotalTab = MaximumEquipmentSet - 4;
+    local TotalTab = MAX_SETS - 4;
     local TotalHeight = floor(TotalTab * buttonHeight + 0.5);
     local MaxScroll = floor((TotalTab - 0.5) * buttonHeight + 0.5);
     self.scrollBar:SetMinMaxValues(0, MaxScroll)
     self.scrollBar:SetValueStep(0.001);
     self.buttonHeight = TotalHeight;
     self.range = MaxScroll;
-    self.scrollBar:SetScript("OnValueChanged", function(self, value)
-        HybridScrollFrame_SetOffset(self:GetParent(), value)
-        UpdateInnerShadowStates(self)
+    self.scrollBar:SetScript("OnValueChanged", function(bar, value)
+        self:SetVerticalScroll(value);
+        UpdateInnerShadowStates(bar);
     end)
     CreateEquipmentSetButtons(self);
     NarciAPI_SmoothScroll_Initialization(self, nil, nil, 2/(TotalTab), 0.14, 0.4);
 end
 
+
+NarciViewUtil.showSetsCallBack = function()         --NarciViewUtil is declared in NarciAPI.lua
+    InitializeEquipmentSetManager();
+    ShouldUpdateEquipment = false;
+    ESM.isOpen = true;
+    UpdateScrollRange();
+
+    local Overlay1 = EquipmentSetManagerFrame.ListScrollFrame.OverlayFrame1;
+    local SaveItemButton =  Overlay1.SaveItem;
+    local SaveTalentButton =  Overlay1.SaveTalent;
+    local r, g, b = NarciThemeUtil:GetColor();
+    SaveItemButton.r, SaveItemButton.g, SaveItemButton.b = r, g, b;
+    SaveTalentButton.r, SaveTalentButton.g, SaveTalentButton.b = r, g, b;
+end
+
+NarciViewUtil.hideSetsCallBack = function()
+    ESM.isOpen = false;
+    --Switch:ShowItemLevel();
+    HideIconSelector();
+end
+
 local function IlvlButtonCenter_OnClick(self)
     --Open/Close Equipment Set Manager
     Narci:HideButtonTooltip();
-    if RepositionFrame.IsOpen then
-        ESM:Close();
+    if ESM.isOpen then
+        NarciViewUtil:ShowAttributes();
         Switch:ShowItemLevel();
         self.isSetManagerOpen = false;
     else
@@ -1337,18 +1373,20 @@ local function IlvlButtonCenter_OnClick(self)
         EquipmentSetManagerFrame.ArtFrame.Tex:SetColorTexture(r, g, b);
         --]]
         InitializeEquipmentSetManager();
-        ESM:Open();
         self.isSetManagerOpen = true;
-        UIFrameFadeOut(self.Highlight, 0.15, self.Highlight:GetAlpha(), 0);
+        FadeFrame(self.Highlight, 0.15, 0);
+        NarciViewUtil:ShowSets();
 	end
 end
 
+--[[
 Switch.onClickFunc = IlvlButtonCenter_OnClick;
 Switch.onHideFunc = function(self)
-    if RepositionFrame.IsOpen then
+    if ESM.isOpen then
         self:Click();
     end
 end
+--]]
 
 -------------------------------------------------------------------
 local EL = CreateFrame("Frame");
@@ -1363,7 +1401,7 @@ EL:RegisterEvent("WEAR_EQUIPMENT_SET");
 EL:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_ENTERING_WORLD" then
         self:UnregisterEvent("PLAYER_ENTERING_WORLD");
-        C_Timer.After(1, function()
+        After(1, function()
             NarcissusDB_PC = NarcissusDB_PC or {};
             EquipmentSetDB = NarcissusDB_PC.EquipmentSetDB;
             EquipmentSetManagerFrame = Narci_EquipmentSetManagerFrame;

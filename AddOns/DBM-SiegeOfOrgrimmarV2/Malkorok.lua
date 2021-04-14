@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(846, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20210119194055")
 mod:SetCreatureID(71454)
 mod:SetEncounterID(1595)
 mod:SetUsedIcons(8, 7, 6, 4, 3, 2, 1)
@@ -56,7 +56,7 @@ mod:AddSetIconOption("SetIconOnAdds", "ej7952", false, true)
 mod:AddArrowOption("BloodrageArrow", 142879, true, true)
 
 --Upvales, don't need variables
-local displacedEnergyDebuff = GetSpellInfo(142913)
+local displacedEnergyDebuff = DBM:GetSpellInfo(142913)
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 --Not important, don't need to recover
 local playerDebuffs = 0
@@ -192,7 +192,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnFatalStrike:Show(args.destName, amount)
 		end
 		timerFatalStrike:Start(args.destName)
-		if self:IsTrivial(100) then return end
+		if self:IsTrivial() then return end
 		if amount % 3 == 0 and amount >= 12 then
 			if args:IsPlayer() then--At this point the other tank SHOULD be clear.
 				specWarnFatalStrike:Show(amount)

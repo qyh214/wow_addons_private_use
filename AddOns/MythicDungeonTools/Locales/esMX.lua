@@ -406,6 +406,8 @@ L["Heart Guardian"] = "Guardián del corazón"
 L["Heartsbane Runeweaver"] = "Tejerruna Aterracorazón"
 L["Heartsbane Soulcharmer"] = "Hechizaalmas Aterracorazón"
 L["Heartsbane Vinetwister"] = "Rizavid Aterracorazón"
+--[[Translation missing --]]
+--[[ L["Heavin the Breaker"] = ""--]] 
 L["Heavy Scrapbot"] = "Robot de chatarra pesado"
 L["Helmouth Cliffs"] = "Acantilados Boca Infernal"
 L["helpPlateDungeon"] = "Personalizar opciones de mazmorra"
@@ -602,6 +604,8 @@ L["Nalthor the Rimebinder"] = "Nalthor Clamaescarcha"
 L["Nar'zudah"] = "Nar'zudah"
 L["Necrotic"] = "Necrótica"
 L["Nefarious Darkspeaker"] = "Hablaoscuro nefario"
+--[[Translation missing --]]
+--[[ L["Nekthara the Mangler"] = ""--]] 
 L["Neltharion's Lair"] = "Guarida de Neltharion"
 L["Neltharion's Lair Sublevel"] = "Subnivel 1 de Guarida de Neltharion"
 L["Netherspace"] = "Espacio Abisal"
@@ -710,6 +714,8 @@ L["Red, Green and Blue"] = "Rojo, Verde y Azúl"
 L["Redo"] = "Rehacer"
 L["Refreshment Vendor"] = "Vendedora de refrigerios"
 L["Regal Mistdancer"] = "Bailarín de la niebla regio"
+--[[Translation missing --]]
+--[[ L["Rek the Hardened"] = ""--]] 
 L["Relentless"] = "Incansable"
 L["Remnant of Fury"] = "Remanente de furia"
 L["Rename"] = "Renombrar"

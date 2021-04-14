@@ -8,15 +8,13 @@ local cos = math.cos;
 local atan2 = math.atan2;
 local sqrt = math.sqrt;
 local tooltip = NarciTooltip;
-local FadeFrame = NarciAPI_FadeFrame;
-local UIFrameFadeIn = UIFrameFadeIn;
+local FadeFrame = NarciFadeUI.Fade;
+local FadeIn = NarciFadeUI.FadeIn;
 local After = C_Timer.After;
 local LanguageDetector = NarciAPI.LanguageDetector;
 local NarciSpellVisualBrowser = NarciSpellVisualBrowser;
 local Screenshot = Screenshot;	--This is an API: screen capture
-local updateThreshold = 2;
 local _G = _G;
-local NARCI_GROUP_PHOTO_NOTIFICATION = NARCI_GROUP_PHOTO_NOTIFICATION;
 local VIRTUAL_ACTOR = L["Virtual Actor"];
 local SettingFrame, BasicPanel;
 local FullSceenChromaKey, FullScreenAlphaChannel;
@@ -80,7 +78,7 @@ local function SetAlertFrame(anchor, msg, offsetY)
     frame:SetScale(Narci_Character:GetEffectiveScale())
 	frame:SetPoint("BOTTOM", anchor, "TOP", 0, offsetY)
 	frame:SetFrameLevel(50);
-	FadeFrame(frame, 0.2, "IN");
+	FadeFrame(frame, 0.2, 1);
 end
 
 local function SetTutorialFrame(self, msg)
@@ -92,7 +90,7 @@ local function SetTutorialFrame(self, msg)
 	frame:SetHeight(frame.Background:GetHeight());
 	frame:SetFrameStrata("TOOLTIP");
 	frame:Hide();
-	FadeFrame(frame, 0.25, "IN");
+	FadeFrame(frame, 0.25, 1);
 
 	if NarcissusDB and NarcissusDB.Tutorials and NarcissusDB.Tutorials[self.keyValue] then
 		NarcissusDB.Tutorials[self.keyValue] = false;
@@ -415,7 +413,7 @@ end
 
 local function EnableSheatheButton(holdWeapon)
 	local sheathFrame = Narci_AnimationOptionFrame_Sheath;
-	UIFrameFadeIn(sheathFrame, 0.2, sheathFrame:GetAlpha(), 1);
+	FadeFrame(sheathFrame, 0.2, 1);
 	local sheathButton = sheathFrame.button;
 	sheathButton.Highlight:SetShown(holdWeapon);
 	sheathButton.IsOn = holdWeapon;
@@ -424,7 +422,7 @@ end
 
 local function DisableSheatheButton()
 	local sheathFrame = Narci_AnimationOptionFrame_Sheath;
-	UIFrameFadeIn(sheathFrame, 0.2, sheathFrame:GetAlpha(), 0.5);
+	FadeFrame(sheathFrame, 0.2, 0.5);
 	local sheathButton = sheathFrame.button;
 	sheathButton.Highlight:Hide();
 	sheathButton:Disable();
@@ -439,18 +437,9 @@ local function Narci_CharacterModelFrame_OnShow(self)
 
 	if not SettingFrame:IsShown() then
 		SettingFrame:Show();
-		SettingFrame.isFading = true;
-		SettingFrame.FadeIn:Stop();
-		if not SettingFrame:IsMouseOver() then
-			SettingFrame:SetAlpha(0);
-		end
 		After(1, function()
-			if SettingFrame:GetAlpha() == 0 then
-				SettingFrame.FadeIn:Play();
-			else
-				SettingFrame.isFading = nil;
-			end
-		end)
+			SettingFrame:FadeIn(0.5);
+		end);
 	end
 end
 
@@ -491,60 +480,9 @@ local function rotateTexture(tex, Degree)
 	tex.ag = ag;
 end
 
-local function RGB2HSV(r, g, b)
-	local floor = math.floor;
-	local Cmax = max(r, g, b);
-	local Cmin = min(r, g, b);
-	local dif = Cmax - Cmin;
-	local Hue = 0;
-	local Brightness = floor(100*(Cmax / 255) + 0.5)/100;
-	local Stauration = 0;
-	if Cmax ~= 0 then Stauration = floor(100*(dif / Cmax)+0.5)/100; end;
-
-	if dif ~= 0 then
-		if r == Cmax and g >= b then
-			Hue = (g - b) / dif + 0;
-		elseif r == Cmax and g < b then
-			Hue = (g - b) / dif + 6;
-		elseif g == Cmax then
-			Hue = (b - r) / dif + 2;
-		elseif b == Cmax then
-			Hue = (r - g) / dif + 4;
-		end
-	end
-	--print(60*Hue.."° "..Stauration.."% "..(100 * Brightness).."%")
-	return floor(60*Hue + 0.5), Stauration, Brightness
-end
-
-local function RGBRatio2HSV(r, g, b)
-	return RGB2HSV(255 * r, 255 * g, 255 * b)
-end
-
-local function HSV2RGB(h, s, v)
-	local floor = math.floor;
-	local Cmax = 255 * v;
-	local Cmin = Cmax * (1 - s);
-	local i = floor(h / 60);
-	local dif = h % 60;
-	local Cmid = (Cmax - Cmin) * dif / 60
-	local r, g, b
-	if i == 0 then
-		r, g, b = Cmax, Cmin + Cmid, Cmin;
-	elseif i == 1 then
-		r, g, b = Cmax - Cmid, Cmax, Cmin;
-	elseif i == 2 then
-		r, g, b = Cmin, Cmax, Cmin + Cmid;
-	elseif i == 3 then
-		r, g, b = Cmin, Cmax - Cmid, Cmax;
-	elseif i == 4 then
-		r, g, b = Cmin + Cmid, Cmin, Cmax;
-	else
-		r, g, b = Cmax, Cmin, Cmax - Cmid;
-	end
-
-	r, g, b = floor(r + 0.5)/255, floor(g + 0.5)/255, floor(b + 0.5)/255;
-	return r, g, b
-end
+local RGB2HSV = NarciAPI.RGB2HSV;
+local RGBRatio2HSV = NarciAPI.RGBRatio2HSV;
+local HSV2RGB = NarciAPI.HSV2RGB;
 
 local LightControl = {};
 LightControl.ambientMode = false;
@@ -783,7 +721,7 @@ end
 local hasSetLight = false;
 
 local _, _, classID = UnitClass("player");
-local EntranceAnimation = Narci.Narci_ClassEntrance[classID];	
+local EntranceAnimation = Narci.ClassEntranceVisuals[classID];	
 PMAI:SetScript("OnShow", function(self)		--PlayerModelAnimIn
 	local model = PrimaryPlayerModel;
 	model:RefreshUnit();
@@ -836,7 +774,7 @@ PMAI:SetScript("OnShow", function(self)		--PlayerModelAnimIn
 	model:SetModelAlpha(1);
 	model.isVirtual = false;
 	model:ResetCameraPosition();
-	FadeFrame(Narci_ModelContainer, 0.6, "Forced_IN");
+	FadeIn(Narci_ModelContainer, 0.6);
 
 	if not hasSetLight then		--You cannot set light color/intensity unless the model is visible
 		BasicPanel.ColorPresets.Color1:Click();
@@ -919,7 +857,7 @@ PMAO:SetScript("OnShow", function(self)
 	self.Facing = PrimaryPlayerModel:GetFacing();
 	local _;
 	_, self.PosY, self.PosZ = PrimaryPlayerModel:GetPosition();
-	FadeFrame(SettingFrame, 0.4, "OUT")
+	FadeFrame(SettingFrame, 0.4, 0)
 	HideAllModels();
 end)
 
@@ -937,13 +875,13 @@ end);
 function Narci_Xmog_UseCompactMode(state)
 	local frame = PrimaryPlayerModel;
 	if state then
-		FadeFrame(frame.GuideFrame, 0.5, "IN");
+		FadeFrame(frame.GuideFrame, 0.5, 1);
 		Narci_PlayerModelGuideFrame.VignetteRightSmall:Show();
 		UIFrameFadeOut(NarciModel_RightGradient, 0.5, NarciModel_RightGradient:GetAlpha(), 0)
 	else
-		FadeFrame(frame.GuideFrame, 0.5, "OUT");
+		FadeFrame(frame.GuideFrame, 0.5, 0);
 		if PrimaryPlayerModel.xmogMode == 2 and Narci_Character:IsShown() then
-			UIFrameFadeIn(NarciModel_RightGradient, 0.5, NarciModel_RightGradient:GetAlpha(), 1)
+			FadeFrame(NarciModel_RightGradient, 0.5, 1)
 		end
 	end
 end
@@ -1044,10 +982,10 @@ local function Narci_ShowChromaKey(state)
 	local frame = FullSceenChromaKey;
 
 	if state then
-		FadeFrame(frame, 0.25, "IN");
+		FadeFrame(frame, 0.25, 1);
 		Narci_Character:SetShown(false);
 	else
-		FadeFrame(frame, 0.5, "OUT");
+		FadeFrame(frame, 0.5, 0);
 		if Narci_SlotLayerButton.IsOn then
 			Narci_Character:SetShown(true);
 		end
@@ -1189,26 +1127,17 @@ local function LayerButton_OnClick(self)
 	HighlightButton(self, self.IsOn);
 end
 
-local function HideVignette()
-	local state = Narci_VignetteLeft:IsShown()
-	Narci_VignetteLeft:SetShown(not state);
-	VignetteRightSmall:SetShown(not state);
-	if PrimaryPlayerModel.xmogMode == 2 and not state then
-		VignetteRightLarge:SetShown(true);
-	end
-end
-
 local function SlotLayerButton_OnClick(self)
 	LayerButton_OnClick(self);
 	--Narci_Character:SetShown(self.IsOn);
 	if self.IsOn then
 		if PrimaryPlayerModel.xmogMode == 2 then
-			FadeFrame(NarciModel_RightGradient, 0.25, "IN");
+			FadeFrame(NarciModel_RightGradient, 0.25, 1);
 		end
-		FadeFrame(Narci_Character, 0.25, "IN");
+		FadeFrame(Narci_Character, 0.25, 1);
 	else
-		FadeFrame(NarciModel_RightGradient, 0.25, "OUT");
-		FadeFrame(Narci_Character, 0.25, "OUT");
+		FadeFrame(NarciModel_RightGradient, 0.25, 0);
+		FadeFrame(Narci_Character, 0.25, 0);
 	end
 end
 
@@ -1241,9 +1170,9 @@ local function SetTextAlphaLayerButtonVisual(self)
 	ChangeHighlight(self);
 
 	if self.IsOn then
-		FadeFrame(FullScreenAlphaChannel, 0.5, "IN");
+		FadeFrame(FullScreenAlphaChannel, 0.5, 1);
 	else
-		FadeFrame(FullScreenAlphaChannel, 0.5, "OUT");
+		FadeFrame(FullScreenAlphaChannel, 0.5, 0);
 		local SlotLayerButton = self:GetParent();
 		SlotLayerButton.IsOn = true;
 		SlotLayerButton:LockHighlight();
@@ -1566,8 +1495,8 @@ function Narci_Model_VignetteSlider_OnValueChanged(self, value, isUserInput)
     if value ~= self.oldValue then
 		self.oldValue = value
 		Narci_VignetteLeft:SetAlpha(value);
-		VignetteRightLarge:SetAlpha(value);
-		VignetteRightSmall:SetAlpha(value);
+		Narci_VignetteRightLarge:SetAlpha(value);
+		Narci_VignetteRightSmall:SetAlpha(value);
 		Narci_PlayerModelGuideFrame.VignetteRightSmall:SetAlpha(value);
     end
 end
@@ -1836,8 +1765,8 @@ function Narci_Model_CaptureButton_OnClick(self)
 	tooltip:Hide();
 	Narci_Character:Hide();
 	Narci_VignetteLeft:SetAlpha(0);
-	VignetteRightSmall:SetAlpha(0);
-	LayersToBeCaptured = 6;
+	Narci_VignetteRightSmall:SetAlpha(0);
+	LayersToBeCaptured = NUM_CAPTURE;
 	Screenshot();
 end
 
@@ -1981,7 +1910,7 @@ end
 
 function NarciAnimationIDEditboxMixin:OnEnter()
 	self.Timer:Stop();
-	UIFrameFadeIn(self.Highlight, 0.2, self.Highlight:GetAlpha(), 1);
+	FadeFrame(self.Highlight, 0.2, 1);
 	self.IDFrame:Show();
 	self.MouseButton:ShowTooltip();
 end
@@ -2270,8 +2199,8 @@ function NarciModelControl_ColorPaneSwitch_OnClick(self)
 	if not self.ShowSlider then
 		--Presets
 		self.tooltip = L["Show Color Sliders"];
-		FadeFrame(Sliders, 0.1, "OUT");
-		FadeFrame(Colors, 0.1, "IN");
+		FadeFrame(Sliders, 0.1, 0);
+		FadeFrame(Colors, 0.1, 1);
 		self.Icon:SetTexCoord(0, 0.25, 0.25, 0.5);
 		self:GetParent():SetHitRectInsets(-60, -60, -60, -60);
 		CPSA:Hide();
@@ -2281,8 +2210,8 @@ function NarciModelControl_ColorPaneSwitch_OnClick(self)
 		--Sliders
 		self.tooltip = L["Show Color Presets"];
 		local ExtraHeight = 12;
-		FadeFrame(Sliders, 0.1, "IN");
-		FadeFrame(Colors, 0.1, "OUT");
+		FadeFrame(Sliders, 0.1, 1);
+		FadeFrame(Colors, 0.1, 0);
 		self.Icon:SetTexCoord(0.75, 1, 0, 0.25);
 		self:GetParent().padding = ExtraHeight + 40;
 		CPSA:Hide();
@@ -2570,25 +2499,6 @@ local function ExitGroupPhoto()
 	ModelFrames[1] = PrimaryPlayerModel;
 end
 
-function Narci_ModelSettings_OnHide(self)
-	self:SetAlpha(0);
-	ResetIndexButton();
-	ExitGroupPhoto();
-	RestorePlayerInfo(1);
-	self:ClearAllPoints();
-	self:SetPoint("BOTTOM", Narci_VirtualLineRightCenter, "BOTTOM", 0 , 4);
-	self:SetUserPlaced(false);
-	self:UnregisterEvent("MODIFIER_STATE_CHANGED");
-
-	FullSceenChromaKey:Hide();
-	FullSceenChromaKey:SetAlpha(0);
-	Narci_BackgroundDarkness:Hide();
-	Narci_BackgroundDarkness:SetAlpha(0);
-	NarciTextOverlayContainer:HideAllWidgets();
-	
-	self.isFading = nil;
-end
-
 local function ShowIndexButtonLabel(self, bool)
 	self.Label:SetShown(bool);
 	self.Status:SetShown(bool);
@@ -2816,7 +2726,7 @@ function Narci_ModelIndexButton_OnClick(self, button)
 
 	--PopUp Frame
 	local PopUp = self:GetParent().PopUp;
-	FadeFrame(PopUp, 0.15, "OUT");
+	FadeFrame(PopUp, 0.15, 0);
 end
 
 ----------------------------------------------------------------------
@@ -3309,14 +3219,14 @@ function Narci_ModelIndexButton_AddSelf(self)
 	local PopUp = self:GetParent();
 	local index = PopUp.Index;
 	CreateAndSelectNewActor(index, "player", false);
-	FadeFrame(PopUp, 0.15, "OUT");
+	FadeFrame(PopUp, 0.15, 0);
 end
 
 function Narci_ModelIndexButton_AddVirtual(self)
 	local PopUp = self:GetParent();
 	local index = PopUp.Index;
 	CreateAndSelectNewActor(index, "player", true);
-	FadeFrame(PopUp, 0.15, "OUT");
+	FadeFrame(PopUp, 0.15, 0);
 end
 
 function Narci_ModelIndexButton_OnEnter(self)
@@ -3346,7 +3256,7 @@ function Narci_ModelIndexButton_OnEnter(self)
 			PopUp.parent = self;
 			PopUp.Index = self:GetID();
 			PopUp:SetPoint("CENTER", self, "CENTER", 0, 16);
-			FadeFrame(PopUp, 0.15, "IN");
+			FadeFrame(PopUp, 0.15, 1);
 		end
 	end
 end
@@ -3378,7 +3288,7 @@ function Narci_ModelIndexButton_OnLeave(self)
 	NarciTooltip:FadeOut();
 	local PopUp = self:GetParent().PopUp;
 	if not PopUp:IsMouseOver() then
-		FadeFrame(PopUp, 0.15, "OUT");
+		FadeFrame(PopUp, 0.15, 0);
 	end
 end
 
@@ -3831,10 +3741,10 @@ function Narci_ActorButton_OnClick(self)
 	if self.IsOn then
 		self:LockHighlight();
 		AutoCloseRaceOption(4);
-		FadeFrame(Narci_RaceOptionFrame, 0.2, "IN");
+		FadeFrame(Narci_RaceOptionFrame, 0.2, 1);
 	else
 		self:UnlockHighlight();
-		FadeFrame(Narci_RaceOptionFrame, 0.2, "OUT");
+		FadeFrame(Narci_RaceOptionFrame, 0.2, 0);
 	end
 
 	NarciTooltip:JustHide();
@@ -3847,22 +3757,6 @@ local function HideGroundShadowControl()
 		if model then
 			model.GroundShadow.Option:Hide();
 		end
-	end
-end
-
-function Narci_ModelSettings_OnLoad(self)
-	SettingFrame = self;
-	BasicPanel = self.BasicPanel;
-	self:RegisterForDrag("LeftButton");
-end
-
-function Narci_ModelSettings_OnEnter(self)
-	if IsMouseButtonDown() then return end;
-	
-	HideGroundShadowControl();
-	Narci_PhotoModeToolbar:SetAlpha(0);
-	if not self.isFading then
-		UIFrameFadeIn(self, 0.2, self:GetAlpha(), 1);
 	end
 end
 
@@ -4003,7 +3897,7 @@ end
 local function CacheModel()
 	local model = PrimaryPlayerModel;
 	model:SetUnit("player");
-	UIFrameFadeIn(model, 0.4, 0.01, 0);
+	model:SetAlpha(0);
 	model:Show();
 	model:SetPosition(0, -1000, -2200)
 	model:EnableMouse(false)
@@ -4051,7 +3945,7 @@ local function AnimationSequence_OnUpdate(self, elapsed)
 		self.last = 0;
 		self.Index = self.Index + 1;
 		if self.Index == 20 then
-			UIFrameFadeIn(ActorPanel.ExtraPanel, 0.0833, 0, 1);
+			FadeIn(ActorPanel.ExtraPanel, 0.0833, 1);
 		elseif self.Index == 26 then
 			ActorPanel.ExtraPanel.buttons[1]:SetAlpha(1);
 		end
@@ -4101,15 +3995,13 @@ ExpandAnim:SetScript("OnUpdate", function(self, elapsed)
 end)
 
 
-function Narci_ActorPanelExpandButton_OnClick(self)
+function Narci_GroupPhotoToggle_OnClick(self)
 	ResetIndexButton();
-	--FadeFrame(self, 0.25, "OUT");
-	--FadeFrame(self:GetParent().ExtraPanel, 0.2, "Forced_IN");
 	self:GetParent().Animation:SetAlpha(1);
 	PanelAnim:Show();
 	local ExtraPanel = ActorPanel.ExtraPanel;
 	ActorPanel.ActorButton.ActorName:SetWidth(120);
-	FadeFrame(ActorPanel.NameFrame.HiddenFrames, 0.5, "Forced_IN");
+	FadeIn(ActorPanel.NameFrame.HiddenFrames, 0.5);
 	ExtraPanel:SetAlpha(0);
 	ExtraPanel.buttons[1]:SetAlpha(0);
 	ExpandAnim:Show();
@@ -4123,6 +4015,8 @@ function Narci_ActorPanelExpandButton_OnClick(self)
 	end
 
 	Narci.showExitConfirm = true;
+
+	Narci_NPCBrowser:Init();
 end
 
 
@@ -4242,10 +4136,61 @@ function NarciShadowRotationMixin:OnMouseUp()
 end
 
 ----------------------------------------------------
+NarciModelSettingsMixin = {};
+
+function NarciModelSettingsMixin:OnLoad()
+	SettingFrame = self;
+	BasicPanel = self.BasicPanel;
+	self:RegisterForDrag("LeftButton");
+	NarciAPI_CreateFadingFrame(self);
+end
+
+function NarciModelSettingsMixin:OnEnter()
+	if IsMouseButtonDown() then return end;
+	
+	HideGroundShadowControl();
+	Narci_PhotoModeToolbar:SetAlpha(0);
+	self:FadeIn(0.15);
+end
+
+function NarciModelSettingsMixin:OnLeave()
+	if self:IsMouseOver(24, -24, -36, 24) or Narci_SpellVisualBrowser:IsMouseOver(0, 0, 0, 0) or Narci_TextOverlay:IsMouseOver(0, 0, 0, 0) or IsMouseButtonDown() then return end;
+	self:FadeOut(0.2);
+end
+
+function NarciModelSettingsMixin:OnHide()
+	self:SetAlpha(0);
+	ResetIndexButton();
+	ExitGroupPhoto();
+	RestorePlayerInfo(1);
+	self:ClearAllPoints();
+	self:SetPoint("BOTTOM", Narci_VirtualLineRightCenter, "BOTTOM", 0 , 4);
+	self:SetUserPlaced(false);
+	self:UnregisterEvent("MODIFIER_STATE_CHANGED");
+
+	FullSceenChromaKey:Hide();
+	FullSceenChromaKey:SetAlpha(0);
+	Narci_BackgroundDarkness:Hide();
+	Narci_BackgroundDarkness:SetAlpha(0);
+	NarciTextOverlayContainer:HideAllWidgets();
+	Narci_ColorPicker:Hide();
+end
+
+
+
+function NarciModelSettingsMixin:OnDragStart()
+	self:StartMoving();
+end
+
+function NarciModelSettingsMixin:OnDragStop()
+	self:StopMovingOrSizing();
+end
+
+----------------------------------------------------
 local function InitializeScripts()
 	local CaptureButton = Narci_Model_CaptureButton;
 	CaptureButton.tooltip = {L["Save Layers"], L["Save Layers Tooltip"]};
-	CaptureButton.GuideIndex = NUM_CAPTURE;
+	CaptureButton.guideIndex = 6;
 end
 
 local ScreenshotListener = CreateFrame("Frame");

@@ -169,8 +169,8 @@ function NPC:SetBackground(kit)
 			overlay:SetSize(atlasInfo.width, atlasInfo.height)
 			overlay:SetTexture(atlasInfo.file)
 			overlay:SetTexCoord(
-				atlasInfo.leftTexCoord, atlasInfo.rightTexCoord + 0.035,
-				atlasInfo.topTexCoord, atlasInfo.bottomTexCoord + 0.035)
+				atlasInfo.leftTexCoord, atlasInfo.rightTexCoord,-- + 0.035,
+				atlasInfo.topTexCoord, atlasInfo.bottomTexCoord)-- + 0.035)
 			return
 		end
 	end

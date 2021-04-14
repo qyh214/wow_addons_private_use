@@ -477,12 +477,12 @@
 
 	<Frame name="Narci_AttributeTemplate" virtual="true" inherits="NarciAttributeSharedTemplate">
 		<Size>
-			<AbsDimension x="250" y="24"/>
+			<AbsDimension x="240" y="24"/>
 		</Size>
 		<Layers>
 			<Layer level="OVERLAY">
 				<Texture setAllPoints="true" parentKey="Color1">
-					<Size x="124.5" y="24" />
+					<Size x="120" y="24" />
 					<Color r="0.06" g="0.627" b="0.537" a="1"/>
 					<Anchors>
 						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="CENTER"  x="0" y="0"/>
@@ -493,7 +493,7 @@
 					</Gradient>
 				</Texture>
 				<Texture setAllPoints="true" parentKey="Color2">
-					<Size x="124.5" y="24" />
+					<Size x="120" y="24" />
 					<Color r="0.06" g="0.627" b="0.537" a="1"/>
 					<Anchors>
 						<Anchor point="LEFT" relativeKey="$parent" relativePoint="CENTER"  x="0" y="0"/>
@@ -508,7 +508,7 @@
 					<Size x="0" y="0"/>
 					<Color r="0.92" g="0.92" b="0.92"/>
 					<Anchors>
-						<Anchor point="LEFT" relativeKey="$parent.GL" relativePoint="LEFT" x="15" y="0"/>
+						<Anchor point="LEFT" relativeKey="$parent.GL" relativePoint="LEFT" x="12" y="0"/>
 					</Anchors>
 				</FontString>
 
@@ -516,7 +516,7 @@
 					<Size x="0" y="0"/>
 					<Color r="0.92" g="0.92" b="0.92"/>
 					<Anchors>
-						<Anchor point="RIGHT" relativeKey="$parent.GR" relativePoint="RIGHT" x="-15" y="0"/>
+						<Anchor point="RIGHT" relativeKey="$parent.GR" relativePoint="RIGHT" x="-12" y="0"/>
 					</Anchors>
 				</FontString>
 
@@ -524,7 +524,7 @@
 					<Size x="0" y="0"/>
 					<Color r="0.92" g="0.92" b="0.92"/>
 					<Anchors>
-						<Anchor point="RIGHT" relativeKey="$parent.Color" relativePoint="RIGHT" x="-10" y="0"/>
+						<Anchor point="RIGHT" relativeKey="$parent.Color" relativePoint="RIGHT" x="-12" y="0"/>
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -550,7 +550,7 @@
 			<OnEnter>
 				Narci_ShowStatTooltip(self);
 			</OnEnter>
-			<OnShow function="Pref_SetBackgroundColor"/>
+			<OnShow function="Narci_AttributeFrame_UpdateBackgroundColor"/>
 			<OnLeave>
 				Narci:HideButtonTooltip();
 			</OnLeave>
@@ -605,7 +605,7 @@
 			<OnLeave>
 				Narci:HideButtonTooltip();
 			</OnLeave>
-			<OnShow function="Pref_SetBackgroundColor"/>
+			<OnShow function="Narci_AttributeFrame_UpdateBackgroundColor"/>
         </Scripts>
 	</Frame>
 
@@ -690,7 +690,7 @@
 				Narci:HideButtonTooltip();
 				self:GetParent():SetVerticeSize(self, 12);
 			</OnLeave>
-			<OnShow function="Pref_SetBackgroundColor"/>
+			<OnShow function="Narci_AttributeFrame_UpdateBackgroundColor"/>
         </Scripts>
 	</Frame>
 
@@ -772,7 +772,7 @@
 				Narci:HideButtonTooltip();
 				self:GetParent():SetVerticeSize(self, 12);
 			</OnLeave>
-			<OnShow function="Pref_SetBackgroundColor"/>
+			<OnShow function="Narci_AttributeFrame_UpdateBackgroundColor"/>
         </Scripts>
 	</Frame>
 
@@ -974,10 +974,11 @@
 									overlay:SetAlpha(1);
 								</OnPlay>
 								<OnFinished>
-									local overlay = self:GetParent():GetParent().IconOverlay;
-									self:GetParent():SetAlpha(0)
-									self:GetParent():SetTexture(overlay:GetTexture());
-									self:GetParent():SetAlpha(1)
+									local tex = self:GetParent();
+									local overlay = tex:GetParent().IconOverlay;
+									tex:SetAlpha(0)
+									tex:SetTexture(overlay:GetTexture());
+									tex:SetAlpha(1)
 									overlay:SetAlpha(0);
 									overlay:Hide();
 								</OnFinished>
@@ -1056,7 +1057,7 @@
 				</Texture>
 			</Layer>
 			<Layer level="OVERLAY">
-				<MaskTexture parentKey="HexMask" file="Interface\AddOns\Narcissus\Art\Border\HexagonMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE" nounload="true">
+				<MaskTexture parentKey="IconMask" file="Interface\AddOns\Narcissus\Art\Border\HexagonMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE" nounload="true">
 					<Size>
 						<AbsDimension x="60" y="60"/>
 					</Size>
@@ -1360,8 +1361,6 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame parentKey="RightLineAnimFrame" inherits="NarciAnimContainerFrame"/>		
-				
 			<Frame name="Narci_VirtualLineLeft" parentKey="VirtualLineLeft">
 				<Size>
 					<AbsDimension x="1" y="1"/>
@@ -1416,7 +1415,7 @@
 				</Frames>
 			</Frame>
 
-			<Frame name="Narci_VirtualLineCenter" parentKey="VirtualLineCenter"  hidden="true" setAllPoints="true">
+			<Frame name="Narci_VirtualLineCenter" parentKey="VirtualLineCenter" hidden="true" setAllPoints="true">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="Narci_VirtualLineLeft" relativePoint="TOPLEFT" x="0" y="0"/>
 					<Anchor point="BOTTOMRIGHT" relativeTo="Narci_VirtualLineRight" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
@@ -1433,7 +1432,7 @@
 					</Layer>
 				</Layers>
 			</Frame>
-			<Frame name="Narci_VirtualLineRightCenter" parentKey="VirtualLineRightCenter"  hidden="false" setAllPoints="true">
+			<Frame name="Narci_VirtualLineRightCenter" parentKey="VirtualLineRightCenter" hidden="false" setAllPoints="true">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="Narci_VirtualLineRight" relativePoint="TOPLEFT" x="0" y="0"/>
 					<Anchor point="BOTTOMRIGHT" />
@@ -1480,7 +1479,7 @@
 			</Anchors>
 		</PushedTexture>
 		<Scripts>
-			<OnLoad function="ControllerButtonTemplate_OnLoad"/>
+			<OnLoad function="Narci_PhotoModeButton_OnLoad"/>
 			<OnMouseDown>
 				NarciTooltip:FadeOut();
 				if self.Pushed and self.Icon then
@@ -1641,7 +1640,7 @@
 					</Layer>
 				</Layers>
 				<Scripts>
-					<OnLoad function="ControllerButtonTemplate_OnLoad"/>
+					<OnLoad function="Narci_PhotoModeButton_OnLoad"/>
 					<OnEnter>
 						self.Icon:SetTexCoord(0.25, 0.5, 0.75, 1);
 						if not CameraZoomController_DraggingFrame:IsShown() then
@@ -1656,7 +1655,12 @@
 						NarciTooltip:FadeOut();
 					</OnLeave>
 					<OnClick function="Narci_PhotoModeButton_OnClick"/>
-
+					<OnMouseDown>
+						self.Icon:SetSize(74, 74);
+					</OnMouseDown>
+					<OnMouseUp>
+						self.Icon:SetSize(80, 80);
+					</OnMouseUp>
 				</Scripts>
 			</Button>
 
@@ -1902,7 +1906,6 @@
 									</OnLoad>
 									<OnHide>
 										self.TimeSinceLastUpdate = 0;
-										--self.OppoDirection = not self.OppoDirection;
 									</OnHide>
 									<OnUpdate function="CameraControlBar_ResetPosition_AnimFrame_OnUpdate"/>
 								</Scripts>
@@ -1943,7 +1946,7 @@
 						<Layers>
 						</Layers>
 						<Scripts>
-							<OnClick function="XmogButton_OnClick"/>
+							<OnClick function="Narci_XmogButton_OnClick"/>
 							<OnEnter>
 								self.enableSFX = true;
 								self.Icon:SetTexCoord(0.5, 1, 0, 1);
@@ -2950,20 +2953,26 @@
 		<Scripts>
 			<OnShow>
 				self:StopAnimating();
+				self:RegisterEvent("PLAYER_REGEN_DISABLED");
 			</OnShow>
 			<OnHide>
 				self:Hide();
-				Narci_FlyoutBlack:SetAlpha(0)
+				self:SetAlpha(0);
+				Narci_FlyoutBlack:SetAlpha(0);
 				Narci_FlyoutBlack.AnimFrame.OppoDirection = false;
 				self:StopAnimating();
+				self:UnregisterEvent("PLAYER_REGEN_DISABLED");
 			</OnHide>
+			<OnEvent>
+				self:Hide();
+			</OnEvent>
 		</Scripts>
 	</Frame>
 
 	<Frame name="Narci_Attribute" hidden="true" frameStrata="MEDIUM" frameLevel="8">
         <Anchors>
 			<Anchor point="BOTTOMRIGHT" relativeTo="Narci_GuideLineFrame" relativePoint="BOTTOMRIGHT"/>
-			<Anchor point="TOPLEFT" relativeTo="Narci_VirtualLineRight" relativePoint="CENTER" y="292"/>
+			<Anchor point="TOPLEFT" relativeTo="Narci_VirtualLineRight" relativePoint="CENTER" y="302"/>
         </Anchors>
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -3058,6 +3067,9 @@
 										<Anchor point="CENTER" x="0" y="0"/>
 									</Anchors>
 								</ButtonText>
+								<PushedTextOffset>
+									<AbsDimension x="0.8" y="-0.8"/>
+								</PushedTextOffset>
 								<Layers>
 									<Layer level="BACKGROUND" textureSubLevel="10">
 										<Texture parentKey="Background" setAllPoints="true">
@@ -3171,13 +3183,7 @@
 							<Anchor point="CENTER" relativeKey="$parent" x="0" y="0"/>
 						</Anchors>
 						<Layers>					
-							<Layer level="ARTWORK">
-								<Texture parentKey="Background" hidden="false" file="Interface\AddOns\Narcissus\Art\Solid\Purple">
-									<Size x="80" y="80"/>
-									<Anchors>
-										<Anchor point="CENTER" relativeKey="$parent" x="0" y="0"/>
-									</Anchors>
-								</Texture>
+							<Layer level="ARTWORK" textureSubLevel="3">
 								<Texture parentKey="Reference">
 									<Size x="80" y="80"/>
 									<Anchors>
@@ -3215,7 +3221,23 @@
 									</MaskedTextures>
 								</MaskTexture>
 							</Layer>
-							<Layer level="BACKGROUND" textureSubLevel="3">
+							<Layer level="BACKGROUND" textureSubLevel="-1">
+								<Texture file="Interface\AddOns\Narcissus\Art\Widgets\ItemLevel\HexagonBackground">
+									<Size x="80" y="80"/>
+									<Anchors>
+										<Anchor point="CENTER" relativeKey="$parent" x="0" y="0"/>
+									</Anchors>
+								</Texture>
+							</Layer>
+							<Layer level="ARTWORK" textureSubLevel="1">
+								<Texture parentKey="Background" hidden="false" file="Interface\AddOns\Narcissus\Art\Solid\Purple">
+									<Size x="80" y="80"/>
+									<Anchors>
+										<Anchor point="CENTER" relativeKey="$parent" x="0" y="0"/>
+									</Anchors>
+								</Texture>
+							</Layer>
+							<Layer level="ARTWORK" textureSubLevel="2">
 								<Texture file="Interface\AddOns\Narcissus\Art\Widgets\ItemLevel\HexagonTube">
 									<TexCoords left="0.5625" right="1" top="0" bottom="0.55859375"/>
 									<Size x="81" y="102"/>
@@ -3447,6 +3469,7 @@
 					<OnLoad method="OnLoad"/>
 				</Scripts>	
 			</Frame>
+			
 			<Frame name="Narci_DetailedStatFrame" setAllPoints="true" hidden="false" Alpha="0" parentKey="DetailedStatFrame">
 				<Frames>
 					<Frame inherits="Narci_DetailedAttributeTemplateLeft" parentKey="Primary" id="1" hidden="false">
@@ -3454,7 +3477,7 @@
 							<KeyValue key="token" value="Primary" type="string"/>
 						</KeyValues>
 						<Anchors>
-							<Anchor point="TOPRIGHT" relativeKey="$parent.$parent.ItemLevelFrame.Background" relativePoint="BOTTOM" x="0" y="-24"/>
+							<Anchor point="TOPRIGHT" relativeKey="$parent.$parent.ItemLevelFrame" relativePoint="BOTTOM" x="0" y="-98"/>
 						</Anchors>	
 					</Frame>
 					<Frame inherits="Narci_DetailedAttributeTemplateLeft" parentKey="Stamina" id="2" hidden="false">
@@ -3774,6 +3797,31 @@
 							<Anchor point="TOP" relativeKey="$parent.Mastery" relativePoint="BOTTOM" x="0" y="0"/>
 						</Anchors>
 					</Frame>
+
+					<Frame inherits="Narci_DetailedAttributeTemplateLeft" parentKey="Primary" hidden="true" Alpha="0" id="0" useParentLevel="true">
+						<KeyValues>
+							<KeyValue key="token" value="Primary" type="string"/>
+						</KeyValues>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.Haste" relativePoint="BOTTOMLEFT" x="0" y="0"/>
+						</Anchors>
+						<Scripts>
+							<OnShow>
+							</OnShow>
+						</Scripts>
+					</Frame>
+					<Frame inherits="Narci_DetailedAttributeTemplateRight" parentKey="Health" hidden="true" Alpha="0" id="0" useParentLevel="true">
+						<KeyValues>
+							<KeyValue key="token" value="Health" type="string"/>
+						</KeyValues>
+						<Anchors>
+							<Anchor point="LEFT" relativeKey="$parent.Primary" relativePoint="RIGHT"  x="0" y="0"/>
+						</Anchors>
+						<Scripts>
+							<OnShow>
+							</OnShow>
+						</Scripts>
+					</Frame>
 				</Frames>
 				<Animations>
 					<AnimationGroup parentKey="animIn" smoothing="OUT">
@@ -3899,7 +3947,7 @@
 							<KeyValue key="token" value="Primary" type="string"/>
 						</KeyValues>
 						<Anchors>
-							<Anchor point="TOP" relativeKey="$parent.$parent.DetailedStatFrame.Primary" relativePoint="TOPRIGHT"  x="0" y="0"/>
+							<Anchor point="TOP" relativeKey="$parent.$parent.ItemLevelFrame" relativePoint="BOTTOM"  x="0" y="-98"/>
 						</Anchors>
 					</Frame>
 					<Frame inherits="Narci_AttributeTemplate" parentKey="Stamina" id="2" hidden="false">
@@ -4057,7 +4105,7 @@
 	<Frame name="Narci_Vignette" setAllPoints="true" hidden="true" Alpha="0" parentKey="Narci_Vignette" frameStrata="BACKGROUND" alphaMode="ADD">
 		<Layers>
 			<Layer level="OVERLAY">
-				<Texture name="VignetteRightLarge" parentKey="VignetteRight" file="Interface\AddOns\Narcissus\Art\Vignetting\Vignetting-Right"><!--182-->
+				<Texture name="Narci_VignetteRightLarge" parentKey="VignetteRight" file="Interface\AddOns\Narcissus\Art\Vignetting\Vignetting-Right"><!--182-->
 					<!--TexCoords left="0" right="1" top="0" bottom="0.75"/-->
 					<Animations>
 						<AnimationGroup parentKey="animIn" smoothing="OUT">
@@ -4073,7 +4121,7 @@
 					</Animations>
 				</Texture>
 
-				<Texture name="VignetteRightSmall" parentKey="VignetteRightSmall" file="Interface\AddOns\Narcissus\Art\Vignetting\Vignetting-Left" Alpha="0" hidden="true">
+				<Texture name="Narci_VignetteRightSmall" parentKey="VignetteRightSmall" file="Interface\AddOns\Narcissus\Art\Vignetting\Vignetting-Left" Alpha="0" hidden="true">
 					<TexCoords left="1" right="0" top="0" bottom="1"/>
 					<Animations>
 						<AnimationGroup parentKey="animIn" smoothing="OUT">
@@ -4110,7 +4158,7 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame name="FullScreenFilterGrain" parentKey="Grain" setAllPoints="true" Alpha="0.8" hidden="true"> 
+			<Frame parentKey="Grain" setAllPoints="true" Alpha="0.8" hidden="true"> 
 				<Anchors>
 					<Anchor point="CENTER"/>
 				</Anchors>
@@ -4253,7 +4301,7 @@
 					</OnShow>
 				</Scripts>
 			</Frame>
-			<Frame name="FullScreenFilterGrain2" parentKey="Grain2" setAllPoints="true" Alpha="0.8" hidden="true"> 
+			<Frame parentKey="Grain2" setAllPoints="true" Alpha="0.8" hidden="true"> 
 				<Anchors>
 					<Anchor point="CENTER"/>
 				</Anchors>
@@ -4396,7 +4444,7 @@
 					</OnShow>
 				</Scripts>
 			</Frame>
-			<Frame name="FullScreenFilterGrainMask1" setAllPoints="true">
+			<Frame setAllPoints="true">
 				<Layers>
 					<Layer level="OVERLAY">
 						<MaskTexture parentKey="GrainMask" file="Interface\AddOns\Narcissus\Art\Vignetting\Linear-Left" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
@@ -4433,7 +4481,7 @@
 					</Layer>
 				</Layers>
 			</Frame>
-			<Frame name="FullScreenFilterGrainMask2" setAllPoints="true">
+			<Frame setAllPoints="true">
 				<Layers>
 					<Layer level="OVERLAY">
 						<MaskTexture parentKey="GrainMask" file="Interface\AddOns\Narcissus\Art\Vignetting\Linear-Right" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">

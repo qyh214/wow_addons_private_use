@@ -417,7 +417,7 @@ end
 
 local function createFilterFrame()
 	-- Changes for Patch 9.0.1 - Shadowlands, retail and classic
-	local win = CreateFrame("Frame", "WIM3_FilterFrame", _G.UIParent, isShadowlands and "BackdropTemplate");
+	local win = CreateFrame("Frame", "WIM3_FilterFrame", _G.UIParent, isTBC and "BackdropTemplate");
 
     win:Hide();
     win.filter = {};
@@ -432,7 +432,7 @@ local function createFilterFrame()
         tile = true, tileSize = 64, edgeSize = 64,
         insets = { left = 64, right = 64, top = 64, bottom = 64 }};
 
-	if not isShadowlands then
+	if not isTBC then
 		win:SetBackdrop(win.backdropInfo);
 	else
 		win:ApplyBackdrop();
@@ -625,7 +625,7 @@ local function createFilterFrame()
     options.AddFramedBackdrop(win.level);
 
 	-- Changes for Patch 9.0.1 - Shadowlands, retail and classic
-	win.level.slider = CreateFrame("Slider", win.level:GetName().."Slider", win.level, isShadowlands and "BackdropTemplate");
+	win.level.slider = CreateFrame("Slider", win.level:GetName().."Slider", win.level, isTBC and "BackdropTemplate");
 
     -- set backdrop - changes for Patch 9.0.1 - Shadowlands, retail and classic
     win.level.slider.backdropInfo = {bgFile = "Interface\\Buttons\\UI-SliderBar-Background",
@@ -633,7 +633,7 @@ local function createFilterFrame()
         tile = true, tileSize = 8, edgeSize = 8,
         insets = { left = 3, right = 3, top = 6, bottom = 6 }};
 
-	if not isShadowlands then
+	if not isTBC then
 		win.level.slider:SetBackdrop(win.level.slider.backdropInfo);
 	else
 		win.level.slider:ApplyBackdrop();

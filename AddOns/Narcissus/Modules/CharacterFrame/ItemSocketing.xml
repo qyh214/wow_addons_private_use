@@ -319,16 +319,12 @@
 		</Scripts>
 	</Button>
 
-	<Button name="Narci_OptionalGems_Template" inherits="Narci_GemButton_Template" virtual="true">
+	<Button name="Narci_OptionalGems_Template" inherits="Narci_GemButton_Template" virtual="true" mixin="NarciGemListButtonMixin">
 		<!--Used in Blizzard Item Socketing UI-->
 		<Scripts>
-			<OnEnter>
-				UIFrameFadeIn(self.Icon3, 0.2, self.Icon3:GetAlpha(), 0.35);
-			</OnEnter>
-			<OnLeave>
-				UIFrameFadeOut(self.Icon3, 0.3, self.Icon3:GetAlpha(), 0);
-			</OnLeave>
-			<OnClick function="Narci_OptionalGems_OnClick"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnClick method="InsertGem"/>
 		</Scripts>
 	</Button>
 
@@ -354,13 +350,13 @@
             </Layer>
         </Layers>
 		<Frames>
-        	<ScrollFrame name="$parent_ScrollFrame" parentKey="ScrollFrame">
+        	<ScrollFrame parentKey="ScrollFrame">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="0" y="-0.5"/>
                     <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="0" y="0.5"/>
                 </Anchors>
                 <ScrollChild>
-                    <Frame name="$parent_GemList" parentKey="scrollChild">
+                    <Frame parentKey="scrollChild">
 						<Size x="80" y="80"/>
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
@@ -412,11 +408,8 @@
 						</Layers>
                         <Scripts>
                             <OnValueChanged>
-                                HybridScrollFrame_SetOffset(self:GetParent(), value);
+                                self:GetParent():SetVerticalScroll(value);
                             </OnValueChanged>
-                            <OnShow>
-                                self:SetValueStep(0.01)
-                            </OnShow>
                         </Scripts>
                     </Slider>
                 </Frames>
@@ -424,22 +417,8 @@
                     <OnLoad function="Narci_ItemSocketing_ScrollFrame_OnLoad"/>
                 </Scripts>
 			</ScrollFrame>
-			<Frame inherits="NarciHeaderWithShadowTemplate" hidden="true">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="0" y="0"/>
-					<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
-				</Anchors>
-				<Scripts>
-					<OnLoad>
-						self.Text:SetText("Item Socketing");
-					</OnLoad>
-				</Scripts>			
-			</Frame>
 		</Frames>
         <Scripts>
-            <OnLoad>
-				
-            </OnLoad>
 			<OnEnter>
 				return;
 			</OnEnter>
@@ -449,7 +428,7 @@
 	<Frame name="Narci_ItemSocketing" inherits="Narci_ItemSocketing_Template">
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString inherits="NarciTooltipDescriptionFontRegularWhite" parentKey="Tooltip" Alpha="1">
+				<FontString inherits="NarciTooltipDescriptionFontRegularWhite" parentKey="Tooltip" Alpha="0">
 					<Anchors>
 						<Anchor point="BOTTOM" relativeKey="$parent" relativePoint="TOP" y="4"/>
 					</Anchors>
@@ -495,7 +474,7 @@
 			</OnShow>
 			<OnEvent>
 				if event == "SOCKET_INFO_SUCCESS" then
-					Narci_ItemSocketing_Succeed()
+					Narci_ItemSocketing_Succeed();
 					CloseSocketInfo();
 				elseif event == "SOCKET_INFO_FAILURE" then
 					CloseSocketInfo();
@@ -570,7 +549,6 @@
 									local root = self:GetParent():GetParent()
 									root.Bling:SetAlpha(1);
 									root.Bling.FadeOut:Play();
-									--root.GemBorder:SetTexture(root.ColorPath)
 									root.GemBorder:SetTexture(nil);
 									root.GemIcon:SetTexture(nil);
 								</OnPlay>
@@ -593,4 +571,19 @@
 			</OnHide>
 		</Scripts>		
 	</Frame>
+
+	<!--Frame name="KK" setAllPoints="true" frameStrata="LOW">
+		<Layers>
+			<Layer level="BACKGROUND" textureSubLevel="3">
+				<Texture setAllPoints="true" hidden="false" parentKey="Color">
+
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				self.Color:SetColorTexture(28/255, 32/255, 40/255);
+			</OnLoad>
+		</Scripts>
+	</Frame-->
 </Ui>

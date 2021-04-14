@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Freya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200530203003")
+mod:SetRevision("20210119194038")
 
 mod:SetCreatureID(32906)
 mod:SetEncounterID(1133)
@@ -140,7 +140,7 @@ end
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 33202 or cid == 32916 or cid == 32919 then
-		if self:AntiSpam(17, 1) and not self:IsTrivial(85) then
+		if self:AntiSpam(17, 1) and not self:IsTrivial() then
 			timerSimulKill:Start()
 			warnSimulKill:Show()
 		end

@@ -1,8 +1,8 @@
 local L = Narci.L;
---NARCI_NEW_ENTRY_PREFIX
+--NARCI_NEW_ENTRY_PREFIX..
 local TabNames = { 
-    L["Interface"], NARCI_NEW_ENTRY_PREFIX..L["Shortcuts"], L["Themes"], L["Effects"], NARCI_NEW_ENTRY_PREFIX..L["Camera"], L["Transmog"],
-    L["Photo Mode"], L["NPC"], L["Extensions"], 
+    L["Interface"], L["Shortcuts"], L["Themes"], L["Effects"], L["Camera"], L["Transmog"],
+    L["Photo Mode"], L["NPC"], NARCI_NEW_ENTRY_PREFIX..L["Soulbinds"], L["Extensions"],
 };  --Credits and About will be inserted later
 
 local FadeFrame = NarciAPI_FadeFrame;
@@ -32,6 +32,19 @@ if textLanguage == "enGB" then
     textLanguage = "enUS";
 end
 
+local function ShowChildButtons(parentButton, state)
+    if parentButton.childButtons then
+        if state then
+            for i = 1, #parentButton.childButtons do
+                FadeFrame(parentButton.childButtons[i], 0.2, "Forced_IN");
+            end
+        else
+            for i = 1, #parentButton.childButtons do
+                parentButton.childButtons[i]:Hide();
+            end
+        end
+    end
+end
 
 --Interface
 local function SetFrameScale(scale)
@@ -185,36 +198,24 @@ local function ShowDetailedIlvlInfo(self, state)
         FadeFrame(Narci_RadarChartFrame, 0.5, "OUT");
 		FadeFrame(Narci_ConciseStatFrame, 0.5, "IN");
 	end
+
+    Narci_NavBar:SetMaximizedMode(state);
 end
 
 
 --Shortcuts
+
 local function MinimapButtonSwitch_SetState(self, state)
     Narci_MinimapButton:SetShown(state);
     if state then
-        for i = 1, #self.childButtons do
-            FadeFrame(self.childButtons[i], 0.25, "Forced_IN");
-        end
         Narci_MinimapButton:PlayBling();
-    else
-        for i = 1, #self.childButtons do
-            self.childButtons[i]:Hide();
-        end
     end
+    ShowChildButtons(self, state);
 end
 
 local function MinimapButtonSwitch_OnShow(self)
     local state = Settings.ShowMinimapButton;
-    if state then
-        for i = 1, #self.childButtons do
-            self.childButtons[i]:Show();
-            self.childButtons[i]:SetAlpha(1);
-        end
-    else
-        for i = 1, #self.childButtons do
-            self.childButtons[i]:Hide();
-        end
-    end
+    ShowChildButtons(self, state);
 end
 
 local function ModulePanelSwitch_SetState(self, state)
@@ -476,14 +477,12 @@ local function VignetteStrengthSlider_OnValueChanged(self, value)
 end
 
 local function GrainEffectSwitch_SetState(self, state)
-	--FullScreenFilterGrain:SetShown(state);
-    --FullScreenFilterGrain2:SetShown(state);
     if state then
-        FadeFrame(FullScreenFilterGrain, 0.5, "IN");
-        FadeFrame(FullScreenFilterGrain2, 0.5, "IN");
+        FadeFrame(Narci_Vignette.Grain, 0.5, "IN");
+        FadeFrame(Narci_Vignette.Grain2, 0.5, "IN");
     else
-		FadeFrame(FullScreenFilterGrain, 0.5, "OUT");
-		FadeFrame(FullScreenFilterGrain2, 0.5, "OUT");
+		FadeFrame(Narci_Vignette.Grain, 0.5, "OUT");
+		FadeFrame(Narci_Vignette.Grain2, 0.5, "OUT");
     end
 end
 
@@ -557,9 +556,10 @@ local function LetterboxRatioSlider_OnValueChanged(self, value)
 end
 
 local function SmoothMusicVolume(state)
-    Narci_MusicInOut:Hide()
-    Narci_MusicInOut.State = state;
-    Narci_MusicInOut:Show()
+    local frame = Narci_MusicInOut;
+    frame:Hide()
+    frame.state = state;
+    frame:Show()
 end
 
 local function FadeMusicSwitch_SetState(self, state)
@@ -571,7 +571,7 @@ end
 
 --Camera
 local function CameraTransitionSwitch_SetState(self, state)
-    Narci.CameraContainer:SetBlend(state);
+    Narci.CameraMover:SetBlend(state);
     if state then
         self.Description:SetText(L["Camera Transition Description On"]);
     else
@@ -696,6 +696,12 @@ local function InteractiveAreaSlider_OnLoad(self)
     Narci_ModelInteractiveArea:Hide();
 end
 
+--Soulbinds & Conduits
+local function ConduitTooltipSwitch_SetState(self, state)
+    ShowChildButtons(self, state);
+    NarciAPI.EnableConduitTooltip(state);
+end
+
 local Structure = {
     {Category = "Interface", localizedName = L["Interface"], layout = {
         { name = "uiScale", type = "header", localizedName = UI_SCALE, },
@@ -745,7 +751,7 @@ local Structure = {
 
     {Category = "Camera", localizedName = L["Camera"], layout = {
         { name = "CameraMovementHeader", type = "header", localizedName = L["Camera Movement"], },
-        { name = "CameraTransition", type = "checkbox", localizedName = NARCI_NEW_ENTRY_PREFIX..L["Camera Transition"], description = L["Camera Transition Description Off"], valueFunc = CameraTransitionSwitch_SetState },
+        { name = "CameraTransition", type = "checkbox", localizedName = L["Camera Transition"], description = L["Camera Transition Description Off"], valueFunc = CameraTransitionSwitch_SetState },
         { name = "CameraOrbit", type = "checkbox", localizedName = L["Orbit Camera"], description = L["Orbit Camera Description On"], valueFunc = CameraOrbitSwitch_SetState },
         { name = "CameraSafeMode", type = "checkbox", localizedName = L["Camera Safe Mode"], description = "\n\n", valueFunc = CameraSafeSwitch_SetState, onShowFunc = CameraSafeSwitch_OnShow, },
         { name = "UseBustShot", type = "checkbox", localizedName = L["Use Bust Shot"], valueFunc = BustShotSwitch_SetState },
@@ -768,6 +774,11 @@ local Structure = {
         { name = "Space", type = "space", height = 32},
         { name = "ModelPanelScale", type = "slider", localizedName = L["Panel Scale"], minValue = 0.8, maxValue = 1, valueStep = 0.10, valueFunc = ModelPanelScaleSlider_OnValueChanged },
         { name = "ShrinkArea", type = "slider", localizedName = L["Interactive Area"], onLoadFunc = InteractiveAreaSlider_OnLoad },
+    }},
+
+    {Category = "Soulbinds", localizedName = L["Soulbinds"], layout = {
+        { name = "BlizzardUI", type = "header", localizedName = L["Blizzard UI"], },
+        { name = "ConduitTooltip", type = "checkbox", localizedName = L["Conduit Tooltip"], valueFunc = ConduitTooltipSwitch_SetState},
     }},
 };
 
@@ -860,7 +871,8 @@ local function CreateSettingFrame(tabContainer)
         end
     end
 
-    wipe(Structure)
+    wipe(Structure);
+    Structure = nil;
 end
 
 
@@ -1004,7 +1016,7 @@ local function AFKScreenSwitch_SetState(self)
     self.Tick:SetShown(state);
     if state then
         if IsAddOnLoaded("ElvUI") then
-            self.Description:SetText(L["AFK Screen Description Extra"].." "..L["AFK Screen Description Extra"]);
+            self.Description:SetText(L["AFK Screen Description"].." "..L["AFK Screen Description Extra"]);
             UnToggleElvUIAFK();
         else
             self.Description:SetText(L["AFK Screen Description"]);

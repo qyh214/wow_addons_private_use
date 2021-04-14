@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Shahraz", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142051")
+mod:SetRevision("20210119194113")
 mod:SetCreatureID(22947)
 mod:SetEncounterID(607)
 mod:SetModelID(21252)
@@ -48,7 +48,7 @@ function mod:OnCombatStart(delay)
 	self.vb.enrage = false
 	timerShriekCD:Start(15.8-delay)
 	timerFACD:Start(24.4-delay)
-	if not self:IsTrivial(85) then
+	if not self:IsTrivial() then
 		self:RegisterShortTermEvents(
 			"UNIT_HEALTH boss1"
 		)

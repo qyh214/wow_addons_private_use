@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(726, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20210119194055")
 mod:SetCreatureID(60410)--Energy Charge (60913), Emphyreal Focus (60776), Cosmic Spark (62618), Celestial Protector (60793)
 mod:SetEncounterID(1500)
 mod:DisableESCombatDetection()
@@ -90,7 +90,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnPhase3:Show()
 	elseif spellId == 117878 and args:IsPlayer() then
 		local amount = args.amount or 1
-		local badAmount = self:IsTrivial(100) and 30 or 6
+		local badAmount = self:IsTrivial() and 30 or 6
 		if (amount >= badAmount) and amount % 3 == 0 then--Warn every 3 stacks at 30/6 and above.
 			specWarnOvercharged:Show(amount)
 		end

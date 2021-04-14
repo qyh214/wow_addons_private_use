@@ -12,7 +12,7 @@ local ceil = math.ceil;
 local max = math.max;
 local min = math.min;
 
-local DefaultTooltip = CreateFrame("GameTooltip", "NarciGameTooltip", UIParent, "GameTooltipTemplate");
+local DefaultTooltip = NarciGameTooltip;	--Created in NarciAPI.lua
 
 local C_PaperDollInfo = C_PaperDollInfo;
 local UnitStat = UnitStat;
@@ -486,9 +486,9 @@ function UpdateFunc:Armor(object, unit)
 	local armorReductionAgainstTarget = C_PaperDollInfo.GetArmorEffectivenessAgainstTarget(effectiveArmor);
 
 	object.tooltip = "|cffffffff".. ARMOR .." "..BreakUpLargeNumbers(effectiveArmor).."|r";
-	object.tooltip2 = format(STAT_ARMOR_TOOLTIP, armorReduction);
+	object.tooltip2 = format(STAT_ARMOR_TOOLTIP, 100*armorReduction);
 	if (armorReductionAgainstTarget) then
-		object.tooltip3 = format(STAT_ARMOR_TARGET_TOOLTIP, armorReductionAgainstTarget);
+		object.tooltip3 = format(STAT_ARMOR_TARGET_TOOLTIP, 100*armorReductionAgainstTarget);
 	else
 		object.tooltip3 = nil;
 	end
@@ -517,7 +517,8 @@ function UpdateFunc:Reduction(object)
 	local unit = "player"
 	local baselineArmor, effectiveArmor, armor, bonusArmor = UnitArmor(unit);
 
-    local armorReduction = C_PaperDollInfo.GetArmorEffectiveness(effectiveArmor, UnitEffectiveLevel(unit));
+	local armorReduction = C_PaperDollInfo.GetArmorEffectiveness(effectiveArmor, UnitEffectiveLevel(unit)) or 0;
+	armorReduction = 100 * armorReduction;
 	local armorReductionAgainstTarget = C_PaperDollInfo.GetArmorEffectivenessAgainstTarget(effectiveArmor);
 	local armorReductionText = format(DIGITS, armorReduction).."%"
 	

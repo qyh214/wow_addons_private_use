@@ -113,6 +113,6 @@ function NarciAchievementStatusBarMixin:OnShow()
 end
 
 function NarciAchievementStatusBarMixin:OnHide()
-    self.animFill:Hide();
-    self:Hide();
+    --self.animFill:Hide();
+    --self:Hide();
 end

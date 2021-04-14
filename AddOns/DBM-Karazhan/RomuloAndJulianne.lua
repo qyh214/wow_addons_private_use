@@ -1,8 +1,8 @@
 local mod	= DBM:NewMod("RomuloAndJulianne", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145731")
-mod:SetCreatureID(17534, 17533, 99999)--99999 bogus screature id to keep mod from pre mature combat end.
+mod:SetRevision("20210307032518")
+mod:SetCreatureID(17534, 17533, 99999)--99999 bogus creature id to keep mod from pre mature combat end.
 --mod:SetEncounterID(655)--used by all 3 of them, so not usuable
 mod:SetModelID(17068)
 mod:RegisterCombat("yell", L.RJ_Pull)
@@ -88,7 +88,7 @@ end
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 17534 and self:IsInCombat() then
-		if self.vb.phase == 3 then--Only want to remove from boss health frame first time they die, and kill only in phase 3.
+		if self.vb.phase == 3 then--kill only in phase 3.
 			self.vb.JulianneDied = GetTime()
 			if (GetTime() - self.vb.RomuloDied) < 10 then
 				DBM:EndCombat(self)
@@ -98,7 +98,7 @@ function mod:UNIT_DIED(args)
 			NextPhase(self)--Trigger phase 2
 		end
 	elseif cid == 17533 and self:IsInCombat() then
-		if self.vb.phase == 3 then--Only want to remove from boss health frame first time they die, and kill only in phase 3.
+		if self.vb.phase == 3 then--kill only in phase 3.
 			self.vb.RomuloDied = GetTime()
 			if (GetTime() - self.vb.JulianneDied) < 10 then
 				DBM:EndCombat(self)

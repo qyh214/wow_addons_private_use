@@ -29,7 +29,7 @@ local DefaultValue = {
     ["AlwaysShowModel"] = false,
     ["DefaultLayout"] = 2,
     ["LetterboxEffect"] = false,
-    ["LetterboxRatio"] = 2.35,
+    ["LetterboxRatio"] = 2,
     ["AFKScreen"] = false,
     ["AFKAutoStand"] = false,                       --Do /stand emote now and then when you go AFK
     ["GemManager"] = true,                          --Enable gem manager for Blizzard item socketing frame
@@ -52,6 +52,7 @@ local DefaultValue = {
     ["AnchorToMinimap"] = true,                     --Anchor the mini button to Minimap
     ["CameraTransition"] = true,                    --(2nd you use the Character Pane) Camera moves smoothly bewtween presets
     ["UseBustShot"] = true,                         --Zoom in to the upper torso
+    ["ConduitTooltip"] = false,                      --Show conduit effects of higher ranks
 
     --Internal Hotkey
     ["SearchRelativesHotkey"] = "TAB",              --The key you press to begin/cycle relative search

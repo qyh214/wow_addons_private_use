@@ -16,25 +16,9 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
-addEntry("3.8.1", "10/08/2019", [[
-	* Add option to display emotes in SAY chat windows.
-	* Rewrite code to manage fading of windows. This should fix the issues some of you've been having.
-]]);
-addEntry("3.7.26", "09/23/2019", [[
-	* Elimated WhoLib, blizzard killed it with fire. Some alternate solutions used to bring some but not all of the functionality back
-]]);
-addEntry("3.7.22", "01/24/2019", [[
-	* trying to fix emote misbehavior in BNet names introduced with patch 8.1
-	* fix class names and icon display for non-english clients
-]]);
-addEntry("3.7.21", "01/24/2019", [[
-	* update BNetWhisper handler for 8.1
-	* update ExtractTellTarget handler
-]]);
-addEntry("3.7.20", "01/24/2019", [[
-	*TOC update for 8.1
-	*fix LibWho error
-	*fix changed BNet name handler
+addEntry("3.9.0", "03/31/2021", [[
+	*TOC update for 9.0.5
+	*Compatible with TBC Beta
 ]]);
 
 local function entryExists(version)

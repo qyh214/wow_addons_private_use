@@ -1,7 +1,7 @@
 local BIND_ACTION = "CLICK Narci_Achievement_MinimapButton:LeftButton";
 _G["BINDING_NAME_CLICK ".."Narci_Achievement_MinimapButton:LeftButton"] = "Open Narcissus Achievement Panel";
 
-local FadeFrame = NarciAPI_FadeFrame;
+--local FadeFrame = NarciAPI_FadeFrame;
 local Color_Good = "|cff7cc576";     --124 197 118
 local Color_Good_r = 124/255;
 local Color_Good_g = 197/255;
@@ -27,8 +27,6 @@ local function ShowOrHideWidgetGroup(parentIndex, widgetIndex, visible)
         end
     end
 end
-
-local REDIRECT_TOOLTIP = "Click tracked achievements or\nachievement alerts to open this panel.";
 
 local WidgetStructure = {
     [1] = {
@@ -104,8 +102,6 @@ local WidgetStructure = {
         },
     },
 }
-
-
 
 local function ClearAllBinding()
     local key1, key2 = GetBindingKey(BIND_ACTION);
@@ -391,6 +387,7 @@ local function CreateSettings(frame)
     frame:SetHeight(4 -startOffset);
 
     wipe(WidgetStructure);
+    WidgetStructure = nil;
 end
 
 local function LoadSettings(self)
@@ -400,6 +397,10 @@ local function LoadSettings(self)
     self:SetBackgroundColor(0.07, 0.07, 0.08, 0.95);
     self:SetOffset(10);
     self:HideWhenParentIsHidden(true);
+
+    CreateWidget = nil;
+    CreateSettings = nil;
+    LoadSettings = nil;
 end
 
 local initialize = CreateFrame("Frame");
@@ -411,5 +412,6 @@ initialize:SetScript("OnEvent", function(self, event, ...)
         C_Timer.After(1.3, function()
             LoadSettings(Narci_AchievementSettings);
         end)
+        initialize = nil;
     end
 end)

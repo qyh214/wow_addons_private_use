@@ -1,10 +1,11 @@
-﻿## Interface: 90002
+## Interface: 90005
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0World Bosses (WoD)|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Draenor|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0드레노어|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0德拉諾|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0德拉诺|r
+## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Мировые боссы (WoD)|r
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
@@ -15,18 +16,20 @@
 ## X-DBM-Mod-Category: WOD
 ## X-DBM-StatTypes: normal
 ## X-DBM-Mod-Name: World Bosses (WoD)
+## X-DBM-Mod-Name-ruRU: Мировые боссы (WoD)
 ## X-DBM-Mod-SubCategories: Draenor,Garrison Invasions
 ## X-DBM-Mod-SubCategories-deDE: Draenor,Garnisonsinvasionen
 ## X-DBM-Mod-SubCategories-esES: Draenor,Invasiones de la ciudadela
 ## X-DBM-Mod-SubCategories-koKR: 드레노어,주둔지 침공
 ## X-DBM-Mod-SubCategories-zhTW: 德拉諾,要塞入侵
+## X-DBM-Mod-SubCategories-ruRU: Дренор,Нападения на гарнизон
 ## X-DBM-Mod-Sort: 604
 ## X-DBM-Mod-MapID: 1116, 1159, 1331, 1158, 1153, 1152, 1330, 1160, 1154, 1464
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
 ## X-DBM-Mod-MinExpansion: 5
 ## X-Curse-Project-ID: 101956
 ## X-WoWI-ID: 24535
-## Version: r53
+## Version: r54
 
 localization.br.lua
 localization.en.lua

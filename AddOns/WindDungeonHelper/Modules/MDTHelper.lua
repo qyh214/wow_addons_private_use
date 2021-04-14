@@ -31,6 +31,12 @@ function MH:Translate()
         return
     end
 
+    if _G.MDT.L then
+        for _, localeString in pairs(TypeDict) do
+            _G.MDT.L[localeString] = localeString
+        end
+    end
+
     for mapID, NPCs in pairs(_G.MDT.dungeonEnemies) do
         if mapID >= 29 and NPCs then
             for _, NPC in pairs(NPCs) do
@@ -38,6 +44,9 @@ function MH:Translate()
                     local name = F.GetNPCNameByID(NPC.id)
                     if name then
                         NPC.name = name
+                        if _G.MDT.L then
+                            _G.MDT.L[name] = name
+                        end
                     end
                 end
                 if NPC.creatureType then
@@ -52,7 +61,7 @@ function MH:MDTLoaded()
     if not self.db or not self.db.enable then
         return
     end
-    self:Translate()
+    --self:Translate()
 end
 
 function MH:ProfileUpdate()

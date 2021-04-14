@@ -1,22 +1,10 @@
-lightweight tag 4841345102d9acfcb7cfaa97ee87c7d7608bf3ee 2.1.0
+lightweight tag 63907cd161bc13163a99fa080a186194eb692124 2.1.1
 Author:	Bernhard Saumweber <b.saumweber@gmail.com>
-Date:	Sat Jan 23 14:57:11 2021 +0100
+Date:	Wed Mar 10 09:02:33 2021 +0100
 
-commit 4841345102d9acfcb7cfaa97ee87c7d7608bf3ee
+commit 63907cd161bc13163a99fa080a186194eb692124
 Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Sat Jan 23 14:57:11 2021 +0100
+Date:   Wed Mar 10 09:02:33 2021 +0100
 
-    Raised version to 2.1.0
-
-commit c25f6162a3aeece897e6d3ee5c92e2e3272e71f5
-Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Sat Jan 23 14:56:25 2021 +0100
-
-    Adapted to changes in premade regions addon: removed usp, usm, usc, use and added la and chi instead
-
-commit cdf233ead7636d328b1903714cea4c63002bb48d
-Author: Bernhard Saumweber <b.saumweber@gmail.com>
-Date:   Thu Dec 10 21:03:34 2020 +0100
-
-    Added synonym mists for mots (Mists of Tirna Scithe)
+    Raised version to 2.1.1 and bumped TOC
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1372, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142006")
+mod:SetRevision("20210119194022")
 mod:SetCreatureID(90199)
 mod:SetEncounterID(1783)
 mod:SetUsedIcons(4, 3, 2, 1)
@@ -259,7 +259,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 180148 then
 		warnHungerforLife:CombinedShow(0.5, args.destName)
-		if args:IsPlayer() and self:AntiSpam(5, 2) and not self:IsTrivial(110) then
+		if args:IsPlayer() and self:AntiSpam(5, 2) and not self:IsTrivial() then
 			specWarnHungerforLife:Show()
 			specWarnHungerforLife:Play("justrun")
 		end

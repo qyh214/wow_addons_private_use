@@ -10,8 +10,9 @@ P["eel"]["progression"] = {
         ["bod"] = false,
         ["cos"] = false,
         ["ep"] = false,
-        ["nya"] = true,
-        },
+        ["nya"] = false,
+        ["nathria"] = true,
+    },
 }
 
 local function ConfigTable()
@@ -57,15 +58,36 @@ local function ConfigTable()
                 type = "group",
                 name = RAIDS,
                 guiInline = true,
-                get = function(info) return E.db.eel.progression.raids[ info[#info] ] end,
-                set = function(info, value) E.db.eel.progression.raids[ info[#info] ] = value end,
                 disabled = function() return not E.db.eel.progression.enable end,
                 args = {
-                    uldir = { order = -45, type = "toggle", name = "Uldir" },
-                    bod = { order = -44, type = "toggle", name = "Battle of Dazar'Alor" },
-                    cos = { order = -43, type = "toggle", name = "Crucible of Storms" },
-                    ep = { order = -42, type = "toggle", name = "The Eternal Palace" },
-                    nya = { order = -41, type = "toggle", name = "Ny'alotha, the Waking City" },
+                    bfa = {
+                        order = 6,
+                        type = "group",
+                        name = "Battle for Azeroth",
+                        guiInline = true,
+                        get = function(info) return E.db.eel.progression.raids[ info[#info] ] end,
+                        set = function(info, value) E.db.eel.progression.raids[ info[#info] ] = value end,
+                        disabled = function() return not E.db.eel.progression.enable end,
+                        args = {
+                            uldir = { order = -45, type = "toggle", name = "Uldir" },
+                            bod = { order = -44, type = "toggle", name = "Battle of Dazar'Alor" },
+                            cos = { order = -43, type = "toggle", name = "Crucible of Storms" },
+                            ep = { order = -42, type = "toggle", name = "The Eternal Palace" },
+                            nya = { order = -41, type = "toggle", name = "Ny'alotha, the Waking City" },
+                        }
+                    },
+                    sl = {
+                        order = 7,
+                        type = "group",
+                        name = "Shadowlands",
+                        guiInline = true,
+                        get = function(info) return E.db.eel.progression.raids[ info[#info] ] end,
+                        set = function(info, value) E.db.eel.progression.raids[ info[#info] ] = value end,
+                        disabled = function() return not E.db.eel.progression.enable end,
+                        args = {
+                            nathria = { order = -40, type = "toggle", name = "Castle Nathria" },
+                        }
+                    }
                 },
             }
         }

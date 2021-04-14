@@ -420,7 +420,7 @@
 				</Scripts>
 			</Frame>
 
-			<Frame name="$parentGuideLineV1" parentKey="GuideLineV1" hidden="true">
+			<Frame parentKey="GuideLineV1" hidden="true">
 				<Size x="1" y="200"/>
 				<Anchors>
 					<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="80" y="0"/>
@@ -433,7 +433,7 @@
                     </Layer>
                 </Layers>			
 			</Frame>
-			<Frame name="$parentGuideLineV2" parentKey="GuideLineV2" hidden="true">
+			<Frame parentKey="GuideLineV2" hidden="true">
 				<Size x="1" y="200"/>
 				<Anchors>
 					<Anchor point="LEFT" relativeKey="$parent.GuideLineV1" relativePoint="LEFT" x="70" y="0"/>
@@ -449,44 +449,44 @@
 			<Button inherits="ItemBonusTinyButtonTemplate" parentKey="BonusButton1"/>
 			<Button inherits="ItemBonusTinyButtonTemplate" parentKey="BonusButton2"/>
 
-			<Frame inherits="StatsIlvlComparisonTemplate" parentKey="ilvl" name="$parentIlvl">
+			<Frame inherits="StatsIlvlComparisonTemplate" parentKey="ilvl">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.ItemName" relativePoint="BOTTOMLEFT" x="0" y="-8"/>
 					<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-14"/>
 				</Anchors>
 			</Frame>
 
-			<Frame inherits="NarciStatsComparisonTemplate" parentKey="prim" name="$parentPrim">
+			<Frame inherits="NarciStatsComparisonTemplate" parentKey="prim">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.ilvl" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
 					<Anchor point="RIGHT" relativeKey="$parent.ilvl" relativePoint="RIGHT" x="0" y="-4"/>
 				</Anchors>
 			</Frame>
-			<Frame inherits="NarciStatsComparisonTemplate" parentKey="stamina" name="$parentStamina">
+			<Frame inherits="NarciStatsComparisonTemplate" parentKey="stamina">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.prim" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
 					<Anchor point="TOPRIGHT" relativeKey="$parent.prim" relativePoint="BOTTOMRIGHT" x="0" y="-4"/>
 				</Anchors>
 			</Frame>
-			<Frame inherits="NarciStatsComparisonTemplate" parentKey="crit" name="$parentCrit">
+			<Frame inherits="NarciStatsComparisonTemplate" parentKey="crit">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.stamina" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
 					<Anchor point="TOPRIGHT" relativeKey="$parent.stamina" relativePoint="BOTTOMRIGHT" x="0" y="-4"/>
 				</Anchors>
 			</Frame>
-			<Frame inherits="NarciStatsComparisonTemplate" parentKey="haste" name="$parentHaste">
+			<Frame inherits="NarciStatsComparisonTemplate" parentKey="haste">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.crit" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
 					<Anchor point="TOPRIGHT" relativeKey="$parent.crit" relativePoint="BOTTOMRIGHT" x="0" y="-4"/>
 				</Anchors>
 			</Frame>
-			<Frame inherits="NarciStatsComparisonTemplate" parentKey="mastery" name="$parentMastery">
+			<Frame inherits="NarciStatsComparisonTemplate" parentKey="mastery">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.haste" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
 					<Anchor point="TOPRIGHT" relativeKey="$parent.haste" relativePoint="BOTTOMRIGHT" x="0" y="-4"/>
 				</Anchors>
 			</Frame>
-			<Frame inherits="NarciStatsComparisonTemplate" parentKey="versatility" name="$parentVersatility">
+			<Frame inherits="NarciStatsComparisonTemplate" parentKey="versatility">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.mastery" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
 					<Anchor point="TOPRIGHT" relativeKey="$parent.mastery" relativePoint="BOTTOMRIGHT" x="0" y="-4"/>

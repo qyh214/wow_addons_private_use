@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Majordomo", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145731")
+mod:SetRevision("20210119194113")
 mod:SetCreatureID(12018, 11663, 11664)
 mod:SetEncounterID(671)
 mod:SetModelID(12029)
@@ -39,7 +39,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerMagicReflect:Start()
 		timerShieldCD:Start()
 	elseif spellId == 21075 then
-		if self.Options.SpecWarn21075reflect and (self:IsDifficulty("event40") or not self:IsTrivial(75)) then--Not a threat to high level melee
+		if self.Options.SpecWarn21075reflect and (self:IsDifficulty("event40") or not self:IsTrivial()) then--Not a threat to high level melee
 			specWarnDamageShield:Show(BOSS)
 			specWarnDamageShield:Play("stopattack")
 		else

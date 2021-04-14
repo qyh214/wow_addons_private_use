@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(851, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20210119194055")
 mod:SetCreatureID(71529)
 mod:SetEncounterID(1599)
 mod:SetUsedIcons(8)
@@ -124,7 +124,7 @@ function mod:OnCombatStart(delay)
 	end
 	berserkTimer:Start(-delay)
 	DBM:AddMsg(DBM_CORE_L.DYNAMIC_DIFFICULTY_CLUMP)
-	if not self:IsTrivial(100) then
+	if not self:IsTrivial() then
 		self:RegisterShortTermEvents(
 			"SPELL_PERIODIC_DAMAGE 143784",
 			"SPELL_PERIODIC_MISSED 143784"

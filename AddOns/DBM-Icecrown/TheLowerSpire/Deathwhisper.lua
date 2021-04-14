@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Deathwhisper", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145648")
+mod:SetRevision("20210119194038")
 mod:SetCreatureID(36855)
 mod:SetEncounterID(1100)
 mod:SetModelID(30893)
@@ -129,12 +129,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			self:Schedule(0.9, showDominateMindWarning, self)
 		end
-	elseif args.spellId == 71001 and not self:IsTrivial(100) then
+	elseif args.spellId == 71001 and not self:IsTrivial() then
 		if args:IsPlayer() then
 			specWarnDeathDecay:Show()
 			specWarnDeathDecay:Play("runaway")
 		end
-	elseif args.spellId == 71237 and args:IsPlayer() and not self:IsTrivial(100) then
+	elseif args.spellId == 71237 and args:IsPlayer() and not self:IsTrivial() then
 		specWarnCurseTorpor:Show()
 		specWarnCurseTorpor:Play("targetyou")
 	elseif args.spellId == 70674 and not args:IsDestTypePlayer() and (UnitName("target") == L.Fanatic1 or UnitName("target") == L.Fanatic2 or UnitName("target") == L.Fanatic3) then
@@ -183,7 +183,7 @@ function mod:SPELL_CAST_START(args)
 			empoweredAdherent = args.sourceGUID
 			TrySetTarget(self)
 		end
-	elseif args.spellId == 71236 and not self:IsTrivial(100) then
+	elseif args.spellId == 71236 and not self:IsTrivial() then
 		specWarnDarkMartyrdom:Show()
 		specWarnDarkMartyrdom:Play("justrun")
 	end

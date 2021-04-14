@@ -1,12 +1,12 @@
-tag 4e97efff5294d017f5f53282d58390cfbf0de63f 4.0.2
+tag 6c5513b03fc2fc1d9405560913ca81167b9febc0 4.0.5
 Author:	Bocky <nick@bocky.nl>
-Date:	Tue Nov 24 02:59:40 2020 +0100
+Date:	Wed Mar 17 08:52:03 2021 +0100
 
-Bug fixed not showing equipment manager
+Update TOC file
 
-commit caf08cb7e07b2b137a3bdc5c422a9b598bcd9f9f
-Author: Nick <git@bockmeulen.nl>
-Date:   Tue Nov 24 02:59:16 2020 +0100
+commit 209ad765f8d3ec6a88e156da9181bbdab421e65c
+Author: Nick Bockmeulen <git@bockmeulen.nl>
+Date:   Wed Mar 17 08:51:31 2021 +0100
 
-    bug fix
+    update toc
 

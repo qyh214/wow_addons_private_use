@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(317, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806141910")
+mod:SetRevision("20210119193946")
 mod:SetCreatureID(55689)
 mod:SetEncounterID(1296)
 mod:SetUsedIcons(3, 4, 5, 6, 7, 8)
@@ -196,7 +196,7 @@ end
 
 function mod:SPELL_AURA_APPLIED_DOSE(args)
 	local spellId = args.spellId
-	if spellId == 105316 and not self:IsTrivial(90) then
+	if spellId == 105316 and not self:IsTrivial() then
 		local amount = args.amount
 		if ((self:IsDifficulty("lfr25") and amount % 6 == 0) or (not self:IsDifficulty("lfr25") and amount % 3 == 0)) and args:IsPlayer() then--Warn every 3 stacks (6 stacks in LFR), don't want to spam TOO much.
 			specWarnIceLance:Show(amount)

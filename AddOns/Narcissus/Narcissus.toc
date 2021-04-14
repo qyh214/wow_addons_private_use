@@ -1,4 +1,4 @@
-## Interface: 90002
+## Interface: 90005
 ## Plain Title: Narcissus
 ## Version: 1.1.0g
 
@@ -20,21 +20,24 @@ Locales\Localization.xml
 
 NarciDB\TitleManagerDB.lua
 NarciDB\GearBonus.lua
-NarciDB\NarciAPIs.lua
+NarciDB\API.xml
 NarciDB\NarciUITemplates.xml
 NarciDB\NarciTooltip.xml
 
 Bridge\Bridge.xml
 
+Modules\CharacterFrame\Enchant.lua
 Modules\CharacterFrame\ItemSocketing.xml
 Modules\CharacterFrame\Attributes.xml
 Narcissus.xml
 Preference.xml
 
-##Modules\CharacterFrame\Soulbinds.xml
+Modules\CharacterFrame\Powers.xml
 Modules\CharacterFrame\EquipmentComparisonFlyout.xml
 Modules\CharacterFrame\TitleManager.xml
 Modules\CharacterFrame\EquipmentSetManager.xml
+
+Modules\CharacterFrame\NavBar.xml
 
 Modules\PhotoMode\Widgets.xml
 Modules\PhotoMode\PhotoMode.xml

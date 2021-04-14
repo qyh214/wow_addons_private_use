@@ -394,6 +394,8 @@ L["Heart Guardian"] = "Gardien du coeur"
 L["Heartsbane Runeweaver"] = "Tisserune malecarde"
 L["Heartsbane Soulcharmer"] = "Charmeuse d'âme malecarde"
 L["Heartsbane Vinetwister"] = "Tourneronces malecarde"
+--[[Translation missing --]]
+--[[ L["Heavin the Breaker"] = ""--]] 
 L["Heavy Scrapbot"] = "Robot-ferrailleur lourd"
 L["Helmouth Cliffs"] = "Falaises de l’embouchure de Hel "
 L["helpPlateDungeon"] = "Personnalisez les options du donjon "
@@ -582,6 +584,8 @@ L["Nalthor the Rimebinder"] = "Nalthor le Lieur-de-Givre"
 L["Nar'zudah"] = "Nar'zudah"
 L["Necrotic"] = "Nécrotique  "
 L["Nefarious Darkspeaker"] = "Sombre orateur néfaste"
+--[[Translation missing --]]
+--[[ L["Nekthara the Mangler"] = ""--]] 
 L["Neltharion's Lair"] = "Repaire de Neltharion "
 L["Neltharion's Lair Sublevel"] = "Sous niveau du Repaire de Neltharion "
 L["Netherspace"] = "Néantespace "
@@ -684,6 +688,8 @@ L["Red, Green and Blue"] = "Rouge, Vert et Bleu  "
 L["Redo"] = "Refaire "
 L["Refreshment Vendor"] = "Vendeuse de rafraîchissements"
 L["Regal Mistdancer"] = "Danse-brume régalien"
+--[[Translation missing --]]
+--[[ L["Rek the Hardened"] = ""--]] 
 L["Relentless"] = "Implacable "
 L["Remnant of Fury"] = "Vestige de fureur"
 L["Rename"] = "Renommer "

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(870, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20210212021333")
 mod:SetCreatureID(73720, 71512)
 mod:SetEncounterID(1594)
 mod:DisableESCombatDetection()
@@ -15,7 +15,7 @@ mod:RegisterKill("yell", L.Victory)
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 145996 145288 142934 142539 145286 146222 146180 145489 142947 146815",
 	"SPELL_CAST_SUCCESS 142947 145712 146253 145230 145786 145812",
-	"SPELL_AURA_APPLIED 145987 145692 145998",
+	"SPELL_AURA_APPLIED 145987 145692",
 	"SPELL_AURA_REMOVED 145987 145692",
 	"UNIT_DIED",
 	"RAID_BOSS_WHISPER",
@@ -115,7 +115,7 @@ function mod:OnCombatStart(delay)
 		DBM.InfoFrame:SetHeader(L.name)
 		DBM.InfoFrame:Show(2, "enemypower", 2, ALTERNATE_POWER_INDEX)
 	end
-	if not self:IsTrivial(100) then
+	if not self:IsTrivial() then
 		self:RegisterShortTermEvents(
 			"SPELL_DAMAGE 145716 145748 146257",
 			"SPELL_MISSED 145716 145748 146257"
@@ -206,8 +206,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnEnrage:Show(args.destName)
 		specWarnEnrage:Show(args.destName)
 		timerEnrage:Start(args.destName)
-	elseif spellId == 145998 then--This is a massive crate mogu spawning
-		timerReturnToStoneCD:Start(6)
 	end
 end
 

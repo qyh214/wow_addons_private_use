@@ -1,20 +1,33 @@
-# [3.1.9](https://github.com/WeakAuras/WeakAuras2/tree/3.1.9) (2021-01-26)
+# [3.2.3](https://github.com/WeakAuras/WeakAuras2/tree/3.2.3) (2021-04-11)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.1.8...3.1.9)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.2.2...3.2.3)
 
 ## Highlights
 
- - bug fixes 
+ - Bug fixes
+- New border shapes 
 
 ## Commits
 
-InfusOnWoW (2):
+InfusOnWoW (4):
 
-- Fix oversight in 7a3d5c762 breaking remaining time check for
-- Clamp tooltips to the screen
+- Don't reset Search filter for most aura changes
+- Distinguish between Rated and Unrated PVP in Instance Size Type
+- Update GCD if the duration changes
+- BT2: Show spell name to exact spell id field
 
-Stanzilla (2):
+Stanzilla (3):
 
-- master -> main
-- Create CODE_OF_CONDUCT.md
+- Update WeakAurasModelPaths from wow.tools
+- Switch to the packager's new multi toc feature
+- Update WeakAurasModelPaths from wow.tools
+
+asaka-wa (1):
+
+- Add border shapes (#3012)
+
+mrbuds (2):
+
+- ensure a few "percentX" property doesn't return a boolean fix type error when they are use in conditions
+- fix potential nil error in dbm & bw triggers fixes #2982
 

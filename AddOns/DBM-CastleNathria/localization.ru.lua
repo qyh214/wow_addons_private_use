@@ -24,14 +24,7 @@ L:SetOptionLocalization({
 ---------------------------
 --  Artificer Xy'Mox --
 ---------------------------
-L= DBM:GetModLocalization(2418)
-
-L:SetMiscLocalization({
-	Phase2			= "Что же делает эта штука? Любопытно до смерти. Правда, умрете, скорее всего, вы.",
-	Phase2Demonic	= "Lok zennshinagas xi ril zila refir il rethule no Rakkas az alar alar archim maev shi ",--Boss has Curse of Tongues
-	Phase3			= "Надеюсь, эта вещица не только выглядит опасной!",
-	Phase3Demonic	= "X ante zila romathis alar il re thorje re az modas "--Boss has Curse of Tongues
-})
+--L= DBM:GetModLocalization(2418)
 
 ---------------------------
 --  Sun King's Salvation/Kael'thas --
@@ -76,12 +69,7 @@ L:SetOptionLocalization({
 ---------------------------
 --  Sire Denathrius --
 ---------------------------
-L= DBM:GetModLocalization(2424)
-
-L:SetMiscLocalization({
-	CrimsonSpawn	= "Алые кабалисты откликнулись на призыв Денатрия."
-})
-
+--L= DBM:GetModLocalization(2424)
 
 -------------
 --  Trash  --

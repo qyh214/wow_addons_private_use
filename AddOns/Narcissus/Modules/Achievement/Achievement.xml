@@ -8,7 +8,7 @@
 	<Script file="Settings.lua"/>
 	<Script file="AchievementFrame.lua"/>
 	<Script file="DIY.lua"/>
-	<Script file="DevTool.lua"/>
+	<!--Script file="DevTool.lua"/-->
 
 	<Frame name="NarciAchievementEditorFrameTemplate" virtual="true" mixin="ExpansionTransitionBackdropTemplateMixin">
 		<Size x="232" y="60"/>

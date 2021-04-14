@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Viscidus", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200905140155")
+mod:SetRevision("20210119194113")
 mod:SetCreatureID(15299)
 mod:SetEncounterID(713)
 mod:SetModelID(15686)
@@ -156,7 +156,7 @@ do
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 25989 and args:IsPlayer() and self:AntiSpam(3, 2) and not self:IsTrivial(80) then
+	if args.spellId == 25989 and args:IsPlayer() and self:AntiSpam(3, 2) and not self:IsTrivial() then
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
 	end

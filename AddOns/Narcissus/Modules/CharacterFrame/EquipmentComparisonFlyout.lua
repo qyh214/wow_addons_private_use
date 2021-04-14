@@ -131,7 +131,7 @@ local function Narci_Comparison_AdjustGap()
     end
     
     frame.GuideLineV1:SetPoint("LEFT", ajustedV1, 0)
-    frame.GuideLineV2:SetPoint("LEFT", frame.GuideLineV1:GetName(), ajustedV2, 0)
+    frame.GuideLineV2:SetPoint("LEFT", frame.GuideLineV1, ajustedV2, 0)
     hasGapAdjusted = true;
 end
 
@@ -621,7 +621,7 @@ local function UpdateSpectIDAndPrimaryStat()
     local currentSpec = GetSpecialization() or 1;
     local _, primaryStatID;
     CURRENT_SPEC, _, _, _, _, primaryStatID = GetSpecializationInfo(currentSpec);
-    PRIMARY_STAT_NAME = PrimaryStatsList[primaryStatID];
+    PRIMARY_STAT_NAME = PrimaryStatsList[primaryStatID] or PRIMARY_STAT_NAME;
 end
 
 local NT = CreateFrame("Frame");

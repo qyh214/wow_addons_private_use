@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BlackrockFoundryTrash", "DBM-BlackrockFoundry")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142006")
+mod:SetRevision("20210119194022")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
@@ -61,7 +61,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnEmberInWind:Show()
 		end
-	elseif spellId == 175594 and not self:IsTrivial(110) then
+	elseif spellId == 175594 and not self:IsTrivial() then
 		local amount = args.amount or 1
 		if (amount >= 8) and (amount % 3 == 0) then
 			if args:IsPlayer() then

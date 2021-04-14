@@ -17,7 +17,6 @@ Bridge:SetScript("OnEvent",function(self, event, ...)
     self:UnregisterEvent(event);
     local _, isLoaded = IsAddOnLoaded("Pawn");
     if isLoaded and NarciRefVirtualTooltip and PawnUpdateTooltip and PawnAddTooltipLine then
-        print("pawn")
         hooksecurefunc(NarciRefVirtualTooltip, "SetHyperlink", function(self, ...)
             PawnUpdateTooltip("NarciRefVirtualTooltip", "SetHyperlink", ...)
             PawnTooltipLineNum = 1;

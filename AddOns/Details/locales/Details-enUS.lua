@@ -1493,6 +1493,7 @@ L["STRING_RIGHTCLICK_CLOSE_SHORT"] = "Right click to close."
 L["STRING_RIGHTCLICK_TYPEVALUE"] = "right click to type the value"
 L["STRING_SCORE_BEST"] = "you scored |cFFFFFF00%s|r, this is your best score, congratulations!"
 L["STRING_SCORE_NOTBEST"] = "you scored |cFFFFFF00%s|r, your best score is |cFFFFFF00%s|r on %s with %d item level."
+L["STRING_SCRIPTS_TITLE"] = "Scripts"
 L["STRING_SEE_BELOW"] = "see below"
 L["STRING_SEGMENT"] = "Segment"
 L["STRING_SEGMENT_EMPTY"] = "this segment is empty"
@@ -1578,7 +1579,7 @@ L["STRING_UNLOCK"] = [=[Ungroup windows
  in this button]=]
 L["STRING_UNLOCK_WINDOW"] = "unlock"
 L["STRING_UPTADING"] = "updating"
-L["STRING_VERSION_AVAILABLE"] = "a new version is available, download it from Twitch App or Curse website."
+L["STRING_VERSION_AVAILABLE"] = "a new version is available, download it from Curse Forge app or website."
 L["STRING_VERSION_UPDATE"] = "new version: what's changed? click here"
 L["STRING_VOIDZONE_TOOLTIP"] = "Damage and Time"
 L["STRING_WAITPLUGIN"] = [=[waiting for

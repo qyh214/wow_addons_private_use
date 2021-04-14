@@ -7,11 +7,11 @@ local CreateFrame = CreateFrame
 local hooksecurefunc = hooksecurefunc
 
 local atlasColors = {
-	["UI-Frame-Bar-Fill-Blue"]			= {0.2, 0.6, 1.0},
-	["UI-Frame-Bar-Fill-Red"]			= {0.9, 0.2, 0.2},
-	["UI-Frame-Bar-Fill-Yellow"]		= {1.0, 0.6, 0.0},
-	["objectivewidget-bar-fill-left"]	= {0.2, 0.6, 1.0},
-	["objectivewidget-bar-fill-right"]	= {0.9, 0.2, 0.2}
+	['UI-Frame-Bar-Fill-Blue']			= {0.2, 0.6, 1.0},
+	['UI-Frame-Bar-Fill-Red']			= {0.9, 0.2, 0.2},
+	['UI-Frame-Bar-Fill-Yellow']		= {1.0, 0.6, 0.0},
+	['objectivewidget-bar-fill-left']	= {0.2, 0.6, 1.0},
+	['objectivewidget-bar-fill-right']	= {0.9, 0.2, 0.2}
 }
 
 local function UpdateBarTexture(bar, atlas)
@@ -34,7 +34,16 @@ local function BelowMinimapPosition(self, _, b)
 	local holder = _G.BelowMinimapContainerHolder
 	if b and (b ~= holder) then
 		self:ClearAllPoints()
-		self:Point('CENTER', holder, 'CENTER')
+		self:Point('CENTER', holder)
+		self:SetParent(holder)
+	end
+end
+
+local function PowerWidgetPosition(self, _, b)
+	local holder = _G.PowerWidgetContainerHolder
+	if b and (b ~= holder) then
+		self:ClearAllPoints()
+		self:Point('CENTER', holder)
 		self:SetParent(holder)
 	end
 end
@@ -57,7 +66,7 @@ function B:UIWidgetTemplateStatusBar()
 	end
 end
 
-function B:UIWidgetTemplateCaptureBar()
+local function PVPCaptureBar(self)
 	self.LeftLine:SetAlpha(0)
 	self.RightLine:SetAlpha(0)
 	self.BarBackground:SetAlpha(0)
@@ -74,15 +83,30 @@ function B:UIWidgetTemplateCaptureBar()
 	self.NeutralBar:SetVertexColor(0.8, 0.8, 0.8)
 
 	if not self.backdrop then
+		local x = E.PixelMode and 1 or 2
+
 		self:CreateBackdrop()
-		self.backdrop:Point('TOPLEFT', self.LeftBar, -2, 2)
-		self.backdrop:Point('BOTTOMRIGHT', self.RightBar, 2, -2)
+		self.backdrop:Point('TOPLEFT', self.LeftBar, -x, x)
+		self.backdrop:Point('BOTTOMRIGHT', self.RightBar, x, -x)
 	end
+end
+
+local function EmberCourtCaptureBar() end
+local CaptureBarSkins = {
+	[2] = PVPCaptureBar,
+	[252] = EmberCourtCaptureBar
+}
+
+function B:UIWidgetTemplateCaptureBar(_, widgetContainer)
+	if not widgetContainer then return end
+	local skinFunc = CaptureBarSkins[widgetContainer.widgetSetID]
+	if skinFunc then skinFunc(self) end
 end
 
 function B:Handle_UIWidgets()
 	local topCenterContainer = _G.UIWidgetTopCenterContainerFrame
 	local belowMiniMapcontainer = _G.UIWidgetBelowMinimapContainerFrame
+	local powerBarContainer = _G.UIWidgetPowerBarContainerFrame
 
 	local topCenterHolder = CreateFrame('Frame', 'TopCenterContainerHolder', E.UIParent)
 	topCenterHolder:Point('TOP', E.UIParent, 'TOP', 0, -30)
@@ -92,17 +116,26 @@ function B:Handle_UIWidgets()
 	belowMiniMapHolder:Point('TOPRIGHT', _G.Minimap, 'BOTTOMRIGHT', 0, -16)
 	belowMiniMapHolder:Size(128, 40)
 
-	E:CreateMover(topCenterHolder, 'TopCenterContainerMover', L["UIWidgetTopContainer"], nil, nil, nil,'ALL,SOLO,WIDGETS')
-	E:CreateMover(belowMiniMapHolder, 'BelowMinimapContainerMover', L["UIWidgetBelowMinimapContainer"], nil, nil, nil,'ALL,SOLO,WIDGETS')
+	local powerWidgetHolder = CreateFrame('Frame', 'PowerWidgetContainerHolder', E.UIParent)
+	powerWidgetHolder:Point('CENTER', E.UIParent, 'TOP', 0, -75)
+	powerWidgetHolder:Size(100, 20)
+
+	E:CreateMover(topCenterHolder, 'TopCenterContainerMover', L["TopWidget"], nil, nil, nil,'ALL,SOLO,WIDGETS')
+	E:CreateMover(belowMiniMapHolder, 'BelowMinimapContainerMover', L["BelowMinimapWidget"], nil, nil, nil,'ALL,SOLO,WIDGETS')
+	E:CreateMover(powerWidgetHolder, 'PowerBarContainerMover', L["PowerBarWidget"], nil, nil, nil,'ALL,SOLO,WIDGETS')
 
 	topCenterContainer:ClearAllPoints()
 	topCenterContainer:Point('CENTER', topCenterHolder)
 
 	belowMiniMapcontainer:ClearAllPoints()
-	belowMiniMapcontainer:Point('CENTER', belowMiniMapHolder, 'CENTER')
+	belowMiniMapcontainer:Point('CENTER', belowMiniMapHolder)
+
+	powerBarContainer:ClearAllPoints()
+	powerBarContainer:Point('CENTER', powerWidgetHolder)
 
 	hooksecurefunc(topCenterContainer, 'SetPoint', TopCenterPosition)
 	hooksecurefunc(belowMiniMapcontainer, 'SetPoint', BelowMinimapPosition)
+	hooksecurefunc(powerBarContainer, 'SetPoint', PowerWidgetPosition)
 
 	-- Credits ShestakUI
 	hooksecurefunc(_G.UIWidgetTemplateStatusBarMixin, 'Setup', B.UIWidgetTemplateStatusBar)

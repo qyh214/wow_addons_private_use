@@ -300,12 +300,12 @@ private.CONTAINER_INFO = {
 	[332220] = { zoneID = 1355, artID = { 1186 }, x = 0.24852055, y = 0.35264885, overlay = { "0.24-0.35" }, questID = { 56912,56913 } }; --Glowing Arcane Trunk
 	[325659] = { zoneID = 1462, artID = { 1276 }, x = 0.52113366, y = 0.5327059, overlay = { "0.43-0.49","0.49-0.30","0.52-0.53","0.53-0.41","0.57-0.38" }, questReset = true, questID = { 55547 } }; --Mechanized Chest
 	[325660] = { zoneID = 1462, artID = { 1276 }, x = 0.40142176, y = 0.54088485, overlay = { "0.20-0.71","0.30-0.51","0.35-0.38","0.4-0.54","0.40-0.54" }, questReset = true, questID = { 55548 } }; --Mechanized Chest
-	[325661] = { zoneID = 1462, artID = { 1276 }, x = 0.5996684, y = 0.6355583, overlay = { "0.60-0.63","0.65-0.64","0.67-0.56","0.73-0.53","0.80-0.48","0.59-0.63" }, questReset = true, questID = { 55549 } }; --Mechanized Chest
-	[325662] = { zoneID = 1462, artID = { 1276 }, x = 0.76213926, y = 0.5285137, overlay = { "0.65-0.53","0.72-0.47","0.72-0.49","0.76-0.52","0.81-0.61" }, questReset = true, questID = { 55550 } }; --Mechanized Chest
+	[325661] = { zoneID = 1462, artID = { 1276 }, x = 0.6584268, y = 0.6456659, overlay = { "0.60-0.63","0.65-0.64","0.67-0.56","0.73-0.53","0.80-0.48" }, questReset = true, questID = { 55549 } }; --Mechanized Chest
+	[325662] = { zoneID = 1462, artID = { 1276 }, x = 0.7301546, y = 0.49460366, overlay = { "0.65-0.53","0.72-0.47","0.72-0.49","0.76-0.52","0.81-0.61","0.73-0.49" }, questReset = true, questID = { 55550 } }; --Mechanized Chest
 	[325663] = { zoneID = 1462, artID = { 1276 }, x = 0.64352787, y = 0.5960885, overlay = { "0.56-0.57","0.58-0.41","0.61-0.32","0.64-0.59","0.70-0.48","0.70-0.47" }, questReset = true, questID = { 55551 } }; --Mechanized Chest
 	[325664] = { zoneID = 1462, artID = { 1276 }, x = 0.50658256, y = 0.28581783, overlay = { "0.50-0.28","0.55-0.24","0.56-0.29","0.57-0.22","0.64-0.26","0.66-0.22" }, questReset = true, questID = { 55552 } }; --Mechanized Chest
-	[325665] = { zoneID = 1462, artID = { 1276 }, x = 0.67324126, y = 0.22879343, overlay = { "0.67-0.23","0.80-0.18","0.85-0.28","0.86-0.20","0.88-0.20","0.67-0.22" }, questReset = true, questID = { 55553 } }; --Mechanized Chest
-	[325666] = { zoneID = 1462, artID = { 1276 }, x = 0.62286294, y = 0.73904103, overlay = { "0.48-0.75","0.57-0.82","0.62-0.74","0.62-0.73","0.66-0.77" }, questReset = true, questID = { 55554 } }; --Mechanized Chest
+	[325665] = { zoneID = 1462, artID = { 1276 }, x = 0.88726985, y = 0.20160918, overlay = { "0.67-0.23","0.80-0.18","0.85-0.28","0.86-0.20","0.88-0.20" }, questReset = true, questID = { 55553 } }; --Mechanized Chest
+	[325666] = { zoneID = 1462, artID = { 1276 }, x = 0.57289463, y = 0.8205109, overlay = { "0.48-0.75","0.57-0.82","0.62-0.74","0.62-0.73","0.66-0.77" }, questReset = true, questID = { 55554 } }; --Mechanized Chest
 	[325667] = { zoneID = 1462, artID = { 1276 }, x = 0.6362025, y = 0.6716517, overlay = { "0.63-0.67","0.72-0.65","0.76-0.65","0.81-0.72","0.85-0.63" }, questReset = true, questID = { 55555 } }; --Mechanized Chest
 	[325668] = { zoneID = 1462, artID = { 1276 }, x = 0.24799839, y = 0.6525334, overlay = { "0.12-0.85","0.20-0.77","0.21-0.83","0.24-0.65" }, questReset = true, questID = { 55556 } }; --Mechanized Chest
 	[166680] = { zoneID = 1525, artID = { 1306 }, x = 0.74834836, y = 0.57233256, overlay = { "0.74-0.57" }, questID = { 59887 } }; --Objects
@@ -315,7 +315,7 @@ private.CONTAINER_INFO = {
 	[173607] = { zoneID = 1525, artID = { 1306 }, x = 0.79993767, y = 0.37000388, overlay = { "0.79-0.37" }, questID = { 62156 } }; --Objects
 	[173634] = { zoneID = 1525, artID = { 1306 }, x = 0.73778915, y = 0.75854313, overlay = { "0.74-0.75","0.73-0.75" }, questID = { 62196 } }; --Objects
 	[173704] = { zoneID = 1525, artID = { 1306 }, x = 0.29700252, y = 0.37247977, overlay = { "0.29-0.37" }, questID = { 62198 } }; --Objects
-	[173786] = { zoneID = 1525, artID = { 1306 }, x = 0.47504506, y = 0.553677, overlay = { "0.47-0.55" }, questID = { 62243 } }; --Objects
+	[173786] = { zoneID = 1525, artID = { 1306 }, x = 0.47504506, y = 0.553677, overlay = { "0.47-0.55" }, questID = { 62243 }, reset = false }; --Objects
 	[349565] = { zoneID = 1525, artID = { 1306 }, x = 0.6932873, y = 0.77969515, overlay = { "0.69-0.78","0.69-0.77" }, questID = { 59833 } }; --Chest of Envious Dreams
 	[349792] = { zoneID = 1525, artID = { 1306 }, x = 0.6418717, y = 0.726531, overlay = { "0.64-0.72" }, questID = { 59883 } }; --Filcher's Prize
 	[349793] = { zoneID = 1525, artID = { 1306 }, x = 0.6844732, y = 0.644557, overlay = { "0.68-0.64" }, questID = { 59884 } }; --Wayfarer's Abandoned Spoils
@@ -454,7 +454,6 @@ private.CONTAINER_INFO = {
 	[354859] = { zoneID = 1533, artID = { 1321 }, x = 0.46328124, y = 0.6717895, overlay = { "0.44-0.65","0.45-0.66","0.45-0.68","0.45-0.65","0.46-0.63","0.46-0.67","0.46-0.64","0.46-0.66","0.47-0.64","0.47-0.65" }, questReset = true, questID = { 61091 } }; --Worthy Aspirant's Cache
 	[355286] = { zoneID = 1533, artID = { 1321 }, x = 0.56488544, y = 0.1714511, overlay = { "0.56-0.17" }, questID = { 61150 } }; --Memorial Offerings
 	[355435] = { zoneID = 1533, artID = { 1321 }, x = 0.36042827, y = 0.26543507, overlay = { "0.36-0.25","0.36-0.26" }, questID = { 61183 } }; --Vesper of the Silver Wind
-	[356756] = { zoneID = 1533, artID = { 1321 }, x = 0.41599998, y = 0.545, overlay = { "0.41-0.54" }, questID = { 60314 } }; --Horn of Courage
 	[356818] = { zoneID = 1533, artID = { 1321 }, x = 0.6026302, y = 0.781719, overlay = { "0.60-0.78" }, questReset = true, questID = { 61688 }, worldmap = true }; --Penitence of Purity
 	[356819] = { zoneID = 1533, artID = { 1321 }, x = 0.60264206, y = 0.7817065, overlay = { "0.60-0.78" }, questReset = true, questID = { 61688 }, worldmap = true }; --Test of Penitence
 	[356823] = { zoneID = 1533, artID = { 1321 }, x = 0.6106753, y = 0.15101019, overlay = { "0.61-0.15" }, questID = { 61698 } }; --Cloudwalker's Coffer
@@ -462,13 +461,13 @@ private.CONTAINER_INFO = {
 	[169664] = { zoneID = 1536, artID = { 1323 }, x = 0.32740262, y = 0.21277522, overlay = { "0.32-0.21" }, questID = { 60587 } }; --Objects
 	[171337] = { zoneID = 1536, artID = { 1323 }, x = 0.5248396, y = 0.20353383, overlay = { "0.49-0.19","0.57-0.41","0.53-0.20","0.49-0.24","0.53-0.14","0.52-0.37","0.52-0.20" }, questReset = true, questID = { 61111 }, worldmap = true }; --Objects
 	[180273] = { zoneID = 1536, artID = { 1323 }, x = 0.5143, y = 0.4847, overlay = { "0.51-0.48" }, questID = { 61128 } }; --Objects
-	[181164] = { zoneID = 1536, artID = { 1323 }, x = 0.5143, y = 0.4847, overlay = { "0.51-0.48" }, questID = { 58868 } }; --Objects
+	[181164] = { zoneID = 1536, artID = { 1323 }, x = 0.5143, y = 0.4847, overlay = { "0.51-0.48" }, questID = { 61127 }, reset = false }; --Objects
 	[341424] = { zoneID = {
 				[1536] = { x = 0.245, y = 0.3162, artID = { 1323 }, overlay = { "0.24-0.31" } };
 				[1649] = { x = 0.3457981, y = 0.5551744, artID = { 1613 }, overlay = { "0.34-0.55" } };
 			  }, questID = { 58710 } }; --Forgotten Momentos
 	[345456] = { zoneID = 1536, artID = { 1323 }, x = 0.48310617, y = 0.16305465, overlay = { "0.48-0.16" }, questID = { 59244 } }; --Chest of Eyes
-	[345458] = { zoneID = 1536, artID = { 1323 }, x = 0.4885103, y = 0.45984867, overlay = { "0.48-0.48","0.48-0.46","0.48-0.47","0.49-0.45","0.49-0.46","0.49-0.49","0.50-0.46","0.50-0.48","0.51-0.5","0.51-0.47","0.51-0.44","0.52-0.48","0.52-0.47","0.48-0.45" } }; --Prize Bag
+	[345458] = { zoneID = 1536, artID = { 1323 }, x = 0.5105762, y = 0.49999347, overlay = { "0.48-0.48","0.48-0.46","0.48-0.47","0.49-0.45","0.49-0.46","0.49-0.49","0.50-0.46","0.50-0.48","0.51-0.5","0.51-0.47","0.51-0.44","0.52-0.48","0.52-0.47","0.51-0.49" } }; --Prize Bag
 	[345459] = { zoneID = 1536, artID = { 1323 }, x = 0.38657668, y = 0.7830296, overlay = { "0.32-0.77","0.33-0.81","0.33-0.72","0.35-0.76","0.36-0.78","0.38-0.78" }, questReset = true }; --Bladesworn Supply Cache
 	[347444] = { zoneID = 1536, artID = { 1323 }, x = 0.47256482, y = 0.6215807, overlay = { "0.47-0.62" }, questID = { 59358 } }; --Ornate Bone Shield
 	[348521] = { zoneID = 1536, artID = { 1323 }, x = 0.5589381, y = 0.38981673, overlay = { "0.55-0.38" }, questID = { 59428 } }; --Strange Growth
@@ -479,7 +478,7 @@ private.CONTAINER_INFO = {
 	[353380] = { zoneID = 1536, artID = { 1323 }, x = 0.3079218, y = 0.28749505, overlay = { "0.30-0.28" }, questID = { 60730 } }; --Halis's Lunch Pail
 	[354852] = { zoneID = 1536, artID = { 1323 }, x = 0.6522323, y = 0.49628308, overlay = { "0.65-0.49","0.66-0.43","0.68-0.47","0.71-0.50","0.73-0.49","0.75-0.45","0.76-0.49" }, questReset = true, questID = { 61090 }, worldmap = true }; --Sprouting Growth
 	[354853] = { zoneID = 1536, artID = { 1323 }, x = 0.47682464, y = 0.3592143, overlay = { "0.40-0.31","0.40-0.25","0.41-0.38","0.44-0.22","0.45-0.35","0.46-0.31","0.47-0.35","0.47-0.29" }, questReset = true, questID = { 61089 }, worldmap = true }; --Sprouting Growth
-	[354856] = { zoneID = 1536, artID = { 1323 }, x = 0.7215498, y = 0.889251, overlay = { "0.65-0.82","0.65-0.75","0.65-0.88","0.68-0.86","0.70-0.75","0.72-0.88" }, questReset = true, questID = { 61093 }, worldmap = true }; --Slime-Coated Crate
+	[354856] = { zoneID = 1536, artID = { 1323 }, x = 0.6581006, y = 0.7592154, overlay = { "0.65-0.82","0.65-0.75","0.65-0.88","0.68-0.86","0.70-0.75","0.72-0.88" }, questReset = true, questID = { 61093 }, worldmap = true }; --Slime-Coated Crate
 	[355036] = { zoneID = 1536, artID = { 1323 }, x = 0.65882397, y = 0.24616338, overlay = { "0.64-0.33","0.65-0.24","0.69-0.27","0.69-0.33" }, questReset = true, worldmap = true }; --Runebound Coffer
 	[355037] = { zoneID = 1536, artID = { 1323 }, x = 0.32360148, y = 0.25688046, overlay = { "0.27-0.46","0.28-0.34","0.32-0.37","0.32-0.25","0.34-0.30" }, questReset = true, questID = { 61120 }, worldmap = true }; --Runebound Coffer
 	[355038] = { zoneID = 1536, artID = { 1323 }, x = 0.64826846, y = 0.3325661, overlay = { "0.64-0.33","0.65-0.24","0.69-0.27","0.69-0.33" }, questReset = true, questID = { 61116 }, worldmap = true }; --Runebound Coffer
@@ -491,13 +490,13 @@ private.CONTAINER_INFO = {
 	[355980] = { zoneID = 1536, artID = { 1323 }, x = 0.6466931, y = 0.24756162, overlay = { "0.64-0.24" }, questID = { 61539 } }; --Ritualist's Cache
 	[356535] = { zoneID = 1536, artID = { 1323 }, x = 0.31736317, y = 0.7003526, overlay = { "0.31-0.7","0.31-0.70" }, questID = { 61491 } }; --Runespeaker's Trove
 	[364531] = { zoneID = 1536, artID = { 1323 }, x = 0.32360607, y = 0.25687042, overlay = { "0.27-0.46","0.28-0.34","0.32-0.37","0.32-0.25","0.34-0.30" }, questReset = true, questID = { 61115 }, worldmap = true }; --Runebound Coffer
-	[170406] = { zoneID = 1565, artID = { 1338 }, x = 0.5294409, y = 0.59985846, overlay = { "0.29-0.47","0.31-0.37","0.53-0.60","0.31-0.38","0.62-0.39","0.51-0.24","0.52-0.59" }, questReset = true, questID = { 60829 }, worldmap = true }; --Objects
+	[170406] = { zoneID = 1565, artID = { 1338 }, x = 0.28975773, y = 0.4761618, overlay = { "0.29-0.47","0.31-0.37","0.53-0.60","0.31-0.38","0.62-0.39","0.51-0.24","0.52-0.59","0.28-0.47" }, questReset = true, questID = { 60829 }, worldmap = true }; --Objects
 	[171156] = { zoneID = 1565, artID = { 1338 }, x = 0.560167, y = 0.2101537, overlay = { "0.56-0.21" }, questID = { 61072 } }; --Objects
 	[171484] = { zoneID = 1565, artID = { 1338 }, x = 0.41954315, y = 0.32668573, overlay = { "0.41-0.32" }, questID = { 61147 } }; --Objects
 	[171699] = { zoneID = 1565, artID = { 1338 }, x = 0.26290283, y = 0.58978945, overlay = { "0.26-0.58" }, questID = { 61192 } }; --Objects
 	[180645] = { zoneID = 1565, artID = { 1338 }, x = 0.3185, y = 0.4363, overlay = { "0.31-0.43" }, questID = { 61085 } }; --Translocation Portal
 	[180731] = { zoneID = 1565, artID = { 1338 }, x = 0.6392, y = 0.3754, overlay = { "0.63-0.37" }, questID = { 61074 } }; --Objects
-	[353233] = { zoneID = 1565, artID = { 1338 }, x = 0.31138098, y = 0.535236, overlay = { "0.19-0.58","0.22-0.61","0.28-0.61","0.30-0.60","0.31-0.53" }, questID = { 60664 }, worldmap = true }; --Enchanted Chest
+	[353233] = { zoneID = 1565, artID = { 1338 }, x = 0.19566047, y = 0.5888333, overlay = { "0.19-0.58","0.22-0.61","0.28-0.61","0.30-0.60","0.31-0.53" }, questID = { 60664 }, worldmap = true }; --Enchanted Chest
 	[353306] = { zoneID = 1565, artID = { 1338 }, x = 0.5438454, y = 0.49703762, overlay = { "0.54-0.49" }, questReset = true, questID = { 60672 }, worldmap = true }; --Decayed Husk
 	[353323] = { zoneID = 1565, artID = { 1338 }, x = 0.4240216, y = 0.31205484, overlay = { "0.42-0.31" }, questReset = true, questID = { 60715 }, worldmap = true }; --Decayed Husk
 	[353324] = { zoneID = 1565, artID = { 1338 }, x = 0.7279999, y = 0.28970668, overlay = { "0.72-0.29","0.72-0.28" }, questReset = true, questID = { 61074 }, worldmap = true }; --Decayed Husk
@@ -509,7 +508,7 @@ private.CONTAINER_INFO = {
 	[353332] = { zoneID = 1565, artID = { 1338 }, x = 0.4254361, y = 0.21810631, overlay = { "0.42-0.21" }, questReset = true, questID = { 60720 }, worldmap = true }; --Faerie Stash
 	[353333] = { zoneID = 1565, artID = { 1338 }, x = 0.42542076, y = 0.668772, overlay = { "0.42-0.66" }, questReset = true, questID = { 60719 }, worldmap = true }; --Faerie Stash
 	[353681] = { zoneID = 1565, artID = { 1338 }, x = 0.4803656, y = 0.7114963, overlay = { "0.48-0.71" }, questReset = true, questID = { 60790 }, worldmap = true }; --Lunarlight Pod
-	[353683] = { zoneID = 1565, artID = { 1338 }, x = 0.39200002, y = 0.544, overlay = { "0.39-0.54" } }; --Lunarlight Pod
+	[353683] = { zoneID = 1565, artID = { 1338 }, x = 0.39224842, y = 0.5447441, overlay = { "0.39-0.54" }, questReset = true, questID = { 60791 }, worldmap = true }; --Lunarlight Pod
 	[353684] = { zoneID = 1565, artID = { 1338 }, x = 0.4815738, y = 0.34859392, overlay = { "0.48-0.34" }, questReset = true, questID = { 60792 }, worldmap = true }; --Lunarlight Pod
 	[353685] = { zoneID = 1565, artID = { 1338 }, x = 0.5545905, y = 0.38615692, overlay = { "0.55-0.38" }, questReset = true, questID = { 60793 }, worldmap = true }; --Lunarlight Pod
 	[353686] = { zoneID = 1565, artID = { 1338 }, x = 0.6117184, y = 0.5680633, overlay = { "0.61-0.56" }, questReset = true, questID = { 60794 }, worldmap = true }; --Lunarlight Pod

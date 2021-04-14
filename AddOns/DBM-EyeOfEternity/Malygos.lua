@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Malygos", "DBM-EyeOfEternity")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20201120224113")
 mod:SetCreatureID(28859)
 mod:SetEncounterID(1094)
 mod:SetModelID(26752)
@@ -95,7 +95,7 @@ end
 function mod:OnCombatStart(delay)
 	tableBuild = false
 	self.vb.phase = 1
-	timerVortexCD:Start(48-delay)--Will verify with more logs next week.
+	timerVortexCD:Start(44.6-delay)--Will verify with more logs next week.
 	enrageTimer:Start(-delay)
 	timerAchieve:Start(-delay)
 	table.wipe(guids)

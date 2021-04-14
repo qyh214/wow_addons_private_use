@@ -53,6 +53,8 @@ local frame = LGF.GetUnitFrame(unit , options)
 - ignoreTargettargetFrame : boolean (default true)
 - ignorePartyFrame : boolean (default false)
 - ignorePartyTargetFrame : boolean (default true)
+- ignoreRaidFrame : boolean (default false)
+
 - playerFrames : array, default :
 
 ```Lua
@@ -109,6 +111,23 @@ local frame = LGF.GetUnitFrame(unit , options)
 ```Lua
 {
     "SUFChildpartytarget",
+}
+```
+
+- raidFrames : array, default :
+
+```Lua
+{
+    "^Vd",
+    "^HealBot",
+    "^GridLayout",
+    "^Grid2Layout",
+    "^PlexusLayout",
+    "^ElvUF_RaidGroup",
+    "^oUF_.-Raid",
+    "^LimeGroup",
+    "^SUFHeaderraid",
+    "^CompactRaid",
 }
 ```
 

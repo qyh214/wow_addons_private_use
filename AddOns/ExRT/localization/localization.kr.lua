@@ -221,8 +221,8 @@ L.RaidCheckMinFlaskExpMin = "분"
 L.RaidCheckDisableInLFR = "공격대 찾기에서 끄기"
 
 L.RaidCheckReinforced = "보강 %("
-L.RaidCheckOilSharpen = "무게 증강 %("
-L.RaidCheckOilSharpen2 = "무게 증강 %("
+L.RaidCheckOilSharpen = "무게 증강 [VIX]+"
+L.RaidCheckOilSharpen2 = "무게 증강 [VIX]+"
 
 L.marksbarstart = "초기화"
 L.marksbardel = "삭제"

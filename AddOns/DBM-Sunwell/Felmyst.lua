@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Felmyst", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142051")
+mod:SetRevision("20210119194113")
 mod:SetCreatureID(25038)
 mod:SetEncounterID(726)
 mod:SetModelID(22838)
@@ -77,7 +77,7 @@ end
 
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 45866 and not self:IsTrivial(85) then
+	if args.spellId == 45866 and not self:IsTrivial() then
 		timerCorrosion:Start(args.destName)
 		if not args:IsPlayer() then
 			specWarnCorrosion:Show(args.destName)
@@ -103,7 +103,7 @@ end
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 45855 then
 		timerGasCD:Start()
-		if not self:IsTrivial(85) then
+		if not self:IsTrivial() then
 			specWarnGas:Show()
 			specWarnGas:Play("helpdispel")
 		end

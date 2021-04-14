@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Mimiron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200530203003")
+mod:SetRevision("20210120231753")
 mod:SetCreatureID(33432)
 mod:SetEncounterID(1138)
 mod:DisableESCombatDetection()
@@ -91,7 +91,7 @@ function mod:OnCombatStart(delay)
 	self.vb.napalmShellIcon = 7
 	table.wipe(napalmShellTargets)
 	timerPlasmaBlastCD:Start(18-delay)
-	timerShockBlastCD:Start(30-delay)
+	timerShockBlastCD:Start(20.7-delay)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(6)
 	end

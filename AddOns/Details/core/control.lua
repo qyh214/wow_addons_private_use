@@ -927,28 +927,28 @@
 		function Details:GetPlayersInArena()
 			local aliados = GetNumGroupMembers() -- LE_PARTY_CATEGORY_HOME
 			for i = 1, aliados-1 do
-				local role = UnitGroupRolesAssigned ("party" .. i)
-				if (role ~= "NONE") then
+				local role = UnitGroupRolesAssigned and UnitGroupRolesAssigned("party" .. i) or "DAMAGER"
+				if (role ~= "NONE" and UnitExists("party" .. i)) then
 					local name = GetUnitName ("party" .. i, true)
 					Details.arena_table [name] = {role = role}
 				end
 			end
 			
-			local role = UnitGroupRolesAssigned ("player")
+			local role = UnitGroupRolesAssigned and UnitGroupRolesAssigned("player") or "DAMAGER"
 			if (role ~= "NONE") then
 				local name = GetUnitName ("player", true)
 				Details.arena_table [name] = {role = role}
 			end
-			if (Details.debug) then
-				Details:Msg ("(debug) Found", oponentes, "enemies and", aliados, "allies")
-			end
 
 			--enemies
-			local enemiesAmount = GetNumArenaOpponentSpecs()
+			local enemiesAmount = GetNumArenaOpponentSpecs and GetNumArenaOpponentSpecs() or 5
 			table.wipe(_detalhes.arena_enemies)
 
 			for i = 1, enemiesAmount do
-				_detalhes.arena_enemies[GetUnitName("arena" .. i, true)] = "arena" .. i
+				local enemyName = _G.GetUnitName("arena" .. i, true)
+				if (enemyName) then
+					_detalhes.arena_enemies[enemyName] = "arena" .. i
+				end
 			end
 		end
 		

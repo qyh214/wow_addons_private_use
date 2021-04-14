@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Illidan", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142051")
+mod:SetRevision("20210119194113")
 mod:SetCreatureID(22917)
 mod:SetEncounterID(609)
 mod:SetModelID(21135)
@@ -90,7 +90,7 @@ function mod:OnCombatStart(delay)
 	self.vb.warned_preP2 = false
 	self.vb.warned_preP4 = false
 	berserkTimer:Start(-delay)
-	if not self:IsTrivial(85) then
+	if not self:IsTrivial() then
 		self:RegisterShortTermEvents(
 			"SPELL_DAMAGE 40841",
 			"SPELL_MISSED 40841",

@@ -1,3 +1,22 @@
+v3.5.6
+- fixed an issue causing a long freeze and crash when opening mdt
+v3.5.5
+- logo update
+v3.5.4
+- nil fix (math.round)
+v3.5.3
+- visual update for pull outlines
+v3.5.2
+- updated G42 and G43 in Plaguefall: Slime Tentacle infront of Domina Venomblade now awards 10 count
+v3.5.1
+- added 2x Plagueroc in Plaguefall once again
+v3.5.0
+- 9.0.5 TOC update
+v3.4.9
+- locale error fix
+v3.4.8
+- mapping updates
+- locale fixes
 v3.4.7
 - affix list fix
 - fix enemy info model frame strata

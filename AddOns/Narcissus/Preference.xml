@@ -551,10 +551,27 @@
                                 </Layers>
                             </Frame>
 
-                            <Frame inherits="Narci_Preference_TabTemplate" parentKey="ExtensionTab">
+                            <Frame inherits="Narci_Preference_TabTemplate" parentKey="Tab8"> <!--Soulbinds-->
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeKey="$parent.CreatureTab" relativePoint="BOTTOMLEFT"/>
                                     <Anchor point="TOPRIGHT" relativeKey="$parent.CreatureTab" relativePoint="BOTTOMRIGHT"/>
+                                </Anchors>
+                                <Layers>
+                                    <Layer level="OVERLAY">
+                                        <Texture file="Interface\AddOns\Narcissus\Art\Preference\ConduitTooltip" parentKey="Preview">
+                                            <Size x="200" y="100"/>
+                                            <Anchors>
+                                                <Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="-28" y="-38"/>
+                                            </Anchors>
+                                        </Texture>
+                                    </Layer>
+                                </Layers>
+                            </Frame>
+
+                            <Frame inherits="Narci_Preference_TabTemplate" parentKey="ExtensionTab">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.Tab8" relativePoint="BOTTOMLEFT"/>
+                                    <Anchor point="TOPRIGHT" relativeKey="$parent.Tab8" relativePoint="BOTTOMRIGHT"/>
                                 </Anchors>
                                 <Layers>
                                     <Layer>

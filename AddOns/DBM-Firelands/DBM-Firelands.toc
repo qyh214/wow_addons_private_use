@@ -1,4 +1,4 @@
-﻿## Interface: 90002
+﻿## Interface: 90005
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Firelands|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Feuerlande|r
@@ -24,7 +24,7 @@
 ## X-DBM-Mod-MinExpansion: 3
 ## X-Curse-Project-ID: 43971
 ## X-WoWI-ID: 21469
-## Version: r211
+## Version: r212
 
 localization.en.lua
 localization.de.lua

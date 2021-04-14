@@ -399,6 +399,8 @@ L["Heart Guardian"] = "Хранитель Сердца"
 L["Heartsbane Runeweaver"] = "Плетельщица рун из ковена Мертвых Сердец"
 L["Heartsbane Soulcharmer"] = "Исказительница душ из ковена Мертвых Сердец"
 L["Heartsbane Vinetwister"] = "Прядильщица лоз из ковена Мертвых Сердец"
+--[[Translation missing --]]
+--[[ L["Heavin the Breaker"] = ""--]] 
 L["Heavy Scrapbot"] = "Тяжелый хламобот"
 L["Helmouth Cliffs"] = "Утесы Адской Пасти"
 L["helpPlateDungeon"] = "Пользовательская настройка опций подземелья"
@@ -594,6 +596,8 @@ L["Nalthor the Rimebinder"] = "Налтор Криомант"
 L["Nar'zudah"] = "Нар'зуда"
 L["Necrotic"] = "Некротический"
 L["Nefarious Darkspeaker"] = "Пагубный темный проповедник"
+--[[Translation missing --]]
+--[[ L["Nekthara the Mangler"] = ""--]] 
 L["Neltharion's Lair"] = "Логово Нелтариона"
 L["Neltharion's Lair Sublevel"] = "Логово Нелтариона"
 L["Netherspace"] = "Пустомарь"
@@ -703,6 +707,8 @@ L["Red, Green and Blue"] = "Красный, Зелёный и Синий"
 L["Redo"] = "Повторить"
 L["Refreshment Vendor"] = "Продавщица закусок"
 L["Regal Mistdancer"] = "Благородный туманный танцор"
+--[[Translation missing --]]
+--[[ L["Rek the Hardened"] = ""--]] 
 L["Relentless"] = "Непреклонный"
 L["Remnant of Fury"] = "Частица неистовства"
 L["Rename"] = "Переименовать"

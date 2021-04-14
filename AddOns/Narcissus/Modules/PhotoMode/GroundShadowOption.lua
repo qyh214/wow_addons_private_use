@@ -226,6 +226,19 @@ function NarciGroundShadowOptionMixin:OnLoad()
     Toggle:SetScript("OnDoubleClick", function()
         return
     end)
+
+    self.ColorPickerButton = self:GetParent().ColorPickerButton;
+    self.ColorPickerButton.onClickFunc = function()
+        if Narci_ColorPicker:IsShown() then
+            self.ColorPickerButton:Deselect();
+            Narci_ColorPicker:Hide();
+        else
+            Narci_ColorPicker:SetObject(self.ColorPickerButton);
+        end
+        
+    end;
+
+    self.OnLoad = nil;
 end
 
 function NarciGroundShadowOptionMixin:UpdateSliderVisibility()
@@ -271,7 +284,18 @@ function NarciGroundShadowOptionMixin:ReAnchor(model, parent)
     self.Toggle:ClearAllPoints();
     self.Toggle:SetParent(parent);
     self.Toggle:SetPoint("TOPLEFT", parent, "TOPLEFT", 10, -4);
+
+    self.ColorPickerButton:ClearAllPoints();
+    self.ColorPickerButton:SetParent(parent);
+    self.ColorPickerButton:SetPoint("TOPRIGHT", parent, "TOPRIGHT", -6, -6);
+    self.ColorPickerButton.objects = {
+        model.GroundShadow.ShadowTextures.Shadow,
+        model.GroundShadow.ShadowTextures.RadialShadow,
+    };
+
     self.GroundShadowContainer = model.GroundShadow.ShadowTextures;
     self.RotationButton = model.GroundShadow.Option.RotationButton;
     self:UpdateUI();
+
+    Narci_ColorPicker:Hide();
 end

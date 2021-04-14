@@ -1,10 +1,16 @@
-## Interface: 90002
+## Interface: 90005
 ## Title: Details!|Skada Covenants
 ## Notes: Show covenant icon
 ## Author: Toenak
-## Version: 0.0.1
+## Version: 1.0.0
 ## X-License: MIT
 ## X-Curse-Project-ID: 431558
-## SavedVariablesPerCharacter: DCovenant
+## SavedVariablesPerCharacter: DCovenant, DCovenantLog
 
-Covenant.lua
+Utils.lua
+SpellIDs.lua
+Oribos.lua
+Details.lua
+Skada.lua
+Core.lua
+Commands.lua

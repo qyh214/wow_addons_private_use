@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(819, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20210119194055")
 mod:SetCreatureID(68476)
 mod:SetEncounterID(1575)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 1)
@@ -159,7 +159,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 136767 then
 		local amount = args.amount or 1
-		local threatamount = self:IsTrivial(100) and 21 or 9
+		local threatamount = self:IsTrivial() and 21 or 9
 		warnPuncture:Show(args.destName, amount)
 		timerPuncture:Start(args.destName)
 		timerPunctureCD:Start()

@@ -641,8 +641,10 @@ function NarciTitleTooltipMixin:ShowSource()
 		self.Description:SetText(description);
 		if not description then return; end;
 		local lines = self.Description:GetNumLines() + self.Title:GetNumLines();
-		if lines < 3 then
-			self.Description:SetText(description.."\n");
+		if lines < 2 then
+			self.Description:SetText(description.."\n \n ");
+		elseif lines < 3 then
+			self.Description:SetText(description.."\n ");
 		end
 	else
 		return false

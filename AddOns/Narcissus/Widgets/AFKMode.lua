@@ -23,7 +23,7 @@ AFK:SetScript("OnEvent",function(self,event,...)
             end)
             C_Timer.After(0.6, function()
                 if IsResting() then
-                    DoEmote("Read", "none");
+                    --DoEmote("Read", "none");
                 end
             end)
         end
@@ -78,13 +78,15 @@ Chat:SetScript("OnEvent", function(self, event, ...)
 end)
 --]]
 
+--[[
 local EL = CreateFrame("Frame");
 local events = {"UNIT_SPELLCAST_SENT", };
 for i = 1, #events do
-    --EL:RegisterEvent(events[i])
+    EL:RegisterEvent(events[i])
 end
 
 EL:SetScript("OnEvent", function(self, event, ...)
     print(event)
     print(...)
 end);
+--]]

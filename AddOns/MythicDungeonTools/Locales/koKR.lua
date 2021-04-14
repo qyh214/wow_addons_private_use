@@ -420,6 +420,8 @@ L["Heart Guardian"] = "심장부 수호자"
 L["Heartsbane Runeweaver"] = "심장파멸 룬마술사"
 L["Heartsbane Soulcharmer"] = "심장파멸 영혼매혹사"
 L["Heartsbane Vinetwister"] = "심장파멸 덩굴왜곡사"
+--[[Translation missing --]]
+--[[ L["Heavin the Breaker"] = ""--]] 
 L["Heavy Scrapbot"] = "중형 고철로봇"
 L["Helmouth Cliffs"] = "지옥어귀 벼랑"
 --[[Translation missing --]]
@@ -619,6 +621,8 @@ L["Nalthor the Rimebinder"] = "냉기결속사 날토르"
 L["Nar'zudah"] = "나르주다"
 L["Necrotic"] = "괴저"
 L["Nefarious Darkspeaker"] = "사악한 암흑예언자"
+--[[Translation missing --]]
+--[[ L["Nekthara the Mangler"] = ""--]] 
 L["Neltharion's Lair"] = "넬타리온의 둥지"
 L["Neltharion's Lair Sublevel"] = "넬타리온의 둥지"
 L["Netherspace"] = "황천의 영역"
@@ -724,6 +728,8 @@ L["Red, Green and Blue"] = "빨간색과 초록색과 파란색"
 L["Redo"] = "다시 하기"
 L["Refreshment Vendor"] = "원기 회복 음식 상인"
 L["Regal Mistdancer"] = "제왕의 안개춤꾼"
+--[[Translation missing --]]
+--[[ L["Rek the Hardened"] = ""--]] 
 L["Relentless"] = "불굴"
 L["Remnant of Fury"] = "분노의 잔재"
 L["Rename"] = "이름 바꾸기"

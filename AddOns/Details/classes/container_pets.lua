@@ -52,6 +52,7 @@ function container_pets:PegaDono (pet_serial, pet_nome, pet_flags)
 			pet_nome = pet_nome .. " <".. ownerName ..">"
 		end
 		
+		--return busca[6] or pet_nome, busca[1], busca[2], busca[3] --> busca[6] poderia estar causando problemas
 		return pet_nome, busca[1], busca[2], busca[3] --> [1] dono nome [2] dono serial [3] dono flag
 	end
 	
@@ -101,7 +102,7 @@ function container_pets:PegaDono (pet_serial, pet_nome, pet_flags)
 	end
 	
 	if (dono_nome) then
-		self.pets [pet_serial] = {dono_nome, dono_serial, dono_flags, _detalhes._tempo, true} --> adicionada a flag emulada
+		self.pets [pet_serial] = {dono_nome, dono_serial, dono_flags, _detalhes._tempo, true, pet_nome, pet_serial} --> adicionada a flag emulada
 		
 		if (not pet_nome:find ("<")) then
 			pet_nome = pet_nome .. " <".. dono_nome ..">"

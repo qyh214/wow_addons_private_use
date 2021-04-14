@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Buru", "DBM-AQ20", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145731")
+mod:SetRevision("20210119194113")
 mod:SetCreatureID(15370)
 mod:SetEncounterID(721)
 mod:SetModelID(15654)
@@ -22,7 +22,7 @@ local specWarnPursue			= mod:NewSpecialWarning("SpecWarnPursue", nil, nil, nil, 
 local timerDismember			= mod:NewTargetTimer(10, 96, nil, "Tank", 2, 5, nil, DBM_CORE_L.TANK_ICON)
 
 function mod:OnCombatStart(delay)
-	if not self:IsTrivial(80) then
+	if not self:IsTrivial() then
 		self:RegisterShortTermEvents(
 			"SPELL_AURA_APPLIED 96",
 			"SPELL_AURA_APPLIED_DOSE 96",

@@ -1,7 +1,7 @@
 <Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
-    <!-- © 2020 Peter Yu All Rights Reserved -->
-    <!--Call: 	self.AnimFrame.Anim:SetScale(scale)   self.AnimFrame.Anim.Bling:Play()-->
-	
+    <!-- © 2021 Peter Yu All Rights Reserved -->
+	<Script file="Widgets.lua"/>
+
 	<Frame name="NarciArtFrameTemplate" frameLevel="20" virtual="true">
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
@@ -232,6 +232,41 @@
 		</Scripts>
 	</Frame>
 
+	<Frame name="NarciFrameRegularShadowBorderTemplate" virtual="true" mixin="ExpansionTransitionBackdropTemplateMixin">
+		<Backdrop edgeFile="Interface\AddOns\Narcissus\Art\Tooltip\Tooltip-DispersiveShadowBorder" tile="true">
+			<EdgeSize>
+				<AbsValue val="24"/>
+			</EdgeSize>
+		</Backdrop>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="-7" y="7"/>
+			<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="7" y="-7"/>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND" textureSubLevel="-1">
+				<Texture setAllPoints="true">
+					<Color r="0.05" g="0.05" b="0.05" a="0.8"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.$parent" relativePoint="TOPLEFT"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.$parent" relativePoint="BOTTOMRIGHT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				local backdropInfo = {
+					edgeFile = "Interface\\AddOns\\Narcissus\\Art\\Tooltip\\Tooltip-RoundedWhite",
+					tile = true,
+					tileEdge = true,
+					tileSize = 12,
+					edgeSize = 12,
+				}
+				self:SetBackdrop(backdropInfo);
+			</OnLoad>
+		</Scripts>
+	</Frame>
+
 	<Frame name="NarciFrameWithShadowTemplate" virtual="true" mixin="ExpansionTransitionBackdropTemplateMixin">
 		<Anchors>
 			<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="-11" y="11"/>
@@ -336,10 +371,10 @@
 	<Frame name="NarciUpdateFrameTemplate" hidden="true" virtual="true">
 		<Scripts>
 			<OnLoad>
-				self.TimeSinceLastUpdate = 0;
+				self.t = 0;
 			</OnLoad>
 			<OnHide>
-				self.TimeSinceLastUpdate = 0;
+				self.t = 0;
 			</OnHide>
 		</Scripts>
 	</Frame>
@@ -2274,4 +2309,278 @@
 			</OnDragStop>
 		</Scripts>
 	</Frame>
+
+	<Slider name="NarciColorPickerSliderTemplate" virtual="true" orientation="HORIZONTAL" enableMouse="true" valueStep="1" obeyStepOnDrag="true" mixin="NarciColorPickerSliderMixin">
+		<Size x="144" y="16"/>
+		<ThumbTexture parentKey="Thumb">
+			<Size x="6" y="12"/>
+			<Color r="0" g="0" b="0" a="0.0"/>
+		</ThumbTexture>
+
+		<Layers>
+			<Layer level="OVERLAY">
+				<Texture parentKey="Left">
+					<Size x="16" y="16"/>
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="LEFT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="Right">
+					<Size x="16" y="16"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativePoint="RIGHT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="Center">
+					<Size x="16" y="16"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.Left" relativePoint="RIGHT"/>
+						<Anchor point="RIGHT" relativeKey="$parent.Right" relativePoint="LEFT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="2">
+				<Texture parentKey="ThumbTexture">
+					<Size x="6" y="12"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Thumb" relativePoint="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="1">
+				<Texture parentKey="Marker" hidden="true">
+					<Size x="2" y="12"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Thumb" relativePoint="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnValueChanged method="OnValueChanged"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnMouseUp method="OnMouseUp"/>
+		</Scripts>
+	</Slider>
+
+	<Button name="NarciColorPickerActionButtonTemplate" virtual="true" mixin="NarciColorPickerActionButtonMixin" motionScriptsWhileDisabled="true">
+		<Size x="64" y="16"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="Reference">
+					<Size x="64" y="14"/>
+					<Anchors>
+						<Anchor point="CENTER" relativePoint="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture parentKey="LeftEnd">
+					<Size x="16" y="32"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.Reference" relativePoint="LEFT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="RightEnd">
+					<Size x="16" y="32"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeKey="$parent.Reference" relativePoint="RIGHT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="Center">
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Reference" relativePoint="CENTER"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="Left">
+					<Size x="8" y="32"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.LeftEnd" relativePoint="RIGHT"/>
+						<Anchor point="RIGHT" relativeKey="$parent.Center" relativePoint="LEFT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="Right">
+					<Size x="8" y="32"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.Center" relativePoint="RIGHT"/>
+						<Anchor point="RIGHT" relativeKey="$parent.RightEnd" relativePoint="LEFT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnMouseDown method="OnMouseDown"/>
+			<OnMouseUp method="OnMouseUp"/>
+			<OnClick method="OnClick"/>
+		</Scripts>
+	</Button>
+
+	<Frame name="Narci_ColorPicker" mixin="NarciUIColorPickerMixin" movable="true" scale="1" enableMouse="true" frameStrata="DIALOG" toplevel="true" ignoreParentScale="true">
+		<Size x="144" y="72"/>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<Layers>
+			<Layer>
+				<Texture parentKey="Preview">
+					<Size x="24" y="24"/>
+					<Anchors>
+						<Anchor point="BOTTOM" relativePoint="TOP" y="8"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Slider inherits="NarciColorPickerSliderTemplate" parentKey="HueSlider">
+				<Anchors>
+					<Anchor point="TOP" relativePoint="TOP" y="0"/>
+				</Anchors>
+			</Slider>
+			<Slider inherits="NarciColorPickerSliderTemplate" parentKey="SaturationSlider">
+				<Anchors>
+					<Anchor point="TOP" relativePoint="TOP" y="-24"/>
+				</Anchors>
+			</Slider>
+			<Slider inherits="NarciColorPickerSliderTemplate" parentKey="BrightnessSlider">
+				<Anchors>
+					<Anchor point="TOP" relativePoint="TOP" y="-48"/>
+				</Anchors>
+			</Slider>
+
+			<Button inherits="NarciColorPickerActionButtonTemplate" parentKey="ConfirmButton">
+				<KeyValues>
+					<KeyValue key="action" value="Confirm" type="string"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativePoint="TOP" y="-72" x="-8"/>
+				</Anchors>				
+			</Button>
+			<Button inherits="NarciColorPickerActionButtonTemplate" parentKey="CancelButton">
+				<KeyValues>
+					<KeyValue key="action" value="Cancel" type="string"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOP" y="-72" x="8"/>
+				</Anchors>				
+			</Button>
+		</Frames>
+		<Frames>
+			<Frame inherits="NarciFrameRegularShadowBorderTemplate" useParentLevel="true" parentKey="FrameContainer"/>
+		</Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnDragStart method="OnDragStart"/>
+			<OnDragStop method="OnDragStop"/>
+		</Scripts>
+	</Frame>
+
+	<Button name="NarciSkewedRectButtonTemplate" virtual="true" mixin="NarciShewedRectButtonMixin">
+		<Size x="36" y="24"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="Icon1">
+					<Size x="36" y="36"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="Icon2">
+					<Size x="36" y="36"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="Icon0">
+					<Size x="36" y="36"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+				
+				<MaskTexture parentKey="MaskLeft" file="Interface\AddOns\Narcissus\Art\SkewdRect\ShewedRectMask-Left" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+					<Size x="6" y="24"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="0"/>
+					</Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="Icon1"/>
+					</MaskedTextures>
+				</MaskTexture>
+				<MaskTexture parentKey="MaskRight" file="Interface\AddOns\Narcissus\Art\SkewdRect\ShewedRectMask-Right" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+					<Size x="6" y="24"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="0"/>
+					</Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="Icon2"/>
+					</MaskedTextures>
+				</MaskTexture>
+
+				<MaskTexture parentKey="MaskCenter" file="Interface\AddOns\Narcissus\Art\Masks\Full" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+					<Size x="26" y="24"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER"/>
+					</Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="Icon0"/>
+					</MaskedTextures>
+				</MaskTexture>
+			</Layer>
+		</Layers>
+	</Button>
+
+    <Frame name="NarciProgressTimerTemplate" virtual="true" mixin="NarciProgressTimerMixin">
+        <Size x="16" y="2"/>
+        <Layers>
+            <Layer>
+                <Texture parentKey="Fluid">
+                    <Color r="0.5" g="0.5" b="0.5"/>
+                    <Animations>
+                        <AnimationGroup parentKey="animFade" setToFinalAlpha="true">
+                            <Alpha duration="0.5" fromAlpha="1" toAlpha="0" order="1"/>
+							<Scripts>
+								<OnFinished>
+									local timer = self:GetParent():GetParent();
+									if timer.isLoop and (not timer.isPaused) then
+										self:GetParent().animFill:Play();
+									end
+									if self.onFinishedFunc then
+										self.onFinishedFunc();
+									end
+								</OnFinished>
+							</Scripts>
+                        </AnimationGroup>
+                        <AnimationGroup parentKey="animFill" setToFinalAlpha="true">
+                            <Alpha duration="0" fromAlpha="1" toAlpha="1" order="1"/>
+                            <Scale duration="2" fromScaleX="0.01" fromScaleY="1" toScaleX="1" toScaleY="1" order="1" parentKey="s1">
+                                <Origin point="LEFT"/>
+                            </Scale>
+							<Scripts>
+								<OnFinished>
+									self:GetParent().animFade:Play();
+									if self.onFinishedFunc then
+										self.onFinishedFunc();
+									end
+								</OnFinished>
+							</Scripts>
+                        </AnimationGroup>
+                    </Animations>
+                </Texture>
+				<Texture>
+					<Color r="0" g="0" b="0" a="0.8"/>
+                    <Gradient orientation="VERTICAL">
+                        <MinColor a="0" r="0" g="0" b="0"/>
+                        <MaxColor a="1" r="0" g="0" b="0"/>
+                    </Gradient>
+				</Texture>
+            </Layer>
+        </Layers>
+    </Frame>
 </Ui>

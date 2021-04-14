@@ -411,6 +411,8 @@ L["Heart Guardian"] = "Guardião de Coração"
 L["Heartsbane Runeweaver"] = "Fiarruna Sangra-coração"
 L["Heartsbane Soulcharmer"] = "Encantadeira Sangra-coração"
 L["Heartsbane Vinetwister"] = "Cipoeira Sangra-coração"
+--[[Translation missing --]]
+--[[ L["Heavin the Breaker"] = ""--]] 
 L["Heavy Scrapbot"] = "Sucatinho Pesado"
 L["Helmouth Cliffs"] = [=[Penhascos da Boca do Inferno 
 ]=]
@@ -611,6 +613,8 @@ L["Nalthor the Rimebinder"] = "Nalthor, o Senhor da Geada"
 L["Nar'zudah"] = "Nar'zudah"
 L["Necrotic"] = "Necrótica"
 L["Nefarious Darkspeaker"] = "Orador Sombrio Nefasto"
+--[[Translation missing --]]
+--[[ L["Nekthara the Mangler"] = ""--]] 
 L["Neltharion's Lair"] = [=[Covil de Neltharian 
 ]=]
 L["Neltharion's Lair Sublevel"] = [=[Covil de Neltharian Subnível 1
@@ -753,6 +757,8 @@ L["Reaping"] = "Ceifadora"
 --[[ L["Redo"] = ""--]] 
 L["Refreshment Vendor"] = "Vendedora de Refeições"
 L["Regal Mistdancer"] = "Dançarino da Névoa Régio"
+--[[Translation missing --]]
+--[[ L["Rek the Hardened"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Relentless"] = ""--]] 
 L["Remnant of Fury"] = "Resquício da Fúria"
