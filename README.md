@@ -102,7 +102,9 @@ https://bbs.nga.cn/read.php?tid=24562077
 
 暴怒魔法效果提示（怪物buff驱散提示）：https://wago.io/r2QBcOnlT
 
-大秘境-死疽词缀警告-奶妈用：https://wago.io/p1ilh7DKv
+大秘境-死疽词缀警告-奶妈用：
+- 原版：https://bbs.nga.cn/read.php?tid=24910345
+- 自用修改版：https://wago.io/p1ilh7DKv
 
 奶萨水盾、土盾提示：
 - 原版：https://bbs.nga.cn/read.php?tid=24506536
@@ -112,6 +114,10 @@ Nnoggie大秘境技能CD监视升级版&自制团队CD监视，带技能激活�
 - ZenTracker后端模块：https://wago.io/r14U746B7
 - 小队CD监控前端：https://wago.io/ZRvyWuoub
 - 团队CD监控前端：https://wago.io/0mlLc0qxd
+
+details中文昵称修正补丁：https://wago.io/uq0Uox6Ta
+
+大米计时器：https://wago.io/M+Timer
 
 ## 一些有用的重要命令
 在游戏内聊天窗口输入，然后回车：
