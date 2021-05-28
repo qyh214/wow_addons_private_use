@@ -52,6 +52,8 @@ MikScrollingBattleText（MSBT战斗浮动信息，parrot替代品）
 
 MythicDungeonTools MDT大秘境路线规划
 
+MythicPlusTimer 大米计时器
+
 Multishot 自动截图【社区修复版本】
 
 MDGuildBest 公会最高大米记录
