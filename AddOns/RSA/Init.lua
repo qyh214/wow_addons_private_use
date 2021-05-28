@@ -68,7 +68,6 @@ function RSA:RefreshConfig()
 	end
 
 	RSA.db.profile = self.db.profile
-	RSA:FixDB()
 	RSA:UpdateOptions()
 
 

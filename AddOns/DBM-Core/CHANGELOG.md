@@ -1,24 +1,45 @@
 # Deadly Boss Mods Core
 
-## [9.0.25](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/9.0.25) (2021-03-30)
-[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/9.0.24...9.0.25) [Previous Releases](https://github.com/DeadlyBossMods/DeadlyBossMods/releases)
+## [9.0.29](https://github.com/DeadlyBossMods/DeadlyBossMods/tree/9.0.29) (2021-05-27)
+[Full Changelog](https://github.com/DeadlyBossMods/DeadlyBossMods/compare/9.0.28...9.0.29) [Previous Releases](https://github.com/DeadlyBossMods/DeadlyBossMods/releases)
 
-- Improve text description of frida after image marking to Council fight in Castle Nathria  
-    Added user requested alert for Tarvoids Sintouched anima inside Sanguine Depths  
-- Add initial timer counts and change object type  
-- Add counters to Shared Suffering and for Adds (#551)  
+- Prep tag  
+- Forgot to add runic Affinity  
+- Sylvanas Drycode  
+    KT update  
+    Painsmith update  
+    Fatescribe update  
+- All Rights Reserved license (#582)  
+- Fixes for profiles using the wrong variable name. (#581)  
+- Just push this mod now. I've been trying to find motivation for a week now to fix it and honestly just can't find it, so leaving it as is for now.  
+- Make it the new scan policy to scan for at least 5 seconds.  
+- stuff  
+- This isn't done yet but I'm done for night and will pick it up tomorrow  
+- Push a few updates that are done-ish so far  
+- Add "no translate" markers for translation portal. (#578)  
+    * Add "no translate" markers for translation portal.  
+    * Also flag these two as no translate.  
+- more quick fixes  
+- quick fix  
+- They changed threat spellId because why not  
+- Still getting reports that ScanForMobs doesn't work when using CID (but works with guid). this shouldn't matter. Maybe this will help 🤷‍♂️  
+- Fix lua on unused table  
+- More updates from today, still not done  
+- Sync bar height. (#577)  
+    * Sync bar height.  
+- Quick fix  
+- Its a typo ;o (#576)  
+- Fix last  
+- Refactored icon code on nine to beb similar to vectis and also changed infoframe to help with fragments as well.  
+- Fixed a bug where Oppressive banner alert/timer was non functional. not sure how it took 6 months for someone to report this bug though :(  
+- don't know what abilities call duplicate on mythic, so protections added to all abilities to not start Cd timer if those valks are dead (since it'll be call CD timer)  
+- Update koKR (#574)  
+    Co-authored-by: QartemisT <QartemisT@gmail.com>  
     Co-authored-by: Adam <MysticalOS@users.noreply.github.com>  
-- Fix panel prototype to not run trivial filter on SWSound dropdown  
-- Sire no longer requires localized trigger for add spawns, kill them off and use encounter event.  
-- Fixed a bug that'd cause dark recital timer to be missing in phase 2 if stavros s killed first on mythic difficulty.  
-- fix  
-- Switch altimor and Kael to hotfixed combat log events, which are slightly less cpu and more reliable  
-- Update TheCouncilofBlood.lua (#550)  
-    Co-authored-by: Mads Chrøis <32795834+Aloise3@users.noreply.github.com>  
-- More DBT fixes (#549)  
-- Add phase warnings for council (Request) (#546)  
-- Fix bug with SetSkin (#547)  
-- revert sound channels back to 64. I think I got more complaints of missing sound bumping it to 128 than I did with it at 64  
-    128 should have solved it if it was a sound channel problem, but something else is amiss  
-- Fixed anothe alert missing voice pack sound  
-- Bump alpha revision  
+- Berserk for council  
+- some debug and remaining  
+- These eye of the jailer mod updates are pretty satisifying for now. room for improvement but need more testing data to see what blizz does with some of the reported issues..  
+- added berserk to the nine  
+    updates to Terragrue to fix timers not canceling and slight mythic timer tweaks  
+- Post raid testing bugfixes/updates  
+- prep alpha revisions  

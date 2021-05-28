@@ -1,24 +1,12 @@
-tag 4021b7d7ebabe1949973e6c0e85cd47a7c4f8d54 9.0-7
+tag 8706ff2b511db8f44233b296bd5d13321e115525 9.0-8
 Author:	Xuerian <xuerian@gmail.com>
-Date:	Thu Dec 24 18:17:09 2020 -0500
+Date:	Thu May 20 21:41:27 2021 -0400
 
-Fix singular currency gains in monitor
+Potential fixes for GetCurrencyInfo() failing to return a value/asking it for unloaded currencies
 
-commit 503fe52e4530829c8936d84d8f05dc75ba33e60a
+commit d7379356c83666c13876f3c5a2f7862f2e0822f3
 Author: Xuerian <xuerian@gmail.com>
-Date:   Thu Dec 24 18:15:41 2020 -0500
+Date:   Thu May 20 21:40:34 2021 -0400
 
-    options: Escape fonts
-
-commit b4254cb4ba1bb28665617f867e0410763705b9f8
-Author: Xuerian <xuerian@gmail.com>
-Date:   Thu Dec 24 18:14:16 2020 -0500
-
-    Monitor: Fix singular currency gains
-
-commit de50adfbce623e0692dd8ebadf216a88c9575b44
-Author: Xuerian <xuerian@gmail.com>
-Date:   Wed Dec 16 13:50:46 2020 -0500
-
-    monitor: Add gradients option
+    Potential fixes for GetCurrencyInfo() failing to return a value/asking it for unloaded currencies
 

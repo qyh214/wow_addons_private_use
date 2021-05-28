@@ -252,7 +252,7 @@ function addon:ApplyOptions(in_options)
 		if C_CurrencyInfo then
 			for i,id in ipairs(preview_currency) do
 				local c = C_CurrencyInfo.GetCurrencyInfo(id)
-				if c.name then
+				if c and c.name then
 					local row =  Fake.rows[slot+i]
 					max_width = math.max(max_width, row:Update({
 						name = c.name,

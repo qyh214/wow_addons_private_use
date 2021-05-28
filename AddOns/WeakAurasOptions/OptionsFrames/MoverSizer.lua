@@ -383,11 +383,9 @@ local function BuildAlignLines(mover)
     y = {}
   }
   local x, y = {}, {}
-  local skipIds = { [data.id] =  true }
-  if data.controlledChildren then
-    for _, id in pairs(data.controlledChildren) do
-      skipIds[id] = true
-    end
+  local skipIds = {}
+  for child in OptionsPrivate.Private.TraverseAll(data) do
+    skipIds[child.id] = true
   end
 
   for k, v in pairs(WeakAuras.displayButtons) do
@@ -401,8 +399,8 @@ local function BuildAlignLines(mover)
         tinsert(y, (region:GetBottom() or 0) * scale)
       else
         local centerX, centerY = region:GetCenter()
-        tinsert(x, centerX or 0 * scale)
-        tinsert(y, centerY or 0 * scale)
+        tinsert(x, (centerX or 0) * scale)
+        tinsert(y, (centerY or 0) * scale)
       end
     end
   end

@@ -1,12 +1,12 @@
-﻿## Interface: 90002
-## X-Min-Interface: 90002
+﻿## Interface: 90005
+## X-Min-Interface: 90005
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Voicepack VV|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0VV语音包|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0VV语音包|r
 ## DefaultState: enabled
 ## RequiredDeps: DBM-Core
 ## Author: VV
-## Version: 9.0.3
+## Version: 9.0.5
 ## X-DBM-Voice: 1
 ## X-DBM-Voice-Name: VV(普通话女)
 ## X-DBM-Voice-ShortName: VV

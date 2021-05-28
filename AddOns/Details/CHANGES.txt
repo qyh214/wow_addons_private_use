@@ -1,10 +1,38 @@
-tag 062fd2ce6ca848d52cfd1b935777c2314acd57f0 DetailsRetail.9.0.5.8406.144
+tag bcb9a337aac3486200d39186a8c13dbb441dedb2 DetailsRetail.9.0.5.8514.144
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Tue Apr 13 18:03:49 2021 -0300
+Date:	Tue May 25 15:32:39 2021 -0300
 
-commit 4a28c63b4e0d2f9fd74338e6146e15522f3ef3b8
+commit 6bde881fb809e06042c74244b4cccb3a2a4bc72f
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Tue Apr 13 18:02:15 2021 -0300
+Date:   Tue May 25 15:29:12 2021 -0300
 
-    Fixed combability issues with the tbc beta version
+    Bug fixes
+    
+    - Fixed an error showing SetBorderSizes().
+    - Fixed an error while on a Battleground.
+    - Fixed tiny threat green icon.
+
+commit 3355e5588fe6a7b7579fc360c86ad44b89dc8b19
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Mon May 24 11:34:20 2021 -0300
+
+    Framework update
+
+commit 3355e5588fe6a7b7579fc360c86ad44b89dc8b19
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Mon May 24 11:34:20 2021 -0300
+
+    Framework update
+
+commit 517a61905f1e47031ec794de0ca9a08562e497df
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Sun May 23 18:40:21 2021 -0500
+
+    Add local _
+
+commit 517a61905f1e47031ec794de0ca9a08562e497df
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Sun May 23 18:40:21 2021 -0500
+
+    Add local _
 

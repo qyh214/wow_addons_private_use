@@ -78,6 +78,7 @@ DBT.DefaultOptions = {
 	BarXOffset = 0,
 	BarYOffset = 0,
 	Width = 183,
+	Height = 20,
 	Alpha = 0.8,
 	Scale = 0.9,
 	TimerX = -223,
@@ -85,11 +86,13 @@ DBT.DefaultOptions = {
 	ExpandUpwards = false,
 	FillUpBars = true,
 	TimerPoint = "TOPRIGHT",
+	Sort = "Sort",
 	-- Huge bar
 	EnlargeBarTime = 11,
 	HugeBarXOffset = 0,
 	HugeBarYOffset = 0,
 	HugeWidth = 200,
+	HugeHeight = 20,
 	HugeAlpha = 1,
 	HugeScale = 1.03,
 	HugeTimerX = 0,
@@ -98,8 +101,8 @@ DBT.DefaultOptions = {
 	FillUpLargeBars = true,
 	HugeBarsEnabled = true,
 	HugeTimerPoint = "CENTER",
+	HugeSort = "Sort",
 	-- Misc
-	Height = 20,
 	TextColorR = 1,
 	TextColorG = 1,
 	TextColorB = 1,
@@ -107,7 +110,6 @@ DBT.DefaultOptions = {
 	FontSize = 10,
 	FlashBar = false,
 	Spark = true,
-	Sort = "Sort",
 	ColorByType = true,
 	NoBarFade = false,
 	InlineIcons = true,
@@ -392,7 +394,7 @@ do
 			DBT_AllPersistentOptions = {}
 		end
 		local DBM_UsedProfile = DBM_UsedProfile
-		if not id or not DBM_AllSavedOptions[DBM_UsedProfile] or not DBM_AllSavedOptions[DBM_UsedProfile][id] then
+		if not id or not DBT_AllPersistentOptions[DBM_UsedProfile] or not DBT_AllPersistentOptions[DBM_UsedProfile][id] then
 			DBM:AddMsg(DBM_CORE_L.PROFILE_APPLY_ERROR:format(id or DBM_CORE_L.UNKNOWN))
 			return
 		end
@@ -410,7 +412,7 @@ do
 		end
 		local DBM_UsedProfile = DBM_UsedProfile
 		if not hasPrinted then
-			if not name or not DBM_AllSavedOptions[name] then
+			if not name or not DBT_AllPersistentOptions[name] then
 				DBM:AddMsg(DBM_CORE_L.PROFILE_COPY_ERROR:format(name or DBM_CORE_L.UNKNOWN))
 				return
 			elseif name == DBM_UsedProfile then
@@ -593,7 +595,7 @@ end
 function DBT:UpdateBars(sortBars)
 	if sortBars and self.Options.Sort ~= "None" then
 		tsort(largeBars, function(x, y)
-			if self.Options.Sort == "Invert" then
+			if self.Options.HugeSort == "Invert" then
 				return x.timer < y.timer
 			end
 			return x.timer > y.timer
@@ -607,11 +609,11 @@ function DBT:UpdateBars(sortBars)
 	end
 	for i, bar in ipairs(largeBars) do
 		bar.frame:ClearAllPoints()
-		bar.frame:SetPoint("TOP", largeBarsAnchor, "TOP", i * self.Options.HugeBarXOffset, (i * (self.Options.Height + self.Options.HugeBarYOffset)) * (self.Options.ExpandUpwardsLarge and 1 or -1))
+		bar.frame:SetPoint("TOP", largeBarsAnchor, "TOP", (i - 1) * self.Options.HugeBarXOffset, ((i - 1) * (self.Options.HugeHeight + self.Options.HugeBarYOffset)) * (self.Options.ExpandUpwardsLarge and 1 or -1))
 	end
 	for i, bar in ipairs(smallBars) do
 		bar.frame:ClearAllPoints()
-		bar.frame:SetPoint("TOP", smallBarsAnchor, "TOP", i * self.Options.BarXOffset, (i * (self.Options.Height + self.Options.BarYOffset)) * (self.Options.ExpandUpwards and 1 or -1))
+		bar.frame:SetPoint("TOP", smallBarsAnchor, "TOP", (i - 1) * self.Options.BarXOffset, ((i - 1) * (self.Options.Height + self.Options.BarYOffset)) * (self.Options.ExpandUpwards and 1 or -1))
 	end
 end
 
@@ -825,7 +827,7 @@ function barPrototype:Update(elapsed)
 	end
 	if sparkEnabled then
 		spark:ClearAllPoints()
-		spark:SetSize(12, barOptions.Height * 3)
+		spark:SetSize(12, barOptions[isEnlarged and 'HugeHeight' or 'Height'] * 3)
 		spark:SetPoint("CENTER", bar, "LEFT", bar:GetValue() * bar:GetWidth(), -1)
 	else
 		spark:SetAlpha(0)
@@ -887,12 +889,13 @@ function barPrototype:Update(elapsed)
 		isEnlarged = true
 		tinsert(largeBars, self)
 		self:ApplyStyle()
+		DBT:UpdateBars(true)
 	end
-	DBT:UpdateBars()
 	if not paused and (timerValue <= enlargeTime) and not self.small and not isEnlarged and isMoving ~= "enlarge" and DBT.Options.HugeBarsEnabled then
 		self:RemoveFromList()
 		self:Enlarge()
 	end
+	DBT:UpdateBars()
 end
 
 function barPrototype:RemoveFromList()
@@ -958,14 +961,13 @@ function barPrototype:ApplyStyle()
 		end
 	end
 	local barTextColorRed, barTextColorGreen, barTextColorBlue = barOptions.TextColorR, barOptions.TextColorG, barOptions.TextColorB
-	local barHeight, barWidth, barHugeWidth = barOptions.Height, barOptions.Width, barOptions.HugeWidth
+	local barHeight, barHugeHeight, barWidth, barHugeWidth = barOptions.Height, barOptions.HugeHeight, barOptions.Width, barOptions.HugeWidth
 	name:SetTextColor(barTextColorRed, barTextColorGreen, barTextColorBlue)
 	timer:SetTextColor(barTextColorRed, barTextColorGreen, barTextColorBlue)
 	if barOptions.IconLeft then icon1:Show() else icon1:Hide() end
 	if barOptions.IconRight then icon2:Show() else icon2:Hide() end
 	if enlarged then
-		bar:SetWidth(barHugeWidth)
-		bar:SetHeight(barHeight)
+		bar:SetSize(barHugeWidth, barHugeHeight)
 		frame:SetScale(barOptions.HugeScale)
 		if barOptions.FadeBars and self.fade then
 			frame:SetAlpha(barOptions.HugeAlpha / 2)
@@ -973,8 +975,7 @@ function barPrototype:ApplyStyle()
 			frame:SetAlpha(barOptions.HugeAlpha)
 		end
 	else
-		bar:SetWidth(barWidth)
-		bar:SetHeight(barHeight)
+		bar:SetSize(barWidth, barHeight)
 		frame:SetScale(barOptions.Scale)
 		if barOptions.FadeBars and self.fade and barOptions.Alpha ~= 0 then
 			frame:SetAlpha(barOptions.Alpha / 2)
@@ -983,9 +984,10 @@ function barPrototype:ApplyStyle()
 		end
 	end
 	if barOptions.IconLocked then
-		frame:SetSize(enlarged and barHugeWidth or barWidth, barHeight)
-		icon1:SetSize(barHeight, barHeight)
-		icon2:SetSize(barHeight, barHeight)
+		local sizeHeight = enlarged and barHugeHeight or barHeight
+		frame:SetSize(enlarged and barHugeWidth or barWidth, sizeHeight)
+		icon1:SetSize(sizeHeight, sizeHeight)
+		icon2:SetSize(sizeHeight, sizeHeight)
 	end
 	self.frame:Show()
 	if sparkEnabled then
@@ -1091,7 +1093,7 @@ function barPrototype:AnimateEnlarge(elapsed)
 		self.moving = nil
 		self.enlarged = true
 		tinsert(largeBars, self)
-		DBT:UpdateBars()
+		DBT:UpdateBars(true)
 		self:ApplyStyle()
 	end
 end

@@ -1715,6 +1715,14 @@ local function Monk_Options()
 			Message_Channels_Disabled = {["Whisper"] = true},
 			Valid_Tags = {'[SPELL]', '[LINK]'},
 		},
+		[20] = {
+			Profile = 'TigersLust',
+			Name = GetSpellInfo(116841),
+			Desc = GetSpellDescription(116841),
+			Message_Amount = 2,
+			Message_Areas = {'Start', 'End'},
+			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]'},
+		},
 	}
 	return Spells
 end
@@ -2613,6 +2621,15 @@ local function Shaman_Options()
 			Profile = 'ManaTide',
 			Name = GetSpellInfo(16191),
 			Desc = GetSpellDescription(16191),
+			Message_Amount = 2,
+			Message_Areas = {'Placed', 'End'},
+			Message_Channels_Disabled = {["Whisper"] = true},
+			Valid_Tags = {'[SPELL]', '[LINK]'},
+		},
+		["EarthbindTotem"] = {
+			Profile = 'EarthbindTotem',
+			Name = GetSpellInfo(2484),
+			Desc = GetSpellDescription(2484),
 			Message_Amount = 2,
 			Message_Areas = {'Placed', 'End'},
 			Message_Channels_Disabled = {["Whisper"] = true},

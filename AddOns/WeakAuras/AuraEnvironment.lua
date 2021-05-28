@@ -3,7 +3,6 @@ local AddonName, Private = ...
 
 local WeakAuras = WeakAuras
 local L = WeakAuras.L
-local prettyPrint = WeakAuras.prettyPrint
 
 local LCD
 if WeakAuras.IsClassic() then
@@ -169,6 +168,7 @@ local blockedFunctions = {
   GuildDisband = true,
   GuildUninvite = true,
   securecall = true,
+  DeleteCursorItem = true,
 }
 
 local blockedTables = {
@@ -350,21 +350,17 @@ local FakeWeakAurasMixin = {
     CloseCodeReview = true,
     CloseImportExport = true,
     CreateTemplateView = true,
-    DisplayToString = true,
     FillOptions = true,
     FindUnusedId = true,
     GetMoverSizerId = true,
     GetDisplayButton = true,
     Import = true,
     NewDisplayButton = true,
-    NewAura = true,
-    OpenTriggerTemplate = true,
     OpenCodeReview = true,
     PickDisplay = true,
     SetMoverSizer = true,
     SetImporting = true,
     SortDisplayButtons = true,
-    ShowOptions = true,
     ToggleOptions = true,
     UpdateDisplayButton = true,
     UpdateGroupOrders = true,
@@ -457,7 +453,7 @@ function WeakAuras.LoadFunction(string, id, inTrigger)
   if function_cache[string] then
     return function_cache[string]
   else
-    local loadedFunction, errorString = loadstring("--[==[ Error in '" .. (id or "Unknown") .. (inTrigger and ("':'".. inTrigger) or "") .."' ]==] " .. string)
+    local loadedFunction, errorString = loadstring(string, "Error in: " .. (id or "Unknown") .. (inTrigger and ("':'".. inTrigger) or ""))
     if errorString then
       print(errorString)
     else

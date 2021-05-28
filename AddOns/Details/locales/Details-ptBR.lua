@@ -1471,7 +1471,7 @@ L["STRING_RIGHTCLICK_TYPEVALUE"] = "botão direito para digitar o valor"
 L["STRING_SCORE_BEST"] = "você fez |cFFFFFF00%d|r, você bateu seu recorde, parabéns!"
 L["STRING_SCORE_NOTBEST"] = [=[você fez |cFFFFFF00%d|r, seu recorde é |cFFFFFF00%d|r em %d com %d de item level.
 ]=]
-L["STRING_SCRIPTS_TITLE"] = "Menu de opções à esquerda, chamado de \"Monitores personalizados\" no passado"
+L["STRING_SCRIPTS_TITLE"] = "Scripts"
 L["STRING_SEE_BELOW"] = "veja abaixo"
 L["STRING_SEGMENT"] = "Segmento"
 L["STRING_SEGMENT_EMPTY"] = "este segmento esta vazio"
@@ -1556,7 +1556,7 @@ L["STRING_UNLOCK"] = [=[Separe as janelas
 neste botão]=]
 L["STRING_UNLOCK_WINDOW"] = "destravar"
 L["STRING_UPTADING"] = "atualizando"
-L["STRING_VERSION_AVAILABLE"] = "uma nova versão está disponível. Baixe pelo aplicativo da Twitch ou pelo site da Curse."
+L["STRING_VERSION_AVAILABLE"] = "uma nova versão está disponível. Baixe pelo aplicativo da Curse Forge ou pelo site da Curse."
 L["STRING_VERSION_UPDATE"] = "nova versão: clique para ver o que mudou"
 L["STRING_VOIDZONE_TOOLTIP"] = "Dano e tempo:"
 L["STRING_WAITPLUGIN"] = [=[esperando por

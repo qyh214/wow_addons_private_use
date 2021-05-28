@@ -1,5 +1,7 @@
 -- Special layout for the New Aura Trigger template page
 
+local AddonName, TemplatePrivate = ...
+
 local AceGUI = LibStub("AceGUI-3.0");
 local floor, ceil, tinsert = floor, ceil, tinsert;
 local CreateFrame, UnitClass, UnitRace, GetSpecialization = CreateFrame, UnitClass, UnitRace, GetSpecialization;
@@ -133,6 +135,10 @@ local checks = {
   enchantMissing = {
     variable = "enchanted",
     value = 0
+  },
+  queued = {
+    variable = "show",
+    value = 1,
   }
 }
 
@@ -190,6 +196,10 @@ local function GenericGlow(conditions, trigger, regionType, check)
   else
     tinsert(conditions, buildCondition(trigger, check, {changes("yellow", regionType)}));
   end
+end
+
+local function isQueuedGlow(conditions, trigger, regionType)
+  GenericGlow(conditions, trigger, regionType, checks.queued)
 end
 
 local function isBuffedGlow(conditions, trigger, regionType)
@@ -390,7 +400,6 @@ local function createOverlayGlowTrigger(triggers, position, item)
   };
 end
 
-
 local function createWeaponEnchantTrigger(triggers, position, item, showOn)
   triggers[position] = {
     trigger = {
@@ -402,6 +411,21 @@ local function createWeaponEnchantTrigger(triggers, position, item, showOn)
       showOn = showOn
     }
   }
+end
+
+local function createQueuedActionTrigger(triggers, position, item)
+  triggers[position] = {
+    trigger = {
+      type = WeakAuras.GetTriggerCategoryFor("Queued Action"),
+      event = "Queued Action",
+      spellName = item.spell
+    }
+  }
+end
+
+local function createAbilityAndQueuedActionTrigger(triggers, item)
+  createAbilityTrigger(triggers, 1, item, "showAlways");
+  createQueuedActionTrigger(triggers, 2, item);
 end
 
 local function createAbilityAndDurationTrigger(triggers, item)
@@ -743,6 +767,19 @@ local function subTypesFor(item, regionType)
             data = dataGlow
           });
         end
+      elseif (item.queued) then
+        tinsert(types, {
+          icon = icon.glow,
+          title = L["Show Cooldown and Action Queued"],
+          description = L["Highlight while action is queued."],
+          createTriggers = createAbilityAndQueuedActionTrigger,
+          createConditions = function(conditions, item, regionType)
+            insufficientResourcesBlue(conditions, 1, regionType);
+            isOnCdGrey(conditions, 1, regionType);
+            isQueuedGlow(conditions, 2, regionType);
+          end,
+          data = dataGlow
+        });
       elseif (item.buff) then
         tinsert(types, {
           icon = icon.glow,
@@ -1167,7 +1204,9 @@ local function subTypesFor(item, regionType)
   return fallbacks
 end
 
-function WeakAuras.CreateTemplateView(frame)
+function WeakAuras.CreateTemplateView(Private, frame)
+  TemplatePrivate.Private = Private
+
   local newView = AceGUI:Create("InlineGroup");
   newView.frame:SetParent(frame);
   newView.frame:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -17, 42);
@@ -1559,17 +1598,10 @@ function WeakAuras.CreateTemplateView(frame)
       WeakAuras.UpdateThumbnail(data);
       WeakAuras.UpdateDisplayButton(data);
     end
-    if (data.controlledChildren) then
-      for index, childId in pairs(data.controlledChildren) do
-        local childData = WeakAuras.GetData(childId);
-        if(childData) then
-          handle(childData, item, subType);
-        end
-      end
-    else
-      handle(data, item, subType);
-      WeakAuras.PickDisplay(data.id);
+    for child in TemplatePrivate.Private.TraverseLeafsOrAura(data) do
+      handle(child, item, subType);
     end
+    WeakAuras.ClearAndUpdateOptions(data.id)
   end
 
   local function addTriggers(data, item, subType)
@@ -1585,17 +1617,10 @@ function WeakAuras.CreateTemplateView(frame)
       WeakAuras.UpdateThumbnail(data);
       WeakAuras.UpdateDisplayButton(data);
     end
-    if (data.controlledChildren) then
-      for index, childId in pairs(data.controlledChildren) do
-        local childData = WeakAuras.GetData(childId);
-        if(childData) then
-          handle(childData, item, subType);
-        end
-      end
-    else
-      handle(data, item, subType);
-      WeakAuras.PickDisplay(data.id);
+    for child in TemplatePrivate.Private.TraverseLeafsOrAura(data) do
+      handle(child, item, subType);
     end
+    WeakAuras.ClearAndUpdateOptions(data.id)
   end
 
   local function createLastPage()
@@ -1681,7 +1706,7 @@ function WeakAuras.CreateTemplateView(frame)
       local classSelector = createDropdown("class", WeakAuras.class_types);
       newViewScroll:AddChild(classSelector);
 
-      if not WeakAuras.IsClassic() then
+      if WeakAuras.IsRetail() then
         local specSelector = createDropdown("spec", WeakAuras.spec_types_specific[newView.class]);
         newViewScroll:AddChild(specSelector);
         newViewScroll:AddChild(createSpacer());
@@ -1829,16 +1854,16 @@ function WeakAuras.CreateTemplateView(frame)
   newViewCancel:SetWidth(100);
   newViewCancel:SetText(L["Cancel"]);
 
-  function newView.Open(self, data)
+  function newView.Open(self, data, targetId)
     frame.window = "newView";
     frame:UpdateFrameVisible()
+    self.targetId = targetId
+    self.data = data -- Might be nil
     if (data) then
-      self.data = data;
       newView.existingAura = true;
       newView.chosenItem = nil;
       newView.chosenSubType = nil;
     else
-      self.data = nil; -- Data is cloned from display template
       newView.existingAura = false;
       newView.chosenItem = nil;
       newView.chosenSubType = nil;
@@ -1846,7 +1871,7 @@ function WeakAuras.CreateTemplateView(frame)
       newView.chosenItemBatch = {};
     end
     newView.class = select(2, UnitClass("player"));
-    if not WeakAuras.IsClassic() then
+    if WeakAuras.IsRetail() then
       newView.spec = GetSpecialization() or 1;
     else
       newView.spec = 1
@@ -1862,11 +1887,6 @@ function WeakAuras.CreateTemplateView(frame)
     if (not self.data) then
       frame:NewAura();
     end
-  end
-
-  function WeakAuras.OpenTriggerTemplate(data, targetId)
-    frame.newView.targetId = targetId;
-    frame.newView:Open(data);
   end
 
   return newView;

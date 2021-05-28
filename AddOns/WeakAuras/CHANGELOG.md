@@ -1,33 +1,44 @@
-# [3.2.3](https://github.com/WeakAuras/WeakAuras2/tree/3.2.3) (2021-04-11)
+# [3.4.2](https://github.com/WeakAuras/WeakAuras2/tree/3.4.2) (2021-05-27)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.2.2...3.2.3)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.4.1...3.4.2)
 
 ## Highlights
 
- - Bug fixes
-- New border shapes 
+ - More work on nested groups.
+- Make more WeakAuras functions private.
+- BCC fixes and model updates. 
 
 ## Commits
 
-InfusOnWoW (4):
+InfusOnWoW (13):
 
-- Don't reset Search filter for most aura changes
-- Distinguish between Rated and Unrated PVP in Instance Size Type
-- Update GCD if the duration changes
-- BT2: Show spell name to exact spell id field
+- Prepare another small part of WeakAurasOptions for nested
+- Prepare TriggerTemplates for nested
+- Make Private accessible for Templates
+- Prepare TriggerOptions for nested
+- Prepare another part of ActionOptions for nested
+- Prepare GetOverlayInfo for nested
+- Prepare SortDisplayButtons for nested
+- Prepare automatic frame level setting for nested
+- Slightly Simplify ProgressTexture Options code
+- Cast Trigger: Deprecate the old Spell Name check
+- Move Swing Timer remaining time check to the right place
+- Improve scam checks
+- Fix regression on dragging auras
 
 Stanzilla (3):
 
+- Move SortDisplayButtons to private namespace (#3116)
 - Update WeakAurasModelPaths from wow.tools
-- Switch to the packager's new multi toc feature
 - Update WeakAurasModelPaths from wow.tools
 
-asaka-wa (1):
+emptyrivers (1):
 
-- Add border shapes (#3012)
+- privatise DisplayToString
 
-mrbuds (2):
+mrbuds (3):
 
-- ensure a few "percentX" property doesn't return a boolean fix type error when they are use in conditions
-- fix potential nil error in dbm & bw triggers fixes #2982
+- swing timer: do not reset swing on SPELL_EXTRA_ATTACKS
+- Swing Timer trigger, fix remaining time check fixes #3106
+- fix CorrectSpellName for linked spells on TBC
 

@@ -69,6 +69,8 @@ local L = WeakAuras.L
 	L["General"] = "Общее"
 	L["Health"] = "Здоровье"
 	--[[Translation missing --]]
+	L["Highlight while action is queued."] = "Highlight while action is queued."
+	--[[Translation missing --]]
 	L["Highlight while active, red when out of range."] = "Highlight while active, red when out of range."
 	--[[Translation missing --]]
 	L["Highlight while active."] = "Highlight while active."
@@ -110,6 +112,8 @@ local L = WeakAuras.L
 	L["Show Charges with Proc Tracking"] = "Показать заряды с отслеживанием срабатывания"
 	L["Show Charges with Range Tracking"] = "Показать заряды с отслеживанием дистанции"
 	L["Show Charges with Usable Check"] = "Показать заряды с проверкой доступности"
+	--[[Translation missing --]]
+	L["Show Cooldown and Action Queued"] = "Show Cooldown and Action Queued"
 	L["Show Cooldown and Buff"] = "Показать восстановление и бафф"
 	L["Show Cooldown and Buff and Check for Target"] = "Показать восстановление, бафф и проверку зоны действия"
 	L["Show Cooldown and Buff and Check Usable"] = "Показать восстановление, бафф и проверку доступности"

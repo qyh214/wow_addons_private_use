@@ -1,6 +1,6 @@
 # <DBM> PvP
 
-## [r120](https://github.com/DeadlyBossMods/DBM-PvP/tree/r120) (2021-04-03)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-PvP/compare/r119...r120) [Previous Releases](https://github.com/DeadlyBossMods/DBM-PvP/releases)
+## [r124](https://github.com/DeadlyBossMods/DBM-PvP/tree/r124) (2021-05-20)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-PvP/compare/r123...r124) [Previous Releases](https://github.com/DeadlyBossMods/DBM-PvP/releases)
 
-- Actually fix #94 by not completely reregistering bg events every time a player dies (which will trigger loading screens where the zone does not change). Similar to how DBM-Core handles it  
+- Fix AV timers for TBC prepatch (#102)  

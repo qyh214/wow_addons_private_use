@@ -3,12 +3,13 @@ local L		= mod:GetLocalizedStrings()
 
 local DBM = DBM
 local GetPlayerFactionGroup = GetPlayerFactionGroup or UnitFactionGroup -- Classic Compat fix
-local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
-local isTBC = DBM:GetTOC() == 20501 or false--TODO, fixme when TBC WOW_PROJECT_ID added
+local isClassic = WOW_PROJECT_ID == (WOW_PROJECT_CLASSIC or 2)
+local isTBC = WOW_PROJECT_ID == (WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5)
 
-mod:SetRevision("20210403135327")
+mod:SetRevision("20210520134703")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 mod:RegisterEvents(
+	"ZONE_CHANGED_NEW_AREA",
 	"LOADING_SCREEN_DISABLED",
 	"PLAYER_ENTERING_WORLD",
 	"PLAYER_DEAD",
@@ -200,6 +201,7 @@ do
 	function mod:LOADING_SCREEN_DISABLED()
 		self:Schedule(0.5, Init, self)
 	end
+	mod.ZONE_CHANGED_NEW_AREA	= mod.LOADING_SCREEN_DISABLED
 	mod.PLAYER_ENTERING_WORLD	= mod.LOADING_SCREEN_DISABLED
 	mod.OnInitialize			= mod.LOADING_SCREEN_DISABLED
 end
@@ -368,7 +370,7 @@ do
 	local resourcesPerSec = {
 		[3] = {1e-300, 0.5, 1.5, 2}, -- Gilneas
 		[4] = {1e-300, 1, 1.5, 2, 6}, -- TempleOfKotmogu/EyeOfTheStorm
-		[5] = {1e-300, 1, 1.5, 2, 3.5, 30--[[Unknown]]} -- Arathi/Deepwind
+		[5] = {1e-300, 1, 1.5, 2, 3.5, 30} -- Arathi/Deepwind
 	}
 
 	if isClassic or isTBC then
@@ -478,7 +480,7 @@ do
 		-- retail av
 		[91]    = 243,
 		-- classic av
-		[1459]  = 304,
+		[1459]  = WOW_PROJECT_ID == (WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5) and 243 or 304,
 		-- korrak
 		[1537]  = 243
 	}

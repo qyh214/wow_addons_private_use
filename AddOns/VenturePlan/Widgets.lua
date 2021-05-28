@@ -69,7 +69,12 @@ local function CommonTooltip_ArmShopWatch(self, item)
 end
 local function CommonTooltip_OnEnter(self)
 	local showCurrencyBar = false
-	GameTooltip:SetOwner(self, self.tooltipAnchor or "ANCHOR_TOP", self.tooltipXO or 0, self.tooltipYO or 0)
+	if self.tooltipAnchor == "ANCHOR_TRUE_LEFT" then
+		GameTooltip:SetOwner(self, "ANCHOR_NONE")
+		GameTooltip:SetPoint("RIGHT", self, "LEFT", self.tooltipXO or 0, self.tooltipYO or 0)
+	else
+		GameTooltip:SetOwner(self, self.tooltipAnchor or "ANCHOR_TOP", self.tooltipXO or 0, self.tooltipYO or 0)
+	end
 	tooltipShopWatch = not not tooltipShopWatch
 	if type(self.mechanicInfo) == "table" then
 		local ic, m = self.Icon and self.Icon:GetTexture(), self.mechanicInfo
@@ -106,7 +111,8 @@ local function CommonTooltip_OnEnter(self)
 		GameTooltip:SetCurrencyByID(self.currencyID)
 		if self.currencyID == 1889 then
 			local ci = C_CurrencyInfo.GetCurrencyInfo(self.currencyID)
-			GameTooltip:AddLine("|n" .. (L"Current Progress: %s"):format("|cffffffff" .. (ci and ci.quantity or "??")))
+			local q = ci and U.GetShiftedCurrencyValue(self.currencyID, ci.quantity) or "??"
+			GameTooltip:AddLine("|n" .. (L"Current Progress: %s"):format("|cffffffff" .. q .. "|r"))
 			GameTooltip:Show()
 		end
 	elseif self.achievementID then
@@ -144,6 +150,9 @@ local function CommonTooltip_OnEnter(self)
 		end
 	end
 	GameTooltip:Show()
+	if self.tooltipPostShow then
+		self.tooltipPostShow(GameTooltip, self)
+	end
 	if showCurrencyBar then
 		local q1, factionID, cur, max, label = self.currencyQ, C_CurrencyInfo.GetFactionGrantedByCurrency(self.currencyID)
 		if factionID then
@@ -161,7 +170,7 @@ local function CommonTooltip_OnEnter(self)
 			return
 		end
 		label = label .. " - " .. BreakUpLargeNumbers(cur) .. " / " .. BreakUpLargeNumbers(max)
-		CreateObject("SharedTooltipProgressBar"):Activate(GameTooltip, cur, max, label, q1)
+		CreateObject("SharedTooltipProgressBar"):Activate(GameTooltip, cur, max, label, self.isRetrospective and 0 or q1)
 	end
 end
 local function CommonTooltip_DelayedRefresh_OnUpdate(self, elapsed)
@@ -215,14 +224,7 @@ local function MissionButton_OnClick(self)
 	else
 		if s.missionID and s.ProgressBar:IsShown() and s.completableAfter and s.completableAfter <= GetTime()
 		   and s.ProgressBar:IsMouseOver(6, -6, -6, 6) then
-			local mid = s.missionID
-			local cm = C_Garrison.GetCompleteMissions(123)
-			for i=1,#cm do
-				if cm[i].missionID == mid then
-					cm[i].encounterIconInfo = C_Garrison.GetMissionEncounterIconInfo(s.missionID)
-					CovenantMissionFrame:InitiateMissionCompletion(cm[i])
-				end
-			end
+			U.InitiateMissionCompletion(s.missionID)
 		else
 			self:GetParent():GetParent():ScrollToward(self)
 		end
@@ -291,8 +293,10 @@ local function TooltipProgressBar_Activate(self, tip, cur, max, label, q1)
 	self.Fill2:SetAtlas((cur+ (q1 or 0)) > max and "UI-Frame-Bar-Fill-Green" or "UI-Frame-Bar-Fill-Yellow")
 	local tl = (q1 or 0)/max
 	self.Fill2:SetTexCoord(tl, tl+self.v2, 0, 1)
+	self.Fill2:SetShown((q1 or 0) > 0)
 	self:SetParent(tip)
-	local lastLine = _G[tip:GetName() .. "TextLeft" .. tip:NumLines()]
+	tip:AddLine(("|TInterface/Minimap/PartyRaidBlipsV2:5:65:0:0:64:32:62:63:0:2|t "):rep(3))
+	local lastLine = _G[tip:GetName() .. "TextLeft" .. (tip:NumLines()-1)]
 	self:SetPoint("TOPLEFT", lastLine, "BOTTOMLEFT", 0, -2)
 	self:Show()
 	tip:Show()
@@ -325,7 +329,7 @@ local function CountdownText_SetCountdown(self, prefix, expireAt, suffix, rest, 
 		self.CDTDisplay:SetText(rest or "")
 		self:SetScript("OnUpdate", nil)
 	else
-		self.cdtTick, self.cdtPrefix, self.cdtTo, self.cdtSuffix, self.cdtRest, self.cdtShort, self.cdtRoundedUp = now, prefix, expireAt, suffix, rest, isShort == true, isRoundUp == true
+		self.cdtTick, self.cdtPrefix, self.cdtTo, self.cdtSuffix, self.cdtRest, self.cdtShort, self.cdtRoundedUp = now, prefix, expireAt, suffix, rest, isShort, isRoundUp == true
 		self:SetScript("OnUpdate", CountdownText_OnUpdate)
 		CountdownText_OnUpdate(self)
 	end
@@ -346,10 +350,13 @@ end
 local function ResourceButton_Update(self, _event, currencyID)
 	if currencyID == self.currencyID then
 		local ci = C_CurrencyInfo.GetCurrencyInfo(currencyID)
-		local quant = ci and ci.quantity
+		local quant = ci and U.GetShiftedCurrencyValue(currencyID, ci.quantity)
 		if quant then
 			self.Text:SetText(BreakUpLargeNumbers(quant))
 			self:SetWidth(self.Text:GetStringWidth()+26)
+		end
+		if GameTooltip:IsOwned(self) and GameTooltip:IsShown() then
+			self:GetScript("OnEnter")(self)
 		end
 	end
 end
@@ -357,6 +364,19 @@ local function ResourceButton_OnClick(self)
 	if IsModifiedClick("CHATLINK") then
 		ChatEdit_InsertLink(C_CurrencyInfo.GetCurrencyLink(self.currencyID, 42))
 	end
+end
+local function SetRarityBorder(b, r, atlas)
+	r = type(r) == "number" and r or 2
+	local vc = (atlas or r >= 1) and 1 or 0.65
+	b:SetAtlas(atlas
+		or r <= 1 and "loottoast-itemborder-gold"
+		or r == 2 and "loottoast-itemborder-green"
+		or r == 3 and "loottoast-itemborder-blue"
+		or r == 4 and "loottoast-itemborder-purple"
+		or r == 9 and "loottoast-itemborder-gold"
+		or "loottoast-itemborder-orange")
+	b:SetDesaturated(r <= 1 and not atlas)
+	b:SetVertexColor(vc, vc, vc)
 end
 local RewardButton_SetReward do
 	local baseXPReward = {title=L"Follower XP", tooltip=L"Awarded even if the adventurers are defeated.", icon="Interface/Icons/XP_Icon", qualityAtlas="loottoast-itemborder-purple"}
@@ -378,45 +398,28 @@ local RewardButton_SetReward do
 		self.RarityBorder:SetDesaturated(false)
 		self.RarityBorder:SetVertexColor(1,1,1)
 		if rew.currencyID then
-			self.RarityBorder:SetAtlas("loottoast-itemborder-gold")
 			if rew.currencyID == 0 then
 				q = math.floor(rew.quantity / 1e4)
 				tooltipText = GetMoneyString(rew.quantity)
+				SetRarityBorder(self.RarityBorder, 9)
 			else
 				local ci = C_CurrencyInfo.GetCurrencyContainerInfo(rew.currencyID, rew.quantity)
 				if ci then
 					self.Icon:SetTexture(ci.icon)
 					tooltipTitle = (ci.quality and "|c" .. (select(4,GetItemQualityColor(ci.quality)) or "ff00ffff") or "") .. ci.name
 					tooltipText = NORMAL_FONT_COLOR_CODE .. (ci.description or "")
-					local lb = LOOT_BORDER_BY_QUALITY[ci.quality]
-					if lb then
-						self.RarityBorder:SetAtlas(lb)
-					end
 				end
-				if rew.currencyID == 1828 then
-					self.RarityBorder:SetAtlas("loottoast-itemborder-orange")
-				end
+				local ci2 = C_CurrencyInfo.GetCurrencyInfo(rew.currencyID)
+				SetRarityBorder(self.RarityBorder, ci and ci.quality or ci2 and ci2.quality)
 				cq = (isOvermax and pw and pw.currencyID == rew.currencyID and pw.currencyQ or 0) + q
 			end
 		elseif rew.itemID then
 			q = rew.quantity == 1 and "" or rew.quantity or ""
 			local r = select(3,GetItemInfo(rew.itemLink or rew.itemID)) or select(3,GetItemInfo(rew.itemID)) or 2
-			self.RarityBorder:SetAtlas(
-				r <= 1 and "loottoast-itemborder-gold"
-				or r == 2 and "loottoast-itemborder-green"
-				or r == 3 and "loottoast-itemborder-blue"
-				or r == 4 and "loottoast-itemborder-purple"
-				or "loottoast-itemborder-orange"
-			)
-			if r <= 1 then
-				self.RarityBorder:SetDesaturated(true)
-				if r < 1 then
-					self.RarityBorder:SetVertexColor(0.65, 0.65, 0.65)
-				end
-			end
+			SetRarityBorder(self.RarityBorder, r)
 		elseif rew.followerXP then
 			q, tooltipTitle, tooltipText = BreakUpLargeNumbers(rew.followerXP), rew.title, rew.tooltip
-			self.RarityBorder:SetAtlas(rew.qualityAtlas or "loottoast-itemborder-green")
+			SetRarityBorder(self.RarityBorder, 2, rew.qualityAtlas)
 		end
 		self.currencyID, self.currencyAmount, self.currencyQ = rew.currencyID, rew.quantity, cq
 		self.itemID, self.itemLink = rew.itemID, rew.itemLink
@@ -425,11 +428,12 @@ local RewardButton_SetReward do
 	end
 end
 local function RewardBlock_SetRewards(self, xp, rw)
-	self[1]:SetReward("xp", xp)
-	self[2]:SetReward(rw and rw[1])
-	self[3]:SetReward(rw and rw[2])
+	local nc = xp and (self[1]:SetReward("xp", xp) and nil or 2) or 1
+	nc = nc + (self[nc]:SetReward(rw and rw[1]) and nil or 1)
+	nc = nc + (self[nc]:SetReward(rw and rw[2]) and nil or 1)
+	for i=nc, #self do self[i]:SetReward() end
 	if self.Container then
-		self.Container:SetWidth(52*(1+(rw and #rw or 0))-2)
+		self.Container:SetWidth((self[1]:GetWidth()+4)*((xp and 1 or 0) + (rw and #rw or 0))-2)
 	elseif self.Label then
 		self[1]:GetParent():SetWidth(self.Label:GetStringWidth()+16+32*(1+(rw and #rw or 0)))
 	end
@@ -477,13 +481,14 @@ local function FollowerButton_OnEnter(self)
 	U.SetFollowerInfo(GameTooltip, info, info.autoCombatSpells, nil, nil, nil, nil, true)
 	local tmid = U.FollowerHasTentativeGroup(info.followerID)
 	if info.status == GARRISON_FOLLOWER_ON_MISSION and info.missionTimeEnd then
+		local tl = math.max(0, info.missionTimeEnd-GetTime())
 		GameTooltip:AddLine(" ")
-		GameTooltip:AddLine(GARRISON_FOLLOWER_ON_MISSION_WITH_DURATION:format(GetTimeStringFromSeconds(math.max(0, info.missionTimeEnd-GetTime()), false, true, true)), 1, 0.4, 0)
+		GameTooltip:AddLine(tl > 0 and COVENANT_MISSIONS_ON_ADVENTURE_DURATION:format(GetTimeStringFromSeconds(tl, false, true, true) or COVENANT_FOLLOWER_MISSION_COMPLETE), 1, 0.4, 0)
 		GameTooltip:Show()
 	elseif tmid and C_Garrison.GetMissionTimes(tmid) then
 		local tn = C_Garrison.GetMissionName(tmid)
 		GameTooltip:AddLine(" ")
-		GameTooltip:AddLine((L"In Tentative Group - %s"):format(tn or "??"), 1, 0.4, 0)
+		GameTooltip:AddLine((L"In Tentative Party - %s"):format(tn or "??"), 1, 0.4, 0)
 		GameTooltip:Show()
 	end
 end
@@ -610,16 +615,16 @@ local function FollowerList_GetTroopHint(ft)
 			o = "|cffa0a0a0[" .. fi.level .. "]|r |cffffffff" .. fi.name .. "|r"
 			ml = (ml+fi.level)/2
 		end
-		for i=m, 1, -1 do
+		for i=ft[m].level == 60 and 0 or m, 1, -1 do
 			local fi = ft[i]
 			o = "|cffa0a0a0[" .. fi.level .. "]|r |cffffffff" .. fi.name .. "|r" .. (o and "\n" .. o or "")
 			if i == 1 or ft[i].level ~= ft[i-1].level then
 				break
 			end
 		end
-		ml = ("%s%.3g|r"):format(NORMAL_FONT_COLOR_CODE, ml)
-		o = (L"Your troop level is the median level of your companions (%s), rounded down."):format(ml) .. "\n\n" ..
-		    NORMAL_FONT_COLOR_CODE .. L"These companions currently affect your troop level:" .. "|r\n" .. o
+		local mlc = ("%s%.3g|r"):format(NORMAL_FONT_COLOR_CODE, ml)
+		o = (L"Your troop level is the median level of your companions (%s), rounded down. It does not decrease when you recruit additional companions."):format(mlc)
+		    .. (ml < 60 and "\n\n" .. NORMAL_FONT_COLOR_CODE .. L"These companions currently affect your troop level:" .. "|r\n" .. o or "")
 	end
 	return COVENANT_MISSIONS_TUTORIAL_TROOPS .. (o and ("\n\n" .. o) or "")
 end
@@ -700,10 +705,11 @@ end
 local function DoomRun_OnEnter(self)
 	local ft, g, gn = C_Garrison.GetFollowers(123), {}, 0
 	SortFollowerList(ft, true)
-	local getACS = C_Garrison.GetFollowerAutoCombatStats
 	for i=#ft,1,-1 do
 		local fi = ft[i]
-		if fi.isCollected and not fi.isMaxLevel and fi.status ~= GARRISON_FOLLOWER_ON_MISSION and not U.FollowerHasTentativeGroup(fi.followerID) and getACS(fi.followerID).currentHealth > 0 then
+		if fi.isCollected and not fi.isMaxLevel and fi.status ~= GARRISON_FOLLOWER_ON_MISSION
+		   and not U.FollowerHasTentativeGroup(fi.followerID)
+		   and C_Garrison.GetFollowerAutoCombatStats(fi.followerID).currentHealth > 0 then
 			g[gn], gn = i, gn + 1
 			if gn == 5 then
 				break
@@ -788,6 +794,7 @@ local function UButton_Sync(self)
 	self.clickKey = self.mode ~= "start-send" and "SPACE" or nil
 	self.clickWithEscape = self.mode and self.mode:match("^stop%-") and true or nil
 	self.eatEscapeUntil = math.max(self.eatEscapeUntil or -math.huge, ocwe and self.clickWithEscape ~= ocwe and GetTime()+0.5 or -math.huge)
+	self.Glow:SetShown(self.mode == "stop-delayed-send")
 	if GameTooltip:IsOwned(self) then
 		local oe = self:GetScript("OnEnter")
 		if not self:IsVisible() then
@@ -821,6 +828,30 @@ local function UButton_OnEnter(self)
 		end
 		GameTooltip:AddLine("|TInterface/TUTORIALFRAME/UI-TUTORIAL-FRAME:14:12:0:-1:512:512:10:70:330:410|t " .. L"Clear all tentative parties", 0.5, 0.8, 1)
 		GameTooltip:Show()
+	elseif m == "start-complete" then
+		GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
+		GameTooltip:AddLine(L"Complete All")
+		local ct = C_Garrison.GetCompleteMissions(123)
+		for i=1, ct and #ct or 0 do
+			GameTooltip:AddLine(ct[i].name or "", 1,1,1)
+		end
+		GameTooltip:AddLine(" ")
+		GameTooltip:AddLine("|TInterface/TUTORIALFRAME/UI-TUTORIAL-FRAME:14:12:0:-1:512:512:10:70:330:410|t " .. COVENANT_MISSIONS_COMBAT_LOG_HEADER, 0.5, 0.8, 1)
+		GameTooltip:Show()
+	elseif m == "stop-delayed-send" then
+		GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
+		GameTooltip:AddLine(L"Starting soon...")
+		local cb = C_CurrencyInfo.GetBasicCurrencyInfo(1813)
+		local curIco = cb and cb.icon and " |T" .. cb.icon .. ":0|t" or ""
+		for mid, nt in U.EnumerateTentativeGroups() do
+			if U.IsMissionStartingSoon(mid) then
+				local co = C_Garrison.GetMissionCost(mid) or 0
+				GameTooltip:AddDoubleLine(C_Garrison.GetMissionName(mid), (co+nt) .. curIco, 1,1,1, 1,1,1)
+			end
+		end
+		GameTooltip:AddLine(" ")
+		GameTooltip:AddLine("|TInterface/TUTORIALFRAME/UI-TUTORIAL-FRAME:14:12:0:-1:512:512:10:70:330:410|t " .. COVENANT_MISSIONS_START_ADVENTURE, 0.5, 0.8, 1)
+		GameTooltip:Show()
 	end
 end
 local function UButton_OnClick(self, button)
@@ -830,11 +861,22 @@ local function UButton_OnClick(self, button)
 	elseif U.IsCompletingMissions() and m == "stop-complete" then
 		U.StopCompletingMissions()
 	elseif m == "stop-delayed-send" then
-		U.ClearDelayedStartMissions()
-		U.StopStartingMissions()
-		snd = 39514
+		if button == "RightButton" then
+			U.RushDelayedStartMissions()
+		else
+			U.ClearDelayedStartMissions()
+			U.StopStartingMissions()
+			snd = 39514
+		end
 	elseif m == "start-complete" then
-		U.StartCompletingMissions()
+		if button == "RightButton" then
+			U.InitiateMissionCompletion("first")
+		else
+			U.StartCompletingMissions()
+			if GameTooltip:IsOwned(self) then
+				GameTooltip:Hide()
+			end
+		end
 	elseif U.HaveTentativeGroups() and m == "start-send" then
 		if button == "RightButton" then
 			U.DisbandTentativeGroups()
@@ -919,15 +961,19 @@ local function MissionPage_AcquireToast(self, followerMode)
 		toasts[#toasts+1] = toast
 	end
 	followerMode = not not followerMode
-	toast.Icon:SetShown(not followerMode)
-	toast.IconBorder:SetShown(not followerMode)
+	S[toast].Rewards.Container:SetWidth(38)
+	S[toast].Rewards.Container:SetShown(not followerMode)
 	toast.Portrait:SetShown(followerMode)
 	toast.PortraitFrame:SetShown(followerMode)
-	toast.Icon:SetTexCoord(4/64, 60/64, 4/64, 60/64)
-	toast.IconBorder:SetAtlas("loottoast-itemborder-gold")
 	toast.animStart, toast.animPhase = nil
 	toast:Show()
 	return toast
+end
+local function MissionToast_CheckTooltip(tip, self)
+	if (tip:GetLeft() or 2) < 1 then
+		tip:ClearAllPoints()
+		tip:SetPoint("LEFT", self, "RIGHT", self.tooltipFXO or 0, self.tooltipFYO or 0)
+	end
 end
 local function cmpTimeLeft(a, b)
 	if a.timeLeft ~= b.timeLeft then
@@ -989,6 +1035,40 @@ function Factory.PanelButton(parent)
 	r:SetHeight(UIBUTTON_HEIGHT)
 	r:SetPushedTextOffset(-1, -1)
 	return r
+end
+function Factory.PanelButtonGlow(p)
+	local ex, ey, w = 6, 6, 16
+	local g = CreateFrame("Frame", nil, p)
+	g:SetFlattensRenderLayers(true)
+	local t = g:CreateTexture(nil, "BACKGROUND", nil, -1)
+	g:SetAllPoints()
+	t:SetTexture("Interface/Buttons/UI-Panel-Button-Glow")
+	t:SetPoint("TOPLEFT", -ex, ey)
+	t:SetPoint("BOTTOMRIGHT", g, "BOTTOMLEFT", w-ex, -ey)
+	t:SetTexCoord(0, 20/128, 0, 38/64)
+	t:SetBlendMode("ADD")
+	t, g[1] = g:CreateTexture(nil, "BACKGROUND", nil, -1)
+	t:SetTexture("Interface/Buttons/UI-Panel-Button-Glow")
+	t:SetPoint("TOPRIGHT", ex, ey)
+	t:SetPoint("BOTTOMLEFT", g, "BOTTOMRIGHT", ex-w, -ey)
+	t:SetTexCoord(75/128, 95/128, 0, 38/64)
+	t:SetBlendMode("ADD")
+	t, g[2] = g:CreateTexture(nil, "BACKGROUND", nil, -1)
+	t:SetTexture("Interface/Buttons/UI-Panel-Button-Glow")
+	t:SetPoint("TOPLEFT", w-ex, ey)
+	t:SetPoint("BOTTOMRIGHT", ex-w, -ey)
+	t:SetTexCoord(20/128, 75/128, 0, 38/64)
+	t:SetBlendMode("ADD")
+	g[3] = t
+	local ag = g:CreateAnimationGroup()
+	ag:SetLooping("BOUNCE")
+	local aa = ag:CreateAnimation("Alpha")
+	aa:SetFromAlpha(0.15)
+	aa:SetToAlpha(0.75)
+	aa:SetDuration(0.8)
+	aa:SetSmoothing("IN_OUT")
+	ag:Play()
+	return g
 end
 function Factory.RaisedBorder(parent)
 	local border = CreateFrame("Frame", nil, parent)
@@ -1156,6 +1236,7 @@ function Factory.MissionPage(parent)
 	local f = CreateFrame("Frame", nil, parent)
 	local s = CreateObject("Shadow", f)
 	f:SetAllPoints()
+	f:EnableMouse(true)
 	s.MissionList = CreateObject("MissionList", f)
 	s.CopyBox = CreateObject("CopyBoxUI", f)
 	s.CopyBox:Hide()
@@ -1182,7 +1263,7 @@ function Factory.MissionPage(parent)
 		logsButton:SetPoint("RIGHT", prButton, "LEFT", -35, 0)
 	end
 	local uButton = CreateObject("PanelButton", f) do
-		s.UnButton = uButton
+		s.UnButton, uButton.Glow = uButton, CreateObject("PanelButtonGlow", uButton)
 		uButton:SetWidth(200)
 		uButton:SetPoint("TOPLEFT", 200, -34)
 		uButton:Hide()
@@ -1326,16 +1407,8 @@ function Factory.MissionButton(parent)
 	t:SetVertexColor(0.85, 0.85, 0.75)
 	t:SetAtlas("UI-QuestPoiCampaign-QuestNumber-SuperTracked")
 	s.TentativeMarker = t
-
-	t = CreateFrame("Frame", nil, cf)
-	t:SetPoint("TOP", 0, -4)
-	t:SetSize(104, 48)
-	s.Rewards = {Container=t, SetRewards=RewardBlock_SetRewards}
-	for j=1,3 do
-		local rew = CreateObject("RewardFrame", t)
-		rew:SetPoint("LEFT", 52*j-52, 0)
-		s.Rewards[j] = rew
-	end
+	s.Rewards = CreateObject("RewardBlock", cf, 48, 4)
+	s.Rewards.Container:SetPoint("TOP", 0, -4)
 	t = CreateObject("AchievementRewardIcon", cf)
 	t:SetPoint("RIGHT", cf, "TOPRIGHT", -25, -40)
 	s.AchievementReward = t
@@ -1405,9 +1478,10 @@ function Factory.MissionButton(parent)
 
 	return cf
 end
-function Factory.RewardFrame(parent)
+function Factory.RewardFrame(parent, sz)
+	sz = sz or 48
 	local f, t = CreateObject("CommonHoverTooltip", CreateFrame("Button", nil, parent))
-	f:SetSize(48, 48)
+	f:SetSize(sz, sz)
 	t = f:CreateTexture(nil, "ARTWORK")
 	t:SetAllPoints()
 	t:SetTexture("Interface/Icons/Temp")
@@ -1421,8 +1495,20 @@ function Factory.RewardFrame(parent)
 	f.SetReward = RewardButton_SetReward
 	return f
 end
+function Factory.RewardBlock(parent, sz, sp)
+	local t, s, r = CreateFrame("Frame", nil, parent), sz+(sp or 3)
+	t:SetSize(s+sz, sz)
+	r = {Container=t, SetRewards=RewardBlock_SetRewards}
+	for j=1,3 do
+		local rew = CreateObject("RewardFrame", t, sz)
+		rew:SetPoint("LEFT", s*j-s, 0)
+		r[j] = rew
+	end
+	return r
+end
 function Factory.InlineRewardBlock(parent)
 	local f, t = CreateFrame("Frame", nil, parent)
+	f:EnableMouse(true)
 	f:SetSize(140, 28)
 	t = f:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	t:SetPoint("LEFT")
@@ -1894,6 +1980,7 @@ function Factory.TexSlice(parent, layer,subLevel, tex,tW,tH, x0,x1,x2,x3, y0,y1,
 end
 function Factory.MissionToast(parent)
 	local f, t = CreateFrame("Button", nil, parent)
+	local sf = CreateObject("Shadow", f)
 	f:SetSize(295, 40)
 	f:SetFrameStrata("FULLSCREEN")
 	f:SetHitRectInsets(-6, -6, -6, -6)
@@ -1912,25 +1999,26 @@ function Factory.MissionToast(parent)
 	t:SetPoint("BOTTOMLEFT", -35, -30)
 	t:SetPoint("TOPRIGHT", 35, 30)
 	t:SetBlendMode("ADD")
-	f.PreGlow = t
-	t = f:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-	t:SetPoint("TOPLEFT", 44, -7)
-	t:SetSize(240, 12)
+	t, f.PreGlow = CreateObject("RewardBlock", f, 32, 2), t
+	t.Container:SetPoint("LEFT", 10, -1)
+	for i=1,3 do
+		local ti = t[i]
+		ti.tooltipAnchor, ti.tooltipXO, ti.tooltipFXO = "ANCHOR_TRUE_LEFT", -34*i+28, 285-34*i
+		ti.tooltipPostShow = MissionToast_CheckTooltip
+		ti.isRetrospective, ti.ShowQuantityFromWidgetText = true, "Quantity"
+		ti.Quantity:Hide()
+	end
+	t, sf.Rewards = f:CreateFontString(nil, "ARTWORK", "GameFontNormal"), t
+	t:SetPoint("TOPLEFT", sf.Rewards.Container, "TOPRIGHT", 2, -2.25)
+	t:SetPoint("TOPRIGHT", -10, -7)
+	t:SetHeight(12)
 	t:SetText("|cffff8000Legendary Mission")
-	t, f.Outcome = f:CreateFontString(nil, "ARTWORK", "GameFontHighlight"), t
-	t:SetPoint("BOTTOMLEFT", 44, 7)
-	t:SetSize(240, 12)
+	t, f.Header = f:CreateFontString(nil, "ARTWORK", "GameFontHighlight"), t
+	t:SetPoint("BOTTOMLEFT", sf.Rewards.Container, "BOTTOMRIGHT", 2, 2.25)
+	t:SetPoint("BOTTOMRIGHT", -10, 7)
+	t:SetHeight(12)
 	t:SetText("Legendary Goat Rescue")
-	t, f.Detail = f:CreateTexture(nil, "ARTWORK"), t
-	t:SetSize(28, 28)
-	t:SetPoint("LEFT", 11, -1)
-	t:SetTexture(877477)
-	t:SetTexCoord(4/64, 60/64, 4/64,60/64)
-	t, f.Background[#f.Background+1], f.Icon = f:CreateTexture(nil, "ARTWORK", nil, 1), t, t
-	t:SetSize(34, 34)
-	t:SetPoint("CENTER", f.Icon, "CENTER")
-	t:SetAtlas("loottoast-itemborder-gold")
-	t, f.Background[#f.Background+1], f.IconBorder = f:CreateTexture(nil, "ARTWORK", nil, 0), t, t
+	t, f.Detail = f:CreateTexture(nil, "ARTWORK", nil, 0), t
 	t:SetSize(28, 28)
 	t:SetPoint("LEFT", 12, -1)
 	t:SetTexture(1605024)

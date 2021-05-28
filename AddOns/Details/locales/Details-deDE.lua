@@ -1559,7 +1559,7 @@ L["STRING_UNLOCK"] = [=[Fenstergruppe auflösen
  mit dieser Schaltfläche]=]
 L["STRING_UNLOCK_WINDOW"] = "freigeben"
 L["STRING_UPTADING"] = "aktualisiere"
-L["STRING_VERSION_AVAILABLE"] = "Eine neue Version ist verfügbar, lade es von der Twitch App oder der Curse Webseite herunter."
+L["STRING_VERSION_AVAILABLE"] = "Eine neue Version ist verfügbar, lade es von der Curse Forge App oder der Curse Webseite herunter."
 L["STRING_VERSION_UPDATE"] = "Neue Version: Was hat sich geändert? Klicke hier"
 L["STRING_VOIDZONE_TOOLTIP"] = "Schaden und Zeit"
 L["STRING_WAITPLUGIN"] = [=[warte auf

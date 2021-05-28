@@ -143,7 +143,9 @@ function events.currency(id, num)
 	if opt.show_currency then
 		local num = tonumber(num) or 1
 		local c = C_CurrencyInfo.GetCurrencyInfo(id)
-		addon:AddRow(c.iconFileID, opt.fade_own, 1, 1, 1, 1, 1, 1):SetTexts(nil,  num > 1 and ("%s x%d"):format(c.name, num) or c.name, c.quantity)
+		if c then
+			addon:AddRow(c.iconFileID, opt.fade_own, 1, 1, 1, 1, 1, 1):SetTexts(nil,  num > 1 and ("%s x%d"):format(c.name, num) or c.name, c.quantity)
+		end
 	end
 end
 

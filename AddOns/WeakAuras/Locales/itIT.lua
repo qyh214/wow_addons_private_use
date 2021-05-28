@@ -20,6 +20,12 @@ L["%s - %i. Trigger"] = "%s - %i. Innesco"
 L["%s - Alpha Animation"] = "%s - Animazione  Alpha"
 L["%s - Color Animation"] = "%s - Animazione Colore"
 L["%s - Condition Custom Chat"] = "%s - Condizioni Chat Personalizzata"
+--[[Translation missing --]]
+L["%s - Custom Anchor"] = "%s - Custom Anchor"
+--[[Translation missing --]]
+L["%s - Custom Grow"] = "%s - Custom Grow"
+--[[Translation missing --]]
+L["%s - Custom Sort"] = "%s - Custom Sort"
 L["%s - Custom Text"] = "%s - Testo Personalizzato"
 L["%s - Finish"] = "%s - Fine"
 L["%s - Finish Action"] = "%s - Azione Finale"
@@ -33,10 +39,14 @@ L["%s - Start Action"] = "%s - Azione Iniziale"
 L["%s - Start Custom Text"] = "%s - Testo Personalizzato Iniziale"
 L["%s - Translate Animation"] = "%s - Animazione di Traslazione"
 L["%s - Trigger Logic"] = "%s - Logica dell'innesco"
+--[[Translation missing --]]
+L["%s Custom Variables"] = "%s Custom Variables"
 L["%s Duration Function"] = "%s Durata della Funzione"
 L["%s Icon Function"] = "%s Icona della Funzione"
 L["%s Name Function"] = "%s Name della Funzione"
 L["%s Overlay Color"] = "%s Colore Overlay"
+--[[Translation missing --]]
+L["%s Overlay Function"] = "%s Overlay Function"
 --[[Translation missing --]]
 L["%s Stacks Function"] = "%s Stacks Function"
 L["%s Texture Function"] = "%s Funzione di Texture"
@@ -684,6 +694,8 @@ L["Haste Rating"] = "Haste Rating"
 --[[Translation missing --]]
 L["Heal"] = "Heal"
 --[[Translation missing --]]
+L["Heal Absorbed"] = "Heal Absorbed"
+--[[Translation missing --]]
 L["Health"] = "Health"
 --[[Translation missing --]]
 L["Health (%)"] = "Health (%)"
@@ -895,6 +907,8 @@ L["Legacy Looking for Raid"] = "Legacy Looking for Raid"
 L["Legacy RGB Gradient"] = "Legacy RGB Gradient"
 --[[Translation missing --]]
 L["Legacy RGB Gradient Pulse"] = "Legacy RGB Gradient Pulse"
+--[[Translation missing --]]
+L["Legacy Spellname"] = "Legacy Spellname"
 --[[Translation missing --]]
 L["Length"] = "Length"
 --[[Translation missing --]]
@@ -1141,6 +1155,8 @@ L["Orbit"] = "Orbit"
 L["Orientation"] = "Orientation"
 --[[Translation missing --]]
 L["Ossirian the Unscarred"] = "Ossirian the Unscarred"
+--[[Translation missing --]]
+L["Other"] = "Other"
 --[[Translation missing --]]
 L["Other Addons"] = "Other Addons"
 --[[Translation missing --]]
@@ -1444,6 +1460,8 @@ L["Separator"] = "Separator"
 --[[Translation missing --]]
 L["Set IDs can be found on websites such as classic.wowhead.com/item-sets"] = "Set IDs can be found on websites such as classic.wowhead.com/item-sets"
 --[[Translation missing --]]
+L["Set IDs can be found on websites such as tbc.wowhead.com/item-sets"] = "Set IDs can be found on websites such as tbc.wowhead.com/item-sets"
+--[[Translation missing --]]
 L["Set IDs can be found on websites such as wowhead.com/item-sets"] = "Set IDs can be found on websites such as wowhead.com/item-sets"
 --[[Translation missing --]]
 L["Set Maximum Progress"] = "Set Maximum Progress"
@@ -1543,8 +1561,6 @@ L["Source Reaction"] = "Source Reaction"
 L["Source Unit"] = "Source Unit"
 --[[Translation missing --]]
 L["Source Unit Name/Realm"] = "Source Unit Name/Realm"
---[[Translation missing --]]
-L["Source: "] = "Source: "
 --[[Translation missing --]]
 L["Space"] = "Space"
 --[[Translation missing --]]

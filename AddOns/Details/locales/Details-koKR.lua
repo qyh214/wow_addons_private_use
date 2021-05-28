@@ -1568,7 +1568,7 @@ L["STRING_UNLOCK"] = [=[이 버튼으로
 창 그룹 해제]=]
 L["STRING_UNLOCK_WINDOW"] = "잠금해제"
 L["STRING_UPTADING"] = "갱신 중"
-L["STRING_VERSION_AVAILABLE"] = "Twitch App 또는 Curse 웹 사이트에서 새로운 버전을 다운로드 할 수 있습니다."
+L["STRING_VERSION_AVAILABLE"] = "Curse Forge App 또는 Curse 웹 사이트에서 새로운 버전을 다운로드 할 수 있습니다."
 L["STRING_VERSION_UPDATE"] = "새 버전: 변경 내용을 보려면 클릭하세요"
 L["STRING_VOIDZONE_TOOLTIP"] = "피해와 시간"
 L["STRING_WAITPLUGIN"] = [=[플러그인

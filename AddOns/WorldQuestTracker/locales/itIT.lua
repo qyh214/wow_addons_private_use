@@ -170,16 +170,11 @@ L["S_QUESTTYPE_RESOURCE"] = "Risorse"
 L["S_QUESTTYPE_TRADESKILL"] = "Creazioni"
 --[[Translation missing --]]
 --[[ L["S_RAREFINDER_ADDFROMPREMADE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_RAREFINDER_NPC_NOTREGISTERED"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_RAREFINDER_OPTIONS_ENGLISHSEARCH"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_RAREFINDER_OPTIONS_SHOWICONS"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_RAREFINDER_SOUND_ALWAYSPLAY"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_RAREFINDER_SOUND_ENABLED"] = ""--]] 
+L["S_RAREFINDER_NPC_NOTREGISTERED"] = "NPC Raro non è nel Database"
+L["S_RAREFINDER_OPTIONS_ENGLISHSEARCH"] = "Cerca solo in lingua Inglese"
+L["S_RAREFINDER_OPTIONS_SHOWICONS"] = "Visualizza icona per i Rari Attivi"
+L["S_RAREFINDER_SOUND_ALWAYSPLAY"] = "Suona lo stesso anche se gli effetti sonori sono disattivati"
+L["S_RAREFINDER_SOUND_ENABLED"] = "Suona quando c'è un Raro nella minimappa"
 --[[Translation missing --]]
 --[[ L["S_RAREFINDER_SOUNDWARNING"] = ""--]] 
 --[[Translation missing --]]
@@ -210,10 +205,8 @@ L["S_TUTORIAL_TIMELEFT"] = "indica il tempo rimasto (+4 ore, +90 minuti, + 30 mi
 --[[ L["S_TUTORIAL_WORLDBUTTONS"] = ""--]] 
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Questo pulsante mostra la mappa delle Isole Disperse."
 L["S_UNKNOWNQUEST"] = "Missione Sconosciuta"
---[[Translation missing --]]
---[[ L["S_WHATSNEW"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_WORLDBUTTONS_SHOW_TYPE"] = ""--]] 
+L["S_WHATSNEW"] = "Cosa c'è di nuovo?"
+L["S_WORLDBUTTONS_SHOW_TYPE"] = "Ordina per tipo"
 --[[Translation missing --]]
 --[[ L["S_WORLDBUTTONS_SHOW_ZONE"] = ""--]] 
 --[[Translation missing --]]

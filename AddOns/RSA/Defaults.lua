@@ -1166,6 +1166,15 @@ local function Monk()
 				},
 				SmartGroup = true,
 			},
+			TigersLust = {
+				Messages = {
+					Start = {"[LINK] cast on [TARGET]!"},
+					End = {"[LINK] on [TARGET] faded!"},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+			},
 		},
 	}
 	return Monk
@@ -2143,6 +2152,15 @@ local function Shaman()
 				},
 			},
 			ManaTide = {
+				Messages = {
+					Placed = {"[LINK] placed!"},
+					End = {"[LINK] faded!"},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+			},
+			EarthbindTotem = {
 				Messages = {
 					Placed = {"[LINK] placed!"},
 					End = {"[LINK] faded!"},

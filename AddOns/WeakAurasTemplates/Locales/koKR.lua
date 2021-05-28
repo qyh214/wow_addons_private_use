@@ -36,8 +36,7 @@ local L = WeakAuras.L
 	L["Always shows the aura."] = "효과를 항상 표시합니다."
 	L["Back"] = "뒤로"
 	L["Basic Show On Cooldown"] = "재사용 대기 중 표시"
-	--[[Translation missing --]]
-	L["Basic Show On Ready"] = "Basic Show On Ready"
+	L["Basic Show On Ready"] = "준비완료 시 표시"
 	L["Bloodlust/Heroism"] = "피의 욕망/영웅심"
 	--[[Translation missing --]]
 	L["Bonded Buff"] = "Bonded Buff"
@@ -70,6 +69,8 @@ local L = WeakAuras.L
 	L["Frost"] = "냉기"
 	L["General"] = "일반"
 	L["Health"] = "생명력"
+	--[[Translation missing --]]
+	L["Highlight while action is queued."] = "Highlight while action is queued."
 	L["Highlight while active, red when out of range."] = "활성화 된 동안 강조, 사정거리를 벗어나면 붉은색으로 표시"
 	L["Highlight while active."] = "활성화된 동안 강조합니다."
 	L["Highlight while buffed, red when out of range."] = "강화 효과가 있는 동안 강조, 사정거리를 벗어나면 붉은색으로 표시"
@@ -115,6 +116,8 @@ local L = WeakAuras.L
 	L["Show Charges with Range Tracking"] = "Show Charges with Range Tracking"
 	--[[Translation missing --]]
 	L["Show Charges with Usable Check"] = "Show Charges with Usable Check"
+	--[[Translation missing --]]
+	L["Show Cooldown and Action Queued"] = "Show Cooldown and Action Queued"
 	L["Show Cooldown and Buff"] = "재사용 대기시간 및 강화 효과 표시"
 	L["Show Cooldown and Buff and Check for Target"] = "재사용 대기시간과 강화 효과 표시 및 대상 확인"
 	--[[Translation missing --]]

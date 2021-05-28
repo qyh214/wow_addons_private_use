@@ -19,26 +19,6 @@ local function createOptions(parentData, data, index, subIndex)
   local options = {
     __title = L["Glow %s"]:format(subIndex),
     __order = 1,
-    __up = function()
-      if (OptionsPrivate.Private.ApplyToDataOrChildData(parentData, OptionsPrivate.MoveSubRegionUp, index, "subglow")) then
-        WeakAuras.ClearAndUpdateOptions(parentData.id)
-      end
-    end,
-    __down = function()
-      if (OptionsPrivate.Private.ApplyToDataOrChildData(parentData, OptionsPrivate.MoveSubRegionDown, index, "subglow")) then
-        WeakAuras.ClearAndUpdateOptions(parentData.id)
-      end
-    end,
-    __duplicate = function()
-      if (OptionsPrivate.Private.ApplyToDataOrChildData(parentData, OptionsPrivate.DuplicateSubRegion, index, "subglow")) then
-        WeakAuras.ClearAndUpdateOptions(parentData.id)
-      end
-    end,
-    __delete = function()
-      if (OptionsPrivate.Private.ApplyToDataOrChildData(parentData, WeakAuras.DeleteSubRegion, index, "subglow")) then
-        WeakAuras.ClearAndUpdateOptions(parentData.id)
-      end
-    end,
     glow = {
       type = "toggle",
       width = WeakAuras.normalWidth,
@@ -251,7 +231,7 @@ local function createOptions(parentData, data, index, subIndex)
       hidden = function() return hiddenGlowExtra() or data.glowType ~= "Pixel" end,
     },
 
-    glow_anchor = {
+    glow_expand_anchor = {
       type = "description",
       name = "",
       order = 20,
@@ -262,6 +242,9 @@ local function createOptions(parentData, data, index, subIndex)
       }
     }
   }
+
+  OptionsPrivate.AddUpDownDeleteDuplicate(options, parentData, index, "subglow")
+
   return options
 end
 

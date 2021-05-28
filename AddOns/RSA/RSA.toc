@@ -2,7 +2,7 @@
 ## Title: RSA [|c10FF75B3Core|r]
 ## Notes: Easy Spell Announcements! Amongst other things. This is required to run RSA.
 ## Author: Raeli
-## Version: r544-Release
+## Version: r545-Release
 ## SavedVariables: RSADB
 ## OptionalDeps: Ace3, LibDualSpec-1.0, LibSink-2.0, LibResInfo-1.0
 ## X-Curse-Project-ID: 21464
@@ -12,7 +12,9 @@
 ## Notes-zhTW: 簡易法術通報！假如使用附加模組，將需要執行RSA。
 
 
+#@no-lib-strip@
 embeds.xml
+#@end-no-lib-strip@
 Localisation\Locale-enUS.lua
 Localisation\Locale-esES.lua
 Localisation\Locale-deDE.lua

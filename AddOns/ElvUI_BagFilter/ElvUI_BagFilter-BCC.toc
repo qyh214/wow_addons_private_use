@@ -1,0 +1,9 @@
+## Interface: 20501
+## Title: |cff1784d1ElvUI TBC|r Bag Filters
+## Version: 7.1
+## Author: Warmexx [Neighbours]
+## Dependencies: ElvUI
+## X-Donate: PayPal:warmexx AT wow-neighbours DOT com
+## X-Website: https://www.curseforge.com/wow/addons/elvui-bag-filters
+
+BagFilter.lua

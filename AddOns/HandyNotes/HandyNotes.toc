@@ -3,7 +3,7 @@
 ## Notes: Handy notes for your maps
 ## Notes-frFR: Notes pratiques pour vos cartes.
 ## Author: Xinhuan
-## Version: v1.6.2
+## Version: v1.6.3
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: xinhuan @ gmail DOT com
@@ -17,6 +17,7 @@
 ## SavedVariables: HandyNotesDB, HandyNotes_HandyNotesDB
 
 # Library files
+#@no-lib-strip@
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
 Libs\AceAddon-3.0\AceAddon-3.0.xml
@@ -30,6 +31,7 @@ Libs\AceConfig-3.0\AceConfig-3.0.xml
 Libs\HereBeDragons\HereBeDragons-2.0.lua
 Libs\HereBeDragons\HereBeDragons-Pins-2.0.lua
 Libs\HereBeDragons\HereBeDragons-Migrate.lua
+#@end-no-lib-strip@
 
 # Locale files
 Locales\Locale-enUS.lua

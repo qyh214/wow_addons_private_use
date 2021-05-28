@@ -1,7 +1,7 @@
 ## Interface: 90001
 ## Title: XLoot Frame
 ## Notes: A customizable, skinnable loot frame.
-## Version: 9.0-7
+## Version: 9.0-8
 ## Author: Xuerian
 ## X-Category: Inventory
 

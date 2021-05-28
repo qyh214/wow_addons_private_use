@@ -1,0 +1,18 @@
+## Interface: 90005
+## Version: 4.3.1
+## Title: MythicPlusTimer
+## Author: Fabys
+## Notes: Custom Mythic+ timer appearance
+## SavedVariables: MythicPlusTimerDB
+
+addon.lua
+locales.lua
+config_gui.lua
+
+config.lua
+main.lua
+timer.lua
+criteria.lua
+infos.lua
+progress.lua
+keystone.lua
