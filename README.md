@@ -117,6 +117,8 @@ Nnoggie大秘境技能CD监视升级版&自制团队CD监视，带技能激活�
 
 details中文昵称修正补丁：https://wago.io/uq0Uox6Ta
 
+崩裂监视：https://wago.io/Hmm-bO1rv
+
 ## 一些有用的重要命令
 在游戏内聊天窗口输入，然后回车：
 
