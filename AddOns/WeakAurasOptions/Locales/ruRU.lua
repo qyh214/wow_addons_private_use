@@ -326,6 +326,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Fallback Icon"] = "Резервная иконка"
 	L["False"] = "Ложь"
 	L["Fetch Affected/Unaffected Names"] = "Извлечь имена задействованных и незадействованных игроков"
+	--[[Translation missing --]]
+	L["Filter by Arena Spec"] = "Filter by Arena Spec"
 	L["Filter by Class"] = "Фильтр по классу"
 	L["Filter by Group Role"] = "Фильтр по роли"
 	L["Filter by Nameplate Type"] = "Тип индикатора здоровья"
@@ -678,6 +680,8 @@ Supports multiple entries, separated by commas
 	L["Spark"] = "Искра"
 	L["Spark Settings"] = "Настройки искры"
 	L["Spark Texture"] = "Текстура искры"
+	--[[Translation missing --]]
+	L["Specialization"] = "Specialization"
 	L["Specific Unit"] = "Конкретная единица"
 	L["Spell ID"] = "ID заклинания"
 	L["Stack Count"] = "Количество стаков"

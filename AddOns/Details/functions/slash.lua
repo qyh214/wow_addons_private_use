@@ -1540,10 +1540,18 @@ function SlashCmdList.DETAILS (msg, editbox)
 		end
 	
 	--BFA BETA
-	elseif (msg == "update") then
-		_detalhes:CopyPaste ([[https://www.wowinterface.com/downloads/info23056-DetailsDamageMeter8.07.3.5.html]])
+	--elseif (msg == "update") then
+	--	_detalhes:CopyPaste ([[https://www.wowinterface.com/downloads/info23056-DetailsDamageMeter8.07.3.5.html]])
 	
 	
+	elseif (msg == "ec") then
+		if (rest and tonumber(rest)) then
+			local combatToErase = tonumber(rest)
+			tremove(_detalhes.tabela_historico.tabelas, combatToErase)
+			Details:Msg("combat erased.")
+		end
+		return
+
 	elseif (msg == "share") then
 	
 		local f = {}
@@ -1659,6 +1667,8 @@ function SlashCmdList.DETAILS (msg, editbox)
 			end
 			
 		end
+
+		print("|", msg)
 		
 		print (" ")
 		--local v = _detalhes.game_version .. "." .. (_detalhes.build_counter >= _detalhes.alpha_build_counter and _detalhes.build_counter or _detalhes.alpha_build_counter)
@@ -1674,15 +1684,14 @@ function SlashCmdList.DETAILS (msg, editbox)
 		--print ("|cffffaeae/details|r |cffffff33" .. Loc ["STRING_SLASH_WIPECONFIG"] .. "|r: " .. Loc ["STRING_SLASH_WIPECONFIG_DESC"])
 		print ("|cffffaeae/details|r |cffffff33" .. "me" .. "|r: open the player breakdown for you.") --localize-me
 		print ("|cffffaeae/details|r |cffffff33" .. "spells" .. "|r: list of spells already saw.") --localize-me
-		
-		
+
 		--print ("|cffffaeae/details " .. Loc ["STRING_SLASH_WORLDBOSS"] .. "|r: " .. Loc ["STRING_SLASH_WORLDBOSS_DESC"])
 		print (" ")
 
 		if (DetailsFramework.IsTBCWow()) then
 			--the burning crusade classic
-			local v = _detalhes.game_version .. "." .. (_detalhes.build_counter >= _detalhes.alpha_build_counter and _detalhes.build_counter or _detalhes.alpha_build_counter)
-			print (Loc ["STRING_DETAILS1"] .. "|cFFFFFF00DETAILS! VERSION|r: |cFFFFAA00BCC" .. (_detalhes.build_counter >= _detalhes.alpha_build_counter and _detalhes.build_counter or _detalhes.alpha_build_counter))
+			local v = _detalhes.game_version .. "." .. (_detalhes.bcc_counter)
+			print (Loc ["STRING_DETAILS1"] .. "|cFFFFFF00DETAILS! VERSION|r: |cFFFFAA00BCC" .. _detalhes.bcc_counter)
 			print (Loc ["STRING_DETAILS1"] .. "|cFFFFFF00GAME VERSION|r: |cFFFFAA00" .. _detalhes.game_version)
 		else
 			--retail

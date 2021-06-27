@@ -1,44 +1,56 @@
-# [3.4.2](https://github.com/WeakAuras/WeakAuras2/tree/3.4.2) (2021-05-27)
+# [3.4.3](https://github.com/WeakAuras/WeakAuras2/tree/3.4.3) (2021-06-13)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.4.1...3.4.2)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.4.2...3.4.3)
 
 ## Highlights
 
- - More work on nested groups.
-- Make more WeakAuras functions private.
-- BCC fixes and model updates. 
+ - More BCC and nested fixes
+- Add a stage trigger for BigWigs (thanks Justwait) 
 
 ## Commits
 
+Continuity (1):
+
+- - fixing personal resource display anchor for disabled Plater personal bar module
+
 InfusOnWoW (13):
 
-- Prepare another small part of WeakAurasOptions for nested
-- Prepare TriggerTemplates for nested
-- Make Private accessible for Templates
-- Prepare TriggerOptions for nested
-- Prepare another part of ActionOptions for nested
-- Prepare GetOverlayInfo for nested
-- Prepare SortDisplayButtons for nested
-- Prepare automatic frame level setting for nested
-- Slightly Simplify ProgressTexture Options code
-- Cast Trigger: Deprecate the old Spell Name check
-- Move Swing Timer remaining time check to the right place
-- Improve scam checks
-- Fix regression on dragging auras
+- Character Stats: Add Run Speed
+- BT2: Add Arena enemy spec support
+- BCC: Remove textures that aren't shipped with BCC
+- Fix Conditions options error on renaming group member
+- Templates: Add Fel Bombardment to DH legendaries
+- Templates: Move Grip of the Everlasting to the right category
+- Make Ungroup action handle nested groups
+- Prepare Drag and Drop for Nested groups
+- Remove debug output in DuplicateAura
+- Prepare Duplicate for nested
+- Prepare load handling for nested
+- Prepare SubText for nested
+- No longer need to block function that doesn't exist
 
-Stanzilla (3):
+Justwait (1):
 
-- Move SortDisplayButtons to private namespace (#3116)
+- WeakAuras: Add a stage trigger for BigWigs (#3139)
+
+Stanzilla (4):
+
+- Update WeakAurasModelPaths from wow.tools
+- Update WeakAurasModelPaths from wow.tools
 - Update WeakAurasModelPaths from wow.tools
 - Update WeakAurasModelPaths from wow.tools
 
-emptyrivers (1):
+Surarn (1):
 
-- privatise DisplayToString
+- Health trigger: Add heal absorb
 
-mrbuds (3):
+Vardex (2):
 
-- swing timer: do not reset swing on SPELL_EXTRA_ATTACKS
-- Swing Timer trigger, fix remaining time check fixes #3106
-- fix CorrectSpellName for linked spells on TBC
+- Fix deletion of nested groups
+- Prepare copy&paste for nested
+
+mrbuds (2):
+
+- add difficulty load condition for bcc fixes #3133
+- support new bcc dungeon difficulty index fixes #3134
 

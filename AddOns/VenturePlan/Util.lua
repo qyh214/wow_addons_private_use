@@ -15,7 +15,7 @@ local overdesc = {
 	[107]={L"Debuffs all enemies, dealing {1} damage this turn and during each of the next three turns. Additionally, increases all damage taken by the nearest enemy by {2} for three turns.", "damageATK", "plusDamageTakenATK"},
 	[121]={L"Reduces all enemies' damage dealt by {}% during the next turn.", "modDamageDealt"},
 	[125]={L"Inflicts {} damage to a random enemy.", "damageATK"},
-	[194]={L"Buffs the closest ally, increasing all damage dealt by {1}% and reducing all damage taken by {2}% for two turns. Inflicts {3} damage to self.", "plusDamageDealtATK", "modDamageTaken", "damageATK"},
+	[194]={L"Buffs the closest ally, increasing all damage dealt by {1} and reducing all damage taken by {2}% for two turns. Inflicts {3} damage to self.", "plusDamageDealtATK", "modDamageTaken", "damageATK"},
 	[227]={L"Every other turn, a random enemy is attacked for {}% of their maximum health.", "damagePerc"},
 	[242]={L"Heals the closest ally for {1}, and increases all damage taken by the ally by {2}% for two turns.", "healATK", "modDamageTaken"},
 	[251]={L"Reduces all enemies' damage dealt by {}% for two turns.", "modDamageDealt"},
@@ -172,6 +172,22 @@ do -- Tentative Groups
 		fi.autoCombatantStats = C_Garrison.GetFollowerAutoCombatStats(fid)
 		return fi
 	end
+	local function StopBoardAnimations(board)
+		local as, af = board.socketsByBoardIndex, board.framesByBoardIndex
+		for i=0, 12 do
+			local f, f2 = as[i], af[i]
+			f.EnemyTargetingIndicatorFrame:Stop()
+			f2.EnemyTargetingIndicatorFrame:Stop()
+			if f.FriendlyTargetingIndicatorFrame then
+				f.FriendlyTargetingIndicatorFrame:Stop()
+			end
+			for _, v in pairs(f.AuraContainer) do
+				if type(v) == "table" and v.FadeIn then
+					v.FadeIn:Stop()
+				end
+			end
+		end
+	end
 	function U.ShowMission(mid, listFrame)
 		local mi, mi2, g = C_Garrison.GetMissionDeploymentInfo(mid), C_Garrison.GetBasicMissionInfo(mid), groups[mid]
 		if mi and mi2 then
@@ -195,6 +211,7 @@ do -- Tentative Groups
 					CovenantMissionFrame:AssignFollowerToMission(MP.Board.framesByBoardIndex[i], GetFollowerInfo(f))
 				end
 			end
+			StopBoardAnimations(CovenantMissionFrame.MissionTab.MissionPage.Board)
 		end
 	end
 	function U.StoreMissionGroup(mid, gt, disbandGroups)
@@ -272,6 +289,16 @@ do -- Tentative Groups
 		local g = groups[mid]
 		if g then
 			U.SendMissionGroup(mid, g)
+		end
+	end
+	function U.GetTentativeGroup(mid, into)
+		local g = groups[mid]
+		if g then
+			into = type(into) == "table" and wipe(into) or {}
+			for i=0,4 do
+				into[i] = g[i]
+			end
+			return into
 		end
 	end
 	local function nextTent(_, k)
@@ -768,6 +795,27 @@ function U.GetAbilityDescriptionOverride(spellID, atk, ms)
 		od = FormatAbilityDescriptionOverride(si, od, atk, ms)
 	end
 	return od
+end
+
+function U.GetInProgressGroup(followers, into)
+	into = type(into) == "table" and wipe(into) or {}
+	for i=1, #followers do
+		local fid = followers[i]
+		local ii = C_Garrison.GetFollowerMissionCompleteInfo(fid)
+		into[ii and ii.boardIndex or -1] = fid
+	end
+	into[-1] = nil
+	return into
+end
+
+function U.FollowerIsFavorite(id)
+	local f = SPC.Favorites
+	return f and f[id] or false
+end
+function U.FollowerSetFavorite(id, nv)
+	local f = SPC.Favorites or {}
+	f[id] = nv or nil
+	SPC.Favorites = next(f) ~= nil and f or nil
 end
 
 function U.GetShiftedCurrencyValue(id, q)

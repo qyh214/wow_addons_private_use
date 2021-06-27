@@ -486,7 +486,7 @@ local function CreatePluginFunctions()
 							deaths_stored = deaths_stored + 1
 						
 							--> store death
-							local d = table_deepcopy (t[1])
+							local d = Details.CopyTable(t[1])
 							
 							local last = d [#d]
 							if (last [4]) then

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2443, "DBM-SanctumOfDomination", nil, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210527010846")
+mod:SetRevision("20210614184808")
 mod:SetCreatureID(176523)
 mod:SetEncounterID(2430)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
@@ -65,17 +65,16 @@ local timerForgeWeapon							= mod:NewCastTimer(48, 355525, nil, nil, nil, 6)
 
 --mod:AddRangeFrameOption("8")
 mod:AddInfoFrameOption(355786, true)
-mod:AddSetIconOption("SetIconOnChains", 355505, true, false, {1, 2, 3, 4, 5, 6})
+mod:AddSetIconOption("SetIconOnChains", 355505, true, false, {1, 2, 3})
 mod:AddNamePlateOption("NPAuraOnFinalScream", 357735)
 
-mod.vb.phase = 1
 mod.vb.ChainsIcon = 1
 
 local debuffedPlayers = {}
 
 local updateInfoFrame
 do
-	local twipe, tsort = table.wipe, table.sort
+	local twipe, tsort, mfloor = table.wipe, table.sort, math.floor
 	local lines = {}
 	local tempLines = {}
 	local tempLinesSorted = {}
@@ -112,7 +111,8 @@ do
 				local spellName, _, _, _, _, expires = DBM:UnitDebuff(uId, 355786)
 				if expires then
 					local unitName = DBM:GetUnitFullName(uId)
-					tempLines[unitName] = expires
+					local debuffTime = expires - GetTime()
+					tempLines[unitName] = mfloor(debuffTime)
 					tempLinesSorted[#tempLinesSorted + 1] = unitName
 				end
 			end
@@ -127,7 +127,7 @@ do
 end
 
 function mod:OnCombatStart(delay)
-	self.vb.phase = 1
+	self:SetStage(1)
 	self.vb.ChainsIcon = 1
 	table.wipe(debuffedPlayers)
 	timerShadowsteelChainsCD:Start(8.7-delay)
@@ -206,10 +206,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		warnShadowsteelChains:CombinedShow(0.5, args.destName)
 		self.vb.ChainsIcon = self.vb.ChainsIcon + 1
-		if self.vb.ChainsIcon > 8 then
-			self.vb.ChainsIcon = 1
-			DBM:AddMsg("Cast event for Chains is wrong, doing backup icon reset")
-		end
 	elseif spellId == 355786 then
 		if not tContains(debuffedPlayers, args.destName) then
 			table.insert(debuffedPlayers, args.destName)
@@ -279,7 +275,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 355525 then--Forge Weapon ending, boss returning
 		timerForgeWeapon:Stop()
-		self.vb.phase = self.vb.phase + 1
+		self:SetStage(0)
 		if self.vb.phase == 2 then
 			timerShadowsteelChainsCD:Start(15.5)
 			timerCruciformAxeCD:Start(24)
@@ -404,6 +400,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	elseif spellId == 352052 then--Spiked Balls
 		timerSpikedBallsCD:Start()
 	elseif spellId == 355504 then--Shadowsteel Chains
+		self.vb.ChainsIcon = 1
 		timerShadowsteelChainsCD:Start()
 	elseif spellId == 348456 then--Flameclasp Trap
 		timerFlameclaspTrapCD:Start()

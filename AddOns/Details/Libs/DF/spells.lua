@@ -4,6 +4,9 @@ if (not DF or not DetailsFrameworkCanLoad) then
 	return 
 end
 
+local IS_WOW_PROJECT_MAINLINE = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+local IS_WOW_PROJECT_NOT_MAINLINE = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
+
 DF_COOLDOWN_RAID = 4
 DF_COOLDOWN_EXTERNAL = 3
 
@@ -486,7 +489,7 @@ DF.CooldownsBySpec = {
 }
 
 --additional CDs / modifications for classic
-if (WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE) then
+if (IS_WOW_PROJECT_NOT_MAINLINE) then
 	--WARRIOR
 	--Arms
 	DF.CooldownsBySpec[71][12292] = 1 --Death Wish (BCC)
@@ -667,19 +670,11 @@ if (WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE) then
 	DF.CooldownsBySpec[267][30414] = 5 --shadowfury Rank 3
 
 	--DRUID - 102
-	DF.CooldownsBySpec[102][1735] = 5 --demoralizing roar Rank 2
-	DF.CooldownsBySpec[102][9490] = 5 --demoralizing roar Rank 3
-	DF.CooldownsBySpec[102][9747] = 5 --demoralizing roar Rank 4
-	DF.CooldownsBySpec[102][9898] = 5 --demoralizing roar Rank 5
-	DF.CooldownsBySpec[102][26998] = 5 --demoralizing roar Rank 6
+	DF.CooldownsBySpec[102][99] = nil --demoralizing roar disabled, no CC in tbc
 
 	--DRUID - 103
 	--DRUID - 104
-	DF.CooldownsBySpec[104][1735] = 5 --demoralizing roar Rank 2
-	DF.CooldownsBySpec[104][9490] = 5 --demoralizing roar Rank 3
-	DF.CooldownsBySpec[104][9747] = 5 --demoralizing roar Rank 4
-	DF.CooldownsBySpec[104][9898] = 5 --demoralizing roar Rank 5
-	DF.CooldownsBySpec[104][26998] = 5 --demoralizing roar Rank 6
+	DF.CooldownsBySpec[104][99] = nil --demoralizing roar disabled, no CC in tbc
 
 	--DRUID - 105
 	DF.CooldownsBySpec[105][8918] = 4 --tranquility Rank 2
@@ -1017,7 +1012,9 @@ DF.CrowdControlSpells = {
 }
 
 -- additionals for classic
-if (WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE) then
+if (IS_WOW_PROJECT_NOT_MAINLINE) then
+	DF.CrowdControlSpells[99] = nil --demoralizing roar disabled, no CC in tbc
+	
 	--auto-generated
 	DF.CrowdControlSpells[18657] = "DRUID" --hibernate Rank 2
 	DF.CrowdControlSpells[18658] = "DRUID" --hibernate Rank 3
@@ -1035,11 +1032,6 @@ if (WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE) then
 	DF.CrowdControlSpells[19974] = "DRUID" --entangling roots Rank 2
 	DF.CrowdControlSpells[26989] = "DRUID" --entangling roots Rank 7
 	DF.CrowdControlSpells[27010] = "DRUID" --entangling roots Rank 7
-	DF.CrowdControlSpells[1735] = "DRUID" --demoralizing roar Rank 2
-	DF.CrowdControlSpells[9490] = "DRUID" --demoralizing roar Rank 3
-	DF.CrowdControlSpells[9747] = "DRUID" --demoralizing roar Rank 4
-	DF.CrowdControlSpells[9898] = "DRUID" --demoralizing roar Rank 5
-	DF.CrowdControlSpells[26998] = "DRUID" --demoralizing roar Rank 6
 
 	DF.CrowdControlSpells[14310] = "HUNTER" --freezing trap Rank 2
 	DF.CrowdControlSpells[14311] = "HUNTER" --freezing trap Rank 3

@@ -655,6 +655,19 @@ local function MissionRewards_OnShow(self)
 		FollowerList:SyncXPGain(xp)
 	end
 end
+local function HealAllButton_OnUpdate(self, elapsed)
+	local tl = (self.timeLeft or 0) - elapsed
+	if tl > 0 then
+		self.timeLeft = tl
+		return
+	end
+	self.timeLeft = 0.125
+	local ff = CovenantMissionFrameFollowers
+	if ff:GetScript("OnUpdate") and not ff:IsShown() then
+		local m = ff.followers and "CalculateHealAllFollowersCost" or "OnShow"
+		ff[m](ff)
+	end
+end
 local function MissionView_OnShow()
 	if not FollowerList then
 		FollowerList = T.CreateObject("FollowerList", CovenantMissionFrame)
@@ -809,6 +822,12 @@ end
 local function Shuffler_OnHide()
 	Tact:Reset()
 end
+local function HookOnShow(f, h)
+	f:HookScript("OnShow", h)
+	if f:IsVisible() then
+		h(f)
+	end
+end
 
 function EV:I_ADVENTURES_UI_LOADED()
 	local MP = CovenantMissionFrame.MissionTab.MissionPage
@@ -828,11 +847,13 @@ function EV:I_ADVENTURES_UI_LOADED()
 		end
 	end)
 	local cag = T.CreateObject("IconButton", MP.Board, 64, "Interface/Icons/INV_Misc_Book_01")
+	cag:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 	cag:SetPoint("BOTTOMLEFT", 24, 4)
 	cag:SetScript("OnEnter", Predictor_OnEnter)
 	cag:SetScript("OnLeave", Predictor_OnLeave)
 	cag:SetScript("OnClick", Predictor_OnClick)
 	local cat = T.CreateObject("IconButton", MP.Board, 32, "Interface/Icons/INV_Misc_Book_06")
+	cat:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 	cat:SetPoint("TOPLEFT", cag, "TOPRIGHT", 4, 0)
 	cat:SetScript("OnEnter", Shuffler_OnEnter)
 	cat:SetScript("OnLeave", Shuffler_OnLeave)
@@ -844,8 +865,9 @@ function EV:I_ADVENTURES_UI_LOADED()
 	hooksecurefunc(CovenantMissionFrame, "AssignFollowerToMission", MissionGroup_OnUpdate)
 	hooksecurefunc(CovenantMissionFrame, "RemoveFollowerFromMission", MissionGroup_OnUpdate)
 	MP:SetScript("OnClick", MissionPage_OnClick)
-	CovenantMissionFrame:UnregisterCallback(CovenantMission.Event.OnFollowerFrameMouseUp, CovenantMissionFrame)
-	CovenantMissionFrame:RegisterCallback(CovenantMission.Event.OnFollowerFrameMouseUp, MissionPageFollower_OnMouseUp, CovenantMissionFrame)
+	HookOnShow(CovenantMissionFrame, function()
+		CovenantMissionFrame:RegisterCallback(CovenantMission.Event.OnFollowerFrameMouseUp, MissionPageFollower_OnMouseUp, CovenantMissionFrame)
+	end)
 	MP.StartMissionButton:SetScript("OnClick", MissionStart_OnClick)
 	MP.StartMissionButton:SetScript("OnEnter", MissionStart_OnEnter)
 	MP.StartMissionButton:RegisterForClicks("LeftButtonUp", "RightButtonUp")
@@ -869,6 +891,10 @@ function EV:I_ADVENTURES_UI_LOADED()
 			MissionView_OnShow()
 		end
 	end)
+	local h = CreateFrame("Frame", nil, CovenantMissionFrameFollowers.HealAllButton)
+	h:SetScript("OnUpdate", HealAllButton_OnUpdate)
+	CovenantMissionFrameFollowers:HookScript("OnShow", function() h:Hide() end)
+	CovenantMissionFrameFollowers:HookScript("OnHide", function() h:Show() end)
 	MP.Stage.Title:SetWidth(320)
-	return false
+	return "remove"
 end

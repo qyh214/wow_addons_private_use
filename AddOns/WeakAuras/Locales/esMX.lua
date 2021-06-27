@@ -92,6 +92,8 @@ L["AbbreviateLargeNumbers (Blizzard)"] = "AbreviarNúmerosGrandes (Blizzard)"
 L["AbbreviateNumbers (Blizzard)"] = "AbreviarNúmeros (Blizzard)"
 L["Absorb"] = "Absorber"
 L["Absorb Display"] = "Mostrar absorción"
+--[[Translation missing --]]
+L["Absorb Heal Display"] = "Absorb Heal Display"
 L["Absorbed"] = "Absorbido"
 L["Action Button Glow"] = "Botón de acción resplandeciente"
 L["Action Usable"] = "Acción utilizable"
@@ -222,6 +224,8 @@ L["BG-System Neutral"] = "Campo de batalla-Sistema neutral"
 L["Big Number"] = "Big Number"
 L["BigWigs Addon"] = "Addon de BigWigs"
 L["BigWigs Message"] = "Mensaje de BigWigs"
+--[[Translation missing --]]
+L["BigWigs Stage"] = "BigWigs Stage"
 L["BigWigs Timer"] = "Temporizador de BigWigs"
 --[[Translation missing --]]
 L["Black Wing Lair"] = "Black Wing Lair"
@@ -347,6 +351,8 @@ L["Crushing"] = "Golpe aplastador"
 L["C'thun"] = "C'thun"
 --[[Translation missing --]]
 L["Current Experience"] = "Current Experience"
+--[[Translation missing --]]
+L["Current Movement Speed (%)"] = "Current Movement Speed (%)"
 --[[Translation missing --]]
 L[ [=[Current Zone Group
 ]=] ] = [=[Current Zone Group
@@ -631,6 +637,8 @@ L["Haste (%)"] = "Haste (%)"
 L["Haste Rating"] = "Haste Rating"
 L["Heal"] = "Cura"
 --[[Translation missing --]]
+L["Heal Absorb"] = "Heal Absorb"
+--[[Translation missing --]]
 L["Heal Absorbed"] = "Heal Absorbed"
 L["Health"] = "Salud"
 L["Health (%)"] = "Salud (%)"
@@ -905,8 +913,6 @@ L["Monster Yell"] = "Monstruo - Susurrar"
 L["Most remaining time"] = "Most remaining time"
 L["Mounted"] = "Montado"
 L["Mouse Cursor"] = "Cursor"
---[[Translation missing --]]
-L["Movement Speed (%)"] = "Movement Speed (%)"
 --[[Translation missing --]]
 L["Movement Speed Rating"] = "Movement Speed Rating"
 L["Multi-target"] = "Objetivo múltiple"
@@ -1214,6 +1220,8 @@ L["Round Mode"] = "Round Mode"
 L["Ruins of Ahn'Qiraj"] = "Ruins of Ahn'Qiraj"
 --[[Translation missing --]]
 L["Run Custom Code"] = "Run Custom Code"
+--[[Translation missing --]]
+L["Run Speed (%)"] = "Run Speed (%)"
 L["Rune"] = "Runa"
 L["Rune #1"] = "Runa #1"
 L["Rune #2"] = "Runa #2"
@@ -1267,6 +1275,8 @@ L["Show Code"] = "Mostrar código"
 --[[Translation missing --]]
 L["Show GCD"] = "Show GCD"
 L["Show Global Cooldown"] = "Mostrar recargas globales"
+--[[Translation missing --]]
+L["Show Heal Absorb"] = "Show Heal Absorb"
 --[[Translation missing --]]
 L["Show Incoming Heal"] = "Show Incoming Heal"
 --[[Translation missing --]]
@@ -1364,6 +1374,8 @@ L["Spiral In And Out"] = "Espiral hacia adentro y afuera"
 --[[Translation missing --]]
 L["Stack Count"] = "Stack Count"
 L["Stacks"] = "Acumulaciones"
+--[[Translation missing --]]
+L["Stage"] = "Stage"
 --[[Translation missing --]]
 L["Stagger Scale"] = "Stagger Scale"
 --[[Translation missing --]]

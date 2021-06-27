@@ -440,6 +440,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["False"] = "Falsch"
 	--[[Translation missing --]]
 	L["Fetch Affected/Unaffected Names"] = "Fetch Affected/Unaffected Names"
+	--[[Translation missing --]]
+	L["Filter by Arena Spec"] = "Filter by Arena Spec"
 	L["Filter by Class"] = "Nach Klasse filtern"
 	L["Filter by Group Role"] = "Nach Gruppenrolle filtern"
 	--[[Translation missing --]]
@@ -937,6 +939,8 @@ Nur ein Wert kann ausgewählt werden.]=]
 	L["Spark"] = "Funken"
 	L["Spark Settings"] = "Funkeneinstellungen"
 	L["Spark Texture"] = "Funkentextur"
+	--[[Translation missing --]]
+	L["Specialization"] = "Specialization"
 	L["Specific Unit"] = "Spezifische Einheit"
 	L["Spell ID"] = "Zauber-ID"
 	L["Stack Count"] = "Stapelanzahl"

@@ -378,6 +378,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
 	L["Fallback Icon"] = "Fallback Icon"
 	L["False"] = "Faux"
 	L["Fetch Affected/Unaffected Names"] = "chercher concerné/Noms non-concernés"
+	--[[Translation missing --]]
+	L["Filter by Arena Spec"] = "Filter by Arena Spec"
 	L["Filter by Class"] = "Filtrer par Classe"
 	L["Filter by Group Role"] = "Filtrer par Rôle de Groupe"
 	L["Filter by Nameplate Type"] = "Filtrer par Type de Nameplate"
@@ -807,6 +809,8 @@ Seule une unique valeur peut être choisie]=]
 	L["Spark"] = "Étincelle"
 	L["Spark Settings"] = "Paramètres de l'étincelle"
 	L["Spark Texture"] = "Texture Étincelle"
+	--[[Translation missing --]]
+	L["Specialization"] = "Specialization"
 	L["Specific Unit"] = "Unité spécifique"
 	L["Spell ID"] = "ID de sort"
 	L["Stack Count"] = "Nombre de Piles"

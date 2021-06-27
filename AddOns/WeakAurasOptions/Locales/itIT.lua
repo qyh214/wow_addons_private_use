@@ -477,6 +477,8 @@ Off Screen]=]
 	--[[Translation missing --]]
 	L["Fetch Affected/Unaffected Names"] = "Fetch Affected/Unaffected Names"
 	--[[Translation missing --]]
+	L["Filter by Arena Spec"] = "Filter by Arena Spec"
+	--[[Translation missing --]]
 	L["Filter by Class"] = "Filter by Class"
 	--[[Translation missing --]]
 	L["Filter by Group Role"] = "Filter by Group Role"
@@ -1136,6 +1138,8 @@ Supports multiple entries, separated by commas
 	L["Spark Settings"] = "Spark Settings"
 	--[[Translation missing --]]
 	L["Spark Texture"] = "Spark Texture"
+	--[[Translation missing --]]
+	L["Specialization"] = "Specialization"
 	--[[Translation missing --]]
 	L["Specific Unit"] = "Specific Unit"
 	--[[Translation missing --]]

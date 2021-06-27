@@ -474,6 +474,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
 	--[[Translation missing --]]
 	L["Fetch Affected/Unaffected Names"] = "Fetch Affected/Unaffected Names"
 	--[[Translation missing --]]
+	L["Filter by Arena Spec"] = "Filter by Arena Spec"
+	--[[Translation missing --]]
 	L["Filter by Class"] = "Filter by Class"
 	--[[Translation missing --]]
 	L["Filter by Group Role"] = "Filter by Group Role"
@@ -1068,6 +1070,8 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Spark Settings"] = "Spark Settings"
 	--[[Translation missing --]]
 	L["Spark Texture"] = "Spark Texture"
+	--[[Translation missing --]]
+	L["Specialization"] = "Specialization"
 	--[[Translation missing --]]
 	L["Specific Unit"] = "Specific Unit"
 	L["Spell ID"] = "ID de Hechizo"

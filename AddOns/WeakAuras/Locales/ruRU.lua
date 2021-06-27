@@ -85,6 +85,8 @@ L["AbbreviateLargeNumbers (Blizzard)"] = "Сократить большие чи
 L["AbbreviateNumbers (Blizzard)"] = "Сократить числа (Blizzard)"
 L["Absorb"] = "Поглощение"
 L["Absorb Display"] = "Отображение поглощения"
+--[[Translation missing --]]
+L["Absorb Heal Display"] = "Absorb Heal Display"
 L["Absorbed"] = "Поглощено"
 L["Action Button Glow"] = "Свечение кнопки действия"
 L["Action Usable"] = "Действие возможно"
@@ -181,6 +183,8 @@ L["BG-System Neutral"] = "Поле боя: нейтральное"
 L["Big Number"] = "Большое число"
 L["BigWigs Addon"] = "Аддон BigWigs"
 L["BigWigs Message"] = "Сообщение BigWigs"
+--[[Translation missing --]]
+L["BigWigs Stage"] = "BigWigs Stage"
 L["BigWigs Timer"] = "Таймер BigWigs"
 L["Black Wing Lair"] = "Логово Крыла Тьмы"
 L["Blizzard (2h | 3m | 10s | 2.4)"] = "Blizzard:  2ч. | 3м. | 10с. | 2.4"
@@ -268,6 +272,8 @@ L["Crowd Controlled"] = "Потеря контроля над персонаже
 L["Crushing"] = "Сокрушительный удар"
 L["C'thun"] = "К'Тун"
 L["Current Experience"] = "Текущее количество опыта"
+--[[Translation missing --]]
+L["Current Movement Speed (%)"] = "Current Movement Speed (%)"
 L[ [=[Current Zone Group
 ]=] ] = [=[Текущая группа игровых зон
 ]=]
@@ -450,6 +456,8 @@ L["HasPet"] = "Призван и жив питомец"
 L["Haste (%)"] = "Скорость"
 L["Haste Rating"] = "Показатель скорости"
 L["Heal"] = "Исцеление"
+--[[Translation missing --]]
+L["Heal Absorb"] = "Heal Absorb"
 L["Heal Absorbed"] = "Исцеление поглощено"
 L["Health"] = "Здоровье"
 L["Health (%)"] = "Здоровье (%)"
@@ -626,7 +634,6 @@ L["Monster Yell"] = "Крик существа"
 L["Most remaining time"] = "Наибольшее оставшееся время"
 L["Mounted"] = "Верхом"
 L["Mouse Cursor"] = "Курсор мыши"
-L["Movement Speed (%)"] = "Скорость движения"
 L["Movement Speed Rating"] = "Показатель скор. передвижения"
 L["Multi-target"] = "Несколько целей"
 L["Mythic Keystone"] = "Эпохальный ключ"
@@ -836,6 +843,8 @@ L["Round"] = "Round (к ближайшему целому)"
 L["Round Mode"] = "Метод округления"
 L["Ruins of Ahn'Qiraj"] = "Руины Ан'Киража"
 L["Run Custom Code"] = "Выполнить свой код"
+--[[Translation missing --]]
+L["Run Speed (%)"] = "Run Speed (%)"
 L["Rune"] = "Руна"
 L["Rune #1"] = "Руна #1"
 L["Rune #2"] = "Руна #2"
@@ -871,6 +880,8 @@ L["Show CD of Charge"] = "Показать восстановление заря
 L["Show Code"] = "Показать код"
 L["Show GCD"] = "Показать общее время восстановления"
 L["Show Global Cooldown"] = "Показать общее время восстановления (GCD)"
+--[[Translation missing --]]
+L["Show Heal Absorb"] = "Show Heal Absorb"
 L["Show Incoming Heal"] = "Показать входящее исцеление (наложение)"
 L["Show On"] = "Показать"
 L["Show Rested Overlay"] = "Показать дополнительный опыт после отдыха (наложение)"
@@ -932,6 +943,8 @@ L["Spiral"] = "Спираль"
 L["Spiral In And Out"] = "Спираль (вперед-назад)"
 L["Stack Count"] = "Количество стаков"
 L["Stacks"] = "Стаки"
+--[[Translation missing --]]
+L["Stage"] = "Stage"
 L["Stagger Scale"] = [=[Масштаб пошатывания
 (множитель запаса здоровья)]=]
 L["Stamina"] = "Выносливость"

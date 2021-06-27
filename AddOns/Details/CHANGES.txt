@@ -1,38 +1,34 @@
-tag bcb9a337aac3486200d39186a8c13dbb441dedb2 DetailsRetail.9.0.5.8514.144
+tag 96a7ba640c2a7b5e302f4258340961dfd245cd01 DetailsRetail.9.0.5.8637.145
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Tue May 25 15:32:39 2021 -0300
+Date:	Tue Jun 22 17:01:04 2021 -0300
 
-commit 6bde881fb809e06042c74244b4cccb3a2a4bc72f
+commit b596445acefd31b32e51a81a115ba69795574db1
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Tue May 25 15:29:12 2021 -0300
+Date:   Tue Jun 22 17:00:09 2021 -0300
 
-    Bug fixes
-    
-    - Fixed an error showing SetBorderSizes().
-    - Fixed an error while on a Battleground.
-    - Fixed tiny threat green icon.
+    Packr Utility on Coach mode and Vanguard massive update
 
-commit 3355e5588fe6a7b7579fc360c86ad44b89dc8b19
+commit 8b2501309f15dfa3605d702cefa963c87af01745
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon May 24 11:34:20 2021 -0300
+Date:   Tue Jun 15 23:10:37 2021 -0300
 
-    Framework update
+    Another wave of changes on Vanguard
 
-commit 3355e5588fe6a7b7579fc360c86ad44b89dc8b19
+commit 7d17a69c1a5b27edbbea76aeab449c5bac0c0ed3
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon May 24 11:34:20 2021 -0300
+Date:   Mon Jun 14 15:55:29 2021 -0300
 
-    Framework update
+     Vanguard updated to 2021
 
-commit 517a61905f1e47031ec794de0ca9a08562e497df
-Author: Flamanis <Flamanis@users.noreply.github.com>
-Date:   Sun May 23 18:40:21 2021 -0500
+commit 39aa5f0e7782b0cc5187f87337d6146f8af4cb08
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Mon Jun 14 15:55:10 2021 -0300
 
-    Add local _
+    Make plugins be in the list of displays
 
-commit 517a61905f1e47031ec794de0ca9a08562e497df
-Author: Flamanis <Flamanis@users.noreply.github.com>
-Date:   Sun May 23 18:40:21 2021 -0500
+commit bd1700b5f11ae1d117a0c4ccba9475f0d96f8961
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Thu Jun 10 12:09:28 2021 -0300
 
-    Add local _
+    general fixes for game client versions
 

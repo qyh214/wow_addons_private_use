@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2439, "DBM-SanctumOfDomination", nil, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210527010846")
+mod:SetRevision("20210614184808")
 mod:SetCreatureID(175726)--Skyja (TODO, add other 2 and set health to highest?)
 mod:SetEncounterID(2429)
 mod:SetUsedIcons(8, 7, 6, 4, 3, 2, 1)
@@ -31,7 +31,7 @@ mod:RegisterEventsInCombat(
 --TODO, mythic timer updates when I have more patience to actually resolve how they update on phase 2 transition. It'd be nice if phase 2 was actually in combat log
 --[[
 (ability.id = 350202 or ability.id = 350342 or ability.id = 350365 or ability.id = 352756 or ability.id = 350385 or ability.id = 352752 or ability.id = 350467 or ability.id = 352744 or ability.id = 350541 or ability.id = 350482 or ability.id = 350687 or ability.id = 350475 or ability.id = 355294) and type = "begincast"
- or ability.id = 350286 and type = "cast"
+ or (ability.id = 350745 or ability.id = 350286) and type = "cast"
  or (target.id = 177095 or target.id = 177094) and type = "death"
 --]]
 --Stage One: The Unending Voice
@@ -116,7 +116,6 @@ local castsPerGUID = {}
 local fragmentTargets = {[1] = false, [2] = false, [3] = false, [4] = false}
 local expectedDebuffs = 3
 
-mod.vb.phase = 1
 mod.vb.valksDead = 11--1 not dead, 2 dead. 10s Kyra and 1s Signe
 --mod.vb.addIcon = 8
 mod.vb.valkCount = 0
@@ -156,7 +155,7 @@ function mod:OnCombatStart(delay)
 	table.wipe(castsPerGUID)
 	fragmentTargets = {[1] = false, [2] = false, [3] = false, [4] = false}
 	expectedDebuffs = self:IsMythic() and 4 or 3
-	self.vb.phase = 1
+	self:SetStage(1)
 	self.vb.valksDead = 11
 --	self.vb.addIcon = 8
 	self.vb.valkCount = 0
@@ -490,8 +489,8 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 --]]
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
-	if spellId == 350745 then--Maw Power (Set to 00)  [DNT]
-		self.vb.phase = 2
+	if spellId == 350745 then--Skyja's Advance
+		self:SetStage(2)
 		--self.vb.fragmentCount = 0
 		timerCalloftheValkyrCD:Stop()
 		timerResentmentCD:Start(6.9, 1)
@@ -501,12 +500,12 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 			timerFragmentsofDestinyCD:Stop()
 			timerFragmentsofDestinyCD:Start(13.4, self.vb.fragmentCount+1)--Heroic confirmed, but maybe mythic won't reset here?
 			timerLinkEssenceCD:Start(22, 1)
---			timerWordofRecallCD:Start(2, 1)--Cast instantly on phasing
+--			timerWordofRecallCD:Start(2, 1)--Cast instantly on phasing so timer will start there
 			if self.Options.InfoFrame and not self:IsMythic() then--Mechanic starts in phase 2 on heroic, it already started on mythic in phase 1
 				DBM.InfoFrame:SetHeader(OVERVIEW)
 				DBM.InfoFrame:Show(5, "function", updateInfoFrame, false, true, true)
 			end
-			--TODO, actually spend time figuring out how to start timers when valks die if it's phase 2
+			--TODO, actually spend time figuring out how to start timers when valks die AFTER it's phase 2
 --			if self:IsMythic() then
 --				timerWingsofRageCD:Start()
 --				timerReverberatingRefrainCD:Start()

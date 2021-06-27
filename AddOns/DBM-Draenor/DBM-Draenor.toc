@@ -29,7 +29,8 @@
 ## X-DBM-Mod-MinExpansion: 5
 ## X-Curse-Project-ID: 101956
 ## X-WoWI-ID: 24535
-## Version: r54
+## X-Wago-ID: LvNAkBKo
+## Version: r55
 
 localization.br.lua
 localization.en.lua

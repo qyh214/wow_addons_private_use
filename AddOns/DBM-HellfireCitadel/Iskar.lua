@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1433, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201208155637")
+mod:SetRevision("20210617040729")
 mod:SetCreatureID(90316)
 mod:SetEncounterID(1788)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
@@ -43,7 +43,7 @@ local warnFelConduit					= mod:NewCastAnnounce(181827, 3, nil, nil, "-Healer")
 --Boss
 local specWarnEyeofAnzu					= mod:NewSpecialWarningYou(179202)
 local specWarnThrowAnzu					= mod:NewSpecialWarning("specWarnThrowAnzu", nil, nil, nil, 1, 5)
-local specWarnFocusedBlast				= mod:NewSpecialWarningCount(181912, nil, nil, nil, 2)
+local specWarnFocusedBlast				= mod:NewSpecialWarningCount(181912, nil, nil, nil, 2, 2)
 local specWarnPhantasmalWinds			= mod:NewSpecialWarningYou(181957, nil, nil, nil, 3, 2)
 local specWarnFelChakram				= mod:NewSpecialWarningMoveAway(182178, nil, nil, nil, 1, 2)
 local yellFelChakram					= mod:NewYell(182178)
@@ -205,7 +205,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.focusedBlast = self.vb.focusedBlast + 1
 		specWarnFocusedBlast:Show(self.vb.focusedBlast)
 		if not DBM:UnitDebuff("player", corruption, phantasmalFelBomb, realFelBomb) and not DBM:UnitDebuff("player", darkBindings) then--Filter debuffs that kill other players
-			specWarnFocusedBlast:Play("gather")
+			specWarnFocusedBlast:Play("gathershare")
 		end
 		timerFocusedBlast:Start()
 	elseif spellId == 181827 or spellId == 187998 then--Both versions of it. I assume the 5 second version is probably LFR/Normal

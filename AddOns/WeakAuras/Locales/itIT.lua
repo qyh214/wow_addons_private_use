@@ -96,6 +96,8 @@ L["AbbreviateLargeNumbers (Blizzard)"] = "AbbreviateLargeNumbers (Blizzard)"
 L["AbbreviateNumbers (Blizzard)"] = "AbbreviateNumbers (Blizzard)"
 L["Absorb"] = "Assorbimento"
 L["Absorb Display"] = "Mostra Assorbimento"
+--[[Translation missing --]]
+L["Absorb Heal Display"] = "Absorb Heal Display"
 L["Absorbed"] = "Assorbito"
 L["Action Button Glow"] = "Bagliore Pulsante Azioni"
 L["Action Usable"] = "Azione utilizzabile"
@@ -214,6 +216,8 @@ L["BG-System Neutral"] = "BG-System Neutral"
 L["Big Number"] = "Big Number"
 L["BigWigs Addon"] = "BigWigs Add-on"
 L["BigWigs Message"] = "Messaggio di BigWigs"
+--[[Translation missing --]]
+L["BigWigs Stage"] = "BigWigs Stage"
 L["BigWigs Timer"] = "Timer di BigWigs"
 --[[Translation missing --]]
 L["Black Wing Lair"] = "Black Wing Lair"
@@ -343,6 +347,8 @@ L["Crushing"] = "Crushing"
 L["C'thun"] = "C'thun"
 --[[Translation missing --]]
 L["Current Experience"] = "Current Experience"
+--[[Translation missing --]]
+L["Current Movement Speed (%)"] = "Current Movement Speed (%)"
 --[[Translation missing --]]
 L[ [=[Current Zone Group
 ]=] ] = [=[Current Zone Group
@@ -694,6 +700,8 @@ L["Haste Rating"] = "Haste Rating"
 --[[Translation missing --]]
 L["Heal"] = "Heal"
 --[[Translation missing --]]
+L["Heal Absorb"] = "Heal Absorb"
+--[[Translation missing --]]
 L["Heal Absorbed"] = "Heal Absorbed"
 --[[Translation missing --]]
 L["Health"] = "Health"
@@ -1033,8 +1041,6 @@ L["Most remaining time"] = "Most remaining time"
 L["Mounted"] = "Mounted"
 --[[Translation missing --]]
 L["Mouse Cursor"] = "Mouse Cursor"
---[[Translation missing --]]
-L["Movement Speed (%)"] = "Movement Speed (%)"
 --[[Translation missing --]]
 L["Movement Speed Rating"] = "Movement Speed Rating"
 --[[Translation missing --]]
@@ -1418,6 +1424,8 @@ L["Ruins of Ahn'Qiraj"] = "Ruins of Ahn'Qiraj"
 --[[Translation missing --]]
 L["Run Custom Code"] = "Run Custom Code"
 --[[Translation missing --]]
+L["Run Speed (%)"] = "Run Speed (%)"
+--[[Translation missing --]]
 L["Rune"] = "Rune"
 --[[Translation missing --]]
 L["Rune #1"] = "Rune #1"
@@ -1487,6 +1495,8 @@ L["Show Code"] = "Show Code"
 L["Show GCD"] = "Show GCD"
 --[[Translation missing --]]
 L["Show Global Cooldown"] = "Show Global Cooldown"
+--[[Translation missing --]]
+L["Show Heal Absorb"] = "Show Heal Absorb"
 --[[Translation missing --]]
 L["Show Incoming Heal"] = "Show Incoming Heal"
 --[[Translation missing --]]
@@ -1609,6 +1619,8 @@ L["Spiral In And Out"] = "Spiral In And Out"
 L["Stack Count"] = "Stack Count"
 --[[Translation missing --]]
 L["Stacks"] = "Stacks"
+--[[Translation missing --]]
+L["Stage"] = "Stage"
 --[[Translation missing --]]
 L["Stagger Scale"] = "Stagger Scale"
 --[[Translation missing --]]
