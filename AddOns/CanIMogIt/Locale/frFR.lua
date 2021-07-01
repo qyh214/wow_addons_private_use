@@ -4,14 +4,10 @@ L["Adds tooltips to items showing if you have learned a transmog appearance."] =
 L["Also shows a summary in the Appearance Sets UI of how many pieces of a transmog set you have collected."] = "Montre également un résumé dans l'interface de sets d'apparences du nombre de pièces d'un set de transmogrification que vous avez collecté."
 L["Another class can learn this item."] = "Une autre classe peut débloquer cette apparence."
 L["Appearances updated: "] = "Apparences mises à jour :"
---[[Translation missing --]]
---[[ L["Ask me later"] = ""--]] 
---[[Translation missing --]]
---[[ L["Bottom"] = ""--]] 
---[[Translation missing --]]
---[[ L["Bottom Left"] = ""--]] 
---[[Translation missing --]]
---[[ L["Bottom Right"] = ""--]] 
+L["Ask me later"] = "Demande moi plus tard"
+L["Bottom"] = "En Bas"
+L["Bottom Left"] = "En Bas à Gauche"
+L["Bottom Right"] = "En Bas à Droite"
 L["Can be learned by:"] = "Peut être débloquée par :"
 L["Can I Mog It? Important Message: Please log into all of your characters to compile complete transmog appearance data."] = "Message important de Can I Mog It? : Merci de vous connecter sur tous vos personnages, afin d'assembler les données d'apparences de transmogrification."
 L["CanIMogItOptions not found, loading defaults!"] = "CanIMogItOptions introuvable, paramètres par défaut chargés !"
@@ -20,22 +16,16 @@ L["Cannot be learned."] = "Ne peut pas être débloquée."
 L["Cannot determine status on other characters."] = "État pour les autres personnages actuellement imprécis."
 L["Cannot learn:"] = "Ne peut être appris :"
 L["Cannot learn: Soulbound"] = "Ne peut être appris : Lié"
---[[Translation missing --]]
---[[ L["Center"] = ""--]] 
---[[Translation missing --]]
---[[ L["Changes saved!"] = ""--]] 
---[[Translation missing --]]
---[[ L["Database migrated to:"] = ""--]] 
+L["Center"] = "Centre"
+L["Changes saved!"] = "Changements sauvegardés !"
+L["Database migrated to:"] = "Base de données migrée vers :"
 L["Database Scanning chat messages"] = "Messages de scan de la base de donnée dans le chat"
 L["Debug Tooltip"] = "Infobulle de débug"
---[[Translation missing --]]
---[[ L["Default"] = ""--]] 
+L["Default"] = "Défaut"
 L["Detailed information for debug purposes. Use this when sending bug reports."] = "Informations détaillées à des fins de debug. À utiliser lors de l'envoi de rapports de bugs."
---[[Translation missing --]]
---[[ L["Does not affect Quests or Adventure Journal."] = ""--]] 
+L["Does not affect Quests or Adventure Journal."] = "N'affecte pas les Quêtes ni le Guide de l'aventurier."
 L["Equippable Items Only"] = "Objets pouvant être équipés uniquement"
---[[Translation missing --]]
---[[ L["Icon Location"] = ""--]] 
+L["Icon Location"] = "Emplacement de l'icône"
 L["Items updated: "] = "Objets mis à jour :"
 L["Learned but cannot transmog yet."] = "Débloquée mais impossible à transmogrifier pour le moment."
 L["Learned for a different class and item."] = "Débloquée pour une autre classe et objet."
@@ -43,24 +33,18 @@ L["Learned for a different class."] = "Débloquée pour une autre classe."
 L["Learned from another item but cannot transmog yet."] = "Débloquée depuis un autre objet, mais impossible à transmogrifier pour le moment."
 L["Learned from another item."] = "Débloquée depuis un autre objet."
 L["Learned."] = "Débloquée."
---[[Translation missing --]]
---[[ L["Left"] = ""--]] 
---[[Translation missing --]]
---[[ L["Migrating Database version to:"] = ""--]] 
+L["Left"] = "Gauche"
+L["Migrating Database version to:"] = "Migration de la version de la base de données vers :"
 L["Not learned."] = "Non débloquée."
---[[Translation missing --]]
---[[ L["Okay"] = ""--]] 
+L["Okay"] = "Okay"
 L["Okay, I'll go log onto all of my toons!"] = "Okay, je me connecte sur tous mes perso !"
 L["Only show on items that can be equipped."] = "Afficher uniquement pour les objets pouvant être équipés."
 L["Only show on items that can be transmoggrified."] = "Afficher uniquement pour les objets pouvant être transmogrifiés."
 L["Only show on items that you haven't learned."] = "Afficher uniquement pour les objets que vous n'avez pas appris."
 L["Please note that this may not always be correct as Blizzard's information is incomplete."] = "Notez que cela peut être incorrect du fait que l'information de Blizzard est incomplète."
---[[Translation missing --]]
---[[ L["Reload to apply"] = ""--]] 
---[[Translation missing --]]
---[[ L["Requires /reload to take effect."] = ""--]] 
---[[Translation missing --]]
---[[ L["Right"] = ""--]] 
+L["Reload to apply"] = "Reload pour appliquer"
+L["Requires /reload to take effect."] = "Nécessite un /reload pour prendre effet."
+L["Right"] = "Droite"
 L["Show Bag Icons"] = "Affiche l'icône sur l'objet"
 L["Show information on the tooltip about transmog sets."] = "Montre l'information dans l'info-bulle au sujet des sets de transmogryphication."
 L["Show Source Location Tooltip"] = "Montre l'info-bulle d'emplacement de la source."
@@ -70,22 +54,16 @@ L["Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor
 L["Shows chat messages on login about the database scan."] = "Affiche les messages dans le chat à la connexion au sujet du scan de la base de donnée."
 L["Shows messages on login about the database scan."] = "Affiche les messages à la connexion au sujet du scan de la base de donnée."
 L["Shows the icon directly on the item in your bag."] = "Affiche l'icône sur l'objet contenu dans votre inventaire."
---[[Translation missing --]]
---[[ L["Sorry! Your database has corrupted entries. This will cause errors and give incorrect results. Please click below to reset the database."] = ""--]] 
---[[Translation missing --]]
---[[ L["Top"] = ""--]] 
---[[Translation missing --]]
---[[ L["Top Left"] = ""--]] 
---[[Translation missing --]]
---[[ L["Top Right"] = ""--]] 
---[[Translation missing --]]
---[[ L["Top Right (default)"] = ""--]] 
+L["Sorry! Your database has corrupted entries. This will cause errors and give incorrect results. Please click below to reset the database."] = "Désolé! Votre base de données a des entrées corrompues. Cela causera des erreurs et donnera des résultats incorrects. S’il vous plaît cliquez ci-dessous pour réinitialiser la base de données."
+L["Top"] = "En Haut"
+L["Top Left"] = "En Haut à Gauche"
+L["Top Right"] = "En Haut à Droite"
+L["Top Right (default)"] = "En Haut à Droite (défaut)"
 L["Transmoggable Items Only"] = "Objets pouvant être transmogrifiés uniquement"
 L["Unknown Items Only"] = "Objets inconnus uniquement"
 L["Updating appearances database."] = "Mise à jour de la base de données d'apparences."
 L["Verbose Text"] = "Texte détaillé"
---[[Translation missing --]]
---[[ L["We need to update our database. This may freeze the game for a few seconds."] = ""--]] 
+L["We need to update our database. This may freeze the game for a few seconds."] = "Nous devons mettre à jour notre base de données. Cela pourrait geler le jeu pendant quelques secondes."
 
 
 

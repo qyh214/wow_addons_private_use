@@ -66,7 +66,7 @@ options.chatBar = {
                     order = 1,
                     type = "toggle",
                     name = L["Auto Hide"],
-                    desc = L["Hide channels not exist."]
+                    desc = L["Hide channels that do not exist."]
                 },
                 mouseOver = {
                     order = 2,
@@ -732,7 +732,7 @@ do
                         order = 1,
                         type = "select",
                         name = L["Style"],
-                        desc = L["Change the icons indicate the role."],
+                        desc = L["Change the icons that indicate the role."],
                         values = {
                             HEXAGON = SampleStrings.hexagon,
                             FFXIV = SampleStrings.ffxiv,
@@ -1116,7 +1116,7 @@ options.friendList = {
             order = 2,
             type = "group",
             inline = true,
-            name = L["Enhanced Texuture"],
+            name = L["Enhanced Texture"],
             get = function(info)
                 return E.db.WT.social.friendList.textures[info[#info]]
             end,

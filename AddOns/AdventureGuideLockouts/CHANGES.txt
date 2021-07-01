@@ -1,10 +1,10 @@
-lightweight tag 1e381305e094de6db1b18b16d22ef8bba7dabfc2 v1.3.8
+lightweight tag 2ce02e4b5d31418c4fe03aae8ca2716e36e5de5d v1.3.9
 Author:	Meivyn <meivyn@live.ca>
-Date:	Tue Dec 22 14:14:14 2020 -0500
+Date:	Wed Jun 30 18:11:41 2021 -0400
 
-commit 1e381305e094de6db1b18b16d22ef8bba7dabfc2
+commit 2ce02e4b5d31418c4fe03aae8ca2716e36e5de5d
 Author: Meivyn <meivyn@live.ca>
-Date:   Tue Dec 22 14:14:14 2020 -0500
+Date:   Wed Jun 30 18:11:41 2021 -0400
 
-    Update Nurgash questID
+    Update for patch 9.1
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Malygos", "DBM-EyeOfEternity")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201120224113")
+mod:SetRevision("20210614230125")
 mod:SetCreatureID(28859)
 mod:SetEncounterID(1094)
 mod:SetModelID(26752)
@@ -47,7 +47,6 @@ local enrageTimer				= mod:NewBerserkTimer(615)
 local tableBuild = false
 local guids = {}
 local surgeTargets = {}
-mod.vb.phase = 1
 
 local function buildGuidTable()
 	table.wipe(guids)
@@ -94,7 +93,7 @@ end
 
 function mod:OnCombatStart(delay)
 	tableBuild = false
-	self.vb.phase = 1
+	self:SetStage(1)
 	timerVortexCD:Start(44.6-delay)--Will verify with more logs next week.
 	enrageTimer:Start(-delay)
 	timerAchieve:Start(-delay)
@@ -176,7 +175,7 @@ end
 
 function mod:OnSync(event, arg)
 	if event == "Phase2" then
-		self.vb.phase = 2
+		self:SetStage(2)
 		timerSpark:Cancel()
 		timerVortexCD:Cancel()
 		warnVortexSoon:Cancel()
@@ -184,7 +183,7 @@ function mod:OnSync(event, arg)
 	elseif event == "BreathSoon" then
 		warnBreathInc:Show()
 	elseif event == "Phase3" then
-		self.vb.phase = 3
+		self:SetStage(3)
 		self:Schedule(6, buildGuidTable)
 		timerBreathCD:Cancel()
 --		timerStaticFieldCD:Start(49.5)--Consistent?

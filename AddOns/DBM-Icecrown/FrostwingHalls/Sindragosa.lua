@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Sindragosa", "DBM-Icecrown", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210119194038")
+mod:SetRevision("20210614230125")
 mod:SetCreatureID(36853)
 mod:SetEncounterID(1105)
 mod:SetModelID(30362)
@@ -65,7 +65,6 @@ local beaconIconTargets	= {}
 local unchainedTargets	= {}
 mod.vb.warned_P2 = false
 mod.vb.warnedfailed = false
-mod.vb.phase = 0
 mod.vb.unchainedIcons = 7
 mod.vb.activeBeacons	= false
 local playerUnchained = false
@@ -144,6 +143,7 @@ local function warnUnchainedTargets(self)
 end
 
 function mod:OnCombatStart(delay)
+	self:SetStage(1)
 	berserkTimer:Start(-delay)
 	timerNextAirphase:Start(50-delay)
 	timerNextBlisteringCold:Start(33-delay)
@@ -155,7 +155,6 @@ function mod:OnCombatStart(delay)
 	self.vb.unchainedIcons = 7
 	playerUnchained = false
 	playerBeaconed = false
-	self.vb.phase = 1
 	self.vb.activeBeacons = false
 end
 
@@ -330,7 +329,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		warnGroundphaseSoon:Schedule(40)
 		self.vb.activeBeacons = true
 	elseif (msg == L.YellPhase2 or msg:find(L.YellPhase2)) or (msg == L.YellPhase2Dem or msg:find(L.YellPhase2Dem)) then
-		self.vb.phase = 2
+		self:SetStage(2)
 		warnPhase2:Show()
 		timerNextBeacon:Start(7)
 		timerNextAirphase:Cancel()

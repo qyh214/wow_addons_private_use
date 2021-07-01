@@ -8,7 +8,7 @@ AddOn.worldBosses = {
       { encounterID = 725, questID = 32098 },  -- Salyis's Warband
       { encounterID = 814, questID = 32518 },  -- Nalak, The Storm Lord
       { encounterID = 826, questID = 32519 },  -- Oondasta
-      { name        = "" , questID = 33117 },  -- The Four Celestials
+      { encounterID = nil, questID = 33117 },  -- The Four Celestials
       { encounterID = 861, questID = 33118 }   -- Ordos, Fire-God of the Yaungol
     }
   },
@@ -75,7 +75,8 @@ AddOn.worldBosses = {
       { encounterID = 2430, questID = 61813 }, -- Valinor, the Light of Eons
       { encounterID = 2431, questID = 61816 }, -- Mortanis
       { encounterID = 2432, questID = 61815 }, -- Oranomonos the Everbranching
-      { encounterID = 2433, questID = 61814 }  -- Nurgash Muckformed
+      { encounterID = 2433, questID = 61814 }, -- Nurgash Muckformed
+      { encounterID = 2456, questID = 63949 }  -- Mor'geth, Tormentor of the Damned
     }
   }
 }

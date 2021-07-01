@@ -79,6 +79,8 @@ local L = WeakAuras.L
 	L["Highlight while debuffed."] = "약화 효과가 있는 동안 강조합니다."
 	L["Highlight while spell is active."] = "주문이 활성화 되어 있는 동안 강조"
 	L["Hold CTRL to create multiple auras at once"] = "한 번에 여러 효과를 만드려면 CTRL 키를 누르세요"
+	--[[Translation missing --]]
+	L["Initial Buff"] = "Initial Buff"
 	L["Keeps existing triggers intact"] = "활성 조건 그대로 유지"
 	L["Legendaries"] = "전설"
 	--[[Translation missing --]]
@@ -97,6 +99,8 @@ local L = WeakAuras.L
 	L["Other cooldown"] = "Other cooldown"
 	L["Pet alive"] = "소환수 생존"
 	L["Pet Behavior"] = "소환수 행동"
+	--[[Translation missing --]]
+	L["Preparation"] = "Preparation"
 	L["PvP Talents"] = "명예 특성"
 	L["Replace all existing triggers"] = "모든 활성 조건 교체"
 	L["Replace Triggers"] = "활성 조건 교체"
@@ -104,8 +108,12 @@ local L = WeakAuras.L
 	L["Resources and Shapeshift Form"] = "자원과 태세 변환"
 	--[[Translation missing --]]
 	L["Rogue cooldown"] = "Rogue cooldown"
+	--[[Translation missing --]]
+	L["Root"] = "Root"
 	L["Runes"] = "룬"
 	L["Shapeshift Form"] = "태세 변환"
+	--[[Translation missing --]]
+	L["Shards Of Domination"] = "Shards Of Domination"
 	--[[Translation missing --]]
 	L["Show Always, Glow on Missing"] = "Show Always, Glow on Missing"
 	--[[Translation missing --]]
@@ -158,6 +166,8 @@ local L = WeakAuras.L
 	L["Slow"] = "Slow"
 	--[[Translation missing --]]
 	L["slow debuff"] = "slow debuff"
+	--[[Translation missing --]]
+	L["Sprint"] = "Sprint"
 	L["Stance"] = "태세"
 	L["stun debuff"] = "기절 약화 효과"
 	L["Stun Debuff"] = "기절 약화 효과"

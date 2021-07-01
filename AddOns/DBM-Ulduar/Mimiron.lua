@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Mimiron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210120231753")
+mod:SetRevision("20210614230125")
 mod:SetCreatureID(33432)
 mod:SetEncounterID(1138)
 mod:DisableESCombatDetection()
@@ -62,7 +62,6 @@ mod:AddSetIconOption("SetIconOnPlasmaBlast", 64529, false, false, {8})
 mod:AddRangeFrameOption("6")
 
 mod.vb.hardmode = false
-mod.vb.phase = 0
 mod.vb.napalmShellIcon = 7
 local spinningUp = DBM:GetSpellInfo(63414)
 local lastSpinUp = 0
@@ -86,7 +85,7 @@ end
 function mod:OnCombatStart(delay)
 	self.vb.hardmode = false
 	enrage:Start(-delay)
-	self.vb.phase = 1
+	self:SetStage(1)
 	self.vb.is_spinningUp = false
 	self.vb.napalmShellIcon = 7
 	table.wipe(napalmShellTargets)
@@ -202,7 +201,7 @@ end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 34098 then--ClearAllDebuffs
-		self.vb.phase = self.vb.phase + 1
+		self:SetStage(0)
 		if self.vb.phase == 2 then
 			timerNextShockblast:Stop()
 			timerProximityMines:Stop()

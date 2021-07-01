@@ -81,6 +81,8 @@ local L = WeakAuras.L
 	L["Highlight while debuffed."] = "Mettez en surbrillance quand non-amélioré."
 	L["Highlight while spell is active."] = "Mettez en surbrillance quand le sort est actif."
 	L["Hold CTRL to create multiple auras at once"] = "Maintenir CTRL pour créer plusieurs auras simultanément"
+	--[[Translation missing --]]
+	L["Initial Buff"] = "Initial Buff"
 	L["Keeps existing triggers intact"] = "Garder intact les déclencheurs existants"
 	--[[Translation missing --]]
 	L["Legendaries"] = "Legendaries"
@@ -99,6 +101,8 @@ local L = WeakAuras.L
 	L["Other cooldown"] = "Autre temps de recharge"
 	L["Pet alive"] = "Familier vivant"
 	L["Pet Behavior"] = "Comportement du Familier"
+	--[[Translation missing --]]
+	L["Preparation"] = "Preparation"
 	L["PvP Talents"] = "Talents JcJ"
 	L["Replace all existing triggers"] = "Remplacer tous les déclencheurs existant"
 	L["Replace Triggers"] = "Remplacer les déclencheurs"
@@ -106,8 +110,12 @@ local L = WeakAuras.L
 	L["Resources and Shapeshift Form"] = "Ressources et Forme de Changeforme"
 	--[[Translation missing --]]
 	L["Rogue cooldown"] = "Rogue cooldown"
+	--[[Translation missing --]]
+	L["Root"] = "Root"
 	L["Runes"] = "Runes"
 	L["Shapeshift Form"] = "Forme de Changeforme"
+	--[[Translation missing --]]
+	L["Shards Of Domination"] = "Shards Of Domination"
 	--[[Translation missing --]]
 	L["Show Always, Glow on Missing"] = "Show Always, Glow on Missing"
 	L["Show Charges and Check Usable"] = "Afficher les Charges et Vérifier si Utilisable"
@@ -153,6 +161,8 @@ local L = WeakAuras.L
 	L["Slow"] = "Lent"
 	--[[Translation missing --]]
 	L["slow debuff"] = "slow debuff"
+	--[[Translation missing --]]
+	L["Sprint"] = "Sprint"
 	L["Stance"] = "Posture"
 	--[[Translation missing --]]
 	L["stun debuff"] = "stun debuff"

@@ -121,6 +121,8 @@ local L = WeakAuras.L
 	L["Highlight while spell is active."] = "Highlight while spell is active."
 	--[[Translation missing --]]
 	L["Hold CTRL to create multiple auras at once"] = "Hold CTRL to create multiple auras at once"
+	--[[Translation missing --]]
+	L["Initial Buff"] = "Initial Buff"
 	L["Keeps existing triggers intact"] = "Verändert existierende Auslöser nicht"
 	--[[Translation missing --]]
 	L["Legendaries"] = "Legendaries"
@@ -147,6 +149,8 @@ local L = WeakAuras.L
 	L["Other cooldown"] = "Other cooldown"
 	L["Pet alive"] = "Begleiter am Leben"
 	L["Pet Behavior"] = "Begleiterverhalten"
+	--[[Translation missing --]]
+	L["Preparation"] = "Preparation"
 	L["PvP Talents"] = "PvP-Talente"
 	L["Replace all existing triggers"] = "Ersetzt alle vorhandenen Auslöser "
 	L["Replace Triggers"] = "Auslöser ersetzen"
@@ -154,8 +158,12 @@ local L = WeakAuras.L
 	L["Resources and Shapeshift Form"] = "Ressourcen und Gestaltwandlungsform"
 	--[[Translation missing --]]
 	L["Rogue cooldown"] = "Rogue cooldown"
+	--[[Translation missing --]]
+	L["Root"] = "Root"
 	L["Runes"] = "Runen"
 	L["Shapeshift Form"] = "Gestaltwandlungsform"
+	--[[Translation missing --]]
+	L["Shards Of Domination"] = "Shards Of Domination"
 	--[[Translation missing --]]
 	L["Show Always, Glow on Missing"] = "Show Always, Glow on Missing"
 	--[[Translation missing --]]
@@ -217,6 +225,8 @@ local L = WeakAuras.L
 	L["Slow"] = "Slow"
 	--[[Translation missing --]]
 	L["slow debuff"] = "slow debuff"
+	--[[Translation missing --]]
+	L["Sprint"] = "Sprint"
 	L["Stance"] = "Haltung"
 	--[[Translation missing --]]
 	L["stun debuff"] = "stun debuff"

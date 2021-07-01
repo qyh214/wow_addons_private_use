@@ -85,8 +85,7 @@ local L = WeakAuras.L
 	L["Anchor"] = "고정시키기"
 	L["Anchor Point"] = "고정 지점"
 	L["Anchored To"] = "다음에 고정:"
-	--[[Translation missing --]]
-	L["And "] = "And "
+	L["And "] = "와"
 	L["and aligned left"] = ", 왼쪽 정렬"
 	L["and aligned right"] = ", 오른쪽 정렬"
 	L["and rotated left"] = ", 왼쪽으로 회전"

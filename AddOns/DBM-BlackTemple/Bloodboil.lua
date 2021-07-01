@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Bloodboil", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142051")
+mod:SetRevision("20210323015546")
 mod:SetCreatureID(22948)
 mod:SetEncounterID(605)
 mod:SetModelID(21443)
@@ -12,9 +12,12 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 42005",
 	"SPELL_AURA_APPLIED 42005 40481 40491 40604",
 	"SPELL_AURA_APPLIED_DOSE 40481 42005",
-	"SPELL_AURA_REFRESH 42005 40481"
+	"SPELL_AURA_REFRESH 42005 40481",
+	"SPELL_AURA_REMOVED 42005",
+	"SPELL_AURA_REMOVED_DOSE 42005"
 )
 
+--TODO, verify blood is in combat log like that, otherwise have to use playerdebuffstacks frame instead
 local warnBlood			= mod:NewTargetAnnounce(42005, 3)
 local warnWound			= mod:NewStackAnnounce(40481, 2, nil, "Tank", 2)
 local warnStrike		= mod:NewTargetNoFilterAnnounce(40491, 3, nil, "Tank", 2)
@@ -33,7 +36,10 @@ local timerRageEnd		= mod:NewBuffActiveTimer(28, 40604, nil, nil, nil, 5, nil, D
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
+mod:AddInfoFrameOption(42005)
+
 mod.vb.rage = false
+local bloodStacks = {}
 
 local function nextRage(self)
 	self.vb.rage = false
@@ -44,12 +50,24 @@ local function nextRage(self)
 end
 
 function mod:OnCombatStart(delay)
+	table.wipe(bloodStacks)
 	self.vb.rage = false
 	berserkTimer:Start(-delay)
 	warnRageSoon:Schedule(47-delay)
 	timerBlood:Start(10.9-delay)
 	timerStrikeCD:Start(26.8-delay)
 	timerRageCD:Start(-delay)
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(42005))
+		--DBM.InfoFrame:Show(30, "playerdebuffstacks", 42005, 1)
+		DBM.InfoFrame:Show(30, "table", bloodStacks, 1)--Maybe sort lowest to highest instead of highest to lowest?
+	end
+end
+
+function mod:OnCombatEnd()
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
+	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
@@ -61,10 +79,15 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 42005 then
+		local amount = args.amount or 1
+		bloodStacks[args.destName] = amount
 		warnBlood:CombinedShow(0.8, args.destName)
 		if args:IsPlayer() then
-			specWarnBlood:Show(args.amount or 1)
+			specWarnBlood:Show(amount)
 			specWarnBlood:Play("targetyou")
+		end
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:UpdateTable(bloodStacks)
 		end
 	elseif spellId == 40481 and not self.vb.rage then
 		local amount = args.amount or 1
@@ -89,3 +112,23 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 mod.SPELL_AURA_REFRESH = mod.SPELL_AURA_APPLIED
+
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
+	if spellId == 42005 then
+		bloodStacks[args.destName] = nil
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:UpdateTable(bloodStacks)
+		end
+	end
+end
+
+function mod:SPELL_AURA_REMOVED_DOSE(args)
+	local spellId = args.spellId
+	if spellId == 42005 then
+		bloodStacks[args.destName] = args.amount or 1
+		if self.Options.InfoFrame then
+			DBM.InfoFrame:UpdateTable(bloodStacks)
+		end
+	end
+end

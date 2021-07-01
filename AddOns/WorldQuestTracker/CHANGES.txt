@@ -1,24 +1,10 @@
-tag 874837542a0781666148086c53a200e5b60a7f68 v9.0.5.423
+tag 93da642fe72fe8756701eebe150ab7143f6e995e v9.1.0.426
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Tue May 4 15:47:20 2021 -0300
+Date:	Thu Jul 1 11:24:19 2021 -0300
 
-commit a738f87e6fb796e451785de2b1c6026b48da1ef2
+commit c69a4b101b651945e2b7089e185569aebbd8f1be
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Sat May 1 16:01:56 2021 -0300
+Date:   Thu Jul 1 11:24:00 2021 -0300
 
-    Update WorldQuestTracker_GroupFinder.lua
-    
-    bugfix
-
-commit f007efaf7c005e3b2c1ec90c90562ed955672863
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Sat May 1 14:39:53 2021 -0300
-
-    framework update
-
-commit 55a08ec10dedad1a62d9068cb29e1dfd87cbfb56
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Thu Apr 22 21:54:26 2021 -0300
-
-    Framework Update
+    Added Korthia portal into the flight master location indicator
 

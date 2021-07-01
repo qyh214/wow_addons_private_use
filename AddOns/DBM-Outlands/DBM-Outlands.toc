@@ -1,4 +1,4 @@
-## Interface: 90005
+## Interface: 90100
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Outlands|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0아웃랜드|r
@@ -21,7 +21,8 @@
 ## X-DBM-Mod-MinExpansion: 1
 ## X-Curse-Project-ID: 16442
 ## X-WoWI-ID: 11700
-## Version: r679
+## X-Wago-ID: 7x61xpN1
+## Version: r680
 
 localization.en.lua
 localization.de.lua

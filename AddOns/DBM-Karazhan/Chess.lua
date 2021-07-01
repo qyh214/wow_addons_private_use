@@ -2,7 +2,7 @@ local mod	= DBM:NewMod("Chess", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
 local playerFactoin = UnitFactionGroup("player")
-mod:SetRevision("20190417010011")
+mod:SetRevision("20210515035656")
 if playerFactoin == "Alliance" then
 	mod:SetCreatureID(21752)--Warchief Blackhand
 else
@@ -19,13 +19,14 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_RAID_BOSS_EMOTE"
 )
 
+--Verify cheat timer
 local timerHeroism			= mod:NewBuffActiveTimer(10, 37471)
 local timerBloodlust		= mod:NewBuffActiveTimer(10, 37472)
 local timerRecentlyInGame	= mod:NewBuffFadesTimer(10, 30529, nil, nil, nil, 5)
 local timerNextCheat		= mod:NewTimer(108, "timerCheat", 39342, nil, nil, 3)
 
 function mod:OnCombatStart(delay)
-	timerNextCheat:Start(111)
+	timerNextCheat:Start(108)
 end
 
 function mod:SPELL_AURA_APPLIED(args)

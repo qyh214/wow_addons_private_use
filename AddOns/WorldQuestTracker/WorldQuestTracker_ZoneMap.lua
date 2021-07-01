@@ -225,13 +225,15 @@ function WorldQuestTracker.CreateZoneWidget (index, name, parent, pinTemplate) -
 				local currentScale = self.ModifiedScale
 				local originalScale = self.OriginalScale
 				
-				if (WorldQuestTrackerAddon.GetCurrentZoneType() == "zone") then
-					self.OnLeaveAnimation.ScaleAnimation:SetFromScale (currentScale, currentScale)
-					self.OnLeaveAnimation.ScaleAnimation:SetToScale (originalScale, originalScale)
-				
-				elseif (WorldQuestTrackerAddon.GetCurrentZoneType() == "world") then
-					self.OnLeaveAnimation.ScaleAnimation:SetFromScale (currentScale, currentScale)
-					self.OnLeaveAnimation.ScaleAnimation:SetToScale (1, 1)
+				if (currentScale and originalScale) then
+					if (WorldQuestTrackerAddon.GetCurrentZoneType() == "zone") then
+						self.OnLeaveAnimation.ScaleAnimation:SetFromScale (currentScale, currentScale)
+						self.OnLeaveAnimation.ScaleAnimation:SetToScale (originalScale, originalScale)
+					
+					elseif (WorldQuestTrackerAddon.GetCurrentZoneType() == "world") then
+						self.OnLeaveAnimation.ScaleAnimation:SetFromScale (currentScale, currentScale)
+						self.OnLeaveAnimation.ScaleAnimation:SetToScale (1, 1)
+					end
 				end
 				
 				self.OnLeaveAnimation:Play()
@@ -921,7 +923,6 @@ end
 
 --this function does not check if the quest reward is in the client cache
 function WorldQuestTracker.SetupWorldQuestButton(self, worldQuestType, rarity, isElite, tradeskillLineIndex, inProgress, selected, isCriteria, isSpellTarget, mapID)
-
 	if (type (worldQuestType) == "boolean" and worldQuestType) then
 		--quick refresh
 		worldQuestType = self.worldQuestType
@@ -962,7 +963,13 @@ function WorldQuestTracker.SetupWorldQuestButton(self, worldQuestType, rarity, i
 
 	if (HaveQuestData (questID)) then
 		local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex = WorldQuestTracker.GetQuest_Info (questID)
-	
+
+		if (tagID == 268) then --new quests on maw?
+			worldQuestType = LE_QUEST_TAG_TYPE_INVASION
+			rarity = LE_WORLD_QUEST_QUALITY_RARE
+			isElite = true
+		end
+
 		--default alpha
 		self:SetAlpha (WQT_ZONEWIDGET_ALPHA - 0.05)
 		self.FactionID = factionID
@@ -1108,7 +1115,7 @@ function WorldQuestTracker.SetupWorldQuestButton(self, worldQuestType, rarity, i
 					okay = true
 				end
 			end
-
+			
 			-- items
 			local itemName, itemTexture, itemLevel, itemQuantity, quality, isUsable, itemID, isArtifact, artifactPower, isStackable = WorldQuestTracker.GetQuestReward_Item(questID)
 		

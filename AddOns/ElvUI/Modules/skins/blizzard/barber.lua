@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local E, L, V, P, G = unpack(select(2, ...)) --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local S = E:GetModule('Skins')
 
 local _G = _G
@@ -8,20 +8,11 @@ function S:Blizzard_BarbershopUI()
 	if not (E.private.skins.blizzard.enable and E.private.skins.blizzard.barber) then return end
 
 	local frame = _G.BarberShopFrame
-	S:HandleButton(frame.ResetButton)
-	S:HandleButton(frame.CancelButton)
-	S:HandleButton(frame.AcceptButton)
-
-	frame.TopBackgroundOverlay:SetDrawLayer('BACKGROUND', 0)
-	frame.LeftBackgroundOverlay:SetDrawLayer('BACKGROUND', 0)
-	frame.RightBackgroundOverlay:SetDrawLayer('BACKGROUND', 0)
+	S:HandleButton(frame.ResetButton, nil, nil, nil, true, nil, nil, nil, true)
+	S:HandleButton(frame.CancelButton, nil, nil, nil, true, nil, nil, nil, true)
+	S:HandleButton(frame.AcceptButton, nil, nil, nil, true, nil, nil, nil, true)
 end
 S:AddCallbackForAddon('Blizzard_BarbershopUI')
-
-local function ReskinCustomizeButton(button)
-	S:HandleButton(button)
-	button.backdrop:SetInside(nil, 3, 3)
-end
 
 function S:Blizzard_CharacterCustomize()
 	if not (E.private.skins.blizzard.enable and E.private.skins.blizzard.barber) then return end -- yes, it belongs also to tbe BarberUI
@@ -35,28 +26,33 @@ function S:Blizzard_CharacterCustomize()
 	S:HandleButton(frame.SmallButtons.RotateRightButton, nil, nil, true)
 
 	hooksecurefunc(frame, 'SetSelectedCatgory', function(list)
-		for button in list.selectionPopoutPool:EnumerateActive() do
-			if not button.IsSkinned then
-				S:HandleNextPrevButton(button.DecrementButton)
-				S:HandleNextPrevButton(button.IncrementButton)
+		if list.selectionPopoutPool then
+			for button in list.selectionPopoutPool:EnumerateActive() do
+				if not button.IsSkinned then
+					S:HandleNextPrevButton(button.DecrementButton)
+					S:HandleNextPrevButton(button.IncrementButton)
 
-				local popoutButton = button.SelectionPopoutButton
-				popoutButton.HighlightTexture:SetAlpha(0)
-				popoutButton.NormalTexture:SetAlpha(0)
+					local popoutButton = button.SelectionPopoutButton
+					popoutButton.HighlightTexture:SetAlpha(0)
+					popoutButton.NormalTexture:SetAlpha(0)
 
-				popoutButton.Popout:StripTextures()
-				popoutButton.Popout:CreateBackdrop('Transparent', nil, nil, nil, nil, nil, nil, true)
-				ReskinCustomizeButton(popoutButton)
+					popoutButton.Popout:StripTextures()
+					popoutButton.Popout:SetTemplate('Transparent')
 
-				button.IsSkinned = true
+					S:HandleButton(popoutButton, nil, nil, nil, true)
+					popoutButton.backdrop:SetInside(nil, 4, 4)
+
+					button.IsSkinned = true
+				end
 			end
 		end
 
-		local optionPool = list.pools:GetPool('CharCustomizeOptionCheckButtonTemplate')
-		for button in optionPool:EnumerateActive() do
-			if not button.IsSkinned then
-				S:HandleCheckBox(button.Button)
-				button.IsSkinned = true
+		local optionPool = list.pools and list.pools:GetPool('CharCustomizeOptionCheckButtonTemplate')
+		if optionPool then
+			for button in optionPool:EnumerateActive() do
+				if not button.isSkinned then
+					S:HandleCheckBox(button.Button)
+				end
 			end
 		end
 	end)

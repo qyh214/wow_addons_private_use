@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(679, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20210526021602")
 mod:SetCreatureID(60051, 60043, 59915, 60047)--Cobalt: 60051, Jade: 60043, Jasper: 59915, Amethyst: 60047
 mod:SetEncounterID(1395)
 
@@ -172,9 +172,16 @@ function mod:SPELL_AURA_APPLIED(args)
 			if not self:IsDifficulty("lfr25") then
 				yellJasperChains:Yell()
 			end
-			local uId = DBM:GetBossUnitId(Jasper)
-			if uId and UnitPower(uId) <= 50 and activePetrification == "Jasper" then--Make sure his energy isn't already high, otherwise breaking chains when jasper will only be active for a few seconds is bad
-				specWarnBreakJasperChains:Show()
+			--Figure out which one is Jasper
+			for i = 1, 5 do
+				local unitId = "boss"..i
+				local cid = self:GetUnitCreatureId(unitId)
+				if cid == 59915 then--Right unit ID
+					if UnitPower(unitId) <= 50 and activePetrification == "Jasper" then--Make sure his energy isn't already high, otherwise breaking chains when jasper will only be active for a few seconds is bad
+						specWarnBreakJasperChains:Show()
+					end
+					break
+				end
 			end
 		end
 	elseif spellId == 130774 and args:IsPlayer() then
@@ -276,7 +283,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end
 		if playerHasChains then
-			--local uId = DBM:GetBossUnitId(Jasper)
 			if uId and UnitPower(uId) <= 50 then--Make sure his energy isn't already high, otherwise breaking chains when jasper will only be active for a few seconds is bad
 				specWarnBreakJasperChains:Show()
 			end

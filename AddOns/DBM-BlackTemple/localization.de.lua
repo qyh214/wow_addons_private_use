@@ -107,7 +107,7 @@ L:SetMiscLocalization{
 	Desire			= "Essenz der Begierde",
 	Anger			= "Essenz des Zorns",
 	Phase1End		= "Ich will nicht zurück!",
-	Phase2End		= "I won't be far!"--translate (trigger)
+	Phase2End		= "Ich bin immer in Eurer Nähe!"
 }
 
 -----------------------

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NorthrendBeasts", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145648")
+mod:SetRevision("20210614230125")
 mod:SetCreatureID(34796, 35144, 34799, 34797)
 --mod:SetEncounterID(1088)--Buggy, never enable this
 mod:SetMinSyncRevision(104)
@@ -80,7 +80,6 @@ mod.vb.burnIcon = 8
 mod.vb.DreadscaleActive = true
 mod.vb.DreadscaleDead = false
 mod.vb.AcidmawDead = false
-mod.vb.phase = 1
 
 function mod:OnCombatStart(delay)
 	table.wipe(bileTargets)
@@ -89,7 +88,7 @@ function mod:OnCombatStart(delay)
 	self.vb.DreadscaleActive = true
 	self.vb.DreadscaleDead = false
 	self.vb.AcidmawDead = false
-	self.vb.phase = 1
+	self:SetStage(1)
 	specWarnSilence:Schedule(14-delay)
 	specWarnSilence:ScheduleVoice(14-delay, "silencesoon")
 	if self:IsDifficulty("heroic10", "heroic25") then
@@ -295,12 +294,12 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	elseif msg == L.Phase2 or msg:find(L.Phase2) then
 		self:ScheduleMethod(17, "WormsEmerge")
 		timerCombatStart:Start(15)
-		self.vb.phase = 2
+		self:SetStage(2)
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(10)
 		end
 	elseif msg == L.Phase3 or msg:find(L.Phase3) then
-		self.vb.phase = 3
+		self:SetStage(3)
 		if self:IsDifficulty("heroic10", "heroic25") then
 			enrageTimer:Start()
 		end

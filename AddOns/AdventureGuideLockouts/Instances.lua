@@ -139,7 +139,9 @@ AddOn.instances = {
   [2289] = 1183, -- Plaguefall
   [2284] = 1189, -- Sanguine Depths
   [2285] = 1186, -- Spires of Ascension
+  [2441] = 1194, -- Tazavesh, the Veiled Market
   [2286] = 1182, -- The Necrotic Wake
   [2293] = 1187, -- Theater of Pain
-  [2296] = 1190  -- Castle Nathria
+  [2296] = 1190, -- Castle Nathria
+  [2450] = 1193  -- Sanctum of Domination	
 }

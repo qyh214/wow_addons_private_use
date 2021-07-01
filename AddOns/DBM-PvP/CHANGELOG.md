@@ -1,6 +1,7 @@
 # <DBM> PvP
 
-## [r124](https://github.com/DeadlyBossMods/DBM-PvP/tree/r124) (2021-05-20)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-PvP/compare/r123...r124) [Previous Releases](https://github.com/DeadlyBossMods/DBM-PvP/releases)
+## [r125](https://github.com/DeadlyBossMods/DBM-PvP/tree/r125) (2021-06-29)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-PvP/compare/r124...r125) [Previous Releases](https://github.com/DeadlyBossMods/DBM-PvP/releases)
 
-- Fix AV timers for TBC prepatch (#102)  
+- toc bump  
+- All Rights Reserved license  

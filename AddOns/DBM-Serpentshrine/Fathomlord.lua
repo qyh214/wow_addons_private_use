@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Fathomlord", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142051")
+mod:SetRevision("20210317004555")
 mod:SetCreatureID(21214)
 mod:SetEncounterID(626)
 mod:SetModelID(20662)
@@ -14,13 +14,12 @@ mod:RegisterEventsInCombat(
 	"SPELL_SUMMON 38236"
 )
 
-local warnTotem			= mod:NewTargetNoFilterAnnounce(38236, 4)
 local warnCariPower		= mod:NewSpellAnnounce(38451, 3)
 local warnTidalPower	= mod:NewSpellAnnounce(38452, 3)
 local warnSharPower		= mod:NewSpellAnnounce(38455, 3)
 
 local specWarnHeal		= mod:NewSpecialWarningInterrupt(38330, "HasInterrupt", nil, nil, 1, 2)
---local specWarnTotem		= mod:NewSpecialWarningSpell(38236)
+local specWarnTotem		= mod:NewSpecialWarningSwitch(38236, "Dps", nil, nil, 1, 2)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
@@ -49,6 +48,7 @@ end
 
 function mod:SPELL_SUMMON(args)
 	if args.spellId == 38236 then
-		warnTotem:Show(args.sourceName)
+		specWarnTotem:Show()
+		specWarnTotem:Play("attacktotem")
 	end
 end

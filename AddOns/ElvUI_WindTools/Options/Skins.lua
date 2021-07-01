@@ -59,7 +59,7 @@ options.general = {
                 "%s\n|cffff0000%s|r: %s",
                 format(L["Add skins for all modules inside %s with %s functions."], L["WindTools"], L["MerathilisUI"]),
                 L["Notice"],
-                format(L["It doesn't means that the %s Skins will not be applied."], L["WindTools"])
+                format(L["It doesn't mean that the %s Skins will not be applied."], L["WindTools"])
             ),
             hidden = function()
                 return not IsAddOnLoaded("ElvUI_MerathilisUI")
@@ -982,11 +982,11 @@ options.addons = {
             type = "toggle",
             name = L["REHack"]
         },
-        rematch = {
-            order = 10,
-            type = "toggle",
-            name = L["Rematch"]
-        },
+        -- rematch = {
+        --     order = 10,
+        --     type = "toggle",
+        --     name = L["Rematch"]
+        -- },
         tinyInspect = {
             order = 10,
             type = "toggle",

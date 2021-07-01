@@ -1,4 +1,4 @@
-## Interface: 90005
+## Interface: 90100
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Dungeons (Shadowlands)|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Mazmorras (Shadowlands)|r
 ## Title-esMX:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Mazmorras (Shadowlands)|r
@@ -74,7 +74,7 @@ SanguineDepths\SanguineDepthsTrash.lua
 Tazavesh\ZophextheSentinel.lua
 Tazavesh\TheMenagerie.lua
 Tazavesh\MailroomMayhem.lua
-Tazavesh\AumyzaOasis.lua
+Tazavesh\MyzasOasis.lua
 Tazavesh\Soazmi.lua
 Tazavesh\Hylbrande.lua
 Tazavesh\TimecapnHooktail.lua

@@ -1,4 +1,4 @@
-﻿-- Mini Dragon(projecteurs AT gmail.com) Brilla@金色平原
+-- Mini Dragon(projecteurs AT gmail.com) Brilla@金色平原
 -- Last update: 2019/08/22
 
 if GetLocale() ~= "zhCN" then return end

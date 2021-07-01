@@ -2,7 +2,6 @@ local _G = _G
 local pairs = pairs
 local print = print
 local select = select
-local tinsert = tinsert
 local tonumber = tonumber
 
 local C_ContributionCollector_GetState = C_ContributionCollector.GetState
@@ -97,9 +96,9 @@ function AddOn:GetSavedWorldBossEncounterInfo(instanceIndex, encounterIndex)
   if encounterIndex > #self.worldBosses[instanceIndex].encounters then return end
   local bossName
   local isKilled = C_QuestLog_IsQuestFlaggedCompleted(self.worldBosses[instanceIndex].encounters[encounterIndex].questID)
-  if self.worldBosses[instanceIndex].encounters[encounterIndex].name == "" then
+  if not self.worldBosses[instanceIndex].encounters[encounterIndex].encounterID then
     bossName = (select(2, GetAchievementInfo(7333))) -- Localize "The Four Celestials"
-  elseif not self.worldBosses[instanceIndex].encounters[encounterIndex].name then
+  else
     bossName = EJ_GetEncounterInfo(self.worldBosses[instanceIndex].encounters[encounterIndex].encounterID)
   end
   return bossName, isKilled
@@ -149,10 +148,10 @@ function AddOn:GetInstanceLockout(instanceIndex)
       end
     end
     local bossName, _, isKilled = GetSavedInstanceEncounterInfo(instanceIndex, encounterIndex)
-    tinsert(encounters, {
+    encounters[encounterIndex] = {
       bossName = bossName,
       isKilled = isKilled
-    })
+    }
     encounterIndex = encounterIndex + 1
   end
 
@@ -190,11 +189,11 @@ function AddOn:GetWorldBossLockout(instanceIndex)
     elseif instanceIndex >= 5 then
       isAvailable = C_TaskQuest_GetQuestTimeLeftMinutes(self.worldBosses[instanceIndex].encounters[encounterIndex].questID) ~= nil
     end
-    tinsert(encounters, {
+    encounters[encounterIndex] = {
       bossName = bossName,
       isKilled = isKilled,
       isAvailable = isAvailable
-    })
+    }
     numEncounters = (isAvailable or isKilled) and numEncounters + 1 or numEncounters
     encounterIndex = encounterIndex + 1
   end
@@ -244,14 +243,17 @@ function AddOn:CreateStatusFrame(instanceButton, difficulty)
     _G.GameTooltip:SetText(frame.instanceInfo.instanceName .. " (" .. frame.instanceInfo.difficultyName .. ")")
     for i = 1, #frame.instanceInfo.encounters do
       local encounter = frame.instanceInfo.encounters[i]
-      local r, g, b = GREEN_FONT_COLOR.r, GREEN_FONT_COLOR.g, GREEN_FONT_COLOR.b
-      local bossStatus = BOSS_ALIVE
+      local r, g, b
+      local bossStatus
       if encounter.isKilled then
-        r, g, b = RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b
+        r, g, b = RED_FONT_COLOR:GetRGB()
         bossStatus = BOSS_DEAD
       elseif encounter.isAvailable == false then
-        r, g, b = GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b
+        r, g, b = GRAY_FONT_COLOR:GetRGB()
         bossStatus = QUEUE_TIME_UNAVAILABLE
+      else
+        r, g, b = GREEN_FONT_COLOR:GetRGB()
+        bossStatus = BOSS_ALIVE
       end
       _G.GameTooltip:AddDoubleLine(encounter.bossName, bossStatus, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b, r, g, b)
     end
@@ -284,11 +286,11 @@ function AddOn:CreateStatusFrame(instanceButton, difficulty)
   local progressFrame = statusFrame:CreateFontString(nil, nil, "GameFontNormalSmallLeft")
 
   if difficulty == 1 or difficulty == 2 then
-    completeFrame:SetPoint("CENTER", statusFrame, "CENTER", 0, -1)
-    progressFrame:SetPoint("CENTER", statusFrame, "CENTER", 0, 5)
+    completeFrame:SetPoint("CENTER", 0, -1)
+    progressFrame:SetPoint("CENTER", 0, 5)
   else
-    completeFrame:SetPoint("CENTER", statusFrame, "CENTER", 0, -12)
-    progressFrame:SetPoint("CENTER", statusFrame, "CENTER", 0, -9)
+    completeFrame:SetPoint("CENTER", 0, -12)
+    progressFrame:SetPoint("CENTER", 0, -9)
   end
 
   statusFrame.completeFrame = completeFrame
@@ -309,36 +311,36 @@ function AddOn:UpdateStatusFramePosition(instanceButton)
   local mythicVisible = savedFrames and savedFrames[4] and savedFrames[4]:IsVisible()
 
   if mythicVisible then
-    savedFrames[4]:SetPoint("BOTTOMRIGHT", instanceButton, "BOTTOMRIGHT", 4, -12)
+    savedFrames[4]:SetPoint("BOTTOMRIGHT", 4, -12)
   end
 
   if heroicVisible then
     if mythicVisible then
-      savedFrames[3]:SetPoint("BOTTOMRIGHT", instanceButton, "BOTTOMRIGHT", -28, -12)
+      savedFrames[3]:SetPoint("BOTTOMRIGHT", -28, -12)
     else
-      savedFrames[3]:SetPoint("BOTTOMRIGHT", instanceButton, "BOTTOMRIGHT", 4, -12)
+      savedFrames[3]:SetPoint("BOTTOMRIGHT", 4, -12)
     end
   end
 
   if normalVisible then
     if heroicVisible and mythicVisible then
-      savedFrames[2]:SetPoint("BOTTOMRIGHT", instanceButton, "BOTTOMRIGHT", -60, -23)
+      savedFrames[2]:SetPoint("BOTTOMRIGHT", -60, -23)
     elseif heroicVisible or mythicVisible then
-      savedFrames[2]:SetPoint("BOTTOMRIGHT", instanceButton, "BOTTOMRIGHT", -28, -23)
+      savedFrames[2]:SetPoint("BOTTOMRIGHT", -28, -23)
     else
-      savedFrames[2]:SetPoint("BOTTOMRIGHT", instanceButton, "BOTTOMRIGHT", 4, -23)
+      savedFrames[2]:SetPoint("BOTTOMRIGHT", 4, -23)
     end
   end
 
   if lfrVisible then
     if normalVisible and heroicVisible and mythicVisible then
-      savedFrames[1]:SetPoint("BOTTOMRIGHT", instanceButton, "BOTTOMRIGHT", -92, -23)
+      savedFrames[1]:SetPoint("BOTTOMRIGHT", -92, -23)
     elseif heroicVisible and mythicVisible or heroicVisible and normalVisible or mythicVisible and normalVisible then
-      savedFrames[1]:SetPoint("BOTTOMRIGHT", instanceButton, "BOTTOMRIGHT", -60, -23)
+      savedFrames[1]:SetPoint("BOTTOMRIGHT", -60, -23)
     elseif normalVisible or heroicVisible or mythicVisible then
-      savedFrames[1]:SetPoint("BOTTOMRIGHT", instanceButton, "BOTTOMRIGHT", -28, -23)
+      savedFrames[1]:SetPoint("BOTTOMRIGHT", -28, -23)
     else
-      savedFrames[1]:SetPoint("BOTTOMRIGHT", instanceButton, "BOTTOMRIGHT", 4, -23)
+      savedFrames[1]:SetPoint("BOTTOMRIGHT", 4, -23)
     end
   end
 end

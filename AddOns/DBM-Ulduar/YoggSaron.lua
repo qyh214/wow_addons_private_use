@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("YoggSaron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210120231753")
+mod:SetRevision("20210614230125")
 mod:SetCreatureID(33288)
 mod:SetEncounterID(1143)
 mod:SetModelID(28817)
@@ -60,7 +60,6 @@ mod:AddSetIconOption("SetIconOnBrainLinkTarget", 63802, true, false, {1, 2})
 mod:AddSetIconOption("SetIconOnBeacon", 64465, true, true, {1, 2, 3, 4, 5, 6, 7, 8})
 mod:AddInfoFrameOption(212647)
 
-mod.vb.phase = 1
 local brainLinkTargets = {}
 local SanityBuff = DBM:GetSpellInfo(63050)
 mod.vb.brainLinkIcon = 2
@@ -69,11 +68,11 @@ mod.vb.Guardians = 0
 mod.vb.numberOfPlayers = 1
 
 function mod:OnCombatStart(delay)
+	self:SetStage(1)
 	self.vb.numberOfPlayers = DBM:GetNumRealGroupMembers()
 	self.vb.brainLinkIcon = 2
 	self.vb.beaconIcon = 8
 	self.vb.Guardians = 0
-	self.vb.phase = 1
 	enrageTimer:Start()
 	timerAchieve:Start()
 	table.wipe(brainLinkTargets)
@@ -197,7 +196,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnFervor:Play("targetyou")
 		end
 	elseif args.spellId == 63894 and self.vb.phase < 2 then	-- Shadowy Barrier of Yogg-Saron (this is happens when p2 starts)
-		self.vb.phase = 2
+		self:SetStage(2)
 		--timerMaladyCD:Start(13)--VERIFY ME
 		--timerBrainLinkCD:Start(19)--VERIFY ME
 		brainportal:Start(25)
@@ -246,7 +245,7 @@ end
 
 function mod:OnSync(msg)
 	if msg == "Phase3" then
-		self.vb.phase = 3
+		self:SetStage(3)
 		brainportal:Cancel()
 		warnBrainPortalSoon:Cancel()
 		--timerMaladyCD:Cancel()

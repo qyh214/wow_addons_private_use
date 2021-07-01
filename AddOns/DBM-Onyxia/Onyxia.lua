@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Onyxia", "DBM-Onyxia")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142023")
+mod:SetRevision("20210614230125")
 mod:SetCreatureID(10184)
 mod:SetEncounterID(1084)
 mod:SetModelID(8570)
@@ -45,11 +45,10 @@ mod:AddBoolOption("SoundWTF3", true, "sound")
 
 mod.vb.warned_preP2 = false
 mod.vb.warned_preP3 = false
-mod.vb.phase = 0
 --mod.vb.whelpsCount = 0
 
 function mod:OnCombatStart(delay)
-	self.vb.phase = 1
+	self:SetStage(1)
 	--self.vb.whelpsCount = 0
     self.vb.warned_preP2 = false
 	self.vb.warned_preP3 = false
@@ -150,7 +149,7 @@ end
 function mod:OnSync(msg)
 	if not self:IsInCombat() then return end
 	if msg == "Phase2" then
-		self.vb.phase = 2
+		self:SetStage(2)
 		self.vb.whelpsCount = 0
 		warnPhase2:Show()
 		--timerBigAddCD:Start(65)
@@ -167,7 +166,7 @@ function mod:OnSync(msg)
 			DBM.RangeCheck:Show(8)
 		end
 	elseif msg == "Phase3" then
-		self.vb.phase = 3
+		self:SetStage(3)
 		warnPhase3:Show()
 		--timerWhelps:Stop()
 		--timerNextDeepBreath:Stop()

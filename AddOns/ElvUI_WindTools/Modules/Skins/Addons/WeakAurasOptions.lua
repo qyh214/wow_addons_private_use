@@ -125,7 +125,7 @@ function S:WeakAurasDisplayButton(Constructor)
 
     local function SkinedConstructor()
         local widget = Constructor()
-        ES:HandleButton(widget.frame)
+        ES:HandleButton(widget.frame, nil, nil, nil, true, "Transparent")
         widget.frame.background:SetAlpha(0)
         widget.frame.backdrop:SetFrameLevel(widget.frame:GetFrameLevel())
         widget.frame.backdrop.color = {widget.frame.backdrop.Center:GetVertexColor()}
@@ -161,7 +161,7 @@ function S:WeakAurasNewButton(Constructor)
 
     local function SkinedConstructor()
         local widget = Constructor()
-        ES:HandleButton(widget.frame)
+        ES:HandleButton(widget.frame, nil, nil, nil, true, "Transparent")
         widget.frame.background:SetAlpha(0)
         widget.frame.backdrop:SetFrameLevel(widget.frame:GetFrameLevel())
         widget.icon:SetTexCoord(unpack(E.TexCoords))

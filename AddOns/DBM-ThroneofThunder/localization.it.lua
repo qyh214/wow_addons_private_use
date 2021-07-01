@@ -1,4 +1,4 @@
-﻿if GetLocale() ~= "itIT" then
+if GetLocale() ~= "itIT" then
 	return
 end
 local L

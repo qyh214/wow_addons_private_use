@@ -1,4 +1,4 @@
-## Interface: 90005
+## Interface: 90100
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
@@ -32,7 +32,7 @@
 ## X-DBM-Mod-Sort: 1500
 ## X-Curse-Project-ID: 61882
 ## X-Wago-ID: Xb6Xe0Kp
-## Version: r124
+## Version: r125
 
 localization.en.lua
 localization.br.lua

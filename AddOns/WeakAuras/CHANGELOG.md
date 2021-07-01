@@ -1,56 +1,36 @@
-# [3.4.3](https://github.com/WeakAuras/WeakAuras2/tree/3.4.3) (2021-06-13)
+# [3.5.0](https://github.com/WeakAuras/WeakAuras2/tree/3.5.0) (2021-06-29)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.4.2...3.4.3)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.4.3...3.5.0)
 
 ## Highlights
 
- - More BCC and nested fixes
-- Add a stage trigger for BigWigs (thanks Justwait) 
+ - Added a few new Patch 9.1 features
+- Performance Optimizations
+- Added BCC Encounter IDs 
 
 ## Commits
 
-Continuity (1):
+InfusOnWoW (8):
 
-- - fixing personal resource display anchor for disabled Plater personal bar module
+- Make translations a bit easier
+- Add new soul bind traits and new conduits
+- Add most new legendary effects
+- Add Shards of Domination buffs
+- Move some StopMotion texture definitions to the plugin
+- Fix New from Templates adding two glows
+- Only update ViewTexture if it changed
+- Be less brain dead for updating the "eye" texture in the Options
 
-InfusOnWoW (13):
+Stanzilla (2):
 
-- Character Stats: Add Run Speed
-- BT2: Add Arena enemy spec support
-- BCC: Remove textures that aren't shipped with BCC
-- Fix Conditions options error on renaming group member
-- Templates: Add Fel Bombardment to DH legendaries
-- Templates: Move Grip of the Everlasting to the right category
-- Make Ungroup action handle nested groups
-- Prepare Drag and Drop for Nested groups
-- Remove debug output in DuplicateAura
-- Prepare Duplicate for nested
-- Prepare load handling for nested
-- Prepare SubText for nested
-- No longer need to block function that doesn't exist
-
-Justwait (1):
-
-- WeakAuras: Add a stage trigger for BigWigs (#3139)
-
-Stanzilla (4):
-
-- Update WeakAurasModelPaths from wow.tools
-- Update WeakAurasModelPaths from wow.tools
-- Update WeakAurasModelPaths from wow.tools
+- Update TOC for Patch 9.1.0
 - Update WeakAurasModelPaths from wow.tools
 
-Surarn (1):
+mrbuds (1):
 
-- Health trigger: Add heal absorb
+- add bcc encounter ids and show list in correct order
 
-Vardex (2):
+nullKomplex (1):
 
-- Fix deletion of nested groups
-- Prepare copy&paste for nested
-
-mrbuds (2):
-
-- add difficulty load condition for bcc fixes #3133
-- support new bcc dungeon difficulty index fixes #3134
+- Update map of legendary ids and bonus ids. (#3170)
 

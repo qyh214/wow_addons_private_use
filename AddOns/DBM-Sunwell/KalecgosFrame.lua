@@ -1,8 +1,6 @@
 local Kal 	= DBM:GetModByName("Kal")
 local L		= Kal:GetLocalizedStrings()
 
-local DBMKalFrameDrag, DBMKalFrameDragTitle = _G["DBMKalFrameDrag"], _G["DBMKalFrameDragTitle"] -- Provided by KalecgosFrame.xml
-
 function Kal:InitializeMenu()
 	local info1 = UIDropDownMenu_CreateInfo()
 	info1.text = L.name
@@ -37,7 +35,7 @@ function Kal:InitializeMenu()
 
 	local info5 = UIDropDownMenu_CreateInfo()
 	info5.text = L.FrameHide
-	info5.func = function() DBMKalFrameDrag:Hide() end
+	info5.func = function() _G["DBMKalFrameDrag"]:Hide() end
 	info5.notCheckable = 1
 	UIDropDownMenu_AddButton(info5, 1)
 
@@ -60,7 +58,7 @@ local function createBarFrame(name)
 		frames[#frames] = nil
 		frame:Show()
 	else
-		frame = CreateFrame("Frame", "DBMKalFrame"..fCounter, DBMKalFrameDrag, "DBMKalFrameTemplate")
+		frame = CreateFrame("Frame", "DBMKalFrame"..fCounter, _G["DBMKalFrameDrag"], "DBMKalFrameTemplate")
 		fCounter = fCounter + 1
 	end
 	_G[frame:GetName().."BarName"]:SetText(name)
@@ -121,9 +119,9 @@ function barMethods:SetPosition()
 	self.data.frame:ClearAllPoints()
 	if self == firstEntry then
 		if Kal.Options.FrameUpwards then
-			self.data.frame:SetPoint("BOTTOM", DBMKalFrameDrag, "TOP", 0, -10)
+			self.data.frame:SetPoint("BOTTOM", _G["DBMKalFrameDrag"], "TOP", 0, -10)
 		else
-			self.data.frame:SetPoint("TOP", DBMKalFrameDrag, "BOTTOM", 0, 0)
+			self.data.frame:SetPoint("TOP", _G["DBMKalFrameDrag"], "BOTTOM", 0, 0)
 		end
 	else
 		if Kal.Options.FrameUpwards then
@@ -147,7 +145,7 @@ function barMethods:GetSpark()
 end
 
 function Kal:CreateFrame()
-	DBMKalFrameDragTitle:SetText(L.FrameTitle)
+	_G["DBMKalFrameDragTitle"]:SetText(L.FrameTitle)
 	if firstEntry then
 		local entry = firstEntry
 		while entry do
@@ -159,21 +157,21 @@ function Kal:CreateFrame()
 		firstEntry = nil
 		lastEntry = nil
 	end
-	DBMKalFrameDrag:Show()
+	_G["DBMKalFrameDrag"]:Show()
 	if self.Options.FramePoint then
-		DBMKalFrameDrag:SetPoint(self.Options.FramePoint, nil, self.Options.FramePoint, self.Options.FrameX, self.Options.FrameY)
+		_G["DBMKalFrameDrag"]:SetPoint(self.Options.FramePoint, nil, self.Options.FramePoint, self.Options.FrameX, self.Options.FrameY)
 	end
 end
 
 function Kal:SaveFramePosition()
-	local point, _, _, x, y = DBMKalFrameDrag:GetPoint()
+	local point, _, _, x, y = _G["DBMKalFrameDrag"]:GetPoint()
 	self.Options.FramePoint = point
 	self.Options.FrameX = x
 	self.Options.FrameY = y
 end
 
 function Kal:DestroyFrame()
-	DBMKalFrameDrag:Hide()
+	_G["DBMKalFrameDrag"]:Hide()
 end
 
 function Kal:ChangeFrameOrientation()

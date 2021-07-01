@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(846, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210119194055")
+mod:SetRevision("20210319150900")
 mod:SetCreatureID(71454)
 mod:SetEncounterID(1595)
 mod:SetUsedIcons(8, 7, 6, 4, 3, 2, 1)
@@ -79,6 +79,7 @@ function mod:OnCombatStart(delay)
 	self.vb.breathCast = 0
 	self.vb.arcingSmashCount = 0
 	self.vb.seismicSlamCount = 0
+	self.vb.displacedCast = false
 	self.vb.rageActive = false
 	timerSeismicSlamCD:Start(5-delay, 1)
 	timerArcingSmashCD:Start(11-delay, 1)

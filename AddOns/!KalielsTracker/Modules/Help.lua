@@ -203,17 +203,16 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |r|cffffffff4.2.13|r\n\n"..
-					"- FIXED - Game freezing after long combat\n"..
-					"- FIXED - LUA Error after Accepting Quest, when active Auto Zone tracking"..
-					offs.."and active ElvUI\n"..
-					"- FIXED - Quest item buttons - visible during Pet Battles after some user actions\n"..
-					"- FIXED - Active Button - Quest item of selected Campaign Quest (with yellow"..
-					offs.."POI button) is not displayed\n"..
-					"- UPDATED - Options - added new Strata option \"BACKGROUND\"\n"..
-					"- UPDATED - Addon support - ElvUI 12.17, Tukui 20.14, SpartanUI 6.0.17\n\n"..
+			text = cTitle.."         What's NEW in version |r|cffffffff4.3.0|r\n\n"..
+					"- ADDED - Support for WoW 9.1.0\n"..
+					"- UPDATED - Addon support - Masque 9.0.6\n"..
+					"- UPDATED - Addon support - PetTracker 9.0.8\n"..
+					"- UPDATED - Addon support - TomTom v3.0.2\n"..
+					"- UPDATED - Addon support - ElvUI 12.29, Tukui 20.22, RealUI 2.3.0,"..
+					offs.."SpartanUI 6.0.26\n"..
+					"- REMOVED - Addon support - SuperVillain UI\n\n"..
 
-                    cTitle.."WoW 9.0.2 - Known issues w/o solution|r\n"..
+                    cTitle.."WoW 9.1.0 - Known issues w/o solution|r\n"..
                     "- Clicking on tracked quests or achievements has no response during combat.\n"..
                     "- Header buttons Q and A don't work during combat.\n\n"..
 

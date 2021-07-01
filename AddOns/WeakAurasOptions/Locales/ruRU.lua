@@ -8,8 +8,7 @@ local L = WeakAuras.L
 
 -- WeakAuras/Options
 	L[" and |cFFFF0000mirrored|r"] = "; Отражение"
-	--[[Translation missing --]]
-	L["-- Do not remove this comment, it is part of this aura: "] = "-- Do not remove this comment, it is part of this aura: "
+	L["-- Do not remove this comment, it is part of this aura: "] = "-- Не удаляйте этот комментарий! Он является частью кода индикации "
 	L[" rotated |cFFFF0000%s|r degrees"] = "; Поворот %.4g"
 	L["% of Progress"] = "% прогресса"
 	L["%i auras selected"] = "%i |4индикация выбрана:индикации выбраны:индикаций выбрано;"
@@ -326,8 +325,7 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Fallback Icon"] = "Резервная иконка"
 	L["False"] = "Ложь"
 	L["Fetch Affected/Unaffected Names"] = "Извлечь имена задействованных и незадействованных игроков"
-	--[[Translation missing --]]
-	L["Filter by Arena Spec"] = "Filter by Arena Spec"
+	L["Filter by Arena Spec"] = "Фильтр по специализации"
 	L["Filter by Class"] = "Фильтр по классу"
 	L["Filter by Group Role"] = "Фильтр по роли"
 	L["Filter by Nameplate Type"] = "Тип индикатора здоровья"
@@ -680,8 +678,7 @@ Supports multiple entries, separated by commas
 	L["Spark"] = "Искра"
 	L["Spark Settings"] = "Настройки искры"
 	L["Spark Texture"] = "Текстура искры"
-	--[[Translation missing --]]
-	L["Specialization"] = "Specialization"
+	L["Specialization"] = "Специализация"
 	L["Specific Unit"] = "Конкретная единица"
 	L["Spell ID"] = "ID заклинания"
 	L["Stack Count"] = "Количество стаков"

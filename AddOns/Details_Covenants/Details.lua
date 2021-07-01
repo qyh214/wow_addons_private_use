@@ -5,9 +5,14 @@ function dc:replaceDetailsImplmentation()
     if _G.NickTag and _G._detalhes then
         _G._detalhes.GetNickname = function(self, playerName, default, silent)
             local covenantPrefix = ""
+            local covenantSuffix = ""
 
             if default == false then
-                covenantPrefix = oribos:getCovenantIconForPlayer(playerName).." "
+                if DCovenant["iconAlign"] == "right" then
+                    covenantSuffix = " "..oribos:getCovenantIconForPlayer(playerName)
+                else 
+                    covenantPrefix = oribos:getCovenantIconForPlayer(playerName).." "
+                end 
             end
 
             if (not silent) then
@@ -20,15 +25,15 @@ function dc:replaceDetailsImplmentation()
                     playerName = playerName:gsub (("%-.*"), "")
                 end
 
-                return covenantPrefix..playerName or nil
+                return covenantPrefix..playerName..covenantSuffix or nil
             end
             
             local nickName = _table[1]
             if nickName then
                 if TemniUgolok_SetEmojiToDetails then
-                    return covenantPrefix..TemniUgolok_SetEmojiToDetails(_table[1])
+                    return covenantPrefix..TemniUgolok_SetEmojiToDetails(_table[1])..covenantSuffix
                 else 
-                    return covenantPrefix.._table[1]
+                    return covenantPrefix.._table[1]..covenantSuffix
                 end 
             else
                 return default or nil

@@ -4,7 +4,14 @@ local oribos = _G.Oribos
 function dc:replaceSkadaImplmentation()
     if _G.Skada then
         _G.Skada.get_player = function(self, set, playerid, playername)
-            local covenantPrefix = oribos:getCovenantIconForPlayer(playername)
+            local covenantPrefix = ""
+            local covenantSuffix = ""
+
+            if DCovenant["iconAlign"] == "right" then
+                covenantSuffix = " "..oribos:getCovenantIconForPlayer(playername)
+            else 
+                covenantPrefix = oribos:getCovenantIconForPlayer(playername).." "
+            end 
             
             -- Add player to set if it does not exist.
             local player = Skada:find_player(set, playerid)
@@ -29,14 +36,14 @@ function dc:replaceSkadaImplmentation()
                 -- Strip realm name
                 -- This is done after module processing due to cross-realm names messing with modules (death log for example, which needs to do UnitHealthMax on the playername).
                 local player_name, realm = string.split("-", playername, 2)
-                player.name = covenantPrefix.." "..(player_name or playername)
+                player.name = covenantPrefix..(player_name or playername)..covenantSuffix
 
                 tinsert(set.players, player)
             end
 
             if player.name == UNKNOWN and playername ~= UNKNOWN then -- fixup players created before we had their info
                 local player_name, realm = string.split("-", playername, 2)
-                player.name = covenantPrefix.." "..(player_name or playername)
+                player.name = covenantPrefix..(player_name or playername)..covenantSuffix
                 local _, playerClass = UnitClass(playername)
                 local playerRole = UnitGroupRolesAssigned(playername)
                 player.class = playerClass

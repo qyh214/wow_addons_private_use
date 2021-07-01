@@ -63,7 +63,7 @@ L:SetOptionLocalization{
 L:SetMiscLocalization{
 	YellSplit1		= "Ich werde Euch Euren Hochmut austreiben!",
 	YellSplit2		= "Ihr seid eindeutig in der Unterzahl!",
-	YellPhase2		= "I become" --translate
+	YellPhase2		= "Ich werde eins mit der Leere!"
 }
 
 ---------------------------

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Moroes", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200329212634")
+mod:SetRevision("20210414192233")
 mod:SetCreatureID(15687)--Moroes
 mod:SetEncounterID(653)
 mod:SetModelID(16540)
@@ -14,19 +14,19 @@ mod:RegisterEventsInCombat(
 )
 
 local warningVanish			= mod:NewSpellAnnounce(29448, 4)
-local warningGarrote		= mod:NewTargetAnnounce(37066, 2)
+local warningGarrote		= mod:NewTargetNoFilterAnnounce(37066, 2, nil, "Healer")
 local warningGouge			= mod:NewTargetAnnounce(29425, 4)
 local warningBlind			= mod:NewTargetAnnounce(34694, 3)
 local warningMortalStrike	= mod:NewTargetNoFilterAnnounce(29572, 1, nil, "Tank|Healer")
 local warningFrenzy			= mod:NewSpellAnnounce(37023, 4)
-local warningManaBurn		= mod:NewCastAnnounce(29405, 3, nil, false)
-local warningGreaterHeal	= mod:NewCastAnnounce(35096, 3, nil, "HasInterrupt")
-local warningHolyLight		= mod:NewCastAnnounce(29562, 3, nil, "HasInterrupt")
+local warningManaBurn		= mod:NewCastAnnounce(29405, 3, nil, nil, false)
+local warningGreaterHeal	= mod:NewCastAnnounce(35096, 3, nil, nil, "HasInterrupt")
+local warningHolyLight		= mod:NewCastAnnounce(29562, 3, nil, nil, "HasInterrupt")
 
 local specWarnGreaterHeal	= mod:NewSpecialWarningInterrupt(35096, "HasInterrupt", nil, nil, 1, 2)
 local specWarnHolyLight		= mod:NewSpecialWarningInterrupt(29562, "HasInterrupt", nil, nil, 1, 2)
 
-local timerVanishCD			= mod:NewCDTimer(31, 29448, nil, nil, nil, 6)
+local timerVanishCD			= mod:NewCDTimer(35, 29448, nil, nil, nil, 6)--35-42
 local timerGouge			= mod:NewTargetTimer(6, 29425, nil, false, nil, 3)
 local timerBlind			= mod:NewTargetTimer(10, 34694, nil, false, nil, 3)
 local timerMortalStrike		= mod:NewTargetTimer(5, 29572, nil, "Tank|Healer", nil, 5)
@@ -58,7 +58,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 29448 then
 		warningVanish:Show()
-		self:AntiSpam(20, 1)
+		timerVanishCD:Start()
 	elseif args.spellId == 29425 then
 		warningGouge:Show(args.destName)
 		timerGouge:Show(args.destName)
@@ -73,9 +73,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerVanishCD:Cancel()
 	elseif args.spellId == 37066 then
 		warningGarrote:Show(args.destName)
-		if self:AntiSpam(20, 1) then--firing this event here instead, since he does garrote as soon as he comes out of vanish.
-			timerVanishCD:Start()
-		end
 	end
 end
 

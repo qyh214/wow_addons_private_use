@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("LichKing", "DBM-Icecrown", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210119194038")
+mod:SetRevision("20210614230125")
 mod:SetCreatureID(36597)
 mod:SetEncounterID(1106)
 mod:DisableEEKillDetection()--EE fires at 10%
@@ -97,7 +97,6 @@ mod:AddSetIconOption("ValkyrIcon", 71844, true, true)
 mod:AddBoolOption("HarvestSoulIcon", false)
 mod:AddBoolOption("AnnounceValkGrabs", false)
 
-mod.vb.phase = 0
 local warnedValkyrGUIDs = {}
 local plagueHop = DBM:GetSpellInfo(70338)--Hop spellID only, not cast one.
 local plagueExpires = {}
@@ -105,7 +104,7 @@ local lastPlague
 local numberOfPlayers = 1
 
 local function NextPhase(self)
-	self.vb.phase = self.vb.phase + 1
+	self:SetStage(0)
 	if self.vb.phase == 1 then
 		berserkTimer:Start()
 		warnShamblingSoon:Schedule(15)
