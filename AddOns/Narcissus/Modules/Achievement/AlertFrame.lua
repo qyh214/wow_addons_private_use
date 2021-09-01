@@ -159,7 +159,7 @@ function NarciAchievementAlertFrame_OnClick(self, button, down)
     if ( not id ) then
         return;
     end
-    
+
     Narci_AchievementFrame:LocateAchievement(id);
 end
 

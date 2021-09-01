@@ -1,4 +1,4 @@
-## Interface: 90002
+## Interface: 90100
 ## Title: RSA [|c61C98D57Warrior|r]
 ## Notes: RSA Warrior Module. This is needed to announce Warrior Spells.
 ## Author: Raeli

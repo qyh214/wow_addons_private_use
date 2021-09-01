@@ -1,4 +1,4 @@
-## Interface: 90002
+## Interface: 90100
 ## Title: RSA [|c11FF75B3Options|r]
 ## Notes: Load on Demand configuration options for Raeli's Spell Announcer.
 ## Author: Raeli

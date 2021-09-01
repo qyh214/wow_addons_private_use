@@ -1,3 +1,4 @@
+local tinsert = table.insert;
 local processors = {};
 
 local function CreateProcessor(name, cycle)
@@ -8,7 +9,7 @@ local function CreateProcessor(name, cycle)
     p.queue = {};
 
     if not cycle or type(cycle) ~= "number" then
-        cycle = 0.2;    --1 update every 0.2 seconds 
+        cycle = 0.25;    --1 update every 0.2 seconds 
     end
     p.cycle = cycle;
 
@@ -36,9 +37,7 @@ local function CreateProcessor(name, cycle)
                 local queryFunc = self.queue[i][2];
                 local arg1 = self.queue[i][3];
                 local numQuery = self.queue[i].numQuery;
-                
-                if (not queryFunc) or ( queryFunc(widget, arg1) ) or (not numQuery) or numQuery > 3 then
-                    --print("Process Done")
+                if (not queryFunc) or ( queryFunc(widget, arg1) ) or (not numQuery) or numQuery > 4 then
                     self.queue[i] = {};
                 else
                     self.queue[i].numQuery = numQuery + 1;
@@ -75,6 +74,6 @@ local function StopAllProcessors()
     end
 end
 
-    
+
 NarciAPI.CreateProcessor = CreateProcessor;
 NarciAPI.StopAllProcessors = StopAllProcessors;

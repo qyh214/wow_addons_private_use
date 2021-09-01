@@ -27,6 +27,8 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"] = "%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"
 	L["%s Keep Aspect Ratio"] = "%s Manter Proporção"
+	--[[Translation missing --]]
+	L["%s Texture"] = "%s Texture"
 	L["%s total auras"] = "%s auras totais"
 	L["%s Zoom: %d%%"] = "%s Zoom: %d%%"
 	L["%s, Border"] = "%s, Borda"
@@ -80,6 +82,10 @@ local L = WeakAuras.L
 	L["Add Overlay"] = "Adicionar sobreposição"
 	L["Add Property Change"] = "Adicionar mudança de propriedade"
 	--[[Translation missing --]]
+	L["Add Raid Mark Information"] = "Add Raid Mark Information"
+	--[[Translation missing --]]
+	L["Add Role Information"] = "Add Role Information"
+	--[[Translation missing --]]
 	L["Add Snippet"] = "Add Snippet"
 	--[[Translation missing --]]
 	L["Add Sub Option"] = "Add Sub Option"
@@ -100,6 +106,8 @@ local L = WeakAuras.L
 	L["Anchor Point"] = "Ponto da âncora"
 	L["Anchored To"] = "Ancorado a"
 	L["And "] = "E"
+	--[[Translation missing --]]
+	L["and"] = "and"
 	L["and aligned left"] = "e alinhado à esquerda"
 	L["and aligned right"] = "e alinhado à direita"
 	L["and rotated left"] = "e girado para a esquerda"
@@ -141,6 +149,8 @@ Off Screen]=] ] = "Aura está fora da tela"
 	L["Auto-cloning enabled"] = "Auto-cloning enabled"
 	L["Automatic"] = "Automático"
 	L["Automatic length"] = "Comprimento Automático"
+	--[[Translation missing --]]
+	L["Available Voices are system specific"] = "Available Voices are system specific"
 	--[[Translation missing --]]
 	L["Backdrop Color"] = "Backdrop Color"
 	--[[Translation missing --]]
@@ -596,6 +606,8 @@ Supports multiple entries, separated by commas
 	L["Ignored Spell ID"] = "Ignored Spell ID"
 	L["Import"] = "Importar"
 	L["Import a display from an encoded string"] = "Importar um display de um string codificado"
+	--[[Translation missing --]]
+	L["Include Pets"] = "Include Pets"
 	--[[Translation missing --]]
 	L["Indent Size"] = "Indent Size"
 	--[[Translation missing --]]
@@ -1069,6 +1081,10 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Thickness"] = "Thickness"
 	--[[Translation missing --]]
+	L["This adds %raidMark as text replacements."] = "This adds %raidMark as text replacements."
+	--[[Translation missing --]]
+	L["This adds %role, %roleIcon as text replacements."] = "This adds %role, %roleIcon as text replacements."
+	--[[Translation missing --]]
 	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."
 	--[[Translation missing --]]
 	L["This display is currently loaded"] = "This display is currently loaded"
@@ -1206,6 +1222,8 @@ Supports multiple entries, separated by commas
 	L["Vertical Bar"] = "Vertical Bar"
 	--[[Translation missing --]]
 	L["View"] = "View"
+	--[[Translation missing --]]
+	L["Voice"] = "Voice"
 	--[[Translation missing --]]
 	L["Whole Area"] = "Whole Area"
 	--[[Translation missing --]]

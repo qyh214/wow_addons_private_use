@@ -92,8 +92,6 @@
                 </Frames>
             </Frame>
 
-
-
             <Frame parentKey="SetsFrame" useParentLevel="true" hidden="true">
                 <Size y="24"/>
                 <Anchors>
@@ -132,6 +130,25 @@
                 </Layers>
             </Frame>
 
+            <Frame parentKey="ChallengeFrame" useParentLevel="true" hidden="true">
+                <Size y="24"/>
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT"/>
+                    <Anchor point="BOTTOMRIGHT"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString inherits="NarciFontMedium12" justifyH="LEFT" justifyV="MIDDLE" parentKey="DataText" maxLines="1">
+                            <Size x="272" y="0"/>
+                            <Color r="0.8" g="0.8" b="0.8"/>
+                            <Anchors>
+                                <Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="10" y="0"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+
             <Frame parentKey="OverlayFrame">
                 <Anchors>
                     <Anchor point="TOPLEFT"/>
@@ -142,7 +159,7 @@
                         <Texture file="Interface\AddOns\Narcissus\Art\NavBar\Shadow-Horizontal" parentKey="Divider">
                             <Size x="240" y="12"/>
                             <Anchors>
-                                <Anchor point="TOPLEFT" relativePoint="LEFT"/>
+                                <Anchor point="TOPLEFT" relativePoint="LEFT" y="0.5"/>
                             </Anchors>
                         </Texture>
                     </Layer>
@@ -150,7 +167,7 @@
                         <Texture file="Interface\AddOns\Narcissus\Art\NavBar\Shadow-Vertical" parentKey="PortraitShadow">
                             <Size x="24" y="48"/>
                             <Anchors>
-                                <Anchor point="RIGHT" x="-44"/>
+                                <Anchor point="RIGHT" x="-43"/>
                             </Anchors>
                         </Texture>
                         <Texture parentKey="Portrait">

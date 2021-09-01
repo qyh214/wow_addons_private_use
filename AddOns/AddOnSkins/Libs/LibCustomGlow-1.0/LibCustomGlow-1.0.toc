@@ -1,3 +1,4 @@
+## Interface: 90100
 ## Interface: 80000
 ## Title: Lib: CustomGlow
 ## Notes: Creates custom glow functions

@@ -328,14 +328,35 @@ function ESM:GetCurrentSpecializationNameAndIcons()
 end
 
 ----------------------------------------------------------
-local function CreateIconSelector()
+
+NarciEquipmentSetIconSelectorMixin = {};
+
+function NarciEquipmentSetIconSelectorMixin:OnLoad()
+    ESM.IconSelector = self;
+end
+
+function NarciEquipmentSetIconSelectorMixin:OnHide()
+    self:Hide();
+    self:SetAlpha(0);
+    self.Header:SetText(NARCI_ICON_SELECTOR);
+end
+
+function NarciEquipmentSetIconSelectorMixin:Load()
+    if self.Init then
+        self:Init();
+    end
+end
+
+
+function NarciEquipmentSetIconSelectorMixin:Init()
+    usedIcons = GetStaticIcons();
+    LoadEquipmentSetIcons()
+
     local row, column = 4, 3;
     local size = 48;
 
-    local Selector = Narci_EquipmentSetIconSelector;
-    Selector:SetSize(size * column, size * row);
-    Selector.row, Selector.column = row, column;
-    ESM.IconSelector = Selector;
+    self:SetSize(size * column, size * row);
+    self.row, self.column = row, column;
 
     --Crreate icon buttons
     local button;
@@ -343,9 +364,9 @@ local function CreateIconSelector()
     local icons = {};
 
     for i = 1 , (row * column) do
-        button = CreateFrame("Button", nil, Selector, "NarciEquipmentSetIconTemplate");
+        button = CreateFrame("Button", nil, self, "NarciEquipmentSetIconTemplate");
         if i == 1 then
-            button:SetPoint("BOTTOMLEFT", Selector, "BOTTOMLEFT", 0, 0);        --Start from bottom-left
+            button:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", 0, 0);        --Start from bottom-left
         elseif i % column == 1 then
             button:SetPoint("BOTTOM", buttons[i - column], "TOP", 0, 0);        --New row
         else
@@ -355,23 +376,8 @@ local function CreateIconSelector()
         tinsert(buttons, button);
     end
 
-    Selector.icons = icons;
-    Selector.buttons = buttons;
+    self.icons = icons;
+    self.buttons = buttons;
+
+    self.Init = nil;
 end
-
-
-
-
-
-
-----------------------------------------------------------
-local SetManger = CreateFrame("Frame");
-SetManger:RegisterEvent("PLAYER_ENTERING_WORLD")
-SetManger:SetScript("OnEvent", function(self)
-    self:UnregisterEvent("PLAYER_ENTERING_WORLD");
-    C_Timer.After(2, function()
-        usedIcons = GetStaticIcons();
-        LoadEquipmentSetIcons()
-        CreateIconSelector();
-    end)
-end)

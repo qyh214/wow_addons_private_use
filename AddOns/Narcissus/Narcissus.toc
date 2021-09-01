@@ -1,6 +1,6 @@
-## Interface: 90005
+## Interface: 90100
 ## Plain Title: Narcissus
-## Version: 1.1.0g
+## Version: 1.1.5
 
 ## Title: |cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r
 
@@ -21,14 +21,22 @@ Locales\Localization.xml
 NarciDB\TitleManagerDB.lua
 NarciDB\GearBonus.lua
 NarciDB\API.xml
-NarciDB\NarciUITemplates.xml
-NarciDB\NarciTooltip.xml
+Widgets\NarciUITemplates.xml
+Widgets\NarciTooltip.xml
+Constants\Constants.xml
 
 Bridge\Bridge.xml
 
+#Expansion Feature
+Modules\CharacterFrame\Domination.xml
+
 Modules\CharacterFrame\Enchant.lua
 Modules\CharacterFrame\ItemSocketing.xml
+Modules\CharacterFrame\ItemCooldown.xml
 Modules\CharacterFrame\Attributes.xml
+
+Modules\MsgAlert\Alert.xml
+
 Narcissus.xml
 Preference.xml
 
@@ -37,6 +45,10 @@ Modules\CharacterFrame\EquipmentComparisonFlyout.xml
 Modules\CharacterFrame\TitleManager.xml
 Modules\CharacterFrame\EquipmentSetManager.xml
 
+Modules\Competitive\UI.xml
+
+# Modules\LootTracker\Main.lua
+
 Modules\CharacterFrame\NavBar.xml
 
 Modules\PhotoMode\Widgets.xml
@@ -44,28 +56,26 @@ Modules\PhotoMode\PhotoMode.xml
 Modules\PhotoMode\SpellVisualBrowser.xml
 Modules\PhotoMode\NPCBrowser.xml
 Modules\PhotoMode\AnimationBrowser.xml
+Modules\PhotoMode\WeaponBrowser.xml
+Modules\PhotoMode\PetStable.xml
 Modules\PhotoMode\ExitConfirmationDialog.xml
 Modules\PhotoMode\SpeechBalloon.xml
+Modules\PhotoMode\Sticker.xml
 
-widgets\AFKMode.lua
-##widgets\ScreenshotInfo.xml
-##widgets\Messi.lua
-widgets\AR.xml
-widgets\AdvancedDressingRoom.xml
-widgets\Splash.xml
+Modules\DressingRoom\DressingRoom.xml
+
+Modules\AFKScreen\AFKScreen.lua
+Modules\AR\AR.xml
+Modules\Splash\FakeMail.xml
+Modules\Splash\Splash.xml
 
 Modules\Achievement\Achievement.xml
 Modules\Statistics\Core.lua
-##Modules\LoreBook\LoreBook.xml
 Modules\ModuleManager\ModuleManager.lua
+
+# Modules\ParticleSystem\ParticleSystem.xml
 
 Filters\CameraEffect.xml
 Filters\Letterbox.xml
 
 Guide\Guide.xml
-
-
-## Modules\Outfit\ItemTooltip.xml
-## Modules\Outfit\Outfit.xml
-
-##Expansion Limited

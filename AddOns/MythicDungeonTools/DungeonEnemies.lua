@@ -489,6 +489,9 @@ function MDT:DisplayBlipTooltip(blip, shown)
     ]]
     local occurence = (blip.data.isBoss and "") or blip.cloneIdx
 
+    --remove tormented clones ids
+    if blip.data.powers then occurence = "" end
+
     local text = L[data.name].." "..occurence..group.."\n"..string.format(L["Level %d %s"],data.level,L[data.creatureType]).."\n".. string.format(L["%s HP"],MDT:FormatEnemyHealth(health)).."\n"
     local count = MDT:IsCurrentPresetTeeming() and data.teemingCount or data.count
     text = text ..L["Forces"]..": ".. MDT:FormatEnemyForces(count)
@@ -606,6 +609,7 @@ local function blipDevModeSetup(blip)
 end
 
 local emissaryIds = {[155432]=true,[155433]=true,[155434]=true}
+local tormentedIds = {[179891]=true,[179892]=true,[179890]=true,[179446]=true}
 
 function MDTDungeonEnemyMixin:SetUp(data,clone)
     local scale = MDT:GetScale()
@@ -655,6 +659,11 @@ function MDTDungeonEnemyMixin:SetUp(data,clone)
         self:Hide()--hide by default, DungeonEnemies_UpdateSeasonalAffix handles showing
     else
         setUpMouseHandlers(self)
+    end
+    --tormented visual
+    if data.powers then
+        local tormentedColor = {0.7,0,1,1}
+        self.texture_Background:SetVertexColor(unpack(tormentedColor))
     end
     if emissaryIds[self.data.id] then self:Hide() end --hide beguiling emissaries by default
     tinsert(blips,self)
@@ -815,6 +824,8 @@ end
 ---DungeonEnemies_UpdateBlipColors
 ---Updates the colors of all selected blips of the specified pull
 function MDT:DungeonEnemies_UpdateBlipColors(pull, r, g, b,pulls)
+    local week = preset.week
+    local isInspiring = MDT:IsWeekInspiring(week)
     pulls = pulls or preset.value.pulls
     local p = pulls[pull]
     for enemyIdx,clones in pairs(p) do
@@ -825,7 +836,7 @@ function MDT:DungeonEnemies_UpdateBlipColors(pull, r, g, b,pulls)
                         if not db.devMode then
                             if db.enemyStyle == 2 then
                                 blip.texture_Portrait:SetVertexColor(r,g,b,1)
-                            elseif not blip.data.corrupted then
+                            elseif (not blip.data.corrupted) then
                                 blip.texture_Portrait:SetVertexColor(r,g,b,1)
                                 blip.texture_SelectedHighlight:SetVertexColor(r,g,b,0.7)
                             end
@@ -842,6 +853,8 @@ end
 function MDT:DungeonEnemies_UpdateSelected(pull,pulls)
     preset = MDT:GetCurrentPreset()
     pulls = pulls or preset.value.pulls
+    local week = preset.week
+    local isInspiring = MDT:IsWeekInspiring(week)
     --deselect all
     for _,blip in pairs(blips) do
         blip.texture_SelectedHighlight:Hide()
@@ -880,6 +893,9 @@ function MDT:DungeonEnemies_UpdateSelected(pull,pulls)
                                         blip.texture_Background:SetVertexColor(0.5,1,0.1,1)
                                         blip.texture_SelectedHighlight:Hide()
                                     else
+                                        if blip.clone.inspiring and isInspiring then
+                                            SetPortraitToTexture(blip.texture_Portrait,135946);
+                                        end
                                         blip.texture_Portrait:SetVertexColor(r,g,b,1)
                                         blip.texture_SelectedHighlight:SetVertexColor(r,g,b,0.7)
                                     end
@@ -947,10 +963,13 @@ function MDT:DungeonEnemies_UpdateSeasonalAffix()
     for _,blip in pairs(blips) do
         if blip.data.corrupted then blip:Hide() end
         if emissaryIds[blip.data.id] then blip:Hide() end
+        if tormentedIds[blip.data.id] then blip:Hide() end
     end
     local week = self:GetEffectivePresetWeek()
     for _,blip in pairs(blips) do
-        if (db.currentSeason == 4 and blip.data.corrupted) or(db.currentSeason == 3 and emissaryIds[blip.data.id]) then
+        if (db.currentSeason == 6 and tormentedIds[blip.data.id])
+        or (db.currentSeason == 4 and blip.data.corrupted)
+        or (db.currentSeason == 3 and emissaryIds[blip.data.id]) then
             local weekData =  blip.clone.week
             if weekData and (not weekData[week] or db.currentDifficulty < 10) then
                 blip:Hide()
@@ -1057,6 +1076,7 @@ function MDT:DungeonEnemies_UpdateInspiring(week)
     local isInspiring = MDT:IsWeekInspiring(week)
     for _,blip in pairs(blips) do
         if blip.clone.inspiring and isInspiring then
+            SetPortraitToTexture(blip.texture_Portrait,135946);
             blip.texture_Indicator:SetVertexColor(1,1,0,1)
             blip.texture_Indicator:SetScale(1.15)
             blip.texture_Indicator:Show()

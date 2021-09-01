@@ -86,6 +86,12 @@ options.general = {
             set = function(info, value)
                 E.db.WT.misc[info[#info]] = value
             end
+        },
+        autoHideWorldMap = {
+            order = 8,
+            type = "toggle",
+            name = L["Auto Hide Map"],
+            desc = L["Automatically close world map if player enters combat."]
         }
     }
 }
@@ -384,6 +390,11 @@ options.mute = {
                     order = 1,
                     type = "toggle",
                     name = L["Tortollan"]
+                },
+                ["Smolderheart"] = {
+                    order = 2,
+                    type = "toggle",
+                    name = L["Smolderheart"]
                 }
             }
         }
@@ -726,6 +737,7 @@ options.gameBar = {
                         customNormalColor = {
                             order = 2,
                             type = "color",
+                            hasAlpha = true,
                             name = L["Custom Color"],
                             hidden = function()
                                 return E.db.WT.misc.gameBar.normalColor ~= "CUSTOM"
@@ -762,6 +774,7 @@ options.gameBar = {
                         customHoverColor = {
                             order = 2,
                             type = "color",
+                            hasAlpha = true,
                             name = L["Custom Color"],
                             hidden = function()
                                 return E.db.WT.misc.gameBar.hoverColor ~= "CUSTOM"

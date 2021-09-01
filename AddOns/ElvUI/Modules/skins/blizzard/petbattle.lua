@@ -145,9 +145,10 @@ function S:PetBattleFrame()
 		infoBar.PetType:SetAlpha(0)
 
 		infoBar.LevelUnderlay:SetAlpha(0)
-		infoBar.Level:SetFontObject(_G.NumberFont_Outline_Huge)
+		infoBar.Level:SetFontObject('NumberFont_Outline_Huge')
 		infoBar.Level:ClearAllPoints()
 		infoBar.Level:Point('BOTTOMLEFT', infoBar.Icon, 'BOTTOMLEFT', 2, 2)
+
 		if infoBar.SpeedIcon then
 			infoBar.SpeedIcon:ClearAllPoints()
 			infoBar.SpeedIcon:Point('CENTER') -- to set
@@ -288,12 +289,14 @@ function S:PetBattleFrame()
 	}
 
 	for _, infoBar in pairs(extraInfoBars) do
-		infoBar.BorderAlive:SetAlpha(0)
-		infoBar.HealthBarBG:SetAlpha(0)
-		infoBar.HealthDivider:SetAlpha(0)
 		infoBar:Size(40)
 		infoBar:SetTemplate()
 		infoBar:ClearAllPoints()
+
+		infoBar.BorderAlive:SetAlpha(0)
+		infoBar.HealthBarBG:SetAlpha(0)
+		infoBar.HealthDivider:SetAlpha(0)
+		infoBar.Icon:SetDrawLayer('ARTWORK')
 
 		infoBar.healthBarWidth = 40
 		infoBar.ActualHealthBar:ClearAllPoints()

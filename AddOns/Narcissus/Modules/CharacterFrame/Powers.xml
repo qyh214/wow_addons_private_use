@@ -43,8 +43,8 @@
                 </MaskTexture>
             </Layer>
             <Layer level="OVERLAY">
-                <Texture parentKey="Border" file="Interface\AddOns\Narcissus\Art\Modules\CharacterFrame\Soulbinds\IconBorder">
-                    <Size x="26" y="26"/>
+                <Texture parentKey="ConduitBorder">
+                    <Size x="27" y="27"/>
                     <TexCoords left="0" right="0.25" top="0" bottom="1"/>
                     <Anchors>
                         <Anchor point="CENTER"/>
@@ -53,7 +53,7 @@
             </Layer>
             <Layer level="OVERLAY" textureSubLevel="1">
                 <Texture file="Interface\AddOns\Narcissus\Art\Modules\CharacterFrame\Soulbinds\ConduitBorderHighlight" parentKey="Highlight" Alpha="0" hidden="true">
-                    <Size x="52" y="52"/>
+                    <Size x="54" y="54"/>
                     <TexCoords left="0" right="0.5" top="0" bottom="1"/>
                     <Anchors>
                         <Anchor point="CENTER"/>
@@ -75,6 +75,7 @@
             </Layer>
         </Layers>
         <Scripts>
+            <OnLoad method="OnLoad"/>
             <OnEnter method="OnEnter"/>
             <OnLeave method="OnLeave"/>
             <OnClick method="OnClick"/>
@@ -259,20 +260,20 @@
         <Layers>
             <Layer level="OVERLAY">
                 <Texture parentKey="Border" file="Interface\AddOns\Narcissus\Art\Modules\CharacterFrame\Soulbinds\ConduitQualityBorder">
-                    <Size x="26" y="26"/>
+                    <Size x="27" y="27"/>
                     <TexCoords left="0" right="0.25" top="0" bottom="1"/>
                     <Anchors>
                         <Anchor point="LEFT" relativePoint="LEFT" x="0"/>
                     </Anchors>
                 </Texture>
-				<FontString inherits="NarciFontMedium12" justifyH="LEFT" justifyV="BOTTOM" parentKey="Name" text="Relentless Onslaught" maxLines="1">
+				<FontString inherits="NarciFontMedium12" justifyH="LEFT" justifyV="BOTTOM" parentKey="Name" text=" " maxLines="1">
 					<Size x="150" y="0"/>
 					<Color r="0.8" g="0.8" b="0.8"/>
 					<Anchors>
 						<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="LEFT" x="29" y="-1"/>
 					</Anchors>
 				</FontString>
-				<FontString inherits="NarciFontStatusNumber10" justifyH="LEFT" justifyV="TOP" parentKey="ItemLevel" text="128">
+				<FontString inherits="NarciFontStatusNumber10" justifyH="LEFT" justifyV="TOP" parentKey="ItemLevel" text=" ">
 					<Size x="0" y="0"/>
 					<Color r="0.5" g="0.5" b="0.5"/>
 					<Anchors>
@@ -423,7 +424,7 @@
                         <Anchor point="CENTER" relativeKey="$parent" relativePoint="LEFT" x="60"/>
                     </Anchors>
                 </Texture>
-                <MaskTexture file="Interface\AddOns\Narcissus\Art\Modules\CharacterFrame\Soulbinds\StoneMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+                <MaskTexture file="Interface\AddOns\Narcissus\Art\Modules\CharacterFrame\Soulbinds\StoneMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE" parentKey="StoneMask">
                     <Size x="136" y="272"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" relativeKey="$parent.Stone" relativePoint="TOPLEFT"/>
@@ -436,16 +437,16 @@
             </Layer>
             <Layer level="OVERLAY">
                 <Texture parentKey="ActivateFXDiamond" alpha="0" alphaMode="ADD" atlas="Soulbinds_Tree_ActivateFX_Diamond" useAtlasSize="true">
-                <Anchors>
-                    <Anchor point="CENTER" relativeKey="$parent.Stone" relativePoint="CENTER" x="0" y="0"/>
-                </Anchors>
-                <Animations>
-                    <AnimationGroup parentKey="ActivateAnim" inherits="VisibleWhilePlayingAnimGroupTemplate" setToFinalAlpha="true">
-                        <Alpha childKey="ActivateFXDiamond" smoothing="OUT" order="1" startDelay="0" duration="1.4" fromAlpha="1" toAlpha="0"/>
-                        <Scale childKey="ActivateFXDiamond" smoothing="OUT" order="1" duration="0.3" fromScaleX="1.5" fromScaleY="1.5" toScaleX="1" toScaleY="1"/>
-                        <Scale childKey="ActivateFXDiamond" smoothing="OUT" order="1" startDelay="0.3" duration="1.1" fromScaleX="1" fromScaleY="1" toScaleX="0.9" toScaleY="0.9"/>
-                    </AnimationGroup>
-                </Animations>
+                    <Anchors>
+                        <Anchor point="CENTER" relativeKey="$parent.Stone" relativePoint="CENTER" x="0" y="0"/>
+                    </Anchors>
+                    <Animations>
+                        <AnimationGroup parentKey="ActivateAnim" inherits="VisibleWhilePlayingAnimGroupTemplate" setToFinalAlpha="true">
+                            <Alpha childKey="ActivateFXDiamond" smoothing="OUT" order="1" startDelay="0" duration="1.4" fromAlpha="1" toAlpha="0"/>
+                            <Scale childKey="ActivateFXDiamond" smoothing="OUT" order="1" duration="0.3" fromScaleX="1.5" fromScaleY="1.5" toScaleX="1" toScaleY="1"/>
+                            <Scale childKey="ActivateFXDiamond" smoothing="OUT" order="1" startDelay="0.3" duration="1.1" fromScaleX="1" fromScaleY="1" toScaleX="0.9" toScaleY="0.9"/>
+                        </AnimationGroup>
+                    </Animations>
                 </Texture>
             </Layer>
         </Layers>
@@ -453,7 +454,7 @@
             <Button parentKey="ActivateButton" mixin="NarciSoulbindsActivateButtonMixin" motionScriptsWhileDisabled="true" useParentLevel="true">
                 <Size x="96" y="24"/>
                 <Anchors>
-                    <Anchor point="CENTER" relativeKey="$parent.Stone" relativePoint="TOP" y="-36"/>
+                    <Anchor point="CENTER" relativeKey="$parent" relativePoint="TOPLEFT" x="60" y="-36"/>
                 </Anchors>
                 <Layers>
                     <Layer level="ARTWORK" textureSubLevel="-2">
@@ -652,7 +653,7 @@
                     </Layer>
                     <Layer level="OVERLAY" textureSubLevel="1">
                         <Texture file="Interface\AddOns\Narcissus\Art\Modules\CharacterFrame\Soulbinds\ConduitBorderHighlight" parentKey="BorderHighlight" alphaMode="ADD">
-                            <Size x="52" y="52"/>
+                            <Size x="54" y="54"/>
                             <TexCoords left="0.5" right="1" top="0" bottom="1"/>
                             <Anchors>
                                 <Anchor point="CENTER" relativeKey="$parent" relativePoint="LEFT" x="13"/>

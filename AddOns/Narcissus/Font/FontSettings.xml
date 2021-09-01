@@ -99,6 +99,24 @@
 		</Member>
 	</FontFamily>
 
+	<FontFamily name="NarciFontThin12" virtual="true">
+		<Member alphabet="roman">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Regular.ttf" height="13"/>
+		</Member>
+		<Member alphabet="korean">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Regular.otf" height="12"/>
+		</Member>
+		<Member alphabet="simplifiedchinese">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Regular.otf" height="12"/>
+		</Member>
+		<Member alphabet="traditionalchinese">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Regular.otf" height="12"/>
+		</Member>
+		<Member alphabet="russian">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Regular.ttf" height="13"/>
+		</Member>
+	</FontFamily>
+
 	<FontFamily name="NarciFontThin9" virtual="true">
 		<Member alphabet="roman">
 			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Regular.ttf" height="10"/>
@@ -752,42 +770,6 @@
 		</Member>
   	</FontFamily>
 
-	<FontFamily name="NarciFontGaramond14Semibold" virtual="true">
-		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\EBGaramond-SemiBold.ttf" height="14"/>
-		</Member>
-		<Member alphabet="korean">
-			<Font font="Fonts\2002.TTF" height="14"/>
-		</Member>
-		<Member alphabet="simplifiedchinese">
-			<Font font="Fonts\ARKai_T.ttf" height="14"/>
-		</Member>
-		<Member alphabet="traditionalchinese">
-			<Font font="Fonts\blei00d.TTF" height="14"/>
-		</Member>
-		<Member alphabet="russian">
-			<Font font="Interface\AddOns\Narcissus\Font\EBGaramond-SemiBold.ttf" height="14"/>
-		</Member>
-	</FontFamily>
-
-  	<FontFamily name="NarciFontGaramond12Regular" virtual="true">
-		<Member alphabet="roman">
-			<Font font="Interface\AddOns\Narcissus\Font\EBGaramond-Regular.ttf" height="12"/>
-		</Member>
-		<Member alphabet="korean">
-			<Font font="Fonts\2002.TTF" height="12"/>
-		</Member>
-		<Member alphabet="simplifiedchinese">
-			<Font font="Fonts\ARHei.ttf" height="12"/>
-		</Member>
-		<Member alphabet="traditionalchinese">
-			<Font font="Fonts\bHEI00M.TTF" height="12"/>
-		</Member>
-		<Member alphabet="russian">
-			<Font font="Interface\AddOns\Narcissus\Font\EBGaramond-Regular.ttf" height="12"/>
-		</Member>
-  	</FontFamily>
-	  
   	<FontFamily name="NarciSpeechBalloonFontRegular" virtual="true">
 		<Member alphabet="roman">
 			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-SemiBold.ttf" height="14"/>
@@ -1009,6 +991,24 @@
 		</Shadow>
 	</Font>
 
+	<Font name="NarciFontNumber24Outline" font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="24" outline="NORMAL">
+		<Shadow>
+			<Offset>
+				<AbsDimension x="2" y="-2"/>
+			</Offset>
+			<Color r="0" g="0" b="0"/>
+		</Shadow>
+	</Font>
+
+	<Font name="NarciFontNumber12Outline" font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="12" outline="NORMAL">
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1"/>
+			</Offset>
+			<Color r="0" g="0" b="0" a="1"/>
+		</Shadow>
+	</Font>
+
 	<Font name="NarciPrefFontGrey9" inherits="NarciFontNormal9" virtual="true">
 		<Color r="0.42" g="0.42" b="0.42"/>
 	</Font>
@@ -1035,7 +1035,7 @@
 
 
 	<Font name="NarciRuneFont" font="Interface\AddOns\Narcissus\Font\Junicode.ttf" height="7" monochrome="false" virtual="true">
-		<Color r="0" g="0" b="0"/>
+		<Color r="0.1" g="0.1" b="0.1"/>
 		<Shadow>
 			<Offset>
 				<AbsDimension x="1" y="-0.6"/>
@@ -1062,6 +1062,16 @@
 			<Color a="0.8" r="0" g="0" b="0"/>
 		</Shadow>
 	</Font>
+	<Font name="NarciIndicatorDigitTiny" font="Interface\AddOns\Narcissus\Font\SourceSansPro-Semibold.ttf" height="8" monochrome="false" virtual="true">
+		<Color r="1" g="1" b="1"/>
+		<Shadow>
+			<Offset>
+				<AbsDimension x="0.6" y="-0.6"/>
+			</Offset>
+			<Color a="0.8" r="0" g="0" b="0"/>
+		</Shadow>
+	</Font>	
+	
 	<Font name="NarciHighlightFont" inherits="NarciFontNormal10" virtual="true">
 		<Color r="1" g="1" b="1"/>
 		<Shadow>
@@ -1248,4 +1258,22 @@
             <Color r="0" g="0" b="0" a="1"/>
         </Shadow>     
 	</Font>
+
+	<FontFamily name="NarciItemShopHeaderFont" virtual="true">
+		<Member alphabet="roman">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Bold.ttf" height="16"/>
+		</Member>
+		<Member alphabet="korean">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="15"/>
+		</Member>
+		<Member alphabet="simplifiedchinese">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="15"/>
+		</Member>
+		<Member alphabet="traditionalchinese">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="15"/>
+		</Member>
+		<Member alphabet="russian">
+			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Bold.ttf" height="16"/>
+		</Member>
+	</FontFamily>
 </Ui>

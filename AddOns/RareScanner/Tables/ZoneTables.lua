@@ -8,7 +8,7 @@ private.CONTINENT_ZONE_IDS = {
 	[619] = { zonefilter = true, npcfilter = true, id = 8, zones = {630,646,625,790,650,634,680,641,649,652} }; --Broken Isles
 	[572] = { zonefilter = true, npcfilter = true, id = 7, zones = {525,534,535,539,542,543,550,582,588,590} }; --Draenor
 	[13] = { zonefilter = true, npcfilter = true, id = 2, zones = {14,15,17,18,21,22,23,25,26,27,32,36,37,47,48,49,50,51,52,56,76,84,201,203,204,205,210,241,425,465,469,943,1470} }; --Eastern Kingdoms
-	[12] = { zonefilter = true, npcfilter = true, id = 1, zones = {1,7,10,57,62,63,64,65,66,69,70,71,76,77,78,80,81,83,103,198,199,249,327,338,1332,1469,1527,1571} }; --Kalimdor
+	[12] = { zonefilter = true, npcfilter = true, id = 1, zones = {1,7,10,57,62,63,64,65,66,69,70,71,76,77,78,80,81,83,97,103,106,198,199,249,327,338,1332,1469,1527,1571} }; --Kalimdor
 	[113] = { zonefilter = true, npcfilter = true, id = 4, zones = {114,115,116,117,118,119,120,121,126} }; --Northrend
 	[424] = { zonefilter = true, npcfilter = true, id = 6, zones = {371,376,379,388,390,418,422,433,507,504,554,1530,1570} }; --Pandaria
 	[101] = { zonefilter = true, npcfilter = true, id = 3, zones = {94,95,100,102,104,105,106,107,108,109} }; --Outland
@@ -19,7 +19,7 @@ private.CONTINENT_ZONE_IDS = {
 	[1550] = { zonefilter = true, npcfilter = true, id = 13, zones = {1409,1525,1533,1536,1543,1565,1618,1961}, current = { "all" } }; --Shadowlands
 	[9999] = { zonefilter = true, npcfilter = true, zones = {276,378,628,629,672,734,702,695,747,739} }; --Class Halls
 	[9998] = { zonefilter = true, npcfilter = true, zones = {407}, current = { "all" } }; --Darkmoon Island
-	[9997] = { zonefilter = true, npcfilter = true, zones = {11,35,219,229,237,243,251,274,280,301,306,316,317,318,616,677,703,706,713,731,733,749,845,897,903,974,1004,1015,1041} }; --Dungeons or scenarios
+	[9997] = { zonefilter = true, npcfilter = true, zones = {11,35,219,229,237,243,251,274,280,301,306,316,317,318,616,677,703,706,713,731,733,749,845,897,903,974,1004,1015,1041,1663,1666,1675,1669,1674,1677,1683,1692} }; --Dungeons or scenarios
 	[9996] = { zonefilter = true, npcfilter = true, zones = {366,508,764,850,909} }; --Raids
 	[9995] = { zonefilter = false, npcfilter = true, zones = {0} }; --Unknown
 	[9994] = { zonefilter = true, npcfilter = false, zones = {981,1022,1032,1033,1034,1035,1036,1037,1336,1337,1501,1502} }; --Expedition islands
@@ -67,6 +67,13 @@ private.SUBZONES_IDS = {
 	[1525] = {1644}; --The ember court
 	[1536] = {1649}; --Vault in Maldraxxus
 	[1618] = {1619,1620,1621,1623,1624,1627,1628,1629,1630,1631,1632,1635,1636,1641,1645,1656,1705,1712,1716,1720,1721,1736,1749,1751,1752,1753,1754,1757,1758,1759,1760,1761,1762,1763,1764,1765,1766,1767,1768,1769,1770,1771,1772,1773,1774,1775,1776,1777,1778,1779,1780,1781,1782,1783,1784,1785,1786,1787,1788,1789,1791,1792,1793,1794,1795,1796,1797,1798,1799,1800,1801,1802,1803,1804,1805,1806,1807,1808,1809,1810,1811,1812}; --Torghast
+	[1663] = {1664,1665}; --Halls of atonement
+	[1675] = {1676}; --Sanguine depths
+	[1677] = {1678,1679,1680}; --De other side
+	[1692] = {1693,1694,1695}; --Spires of Ascension
+	[1666] = {1667,1668}; --The necrotic wake
+	[1683] = {1684,1685,1686,1687}; --Theater of pain
+	[1674] = {1697}; --Plaguefall
 }
 
 private.ZONES_WITHOUT_VIGNETTE = {

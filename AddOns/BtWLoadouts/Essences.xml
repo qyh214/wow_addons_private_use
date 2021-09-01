@@ -1,0 +1,308 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="Essences.lua"/>
+
+	<Button name="BtWLoadoutsAzeriteMilestoneSlotTemplate" mixin="BtWLoadoutsAzeriteMilestoneSlotMixin" virtual="true">
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnClick method="OnClick"/>
+		</Scripts>
+	</Button>
+	<Button name="BtWLoadoutsAzeriteMilestoneMajorSlotTemplate" inherits="BtWLoadoutsAzeriteMilestoneSlotTemplate" virtual="true">
+		<Size x="110" y="82"/>>
+		<Layers>
+			<Layer level="BACKGROUND" textureSubLevel="-1">
+				<Texture parentKey="GlowRings" atlas="heartofazeroth-slot-major-glowrings" alphaMode="ADD" alpha="0.6">
+					<Size x="107" y="107"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="Glow" atlas="heartofazeroth-slot-major-glow" useAtlasSize="true" alphaMode="ADD" alpha="0.8">
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="BACKGROUND" textureSubLevel="1">
+				<Texture parentKey="Shadow" atlas="heartofazeroth-slot-major-shadow" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="BORDER">
+				<Texture parentKey="Icon">
+					<Size x="64" y="64"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="EmptyIcon" atlas="heartofazeroth-slot-major-background" setAllPoints="true"/>
+				<MaskTexture parentKey="CircleMask" file="Interface\CharacterFrame\TempPortraitAlphaMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.Icon" x="2" y="-2"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Icon" x="-2" y="2"/>
+					</Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="Icon"/>
+					</MaskedTextures>
+				</MaskTexture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture parentKey="GlassCover" atlas="heartofazeroth-slot-major-glass" setAllPoints="true" alphaMode="ADD"/>
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="1">
+				<Texture parentKey="DragHighlight" atlas="common-roundhighlight" alphaMode="ADD" hidden="true">
+					<Size x="59" y="59"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="2">
+				<Texture parentKey="Ring" atlas="heartofazeroth-slot-major-ring" setAllPoints="true"/>
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="3">
+				<Texture parentKey="HighlightRing" atlas="heartofazeroth-slot-major-ring" setAllPoints="true" hidden="true" alpha="0.2" alphaMode="ADD"/>
+				<Texture parentKey="EmptyGlow" atlas="heartofazeroth-slot-yellowglow" useAtlasSize="true" alphaMode="ADD">
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+					<Animations>
+						<AnimationGroup parentKey="Anim" looping="REPEAT">
+							<Alpha fromAlpha="0" toAlpha="0.8" duration="0.8" smoothing="IN_OUT" order="1"/>
+							<Alpha fromAlpha="0.8" toAlpha="0" duration="0.8" smoothing="IN_OUT" order="2"/>
+						</AnimationGroup>
+					</Animations>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<ModelScene parentKey="BlueGemModelScene" drawLayer="OVERLAY" inherits="NonInteractableModelSceneMixinTemplate" hidden="true" alpha="0.75">
+				<Size x="400" y="400"/>
+				<Anchors>
+					<Anchor point="CENTER" relativePoint="TOP" x="3" y="-5"/>
+				</Anchors>
+			</ModelScene>
+			<ModelScene parentKey="PurpleGemModelScene" drawLayer="OVERLAY" inherits="NonInteractableModelSceneMixinTemplate" hidden="true" alpha="0.75">
+				<Size x="400" y="400"/>
+				<Anchors>
+					<Anchor point="CENTER" relativePoint="BOTTOM" x="3" y="11"/>
+				</Anchors>
+			</ModelScene>
+		</Frames>
+	</Button>
+	<Button name="BtWLoadoutsAzeriteMilestoneMinorSlotTemplate" inherits="BtWLoadoutsAzeriteMilestoneSlotTemplate" virtual="true">
+		<Size x="66" y="66"/>
+		<Layers>
+			<Layer level="BORDER">
+				<Texture parentKey="Icon">
+					<Size x="58" y="58"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="EmptyIcon" atlas="heartofazeroth-slot-minor-background" setAllPoints="true"/>
+				<MaskTexture parentKey="CircleMask" file="Interface\CharacterFrame\TempPortraitAlphaMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.Icon" x="2" y="-2"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Icon" x="-2" y="2"/>
+					</Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="Icon"/>
+					</MaskedTextures>
+				</MaskTexture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture parentKey="GlassCover" atlas="heartofazeroth-slot-minor-glass" setAllPoints="true" alphaMode="ADD"/>
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="1">
+				<Texture parentKey="Ring" atlas="heartofazeroth-slot-minor-ring" setAllPoints="true"/>
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="2">
+				<Texture parentKey="HighlightRing" atlas="heartofazeroth-slot-minor-ring" alpha="0.2" setAllPoints="true" hidden="true" alphaMode="ADD"/>
+				<Texture parentKey="EmptyGlow" atlas="heartofazeroth-slot-yellowglow" alphaMode="ADD">
+					<Size x="76" y="76"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+					<Animations>
+						<AnimationGroup parentKey="Anim" looping="REPEAT">
+							<Alpha fromAlpha="0" toAlpha="0.8" duration="0.8" smoothing="IN_OUT" order="1"/>
+							<Alpha fromAlpha="0.8" toAlpha="0" duration="0.8" smoothing="IN_OUT" order="2"/>
+						</AnimationGroup>
+					</Animations>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<ModelScene parentKey="PurpleGemModelScene" drawLayer="OVERLAY" inherits="NonInteractableModelSceneMixinTemplate" hidden="true" alpha="0.75">
+				<Size x="400" y="400"/>
+				<Anchors>
+					<Anchor point="CENTER" relativePoint="BOTTOM" x="3" y="11"/>
+				</Anchors>
+			</ModelScene>
+		</Frames>
+	</Button>
+
+	<Button name="BtWLoadoutsAzeriteEssenceButtonTemplate" virtual="true" mixin="BtWLoadoutsAzeriteEssenceButtonMixin" registerForClicks="LeftButtonUp, RightButtonUp">
+		<Size x="178" y="41"/>
+		<Layers>
+			<Layer level="OVERLAY" textureSubLevel="-1">
+				<Texture parentKey="PendingGlow" atlas="heartofazeroth-list-item-selected" alphaMode="ADD" hidden="true" setAllPoints="true"/>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture parentKey="Icon">
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="LEFT" x="5" y="1"/>
+					</Anchors>
+				</Texture>
+				<FontString parentKey="Name" inherits="GameFontNormal" justifyH="LEFT" maxLines="2">
+					<Anchors>
+						<Anchor point="LEFT"  relativeKey="$parent.Icon" relativePoint="RIGHT" x="8" y="0"/>
+						<Anchor point="RIGHT" x="-10"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame parentKey="ActivatedMarkerMain" parentArray="ActivatedMarkers">
+				<Size x="14" y="17"/>
+				<Anchors>
+					<Anchor point="RIGHT" x="4"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture atlas="heartofazeroth-list-selected-major" setAllPoints="true"/>
+					</Layer>
+				</Layers>
+			</Frame>
+			<Frame parentKey="ActivatedMarkerPassive" parentArray="ActivatedMarkers">
+				<Size x="12" y="15"/>
+				<Anchors>
+					<Anchor point="RIGHT" x="4"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture atlas="heartofazeroth-list-selected-minor" setAllPoints="true"/>
+					</Layer>
+				</Layers>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnClick method="OnClick"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave function="GameTooltip_Hide"/>
+		</Scripts>
+		<NormalTexture parentKey="Background" atlas="heartofazeroth-list-item"/>
+		<HighlightTexture atlas="heartofazeroth-list-item-highlight" alphaMode="ADD"/>
+	</Button>
+
+    <Frame parentKey="Essences" mixin="BtWLoadoutsEssencesMixin" inherits="BtWLoadoutsTabFrameTemplate">
+        <KeyValues>
+            <KeyValue key="name" value="BTWLOADOUTS_ESSENCES" type="global"/>
+        </KeyValues>
+        <Frames>
+            <Frame parentKey="Inset" useParentLevel="true" inherits="InsetFrameTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="-4" y="-31"/>
+                    <Anchor point="BOTTOMRIGHT" x="4" y="-2" />
+                </Anchors>
+            </Frame>
+            <Frame name="$parentRoleDropDown" parentKey="RoleDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="0" y="0"/>
+                </Anchors>
+                <Scripts>
+                </Scripts>
+            </Frame>
+            <EditBox name="$parentName" letters="50" parentKey="Name" autoFocus="false" inherits="InputBoxTemplate">
+                <Size x="0" y="22"/>
+                <Anchors>
+                    <Anchor point="LEFT" relativeKey="$parent.RoleDropDown" relativePoint="RIGHT" x="10" y="2"/>
+					<Anchor point="RIGHT" x="-30" y="0"/>
+                </Anchors>
+                <Scripts>
+                    <OnTextChanged>
+                        self:GetParent():UpdateSetName(self:GetText())
+                    </OnTextChanged>
+                    <OnEnterPressed function="EditBox_ClearFocus"/>
+                </Scripts>
+            </EditBox>
+			<Frame parentKey="RestrictionsDropDown" inherits="BtWLoadoutsRestrictionsDropDownTemplate"/>
+			<DropDownToggleButton parentKey="RestrictionsButton">
+				<Size x="22" y="22"/>
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.Name" relativePoint="RIGHT" x="4" y="0"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture file="Interface\WorldMap\GEAR_64GREY" alpha="0.5" parentKey="texture"/>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						self.texture:SetAlpha(1.0);
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText(BTWLOADOUTS_RESTRICTIONS);
+					</OnEnter>
+					<OnLeave>
+						self.texture:SetAlpha(0.5);
+						GameTooltip_Hide();
+					</OnLeave>
+					<OnMouseDown>
+						ToggleDropDownMenu(1, nil, self:GetParent().RestrictionsDropDown, self, 0, 0);
+					</OnMouseDown>
+					<OnMouseUp>
+						self.texture:SetPoint("TOPLEFT", 0, 0);
+					</OnMouseUp>
+				</Scripts>
+			</DropDownToggleButton>
+            <Button inherits="BtWLoadoutsAzeriteMilestoneMajorSlotTemplate" parentKey="MajorSlot">
+                <Anchors>
+                    <Anchor point="CENTER" relativePoint="CENTER" x="-100" y="-30"/>
+                </Anchors>
+            </Button>
+            <Button inherits="BtWLoadoutsAzeriteMilestoneMinorSlotTemplate" parentKey="MinorSlot1">
+                <Anchors>
+                    <Anchor point="CENTER" relativeKey="$parent.MajorSlot" relativePoint="CENTER" x="-83" y="-114"/>
+                </Anchors>
+            </Button>
+            <Button inherits="BtWLoadoutsAzeriteMilestoneMinorSlotTemplate" parentKey="MinorSlot2">
+                <Anchors>
+                    <Anchor point="CENTER" relativeKey="$parent.MajorSlot" relativePoint="CENTER" x="139" y="-15"/>
+                </Anchors>
+            </Button>
+            <Button inherits="BtWLoadoutsAzeriteMilestoneMinorSlotTemplate" parentKey="MinorSlot3" virtual="true">
+                <Anchors>
+                    <Anchor point="CENTER" relativeKey="$parent.MajorSlot" relativePoint="CENTER" x="-59" y="129"/>
+                </Anchors>
+            </Button>
+            <ScrollFrame parentKey="EssenceList" inherits="HybridScrollFrameTemplate">
+                <Size x="185" y="250"/>
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativeKey="$parent.Name" relativePoint="BOTTOMRIGHT" x="12" y="-11"/>
+                    <Anchor point="BOTTOM" x="0" y="0"/>
+                </Anchors>
+                <Frames>
+                    <Slider parentKey="ScrollBar" inherits="HybridScrollBarTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="0" y="-12"/>
+                            <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="0" y="13"/>
+                        </Anchors>
+                    </Slider>
+                </Frames>
+            </ScrollFrame>
+        </Frames>
+        <Scripts>
+            <OnLoad inherit="prepend" method="OnLoad"/>
+            <OnShow inherit="prepend" method="OnShow"/>
+        </Scripts>
+    </Frame>
+</Ui>

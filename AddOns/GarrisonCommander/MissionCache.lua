@@ -56,8 +56,9 @@ function addon:GetContainedItems(itemID,spec)
 	return data
 end
 function module:OnInitialized()
+  if module.initalized then return end
 --[===[@debug@
-	print("OnInitialized")
+  print("OnInitialized")
 --@end-debug@]===]
 	--Building price function
 	--> has auction addons installed?
@@ -71,9 +72,9 @@ function module:OnInitialized()
 		addon.AuctionPrices=true
 		appraisers.ATR=Atr_GetAuctionBuyout
 	end
-	if _G.TSMAPI_FOUR then
+	if _G.TSM_API then
 		addon.AuctionPrices=true
-		appraisers.TSM=function(itemlink) return TSMAPI_FOUR.CustomPrice.GetItemPrice(itemlink,"DBMarket") end
+		appraisers.TSM=function(itemlink) return TSM_API.GetCustomPriceValue("DBMarket", "i:" .. itemlink) end
 	end
 	if _G.TUJMarketInfo then
 		addon.AuctionPrices=true
@@ -140,6 +141,7 @@ function module:GetMission(id,noretry)
 	return self:GetMission(id,true)
 end
 function module:AddExtraData(mission)
+  if not GMF:IsShown() and not GSF:IsShown() then return end
 	if mission.class then return end
 	local rewards=mission.rewards
 	if not rewards then
@@ -242,9 +244,6 @@ function module:GetMissionIterator(followerType)
 		list=GMFMissions.availableMissions
 	end
 
---[===[@debug@
-print("Iterator called, list is",list)
---@end-debug@]===]
 	return function(sorted,i)
 		i=i+1
 		if type(sorted[i])=="table" then

@@ -1,0 +1,6 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <!--@no-lib-strip@-->
+    <Script file="LibStub\LibStub.lua"/>
+	<Include file="StdUi\StdUi.xml"/>
+    <!--@end-no-lib-strip@-->
+</Ui>

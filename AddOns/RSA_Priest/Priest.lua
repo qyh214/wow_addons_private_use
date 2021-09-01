@@ -144,6 +144,7 @@ function RSA_Priest:OnEnable()
 			[64843] = {
 				profile = 'DivineHymn'
 			},
+
 			[200183] = {
 				profile = 'Apotheosis'
 			},
@@ -153,6 +154,10 @@ function RSA_Priest:OnEnable()
 			},
 			[33206] = {
 				profile = 'PainSuppression',
+				replacements = { TARGET = 1 }
+			},
+			[453] = {
+				profile = 'MindSoothe',
 				replacements = { TARGET = 1 }
 			},
 			[64044] = {
@@ -234,6 +239,11 @@ function RSA_Priest:OnEnable()
 			},
 			[33206] = {
 				profile = 'PainSuppression',
+				section = 'End',
+				replacements = { TARGET = 1 }
+			},
+			[453] = {
+				profile = 'MindSoothe',
 				section = 'End',
 				replacements = { TARGET = 1 }
 			},

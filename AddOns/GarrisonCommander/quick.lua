@@ -109,7 +109,7 @@ end
 function addon:RunQuick(force)
 	local main=GMF:IsVisible() and GMF or GSF
 	if main.tabMC:GetChecked() then
-		self:OpenMissionControlTab()
+		--self:OpenMissionControlTab()
 		self:ScheduleTimer("RunQuick",0.2)
 		return
 	end

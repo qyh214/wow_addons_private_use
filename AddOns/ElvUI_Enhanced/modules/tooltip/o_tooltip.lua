@@ -11,7 +11,8 @@ P["eel"]["progression"] = {
         ["cos"] = false,
         ["ep"] = false,
         ["nya"] = false,
-        ["nathria"] = true,
+        ["nathria"] = false,
+        ["sanctum"] = true,
     },
 }
 
@@ -86,6 +87,7 @@ local function ConfigTable()
                         disabled = function() return not E.db.eel.progression.enable end,
                         args = {
                             nathria = { order = -40, type = "toggle", name = "Castle Nathria" },
+                            sanctum = { order = -39, type = "toggle", name = "Sanctum of Domination" },
                         }
                     }
                 },

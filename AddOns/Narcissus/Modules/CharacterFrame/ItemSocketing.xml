@@ -1,7 +1,8 @@
 <Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
 	<Script file="ItemSocketing.lua"/>
+	<Script file="GemExtractor.lua"/>
 
-    <Frame name="Narci_GearEnhancement_Tooltip_Template" clipChildren="false" virtual="true" Alpha="0">
+    <Frame name="NarciGearEnhancementTooltipTemplate" clipChildren="false" virtual="true" Alpha="0">
         <Size x="240" y="48"/>
         <!--Anchors>
             <Anchor point="CENTER"/>
@@ -76,7 +77,7 @@
 		</Scripts>
     </Frame>
 
-	<Button name="Narci_GearEnhancement_Tooltip" inherits="Narci_GearEnhancement_Tooltip_Template" frameStrata="FULLSCREEN">
+	<Button name="Narci_GearEnhancement_Tooltip" inherits="NarciGearEnhancementTooltipTemplate" frameStrata="FULLSCREEN">
 		<Frames>
 			<Frame parentKey="OtherGems">
 				<Anchors>
@@ -106,11 +107,8 @@
 		</Frames>
 	</Button>
 
-    <Button name="Narci_GemButton_Template" clipChildren="true" virtual="true">
+    <Button name="NarciGemRectButtonTemplate" clipChildren="true" virtual="true">
         <Size x="240" y="48"/>
-        <!--Anchors>
-            <Anchor point="CENTER"/>
-        </Anchors-->
 		<Layers>
             <Layer level="BACKGROUND" textureSubLevel="1">
 				<Texture setAllPoints="true">
@@ -159,26 +157,7 @@
 				</MaskTexture>
             </Layer>
 			<Layer level="BORDER">
-				<!--Texture setAllPoints="true" parentKey="ButtonHighlight" Alpha="0">
-					<Color a="0.1" r="1" g="1" b="1"/>
-					<Size x="480"/>
-                    <Anchors>
-                        <Anchor point="TOP" relativeKey="$parent" relativePoint="TOPLEFT" x="0" y="0"/>
-						<Anchor point="BOTTOM" relativeKey="$parent" relativePoint="BOTTOMLEFT" x="0" y="0"/>
-                    </Anchors>
-					<Animations>
-						<AnimationGroup parentKey="animQuickFill">
-							<Alpha fromAlpha="0" toAlpha="1" duration="0" order="1"/>		
-							<Alpha fromAlpha="1" toAlpha="0" startDelay="0.5" duration="0.4" order="2"/>
-							<Scale parentKey="scale" fromScaleX="0" toScaleX="1" fromScaleY="1" toScaleY="1" duration="0.6" order="2"/>
-							<Scripts>
-								<OnFinished>
-								</OnFinished>
-							</Scripts>
-						</AnimationGroup>
-					</Animations>
-				</Texture-->
-				<Texture setAllPoints="true" parentKey="ButtonFill" Alpha="0">
+				<Texture setAllPoints="true" parentKey="ButtonFill" Alpha="0" hidden="true">
 					<Color r="1" g="1" b="1"/>
 					<Size x="480"/>
                     <Anchors>
@@ -201,7 +180,9 @@
 						</AnimationGroup>
 					</Animations>
 				</Texture>
-				<Texture file="Interface\AddOns\Narcissus\Art\Tooltip\Gem-Border-Colorized" setAllPoints="true" parentKey="Border0">
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="-1">
+				<Texture file="Interface\AddOns\Narcissus\Art\GemBorder\RectBorderColorized" setAllPoints="true" parentKey="Border0">
 					<TexCoords left="0" right="0.125" top="0" bottom="0.5"/>
                     <Size x="40" y="40"/>
 					<Anchors>
@@ -219,7 +200,7 @@
 				</Texture>
 			</Layer>
 			<Layer level="ARTWORK" textureSubLevel="1">
-				<Texture file="Interface\AddOns\Narcissus\Art\Tooltip\Gem-Border-Colorized" setAllPoints="true" parentKey="Border1">
+				<Texture file="Interface\AddOns\Narcissus\Art\GemBorder\RectBorderColorized" setAllPoints="true" parentKey="Border1">
 					<TexCoords left="0" right="0.125" top="0.5" bottom="1"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeKey="$parent.Border0" relativePoint="TOPLEFT"/>
@@ -240,7 +221,6 @@
 				<FontString inherits="NarciIndicatorTiny" justifyH="CENTER" justifyV="MIDDLE" hidden="false" parentKey="Count" text="10">
 					<Color r="1" g="1" b="1"/>
                     <Shadow>
-
                     </Shadow>
 					<Anchors>
 						<Anchor point="CENTER" relativeKey="$parent.CountBackground" relativePoint="CENTER" x="2" y="-1"/>
@@ -251,12 +231,24 @@
 					<Anchors>
 						<Anchor point="BOTTOMLEFT" relativeKey="$parent.Border0" relativePoint="RIGHT" x="5" y="1"/>
 					</Anchors>
+					<Shadow>
+						<Offset>
+							<AbsDimension x="1" y="-1"/>
+						</Offset>
+						<Color r="0" g="0" b="0" a="0.6"/>
+					</Shadow>
 				</FontString>
 				<FontString inherits="NarciFontNormal10Outline" justifyH="LEFT" justifyV="TOP" hidden="false" parentKey="ItemName">
 					<Color r="1" g="1" b="1"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeKey="$parent.Border0" relativePoint="RIGHT" x="5" y="-3"/>
 					</Anchors>
+					<Shadow>
+						<Offset>
+							<AbsDimension x="1" y="-1"/>
+						</Offset>
+						<Color r="0" g="0" b="0" a="0.6"/>
+					</Shadow>
 				</FontString>
             </Layer>
 			<Layer level="OVERLAY" textureSubLevel="5">
@@ -302,12 +294,11 @@
 				self.Border1:SetDesaturated(false);
 				self.Bonus:SetTextColor(1, 1, 1);
 				self.Count:SetTextColor(1, 1, 1);
-				self.ItemName:SetTextColor(self.r, self.g, self.b);
 			</OnEnable>
 		</Scripts>
     </Button>
 
-	<Button name="Narci_GearEnhancement_Template" inherits="Narci_GemButton_Template" virtual="true" mixin="NarciGemListButtonMixin">
+	<Button name="NarciGemListButtonTemplate" inherits="NarciGemRectButtonTemplate" virtual="true" mixin="NarciGemListButtonMixin">
 		<!--Used in Narcissus-->
 		<Scripts>
 			<OnEnter method="OnEnter"/>
@@ -319,7 +310,7 @@
 		</Scripts>
 	</Button>
 
-	<Button name="Narci_OptionalGems_Template" inherits="Narci_GemButton_Template" virtual="true" mixin="NarciGemListButtonMixin">
+	<Button name="NarciBlizzardGemListButtonTemplate" inherits="NarciGemRectButtonTemplate" virtual="true" mixin="NarciGemListButtonMixin">
 		<!--Used in Blizzard Item Socketing UI-->
 		<Scripts>
 			<OnEnter method="OnEnter"/>
@@ -328,11 +319,11 @@
 		</Scripts>
 	</Button>
 
-    <Frame name="Narci_ItemSocketing_Template" frameStrata="FULLSCREEN_DIALOG" hidden="true" clampedToScreen="true" virtual="true">
+    <Frame name="NarciItemSocketingFrameTemplate" frameStrata="FULLSCREEN_DIALOG" hidden="true" clampedToScreen="true" virtual="true">
         <Anchors>
             <Anchor point="BOTTOMRIGHT" relativePoint="TOPLEFT"/>
         </Anchors>
-        <Size x="240" y="190"/>
+        <Size x="240" y="48"/>
         <Layers>
             <Layer level="BACKGROUND" textureSubLevel="1">
                 <Texture file="Interface\AddOns\Narcissus\Art\Tooltip\DropShadowx4" parentKey="Shadow">
@@ -417,6 +408,60 @@
                     <OnLoad function="Narci_ItemSocketing_ScrollFrame_OnLoad"/>
                 </Scripts>
 			</ScrollFrame>
+
+			<Frame parentKey="DominationBlock" hidden="true" enableMouse="true" frameLevel="12">
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+					<Anchor point="TOPRIGHT"/>
+				</Anchors>
+				<Size y="240"/>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture parentKey="Background">
+							<Color r="0.05" g="0.05" b="0.05"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeKey="$parent.$parent" relativePoint="TOPLEFT"/>
+								<Anchor point="BOTTOMRIGHT" relativeKey="$parent.$parent" relativePoint="BOTTOMRIGHT"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+					<Layer level="OVERLAY">
+						<FontString inherits="NarciFontMedium12" justifyH="CENTER" justifyV="MIDDLE" parentKey="ErrorMsg" hidden="true">
+							<Anchors>
+								<Anchor point="CENTER" relativeKey="$parent.Background" relativePoint="CENTER"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+
+				</Frames>
+				<Animations>
+					<AnimationGroup parentKey="FadeIn">
+						<Alpha fromAlpha="0" toAlpha="1" duration="0.2" order="1"/>
+					</AnimationGroup>
+					<AnimationGroup parentKey="FadeOut">
+						<Alpha fromAlpha="1" toAlpha="0" duration="0.2" order="1"/>
+						<Scripts>
+							<OnFinished>
+								self:GetParent():Hide();
+							</OnFinished>
+						</Scripts>
+					</AnimationGroup>
+				</Animations>
+				<Scripts>
+					<OnLoad>
+						self.ErrorMsg:SetText(Narci.L["Combat Error"]);
+					</OnLoad>
+					<OnMouseWheel>
+						return;
+					</OnMouseWheel>
+					<OnHide>
+						self:StopAnimating();
+						self:Hide();
+					</OnHide>
+				</Scripts>
+			</Frame>
 		</Frames>
         <Scripts>
 			<OnEnter>
@@ -425,7 +470,7 @@
         </Scripts>
     </Frame>
 
-	<Frame name="Narci_ItemSocketing" inherits="Narci_ItemSocketing_Template">
+	<Frame name="Narci_ItemSocketing" inherits="NarciItemSocketingFrameTemplate">
 		<Layers>
 			<Layer level="OVERLAY">
 				<FontString inherits="NarciTooltipDescriptionFontRegularWhite" parentKey="Tooltip" Alpha="0">
@@ -452,6 +497,7 @@
         <Scripts>
             <OnLoad>
 				self.Tooltip:SetText(Narci.L["Item Socketing Tooltip"]);
+				self.isNarcissusUI = true;
             </OnLoad>
 			<OnHide>
 				self:Hide();
@@ -491,24 +537,60 @@
         </Scripts>
 	</Frame>
 
-	<Frame name="Narci_ItemSocketing_ForBlizzardUI_Template" inherits="Narci_ItemSocketing_Template" virtual="true" ignoreParentScale="true" toplevel="true">
+	<Frame name="Narci_ItemSocketing_ForBlizzardUI_Template" inherits="NarciItemSocketingFrameTemplate" virtual="true" ignoreParentScale="true" toplevel="true">
 		<Animations>
 			<AnimationGroup parentKey="animIn">
 				<Translation parentKey="Translation" offsetX="-20" duration="0" order="1"/>
 				<Alpha fromAlpha="0" toAlpha="1" duration="0.15" order="2"/>
 				<Translation parentKey="Translation" offsetX="20" duration="0.2" order="2" smoothing="OUT"/>
 			</AnimationGroup>
-		</Animations>       
+		</Animations>
+		<Frames>
+			<Frame parentKey="ItemAnim" hidden="true">
+				<Size x="38" y="38"/>
+				<Layers>
+					<Layer level="OVERLAY">
+						<Texture parentKey="Icon" setAllPoints="true" hidden="true"/>
+					</Layer>
+				</Layers>
+				<Animations>
+					<AnimationGroup parentKey="FlyOut">
+						<Scale childKey="Icon" fromScaleX="1" fromScaleY="1" toScaleX="0.125" toScaleY="0.125" duration="1" order="1"/>
+						<Alpha childKey="Icon" fromAlpha="1" toAlpha="0" duration="1" order="1"/>
+						<Path childKey="Icon" curve="SMOOTH" duration="1" order="1">
+							<ControlPoints>
+								<ControlPoint offsetX="0" offsetY="60"/>
+								<ControlPoint offsetX="60" offsetY="0"/>
+							</ControlPoints>
+						</Path>
+						<Scripts>
+							<OnPlay>
+								self:GetParent().Icon:Show();
+							</OnPlay>
+							<OnFinished>
+								self:GetParent().Icon:Hide();
+							</OnFinished>
+						</Scripts>
+					</AnimationGroup>
+				</Animations>
+			</Frame>
+		</Frames>
 		<Scripts>
 			<OnHide>
 				self:Hide();
+				self.ItemAnim:Hide();
 				self:StopAnimating();
 				self:UnregisterEvent("SOCKET_INFO_SUCCESS");
+				self:UnregisterEvent("ITEM_PUSH");
+				self:UnregisterEvent("BAG_UPDATE");
+				NarciItemSocketingActionButton:Release();
 			</OnHide>
 			<OnShow>
 				self:StopAnimating();
 				self.animIn:Play();
 				self:RegisterEvent("SOCKET_INFO_SUCCESS");
+				self:RegisterEvent("ITEM_PUSH");
+				self:RegisterEvent("BAG_UPDATE");
 			</OnShow>
 			<OnEvent function="Narci_ItemSocketing_OnEvent"/>
         </Scripts>
@@ -560,6 +642,24 @@
 						</AnimationGroup>
 					</Animations>
 				</Texture>
+				<Texture parentKey="Pulse" file="Interface\AddOns\Narcissus\Art\GemBorder\Domination\Pulse" hidden="false" Alpha="0" alphaMode="ADD">
+					<Size x="64" y="64"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
+					</Anchors>
+					<Animations>
+						<AnimationGroup parentKey="Shrink">
+							<Alpha fromAlpha="0" toAlpha="0" duration="0" order="1"/>
+							<Alpha fromAlpha="0" toAlpha="1" duration="0.25" order="2"/>
+							<Scale fromScaleX="1.5" toScaleX="1" fromScaleY="1.5" toScaleY="1" duration="0.25" smoothing="IN_OUT" order="2"/>
+							<Alpha fromAlpha="1" toAlpha="1" duration="2" order="3"/>
+						</AnimationGroup>
+						<AnimationGroup parentKey="Expand">
+							<Alpha fromAlpha="1" toAlpha="0" duration="0.25" order="1"/>
+							<Scale scaleX="2" scaleY="2" duration="0.25" smoothing="IN_OUT" order="1"/>
+						</AnimationGroup>
+					</Animations>
+				</Texture>
 			</Layer>
 		</Layers>
 		<Scripts>
@@ -572,18 +672,68 @@
 		</Scripts>		
 	</Frame>
 
-	<!--Frame name="KK" setAllPoints="true" frameStrata="LOW">
+	<Button name="NarciItemSocketingActionButton" mixin="NarciItemSocketingActionButtonMixin" inherits="SecureActionButtonTemplate" parent="NarciSecureFrameContainer">
+		<Size x="96" y="36"/>
 		<Layers>
-			<Layer level="BACKGROUND" textureSubLevel="3">
-				<Texture setAllPoints="true" hidden="false" parentKey="Color">
+			<Layer level="OVERLAY">
+				<FontString inherits="NarciFontMedium12" justifyH="CENTER" justifyV="MIDDLE" parentKey="Label">
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</FontString>
 
+				<Texture parentKey="ArrowLeft" file="Interface\AddOns\Narcissus\Art\Widgets\Domination\LabelArrows">
+					<TexCoords left="0" right="0.5" top="0" bottom="1"/>
+					<Size x="10" y="10"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeKey="$parent.Label" relativePoint="LEFT" x="-2" y="0.5"/>
+					</Anchors>
+					<Animations>
+						<AnimationGroup parentKey="Close">
+							<Translation offsetX="2" duration="0.12" smoothing="OUT" order="1"/>
+							<Translation offsetX="0" duration="10" order="2"/>
+						</AnimationGroup>
+						<AnimationGroup parentKey="Expand">
+							<Translation offsetX="2" duration="0" order="1"/>
+							<Translation offsetX="-12" duration="0.5" smoothing="IN_OUT" order="2"/>
+							<Alpha fromAlpha="1" toAlpha="0" startDelay="0.1" duration="0.4" order="2"/>
+							<Translation offsetX="10" duration="0" order="3"/>
+							<Alpha fromAlpha="0" toAlpha="1" duration="0.25" order="4"/>
+						</AnimationGroup>
+					</Animations>
+				</Texture>
+
+				<Texture parentKey="ArrowRight" file="Interface\AddOns\Narcissus\Art\Widgets\Domination\LabelArrows">
+					<TexCoords left="0.5" right="1" top="0" bottom="1"/>
+					<Size x="10" y="10"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.Label" relativePoint="RIGHT" x="2" y="0.5"/>
+					</Anchors>
+					<Animations>
+						<AnimationGroup parentKey="Close">
+							<Translation offsetX="-2" duration="0.12" smoothing="OUT" order="1"/>
+							<Translation offsetX="0" duration="10" order="2"/>
+						</AnimationGroup>
+						<AnimationGroup parentKey="Expand">
+							<Translation offsetX="-2" duration="0" order="1"/>
+							<Translation offsetX="12" duration="0.5" smoothing="IN_OUT" order="2"/>
+							<Alpha fromAlpha="1" toAlpha="0" startDelay="0.1" duration="0.4" order="2"/>
+							<Translation offsetX="-10" duration="0" order="3"/>
+							<Alpha fromAlpha="0" toAlpha="1" duration="0.25" order="4"/>
+						</AnimationGroup>
+					</Animations>
 				</Texture>
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnLoad>
-				self.Color:SetColorTexture(28/255, 32/255, 40/255);
-			</OnLoad>
+			<OnLoad method="OnLoad"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnShow method="OnShow"/>
+			<OnHide method="OnHide"/>
+			<OnEvent method="OnEvent"/>
+			<OnEnable method="OnEnable"/>
+			<OnDisable method="OnDisable"/>
 		</Scripts>
-	</Frame-->
+	</Button>
 </Ui>

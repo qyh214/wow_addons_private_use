@@ -1,0 +1,36 @@
+## Interface: 90100
+## Title: BtWLoadouts
+## Version: 1.3.0
+## Notes: Change your characters spec, talents, equipment, essences, and action bars all at once
+## Author: Breen
+## SavedVariables: BtWLoadoutsSets, BtWLoadoutsSpecInfo, BtWLoadoutsRoleInfo, BtWLoadoutsEssenceInfo, BtWLoadoutsCharacterInfo, BtWLoadoutsHelpTipFlags, BtWLoadoutsSettings
+## SavedVariablesPerCharacter: BtWLoadoutsCollapsed, BtWLoadoutsCategories, BtWLoadoutsFilters
+## OptionalDeps: OPie, Adibags, Bagnon
+
+Localizations.lua
+Localizations.deDE.lua
+Localizations.esES.lua
+Localizations.frFR.lua
+Localizations.koKR.lua
+Localizations.ruRU.lua
+Localizations.zhCN.lua
+Localizations.zhTW.lua
+
+Characters.lua
+Instances.lua
+Sets.lua
+
+BtWLoadouts.xml
+
+Loadouts.xml
+Talents.xml
+PvPTalents.xml
+Essences.xml
+Soulbinds.xml
+Equipment.xml
+ActionBars.xml
+Conditions.xml
+
+Launcher.lua
+Events.lua
+Minimap.xml

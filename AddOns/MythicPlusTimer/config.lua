@@ -128,10 +128,10 @@ local function on_category_colors_default()
     "color_current_pull",
     "color_deathcounter",
     "color_deathcounter_timelost",
-    "color_prideful",
-    "color_prideful_value",
-    "color_prideful_value_warning",
-    "color_prideful_value_alert",
+    -- "color_prideful",
+    -- "color_prideful_value",
+    -- "color_prideful_value_warning",
+    -- "color_prideful_value_alert",
   }
 
   for _, key in ipairs(colors) do
@@ -172,8 +172,8 @@ local function on_category_refresh(self)
     "show_affixes_as_text",
     "show_affixes_as_icons",
     "hide_default_objectivetracker",
-    --    "show_reapingtimer"
-    "show_pridefultimer",
+    -- "show_reapingtimer"
+    -- "show_pridefultimer",
   }
 
   local checkboxes_frames = {}
@@ -333,11 +333,11 @@ local function on_category_colors_refresh(self)
     "_line",
     "color_deathcounter",
     "color_deathcounter_timelost",
-    "_line",
-    "color_prideful",
-    "color_prideful_value",
-    "color_prideful_value_warning",
-    "color_prideful_value_alert",
+    -- "_line",
+    -- "color_prideful",
+    -- "color_prideful_value",
+    -- "color_prideful_value_warning",
+    -- "color_prideful_value_alert",
   }
 
   local colors_frames = {}

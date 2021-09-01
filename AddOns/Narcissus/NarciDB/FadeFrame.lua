@@ -51,11 +51,20 @@ function f:Add(frame, fullDuration, fromAlpha, toAlpha, alterShownState, useCons
         if toAlpha > 0 then
             frame:Show();
         end
-        if alpha == 0 and toAlpha == 0 then
-            frame:Hide();
+        if toAlpha == 0 then
+            if not frame:IsShown() then
+                frame:SetAlpha(0);
+                alpha = 0;
+            end
+            if alpha == 0 then
+                frame:Hide();
+            end
         end
     end
     if fromAlpha == toAlpha or alpha == toAlpha then
+        if fadeInfo[frame] then
+            fadeInfo[frame] = nil;
+        end
         return;
     end
     local duration;

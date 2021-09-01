@@ -1,6 +1,6 @@
 local L = Narci.L;
 
-Narci_GemInfo = {
+local GemData = {
     --[ItemID] = {"Attribute", Amount},
 
     ----9 SL----
@@ -61,7 +61,9 @@ Narci_GemInfo = {
     [130218] = {"mastery", 4},      --Masterful Queen's Opal
 }
 
-Narci_EnchantInfo = {
+Narci.GemData = GemData;
+
+local EnchantData= {
     --[EnchantID] = {"Attribute", Amount, SpellID},  --need to be parsed from itemstring
 
     ----9 SL----
@@ -150,6 +152,7 @@ Narci_EnchantInfo = {
     
 }
 
+Narci.EnchantData = EnchantData;
 
 
 --Corruption System

@@ -29,19 +29,20 @@ local notDiscoveredNpcIDs = {}
 function RSNpcPOI.InitializeNotDiscoveredNpcs()
 	for npcID, _ in pairs (RSNpcDB.GetAllInternalNpcInfo()) do
 		if (not RSGeneralDB.GetAlreadyFoundEntity(npcID)) then
-			tinsert(notDiscoveredNpcIDs, npcID)
+			notDiscoveredNpcIDs[npcID] = true
 		end
 	end
 end
 
 local function RefreshNotDiscoveredNpcs(npcID)
-	if (not RSGeneralDB.GetAlreadyFoundEntity(npcID) and not RSUtils.Contains(notDiscoveredNpcIDs, npcID)) then
-		tinsert(notDiscoveredNpcIDs, npcID)
+	if (not RSGeneralDB.GetAlreadyFoundEntity(npcID) and not notDiscoveredNpcIDs[npcID]) then
+		notDiscoveredNpcIDs[npcID] = true
 	end
 end
 
 local function RemoveNotDiscoveredNpc(npcID)
 	if (npcID) then
+		RSLogger:PrintDebugMessageEntityID(npcID, string.format("RemoveNotDiscoveredNpc. NPC [%s] pasa a estar 'descubierto'", npcID))
 		notDiscoveredNpcIDs[npcID] = nil
 	end
 end
@@ -189,12 +190,19 @@ function RSNpcPOI.GetMapNotDiscoveredNpcPOIs(mapID, questTitles, vignetteGUIDs, 
 	end
 
 	local POIs = {}
-	for _, npcID in ipairs(notDiscoveredNpcIDs) do
+	for npcID, _ in pairs(notDiscoveredNpcIDs) do
 		local filtered = false
 		local npcInfo = RSNpcDB.GetInternalNpcInfo(npcID)
+		
+		-- It it was a custom NPC and has being deleted it could be unsynchronized
+		if (npcInfo == nil) then
+			RemoveNotDiscoveredNpc(npcID)
+			RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC N/D [%s]: Era un NPC personalizado y ya no existe.", npcID))
+			filtered = true
+		end
 
 		-- Skip if it was discovered in this session
-		if (RSGeneralDB.GetAlreadyFoundEntity(npcID)) then
+		if (not filtered and RSGeneralDB.GetAlreadyFoundEntity(npcID)) then
 			RemoveNotDiscoveredNpc(npcID)
 			RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC N/D [%s]: Ya no es 'no descubierto'.", npcID))
 			filtered = true
@@ -203,6 +211,12 @@ function RSNpcPOI.GetMapNotDiscoveredNpcPOIs(mapID, questTitles, vignetteGUIDs, 
 		-- Skip if the entity belong to a different mapID/artID that the one displaying
 		if (not filtered and not RSNpcDB.IsInternalNpcInMap(npcID, mapID)) then
 			RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC N/D [%s]: En distinta zona.", npcID))
+			filtered = true
+		end
+		
+		-- Skip if it doesnt have coordinates. This could happend if it is a custom NPC
+		if (not filtered and (not npcInfo.x or not npcInfo.y)) then
+			RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC N/D [%s]: No disponía de coordenadas.", npcID))
 			filtered = true
 		end
 

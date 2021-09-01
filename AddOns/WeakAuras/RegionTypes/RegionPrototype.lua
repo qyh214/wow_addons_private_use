@@ -279,8 +279,7 @@ local function SendChat(self, options)
   if (not options or WeakAuras.IsOptionsOpen()) then
     return
   end
-
-  Private.HandleChatAction(options.message_type, options.message, options.message_dest, options.message_channel, options.r, options.g, options.b, self, options.message_custom, nil, options.message_formaters);
+  Private.HandleChatAction(options.message_type, options.message, options.message_dest, options.message_channel, options.r, options.g, options.b, self, options.message_custom, nil, options.message_formaters, options.message_voice);
 end
 
 local function RunCode(self, func)
@@ -463,6 +462,7 @@ local function UpdateTimerTick(self)
 end
 
 function WeakAuras.regionPrototype.create(region)
+  local defaultsForRegion = WeakAuras.regionTypes[region.regionType] and WeakAuras.regionTypes[region.regionType].default;
   region.SoundPlay = SoundPlay;
   region.SoundStop = SoundStop;
   region.SoundRepeatStop = SoundRepeatStop;
@@ -488,8 +488,10 @@ function WeakAuras.regionPrototype.create(region)
     region:RealClearAllPoints();
     region:ResetPosition();
   end
-  region.SetRegionAlpha = SetRegionAlpha;
-  region.GetRegionAlpha = GetRegionAlpha;
+  if (defaultsForRegion and defaultsForRegion.alpha) then
+    region.SetRegionAlpha = SetRegionAlpha;
+    region.GetRegionAlpha = GetRegionAlpha;
+  end
   region.SetAnimAlpha = SetAnimAlpha;
 
   region.SetTriggerProvidesTimer = SetTriggerProvidesTimer
@@ -507,9 +509,7 @@ function WeakAuras.regionPrototype.modify(parent, region, data)
   region.subRegionEvents:ClearSubscribers()
 
   local defaultsForRegion = WeakAuras.regionTypes[data.regionType] and WeakAuras.regionTypes[data.regionType].default;
-  if (defaultsForRegion and defaultsForRegion.alpha) then
-    region:SetRegionAlpha(data.alpha);
-  end
+
   if region.SetRegionAlpha then
     region:SetRegionAlpha(data.alpha)
   end

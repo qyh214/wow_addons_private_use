@@ -260,6 +260,7 @@ scanner_button:RegisterEvent("TRANSMOG_COLLECTION_UPDATED")
 -- Captures all events
 local isCinematicPlaying = false
 local hasLoadedCompletely = false
+local alreadySeenWorldMapVignettes = {}
 scanner_button:SetScript("OnEvent", function(self, event, ...)
 	-- Player login
 	if (event == "PLAYER_LOGIN") then
@@ -293,8 +294,10 @@ scanner_button:SetScript("OnEvent", function(self, event, ...)
 			local vignetteInfo = C_VignetteInfo.GetVignetteInfo(vignetteGUID);
 			if (vignetteInfo and vignetteInfo.onWorldMap) then
 				-- This event fires several times, avoid to capture it in 10 seconds
-				if (not self.lastTimeVignetteUpdated or self.lastTimeVignetteUpdated < time()) then
+				if (not alreadySeenWorldMapVignettes[vignetteGUID] or not self.lastTimeVignetteUpdated or self.lastTimeVignetteUpdated < time()) then
 					self.lastTimeVignetteUpdated = time() + 10 --wait 10 seconds
+					alreadySeenWorldMapVignettes = {}
+					alreadySeenWorldMapVignettes[vignetteGUID] = true
 				else
 					return
 				end
@@ -475,6 +478,7 @@ scanner_button:SetScript("OnEvent", function(self, event, ...)
 
 				-- If the loot comes from a container that we support
 				if (npcType == "GameObject") then
+					RSLogger:PrintDebugMessage(string.format("Abierto [%s].", id or ""))
 					local containerID = id and tonumber(id) or nil
 
 					-- We support all the containers with vignette plus those ones that are part of achievements (without vignette)
@@ -483,6 +487,8 @@ scanner_button:SetScript("OnEvent", function(self, event, ...)
 						-- This will happend in the case where the container doesnt have a vignette
 						if (not RSGeneralDB.GetAlreadyFoundEntity(containerID)) then
 							RSGeneralDB.AddAlreadyFoundContainerWithoutVignette(containerID)
+						else
+							RSGeneralDB.UpdateAlreadyFoundEntityPlayerPosition(containerID)
 						end
 
 						-- Sets the container as opened
@@ -711,7 +717,7 @@ function RareScanner:ProcessKillByZone(npcID, mapID, forzed)
 		-- If we know for sure it resets with every server restart
 	elseif (npcInfo and npcInfo.weeklyReset) then
 		RSLogger:PrintDebugMessage(string.format("NPC [%s]. Resetea con el reinicio del servidor", npcID))
-		RSNpcDB.SetNpcKilled(npcID, RSTimeUtils.GetServerResetTime())
+		RSNpcDB.SetNpcKilled(npcID, C_DateAndTime.GetSecondsUntilWeeklyReset())
 		-- If we know the exact reset timer
 	elseif (npcInfo and npcInfo.resetTimer) then
 		RSLogger:PrintDebugMessage(string.format("NPC [%s]. Resetea pasados [%s]segundos", npcID, npcInfo.resetTimer))
@@ -723,7 +729,7 @@ function RareScanner:ProcessKillByZone(npcID, mapID, forzed)
 		-- If its a warfront reseteable rare
 	elseif (RSMapDB.IsEntityInWarfrontZone(npcID, mapID, alreadyFoundInfo)) then
 		RSLogger:PrintDebugMessage(string.format("NPC [%s]. Resetea cada 2 semanas (Warfront)", npcID))
-		RSNpcDB.SetNpcKilled(npcID, RSTimeUtils.GetServerResetTime() + RSTimeUtils.DaysToSeconds(7))
+		RSNpcDB.SetNpcKilled(npcID, C_DateAndTime.GetSecondsUntilWeeklyReset() + RSTimeUtils.DaysToSeconds(7))
 		-- If it wont ever be a rare anymore
 	elseif (RSMapDB.IsEntityInPermanentZone(npcID, mapID, alreadyFoundInfo)) then
 		RSLogger:PrintDebugMessage(string.format("NPC [%s]. Deja de ser un rare NPC", npcID))
@@ -846,7 +852,18 @@ function RareScanner:ProcessOpenContainerByZone(containerID, mapID, forzed)
 			-- If we know for sure it resets with every server restart
 		elseif (containerInternalInfo and containerInternalInfo.weeklyReset) then
 			RSLogger:PrintDebugMessage(string.format("Contenedor [%s]. Resetea con el reinicio del servidor", containerID))
-			RSContainerDB.SetContainerOpened(containerID, RSTimeUtils.GetServerResetTime())
+			RSContainerDB.SetContainerOpened(containerID, C_DateAndTime.GetSecondsUntilWeeklyReset())
+			-- If we know for sure it resets every two weeks
+		elseif (containerInternalInfo and containerInternalInfo.covenantAssaultReset) then
+			if (containerInternalInfo.covenantAssaultReset == 0) then
+				local assaultResetTime = RSTimeUtils.GetCovenantAssaultResetTime(true)
+				RSLogger:PrintDebugMessage(string.format("Contenedor [%s]. Resetea en %s por pertenecer a un asalto de curia", containerID, RSTimeUtils.TimeStampToClock(assaultResetTime)))
+				RSContainerDB.SetContainerOpened(containerID, time() + assaultResetTime)
+			else
+				local assaultResetTime = RSTimeUtils.GetCovenantAssaultResetTime()
+				RSLogger:PrintDebugMessage(string.format("Contenedor [%s]. Resetea en %s por pertenecer a un cualquier asalto de curia", containerID, RSTimeUtils.TimeStampToClock(assaultResetTime)))
+				RSContainerDB.SetContainerOpened(containerID, time() + assaultResetTime)
+			end
 			-- If we know the exact reset timer
 		elseif (containerInternalInfo and containerInternalInfo.resetTimer) then
 			RSLogger:PrintDebugMessage(string.format("Contenedor [%s]. Resetea pasados [%s]segundos", containerID, containerInternalInfo.resetTimer))
@@ -862,7 +879,7 @@ function RareScanner:ProcessOpenContainerByZone(containerID, mapID, forzed)
 			-- If its a warfront reseteable container
 		elseif (RSMapDB.IsEntityInWarfrontZone(containerID, mapID, containerAlreadyFoundInfo)) then
 			RSLogger:PrintDebugMessage(string.format("Contenedor [%s]. Resetea cada 2 semanas (Warfront)", containerID))
-			RSContainerDB.SetContainerOpened(containerID, RSTimeUtils.GetServerResetTime() + RSTimeUtils.DaysToSeconds(7))
+			RSContainerDB.SetContainerOpened(containerID, C_DateAndTime.GetSecondsUntilWeeklyReset() + RSTimeUtils.DaysToSeconds(7))
 			-- If it wont ever be open anymore
 		elseif (RSMapDB.IsEntityInPermanentZone(containerID, mapID, containerAlreadyFoundInfo)) then
 			RSLogger:PrintDebugMessage(string.format("Contenedor [%s]. No se puede abrir de nuevo", containerID))
@@ -928,7 +945,7 @@ function RareScanner:ProcessCompletedEvent(eventID, forzed)
 		-- If we know for sure it resets with every server restart
 	elseif (eventInternalInfo and eventInternalInfo.weeklyReset) then
 		RSLogger:PrintDebugMessage(string.format("Evento [%s]. Resetea con el reinicio del servidor", eventID))
-		RSEventDB.SetEventCompleted(eventID, RSTimeUtils.GetServerResetTime())
+		RSEventDB.SetEventCompleted(eventID, C_DateAndTime.GetSecondsUntilWeeklyReset())
 		-- If we know the exact reset timer
 	elseif (eventInternalInfo and eventInternalInfo.resetTimer) then
 		RSLogger:PrintDebugMessage(string.format("Evento [%s]. Resetea pasados [%s]segundos", eventID))
@@ -981,13 +998,19 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 	if (not entityID) then
 		return
 	end
+		
+	-- Overrides name if Torghast vignette
+	if (vignetteInfo.type and vignetteInfo.type == Enum.VignetteType.Torghast) then
+		vignetteInfo.name = RSNpcDB.GetNpcName(entityID)
+	end
 	
 	-- Check if it is an event to summon another NPC. In that case display NPC information instead
-	for eventID, rareNpcID in pairs (RSConstants.NPCS_WITH_PRE_EVENT) do
-		if (eventID == entityID) then
-			RSGeneralDB.RemoveAlreadyFoundEntity(eventID)
-			entityID = rareNpcID
-		end
+	if (RSConstants.NPCS_WITH_PRE_EVENT[entityID]) then
+		local rareNpcID = RSConstants.NPCS_WITH_PRE_EVENT[entityID]
+		RSGeneralDB.RemoveAlreadyFoundEntity(entityID)
+		vignetteInfo.name = RSNpcDB.GetNpcName(rareNpcID)
+		entityID = rareNpcID
+		vignetteInfo.preEvent = true
 	end
 
 	-- Check it it is an entity that use a vignette but it isn't a rare, event or treasure
@@ -1136,7 +1159,7 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 				RareScanner:SetVignetteFound(vignetteInfo.id, false, entityID)
 				FlashClientIcon()
 				self:PlaySoundAlert(vignetteInfo.atlasName)
-				self:DisplayMessages(vignetteInfo.name)
+				self:DisplayMessages(vignetteInfo.preEvent and string.format(AL["PRE_EVENT"], vignetteInfo.name) or vignetteInfo.name)
 				return
 			end
 		end
@@ -1163,7 +1186,7 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 	--------------------------------
 	if (not isNavigating) then
 		FlashClientIcon()
-		self:DisplayMessages(vignetteInfo.name)
+		self:DisplayMessages(vignetteInfo.preEvent and string.format(AL["PRE_EVENT"], vignetteInfo.name) or vignetteInfo.name)
 		self:PlaySoundAlert(vignetteInfo.atlasName)
 	end
 
@@ -1180,6 +1203,7 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 		if (not self:IsShown() or isNavigating or not RSConfigDB.IsDisplayingNavigationArrows() or not RSConfigDB.IsNavigationLockEnabled()) then
 			self.npcID = entityID
 			self.name = vignetteInfo.name
+			self.preEvent = vignetteInfo.preEvent
 			self.atlasName = vignetteInfo.atlasName
 
 			local npcInfo = RSNpcDB.GetInternalNpcInfo(entityID)
@@ -1380,9 +1404,17 @@ end
 
 function scanner_button:PlaySoundAlert(atlasName)
 	if (not RSConfigDB.IsPlayingObjectsSound() and (RSConstants.IsContainerAtlas(atlasName) or RSConstants.IsEventAtlas(atlasName))) then
-		PlaySoundFile(string.gsub(private.SOUNDS[RSConfigDB.GetSoundPlayedWithObjects()], "-4", "-"..RSConfigDB.GetSoundVolume()), RSConfigDB.GetSoundChannel())
+		if (RSConfigDB.GetCustomSound(RSConfigDB.GetSoundPlayedWithObjects())) then
+			PlaySoundFile(string.format(RSConstants.EXTERNAL_SOUND_FOLDER, RSConfigDB.GetCustomSoundsFolder(), RSConfigDB.GetCustomSound(RSConfigDB.GetSoundPlayedWithObjects())), RSConfigDB.GetSoundChannel())
+		else
+			PlaySoundFile(string.gsub(RSConstants.DEFAULT_SOUNDS[RSConfigDB.GetSoundPlayedWithObjects()], "-4", "-"..RSConfigDB.GetSoundVolume()), RSConfigDB.GetSoundChannel())
+		end
 	elseif (not RSConfigDB.IsPlayingSound() and RSConstants.IsNpcAtlas(atlasName)) then
-		PlaySoundFile(string.gsub(private.SOUNDS[RSConfigDB.GetSoundPlayedWithNpcs()], "-4", "-"..RSConfigDB.GetSoundVolume()), RSConfigDB.GetSoundChannel())
+		if (RSConfigDB.GetCustomSound(RSConfigDB.GetSoundPlayedWithNpcs())) then
+			PlaySoundFile(string.format(RSConstants.EXTERNAL_SOUND_FOLDER, RSConfigDB.GetCustomSoundsFolder(), RSConfigDB.GetCustomSound(RSConfigDB.GetSoundPlayedWithNpcs())), RSConfigDB.GetSoundChannel())
+		else
+			PlaySoundFile(string.gsub(RSConstants.DEFAULT_SOUNDS[RSConfigDB.GetSoundPlayedWithNpcs()], "-4", "-"..RSConfigDB.GetSoundVolume()), RSConfigDB.GetSoundChannel())
+		end
 	end
 end
 
@@ -1425,7 +1457,7 @@ function scanner_button:ShowButton()
 	self:SetScale(RSConfigDB.GetButtonScale())
 
 	-- Sets the name
-	self.Title:SetText(self.name)
+	self.Title:SetText(self.preEvent and string.format(AL["PRE_EVENT"], self.name) or self.name)
 
 	-- show loot bar
 	if (RSConfigDB.IsDisplayingLootBar()) then
@@ -1647,6 +1679,15 @@ local function RefreshDatabaseData()
 				RSLogger:PrintDebugMessage(string.format("NPC [%s]. Sin nombre, reintantando obtenerlo.", npcID))
 				RSNpcDB.GetNpcName(npcID);
 				sync = false
+			end
+		end
+	
+		-- Sets already found NPCs as NPCs if they were found as events
+		for _, npcID in ipairs (RSConstants.NPCS_WITH_EVENT_VIGNETTE) do
+			local npcInfo = RSGeneralDB.GetAlreadyFoundEntity(npcID)
+			if (npcInfo and npcInfo.atlasName ~= RSConstants.NPC_VIGNETTE) then
+				npcInfo.atlasName =	RSConstants.NPC_VIGNETTE
+				RSLogger:PrintDebugMessage(string.format("NPC [%s]. Estaba marcado como un evento, Corregido!.", npcID))
 			end
 		end
 

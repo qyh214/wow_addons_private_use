@@ -1040,7 +1040,7 @@ end
 local Initialize = CreateFrame("Frame");
 Initialize:RegisterEvent("PLAYER_ENTERING_WORLD");
 Initialize:SetScript("OnEvent", function(self, event, ...)
-    self:UnregisterEvent("PLAYER_ENTERING_WORLD");
+    self:UnregisterEvent(self);
     local level = UnitLevel("player");
     if level == 120 then
         hooksecurefunc("UseContainerItem", function(bag, slot)

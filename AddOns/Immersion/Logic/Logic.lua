@@ -136,22 +136,12 @@ function NPC:HandleGossipQuestOverlap(event)
 end
 
 function NPC:HandleGossipOpenEvent(kit)
-	local handler = kit and self:GetGossipHandler(kit)
-	if handler then
-		self.customGossipFrame = handler(kit)
-	else
+	if not self.gossipHandlers[kit] then
 		self:SetBackground(kit)
 		self:UpdateTalkingHead(API:GetUnitName('npc'), API:GetGossipText(), 'GossipGossip')
 		if self:IsGossipAvailable() then
 			self:PlayIntro('GOSSIP_SHOW')
 		end
-	end
-end
-
-function NPC:HandleGossipCloseEvent()
-	if self.customGossipFrame then
-		self.customGossipFrame:Hide()
-		self.customGossipFrame = nil;
 	end
 end
 

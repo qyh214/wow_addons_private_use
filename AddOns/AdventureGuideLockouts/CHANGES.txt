@@ -1,10 +1,10 @@
-lightweight tag 2ce02e4b5d31418c4fe03aae8ca2716e36e5de5d v1.3.9
+lightweight tag 9041406f693a35a90cc3ab8566c3debe106186d9 v1.4.0
 Author:	Meivyn <meivyn@live.ca>
-Date:	Wed Jun 30 18:11:41 2021 -0400
+Date:	Wed Jul 7 03:05:30 2021 -0400
 
-commit 2ce02e4b5d31418c4fe03aae8ca2716e36e5de5d
+commit 9041406f693a35a90cc3ab8566c3debe106186d9
 Author: Meivyn <meivyn@live.ca>
-Date:   Wed Jun 30 18:11:41 2021 -0400
+Date:   Wed Jul 7 03:05:30 2021 -0400
 
-    Update for patch 9.1
+    Fix Mor'geth quest ID
 

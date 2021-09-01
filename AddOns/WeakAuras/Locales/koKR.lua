@@ -126,6 +126,8 @@ L["Armor Rating"] = "방어도"
 L["Array"] = "정렬"
 L["Ascending"] = "오름차순"
 L["Assigned Role"] = "할당된 역할"
+--[[Translation missing --]]
+L["Assigned Role Icon"] = "Assigned Role Icon"
 L["At Least One Enemy"] = "최소 1명의 적 대상"
 --[[Translation missing --]]
 L["At missing Value"] = "At missing Value"
@@ -306,12 +308,16 @@ L["Damage Shield"] = "피해 반사"
 L["Damage Shield Missed"] = "피해 보호막 적중 실패"
 L["Damage Split"] = "피해 분배"
 L["DBM Announce"] = "DBM 알림"
+--[[Translation missing --]]
+L["DBM Stage"] = "DBM Stage"
 L["DBM Timer"] = "DBM 타이머"
 L["Death Knight Rune"] = "죽음의 기사 룬"
 L["Debuff"] = "약화 효과"
 L["Debuff Class"] = "약화 효과 직업"
 L["Debuff Class Icon"] = "약화 효과 직업 아이콘"
 L["Debuff Type"] = "약화 효과 유형"
+--[[Translation missing --]]
+L["Defense"] = "Defense"
 L["Deflect"] = "튕김"
 L["Desaturate"] = "흑백"
 L["Desaturate Background"] = "흑백 배경"
@@ -396,6 +402,8 @@ L["Equipped"] = "장착함"
 L["Eredar Twins"] = "Eredar Twins"
 L["Error"] = "오류"
 L["Error Frame"] = "오류창"
+--[[Translation missing --]]
+L["Error in aura '%s' in %s. trigger. All States table contains a non table at key: '%s'."] = "Error in aura '%s' in %s. trigger. All States table contains a non table at key: '%s'."
 L["Error not receiving display information from %s"] = "%s 에서 표시 정보를 받지 못하는 오류"
 --[[Translation missing --]]
 L[ [=['ERROR: Anchoring %s': 
@@ -518,6 +526,8 @@ L["Heal Absorb"] = "Heal Absorb"
 L["Heal Absorbed"] = "Heal Absorbed"
 L["Health"] = "생명력"
 L["Health (%)"] = "생명력 (%)"
+--[[Translation missing --]]
+L["Health Deficit"] = "Health Deficit"
 L["Heigan the Unclean"] = "부정의 헤이건"
 L["Height"] = "높이"
 --[[Translation missing --]]
@@ -537,6 +547,10 @@ L["High Priestess Mar'li"] = "대여사제 말리"
 --[[Translation missing --]]
 L["High Warlord Naj'entus"] = "High Warlord Naj'entus"
 L["Higher Than Tank"] = "탱커보다 높을 때"
+--[[Translation missing --]]
+L["Hit (%)"] = "Hit (%)"
+--[[Translation missing --]]
+L["Hit Rating"] = "Hit Rating"
 L["Holy Resistance"] = "신성 저항"
 L["Horde"] = "호드"
 L["Hostile"] = "적대적"
@@ -571,6 +585,8 @@ L["In Raid"] = "공격대 중"
 L["In Vehicle"] = "차량 탑승 중"
 L["Include Bank"] = "은행 포함"
 L["Include Charges"] = "충전량 포함"
+--[[Translation missing --]]
+L["Include Pets"] = "Include Pets"
 L["Incoming Heal"] = "받는 치유"
 --[[Translation missing --]]
 L["Increase Precision Below"] = "Increase Precision Below"
@@ -854,6 +870,8 @@ L["Pet Behavior"] = "소환수 행동"
 L["Pet Specialization"] = "소환수 전문화"
 L["Pet Spell"] = "소환수 주문"
 --[[Translation missing --]]
+L["Pets only"] = "Pets only"
+--[[Translation missing --]]
 L["Phase"] = "Phase"
 L["Pixel Glow"] = "픽셀 반짝임"
 L["Placement"] = "배치"
@@ -872,9 +890,13 @@ L["Player Race"] = "플레이어 종족"
 L["Player(s) Affected"] = "영향 받은 플레이어"
 L["Player(s) Not Affected"] = "영향 받지 않은 플레이어"
 L["Player/Unit Info"] = "플레이어/유닛 정보"
+--[[Translation missing --]]
+L["Players and Pets"] = "Players and Pets"
 L["Poison"] = "독"
 L["Power"] = "자원"
 L["Power (%)"] = "자원 (%)"
+--[[Translation missing --]]
+L["Power Deficit"] = "Power Deficit"
 L["Power Type"] = "자원 유형"
 L["Precision"] = "정밀도"
 L["Preset"] = "프리셋"
@@ -908,6 +930,8 @@ L["Raid (Heroic)"] = "공격대 (영웅)"
 L["Raid (Mythic)"] = "공격대 (신화)"
 L["Raid (Normal)"] = "공격대 (일반)"
 L["Raid (Timewalking)"] = "공격대 (시간여행)"
+--[[Translation missing --]]
+L["Raid Mark"] = "Raid Mark"
 L["Raid Role"] = "공격대 역할"
 L["Raid Warning"] = "공격대 경보"
 L["Raids"] = "공격대"
@@ -1169,6 +1193,8 @@ L["Terestian Illhoof"] = "Terestian Illhoof"
 --[[Translation missing --]]
 L["Teron Gorefiend"] = "Teron Gorefiend"
 L["Text"] = "문자"
+--[[Translation missing --]]
+L["Text-to-speech"] = "Text-to-speech"
 L["Thaddius"] = "타디우스"
 L["The aura has overwritten the global '%s', this might affect other auras."] = "aura가 전역 '%s'|1을;를; 덮어썼습니다, 다른 aura도 영향을 받습니다."
 --[[Translation missing --]]
@@ -1196,6 +1222,8 @@ L["This aura has legacy aura trigger(s), which are no longer supported."] = "이
 L["This aura was created with a newer version of WeakAuras."] = "이 효과는 WeakAuras의 새로운 버전으로 만들어졌습니다."
 L["This aura was created with the Classic version of World of Warcraft."] = "이 효과는 월드 오브 워크래프트 클래식 버전 으로 만들어졌습니다."
 L["This aura was created with the retail version of World of Warcraft."] = "이 효과는 월드 오브 워크래프트 리테일 버전 으로 만들어졌습니다."
+--[[Translation missing --]]
+L["This import requires a newer WeakAuras version."] = "This import requires a newer WeakAuras version."
 L["This is a modified version of your aura, |cff9900FF%s.|r"] = "|cff9900FF%s.|r 이것은 귀하의 효과를 수정한 것입니다."
 L["This is a modified version of your group, |cff9900FF%s.|r"] = "|cff9900FF%s.|r 이것은 귀하의 그룹을 수정한 버전입니다."
 L["Threat Percent"] = "위협 수준 백분율"

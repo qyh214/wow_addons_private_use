@@ -34,8 +34,8 @@ local function Entrance_DH(self, elapsed)
 	
 	if self.t <= 0.2 then
 		return;
-	elseif self.Trigger then
-		self.Trigger = false;
+	elseif self.trigger then
+		self.trigger = false;
 		ModelFrame:SetAnimation(39, 1)
 		ModelFrame:MakeCurrentCameraCustom();
 		After(0, function()
@@ -60,8 +60,8 @@ local function Entrance_Mage(self, elapsed)
 	
 	if self.t <=0 then
 		return;
-	elseif self.Trigger then
-		self.Trigger = false;
+	elseif self.trigger then
+		self.trigger = false;
 		ModelFrame:MakeCurrentCameraCustom();
 		After(0, function()
 			ModelFrame:ApplySpellVisualKit(68828, true);
@@ -85,8 +85,8 @@ local function Entrance_Warlock(self, elapsed)
 	ModelFrame:SetAlpha(0);
 	if self.t <=0 then
 		return;
-	elseif self.Trigger then
-		self.Trigger = false;
+	elseif self.trigger then
+		self.trigger = false;
 		ModelFrame:FreezeAnimation(1056, 0, 1);
 		After(0, function()
 			ModelFrame:ApplySpellVisualKit(71357, true);
@@ -122,8 +122,8 @@ local function Entrance_Rogue(self, elapsed)
 	
 	if self.t <=0 then
 		return;
-	elseif self.Trigger then
-		self.Trigger = false;
+	elseif self.trigger then
+		self.trigger = false;
 		ModelFrame:MakeCurrentCameraCustom();
 		After(0, function()
             ModelFrame:ApplySpellVisualKit(105866, true);
@@ -151,8 +151,8 @@ local function Entrance_Priest(self, elapsed)
 	
 	if self.t <=0 then
 		return;
-	elseif self.Trigger then
-		self.Trigger = false;
+	elseif self.trigger then
+		self.trigger = false;
 		ModelFrame:MakeCurrentCameraCustom();
 		After(0, function()
 			ModelFrame:ApplySpellVisualKit(41593, true);
@@ -176,8 +176,8 @@ local function Entrance_DK(self, elapsed)
 	
 	if self.t <=0 then
 		return;
-	elseif self.Trigger then
-		self.Trigger = false;
+	elseif self.trigger then
+		self.trigger = false;
 		ModelFrame:MakeCurrentCameraCustom();
 		After(0, function()
             ModelFrame:ApplySpellVisualKit(57627, true);
@@ -200,8 +200,8 @@ local function Entrance_Monk(self, elapsed)
 	local offset = outQuad(self.t, self.startY, self.defaultY - self.startY, t)
 
 	if self.t > turnTime then
-		self.FaceTime= self.FaceTime + elapsed;
-		local radian = outSine(self.FaceTime, -pi/2, -pi/8 + pi/2, 0.8) --0.11 NE
+		self.faceTime= self.faceTime + elapsed;
+		local radian = outSine(self.faceTime, -pi/2, -pi/8 + pi/2, 0.8) --0.11 NE
 		ModelFrame:SetFacing(radian)
         ModelFrame.rotation = radian
 	end
@@ -216,9 +216,9 @@ local function Entrance_Monk(self, elapsed)
 
 	if self.t <=0 then
 		return;
-	elseif self.Trigger then
-		self.Trigger = false;
-		ModelFrame:ApplySpellVisualKit(70520, true);	--Cloud
+	elseif self.trigger then
+		self.trigger = false;
+		ModelFrame:ApplySpellVisualKit(6095, true);	--Cloud
 		After(0.8, function()
 			ModelFrame:ApplySpellVisualKit(65638, true);	--65217
 			ModelFrame:SetAnimation(116, 1);
@@ -247,8 +247,8 @@ local function Entrance_Warrior(self, elapsed)
 	
 	if self.t <=0 then
 		return;
-	elseif self.Trigger then
-		self.Trigger = false;
+	elseif self.trigger then
+		self.trigger = false;
 		
 		ModelFrame:SetAnimation(39, 1)
 		ModelFrame:MakeCurrentCameraCustom();
@@ -281,8 +281,8 @@ local function Entrance_Shaman(self, elapsed)
 
 	if self.t <= 0 then
 		return;
-	elseif self.Trigger then
-        self.Trigger = false;
+	elseif self.trigger then
+        self.trigger = false;
 		ModelFrame:ApplySpellVisualKit(100019, true);	--74261 Thunder
 		ModelFrame:SetAnimation(115, 1)
 		After(0.2, function()
@@ -306,8 +306,8 @@ local function Entrance_Druid(self, elapsed)
 	
 	if self.t <=0 then
 		return;
-	elseif self.Trigger then
-		self.Trigger = false;
+	elseif self.trigger then
+		self.trigger = false;
 		ModelFrame:MakeCurrentCameraCustom();
 		local id = 78803 + math.random(0, 3);
 		ModelFrame:ApplySpellVisualKit(id, true);
@@ -334,8 +334,8 @@ local function Entrance_Paladin(self, elapsed)
 	
 	if self.t <=0 then
 		return;
-	elseif self.Trigger then
-		self.Trigger = false;
+	elseif self.trigger then
+		self.trigger = false;
 		ModelFrame:MakeCurrentCameraCustom();
 		After(0, function()
 			ModelFrame:ApplySpellVisualKit(109802, true);
@@ -358,8 +358,8 @@ local function Entrance_Hunter(self, elapsed)
 	local offset = outQuad(self.t, self.startY, self.defaultY - self.startY, t)
 
 	if self.t > turnTime then
-		self.FaceTime= self.FaceTime + elapsed;
-		local radian = outSine(self.FaceTime, -pi/2, endFacing + pi/2, 0.8) --0.11 NE
+		self.faceTime= self.faceTime + elapsed;
+		local radian = outSine(self.faceTime, -pi/2, endFacing + pi/2, 0.8) --0.11 NE
 		ModelFrame:SetFacing(radian)
 		ModelFrame.rotation = radian
 	end
@@ -374,8 +374,8 @@ local function Entrance_Hunter(self, elapsed)
 	
 	if self.t <=0.8 then
 		return;
-	elseif self.Trigger then
-		self.Trigger = false;
+	elseif self.trigger then
+		self.trigger = false;
 		ModelFrame:ApplySpellVisualKit(11212, true);	
 		After(0.2, function()
 			ModelFrame:SetAnimation(113);

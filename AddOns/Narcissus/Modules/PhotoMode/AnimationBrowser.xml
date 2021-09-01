@@ -1,7 +1,7 @@
 <Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
     <Script file="AnimationBrowser.lua"/>
 
-    <Button name="Narci_AnimationButtonTemplate" hidden="true" virtual="true" registerForClicks="LeftButtonUp, RightButtonUp">
+    <Button name="Narci_AnimationButtonTemplate" virtual="true" registerForClicks="LeftButtonUp, RightButtonUp" mixin="NarciAnimationOptionButtonMixin">
         <Size x="139" y="16"/>
         <Layers>
             <Layer level="BACKGROUND">
@@ -10,7 +10,7 @@
                 </Texture>
             </Layer>
 			<Layer level="ARTWORK">
-				<Texture setAllPoints="true" parentKey="Highlight" hidden="true">
+				<Texture setAllPoints="true" parentKey="Highlight" hidden="true" Alpha="0">
 					<Color r="1" g="1" b="1" a="0.08"/>		
 				</Texture>
 			</Layer>
@@ -25,7 +25,7 @@
 					<Size x="16" y="16"/>
 					<TexCoords left="0.75" right="1" top="0.25" bottom="0.5"/>
 					<Anchors>
-						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-2"/>
+						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-6"/>
 					</Anchors>
 				</Texture>
             </Layer>
@@ -64,17 +64,10 @@
             </Frame>
         </Frames>
 		<Scripts>
-            <OnLoad>
-                self.Name = self.FlyingTextFrame.Name;
-                self.FlyIn = self.FlyingTextFrame.Name.FlyIn;
-            </OnLoad>
-			<OnLeave>
-				UIFrameFadeOut(self.Highlight, 0.2, self.Highlight:GetAlpha(), 0);
-                self.FlyIn:Stop();
-			</OnLeave>
-			<OnDoubleClick>
-				return;
-			</OnDoubleClick>
+			<OnLeave method="OnLeave"/>
+			<OnDoubleClick method="OnDoubleClick"/>
+            <OnEnter method="OnEnter"/>
+            <OnClick method="OnClick"/>
 		</Scripts>
     </Button>
 
@@ -138,7 +131,7 @@
                     </Frame>
                 </ScrollChild>
                 <Frames>
-                    <Slider inherits="NarciSimpleSliderTemplate">
+                    <Slider inherits="NarciCustomScrollBarTemplate" frameLevel="55">
                         <Anchors>
                             <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="0" y="0"/>
                             <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
@@ -155,100 +148,14 @@
                 </Frames>
             </ScrollFrame>
             
-            <Editbox parentKey="Editbox" autoFocus="false" letters="24" mixin="NarciAnimationSearchBoxMixin">
+            <Editbox parentKey="Editbox" autoFocus="false" letters="24" mixin="NarciAnimationSearchBoxMixin" inherits="NarciSearchBoxTemplate">
                 <Size y="16"/>
                 <Anchors>
                     <Anchor point="LEFT" relativeKey="$parent.Header" relativePoint="LEFT" x="26"/>
                     <Anchor point="RIGHT" relativeKey="$parent.Header" relativePoint="RIGHT" x="0"/>
                 </Anchors>
-                <FontString inherits="NarciPastelWhiteFont" justifyH="LEFT" justifyV="MIDDLE"/>
-                <Layers>
-                    <Layer level="BACKGROUND">
-                        <FontString inherits="NarciDisabledButtonFont" justifyH="LEFT" justifyV="MIDDLE" parentKey="DefaultText">
-                            <Size x="80" y="16"/>
-                            <Anchors>
-                                <Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="0" y="0"/>
-                            </Anchors>
-                            <Animations>
-                                <AnimationGroup parentKey="FadeOut">
-                                    <Alpha fromAlpha="1" toAlpha="1" duration="1.75" order="1"/>
-                                    <Alpha fromAlpha="1" toAlpha="0" duration="0.2" order="2"/>
-                                    <Scripts>
-                                        <OnFinished>
-                                            self:GetParent():SetText("Search");
-                                            self:GetParent().FadeIn:Play();
-                                        </OnFinished>
-                                    </Scripts>
-                                </AnimationGroup>
-                                <AnimationGroup parentKey="FadeIn">
-                                    <Alpha fromAlpha="0" toAlpha="1" duration="0.2" order="1"/>
-                                </AnimationGroup>
-                            </Animations>									
-                        </FontString>
-                    </Layer>
-                </Layers>
-                <Frames>
-                    <Button parentKey="EraseButton"> <!--Scripts in NarciTooltip-->
-                        <Size x="20" y="20"/>
-                        <HitRectInsets>
-                            <AbsInset left="0" right="0" top="-1" bottom="2"/>
-                        </HitRectInsets>
-                        <Anchors>
-                            <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="0" y="0"/> 
-                        </Anchors>
-                        <Layers>
-                            <Layer level="OVERLAY" textureSubLevel="1">
-                                <Texture file="Interface\AddOns\Narcissus\Art\Widgets\SpellVisualBrowser\Icons" parentKey="Icon" Alpha="0.5">
-                                    <TexCoords left="0.75" right="1" top="0.75" bottom="1"/>
-                                    <Size x="20" y="20"/>
-                                    <Anchors>
-                                        <Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER"/>
-                                    </Anchors>
-                                </Texture>
-                            </Layer>
-                        </Layers>
-                        <Scripts>
-                            <OnLoad>
-                                self.Icon:SetTexCoord(0.75, 1, 0.75, 1);
-                            </OnLoad>
-                            <OnClick>
-                                self:GetParent():ClearText(true);
-                            </OnClick>
-                            <OnEnter>
-                                self.Icon:SetAlpha(1);
-                            </OnEnter>
-                            <OnLeave>
-                                self.Icon:SetAlpha(0.5);
-                            </OnLeave>
-                            <OnMouseDown>
-                                self.Icon:SetSize(18, 18);
-                            </OnMouseDown>
-                            <OnMouseUp>
-                                self.Icon:SetSize(20, 20);
-                            </OnMouseUp>
-                            <OnDoubleClick>
-                                return;
-                            </OnDoubleClick>
-                            <PostClick>
-                                if self.isEditing then
-                                    self:GetParent():SetFocus();
-                                end
-                            </PostClick>
-                        </Scripts>
-                    </Button>
-                </Frames>
                 <Scripts>
-                    <OnLoad method="OnLoad"/>
-                    <OnTextChanged method="OnTextChanged"/>
-                    <OnEscapePressed method="QuitEdit"/>
-                    <OnEnterPressed method="QuitEdit"/>
-                    <OnTabPressed method="OnTabPressed"/>
-                    <OnEditFocusGained method="OnEditFocusGained"/>
-                    <OnEditFocusLost method="OnEditFocusLost"/>
-                    <OnShow method="OnShow"/>
-                    <OnHide method="OnHide"/>
-                    <OnEnter method="OnEnter"/>
-                    <OnLeave method="OnLeave"/>
+                    <OnLoad method="PostLoad"/>
                 </Scripts>
             </Editbox>
         </Frames>

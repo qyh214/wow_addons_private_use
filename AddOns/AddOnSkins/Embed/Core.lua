@@ -7,8 +7,8 @@ local strmatch = strmatch
 local strsub = strsub
 
 local CreateFrame = CreateFrame
-local FCF_GetNumActiveChatFrames = FCF_GetNumActiveChatFrames
 local FCF_IsValidChatFrame = FCF_IsValidChatFrame
+local FCF_IsChatWindowIndexActive = FCF_IsChatWindowIndexActive
 local hooksecurefunc = hooksecurefunc
 local UIParent = UIParent
 
@@ -17,10 +17,24 @@ AS.ChatFrameHider:Hide()
 
 local EmbedSystem_MainWindow, EmbedSystem_LeftWindow, EmbedSystem_RightWindow
 
+if not FCF_IsChatWindowIndexActive then
+	function FCF_IsChatWindowIndexActive(chatWindowIndex)
+		local shown = select(7, FCF_GetChatWindowInfo(chatWindowIndex));
+		if shown then
+			return true;
+		end
+
+		local chatFrame = _G["ChatFrame"..chatWindowIndex];
+		return (chatFrame and chatFrame.isDocked);
+	end
+end
+
 function AS:GetChatWindowInfo()
 	local ChatTabInfo = {['NONE'] = 'NONE'}
-	for i = 1, FCF_GetNumActiveChatFrames() do
-		ChatTabInfo["ChatFrame"..i] = _G["ChatFrame"..i.."Tab"]:GetText()
+	for i = 1, NUM_CHAT_WINDOWS do
+		if i ~= 2 and FCF_IsChatWindowIndexActive(i) then
+			ChatTabInfo["ChatFrame"..i] = _G["ChatFrame"..i.."Tab"]:GetText()
+		end
 	end
 	return ChatTabInfo
 end

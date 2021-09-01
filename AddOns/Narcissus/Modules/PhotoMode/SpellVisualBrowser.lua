@@ -1240,14 +1240,6 @@ local function ReApplySpellVisual(model)
     end
 end
 
-local function ReEquipWeapons(model)
-    if model.weapons and model.holdWeapon then
-        for i = 1, #model.weapons do
-            model:EquipItem(model.weapons[i]);
-        end
-    end
-end
-
 local function ResetModel()
     local model = Narci.ActiveModel;
     if not model then return; end;
@@ -1287,10 +1279,7 @@ local function ResetModel()
 
         After(0, function()
             ReApplySpellVisual(model);
-
-            if model.creatureID then
-                ReEquipWeapons(model);
-            end
+            model:ReEquipWeapons();
 
             if model.isVirtual then
                 model:SetModelAlpha(0);

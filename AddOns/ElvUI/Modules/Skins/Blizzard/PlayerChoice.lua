@@ -1,9 +1,9 @@
 local E, L, V, P, G = unpack(select(2, ...)) --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local S = E:GetModule('Skins')
+local B = E:GetModule('Blizzard')
 
 local _G = _G
 local hooksecurefunc = hooksecurefunc
-local IsInJailersTower = IsInJailersTower
 
 local function SetupButtons(buttons)
 	if buttons and buttons.buttonPool then
@@ -50,27 +50,29 @@ local function SetupOptions(frame)
 		frame.CloseButton.Border:SetAlpha(0)
 	end
 
-	local inTower = IsInJailersTower()
-	frame:SetTemplate(inTower and 'NoBackdrop' or 'Transparent')
+	local kit = frame.uiTextureKit == 'jailerstower'
+	frame:SetTemplate(kit and 'NoBackdrop' or 'Transparent')
 
 	if frame.optionFrameTemplate and frame.optionPools then
 		local parchmentRemover = E.private.skins.parchmentRemoverEnable
-		local noParchment = not inTower and parchmentRemover
+		local noParchment = not kit and parchmentRemover
 
 		for option in frame.optionPools:EnumerateActiveByTemplate(frame.optionFrameTemplate) do
+			local header = option.Header
+			local contents = header and header.Contents
+
 			if parchmentRemover then
-				option.Header.Text:SetTextColor(1, .8, 0)
-				option.OptionText:SetTextColor(1, 1, 1)
+				if contents and contents.Text then contents.Text:SetTextColor(1, .8, 0) end -- Normal Header Text
+				if header and header.Text then header.Text:SetTextColor(1, .8, 0) end -- Torghast Header Text
+				if option.OptionText then option.OptionText:SetTextColor(1, 1, 1) end -- description text
 			end
 
 			if noParchment then
-				option.Background:SetAlpha(0)
-				option.Header.Ribbon:SetAlpha(0)
+				if option.Background then option.Background:SetAlpha(0) end
+				if header and header.Ribbon then header.Ribbon:SetAlpha(0) end -- Normal only
 			end
 
-			if option.Artwork then -- blizzard never sets a size
-				option.Artwork:Size(64) -- fix it for art replacements
-			end
+			if option.Artwork and kit then option.Artwork:Size(64) end -- fix size from icon replacements in tower
 
 			SetupRewards(option.rewards)
 			SetupButtons(option.buttons)
@@ -80,6 +82,21 @@ end
 
 function S:Blizzard_PlayerChoice()
 	if not (E.private.skins.blizzard.enable and E.private.skins.blizzard.playerChoice) then return end
+
+	B:BuildWidgetHolder('PlayerChoiceToggleHolder', 'PlayerChoiceToggle', 'CENTER', L["Player Choice Toggle"], _G.PlayerChoiceToggleButton, 'CENTER', E.UIParent, 'CENTER', 0, -200, 300, 40, 'ALL,GENERAL')
+
+	-- whole area is clickable which is pretty big; keep an eye on this
+	_G.PlayerChoiceToggleButton:SetHitRectInsets(70, 70, 40, 40)
+
+	-- this fixes the trajectory of the anima orb to stay in correct place
+	hooksecurefunc(_G.PlayerChoiceToggleButton, 'StartEffect', function(button, effectID)
+		local controller = button.effectController
+		if not controller then return end
+
+		if effectID == 98 then -- anima orb
+			controller:SetDynamicOffsets(-5, -10, -1.33)
+		end
+	end)
 
 	hooksecurefunc(_G.PlayerChoiceFrame, 'SetupOptions', SetupOptions)
 end

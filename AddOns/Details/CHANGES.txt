@@ -1,34 +1,42 @@
-tag 96a7ba640c2a7b5e302f4258340961dfd245cd01 DetailsRetail.9.0.5.8637.145
+tag 7f880533a9b4ab5697743cc2076994988ac6ab8a DetailsRetail.9.1.0.8782.145
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Tue Jun 22 17:01:04 2021 -0300
+Date:	Wed Aug 11 19:55:11 2021 -0300
 
-commit b596445acefd31b32e51a81a115ba69795574db1
+commit 70483cd1945ae726c1d1cc28e463d7e29bfcb7d0
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Tue Jun 22 17:00:09 2021 -0300
+Date:   Wed Aug 11 19:54:12 2021 -0300
 
-    Packr Utility on Coach mode and Vanguard massive update
+    Tiny Threat (plugin): added options to Hide the Pull Bar and Use Focus Target.
 
-commit 8b2501309f15dfa3605d702cefa963c87af01745
+commit b4b6b645049fda4aebe8ede76ced05995fb71b4d
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Tue Jun 15 23:10:37 2021 -0300
+Date:   Tue Aug 3 10:44:42 2021 -0300
 
-    Another wave of changes on Vanguard
+    Fixed lib Translit on healing done
 
-commit 7d17a69c1a5b27edbbea76aeab449c5bac0c0ed3
+commit 4fe002cf18309212b1322b052f7d4618a5e6c8c6
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon Jun 14 15:55:29 2021 -0300
+Date:   Fri Jul 30 20:22:07 2021 -0300
 
-     Vanguard updated to 2021
+    Added Transliterate to healing tooltips, fixed some close buttons with green boxes
 
-commit 39aa5f0e7782b0cc5187f87337d6146f8af4cb08
+commit b32a48dc635c999e008aafc0be3503924fca48f8
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon Jun 14 15:55:10 2021 -0300
+Date:   Fri Jul 30 17:56:11 2021 -0300
 
-    Make plugins be in the list of displays
+    Added Details.all_switch_config.font_size and Details.all_switch_config.scale
+    
+    These entries configure the panel shown when right click the title bar of the window.
 
-commit bd1700b5f11ae1d117a0c4ccba9475f0d96f8961
+commit e3c539dc30d29c4f00d7ac0e755f3c76186657ab
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Thu Jun 10 12:09:28 2021 -0300
+Date:   Fri Jul 30 13:06:41 2021 -0300
 
-    general fixes for game client versions
+    Fixed Raid Check plugin position and shadow priest void eruption got merged with other spells of the same name
+
+commit 9a69703ea7a7019d01dac3075d76ef291add3aa4
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Thu Jul 15 14:25:52 2021 -0300
+
+    Clicking on the minimap while the options panel is open will close it
 

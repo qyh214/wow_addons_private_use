@@ -18,7 +18,7 @@ local DefaultValue = {
     ["EnableDoubleTap"] = false,
     ["CameraOrbit"] = true,
     ["CameraSafeMode"] = true,
-    ["BorderTheme"] = "Bright",
+    ["BorderTheme"] = "Dark",
     ["TooltipTheme"] = "Bright",
     ["TruncateText"] = false,
     ["ItemNameWidth"] = 180,
@@ -52,14 +52,18 @@ local DefaultValue = {
     ["AnchorToMinimap"] = true,                     --Anchor the mini button to Minimap
     ["CameraTransition"] = true,                    --(2nd you use the Character Pane) Camera moves smoothly bewtween presets
     ["UseBustShot"] = true,                         --Zoom in to the upper torso
-    ["ConduitTooltip"] = false,                      --Show conduit effects of higher ranks
-
+    ["ConduitTooltip"] = false,                     --Show conduit effects of higher ranks
+    ["DominationIndicator"] = true,                 --Show Domination indicator on the Blizzard character pane
+    
     --Internal Hotkey
     ["SearchRelativesHotkey"] = "TAB",              --The key you press to begin/cycle relative search
     
     --Deprecated
     --["UseExitConfirmation"] = true,               --Show exit confirmation dialog upon leaving group photo mode
     --["ShowFullBody"] = true,                      --Show entire body in Xmog Mode
+
+    --User Tag
+    --"UserIsCurious" (user interacted with our item shop)
 };
 
 local CreatureDatabaseOptions = {
@@ -81,8 +85,9 @@ local AchievementOptions = {
 };
 
 local TutorialInclude = {
-    "SpellVisualBrowser", "EquipmentSetManager", "Movement", "ExitConfirmation",    --"IndependentMinimapButton"
-    "NPCBrowserEntance", "NPCBrowser", 
+    "SpellVisualBrowser", "Movement", "ExitConfirmation",    --"IndependentMinimapButton" , "EquipmentSetManager"
+    "NPCBrowserEntance", "NPCBrowser",
+    "WeaponBrowser",
 };
 
 local function Initialize_NarcissusDB()
@@ -93,7 +98,7 @@ local function Initialize_NarcissusDB()
     NarcissusDB_PC.EquipmentSetDB = NarcissusDB_PC.EquipmentSetDB or {};
 
     NarcissusDB.MinimapButton = NarcissusDB.MinimapButton or {};
-    NarcissusDB.MinimapButton.Position = NarcissusDB.MinimapButton.Position or rad(150);
+    NarcissusDB.MinimapButton.Position = NarcissusDB.MinimapButton.Position or math.rad(150);
 
     if (not NarcissusDB.Version) or (type(NarcissusDB.Version) ~= "number") then    --Used for showing patch notes when opening Narcissus after an update
         NarcissusDB.Version = 10000;
@@ -169,9 +174,11 @@ initialize:SetScript("OnEvent",function(self,event,...)
             Initialize_NarcissusDB();
             if (not NarciCreatureOptions.LoadOnDemand) or NarciCreatureOptions.SearchRelatives or NarciCreatureOptions.TranslateName then
                 C_Timer.After(0, function()
-                    LoadAddOn("Narcissus_Database");
+                    LoadAddOn("Narcissus_Database_NPC");
                 end)
             end
         end
     end
 end)
+
+--Narci.timeLoadingStart = GetTimePreciseSec();

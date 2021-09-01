@@ -2076,7 +2076,7 @@ local function InitializeBarberShopFrame()
     frame:Show();
 
     --Yogg-Salon Mockup
-    if Narci_InteractiveSplash then
+    if false then   --Narci_InteractiveSplash
         local MoneyFrame = CreateFrame("Frame", nil, BarberShopFrame, "NarciBarberShopDiscountMoneyFrameTemplate");
         MoneyFrame:ClearAllPoints();
         local PriceFrame = BarberShopFrame.PriceFrame;

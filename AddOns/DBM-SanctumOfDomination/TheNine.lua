@@ -1,36 +1,34 @@
 local mod	= DBM:NewMod(2439, "DBM-SanctumOfDomination", nil, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210614184808")
+mod:SetRevision("20210831171020")
 mod:SetCreatureID(175726)--Skyja (TODO, add other 2 and set health to highest?)
 mod:SetEncounterID(2429)
 mod:SetUsedIcons(8, 7, 6, 4, 3, 2, 1)
-mod:SetHotfixNoticeRev(20210520000000)--2021-05-20
-mod:SetMinSyncRevision(20210520000000)
+mod:SetHotfixNoticeRev(20210720000000)--2021-07-20
+mod:SetMinSyncRevision(20210713000000)
 --mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 350202 350342 350339 350365 350283 350385 350467 352744 350541 350482 350687 350475 355294 352756 352752",
-	"SPELL_CAST_SUCCESS 350286",
-	"SPELL_AURA_APPLIED 350202 350158 350109 351139 350039 350542 350184 350483",
+	"SPELL_CAST_SUCCESS 350286 350745",
+	"SPELL_AURA_APPLIED 350202 350158 350109 351139 350039 350542 350184 350483 350012 350078",
 	"SPELL_AURA_APPLIED_DOSE 350202 350542",
 	"SPELL_AURA_REMOVED 350158 350109 351139 350039 350542 350184 350483",
 --	"SPELL_AURA_REMOVED_DOSE 350542",
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
-	"UNIT_DIED",
-	"CHAT_MSG_MONSTER_YELL",
-	"UNIT_SPELLCAST_SUCCEEDED boss1"
+	"UNIT_DIED"
+--	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 --TODO, tank swap stacks
 --TODO, how many formless mass spawn in higher difficulties? Find out total needed icons
 --TODO, marking anything else??
---TODO, mythic timer updates when I have more patience to actually resolve how they update on phase 2 transition. It'd be nice if phase 2 was actually in combat log
 --[[
-(ability.id = 350202 or ability.id = 350342 or ability.id = 350365 or ability.id = 352756 or ability.id = 350385 or ability.id = 352752 or ability.id = 350467 or ability.id = 352744 or ability.id = 350541 or ability.id = 350482 or ability.id = 350687 or ability.id = 350475 or ability.id = 355294) and type = "begincast"
+(ability.id = 350202 or ability.id = 350342 or ability.id = 350365 or ability.id = 352756 or ability.id = 350385 or ability.id = 352752 or ability.id = 350467 or ability.id = 352744 or ability.id = 350541 or ability.id = 350482 or ability.id = 350687 or ability.id = 350475 or ability.id = 355294 or ability.id = 350339) and type = "begincast"
  or (ability.id = 350745 or ability.id = 350286) and type = "cast"
  or (target.id = 177095 or target.id = 177094) and type = "death"
 --]]
@@ -82,7 +80,7 @@ local yellFragmentsofDestiny					= mod:NewShortPosYell(350542)--TODO, probably c
 --Stage Two: The First of the Mawsworn
 local specWarnPierceSoul						= mod:NewSpecialWarningStack(350475, nil, 4, nil, nil, 1, 6)
 local specWarnPierceSoulTaunt					= mod:NewSpecialWarningTaunt(350475, nil, nil, nil, 1, 2)
-local specWarnLinkEssence						= mod:NewSpecialWarningYou(350482, nil, nil, nil, 1, 2, 3)
+local specWarnLinkEssence						= mod:NewSpecialWarningDefensive(350482, nil, nil, nil, 1, 2, 3)
 local specWarnWordofRecall						= mod:NewSpecialWarningSpell(350687, nil, nil, nil, 2, 2, 3)
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
@@ -94,15 +92,15 @@ local timerFormlessMassCD						= mod:NewCDCountTimer(47.3, 350342, nil, nil, nil
 local timerWingsofRageCD						= mod:NewCDCountTimer(72.9, 350365, nil, nil, nil, 2)
 ----Signe, The Voice
 local timerSongofDissolutionCD					= mod:NewCDCountTimer(19.4, 350286, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)--19.4-25.5 (unless delayed massivley by another channel)
-local timerReverberatingRefrainCD				= mod:NewCDCountTimer(74.2, 350385, nil, nil, nil, 2)
+local timerReverberatingRefrainCD				= mod:NewCDCountTimer(73.1, 350385, nil, nil, nil, 2)
 ----Skyja, The First
-local timerCalloftheValkyrCD					= mod:NewCDCountTimer(72.9, 350467, nil, nil, nil, 3, nil, nil, nil, 1, 3)
+local timerCalloftheValkyrCD					= mod:NewCDCountTimer(52.3, 350467, nil, nil, nil, 3, nil, nil, nil, 1, 3)
 local timerFragmentsofDestinyCD					= mod:NewCDCountTimer(47.3, 350541, nil, nil, nil, 3, nil, nil, nil, 2, 3)
 --Stage Two: The First of the Mawsworn
 local timerPierceSoulCD							= mod:NewCDTimer(9.7, 350475, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON)
-local timerResentmentCD							= mod:NewCDCountTimer(7.6, 355294, nil, nil, nil, 2)--7.6-9.7
-local timerLinkEssenceCD						= mod:NewCDCountTimer(37.7, 350482, nil, nil, nil, 3, nil, DBM_CORE_L.HEROIC_ICON)
-local timerWordofRecallCD						= mod:NewCDCountTimer(74.4, 350687, nil, nil, nil, 2, nil, DBM_CORE_L.HEROIC_ICON)
+local timerResentmentCD							= mod:NewCDCountTimer(21.8, 355294, nil, nil, nil, 2)
+local timerLinkEssenceCD						= mod:NewCDCountTimer(37.6, 350482, nil, nil, nil, 3, nil, DBM_CORE_L.HEROIC_ICON)
+local timerWordofRecallCD						= mod:NewCDCountTimer(72.9, 350687, nil, nil, nil, 2, nil, DBM_CORE_L.HEROIC_ICON)
 
 local berserkTimer								= mod:NewBerserkTimer(600)
 
@@ -114,7 +112,7 @@ mod:AddNamePlateOption("NPAuraOnBrightAegis", 350158)
 
 local castsPerGUID = {}
 local fragmentTargets = {[1] = false, [2] = false, [3] = false, [4] = false}
-local expectedDebuffs = 3
+--local expectedDebuffs = 3
 
 mod.vb.valksDead = 11--1 not dead, 2 dead. 10s Kyra and 1s Signe
 --mod.vb.addIcon = 8
@@ -141,7 +139,7 @@ do
 	updateInfoFrame = function()
 		table.wipe(lines)
 		table.wipe(sortedLines)
-		for i = 1, expectedDebuffs do
+		for i = 1, 8 do
 			if fragmentTargets[i] then
 				local name = fragmentTargets[i]
 				addLine(L.Fragment..i, name)
@@ -154,7 +152,7 @@ end
 function mod:OnCombatStart(delay)
 	table.wipe(castsPerGUID)
 	fragmentTargets = {[1] = false, [2] = false, [3] = false, [4] = false}
-	expectedDebuffs = self:IsMythic() and 4 or 3
+--	expectedDebuffs = self:IsMythic() and 4 or 3
 	self:SetStage(1)
 	self.vb.valksDead = 11
 --	self.vb.addIcon = 8
@@ -167,15 +165,15 @@ function mod:OnCombatStart(delay)
 	self.vb.recallCount = 0
 	self.vb.linkEssence = 0
 	--Kyra
-	timerUnendingStrikeCD:Start(7-delay)
+	timerUnendingStrikeCD:Start(6.3-delay)
 	timerFormlessMassCD:Start(12-delay, 1)
-	timerWingsofRageCD:Start(47.6-delay, 1)
+	timerWingsofRageCD:Start(39.1-delay, 1)
 	--Signe
-	timerSongofDissolutionCD:Start(17.4-delay, 1)
-	timerReverberatingRefrainCD:Start(71.7-delay, 1)--71.7-76
+	timerSongofDissolutionCD:Start(15.4-delay, 1)--15-19
+	timerReverberatingRefrainCD:Start(60.6-delay, 1)--60+
 	--Skyja
-	timerCalloftheValkyrCD:Start(14.1-delay, 1)--14.1
-	if self:IsMythic() then--Journal says mythic, but it's been wrong on earlier testing, leaving this here for now
+	timerCalloftheValkyrCD:Start(10.4-delay, 1)--10.4-15
+	if self:IsMythic() then
 		timerFragmentsofDestinyCD:Start(4.5-delay, 1)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(OVERVIEW)
@@ -203,7 +201,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 350202 then
-		timerUnendingStrikeCD:Start()
+		timerUnendingStrikeCD:Start(self:IsEasy() and 12.1 or 6.9)--TODO, mythic might be faster and LFR even slower
 	elseif spellId == 350342 then
 --		self.vb.addIcon = 8
 		self.vb.massCount = self.vb.massCount + 1
@@ -262,7 +260,7 @@ function mod:SPELL_CAST_START(args)
 		timerCalloftheValkyrCD:Start(nil, self.vb.valkCount+1)
 	elseif spellId == 352744 or spellId == 350541 then
 		self.vb.fragmentCount = self.vb.fragmentCount + 1
-		local timer = self:IsMythic() and (self.vb.phase == 1 and 34.3 or 37.3) or 47.3
+		local timer = self:IsMythic() and (self.vb.phase == 1 and 33.2 or 37.3) or 47.3
 		timerFragmentsofDestinyCD:Start(timer, self.vb.fragmentCount+1)
 	elseif spellId == 350482 then
 		self.vb.linkEssence = self.vb.linkEssence + 1
@@ -285,11 +283,35 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 350286 then
 		self.vb.songCount = self.vb.songCount + 1
-		timerSongofDissolutionCD:Start(nil, self.vb.songCount+1)
+		timerSongofDissolutionCD:Start(self:IsEasy() and 37.6 or 19.4, self.vb.songCount+1)
 		if self:CheckInterruptFilter(args.sourceGUID, false, false) then
 			specWarnSongofDissolution:Show(args.sourceName)
 			specWarnSongofDissolution:Play("kickcast")
 		end
+	elseif spellId == 350745 then--Skyja's Advance
+		self:SetStage(2)
+		--self.vb.fragmentCount = 0
+		timerCalloftheValkyrCD:Stop()
+		timerPierceSoulCD:Start(11.7)--11.7-13.3
+		timerResentmentCD:Start(28.7, 1)--28.7-33.6
+		timerCalloftheValkyrCD:Start(self:IsEasy() and 30 or 42.6, 1)--42.6-44
+		timerFragmentsofDestinyCD:Stop()
+		timerFragmentsofDestinyCD:Start(15.4, self.vb.fragmentCount+1)--15-17.4. Heroic and normal confirmed, mythic and LFR?
+		if self:IsHard() then--Heroic and Mythic
+			timerLinkEssenceCD:Start(24.7, 1)
+			timerWordofRecallCD:Start(72.5, 1)
+		end
+		if self.Options.InfoFrame and not self:IsMythic() then--Mechanic starts in phase 2 on heroic, it already started on mythic in phase 1
+			DBM.InfoFrame:SetHeader(OVERVIEW)
+			DBM.InfoFrame:Show(5, "function", updateInfoFrame, false, true, true)
+		end
+		if self:IsMythic() then
+			--TODO, actually see what happens if they aren't dead by the time these timers expire
+			timerWingsofRageCD:Start(56.7)
+			timerReverberatingRefrainCD:Start(95.7)
+		end
+		berserkTimer:Cancel()--Tecnically not accurate, Phase 1 berserk stops when both valks die. TODO, separate object
+		berserkTimer:Start(602)--Phase 2
 	end
 end
 
@@ -302,7 +324,12 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnUnendingStrike:Show(amount)
 				specWarnUnendingStrike:Play("stackhigh")
 			else
-				if not UnitIsDeadOrGhost("player") and not DBM:UnitDebuff("player", spellId) then
+				local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+				local remaining
+				if expireTime then
+					remaining = expireTime-GetTime()
+				end
+				if (not remaining or remaining and remaining < 6.7) and not UnitIsDeadOrGhost("player") then
 					specWarnUnendingStrikeTaunt:Show(args.destName)
 					specWarnUnendingStrikeTaunt:Play("tauntboss")
 				else
@@ -323,11 +350,11 @@ function mod:SPELL_AURA_APPLIED(args)
 					specWarnPierceSoulTaunt:Show(args.destName)
 					specWarnPierceSoulTaunt:Play("tauntboss")
 				else
-					warnUnendingStrike:Show(args.destName, amount)
+					warnPierceSoul:Show(args.destName, amount)
 				end
 			end
 		else
-			warnUnendingStrike:Show(args.destName, amount)
+			warnPierceSoul:Show(args.destName, amount)
 		end
 	elseif spellId == 350158 then
 		warnAnnhyldesBrightAegis:CombinedShow(0.3, args.destName)
@@ -354,14 +381,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 350542 then
 		local amount = args.amount or 1
 		local icon = 0
-		for i = 1, expectedDebuffs do
+		local uId = DBM:GetRaidUnitId(args.destName)
+		for i = 1, 8 do--Only up to 8 icons
 			if not fragmentTargets[i] then--Not yet assigned!
 				icon = i
 				fragmentTargets[i] = args.destName--Assign player name for infoframe even if they already have icon
-				if self.Options.SetIconOnFragments then--Now do icon stuff, if enabled
-					local uId = DBM:GetRaidUnitId(args.destName)
-					local currentIcon = GetRaidTargetIndex(uId) or 9--We want to set "no icon" as max index for below logic
-					if currentIcon > i then--Automatically set lowest icon index on target, meaning star favored over circle, circle favored over triangle, etc.
+				local currentIcon = GetRaidTargetIndex(uId) or 9--We want to set "no icon" as max index for below logic
+				if currentIcon > i then--Automatically set lowest icon index on target, meaning star favored over circle, circle favored over triangle, etc.
+					if self.Options.SetIconOnFragments then--Now do icon stuff, if enabled
 						self:SetIcon(args.destName, i)
 					end
 				end
@@ -372,7 +399,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			if args:IsPlayer() then
 				specWarnFragmentsofDestiny:Show(self:IconNumToTexture(icon))
 				specWarnFragmentsofDestiny:Play("targetyou")
-				yellFragmentsofDestiny:Yell(icon, icon)
+				if icon < 9 then
+					yellFragmentsofDestiny:Yell(icon, icon)
+				end
 			end
 			warnFragmentsofDestiny:CombinedShow(0.3, args.destName)
 		else
@@ -387,16 +416,22 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnLinkEssence:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnLinkEssence:Show()
-			specWarnLinkEssence:Play("targetyou")
+			specWarnLinkEssence:Play("defensive")
 		end
 	elseif spellId == 350184 then
 		warnDaschlasMightyAnvil:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnDaschlasMightyAnvil:Show()
-			specWarnDaschlasMightyAnvil:Play("watchstep")
+			specWarnDaschlasMightyAnvil:Play("scatter")
 			yellDaschlasMightyAnvil:Yell()
 			yellDaschlasMightyAnvilFades:Countdown(spellId)
 		end
+	elseif spellId == 350012 then
+		specWarnAgathasEternalblade:Show()
+		specWarnAgathasEternalblade:Play("farfromline")
+	elseif spellId == 350078 then
+		specWarnAradnesFallingStrike:Show()
+		specWarnAradnesFallingStrike:Play("helpsoak")
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -416,28 +451,14 @@ function mod:SPELL_AURA_REMOVED(args)
 			yellArthurasCrushingGazeFades:Cancel()
 		end
 	elseif spellId == 350542 then
---		local oneRemoved = false
 		--Combat log doesn't fire for each dose, removed removes ALL stacks
-		for i = 1, expectedDebuffs do
+		for i = 1, 8 do
 			if fragmentTargets[i] and fragmentTargets[i] == args.destName then--Found assignment matching this units name
---				if not oneRemoved then
-					fragmentTargets[i] = false--remove first assignment we find
---					oneRemoved = true
---					local uId = DBM:GetRaidUnitId(args.destName)
---					local stillDebuffed = DBM:UnitDebuff(uId, spellId)--Check for remaining debuffs
---					if not stillDebuffed then--Terminate loop and remove icon if enabled
-						if self.Options.SetIconOnFragments then
-							self:SetIcon(args.destName, 0)
-						end
---						break--Break loop, nothing further to do
---					end
---				else
---					if self.Options.SetIconOnFragments then
---						self:SetIcon(args.destName, i)
---						break--Break loop, Icon updated to next
---					end
---				end
+				fragmentTargets[i] = false--remove assignment
 			end
+		end
+		if self.Options.SetIconOnFragments then
+			self:SetIcon(args.destName, 0)
 		end
 		if DBM.InfoFrame:IsShown() then
 			DBM.InfoFrame:Update()
@@ -466,18 +487,6 @@ function mod:UNIT_DIED(args)
 	end
 end
 
-function mod:CHAT_MSG_MONSTER_YELL(msg, _, _, _, target)
-	--"<22.56 20:59:16> [CHAT_MSG_MONSTER_YELL] Fall before my blade!#Agatha#####0#0##0#1227#nil#0#false#false#false#false", -- [821]
-	if msg == L.AgathaBlade or msg:find(L.AgathaBlade) then
-		specWarnAgathasEternalblade:Show()
-		specWarnAgathasEternalblade:Play("farfromline")
-	--"<240.03 21:02:54> [CHAT_MSG_MONSTER_YELL] You are all outmatched!#Aradne#####0#0##0#1273#nil#0#false#false#false#false", -- [4657]
-	elseif msg == L.AradneStrike or msg:find(L.AradneStrike) then
-		specWarnAradnesFallingStrike:Show()
-		specWarnAradnesFallingStrike:Play("helpsoak")
-	end
-end
-
 --[[
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
 	if spellId == 340324 and destGUID == UnitGUID("player") and not playerDebuff and self:AntiSpam(2, 2) then
@@ -486,33 +495,10 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spell
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
---]]
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 350745 then--Skyja's Advance
-		self:SetStage(2)
-		--self.vb.fragmentCount = 0
-		timerCalloftheValkyrCD:Stop()
-		timerResentmentCD:Start(6.9, 1)
-		timerPierceSoulCD:Start(8.9)
-		timerCalloftheValkyrCD:Start(44, 1)
-		if self:IsHard() then
-			timerFragmentsofDestinyCD:Stop()
-			timerFragmentsofDestinyCD:Start(13.4, self.vb.fragmentCount+1)--Heroic confirmed, but maybe mythic won't reset here?
-			timerLinkEssenceCD:Start(22, 1)
---			timerWordofRecallCD:Start(2, 1)--Cast instantly on phasing so timer will start there
-			if self.Options.InfoFrame and not self:IsMythic() then--Mechanic starts in phase 2 on heroic, it already started on mythic in phase 1
-				DBM.InfoFrame:SetHeader(OVERVIEW)
-				DBM.InfoFrame:Show(5, "function", updateInfoFrame, false, true, true)
-			end
-			--TODO, actually spend time figuring out how to start timers when valks die AFTER it's phase 2
---			if self:IsMythic() then
---				timerWingsofRageCD:Start()
---				timerReverberatingRefrainCD:Start()
---			end
-		end
-		berserkTimer:Cancel()--Tecnically not accurate, Phase 1 berserk stops when both valks die. TODO, separate object
-		berserkTimer:Start(602)--Phase 2
+
 	end
 end
-
+--]]

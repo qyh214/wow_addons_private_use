@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(861, "DBM-Pandaria", nil, 322, 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20210721041539")
 mod:SetCreatureID(72057)
 mod:SetReCombatTime(20, 10)
 mod:SetUsedIcons(8, 7, 6)
+mod:EnableWBEngageSync()--Enable syncing engage in outdoors
 
 mod:RegisterCombat("combat_yell", L.Pull)
 

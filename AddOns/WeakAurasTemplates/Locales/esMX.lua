@@ -54,8 +54,7 @@ local L = WeakAuras.L
 	L["Bloodlust/Heroism"] = "Sed de sangre/Heroísmo"
 	--[[Translation missing --]]
 	L["Bonded Buff"] = "Bonded Buff"
-	--[[Translation missing --]]
-	L["Buff"] = "Buff"
+	L["Buff"] = "Beneficio"
 	L["buff"] = "beneficio"
 	--[[Translation missing --]]
 	L["Buff on Other"] = "Buff on Other"
@@ -76,17 +75,14 @@ local L = WeakAuras.L
 	L["Combustion Ready"] = "Combustion Ready"
 	--[[Translation missing --]]
 	L["Conduits"] = "Conduits"
-	--[[Translation missing --]]
-	L["Cooldown"] = "Cooldown"
+	L["Cooldown"] = "Reutilización"
 	L["cooldown"] = "enfriamiento"
 	--[[Translation missing --]]
 	L["Cooldown Tracking"] = "Cooldown Tracking"
 	--[[Translation missing --]]
 	L["Create Auras"] = "Create Auras"
-	--[[Translation missing --]]
-	L["Debuff"] = "Debuff"
-	--[[Translation missing --]]
-	L["debuff"] = "debuff"
+	L["Debuff"] = "Perjuicio"
+	L["debuff"] = "Perjuicio"
 	L["Debuffs"] = "Perjuicios"
 	--[[Translation missing --]]
 	L["Empowered Buff"] = "Empowered Buff"

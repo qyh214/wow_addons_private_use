@@ -219,7 +219,7 @@
 		<Size x="120" y="24"/>
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString inherits="NarciAchievementText" parentKey="label" text="" justifyH="CENTER" justifyV="CENTER">
+				<FontString inherits="NarciAchievementText" parentKey="label" text="" justifyH="CENTER" justifyV="MIDDLE">
 					<Size x="0"/>
 					<Anchors>
 						<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
@@ -356,6 +356,14 @@
 					<TexCoords left="0.203125" right="0.875" top="0" bottom="1"/>
 				</Texture>
 			</Layer>
+			<Layer level="OVERLAY">
+				<Texture file="Interface\AddOns\Narcissus\Art\Modules\Achievement\GreenCheck" parentKey="greenCheck" hidden="true">
+					<Size x="18" y="18"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="6" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
 		</Layers>
 	</Button>
 
@@ -390,6 +398,18 @@
 				</Texture>
 			</Layer>
 			<Layer level="OVERLAY" textureSubLevel="2">
+				<!--FontString inherits="NarciAchievemtPoints" parentKey="AbsoluteIndex" justifyH="CENTER">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
+					</Anchors>
+				</FontString>
+				<FontString inherits="NarciAchievemtPoints" parentKey="TableIndex" justifyH="CENTER">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="24" y="0"/>
+					</Anchors>
+					<Color r="1" g="0.5" b="0.5"/>
+				</FontString-->
+
 				<FontString inherits="NarciAchievementHeader" parentKey="header" text="Achievement Name" maxLines="1" justifyH="CENTER">
 					<Size x="300"/>
 					<Anchors>
@@ -858,7 +878,7 @@
 						<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
 					</Anchors>
 					<Animations>
-						<AnimationGroup parentKey="animIn" smoothing="IN">
+						<AnimationGroup parentKey="animIn">
 							<Scale scaleX="1.25" scaleY="1.25" duration="0.12" order="1"/>
 							<Scripts>
 								<OnFinished>
@@ -876,7 +896,7 @@
 						<Anchor point="CENTER" relativeKey="$parent.icon" relativePoint="CENTER" x="0" y="0"/>
 					</Anchors>
 					<Animations>
-						<AnimationGroup parentKey="animIn" smoothing="IN">
+						<AnimationGroup parentKey="animIn">
 							<Scale scaleX="1.25" scaleY="1.25" duration="0.12" order="1"/>
 							<Scripts>
 								<OnFinished>
@@ -916,10 +936,9 @@
 					<Animations>
 						<AnimationGroup parentKey="flyIn">
 							<Alpha fromAlpha="0" toAlpha="0" duration="0" order="1" parentKey="hold1"/>
-							<Translation offsetY="-20" duration="0" order="1" parentKey="hold2"/>
-							<Translation offsetY="18" duration="0.15" order="2"/>
+							<Translation offsetY="-18" duration="0" order="1" parentKey="hold2"/>
+							<Translation offsetY="18" duration="0.15" order="2" smoothing="OUT"/>
 							<Alpha fromAlpha="0" toAlpha="1" duration="0.15" order="2"/>
-							<Translation offsetY="2" duration="0.1" order="3"/>
 						</AnimationGroup>
 					</Animations>
 				</FontString>
@@ -1223,7 +1242,7 @@
 						<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="0" y="0"/>
 					</Anchors>
 				</Texture>
-				<MaskTexture parentKey="mask" file="Interface\AddOns\Narcissus\Art\Modules\Outfit\IconMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+				<MaskTexture parentKey="mask" file="Interface\AddOns\Narcissus\Art\Tooltip\Icon-Mask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeKey="$parent.itemIcon" relativePoint="TOPLEFT" x="0" y="0"/>
 						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.itemIcon" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
@@ -1622,7 +1641,7 @@
 			</Anchors>
 		</HighlightTexture>
 		<Animations>
-			<AnimationGroup parentKey="fadeIn" setToFinalAlpha="true" smoothing="OUT">
+			<AnimationGroup parentKey="fadeIn" setToFinalAlpha="true">
 				<Alpha fromAlpha="0" toAlpha="0" duration="0" order="1"/>
 				<Alpha startDelay="0" fromAlpha="0" toAlpha="1" duration="0.15" order="2" parentKey="a1"/>
 			</AnimationGroup>
@@ -1717,6 +1736,16 @@
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeTo="UIParent" x="100" y="-104"/>
 		</Anchors>
+		<Layers>
+			<Layer level="BAACKGROUND" textureSubLevel="-1">
+				<FontString inherits="NarciAchievementText" parentKey="TextHeightRetriever" maxLines="0" spacing="2" justifyH="CENTER" justifyV="TOP" hidden="true">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
+					</Anchors>
+					<Size x="390"/>
+				</FontString>
+			</Layer>
+		</Layers>
 		<Frames>
 			<ScrollFrame parentKey="CategoryFrame" inherits="NarciAchievementCategoryContainerTemplate"/>
 
@@ -2113,7 +2142,7 @@
 						</Anchors>
 						<Layers>
 							<Layer level="OVERLAY">
-								<FontString inherits="NarciAchievementText" parentKey="label" text="" justifyH="CENTER" justifyV="CENTER" maxLines="1">
+								<FontString inherits="NarciAchievementText" parentKey="label" text="" justifyH="CENTER" justifyV="MIDDLE" maxLines="1">
 									<Color r="0.6" g="0.6" b="0.6"/>
 									<Size x="0"/>
 									<Anchors>
@@ -2416,7 +2445,7 @@
 								</Texture>
 							</Layer>
 							<Layer level="OVERLAY">
-								<FontString inherits="NarciAchievementText" parentKey="Label" justifyH="LEFT" justifyV="CENTER" hidden="false" Alpha="0">
+								<FontString inherits="NarciAchievementText" parentKey="Label" justifyH="LEFT" justifyV="MIDDLE" hidden="false" Alpha="0">
 									<Size x="0"/>
 									<Anchors>
 										<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-28" y="0"/>
@@ -2455,7 +2484,7 @@
 								</Texture>
 							</Layer>
 							<Layer level="OVERLAY">
-								<FontString inherits="NarciAchievementText" parentKey="Label" justifyH="LEFT" justifyV="CENTER" hidden="false" Alpha="1">
+								<FontString inherits="NarciAchievementText" parentKey="Label" justifyH="LEFT" justifyV="MIDDLE" hidden="false" Alpha="1">
 									<Size x="0"/>
 									<Anchors>
 										<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="56" y="0"/>
@@ -2828,7 +2857,7 @@
 								<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" y="0"/>
 							</Anchors>
 						</Texture>
-						<FontString inherits="GameFontHighlightSmall" parentKey="label" text="Incomplete First" maxLines="1" justifyH="LEFT" justifyV="CENTER">
+						<FontString inherits="GameFontHighlightSmall" parentKey="label" text="Incomplete First" maxLines="1" justifyH="LEFT" justifyV="MIDDLE">
 							<Color r="0.8" g="0.8" b="0.8"/>
 							<Size x="96"/>
 							<Anchors>
@@ -2930,6 +2959,8 @@
 				self:StopMovingOrSizing();
 			</OnDragStop>
 			<OnShow method="OnShow"/>
+			<OnHide method="OnHide"/>
+			<OnEvent method="OnEvent"/>
 		</Scripts>
 	</Frame>
 
@@ -2980,7 +3011,7 @@
 						<MaskedTexture childKey="background"/>
 					</MaskedTextures>
 				</MaskTexture>
-				<FontString parentKey="name" inherits="GameFontHighlight" text="" justifyV="CENTER">
+				<FontString parentKey="name" inherits="GameFontHighlight" text="" justifyV="MIDDLE">
 					<Anchors>
 						<Anchor point="BOTTOM" x="4" y="25"/>
 					</Anchors>
@@ -2993,7 +3024,7 @@
 						</Offset>
 					</Shadow>
 				</FontString>
-				<FontString parentKey="nameLong" inherits="GameFontNormalSmall" text="" justifyV="CENTER" hidden="true">
+				<FontString parentKey="nameLong" inherits="GameFontNormalSmall" text="" justifyV="MIDDLE" hidden="true">
 					<Color r="1" g="1" b="1"/>
 					<Anchors>
 						<Anchor point="CENTER" relativeKey="$parent.name" relativePoint="CENTER"/>
@@ -3007,7 +3038,7 @@
 						</Offset>
 					</Shadow>
 				</FontString>
-				<FontString parentKey="unlockedText" inherits="GameFontBlackTiny" text="ACHIEVEMENT_UNLOCKED" height="9">
+				<FontString parentKey="unlockedText" inherits="GameFontBlackTiny" text="ACHIEVEMENT_UNLOCKED">
 					<Size x="180" y="12"/>
 					<Color r="0" g="0" b="0" a="1"/>
 					<Shadow>
@@ -3167,7 +3198,7 @@
 						<MaskedTexture childKey="background"/>
 					</MaskedTextures>
 				</MaskTexture>
-				<FontString parentKey="name" inherits="GameFontHighlight" text="" justifyV="CENTER">
+				<FontString parentKey="name" inherits="GameFontHighlight" text="" justifyV="MIDDLE">
 					<Anchors>
 						<Anchor point="BOTTOM" x="0" y="24"/>
 					</Anchors>
@@ -3180,7 +3211,7 @@
 						</Offset>
 					</Shadow>
 				</FontString>
-				<FontString parentKey="unlockedText" inherits="GameFontBlackTiny" text="ACHIEVEMENT_PROGRESSED" height="9">
+				<FontString parentKey="unlockedText" inherits="GameFontBlackTiny" text="ACHIEVEMENT_PROGRESSED">
 					<Size x="180" y="12"/>
 					<Color r="0" g="0" b="0" a="1"/>
 					<Shadow>

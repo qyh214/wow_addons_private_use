@@ -4,42 +4,24 @@
 			<AbsInset left="0" right="0" top="0" bottom="-2.5"/>
 		</HitRectInsets>
 		<Anchors>
-			<Anchor point="BOTTOM" relativeKey="$parent.AddSelf" relativePoint="TOP" y="8"/>
+			<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" y="40"/>
 		</Anchors>
 		<Scripts>
 			<OnLoad>
 				self.Label:SetText(Narci.L["NPC Browser"]);
 				self.Text:SetText(Narci.L["NPC Browser Tooltip"]);
 				self.Border:SetTexCoord(0.125, 0.25, 0, 0.5);
+				self.isTypeLocked = true;
 			</OnLoad>
 			<OnClick>
-				Narci_ToggleNPCBrowser(self, true);
+				Narci_NPCBrowser:Open(self);
 			</OnClick>
 		</Scripts>
 	</Button>
 
     <Script file="NPCBrowser.lua"/>
 
-	<Frame name="NarciGreyBorderTemplate" virtual="true" mixin="ExpansionTransitionBackdropTemplateMixin">
-		<Anchors>
-			<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="-8.5" y="8.5"/>
-			<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="8.5" y="-8.5"/>
-		</Anchors>
-		<Scripts>
-			<OnLoad>
-				local backdropInfo = {
-					edgeFile = "Interface\\AddOns\\Narcissus\\Art\\Widgets\\NPCBrowser\\FrameBorder",
-					tile = true,
-					tileEdge = true,
-					tileSize = 16,
-					edgeSize = 16,
-				}
-				self:SetBackdrop(backdropInfo);
-			</OnLoad>
-		</Scripts>
-	</Frame>
-
-	<Button name="Narci_NPCCoverTemplate" virtual="true">
+	<Button name="NarciNPCCoverTemplate" virtual="true" mixin="NarciNPCBrowserCoverButtonMixin">
 		<Size x="64" y="96"/>
 		<Layers>
 			<Layer level="ARTWORK">
@@ -73,27 +55,16 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnLoad>
-				self.Image:SetTexCoord(0.046875, 0.625, 0.06640625, 0.93359375);
-			</OnLoad>
-			<OnEnter>
-				UIFrameFadeIn(self.Highlight, 0.12, self.Highlight:GetAlpha(), 1);
-				self.Name:SetAlpha(1);
-			</OnEnter>
-			<OnLeave>
-				UIFrameFadeOut(self.Highlight, 0.2, self.Highlight:GetAlpha(), 0);
-				self.Name:SetAlpha(0.88);
-			</OnLeave>
-			<OnMouseDown>
-				self.Image:SetTexCoord(0, 0.66796875, 0, 1);
-			</OnMouseDown>
-			<OnMouseUp>
-				self.Image:SetTexCoord(0.046875, 0.625, 0.06640625, 0.93359375);
-			</OnMouseUp>
+			<OnLoad method="OnMouseUp"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnMouseDown method="OnMouseDown"/>
+			<OnMouseUp method="OnMouseUp"/>
+			<OnClick method="OnClick"/>
 		</Scripts>
 	</Button>
 
-	<Button name="Narci_NPCButtonTemplate" virtual="true"  hidden="true" registerForClicks="LeftButtonUp, RightButtonUp">
+	<Button name="NarciNPCButtonTemplate" virtual="true"  hidden="true" registerForClicks="LeftButtonUp, RightButtonUp">
 		<Size x="192" y="32"/>
 		<Layers>
 			<Layer level="ARTWORK" textureSubLevel="3">
@@ -147,7 +118,7 @@
 		</Scripts>
 	</Button>
 
-	<Button name="Narci_NPCButtonWithPortaitTemplate" virtual="true" inherits="Narci_NPCButtonTemplate" hidden="true">
+	<Button name="NarciNPCButtonWithPortaitTemplate" virtual="true" inherits="NarciNPCButtonTemplate" hidden="true">
 		<Size x="192" y="32"/>
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -232,7 +203,7 @@
 		</Scripts>
 	</Button>
 	
-	<Button name="Narci_NPCButtonResultTemplate" virtual="true" inherits="Narci_NPCButtonTemplate" hidden="true">
+	<Button name="NarciNPCMatchButtonTemplate" virtual="true" inherits="NarciNPCButtonTemplate" hidden="true">
 		<Layers>
 			<Layer level="ARTWORK" textureSubLevel="2">
 				<Texture setAllPoints="true" parentKey="Highlight" hidden="true" Alpha="0" file="Interface\AddOns\Narcissus\Art\Widgets\NPCBrowser\Gradient-90To10"/>
@@ -312,8 +283,8 @@
 		</Scripts>
 	</ScrollFrame>
 
-	<Frame name="Narci_NPCBrowser" hidden="true" parent="Narci_ModelSettings" frameLevel="80" mixin="NarciNPCBrowserMixin">
-		<Size x="192" y="208"/>
+	<Frame name="Narci_NPCBrowser" hidden="true" parent="Narci_ModelSettings" frameLevel="80" mixin="NarciNPCBrowserMixin" parentKey="NPCBrowser">
+		<Size x="194" y="208"/>
 		<Layers>
 			<!--Layer level="OVERLAY">
 				<Texture>
@@ -330,13 +301,13 @@
 					<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT"/>
 				</Anchors>
 				<Frames>
-					<ScrollFrame name="Narci_NPCBrowser_CategoryTabTab" parentKey="CategoryTab" inherits="Narci_NPCBrowser_ScrollFrameTemplate">
+					<ScrollFrame parentKey="CategoryTab" inherits="Narci_NPCBrowser_ScrollFrameTemplate">
 						<Anchors>
 							<Anchor point="TOP" relativeKey="$parent.$parent" relativePoint="TOP" y="-16"/>
 						</Anchors>
 					</ScrollFrame>
 
-					<ScrollFrame name="Narci_NPCBrowser_EntryTab" parentKey="EntryTab" inherits="Narci_NPCBrowser_ScrollFrameTemplate">
+					<ScrollFrame parentKey="EntryTab" inherits="Narci_NPCBrowser_ScrollFrameTemplate">
 						<Anchors>
 							<Anchor point="LEFT" relativeKey="$parent.CategoryTab" relativePoint="RIGHT" x="2"/>
 						</Anchors>
@@ -371,22 +342,27 @@
 							</Layer>
 						</Layers>
 						<Frames>
-							<CinematicModel parentKey="Model" hidden="true" Alpha="0">
+							<CinematicModel parentKey="IDModel" hidden="true" Alpha="0">
 								<Size x="192" y="192"/>
 								<Anchors>
 									<Anchor point="TOP" relativeKey="$parent" relativePoint="TOP"/>
 								</Anchors>
 								<Scripts>
-									<OnShow>
-										self:SetViewTranslation(self:GetWidth()/2, 0)
-									</OnShow>
+									<OnLoad>
+										self:UseModelCenterToTransform(true);
+									</OnLoad>
 									<OnHide>
 										self:ClearModel();
 										self:Hide();
 									</OnHide>
+									<OnModelLoaded>
+										self:SetCamera(0);
+										self:SetPortraitZoom(1);
+										self:SetPortraitZoom(0);
+									</OnModelLoaded>
 								</Scripts>				
 							</CinematicModel>
-							<CinematicModel name="Narci_NPCBrowser_ModelPreview" parentKey="MatchPreview" hidden="true" Alpha="0" frameLevel="60" drawLayer="ARTWORK">
+							<CinematicModel parentKey="MatchPreview" hidden="true" Alpha="0" frameLevel="60" drawLayer="ARTWORK">
 								<Size x="192" y="192"/>
 								<Anchors>
 									<Anchor point="TOP" relativeKey="$parent" relativePoint="TOP"/>
@@ -394,15 +370,21 @@
 								<Scripts>
 									<OnLoad>
 										self:SetFacing(-0.5236);
+										self:UseModelCenterToTransform(true);
 									</OnLoad>
 									<OnShow>
-										self:SetViewTranslation(self:GetWidth()*3/4, 0);
+										self:SetViewTranslation(48, 0);
 									</OnShow>
 									<OnHide>
 										self:ClearModel();
 										self:Hide();
 										self.id = nil;
 									</OnHide>
+									<OnModelLoaded>
+										self:SetCamera(0);
+										self:SetPortraitZoom(1);
+										self:SetPortraitZoom(0);
+									</OnModelLoaded>
 								</Scripts>				
 							</CinematicModel>
 						</Frames>
@@ -465,7 +447,7 @@
 					</Frame>
 
 					<Frame parentKey="Header" frameLevel="65">
-						<Size x="192" y="16"/>
+						<Size x="194" y="16"/>
 						<Anchors>
 							<Anchor point="TOP" relativeKey="$parent" relativePoint="TOP" y="0"/>
 						</Anchors>
@@ -490,7 +472,7 @@
 							<Layer level="OVERLAY">
 								<FontString inherits="NarciNonInteractiveFont" justifyH="CENTER" justifyV="MIDDLE" maxLines="1" parentKey="Tab1Label">
 									<Size x="0" y="0"/>
-									<Color r="0.72" g="0.72" b="0.72"/>
+									<Color r="0.5" g="0.5" b="0.5"/>
 									<Anchors>
 										<Anchor point="BOTTOM" relativeKey="$parent.$parent.CategoryTab" relativePoint="TOP" y="3"/>
 									</Anchors>
@@ -545,7 +527,7 @@
 										self.Icon:SetTexCoord(0, 0.25, 0.75, 1);
 									</OnLoad>
 									<OnClick>
-										Narci_ToggleNPCBrowser(false);
+										Narci_NPCBrowser:Close();
 									</OnClick>
 								</Scripts>
 							</Button>
@@ -568,7 +550,7 @@
 								</Scripts>
 							</Button>
 
-							<Button parentKey="DeleteTextButton" hidden="true">
+							<!--Button parentKey="DeleteTextButton" hidden="true">
 								<Size x="1" y="16"/>
 								<Anchors>
 									<Anchor point="RIGHT" relativeKey="$parent.CloseButton" relativePoint="LEFT" x="-4" y="0"/>
@@ -613,35 +595,20 @@
 										self:SetWidth(1);
 									</OnHide>
 								</Scripts>
-							</Button>
+							</Button-->
 
-							<EditBox parentKey="SearchBox" autoFocus="false" mixin="NarciNPCSearchBoxMixin" hidden="true">
+							<EditBox parentKey="SearchBox" autoFocus="false" mixin="NarciNPCSearchBoxMixin" hidden="true" inherits="NarciSearchBoxTemplate">
 								<Size y="16"/>
 								<Anchors>
 									<Anchor point="LEFT" relativeKey="$parent.HomeButton" relativePoint="RIGHT" x="6" y="-0.5"/>
-									<Anchor point="RIGHT" relativeKey="$parent.DeleteTextButton" relativePoint="LEFT" x="-2" y="-0.5"/> 
+									<Anchor point="RIGHT" relativeKey="$parent.CloseButton" relativePoint="LEFT" x="-6" y="-0.5"/> 
 								</Anchors>
 								<FontString inherits="NarciPastelWhiteFont" justifyH="LEFT" justifyV="MIDDLE"/>
-								<Layers>
-									<Layer level="BACKGROUND">
-										<FontString inherits="NarciNonInteractiveFont" justifyH="LEFT" justifyV="MIDDLE" parentKey="DefaultText" hidden="false">
-											<Size x="160" y="16"/>
-											<Anchors>
-												<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="4" y="0"/>
-											</Anchors>											
-										</FontString>
-									</Layer>
-								</Layers>
 								<Scripts>
 									<OnLoad method="OnLoad"/>
 									<OnTextChanged method="OnTextChanged"/>
-									<OnEscapePressed method="QuitEdit"/>
-									<OnEnterPressed method="QuitEdit"/>
-									<OnEditFocusGained method="OnEditFocusGained"/>
-									<OnEditFocusLost method="OnEditFocusLost"/>
-									<OnHide method="ClearText"/>
+									<OnEditFocusGained method="OnFocusGained"/>
 									<OnMouseWheel method="OnMouseWheel"/>
-									<OnShow method="OnShow"/>
 								</Scripts>
 							</EditBox>
 						</Frames>
@@ -699,9 +666,9 @@
 			</Frame>
 		</Frames>
 		<Scripts>
-			<OnEnter>
-
-			</OnEnter>
+			<OnLoad method="OnLoad"/>
+			<OnEnter method="OnEnter"/>
+			<OnHide method="OnHide"/>
 		</Scripts>
 	</Frame>
 </Ui>

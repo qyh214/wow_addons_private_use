@@ -59,7 +59,9 @@ https://bbs.nga.cn/read.php?tid=24562077
 #### 目前使用的字符串
 鼠标跟踪：https://wago.io/SypUT-DPm
 
-属性监控：https://wago.io/rJZgZUxn7
+属性监控：
+- https://wago.io/rJZgZUxn7
+- https://wago.io/Wz2moZO4Z
 
 全职业中二语音：
 - https://bbs.nga.cn/read.php?tid=20729857
@@ -118,6 +120,26 @@ Nnoggie大秘境技能CD监视升级版&自制团队CD监视，带技能激活�
 details中文昵称修正补丁：https://wago.io/uq0Uox6Ta
 
 崩裂监视：https://wago.io/Hmm-bO1rv
+
+9.1刻希亚宝箱+圣物+坐标+位面：
+- 圣物坐标：https://bbs.nga.cn/read.php?tid=27452058 （ https://wago.io/QCM2wKxJK ）
+- 每日助手：https://wago.io/v3gssSmaY （略有修改，设置为全部只在噬渊区域生效显示）
+
+9.1团本统御圣所+9.1五人本集市wa：https://bbs.nga.cn/read.php?tid=27412879
+
+奶萨始源波通报：
+- 原版：https://wago.io/MJQ3eXdFA
+- 自用修改版：https://wago.io/WtEbYYcbH
+
+大秘境界面美化增强：
+- 原版：https://wago.io/lNCA6Tv1s
+- 社区汉化：https://bbs.nga.cn/read.php?tid=27955156
+
+第二赛季词缀磨难监视：https://wago.io/47UbmGv1
+
+史诗钥石地下城界面显示分数：https://wago.io/M+LevelDisplay
+
+通灵战潮道具监视：https://wago.io/KyrianArmaments
 
 ## 一些有用的重要命令
 在游戏内聊天窗口输入，然后回车：

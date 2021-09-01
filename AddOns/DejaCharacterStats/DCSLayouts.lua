@@ -69,18 +69,6 @@ local StatScrollFrame = CreateFrame("ScrollFrame", nil, CharacterFrameInsetRight
 
 local DefaultTankData = DCS_TableData:MergeTable({
 	{ statKey = "ItemLevelFrame" },
-	{ statKey = "CorruptionCategory" },
-		{ statKey = "CR_CORRUPTION", hideAt = 0 },
-		{ statKey = "CR_CORRUPTION_RESISTANCE", hideAt = 0 },
-		{ statKey = "CR_TOTAL_CORRUPTION", hideAt = 0 },
-	{ statKey = "HonorCategory" },
-		{ statKey = "HONOR_PROGRESS", hideAt = 0 },
-		{ statKey = "HONOR_LEVEL", hideAt = 0 },
-	{ statKey = "ConquestCategory" },
-		{ statKey = "RATING_2V2", hideAt = 0 },
-		{ statKey = "RATING_3V3", hideAt = 0 },
-		{ statKey = "RATING_RBG", hideAt = 0 },
-		{ statKey = "CONQUEST_PROGRESS", hideAt = 0 },
 	{ statKey = "GeneralCategory" },
         { statKey = "HEALTH" },
         { statKey = "DCS_POWER" },
@@ -129,9 +117,13 @@ local DefaultTankData = DCS_TableData:MergeTable({
 		{ statKey = "PARRY_RATING", hideAt = 0 },
 		{ statKey = "SPEED_RATING", hideAt = 0, hidden = true },
 		{ statKey = "SPEED", hideAt = 0, hidden = true }, --seems like Blizzard's implemented speed rating
-})
-local DefaultNonTankData = DCS_TableData:MergeTable({
-	{ statKey = "ItemLevelFrame" },
+	{ statKey = "ActiBlizzWalkout" },
+		{ statKey = "BLACK_GIRLS_CODE" },
+		{ statKey = "FUTURES" },
+		{ statKey = "GIRLS_WHO_CODE" },
+		{ statKey = "RAINN" },
+		{ statKey = "WOMEN_IN__ANIMATION" },
+		{ statKey = "WOMEN_IN_GAMES_INTL" },
 	{ statKey = "CorruptionCategory" },
 		{ statKey = "CR_CORRUPTION", hideAt = 0 },
 		{ statKey = "CR_CORRUPTION_RESISTANCE", hideAt = 0 },
@@ -144,6 +136,10 @@ local DefaultNonTankData = DCS_TableData:MergeTable({
 		{ statKey = "RATING_3V3", hideAt = 0 },
 		{ statKey = "RATING_RBG", hideAt = 0 },
 		{ statKey = "CONQUEST_PROGRESS", hideAt = 0 },
+})
+
+local DefaultNonTankData = DCS_TableData:MergeTable({
+	{ statKey = "ItemLevelFrame" },
 	{ statKey = "GeneralCategory" },
         { statKey = "HEALTH" },
         { statKey = "DCS_POWER" },
@@ -192,6 +188,25 @@ local DefaultNonTankData = DCS_TableData:MergeTable({
 		{ statKey = "SPEED_RATING", hideAt = 0, hidden = true },
 		{ statKey = "SPEED", hideAt = 0, hidden = true }, --seems like Blizzard's implemented speed rating
 		{ statKey = "STAGGER", hideAt = 0, roles = {"TANK"} },
+	{ statKey = "ActiBlizzWalkout" },
+		{ statKey = "BLACK_GIRLS_CODE" },
+		{ statKey = "FUTURES" },
+		{ statKey = "GIRLS_WHO_CODE" },
+		{ statKey = "RAINN" },
+		{ statKey = "WOMEN_IN__ANIMATION" },
+		{ statKey = "WOMEN_IN_GAMES_INTL" },
+	{ statKey = "CorruptionCategory" },
+		{ statKey = "CR_CORRUPTION", hideAt = 0 },
+		{ statKey = "CR_CORRUPTION_RESISTANCE", hideAt = 0 },
+		{ statKey = "CR_TOTAL_CORRUPTION", hideAt = 0 },
+	{ statKey = "HonorCategory" },
+		{ statKey = "HONOR_PROGRESS", hideAt = 0 },
+		{ statKey = "HONOR_LEVEL", hideAt = 0 },
+	{ statKey = "ConquestCategory" },
+		{ statKey = "RATING_2V2", hideAt = 0 },
+		{ statKey = "RATING_3V3", hideAt = 0 },
+		{ statKey = "RATING_RBG", hideAt = 0 },
+		{ statKey = "CONQUEST_PROGRESS", hideAt = 0 },
 })
 --local ShownData = DefaultData
 local ShownData = DefaultNonTankData --TODO: find a reason why error during login with "local ShownData". Most probably too early PaperDollFrame_UpdateStats() calls due to DCS_configButton:RegisterEvent("UPDATE_INVENTORY_DURABILITY")
@@ -204,6 +219,9 @@ for k, v in pairs(DCS_TableData.StatData) do
 			v.frame.Background:SetHeight(28)
 			if k == "CorruptionCategory" then
 				v.frame.Title:SetText(L["Corruption"])
+			end
+			if k == "ActiBlizzWalkout" then
+				v.frame.Title:SetText(L["#ActiBlizzWalkout |cff00c0ff<3|r"])
 			end
 			if k == "GeneralCategory" then
 				v.frame.Title:SetText(L["General"])
@@ -438,11 +456,6 @@ local function DCS_Table_Relevant()
 	local hashonorlevel = UnitHonorLevel("player")
 	local hasconquestlevel = PVPGetConquestLevelInfo()
 
-
-
-
-
-
 	for _, v in ipairs(ShownData) do
 		if v.hidden then v.hidden = false end
 	end 
@@ -512,6 +525,14 @@ local function DCS_Table_Relevant()
 			if v.statKey == "CR_CORRUPTION_RESISTANCE" then v.hidden = true end
 			if v.statKey == "CR_TOTAL_CORRUPTION" then v.hidden = true end
 		end
+		if v.statKey == "ActiBlizzWalkout" then v.hidden = true end
+		if v.statKey == "BLACK_GIRLS_CODE" then v.hidden = true end
+		if v.statKey == "FUTURES" then v.hidden = true end
+		if v.statKey == "GIRLS_WHO_CODE" then v.hidden = true end
+		if v.statKey == "RAINN" then v.hidden = true end
+		if v.statKey == "WOMEN_IN__ANIMATION" then v.hidden = true end
+		if v.statKey == "WOMEN_IN_GAMES_INTL" then v.hidden = true end
+
 		--if v.statKey == "GeneralCategory" then v.hidden = true end
 		--if v.statKey == "OffenseCategory" then v.hidden = true end
 		--if v.statKey == "DefenseCategory" then v.hidden = true end

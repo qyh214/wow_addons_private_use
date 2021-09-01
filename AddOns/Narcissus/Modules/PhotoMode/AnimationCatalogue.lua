@@ -1508,6 +1508,8 @@ local officialAnimationName = {
 	"FlyWASit04",	-- [1495]
 	"MountSummon",	-- [1496]
 	"FlyMountSummon",	-- [1497]
+	"EmoteSelfie",	--[1498]
+	"FlyEmoteSelfie", --[1499]
 	[0] = "Stand",
 }
 
@@ -1651,7 +1653,7 @@ local FavoriteAnimationIDs;
 local IsFavorite = {};
 
 function NarciAnimationInfo:GetOfficialName(id)
-    return colorizedName[id] or "|cffff5050None|r";
+    return colorizedName[id] or "|cffff5050Undefined|r";
 end
 
 function NarciAnimationInfo:IsFavorite(id)
@@ -1659,7 +1661,7 @@ function NarciAnimationInfo:IsFavorite(id)
 end
 
 function NarciAnimationInfo:GetInfo(id)
-	return colorizedName[id] or "|cffff5050None|r", IsFavorite[id]
+	return colorizedName[id] or "|cffff5050Undefined|r", IsFavorite[id]
 end
 
 function NarciAnimationInfo:AddFavorite(id)
@@ -1720,7 +1722,7 @@ end
 
 
 -----------------Construct Search Table-----------------
-local textLocale = GetLocale();
+local textLocale = "enUS" --GetLocale();
 local GetInitial;
 local searchTable = {};
 local sort = table.sort;
@@ -1740,9 +1742,7 @@ else
 end
 
 local function DivideListByInitials()
-    local gsub = string.gsub;
     local find = string.find;
-    local strsplit = strsplit;
 
     local dividedName, initial;
     local names = {};
@@ -1822,7 +1822,7 @@ function NarciAnimationInfo:SearchByName(str)
 			if model:HasAnimation(id) then
 				nameTemp = lower(name);
 				if find(nameTemp, str, 1, true) or find(nameTemp, str2, 1, true) then
-					tinsert(matchedIDs, {id, colorizedName[id], IsFavorite[id]} );
+					tinsert(matchedIDs, {id, IsFavorite[id]} );
 					numMatches = numMatches + 1;
 				end
 			end

@@ -15,6 +15,9 @@ end
 
 L.HOW_TO_USE_MOD					= "Welcome to " .. L.DBM .. ". Type /dbm help for a list of supported commands. To access options type /dbm in your chat to begin configuration. Load specific zones manually to configure any boss specific settings to your liking as well. " .. L.DBM .. " will setup defaults for your spec, but you may want to fine tune these."
 L.SILENT_REMINDER					= "Reminder: " .. L.DBM .. " is still in silent mode."
+L.NEWS_UPDATE						= "|h|c11ff1111News|r|h: This update is basically a re-release of 9.1.9 to clear a false malware detection on the hash of the previous file release. Read more about it |Hgarrmission:DBM:news|h|cff3588ff[here]|r|h"
+
+L.COPY_URL_DIALOG_NEWS				= "To read latest news, visit link below"
 
 L.LOAD_MOD_ERROR					= "Error while loading boss mods for %s: %s"
 L.LOAD_MOD_SUCCESS					= "Loaded '%s' mods. For more options such as custom alert sounds and personalized warning notes, type /dbm."
@@ -202,7 +205,7 @@ L.RETAIL_ONLY						= "WARNING: This version of " .. L.DBM .. " is only meant to 
 
 L.MOVABLE_BAR						= "Drag me!"
 
-L.PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h sent you a " .. L.DBM .. " timer: '%2$s'\n|HDBM:cancel:%2$s:nil|h|cff3588ff[Cancel this timer]|r|h  |HDBM:ignore:%2$s:%1$s|h|cff3588ff[Ignore timers from %1$s]|r|h"
+L.PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h sent you a " .. L.DBM .. " timer: '%2$s'\n|Hgarrmission:DBM:cancel:%2$s:nil|h|cff3588ff[Cancel this timer]|r|h  |Hgarrmission:DBM:ignore:%2$s:%1$s|h|cff3588ff[Ignore timers from %1$s]|r|h"
 --L.PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h sent you a " .. L.DBM .. " timer"
 L.PIZZA_CONFIRM_IGNORE				= "Do you really want to ignore " .. L.DBM .. " timers from %s for this session?"
 L.PIZZA_ERROR_USAGE					= "Usage: /dbm [broadcast] timer <time> <text>. <time> must be 3 or greater."
@@ -302,6 +305,8 @@ L.SOUTH								= "South"
 L.INTERMISSION						= "Intermission"--No blizz global for this, and will probably be used in most end tier fights with intermission phases
 L.ORB								= "Orb"
 L.ORBS								= "Orbs"
+L.RING								= "Ring"
+L.RINGS								= "Rings"
 L.CHEST								= "Chest"--As in Treasure 'Chest'. Not Chest as in body part.
 L.NO_DEBUFF							= "Not %s"--For use in places like info frame where you put "Not Spellname"
 L.ALLY								= "Ally"--Such as "Move to Ally"
@@ -421,6 +426,7 @@ L.AUTO_SPEC_WARN_TEXTS = {
 	moveawaycount					= "%s (%%s) - move away from others",
 	moveto							= "%s - move to >%%s<",
 	soak							= "%s - soak it",
+	soakcount						= "%s - soak %%s",
 	jump							= "%s - jump",
 	run								= "%s - run away",
 	cast							= "%s - stop casting",
@@ -467,6 +473,7 @@ L.AUTO_SPEC_WARN_OPTIONS = {
 	moveawaycount					= "Show special warning (with count) to move away from others for $spell:%s",
 	moveto							= "Show special warning to move to someone or some place for $spell:%s",
 	soak							= "Show special warning to soak for $spell:%s",
+	soakcount						= "Show special warning (with count) to soak for $spell:%s",
 	jump							= "Show special warning to move to jump for $spell:%s",
 	run 							= "Show special warning to run away from $spell:%s",
 	cast 							= "Show special warning to stop casting for $spell:%s",--Spell Interrupt
@@ -485,6 +492,7 @@ L.AUTO_SPEC_WARN_OPTIONS = {
 -- Auto-generated Timer Localizations
 L.AUTO_TIMER_TEXTS = {
 	target							= "%s: %%s",
+	targetcount						= "%s (%%2$s): %%1$s",
 	cast							= "%s",
 	castshort						= "%s ",--if short timers enabled, cast and next are same timer text, this is a conflict. the space resolves it
 	castcount						= "%s (%%s)",
@@ -496,7 +504,7 @@ L.AUTO_TIMER_TEXTS = {
 	ai								= "%s AI",
 	cd								= "%s CD",
 	cdshort							= "~%s",
-	cdcount							= "%s CD (%%s)",
+	cdcount							= "%s (%%s) CD",
 	cdcountshort					= "~%s (%%s)",
 	cdsource						= "%s CD: >%%s<",
 	cdsourceshort					= "~%s: >%%s<",
@@ -522,6 +530,7 @@ L.AUTO_TIMER_TEXTS = {
 
 L.AUTO_TIMER_OPTIONS = {
 	target							= "Show timer for $spell:%s debuff",
+	targetcount						= "Show timer (with count) for $spell:%s debuff",
 	cast							= "Show timer for $spell:%s cast",
 	castcount						= "Show timer (with count) for $spell:%s cast",
 	castsource						= "Show timer (with source) for $spell:%s cast",
@@ -573,7 +582,7 @@ L.AUTO_YELL_ANNOUNCE_TEXT = {
 	shortposition 					= "{rt%%1$d}%s %%2$d",--Icon, Spellname, number
 	combo							= "%s and %%s",--Spell name (from option, plus spellname given in arg)
 	repeatplayer					= UnitName("player"),--Doesn't need translation, it's just player name spam
-	repeaticon						= "{rt%%2$d}"--Doesn't need translation. It's just icon spam
+	repeaticon						= "{rt%%1$d}"--Doesn't need translation. It's just icon spam
 }
 L.AUTO_YELL_CUSTOM_POSITION			= "{rt%d}%s"--Doesn't need translating. Has no strings (Used in niche situations such as icon repeat yells)
 L.AUTO_YELL_CUSTOM_POSITION2		= "{rt%d}%s{rt%d}"--Doesn't need translating. Has no strings (Deprecated, will be removed soon)

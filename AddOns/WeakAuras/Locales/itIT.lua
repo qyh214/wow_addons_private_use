@@ -151,6 +151,8 @@ L["Array"] = "Array"
 L["Ascending"] = "Crescente"
 --[[Translation missing --]]
 L["Assigned Role"] = "Assigned Role"
+--[[Translation missing --]]
+L["Assigned Role Icon"] = "Assigned Role Icon"
 L["At Least One Enemy"] = "Almeno un nemico"
 --[[Translation missing --]]
 L["At missing Value"] = "At missing Value"
@@ -399,6 +401,8 @@ L["Damage Split"] = "Damage Split"
 --[[Translation missing --]]
 L["DBM Announce"] = "DBM Announce"
 --[[Translation missing --]]
+L["DBM Stage"] = "DBM Stage"
+--[[Translation missing --]]
 L["DBM Timer"] = "DBM Timer"
 L["Death Knight Rune"] = "Rune del cavaliere della morte"
 --[[Translation missing --]]
@@ -409,6 +413,8 @@ L["Debuff Class"] = "Debuff Class"
 L["Debuff Class Icon"] = "Debuff Class Icon"
 --[[Translation missing --]]
 L["Debuff Type"] = "Debuff Type"
+--[[Translation missing --]]
+L["Defense"] = "Defense"
 --[[Translation missing --]]
 L["Deflect"] = "Deflect"
 --[[Translation missing --]]
@@ -546,6 +552,8 @@ L["Eredar Twins"] = "Eredar Twins"
 L["Error"] = "Errore"
 --[[Translation missing --]]
 L["Error Frame"] = "Error Frame"
+--[[Translation missing --]]
+L["Error in aura '%s' in %s. trigger. All States table contains a non table at key: '%s'."] = "Error in aura '%s' in %s. trigger. All States table contains a non table at key: '%s'."
 --[[Translation missing --]]
 L["Error not receiving display information from %s"] = "Error not receiving display information from %s"
 --[[Translation missing --]]
@@ -741,6 +749,8 @@ L["Health"] = "Health"
 --[[Translation missing --]]
 L["Health (%)"] = "Health (%)"
 --[[Translation missing --]]
+L["Health Deficit"] = "Health Deficit"
+--[[Translation missing --]]
 L["Heigan the Unclean"] = "Heigan the Unclean"
 --[[Translation missing --]]
 L["Height"] = "Height"
@@ -770,6 +780,10 @@ L["High Priestess Mar'li"] = "High Priestess Mar'li"
 L["High Warlord Naj'entus"] = "High Warlord Naj'entus"
 --[[Translation missing --]]
 L["Higher Than Tank"] = "Higher Than Tank"
+--[[Translation missing --]]
+L["Hit (%)"] = "Hit (%)"
+--[[Translation missing --]]
+L["Hit Rating"] = "Hit Rating"
 --[[Translation missing --]]
 L["Holy Resistance"] = "Holy Resistance"
 --[[Translation missing --]]
@@ -832,6 +846,8 @@ L["In Vehicle"] = "In Vehicle"
 L["Include Bank"] = "Include Bank"
 --[[Translation missing --]]
 L["Include Charges"] = "Include Charges"
+--[[Translation missing --]]
+L["Include Pets"] = "Include Pets"
 --[[Translation missing --]]
 L["Incoming Heal"] = "Incoming Heal"
 --[[Translation missing --]]
@@ -1301,6 +1317,8 @@ L["Pet Specialization"] = "Pet Specialization"
 --[[Translation missing --]]
 L["Pet Spell"] = "Pet Spell"
 --[[Translation missing --]]
+L["Pets only"] = "Pets only"
+--[[Translation missing --]]
 L["Phase"] = "Phase"
 --[[Translation missing --]]
 L["Pixel Glow"] = "Pixel Glow"
@@ -1337,11 +1355,15 @@ L["Player(s) Not Affected"] = "Player(s) Not Affected"
 --[[Translation missing --]]
 L["Player/Unit Info"] = "Player/Unit Info"
 --[[Translation missing --]]
+L["Players and Pets"] = "Players and Pets"
+--[[Translation missing --]]
 L["Poison"] = "Poison"
 --[[Translation missing --]]
 L["Power"] = "Power"
 --[[Translation missing --]]
 L["Power (%)"] = "Power (%)"
+--[[Translation missing --]]
+L["Power Deficit"] = "Power Deficit"
 --[[Translation missing --]]
 L["Power Type"] = "Power Type"
 --[[Translation missing --]]
@@ -1402,6 +1424,8 @@ L["Raid (Mythic)"] = "Raid (Mythic)"
 L["Raid (Normal)"] = "Raid (Normal)"
 --[[Translation missing --]]
 L["Raid (Timewalking)"] = "Raid (Timewalking)"
+--[[Translation missing --]]
+L["Raid Mark"] = "Raid Mark"
 --[[Translation missing --]]
 L["Raid Role"] = "Raid Role"
 --[[Translation missing --]]
@@ -1799,6 +1823,8 @@ L["Teron Gorefiend"] = "Teron Gorefiend"
 --[[Translation missing --]]
 L["Text"] = "Text"
 --[[Translation missing --]]
+L["Text-to-speech"] = "Text-to-speech"
+--[[Translation missing --]]
 L["Thaddius"] = "Thaddius"
 --[[Translation missing --]]
 L["The aura has overwritten the global '%s', this might affect other auras."] = "The aura has overwritten the global '%s', this might affect other auras."
@@ -1840,6 +1866,8 @@ L["This aura was created with a newer version of WeakAuras."] = "This aura was c
 L["This aura was created with the Classic version of World of Warcraft."] = "This aura was created with the Classic version of World of Warcraft."
 --[[Translation missing --]]
 L["This aura was created with the retail version of World of Warcraft."] = "This aura was created with the retail version of World of Warcraft."
+--[[Translation missing --]]
+L["This import requires a newer WeakAuras version."] = "This import requires a newer WeakAuras version."
 --[[Translation missing --]]
 L["This is a modified version of your aura, |cff9900FF%s.|r"] = "This is a modified version of your aura, |cff9900FF%s.|r"
 --[[Translation missing --]]

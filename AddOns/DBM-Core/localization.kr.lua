@@ -5,6 +5,9 @@ local L = DBM_CORE_L
 
 L.HOW_TO_USE_MOD					= L.DBM .. "을 사용해 주셔서 감사합니다. 대화창에서 /dbm help를 입력하면 사용 가능한 명령어 목록을 볼 수 있습니다. 설정을 하시려면 /dbm을 입력하세요. 보스 알림 설정을 기호에 맞게 변경하려면 원하는 던전을 직접 선택해서 로딩을 클릭하세요. " .. L.DBM .. "이 당신의 현재 전문화에 맞는 기본값을 설정하지만 일부 옵션은 자신에게 맞게 조정해야 할 수도 있습니다."
 L.SILENT_REMINDER					= "알림: " .. L.DBM .. "이 아직 조용함 모드입니다."
+L.NEWS_UPDATE						= "|h|c11ff1111뉴스|r|h: 이 업데이트는 기본적으로 이전에 배포된 파일의 해쉬값이 악성코드로 잘못 감지되어 이를 피하기 위한 9.1.9의 재배포 버전입니다. 자세한 내용은 |Hgarrmission:DBM:news|h|cff3588ff[이곳]|r|h에서 읽을 수 있습니다"
+
+L.COPY_URL_DIALOG_NEWS				= "최신 소식을 보려면 아래 링크를 방문하세요"
 
 L.LOAD_MOD_ERROR				= "%s 보스 모드 로딩중 오류 발생: %s"
 L.LOAD_MOD_SUCCESS			= "'%s' 모드가 로딩됐습니다. 사용자 지정 경고 효과음을 설정하거나 개인적으로 메모를 적어놓고 싶다면 /dbm을 입력하세요."
@@ -190,7 +193,7 @@ L.RETAIL_ONLY					= "경고: 이 " .. L.DBM .. " 버전은 월드 오브 워크�
 L.MOVABLE_BAR				= "드래그 하세요!"
 
 --L.PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h님이 당신에게 " .. L.DBM .. " 타이머를 전송했습니다"
-L.PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h님이 당신에게 " .. L.DBM .. " 타이머를 전송했습니다: '%2$s'\n|HDBM:cancel:%2$s:nil|h|cff3588ff[타이머 취소]|r|h  |HDBM:ignore:%2$s:%1$s|h|cff3588ff[%1$s의 타이머 무시]|r|h"
+L.PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h님이 당신에게 " .. L.DBM .. " 타이머를 전송했습니다: '%2$s'\n|Hgarrmission:DBM:cancel:%2$s:nil|h|cff3588ff[타이머 취소]|r|h  |Hgarrmission:DBM:ignore:%2$s:%1$s|h|cff3588ff[%1$s의 타이머 무시]|r|h"
 L.PIZZA_CONFIRM_IGNORE			= "정말 %s의 " .. L.DBM .. " 타이머를 차단하시겠습니까? 이 공격대에 있는 동안에만 적용됩니다."
 L.PIZZA_ERROR_USAGE				= "사용법: /dbm [broadcast] timer <시간> <텍스트>. <시간>은 3초 이상이어야 합니다."
 
@@ -288,6 +291,8 @@ L.SOUTH						= "남쪽"
 L.INTERMISSION				= "사잇 단계"
 L.ORB						= "구슬"
 L.ORBS						= "구슬"
+L.RING						= "고리"
+L.RINGS						= "고리"
 L.CHEST						= "상자"--As in Treasure 'Chest'. Not Chest as in body part.
 L.NO_DEBUFF					= "%s 없음"--For use in places like info frame where you put "Not Spellname"
 L.ALLY						= "공대원"--Such as "Move to Ally"
@@ -399,6 +404,7 @@ L.AUTO_SPEC_WARN_TEXTS.moveaway		= "%s - 거리 이격"
 L.AUTO_SPEC_WARN_TEXTS.moveawaycount	= "%s (%%s) - 밖으로 나오세요"
 L.AUTO_SPEC_WARN_TEXTS.moveto		= "%s - >%%s<|1으로;로; 이동"
 L.AUTO_SPEC_WARN_TEXTS.soak		= "%s - 맞으세요"
+L.AUTO_SPEC_WARN_TEXTS.soakcount	= "%s - 맞으세요 %%s"
 L.AUTO_SPEC_WARN_TEXTS.jump		= "%s - 점프"
 L.AUTO_SPEC_WARN_TEXTS.run		= "%s - 도망치세요"
 L.AUTO_SPEC_WARN_TEXTS.cast		= "%s - 주문 시전 중지"
@@ -442,6 +448,7 @@ L.AUTO_SPEC_WARN_OPTIONS.moveaway		= "$spell:%s에 거리 이격 특수 알림 �
 L.AUTO_SPEC_WARN_OPTIONS.moveawaycount		= "$spell:%s에 밖으로 나오기 특수 알림 보기 (횟수 포함)"
 L.AUTO_SPEC_WARN_OPTIONS.moveto			= "$spell:%s에 특정인 또는 특정 위치로 이동 특수 알림 보기"
 L.AUTO_SPEC_WARN_OPTIONS.soak			= "$spell:%s 맞기 특수 알림 보기"
+L.AUTO_SPEC_WARN_OPTIONS.soakcount		= "$spell:%s 맞기 특수 알림 보기 (횟수 포함)"
 L.AUTO_SPEC_WARN_OPTIONS.jump			= "$spell:%s에 점프 특수 알림 보기"
 L.AUTO_SPEC_WARN_OPTIONS.run			= "$spell:%s|1으로;로;부터 도망 특수 알림 보기"
 L.AUTO_SPEC_WARN_OPTIONS.cast			= "$spell:%s에 주문 시전 중지 특수 알림 보기"
@@ -461,7 +468,7 @@ L.AUTO_TIMER_TEXTS.active		= "%s 종료"--Buff/Debuff/event on boss
 L.AUTO_TIMER_TEXTS.fades			= "%s 사라짐"--Buff/Debuff on players
 L.AUTO_TIMER_TEXTS.ai				= "%s AI 예상"
 L.AUTO_TIMER_TEXTS.cd				= "%s 쿨타임"
-L.AUTO_TIMER_TEXTS.cdcount		= "%s 쿨타임 (%%s)"
+L.AUTO_TIMER_TEXTS.cdcount		= "%s (%%s) 쿨타임"
 L.AUTO_TIMER_TEXTS.cdsource		= "%s 쿨타임: >%%s<"
 L.AUTO_TIMER_TEXTS.cdspecial		= "특수 능력 쿨타임"
 L.AUTO_TIMER_TEXTS.cdspecialshort	= "~특수 능력"
@@ -478,6 +485,7 @@ L.AUTO_TIMER_TEXTS.addscustom		= "쫄 등장 (%%s)"
 L.AUTO_TIMER_TEXTS.addscustomshort	= "쫄 (%%s)"
 
 L.AUTO_TIMER_OPTIONS.target		= "$spell:%s 디버프 타이머 바 보기"
+L.AUTO_TIMER_OPTIONS.targetcount	= "$spell:%s 디버프 타이머 바 보기 (횟수 포함)"
 L.AUTO_TIMER_OPTIONS.cast		= "$spell:%s 시전 타이머 바 보기"
 L.AUTO_TIMER_OPTIONS.castcount		= "$spell:%s 시전 타이머 바 보기 (횟수 포함)"
 L.AUTO_TIMER_OPTIONS.castsource		= "$spell:%s 시전 타이머 바 보기 (시전자 이름 포함)"

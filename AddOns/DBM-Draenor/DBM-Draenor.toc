@@ -25,12 +25,12 @@
 ## X-DBM-Mod-SubCategories-ruRU: Дренор,Нападения на гарнизон
 ## X-DBM-Mod-Sort: 604
 ## X-DBM-Mod-MapID: 1116, 1159, 1331, 1158, 1153, 1152, 1330, 1160, 1154, 1464
-## X-DBM-Mod-MinCoreRevision: 20200524142133
+## X-DBM-Mod-MinCoreRevision: 20210721040757
 ## X-DBM-Mod-MinExpansion: 5
 ## X-Curse-Project-ID: 101956
 ## X-WoWI-ID: 24535
 ## X-Wago-ID: LvNAkBKo
-## Version: r56
+## Version: r57
 
 localization.br.lua
 localization.en.lua

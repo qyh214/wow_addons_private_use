@@ -16,6 +16,8 @@ local DefaultTooltip = NarciGameTooltip;	--Created in NarciAPI.lua
 
 local C_PaperDollInfo = C_PaperDollInfo;
 local UnitStat = UnitStat;
+local GetCombatRating = GetCombatRating;
+local GetCombatRatingBonus = GetCombatRatingBonus;
 local BASE_MOVEMENT_SPEED = BASE_MOVEMENT_SPEED;
 
 local function GetPrimaryStatsNum()
@@ -124,7 +126,6 @@ local function MasteryFrame_OnEnter(object)
 
 	DefaultTooltip:SetOwner(object, "ANCHOR_NONE");
 
-	local _, class = UnitClass("player");
 	local mastery, bonusCoeff = GetMasteryEffect();
 	local masteryBonus = GetCombatRatingBonus(CR_MASTERY) * bonusCoeff;
 
@@ -495,24 +496,6 @@ function UpdateFunc:Armor(object, unit)
 	--object:Show();
 end
 
-function UpdateFunc:Power(object)
-	local unit = "player"
-	local powerType, powerToken = UnitPowerType(unit);
-	local power = UnitPowerMax(unit) or 0;
-	local powerText = FormatLargeNumbers(power);
-	local powerName = _G[powerToken];
-	if (powerToken and powerName) then
-		object.Label:SetText(powerName)
-		object.Value:SetText(powerText)
-		object.tooltip = "|cffffffff".. powerName .." "..powerText.."|r";
-		object.tooltip2 = _G["STAT_"..powerToken.."_TOOLTIP"];
-		object:Show();
-	else
-		object.Label:SetText("Resource")
-		object.Value:SetText("N/A")
-	end
-end
-
 function UpdateFunc:Reduction(object)
 	local unit = "player"
 	local baselineArmor, effectiveArmor, armor, bonusArmor = UnitArmor(unit);
@@ -606,20 +589,20 @@ function UpdateFunc:Health(object, unit)
 	object:Show();
 end
 
-function UpdateFunc:Power(self)
+function UpdateFunc:Power(object)
 	local unit = "player";
 	local powerType, powerToken = UnitPowerType(unit);
 	local power = UnitPowerMax(unit) or 0;
 	local powerText = FormatLargeNumbers(power);
 	local powerName = _G[powerToken];
 	if (powerToken and powerName) then
-		self.Label:SetText(powerName)
-		self.Value:SetText(powerText)
-		self.tooltip = "|cffffffff".. powerName .." "..powerText.."|r";
-		self.tooltip2 = _G["STAT_"..powerToken.."_TOOLTIP"];
-		self:Show();
+		object.Label:SetText(powerName)
+		object.Value:SetText(powerText)
+		object.tooltip = "|cffffffff".. powerName .." "..powerText.."|r";
+		object.tooltip2 = _G["STAT_"..powerToken.."_TOOLTIP"];
+		object:Show();
 	else
-		self:SetLabelAndValue("Resource", "N/A", true);
+		object:SetLabelAndValue("Resource", "N/A", true);
 	end
 end
 

@@ -214,7 +214,7 @@
 						<MaxColor a="1" r="0.6" g="0.6" b="0.6"/>
 					</Gradient>
 					<Animations>
-						<AnimationGroup parentKey="animBling" smoothing="IN_OUT">	
+						<AnimationGroup parentKey="animBling">	
 							<!--Scale parentKey="scale" fromScaleX="0" toScaleX="1" fromScaleY="1" toScaleY="1" duration="0.5" order="1"/-->
 							<Alpha fromAlpha="1" toAlpha="0" duration="0.1" order="2"/>
 							<Scripts>
@@ -278,7 +278,7 @@
 		<Frames>
 			<Frame parentKey="AnimFrame" inherits="NarciUpdateFrameTemplate"/>
 			<Frame parentKey="EraseFrame" inherits="NarciUpdateFrameTemplate"/>
-			<EditBox parentKey="SetName" inherits="NarciEditBoxTemplate" letters="16" multiLine="false" level="6">
+			<EditBox parentKey="SetName" inherits="NarciEditBoxTemplate" letters="16" multiLine="false">
 				<HitRectInsets>
 					<AbsInset left="-4" right="-6" top="-6" bottom="-6"/>
 				</HitRectInsets>
@@ -300,7 +300,7 @@
 							<Color r="1" g="1" b="1" a="0.15"/>
 							<Size x="36" y="12"/>
 							<Anchors>
-								<Acnhor point="RIGHT" relativePoint="RIGHT"/>
+								<Anchor point="RIGHT" relativePoint="RIGHT"/>
 							</Anchors>
 						</FontString>
 						<Texture setAllPoints="true" parentKey="RightEndColor">
@@ -389,8 +389,8 @@
 						<Texture parentKey="Icon" desaturated="false" file="Interface\AddOns\Narcissus\Art\Widgets\EquipmentSetManager\NewSet">
 							<TexCoords left="0.075" right="0.925" top="0.075" bottom="0.925"/>
 							<Anchors>
-								<Acnhor point="TOPLEFT" relativeKey="$parent.IconTemp" relativePoint="TOPLEFT"/>
-								<Acnhor point="BOTTOMRIGHT" relativeKey="$parent.IconTemp" relativePoint="BOTTOMRIGHT"/>
+								<Anchor point="TOPLEFT" relativeKey="$parent.IconTemp" relativePoint="TOPLEFT"/>
+								<Anchor point="BOTTOMRIGHT" relativeKey="$parent.IconTemp" relativePoint="BOTTOMRIGHT"/>
 							</Anchors>
 							<Animations>
 								<AnimationGroup parentKey="Transition">
@@ -468,7 +468,7 @@
 
 		</Frames>
 		<Animations>
-			<AnimationGroup parentKey="Erase" smoothing="OUT">
+			<AnimationGroup parentKey="Erase">
 				<Alpha fromAlpha="1" toAlpha="0" duration="0.5" order="1"/>
 				<Scale fromScaleX="1" toScaleX="0.9" fromScaleY="1" toScaleY="0" duration="0.5" order="1"/>
 				<Scripts>
@@ -782,7 +782,7 @@
 								<Anchor point="RIGHT" relativePoint="LEFT"/>
 							</Anchors>
 							<Animations>
-								<AnimationGroup parentKey="animIn" smoothing="IN_OUT">
+								<AnimationGroup parentKey="animIn">
 									<Translation offsetX="416" duration="0.8" order="1"/>
 									<Alpha fromAlpha="0" toAlpha="1" duration="0.15" order="1"/>
 									<Alpha startDelay="0.6" fromAlpha="1" toAlpha="0" duration="0.3" order="1"/>
@@ -800,7 +800,7 @@
 		</Scripts>
 	</Frame>
 
-	<Button name="Narci_EquipmentSetIconSelector" parent="Narci_Attribute" hidden="true" Alpha="0">
+	<Button name="Narci_EquipmentSetIconSelector" parent="Narci_Attribute" hidden="true" Alpha="0" mixin="NarciEquipmentSetIconSelectorMixin">
 		<!--Overlap item buttons around icon selector, nullify their click events-->
 		<HitRectInsets>
 			<AbsInset left="-60" right="0" top="-24" bottom="-24"/>
@@ -830,11 +830,8 @@
 			</Layer>			
 		</Layers>
 		<Scripts>
-			<OnHide>
-				self:Hide();
-				self:SetAlpha(0);
-				self.Header:SetText(NARCI_ICON_SELECTOR);
-			</OnHide>
+			<OnLoad method="OnLoad"/>
+			<OnHide method="OnHide"/>
 			<OnClick>
 			</OnClick>
 		</Scripts>

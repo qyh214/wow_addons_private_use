@@ -1,12 +1,18 @@
-tag 89cd83b9012a3a164151c5e2b01ca66c911fa8a5 3.3.7
+tag 7fae0e8eb2c75c064d8a49c35ca304a716c6a341 3.3.10-beta1
 Author:	Alar of Runetotem <alar@aspide.it>
-Date:	Sat Mar 13 15:58:26 2021 +0100
+Date:	Sun Jul 11 23:10:59 2021 +0200
 
-Toc update
+Fix to shipyard control
 
-commit 8d033b4ab0d248e6cfb44afbff9f208265f1c332
+commit fe95c3b3b42d3f614ce22dfc35a1d6678591f337
 Author: Alar of Runetotem <alar@aspide.it>
-Date:   Sat Mar 13 15:03:27 2021 +0100
+Date:   Sun Jul 11 23:02:13 2021 +0200
 
-    Toc update to 90005
+    Fix: Restores Shipyard autoprocess
+
+commit b3e02d3b1dba6f833b29ba5464dbe07b161f98f1
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Sun Jul 11 12:06:47 2021 +0200
+
+    Bad use of global
 

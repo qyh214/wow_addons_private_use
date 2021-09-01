@@ -73,40 +73,60 @@ function NarciAPI_ActivateDistanceCalculator(calibrateDistance)
     end
 end
 
-local Globals = {};
-local totalGlobals = 1;
-for k, v in pairs(_G) do
-    Globals[totalGlobals] = k;
-    totalGlobals = totalGlobals + 1;
-end
+local _G = _G;
+local Globals;
+local totalGlobals;
 
 local SEARCH_PER_FRAME = 240;
 local numLoop = 0;
 local numMatch = 0;
-local function SearchLoop(b, key)
+local function SearchLoop(b, key, value)
     local find = string.find;
     local index;
-    for i = b, b + SEARCH_PER_FRAME  do
-        if Globals[i] then
-            index = i;
 
-            if find(Globals[i], key) then
-                numMatch = numMatch + 1;
-                
-                local t = type(_G[ Globals[i] ]);
-                if t == "number" or t == "string" then
-                    print("|cffffd200".. Globals[i].."|r = ".. (_G[Globals[i]] or "nil") );
-                else
-                    print("|cff808080"..t.." |cffffd200".. Globals[i]);
+    if key then
+        local globalName
+        for i = b, b + SEARCH_PER_FRAME  do
+            if Globals[i] then
+                index = i;
+                globalName = Globals[i];
+                if find(globalName, key) then
+                    numMatch = numMatch + 1;
+                    
+                    local t = type(_G[ globalName ]);
+                    if t == "number" or t == "string" then
+                        print("|cffffd200".. globalName.."|r = ".. (_G[ globalName ] or "nil") );
+                    else
+                        print("|cff808080"..t.." |cffffd200".. globalName);
+                    end
                 end
+            else
+                print("Search Completes ---------------")
+                print("Found ".. "|cffffd200".. numMatch .. "|r matches.")
+                numLoop = 0;
+                return
             end
-        else
-            print("Search Completes ---------------")
-            print("Found ".. "|cffffd200".. numMatch .. "|r matches.")
-            numLoop = 0;
-            return
+        end
+    else
+        local globalValue;
+        value = tostring(value);
+        for i = b, b + SEARCH_PER_FRAME  do
+            if Globals[i] then
+                index = i;
+                globalValue = _G[ Globals[i] ];
+                if (type(globalValue) == "string" or type(globalValue) == "number") and find(globalValue, value) then
+                    numMatch = numMatch + 1;
+                    print("|cffffd200".. Globals[i].."|r = ".. (globalValue or "nil") );
+                end
+            else
+                print("Search Completes ---------------")
+                print("Found ".. "|cffffd200".. numMatch .. "|r matches.")
+                numLoop = 0;
+                return
+            end
         end
     end
+
     After(0, function()
         SearchLoop(b + SEARCH_PER_FRAME + 1, key)
     end)
@@ -119,13 +139,36 @@ local function SearchLoop(b, key)
     end
 end
 
-function Narci_SearchGlobalString(key)
-    if type(key) ~= "string" then
-        print("The key must be a string!");
+function Narci_SearchGlobalString(key, value)
+    if key then
+        if type(key) ~= "string" then
+            print("The key must be a string!");
+            return
+        end
+    elseif value then
+        if type(value) ~= "number" and type(value) ~= "string" then
+            print("The value  must be a string or number!");
+            return
+        end
+    else
         return
     end
+
+    if not Globals then
+        Globals = {};
+        totalGlobals = 0;
+        for k, v in pairs(_G) do
+            Globals[totalGlobals] = k;
+            totalGlobals = totalGlobals + 1;
+        end
+    end
+
     numLoop = 0;
     numMatch = 0;
     local beginning = 1;
-    SearchLoop(beginning, key)
+    if value then
+        SearchLoop(beginning, nil, value)
+    else
+        SearchLoop(beginning, key)
+    end
 end

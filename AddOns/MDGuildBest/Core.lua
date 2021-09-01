@@ -1,8 +1,13 @@
 ----------------------
 -- 显示公会大米记录
 ----------------------
+local C_MythicPlus_GetRunHistory = C_MythicPlus.GetRunHistory
+local C_ChallengeMode_GetMapUIInfo = C_ChallengeMode.GetMapUIInfo
+local WEEKLY_REWARDS_MYTHIC_TOP_RUNS = WEEKLY_REWARDS_MYTHIC_TOP_RUNS
+
 local hasAngryKeystones
 local frame
+local WeeklyRunsThreshold = 10
 
 local function AddFontString(self, fontSize, text, anchor)
 	local fs = self:CreateFontString(nil, "OVERLAY")
@@ -97,12 +102,23 @@ local function UpdateGuildBest(self)
 	end
 
 	if not resize and hasAngryKeystones then
-		local schedule = AngryKeystones.Modules.Schedule.AffixFrame
+		hooksecurefunc(self.WeeklyInfo.Child.WeeklyChest, "SetPoint", function(frame, _, x, y)
+			if x == 100 and y == -30 then
+				frame:SetPoint("LEFT", 105, -5)
+			end
+		end)
+		self.WeeklyInfo.Child.ThisWeekLabel:SetPoint("TOP", -135, -25)
+
+		local schedule = AngryKeystones.Modules.Schedule
 		frame:SetWidth(246)
 		frame:ClearAllPoints()
-		frame:SetPoint("BOTTOMLEFT", schedule, "TOPLEFT", 0, 10)
+		frame:SetPoint("BOTTOMLEFT", schedule.AffixFrame, "TOPLEFT", 0, 10)
 
-		self.WeeklyInfo.Child.ThisWeekLabel:SetPoint("TOP", -135, -25)
+		local keystoneText = schedule.KeystoneText
+		keystoneText:SetFontObject(Game13Font)
+		keystoneText:ClearAllPoints()
+		keystoneText:SetPoint("TOP", self.WeeklyInfo.Child.DungeonScoreInfo.Score, "BOTTOM", 0, -3)
+
 		local affix = self.WeeklyInfo.Child.Affixes[1]
 		if affix then
 			affix:ClearAllPoints()
@@ -113,10 +129,40 @@ local function UpdateGuildBest(self)
 	end
 end
 
+local function sortHistory(entry1, entry2)
+	if entry1.level == entry2.level then
+		return entry1.mapChallengeModeID < entry2.mapChallengeModeID
+	else
+		return entry1.level > entry2.level
+	end
+end
+
+local function keystoneInfo_WeeklyRuns()
+	local runHistory = C_MythicPlus_GetRunHistory(false, true)
+	local numRuns = runHistory and #runHistory
+	if numRuns > 0 then
+		GameTooltip:AddLine(" ")
+		GameTooltip:AddDoubleLine(format(WEEKLY_REWARDS_MYTHIC_TOP_RUNS, WeeklyRunsThreshold), "("..numRuns..")", .6,.8,1)
+		sort(runHistory, sortHistory)
+
+		for i = 1, WeeklyRunsThreshold do
+			local runInfo = runHistory[i]
+			if not runInfo then break end
+
+			local name = C_ChallengeMode_GetMapUIInfo(runInfo.mapChallengeModeID)
+			local r,g,b = 0,1,0
+			if not runInfo.completed then r,g,b = 1,0,0 end
+			GameTooltip:AddDoubleLine(name, "Lv."..runInfo.level, 1,1,1, r,g,b)
+		end
+		GameTooltip:Show()
+	end
+end
+
 local function ChallengesOnLoad(self, event, addon)
 	if addon == "Blizzard_ChallengesUI" then
 		hasAngryKeystones = IsAddOnLoaded("AngryKeystones")
 		hooksecurefunc("ChallengesFrame_Update", UpdateGuildBest)
+		ChallengesFrame.WeeklyInfo.Child.WeeklyChest:HookScript("OnEnter", keystoneInfo_WeeklyRuns)
 		self:UnregisterEvent(event)
 	end
 end

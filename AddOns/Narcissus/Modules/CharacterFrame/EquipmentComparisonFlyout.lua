@@ -12,12 +12,16 @@ local IsItemSocketable = NarciAPI.IsItemSocketable;
 
 local DoesItemExist = C_Item.DoesItemExist;
 local GetItemLink = C_Item.GetItemLink;
+local GetItemID = C_Item.GetItemID;
 local GetItemIcon = C_Item.GetItemIcon;
 local GetItemName = C_Item.GetItemName;
 local GetItemQuality = C_Item.GetItemQuality;
 local GetCombatRating = GetCombatRating;
 
 local GetGemBorderTexture = NarciAPI.GetGemBorderTexture;
+local DoesItemHaveDomationSocket = NarciAPI.DoesItemHaveDomationSocket;
+local GetDominationBorderTexture = NarciAPI.GetDominationBorderTexture;
+local GetItemDominationGem = NarciAPI.GetItemDominationGem;
 
 local LocalizedSlotName = Narci.SlotIDtoName    --[SlotID] = {InventorySlotName, Localized Name, SlotID}                                                                            
 
@@ -303,14 +307,6 @@ end
 
 local TraitsCache = {};
 
-local function DesatureBorder(texture, bool)
-    if bool then
-        texture:SetTexCoord(0.5, 0.75, 0, 1);
-    else
-        texture:SetTexCoord(0, 0.25, 0, 1);
-    end
-end
-
 local function BuildAzeiteTraitsFrame(TraitsFrame, itemLocation, itemButton)
     TraitsCache = GetActiveTraits(itemLocation, itemButton);
     if not TraitsCache then return; end
@@ -398,50 +394,6 @@ local function BuildAzeiteTraitsFrame(TraitsFrame, itemLocation, itemButton)
     end
 
     wipe(TraitsCache);
-    --[[
-    for i = 1, MAX_TIER do
-        TraitsFrame.Traits[i].Icon:Hide();
-        if (not TierInfos[i]) or (not TierInfos[i].azeritePowerIDs) then
-            TraitsFrame.Traits[i]:Hide();
-            for j = i + 1, MAX_TIER do
-                TraitsFrame.Traits[j]:Hide();
-            end
-            return;
-        end
-        TraitsFrame.Traits[i]:Show();
-        PowerIDs = TierInfos[i].azeritePowerIDs;
-        unlockLevel = TierInfos[i].unlockLevel;
-        button = TraitsFrame.Traits[i];
-
-        if unlockLevel > HEART_LEVEL then
-            button.Level:SetText(unlockLevel);
-            button.Level:Show();
-            button.Border0:SetTexCoord(0.5, 0.75, 0, 1);
-            --button.Border1:SetTexCoord(0.5, 0.75, 0, 1);
-        else
-            button.Level:Hide();
-            button.Border0:SetTexCoord(0, 0.25, 0, 1);
-            --button.Border1:SetTexCoord(0, 0.25, 0, 1);
-        end
-
-        for k, PowerID in pairs(PowerIDs) do
-            azeritePowerName, _, icon = GetSpellInfo(GetPowerInfo(PowerID) and GetPowerInfo(PowerID).spellID)
-            --print(azeritePowerName)
-            if IsPowerSelected(itemLocation, PowerID) then
-                button.Icon:SetTexture(icon)
-                button.BaseTrait.Icon:SetTexture(icon)
-                button.Icon:Show();
-                azeritePowerDescription = GetPowerText(itemLocation, PowerID, 0);
-                button.Name = azeritePowerName;
-                button.Description = azeritePowerDescription and azeritePowerDescription.description;
-                button:Enable();
-                break;
-            end
-            button:Disable();
-        end
-
-    end
-    --]]
 end
 
 local RequestLoadItemData = C_Item.RequestLoadItemData  --Cache Item info
@@ -464,7 +416,8 @@ function Narci_Comparison_SetComparison(itemLocation, itemButton)
 
     RequestLoadItemData(itemLocation)
     --print("location"..C_Item.GetItemInventoryType(itemLocation))
-    local itemLink = GetItemLink(itemLocation)
+    local itemLink = GetItemLink(itemLocation);
+    local itemID = GetItemID(itemLocation);
     CacheTooltip(itemLink)
     local itemIcon = GetItemIcon(itemLocation);
     local name = GetItemName(itemLocation);
@@ -543,15 +496,33 @@ function Narci_Comparison_SetComparison(itemLocation, itemButton)
 
 
     --Gem check
-    local GemName, GemLink = IsItemSocketable(itemLink)
+    local isDominationItem = DoesItemHaveDomationSocket(itemID);
+    local GemName, GemLink;
+    if isDominationItem then
+        GemName, GemLink = GetItemDominationGem(itemLink);
+    else
+        GemName, GemLink = IsItemSocketable(itemLink);
+    end
+
     if GemName then
         local itemSubClassID = 9;
-        local id, icon;
+        local _, gemID, gemIcon, borderTexture;
         if GemLink then
-            id, _, _, _, icon, _, itemSubClassID = GetItemInfoInstant(GemLink);
+            gemID, _, _, _, gemIcon, _, itemSubClassID = GetItemInfoInstant(GemLink);
+            if isDominationItem then
+                borderTexture = GetDominationBorderTexture(gemID);
+            else
+                borderTexture = GetGemBorderTexture(itemSubClassID, gemIcon);
+            end
+        else
+            if isDominationItem then
+                borderTexture = GetDominationBorderTexture(nil);
+            else
+                borderTexture = GetGemBorderTexture(nil);
+            end
         end
-        frame.GemSlot.GemBorder:SetTexture( GetGemBorderTexture(itemSubClassID, id) );
-        frame.GemSlot.GemIcon:SetTexture(icon);
+        frame.GemSlot.GemBorder:SetTexture(borderTexture);
+        frame.GemSlot.GemIcon:SetTexture(gemIcon);
         frame.GemSlot:Show();
         frame.GemSlot.GemIcon:Show();
     else
@@ -563,6 +534,7 @@ function Narci_Comparison_SetComparison(itemLocation, itemButton)
     local TraitsFrame = SubTooltip.AzeriteTraits;
     local extraText = SubTooltip.Description;
     local headerText = SubTooltip.Header.Text;
+
     --Azerite Empowered Items
     if C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(itemLocation) then
         headerText:SetText(NARCI_AZERITE_POWERS);
@@ -578,7 +550,7 @@ function Narci_Comparison_SetComparison(itemLocation, itemButton)
 
     --Extra Effect (Trinket/Usable)
     --print("CacheCheck Extra: "..tostring(C_Item.IsItemDataCachedByID(itemLink)))
-    local headline, str = GetItemExtraEffect(itemLink)
+    local headline, str = GetItemExtraEffect(itemLink, isDominationItem);
     if not headline then
         headline, str = GetItemExtraEffect(itemLink)
     end

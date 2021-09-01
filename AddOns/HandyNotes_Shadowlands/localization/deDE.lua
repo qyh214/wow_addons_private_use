@@ -238,41 +238,83 @@ L["zolla_note"] = "Wir nehmen unsere Verteidigung sehr ernst. Ob groß oder klei
 ----------------------------------- KORTHIA -----------------------------------
 -------------------------------------------------------------------------------
 
-L["chamber_note"] = "Verwende für den Uralten Teleporter ein {item:186718} von {npc:178257}. Benutze den Reparierten Uralten Teleporter, um die Kammer zu betreten."
-L["corpse_heap_note"] = "Sprich mit {npc:180079}, um das Sammelevent zu starten."
-L["darkmaul_note"] = "Sammel {item:187153} von einem Invasivem Schlundpilz und füttere {npc:180063} damit. Das Event muss 6 mal abgeschlossen werden, um das Reittier zu erhalten."
+L["carriage_crusher_note"] = "Folge der {npc:180182} in den Schlund und verteidige sie, bis der {npc:180246} angreift."
+L["chamber_note"] = "Verwende für den Uralten Teleporter ein {item:186718} von {npc:178257}, um die Kammer zu betreten."
+L["consumption_note"] = [[
+Wird keine Beute fallen lassen, bis er 40x {npc:179758} verzehrt hat, um sich in seine blauschattierte Form zu verwandeln (Selten).
+
+Lässt zusätzliche Gegenstände für {currency:1931} fallen, wenn er *erneut* 40x {npc:179758} verzehrt hat, um sich in seine grünschattierte Form zu verwandeln (Selten Elite).
+
+|cFFFF0000Lässt keine {npc:179758} zum verzehren erscheinen, wenn er im Kampf ist.|r
+]]
+L["darkmaul_note"] = "Sammel {item:187153} von einem Invasivem Schlundpilz und füttere 10x {npc:180063} damit, um das Reittier zu erhalten."
 L["dislodged_nest_note"] = "Klicke in der Nähe eine Giftige Motte an, um den Stärkungszauber {spell:355181} zu erhalten. Benutze den Extrabutton von {spell:355131} auf einen {npc:178547}, um die Kontrolle über ihn zu erlangen und dann reite mit ihm gegen den Baum, in dem der Schatz liegt."
+L["escaped_wilderling_note"] = "Klicke den {npc:180014} an, um das Zähmungsevent zu starten."
 L["flayedwing_transporter_note"] = "Klicke den {npc:178633} an, um zum oder vom Archiv der Geheimnisse zu fliegen."
-L["forgotten_feather_note"] = "Schweben auf einer kleinen Insel, die man durch einen Absprung von Zuflucht des Hüters erreicht."
-L["hunting_hunter_note"] = "Sprich mit {npc:179729}, um den Stärkungszauber {spell:355078} zu erhalten und dann folge den Fußspuren, bis du die fleischigen Überreste findest."
-L["konthrogz_note"] = "Erscheint bei einem Verschlinger Event."
+L["fleshwing_note"] = "Sprich mit {npc:180079}, um das Sammelevent zu starten."
+L["forgotten_feather_note"] = "Auf einer kleinen schwebenden Insel, die man durch einen Absprung von der Zuflucht des Hüters aus erreicht."
+L["konthrogz_note"] = "Erscheint bei dem Event 'Verschlingender Spalt', dass an mehreren Orten in Korthia erscheinen kann."
+L["korthia_limited_rare"] = "|cFFFF8C00Dieser seltene Gegner ist an manchen Tagen nicht verfügbar.|r"
+L["krelva_note"] = "Wechselt bei 80% Leben zu einer anderen Plattform und wechselt erneut bei 60% zum Festland. \n|cFFFF8C00Damit die Tötung angerechnet wird, muss nach 60% auch angegriffen worden sein!|r"
+L["kroke_note"] = "Töte {npc:179029} in dem Gebiet, bis er erscheint. Kann nicht an Tagen erscheinen, an denen {npc:179029} nicht aufzufinden sind."
 L["maelie_wanderer"] = "Erscheint für den Tag an einem festgeleten Ort. Wenn du an 6 verschiedenen Tagen {spell:355862} verwendet hast, kehre zu {npc:179930} zurück, um das Reittier zu erhalten."
-L["no_stoneborne_note"] = "Sprich mit {npc:179974}, um das Event zu starten."
+L["malbog_note"] = "Sprich mit {npc:179729}, um den Stärkungszauber {spell:355078} zu erhalten und dann folge den Fußspuren, bis du die fleischigen Überreste findest."
 L["offering_box_note"] = "Der {item:187033} befindet sich oben auf der westlichen Wand der nahe gelegenen Ruine."
 L["pop_quiz_note"] = "Wird zufällig auf der Map erscheinen. Klicke den zurückgelassenen Schleierstab an und antworte auf die Fragen von {npc:180162}."
-L["popo_note"] = "Sprich mit {npc:180028}, um das Escortevent zu starten."
-L["razorwing_note"] = "Gib 6x {item:187054} ab, dass von den Verschlingern wie {npc:177245} geplündert werden kann."
-L["reliwik_note"] = "Klicke das Unverderbte Klingenschwingenei an."
-L["riftbound_cache"] = "Rissgebundene Truhe"
-L["spectral_bound_chest"] = "Klicke die drei Spektralschlüssel in der Nähe an, um die Truhe freizuschalten. "
-L["spectral_bound_note"] = "Spektralgebundene Truhe"
-L["towering_exterminator_note"] = "Erscheint bei einem Schlundgebundenenportal Event." -- review
-L["wilderling_note"] = "Klicke den {npc:180014} an, um das Zähmungsevent zu starten."
+L["razorwing_note"] = [[
+|cFFFF0000Es können täglich 2 Eier erbeutet werden.|r
 
-L["archivist_key_note"] = "Kaufe zum öffnen von {npc:178257} einen {item:186984}." -- review
-L["korthia_rift_note"] = "Kaufe einen {item:186731} von {npc:178257}, um den Riss betreten zu können."
+Gib 10x {item:187054} ab, dass von den Verschlingern wie {npc:177245} geplündert werden kann.
+]]
+L["reliwik_note"] = "Klicke das Unverderbte Klingenschwingenei an."
+L["spectral_bound_chest"] = "Spektralgebundene Truhe"
+L["spectral_bound_note"] = "Klicke die drei Spektralschlüssel in der Nähe an, um die Truhe freizuschalten."
+L["stonecrusher_note"] = "Sprich mit {npc:179974}, um das Event zu starten."
+L["towering_exterminator_note"] = "Erscheint bei dem Event 'Schlundgebundenes Portal', dass an mehreren Orten in Korthia erscheinen kann."
+L["worldcracker_note"] = "Sprich mit {npc:180028}, um das Escortevent zu starten."
+
+L["archivist_key_note"] = "Kaufe zum öffnen von {npc:178257} einen %s."
 L["korthian_shrine_note"] = "Klicke den Schrein an, um die {spell:352367} zu erhalten, damit du den versteckten Pfad zum Altar sehen kannst."
 L["num_research"] = "%d katalogisierte Forschung"
+L["plus_research"] = "+katalogisierte Forschung"
 L["options_icons_relic"] = "{achievement:15066}"
 L["options_icons_relic_desc"] = "Zeigt die 20 Relikte für den Erfolg {achievement:15066} an."
 
+L["rift_portal_note"] = [[
+Betritt den |cFFFFFF00Riss|r, eine alterative Phase von Korthia und des Schlunds mit zusätzlichen seltenen Gegnern, Relikten und Truhen.
+
+Benötigt einen {item:186731}, den man bei {npc:178257} kaufen kann, wenn Stufe 4 bei {faction:2472} erreicht wurde. Die Schlüssel haben auch eine geringe Chance von seltenen Gegnern und Truhen in der Zone geplündert zu werden.
+
+|cFFFF8C00Nicht alle Rissportale sind gleichzeitig aktiv.|r
+]]
+L["rift_rare_only_note"] = "Dieser seltene Gegner kann nur gesehen und getötet werden, während man sich im |cFFFFFF00Riss|r befindet."
+L["rift_rare_exit_note"] = [[
+Dieser seltene Gegner wird den |cFFFFFF00Riss|r verlassen, wenn mit ihm im |cFFFFFF00Riss|r interagiert wurde.
+
+Die drei seltenen Gegner im |cFFFFFF00Riss|r erscheinen üblicherweise in einer festgelegten Reihenfolge in einem Intervall von etwa 20 Minuten:
+
+  1. {npc:179913}
+  2. {npc:179608}
+  3. {npc:179911}
+]]
+L["options_icons_rift_portal"] = "{npc:179595}"
+L["options_icons_rift_portal_desc"] = "Zeigt die Positionen von {npc:179595en} an, um den |cFFFFFF00Riss|r zu betreten."
+
+L["riftbound_cache"] = "Rissgebundene Truhe"
+L["riftbound_cache_note"] = "Es gibt 4 einzigartige Truhen, die jeweils an festgelegten Orten im |cFFFFFF00Riss|r erscheinen können."
+L["options_icons_riftbound_cache"] = "Rissgebundene Truhen"
+L["options_icons_riftbound_cache_desc"] = "Zeigt die Positionen von Truhen innerhalb des |cFFFFFF00Riss|r an."
+
 L["invasive_mawshroom"] = "Invasiver Schlundpilz"
+L["invasive_mawshroom_note"] = "Es gibt 5 einzigartige Pilze, die jeweils an festgelegten Orten erscheinen können."
 L["mawsworn_cache"] = "Schlundgebundene Truhe"
+L["mawsworn_cache_note"] = "Es gibt 3 einzigartige Truhen, die jeweils an festgelegten Orten erscheinen können."
 L["pile_of_bones"] = "Knochenhaufen"
 L["relic_cache"] = "Relikttruhe"
 L["shardhide_stash"] = "Splitterfellvorrat"
-L["shared_note"] = "Es können fünf von diesen Schätzen täglich gesammelt werden."
+L["korthia_shared_chest_note"] = "Es können täglich 5 Relikte von diesen Schätzen gesammelt werden, zusätzliche Schätze können noch {item:186017} und {item:187187} enthalten."
 L["unusual_nest"] = "Nest aus ungewöhnlichen Materialien"
+L["unusual_nest_note"] = "Jedes der 5 Nester kann täglich geplündert werden."
 
 L["options_icons_invasive_mawshroom_desc"] = "Zeigt die Positionen von Invasiven Schlundpilzen an."
 L["options_icons_invasive_mawshroom"] = "Invasiver Schlundpilz (tägliche)"
@@ -297,6 +339,7 @@ L["nirvaska_note"] = "Erscheint nur, wenn die Weltquest {wq:Tödliche Erinnerung
 L["ravenomous_note"] = "Zerquetsche {npc:159901} in der Gegend, bis der seltene Gegner erscheint."
 L["sabriel_note"] = "Kann als einer der Champions im Theater der Schmerzen auftreten."
 L["schmitd_note"] = "Benutze nahegelegene {spell:313451}, um sein Schild zu brechen."
+L["tahonta_note"] = "Das Reittier kann nur geplündert werden, wenn {npc:159239} dir folgt!"
 L["taskmaster_xox_note"] = "Teilt sich einen spawn mit {npc:160204}, {npc:160230} und {npc:160226}."
 L["theater_of_pain_note"] = "Bei der ersten Tötung am Tag, besteht die Chance, dass das Reittier fallen gelassen wird."
 L["zargox_the_reborn_note"] = [[
@@ -446,6 +489,18 @@ L["inquisitor_note"] = "Gib 100 {currency:1816} bei {npc:160248} ab, um eine Cha
 L["options_icons_inquisitors"] = "{achievement:14276}"
 L["options_icons_inquisitors_desc"] = "Zeigt die Inquisitoren für den Erfolg {achievement:14276} an."
 
+L["broken_mirror"] = "Zerbrochener Spiegel"
+L["broken_mirror_note"] = "Täglich wird eine Gruppe von drei zerbrochenen Spiegeln aktiv sein. Benutze ein {item:181363}, um die Spiegel zu reparieren und die |cFFFFFD00Vergessene Truhe|r auf der anderen Seite des Spiegels zu plündern."
+L["broken_mirror_crypt"] = "In einer Gruft."
+L["broken_mirror_elite"] = "In einem kleinen Raum mit Elite Gegnern."
+L["broken_mirror_group"] = "Gruppe"
+L["broken_mirror_house"] = "Im Haus."
+L["broken_mirror_61818"] = "In einem kleinen Raum mit {npc:173699}."
+L["broken_mirror_61819"] = "In einem kleinen Raum auf der untersten Ebene."
+L["broken_mirror_61827"] = "In einem kleinen Raum."
+L["options_icons_broken_mirror"] = "Zerbrochene Spiegel"
+L["options_icons_broken_mirror_desc"] = "Zeigt die Position der Zerbrochenen Spiegel an."
+
 -------------------------------------------------------------------------------
 ----------------------------------- THE MAW -----------------------------------
 -------------------------------------------------------------------------------
@@ -458,13 +513,22 @@ L["dekaris_note"] = "Auf einem großen hervorstehenden Felsen."
 L["deomen_note"] = "Betritt die Kammer (bei 63.3 43.7) und aktiviere die beiden Schlosssteuerungen, um ihn zu befreien."
 L["drifting_sorrow_note"] = "Töte {npc:175246} in der Nähe der schwebenden Kugel, um den Boss zu aktivieren."
 L["ekphoras_note"] = "Stelle dich mit drei anderen Spielern in die Ecken der Plattform und wirkt {spell:330650}, um {npc:169827} zu beschwören."
-L["etherwyrm_label"] = "Ätherwyrmkäfig" -- review Infused Etherwyrm Cage
-L["etherwyrm_note"] = "Es muss ein Angriff der Nachfae aktiv sein. \nUm einen {item:186190} zu erhalten, töte einen {npc:179030} im Riss." -- review
+L["etherwyrm_label"] = "Ätherwyrmkäfig"
+L["etherwyrm_note"] = "Es muss ein Angriff der Nachfae aktiv sein. Töte einen {npc:179030} während du im |cFFFFFF00Riss|r bist, um einen {item:186190} zu erhalten. Benutze den Schlüssel für den Ätherwyrmkäfig (außerhalb des |cFFFFFF00Riss|r) in der Desolate Höhle (wo sich {npc:175821} befindet, wenn der Angriff nicht aktiv ist)."
 L["fallen_charger_note"] = "Nach einem Zonenweiten Schrei, wird es einen der beiden Pfade entlang reiten, bis es Korthia erreicht und wieder verschwindet."
 L["ikras_note"] = "Fliegt um die Verdammnisfestung herum. Das ist ein guter Platz ihn anzugreifen."
-L["lilabom_note"] = "Sammel alle 5 Teile, um das Haustier zu vervollständigen."
+L["lilabom_note"] = [[
+Sammel alle 5 Teile, um das Haustier zu vervollständigen. Einige Teile können an verschiedenen Orten erscheinen.
+
+• {item:186183}
+• {item:186184}
+• {item:186185}
+• {item:186186}
+• {item:186187}
+]]
 L["orophea_note"] = "Hebe das {spell:337143} im Südosten auf und biete es {npc:172577} an, um sie zu aktivieren."
 L["sanngror_note"] = "\nWenn er gerade nicht angreifbar ist, dann warte bis er nicht mehr mit Seelen experimentiert."
+L["sly_note"] = "Sprich mit {npc:179068}, um den Stärkungszauber {spell:353322} zu erhalten und finde {npc:179096} bei 3 verschiedenen Paktangriffen der Kyrianer."
 L["talaporas_note"] = "Stelle dich mit drei anderen Spielern in die Ecken der Plattform und wirkt {spell:331800}, um {npc:170302} zu beschwören."
 L["valis_note"] = "Klicke die drei {npc:174810} in der richtigen Reihenfolge an, um {npc:173086} zu beschwören. Die Reihenfolge ändert sich jedes Mal und wenn die falsche Rune angeklickt wird, erleidest du Schaden und wirst mit dem Schwächungszauber {spell:343636} belegt."
 L["yero_note"] = "Nähere dich {npc:172862} und folge ihm in die Höhle in der Nähe, wo er feindlich wird."
@@ -478,9 +542,6 @@ Töte die anderen drei Herolde der Trauer, der Pein und des Verlusts um ihre dre
 
 Kombiniere alle drei Gravuren, um den {item:182329} herzustellen, welcher am Altar der Herrschaft verwendet werden kann, um den seltenen Gegner zu beschwören. Verwende das {npc:173892}, um in die obere Etage zu gelangen.
 ]]
-
-L["soul_well_note"] = "Fangt die aus dem Seelenbrunnen ausbrechende Stygia."
-L["obliterated_soul_shards_note"] = "Sammel Ausgelöschte Seelensplitter auf den Brücken."
 
 L["animaflow_teleporter_note"] = "Bei Aktivierung gelangst du direkt an andere Orte im Schlund."
 L["chaotic_riftstone_note"] = "Bei Aktivierung reist du mit einem {spell:344157} schnell durch den Schlund."
@@ -518,6 +579,7 @@ L["nexus_area_gorgoa_mouth"] = "An der Mündung des Gorgoa (Fluss der Seelen)."
 L["nexus_area_perdition_wall"] = "Entlang der Außenmauer der Verdammnisfestung."
 L["nexus_area_torment_rock"] = "Auf einem Felsen in den Ebenen der Qual."
 L["nexus_area_zone_edge"] = "Entlang des Zonenrandes."
+L["nexus_area_zovaal_edge"] = "Entlang des Randes von Zovaals Kessel."
 L["nexus_area_zovaal_wall"] = "Entlang der Mauer unter Zovaals Kessel."
 -- Locations given relative to a named cave/cavern
 L["nexus_cave_anguish_lower"] = "In der Grube der Qualen (untere Ebenen)."
@@ -528,14 +590,14 @@ L["nexus_cave_echoing_outside"] = "Außerhalb der Schallenden Höhlen."
 L["nexus_cave_forlorn"] = 'In der "Trostlose Rast" Höhle.'
 L["nexus_cave_howl_outside"] = 'Auf dem Boden, außerhalb der "Todesgeheul" Höhle.'
 L["nexus_cave_howl"] = 'In der "Todesgeheul" Höhle.'
+L["nexus_cave_roar"] = 'In der "Todesgebrüll" Höhle'
 L["nexus_cave_ledge"] = "In einer kleinen Höhle unter einer Kante."
-L["nexus_cave_mothers"] = 'In der "Mutterunterschlupf" Höhle.'
 L["nexus_cave_prodigum"] = "In einer kleinen Höhle bei Prodigum."
-L["nexus_cave_raveners"] = "In einer kleinen Höhle bei Klage des Tobsüchtigen."
 L["nexus_cave_soulstained"] = "In einer kleinen Höhle, in den Seelenbefleckten Feldern."
 L["nexus_cave_torturer"] = "Innerhalb des Schlupflochs des Folterers."
 -- Locations given relative to a named NPC
 L["nexus_npc_akros"] = "Oberhalb der Treppen, neben {npc:170787}."
+L["nexus_npc_dekaris"] = "Auf dem Gipfel, wo sich {npc:157964} befindet."
 L["nexus_npc_dolos"] = "Auf dem Boden hinter {npc:170711}."
 L["nexus_npc_ekphoras"] = "Neben der Plattform von {npc:169827}"
 L["nexus_npc_incinerator"] = "Auf einem kleinen Vorsprung unterhalb von {npc:156203}."
@@ -560,36 +622,60 @@ L["nexus_misc_grapple_rock"] = "Bei einem Greifhakenziel auf dem Felsen."
 L["nexus_misc_ledge_below"] = "Auf dem Boden unter einer Kante."
 L["nexus_misc_three_chains"] = "Auf dem Boden bei drei Ketten."
 
+L["stolen_anima_vessel"] = "Gestohlenes Animagefäß"
+L["hidden_anima_cache"] = "Versteckter Animabehälter"
+L["options_icons_anima_vessel"] = "Gestohlene Animagefäße"
+L["options_icons_anima_vessel_desc"] = "Zeigt die Positionen von Animagefäßen während der Paktangriffe und innerhalb des |cFFFFFF00Riss|r an."
+
+L["rift_hidden_cache"] = "Versteckte Risstruhe"
+L["options_icons_rift_hidden_cache"] = "Versteckte Risstruhen"
+L["options_icons_rift_hidden_cache_desc"] = "Zeigt die Positionen von versteckten Risstruhen innerhalb des |cFFFFFF00Riss|r an."
+
 L["options_icons_bonus_boss"] = "Bonus Elitegegner"
 L["options_icons_bonus_boss_desc"] = "Zeigt die Positionen von Bonus Elitegegnern."
-L["options_icons_bonus_event"] = "Bonus Events"
-L["options_icons_bonus_event_desc"] = "Zeigt die Positionen von Bonus Events."
 L["options_icons_riftstone"] = "Chaotische Risssteine"
 L["options_icons_riftstone_desc"] = "Zeigt die Positionen von Chaotischen Risssteinen an."
 L["options_icons_grapples"] = "{npc:176308}"
 L["options_icons_grapples_desc"] = "Zeigt Greifhakenziele für die {item:184653} Aufwertung an."
-L["options_icons_maw_lore"] = "Mythen des Schlunds"
-L["options_icons_maw_lore_desc"] = "Zeigt die Mythen für den Erfolg {achievement:14761} an."
 L["options_icons_stygia_nexus"] = "Stygianexus"
-L["options_icons_stygia_nexus_desc"] = "Zeigt Stygianexus an, die für das Reittier {item:184168} benötigt werden."
+L["options_icons_stygia_nexus_desc"] = "Zeigt die für das Reittier {item:184168} benötigten Stygianexus an."
 L["options_icons_stygian_caches"] = "Stygische Truhen"
 L["options_icons_stygian_caches_desc"] = "Zeigt Truhen an, die zusätzliche Stygia enthalten."
 
-L["domination_chest"] = "Herrschaftstruhe"
-L["domination_chest_note"] = [[
-Benötigt 4x {item:186727}, um alle Siegel zu öffnen.
+L["cov_assault_only"] = "Nur während des Paktangriffs der %s verfügbar."
 
-Du bekommst jeweils einen Schlüssel von:
-• dem seltenen Gegner {npc:177444}
-• dem Schlüsselring der Plagerin
-• einer Vorratskiste von Helgarde
-• den Gegnern {npc:177134}
-]]
-L["gold_band_note"] = "Am Gipfel des Berges an einem Stachel. (Starte den Aufstieg zum Gipfel bei 18.5 39.3)"
-L["harrower_key_ring"] = "Schlüsselring der Plagerin"
-L["harrower_key_note"] = "In einer Kammer, an der Wand bei {npc:178311}."
 L["helgarde_supply"] = "Vorratskiste von Helgarde"
-L["maw_mad_note"] = "Läuft zufällig in der Verdammnisfestung umher, erscheint immer hier."
-L["nilganihmaht_note"] = "Es müssen fünf Ringe gesammelt und diese zur {npc:179572} im Riss gebracht werden."
-L["options_icons_nilganihmaht"] = "{npc:179572}"
-L["options_icons_nilganihmaht_desc"] = "Zeigt die Positionen der Ringe für das geheime Reittier {spell:354354} an. "
+L["helgarde_supply_note"] = "Erscheint in ganz Desmotaeron. Dein {npc:180598} kann helfen diese zu finden."
+L["options_icons_helgarde_cache"] = "Vorratskisten von Helgarde"
+L["options_icons_helgarde_cache_desc"] = "Zeigt mögliche Positionen der Vorratskisten von Helgarde an."
+
+L["mawsworn_cache_ramparts_note"] = "Diese Truhe ist auf der Mauer. Benutze das Greifhakenziel oder den {npc:177093}, um sie zu erreichen."
+L["mawsworn_cache_tower_note"] = "Diese Truhe ist auf dem Turm und benötigt den {npc:177093}, um sie zu erreichen. Benutze die Fähigkeit {spell:349853} zum Hochklettern."
+L["mawsworn_cache_quest_note"] = "Die {item:186573} wird erst dropen, nachdem die Quest {quest:63545} abgeschlossen wurde!"
+
+L["nilg_silver_ring_note"] = "Sammel 4x {item:186727} in Desmotaeron und benutze diese, um die Herrschaftstruhe zu öffnen."
+L["nilg_silver_ring_note1"] = "Töte {npc:177444} und öffne die {item:186970}."
+L["nilg_silver_ring_note2"] = "Plündere den Schlüsselring der Plagerin, an der Wand, in der Untergrundkammer neben {npc:178311}."
+L["nilg_silver_ring_note3"] = "Öffne Vorratskisten von Helgarde in Desmotaeron. Dein {npc:180598} kann helfen diese zu finden."
+L["nilg_silver_ring_note4"] = "Töte {npc:177134s} in Desmotaeron (geringe droprate)."
+L["nilg_stone_ring_note"] = "Sammel vier {item:186600} während des Nekrolordangriffs und kombiniere diese an einer {npc:171492} in Zovaals Kessel."
+L["nilg_stone_ring_note1"] = "Gefunden in bestimmten Schlundgebundenen Truhen (gelbes Symbol), auf den Mauern der Verdammnisfestung."
+L["nilg_stone_ring_note2"] = "Schließe die Quest {quest:63545} ab, dann plündere Schlundgebundene Truhen bis du den Questgegenstand {item:186573} findest. Diese Quest ist teilbar!"
+L["nilg_stone_ring_note3"] = "Erbeutet vom {npc:179601} im mittleren Bereich der Verdammnisfestung."
+L["nilg_stone_ring_note4"] = "Kann auf dem Boden in der Verdammnisfestung in der Nähe von {npc:170634} gefunden werden. Dein {npc:180598} kann helfen ihn zu finden."
+L["nilg_gold_band_note"] = "Benutze das Greifhakenziel und folge dem Weg nach oben zum Gipfel."
+L["nilganihmaht_note"] = "Es müssen fünf Ringe gesammelt und diese zur {npc:179572} im |cFFFFFF00Riss|r gebracht werden."
+L["calcis"] = "Calcis"
+L["desmotaeron"] = "Desmotaeron"
+
+L["zovault_note"] = "Ziehe täglich {npc:179883} zu {npc:179904} für einen garantierten Rissstein."
+L["options_icons_zovault"] = "{npc:179883}"
+L["options_icons_zovault_desc"] = "Zeigt mögliche Positionen für {npc:179883} an."
+
+L["tormentors"] = "Peiniger von Torghast"
+L["tormentors_note"] = [[
+Das Event erscheint alle 2 Stunden, zur vollen ungeraden Stunde (z.B. 13:00 Uhr).
+Die Bosse erscheinen in der unten aufgeführten Reihenfolge.
+
+Die {item:185972} kann wöchentlich geplündert werden und enthält 50 {currency:1906}.
+]]

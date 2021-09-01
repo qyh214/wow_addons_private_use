@@ -197,7 +197,7 @@ local dcstitle=CreateFrame("Frame", "DCSTitle", DejaCharacterStatsPanel)
 	dcstitle:Show()
 
 local dcstitleFS = dcstitle:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-	dcstitleFS:SetText('|cff00c0ffDejaCharacterStats|r')
+	dcstitleFS:SetText('|cff00c0ffDejaCharacterStats <3|r')
 	dcstitleFS:SetPoint("TOPLEFT", 0, 0)
 	dcstitleFS:SetFont("Fonts\\FRIZQT__.TTF", 20)
 

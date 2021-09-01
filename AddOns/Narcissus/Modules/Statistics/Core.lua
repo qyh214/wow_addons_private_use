@@ -64,12 +64,22 @@ function DataManager:LoadData()
         NarciStatisticsDB_PC = {};
     end
 
+    ---------------------
+    -----Statistics------
+    ---------------------
+    --"InstalledDate" (added in 1.1.2)
+    --"TimeSpentInNarcissus"
+    --"ScreenshotsTakenInNarcissus"
+    if not NarciStatisticsDB.InstalledDate then
+        NarciStatisticsDB.InstalledDate = time();
+    end
+
     for id, data in pairs(self.List) do
         self.ListByName[data.name] = id;
     end
 end
 
-function DataManager:SaveAccountData(filed, value)
+function DataManager:SaveAccountData(field, value)
     NarciStatisticsDB[field] = value;
 end
 
@@ -91,7 +101,7 @@ function DataManager:GetDataByID(id)
                 dataSource = NarciStatisticsDB_PC;
             end
             for i = 1, #fields do
-                value = dataSource[fields[i].name];
+                local value = dataSource[fields[i].name];
                 if value then
                     if isTime then
                         value = FormatTime( tonumber(value) );
@@ -419,9 +429,42 @@ local function PrintReadingSpeed()
     ReadQuest:PrintResult();
 end
 
+local function PrintAddOnUsage()
+    local timeSpent = NarciStatisticsDB.TimeSpentInNarcissus or 0;
+    local installedDate = NarciStatisticsDB.InstalledDate;
+    if timeSpent and installedDate then
+        local installedDateString = date("%d %m %y", installedDate);
+        local day, month, year = string.split(" ", installedDateString);
+        if day and month and year then
+            day = tonumber(day);
+            month = tonumber(month);
+            year = tonumber(year);
+            local dateString = FormatShortDate(day, month, year);
+            timeSpent = SecondsToTime(timeSpent);
+            print(string.format("|cFFFFD100Total time spent in Narcissus:|r %s", timeSpent));
+            print(string.format("|cFFFFD100Installed On:|r %s", dateString));
+        end
+    end
+end
+
+local function PrintScreenshotsTaken()
+    local numTaken = NarciStatisticsDB.ScreenshotsTakenInNarcissus or 0;
+    print(string.format("|cFFFFD100Screenshots Taken In Narcissus:|r %s", numTaken));
+end
+
 ------------------------------------------------------------------------------------------------------------
 DataManager.List ={
     [1] = {
+        name = "TimeSpentInNarcissus",
+        printFunc = PrintAddOnUsage,
+    },
+
+    [2] = {
+        name = "ScreenshotsTakenInNarcissus",
+        printFunc = PrintScreenshotsTaken,
+    },
+
+    [3] = {
         name = "CovenantChoice",
         isAccountWide = false,
         isTime = true,
@@ -431,7 +474,7 @@ DataManager.List ={
         },
     },
 
-    [2] = {
+    [4] = {
         name = "ReadingSpeed",
         printFunc = PrintReadingSpeed,
     },

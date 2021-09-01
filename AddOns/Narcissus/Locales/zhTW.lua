@@ -186,9 +186,9 @@ L["Camera Transition Description On"] = "當你打開角色面板時鏡頭會平
 L["Camera Transition Description Off"] = "鏡頭轉換變為瞬時。此效果將在你第二次使用角色面板時開始生效。\n此效果會占用鏡頭預設#4。";
 L["Interface Options Tab Description"] = "你也可以點擊位於屏幕左下角Narcissus工具欄右端的小齒輪按鈕來打開偏好設置。";
 L["Conduit Tooltip"] = "顯示更高級別的靈印效果";
+L["Domination Indicator"] = "統御裂片指示器";
 
 --Model Control--
-NARCI_HOLD_WEAPON = "握住武器";
 NARCI_STAND_IDLY = "站立狀態";
 NARCI_RANGED_WEAPON = "遠程武器";
 NARCI_MELEE_WEAPON = "近戰武器";
@@ -428,7 +428,7 @@ L["Splash Content8 Description"] = "按住Shift並拖動此按鈕可使其脫離
 
 --Project Details--
 NARCI_ALL_PROJECTS = "全部項目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100模組作者: Peterodox\n更新日期: 2021.03.20|r\n\n感謝妳使用此模組！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100模組作者: Peterodox\n更新日期: 2021.08.23|r\n\n感謝妳使用此模組！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾澤拉斯上的不同景點，並收集各種故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沈浸式角色面板；妳最好的截圖助手。"
 
@@ -442,3 +442,29 @@ L["A1"] = "顯然這是壹個退出確認窗口。當妳嘗試按下快捷鍵來
 L["A2"] = "哈哈哈，她也是這麽說的。";
 L["A3"] = "好吧...好吧..."
 L["A4"] = "打開偏好設定，然後選擇拍照模式標簽，妳就能看到這個選項啦。";
+
+--Search--
+L["Search Result Singular"] = "%s結果";
+L["Search Result Plural"] = "%s个結果";
+L["Search Result Overflow"] = "超過%s個結果";
+
+--Weapon Browser--
+L["Draw Weapon"] = "握住武器";
+L["Unequip Item"] = "卸下武器";
+
+
+--Pet Stables--
+L["PetStable Tooltip"] = "從獸欄中選擇寵物。";
+L["PetStable Loading"] = "正在獲取寵物信息";
+
+--Domination Item--
+L["Item Bonus"] = "獎勵：";
+L["Combat Error"] = NARCI_COLOR_RED_MILD.."此操作無法在戰鬥中進行".."|r";
+L["Extract Shard"] = "取下統御裂片";
+
+--Mythic+ Leaderboard--
+L["Mythic Plus"] = "傳奇地城";
+L["Mythic Plus Abbrev"] = "傳奇地城";
+L["Total Runs"] = "完成次數：";
+L["Complete In Time"] = "限時";
+L["Complete Over Time"] = "超時";

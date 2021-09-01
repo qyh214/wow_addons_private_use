@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod("Zandalari", "DBM-Pandaria")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20210721035104")
 mod:SetCreatureID(69768, 69769, 69841, 69842)
-mod:DisableWBEngageSync()
 
 mod:RegisterCombat("combat")
 

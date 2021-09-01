@@ -176,7 +176,7 @@ end
 function addon:UNIT_SPELLCAST_START(event,unit,lineID,spellID)
 	if (unit=='player') then
 		if spellids[spellID] then
-			name=names[spellids[spellID]]
+			local name=names[spellids[spellID]]
 			if not self.db.realm.farms[ns.me][name] or  today > (tonumber(self.db.realm.farms[ns.me][name]) or 0) then
 				self:CheckDateReset()
 				self.db.realm.farms[ns.me][name]=today

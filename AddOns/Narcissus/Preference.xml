@@ -125,9 +125,9 @@
         </Scripts>
     </Button>
 
-    <Button name="Narci_PreferenceButton" parent="Narci_PhotoModeToolbar" inherits="Narci_RoundButtonTemplate">
+    <Button name="Narci_PreferenceButton" parent="Narci_PhotoModeToolbar" inherits="Narci_RoundButtonTemplate" parentKey="PreferenceToggle">
         <Anchors>
-            <Anchor point="LEFT" relativeTo="PhotoModeControllerBar" relativePoint="RIGHT" x="0"/>
+            <Anchor point="LEFT" relativeKey="$parent.Bar" relativePoint="RIGHT" x="0"/>
         </Anchors>
 		<Size>
 			<AbsDimension x="24" y="24"/>
@@ -559,9 +559,15 @@
                                 <Layers>
                                     <Layer level="OVERLAY">
                                         <Texture file="Interface\AddOns\Narcissus\Art\Preference\ConduitTooltip" parentKey="Preview">
-                                            <Size x="200" y="100"/>
+                                            <Size x="192" y="96"/>
                                             <Anchors>
-                                                <Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="-28" y="-38"/>
+                                                <Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="-28" y="-36"/>
+                                            </Anchors>
+                                        </Texture>
+                                        <Texture file="Interface\AddOns\Narcissus\Art\Preference\DominationIndicator" parentKey="Preview2">
+                                            <Size x="96" y="96"/>
+                                            <Anchors>
+                                                <Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="-28" y="-160"/>
                                             </Anchors>
                                         </Texture>
                                     </Layer>
@@ -727,7 +733,7 @@
                                         <FontString parentKey="Cate2" inherits="NarciPrefFontGrey9" justifyH="LEFT" justifyV="TOP" text="Acknowledgement">
                                             <Size x="0" y="0"/>
                                             <Anchors>
-                                                <Anchor point="CENTER" relativeKey="$parent" relativePoint="BOTTOM" y="124"/>
+                                                <Anchor point="CENTER" relativeKey="$parent" relativePoint="BOTTOM" y="100"/>
                                             </Anchors>
                                         </FontString>
                                         <FontString parentKey="ExtraList" inherits="NarciPrefFontWhiteMild" justifyH="LEFT" justifyV="TOP" spacing="2">

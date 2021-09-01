@@ -1,10 +1,10 @@
-tag 93da642fe72fe8756701eebe150ab7143f6e995e v9.1.0.426
+tag 5dc94a6f0305a84da498fc4b0dfa51611be7f699 v9.1.0.428
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Thu Jul 1 11:24:19 2021 -0300
+Date:	Thu Aug 26 16:04:27 2021 -0300
 
-commit c69a4b101b651945e2b7089e185569aebbd8f1be
+commit a6ac16ab84ea64f46ed1eb17576c928aca14e9b2
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Thu Jul 1 11:24:00 2021 -0300
+Date:   Thu Aug 26 16:04:03 2021 -0300
 
-    Added Korthia portal into the flight master location indicator
+    Fixes and QoL improvements
 

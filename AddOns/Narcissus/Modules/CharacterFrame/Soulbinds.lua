@@ -6,6 +6,7 @@ local unpack = unpack;
 
 local FadeFrame = NarciFadeUI.Fade;
 
+local MAX_ROW = NarciConstants.Soulbinds.MaxRow or 8;   --12
 local FILE_PATH = "Interface\\AddOns\\Narcissus\\Art\\Modules\\CharacterFrame\\Soulbinds\\";
 local CONDUIT_OFFSET = 60;
 local CONDUIT_MAX_RANK = 14;
@@ -264,26 +265,27 @@ function ConduitNodeUtil:BuildNodes(fullNodesData, isTreeActive)
         for i = 1, numNodes do
             node = self.nodePool[i];
             nodeData = fullNodesData[i];
-            if not node then
-                node = CreateFrame("Button", nil, NodesContainer, "NarciConduitNodeButtonTemplate");
-                self.nodePool[i] = node;
-            end
-            if node:SetUp(nodeData, isTreeActive) then
-                tinsert(self.activeNodeIndexes, i);
-            end
-            node:Show();
-
             local row = nodeData.row;
-            if nodeData.state == 0 then   --Unavailable
-                if not IS_ROW_PROCESSED[row] then
-                    IS_ROW_PROCESSED[row] = true;
-                    local unlockLevel = nodeData.failureRenownRequirement;
-                    if unlockLevel then
-                        self:SetUpEmptyNodeFrame(row, unlockLevel);
-                    end
+            if row + 1 <= MAX_ROW then
+                if not node then
+                    node = CreateFrame("Button", nil, NodesContainer, "NarciConduitNodeButtonTemplate");
+                    self.nodePool[i] = node;
                 end
-            elseif nodeData.state == 3 then                
-
+                if node:SetUp(nodeData, isTreeActive) then
+                    tinsert(self.activeNodeIndexes, i);
+                end
+                node:Show();
+                if nodeData.state == 0 then   --Unavailable
+                    if not IS_ROW_PROCESSED[row] then
+                        IS_ROW_PROCESSED[row] = true;
+                        local unlockLevel = nodeData.failureRenownRequirement;
+                        if unlockLevel then
+                            self:SetUpEmptyNodeFrame(row, unlockLevel);
+                        end
+                    end
+                elseif nodeData.state == 3 then         
+    
+                end
             end
         end
     else
@@ -455,6 +457,14 @@ end
 -----------------------------------------------------------------------------------
 NarciConduitNodeButtonMixin = {};
 --/script for i = 1, 15 do if NODES[i].row == 6 then print(NODES[i].conduitType) end end
+
+function NarciConduitNodeButtonMixin:OnLoad()
+    self.ConduitBorder:SetTexture(FILE_PATH.."IconBorder", nil, nil, "LINEAR");
+
+    self.OnLoad = nil;
+    self:SetScript("OnLoad", nil);
+end
+
 function NarciConduitNodeButtonMixin:SetUp(nodeData, isTreeActive)
     if nodeData then
         self.nodeID = nodeData.ID;
@@ -472,21 +482,26 @@ function NarciConduitNodeButtonMixin:SetUp(nodeData, isTreeActive)
         local conduitRank = nodeData.conduitRank;
         self.conduitID = conduitID;
         self.conduitRank = conduitRank;
+        self.isEnhanced = nodeData.socketEnhanced;
 
         if conduitID ~= 0 and (conduitRank and conduitRank ~= 0) then
             spellID = C_Soulbinds.GetConduitSpellID(conduitID, conduitRank);
             self.Icon:SetTexture(GetSpellTexture(spellID));
-            self.Border:SetTexCoord(0.25, 0.5, 0, 1);
+            if self.isEnhanced then
+                self.ConduitBorder:SetTexCoord(0.75, 1, 0, 1);
+            else
+                self.ConduitBorder:SetTexCoord(0.25, 0.5, 0, 1);
+            end
             self.Highlight:SetTexCoord(0.5, 1, 0, 1);
             self.Mask:SetTexture(FILE_PATH.."MaskOctagon");
         elseif spellID ~= 0 then
             self.Icon:SetTexture(nodeData.icon); --nodeData.icon
             self.Mask:SetTexture(FILE_PATH.."MaskCircle");
-            self.Border:SetTexCoord(0, 0.25, 0, 1);
+            self.ConduitBorder:SetTexCoord(0, 0.25, 0, 1);
             self.Highlight:SetTexCoord(0, 0.5, 0, 1);
         else
             self.Icon:SetTexture(nil);
-            self.Border:SetTexCoord(0.5, 0.75, 0, 1);
+            self.ConduitBorder:SetTexCoord(0.5, 0.75, 0, 1);
             self.Highlight:SetTexCoord(0, 0, 0, 0);
         end
 
@@ -517,17 +532,17 @@ end
 function NarciConduitNodeButtonMixin:UpdateVisual(isNodeSelected, isTreeActive)
     if isNodeSelected then
         self.Icon:SetDesaturation(0);
-        self.Border:SetDesaturation(0);
+        self.ConduitBorder:SetDesaturation(0);
     else
         self.Icon:SetDesaturation(1);
-        self.Border:SetDesaturation(1);
+        self.ConduitBorder:SetDesaturation(1);
     end
     if isTreeActive then
         self.Icon:SetVertexColor(1, 1, 1);
-        self.Border:SetVertexColor(1, 1, 1);
+        self.ConduitBorder:SetVertexColor(1, 1, 1);
     else
         self.Icon:SetVertexColor(0.66, 0.66, 0.66);
-        self.Border:SetVertexColor(0.66, 0.66, 0.66);
+        self.ConduitBorder:SetVertexColor(0.66, 0.66, 0.66);
 
     end
 end
@@ -544,7 +559,11 @@ function NarciConduitNodeButtonMixin:ShowTooltip()
         tooltip:SetOwner(self, "ANCHOR_NONE");
         tooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", 2, 0);
         if self.conduitType then
-            tooltip:SetConduit(self.conduitID, self.conduitRank or 1);
+            if self.isEnhanced then
+                tooltip:SetEnhancedConduit(self.conduitID, self.conduitRank or 1);
+            else
+                tooltip:SetConduit(self.conduitID, self.conduitRank or 1);
+            end
         elseif self.spellID then
             tooltip:SetSpellByID(self.spellID);
         end
@@ -722,32 +741,32 @@ function NarciConduitFlatButtonMixin:OnLeave()
 end
 
 function NarciConduitFlatButtonMixin:SetConduit(nodeData)
-    
     if not (nodeData and nodeData.conduitRank) then
+        self:SetEmptyConduit();
         return
     end
+
     local rank = nodeData.conduitRank;
     local spellID;
     if rank == 0 then
         spellID = nodeData.spellID;
-        self.spellID = spellID;
         self.conduitID = nil;
         self.conduitRank = nil;
     else
         local conduitID = nodeData.conduitID;
         spellID = C_Soulbinds.GetConduitSpellID(conduitID, rank);
-        self.spellID = nil;
         self.conduitID = conduitID;
         self.conduitRank = rank;
     end
-    
     self.spellID = spellID;
+
     if not spellID or spellID == 0 then
         self:SetEmptyConduit();
         return
     else
         self:Show();
     end
+
     local conduitType = nodeData.conduitType;
     conduitType = conduitType or 3;
     self.ConduitTypeIcon:Show();
@@ -800,7 +819,7 @@ local dynamicEvents = {"SOULBIND_ACTIVATED", "SOULBIND_NODE_UPDATED", "SOULBIND_
 
 function NarciSoulbindsMixin:OnLoad()
     MainFrame = self;
-    local numRow = 8;
+    local numRow = MAX_ROW;
     local frameHeight = (numRow + 1) * 24;
     self:SetHeight(frameHeight);
     self.AcitveNodesList:SetHeight(frameHeight);
@@ -845,12 +864,20 @@ function NarciSoulbindsMixin:OnLoad()
     CreateTabs(self.TabHolder);
     CreateTabs = nil;
 
+    --Update Subtrate Height
+
+    if MAX_ROW and MAX_ROW > 8 then
+        self.Stone:SetTexture(FILE_PATH.."StoneLong");
+        self.StoneMask:SetTexture(FILE_PATH.."StoneMaskLong");
+        self.Stone:SetSize(136, 272 * 2);
+    end
+
+    self:SetScript("OnLoad", nil);
     self.OnLoad = nil;
 end
 
 function NarciSoulbindsMixin:OnShow()
     if self.needsUpdate then
-        self.needsUpdate = nil;
         self:SelectTree();
     end
 end
@@ -1083,7 +1110,7 @@ end
 
 local function GetNullStructure()
     local structure = {};
-    local numRow, numCol = 8, 3;
+    local numRow, numCol = MAX_ROW, 3;
     for row = 1, numRow do
         structure[row] = {};
         for col = 1, numCol do
@@ -1166,21 +1193,24 @@ function NarciSoulbindsMixin:SelectTree(soulbindID)
 
     local nodes = data.tree.nodes;
     if not nodes then return end;
-
+    self.needsUpdate = nil;
+    
     local node, conduitType, conduitState, spellID, conduitRank, traitID;
     local isTreeActive = soulbindID == activeSoulbindID;
     local structure = GetNullStructure();
-    
+
     Narci_NavBar:SetSoulbindName(data.name, isTreeActive);
 
     for i = 1, #nodes do
         node = nodes[i];
-        conduitState = node.state;
-        if conduitState then
-            if conduitState == 3 then   --Selected
-                structure[node.row + 1][node.column + 1] = 2;
-            else
-                structure[node.row + 1][node.column + 1] = 1;
+        if structure[node.row + 1] then
+            conduitState = node.state;
+            if conduitState then
+                if conduitState == 3 then   --Selected
+                    structure[node.row + 1][node.column + 1] = 2;
+                else
+                    structure[node.row + 1][node.column + 1] = 1;
+                end
             end
         end
     end
@@ -1245,7 +1275,7 @@ function NarciSoulbindsActivateButtonMixin:OnLoad()
             offsetY = frame.toY;
             frame:Hide();
         end
-        self:SetPoint("CENTER", animFly.relativeTo, "TOP", 0, offsetY);
+        self:SetPoint("CENTER", animFly.relativeTo, animFly.relativePoint, animFly.offsetX, offsetY);
     end);
 
     function self:PlayFlyAnimation(direction)
@@ -1257,22 +1287,27 @@ function NarciSoulbindsActivateButtonMixin:OnLoad()
 
         animFly:Hide();
         local _, fromY, toY;
-        _, animFly.relativeTo, _, _, fromY = self:GetPoint();
+        _, animFly.relativeTo, animFly.relativePoint, animFly.offsetX, fromY = self:GetPoint();
         animFly.fromY = fromY;
+        local baseY = 28;
         if direction > 0 then
             toY = -12;
         else
             toY = -36;
         end
+        toY = toY + baseY;
+
         animFly.toY = toY;
 
         local duration = (toY - fromY)/24 * 0.35;
-        if toY < fromY then
-            duration = -duration;
-        end
-        animFly.duration = duration;
+        if duration ~= 0 then
+            if toY < fromY then
+                duration = -duration;
+            end
+            animFly.duration = duration;
 
-        animFly:Show();
+            animFly:Show();
+        end
     end
 end
 

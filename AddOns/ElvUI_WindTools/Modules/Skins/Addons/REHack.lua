@@ -3,7 +3,28 @@ local S = W:GetModule("Skins")
 local ES = E:GetModule("Skins")
 
 local _G = _G
+local pairs = pairs
 local unpack = unpack
+
+local DeleteRegions = {
+    "Center",
+    "BottomEdge",
+    "LeftEdge",
+    "RightEdge",
+    "TopEdge",
+    "BottomLeftCorner",
+    "BottomRightCorner",
+    "TopLeftCorner",
+    "TopRightCorner"
+}
+
+local function StripEdgeTextures(frame)
+    for _, regionKey in pairs(DeleteRegions) do
+        if frame[regionKey] then
+            frame[regionKey]:Kill()
+        end
+    end
+end
 
 function S:REHack()
     if not E.private.WT.skins.enable or not E.private.WT.skins.addons.rehack then
@@ -11,6 +32,7 @@ function S:REHack()
     end
 
     if _G.HackEditFrame then
+        StripEdgeTextures(_G.HackEditFrame)
         _G.HackEditFrameBG:StripTextures()
         _G.HackEditFrame:CreateBackdrop("Transparent")
         self:CreateBackdropShadow(_G.HackEditFrame)
@@ -32,6 +54,7 @@ function S:REHack()
     end
 
     if _G.HackListFrame then
+        StripEdgeTextures(_G.HackListFrame)
         _G.HackListFrameBG:StripTextures()
         _G.HackListFrame:CreateBackdrop("Transparent")
         self:CreateBackdropShadow(_G.HackListFrame)

@@ -1,10 +1,22 @@
-lightweight tag 40c5514fb822a6135b418c96a1487fa2572ca962 v5.5.1
+lightweight tag bfc2a838ecd1a2bbbf98afc6da06a963f9126516 v5.6.0
 Author:	Boshi Lian <farmer1992@gmail.com>
-Date:	Tue Jan 12 18:05:27 2021 -0800
+Date:	Sun Aug 8 14:41:35 2021 -0700
 
-commit 40c5514fb822a6135b418c96a1487fa2572ca962
+commit bfc2a838ecd1a2bbbf98afc6da06a963f9126516
 Author: Boshi Lian <farmer1992@gmail.com>
-Date:   Tue Jan 12 18:05:27 2021 -0800
+Date:   Sun Aug 8 14:41:35 2021 -0700
 
-    set max count to 50
+    fix unify tailing lf
+
+commit 92acf55daebd203191c209293489277b9e040348
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Sun Aug 8 13:04:18 2021 -0700
+
+    auto trim
+
+commit f16ea753304119482494d720b3e916f9e00cc912
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Sun Aug 8 12:52:55 2021 -0700
+
+    bump ver
 

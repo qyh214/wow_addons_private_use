@@ -2,7 +2,7 @@
     return
 end
 
-local L = Narci.L
+local L = Narci.L;
 
 NARCI_MODIFIER_ALT = "ALT键";   --Windows
 if IsMacClient() then
@@ -185,16 +185,16 @@ L["Tooltip"] = "鼠标提示";
 L["Name Plate"] = "姓名板";
 L["Y Offset"] = "纵向偏移";
 L["Sceenshot Quality"] = "截图质量";
-L["Screenshot Quality Description"] = "更高的截图质量会增加图片体积。";
+L["Screenshot Quality Description"] = "提高截图质量会增加文件大小。";
 L["General"] = "通用设置";
 L["Camera Transition"] = "镜头过渡";
 L["Camera Transition Description On"] = "当你打开角色面板时镜头会平滑地运动到预设位置。";
 L["Camera Transition Description Off"] = "镜头转换变为瞬时。此效果将在你第二次使用角色面板时开始生效。\n此效果会占用镜头预设#4。";
 L["Interface Options Tab Description"] = "你也可以点击位于屏幕左下角Narcissus工具栏右端的小齿轮按钮来打开偏好设置。";
 L["Conduit Tooltip"] = "显示更高级别的导灵器效果";
+L["Domination Indicator"] = "统御碎片指示器";
 
 --模型控制面板--
-NARCI_HOLD_WEAPON = "握住武器";
 NARCI_STAND_IDLY = "普通站姿";
 NARCI_RANGED_WEAPON = "远程武器";
 NARCI_MELEE_WEAPON = "近战武器";
@@ -406,32 +406,26 @@ L["Guide Minimap Button Line1"] = "此按钮现在可以被其他插件控制。
 
 --Splash--
 NARCI_SPLASH_WHATS_NEW_FORMAT = "Narcissus %s ".."更新内容";
-L["Splash Category1"] = "照片模式";
-L["Splash Content1 Name"] = "添加文字";
-L["Splash Content1 Description"] = "-你可以在合影模式中创建聊天气泡，talking heads和字幕。";
-L["Splash Content2 Name"] = "动画面板";
-L["Splash Content2 Description"] = "-你可以搜索和收藏动画ID。\n-有些动画ID包含多种动作,现在你也可以进行选择了。";
-L["Splash Content3 Name"] = "地面阴影";
-L["Splash Content3 Description"] = "-新增加了一种放射状阴影，它在某些场景下会更加真实。";
-L["Splash Category2"] = "理发店";
-L["Splash Content4 Name"] = "理发店增强";
-L["Splash Content4 Description"] = "-你可以保存外观。\n-每个角色拥有20个保存栏位(男女各10个)。\n-一些统计功能？";
-L["Splash Category3"] = "成就";
-L["Splash Content5 Name"] = "成就面板";
-L["Splash Content5 Description"] = "-独立的成就面板。\n-可以方便地在相关成就间切换。\n-左键拖拽一项成就即可生成一张悬浮的成就卡片。\n-更加流畅，更少卡顿。";
-L["Splash Category4"] = "其他";
-L["Splash Content6 Name"] = "镜头运动";
-L["Splash Content6 Description"] = "-在你游戏期间第二次使用Narcissus角色面板时，镜头会瞬间移动到预设位置。";
-L["Splash Content7 Name"] = "最佳画质";
-L["Splash Content7 Description"] = "如果你的系统支持的话，你可以一键将光线追踪阴影暂时调制最佳。";
-L["Splash Content8 Name"] = "小地图按钮";
-L["Splash Content8 Description"] = "按住Shift并拖动此按钮可使其脱离小地图。";
-
-L["Flavored Text"] = "在主城内的优格沙龙使用美容美发服务即可享受10‰折扣，仅限今天！";
+L["Splash Category1"] = L["Photo Mode"];
+L["Splash Content1 Name"] = "武器浏览器";
+L["Splash Content1 Description"] = "-浏览并使用所有存在于数据库内（包括那些玩家无法获取）的武器。";
+L["Splash Content2 Name"] = "角色选择界面";
+L["Splash Content2 Description"] = "-你可以使用装饰性的边框来创建你自己的角色选择界面。";
+L["Splash Content3 Name"] = "试衣间";
+L["Splash Content3 Description"] = "-对试衣间模块进行了重新设计。\n-幻化调料包现在支持显示不对称的肩部幻化以及武器幻象。";
+L["Splash Content4 Name"] = "NPC浏览器";
+L["Splash Content4 Description"] = "-内置数据库已更新至9.1，其中包含152,219个NPC。";
+L["Splash Category2"] = "装备界面";
+L["Splash Content5 Name"] = "统御碎片";
+L["Splash Content5 Description"] = "-统御碎片指示器会在你装备相应物品后出现。\n-镶嵌物品的时候会显示你背包中可用的统御碎片。";
+L["Splash Content6 Name"] = "灵魂羁绊";
+L["Splash Content6 Description"] = "-更新了灵魂羁绊UI。你可以查看更高等级的导灵器效果。";
+L["Splash Content7 Name"] = "外观";
+L["Splash Content7 Description"] = "-六边形装备边框有了新的外观。特定物品具有独特的皮肤。";
 
 --Project Details--
 NARCI_ALL_PROJECTS = "全部项目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2021.03.20|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2021.08.23|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾泽拉斯上的不同景点，并收集各种故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沉浸式角色面板；你最好的截图助手。"
 
@@ -445,3 +439,33 @@ L["A1"] = "显然这是一个退出确认窗口。当你尝试按下快捷键来
 L["A2"] = "哈哈哈，她也是这么说的。";
 L["A3"] = "好吧...好吧..."
 L["A4"] = "打开偏好设定，然后选择拍照模式标签，你就能看到这个选项啦。";
+
+--Search--
+L["Search Result Singular"] = "%s结果";
+L["Search Result Plural"] = "%s个结果";
+L["Search Result Overflow"] = "超过%s个结果";
+
+--Weapon Browser--
+L["Draw Weapon"] = "握住武器";
+L["Unequip Item"] = "卸下武器";
+L["WeaponBrowser Guide Hotkey"] = "指定用哪只手来握住武器：";
+L["WeaponBrowser Guide ModelType"] = "有些武器只能被添加到特定类型的模型上：";
+L["WeaponBrowser Guide DressUpModel"] = "当你的目标是玩家时，默认创建此种模型的模型。除非你在点击添加角色的同时按住<%s>键。";
+L["WeaponBrowser Guide CinematicModel"] = "当添加的角色是NPC时，模型的类型只能为此种。此种模型不支持收起武器。";
+
+--Pet Stables--
+L["PetStable Tooltip"] = "从兽栏中选择宠物。";
+L["PetStable Loading"] = "正在获取宠物信息";
+
+--Domination Item--
+L["Item Bonus"] = "加成：";
+L["Combat Error"] = NARCI_COLOR_RED_MILD.."此操作无法在战斗中进行".."|r";
+L["Extract Shard"] = "取下统御碎片";
+
+--Mythic+ Leaderboard--
+L["Mythic Plus"] = "大秘境";
+L["Mythic Plus Abbrev"] = "大秘境";
+L["Total Runs"] = "完成次数：";
+L["Complete In Time"] = "限时";
+L["Complete Over Time"] = "超时";
+L["Runs"] = "分布";

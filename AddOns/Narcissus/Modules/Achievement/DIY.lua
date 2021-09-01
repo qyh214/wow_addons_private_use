@@ -1111,12 +1111,14 @@ local function CreateTextEditor()
 
     RemoveButton:SetScript("OnEnter", function(self)
         self.colorBackground:SetColorTexture(0.5, 0.2, 0.2);
+        self.label:SetText("Click and Hold");
         DIYContainer.Editor.removeMark:Show();
         PlayAnimMark();
     end);
 
     RemoveButton:SetScript("OnLeave", function(self)
         self.colorBackground:SetColorTexture(0.2, 0.2, 0.2);
+        self.label:SetText("Remove");
         if not IsMouseButtonDown() then
             DIYContainer.Editor.removeMark:Hide();
         end

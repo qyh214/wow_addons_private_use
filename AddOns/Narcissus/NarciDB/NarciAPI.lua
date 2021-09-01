@@ -1,7 +1,3 @@
-local max = math.max;
-local GetText = GetText;
-local GetTexture = GetTexture;
-local NumLines = NumLines;
 local _;
 local _G = _G;
 local After = C_Timer.After;
@@ -17,6 +13,7 @@ local match = string.match;
 local gsub = string.gsub;
 local sub = string.sub;
 local strsplit = strsplit;
+local find = string.find;
 
 local min = math.min;
 local max = math.max;
@@ -25,11 +22,13 @@ local floor = math.floor;
 
 local TEXT_LOCALE = GetLocale();
 
+local Narci = Narci;
 NarciAPI = {};
 NarciViewUtil = {};
 
 local NarciGameTooltip = CreateFrame("GameTooltip", "NarciGameTooltip", UIParent, "GameTooltipTemplate");
-
+local SecureContainer = CreateFrame("Frame", "NarciSecureFrameContainer");
+SecureContainer:Hide();
 ------------------------
 --Redirect API for 9.0--
 ------------------------
@@ -42,48 +41,61 @@ if BackdropTemplateMixin then
 end
 
 --GetSlotVisualID
-local NarciAPI_GetSlotVisualID;
-if not TransmogLocationMixin then
-    function NarciAPI_GetSlotVisualID(slotID)
-        if slotID == 2 or (slotID > 10 and slotID < 15) then
-            return -1, -1;
-        end
-
-        local baseSourceID, baseVisualID, appliedSourceID, appliedVisualID, _, _, _, hideVisual = C_Transmog.GetSlotVisualInfo(slotID, 0);
-        if ( hideVisual ) then
-            return 0, 0;
-        elseif ( appliedSourceID == 0 ) then    --NO_TRANSMOG_SOURCE_ID
-            return baseSourceID, baseVisualID;
-        else
-            return appliedSourceID, appliedVisualID;
-        end
+local function NarciAPI_GetSlotVisualID(slotID)
+    if (slotID > 10 and slotID < 15) then
+        --slotID = 2 ~ Use neck to show right shoulder
+        return 0, 0;
     end
-else
-    function NarciAPI_GetSlotVisualID(slotID)
-        if slotID == 2 or (slotID > 10 and slotID < 15) then
-            return -1, -1;
-        end
-        
-        local itemLocation = ItemLocation:CreateFromEquipmentSlot(slotID)
-        if not itemLocation or not C_Item.DoesItemExist(itemLocation) then
-            return -1, -1;
-        end
 
-        local transmogLocation = CreateFromMixins(TransmogLocationMixin);
-        local transmogType = 0;
-        local modification = 0;
+    local isSecondaryAppearance;
+    if slotID == 2 then
+        isSecondaryAppearance = true;   --Enum.TransmogModification.Secondary
+        slotID = 3;
+    end
+
+    local itemLocation = ItemLocation:CreateFromEquipmentSlot(slotID);
+    if not itemLocation or not C_Item.DoesItemExist(itemLocation) then
+        return 0, 0;
+    end
+    local transmogLocation = CreateFromMixins(TransmogLocationMixin);
+    local transmogType = 0;
+    local modification = 0;
+    if slotID == 3 then
+        --Shoulders
+        local itemTransmogInfo = C_Item.GetAppliedItemTransmogInfo(itemLocation);
+        local hasSecondaryAppearance;
+        if itemTransmogInfo then
+            hasSecondaryAppearance = itemTransmogInfo.secondaryAppearanceID ~= 0;   --show direction mark
+        end
+        if isSecondaryAppearance then
+            if not hasSecondaryAppearance then
+                return 0, 0;
+            end
+            modification = 1;       --Enum.TransmogModification : 0 ~ Main, 1 ~ Secondary
+        end
         transmogLocation:Set(slotID, transmogType, modification);
-
-        local baseSourceID, baseVisualID, appliedSourceID, appliedVisualID, appliedCategoryID, pendingSourceID, pendingVisualID, pendingCategoryID, hasPendingUndo, _, itemSubclass = C_Transmog.GetSlotVisualInfo(transmogLocation);
-        
-        if ( appliedSourceID == 0 ) then	--NO_TRANSMOG_SOURCE_ID
+        local baseSourceID, baseVisualID, appliedSourceID, appliedVisualID, pendingSourceID, pendingVisualID, hasPendingUndo, isHideVisual, itemSubclass = C_Transmog.GetSlotVisualInfo(transmogLocation);
+        if ( appliedSourceID == 0 ) then
             appliedSourceID = baseSourceID;
             appliedVisualID = baseVisualID;
         end
+        return appliedSourceID, appliedVisualID, hasSecondaryAppearance;
+    else
+        transmogLocation:Set(slotID, transmogType, modification);
+
+        local baseSourceID, baseVisualID, appliedSourceID, appliedVisualID, pendingSourceID, pendingVisualID, hasPendingUndo, isHideVisual, itemSubclass = C_Transmog.GetSlotVisualInfo(transmogLocation);
+        if ( appliedSourceID == 0 ) then
+            appliedSourceID = baseSourceID;
+            appliedVisualID = baseVisualID;
+        end
+
         return appliedSourceID, appliedVisualID;
     end
 end
-
+--/script for i =1, 17 do if C_Transmog.CanHaveSecondaryAppearanceForSlotID(i) then print(i) end end
+--/script C_Transmog.GetSlotVisualInfo( CreateFromMixins(TransmogLocationMixin):Set(3, 0, 0) )
+--/dump C_Item.GetAppliedItemTransmogInfo(ItemLocation:CreateFromEquipmentSlot(3))
+--/dump C_Transmog.GetSlotVisualInfo((CreateFromMixins(TransmogLocationMixin)):Set(3, 0, 0));
 NarciAPI.GetSlotVisualID = NarciAPI_GetSlotVisualID;
 
 --------------------
@@ -91,37 +103,53 @@ NarciAPI.GetSlotVisualID = NarciAPI_GetSlotVisualID;
 --------------------
 local SlotIDtoName = {
     --[slotID] = {InventorySlotName, Localized Name, invType, textureID}    --GetInventorySlotInfo("SlotName")
-    [1] = {"HeadSlot", HEADSLOT, INVTYPE_HEAD},
-    [2] = {"NeckSlot", NECKSLOT, INVSLOT_NECK},
-    [3] = {"ShoulderSlot", SHOULDERSLOT, INVTYPE_SHOULDER},
-    [4] = {"ShirtSlot", SHIRTSLOT, INVTYPE_BODY},
-    [5] = {"ChestSlot", CHESTSLOT, INVTYPE_CHEST},
-    [6] = {"WaistSlot", WAISTSLOT, INVTYPE_WAIST},
-    [7] = {"LegsSlot", LEGSSLOT, INVTYPE_LEGS},
-    [8] = {"FeetSlot", FEETSLOT, INVTYPE_FEET},
-    [9] = {"WristSlot", WRISTSLOT, INVTYPE_WRIST},
-    [10]= {"HandsSlot", HANDSSLOT, INVTYPE_HAND},
-    [11]= {"Finger0Slot", FINGER0SLOT_UNIQUE, INVSLOT_FINGER1},
-    [12]= {"Finger1Slot", FINGER1SLOT_UNIQUE, INVSLOT_FINGER2},
-    [13]= {"Trinket0Slot", TRINKET0SLOT_UNIQUE, INVSLOT_TRINKET1},
-    [14]= {"Trinket1Slot", TRINKET1SLOT_UNIQUE, INVSLOT_TRINKET2},
-    [15]= {"BackSlot", BACKSLOT, INVTYPE_CLOAK},
-    [16]= {"MainHandSlot", MAINHANDSLOT, INVTYPE_WEAPONMAINHAND},
-    [17]= {"SecondaryHandSlot", SECONDARYHANDSLOT, INVTYPE_WEAPONOFFHAND},
-    [18]= {"AmmoSlot", RANGEDSLOT, INVSLOT_RANGED},
-    [19]= {"TabardSlot", TABARDSLOT, INVTYPE_TABARD},
+    [1] = {"HeadSlot", HEADSLOT, "INVTYPE_HEAD"},
+    [2] = {"NeckSlot", NECKSLOT, "INVSLOT_NECK"},
+    [3] = {"ShoulderSlot", SHOULDERSLOT, "INVTYPE_SHOULDER"},
+    [4] = {"ShirtSlot", SHIRTSLOT, "INVTYPE_BODY"},
+    [5] = {"ChestSlot", CHESTSLOT, "INVTYPE_CHEST"},
+    [6] = {"WaistSlot", WAISTSLOT, "INVTYPE_WAIST"},
+    [7] = {"LegsSlot", LEGSSLOT, "INVTYPE_LEGS"},
+    [8] = {"FeetSlot", FEETSLOT, "INVTYPE_FEET"},
+    [9] = {"WristSlot", WRISTSLOT, "INVTYPE_WRIST"},
+    [10]= {"HandsSlot", HANDSSLOT, "INVTYPE_HAND"},
+    [11]= {"Finger0Slot", FINGER0SLOT_UNIQUE, "INVSLOT_FINGER1"},
+    [12]= {"Finger1Slot", FINGER1SLOT_UNIQUE, "INVSLOT_FINGER2"},
+    [13]= {"Trinket0Slot", TRINKET0SLOT_UNIQUE, "INVSLOT_TRINKET1"},
+    [14]= {"Trinket1Slot", TRINKET1SLOT_UNIQUE, "INVSLOT_TRINKET2"},
+    [15]= {"BackSlot", BACKSLOT, "INVTYPE_CLOAK"},
+    [16]= {"MainHandSlot", MAINHANDSLOT, "INVTYPE_WEAPONMAINHAND"},
+    [17]= {"SecondaryHandSlot", SECONDARYHANDSLOT, "INVTYPE_WEAPONOFFHAND"},
+    [18]= {"AmmoSlot", RANGEDSLOT, "INVSLOT_RANGED"},
+    [19]= {"TabardSlot", TABARDSLOT, "INVTYPE_TABARD"},
 }
+
+local invTypeSlotID = {
+    INVTYPE_WEAPON = 16,
+    INVTYPE_2HWEAPON = 16,
+    INVTYPE_SHIELD = 17,
+    INVTYPE_HOLDABLE = 17,
+    INVTYPE_RANGED = 16,    --actually held in offhand, 17
+    INVTYPE_RANGEDRIGHT = 16,
+};
 
 for slotID, info in pairs(SlotIDtoName) do
     _, info[4] = GetInventorySlotInfo(info[1]);
+    invTypeSlotID[ info[3] ] = slotID;
 end
 
---[[
-function NarciAPI_GetSlotLocalizedName(slotID)
+local function GetSlotIDByInvType(invType)
+    return invTypeSlotID[invType]
+end
+
+NarciAPI.GetSlotIDByInvType = GetSlotIDByInvType;
+
+
+local function GetSlotNameAndTexture(slotID)
     return SlotIDtoName[slotID][2], SlotIDtoName[slotID][4]
 end
---]]
 
+NarciAPI.GetSlotNameAndTexture = GetSlotNameAndTexture;
 Narci.SlotIDtoName = SlotIDtoName;
 -----------------------------------------------------
 
@@ -501,84 +529,51 @@ NarciAPI.GetItemQualityColorTable = function()
     return newTable;
 end
 
-local BorderTexture = {
-    ["Bright"]  = {
-        [0] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Black",
-        [1] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder",
-        [2] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Uncommon",
-        [3] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Rare",
-        [4] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Epic",   --Epic NZoth
-        [5] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Legendary",
-        [6] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Artifact",
-        [7] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Heirloom",	--Void
-        [8] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Azerite",
-        [12] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Special",
-        ["Heart"] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-Heart",    --Heart
-        ["NZoth"] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-NZoth",
-        ["BlackDragon"] = "Interface/AddOns/Narcissus/Art/Border/HexagonBorder-BlackDragon",    --8.3 Legendary Cloak
-        ["Minimap"] = "Interface/AddOns/Narcissus/Art/Minimap/LOGO-Large",
-    },
-
-    ["Dark"] = {
-        [0] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Black",
-        [1] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Black",
-        [2] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Uncommon",
-        [3] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Rare",
-        [4] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Epic",    --Epic
-        [5] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Legendary",
-        [6] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Artifact",
-        [7] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Heirloom",	--Void
-        [8] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Azerite",
-        [12] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Black",
-        ["Heart"] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-Heart",    --Heart
-        ["NZoth"] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-NZoth",
-        ["BlackDragon"] = "Interface/AddOns/Narcissus/Art/Border-Thick/HexagonThickBorder-BlackDragon",    --8.3 Legendary Cloak
-        ["Minimap"] = "Interface/AddOns/Narcissus/Art/Minimap/LOGO-Large",                                --only enable Thick minimap when AzeriteUI is loaded
-    },
-}
-
-local function NarciAPI_GetBorderTexture()
-    local index = NarcissusDB and NarcissusDB.BorderTheme
-    if not index then
-        return BorderTexture["Bright"], BorderTexture["Bright"]["Minimap"], "Bright"
-    else
-        return (BorderTexture[index] or BorderTexture["Bright"]), BorderTexture[index]["Minimap"], index
-    end
-end
-
-NarciAPI.GetBorderTexture = NarciAPI_GetBorderTexture;
-
-local GemBorderTexture = {
-	[0]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot",			--Empty
-	[1]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Unique",	--Kraken's Eye
-	[2]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Green",
-	[3]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Unique",	--Prismatic	
-	[4]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Unique",	--Meta
-	[5]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Orange",	--Orange
-	[6]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Purple",
-    [7]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Yellow",	--Yellow	
-	[8]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Blue",		--Blue
-	[9]  = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Yellow",	--Empty
-	[10] = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot-Red",		--Red
-	[11] = "Interface/AddOns/Narcissus/Art/GemBorder/GemSlot",			--Artifact
+local gemBorderTexture = {
+    filePrefix = "Interface/AddOns/Narcissus/Art/GemBorder/Dark/",
+	[0]  = "White",			--Empty
+	[1]  = "Primary",	--Kraken's Eye
+	[2]  = "Green",
+	[3]  = "Primary",	--Prismatic
+	[4]  = "Primary",	--Meta
+	[5]  = "Orange",	--Orange
+	[6]  = "Purple",
+    [7]  = "Yellow",	--Yellow
+	[8]  = "Blue",		--Blue
+	[9]  = "Yellow",	--Empty
+	[10] = "Red",		--Red
+	[11] = "White",			--Artifact
 }
 
 
---Some gems require you to assign colors manually
---itemID, itemType, itemSubType, itemEquipLoc, icon, itemClassID, itemSubClassID = GetItemInfoInstant(itemID or "itemString" or "itemName" or "itemLink") 
+--itemID, itemType, itemSubType, itemEquipLoc, icon, itemClassID, itemSubClassID = GetItemInfoInstant(itemID or "itemString" or "itemName" or "itemLink")
 local function GetGemBorderTexture(itemSubClassID, itemID)
     local index = itemSubClassID or 0;
-    if itemID == 153714 or itemID == 173125 then
-        index = 10;     --Red EXP bonus
-    elseif itemID == 153715 or itemID == 169220 or itemID == 173126 then
-        index = 2;      --Movement Speed
-    elseif itemID == 168636 or itemID == 168637 or itemID == 168638 or
-    itemID == 153707 or itemID == 153708 or itemID == 153709 then
-        index = 1;      --Primary
+    if itemID then
+        if itemID == 153714 or itemID == 173125 then
+            index = 10;     --Red EXP bonus
+        elseif itemID == 153715 or itemID == 169220 or itemID == 173126 then
+            index = 2;      --Movement Speed
+        elseif itemID == 168636 or itemID == 168637 or itemID == 168638 or
+        itemID == 153707 or itemID == 153708 or itemID == 153709 then
+            index = 1;      --Primary
+        end
     end
-    return GemBorderTexture[index], index
+    return gemBorderTexture.filePrefix..gemBorderTexture[index], index
 end
 
+local function SetBorderTheme(theme)
+    --1.1.2 Override
+    theme = "Dark";
+
+    if theme == "Bright" then
+        gemBorderTexture.filePrefix = "Interface/AddOns/Narcissus/Art/GemBorder/Bright/";
+    elseif theme == "Dark" then
+        gemBorderTexture.filePrefix = "Interface/AddOns/Narcissus/Art/GemBorder/Dark/";
+    end
+end
+
+NarciAPI.SetBorderTheme = SetBorderTheme;
 NarciAPI.GetGemBorderTexture = GetGemBorderTexture;
 
 --------------------
@@ -653,8 +648,8 @@ end
 
 NarciAPI.GetPrimaryStats = NarciAPI_GetPrimaryStats;
 
-local GemInfo = Narci_GemInfo;
-local EnchantInfo = Narci_EnchantInfo;
+local GemInfo = Narci.GemData;
+local EnchantInfo = Narci.EnchantData;
 local DoesItemExist = C_Item.DoesItemExist;
 local GetCurrentItemLevel = C_Item.GetCurrentItemLevel;
 local GetItemLink = C_Item.GetItemLink
@@ -764,21 +759,21 @@ local TP = CreateFrame("GameTooltip", "NarciVirtualTooltip", nil, "GameTooltipTe
 TP:SetScript("OnLoad", GameTooltip_OnLoad);
 TP:SetOwner(UIParent, 'ANCHOR_NONE');
 
-local find = string.find;
-local function NarciAPI_IsItemSocketable(itemLink, socketID)
+local function IsItemSocketable(itemLink, socketID)
     if not itemLink then return; end
     if not socketID then socketID = 1; end
 
     local gemName, gemLink = GetItemGem(itemLink, socketID)
-    if gemName then
-        return gemName, gemLink;
+    if gemLink then
+        return gemName or "...", gemLink;
     end
-    --]]
 
     local tex, texID;
     for i = 1, 3 do
-        tex = _G["NarciVirtualTooltip".."Texture"..i]
-        tex = tex:SetTexture(nil);
+        tex = _G["NarciVirtualTooltip".."Texture"..i];
+        if tex then
+            tex = tex:SetTexture(nil);
+        end
     end
 
     TP:SetHyperlink(itemLink);
@@ -787,7 +782,7 @@ local function NarciAPI_IsItemSocketable(itemLink, socketID)
         tex = _G["NarciVirtualTooltip".."Texture"..i]
         texID = tex and tex:GetTexture();
         --print(texID)
-        if texID == 458977 then     --no file name anymore 458977:Regular empty socket texture
+        if texID == 458977 then     --458977: Regular empty socket texture  --Doesn't include domination socket
             return "Empty", nil;
         end
     end
@@ -803,7 +798,7 @@ local function NarciAPI_IsItemSocketable(itemLink, socketID)
     return nil, nil;
 end
 
-NarciAPI.IsItemSocketable = NarciAPI_IsItemSocketable;
+NarciAPI.IsItemSocketable = IsItemSocketable;
 
 local function NarciAPI_GetItemRank(itemLink, statName)
     --Items that can get upgraded
@@ -944,13 +939,15 @@ end
 local onUse = ITEM_SPELL_TRIGGER_ONUSE;
 local onEquip = ITEM_SPELL_TRIGGER_ONEQUIP;
 local onProc = ITEM_SPELL_TRIGGER_ONPROC;
+local setBonus = Narci.L["Item Bonus"];
+local _onUse = trimComma(onUse);
+local _onEquip = trimComma(onEquip);
+local _onProc = trimComma(onProc);
+local _setBonus = trimComma(setBonus);
 local minLevel = SOCKETING_ITEM_MIN_LEVEL_I;
-local _onUse = trimComma(onUse)
-local _onEquip = trimComma(onEquip)
-local _onProc = trimComma(onProc)
 
-local function NarciAPI_GetItemExtraEffect(itemLink)
-    if not itemLink then    return; end
+local function GetItemExtraEffect(itemLink, checkBonus)
+    if not itemLink then return; end
 
     TP:SetHyperlink(itemLink);
     local num = TP:NumLines();
@@ -960,9 +957,9 @@ local function NarciAPI_GetItemExtraEffect(itemLink)
 
     for i = begin, num, 1 do
         str = nil;
-        str = _G["NarciVirtualTooltip".."TextLeft"..i]
+        str = _G["NarciVirtualTooltip".."TextLeft"..i];
         if not str then
-            return;
+            break;
         else
             str = str:GetText();
         end
@@ -982,13 +979,19 @@ local function NarciAPI_GetItemExtraEffect(itemLink)
             if not category then    category = _onProc; end
             --return _onProc, str;
             output = output..str.."\n\n"
+        elseif checkBonus then
+            if find(str, setBonus) then
+                str = formatString(str, _setBonus);
+                if not category then    category = _setBonus; end
+                output = output..str.."\n\n"
+                break
+            end
         end
-        
     end
     return category, output;
 end
 
-NarciAPI.GetItemExtraEffect = NarciAPI_GetItemExtraEffect;
+NarciAPI.GetItemExtraEffect = GetItemExtraEffect;
 
 local SpecialGemData = {
     --1 Movement Speed
@@ -1275,33 +1278,31 @@ end
 -----Smooth Scroll-----
 
 local function SmoothScrollContainer_OnUpdate(self, elapsed)
-	local delta = self.delta;
-    local scrollBar = self.scrollBar;
-    local value = scrollBar:GetValue();
-    local step = max(abs(value - self.endValue)*(self.speedRatio) , self.minOffset);		--if the step (Δy) is too small, the fontstring will jitter.
+    local value = self.scrollBar:GetValue();
+    local step = max(abs(value - self.endValue)*(self.speedRatio)*(elapsed*60) , self.minOffset);		--if the step (Δy) is too small, the fontstring will jitter.    --Consider elapsed -- scroll duration should be constant regardless of FPS
     local remainedStep;
-    if ( delta == 1 ) then
+    if ( self.delta == 1 ) then
         --Up
         remainedStep = min(self.endValue - value, 0);
         if - remainedStep <= ( self.minOffset) then
             self:Hide();
-            scrollBar:SetValue(min(self.maxVal, self.endValue));
+            self.scrollBar:SetValue(min(self.maxVal, self.endValue));
             if self.onScrollFinishedFunc then
                 self.onScrollFinishedFunc();
             end
         else
-            scrollBar:SetValue(max(0, value - step));
+            self.scrollBar:SetValue(max(0, value - step));
         end
 	else
         remainedStep = max(self.endValue - value, 0);
         if remainedStep <= ( self.minOffset) then
             self:Hide();
-            scrollBar:SetValue(min(self.maxVal, self.endValue));
+            self.scrollBar:SetValue(min(self.maxVal, self.endValue));
             if self.onScrollFinishedFunc then
                 self.onScrollFinishedFunc();
             end
         else
-            scrollBar:SetValue(min(self.maxVal, value + step));
+            self.scrollBar:SetValue(min(self.maxVal, value + step));
         end
     end
 end
@@ -1316,7 +1317,7 @@ local function NarciAPI_SmoothScroll_OnMouseWheel(self, delta, stepSize)
     end
     
     local ScrollContainer = self.SmoothScrollContainer; 
-	local stepSize = stepSize or self.stepSize or self.buttonHeight;
+	stepSize = stepSize or self.stepSize or self.buttonHeight;
 
     ScrollContainer.stepSize = stepSize;
 	ScrollContainer.maxVal = self.range;
@@ -1370,8 +1371,8 @@ function NarciAPI_SmoothScroll_Initialization(scrollFrame, updatedList, updateFu
     local SmoothScrollContainer = CreateFrame("Frame", frameName, scrollFrame);
     SmoothScrollContainer:Hide();
     
-    local scale = match(GetCVar( "gxWindowedResolution" ), "%d+x(%d+)" );
-    local uiScale = scrollFrame:GetEffectiveScale(); 
+    --local scale = match(GetCVar( "gxWindowedResolution" ), "%d+x(%d+)" );
+    local uiScale = scrollFrame:GetEffectiveScale();
     --local pixel = 768/scale/uiScale;
     --local _, screenHeight = GetPhysicalScreenSize();
     local pixel = (768/screenHeight)/uiScale;
@@ -1393,7 +1394,9 @@ function NarciAPI_SmoothScroll_Initialization(scrollFrame, updatedList, updateFu
     SmoothScrollContainer:SetScript("OnShow", function(self)
         self.endValue = self:GetParent().scrollBar:GetValue();
     end);
-
+    SmoothScrollContainer:SetScript("OnHide", function(self)
+        self:Hide();
+    end);
     scrollFrame.SmoothScrollContainer = SmoothScrollContainer;
 
     scrollFrame:SetScript("OnMouseWheel", NarciAPI_SmoothScroll_OnMouseWheel);  --a position-related function
@@ -1509,14 +1512,12 @@ end
 --]]
 
 -----Language Adaptor-----
-local function LanguageDetector(string)
-	local str = string
+local function LanguageDetector(str)
 	local len = strlen(str)
 	local i = 1
 	while i <= len do
 		local c = string.byte(str, i)
 		local shift = 1
-		--print(c)
 		if (c > 0 and c <= 127)then
 			shift = 1
 		elseif c == 195 then
@@ -1536,7 +1537,7 @@ local function LanguageDetector(string)
 		elseif (c >= 240 and c <= 244) then
 			shift = 4	--Unknown invalid
 		end
-		local char = sub(str, i, i+shift-1)
+		--local char = sub(str, i, i+shift-1)
 		i = i + shift
 	end
 	return "RM"
@@ -1584,30 +1585,47 @@ local EditBoxFont = {
 	["JP"] = {"Interface\\AddOns\\Narcissus\\Font\\NotoSansCJKsc-Medium.otf", 8},
 }
 
-local function SmartFontType(self, height, fontTable)
+local NormalFont12 = {
+	["CN"] = {"Interface\\AddOns\\Narcissus\\Font\\NotoSansCJKsc-Medium.otf", 11},
+	["RM"] = {"Interface\\AddOns\\Narcissus\\Font\\SourceSansPro-Semibold.ttf", 12},
+	["RU"] = {"Interface\\AddOns\\Narcissus\\Font\\NotoSans-Medium.ttf", 11},
+	["KR"] = {"Interface\\AddOns\\Narcissus\\Font\\NotoSansCJKsc-Medium.otf", 11},
+	["JP"] = {"Interface\\AddOns\\Narcissus\\Font\\NotoSansCJKsc-Medium.otf", 11},
+}
+
+local function SmartFontType(self, fontTable)
 	local str = self:GetText();
-	local Language = LanguageDetector(str);
+	local language = LanguageDetector(str);
 	--print(str.." Language is: "..Language);
-    local Height = self:GetHeight();
-    if Language and fontTable[Language] then
-		self:SetFont(fontTable[Language] , Height);
+    local height = self:GetHeight();
+    if language and fontTable[language] then
+		self:SetFont(fontTable[language] , height);
 	end
 end
 
 local function SmartEditBoxFont(self, extraHeight)
 	local str = self:GetText();
-	local Language = LanguageDetector(str);
-    if Language and EditBoxFont[Language] then
+	local language = LanguageDetector(str);
+    if language and EditBoxFont[language] then
         local height = extraHeight or 0;
-		self:SetFont(EditBoxFont[Language][1] , EditBoxFont[Language][2] + height);
+		self:SetFont(EditBoxFont[language][1] , EditBoxFont[language][2] + height);
 	end
 end
 
-local function NarciAPI_SmartFontType(self, height)
-    SmartFontType(self, height, PlayerNameFont);
+local function NarciAPI_SmartFontType(fontString)
+    SmartFontType(fontString, PlayerNameFont);
+end
+
+local function SmartSetName(fontString, str)
+	local language = LanguageDetector(str);
+    if language and NormalFont12[language] then
+		fontString:SetFont(NormalFont12[language][1], NormalFont12[language][2]);
+	end
+    fontString:SetText(str);
 end
 
 NarciAPI.SmartFontType = NarciAPI_SmartFontType;
+NarciAPI.SmartSetName = SmartSetName;
 
 function NarciAPI_SmartEditBoxType(self, extraHeight)
     SmartEditBoxFont(self, extraHeight);
@@ -1632,7 +1650,6 @@ function NarciAPI_LetterboxAnimation(command)
 		frame.TopMask.animOut:Play();
 	else
         if NarcissusDB.LetterboxEffect then
-            Narci_PhotoModeToolbar.PhotoModeControllerAnimFrame.toAlpha = 0
 			frame:Show();
 			frame.BottomMask.animIn:Play();
 			frame.TopMask.animIn:Play();
@@ -1659,7 +1676,7 @@ DelayedTP:Hide();
 
 DelayedTP:SetScript("OnShow", function(self)
     self.t = 0;                                            --Total time after ShowDelayedTooltip gets called
-    --self.ScanTime = 0;                                   --Cursor scaning time
+    --self.ScanTime = 0;                                   --Cursor scanning time
     --self.CursorX, self.CursorY = GetCursorPosition();    --Cursor position
 end)
 DelayedTP:SetScript("OnHide", function(self)
@@ -2460,7 +2477,7 @@ local function ParserButton_GetCursor(self)
     local itemName, _, itemQuality, itemLevel, _, _, _, _, itemEquipLoc, itemIcon = GetItemInfo(itemLink);
     local itemString = match(itemLink, "item:([%-?%d:]+)");
     local supposedEffect, corruptionID = NarciAPI_GetCorruptedItemAffix(itemLink);
-    local hasGem = NarciAPI_IsItemSocketable(itemLink);
+    local hasGem = IsItemSocketable(itemLink);
     local enchantID = GetItemEnchantID(itemLink);
     local corruption = GetItemStats(itemLink)["ITEM_MOD_CORRUPTION"] or 0;
     local _, extraEffect = NarciAPI_GetItemExtraEffect(itemLink);
@@ -2485,7 +2502,7 @@ local function ParserButton_GetCursor(self)
     local colorizedString = itemString;
     if enchantID and enchantID ~= 0 then
         local GREEN = "|cff1eff00";
-        local info = Narci_EnchantInfo[enchantID];
+        local info = EnchantInfo[enchantID];
         if info then
             enchantName = string.gsub(info[1], "%a", string.upper, 1).." "..info[2];
             supposedEffect = supposedEffect.."  "..GREEN..enchantName.."|r";
@@ -2843,20 +2860,30 @@ end);
 
 NarciHotkeyNotificationMixin = {};
 
-function NarciHotkeyNotificationMixin:SetKey(hotkey, mouseButton, text, alwaysShown)
+function NarciHotkeyNotificationMixin:SetKey(hotkey, mouseButton, description, alwaysShown)
     local ICON_HEIGHT = 20;
     self.alwaysShown = alwaysShown;
-    self.Label:SetText(text);
+    self.Label:SetText(description);
+    if description then
+        self.GradientM:Show();
+        self.GradientR:Show();
+    else
+        self.GradientM:Hide();
+        self.GradientR:Hide();
+    end
     local width = self.Label:GetWidth();
     if alwaysShown then
         self:SetAlpha(1);
     else
         self:SetAlpha(0);
     end
-    
+
     if hotkey then
         self.KeyIcon:SetTexture("Interface/AddOns/Narcissus/Art/Keyboard/Key", nil, nil, "TRILINEAR");
         self.KeyIcon:Show();
+        if string.lower(hotkey) == "alt" then
+            hotkey = NARCI_MODIFIER_ALT;
+        end
         self.KeyLabel:SetText(hotkey);
         self.KeyLabel:SetShadowColor(0, 0, 0);
         self.KeyLabel:SetShadowOffset(0, 1.4);
@@ -2864,11 +2891,14 @@ function NarciHotkeyNotificationMixin:SetKey(hotkey, mouseButton, text, alwaysSh
         local texWidth;
         if string.len(hotkey) > 5 then
             texWidth = 146;
-            self.KeyIcon:SetTexCoord(0, texWidth/256, 0.5, 1);
+            self.KeyIcon:SetTexCoord(0, texWidth/256, 0.25, 0.5);
+            self.isLongButton = true
         else
             texWidth = 118;
-            self.KeyIcon:SetTexCoord(0, texWidth/256, 0, 0.5);
+            self.isLongButton = nil;
+            self.KeyIcon:SetTexCoord(0, texWidth/256, 0, 0.25);
         end
+        self.keyTexCoord = texWidth/256;
         self.KeyIcon:SetSize(texWidth/64*ICON_HEIGHT, ICON_HEIGHT);
         width = width + texWidth/64*ICON_HEIGHT;
     end
@@ -2928,7 +2958,7 @@ function NarciHotkeyNotificationMixin:OnHide()
         self:Hide();
         self:SetAlpha(0);
     end
-    
+
     if self.enableListener then
         self:UnregisterEvent("GLOBAL_MOUSE_UP");
     end
@@ -2941,6 +2971,26 @@ function NarciHotkeyNotificationMixin:OnEvent(event, key)
     end
 end
 
+function NarciHotkeyNotificationMixin:SetHighlight(state)
+    if self.keyTexCoord then
+        local texCoordY;
+        if self.isLongButton then
+            texCoordY = 0.25;
+        else
+            texCoordY = 0;
+        end
+        if state then
+            texCoordY = texCoordY + 0.5;
+            self.KeyIcon:SetTexCoord(0, self.keyTexCoord, texCoordY + 0.25, texCoordY);
+            self.KeyLabel:SetPoint("CENTER", 0, -1);
+            self.KeyLabel:SetTextColor(0.72, 0.72, 0.72);
+        else
+            self.KeyIcon:SetTexCoord(0, self.keyTexCoord, texCoordY, texCoordY + 0.25);
+            self.KeyLabel:SetPoint("CENTER", 0, 0);
+            self.KeyLabel:SetTextColor(0.6, 0.6, 0.6);
+        end
+    end
+end
 
 NarciQuickFavoriteButtonMixin = {};
 
@@ -3231,6 +3281,11 @@ function NarciClipboardMixin:ShowClipboard()
     self.Tooltip:SetAlpha(0);
 end
 
+function NarciClipboardMixin:HasFocus()
+    return self.EditBox.hasFocus;
+end
+
+
 function NarciClipboardMixin:ReAnchorTooltipToObject(object)
     if object then
         self.Tooltip:ClearAllPoints();
@@ -3243,6 +3298,16 @@ NarciNonEditableEditBoxMixin = {};
 
 function NarciNonEditableEditBoxMixin:OnLoad()
 
+end
+
+function NarciNonEditableEditBoxMixin:OnEditFocusGained()
+    self.hasFocus = true;
+    self:SelectText();
+end
+
+function NarciNonEditableEditBoxMixin:OnEditFocusLost()
+    self.hasFocus = nil;
+    self:Quit();
 end
 
 function NarciNonEditableEditBoxMixin:SelectText()
@@ -3268,7 +3333,7 @@ function NarciNonEditableEditBoxMixin:OnTextChanged(isUserInput)
 end
 
 function NarciNonEditableEditBoxMixin:OnKeyDown(key, down)
-    local keys = CreateKeyChordString(key);
+    local keys = CreateKeyChordStringUsingMetaKeyState(key);
     if keys == "CTRL-C" or key == "COMMAND-C" then
         self.hasCopied = true;
         After(0, function()
@@ -3489,6 +3554,78 @@ end
 
 NarciAPI.GetAllSelectedTalentIDsAndIcons = GetAllSelectedTalentIDsAndIcons;
 
+
+local round = function(number, digit)
+    digit = digit or 0;
+    local a = 10 ^ digit;
+    return math.floor(number * a + 0.5)/a
+end
+
+local function CreateColor(r, g, b)
+    return round(r/255, 4), round(g/255, 4), round(b/255, 4);
+end
+
+NarciAPI.CreateColor = CreateColor;
+
+
+local timeStartNarcissus;
+local function UpdateSessionTime()
+    local t = time();
+    if timeStartNarcissus then
+        local session = t - timeStartNarcissus;
+        local timeSpent = NarciStatisticsDB.TimeSpentInNarcissus;
+        if not timeSpent or type(timeSpent) ~= "number" then
+            timeSpent = 0;
+        end
+        NarciStatisticsDB.TimeSpentInNarcissus = timeSpent + session;
+        timeStartNarcissus = nil;
+    else
+        timeStartNarcissus = t;
+    end
+end
+
+NarciAPI.UpdateSessionTime = UpdateSessionTime;
+
+
+local function UpdateScreenshotsCounter()
+    if Narci.isActive then
+        local numTaken = NarciStatisticsDB.ScreenshotsTakenInNarcissus;
+        if not numTaken or type(numTaken) ~= "number" then
+            numTaken = 0;
+        end
+        NarciStatisticsDB.ScreenshotsTakenInNarcissus = numTaken + 1;
+    end
+end
+
+NarciAPI.UpdateScreenshotsCounter = UpdateScreenshotsCounter;
+
+
+local function WrapNameWithClassColor(name, classID, specID, showIcon, offsetY)
+    local classInfo = C_CreatureInfo.GetClassInfo(classID);
+    if classInfo then
+        local color = C_ClassColor.GetClassColor(classInfo.classFile);
+        if color then
+            if specID and showIcon then
+                local str = color:WrapTextInColorCode(name);
+                local _, _, _, icon, role = GetSpecializationInfoByID(specID);
+                if icon then
+                    offsetY = offsetY or 0;
+                    str = "|T"..icon..":12:12:-1:"..offsetY..":64:64:4:60:4:60|t" ..str;
+                end
+                return str
+            else
+                return color:WrapTextInColorCode(name);
+            end
+        else
+            return name
+        end
+    else
+        return name
+    end
+end
+
+
+NarciAPI.WrapNameWithClassColor = WrapNameWithClassColor;
 --[[
 function TestFX(modelFileID, zoomDistance, view)
     NarciAPI_SetupModelScene(TestScene, modelFileID, zoomDistance, view);
@@ -3502,6 +3639,7 @@ end
 
 
 --Debug
+--[[
 local DebugUtil = NarciAPI_CreateAnimationFrame(1, "NarciDebug");
 
 DebugUtil:SetScript("OnUpdate", function(self, elapsed)
@@ -3531,6 +3669,7 @@ function DebugUtil:CalculateAverage(number)
         self:RestartTimer();
     end
 end
+
 
 local function TestItemLinkAffix(from, to)
     local TP = TP;
@@ -3579,3 +3718,5 @@ local function TestItemLinkAffix(from, to)
     end
     After(1, GetExtraInfo);
 end
+
+--]]

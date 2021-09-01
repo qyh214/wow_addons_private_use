@@ -193,8 +193,7 @@ L.RETAIL_ONLY					= "AVISO: esta versión de DBM está pensada para la versión 
 
 L.MOVABLE_BAR				= "¡Muéveme!"
 
-L.PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h ha compartido un temporizador de DBM: '%2$s'\n|HDBM:cancel:%2$s:nil|h|cff3588ff[Cancelar este temporizador]|r|h  |HDBM:ignore:%2$s:%1$s|h|cff3588ff[Ignorar temporizadores de %1$s]|r|h"
---L.PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h ha compartido un temporizador de DBM: '%2$s'\n|HDBM:cancel:%2$s:nil|h|cff3588ff[Cancelar este temporizador]|r|h  |HDBM:ignore:%2$s:%1$s|h|cff3588ff[Ignorar temporizadores de %1$s]|r|h"
+L.PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h ha compartido un temporizador de DBM: '%2$s'\n|Hgarrmission:DBM:cancel:%2$s:nil|h|cff3588ff[Cancelar este temporizador]|r|h  |Hgarrmission:DBM:ignore:%2$s:%1$s|h|cff3588ff[Ignorar temporizadores de %1$s]|r|h"
 L.PIZZA_CONFIRM_IGNORE			= "¿Seguro que quieres ignorar los temporizadores de %s para esta sesión?"
 L.PIZZA_ERROR_USAGE				= "Uso: /dbm [broadcast] timer <seg> <texto>. <seg> debe ser mayor que 1."
 
@@ -476,7 +475,7 @@ L.AUTO_TIMER_TEXTS.fades		= "%s expira"--Buff/Debuff on players
 L.AUTO_TIMER_TEXTS.ai			= "IA de %s"
 L.AUTO_TIMER_TEXTS.cd			= "%s TdR"
 L.AUTO_TIMER_TEXTS.cdshort		= "~%s"
-L.AUTO_TIMER_TEXTS.cdcount		= "%s TdR (%%s)"
+L.AUTO_TIMER_TEXTS.cdcount		= "%s (%%s) TdR"
 L.AUTO_TIMER_TEXTS.cdcountshort		= "~%s (%%s)"
 L.AUTO_TIMER_TEXTS.cdsource		= "%s TdR: >%%s<"
 L.AUTO_TIMER_TEXTS.cdsourceshort	= "~%s: >%%s<"

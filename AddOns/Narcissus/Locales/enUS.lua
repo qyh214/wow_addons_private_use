@@ -1,11 +1,11 @@
-Narci.L = {}
+Narci.L = {};
 
-local L = Narci.L
+local L = Narci.L;
 
-NARCI_GRADIENT = "|cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r"
+NARCI_GRADIENT = "|cffA236EFN|r|cff9448F1a|r|cff865BF2r|r|cff786DF4c|r|cff6A80F6i|r|cff5D92F7s|r|cff4FA4F9s|r|cff41B7FAu|r|cff33C9FCs|r"
 MYMOG_GRADIENT = "|cffA236EFM|cff9448F1y |cff865BF2T|cff786DF4r|cff6A80F6a|cff5D92F7n|cff4FA4F9s|cff41B7FAm|cff33C9FCo|cff32c9fbg|r"
 
-NARCI_VERSION_INFO = "1.1.1";
+NARCI_VERSION_INFO = "1.1.5";
 NARCI_DEVELOPER_INFO = "Designed by Peterodox";
 
 NARCI_NEW_ENTRY_PREFIX = "|cff40C7EB";
@@ -17,7 +17,8 @@ NARCI_COLOR_YELLOW = "|cfffced00";
 NARCI_COLOR_CYAN_DARK = "5385a5";
 NARCI_COLOR_PINK_DARK = "da9bc3";
 
-NARCI_MODIFIER_ALT = "ALT";   --Windows
+NARCI_MODIFIER_CONTROL = "Ctrl";
+NARCI_MODIFIER_ALT = "Alt";   --Windows
 NARCI_SHORTCUTS_COPY = "Ctrl+C";
 
 NARCI_MOUSE_BUTTON_ICON_1 = "|TInterface\\AddOns\\Narcissus\\Art\\Keyboard\\Mouse-Small:16:16:0:0:64:16:0:16:0:16|t";   --Left Button
@@ -26,6 +27,7 @@ NARCI_MOUSE_BUTTON_ICON_3 = "|TInterface\\AddOns\\Narcissus\\Art\\Keyboard\\Mous
 
 if IsMacClient() then
     --Mac OS
+    NARCI_MODIFIER_CONTROL = "Command";
     NARCI_MODIFIER_ALT = "Option";
     NARCI_SHORTCUTS_COPY = "Command+C";
 end
@@ -170,7 +172,7 @@ L["Ultra-wide Optimization"] = "Ultra-wide Optimization";
 L["Baseline Offset"] = "Baseline Offset";
 L["Ultra-wide Tooltip"] = "You can see this option because you are using a %s:9 monitor.";
 L["Interactive Area"] = "Interactable  Area";
-L["Item Socketing Tooltip"] = "Double-click to embed";
+L["Item Socketing Tooltip"] = "Click and hold to embed";
 L["No Available Gem"] = "|cffd8d8d8No available gem|r";
 L["Use Bust Shot"] = "Use Bust Shot";
 L["Use Escape Button"] = "Esc Key";
@@ -216,10 +218,10 @@ L["Camera Transition Description On"] = "Camera will move smoothly to the predet
 L["Camera Transition Description Off"] = "Camera transition becomes instant. Starts from the second time you use this character panel.\nInstant transition will override camera preset #4.";
 L["Interface Options Tab Description"] = "You can also access the this panel by clicking the gear button next to the toolbar on the bottom left of your screen while using Narcissus.";
 L["Soulbinds"] = COVENANT_PREVIEW_SOULBINDS;
-L["Conduit Tooltip"] = "Effects of Higher Ranks";
+L["Conduit Tooltip"] = "Conduit Effects of Higher Ranks";
+L["Domination Indicator"] = "Domination Indicator";
 
 --Model Control--
-NARCI_HOLD_WEAPON = "Draw Weapon";
 NARCI_STAND_IDLY = "Stand Idly";
 NARCI_RANGED_WEAPON = "Ranged Weapon";
 NARCI_MELEE_WEAPON = "Melee Weapon";
@@ -446,34 +448,27 @@ L["Guide NPC Browser Line1"] = "Notable NPCs are listed in the catalog below.\nY
     
 --Splash--
 NARCI_SPLASH_WHATS_NEW_FORMAT = "What's New in Narcissus %s";
-
+L["See Ads"] = "See ads from our authentic sponsor";    --Not real ads!
 L["Splash Category1"] = L["Photo Mode"];
-L["Splash Content1 Name"] = "Text Overlay";
-L["Splash Content1 Description"] = "-Create speech balloons, talking heads and subtitles in group photo mode.";
-L["Splash Content2 Name"] = "Animation Tab";
-L["Splash Content2 Description"] = "-You can search and favorite animations.\n-Some animations have variations, now you can select them too.";
-L["Splash Content3 Name"] = "Ground Shadow";
-L["Splash Content3 Description"] = "-Introducing a new shape of ground shadow which is more realistic in some scenes.";
-L["Splash Category2"] = "Barbershop";
-L["Splash Content4 Name"] = "Barbershop Enhancement";
-L["Splash Content4 Description"] = "-You can save your appearances.\n-You have 20 save slots on each character (10 for each gender).\n-Some statistics?";
-L["Splash Category3"] = "Achievements";
-L["Splash Content5 Name"] = "Achievement Frame";
-L["Splash Content5 Description"] = "-A standalone achievement frame.\n-Easy to go back and forth when browsing related achievements.\n-Create a floating card by simply dragging an entry.\n-Smoother, less stuttering.";
-L["Splash Category4"] = "Miscellaneous";
-L["Splash Content6 Name"] = "Camera Movement";
-L["Splash Content6 Description"] = "-The camera transition will be instant the second time you enter Narcissus character frame during the game session.";
-L["Splash Content7 Name"] = "Top Quality";
-L["Splash Content7 Description"] = "You can temporarily maximize ray traced shadows if the feature is supported.";
-L["Splash Content8 Name"] = "Minimap Button";
-L["Splash Content8 Description"] = "You can detach the button from minimap by holding Shift while dragging it.";
-
-L["Flavored Text"] = "Visit any Yogg Salon in major cities today to recieve a 10‰ discount.";
-
+L["Splash Content1 Name"] = "Weapon Browser";
+L["Splash Content1 Description"] = "-View and use all weapons in the database, including those that are not obtainable by players.";
+L["Splash Content2 Name"] = "Character Select Screen";
+L["Splash Content2 Description"] = "-Add a decorative frame to create (fake) your own character select screen.";
+L["Splash Content3 Name"] = "Dressing Room";
+L["Splash Content3 Description"] = "-The dressing room module has been redesigned.\n-The item list now includes unpaired shoulders and weapon illusions.";
+L["Splash Content4 Name"] = "Pet Stable";
+L["Splash Content4 Description"] = "-Hunters can select and add pets using a new Stable UI in the group photo mode.";
+L["Splash Category2"] = "Character Frame";
+L["Splash Content5 Name"] = "Shard of Domination";
+L["Splash Content5 Description"] = "-The Shard of Domination indicator will show up if you equip relevant items.\n-A list of available shards will be presented to you when you socket domination items.\n-Extract shards with a single click.";
+L["Splash Content6 Name"] = "Soulbinds";
+L["Splash Content6 Description"] = "-The Soulbinds UI has been updated. You can check the conduit effects of higher ranks.";
+L["Splash Content7 Name"] = "Visuals";
+L["Splash Content7 Description"] = "-The hexagon item border gets a new look. Certain items have unique appearances.";
 
 --Project Details--
 NARCI_ALL_PROJECTS = "All Projects";
-NARCI_PROJECT_DETAILS = "|cFFFFD100Developer: Peterodox\nRelease Date: March 20, 2020|r\n\nThank you for trying this add-on! If you have any issues, suggestions, ideas, please leave a comment on the curseforge page or contact me on...";
+NARCI_PROJECT_DETAILS = "|cFFFFD100Developer: Peterodox\nRelease Date: August 23, 2021|r\n\nThank you for trying this add-on! If you have any issues, suggestions, ideas, please leave a comment on the curseforge page or contact me on...";
 NARCI_PROJECT_AAA_TITLE = "|cff008affA|cff0d8ef2z|cff1a92e5e|cff2696d9r|cff339acco|cff409ebft|cff4da1b2h |cff59a5a6A|cff66a999d|cff73ad8cv|cff7fb180e|cff8cb573n|cff99b966t|cffa6bd59u|cffb2c14dr|cffbfc440e |cffccc833A|cffd9cc26l|cffe5d01ab|cfff2d40du|cffffd800m|r";
 NARCI_PROJECT_AAA_SUMMARY = "Explore places of interest and collect lores and photos from all across Azeroth.|cff636363";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "An immersive character pane and your ultimate screenshot tool.";
@@ -492,3 +487,34 @@ L["A1"] = "Apparently, this is an exit confirmation dialog. It pops up when you 
 L["A2"] = "Ha, that's what she said.";
 L["A3"] = "Fine...fine..."
 L["A4"] = "Sorry, you can't. It's for safety you know.";
+
+--Search--
+L["Search Result Singular"] = "%s result";
+L["Search Result Plural"] = "%s results";
+L["Search Result Overflow"] = "%s+ results";
+L["Search Result None"] = CLUB_FINDER_APPLICANT_LIST_NO_MATCHING_SPECS;
+
+--Weapon Browser--
+L["Draw Weapon"] = "Draw Weapon";
+L["Unequip Item"] = "Unequip";
+L["WeaponBrowser Guide Hotkey"] = "Specify which hand to hold the weapon:";
+L["WeaponBrowser Guide ModelType"] = "Some items are limited to certain type of model:";
+L["WeaponBrowser Guide DressUpModel"] = "This will be the default type if your target is a player unless you are holding <%s> while creating it.";
+L["WeaponBrowser Guide CinematicModel"] = "The model type will always be Cinematic if the creature is an NPC. You cannot sheathe weapons.";
+
+--Pet Stables--
+L["PetStable Tooltip"] = "Choose a pet from your stable";
+L["PetStable Loading"] = "Retrieving Pet Info";
+
+--Domination Item--
+L["Item Bonus"] = "Bonus:";
+L["Combat Error"] = NARCI_COLOR_RED_MILD.."Leave combat to continue".."|r";
+L["Extract Shard"] = "Extract Shard";
+
+--Mythic+ Leaderboard--
+L["Mythic Plus"] = "Mythic+";
+L["Mythic Plus Abbrev"] = "M+";
+L["Total Runs"] = "Total Runs: ";
+L["Complete In Time"] = "In time";
+L["Complete Over Time"] = "Over time";
+L["Runs"] = "Runs";

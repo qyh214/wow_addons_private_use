@@ -7,21 +7,8 @@ local After = C_Timer.After;
 local BrowserFrame, QuickFavoriteButton;
 
 local max = math.max;
-local min = math.min;
-local cos = math.cos;
-local sin = math.sin;
-local sqrt = math.sqrt;
-local ceil = math.ceil;
 local floor = math.floor;
 local pow = math.pow;
-local abs = math.abs;
-local pi = math.pi;
-
-local trim = strtrim;
-
-local function outSine(t, b, e, d)
-	return (e - b) * sin(t / d * (pi / 2)) + b
-end
 
 local function outQuart(t, b, e, d)
     t = t / d - 1;
@@ -30,8 +17,8 @@ end
 
 local function FlyInText(button)
     local textWidth = button.Name:GetWidth();
-    if textWidth > 94 then
-        local offset = textWidth - 90;
+    if textWidth > 82 then
+        local offset = textWidth - 82;
         button.FlyIn:Stop();
         button.FlyIn.offset:SetOffset( -offset, 0 );
         button.FlyIn.offset:SetDuration( offset / 12);
@@ -48,7 +35,16 @@ delayedAction:SetScript("OnUpdate", function(self, elapsed)
     end
 end)
 
-local function AnimationButton_OnEnter(self)
+NarciAnimationOptionButtonMixin = {};
+
+function NarciAnimationOptionButtonMixin:Init()
+    self.Name = self.FlyingTextFrame.Name;
+    self.FlyIn = self.FlyingTextFrame.Name.FlyIn;
+
+    self.Init = nil;
+end
+
+function NarciAnimationOptionButtonMixin:OnEnter()
     FadeFrame(self.Highlight, 0.12, 1);
 
     delayedAction:Hide();
@@ -64,14 +60,44 @@ local function AnimationButton_OnEnter(self)
     Star:SetFavorite(self.isFavorite);
 end
 
-local function AnimationButton_OnClick(self, button)
+function NarciAnimationOptionButtonMixin:OnLeave()
+    FadeFrame(self.Highlight, 0.2, 0);
+    self.FlyIn:Stop();
+end
+
+function NarciAnimationOptionButtonMixin:OnClick(button)
     local model = Narci:GetActiveActor();
-    local id = self.animationID;
+    local id = self.animationID or 0;
     model:PlayAnimation(id);
     NarciModelControl_AnimationIDEditBox:SetText(id);
     if button == "RightButton" then
         BrowserFrame:Close();
     end
+end
+
+function NarciAnimationOptionButtonMixin:OnDoubleClick()
+    return
+end
+
+function NarciAnimationOptionButtonMixin:SetFavorite(isFavorite)
+    self.Star:SetShown(isFavorite);
+    self.isFavorite = isFavorite;
+end
+
+function NarciAnimationOptionButtonMixin:SetAnimationInfo(id, name, isFavorite)
+    if id ~= self.animationID then
+        self.animationID = id;
+        self.FlyIn:Stop();
+        self.ID:SetText(id);
+        self.Name:SetText( NarciAnimationInfo:GetOfficialName(id) );
+        self:SetFavorite( NarciAnimationInfo:IsFavorite(id) );
+        self:Show();
+    end
+end
+
+function NarciAnimationOptionButtonMixin:SetEmpty()
+    self.animationID = -1;
+    self:Hide();
 end
 
 ----------------------------------------------------
@@ -80,11 +106,7 @@ local DataProvider = {};
 
 DataProvider.playerAnimations = {};
 DataProvider.npcAnimations = {};
-if select(4, GetBuildInfo() ) > 89999 then
-	DataProvider.maxAnimID = 1498 - 1;
-else
-	DataProvider.maxAnimID = 1484 - 1;
-end
+DataProvider.maxAnimID = 1499;
 
 
 function DataProvider:GetAvailableAnimationsForModel(model, forcedUpdate)
@@ -104,15 +126,67 @@ function DataProvider:GetAvailableAnimationsForModel(model, forcedUpdate)
             animations[id] = {};
         end
 
+        local numAnim = 0;
         for i = 0, self.maxAnimID do
             if model:HasAnimation(i) then
-                tinsert(animations[id], { i, NarciAnimationInfo:GetInfo(i) } );
+                numAnim = numAnim + 1;
+                animations[numAnim] = { i, NarciAnimationInfo:IsFavorite(i) };
             end
         end
         model.isAnimationCached = true;
     end
 
-    return animations[id];
+    return animations;
+end
+
+function DataProvider:GetAnimationsByIndex(fromIndex)
+    local data = {};
+    for i = 1, 10 do
+        data[i] = BrowserFrame.availableAnimations[fromIndex + i];
+    end
+    return data
+end
+
+----------------------------------------------------
+local ViewUpdator = {};
+ViewUpdator.tremove = table.remove;
+ViewUpdator.tinsert = table.insert;
+ViewUpdator.unpack = unpack;
+
+function ViewUpdator:SetButtonGroup(buttons)
+    self.buttons = buttons;
+    self.numButtons = #buttons;
+    self.b = -2;
+end
+
+function ViewUpdator:UpdateVisibleArea(offsetY)
+    local b = floor( offsetY / 16 + 0.5) - 1;   --16 ~ buttonHeight
+    if b ~= self.b then --last offset
+        local buttons = self.buttons;
+        local data;
+        if b > self.b then
+            local topButton = self.tremove(buttons, 1);
+            self.tinsert(buttons, topButton);
+        else
+            local bottomButton = self.tremove(buttons);
+            self.tinsert(buttons, 1, bottomButton);
+        end
+        for i = 1, self.numButtons do
+            buttons[i]:SetPoint("TOP", 0, -(b + i - 1) * 16);
+            data = BrowserFrame.availableAnimations[b + i];
+            if data then
+                buttons[i]:SetAnimationInfo( self.unpack(data) );
+            else
+                buttons[i]:SetEmpty();
+            end
+        end
+        self.b = b;
+    end
+end
+
+function ViewUpdator:ForceUpdate()
+    self.b = -2;
+    self:UpdateVisibleArea(0);
 end
 
 ----------------------------------------------------
@@ -151,53 +225,28 @@ function NarciAnimationBrowserMixin:OnLoad()
 
     --Scroll Frame
     local ScrollFrame = self.ScrollFrame;
-    local renderRange = 18;
     local buttonHeight = 16;
     local numButtons = 12;
     local numButtonsPerPage = 8;
-    
-    local function UpdateRenderArea(scrollOffset, delta)
-        local renderRange = renderRange;
-        local pos = 1 + floor(scrollOffset / 16 + 0.5);
-        for i = pos - renderRange, pos - renderRange - 4, -1 do
-            if buttons[i] then
-                buttons[i]:Hide();
-            else
-                break;
-            end
-        end
-
-        for i = pos + renderRange, pos + renderRange + 4 do
-            if buttons[i] then
-                buttons[i]:Hide();
-            else
-                break;
-            end
-        end
-
-        for i = pos - renderRange + 1, pos + renderRange - 1 do
-            if buttons[i] then
-                buttons[i]:Show();
-            end
-        end
-    end
 
     local totalHeight = floor(numButtons * buttonHeight + 0.5);
     local maxScroll = floor((numButtons - numButtonsPerPage) * buttonHeight + 0.5);
-    ScrollFrame.scrollBar:SetMinMaxValues(0, maxScroll)
-    ScrollFrame.scrollBar:SetValueStep(0.001);
+    ScrollFrame.scrollBar:SetMinMaxValues(0, maxScroll);
     ScrollFrame.buttonHeight = totalHeight;
     ScrollFrame.range = maxScroll;
-    ScrollFrame.scrollBar:SetScript("OnValueChanged", function(bar, value)
-        ScrollFrame:SetVerticalScroll(value);
-        --UpdateInnerShadowStates(self, nil, false);
-    end)
-    NarciAPI_SmoothScroll_Initialization(ScrollFrame, nil, nil, 4/(numButtons), 0.14, nil, UpdateRenderArea);
 
+    NarciAPI_SmoothScroll_Initialization(ScrollFrame, nil, nil, 4/(numButtons), 0.14);
+    ScrollFrame.scrollBar.onValueChangedFunc = function(value)
+        ScrollFrame:SetVerticalScroll(value);
+        ViewUpdator:UpdateVisibleArea(value);
+    end
+    ScrollFrame.scrollBar.onMouseDownFunc = function()
+        QuickFavoriteButton:Hide();
+    end
 
     --Quick Favorite
     QuickFavoriteButton = ScrollFrame.QuickFavoriteButton;
-
+    
     local IDEditbox = BrowserFrame:GetParent().IDEditBox;
     local IDEditboxFavoriteButton = BrowserFrame:GetParent().FavoriteButton;
 
@@ -221,14 +270,18 @@ function NarciAnimationBrowserMixin:OnLoad()
     end
 
     QuickFavoriteButton:SetScript("OnClick", QuickFavoriteButton_OnClick);
+
+
+    self.OnLoad = nil;
+    self:SetScript("OnLoad", nil);
 end
 
 local sort = table.sort;
 
 local function SortFunc(a, b)
     --favorite, id -
-    if a[3] ~= b[3] then
-        return a[3]
+    if a[2] ~= b[2] then
+        return a[2]
     else
         return a[1] < b[1]
     end
@@ -247,57 +300,31 @@ function NarciAnimationBrowserMixin:UpdateButtons()
     local buttons = self.buttons;
     local ScrollChild = self.ScrollFrame.ScrollChild;
     local numButtons = #self.availableAnimations;
-    local info;
-    for i = 1, numButtons do
+    local numVisible = 10;
+    for i = 1, numVisible do
         if not buttons[i] then
             buttons[i] = CreateFrame("Button", nil, ScrollChild, "Narci_AnimationButtonTemplate");
-            buttons[i]:SetScript("OnEnter", AnimationButton_OnEnter);
-            buttons[i]:SetScript("OnClick", AnimationButton_OnClick);
+            buttons[i]:Init();
+            buttons[i]:SetPoint("TOP", ScrollChild, "TOP", 0, 16*(1 - i));
         end
         button = buttons[i];
-        button:SetPoint("TOP", ScrollChild, "TOP", 0, 16*(1 - i));
-
-        info = self.availableAnimations[i];
-        local id = info[1];
-        local isFavorite = info[3];
-        button.ID:SetText(id);
-        button.Name:SetText(info[2]);
-        button.Star:SetShown(isFavorite);
-        button.animationID = id;
-        button.isFavorite = isFavorite;
-
-        if i <= 20 then
-            button:Show();
-            button.FlyIn:Stop();
-        else
-            button:Hide();
-        end
+        button.FlyIn:Stop();
     end
-
+    ViewUpdator:SetButtonGroup(buttons);
+    
     local buttonHeight = 16;
     local numButtonsPerPage = 8;
-    local totalHeight = floor(numButtons * buttonHeight + 0.5);
     local maxScroll = max(0, floor((numButtons - numButtonsPerPage) * buttonHeight + 0.5));
-    self.ScrollFrame.scrollBar:SetMinMaxValues(0, maxScroll);
-    self.ScrollFrame.range = maxScroll;
-    self.ScrollFrame.scrollBar:SetValue(0);
-
-    if maxScroll == 0 then
-        self.ScrollFrame.scrollBar:Hide();
+    local scrollBar = self.ScrollFrame.scrollBar;
+    scrollBar:SetRange(maxScroll, true);
+    if scrollBar:GetValue() == 0 then
+        ViewUpdator:ForceUpdate();
     else
-        self.ScrollFrame.scrollBar:Show();
-    end
-
-    if numButtons < numButtonsPerPage then
-        for i = numButtons + 1, numButtonsPerPage do
-            if buttons[i] then
-                buttons[i]:Hide();
-            end
-        end
+        scrollBar:SetValue(0);
     end
 
     self.Editbox.numResults = numButtons;
-
+    self.Editbox.NoMatchText:SetShown(numButtons == 0);
     QuickFavoriteButton:Hide();
 end
 
@@ -332,12 +359,18 @@ function NarciAnimationBrowserMixin:Open()
     self.ExpandArrow:SetTexCoord(0, 1, 0, 1);
 end
 
-function NarciAnimationBrowserMixin:Close()
-    local animExpand = self.animExpand;
-    animExpand.fromHeight = self:GetHeight();
-    animExpand.toHeight = 8;        --Collapsed Height
-    animExpand:Show();
-    FadeFrame(self, 0.25, 0);
+function NarciAnimationBrowserMixin:Close(noAnimation)
+    if noAnimation then
+        self:Hide();
+        self:SetAlpha(0);
+        self:SetHeight(8);
+    else
+        local animExpand = self.animExpand;
+        animExpand.fromHeight = self:GetHeight();
+        animExpand.toHeight = 8;        --Collapsed Height
+        animExpand:Show();
+        FadeFrame(self, 0.25, 0);
+    end
     self.ExpandArrow:SetTexCoord(0, 1, 1, 0);
 end
 
@@ -349,6 +382,13 @@ function NarciAnimationBrowserMixin:Toggle()
     if self:IsShown() then
         self:Close();
     else
+        if not self.isLoaded then
+            self.isLoaded = true;
+            if NarciConstants and NarciConstants.Animation and NarciConstants.Animation.MaxAnimationID then
+                DataProvider.maxAnimID = NarciConstants.Animation.MaxAnimationID;
+            end
+        end
+        
         if self.forcedUpdate then
             self.forcedUpdate = nil;
             self:BuildListForModel(true);
@@ -366,7 +406,7 @@ function NarciAnimationBrowserMixin:BuildListForModel(forcedUpdate)
     local fileID = model:GetModelFileID();
     if fileID ~= self.lastFileID or forcedUpdate then
         self.lastFileID = fileID;
-        self.availableAnimations = DataProvider:GetAvailableAnimationsForModel(model, forcedUpdate);
+        self.availableAnimations = DataProvider:GetAvailableAnimationsForModel(model, forcedUpdate) or {};
         self.Editbox:ClearText();
         self:RefreshList();
     end
@@ -379,6 +419,7 @@ end
 
 function NarciAnimationBrowserMixin:OnHide()
     self:UnregisterEvent("GLOBAL_MOUSE_DOWN");
+    self:Close(true);
 end
 
 function NarciAnimationBrowserMixin:OnEvent(event)
@@ -406,23 +447,17 @@ function NarciAnimationBrowserMixin:SearchAnimation(keyword)
 end
 
 --------------------------------------------------
-NarciAnimationSearchBoxMixin = {};
+NarciAnimationSearchBoxMixin = CreateFromMixins(NarciSearchBoxSharedMixin);
 
-function NarciAnimationSearchBoxMixin:OnLoad()
-    local delayedSearch = NarciAPI_CreateAnimationFrame(0.5);
-    self.delayedSearch = delayedSearch;
-    delayedSearch:SetScript("OnUpdate", function(frame, elapsed)
-        frame.total = frame.total + elapsed;
-        if frame.total >= frame.duration then
-            frame:Hide();
-            Narci_AnimationBrowser:SearchAnimation( self:GetText() )
-        end
-    end)
+function NarciAnimationSearchBoxMixin:PostLoad()
+    self:OnLoad();
+    self.onSearchFunc = function(word) BrowserFrame:SearchAnimation(word); end;
+    self.NoMatchText:SetPoint("TOP", self, "BOTTOM", -14, -4);
 end
 
 function NarciAnimationSearchBoxMixin:OnShow()
     if self.numResults then
-        self.DefaultText:SetText("  ".. self.numResults.. " available");
+        self.DefaultText:SetText(self.numResults.. " available");
     end
     self.DefaultText.FadeOut:Play();
     self:SetFocus();
@@ -446,7 +481,9 @@ end
 function NarciAnimationSearchBoxMixin:OnTextChanged(isUserInput)
     local str = self:GetText();
     if str and str ~= "" then
-        self.DefaultText:Hide();
+        if isUserInput then
+            self.DefaultText:Hide();
+        end
         self.EraseButton:Show();
     else
         self.DefaultText:Show();
@@ -458,10 +495,6 @@ function NarciAnimationSearchBoxMixin:OnTextChanged(isUserInput)
     end
 end
 
-function NarciAnimationSearchBoxMixin:QuitEdit()
-    self:ClearFocus();
-end
-
 function NarciAnimationSearchBoxMixin:ClearText(reset)
     self:SetText("");
     self.DefaultText:Show();
@@ -469,26 +502,6 @@ function NarciAnimationSearchBoxMixin:ClearText(reset)
     if reset then
         --Unfilter search
         self:Search(true);
-    end
-end
-
-function NarciAnimationSearchBoxMixin:OnTabPressed()
-    self:HighlightText();
-end
-
-function NarciAnimationSearchBoxMixin:OnEditFocusGained()
-    self:HighlightText();
-end
-
-function NarciAnimationSearchBoxMixin:OnEditFocusLost()
-    --self.KeyListener:Hide();
-    self:HighlightText(0, 0);
-    self:OnLeave();
-
-    if self:IsMouseOver() and IsMouseButtonDown("LeftButton") then
-        self.EraseButton.isEditing = true;
-    else
-        self.EraseButton.isEditing = false;
     end
 end
 

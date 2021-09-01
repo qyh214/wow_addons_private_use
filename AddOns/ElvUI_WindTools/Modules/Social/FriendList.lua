@@ -35,6 +35,8 @@ local BNET_CLIENT_ARCADE = BNET_CLIENT_ARCADE
 local BNET_CLIENT_CRASH4 = BNET_CLIENT_CRASH4
 local BNET_CLIENT_D2 = BNET_CLIENT_D2
 
+local CINEMATIC_NAME_2 = CINEMATIC_NAME_2
+
 local WOW_PROJECT_MAINLINE = WOW_PROJECT_MAINLINE
 local WOW_PROJECT_CLASSIC = WOW_PROJECT_CLASSIC
 local WOW_PROJECT_CLASSIC_TBC = 5
@@ -275,8 +277,10 @@ function FL:UpdateFriendButton(button)
             nameString = F.CreateColorString(name, classColor)
         end
 
-        if level and level ~= 0 and MaxLevel[game] and (level ~= MaxLevel[game] or not self.db.hideMaxLevel) then
-            nameString = nameString .. F.CreateColorString(": " .. level, GetQuestDifficultyColor(level))
+        if self.db.level then
+            if level and level ~= 0 and MaxLevel[game] and (level ~= MaxLevel[game] or not self.db.hideMaxLevel) then
+                nameString = nameString .. F.CreateColorString(": " .. level, GetQuestDifficultyColor(level))
+            end
         end
 
         if nameString and realIDString then

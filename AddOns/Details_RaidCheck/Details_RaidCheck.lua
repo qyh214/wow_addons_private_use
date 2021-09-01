@@ -10,6 +10,8 @@ local DF = DetailsFramework
 
 local UnitGroupRolesAssigned = DF.UnitGroupRolesAssigned
 
+local version = "95"
+
 --> build the list of buffs to track
 local flask_list = DF.FlaskIDs
 
@@ -67,7 +69,6 @@ end
 	tinsert (UISpecialFrames, "Details_RaidCheck")
 	DetailsRaidCheck:SetPluginDescription (Loc ["STRING_RAIDCHECK_PLUGIN_DESC"])
 
-	local version = "v2.0"
 	
 	local debugmode = false
 	--local debugmode = true
@@ -380,8 +381,9 @@ end
 			data = dataInOrder
 
 			local raidStatusLib = LibStub:GetLibrary("LibRaidStatus-1.0")
-			local playerInfo = raidStatusLib.playerInfoManager.GetPlayerInfo()
-			local gearInfo = raidStatusLib.gearManager.GetGearTable()
+			--get the information of all players
+			local playersInfoData = raidStatusLib.playerInfoManager.GetAllPlayersInfo()
+			local playersGearData = raidStatusLib.gearManager.GetAllPlayersGear()
 
 			local libRaidStatus = 0
 		
@@ -393,7 +395,7 @@ end
 					local line = self:GetLine (i)
 					if (line) then
 						
-						local thisPlayerInfo = playerInfo[playerTable.UnitNameRealm]
+						local thisPlayerInfo = playersInfoData[playerTable.UnitNameRealm]
 						if (thisPlayerInfo) then
 							local playerCovenantId = thisPlayerInfo.covenantId
 							if (playerCovenantId > 0) then
@@ -407,7 +409,7 @@ end
 						end
 
 						--repair status
-						local thisPlayerGearInfo = gearInfo[playerTable.UnitNameRealm]
+						local thisPlayerGearInfo = playersGearData[playerTable.UnitNameRealm]
 						if (thisPlayerGearInfo) then
 							line.RepairStatus:SetText(thisPlayerGearInfo.durability .. "%")
 						else
@@ -615,6 +617,7 @@ end
 		end)
 
 		local update_panel = function (self, elapsed)
+			
 			show_panel.NextUpdate = show_panel.NextUpdate - elapsed
 			
 			if (show_panel.NextUpdate > 0) then
@@ -684,9 +687,11 @@ end
 				local talentsTable = _detalhes:GetTalents (unitSerial)
 
 				unitClassID = ((unitClassID + 128) ^ 4) + tonumber (string.byte (unitName, 1) .. "" .. string.byte (unitName, 2))
-				
+				local unitNameWithRealm = GetUnitName(unitID, true)
+
 				tinsert (PlayerData, {unitName, unitClassID,
 					Name = unitName,
+					UnitNameRealm = unitNameWithRealm,
 					Class = unitClass,
 					Serial = unitSerial,
 					Role = unitRole,
@@ -712,7 +717,18 @@ end
 		DetailsRaidCheck.ToolbarButton:SetScript ("OnEnter", function (self)
 			show_panel:Show()
 			show_panel:ClearAllPoints()
-			show_panel:SetPoint ("bottom", DetailsRaidCheck.ToolbarButton, "top", 0, 10)
+
+			local bottomPosition = self:GetBottom()
+			local screenHeight = GetScreenHeight()
+
+			local positionHeightPercent = bottomPosition / screenHeight
+
+			if (positionHeightPercent > 0.7) then
+				show_panel:SetPoint("top", DetailsRaidCheck.ToolbarButton, "bottom", 0, -10)
+			else
+				show_panel:SetPoint("bottom", DetailsRaidCheck.ToolbarButton, "top", 0, 10)
+			end
+
 			show_panel.NextUpdate = UpdateSpeed
 			update_panel (show_panel, 1)
 			show_panel:SetScript ("OnUpdate", update_panel)

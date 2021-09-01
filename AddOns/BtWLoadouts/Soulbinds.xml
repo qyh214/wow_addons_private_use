@@ -1,0 +1,284 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="Soulbinds.lua"/>
+
+	<Frame name="BtWLoadoutsSoulbindDropDownTemplate" mixin="BtWLoadoutsSoulbindDropDownMixin" inherits="UIDropDownMenuTemplate" enableMouse="true" virtual="true">
+		<Scripts>
+			<OnShow method="OnShow"/>
+		</Scripts>
+	</Frame>
+
+	<Frame name="BtWLoadoutsSoulbindTreeNodeLinkTemplate" mixin="BtWLoadoutsSoulbindTreeNodeLinkMixin" virtual="true">
+		<Size x="64" y="64"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="Background">
+					<Size x="12" y="53"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture parentKey="Foreground1" parentArray="foregrounds" atlas="Azerite-CenterBG-ChannelGlowBar-Particles" useAtlasSize="true" alphaMode="ADD">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Background" />
+					</Anchors>
+				</Texture>
+				<Texture parentKey="Foreground2" parentArray="foregrounds" atlas="Azerite-CenterBG-ChannelGlowBar-Gold" useAtlasSize="true" alphaMode="ADD">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Background" />
+					</Anchors>
+				</Texture>
+				<Texture parentKey="Foreground3" parentArray="foregrounds" atlas="Azerite-CenterBG-ChannelGlowBar-Effect" useAtlasSize="true" alphaMode="ADD">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Background" />
+					</Anchors>
+				</Texture>
+				<Texture parentKey="Foreground4" parentArray="foregrounds" atlas="Azerite-CenterBG-ChannelGlowBar-Effect" useAtlasSize="true" alphaMode="ADD">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Background" />
+					</Anchors>
+				</Texture>
+				<Texture parentKey="Foreground5" parentArray="foregrounds" atlas="Soulbinds_Link_Spirits" useAtlasSize="true" alphaMode="ADD">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Background" />
+					</Anchors>
+				</Texture>
+				<Texture parentKey="Foreground6" parentArray="foregrounds" atlas="Soulbinds_Link_Spirits" useAtlasSize="true" alphaMode="ADD">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Background" />
+					</Anchors>
+				</Texture>
+				<MaskTexture parentKey="FillMask" useAtlasSize="true" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="Foreground1" />
+						<MaskedTexture childKey="Foreground2" />
+						<MaskedTexture childKey="Foreground3" />
+						<MaskedTexture childKey="Foreground4" />
+						<MaskedTexture childKey="Foreground5" />
+						<MaskedTexture childKey="Foreground6" />
+					</MaskedTextures>
+				</MaskTexture>
+			</Layer>
+		</Layers>
+		<Animations>
+			<AnimationGroup parentKey="FlowAnim1" looping="REPEAT">
+				<Alpha childkey="Foreground1" duration="1.2" order="1" smoothing="in_out" fromalpha=".7" toalpha="1" />
+				<Alpha childKey="Foreground1" duration="1.0" order="2" smoothing="in_out" fromAlpha="1" toAlpha=".7" />
+				<Alpha childkey="Foreground2" duration="2.2" order="1" smoothing="in_out" fromalpha="1" toalpha=".8" />
+				<Alpha childKey="Foreground2" duration="2.0" order="2" smoothing="in_out" fromAlpha=".8" toAlpha="1" />
+				<Alpha childkey="Foreground3" duration="1.2" order="1" smoothing="in_out" fromalpha=".6" toalpha=".8" />
+				<Alpha childKey="Foreground3" duration="1.0" order="2" smoothing="in_out" fromAlpha=".8" toAlpha=".6" />
+				<Alpha childkey="Foreground4" duration="3.2" order="1" smoothing="in_out" fromalpha=".3" toalpha=".7" />
+				<Alpha childKey="Foreground4" duration="3.0" order="2" smoothing="in_out" fromAlpha=".7" toAlpha=".3" />
+				<Alpha childkey="Foreground5" duration="2.2" order="1" smoothing="in_out" fromalpha="1" toalpha=".8" />
+				<Alpha childKey="Foreground5" duration="2.0" order="2" smoothing="in_out" fromAlpha=".8" toAlpha="1" />
+			</AnimationGroup>
+			<AnimationGroup parentKey="FlowAnim2" looping="REPEAT">
+				<TextureCoordTranslation childKey="Foreground1" duration="16" order="1" offsetU="0" offsetV="1" />
+				<TextureCoordTranslation childKey="Foreground2" duration="16" order="1" offsetU="0" offsetV="1" />
+				<TextureCoordTranslation childKey="Foreground3" duration="16" order="1" offsetU="0" offsetV="-1" />
+				<Rotation childKey="Foreground4" duration="16" order="1" degrees="360" />
+			</AnimationGroup>
+			<AnimationGroup parentKey="FlowAnim3" looping="REPEAT">
+				<TextureCoordTranslation childKey="Foreground5" duration="4" order="1" offsetU="0" offsetV="1" />
+			</AnimationGroup>
+			<AnimationGroup parentKey="FlowAnim4" looping="REPEAT">
+				<TextureCoordTranslation childKey="Foreground6" duration="2" order="1" offsetU="0" offsetV="1" />
+			</AnimationGroup>
+			<AnimationGroup parentKey="FlowAnim5" looping="REPEAT">
+				<Rotation childKey="Foreground6" duration="16" order="1" degrees="-45" />
+				<Rotation childKey="Foreground6" duration="16" order="2" degrees="45" />
+			</AnimationGroup>
+			<AnimationGroup parentKey="FlowAnim6" looping="REPEAT">
+				<Rotation childKey="Foreground5" duration="32" order="1" degrees="45" />
+				<Rotation childKey="Foreground5" duration="32" order="2" degrees="-45" />
+			</AnimationGroup>	
+		</Animations>
+		<Scripts>
+			<OnHide method="OnHide"/>
+		</Scripts>
+	</Frame>
+	<Button name="BtWLoadoutsSoulbindNodeTemplate" mixin="BtWLoadoutsSoulbindNodeMixin" virtual="true">
+		<Size x="30" y="30"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="Background" atlas="Soulbinds_Tree_Conduit_Background">
+					<Size x="46" y="47"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="1">
+				<Texture parentKey="Icon">
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="2">
+				<Texture parentKey="IconOverlay">
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+					<Color color="BLACK_FONT_COLOR" a=".5"/>
+				</Texture>
+				<MaskTexture atlas="CircleMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+					<Size x="30" y="30"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="Icon"/>
+						<MaskedTexture childKey="IconOverlay"/>
+					</MaskedTextures>
+				</MaskTexture>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="1">
+				<Texture parentKey="Ring" atlas="Soulbinds_Tree_Ring_Disabled" useAtlasSize="false">
+					<Size x="46" y="47"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="RingOverlay" atlas="Soulbinds_Tree_Ring_Glow" hidden="true">
+					<Size x="46" y="47"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+					<Animations>
+						<AnimationGroup parentKey="Anim" looping="REPEAT">
+							<Alpha parentKey="FadeIn" duration=".8" order="1" fromAlpha=".2" toAlpha="1"/>
+							<Alpha parentKey="FadeOut" duration=".8" order="2" fromAlpha="1" toAlpha=".2"/>
+						</AnimationGroup>
+					</Animations>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="2">
+				<Texture parentKey="MouseOverlay" atlas="Soulbinds_Tree_Ring" hidden="true" alphaMode="ADD">
+					<Size x="46" y="47"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="EmblemBg">
+					<Size x="21" y="26"/>
+					<Anchors>
+						<Anchor point="BOTTOM" y="-16"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="3" >
+				<Texture parentKey="Emblem">
+					<Size x="21" y="26"/>
+					<Anchors>
+						<Anchor point="BOTTOM" y="-16"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnClick method="OnClick"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+		</Scripts>
+	</Button>
+    
+    <Frame name="$parentSoulbinds" parentKey="Soulbinds" mixin="BtWLoadoutsSoulbindsMixin" inherits="BtWLoadoutsTabFrameTemplate">
+        <KeyValues>
+            <KeyValue key="name" value="BTWLOADOUTS_SOULBINDS" type="global"/>
+            <KeyValue key="enabled" value="BTWLOADOUTS_SOULBINDS_ACTIVE" type="global"/>
+        </KeyValues>
+        <Frames>
+            <Frame parentKey="Inset" useParentLevel="true" inherits="InsetFrameTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="-4" y="-31" />
+                    <Anchor point="BOTTOMRIGHT" x="4" y="-2" />
+                </Anchors>
+            </Frame>
+            <Frame name="$parentSoulbindDropDown" parentKey="SoulbindDropDown" inherits="BtWLoadoutsSoulbindDropDownTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="0" y="0"/>
+                </Anchors>
+            </Frame>
+            <EditBox name="$parentName" letters="50" parentKey="Name" autoFocus="false" inherits="InputBoxTemplate">
+                <Size x="0" y="22"/>
+                <Anchors>
+                    <Anchor point="LEFT" relativeKey="$parent.SoulbindDropDown" relativePoint="RIGHT" x="10" y="2"/>
+					<Anchor point="RIGHT" x="-30" y="0"/>
+                </Anchors>
+                <Scripts>
+                    <OnTextChanged>
+                        self:GetParent():UpdateSetName(self:GetText())
+                    </OnTextChanged>
+                    <OnEnterPressed function="EditBox_ClearFocus"/>
+                </Scripts>
+            </EditBox>
+			<Frame parentKey="RestrictionsDropDown" inherits="BtWLoadoutsRestrictionsDropDownTemplate"/>
+			<DropDownToggleButton parentKey="RestrictionsButton">
+				<Size x="22" y="22"/>
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.Name" relativePoint="RIGHT" x="4" y="0"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture file="Interface\WorldMap\GEAR_64GREY" alpha="0.5" parentKey="texture"/>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						self.texture:SetAlpha(1.0);
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText(BTWLOADOUTS_RESTRICTIONS);
+					</OnEnter>
+					<OnLeave>
+						self.texture:SetAlpha(0.5);
+						GameTooltip_Hide();
+					</OnLeave>
+					<OnMouseDown>
+						ToggleDropDownMenu(1, nil, self:GetParent().RestrictionsDropDown, self, 0, 0);
+					</OnMouseDown>
+					<OnMouseUp>
+						self.texture:SetPoint("TOPLEFT", 0, 0);
+					</OnMouseUp>
+				</Scripts>
+			</DropDownToggleButton>
+			<ScrollFrame parentKey="Scroll" clipChildren="true" inherits="UIPanelScrollFrameCodeTemplate">
+				<Anchors>
+                    <Anchor point="TOPLEFT" x="-4" y="-34" />
+                    <Anchor point="BOTTOMRIGHT" x="4" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="scrollBarHideable" value="true" type="boolean"/>
+				</KeyValues>
+				<Frames>
+					<Slider name="$parentScrollBar" inherits="UIPanelScrollBarTemplate" parentKey="ScrollBar">
+						<Anchors>
+							<Anchor point="TOPRIGHT" x="-4.5" y="-16"/>
+							<Anchor point="BOTTOMRIGHT" x="-4.5" y="15"/>
+						</Anchors>
+					</Slider>
+				</Frames>
+				<ScrollChild>
+					<Frame>
+						<Size x="577" y="100"/>
+						<Anchors>
+							<Anchor point="TOPLEFT" x="0" y="0"/>
+						</Anchors>
+					</Frame>
+				</ScrollChild>
+			</ScrollFrame>
+        </Frames>
+        <Scripts>
+            <OnLoad inherit="prepend" method="OnLoad"/>
+            <OnShow inherit="prepend" method="OnShow"/>
+        </Scripts>
+    </Frame>
+</Ui>

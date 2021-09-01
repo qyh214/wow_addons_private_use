@@ -718,6 +718,7 @@ P.social = {
     },
     friendList = {
         enable = true,
+        level = true,
         hideMaxLevel = true,
         useGameColor = true,
         useClassColor = true,
@@ -770,7 +771,7 @@ P.quest = {
     paragonReputation = {
         enable = true,
         color = {r = 0, g = .5, b = .9},
-        text = "DEFICIT",
+        text = "PARAGON",
         toast = {
             enable = true,
             sound = true,

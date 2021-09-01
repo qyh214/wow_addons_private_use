@@ -23,6 +23,8 @@ local L = WeakAuras.L
 	L["%s Inset: %d%%"] = "%s Inserción: %d%%"
 	L["%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"] = "%s no es un válido SubEvent para COMBAT_LOG_EVENT_UNFILTERED"
 	L["%s Keep Aspect Ratio"] = "%s Mantener relación de aspecto"
+	--[[Translation missing --]]
+	L["%s Texture"] = "%s Texture"
 	L["%s total auras"] = "%s auras en total"
 	L["%s Zoom: %d%%"] = "%s Zoom: %d%%"
 	L["%s, Border"] = "%s, Borde"
@@ -83,6 +85,10 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Add Property Change"] = "Add Property Change"
 	--[[Translation missing --]]
+	L["Add Raid Mark Information"] = "Add Raid Mark Information"
+	--[[Translation missing --]]
+	L["Add Role Information"] = "Add Role Information"
+	--[[Translation missing --]]
 	L["Add Snippet"] = "Add Snippet"
 	--[[Translation missing --]]
 	L["Add Sub Option"] = "Add Sub Option"
@@ -105,6 +111,8 @@ local L = WeakAuras.L
 	L["Anchor Point"] = "Punto de anclaje"
 	L["Anchored To"] = "Anclado a"
 	L["And "] = "y"
+	--[[Translation missing --]]
+	L["and"] = "and"
 	--[[Translation missing --]]
 	L["and aligned left"] = "and aligned left"
 	--[[Translation missing --]]
@@ -161,6 +169,8 @@ Off Screen]=]
 	L["Automatic"] = "Automatic"
 	--[[Translation missing --]]
 	L["Automatic length"] = "Automatic length"
+	--[[Translation missing --]]
+	L["Available Voices are system specific"] = "Available Voices are system specific"
 	L["Backdrop Color"] = "Color de fondo"
 	--[[Translation missing --]]
 	L["Backdrop in Front"] = "Backdrop in Front"
@@ -180,8 +190,7 @@ Off Screen]=]
 	L["Blue Rune"] = "Runa azul"
 	L["Blue Sparkle Orb"] = "Orbe del destello azul"
 	L["Border"] = "Borde"
-	--[[Translation missing --]]
-	L["Border %s"] = "Border %s"
+	L["Border %s"] = "Borde %s"
 	--[[Translation missing --]]
 	L["Border Anchor"] = "Border Anchor"
 	L["Border Color"] = "Color del borde"
@@ -192,12 +201,9 @@ Off Screen]=]
 	L["Border Settings"] = "Configuración de los bordes"
 	L["Border Size"] = "Border Size"
 	L["Border Style"] = "Estilo de los bordes"
-	--[[Translation missing --]]
-	L["Bottom"] = "Bottom"
-	--[[Translation missing --]]
-	L["Bottom Left"] = "Bottom Left"
-	--[[Translation missing --]]
-	L["Bottom Right"] = "Bottom Right"
+	L["Bottom"] = "Inferior"
+	L["Bottom Left"] = "Inferior izquierda"
+	L["Bottom Right"] = "Inferior derecha"
 	--[[Translation missing --]]
 	L["Bracket Matching"] = "Bracket Matching"
 	--[[Translation missing --]]
@@ -211,8 +217,7 @@ Off Screen]=]
 	L["Cast by Player Character"] = "Cast by Player Character"
 	--[[Translation missing --]]
 	L["Cast by Players"] = "Cast by Players"
-	--[[Translation missing --]]
-	L["Center"] = "Center"
+	L["Center"] = "Centro"
 	L["Chat Message"] = "Mensaje de chat"
 	--[[Translation missing --]]
 	L["Chat with WeakAuras experts on our Discord server."] = "Chat with WeakAuras experts on our Discord server."
@@ -221,8 +226,7 @@ Off Screen]=]
 	L["Check out our wiki for a large collection of examples and snippets."] = "Check out our wiki for a large collection of examples and snippets."
 	L["Children:"] = "Dependientes:"
 	L["Choose"] = "Elegir"
-	--[[Translation missing --]]
-	L["Class"] = "Class"
+	L["Class"] = "Clase"
 	--[[Translation missing --]]
 	L["Clip Overlays"] = "Clip Overlays"
 	--[[Translation missing --]]
@@ -235,15 +239,13 @@ Off Screen]=]
 	L["Collapse all pending Import"] = "Collapse all pending Import"
 	--[[Translation missing --]]
 	L["Collapsible Group"] = "Collapsible Group"
-	--[[Translation missing --]]
-	L["color"] = "color"
+	L["color"] = "Color"
 	L["Color"] = "Color"
 	--[[Translation missing --]]
 	L["Column Height"] = "Column Height"
 	--[[Translation missing --]]
 	L["Column Space"] = "Column Space"
-	--[[Translation missing --]]
-	L["Columns"] = "Columns"
+	L["Columns"] = "Columnas"
 	--[[Translation missing --]]
 	L["Combinations"] = "Combinations"
 	--[[Translation missing --]]
@@ -272,8 +274,7 @@ Off Screen]=]
 	L["Cooldown Settings"] = "Cooldown Settings"
 	--[[Translation missing --]]
 	L["Cooldown Swipe"] = "Cooldown Swipe"
-	--[[Translation missing --]]
-	L["Copy"] = "Copy"
+	L["Copy"] = "Copiar"
 	--[[Translation missing --]]
 	L["Copy settings..."] = "Copy settings..."
 	--[[Translation missing --]]
@@ -615,6 +616,8 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	L["Ignored Spell ID"] = "Ignored Spell ID"
 	L["Import"] = "Importar"
 	L["Import a display from an encoded string"] = "Importar un aura desde un texto cifrado"
+	--[[Translation missing --]]
+	L["Include Pets"] = "Include Pets"
 	--[[Translation missing --]]
 	L["Indent Size"] = "Indent Size"
 	--[[Translation missing --]]
@@ -1028,10 +1031,12 @@ Sólo un valor coincidente puede ser escogido.]=]
 	--[[Translation missing --]]
 	L["The duration of the animation in seconds. The finish animation does not start playing until after the display would normally be hidden."] = "The duration of the animation in seconds. The finish animation does not start playing until after the display would normally be hidden."
 	L["The type of trigger"] = "El tipo de desencadenador"
+	L["Then "] = "Entonces"
+	L["Thickness"] = "Grueso"
 	--[[Translation missing --]]
-	L["Then "] = "Then "
+	L["This adds %raidMark as text replacements."] = "This adds %raidMark as text replacements."
 	--[[Translation missing --]]
-	L["Thickness"] = "Thickness"
+	L["This adds %role, %roleIcon as text replacements."] = "This adds %role, %roleIcon as text replacements."
 	--[[Translation missing --]]
 	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."
 	L["This display is currently loaded"] = "Esta aura está cargada"
@@ -1039,12 +1044,9 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["This region of type \"%s\" is not supported."] = "No soporta el tipo de región \"%s\"."
 	--[[Translation missing --]]
 	L["This setting controls what widget is generated in user mode."] = "This setting controls what widget is generated in user mode."
-	--[[Translation missing --]]
-	L["Tick %s"] = "Tick %s"
-	--[[Translation missing --]]
-	L["Tick Mode"] = "Tick Mode"
-	--[[Translation missing --]]
-	L["Tick Placement"] = "Tick Placement"
+	L["Tick %s"] = "Tic %s"
+	L["Tick Mode"] = "Modo de tic"
+	L["Tick Placement"] = "Colocación de tic"
 	L["Time in"] = "Contar en"
 	L["Tiny Icon"] = "Icono miniatura"
 	L["To Frame's"] = "Al macro"
@@ -1145,6 +1147,8 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Vertical Bar"] = "Barra vertical"
 	L["View"] = "Visualización"
 	--[[Translation missing --]]
+	L["Voice"] = "Voice"
+	--[[Translation missing --]]
 	L["Whole Area"] = "Whole Area"
 	L["Width"] = "Ancho"
 	--[[Translation missing --]]
@@ -1152,20 +1156,15 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["X Offset"] = "Posición de X"
 	L["X Rotation"] = "Rotación de X"
 	L["X Scale"] = "Ajuste de tamaño de X"
-	--[[Translation missing --]]
-	L["X-Offset"] = "X-Offset"
-	--[[Translation missing --]]
-	L["x-Offset"] = "x-Offset"
+	L["X-Offset"] = "Desplazamiento X"
+	L["x-Offset"] = "Desplazamiento X"
 	L["Y Offset"] = "Posición de Y"
 	L["Y Rotation"] = "Rotación de Y"
 	L["Y Scale"] = "Ajuste de tamaño de Y"
 	L["Yellow Rune"] = "Runa amarilla"
-	--[[Translation missing --]]
-	L["Yes"] = "Yes"
-	--[[Translation missing --]]
-	L["y-Offset"] = "y-Offset"
-	--[[Translation missing --]]
-	L["Y-Offset"] = "Y-Offset"
+	L["Yes"] = "Sí"
+	L["y-Offset"] = "Desplazamiento Y"
+	L["Y-Offset"] = "Desplazamiento Y"
 	--[[Translation missing --]]
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"
 	--[[Translation missing --]]

@@ -1,0 +1,17 @@
+## Interface: 90100
+## Title: |cff1572cfFree Instance Fetcher|r
+## Title-zhCN: |cff1572cf便利CD获取|r
+## Author: LiangYuxuan
+## Version: v9.1.0
+## SavedVariables: FIFConfig
+## X-ReleaseDate: 2021-06-30T01:55:18Z
+## X-License: GPL-3.0
+## X-Curse-Project-ID: 415572
+## X-WoWI-ID: 25930
+## X-Wago-ID: VBNBMzGx
+
+Libs\Load_Libs.xml
+
+FreeInstanceFetcher.lua
+CRC32.lua
+Instances.lua

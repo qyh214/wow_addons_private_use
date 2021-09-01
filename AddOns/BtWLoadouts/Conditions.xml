@@ -1,0 +1,167 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="Conditions.lua"/>
+    
+	<Button name="BtWLoadoutsConditionsAffixesDropDownButton" inherits="UIDropDownMenuButtonTemplate" virtual="true">
+		<Size x="100" y="16"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="Selection" file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD" setAllPoints="true" desaturated="true" hidden="true">
+					<Color r="0.65" g="0.80" b="1"/>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Button>
+
+    <Frame parentKey="Conditions" mixin="BtWLoadoutsConditionsMixin" inherits="BtWLoadoutsTabFrameTemplate">
+        <KeyValues>
+            <KeyValue key="name" value="BTWLOADOUTS_CONDITIONS" type="global"/>
+        </KeyValues>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="NameTitle" text="BTWLOADOUTS_NAME" inherits="GameFontNormalLeft">
+                    <Size x="225" y="0"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="10" y="-10"/>
+                    </Anchors>
+                    <Color r="0.75" g="0.61" b="0"/>
+                </FontString>
+                <FontString parentKey="LoadoutTitle" text="BTWLOADOUTS_LOADOUT" inherits="GameFontNormalLeft">
+                    <Size x="225" y="0"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="10" y="-70"/>
+                    </Anchors>
+                    <Color r="0.75" g="0.61" b="0"/>
+                </FontString>
+                <FontString parentKey="CharacterRestrictionsTitle" text="BTWLOADOUTS_CHARACTER_RESTRICTIONS" inherits="GameFontNormalLeft">
+                    <Size x="175" y="0"/>
+                    <Anchors>
+                    <Anchor point="LEFT" relativeKey="$parent.LoadoutTitle" relativePoint="RIGHT" x="0" y="0"/>
+                    </Anchors>
+                    <Color r="0.75" g="0.61" b="0"/>
+                </FontString>
+                <FontString parentKey="ConditionsTitle" text="BTWLOADOUTS_CONDITIONS" inherits="GameFontNormalLeft">
+                    <Size x="175" y="0"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="10" y="-130"/>
+                    </Anchors>
+                    <Color r="0.75" g="0.61" b="0"/>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Frame parentKey="Inset" useParentLevel="true" inherits="InsetFrameTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="-4" y="4" />
+                    <Anchor point="BOTTOMRIGHT" x="4" y="-2" />
+                </Anchors>
+            </Frame>
+            <CheckButton parentKey="Enabled" inherits="OptionsBaseCheckButtonTemplate">
+                <Size x="26" y="26"/>
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativeKey="$parent.Inset" relativePoint="TOPRIGHT" x="-75" y="-10"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <FontString parentKey="Text" inherits="GameFontNormalSmall" text="BTWLOADOUTS_ENABLED">
+                            <Anchors>
+                                <Anchor point="LEFT" relativePoint="RIGHT" x="0" y="1"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <HitRectInsets>
+                    <AbsInset left="0" right="-65" top="0" bottom="0"/>
+                </HitRectInsets>
+                <Scripts>
+                    <OnClick>
+                        self:GetParent():UpdateSetEnabled(not self:GetChecked())
+                    </OnClick>
+                </Scripts>
+            </CheckButton>
+            <EditBox letters="50" parentKey="Name" autoFocus="false" inherits="InputBoxTemplate">
+                <Size x="0" y="22"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.NameTitle" relativePoint="BOTTOMLEFT" x="20" y="-10"/>
+                    <Anchor point="RIGHT" x="-10" y="0"/>
+                </Anchors>
+                <Scripts>
+                    <OnTextChanged>
+                        self:GetParent():UpdateSetName(self:GetText())
+                    </OnTextChanged>
+                    <OnEnterPressed function="EditBox_ClearFocus"/>
+                </Scripts>
+            </EditBox>
+            <Frame parentKey="LoadoutDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.LoadoutTitle" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+                </Anchors>
+            </Frame>
+            <Frame parentKey="CharacterDropDown" inherits="BtWLoadoutsCharacterDropDownTemplate">
+                <Anchors>
+                    <Anchor point="LEFT" relativeKey="$parent.LoadoutDropDown" relativePoint="RIGHT" x="0" y="0"/>
+                </Anchors>
+                <KeyValues>
+                    <KeyValue key="multiple" type="boolean" value="true"/>
+                    <KeyValue key="includeAny" type="boolean" value="true"/>
+                    <KeyValue key="includeInherit" type="boolean" value="true"/>
+                </KeyValues>
+            </Frame>
+            <Frame parentKey="ConditionTypeDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.ConditionsTitle" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+                </Anchors>
+            </Frame>
+            <Frame parentKey="InstanceDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.ConditionTypeDropDown" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+                </Anchors>
+            </Frame>
+            <Frame parentKey="DifficultyDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
+                <Anchors>
+                    <Anchor point="LEFT" relativeKey="$parent.InstanceDropDown" relativePoint="RIGHT" x="0" y="0"/>
+                </Anchors>
+            </Frame>
+            <Frame parentKey="BossDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.InstanceDropDown" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+                </Anchors>
+            </Frame>
+            <Frame parentKey="AffixesDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.InstanceDropDown" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+                </Anchors>
+            </Frame>
+            <Frame parentKey="ScenarioDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.ConditionTypeDropDown" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+                </Anchors>
+            </Frame>
+            <Frame parentKey="BattlegroundDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.ConditionTypeDropDown" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+                </Anchors>
+            </Frame>
+
+            <Button name="BtWLoadoutsConditionsAffixesDropDownList" mixin="BtWLoadoutsConditionsAffixesMixin" toplevel="true" frameStrata="FULLSCREEN_DIALOG" hidden="true">
+                <Size x="400" y="155"/>
+                <KeyValues>
+                    <KeyValue type="number" key="maxWidth" value="400"/>
+                </KeyValues>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.AffixesDropDown.Left" relativePoint="BOTTOMLEFT" x="8" y="22"/>
+                </Anchors>
+                <Frames>
+                    <Frame name="$parentBackdrop" parentKey="Border" inherits="DialogBorderDarkTemplate"/>
+                </Frames>
+                <Scripts>
+                    <OnLoad method="OnLoad"/>
+                </Scripts>
+            </Button>
+        </Frames>
+        <Scripts>
+            <OnLoad inherit="prepend" method="OnLoad"/>
+            <OnShow inherit="prepend" method="OnShow"/>
+        </Scripts>
+    </Frame>
+</Ui>

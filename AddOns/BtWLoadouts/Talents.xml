@@ -1,0 +1,104 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="Talents.lua"/>
+    
+    <Frame name="$parentTalents" parentKey="Talents" mixin="BtWLoadoutsTalentsMixin" inherits="BtWLoadoutsTabFrameTemplate">
+        <KeyValues>
+            <KeyValue key="name" value="BTWLOADOUTS_TALENTS" type="global"/>
+        </KeyValues>
+        <Frames>
+            <Frame parentKey="Inset" useParentLevel="true" inherits="InsetFrameTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="-4" y="-31" />
+                    <Anchor point="BOTTOMRIGHT" x="4" y="-2" />
+                </Anchors>
+            </Frame>
+            <Frame name="$parentSpecDropDown" parentKey="SpecDropDown" inherits="BtWLoadoutsSpecDropDownTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="0" y="0"/>
+                </Anchors>
+            </Frame>
+            <EditBox name="$parentName" letters="50" parentKey="Name" autoFocus="false" inherits="InputBoxTemplate">
+                <Size x="0" y="22"/>
+                <Anchors>
+                    <Anchor point="LEFT" relativeKey="$parent.SpecDropDown" relativePoint="RIGHT" x="10" y="2"/>
+					<Anchor point="RIGHT" x="-30" y="0"/>
+                </Anchors>
+                <Scripts>
+                    <OnTextChanged>
+                        self:GetParent():UpdateSetName(self:GetText())
+                    </OnTextChanged>
+                    <OnEnterPressed function="EditBox_ClearFocus"/>
+                </Scripts>
+            </EditBox>
+			<Frame parentKey="RestrictionsDropDown" inherits="BtWLoadoutsRestrictionsDropDownTemplate"/>
+			<DropDownToggleButton parentKey="RestrictionsButton">
+				<Size x="22" y="22"/>
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.Name" relativePoint="RIGHT" x="4" y="0"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture file="Interface\WorldMap\GEAR_64GREY" alpha="0.5" parentKey="texture"/>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						self.texture:SetAlpha(1.0);
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText(BTWLOADOUTS_RESTRICTIONS);
+					</OnEnter>
+					<OnLeave>
+						self.texture:SetAlpha(0.5);
+						GameTooltip_Hide();
+					</OnLeave>
+					<OnMouseDown>
+						ToggleDropDownMenu(1, nil, self:GetParent().RestrictionsDropDown, self, 0, 0);
+					</OnMouseDown>
+					<OnMouseUp>
+						self.texture:SetPoint("TOPLEFT", 0, 0);
+					</OnMouseUp>
+				</Scripts>
+			</DropDownToggleButton>
+            <Frame name="$parentTalentRow1" inherits="BtWLoadoutsTalentSelectionTemplate" parentArray="rows">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="0" y="-38"/>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentTalentRow2" inherits="BtWLoadoutsTalentSelectionTemplate" parentArray="rows">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentTalentRow1" relativePoint="BOTTOM" x="0" y="0"/>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentTalentRow3" inherits="BtWLoadoutsTalentSelectionTemplate" parentArray="rows">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentTalentRow2" relativePoint="BOTTOM" x="0" y="0"/>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentTalentRow4" inherits="BtWLoadoutsTalentSelectionTemplate" parentArray="rows">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentTalentRow3" relativePoint="BOTTOM" x="0" y="0"/>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentTalentRow5" inherits="BtWLoadoutsTalentSelectionTemplate" parentArray="rows">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentTalentRow4" relativePoint="BOTTOM" x="0" y="0"/>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentTalentRow6" inherits="BtWLoadoutsTalentSelectionTemplate" parentArray="rows">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentTalentRow5" relativePoint="BOTTOM" x="0" y="0"/>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentTalentRow7" inherits="BtWLoadoutsTalentSelectionTemplate" parentArray="rows">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentTalentRow6" relativePoint="BOTTOM" x="0" y="0"/>
+                </Anchors>
+            </Frame>
+        </Frames>
+        <Scripts>
+            <OnLoad inherit="prepend" method="OnLoad"/>
+            <OnShow inherit="prepend" method="OnShow"/>
+        </Scripts>
+    </Frame>
+</Ui>

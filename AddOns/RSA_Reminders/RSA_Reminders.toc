@@ -1,4 +1,4 @@
-## Interface: 90002
+## Interface: 90100
 ## Title: RSA [|c12FF75B3Reminders|r]
 ## Notes: Buff Reminder module for RSA. If you want to be reminded of buffs, you need to enable this!
 ## Author: Raeli

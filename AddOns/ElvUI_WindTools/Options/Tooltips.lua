@@ -38,10 +38,16 @@ options.general = {
             name = L["Additional Information"],
             args = {
                 icon = {
-                    order = 3,
+                    order = 1,
                     type = "toggle",
                     name = L["Add Icon"],
                     desc = L["Show an icon for items and spells."]
+                },
+                dominationRank = {
+                    order = 2,
+                    type = "toggle",
+                    name = L["Domination Rank"],
+                    desc = L["Show the rank of shards."]
                 }
             }
         },
@@ -229,7 +235,8 @@ options.progression = {
 
 do
     local raids = {
-        "Castle Nathria"
+        "Castle Nathria",
+        "Sanctum of Domination"
     }
 
     local dungeons = {
@@ -240,11 +247,13 @@ do
         "Theater of Pain",
         "De Other Side",
         "Spires of Ascension",
-        "Sanguine Depths"
+        "Sanguine Depths",
+        "Tazavesh, the Veiled Market"
     }
 
     local special = {
-        "Shadowlands Keystone Master: Season One"
+        "Shadowlands Keystone Master: Season One",
+        "Shadowlands Keystone Master: Season Two"
     }
 
     for index, name in ipairs(raids) do

@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(1211, "DBM-Draenor", 1, 557)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201111213748")
+mod:SetRevision("20210721041505")
 mod:SetCreatureID(81535)
 mod:SetEncounterID(1770)
 mod:SetReCombatTime(20)
+mod:EnableWBEngageSync()--Enable syncing engage in outdoors
 
 mod:RegisterCombat("combat")--no yell
 

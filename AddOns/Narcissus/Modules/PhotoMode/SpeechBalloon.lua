@@ -115,7 +115,7 @@ local function SmartFontType(fontstring, text)
 	--Automatically apply different font based on given text languange. Change text color after this step.
 	if not fontstring then return; end;
 	fontstring:SetText(text);
-	local Language = Narci_LanguageDetector(text);
+	local Language = NarciAPI.LanguageDetector(text);
 	if Language and ActorNameFont[Language] then
 		fontstring:SetFont(ActorNameFont[Language][1] , ActorNameFont[Language][2]);
 	end

@@ -190,6 +190,9 @@ function PGF.SortByFriendsAndAge(searchResultID1, searchResultID2)
     if searchResultInfo1.numGuildMates ~= searchResultInfo2.numGuildMates then
         return searchResultInfo1.numGuildMates > searchResultInfo2.numGuildMates
     end
+    if searchResultInfo1.isWarMode ~= searchResultInfo2.isWarMode then
+        return searchResultInfo1.isWarMode == C_PvP.IsWarModeDesired()
+    end
 
     return searchResultInfo1.age < searchResultInfo2.age
 end
@@ -341,6 +344,18 @@ function PGF.DoFilterSearchResults(results)
         env.autoinv = searchResultInfo.autoAccept
         env.questid = searchResultInfo.questID
         env.declined = PGF.IsDeclinedGroup(searchResultInfo)
+        env.warmode = searchResultInfo.isWarMode
+        env.mprating = searchResultInfo.leaderOverallDungeonScore or 0
+        env.mpmaprating = 0
+        env.mpmapname   = ""
+        env.mpmapmaxkey = 0
+        env.mpmapintime = false
+        if searchResultInfo.leaderDungeonScoreInfo then
+            env.mpmaprating = searchResultInfo.leaderDungeonScoreInfo.mapScore
+            env.mpmapname   = searchResultInfo.leaderDungeonScoreInfo.mapName
+            env.mpmapmaxkey = searchResultInfo.leaderDungeonScoreInfo.bestRunLevel
+            env.mpmapintime = searchResultInfo.leaderDungeonScoreInfo.finishedSuccess
+        end
 
         PGF.PutSearchResultMemberInfos(resultID, searchResultInfo, env)
         PGF.PutEncounterNames(resultID, env)
@@ -401,6 +416,10 @@ function PGF.DoFilterSearchResults(results)
         env.soa  = aID == 708 or aID == 711 or aID == 710 or aID == 709  -- Spires of Ascension
         env.nw   = aID == 712 or aID == 715 or aID == 714 or aID == 713  -- The Necrotic Wake
         env.top  = aID == 716 or aID == 719 or aID == 718 or aID == 717  -- Theater of Pain
+        env.sod  = aID == 743 or aID == 744 or aID == 745                -- Sanctum of Domination
+        env.taz  =                             aID == 746                -- Tazavesh, the Veiled Market
+        env.taza = env.taz
+        env.ttvm = env.taz
         env.mists = env.mots
 
         if PGF.PutRaiderIOMetrics then

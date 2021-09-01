@@ -422,20 +422,30 @@ Narci_CharacterTitlesTable =
 
     --Shadowlands
     [676] = {"achv", 1, "Cryptkeeper", 423, 14277},     --The Accuser's Avowed
-    [678] = {"achv", 1, "Hand of the Archon", 425, },
-    [679] = {"achv", 1, "Baron", 426, },
-    [680] = {"achv", 1, "Baroness", 427, },
+    [678] = {"achv", 0, "Hand of the Archon", 425, },
+    [679] = {"achv", 0, "Baron", 426, },
+    [680] = {"achv", 0, "Baroness", 427, },
     [681] = {"achv", 1, "Winter's Envoy", 428, },
-    [682] = {"achv", 1, "Count", 429, },
-    [683] = {"achv", 1, "Countess", 430, },
+    [682] = {"achv", 0, "Count", 429, },
+    [683] = {"achv", 0, "Countess", 430, },
     [684] = {"pvp", 1, "Deathbringer", 424, 14520},
     [685] = {"achv", 1, "the Proud", 431, },
-    [686] = {"pve", 5, "Sinbreaker", 432, 14365},   --Mythic: Sire Denathrius
-    [687] = {"achv", 1, "the Party Herald", 433, 14682},
+    [686] = {"pve", 3, "Sinbreaker", 432, 14365},   --Mythic: Sire Denathrius
+    [687] = {"achv", 0, "the Party Herald", 433, 14682},
     [688] = {"pvp", 5, "Sinful Gladiator", 434, },
-    [689] = {"achv", 1, "Fun Guy Fun Gal", 435, },
+    [689] = {"achv", 0, "Fun Guy Fun Gal", 435, },
     [690] = {"achv", 1, "the Avowed", 436, },
-    [691] = {"achv", 1, "Abominable", 437, },
-    [692] = {"achv", 1, "Spirestalker", 438, 14568},
-    [693] = {"achv", 1, "the Ascended", 439, },
+    [691] = {"achv", 0, "Abominable", 437, },
+    [692] = {"achv", 0, "Spirestalker", 438, 14568},
+    [693] = {"achv", 0, "the Ascended", 439, },
+
+    [694] = {"pve", 5, "Famed Slayer of Denathrius", 440, 14650},
+    [698] = {"pvp", 5, "Unchained Gladiator", 441, 14973},
+    [699] = {"achv", 0, "Protector of the Weald", 442, },
+    [700] = {"achv", 0, "Sword of the Primus", 443, },
+    [701] = {"achv", 0, "Sin Eater", 444, },
+    [702] = {"achv", 0, "Disciple of Devotion", 445, },
+    [703] = {"achv", 0, "the Tormented", 446, 15077},    --SL: M+ S2
+    [704] = {"pve", 3, "Breaker of Chains", 447, 15121},
+    [705] = {"pve", 5, "Famed Bane of the Banshee Queen", 448, 15196},
 }

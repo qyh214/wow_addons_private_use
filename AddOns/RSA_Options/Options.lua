@@ -2093,6 +2093,15 @@ local function Priest_Options()
 			Message_Areas = {'Start', 'End'},
 			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]'},
 		},
+		["MindSoothe"] = {
+			Profile = 'MindSoothe',
+			Name = GetSpellInfo(453),
+			Desc = GetSpellDescription(453),
+			Message_Amount = 2,
+			Message_Areas = {'Start', 'End'},
+			Message_Channels_Disabled = {["Whisper"] = true},
+			Valid_Tags = {'[SPELL]', '[LINK]', '[TARGET]'},
+		},
 		["PowerWordBarrier"] = {
 			Profile = 'PowerWordBarrier',
 			Name = GetSpellInfo(62618),

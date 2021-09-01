@@ -87,7 +87,7 @@ function WorldMapOptionsButtonMixin:InitializeDropDown(level)
         })
 
         for i, group in ipairs(map.groups) do
-            if group:IsEnabled() then
+            if group:IsEnabled() and group:HasEnabledNodes(map) then
                 icon = group.icon
                 if group.name == 'misc' then
                     -- find an icon from the misc nodes in the map
@@ -173,7 +173,7 @@ function WorldMapOptionsButtonMixin:InitializeDropDown(level)
         })
     elseif level == 2 then
         if UIDROPDOWNMENU_MENU_VALUE == 'rewards' then
-            for i, type in ipairs({'mount', 'pet', 'toy', 'transmog'}) do
+            for i, type in ipairs({'mount', 'pet', 'toy', 'transmog', 'all_transmog'}) do
                 UIDropDownMenu_AddButton({
                     text = L["options_"..type.."_rewards"],
                     isNotRadio = true,

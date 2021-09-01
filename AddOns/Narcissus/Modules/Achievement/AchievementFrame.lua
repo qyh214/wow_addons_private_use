@@ -1,4 +1,5 @@
 --Constant
+local NUM_ACHIEVEMENT_CARDS = 8;
 local LEGACY_ID = 15234;
 local FEAT_OF_STRENGTH_ID = 81;
 local GUILD_FEAT_OF_STRENGTH_ID = 15093;
@@ -16,6 +17,9 @@ local floor = math.floor;
 local ceil = math.ceil;
 local After = C_Timer.After;
 local gsub = string.gsub;
+local format = string.format;
+local tremove = table.remove;
+local tinsert = table.insert;
 local GetAchievementCategory = GetAchievementCategory;
 local GetAchievementInfo = GetAchievementInfo;
 local GetAchievementNumCriteria = GetAchievementNumCriteria;
@@ -24,6 +28,7 @@ local GetRewardItemID = C_AchievementInfo.GetRewardItemID;
 local GetPreviousAchievement = GetPreviousAchievement;
 local GetNextAchievement = GetNextAchievement;
 local SetFocusedAchievement = SetFocusedAchievement;    --Requset guild achievement progress from server, will fire "CRITERIA_UPDATE" after calling GetAchievementCriteriaInfo()
+local GetCategoryNumAchievements = GetCategoryNumAchievements;
 local FadeFrame = NarciFadeUI.Fade;
 local GetParentAchievementID = NarciAPI.GetParentAchievementID;
 local L = Narci.L;
@@ -125,7 +130,7 @@ end
 
 
 local MainFrame, InspectionFrame, MountPreview, Tooltip, ReturnButton, SummaryButton, GoToCategoryButton;
-local CategoryContainer, AchievementContainer, DIYContainer, EditorContainer, SummaryFrame, AchievementCards, ResultFrame, ResultButtons, TabButtons;
+local CategoryContainer, AchievementContainer, DIYContainer, EditorContainer, SummaryFrame, AchievementCards, SummaryCards, ResultFrame, ResultButtons, TabButtons;
 
 local CategoryButtons = {
     player = { parentButtons = {}, buttons = {}, },
@@ -281,28 +286,53 @@ function DataProvider:IsTrackedAchievement(id)
     return self.isTrackedAchievements[id]
 end
 
+local ScrollCard = {};      --DataProvider for ScrollFrame
 
 --Limit the request frequency
 local processor = CreateFrame("Frame");
 processor:Hide();
 processor:SetScript("OnUpdate", function(self, elapsed)
     local processComplete;
+    self.cycle = self.cycle + 1;
     if self.func then
         self.arg2, processComplete = self.func(self.arg1, self.arg2);
         if processComplete then
             self:Hide();
             self.func = nil;
             self.callback();
+            if self.cycle == 2 then
+                ScrollCard:UpdateScrollChild(0);
+            end
+        end
+        if self.cycle == 3 then
+            ScrollCard:UpdateScrollChild(0);
         end
     else
         self:Hide();
     end
 end)
 
-function processor:Add(func)
-    self.func = func
-end
+function processor:Start()
+    local processComplete;
+    if self.func then
+        self.cycle = 1;
+        self.arg2, processComplete = self.func(self.arg1, self.arg2);
+        if processComplete then
+            self:Hide();
+            self.func = nil;
+            self.callback();
 
+            --Achievement Card Data is being constructed by OnUpdate script
+            --The step is 4: Meaning it takes 2 frames to build the visible area
+            --Update scrollframe on the 3rd frame
+            ScrollCard:UpdateScrollChild(0);
+        else
+            self:Show();
+        end
+    else
+        self:Hide();
+    end
+end
 
 ------------------------------------------------------------------------------------------------------
 local function HideItemPreview()
@@ -311,15 +341,6 @@ local function HideItemPreview()
         MountPreview:FadeOut();
     end
     MountPreview:ClearCallback();
-end
-
-local function SetItemPreview(self)
-    local itemID = self.itemID;
-    if itemID then
-        MountPreview:SetItem(itemID);
-    else
-        HideItemPreview();
-    end
 end
 
 
@@ -418,7 +439,6 @@ end
 
 ------------------------------------------------------------------------------------------------------
 local function DisplayProgress(id, flags)
-    --print(id)
     local cData, iData = {}, {};
     cData.names, iData.names = {}, {};
     cData.icons, iData.icons = {}, {};
@@ -577,16 +597,11 @@ end
 
 
 local function FormatAchievementCard(buttonIndex, id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe)
-    local headerObject, numLines, textHeight;
     local button = AchievementCards[buttonIndex];
     if not button then
-        button = CreateFrame("Button", nil, AchievementContainer.ScrollChild, "NarciAchievementCardLargeTemplate");
-        button:SetScript("OnClick", AchievementCard_OnClick);
-        button:SetPoint("TOP", AchievementCards[buttonIndex - 1], "BOTTOM", 0, -4);
-        tinsert(AchievementCards, button);
-        button.index = buttonIndex;
-        ReskinButton(button);
+        return
     end
+    local headerObject, numLines, textHeight;
 
     button.id = id;
     button.trackIcon:SetShown( DataProvider:IsTrackedAchievement(id) );
@@ -721,7 +736,7 @@ local function FormatAchievementCard(buttonIndex, id, name, points, completed, m
             button:SetAlpha(1);
         else
             button.toAlpha = 1;
-            button:SetAlpha(0);     --for flip animation
+           -- button:SetAlpha(0);     --for flip animation
         end
 
         if (button.isDark == nil) or (button.isDark) then
@@ -750,7 +765,7 @@ local function FormatAchievementCard(buttonIndex, id, name, points, completed, m
             button:SetAlpha(1); --0.5
         else
             button.toAlpha = 1  --0.5;
-            button:SetAlpha(0);     --for flip animation
+            --button:SetAlpha(0);     --for flip animation
         end
 
         if (button.isDark == nil) or (not button.isDark) then
@@ -772,12 +787,8 @@ local function FormatAchievementCard(buttonIndex, id, name, points, completed, m
             button.bottom:SetDesaturation(0.6);
         end
     end
-
-    if buttonIndex < 20 then
-        button:Show();
-    else
-        button:Hide();
-    end
+    
+    button:SetShown(id);
 end
 
 
@@ -807,8 +818,130 @@ local function InspectAchievement(id)
     return completed, AchievementCards[-1]:GetHeight()/2
 end
 
+
+ScrollCard.heightData = {};
+ScrollCard.achievementID = {};
+ScrollCard.totalHeight = 0;
+ScrollCard.positionToButton = {};
+
+HEIGHTS = ScrollCard.heightData
+function ScrollCard:ResetHeights()
+    self.totalHeight = 18;
+    self.position = 1;
+    self.lastOffset = 0;
+    self.nextOffset = 0;
+    wipe(self.heightData);
+end
+
+function ScrollCard:GetScrollRange()
+    local range = self.totalHeight - (AchievementContainer:GetHeight() or 0) + 18;
+    if range < 0 then
+        range = 0;
+    end
+    return range;
+end
+
+function ScrollCard:SetCardData(cardIndex, achievementID, description, rewardText)
+    local rewardHeight;
+    if rewardText and rewardText ~= "" then
+        rewardHeight = 24;
+    else
+        if isDarkTheme then
+            rewardHeight = 2;
+        else
+            rewardHeight = 8;
+        end
+    end
+    self.textReference:SetText("");
+    self.textReference:SetHeight(0);
+    self.textReference:SetText(description);
+    local descriptionHeight = self.textReference:GetHeight();
+    local numLines = ceil( descriptionHeight / 14 - 0.1 );
+    local buttonHeight = 72 + rewardHeight + 14*(numLines - 1) + 4;     --4 is the Gap
+
+    self.heightData[cardIndex] = self.totalHeight;
+    self.achievementID[cardIndex] = achievementID;
+    self.totalHeight = self.totalHeight + buttonHeight;
+
+    return buttonHeight;
+end
+
+function ScrollCard:GetTopButtonIndex(scrollOffset)
+    if scrollOffset > self.nextOffset then
+        local p = self.position + 1;
+        if self.heightData[p] then
+            self.position = p;
+            self.lastOffset = self.heightData[p];
+            self.nextOffset = self.heightData[p + 1];
+            self:UpdateScrollChild(-1);
+        end
+    elseif scrollOffset < self.lastOffset then
+        local p = self.position - 1;
+        if self.heightData[p] then
+            self.nextOffset = self.heightData[p + 1];
+            self.lastOffset = self.heightData[p];
+            if p < 1 then
+                p = 1;
+            end
+            self.position = p;
+            self:UpdateScrollChild(1);
+        end
+    end
+end
+
+function ScrollCard:UpdateScrollChild(direction)
+    if direction < 0 then
+        local topButton = tremove(AchievementCards, 1);
+        tinsert(AchievementCards, topButton);
+    elseif direction > 0 then
+        local bottomButton = tremove(AchievementCards);
+        tinsert(AchievementCards, 1, bottomButton);
+    end
+    wipe(self.positionToButton);
+    local p = self.position;
+    local id;
+    local positionIndex;
+    local name, points, completed, month, day, year, description, flags, icon, rewardText;
+    local card;
+    for i = 1, NUM_ACHIEVEMENT_CARDS do
+        card = AchievementCards[i];
+        positionIndex = p + i - 1;
+        card.positionIndex = positionIndex;
+        --card.TableIndex:SetText(i);
+        if self.heightData[positionIndex] then
+            card:SetPoint("TOP", AchievementContainer.ScrollChild, "TOP", 0, -self.heightData[positionIndex]);
+            self.positionToButton[positionIndex] = card;
+            id = self.achievementID[positionIndex];
+            if id then
+                if card.id ~= id then
+                    id, name, points, completed, month, day, year, description, flags, icon, rewardText = DataProvider:GetAchievementInfo(id);
+                    FormatAchievementCard(i, id, name, points, completed, month, day, year, description, flags, icon, rewardText);
+                else
+                    card:Show();
+                end
+            else
+                card:Hide();
+            end
+        else
+            card:Hide();
+        end
+    end
+end
+
+function ScrollCard:GetOffsetByPositionIndex(index)
+    return self.heightData[index] or 0
+end
+
+function ScrollCard:GetAchievementIDByPositionIndex(index)
+    return self.achievementID[index];
+end
+
+function ScrollCard:GetCardByPositionIndex(index)
+    return self.positionToButton[index];
+end
+
 function InspectCard(button, playAnimation)    --Private
-    local index = button.index;
+    local index = button.positionIndex;
     if not index then return end;
 
     local Card = InspectionFrame.Card;
@@ -817,7 +950,7 @@ function InspectCard(button, playAnimation)    --Private
     Card:SetPoint("BOTTOM", InspectionFrame, "CENTER", 0, 36);
 
     InspectionFrame.pauseScroll = nil;
-    InspectionFrame.inspectedButtonIndex = index;
+    InspectionFrame.dataIndex = index;
 
     local numAchievements = InspectionFrame.numAchievements;
     if index <= 1 then
@@ -861,7 +994,6 @@ end
 local function Slice_UpdateAchievementCards(categoryID, startIndex)
     --from 1st complete achievement to bottom
     local slice = 4;
-    local button;
     local id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe;
     local processComplete = false;
     local numProcessed = 0;
@@ -870,7 +1002,10 @@ local function Slice_UpdateAchievementCards(categoryID, startIndex)
     for i = startIndex, startIndex + slice do
         id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe = DataProvider:GetAchievementInfoByOrder(categoryID, i);
         if i > 0 and id then
-            FormatAchievementCard(i, id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe);
+            if i <= NUM_ACHIEVEMENT_CARDS then
+                FormatAchievementCard(i, id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe);
+            end
+            ScrollCard:SetCardData(i, id, description, rewardText);
             numProcessed = i;
         else
             processComplete = true;
@@ -878,13 +1013,12 @@ local function Slice_UpdateAchievementCards(categoryID, startIndex)
         end
     end
 
-    return numProcessed, processComplete
+    return numProcessed + 1, processComplete
 end
 
 local function Slice_ReverselyUpdateAchievementCards_Callback(categoryID, startIndex)
     --from 1st complete achievement to 1st incomplete
     local slice = 4;
-    local button;
     local id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe;
     local processComplete = false;
     local numProcessed = 0;
@@ -894,7 +1028,10 @@ local function Slice_ReverselyUpdateAchievementCards_Callback(categoryID, startI
         id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe = DataProvider:GetAchievementInfoByOrder(categoryID, i);
         if i <= numCompleted then
             index = i + numIncomplete;
-            FormatAchievementCard(index, id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe);
+            if i <= NUM_ACHIEVEMENT_CARDS then
+                FormatAchievementCard(index, id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe);
+            end
+            ScrollCard:SetCardData(index, id, description, rewardText);
             numProcessed = i;
         else
             processComplete = true;
@@ -902,13 +1039,12 @@ local function Slice_ReverselyUpdateAchievementCards_Callback(categoryID, startI
         end
     end
 
-    return numProcessed, processComplete
+    return numProcessed + 1, processComplete
 end
 
 local function Slice_ReverselyUpdateAchievementCards(categoryID, startIndex)
     --from 1st incomplete achievement to the bottom
     local slice = 4;
-    local button;
     local id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe;
     local processComplete = false;
     local numProcessed = 0;
@@ -920,7 +1056,10 @@ local function Slice_ReverselyUpdateAchievementCards(categoryID, startIndex)
         if id then
             --print("id #"..id)
             if not completed then
-                FormatAchievementCard(i, id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe);
+                if i <= NUM_ACHIEVEMENT_CARDS then
+                    FormatAchievementCard(i, id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe);
+                end
+                ScrollCard:SetCardData(i, id, description, rewardText);
                 numProcessed = i;
             end
         else
@@ -934,107 +1073,82 @@ local function Slice_ReverselyUpdateAchievementCards(categoryID, startIndex)
         end
     end
 
-    return numProcessed, processComplete
+    return numProcessed + 1, processComplete
 end
 
 local function UpdateAchievementScrollRange()
-    local numAchievements = DataProvider.numAchievements or 0;
     local scrollBar = AchievementContainer.scrollBar;
-    local range;
-    if numAchievements == 0 or not AchievementCards[numAchievements] then
-        range = 0;
-    else
-        range = max(0, AchievementCards[1]:GetTop() -  AchievementCards[numAchievements]:GetBottom() - AchievementContainer:GetHeight() + 40);
-    end
+    local range = ScrollCard:GetScrollRange();
     scrollBar:SetMinMaxValues(0, range);
     AchievementContainer.range = range;
     scrollBar:SetShown(range ~= 0);
-
-    for i = numAchievements + 1, #AchievementCards do
-        AchievementCards[i]:Hide();
-    end
 end
 
 processor.func = Slice_ReverselyUpdateAchievementCards  --Slice_UpdateAchievementCards;
 processor.callback = UpdateAchievementScrollRange;
 
 
-local animFlip = {};
-
-function animFlip:Add(buttons, cap, groupIndex)
-    for i = 1, cap do
-        local button = buttons[i];
-        if not button then break end;
-
-        button.toAlpha = 1;
-        local flip = NarciAPI_CreateAnimationFrame(0.4);
-        if not self.animFrames then
-            self.animFrames = {};
-        end
-        if not self.animFrames[groupIndex] then
-            self.animFrames[groupIndex] = {};
-        end
-        
-        self.animFrames[groupIndex][i] = flip;
-        flip.index = i;
-        flip.hold = true;
-        flip.button = button;
-        flip.border = button.border;
-        flip.description = button.description;
-        flip.objects = {
-            button.points,
-            button.icon,
-            button.lion,
-            button.border,
-        }
-        flip:SetScript("OnUpdate", function(frame, elapsed)
-            frame.total = frame.total + elapsed;
-            local scale = outQuart(frame.total, 1.25, 1, frame.duration);
-            local offset1 = outQuart(frame.total, 24, 0, frame.duration);
-            local offset2 = outQuart(frame.total, -72, -48, frame.duration);
-            local alpha = min(button.toAlpha, linear(frame.total, 0, 1, 0.25) );
-            if frame.total >= 0.05 and frame.hold then
-                frame.hold = nil;
-                local nextFlip = self.animFrames[groupIndex][frame.index + 1];
-                if nextFlip and nextFlip.button:IsShown() then
-                    self.animFrames[groupIndex][frame.index + 1]:Show();
-                end
-            end
-            if frame.total >= frame.duration then
-                frame:Hide()
-                scale = 1;
-                offset1 = 0;
-                offset2 = -48;
-                alpha = button.toAlpha;
-            end
-        
-            frame.button:SetAlpha(alpha);
-            frame.border:SetPoint("TOP", 0, offset1);
-            frame.description:SetPoint("TOP", 0, offset2);
-            for i = 1, #frame.objects do
-                frame.objects[i]:SetScale(scale);
-            end
-        end)
-    end
-end
+local animFlip = CreateFrame("Frame");
 
 function animFlip:Play(groupIndex)
-    local group = self.animFrames[groupIndex];
-    if group then
-        for i = 1, #group do
-            group[i]:Hide();
-            group[i].hold = true;
-        end
-
-        group[1]:Show();
+    self:Hide();
+    self.t = 0;
+    local objects;
+    if groupIndex == 1 then
+        objects = AchievementCards;
+    else
+        objects = SummaryCards;
     end
+    local numObjects = #objects;
+    numObjects = min(numObjects, 6);
+    for i = 1, numObjects do
+        objects[i]:SetAlpha(0);
+    end
+
+    local oT, card;
+    local scale, offset1, offset2, alpha;
+    local fullDuration = numObjects * 0.05 + 0.4;
+    self:SetScript("OnUpdate", function(f, elapsed)
+        self.t = self.t + elapsed;
+        for i = 1, numObjects do
+            oT = self.t - 0.05 * (i - 1);
+            if oT > 0 then
+                if oT < 0.4 then
+                    scale = outQuart(oT, 1.25, 1, 0.4);
+                    offset1 = outQuart(oT, 24, 0, 0.4);
+                    offset2 = outQuart(oT, -72, -48, 0.4);
+                    alpha = min(1, linear(oT, 0, 1, 0.25));
+                else
+                    scale = 1;
+                    offset1 = 0;
+                    offset2 = -48;
+                    alpha = 1;
+                end
+                card = objects[i];
+                card:SetAlpha(alpha);
+                card.border:SetPoint("TOP", 0, offset1);
+                card.description:SetPoint("TOP", 0, offset2);
+                card.points:SetScale(scale);
+                card.icon:SetScale(scale);
+                card.lion:SetScale(scale);
+                card.border:SetScale(scale);
+            end
+        end
+        if self.t > fullDuration then
+            self:Hide();
+        end
+    end);
+    self:Show();
 end
+
 
 local SORT_FUNC = Slice_ReverselyUpdateAchievementCards;
 local function UpdateAchievementCardsBySlice(categoryID)
+    ScrollCard:ResetHeights();
+
     processor:Hide();
     AchievementContainer.scrollBar:SetValue(0);
-    for i = 1, 7 do
+    for i = 1, NUM_ACHIEVEMENT_CARDS do
         AchievementCards[i]:Hide();
     end
     local numAchievements, numCompleted, numIncomplete = GetCategoryNumAchievements(categoryID, false);
@@ -1042,10 +1156,9 @@ local function UpdateAchievementCardsBySlice(categoryID)
     processor.arg1 = categoryID;
     processor.arg2 = 1;     --fromIndex
     processor.func = SORT_FUNC;
-    processor:Show();
+    processor:Start();
 
     --animation
-
     if numAchievements ~= 0 then
         animFlip:Play(1);
     end
@@ -1174,16 +1287,20 @@ local function SetCategoryButtonProgress(button, numAchievements, numCompleted, 
             button.progress:SetText(numCompleted);
         else
             local percentage = numCompleted / numAchievements;
-            if false and percentage == 1 then
+            if percentage == 1 then
                 button.fill:Hide();
                 button.fillEnd:Hide();
-                button.progress:SetText("");
+                button.progress:SetText(numAchievements);
+                button.label:SetPoint("LEFT", 27, 0);
+                button.greenCheck:Show();
             else
                 button.fill:Show();
                 button.fillEnd:Show();
                 button.fill:SetWidth(button.fillWidth * percentage);
                 button.fill:SetTexCoord(0, percentage *  0.75, 0, 1);
                 button.progress:SetText(numCompleted .."/".. numAchievements);
+                button.label:SetPoint("LEFT", 10, 0);
+                button.greenCheck:Hide();
             end
         end
     end
@@ -1530,12 +1647,11 @@ local function CreateAchievementButtons(frame)
     local buttons = {};
     local numButtons = 0;
 
-    for i = 1, 40 do
+    for i = 1, NUM_ACHIEVEMENT_CARDS do
         button = CreateFrame("Button", nil, frame, "NarciAchievementCardLargeTemplate");
         button:SetScript("OnClick", AchievementCard_OnClick);
         button.index = i;
-        --button.RewardFrame:SetScript("OnEnter", SetItemPreview);
-        --button.RewardFrame:SetScript("OnLeave", HideItemPreview);
+        --button.AbsoluteIndex:SetText(i)
         tinsert(buttons, button);
         if i == 1 then
             button:SetPoint("TOP", frame, "TOP", 0, -18);
@@ -1560,27 +1676,6 @@ local function CreateAchievementButtons(frame)
     animFlyIn.reward = Card.RewardFrame;
 end
 
-local function UpdateRenderedArea(value)
-    --103 avg. height
-    local firstIndex = max(1, ceil(value/98) - 2);
-    local lastIndex = firstIndex + 22;
-    
-    for i = 1, firstIndex - 1 do
-        if AchievementCards[i] then
-            AchievementCards[i]:Hide();
-        end
-    end
-    for i = lastIndex + 1, InspectionFrame.numAchievements do
-        if AchievementCards[i] then
-            AchievementCards[i]:Hide();
-        end
-    end
-    for i = firstIndex, lastIndex do
-        if AchievementCards[i] then
-            AchievementCards[i]:Show();
-        end
-    end
-end
 
 ------------------------------------------------
 NarciAchievementInspectionFrameMixin = {};
@@ -1613,7 +1708,7 @@ function NarciAchievementInspectionFrameMixin:OnLoad()
     animFlyOut.ObjectiveFrame = self.CriteriaFrame;
     animFlyOut.ChainFrame = self.ChainFrame;
 
-    self.inspectedButtonIndex = 1;
+    self.dataIndex = 1;
 
 
     self.TextContainerLeft = self.CriteriaFrame.LeftInset.TextFrame;
@@ -1633,7 +1728,7 @@ function NarciAchievementInspectionFrameMixin:OnLoad()
     local deltaRatio = 1;
     local speedRatio = 0.24;
     local blurHeight = 77;
-    local range = 10000;
+    local range = 20000;
     local RepositionBlur = function(value, delta)
         local index;
         if delta < 0 then
@@ -1661,8 +1756,10 @@ function NarciAchievementInspectionFrameMixin:OnLoad()
     local Blur_OnMouseWheel = BlurFrame:GetScript("OnMouseWheel");
 
     function self:ScrollBlur(delta)
-        Blur_OnMouseWheel(BlurFrame, delta);
-        ReturnButton:Hide();
+        if delta ~= 0 then
+            Blur_OnMouseWheel(BlurFrame, delta);
+            ReturnButton:Hide();
+        end
     end
 
     function self:SyncBlurOffset(buttonIndex)
@@ -1720,6 +1817,9 @@ function NarciAchievementInspectionFrameMixin:OnLoad()
     local deltaRatio = 2;
     NarciAPI_ApplySmoothScrollToScrollFrame(IncompleteFrame.MetaFrame, deltaRatio, speedRatio, positionFunc, buttonHeight, range, parentScrollFunc);
     NarciAPI_ApplySmoothScrollToScrollFrame(CompleteFrame.MetaFrame, deltaRatio, speedRatio, positionFunc, buttonHeight, range, parentScrollFunc);
+
+    self:SetScript("OnLoad", nil);
+    self.OnLoad = nil;
 end
 
 function NarciAchievementInspectionFrameMixin:OnShow()
@@ -1727,7 +1827,9 @@ function NarciAchievementInspectionFrameMixin:OnShow()
 end
 
 function NarciAchievementInspectionFrameMixin:OnMouseDown()
-    animFlyOut:Play();
+    if not self.NextButton:IsMouseOver() and not self.PrevButton:IsMouseOver() then
+        animFlyOut:Play();
+    end
 end
 
 function NarciAchievementInspectionFrameMixin:ScrollToCategoryButton(button)
@@ -1738,42 +1840,34 @@ function NarciAchievementInspectionFrameMixin:ScrollToCategoryButton(button)
     end
 end
 
-function NarciAchievementInspectionFrameMixin:ScrollToButton(button)
-    if button then
-        local offset = AchievementCards[1]:GetTop() -  button:GetTop();
-        AchievementContainer.scrollBar:SetValue(offset);
-        UpdateRenderedArea(offset);
-    end
+function NarciAchievementInspectionFrameMixin:ScrollToPosition(positionIndex)
+    local offset = ScrollCard:GetOffsetByPositionIndex(positionIndex) - 18;
+    AchievementContainer.scrollBar:SetValue(offset);
 end
 
 function NarciAchievementInspectionFrameMixin:OnMouseWheel(delta)
     if self.isTransiting or self.pauseScroll then return end;
 
-    local categoryID = DataProvider.currentCategory;
-    local numAchievements = self.numAchievements;
-    local index = self.inspectedButtonIndex;
+    local index = self.dataIndex;
     if delta > 0 then
-        if index == 1 then
-            return
-        else
-            index = index - 1;
-        end
+        index = index - 1;
     else
-        if index == numAchievements then
-            return
-        else
-            index = index + 1;
-        end
+        index = index + 1;
     end
+    if index < 1 or index > self.numAchievements then
+        return
+    else
+        self.dataIndex = index;
+    end
+
+    self.dataIndex = index;
     self:ScrollBlur(delta);
+    self:ScrollToPosition(index);
 
-    self.inspectedButtonIndex = index;
+    local newButton = ScrollCard:GetCardByPositionIndex(index);
+    --InspectAchievement( ScrollCard:GetAchievementIDByPositionIndex(index) );
 
-    local newButton = AchievementCards[index];
-    self:ScrollToButton(newButton);
-    InspectCard(newButton)
-    --local id = DataProvider:GetAchievementInfoByOrder(categoryID, index)
-    --InspectAchievement(id);
+    InspectCard(newButton);
 end
 
 local function FormatTextButtons(container, data, count, completed)
@@ -1811,12 +1905,7 @@ local function FormatTextButtons(container, data, count, completed)
         button.name:SetText(data.names[i]);
         numLines = ceil( button.name:GetHeight() / 12 - 0.1 );
         button.icon:SetTexture(nil);
-        if icon and false then
-            button:SetHeight(32 + (numLines - 1)*12 );
-        else
-            button:SetHeight(18 + (numLines - 1)*12 );
-        end
-        
+        button:SetHeight(18 + (numLines - 1)*12 );
         button:Show();
     end
 
@@ -1831,6 +1920,7 @@ local function FormatTextButtons(container, data, count, completed)
         range = 0;
     else
         range = max(0, buttons[1]:GetTop() -  buttons[count]:GetBottom() - container:GetHeight() + 4);
+        range = floor(range + 0.2);
     end
     scrollBar:SetValue(0);
     scrollBar:SetMinMaxValues(0, range);
@@ -2416,9 +2506,6 @@ function NarciAchievementTooltipMixin:OnHide()
 end
 
 function NarciAchievementTooltipMixin:ResizeAndShow()
-    --local textWidth = min(280, self.description:GetWidth());
-    --self.description:SetWidth(textWidth);
-    --self:SetWidth(textWidth + 32);
     self:SetHeight( self.name:GetHeight() + self.description:GetHeight() + 4 + 24 );
     
     if not self:IsShown() then
@@ -2453,6 +2540,7 @@ function NarciAchievementTooltipMixin:SetAchievement(id)
     else
         self.shield:Show();
         self.points:SetText(points);
+        self.points:Show();
     end
 
     self:ResizeAndShow();
@@ -2986,37 +3074,34 @@ local UpdateHeaderFrame;
 local function CreateSummaryButtons()
     local MAX_SUMMARY_ACHIEVEMENTS = 5;
 
-    if not SummaryFrame.buttons then
-        SummaryFrame.buttons = {};
+    if not SummaryCards then
+        SummaryCards = {};
     end
-    local buttons = SummaryFrame.buttons;
+
     local button;
     for i = 1, MAX_SUMMARY_ACHIEVEMENTS do
-        button = buttons[i];
+        button = SummaryCards[i];
         if not button then
             button = CreateFrame("Button", nil, SummaryFrame, "NarciAchievementCardLargeTemplate");
             button:SetScript("OnClick", InspectResult);
             button.header:SetWidth(274);
             button.description:SetMaxLines(1);
-            tinsert(buttons, button);
+            tinsert(SummaryCards, button);
             if i == 1 then
                 button:SetPoint("TOP", SummaryFrame, "TOP", -9, -18);
             else
-                button:SetPoint("TOP", buttons[i - 1], "BOTTOM", 0, -4);
+                button:SetPoint("TOP", SummaryCards[i - 1], "BOTTOM", 0, -4);
             end
             button:Hide();
 
             ReskinButton(button);
         end
     end
-
-    animFlip:Add(buttons, MAX_SUMMARY_ACHIEVEMENTS, 2);
 end
 
 local function UpdateSummaryFrame(breakLoop, noRenderWhileHidden)
     if noRenderWhileHidden and not SummaryFrame:IsShown() then return end;
 
-    local buttons = SummaryFrame.buttons;
     local button;
     local recentAchievements = { GetLatestCompletedAchievements(isGuildView) };
 
@@ -3031,7 +3116,7 @@ local function UpdateSummaryFrame(breakLoop, noRenderWhileHidden)
     local id, name, points, completed, month, day, year, description, flags, icon, rewardText;
     local useRelativeDate = true;
     for i = 1, 5 do
-        button = buttons[i];
+        button = SummaryCards[i];
         id = recentAchievements[i];
         if id then
             id, name, points, completed, month, day, year, description, flags, icon, rewardText = DataProvider:GetAchievementInfo(id);
@@ -3156,6 +3241,7 @@ local function SummaryButton_OnClick(self)
     AchievementContainer:Hide();
     SummaryFrame:Show();
     SummaryButton:Hide();
+    MainFrame.FeatOfStrengthText:Hide();
 end
 
 
@@ -3319,7 +3405,7 @@ function NarciAchievementGetLinkButtonMixin:OnEnter()
 end
 
 function NarciAchievementGetLinkButtonMixin:OnLeave()
-    if not self:IsMouseOver() then
+    if not self:IsMouseOver() and not self.Clipboard:HasFocus() then
         self.Label:SetTextColor(0.8, 0.8, 0.8);
         self.Icon:SetTexCoord(0, 0.5, 0, 1);
         self.Icon:SetAlpha(0.4);
@@ -3330,29 +3416,6 @@ end
 
 
 --------------------------------------------------------
---Start updating rendered area when dragging achievement scrollframe scrollbar
-local updateFrame = CreateFrame("Frame");
-updateFrame:Hide();
-updateFrame.t = 0;
-updateFrame:SetScript("OnUpdate", function(self, elapsed)
-    self.t = self.t + elapsed;
-    if self.t >= 0.2 then
-        self.t = 0;
-        UpdateRenderedArea(self.scrollBar:GetValue());
-    end
-end);
-
-local function ScrollBar_OnDragStart()
-    updateFrame:Show();
-end
-
-local function ScrollBar_OnDragStop()
-    updateFrame.t = 1;
-    After(0, function()
-        updateFrame:Hide();
-    end)
-end
-
 local function InitializeFrame(frame)
     MainFrame = frame;
 
@@ -3365,7 +3428,7 @@ local function InitializeFrame(frame)
 
     local numCategories = CategoryStructure.player.numCategories;
     local deltaRatio = 2;
-    local speedRatio = 0.2;
+    local speedRatio = 0.15;
     local buttonHeight = 32;
     local range = numCategories  * (buttonHeight + 4) - CategoryContainer:GetHeight();
     local positionFunc;
@@ -3389,19 +3452,19 @@ local function InitializeFrame(frame)
     --Achievement
     AchievementContainer = frame.AchievementCardFrame;
     CreateAchievementButtons(AchievementContainer.ScrollChild);
-    animFlip:Add(AchievementCards, 7, 1);
 
     local numCards = #AchievementCards;
     local deltaRatio = 1;
     local speedRatio = 0.24;
     local buttonHeight = 64;
     local range = numCards  * (buttonHeight + 4) - AchievementContainer:GetHeight();
-    local positionFunc = UpdateRenderedArea;
+    local positionFunc;
     NarciAPI_ApplySmoothScrollToScrollFrame(AchievementContainer, deltaRatio, speedRatio, positionFunc, buttonHeight, range);
     local scrollBar = AchievementContainer.scrollBar;
-    updateFrame.scrollBar = scrollBar;
-    scrollBar:SetScript("OnMouseDown", ScrollBar_OnDragStart);
-    scrollBar:SetScript("OnMouseUp", ScrollBar_OnDragStop);
+    scrollBar:SetScript("OnValueChanged", function(bar, value)
+        AchievementContainer:SetVerticalScroll(value);
+        ScrollCard:GetTopButtonIndex(value);
+    end);
     UpdateAchievementScrollRange();
 
     --Model Preview
@@ -3586,11 +3649,26 @@ local function FormatFloatingCard(card, id, name, points, completed, month, day,
 end
 
 
+
+local function RefreshInspection(achievementID)
+    --Refresh inspection card
+    if achievementID then
+        if (InspectionFrame:IsShown()) and (achievementID == InspectionFrame.Card.id) then
+            InspectAchievement(achievementID);
+        end
+    else
+        if (InspectionFrame:IsShown()) and InspectionFrame.Card.id then
+            InspectAchievement(InspectionFrame.Card.id);
+        end
+    end
+end
 --------------------------------------------------------------------
 --Public
 NarciAchivementFrameMixin = {};
 
 function NarciAchivementFrameMixin:OnLoad()
+    ScrollCard.textReference = self.TextHeightRetriever;
+
     self:RegisterForDrag("LeftButton");
     self:SetAttribute("nodeignore", true);  --ConsolePort: Ignore this frame
 end
@@ -3603,6 +3681,26 @@ function NarciAchivementFrameMixin:OnShow()
         self.pendingUpdate = nil;
         UpdateSummaryFrame();
     end
+    self:RegisterDynamicEvent(true);
+    RefreshInspection();
+end
+
+function NarciAchivementFrameMixin:OnHide()
+    self:RegisterDynamicEvent(false);
+end
+
+function NarciAchivementFrameMixin:RegisterDynamicEvent(state)
+    if state then
+        self:RegisterEvent("CRITERIA_UPDATE");
+        self:RegisterEvent("CRITERIA_COMPLETE");
+    else
+        self:UnregisterEvent("CRITERIA_UPDATE");
+        self:UnregisterEvent("CRITERIA_COMPLETE");
+    end
+end
+
+function NarciAchivementFrameMixin:OnEvent(event)
+    RefreshInspection();
 end
 
 function NarciAchivementFrameMixin:ShowRedMark(visible)
@@ -3737,18 +3835,20 @@ function NarciAchievement_SelectTheme(index)
         EditorContainer.notes:SetTextColor(0.5, 0.5, 0.5);
     end
 
-    local inpsectedAchievementID = AchievementCards[-1].id;
-    if inpsectedAchievementID then
-        local id, name, points, completed, month, day, year, description, flags, icon, rewardText = DataProvider:GetAchievementInfo(inpsectedAchievementID);
+    local inspectedAchievementID = AchievementCards[-1].id;
+    if inspectedAchievementID then
+        local id, name, points, completed, month, day, year, description, flags, icon, rewardText = DataProvider:GetAchievementInfo(inspectedAchievementID);
         FormatAchievementCard(-1, id, name, points, completed, month, day, year, description, flags, icon, rewardText);
-        --print("FormatAchievementCard")
     end
     
-    local categoryID = DataProvider.currentCategory;
-    if categoryID and categoryID ~= 0 then
-        UpdateAchievementCardsBySlice(categoryID);
+    if SummaryFrame:IsVisible() then
+        UpdateSummaryFrame();
+    else
+        local categoryID = DataProvider.currentCategory;
+        if categoryID and categoryID ~= 0 then
+            UpdateAchievementCardsBySlice(categoryID);
+        end
     end
-    UpdateSummaryFrame();
 
     --Search Results:
     for i = 1, #ResultButtons do
@@ -3920,13 +4020,6 @@ local function UpdateTrackAchievements()
 
     if (InspectionFrame:IsShown()) and (changedAchievementID == InspectionFrame.Card.id) then
         InspectionFrame.Card.trackIcon:SetShown(isTracked);
-    end
-end
-
-local function RefreshInspection(achievementID)
-    --Refresh inspection card
-    if (InspectionFrame:IsShown()) and (achievementID == InspectionFrame.Card.id) then
-        InspectAchievement(achievementID);
     end
 end
 

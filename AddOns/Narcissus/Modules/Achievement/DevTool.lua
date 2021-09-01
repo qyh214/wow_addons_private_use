@@ -129,14 +129,15 @@ Builder:SetScript("OnEvent", function(self, event, ...)
     if not NarciDevToolOutput then
         NarciDevToolOutput = {};
     end
-    NarciDevToolOutput.parentAchievementData = {};
+    NarciDevToolOutput.parentAchievementData = NarciDevToolOutput.parentAchievementData or {};
     outputTable = NarciDevToolOutput.parentAchievementData;
     
     BuildCategories();
+    local isGuild = false;
     After(0.5, function()
-        BuildCategories(true);
+        BuildCategories(isGuild);
         After(0.5, function()
-            Loader:LoadList(guildCategories);
+            Loader:LoadList(playerCategories);
         end);
     end);
 end);

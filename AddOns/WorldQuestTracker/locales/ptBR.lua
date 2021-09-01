@@ -3,7 +3,7 @@ if not L then return end
 
 L["S_APOWER_AVAILABLE"] = "Disponível"
 L["S_APOWER_NEXTLEVEL"] = "Próximo nível"
-L["S_DECREASESIZE"] = "Diminuir Tamanho"
+L["S_DECREASESIZE"] = "Diminuir tamanho"
 L["S_ENABLED"] = "Ativado"
 L["S_ERROR_NOTIMELEFT"] = "Esta missão expirou."
 L["S_ERROR_NOTLOADEDYET"] = "Esta missão não foi carregada ainda, por favor aguarde alguns segundos."
@@ -12,7 +12,7 @@ L["S_FACTION_TOOLTIP_TRACK"] = "Shift + Clique: rastreie as missões desta facç
 L["S_FLYMAP_SHOWTRACKEDONLY"] = "Apenas Rastreadas"
 L["S_FLYMAP_SHOWTRACKEDONLY_DESC"] = "Mostrar apenas missões que estão sendo rastreadas."
 L["S_FLYMAP_SHOWWORLDQUESTS"] = "Mostrar Missões Mundiais"
-L["S_GROUPFINDER_ACTIONS_CANCEL_APPLICATIONS"] = "clique para cancelar aplicações..."
+L["S_GROUPFINDER_ACTIONS_CANCEL_APPLICATIONS"] = "clique para cancelar aplicações.."
 L["S_GROUPFINDER_ACTIONS_CANCELING"] = "cancelando..."
 L["S_GROUPFINDER_ACTIONS_CREATE"] = [=[nenhum grupo encontrado?
 clique para criar um]=]
@@ -21,16 +21,16 @@ L["S_GROUPFINDER_ACTIONS_LEAVEASK"] = "Sair do grupo?"
 L["S_GROUPFINDER_ACTIONS_LEAVINGIN"] = "Saindo do grupo em (clique para sair agora):"
 L["S_GROUPFINDER_ACTIONS_RETRYSEARCH"] = "repetir busca"
 L["S_GROUPFINDER_ACTIONS_SEARCH"] = "clique para iniciar busca por grupos"
-L["S_GROUPFINDER_ACTIONS_SEARCH_RARENPC"] = "procurar por grupo para matar este raro"
+L["S_GROUPFINDER_ACTIONS_SEARCH_RARENPC"] = "procurar por um grupo para matar este raro"
 L["S_GROUPFINDER_ACTIONS_SEARCH_TOOLTIP"] = "Entre em um grupo que está fazendo esta missão"
 L["S_GROUPFINDER_ACTIONS_SEARCHING"] = "buscando..."
-L["S_GROUPFINDER_ACTIONS_SEARCHMORE"] = "clique para buscar por mais jogadores para o grupo"
+L["S_GROUPFINDER_ACTIONS_SEARCHMORE"] = "clique para procurar por mais jogadores para o grupo"
 L["S_GROUPFINDER_ACTIONS_SEARCHOTHER"] = "Sair e buscar outro grupo?"
-L["S_GROUPFINDER_ACTIONS_UNAPPLY1"] = "clique para remover a aplicação e criar um grupo novo"
-L["S_GROUPFINDER_ACTIONS_UNLIST"] = "clique para deslistar o seu grupo"
-L["S_GROUPFINDER_ACTIONS_UNLISTING"] = "deslistando..."
+L["S_GROUPFINDER_ACTIONS_UNAPPLY1"] = "clique para remover a aplicação e criar um grupo novo "
+L["S_GROUPFINDER_ACTIONS_UNLIST"] = "clique para deslistar o seu grupo "
+L["S_GROUPFINDER_ACTIONS_UNLISTING"] = "deslistando.."
 L["S_GROUPFINDER_ACTIONS_WAITING"] = "esperando..."
-L["S_GROUPFINDER_AUTOOPEN_RARENPC_TARGETED"] = "Abrir automaticamente ao Selecionar um Raro"
+L["S_GROUPFINDER_AUTOOPEN_RARENPC_TARGETED"] = "Abrir Automaticamente ao Selecionar um Raro"
 L["S_GROUPFINDER_ENABLED"] = "Abrir esta janela automaticamente em uma nova missão"
 L["S_GROUPFINDER_LEAVEOPTIONS"] = "Opções de sair do grupo"
 L["S_GROUPFINDER_LEAVEOPTIONS_AFTERX"] = "Sair Depois de X Segundos"
@@ -40,19 +40,18 @@ L["S_GROUPFINDER_LEAVEOPTIONS_IMMEDIATELY"] = "Sair imediatamente após completa
 L["S_GROUPFINDER_NOPVP"] = "Evitar servidores JxJ"
 L["S_GROUPFINDER_OT_ENABLED"] = "Mostrar botões na listagem de objetivos"
 L["S_GROUPFINDER_QUEUEBUSY"] = "você já está em uma fila."
-L["S_GROUPFINDER_QUEUEBUSY2"] = "Não foi possível mostrar a janela do Localizador de grupo: você já está no grupo ou na fila."
+L["S_GROUPFINDER_QUEUEBUSY2"] = "Não foi possível mostrar a janela do Localizador de grupo: você já está em grupo ou na fila."
 L["S_GROUPFINDER_RESULTS_APPLYING"] = "Faltam %d grupos para aplicar, clique novamente"
 L["S_GROUPFINDER_RESULTS_APPLYING1"] = "Falta um grupo para aplicar, clique novamente"
-L["S_GROUPFINDER_RESULTS_FOUND"] = [=[%d grupos encontrados
-clique para iniciar as aplicações]=]
+L["S_GROUPFINDER_RESULTS_FOUND"] = "%d grupos encontrados clique para iniciar as aplicações"
 L["S_GROUPFINDER_RESULTS_FOUND1"] = [=[1 grupo encontrado
 clique para entrar no grupo]=]
-L["S_GROUPFINDER_RESULTS_UNAPPLY"] = "%d aplicações restantes..."
-L["S_GROUPFINDER_RIGHTCLICKCLOSE"] = "botão direito para fechar este painel"
+L["S_GROUPFINDER_RESULTS_UNAPPLY"] = "%d aplicações restantes.."
+L["S_GROUPFINDER_RIGHTCLICKCLOSE"] = "botão direito para fechar este painel "
 L["S_GROUPFINDER_SECONDS"] = "Segundos"
 L["S_GROUPFINDER_TITLE"] = "Localizador de Grupos"
 L["S_GROUPFINDER_TUTORIAL1"] = "Faça missões mundiais mais rápido ao se juntar a um grupo que está fazendo a mesma missão!"
-L["S_INCREASESIZE"] = "Aumentar Tamanho"
+L["S_INCREASESIZE"] = "Aumentar tamanho"
 L["S_MAPBAR_FILTER"] = "Filtros"
 L["S_MAPBAR_FILTERMENU_FACTIONOBJECTIVES"] = "Objetivos de facções"
 L["S_MAPBAR_FILTERMENU_FACTIONOBJECTIVES_DESC"] = "Mostra missões de facções mesmo que tenham sido excluídas por filtros."
@@ -66,10 +65,8 @@ L["S_MAPBAR_OPTIONSMENU_EQUIPMENTICONS"] = "Ícones de equipamentos"
 L["S_MAPBAR_OPTIONSMENU_QUESTTRACKER"] = "Habilitar Listagem de Missões"
 L["S_MAPBAR_OPTIONSMENU_REFRESH"] = "Recarregar"
 L["S_MAPBAR_OPTIONSMENU_SOUNDENABLED"] = "Habilitar som"
---[[Translation missing --]]
---[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_ONDISABLE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = ""--]] 
+L["S_MAPBAR_OPTIONSMENU_STATUSBAR_ONDISABLE"] = "Use '/wqt statusbar' ou a opção addon nas opções de interface para restaurar a barra de status"
+L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = "Mostrar barra de status"
 L["S_MAPBAR_OPTIONSMENU_STATUSBARANCHOR"] = "Ancorar ao topo"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_CURRENTZONE"] = "Apenas zona atual"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_SCALE"] = "Escala do rastreador: %s"
@@ -80,7 +77,7 @@ L["S_MAPBAR_OPTIONSMENU_TRACKERMOVABLE_LOCKED"] = "Trancado"
 L["S_MAPBAR_OPTIONSMENU_UNTRACKQUESTS"] = "Parar de listar tudo"
 L["S_MAPBAR_OPTIONSMENU_WORLDMAPCONFIG"] = "Ajustes do Mapa Mundi"
 L["S_MAPBAR_OPTIONSMENU_YARDSDISTANCE"] = "Mostrar Distância"
-L["S_MAPBAR_OPTIONSMENU_ZONE_QUESTSUMMARY"] = "Resumo de missões (tela cheia)"
+L["S_MAPBAR_OPTIONSMENU_ZONE_QUESTSUMMARY"] = "Resumo de missões"
 L["S_MAPBAR_OPTIONSMENU_ZONEMAPCONFIG"] = "Ajustas do Mapa Zona"
 L["S_MAPBAR_RESOURCES_TOOLTIP_TRACKALL"] = "Clique para rastrear: |cFFFFFFFF%s|r quests."
 L["S_MAPBAR_SORTORDER"] = "Ordem"
@@ -91,43 +88,25 @@ L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SORTBYTIME"] = "Ordem por Tempo"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_TITLE"] = "Tempo Restante"
 L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "Na Conta"
 L["S_OPTIONS_ACCESSIBILITY"] = "Acessibilidade"
---[[Translation missing --]]
---[[ L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_ANIMATIONS"] = ""--]] 
-L["S_OPTIONS_MAPFRAME_ALIGN"] = "Janela do Mapa Centralizada"
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_SCALE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_QUESTBLACKLIST"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_RESET"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_SHOWFACTIONS"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_TRACKER_RESETPOSITION"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_ANCHOR_LEFT"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_ANCHOR_RIGHT"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_DECREASEICONSPERROW"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_INCREASEICONSPERROW"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = ""--]] 
---[[Translation missing --]]
---[[ L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = ""--]] 
+L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = "Marcar Rastreador Extra"
+L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "Mostrar anel de recompensa"
+L["S_OPTIONS_ANIMATIONS"] = "Faça animações"
+L["S_OPTIONS_MAPFRAME_ALIGN"] = "Janela do Mapa Centralizada "
+L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "Você precisa habilitar a 'Escala da janela do mapa' primeiro, nenhum valor foi alterado."
+L["S_OPTIONS_MAPFRAME_SCALE"] = "Escala da janela do mapa"
+L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = "Habilitar escala da janela do mapa"
+L["S_OPTIONS_QUESTBLACKLIST"] = "Lista negra de Missões"
+L["S_OPTIONS_RESET"] = "Redefinir"
+L["S_OPTIONS_SHOWFACTIONS"] = "Mostrar Facções"
+L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = "Sem prioridade por tempo restante"
+L["S_OPTIONS_TRACKER_RESETPOSITION"] = "Redefinir Posição"
+L["S_OPTIONS_WORLD_ANCHOR_LEFT"] = "Âncora do lado esquerdo"
+L["S_OPTIONS_WORLD_ANCHOR_RIGHT"] = "Âncora do lado direito"
+L["S_OPTIONS_WORLD_DECREASEICONSPERROW"] = "Diminuir quadrados por linha"
+L["S_OPTIONS_WORLD_INCREASEICONSPERROW"] = "Aumentar quadrados por linha"
+L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = "Organizar por mapa"
+L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = "Organizar por tipo de missão"
+L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = "Apenas Rastreados"
 L["S_OVERALL"] = "Em Geral"
 L["S_PARTY"] = "Grupo"
 L["S_PARTY_DESC1"] = "Uma estrela azul na quest significa que todos do grupo a possuem."
@@ -144,17 +123,17 @@ L["S_QUESTTYPE_PROFESSION"] = "Profissão"
 L["S_QUESTTYPE_PVP"] = "JxJ"
 L["S_QUESTTYPE_RESOURCE"] = "Recursos"
 L["S_QUESTTYPE_TRADESKILL"] = "Materiais"
-L["S_RAREFINDER_ADDFROMPREMADE"] = "Adicionar Raros Encontrado em Grupos Premade"
+L["S_RAREFINDER_ADDFROMPREMADE"] = "Adicionar Raros Encontrado em Grupos Premade "
 L["S_RAREFINDER_NPC_NOTREGISTERED"] = "monstro raro não registrado no banco de dados"
 L["S_RAREFINDER_OPTIONS_ENGLISHSEARCH"] = "Procurar Usando Nomes em Inglês"
-L["S_RAREFINDER_OPTIONS_SHOWICONS"] = "Mostrar Ícones para Raros Ativos"
+L["S_RAREFINDER_OPTIONS_SHOWICONS"] = "Mostrar Ícones para Raros Ativos "
 L["S_RAREFINDER_SOUND_ALWAYSPLAY"] = "Reproduzir mesmo quando os efeitos sonoros estão desativados"
-L["S_RAREFINDER_SOUND_ENABLED"] = "Reproduzir Som para Raros no Mini Mapa"
-L["S_RAREFINDER_SOUNDWARNING"] = "som reproduzido devido a um raro no minimapa, você pode desativar esse som no menu de opções > rato,localizar, sub-menu."
-L["S_RAREFINDER_TITLE"] = "Procura  de Raros"
+L["S_RAREFINDER_SOUND_ENABLED"] = "Reproduzir Som para Raros no Mini Mapa "
+L["S_RAREFINDER_SOUNDWARNING"] = "som reproduzido devido a um raro no mini mapa, você pode desativar esse som no menu de opções > submenu do localizador de raros."
+L["S_RAREFINDER_TITLE"] = "Procura de Raros"
 L["S_RAREFINDER_TOOLTIP_REMOVE"] = "Remover"
 L["S_RAREFINDER_TOOLTIP_SEACHREALM"] = "Procurar em outros reinos"
-L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = "Visto Por"
+L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = "Visto Por "
 L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = "minutos atrás"
 L["S_SUMMARYPANEL_EXPIRED"] = "EXPIRADA"
 L["S_SUMMARYPANEL_LAST15DAYS"] = "Últimos 15 dias"
@@ -166,19 +145,15 @@ L["S_TUTORIAL_CLICKTOTRACK"] = "Clique para rastrear a missão."
 L["S_TUTORIAL_PARTY"] = "Quando estiver em grupo, uma estrela azul é mostrada em missões em que todos do grupo estão!"
 L["S_TUTORIAL_STATISTICS_BUTTON"] = "Clique aqui para ver as estatísticas e salvar uma lista de missões noutros personagens."
 L["S_TUTORIAL_TIMELEFT"] = "indica o tempo restante (+4 horas, +90 minutos, +30 minutos, menos de 30 minutos)."
---[[Translation missing --]]
---[[ L["S_TUTORIAL_WORLDBUTTONS"] = ""--]] 
+L["S_TUTORIAL_WORLDBUTTONS"] = "Clique aqui para alternar entre três tipos de resumos: - |cFFFFAA11Por tipo de missão|r - |cFFFFAA11Por Zona|r - |cFFFFAA11Nenhum|r Click |cFFFFAA11Alternar missões|r para ocultar locais de missões."
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Este botão mostra o mapa das Ilhas Partidas."
 L["S_UNKNOWNQUEST"] = "Missão desconhecida"
 L["S_WHATSNEW"] = "O que tem de novo?"
---[[Translation missing --]]
---[[ L["S_WORLDBUTTONS_SHOW_TYPE"] = ""--]] 
+L["S_WORLDBUTTONS_SHOW_TYPE"] = "Ordenar por tipo"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "Ordenar por Zona"
---[[Translation missing --]]
---[[ L["S_WORLDBUTTONS_TOGGLE_QUESTS"] = ""--]] 
-L["S_WORLDMAP_QUESTLOCATIONS"] = "Mostrar local da quest"
-L["S_WORLDMAP_QUESTSUMMARY"] = "Mostrar resumo de quest"
---[[Translation missing --]]
---[[ L["S_WORLDMAP_TOOLTIP_TRACKALL"] = ""--]] 
+L["S_WORLDBUTTONS_TOGGLE_QUESTS"] = "Alternar missões"
+L["S_WORLDMAP_QUESTLOCATIONS"] = "Mostrar local da missão"
+L["S_WORLDMAP_QUESTSUMMARY"] = "Mostrar resumo da missão"
+L["S_WORLDMAP_TOOLTIP_TRACKALL"] = "rastrear todas as missões nesta lista"
 L["S_WORLDQUESTS"] = "Missões Mundiais"
 

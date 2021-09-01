@@ -1,0 +1,106 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="Minimap.lua"/>
+
+	<Button name="BtWLoadoutsMinimapButton" mixin="BtWLoadoutsMinimapMixin" parent="Minimap" frameStrata="MEDIUM" frameLevel="8" enableMouse="true" movable="true" hidden="false">
+		<Size x="33" y="33"/>
+		<Anchors>
+			<Anchor point="CENTER" x="-12" y="-80"/>
+		</Anchors>
+		<KeyValues>
+			<!-- Prevent ElvUI Enhanced from skinning this minimap button on the first pass -->
+			<KeyValue key="isSkinned" value="true" type="boolean"/>
+		</KeyValues>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="Icon" file="Interface\ICONS\Ability_marksmanship">
+					<Size x="21" y="21"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="7" y="-6"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="TomeIcon" file="Interface\ICONS\INV_Relics_LibramofGrace" hidden="true">
+					<Size x="21" y="21"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="7" y="-6"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture file="Interface\Minimap\MiniMap-TrackingBorder">
+					<Size x="56" y="56"/>
+					<Anchors>
+						<Anchor point="TOPLEFT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="PulseA" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight" alphaMode="ADD" hidden="true">
+					<Size x="33" y="33"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="PulseB" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight" alphaMode="ADD" hidden="true">
+					<Size x="33" y="33"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="Progress" file="Interface\Artifacts\Artifacts-PerkRing-Final-Mask" alphaMode="ADD" hidden="true">
+					<Size x="20" y="20"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+	                <TexCoords left="0.203125" right="0.7890625" top="0.203125" bottom="0.7890625"/>
+				</Texture>
+				<MaskTexture parentKey="CircleMask" file="Interface\CharacterFrame\TempPortraitAlphaMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+					<Size x="20" y="20"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="Progress"/>
+					</MaskedTextures>
+				</MaskTexture>
+			</Layer>
+		</Layers>
+		<Animations>
+			<AnimationGroup parentKey="FirstTimeAnim" looping="REPEAT">
+				<Alpha childKey="PulseA" duration="1" order="1" fromAlpha="0" toAlpha="1" />
+				<Alpha childKey="PulseB" duration="1" order="1" fromAlpha="0" toAlpha="1" />
+				<Alpha childKey="PulseA" duration="1" order="2" fromAlpha="1" toAlpha="0" />
+				<Alpha childKey="PulseB" duration="1" order="2" fromAlpha="1" toAlpha="0" />
+                <Scripts>
+                    <OnPlay>
+                        self:GetParent().PulseA:Show()
+                        self:GetParent().PulseB:Show()
+                    </OnPlay>
+                    <OnFinished>
+                        self:GetParent().PulseA:Hide()
+                        self:GetParent().PulseB:Hide()
+                    </OnFinished>
+                </Scripts>
+			</AnimationGroup>
+			<AnimationGroup parentKey="ProgressAnim" looping="REPEAT">
+				<Rotation parentKey="Rotation" childKey="Progress" smoothing="NONE" duration="1" order="1" degrees="-360"/>
+                <Scripts>
+                    <OnPlay>
+                        self:GetParent().Progress:Show()
+                    </OnPlay>
+                    <OnStop>
+                        self:GetParent().Progress:Hide()
+                    </OnStop>
+                </Scripts>
+			</AnimationGroup>
+		</Animations>
+		<HighlightTexture parentKey="HighlightTexture" alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnEvent method="OnEvent"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnDragStart method="OnDragStart"/>
+			<OnDragStop method="OnDragStop"/>
+			<OnClick method="OnClick"/>
+		</Scripts>
+	</Button>
+</Ui>

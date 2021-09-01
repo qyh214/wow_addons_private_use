@@ -3,7 +3,9 @@
 	<Script file="SpellVisualCatalogue.lua"/>
 	<Script file="AnimationCatalogue.lua"/>
 	<Script file="GroundShadowOption.lua"/>
+	<Script file="WeaponSlot.lua"/>
     <Script file="PlayerModel.lua"/>
+
 
 	<Button name="Narci_RaceOptionButton_Template" virtual="true">
 		<Size x="80" y="20"/>
@@ -34,7 +36,7 @@
 		</Scripts>	
 	</Button>
 
-	<Button name="Narci_ColorButton_Template" frameStrata="DIALOG" virtual="true">
+	<Button name="Narci_ColorButton_Template" virtual="true">
 		<Size>
 			<AbsDimension x="24" y="24"/>
 		</Size>
@@ -85,7 +87,7 @@
 		</Scripts>
 	</Button>
 
-	<Button name="Narci_ModelIndexButton_Template" virtual="true" frameLevel="21" registerForClicks="LeftButtonUp, RightButtonUp">
+	<Button name="Narci_ModelIndexButton_Template" virtual="true" frameLevel="21" registerForClicks="LeftButtonUp, RightButtonUp" mixin="NarciModelIndexButtonMixin">
 		<Size>
 			<AbsDimension x="24" y="24"/>
 		</Size>
@@ -168,6 +170,15 @@
 					</Gradient>
 				</Texture>
 			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="1">
+				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\ActorPanel\ActorIndexButton" parentKey="Selection" hidden="true">
+					<Size x="34" y="34"/>
+					<TexCoords left="0.875" right="1" top="0.5" bottom="1"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
 		</Layers>
 		<Frames>
 			<Frame parentKey="AnimFrame" hidden="true">
@@ -192,21 +203,13 @@
 			</Frame>
 		</Frames>
 		<Scripts>
-			<OnEnter function="Narci_ModelIndexButton_OnEnter"/>
-			<OnMouseDown>
-				self.ID:SetPoint("CENTER", 0.5, -0.5);
-				self.Icon:SetPoint("CENTER", 0.5, -0.5);
-			</OnMouseDown>
-			<OnMouseUp>
-				self.ID:SetPoint("CENTER", 0, 0);
-				self.Icon:SetPoint("CENTER", 0, 0);
-			</OnMouseUp>
-			<OnDragStart function="Narci_ModelIndexButton_OnDragStart"/>
-			<OnDragStop function="Narci_ModelIndexButton_OnDragStop"/>
-			<OnLeave function="Narci_ModelIndexButton_OnLeave"/>
-			<OnDoubleClick>
-				return;
-			</OnDoubleClick>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnMouseDown method="OnMouseDown"/>
+			<OnMouseUp method="OnMouseUp"/>
+			<OnDragStart method="OnDragStart"/>
+			<OnDragStop method="OnDragStop"/>
+			<OnDoubleClick method="OnDoubleClick"/>
 			<OnClick function="Narci_ModelIndexButton_OnClick"/>
 		</Scripts>
 	</Button>
@@ -287,6 +290,7 @@
 				self.Text:Show();
 				self.TextBG:Show();
 				self.Label:SetTextColor(1, 1, 1);
+				self:GetParent():UpdateWidgetTpe(self.isTypeLocked);
 			</OnEnter>
 			<OnLeave>
 				self.Highlight:Hide();
@@ -295,12 +299,12 @@
 				self.Label:SetTextColor(0.65, 0.65, 0.65);
 				local PopUp = self:GetParent();
 				if not PopUp:IsMouseOver() then
-					NarciAPI_FadeFrame(PopUp, 0.15, "OUT");
+					NarciFadeUI.Fade(PopUp, 0.15, 0);
 				end
 			</OnLeave>
 			<OnClick>
 				local PopUp = self:GetParent();
-				NarciAPI_FadeFrame(PopUp, 0.15, "OUT");
+				NarciFadeUI.Fade(PopUp, 0.15, 0);
 			</OnClick>
 		</Scripts>
 	</Button>
@@ -594,7 +598,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad method="OnLoad"/>
-			<OnUpdate method="OnUpdate"/>
+			<!--OnUpdate method="OnUpdate"/-->
 			<OnMouseUp method="OnMouseUp"/>
 			<OnMouseDown method="OnMouseDown"/>
 			<OnMouseWheel method="OnMouseWheel"/>
@@ -746,6 +750,10 @@
 						</Scripts>
 					</Frame>
 				</Frames>
+				<Scripts>
+					<OnMouseUp method="OnMouseUpModified"/>
+					<OnMouseDown method="OnMouseDownModified"/>
+				</Scripts>
 			</DressUpModel>
 		</Frames>
 	</Frame>
@@ -760,7 +768,7 @@
 				<Scripts>
 					<OnFinished>
 						self:GetParent().Highlight:Hide();
-						self:GetParent().IsOn = false;
+						self:GetParent().isOn = false;
 						self:GetParent().animIn:Play();
 					</OnFinished>
 				</Scripts>
@@ -793,7 +801,7 @@
             </OnEnter>
             <OnLeave>
 				self:GetParent().IDFrame:Hide();
-				if self.IsOn then	return; end
+				if self.isOn then	return; end
                 self.Highlight:Hide();
             </OnLeave>
 		</Scripts>
@@ -807,7 +815,7 @@
 			</OnEnter>
 			<OnLeave>
 				NarciTooltip:FadeOut();
-				if not self.IsOn then
+				if not self.isOn then
 					self.Highlight:Hide();
 				end
 			</OnLeave>
@@ -832,7 +840,7 @@
 					</Anchors>
 				</Texture>
 			</Layer>
-			<Layer lvel="OVERLAY">
+			<Layer level="OVERLAY">
 				<FontString justifyH="LEFT" justifyV="MIDDLE" maxLines="1" inherits="NarciDisabledButtonFont" parentKey="Label">
 					<Size x="0" y="0"/>
 					<Anchors>
@@ -876,7 +884,7 @@
 			</OnEnter>
 			<OnLeave>
 				NarciTooltip:FadeOut();
-				if (self.IsOn) then	return;	end;
+				if (self.isOn) then	return;	end;
 			</OnLeave>
 			<OnMouseDown>
 				self:SetSize(34, 34);
@@ -885,7 +893,7 @@
 				self:SetSize(38, 38);
 			</OnMouseUp>
 			<OnHide>
-				if self.IsOn then
+				if self.isOn then
 					self:Click();
 				end
 			</OnHide>
@@ -940,7 +948,7 @@
 				</OnEnter>
 				<OnLeave>
 					NarciTooltip:FadeOut();
-					if (self.IsOn) or self:IsMouseOver(-4, 4, 0, 0) then return; end;
+					if (self.isOn) or self:IsMouseOver(-4, 4, 0, 0) then return; end;
 				</OnLeave>
 			</Scripts>
 	</Button>
@@ -1003,7 +1011,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				self.IsOn = false;
+				self.isOn = false;
 			</OnLoad>
 			<OnClick function="Narci_AnimationOption_OtherTabButton_OnClick"/>
 			<OnEnter>
@@ -1047,7 +1055,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				self.IsOn = false;
+				self.isOn = false;
 			</OnLoad>
 			<OnClick function="Narci_AnimationOption_OtherTabButton_OnClick"/>
 			<OnEnter>
@@ -1072,7 +1080,7 @@
 						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
 					</Anchors>
 					<Animations>
-						<AnimationGroup parentKey="Bling" smoothing="IN_OUT">
+						<AnimationGroup parentKey="Bling">
 							<Alpha fromAlpha="1" toAlpha="0" duration="0.3" order="1"/>
 							<Alpha fromAlpha="0.2" toAlpha="1" duration="0.4" order="2"/>
 						</AnimationGroup>
@@ -1093,7 +1101,7 @@
 						<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER"/>
 					</Anchors>
 					<Animations>
-						<AnimationGroup parentKey="Bling" smoothing="IN_OUT">
+						<AnimationGroup parentKey="Bling">
 							<Alpha fromAlpha="0.6" toAlpha="0" duration="0.3" order="1"/>
 							<Alpha fromAlpha="0" toAlpha="0.6" duration="0.4" order="2"/>
 						</AnimationGroup>
@@ -1229,7 +1237,7 @@
 						</Texture>
 					</Layer>
 					<Layer level="OVERLAY" textureSubLevel="4">
-						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\ActorPanel\Panel" parentKey="Highlight" hidden="true" Alpha="0">
+						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\ActorPanel\Panel" parentKey="Highlight" Alpha="0">
 							<TexCoords left="0" right="0.44140625" top="0.56640625" bottom="0.6796875"/>
 						</Texture>
 					</Layer>
@@ -1243,15 +1251,20 @@
 		</Frames>
 		<Scripts>
 			<OnEnter>
-				--self.Highlight:Show()
 				UIFrameFadeIn(self.Highlight, 0.12, self.Highlight:GetAlpha(), 0.6);
 			</OnEnter>
 			<OnLeave>
-				if not self.IsOn then
+				if not self.isOn then
 					UIFrameFadeIn(self.Highlight, 0.25, self.Highlight:GetAlpha(), 0);
-					--self.Highlight:Hide()
 				end
 			</OnLeave>
+			<OnShow>
+				if self.isOn then
+					self.Highlight:SetAlpha(1);
+				else
+					self.Highlight:SetAlpha(0);
+				end
+			</OnShow>
 		</Scripts>
 	</Button>
 
@@ -1289,7 +1302,76 @@
 		</Layers>
 	</Button>
 
-	<Frame name="Narci_ModelSettings" frameLevel="1" frameStrata="DIALOG" hidden="true" clampedToScreen="false" Alpha="0" movable="true" clipChildren="false" mixin="NarciModelSettingsMixin">
+	<Button name="Narci_ActorWeaponTemplate" virtual="true" mixin="NarciActorWeaponSlotMixin">
+		<Size x="48" y="24"/>
+		<HitRectInsets>
+			<AbsInset left="3" right="12" top="0" bottom="0"/>
+		</HitRectInsets>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="ItemIcon">
+					<Size x="24" y="14"/>
+					<Color r="0" g="1" b="0"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="6"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\ModelWeapon\Panel" parentKey="Border">
+					<TexCoords left="0" right="0.328125" top="0" bottom="0.1171875"/>
+					<Size x="51" y="18"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<FontString inherits="NarciNonInteractiveFont" justifyH="CENTER" justifyV="MIDDLE" maxLines="1" parentKey="EmptyText" hidden="true">
+					<Size x="32" y="12"/>
+					<Color r="0.25" g="0.78" b="0.92" a="1"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<HighlightTexture file="Interface\AddOns\Narcissus\Art\Widgets\ModelWeapon\Panel" parentKey="Highlight">
+			<TexCoords left="0" right="0.328125" top="0.125" bottom="0.2421875"/>
+			<Size x="51" y="18"/>
+			<Anchors>
+				<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
+			</Anchors>
+		</HighlightTexture>
+		
+		<Frames>
+			<Button parentKey="UnequipButton">
+				<Size x="18" y="18"/>
+				<Anchors>
+					<Anchor point="CENTER" relativeKey="$parent" relativePoint="RIGHT" x="-11.5"/>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<Texture file="Interface\AddOns\Narcissus\Art\Widgets\ModelWeapon\Panel" parentKey="Icon">
+							<TexCoords left="0.7578125" right="0.875" top="0" bottom="0.1171875"/>
+							<Size x="18" y="18"/>
+							<Anchors>
+								<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnClick method="OnClick"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+		</Scripts>
+	</Button>
+
+	<Frame name="Narci_ModelSettings" frameLevel="1" frameStrata="FULLSCREEN" hidden="true" clampedToScreen="false" Alpha="0" movable="true" clipChildren="false" mixin="NarciModelSettingsMixin">
 		<Size>
 			<AbsDimension x="440" y="310"/>
 		</Size>
@@ -1297,7 +1379,8 @@
 			<AbsInset left="-36" right="-24" top="-50" bottom="-24"/>
 		</HitRectInsets>
 		<Anchors>
-			<Anchor point="BOTTOM" relativeTo="Narci_VirtualLineRightCenter" relativePoint="BOTTOM" x="0" y="4"/> <!--x="-150" y="-20"-->
+			<Anchor point="CENTER" relativeTo="Narci_VirtualLineRightCenter" relativePoint="CENTER" x="0" y="0"/> <!--x="-150" y="-20"-->
+			<Anchor point="BOTTOM" relativeTo="UIParent" relativePoint="BOTTOM" x="0" y="4"/>
 		</Anchors>
 		<Layers>					
 			<Layer level="BACKGROUND">
@@ -1322,7 +1405,6 @@
 						_, _, self.raceID = UnitRace("player");
 						self.gender = UnitSex("player");
 					</OnLoad>
-					<OnShow function="Narci_LoadWeaponVisuals"/>
 				</Scripts>
 				<Frames>
 					<Button name="NarciModelControl_ActorButton" parentKey="ActorButton" frameLevel="50">
@@ -1397,7 +1479,7 @@
 						
 						<Scripts>
 							<OnLoad>
-								self.IsOn = false;
+								self.isOn = false;
 								self.tooltip = Narci.L["Race Change Tooltip"];
 							</OnLoad>
 							<OnMouseDown>
@@ -1530,7 +1612,7 @@
 								self.Highlight:Show()
 							</OnEnter>
 							<OnLeave>
-								if not self.IsOn then
+								if not self.isOn then
 									self.Highlight:Hide()
 								end
 							</OnLeave>
@@ -1613,7 +1695,7 @@
 										<Scripts>
 											<OnLoad>
 												self.Label:SetText(Narci.L["Virtual Actor"]);
-												self.IsOn = false;
+												self.isOn = false;
 												self.Highlight:SetAlpha(1);
 												self.Highlight:SetColorTexture(1, 1, 1, 0.25);
 											</OnLoad>
@@ -1684,7 +1766,7 @@
 										</Anchors>
 										<Scripts>
 											<OnLoad>
-												self.IsOn = false;
+												self.isOn = false;
 												self.Label:SetText(NARCI_LINK_MODEL_SCALE);
 											</OnLoad>
 											<OnClick function="Narci_LinkScaleButton_OnClick"/>
@@ -1697,7 +1779,7 @@
 										</Anchors>
 										<Scripts>
 											<OnLoad>
-												self.IsOn = true;
+												self.isOn = true;
 												self.Label:SetText(NARCI_LINK_LIGHT_SETTINGS);
 												self.Highlight:Show();
 												self.Label:SetTextColor(0.88, 0.88, 0.88);
@@ -1795,20 +1877,31 @@
 								</Scripts>
 							</Frame>
 
-							<Frame name="Narci_ActorPanelPopUp" parentKey="PopUp" hidden="true" frameLevel="80" Alpha="0">
+							<Frame name="Narci_ActorPanelPopUp" parentKey="PopUp" hidden="true" frameLevel="80" Alpha="0" mixin="NarciActorPanelPopUpMixin">
 								<Size x="24" y="104"/>
 								<Layers>
 									<Layer level="BACKGROUND">
-										<Texture file="Interface\AddOns\Narcissus\Art\Widgets\ActorPanel\PhantomPopUp" nounload="true">
-											<TexCoords left="0.21875" right="0.78125" top="0.2265625" bottom="0.7734375"/>
-											<Size x="154" y="150"/>
+										<Texture file="Interface\AddOns\Narcissus\Art\Widgets\ActorPanel\PhantomPopUp" nounload="true" parentKey="BackdropBottom">
+											<Size x="274" y="34.25"/>
+											<TexCoords left="0" right="1" top="0.625" bottom="0.75"/>
 											<Anchors>
-												<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER"/>
+												<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" y="-52"/>
 											</Anchors>
 										</Texture>
-										<!--Texture>
-											<Color r="0" g="1" b="0" a="0.5"/>
-										</Texture-->
+										<Texture file="Interface\AddOns\Narcissus\Art\Widgets\ActorPanel\PhantomPopUp" nounload="true" parentKey="BackdropMiddle">
+											<Size x="274" y="88"/>
+											<TexCoords left="0" right="1" top="0.375" bottom="0.625"/>
+											<Anchors>
+												<Anchor point="BOTTOM" relativeKey="$parent.BackdropBottom" relativePoint="TOP"/>
+											</Anchors>
+										</Texture>
+										<Texture file="Interface\AddOns\Narcissus\Art\Widgets\ActorPanel\PhantomPopUp" nounload="true" parentKey="BackdropTop">
+											<Size x="274" y="34.25"/>
+											<TexCoords left="0" right="1" top="0.25" bottom="0.375"/>
+											<Anchors>
+												<Anchor point="BOTTOM" relativeKey="$parent.BackdropMiddle" relativePoint="TOP"/>
+											</Anchors>
+										</Texture>
 									</Layer>
 								</Layers>
 								<Frames>
@@ -1833,7 +1926,7 @@
 
 									<Button inherits="Narci_ModelIndexPopUpButton_Template" parentKey="AddSelf">
 										<Anchors>
-											<Anchor point="BOTTOM" relativeKey="$parent.AddTarget" relativePoint="TOP" y="0"/>
+											<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" y="8"/>
 										</Anchors>
 										<Scripts>
 											<OnLoad>
@@ -1847,7 +1940,7 @@
 
 									<Button inherits="Narci_ModelIndexPopUpButton_Template" parentKey="AddVirtual">
 										<Anchors>
-											<Anchor point="TOP" relativeKey="$parent.AddTarget" relativePoint="BOTTOM" y="0"/>
+											<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" y="-40"/>
 										</Anchors>
 										<Scripts>
 											<OnLoad>
@@ -1859,22 +1952,51 @@
 										</Scripts>
 									</Button>
 
+									<Frame parentKey="Header">
+										<Size x="18" y="22"/>
+										<Anchors>
+											<Anchor point="BOTTOMLEFT" relativeKey="$parent.BackdropTop" relativePoint="BOTTOM" x="-10"/>
+										</Anchors>
+										<Frames>
+											<Frame parentKey="HotkeyAlt" inherits="NarciHotkeyNotificationTemplate" scale="0.75">
+												<Anchors>
+													<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="-5" y="0"/>
+												</Anchors>
+												<Scripts>
+													<OnLoad>
+														self:SetKey("Alt", nil, nil, true);
+													</OnLoad>
+												</Scripts>
+											</Frame>
+										</Frames>
+										<Layers>
+											<Layer level="OVERLAY">
+												<FontString inherits="NarciIndicatorDigitTiny" justifyH="LEFT" justifyV="MIDDLE" maxLines="1" parentKey="LeftText" text="Type">
+													<Color r="0.42" g="0.42" b="0.42"/>
+													<Anchors>
+														<Anchor point="LEFT" relativeKey="$parent.HotkeyAlt" relativePoint="RIGHT" x="1" y="0"/>
+													</Anchors>
+												</FontString>
+												<Texture parentKey="LockIcon" hidden="true" file="Interface\AddOns\Narcissus\Art\Keyboard\Lock">
+													<Size x="14" y="14"/>
+													<Anchors>
+														<Anchor point="CENTER" relativeKey="$parent.LeftText" relativePoint="CENTER" x="0" y="0"/>
+													</Anchors>
+												</Texture>
+												<FontString inherits="NarciIndicatorDigitTiny" justifyH="LEFT" justifyV="MIDDLE" maxLines="1" parentKey="WidgetType" text="CinematicModel">
+													<Anchors>
+														<Anchor point="LEFT" relativeKey="$parent.LeftText" relativePoint="RIGHT" x="2" y="0"/>
+													</Anchors>
+												</FontString>
+											</Layer>
+										</Layers>
+									</Frame>
 								</Frames>
 								<Scripts>
-									<OnShow>
-										self:RegisterEvent("PLAYER_TARGET_CHANGED");
-									</OnShow>
-									<OnHide>
-										self:Hide();
-										self:SetAlpha(0);
-										self:UnregisterEvent("PLAYER_TARGET_CHANGED");
-									</OnHide>
-									<OnLeave>
-										if not self:IsMouseOver() then
-											NarciAPI_FadeFrame(self, 0.15, "OUT");
-										end
-									</OnLeave>
-									<OnEvent function="Narci_ModelIndexPopUp_OnEvent"/>
+									<OnShow method="OnShow"/>
+									<OnHide method="OnHide"/>
+									<OnLeave method="OnLeave"/>
+									<OnEvent method="OnEvent"/>
 								</Scripts>
 							</Frame>
 							
@@ -1897,14 +2019,14 @@
 								</Layers>
 								<Scripts>
 									<OnLoad>
-										self.IsOn = false;
+										self.isOn = false;
 										self:Disable();
 									</OnLoad>
 									<OnEnter>
 										self.Highlight:Show()
 									</OnEnter>
 									<OnLeave>
-										if not self.IsOn then
+										if not self.isOn then
 											self.Highlight:Hide()
 										end
 									</OnLeave>
@@ -2033,7 +2155,7 @@
 							</Layer>
 							<Layer level="OVERLAY" textureSubLevel="2">
 								<Texture file="Interface\AddOns\Narcissus\Art\Widgets\LightSetup\LightSwitchIcons" Alpha="1" hidden="false" parentKey="Icon">
-									<TexCoords left="0.25" right="0.5" top="0" bottom="1"/>
+									<TexCoords left="0" right="0.25" top="0" bottom="1"/>
 									<Size x="20" y="20"/>
 									<Anchors>
 										<Anchor point="CENTER" x="0"/>
@@ -2399,64 +2521,62 @@
 						</Frames>
 					</Frame>
 					
-					<Frame inherits="Narci_AnimationOptionFrameTemplate_1x4" parentKey="Sheath" name="Narci_AnimationOptionFrame_Sheath">
-						<Size x="96" y="24"/>
+					<Frame name="Narci_PhotoModeWeaponFrame" parentKey="WeaponFrame" mixin="NarciPhotoModeWeaponFrameMixin">
+						<Size x="192" y="24"/>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeKey="$parent.ColorSliders.BrightnessSlider" relativePoint="BOTTOMLEFT" x="-7" y="-6"/>	<!--(0, -8)-->
 						</Anchors>
+						<Layers>
+							<Layer level="BACKGROUND">
+								<Texture file="Interface\AddOns\Narcissus\Art\Widgets\LightSetup\Pane" Alpha="1" hidden="false" parentKey="Background">
+									<TexCoords left="0" right="0.72265625" top="0.10546875" bottom="0.2109375"/>
+									<Size x="202" y="30"/>
+									<Anchors>
+										<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
+									</Anchors>
+								</Texture>
+							</Layer>
+							<Layer level="OVERLAY">
+								<FontString inherits="NarciNonInteractiveFont" justifyH="LEFT" justifyV="MIDDLE" text="Label" maxLines="1" parentKey="Label">
+									<Size x="90" y="0"/>
+									<Anchors>
+										<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="8" y="0"/>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
 						<Frames>
-							<Button parentKey="button" inherits="Narci_RoundButtonTemplate" hidden="false">
+							<Frame inherits="NarciIDFrameTemplate"/>
+
+							<Button parentKey="SheathButton" inherits="Narci_RoundButtonTemplate" hidden="false">
 								<Anchors>
-									<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="0"/>
+									<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="72"/>
 								</Anchors>
-								<Scripts>
-									<OnClick function="Narci_Model_HoldWeapon"/>
-								</Scripts>
+							</Button>
+							<Button parentKey="MainHandSlot" inherits="Narci_ActorWeaponTemplate" id="1">
+								<Anchors>
+									<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="96"/>
+								</Anchors>
+							</Button>
+							<Button parentKey="OffHandSlot" inherits="Narci_ActorWeaponTemplate" id="2">
+								<Anchors>
+									<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="144"/>
+								</Anchors>
 							</Button>
 						</Frames>				
 						<Scripts>
-							<OnLoad>
-								self.button.Highlight:Hide();
-								self.button.IsOn = false;
-								self.Label:SetText(NARCI_HOLD_WEAPON);
-							</OnLoad>
-						</Scripts>
-					</Frame>
-
-					<Frame inherits="Narci_AnimationOptionFrameTemplate_1x4" parentKey="Idle" name="Narci_AnimationOptionFrame_Idle">
-						<Size x="96" y="24"/>
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Sheath" relativePoint="TOPRIGHT" x="0" y="0"/>
-						</Anchors>
-						<Frames>
-							<Button parentKey="button" inherits="Narci_Model_PlayAnimationTemplate" id="804" hidden="false"  name="Narci_Model_IdleButton">
-								<Anchors>
-									<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="0"/>
-								</Anchors>
-							<Scripts>
-								<OnClick function="Narci_Model_Idle"/>
-								<OnLoad>
-									self.IsOn = true;
-									self.Highlight:Show();
-								</OnLoad>
-							</Scripts>
-							</Button>
-						</Frames>	
-						<Scripts>
-							<OnLoad>
-								self.Label:SetText(NARCI_STAND_IDLY);
-							</OnLoad>
+							<OnLoad method="OnLoad"/>
 						</Scripts>
 					</Frame>
 
 					<Frame name="Narci_AnimationOptionFrame" parentKey="OptionFrame" frameLevel="40">
 						<Size x="192" y="24"/>
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Sheath" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
+							<Anchor point="TOPLEFT" relativeKey="$parent.WeaponFrame" relativePoint="BOTTOMLEFT" x="0" y="-4"/>
 						</Anchors>
 						<Layers>
 							<Layer level="BACKGROUND">
-								<Texture file="Interface\AddOns\Narcissus\Art\Widgets\LightSetup\Pane" Alpha="1" hidden="false" name="Narci_AnimationBackground">
+								<Texture file="Interface\AddOns\Narcissus\Art\Widgets\LightSetup\Pane" Alpha="1" hidden="false">
 									<TexCoords left="0" right="0.72265625" top="0.10546875" bottom="0.2109375"/>
 									<Size x="202" y="30"/>
 									<Anchors>
@@ -2512,7 +2632,7 @@
 								</Layers>
 								<Scripts>
 									<OnLoad>
-										self.IsOn = false;
+										self.isOn = false;
 									</OnLoad>
 									<OnClick function="Narci_AnimationOption_MainTabButton_OnClick"/>
 									<OnEnter>
@@ -2581,7 +2701,7 @@
 						</Anchors>
 						<Layers>
 							<Layer level="BACKGROUND">
-								<Texture file="Interface\AddOns\Narcissus\Art\Widgets\LightSetup\Pane" Alpha="1" hidden="false" name="Narci_AnimationBackground2">
+								<Texture file="Interface\AddOns\Narcissus\Art\Widgets\LightSetup\Pane" Alpha="1" hidden="false" parentKey="Background">
 									<TexCoords left="0" right="0.72265625" top="0.10546875" bottom="0.2109375"/>
 									<Size x="202" y="30"/>
 									<Anchors>
@@ -2748,7 +2868,7 @@
 											</Anchors>
 										</Texture>
 									</Layer>
-									<Layer level="ARTWORK" textureSubLevel="1">
+									<Layer level="BACKGROUND" textureSubLevel="1">
 										<Texture file="Interface\AddOns\Narcissus\Art\Widgets\ModelAnimation\Panel" parentKey="Highlight" hidden="true" setAllPoints="true">
 											<TexCoords left="0.5" right="1" top="0" bottom="0.1171875"/>
 											<Anchors>
@@ -2807,6 +2927,7 @@
 									<OnMouseWheel method="OnMouseWheel"/>
 								</Scripts>
 							</EditBox>
+							
 							<Frame inherits="NarciUncappedSliderTemplate" name="NarciModelControl_AnimationSlider" parentKey="AnimFrameSlider" hidden="true">
 								<Anchors>
 									<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-10" y="-2"/>
@@ -2837,6 +2958,7 @@
 									</OnHide>
 								</Scripts>
 							</Frame>
+
 							<Button parentKey="Pause" inherits="Narci_Model_AnimationControlButtonTemplate" hidden="false" name="NarciModelControl_PauseAnimationButton">
 								<Anchors>
 									<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="0"/>
@@ -2855,7 +2977,7 @@
 								<Scripts>
 									<OnClick function="NarciModelControl_PauseAnimationButton_OnClick"/>
 									<OnHide>
-										self.IsOn = false;
+										self.isOn = false;
 										self.Highlight:Hide();
 									</OnHide>
 									<OnLoad>
@@ -2882,7 +3004,7 @@
 								<Scripts>
 									<OnClick function="NarciModelControl_PlayAnimationButton_OnClick"/>
 									<OnShow>
-										self.IsOn = true;
+										self.isOn = true;
 										self.Highlight:Show();
 									</OnShow>
 									<OnLoad>
@@ -2979,7 +3101,7 @@
 					<Button name="Narci_GroundShadowToggle" parentKey="GroundShadowToggle">
 						<Size x="192" y="24"/>
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.Idle" relativePoint="TOPRIGHT" x="30" y="0"/>
+							<Anchor point="TOPLEFT" relativeKey="$parent.WeaponFrame" relativePoint="TOPRIGHT" x="30" y="0"/>
 						</Anchors>
 						<Layers>
 							<Layer level="BACKGROUND">
@@ -2991,7 +3113,7 @@
 									</Anchors>
 								</Texture>
 							</Layer>
-							<Layer lvel="OVERLAY">
+							<Layer level="OVERLAY">
 								<FontString justifyH="LEFT" justifyV="MIDDLE" maxLines="1" inherits="NarciDisabledButtonFont" parentKey="Label">
 									<Size x="0" y="0"/>
 									<Anchors>
@@ -3048,7 +3170,7 @@
 								</Layers>
 								<Scripts>
 									<OnLoad>
-										self.IsOn = false;
+										self.isOn = false;
 										self.tooltip = Narci.L["Reset"];
 									</OnLoad>
 									<OnEnter>
@@ -3072,7 +3194,7 @@
 						<Scripts>
 							<OnLoad>
 								self.Label:SetText(Narci.L["Ground Shadow"])
-								self.IsOn = false;
+								self.isOn = false;
 								self.tooltip = {Narci.L["Ground Shadow"], Narci.L["Ground Shadow Tooltip"]};
 								self.guideIndex = 3;
 							</OnLoad>
@@ -3098,20 +3220,20 @@
 								self.guideIndex = 4;
 							</OnLoad>
 							<OnShow>
-								self.IsOn = false;
+								self.isOn = false;
 								self:UnlockHighlight();
 								self:RegisterEvent("PLAYER_LEAVING_WORLD");
 							</OnShow>
 							<OnClick function="Narci_Model_HidePlayer_OnClick"/>
 							<OnHide>
-								if self.IsOn then
+								if self.isOn then
 									--ConsoleExec( "showPlayer 1");
 									self:Click();
 								end
 								self:UnregisterEvent("PLAYER_LEAVING_WORLD");
 							</OnHide>
 							<OnEvent>
-								if self.IsOn then
+								if self.isOn then
 									ConsoleExec( "showPlayer 1");
 								end					
 							</OnEvent>
@@ -3129,7 +3251,7 @@
 								self.guideIndex = 5;
 							</OnLoad>
 							<OnShow>
-								self.IsOn = false;
+								self.isOn = false;
 								self:UnlockHighlight();
 								if NarcissusDB.DefaultLayout == 3 then
 									self:Click();
@@ -3160,7 +3282,7 @@
 									</Anchors>
 								</Texture>
 							</Layer>
-							<Layer lvel="OVERLAY">
+							<Layer level="OVERLAY">
 								<FontString justifyH="CENTER" justifyV="MIDDLE" maxLines="1" inherits="NarciPastelBrownFont" parentKey="Value" text="0">
 									<Size x="0" y="0"/>
 									<Anchors>
@@ -3186,7 +3308,20 @@
 						</Scripts>
 					</Button>		
 					
-					<!--Art Overlay-->
+					<!--Border Overlay-->
+					<Frame frameLevel="38">
+						<Layers>
+							<Layer level="OVERLAY">
+								<Texture file="Interface\AddOns\Narcissus\Art\Widgets\LightSetup\Pane" Alpha="1" hidden="false">
+									<TexCoords left="0" right="0.72265625" top="0" bottom="0.10546875"/>
+									<Size x="202" y="30"/>
+									<Anchors>
+										<Anchor point="CENTER" relativeKey="$parent.$parent.WeaponFrame" relativePoint="CENTER" x="0" y="0"/>
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
 					<Frame frameLevel="44">
 						<Layers>
 							<Layer level="OVERLAY">
@@ -3194,7 +3329,7 @@
 									<TexCoords left="0" right="0.72265625" top="0" bottom="0.10546875"/>
 									<Size x="202" y="30"/>
 									<Anchors>
-										<Anchor point="CENTER" relativeTo="Narci_AnimationBackground" relativePoint="CENTER" x="0" y="0"/>
+										<Anchor point="CENTER" relativeKey="$parent.$parent.OptionFrame" relativePoint="CENTER" x="0" y="0"/>
 									</Anchors>
 								</Texture>
 							</Layer>
@@ -3207,7 +3342,7 @@
 									<TexCoords left="0" right="0.72265625" top="0" bottom="0.10546875"/>
 									<Size x="202" y="30"/>
 									<Anchors>
-										<Anchor point="CENTER" relativeTo="Narci_AnimationBackground2" relativePoint="CENTER" x="0" y="0"/>
+										<Anchor point="CENTER" relativeKey="$parent.$parent.AnimationIDFrame" relativePoint="CENTER" x="0" y="0"/>
 									</Anchors>
 								</Texture>
 							</Layer>
@@ -3268,16 +3403,6 @@
 			<OnEnter method="OnEnter"/>
 			<OnLeave method="OnLeave"/>
 		</Scripts>
-	</Frame>
-
-	<Frame name="Narci_TestBackground" hidden="true" setAllPoints="true" frameStrata="LOW">
-		<Layers>
-			<Layer level="OVERLAY" textureSubLevel="5">
-				<Texture file="Interface\AddOns\Narcissus\Art\Stages\Test" setAllPoints="true">
-
-				</Texture>
-			</Layer>
-		</Layers>
 	</Frame>
 
 	<Frame name="Narci_ModelInteractiveArea" hidden="true" setAllPoints="true" frameStrata="LOW">

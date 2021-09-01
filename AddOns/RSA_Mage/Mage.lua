@@ -111,13 +111,21 @@ function RSA_Mage:OnEnable()
 			},
 		},
 		SPELL_AURA_APPLIED = {
-			[118] = Config_Polymorph, -- SHEEP
-			[28271] = Config_Polymorph, -- TURTLE
-			[28272] = Config_Polymorph, -- PIG
-			[61305] = Config_Polymorph, -- BLACK CAT
-			[61721] = Config_Polymorph, -- RABBIT
-			[61780] = Config_Polymorph, -- TURKEY
-			[277792] = Config_Polymorph, -- Bee
+			[118] = Config_Polymorph, -- Sheep
+			[161372] = Config_Polymorph, --Peacock
+			[28272] = Config_Polymorph, -- Pig
+			[61780] = Config_Polymorph, -- Turkey
+			[161355] = Config_Polymorph, -- Penguin
+			[61305] = Config_Polymorph, -- Black Cat
+			[28271] = Config_Polymorph, -- Turtle
+			[161353] = Config_Polymorph, -- Polar Bear Cub
+			[277792] = Config_Polymorph, -- Bumblebee
+			[61721] = Config_Polymorph, -- Rabbit
+			[161354] = Config_Polymorph, -- Monkey
+			[126819] = Config_Polymorph, -- Porcupine
+			[277787] = Config_Polymorph, -- Direhorn
+			[321395] = Config_Polymorph, -- Mawrat
+
 			[80353] = { -- TIME WARP
 				profile = 'TimeWarp',
 				targetIsMe = 1

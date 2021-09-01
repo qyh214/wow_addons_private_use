@@ -9,9 +9,7 @@ function S:Blizzard_DebugTools()
         return
     end
 
-    self:CreateBackdropShadow(_G.TableAttributeDisplay)
-    self:CreateBackdropShadow(_G.EventTraceFrame)
-
+    self:CreateShadow(_G.TableAttributeDisplay)
     self:SecureHook(_G.TableInspectorMixin, "OnLoad", "CreateBackdropShadow")
 end
 

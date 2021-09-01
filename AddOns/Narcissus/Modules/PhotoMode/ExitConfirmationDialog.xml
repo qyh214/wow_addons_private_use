@@ -120,7 +120,7 @@
 						</Texture>
 					</Layer>
 					<Layer level="OVERLAY">
-						<Texture setAllPoints="true" thickness="1" parentKey="Divider">
+						<Texture setAllPoints="true" parentKey="Divider">
 							<Size y="1"/>
 							<Color r="0" g="0" b="0" a="0.8"/>
 							<Anchors>
@@ -353,7 +353,7 @@
                 </FontString>
             </Layer>
         </Layers>
-        <ButtonText inherits="NarciFontMedium12" justifyH="LEFT" justifyV="MIDDLE" multiLine="true" text="What is this?">
+        <ButtonText inherits="NarciFontMedium12" justifyH="LEFT" justifyV="MIDDLE" text="What is this?">
             <Size x="0" y="0"/>
 			<Color r="0.25" g="0.78" b="0.92"/>
             <Anchors>

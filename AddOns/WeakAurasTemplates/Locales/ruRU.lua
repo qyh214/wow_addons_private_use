@@ -37,8 +37,7 @@ local L = WeakAuras.L
 	L["Basic Show On Cooldown"] = "Показать восстановление"
 	L["Basic Show On Ready"] = "Отображать если готово"
 	L["Bloodlust/Heroism"] = "Жажда крови / Героизм"
-	--[[Translation missing --]]
-	L["Bonded Buff"] = "Bonded Buff"
+	L["Bonded Buff"] = "(бафф связи)"
 	L["Buff"] = "(бафф)"
 	L["buff"] = "(бафф)"
 	L["Buff on Other"] = "(бафф цели)"
@@ -59,8 +58,7 @@ local L = WeakAuras.L
 	L["Debuff"] = "(дебафф)"
 	L["debuff"] = "(дебафф)"
 	L["Debuffs"] = "Дебаффы"
-	--[[Translation missing --]]
-	L["Empowered Buff"] = "Empowered Buff"
+	L["Empowered Buff"] = "(бафф усиления)"
 	L["Fire"] = "(огонь)"
 	L["Frost"] = "(лед)"
 	L["General"] = "Общее"
@@ -76,8 +74,7 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Highlight while spell is active."] = "Highlight while spell is active."
 	L["Hold CTRL to create multiple auras at once"] = "Удерживайте Ctrl для создания нескольких индикаций"
-	--[[Translation missing --]]
-	L["Initial Buff"] = "Initial Buff"
+	L["Initial Buff"] = "(исходный бафф)"
 	L["Keeps existing triggers intact"] = "Сохраняет существующие триггеры нетронутыми"
 	L["Legendaries"] = "Легендарные предметы"
 	L["Meteor Ready"] = "(готовность)"
@@ -96,20 +93,17 @@ local L = WeakAuras.L
 	L["Other cooldown"] = "(восстановление, остальные)"
 	L["Pet alive"] = "Питомец жив"
 	L["Pet Behavior"] = "Поведение питомца"
-	--[[Translation missing --]]
-	L["Preparation"] = "Preparation"
+	L["Preparation"] = "(подготовка)"
 	L["PvP Talents"] = "PvP таланты"
 	L["Replace all existing triggers"] = "Заменяет все существующие триггеры"
 	L["Replace Triggers"] = "Заменить триггеры"
 	L["Resources"] = "Ресурсы"
 	L["Resources and Shapeshift Form"] = "Ресурсы и облики друида"
 	L["Rogue cooldown"] = "(восстановление, разбойник)"
-	--[[Translation missing --]]
-	L["Root"] = "Root"
+	L["Root"] = "(обездвиженность)"
 	L["Runes"] = "Руны"
 	L["Shapeshift Form"] = "Облик друида"
-	--[[Translation missing --]]
-	L["Shards Of Domination"] = "Shards Of Domination"
+	L["Shards Of Domination"] = "Осколки Господства"
 	L["Show Always, Glow on Missing"] = "Показывать всегда, сверкать при отсутствии"
 	L["Show Charges and Check Usable"] = "Показать заряды и проверить доступность"
 	L["Show Charges with Proc Tracking"] = "Показать заряды с отслеживанием срабатывания"
@@ -156,8 +150,7 @@ local L = WeakAuras.L
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
 	L["Slow"] = "(замедление)"
 	L["slow debuff"] = "(замедление)"
-	--[[Translation missing --]]
-	L["Sprint"] = "Sprint"
+	L["Sprint"] = "(ускорение)"
 	L["Stance"] = "Стойка"
 	L["stun debuff"] = "(оглушение)"
 	L["Stun Debuff"] = "(оглушение)"

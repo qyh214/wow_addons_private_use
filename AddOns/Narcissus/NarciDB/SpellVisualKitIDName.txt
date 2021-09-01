@@ -31,6 +31,12 @@ Attachment ID:
 365680 Light bulb
 108563 Coin Rain Small
 ----------------------------------------------
+149490
+149856 Arcane Rune Ring
+149584 Maw Empowered Area
+149574 Sylvanas Channel
+
+
 140008
 136777 Bastion Crates 136784
 --136333 Mushroom right hand red glow

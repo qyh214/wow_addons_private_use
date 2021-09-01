@@ -1600,6 +1600,16 @@ local function Priest()
 				},
 				SmartGroup = true,
 			},
+			MindSoothe = {
+				Messages = {
+					Start = {"[LINK] cast on [TARGET]!"},
+					End = {"[LINK] on [TARGET] ended!"},
+				},
+				CustomChannel = {
+					Channel = "",
+				},
+				SmartGroup = true,
+			},
 			PowerWordBarrier = {
 				Messages = {
 					Start = {"[LINK] activated!"},

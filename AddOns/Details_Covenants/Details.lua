@@ -1,9 +1,14 @@
 local _, dc = ...
 local oribos = _G.Oribos
+local detalhes = _G._detalhes
 
 function dc:replaceDetailsImplmentation()
-    if _G.NickTag and _G._detalhes then
-        _G._detalhes.GetNickname = function(self, playerName, default, silent)
+    if _G.NickTag and detalhes then
+        if DCovenant["detailsIgnoreNickname"] == true then
+            detalhes.ignore_nicktag = false
+        end
+        
+        detalhes.GetNickname = function(self, playerName, default, silent)
             local covenantPrefix = ""
             local covenantSuffix = ""
 
@@ -15,13 +20,23 @@ function dc:replaceDetailsImplmentation()
                 end 
             end
 
+            if DCovenant["detailsIgnoreNickname"] == true then
+                local name_without_nicktag = playerName
+
+                if (detalhes.remove_realm_from_name) then
+                    name_without_nicktag = name_without_nicktag:gsub (("%-.*"), "")
+                end
+
+                return covenantPrefix..name_without_nicktag..covenantSuffix
+            end
+
             if (not silent) then
                 assert (type (playerName) == "string", "NickTag 'GetNickname' expects a string or string on #1 argument.")
             end
             
             local _table = NickTag:GetNicknameTable (playerName)
             if (not _table) then
-                if (_G._detalhes.remove_realm_from_name) then
+                if (detalhes.remove_realm_from_name) then
                     playerName = playerName:gsub (("%-.*"), "")
                 end
 

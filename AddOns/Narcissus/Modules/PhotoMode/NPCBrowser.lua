@@ -2,9 +2,7 @@ local Narci = Narci;
 local L = Narci.L;
 local FadeFrame = NarciAPI_FadeFrame;
 local UIFrameFadeIn = UIFrameFadeIn;
-local UIFrameFadeOut = UIFrameFadeOut;
 local NarciPhotoModeAPI = NarciPhotoModeAPI;
-local NarciTooltip = NarciTooltip;
 
 local BROWSER_WIDTH = 192;
 local BROWSER_HEIGHT = 208;
@@ -21,12 +19,12 @@ local NUM_COVER_ROW_PER_PAGE = 2;
 local NUM_MAX_MATCHES = 80;
 local TAB_HEIGHT = NUM_BUTTONS_PER_PAGE * NPC_BUTTON_HEIGHT;
 
-local BrowserFrame, CategoryTab, EntryTab, MatchTab, HeaderFrame, HomeButton, SearchBox, SearchTrigger, DeleteTextButton, MatchPreviewModel;
+local BrowserFrame, CategoryTab, EntryTab, MatchTab, HeaderFrame, HomeButton, SearchBox, SearchTrigger, MatchPreviewModel;
 local MouseOverButtons, QuickFavoriteButton, IDMatchButton;
 local LoadingIndicator;
 
-local targetModelIndex = 1;     --Add an NPC to NarciNPCModelFrame(n)
-local hasNewActor = false;      --Whether user has added an NPC from browser or not
+local TARGET_MODEL_INDEX = 1;     --Add an NPC to NarciNPCModelFrame(n)
+local ACTOR_CREATED = false;      --Whether user has added an NPC from browser or not
 local textLocale = GetLocale();
 
 local _;
@@ -37,17 +35,11 @@ local max = math.max;
 local sin = math.sin;
 local cos = math.cos;
 local floor = math.floor;
-
-local function linear(t, b, e, d)
-	return (e - b) * t / d + b
-end
+local tinsert = table.insert;
+local tremove = table.remove;
 
 local function outSine(t, b, e, d)                  --elapsed, begin, end, duration
 	return (e - b) * sin(t / d * (pi / 2)) + b
-end
-
-local function inSine(t, b, e, d)
-    return (b - e) * cos(t / d * (pi / 2)) + e
 end
 
 local function inOutSine(t, b, e, d)
@@ -163,7 +155,6 @@ local function GoToTab(index, isFavoriteTab)
         end
     end
     
-    DeleteTextButton:Hide();
     MouseOverButtons:Hide();
 end
 
@@ -197,10 +188,10 @@ end
 
 
 --Opening/closing animation
-local SizingAnim = NarciAPI_CreateAnimationFrame(0.25);
-SizingAnim.duration2 = 0.5;
-SizingAnim.relativeTo = Narci_NPCBrowser_Toggle;
-SizingAnim:SetScript("OnShow", function(self)
+local animSizing = NarciAPI_CreateAnimationFrame(0.25);
+animSizing.duration2 = 0.5;
+animSizing.relativeTo = Narci_NPCBrowser_Toggle;
+animSizing:SetScript("OnShow", function(self)
     self.startWidth, self.startHeight = BrowserFrame:GetSize();
 end);
 
@@ -237,7 +228,6 @@ local function Sizing_Collapse_OnUpdate(self, elapsed)
             After(0.15, function()
                 FadeFrame(BrowserFrame, 0.15, "OUT");
             end)
-            --BrowserFrame:SetFrameLevel(12);
         end
 
         local offsetY = inOutSine(self.total - self.duration, -5, -60, self.duration2 - self.duration);
@@ -251,76 +241,26 @@ local function Sizing_Collapse_OnUpdate(self, elapsed)
     BrowserFrame:SetSize(width, height);
 end
 
-SizingAnim:SetScript("OnUpdate", Sizing_OnUpdate);
+animSizing:SetScript("OnUpdate", Sizing_OnUpdate);
 
-local function ToggleBrowser(state)
-    if SizingAnim:IsShown() then return end
+local function PlayToggleAnimation(state)
+    if animSizing:IsShown() then return end
 
     if state then
-        SizingAnim.endWidth = BROWSER_WIDTH;
-        SizingAnim.endHeight = BROWSER_HEIGHT;
-        SizingAnim.duration = 0.25;
-        SizingAnim:SetScript("OnUpdate", Sizing_OnUpdate);
+        animSizing.endWidth = BROWSER_WIDTH;
+        animSizing.endHeight = BROWSER_HEIGHT;
+        animSizing.duration = 0.25;
+        animSizing:SetScript("OnUpdate", Sizing_OnUpdate);
 
         FadeFrame(BrowserFrame, 0.15, "Forced_IN");
     else
-        SizingAnim.endWidth = BROWSER_SHRINK_WIDTH;
-        SizingAnim.endHeight = BROWSER_SHRINK_HEIGHT;
-        SizingAnim.duration = 0.2;
-        SizingAnim:SetScript("OnUpdate", Sizing_Collapse_OnUpdate);
+        animSizing.endWidth = BROWSER_SHRINK_WIDTH;
+        animSizing.endHeight = BROWSER_SHRINK_HEIGHT;
+        animSizing.duration = 0.2;
+        animSizing:SetScript("OnUpdate", Sizing_Collapse_OnUpdate);
     end
 
-    SizingAnim:Show();
-end
-
-local function SetPanelAlpha(value, smoothing)
-    local SettingFrame = Narci_ModelSettings;
-    local SpellVisualBrowser = SettingFrame.SpellPanel;
-    local fromAlpha = SettingFrame.BasicPanel:GetAlpha();
-
-    if smoothing then
-        local fadeDuation;
-        if value == 1 then
-            fadeDuation = 0.2;
-        else
-            fadeDuation = 0.5;
-        end
-            
-        if SpellVisualBrowser.isActive then
-            UIFrameFadeIn(SpellVisualBrowser, fadeDuation, fromAlpha, value);
-        end
-        UIFrameFadeIn(SettingFrame.ActorPanel, fadeDuation, fromAlpha, value);
-        UIFrameFadeIn(SettingFrame.BasicPanel, fadeDuation, fromAlpha, value);
-    else
-        if SpellVisualBrowser.isActive then
-            SpellVisualBrowser:SetAlpha(value);
-        end
-        SettingFrame.ActorPanel:SetAlpha(value);
-        SettingFrame.BasicPanel:SetAlpha(value);
-    end
-end
-
-function Narci_ToggleNPCBrowser(self, state)
-    if state then
-        FadeFrame(Narci_ActorPanelPopUp, 0.15, "OUT");
-        BrowserFrame:SetPoint("TOP", self, "TOP", 0, -5);
-        --BrowserFrame:SetFrameLevel(60);
-        ToggleBrowser(true);
-        SetPanelAlpha(0.5, true);
-
-        local PopUp = self:GetParent();
-        local index = PopUp.Index;
-        NarciPhotoModeAPI.CreateEmptyModelForNPCBrowser(index);     --Defined in PlayerModel.lua
-        targetModelIndex = index;
-        BrowserFrame:Init();
-    else
-        ToggleBrowser(false);
-        SetPanelAlpha(1, true);
-        if not hasNewActor then
-            NarciPhotoModeAPI.RemoveActor(nil, targetModelIndex)
-        end
-        hasNewActor = false;
-    end
+    animSizing:Show();
 end
 
 -----------------------------------------------------------------------------------------------
@@ -414,7 +354,7 @@ local NPCInfo = {
     [100636] = {"", "r", 115196, {155857} },          --High Overlord Saurfang
     [4949]   = {"", "bk", 7214, {56228} },            --Thrall Old
     [54634]  = {"", "o", 10700, {109674} },           --Thrall <The Earthen Ring> Hoody
-    [110516] = {"", "o", 74514},           --Thrall <The Earthen Ring>
+    [110516] = {"", "o", 74514, {109674}},           --Thrall <The Earthen Ring>
     [152977] = {"", "o", 137435, {168268} },           --Thrall New
     [54938]  = {"", "b", 7218, {31700} },            --Archbishop Benedictus Old
     [54953]  = {"Twilight Prophet", "p", 127200, {31700} },          --Archbishop Benedictus Twilight Prophet
@@ -706,7 +646,6 @@ local NPCInfo = {
     [146927] = {"", "bk", 123536, {164726} },          --Tyrande Whisperwind <The Night Warrior>
     [145357] = {"", "g", 3604},             --Dori'thur <Tyrande's Companion>
     [103769] = {"", "r", 52106},            --Xavius <Nightmare Lord>  Giant
-    [103769] = {"", "r", 54465},            --Xavius <Nightmare Lord>  Human
     [113587] = {"", "r", 54473},            --Xavius Defeated
     --Peroth'arn
 
@@ -1017,7 +956,7 @@ local NPCInfo = {
     [165246] = {"", "bp", 169665},      --Droman Tashmur
     [171648] = {"", "g", 166417},       --Ysera
 
-    [165005] = {"", "r", 166196, },    --Sire Denathrius
+    [165005] = {"", "r", 166196, {179391} },    --Sire Denathrius
     [158653] = {"", "y", 166196, {178716} },    --Prince Renathal
     [165291] = {"", "bk", 160308, {175939} },   --The Accuser <Harvester of Pride>
     [165589] = {"", "o", 166196, {178716} },    --The Curator <Harvester of Avarice>
@@ -1051,8 +990,15 @@ local NPCInfo = {
     [171770] = {"", "tt", 169718},  --Ve'nari
     [165799] = {"", "tt", },    --The Jailer **Sound
     [171356] = {"", "tt", 171008},    --Runecarver
-    [164449] = {"", "tt", 139981},    --Sylvanas Windrunner **Sound
+    [164449] = {"", "tt", 139981, {181374}},    --Sylvanas Windrunner **Sound
 
+    --9.1
+    --Sound files are still encrypted
+    [178372] = {"", "tt", nil, {183938} },  --Maw Anduin
+    [178072] = {"", "tt", nil, {183938} },  --Maw Anduin Helm
+    [179314] = {"", "bk", nil, },   --Banshee Sylvanas
+    [180211] = {"", "y", nil, {168268} },    --Thrall SL
+    [178295] = {"", "r", nil, },  --Kin'tessa Dread Queen
     --[] = {"", "", },
 };
 
@@ -1129,6 +1075,10 @@ local Catalogue = {
             171356,     --Runecarver
             171770,     --Ve'nari
             164449,     --Sylvanas Windrunner
+            179314,     --Banshee Sylvanas
+            178372,     --Maw Anduin
+            178072,     --Maw Anduin Helm
+            178295,     --Kin'tessa
         },
 
         [6] = {["name"] = "Oribos",
@@ -1136,6 +1086,7 @@ local Catalogue = {
             167486,     --Tal-Inara <Honored Voice>
             167424,     --Overseer Kah-Sher <Will of the Arbiter>
             163490,     --Bolvar
+            180211,     --Thrall SL
         },
     },
 
@@ -1637,6 +1588,7 @@ local Catalogue = {
             54634,      --Thrall <The Earthen Ring> Hoody
             110516,     --Thrall <The Earthen Ring>
             152977,     --Thrall New
+            180211,     --Thrall SL
             11946,      --Drek'Thar <Frostwolf General>   Alterac Valley
             80597,      --Farseer Drek'Thar Alternate
             3230,       --Nazgrel <Advisor to Thrall>
@@ -1873,6 +1825,7 @@ local Catalogue = {
             90981,          --Balnazzar Darkshore
             122366,         --Varimathras
             108610,         --Kathra'natir
+            178295,         --Kin'tessa
         },
 
         [5] = {["name"] = "Doomlord",
@@ -2311,7 +2264,7 @@ local function UpdateScrollRange(scrollFrame, smoothing, frameType)
     if frameType == 1 then
         UpdateRenderAreaEntry(scrollBar:GetValue());
     else
-        UpdateRenderAreaMatch(scrollBar:GetValue());
+        --UpdateRenderAreaMatch(scrollBar:GetValue());
     end
 end
 
@@ -2376,7 +2329,7 @@ end
 local function GetNPCNameAndTitle(creatureID)
     VirtualTooltip:SetOwner(UIParent, "ANCHOR_NONE");
     VirtualTooltip:SetHyperlink(format("unit:Creature-0-0-0-0-%d", creatureID));
-    
+
     if IsTooltipLineTitle(lineTitle:GetText()) then
         return {lineName:GetText() or "", lineTitle:GetText()}, (lineName:GetText() == "")
     else
@@ -2386,73 +2339,73 @@ end
 
 --------------------------------------------------------------------------
 --My Favorites
-local IsFavorite = {};
-local FavoriteCreatureIDs;
-local numFavorites = 0;
+local FavUtil = {};
+FavUtil.favNPCs = {};
+FavUtil.numFavs = 0;
 
-local function LoadFavorites()
+function FavUtil:Load()
     if not NarcissusDB then
         print("Cannot find NarcissusDB");
-        return 0;
+        return
     end
 
     NarcissusDB.Favorites = NarcissusDB.Favorites or {};
     NarcissusDB.Favorites.FavoriteCreatureIDs = NarcissusDB.Favorites.FavoriteCreatureIDs or {};
-    FavoriteCreatureIDs = NarcissusDB.Favorites.FavoriteCreatureIDs;
+    self.db = NarcissusDB.Favorites.FavoriteCreatureIDs;
 
-    local sum = 0;
-    for npcID, isFav in pairs(FavoriteCreatureIDs) do
+    local numFavs = 0;
+    for npcID, isFav in pairs(self.db) do
         if isFav then
-            IsFavorite[npcID] = true;
-            sum = sum +1;
+            self.favNPCs[npcID] = true;
+            numFavs = numFavs +1;
             RequestCreatureInfo(npcID);
         end
     end
+    self.numFavs = numFavs;
 
-    numFavorites = sum;
-
-    return sum;
+    return numFavs
 end
 
-local function AddToFavorites(creatureID)
-    FavoriteCreatureIDs[creatureID] = true;
-    IsFavorite[creatureID] = true;
-    numFavorites = numFavorites + 1;
-    PlaySound(39672, "SFX");
+function FavUtil:Add(creatureID)
+    if creatureID then
+        self.favNPCs[creatureID] = true;
+        self.db[creatureID] = true;
+        self.numFavs = self.numFavs + 1;
+        PlaySound(39672, "SFX");
+        return true;
+    else
+        return false;
+    end
 end
 
-local function RemoveFromFavorites(IDsToBeDeleted)
-    if not IDsToBeDeleted then return; end;
-
-    local ShouldBeDeleted = {};
-    local IDType = type(IDsToBeDeleted);
-    if IDType == "number" then
-        ShouldBeDeleted[ IDsToBeDeleted ] = true;
-    elseif IDType == "table" then
-        for i = 1, #IDsToBeDeleted do
-            ShouldBeDeleted[ IDsToBeDeleted[i] ] = true;
+function FavUtil:Remove(creatureID)
+    if not creatureID then return false end;
+    self.favNPCs[creatureID] = false;
+    local numFavs = 0;
+    wipe(self.db);
+    for id, isFav in pairs(self.favNPCs) do
+        if isFav then
+            self.db[id] = true;
+            numFavs = numFavs + 1;
         end
     end
+    self.numFavs = numFavs;
 
-    local newList = {};
-    local oldList = FavoriteCreatureIDs;
-    local sum = 0;
-    for id, v in pairs(oldList) do
-        if not ShouldBeDeleted[id] then
-            newList[id] = true;
-            sum = sum + 1;
-        else
-            IsFavorite[id] = false;
-            numFavorites = numFavorites - 1;
-        end
-    end
-    
-    wipe(NarcissusDB.Favorites.FavoriteCreatureIDs);
-    NarcissusDB.Favorites.FavoriteCreatureIDs = newList;
-    FavoriteCreatureIDs = NarcissusDB.Favorites.FavoriteCreatureIDs;
-
-    return sum;
+    return numFavs;
 end
+
+function FavUtil:IsFavorite(creatureID)
+    return self.favNPCs[creatureID];
+end
+
+function FavUtil:GetFavoriteNPCs()
+    return self.favNPCs;
+end
+
+function FavUtil:GetNumFavorites()
+    return self.numFavs or 0;
+end
+
 
 -----------------------------------------------------------------------------------------------
 local NPCCardAPI = {};
@@ -2475,6 +2428,7 @@ end
 
 local function SetNPCModel(model, creatureID)
     local _, _, dirX, dirY, dirZ, _, ambR, ambG, ambB, _, dirR, dirG, dirB = model:GetLight();
+    model.isModelLoaded = false;
     model:SetCreature(creatureID);
     model:SetModelAlpha(0);
     After(0.1, function()
@@ -2495,41 +2449,44 @@ local function NPCCard_OnEnter(self)
     end
 end
 
-local function NPCCard_OnClick(self, button)
+local function NPCCard_OnClick(self, button, down, holdWeapon)
     local creatureID = self.creatureID;
     if creatureID then
-        hasNewActor = true;
-        local model = _G["NarciNPCModelFrame"..targetModelIndex];
+        ACTOR_CREATED = true;
+        local model = _G["NarciNPCModelFrame"..TARGET_MODEL_INDEX];
 
         SetNPCModel(model, creatureID);
         model.creatureID = creatureID;
-        model.weapons = self.weapons;
-
+        model.holdWeapon = holdWeapon;
+        model.equippedWeapons = self.weapons;
+        if holdWeapon and self.weapons then
+            for i = 1, #self.weapons do
+                model:EquipItem(self.weapons[i]);
+            end
+        end
         if self.voiceID then
             PlaySound(self.voiceID, "Dialog");
         end
-        
+     
         local creatureName = self.creatureName;
         model.creatureName = creatureName;
         if self.hasPortrait then
-            NarciPhotoModeAPI.OverrideActorInfo(targetModelIndex, creatureName, self.weapons, "Interface/AddOns/Narcissus/Art/Widgets/NPCBrowser/Portraits/".. creatureID);
+            NarciPhotoModeAPI.OverrideActorInfo(TARGET_MODEL_INDEX, creatureName, self.weapons, "Interface/AddOns/Narcissus/Art/Widgets/NPCBrowser/Portraits/".. creatureID);
         else
-            NarciPhotoModeAPI.OverrideActorInfo(targetModelIndex, creatureName, self.weapons);
+            NarciPhotoModeAPI.OverrideActorInfo(TARGET_MODEL_INDEX, creatureName, self.weapons);
         end
+        model:SetActive(true);
 
         if button == "RightButton" then
-            Narci_ToggleNPCBrowser(nil, false)
+            BrowserFrame:Close();
         end
     end
 end
 
 local function AddModelAndEquipItems(self, button)
     if not MouseOverButtons.parent then return end
-
-    NPCCard_OnClick(MouseOverButtons.parent, button);
-    After(0, function()
-        Narci_Model_HoldWeapon(Narci_AnimationOptionFrame_Sheath.button);
-    end)
+    local holdWeapon = true;
+    NPCCard_OnClick(MouseOverButtons.parent, button, nil, holdWeapon);
 end
 
 local function Category_OnClick(self)
@@ -2550,23 +2507,12 @@ local function Category_OnClick(self)
     UpdateScrollRange(self:GetParent():GetParent(), true, 1);
 end
 
-local function Match_OnEnter(self)
-    UIFrameFadeIn(self.Highlight, 0.2, self.Highlight:GetAlpha(), 1);
-    MatchPreviewModel:SetLight(true, false, - 0.44699833180028 ,  0.72403680806459 , -0.52532198881773, 0.8, 172/255, 172/255, 172/255, 1, 0.8, 0.8, 0.8);
-    ShowMouseOverButtons(self);
-    if MatchPreviewModel.id ~= self.creatureID then
-        MatchPreviewModel.id = self.creatureID;
-        UpdatePreviewModel(self.creatureID);
-    end
-    --print(self.creatureID);
-end
-
 local function IDMatch_OnEnter(self)
     UIFrameFadeIn(self.Highlight, 0.12, self.Highlight:GetAlpha(), 1);
     ShowMouseOverButtons(self);
 end
 
-function NPCCardAPI:SetNPC(button, id, name)
+function NPCCardAPI:SetNPC(button, id)
     button.mode = "npc";
     button:SetHeight(32);
     button.Highlight = button.HighlightNPC;
@@ -2618,7 +2564,7 @@ function NPCCardAPI:SetNPC(button, id, name)
     button:Hide();
 
     --Favorites
-    if IsFavorite[id] then
+    if FavUtil:IsFavorite(id) then
         button.isFav = true;
         button.Star:Show();
     else
@@ -2731,7 +2677,7 @@ function NPCCardAPI:SetMatchedNPC(button, id, name, title, keyword)
     button.Highlight:SetAlpha(0)
 
     --Favorites
-    if IsFavorite[id] then
+    if FavUtil:IsFavorite(id) then
         button.isFav = true;
         button.Star:Show();
     else
@@ -2791,12 +2737,12 @@ end
 
 local function CreateEntryButton(categoryID)
     local frame = EntryTab;
-    local NPCCardAPI = NPCCardAPI;
     local button, categoryButton;
     local buttons, categoryButtons = frame.buttons, {};
     local id;
 
     local subCategory = Catalogue[categoryID];
+    if not subCategory then return end;
 
     local numActiveButton = 0;
     local numSubcategory = #subCategory;
@@ -2855,58 +2801,147 @@ local function CreateEntryButton(categoryID)
     end)
 end
 
-local function HideMatchButton()
-    if MatchTab.numActiveButton ~= 0 then
-        local buttons = MatchTab.buttons;
-        local button;
-        for i = 1, MatchTab.numActiveButton do
-            buttons[i]:Hide();
+local function SetUpMatchButton(button, creatureData, keyword)
+    if creatureData then
+        button:Show();
+
+        local id = creatureData[2];
+        local name, title;
+        if id ~= button.creatureID then
+            button.creatureID = id;
+            name = creatureData[1];
+            title = GetNPCTitle(id);
+            if title then
+                button.hasTitle = true;
+                button.Name:Show();
+                button.Title:Show();
+                button.NameCenter:Hide();
+                button.Name:SetTextColor(0.72, 0.72, 0.72);
+                button.Title:SetText(title);
+            else
+                button.hasTitle = nil;
+                button.Name:Hide();
+                button.Title:Hide();
+                button.NameCenter:Show();
+                button.NameCenter:SetTextColor(0.72, 0.72, 0.72);
+            end
+        else
+            return
         end
-        MatchTab.numActiveButton = 0;
+    
+        button.creatureName = name;
+    
+        --Highlight matched words
+        name = HighlightMatchedWord(name, keyword)
+        if button.hasTitle then
+            button.Name:SetText(name);
+        else
+            button.NameCenter:SetText(name);
+        end
+    
+        button.Highlight:SetAlpha(0)
+    
+        --Favorites
+        if FavUtil:IsFavorite(id) then
+            button.isFav = true;
+            button.Star:Show();
+        else
+            button.isFav = nil;
+            button.Star:Hide();
+        end
+
+    else
+        button:Hide();
+        button.creatureID = nil;
+    end
+end
+
+local function Match_OnEnter(self)
+    UIFrameFadeIn(self.Highlight, 0.2, self.Highlight:GetAlpha(), 1);
+    MatchPreviewModel:SetLight(true, false, - 0.44699833180028 ,  0.72403680806459 , -0.52532198881773, 0.8, 172/255, 172/255, 172/255, 1, 0.8, 0.8, 0.8);
+    ShowMouseOverButtons(self);
+    if MatchPreviewModel.id ~= self.creatureID then
+        MatchPreviewModel.id = self.creatureID;
+        UpdatePreviewModel(self.creatureID);
+    end
+end
+
+local ScrollMatch = {};
+ScrollMatch.data = {};
+ScrollMatch.indexOffset = -1;
+ScrollMatch.buttons = {};
+ScrollMatch.numButtons = 12; --6 visible, 6 for buffer
+
+function ScrollMatch:HideButtons()
+    for k, button in pairs(self.buttons) do
+        button:Hide();
     end
     MatchPreviewModel:Hide();
     MouseOverButtons:Hide();
     MatchTab.Notes:Show();
 end
 
-local function CreateMatchButton(matchTable)
+function ScrollMatch:SetMatchData(data, keyword)
+    self.data = data;
+    self.keyword = keyword;
+end
+
+function ScrollMatch:UpdateScrollChild(offset, forced)
+    local index = floor((offset + 2) / NPC_BUTTON_HEIGHT);
+    if index == self.indexOffset and not forced then
+        return
+    end
+
+    local anchorTo = MatchTab.ScrollChild;
+    local button;
+
+    if index > self.indexOffset then
+        local topButton = tremove(self.buttons, 1);
+        if topButton then
+            tinsert(self.buttons, topButton);
+        end
+    else
+        local bottomButton = tremove(self.buttons);
+        if bottomButton then
+            tinsert(self.buttons, 1, bottomButton);
+        end
+    end
+    self.indexOffset = index;
+    local dataIndex;
+    for i = 1, self.numButtons do
+        button = self.buttons[i];
+        if not button then
+            button = CreateFrame("Button", nil, anchorTo, "NarciNPCMatchButtonTemplate");
+            button:SetScript("OnEnter", Match_OnEnter);
+            button:SetScript("OnClick", NPCCard_OnClick);
+            self.buttons[i] = button;
+        end
+        dataIndex = i + index;
+        button:ClearAllPoints();
+        button:SetPoint("TOP", anchorTo, "TOP", 0, NPC_BUTTON_HEIGHT * (1 - dataIndex));
+        SetUpMatchButton(button, self.data[dataIndex], self.keyword);
+    end
+end
+
+local function CreateMatchButton(matchTable, keyword)
+    ScrollMatch:SetMatchData(matchTable, keyword);
     local frame = MatchTab;
     local numMacthes = #matchTable;
     if numMacthes > 0 then
         frame.Notes:Hide();
         MouseOverButtons:Hide();
     else
-        HideMatchButton();
+        ScrollMatch:HideButtons();
         return
     end
-
-    local NPCCardAPI = NPCCardAPI;
-    local button;
-    local buttons = frame.buttons;
-    local name, title, id;
     local numActiveButton = min(numMacthes, NUM_MAX_MATCHES);
-    --print(numActiveButton.." Matches");
-
-    local keyword = matchTable.keyword;
-
-    for i = 1, numActiveButton do
-        name = matchTable[i][1];
-        id = matchTable[i][2];
-        button = buttons[i];
-        title = GetNPCTitle(id);
-        NPCCardAPI:SetMatchedNPC(button, id, name, title, keyword);
-    end
-
-    for i = numActiveButton + 1, NUM_MAX_MATCHES do
-        buttons[i]:Hide();
-    end
 
     frame.numActiveButton = numActiveButton;
 
     After(0, function()
         UpdateScrollRange(frame, false, 0);
+        ScrollMatch:UpdateScrollChild(0, true);
         frame.scrollBar:SetValue(0);
-        UpdateRenderAreaMatch(0);
     end);
 end
 
@@ -2914,7 +2949,7 @@ local function CreateFavoritesButton()
     --not a RAM friendly way but let it be for now
     local matchedIDs = {};
     local name;
-    for npcID, isFav in pairs(IsFavorite) do
+    for npcID, isFav in pairs( FavUtil:GetFavoriteNPCs() ) do
         if isFav then
             name = GetNPCName(npcID) or "";
             tinsert(matchedIDs, {name, npcID});
@@ -2924,12 +2959,14 @@ local function CreateFavoritesButton()
     CreateMatchButton(matchedIDs);
     local isFavoriteTab = true;
     GoToTab(3, isFavoriteTab);
-    MatchTab.Model:Hide();
+    MatchTab.IDModel:Hide();
     IDMatchButton:Hide();
 end
 
-local function NarciNPCCover_OnClick(self)
-    if self.categoryID ~= -1 then
+NarciNPCBrowserCoverButtonMixin = {};
+
+function NarciNPCBrowserCoverButtonMixin:OnClick()
+    if self.categoryID ~= 0 then
         CreateEntryButton(self.categoryID);
         HeaderFrame.Tab2Label:SetText(self.Name:GetText());
     else
@@ -2937,71 +2974,141 @@ local function NarciNPCCover_OnClick(self)
     end
 end
 
-local function CreateCoverButton() --ScrollFrame--
-    local frame = CategoryTab;
-    local button, category;
-    local buttons = frame.buttons or {};
-    local Catalogue = Catalogue;
+function NarciNPCBrowserCoverButtonMixin:OnMouseUp()
+    self.Image:SetTexCoord(0.046875, 0.625, 0.06640625, 0.93359375);
+end
 
-    --If My Favorites is not empty, set it to the first place.
-    local numCovers = Catalogue.numCategory;
-    local isFirstCategoryFavorites;
-    if numFavorites > 0 then           
-        isFirstCategoryFavorites = true;
+function NarciNPCBrowserCoverButtonMixin:OnMouseDown()
+    self.Image:SetTexCoord(0, 0.66796875, 0, 1);
+end
+
+function NarciNPCBrowserCoverButtonMixin:OnEnter()
+    UIFrameFadeIn(self.Highlight, 0.12, self.Highlight:GetAlpha(), 1);
+    self.Name:SetAlpha(1);
+end
+
+function NarciNPCBrowserCoverButtonMixin:OnLeave()
+    UIFrameFadeIn(self.Highlight, 0.2, self.Highlight:GetAlpha(), 0);
+    self.Name:SetAlpha(0.88);
+end
+
+function NarciNPCBrowserCoverButtonMixin:Init(categoryID)
+    if (categoryID == self.categoryID) and (categoryID ~= 0) then
+        return
     end
+    self.categoryID = categoryID;
 
-    for i = 1, numCovers do
-        button = buttons[i];
-        if not button then
-            button = CreateFrame("Button", nil, frame.ScrollChild, "Narci_NPCCoverTemplate");
-            tinsert(buttons, button);
-            if i == 1 then
-                button:SetPoint("TOPLEFT", frame.ScrollChild, "TOPLEFT", 0, 0);
-            else
-                if i % 3 == 1 then
-                    button:SetPoint("TOP", buttons[i - 3], "BOTTOM", 0, 0);
-                else
-                    button:SetPoint("LEFT", buttons[i - 1], "RIGHT", 0, 0);
-                end
-            end
-            button:SetScript("OnClick", NarciNPCCover_OnClick);
-        end
-
-
-        --Contents
-        if isFirstCategoryFavorites then
-            if i == 1 then
-                index = -1;
-                button.categoryID = -1;
-                button.Count:SetText(numFavorites);
-                button.Name:SetText(L["My Favorites"]);
-                button.Image:SetTexture("Interface/AddOns/Narcissus/Art/Widgets/NPCBrowser/Covers/MyFavorites");
-            else
-                index = i - 1;
-                if i == numCovers then
-                    button:Show();
-                end
-            end
+    if categoryID then
+        if categoryID == 0 then
+            self.Count:SetText( FavUtil:GetNumFavorites() );
+            self.Name:SetText(L["My Favorites"]);
+            self.Image:SetTexture("Interface/AddOns/Narcissus/Art/Widgets/NPCBrowser/Covers/MyFavorites");
         else
-            index = i;
-            if i == numCovers then
-                button:Hide();
-                frame.buttons = buttons;
+            local category = Catalogue[categoryID];
+            if category then
+                self.Count:SetText(category.numEntries);
+                self.Name:SetText(category.name);
+                self.Image:SetTexture("Interface/AddOns/Narcissus/Art/Widgets/NPCBrowser/Covers/".. (category.name) );
+            else
+                self:Hide();
                 return
             end
         end
+        self:Show();
+    else
+        self:Hide();
+    end
+end
 
-        category = Catalogue[index];
-        if category then
-            button.categoryID = index;
-            button.Count:SetText(category.numEntries);
-            button.Name:SetText(category.name);
-            button.Image:SetTexture("Interface/AddOns/Narcissus/Art/Widgets/NPCBrowser/Covers/".. (category.name) );
+local ScrollCategory = {};
+ScrollCategory.indexOffset = -1;
+ScrollCategory.buttons = {};
+ScrollCategory.numButtons = 12; --6 visible, 6 for buffer
+
+function ScrollCategory:UpdateData()
+    self.data = {};
+
+    local numCategory = Catalogue.numCategory;
+    local index;
+    if FavUtil:GetNumFavorites() > 0 then
+        numCategory = numCategory + 1;
+        index = 0;
+    else
+        index = 1;
+    end
+    local numCol = 3;
+    local numRow = math.ceil(numCategory / numCol);
+    for row = 1, numRow do
+        self.data[row] = {};
+        for col = 1, numCol do
+            self.data[row][col] = index;
+            index = index + 1;
+            if index > numCategory then
+                return
+            end
         end
     end
-    
-    frame.buttons = buttons;
 end
+
+function ScrollCategory:UpdateScrollChild(offset, forced)
+    local index = floor((offset + 2) / COVER_BUTTON_HEIGHT) - 1;
+    if index == self.indexOffset and not forced then
+        return
+    end
+
+    local anchorTo = CategoryTab.ScrollChild;
+    local row, col = index + 1, 1;
+    local button;
+
+    if index > self.indexOffset then
+        local topButton;
+        for i = 1, 3 do
+            topButton = tremove(self.buttons, 1);
+            if topButton then
+                tinsert(self.buttons, topButton);
+            else
+                break;
+            end
+        end
+    else
+        local bottomButton;
+        for i = 1, 3 do
+            bottomButton = tremove(self.buttons);
+            if bottomButton then
+                tinsert(self.buttons, 1, bottomButton);
+            else
+                break;
+            end
+        end
+    end
+    self.indexOffset = index;
+
+    for i = 1, self.numButtons do
+        button = self.buttons[i];
+        if not button then
+            button = CreateFrame("Button", nil, anchorTo, "NarciNPCCoverTemplate");
+            self.buttons[i] = button;
+        end
+        button:ClearAllPoints();
+        button:SetPoint("TOPLEFT", anchorTo, "TOPLEFT", COVER_BUTTON_WIDTH * (col - 1), COVER_BUTTON_HEIGHT * (1 - row));
+        if self.data[row] then
+            button:Init( self.data[row][col] );
+        else
+            button:Init(nil);
+        end
+        col = col + 1;
+        if col > 3 then
+            col = 1;
+            row = row + 1;
+        end
+    end
+end
+
+function ScrollCategory:Update()
+    ScrollCategory:UpdateData();
+    ScrollCategory:UpdateScrollChild(0, true);
+end
+
 
 local function QuickFavoriteButton_OnClick(self)
     if not self.parent then return end
@@ -3009,15 +3116,15 @@ local function QuickFavoriteButton_OnClick(self)
     local isFav = not self.isFav;
     self.isFav = isFav;
     self.parent.isFav = isFav;
-
+    local creatureID = MouseOverButtons.parent.creatureID;
     if isFav then
-        AddToFavorites(MouseOverButtons.parent.creatureID);
+        FavUtil:Add(creatureID);
     else
-        RemoveFromFavorites(MouseOverButtons.parent.creatureID);
+        FavUtil:Remove(creatureID);
     end
-
     self:PlayVisual();
-    CreateCoverButton();
+
+    ScrollCategory:Update();
 end
 --------------------------------------------------------------------------
 
@@ -3032,12 +3139,22 @@ local function NPCBrowser_OnLoad(self)
     HomeButton = HeaderFrame.HomeButton;
     SearchBox = HeaderFrame.SearchBox;
     SearchTrigger = HeaderFrame.SearchTrigger;
-    DeleteTextButton = HeaderFrame.DeleteTextButton;
     LoadingIndicator = self.Container.LoadingIndicator;
     
     CreateSmoothScroll(EntryTab, NPC_BUTTON_HEIGHT, NUM_BUTTONS_PER_PAGE, 2, UpdateRenderAreaEntry);
-    CreateCoverButton();
+
+    ScrollCategory:Update();
     CreateSmoothScroll(CategoryTab, COVER_BUTTON_HEIGHT, NUM_COVER_ROW_PER_PAGE, 1);
+    CategoryTab.scrollBar:SetScript("OnValueChanged", function(bar, value)
+        CategoryTab:SetVerticalScroll(value);
+        ScrollCategory:UpdateScrollChild(value);
+    end);
+
+    CreateSmoothScroll(MatchTab, NPC_BUTTON_HEIGHT, NUM_BUTTONS_PER_PAGE, 2);
+    MatchTab.scrollBar:SetScript("OnValueChanged", function(bar, value)
+        MatchTab:SetVerticalScroll(value);
+        ScrollMatch:UpdateScrollChild(value);
+    end);
 
     local numCover = Catalogue.numCategory;
     local numRow = floor( (numCover + 2) /3 );
@@ -3050,13 +3167,15 @@ local function NPCBrowser_OnLoad(self)
         FadeFrame(self, 0.2, "OUT");
     end)
     
+    SearchTrigger:Show();
+    HeaderFrame.Tab1Label:SetTextColor(0.72, 0.72, 0.72);
     SearchTrigger:SetScript("OnClick", function(self)
         self:Hide();
         SearchBox:Show();
         GoToTab(3);
 
         if not self.isDatabaseLoaded then
-            local addOnName = "Narcissus_Database";
+            local addOnName = "Narcissus_Database_NPC";
             if IsAddOnLoaded(addOnName) then
                 self.isDatabaseLoaded = true;
             else
@@ -3084,7 +3203,6 @@ local function NPCBrowser_OnLoad(self)
                 LoadingIndicator:Show();
 
                 After(0.2, function()
-                    timeStart = GetTime();
                     local loaded, reason = LoadAddOn(addOnName);
                     if not loaded then
                         PlaySound(138528);
@@ -3110,7 +3228,7 @@ local function NPCBrowser_OnLoad(self)
     MouseOverButtons.WeaponMark:SetScript("OnClick", AddModelAndEquipItems);
 
     --localization
-    MatchTab.Notes:SetText("No Match");
+    MatchTab.Notes:SetText(CLUB_FINDER_APPLICANT_LIST_NO_MATCHING_SPECS);   --No matches
     HeaderFrame.Tab3Label:SetText(L["My Favorites"]);
 
     function Narci_GetNumRendered()
@@ -3128,16 +3246,10 @@ local function NPCBrowser_OnLoad(self)
     end
 end
 
-local function Narci_NPCBrowser_OnHide(self)
-    self:Hide();
-    self:SetSize(BROWSER_SHRINK_WIDTH, BROWSER_SHRINK_HEIGHT);
-    targetModelIndex = nil;
-    hasNewActor = nil;
-    SetPanelAlpha(1, false);
-end
+
 
 ------------------------------------------------------
-NarciNPCSearchBoxMixin = {};
+--Search Box
 
 local SearchDelay = NarciAPI_CreateAnimationFrame(0.5);
 
@@ -3151,7 +3263,7 @@ local function StartSearching()
 end
 
 local function SetCreaturePreview(id)
-    local Model = MatchTab.Model;
+    local Model = MatchTab.IDModel;
     if id then
         Model:SetAlpha(0)
         Model:SetCreature(id);
@@ -3168,7 +3280,7 @@ local function SearchByID(id)
     if IsKeyDown("BACKSPACE") then return end
 
     local Tooltip = MatchTab.NPCTooltip;
-    HideMatchButton();
+    ScrollMatch:HideButtons();
 
     Tooltip:SetOwner(UIParent, "ANCHOR_NONE");
     Tooltip:SetHyperlink(format("unit:Creature-0-0-0-0-%d", id));
@@ -3196,7 +3308,7 @@ local function SearchByID(id)
             IDMatchButton.Title:Hide();
         end
 
-        if IsFavorite[id] then
+        if FavUtil:IsFavorite(id) then
             IDMatchButton.Star:Show();
             IDMatchButton.isFav = true;
         else
@@ -3219,7 +3331,7 @@ local function SearchByName(str)
     end
 
     str = gsub(str, "[%c, %-]", "%%%1");
-    local strTemp = gsub(str, "[%.]", "%%%1");
+    local keyword = gsub(str, "[%.]", "%%%1");
     local matchedIDs, numMacthes = NarciCreatureInfo.SearchNPCByName(str);
 
     if numMacthes > 0 then
@@ -3231,9 +3343,8 @@ local function SearchByName(str)
     After(0.25, function()
         if numMacthes > 0 then
             table.sort(matchedIDs, SortFunc);
-            matchedIDs.keyword = strTemp;
         end
-        CreateMatchButton(matchedIDs);
+        CreateMatchButton(matchedIDs, keyword);
     end)
 
     IDMatchButton:Hide();
@@ -3260,7 +3371,24 @@ SearchDelay:SetScript("OnShow", function(self)
     self.LoadingIcon:Show();
 end);
 
+
+local SearchBoxOnKeydownFunc = function(self, key)
+    if key == "DELETE" then
+        self.onDeletePressedFunc(self, key);
+    elseif self.hasNumber then
+        if key == "UP" then
+            self:SetText(self:GetNumber() + 1);
+        elseif key == "DOWN" then
+            self:SetText( max(self:GetNumber() - 1, 1) );
+        end
+    end
+end
+
+NarciNPCSearchBoxMixin = CreateFromMixins(NarciSearchBoxSharedMixin);
+
 function NarciNPCSearchBoxMixin:OnLoad()
+    self.delayedSearch = SearchDelay;
+    self.onKeyDownFunc = SearchBoxOnKeydownFunc;
     self.DefaultText:SetText(L["Name or ID"]);
 
     local Tab = Narci_NPCBrowser_MatchTab;
@@ -3272,34 +3400,11 @@ function NarciNPCSearchBoxMixin:OnLoad()
     ---Font
     TP.TextLeft1 = _G[NPCTooltipName.."TextLeft1"];
     TP.TextLeft2 = _G[NPCTooltipName.."TextLeft2"];
-    
-    IDMatchButton = CreateFrame("Button", nil, Tab, "Narci_NPCButtonResultTemplate");
+
+    IDMatchButton = CreateFrame("Button", nil, Tab, "NarciNPCMatchButtonTemplate");
     IDMatchButton:SetPoint("TOP", Tab, "TOP", 0, 0);
     IDMatchButton:SetScript("OnEnter", IDMatch_OnEnter);
     IDMatchButton:SetScript("OnClick", NPCCard_OnClick);
-
-    --Create Key Listener: Use ↑↓ to change ID
-    local KeyListener = CreateFrame("Frame", nil, self);
-    KeyListener:SetPropagateKeyboardInput(true);
-    KeyListener:Hide();
-
-    KeyListener:SetScript("OnKeyDown", function(_, key)
-        if key == "DELETE" then
-            self:ResetSearch();
-        elseif self.hasNumber then
-            if key == "UP" then
-                self:SetText(self:GetNumber() + 1);
-            elseif key == "DOWN" then
-                self:SetText( max(self:GetNumber() - 1, 1) );
-            end
-        end
-    end);
-
-    self.KeyListener = KeyListener;
-end
-
-function NarciNPCSearchBoxMixin:OnShow()
-    self:SetFocus();
 end
 
 function NarciNPCSearchBoxMixin:OnMouseWheel(delta)
@@ -3312,26 +3417,6 @@ function NarciNPCSearchBoxMixin:OnMouseWheel(delta)
     end
 end
 
-function NarciNPCSearchBoxMixin:ResetSearch()
-    self:SetText("");
-    if self.hadFocus then
-        self.hadFocus = false;
-        self:SetFocus();
-    end
-end
-
-function NarciNPCSearchBoxMixin:QuitEdit()
-    self.KeyListener:Hide();
-    self:HighlightText(0,0);
-    self:ClearFocus();
-end
-
-function NarciNPCSearchBoxMixin:ClearText()
-    self:SetText("");
-    self:QuitEdit();
-    self.DefaultText:Show();
-end
-
 function NarciNPCSearchBoxMixin:OnTextChanged(isUserInput)
     SearchDelay.total = 0;
     local str = self:GetNumber();
@@ -3341,7 +3426,7 @@ function NarciNPCSearchBoxMixin:OnTextChanged(isUserInput)
         
         self.hasNumber = true;
         self.DefaultText:Hide();
-        DeleteTextButton:Show();
+        self.EraseButton:Show();
 
         SearchDelay.type = "ID";
         SearchDelay.requireUpdate = nil;
@@ -3364,23 +3449,23 @@ function NarciNPCSearchBoxMixin:OnTextChanged(isUserInput)
 
         if not str or str == "" then
             self.DefaultText:Show();
-            DeleteTextButton:Hide();
+            self.EraseButton:Hide();
             MatchTab.Notes:Hide();
         else
             self.DefaultText:Hide();
-            DeleteTextButton:Show();
+            self.EraseButton:Show();
             if isUserInput then
                 StartSearching();
             end
         end
 
         MatchTab.NPCTooltip:Hide();
-        MatchTab.Model:Hide();
+        MatchTab.IDModel:Hide();
     end
 end
 
-function NarciNPCSearchBoxMixin:OnEditFocusGained()
-    self.KeyListener:Show();
+function NarciNPCSearchBoxMixin:OnFocusGained()
+    self:OnEditFocusGained();
     if self:GetNumber() ~= 0 then
         self.hasNumber = true;
     else
@@ -3388,20 +3473,13 @@ function NarciNPCSearchBoxMixin:OnEditFocusGained()
     end
 end
 
-function NarciNPCSearchBoxMixin:OnEditFocusLost()
-    self.KeyListener:Hide();
-    self:HighlightText(0, 0);
-    self.hadFocus = DeleteTextButton:IsMouseOver();
-end
 ------------------------------------------------------
 local function BuildNPCList()
     RequestAllCreatureInfo(NPCInfo);
-    CreateButtonsForScrollFrame(BrowserFrame.Container.EntryTab, NUM_MAX_ENTRY_BUTTONS, "Narci_NPCButtonWithPortaitTemplate", NPCCard_OnEnter);
-    CreateButtonsForScrollFrame(BrowserFrame.Container.MatchTab, NUM_MAX_MATCHES, "Narci_NPCButtonResultTemplate", Match_OnEnter, NPCCard_OnClick);
-    CreateSmoothScroll(BrowserFrame.Container.MatchTab, NPC_BUTTON_HEIGHT, NUM_BUTTONS_PER_PAGE, 2, UpdateRenderAreaMatch);
+    CreateButtonsForScrollFrame(BrowserFrame.Container.EntryTab, NUM_MAX_ENTRY_BUTTONS, "NarciNPCButtonWithPortaitTemplate", NPCCard_OnEnter);
+    --CreateButtonsForScrollFrame(BrowserFrame.Container.MatchTab, NUM_MAX_MATCHES, "NarciNPCMatchButtonTemplate", Match_OnEnter, NPCCard_OnClick);
 
     local npcIDList = GetKeyTable(NPCInfo);
-    local After = After;
     After(1, function()
         local id;
         local shouldQueue, iteration = false, 0;
@@ -3443,6 +3521,7 @@ local function BuildNPCList()
             if numLeft > 0 then
                 After(0, GetNameRecursively);
             else
+                --Loading Complete
                 NPCBrowser_OnLoad(BrowserFrame);
                 LoadTexture();
                 LoadingIndicator.Progress:SetText("");
@@ -3452,11 +3531,34 @@ local function BuildNPCList()
 
         GetNameRecursively();
     end)
-    LoadFavorites();
+
+    FavUtil:Load();
 end
 
 
 NarciNPCBrowserMixin = {};
+
+function NarciNPCBrowserMixin:OnLoad()
+    BrowserFrame = self;
+    self:Minimize();
+
+    self:SetScript("OnLoad", nil);
+    self.OnLoad = nil;
+end
+
+function NarciNPCBrowserMixin:OnEnter()
+end
+
+function NarciNPCBrowserMixin:OnHide()
+    self:Hide();
+    self:Minimize();
+    TARGET_MODEL_INDEX = nil;
+    ACTOR_CREATED = nil;
+end
+
+function NarciNPCBrowserMixin:Minimize()
+    self:SetSize(BROWSER_SHRINK_WIDTH, BROWSER_SHRINK_HEIGHT);
+end
 
 function NarciNPCBrowserMixin:Init()
     if not self.isLoaded then
@@ -3464,21 +3566,32 @@ function NarciNPCBrowserMixin:Init()
         LoadingIndicator = self.Container.LoadingIndicator;
         LoadingIndicator:Show();
         BuildNPCList();
+        self.Container.Header.SearchTrigger:Hide();
     end
 end
 
-local Initialize = CreateFrame("Frame");
-Initialize:RegisterEvent("PLAYER_ENTERING_WORLD");
-Initialize:SetScript("OnEvent", function(self, event)
-    if event == "PLAYER_ENTERING_WORLD" then
-        self:UnregisterEvent(event);
+function NarciNPCBrowserMixin:Open(anchorButton)
+    FadeFrame(Narci_ActorPanelPopUp, 0.15, "OUT");
+    self:ClearAllPoints();
+    self:SetPoint("TOP", anchorButton, "TOP", 0, -5);
+    PlayToggleAnimation(true);
+    Narci_ModelSettings:SetPanelAlpha(0.5, true);
+    local PopUp = anchorButton:GetParent();
+    local index = PopUp.Index;
+    NarciPhotoModeAPI.CreateEmptyModelForNPCBrowser(index);     --Defined in PlayerModel.lua
+    TARGET_MODEL_INDEX = index;
+    self:Init();
+end
 
-        BrowserFrame = Narci_NPCBrowser;
-        BrowserFrame:SetSize(BROWSER_SHRINK_WIDTH, BROWSER_SHRINK_HEIGHT);
-        BrowserFrame:SetScript("OnHide", Narci_NPCBrowser_OnHide);
-        --BuildNPCList();
+function NarciNPCBrowserMixin:Close()
+    PlayToggleAnimation(false);
+    Narci_ModelSettings:SetPanelAlpha(1, true);
+    if not ACTOR_CREATED then
+        NarciPhotoModeAPI.RemoveActor(TARGET_MODEL_INDEX)
     end
-end)
+    ACTOR_CREATED = false;
+end
+
 
 
 

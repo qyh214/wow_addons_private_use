@@ -1,0 +1,77 @@
+<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+    <Script file="Domination.lua"/>
+    
+    <Frame name="NarciDomimationItemHighlight" hidden="true" virtual="true" mixin="NarciDominationItemHighlightMixin">
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture file="Interface\AddOns\Narcissus\Art\Widgets\Domination\PaperDollItemHighlight" parentKey="BorderHighlight" alphaMode="ADD">
+                    <Size x="37" y="37"/>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                    <Animations>
+                        <AnimationGroup parentKey="Shine">
+                            <Alpha fromAlpha="0" toAlpha="1" duration="0.12" order="1"/>
+                        </AnimationGroup>
+                    </Animations>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <Texture file="Interface\AddOns\Narcissus\Art\Widgets\Domination\PaperDollItemRank" parentKey="RankIndicator">
+                    <TexCoords left="0" right="0.25" top="0" bottom="0.5"/>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnHide>
+                self:StopAnimating();
+				self:Hide();
+            </OnHide>
+        </Scripts>
+    </Frame>
+
+    <Texture name="NarciDominationIndicatorNodeTemplate" file="Interface\AddOns\Narcissus\Art\Widgets\Domination\ShardNodeTiny" virtual="true">
+        <Size x="36" y="72"/>
+        <TexCoords left="0.75" right="1" top="0" bottom="1"/>
+    </Texture>
+
+    <Frame name="NarciCharacterFrameDominationIndicator" parent="CharacterFrame" mixin="NarciDominationIndicatorMixin" frameStrata="HIGH" id="2">
+        <Size x="72" y="72"/>
+        <Layers>
+            <Layer level="BACKGROUND" textureSubLevel="-1">
+                <Texture file="Interface\AddOns\Narcissus\Art\Widgets\Domination\IndicatorUI" parentKey="Highlight" hidden="true">
+                    <TexCoords left="0.5" right="0.75" top="0" bottom="0.25"/>
+                </Texture>
+            </Layer>
+            <Layer level="BACKGROUND">
+                <Texture file="Interface\AddOns\Narcissus\Art\Widgets\Domination\IndicatorUI" parentKey="Background">
+                    <TexCoords left="0" right="0.25" top="0" bottom="0.25"/>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <Texture parentKey="SpellIcon" hidden="true">
+                    <Size x="32" y="32"/>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </Texture>
+				<MaskTexture parentKey="SpellIconMask" file="Interface\AddOns\Narcissus\Art\Widgets\Domination\IndicatorIconMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+                    <Size x="36" y="36"/>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="SpellIcon"/>
+					</MaskedTextures>
+				</MaskTexture>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
+            <OnShow method="OnShow"/>
+            <OnHide method="OnHide"/>
+        </Scripts>
+    </Frame>
+</Ui>

@@ -286,7 +286,7 @@ function MB:UpdateLayout()
 			frame:SetScript("OnDragStop", nil)
 			
 			frame:ClearAllPoints()
-			frame:SetFrameStrata("HIGH")
+			frame:SetFrameStrata("MEDIUM")
 			frame:SetFrameLevel(20)
 			frame:Size(E.minimapbuttons.db.buttonSize)
 

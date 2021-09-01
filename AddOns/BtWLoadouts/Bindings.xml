@@ -1,0 +1,9 @@
+<Bindings>
+	<Binding name="TOGGLE_BTWLOADOUTS" header="BTWLOADOUTS" category="ADDONS">
+        if BtWLoadoutsFrame:IsShown() then
+            BtWLoadoutsFrame:Hide()
+        else
+            BtWLoadoutsFrame:Show()
+        end
+	</Binding>
+</Bindings>

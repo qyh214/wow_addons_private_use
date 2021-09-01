@@ -1,0 +1,253 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="Loadouts.lua"/>
+
+	<Button name="BtWLoadoutsSetsScrollListItemTemplate" mixin="BtWLoadoutsSetsScrollListItemMixin" parentArray="ScrollButtons" virtual="true">
+		<Size x="540" y="21"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="ExpandedIcon" inherits="Char-Stat-Minus">
+					<Anchors>
+						<Anchor point="LEFT" x="4" y="0"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="CollapsedIcon" inherits="Char-Stat-Plus">
+					<Anchors>
+						<Anchor point="LEFT" x="4" y="0"/>
+					</Anchors>
+				</Texture>
+				<FontString parentKey="Name" inherits="GameFontNormalLeft">
+					<Size x="145" y="22"/>
+					<Anchors>
+						<Anchor point="LEFT" x="15" y="0"/>
+						<Anchor point="RIGHT" x="-5" y="0"/>
+					</Anchors>
+					<Color r="1.0" g="1.0" b="1.0" a="1.0"/>
+				</FontString>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture parentKey="ErrorBorder" setAllPoints="true" file="Interface\Common\WhiteIconFrame" hidden="true">
+					<Color r="1" g="0" b="0" a="0"/>
+				</Texture>
+				<Texture parentKey="SelectedBar" file="Interface\FriendsFrame\UI-FriendsFrame-HighlightBar" alpha="0.4" alphaMode="ADD" hidden="true"/>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="4">
+				<Texture parentKey="ErrorOverlay" setAllPoints="true" hidden="true">
+					<Color r="1" g="0" b="0" a="0.3"/>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button parentKey="AddButton">
+				<Size x="16" y="16"/>
+				<Anchors>
+					<Anchor point="RIGHT" x="0" y="0"/>
+				</Anchors>
+				<NormalTexture parentKey="Icon" file="Interface\GUILDFRAME\Communities">
+					<TexCoords left="0.2236328125" right="0.2509765625" top="0.884765625" bottom="0.939453125"/>
+				</NormalTexture>
+				<Scripts>
+					<OnClick>
+						self:GetParent():Add(self)
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button parentKey="RemoveButton">
+				<Size x="16" y="16"/>
+				<Anchors>
+					<Anchor point="RIGHT" x="0" y="0"/>
+				</Anchors>
+				<NormalTexture parentKey="Icon" file="Interface\GUILDFRAME\Communities">
+					<TexCoords left="0.3037109375" right="0.3271484375" top="0.880859375" bottom="0.927734375"/>
+				</NormalTexture>
+				<Scripts>
+					<OnClick>
+						self:GetParent():Remove(self)
+					</OnClick>
+					<OnLeave>
+						local parent = self:GetParent()
+						if not MouseIsOver(parent) then
+							parent.MoveButton:Hide()
+							parent.RemoveButton:Hide()
+						end
+					</OnLeave>
+				</Scripts>
+			</Button>
+
+			<Button parentKey="MoveButton">
+				<Size x="16" y="16"/>
+				<Anchors>
+					<Anchor point="LEFT" x="0" y="0"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture parentKey="Up" file="Interface\ChatFrame\ChatFrameExpandArrow">
+							<Size x="10" y="10"/>
+							<Anchors>
+								<Anchor point="TOP" x="0" y="1"/>
+							</Anchors>
+						</Texture>
+						<Texture parentKey="Down" file="Interface\ChatFrame\ChatFrameExpandArrow">
+							<Size x="10" y="10"/>
+							<Anchors>
+								<Anchor point="BOTTOM" x="0" y="-1"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+
+				<!-- <NormalTexture file="Interface\ChatFrame\ChatFrameExpandArrow"/>
+				<DisabledTexture file="Interface\ChatFrame\ChatFrameExpandArrow" desaturated="true"/> -->
+				<Scripts>
+					<OnLoad>
+						self.Up:SetRotation(math.pi * 0.5)
+						self.Down:SetRotation(-math.pi * 0.5)
+					</OnLoad>
+					<OnMouseDown>
+						self:GetParent():StartDrag(self)
+					</OnMouseDown>
+					<OnLeave>
+						local parent = self:GetParent()
+						if not MouseIsOver(parent) then
+							parent.MoveButton:Hide()
+							parent.RemoveButton:Hide()
+						end
+					</OnLeave>
+				</Scripts>
+			</Button>
+		</Frames>
+		<!-- <NormalTexture parentKey="NormalTexture" atlas="voicechat-channellist-row-background" alphaMode="ADD"/> -->
+		<HighlightTexture parentKey="HighlightTexture" atlas="voicechat-channellist-row-highlight" alphaMode="ADD"/>
+		<!-- <HighlightTexture file="Interface\FriendsFrame\UI-FriendsFrame-HighlightBar-Blue" alphaMode="ADD"/> -->
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnClick method="OnClick"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+		</Scripts>
+	</Button>
+
+    <Frame name="$parentLoadouts" parentKey="Loadouts" mixin="BtWLoadoutsLoadoutsMixin" inherits="BtWLoadoutsTabFrameTemplate">
+        <KeyValues>
+            <KeyValue key="name" value="BTWLOADOUTS_LOADOUTS" type="global"/>
+        </KeyValues>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="NameTitle" text="BTWLOADOUTS_NAME" inherits="GameFontNormalLeft">
+                    <Size x="175" y="0"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="10" y="-10"/>
+                    </Anchors>
+                    <Color r="0.75" g="0.61" b="0"/>
+                </FontString>
+                <FontString parentKey="SpecTitle" text="BTWLOADOUTS_SPECIALIZATION" inherits="GameFontNormalLeft">
+                    <Size x="225" y="0"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="10" y="-60"/>
+                    </Anchors>
+                    <Color r="0.75" g="0.61" b="0"/>
+                </FontString>
+                <FontString parentKey="CharacterRestrictionsTitle" text="BTWLOADOUTS_CHARACTER_RESTRICTIONS" inherits="GameFontNormalLeft">
+                    <Size x="175" y="0"/>
+                    <Anchors>
+                    <Anchor point="LEFT" relativeKey="$parent.SpecTitle" relativePoint="RIGHT" x="0" y="0"/>
+                    </Anchors>
+                    <Color r="0.75" g="0.61" b="0"/>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Frame parentKey="Inset" useParentLevel="true" inherits="InsetFrameTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="-4" y="4" />
+                    <Anchor point="BOTTOMRIGHT" x="4" y="-2" />
+                </Anchors>
+            </Frame>
+            <CheckButton parentKey="Enabled" inherits="OptionsBaseCheckButtonTemplate">
+                <Size x="26" y="26"/>
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativeKey="$parent.Inset" relativePoint="TOPRIGHT" x="-75" y="-10"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <FontString parentKey="Text" inherits="GameFontNormalSmall" text="BTWLOADOUTS_ENABLED">
+                            <Anchors>
+                                <Anchor point="LEFT" relativePoint="RIGHT" x="0" y="1"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <HitRectInsets>
+                    <AbsInset left="0" right="-65" top="0" bottom="0"/>
+                </HitRectInsets>
+                <Scripts>
+                    <OnClick>
+                        self:GetParent():UpdateSetEnabled(self:GetChecked())
+                    </OnClick>
+                </Scripts>
+            </CheckButton>
+            <EditBox letters="50" parentKey="Name" autoFocus="false" inherits="InputBoxTemplate">
+                <Size x="0" y="22"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.NameTitle" relativePoint="BOTTOMLEFT" x="20" y="-10"/>
+                    <Anchor point="RIGHT" x="-10" y="0"/>
+                </Anchors>
+                <Scripts>
+                    <OnTextChanged>
+                        self:GetParent():UpdateSetName(self:GetText())
+                    </OnTextChanged>
+                    <OnEnterPressed function="EditBox_ClearFocus"/>
+                </Scripts>
+            </EditBox>
+            <Frame name="$parentSpecDropDown" parentKey="SpecDropDown" inherits="BtWLoadoutsSpecDropDownTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.SpecTitle" relativePoint="BOTTOMLEFT" x="0" y="-5"/>
+                </Anchors>
+            </Frame>
+            <Frame parentKey="CharacterDropDown" inherits="BtWLoadoutsCharacterDropDownTemplate">
+                <Anchors>
+                    <Anchor point="LEFT" relativeKey="$parent.SpecDropDown" relativePoint="RIGHT" x="0" y="0"/>
+                </Anchors>
+                <KeyValues>
+                    <KeyValue key="multiple" type="boolean" value="true"/>
+                    <KeyValue key="includeAny" type="boolean" value="true"/>
+                </KeyValues>
+            </Frame>
+
+            <ScrollFrame parentKey="SetsScroll" inherits="HybridScrollFrameTemplate">
+                <Size x="548" y="250"/>
+                <Anchors>
+                    <Anchor point="TOP" relativeKey="$parent.SpecDropDown" relativePoint="BOTTOM" x="0" y="0"/>
+                    <Anchor point="LEFT" x="6" y="0"/>
+                    <Anchor point="BOTTOMRIGHT" x="-18" y="3"/>
+                </Anchors>
+                <Frames>
+                    <Frame parentKey="DropDown" inherits="BtWLoadoutsSetDropDownTemplate" enableMouse="true">
+                    </Frame>
+                    <Slider parentKey="ScrollBar" inherits="HybridScrollBarTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="0" y="-12"/>
+                            <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="0" y="13"/>
+                        </Anchors>
+                    </Slider>
+                </Frames>
+                <Scripts>
+                    <OnLoad>
+                        UIDropDownMenu_Initialize(self.DropDown, nil, "MENU")
+                    </OnLoad>
+                    <OnMouseWheel>
+                        HybridScrollFrame_OnMouseWheel(self, delta, stepSize)
+                        if self:GetScrollChild().currentDrag  ~= nil then
+                            self:GetScrollChild().currentDrag = nil -- Cancel dragging on scroll
+                        end
+                    </OnMouseWheel>
+                </Scripts>
+            </ScrollFrame>
+        </Frames>
+        <Scripts>
+            <OnLoad inherit="prepend" method="OnLoad"/>
+            <OnShow inherit="prepend" method="OnShow"/>
+            <OnEvent method="OnEvent"/>
+        </Scripts>
+    </Frame>
+</Ui>

@@ -1,6 +1,8 @@
 local _, T = ...
 local SpellInfo = T.KnownSpells
 
+_G[_] = T
+
 local band, bor, floor = bit.band, bit.bor, math.floor
 local f32_ne, f32_perc, f32_pim, f32_fpim do
 	local frexp, lt = math.frexp, {

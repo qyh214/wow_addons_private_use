@@ -37,7 +37,11 @@ V.maps = {
 	},
 	worldMap = {
 		enable = true,
-		reveal = true,
+		reveal = {
+			enable = true,
+			useColor = false,
+			color = {r = 1, g = 1, b = 1, a = 1}
+		},
 		scale = {
 			enable = true,
 			size = 1.24
@@ -59,6 +63,7 @@ V.maps = {
 }
 
 V.misc = {
+	autoHideWorldMap = false,
 	autoScreenshot = false,
 	pauseToSlash = true,
 	noKanjiMath = false,
@@ -78,7 +83,8 @@ V.misc = {
 			[312762] = false
 		},
 		other = {
-			["Tortollan"] = false
+			["Tortollan"] = false,
+			["Smolderheart"] = false
 		}
 	},
 	lfgList = {
@@ -210,6 +216,7 @@ V.skins = {
 		debugTools = true,
 		dressingRoom = true,
 		encounterJournal = true,
+		eventTrace = true,
 		flightMap = true,
 		friends = true,
 		garrison = true,
@@ -281,17 +288,20 @@ V.skins = {
 
 V.tooltips = {
 	icon = true,
+	dominationRank = true,
 	objectiveProgress = true,
 	objectiveProgressAccuracy = 1,
 	progression = {
 		enable = true,
 		raids = {
 			enable = true,
-			["Castle Nathria"] = true
+			["Castle Nathria"] = true,
+			["Sanctum of Domination"] = true
 		},
 		special = {
 			enable = true,
-			["Shadowlands Keystone Master: Season One"] = true
+			["Shadowlands Keystone Master: Season One"] = true,
+			["Shadowlands Keystone Master: Season Two"] = true
 		},
 		mythicDungeons = {
 			enable = true,
@@ -302,7 +312,8 @@ V.tooltips = {
 			["Theater of Pain"] = true,
 			["De Other Side"] = true,
 			["Spires of Ascension"] = true,
-			["Sanguine Depths"] = true
+			["Sanguine Depths"] = true,
+			["Tazavesh, the Veiled Market"] = true
 		}
 	}
 }

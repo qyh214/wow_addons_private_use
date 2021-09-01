@@ -9,6 +9,7 @@ local type = type
 local CreateFrame = CreateFrame
 local LibStub = LibStub
 
+local MTSAddon
 local NEG
 local module
 
@@ -50,7 +51,7 @@ local function SkinListTitle(self)
 
     for _, button in pairs(self.sortButtons) do
         button:StripTextures()
-        ES:HandleButton(button)
+        ES:HandleButton(button, nil, nil, nil, true, "Transparent")
         button.backdrop:ClearAllPoints()
         button.backdrop:SetOutside(button, -2, 0)
     end
@@ -73,6 +74,7 @@ function S:MeetingStone()
 
     local NetEaseEnv = LibStub("NetEaseEnv-1.0")
     local NetEaseGUI = LibStub("NetEaseGUI-2.0")
+    local MTSAddon = LibStub("AceAddon-3.0"):GetAddon("MeetingStone")
 
     if not NetEaseEnv or not NetEaseGUI then
         return
@@ -89,10 +91,10 @@ function S:MeetingStone()
     end
 
     -- Main Panel
-    local MainPanel = NEG.MainPanel
+    local MainPanel = NEG.MainPanel or MTSAddon and MTSAddon:GetModule("MainPanel")
     if MainPanel then
         ES:HandlePortraitFrame(MainPanel)
-        self:CreateBackdropShadow(MainPanel)
+        self:CreateShadow(MainPanel)
         self:MerathilisUISkin(MainPanel)
         MainPanel.PortraitFrame:Hide()
         local close =
@@ -174,7 +176,7 @@ function S:MeetingStone()
                     if button.Icon then -- prevent cause error in ElvUI Skin functions
                         button.Icon.GetTexture = button.Icon.GetTexture or E.noop
                     end
-                    ES:HandleButton(button)
+                    ES:HandleButton(button, nil, nil, nil, true, "Transparent")
 
                     local selectedTex = button.backdrop:CreateTexture(nil)
                     local classColor = E:ClassColor(E.myclass)
@@ -204,22 +206,56 @@ function S:MeetingStone()
     )
 
     -- Browse Panel (查找活动)
-    local BrowsePanel = NEG.BrowsePanel
+    local BrowsePanel = NEG.BrowsePanel or MTSAddon and MTSAddon:GetModule("BrowsePanel", true)
     if BrowsePanel then
+        -- Check Buttons: Auto join (自动进组) / Double Click Join (双击加入)
+        for _, child in pairs({BrowsePanel:GetChildren()}) do
+            if child.GetObjectType and child:GetObjectType() == "CheckButton" then
+                ES:HandleCheckBox(child)
+            end
+        end
+
+        -- Refresh (重置)
         if BrowsePanel.RefreshButton then
-            ES:HandleButton(BrowsePanel.RefreshButton)
+            ES:HandleButton(BrowsePanel.RefreshButton, nil, nil, nil, true, "Transparent")
             BrowsePanel.RefreshButton.backdrop:ClearAllPoints()
             BrowsePanel.RefreshButton.backdrop:SetOutside(BrowsePanel.RefreshButton, -1, -1)
         end
 
+        -- Meeting Stone EX element (大秘境)
+        if BrowsePanel.ExSearchButton then
+            ES:HandleButton(BrowsePanel.ExSearchButton, nil, nil, nil, true, "Transparent")
+            BrowsePanel.ExSearchButton.backdrop:ClearAllPoints()
+            BrowsePanel.ExSearchButton.backdrop:SetOutside(BrowsePanel.ExSearchButton, -1, -1)
+        end
+
+        -- Advanced Filter (高级过滤)
         if BrowsePanel.AdvButton then
-            ES:HandleButton(BrowsePanel.AdvButton)
+            ES:HandleButton(BrowsePanel.AdvButton, nil, nil, nil, true, "Transparent")
             BrowsePanel.AdvButton.backdrop:ClearAllPoints()
             BrowsePanel.AdvButton.backdrop:SetOutside(BrowsePanel.AdvButton, -1, -1)
+            if BrowsePanel.AdvButton.Shine then
+                BrowsePanel.AdvButton.Shine:Hide()
+            end
+        end
+
+        -- Auto Complete Frame (活动搜索框)
+        if BrowsePanel.AutoCompleteFrame then
+            BrowsePanel.AutoCompleteFrame:StripTextures()
+            BrowsePanel.AutoCompleteFrame:CreateBackdrop()
+            BrowsePanel.AutoCompleteFrame.backdrop:ClearAllPoints()
+            BrowsePanel.AutoCompleteFrame.backdrop:SetOutside(BrowsePanel.AutoCompleteFrame, 2, 2)
+            local scrollBar = BrowsePanel.AutoCompleteFrame:GetScrollBar()
+
+            if scrollBar then
+                ES:HandleNextPrevButton(scrollBar.ScrollUpButton, "up")
+                ES:HandleNextPrevButton(scrollBar.ScrollDownButton, "down")
+                ES:HandleScrollBar(scrollBar)
+            end
         end
 
         if BrowsePanel.SignUpButton then
-            ES:HandleButton(BrowsePanel.SignUpButton)
+            ES:HandleButton(BrowsePanel.SignUpButton, nil, nil, nil, true, "Transparent")
         end
 
         if BrowsePanel.ActivityDropdown then
@@ -231,18 +267,18 @@ function S:MeetingStone()
         end
 
         if BrowsePanel.NoResultBlocker then
-            ES:HandleButton(BrowsePanel.NoResultBlocker.Button)
+            ES:HandleButton(BrowsePanel.NoResultBlocker.Button, nil, nil, nil, true, "Transparent")
             F.SetFontOutline(BrowsePanel.NoResultBlocker.Label)
         end
 
         if BrowsePanel.AdvFilterPanel then
             local panel = BrowsePanel.AdvFilterPanel
             ES:HandlePortraitFrame(panel)
-            S:CreateBackdropShadow(panel, true)
+            S:CreateShadow(panel)
             for _, child in pairs {panel:GetChildren()} do
                 if child.GetObjectType and child:GetObjectType() == "Button" then
                     if child.GetText and child:GetText() ~= "" and child:GetText() ~= nil then
-                        ES:HandleButton(child)
+                        ES:HandleButton(child, nil, nil, nil, true, "Transparent")
                         child.backdrop:ClearAllPoints()
                         child.backdrop:SetOutside(child, -1, 0)
                     else
@@ -261,10 +297,34 @@ function S:MeetingStone()
                 end
             end
         end
+
+        -- Meeting Stone EX element (大秘境过滤)
+        if BrowsePanel.ExSearchPanel then
+            local panel = BrowsePanel.ExSearchPanel
+            ES:HandlePortraitFrame(panel)
+            S:CreateShadow(panel)
+            for _, child in pairs {panel:GetChildren()} do
+                if child.GetObjectType and child:GetObjectType() == "Button" then
+                    if child.GetText and child:GetText() ~= "" and child:GetText() ~= nil then
+                        ES:HandleButton(child, nil, nil, nil, true, "Transparent")
+                        child.backdrop:ClearAllPoints()
+                        child.backdrop:SetOutside(child, -1, 0)
+                    else
+                        ES:HandleCloseButton(child)
+                    end
+                end
+            end
+
+            for _, child in pairs {panel.Inset:GetChildren()} do
+                if child.Check then
+                    ES:HandleCheckBox(child.Check)
+                end
+            end
+        end
     end
 
     -- Manager Panel (管理活动)
-    local ManagerPanel = NEG.ManagerPanel
+    local ManagerPanel = NEG.ManagerPanel or MTSAddon and MTSAddon:GetModule("ManagerPanel", true)
     if ManagerPanel then
         for _, child in pairs {ManagerPanel:GetChildren()} do
             if child.CreateWidget then
@@ -275,7 +335,7 @@ function S:MeetingStone()
         end
 
         if ManagerPanel.RefreshButton then
-            ES:HandleButton(ManagerPanel.RefreshButton)
+            ES:HandleButton(ManagerPanel.RefreshButton, nil, nil, nil, true, "Transparent")
             ManagerPanel.RefreshButton.backdrop:ClearAllPoints()
             ManagerPanel.RefreshButton.backdrop:SetOutside(ManagerPanel.RefreshButton, -1, -2)
         end
@@ -297,11 +357,11 @@ function S:MeetingStone()
         end
 
         if ManagerPanel.LeftPart and ManagerPanel.LeftPart.CreateButton then
-            ES:HandleButton(ManagerPanel.LeftPart.CreateButton)
+            ES:HandleButton(ManagerPanel.LeftPart.CreateButton, nil, nil, nil, true, "Transparent")
         end
 
         if ManagerPanel.LeftPart and ManagerPanel.LeftPart.DisbandButton then
-            ES:HandleButton(ManagerPanel.LeftPart.DisbandButton)
+            ES:HandleButton(ManagerPanel.LeftPart.DisbandButton, nil, nil, nil, true, "Transparent")
         end
 
         if ManagerPanel.LeftPart and ManagerPanel.LeftPart.CreateWidget then
@@ -336,7 +396,7 @@ function S:MeetingStone()
     end
 
     -- Recent Panel (最近玩友)
-    local RecentPanel = NEG.RecentPanel
+    local RecentPanel = NEG.RecentPanel or MTSAddon and MTSAddon:GetModule("RecentPanel", true)
     if RecentPanel then
         if RecentPanel.ActivityDropdown then
             SkinDropDown(RecentPanel.ActivityDropdown)
@@ -365,7 +425,7 @@ function S:MeetingStone()
         end
 
         if RecentPanel.BatchDeleteButton then
-            ES:HandleButton(RecentPanel.BatchDeleteButton)
+            ES:HandleButton(RecentPanel.BatchDeleteButton, nil, nil, nil, true, "Transparent")
         end
 
         if RecentPanel.MemberList then
@@ -374,12 +434,29 @@ function S:MeetingStone()
     end
 
     -- Broker Panel (悬浮框)
-    local BrokerPanel = NEG.DataBroker.BrokerPanel
-    if BrokerPanel then
-        BrokerPanel:SetBackdrop(nil)
-        BrokerPanel:CreateBackdrop("Transparent")
-        self:CreateBackdropShadow(BrokerPanel)
-        self:MerathilisUISkin(BrokerPanel)
+    local DataBroker = NEG.DataBroker or MTSAddon and MTSAddon:GetModule("DataBroker", true)
+    if DataBroker then
+        local BrokerPanel = DataBroker.BrokerPanel
+        if BrokerPanel then
+            BrokerPanel:SetBackdrop(nil)
+            BrokerPanel:CreateBackdrop("Transparent")
+            self:CreateBackdropShadow(BrokerPanel)
+            self:MerathilisUISkin(BrokerPanel)
+        end
+    end
+
+    -- Meeting Stone EX element (屏蔽玩家列表)
+    local IgnoreListPanel = NEG.IgnoreListPanel or MTSAddon and MTSAddon:GetModule("IgnoreListPanel", true)
+    if IgnoreListPanel then
+        if IgnoreListPanel.IgnoreList then
+            SkinListTitle(IgnoreListPanel.IgnoreList)
+        end
+
+        for _, child in pairs {IgnoreListPanel:GetChildren()} do
+            if child.GetObjectType and child:GetObjectType() == "Button" and child.Left and child.Right then
+                ES:HandleButton(child)
+            end
+        end
     end
 end
 

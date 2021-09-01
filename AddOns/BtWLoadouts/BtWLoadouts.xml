@@ -1,0 +1,606 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="BtWLoadouts.lua"/>
+
+	<Frame name="BtWLoadoutsSpecDropDownTemplate" mixin="BtWLoadoutsSpecDropDownMixin" inherits="UIDropDownMenuTemplate" enableMouse="true" virtual="true">
+		<Scripts>
+			<OnShow method="OnShow"/>
+		</Scripts>
+	</Frame>
+
+	<Frame name="BtWLoadoutsCharacterDropDownTemplate" mixin="BtWLoadoutsCharacterDropDownMixin" inherits="UIDropDownMenuTemplate" enableMouse="true" virtual="true">
+		<Scripts>
+			<OnShow method="OnShow"/>
+		</Scripts>
+	</Frame>
+	<Frame name="BtWLoadoutsRestrictionsDropDownTemplate" mixin="BtWLoadoutsRestrictionsDropDownMixin" inherits="UIDropDownMenuTemplate" enableMouse="true" virtual="true">
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnShow method="OnShow"/>
+		</Scripts>
+	</Frame>
+	<Frame name="BtWLoadoutsSetDropDownTemplate" mixin="BtWLoadoutsSetDropDownMixin" inherits="UIDropDownMenuTemplate" enableMouse="true" virtual="true">
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnShow method="OnShow"/>
+		</Scripts>
+	</Frame>
+
+	<Button name="BtWLoadoutsTalentButtonTemplate" mixin="BtWLoadoutsTalentButtonMixin" motionScriptsWhileDisabled="true" virtual="true">
+		<Size x="190" y="42"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="Icon">
+					<Size x="36" y="36"/>
+					<Anchors>
+						<Anchor point="LEFT" x="35" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK" textureSubLevel="1">
+				<Texture inherits="Talent-SingleBorder" parentKey="Slot">
+					<Size x="37" y="36"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Icon" x="-1" y="0"/>
+					</Anchors>
+				</Texture>
+				<FontString inherits="GameFontNormalSmall" justifyH="LEFT" parentKey="Name">
+					<Size x="90" y="35"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.Icon" relativePoint="RIGHT" x="10" y="0"/>
+					</Anchors>
+					<Color r="1.0" g="1.0" b="1.0" a="1.0"/>
+				</FontString>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="-1">
+				<Texture parentKey="Cover" hidden="true" setAllPoints="true" alpha=".4">
+					<Color r="0" g="0" b="0"/>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture atlas="Talent-Selection" useAtlasSize="true" alphaMode="ADD" parentKey="KnownSelection" hidden="true">
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<HighlightTexture atlas="Talent-Highlight" useAtlasSize="true" alphaMode="ADD" parentKey="Highlight">
+			<Anchors>
+				<Anchor point="CENTER"/>
+			</Anchors>
+		</HighlightTexture>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnClick method="OnClick"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+		</Scripts>
+	</Button>
+	<Texture name="BtWLoadoutsTalentRowBackgroundTemplate" atlas="Talent-Background" useAtlasSize="true" virtual="true"/>
+	<Texture name="BtWLoadoutsTalentRowSeparatorTemplate" atlas="Talent-Separator" useAtlasSize="true" virtual="true"/>
+	<Frame name="BtWLoadoutsTalentSelectionTemplate" mixin="BtWLoadoutsTalentSelectionMixin" virtual="true">
+		<Size x="570" y="42"/>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnShow method="OnShow"/>
+		</Scripts>
+	</Frame>
+
+	<Frame name="BtWLoadoutsSidebarFilterEntryTemplate" inherits="UIDropDownCustomMenuEntryTemplate" virtual="true">
+	</Frame>
+	<Button name="BtWLoadoutsSidebarScrollItemTemplate" parentArray="ScrollButtons" virtual="true">
+		<Size x="223" y="21"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="ExpandedIcon" inherits="Char-Stat-Minus">
+					<Anchors>
+						<Anchor point="LEFT" x="4" y="0"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="CollapsedIcon" inherits="Char-Stat-Plus">
+					<Anchors>
+						<Anchor point="LEFT" x="4" y="0"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="BuiltinIcon" file="Interface\FriendsFrame\Battlenet-WoWicon">
+					<Size x="16" y="16"/>
+					<Anchors>
+						<Anchor point="LEFT" x="0" y="0"/>
+					</Anchors>
+				</Texture>
+				<FontString parentKey="Name" inherits="GameFontNormalSmall" justifyH="LEFT">
+					<Size x="145" y="22"/>
+					<Anchors>
+						<Anchor point="LEFT" x="15" y="0"/>
+						<Anchor point="RIGHT" x="-5" y="0"/>
+					</Anchors>
+					<Color r="1.0" g="1.0" b="1.0" a="1.0"/>
+				</FontString>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture parentKey="SelectedBar" file="Interface\FriendsFrame\UI-FriendsFrame-HighlightBar" alpha="0.4" alphaMode="ADD" hidden="true"/>
+			</Layer>
+		</Layers>
+		<HighlightTexture file="Interface\FriendsFrame\UI-FriendsFrame-HighlightBar-Blue" alphaMode="ADD"/>
+		<Scripts>
+			<OnLoad>
+				self:RegisterForDrag("LeftButton");
+			</OnLoad>
+			<OnClick>
+				BtWLoadoutsFrame:OnSidebarItemClick(self);
+			</OnClick>
+			<OnDoubleClick>
+				BtWLoadoutsFrame:OnSidebarItemDoubleClick(self);
+			</OnDoubleClick>
+			<OnDragStart>
+				BtWLoadoutsFrame:OnSidebarItemDragStart(self);
+			</OnDragStart>
+		</Scripts>
+	</Button>
+	<Frame name="BtWLoadoutsSidebarTemplate" mixin="BtWLoadoutsSidebarMixin" virtual="true">
+		<Frames>
+			<EditBox parentKey="SearchBox" inherits="SearchBoxTemplate" letters="40">
+				<Size x="115" y="20"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" x="15" y="-9"/>
+				</Anchors>
+				<Scripts>
+					<OnTextChanged>
+						SearchBoxTemplate_OnTextChanged(self);
+						self:GetParent():OnSearchChanged(self)
+					</OnTextChanged>
+				</Scripts>
+			</EditBox>
+			<DropDownToggleButton parentKey="FilterButton" inherits="UIMenuButtonStretchTemplate" text="FILTER">
+				<Size x="93" y="22"/>
+				<Anchors>
+					<Anchor point="TOPRIGHT" x="-5" y="-9"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture parentKey="Icon" file="Interface\ChatFrame\ChatFrameExpandArrow">
+							<Size x="10" y="12"/>
+							<Anchors>
+								<Anchor point="RIGHT" relativeKey="$parent.Right" relativePoint="RIGHT" x="-5"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnMouseDown>
+						UIMenuButtonStretchMixin.OnMouseDown(self, button);
+						PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
+						ToggleDropDownMenu(1, nil, self:GetParent().FilterDropDown, self, 74, 15);
+					</OnMouseDown>
+				</Scripts>
+			</DropDownToggleButton>
+			<Frame parentKey="FilterDropDown" inherits="UIDropDownMenuTemplate"/>
+			<ScrollFrame parentKey="Scroll" inherits="HybridScrollFrameTemplate">
+				<Size x="225" y="0"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" x="6" y="-39" />
+					<Anchor point="BOTTOM" x="0" y="5"/>
+				</Anchors>
+				<Frames>
+					<!-- <Slider parentKey="ScrollBar" inherits="HybridScrollBarTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-20" y="-12"/>
+							<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-20" y="13"/>
+						</Anchors>
+					</Slider> -->
+					<Slider parentKey="ScrollBar" inherits="HybridScrollBarTrimTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="4" y="20"/>
+							<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="4" y="11"/>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								self.trackBG:Show();
+								self.trackBG:SetVertexColor(0, 0, 0, 0.75);
+							</OnLoad>
+						</Scripts>
+					</Slider>
+				</Frames>
+			</ScrollFrame>
+		</Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnShow method="OnShow"/>
+		</Scripts>
+	</Frame>
+
+    <Button name="BtWLoadoutsTabTemplate" parentArray="Tabs" motionScriptsWhileDisabled="true" virtual="true">
+        <Size>
+            <AbsDimension x="10" y="32"/>
+        </Size>
+        <Layers>
+        	<Layer level="BACKGROUND">
+        		<Texture parentKey="LeftDisabled" file="Interface\PaperDollInfoFrame\UI-Character-ActiveTab">
+        			<Size>
+        				<AbsDimension x="20" y="35"/>
+        			</Size>
+        			<Anchors>
+        				<Anchor point="TOPLEFT">
+        					<Offset>
+        						<AbsDimension x="0" y="0"/>
+        					</Offset>
+        				</Anchor>
+        			</Anchors>
+					<TexCoords left="0" right="0.15625" top="0" bottom="0.546875"/>
+        		</Texture>
+				<Texture parentKey="MiddleDisabled" file="Interface\PaperDollInfoFrame\UI-Character-ActiveTab">
+        			<Size>
+        				<AbsDimension x="88" y="35"/>
+        			</Size>
+        			<Anchors>
+        				<Anchor point="LEFT" relativeKey="$parent.LeftDisabled" relativePoint="RIGHT"/>
+        			</Anchors>
+					<TexCoords left="0.15625" right="0.84375" top="0" bottom="0.546875"/>
+        		</Texture>
+				<Texture parentKey="RightDisabled" file="Interface\PaperDollInfoFrame\UI-Character-ActiveTab">
+        			<Size>
+        				<AbsDimension x="20" y="35"/>
+        			</Size>
+        			<Anchors>
+        				<Anchor point="LEFT" relativeKey="$parent.MiddleDisabled" relativePoint="RIGHT"/>
+        			</Anchors>
+					<TexCoords left="0.84375" right="1.0" top="0" bottom="0.546875"/>
+        		</Texture>
+				<Texture parentKey="Left" file="Interface\PaperDollInfoFrame\UI-Character-InActiveTab">
+        			<Size>
+        				<AbsDimension x="20" y="32"/>
+        			</Size>
+        			<Anchors>
+        				<Anchor point="TOPLEFT" x="0" y="-1"/>
+        			</Anchors>
+					<TexCoords left="0" right="0.15625" top="0" bottom="1.0"/>
+        		</Texture>
+				<Texture parentKey="Middle" file="Interface\PaperDollInfoFrame\UI-Character-InActiveTab">
+        			<Size>
+        				<AbsDimension x="88" y="32"/>
+        			</Size>
+        			<Anchors>
+        				<Anchor point="LEFT" relativeKey="$parent.Left" relativePoint="RIGHT"/>
+					</Anchors>
+					<TexCoords left="0.15625" right="0.84375" top="0" bottom="1.0"/>
+        		</Texture>
+				<Texture parentKey="Right" file="Interface\PaperDollInfoFrame\UI-Character-InActiveTab">
+        			<Size>
+        				<AbsDimension x="20" y="32"/>
+        			</Size>
+        			<Anchors>
+        				<Anchor point="LEFT" relativeKey="$parent.Middle" relativePoint="RIGHT"/>
+        			</Anchors>
+					<TexCoords left="0.84375" right="1.0" top="0" bottom="1.0"/>
+        		</Texture>
+        	</Layer>
+        </Layers>
+		<Scripts>
+			<OnLoad>
+				self:SetFrameLevel(self:GetFrameLevel() + 4);
+				self:RegisterEvent("DISPLAY_SIZE_CHANGED");
+			</OnLoad>
+			<OnEvent>
+				if (self:IsVisible()) then
+					PanelTemplates_TabResize(self, 0, nil, 36, self:GetParent().maxTabWidth or 88);
+				end
+			</OnEvent>
+			<OnClick>
+				PanelTemplates_Tab_OnClick(self, BtWLoadoutsFrame);
+				BtWLoadoutsFrame:Update();
+			</OnClick>
+			<OnShow>
+				PanelTemplates_TabResize(self, 0, nil, 36, self:GetParent().maxTabWidth or 88);
+			</OnShow>
+			<OnEnter>
+				local buttonText = self.Text;
+				if (buttonText and buttonText:IsTruncated()) then
+					GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+					GameTooltip:SetText(buttonText:GetText());
+				end
+			</OnEnter>
+			<OnLeave>
+				GameTooltip_Hide();
+			</OnLeave>
+		</Scripts>
+		<ButtonText parentKey="Text">
+			<Size>
+				<AbsDimension x="0" y="10"/>
+			</Size>
+			<Anchors>
+				<Anchor point="CENTER">
+					<Offset>
+						<AbsDimension x="0" y="2"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</ButtonText>
+		<NormalFont style="GameFontNormalSmall"/>
+		<HighlightFont style="GameFontHighlightSmall"/>
+		<DisabledFont style="GameFontHighlightSmall"/>
+		<HighlightTexture name="$parentHighlightTexture" file="Interface\PaperDollInfoFrame\UI-Character-Tab-RealHighlight" alphaMode="ADD">
+			<Anchors>
+				<Anchor point="TOPLEFT">
+					<Offset>
+						<AbsDimension x="3" y="5"/>
+					</Offset>
+				</Anchor>
+				<Anchor point="BOTTOMRIGHT">
+					<Offset>
+						<AbsDimension x="-3" y="0"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</HighlightTexture>
+    </Button>
+	<Frame name="BtWLoadoutsTabFrameTemplate" parent="BtWLoadoutsFrame" parentArray="TabFrames" hidden="true" virtual="true">
+        <Anchors>
+            <Anchor point="TOPLEFT" x="270" y="-30"/>
+            <Anchor point="BOTTOMRIGHT" x="-10" y="28"/>
+        </Anchors>
+		<Scripts>
+			<OnLoad inherit="prepend" function="BtWLoadoutsTabFrame_OnLoad"/>
+		</Scripts>
+	</Frame>
+
+	<Frame name="BtWLoadoutsFrame" mixin="BtWLoadoutsFrameMixin" inherits="DefaultPanelTemplate" parent="UIParent" toplevel="true" enableMouse="true" movable="true" hidden="true">
+		<Size x="849" y="448"/>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<KeyValues>
+			<KeyValue key="layoutType" value="ButtonFrameTemplateNoPortraitMinimizable" type="string"/>
+		</KeyValues>
+		<Frames>
+			<Button name="$parentCloseButton" parentKey="CloseButton" inherits="UIPanelCloseButton">
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="5.6" y="5"/>
+				</Anchors>
+			</Button>
+			<Button parentKey="OptionsButton">
+				<Size x="32" y="32"/>
+				<HitRectInsets left="5" right="5" top="5" bottom="5"/>
+				<Anchors>
+					<Anchor point="RIGHT" relativeKey="$parent.CloseButton" relativePoint="LEFT" x="9" y="0"/>
+				</Anchors>
+				<DisabledTexture file="Interface\Addons\BtWLoadouts\UI-Frame-OptionsButton-Disabled"/>
+				<NormalTexture file="Interface\Addons\BtWLoadouts\UI-Frame-OptionsButton-Up"/>
+				<PushedTexture file="Interface\Addons\BtWLoadouts\UI-Frame-OptionsButton-Down"/>
+				<HighlightTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Highlight" alphaMode="ADD"/>
+				<Scripts>
+					<OnClick>
+						self:GetParent():OnOptionsClick(self)
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Frame parentKey="SidebarInset" useParentLevel="true" inherits="InsetFrameTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="4" y="-26" />
+					<Anchor point="BOTTOM" x="0" y="26" />
+				</Anchors>
+				<Size x="235" y="0"/>
+			</Frame>
+			<Frame parentKey="Sidebar" inherits="BtWLoadoutsSidebarTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="4" y="-26" />
+					<Anchor point="BOTTOM" x="0" y="26" />
+				</Anchors>
+				<Size x="235" y="0"/>
+			</Frame>
+			<Frame parentKey="BodyInset" useParentLevel="true" inherits="InsetFrameTemplate" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="270" y="-30"/>
+					<Anchor point="BOTTOMRIGHT" x="-10" y="28"/>
+				</Anchors>
+			</Frame>
+			<Button parentKey="AddButton" inherits="UIPanelButtonTemplate" text="BTWLOADOUTS_NEW_SET">
+				<KeyValues>
+					<KeyValue type="boolean" key="isAdd" value="true"/>
+				</KeyValues>
+				<Size x="120" y="22"/>
+				<Anchors>
+					<Anchor point="TOP" relativeKey="$parent.SidebarInset" relativePoint="BOTTOM" x="0" y="0"/>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<Texture file="Interface\Buttons\UI-Panel-Button-Glow" alphaMode="ADD" parentKey="Flash" hidden="true">
+							<Size x="184" y="60"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" x="-9" y="7"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Animations>
+					<AnimationGroup parentKey="FlashAnim" looping="BOUNCE">
+						<Alpha childKey="Flash" fromAlpha="0.75" toAlpha="0" duration="1.0" smoothing="IN_OUT" order="1"/>
+					</AnimationGroup>
+				</Animations>
+				<Scripts>
+					<OnClick>
+						BtWLoadoutsFrame:OnButtonClick(self);
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button parentKey="RefreshButton" inherits="UIPanelButtonTemplate" text="BTWLOADOUTS_UPDATE">
+				<KeyValues>
+					<KeyValue type="boolean" key="isRefresh" value="true"/>
+				</KeyValues>
+				<Size x="80" y="22"/>
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" x="-499" y="4"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						BtWLoadoutsFrame:OnButtonClick(self);
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button parentKey="ActivateButton" inherits="UIPanelButtonTemplate" text="BTWLOADOUTS_ACTIVATE">
+				<KeyValues>
+					<KeyValue type="boolean" key="isActivate" value="true"/>
+				</KeyValues>
+				<Size x="120" y="22"/>
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" x="-234" y="4"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						BtWLoadoutsFrame:OnButtonClick(self);
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button parentKey="DeleteButton" inherits="UIPanelButtonTemplate" text="BTWLOADOUTS_DELETE">
+				<KeyValues>
+					<KeyValue type="boolean" key="isDelete" value="true"/>
+				</KeyValues>
+				<Size x="80" y="22"/>
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" x="-10" y="4"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						BtWLoadoutsFrame:OnButtonClick(self);
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Frame parentKey="HelpTipBox" inherits="GlowBoxTemplate" enableMouse="true" hidden="true" frameStrata="DIALOG">
+				<Size x="220" y="100"/>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString parentKey="Text" inherits="GameFontHighlightLeft" justifyV="TOP">
+							<Size x="190" y="0"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" x="10" y="-18"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<Button parentKey="CloseButton" inherits="UIPanelCloseButton">
+						<Scripts>
+							<OnClick>
+								HideParentPanel(self);
+								self:GetParent():GetParent():OnHelpTipManuallyClosed(self:GetParent().closeFlag);
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Frame parentKey="Arrow" inherits="GlowBoxArrowTemplate" />
+				</Frames>
+			</Frame>
+			<Frame parentKey="NPE" hidden="true" frameLevel="20">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="10" y="-30"/>
+					<Anchor point="BOTTOMRIGHT" x="-10" y="28"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString parentKey="Message" text="BTWLOADOUTS_SPECIALIZATION" inherits="GameFontHighlight" justifyH="LEFT">
+							<Size x="400" y="0"/>
+							<Anchors>
+								<Anchor point="CENTER" x="0" y="0"/>
+							</Anchors>
+							<Color r="0.75" g="0.61" b="0"/>
+						</FontString>
+						<FontString parentKey="Title" text="BTWLOADOUTS_NAME" inherits="BossEmoteNormalHuge" justifyH="LEFT">
+							<Size x="400" y="0"/>
+							<Anchors>
+								<Anchor point="BOTTOM" relativeKey="$parent.Message" relativePoint="TOP" x="0" y="10"/>
+							</Anchors>
+							<Color r="0.75" g="0.61" b="0"/>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<Frame parentKey="Inset" useParentLevel="true" inherits="InsetFrameTemplate" alpha="0.85" enableMouse="true">
+						<Anchors>
+							<Anchor point="TOPLEFT" x="-6" y="4" />
+							<Anchor point="BOTTOMRIGHT" x="4" y="-2" />
+						</Anchors>
+					</Frame>
+					<Button parentKey="AddButton" inherits="UIPanelButtonTemplate" text="BTWLOADOUTS_NEW_SET">
+						<KeyValues>
+							<KeyValue type="boolean" key="isAdd" value="true"/>
+						</KeyValues>
+						<Size x="120" y="22"/>
+						<Anchors>
+							<Anchor point="TOP" relativeKey="$parent.Message" relativePoint="BOTTOM" x="0" y="-10"/>
+						</Anchors>
+						<Layers>
+							<Layer level="OVERLAY">
+								<Texture file="Interface\Buttons\UI-Panel-Button-Glow" alphaMode="ADD" parentKey="Flash">
+									<Size x="184" y="60"/>
+									<Anchors>
+										<Anchor point="TOPLEFT" x="-9" y="7"/>
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+						<Animations>
+							<AnimationGroup parentKey="FlashAnim" looping="BOUNCE">
+								<Alpha childKey="Flash" fromAlpha="0.75" toAlpha="0" duration="1.0" smoothing="IN_OUT" order="1"/>
+							</AnimationGroup>
+						</Animations>
+						<Scripts>
+							<OnClick>
+								BtWLoadoutsFrame:OnButtonClick(self);
+							</OnClick>
+						</Scripts>
+					</Button>
+				</Frames>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnDragStart method="OnDragStart"/>
+			<OnDragStop method="OnDragStop"/>
+			<OnMouseUp method="OnMouseUp"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnShow method="OnShow"/>
+			<OnHide method="OnHide"/>
+		</Scripts>
+	</Frame>
+	
+	<Frame name="BtWLoadoutsLogFrame" mixin="BtWLoadoutsLogFrameMixin" inherits="DefaultPanelTemplate" parent="UIParent" toplevel="true" enableMouse="true" movable="true" hidden="true">
+		<Size x="829" y="448"/>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<Frames>
+			<Button name="$parentCloseButton" parentKey="CloseButton" inherits="UIPanelCloseButton">
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="5.6" y="5"/>
+				</Anchors>
+			</Button>
+			<Frame parentKey="BodyInset" useParentLevel="true" inherits="InsetFrameTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="4" y="-26" />
+					<Anchor point="BOTTOMRIGHT" x="-6" y="6" />
+				</Anchors>
+			</Frame>
+            <ScrollFrame enableMouse="true" parentKey="Scroll" inherits="InputScrollFrameTemplate">
+                <Size x="575" y="377"/>
+				<KeyValues>
+					<KeyValue key="hideCharCount" value="true" type="boolean"/>
+					<!--
+					<KeyValue key="maxLetters" value="127" type="number"/>
+					<KeyValue key="instructions" value="INSTRUCTION_TEXT" type="global"/>
+					-->
+				</KeyValues>
+                <Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.BodyInset" relativePoint="TOPLEFT" x="5" y="-5" />
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BodyInset" relativePoint="BOTTOMRIGHT" x="-26" y="6"/>
+                </Anchors>
+				<Scripts>
+				</Scripts>
+            </ScrollFrame>
+		</Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnDragStart method="OnDragStart"/>
+			<OnDragStop method="OnDragStop"/>
+		</Scripts>
+	</Frame>
+</Ui>

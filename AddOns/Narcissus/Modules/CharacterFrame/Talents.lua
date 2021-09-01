@@ -81,10 +81,12 @@ function NarciTalentsMixin:UpdateAllTalents()
     if NavBar.cycledTabIndex == 0 then
         NavBar:SetPortraitTexture(specIcon, true);
     end
+
+    self.needsUpdate = nil;
 end
 
 function NarciTalentsMixin:OnLoad()
-    local staticEvents = {"PLAYER_TALENT_UPDATE", "ACTIVE_TALENT_GROUP_CHANGED", };
+    local staticEvents = {"PLAYER_TALENT_UPDATE", "ACTIVE_TALENT_GROUP_CHANGED", "PLAYER_ENTERING_WORLD"};
     for _, event in pairs(staticEvents) do
         self:RegisterEvent(event);
     end
@@ -118,8 +120,8 @@ function NarciTalentsMixin:OnLoad()
     self:SetScript("OnLoad", nil);
 end
 
-function NarciTalentsMixin:RequestUpdate()
-    if self:IsVisible() then
+function NarciTalentsMixin:RequestUpdate(forcedUpdate)
+    if self:IsVisible() or forcedUpdate then
         if self.pauseUpdate then
             After(0, function()
                 self.pauseUpdate = nil;
@@ -135,7 +137,6 @@ end
 
 function NarciTalentsMixin:OnShow()
     if self.needsUpdate then
-        self.needsUpdate = nil;
         self:UpdateAllTalents();
     end
 end
@@ -147,5 +148,7 @@ end
 function NarciTalentsMixin:OnEvent(event, ...)
     if event == "PLAYER_TALENT_UPDATE" or event == "ACTIVE_TALENT_GROUP_CHANGED" then
         self:RequestUpdate();
+    elseif event == "PLAYER_ENTERING_WORLD" then
+        self:RequestUpdate(true);
     end
 end
