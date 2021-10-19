@@ -50,7 +50,9 @@ TinyInspect、TinyTooltip：http://bbs.ngacn.cc/read.php?tid=10240957
 
 wa字符串更新客户端：https://weakauras.wtf/
 
-wa和插件也可以用类似的统一管理客户端管理，例如：https://github.com/ajour/ajour
+wa和插件也可以用类似的统一管理客户端管理，例如：
+- ajour：https://github.com/ajour/ajour
+- 黑盒工坊：https://xiaoheihe.cn/workshop
 
 ## WA字符串
 #### wa字符串总结和概述
@@ -100,7 +102,7 @@ https://bbs.nga.cn/read.php?tid=24562077
 
 震荡词缀打断判断：https://wago.io/OYG84YE0x
 
-怨毒目标：https://wago.io/NPWlnnxt1
+怨毒目标：https://wago.io/NPWlnnxt1   【似乎无效了】
 
 暴怒魔法效果提示（怪物buff驱散提示）：https://wago.io/r2QBcOnlT
 
@@ -141,6 +143,12 @@ details中文昵称修正补丁：https://wago.io/uq0Uox6Ta
 
 通灵战潮道具监视：https://wago.io/KyrianArmaments
 
+大米地下城框架上高亮显示点名技能：https://wago.io/BFADungeonTargetedSpells
+
+姓名版目标（可用来显示怨毒目标）：https://wago.io/0QGPOXwHc
+
+彼界尾王分身击杀报警：https://wago.io/-_UWm33O3
+
 ## 一些有用的重要命令
 在游戏内聊天窗口输入，然后回车：
 
@@ -166,3 +174,5 @@ SET overrideArchive "0"
 在[wtf](./wtf/)文件夹里有其他的部分配置文件存档供参考。
 
 wa自用字符串、合集整理可访问：https://wago.io/p/shihuang214
+
+全部插件和配置文件的备份：黑盒工坊分享码：21540cYOUddK4Cw
