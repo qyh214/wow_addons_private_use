@@ -151,8 +151,6 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	SapperEmote			= "Дракон пикирует на палубу, чтобы сбросить на нее сумеречного сапера!",
-	Broadside			= "spell:110153",
-	DeckFire			= "spell:110095",
 	GorionaRetreat			= "screeches in pain and retreats into the swirling clouds"
 })
 

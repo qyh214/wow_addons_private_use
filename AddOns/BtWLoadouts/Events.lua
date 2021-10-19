@@ -250,22 +250,6 @@ function frame:PLAYER_LOGIN(...)
 
     frame:RegisterEvent("PLAYER_TALENT_UPDATE");
 
-    do
-        local name, realm = UnitFullName("player");
-        local character = GetCharacterSlug();
-        for setID,set in pairs(BtWLoadoutsSets.equipment) do
-            if type(set) == "table" then
-                if set.character == character and set.managerID ~= nil then
-                    if equipmentSetMap[set.managerID] then
-                        set.managerID = nil;
-                    else
-                        equipmentSetMap[set.managerID] = set;
-                    end
-                end
-            end
-        end
-    end
-
     for _,set in pairs(BtWLoadoutsSets.conditions) do
         if type(set) == "table" then
             if set.difficultyID ~= 8 then
@@ -410,6 +394,19 @@ function frame:CONSOLE_MESSAGE()
 end
 function frame:EQUIPMENT_SETS_CHANGED(...)
     -- Update our saved equipment sets to match the built in equipment sets
+
+    if next(equipmentSetMap) == nil then
+        local name, realm = UnitFullName("player");
+        local character = GetCharacterSlug();
+        for setID,set in pairs(BtWLoadoutsSets.equipment) do
+            if type(set) == "table" then
+                if set.character == character and set.managerID ~= nil then
+                    equipmentSetMap[set.managerID] = set
+                end
+            end
+        end
+    end
+
     local oldEquipmentSetMap = equipmentSetMap;
     equipmentSetMap = {};
 
@@ -473,12 +470,20 @@ function frame:EQUIPMENT_SETS_CHANGED(...)
     -- If a set previously managed by the blizzard manager is deleted
     -- we delete our set unless its in use, then we just disconnect it from
     -- the blizzard manager
-    for managerID,set in pairs(oldEquipmentSetMap) do
-        if set.managerID == managerID then
-            if set.useCount > 0 then
-                set.managerID = nil;
-            else
-                Internal.DeleteEquipmentSet(set)
+    do
+        local name, realm = UnitFullName("player");
+        local character = GetCharacterSlug();
+        for setID,set in pairs(BtWLoadoutsSets.equipment) do
+            if type(set) == "table" then
+                if set.character == character and set.managerID ~= nil then
+                    if equipmentSetMap[set.managerID] ~= set then
+                        if set.useCount > 0 then
+                            set.managerID = nil;
+                        else
+                            Internal.DeleteEquipmentSet(set)
+                        end
+                    end
+                end
             end
         end
     end

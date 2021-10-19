@@ -119,6 +119,7 @@
     
     <Frame parentKey="Equipment" mixin="BtWLoadoutsEquipmentMixin" inherits="BtWLoadoutsTabFrameTemplate">
         <KeyValues>
+            <KeyValue key="segment" value="equipment" type="string"/>
             <KeyValue key="name" value="BTWLOADOUTS_EQUIPMENT" type="global"/>
         </KeyValues>
         <Frames>

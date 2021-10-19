@@ -213,6 +213,8 @@ L["Blizzard Combat Text"] = "Texto de Combate da Blizzard"
 L["Block"] = "Bloquear"
 L["Block (%)"] = "Bloqueio (%)"
 L["Block against Target (%)"] = "Bloqueio contra o Alvo (%)"
+--[[Translation missing --]]
+L["Block Value"] = "Block Value"
 L["Blocked"] = "Bloqueado"
 L["Bloodlord Mandokir"] = "Sangrelorde Mandokir"
 L["Border"] = "Borda"

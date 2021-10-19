@@ -71,7 +71,7 @@ function S:CreateShadow(frame, size, r, g, b, force)
     b = b or E.private.WT.skins.color.b or 0
 
     size = size or 4
-    size = size + E.private.WT.skins.increasedSize or 0
+    size = size + (E.private.WT.skins.increasedSize or 0)
 
     local shadow = CreateFrame("Frame", nil, frame, "BackdropTemplate")
     shadow:SetFrameStrata(frame:GetFrameStrata())
@@ -370,6 +370,35 @@ do
             MERS:ReskinTab(tab)
         end
     end
+end
+
+do
+    local DeleteRegions = {
+        "Center",
+        "BottomEdge",
+        "LeftEdge",
+        "RightEdge",
+        "TopEdge",
+        "BottomLeftCorner",
+        "BottomRightCorner",
+        "TopLeftCorner",
+        "TopRightCorner"
+    }
+    function S:StripEdgeTextures(frame)
+        for _, regionKey in pairs(DeleteRegions) do
+            if frame[regionKey] then
+                frame[regionKey]:Kill()
+            end
+        end
+    end
+end
+
+function S:Reposition(frame, target, border, top, bottom, left, right)
+    frame:ClearAllPoints()
+    frame:SetPoint("TOPLEFT", target, "TOPLEFT", -left - border, top + border)
+    frame:SetPoint("TOPRIGHT", target, "TOPRIGHT", right + border, top + border)
+    frame:SetPoint("BOTTOMLEFT", target, "BOTTOMLEFT", -left - border, -bottom - border)
+    frame:SetPoint("BOTTOMRIGHT", target, "BOTTOMRIGHT", right + border, -bottom - border)
 end
 
 -- 初始化，将不需要监视插件载入情况的函数全部进行执行

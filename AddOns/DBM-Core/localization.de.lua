@@ -544,6 +544,11 @@ L.LAG_FOOTER					= "Keine Antwort: %s"
 L.LDB_TOOLTIP_HELP1	= "Links-Klick, um DBM zu öffnen."
 L.LDB_TOOLTIP_HELP2	= "Rechts-Klick, um das Konfigurationsmenü zu öffnen."
 
-L.LDB_LOAD_MODS		= "Lade Boss Mod"
-
-L.LDB_ENABLE_BOSS_MOD	= "Aktiviere Boss Mod"
+L.WORLD_BUFFS.hordeOny		= "Miembros de la Horda, ciudadanos de Orgrimmar, vengan y reúnanse para homenajear un hecho heroico" --needs translation
+L.WORLD_BUFFS.allianceOny	= "Bürger und Verbündete Stormwinds, am heutigen Tage ist Geschichte geschrieben worden."
+L.WORLD_BUFFS.hordeNef		= "NEFARIAN IS SLAIN! People of Orgrimmar"    --needs translation
+L.WORLD_BUFFS.allianceNef	= "Angehörige der Allianz, der Herrscher des Blackrocks wurde besiegt!"
+L.WORLD_BUFFS.zgHeart		= "Nun ist nur noch ein letzter Schritt nötig, um uns von der Bedrohung des Seelenschinders zu befreien"
+L.WORLD_BUFFS.zgHeartBooty	= "Der Blutgott, der Seelenschinder, wurde besiegt! Wir werden nicht länger unterdrückt!"
+L.WORLD_BUFFS.zgHeartYojamba= "Beginnt mit dem Ritual, meine Diener. Wir müssen das Herz von Hakkar wieder in das Nichts verbannen!"
+L.WORLD_BUFFS.rendHead		= "Rend Blackhand, der falsche Kriegshäuptling, ist gefallen!"

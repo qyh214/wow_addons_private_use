@@ -32,6 +32,7 @@ _G[ADDON_NAME] = External
 local GetCharacterInfo = Internal.GetCharacterInfo
 local GetCharacterSlug = Internal.GetCharacterSlug
 
+BTWLOADOUTS = ADDON_NAME
 BTWLOADOUTS_LOADOUT = L["Loadout"]
 BTWLOADOUTS_LOADOUTS = L["Loadouts"]
 BTWLOADOUTS_TALENTS = L["Talents"]
@@ -51,6 +52,8 @@ BTWLOADOUTS_UPDATE = L["Update"]
 BTWLOADOUTS_LOG = L["Log"]
 BTWLOADOUTS_CHARACTER_RESTRICTIONS = L["Character Restrictions"]
 BTWLOADOUTS_RESTRICTIONS = L["Restrictions"]
+BTWLOADOUTS_IMPORT = L["Import"]
+BTWLOADOUTS_EXPORT = L["Export"]
 
 BINDING_HEADER_BTWLOADOUTS = L["BtWLoadouts"]
 BINDING_NAME_TOGGLE_BTWLOADOUTS = L["Toggle BtWLoadouts"]
@@ -1373,6 +1376,7 @@ do
 		end
 
 		self.Scroll:update();
+		self:Show()
 	end
 end
 
@@ -1402,6 +1406,10 @@ do
 		end
 
 		tab:SetShown(self.enabled ~= false)
+
+		if self.segment then
+			frame.TabSegments[self.segment] = self
+		end
 
 		PanelTemplates_SetNumTabs(frame, id);
 		if id == 1 then
@@ -1446,6 +1454,7 @@ do
 		self:RegisterForDrag("LeftButton");
 
 		self.Tabs = {}
+		self.TabSegments = {}
 		self.TabPool = CreateFramePool("Button", self, "BtWLoadoutsTabTemplate")
 
 		self.TitleText:SetText(LOADOUTS)
@@ -1505,6 +1514,14 @@ do
 		wipe(self.Conditions.temp);
 		self:Update();
 	end
+	function BtWLoadoutsFrameMixin:SetSetByID(setType, setID)
+		local frame = setType == "loadout" and self.TabFrames[1] or self.TabSegments[setType]
+		if frame then
+			PanelTemplates_SetTab(self, frame:GetID())
+			frame:SetSetByID(setID)
+			self:Update()
+		end
+	end
 	function BtWLoadoutsFrameMixin:GetCurrentTab()
 		local selectedTab = PanelTemplates_GetSelectedTab(self) or 1
 		return self.TabFrames[selectedTab]
@@ -1516,6 +1533,7 @@ do
 			PanelTemplates_SetTab(self, selectedTab)
 		end
 
+		self.Export:Hide()
 		for id,frame in ipairs(self.TabFrames) do
 			frame:SetShown(id == selectedTab)
 		end
@@ -1604,6 +1622,27 @@ do
 
 		ToggleDropDownMenu(1, nil, self.OptionsMenu, button, 0, 0);
 	end
+	function BtWLoadoutsFrameMixin:SetExport(value)
+		PanelTemplates_SetTab(self, 0);
+		self.TitleText:SetText(L["Export"]);
+	
+		self.Sidebar:Hide()
+		for id,frame in ipairs(self.TabFrames) do
+			frame:SetShown(false);
+		end
+		self.Export:Show()
+
+		self.AddButton:Hide();
+		self.ActivateButton:Hide();
+		self.RefreshButton:Hide();
+		self.ExportButton:Hide();
+		self.DeleteButton:Hide();
+
+		self.Export.Scroll.EditBox.text = value:gsub("|", "||")
+		self.Export.Scroll.EditBox:SetText(value:gsub("|", "||"))
+		self.Export.Scroll.EditBox:HighlightText()
+		self.Export.Scroll.EditBox:SetFocus()
+	end
 	function BtWLoadoutsFrameMixin:OnShow()
 		if not self.initialized then
 			-- self.Equipment.flyoutSettings = {
@@ -1644,6 +1683,7 @@ do
 		
 		self.AddButton:SetShown(not show)
 		self.RefreshButton:SetShown(not show)
+		self.ExportButton:SetShown(not show)
 		self.ActivateButton:SetShown(not show)
 		self.DeleteButton:SetShown(not show)
 

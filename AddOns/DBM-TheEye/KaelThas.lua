@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("KaelThas", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142051")
+mod:SetRevision("20210826001945")
 mod:SetCreatureID(19622)
 mod:SetEncounterID(733)
 mod:SetModelID(20023)
@@ -108,9 +108,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		self.vb.mcIcon = self.vb.mcIcon - 1
 		if #warnMCTargets >= 3 then
-			showMC()
+			showMC(self)
 		else
-			self:Schedule(0.3, showMC)
+			self:Schedule(0.3, showMC, self)
 		end
 	elseif args.spellId == 37027 then
 		timerToy:Start(args.destName)

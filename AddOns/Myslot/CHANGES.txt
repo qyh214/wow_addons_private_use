@@ -1,22 +1,10 @@
-lightweight tag bfc2a838ecd1a2bbbf98afc6da06a963f9126516 v5.6.0
-Author:	Boshi Lian <farmer1992@gmail.com>
-Date:	Sun Aug 8 14:41:35 2021 -0700
+lightweight tag 14ddf779b9bf1376b6e3de51d2c513475f3f88ed v5.7.0
+Author:	GitHub <noreply@github.com>
+Date:	Wed Sep 22 04:03:56 2021 -0700
 
-commit bfc2a838ecd1a2bbbf98afc6da06a963f9126516
+commit 14ddf779b9bf1376b6e3de51d2c513475f3f88ed
 Author: Boshi Lian <farmer1992@gmail.com>
-Date:   Sun Aug 8 14:41:35 2021 -0700
+Date:   Wed Sep 22 04:03:56 2021 -0700
 
-    fix unify tailing lf
-
-commit 92acf55daebd203191c209293489277b9e040348
-Author: Boshi Lian <farmer1992@gmail.com>
-Date:   Sun Aug 8 13:04:18 2021 -0700
-
-    auto trim
-
-commit f16ea753304119482494d720b3e916f9e00cc912
-Author: Boshi Lian <farmer1992@gmail.com>
-Date:   Sun Aug 8 12:52:55 2021 -0700
-
-    bump ver
+    add cmd on mac
 

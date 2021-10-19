@@ -14,11 +14,27 @@ local tonumber = tonumber
 local IsAddOnLoaded = IsAddOnLoaded
 local ObjectiveTracker_Update = ObjectiveTracker_Update
 
-local replaceRule = {
-    ["『譴罪之塔』托迦司"] = L["Torghast"],
-    ["托加斯特，罪魂之塔"] = L["Torghast"],
-    ["Torghast, Tower of the Damned"] = L["Torghast"]
-}
+local C_QuestLog_GetTitleForQuestID = C_QuestLog.GetTitleForQuestID
+
+local replaceRule = {}
+
+local function AddQuestTitleToReplaceRule(questID, text)
+    F.SetCallback(
+        function(title)
+            if title then
+                replaceRule[title] = text
+                ObjectiveTracker_Update()
+                return true
+            end
+            return false
+        end,
+        C_QuestLog_GetTitleForQuestID,
+        nil,
+        questID
+    )
+end
+
+AddQuestTitleToReplaceRule(57693, L["Torghast"])
 
 local classColor = _G.RAID_CLASS_COLORS[E.myclass]
 local color = {
@@ -220,24 +236,6 @@ function OT:ShortTitle(str)
     return str
 end
 
-function OT:ShowMawBuffRight()
-    if not self.db.enable or not self.db.showMawBuffRight then
-        return
-    end
-
-    local B = E:GetModule("Blizzard")
-    if B.SetupTorghastBuffFrame then
-        B.SetupTorghastBuffFrame = E.noop
-    end
-
-    local mawBuffsBlock = _G.ScenarioBlocksFrame.MawBuffsBlock
-    local list = mawBuffsBlock and mawBuffsBlock.Container.List
-    if list then
-        list:ClearAllPoints()
-        list:Point("TOPLEFT", mawBuffsBlock.Container, "TOPRIGHT", 10, 0)
-    end
-end
-
 function OT:Initialize()
     self.db = E.private.WT.quest.objectiveTracker
     if not self.db.enable then
@@ -245,7 +243,6 @@ function OT:Initialize()
     end
 
     self:UpdateTextWidth()
-    self:ShowMawBuffRight()
 
     if not self.Initialized then
         local trackerModules = {

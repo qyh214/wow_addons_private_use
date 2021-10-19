@@ -18,6 +18,21 @@ local SelectSoulbindNode = C_Soulbinds.SelectNode
 local HelpTipBox_Anchor = Internal.HelpTipBox_Anchor;
 local HelpTipBox_SetText = Internal.HelpTipBox_SetText;
 
+local function CompareSets(a, b)
+    if a.soulbindID ~= b.soulbindID then
+        return false
+    end
+
+    if not tCompare(a.nodes, b.nodes, 10) then
+        return false
+    end
+    if type(a.restrictions) ~= type(b.restrictions) and not tCompare(a.restrictions, b.restrictions, 10) then
+        return false
+    end
+
+    return true
+end
+
 --[[ SOULBIND DROPDOWN ]]
 
 local function SoulbindDropDown_OnClick(self, arg1, arg2, checked)
@@ -95,7 +110,9 @@ end
 --[[ SET HANDLING ]]
 
 local function UpdateSetFilters(set)
-	local filters = set.filters or {}
+	set.filters = set.filters or {}
+
+	local filters = set.filters
     wipe(filters)
     
     Internal.UpdateRestrictionFilters(set)
@@ -337,6 +354,52 @@ Internal.AddLoadoutSegment({
 	activate = ActivateSet,
     dropdowninit = SetDropDownInit,
 	checkerrors = CheckErrors,
+
+    export = function (set)
+        return {
+            version = 1,
+            name = set.name,
+            soulbindID = set.soulbindID,
+            nodes = set.nodes,
+            restrictions = set.restrictions,
+        }
+    end,
+    import = function (source, version, name, ...)
+        assert(version == 1)
+
+        local soulbindID = source.soulbindID or ...
+        return Internal.AddSet("soulbinds", UpdateSetFilters({
+			soulbindID = soulbindID,
+			name = name or source.name,
+			useCount = 0,
+			nodes = source.nodes,
+			restrictions = source.restrictions,
+        }))
+    end,
+    getByValue = function (set)
+        -- If the nodes is missing then we just want the faux set
+        if set.nodes == nil then
+            return GetSet(-set.soulbindID)
+        else
+            return Internal.GetSetByValue(BtWLoadoutsSets.soulbinds, set, CompareSets)
+        end
+    end,
+    verify = function (source, ...)
+        local soulbindID = source.soulbindID or ...
+        if not soulbindID or not GetSoulbindData(soulbindID) then
+            return false, L["Invalid soulbind"]
+        end
+        if source.nodes ~= nil and type(source.nodes) ~= "table" then
+            return false, L["Invalid nodes"]
+        end
+        if source.restrictions ~= nil and type(source.restrictions) ~= "table" then
+            return false, L["Missing restrictions"]
+        end
+
+        -- @TODO verify talent ids?
+
+        return true
+    end,
 })
 
 -- [[ TAB UI ]]
@@ -570,6 +633,9 @@ function BtWLoadoutsSoulbindsMixin:OnButtonClick(button)
         local set = self.set;
         RefreshSet(set)
         self:Update()
+	elseif button.isExport then
+		local set = self.set;
+		self:GetParent():SetExport(Internal.Export("soulbinds", set.setID))
 	elseif button.isActivate then
         local set = self.set;
         Internal.ActivateProfile({
@@ -669,6 +735,7 @@ function BtWLoadoutsSoulbindsMixin:Update()
 	
 	local showingNPE = BtWLoadoutsFrame:SetNPEShown(set == nil, L["Soulbinds"], L["Create soulbind trees for switching between soulbind paths, leave rows blank to not skip them. Conduits are not affected."])
 
+	self:GetParent().ExportButton:SetEnabled(true)
     self:GetParent().DeleteButton:SetEnabled(true);
 
     if not showingNPE then
@@ -780,4 +847,7 @@ function BtWLoadoutsSoulbindsMixin:Update()
         local helpTipBox = self:GetParent().HelpTipBox;
         helpTipBox:Hide();
     end
+end
+function BtWLoadoutsSoulbindsMixin:SetSetByID(setID)
+	self.set = GetSet(setID)
 end

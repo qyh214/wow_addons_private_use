@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(868, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20211011225517")
 mod:SetCreatureID(72311, 72560, 72249, 73910, 72302, 72561, 73909)--Boss needs to engage off friendly NCPS, not the boss. I include the boss too so we don't detect a win off losing varian. :)
 mod:SetEncounterID(1622)
-mod:DisableESCombatDetection()
-mod:SetReCombatTime(180, 15)--fix combat re-starts after killed. Same issue as tsulong. Fires TONS of IEEU for like 1-2 minutes after fight ends.
+--mod:DisableESCombatDetection()--Doesn't appear bugged anymore, IEEU still is
+mod:SetReCombatTime(180, 20)--fix combat re-starts after killed. Same issue as tsulong. Fires TONS of IEEU for like 1-2 minutes after fight ends.
 mod:SetMainBossID(72249)
 mod:SetUsedIcons(8, 7, 2)
 
@@ -165,8 +165,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.FixateIcon then
 			self:SetIcon(args.destName, 2)
 		end
-	elseif spellId == 147328 and (not DBM.Options.DontShowFarWarnings or UnitPower("player", 10) == 0) then
+	elseif spellId == 147328 and (not DBM.Options.DontShowFarWarnings or UnitPower("player", 10) == 0) and self:AntiSpam(3, 5) then
 		specWarnWarBanner:Show()
+		specWarnWarBanner:Play("targetchange")
 	elseif spellId == 146899 and (not DBM.Options.DontShowFarWarnings or UnitPower("player", 10) == 0) then
 		warnFracture:Show(args.destName)
 		specWarnFracture:Show(args.destName)
@@ -313,7 +314,7 @@ function mod:OnSync(msg)
 			timerAddsCD:Start(nil, self.vb.addsCount + 1)
 		end
 		if self.Options.SetIconOnAdds then
-			self:ScanForMobs(72958, 0, 8, 2, 0.2, 8)
+			self:ScanForMobs(72958, 0, 8, 2, nil, 8)
 		end
 	elseif msg == "prepull" then--Alliance
 		timerCombatStarts:Start()

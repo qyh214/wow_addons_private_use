@@ -3,12 +3,14 @@ local LSM = E.Libs.LSM
 
 local format = format
 local pairs = pairs
+local pcall = pcall
 local print = print
 local strbyte = strbyte
 local strfind = strfind
 local strlen = strlen
 local strsub = strsub
 local tinsert = tinsert
+local tremove = tremove
 local tonumber = tonumber
 local type = type
 local unpack = unpack
@@ -68,7 +70,7 @@ function F.SetFontOutline(text, font, size)
         size = fontHeight + tonumber(size)
     end
 
-    if font and not strfind(font, "\.ttf") then
+    if font and not strfind(font, "%.ttf") and not strfind(font, "%.otf") then
         font = LSM:Fetch('font', font)
     end
 
@@ -232,4 +234,23 @@ end
 
 function F.Round(number, decimals)
     return format(format("%%.%df", decimals), number)
+end
+
+function F.SetCallback(callback, target, times, ...)
+    times = times or 0
+    if times >= 10 then
+        return
+    end
+
+    if times < 10 then
+        local result = {pcall(target, ...)}
+        if result and result[1] == true then
+            tremove(result, 1)
+            if callback(unpack(result)) then
+                return
+            end
+        end
+    end
+
+    E:Delay(0.1, F.SetCallback, callback, target, times+1, ...)
 end

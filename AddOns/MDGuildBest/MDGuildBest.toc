@@ -3,6 +3,8 @@
 ## Title-zhCN: |cff0080ffMDGuildBest|r 公会大秘记录
 ## Title-zhTW: |cff0080ffMDGuildBest|r 公會大秘記錄
 ## Author: Siweia
-## Version: 2.6
+## Version: 2.7
+## SavedVariables: MDdb
 
+Locales.lua
 Core.lua

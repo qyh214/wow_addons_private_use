@@ -155,8 +155,6 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	SapperEmote			= "一条幼龙俯冲下来，往甲板上投放了一个暮光工兵！",
-	Broadside			= "spell:110153",
-	DeckFire			= "spell:110095",
 	GorionaRetreat		= "痛苦地尖叫并退入了云海的漩涡中"
 })
 

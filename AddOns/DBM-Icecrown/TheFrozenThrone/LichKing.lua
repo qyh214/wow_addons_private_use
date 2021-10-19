@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("LichKing", "DBM-Icecrown", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210614230125")
+mod:SetRevision("20211011150912")
 mod:SetCreatureID(36597)
 mod:SetEncounterID(1106)
 mod:DisableEEKillDetection()--EE fires at 10%
@@ -382,9 +382,9 @@ do
 				if self.Options.ValkyrIcon then
 					local cid = self:GetCIDFromGUID(args.destGUID)
 					if self:IsDifficulty("normal25", "heroic25") then
-						self:ScanForMobs(cid, 1, 2, 3, 0.1, 20, "ValkyrIcon")
+						self:ScanForMobs(cid, 1, 2, 3, nil, 20, "ValkyrIcon")
 					else
-						self:ScanForMobs(cid, 1, 2, 1, 0.1, 20, "ValkyrIcon")
+						self:ScanForMobs(cid, 1, 2, 1, nil, 20, "ValkyrIcon")
 					end
 				end
 			end

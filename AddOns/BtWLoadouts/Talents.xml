@@ -4,6 +4,7 @@
     
     <Frame name="$parentTalents" parentKey="Talents" mixin="BtWLoadoutsTalentsMixin" inherits="BtWLoadoutsTabFrameTemplate">
         <KeyValues>
+            <KeyValue key="segment" value="talents" type="string"/>
             <KeyValue key="name" value="BTWLOADOUTS_TALENTS" type="global"/>
         </KeyValues>
         <Frames>

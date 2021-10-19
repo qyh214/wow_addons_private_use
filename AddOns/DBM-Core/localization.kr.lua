@@ -114,6 +114,7 @@ L.SOUNDKIT_MIGRATION			= "한개 이상의 알림/특수 알림 효과음이 호
 
 L.WORLDBOSS_ENGAGED			= "당신이 속한 서버에서 %s 전투가 %s 퍼센트의 체력으로 시작된 것 같습니다. (%s|1이;가; 전송)"
 L.WORLDBOSS_DEFEATED			= "당신이 속한 서버에서 %s|1이;가; 잡힌 것 같습니다. (%s|1이;가; 전송)"
+L.WORLDBUFF_STARTED			= "%s 버프가 당신이 속한 서버의 %s 진영에서 시작됐습니다. (%s|1이;가; 받음)"
 
 L.TIMER_FORMAT_SECS			= "%.2f초"
 L.TIMER_FORMAT_MINS			= "%d분"
@@ -188,7 +189,6 @@ L.DBMLDB							= "경고: DBM-LDB는 이제 DBM-Core에 편입되었습니다. �
 L.DBMLOOTREMINDER				= "경고: 써드파티 모드인 DBM-LootReminder가 설치되었습니다. 이 애드온은 최신 WoW 클라이언트에 더이상 호환되지 않으며 " .. L.DBM .. "이 오작동하여 풀링 타이머를 전송하지 못하게 될 수 있습니다. 애드온 삭제를 권장합니다"
 L.UPDATE_REQUIRES_RELAUNCH		= "경고: 지금 업데이트한 " .. L.DBM .. "은 게임 클라이언트를 완전히 재시작하기 전까진 정상 작동하지 않습니다. 이 업데이트엔 새 파일이 포함되어 있거나 UI 재시작으로는 로딩할 수 없는 .toc 파일의 변경 사항이 있습니다. 클라이언트 재시작 없이 사용할 경우 오류가 발생하거나 작동하지 않을 수 있습니다."
 L.OUT_OF_DATE_NAG				= "현재 사용중인 " .. L.DBM .. " 버전이 오래되었습니다. 이 전투에 대응하는 모듈은 새로운 기능을 탑재했거나 버그가 수정된 상태입니다. 향상된 레이드 경험을 누리고 싶다면 업데이트를 권장합니다."
-L.RETAIL_ONLY					= "경고: 이 " .. L.DBM .. " 버전은 월드 오브 워크래프트 최신 버전용입니다. 삭제하시고 클래식 WoW 전용 DBM을 설치하세요."
 
 L.MOVABLE_BAR				= "드래그 하세요!"
 
@@ -593,6 +593,11 @@ L.LAG_FOOTER					= "응답 없음: %s"
 L.LDB_TOOLTIP_HELP1			= "왼쪽 클릭으로 " .. L.DBM .. " 열기"
 L.SILENTMODE_IS					= "조용함 모드 "
 
-L.LDB_LOAD_MODS		= "보스 모드 로드"
-
-L.LDB_ENABLE_BOSS_MOD	= "보스 모드 사용"
+L.WORLD_BUFFS.hordeOny		= "호드의 백성들이여, 오그리마의 주민들이여, 모두 와서 호드의 영웅을 찬양하라."
+L.WORLD_BUFFS.allianceOny	= "스톰윈드의 주민들과 모든 얼라이언스여! 오늘, 역사가 이루어졌노라."
+L.WORLD_BUFFS.hordeNef		= "네파리안이 쓰러졌다! 오그리마의 백성들이여"
+L.WORLD_BUFFS.allianceNef	= "얼라이언스의 시민들이여, 검은바위부족의 군주가 쓰러졌다!"
+L.WORLD_BUFFS.zgHeart		= "이제 한 가지 일만 더 하면 영혼의 약탈자의 위협을 완전히 제거할 수 있겠군..."
+L.WORLD_BUFFS.zgHeartBooty	= "공포의 혈신, 영혼의 약탈자 학카르가 패했군! 이제 더 이상 두려워할 필요 없어!"
+L.WORLD_BUFFS.zgHeartYojamba	= "나의 종복들이여, 의식을 시작하라! 학카르의 심장을 다시 공허의 차원으로 쫓아내야 한다!"
+L.WORLD_BUFFS.rendHead		= "가짜 대족장 렌드 블랙핸드가 쓰러졌도다!"

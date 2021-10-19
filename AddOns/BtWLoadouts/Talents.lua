@@ -86,8 +86,10 @@ local function FixTalentSet(set)
     return changed
 end
 local function UpdateSetFilters(set)
+	set.filters = set.filters or {}
+
     local specID = set.specID;
-    local filters = set.filters or {}
+    local filters = set.filters
 
     Internal.UpdateRestrictionFilters(set)
 
@@ -367,6 +369,17 @@ local function SetDropDownInit(self, set, index)
     Internal.SetDropDownInit(self, set, index, "talents", BtWLoadoutsFrame.Talents)
 end
 
+local function CompareSets(a, b)
+    if not tCompare(a.talents, b.talents, 10) then
+        return false
+    end
+    if type(a.restrictions) ~= type(b.restrictions) and not tCompare(a.restrictions, b.restrictions, 10) then
+        return false
+    end
+
+    return true
+end
+
 Internal.AddLoadoutSegment({
     id = "talents",
     name = L["Talents"],
@@ -378,6 +391,47 @@ Internal.AddLoadoutSegment({
     activate = ActivateTalentSet,
     dropdowninit = SetDropDownInit,
     checkerrors = CheckErrors,
+
+    export = function (set)
+        return {
+            version = 1,
+            name = set.name,
+            specID = set.specID,
+            talents = set.talents,
+            restrictions = set.restrictions,
+        }
+    end,
+    import = function (source, version, name, ...)
+        assert(version == 1)
+
+        local specID = source.specID or ...
+        return AddSet("talents", UpdateSetFilters({
+			specID = specID,
+			name = name or source.name,
+			useCount = 0,
+			talents = source.talents,
+            restrictions = source.restrictions,
+        }))
+    end,
+    getByValue = function (set)
+        return Internal.GetSetByValue(BtWLoadoutsSets.talents, set, CompareSets)
+    end,
+    verify = function (source, ...)
+        local specID = source.specID or ...
+        if not specID or not GetSpecializationInfoByID(specID) then
+            return false, L["Invalid specialization"]
+        end
+        if type(source.talents) ~= "table" then
+            return false, L["Missing talents"]
+        end
+        if source.restrictions ~= nil and type(source.restrictions) ~= "table" then
+            return false, L["Missing restrictions"]
+        end
+
+        -- @TODO verify talent ids?
+
+        return true
+    end,
 })
 
 BtWLoadoutsTalentsMixin = {}
@@ -440,6 +494,9 @@ function BtWLoadoutsTalentsMixin:OnButtonClick(button)
         local set = self.set;
         RefreshTalentSet(set)
         self:Update()
+	elseif button.isExport then
+		local set = self.set;
+		self:GetParent():SetExport(Internal.Export("talents", set.setID))
 	elseif button.isActivate then
         local set = self.set;
         if select(6, GetSpecializationInfoByID(set.specID)) == select(2, UnitClass("player")) then
@@ -545,6 +602,7 @@ function BtWLoadoutsTalentsMixin:Update()
 	
 	local showingNPE = BtWLoadoutsFrame:SetNPEShown(set == nil, L["Talents"], L["Create different talent layouts for the type of content you wish to do. Leave rows blank to skip the tier."])
         
+	self:GetParent().ExportButton:SetEnabled(true)
     self:GetParent().DeleteButton:SetEnabled(true);
 
     if not showingNPE then
@@ -617,4 +675,7 @@ function BtWLoadoutsTalentsMixin:Update()
         local helpTipBox = self:GetParent().HelpTipBox;
         helpTipBox:Hide();
     end
+end
+function BtWLoadoutsTalentsMixin:SetSetByID(setID)
+	self.set = GetTalentSet(setID)
 end

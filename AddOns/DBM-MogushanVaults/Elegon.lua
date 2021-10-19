@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(726, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210119194055")
+mod:SetRevision("20211011150900")
 mod:SetCreatureID(60410)--Energy Charge (60913), Emphyreal Focus (60776), Cosmic Spark (62618), Celestial Protector (60793)
 mod:SetEncounterID(1500)
 mod:DisableESCombatDetection()
@@ -134,7 +134,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpellID(116598, 132265) then--Cast when these are activated
 		focusActivated = focusActivated + 1
 		if self.Options.SetIconOnCreature then
-			self:ScanForMobs(args.sourceGUID, 0, 8, 6, 0.5, 10)
+			self:ScanForMobs(args.sourceGUID, 0, 8, 6, nil, 10)
 		end
 		if focusActivated == 6 then
 			timerDespawnFloor:Start()

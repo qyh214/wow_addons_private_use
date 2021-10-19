@@ -153,8 +153,6 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	SapperEmote			= "Un Drago lascia cadere un Geniere sul ponte!",
-	Broadside			= "spell:110153",
-	DeckFire			= "spell:110095",
 	GorionaRetreat			= "Urla di Dolore e si rivolta nelle nuvole tempestose"
 })
 

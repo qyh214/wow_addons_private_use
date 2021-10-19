@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1147, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142006")
+mod:SetRevision("20211011150925")
 mod:SetCreatureID(76906)--81315 Crack-Shot, 81197 Raider, 77487 Grom'kar Firemender, 80791 Grom'kar Man-at-Arms, 81318 Iron Gunnery Sergeant, 77560 Obliterator Cannon, 81612 Deforester
 mod:SetEncounterID(1692)
 mod:SetUsedIcons(8, 7, 2, 1)
@@ -759,8 +759,8 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, target)
 			if (count == 1 or count == 18 or count == 21 or count == 34) and not adjusted then
 				specWarnManOArms:Show()
 				if self.Options.SetIconOnAdds then
-					self:ScanForMobs(80791, 0, 8, 2, 0.2, 15)--Man At Arms scanner marking 8 down
-					self:ScanForMobs(77487, 1, 1, 2, 0.2, 15)--Fire Mender scanner marking 1 up
+					self:ScanForMobs(80791, 0, 8, 2, nil, 15)--Man At Arms scanner marking 8 down
+					self:ScanForMobs(77487, 1, 1, 2, nil, 15)--Fire Mender scanner marking 1 up
 				end
 			end
 		else
@@ -810,8 +810,8 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, npc, _, _, target)
 			if (count == 7 or count == 17 or count == 23 or count == 28) and not adjusted then--I'm sure they spawn again sometime later, find that data
 				specWarnManOArms:Show()
 				if self.Options.SetIconOnAdds then
-					self:ScanForMobs(80791, 0, 8, 2, 0.2, 15)--Man At Arms scanner marking 8 down
-					self:ScanForMobs(77487, 1, 1, 2, 0.2, 15)--Fire Mender scanner marking 1 up
+					self:ScanForMobs(80791, 0, 8, 2, nil, 15)--Man At Arms scanner marking 8 down
+					self:ScanForMobs(77487, 1, 1, 2, nil, 15)--Fire Mender scanner marking 1 up
 				end
 			end
 		end

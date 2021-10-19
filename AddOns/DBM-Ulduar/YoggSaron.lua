@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("YoggSaron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210614230125")
+mod:SetRevision("20211011150912")
 mod:SetCreatureID(33288)
 mod:SetEncounterID(1143)
 mod:SetModelID(28817)
@@ -206,7 +206,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerLunaricGaze:Start()
 	elseif args.spellId == 64465 then
 		if self.Options.SetIconOnBeacon then
-			self:ScanForMobs(args.destGUID, 2, self.vb.beaconIcon, 1, 0.2, 10, "SetIconOnBeacon")
+			self:ScanForMobs(args.destGUID, 2, self.vb.beaconIcon, 1, nil, 10, "SetIconOnBeacon")
 		end
 		self.vb.beaconIcon = self.vb.beaconIcon - 1
 		if self.vb.beaconIcon == 0 then
@@ -228,7 +228,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		self:SetIcon(args.destName, 0)
 	elseif args.spellId == 64465 then
 		if self.Options.SetIconOnBeacon then
-			self:ScanForMobs(args.destGUID, 2, 0, 1, 0.2, 12, "SetIconOnBeacon")
+			self:ScanForMobs(args.destGUID, 2, 0, 1, nil, 12, "SetIconOnBeacon")
 		end
 	end
 end

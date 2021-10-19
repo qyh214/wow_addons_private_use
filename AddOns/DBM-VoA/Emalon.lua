@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Emalon", "DBM-VoA")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145648")
+mod:SetRevision("20211011150912")
 mod:SetCreatureID(33993)
 mod:SetEncounterID(1127)
 mod:SetModelID(27108)
@@ -59,7 +59,7 @@ function mod:SPELL_HEAL(_, _, _, _, destGUID, _, _, _, spellId)
 		warnOverCharge:Show()
 		timerOvercharge:Start()
 		if self.Options.SetIconOnOvercharge then
-			self:ScanForMobs(destGUID, 2, 8, 1, 0.2, 10, "SetIconOnOvercharge")
+			self:ScanForMobs(destGUID, 2, 8, 1, nil, 10, "SetIconOnOvercharge")
 		end
 	end
 end

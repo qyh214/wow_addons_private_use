@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(819, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210119194055")
+mod:SetRevision("20211011150900")
 mod:SetCreatureID(68476)
 mod:SetEncounterID(1575)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 1)
@@ -291,7 +291,7 @@ function mod:OnSync(msg, targetname)
 		timerDinoCD:Schedule(37.8)
 		specWarnDino:Schedule(56.75)
 		if self.Options.SetIconOnAdds then
-			self:ScanForMobs(balcMobs, 0, 7, 6, 0.2, 64)
+			self:ScanForMobs(69221, 0, 7, 6, balcMobs, 64)
 		end
 		if doorNumber == 1 then
 			timerAdds:Start(18.9, Farraki)

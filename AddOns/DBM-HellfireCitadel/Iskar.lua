@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1433, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210617040729")
+mod:SetRevision("20211011150925")
 mod:SetCreatureID(90316)
 mod:SetEncounterID(1788)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
@@ -231,23 +231,23 @@ function mod:SPELL_CAST_START(args)
 		if self:IsMythic() then
 			self.vb.savedRiposte = timerShadowRiposteCD:GetRemaining()
 			if self.Options.SetIconOnAdds then
-				self:ScanForMobs(93625, 2, 8, 1, 0.2, 15)--Mythic Add
-				self:ScanForMobs(91543, 2, 7, 1, 0.2, 15)--Bomb Add
+				self:ScanForMobs(93625, 2, 8, 1, nil, 15)--Mythic Add
+				self:ScanForMobs(91543, 2, 7, 1, nil, 15)--Bomb Add
 				if self.vb.escapeCount >= 2 then
-					self:ScanForMobs(91541, 2, 6, 1, 0.2, 15)--Construct Add
+					self:ScanForMobs(91541, 2, 6, 1, nil, 15)--Construct Add
 				end
 				if self.vb.escapeCount == 3 then
-					self:ScanForMobs(91539, 2, 5, 1, 0.2, 15)--Raven Add
+					self:ScanForMobs(91539, 2, 5, 1, nil, 15)--Raven Add
 				end
 			end
 		else
 			if self.Options.SetIconOnAdds then
-				self:ScanForMobs(91543, 2, 8, 1, 0.2, 15)--Bomb Add
+				self:ScanForMobs(91543, 2, 8, 1, nil, 15)--Bomb Add
 				if self.vb.escapeCount >= 2 then
-					self:ScanForMobs(91541, 2, 7, 1, 0.2, 15)--Construct Add
+					self:ScanForMobs(91541, 2, 7, 1, nil, 15)--Construct Add
 				end
 				if self.vb.escapeCount == 3 then
-					self:ScanForMobs(91539, 2, 6, 1, 0.2, 15)--Raven Add
+					self:ScanForMobs(91539, 2, 6, 1, nil, 15)--Raven Add
 				end
 			end
 		end

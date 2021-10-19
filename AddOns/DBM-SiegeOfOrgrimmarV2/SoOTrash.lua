@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("SoOTrash", "DBM-SiegeOfOrgrimmarV2")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20211011225517")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
@@ -32,7 +32,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 147200 and not galakrasMod:IsInCombat() then
 		warnFracture:Show(args.destName)
 		specWarnFracture:Show(args.destName)
-	elseif spellId == 147328 and not galakrasMod:IsInCombat() then
+	elseif spellId == 147328 and not galakrasMod:IsInCombat() and self:AntiSpam(3, 1) then
 		specWarnWarBanner:Show()
 	elseif spellId == 145553 then
 		warnBribe:Show(args.destName)
@@ -48,7 +48,7 @@ function mod:SPELL_CAST_START(args)
 		if source == UnitName("target") or source == UnitName("focus") then
 			specWarnChainheal:Show(source)
 		end
-	elseif spellId == 147884 and self:AntiSpam(3) then
+	elseif spellId == 147884 and self:AntiSpam(3, 2) then
 		specWarnInfusion:Show()
 	end
 end

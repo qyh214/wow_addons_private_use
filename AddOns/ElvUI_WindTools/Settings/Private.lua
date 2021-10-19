@@ -63,7 +63,6 @@ V.maps = {
 }
 
 V.misc = {
-	autoHideWorldMap = false,
 	autoScreenshot = false,
 	pauseToSlash = true,
 	noKanjiMath = false,
@@ -115,7 +114,6 @@ V.quest = {
 		colorfulProgress = true,
 		percentage = false,
 		colorfulPercentage = false,
-		showMawBuffRight = false,
 		header = {
 			name = E.db.general.font,
 			size = E.db.general.fontSize + 2,
@@ -172,6 +170,7 @@ V.skins = {
 	},
 	addons = {
 		ace3 = true,
+		angryKeystones = true,
 		azerothAutoPilot = true,
 		bigWigs = true,
 		bigWigsQueueTimer = true,
@@ -203,6 +202,7 @@ V.skins = {
 		barberShop = true,
 		binding = true,
 		blackMarket = true,
+		blizzardOptions = true,
 		calendar = true,
 		challenges = true,
 		channels = true,

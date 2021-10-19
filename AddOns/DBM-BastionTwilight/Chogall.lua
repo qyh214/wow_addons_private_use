@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(167, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806141910")
+mod:SetRevision("20211011150949")
 mod:SetCreatureID(43324)
 mod:SetEncounterID(1029)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -192,9 +192,9 @@ function mod:SPELL_CAST_START(args)
 	elseif args.spellId == 82411 then -- Creatures are channeling after their spawn.
 		if self.Options.SetIconOnCreature then
 			if self:IsDifficulty("normal25", "heroic25") then
-				self:ScanForMobs(args.destGUID, 0, 8, 8, 0.1, 20, "SetIconOnCreature")
+				self:ScanForMobs(args.destGUID, 0, 8, 8, nil, 20, "SetIconOnCreature")
 			else
-				self:ScanForMobs(args.destGUID, 0, 8, 4, 0.1, 20, "SetIconOnCreature")
+				self:ScanForMobs(args.destGUID, 0, 8, 4, nil, 20, "SetIconOnCreature")
 			end
 		end
 	elseif args.spellId == 81713 then

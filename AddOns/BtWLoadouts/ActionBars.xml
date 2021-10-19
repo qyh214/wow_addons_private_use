@@ -78,6 +78,7 @@
 
     <Frame parentKey="ActionBars" mixin="BtWLoadoutsActionBarsMixin" inherits="BtWLoadoutsTabFrameTemplate">
         <KeyValues>
+            <KeyValue key="segment" value="actionbars" type="string"/>
             <KeyValue key="name" value="BTWLOADOUTS_ACTION_BARS" type="global"/>
         </KeyValues>
 		<Layers>

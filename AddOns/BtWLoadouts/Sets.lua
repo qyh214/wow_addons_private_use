@@ -77,6 +77,17 @@ do
 		end
 	end
 end
+local function GetSetByValue(sets, value, callback)
+    if type(sets) == "string" then
+        sets = BtWLoadoutsSets[sets]
+	end
+
+	for _,set in pairs(sets) do
+		if type(set) == "table" and callback(set, value) then
+			return set;
+		end
+	end
+end
 local function AddSet(sets, set)
     if type(sets) == "string" then
         sets = BtWLoadoutsSets[sets]
@@ -116,6 +127,7 @@ Internal.GetNextSetID = GetNextSetID;
 Internal.GetSet = GetSet;
 Internal.GetSetByName = GetSetByName;
 Internal.GetSetsByName = GetSetsByName;
+Internal.GetSetByValue = GetSetByValue;
 Internal.AddSet = AddSet;
 Internal.DeleteSet = DeleteSet;
 

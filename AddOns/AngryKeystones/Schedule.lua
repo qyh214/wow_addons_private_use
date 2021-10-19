@@ -7,18 +7,19 @@ local requestPartyKeystones
 
 -- 1:Overflowing, 2:Skittish, 3:Volcanic, 4:Necrotic, 5:Teeming, 6:Raging, 7:Bolstering, 8:Sanguine, 9:Tyrannical, 10:Fortified, 11:Bursting, 12:Grievous, 13:Explosive, 14:Quaking, 16:Infested, 117: Reaping, 119:Beguiling 120:Awakened, 121:Prideful, 122:Inspiring, 123:Spiteful, 124:Storming
 local affixSchedule = {
-	[1] =  {[1]=11, [2]=3,  [3]=10}, --1 Bursting Volcanic Fortified
-	[2] =  {[1]=7,  [2]=124,[3]=9}, --2 Bolstering Storming Tyrannical
-	[3] =  {[1]=123,[2]=12, [3]=10}, --3 Spiteful Grievous Fortified
-	[4] =  {[1]=122,[2]=4,  [3]=9}, --4 Inspiring Necrotic Tyrannical
-	[5] =  {[1]=8,  [2]=14, [3]=10}, --5 Sanguine Quaking Fortified
-	[6] =  {[1]=6,  [2]=13, [3]=9}, --6 Raging Explosive Tyrannical
-	[7] =  {[1]=123,[2]=3,  [3]=10}, --7 Spiteful Volcanic Fortified
-	[8] =  {[1]=7,  [2]=4,  [3]=9}, --8 Bolstering Necrotic Tyrannical
-	[9] =  {[1]=122,[2]=124,[3]=10}, --9 Inspiring Storming Fortified
-	[10] = {[1]=11, [2]=13, [3]=9}, --10 Bursting Explosive Tyrannical
-	[11] = {[1]=8,  [2]=12, [3]=10}, --11 Sanguine Grievous Fortified
-	[12] = {[1]=6,  [2]=14, [3]=9}, --12 Raging Quaking Tyrannical
+	-- Shadowlands Season 2
+	[1] =  {[1]=11, [2]=124,[3]=10}, -- 1 Bursting Storming Fortified
+	[2] =  {[1]=6,  [2]=3,  [3]=9},  -- 2 Raging Volcanic Tyrannical
+	[3] =  {[1]=122,[2]=12, [3]=10}, -- 3 Inspiring Grievous Fortified
+	[4] =  {[1]=123,[2]=4,  [3]=9},  -- 4 Spiteful Necrotic Tyrannical
+	[5] =  {[1]=7,  [2]=14, [3]=10}, -- 5 Bolstering Quaking Fortified
+	[6] =  {[1]=8,  [2]=124,[3]=9},  -- 6 Sanguine Storming Tyrannical
+	[7] =  {[1]=6,  [2]=13, [3]=10}, -- 7 Raging Explosive Fortified
+	[8] =  {[1]=11, [2]=3,  [3]=9},  -- 8 Bursting Volcanic Tyrannical
+	[9] =  {[1]=123,[2]=12, [3]=10}, -- 9 Spiteful Grievous Fortified
+	[10] = {[1]=122,[2]=14, [3]=9},  --10 Inspiring Quaking Tyrannical
+	[11] = {[1]=8,  [2]=4,  [3]=10}, --11 Sanguine Necrotic Fortified
+	[12] = {[1]=7,  [2]=13, [3]=9},  --12 Bolstering Explosive Tyrannical
 }
 
 local affixScheduleUnknown = false
@@ -42,7 +43,7 @@ local function UpdatePartyKeystones()
 
 	if not IsAddOnLoaded("Blizzard_ChallengesUI") then return end
 
-	local playerRealm = select(2, UnitFullName("player"))
+	local playerRealm = select(2, UnitFullName("player")) or ""
 
 	local e = 1
 	for i = 1, 4 do
@@ -286,7 +287,7 @@ function Mod:Blizzard_ChallengesUI()
 
 	local keystoneText = ChallengesFrame.WeeklyInfo.Child:CreateFontString(nil, "ARTWORK", "GameFontNormalMed2")
 	keystoneText:SetPoint("TOP", ChallengesFrame.WeeklyInfo.Child.WeeklyChest, "BOTTOM", 0, -15)
-	keystoneText:SetWidth(220)
+	keystoneText:SetWidth(320)
 	Mod.KeystoneText = keystoneText
 
 	hooksecurefunc("ChallengesFrame_Update", UpdateFrame)

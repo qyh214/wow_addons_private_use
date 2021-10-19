@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(850, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20211011150900")
 mod:SetCreatureID(71515)
 mod:SetEncounterID(1603)
 mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
@@ -294,7 +294,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnKorkronBanner:Show()
 		specWarnKorkronBanner:Show()
 		if self.Options.SetIconOnAdds then
-			self:ScanForMobs(71626, 2, 8, 1, 0.2, 4)--banner
+			self:ScanForMobs(71626, 2, 8, 1, nil, 4)--banner
 		end
 	elseif spellId == 143474 then
 		warnHealingTideTotem:Show()
@@ -406,9 +406,9 @@ function mod:OnSync(msg)
 		end
 		if self.Options.SetIconOnAdds then
 			if self:IsMythic() or self.vb.addsCount > 6 then--3 Adds
-				self:ScanForMobs(addsTable, 2, 7, 3, 0.2, 15)
+				self:ScanForMobs(71519, 2, 7, 3, addsTable, 15)
 			else
-				self:ScanForMobs(addsTable, 2, 7, 2, 0.2, 15)--2 adds
+				self:ScanForMobs(71519, 2, 7, 2, addsTable, 15)--2 adds
 			end
 		end
 		if self.Options.InfoFrame then

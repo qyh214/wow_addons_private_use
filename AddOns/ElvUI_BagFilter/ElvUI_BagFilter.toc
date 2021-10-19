@@ -1,9 +1,14 @@
+
 ## Interface: 90005
 ## Title: |cff1784d1ElvUI|r Bag Filters
-## Version: 7.1
+## Version: v7.3
 ## Author: Warmexx [Neighbours]
 ## Dependencies: ElvUI
+## X-Date: 2021-05-24T09:55:04Z
 ## X-Donate: PayPal:warmexx AT wow-neighbours DOT com
-## X-Website: https://www.curseforge.com/wow/addons/elvui-bag-filters
+## X-Website: https://github.com/warmexx/elvui-bag-filters
+## X-Curse-Project-ID: 49767
+## X-WoWI-ID: 26030
+## X-Wago-ID: WL6JJj6v
 
 BagFilter.lua

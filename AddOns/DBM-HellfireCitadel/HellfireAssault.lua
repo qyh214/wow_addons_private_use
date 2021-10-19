@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1426, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142006")
+mod:SetRevision("20211011150925")
 mod:SetCreatureID(90019)--Main ID is door, door death= win. 94515 Siegemaster Mar'tak
 mod:SetEncounterID(1778)
 mod:SetUsedIcons(6, 5, 4, 3, 2, 1)
@@ -361,7 +361,7 @@ function mod:OnSync(msg)
 		warnFelCaster:Show(self.vb.felcasterCount)
 		--if self.Options.SetIconOnAdds then
 			--Set icons starting at 6, not using skull and x, those will probably be used to auto mark terrors in a later feature
-		--	self:ScanForMobs(93931, 0, 6-self.vb.felCastersAlive, nil, 0.2, 15)
+		--	self:ScanForMobs(93931, 0, 6-self.vb.felCastersAlive, nil, nil, 15)
 		--end
 		if self:IsMythic() then
 			if mythicfelcasterTimers[self.vb.felcasterCount] then
@@ -377,7 +377,7 @@ function mod:OnSync(msg)
 		self.vb.berserkerCount = self.vb.berserkerCount + 1
 		warnBerserker:Show(self.vb.berserkerCount)
 --		if self.Options.SetIconOnAdds then
---			self:ScanForMobs(93858, 0, 8, nil, 0.2, 12)
+--			self:ScanForMobs(93858, 0, 8, nil, nil, 12)
 --		end
 		if self:IsMythic() then
 			if mythicberserkerTimers[self.vb.berserkerCount] then

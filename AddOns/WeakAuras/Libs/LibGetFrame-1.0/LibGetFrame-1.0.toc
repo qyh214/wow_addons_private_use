@@ -1,10 +1,10 @@
-## Interface: 90001
+## Interface: 90100
 ## Title: Lib: GetFrame
 ## Notes: Get unit frame for a unit
 ## Author: Buds
 ## X-Category: Library
 ## X-License: BSD
-## Version: feea6a3
+## Version: 037d136
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 

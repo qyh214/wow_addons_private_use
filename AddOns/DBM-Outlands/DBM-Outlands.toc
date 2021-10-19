@@ -1,5 +1,6 @@
 ## Interface: 90100
 ## X-Min-Interface: 80000
+## Version: r682
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Outlands|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0아웃랜드|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Scherbenwelt|r
@@ -22,7 +23,6 @@
 ## X-Curse-Project-ID: 16442
 ## X-WoWI-ID: 11700
 ## X-Wago-ID: 7x61xpN1
-## Version: r681
 
 localization.en.lua
 localization.de.lua

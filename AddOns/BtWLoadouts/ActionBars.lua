@@ -34,6 +34,34 @@ local function compare(a, b)
     return true
 end
 
+local function CompareSets(a, b)
+    if not tCompare(a.actions, b.actions, 10) then
+        return false
+    end
+    if not tCompare(a.ignored, b.ignored, 10) then
+        return false
+    end
+    if type(a.restrictions) ~= type(b.restrictions) and not tCompare(a.restrictions, b.restrictions, 10) then
+        return false
+    end
+
+    return true
+end
+-- Unlike others, imported sets lack ignored values so need a slightly different comparison function
+local function CompareImportSets(set, import)
+    for slot = 1,120 do
+        if set.ignored[slot] ~= import.ignored[slot] then
+            return false
+        end
+
+        if not set.ignored[slot] and (type(set.actions[slot]) ~= type(import.actions[slot]) or (set.actions[slot] ~= import.actions[slot] and not tCompare(set.actions[slot], import.actions[slot], 10))) then
+            return false
+        end
+    end
+
+    return true
+end
+
 -- Track changes to macros
 do
     local mapCreated = false
@@ -182,11 +210,9 @@ do
 end
 
 local function UpdateSetFilters(set)
-	local filters = set.filters or {}
+	set.filters = set.filters or {}
 
     Internal.UpdateRestrictionFilters(set)
-
-	set.filters = filters
 
     return set
 end
@@ -810,6 +836,52 @@ Internal.AddLoadoutSegment({
     activate = ActivateActionBarSet,
     dropdowninit = SetDropDownInit,
 	checkerrors = CheckErrors,
+
+    export = function (set)
+        local result = {
+            version = 1,
+            name = set.name,
+            actions = CopyTable(set.actions),
+            ignored = set.ignored,
+            restrictions = set.restrictions,
+        }
+        for index,ignored in pairs(result.ignored) do
+            if ignored then
+                result.actions[index] = nil
+            end
+        end
+        return result
+    end,
+    import = function (source, version, name, ...)
+        assert(version == 1)
+
+        return Internal.AddSet("actionbars", UpdateSetFilters({
+			soulbindID = soulbindID,
+			name = name or source.name,
+			useCount = 0,
+			actions = source.actions,
+			ignored = source.ignored,
+            restrictions = source.restrictions,
+        }))
+    end,
+    getByValue = function (set)
+        return Internal.GetSetByValue(BtWLoadoutsSets.actionbars, set, CompareImportSets)
+    end,
+    verify = function (source, ...)
+        if type(source.actions) ~= "table" then
+            return false, L["Missing actions"]
+        end
+        if type(source.ignored) ~= "table" then
+            return false, L["Missing ignored"]
+        end
+        if source.restrictions ~= nil and type(source.restrictions) ~= "table" then
+            return false, L["Missing restrictions"]
+        end
+
+        -- @TODO verify table values?
+
+        return true
+    end,
 })
 
 BtWLoadoutsActionButtonMixin = {}
@@ -1098,6 +1170,9 @@ function BtWLoadoutsActionBarsMixin:OnButtonClick(button)
         local set = self.set;
         RefreshActionBarSet(set)
         self:Update()
+	elseif button.isExport then
+		local set = self.set;
+		self:GetParent():SetExport(Internal.Export("actionbars", set.setID))
     elseif button.isActivate then
         Internal.ActivateProfile({
             actionbars = {self.set.setID}
@@ -1191,6 +1266,7 @@ function BtWLoadoutsActionBarsMixin:Update()
 	
 	local showingNPE = BtWLoadoutsFrame:SetNPEShown(set == nil, L["Action Bars"], L["Create different action bar layouts, including stealth, form, and stance bars. You can ignore specific action buttons or entire bars."])
         
+	self:GetParent().ExportButton:SetEnabled(true)
     self:GetParent().RefreshButton:SetEnabled(true)
     self:GetParent().ActivateButton:SetEnabled(true);
     self:GetParent().DeleteButton:SetEnabled(true);
@@ -1242,4 +1318,7 @@ function BtWLoadoutsActionBarsMixin:Update()
         local helpTipBox = self:GetParent().HelpTipBox;
         helpTipBox:Hide();
 	end
+end
+function BtWLoadoutsActionBarsMixin:SetSetByID(setID)
+	self.set = GetActionBarSet(setID)
 end

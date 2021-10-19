@@ -107,10 +107,10 @@ L.NOTESHAREERRORALREADYOPEN	= "No se puede abrir notas compartidas con el editor
 L.ALLMOD_DEFAULT_LOADED		= "Se han cargado las opciones por defecto de todos los módulos de esta estancia."
 L.ALLMOD_STATS_RESETED		= "Se han restaurado todas las estadísticas de este módulo."
 L.MOD_DEFAULT_LOADED			= "Se han cargado las opciones por defecto de este encuentro."
-L.SOUNDKIT_MIGRATION			= "Uno o varios de tus sonidos de avisos se han restaurado a la opción por defecto debido a incompatibilidades con el tipo de archivo o a una ruta incorrecta. DBM solo acepta sonidos externos que estén la carpeta de addons."
 
 L.WORLDBOSS_ENGAGED			= "Es posible que el encuentro de %s se haya iniciado en tu reino a %s de su salud máxima. (Enviado por %s.)"
 L.WORLDBOSS_DEFEATED			= "Es posible que %s haya sido derrotado en tu reino. (Enviado por %s.)"
+L.WORLDBUFF_STARTED			= "%s ha empezado en tu reino para la facción %s (Enviado por %s)."
 
 L.TIMER_FORMAT_SECS			= "%.2f |4segundo:segundos;"
 L.TIMER_FORMAT_MINS			= "%d |4minuto:minutos;"
@@ -189,7 +189,6 @@ L.DBMLDB							= "AVISO: DBM-LDB está ahora incluido en DBM-Core. Es recomendab
 L.DBMLOOTREMINDER				= "AVISO: tienes instalado el módulo de terceros DBM-LootReminder. Este addon ya no es compatible con el cliente de WoW y causa conflictos con los temporizadores de DBM. Es recomendable que lo desinstales."
 L.UPDATE_REQUIRES_RELAUNCH		= "AVISO: Esta actualización de DBM no funcionará correctamente hasta que reinicies el juego. Esta versión contiene nuevos archivos o cambios a los archivos .toc que no pueden recargarse mediante /reload. Es muy probable que DBM no funcione correctamente hasta que reinicies el juego."
 L.OUT_OF_DATE_NAG				= "Tu versión de Deadly Boss Mods está desfasada para este encuentro. Se recomienda que actualices DBM para no perderte ningún aviso, temporizador o indicador crucial para tu grupo de banda."
-L.RETAIL_ONLY					= "AVISO: esta versión de DBM está pensada para la versión actual de World of Warcraft. Desinstala DBM e instala la versión correcta para WoW Classic."
 
 L.MOVABLE_BAR				= "¡Muéveme!"
 
@@ -608,6 +607,11 @@ L.LAG_FOOTER					= "Sin respuesta: %s"
 L.LDB_TOOLTIP_HELP1	= "Clic izquierdo para abrir DBM"
 L.LDB_TOOLTIP_HELP2	= "Clic derecho para el menú de configuración"
 
-L.LDB_LOAD_MODS		= "Cargar módulo"
-
-L.LDB_ENABLE_BOSS_MOD	= "Habilitar módulo"
+L.WORLD_BUFFS.hordeOny			= "Miembros de la Horda, ciudadanos de Orgrimmar, vengan y reúnanse para homenajear un hecho heroico"
+L.WORLD_BUFFS.allianceOny		= "Ciudadanos y aliados de Ventormenta, en el día de hoy, hemos hecho historia."
+L.WORLD_BUFFS.hordeNef			= "¡NEFARIAN HA SIDO ASESINADO! Ciudadanos de Orgrimmar"
+L.WORLD_BUFFS.allianceNef		= "¡Ciudadanos de la Alianza, el Señor de Roca Negra está muerto!"
+L.WORLD_BUFFS.zgHeart			= "Ahora, solo un paso más para poder librarnos de la amenaza del Cazador de Almas"
+L.WORLD_BUFFS.zgHeartBooty		= "¡El Dios de la Sangre, el Cazador de Almas, ha sido derrotado! ¡Ya no corremos peligro!"
+L.WORLD_BUFFS.zgHeartYojamba	= "Comiencen el ritual, sirvientes. ¡Debemos desterrar el corazón de Hakkar al vacío!"
+L.WORLD_BUFFS.rendHead			= "¡El falso Jefe de Guerra Rend Puño Negro ha caído!"

@@ -77,6 +77,7 @@ L.MOD_DEFAULT_LOADED				= "Foram carregadas opções padrão para esta luta."
 
 L.WORLDBOSS_ENGAGED					= "%s foi possivelmente puxado no seu reino %s por cento de vida. (Enviado por %s)"
 L.WORLDBOSS_DEFEATED				= "%s foi possivelmente derrotado no seu reino (Enviado por %s)."
+L.WORLDBUFF_STARTED					= "%s buff começou em seu reino para a facção da %s (Enviado por %s)."
 
 L.TIMER_FORMAT_SECS					= "%.2f |4segundo:segundos;"
 L.TIMER_FORMAT_MINS					= "%d |4minuto:minutos;"
@@ -334,3 +335,30 @@ L.ARROW_ERROR_USAGE					= {
 }
 
 L.SPEED_KILL_TIMER_TEXT				= "Vitória em tempo recorde"
+L.SPEED_CLEAR_TIMER_TEXT			= "Limpeza mais rápida"
+L.COMBAT_RES_TIMER_TEXT				= "Próxima recarga CR"
+L.TIMER_RESPAWN						= "%s Respawn"
+
+L.LAG_CHECKING						= "Verificando a latência da raide..."
+L.LAG_HEADER						= L.DEADLY_BOSS_MODS .. " - Resultados de latência"
+L.LAG_ENTRY							= "%s: Latência mundial [%d ms] / Latência em casa [%d ms]"
+L.LAG_FOOTER						= "Sem resposta: %s"
+
+L.DUR_CHECKING						= "Verificando a durabilidade da raide..."
+L.DUR_HEADER						= L.DEADLY_BOSS_MODS .. " - Resultados de durabilidade"
+L.DUR_ENTRY							= "%s: Durabilidade [%d percent] / quebrada [%s]"
+L.LAG_FOOTER						= "Sem resposta: %s"
+
+--LDB
+L.LDB_TOOLTIP_HELP1					= "Clique para abrir " .. L.DBM
+L.LDB_TOOLTIP_HELP2					= "Alt-clique para alternar o modo silencioso"
+L.SILENTMODE_IS                     = "Modo silencioso é "
+
+L.WORLD_BUFFS.hordeOny		= "Povo da Horda, cidadãos de Orgrimmar, venham! Vamos homenagear uma heroína da Horda"
+L.WORLD_BUFFS.allianceOny	= "Cidadãos e aliados de Ventobravo, no dia de hoje, fez-se história."
+L.WORLD_BUFFS.hordeNef		= "NEFARIAN ESTÁ MORTO! Povo de Orgrimmar"
+L.WORLD_BUFFS.allianceNef	= "Cidadãos da Aliança, o Senhor da Rocha Negra foi derrubado!"
+L.WORLD_BUFFS.zgHeart		= "Agora só falta um passo para nos livrarmos do Esfolador de Almas"
+L.WORLD_BUFFS.zgHeartBooty	= "O Deus Sanguinário, o Esfolador de Almas, foi derrotado! Acabaram-se os nossos temores!"
+L.WORLD_BUFFS.zgHeartYojamba	= "Iniciem o ritual, meus servos. Temos que banir o coração de Hakkar de volta para o vórtice!"
+L.WORLD_BUFFS.rendHead		= "O falso Chefe Guerreiro, Laceral Mão Negra, caiu!"

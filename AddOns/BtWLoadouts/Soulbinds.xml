@@ -193,6 +193,7 @@
     
     <Frame name="$parentSoulbinds" parentKey="Soulbinds" mixin="BtWLoadoutsSoulbindsMixin" inherits="BtWLoadoutsTabFrameTemplate">
         <KeyValues>
+            <KeyValue key="segment" value="soulbinds" type="string"/>
             <KeyValue key="name" value="BTWLOADOUTS_SOULBINDS" type="global"/>
             <KeyValue key="enabled" value="BTWLOADOUTS_SOULBINDS_ACTIVE" type="global"/>
         </KeyValues>

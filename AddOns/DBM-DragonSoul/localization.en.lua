@@ -149,10 +149,9 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
+	Pull				= "All ahead full. Everything depends on our speed! We can't let the Destroyer get away.",
 	SapperEmote			= "A drake swoops down to drop a Twilight Sapper onto the deck!",
-	Broadside			= "spell:110153",
-	DeckFire			= "spell:110095",
-	GorionaRetreat			= "screeches in pain and retreats into the swirling clouds"
+	GorionaRetreat		= "screeches in pain and retreats into the swirling clouds"
 })
 
 -------------------------

@@ -10,10 +10,23 @@ local AddSet = Internal.AddSet
 
 local format = string.format
 
+local function CompareSets(a, b)
+    if not tCompare(a.essences, b.essences, 10) then
+        return false
+    end
+    if type(a.restrictions) ~= type(b.restrictions) and not tCompare(a.restrictions, b.restrictions, 10) then
+        return false
+    end
+
+    return true
+end
+
 local function UpdateSetFilters(set)
-	local filters = set.filters or {}
+	set.filters = set.filters or {}
 
     Internal.UpdateRestrictionFilters(set)
+
+	local filters = set.filters
 	
 	filters.role = set.role
 
@@ -297,6 +310,44 @@ Internal.AddLoadoutSegment({
 	activate = ActivateEssenceSet,
 	dropdowninit = SetDropDownInit,
     checkerrors = CheckErrors,
+
+    export = function (set)
+        return {
+            version = 1,
+            name = set.name,
+            role = set.role,
+			essences = set.essences,
+            restrictions = set.restrictions,
+        }
+    end,
+    import = function (source, version, name, ...)
+        assert(version == 1)
+
+        local role = source.role or ...
+        return Internal.AddSet("essences", UpdateSetFilters({
+			role = role,
+			name = name or source.name,
+			useCount = 0,
+			essences = source.essences,
+            restrictions = source.restrictions,
+        }))
+    end,
+    getByValue = function (set)
+		return Internal.GetSetByValue(BtWLoadoutsSets.essences, set, CompareSets)
+    end,
+    verify = function (source, ...)
+        local role = source.role or ...
+        if not role or type(_G[role]) ~= "string" then
+            return false, L["Invalid role"]
+        end
+        if source.restrictions ~= nil and type(source.restrictions) ~= "table" then
+            return false, L["Missing restrictions"]
+        end
+
+        -- @TODO verify essence ids?
+
+        return true
+    end,
 })
 
 BtWLoadoutsAzeriteMilestoneSlotMixin = {};
@@ -511,6 +562,9 @@ function BtWLoadoutsEssencesMixin:OnButtonClick(button)
 		local set = self.set;
 		RefreshEssenceSet(set)
 		self:Update()
+	elseif button.isExport then
+		local set = self.set;
+		self:GetParent():SetExport(Internal.Export("essences", set.setID))
 	elseif button.isActivate then
 		Internal.ActivateProfile({
 			essences = {self.set.setID}
@@ -604,6 +658,7 @@ function BtWLoadoutsEssencesMixin:Update()
 	
 	local showingNPE = BtWLoadoutsFrame:SetNPEShown(set == nil, L["Essences"], L["Create sets for the Battle for Azeroth artifact neck."])
 
+	self:GetParent().ExportButton:SetEnabled(true)
     self:GetParent().DeleteButton:SetEnabled(true);
 
 	if not showingNPE then
@@ -673,4 +728,7 @@ function BtWLoadoutsEssencesMixin:Update()
 end
 function BtWLoadoutsEssencesMixin:SetEnabled(value)
 	BtWLoadoutsTabFrame_SetEnabled(self, value)
+end
+function BtWLoadoutsEssencesMixin:SetSetByID(setID)
+	self.set = GetEssenceSet(setID)
 end

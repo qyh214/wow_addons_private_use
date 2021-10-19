@@ -152,8 +152,6 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	SapperEmote			= "Um draco mergulha para lançar um Sapador do Crepúsculo ao convés!",
-	Broadside			= "spell:110153",
-	DeckFire			= "spell:110095",
 	GorionaRetreat			= "se contorce de dor e retira-se entre as nuvens rodopiantes."
 })
 

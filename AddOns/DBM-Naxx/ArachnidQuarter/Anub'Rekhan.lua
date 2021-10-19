@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Anub'Rekhan", "DBM-Naxx", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190817015124")
+mod:SetRevision("20210815125804")
 mod:SetCreatureID(15956)
 mod:SetEncounterID(1107)
 mod:SetModelID(15931)
@@ -35,7 +35,7 @@ end
 
 function mod:OnCombatEnd(wipe)
 	if not wipe and self.Options.ArachnophobiaTimer then
-		DBM.Bars:CreateBar(1200, L.ArachnophobiaTimer)
+		DBT:CreateBar(1200, L.ArachnophobiaTimer)
 	end
 end
 

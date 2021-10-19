@@ -4,6 +4,7 @@
     
     <Frame name="$parentPvPTalents" parentKey="PvPTalents" mixin="BtWLoadoutsPvPTalentsMixin" inherits="BtWLoadoutsTabFrameTemplate">
         <KeyValues>
+            <KeyValue key="segment" value="pvptalents" type="string"/>
             <KeyValue key="name" value="BTWLOADOUTS_PVP_TALENTS" type="global"/>
         </KeyValues>
         <Frames>

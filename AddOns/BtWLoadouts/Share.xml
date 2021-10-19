@@ -1,0 +1,262 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="Share.lua"/>
+    
+	<CheckButton name="BtWLoadoutsImportCheckButtonTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="15" y="15"/>
+		</Size>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString parentKey="Text" inherits="GameFontNormalSmall">
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<HitRectInsets>
+			<AbsInset left="0" right="-100" top="0" bottom="0"/>
+		</HitRectInsets>
+		<NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
+		<PushedTexture file="Interface\Buttons\UI-CheckBox-Down"/>
+		<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD"/>
+		<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check"/>
+		<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
+	</CheckButton>
+	<Frame name="BtWLoadoutsImportFrame" mixin="BtWLoadoutsImportFrameMixin" inherits="TooltipBackdropTemplate" frameStrata="DIALOG" parent="UIParent" toplevel="true" enableMouse="true" movable="true" clampedToScreen="true" hidden="true">
+		<Size x="350" y="448"/>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString inherits="GameFontNormal" text="BTWLOADOUTS" justifyH="LEFT" parentKey="Title">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="15" y="-15"/>
+						<Anchor point="RIGHT" x="-15" y="0"/>
+					</Anchors>
+					<Color r="1.0" g="1.0" b="1.0"/>
+				</FontString>
+				<FontString inherits="GameFontNormal" justifyH="LEFT" parentKey="Name">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.Title" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+						<Anchor point="RIGHT" x="-15" y="0"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button parentKey="CloseButton" inherits="UIPanelCloseButton">
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="-5.6" y="-5"/>
+				</Anchors>
+			</Button>
+			<Button parentKey="ImportButton" inherits="UIPanelButtonTemplate" text="BTWLOADOUTS_IMPORT">
+				<Size x="120" y="22"/>
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT" x="15" y="15"/>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<Texture file="Interface\Buttons\UI-Panel-Button-Glow" alphaMode="ADD" parentKey="Flash" hidden="true">
+							<Size x="184" y="60"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" x="-7" y="7"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnClick>
+						self:GetParent():Accept();
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnDragStart method="OnDragStart"/>
+			<OnDragStop method="OnDragStop"/>
+			<OnShow method="OnShow"/>
+		</Scripts>
+	</Frame>
+    
+    <Frame parentKey="Import" mixin="BtWLoadoutsImportMixin" inherits="BtWLoadoutsTabFrameTemplate">
+        <KeyValues>
+            <KeyValue key="name" value="BTWLOADOUTS_IMPORT" type="global"/>
+        </KeyValues>
+        <Anchors>
+            <Anchor point="TOPLEFT" x="8" y="-30"/>
+            <Anchor point="BOTTOMRIGHT" x="-10" y="28"/>
+        </Anchors>
+        <Layers>
+            <Layer>
+                <FontString parentKey="ErrorMessage" inherits="GameFontNormalLeftRed">
+                    <Size x="700" y="0"/>
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT" x="0" y="-21"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Frame parentKey="Inset" useParentLevel="true" inherits="InsetFrameTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="-4" y="4" />
+                    <Anchor point="BOTTOMRIGHT" x="4" y="-2" />
+                </Anchors>
+            </Frame>
+            <ScrollFrame parentKey="Scroll" inherits="UIPanelScrollFrameTemplate">
+                <Size x="0" y="0"/>
+                <Anchors>
+                    <!-- <Anchor point="TOPLEFT" x="-4" y="4" />
+                    <Anchor point="BOTTOMRIGHT" x="4" y="-2" /> -->
+                    <Anchor point="TOPLEFT" x="2" y="-2"/>
+                    <Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
+                </Anchors>
+                <KeyValues>
+                    <KeyValue key="hideCharCount" value="true" type="boolean"/>
+                    <KeyValue key="cursorOffset" value="0" type="number"/>
+                </KeyValues>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString inherits="GameFontDisableLarge" parentKey="CharCount">
+                            <Anchors>
+                                <Anchor point="BOTTOMRIGHT" x="-6" y="0"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnLoad>
+                        self.EditBox:SetScript("OnTextChanged", function(self)
+                            local text = self:GetText()
+                            local success, err = text == ""
+                            if text ~= "" then
+                                success, err = BtWLoadouts.Import(text)
+                            end
+                            if success then
+                                err = ""
+                            end
+                            BtWLoadoutsFrame.Import.ErrorMessage:SetText(err);
+                        end);
+                        InputScrollFrame_OnLoad(self);
+                    </OnLoad>
+                    <OnMouseDown>
+                        self.EditBox:HighlightText()
+                        self.EditBox:SetFocus();
+                    </OnMouseDown>
+                </Scripts>
+                <ScrollChild>
+                    <EditBox parentKey="EditBox" multiLine="true" countInvisibleLetters="true" autoFocus="false">
+                        <Size x="1" y="1"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT"/>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="BORDER">
+                                <FontString parentKey="Instructions" inherits="GameFontNormalSmall" justifyH="LEFT" justifyV="TOP">
+                                    <Anchors>
+                                        <Anchor point="TOPLEFT" x="0" y="0"/>
+                                    </Anchors>
+                                    <Color r="0.35" g="0.35" b="0.35"/>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnTabPressed function="InputScrollFrame_OnTabPressed"/>
+                            <OnTextChanged function="InputScrollFrame_OnTextChanged"/>
+                            <OnCursorChanged function="ScrollingEdit_OnCursorChanged"/>
+                            <OnUpdate function="InputScrollFrame_OnUpdate"/>
+                            <OnEscapePressed function="InputScrollFrame_OnEscapePressed"/>
+                            <OnMouseUp>
+                                self:HighlightText()
+                            </OnMouseUp>
+                        </Scripts>
+                        <FontString inherits="GameFontHighlight"/>
+                    </EditBox>
+                </ScrollChild>
+            </ScrollFrame>
+        </Frames>
+        <Scripts>
+            <OnShow method="OnShow"/>
+        </Scripts>
+    </Frame>
+    <Frame parentKey="Export" parent="BtWLoadoutsFrame" hidden="true">
+        <Anchors>
+            <Anchor point="TOPLEFT" x="8" y="-30"/>
+            <Anchor point="BOTTOMRIGHT" x="-10" y="28"/>
+        </Anchors>
+        <Frames>
+            <Frame parentKey="Inset" useParentLevel="true" inherits="InsetFrameTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="-4" y="4" />
+                    <Anchor point="BOTTOMRIGHT" x="4" y="-2" />
+                </Anchors>
+            </Frame>
+            <ScrollFrame parentKey="Scroll" inherits="UIPanelScrollFrameTemplate">
+                <Size x="0" y="0"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="2" y="-2"/>
+                    <Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
+                </Anchors>
+                <KeyValues>
+                    <KeyValue key="hideCharCount" value="true" type="boolean"/>
+                    <KeyValue key="cursorOffset" value="0" type="number"/>
+                </KeyValues>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString inherits="GameFontDisableLarge" parentKey="CharCount">
+                            <Anchors>
+                                <Anchor point="BOTTOMRIGHT" x="-6" y="0"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnLoad>
+                        InputScrollFrame_OnLoad(self);
+                        self.EditBox:SetScript("OnChar", function (self)
+                            self:SetText(self.text)
+                            self:HighlightText()
+                        end);
+                    </OnLoad>
+                    <OnMouseDown>
+                        self.EditBox:HighlightText()
+                        self.EditBox:SetFocus()
+                    </OnMouseDown>
+                </Scripts>
+                <ScrollChild>
+                    <EditBox parentKey="EditBox" multiLine="true" countInvisibleLetters="true" autoFocus="false">
+                        <Size x="1" y="1"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT"/>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="BORDER">
+                                <FontString parentKey="Instructions" inherits="GameFontNormalSmall" justifyH="LEFT" justifyV="TOP">
+                                    <Anchors>
+                                        <Anchor point="TOPLEFT" x="0" y="0"/>
+                                    </Anchors>
+                                    <Color r="0.35" g="0.35" b="0.35"/>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnTabPressed function="InputScrollFrame_OnTabPressed"/>
+                            <OnTextChanged function="InputScrollFrame_OnTextChanged"/>
+                            <OnCursorChanged function="ScrollingEdit_OnCursorChanged"/>
+                            <OnUpdate function="InputScrollFrame_OnUpdate"/>
+                            <OnEscapePressed function="InputScrollFrame_OnEscapePressed"/>
+                            <OnMouseUp>
+                                self:HighlightText()
+                            </OnMouseUp>
+                        </Scripts>
+                        <FontString inherits="GameFontHighlight"/>
+                    </EditBox>
+                </ScrollChild>
+            </ScrollFrame>
+        </Frames>
+    </Frame>
+</Ui>

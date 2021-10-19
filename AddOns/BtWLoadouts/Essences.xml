@@ -206,6 +206,7 @@
 
     <Frame parentKey="Essences" mixin="BtWLoadoutsEssencesMixin" inherits="BtWLoadoutsTabFrameTemplate">
         <KeyValues>
+            <KeyValue key="segment" value="essences" type="string"/>
             <KeyValue key="name" value="BTWLOADOUTS_ESSENCES" type="global"/>
         </KeyValues>
         <Frames>

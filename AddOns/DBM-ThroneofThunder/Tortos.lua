@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(825, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201208160225")
+mod:SetRevision("20211011150900")
 mod:SetCreatureID(67977)
 mod:SetEncounterID(1565)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3)
@@ -152,7 +152,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 133974 then--Spinning Shell
 		addsActivated = addsActivated + 1
 		if self.Options.SetIconOnTurtles and addsActivated < 9 then
-			self:ScanForMobs(args.destGUID, 2, 9-addsActivated, 1, 0.2, 10)
+			self:ScanForMobs(args.destGUID, 2, 9-addsActivated, 1, nil, 10)
 		end
 	end
 end

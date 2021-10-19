@@ -1,10 +1,11 @@
 local mod	= DBM:NewMod(869, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20211011150900")
 mod:SetCreatureID(71865)
 mod:SetEncounterID(1623)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
+mod:SetHotfixNoticeRev(20210902000000)
 
 mod:RegisterCombat("combat")
 
@@ -78,10 +79,10 @@ local specWarnNapalm				= mod:NewSpecialWarningMove(147136)
 
 local timerRoleplay					= mod:NewTimer(120.5, "timerRoleplay", "237538")--Wonder if this is somewhat variable?
 --Stage 1: A Cry in the Darkness
-local timerDesecrateCD				= mod:NewCDCountTimer(35, 144748, nil, nil, nil, 3, nil, nil, nil, 2, 4)
+local timerDesecrateCD				= mod:NewCDCountTimer(33.8, 144748, nil, nil, nil, 3, nil, nil, nil, 2, 4)
 local timerHellscreamsWarsongCD		= mod:NewNextTimer(42.2, 144821, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON)
-local timerFarseerWolfRiderCD		= mod:NewNextTimer(50, "ej8294", nil, nil, nil, 1, 144585)--EJ says they come faster as phase progresses but all i saw was 3 spawn on any given pull and it was 30 50 50
-local timerSiegeEngineerCD			= mod:NewNextTimer(40, "ej8298", nil, nil, nil, 1, 144616)
+local timerFarseerWolfRiderCD		= mod:NewNextCountTimer(50, "ej8294", nil, nil, nil, 1, 144585)--EJ says they come faster as phase progresses but all i saw was 3 spawn on any given pull and it was 30 50 50
+local timerSiegeEngineerCD			= mod:NewNextCountTimer(40, "ej8298", nil, nil, nil, 1, 144616)
 local timerPowerIronStar			= mod:NewCastTimer(16.5, 144616, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON, nil, 1, 5)
 --Intermission: Realm of Y'Shaarj
 local timerEnterRealm				= mod:NewNextTimer(145.5, 144866, nil, nil, nil, 6, 144945)
@@ -114,6 +115,8 @@ mod:AddBoolOption("InfoFrame", "Healer")
 --Upvales, don't need variables
 local UnitExists, UnitIsDeadOrGhost = UnitExists, UnitIsDeadOrGhost
 local bombardCD = {55, 40, 40, 25, 25}
+local engineerTimers = {20, 45, 40, 40, 35, 35, 30, 30, 25, 25, 25}
+local shamanTimers = {31.5, 50, 50, 40, 40, 40, 30, 30, 30, 20}
 local spellName1, spellName2, spellName3 = DBM:GetSpellInfo(149004), DBM:GetSpellInfo(148983), DBM:GetSpellInfo(148994)
 local starFixate, grippingDespair, empGrippingDespair = DBM:GetSpellInfo(147665), DBM:GetSpellInfo(145183), DBM:GetSpellInfo(145195)
 --Tables, can't recover
@@ -122,13 +125,14 @@ local lines = {}
 local engineerDied = 0
 local numberOfPlayers = 1
 --Important, needs recover
+mod.vb.engineerCount = 0
+mod.vb.shamanCount = 0
 mod.vb.shamanAlive = 0
 mod.vb.phase = 1
 mod.vb.whirlCount = 0
 mod.vb.desecrateCount = 0
 mod.vb.mindControlCount = 0
 mod.vb.bombardCount = 0
-mod.vb.firstIronStar = false
 mod.vb.phase4Correction = false
 
 local function updateInfoFrame()
@@ -177,20 +181,21 @@ end
 
 function mod:OnCombatStart(delay)
 	engineerDied = 0
+	self.vb.engineerCount = 0
+	self.vb.shamanCount = 0
 	self.vb.shamanAlive = 0
 	self.vb.phase = 1
 	self.vb.whirlCount = 0
 	self.vb.desecrateCount = 0
 	self.vb.mindControlCount = 0
 	self.vb.bombardCount = 0
-	self.vb.firstIronStar = false
 	self.vb.phase4Correction = false
 	numberOfPlayers = DBM:GetNumRealGroupMembers()
 	timerDesecrateCD:Start(10.5-delay, 1)
 	specWarnSiegeEngineer:Schedule(16-delay)
-	timerSiegeEngineerCD:Start(20-delay)
+	timerSiegeEngineerCD:Start(20-delay, 1)
 	timerHellscreamsWarsongCD:Start(22-delay)
-	timerFarseerWolfRiderCD:Start(30-delay)
+	timerFarseerWolfRiderCD:Start(30-delay, 1)
 	if self:IsDifficulty("lfr25") then
 		berserkTimer:Start(1500-delay)
 	else
@@ -321,10 +326,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 144585 then
 		self.vb.shamanAlive = self.vb.shamanAlive + 1
+		self.vb.shamanCount = self.vb.shamanCount + 1
 		specWarnFarseerWolfRider:Show()
-		timerFarseerWolfRiderCD:Start()
+		local timer = shamanTimers[self.vb.shamanCount+1] or 20--20 assumed, it could go lower?
+		timerFarseerWolfRiderCD:Start(timer, self.vb.shamanCount+1)
 		if self.Options.SetIconOnShaman and self.vb.shamanAlive < 9 then--Support for marking up to 8 shaman
-			self:ScanForMobs(71983, 2, 9-self.vb.shamanAlive, 1, 0.2, 10, "SetIconOnShaman")
+			self:ScanForMobs(71983, 2, 9-self.vb.shamanAlive, 1, nil, 10, "SetIconOnShaman")
 		end
 	elseif spellId == 147209 then
 		self:SendSync("MaliceTarget", args.destGUID)
@@ -456,16 +463,13 @@ end
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg:find("spell:144616") then
+		self.vb.engineerCount = self.vb.engineerCount + 1
 		engineerDied = 0
 		warnSiegeEngineer:Show()
 		specWarnSiegeEngineer:Cancel()
 		specWarnSiegeEngineer:Schedule(41)
-		if not self.vb.firstIronStar then
-			self.vb.firstIronStar = true
-			timerSiegeEngineerCD:Start(45)
-		else
-			timerSiegeEngineerCD:Start()
-		end
+		local timer = engineerTimers[self.vb.engineerCount+1] or 25--Assumed 25 is lowest it goes
+		timerSiegeEngineerCD:Start(timer, self.vb.engineerCount+1)
 		if self:IsMythic() then
 			timerPowerIronStar:Start(11.5)
 			specWarnExplodingIronStar:Schedule(11.5)

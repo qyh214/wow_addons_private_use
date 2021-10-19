@@ -25,7 +25,7 @@ RSConstants.LOOT_ITEM_ID = nil
 ---============================================================================
 
 RSConstants.CURRENT_DB_VERSION = 44
-RSConstants.CURRENT_LOOT_DB_VERSION = 57
+RSConstants.CURRENT_LOOT_DB_VERSION = 58
 
 ---============================================================================
 -- Special events
@@ -323,9 +323,10 @@ RSConstants.MOUNTS_WITHOUT_SOURCE = { 1314, 1411 }
 -- ItemIDs
 ---============================================================================
 
-RSConstants.ITEMS_REQUIRE_NECROLORD = { 181815, 182080 }
-RSConstants.ITEMS_REQUIRE_NIGHT_FAE = { 180730 }
-RSConstants.ITEMS_REQUIRE_VENTHYR = { 180581, 180461 }
+RSConstants.ITEMS_REQUIRE_NECROLORD = { 181815, 182080, 186489 }
+RSConstants.ITEMS_REQUIRE_NIGHT_FAE = { 180730, 186492 }
+RSConstants.ITEMS_REQUIRE_VENTHYR = { 180581, 180461, 186479 }
+RSConstants.ITEMS_REQUIRE_KYRIAN = { 186483 }
 
 ---============================================================================
 -- Garrison cache
@@ -504,6 +505,7 @@ RSConstants.START_COLLECTIONS_SCAN = "RARESCANNER_START_COLLECTIONS_SCAN"
 
 RSConstants.RAID_WARNING_SHOWING_TIME = 3
 RSConstants.MINIMUM_DISTANCE_PINS_WORLD_MAP = 0.015
+RSConstants.MAXIMUN_MINIMAP_DISTANCE_RANGE = 0.096
 RSConstants.TOOLTIP_MAX_WIDTH = 250
 
 ---============================================================================

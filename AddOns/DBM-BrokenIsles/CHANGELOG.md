@@ -1,6 +1,9 @@
 # <DBM> World Bosses (Legion)
 
-## [r25](https://github.com/DeadlyBossMods/DBM-Legion/tree/r25) (2021-07-21)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Legion/compare/r24...r25) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Legion/releases)
+## [r26](https://github.com/DeadlyBossMods/DBM-Legion/tree/r26) (2021-10-11)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Legion/compare/r25...r26) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Legion/releases)
 
-- new world boss sync object  
+- Fix improperly assigned icon method on scorpyron  
+- updated scanformobs  
+- Compat code cleanup  
+- Make skipped mark an optional behavior on Aggramar, since it's fixed with latest core.  

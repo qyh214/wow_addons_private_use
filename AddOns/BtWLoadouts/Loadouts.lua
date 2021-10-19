@@ -481,6 +481,27 @@ local function IsLoadoutEnabled(set)
 	return true
 end
 
+function Internal.ImportLoadout(source, version, name)
+	assert(version == 2)
+
+	local set = {
+		name = name,
+		version = 2,
+		useCount = 0,
+		specID = source.specID
+	}
+
+	for _,segment in Internal.EnumerateLoadoutSegments() do
+		if source[segment.id] then
+			set[segment.id] = {unpack(source[segment.id])}
+		else
+			set[segment.id] = {}
+		end
+	end
+
+    return AddSet("profiles", UpdateSetFilters(set))
+end
+
 local function GetActiveProfiles()
 	if target.active then
 		if target.name then
@@ -737,6 +758,10 @@ do
 	end
 	function Internal.AddLoadoutSegment(details)
 		details.enabled = details.enabled == nil and true or details.enabled
+
+		if (details.import or details.export or details.verify or details.getByValue) and not (details.import and details.export and details.verify and details.getByValue) then
+			error(L["Segments that support import/export must define import, export, verify, and getByValue functions"])
+		end
 
 		loadoutSegmentsUIOrder[#loadoutSegmentsUIOrder+1] = details
 		loadoutSegmentsByID[details.id] = details
@@ -1289,6 +1314,9 @@ function BtWLoadoutsLoadoutsMixin:OnButtonClick(button)
 		end
 	elseif button.isRefresh then
 		-- Do nothing
+	elseif button.isExport then
+		local set = self.set;
+		self:GetParent():SetExport(External.Export(set.setID))
 	elseif button.isActivate then
 		BtWLoadoutsHelpTipFlags["TUTORIAL_ACTIVATE_SET"] = true
 
@@ -1382,6 +1410,7 @@ function BtWLoadoutsLoadoutsMixin:Update()
 	
 	local showingNPE = BtWLoadoutsFrame:SetNPEShown(set == nil, L["Loadouts"], L["Add sets of one or more types (Talents, Soulbinds, etc.) to your loadouts to swap them together."])
 
+	self:GetParent().ExportButton:SetEnabled(true)
 	self:GetParent().RefreshButton:SetEnabled(false)
 	self:GetParent().DeleteButton:SetEnabled(true)
 
@@ -1482,4 +1511,7 @@ function BtWLoadoutsLoadoutsMixin:Update()
 			helpTipBox:Hide();
 		end
 	end
+end
+function BtWLoadoutsLoadoutsMixin:SetSetByID(setID)
+	self.set = GetProfile(setID)
 end

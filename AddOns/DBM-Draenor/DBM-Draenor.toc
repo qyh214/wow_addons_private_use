@@ -30,7 +30,7 @@
 ## X-Curse-Project-ID: 101956
 ## X-WoWI-ID: 24535
 ## X-Wago-ID: LvNAkBKo
-## Version: r57
+## Version: r58
 
 localization.br.lua
 localization.en.lua

@@ -151,8 +151,6 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	SapperEmote			= "¡Un draco desciende para dejar a un zapador Crepuscular en la cubierta!",
-	Broadside			= "spell:110153",
-	DeckFire			= "spell:110095",
 	GorionaRetreat			= "grita de dolor y se retira al remolino de nubes."
 })
 

@@ -198,6 +198,8 @@ L["Blizzard Combat Text"] = "블리자드 전투 문자"
 L["Block"] = "방어함"
 L["Block (%)"] = "막음(%)"
 L["Block against Target (%)"] = "대상의 막음(%)"
+--[[Translation missing --]]
+L["Block Value"] = "Block Value"
 L["Blocked"] = "방패 막기"
 L["Bloodlord Mandokir"] = "혈군주 만도키르"
 L["Border"] = "테두리"

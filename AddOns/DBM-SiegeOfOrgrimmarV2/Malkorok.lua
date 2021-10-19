@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(846, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210319150900")
+mod:SetRevision("20211011150900")
 mod:SetCreatureID(71454)
 mod:SetEncounterID(1595)
 mod:SetUsedIcons(8, 7, 6, 4, 3, 2, 1)
@@ -159,7 +159,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerSeismicSlamCD:Start(nil, self.vb.seismicSlamCount+1)
 		end
 		if self.Options.SetIconOnAdds and self:IsMythic() then
-			self:ScanForMobs(71644, 0, 8, 3, 0.2, 6)
+			self:ScanForMobs(71644, 0, 8, 3, nil, 6)
 		end
 	end
 end

@@ -1,88 +1,132 @@
-# Version: 2.24
-2021/08/15 Released
+# Version: 2.25
+2021/09/11 Released
 ## ❗ Important
-- Some color options now support alpha channel.
-- [Skins] Add support of Meeting Stone EX.
-- [Objective Progress] Update mob data to latest version.
+- Update functions in core library.
+- ElvUI version will be checked once before modules loading.
+- [Skins] Significantly improve the quality of the skin of WeakAuras Options.
+- [Objective Tracker] ElvUI already handling the maw buff list frame, removing the option for expanding maw buff list in right side.
 ## ✳️ New
-- [Misc] Add new features to close world map after player enters combat.
-- [Skins] Add new skin for Blizzard Event Trace.
-- [Friend List] Add an option to hide level information completely.
-- [Mute] Add an new option for Smolderheart.
-- [World Map] Add color option of Fog of War.
+- [Misc] Add new features to close bags after player enters combat.
+- [Skins] Add the skin of aura bars for ElvUI unit frames.
+- [Skins] Add the skin of scenario UI in Torghast.
+- [Skins] Add the skin of timer in mythic plus.
+- [Skins] Add the skin of ElvUI minimap middle click menu.
+- [Skins] Add the skin of Angry Keystones.
+- [Skins] Optimize the skin of ElvUI cast bars which contains an attached icon.
 ## 💪 Improvement
-- [Tags] Optimize the performance of additional tags.
-- [Skins] Fix the shadows of PlayerChoiceFrame in mythic dungeons.
-- [Skins] Optimize the skin of NetEase Meeting Stone.
-- [Skins] Fix the backdrop of icons inside WeakAuras aurabars.
-- [Skins] Scale down the font size of Immersion quest text.
-- [Skins] Fix shadows on Player Choice Frame when player in garrison.
-- [Turn In] Update ignore NPCs list.
+- [Misc] Some options now can be changed without reloading user interface.
+- [Extra Item Bar] Fix the backdrop scale issue when auto-scale disabled.
+- [Game Bar] Fix the backdrop scale issue when auto-scale disabled.
+- [Raid Markers] Fix the backdrop scale issue when auto-scale disabled.
+- [Minimap Buttons] Fix the backdrop scale issue when auto-scale disabled.
+- [Chat Bar] Fix the backdrop scale issue when auto-scale disabled.
+- [Combat Alert] Fix the scale issue when auto-scale disabled.
+- [Skins] Fix the skin for auras on ElvUI unit frames.
+- [Skins] Fix the skin for flyout buttons in ElvUI action bar.
+- [Skins] Fix the skin of mythic keystone frame.
+- [Skins] The action bar skin will not be loaded if masque enabled.
+- [Skins] Add a new option for Blizzard interface options skin.
+- [Skins] Optimize the skin for Torghast tooltip in world map.
+- [Skins] Optimize the option UI of addon skins.
+- [Objective Tracker] Optimize the abbreviation feature for long titles.
 
 ------
-# 版本: 2.24
-2021/08/15 发布
+# 版本: 2.25
+2021/09/11 发布
 ## ❗ 重要
-- 部分颜色选项支持了 Alpha 通道.
-- [美化皮肤] 支持了 Meeting Stone EX 组件.
-- [任务信息] 怪物数据库更新到最新.
+- 核心函数库更新.
+- 在模块载入前现在将会检查 ElvUI 版本是否受到支持.
+- [美化皮肤] 大幅改善了 WeakAuras 的设定美化.
+- [任务列表] 由于 ElvUI 已经能够自动控制, 去除了爬塔 Buff 在右选项.
 ## ✳️ 新增
-- [其他] 添加了进入战斗自动关闭世界地图功能.
-- [美化皮肤] 添加了事件追踪工具的美化.
-- [好友列表] 添加了完全隐藏等级的选项.
-- [静音] 添加了闷燃之心的选项.
-- [地图] 支持对战争迷雾进行染色.
+- [其他] 添加了进入战斗自动关闭背包功能.
+- [美化皮肤] 新增了 ElvUI 光环条的美化.
+- [美化皮肤] 新增了爬塔场景事件界面的美化.
+- [美化皮肤] 新增了史诗钥石地下城界面的美化.
+- [美化皮肤] 新增了 ElvUI 小地图中键菜鸟的美化.
+- [美化皮肤] 新增了 Angry Keystones 的美化.
+- [美化皮肤] 优化并新增了 ElvUI 施法条图标在内时的美化.
 ## 💪 改善
-- [标签] 改善标签的运行性能.
-- [美化皮肤] 修复大秘境内的玩家选择框体美化.
-- [美化皮肤] 适配最新版本网易集合石.
-- [美化皮肤] 修复 WeakAuras 的进度条内图标背景错误.
-- [美化皮肤] 适当缩小 Immersion 任务文本字体大小.
-- [美化皮肤] 修复要塞内玩家选择框体的阴影.
-- [交接] 更新了忽略 NPC 列表.
+- [其他] 部分选项更改后不需要重载界面.
+- [额外物品条] 修复了不启用自动缩放时背景错位的问题.
+- [游戏条] 修复了不启用自动缩放时背景错位的问题.
+- [团队标记] 修复了不启用自动缩放时背景错位的问题.
+- [小地图按钮] 修复了不启用自动缩放时背景错位的问题.
+- [聊天条] 修复了不启用自动缩放时背景错位的问题.
+- [战斗提醒] 修复了不启用自动缩放时错位的问题.
+- [美化皮肤] 修复了 ElvUI 单位框体的光环美化
+- [美化皮肤] 修复了 ElvUI 动作条飞出按钮的美化.
+- [美化皮肤] 修复了史诗钥石地下城开启界面的美化.
+- [美化皮肤] 启用 Masque 的情况下会自动停用动作条美化.
+- [美化皮肤] 为暴雪的界面设定美化新增了独立选项.
+- [美化皮肤] 优化了世界地图上托加斯特鼠标提示的美化.
+- [美化皮肤] 优化了插件皮肤设定界面.
+- [任务列表] 优化了标题缩写功能.
 
 ------
-# 版本: 2.24
-2021/08/15 發布
+# 版本: 2.25
+2021/09/11 發布
 ## ❗ 重要
-- 部分色彩選項支援 Alpha 通道.
-- [美化皮膚] 支援 Meeting Stone EX 組件.
-- [任務信息] 怪物數據資料更新到最新.
+- 核心函數庫更新.
+- 在模組載入前, 現在會檢查使用的 ElvUI 版本是否為支援版本.
+- [美化皮膚] 大幅改善了 WeakAuras 的設定美化.
+- [任務列表] 由於 ElvUI 已經能夠自動控制, 去除了爬塔 Buff 在右選項.
 ## ✳️ 新增
-- [其他] 新增了進入戰鬥自動關閉世界地圖功能.
-- [美化皮膚] 新增了事件追蹤工具的美化.
-- [好友列表] 新增了一個完全隱藏等級的選項.
-- [靜音] 新增了燃心的選項.
-- [世界地圖] 新增染色戰爭迷霧的選項.
+- [其他] 新增了進入戰鬥自動關閉背包功能.
+- [美化皮膚] 新增了 ElvUI 光環條的美化.
+- [美化皮膚] 新增了爬塔場景事件介面的美化.
+- [美化皮膚] 新增了传奇鑰石地城介面的美化.
+- [美化皮膚] 新增了 Angry Keystones 的美化.
+- [美化皮膚] 新增了 ElvUI 小地圖中鍵選單的美化.
+- [美化皮膚] 優化并新增了 ElvUI 施法條圖示在內時的美化.
 ## 💪 改善
-- [標籤] 改善標籤的執行性能.
-- [美化皮膚] 修復傳奇鑰石地下城中的玩家選擇框架美化.
-- [美化皮膚] 支援最新版本的網易集合石.
-- [美化皮膚] 修復 WeakAuras 進度條內圖示背景錯誤.
-- [美化皮膚] 適當縮小 Immersion 任務文本字體尺寸.
-- [美化皮膚] 修復要塞內玩家選擇框架的陰影.
-- [交接] 更新了忽略 NPC 列表.
+- [其他] 部分選項更改後毋須重載介面.
+- [額外物品條] 修復了不啟用自動縮放時背景錯位的問題.
+- [遊戲條] 修復了不啟用自動縮放時背景錯位的問題.
+- [團隊標記] 修復了不啟用自動縮放時背景錯位的問題.
+- [小地圖按鍵] 修復了不啟用自動縮放時背景錯位的問題.
+- [聊天條] 修復了不啟用自動縮放時背景錯位的問題.
+- [戰鬥提醒] 修復了不啟用自動縮放時錯位的問題.
+- [美化皮膚] 修復了 ElvUI 單位框架的光環美化.
+- [美化皮膚] 修復了 ElvUI 快捷列飛出按鍵的美化.
+- [美化皮膚] 修復了傳奇鑰石地城開啟介面的美化.
+- [美化皮膚] 啟用 Masque 的情況下會自動停用快捷列美化.
+- [美化皮膚] 為暴雪的介面設定新增了獨立選項.
+- [美化皮膚] 優化了世界地圖上托伽司浮動提示的美化.
+- [美化皮膚] 優化了插件皮膚設定介面.
+- [任務列表] 優化了標題縮寫功能.
 
 ------
-# 버전: 2.24
-2021/08/15 Released
+# 버전: 2.25
+2021/09/11 Released
 ## ❗ 중요 사항
-- 일부 색상 옵션은 알파 채널을 지원합니다.
-- [스킨] Meeting Stone EX 스킨 추가.
-- [목표 진행] 몬스터 데이터베이스가 최신 버전으로 업데이트되었습니다.
+- 핵심 기능 라이브러리 업데이트.
+- 이제 모듈이 로드되기 전에 ElvUI 버전이 지원되는지 확인합니다.
+- [스킨] WeakAuras 설정창의 스킨 품질을 대폭 개선합니다.
+- [퀘스트 추적기] ElvUI에서 령 버프 목록 프레임을 처리하고 있으므로 령 버프 목록을 오른쪽에서 확장하는 옵션을 제거했습니다.
 ## ✳️ 신규 사항
-- [기타] 전투 진입 시 자동으로 월드맵을 닫는 기능을 추가하였습니다.
-- [스킨] Blizzard Event Trace 스킨 추가.
-- [친구 목록] 레벨을 완전히 숨기는 옵션이 추가되었습니다.
-- [음소거] 이글심장 관련 옵션을 추가하였습니다.
-- [월드맵] 전쟁의 안개 관련 색상 옵션을 추가허셨습니다.
+- [기타] 전투가 시작되면 자동으로 가방을 닫는 기능을 추가했습니다.
+- [스킨] ElvUI 유닛 프레임의 오라 바 스킨을 추가했습니다.
+- [스킨] 토르가스트의 시나리오 UI 스킨을 추가했습니다.
+- [스킨] 신화+ 타이머 스킨을 추가했습니다.
+- [스킨] ElvUI 미니맵 중간 클릭 메뉴의 스킨을 추가했습니다.
+- [스킨] Angry Keystones 애드온 스킨을 추가했습니다.
+- [스킨] ElvUI 캐스팅 바 아이콘을 최적화한 스킨을 추가했습니다.
 ## 💪 개선 사항
-- [태그] 추가된 태그의 성능을 최적화하였습니다.
-- [스킨] 쐐기돌 던전에서 령 능력 선택 창의 그림자를 수정합니다.
-- [스킨] NetEase Meeting Stone 스킨 최적화.
-- [스킨] WeakAuras 오라바 내부의 아이콘 배경을 수정했습니다.
-- [스킨] Immersion 퀘스트 텍스트의 글꼴 크기를 줄입니다.
-- [스킨] 플레이어가 주둔지에 있을 때 령 선택 프레임의 그림자를 수정했습니다.
-- [자동 수락] 무시할 NPC 목록을 업데이트하였습니다.
+- [기타] 이제 일부 옵션은 사용자 인터페이스를 다시 로드하지 않고 변경할 수 있습니다.
+- [아이템 바] 자동 크기 조정이 활성화되지 않았을 때 배경이 어긋나는 문제를 수정했습니다.
+- [게임 바] 자동 크기 조정이 활성화되지 않았을 때 배경이 어긋나는 문제를 수정했습니다.
+- [공격대 징표] 자동 크기 조정이 활성화되지 않았을 때 배경이 어긋나는 문제를 수정했습니다.
+- [미니맵 버튼] 자동 크기 조정이 활성화되지 않았을 때 배경이 어긋나는 문제를 수정했습니다.
+- [전투 알림] 자동 크기 조정이 활성화되지 않았을 때 크기 문제를 수정했습니다.
+- [채팅 바] 자동 크기 조정이 활성화되지 않았을 때 크기 문제를 수정했습니다.
+- [스킨] ElvUI 유닛 프레임의 오라 스킨을 수정했습니다.
+- [스킨] ElvUI 액션바의 플라이아웃 버튼 스킨을 수정하였습니다.
+- [스킨] 신화 쐐기돌 프레임 스킨을 수정하였습니다.
+- [스킨] Masque 애드온이 활성화되면 액션 바 스킨이 자동으로 비활성화됩니다.
+- [스킨] Blizzard 인터페이스 설정창 스킨을 위한 별도의 옵션을 추가했습니다.
+- [스킨] 월드맵에서 토르가스트 툴팁에 대한 스킨을 최적화합니다.
+- [스킨] 애드온 스킨 설정 인터페이스를 최적화했습니다.
+- [퀘스트 추적기] 긴 제목에 대한 약어 기능을 최적화했습니다.
 
 ------

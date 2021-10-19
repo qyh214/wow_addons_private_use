@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(867, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20211011150900")
 mod:SetCreatureID(71734)
 mod:SetEncounterID(1604)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -188,7 +188,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 144800 then
 		specWarnSelfReflection:Show()
 	elseif spellId == 146823 and self.Options.SetIconOnFragment then--Banishment cast. Not want to use applied for add mark scheduling
-		self:ScanForMobs(72569, 0, 8, 2, 0.2, 10)
+		self:ScanForMobs(72569, 0, 8, 2, nil, 10)
 	end
 end
 

@@ -1186,6 +1186,7 @@ function BtWLoadoutsConditionsMixin:Update()
 	
 	local showingNPE = BtWLoadoutsFrame:SetNPEShown(set == nil, L["Conditions"], L["Create conditions to notify you to change sets under specific circumstances, including raid bosses and mythic keystone dungeon affixes."])
 
+	self:GetParent().ExportButton:SetEnabled(false)
 	self:GetParent().RefreshButton:SetEnabled(true)
 	self:GetParent().ActivateButton:SetEnabled(false)
 	self:GetParent().DeleteButton:SetEnabled(true)

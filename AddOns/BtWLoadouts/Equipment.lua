@@ -1203,12 +1203,11 @@ do
 	end
 end
 local function UpdateSetFilters(set)
-	local filters = set.filters or {}
+	set.filters = set.filters or {}
 	
     Internal.UpdateRestrictionFilters(set)
 
-	filters.character = set.character
-	set.filters = filters
+	set.filters.character = set.character
 
     return set
 end
@@ -1910,6 +1909,8 @@ function BtWLoadoutsEquipmentMixin:Update()
 	
 	local showingNPE = BtWLoadoutsFrame:SetNPEShown(set == nil, L["Equipment"], L["Create gear sets or use the Blizzard equipment set manager."])
 
+	self:GetParent().ExportButton:SetEnabled(false)
+	
 	if not showingNPE then
 		UpdateSetFilters(set)
 		sidebar:Update()
@@ -2515,8 +2516,14 @@ do
 			for setLocation in pairs(sets) do
 				local setID = tonumber((strsplit(":", setLocation)))
 				if not temp[setID] then
-					result[#result+1] = GetEquipmentSet(setID)
-					temp[setID] = true
+					local set = GetEquipmentSet(setID)
+					for slot,targetLocation in pairs(set.locations) do
+						if location == targetLocation and not set.ignored[slot] then
+							result[#result+1] = set
+							temp[setID] = true
+							break
+						end
+					end
 				end
 			end
 		end

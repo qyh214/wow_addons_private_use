@@ -545,6 +545,11 @@ do -- 媒体文件
         ["王乐城愚人云端 @ www.iconfont.cn"] = {
             "Media/Texture/WindToolsSmall.tga"
         },
+        ["LieutenantG @ www.iconfont.cn"] = {
+            "Media/Icons/Button/Minus.tga",
+            "Media/Icons/Button/Plus.tga",
+            "Media/Icons/Button/Forward.tga"
+        },
         ["TinyChat (loudsoul)"] = {
             "Media/Emotes"
         },
@@ -634,7 +639,18 @@ for version, data in pairs(W.Changelog) do
             name = function()
                 local text = ""
                 for index, line in ipairs(importantPart) do
-                    text = text .. format("%02d", index) .. ". " .. line .. "\n"
+                    text =
+                        text ..
+                        format("%02d", index) ..
+                            ". " ..
+                                gsub(
+                                    line,
+                                    "%[.+%]",
+                                    function(s)
+                                        return AddColor(s)
+                                    end
+                                ) ..
+                                    "\n"
                 end
                 return text .. "\n"
             end,
@@ -655,7 +671,18 @@ for version, data in pairs(W.Changelog) do
             name = function()
                 local text = ""
                 for index, line in ipairs(newPart) do
-                    text = text .. format("%02d", index) .. ". " .. line .. "\n"
+                    text =
+                        text ..
+                        format("%02d", index) ..
+                            ". " ..
+                                gsub(
+                                    line,
+                                    "%[.+%]",
+                                    function(s)
+                                        return AddColor(s)
+                                    end
+                                ) ..
+                                    "\n"
                 end
                 return text .. "\n"
             end,
@@ -676,7 +703,18 @@ for version, data in pairs(W.Changelog) do
             name = function()
                 local text = ""
                 for index, line in ipairs(improvementPart) do
-                    text = text .. format("%02d", index) .. ". " .. line .. "\n"
+                    text =
+                        text ..
+                        format("%02d", index) ..
+                            ". " ..
+                                gsub(
+                                    line,
+                                    "%[.+%]",
+                                    function(s)
+                                        return AddColor(s)
+                                    end
+                                ) ..
+                                    "\n"
                 end
                 return text .. "\n"
             end,

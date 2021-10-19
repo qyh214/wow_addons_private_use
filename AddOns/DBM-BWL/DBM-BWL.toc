@@ -19,9 +19,6 @@
 ## X-DBM-Mod-Sort: 1104
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
 ## X-DBM-Mod-MinExpansion: 0
-## X-Curse-Project-ID: 16442
-## X-WoWI-ID: 11700
-## Version: r681
 
 localization.en.lua
 localization.de.lua
@@ -30,6 +27,7 @@ localization.ru.lua
 localization.kr.lua
 localization.tw.lua
 localization.cn.lua
+
 Razorgore.lua
 Vaelastrasz.lua
 Broodlord.lua

@@ -89,6 +89,7 @@ L.MOD_DEFAULT_LOADED			= "Les options par défaut pour ce combat ont été charg
 
 L.WORLDBOSS_ENGAGED          = "%s a probablement été engagé sur votre royaume à %s de vie. (Envoyé par %s)"
 L.WORLDBOSS_DEFEATED         = "%s a probablement été tué sur votre royaume (Envoyé par %s)."
+L.WORLDBUFF_STARTED			= "%s a commencé sur votre royaume depuis la faction de %s (Envoyé par %s)."
 
 L.TIMER_FORMAT_SECS			= "%.2f |4seconde:secondes;"
 L.TIMER_FORMAT_MINS			= "%d |4minute:minutes;"
@@ -424,3 +425,12 @@ L.LAG_CHECKING               = "Vérification de la latence du raid..."
 L.LAG_HEADER                 = "Deadly Boss Mods - Résultats sur la latence"
 L.LAG_ENTRY                  = "%s: délai monde [%d ms] / délai domicile [%d ms]"
 L.LAG_FOOTER                 = "Pas de réponse: %s"
+
+L.WORLD_BUFFS.hordeOny		= "Peuple de la Horde, citoyens d’Orgrimmar, venez, rassemblez-vous et célébrez un héros de la Horde"
+L.WORLD_BUFFS.allianceOny	= "Citoyens et alliés de Stormwind, ce jour est historique."
+L.WORLD_BUFFS.hordeNef		= "NEFARIAN A ÉTÉ TUÉ ! Peuple d'Orgrimmar"
+L.WORLD_BUFFS.allianceNef	= "Citoyens de l'Alliance, le seigneur du clan Blackrock a été tué !"
+L.WORLD_BUFFS.zgHeart		= "Il ne reste plus qu'une étape avant que prenne fin la menace de l'Écorcheur d'âmes"
+L.WORLD_BUFFS.zgHeartBooty	= "Le Dieu sanglant, l'Écorcheur d'âmes, a été vaincu ! Nous ne sommes plus menacés !"
+L.WORLD_BUFFS.zgHeartYojamba	= "Commencez le rituel, mes serviteurs. Nous devons renvoyer le cœur d'Hakkar dans le vide !"
+L.WORLD_BUFFS.rendHead		= "Le faux chef Rend Blackhand est tombé !"

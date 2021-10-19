@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Deathbringer", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200524145648")
+mod:SetRevision("20211011150912")
 mod:SetCreatureID(37813)
 mod:SetEncounterID(1096)
 mod:SetModelID(30790)
@@ -119,9 +119,9 @@ function mod:SPELL_SUMMON(args)
 		end
 		if self.Options.BeastIcons then
 			if self:IsDifficulty("normal25", "heroic25") then
-				self:ScanForMobs(args.destGUID, 0, 8, 5, 0.1, 20, "BeastIcons")
+				self:ScanForMobs(args.destGUID, 0, 8, 5, nil, 20, "BeastIcons")
 			else
-				self:ScanForMobs(args.destGUID, 0, 8, 2, 0.1, 20, "BeastIcons")
+				self:ScanForMobs(args.destGUID, 0, 8, 2, nil, 20, "BeastIcons")
 			end
 		end
 	end

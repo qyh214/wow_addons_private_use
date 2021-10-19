@@ -1,13 +1,30 @@
 ----------------------
 -- 显示公会大米记录
 ----------------------
+local _, ns = ...
+local MDl = ns.Locales
+MDdb = {}
+
+local format, strsplit, tonumber, pairs, wipe = format, strsplit, tonumber, pairs, wipe
+local Ambiguate = Ambiguate
 local C_MythicPlus_GetRunHistory = C_MythicPlus.GetRunHistory
 local C_ChallengeMode_GetMapUIInfo = C_ChallengeMode.GetMapUIInfo
+local C_ChallengeMode_GetGuildLeaders = C_ChallengeMode.GetGuildLeaders
+local C_MythicPlus_GetOwnedKeystoneLevel = C_MythicPlus.GetOwnedKeystoneLevel
+local C_MythicPlus_GetOwnedKeystoneChallengeMapID = C_MythicPlus.GetOwnedKeystoneChallengeMapID
+local CHALLENGE_MODE_POWER_LEVEL = CHALLENGE_MODE_POWER_LEVEL
+local CHALLENGE_MODE_GUILD_BEST_LINE = CHALLENGE_MODE_GUILD_BEST_LINE
+local CHALLENGE_MODE_GUILD_BEST_LINE_YOU = CHALLENGE_MODE_GUILD_BEST_LINE_YOU
 local WEEKLY_REWARDS_MYTHIC_TOP_RUNS = WEEKLY_REWARDS_MYTHIC_TOP_RUNS
 
 local hasAngryKeystones
 local frame
 local WeeklyRunsThreshold = 10
+
+local MyClass = select(2, UnitClass("player"))
+local MyFaction = UnitFactionGroup("player")
+local MyFullName = UnitName("player").."-"..GetRealmName()
+local RaidClassColors = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
 
 local function AddFontString(self, fontSize, text, anchor)
 	local fs = self:CreateFontString(nil, "OVERLAY")
@@ -24,12 +41,12 @@ local function UpdateTooltip(self)
 	if not leaderInfo then return end
 
 	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-	local name = C_ChallengeMode.GetMapUIInfo(leaderInfo.mapChallengeModeID)
+	local name = C_ChallengeMode_GetMapUIInfo(leaderInfo.mapChallengeModeID)
 	GameTooltip:SetText(name, 1, 1, 1)
-	GameTooltip:AddLine(CHALLENGE_MODE_POWER_LEVEL:format(leaderInfo.keystoneLevel))
+	GameTooltip:AddLine(format(CHALLENGE_MODE_POWER_LEVEL, leaderInfo.keystoneLevel))
 	for i = 1, #leaderInfo.members do
-		local classColorStr = RAID_CLASS_COLORS[leaderInfo.members[i].classFileName].colorStr
-		GameTooltip:AddLine(CHALLENGE_MODE_GUILD_BEST_LINE:format(classColorStr,leaderInfo.members[i].name));
+		local classColorStr = RaidClassColors[leaderInfo.members[i].classFileName].colorStr
+		GameTooltip:AddLine(format(CHALLENGE_MODE_GUILD_BEST_LINE, classColorStr,leaderInfo.members[i].name))
 	end
 	GameTooltip:Show()
 end
@@ -81,8 +98,8 @@ local function SetUpRecord(self, leaderInfo)
 		str = CHALLENGE_MODE_GUILD_BEST_LINE_YOU
 	end
 
-	local classColorStr = RAID_CLASS_COLORS[leaderInfo.classFileName].colorStr
-	self.CharacterName:SetText(str:format(classColorStr, leaderInfo.name))
+	local classColorStr = RaidClassColors[leaderInfo.classFileName].colorStr
+	self.CharacterName:SetText(format(str, classColorStr, leaderInfo.name))
 	self.Level:SetText(leaderInfo.keystoneLevel)
 end
 
@@ -90,7 +107,7 @@ local resize
 local function UpdateGuildBest(self)
 	if not frame then CreateBoard() end
 	if self.leadersAvailable then
-		local leaders = C_ChallengeMode.GetGuildLeaders()
+		local leaders = C_ChallengeMode_GetGuildLeaders()
 		if leaders and #leaders > 0 then
 			for i = 1, #leaders do
 				SetUpRecord(frame.entries[i], leaders[i])
@@ -129,6 +146,7 @@ local function UpdateGuildBest(self)
 	end
 end
 
+-- Weekly runs record
 local function sortHistory(entry1, entry2)
 	if entry1.level == entry2.level then
 		return entry1.mapChallengeModeID < entry2.mapChallengeModeID
@@ -158,15 +176,85 @@ local function keystoneInfo_WeeklyRuns()
 	end
 end
 
-local function ChallengesOnLoad(self, event, addon)
-	if addon == "Blizzard_ChallengesUI" then
-		hasAngryKeystones = IsAddOnLoaded("AngryKeystones")
-		hooksecurefunc("ChallengesFrame_Update", UpdateGuildBest)
-		ChallengesFrame.WeeklyInfo.Child.WeeklyChest:HookScript("OnEnter", keystoneInfo_WeeklyRuns)
-		self:UnregisterEvent(event)
+-- Account keystones
+local function keystoneInfo_UpdateBag()
+	local keystoneMapID = C_MythicPlus_GetOwnedKeystoneChallengeMapID()
+	if keystoneMapID then
+		return keystoneMapID, C_MythicPlus_GetOwnedKeystoneLevel()
 	end
+end
+
+local function keystoneInfo_Update()
+	local mapID, keystoneLevel = keystoneInfo_UpdateBag()
+	if mapID then
+		MDdb["KeystoneInfo"][MyFullName] = mapID..":"..keystoneLevel..":"..MyClass..":"..MyFaction
+	else
+		MDdb["KeystoneInfo"][MyFullName] = nil
+	end
+end
+
+local function keystoneInfo_Create()
+	local texture = select(10, GetItemInfo(158923)) or 525134
+	local iconColor = BAG_ITEM_QUALITY_COLORS[Enum.ItemQuality.Epic or 4]
+	local button = CreateFrame("Frame", nil, ChallengesFrame.WeeklyInfo, "BackdropTemplate")
+	button:SetPoint("BOTTOMLEFT", 2, 67)
+	button:SetSize(32, 32)
+
+	button:SetBackdrop({
+		bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
+		edgeFile = "Interface\\ChatFrame\\ChatFrameBackground",
+		edgeSize = 1,
+	})
+	button:SetBackdropColor(0, 0, 0, 0)
+	button:SetBackdropBorderColor(iconColor.r, iconColor.g, iconColor.b)
+	local icon = button:CreateTexture(nil, "ARTWORK")
+	icon:SetPoint("TOPLEFT", 1, -1)
+	icon:SetPoint("BOTTOMRIGHT", -1, 1)
+	icon:SetTexCoord(.08, .92, .08, .92)
+	icon:SetTexture(texture)
+	local hl = button:CreateTexture(nil, "HIGHLIGHT")
+	hl:SetColorTexture(1, 1, 1, .25)
+	hl:SetAllPoints(icon)
+
+	button:SetScript("OnEnter", function(self)
+		GameTooltip:ClearLines()
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+		GameTooltip:AddLine(MDl["Account Keystones"])
+		for fullName, info in pairs(MDdb["KeystoneInfo"]) do
+			local name = Ambiguate(fullName, "none")
+			local mapID, level, class, faction = strsplit(":", info)
+			local color = "|c"..RaidClassColors[class or "PRIEST"].colorStr
+			local factionColor = faction == "Horde" and "|cffff5040" or "|cff00adf0"
+			local dungeon = C_ChallengeMode_GetMapUIInfo(tonumber(mapID))
+			GameTooltip:AddDoubleLine(format(color.."%s:|r", name), format("%s%s(%s)|r", factionColor, dungeon, level))
+		end
+		GameTooltip:AddDoubleLine(" ", "----------")
+		GameTooltip:AddDoubleLine(" ", " |TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:13:11:0:-1:512:512:12:66:127:204|t "..MDl["Reset Info"].." ", 1,1,1, .6,.8,1)
+		GameTooltip:Show()
+	end)
+	button:SetScript("OnLeave", GameTooltip_Hide)
+	button:SetScript("OnMouseUp", function(_, btn)
+		if btn == "MiddleButton" then
+			wipe(MDdb["KeystoneInfo"])
+			keystoneInfo_Update()
+		end
+	end)
 end
 
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("ADDON_LOADED")
-eventFrame:SetScript("OnEvent", ChallengesOnLoad)
+eventFrame:RegisterEvent("PLAYER_LOGIN")
+eventFrame:RegisterEvent("BAG_UPDATE")
+eventFrame:SetScript("OnEvent", function(self, event, arg)
+	if event == "ADDON_LOADED" and arg == "Blizzard_ChallengesUI" then
+		hasAngryKeystones = IsAddOnLoaded("AngryKeystones")
+		hooksecurefunc("ChallengesFrame_Update", UpdateGuildBest)
+		ChallengesFrame.WeeklyInfo.Child.WeeklyChest:HookScript("OnEnter", keystoneInfo_WeeklyRuns)
+		keystoneInfo_Create()
+
+		self:UnregisterEvent(event)
+	else
+		if not MDdb["KeystoneInfo"] then MDdb["KeystoneInfo"] = {} end
+		keystoneInfo_Update()
+	end
+end)

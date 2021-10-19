@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1438, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142006")
+mod:SetRevision("20211011150925")
 mod:SetCreatureID(91331)--Doomfire Spirit (92208), Hellfire Deathcaller (92740), Felborne Overfiend (93615), Dreadstalker (93616), Infernal doombringer (94412)
 mod:SetEncounterID(1799)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -1151,11 +1151,11 @@ function mod:SPELL_SUMMON(args)
 		end
 		if self.Options.SetIconOnInfernals2 then
 			if self.vb.InfernalsCast < 3 or not self:IsMythic() then--Only 3 infernals expected
-				self:ScanForMobs(args.destGUID, 1, 1, 3, 0.2, 20, "SetIconOnInfernals2")
+				self:ScanForMobs(args.destGUID, 1, 1, 3, nil, 20, "SetIconOnInfernals2")
 			elseif self.vb.InfernalsCast < 6 then--4 infernals expected
-				self:ScanForMobs(args.destGUID, 1, 1, 4, 0.2, 20, "SetIconOnInfernals2")
+				self:ScanForMobs(args.destGUID, 1, 1, 4, nil, 20, "SetIconOnInfernals2")
 			else--5 expected
-				self:ScanForMobs(args.destGUID, 1, 1, 5, 0.2, 20, "SetIconOnInfernals2")
+				self:ScanForMobs(args.destGUID, 1, 1, 5, nil, 20, "SetIconOnInfernals2")
 			end
 		end
 	end
