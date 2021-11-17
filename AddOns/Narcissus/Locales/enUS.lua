@@ -5,7 +5,7 @@ local L = Narci.L;
 NARCI_GRADIENT = "|cffA236EFN|r|cff9448F1a|r|cff865BF2r|r|cff786DF4c|r|cff6A80F6i|r|cff5D92F7s|r|cff4FA4F9s|r|cff41B7FAu|r|cff33C9FCs|r"
 MYMOG_GRADIENT = "|cffA236EFM|cff9448F1y |cff865BF2T|cff786DF4r|cff6A80F6a|cff5D92F7n|cff4FA4F9s|cff41B7FAm|cff33C9FCo|cff32c9fbg|r"
 
-NARCI_VERSION_INFO = "1.1.5";
+NARCI_VERSION_INFO = "1.1.6";
 NARCI_DEVELOPER_INFO = "Designed by Peterodox";
 
 NARCI_NEW_ENTRY_PREFIX = "|cff40C7EB";
@@ -407,6 +407,10 @@ L["Show Unearned Mark Description"] = "Mark the achievements that were not earne
 L["Show Dates"] = "Show Dates";
 L["Hide Dates"] = "Hide Dates";
 
+L["Pinned Entries"] = "Pinned Entries";
+L["Pinned Entry Format"] = "Pinned  %d/%d";
+
+
 --Barbershop--
 L["Save New Look"] = "Save New Look";
 L["No Available Slot"] = "No Available Slot";
@@ -518,3 +522,14 @@ L["Total Runs"] = "Total Runs: ";
 L["Complete In Time"] = "In time";
 L["Complete Over Time"] = "Over time";
 L["Runs"] = "Runs";
+
+--Equipment Upgrade--
+L["At Level"] = "At level %d:";      --Enchants scale with player level
+L["No Item Alert"] = "No compatible items";
+
+--Statistics--
+Narci.L.S = {};
+local S = Narci.L.S;
+S["Narcissus Played"] = "Total time spent in Narcissus";
+S["Format Since"] = "(since %s)";
+S["Screenshots"] = "Screenshots Taken In Narcissus";

@@ -1,5 +1,6 @@
 local _;
 local _G = _G;
+local C_Item = C_Item;
 local After = C_Timer.After;
 local GetItemInfo = GetItemInfo;
 local UIFrameFadeIn = UIFrameFadeIn;
@@ -521,9 +522,19 @@ local function GetCustomQualityColor(itemQuality)
 end
 
 NarciAPI.GetItemQualityColor = GetCustomQualityColor;
+
+
+local function GetCustomQualityColorByItemID(itemID)
+    local itemQuality = C_Item.GetItemQualityByID(itemID);
+    return GetCustomQualityColor(itemQuality);
+end
+
+NarciAPI.GetItemQualityColorByItemID = GetCustomQualityColorByItemID;
+
+
 NarciAPI.GetItemQualityColorTable = function()
     local newTable = {};
-    for k, v in pairs(customQualityColors)   do
+    for k, v in pairs(customQualityColors) do
         newTable[k] = v;
     end
     return newTable;
@@ -797,10 +808,10 @@ local function IsItemSocketable(itemLink, socketID)
     --]]
     return nil, nil;
 end
-
 NarciAPI.IsItemSocketable = IsItemSocketable;
 
-local function NarciAPI_GetItemRank(itemLink, statName)
+
+local function GetItemRank(itemLink, statName)
     --Items that can get upgraded
     if not itemLink then return; end
     
@@ -818,7 +829,38 @@ local function NarciAPI_GetItemRank(itemLink, statName)
     end
 end
 
-NarciAPI.GetItemRank = NarciAPI_GetItemRank;
+NarciAPI.GetItemRank = GetItemRank;
+
+
+local function RemoveColorString(str)
+    if str then
+        return gsub(str, "|[cC][fF][fF]%w%w%w%w%w%w(.*)|[rR]", "%1")
+    end
+end
+
+NarciAPI.RemoveColorString = RemoveColorString;
+
+
+local function GetItemTooltipTextByLine(item, line, keepColor)
+    --It's possible that item description hasn't been cached yet
+    --See TooltipParser.lua for more advanced functionalities
+    if type(item) == "number" then
+        TP:SetItemByID(item);
+    else
+        TP:SetHyperlink(item);
+    end
+    local object = _G["NarciVirtualTooltipTextLeft"..line];
+    if object then
+        if keepColor then
+            return object:GetText();
+        else
+            return RemoveColorString(object:GetText());
+        end
+    end
+end
+
+NarciAPI.GetItemTooltipTextByLine = GetItemTooltipTextByLine;
+
 
 local ITEM_ENCHANT_FORMAT = gsub(ENCHANTED_TOOLTIP_LINE, "%%s", "(.+)");
 local function GetItemEnchantText(itemLink, colorized)
@@ -850,7 +892,15 @@ local function GetItemEnchantText(itemLink, colorized)
     end
 end
 
+local function GetEnchantTextByEnchantID(enchantID)
+    if enchantID then
+        local itemLink = "item:2092:"..enchantID;
+        return GetItemEnchantText(itemLink, false);
+    end
+end
+
 NarciAPI.GetItemEnchantText = GetItemEnchantText;
+NarciAPI.GetEnchantTextByEnchantID = GetEnchantTextByEnchantID;
 
 -----String API------
 --[[
@@ -1316,7 +1366,7 @@ local function NarciAPI_SmoothScroll_OnMouseWheel(self, delta, stepSize)
         end
     end
     
-    local ScrollContainer = self.SmoothScrollContainer; 
+    local ScrollContainer = self.SmoothScrollContainer;
 	stepSize = stepSize or self.stepSize or self.buttonHeight;
 
     ScrollContainer.stepSize = stepSize;
@@ -2860,9 +2910,10 @@ end);
 
 NarciHotkeyNotificationMixin = {};
 
-function NarciHotkeyNotificationMixin:SetKey(hotkey, mouseButton, description, alwaysShown)
+function NarciHotkeyNotificationMixin:SetKey(hotkey, mouseButton, description, alwaysShown, enableListener)
     local ICON_HEIGHT = 20;
     self.alwaysShown = alwaysShown;
+    self.enableListener = enableListener;
     self.Label:SetText(description);
     if description then
         self.GradientM:Show();
@@ -2912,7 +2963,6 @@ function NarciHotkeyNotificationMixin:SetKey(hotkey, mouseButton, description, a
             self.MouseIcon:SetTexCoord(0, 0.25, 0, 1);
         elseif mouseButton == "RightButton" then
             self.MouseIcon:SetTexCoord(0.25, 0.5, 0, 1);
-            self.enableListener = true;
         elseif mouseButton == "MiddleButton" then
             self.MouseIcon:SetTexCoord(0.5, 0.75, 0, 1);
         elseif mouseButton == "MouseWheel" then
@@ -2944,6 +2994,11 @@ end
 function NarciHotkeyNotificationMixin:FadeOut()
     DelayedFadeIn:Hide();
     FadeFrame(self, 0.25, "OUT");
+end
+
+function NarciHotkeyNotificationMixin:JustHide()
+    DelayedFadeIn:Hide();
+    FadeFrame(self, 0, "OUT");
 end
 
 function NarciHotkeyNotificationMixin:OnShow()

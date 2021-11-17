@@ -90,8 +90,6 @@ local L = WeakAuras.L
 	L["Add to new Group"] = "Ajouter à un nouveau groupe"
 	L["Add Trigger"] = "Ajouter déclencheur"
 	L["Additional Events"] = "Événements supplémentaires"
-	L["Addon"] = "Addon"
-	L["Addons"] = "Addons"
 	L["Advanced"] = "Avancé"
 	L["Align"] = "Aligner"
 	L["Alignment"] = "Alignement"
@@ -570,7 +568,6 @@ Si cette case est cochée, ce séparateur inclura du texte. Sinon, ce sera juste
 	--[[Translation missing --]]
 	L["Magnetically Align"] = "Magnetically Align"
 	L["Main"] = "Principal"
-	L["Manage displays defined by Addons"] = "Gérer les affichages définis par des addons"
 	--[[Translation missing --]]
 	L["Match Count"] = "Match Count"
 	--[[Translation missing --]]

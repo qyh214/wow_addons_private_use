@@ -3,6 +3,7 @@
 end
 
 local L = Narci.L;
+local S = Narci.L.S;
 
 NARCI_MODIFIER_ALT = "ALT键";   --Windows
 if IsMacClient() then
@@ -469,3 +470,9 @@ L["Total Runs"] = "完成次数：";
 L["Complete In Time"] = "限时";
 L["Complete Over Time"] = "超时";
 L["Runs"] = "分布";
+
+
+--Statistics--
+S["Narcissus Played"] = "Narcissus使用时长";
+S["Format Since"] = "(自%s以来)";
+S["Screenshots"] = "使用Narcissus截图";

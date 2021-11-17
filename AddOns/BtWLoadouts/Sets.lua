@@ -306,6 +306,43 @@ do -- Build Spec List
 			end
 		end
 	end
+	
+	function Internal.SortClassesByName()
+		table.sort(classes, function (a, b)
+			if a == playerClassID and b ~= playerClassID then
+				return true
+			elseif b == playerClassID and a ~= playerClassID then
+				return false
+			end
+			return C_CreatureInfo.GetClassInfo(a).className < C_CreatureInfo.GetClassInfo(b).className
+		end)
+
+		wipe(specializations)
+		for _,classID in ipairs(classes) do
+			for specIndex=1,GetNumSpecializationsForClassID(classID) do
+				local specID = GetSpecializationInfoForClassID(classID, specIndex);
+				specializations[#specializations+1] = specID
+			end
+		end
+	end
+	function Internal.SortClassesByID()
+		table.sort(classes, function (a, b)
+			if a == playerClassID and b ~= playerClassID then
+				return true
+			elseif b == playerClassID and a ~= playerClassID then
+				return false
+			end
+			return a < b
+		end)
+
+		wipe(specializations)
+		for _,classID in ipairs(classes) do
+			for specIndex=1,GetNumSpecializationsForClassID(classID) do
+				local specID = GetSpecializationInfoForClassID(classID, specIndex);
+				specializations[#specializations+1] = specID
+			end
+		end
+	end
 end
 local instanceTypeEnumeratorList = {
 	{ "party", L["Dungeon"], },

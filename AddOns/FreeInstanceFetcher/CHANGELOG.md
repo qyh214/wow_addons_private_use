@@ -1,9 +1,8 @@
 # Free Instance Fetcher
 
-## [v9.1.0](https://github.com/LiangYuxuan/FreeInstanceFetcher/tree/v9.1.0) (2021-06-30)
-[Full Changelog](https://github.com/LiangYuxuan/FreeInstanceFetcher/compare/v9.0.10...v9.1.0) [Previous Releases](https://github.com/LiangYuxuan/FreeInstanceFetcher/releases)
+## [v9.1.5](https://github.com/LiangYuxuan/FreeInstanceFetcher/tree/v9.1.5) (2021-11-08)
+[Full Changelog](https://github.com/LiangYuxuan/FreeInstanceFetcher/compare/v9.1.0...v9.1.5) [Previous Releases](https://github.com/LiangYuxuan/FreeInstanceFetcher/releases)
 
-- chore: update characters  
+- feat: update character name  
+- feat: add Sanctum of Domination and Tazavesh, the Veiled Market  
 - chore: toc update  
-- feat: show warning message on wrong difficulty in ICC  
-- fix: refetch instance and boss name on fail  

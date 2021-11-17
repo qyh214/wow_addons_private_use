@@ -106,7 +106,7 @@ local SPELLID_AUTOSHOT = 75
 -- Spell names.
 local SPELL_BLINK					= GetSkillName(1953)
 --local SPELL_BLIZZARD				= GetSkillName(10)
-local SPELL_BLOOD_STRIKE			= WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC and GetSkillName(60945)
+local SPELL_BLOOD_STRIKE			= WOW_PROJECT_ID < WOW_PROJECT_CLASSIC and GetSkillName(60945)
 --local SPELL_BLOOD_STRIKE_OFF_HAND	= GetSkillName(66215)
 --local SPELL_HELLFIRE				= GetSkillName(1949)
 --local SPELL_HURRICANE				= GetSkillName(16914)

@@ -1,5 +1,5 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.37 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.38 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for
@@ -24,12 +24,13 @@ hooksecurefunc("ReputationParagonFrame_SetupParagonTooltip",function(self)
 		local factionName = GetFactionInfoByID(self.factionID)
 		local questIndex = C_QuestLog.GetLogIndexForQuestID(rewardQuestID)
 		local description = GetQuestLogCompletionText(questIndex) or ""
-		EmbeddedItemTooltip:SetText(PR.L["PARAGON"])
-		EmbeddedItemTooltip:AddLine(description,HIGHLIGHT_FONT_COLOR.r,HIGHLIGHT_FONT_COLOR.g,HIGHLIGHT_FONT_COLOR.b,1)
-		GameTooltip_AddQuestRewardsToTooltip(EmbeddedItemTooltip,rewardQuestID)
-		EmbeddedItemTooltip:Show()
+		GameTooltip:ClearLines()
+		GameTooltip_SetTitle(GameTooltip,PR.L["PARAGON"],NORMAL_FONT_COLOR)
+		GameTooltip_AddHighlightLine(GameTooltip,description)
+		GameTooltip_AddQuestRewardsToTooltip(GameTooltip,rewardQuestID)
+		GameTooltip:Show()
 	else
-		EmbeddedItemTooltip:Hide()
+		GameTooltip:Hide()
 	end
 end)
 

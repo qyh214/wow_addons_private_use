@@ -1,8 +1,9 @@
 # <DBM> Outlands
 
-## [r682](https://github.com/DeadlyBossMods/DBM-BCVanilla/tree/r682) (2021-10-11)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-BCVanilla/compare/r681...r682) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BCVanilla/releases)
+## [r683](https://github.com/DeadlyBossMods/DBM-BCVanilla/tree/r683) (2021-11-02)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-BCVanilla/compare/r682...r683) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BCVanilla/releases)
 
-- update scanformobs  
-- The weird stuff that happens in repos when I'm not looking... (#23)  
-- fix KT lua error  
+- bump tocs  
+- Revert "Fix hydross boss not firing BOSS\_KILL/ENCOUNTER\_END event (#24)"  
+- Fix hydross boss not firing BOSS\_KILL/ENCOUNTER\_END event (#24)  
+    Register on UNIT\_DIED instead  

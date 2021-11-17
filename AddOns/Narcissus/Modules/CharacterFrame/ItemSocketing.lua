@@ -64,12 +64,12 @@ local function GetBorderTexCoord(itemSubClassID, itemID)
 end
 
 local function ShowFlyoutBlack(bool)
-    --Narci_FlyoutBlack.Black:SetColorTexture(28/255, 32/255, 40/255, 0.5);
     if Narci_EquipmentFlyoutFrame:IsShown() then return; end
-    local frame = Narci_FlyoutBlack;
-	frame.AnimFrame:Hide();
-	frame.AnimFrame.OppoDirection = not bool;
-	frame.AnimFrame:Show();
+    if bool then
+        Narci_FlyoutBlack:In();
+    else
+        Narci_FlyoutBlack:Out();
+    end
 end
 
 local GemIDList, GemTypesByID = {}, {};

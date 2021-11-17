@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1122, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142006")
+mod:SetRevision("20211016204643")
 mod:SetCreatureID(76865)--No need to add beasts to this. It's always main boss that's engaged first and dies last.
 mod:SetEncounterID(1694)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -44,7 +44,7 @@ local specWarnPinDown				= mod:NewSpecialWarningSpell(154960, "Ranged", nil, 3, 
 local yellPinDown					= mod:NewYell(154960)
 --Boss gained abilities (beast deaths grant boss new abilities)
 local specWarnRendandTear			= mod:NewSpecialWarningMove(155385, "Melee", nil, nil, nil, 2)--Always returns to melee (tank)
-local specWarnSuperheatedShrapnel	= mod:NewSpecialWarningDodge(155499, nil, nil, nil, 2)
+local specWarnSuperheatedShrapnel	= mod:NewSpecialWarningDodge(155499, nil, nil, nil, 2, 2)
 local specWarnFlameInfusion			= mod:NewSpecialWarningMove(155657)
 local specWarnTantrum				= mod:NewSpecialWarningCount(162275, nil, nil, nil, 2, 2)
 local specWarnEpicenter				= mod:NewSpecialWarningMove(159043)
@@ -254,7 +254,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 154960 then
 		warnPinDownTargets:CombinedShow(0.5, args.destName)
 		if self.Options.SetIconOnSpear then
-			self:SetSortedIcon(1, args.destName, 8, nil, true)
+			self:SetSortedIcon(1, args.destName, 8, nil, true, nil, 2)
 		end
 		if args:IsPlayer() then
 			yellPinDown:Yell()
@@ -267,7 +267,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnConflag:CombinedShow(2.3, args.destName)
 		end
 		if self.Options.SetIconOnConflag and not self:IsLFR() then
-			self:SetSortedIcon(2.3, args.destName, 1, 3)
+			self:SetSortedIcon(2.3, args.destName, 1, 3, nil, nil, 1)
 		end
 	elseif spellId == 155030 then
 		local amount = args.amount or 1
@@ -450,7 +450,6 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		specWarnSuperheatedShrapnel:Show()
 		specWarnSuperheatedShrapnel:Play("breathsoon")
 		timerSuperheatedShrapnelCD:Start()
-		--self:BossTargetScanner(76865, "SuperheatedTarget", 0.05, 40)--Apparently scanning this does work in LFR, but I've never seen him look at a target on mythic
 		self:BossUnitTargetScanner(uId, "SuperheatedTarget")
 	elseif spellId == 155385 or spellId == 155515 then--Both versions of spell(boss and beast), they seem to have same cooldown so combining is fine
 		specWarnRendandTear:Show()

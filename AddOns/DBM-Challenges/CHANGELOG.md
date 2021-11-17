@@ -1,6 +1,11 @@
 # <DBM> Challenges
 
-## [r142](https://github.com/DeadlyBossMods/DBM-Challenges/tree/r142) (2021-09-07)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Challenges/compare/r141...r142) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Challenges/releases)
+## [r143](https://github.com/DeadlyBossMods/DBM-Challenges/tree/r143) (2021-11-02)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Challenges/compare/r142...r143) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Challenges/releases)
 
-- Added some more 9.1 spells to torghast, especially the 3 dreadlords which can be very dangerous if not interrupted or dodged  
+- bump retail toc  
+- Fixed error in last  
+- Added nameplate aura to Queen mage tower challenge  
+    Fixed wipe detection on xylem mage tower challenge so it wipes faster on player death  
+    Added kick warning when sheild goes down on imp mother in mage tower challenges  
+- comment unused  

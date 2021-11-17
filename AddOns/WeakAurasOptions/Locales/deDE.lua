@@ -114,8 +114,6 @@ local L = WeakAuras.L
 	L["Add Trigger"] = "Auslöser hinzufügen"
 	--[[Translation missing --]]
 	L["Additional Events"] = "Additional Events"
-	L["Addon"] = "Addon"
-	L["Addons"] = "Addons"
 	L["Advanced"] = "Erweitert"
 	L["Align"] = "Ausrichtung"
 	L["Alignment"] = "Ausrichtung"
@@ -659,7 +657,6 @@ Falls die Zahl als Dezimalzahl (z.B. 0.5), Bruch (z.B. 1/2) oder Prozentsatz (z.
 	--[[Translation missing --]]
 	L["Magnetically Align"] = "Magnetically Align"
 	L["Main"] = "Hauptanimation"
-	L["Manage displays defined by Addons"] = "Bearbeite Anzeigen von externen Addons"
 	--[[Translation missing --]]
 	L["Match Count"] = "Match Count"
 	--[[Translation missing --]]

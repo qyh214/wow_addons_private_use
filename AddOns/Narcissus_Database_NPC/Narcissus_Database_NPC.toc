@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 90105
 ## Plain Title: Narcissus Database NPC
 ## Version: 9.1.0
 ## LoadOnDemand: 1

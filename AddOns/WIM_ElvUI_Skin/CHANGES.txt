@@ -1,10 +1,10 @@
-tag d8a65fa267ad3e467d60d1868cd12233efc41a58 90005.01-Retail
-Author:	fuba <q3fuba@gmail.com>
-Date:	Fri May 28 04:58:43 2021 +0200
+tag 1545158646fb8fb725f92c7360033fbb398f816d 90105.01-Retail
+Author:	fubaSourceTree <q3fuba@gmail.com>
+Date:	Wed Nov 3 21:36:21 2021 +0100
 
-commit e3abb23672045d45983b41d31a9182ac38f9b163
-Author: fuba <q3fuba@gmail.com>
-Date:   Fri May 28 04:57:18 2021 +0200
+commit 942f7d382c32563b21aa7ef3525d62a82cf25797
+Author: fubaSourceTree <q3fuba@gmail.com>
+Date:   Wed Nov 3 21:34:02 2021 +0100
 
-    TOC Update Retail
+    updated url & updated toc
 

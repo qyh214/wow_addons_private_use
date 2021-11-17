@@ -80,8 +80,6 @@ local L = WeakAuras.L
 	L["Add to new Group"] = "새 그룹에 추가"
 	L["Add Trigger"] = "활성 조건 추가"
 	L["Additional Events"] = "추가 이벤트"
-	L["Addon"] = "애드온"
-	L["Addons"] = "애드온"
 	L["Advanced"] = "고급"
 	L["Align"] = "정렬"
 	L["Alignment"] = "정렬"
@@ -531,7 +529,6 @@ Supports multiple entries, separated by commas
 	L["Low Mana"] = "마나 낮음"
 	L["Magnetically Align"] = "자석 정렬"
 	L["Main"] = "메인"
-	L["Manage displays defined by Addons"] = "애드온에 의해 정의된 디스플레이 관리"
 	L["Match Count"] = "일치 횟수"
 	--[[Translation missing --]]
 	L["Matches the height setting of a horizontal bar or width for a vertical bar."] = "Matches the height setting of a horizontal bar or width for a vertical bar."

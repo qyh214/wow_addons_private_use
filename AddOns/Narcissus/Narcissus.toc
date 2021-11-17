@@ -1,6 +1,6 @@
-## Interface: 90100
+## Interface: 90105
 ## Plain Title: Narcissus
-## Version: 1.1.5
+## Version: 1.1.6
 
 ## Title: |cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r
 
@@ -29,8 +29,10 @@ Bridge\Bridge.xml
 
 #Expansion Feature
 Modules\CharacterFrame\Domination.xml
+#
 
 Modules\CharacterFrame\Enchant.lua
+Modules\EquipmentOption\EquipmentOption.xml
 Modules\CharacterFrame\ItemSocketing.xml
 Modules\CharacterFrame\ItemCooldown.xml
 Modules\CharacterFrame\Attributes.xml
@@ -46,8 +48,6 @@ Modules\CharacterFrame\TitleManager.xml
 Modules\CharacterFrame\EquipmentSetManager.xml
 
 Modules\Competitive\UI.xml
-
-# Modules\LootTracker\Main.lua
 
 Modules\CharacterFrame\NavBar.xml
 
@@ -69,7 +69,7 @@ Modules\AR\AR.xml
 Modules\Splash\FakeMail.xml
 Modules\Splash\Splash.xml
 
-Modules\Achievement\Achievement.xml
+Modules\Achievement\Core.xml
 Modules\Statistics\Core.lua
 Modules\ModuleManager\ModuleManager.lua
 
@@ -79,3 +79,9 @@ Filters\CameraEffect.xml
 Filters\Letterbox.xml
 
 Guide\Guide.xml
+
+
+#Test
+# Modules\LootTracker\Main.lua
+# Modules\AnimKit\AnimKit.xml
+# Modules\Map\Map.xml

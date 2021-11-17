@@ -54,7 +54,8 @@ local DefaultValue = {
     ["UseBustShot"] = true,                         --Zoom in to the upper torso
     ["ConduitTooltip"] = false,                     --Show conduit effects of higher ranks
     ["DominationIndicator"] = true,                 --Show Domination indicator on the Blizzard character pane
-    
+    ["OnlyShowOwnedUpgradeItem"] = true,            --Filter for gems/enchant scrolls
+
     --Internal Hotkey
     ["SearchRelativesHotkey"] = "TAB",              --The key you press to begin/cycle relative search
     

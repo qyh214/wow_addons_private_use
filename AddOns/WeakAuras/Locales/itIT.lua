@@ -301,7 +301,21 @@ L["Character Type"] = "Tipo di carattere"
 --[[Translation missing --]]
 L["Charge gained/lost"] = "Charge gained/lost"
 --[[Translation missing --]]
-L["Charged Combo Point"] = "Charged Combo Point"
+L["Charged Combo Point (1)"] = "Charged Combo Point (1)"
+--[[Translation missing --]]
+L["Charged Combo Point (2)"] = "Charged Combo Point (2)"
+--[[Translation missing --]]
+L["Charged Combo Point (3)"] = "Charged Combo Point (3)"
+--[[Translation missing --]]
+L["Charged Combo Point (4)"] = "Charged Combo Point (4)"
+--[[Translation missing --]]
+L["Charged Combo Point 1"] = "Charged Combo Point 1"
+--[[Translation missing --]]
+L["Charged Combo Point 2"] = "Charged Combo Point 2"
+--[[Translation missing --]]
+L["Charged Combo Point 3"] = "Charged Combo Point 3"
+--[[Translation missing --]]
+L["Charged Combo Point 4"] = "Charged Combo Point 4"
 L["Charges"] = "Cariche"
 --[[Translation missing --]]
 L["Charges Changed Event"] = "Charges Changed Event"
@@ -463,8 +477,6 @@ L["Dodge"] = "Dodge"
 L["Dodge (%)"] = "Dodge (%)"
 --[[Translation missing --]]
 L["Dodge Rating"] = "Dodge Rating"
---[[Translation missing --]]
-L["Done"] = "Done"
 --[[Translation missing --]]
 L["Down"] = "Down"
 --[[Translation missing --]]
@@ -1173,8 +1185,6 @@ L["Neutral"] = "Neutral"
 --[[Translation missing --]]
 L["Never"] = "Never"
 --[[Translation missing --]]
-L["Next"] = "Next"
---[[Translation missing --]]
 L["Next Combat"] = "Next Combat"
 --[[Translation missing --]]
 L["Next Encounter"] = "Next Encounter"
@@ -1202,6 +1212,8 @@ L["Not on Cooldown"] = "Not on Cooldown"
 L["Not On Threat Table"] = "Not On Threat Table"
 --[[Translation missing --]]
 L["Note, that cross realm transmission is possible if you are on the same group"] = "Note, that cross realm transmission is possible if you are on the same group"
+--[[Translation missing --]]
+L["Note: Due to how complicated the swing timer behaviour is and the lack of APIs from Blizzard, results are inaccurate in edge cases."] = "Note: Due to how complicated the swing timer behaviour is and the lack of APIs from Blizzard, results are inaccurate in edge cases."
 --[[Translation missing --]]
 L["Note: 'Hide Alone' is not available in the new aura tracking system. A load option can be used instead."] = "Note: 'Hide Alone' is not available in the new aura tracking system. A load option can be used instead."
 --[[Translation missing --]]
@@ -1497,14 +1509,6 @@ L["Resist"] = "Resist"
 --[[Translation missing --]]
 L["Resisted"] = "Resisted"
 --[[Translation missing --]]
-L["Resolve collisions dialog"] = "Resolve collisions dialog"
---[[Translation missing --]]
-L["Resolve collisions dialog singular"] = "Resolve collisions dialog singular"
---[[Translation missing --]]
-L["Resolve collisions dialog startup"] = "Resolve collisions dialog startup"
---[[Translation missing --]]
-L["Resolve collisions dialog startup singular"] = "Resolve collisions dialog startup singular"
---[[Translation missing --]]
 L["Rested"] = "Rested"
 --[[Translation missing --]]
 L["Rested Experience"] = "Rested Experience"
@@ -1734,6 +1738,8 @@ L["Spin"] = "Spin"
 L["Spiral"] = "Spiral"
 --[[Translation missing --]]
 L["Spiral In And Out"] = "Spiral In And Out"
+--[[Translation missing --]]
+L["Spirit"] = "Spirit"
 --[[Translation missing --]]
 L["Stack Count"] = "Stack Count"
 --[[Translation missing --]]

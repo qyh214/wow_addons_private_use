@@ -182,33 +182,33 @@ do
         },
         { L.Equipment, 'Interface/Icons/INV_Chest_Chain_04',
           function(location, link, type, subType)
-              return type == LE_ITEM_CLASS_ARMOR or
-                     type == LE_ITEM_CLASS_WEAPON;
+              return type == Enum.ItemClass.Armor or
+                     type == Enum.ItemClass.Weapon;
           end
         },
         { L.Consumable, 'Interface/Icons/INV_Potion_93',
           function(location, link, type, subType)
-              return type == LE_ITEM_CLASS_CONSUMABLE;
+              return type == Enum.ItemClass.Consumable;
           end
         },
         { L.Quest, 'Interface/QuestFrame/UI-QuestLog-BookIcon',
           function(location, link, type, subType)
-              return type == LE_ITEM_CLASS_QUESTITEM;
+              return type == Enum.ItemClass.Questitem;
           end
         },
         { L.TradeGood, 'Interface/Icons/INV_Fabric_Silk_02',
           function(location, link, type, subType)
-              return type == LE_ITEM_CLASS_TRADEGOODS or
-                     type == LE_ITEM_CLASS_RECIPE or
-                     type == LE_ITEM_CLASS_GEM or
-                     type == LE_ITEM_CLASS_ITEM_ENHANCEMENT or
-                     type == LE_ITEM_CLASS_GLYPH;
+              return type == Enum.ItemClass.Tradegoods or
+                     type == Enum.ItemClass.Recipe or
+                     type == Enum.ItemClass.Gem or
+                     type == Enum.ItemClass.ItemEnhancement or
+                     type == Enum.ItemClass.Glyph;
           end
         },
         { L.Misc, 'Interface/Icons/INV_Misc_Rune_01',
           function(location, link, type, subType)
-              return type == LE_ITEM_CLASS_MISCELLANEOUS or
-                     type == LE_ITEM_CLASS_CONTAINER;
+              return type == Enum.ItemClass.Miscellaneous or
+                     type == Enum.ItemClass.Container;
           end
         },
         { L.New, 'Interface/PaperDollInfoFrame/UI-GearManager-ItemIntoBag',
@@ -222,8 +222,8 @@ do
         table.insert(U.Filters, table.getn(U.Filters),
             { L.BattlePets, 'Interface/Icons/INV_Pet_BattlePetTraining',
               function(location, link, type, subType)
-                  return type == LE_ITEM_CLASS_BATTLEPET or
-                        (type == LE_ITEM_CLASS_MISCELLANEOUS and subType == LE_ITEM_MISCELLANEOUS_COMPANION_PET);
+                  return type == Enum.ItemClass.Battlepet or
+                        (type == Enum.ItemClass.Miscellaneous and subType == Enum.ItemMiscellaneousSubclass.CompanionPet);
               end
             }
         )

@@ -26,7 +26,7 @@ local SplitString = MikSBT.SplitString
 local Print = MikSBT.Print
 local GetSkillName = MikSBT.GetSkillName
 
-local IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
 
 
 -------------------------------------------------------------------------------

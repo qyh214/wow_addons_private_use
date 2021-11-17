@@ -3469,10 +3469,14 @@ local function CreateTriggerPopup()
 	}
 
 	-- Localized warrior stances.
-	local warriorStances = {
-		[1] = GetSkillName(2457),
-		[2] = GetSkillName(71),
-	}
+	local warriorStances
+	if WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC then
+		warriorStances = {
+			[1] = GetSkillName(2457),
+			[2] = GetSkillName(71),
+			[3] = GetSkillName(2458),
+		}
+	end
 
 	-- Localized zone types.
 	local zoneTypes = {arena = objLocale["zoneTypeArena"], pvp = objLocale["zoneTypePvP"], party = objLocale["zoneTypeParty"], raid = objLocale["zoneTypeRaid"]}
@@ -3545,10 +3549,13 @@ local function CreateTriggerPopup()
 		recentlyFired = {controlType = "slider", minValue = 1, maxValue = 30, step = 1, default = 5, relations = lessThanRelations, defaultRelation = "lt"},
 		trivialTarget = {controlType = "dropdown", items = booleanItems, default = "false", relations = booleanRelations},
 		unavailableSkill = {controlType = "editbox", relations = equalityRelations},
-		warriorStance = {controlType = "dropdown", items = warriorStances, default = 1, relations = booleanRelations},
 		zoneName = {controlType = "editbox", relations = stringRelations},
 		zoneType = {controlType = "dropdown", items = zoneTypes, default = "arena", relations = booleanRelations},
 	}
+
+	if warriorStances then
+		frame.conditionData["warriorStance"] = {controlType = "dropdown", items = warriorStances, default = 1, relations = booleanRelations}
+	end
 
 	-- Event condition data.
 	local commonSourceFields = "sourceName sourceAffiliation sourceReaction sourceControl sourceUnitType "

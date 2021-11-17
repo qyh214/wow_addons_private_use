@@ -124,6 +124,6 @@ function NarciDressingRoomOptionButtonMixin:OnMouseUp()
     self.Icon:SetScale(1);
 end
 
-function NarciDressingRoomOptionButtonMixin:FadeTooltip(t, finalAlpha)
-    FadeFrame(self.Label, t, finalAlpha);
+function NarciDressingRoomOptionButtonMixin:FadeTooltip(t, toAlpha)
+    FadeFrame(self.Label, t, toAlpha);
 end

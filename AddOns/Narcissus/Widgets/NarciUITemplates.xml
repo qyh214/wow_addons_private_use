@@ -3,8 +3,9 @@
 	<Script file="FrameBorder.lua"/>
 	<Script file="ItemBorder.lua"/>
 	<Script file="ClockFrame.lua"/>
+	<Script file="AnimatedSizingFrame.lua"/>
 	<Script file="Widgets.lua"/>
-
+	
 	<Frame name="NarciArtFrameTemplate" frameLevel="20" virtual="true">
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
@@ -639,7 +640,11 @@
 		</HighlightTexture>	
 		<Scripts>
 			<OnClick>
-				NarciAPI_FadeFrame(self:GetParent(), 0.2, "OUT");
+				if self.noFading then
+					self:GetParent():Hide();
+				else
+					NarciAPI_FadeFrame(self:GetParent(), 0.2, "OUT");
+				end
 			</OnClick>
 		</Scripts>
 	</Button>
@@ -2948,5 +2953,74 @@
 			<OnHide method="OnHide"/>
 			<OnEvent method="OnEvent"/>
 		</Scripts>
+	</Frame>
+
+    <Frame name="NarciAnimatedSizingFrameTemplate" mixin="NarciAnimatedSizingFrameMixin" virtual="true">
+        <Size x="48" y="48"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Backdrop">
+                    <Color r="0" g="0" b="0"/>
+                </Texture>
+            </Layer>
+            <Layer level="BORDER">
+                <Texture parentKey="TopLeft" file="Interface\AddOns\Narcissus\Art\EquipmentOption\Shadow" parentArray="BorderTextures">
+                    <Size x="32" y="32"/>
+                    <TexCoords left="0" right="0.25" top="0" bottom="0.25"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativePoint="TOPLEFT"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="TopRight" file="Interface\AddOns\Narcissus\Art\EquipmentOption\Shadow" parentArray="BorderTextures">
+                    <Size x="32" y="32"/>
+                    <TexCoords left="0.75" right="1" top="0" bottom="0.25"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativePoint="TOPRIGHT"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="BottomLeft" file="Interface\AddOns\Narcissus\Art\EquipmentOption\Shadow" parentArray="BorderTextures">
+                    <Size x="32" y="32"/>
+                    <TexCoords left="0" right="0.25" top="0.75" bottom="1"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativePoint="BOTTOMLEFT"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="BottomRight" file="Interface\AddOns\Narcissus\Art\EquipmentOption\Shadow" parentArray="BorderTextures">
+                    <Size x="32" y="32"/>
+                    <TexCoords left="0.75" right="1" top="0.75" bottom="1"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativePoint="BOTTOMRIGHT"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="Top" file="Interface\AddOns\Narcissus\Art\EquipmentOption\Shadow" parentArray="BorderTextures">
+                    <Size x="16" y="32"/>
+                    <TexCoords left="0.25" right="0.75" top="0" bottom="0.25"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativePoint="TOP"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="Bottom" file="Interface\AddOns\Narcissus\Art\EquipmentOption\Shadow" parentArray="BorderTextures">
+                    <Size x="16" y="32"/>
+                    <TexCoords left="0.25" right="0.75" top="0.75" bottom="1"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativePoint="BOTTOM"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="Left" file="Interface\AddOns\Narcissus\Art\EquipmentOption\Shadow" parentArray="BorderTextures">
+                    <Size x="32" y="16"/>
+                    <TexCoords left="0" right="0.25" top="0.25" bottom="0.75"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativePoint="LEFT"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="Right" file="Interface\AddOns\Narcissus\Art\EquipmentOption\Shadow" parentArray="BorderTextures">
+                    <Size x="32" y="16"/>
+                    <TexCoords left="0.75" right="1" top="0.25" bottom="0.75"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativePoint="RIGHT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+		</Layers>
 	</Frame>
 </Ui>

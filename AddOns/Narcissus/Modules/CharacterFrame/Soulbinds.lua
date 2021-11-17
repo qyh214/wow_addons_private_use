@@ -1176,16 +1176,16 @@ end
 function NarciSoulbindsMixin:SelectTree(soulbindID)
     local data;
     local activeSoulbindID = C_Soulbinds.GetActiveSoulbindID();
+    if not activeSoulbindID or activeSoulbindID == 0 then
+        --Thread of Fate Alt
+        Narci_NavBar:SetSkipCovenant(true);
+        return
+    end
     soulbindID = soulbindID or activeSoulbindID;
     if soulbindID == 0 then
         soulbindID = self.defaultSoulbindID;
     end
-    if soulbindID then
-        data = C_Soulbinds.GetSoulbindData(soulbindID);
-    else
-        Narci_NavBar:SetSkipCovenant(true);
-        return
-    end
+    data = C_Soulbinds.GetSoulbindData(soulbindID);
 
     if not data or not data.tree then
         return

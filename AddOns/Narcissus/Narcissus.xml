@@ -779,13 +779,13 @@
 		</HitRectInsets>
 		<Layers>
 			<Layer level="OVERLAY" textureSubLevel="3">
-				<Texture parentKey="Background" hidden="false" file="Interface\AddOns\Narcissus\Art\Runes\RunePlate-Epic">
+				<!--Texture parentKey="Background" hidden="false" file="Interface\AddOns\Narcissus\Art\Runes\RunePlate-Epic">
 					<TexCoords left="0" right="1" top="0" bottom="1"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" x="0" y="0"/>
 						<Anchor point="BOTTOMRIGHT" x="0" y="0"/>
 					</Anchors>
-				</Texture>
+				</Texture-->
 			</Layer>
 			<Layer level="OVERLAY" textureSubLevel="4">
 				<FontString inherits="NarciRuneFont" parentKey="RuneLetter" Alpha="1" hidden="true" justifyH="CENTER">
@@ -801,13 +801,13 @@
 				</FontString>	
 			</Layer>
 			<Layer level="OVERLAY" textureSubLevel="5">
-				<Texture parentKey="AlphaChannelRune" hidden="true" file="Interface\AddOns\Narcissus\Art\Masks\Rune-Mask" Alpha="1">
+				<!--Texture parentKey="AlphaChannelRune" hidden="true" file="Interface\AddOns\Narcissus\Art\Masks\Rune-Mask" Alpha="1">
 					<TexCoords left="1" right="0" top="0" bottom="1"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" x="0" y="0"/>
 						<Anchor point="BOTTOMRIGHT" x="0" y="0"/>
 					</Anchors>
-				</Texture>
+				</Texture-->
 			</Layer>
 		</Layers>
 	</Button>
@@ -819,13 +819,13 @@
 		</HitRectInsets>
 		<Layers>
 			<Layer level="OVERLAY" textureSubLevel="3">
-				<Texture parentKey="Background" hidden="false" file="Interface\AddOns\Narcissus\Art\Runes\RunePlate-Epic">
+				<!--Texture parentKey="Background" hidden="false" file="Interface\AddOns\Narcissus\Art\Runes\RunePlate-Epic">
 					<TexCoords left="1" right="0" top="0" bottom="1"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" x="0" y="0"/>
 						<Anchor point="BOTTOMRIGHT" x="0" y="0"/>
 					</Anchors>
-				</Texture>
+				</Texture-->
 			</Layer>
 			<Layer level="OVERLAY" textureSubLevel="4">
 				<FontString inherits="NarciRuneFont" parentKey="RuneLetter" Alpha="1" hidden="true" justifyH="CENTER"> <!--&#x000A;ᛏ-->
@@ -841,13 +841,13 @@
 				</FontString>
 			</Layer>
 			<Layer level="OVERLAY" textureSubLevel="5">
-				<Texture parentKey="AlphaChannelRune" hidden="true" file="Interface\AddOns\Narcissus\Art\Masks\Rune-Mask" Alpha="1">
+				<!--Texture parentKey="AlphaChannelRune" hidden="true" file="Interface\AddOns\Narcissus\Art\Masks\Rune-Mask" Alpha="1">
 					<TexCoords left="1" right="0" top="0" bottom="1"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" x="0" y="0"/>
 						<Anchor point="BOTTOMRIGHT" x="0" y="0"/>
 					</Anchors>
-				</Texture>
+				</Texture-->
 			</Layer>
 		</Layers>
 	</Button>
@@ -1047,6 +1047,14 @@
 				</Scripts>
 			</Button>
 		</Frames>
+		<Animations>
+			<AnimationGroup parentKey="FlyUp">
+				<Translation offsetY="-8" duration="0" order="1"/>
+				<Alpha fromAlpha="0" toAlpha="0" duration="0" order="1"/>
+				<Translation offsetY="8" duration="0.2" order="2" smoothing="OUT" parentKey="Move"/>
+				<Alpha fromAlpha="0" toAlpha="1" duration="0.2" order="2" parentKey="Fade"/>
+			</AnimationGroup>
+		</Animations>
 	</Button>
 
     <Button name="NarciEquipmentSlotButtonTemplate" inherits="NarciSlotButtonTemplate" virtual="true" mixin="NarciEquipmentSlotMixin"> <!--inherits="SecureActionButtonTemplate"-->
@@ -2265,20 +2273,11 @@
 						</Texture>
 					</Layer-->
 				</Layers>
-				<Scripts>
-					<OnEnter>
-						UIFrameFadeIn(self:GetParent(), 0.2, self:GetParent():GetAlpha(), 1);
-					</OnEnter>
-					<OnLeave>
-						if self:IsMouseOver() then return end;
-						if not Narci_PhotoModeButton.IsOn then
-							self:GetParent().Bar:SetAlpha(0);
-						end
-						Narci_GearTexts:ClearFocus();
-						Narci_GearTexts:HighlightText(0,0);
-						UIFrameFadeOut(self:GetParent(), 0.2, self:GetParent():GetAlpha(), 0);
-					</OnLeave>
-				</Scripts>
+				<Animations>
+					<AnimationGroup parentKey="AutoHideTimer">
+						<Translation duration="5"/>
+					</AnimationGroup>
+				</Animations>
 			</Frame>
 
 			<Frame parentKey="MotionBlock" enableMouse="true" hidden="true">
@@ -2339,7 +2338,7 @@
 					<OnEvent method="OnEvent"/>
 				</Scripts>
 			</Frame>
-			<Frame name="Narci_FlyoutBlack" hidden="false" frameStrata="MEDIUM" setAllPoints="true" Alpha="0" frameLevel="8">
+			<Frame name="Narci_FlyoutBlack" hidden="false" frameStrata="MEDIUM" setAllPoints="true" Alpha="0" frameLevel="8" mixin="NarciFlyoutOverlayMixin">
 				<Layers>
 					<Layer level="BACKGROUND">
 						<Texture setAllPoints="true" parentKey="Black">
@@ -2347,25 +2346,9 @@
 						</Texture>
 					</Layer>
 				</Layers>
-				<Frames>
-					<Frame parentKey="AnimFrame" hidden="true">
-						<Scripts>
-							<OnLoad>
-								self.OppoDirection = false;
-								self.TimeSinceLastUpdate = 0;
-							</OnLoad>
-							<OnShow>
-								self:GetParent():Show()
-								self.startAlpha = self:GetParent():GetAlpha();
-							</OnShow>
-							<OnHide>
-								self.TimeSinceLastUpdate = 0;
-								self.OppoDirection = not self.OppoDirection;
-							</OnHide>
-							<OnUpdate function="Narci_FlyoutBlack_OnUpdate"/>
-						</Scripts>
-					</Frame>
-				</Frames>
+				<Scripts>
+					<OnHide method="OnHide"/>
+				</Scripts>
 			</Frame>
 			<Frame name="Narci_XmogNameFrame" parentKey="XmogNameFrame" Alpha="1" hidden="true" frameStrata="HIGH"  ignoreParentScale="true" scale="0.8">
 				<Anchors>
@@ -2774,9 +2757,6 @@
 			<OnHide>
 				self:Hide();
 				self:SetAlpha(0);
-				Narci_FlyoutBlack:SetAlpha(0);
-				Narci_FlyoutBlack.AnimFrame.OppoDirection = false;
-				Narci_FlyoutBlack.AnimFrame:Hide();
 				self:StopAnimating();
 				self:UnregisterEvent("PLAYER_REGEN_DISABLED");
 			</OnHide>
@@ -2792,11 +2772,11 @@
 			<Anchor point="TOPLEFT" relativeTo="Narci_VirtualLineRight" relativePoint="CENTER" y="302"/>
         </Anchors>
 		<Layers>
-			<Layer level="BACKGROUND">
-				<Texture setAllPoints="true" hidden="true">
+			<!--Layer level="BACKGROUND">
+				<Texture setAllPoints="true" hidden="false">
 					<Color r="0.64" g="0.21" b="0.93" a="0.5"/>
 				</Texture>
-			</Layer>
+			</Layer-->
 		</Layers>
 		<Frames>
 			<Frame name="Narci_PlayerInfoFrame" parentKey="PlayerInfo" frameLevel="20">
@@ -3047,7 +3027,7 @@
 								</Texture>
 							</Layer>
 							<Layer level="ARTWORK" textureSubLevel="1">
-								<Texture parentKey="Background" hidden="false" file="Interface\AddOns\Narcissus\Art\Solid\Purple" snapToPixelGrid="false">
+								<Texture parentKey="Background" hidden="false" file="Interface\AddOns\Narcissus\Art\Solid\Purple" snapToPixelGrid="false" texelSnappingBias="0">
 									<Size x="80" y="80"/>
 									<Anchors>
 										<Anchor point="CENTER" relativeKey="$parent" x="0" y="0"/>
@@ -3055,7 +3035,7 @@
 								</Texture>
 							</Layer>
 							<Layer level="ARTWORK" textureSubLevel="2">
-								<Texture parentKey="FluidBackground" file="Interface\AddOns\Narcissus\Art\Widgets\ItemLevel\HexagonTube" snapToPixelGrid="false">
+								<Texture parentKey="FluidBackground" file="Interface\AddOns\Narcissus\Art\Widgets\ItemLevel\HexagonTube" snapToPixelGrid="false" texelSnappingBias="0">
 									<TexCoords left="0.5" right="1" top="0" bottom="0.5"/>
 									<Size x="104.0" y="104.0"/>
 									<Anchors>
@@ -3064,7 +3044,7 @@
 								</Texture>
 							</Layer>
 							<Layer level="OVERLAY" textureSubLevel="2">
-								<Texture parentKey="TubeBorder" file="Interface\AddOns\Narcissus\Art\Widgets\ItemLevel\HexagonTube" snapToPixelGrid="false">
+								<Texture parentKey="TubeBorder" file="Interface\AddOns\Narcissus\Art\Widgets\ItemLevel\HexagonTube" snapToPixelGrid="false" texelSnappingBias="0">
 									<TexCoords left="0" right="0.5" top="0" bottom="0.5"/>
 									<Size x="104.0" y="104.0"/>
 									<Anchors>

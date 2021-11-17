@@ -49,11 +49,11 @@ local shardData = {
 
     --[itemID] = {typeID, rank, effectID},    typeID: 1 Unholy/ 2 Frost/ 3 Blood        effectID: 1 Healing(SHOW_COMBAT_HEALING) / 2 Defensive(ABSORB)/ 3 Tertiary(STAT_SPEED)/ 4 Tertiary(STAT_LIFESTEAL)/ 5 Offensive(CLUB_FINDER_DAMAGE)
     --Unholy
-    [187079] = {2, 1, 1},     --Zed R1    Healing
-    [187292] = {2, 2, 1},     --Zed R2
-    [187301] = {2, 3, 1},     --Zed R3
-    [187310] = {2, 4, 1},     --Zed R4
-    [187320] = {2, 5, 1},     --Zed R5
+    [187079] = {2, 1, 6},     --Zed R1    Healing
+    [187292] = {2, 2, 6},     --Zed R2
+    [187301] = {2, 3, 6},     --Zed R3
+    [187310] = {2, 4, 6},     --Zed R4
+    [187320] = {2, 5, 6},     --Zed R5
 
     [187076] = {2, 1, 3},     --Oth R1    Tertiary
     [187291] = {2, 2, 3},     --Oth R2
@@ -114,6 +114,7 @@ local shardEffects = {
     [3] = STAT_SPEED,
     [4] = STAT_LIFESTEAL,
     [5] = CLUB_FINDER_DAMAGE,
+    [6] = DRAINS,
 }
 
 local shardTypes = {
@@ -424,6 +425,10 @@ local function GetShardRectBorderTexCoord(itemSubClassID, shardID)
     end
 end
 
+local function IsItemDominationShard(itemID)
+    return not(shardData[itemID] == nil)
+end
+
 
 NarciAPI.GetDominationShardBonus = GetShardBonus;
 NarciAPI.DoesItemHaveDomationSocket = DoesItemHaveDomationSocket;
@@ -431,7 +436,7 @@ NarciAPI.GetItemDominationGem = GetItemDominationGem;
 NarciAPI.GetEquippedDomiationGearData = GetEquippedDomiationGearData;
 NarciAPI.GetDominationBorderTexture = GetDominationBorderTexture;
 NarciAPI.GetShardRectBorderTexCoord = GetShardRectBorderTexCoord;
-
+NarciAPI.IsItemDominationShard = IsItemDominationShard;
 
 
 ---------------------------------------------------------------

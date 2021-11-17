@@ -280,7 +280,22 @@ L["Channel (Spell)"] = "Canalisation"
 L["Character Stats"] = "Stats Personnage"
 L["Character Type"] = "Type de Personnage"
 L["Charge gained/lost"] = "Charge gagné/perdu"
-L["Charged Combo Point"] = "Points de combo chargés"
+--[[Translation missing --]]
+L["Charged Combo Point (1)"] = "Charged Combo Point (1)"
+--[[Translation missing --]]
+L["Charged Combo Point (2)"] = "Charged Combo Point (2)"
+--[[Translation missing --]]
+L["Charged Combo Point (3)"] = "Charged Combo Point (3)"
+--[[Translation missing --]]
+L["Charged Combo Point (4)"] = "Charged Combo Point (4)"
+--[[Translation missing --]]
+L["Charged Combo Point 1"] = "Charged Combo Point 1"
+--[[Translation missing --]]
+L["Charged Combo Point 2"] = "Charged Combo Point 2"
+--[[Translation missing --]]
+L["Charged Combo Point 3"] = "Charged Combo Point 3"
+--[[Translation missing --]]
+L["Charged Combo Point 4"] = "Charged Combo Point 4"
 L["Charges"] = "Charges"
 --[[Translation missing --]]
 L["Charges Changed Event"] = "Charges Changed Event"
@@ -401,7 +416,6 @@ L["Distance"] = "Distance"
 L["Dodge"] = "Esquive"
 L["Dodge (%)"] = "Esquive (%)"
 L["Dodge Rating"] = "Pourcentage Esquive"
-L["Done"] = "Fait"
 L["Down"] = "Bas"
 L["Down, then Left"] = "Bas puis Gauche"
 L["Down, then Right"] = "Bas puis Droite"
@@ -890,7 +904,6 @@ L["Nefarian"] = "Nefarian"
 L["Netherspite"] = "Netherspite"
 L["Neutral"] = "Neutre"
 L["Never"] = "Jamais"
-L["Next"] = "Suivant"
 --[[Translation missing --]]
 L["Next Combat"] = "Next Combat"
 --[[Translation missing --]]
@@ -909,6 +922,8 @@ L["Not in Group"] = "Pas en groupe"
 L["Not on Cooldown"] = "Pas en recharge"
 L["Not On Threat Table"] = "Pas sur la table de menace"
 L["Note, that cross realm transmission is possible if you are on the same group"] = "Notez que la transmission inter-domaines est possible que si vous êtes dans le même groupe"
+--[[Translation missing --]]
+L["Note: Due to how complicated the swing timer behaviour is and the lack of APIs from Blizzard, results are inaccurate in edge cases."] = "Note: Due to how complicated the swing timer behaviour is and the lack of APIs from Blizzard, results are inaccurate in edge cases."
 L["Note: 'Hide Alone' is not available in the new aura tracking system. A load option can be used instead."] = "Remarque: \"Cacher Seul\" n'est pas disponible dans le nouveau système de suivi d'aura. Une option de chargement peut être utilisée à la place."
 L["Note: The available text replacements for multi triggers match the normal triggers now."] = "Remarque: Les remplacements de texte disponibles pour les déclencheurs multiples correspondent maintenant aux déclencheurs normaux."
 --[[Translation missing --]]
@@ -1109,28 +1124,6 @@ L["Requesting display information from %s ..."] = "Demande des informations de l
 L["Require Valid Target"] = "Nécessite une cible valide"
 L["Resist"] = "Résiste"
 L["Resisted"] = "Résisté"
-L["Resolve collisions dialog"] = [=[
-Vous avez activé un addon qui crée des graphiques |cFF8800FFWeakAuras|r ayant les même noms que certains de vos graphiques existants.
-
-Vous devez renommer vos graphiques pour faire de la place pour ceux de l'addon.
-
-Résolu : |cFFFF0000]=]
-L["Resolve collisions dialog singular"] = [=[
-Vous avez activé un addon qui crée un graphique |cFF8800FFWeakAuras|r ayant le même nom qu'un de vos graphiques existants.
-
-Vous devez renommer votre graphique pour faire de la place pour celui de l'addon.
-
-Résolu : |cFFFF0000]=]
-L["Resolve collisions dialog startup"] = [=[Vous avez activé un addon qui crée des graphiques |cFF8800FFWeakAuras|r ayant les même noms que certains de vos graphiques existants.
-
-Vous devez renommer vos graphiques pour faire de la place pour ceux de l'addon.
-
-Résolu : |cFFFF0000]=]
-L["Resolve collisions dialog startup singular"] = [=[Vous avez activé un addon qui créée un graphique |cFF8800FFWeakAuras|r ayant le même nom qu'un de vos graphiques existants.
-
-Vous devez renommer votre graphique pour faire de la place pour celui de l'addon.
-
-Résolu : |cFFFF0000]=]
 L["Rested"] = "Reposé"
 --[[Translation missing --]]
 L["Rested Experience"] = "Rested Experience"
@@ -1280,6 +1273,8 @@ L["Spell Usable"] = "Sort Utilisable"
 L["Spin"] = "Tourne"
 L["Spiral"] = "Spirale"
 L["Spiral In And Out"] = "Spirale entrante et sortante"
+--[[Translation missing --]]
+L["Spirit"] = "Spirit"
 L["Stack Count"] = "Nombre de Piles"
 L["Stacks"] = "Piles"
 --[[Translation missing --]]

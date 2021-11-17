@@ -1,9 +1,9 @@
-## Interface: 90100
+## Interface: 90105
 ## Title: Details!: Explosive Orbs (plugin)
 ## Notes: Show how many explosive orbs players target and hit.
 ## RequiredDeps: Details
 ## Author: LiangYuxuan
-## Version: v9.1.0
+## Version: v9.1.5
 ## SavedVariablesPerCharacter: ExplosiveOrbsLog
 ## X-License: MIT
 ## X-Curse-Project-ID: 352367

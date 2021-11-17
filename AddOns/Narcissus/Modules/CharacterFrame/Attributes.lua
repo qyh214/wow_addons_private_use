@@ -64,7 +64,14 @@ local function CharacterDamageFrame_OnEnter(object)
 	DefaultTooltip:Show();
 end
 
-local function MovementSpeed_OnUpdate(object, elapsedTime)
+local function MovementSpeed_OnUpdate(object, elapsed)
+	object.t = object.t + elapsed;
+	if object.t > 0.1 then
+		object.t = 0;
+	else
+		return
+	end
+
 	local unit = object.unit;
 	local _, runSpeed, flightSpeed, swimSpeed = GetUnitSpeed(unit);
 	runSpeed = runSpeed/BASE_MOVEMENT_SPEED*100;
@@ -787,7 +794,8 @@ function UpdateFunc:MovementSpeed(object)
 
 	object.wasSwimming = nil;
 	object.unit = unit;
-	MovementSpeed_OnUpdate(object);
+	object.t = 0;
+	MovementSpeed_OnUpdate(object, 1);
 	object:SetScript("OnEnter", MovementSpeed_OnEnter);
 	object:SetScript("OnUpdate", MovementSpeed_OnUpdate);
 end

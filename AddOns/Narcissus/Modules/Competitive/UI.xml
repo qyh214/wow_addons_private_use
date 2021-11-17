@@ -311,7 +311,7 @@
     </Button>
 
     <Frame name="NarciMythicPlusHistogrameTemplate" mixin="NarciMythicPlusHistogrameMixin" virtual="true">
-        <Size x="320" y="16"/>
+        <Size x="320" y="24"/>
         <Layers>
             <Layer level="ARTWORK">
                 <Texture parentKey="Bar1" file="Interface\AddOns\Narcissus\Art\Modules\Competitive\MythicPlus\Bar">
@@ -343,8 +343,27 @@
                         <Anchor point="LEFT" relativeKey="$parent.Bar2" relativePoint="RIGHT" x="4" y="0"/>
                     </Anchors>
                 </FontString>
+
+                <FontString inherits="NarciTooltipDescriptionFontSemibold" justifyH="CENTER" justifyV="MIDDLE" parentKey="Text1" hidden="true">
+                    <Size x="0" y="0"/>
+                    <Color r="0" g="0" b="0"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativeKey="$parent.Bar1" relativePoint="CENTER" x="0" y="0"/>
+                    </Anchors>
+                </FontString>
+                <FontString inherits="NarciTooltipDescriptionFontSemibold" justifyH="CENTER" justifyV="MIDDLE" parentKey="Text2" hidden="true">
+                    <Size x="0" y="0"/>
+                    <Color r="0" g="0" b="0"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativeKey="$parent.Bar2" relativePoint="CENTER" x="0" y="0"/>
+                    </Anchors>
+                </FontString>
             </Layer>
         </Layers>
+        <Scripts>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
+        </Scripts>
     </Frame>
 
     <Button name="NarciMythicPlusTabButtonTemplate" mixin="NarciMythicPlusTabButtonMixin" virtual="true">

@@ -1090,8 +1090,8 @@ local function ShowTextAlphaChannel(state, doNotShowModel)
 			if slot then
 				--slotTable[i].Name:SetFont(font, Height);
 				if slot.RuneSlot then
-					slot.RuneSlot.AlphaChannelRune:Show();
-					slot.RuneSlot.Background:SetAlpha(runeAlpha);
+					--slot.RuneSlot.AlphaChannelRune:Show();
+					--slot.RuneSlot.Background:SetAlpha(runeAlpha);
 				end
 				slot.GradientBackground:SetColorTexture(1, 1, 1);
 				slot.Name:SetTextColor(1, 1, 1);
@@ -1119,8 +1119,8 @@ local function ShowTextAlphaChannel(state, doNotShowModel)
 			if slot then
 				--slotTable[i].Name:SetFont(font, Height);
 				if slot.RuneSlot then
-					slot.RuneSlot.AlphaChannelRune:Hide();
-					slot.RuneSlot.Background:SetAlpha(runeAlpha);
+					--slot.RuneSlot.AlphaChannelRune:Hide();
+					--slot.RuneSlot.Background:SetAlpha(runeAlpha);
 				end
 				slot.GradientBackground:SetColorTexture(0, 0, 0);
 				slot.Name:SetShadowColor(0, 0, 0);

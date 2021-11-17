@@ -1,10 +1,10 @@
-## Interface: 90100
+## Interface: 90105
 ## Title: |cff1572cfFree Instance Fetcher|r
 ## Title-zhCN: |cff1572cf便利CD获取|r
 ## Author: LiangYuxuan
-## Version: v9.1.0
+## Version: v9.1.5
 ## SavedVariables: FIFConfig
-## X-ReleaseDate: 2021-06-30T01:55:18Z
+## X-ReleaseDate: 2021-11-08T09:48:57Z
 ## X-License: GPL-3.0
 ## X-Curse-Project-ID: 415572
 ## X-WoWI-ID: 25930

@@ -10,7 +10,7 @@ function S:PremadeGroupsFilter_SetPoint(frame, point, relativeFrame, relativePoi
     if point == "TOPLEFT" and relativePoint == "TOPRIGHT" then
         if (not x and not y) or (x == 0 and y == 0) then
             frame:ClearAllPoints()
-            frame:Point("TOPLEFT", relativeFrame, "TOPRIGHT", 5, 0)
+            frame:SetPoint("TOPLEFT", relativeFrame, "TOPRIGHT", 5, 0)
         end
     end
 end
@@ -19,6 +19,8 @@ function S:PremadeGroupsFilter()
     if not E.private.WT.skins.enable or not E.private.WT.skins.addons.premadeGroupsFilter then
         return
     end
+
+    S:DisableAddOnSkin("PremadeGroupsFilter")
 
     local frame = _G.PremadeGroupsFilterDialog
     ES:HandlePortraitFrame(frame, true)
@@ -34,7 +36,10 @@ function S:PremadeGroupsFilter()
 
     -- Because we added shadow, moving the frame a little bit right looks better
     self:SecureHook(frame, "SetPoint", "PremadeGroupsFilter_SetPoint")
-    frame:Point(frame:GetPoint())
+
+    for i = 1, frame:GetNumPoints() do
+        S:PremadeGroupsFilter_SetPoint(frame, frame:GetPoint())
+    end
 
     if frame.Advanced then
         for _, region in pairs {frame.Advanced:GetRegions()} do
@@ -135,4 +140,3 @@ function S:PremadeGroupsFilter()
 end
 
 S:AddCallbackForAddon("PremadeGroupsFilter")
-S:DisableAddOnSkin("PremadeGroupsFilter")

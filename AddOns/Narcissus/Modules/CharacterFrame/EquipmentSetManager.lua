@@ -732,11 +732,12 @@ local function NarciEquipmentSetButton_AnimFrame_OnUpdate(self, elapsed)
 	self.t = self.t + elapsed;
 end
 
-local function ShowFlyoutBlack(bool)
-    if Narci_EquipmentFlyoutFrame:IsShown() then return; end
-	Narci_FlyoutBlack.AnimFrame:Hide();
-	Narci_FlyoutBlack.AnimFrame.OppoDirection = not bool;
-	Narci_FlyoutBlack.AnimFrame:Show();
+local function ShowFlyoutBlack(state)
+    if state then
+        Narci_FlyoutBlack:In();
+    else
+        Narci_FlyoutBlack:Out();
+    end
 end
 
 local function HideIconSelector()

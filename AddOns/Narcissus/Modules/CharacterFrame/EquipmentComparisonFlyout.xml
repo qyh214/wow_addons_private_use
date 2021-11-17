@@ -84,7 +84,7 @@
 		</Scripts>
 	</Frame>
 
-	<Button name="ItemBonusTinyButtonTemplate" hidden="true" virtual="true">
+	<Button name="NarciItemBonusTinyButtonTemplate" hidden="true" virtual="true">
 		<Size x="8" y="8"/>
 		<Layers>					
 			<Layer level="OVERLAY">
@@ -428,8 +428,8 @@
                     </Layer>
                 </Layers>			
 			</Frame>
-			<Button inherits="ItemBonusTinyButtonTemplate" parentKey="BonusButton1"/>
-			<Button inherits="ItemBonusTinyButtonTemplate" parentKey="BonusButton2"/>
+			<Button inherits="NarciItemBonusTinyButtonTemplate" parentKey="BonusButton1"/>
+			<Button inherits="NarciItemBonusTinyButtonTemplate" parentKey="BonusButton2"/>
 
 			<Frame inherits="StatsIlvlComparisonTemplate" parentKey="ilvl">
 				<Anchors>

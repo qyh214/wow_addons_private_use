@@ -1,6 +1,6 @@
 # ElvUI Bag Filters
 
-## [v7.3](https://github.com/warmexx/elvui-bag-filters/tree/v7.3) (2021-05-24)
-[Full Changelog](https://github.com/warmexx/elvui-bag-filters/commits/v7.3) [Previous Releases](https://github.com/warmexx/elvui-bag-filters/releases)
+## [v7.4](https://github.com/warmexx/elvui-bag-filters/tree/v7.4) (2021-11-14)
+[Full Changelog](https://github.com/warmexx/elvui-bag-filters/commits/v7.4) [Previous Releases](https://github.com/warmexx/elvui-bag-filters/releases)
 
-- Fixes title for different game versions  
+- Bumps TOC  

@@ -123,11 +123,11 @@ local function checkClass(result, filter)
     if(constants.classes[result.Class]) then
         classTag = string.gsub(constants.classes[result.Class].tag, "F$", "");
         if(not filter.classSpecific) then
-		triggerClass = true;
+			triggerClass = true;
         else
-		if(filter.classSpecific ~= classTag) then
-		    triggerClass = false;
-	    end
+			if(filter.classSpecific ~= classTag) then
+			    triggerClass = false;
+	    	end
         end
     end
     return triggerClass;
@@ -417,7 +417,7 @@ end
 
 local function createFilterFrame()
 	-- Changes for Patch 9.0.1 - Shadowlands, retail and classic
-	local win = CreateFrame("Frame", "WIM3_FilterFrame", _G.UIParent, isTBC and "BackdropTemplate");
+	local win = CreateFrame("Frame", "WIM3_FilterFrame", _G.UIParent, "BackdropTemplate");
 
     win:Hide();
     win.filter = {};
@@ -432,11 +432,7 @@ local function createFilterFrame()
         tile = true, tileSize = 64, edgeSize = 64,
         insets = { left = 64, right = 64, top = 64, bottom = 64 }};
 
-	if not isTBC then
-		win:SetBackdrop(win.backdropInfo);
-	else
-		win:ApplyBackdrop();
-	end
+	win:ApplyBackdrop();
 
     -- set basic frame properties
     win:SetClampedToScreen(true);
@@ -507,7 +503,7 @@ local function createFilterFrame()
             info.value = 1;
             info.func = win.by.click;
             _G.UIDropDownMenu_AddButton(info, _G.UIDROPDOWNMENU_MENU_LEVEL);
-            local info = _G.UIDropDownMenu_CreateInfo();
+            info = _G.UIDropDownMenu_CreateInfo();
             info.text = L["User Type"];
             info.value = 2;
             info.func = win.by.click;
@@ -625,7 +621,7 @@ local function createFilterFrame()
     options.AddFramedBackdrop(win.level);
 
 	-- Changes for Patch 9.0.1 - Shadowlands, retail and classic
-	win.level.slider = CreateFrame("Slider", win.level:GetName().."Slider", win.level, isTBC and "BackdropTemplate");
+	win.level.slider = CreateFrame("Slider", win.level:GetName().."Slider", win.level, "BackdropTemplate");
 
     -- set backdrop - changes for Patch 9.0.1 - Shadowlands, retail and classic
     win.level.slider.backdropInfo = {bgFile = "Interface\\Buttons\\UI-SliderBar-Background",
@@ -633,11 +629,7 @@ local function createFilterFrame()
         tile = true, tileSize = 8, edgeSize = 8,
         insets = { left = 3, right = 3, top = 6, bottom = 6 }};
 
-	if not isTBC then
-		win.level.slider:SetBackdrop(win.level.slider.backdropInfo);
-	else
-		win.level.slider:ApplyBackdrop();
-	end
+	win.level.slider:ApplyBackdrop();
 
     win.level.slider:SetHeight(17);
     --win.level.slider:SetPoint("CENTER");
@@ -683,20 +675,20 @@ local function createFilterFrame()
             win.level.class:Show();
         end
     win.level.class.init = function(self)
-            local info = _G.UIDropDownMenu_CreateInfo();
-            info.text = L["All Classes"];
-            info.value = 0;
-            info.func = win.level.class.click;
+		local info = _G.UIDropDownMenu_CreateInfo();
+		info.text = L["All Classes"];
+		info.value = 0;
+		info.func = win.level.class.click;
 	    local classes = constants.classListEng;
 	    _G.UIDropDownMenu_AddButton(info, _G.UIDROPDOWNMENU_MENU_LEVEL);
 	    for i=1, #classes do
-                local info = _G.UIDropDownMenu_CreateInfo();
-                info.text = L[classes[i]];
-                info.value = constants.classes[L[classes[i]]].tag;
-                info.func = win.level.class.click;
-		_G.UIDropDownMenu_AddButton(info, _G.UIDROPDOWNMENU_MENU_LEVEL);
+			info = _G.UIDropDownMenu_CreateInfo();
+			info.text = L[classes[i]];
+			info.value = constants.classes[L[classes[i]]].tag;
+			info.func = win.level.class.click;
+			_G.UIDropDownMenu_AddButton(info, _G.UIDROPDOWNMENU_MENU_LEVEL);
 	    end
-        end
+    end
     win.level.class:SetScript("OnShow", function(self)
             win.filter.classSpecific = win.filter.classSpecific or 0;
             _G.UIDropDownMenu_Initialize(self, self.init);
@@ -750,12 +742,12 @@ local function createFilterFrame()
             info.value = 1;
             info.func = win.action.click;
             _G.UIDropDownMenu_AddButton(info, _G.UIDROPDOWNMENU_MENU_LEVEL);
-            local info = _G.UIDropDownMenu_CreateInfo();
+            info = _G.UIDropDownMenu_CreateInfo();
             info.text = L["Ignore"];
             info.value = 2;
             info.func = win.action.click;
             _G.UIDropDownMenu_AddButton(info, _G.UIDROPDOWNMENU_MENU_LEVEL);
-            local info = _G.UIDropDownMenu_CreateInfo();
+            info = _G.UIDropDownMenu_CreateInfo();
             info.text = L["Blocked"];
             info.value = 3;
             info.func = win.action.click;

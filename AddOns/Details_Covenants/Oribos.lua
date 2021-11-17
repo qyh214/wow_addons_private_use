@@ -6,6 +6,8 @@ local oribos = dc.oribos
 oribos.emptyCovenants = {}
 oribos.covenants = {}
 
+local _, ownClass = UnitClass("player")
+
 function oribos:getCovenantIcon(covenantID)
     if covenantID > 0 and covenantID < 5 then
         local covenantMap = {
@@ -26,7 +28,7 @@ function oribos:fillCovenants()
     for groupindex = 1, numGroupMembers do
         local name = GetRaidRosterInfo(groupindex)
 
-        if name and not oribos.covenants[name] and not oribos.emptyCovenants[name]then
+        if name and not oribos.covenants[name] and not oribos.emptyCovenants[name] then
             oribos.emptyCovenants[name] = 0
             oribos:askCovenantInfo(name)
         end
@@ -34,7 +36,7 @@ function oribos:fillCovenants()
 end
 
 function oribos:addCovenantForPlayer(covenantID, playerName, playerClass)
-    if covenantID then 
+    if covenantID then
         local playerData = {}
         playerData.covenantID = covenantID
         playerData.class = playerClass
@@ -49,10 +51,15 @@ function oribos:askCovenantInfo(playerName)
 end
 
 function oribos:sendCovenantInfo(playerName)
-    if playerName and oribos.covenants[playerName] then 
-        local message = playerName..":"..oribos.covenants[playerName].covenantID..":"..oribos.covenants[playerName].class
-        C_ChatInfo.SendAddonMessage(dc.addonPrefix, message, "RAID")
-    end 
+    if playerName then
+        if playerName == UnitName("player") then
+            local message = playerName..":"..C_Covenants.GetActiveCovenantID()..":"..ownClass
+            C_ChatInfo.SendAddonMessage(dc.addonPrefix, message, "RAID")
+        elseif oribos.covenants[playerName] then
+            local message = playerName..":"..oribos.covenants[playerName].covenantID..":"..oribos.covenants[playerName].class
+            C_ChatInfo.SendAddonMessage(dc.addonPrefix, message, "RAID")
+        end
+    end
 end
 
 function oribos:hasPlayerWithEmptyCovenant()
@@ -61,7 +68,7 @@ end
 
 -- Loggers
 function oribos:logNewPlayer(covenantID, playerName, playerClass, spellID)
-    if DCovenantLog and covenantID and playerName ~= UnitName("player") and not oribos.covenants[playerName] then
+    if DCovenantLog and covenantID and playerName ~= UnitName("player") and (not oribos.covenants[playerName] or oribos.covenants[playerName].covenantID ~= covenantID) then
         local coloredName = "|CFFe5a472Details_Covenants|r"
         local _, _, _, classColor = GetClassColor(playerClass)
         local byMessage = ""
@@ -86,7 +93,7 @@ end
 
 function oribos:logParty()
     local numGroupMembers = GetNumGroupMembers()
-    if numGroupMembers > 0 then 
+    if numGroupMembers > 0 then
         print("|CFFe5a472Details_Covenants|r Party covenants:")
 
         for groupindex = 1, numGroupMembers do
@@ -96,24 +103,32 @@ function oribos:logParty()
             if name and playerData then
                 local _, _, _, classColor = GetClassColor(playerData.class)
                 print(oribos:getCovenantIcon(playerData.covenantID).." |C"..classColor..name.."|r")
-            end  
+            end
         end
-    else 
+    else
         print("|CFFe5a472Details_Covenants|r You are not currently in group.")
-    end 
+    end
 end
 
 
--- Public 
+-- Public
 _G.Oribos = {}
 local publicOribos = _G.Oribos
 
 function publicOribos:getCovenantIconForPlayer(playerName)
-    local covenantData = oribos.covenants[playerName]
+    local covenantID = 0
 
-    if covenantData and covenantData.covenantID then
-        return oribos:getCovenantIcon(covenantData.covenantID)
+    if playerName == UnitName("player") then
+        covenantID = C_Covenants.GetActiveCovenantID()
     else
-        return ""
-    end 
+        local covenantData = oribos.covenants[playerName]
+
+        if covenantData and covenantData.covenantID then
+            covenantID = covenantData.covenantID
+        else
+            return ""
+        end
+    end
+
+    return oribos:getCovenantIcon(covenantID)
 end

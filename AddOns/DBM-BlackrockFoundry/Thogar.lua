@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1147, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211011150925")
+mod:SetRevision("20211016214700")
 mod:SetCreatureID(76906)--81315 Crack-Shot, 81197 Raider, 77487 Grom'kar Firemender, 80791 Grom'kar Man-at-Arms, 81318 Iron Gunnery Sergeant, 77560 Obliterator Cannon, 81612 Deforester
 mod:SetEncounterID(1692)
 mod:SetUsedIcons(8, 7, 2, 1)
@@ -50,7 +50,7 @@ local timerEnkindleCD				= mod:NewCDTimer(11.5, 155921, nil, "Tank", nil, 5, nil
 local timerTrainCD					= mod:NewNextCountTimer("d15", 176312, nil, nil, nil, 1, nil, DBM_CORE_L.DEADLY_ICON, nil, 1, 5)
 --Adds
 --local timerCauterizingBoltCD		= mod:NewNextTimer(30, 160140, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)
-local timerIronbellowCD				= mod:NewCDTimer(8.5, 163753, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)
+local timerIronbellowCD				= mod:NewCDTimer("d8", 163753, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)
 local timerDelayedSiegeBomb			= mod:NewNextCountTimer(6, 159481)
 
 local berserkTimer					= mod:NewBerserkTimer(492)
@@ -585,7 +585,7 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 155864 and self:AntiSpam(2, 4) then
-		self:BossTargetScanner(76906, "GrenadeTarget", 0.02, 50, true, nil, nil, nil, true)
+		self:BossTargetScanner(args.sourceGUID, "GrenadeTarget", 0.02, 50, true, nil, nil, nil, true)--such high cpu loop really needed?
 		timerProtoGrenadeCD:Start()
 	elseif spellId == 159481 and args:IsPlayer() then
 		bombFrom = args.sourceGUID
@@ -619,7 +619,9 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 155921 then
 		local amount = args.amount or 1
-		timerEnkindleCD:Start()
+		if self:AntiSpam(3, 2) then
+			timerEnkindleCD:Start()
+		end
 		if amount >= 2 then
 			if args:IsPlayer() then
 				specWarnEnkindle:Show(amount)

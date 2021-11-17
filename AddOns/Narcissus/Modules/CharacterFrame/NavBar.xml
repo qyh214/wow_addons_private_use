@@ -147,6 +147,38 @@
                         </FontString>
                     </Layer>
                 </Layers>
+                <Frames>
+                    <Frame parentKey="OwnedInfo" mixin="NarciOwnedKeystoneFrameMixin">
+                        <Size x="48" y="48"/>
+                        <Anchors>
+                            <Anchor point="BOTTOMRIGHT" x="0"/>
+                        </Anchors>
+                        <Layers>
+                            <!--Layer level="OVERLAY" textureSubLevel="2">
+                                <Texture parentKey="KeystoneOverlay" file="Interface\AddOns\Narcissus\Art\Modules\Competitive\MythicPlus\MyKeystoneOverlay">
+                                    <Size x="48" y="48"/>
+                                        <Anchors>
+                                            <Anchor point="CENTER"/>
+                                        </Anchors>
+                                </Texture>
+                            </Layer-->
+                            <Layer level="OVERLAY" textureSubLevel="3">
+                                <FontString inherits="NarciFontNumber12Outline" justifyH="CENTER" justifyV="MIDDLE" parentKey="Level" maxLines="1">
+                                    <Size x="64" y="24"/>
+                                    <Color r="0.8" g="0.8" b="0.8"/>
+                                    <Anchors>
+                                        <Anchor point="BOTTOM" relativeKey="$parent" relativePoint="BOTTOM" x="0" y="0"/>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnLoad method="OnLoad"/>
+                            <OnEnter method="OnEnter"/>
+                            <OnLeave method="OnLeave"/>
+                        </Scripts>
+                    </Frame>
+                </Frames>
             </Frame>
 
             <Frame parentKey="OverlayFrame">

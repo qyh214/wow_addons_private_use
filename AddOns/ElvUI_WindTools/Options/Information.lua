@@ -4,6 +4,7 @@ local ACH = E.Libs.ACH
 
 local _G = _G
 local format = format
+local gsub = gsub
 local ipairs = ipairs
 local pairs = pairs
 local tostring = tostring
@@ -460,6 +461,9 @@ do -- 插件代码
             "loudsoul (TinyInspect)"
         },
         [L["Instance Difficulty"]] = {
+            "Merathilis (ElvUI MerathilisUI)"
+        },
+        [L["Item Level"]] = {
             "Merathilis (ElvUI MerathilisUI)"
         }
     }
@@ -1111,6 +1115,21 @@ options.reset = {
                             nil,
                             function()
                                 E.db.WT.item.inspect = P.item.inspect
+                            end
+                        )
+                    end
+                },
+                itemLevel = {
+                    order = 8,
+                    type = "execute",
+                    name = L["Item Level"],
+                    func = function()
+                        E:StaticPopup_Show(
+                            "WINDTOOLS_RESET_MODULE",
+                            L["Item Level"],
+                            nil,
+                            function()
+                                E.db.WT.item.itemLevel = P.item.itemLevel
                             end
                         )
                     end

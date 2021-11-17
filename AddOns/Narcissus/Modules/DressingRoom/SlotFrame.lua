@@ -10,6 +10,7 @@ local GetAllsources = MogAPI.GetAllAppearanceSources;
 local GetAppearanceSourceDrops = MogAPI.GetAppearanceSourceDrops;
 local IsAppearanceFavorite = MogAPI.GetIsAppearanceFavorite;
 local GetAppearanceInfoBySource = MogAPI.GetAppearanceInfoBySource;
+local GetItemInfoInstant = GetItemInfoInstant;
 
 local GetSlotVisualID = NarciAPI.GetSlotVisualID;
 
@@ -757,7 +758,6 @@ end
 
 
 ----------------------------------------------------
-
 NarciDressingRoomSlotFrameMixin = {};
 
 function NarciDressingRoomSlotFrameMixin:OnLoad()
@@ -776,8 +776,18 @@ function NarciDressingRoomSlotFrameMixin:OnLoad()
         end
     end);
 
+    hooksecurefunc("DressUpItemTransmogInfo", function(itemTransmogInfo)
+        if itemTransmogInfo and itemTransmogInfo.appearanceID then
+            local slotID = GetItemEquipLocation(itemTransmogInfo.appearanceID);
+            if slotID then
+                self:ShineSlot(slotID);
+                self:FadeIn();
+            end
+        end
+    end);
+
     --OutfitDropDown
-    if DressUpItemTransmogInfoList then
+    if false and DressUpItemTransmogInfoList then
         hooksecurefunc("DressUpItemTransmogInfoList", function(itemTransmogInfoList)
             if itemTransmogInfoList then
                 ItemList:WipeList();
@@ -793,7 +803,7 @@ function NarciDressingRoomSlotFrameMixin:OnLoad()
     end
 
     --Ctrl+Click Wardrobe Items
-    if DressUpCollectionAppearance then
+    if false and DressUpCollectionAppearance then
         hooksecurefunc("DressUpCollectionAppearance", function(sourceID, transmogLocation, categoryID)
             local slotID = transmogLocation.slotID;
             local secondarySourceID;

@@ -1,3 +1,12 @@
+# v1.5.1
+
+- Updated interface for 9.1.5
+- Fixed error when updating restrictions
+
+# v1.5.0
+
+- Added option to sort classes by name
+
 # v1.4.0
 
 - Added Import/Export for loadouts, talents, pvp talents, essences, soulbinds, and action bars.

@@ -69,12 +69,23 @@ end)
 --]]
 
 
-
-
-
-
-
-
+local IsMounted = IsMounted;
+local IsFlying = IsFlying;
+local function ActionButton_OnUpdate(self, elapsed)
+    if not self.t then
+        self.t = 0;
+    end
+    self.t = self.t + elapsed;
+    if self.t >= 0.5 then
+        if IsFlying() then
+            self.t = nil;
+            self:SetScript("OnUpdate", nil);
+            self:SetFailedReason(2);
+        end
+    else
+        return
+    end
+end
 
 
 --------------------------------------------------------------
@@ -85,7 +96,7 @@ local function SharedPostClickFunc(self)
     self.ArrowRight.Expand:Play();
     self:Disable();
     After(0.8, function()
-        self:EnableButton();
+        self:AttemptToEnable();
     end);
 end
 
@@ -126,12 +137,14 @@ function NarciItemSocketingActionButtonMixin:OnLeave()
 end
 
 function NarciItemSocketingActionButtonMixin:OnShow()
+    self:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED");
     self:RegisterEvent("PLAYER_REGEN_DISABLED");
 end
 
 function NarciItemSocketingActionButtonMixin:OnHide()
     self:StopAnimating();
     self:UnregisterEvent("PLAYER_REGEN_DISABLED");
+    self:UnregisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED");
 end
 
 function NarciItemSocketingActionButtonMixin:DisableButton()
@@ -142,15 +155,38 @@ function NarciItemSocketingActionButtonMixin:DisableButton()
     self.Label:SetText( string.format(REQUIREMENT_FORMAT, (EXTRACTOR_ITEM_LOCALIZED_NAME or EXTRACTOR_ITEM_NAME)) );
 end
 
-function NarciItemSocketingActionButtonMixin:EnableButton()
+function NarciItemSocketingActionButtonMixin:AttemptToEnable()
     self:Show();
+    self:SetScript("OnUpdate", nil);
     local numFreeSlots = GetNumFreeBagSlots();
     if numFreeSlots > 0 then
-        self:Enable();
-        self.Label:SetText(Narci.L["Extract Shard"]);
+        if IsMounted() then
+            if IsFlying() then
+                self:SetFailedReason(2);
+            else
+                self:TrackFlyingStatus();
+                self:Enable();
+                self.Label:SetText(Narci.L["Extract Shard"]);
+            end
+        else
+            self:Enable();
+            self.Label:SetText(Narci.L["Extract Shard"]);
+        end
     else
-        self:Disable();
+        self:SetFailedReason(1);
+    end
+end
+
+function NarciItemSocketingActionButtonMixin:TrackFlyingStatus()
+    self:SetScript("OnUpdate", ActionButton_OnUpdate);
+end
+
+function NarciItemSocketingActionButtonMixin:SetFailedReason(id)
+    self:Disable();
+    if id == 1 then
         self.Label:SetText(TUTORIAL_TITLE58);
+    elseif id == 2 then
+        self.Label:SetText(string.gsub(SPELL_FAILED_NOT_FLYING, "[%.。]", ""));
     end
 end
 
@@ -200,6 +236,14 @@ function NarciItemSocketingActionButtonMixin:OnExtactSuccess()
     end);
 end
 
+function NarciItemSocketingActionButtonMixin:OnMountChanged()
+    After(0.1, function()
+        if not self.isReleased then
+            self:AttemptToEnable();
+        end
+    end)
+end
+
 function NarciItemSocketingActionButtonMixin:OnEvent(event)
     if event == "BAG_UPDATE" then
         self:OnExtactSuccess();
@@ -207,10 +251,13 @@ function NarciItemSocketingActionButtonMixin:OnEvent(event)
         self:OnEnterCombat();
     elseif event == "PLAYER_REGEN_ENABLED" then
         self:OnLeaveCombat();
+    elseif event == "PLAYER_MOUNT_DISPLAY_CHANGED" then
+        self:OnMountChanged();
     end
 end
 
 function NarciItemSocketingActionButtonMixin:OnEnable()
+    self:SetScript("OnUpdate", nil);
     self:StopAnimating();
     self.ArrowLeft:SetDesaturated(false);
     self.ArrowRight:SetDesaturated(false);
@@ -237,7 +284,7 @@ function NarciItemSocketingActionButtonMixin:SetActionForNarcissusUI()
         local macroText = string.format("/use item:%s\r/use %s", itemID, equipmentSlotIndex);
         self:SetAttribute("type", "macro");
         self:SetAttribute("macrotext", macroText);
-        self:EnableButton();
+        self:AttemptToEnable();
         self:SetScript("PostClick", NarcissusActionButton_PostClick);
     else
         self:DisableButton();
@@ -250,7 +297,7 @@ function NarciItemSocketingActionButtonMixin:SetExtractAction()
         local macroText = string.format("/use item:%s\r/click ItemSocketingSocket1", itemID);
         self:SetAttribute("type", "macro");
         self:SetAttribute("macrotext", macroText);
-        self:EnableButton();
+        self:AttemptToEnable();
     else
         self:DisableButton();
     end

@@ -97,8 +97,6 @@ local L = WeakAuras.L
 	L["Add to new Group"] = "Agregar al grupo nuevo"
 	L["Add Trigger"] = "Agregar disparador"
 	L["Additional Events"] = "Eventos adicionales"
-	L["Addon"] = "Addon"
-	L["Addons"] = "Addons"
 	--[[Translation missing --]]
 	L["Advanced"] = "Advanced"
 	L["Align"] = "Alinear"
@@ -673,7 +671,6 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	--[[Translation missing --]]
 	L["Magnetically Align"] = "Magnetically Align"
 	L["Main"] = "Principal"
-	L["Manage displays defined by Addons"] = "Administra las auras definidas por los Addons"
 	--[[Translation missing --]]
 	L["Match Count"] = "Match Count"
 	--[[Translation missing --]]

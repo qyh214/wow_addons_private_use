@@ -850,7 +850,7 @@
 		<Color r="0.5" g="0.5" b="0.5"/>
 		<Shadow>
 			<Offset>
-				<AbsDimension x="0" y="-1"/>
+				<AbsDimension x="0" y="1"/>
 			</Offset>
 			<Color a="1" r="0" g="0" b="0"/>
 		</Shadow>
@@ -860,7 +860,7 @@
 		<Color r="0.5" g="0.5" b="0.5"/>
 		<Shadow>
 			<Offset>
-				<AbsDimension x="0" y="-2"/>
+				<AbsDimension x="0" y="2"/>
 			</Offset>
 			<Color a="0.5" r="0" g="0" b="0"/>
 		</Shadow>
@@ -870,7 +870,7 @@
 		<Color r="0.5" g="0.5" b="0.5"/>
 		<Shadow>
 			<Offset>
-				<AbsDimension x="0" y="-2"/>
+				<AbsDimension x="0" y="2"/>
 			</Offset>
 			<Color a="0.5" r="0" g="0" b="0"/>
 		</Shadow>
@@ -900,17 +900,17 @@
 		<Color r="0.8" g="0.8" b="0.8"/>
 		<Shadow>
 			<Offset>
-				<AbsDimension x="0" y="-2"/>
+				<AbsDimension x="0" y="2"/>
 			</Offset>
 			<Color a="1" r="0" g="0" b="0"/>
 		</Shadow>
 	</Font>
 
 	<Font name="NarciAchievementText" inherits="NarciFontFremont12" virtual="true">
-		<Color r="0.8" g="0.8" b="0.8"/>
+		<Color r="0.72" g="0.72" b="0.72"/>
 		<Shadow>
 			<Offset>
-				<AbsDimension x="0" y="-2"/>
+				<AbsDimension x="0" y="2"/>
 			</Offset>
 			<Color a="0.5" r="0" g="0" b="0"/>
 		</Shadow>
@@ -918,12 +918,12 @@
 
 	<Font name="NarciAchievementTextBlack" inherits="NarciFontFremont12" virtual="true">
 		<Color r="0" g="0" b="0"/>
-		<Shadow>
+		<!--Shadow>
 			<Offset>
-				<AbsDimension x="0" y="-2"/>
+				<AbsDimension x="0" y="0"/>
 			</Offset>
-			<Color a="0" r="0.894" g="0.761" b="0.408"/>
-		</Shadow>
+			<Color a="1" r="0.894" g="0.761" b="0.408"/>
+		</Shadow-->
 	</Font>
 
 	<Font name="NarciLoreBookHeader" inherits="NarciFontFremont14" virtual="true">

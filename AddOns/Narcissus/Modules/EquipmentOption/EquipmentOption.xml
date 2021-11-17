@@ -1,0 +1,530 @@
+<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+    <Script file="EnchantData.lua"/>
+    <Script file="GemData.lua"/>
+    <Script file="ActionButton.lua"/>
+	<Script file="EquipmentOption.lua"/>
+    <Script file="EnchantButton.lua"/>
+
+    <Button name="NarciEquipmentOptionButtonTemplate" mixin="NarciEquipmentOptionButtonMixin" virtual="true" registerForClicks="LeftButtonUp, RightButtonUp" motionScriptsWhileDisabled="true">
+        <Size x="240" y="48"/>
+        <Layers>
+            <Layer level="BORDER">
+                <Texture parentKey="BorderLeft" file="Interface\AddOns\Narcissus\Art\EquipmentOption\Button" alpha="0.25" hidden="true">
+                    <Size x="48" y="48"/>
+                    <TexCoords left="0" right="0.25" top="0" bottom="1"/>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="0" y="0"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="BorderRight" file="Interface\AddOns\Narcissus\Art\EquipmentOption\Button" alpha="0.25" hidden="true">
+                    <Size x="0" y="48"/>
+                    <TexCoords left="0.25" right="1" top="0" bottom="1"/>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="48" y="0"/>
+                        <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="0" y="0"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <Texture parentKey="Icon">
+                    <Size x="28" y="28"/>
+                    <TexCoords left="0.075" right="0.925" top="0.075" bottom="0.925"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativeKey="$parent" relativePoint="LEFT" x="24" y="0"/>
+                    </Anchors>
+                </Texture>
+                <FontString inherits="NarciFontMedium12" justifyH="LEFT" justifyV="BOTTOM" hidden="false" parentKey="Text1" text=" ">
+                    <Size x="180"/>
+                    <Color r="0.92" g="0.92" b="0.92"/>
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT" relativeKey="$parent.Icon" relativePoint="RIGHT" x="7" y="1"/>
+                    </Anchors>
+                </FontString>
+                <FontString inherits="NarciFontNormal10White" justifyH="LEFT" justifyV="TOP" hidden="false" parentKey="Text2" text=" " maxLines="1">
+                    <Size x="180"/>
+                    <Color r="0.5" g="0.5" b="0.5"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeKey="$parent.Icon" relativePoint="RIGHT" x="7" y="-2"/>
+                    </Anchors>
+                </FontString>
+                <!--Texture>
+                    <Color r="1" a="0.25"/>
+                    <Size x="180" y="12"/>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeKey="$parent.Text1" relativePoint="LEFT"/>
+                    </Anchors>
+                </Texture-->
+            </Layer>
+            <Layer level="OVERLAY" textureSubLevel="1">
+                <Texture parentKey="IconBorder" file="Interface\AddOns\Narcissus\Art\EquipmentOption\IconBorder">
+                    <Size x="48" y="48"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativeKey="$parent.Icon" relativePoint="CENTER" x="0" y="0"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY" textureSubLevel="2">
+                <Texture parentKey="IconBorderRed" file="Interface\AddOns\Narcissus\Art\EquipmentOption\IconBorderRed" hidden="true">
+                    <Size x="48" y="48"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativeKey="$parent.Icon" relativePoint="CENTER" x="0" y="0"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+
+        <!--HighlightTexture file="Interface\AddOns\Narcissus\Art\EquipmentOption\ButtonHighlight" alphaMode="ADD" parentKey="Highlight">
+            <Size x="240" y="96"/>
+            <Anchors>
+                <Anchor point="LEFT" x="0"/>
+                <Anchor point="RIGHT" x="0"/>
+            </Anchors>
+            <Animations>
+                <AnimationGroup parentKey="Anim">
+                    <Alpha fromAlpha="0" toAlpha="1" duration="0.2" order="2"/>
+                </AnimationGroup>
+            </Animations>
+        </HighlightTexture-->
+		<Animations>
+			<AnimationGroup parentKey="AnimPushed">
+				<Translation offsetX="2" duration="0.1" order="1"/>
+				<Translation duration="20" order="2" parentKey="Hold"/>
+				<Translation offsetX="-2" duration="0.1" order="3"/>
+			</AnimationGroup>
+            <AnimationGroup parentKey="FadeOut">
+                <Alpha fromAlpha="1" toAlpha="0" duration="0.5" order="1"/>
+                <Scripts>
+                    <OnFinished>
+                        self:GetParent():Hide();
+                    </OnFinished>
+                </Scripts>
+            </AnimationGroup>
+        </Animations>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
+            <OnMouseUp method="OnMouseUp"/>
+            <OnMouseDown method="OnMouseDown"/>
+            <OnClick method="OnClick"/>
+        </Scripts>
+    </Button>
+
+    <Button name="NarciEquipmentEnchantButtonTemplate" inherits="NarciEquipmentOptionButtonTemplate" mixin="NarciEquipmentEnchantButtonMixin" virtual="true" hidden="true">
+        <Layers>
+            <Layer level="OVERLAY" textureSubLevel="1">
+				<Texture parentKey="ItemCountBackdrop" hidden="true">
+                    <Size x="14" y="11"/>
+                    <Color r="0" g="0" b="0" a="0.8"/>
+					<Anchors>
+                        <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Icon" relativePoint="BOTTOMRIGHT" x="-1" y="1"/>
+					</Anchors>
+				</Texture>
+            </Layer>
+            <Layer level="OVERLAY" textureSubLevel="2">
+				<FontString inherits="NarciIndicatorTiny" justifyH="CENTER" justifyV="MIDDLE" hidden="true" parentKey="ItemCount" text="0">
+					<Color r="0.92" g="0.92" b="0.92"/>
+                    <Shadow>
+                    </Shadow>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.ItemCountBackdrop" relativePoint="CENTER" x="0" y="0"/>
+					</Anchors>
+				</FontString>
+            </Layer>
+            <Layer level="OVERLAY" textureSubLevel="3">
+                <Texture parentKey="LoadingIndicator" hidden="true" file="Interface\AddOns\Narcissus\Art\EquipmentOption\LoadingIcon">
+                    <Size x="24" y="24"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
+                    </Anchors>
+                    <Animations>
+                        <AnimationGroup parentKey="Rotate" looping="REPEAT">
+                            <Rotation degrees="-360" duration="1" order="1"/>
+                        </AnimationGroup>
+                    </Animations>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <!--OnEnable method="OnEnable"/>
+            <OnDisable method="OnDisable"/-->
+        </Scripts>
+    </Button>
+
+    <Frame name="Narci_EquipmentOption" mixin="NarciEquipmentOptionMixin" frameStrata="HIGH" hidden="true" inherits="NarciAnimatedSizingFrameTemplate">
+        <Size x="48" y="48"/>
+        <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="UIParent" relativePoint="CENTER" y="120"/>
+        </Anchors>
+        <Layers>
+            <Layer level="BORDER" textureSubLevel="3">
+                <Texture parentKey="Pointer" file="Interface\AddOns\Narcissus\Art\EquipmentOption\Shadow" parentArray="BorderTextures">
+                    <Size x="32" y="32"/>
+                    <TexCoords left="0.25" right="0.5" top="0.25" bottom="0.5"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativePoint="RIGHT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="BORDER" textureSubLevel="2">
+                <Texture parentKey="PointerBackdrop" file="Interface\AddOns\Narcissus\Art\EquipmentOption\Shadow">
+                    <Size x="32" y="32"/>
+                    <TexCoords left="0.5" right="0.75" top="0.25" bottom="0.5"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativeKey="$parent.Pointer" relativePoint="CENTER"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Frame parentKey="ArtFrame" useParentLevel="false" clipChildren="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT"/>
+                    <Anchor point="BOTTOMRIGHT"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="ARTWORK" textureSubLevel="1">
+                        <Texture parentKey="Stain" file="Interface\AddOns\Narcissus\Art\EquipmentOption\Stain">
+                            <Size x="240" y="240"/>
+                            <Anchors>
+                                <Anchor point="TOPRIGHT"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+            </Frame>
+            <Frame parentKey="Menu">
+                <Anchors>
+                    <Anchor point="TOPLEFT"/>
+                    <Anchor point="BOTTOMRIGHT"/>
+                </Anchors>
+            </Frame>
+            <ScrollFrame parentKey="ItemList" hidden="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT"/>
+                    <Anchor point="BOTTOMRIGHT"/>
+                </Anchors>
+                <ScrollChild>
+                    <Frame parentKey="ScrollChild">
+                        <Size x="16" y="16"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
+                        </Anchors>
+                        <Layers>
+
+                        </Layers>
+                        <Frames>
+                            <Frame parentKey="HighlightFrame" hidden="true" useParentLevel="true" mixin="NarciItemListButtonHighlightMixin">
+                                <Size x="240" y="48"/>
+                                <Layers>
+                                    <Layer level="BORDER">
+                                        <Texture parentKey="Highlight">
+                                            <Color r="0.2" g="0.2" b="0.2" a="1"/>
+                                            <Gradient orientation="HORIZONTAL">
+                                                <MinColor a="1" r="1" g="1" b="1"/>
+                                                <MaxColor a="0" r="1" g="1" b="1"/>
+                                            </Gradient>
+                                        </Texture>
+                                    </Layer>
+                                    <Layer level="ARTWORK">
+                                        <Texture parentKey="IconRight" desaturated="true" Alpha="0.25" hidden="false">
+                                            <TexCoords left="0.2" right="0.8" top="0.35" bottom="0.65"/>
+                                            <Size x="96" y="48"/>
+                                            <Anchors>
+                                                <Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="0" y="0"/>
+                                            </Anchors>
+                                            <Animations>
+                                                <AnimationGroup parentKey="FlyIn">
+                                                    <Translation offsetX="-8" duration="0" order="1"/>
+                                                    <Alpha fromAlpha="0" toAlpha="0" duration="0" order="1"/>
+                                                    <Translation offsetX="6" duration="0.15" order="2"/>
+                                                    <Alpha fromAlpha="0" toAlpha="0.25" duration="0.15" order="2"/>
+                                                    <Translation offsetX="2" duration="0.1" order="3" smoothing="OUT"/>
+                                                </AnimationGroup>
+                                            </Animations>
+                                        </Texture>
+                                        <MaskTexture file="Interface\AddOns\Narcissus\Art\EquipmentOption\BackdropIconMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+                                            <Anchors>
+                                                <Anchor point="TOPLEFT" relativeKey="$parent.IconRight" relativePoint="TOPLEFT" x="0" y="0"/>
+                                                <Anchor point="BOTTOMRIGHT" relativeKey="$parent.IconRight" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+                                            </Anchors>
+                                            <MaskedTextures>
+                                                <MaskedTexture childKey="IconRight"/>
+                                            </MaskedTextures>
+                                        </MaskTexture>
+                                    </Layer>
+                                </Layers>
+                                <Scripts>
+                                    <OnLoad method="OnLoad"/>
+                                </Scripts>
+                            </Frame>
+                        </Frames>
+                    </Frame>
+                </ScrollChild>
+                <Frames>
+                    <Slider valueStep="0.01" parentKey="ScrollBar">
+                        <Size x="8"/>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="0" y="-8"/>
+                            <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="0" y="8"/>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="BACKGROUND">
+                                <Texture file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\VerticleLine" parentKey="Background" alphaMode="ADD" alpha="0.1"/>
+                            </Layer>
+                        </Layers>
+                        <ThumbTexture parentKey="Thumb" file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\SliderThumb">
+                            <Size x="8" y="8"/>
+                        </ThumbTexture>
+                        <Scripts>
+                            <OnLoad>
+                                self.Thumb:SetVertexColor(0.5, 0.5, 0.5);
+                            </OnLoad>
+                            <OnEnter>
+                                self.Thumb:SetVertexColor(0.8, 0.8, 0.8);
+                            </OnEnter>
+                            <OnLeave>
+                                self.Thumb:SetVertexColor(0.5, 0.5, 0.5);
+                            </OnLeave>
+                        </Scripts>
+                    </Slider>
+                    <Button parentKey="FilterToggle" mixin="NarciEquipmentListFilterButtonMixin">
+                        <Size x="64" y="24"/>
+                        <Anchors>
+                            <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="0" y="2"/>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="ARTWORK">
+                                <Texture parentKey="Square" file="Interface\AddOns\Narcissus\Art\EquipmentOption\Toggle">
+                                    <Size x="18" y="18"/>
+                                    <TexCoords left="0.125" right="0.875" top="0.125" bottom="0.875"/>
+                                    <Anchors>
+                                        <Anchor point="RIGHT"/>
+                                    </Anchors>
+                                </Texture>
+                            </Layer>
+                            <Layer level="OVERLAY">
+                                <Texture parentKey="Check" file="Interface\AddOns\Narcissus\Art\EquipmentOption\ToggleCheck">
+                                    <Size x="24" y="24"/>
+                                    <Anchors>
+                                        <Anchor point="CENTER" relativeKey="$parent.Square" relativePoint="CENTER"/>
+                                    </Anchors>
+                                    <Animations>
+                                        <AnimationGroup parentKey="AnimIn">
+                                            <Alpha fromAlpha="0" toAlpha="1" duration="0.12" order="1"/>
+                                            <Scale fromScaleX="0.5" toScaleX="1" fromScaleY="0.5" toScaleY="1" duration="0.12" order="1"/>
+                                        </AnimationGroup>
+                                    </Animations>
+                                </Texture>
+                                <FontString inherits="NarciFontNormal10White" justifyH="RIGHT" justifyV="MIDDLE" parentKey="Label">
+                                    <Size x="0" y="16"/>
+                                    <Color r="0.5" g="0.5" b="0.5"/>
+                                    <Anchors>
+                                        <Anchor point="RIGHT" relativeKey="$parent.Square" relativePoint="LEFT" x="-4" y="0"/>
+                                    </Anchors>
+                                    <Animations>
+                                        <AnimationGroup parentKey="FadeIn">
+                                            <Alpha fromAlpha="0" toAlpha="0" duration="0" order="1"/>
+                                            <Alpha fromAlpha="0" toAlpha="1" duration="0.15" startDelay="0.15" order="2"/>
+                                        </AnimationGroup>
+                                    </Animations>
+                                </FontString>
+                            </Layer>
+                            <Layer level="BACKGROUND">
+                                <Texture parentKey="Shadow" file="Interface\AddOns\Narcissus\Art\EquipmentOption\ToggleLabelShadow">
+                                    <Size x="96" y="36"/>
+                                    <Anchors>
+                                        <Anchor point="BOTTOMRIGHT" y="-2"/>
+                                    </Anchors>
+                                </Texture>
+                            </Layer>
+                        </Layers>
+                        <Animations>
+                            <AnimationGroup parentKey="FlyUp">
+                                <Translation offsetY="-12" duration="0" order="1"/>
+                                <Alpha fromAlpha="0" toAlpha="0" duration="0" order="1"/>
+                                <Translation offsetY="12" duration="0.15" order="2" smoothing="OUT"/>
+                                <Alpha fromAlpha="0" toAlpha="1" duration="0.12" order="2"/>
+                            </AnimationGroup>
+                        </Animations>
+                        <Scripts>
+                            <OnLoad method="OnLoad"/>
+                            <OnEnter method="OnEnter"/>
+                            <OnLeave method="OnLeave"/>
+                            <OnClick method="OnClick"/>
+                            <OnShow method="OnShow"/>
+                        </Scripts>
+                    </Button>
+                    <Frame parentKey="Tooltip" mixin="NarciEquipmentListTooltipMixin" inherits="NarciAnimatedSizingFrameTemplate" hidden="true" alpha="0">
+                        <Size x="32" y="24"/>
+                        <Frames>
+                            <Frame parentKey="ClipFrame" clipChildren="true">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"/>
+                                    <Anchor point="BOTTOMRIGHT"/>
+                                </Anchors>
+                                <Layers>
+                                    <Layer level="BORDER">
+                                        <Texture parentKey="Icon" desaturated="true" Alpha="0.4">
+                                            <TexCoords left="0.075" right="0.925" top="0.075" bottom="0.925"/>
+                                            <Size x="24" y="24"/>
+                                            <Anchors>
+                                                <Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="0" y="0"/>
+                                            </Anchors>
+                                        </Texture>
+                                        <MaskTexture file="Interface\AddOns\Narcissus\Art\EquipmentOption\TooltipIconMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+                                            <Anchors>
+                                                <Anchor point="TOPLEFT" relativeKey="$parent.Icon" relativePoint="TOPLEFT" x="0" y="0"/>
+                                                <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Icon" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+                                            </Anchors>
+                                            <MaskedTextures>
+                                                <MaskedTexture childKey="Icon"/>
+                                            </MaskedTextures>
+                                        </MaskTexture>
+                                    </Layer>
+                                    <Layer level="ARTWORK">
+                                        <FontString inherits="NarciFontNormal10White" justifyH="LEFT" justifyV="TOP" parentKey="Description" spacing="2">
+                                            <Size x="0" y="0"/>
+                                            <Color r="0.529" g="0.863" b="0.6"/>
+                                            <Anchors>
+                                                <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="6" y="-6"/>
+                                            </Anchors>
+                                            <Animations>
+                                                <AnimationGroup parentKey="FadeIn">
+                                                    <Alpha fromAlpha="0" toAlpha="1" duration="0.2" order="1"/>
+                                                </AnimationGroup>
+                                            </Animations>
+                                        </FontString>
+                                    </Layer>
+                                    <Layer level="OVERLAY" textureSubLevel="2">
+                                        <Texture parentKey="LoadingIndicator" hidden="true" file="Interface\AddOns\Narcissus\Art\EquipmentOption\LoadingIcon">
+                                            <Size x="24" y="24"/>
+                                            <Anchors>
+                                                <Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
+                                            </Anchors>
+                                            <Animations>
+                                                <AnimationGroup parentKey="Rotate" looping="REPEAT">
+                                                    <Rotation degrees="-360" duration="1" order="1"/>
+                                                </AnimationGroup>
+                                            </Animations>
+                                        </Texture>
+                                    </Layer>
+                                </Layers>
+                            </Frame>
+                        </Frames>
+                        <Scripts>
+                            <OnLoad method="OnLoad"/>
+                            <OnShow method="OnShow"/>
+                            <OnHide method="OnHide"/>
+                            <OnEvent method="OnEvent"/>
+                        </Scripts>
+                    </Frame>
+                    <Frame parentKey="SelectionOverlay" frameLevel="4" hidden="true" clipChildren="true" alpha="0">
+                        <Anchors>
+                            <Anchor point="TOPLEFT"/>
+                            <Anchor point="BOTTOMRIGHT"/>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <Texture parentKey="Black">
+                                    <Color r="0" g="0" b="0" a="0.5"/>
+                                </Texture>
+                            </Layer>
+                        </Layers>
+                    </Frame>
+                </Frames>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString inherits="NarciFontNormal10White" justifyH="CENTER" justifyV="MIDDLE" parentKey="NoItemText" hidden="true">
+                            <Color r="0.5" g="0.5" b="0.5"/>
+                            <Anchors>
+                                <Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="" y="0"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </ScrollFrame>
+        </Frames>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+        </Scripts>
+    </Frame>
+
+	<Button name="NarciEquipmentOptionActionButton" mixin="NarciEquipmentOptionActionButtonMixin" inherits="SecureActionButtonTemplate" parent="NarciSecureFrameContainer" frameStrata="FULLSCREEN" registerForClicks="LeftButtonUp, RightButtonUp" ignoreParentAlpha="true">
+		<Size x="240" y="48"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Backdrop" Alpha="1">
+                    <Color r="0.5" g="0.5" b="0.5" a="1"/>
+                    <Animations>
+                        <AnimationGroup parentKey="Shine" setToFinalAlpha="true">
+                            <Alpha fromAlpha="0.2" toAlpha="0.5" duration="0.05" order="1"/>
+                            <Alpha fromAlpha="0.5" toAlpha="0.25" duration="0.2" order="2"/>
+                        </AnimationGroup>
+                    </Animations>
+                </Texture>
+            </Layer>
+            <Layer level="ARTWORK">
+                <FontString inherits="NarciFontNormal10White" justifyH="CENTER" justifyV="BOTTOM" parentKey="Header" maxLines="1" text="Continue with">
+                    <Size x="208" y="0"/>
+                    <Color r="0.92" g="0.92" b="0.92"/>
+                    <Anchors>
+                        <Anchor point="BOTTOM" relativeKey="$parent" relativePoint="CENTER" x="0" y="2"/>
+                    </Anchors>
+                    <Animations>
+                        <AnimationGroup parentKey="FlyIn">
+                            <Translation offsetX="-6" duration="0" order="1"/>
+                            <Translation offsetX="4" duration="0.1" order="2"/>
+                            <Translation offsetX="2" duration="0.1" order="3" smoothing="OUT"/>
+                            <Alpha fromAlpha="0" toAlpha="0" duration="0" order="1"/>
+                            <Alpha fromAlpha="0" toAlpha="1" duration="0.1" order="2"/>
+                        </AnimationGroup>
+                    </Animations>
+                </FontString>
+                <FontString inherits="NarciFontNormal10White" justifyH="CENTER" justifyV="TOP" parentKey="ItemName" maxLines="1">
+                    <Size x="208" y="0"/>
+                    <Color r="0.5" g="0.5" b="0.5"/>
+                    <Anchors>
+                        <Anchor point="TOP" relativeKey="$parent" relativePoint="CENTER" x="0" y="-2"/>
+                    </Anchors>
+                    <Animations>
+                        <AnimationGroup parentKey="FlyIn">
+                            <Translation offsetX="-6" duration="0" order="1"/>
+                            <Translation offsetX="4" duration="0.1" order="2"/>
+                            <Translation offsetX="2" duration="0.1" order="3" smoothing="OUT"/>
+                            <Alpha fromAlpha="0" toAlpha="0" duration="0" order="1"/>
+                            <Alpha fromAlpha="0" toAlpha="1" duration="0.1" order="2"/>
+                        </AnimationGroup>
+                    </Animations>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Frame parentKey="ClipFrame" clipChildren="true">
+                <Size x="240" y="48"/>
+                <Anchors>
+                    <Anchor point="CENTER"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY" textureSubLevel="2">
+                        <Texture parentKey="Blink" file="Interface\AddOns\Narcissus\Art\EquipmentOption\SelectionHighlight" alphaMode="ADD" alpha="0.6">
+                            <Size x="96" y="48"/>
+                            <Anchors>
+                                <Anchor point="RIGHT" relativeKey="$parent" relativePoint="LEFT"/>
+                            </Anchors>
+                            <Animations>
+                                <AnimationGroup parentKey="FlyBy">
+                                    <Translation offsetX="336" duration="0.25" order="1" smoothing="IN_OUT"/>
+                                </AnimationGroup>
+                            </Animations>
+                        </Texture>
+                    </Layer>
+                </Layers>
+            </Frame>
+        </Frames>
+        <Scripts>
+            <OnLeave method="OnLeave"/>
+            <PostClick method="PostClick"/>
+        </Scripts>
+    </Button>
+</Ui>

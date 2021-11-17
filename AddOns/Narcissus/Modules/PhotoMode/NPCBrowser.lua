@@ -2614,12 +2614,6 @@ function NPCCardAPI:SetCategory(button, name, numChild)
     button.isFav = false;
 end
 
-
-
-local function RemoveColorString(str)
-    return gsub(str, "|cff%w%w%w%w%w%w(.*)|r", "%1")
-end
-
 local upper = string.upper;
 local HighlightMatchedWord;
 
@@ -3395,7 +3389,11 @@ function NarciNPCSearchBoxMixin:OnLoad()
     local TP = CreateFrame("GameTooltip", NPCTooltipName, Tab, "GameTooltipTemplate");
     TP.lineName = _G[NPCTooltipName.."TextLeft1"];
     Tab.NPCTooltip = TP;
-    TP:SetBackdrop(nil);
+    if TP.NiceSlice then
+        TP.NiceSlice:Hide();
+    elseif TP.SetBackdrop then
+        TP:SetBackdrop(nil);
+    end
 
     ---Font
     TP.TextLeft1 = _G[NPCTooltipName.."TextLeft1"];

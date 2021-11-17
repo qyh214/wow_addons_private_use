@@ -301,7 +301,7 @@ local function ShowNextTab()
     local i = frame.cycledTabIndex;
     if i == 0 then  --Talents
         FadeFrame(frame.PrimaryFrame.TalentContainer, 0.5, 1);
-        frame:SetPortraitTexture(frame.specIcon, true);
+        frame:SetPortraitTexture(frame.specIcon, true, true);
     elseif i == 1 then  --ConduitTooltip
         FadeFrame(frame.PrimaryFrame.ConduitContainer, 0.5, 1);
         frame:SetPortraitTexture("Interface\\AddOns\\Narcissus\\Art\\NavBar\\Soulbinds\\".. frame.soulbindID);
@@ -394,7 +394,7 @@ function NarciNavBarMixin:SetThemeColor(colorTable)
     ProgressTimer:SetColor(unpack(colorTable));
 end
 
-function NarciNavBarMixin:SetPortraitTexture(tex, offset)
+function NarciNavBarMixin:SetPortraitTexture(tex, useOffset, darken)
     if tex == self.portraitTexture then
         return;
     else
@@ -404,13 +404,16 @@ function NarciNavBarMixin:SetPortraitTexture(tex, offset)
             portrait.ActivateAnim:Stop();
             portrait:SetTexture(tex, nil, nil, "LINEAR");
             portrait.ActivateAnim:Play();
-            if offset then
+            if useOffset then
                 portrait:SetTexCoord(0.08, 0.92, 0.08, 0.92);
                 portrait:SetVertexColor(0.80, 0.80, 0.80);
-                portrait:SetDesaturation(0.2);
             else
                 portrait:SetTexCoord(0, 1, 0, 1);
                 portrait:SetVertexColor(1, 1, 1);
+            end
+            if darken then
+                portrait:SetDesaturation(0.2);
+            else
                 portrait:SetDesaturation(0);
             end
         else
@@ -509,7 +512,11 @@ function NarciNavBarMixin:SetSoulbindName(soulbindName, isActive)
 end
 
 function NarciNavBarMixin:ShowChallenge()
-    self:SetPortraitTexture("Interface\\AddOns\\Narcissus\\Art\\NavBar\\Hourglass");
+    if self.keystoneIcon then
+        self:SetPortraitTexture(self.keystoneIcon, false, true);
+    else
+        self:SetPortraitTexture("Interface\\AddOns\\Narcissus\\Art\\NavBar\\Hourglass");
+    end
 end
 
 function NarciNavBarMixin:ToggleBar(state)

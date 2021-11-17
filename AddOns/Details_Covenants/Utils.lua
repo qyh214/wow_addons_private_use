@@ -28,7 +28,7 @@ end
 function utils:splitName(name)
     local result = utils:split(name, '-')
     return result[1], result[2]
-end 
+end
 
 function utils:splitMessage(msg)
     local result = utils:split(msg, ':')
@@ -43,4 +43,12 @@ end
 function utils:splitCommand(msg)
     local result = utils:split(msg, ' ')
     return result[1], result[2]
+end
+
+function utils:isValidGUID(guid) 
+    if guid then
+        local unitType = utils:split(guid, '-')
+        return unitType[1] == "Player"
+    end
+    return false
 end

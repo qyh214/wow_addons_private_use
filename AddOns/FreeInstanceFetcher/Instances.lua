@@ -415,6 +415,24 @@ local instanceList = {
         },
     },
     {
+        -- Sanctum of Domination
+        instanceID = 2450,
+        difficulties = {
+            [14] = {1},
+            [15] = {1},
+        },
+        collections = {
+            {
+                -- The Nine
+                bossIndex = 3,
+                bossBit = 2,
+                type = 'mount',
+                mountID = 1500,
+                itemID = 186656,
+            },
+        },
+    },
+    {
         -- Return to Karazhan
         instanceID = 1651,
         difficulties = {
@@ -496,6 +514,23 @@ local instanceList = {
                 type = 'mount',
                 mountID = 1252,
                 itemID = 168826,
+            },
+        },
+    },
+    {
+        -- Tazavesh, the Veiled Market
+        instanceID = 2441,
+        difficulties = {
+            [23] = {1},
+        },
+        collections = {
+            {
+                -- So'leah
+                bossIndex = 8,
+                bossBit = 7,
+                type = 'mount',
+                mountID = 1481,
+                itemID = 186638,
             },
         },
     },

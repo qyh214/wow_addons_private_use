@@ -395,9 +395,16 @@ function W:CheckCompatibility()
 
     self:CheckCompatibilityMerathilisUI(
         format("%s-%s", L["Tooltip"], L["Add Icon"]),
-        L["Tooltip Icons"],
+        format("%s-%s", L["Tooltip"], L["Tooltip Icons"]),
         "private.WT.tooltips.icon",
         "db.mui.tooltip.tooltipIcon"
+    )
+
+    self:CheckCompatibilityMerathilisUI(
+        format("%s-%s", L["Tooltip"], L["Domination Rank"]),
+        format("%s-%s", L["Tooltip"], L["Domination Rank"]),
+        "private.WT.tooltips.dominationRank",
+        "db.mui.tooltip.dominationRank"
     )
 
     self:CheckCompatibilityMerathilisUI(
@@ -495,14 +502,7 @@ function W:CheckCompatibility()
         L["Instance Difficulty"],
         L["Raid Difficulty"],
         "private.WT.maps.instanceDifficulty.enable",
-        "db.mui.maps.minimap.difficulty"
-    )
-
-    self:CheckCompatibilityMerathilisUI(
-       L["Talent Manager"],
-       L["Talent Manager"],
-       "private.WT.combat.talentManager.enable",
-       "db.mui.talents.talentManager.enable"
+        "db.mui.maps.minimap.instanceDifficulty.enable"
     )
 
     -- S&L
@@ -511,6 +511,20 @@ function W:CheckCompatibility()
         L["Move Blizzard frames"],
         "private.WT.misc.moveBlizzardFrames",
         "private.sle.module.blizzmove.enable"
+    )
+
+    self:CheckCompatibilityShadowAndLight(
+        format("%s-%s", L["Skins"], L["Shadow"]),
+        L["Enhanced Shadow"],
+        "private.WT.skins.shadow",
+        "private.sle.module.shadows.enable"
+    )
+
+    self:CheckCompatibilityShadowAndLight(
+        format("%s-%s", L["Tooltip"], L["Progression"]),
+        format("%s-%s", L["Tooltip"], L["Raid Progression"]),
+        "private.WT.tooltips.progression.enable",
+        "db.sle.tooltip.RaidProg.enable"
     )
 
     self:CheckCompatibilityShadowAndLight(
@@ -534,12 +548,26 @@ function W:CheckCompatibility()
         "private.sle.skins.objectiveTracker.enable"
     )
 
+    self:CheckCompatibilityShadowAndLight(
+        format("%s-%s", L["Item"], L["Fast Loot"]),
+        L["Loot"],
+        "db.WT.item.fastLoot.enable",
+        "db.sle.loot.enable"
+    )
+
     -- mMediaTag
     self:CheckCompatibilitymMediaTag(
         format("%s-%s", L["Tooltips"], L["Icon"]),
         L["Tooltip Icons"],
         "private.WT.tooltips.icon",
         "db.mMediaTag.mTIcon"
+    )
+
+    self:CheckCompatibilitymMediaTag(
+        L["Objective Tracker"],
+        L["ObjectiveTracker Skin"],
+        "private.WT.quest.objectiveTracker.enable",
+        "db.mMediaTag.mObjectiveTracker.enable"
     )
 
     if self.CompatibiltyFrame.numModules > 0 then

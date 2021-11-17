@@ -22,6 +22,10 @@ function frame:ADDON_LOADED(...)
         Internal.Settings(BtWLoadoutsSettings)
 
         Internal.UpdateClassInfo()
+        
+        if Internal.Settings.sortClassesByName then
+            Internal.SortClassesByName()
+        end
 
         BtWLoadoutsSets = setmetatable(BtWLoadoutsSets or {
             profiles = {},

@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 90105
 ## Title: 黑盒工坊配置同步模块
 ## Version: 1.0
 ## SavedVariables:  HEYBOX_SAVED_PLAYER_INFOS

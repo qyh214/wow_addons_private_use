@@ -1,3 +1,6 @@
+local HIDE_MYTHIC_TAB_ON_LOW_LEVELS = true;
+
+
 local _, addon = ...
 
 local L = Narci.L;
@@ -16,7 +19,7 @@ local BLUR_FILE_PREFIX = "Interface\\AddOns\\Narcissus\\Art\\Modules\\Competitiv
 local AFFIX_TYRANNICAL;     --9
 local AFFIX_FORTIFIED;      --10
 
-local MainFrame;
+local MainFrame, OwnedKeystoneFrame;
 
 local mapUIInfo = {
     [375] = {name = 'mists-of-tirna-scithe', color = '2f1d1b', barColor='6273f4'};
@@ -62,10 +65,16 @@ end
 
 
 local DataProvider = {};
-DataProvider.mapRecords = {};
-DataProvider.mapNames = {};
-DataProvider.mapTimers = {};
-DataProvider.mapIDs = {};   --Map with record
+
+function DataProvider:Init()
+    self.mapRecords = {};
+    self.mapNames = {};
+    self.mapTimers = {};
+    self.mapIDs = {};   --Map with record
+    self.mapIcons = {};
+
+    self.Init = nil;
+end
 
 function DataProvider:GetSeasonBestForMap(mapID)
     if not self.mapRecords[mapID] then
@@ -112,6 +121,11 @@ function DataProvider:CacheMapUIInfo(mapID)
             self.mapTimers[mapID] = timeLimit;
         end
     end
+    if texture then
+        if not self.mapIcons[mapID] then
+            self.mapIcons[mapID] = texture;
+        end
+    end
 end
 
 function DataProvider:GetMapName(mapID)
@@ -130,6 +144,15 @@ function DataProvider:GetMapTimer(mapID)
 
     self:CacheMapUIInfo(mapID);
     return self.mapTimers[mapID];
+end
+
+function DataProvider:GetMapIcon(mapID)
+    if self.mapIcons[mapID] then
+        return self.mapIcons[mapID];
+    end
+
+    self:CacheMapUIInfo(mapID);
+    return self.mapIcons[mapID];
 end
 
 function DataProvider:GetMapTexture(mapID, blurred)
@@ -160,6 +183,36 @@ function DataProvider:SetMapComplete(mapID)
     self.numCompleteMaps = #self.mapIDs;
 end
 
+function DataProvider:GetWeeklyAffixesForLevel(keystoneLevel)
+    local weeklyAffixes = C_MythicPlus.GetCurrentAffixes();
+    local affixes = {};
+    if weeklyAffixes then
+        local total;
+        if keystoneLevel then
+            total = 4;
+        else
+            if keystoneLevel >= 10 then
+                total = 4;
+            elseif keystoneLevel >= 7 then
+                total = 3;
+            elseif keystoneLevel >= 4 then
+                total = 2;
+            elseif keystoneLevel >= 2 then
+                total = 1;
+            else
+                total = 0;
+            end
+        end
+        for i = 1, total do
+            if weeklyAffixes[i] then
+                tinsert(affixes, weeklyAffixes[i].id);
+            else
+                break;
+            end
+        end
+    end
+    return affixes;
+end
 
 NarciMythicPlusAffixFrameMixin = {};
 
@@ -286,6 +339,10 @@ function NarciMythicPlusRatingCardMixin:SetEmpty()
     self.Duration1:Hide();
     self.Level2:Hide();
     self.Duration2:Hide();
+    if not HIDE_MYTHIC_TAB_ON_LOW_LEVELS then
+        DataProvider:SetMapComplete(self.mapID);
+        return
+    end
     self.MapTexture:SetDesaturation(1);
     self.MapTexture:SetVertexColor(0.6, 0.6, 0.6);
     self.Header:SetDesaturation(1);
@@ -397,7 +454,7 @@ function NarciMythicPlusDisplayMixin:OnEvent(event)
         self.memberInfoReady = true;
     elseif event == "PLAYER_ENTERING_WORLD" then
         self:UnregisterEvent(event);
-        if UnitLevel("player") ~= GetMaxLevelForPlayerExpansion() then
+        if UnitLevel("player") ~= GetMaxLevelForPlayerExpansion() and HIDE_MYTHIC_TAB_ON_LOW_LEVELS then
             Narci_NavBar:ToggleTabButtonByIndex(4, false);
         end
     end
@@ -420,6 +477,8 @@ function NarciMythicPlusDisplayMixin:OnHide()
 end
 
 function NarciMythicPlusDisplayMixin:Init()
+    DataProvider:Init();
+
     local OFFSET_Y= -24;
 
     if not self.maps then
@@ -459,6 +518,8 @@ function NarciMythicPlusDisplayMixin:Init()
     --Map Detail Frame
     self.MapDetail:SetScript("OnMouseDown", SharedOnMouseDown);
     self.MapDetail:SetScript("OnMouseWheel", MapDetail_OnMouseWheel);
+    self.MapDetail:SetHitRectInsets(0, 0, 0, -20);
+
     for i = 3, 0, -1 do
         local f = CreateFrame("Frame", nil, self.MapDetail, "NarciMythicPlusAffixFrameTemplate");
         f:SetPoint("TOPRIGHT", self.MapDetail.ContentBackdrop, "TOPRIGHT", -24 - i * 32, -74);
@@ -511,13 +572,14 @@ function NarciMythicPlusDisplayMixin:SelectTab(tabIndex)
 end
 
 function NarciMythicPlusDisplayMixin:RequestUpdate()
+    if self.Init then
+        self:Init();
+    end
+
     self:GetParent():ShowLoading();
 
     CacheAffixNames();
 
-    if self.Init then
-        self:Init();
-    end
     local numMaps = #self.maps;
     local card, mapID;
 
@@ -528,6 +590,7 @@ function NarciMythicPlusDisplayMixin:RequestUpdate()
 
     DataProvider.mapIDs = {};
     C_MythicPlus.RequestMapInfo();
+    C_MythicPlus.RequestCurrentAffixes();
 end
 
 function NarciMythicPlusDisplayMixin:PostUpdate()
@@ -562,8 +625,27 @@ function NarciMythicPlusDisplayMixin:PostUpdate()
         end
     end
 
-    Narci_NavBar.ChallengeFrame.DataText:SetText(string.format(DUNGEON_SCORE_LEADER, text));
 
+    local nav = Narci_NavBar;
+    nav.ChallengeFrame.DataText:SetText(string.format(DUNGEON_SCORE_LEADER, text));
+    local ownedMapID = C_MythicPlus.GetOwnedKeystoneChallengeMapID();
+    local mapIcon;
+    OwnedKeystoneFrame.mapID = ownedMapID;
+    if ownedMapID then
+        --known issue: talking with keystone trader doesn't trigger updates.
+        mapIcon = DataProvider:GetMapIcon(ownedMapID);
+        local level = C_MythicPlus.GetOwnedKeystoneLevel();
+        OwnedKeystoneFrame:Show();
+        if level then
+            OwnedKeystoneFrame:SetLevel(level);
+        end
+    else
+        OwnedKeystoneFrame:Hide();
+    end
+    nav.keystoneIcon = mapIcon;
+    if mapIcon then
+        nav:SetPortraitTexture(mapIcon, false, true);
+    end
 
     self:GetParent():HideLoading();
 end
@@ -618,6 +700,16 @@ function NarciMythicPlusDisplayMixin:ToggleMapDetail(state)
     self.MapDetail:SetShown(state);
     self.CardContainer:SetShown(not state);
     self.HistoryFrame:Hide();
+    if state then
+        if not self.MapDetail.MouseButton then
+            --Create a note that informs user you can right click to go back to the main frame.
+            local f = CreateFrame("Frame", nil, self.MapDetail, "NarciHotkeyNotificationTemplate");
+            self.MapDetail.MouseButton = f;
+            f:SetKey(nil, "RightButton", L["Return"], true);
+            f:SetPoint("TOPRIGHT", self.MapDetail, "BOTTOMRIGHT", -6, -4);
+            f:SetIgnoreParentScale(true);
+        end
+    end
 end
 
 function NarciMythicPlusDisplayMixin:ToggleHistory(state)
@@ -743,10 +835,13 @@ function NarciMythicPlusDisplayMixin:SetMapDetail(mapID, useIntimeOrOvertime)
 
     local f = self.MapDetail;
     f.page = DataProvider:GetPageByMapID(mapID);
+
     f.LeftArrow:SetShown(f.page ~= 1);
     f.RightArrow:SetShown(f.page ~= DataProvider.numCompleteMaps);
 
     f.Header:SetTexture(DataProvider:GetMapTexture(mapID, true));
+    f.MapName:SetText( DataProvider:GetMapName(mapID) );
+
     local intimeInfo, overtimeInfo, isCached = DataProvider:GetSeasonBestForMap(mapID);
     local data;
 
@@ -780,7 +875,6 @@ function NarciMythicPlusDisplayMixin:SetMapDetail(mapID, useIntimeOrOvertime)
             f.Duration:SetTextColor(1, 1, 1);
             f.Level:SetText( data.level );
             f.Level:SetTextColor(1, 1, 1);
-            f.MapName:SetText( DataProvider:GetMapName(mapID) );
             f.Date:SetText( FormatShortDate(data.completionDate.day, data.completionDate.month, data.completionDate.year) );
             f.Score:SetText( data.dungeonScore );
             local color = C_ChallengeMode.GetSpecificDungeonScoreRarityColor(data.dungeonScore);
@@ -848,7 +942,7 @@ function NarciMythicPlusDisplayMixin:SetMapDetail(mapID, useIntimeOrOvertime)
     if not hasData then
         f.Score:SetText("--");
         f.Score:SetTextColor(0.5, 0.5, 0.5);
-        f.Date:SetText("No Data");
+        f.Date:SetText("No Date");
         f.Duration:SetText("00:00");
         f.Duration:SetTextColor(0.5, 0.5, 0.5);
         f.Level:SetText("--");
@@ -957,6 +1051,66 @@ function NarciMythicPlusHistogrameMixin:SetData(mapID, intimeRun, overtimeRun, n
         self.Bar2:Hide();
         self.Bar2:SetWidth(0.1);
     end
+
+    self.Text1:SetText((intimeRun > 0 and intimeRun) or "");
+    self.Text2:SetText((overtimeRun > 0 and overtimeRun) or "");
+end
+
+function NarciMythicPlusHistogrameMixin:OnEnter()
+    self.Text1:Show();
+    self.Text2:Show();
+end
+
+function NarciMythicPlusHistogrameMixin:OnLeave()
+    self.Text1:Hide();
+    self.Text2:Hide();
+end
+
+
+NarciOwnedKeystoneFrameMixin = {};
+
+function NarciOwnedKeystoneFrameMixin:OnLoad()
+    OwnedKeystoneFrame = self;
+    self:SetScript("OnLoad", nil);
+    self.OnLoad = nil;
+end
+function NarciOwnedKeystoneFrameMixin:OnEnter()
+    if self.level and self.mapID then
+        local tooltip = NarciGameTooltip;
+        tooltip:Hide();
+        tooltip:SetOwner(self, "ANCHOR_NONE");
+        tooltip:SetText(DataProvider:GetMapName(self.mapID));
+        local affixes = DataProvider:GetWeeklyAffixesForLevel(self.level);
+        local name;
+        for i = 1, #affixes do
+            name = C_ChallengeMode.GetAffixInfo(affixes[i]);
+            if name and name ~= "" then
+                tooltip:AddLine(name, 1 ,1 ,1 ,true);
+            else
+                After(0.2, function ()
+                    self:Retry();
+                end)
+                return
+            end
+        end
+        tooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT", -4, -2);
+        tooltip:Show();
+    end
+end
+
+function NarciOwnedKeystoneFrameMixin:OnLeave()
+    NarciGameTooltip:Hide();
+end
+
+function NarciOwnedKeystoneFrameMixin:Retry()
+    if self:IsVisible() and self:IsMouseOver() then
+        self:OnEnter();
+    end
+end
+
+function NarciOwnedKeystoneFrameMixin:SetLevel(level)
+    self.level = level;
+    self.Level:SetText("|cffffffff+"..level.."|r");
 end
 
 --[[

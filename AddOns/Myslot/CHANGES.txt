@@ -1,10 +1,46 @@
-lightweight tag 14ddf779b9bf1376b6e3de51d2c513475f3f88ed v5.7.0
-Author:	GitHub <noreply@github.com>
-Date:	Wed Sep 22 04:03:56 2021 -0700
+lightweight tag 3c13831775d945b3ea247492dd799139fd8cbf8d v5.8.0
+Author:	Boshi Lian <farmer1992@gmail.com>
+Date:	Mon Nov 15 03:21:39 2021 -0800
 
-commit 14ddf779b9bf1376b6e3de51d2c513475f3f88ed
+commit 3c13831775d945b3ea247492dd799139fd8cbf8d
 Author: Boshi Lian <farmer1992@gmail.com>
-Date:   Wed Sep 22 04:03:56 2021 -0700
+Date:   Mon Nov 15 03:21:39 2021 -0800
 
-    add cmd on mac
+    bump ver
+
+commit 04c292e13c46ac1718a4b365e79d4957a05bcfe8
+Author: yh_victor <yhvictor@users.noreply.github.com>
+Date:   Fri Nov 12 17:03:07 2021 -0800
+
+    Update Myslot.lua
+
+commit 04c292e13c46ac1718a4b365e79d4957a05bcfe8
+Author: yh_victor <yhvictor@users.noreply.github.com>
+Date:   Fri Nov 12 17:03:07 2021 -0800
+
+    Update Myslot.lua
+
+commit 737cf4c8948e583fb0a5a5aaadf483214f4c42da
+Author: yh_victor <yhvictor@users.noreply.github.com>
+Date:   Fri Nov 12 17:00:58 2021 -0800
+
+    Update gui.lua
+
+commit 71054e03e03380377c25e22e177ea210e588cfa5
+Author: yh_victor <yhvictor@users.noreply.github.com>
+Date:   Fri Nov 12 16:59:35 2021 -0800
+
+    Update gui.lua
+
+commit f6987d138f8395a31ac2e2a15e9ffc49aa1f56b3
+Author: yh_victor <yhvictor@users.noreply.github.com>
+Date:   Fri Nov 12 16:56:38 2021 -0800
+
+    Update Myslot.lua
+
+commit fe85673a57399b6ce95c28e32b0ce669aef9a65f
+Author: yh_victor <yhvictor@users.noreply.github.com>
+Date:   Fri Nov 12 12:14:56 2021 -0800
+
+    Update Myslot.lua
 

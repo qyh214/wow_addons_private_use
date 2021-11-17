@@ -236,7 +236,22 @@ L["Channel (Spell)"] = "Потоковое"
 L["Character Stats"] = "Характеристики персонажа"
 L["Character Type"] = "Тип персонажа"
 L["Charge gained/lost"] = "Событие заряда"
-L["Charged Combo Point"] = "Заряженные анимой приемы"
+--[[Translation missing --]]
+L["Charged Combo Point (1)"] = "Charged Combo Point (1)"
+--[[Translation missing --]]
+L["Charged Combo Point (2)"] = "Charged Combo Point (2)"
+--[[Translation missing --]]
+L["Charged Combo Point (3)"] = "Charged Combo Point (3)"
+--[[Translation missing --]]
+L["Charged Combo Point (4)"] = "Charged Combo Point (4)"
+--[[Translation missing --]]
+L["Charged Combo Point 1"] = "Charged Combo Point 1"
+--[[Translation missing --]]
+L["Charged Combo Point 2"] = "Charged Combo Point 2"
+--[[Translation missing --]]
+L["Charged Combo Point 3"] = "Charged Combo Point 3"
+--[[Translation missing --]]
+L["Charged Combo Point 4"] = "Charged Combo Point 4"
 L["Charges"] = "Заряды"
 L["Charges Changed Event"] = "Изменение зарядов"
 L["Chat Frame"] = "Окно чата"
@@ -328,7 +343,6 @@ L["Distance"] = "Расстояние"
 L["Dodge"] = "Уклонение"
 L["Dodge (%)"] = "Уклонение"
 L["Dodge Rating"] = "Показатель уклонения"
-L["Done"] = "Выполнено"
 L["Down"] = "Вниз"
 L["Down, then Left"] = "Вниз, затем влево"
 L["Down, then Right"] = "Вниз, затем вправо"
@@ -693,7 +707,6 @@ L["Nefarian"] = "Нефариан"
 L["Netherspite"] = "Гнев Пустоты"
 L["Neutral"] = "Нейтральный"
 L["Never"] = "Никогда"
-L["Next"] = "Далее"
 L["Next Combat"] = "Режим боя"
 L["Next Encounter"] = "Сражение с боссом"
 L["Nightbane"] = "Ночная Погибель"
@@ -709,6 +722,8 @@ L["Not on Cooldown"] = "Не перезаряжается"
 L["Not On Threat Table"] = "Не в списке угроз"
 L["Note, that cross realm transmission is possible if you are on the same group"] = [=[Передача данных между игровыми мирами возможна,
 если вы находитесь в одной группе!]=]
+--[[Translation missing --]]
+L["Note: Due to how complicated the swing timer behaviour is and the lack of APIs from Blizzard, results are inaccurate in edge cases."] = "Note: Due to how complicated the swing timer behaviour is and the lack of APIs from Blizzard, results are inaccurate in edge cases."
 L["Note: 'Hide Alone' is not available in the new aura tracking system. A load option can be used instead."] = "|cFFFFCC00Предупреждение.|r Параметр \"Скрыть когда не в группе\" недоступен в новой версии триггера. Вместо него может быть использовано соответствующее условие на вкладке Загрузка."
 L["Note: The available text replacements for multi triggers match the normal triggers now."] = "|cFFFFCC00Примечение.|r Теперь для данного варианта триггера (несколько целей) доступны такие же специальные коды отображения динамической информации в тексте, как и для остальных."
 L["Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate. Range checking capabilities depend on your current class and known abilities as well as the type of unit being checked. Some of the ranges may also not work with certain NPCs.|n|n|cFFAAFFAAFriendly Units:|r %s|n|cFFFFAAAAHarmful Units:|r %s|n|cFFAAAAFFMiscellanous Units:|r %s"] = "|cFFFFCC00Примечание.|r Триггер оценивает (определяет приближённо) расстояние до хитбокса единицы. Фактическое расстояние до дружественных игроков обычно на 3 метра больше оценки. Возможности проверки дистанции зависят от вашего текущего класса, имеющихся способностей и от типа проверяемой единицы. Некоторые диапазоны могут не работать с отдельными NPC. |n|n|cFFAAFFAACоюзники:|r %s|n|cFFFFAAAAПротивники:|r %s|n|cFFAAAAFFПрочие цели:|r %s"
@@ -860,27 +875,6 @@ L["Requesting display information from %s ..."] = "Запрос информац
 L["Require Valid Target"] = "Требуется допустимая цель"
 L["Resist"] = "Сопротивление"
 L["Resisted"] = "Сопротивление"
-L["Resolve collisions dialog"] = [=[Вы включили аддон в котором определены индикации |cFF8800FFWeakAuras|r которые имеют те же имена, что и существующие.
-
-Вы должны переименовать ваши индикации, чтобы не было конфликта.
-
-Resolved: |cFFFF0000]=]
-L["Resolve collisions dialog singular"] = [=[Вы включили аддон в котором определена индикация |cFF8800FFWeakAuras|r которая имеет то же имя, что и существующая.
-
-Вы должны переименовать вашу индикацию, чтобы не было конфликта.
-
-Resolved: |cFFFF0000]=]
-L["Resolve collisions dialog startup"] = [=[Вы включили аддон в котором определены индикации |cFF8800FFWeakAuras|r которые имеют те же имена, что и существующие.
-
-
-Вы должны переименовать ваши индикации, чтобы не было конфликта.
-
-Resolved: |cFFFF0000]=]
-L["Resolve collisions dialog startup singular"] = [=[Вы включили аддон в котором определена индикация |cFF8800FFWeakAuras|r которая имеет то же имя, что и существующая.
-
-Вы должны переименовать вашу индикацию, чтобы не было конфликта.
-
-Resolved: |cFFFF0000]=]
 L["Rested"] = "Доп. опыт после отдыха"
 L["Rested Experience"] = "Доп. опыт после отдыха"
 L["Rested Experience (%)"] = "Доп. опыт после отдыха (%)"
@@ -996,6 +990,8 @@ L["Spell Usable"] = "Заклинание доступно"
 L["Spin"] = "Вращение"
 L["Spiral"] = "Спираль"
 L["Spiral In And Out"] = "Спираль (вперед-назад)"
+--[[Translation missing --]]
+L["Spirit"] = "Spirit"
 L["Stack Count"] = "Количество стаков"
 L["Stacks"] = "Стаки"
 L["Stage"] = "Фаза"

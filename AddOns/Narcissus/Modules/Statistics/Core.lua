@@ -348,6 +348,7 @@ function ReadQuest:UpdateActiveQuestData(questComplete)
     self.questlineLength = self:GetQuestlineLength(questComplete);
     self.timeStartReading = time();
     self.activeQuestID = GetQuestID();
+    self.cache = nil;
 end
 
 function ReadQuest:SaveReadingTime(questID, questComplete)
@@ -371,7 +372,6 @@ function ReadQuest:SaveReadingTime(questID, questComplete)
         self.db[questID] = {questlineLength, timeReading, questComplete};
     end
 end
-
 
 function ReadQuest:GetQuestlineLength(questComplete)
     local numWords = 0;
@@ -398,6 +398,38 @@ function ReadQuest:GetQuestlineLength(questComplete)
     end
     --print(numWords);
     return numWords
+end
+
+function ReadQuest:GetStatistics()
+    --use cache
+    if not self.cache then
+        self.cache = {};
+        for locale, questData in pairs(NarciStatisticsDB.questReadingTime) do
+            local numQuests = 0;
+            local numWords = 0;
+            local timeReading = 0;
+            for questID, data in pairs(questData) do
+                numQuests = numQuests + 1;
+                numWords = numWords + (data[1] or 0);
+                timeReading = timeReading + (data[2] or 0);
+            end
+            if numQuests > 0 then
+                local speed = 0;
+                if timeReading > 0 then
+                    speed = math.floor(numWords / timeReading * 60 + 0.5);
+                    timeReading = FormatTime(timeReading);
+                end
+                self.cache = {locale, numQuests, numWords, timeReading, speed};
+                --just get one locale for now
+                break
+            end
+        end
+    end
+    return unpack(self.cache)
+end
+
+NarciAPI.GetQuestStatistics = function()
+    return ReadQuest:GetStatistics()
 end
 
 function ReadQuest:PrintResult()

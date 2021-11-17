@@ -113,8 +113,6 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Add Trigger"] = "Add Trigger"
 	L["Additional Events"] = "Eventi Addizionali"
-	L["Addon"] = "Add-on"
-	L["Addons"] = "Add-ons"
 	L["Advanced"] = "Avanzate"
 	L["Align"] = "Allinea"
 	L["Alignment"] = "Allineamento"
@@ -748,8 +746,6 @@ Supports multiple entries, separated by commas
 	L["Magnetically Align"] = "Magnetically Align"
 	--[[Translation missing --]]
 	L["Main"] = "Main"
-	--[[Translation missing --]]
-	L["Manage displays defined by Addons"] = "Manage displays defined by Addons"
 	--[[Translation missing --]]
 	L["Match Count"] = "Match Count"
 	--[[Translation missing --]]

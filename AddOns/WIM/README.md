@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/sylvanaar/wow-instant-messenger.svg?branch=master)](https://travis-ci.org/sylvanaar/wow-instant-messenger)
-
 # wow-instant-messenger
 WIM (WoW Instant Messenger) is a World of Warcraft addon which brings an instant messenger feel to communication in game.
 

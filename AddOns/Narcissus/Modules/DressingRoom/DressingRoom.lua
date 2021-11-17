@@ -190,12 +190,26 @@ local function IsDressUpFrameMaximized()
     return (DressUpFrame.MaximizeMinimizeFrame and not DressUpFrame.MaximizeMinimizeFrame:IsMinimized())
 end
 
+local function InitializeActor(actor, actorInfo)
+	actor:SetUseCenterForOrigin(actorInfo.useCenterForOriginX, actorInfo.useCenterForOriginY, actorInfo.useCenterForOriginZ);
+	actor:SetPosition(actorInfo.position:GetXYZ());
+	actor:SetYaw(actorInfo.yaw);
+	actor:SetPitch(actorInfo.pitch);
+	actor:SetRoll(actorInfo.roll);
+
+    actor:SetAnimation(0, 0, 1.0);
+    actor:SetAlpha(1.0);
+    actor:SetRequestedScale(1.0);
+
+    actor:SetNormalizedScaleAggressiveness(actorInfo.normalizeScaleAggressiveness or 0.0);
+    actor:MarkScaleDirty();
+    actor:UpdateScale();
+end
 
 local function UpdateDressingRoomModelByUnit(unit)
     if not DressingRoomOverlayFrame then
         return
     end
-
     unit = unit or "player";
     local overlay = DressingRoomOverlayFrame;
     if not UnitExists(unit) then
@@ -256,7 +270,8 @@ local function UpdateDressingRoomModelByUnit(unit)
         modelInfo = GetActorInfoByUnit(modelUnit);
         if modelInfo then
             After(0.0,function()
-                ModelScene:InitializeActor(actor, modelInfo);   --Re-scale
+                --ModelScene:InitializeActor(actor, modelInfo);   --Re-scale      --!! This one taints !!
+                InitializeActor(actor, modelInfo)
             end);
         end
     end
@@ -347,15 +362,74 @@ end
 
 local Narci_UpdateDressingRoom = Narci_UpdateDressingRoom;
 
+local function SetupPlayerForModelScene(modelScene, itemModifiedAppearanceIDs, sheatheWeapons, autoDress, hideWeapons)
+	local actor = modelScene:GetPlayerActor();
+	if actor then
+		sheatheWeapons = (sheatheWeapons == nil) or sheatheWeapons;
+		hideWeapons = (hideWeapons == nil) or hideWeapons;
+        actor:SetModelByUnit("player", sheatheWeapons, autoDress, hideWeapons);
+		if itemModifiedAppearanceIDs then
+			for i, itemModifiedAppearanceID in ipairs(itemModifiedAppearanceIDs) do
+				actor:TryOn(itemModifiedAppearanceID);
+			end
+		end
+		actor:SetAnimationBlendOperation(LE_MODEL_BLEND_OPERATION_NONE);
+	end
+end
+
+local function TransitionToModelSceneID(self, modelSceneID, cameraTransitionType, cameraModificationType, forceEvenIfSame)
+	local modelSceneType, cameraIDs, actorIDs = C_ModelInfo.GetModelSceneInfoByID(modelSceneID);
+	if not modelSceneType or #cameraIDs == 0 or #actorIDs == 0 then
+		return;
+	end
+	if self.modelSceneID ~= modelSceneID or forceEvenIfSame then
+		self.modelSceneID = modelSceneID;
+		self.cameraTransitionType = cameraTransitionType;
+		self.cameraModificationType = cameraModificationType;
+		self.forceEvenIfSame = forceEvenIfSame;
+		local actorsToRelease = {};
+		for actor in self:EnumerateActiveActors() do
+			actorsToRelease[actor] = true;
+		end
+		local oldTagToActor = self.tagToActor;
+		self.tagToActor = {};
+		for actorIndex, actorID in ipairs(actorIDs) do
+			local actor = self:CreateOrTransitionActorFromScene(oldTagToActor, actorID);    --Taint!
+			if actor then
+				actorsToRelease[actor] = nil;
+			end
+		end
+		for actor in pairs(actorsToRelease) do
+			self.actorPool:Release(actor);
+		end
+		local oldTagToCamera = self.tagToCamera;
+		self.tagToCamera = {};
+		self.cameras = {};
+		local needsNewCamera = true;
+		for cameraIndex, cameraID in ipairs(cameraIDs) do
+			local camera = self:CreateOrTransitionCameraFromScene(oldTagToCamera, cameraTransitionType, cameraModificationType, cameraID);
+			if camera == self.activeCamera then
+				needsNewCamera = false;
+			end
+		end
+		if needsNewCamera then
+			self:SetActiveCamera(self.cameras[1]);
+		end
+		-- HACK: This should come from game data, instead we're caching them incase we Reset()
+		self.lightDirX, self.lightDirY, self.lightDirZ = self:GetLightDirection();
+	end
+	C_ModelInfo.AddActiveModelScene(self, self.modelSceneID);
+end
+
 function Narci_ShowDressingRoom()
     local frame = DressUpFrame;
     --derivated from Blizzard DressUpFrames.lua / DressUpFrame_Show
     if ( not frame:IsShown() ) then
-        if InCombatLockdown() then
+        if true or InCombatLockdown() then
             frame:Show();
             DressingRoomOverlayFrame:ListenEscapeKey(true);
         else
-            DressUpFrame_Show(frame);
+            DressUpFrame_Show(frame);   --!! This one taints !!
         end
 
         if frame.mode ~= "player" then
@@ -364,14 +438,14 @@ function Narci_ShowDressingRoom()
             frame.MaximizeMinimizeFrame:Maximize(true);
             frame.ModelScene:ClearScene();
             frame.ModelScene:SetViewInsets(0, 0, 0, 0);
-            frame.ModelScene:TransitionToModelSceneID(290, CAMERA_TRANSITION_TYPE_IMMEDIATE, CAMERA_MODIFICATION_TYPE_DISCARD, true);
-
+            TransitionToModelSceneID(frame.ModelScene, 290, CAMERA_TRANSITION_TYPE_IMMEDIATE, CAMERA_MODIFICATION_TYPE_DISCARD, true);  --Taint
             local sheatheWeapons = false;
             local autoDress = true;
             local itemModifiedAppearanceIDs = nil;
             SetupPlayerForModelScene(frame.ModelScene, itemModifiedAppearanceIDs, sheatheWeapons, autoDress);
             Narci_UpdateDressingRoom();
         end
+        
 
         if slotFrameEnabled then
             UpdateDressingRoomModelByUnit("player");
@@ -483,6 +557,26 @@ local function DressingRoomOverlayFrame_Initialize()
             UpdateDressingRoomModelByUnit("player");
         end)
     end
+
+    DressUpFrame.ModelScene:HookScript("OnDressModel", function(self, ...)
+        --expensive call
+        if not (DressingRoomOverlayFrame and slotFrameEnabled) then return end;
+        if not DressingRoomOverlayFrame.pauseUpdate then
+            DressingRoomOverlayFrame.pauseUpdate = true;
+            DressingRoomOverlayFrame.mode = "visual";
+            After(0, function()
+                if slotFrameEnabled and IsDressUpFrameMaximized() then
+                    DressingRoomOverlayFrame.SlotFrame:Show();
+                    DressingRoomOverlayFrame.OptionFrame:Show();
+                    GetDressingSourceFromActor();
+                    if NarciDressingRoomGearTextsClipborad:IsVisible() then
+                        PrintItemList();
+                    end
+                end
+                DressingRoomOverlayFrame.pauseUpdate = nil;
+            end)
+        end
+    end)
 end
 
 
@@ -573,7 +667,11 @@ function NarciDressingRoomOverlayMixin:ListenEscapeKey(state)
     if state then
         self:SetScript("OnKeyDown", function(frame, key, down)
             if key == "ESCAPE" then
+                self:SetPropagateKeyboardInput(false);
+                self:SetScript("OnKeyDown", nil);
                 DressUpFrame:Hide();
+            else
+                self:SetPropagateKeyboardInput(true);
             end
         end)
     else
@@ -769,220 +867,17 @@ SetModelByCreatureDisplayID()
 SetAnimation(animation[, variation, animSpeed, timeOffsetSecs])
 SetSpellVisualKit(spellVisualKitID[, oneShot])
 
---]]
 
-
-
-
-
---[[
---For Testing
-
-function MountDressingRoom(mountSpellID)
-    if not DressingRoomMountModel then
-        DressingRoomMountModel = DressUpFrame.ModelScene:CreateActor();
-    end
-
-    local mountActor = DressingRoomMountModel;
-    local ModelScene = DressUpFrame.ModelScene;
-    local playerActor = ModelScene:GetPlayerActor();
-
-    local mountID = C_MountJournal.GetMountFromSpell(tonumber(mountSpellID));
-    local creatureDisplayID, _, _, isSelfMount, _, modelSceneID, animID, spellVisualKitID, disablePlayerMountPreview = C_MountJournal.GetMountInfoExtraByID(mountID);   --93202 Hopper
-    mountActor:SetModelByCreatureDisplayID(creatureDisplayID);
-
-    local calcMountScale = mountActor:CalculateMountScale(playerActor);
-    if false then   --Scale down Player
-        local inverseScale = 1 / calcMountScale; 
-        playerActor:SetRequestedScale( inverseScale );
-    else            --Scale Mount
-        mountActor:SetScale( calcMountScale );
-    end
-    playerActor:SetYaw(0)
-    mountActor:AttachToMount(playerActor, animID, spellVisualKitID);
-end
-
-function GetActorScriptTag(actorID)
-    local a = C_ModelInfo.GetModelSceneActorInfoByID(actorID)
-    if a then print(" Tag: "..(a.scriptTag or "N/A") ); end;
-end
-
-function GetAllActorScriptTags()
-    local modelSceneID = 290;       --DressUpFrame
-    local _, _, actorIDs = C_ModelInfo.GetModelSceneInfoByID(modelSceneID);
-    for k, v in pairs(actorIDs) do
-        print("ID: "..(k or "N/A"));
-        GetActorScriptTag(v);
-    end
-end
-
-function GetDressUpFrameInfo()
-    local ModelScene = DressUpFrame.ModelScene;
-    local camera = ModelScene:GetActiveCamera();
-    local actor = ModelScene:GetPlayerActor();
-    local scale = actor:GetScale();
-    local x, y, z = ModelScene:GetCameraPosition();
-    local cameraDistance = camera:GetZoomDistance();
-    print("Model Scale: "..scale);
-    print(x.."\n"..y.."\n"..z);
-    print("Distance: "..cameraDistance)
-    --/run GetDressUpFrameInfo()
-end
-
-function TestActorIDs(begin, ending)
-    local temp;
-    for i = begin, ending do
-        temp = C_ModelInfo.GetModelSceneActorInfoByID(i)
-        if temp and temp.scriptTag then
-            print(i.." Tag: "..temp.scriptTag);
-        end
-    end
-end
-
-function GetActorID(RaceName)
-    --Run this when new playable race available
-    local temp, tag;
-    local match1 = RaceName.."-male";
-    local match2 = RaceName.."-female";
-
-    for i = 1, 1500 do
-        temp = C_ModelInfo.GetModelSceneActorInfoByID(i)
-        if temp and temp.scriptTag then
-            tag = temp.scriptTag
-            if tag == match1 or tag == match2 or tag == RaceName then
-                print(i.." "..tag);
-            end
-        end
-    end
-end
-
-hooksecurefunc("ChatFrame_DisplayUsageError", function(messageTag)
-    print(messageTag)
+local Test = CreateFrame("Button", "TestButton", DressUpFrame, "SecureActionButtonTemplate");
+Test:SetFrameStrata("FULLSCREEN")
+Test:SetSize(64, 64);
+Test:SetPoint("CENTER", DressUpFrame, "CENTER", 0, 0);
+Test.tex = Test:CreateTexture(nil, "ARTWORK");
+Test.tex:SetAllPoints(true);
+Test.tex:SetColorTexture(1, 0, 0);
+Test:SetAttribute("type1", "test")
+Test:SetAttribute("_test", function()
+    --DressUpVisual("item:2092");
+    securecall("DressUpVisual", "item:2092");
 end)
---]]
-
---[[
-function ModelSceneActorMixin:OnModelLoaded()
-    self:MarkScaleDirty();
-    self:SetAlpha(0);
-    After(0, function()
-        if self:IsShown() then
-            print("Loaded")
-            UIFrameFadeIn(self, 0.2, 0, 1)
-        end
-    end)
-end
---]]
-
---[[
-WardrobeCollectionFrame.SetsCollectionFrame:Refresh()
-
-
-local customSources = {};
-local CustomSet = {
-    ["description"] = "Custom",
-    ["label"] = "This Is A Set Description",
-    ["hiddenUntilCollected"] = false,
-    ["setID"] = 1208001,
-    ["expansionID"] = 9,
-    ["limitedTimeSet"] = true,
-    ["patchID"] = 90000,
-    ["classMask"] = 3592,
-    ["collected"] = true,
-    ["uiOrder"] = 3592,
-    ["favorite"] = false,
-    ["name"] = "Custom Name",
-}
-
-local GetSetInfo = C_TransmogSets.GetSetInfo;
-local GetBaseSets = C_TransmogSets.GetBaseSets;
-local GetVariantSets = C_TransmogSets.GetVariantSets;
-local GetBaseSetID = C_TransmogSets.GetBaseSetID;
-local GetSetSources = C_TransmogSets.GetSetSources;
-local GetSourcesForSlot = C_TransmogSets.GetSourcesForSlot;
-local IsBaseSetCollected = C_TransmogSets.IsBaseSetCollected;
-
-local function IsSourceCollected(sourceID)
-    return C_TransmogCollection.GetSourceInfo(sourceID) or false
-end
-
-function C_TransmogSets.GetSetInfo(setID)
-    if setID < 10000 then
-        return GetSetInfo(setID)
-    else
-        return CustomSet
-    end
-end
-
-function C_TransmogSets.GetVariantSets(setID)
-    if setID < 10000 then
-        return GetVariantSets(setID)
-    else
-        return {}
-    end
-end
-
-function C_TransmogSets.GetBaseSetID(setID)
-    if setID < 10000 then
-        return GetBaseSetID(setID)
-    else
-        return setID
-    end
-end
-
-function C_TransmogSets.GetSetSources(setID)
-    if setID < 10000 then
-        return GetSetSources(setID)
-    else
-        local table = {}
-        for k, v in pairs(customSources) do
-            table[v] = IsSourceCollected(v);
-        end
-
-        return table
-    end
-end
-
-function C_TransmogSets.GetSourcesForSlot(setID, slot)
-    if setID < 10000 then
-        return GetSourcesForSlot(setID, slot)
-    else
-        return {}
-    end
-end
-
-function C_TransmogSets.IsBaseSetCollected(setID)
-    if setID < 10000 then
-        return IsBaseSetCollected(setID)
-    else
-        return true
-    end
-end
-
-function C_TransmogSets.GetBaseSets()
-    local Sets = GetBaseSets();
-    if CustomSet and #customSources ~= 0 then
-        tinsert(Sets, CustomSet);
-    end
-    return Sets
-end
-
-
-hooksecurefunc(C_TransmogCollection, "SaveOutfit", function(name, sourceIDTable, mainHandEnchant, offHandEnchant, icon)
-    print(name);
-    CustomSet.name = name;
-    customSources = sourceIDTable;
-    if WardrobeCollectionFrame then
-        After(0, function()
-            local SetsCollectionFrame = WardrobeCollectionFrame.SetsCollectionFrame;
-            SetsCollectionFrame:Hide();
-            SetsCollectionFrame:Show();
-        end)
-    end
-end)
-
-
-/script local n = CreateFromMixins(ItemTransmogInfoMixin); n:Init(146480, 113239);NarciPlayerModelFrame1:SetItemTransmogInfo(n, 3)
-/script local n = CreateFromMixins(ItemTransmogInfoMixin); n:Init(113239, 146480);NarciPlayerModelFrame1:SetItemTransmogInfo(n, 3)
-/dump C_TransmogCollection.GetAllAppearanceSources(55699)
 --]]

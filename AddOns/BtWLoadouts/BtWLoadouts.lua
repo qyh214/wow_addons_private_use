@@ -127,6 +127,19 @@ local Settings = SettingsCreate({
         end,
         default = true,
     },
+    {
+        name = L["Sort classes by name"],
+        key = "sortClassesByName",
+        onChange = function (id, value)
+			if value then
+				Internal.SortClassesByName()
+			else
+				Internal.SortClassesByID()
+			end
+			BtWLoadoutsFrame:Update()
+        end,
+        default = true,
+    },
 });
 Internal.Settings = Settings;
 
@@ -686,7 +699,7 @@ do
 
 	function Internal.UpdateRestrictionFilters(set)
 		if set.restrictions then
-			local filters = set.filters
+			local filters = set.filters or {}
 			
 			-- Covenant
 			if set.restrictions.covenant and next(set.restrictions.covenant) then

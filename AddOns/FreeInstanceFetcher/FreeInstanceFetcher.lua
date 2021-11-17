@@ -5,15 +5,15 @@ if not faction then return end
 
 local database = {
     Alliance = {
-        ['恩托哇-瓦里安'] = {true, '9', '0'},
-        ['太阳断月之弦-末日行者'] = {true, '9', '0'},
+        ['羔羊公益之使-瓦里安'] = {true, '9', '0'},
+        ['羔羊公益之命-末日行者'] = {true, '9', '0'},
     },
     Horde = {
-        ['咩咩的羊羔-金色平原'] = {true, '9', '0'},
-        ['咩咩的羊羔-瓦里安'] = {true, '9', '0'},
-        ['愤怒的羊羊-瓦拉纳'] = {true, '9', '0'},
-        ['咩咩的猎手-金色平原'] = {true, '9', '0'},
-        ['愤怒的羊羊-冰霜之刃'] = {true, '9', '0'},
+        ['羔羊公益之不-瓦拉纳'] = {true, '9', '0'},
+        ['羔羊公益之忘-金色平原'] = {true, '9', '0'},
+        ['羔羊公益之初-瓦里安'] = {true, '9', '0'},
+        ['羔羊公益之心-冰霜之刃'] = {true, '9', '0'},
+        ['羔羊公益之牢-金色平原'] = {true, '9', '0'},
     },
 }
 
@@ -131,7 +131,7 @@ F.addonPrefix = "\124cFF70B8FF" .. addonName .. "\124r: "
 F.addonLocaleName = "\124cFF70B8FF便利CD获取\124r: "
 F.addonVersion = GetAddOnMetadata(addonName, 'Version')
 --[==[@debug@
-if F.addonVersion == 'v9.1.0' then
+if F.addonVersion == 'v9.1.5' then
     F.addonVersion = 'Dev'
 end
 --@end-debug@]==]

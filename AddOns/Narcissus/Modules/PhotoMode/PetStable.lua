@@ -134,7 +134,7 @@ local function SortFunc(a, b)
     --active pet first (index <=5 ) else: icon then index
     if a[1] > 5 and b[1] > 5 then
         if a[2] == b[2] then
-            return a[1] < a[2]
+            return a[1] < b[1]
         else
             return a[2] < b[2]
         end
