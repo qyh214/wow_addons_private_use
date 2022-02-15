@@ -7,8 +7,7 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Options
-	--[[Translation missing --]]
-	L[" and |cFFFF0000mirrored|r"] = " and |cFFFF0000mirrored|r"
+	L[" and |cFFFF0000mirrored|r"] = "und |cFFFF0000gespiegelt|r"
 	--[[Translation missing --]]
 	L["-- Do not remove this comment, it is part of this aura: "] = "-- Do not remove this comment, it is part of this aura: "
 	--[[Translation missing --]]
@@ -117,34 +116,28 @@ local L = WeakAuras.L
 	L["Advanced"] = "Erweitert"
 	L["Align"] = "Ausrichtung"
 	L["Alignment"] = "Ausrichtung"
-	--[[Translation missing --]]
-	L["All of"] = "All of"
+	L["All of"] = "Alles von"
 	L["Allow Full Rotation"] = "Erlaubt eine vollständige Rotation"
 	L["Alpha"] = "Transparenz"
 	L["Anchor"] = "Anker"
 	L["Anchor Point"] = "Ankerpunkt"
 	L["Anchored To"] = "Angeheftet an"
 	L["And "] = "Und"
-	--[[Translation missing --]]
-	L["and"] = "and"
+	L["and"] = "und"
 	L["and aligned left"] = "und links ausgerichtet"
 	L["and aligned right"] = "und rechts ausgerichtet"
-	--[[Translation missing --]]
-	L["and rotated left"] = "and rotated left"
-	--[[Translation missing --]]
-	L["and rotated right"] = "and rotated right"
+	L["and rotated left"] = "und nach links gedreht"
+	L["and rotated right"] = "und nach rechts gedreht"
 	L["and Trigger %s"] = "und Auslöser %s"
 	--[[Translation missing --]]
 	L["and with width |cFFFF0000%s|r and %s"] = "and with width |cFFFF0000%s|r and %s"
 	L["Angle"] = "Winkel"
 	L["Animate"] = "Animieren"
 	L["Animated Expand and Collapse"] = "Erweitern und Verbergen animieren"
-	--[[Translation missing --]]
-	L["Animates progress changes"] = "Animates progress changes"
+	L["Animates progress changes"] = "Animiert Fortschrittsänderungen"
 	--[[Translation missing --]]
 	L["Animation End"] = "Animation End"
-	--[[Translation missing --]]
-	L["Animation Mode"] = "Animation Mode"
+	L["Animation Mode"] = "Animationsmodus"
 	L["Animation relative duration description"] = [=[Die Dauer der Animation relativ zur Dauer der Anzeige als Bruchteil (1/2), als Prozent (50%) oder als Dezimal (0.5).
 |cFFFF0000Notiz:|r Falls die Anzeige keine Dauer besitzt (zb. Aura ohne Dauer), wird diese Animation nicht ausgeführt.
 
@@ -186,8 +179,7 @@ Off Screen]=]
 	--[[Translation missing --]]
 	L["Backdrop in Front"] = "Backdrop in Front"
 	L["Backdrop Style"] = "Hintergrundstil"
-	--[[Translation missing --]]
-	L["Background"] = "Background"
+	L["Background"] = "Hintergrund"
 	L["Background Color"] = "Hintergrundfarbe"
 	--[[Translation missing --]]
 	L["Background Inner"] = "Background Inner"
@@ -213,12 +205,9 @@ Off Screen]=]
 	L["Border Settings"] = "Rahmeneinstellungen"
 	L["Border Size"] = "Rahmengröße"
 	L["Border Style"] = "Rahmenstil"
-	--[[Translation missing --]]
-	L["Bottom"] = "Bottom"
-	--[[Translation missing --]]
-	L["Bottom Left"] = "Bottom Left"
-	--[[Translation missing --]]
-	L["Bottom Right"] = "Bottom Right"
+	L["Bottom"] = "Unten"
+	L["Bottom Left"] = "Unten Links"
+	L["Bottom Right"] = "Unten Rechts"
 	--[[Translation missing --]]
 	L["Bracket Matching"] = "Bracket Matching"
 	--[[Translation missing --]]
@@ -345,8 +334,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Delete children and group"] = "Kinder und Gruppe löschen"
 	L["Delete Entry"] = "Eintrag löschen"
 	L["Desaturate"] = "Entsättigen"
-	--[[Translation missing --]]
-	L["Description"] = "Description"
+	L["Description"] = "Beschreibung"
 	L["Description Text"] = "Beschreibungstext"
 	--[[Translation missing --]]
 	L["Determines how many entries can be in the table."] = "Determines how many entries can be in the table."
@@ -364,8 +352,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Do not group this display"] = "Diese Anzeige nicht kopieren"
 	--[[Translation missing --]]
 	L["Do you want to ignore all future updates for this aura"] = "Do you want to ignore all future updates for this aura"
-	--[[Translation missing --]]
-	L["Documentation"] = "Documentation"
+	L["Documentation"] = "Dokumentation"
 	L["Done"] = "Fertig"
 	L["Drag to move"] = "Ziehen, um diese Anzeige zu verschieben"
 	L["Duplicate"] = "Duplizieren"
@@ -416,19 +403,14 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Enter User Mode"] = "Enter User Mode"
 	--[[Translation missing --]]
 	L["Enter user mode."] = "Enter user mode."
-	--[[Translation missing --]]
-	L["Entry %i"] = "Entry %i"
-	--[[Translation missing --]]
-	L["Entry limit"] = "Entry limit"
-	--[[Translation missing --]]
-	L["Entry Name Source"] = "Entry Name Source"
+	L["Entry %i"] = "Eintrag %i"
+	L["Entry limit"] = "Eintragsgrenze"
+	L["Entry Name Source"] = "Eintragsnamensquelle"
 	L["Event Type"] = "Ereignistyp"
 	L["Event(s)"] = "Ereignis(se)"
 	L["Everything"] = "Alles"
-	--[[Translation missing --]]
-	L["Exact Spell ID(s)"] = "Exact Spell ID(s)"
-	--[[Translation missing --]]
-	L["Exact Spell Match"] = "Exact Spell Match"
+	L["Exact Spell ID(s)"] = "Exakte ZauberID(s)"
+	L["Exact Spell Match"] = "Exakte Zauberübereinstimmung"
 	L["Expand"] = "Erweitern"
 	L["Expand all loaded displays"] = "Alle geladenen Anzeigen erweitern"
 	L["Expand all non-loaded displays"] = "Alle nicht geladenen Anzeigen erweitern"
@@ -438,6 +420,10 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Export to Lua table..."] = "Als Lua-Tabelle exportieren.."
 	L["Export to string..."] = "Als Zeichenkette exportieren.."
 	L["External"] = "Extern"
+	--[[Translation missing --]]
+	L["Extra Height"] = "Extra Height"
+	--[[Translation missing --]]
+	L["Extra Width"] = "Extra Width"
 	L["Fade"] = "Verblassen"
 	L["Fade In"] = "Einblenden"
 	L["Fade Out"] = "Ausblenden"
@@ -452,10 +438,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Filter by Arena Spec"] = "Filter by Arena Spec"
 	L["Filter by Class"] = "Nach Klasse filtern"
 	L["Filter by Group Role"] = "Nach Gruppenrolle filtern"
-	--[[Translation missing --]]
-	L["Filter by Nameplate Type"] = "Filter by Nameplate Type"
-	--[[Translation missing --]]
-	L["Filter by Raid Role"] = "Filter by Raid Role"
+	L["Filter by Nameplate Type"] = "Filter nach Namensschildertypen"
+	L["Filter by Raid Role"] = "Filter nach Schlachtzugsrollen"
 	--[[Translation missing --]]
 	L[ [=[Filter formats: 'Name', 'Name-Realm', '-Realm'.
 
@@ -464,8 +448,7 @@ Supports multiple entries, separated by commas
 
 Supports multiple entries, separated by commas
 ]=]
-	--[[Translation missing --]]
-	L["Find Auras"] = "Find Auras"
+	L["Find Auras"] = "Finde Auren"
 	L["Finish"] = "Endanimation"
 	L["Fire Orb"] = "Feuerkugel"
 	L["Font"] = "Schriftart"
@@ -1027,8 +1010,7 @@ Nur ein Wert kann ausgewählt werden.]=]
 	L["Tooltip Pattern Match"] = "Tooltip Pattern Match"
 	L["Tooltip Text"] = "Tooltip Text"
 	L["Tooltip Value"] = "Tooltip Wert"
-	--[[Translation missing --]]
-	L["Tooltip Value #"] = "Tooltip Value #"
+	L["Tooltip Value #"] = "Tooltip Wert #"
 	L["Top"] = "Oben"
 	L["Top HUD position"] = "Höchste HUD Position"
 	L["Top Left"] = "Oben links"
@@ -1115,8 +1097,7 @@ Nur ein Wert kann ausgewählt werden.]=]
 	L["Y Rotation"] = "Y-Rotation"
 	L["Y Scale"] = "Skalierung (Y)"
 	L["Yellow Rune"] = "Gelbe Rune"
-	--[[Translation missing --]]
-	L["Yes"] = "Yes"
+	L["Yes"] = "Ja"
 	--[[Translation missing --]]
 	L["y-Offset"] = "y-Offset"
 	L["Y-Offset"] = "Y-Versatz"

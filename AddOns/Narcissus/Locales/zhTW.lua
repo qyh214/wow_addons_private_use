@@ -2,15 +2,12 @@ if not(GetLocale() == "zhTW") then
     return
 end
 
-local L = Narci.L
+local L = Narci.L;
+local S = Narci.L.S;
 
 NARCI_GRADIENT = "|cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r 角色資訊"
 MYMOG_GRADIENT = "|cffA236EFM|cff9448F1y |cff865BF2T|cff786DF4r|cff6A80F6a|cff5D92F7n|cff4FA4F9s|cff41B7FAm|cff33C9FCo|cff32c9fbg|r"
 
-NARCI_MODIFIER_ALT = "ALT鍵";   --Windows
-if IsMacClient() then
-    NARCI_MODIFIER_ALT = "Option鍵";  --Mac OS
-end
 
 L["Movement Speed"] = "移動速度";
 L["Damage Reduction Percentage"] = "減傷%";
@@ -277,6 +274,9 @@ L["Use Your Model"] = "使用自身外形";
 L["Cannot Inspect Target"] = "無法檢視目標";
 L["External Link"] = "外部鏈接";
 L["Add to MogIt Wishlist"] = "加入MogIt願望清單";
+L["Show Taint Solution"] = "如何避免此問題？";
+L["Taint Solution Step1"] = "1.重新載入介面。";
+L["Taint Solution Step2"] = "2."..NARCI_MODIFIER_CONTROL.."+左鍵點擊物品來打開試衣間。";
 
 --NPC Browser--
 NARCI_NPC_BROWSER_TITLE_LEVEL = ".*%?%?.?";      --Level ?? --Use this to check if the second line of the tooltip is NPC's title or unit type
@@ -428,7 +428,7 @@ L["Splash Content8 Description"] = "按住Shift並拖動此按鈕可使其脫離
 
 --Project Details--
 NARCI_ALL_PROJECTS = "全部項目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100模組作者: Peterodox\n更新日期: 2021.08.23|r\n\n感謝妳使用此模組！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100模組作者: Peterodox\n更新日期: 2021.11.28|r\n\n感謝妳使用此模組！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾澤拉斯上的不同景點，並收集各種故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沈浸式角色面板；妳最好的截圖助手。"
 
@@ -468,3 +468,19 @@ L["Mythic Plus Abbrev"] = "傳奇地城";
 L["Total Runs"] = "完成次數：";
 L["Complete In Time"] = "限時";
 L["Complete Over Time"] = "超時";
+L["Runs"] = "分佈圖";
+
+--Equipment Upgrade--
+L["Temp Enchant"] = "暫時性附魔";
+L["Owned"] = "擁有的";                       --Only show owned items
+L["At Level"] = "在%d級時:";                 --Enchants scale with player level
+L["No Item Alert"] = "沒有相容的物品";
+L["Click to Insert"] = "左鍵進行鑲嵌";       --Insert a gem
+L["No Socket"] = "沒有插槽";
+L["No Other Item For Slot"] = "没用其他的%s装备";       --where %s is the slot name
+L["In Bags"] = "背包中";
+
+--Statistics--
+S["Narcissus Played"] = "Narcissus使用時長";
+S["Format Since"] = "(自%s以來)";
+S["Screenshots"] = "使用Narcissus擷圖";

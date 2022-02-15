@@ -1,6 +1,6 @@
 local E, L, V, P, G = unpack(ElvUI)
 local M = E:GetModule('Misc')
-local LBG = E.Libs.ButtonGlow
+local LCG = E.Libs.CustomGlow
 
 local _G = _G
 local unpack, pairs = unpack, pairs
@@ -16,7 +16,6 @@ local GetCVarBool = GetCVarBool
 local GetLootSlotInfo = GetLootSlotInfo
 local GetLootSlotLink = GetLootSlotLink
 local GetNumLootItems = GetNumLootItems
-local HandleModifiedItemClick = HandleModifiedItemClick
 local IsFishingLoot = IsFishingLoot
 local IsModifiedClick = IsModifiedClick
 local LootSlot = LootSlot
@@ -80,7 +79,7 @@ local OnClick = function(self)
 	LootFrame.selectedTexture = self.icon:GetTexture()
 
 	if IsModifiedClick() then
-		HandleModifiedItemClick(GetLootSlotLink(self:GetID()))
+		_G.HandleModifiedItemClick(GetLootSlotLink(self:GetID()))
 	else
 		StaticPopup_Hide('CONFIRM_LOOT_DISTRIBUTION')
 		LootSlot(self:GetID())
@@ -260,15 +259,15 @@ function M:LOOT_OPENED(_, autoloot)
 			w = max(w, slot.name:GetStringWidth())
 
 			local questTexture = slot.questTexture
-			if ( questId and not isActive ) then
+			if questId and not isActive then
 				questTexture:Show()
-				LBG.ShowOverlayGlow(slot.iconFrame)
-			elseif ( questId or isQuestItem ) then
+				LCG.ShowOverlayGlow(slot.iconFrame)
+			elseif questId or isQuestItem then
 				questTexture:Hide()
-				LBG.ShowOverlayGlow(slot.iconFrame)
+				LCG.ShowOverlayGlow(slot.iconFrame)
 			else
 				questTexture:Hide()
-				LBG.HideOverlayGlow(slot.iconFrame)
+				LCG.HideOverlayGlow(slot.iconFrame)
 			end
 
 			-- Check for FasterLooting scripts or w/e (if bag is full)

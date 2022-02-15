@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1737, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210905144823")
+mod:SetRevision("20220116144653")
 mod:SetCreatureID(104154)--The Demon Within (111022)
 mod:SetEncounterID(1866)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
@@ -108,7 +108,7 @@ local timerFelEffluxCD				= mod:NewCDCountTimer(10.7, 206514, nil, nil, nil, 3)-
 ----Fel Lord Kuraz'mal
 mod:AddTimerLine(Kurazmal)
 local timerFelLordKurazCD			= mod:NewCastTimer(16, "ej13121", nil, nil, nil, 1, 212258, nil, nil, mod:IsTank() and 2, 4)
-local timerShatterEssenceCD			= mod:NewCDTimer(54, 206675, nil, "Tank", nil, 5, nil, DBM_CORE_L.DEADLY_ICON..DBM_CORE_L.TANK_ICON)
+local timerShatterEssenceCD			= mod:NewCDTimer(54, 206675, nil, "Tank", nil, 5, nil, DBM_COMMON_L.DEADLY_ICON..DBM_COMMON_L.TANK_ICON)
 local timerFelObeliskCD				= mod:NewCDTimer(16, 206841, nil, nil, nil, 3)
 ----Inquisitor Vethriz
 mod:AddTimerLine(Vethriz)
@@ -136,13 +136,13 @@ local timerWindsCD					= mod:NewCDCountTimer(39, 199446, nil, nil, nil, 2)
 local timerWilloftheDemonWithin		= mod:NewCastTimer(43, 211439, nil, nil, nil, 2)
 local timerParasiticWoundCD			= mod:NewCDTimer(36, 206847, nil, nil, nil, 3)
 local timerWounded					= mod:NewBuffActiveTimer(36, 227009, nil, nil, nil, 6)
-local timerSoulSeverCD				= mod:NewCDCountTimer(36, 220957, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, mod:IsTank() and 2, 6)
+local timerSoulSeverCD				= mod:NewCDCountTimer(36, 220957, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, mod:IsTank() and 2, 6)
 local timerVisionsofDarkTitan		= mod:NewCastTimer(9, 227008, nil, nil, nil, 2)
 local timerVisionsofDarkTitanCD		= mod:NewCDCountTimer(9, 227008, nil, nil, nil, 2, nil, nil, nil, 1, 6)
 local timerFlameCrashCD				= mod:NewCDCountTimer(20, 227071, nil, nil, nil, 3, nil, nil, nil, mod:IsTank() and 3, 6)
 local timerSummonNightorbCD			= mod:NewCDCountTimer(10.9, 227283, nil, nil, nil, 1, 225133)
 --Shard
-mod:AddTimerLine(DBM_CORE_L.ADDS)
+mod:AddTimerLine(DBM_COMMON_L.ADDS)
 local timerManifestAzzinothCD		= mod:NewCDCountTimer(10.9, 221149, nil, nil, nil, 1, 236237)
 local timerChaosSeedCD				= mod:NewCDTimer(10.9, 221336, nil, nil, nil, 3)
 local timerBulwarkofAzzinothCD		= mod:NewCDTimer(10.9, 221408, nil, nil, nil, 6)
@@ -386,7 +386,7 @@ function mod:SPELL_CAST_START(args)
 				specWarnBondsofFel:Play("carefly")
 			end
 		else
-			local targetName = UnitName("boss1target") or DBM_CORE_L.UNKNOWN
+			local targetName = UnitName("boss1target") or DBM_COMMON_L.UNKNOWN
 			if not UnitIsUnit("player", "boss1target") then--the very first bonds of fel, threat is broken and not available yet, so we need an additional filter
 				if self:AntiSpam(5, targetName) then
 					specWarnBondsofFelTank:Show(targetName)
@@ -425,7 +425,7 @@ function mod:SPELL_CAST_START(args)
 			end
 		end
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(DBM_CORE_L.NO_DEBUFF:format(timeStopBuff))
+			DBM.InfoFrame:SetHeader(DBM_COMMON_L.NO_DEBUFF:format(timeStopBuff))
 			DBM.InfoFrame:Show(10, "playergooddebuff", timeStopBuff)
 		end
 	elseif spellId == 221408 then
@@ -435,7 +435,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnPurifiedEssence:Play("movetimebubble")
 		timerPurifiedEssence:Start()
 		if self.Options.InfoFrame then
-			DBM.InfoFrame:SetHeader(DBM_CORE_L.NO_DEBUFF:format(timeStopBuff))
+			DBM.InfoFrame:SetHeader(DBM_COMMON_L.NO_DEBUFF:format(timeStopBuff))
 			DBM.InfoFrame:Show(10, "playergooddebuff", timeStopBuff)
 		end
 	end

@@ -2645,7 +2645,7 @@ function NarciBarberShopSettingsMixin:OnLoad()
     self:SetBorderColor(v, v, v, 1);
     self:SetBackgroundColor(0, 0, 0, 1);
     self.Divider:SetVertexColor(v, v, v);
-    self.ScrollFrame.scrollBar.Background:SetVertexColor(v, v, v);
+    self.ScrollFrame.scrollBar.Background:SetVertexColor(0.5, 0.5, 0.5);
 
     local frameHeight = math.floor(self.ScrollFrame:GetHeight() + 0.5);
     self.frameHeight = frameHeight;

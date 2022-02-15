@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(157, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806141910")
+mod:SetRevision("20220116034430")
 mod:SetCreatureID(45992, 45993)
 mod:SetEncounterID(1032)
 mod:SetUsedIcons(6, 7, 8)
@@ -58,8 +58,8 @@ local yellEngulfingMagic			= mod:NewYell(86622)
 local specWarnTwilightZone			= mod:NewSpecialWarningStack(86214, nil, 20)
 
 --Valiona Ground Phase
-local timerBlackout					= mod:NewTargetTimer(15, 86788, nil, nil, nil, 5, nil, DBM_CORE_L.MAGIC_ICON..DBM_CORE_L.HEALER_ICON)
-local timerBlackoutCD				= mod:NewCDTimer(45.5, 86788, nil, nil, nil, 3, nil, DBM_CORE_L.MAGIC_ICON..DBM_CORE_L.DEADLY_ICON)
+local timerBlackout					= mod:NewTargetTimer(15, 86788, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON..DBM_COMMON_L.HEALER_ICON)
+local timerBlackoutCD				= mod:NewCDTimer(45.5, 86788, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON..DBM_COMMON_L.DEADLY_ICON)
 local timerDevouringFlamesCD		= mod:NewCDTimer(40, 86840, nil, nil, nil, 3)
 local timerNextDazzlingDestruction	= mod:NewNextTimer(132, 86408, nil, nil, nil, 3)
 --Theralion Ground Phase
@@ -69,8 +69,8 @@ local timerEngulfingMagicNext		= mod:NewCDTimer(35, 86622, nil, nil, nil, 3)--30
 local timerNextFabFlames			= mod:NewNextTimer(15, 86505, nil, nil, nil, 3)
 local timerNextDeepBreath			= mod:NewNextTimer(98, 86059, nil, nil, nil, 3)
 
-local timerTwilightShift			= mod:NewTargetTimer(100, 93051, nil, "Tank", 2, 5, nil, DBM_CORE_L.TANK_ICON)
-local timerTwilightShiftCD			= mod:NewCDTimer(20, 93051, nil, "Tank", 2, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerTwilightShift			= mod:NewTargetTimer(100, 93051, nil, "Tank", 2, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerTwilightShiftCD			= mod:NewCDTimer(20, 93051, nil, "Tank", 2, 5, nil, DBM_COMMON_L.TANK_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 

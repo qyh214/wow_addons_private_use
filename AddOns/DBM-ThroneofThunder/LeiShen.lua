@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(832, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210119194055")
+mod:SetRevision("20220116041948")
 mod:SetCreatureID(68397)--Diffusion Chain Conduit 68696, Static Shock Conduit 68398, Bouncing Bolt conduit 68698, Overcharge conduit 68697
 mod:SetEncounterID(1579)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)--All icons can be used, because if a pillar is level 3, it puts out 4 debuffs on 25 man (if both are level 3, then you will have 8)
@@ -75,7 +75,7 @@ local timerOverchargeCD					= mod:NewCDTimer(40, 136295, nil, nil, nil, 3)
 local timerBouncingBoltCD				= mod:NewCDTimer(40, 136361, nil, nil, nil, 5, nil, nil, nil, 3, 4)
 local timerSuperChargedConduits			= mod:NewBuffActiveTimer(47, 137045)--Actually intermission only, but it fits best with conduits
 --Phase 1
-local timerDecapitateCD					= mod:NewCDTimer(50, 134912, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, 2, 4)--Cooldown with some variation. 50-57ish or so.
+local timerDecapitateCD					= mod:NewCDTimer(50, 134912, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, 2, 4)--Cooldown with some variation. 50-57ish or so.
 local timerThunderstruck				= mod:NewCastTimer(4.8, 135095)--4 sec cast. + landing 0.8~1.3 sec.
 local timerThunderstruckCD				= mod:NewNextCountTimer(46, 135095, nil, nil, nil, 3, nil, nil, nil, 1, 4)--Seems like an exact bar
 --Phase 2

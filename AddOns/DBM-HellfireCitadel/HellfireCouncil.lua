@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1432, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142006")
+mod:SetRevision("20220116041913")
 mod:SetCreatureID(92142, 92144, 92146)--Blademaster Jubei'thos (92142). Dia Darkwhisper (92144). Gurthogg Bloodboil (92146)
 mod:SetEncounterID(1778)
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
@@ -62,16 +62,16 @@ local timerMirrorImageCD			= mod:NewCDTimer(75, 183885, nil, nil, nil, 1)
 local timerWickedStrikeCD			= mod:NewCDTimer(10.5, 186993, nil, nil, nil, 2)
 mod:AddTimerLine(Dia)
 --Dia Darkwhisper
-local timerMarkofNecroCD			= mod:NewCDTimer(60, 184449, 28836, "Healer", nil, 5, nil, DBM_CORE_L.HEALER_ICON)
+local timerMarkofNecroCD			= mod:NewCDTimer(60, 184449, 28836, "Healer", nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
 local timerReapCD					= mod:NewCDTimer(54, 184476, nil, nil, nil, 3, nil, nil, nil, 2, 4)--54-71
-local timerNightmareVisageCD		= mod:NewCDTimer(30, 184657, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
-local timerDarknessCD				= mod:NewCDTimer(75, 184681, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON, nil, 1, 5)
+local timerNightmareVisageCD		= mod:NewCDTimer(30, 184657, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerDarknessCD				= mod:NewCDTimer(75, 184681, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 5)
 mod:AddTimerLine(Gurtogg)
 --Gurtogg Bloodboil
 local timerFelRageCD				= mod:NewCDCountTimer(60, 184360, nil, nil, nil, 3)--60-84 (maybe this is HP based, cause this variation is stupid)
 local timerDemoLeapCD				= mod:NewCDTimer(75, 184366, nil, nil, nil, 2, nil, nil, nil, 1, 5)--Most will never see this ability since he's 3rd in the special rotation and he dies first in most strats
 local timerTaintedBloodCD			= mod:NewNextCountTimer(15.8, 184357)
-local timerBloodBoilCD				= mod:NewCDTimer(7.3, 184355, nil, false, nil, 3, nil, DBM_CORE_L.HEROIC_ICON)
+local timerBloodBoilCD				= mod:NewCDTimer(7.3, 184355, nil, false, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 

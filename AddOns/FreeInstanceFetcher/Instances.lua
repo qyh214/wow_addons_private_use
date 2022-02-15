@@ -1,6 +1,32 @@
 local F = unpack(select(2, ...))
 local StdUi = LibStub('StdUi')
 
+-- Lua functions
+local _G = _G
+local bit_band, bit_lshift = bit.band, bit.lshift
+local format, ipairs, next, pairs, select, strmatch = format, ipairs, next, pairs, select, strmatch
+local tinsert, tonumber, wipe = tinsert, tonumber, wipe
+
+-- WoW API / Variables
+local C_MountJournal_GetMountInfoByID = C_MountJournal.GetMountInfoByID
+local C_PetJournal_FindPetIDByName = C_PetJournal.FindPetIDByName
+local C_PetJournal_GetPetInfoByItemID = C_PetJournal.GetPetInfoByItemID
+local C_TransmogCollection_GetAppearanceSourceInfo = C_TransmogCollection.GetAppearanceSourceInfo
+local C_TransmogCollection_GetIllusions = C_TransmogCollection.GetIllusions
+local C_TransmogCollection_GetItemInfo = C_TransmogCollection.GetItemInfo
+local GetAchievementInfo = GetAchievementInfo
+local GetAchievementLink = GetAchievementLink
+local GetDifficultyInfo = GetDifficultyInfo
+local GetItemInfo = GetItemInfo
+local GetNumSavedInstances = GetNumSavedInstances
+local GetSavedInstanceChatLink = GetSavedInstanceChatLink
+local GetSavedInstanceInfo = GetSavedInstanceInfo
+local PlayerHasToy = PlayerHasToy
+local RequestRaidInfo = RequestRaidInfo
+
+local C_Timer_After = C_Timer.After
+local Item = Item
+
 local classFilename = select(2, UnitClass('player'))
 
 -- filters
@@ -578,7 +604,7 @@ do
             return instanceNameCache[instanceID], bossNameCache[instanceID][bossIndex]
         end
 
-        local bitmap = bit.lshift(1, bossBit)
+        local bitmap = bit_lshift(1, bossBit)
         local root = format(template, instanceID, 0, bitmap, '')
         scanTooltip:SetHyperlink(root)
 
@@ -651,7 +677,7 @@ do
         if not instanceName or not bossName then
             local index = instanceID .. '-' .. (difficultyID or 0)
             inProgress[index] = true
-            C_Timer.After(1, function()
+            C_Timer_After(1, function()
                 inProgress[index] = nil
                 F:HandleCollection(instanceID, difficultyID, disabled, collectionData)
                 ExportData()
@@ -676,7 +702,7 @@ do
                 bossBits = instanceLock[instanceID][difficultyID]
             end
 
-            if bossBits and bit.band(bossBits, bit.lshift(1, collectionData.bossBit)) > 0 then
+            if bossBits and bit_band(bossBits, bit_lshift(1, collectionData.bossBit)) > 0 then
                 if not showLooted then return end
 
                 info.killed = 136814
@@ -699,15 +725,15 @@ do
 
         local isCollected
         if collectionType == 'mount' then
-            isCollected = select(11, C_MountJournal.GetMountInfoByID(collectionData.mountID))
+            isCollected = select(11, C_MountJournal_GetMountInfoByID(collectionData.mountID))
         elseif collectionType == 'toy' then
             isCollected = PlayerHasToy(collectionData.itemID)
         elseif collectionType == 'pet' then
-            local name = C_PetJournal.GetPetInfoByItemID(collectionData.itemID)
-            local petGUID = name and select(2, C_PetJournal.FindPetIDByName(name))
+            local name = C_PetJournal_GetPetInfoByItemID(collectionData.itemID)
+            local petGUID = name and select(2, C_PetJournal_FindPetIDByName(name))
             isCollected = not not petGUID
         elseif collectionType == 'illusion' then
-            local visualsList = C_TransmogCollection.GetIllusions()
+            local visualsList = C_TransmogCollection_GetIllusions()
             for _, visual in ipairs(visualsList) do
                 if visual.sourceID == collectionData.sourceID then
                     isCollected = visual.isCollected
@@ -717,18 +743,18 @@ do
         elseif collectionType == 'transmog' then
             local prevAppearanceID
             for i = 0, 4 do
-                local appearanceID, sourceID = C_TransmogCollection.GetItemInfo(collectionData.itemID, i)
+                local appearanceID, sourceID = C_TransmogCollection_GetItemInfo(collectionData.itemID, i)
                 if appearanceID then
                     if not prevAppearanceID then
                         prevAppearanceID = appearanceID
-                        isCollected = select(5, C_TransmogCollection.GetAppearanceSourceInfo(sourceID))
+                        isCollected = select(5, C_TransmogCollection_GetAppearanceSourceInfo(sourceID))
                     elseif prevAppearanceID ~= appearanceID then
                         local itemModID = difficultyID == 14 and 0 or 1
-                        local sourceID = select(2, C_TransmogCollection.GetItemInfo(collectionData.itemID, itemModID))
-                        isCollected = sourceID and select(5, C_TransmogCollection.GetAppearanceSourceInfo(sourceID))
+                        local sourceID = select(2, C_TransmogCollection_GetItemInfo(collectionData.itemID, itemModID))
+                        isCollected = sourceID and select(5, C_TransmogCollection_GetAppearanceSourceInfo(sourceID))
                         break
                     elseif not isCollected then
-                        isCollected = select(5, C_TransmogCollection.GetAppearanceSourceInfo(sourceID))
+                        isCollected = select(5, C_TransmogCollection_GetAppearanceSourceInfo(sourceID))
                     end
                 end
             end
@@ -791,7 +817,7 @@ function F:LoadInstances()
 end
 
 function F:BuildWindow()
-    local window = StdUi:Window(UIParent, 700, 500, "支持副本")
+    local window = StdUi:Window(_G.UIParent, 700, 500, "支持副本")
     window:SetPoint('CENTER')
     window:SetScript('OnShow', function()
         F:LoadInstances()

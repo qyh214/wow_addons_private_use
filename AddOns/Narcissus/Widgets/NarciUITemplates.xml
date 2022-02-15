@@ -4,6 +4,7 @@
 	<Script file="ItemBorder.lua"/>
 	<Script file="ClockFrame.lua"/>
 	<Script file="AnimatedSizingFrame.lua"/>
+	<Script file="RedButton.lua"/>
 	<Script file="Widgets.lua"/>
 	
 	<Frame name="NarciArtFrameTemplate" frameLevel="20" virtual="true">
@@ -1037,7 +1038,7 @@
         </Scripts>
     </Button>
 
-	<Button name="Narci_GemSlot_Template" parentKey="GemSlot" hidden="true" virtual="true">
+	<Button name="NarciGemSlotTemplate" parentKey="GemSlot" hidden="true" virtual="true">
 		<Size x="30" y="30"/>
 		<HitRectInsets>
 			<AbsInset left="8" right="8" top="4" bottom="4"/>
@@ -2791,6 +2792,9 @@
 							<OnFinished>
 								self:GetParent():Hide();
 							</OnFinished>
+							<OnStop>
+								self:GetParent():Hide();
+							</OnStop>
 						</Scripts>
 					</AnimationGroup>
 				</Animations>
@@ -2846,7 +2850,9 @@
 			<OnEditFocusGained method="OnEditFocusGained"/>
 			<OnEditFocusLost method="OnEditFocusLost"/>
 			<OnEscapePressed method="QuitEdit"/>
-			<OnHide method="QuitEdit"/>
+			<OnEnterPressed method="QuitEdit"/>
+			<OnTextChanged method="OnTextChanged"/>
+			<OnHide method="OnHide"/>
 			<OnEnter method="OnEnter"/>
 			<OnLeave method="OnLeave"/>
 		</Scripts>
@@ -3023,4 +3029,154 @@
             </Layer>
 		</Layers>
 	</Frame>
+
+	<Slider name="NarciVerticalLineSliderTemplate" valueStep="0.01" virtual="true" mixin="NarciVerticalLineSliderMixin">
+		<Size x="12"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture file="Interface\AddOns\Narcissus\Art\Widgets\Slider\VerticalLine" parentKey="Background" alphaMode="ADD" Alpha="0.1"/>
+				<Size x="8"/>
+				<Anchors>
+					<Anchor point="TOP" relativeKey="$parent" relativePoint="TOP"/>
+					<Anchor point="BOTTOM" relativeKey="$parent" relativePoint="BOTTOM"/>
+				</Anchors>
+			</Layer>
+		</Layers>
+		<ThumbTexture parentKey="Thumb" file="Interface\AddOns\Narcissus\Art\Widgets\Slider\Thumb">
+			<Size x="8" y="8"/>
+		</ThumbTexture>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnMouseUp method="OnMouseUp"/>
+		</Scripts>
+	</Slider>
+
+	<Button name="NarciRectRedButtonTemplate" mixin="NarciRectRedButtonMixin" virtual="true">
+		<Size x="128" y="32"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture file="Interface\AddOns\Narcissus\Art\RedButtons\RectRegular" parentKey="Center">
+					<TexCoords left="0.25" right="0.75" top="0" bottom="0.25"/>
+					<Size x="64" y="32"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER"/>
+					</Anchors>
+				</Texture>
+				<Texture file="Interface\AddOns\Narcissus\Art\RedButtons\RectRegular" parentKey="Left">
+					<TexCoords left="0" right="0.25" top="0" bottom="0.25"/>
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeKey="$parent.Center" relativePoint="LEFT"/>
+					</Anchors>
+				</Texture>
+				<Texture file="Interface\AddOns\Narcissus\Art\RedButtons\RectRegular" parentKey="Right">
+					<TexCoords left="0.75" right="1" top="0" bottom="0.25"/>
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.Center" relativePoint="Right"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+
+			<Layer level="OVERLAY">
+				<Texture file="Interface\AddOns\Narcissus\Art\RedButtons\RectRegular" parentKey="HighlightCenter" hidden="true">
+					<TexCoords left="0.25" right="0.75" top="0.5" bottom="0.75"/>
+					<Size x="64" y="32"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER"/>
+					</Anchors>
+				</Texture>
+				<Texture file="Interface\AddOns\Narcissus\Art\RedButtons\RectRegular" parentKey="HighlightLeft" hidden="true">
+					<TexCoords left="0" right="0.25" top="0.5" bottom="0.75"/>
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeKey="$parent.HighlightCenter" relativePoint="LEFT"/>
+					</Anchors>
+				</Texture>
+				<Texture file="Interface\AddOns\Narcissus\Art\RedButtons\RectRegular" parentKey="HighlightRight" hidden="true">
+					<TexCoords left="0.75" right="1" top="0.5" bottom="0.75"/>
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.HighlightCenter" relativePoint="Right"/>
+					</Anchors>
+				</Texture>
+
+				<FontString parentKey="ButtonText" inherits="GameFontHighlight" justifyH="CENTER" justifyV="MIDDLE" maxLines="1">
+					<Size x="0" y="0"/>
+					<Color r="1" g="0.82" b="0"/>
+					<Shadow>
+						<Offset>
+							<AbsDimension x="1" y="1"/>
+						</Offset>
+						<Color r="0" g="0" b="0"/>
+					</Shadow>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnMouseUp method="OnMouseUp"/>
+			<OnMouseDown method="OnMouseDown"/>
+		</Scripts>
+	</Button>
+
+	<Button name="NarciSquareRedButtonTemplate" mixin="NarciSquareRedButtonMixin" virtual="true">
+		<Size x="32" y="32"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture file="Interface\AddOns\Narcissus\Art\RedButtons\RectRegular" parentKey="Left">
+					<TexCoords left="0" right="0.125" top="0" bottom="0.25"/>
+					<Size x="16" y="32"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="CENTER"/>
+					</Anchors>
+				</Texture>
+				<Texture file="Interface\AddOns\Narcissus\Art\RedButtons\RectRegular" parentKey="Right">
+					<TexCoords left="0.875" right="1" top="0" bottom="0.25"/>
+					<Size x="16" y="32"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent" relativePoint="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+
+			<Layer level="OVERLAY">
+				<Texture file="Interface\AddOns\Narcissus\Art\RedButtons\RectRegular" parentKey="HighlightLeft" hidden="true">
+					<TexCoords left="0" right="0.125" top="0.5" bottom="0.75"/>
+					<Size x="16" y="32"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="CENTER"/>
+					</Anchors>
+				</Texture>
+				<Texture file="Interface\AddOns\Narcissus\Art\RedButtons\RectRegular" parentKey="HighlightRight" hidden="true">
+					<TexCoords left="0.875" right="1" top="0.5" bottom="0.75"/>
+					<Size x="16" y="32"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent" relativePoint="CENTER"/>
+					</Anchors>
+				</Texture>
+
+				<Texture parentKey="Icon" >
+					<Size x="16" y="16"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnMouseUp method="OnMouseUp"/>
+			<OnMouseDown method="OnMouseDown"/>
+		</Scripts>
+	</Button>
 </Ui>

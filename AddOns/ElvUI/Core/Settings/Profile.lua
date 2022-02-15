@@ -20,6 +20,14 @@ P.general = {
 	autoTrackReputation = false,
 	autoAcceptInvite = false,
 	topPanel = false,
+	customGlow = {
+		style = 'Pixel Glow',
+		color = { r = 23/255, g = 132/255, b = 209/255, a = 0.9 },
+		useColor = false,
+		speed = 0.3,
+		lines = 8,
+		size = 1,
+	},
 	topPanelSettings = {
 		transparent = true,
 		height = 22,
@@ -52,6 +60,8 @@ P.general = {
 		itemLevelFontOutline = 'OUTLINE',
 	},
 	durabilityScale = 1,
+	lockCameraDistanceMax = true,
+	cameraDistanceMax = E.Retail and 2.6 or 4,
 	afk = true,
 	afkChat = true,
 	numberPrefixStyle = 'ENGLISH',
@@ -75,10 +85,11 @@ P.general = {
 	bordercolor = { r = 0, g = 0, b = 0 }, -- updated in E.Initialize
 	backdropcolor = { r = 0.1, g = 0.1, b = 0.1 },
 	backdropfadecolor = { r = .06, g = .06, b = .06, a = 0.8 },
-	valuecolor = {r = 23/255, g = 132/255, b = 209/255},
+	valuecolor = { r = 23/255, g = 132/255, b = 209/255 },
 	cropIcon = 2,
 	minimap = {
-		size = 176,
+		size = 175,
+		scale = 1,
 		locationText = 'MOUSEOVER',
 		locationFontSize = 12,
 		locationFontOutline = 'OUTLINE',
@@ -149,6 +160,22 @@ P.general = {
 				yOffset = -8,
 			}
 		}
+	},
+	lootRoll = {
+		width = 325,
+		height = 30,
+		spacing = 4,
+		buttonSize = 20,
+		style = 'halfbar',
+		statusBarTexture = 'ElvUI Norm',
+		leftButtons = false,
+		qualityName = false,
+		qualityStatusBar = true,
+		qualityStatusBarBackdrop = true,
+		statusBarColor = { r = 0, g = .4, b = 1 },
+		nameFont = 'Expressway',
+		nameFontSize = 12,
+		nameFontOutline = 'OUTLINE',
 	},
 	objectiveTracker = true,
 	totems = {
@@ -290,18 +317,19 @@ P.bags = {
 	showAssignedIcon = true,
 	colors = {
 		profession = {
-			quiver = { r = 1, g = 0.69, b = 0.41 },
 			ammoPouch = { r = 1, g = 0.69, b = 0.41 },
-			soulBag = { r = 1, g = 0.69, b = 0.41 },
-			leatherworking = { r = .88, g = .73, b = .29 },
-			inscription = { r = .29, g = .30, b = .88 },
-			herbs = { r = .07, g = .71, b = .13 },
+			cooking = { r = .87, g = .05, b = .25 },
 			enchanting = { r = .76, g = .02, b = .8 },
 			engineering = { r = .91, g = .46, b = .18 },
-			gems = { r = .03, g = .71, b = .81 },
-			mining = { r = .54, g = .40, b = .04 },
 			fishing = { r = .42, g = .59, b = 1 },
-			cooking = { r = .87, g = .05, b = .25 },
+			gems = { r = .03, g = .71, b = .81 },
+			herbs = { r = .07, g = .71, b = .13 },
+			inscription = { r = .29, g = .30, b = .88 },
+			keyring = { r = 1, g = .96, b = .41 },
+			leatherworking = { r = .88, g = .73, b = .29 },
+			mining = { r = .54, g = .40, b = .04 },
+			quiver = { r = 1, g = 0.69, b = 0.41 },
+			soulBag = { r = 1, g = 0.69, b = 0.41 },
 		},
 		assignment = {
 			equipment = { r = 0, g = .50, b = .47 },
@@ -309,8 +337,8 @@ P.bags = {
 			tradegoods = { r = 1, g = .32, b = .66 },
 		},
 		items = {
-			questStarter = {r = 1, g = 1, b = 0},
-			questItem = {r = 1, g = 0.30, b = 0.30},
+			questStarter = { r = 1, g = .96, b = .41 },
+			questItem = { r = 1, g = 0.30, b = 0.30 },
 		}
 	},
 	vendorGrays = {
@@ -574,6 +602,8 @@ P.nameplates = {
 	lowHealthThreshold = 0.4,
 	motionType = 'STACKED',
 	nameColoredGlow = false,
+	overlapH = 0.8,
+	overlapV = 1.1,
 	showEnemyCombat = 'DISABLED',
 	showFriendlyCombat = 'DISABLED',
 	smoothbars = false,
@@ -605,6 +635,7 @@ P.nameplates = {
 	},
 	threat = {
 		enable = true,
+		beingTankedByPet = true,
 		beingTankedByTank = true,
 		goodScale = 1,
 		badScale = 1,
@@ -880,7 +911,7 @@ P.nameplates.units.FRIENDLY_PLAYER.debuffs.anchorPoint = 'TOPRIGHT'
 P.nameplates.units.FRIENDLY_PLAYER.debuffs.growthX = 'LEFT'
 P.nameplates.units.FRIENDLY_PLAYER.debuffs.growthY = 'UP'
 P.nameplates.units.FRIENDLY_PLAYER.debuffs.yOffset = 35
-P.nameplates.units.FRIENDLY_PLAYER.debuffs.priority = 'Blacklist,Dispellable,blockNoDuration,Personal,Boss,CCDebuffs'
+P.nameplates.units.FRIENDLY_PLAYER.debuffs.priority = 'Blacklist,Dispellable,blockNoDuration,Personal,CCDebuffs'
 
 P.nameplates.units.ENEMY_PLAYER.buffs.priority = 'Blacklist,Dispellable,PlayerBuffs,TurtleBuffs'
 P.nameplates.units.ENEMY_PLAYER.buffs.maxDuration = 300
@@ -888,7 +919,7 @@ P.nameplates.units.ENEMY_PLAYER.debuffs.anchorPoint = 'TOPRIGHT'
 P.nameplates.units.ENEMY_PLAYER.debuffs.growthX = 'LEFT'
 P.nameplates.units.ENEMY_PLAYER.debuffs.growthY = 'UP'
 P.nameplates.units.ENEMY_PLAYER.debuffs.yOffset = 35
-P.nameplates.units.ENEMY_PLAYER.debuffs.priority = 'Blacklist,blockNoDuration,Personal,Boss,CCDebuffs,RaidDebuffs'
+P.nameplates.units.ENEMY_PLAYER.debuffs.priority = 'Blacklist,blockNoDuration,Personal,CCDebuffs'
 P.nameplates.units.ENEMY_PLAYER.name.format = '[classcolor][name:abbrev:long]'
 
 P.nameplates.units.FRIENDLY_NPC.buffs.priority = 'Blacklist,blockNoDuration,Personal,TurtleBuffs'
@@ -896,11 +927,11 @@ P.nameplates.units.FRIENDLY_NPC.debuffs.anchorPoint = 'TOPRIGHT'
 P.nameplates.units.FRIENDLY_NPC.debuffs.growthX = 'LEFT'
 P.nameplates.units.FRIENDLY_NPC.debuffs.growthY = 'UP'
 P.nameplates.units.FRIENDLY_NPC.debuffs.yOffset = 35
-P.nameplates.units.FRIENDLY_NPC.debuffs.priority = 'Blacklist,Boss,CCDebuffs,RaidDebuffs,Dispellable'
+P.nameplates.units.FRIENDLY_NPC.debuffs.priority = 'Blacklist,Dispellable,CCDebuffs,RaidDebuffs'
 P.nameplates.units.FRIENDLY_NPC.level.format = '[difficultycolor][level][shortclassification]'
 P.nameplates.units.FRIENDLY_NPC.title.format = '[npctitle]'
 
-P.nameplates.units.ENEMY_NPC.buffs.priority = 'Blacklist,RaidBuffsElvUI,Dispellable,blockNoDuration,PlayerBuffs,TurtleBuffs,CastByUnit'
+P.nameplates.units.ENEMY_NPC.buffs.priority = 'Blacklist,RaidBuffsElvUI,Dispellable,CastByUnit'
 P.nameplates.units.ENEMY_NPC.debuffs.anchorPoint = 'TOPRIGHT'
 P.nameplates.units.ENEMY_NPC.debuffs.growthX = 'LEFT'
 P.nameplates.units.ENEMY_NPC.debuffs.growthY = 'UP'
@@ -946,6 +977,8 @@ local TopAuras = {
 P.auras = {
 	buffs = CopyTable(TopAuras),
 	debuffs = CopyTable(TopAuras),
+	colorEnchants = true,
+	colorDebuffs = true,
 }
 
 P.auras.debuffs.maxWraps = 1
@@ -1190,10 +1223,11 @@ local UF_AuraBars = {
 	spacing = 0,
 	yOffset = 0,
 	clickThrough = false,
+	reverseFill = false,
 }
 
 local UF_AuraWatch = {
-	enable = true,
+	enable = false,
 	profileSpecific = false,
 	size = 8,
 	countFontSize = 12,
@@ -1224,7 +1258,6 @@ local UF_Castbar = {
 		fontSize = 12,
 		fontStyle = 'OUTLINE'
 	},
-	displayTarget = false,
 	enable = true,
 	format = 'REMAINING',
 	height = 18,
@@ -1779,6 +1812,7 @@ P.unitframe = {
 			debuffs = CopyTable(UF_Auras),
 			fader = CopyTable(UF_Fader),
 			health = CopyTable(UF_Health),
+			healPrediction = CopyTable(UF_HealthPrediction),
 			infoPanel = CopyTable(UF_InfoPanel),
 			name = CopyTable(UF_Name),
 			portrait = CopyTable(UF_Portrait),
@@ -1856,6 +1890,7 @@ P.unitframe = {
 			disableTargetGlow = false,
 			disableFocusGlow = false,
 			buffIndicator = CopyTable(UF_AuraWatch),
+			healPrediction = CopyTable(UF_HealthPrediction),
 			health = CopyTable(UF_Health),
 			fader = CopyTable(UF_Fader),
 			power = CopyTable(UF_Power),
@@ -1911,8 +1946,6 @@ P.unitframe = {
 			growthDirection = 'UP_RIGHT',
 			horizontalSpacing = 0,
 			verticalSpacing = 3,
-			numGroups = 1,
-			groupsPerRowCol = 1,
 			groupBy = 'INDEX',
 			sortDir = 'ASC',
 			sortMethod = 'INDEX',
@@ -1950,6 +1983,7 @@ P.unitframe = {
 			roleIcon = CopyTable(UF_RoleIcon),
 			summonIcon = CopyTable(UF_SummonIcon),
 			targetsGroup = CopyTable(UF_SubGroup),
+			pvpclassificationindicator = CopyTable(UF_PvPClassificationIndicator),
 		},
 		tank = {
 			enable = true,
@@ -1986,6 +2020,8 @@ P.unitframe.units.player.buffs.priority = 'Blacklist,Personal,PlayerBuffs,Whitel
 P.unitframe.units.player.debuffs.enable = true
 P.unitframe.units.player.debuffs.priority = 'Blacklist,Personal,nonPersonal'
 P.unitframe.units.player.castbar.latency = true
+P.unitframe.units.player.castbar.displayTarget = false
+
 P.unitframe.units.player.fader.enable = false
 P.unitframe.units.player.fader.casting = true
 P.unitframe.units.player.fader.combat = true
@@ -2080,7 +2116,6 @@ P.unitframe.units.focustarget.debuffs.enable = false
 P.unitframe.units.focustarget.debuffs.anchorPoint = 'BOTTOMRIGHT'
 P.unitframe.units.focustarget.debuffs.growthX = 'LEFT'
 P.unitframe.units.focustarget.debuffs.priority = 'Blacklist,Personal,Boss,RaidDebuffs,Dispellable,Whitelist'
-P.unitframe.units.focustarget.healPrediction = nil
 P.unitframe.units.focustarget.height = 26
 P.unitframe.units.focustarget.infoPanel.height = 12
 P.unitframe.units.focustarget.threatStyle = 'NONE'
@@ -2112,7 +2147,6 @@ P.unitframe.units.pettarget.buffs.maxDuration = 300
 P.unitframe.units.pettarget.buffs.priority = 'Blacklist,PlayerBuffs,CastByUnit,Whitelist,RaidBuffsElvUI'
 P.unitframe.units.pettarget.debuffs.maxDuration = 300
 P.unitframe.units.pettarget.debuffs.priority = 'Blacklist,Boss,RaidDebuffs,Dispellable,Whitelist'
-P.unitframe.units.pettarget.healPrediction = nil
 P.unitframe.units.pettarget.height = 26
 P.unitframe.units.pettarget.threatStyle = 'NONE'
 
@@ -2173,6 +2207,7 @@ P.unitframe.units.party.health.xOffset = 2
 P.unitframe.units.party.buffs.anchorPoint = 'LEFT'
 P.unitframe.units.party.buffs.maxDuration = 300
 P.unitframe.units.party.buffs.priority = 'Blacklist,TurtleBuffs'
+P.unitframe.units.party.buffIndicator.enable = true
 P.unitframe.units.party.castbar.enable = false
 P.unitframe.units.party.castbar.width = 256
 P.unitframe.units.party.castbar.positionsGroup = { anchorPoint = 'BOTTOM', xOffset = 0, yOffset = 0}
@@ -2198,9 +2233,11 @@ P.unitframe.units.party.targetsGroup.buffIndicator = nil
 P.unitframe.units.party.targetsGroup.healPrediction = nil
 
 P.unitframe.units.raid = CopyTable(P.unitframe.units.party)
+P.unitframe.units.raid.groupsPerRowCol = 1
 P.unitframe.units.raid.groupBy = 'GROUP'
 P.unitframe.units.raid.buffs.numrows = 1
 P.unitframe.units.raid.buffs.perrow = 3
+P.unitframe.units.raid.buffIndicator.enable = true
 P.unitframe.units.raid.castbar = nil
 P.unitframe.units.raid.debuffs.enable = false
 P.unitframe.units.raid.debuffs.numrows = 1
@@ -2235,6 +2272,8 @@ P.unitframe.units.raid40.power.enable = false
 P.unitframe.units.raid40.roleIcon.enable = false
 
 P.unitframe.units.raidpet = CopyTable(P.unitframe.units.raid)
+P.unitframe.units.raidpet.pvpclassificationindicator = nil
+P.unitframe.units.raidpet.buffIndicator.enable = false
 P.unitframe.units.raidpet.enable = false
 P.unitframe.units.raidpet.raidWideSorting = true
 P.unitframe.units.raidpet.buffs.numrows = 1
@@ -2345,6 +2384,8 @@ P.actionbar = {
 	noPowerColor = { r = 0.5, g = 0.5, b = 1 },
 	noRangeColor = { r = 0.8, g = 0.1, b = 0.1 },
 	notUsableColor = { r = 0.4, g = 0.4, b = 0.4 },
+	checkSelfCast = true,
+	checkFocusCast = true,
 	rightClickSelfCast = false,
 	transparent = false,
 	usableColor = { r = 1, g = 1, b = 1 },

@@ -204,6 +204,58 @@
         </Animations>  
     </Texture>
 
+    <Button name="NarciMinimapTextureOptionTemplate" virtual="true" parentArray="MinimapTextureOptions" mixin="NarciMinimapTextureOptionMixin">
+        <Size x="64" y="64"/>
+		<HitRectInsets>
+			<AbsInset left="6" right="6" top="0" bottom="-12"/>
+		</HitRectInsets>
+        <Layers>
+            <Layer level="OVERLAY">
+                <Texture file="Interface\AddOns\Narcissus\Art\Minimap\LOGO-Cyan" parentKey="NormalTexture" scale="0.875">
+                    <TexCoords left="0" right="0.5" top="0" bottom="1"/>
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </Texture>
+                <FontString parentKey="ButtonName" inherits="NarciPrefFontGrey9" justifyH="CENTER" justifyV="TOP" text="Narcissus">
+                    <Size x="0" y="0"/>
+                    <Anchors>
+                        <Anchor point="TOP" relativeKey="$parent" relativePoint="BOTTOM" x="0" y="0"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+            <Layer level="OVERLAY" textureSubLevel="1">
+                <Texture file="Interface\AddOns\Narcissus\Art\Minimap\LOGO-Cyan" parentKey="HighlightTexture" scale="0.875" hidden="true" alpha="0">
+                    <TexCoords left="0.5" right="1" top="0" bottom="1"/>
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Animations>
+            <AnimationGroup parentKey="AnimIn">
+                <Scale scaleX="1.25" scaleY="1.25" duration="0.15" order="1" childKey="NormalTexture"/>
+                <Scale scaleX="0.914" scaleY="0.914" duration="0.2" order="2" childKey="NormalTexture" smoothing="OUT" parentKey="Bounce1"/>
+                <Scale scaleX="1" scaleY="1" duration="20" order="3" childKey="NormalTexture" parentKey="Hold1"/>
+                <Scale scaleX="0.875" scaleY="0.875" duration="0.15" order="4" childKey="NormalTexture" smoothing="OUT"/>
+                <Scale scaleX="1.25" scaleY="1.25" duration="0.15" order="1" childKey="HighlightTexture"/>
+                <Scale scaleX="0.914" scaleY="0.914" duration="0.2" order="2" childKey="HighlightTexture" smoothing="OUT" parentKey="Bounce2"/>
+                <Scale scaleX="1" scaleY="1" duration="20" order="3" childKey="HighlightTexture" parentKey="Hold2"/>
+                <Scale scaleX="0.875" scaleY="0.875" duration="0.15" order="4" childKey="HighlightTexture" smoothing="OUT"/>
+            </AnimationGroup>
+        </Animations>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
+            <OnClick method="OnClick"/>
+            <OnShow method="Init"/>
+        </Scripts>
+    </Button>
+
     <Frame name="Narci_Preference" parent="Narci_Vignette" ignoreParentScale="true" FrameStrata="DIALOG" enableMouse="false" enableMouseMotion="true" hidden="true" Alpha="0" scale="1" inherits="NarciChamferedFrameTemplate" mixin="NarciPreferenceMixin">
         <Size x="512" y="316"/>
         <Anchors>
@@ -272,18 +324,18 @@
                                 </Anchors>
                                 <Layers>
                                     <Layer>
-                                        <Texture file="Interface\AddOns\Narcissus\Art\Preference\BorderTheme" Alpha="1" hidden="false" parentKey="Preview">
+                                        <!--Texture file="Interface\AddOns\Narcissus\Art\Preference\BorderTheme" Alpha="1" hidden="false" parentKey="Preview">
                                             <TexCoords left="0.5" right="1" top="0" bottom="1"/>
                                             <Size x="100" y="100"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="220" y="-10"/>
                                             </Anchors>
-                                        </Texture>
+                                        </Texture-->
                                         <Texture file="Interface\AddOns\Narcissus\Art\Preference\TooltipTheme" Alpha="1" hidden="false" parentKey="Preview2">
                                             <TexCoords left="0" right="1" top="0" bottom="0.5"/>
                                             <Size x="200" y="100"/>
                                             <Anchors>
-                                                <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="172" y="-138"/>
+                                                <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="172" y="-182"/>
                                             </Anchors>
                                         </Texture>
                                         <MaskTexture file="Interface\AddOns\Narcissus\Art\Preference\TooltipTheme-Mask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
@@ -296,7 +348,42 @@
                                             </MaskedTextures>
                                         </MaskTexture>
                                     </Layer>
-                                </Layers> 
+                                </Layers>
+                                <Frames>
+                                    <Frame name="NarciMinimapTextureOptions">
+                                        <Size x="224" y="76"/>
+                                        <Layers>
+                                            <Layer level="OVERLAY">
+                                                <Texture file="Interface\AddOns\Narcissus\Art\Widgets\Arrows\Tick" parentKey="Tick" hidden="true">
+                                                    <Size x="12.0" y="12.0"/>
+                                                    <Anchors>
+                                                        <Anchor point="TOP"/>
+                                                    </Anchors>
+                                                </Texture>
+                                            </Layer>
+                                        </Layers>
+                                        <Anchors>
+                                            <Anchor point="TOP" relativeKey="$parent" relativePoint="TOP" x="0" y="-40"/>
+                                        </Anchors>
+                                        <Frames>
+                                            <Button inherits="NarciMinimapTextureOptionTemplate" id="1">
+                                                <Anchors>
+                                                    <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="0"/>
+                                                </Anchors>
+                                            </Button>
+                                            <Button inherits="NarciMinimapTextureOptionTemplate" id="2">
+                                                <Anchors>
+                                                    <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="80"/>
+                                                </Anchors>
+                                            </Button>
+                                            <Button inherits="NarciMinimapTextureOptionTemplate" id="3">
+                                                <Anchors>
+                                                    <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="160"/>
+                                                </Anchors>
+                                            </Button>
+                                        </Frames>
+                                    </Frame>
+                                </Frames>
                             </Frame>
 
                             <Frame inherits="Narci_Preference_TabTemplate" parentKey="Tab4">

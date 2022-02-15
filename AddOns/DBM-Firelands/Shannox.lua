@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 local Riplimb	= DBM:EJ_GetSectionInfo(2581)
 local Rageface	= DBM:EJ_GetSectionInfo(2583)
 
-mod:SetRevision("20200806141910")
+mod:SetRevision("20220116034430")
 mod:SetCreatureID(53691)
 mod:SetEncounterID(1205)
 mod:SetUsedIcons(1, 2) -- cross(7) is hard to see in redish environment?
@@ -52,9 +52,9 @@ local specWarnCrystalTrapNear	= mod:NewSpecialWarningClose(99836, nil, nil, nil,
 local yellCrystalTrap			= mod:NewShortYell(99836)
 local specWarnTears				= mod:NewSpecialWarningStack(99937, "Tank", 8, nil, nil, 1, 6)
 
-local timerRage					= mod:NewTargetTimer(15, 100415, nil, "Healer", nil, 5, nil, DBM_CORE_L.HEALER_ICON)
+local timerRage					= mod:NewTargetTimer(15, 100415, nil, "Healer", nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
 local timerWary					= mod:NewTargetTimer(25, 100167, nil, false, nil, 5)
-local timerTears				= mod:NewTargetTimer(26, 99937, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerTears				= mod:NewTargetTimer(26, 99937, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerCrystalPrison		= mod:NewTargetTimer(10, 99837, nil, nil, nil, 5)--Dogs Only
 local timerCrystalPrisonCD		= mod:NewCDTimer(25.5, 99836, nil, nil, nil, 3)--Seems consistent timing, other trap is not.
 local timerSpearCD				= mod:NewCDTimer(42, 100002, nil, nil, nil, 3)--Before riplimb dies

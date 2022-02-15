@@ -146,7 +146,7 @@ function DataProvider:ApplyFilter(ownedOnly)
         end
         return numData
     else
-        DataProvider.filteredData = subset;
+        self.filteredData = subset;
         return #self.filteredData
     end
 end

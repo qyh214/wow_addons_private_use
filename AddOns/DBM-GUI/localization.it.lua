@@ -13,7 +13,7 @@ L.OTabBosses	= "Boss"
 L.OTabOptions	= "Opzioni"
 
 L.TabCategory_Options	 	= "Opzioni Generali"
-L.TabCategory_OTHER    		= "Altre Mod"
+L.TabCategory_OTHER			= "Altre Mod"
 
 L.BossModLoaded 			= "%s statistiche"
 L.BossModLoad_now 			= [[Boss Mod non caricata.
@@ -31,7 +31,7 @@ L.Mod_Enabled				= "Abilita boss mod"
 L.Mod_Reset					= "Ripristina predefiniti"
 L.Reset 					= "Resetta"
 
-L.Enable  					= "Abilita"
+L.Enable					= "Abilita"
 L.Disable					= "Disabilita"
 
 L.NoSound					= "Nessun Suono"
@@ -206,8 +206,6 @@ L.SWFDefaultOnly			= "quando gli avvisi speciali usano suono pred. (Permetti ese
 L.SWFAll					= "quando gli avvisi speciali usano qualunque suono"
 L.SpecWarn_AlwaysVoice		= "Riproduci sempre tutti gli avvisi parlati (Anche se Avvisi Speciali disabilitati. Utili per Capo Incursione, sconsigliati altrimenti)"
 -- TODO, maybe add URLS right to GUI panel on where to acquire 3rd party voice packs?
-L.Area_GetVEM				= "Ottieni Pacchetto Vocale VEM"
-L.VEMDownload				= "|cFF73C2FBhttps://www.curseforge.com/wow/addons/dbm-voicepack-vem|r"
 L.Area_BrowseOtherVP		= "Altri pacchetti vocali su curse"
 L.BrowseOtherVPs			= "|cFF73C2FBhttps://www.curseforge.com/wow/addons/search?search=dbm+voice|r"
 L.Area_BrowseOtherCT		= "Altri conti alla rovescia su curse"

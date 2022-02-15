@@ -1,10 +1,12 @@
+local strtrim = strtrim;
+
 local Tooltip;
 
 local TOOLTIP_NAME = "NarciUtilityTooltip";
 local IS_ITEM_CACHED = {};
 local IS_LINE_HOOKED = {};
 
-local pinnedObject, lastItem, lastText, onTextChangedCallback;
+local pinnedObjects, lastItem, lastText, onTextChangedCallback;
 
 local function OnTextChanged(object, text)
     print(object.lineIndex);
@@ -29,12 +31,24 @@ local function SetTooltipItem(item)
 end
 
 local function GetPinnedLineText()
-    if pinnedObject then
-        local newText = pinnedObject:GetText();
-        if newText ~= lastText then
-            lastText = newText;
+    if pinnedObjects then
+        local output;
+        local text;
+        for i = 1, #pinnedObjects do
+            text = pinnedObjects[i]:GetText();
+            text = strtrim(text);
+            if text and text ~= "" then
+                if output then
+                    output = output.."\n"..text;
+                else
+                    output = text;
+                end
+            end
+        end
+        if output ~= lastText then
+            lastText = output;
             if onTextChangedCallback then
-                onTextChangedCallback(newText);
+                onTextChangedCallback(output);
             end
             return true
         end
@@ -65,23 +79,56 @@ local function GetItemTooltipTextByLine(item, line, callbackFunc)
 
     if item ~= lastItem then
         lastItem = item;
+        lastText = nil;
         Tooltip.t = 0;
         Tooltip.iteration = 0;
         Tooltip:SetScript("OnUpdate", Tooltip_OnUpdate);
     end
 
-    local object = _G[TOOLTIP_NAME.."TextLeft"..line];
-    pinnedObject = object;
+    local object;
     local text;
-    if object then
-        if not IS_LINE_HOOKED[line] then
-            IS_LINE_HOOKED[line] = true;
-            object.lineIndex = line;
-        end
-        text = object:GetText();
-    end
 
-    return text, isCached
+    if pinnedObjects then
+        wipe(pinnedObjects);
+    else
+        pinnedObjects = {};
+    end
+    if type(line) == "table" then
+        local output;
+        local _l;
+        for i = 1, #line do
+            _l = line[i];
+            object = _G[TOOLTIP_NAME.."TextLeft".._l];
+            if object then
+                tinsert(pinnedObjects, object);
+                if not IS_LINE_HOOKED[_l] then
+                    IS_LINE_HOOKED[_l] = true;
+                    object.lineIndex = _l;
+                end
+                text = object:GetText();
+                text = strtrim(text);
+                if text and text ~= "" then
+                    if output then
+                        output = output.."\n"..text;
+                    else
+                        output = text;
+                    end
+                end
+            end
+        end
+        return output, isCached
+    else
+        object = _G[TOOLTIP_NAME.."TextLeft"..line];
+        pinnedObjects = {object};
+        if object then
+            if not IS_LINE_HOOKED[line] then
+                IS_LINE_HOOKED[line] = true;
+                object.lineIndex = line;
+            end
+            text = object:GetText();
+        end
+        return text, isCached
+    end
 end
 
 NarciAPI.GetCachedItemTooltipTextByLine = GetItemTooltipTextByLine;

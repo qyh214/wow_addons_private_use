@@ -1,11 +1,11 @@
 local L = Narci.L;
 --NARCI_NEW_ENTRY_PREFIX..
 local TabNames = { 
-    L["Interface"], L["Shortcuts"], L["Themes"], L["Effects"], L["Camera"], L["Transmog"],
+    L["Interface"], L["Shortcuts"], NARCI_NEW_ENTRY_PREFIX..L["Themes"], L["Effects"], L["Camera"], L["Transmog"],
     L["Photo Mode"], L["NPC"], NARCI_NEW_ENTRY_PREFIX..EXPANSION_NAME8, L["Extensions"],
 };  --Credits and About will be inserted later
 
-local FadeFrame = NarciAPI_FadeFrame;
+local FadeFrame = NarciFadeUI.Fade;
 local Color_Good = "|cff7cc576";     --124 197 118
 local Color_Good_r = 124/255;
 local Color_Good_g = 197/255;
@@ -36,7 +36,7 @@ local function ShowChildButtons(parentButton, state)
     if parentButton.childButtons then
         if state then
             for i = 1, #parentButton.childButtons do
-                FadeFrame(parentButton.childButtons[i], 0.2, "Forced_IN");
+                FadeFrame(parentButton.childButtons[i], 0.2, 1, 0);
             end
         else
             for i = 1, #parentButton.childButtons do
@@ -124,16 +124,16 @@ local function SetItemNameTextWidth(width)
     Settings.ItemNameWidth = Width;
 
     if Width == 200 then
-        Width = 1208;
+        Width = 512;
     end
     
     local slot;
-    for i=1, #slotTable do
+    for i = 1, #slotTable do
         slot = slotTable[i];
         if slot then
             slot.Name:SetWidth(Width);
             slot.ItemLevel:SetWidth(Width);
-            slot.GradientBackground:SetHeight(slot.Name:GetHeight() + slot.ItemLevel:GetHeight() + 18);
+            slot:UpdateGradientSize();
         end
     end
 end
@@ -171,20 +171,20 @@ local function SetItemNameTextTruncated(self, state)
             slot.Name:SetWidth(slot.Name:GetWidth()-1)
             slot.ItemLevel:SetWidth(slot.Name:GetWidth()+1)
             slot.ItemLevel:SetWidth(slot.Name:GetWidth()-1)
-            slot.GradientBackground:SetHeight(slot.Name:GetHeight() + slot.ItemLevel:GetHeight() + 18);
+            slot:UpdateGradientSize();
         end
     end
 end
 
 local function ShowDetailedIlvlInfo(self, state)
 	if state then
-        FadeFrame(Narci_DetailedStatFrame, 0.5, "IN");
-        FadeFrame(Narci_RadarChartFrame, 0.5, "IN");
-		FadeFrame(Narci_ConciseStatFrame, 0.5, "OUT");
+        FadeFrame(Narci_DetailedStatFrame, 0.5, 1);
+        FadeFrame(Narci_RadarChartFrame, 0.5, 1);
+		FadeFrame(Narci_ConciseStatFrame, 0.5, 0);
 	else
-        FadeFrame(Narci_DetailedStatFrame, 0.5, "OUT");
-        FadeFrame(Narci_RadarChartFrame, 0.5, "OUT");
-		FadeFrame(Narci_ConciseStatFrame, 0.5, "IN");
+        FadeFrame(Narci_DetailedStatFrame, 0.5, 0);
+        FadeFrame(Narci_RadarChartFrame, 0.5, 0);
+		FadeFrame(Narci_ConciseStatFrame, 0.5, 1);
 	end
     Narci_ItemLevelFrame:ToggleExtraInfo(state);
     Narci_ItemLevelFrame.showExtraInfo = state;
@@ -497,7 +497,7 @@ end
 local function LetterboxEffectSwitch_SetState(self, state)
     if state then
         if Narci_LetterboxRatioSlider then
-            FadeFrame(Narci_LetterboxRatioSlider, 0.25, "Forced_IN");
+            FadeFrame(Narci_LetterboxRatioSlider, 0.25, 1, 0);
         end
         if self:IsVisible() then
             Narci_LetterboxAnimation();
@@ -686,6 +686,85 @@ local function DominationIndicator_SetState(self, state)
     NarciCharacterFrameDominationIndicator:SetEnabled(state);
 end
 
+
+local MinimapTextureData = {
+    [1] = {"Minimap\\LOGO-Cyan", "Narcissus"},
+    [2] = {"Minimap\\LOGO-Thick", "AzeriteUI"},
+    [3] = {"Preference\\MBT-Hollow", "SexyMap"},
+};
+
+NarciMinimapTextureOptionMixin = {};
+
+function NarciMinimapTextureOptionMixin:OnLoad()
+    self.styleID = self:GetID();
+    if MinimapTextureData[self.styleID] then
+        self.HighlightTexture:SetTexture("Interface\\AddOns\\Narcissus\\ART\\".. MinimapTextureData[self.styleID][1]);
+        self.NormalTexture:SetTexture("Interface\\AddOns\\Narcissus\\ART\\".. MinimapTextureData[self.styleID][1]);
+        self.ButtonName:SetText(MinimapTextureData[self.styleID][2]);
+    else
+        self.ButtonName:SetText("Unknown");
+    end
+    if self.styleID == 1 then
+        self:SetSelection(true);
+    end
+end
+
+function NarciMinimapTextureOptionMixin:OnEnter()
+    self:StopAnimating();
+    self.AnimIn:Play();
+    self.AnimIn.Bounce1:SetDuration(0.2);
+    self.AnimIn.Bounce2:SetDuration(0.2);
+    self.AnimIn.Hold1:SetDuration(20);
+    self.AnimIn.Hold2:SetDuration(20);
+    --self.HighlightTexture:Show();
+    FadeFrame(self.HighlightTexture, 0.2, 1);
+    if not self.isSelected then
+        self.ButtonName:SetTextColor(0.72, 0.72, 0.72);
+    end
+end
+
+function NarciMinimapTextureOptionMixin:OnLeave()
+    self.AnimIn.Bounce1:SetDuration(0);
+    self.AnimIn.Bounce2:SetDuration(0);
+    self.AnimIn.Hold1:SetDuration(0);
+    self.AnimIn.Hold2:SetDuration(0);
+    --self.HighlightTexture:Hide();
+    FadeFrame(self.HighlightTexture, 0.2, 0);
+    if self.isSelected then
+        self.ButtonName:SetTextColor(0.72, 0.72, 0.72);
+    else
+        self.ButtonName:SetTextColor(0.42, 0.42, 0.42);
+    end
+end
+
+function NarciMinimapTextureOptionMixin:OnClick()
+    local buttons = self:GetParent().MinimapTextureOptions;
+    for _, button in pairs(buttons) do
+        button:SetSelection(false);
+    end
+    self:SetSelection(true);
+    NarcissusDB.MinimapIconStyle = self.styleID;
+    Narci_MinimapButton:SetBackground();
+end
+
+function NarciMinimapTextureOptionMixin:SetSelection(state)
+    self.isSelected = state;
+    if state then
+        self.ButtonName:SetTextColor(0.72, 0.72, 0.72);
+        local Tick = self:GetParent().Tick;
+        Tick:ClearAllPoints();
+        Tick:SetPoint("TOP", self, "BOTTOM", 0, -12);
+        Tick:Show();
+    else
+        self.ButtonName:SetTextColor(0.42, 0.42, 0.42);
+    end
+end
+
+function NarciMinimapTextureOptionMixin:Init()
+    self:SetSelection(self.styleID and self.styleID == NarcissusDB.MinimapIconStyle);
+    self:SetScript("OnShow", nil);
+end
+
 local Structure = {
     {Category = "Interface", localizedName = L["Interface"], layout = {
         { name = "uiScale", type = "header", localizedName = UI_SCALE, },
@@ -712,10 +791,12 @@ local Structure = {
     }},
 
     {Category = "Themes", localizedName = L["Themes"], layout = {
-        { name = "BorderThemeHeader", type = "header", localizedName = L["Border Theme Header"], },
+        --{ name = "BorderThemeHeader", type = "header", localizedName = L["Border Theme Header"], },
         --{ name = "BorderTheme", type = "radio", localizedName = L["Border Theme Bright"], valueFunc = BorderThemeButton_OnClick, optionValue = "Bright", groupIndex = 1 },
-        { name = "BorderTheme", type = "radio", localizedName = L["Border Theme Dark"], valueFunc = BorderThemeButton_OnClick, optionValue = "Dark", groupIndex = 1 },
-        { name = "Space", type = "space", height = 64},
+        --{ name = "BorderTheme", type = "radio", localizedName = L["Border Theme Dark"], valueFunc = BorderThemeButton_OnClick, optionValue = "Dark", groupIndex = 1 },
+        --{ name = "Space", type = "space", height = 64},
+        { name = "BorderThemeHeader", type = "header", localizedName = L["Minimap Button"], },
+        { name = "Space", type = "space", height = 108},
         { name = "TooltipThemeHeader", type = "header", localizedName = L["Tooltip Color"], },
         { name = "TooltipTheme", type = "radio", localizedName = L["Border Theme Bright"], valueFunc = TooltipThemeButton_OnClick, optionValue = "Bright", groupIndex = 2 },
         { name = "TooltipTheme", type = "radio", localizedName = L["Border Theme Dark"], valueFunc = TooltipThemeButton_OnClick, optionValue = "Dark", groupIndex = 2 },
@@ -1007,7 +1088,7 @@ local function AFKScreenSwitch_SetState(self)
             self.Description:SetText(L["AFK Screen Description"]);
         end
 
-        FadeFrame(self:GetParent().AutoStand, 0.25, "Forced_IN");
+        FadeFrame(self:GetParent().AutoStand, 0.25, 1, 0);
         self:GetParent().Gemma:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -90);
     else
         self.Description:SetText(L["AFK Screen Description"]);
@@ -1119,9 +1200,9 @@ local function TranslatorSwitch_SetState(self)
     self.Tick:SetShown(state);
 
     if state then
-        FadeFrame(CreatureTab.OnTooltip, 0.25, "Forced_IN");
-        FadeFrame(CreatureTab.OnNamePlate, 0.25, "Forced_IN");
-        FadeFrame(CreatureTab.SelectLanguage, 0.25, "Forced_IN");
+        FadeFrame(CreatureTab.OnTooltip, 0.25, 1, 0);
+        FadeFrame(CreatureTab.OnNamePlate, 0.25, 1, 0);
+        FadeFrame(CreatureTab.SelectLanguage, 0.25, 1, 0);
         self.Description:SetText(self.enabledText);
     else
         CreatureTab.OnTooltip:Hide();
@@ -1174,7 +1255,7 @@ function Narci_TranslatorSwitch_OnClick(self)
 end
 
 function Narci_SelectLanguage_OnClick(self)
-    FadeFrame(CreatureTab.LanguageOptions, 0.25, "Forced_IN");
+    FadeFrame(CreatureTab.LanguageOptions, 0.25, 1, 0);
 end
 
 local function FindRelativesSwitch_SetState(self)
@@ -1190,7 +1271,7 @@ function Narci_FindRelativesSwitch_OnClick(self)
     LockDatabaseToggle();
     self.Tick:SetShown(state);
     if state then
-        FadeFrame(self.KeyBinding, 0.25, "Forced_IN");
+        FadeFrame(self.KeyBinding, 0.25, 1, 0);
     else
         self.KeyBinding:Hide();
     end
@@ -1274,7 +1355,7 @@ function Narci_TranslationPositionButton_OnClick(self)
     
     CreatureSettings.ShowTranslatedNameOnNamePlate = useNamePlate;
     if useNamePlate then
-        FadeFrame(self.OffsetSetting, 0.25, "Forced_IN");
+        FadeFrame(self.OffsetSetting, 0.25, 1, 0);
     else
         self:GetParent().OnNamePlate.OffsetSetting:Hide();
     end
@@ -1823,9 +1904,9 @@ end
 function NarciPreferenceMixin:Toggle()
     local state = not self:IsShown();
     if state then
-        FadeFrame(Narci_Preference, 0.15, "IN");
+        FadeFrame(Narci_Preference, 0.15, 1);
     else
-        FadeFrame(Narci_Preference, 0.2, "OUT");
+        FadeFrame(Narci_Preference, 0.2, 0);
     end
 end
 

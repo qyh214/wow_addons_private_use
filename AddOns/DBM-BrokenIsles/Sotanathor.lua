@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2014, "DBM-BrokenIsles", 2, 822)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210721041434")
+mod:SetRevision("20220116041824")
 mod:SetCreatureID(124555)
 --mod:SetEncounterID(1952)--Does not have one
 --mod:SetReCombatTime(20)
@@ -24,10 +24,10 @@ local specWarnClovenSoul		= mod:NewSpecialWarningTaunt(247444, nil, nil, nil, 1,
 local specWarnWakeofDestruction	= mod:NewSpecialWarningSpell(247432, nil, nil, nil, 2, 2)--Used for both warnings that trigger it
 local specWarnSeedofDestruction	= mod:NewSpecialWarningYou(247437, nil, nil, nil, 3, 4)
 
-local timerSilenceCD			= mod:NewCDTimer(24.4, 247698, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)
-local timerSoulCleaveCD			= mod:NewCDTimer(25.5, 247410, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerSilenceCD			= mod:NewCDTimer(24.4, 247698, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
+local timerSoulCleaveCD			= mod:NewCDTimer(25.5, 247410, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerCavitationCD			= mod:NewCDTimer(26.7, 181461, nil, nil, nil, 2)
-local timerSeedsofDestructionCD	= mod:NewCDTimer(17.0, 247437, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)
+local timerSeedsofDestructionCD	= mod:NewCDTimer(17.0, 247437, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 
 mod:AddReadyCheckOption(49197, false)
 

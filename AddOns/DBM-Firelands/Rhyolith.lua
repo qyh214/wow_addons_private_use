@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(193, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200918002541")
+mod:SetRevision("20220116034430")
 mod:SetCreatureID(52558)--or does 53772 die instead?didn't actually varify this fires right unit_died event yet so we'll see tonight
 mod:SetEncounterID(1204)
 --mod:SetModelSound("Sound\\Creature\\RHYOLITH\\VO_FL_RHYOLITH_AGGRO.ogg", "Sound\\Creature\\RHYOLITH\\VO_FL_RHYOLITH_KILL_02.ogg")
@@ -35,11 +35,11 @@ local warnPhase2			= mod:NewPhaseAnnounce(2, 3)
 
 local specWarnMagmaFlow		= mod:NewSpecialWarningSpell(97225, nil, nil, nil, 2, 2)
 
-local timerAddsCD			= mod:NewNextCountTimer(22.3, "ej2529", nil, nil, nil, 1, 98552, DBM_CORE_L.DAMAGE_ICON)
+local timerAddsCD			= mod:NewNextCountTimer(22.3, "ej2529", nil, nil, nil, 1, 98552, DBM_COMMON_L.DAMAGE_ICON)
 local timerHeatedVolcano	= mod:NewNextTimer(25.5, 98493, nil, nil, nil, 5)
 local timerFlameStomp		= mod:NewCDTimer(30.5, 97282, nil, nil, nil, 2)
-local timerSuperheated		= mod:NewNextTimer(10, 101304, nil, nil, nil, 5, nil, DBM_CORE_L.DAMAGE_ICON)		--Add the 10 second party in later at some point if i remember to actually log it better
-local timerMoltenSpew		= mod:NewCastTimer(6, 98034, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)		--6secs after Drinking Magma
+local timerSuperheated		= mod:NewNextTimer(10, 101304, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)		--Add the 10 second party in later at some point if i remember to actually log it better
+local timerMoltenSpew		= mod:NewCastTimer(6, 98034, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)		--6secs after Drinking Magma
 local timerMagmaFlowActive	= mod:NewBuffActiveTimer(10, 97225)	--10 second buff volcano has, after which the magma line explodes.
 
 mod.vb.phase = 1

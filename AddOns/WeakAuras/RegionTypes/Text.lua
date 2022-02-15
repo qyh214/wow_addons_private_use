@@ -27,7 +27,7 @@ local default = {
 
   shadowColor = { 0, 0, 0, 1},
   shadowXOffset = 1,
-  shadowYOffset = -1,
+  shadowYOffset = -1
 };
 
 local properties = {
@@ -63,7 +63,6 @@ local function create(parent)
   text:SetWordWrap(true);
   text:SetNonSpaceWrap(true);
 
-  region.values = {};
   region.duration = 0;
   region.expirationTime = math.huge;
 
@@ -265,7 +264,11 @@ local function modify(parent, region, data)
   WeakAuras.regionPrototype.modifyFinish(parent, region, data);
 end
 
-WeakAuras.RegisterRegionType("text", create, modify, default, GetProperties);
+local function validate(data)
+  Private.EnforceSubregionExists(data, "subbackground")
+end
+
+WeakAuras.RegisterRegionType("text", create, modify, default, GetProperties, validate);
 
 -- Fallback region type
 

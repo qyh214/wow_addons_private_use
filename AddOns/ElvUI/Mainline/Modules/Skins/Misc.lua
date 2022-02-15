@@ -287,8 +287,7 @@ function S:BlizzardMiscFrames()
 
 		local menuBackdrop = _G[listFrameName..'MenuBackdrop']
 		if menuBackdrop and not menuBackdrop.template then
-			menuBackdrop:StripTextures()
-			menuBackdrop:SetTemplate('Transparent')
+			menuBackdrop.NineSlice:SetTemplate('Transparent')
 		end
 	end)
 
@@ -386,9 +385,6 @@ function S:BlizzardMiscFrames()
 
 	--NavBar Buttons (Used in WorldMapFrame, EncounterJournal and HelpFrame)
 	hooksecurefunc('NavBar_AddButton', SkinNavBarButtons)
-
-	-- Ticket Frames (not GMTicketFrames)
-	_G.TicketStatusFrameButton.Background.NineSlice:SetTemplate('Transparent')
 end
 
 S:AddCallback('BlizzardMiscFrames')

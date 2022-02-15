@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 90105
 ## Title: RSA [|c50C41F3BDeath Knight|r]
 ## Notes: RSA Death Knight Module. This is needed to announce Death Knight Spells.
 ## Author: Raeli

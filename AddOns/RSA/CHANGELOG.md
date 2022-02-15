@@ -1,8 +1,5 @@
-# RSA r546-Release
+# RSA r547-Release
 
-* Updated interface version for 9.1
-### Mage
-* Added a variety of missing polymorph variants.
-
-### Priest
-* Added Mind Soothe
+* Updated interface version for 9.1.5
+### Shaman
+* Added support for the Shamanism PVP Talent.

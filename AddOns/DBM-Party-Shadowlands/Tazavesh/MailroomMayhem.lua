@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2436, "DBM-Party-Shadowlands", 9, 1194)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210620030927")
+mod:SetRevision("20220204091202")
 mod:SetCreatureID(175646)
 mod:SetEncounterID(2424)
 
@@ -32,8 +32,10 @@ local specWarnGTFO					= mod:NewSpecialWarningGTFO(346329, nil, nil, nil, 1, 8)
 
 local timerUnstableGoodsCD			= mod:NewAITimer(11, 346947, nil, nil, nil, 5)
 local timerHazardousLiquidsCD		= mod:NewAITimer(11, 346947, nil, nil, nil, 3)
-local timerFanMailCD				= mod:NewAITimer(15.8, 346293, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)
+local timerFanMailCD				= mod:NewAITimer(15.8, 346293, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
 local timerMoneyOrderCD				= mod:NewAITimer(11, 346962, nil, nil, nil, 3)
+
+mod:GroupSpells(346403, 346947)--Unstable goods, one for spawn and one for holdin it, two diff icons so separated on purpose
 
 mod.vb.goodPhase = 0
 mod.vb.fanCount = 0
@@ -81,7 +83,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnGTFO:Play("watchfeet")
 	elseif spellId == 346962 then
 		if args:IsPlayer() then
-			specWarnMoneyOrder:Show(DBM_CORE_L.ALLIES)
+			specWarnMoneyOrder:Show(DBM_COMMON_L.ALLIES)
 			yellMoneyOrder:Yell()
 			yellMoneyOrderFades:Countdown(spellId)
 		else

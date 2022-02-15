@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(866, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20220116041948")
 mod:SetCreatureID(72276)
 --mod:SetEncounterID(1624)
 
@@ -53,9 +53,9 @@ local specWarnPiercingCorruption		= mod:NewSpecialWarningSpell(144657)
 
 --Amalgam of Corruption
 local timerCombatStarts					= mod:NewCombatTimer(25)
-local timerUnleashedAngerCD				= mod:NewCDTimer(11, 145216, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
-local timerBlindHatred					= mod:NewBuffActiveTimer(30, 145226, nil, nil, nil, 6, nil, DBM_CORE_L.DEADLY_ICON)
-local timerBlindHatredCD				= mod:NewNextTimer(30, 145226, nil, nil, nil, 6, nil, DBM_CORE_L.DEADLY_ICON)
+local timerUnleashedAngerCD				= mod:NewCDTimer(11, 145216, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerBlindHatred					= mod:NewBuffActiveTimer(30, 145226, nil, nil, nil, 6, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerBlindHatredCD				= mod:NewNextTimer(30, 145226, nil, nil, nil, 6, nil, DBM_COMMON_L.DEADLY_ICON)
 --All Tests
 local timerLookWithin					= mod:NewBuffFadesTimer(60, "ej8220", nil, nil, nil, 6, nil, nil, nil, 1, 4)
 --Test of Serenity (DPS)
@@ -66,7 +66,7 @@ local timerLingeringCorruptionCD		= mod:NewNextTimer(15.5, 144514, nil, nil, nil
 --Test of Confidence (tank)
 local timerTitanicSmashCD				= mod:NewCDTimer(14.5, 144628, nil, nil, nil, 3)--14-17sec variation
 local timerPiercingCorruptionCD			= mod:NewCDTimer(14, 144657, nil, nil, nil, 5)--14-17sec variation
-local timerHurlCorruptionCD				= mod:NewNextTimer(20, 144649, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON, nil, 2, 3)
+local timerHurlCorruptionCD				= mod:NewNextTimer(20, 144649, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON, nil, 2, 3)
 
 local berserkTimer						= mod:NewBerserkTimer(418)
 

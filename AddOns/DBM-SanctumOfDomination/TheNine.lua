@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2439, "DBM-SanctumOfDomination", nil, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211030022616")
+mod:SetRevision("20220202090223")
 mod:SetCreatureID(175726)--Skyja (TODO, add other 2 and set health to highest?)
 mod:SetEncounterID(2429)
 mod:SetUsedIcons(8, 7, 6, 4, 3, 2, 1)
@@ -33,85 +33,86 @@ mod:RegisterEventsInCombat(
  or (target.id = 177095 or target.id = 177094) and type = "death"
 --]]
 --Stage One: The Unending Voice
+mod:AddOptionLine(DBM:EJ_GetSectionInfo(22877), "announce")
 ----Kyra, The Unending
+mod:AddOptionLine(DBM:EJ_GetSectionInfo(23202), "announce")
 local warnUnendingStrike						= mod:NewStackAnnounce(350202, 2, nil, "Tank|Healer")
-----Signe, The Voice
---local warnBloodLantern						= mod:NewTargetNoFilterAnnounce(341684, 2)
-----Skyja, The First
-local warnCalloftheValkyr						= mod:NewCountAnnounce(350467, 3)
-local warnAnnhyldesBrightAegis					= mod:NewTargetNoFilterAnnounce(350158, 2, nil, "Tank")
-local warnDaschlasMightyAnvil					= mod:NewTargetAnnounce(350184, 2)
-local warnBrynjasMournfulDirge					= mod:NewTargetAnnounce(350109, 2, nil, false)--On half the raid
-local warnArthurasCrushingGaze					= mod:NewTargetNoFilterAnnounce(350039, 3)
-local warnFragmentsofDestiny					= mod:NewTargetNoFilterAnnounce(350542, 3)
-local warnFragmentsofDestinyStack				= mod:NewCountAnnounce(350542, 2)
---Stage Two: The First of the Mawsworn
-local warnPierceSoul							= mod:NewStackAnnounce(350475, 2, nil, "Tank|Healer")
-local warnResentment							= mod:NewCountAnnounce(355294, 3)
-local warnLinkEssence							= mod:NewTargetNoFilterAnnounce(350483, 3)
 
---Stage One: The Unending Voice
-----Kyra, The Unending
 local specWarnUnendingStrike					= mod:NewSpecialWarningStack(350202, nil, 3, nil, nil, 1, 6)
 local specWarnUnendingStrikeTaunt				= mod:NewSpecialWarningTaunt(350202, nil, nil, nil, 1, 2)
 local specWarnFormlessMass						= mod:NewSpecialWarningSwitchCount(350342, "Dps", nil, nil, 1, 2)
 local specWarnSiphonVitality					= mod:NewSpecialWarningInterruptCount(350339, "HasInterrupt", nil, nil, 1, 2)
 local specWarnWingsofRage						= mod:NewSpecialWarningRun(350365, nil, nil, nil, 4, 2)
+
+local timerUnendingStrikeCD						= mod:NewCDTimer(6.7, 350202, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--6.7-14.7
+local timerFormlessMassCD						= mod:NewCDCountTimer(47.3, 350342, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
+local timerWingsofRageCD						= mod:NewCDCountTimer(72.9, 350365, nil, nil, nil, 2)
+
+mod:AddSetIconOption("SetIconOnFormlessMass", 350342, true, true, {7, 8, 6})
 ----Signe, The Voice
+mod:AddOptionLine(DBM:EJ_GetSectionInfo(23203), "announce")
+--local warnBloodLantern						= mod:NewTargetNoFilterAnnounce(341684, 2)
+
 local specWarnSoulfulBlast						= mod:NewSpecialWarningInterrupt(350283, false, nil, nil, 1, 2)--Opt in, only some should be doing this one, plus it's spammy as hell
 local specWarnSongofDissolution					= mod:NewSpecialWarningInterrupt(350286, "HasInterrupt", nil, nil, 1, 2)
 local specWarnReverberatingRefrain				= mod:NewSpecialWarningMoveTo(350385, nil, nil, nil, 3, 2)
+
+local timerSongofDissolutionCD					= mod:NewCDCountTimer(19.4, 350286, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--19.4-25.5 (unless delayed massivley by another channel)
+local timerReverberatingRefrainCD				= mod:NewCDCountTimer(73.1, 350385, nil, nil, nil, 2)
 ----Skyja, The First
+mod:AddOptionLine(DBM:EJ_GetSectionInfo(23205), "announce")
+local warnCalloftheValkyr						= mod:NewCountAnnounce(350467, 3)
+local warnFragmentsofDestiny					= mod:NewTargetNoFilterAnnounce(350542, 3)
+local warnFragmentsofDestinyStack				= mod:NewCountAnnounce(350542, 2)
+
+local specWarnFragmentsofDestiny				= mod:NewSpecialWarningMoveAway(350542, nil, nil, nil, 1, 2)
+local yellFragmentsofDestiny					= mod:NewShortPosYell(350542)--TODO, probably change to icon/numbered yell system based on icon/combatlog order
+
+local timerCalloftheValkyrCD					= mod:NewCDCountTimer(52.3, 350467, nil, nil, nil, 3, nil, nil, nil, 1, 3)
+local timerFragmentsofDestinyCD					= mod:NewCDCountTimer(47.3, 350541, nil, nil, nil, 3, nil, nil, nil, 2, 3)
+
+mod:AddInfoFrameOption(350542, true)
+mod:AddSetIconOption("SetIconOnFragments", 350542, true, false, {1, 2, 3, 4})--Mythic says max 4, so probably the cap
 ------Call of the Val'kyr
-local specWarnAgathasEternalblade				= mod:NewSpecialWarningDodge(350031, nil, nil, nil, 2, 2)
+mod:AddOptionLine(DBM:EJ_GetSectionInfo(23206), "announce")
+local warnAnnhyldesBrightAegis					= mod:NewTargetNoFilterAnnounce(350158, 2, nil, "Tank")
+local warnDaschlasMightyAnvil					= mod:NewTargetAnnounce(350184, 2)
+local warnBrynjasMournfulDirge					= mod:NewTargetAnnounce(350109, 2, nil, false)--On half the raid
+local warnArthurasCrushingGaze					= mod:NewTargetNoFilterAnnounce(350039, 3)
+
+local specWarnAgathasEternalblade				= mod:NewSpecialWarningDodge(350012, nil, nil, nil, 2, 2)
 local specWarnDaschlasMightyAnvil				= mod:NewSpecialWarningMoveAway(350184, nil, nil, nil, 1, 2)
 local yellDaschlasMightyAnvil					= mod:NewShortYell(350184)
 local yellDaschlasMightyAnvilFades				= mod:NewShortFadesYell(350184)
-local specWarnAradnesFallingStrike				= mod:NewSpecialWarningSoak(350098, nil, nil, nil, 1, 2)
+local specWarnAradnesFallingStrike				= mod:NewSpecialWarningSoak(350078, nil, nil, nil, 1, 2)
 local specWarnBrynjasMournfulDirge				= mod:NewSpecialWarningMoveAway(350109, nil, nil, nil, 1, 2)
 local yellBrynjasMournfulDirge					= mod:NewShortYell(350109)
 local yellBrynjasMournfulDirgeFades				= mod:NewShortFadesYell(350109)
 local specWarnArthurasCrushingGaze				= mod:NewSpecialWarningMoveTo(350039, nil, nil, nil, 3, 2)
 local yellArthurasCrushingGaze					= mod:NewYell(350039, nil, nil, nil, "YELL")
 local yellArthurasCrushingGazeFades				= mod:NewShortFadesYell(350039, nil, nil, nil, "YELL")
-------End Valks
-local specWarnFragmentsofDestiny				= mod:NewSpecialWarningMoveAway(350542, nil, nil, nil, 1, 2)
-local yellFragmentsofDestiny					= mod:NewShortPosYell(350542)--TODO, probably change to icon/numbered yell system based on icon/combatlog order
+
+mod:AddNamePlateOption("NPAuraOnBrightAegis", 350158)
 --Stage Two: The First of the Mawsworn
+mod:AddOptionLine(DBM:EJ_GetSectionInfo(22879), "announce")
+local warnPierceSoul							= mod:NewStackAnnounce(350475, 2, nil, "Tank|Healer")
+local warnResentment							= mod:NewCountAnnounce(355294, 3)
+local warnLinkEssence							= mod:NewTargetNoFilterAnnounce(350483, 3)
+
 local specWarnPierceSoul						= mod:NewSpecialWarningStack(350475, nil, 4, nil, nil, 1, 6)
 local specWarnPierceSoulTaunt					= mod:NewSpecialWarningTaunt(350475, nil, nil, nil, 1, 2)
-local specWarnLinkEssence						= mod:NewSpecialWarningDefensive(350482, nil, nil, nil, 1, 2, 3)
+local specWarnLinkEssence						= mod:NewSpecialWarningDefensive(350483, nil, nil, nil, 1, 2, 3)
 local specWarnWordofRecall						= mod:NewSpecialWarningSpell(350687, nil, nil, nil, 2, 2, 3)
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
---mod:AddTimerLine(BOSS)
---Stage One: The Unending Voice
-----Kyra, The Unending
-local timerUnendingStrikeCD						= mod:NewCDTimer(6.7, 350202, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON)--6.7-14.7
-local timerFormlessMassCD						= mod:NewCDCountTimer(47.3, 350342, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)
-local timerWingsofRageCD						= mod:NewCDCountTimer(72.9, 350365, nil, nil, nil, 2)
-----Signe, The Voice
-local timerSongofDissolutionCD					= mod:NewCDCountTimer(19.4, 350286, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)--19.4-25.5 (unless delayed massivley by another channel)
-local timerReverberatingRefrainCD				= mod:NewCDCountTimer(73.1, 350385, nil, nil, nil, 2)
-----Skyja, The First
-local timerCalloftheValkyrCD					= mod:NewCDCountTimer(52.3, 350467, nil, nil, nil, 3, nil, nil, nil, 1, 3)
-local timerFragmentsofDestinyCD					= mod:NewCDCountTimer(47.3, 350541, nil, nil, nil, 3, nil, nil, nil, 2, 3)
---Stage Two: The First of the Mawsworn
-local timerPierceSoulCD							= mod:NewCDTimer(9.7, 350475, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerPierceSoulCD							= mod:NewCDTimer(9.7, 350475, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerResentmentCD							= mod:NewCDCountTimer(21.8, 355294, nil, nil, nil, 2)
-local timerLinkEssenceCD						= mod:NewCDCountTimer(37.6, 350482, nil, nil, nil, 3, nil, DBM_CORE_L.HEROIC_ICON)
-local timerWordofRecallCD						= mod:NewCDCountTimer(72.9, 350687, nil, nil, nil, 2, nil, DBM_CORE_L.HEROIC_ICON)
-
+local timerLinkEssenceCD						= mod:NewCDCountTimer(37.6, 350483, nil, nil, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON)
+local timerWordofRecallCD						= mod:NewCDCountTimer(72.9, 350687, nil, nil, nil, 2, nil, DBM_COMMON_L.HEROIC_ICON)
 local berserkTimer								= mod:NewBerserkTimer(600)
 
---mod:AddRangeFrameOption("8")
-mod:AddInfoFrameOption(350542, true)
-mod:AddSetIconOption("SetIconOnFragments", 350542, true, false, {1, 2, 3, 4})--Mythic says max 4, so probably the cap
-mod:AddSetIconOption("SetIconOnFormlessMass", 350342, true, true, {7, 8, 6})
-mod:AddNamePlateOption("NPAuraOnBrightAegis", 350158)
-
 local castsPerGUID = {}
-local fragmentTargets = {[1] = false, [2] = false, [3] = false, [4] = false}
+local fragmentTargets = {}
 --local expectedDebuffs = 3
 
 mod.vb.valksDead = 11--1 not dead, 2 dead. 10s Kyra and 1s Signe
@@ -128,21 +129,19 @@ mod.vb.linkEssence = 0
 
 local updateInfoFrame
 do
-	local floor = math.floor
-	local lines = {}
-	local sortedLines = {}
+	local twipe = table.wipe
+	local lines, sortedLines = {}, {}
 	local function addLine(key, value)
 		-- sort by insertion order
 		lines[key] = value
 		sortedLines[#sortedLines + 1] = key
 	end
 	updateInfoFrame = function()
-		table.wipe(lines)
-		table.wipe(sortedLines)
+		twipe(lines)
+		twipe(sortedLines)
 		for i = 1, 8 do
 			if fragmentTargets[i] then
-				local name = fragmentTargets[i]
-				addLine(L.Fragment..i, name)
+				addLine(L.Fragment..i, fragmentTargets[i])
 			end
 		end
 		return lines, sortedLines
@@ -151,7 +150,7 @@ end
 
 function mod:OnCombatStart(delay)
 	table.wipe(castsPerGUID)
-	fragmentTargets = {[1] = false, [2] = false, [3] = false, [4] = false}
+	table.wipe(fragmentTargets)
 --	expectedDebuffs = self:IsMythic() and 4 or 3
 	self:SetStage(1)
 	self.vb.valksDead = 11
@@ -170,7 +169,7 @@ function mod:OnCombatStart(delay)
 	timerWingsofRageCD:Start(39.1-delay, 1)
 	--Signe
 	timerSongofDissolutionCD:Start(15.4-delay, 1)--15-19
-	timerReverberatingRefrainCD:Start(60.6-delay, 1)--60+
+	timerReverberatingRefrainCD:Start(60.3-delay, 1)--60+
 	--Skyja
 	timerCalloftheValkyrCD:Start(10.4-delay, 1)--10.4-15
 	if self:IsMythic() then
@@ -201,7 +200,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 350202 then
-		timerUnendingStrikeCD:Start(self:IsEasy() and 12.1 or 6.9)--TODO, mythic might be faster and LFR even slower
+		timerUnendingStrikeCD:Start(self:IsEasy() and 11.7 or 6.9)--TODO, mythic might be faster and LFR even slower
 	elseif spellId == 350342 then
 --		self.vb.addIcon = 8
 		self.vb.massCount = self.vb.massCount + 1
@@ -252,7 +251,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnReverberatingRefrain:Show(args.sourceName)
 		specWarnReverberatingRefrain:Play("findshelter")
 --		if self.vb.valksDead == 11 or self.vb.valksDead == 21 then
-			timerReverberatingRefrainCD:Start(spellId == 350385 and 74.2 or 71.8, self.vb.refrainCount+1)
+			timerReverberatingRefrainCD:Start(spellId == 350385 and 72.8 or 71.8, self.vb.refrainCount+1)
 --		end
 	elseif spellId == 350467 then
 		self.vb.valkCount = self.vb.valkCount + 1
@@ -292,11 +291,11 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self:SetStage(2)
 		--self.vb.fragmentCount = 0
 		timerCalloftheValkyrCD:Stop()
-		timerPierceSoulCD:Start(11.7)--11.7-13.3
-		timerResentmentCD:Start(28.7, 1)--28.7-33.6
+		timerPierceSoulCD:Start(9.3)--9.3-13.3
+		timerResentmentCD:Start(27.5, 1)--27.5-33.6
 		timerCalloftheValkyrCD:Start(self:IsEasy() and 30 or 42.6, 1)--42.6-44
 		timerFragmentsofDestinyCD:Stop()
-		timerFragmentsofDestinyCD:Start(15.4, self.vb.fragmentCount+1)--15-17.4. Heroic and normal confirmed, mythic and LFR?
+		timerFragmentsofDestinyCD:Start(14.1, self.vb.fragmentCount+1)--14.1-17.4. Heroic and normal confirmed, mythic and LFR?
 		if self:IsHard() then--Heroic and Mythic
 			timerLinkEssenceCD:Start(24.7, 1)
 			timerWordofRecallCD:Start(72.5, 1)
@@ -307,8 +306,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 		if self:IsMythic() then
 			--TODO, actually see what happens if they aren't dead by the time these timers expire
-			timerWingsofRageCD:Start(56.7)
-			timerReverberatingRefrainCD:Start(95.7)
+			timerWingsofRageCD:Start(56.7, self.vb.wingCount+1)
+			timerReverberatingRefrainCD:Start(95.7, self.vb.refrainCount+1)
 		end
 		berserkTimer:Cancel()--Tecnically not accurate, Phase 1 berserk stops when both valks die. TODO, separate object
 		berserkTimer:Start(602)--Phase 2
@@ -371,7 +370,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 350039 then
 		if args:IsPlayer() then
-			specWarnArthurasCrushingGaze:Show(DBM_CORE_L.ALLIES)
+			specWarnArthurasCrushingGaze:Show(DBM_COMMON_L.ALLIES)
 			specWarnArthurasCrushingGaze:Play("gathershare")
 			yellArthurasCrushingGaze:Yell()
 			yellArthurasCrushingGazeFades:Countdown(spellId)
@@ -454,7 +453,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		--Combat log doesn't fire for each dose, removed removes ALL stacks
 		for i = 1, 8 do
 			if fragmentTargets[i] and fragmentTargets[i] == args.destName then--Found assignment matching this units name
-				fragmentTargets[i] = false--remove assignment
+				fragmentTargets[i] = nil--remove assignment
 			end
 		end
 		if self.Options.SetIconOnFragments then

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1391, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806143035")
+mod:SetRevision("20220116041913")
 mod:SetCreatureID(89890)
 mod:SetEncounterID(1777)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -47,12 +47,12 @@ local yellSeedsofDestruction			= mod:NewYell(181508)
 
 --Armed
 local timerRumblingFissureCD			= mod:NewNextTimer(39, 179582, 161600, nil, nil, 5)
-local timerBefouledCD					= mod:NewNextTimer(38, 179711, nil, nil, nil, 3, nil, DBM_CORE_L.HEALER_ICON)
-local timerSoulCleaveCD					= mod:NewNextTimer(40, 179406, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerBefouledCD					= mod:NewNextTimer(38, 179711, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON)
+local timerSoulCleaveCD					= mod:NewNextTimer(40, 179406, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerCavitationCD					= mod:NewNextTimer(40, 181461, nil, nil, nil, 2)
 --Disarmed
 local timerDisarmCD						= mod:NewNextTimer(85.8, 179667, nil, nil, nil, 6, nil, nil, nil, 1, 4)
-local timerSeedsofDestructionCD			= mod:NewNextCountTimer(14.5, 181508, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON, nil, 3, 4)--14.5-16
+local timerSeedsofDestructionCD			= mod:NewNextCountTimer(14.5, 181508, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 3, 4)--14.5-16
 
 --local berserkTimer					= mod:NewBerserkTimer(360)
 

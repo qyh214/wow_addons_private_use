@@ -377,6 +377,10 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
 	L["Export to Lua table..."] = "Exporter vers une table Lua..."
 	L["Export to string..."] = "Exporter vers une chaîne..."
 	L["External"] = "Externe"
+	--[[Translation missing --]]
+	L["Extra Height"] = "Extra Height"
+	--[[Translation missing --]]
+	L["Extra Width"] = "Extra Width"
 	L["Fade"] = "Fondu"
 	L["Fade In"] = "Fondu entrant"
 	L["Fade Out"] = "Fondu sortant"

@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal"
 
-mod:SetRevision("20210614230125")
+mod:SetRevision("20220116041927")
 mod:SetCreatureID(32871)
 mod:SetEncounterID(1130)
 mod:DisableEEKillDetection()--EE always fires wipe
@@ -39,12 +39,12 @@ local specWarnBigBang			= mod:NewSpecialWarningSpell(64584, nil, nil, nil, 3, 2)
 local specWarnCosmicSmash		= mod:NewSpecialWarningDodge(64596, nil, nil, nil, 2, 2)
 
 local timerNextBigBang			= mod:NewNextTimer(90.5, 64584, nil, nil, nil, 2)
-local timerBigBangCast			= mod:NewCastTimer(8, 64584, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON)
+local timerBigBangCast			= mod:NewCastTimer(8, 64584, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerNextCollapsingStar	= mod:NewTimer(15, "NextCollapsingStar", 227161)
 local timerCDCosmicSmash		= mod:NewCDTimer(24.6, 64596, nil, nil, nil, 3)
 local timerCastCosmicSmash		= mod:NewCastTimer(4.5, 64596)
-local timerPhasePunch			= mod:NewTargetTimer(45, 64412, nil, "Tank", 2, 5, nil, DBM_CORE_L.TANK_ICON)
-local timerNextPhasePunch		= mod:NewNextTimer(15.5, 64412, nil, "Tank", 2, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerPhasePunch			= mod:NewTargetTimer(45, 64412, nil, "Tank", 2, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerNextPhasePunch		= mod:NewNextTimer(15.5, 64412, nil, "Tank", 2, 5, nil, DBM_COMMON_L.TANK_ICON)
 local enrageTimer				= mod:NewBerserkTimer(360)
 
 --mod:AddInfoFrameOption(64122, true)--Disabled until post squish health is known. Wowhead is not parsing data correctly

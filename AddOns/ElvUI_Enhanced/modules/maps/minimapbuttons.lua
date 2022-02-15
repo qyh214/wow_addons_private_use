@@ -153,8 +153,10 @@ function MB:SkinButton(frame)
 			end
 			if (region:GetObjectType() == "Texture") then
 				local texture = region:GetTexture()
-
-				if (texture and (type(texture) ~= "number") and (texture:find("Border") or texture:find("Background") or texture:find("AlphaMask"))) then
+				
+				if (texture and (type(texture) == "number" and (texture == 136477 or texture == 136430 or texture == 136467))) then
+					region:SetTexture(nil)
+				elseif (texture and (type(texture) ~= "number" and (texture:find("Border") or texture:find("Background") or texture:find("AlphaMask")))) then	
 					region:SetTexture(nil)
 				else
 					region:ClearAllPoints()

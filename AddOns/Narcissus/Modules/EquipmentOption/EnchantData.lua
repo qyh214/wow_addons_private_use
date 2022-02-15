@@ -31,12 +31,12 @@ local enchantData = {
     --Shadowlands and on
 
     [5] = {     --Chest
-        {323762, 177716, 6216},             --Sacred Stats
         {342316, 183738, 6265, 631503},     --Eternal Insight
         {309535, 172418, 6213, 134950},     --Eternal Bulwark
-        {324773, 177962, 6230},             --Eternal Stats
         {323761, 177715, 6217, 135913},     --Eternal Bounds
         {323760, 177659, 6214, 631503},     --Eternal Skirmish
+        {324773, 177962, 6230},             --Eternal Stats
+        {323762, 177716, 6216},             --Sacred Stats
     },
 
     [8] = {     --Feet
@@ -58,15 +58,15 @@ local enchantData = {
     },
 
     [11] = {     --Finger
-        {309612, 172357, 6163},    --Bargain of Critical Strike
-        {309613, 172358, 6165},    --Bargain of Haste
-        {309614, 172359, 6167},    --Bargain of Mastery
-        {309615, 172360, 6169},    --Bargain of Versatility
-
         {309616, 172361, 6164},    --Tenet of Critical Strike
         {309617, 172362, 6166},    --Tenet of Haste
         {309618, 177661, 6168},    --Tenet of Mastery
         {309619, 172364, 6170},    --Tenet of Versatility
+
+        {309612, 172357, 6163},    --Bargain of Critical Strike
+        {309613, 172358, 6165},    --Bargain of Haste
+        {309614, 172359, 6167},    --Bargain of Mastery
+        {309615, 172360, 6169},    --Bargain of Versatility
     },
 
     [15] = {    --Back
@@ -78,10 +78,10 @@ local enchantData = {
 
     [16] = {    --Weapon
         {309627, 172366, 6229, 636335},     --Celestial Guidance
+        {309623, 172368, 6228, 462651},     --Sinful Revelation
         {309622, 172365, 6227, 135905},     --Ascended Vigor
         {309621, 172367, 6226, 1519263},    --Eternal Grace
         {309620, 172370, 6223, 631519},     --Lightless Force
-        {309623, 172368, 6228, 462651},     --Sinful Revelation
     },
 };
 
@@ -102,6 +102,11 @@ function DataProvider:SetSubset(slotID)
         slotID = 16;
     end
     subset = enchantData[slotID] or {};
+    if enchantData[slotID] then
+        return true
+    else
+        return false
+    end
 end
 
 function DataProvider:ApplyFilter(ownedOnly)

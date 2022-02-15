@@ -717,7 +717,7 @@ local function CompareItems(itemLinkA, itemLinkB, extrasA, extrasB)
 		return false
 	end
 	if enchantIDA ~= enchantIDB or #gemIDsA ~= #gemIDsB or suffixIDA ~= suffixIDB or
-	   uniqueIDA ~= uniqueIDB or upgradeTypeIDA ~= upgradeTypeIDB or 
+	   uniqueIDA ~= uniqueIDB or upgradeTypeIDA ~= upgradeTypeIDB or
 	   #bonusIDsA ~= #bonusIDsB or #relic1BonusIDsA ~= #relic1BonusIDsB or #relic2BonusIDsA ~= #relic2BonusIDsB or #relic3BonusIDsA ~= #relic3BonusIDsB then
 		return false;
 	end
@@ -1968,7 +1968,7 @@ function BtWLoadoutsEquipmentMixin:Update()
 			if not BtWLoadoutsHelpTipFlags["INVALID_PLAYER"] then
 				helpTipBox.closeFlag = "INVALID_PLAYER";
 
-				HelpTipBox_Anchor(helpTipBox, "TOP", activateButton);
+				HelpTipBox_Anchor(helpTipBox, "TOP", self:GetParent().ActivateButton);
 
 				helpTipBox:Show();
 				HelpTipBox_SetText(helpTipBox, L["Can not equip sets for other characters."]);
@@ -2021,7 +2021,7 @@ end
 local GetSetsForLocation, GetEnabledSetsForLocation, GetLocationForItem, GetEnabledSetsForItem, GetEnabledSetsForItemID
 do
 	local itemLocation = ItemLocation:CreateEmpty(); -- Reusable item location, be careful not to double use it
-	local possibleItems = {} -- Reused for storing lists of items 
+	local possibleItems = {} -- Reused for storing lists of items
 
 	--[[
 		`itemData` == `itemLink`-azerite:::::
@@ -2181,8 +2181,8 @@ do
 						local sets = missingItemDatasLocationSets[itemData]
 						for setLocation in pairs(sets) do
 							local setId, slotId = strsplit(":", setLocation)
-							setID, slotId = tonumber(setId), tonumber(slotId)
-							local set = GetEquipmentSet(setID)
+							setId, slotId = tonumber(setId), tonumber(slotId)
+							local set = GetEquipmentSet(setId)
 							assert(set)
 							set.locations[slotId] = newLocation
 						end
@@ -2193,8 +2193,8 @@ do
 						local sets = locationSets[oldLocation]
 						for setLocation in pairs(sets) do
 							local setId, slotId = strsplit(":", setLocation)
-							setID, slotId = tonumber(setId), tonumber(slotId)
-							local set = GetEquipmentSet(setID)
+							setId, slotId = tonumber(setId), tonumber(slotId)
+							local set = GetEquipmentSet(setId)
 							assert(set)
 							set.locations[slotId] = newLocation
 						end
@@ -2663,7 +2663,7 @@ do
 		return prefix .. ":" .. itemID .. ":" .. enchantID .. ":".. rest
 	end
 	-- Triggered by UNIT_SPELLCAST_SUCCESSFUL followed by a BAG_UPDATE_DELAYED or UNIT_INVENTORY_CHANGED,
-	-- Searched through items looking for the one with the previous 
+	-- Searched through items looking for the one with the previous
 	local function EnchantApplied(enchantID)
 		for location,previousItemData in pairs(locationItems) do
 			local currentItemData = GetEncodedItemDataForLocation(location)

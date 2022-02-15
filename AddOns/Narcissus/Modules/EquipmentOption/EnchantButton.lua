@@ -1,12 +1,13 @@
 local _, addon = ...;
 
-local MainFrame, ScrollFrame, Tooltip, ButtonHighlight, ActionButton;
+local MainFrame, ScrollFrame, Tooltip, ButtonHighlight, EnchantActionButton, GemActionButton;
 
 local FadeFrame = NarciFadeUI.Fade;
 local GetEnchantText = NarciAPI.GetEnchantTextByEnchantID;
 local GetItemQualityColor = NarciAPI.GetItemQualityColor;
 local GetGemBonus = NarciAPI.GetGemBonus;
 local GetShardBonus = NarciAPI.GetDominationShardBonus;
+local GetItemBagPosition = NarciAPI.GetItemBagPosition;
 
 local GetSpellInfo = GetSpellInfo;
 local GetSpellDescription = GetSpellDescription;
@@ -14,6 +15,87 @@ local GetItemCount = GetItemCount;
 local GetItemIcon = GetItemIcon;
 local GetItemInfo = GetItemInfo;
 local IsMouseButtonDown = IsMouseButtonDown;
+
+local InUseIDs = {
+    gemID = nil,
+    enchantID = nil,
+    tempEnchantID = nil,
+    newGemID = nil;
+};
+
+local function GetAppliedEnhancement(id1, id2)
+    --GetContainerItemLink
+    local itemLink;
+    if type(id1) == "string" then
+        itemLink = id1;
+    else
+        if id2 then
+            itemLink = GetContainerItemLink(id1, id2);
+        else
+            itemLink = GetInventoryItemLink("player", id1);
+        end
+    end
+
+    local _, _, _, linkType, id, enchantID, gemID;
+    if itemLink then
+        _, _, _, linkType, id, enchantID, gemID = strsplit(":|H", itemLink);
+    end
+    
+    gemID = tonumber(gemID);
+    enchantID = tonumber(enchantID);
+    if gemID == 0 then
+        gemID = nil;
+    end
+    if enchantID == 0 then
+        enchantID = nil;
+    end
+    InUseIDs.gemID = gemID;
+    InUseIDs.enchantID = enchantID;
+    return gemID, enchantID
+end
+
+local function GetNewGemID(state)
+    if state then
+        local gemLink = GetNewSocketLink(1);
+        if gemLink then
+            local gemID = GetItemInfoInstant(gemLink);
+            if gemID == 0 then
+                gemID = nil;
+            end
+            InUseIDs.newGemID = gemID;
+            return gemID
+        else
+            InUseIDs.newGemID = nil;
+        end
+    else
+        InUseIDs.newGemID = nil;
+    end
+end
+
+local function PlaceGem(gemID)
+    ClearCursor();
+    local bagID, slotIndex = GetItemBagPosition(gemID);
+    if not(bagID and slotIndex) then return; end
+    PickupContainerItem(bagID, slotIndex);
+    ClickSocketButton(1);
+    ClearCursor();
+end
+
+addon.GetAppliedEnhancement = GetAppliedEnhancement;
+addon.GetNewGemID = GetNewGemID;
+
+
+
+local function RightClickToReturnHome(f, mouseButton)
+    if mouseButton == "RightButton" then
+        if MainFrame.isNarcissusUI then
+            MainFrame:ShowMenu();
+        end
+    end
+end
+
+addon.RightClickToReturnHome = RightClickToReturnHome;
+
 
 local EventListener = CreateFrame("Frame");
 EventListener.t = 0;
@@ -40,13 +122,17 @@ EventListener:SetScript("OnEvent", function(self, event, ...)
                     self.itemQueue[itemID] = nil;
                     local quality = C_Item.GetItemQualityByID(itemID);
                     local r, g, b = GetItemQualityColor(quality);
-                    button.Text2:SetTextColor(r, g, b, 1);
-                    if not button:IsEnabled() then
-                        button.Text2:SetVertexColor(0.5, 0.5, 0.5);
+                    if button:IsEnabled() then
+                        button.Text2:SetTextColor(r, g, b, 1);
+                    else
+                        button.Text2:SetTextColor(r, g, b, 0.6);
                     end
                     local name = GetItemInfo(itemID);
                     if button.isShard then
                         button:SetButtonText(GetShardBonus(itemID), name);
+                    elseif button.useActionButton then
+                        --Temp Enchant
+                        button:SetEnchantText(button.enchantID);
                     else
                         button:SetButtonText(GetGemBonus(itemID), name);
                     end
@@ -133,9 +219,10 @@ end
 
 local function AssignWidgets()
     MainFrame = Narci_EquipmentOption;
-    ActionButton = NarciEquipmentOptionActionButton;
+    EnchantActionButton = NarciEquipmentEnchantActionButton;
     ScrollFrame = MainFrame.ItemList;
     Tooltip = ScrollFrame.Tooltip;
+    GemActionButton = ScrollFrame.GemActionButton;
 end
 
 
@@ -146,7 +233,7 @@ function NarciEquipmentEnchantButtonMixin:OnLoad()
         AssignWidgets();
         AssignWidgets = nil;
     end
-    self:OnEnable();
+    self:SetEnabledVisual();
 end
 
 function NarciEquipmentEnchantButtonMixin:OnEnter()
@@ -184,7 +271,7 @@ function NarciEquipmentEnchantButtonMixin:OnLeave()
     Tooltip:FadeOut();
 end
 
-function NarciEquipmentEnchantButtonMixin:OnEnable()
+function NarciEquipmentEnchantButtonMixin:SetEnabledVisual()
     self.Icon:SetDesaturation(0);
     self.Text1:SetTextColor(0.920, 0.920, 0.920);
     self.ItemCount:SetTextColor(0.920, 0.920, 0.920);
@@ -193,30 +280,48 @@ function NarciEquipmentEnchantButtonMixin:OnEnable()
     self.Text2:SetAlpha(1);
 end
 
-function NarciEquipmentEnchantButtonMixin:OnDisable()
+function NarciEquipmentEnchantButtonMixin:SetDisabledVisual(redNumber)
     self.Icon:SetDesaturation(0.5);
     self.Text1:SetTextColor(0.6, 0.6, 0.6);
-    self.ItemCount:SetTextColor(1, 0.33, 0.33);
+    if redNumber then
+        self.ItemCount:SetTextColor(1, 0.3137, 0.3137);
+    else
+        self.ItemCount:SetTextColor(0.920, 0.920, 0.920);
+    end
     self.IconBorder:SetVertexColor(0.5, 0.5, 0.5);
     self.Icon:SetVertexColor(0.5, 0.5, 0.5);
     self.Text2:SetAlpha(0.6);
 end
 
-function NarciEquipmentOptionButtonMixin:OnMouseDown()
-    self.AnimPushed:Stop();
-    self.AnimPushed.Hold:SetDuration(20);
-    self.AnimPushed:Play();
+function NarciEquipmentEnchantButtonMixin:OnMouseDown()
+    if self:IsEnabled() then
+        self.AnimPushed:Stop();
+        self.AnimPushed.Hold:SetDuration(20);
+        self.AnimPushed:Play();
+    end
 end
 
 function NarciEquipmentEnchantButtonMixin:OnMouseUp(button)
     self.AnimPushed.Hold:SetDuration(0);
-    if button == "RightButton" then
-        MainFrame:ShowMenu();
-    end
+    RightClickToReturnHome(self, button);
 end
 
 function NarciEquipmentEnchantButtonMixin:OnClick()
-    ActionButton:InitFromButton(self);
+    if self.useActionButton then
+        --Enchant/Temp enchant
+        if self.useActionButton == 2 then
+            EnchantActionButton:InitFromButton(self, MainFrame.slotID);
+        else
+            EnchantActionButton:InitFromButton(self, MainFrame.slotID, InUseIDs.enchantID);
+        end
+    else
+        --Gem/Shard
+        if MainFrame.isNarcissusUI then
+            GemActionButton:InitFromButton(self, MainFrame.slotID, InUseIDs.gemID);
+        else
+            PlaceGem(self.itemID);
+        end
+    end
 end
 
 function NarciEquipmentEnchantButtonMixin:ShowLoadingIcon(state)
@@ -252,7 +357,7 @@ function NarciEquipmentEnchantButtonMixin:SetButtonText(text1, text2)
     end
 end
 
-function NarciEquipmentEnchantButtonMixin:SetEnchantData(spellID, itemID, enchantID, iconFileID)
+function NarciEquipmentEnchantButtonMixin:SetEnchantData(spellID, itemID, enchantID, rune, iconFileID)
     if spellID ~= self.spellID then
         self.spellID = spellID;
     else
@@ -262,28 +367,88 @@ function NarciEquipmentEnchantButtonMixin:SetEnchantData(spellID, itemID, enchan
         return
     end
     self.isShard = nil;
-
+    self.enchantID = enchantID;
+    self.itemID = itemID;
+    self.useActionButton = 1;
     if spellID then
-        self.itemID = itemID;
+        self:SetUsed(enchantID == InUseIDs.enchantID);
         self:SetItemCount(itemID);
         self.Icon:SetTexture(iconFileID or 463531);
         self.Text2:SetTextColor(0.5, 0.5, 0.5);
         local name = GetSpellInfo(spellID);
         local enchantText = GetEnchantText(enchantID);
+        local notLoaded;
         if not enchantText then
             EventListener:AddEnchant(enchantID, self);
+            notLoaded = true;
         end
         if name and name ~= "" then
+            notLoaded = notLoaded or false
             if name == enchantText then
-                enchantText = nil;
+                name = nil;
             end
             self.itemName = name;
-            self:SetButtonText(name, enchantText);
+            self:SetButtonText(enchantText, name);
             self:ShowLoadingIcon(false);
         else
+            notLoaded = true;
             EventListener:AddSpell(spellID, self);
-            self:ShowLoadingIcon(true);
         end
+        C_Item.GetItemQualityByID(itemID);  --cache
+        self:ShowLoadingIcon(notLoaded);
+        self:Show();
+    else
+        self:Hide();
+    end
+end
+
+function NarciEquipmentEnchantButtonMixin:SetTempEnchantData(spellID, itemID, enchantID)
+    if spellID ~= self.spellID then
+        self.spellID = spellID;
+    else
+        if not spellID then
+            self:Hide();
+        end
+        return
+    end
+    self.isShard = nil;
+    self.enchantID = enchantID;
+    self.itemID = itemID;
+    self.useActionButton = 2;
+    if spellID then
+        self:SetUsed(false);
+        self.Icon:SetTexture( GetItemIcon(itemID) );
+        
+        local enchantText = GetEnchantText(enchantID);
+        local notLoaded;
+        if not enchantText then
+            EventListener:AddEnchant(enchantID, self);
+            notLoaded = true;
+        end
+
+        local name = GetItemInfo(itemID);
+        local quality = C_Item.GetItemQualityByID(itemID);
+        if name and name ~= "" and quality and enchantText then
+            local r, g, b;
+            if quality == 1 then
+                r, g, b = 0.92, 0.92, 0.92;
+            else
+                r, g, b = GetItemQualityColor(quality);
+            end
+            self.Text2:SetTextColor(r, g, b, 1);
+            if name == enchantText then
+                name = nil;
+            end
+            self:SetButtonText(enchantText, name);
+            self:ShowLoadingIcon(false);
+            self.itemName = name;
+        else
+            EventListener:AddItem(itemID, self);
+            notLoaded = true;
+        end
+
+        self:SetItemCount(itemID);
+        self:ShowLoadingIcon(notLoaded);
         self:Show();
     else
         self:Hide();
@@ -293,12 +458,12 @@ end
 function NarciEquipmentEnchantButtonMixin:SetItemCount(itemID)
     if itemID then
         local count = GetItemCount(itemID);
-        if count > 0 then
-            self:Enable();
-            self:OnEnable();
-        else
+        if count <= 0 or self.isUsed then
             self:Disable();
-            self:OnDisable();
+            self:SetDisabledVisual(count <= 0);
+        else
+            self:Enable();
+            self:SetEnabledVisual();
         end
         self.ItemCount:SetText(count);
         self.ItemCount:Show();
@@ -314,13 +479,19 @@ function NarciEquipmentEnchantButtonMixin:SetEnchantText(enchantID)
         return
     end
 
-    local name = GetSpellInfo(self.spellID);
+    local name;
+    if self.useActionButton == 2 then
+        name = GetItemInfo(self.itemID);
+    else
+        name = GetSpellInfo(self.spellID);
+    end
+    
     local enchantText = GetEnchantText(enchantID);
     if name and name ~= "" and enchantText then
         if name == enchantText then
-            enchantText = nil;
+            name = nil;
         end
-        self:SetButtonText(name, enchantText);
+        self:SetButtonText(enchantText, name);
         self:ShowLoadingIcon(false);
         return true
     else
@@ -338,14 +509,18 @@ function NarciEquipmentEnchantButtonMixin:SetGemData(itemID)
         end
         return
     end
-
+    self.spellID = nil;
+    self.isShard = nil;
+    self.enchantID = nil;
+    self.useActionButton = nil;
     if itemID then
         local icon = GetItemIcon(itemID);
         self.Icon:SetTexture(icon);
         local name = GetItemInfo(itemID);
         local gemBonus = GetGemBonus(itemID);
-        if name and name ~= "" and gemBonus and gemBonus ~= "" then
-            local quality = C_Item.GetItemQualityByID(itemID);
+        local quality = C_Item.GetItemQualityByID(itemID);
+        self:SetUsed(itemID == InUseIDs.gemID, itemID == InUseIDs.newGemID);
+        if name and name ~= "" and gemBonus and gemBonus ~= "" and quality then
             local r, g, b = GetItemQualityColor(quality);
             self.Text2:SetTextColor(r, g, b, 1);
             self:SetButtonText(gemBonus, name);
@@ -360,8 +535,6 @@ function NarciEquipmentEnchantButtonMixin:SetGemData(itemID)
     else
         self:Hide();
     end
-    self.spellID = nil;
-    self.isShard = nil;
 end
 
 function NarciEquipmentEnchantButtonMixin:SetDominationShardData(itemID)
@@ -373,13 +546,17 @@ function NarciEquipmentEnchantButtonMixin:SetDominationShardData(itemID)
         end
         return
     end
+    self.spellID = nil;
+    self.enchantID = nil;
+    self.useActionButton = nil;
     if itemID then
         self.isShard = true;
         local icon = GetItemIcon(itemID);
         self.Icon:SetTexture(icon);
         local name = GetItemInfo(itemID);
-        if name and name ~= "" then
-            local quality = C_Item.GetItemQualityByID(itemID);
+        local quality = C_Item.GetItemQualityByID(itemID);
+        self:SetUsed(itemID == InUseIDs.gemID, itemID == InUseIDs.newGemID);
+        if name and name ~= "" and quality then
             local r, g, b = GetItemQualityColor(quality);
             self.Text2:SetTextColor(r, g, b, 1);
             self:SetButtonText(GetShardBonus(itemID), name);
@@ -395,12 +572,26 @@ function NarciEquipmentEnchantButtonMixin:SetDominationShardData(itemID)
         self.isShard = nil;
         self:Hide();
     end
-    self.spellID = nil;
+end
+
+function NarciEquipmentEnchantButtonMixin:SetUsed(state, pending)
+    self.InUseMark:SetShown(state);
+    self.isUsed = state;
+    if state then
+        self.InUseMark:SetColorTexture(0.3725, 0.7412, 0.4196);
+    else
+        if pending then
+            self.InUseMark:Show();
+            self.InUseMark:SetColorTexture(0.9686, 0.8941, 0);
+        end
+    end
 end
 
 function NarciEquipmentEnchantButtonMixin:WipeData()
     self.itemID = nil;
     self.spellID = nil;
+    self.enchantID = nil;
+    self.isUsed = nil;
 end
 
 NarciItemListButtonHighlightMixin = {};

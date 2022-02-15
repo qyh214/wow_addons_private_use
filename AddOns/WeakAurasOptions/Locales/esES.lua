@@ -468,6 +468,10 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
 	L["Export to string..."] = "Export to string..."
 	--[[Translation missing --]]
 	L["External"] = "External"
+	--[[Translation missing --]]
+	L["Extra Height"] = "Extra Height"
+	--[[Translation missing --]]
+	L["Extra Width"] = "Extra Width"
 	L["Fade"] = "Apagar"
 	--[[Translation missing --]]
 	L["Fade In"] = "Fade In"

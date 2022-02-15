@@ -14,7 +14,6 @@ local AcceptGroup = AcceptGroup
 local C_FriendList_IsFriend = C_FriendList.IsFriend
 local CanGuildBankRepair = CanGuildBankRepair
 local CanMerchantRepair = CanMerchantRepair
-local GetCVarBool, SetCVar = GetCVarBool, SetCVar
 local GetGuildBankWithdrawMoney = GetGuildBankWithdrawMoney
 local GetInstanceInfo = GetInstanceInfo
 local GetItemInfo = GetItemInfo
@@ -53,7 +52,7 @@ local SetWatchedFactionIndex = SetWatchedFactionIndex
 local GetCurrentCombatTextEventInfo = GetCurrentCombatTextEventInfo
 local hooksecurefunc = hooksecurefunc
 
-local C_PartyInfo_LeaveParty = C_PartyInfo.LeaveParty
+local LeaveParty = C_PartyInfo.LeaveParty or LeaveParty
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local LE_GAME_ERR_GUILD_NOT_ENOUGH_MONEY = LE_GAME_ERR_GUILD_NOT_ENOUGH_MONEY
 local LE_GAME_ERR_NOT_ENOUGH_MONEY = LE_GAME_ERR_NOT_ENOUGH_MONEY
@@ -118,8 +117,8 @@ function M:COMBAT_TEXT_UPDATE(_, messagetype)
 	if not E.db.general.autoTrackReputation then return end
 
 	if messagetype == 'FACTION' then
-		local faction = GetCurrentCombatTextEventInfo()
-		if faction ~= 'Guild' and faction ~= GetWatchedFactionInfo() then
+		local faction, rep = GetCurrentCombatTextEventInfo()
+		if faction ~= 'Guild' and faction ~= GetWatchedFactionInfo() and rep > 0 then
 			ExpandAllFactionHeaders()
 
 			for i = 1, GetNumFactions() do
@@ -175,9 +174,9 @@ do -- Auto Repair Functions
 end
 
 function M:MERCHANT_CLOSED()
-	self:UnregisterEvent('UI_ERROR_MESSAGE')
-	self:UnregisterEvent('UPDATE_INVENTORY_DURABILITY')
-	self:UnregisterEvent('MERCHANT_CLOSED')
+	M:UnregisterEvent('UI_ERROR_MESSAGE')
+	M:UnregisterEvent('UPDATE_INVENTORY_DURABILITY')
+	M:UnregisterEvent('MERCHANT_CLOSED')
 end
 
 function M:MERCHANT_SHOW()
@@ -186,10 +185,10 @@ function M:MERCHANT_SHOW()
 	if E.db.general.autoRepair == 'NONE' or IsShiftKeyDown() or not CanMerchantRepair() then return end
 
 	--Prepare to catch 'not enough money' messages
-	self:RegisterEvent('UI_ERROR_MESSAGE')
+	M:RegisterEvent('UI_ERROR_MESSAGE')
 
 	--Use this to unregister events afterwards
-	self:RegisterEvent('MERCHANT_CLOSED')
+	M:RegisterEvent('MERCHANT_CLOSED')
 
 	M:AttemptAutoRepair()
 end
@@ -212,7 +211,7 @@ function M:DisbandRaidGroup()
 		end
 	end
 
-	C_PartyInfo_LeaveParty()
+	LeaveParty()
 end
 
 function M:PVPMessageEnhancement(_, msg)
@@ -245,16 +244,6 @@ function M:AutoInvite(event, _, _, _, _, _, _, inviterGUID)
 		StaticPopup_Hide('PARTY_INVITE')
 		hideStatic = nil
 	end
-end
-
-function M:ForceCVars()
-	if not GetCVarBool('lockActionBars') and E.private.actionbar.enable then
-		SetCVar('lockActionBars', 1)
-	end
-end
-
-function M:PLAYER_ENTERING_WORLD()
-	self:ForceCVars()
 end
 
 function M:RESURRECT_REQUEST()
@@ -316,25 +305,23 @@ function M:BossBanner_ConfigureLootFrame(lootFrame)
 end
 
 function M:Initialize()
-	self.Initialized = true
-	self:LoadRaidMarker()
-	self:LoadLootRoll()
-	self:LoadChatBubbles()
-	self:LoadLoot()
-	self:ToggleItemLevelInfo(true)
-	self:RegisterEvent('MERCHANT_SHOW')
-	self:RegisterEvent('RESURRECT_REQUEST')
-	self:RegisterEvent('PLAYER_REGEN_DISABLED', 'ErrorFrameToggle')
-	self:RegisterEvent('PLAYER_REGEN_ENABLED', 'ErrorFrameToggle')
-	self:RegisterEvent('CHAT_MSG_BG_SYSTEM_HORDE', 'PVPMessageEnhancement')
-	self:RegisterEvent('CHAT_MSG_BG_SYSTEM_ALLIANCE', 'PVPMessageEnhancement')
-	self:RegisterEvent('CHAT_MSG_BG_SYSTEM_NEUTRAL', 'PVPMessageEnhancement')
-	self:RegisterEvent('PARTY_INVITE_REQUEST', 'AutoInvite')
-	self:RegisterEvent('GROUP_ROSTER_UPDATE', 'AutoInvite')
-	self:RegisterEvent('CVAR_UPDATE', 'ForceCVars')
-	self:RegisterEvent('COMBAT_TEXT_UPDATE')
-	self:RegisterEvent('PLAYER_ENTERING_WORLD')
-	self:RegisterEvent('QUEST_COMPLETE')
+	M.Initialized = true
+	M:LoadRaidMarker()
+	M:LoadLootRoll()
+	M:LoadChatBubbles()
+	M:LoadLoot()
+	M:ToggleItemLevelInfo(true)
+	M:RegisterEvent('MERCHANT_SHOW')
+	M:RegisterEvent('RESURRECT_REQUEST')
+	M:RegisterEvent('PLAYER_REGEN_DISABLED', 'ErrorFrameToggle')
+	M:RegisterEvent('PLAYER_REGEN_ENABLED', 'ErrorFrameToggle')
+	M:RegisterEvent('CHAT_MSG_BG_SYSTEM_HORDE', 'PVPMessageEnhancement')
+	M:RegisterEvent('CHAT_MSG_BG_SYSTEM_ALLIANCE', 'PVPMessageEnhancement')
+	M:RegisterEvent('CHAT_MSG_BG_SYSTEM_NEUTRAL', 'PVPMessageEnhancement')
+	M:RegisterEvent('PARTY_INVITE_REQUEST', 'AutoInvite')
+	M:RegisterEvent('GROUP_ROSTER_UPDATE', 'AutoInvite')
+	M:RegisterEvent('COMBAT_TEXT_UPDATE')
+	M:RegisterEvent('QUEST_COMPLETE')
 
 	do	-- questRewardMostValueIcon
 		local MostValue = CreateFrame('Frame', 'ElvUI_QuestRewardGoldIconFrame', _G.UIParent)
@@ -357,13 +344,13 @@ function M:Initialize()
 	end
 
 	if E.db.general.interruptAnnounce ~= 'NONE' then
-		self:RegisterEvent('COMBAT_LOG_EVENT_UNFILTERED')
+		M:RegisterEvent('COMBAT_LOG_EVENT_UNFILTERED')
 	end
 
 	if IsAddOnLoaded('Blizzard_InspectUI') then
 		M:SetupInspectPageInfo()
 	else
-		self:RegisterEvent('ADDON_LOADED')
+		M:RegisterEvent('ADDON_LOADED')
 	end
 
 	if E.Retail then

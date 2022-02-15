@@ -2,12 +2,15 @@ local _, addon = ...
 
 local EnchantDataProvider = addon.EnchantDataProvider;
 local GemDataProvider = addon.GemDataProvider;
+local TempDataProvider = addon.TempDataProvider;
+local GetAppliedEnhancement = addon.GetAppliedEnhancement;
+local GetNewGemID = addon.GetNewGemID;
 
 local L = Narci.L;
 
 local DataProvider = GemDataProvider;
 
-local MainFrame, Tooltip, ButtonHighlight;
+local MainFrame, FilterButton, Tooltip;
 
 local BUTTON_HEIGHT = 48;
 local MAX_VISIBLE_BUTTONS = 4;
@@ -39,6 +42,11 @@ local pi = math.pi;
 local pow = math.pow;
 local floor = math.floor;
 
+local validSlotForTempEnchants = {
+    [5] = true,
+    [16] = true,
+    [17] = true,
+};
 
 local function inOutSine(t, b, e, d)
 	return (b - e) / 2 * (cos(pi * t / d) - 1) + b
@@ -97,6 +105,10 @@ local function SetButtonShard(button, ...)
     button:SetDominationShardData(...);
 end
 
+local function SetButtonTempEnchant(button, ...)
+    button:SetTempEnchantData(...);
+end
+
 SetButtonData = SetButtonEnchant;
 
 
@@ -116,7 +128,6 @@ function ViewUpdator:UpdateVisibleArea(offsetY, forcedUpdate)
             self.buttons[i]:SetPoint("TOPLEFT", 0, -(self.b + i - 1) * BUTTON_HEIGHT);
             SetButtonData(self.buttons[i], DataProvider:GetDataByIndex(i + self.b));
         end
-        MainFrame:StopAnimating();
     else
         local b = floor( offsetY / BUTTON_HEIGHT + 0.5) - 1;
         if b ~= self.b then --last offset
@@ -152,17 +163,57 @@ function ViewUpdator:FindFocusedButton()
 end
 
 
+local DelayedUpdate = {};
+
+DelayedUpdate.callback = function(f)
+    MainFrame:RefreshListForBlizzardUI();
+    f:SetScript("OnUpdate", nil);
+end
+
+function DelayedUpdate:Start()
+    if not self.f then
+        self.f = CreateFrame("Frame");
+    end
+    self.f:SetScript("OnUpdate", self.callback);
+end
+
 local buttonData = {
-    {1030900, "AUCTION_HOUSE_FILTER_CATEGORY_EQUIPMENT", 1},
-    {136244, "ENCHANTS", 2},
-    {134071, "AUCTION_CATEGORY_GEMS", 3},
+    {1, 1030900, AUCTION_HOUSE_FILTER_CATEGORY_EQUIPMENT, },
+    {2, 136244, ENCHANTS, SPELL_FAILED_CANT_BE_ENCHANTED},
+    {3, 134071, AUCTION_CATEGORY_GEMS, L["No Socket"]},
+    {4, 413594, L["Temp Enchant"], },
 };
 
+
+local function PositionGemOverlay(equipmentSlot)
+    local gemSlot = equipmentSlot.GemSlot;
+    if not gemSlot:IsShown() then return false end;
+
+    local frame = NarciGemSlotOverlay;
+    frame:ClearAllPoints();
+    frame:SetParent(Narci_Character);
+    frame:SetFrameStrata("HIGH");
+    frame:SetPoint("CENTER", gemSlot, "CENTER", 0, 0);
+    frame.GemBorder:SetTexture(gemSlot.GemBorder:GetTexture());
+    frame.GemIcon:SetTexture(gemSlot.GemIcon:GetTexture());
+    if equipmentSlot.isRight then
+        frame.GemBorder:SetTexCoord(1, 0, 0, 1);
+        frame.Bling:SetTexCoord(0.5, 0, 0, 1);
+        frame.Pulse:SetTexCoord(1, 0, 0, 1);
+    else
+        frame.GemBorder:SetTexCoord(0, 1, 0, 1);
+        frame.Bling:SetTexCoord(0, 0.5, 0, 1);
+        frame.Pulse:SetTexCoord(0, 1, 0, 1);
+    end
+    frame:Show();
+    return true
+end
 
 
 NarciEquipmentListFilterButtonMixin = {};
 
 function NarciEquipmentListFilterButtonMixin:OnLoad()
+    FilterButton = self;
     self:OnLeave();
     self:SetLabelText("Owned");
     self.needUpdate = true;
@@ -216,6 +267,66 @@ end
 
 NarciEquipmentOptionMixin = CreateFromMixins(NarciAnimatedSizingFrameMixin);
 
+function NarciEquipmentOptionMixin:OnLoad()
+    MainFrame = self;
+
+    self.maxHeight = BUTTON_HEIGHT * (MAX_VISIBLE_BUTTONS + 0.5);
+    self:SetBackdropColor(0, 0, 0);
+    self:SetBorderColor(0.5, 0.5, 0.5);
+    self:SetFrameSize(240, 48 * 3);
+    self:SetAnchor(nil, "LEFT");
+    self:Init();
+
+    animFrame.object = self.ArtFrame.Stain;
+    animFrame.objectAnchor = self.ArtFrame;
+
+    self:SetParent(Narci_Character);
+
+    self.OnLoad = nil;
+    self:SetScript("OnLoad", nil);
+end
+
+function NarciEquipmentOptionMixin:RegisterEventsForNarcissus(state)
+    if state then
+        self:RegisterEvent("GLOBAL_MOUSE_DOWN");
+        self:UnregisterEvent("SOCKET_INFO_UPDATE");
+        self:UnregisterEvent("BAG_UPDATE");
+    else
+        self:UnregisterEvent("GLOBAL_MOUSE_DOWN");
+        self:RegisterEvent("SOCKET_INFO_UPDATE");
+        self:RegisterEvent("BAG_UPDATE");
+    end
+end
+
+function NarciEquipmentOptionMixin:OnHide()
+    self:UnregisterEvent("GLOBAL_MOUSE_DOWN");
+    self:UnregisterEvent("SOCKET_INFO_UPDATE");
+    self:UnregisterEvent("BAG_UPDATE");
+    self:Hide();
+    self:StopAnimating();
+    NarciGemSlotOverlay:HideIfIdle();
+end
+
+function NarciEquipmentOptionMixin:IsMouseOverWidgets()
+    return ( self:IsMouseOver(12, -12, -12, 12) or FilterButton:IsMouseOver(12, -12, -12, 12) or (self.slotButton and self.slotButton:IsMouseOver()) )
+end
+
+function NarciEquipmentOptionMixin:CloseUI()
+    self:Hide();
+    Narci_FlyoutBlack:Out();
+end
+
+function NarciEquipmentOptionMixin:OnEvent(event, ...)
+    if event == "GLOBAL_MOUSE_DOWN" then
+        if not self:IsMouseOverWidgets() then
+            self:CloseUI();
+        end
+    elseif event == "SOCKET_INFO_UPDATE" or event == "BAG_UPDATE" then
+        --this event precedes "SocketContainerItem" so we use a delay here
+        DelayedUpdate:Start();
+    end
+end
+
 function NarciEquipmentOptionMixin:SetAnchor(object, direction)
     self.Pointer:ClearAllPoints();
     if direction == "LEFT" then
@@ -249,53 +360,189 @@ function NarciEquipmentOptionMixin:SetBackdropColor(r, g, b, alpha)
     self.PointerBackdrop:SetVertexColor(r, g, b, alpha);
 end
 
-function NarciEquipmentOptionMixin:SetFromSlotButton(slotButton)
+function NarciEquipmentOptionMixin:SetFromSlotButton(slotButton, returnHome)
+    self.isNarcissusUI = true;
+    local slotID = slotButton.slotID;
+    self.slotID = slotID;
+    local initialAlpha;
+    if returnHome then
+        initialAlpha = 0;
+        self:ShowMenu();
+    end
+
     self.slotButton = slotButton;
-    self.slotID = slotButton.slotID;
     self.isDominationItem = slotButton.isDominationItem;
 
-    self:SetPoint("TOPLEFT", slotButton, "TOPRIGHT", -2, -12);
-    self:SetAlpha(0);
-    FadeFrame(self, 0.15, 1);
+    local runeOverlay = NarciRuneAnimationOverlay;
+    if slotButton.isRight then
+        self:SetPoint("TOPLEFT", slotButton, "TOPLEFT", 2 - 240, -12);
+        runeOverlay:SetPoint("CENTER", slotButton.RuneSlot, "CENTER", 2, 0);
+        runeOverlay:SetDirection(1);
+    else
+        self:SetPoint("TOPLEFT", slotButton, "TOPRIGHT", -2, -12);
+        runeOverlay:SetPoint("CENTER", slotButton.RuneSlot, "CENTER", -2, 0);
+        runeOverlay:SetDirection(-1);
+    end
+    runeOverlay:SetParent(Narci_Character);
+
+    FadeFrame(self, 0.15, 1, initialAlpha);
     Narci_EquipmentFlyoutFrame:Hide();
-    Narci_FlyoutBlack:In();
     Narci:HideButtonTooltip();
 
+    self.inUseGemID, self.inUsedEnchantID = GetAppliedEnhancement(slotID);
+    GetNewGemID(false);
+    local validForEnchant = EnchantDataProvider:SetSubset(slotID);
+    TempDataProvider:SetSubset(slotID);
+    GemDataProvider:SetSubset(self.isDominationItem);
+
+    Narci_FlyoutBlack:In();
+    Narci_FlyoutBlack:RaiseFrameLevel(slotButton);
+
+    self:SetParent(slotButton);
+    self:SetFrameStrata("DIALOG");
+    self:SetIgnoreParentScale(false);
+    self:SetScale(1);
+    self:RegisterEventsForNarcissus(true);
+
+    if validForEnchant then
+        self.meunButtons[2]:Enable();
+    else
+        self.meunButtons[2]:Disable();
+    end
+
+    if PositionGemOverlay(slotButton) then
+        self.meunButtons[3]:Enable();
+    else
+        self.meunButtons[3]:Disable();
+    end
+
+    --Calculate available gears
+    local button1 = self.meunButtons[1];
     local equipmentTable = {};
-    GetInventoryItemsForSlot(self.slotID, equipmentTable);
+    GetInventoryItemsForSlot(slotID, equipmentTable);
     local numEquipment = 0;
+    local invLocationPlayer = ITEM_INVENTORY_LOCATION_PLAYER;
+    local _, _, inBags
     for location, hyperlink in pairs(equipmentTable) do
-        numEquipment = numEquipment + 1;
+        if ( location - slotID ~= invLocationPlayer ) then      --Remove the currently equipped item from the list
+            _, _, inBags = EquipmentManager_UnpackLocation(location);
+            if inBags then
+                numEquipment = numEquipment + 1;
+            end
+        end
     end
     equipmentTable = nil;
-
-    EnchantDataProvider:SetSubset(self.slotID);
-    GemDataProvider:SetSubset();
+    if numEquipment > 0 then
+        button1:Enable();
+        button1:SetButtonText(button1.buttonName, string.format(SINGLE_PAGE_RESULTS_TEMPLATE, numEquipment));
+    else
+        button1:Disable();
+        local slotName = NarciAPI.GetSlotNameAndTexture(slotID);
+        button1:SetButtonText(button1.buttonName, string.format(L["No Other Item For Slot"], slotName));
+    end
 end
 
-function NarciEquipmentOptionMixin:OnLoad()
-    MainFrame = self;
+function NarciEquipmentOptionMixin:SetGemListFromSlotButton(slotButton)
+    self:SetFromSlotButton(slotButton, false);
+    self:ShowGemList();
+end
 
-    self.maxHeight = BUTTON_HEIGHT * (MAX_VISIBLE_BUTTONS + 0.5);
-    self:SetBackdropColor(0, 0, 0);
-    self:SetBorderColor(0.5, 0.5, 0.5);
-    self:SetFrameSize(240, 48 * 3);
-    self:SetAnchor(nil, "LEFT");
-    self:Init();
+function NarciEquipmentOptionMixin:SetGemListForBlizzardUI(id1, id2)
+    self.isNarcissusUI = false;
+    local parentFrame = ItemSocketingFrame;
+    if not parentFrame then return end;
 
-    animFrame.object = self.ArtFrame.Stain;
-    animFrame.objectAnchor = self.ArtFrame;
+    local itemLink;
+    if id2 then
+        itemLink = GetContainerItemLink(id1, id2);
+    else
+        itemLink = GetInventoryItemLink("player", id1);
+    end
+
+    local itemID, _, _, invType = GetItemInfoInstant(itemLink);
+    self.isDominationItem = NarciAPI.DoesItemHaveDomationSocket(itemID);
+    local slotID = NarciAPI.GetSlotIDByInvType(invType);
+    self.slotID = slotID;
+    self.slotButton = nil;
+    self.inUseGemID, self.inUsedEnchantID = GetAppliedEnhancement(itemLink);
+    local newGemID = GetNewGemID(true);
+    EnchantDataProvider:SetSubset(slotID);
+    GemDataProvider:SetSubset(self.isDominationItem);
+
+    self:ClearAllPoints();
+    self:SetIgnoreParentScale(true);
+    local uiScale = UIParent:GetEffectiveScale();
+    self:SetScale(math.max(uiScale, 0.75));
+    self:SetParent(parentFrame);
+    self:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", 4, 0);
+    self:Show();
+    self:SetAlpha(1);
+    self:ShowGemList();
+    self:RegisterEventsForNarcissus(false);
+
+    self.meunButtons[1]:Disable();      --Equipment
+
+
+    if self.isDominationItem then
+        local gemLink = GetExistingSocketLink(1);
+        if gemLink then
+            local existingGemID, _, _, _, icon = GetItemInfoInstant(gemLink);
+            NarciItemPushOverlay:WatchIcon(icon);
+        else
+            NarciItemPushOverlay:HideIfIdle();
+        end
+    else
+        NarciItemPushOverlay:HideIfIdle();
+    end
+
+    --flash the "Apply" button on the ItemSocketingFrame
+    --Disabled: Taint during combat!
+    --[[
+    if newGemID then
+        NarciRedButtonFlash:FlashButton(ItemSocketingSocketButton);
+    else
+        NarciRedButtonFlash:Hide();
+    end
+    --]]
+end
+
+function NarciEquipmentOptionMixin:SetItemPosition(id1, id2)
+    self.itemPositions = {id1, id2};
+end
+
+function NarciEquipmentOptionMixin:RefreshListForBlizzardUI()
+    self:SetGemListForBlizzardUI( unpack(self.itemPositions) );
+end
+
+function NarciEquipmentOptionMixin:GetCurrentSlot()
+    return self.slotButton;
+end
+
+function NarciEquipmentOptionMixin:FadeOut()
+    FadeFrame(self, 0.15, 0);
 end
 
 function NarciEquipmentOptionMixin:Init()
     self.ItemList.NoItemText:SetText(L["No Item Alert"]);
     local button;
-    for i = 1, 3 do
+    self.meunButtons = {};
+    for i = 1, #buttonData do
         button = CreateFrame("Button", nil, self.Menu, "NarciEquipmentOptionButtonTemplate");
         button:SetPoint("TOPLEFT", self, "TOPLEFT", 0, -48 * (i - 1));
-        button.Icon:SetTexture(buttonData[i][1]);
-        button:SetButtonText(_G[buttonData[i][2]]);
-        button.type = buttonData[i][3];
+        button.type = buttonData[i][1];
+        button.Icon:SetTexture(buttonData[i][2]);
+        button.buttonName = buttonData[i][3];
+        button:SetButtonText(button.buttonName);
+        button.disabledText = buttonData[i][4];
+        self.meunButtons[i] = button;
+
+        if button.type == 4 then
+            local tempEnchantFrame = CreateFrame("Frame", nil, button, "NarciSimpleTempEnchantIndicatorTemplate");
+            tempEnchantFrame:SetSize(12, 12);
+            button.TempEnchantIndicator = tempEnchantFrame;
+            tempEnchantFrame:Hide();
+            tempEnchantFrame:SetPoint("BOTTOMLEFT", button.Icon, "BOTTOMRIGHT", 7, 0);
+        end
     end
 
     NarciAPI.CreateSmoothScroll(self.ItemList);
@@ -317,11 +564,10 @@ function NarciEquipmentOptionMixin:Init()
             Tooltip:AnchorToButton(focusedButton);
         end
     end);
-    self.ItemList:SetScript("OnMouseUp", function(f, mouseButton)
-        if mouseButton == "RightButton" then
-            self:ShowMenu();
-        end
-    end);
+
+    self.ItemList:SetScript("OnMouseUp", addon.RightClickToReturnHome);
+    self.ItemList.ActionBlocker:SetScript("OnMouseUp", addon.RightClickToReturnHome);
+    self.ItemList.ActionBlocker.ErrorMsg:SetText(L["Combat Error"]);
 end
 
 function NarciEquipmentOptionMixin:ShowMenu()
@@ -329,15 +575,35 @@ function NarciEquipmentOptionMixin:ShowMenu()
     self.Menu:Show();
     self.ItemList:Hide();
     self:StopAnimating();
-    self:AnimateSize(240, 3*BUTTON_HEIGHT, 0.25);
+    self:ToggleActionBlocker(false);
+    local numButtons;
+    if validSlotForTempEnchants[self.slotID] then
+        numButtons = 4;
+        local button4 = self.meunButtons[4];
+        button4:Show();
+        local hasTempEnchant = button4.TempEnchantIndicator:SetInventoryItem(self.slotID);
+        if hasTempEnchant then
+            button4:SetButtonText(button4.buttonName, " ");
+            button4.TempEnchantIndicator:Show();
+        else
+            button4:SetButtonText(button4.buttonName);
+            button4.TempEnchantIndicator:Hide();
+        end
+    else
+        numButtons = 3;
+        self.meunButtons[4]:Hide();
+    end
+    self:AnimateSize(240, numButtons*BUTTON_HEIGHT, 0.25);
 end
 
 function NarciEquipmentOptionMixin:ShowEquipment()
-    Narci_EquipmentFlyoutFrame:SetItemSlot(self.slotButton, true);
-    FadeFrame(self, 0.12, 0);
+    if self.slotButton then
+        Narci_EquipmentFlyoutFrame:SetItemSlot(self.slotButton, true);
+        FadeFrame(self, 0.12, 0);
+    end
 end
 
-function NarciEquipmentOptionMixin:ShowItemList(listType)
+function NarciEquipmentOptionMixin:ShowItemList(listType, hideList)
     if self.CreateList then
         self:CreateList();
     end
@@ -349,6 +615,11 @@ function NarciEquipmentOptionMixin:ShowItemList(listType)
         self.ItemList:SetOffset(0);
     end
     self:UpdateCurrentList();
+    if not hideList then
+        if not self.ItemList.ScrollChild:IsShown() then
+            FadeFrame(self.ItemList.ScrollChild, 0.2, 1, 0);
+        end
+    end
 end
 
 function NarciEquipmentOptionMixin:ShowGemList()
@@ -358,7 +629,9 @@ function NarciEquipmentOptionMixin:ShowGemList()
     else
         SetButtonData = SetButtonGem;
     end
-    self:ShowItemList("gem");
+    local showActionBlocker = self.isDominationItem and self.inUseGemID;
+    self:ShowItemList("gem", showActionBlocker);
+    self:ToggleActionBlocker(showActionBlocker);
 end
 
 function NarciEquipmentOptionMixin:ShowEnchantList()
@@ -367,8 +640,24 @@ function NarciEquipmentOptionMixin:ShowEnchantList()
     self:ShowItemList("enchant");
 end
 
-function NarciEquipmentOptionMixin:ShowTempUpgradeList()
+function NarciEquipmentOptionMixin:ShowTempEnchantList()
+    DataProvider = TempDataProvider;
+    SetButtonData = SetButtonTempEnchant;
+    self:ShowItemList("temp");
+end
 
+function NarciEquipmentOptionMixin:ToggleActionBlocker(state)
+    self.ItemList.ActionBlocker:SetShown(state);
+    if state then
+        self.ItemList.ScrollChild:Hide();
+        self.ItemList.ScrollBar:Hide();
+        self.ItemList.Tooltip:Hide();
+        self.ItemList.SelectionOverlay:Hide();
+        self.ItemList.GemActionButton:Hide();
+
+        local success = NarciItemSocketingActionButton:SetParentFrame(self.ItemList.ActionBlocker, self.isNarcissusUI); --combat lockdown
+        self.ItemList.ActionBlocker.ErrorMsg:SetShown(not success)
+    end
 end
 
 function NarciEquipmentOptionMixin:UpdateCurrentList(resetOffset)
@@ -378,6 +667,7 @@ function NarciEquipmentOptionMixin:UpdateCurrentList(resetOffset)
         self:AnimateSize(240, BUTTON_HEIGHT * 4.5, 0.25);
     else
         self.ItemList:SetScrollRange(0);
+        self:AnimateSize(240, BUTTON_HEIGHT * 4, 0.25);
     end
     self.ItemList.NoItemText:SetShown(numItems == 0);
     if resetOffset then
@@ -397,6 +687,11 @@ function NarciEquipmentOptionMixin:CreateList()
     self.CreateList = nil;
 end
 
+function NarciEquipmentOptionMixin:HasMouseFocus()
+    return (self:IsShown() and self:IsMouseOverWidgets());
+end
+
+
 NarciEquipmentOptionButtonMixin = {};
 
 function NarciEquipmentOptionButtonMixin:OnLoad()
@@ -404,27 +699,31 @@ function NarciEquipmentOptionButtonMixin:OnLoad()
 end
 
 function NarciEquipmentOptionButtonMixin:OnEnter()
-    --FadeFrame(self.BorderLeft, 0.5, 0.5);
-    --FadeFrame(self.BorderRight, 0.5, 0.5);
-    --self.Highlight.Anim:Play();
-    self:SetAlpha(1);
+    self.Icon:SetVertexColor(1, 1, 1);
+    self.Highlight:Show();
 end
 
 function NarciEquipmentOptionButtonMixin:OnLeave()
-    --FadeFrame(self.BorderLeft, 0.5, 0.25);
-    --FadeFrame(self.BorderRight, 0.5, 0.25);
-    --self.Highlight.Anim:Stop();
-    self:SetAlpha(0.8);
+    self.Icon:SetVertexColor(0.72, 0.72, 0.72);
+    self.Highlight:Hide();
 end
 
-function NarciEquipmentOptionButtonMixin:OnMouseDown()
-    self.AnimPushed:Stop();
-    self.AnimPushed.Hold:SetDuration(20);
-    self.AnimPushed:Play();
+function NarciEquipmentOptionButtonMixin:OnMouseDown(button)
+    if not self:IsEnabled() then return end;
+
+    if button == "LeftButton" then
+        self.AnimPushed:Stop();
+        self.AnimPushed.Hold:SetDuration(20);
+        self.AnimPushed:Play();
+    end
 end
 
-function NarciEquipmentOptionButtonMixin:OnMouseUp()
-    self.AnimPushed.Hold:SetDuration(0);
+function NarciEquipmentOptionButtonMixin:OnMouseUp(button)
+    if not self:IsEnabled() then return end;
+
+    if button == "LeftButton" then
+        self.AnimPushed.Hold:SetDuration(0);
+    end
 end
 
 function NarciEquipmentOptionButtonMixin:OnClick()
@@ -438,7 +737,7 @@ function NarciEquipmentOptionButtonMixin:OnClick()
     elseif self.type == 3 then
         MainFrame:ShowGemList();
     elseif self.type == 4 then
-        MainFrame:ShowTempUpgradeList();
+        MainFrame:ShowTempEnchantList();
     end
 end
 
@@ -465,6 +764,23 @@ function NarciEquipmentOptionButtonMixin:SetButtonText(text1, text2)
     end
 end
 
+function NarciEquipmentOptionButtonMixin:OnEnable()
+    self.Text1:SetTextColor(0.92, 0.92, 0.92);
+    self.Text2:SetTextColor(0.5, 0.5, 0.5);
+    self.Highlight:SetColorTexture(0.2, 0.2, 0.2);
+    self.Icon:SetDesaturation(0);
+    self:SetButtonText(self.buttonName);
+end
+
+function NarciEquipmentOptionButtonMixin:OnDisable()
+    self.Text1:SetTextColor(0.6, 0.6, 0.6);
+    self.Text2:SetTextColor(1, 0.3137, 0.3137);
+    self.Highlight:SetColorTexture(0.25, 0, 0);
+    self.Icon:SetDesaturation(1);
+    if self.disabledText then
+        self:SetButtonText(self.buttonName, self.disabledText);
+    end
+end
 
 
 NarciEquipmentListTooltipMixin = CreateFromMixins(NarciAnimatedSizingFrameMixin);
@@ -479,7 +795,12 @@ end
 function NarciEquipmentListTooltipMixin:OnHide()
     self:SetScript("OnUpdate", nil);
     self:UnregisterEvent("SPELL_DATA_LOAD_RESULT");
+    self:UnregisterEvent("ITEM_DATA_LOAD_RESULT");
     self:SetAlpha(0);
+end
+
+function NarciEquipmentListTooltipMixin:OnEvent()
+
 end
 
 function NarciEquipmentListTooltipMixin:SetSpell(spellID)
@@ -515,6 +836,8 @@ function NarciEquipmentListTooltipMixin:OnDataReceived()
     if not self.ClipFrame.Description:IsShown() then
         self.ClipFrame.Description.FadeIn:Play();
         self.ClipFrame.Description:Show();
+    else
+        self.ClipFrame.Description:SetAlpha(1);
     end
 end
 
@@ -546,7 +869,7 @@ function NarciEquipmentListTooltipMixin:SetItem(itemID)
             if IsItemDominationShard(itemID) then
                 line = 5;
             else
-                line = 3;
+                line = {3, 4};
             end
             self.ClipFrame.Description:SetSize(0, 0);
             local tooltipText, isCached = GetCachedItemTooltipTextByLine(itemID, line, function(newText)
@@ -620,7 +943,7 @@ function NarciEquipmentListTooltipMixin:IsTurningVisible()
 end
 
 function NarciEquipmentListTooltipMixin:OnShow()
-
+    self:SetFrameStrata("DIALOG");
 end
 
 function NarciEquipmentListTooltipMixin:AnchorToButton(button)
@@ -640,3 +963,21 @@ function NarciEquipmentListTooltipMixin:AnchorToButton(button)
         return
     end
 end
+
+local function ShouldAnchorToBlizzard()
+    return NarcissusDB.GemManager and (not Narci_Character:IsShown()) and (not MainFrame:IsShown() or MainFrame.isNarcissusUI)
+end
+
+hooksecurefunc("SocketInventoryItem", function(slot)
+    MainFrame:SetItemPosition(slot);
+    if ShouldAnchorToBlizzard() then
+        MainFrame:SetGemListForBlizzardUI(slot);
+    end
+end)
+
+hooksecurefunc("SocketContainerItem", function(bag, slot)
+    MainFrame:SetItemPosition(bag, slot);
+    if ShouldAnchorToBlizzard() then
+        MainFrame:SetGemListForBlizzardUI(bag, slot);
+    end
+end)

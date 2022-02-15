@@ -90,7 +90,10 @@ end
 
 --------------------------------------------------------------
 --Extract Domination Shard
-local function SharedPostClickFunc(self)
+local function SharedPostClickFunc(self, button)
+    if button == "RightButton" then
+        return
+    end
     self:StopAnimating();
     self.ArrowLeft.Expand:Play();
     self.ArrowRight.Expand:Play();
@@ -100,10 +103,14 @@ local function SharedPostClickFunc(self)
     end);
 end
 
-local function NarcissusActionButton_PostClick(self)
+local function NarcissusActionButton_PostClick(self, button)
+    if button == "RightButton" then
+        Narci_EquipmentOption:ShowMenu();
+        return
+    end
     self:RegisterEvent("BAG_UPDATE");
     SharedPostClickFunc(self);
-    local gemFrame = Narci_ItemSocketing_GemFrame;
+    local gemFrame = NarciGemSlotOverlay;
     if gemFrame:IsShown() then
         gemFrame.Pulse.Expand:Stop();
         gemFrame.Pulse.Shrink:Play();
@@ -139,6 +146,9 @@ end
 function NarciItemSocketingActionButtonMixin:OnShow()
     self:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED");
     self:RegisterEvent("PLAYER_REGEN_DISABLED");
+    if not self:IsMouseOver() then
+        self:OnLeave();
+    end
 end
 
 function NarciItemSocketingActionButtonMixin:OnHide()
@@ -196,7 +206,7 @@ function NarciItemSocketingActionButtonMixin:SetLabelText(text)
     if textWidth < 64 then
         textWidth = 64;
     end
-    self:SetWidth(textWidth + 24);
+    --self:SetWidth(textWidth + 24);
 end
 
 function NarciItemSocketingActionButtonMixin:SetActionForBlizzardUI()
@@ -217,7 +227,7 @@ end
 function NarciItemSocketingActionButtonMixin:OnLeaveCombat()
     if self.parentFrame and self.parentFrame.ErrorMsg then
         self.parentFrame.ErrorMsg:Hide();
-        self:SetParentFrame(self.parentFrame:GetParent());
+        self:SetParentFrame(self.parentFrame);
     end
 end
 
@@ -225,10 +235,10 @@ function NarciItemSocketingActionButtonMixin:OnExtactSuccess()
     self:UnregisterEvent("BAG_UPDATE");
     local slotButton = Narci.RefreshSlot(self.equipmentSlotIndex);
     After(0.5, function()
-        if Narci_ItemSocketing:IsShown() then
-            slotButton.GemSlot:LoadGemList();
+        if Narci_EquipmentOption:IsShown() then
+            Narci_EquipmentOption:SetGemListFromSlotButton(slotButton);
         end
-        local gemFrame = Narci_ItemSocketing_GemFrame;
+        local gemFrame = NarciGemSlotOverlay;
         if gemFrame:IsShown() then
             gemFrame.Pulse.Shrink:Stop();
             gemFrame.Pulse.Expand:Play();
@@ -278,13 +288,14 @@ end
 
 function NarciItemSocketingActionButtonMixin:SetActionForNarcissusUI()
     local itemID = EXTRACTOR_ITEM_ID;
-    local equipmentSlotIndex = Narci_ItemSocketing.slotID;
+    local equipmentSlotIndex = Narci_EquipmentOption.slotID;
     self.equipmentSlotIndex = equipmentSlotIndex;
     if DoesPlayerHaveItem(itemID) and equipmentSlotIndex then
         local macroText = string.format("/use item:%s\r/use %s", itemID, equipmentSlotIndex);
-        self:SetAttribute("type", "macro");
+        self:SetAttribute("type1", "macro");
         self:SetAttribute("macrotext", macroText);
         self:AttemptToEnable();
+        self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
         self:SetScript("PostClick", NarcissusActionButton_PostClick);
     else
         self:DisableButton();
@@ -295,7 +306,7 @@ function NarciItemSocketingActionButtonMixin:SetExtractAction()
     local itemID = EXTRACTOR_ITEM_ID;
     if DoesPlayerHaveItem(itemID) then
         local macroText = string.format("/use item:%s\r/click ItemSocketingSocket1", itemID);
-        self:SetAttribute("type", "macro");
+        self:SetAttribute("type1", "macro");
         self:SetAttribute("macrotext", macroText);
         self:AttemptToEnable();
     else
@@ -303,22 +314,23 @@ function NarciItemSocketingActionButtonMixin:SetExtractAction()
     end
 end
 
-function NarciItemSocketingActionButtonMixin:SetParentFrame(frame)
-    self.parentFrame = frame.DominationBlock;
+function NarciItemSocketingActionButtonMixin:SetParentFrame(frame, isNarcissusUI)
+    self.parentFrame = frame;
     if InCombatLockdown() then
         self:RegisterEvent("PLAYER_REGEN_ENABLED");
         return false;
     end
     if frame then
-        self:SetParent(frame.DominationBlock);
+        self:SetParent(frame);
         self:ClearAllPoints();
         self:SetPoint("CENTER", frame, "CENTER", 0, 0);
-        if frame.isNarcissusUI then
+        if isNarcissusUI then
             self:SetActionForNarcissusUI();
         else
             self:SetActionForBlizzardUI();
         end
         self.isReleased = nil;
+        self.FadeIn:Play();
     else
         self:Release();
     end

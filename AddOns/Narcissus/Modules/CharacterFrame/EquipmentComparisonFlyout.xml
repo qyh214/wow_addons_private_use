@@ -368,7 +368,7 @@
             </Layer>
         </Layers>
 		<Frames>
-			<Frame inherits="Narci_GemSlot_Template">
+			<Frame inherits="NarciGemSlotTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPRIGHT" x="-2" y="0"/>
 				</Anchors>

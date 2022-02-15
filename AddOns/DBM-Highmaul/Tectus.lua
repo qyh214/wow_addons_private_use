@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1195, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211011150925")
+mod:SetRevision("20220116041913")
 mod:SetCreatureID(78948, 80557, 80551, 99999)--78948 Tectus, 80557 Mote of Tectus, 80551 Shard of Tectus
 mod:SetEncounterID(1722)--Hopefully win will work fine off this because otherwise tracking shard deaths is crappy
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -41,7 +41,7 @@ local specWarnGiftOfEarth			= mod:NewSpecialWarningCount(162894, "Melee", nil, n
 
 local timerEarthwarperCD			= mod:NewNextTimer(40, "ej10061", nil, nil, nil, 1, 162894)--Both of these get delayed by upheavel
 local timerBerserkerCD				= mod:NewNextTimer(40, "ej10062", nil, "Tank", nil, 1, 163312)--Both of these get delayed by upheavel
-local timerGiftOfEarthCD			= mod:NewCDTimer(10.5, 162894, nil, "Melee", nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)--10.5 but obviously delayed if stuns were used.
+local timerGiftOfEarthCD			= mod:NewCDTimer(10.5, 162894, nil, "Melee", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--10.5 but obviously delayed if stuns were used.
 local timerEarthenFlechettesCD		= mod:NewCDTimer(14, 162968, nil, "Melee", nil, 5)--14 but obviously delayed if stuns were used. Also tends to be recast immediately if stun interrupted
 local timerCrystalBarrageCD			= mod:NewNextSourceTimer(30, 162346, nil, false, nil, 3)--Very accurate but spammy mess with 4+ adds up.
 local timerCrystalBarrage			= mod:NewBuffFadesTimer(15, 162346)

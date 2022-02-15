@@ -5,11 +5,6 @@ end
 local L = Narci.L;
 local S = Narci.L.S;
 
-NARCI_MODIFIER_ALT = "ALT键";   --Windows
-if IsMacClient() then
-    NARCI_MODIFIER_ALT = "Option键";  --Mac OS
-end
-
 L["Swap items"] = "替换装备";
 L["Movement Speed"] = STAT_MOVEMENT_SPEED;
 L["Damage Reduction Percentage"] = COMBAT_TEXT_SHOW_RESISTANCES_TEXT;
@@ -286,6 +281,9 @@ L["Use Your Model"] = "使用自身模型";
 L["Cannot Inspect Target"] = "无法检视目标";
 L["External Link"] = "外部链接";
 L["Add to MogIt Wishlist"] = "加入MogIt愿望清单";
+L["Show Taint Solution"] = "如何避免此问题？";
+L["Taint Solution Step1"] = "1.重载界面。";
+L["Taint Solution Step2"] = "2."..NARCI_MODIFIER_CONTROL.."+左键点击物品来打开试衣间。";
 
 --NPC Browser--
 NARCI_NPC_BROWSER_TITLE_LEVEL = ".*%?%?.?";      --Level ?? --Use this to check if the second line of the tooltip is NPC's title or unit type
@@ -426,7 +424,7 @@ L["Splash Content7 Description"] = "-六边形装备边框有了新的外观。�
 
 --Project Details--
 NARCI_ALL_PROJECTS = "全部项目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2021.08.23|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2021.11.28|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾泽拉斯上的不同景点，并收集各种故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沉浸式角色面板；你最好的截图助手。"
 
@@ -469,8 +467,17 @@ L["Mythic Plus Abbrev"] = "大秘境";
 L["Total Runs"] = "完成次数：";
 L["Complete In Time"] = "限时";
 L["Complete Over Time"] = "超时";
-L["Runs"] = "分布";
+L["Runs"] = "分布图";
 
+--Equipment Upgrade--
+L["Temp Enchant"] = "暂时性附魔";
+L["Owned"] = "拥有的";
+L["At Level"] = "在%d级时:";
+L["No Item Alert"] = "没有匹配的物品";
+L["Click to Insert"] = "左键点击以镶嵌";
+L["No Socket"] = "这件物品不带孔";
+L["No Other Item For Slot"] = "没有其他的%s装备";
+L["In Bags"] = "背包内";
 
 --Statistics--
 S["Narcissus Played"] = "Narcissus使用时长";

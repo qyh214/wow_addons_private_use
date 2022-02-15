@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1162, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142006")
+mod:SetRevision("20220116041913")
 mod:SetCreatureID(77692)
 mod:SetEncounterID(1713)
 mod.respawnTime = 29.5
@@ -40,14 +40,14 @@ local specWarnTremblingEarth		= mod:NewSpecialWarningCount(173917, nil, nil, nil
 local specWarnCalloftheMountain		= mod:NewSpecialWarningCount(158217, nil, nil, nil, 3, 2)
 
 local timerGraspingEarthCD			= mod:NewCDTimer(114, 157060, nil, nil, nil, 6)--Unless see new logs on normal showing it can still be 111, raising to 115, average i saw was 116-119
-local timerThunderingBlowsCD		= mod:NewNextTimer(12, 157054, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON, nil, 1, 4)
+local timerThunderingBlowsCD		= mod:NewNextTimer(12, 157054, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 4)
 local timerRipplingSmashCD			= mod:NewCDTimer(21, 157592, nil, nil, nil, 3)--If it comes off CD early enough into ThunderingBlows/Grasping Earth, he skips a cast. Else, he'll cast it very soon after.
-local timerStoneBreathCD			= mod:NewCDCountTimer(22, 156852, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)
-local timerSlamCD					= mod:NewCDTimer(23, 156704, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
-local timerWarpedArmorCD			= mod:NewCDTimer(14, 156766, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerStoneBreathCD			= mod:NewCDCountTimer(22, 156852, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
+local timerSlamCD					= mod:NewCDTimer(23, 156704, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerWarpedArmorCD			= mod:NewCDTimer(14, 156766, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerTremblingEarthCD			= mod:NewCDTimer(153.5, 173917, nil, nil, nil, 6)
 local timerTremblingEarth			= mod:NewBuffActiveTimer(25, 173917, nil, nil, nil, 6, nil, nil, nil, 2, 4)
-local timerCalloftheMountain		= mod:NewCastTimer(5, 158217, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON)
+local timerCalloftheMountain		= mod:NewCastTimer(5, 158217, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(540)
 

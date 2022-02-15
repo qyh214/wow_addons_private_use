@@ -6,6 +6,8 @@ Saved Variables:
 --]]
 
 Narci = {};
+NarciAPI = {};
+NarciViewUtil = {};
 
 local DefaultValue = {
     ["DetailedIlvlInfo"] = true,
@@ -56,14 +58,17 @@ local DefaultValue = {
     ["DominationIndicator"] = true,                 --Show Domination indicator on the Blizzard character pane
     ["OnlyShowOwnedUpgradeItem"] = true,            --Filter for gems/enchant scrolls
 
-    --Internal Hotkey
+    --# Internal Hotkey
     ["SearchRelativesHotkey"] = "TAB",              --The key you press to begin/cycle relative search
-    
-    --Deprecated
+
+    --# Initialized in other files
+    --["MinimapIconStyle"] = 1,                     --Change the icon of minimap button (Main.lua)
+
+    --# Deprecated
     --["UseExitConfirmation"] = true,               --Show exit confirmation dialog upon leaving group photo mode
     --["ShowFullBody"] = true,                      --Show entire body in Xmog Mode
 
-    --User Tag
+    --# User Tag
     --"UserIsCurious" (user interacted with our item shop)
 };
 

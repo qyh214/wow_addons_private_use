@@ -1,6 +1,6 @@
 ## Interface: 90105
 ## Plain Title: Narcissus
-## Version: 1.1.6
+## Version: 1.1.7
 
 ## Title: |cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r
 
@@ -32,6 +32,7 @@ Modules\CharacterFrame\Domination.xml
 #
 
 Modules\CharacterFrame\Enchant.lua
+Modules\CharacterFrame\TemporaryEnchant.xml
 Modules\EquipmentOption\EquipmentOption.xml
 Modules\CharacterFrame\ItemSocketing.xml
 Modules\CharacterFrame\ItemCooldown.xml

@@ -12,6 +12,7 @@ local RSGuideDB = private.ImportLib("RareScannerGuideDB")
 
 -- RareScanner service libraries
 local RSTooltip = private.ImportLib("RareScannerTooltip")
+local RSMinimap = private.ImportLib("RareScannerMinimap")
 
 -- RareScanner services
 local RSGuidePOI = private.ImportLib("RareScannerGuidePOI")
@@ -75,13 +76,28 @@ function RSGroupPinMixin:ShowOverlay(childPOI)
 	end
 
 	if (overlay) then
+		local r, g, b, replacedEntityID = RSGeneralDB.AddOverlayActive(childPOI.entityID)
+		
+		-- Cleans the replaced overlay
+		if (replacedEntityID) then
+			for pin in self:GetMap():EnumeratePinsByTemplate("RSOverlayTemplate") do
+				if (pin:GetEntityID() == replacedEntityID) then
+					self:GetMap():RemovePin(pin)
+				end
+			end
+			
+			-- Cleans the replaced overly in the minimap
+			RSMinimap.RemoveOverlay(replacedEntityID)
+		end
+		
+		-- Adds the new one
 		for _, coordinates in ipairs (overlay) do
 			local x, y = strsplit("-", coordinates)
-			self:GetMap():AcquirePin("RSOverlayTemplate", tonumber(x), tonumber(y), childPOI);
+			self:GetMap():AcquirePin("RSOverlayTemplate", tonumber(x), tonumber(y), r, g, b, childPOI);
 		end
-		RSGeneralDB.SetOverlayActive(childPOI.entityID)
-	else
-		RSGeneralDB.RemoveOverlayActive()
+		
+		-- Adds the new one to the minimap
+		RSMinimap.AddOverlay(childPOI.entityID)
 	end
 end
 
@@ -104,7 +120,9 @@ function RSGroupPinMixin:ShowGuide(childPOI)
 			end
 		end
 		RSGeneralDB.SetGuideActive(childPOI.entityID)
+		RSMinimap.AddGuide(childPOI.entityID)
 	else
 		RSGeneralDB.RemoveGuideActive()
+		RSMinimap.RemoveGuide(childPOI.entityID)
 	end
 end

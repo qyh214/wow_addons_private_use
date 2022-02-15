@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2393, "DBM-CastleNathria", nil, 1190)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210823220630")
+mod:SetRevision("20220202090223")
 mod:SetCreatureID(164406)
 mod:SetEncounterID(2398)
 mod:SetUsedIcons(1, 2, 3)
@@ -34,7 +34,7 @@ mod:RegisterEventsInCombat(
 --]]
 --Stage One - Thirst for Blood
 local warnExsanguinated							= mod:NewStackAnnounce(328897, 2, nil, "Tank|Healer")
-local warnEcholocation							= mod:NewTargetAnnounce(342077, 3)
+local warnEcholocation							= mod:NewTargetAnnounce(342074, 3)
 local warnWaveofBlood							= mod:NewCountAnnounce(345397, 3)
 --Stage Two - Terror of Castle Nathria
 local warnDeadlyDescent							= mod:NewTargetNoFilterAnnounce(343024, 4)
@@ -48,9 +48,9 @@ local warnBloodLantern							= mod:NewTargetNoFilterAnnounce(341684, 1)--Mythic
 local specWarnExsanguinated						= mod:NewSpecialWarningStack(328897, nil, 2, nil, nil, 1, 6)
 local specWarnExsanguinatingBite				= mod:NewSpecialWarningDefensive(328857, nil, 17253, nil, 1, 2)
 local specWarnExsanguinatingBiteOther			= mod:NewSpecialWarningTaunt(328857, nil, 17253, nil, 1, 2)
-local specWarnEcholocation						= mod:NewSpecialWarningMoveAway(342077, nil, nil, nil, 1, 2)
-local yellEcholocation							= mod:NewPosYell(342077)
-local yellEcholocationFades						= mod:NewIconFadesYell(342077)
+local specWarnEcholocation						= mod:NewSpecialWarningMoveAway(342074, nil, nil, nil, 1, 2)
+local yellEcholocation							= mod:NewPosYell(342074)
+local yellEcholocationFades						= mod:NewIconFadesYell(342074)
 local specWarnEarsplittingShriek				= mod:NewSpecialWarningMoveTo(330711, nil, 251719, nil, 1, 2)
 local specWarnBlindSwipe						= mod:NewSpecialWarningDefensive(343005, "Tank", nil, nil, 1, 2)
 local specWarnEchoingScreech					= mod:NewSpecialWarningDodge(342863, nil, 252538, nil, 2, 2)
@@ -62,13 +62,13 @@ local specWarnGTFO								= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 
 
 --Stage One - Thirst for Blood
 --mod:AddTimerLine(BOSS)
-local timerExsanguinatingBiteCD					= mod:NewCDTimer(17.8, 328857, 17253, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON)--10-22.9 (too varaible for a countdown by default)
-local timerEcholocationCD						= mod:NewCDTimer(23, 342077, nil, nil, nil, 3, nil, nil, nil, 1, 3)--Seems to be 42.7 without a hitch
+local timerExsanguinatingBiteCD					= mod:NewCDTimer(17.8, 328857, 17253, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--10-22.9 (too varaible for a countdown by default)
+local timerEcholocationCD						= mod:NewCDTimer(23, 342074, nil, nil, nil, 3, nil, nil, nil, 1, 3)--Seems to be 42.7 without a hitch
 local timerEarsplittingShriekCD					= mod:NewCDTimer(47.1, 330711, 251719, nil, nil, 2)--Shortname "Shriek"
 local timerEarsplittingShriek					= mod:NewCastTimer(4, 345936, 251719, false, nil, 5)--For users to see cast bar if boss remains untargetable in intermission
-local timerWaveofBloodCD						= mod:NewCDCountTimer(24.8, 345397, nil, nil, nil, 2, nil, DBM_CORE_L.HEALER_ICON)--24-30
-local timerBlindSwipeCD							= mod:NewCDTimer(44.4, 343005, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)
-local timerEchoingScreechCD						= mod:NewCDTimer(48, 342863, 252538, nil, nil, 3, nil, DBM_CORE_L.HEROIC_ICON)
+local timerWaveofBloodCD						= mod:NewCDCountTimer(24.8, 345397, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)--24-30
+local timerBlindSwipeCD							= mod:NewCDTimer(44.4, 343005, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerEchoingScreechCD						= mod:NewCDTimer(48, 342863, 252538, nil, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON)
 local timerBloodshroudCD						= mod:NewCDTimer(112, 328921, nil, nil, nil, 6)--100-103
 --Stage Two - Terror of Castle Nathria
 --local timerBloodshroud						= mod:NewBuffActiveTimer(47.5, 328921, nil, nil, nil, 6)--43.4-47.5, more to it than this? or just fact blizzards energy code always proves to be dogshit
@@ -77,7 +77,9 @@ local timerEchoingSonar							= mod:NewCastTimer(6, 329362, nil, false, nil, 5)
 
 mod:AddRangeFrameOption("8")
 mod:AddInfoFrameOption(328897, true)
-mod:AddSetIconOption("SetIconOnEcholocation", 342077, true, false, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnEcholocation", 342074, true, false, {1, 2, 3})
+
+mod:GroupSpells(328857, 328897)
 
 local ExsanguinatedStacks = {}
 local playerDebuff = false
@@ -125,7 +127,7 @@ function mod:SPELL_CAST_START(args)
 		timerExsanguinatingBiteCD:Start()
 	elseif spellId == 330711 or spellId == 345936  then--Phase 1/Phase 2
 		if self.Options.SpecWarn330711moveto then
-			specWarnEarsplittingShriek:Show(DBM_CORE_L.BREAK_LOS)
+			specWarnEarsplittingShriek:Show(DBM_COMMON_L.BREAK_LOS)
 			specWarnEarsplittingShriek:Play("findshelter")
 		else
 			warnEarsplittingShriek:Show()

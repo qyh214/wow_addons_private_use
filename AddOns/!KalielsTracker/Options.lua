@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2021, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2022, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -114,6 +114,8 @@ local defaults = {
 		addonMasque = false,
 		addonPetTracker = false,
 		addonTomTom = false,
+
+		hackLFG = true,
 	},
 	char = {
 		collapsed = false,
@@ -834,7 +836,7 @@ local options = {
 							width = "double",
 							set = function()
 								db.hdrOtherButtons = not db.hdrOtherButtons
-								KT:ToggleOtherButtons()
+								KT:SetOtherButtons()
 								KT:SetBackground()
 								ObjectiveTracker_Update()
 							end,
@@ -1359,12 +1361,52 @@ local options = {
 				},
 			},
 		},
+		hacks = {
+			name = "Hacks",
+			type = "group",
+			args = {
+				desc = {
+					name = cWarning.."Warning:|r Hacks may affect other addons!",
+					type = "description",
+					order = 0,
+				},
+				sec1 = {
+					name = DUNGEONS_BUTTON,
+					type = "group",
+					inline = true,
+					order = 1,
+					args = {
+						hackLFG = {
+							name = "LFG Hack",
+							desc = cBold.."Affects the small Eye buttons|r for finding groups inside the tracker. When the hack is active, "..
+									"the buttons work without errors. When hack is inactive, the buttons are not available.\n\n"..
+									"Negative impacts:|r\n"..
+									"- Inside the dialog for create Premade Group is hidden item \"Goal\".\n"..
+									"- Tooltips of items in the list of Premade Groups have a hidden 2nd (green) row with \"Goal\".\n"..
+									"- Inside the dialog for create Premade Group, no automatically set the \"Title\",\n"..
+									"  e.g. keystone level for Mythic+.",
+							descStyle = "inline",
+							type = "toggle",
+							width = "full",
+							confirm = true,
+							confirmText = warning,
+							set = function()
+								db.hackLFG = not db.hackLFG
+								ReloadUI()
+							end,
+							order = 1.1,
+						},
+					},
+				},
+			},
+		},
 	},
 }
 
 local general = options.args.general.args
 local modules = options.args.modules.args
 local addons = options.args.addons.args
+local hacks = options.args.hacks.args
 
 function KT:CheckAddOn(addon, version, isUI)
 	local name = strsplit("_", addon)
@@ -1462,6 +1504,7 @@ function KT:SetupOptions()
 	self.optionsFrame.general = ACD:AddToBlizOptions(addonName, self.title, nil, "general")
 	self.optionsFrame.modules = ACD:AddToBlizOptions(addonName, options.args.modules.name, self.title, "modules")
 	self.optionsFrame.addons = ACD:AddToBlizOptions(addonName, options.args.addons.name, self.title, "addons")
+	self.optionsFrame.hacks = ACD:AddToBlizOptions(addonName, options.args.hacks.name, self.title, "hacks")
 	self.optionsFrame.profiles = ACD:AddToBlizOptions(addonName, options.args.profiles.name, self.title, "profiles")
 
 	self.db.RegisterCallback(self, "OnProfileChanged", "InitProfile")

@@ -1,52 +1,28 @@
-tag df6ed509de7ca6192062d05e83ffd876a6ccd40c DetailsRetail.9.1.5.9108.145
+tag 8b2c90acef5313f7d767ed1d90049a687cbdda09 DetailsRetail.9.1.5.9213.145
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Tue Nov 2 19:31:28 2021 -0300
+Date:	Fri Dec 10 16:58:11 2021 -0300
 
-commit e701c95fdd01ea64de1d88edadbc0698d90d43c7
+commit 8be58e717b9ad373c819e1e21bec13074038641b
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Tue Nov 2 19:30:06 2021 -0300
+Date:   Fri Dec 10 16:57:26 2021 -0300
 
-    ToC Updates; Change logs; Framework update
+    v9213
+    
+    Fixed an issue where after reloading, overall data won't show the players nickname.
+    Fixed overkill damage on death log tooltip.
+    Fixed the percent bars for the healing done target on the player breakdown window.
+    Fixed an issue with resource tooltips.
+    And more...
 
-commit 1536e16274a12337ba7f15f0469fcaf29d1e6abd
+commit 7adae64a152661fb31851ffdfbf479990c7d9480
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Tue Oct 26 19:51:07 2021 -0300
+Date:   Wed Nov 10 11:47:02 2021 -0300
 
-    Ignoring some npcs on plaguefall
+    Added support for Tab replacement on the breakdown window
 
-commit 54916604484d50fb9ab9b7bdeea48898b0b6dbb7
+commit 8539e3b3abf2797d6927559f78af834d922e67a8
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Sun Oct 24 14:32:42 2021 -0300
+Date:   Wed Nov 3 13:05:55 2021 -0300
 
-    Fix for an error on classic era SoM
-
-commit 1ac9492e90b96c9a2a8e7b85ad20768adce37ea1
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Thu Oct 21 10:18:44 2021 -0300
-
-    Removed print debug
-
-commit d1c06a262cd77ac822a6952493d1a5d822e38662
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Wed Oct 20 15:28:08 2021 -0300
-
-    No more damage done for mobs that doesn't award points
-
-commit d905a0d38f1dc6e2490476b9c2992a1017bb046a
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Sat Oct 16 17:59:41 2021 -0300
-
-    Fixed some bugs with the /details stats
-
-commit 791ce4df93ea605f01403ec7e9a8017b1548feca
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Tue Oct 12 23:20:02 2021 -0300
-
-    weapon bar color
-
-commit d87611cfc50ea76de06cfd29c64e3bb966cedc02
-Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Tue Oct 12 21:35:03 2021 -0300
-
-    Necrotic wake weapons
+    Merging fixes from tbc
 

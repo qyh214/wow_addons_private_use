@@ -145,24 +145,14 @@
 		</Scripts>
 	</Button>
 	
-	<Button name="NarciEmoteTokenButtonTemplate" inherits="NarciWidgetButtonTemplate" virtual="true">
+	<Button name="NarciEmoteTokenButtonTemplate" mixin="NarciEmoteTokenButtonMixin" inherits="NarciWidgetButtonTemplate" virtual="true" motionScriptsWhileDisabled="true">
 		<Size>
 			<AbsDimension x="80" y="20"/>
 		</Size>
-		<Layers>
-			<Layer level="OVERLAY" textureSubLevel="3">
-				<Texture setAllPoints="true" parentKey="HighlightColor" hidden="true" Alpha="0.5">
-					<Anchors>
-						<Anchor point="TOPLEFT" x="0" y="0"/>
-						<Anchor point="BOTTOMRIGHT" x="0" y="0"/>
-					</Anchors>
-					<Color r="0" g="0" b="0" a="0.5"/>
-				</Texture>
-			</Layer>
-		</Layers>
 		<Scripts>
-			<OnShow function="Narci_SetButtonColor"/>
-			<OnClick function="Narci_EmoteTokenButton_OnClick"/>
+			<OnClick method="OnClick"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
 		</Scripts>
 	</Button>
 
@@ -191,7 +181,7 @@
 		</Scripts>
 	</Button>
 
-	<Button name="CodeTokenButtonTemplate" inherits="NarciWidgetButtonTemplate" virtual="true">
+	<Button name="NarciCodeTokenButtonTemplate" inherits="NarciWidgetButtonTemplate" virtual="true">
 		<Size>
 			<AbsDimension y="20"/>
 		</Size>
@@ -227,7 +217,7 @@
 		</Scripts>
 	</Button>
 
-	<Button name="WebsiteButtonTemplate" virtual="true">
+	<Button name="NarciWebsiteButtonTemplate" virtual="true">
 		<Size>
 			<AbsDimension x="20" y="20"/>
 		</Size>
@@ -763,7 +753,7 @@
         </Scripts>
 	</Frame>
 
-	<Button name="NarciRuneSlotTemplate" parentKey="RuneSlot" frameLevel="6" hidden="true" virtual="true">
+	<Button name="NarciRuneSlotTemplate" parentKey="RuneSlot" useParentLevel="true" hidden="true" virtual="true">
 		<Scripts>
 			<OnEnter function="Narci_RuneButton_OnEnter"/>
 			<OnLeave>
@@ -772,10 +762,10 @@
 		</Scripts>
 	</Button>
 
-	<Button name="NarciRuneSlotLeftTemplate" inherits="NarciRuneSlotTemplate" frameLevel="6" virtual="true">
+	<Button name="NarciRuneSlotLeftTemplate" inherits="NarciRuneSlotTemplate" virtual="true">
 		<Size x="30" y="30"/>
 		<HitRectInsets>
-			<AbsInset left="4" right="10" top="-2" bottom="-2"/>
+			<AbsInset left="6" right="8" top="-2" bottom="-2"/>
 		</HitRectInsets>
 		<Layers>
 			<Layer level="OVERLAY" textureSubLevel="3">
@@ -812,10 +802,10 @@
 		</Layers>
 	</Button>
 
-	<Button name="NarciRuneSlotRightTemplate" inherits="NarciRuneSlotTemplate" frameLevel="6" virtual="true">
+	<Button name="NarciRuneSlotRightTemplate" inherits="NarciRuneSlotTemplate" virtual="true">
 		<Size x="30" y="30"/>
 		<HitRectInsets>
-			<AbsInset left="10" right="4" top="-2" bottom="-2"/>
+			<AbsInset left="8" right="6" top="-2" bottom="-2"/>
 		</HitRectInsets>
 		<Layers>
 			<Layer level="OVERLAY" textureSubLevel="3">
@@ -1070,7 +1060,7 @@
         </Scripts>
     </Button>
 
-	<Button name="Narci_InteractiveGemSlot_Template" inherits="Narci_GemSlot_Template" virtual="true" mixin="NarciGemSlotMixin">
+	<Button name="NarciClickableGemSlotTemplate" inherits="NarciGemSlotTemplate" virtual="true" mixin="NarciGemSlotMixin" useParentLevel="true">
 		<Scripts>
 			<OnEnter method="OnEnter"/>
 			<OnLeave method="OnLeave"/>
@@ -1078,7 +1068,7 @@
 		</Scripts>
 	</Button>
 
-	<Button name="NarciSlotButtonLeft" inherits="NarciEquipmentSlotButtonTemplate" virtual="true"> 
+	<Button name="NarciSlotButtonLeftTemplate" inherits="NarciEquipmentSlotButtonTemplate" virtual="true"> 
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture setAllPoints="true" parentKey="GradientBackground">
@@ -1125,10 +1115,13 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Button inherits="Narci_InteractiveGemSlot_Template">
+			<Button inherits="NarciClickableGemSlotTemplate">
 				<Anchors>
 					<Anchor point="RIGHT" relativeKey="$parent" relativePoint="LEFT" x="11" y="0"/>
 				</Anchors>
+				<HitRectInsets>
+					<AbsInset left="2" right="8" top="4" bottom="4"/>
+				</HitRectInsets>
 			</Button>
 			<Button inherits="NarciRuneSlotLeftTemplate">
 				<Anchors>
@@ -1146,7 +1139,7 @@
 		</Animations>
 	</Button>
 
-	<Button name="NarciSlotButtonRight" inherits="NarciEquipmentSlotButtonTemplate" virtual="true"> 
+	<Button name="NarciSlotButtonRightTemplate" inherits="NarciEquipmentSlotButtonTemplate" virtual="true"> 
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture setAllPoints="true" parentKey="GradientBackground">
@@ -1193,10 +1186,13 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Button inherits="Narci_InteractiveGemSlot_Template">
+			<Button inherits="NarciClickableGemSlotTemplate">
 				<Anchors>
 					<Anchor point="LEFT" relativeKey="$parent" relativePoint="RIGHT" x="-11" y="0"/>
 				</Anchors>
+				<HitRectInsets>
+					<AbsInset left="8" right="2" top="4" bottom="4"/>
+				</HitRectInsets>
 				<Scripts>
 					<OnLoad>
 						self.isRight = true;
@@ -1997,11 +1993,6 @@
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="Narci_EmoteButton" relativePoint="TOPLEFT" x="-46" y="-20"/> <!--toPoint 8-->
 				</Anchors>
-				<Layers>
-					<Layer level="OVERLAY">
-						<Texture inherits="NarciBottomShadowTemplate"/>
-					</Layer>					
-				</Layers>
 				<Frames>
 					<Frame parentKey="AnimFrame" inherits="NarciAnimContainerFrame">
 						<Scripts>
@@ -2009,18 +2000,13 @@
 						</Scripts>
 					</Frame>
 
-					<Button inherits="NarciWidgetCheckboxButtonTemplate" parentKey="AutoCapture" id="4">
+					<Button inherits="NarciWidgetCheckboxButtonTemplate" parentKey="AutoCaptureButton" id="4">
 						<Size>
 							<AbsDimension x="150" y="20"/>
 						</Size>
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPRIGHT" x="2" y="0"/>
+							<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="0" y="0"/>
 						</Anchors>
-						<Layers>
-							<Layer level="OVERLAY">
-								<Texture inherits="NarciBottomShadowTemplate"/>
-							</Layer>					
-						</Layers>
 						<Scripts>
 							<OnLoad>
 								self.Background:SetColorTexture(0.06, 0.06, 0.06, 0.8);
@@ -2030,6 +2016,19 @@
 							<OnClick function="Narci_AutoCaptureButton_OnClick"/>
 						</Scripts>
 					</Button>
+
+					<Frame parentKey="HighlightColorFrame" hidden="true" useParentLevel="true">
+						<Size>
+							<AbsDimension x="80" y="20"/>
+						</Size>
+						<Layers>
+							<Layer level="OVERLAY" textureSubLevel="2">
+								<Texture setAllPoints="true" parentKey="HighlightColor">
+									<Color r="0.5" g="0.5" b="0.5" a="0.5"/>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
 				</Frames>
 				<Scripts>
 					<OnLoad function="Narci_EmoteButtonPopUp_OnLoad"/>
@@ -2158,20 +2157,20 @@
 											</OnLoad>
 										</Scripts>
 									</Frame>
-									<Button inherits="CodeTokenButtonTemplate" parentKey="Markdown" id="3">
+									<Button inherits="NarciCodeTokenButtonTemplate" parentKey="Markdown" id="3">
 										<Anchors>
 											<Anchor point="BOTTOMLEFT" relativeKey="$parent.Header3" relativePoint="TOPLEFT" x="0" y="0"/>
 											<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Header3" relativePoint="TOPRIGHT" x="0" y="0"/>
 										</Anchors>
 										<Frames>
-											<Button inherits="WebsiteButtonTemplate" id="0" parentKey="reddit">
+											<Button inherits="NarciWebsiteButtonTemplate" id="0" parentKey="reddit">
 												<Anchors>
 													<Anchor point="RIGHT" x="-8" y="0"/>
 												</Anchors>
 											</Button>
 										</Frames>
 									</Button>
-									<Button inherits="CodeTokenButtonTemplate" parentKey="BBSCode" id="2">
+									<Button inherits="NarciCodeTokenButtonTemplate" parentKey="BBSCode" id="2">
 										<Anchors>
 											<Anchor point="BOTTOMLEFT" relativeKey="$parent.Markdown" relativePoint="TOPLEFT" x="0" y="0"/>
 											<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Markdown" relativePoint="TOPRIGHT" x="0" y="0"/>
@@ -2179,29 +2178,29 @@
 										<Layers>		
 										</Layers>
 										<Frames>
-											<Button inherits="WebsiteButtonTemplate" id="3" parentKey="web4">
+											<Button inherits="NarciWebsiteButtonTemplate" id="3" parentKey="web4">
 												<Anchors>
 													<Anchor point="RIGHT" x="-8" y="0"/>
 												</Anchors>
 											</Button>
-											<Button inherits="WebsiteButtonTemplate" id="2" parentKey="web3">
+											<Button inherits="NarciWebsiteButtonTemplate" id="2" parentKey="web3">
 												<Anchors>
 													<Anchor point="RIGHT" relativeKey="$parent.web4" relativePoint="LEFT" x="2" y="0"/>
 												</Anchors>
 											</Button>
-											<Button inherits="WebsiteButtonTemplate" id="1" parentKey="web2">
+											<Button inherits="NarciWebsiteButtonTemplate" id="1" parentKey="web2">
 												<Anchors>
 													<Anchor point="RIGHT" relativeKey="$parent.web3" relativePoint="LEFT" x="2" y="0"/>
 												</Anchors>
 											</Button>
-											<Button inherits="WebsiteButtonTemplate" id="4" parentKey="web1">
+											<Button inherits="NarciWebsiteButtonTemplate" id="4" parentKey="web1">
 												<Anchors>
 													<Anchor point="RIGHT" relativeKey="$parent.web2" relativePoint="LEFT" x="2" y="0"/>
 												</Anchors>
 											</Button>
 										</Frames>
 									</Button>
-									<Button inherits="CodeTokenButtonTemplate" parentKey="PlainText" id="1">
+									<Button inherits="NarciCodeTokenButtonTemplate" parentKey="PlainText" id="1">
 										<Anchors>
 											<Anchor point="BOTTOMLEFT" relativeKey="$parent.BBSCode" relativePoint="TOPLEFT" x="0" y="0"/>
 											<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BBSCode" relativePoint="TOPRIGHT" x="0" y="0"/>
@@ -2261,10 +2260,10 @@
 
 			<Frame parentKey="AutoHideContainer" frameStrata="LOW" enableMouse="false" enableMouseClicks="false">
 				<Size>
-					<AbsDimension x="380" y="180"/>
+					<AbsDimension x="380" y="172"/>
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="BOTTOMLEFT" x="0"/>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="BOTTOMLEFT" y="-30"/>
 				</Anchors>
 				<Layers>		
 					<!--Layer level="ARTWORK" textureSubLevel="2">
@@ -2509,7 +2508,7 @@
 				</Scripts>
 			</Frame>
 
-			<Button inherits="NarciSlotButtonLeft" parentKey="ChestSlot" id="5">
+			<Button inherits="NarciSlotButtonLeftTemplate" parentKey="ChestSlot" id="5">
 				<KeyValues>
 					<KeyValue key="slotName" value="ChestSlot" type="string"/>
 				</KeyValues>
@@ -2518,7 +2517,7 @@
 				</Anchors>
 			</Button>
 
-			<Button inherits="NarciSlotButtonLeft" parentKey="BackSlot" id="15">
+			<Button inherits="NarciSlotButtonLeftTemplate" parentKey="BackSlot" id="15">
 				<KeyValues>
 					<KeyValue key="slotName" value="BackSlot" type="string"/>
 				</KeyValues>
@@ -2527,7 +2526,7 @@
 				</Anchors>
 			</Button>
 
-			<Button inherits="NarciSlotButtonLeft" parentKey="ShoulderSlot" id="3">
+			<Button inherits="NarciSlotButtonLeftTemplate" parentKey="ShoulderSlot" id="3">
 				<KeyValues>
 					<KeyValue key="slotName" value="ShoulderSlot" type="string"/>
 				</KeyValues>
@@ -2536,7 +2535,7 @@
 				</Anchors>
 			</Button>
 
-			<Button inherits="NarciSlotButtonLeft" parentKey="NeckSlot" id="2">
+			<Button inherits="NarciSlotButtonLeftTemplate" parentKey="NeckSlot" id="2">
 				<KeyValues>
 					<KeyValue key="slotName" value="NeckSlot" type="string"/>
 				</KeyValues>
@@ -2605,7 +2604,7 @@
 				</Scripts>
 			</Button>
 
-			<Button inherits="NarciSlotButtonLeft" parentKey="HeadSlot" id="1">
+			<Button inherits="NarciSlotButtonLeftTemplate" parentKey="HeadSlot" id="1">
 				<KeyValues>
 					<KeyValue key="slotName" value="HeadSlot" type="string"/>
 				</KeyValues>
@@ -2614,7 +2613,7 @@
 				</Anchors>
 			</Button>
 
-			<Button inherits="NarciSlotButtonLeft" parentKey="WristSlot" id="9">
+			<Button inherits="NarciSlotButtonLeftTemplate" parentKey="WristSlot" id="9">
 				<KeyValues>
 					<KeyValue key="slotName" value="WristSlot" type="string"/>
 				</KeyValues>
@@ -2623,7 +2622,7 @@
 				</Anchors>
 			</Button>
 
-			<Button inherits="NarciSlotButtonLeft" parentKey="MainHandSlot" id="16">
+			<Button inherits="NarciSlotButtonLeftTemplate" parentKey="MainHandSlot" id="16">
 				<KeyValues>
 					<KeyValue key="slotName" value="MainHandSlot" type="string"/>
 				</KeyValues>
@@ -2632,7 +2631,7 @@
 				</Anchors>
 			</Button>
 
-			<Button inherits="NarciSlotButtonLeft" parentKey="SecondaryHandSlot" id="17">
+			<Button inherits="NarciSlotButtonLeftTemplate" parentKey="SecondaryHandSlot" id="17">
 				<KeyValues>
 					<KeyValue key="slotName" value="SecondaryHandSlot" type="string"/>
 				</KeyValues>
@@ -2641,7 +2640,7 @@
 				</Anchors>
 			</Button>
 
-			<Button inherits="NarciSlotButtonLeft" parentKey="ShirtSlot">
+			<Button inherits="NarciSlotButtonLeftTemplate" parentKey="ShirtSlot">
 				<KeyValues>
 					<KeyValue key="slotName" value="ShirtSlot" type="string"/>
 				</KeyValues>
@@ -2650,7 +2649,7 @@
 				</Anchors>
 			</Button>
 
-			<Button inherits="NarciSlotButtonRight" parentKey="Finger0Slot" id="11">
+			<Button inherits="NarciSlotButtonRightTemplate" parentKey="Finger0Slot" id="11">
 				<KeyValues>
 					<KeyValue key="slotName" value="Finger0Slot" type="string"/>
 				</KeyValues>
@@ -2659,7 +2658,7 @@
 				</Anchors>
 			</Button>
 
-			<Button inherits="NarciSlotButtonRight" parentKey="FeetSlot" id="8">
+			<Button inherits="NarciSlotButtonRightTemplate" parentKey="FeetSlot" id="8">
 				<KeyValues>
 					<KeyValue key="slotName" value="FeetSlot" type="string"/>
 				</KeyValues>
@@ -2668,7 +2667,7 @@
 				</Anchors>
 			</Button>
 
-			<Button inherits="NarciSlotButtonRight" parentKey="LegsSlot" id="7">
+			<Button inherits="NarciSlotButtonRightTemplate" parentKey="LegsSlot" id="7">
 				<KeyValues>
 					<KeyValue key="slotName" value="LegsSlot" type="string"/>
 				</KeyValues>
@@ -2677,7 +2676,7 @@
 				</Anchors>
 			</Button>
 
-			<Button inherits="NarciSlotButtonRight" parentKey="WaistSlot" id="6">
+			<Button inherits="NarciSlotButtonRightTemplate" parentKey="WaistSlot" id="6">
 				<KeyValues>
 					<KeyValue key="slotName" value="WaistSlot" type="string"/>
 				</KeyValues>
@@ -2686,7 +2685,7 @@
 				</Anchors>
 			</Button>
 
-			<Button inherits="NarciSlotButtonRight" parentKey="HandsSlot" id="10">
+			<Button inherits="NarciSlotButtonRightTemplate" parentKey="HandsSlot" id="10">
 				<KeyValues>
 					<KeyValue key="slotName" value="HandsSlot" type="string"/>
 				</KeyValues>
@@ -2695,7 +2694,7 @@
 				</Anchors>
 			</Button>
 
-			<Button inherits="NarciSlotButtonRight" parentKey="Finger1Slot" id="12">
+			<Button inherits="NarciSlotButtonRightTemplate" parentKey="Finger1Slot" id="12">
 				<KeyValues>
 					<KeyValue key="slotName" value="Finger1Slot" type="string"/>
 				</KeyValues>
@@ -2704,7 +2703,7 @@
 				</Anchors>
 			</Button>
 
-			<Button inherits="NarciSlotButtonRight" parentKey="Trinket0Slot" id="13">
+			<Button inherits="NarciSlotButtonRightTemplate" parentKey="Trinket0Slot" id="13">
 				<KeyValues>
 					<KeyValue key="slotName" value="Trinket0Slot" type="string"/>
 				</KeyValues>
@@ -2713,7 +2712,7 @@
 				</Anchors>
 			</Button>
 
-			<Button inherits="NarciSlotButtonRight" parentKey="Trinket1Slot" id="14">
+			<Button inherits="NarciSlotButtonRightTemplate" parentKey="Trinket1Slot" id="14">
 				<KeyValues>
 					<KeyValue key="slotName" value="Trinket1Slot" type="string"/>
 				</KeyValues>
@@ -2722,7 +2721,7 @@
 				</Anchors>
 			</Button>
 
-			<Button inherits="NarciSlotButtonRight" parentKey="TabardSlot">
+			<Button inherits="NarciSlotButtonRightTemplate" parentKey="TabardSlot">
 				<KeyValues>
 					<KeyValue key="slotName" value="TabardSlot" type="string"/>
 				</KeyValues>
@@ -4045,7 +4044,7 @@
 				</Texture>
 			</Layer>
 			<Layer level="ARTWORK">
-				<Texture file="Interface\AddOns\Narcissus\Art\Minimap\LOGO-Large" parentKey="Background" hidden="false">
+				<Texture file="Interface\AddOns\Narcissus\Art\Minimap\LOGO-Cyan" parentKey="Background" hidden="false">
 					<TexCoords left="0" right="0.5" top="0" bottom="1"/>
 					<Size>
 						<AbsDimension x="42" y="42"/>	<!--86 for AzUI-->
@@ -4060,7 +4059,7 @@
 				</Texture>
 			</Layer>
 			<Layer level="OVERLAY">
-				<Texture parentKey="Color" file="Interface\AddOns\Narcissus\Art\Minimap\LOGO-Large" hidden="true" Alpha="0">
+				<Texture parentKey="Color" file="Interface\AddOns\Narcissus\Art\Minimap\LOGO-Cyan" hidden="true" Alpha="0">
 					<TexCoords left="0.5" right="1" top="0" bottom="1"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeKey="$parent.Background" relativePoint="TOPLEFT"/>
@@ -4279,7 +4278,7 @@
 			<Anchor point="CENTER" relativeTo="UIParent" relativePoint="CENTER"/>
 		</Anchors>
 		<Frames>
-			<Button inherits="NarciSlotButtonLeft" parentKey="ItemSlot" useParentLevel="true" hidden="true">
+			<Button inherits="NarciSlotButtonLeftTemplate" parentKey="ItemSlot" useParentLevel="true" hidden="true">
 				<KeyValues>
 					<KeyValue key="slotName" value="ChestSlot" type="string"/>
 				</KeyValues>

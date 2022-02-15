@@ -405,4 +405,8 @@ local function modify(parent, region, data)
     end
 end
 
-WeakAuras.RegisterRegionType("stopmotion", create, modify, default, properties);
+local function validate(data)
+  Private.EnforceSubregionExists(data, "subbackground")
+end
+
+WeakAuras.RegisterRegionType("stopmotion", create, modify, default, properties, validate);

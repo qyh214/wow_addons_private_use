@@ -28,7 +28,7 @@ frame:SetMinResize(800, 400)
 frame:SetMaxResize(UIParent:GetWidth(), UIParent:GetHeight())
 frame:Hide()
 frame.backdropInfo = {
-	bgFile		= "Interface\\DialogFrame\\UI-DialogBox-Background", -- 131071
+	bgFile		= "Interface\\DialogFrame\\UI-DialogBox-Background-Dark", -- 131071
 	edgeFile	= "Interface\\DialogFrame\\UI-DialogBox-Border", -- 131072
 	tile		= true,
 	tileSize	= 32,
@@ -37,6 +37,7 @@ frame.backdropInfo = {
 }
 
 frame:ApplyBackdrop()
+frame:SetBackdropColor(1, 1, 1, .85)
 frame.firstshow = true
 frame:SetScript("OnShow", function(self)
 	if self.firstshow then
@@ -94,6 +95,22 @@ if DBM.NewerVersion then
 	frameRevision:SetText(CL.DEADLY_BOSS_MODS.. " " .. DBM.DisplayVersion.. " (" .. DBM:ShowRealDate(DBM.Revision) .. "). |cffff0000Version " .. DBM.NewerVersion .. " is available.|r")
 else
 	frameRevision:SetText(CL.DEADLY_BOSS_MODS.. " " .. DBM.DisplayVersion.. " (" .. DBM:ShowRealDate(DBM.Revision) .. ")")
+end
+
+do
+	local count = 0
+
+	local frameHeaderButton = CreateFrame("Frame", nil, frame)
+	frameHeaderButton:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 20, 18)
+	frameHeaderButton:SetSize(frameRevision:GetSize())
+	frameHeaderButton:EnableMouse(true)
+	frameHeaderButton:SetScript("OnMouseUp", function()
+		count = count + 1
+		if count == 3 then
+			count = 0
+			DBM:PlaySound("1304911", true)
+		end
+	end)
 end
 
 local frameTranslation = frame:CreateFontString("$parentTranslation", "ARTWORK", "GameFontDisableSmall")

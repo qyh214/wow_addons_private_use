@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 local Nefarian	= DBM:EJ_GetSectionInfo(3279)
 local Onyxia	= DBM:EJ_GetSectionInfo(3283)
 
-mod:SetRevision("20200806141910")
+mod:SetRevision("20220116034430")
 mod:SetCreatureID(41376, 41270)
 mod:SetEncounterID(1026) -- ES fires when Nefarian engaged.
 --mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_Event09.ogg", "Sound\\Creature\\Nefarian\\VO_BD_Nefarian_Event13.ogg")
@@ -58,7 +58,7 @@ local timerNefBreathCD			= mod:NewTimer(12, "NefBreathTimer", 77826, "Tank|Heale
 local timerCinder				= mod:NewBuffFadesTimer(8, 79339)--Heroic Ability
 local timerCinderCD				= mod:NewCDTimer(22, 79339)--Heroic Ability (Every 22-25 seconds, 25 being most common but we gotta use 22 for timer cause of that small chance it's that).
 local timerDominionCD			= mod:NewNextTimer(15, 79318, nil, not "Tank")
-local timerShadowBlazeCD		= mod:NewCDTimer(10, 81031, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, 2, 4)
+local timerShadowBlazeCD		= mod:NewCDTimer(10, 81031, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, 2, 4)
 
 local berserkTimer				= mod:NewBerserkTimer(630)
 

@@ -1,9 +1,8 @@
 # <DBM> Outlands
 
-## [r683](https://github.com/DeadlyBossMods/DBM-BCVanilla/tree/r683) (2021-11-02)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-BCVanilla/compare/r682...r683) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BCVanilla/releases)
+## [r685](https://github.com/DeadlyBossMods/DBM-BCVanilla/tree/r685) (2022-01-16)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-BCVanilla/compare/r684...r685) [Previous Releases](https://github.com/DeadlyBossMods/DBM-BCVanilla/releases)
 
-- bump tocs  
-- Revert "Fix hydross boss not firing BOSS\_KILL/ENCOUNTER\_END event (#24)"  
-- Fix hydross boss not firing BOSS\_KILL/ENCOUNTER\_END event (#24)  
-    Register on UNIT\_DIED instead  
+- Update localization.cn.lua (#25)  
+- Oh, and this  
+- Change to DBM\_COMMON\_L where applicable  

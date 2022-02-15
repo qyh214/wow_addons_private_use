@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("AQ40Trash", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210119194113")
+mod:SetRevision("20211127000556")
 --mod:SetModelID(47785)
 mod:SetMinSyncRevision(20200710000000)--2020, 7, 10
 
@@ -87,7 +87,7 @@ do
 				self.vb.firstEngageTime = GetServerTime()
 				if self.Options.FastestClear3 and self.Options.SpeedClearTimer then
 					--Custom bar creation that's bound to core, not mod, so timer doesn't stop when mod stops it's own timers
-					DBM.Bars:CreateBar(self.Options.FastestClear3, DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT, 136106)
+					DBT:CreateBar(self.Options.FastestClear3, DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT, 136106)
 				end
 				self:SendSync("AQ40Started", self.vb.firstEngageTime)--Also sync engage time
 			end
@@ -141,14 +141,14 @@ do
 	function mod:OnSync(msg, startTime, sender)
 		--Sync recieved with start time and ours is currently not started
 		--The reason this doesn't just check self.vb.firstEngageTime is nil, because it might not be if SendVariableInfo send it first
-		if msg == "AQ40Started" and startTime and not DBM.Bars:GetBar(DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT) then
+		if msg == "AQ40Started" and startTime and not DBT:GetBar(DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT) then
 			if not self.vb.firstEngageTime then
 				self.vb.firstEngageTime = tonumber(startTime)
 			end
 			if self.Options.FastestClear3 and self.Options.SpeedClearTimer then
 				--Custom bar creation that's bound to core, not mod, so timer doesn't stop when mod stops it's own timers
 				local adjustment = GetServerTime() - self.vb.firstEngageTime
-				DBM.Bars:CreateBar(self.Options.FastestClear3 - adjustment, DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT)
+				DBT:CreateBar(self.Options.FastestClear3 - adjustment, DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT)
 			end
 			--Unregister high CPU combat log events
 			self:UnregisterShortTermEvents()
@@ -169,7 +169,7 @@ function mod:ENCOUNTER_END(encounterID, _, _, _, success)
 	if encounterID == 710 or encounterID == 713 or encounterID == 716 or encounterID == 717 or encounterID == 714 then
 		self.vb.requiredBosses = self.vb.requiredBosses + 1
 		if self.vb.requiredBosses == 5 then
-			DBM.Bars:CancelBar(DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT)
+			DBT:CancelBar(DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT)
 			if self.vb.firstEngageTime then
 				local thisTime = GetServerTime() - self.vb.firstEngageTime
 				if thisTime and thisTime > 0 then

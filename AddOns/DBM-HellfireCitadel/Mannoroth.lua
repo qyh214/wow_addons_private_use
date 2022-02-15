@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1395, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142006")
+mod:SetRevision("20220116041913")
 mod:SetCreatureID(91349)--91305 Fel Iron Summoner
 mod:SetEncounterID(1795)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -72,22 +72,22 @@ local specWarnShadowForce			= mod:NewSpecialWarningSpell(181799, nil, nil, nil, 
 --Adds
 mod:AddTimerLine(OTHER)
 ----Doom Lords
-local timerCurseofLegionCD			= mod:NewNextCountTimer(64.8, 181275, nil, nil, nil, 1, nil, DBM_CORE_L.HEROIC_ICON)--Maybe see one day, in LFR or something when group is terrible or doesn't kill doom lord portal first
+local timerCurseofLegionCD			= mod:NewNextCountTimer(64.8, 181275, nil, nil, nil, 1, nil, DBM_COMMON_L.HEROIC_ICON)--Maybe see one day, in LFR or something when group is terrible or doesn't kill doom lord portal first
 local timerMarkofDoomCD				= mod:NewCDTimer(31.5, 181099, nil, "-Tank", nil, 3, nil, nil, nil, 3, 4)
 --local timerShadowBoltVolleyCD		= mod:NewCDTimer(12, 181126, nil, "-Healer", nil, 4)
 ----Fel Imps
-local timerFelImplosionCD			= mod:NewNextCountTimer(46, 181255, nil, nil, nil, 1, nil, DBM_CORE_L.DAMAGE_ICON)
+local timerFelImplosionCD			= mod:NewNextCountTimer(46, 181255, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
 ----Infernals
 local timerInfernoCD				= mod:NewNextCountTimer(107, 181180, nil, nil, nil, 1)
 ----Gul'dan
-local timerWrathofGuldanCD			= mod:NewNextTimer(107, 186348, 169826, nil, nil, 3, nil, DBM_CORE_L.HEROIC_ICON)
+local timerWrathofGuldanCD			= mod:NewNextTimer(107, 186348, 169826, nil, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON)
 --Mannoroth
 mod:AddTimerLine(L.name)
-local timerGlaiveComboCD			= mod:NewCDTimer(30, 181354, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, 2, 3)--30 seconds unless delayed by something else
+local timerGlaiveComboCD			= mod:NewCDTimer(30, 181354, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, 2, 3)--30 seconds unless delayed by something else
 local timerFelHellfireCD			= mod:NewCDTimer(35, 181557, nil, nil, nil, 2)--35, unless delayed by other things.
-local timerGazeCD					= mod:NewCDTimer(47.1, 181597, 134029, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)--As usual, some variation do to other abilities
+local timerGazeCD					= mod:NewCDTimer(47.1, 181597, 134029, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--As usual, some variation do to other abilities
 local timerFelSeekerCD				= mod:NewCDTimer(49.5, 181735, nil, nil, nil, 2)--Small sample size, confirm it's not shorter if not delayed by things.
-local timerShadowForceCD			= mod:NewCDTimer(52.2, 181799, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON, nil, 1, 4)
+local timerShadowForceCD			= mod:NewCDTimer(52.2, 181799, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 4)
 
 --local berserkTimer					= mod:NewBerserkTimer(360)
 

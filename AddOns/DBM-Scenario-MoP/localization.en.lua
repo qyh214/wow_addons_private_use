@@ -114,7 +114,7 @@ L = DBM:GetModLocalization("d492")
 L = DBM:GetModLocalization("Landfall")
 
 L:SetGeneralLocalization({
-	name = GetDungeonInfo(UnitFactionGroup("player") == "Alliance" and 590 or 595)
+	name = C_LFGInfo.GetDungeonInfo(UnitFactionGroup("player") == "Alliance" and 590 or 595)
 })
 
 L:SetWarningLocalization({

@@ -806,7 +806,7 @@ do
 			self.initialized = true
 		end
 	end
-	function BtWLoadoutsCharacterDropDownMixin:Init()
+	function BtWLoadoutsCharacterDropDownMixin:Init(level)
 		if not self.GetValue then
 			return
 		end
@@ -866,7 +866,8 @@ do
 		local playerCharacter = character
 		for _,character in Internal.CharacterIterator() do
 			if playerCharacter ~= character then
-				characterInfo = GetCharacterInfo(character)
+				local name
+				local characterInfo = GetCharacterInfo(character)
 				if self.classFile == nil or self.classFile == characterInfo.class then
 					if characterInfo then
 						local classColor = C_ClassColor.GetClassColor(characterInfo.class)
@@ -1470,7 +1471,7 @@ do
 		self.TabSegments = {}
 		self.TabPool = CreateFramePool("Button", self, "BtWLoadoutsTabTemplate")
 
-		self.TitleText:SetText(LOADOUTS)
+		self.TitleText:SetText(BTWLOADOUTS_LOADOUTS)
 		self.TitleText:SetHeight(24)
 	end
 	function BtWLoadoutsFrameMixin:OnDragStart()
@@ -1724,7 +1725,7 @@ function BtWLoadoutsTalentButtonMixin:Update()
 
 	self:SetShown(id ~= nil)
 	if not id then
-		return 
+		return
 	end
 
 	local grid = self:GetParent();

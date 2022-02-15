@@ -1,16 +1,17 @@
 local mod	= DBM:NewMod("ArtifactQueen", "DBM-Challenges", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211022011000")
+mod.statTypes = "normal,timewalker"
+
+mod:SetRevision("20211226023423")
 mod:SetCreatureID(116484, 116499, 116496)--Sigryn, Jarl Velbrand, Runeseer Faljar
 mod:SetEncounterID(2059)
-mod:SetZone()--Healer (1710), Tank (1698), DPS (1703-The God-Queen's Fury), DPS (Fel Totem Fall)
 mod:SetBossHPInfoToHighest()
 mod.soloChallenge = true
 
 mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 238694 237870 237947 237945 237857",
+	"SPELL_CAST_START 238694 237870 237947 237945 237857 237952",
 	"SPELL_CAST_SUCCESS 237849 238432",
 	"SPELL_AURA_APPLIED 237947",
 	"SPELL_AURA_REMOVED 237947",
@@ -132,7 +133,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnKnowledge:Play("targetchange")
 		local timer = ancestralKnowledgeTimers[knowledgeCast+1] or 25
 		if timer then
-			timerBladeStormCD:Start(timer, knowledgeCast+1)
+			timerKnowledgeCD:Start(timer, knowledgeCast+1)
 		end
 	end
 end

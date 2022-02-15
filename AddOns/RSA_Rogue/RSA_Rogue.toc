@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 90105
 ## Title: RSA [|c58FFDD00Rogue|r]
 ## Notes: RSA Rogue Module. This is needed to announce Rogue Spells.
 ## Author: Raeli

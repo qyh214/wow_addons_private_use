@@ -29,7 +29,7 @@
 ## X-DBM-Mod-Sort: 907
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
 ## X-DBM-Mod-MinExpansion: 2
-## Version: r302
+## Version: r304
 
 localization.en.lua
 localization.de.lua

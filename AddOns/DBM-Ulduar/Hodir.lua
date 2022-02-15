@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Hodir", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200530203003")
+mod:SetRevision("20220116041927")
 mod:SetCreatureID(32845,32926)
 mod:SetEncounterID(1135)
 mod:SetModelID(28743)
@@ -27,7 +27,7 @@ local specWarnBitingCold	= mod:NewSpecialWarningMove(62188, nil, nil, nil, 1, 2)
 
 local enrageTimer			= mod:NewBerserkTimer(475)
 local timerFlashFreeze		= mod:NewCastTimer(9, 61968, nil, nil, nil, 2)
-local timerFrozenBlows		= mod:NewBuffActiveTimer(20, 63512, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON..DBM_CORE_L.HEALER_ICON)
+local timerFrozenBlows		= mod:NewBuffActiveTimer(20, 63512, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON)
 local timerFlashFrCD		= mod:NewCDTimer(50, 61968, nil, nil, nil, 2)
 local timerAchieve			= mod:NewAchievementTimer(179, 12347)--3182
 

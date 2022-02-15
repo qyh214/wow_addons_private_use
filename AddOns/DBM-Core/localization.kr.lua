@@ -139,6 +139,7 @@ L.OPTION_CATEGORY_WARNINGS	= "일반 알림"
 L.OPTION_CATEGORY_WARNINGS_YOU	= "개인 알림"
 L.OPTION_CATEGORY_WARNINGS_OTHER	= "대상 관련 알림"
 L.OPTION_CATEGORY_WARNINGS_ROLE	= "역할 관련 알림"
+L.OPTION_CATEGORY_SPECWARNINGS		= "특수 알림"
 
 L.OPTION_CATEGORY_SOUNDS		= "음성"
 --Sub cats for "announce" object
@@ -261,58 +262,12 @@ L.TIMER_USAGE	= {
 	"--------------",
 	"/dbm timer <초> <텍스트>: <초> 만큼 지속되는 <텍스트> 타이머가 시작됩니다.",
 	"/dbm ltimer <초> <텍스트>: 취소하기 전까진 자동 반복되는 타이머가 시작됩니다.",
-	"(공대장이나 승급자일 경우 타이머 텍스트 앞에 'Broadcast'를 입력하면 공격대에 공유)",
-	"/dbm timer endloop: ltimer와 반복 작동을 멈춥니다."
+	"(공대장이나 승급자일 경우 'timer'와 'ltimer' 앞에 'Broadcast'를 입력하면 공격대에 공유)",
+	"/dbm timer endloop: 반복 작동중인 모든 ltimer를 멈춥니다."
 }
 
 L.ERROR_NO_PERMISSION				= "이 명령어를 실행하기 위한 권한을 가지고 있지 않습니다."
 L.TIME_TOO_SHORT					= "풀링 타이머는 3초 이상으로 설정해야 합니다."
-
---Common Locals
-L.NONE						= "없음"
-L.RANDOM					= "무작위"
-L.NEXT						= "다음 %s"
-L.COOLDOWN					= "%s 쿨타임"
-L.UNKNOWN					= "알 수 없음"--UNKNOWN
-L.LEFT						= "왼쪽"
-L.RIGHT						= "오른쪽"
-L.BOTH						= "양쪽"
-L.BEHIND					= "뒤쪽"
-L.BACK						= "뒤쪽"--BACK
-L.SIDE						= "옆쪽"
-L.TOP						= "위쪽"
-L.BOTTOM					= "아래쪽"
-L.MIDDLE					= "가운데"
-L.FRONT						= "앞쪽"
-L.EAST						= "동쪽"
-L.WEST						= "서쪽"
-L.NORTH						= "북쪽"
-L.SOUTH						= "남쪽"
-L.INTERMISSION				= "사잇 단계"
-L.ORB						= "구슬"
-L.ORBS						= "구슬"
-L.RING						= "고리"
-L.RINGS						= "고리"
-L.CHEST						= "상자"--As in Treasure 'Chest'. Not Chest as in body part.
-L.NO_DEBUFF					= "%s 없음"--For use in places like info frame where you put "Not Spellname"
-L.ALLY						= "공대원"--Such as "Move to Ally"
-L.ALLIES					= "공대원"--Such as "Move to Allies"
-L.ADD						= "쫄"--A fight Add as in "boss spawned extra adds"
-L.ADDS						= "쫄"
-L.BIG_ADD					= "큰 쫄"
-L.BOSS						= "보스"
-L.EDGE						= "구석"
-L.FAR_AWAY					= "먼 곳"
-L.BREAK_LOS					= "시야 안나오는 곳"
-L.RESTORE_LOS				= "시야 확보되는 곳"
-L.SAFE						= "안전함"
-L.NOTSAFE					= "위험함"
-L.SHIELD					= "보호막"
-L.PILLAR					= "기둥"
-L.INCOMING					= "%s 등장"
-L.BOSSTOGETHER				= "보스 붙이세요"
-L.BOSSAPART					= "보스 떨어트리세요"
---Common Locals end
 
 L.BREAK_USAGE				= "쉬는 시간은 60분을 초과할 수 없습니다. 쉬는 시간은 초단위가 아니라 분단위로 입력해야 합니다."
 L.BREAK_START				= "쉬는 시간 시작 -- %s 받았습니다! (%s|1이;가; 전송)"
@@ -358,12 +313,12 @@ L.AUTO_ANNOUNCE_OPTIONS.target		= "$spell:%s 대상 알림"
 L.AUTO_ANNOUNCE_OPTIONS.targetNF		= "$spell:%s 대상 알림 (전역 대상 필터 무시)"
 L.AUTO_ANNOUNCE_OPTIONS.targetsource	= "$spell:%s 대상 알림 (시전자 포함)"
 L.AUTO_ANNOUNCE_OPTIONS.targetcount	= "$spell:%s 대상 알림 (횟수 포함)"
-L.AUTO_ANNOUNCE_OPTIONS.spell		= "$spell:%s 경고 보기"
-L.AUTO_ANNOUNCE_OPTIONS.ends			= "$spell:%s 종료시 경고 보기"
-L.AUTO_ANNOUNCE_OPTIONS.endtarget	= "$spell:%s 종료시 경고 보기"
-L.AUTO_ANNOUNCE_OPTIONS.fades		= "$spell:%s|1이;가; 사라졌을 때 경고 보기"
+L.AUTO_ANNOUNCE_OPTIONS.spell		= "$spell:%s 시전 완료 알림 보기"
+L.AUTO_ANNOUNCE_OPTIONS.ends			= "$spell:%s 지속 시간 종료시 알림 보기"
+L.AUTO_ANNOUNCE_OPTIONS.endtarget	= "$spell:%s 지속 시간 종료시 알림 보기 (대상 포함)"
+L.AUTO_ANNOUNCE_OPTIONS.fades		= "$spell:%s|1이;가; 사라졌을 때 알림 보기"
 L.AUTO_ANNOUNCE_OPTIONS.adds			= "$spell:%s의 남은 수 알림 보기"
-L.AUTO_ANNOUNCE_OPTIONS.cast			= "$spell:%s 시전시 경고 보기"
+L.AUTO_ANNOUNCE_OPTIONS.cast			= "$spell:%s 시전 시작 알림 보기"
 L.AUTO_ANNOUNCE_OPTIONS.soon		= prewarnOption
 L.AUTO_ANNOUNCE_OPTIONS.sooncount	= prewarnOption
 L.AUTO_ANNOUNCE_OPTIONS.countdown	= "$spell:%s의 초읽기 사전 경고 보기"
@@ -372,9 +327,9 @@ L.AUTO_ANNOUNCE_OPTIONS.bait		= "$spell:%s 사전 경고 보기 (위치 유도)"
 L.AUTO_ANNOUNCE_OPTIONS.stage		= "%s단계 알림"
 L.AUTO_ANNOUNCE_OPTIONS.stagechange	= "단계 전환 알림"
 L.AUTO_ANNOUNCE_OPTIONS.prestage		= "%s단계로 넘어가기 전 경고 보기"
-L.AUTO_ANNOUNCE_OPTIONS.count		= "$spell:%s 경고 보기 (횟수 포함)"
+L.AUTO_ANNOUNCE_OPTIONS.count		= "$spell:%s 시전 완료 알림 보기 (횟수 포함)"
 L.AUTO_ANNOUNCE_OPTIONS.stack		= "$spell:%s 중첩 알림"
-L.AUTO_ANNOUNCE_OPTIONS.moveto		= "$spell:%s에 특정인 또는 특정 위치로 이동 경고 보기"
+L.AUTO_ANNOUNCE_OPTIONS.moveto		= "$spell:%s에 특정인 또는 특정 위치로 이동 알림 보기"
 
 L.AUTO_SPEC_WARN_TEXTS.ends		= "%s 종료!"
 L.AUTO_SPEC_WARN_TEXTS.fades		= "%s 사라짐!"
@@ -420,7 +375,7 @@ L.AUTO_SPEC_WARN_TEXTS.targetchange	= "대상 변경 - %%s 치세요"
 
 -- Auto-generated Special Warning Localizations
 L.AUTO_SPEC_WARN_OPTIONS.spell			= "$spell:%s 특수 알림 보기"
-L.AUTO_SPEC_WARN_OPTIONS.ends			= "$spell:%s 종료시 특수 알림 보기"
+L.AUTO_SPEC_WARN_OPTIONS.ends			= "$spell:%s 지속 시간 종료시 특수 알림 보기"
 L.AUTO_SPEC_WARN_OPTIONS.fades			= "$spell:%s|1이;가; 사라졌을 때 특수 알림 보기"
 L.AUTO_SPEC_WARN_OPTIONS.soon			= "$spell:%s 이전에 특수 알림 보기"
 L.AUTO_SPEC_WARN_OPTIONS.sooncount		= "$spell:%s 이전에 특수 알림 보기 (횟수 포함)"
@@ -464,25 +419,20 @@ L.AUTO_SPEC_WARN_OPTIONS.addscustom		= "쫄 등장시 특수 알림 보기"
 L.AUTO_SPEC_WARN_OPTIONS.targetchange		= "점사 우선순위 변경시 특수 알림 보기"
 
 -- Auto-generated Timer Localizations
-L.AUTO_TIMER_TEXTS.active		= "%s 종료"--Buff/Debuff/event on boss
+L.AUTO_TIMER_TEXTS.active			= "%s 종료"--Buff/Debuff/event on boss
 L.AUTO_TIMER_TEXTS.fades			= "%s 사라짐"--Buff/Debuff on players
 L.AUTO_TIMER_TEXTS.ai				= "%s AI 예상"
 L.AUTO_TIMER_TEXTS.cd				= "%s 쿨타임"
-L.AUTO_TIMER_TEXTS.cdcount		= "%s (%%s) 쿨타임"
-L.AUTO_TIMER_TEXTS.cdsource		= "%s 쿨타임: >%%s<"
-L.AUTO_TIMER_TEXTS.cdspecial		= "특수 능력 쿨타임"
-L.AUTO_TIMER_TEXTS.cdspecialshort	= "~특수 능력"
-L.AUTO_TIMER_TEXTS.next			= "다음 %s"
+L.AUTO_TIMER_TEXTS.cdcount			= "%s (%%s) 쿨타임"
+L.AUTO_TIMER_TEXTS.cdsource			= "%s 쿨타임: >%%s<"
+L.AUTO_TIMER_TEXTS.cdspecial		= "~특수 능력"
+L.AUTO_TIMER_TEXTS.next				= "다음 %s"
 L.AUTO_TIMER_TEXTS.nextcount		= "다음 %s (%%s)"
 L.AUTO_TIMER_TEXTS.nextsource		= "다음 %s: %%s"
-L.AUTO_TIMER_TEXTS.nextspecial		= "다음 특수 능력"
-L.AUTO_TIMER_TEXTS.nextspecialshort	= "특수 능력"
-L.AUTO_TIMER_TEXTS.stage			= "다음 단계"
-L.AUTO_TIMER_TEXTS.stageshort		= "단계"
-L.AUTO_TIMER_TEXTS.adds			= "쫄 등장"
-L.AUTO_TIMER_TEXTS.addsshort		= "쫄"
-L.AUTO_TIMER_TEXTS.addscustom		= "쫄 등장 (%%s)"
-L.AUTO_TIMER_TEXTS.addscustomshort	= "쫄 (%%s)"
+L.AUTO_TIMER_TEXTS.nextspecial		= "특수 능력"
+L.AUTO_TIMER_TEXTS.stage			= "단계"
+L.AUTO_TIMER_TEXTS.adds				= "쫄"
+L.AUTO_TIMER_TEXTS.addscustom		= "쫄 (%%s)"
 
 L.AUTO_TIMER_OPTIONS.target		= "$spell:%s 디버프 타이머 바 보기"
 L.AUTO_TIMER_OPTIONS.targetcount	= "$spell:%s 디버프 타이머 바 보기 (횟수 포함)"
@@ -508,15 +458,16 @@ L.AUTO_TIMER_OPTIONS.roleplay		= "역할 수행(롤플레이) 지속 시간 타�
 
 L.AUTO_ICONS_OPTION_TEXT			= "$spell:%s 대상에 공격대 징표 설정"
 L.AUTO_ICONS_OPTION_TEXT2		= "$spell:%s에 공격대 징표 설정"
+L.AUTO_ICONS_OPTION_CONFLICT		= " (다른 옵션과 충돌을 일으킬 수 있음)"
 L.AUTO_ARROW_OPTION_TEXT			= "$spell:%s 대상을 향하는 " .. L.DBM .. " 화살표 보기"
 L.AUTO_ARROW_OPTION_TEXT2		= "$spell:%s 대상과 반대 방향의 " .. L.DBM .. " 화살표 보기"
 L.AUTO_ARROW_OPTION_TEXT3		= "$spell:%s 특정 지점을 가리키는 " .. L.DBM .. " 화살표 보기"
 L.AUTO_YELL_OPTION_TEXT.shortyell	= "$spell:%s 대상일 때 말풍선으로 알리기"
 L.AUTO_YELL_OPTION_TEXT.yell		= "$spell:%s 대상일 때 말풍선으로 알리기 (플레이어 이름 포함)"
 L.AUTO_YELL_OPTION_TEXT.count		= "$spell:%s 대상일 때 말풍선으로 알리기 (횟수 포함)"
-L.AUTO_YELL_OPTION_TEXT.fade		= "$spell:%s 지속시간이 끝나갈 때 말풍선으로 알리기 (주문 이름 및 초읽기 포함)"
-L.AUTO_YELL_OPTION_TEXT.shortfade	= "$spell:%s 지속시간이 끝나갈 때 말풍선으로 알리기 (초읽기 포함)"
-L.AUTO_YELL_OPTION_TEXT.iconfade		= "$spell:%s 지속시간이 끝나갈 때 말풍선으로 알리기 (초읽기 및 공격대 징표 포함)"
+L.AUTO_YELL_OPTION_TEXT.fade		= "$spell:%s 지속 시간이 끝나갈 때 말풍선으로 알리기 (주문 이름 및 초읽기 포함)"
+L.AUTO_YELL_OPTION_TEXT.shortfade	= "$spell:%s 지속 시간이 끝나갈 때 말풍선으로 알리기 (초읽기 포함)"
+L.AUTO_YELL_OPTION_TEXT.iconfade		= "$spell:%s 지속 시간이 끝나갈 때 말풍선으로 알리기 (초읽기 및 공격대 징표 포함)"
 L.AUTO_YELL_OPTION_TEXT.position		= "$spell:%s 대상일 때 말풍선으로 알리기 (위치와 이름 포함)"
 L.AUTO_YELL_OPTION_TEXT.shortposition	= "$spell:%s 대상일 때 말풍선으로 알리기 (위치 포함)"
 L.AUTO_YELL_OPTION_TEXT.combo		= "$spell:%s|1과;와; 다른 디버프가 같이 걸렸을 때 말풍선으로 알리기 (사용자 지정 문자 포함)"
@@ -537,6 +488,7 @@ L.AUTO_RRANGE_OPTION_TEXT		= "$spell:%2$s 범위에 대한 반전 거리 창 보
 L.AUTO_RRANGE_OPTION_TEXT_SHORT	= "반전 거리 창 보기 (%sm)"
 L.AUTO_INFO_FRAME_OPTION_TEXT	= "$spell:%s|1을;를; 정보 창에 표시"
 L.AUTO_INFO_FRAME_OPTION_TEXT2	= "전투 전반에 관한 사항을 정보 창에 표시"
+L.AUTO_INFO_FRAME_OPTION_TEXT3		= "$spell:%s|1을;를; 정보 창에 표시 (%%s의 제한 수치 이상인 경우)"
 L.AUTO_READY_CHECK_OPTION_TEXT	= "보스가 풀링되면 전투 준비 효과음 듣기 (보스를 대상으로 잡지 않아도 재생)"
 L.AUTO_SPEEDCLEAR_OPTION_TEXT	= "%s의 완료 신기록 타이머 표시"
 
@@ -554,7 +506,7 @@ L.HUD_SUCCESS				= "HUD가 입력한 정보를 표시하기 시작합니다. %s 
 L.HUD_USAGE	= {
 	L.DBM .. " HUD 사용법:",
 	"--------------------",
-	"/dbm hud <형식> <대상> <지속시간>: 지정한 시간 동안 대상을 가리키는 HUD를 생성",
+	"/dbm hud <형식> <대상> <지속 시간>: 지정한 시간 동안 대상을 가리키는 HUD를 생성",
 	"유효한 형식: arrow, red, blue, green, yellow, icon (대상에게 공격대 징표가 설정되어 있어야 함)",
 	"유효한 대상: target, focus, <대상이름>",
 	"유효한 시간: 아무 숫자(초단위). 지정하지 않으면 20분간 적용됩니다.",

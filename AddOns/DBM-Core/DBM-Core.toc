@@ -1,7 +1,7 @@
 ## Interface: 90105
 ## X-Min-Interface: 90105
-## X-Min-Interface-Classic: 11400
-## X-Min-Interface-BCC: 20502
+## X-Min-Interface-Classic: 11402
+## X-Min-Interface-BCC: 20503
 
 ## Title:|cffffd200Deadly Boss Mods|r |cff69ccf0Core|r
 ## Title-zhCN:|cffffd200Deadly Boss Mods|r |cff69ccf0核心|r
@@ -20,7 +20,7 @@
 ## LoadOnDemand: 0
 ## DefaultState: enabled
 ## Author: MysticalOS, QartemisT
-## Version: edca2ba
+## Version: e74c090
 ## X-Website: https://deadlybossmods.com
 
 Libs\LibStub\LibStub.lua
@@ -35,15 +35,26 @@ Libs\LibDeflate\LibDeflate.lua
 Libs\LibSerialize\lib.xml
 
 localization.en.lua
-localization.de.lua
+localization.br.lua
 localization.cn.lua
-localization.ru.lua
+localization.de.lua
+localization.es.lua
 localization.fr.lua
 localization.it.lua
-localization.tw.lua
 localization.kr.lua
-localization.es.lua
-localization.br.lua
+localization.ru.lua
+localization.tw.lua
+
+commonlocal.en.lua
+commonlocal.tw.lua
+commonlocal.br.lua
+commonlocal.cn.lua
+commonlocal.de.lua
+commonlocal.es.lua
+commonlocal.fr.lua
+commonlocal.it.lua
+commonlocal.kr.lua
+commonlocal.ru.lua
 
 # Pre-core modules
 modules\Modules.lua
@@ -63,8 +74,12 @@ DBM-HudMap.lua
 DBM-Nameplate.lua
 
 # Modules
+modules\Commands.lua
+modules\Hyperlinks.lua
 modules\MinimapButton.lua
+modules\Notes.lua
 modules\Sounds.lua
 modules\SpecRole.lua
+modules\UpdateReminder.lua
 
 modules\objects\Localization.lua

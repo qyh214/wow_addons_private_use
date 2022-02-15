@@ -32,6 +32,8 @@ local GetBorderArtByItemID = NarciAPI.GetBorderArtByItemID;
 local DoesItemHaveDomationSocket = NarciAPI.DoesItemHaveDomationSocket;
 local GetDominationBorderTexture = NarciAPI.GetDominationBorderTexture;
 local GetItemDominationGem = NarciAPI.GetItemDominationGem;
+local GetVerticalRunicLetters = NarciAPI.GetVerticalRunicLetters;
+local GetTemporaryItemBuff = NarciAPI.GetTemporaryItemBuff;
 local FadeFrame = NarciFadeUI.Fade;
 
 --local GetCorruptedItemAffix = NarciAPI_GetCorruptedItemAffix;
@@ -855,6 +857,8 @@ local function ExitFunc()
 
 	DefaultTooltip:Hide();
 	MsgAlertContainer:Hide();
+
+	UIErrorsFrame:Clear();
 end
 
 --[[
@@ -954,7 +958,7 @@ local function MinimapButton_SetAngle(radian)
 		x = math.max(-w, math.min(x*diagRadiusW, w));
 		y = math.max(-h, math.min(y*diagRadiusH, h));
 	end
-	MiniButton:SetPoint("CENTER", "Minimap", "CENTER", x, y);
+	MiniButton:SetPoint("CENTER", Minimap, "CENTER", x, y);
 end
 
 
@@ -1333,25 +1337,41 @@ function NarciMinimapButtonMixin:OnClick(button, down)
 end
 
 function NarciMinimapButtonMixin:SetBackground(index)
-	if not index then
-		index = C_Covenants.GetActiveCovenantID();
-	end
+	local useCovenantColor = false;
 	local prefix = "Interface/AddOns/Narcissus/Art/Minimap/LOGO-";
 	local tex;
 
-	if IsAddOnLoaded("SexyMap") then
-		tex = prefix.."Hollow";
+	local customStyleID = NarcissusDB.MinimapIconStyle;
+	if not customStyleID then
+		if IsAddOnLoaded("AzeriteUI") then
+			customStyleID = 2;
+		elseif IsAddOnLoaded("SexyMap") then
+			customStyleID = 3;
+		else
+			customStyleID = 1;
+		end
+		--NarcissusDB.MinimapIconStyle = customStyleID;
+	end
+
+	if customStyleID == 2 then
+		tex = prefix.."Thick";		--AzeriteUI
+	elseif customStyleID == 3 then
+		tex = prefix.."Hollow";		--SexyMap
 	else
-		if index == 2 then
-			--Venthyr
-			tex = prefix.."Brown";
-		elseif index == 4 then
-			--Necrolord
-			tex = prefix.."Green";
+		useCovenantColor = true;
+	end
+
+	if useCovenantColor then
+		local id = index or C_Covenants.GetActiveCovenantID();
+		if id == 2 then
+			tex = prefix.."Brown";		--Venthyr
+		elseif id == 4 then
+			tex = prefix.."Green";		--Necrolord
 		else
 			tex = prefix.."Cyan";
 		end
 	end
+
 	self.Background:SetTexture(tex);
 	self.Color:SetTexture(tex);
 end
@@ -1361,9 +1381,6 @@ function NarciMinimapButtonMixin:SetIconScale(scale)
 end
 
 function NarciMinimapButtonMixin:OnEnter()
-	--[[
-
-	--]]
 	if IsMouseButtonDown() then return; end;
 	self:ShowMouseMotionVisual(true);
 	if (not IsShiftKeyDown()) then
@@ -1561,6 +1578,11 @@ local IsItemEnchantable = {
 	[16] = true,
 	[17] = true,
 	[5]  = true,
+
+	[8] = true,
+	[9] = true,
+	[10] = true,
+	[15] = true,
 };
 
 local RunicLetters = {
@@ -1571,7 +1593,7 @@ local RunicLetters = {
 	["STR"] = "ᛊ\nᛏ\nᚱ",	 --STR
 	["AGI"] = "ᛆ\nᚵ\nᛁ",	 --AGI
 	["INT"] = "ᛁ\nᚾ\nᛐ",	 --INT
-	["speed"] = "ᛋ\nᛕ\nᛑ",	 --SPF
+	["speed"] = "ᛋ\nᛕ\nᛑ",	 --SPD
 	["armor"] = "ᛆ\nᚱ\nᛘ",	 --ARM
 	["heal"] = "ᚺ\nᛁ\nᛚ", 	 --HIL
 	["leech"] = "ᛒ\nᛚ\nᛑ",	 --BLD
@@ -1599,7 +1621,7 @@ local function DisplayRuneSlot(equipmentSlot, slotID, itemQuality, itemLink)
 	if enchantID ~= 0 then
 		equipmentSlot.RuneSlot.RuneLetter:Show();
 		if EnchantInfo[enchantID] then
-			equipmentSlot.RuneSlot.RuneLetter:SetText(RunicLetters[ EnchantInfo[enchantID][1] ])
+			equipmentSlot.RuneSlot.RuneLetter:SetText( GetVerticalRunicLetters( EnchantInfo[enchantID][1] ) );
 			equipmentSlot.RuneSlot.spellID = EnchantInfo[enchantID][3]
 		end
 	else
@@ -1615,9 +1637,13 @@ function Narci_RuneButton_OnEnter(self)
 		return;
 	end
 	DefaultTooltip:SetOwner(self, "ANCHOR_NONE");
-	DefaultTooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", 0, 0);
+	if self:GetParent().isRight then
+		DefaultTooltip:SetPoint("TOPRIGHT", self, "TOPLEFT", 8, 8);
+	else
+		DefaultTooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", 0, 8);
+	end
 	DefaultTooltip:SetSpellByID(spellID);
-	DefaultTooltip:Show()
+	DefaultTooltip:Show();
 end
 
 ---------------------------------------------------
@@ -1746,9 +1772,15 @@ function NarciItemButtonSharedMixin:ShowAlphaChannel()
 end
 
 -----------------------------------------------------------------------
+local validForTempEnchant = {
+	[16] = true,
+	[17] = true,
+	[5] = true,
+};
+
 NarciEquipmentSlotMixin = CreateFromMixins{NarciItemButtonSharedMixin};
 
-function NarciEquipmentSlotMixin:Refresh()
+function NarciEquipmentSlotMixin:Refresh(forceRefresh)
 	local _;
 	local slotID = self.slotID;
 	local itemLocation = ItemLocation:CreateFromEquipmentSlot(slotID)
@@ -1766,6 +1798,7 @@ function NarciEquipmentSlotMixin:Refresh()
 	if C_Item.DoesItemExist(itemLocation) then
 		if MOG_MODE then
 			self:UntrackCooldown();
+			self:UntrackTempEnchant();
 			self:HideVFX();
 			self.isSlotHidden = false;	--Undress an item from player model
 			self.RuneSlot:Hide();
@@ -1907,9 +1940,30 @@ function NarciEquipmentSlotMixin:Refresh()
 			--]]
 			itemLink = C_Item.GetItemLink(itemLocation);
 			
-			if itemLink == self.itemLink then
-				return
+			if validForTempEnchant[slotID] then
+				--[[
+				local buffText, durationText = GetTemporaryItemBuff(slotID);
+				if buffText and durationText then
+					buffText = "|cffa1cca4"..buffText.."|r";
+					durationText = "|cffa8a8a8"..durationText.."|r";
+					effectiveLvl = effectiveLvl.."  "..buffText.." "..durationText;
+				end
+				--]]
+				local hasTempEnchant = NarciTempEnchantIndicatorController:InitFromSlotButton(self);
+				if hasTempEnchant ~= self.hasTempEnchant then
+					self.hasTempEnchant = hasTempEnchant;
+				else
+					if itemLink == self.itemLink then
+						return
+					end
+				end
+			else
+				if itemLink == self.itemLink then
+					return
+				end
 			end
+
+
 			
 			
 			local itemVFX;
@@ -1986,7 +2040,7 @@ function NarciEquipmentSlotMixin:Refresh()
 			end
 
 			--Enchant Frame--
-			if itemQuality and not isRuneforgeLegendary then
+			if itemQuality then	--and not isRuneforgeLegendary
 				DisplayRuneSlot(self, slotID, itemQuality, itemLink);
 			end
 
@@ -2006,6 +2060,7 @@ function NarciEquipmentSlotMixin:Refresh()
 		self.itemLink = itemLink;
 	else
 		self:UntrackCooldown();
+		self:UntrackTempEnchant();
 		self:HideVFX();
 		self:DisplayDirectionMark(false);
 		self.GradientBackground:Hide();
@@ -2186,8 +2241,25 @@ function NarciEquipmentSlotMixin:Refresh()
 end
 
 function NarciEquipmentSlotMixin:UpdateGradientSize()
+	local text2Width = self.ItemLevel:GetWrappedWidth();
+	local extraWidth;
+	if self.TempEnchantIndicator then
+		extraWidth = 48;
+		self.TempEnchantIndicator:ClearAllPoints();
+		if self.isRight then
+			self.TempEnchantIndicator:SetPoint("TOPRIGHT", self.ItemLevel, "TOPRIGHT", -text2Width - 6, 0);
+		else
+			local extraOffset;
+			if self.ItemLevel:IsTruncated() then
+				text2Width = self.ItemLevel:GetWidth();
+			end
+			self.TempEnchantIndicator:SetPoint("TOPLEFT", self.ItemLevel, "TOPLEFT", text2Width + 6, 0);
+		end
+	else
+		extraWidth = 0;
+	end
 	self.GradientBackground:SetHeight(self.Name:GetHeight() + self.ItemLevel:GetHeight() + 18);
-	self.GradientBackground:SetWidth(max(self.Name:GetWrappedWidth(), self.ItemLevel:GetWrappedWidth()) + 48);
+	self.GradientBackground:SetWidth(max(self.Name:GetWrappedWidth(), text2Width + extraWidth) + 48);
 end
 
 function NarciEquipmentSlotMixin:OnLoad()
@@ -2251,6 +2323,13 @@ function NarciEquipmentSlotMixin:TrackCooldown()
 		self:UntrackCooldown();
 	end
 	return false
+end
+
+function NarciEquipmentSlotMixin:UntrackTempEnchant()
+	if self.TempEnchantIndicator then
+		self.TempEnchantIndicator:Hide();
+		self.TempEnchantIndicator = nil;
+	end
 end
 
 function NarciEquipmentSlotMixin:OnEnter(motion, isGamepad)
@@ -2349,8 +2428,8 @@ function NarciEquipmentSlotMixin:PostClick(button)
 			if MOG_MODE then	--Undress an item from player model while in Xmog Mode
 				ShowOrHideEquiment(self);
 			else
-				EquipmentFlyoutFrame:SetItemSlot(self);
-				--Narci_EquipmentOption:SetFromSlotButton(self)
+				--EquipmentFlyoutFrame:SetItemSlot(self);
+				Narci_EquipmentOption:SetFromSlotButton(self, true)
 			end
 		elseif button == "RightButton" then
 			Narci_AlertFrame_Autohide:SetAnchor(self, -24, true);
@@ -2595,10 +2674,15 @@ end
 
 function NarciItemLevelFrameMixin:UpdateRenownLevel(newLevel)
 	local renownLevel = newLevel or C_CovenantSanctumUI.GetRenownLevel() or 0;
-
+	local headerText = string.format(COVENANT_SANCTUM_LEVEL, renownLevel);
+	if C_CovenantSanctumUI.HasMaximumRenown() then
+		headerText = headerText.. "  (maxed)";
+	else
+		--to-do: get max level: C_CovenantSanctumUI.GetRenownLevels is too much
+	end
 	local frame = self.RightButton;
 	frame.Header:SetText("RN");
-	frame.tooltipHeadline = string.format(COVENANT_SANCTUM_LEVEL, renownLevel);
+	frame.tooltipHeadline = headerText;
 	frame.Number:SetText(renownLevel);
 
 	if renownLevel == 0 then
@@ -2798,14 +2882,34 @@ local function UpdateCharacterInfoFrame(newLevel)
 end
 
 local SlotController = {};
+SlotController.updateFrame = CreateFrame("Frame");
+SlotController.updateFrame:Hide();
+SlotController.updateFrame:SetScript("OnUpdate", function(f, elapsed)
+	f.t = f.t + elapsed;
+	if f.t >= 0.05 then
+		f.t = 0;
+		if SlotController:Refresh( f.sequence[f.i], f.forceRefresh) then
+			f.i = f.i + 1;
+		else
+			f:Hide();
+		end
+	end
+end);
+
 SlotController.refreshSequence = {
 	1, 2, 3, 15, 5, 9, 16, 17, 4,
 	10, 6, 7, 8, 11, 12, 13, 14, 19,
 };
 
-function SlotController:Refresh(slotID)
+SlotController.tempEnchantSequence = {};
+
+for slotID in pairs(validForTempEnchant) do
+	tinsert(SlotController.tempEnchantSequence, slotID);
+end
+
+function SlotController:Refresh(slotID, forceRefresh)
 	if slotTable[slotID] then
-		slotTable[slotID]:Refresh();
+		slotTable[slotID]:Refresh(forceRefresh);
 		return true;
 	end
 end
@@ -2822,29 +2926,18 @@ function SlotController:StopRefresh()
 	end
 end
 
-function SlotController:LazyRefresh()
+function SlotController:LazyRefresh(sequenceName)
 	local f = self.updateFrame;
-	if not f then
-		f = CreateFrame("Frame");
-		f:Hide();
-		self.updateFrame = f;
-		local delay = 0.05;
-		local numSlots = #self.refreshSequence;
-		f:SetScript("OnUpdate", function(f, elapsed)
-			f.t = f.t + elapsed;
-			if f.t >= delay then
-				f.t = 0;
-				if self:Refresh( self.refreshSequence[f.i]) then
-					f.i = f.i + 1;
-				else
-					f:Hide();
-				end
-			end
-		end);
-	end
 	f:Hide();
 	f.t = 0;
 	f.i = 1;
+	if sequenceName == "temp" then
+		f.sequence = self.tempEnchantSequence;
+		f.forceRefresh = true;
+	else
+		f.sequence = self.refreshSequence;
+		f.forceRefresh = false;
+	end
 	f:Show();
 end
 
@@ -2906,15 +2999,17 @@ end
 NarciEquipmentFlyoutButtonMixin = CreateFromMixins{NarciItemButtonSharedMixin};
 
 function NarciEquipmentFlyoutButtonMixin:OnClick(button, down, isGamepad)
-	local action = EquipmentManager_EquipItemByLocation(self.location, self.slotID)
-	if action then
-		self:RegisterErrorEvent();
-		Narci_AlertFrame_Autohide:SetAnchor(self, -24, true);
-		EquipmentManager_RunAction(action)
-	end
-	self:Disable();
-	if isGamepad then
-		EquipmentFlyoutFrame.gamepadButton = self;
+	if button == "LeftButton" then
+		local action = EquipmentManager_EquipItemByLocation(self.location, self.slotID)
+		if action then
+			self:RegisterErrorEvent();
+			Narci_AlertFrame_Autohide:SetAnchor(self, -24, true);
+			EquipmentManager_RunAction(action)
+		end
+		self:Disable();
+		if isGamepad then
+			EquipmentFlyoutFrame.gamepadButton = self;
+		end
 	end
 end
 
@@ -3077,13 +3172,13 @@ function NarciEquipmentFlyoutFrameMixin:SetItemSlot(slotButton, showArrow)
 	if self.parentButton then
 		local level = Narci_FlyoutBlack:GetFrameLevel() -1
 		self.parentButton:SetFrameLevel(level - 1);
-		self.parentButton.RuneSlot:SetFrameLevel(level)
+		self.parentButton.RuneSlot:SetFrameLevel(level);
 		ShowLessItemInfo(self.parentButton, false);
 	end
 
-	self.slotID = slotID;
 	self.parentButton = slotButton;
-	self:DisplayItemsBySlotID(slotID, true);
+	self:DisplayItemsBySlotID(slotID, self.slotID ~= slotID);
+	self.slotID = slotID;
 	self:SetParent(slotButton);
 	self:ClearAllPoints();
 	if slotButton.isRight then
@@ -3155,8 +3250,9 @@ function NarciEquipmentFlyoutFrameMixin:DisplayItemsBySlotID(slotID, playFlyUpAn
 	local sortedItems = {};
 	GetInventoryItemsForSlot(id, itemTable);
 	local itemLocation, itemLevel, itemInfo;
+	local invLocationPlayer = ITEM_INVENTORY_LOCATION_PLAYER;
 	for location, hyperlink in pairs(itemTable) do
-		if ( location - id == ITEM_INVENTORY_LOCATION_PLAYER ) then -- Remove the currently equipped item from the list
+		if ( location - id == invLocationPlayer ) then -- Remove the currently equipped item from the list
 			itemTable[location] = nil;
 		else
 			local _, _, bags, _, slot, bag = EquipmentManager_UnpackLocation(location);
@@ -3677,9 +3773,6 @@ function StatsUpdator:UpdateCooldown()
 	end
 end
 
-Narci.RefreshSlot = function(slotID) SlotController:Refresh(slotID) return slotTable[slotID] end;
-Narci.RefreshAllSlots = SlotController.RefreshAll;
-Narci.RefreshAllStats = StatsUpdator.Instant;
 
 local function PlayAttributeAnimation()
 	if not NarcissusDB.DetailedIlvlInfo then
@@ -4752,25 +4845,25 @@ local function EmoteButton_CreateList(self, buttonTemplate, List)
 
 	if List and List[1] then
 		for i = 1, #List do
-			subListNum = #List[i]
+			subListNum = #List[i];
 			subListNum_Max = max(subListNum, subListNum_Max);
 		end
 	end
 
 	for i = 1, #List do
-		for j=1, subListNum_Max do
+		for j = 1 , subListNum_Max do
 			button = CreateFrame("Button", nil, PopUp, buttonTemplate);
 
 			if List[i][j] then
 				local text = ltrim(List[i][j][2],"/"); 									--remove the slash
 				if LanguageDetector(text) == "RM" then
-					text = strupper(string.sub(text, 1, 1)) .. string.sub(text, 2)		--upper initial
+					text = strupper(string.sub(text, 1, 1)) .. string.sub(text, 2);		--upper initial
 				end
-				button.Label:SetText(text)
-				button.Token = List[i][j][1]
+				button.Label:SetText(text);
+				button.Token = List[i][j][1];
 			else
 				button.Label:SetText(" ")
-				button.Token = nil
+				button.Token = nil;
 				button:Disable();
 			end
 
@@ -4780,7 +4873,7 @@ local function EmoteButton_CreateList(self, buttonTemplate, List)
 			buttonWidth = button:GetWidth();
 			buttonHeight = button:GetHeight();
 
-			local offsetY = (1-i)*buttonHeight
+			local offsetY = (1-i)*buttonHeight;
 			if not buttons then
 				button:SetPoint(initialPoint, PopUp, initialRelative, 0, offsetY);
 			elseif j == 1 then
@@ -4795,17 +4888,36 @@ local function EmoteButton_CreateList(self, buttonTemplate, List)
 
 	self.buttons = buttons;
 
-	local PopUpHeight = #List * buttonHeight
-	local PopUpWidth = 4 * buttonWidth
-	PopUp:SetHeight(PopUpHeight)
-	PopUp:SetWidth(PopUpWidth)
+	local popUpHeight = #List * buttonHeight;
+	local popUpWidth = 4 * buttonWidth;
+	PopUp:SetHeight(popUpHeight);
+	PopUp:SetWidth(popUpWidth + 2 + 150);
 
 	EmoteTokenList = nil;
 end
 
 function Narci_EmoteButtonPopUp_OnLoad(self)
-	EmoteButton_CreateList(self, "NarciEmoteTokenButtonTemplate", EmoteTokenList)
+	EmoteButton_CreateList(self, "NarciEmoteTokenButtonTemplate", EmoteTokenList);
 	self.autoCapture = false;
+	self:SetScript("OnEnter", function()
+		Toolbar.OnEnter();
+	end);
+	self:SetScript("OnLeave", function()
+		if not self:IsMouseOver() then
+			Toolbar.OnLeave();
+		end
+	end);
+
+	self.AutoCaptureButton:SetScript("OnEnter", function(f)
+		f.Color:Show();
+		Toolbar.OnEnter();
+	end);
+	self.AutoCaptureButton:SetScript("OnLeave", function(f)
+		f.Color:Hide();
+		if not self:IsMouseOver() then
+			Toolbar.OnLeave();
+		end
+	end);
 end
 
 function Narci_EmoteButton_OnClick(self)
@@ -4835,6 +4947,37 @@ function Narci_EmoteButton_OnClick(self)
 		Narci_XmogButtonPopUp.AnimFrame.toY = -20;
 	end
 end
+
+NarciEmoteTokenButtonMixin = {};
+
+function NarciEmoteTokenButtonMixin:OnClick()
+	Narci_EmoteButton.UpdateFrame.Emote = self.Token;
+	if Narci_EmoteButton.IsOn then
+		Narci_EmoteButton.UpdateFrame:Hide();
+		Narci_EmoteButton.UpdateFrame:Show();
+	end
+
+	self.AnimFrame.Anim.Bling:Play();
+end
+
+function NarciEmoteTokenButtonMixin:OnEnter()
+	if self:IsEnabled() then
+		local highlight = self:GetParent().HighlightColorFrame;
+		highlight:SetParent(self);
+		highlight:ClearAllPoints();
+		highlight:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0);
+		highlight:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0);
+		highlight:Show();
+	end
+
+	Toolbar.OnEnter();
+end
+
+function NarciEmoteTokenButtonMixin:OnLeave()
+	self:GetParent().HighlightColorFrame:Hide();
+	Toolbar.OnLeave();
+end
+
 
 function EmoteButtonPopUp_AnimFrame_OnUpdate(self, elapsed)
 	local duration = 0.35;
@@ -4907,17 +5050,6 @@ function Narci_SetButtonColor(self)
 	ColorUtil:SetWidgetColor(self.HighlightColor);
 end
 
-function Narci_EmoteTokenButton_OnClick(self)
-	TokenButton_ClearMarker(self)
-	self.HighlightColor:Show()
-	Narci_EmoteButton.UpdateFrame.Emote = self.Token;
-	if Narci_EmoteButton.IsOn then
-		Narci_EmoteButton.UpdateFrame:Hide();
-		Narci_EmoteButton.UpdateFrame:Show();
-	end
-
-	self.AnimFrame.Anim.Bling:Play();
-end
 
 function Narci_HideTextsButton_OnClick(self)
 	self.IsOn = not self.IsOn
@@ -5120,7 +5252,7 @@ function NarciPhotoModeToolbarMixin:OnLoad()
 	end
 
 	local function AutoHideContainer_OnLeave()
-		if self.AutoHideContainer:IsMouseOver() then return end;
+		if self:ShouldBeVisible() then return end;
 		self:FadeTo(0, 0.2);
 		if not self.Switch.IsOn then
 			self.Bar:SetAlpha(0);
@@ -5129,6 +5261,9 @@ function NarciPhotoModeToolbarMixin:OnLoad()
 		Narci_GearTexts:HighlightText(0,0);
 		return true
 	end
+
+	Toolbar.OnEnter = AutoHideContainer_OnEnter;
+	Toolbar.OnLeave = AutoHideContainer_OnLeave;
 
 	local function AutoHideTimer_OnFinished(animationGroup)
 		if not AutoHideContainer_OnLeave() then
@@ -5142,6 +5277,10 @@ function NarciPhotoModeToolbarMixin:OnLoad()
 
 	self:SetScript("OnLoad", nil);
 	self.OnLoad = nil;
+end
+
+function NarciPhotoModeToolbarMixin:ShouldBeVisible()
+	return (self.AutoHideContainer:IsMouseOver()) and not (Narci_EquipmentOption:HasMouseFocus())
 end
 
 function NarciPhotoModeToolbarMixin:DisableAll()
@@ -5206,7 +5345,7 @@ function NarciPhotoModeToolbarMixin:FadeTo(toAlpha, duration)
 		return
 	end
 
-	if self.AutoHideContainer:IsMouseOver() then
+	if self:ShouldBeVisible() then
 		f.toAlpha = 1;
 	else
 		f.toAlpha = toAlpha or f.defaultAlpha;
@@ -6017,6 +6156,9 @@ EL:SetScript("OnEvent",function(self, event, ...)
 			self.lastTime = newTime;
 		end
 		ItemLevelFrame:UpdateDomination();
+
+	elseif event == "UNIT_INVENTORY_CHANGED" then
+		SlotController:LazyRefresh("temp");
 	end
 end)
 
@@ -6025,7 +6167,7 @@ function EL:ToggleDynamicEvents(state)
 	"PLAYER_STARTED_MOVING", "PLAYER_REGEN_DISABLED", "UNIT_MAXPOWER", "PLAYER_STARTED_TURNING", "PLAYER_STOPPED_TURNING",
 	"BAG_UPDATE_COOLDOWN", "UNIT_STATS", "BAG_UPDATE", "PLAYER_EQUIPMENT_CHANGED", "AZERITE_ESSENCE_ACTIVATED",
 	};
-	local unitEvents = {"UNIT_DAMAGE", "UNIT_ATTACK_SPEED", "UNIT_MAXHEALTH", "UNIT_AURA"};
+	local unitEvents = {"UNIT_DAMAGE", "UNIT_ATTACK_SPEED", "UNIT_MAXHEALTH", "UNIT_AURA", "UNIT_INVENTORY_CHANGED"};
 	
 	if state then
 		for i = 1, #dynamicEvents do
@@ -6140,12 +6282,11 @@ function Narci_SetActiveBorderTexture()
 			insets = { left = 8, right = 8, top = 8, bottom = 8 },
 		};
 		
+		DefaultTooltip.backdropInfo = backdropInfo;
 		DefaultTooltip.offsetX = 2;
 		DefaultTooltip.offsetY = -12;
 		DefaultTooltip:HookScript("OnShow", function(self)
-			self:SetBackdrop(backdropInfo);
 			self:SetPadding(8, 8, 8, 8);
-			self:SetBackdropColor(0, 0, 0, 0.9);
 		end)
 		
 	elseif IsAddOnLoaded("DiabolicUI") then
@@ -6337,6 +6478,26 @@ function NarciFlyoutOverlayMixin:Init()
 	self.animFrame.t = 0;
 	self.animFrame.fromAlpha = self:GetAlpha();
 end
+
+function NarciFlyoutOverlayMixin:RaiseFrameLevel(widget)
+	local selfLevel = self:GetFrameLevel();
+	if self.lastWidget then
+		self.lastWidget:SetFrameLevel(selfLevel - 1);
+		self.lastWidget = nil;
+	end
+	local widgetLevel = widget:GetFrameLevel();
+	if widgetLevel <= selfLevel then
+		widget:SetFrameLevel(selfLevel + 1);
+		self.lastWidget = widget;
+	end
+end
+
+
+
+Narci.GetEquipmentSlotByID = function(slotID) return slotTable[slotID] end;
+Narci.RefreshSlot = function(slotID) SlotController:Refresh(slotID) return slotTable[slotID] end;
+Narci.RefreshAllSlots = SlotController.RefreshAll;
+Narci.RefreshAllStats = StatsUpdator.Instant;
 
 --[[
 	C_BarberShop.GetAvailableCustomizations();

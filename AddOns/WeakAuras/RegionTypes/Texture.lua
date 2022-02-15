@@ -82,9 +82,6 @@ local function create(parent)
   texture:SetAllPoints(region);
 
   WeakAuras.regionPrototype.create(region);
-  region.values = {};
-
-  region.AnchorSubRegion = WeakAuras.regionPrototype.AnchorSubRegion
 
   return region;
 end
@@ -241,4 +238,8 @@ local function modify(parent, region, data)
   WeakAuras.regionPrototype.modifyFinish(parent, region, data);
 end
 
-WeakAuras.RegisterRegionType("texture", create, modify, default, properties);
+local function validate(data)
+  Private.EnforceSubregionExists(data, "subbackground")
+end
+
+WeakAuras.RegisterRegionType("texture", create, modify, default, properties, validate);

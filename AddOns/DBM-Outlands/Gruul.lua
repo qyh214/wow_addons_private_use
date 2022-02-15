@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Gruul", "DBM-Outlands")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210602183552")
+mod:SetRevision("20220116021832")
 mod:SetCreatureID(19044)
 mod:SetEncounterID(650)
 mod:SetModelID(18698)
@@ -24,8 +24,8 @@ local specWarnShatter	= mod:NewSpecialWarningMoveAway(33654, nil, nil, nil, 1, 6
 
 local timerGrowthCD		= mod:NewNextTimer(30, 36300, nil, nil, nil, 6)
 local timerGroundSlamCD	= mod:NewCDTimer(74, 33525, nil, nil, nil, 2)--74-80 second variation,and this is just from 2 pulls.
-local timerShatterCD	= mod:NewNextTimer(10, 33654, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON, nil, 1, 4)--10 seconds after ground slam
-local timerSilenceCD	= mod:NewCDTimer(32, 36297, nil, nil, nil, 5, nil, DBM_CORE_L.HEALER_ICON)--Also showing a HUGE variation of 32-48 seconds.
+local timerShatterCD	= mod:NewNextTimer(10, 33654, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 4)--10 seconds after ground slam
+local timerSilenceCD	= mod:NewCDTimer(32, 36297, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)--Also showing a HUGE variation of 32-48 seconds.
 
 mod:AddRangeFrameOption(11, 33654)
 

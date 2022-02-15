@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(849, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211011225517")
+mod:SetRevision("20220116041948")
 mod:SetCreatureID(71479, 71475, 71480)--He-Softfoot, Rook Stonetoe, Sun Tenderheart
 mod:SetEncounterID(1598)
 mod:SetUsedIcons(7)
@@ -72,23 +72,23 @@ local specWarnCalamity				= mod:NewSpecialWarning("specWarnCalamity", nil, DBM_C
 local specWarnDarkMeditation		= mod:NewSpecialWarningSpell(143546)
 
 --Rook Stonetoe
-mod:AddTimerLine(DBM:EJ_GetSectionInfo(Stonetoe))
-local timerVengefulStrikesCD		= mod:NewCDTimer(21, 144396, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
+mod:AddTimerLine(Stonetoe)
+local timerVengefulStrikesCD		= mod:NewCDTimer(21, 144396, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerCorruptedBrewCD			= mod:NewCDTimer(11, 143019, nil, nil, nil, 3)--11-27
 local timerClashCD					= mod:NewCDTimer(46, 143027, nil, nil, nil, 3)--46 second next timer IF none of bosses enter a special between casts, otherwise always delayed by specials (and usually cast within 5 seconds after special ends)
 ----Rook Stonetoe's Desperate Measures
-local timerDefiledGroundCD			= mod:NewCDTimer(10.5, 143961, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerDefiledGroundCD			= mod:NewCDTimer(10.5, 143961, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerInfernoStrikeCD			= mod:NewNextTimer(9.5, 143962, nil, nil, nil, 3)
 local timerInfernoStrike			= mod:NewBuffFadesTimer(7.7, 143962)
 --He Softfoot
-mod:AddTimerLine(DBM:EJ_GetSectionInfo(Softfoot))
-local timerGougeCD					= mod:NewCDTimer(30, 143330, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)--30-41
-local timerGarroteCD				= mod:NewCDTimer(29, 143198, nil, "Healer", nil, 5, nil, DBM_CORE_L.HEALER_ICON)--30-46 (heroic 20-26)
+mod:AddTimerLine(Softfoot)
+local timerGougeCD					= mod:NewCDTimer(30, 143330, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--30-41
+local timerGarroteCD				= mod:NewCDTimer(29, 143198, nil, "Healer", nil, 5, nil, DBM_COMMON_L.HEALER_ICON)--30-46 (heroic 20-26)
 --Sun Tenderheart
-mod:AddTimerLine(DBM:EJ_GetSectionInfo(Tenderheart))
-local timerBaneCD					= mod:NewCDTimer(17, 143446, nil, "Healer", nil, 5, nil, DBM_CORE_L.HEALER_ICON)--17-25 (heroic 13-20)
+mod:AddTimerLine(Tenderheart)
+local timerBaneCD					= mod:NewCDTimer(17, 143446, nil, "Healer", nil, 5, nil, DBM_COMMON_L.HEALER_ICON)--17-25 (heroic 13-20)
 local timerCalamity					= mod:NewCastTimer(5, 143491, nil, "Healer")
-local timerCalamityCD				= mod:NewCDTimer(40, 143491, nil, "Healer", nil, 5, nil, DBM_CORE_L.HEALER_ICON)--40-50 (when two can be cast in a row) Also affected by boss specials
+local timerCalamityCD				= mod:NewCDTimer(40, 143491, nil, "Healer", nil, 5, nil, DBM_COMMON_L.HEALER_ICON)--40-50 (when two can be cast in a row) Also affected by boss specials
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 

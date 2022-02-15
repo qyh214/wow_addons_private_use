@@ -6,7 +6,6 @@ local ElvUF = ns.oUF
 assert(ElvUF, 'ElvUI was unable to locate oUF.')
 
 local _G = _G
-local CreateFrame = CreateFrame
 local InCombatLockdown = InCombatLockdown
 
 function UF:Construct_PartyFrames()
@@ -52,6 +51,7 @@ function UF:Construct_PartyFrames()
 		self.Name = UF:Construct_NameText(self)
 		self.Buffs = UF:Construct_Buffs(self)
 		self.Debuffs = UF:Construct_Debuffs(self)
+		self.Castbar = UF:Construct_Castbar(self)
 		self.AuraWatch = UF:Construct_AuraWatch(self)
 		self.RaidDebuffs = UF:Construct_RaidDebuffs(self)
 		self.AuraHighlight = UF:Construct_AuraHighlight(self)
@@ -70,13 +70,10 @@ function UF:Construct_PartyFrames()
 		self.customTexts = {}
 
 		if E.Retail then
+			self.PvPClassificationIndicator = UF:Construct_PvPClassificationIndicator(self) -- Cart / Flag / Orb / Assassin Bounty
 			self.AlternativePower = UF:Construct_AltPowerBar(self)
 			self.ClassBar = 'AlternativePower'
 		end
-
-		self.Sparkle = CreateFrame('Frame', nil, self)
-		self.Sparkle:SetAllPoints(self.Health)
-		self.Castbar = UF:Construct_Castbar(self)
 
 		self.unitframeType = 'party'
 	end
@@ -197,6 +194,7 @@ function UF:Update_PartyFrames(frame, db)
 			UF:Configure_AltPowerBar(frame)
 			UF:Configure_ResurrectionIcon(frame)
 			UF:Configure_SummonIcon(frame)
+			UF:Configure_PvPClassificationIndicator(frame)
 		end
 	end
 

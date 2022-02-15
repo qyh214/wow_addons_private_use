@@ -141,10 +141,10 @@ local function SetDropDownInit(self, set, index, segment, tab)
     self:OnItemClick(function (self, setID)
 		local index = index or (#set[segment] + 1)
 
-    	if set[segment][index] then
-    		local subset = Internal.GetLoadoutSegment(segment).get(set[segment][index]);
-    		subset.useCount = (subset.useCount or 1) - 1;
-    	end
+		if set[segment][index] then
+			local subset = Internal.GetLoadoutSegment(segment).get(set[segment][index]);
+			subset.useCount = (subset.useCount or 1) - 1;
+		end
 
         if setID == "none" then
 			table.remove(set[segment], index);

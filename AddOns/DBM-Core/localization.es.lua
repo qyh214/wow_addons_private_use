@@ -67,7 +67,7 @@ L.BONUS_EXPIRED				= "Has intentado usar /dbmbonusroll para abrir la ventana de 
 
 L.AFK_WARNING				= "Estás ausente y en combate (%d por cierto de salud restante); se procederá a reproducir un sonido de alerta. Sino estás ausente, quítate el estado o desactiva esta opción en 'Funciones adicionales'."
 
-L.COMBAT_STARTED_AI_TIMER	= "Mi unidad central es un procesador de red neuronal: una máquina capaz de aprender. (Este encuentro usará la nueva IA de temporizadores  para generar temporizadores aproximados.)"
+L.COMBAT_STARTED_AI_TIMER	= "Mi unidad central es un procesador de red neuronal: una máquina capaz de aprender. (Este encuentro usará la nueva IA de temporizadores para generar temporizadores aproximados.)"
 
 L.PROFILE_NOT_FOUND			= "<DBM> Tu perfil actual está corrupto. DBM cargará el perfil 'Default'."
 L.PROFILE_CREATED			= "Se ha creado el perfil '%s'."
@@ -165,7 +165,7 @@ L.VERSIONCHECK_ENTRY_TWO		= "%s: %s (r%d) y %s (r%d)"--Two Boss mods
 L.VERSIONCHECK_ENTRY_NO_DBM	= "%s: Sin instalar"
 L.VERSIONCHECK_FOOTER		= "Se ha encontrado %d jugador(es) con DBM y %d jugador(es) con BigWigs."
 L.VERSIONCHECK_OUTDATED		= "Los siguientes %d jugadores tienen una versión desfasada de DBM: %s"
-L.YOUR_VERSION_OUTDATED      = "Tu versión de Deadly Boss Mods está desfasada. Por favor, visita www.deadlybossmods.com para descargar la última versión."
+L.YOUR_VERSION_OUTDATED		= "Tu versión de Deadly Boss Mods está desfasada. Por favor, visita www.deadlybossmods.com para descargar la última versión."
 L.VOICE_PACK_OUTDATED		= "A este paquete de voces le faltan sonidos compatibles con esta versión de DBM. No se sustituirán los sonidos de avisos especiales que no tengan sustituto. Por favor, descarga una versión más reciente del paquete de voces o contacta con el autor para informarle de los archivos de sonido que faltan."
 L.VOICE_MISSING				= "Tenías seleccionado un paquete de voces que no se ha podido encontrar. Se ha restaurado tu selección a 'Ninguno'. Si crees que se trata de un error, asegúrate de que el paquete de voces se haya instalado correctamente y esté habilitado en la lista de Addons."
 L.VOICE_DISABLED				= "Tienes al menos un paquete de voces de DBM instalado, pero ninguno está activado. Si quieres usar un paquete de voces, asegúrate de que lo has asignado en 'Alertas de voz'. Desinstala los paquetes de voces que tengas sin usar para ocultar este mensaje."
@@ -173,8 +173,8 @@ L.VOICE_COUNT_MISSING		= "La voz de cuenta atrás %d está asignada a un paquete
 L.BIG_WIGS						= "BigWigs"
 
 L.UPDATEREMINDER_HEADER			= "Tu versión de Deadly Boss Mods está desfasada.\nPuedes descargar la versión %s (%s) a través de Curse, WoWInterface o deadlybossmods.com."
-L.UPDATEREMINDER_FOOTER			= "Pulsa " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " para copiar el enlace de descarga en tu portapapeles."
-L.UPDATEREMINDER_FOOTER_GENERIC	= "Pulsa " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " para copiar el enlace en tu portapapeles."
+L.UPDATEREMINDER_FOOTER			= "Pulsa " .. (IsMacClient() and "Cmd-C" or "Ctrl-C") .. " para copiar el enlace de descarga en tu portapapeles."
+L.UPDATEREMINDER_FOOTER_GENERIC	= "Pulsa " .. (IsMacClient() and "Cmd-C" or "Ctrl-C") .. " para copiar el enlace en tu portapapeles."
 L.UPDATEREMINDER_DISABLE			= "AVISO: Se ha desactivado Deadly Boss Mods porque tu versión está demasiado desfasada. Con tal de prevenir conflictos con las versiones de otros jugadores, no se podrá volver a activar DBM hasta que lo actualices."
 L.UPDATEREMINDER_HOTFIX			= "Tu versión de DBM actual tiene errores conocidos en este encuentro. Por favor, actualiza a la última versión."
 L.UPDATEREMINDER_HOTFIX_ALPHA	= "Tu versión de DBM actual tiene errores conocidos en este encuentro. Estos errores serán corregidos en la próxima versión (o ya están corregidos en la última versión alfa)."
@@ -192,7 +192,7 @@ L.OUT_OF_DATE_NAG				= "Tu versión de Deadly Boss Mods está desfasada para est
 
 L.MOVABLE_BAR				= "¡Muéveme!"
 
-L.PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h ha compartido un temporizador de DBM: '%2$s'\n|Hgarrmission:DBM:cancel:%2$s:nil|h|cff3588ff[Cancelar este temporizador]|r|h  |Hgarrmission:DBM:ignore:%2$s:%1$s|h|cff3588ff[Ignorar temporizadores de %1$s]|r|h"
+L.PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h ha compartido un temporizador de DBM: '%2$s'\n|Hgarrmission:DBM:cancel:%2$s:nil|h|cff3588ff[Cancelar este temporizador]|r|h |Hgarrmission:DBM:ignore:%2$s:%1$s|h|cff3588ff[Ignorar temporizadores de %1$s]|r|h"
 L.PIZZA_CONFIRM_IGNORE			= "¿Seguro que quieres ignorar los temporizadores de %s para esta sesión?"
 L.PIZZA_ERROR_USAGE				= "Uso: /dbm [broadcast] timer <seg> <texto>. <seg> debe ser mayor que 1."
 
@@ -266,50 +266,6 @@ L.TIMER_USAGE	= {
 }
 
 L.ERROR_NO_PERMISSION				= "No tienes permiso para hacer eso."
-
---Common Locals
-L.NONE						= "Ninguno"
-L.RANDOM					= "Aleatorio"
-L.NEXT						= "Siguiente %s"
-L.COOLDOWN					= "%s TdR"
-L.UNKNOWN					= "Desconocido"--UNKNOWN which is "Unknown" (does u vs U matter?)
-L.LEFT						= "Izquierda"
-L.RIGHT						= "Derecha"
-L.BOTH						= "Ambos"
-L.BEHIND					= "Detrás"
-L.BACK						= "Atrás"--BACK
-L.SIDE						= "Lado"
-L.TOP						= "Arriba"
-L.BOTTOM					= "Abajo"
-L.MIDDLE					= "Medio"
-L.FRONT						= "Delante"
-L.EAST						= "Este"
-L.WEST						= "Oeste"
-L.NORTH						= "Norte"
-L.SOUTH						= "Sur"
-L.INTERMISSION				= "Interfase"--No blizz global for this, and will probably be used in most end tier fights with intermission phases
-L.ORB						= "Orbe"
-L.ORBS						= "Orbes"
-L.CHEST						= "Cofre"--As in Treasure 'Chest'. Not Chest as in body part.
-L.NO_DEBUFF					= "Sin %s"--For use in places like info frame where you put "Not Spellname"
-L.ALLY						= "un aliado"--Such as "Move to Ally"
-L.ALLIES					= "tus aliados"--Such as "Move to Allies"
-L.ADD						= "Esbirro"--A fight Add as in "boss spawned extra adds" - must check
-L.ADDS						= "Esbirros"
-L.BIG_ADD					= "Esbirro grande"
-L.BOSS						= "Jefe"
-L.EDGE				    	= "los bordes de la sala"
-L.FAR_AWAY					= "alejarte"
-L.BREAK_LOS					= "romper la línea de mira"
-L.RESTORE_LOS				= "la línea de mira"
-L.SAFE						= "Zona segura"
-L.NOTSAFE					= "Zona no segura"
-L.SHIELD					= "Escudo"
-L.PILLAR					= "Pilar"
-L.INCOMING					= "%s en breve"
-L.BOSSTOGETHER				= "Jefes juntos"
-L.BOSSAPART					= "Jefes separados"
---Common Locals end
 
 L.BREAK_USAGE				= "El temporizador de descanso no puede durar más de 60 minutos. Asegúrate de que has escrito el tiempo en minutos y no en segundos."
 L.BREAK_START				= "El descanso comienza ahora. ¡Tienes %s! (Enviado por %s)"
@@ -464,37 +420,23 @@ L.AUTO_SPEC_WARN_OPTIONS.targetchange	= "Mostrar aviso especial para cambiar a o
 -- Auto-generated Timer Localizations
 L.AUTO_TIMER_TEXTS.target		= "%s: %%s"
 L.AUTO_TIMER_TEXTS.cast			= "%s"
-L.AUTO_TIMER_TEXTS.castshort	= "%s "--if short timers enabled, cast and next are same timer text, this is a conflict. the space resolves it
 L.AUTO_TIMER_TEXTS.castcount	= "%s (%%s)"
-L.AUTO_TIMER_TEXTS.castcountshort		= "%s (%%s) "--Resolve short timer conflict with next timers
 L.AUTO_TIMER_TEXTS.castsource	= "%s: %%s"
-L.AUTO_TIMER_TEXTS.castsourceshort		= "%s: %%s "--Resolve short timer conflict with next timers
 L.AUTO_TIMER_TEXTS.active		= "%s termina"--Buff/Debuff/event on boss
 L.AUTO_TIMER_TEXTS.fades		= "%s expira"--Buff/Debuff on players
 L.AUTO_TIMER_TEXTS.ai			= "IA de %s"
-L.AUTO_TIMER_TEXTS.cd			= "%s TdR"
-L.AUTO_TIMER_TEXTS.cdshort		= "~%s"
-L.AUTO_TIMER_TEXTS.cdcount		= "%s (%%s) TdR"
-L.AUTO_TIMER_TEXTS.cdcountshort		= "~%s (%%s)"
-L.AUTO_TIMER_TEXTS.cdsource		= "%s TdR: >%%s<"
-L.AUTO_TIMER_TEXTS.cdsourceshort	= "~%s: >%%s<"
-L.AUTO_TIMER_TEXTS.cdspecial	= "Facultad especial TdR"
-L.AUTO_TIMER_TEXTS.cdspecialshort		= "~Facultad especial"
-L.AUTO_TIMER_TEXTS.next			= "Siguiente %s"
-L.AUTO_TIMER_TEXTS.nextshort	= "%s"
-L.AUTO_TIMER_TEXTS.nextcount	= "Siguiente %s (%%s)"
-L.AUTO_TIMER_TEXTS.nextcountshort		= "%s (%%s)"
-L.AUTO_TIMER_TEXTS.nextsource	= "Siguiente %s: %%s"
-L.AUTO_TIMER_TEXTS.nextsourceshort		= "%s: %%s"
-L.AUTO_TIMER_TEXTS.nextspecial	= "Siguiente facultad especial"
-L.AUTO_TIMER_TEXTS.nextspecialshort		= "Facultad especial"
+L.AUTO_TIMER_TEXTS.cd			= "~%s"
+L.AUTO_TIMER_TEXTS.cdcount		= "~%s (%%s)"
+L.AUTO_TIMER_TEXTS.cdsource		= "~%s: >%%s<"
+L.AUTO_TIMER_TEXTS.cdspecial	= "~Facultad especial"
+L.AUTO_TIMER_TEXTS.next			= "%s"
+L.AUTO_TIMER_TEXTS.nextcount	= "%s (%%s)"
+L.AUTO_TIMER_TEXTS.nextsource	= "%s: %%s"
+L.AUTO_TIMER_TEXTS.nextspecial	= "Facultad especial"
 L.AUTO_TIMER_TEXTS.achievement	= "Logro: %s"
-L.AUTO_TIMER_TEXTS.stage		= "Siguiente fase"
-L.AUTO_TIMER_TEXTS.stageshort	= "Fase"
+L.AUTO_TIMER_TEXTS.stage		= "Fase"
 L.AUTO_TIMER_TEXTS.adds			= "Esbirros"
-L.AUTO_TIMER_TEXTS.addsshort	= "Esbirros"
 L.AUTO_TIMER_TEXTS.addscustom	= "Esbirros (%%s)"
-L.AUTO_TIMER_TEXTS.addscustomshort		= "Esbirros (%%s)"
 L.AUTO_TIMER_TEXTS.roleplay		= "Diálogo"
 
 L.AUTO_TIMER_OPTIONS.target		= "Mostrar temporizador para la duración del perjuicio de $spell:%s"

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Nefarian-Classic", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200909051026")
+mod:SetRevision("20211127000556")
 mod:SetCreatureID(11583)
 mod:SetEncounterID(617)
 mod:SetModelID(11380)
@@ -48,7 +48,7 @@ end
 
 function mod:OnCombatEnd(wipe)
 	if not wipe then
-		DBM.Bars:CancelBar(DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT)
+		DBT:CancelBar(DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT)
 		if firstBossMod.vb.firstEngageTime then
 			local thisTime = GetServerTime() - firstBossMod.vb.firstEngageTime
 			if thisTime and thisTime > 0 then

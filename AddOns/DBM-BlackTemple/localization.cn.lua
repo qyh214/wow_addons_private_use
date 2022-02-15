@@ -143,10 +143,6 @@ L:SetGeneralLocalization{
 	name = "伊利达雷议会"
 }
 
-L:SetGeneralLocalization{
-	name = "Illidari Council"
-}
-
 L:SetWarningLocalization{
 	Immune			= "Malande - %s immune for 15 sec"
 }

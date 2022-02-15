@@ -216,6 +216,8 @@ L["Broodlord Lashlayer"] = "용기대장 래쉬레이어"
 --[[Translation missing --]]
 L["Brutallus"] = "Brutallus"
 L["Buff"] = "강화 효과"
+--[[Translation missing --]]
+L["Buff/Debuff"] = "Buff/Debuff"
 L["Buffed/Debuffed"] = "강화 효과/약화 효과"
 L["Buru the Gorger"] = "먹보 부루"
 L["Can be used for e.g. checking if \"boss1target\" is the same as \"player\"."] = "예를 들어 \"우두머리1대상\"이 \"플레이어\"와 같은지 확인하는데 사용할 수 있습니다."
@@ -419,6 +421,8 @@ L["Eredar Twins"] = "Eredar Twins"
 L["Error"] = "오류"
 L["Error Frame"] = "오류창"
 --[[Translation missing --]]
+L["ERROR in '%s' unknown or incompatible sub element type '%s'"] = "ERROR in '%s' unknown or incompatible sub element type '%s'"
+--[[Translation missing --]]
 L["Error in aura '%s' in %s. trigger. All States table contains a non table at key: '%s'."] = "Error in aura '%s' in %s. trigger. All States table contains a non table at key: '%s'."
 L["Error not receiving display information from %s"] = "%s 에서 표시 정보를 받지 못하는 오류"
 --[[Translation missing --]]
@@ -596,6 +600,8 @@ L["Importing is disabled while in combat"] = "가져오기는 전투 중에는 �
 L["In Combat"] = "전투 중"
 L["In Encounter"] = "교전 중"
 L["In Group"] = "파티 중"
+--[[Translation missing --]]
+L["In Party"] = "In Party"
 L["In Pet Battle"] = "애완동물 대전 중"
 L["In Raid"] = "공격대 중"
 L["In Vehicle"] = "차량 탑승 중"
@@ -606,6 +612,8 @@ L["Include Pets"] = "Include Pets"
 L["Incoming Heal"] = "받는 치유"
 --[[Translation missing --]]
 L["Increase Precision Below"] = "Increase Precision Below"
+--[[Translation missing --]]
+L["Increases by one per stage or intermission."] = "Increases by one per stage or intermission."
 L["Information"] = "정보"
 L["Inherited"] = "상속"
 L["Instakill"] = "죽임"
@@ -654,6 +662,8 @@ L["Item Type Equipped"] = "착용한 아이템 유형"
 --[[Translation missing --]]
 L["Jan'alai"] = "Jan'alai"
 L["Jin'do the Hexxer"] = "주술사 진도"
+--[[Translation missing --]]
+L["Journal Stage"] = "Journal Stage"
 --[[Translation missing --]]
 L["Kael'thas Sunstrider"] = "Kael'thas Sunstrider"
 --[[Translation missing --]]
@@ -729,6 +739,12 @@ L["Mastery Rating"] = "특화"
 L["Match Count"] = "일치 횟수"
 L["Match Count per Unit"] = "유닛당 일치 횟수"
 L["Matches (Pattern)"] = "일치 (패턴)"
+--[[Translation missing --]]
+L[ [=[Matches stage number of encounter journal.
+Intermissions are .5
+E.g. 1;2;1;2;2.5;3]=] ] = [=[Matches stage number of encounter journal.
+Intermissions are .5
+E.g. 1;2;1;2;2.5;3]=]
 L["Max Char "] = "최대 글자수"
 L["Max Charges"] = "최대 충전량"
 L["Maximum"] = "최대"
@@ -807,6 +823,8 @@ L["None"] = "없음"
 L["Non-player Character"] = "NPC"
 L["Normal"] = "일반"
 L["Not in Group"] = "파티에 속하지 않음"
+--[[Translation missing --]]
+L["Not in Smart Group"] = "Not in Smart Group"
 L["Not on Cooldown"] = "재사용 대기 중이 아닐 때"
 L["Not On Threat Table"] = "위협 수준 없음"
 L["Note, that cross realm transmission is possible if you are on the same group"] = "참고로, 같은 영역에 있다면 상호 영역 전송이 가능합니다."
@@ -949,6 +967,8 @@ L["Raid (Normal)"] = "공격대 (일반)"
 L["Raid (Timewalking)"] = "공격대 (시간여행)"
 --[[Translation missing --]]
 L["Raid Mark"] = "Raid Mark"
+--[[Translation missing --]]
+L["Raid Mark Icon"] = "Raid Mark Icon"
 L["Raid Role"] = "공격대 역할"
 L["Raid Warning"] = "공격대 경보"
 L["Raids"] = "공격대"
@@ -1114,6 +1134,8 @@ L["Specific Unit"] = "특정 유닛"
 L["Spell"] = "주문"
 L["Spell (Building)"] = "주문 (공성)"
 L["Spell Activation Overlay Glow"] = "주문 활성화 강조 표시"
+--[[Translation missing --]]
+L["Spell Cast Succeeded"] = "Spell Cast Succeeded"
 L["Spell Cost"] = "주문 요건"
 L["Spell Count"] = "주문 횟수"
 L["Spell ID"] = "주문 ID"
@@ -1133,6 +1155,8 @@ L["Stack Count"] = "중첩 횟수"
 L["Stacks"] = "중첩"
 --[[Translation missing --]]
 L["Stage"] = "Stage"
+--[[Translation missing --]]
+L["Stage Counter"] = "Stage Counter"
 --[[Translation missing --]]
 L["Stagger Scale"] = "Stagger Scale"
 L["Stamina"] = "체력"
@@ -1214,6 +1238,8 @@ L["Third"] = "세 번째"
 L["Third Value of Tooltip Text"] = "툴팁 문자의 세 번째 값"
 L["This aura contains custom Lua code."] = "이 aura는 사용자 정의 Lua 코드를 포함합니다."
 L["This aura has legacy aura trigger(s), which are no longer supported."] = "이 aura는 더 이상 지원되지 않는 과거의 aura 활성 조건을 포함하고 있습니다."
+--[[Translation missing --]]
+L["This aura tried to show a tooltip on a anchoring restricted region"] = "This aura tried to show a tooltip on a anchoring restricted region"
 L["This aura was created with a newer version of WeakAuras."] = "이 효과는 WeakAuras의 새로운 버전으로 만들어졌습니다."
 L["This aura was created with the Classic version of World of Warcraft."] = "이 효과는 월드 오브 워크래프트 클래식 버전 으로 만들어졌습니다."
 L["This aura was created with the retail version of World of Warcraft."] = "이 효과는 월드 오브 워크래프트 리테일 버전 으로 만들어졌습니다."
@@ -1277,6 +1303,8 @@ L["Trigger:"] = "활성 조건:"
 --[[Translation missing --]]
 L["Trivial (Low Level)"] = "Trivial (Low Level)"
 L["True"] = "참"
+--[[Translation missing --]]
+L["Trying to repair broken conditions in %s likely caused by a WeakAuras bug."] = "Trying to repair broken conditions in %s likely caused by a WeakAuras bug."
 L["Twin Emperors"] = "쌍둥이 제왕"
 L["Type"] = "유형"
 L["Unaffected"] = "영향 받지 않음"
@@ -1300,6 +1328,8 @@ L["Update Auras"] = "효과 갱신"
 L["Usage:"] = "사용법:"
 L["Use /wa minimap to show the minimap icon again."] = "/wa minimap 을 사용하여 미니맵 아이콘을 다시 표시합니다."
 L["Use Custom Color"] = "사용자 설정 색상 사용"
+--[[Translation missing --]]
+L["Use Watched Faction"] = "Use Watched Faction"
 L["Vaelastrasz the Corrupt"] = "타락한 밸라스트라즈"
 L["Value"] = "값"
 L["Values/Remaining Time above this value are displayed as full progress."] = "이 값보다 큰 값/남은 시간은 전체 진행으로 표시됩니다."

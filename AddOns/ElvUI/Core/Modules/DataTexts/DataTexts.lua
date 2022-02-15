@@ -663,13 +663,43 @@ function DT:RegisterHyperDT()
 	end
 
 	tinsert(HyperList, {
-		order = 100, text = L["NONE"],
+		order = 100, text = L["None"],
 		checked = function() return DT.EasyMenu.MenuGetItem(DT.SelectedDatatext, '') end,
 		func = function() DT.EasyMenu.MenuSetItem(DT.SelectedDatatext, '') end
 	})
 
 	DT:SortMenuList(HyperList)
 	DT:RegisterEvent('MODIFIER_STATE_CHANGED', 'SingleHyperMode')
+end
+
+do
+	local function hasName(tbl, name)
+		for _, data in pairs(tbl) do
+			if data.text == name then
+				return true
+			end
+		end
+	end
+
+	function DT:UpdateHyperDT()
+		for name, info in pairs(DT.RegisteredDataTexts) do
+			local category = DT:GetMenuListCategory(info.category or MISCELLANEOUS)
+			if not category then
+				category = #HyperList + 1
+				tinsert(HyperList, { order = 0, text = info.category or MISCELLANEOUS, notCheckable = true, hasArrow = true, menuList = {} })
+			end
+
+			if not hasName(HyperList[category].menuList, info.localizedName or name) then
+				tinsert(HyperList[category].menuList, {
+					text = info.localizedName or name,
+					checked = function() return DT.EasyMenu.MenuGetItem(DT.SelectedDatatext, name) end,
+					func = function() DT.EasyMenu.MenuSetItem(DT.SelectedDatatext, name) end
+				})
+			end
+		end
+
+		DT:SortMenuList(HyperList)
+	end
 end
 
 function DT:PopulateData(currencyOnly)

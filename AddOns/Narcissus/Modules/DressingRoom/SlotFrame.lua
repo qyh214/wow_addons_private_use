@@ -3,6 +3,7 @@ local HIDDEN_ILLUSION = 5360;
 
 local After = C_Timer.After;
 
+local TransmogUtil = TransmogUtil;
 local MogAPI = C_TransmogCollection;
 local PlayerHasTransmog = MogAPI.PlayerHasTransmogItemModifiedAppearance;
 local GetSourceInfo = MogAPI.GetSourceInfo;
@@ -18,7 +19,7 @@ local FadeFrame = NarciFadeUI.Fade;
 local GetSlotIDByInvType = NarciAPI.GetSlotIDByInvType;
 
 ----------------------------------------------------
-local SlotFrame;
+local SlotFrame, GearTextsClipborad;
 local slotButtons = {};
 
 ----------------------------------------------------
@@ -89,9 +90,6 @@ function ItemList:AddItemSourceID(slotID, sourceID)
 end
 
 function ItemList:AddItemSourceText(slotID, sourceText)
-    if not sourceText or sourceText == "" then
-        return
-    end
     if not self.itemList[slotID] then
         self.itemList[slotID] = {};
     end
@@ -106,7 +104,7 @@ function ItemList:AddItem(slotID, itemID, bonusID, itemName, sourceID, sourceTex
 end
 
 function ItemList:SetSecondarySourceID(slotID, secondarySourceID)
-    if not secondarySourceID or secondarySourceID == HIDDEN_ILLUSION then
+    if not secondarySourceID then
         return
     end
     if not self.itemList[slotID] then
@@ -131,9 +129,7 @@ function ItemList:SetSecondarySourceInfo(slotID, itemID, itemName, sourceText)
     end
     self.itemList[slotID].secondaryItemID = itemID;
     self.itemList[slotID].secondaryName = itemName;
-    if sourceText and sourceText ~= "" then
-        self.itemList[slotID].secondarySourceText = sourceText;
-    end
+    self.itemList[slotID].secondarySourceText = sourceText;
 end
 
 function ItemList:AddSourceToHistory(slotID, sourceID)
@@ -319,7 +315,7 @@ local function GenerateHyperlinkAndSource(slotID, sourceID, enchantID, isSeconda
     local sourceType = sourceInfo.sourceType;
     local itemModID = sourceInfo.itemModID;
     local hyperlink, unformatedHyperlink;
-    local sourceTextColorized, sourcePlainText = "", nil;
+    local sourceTextColorized, sourcePlainText;
     local _, _, _, hex = GetItemQualityColor(itemQuality)
     local bonusID = 0;
     enchantID = enchantID or "";
@@ -327,8 +323,8 @@ local function GenerateHyperlinkAndSource(slotID, sourceID, enchantID, isSeconda
     if sourceType == 1 then --TRANSMOG_SOURCE_BOSS_DROP
         local drops = GetAppearanceSourceDrops(sourceID)
         if drops and drops[1] then
-            sourceTextColorized = "|cffe0e0e0"..drops[1].encounter.."|r ".."|cffffD100"..drops[1].instance.."|r|CFFf8e694";
-            sourcePlainText = drops[1].encounter.." "..drops[1].instance;
+            sourceTextColorized = ("|cffe0e0e0"..drops[1].encounter.."|r ".."|cffffD100"..drops[1].instance.."|r|CFFf8e694") or "";
+            sourcePlainText = (drops[1].encounter.." "..drops[1].instance) or "";
             
             if itemModID == 0 then 
                 sourceTextColorized = sourceTextColorized.." "..PLAYER_DIFFICULTY1;
@@ -526,6 +522,7 @@ function NarciDressingRoomItemButtonMixin:Init(slotName)
     slotButtons[slotID] = self;
 
     if DataProvider:CanHaveSecondaryAppearanceForSlotID(slotID) then
+        self.secondarySourceID = 0;
         self.isValidForSecondarySource = true;
         self.SecondaryButton:SetScript("OnEnter", SecondaryButton_OnEnter);
         self.SecondaryButton:SetScript("OnLeave", HideGameTooltip);
@@ -584,6 +581,14 @@ end
 
 function NarciDressingRoomItemButtonMixin:OnDragStop()
 
+end
+
+function NarciDressingRoomItemButtonMixin:IsSameSouce(newSouceID, newSecondarySourceID)
+    if self.isValidForSecondarySource then
+        return (newSouceID == self.sourceID) and (newSecondarySourceID == self.secondarySourceID);
+    else
+        return (newSouceID == self.sourceID)
+    end
 end
 
 function NarciDressingRoomItemButtonMixin:SetItemSource(sourceID, secondarySourceID)
@@ -660,6 +665,7 @@ function NarciDressingRoomItemButtonMixin:SetSecondarySource(secondarySourceID)
             self.SecondaryButton.GreenTick:SetShown(isKnown);
         else
             hasSecondaryAppearance = false;
+            ItemList:SetSecondarySourceID(self.slotID, 0);
         end
         if hasSecondaryAppearance then
             self.Border:SetTexCoord(0.5, 1, 0, 1);
@@ -695,7 +701,7 @@ function NarciDressingRoomItemButtonMixin:DressSlot(state)
             else
                 transmogInfo:Init(self.sourceID, self.secondarySourceID);
             end
-            playerActor:SetItemTransmogInfo(transmogInfo);
+            playerActor:SetItemTransmogInfo(transmogInfo, self.slotID);
         else
             if self.slotID == 16 then
                 playerActor:TryOn(self.sourceID, "MAINHANDSLOT", self.secondarySourceID);
@@ -707,15 +713,6 @@ function NarciDressingRoomItemButtonMixin:DressSlot(state)
         end
     else
         playerActor:UndressSlot(self.slotID);
-    end
-end
-
-function NarciDressingRoomItemButtonMixin:OnMouseDown(mouseButton)
-    if mouseButton == "LeftButton" then
-        if self:HasItem() then
-            self:SetHiddenVisual(not self.isSlotHidden);
-            self:DressSlot(not self.isSlotHidden);
-        end
     end
 end
 
@@ -762,6 +759,7 @@ NarciDressingRoomSlotFrameMixin = {};
 
 function NarciDressingRoomSlotFrameMixin:OnLoad()
     SlotFrame = self;
+    GearTextsClipborad = NarciDressingRoomGearTextsClipborad;
     MotionHandler:Init();
     DataProvider:Init();
 
@@ -774,6 +772,7 @@ function NarciDressingRoomSlotFrameMixin:OnLoad()
                 self:FadeIn();
             end
         end
+        --print("DressUpVisual")
     end);
 
     hooksecurefunc("DressUpItemTransmogInfo", function(itemTransmogInfo)
@@ -784,36 +783,30 @@ function NarciDressingRoomSlotFrameMixin:OnLoad()
                 self:FadeIn();
             end
         end
+        --print("DressUpItemTransmogInfo")
     end);
 
     --OutfitDropDown
-    if false and DressUpItemTransmogInfoList then
+    if DressUpItemTransmogInfoList then
         hooksecurefunc("DressUpItemTransmogInfoList", function(itemTransmogInfoList)
-            if itemTransmogInfoList then
-                ItemList:WipeList();
-                local sourceID, secondarySourceID;
-                for slotID, itemTransmogInfo in ipairs(itemTransmogInfoList) do
-                    sourceID, secondarySourceID = DataProvider:GetSourceIDFromTransmogInfo(itemTransmogInfo);
-                    if slotButtons[slotID] then
-                        slotButtons[slotID]:SetItemSource(sourceID, secondarySourceID);
-                    end
-                end
-            end
+            self:FadeIn();
+            --print("DressUpItemTransmogInfoList")
         end)
     end
 
     --Ctrl+Click Wardrobe Items
-    if false and DressUpCollectionAppearance then
+    if DressUpCollectionAppearance then
         hooksecurefunc("DressUpCollectionAppearance", function(sourceID, transmogLocation, categoryID)
             local slotID = transmogLocation.slotID;
-            local secondarySourceID;
-            if slotButtons[slotID] then
-                slotButtons[slotID]:SetItemSource(sourceID, secondarySourceID);
+            if slotID then
+                self:ShineSlot(slotID);
+                self:FadeIn();
             end
+            --print("DressUpCollectionAppearance")
         end);
     end
 
-    self:SetAlpha(0);
+    self:SetAlpha(0.25);
 
     self.OnLoad = nil;
     self:SetScript("OnLoad", nil);
@@ -977,6 +970,8 @@ local ITEM_SOURCE_ILLUSION = "|cffff80ff".. (TRANSMOGRIFIED_ENCHANT or "Illusion
 local includeItemID;
 
 local function PrintItemList()
+    if not GearTextsClipborad:IsVisible() then return end;
+
     if includeItemID == nil then
         includeItemID = NarcissusDB.DressingRoomIncludeItemID;
     end
@@ -990,7 +985,7 @@ local function PrintItemList()
     local canHaveSecondaryVisual;
     for slotID = 1, 19 do
         data = itemList[slotID];
-        if data then
+        if data and not slotButtons[slotID].isSlotHidden then
             itemName = data.name;
             if itemName then
                 if isFirstLine then
@@ -1004,7 +999,7 @@ local function PrintItemList()
                 end
                 if slotID == 3 then
                     local secondarySourceID = ItemList:GetSecondarySourceID(slotID);
-                    if secondarySourceID then
+                    if secondarySourceID and secondarySourceID ~= 0 then
                         localizedSlotName = alternateSlotName[3][1] or localizedSlotName;
                     end
                 end
@@ -1026,7 +1021,7 @@ local function PrintItemList()
 
                     if DataProvider:CanHaveSecondaryAppearanceForSlotID(slotID) then
                         local secondarySourceID = ItemList:GetSecondarySourceID(slotID);
-                        if secondarySourceID then
+                        if secondarySourceID and secondarySourceID ~= 0 then
                             if IsWeaponSlot(slotID) then
                                 local sourceName = DataProvider:GetIllusionName(secondarySourceID);
                                 if sourceName then
@@ -1061,12 +1056,14 @@ local function PrintItemList()
         end
     end
 
-    local TextContainer = NarciDressingRoomSharePopup.GearTextContainer;
-    TextContainer:SetText(itemText);
+    local popup = NarciDressingRoomSharePopup;
+    popup.GearTextContainer:SetText(itemText);
 
-    local LinkContainer = NarciDressingRoomSharePopup.ExternalLink;
-    LinkContainer:SetText( NarciAPI.EncodeItemlist(formatedItemList) );
-    LinkContainer:SetCursorPosition(0);
+    popup.ExternalLink:SetText( NarciAPI.EncodeItemlist(formatedItemList) );
+    popup.ExternalLink:SetDefaultCursorPosition(0);
+
+    popup.SlashCommand:SetText( NarciAPI.GetOutfitSlashCommand() );
+    popup.SlashCommand:SetDefaultCursorPosition(0);
 end
 
 NarciDressingRoomAPI.PrintItemList = PrintItemList;
@@ -1084,13 +1081,23 @@ DataCache:SetScript("OnUpdate", function(self, elapsed)
         if self.t > 0.5 then
             wipe(self.queue);
             self:Hide();
-            if NarciDressingRoomGearTextsClipborad:IsVisible() then
-                PrintItemList();
-            end
+            PrintItemList();
         end
     end
 end)
 
+
+function NarciDressingRoomItemButtonMixin:OnMouseDown(mouseButton)
+    if mouseButton == "LeftButton" then
+        if self:HasItem() then
+            self:SetHiddenVisual(not self.isSlotHidden);
+            self:DressSlot(not self.isSlotHidden);
+        else
+            self:DressSlot(false);
+        end
+        PrintItemList();
+    end
+end
 
 
 NarciDressingRoomItemIDToggleMixin = {};

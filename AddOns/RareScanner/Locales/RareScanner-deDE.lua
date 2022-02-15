@@ -45,8 +45,6 @@ if AL then
 	AL["CMD_SHOW_EVENTS"] = "Zeige RareScanner Icons für Ereignisse auf der Weltkarte"
 	AL["CMD_SHOW_RARES"] = "Zeige RareScanner Icons für seltene NPC auf der Weltkarte"
 	AL["CMD_SHOW_TREASURES"] = "Zeige RareScanner Icons für Schätze auf der Weltkarte"
-	AL["COLLECTION_FILTERS_MOUNTS"] = "Reittiere"
-	AL["COLLECTION_FILTERS_PETS"] = "Haustiere"
 	AL["CONTAINER"] = "Truhe"
 	AL["CUSTOM_NPC_ADD_NPC"] = "NPC-ID"
 	AL["CUSTOM_NPC_ADD_NPC_DESC"] = "Füge eine NPC-ID ein und bestätige diese mit Eingabe, um einen neuen benutzerdefinierten NPC hinzuzufügen. Die NPC-ID ist eine einzigartige Zahlenfolge, die einem NPC zugeordnet ist. Du kannst diese Identifizierungsnummer auf Webseiten wie z.B. Wowhead finden."

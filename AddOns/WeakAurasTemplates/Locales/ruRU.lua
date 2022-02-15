@@ -139,8 +139,7 @@ local L = WeakAuras.L
 	L["Show Cooldown and Totem Information"] = "Show Cooldown and Totem Information"
 	--[[Translation missing --]]
 	L["Show if Enchant Missing"] = "Show if Enchant Missing"
-	--[[Translation missing --]]
-	L["Show on Ready"] = "Show on Ready"
+	L["Show on Ready"] = "Показывать готовность "
 	L["Show Only if Buffed"] = "Показать бафф"
 	L["Show Only if Debuffed"] = "Показать дебафф"
 	--[[Translation missing --]]

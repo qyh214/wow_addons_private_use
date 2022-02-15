@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1153, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142006")
+mod:SetRevision("20220116041913")
 mod:SetCreatureID(79015)
 mod:SetEncounterID(1723)
 mod:SetUsedIcons(8, 7, 6, 3, 2, 1)--Don't know total number of icons needed yet
@@ -58,10 +58,10 @@ local timerExpelMagicFrost			= mod:NewBuffActiveTimer(20, 161411, nil, false, 3)
 local timerExpelMagicFrostCD		= mod:NewCDTimer(60, 161411, nil, nil, nil, 2)--60-63 variation
 local timerExpelMagicShadowCD		= mod:NewCDTimer(59, 162184, nil, "Tank|Healer", nil, 5)--60-63 variation
 local timerExpelMagicArcane			= mod:NewTargetTimer(10, 162186, nil, "Tank|Healer")
-local timerExpelMagicArcaneCD		= mod:NewCDTimer(26, 162186, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)--26-32
+local timerExpelMagicArcaneCD		= mod:NewCDTimer(26, 162186, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--26-32
 local timerBallsCD					= mod:NewNextCountTimer(30, 161612, nil, nil, nil, 5, nil, nil, nil, 1, 5)
 mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
-local timerExpelMagicFelCD			= mod:NewCDTimer(15.5, 172895, nil, "-Tank", 2, 3, nil, DBM_CORE_L.HEROIC_ICON)--Mythic
+local timerExpelMagicFelCD			= mod:NewCDTimer(15.5, 172895, nil, "-Tank", 2, 3, nil, DBM_COMMON_L.HEROIC_ICON)--Mythic
 local timerExpelMagicFel			= mod:NewBuffFadesTimer(12, 172895, nil, nil, nil, 5, nil, nil, nil, 3, 4)--Mythic
 
 mod:AddRangeFrameOption("5")

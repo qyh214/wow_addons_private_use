@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(852, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210212020310")
+mod:SetRevision("20220116041948")
 mod:SetCreatureID(71543)
 mod:SetEncounterID(1602)
 mod:SetReCombatTime(45)--Lets just assume he has same bug as tsulong in advance and avoid problems
@@ -30,7 +30,7 @@ local specWarnSwirl						= mod:NewSpecialWarningSpell(143309, nil, nil, nil, 2, 
 local specWarnSwellingCorruptionTarget	= mod:NewSpecialWarningTarget(143578, false)
 local specWarnSwellingCorruptionFades	= mod:NewSpecialWarningFades(143578, false)
 
-local timerBreathCD						= mod:NewCDTimer(35, 143436, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON)--35-65 second variation wtf?
+local timerBreathCD						= mod:NewCDTimer(35, 143436, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--35-65 second variation wtf?
 local timerSwirl						= mod:NewBuffActiveTimer(13, 143309)
 local timerSwirlCD						= mod:NewCDTimer(48.5, 143309, nil, nil, nil, 2)
 local timerShaResidue					= mod:NewBuffFadesTimer(10, 143459, nil, false)

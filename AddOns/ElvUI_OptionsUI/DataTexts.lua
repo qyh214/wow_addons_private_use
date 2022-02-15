@@ -20,7 +20,7 @@ DTPanelOptions.width = ACH:Range(L["Width"], nil, 4, { min = 24, max = ceil(E.sc
 DTPanelOptions.height = ACH:Range(L["Height"], nil, 5, { min = 12, max = ceil(E.screenHeight), step = 1})
 DTPanelOptions.textJustify = ACH:Select(L["Text Justify"], L["Sets the font instance's horizontal text alignment style."], 6, { CENTER = L["Center"], LEFT = L["Left"], RIGHT = L["Right"] })
 
-DTPanelOptions.templateGroup = ACH:MultiSelect(L["Template"], nil, 10, { backdrop = L["Backdrop"], panelTransparency = L["Backdrop Transparency"], mouseover = L["Mouse Over"], border = L["Show Border"] })
+DTPanelOptions.templateGroup = ACH:MultiSelect(L["Template"], nil, 10, { backdrop = L["Backdrop"], panelTransparency = L["Backdrop Transparency"], mouseover = L["Mouseover"], border = L["Show Border"] })
 DTPanelOptions.templateGroup.sortByValue = true
 
 DTPanelOptions.strataAndLevel = ACH:Group(L["Strata and Level"], nil, 15)
@@ -84,7 +84,7 @@ local function PanelGroup_Create(panel)
 	return opts
 end
 
-local dts = { [''] = L["NONE"] }
+local dts = { [''] = L["None"] }
 
 function DT:SetupPanelOptions(name)
 	local options = PanelGroup_Create(name)
@@ -193,11 +193,13 @@ local function CreateDTOptions(name, data)
 			optionTable.args.textFormat = ACH:Select(L["Text Format"], nil, nil, nil, nil, 'double', function(info) return settings[info[#info]] end, function(info, value) settings[info[#info]] = value; DT:ForceUpdate_DataText(name) end)
 		elseif key == 'latency' then
 			optionTable.args.latency = ACH:Select(L["Latency"], nil, nil, { WORLD = L["World Latency"], HOME = L["Home Latency"] })
+		elseif key == 'school' then
+			optionTable.args.school = ACH:Select(L["School"], nil, nil, { [0] = "Default", [1] = "Physical", [2] = "Holy", [3] = "Fire", [4] = "Nature", [5] = "Frost", [6] = "Shadow", [7] = "Arcane" })
 		end
 	end
 
 	if name == 'Combat' then
-		optionTable.args.TimeFull = ACH:Toggle('Full Time')
+		optionTable.args.TimeFull = ACH:Toggle(L["Full Time"])
 	elseif name == 'Currencies' then
 		optionTable.args.displayedCurrency = ACH:Select(L["Displayed Currency"], nil, 0, function() local list = E:CopyTable({}, DT.CurrencyList) for _, info in pairs(E.global.datatexts.customCurrencies) do local id = tostring(info.ID) if info and not DT.CurrencyList[id] then list[id] = info.NAME end end return list end)
 		optionTable.args.displayedCurrency.sortByValue = true
@@ -310,7 +312,7 @@ DataTexts.args.customCurrency.args.addID = ACH:Input(L["Add Currency by ID"], ni
 DataTexts.args.customCurrency.args.delete = ACH:Select(L["Delete"], nil, 2, function() wipe(currencyList) for currencyID, table in pairs(E.global.datatexts.customCurrencies) do currencyList[currencyID] = table.NAME end return currencyList end, nil, 'double', nil, function(_, value) local currencyName = E.global.datatexts.customCurrencies[value].NAME DT:RemoveCustomCurrency(currencyName) E.Options.args.datatexts.args.customCurrency.args[currencyName] = nil DT.RegisteredDataTexts[currencyName] = nil E.global.datatexts.customCurrencies[value] = nil dts[currencyName] = nil DT:LoadDataTexts() end, function() return not next(E.global.datatexts.customCurrencies) end)
 DataTexts.args.customCurrency.args.spacer = ACH:Spacer(4)
 
-DataTexts.args.settings = ACH:Group(L["DataText Customization"], nil, 7)
+DataTexts.args.settings = ACH:Group(L["Customization"], nil, 7)
 
 E:CopyTable(E.Options.args.datatexts.args.panels.args.newPanel.args, DTPanelOptions)
 E.Options.args.datatexts.args.panels.args.newPanel.args.templateGroup.get = function(_, key) return E.global.datatexts.newPanelInfo[key] end

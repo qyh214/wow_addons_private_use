@@ -24,8 +24,6 @@ local floor = math.floor;
 local TEXT_LOCALE = GetLocale();
 
 local Narci = Narci;
-NarciAPI = {};
-NarciViewUtil = {};
 
 local NarciGameTooltip = CreateFrame("GameTooltip", "NarciGameTooltip", UIParent, "GameTooltipTemplate");
 local SecureContainer = CreateFrame("Frame", "NarciSecureFrameContainer");
@@ -132,6 +130,8 @@ local invTypeSlotID = {
     INVTYPE_HOLDABLE = 17,
     INVTYPE_RANGED = 16,    --actually held in offhand, 17
     INVTYPE_RANGEDRIGHT = 16,
+    INVTYPE_FINGER = 11,
+    INVTYPE_TRINKET = 13,
 };
 
 for slotID, info in pairs(SlotIDtoName) do
@@ -143,8 +143,13 @@ local function GetSlotIDByInvType(invType)
     return invTypeSlotID[invType]
 end
 
-NarciAPI.GetSlotIDByInvType = GetSlotIDByInvType;
+local function GetSlotIDByItemID(itemID)
+    local _, _, _, invType = GetItemInfoInstant(itemID);
+    return invTypeSlotID[invType]
+end
 
+NarciAPI.GetSlotIDByInvType = GetSlotIDByInvType;
+NarciAPI.GetSlotIDByItemID = GetSlotIDByItemID;
 
 local function GetSlotNameAndTexture(slotID)
     return SlotIDtoName[slotID][2], SlotIDtoName[slotID][4]
@@ -152,6 +157,15 @@ end
 
 NarciAPI.GetSlotNameAndTexture = GetSlotNameAndTexture;
 Narci.SlotIDtoName = SlotIDtoName;
+
+
+local function GetSlotButtonNameBySlotID(slotID)
+    if SlotIDtoName[slotID] then
+        return "Character"..SlotIDtoName[slotID][1];
+    end
+end
+
+NarciAPI.GetSlotButtonNameBySlotID = GetSlotButtonNameBySlotID;
 -----------------------------------------------------
 
 local _, CommanderOfArgus = GetAchievementInfo(12078);                                  --Argus Weapon Transmogs: Arsenal: Weapons of the Lightforged
@@ -592,8 +606,12 @@ NarciAPI.GetGemBorderTexture = GetGemBorderTexture;
 --------------------
 
 local function GetItemEnchantID(itemLink)
-    local _, _, _, linkType, linkID, enchantID = strsplit(":|H", itemLink);
-    return tonumber(enchantID) or 0;
+    if itemLink then
+        local _, _, _, linkType, linkID, enchantID = strsplit(":|H", itemLink);
+        return tonumber(enchantID) or 0;
+    else
+        return 0
+    end
 end
 
 NarciAPI.GetItemEnchantID = GetItemEnchantID;
@@ -707,27 +725,27 @@ function NarciAPI_GetItemStats(itemLocation)
 
     --Calculate bonus from Gems and Enchants--
     local gemIndex = 1;         --BFA 1 gem for each item.
-    local GemName, GemLink = GetItemGem(itemLink, gemIndex);
-    if GemLink then
-        local GemID = GetItemInfoInstant(GemLink)
-        --local _, _, _, _, _, _, _, _, _, GemIcon, _, _, itemSubClassID = GetItemInfo(GemLink)
-        local _, _, _, _, GemIcon, _, itemSubClassID = GetItemInfoInstant(GemLink); 
+    local gemName, gemLink = GetItemGem(itemLink, gemIndex);
+    if gemLink then
+        local GemID = GetItemInfoInstant(gemLink)
+        --local _, _, _, _, _, _, _, _, _, GemIcon, _, _, itemSubClassID = GetItemInfo(gemLink)
+        local _, _, _, _, GemIcon, _, itemSubClassID = GetItemInfoInstant(gemLink); 
         statsTable.GemIcon = GemIcon
         statsTable.gems = 1;
 
         if GemInfo[GemID] then
-            local GemInfo = GemInfo[GemID]
+            local info = GemInfo[GemID]
             statsTable.GemPos = GemInfo[1];
-            if GemInfo[1] == "crit" then
-                statsTable.crit = statsTable.crit + GemInfo[2];
-            elseif GemInfo[1] == "haste" then
-                statsTable.haste = statsTable.haste + GemInfo[2];
-            elseif GemInfo[1] == "mastery" then
-                statsTable.mastery = statsTable.mastery + GemInfo[2];
-            elseif GemInfo[1] == "versatility" then
-                statsTable.versatility = statsTable.versatility + GemInfo[2];
-            elseif GemInfo[1] == "AGI" or GemInfo[1] == "STR" or GemInfo[1] == "INT" then
-                statsTable.prim = statsTable.prim + GemInfo[2];
+            if info[1] == "crit" then
+                statsTable.crit = statsTable.crit + info[2];
+            elseif info[1] == "haste" then
+                statsTable.haste = statsTable.haste + info[2];
+            elseif info[1] == "mastery" then
+                statsTable.mastery = statsTable.mastery + info[2];
+            elseif info[1] == "versatility" then
+                statsTable.versatility = statsTable.versatility + info[2];
+            elseif info[1] == "AGI" or info[1] == "STR" or info[1] == "INT" then
+                statsTable.prim = statsTable.prim + info[2];
                 statsTable.GemPos = "prim";
             end
         end
@@ -748,6 +766,9 @@ function NarciAPI_GetItemStats(itemLocation)
         elseif data[1] == "AGI" or data[1] == "STR" or data[1] == "INT" then
             statsTable.prim = statsTable.prim + data[2];
             statsTable.EnchantPos = "prim";
+        elseif data[1] == "stamina" then
+            statsTable.stamina = statsTable.stamina + data[2];
+            statsTable.EnchantPos = "stamina";
         end
 
         statsTable.EnchantSpellID = data[3];
@@ -761,6 +782,19 @@ function NarciAPI_GetItemStatsFromSlot(slotID)
     local itemLink = C_Item.GetItemLink(itemLocation)
     return GetItemStats(itemLink);
 end
+
+
+local function GetItemBagPosition(itemID)
+    for bagID = 0, (NUM_BAG_SLOTS or 4) do
+        for slotID = 1, GetContainerNumSlots(bagID) do
+            if(GetContainerItemID(bagID, slotID) == itemID) then
+                return bagID, slotID
+            end
+        end
+    end
+end
+
+NarciAPI.GetItemBagPosition = GetItemBagPosition;
 
 --------------------
 ----Tooltip Scan----
@@ -867,11 +901,11 @@ local function GetItemEnchantText(itemLink, colorized)
     if not itemLink then return; end
 
     TP:SetHyperlink(itemLink);
-    local num = TP:NumLines();
+    local numLines = TP:NumLines();
     local str;
     local enchantText;
     local enchantFormat = ITEM_ENCHANT_FORMAT;
-    for i = 5, num do
+    for i = 5, numLines do
         str = _G["NarciVirtualTooltip".."TextLeft"..i];
         if str then
             str = str:GetText();
@@ -901,6 +935,39 @@ end
 
 NarciAPI.GetItemEnchantText = GetItemEnchantText;
 NarciAPI.GetEnchantTextByEnchantID = GetEnchantTextByEnchantID;
+
+
+
+local function GetTemporaryItemBuff(location1, location2)
+    if not location1 then return; end
+    if location2 then
+        TP:SetBagItem(location1, location2);
+    else
+        TP:SetInventoryItem("player", location1, nil, true);
+    end
+    local numLines = TP:NumLines();
+    local str;
+    local r, g, b;
+    local buffText, durationText;
+    for i = 5, numLines do
+        str = _G["NarciVirtualTooltip".."TextLeft"..i];
+        if str then
+            str = str:GetText();
+            if not match(str, "[:：]") then
+                buffText, durationText = match(str, "([^+].+) %((%d+%D+)%)");
+                if buffText and durationText then
+                    break
+                end
+            end
+        end
+    end
+
+    --durationText: hours, hour, min, sec
+    --/dump string.match("Reinforced (15 sec)", ".+ %((%d+) sec%)")
+    return buffText, durationText
+end
+
+NarciAPI.GetTemporaryItemBuff = GetTemporaryItemBuff;
 
 -----String API------
 --[[
@@ -3681,6 +3748,17 @@ end
 
 
 NarciAPI.WrapNameWithClassColor = WrapNameWithClassColor;
+
+
+local function GetOutfitSlashCommand()
+	local playerActor = DressUpFrame.ModelScene:GetPlayerActor();
+	local itemTransmogInfoList = playerActor and playerActor:GetItemTransmogInfoList();
+    local slashCommand = TransmogUtil.CreateOutfitSlashCommand(itemTransmogInfoList);
+    return slashCommand
+end
+
+NarciAPI.GetOutfitSlashCommand = GetOutfitSlashCommand;
+
 --[[
 function TestFX(modelFileID, zoomDistance, view)
     NarciAPI_SetupModelScene(TestScene, modelFileID, zoomDistance, view);

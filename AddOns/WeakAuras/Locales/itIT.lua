@@ -263,6 +263,8 @@ L["Broodlord Lashlayer"] = "Broodlord Lashlayer"
 --[[Translation missing --]]
 L["Brutallus"] = "Brutallus"
 L["Buff"] = "Buff"
+--[[Translation missing --]]
+L["Buff/Debuff"] = "Buff/Debuff"
 L["Buffed/Debuffed"] = "Buffato/Debuffato"
 --[[Translation missing --]]
 L["Buru the Gorger"] = "Buru the Gorger"
@@ -567,6 +569,8 @@ L["Error"] = "Errore"
 --[[Translation missing --]]
 L["Error Frame"] = "Error Frame"
 --[[Translation missing --]]
+L["ERROR in '%s' unknown or incompatible sub element type '%s'"] = "ERROR in '%s' unknown or incompatible sub element type '%s'"
+--[[Translation missing --]]
 L["Error in aura '%s' in %s. trigger. All States table contains a non table at key: '%s'."] = "Error in aura '%s' in %s. trigger. All States table contains a non table at key: '%s'."
 --[[Translation missing --]]
 L["Error not receiving display information from %s"] = "Error not receiving display information from %s"
@@ -851,6 +855,8 @@ L["In Encounter"] = "In Encounter"
 --[[Translation missing --]]
 L["In Group"] = "In Group"
 --[[Translation missing --]]
+L["In Party"] = "In Party"
+--[[Translation missing --]]
 L["In Pet Battle"] = "In Pet Battle"
 --[[Translation missing --]]
 L["In Raid"] = "In Raid"
@@ -866,6 +872,8 @@ L["Include Pets"] = "Include Pets"
 L["Incoming Heal"] = "Incoming Heal"
 --[[Translation missing --]]
 L["Increase Precision Below"] = "Increase Precision Below"
+--[[Translation missing --]]
+L["Increases by one per stage or intermission."] = "Increases by one per stage or intermission."
 --[[Translation missing --]]
 L["Information"] = "Information"
 --[[Translation missing --]]
@@ -954,6 +962,8 @@ L["Item Type Equipped"] = "Item Type Equipped"
 L["Jan'alai"] = "Jan'alai"
 --[[Translation missing --]]
 L["Jin'do the Hexxer"] = "Jin'do the Hexxer"
+--[[Translation missing --]]
+L["Journal Stage"] = "Journal Stage"
 --[[Translation missing --]]
 L["Kael'thas Sunstrider"] = "Kael'thas Sunstrider"
 --[[Translation missing --]]
@@ -1072,6 +1082,12 @@ L["Match Count"] = "Match Count"
 L["Match Count per Unit"] = "Match Count per Unit"
 --[[Translation missing --]]
 L["Matches (Pattern)"] = "Matches (Pattern)"
+--[[Translation missing --]]
+L[ [=[Matches stage number of encounter journal.
+Intermissions are .5
+E.g. 1;2;1;2;2.5;3]=] ] = [=[Matches stage number of encounter journal.
+Intermissions are .5
+E.g. 1;2;1;2;2.5;3]=]
 --[[Translation missing --]]
 L["Max Char "] = "Max Char "
 --[[Translation missing --]]
@@ -1206,6 +1222,8 @@ L["Non-player Character"] = "Non-player Character"
 L["Normal"] = "Normal"
 --[[Translation missing --]]
 L["Not in Group"] = "Not in Group"
+--[[Translation missing --]]
+L["Not in Smart Group"] = "Not in Smart Group"
 --[[Translation missing --]]
 L["Not on Cooldown"] = "Not on Cooldown"
 --[[Translation missing --]]
@@ -1440,6 +1458,8 @@ L["Raid (Normal)"] = "Raid (Normal)"
 L["Raid (Timewalking)"] = "Raid (Timewalking)"
 --[[Translation missing --]]
 L["Raid Mark"] = "Raid Mark"
+--[[Translation missing --]]
+L["Raid Mark Icon"] = "Raid Mark Icon"
 --[[Translation missing --]]
 L["Raid Role"] = "Raid Role"
 --[[Translation missing --]]
@@ -1713,6 +1733,8 @@ L["Spell (Building)"] = "Spell (Building)"
 --[[Translation missing --]]
 L["Spell Activation Overlay Glow"] = "Spell Activation Overlay Glow"
 --[[Translation missing --]]
+L["Spell Cast Succeeded"] = "Spell Cast Succeeded"
+--[[Translation missing --]]
 L["Spell Cost"] = "Spell Cost"
 --[[Translation missing --]]
 L["Spell Count"] = "Spell Count"
@@ -1746,6 +1768,8 @@ L["Stack Count"] = "Stack Count"
 L["Stacks"] = "Stacks"
 --[[Translation missing --]]
 L["Stage"] = "Stage"
+--[[Translation missing --]]
+L["Stage Counter"] = "Stage Counter"
 --[[Translation missing --]]
 L["Stagger Scale"] = "Stagger Scale"
 --[[Translation missing --]]
@@ -1869,6 +1893,8 @@ L["This aura contains custom Lua code."] = "This aura contains custom Lua code."
 --[[Translation missing --]]
 L["This aura has legacy aura trigger(s), which are no longer supported."] = "This aura has legacy aura trigger(s), which are no longer supported."
 --[[Translation missing --]]
+L["This aura tried to show a tooltip on a anchoring restricted region"] = "This aura tried to show a tooltip on a anchoring restricted region"
+--[[Translation missing --]]
 L["This aura was created with a newer version of WeakAuras."] = "This aura was created with a newer version of WeakAuras."
 --[[Translation missing --]]
 L["This aura was created with the Classic version of World of Warcraft."] = "This aura was created with the Classic version of World of Warcraft."
@@ -1977,6 +2003,8 @@ L["Trivial (Low Level)"] = "Trivial (Low Level)"
 --[[Translation missing --]]
 L["True"] = "True"
 --[[Translation missing --]]
+L["Trying to repair broken conditions in %s likely caused by a WeakAuras bug."] = "Trying to repair broken conditions in %s likely caused by a WeakAuras bug."
+--[[Translation missing --]]
 L["Twin Emperors"] = "Twin Emperors"
 --[[Translation missing --]]
 L["Type"] = "Type"
@@ -2022,6 +2050,8 @@ L["Usage:"] = "Usage:"
 L["Use /wa minimap to show the minimap icon again."] = "Use /wa minimap to show the minimap icon again."
 --[[Translation missing --]]
 L["Use Custom Color"] = "Use Custom Color"
+--[[Translation missing --]]
+L["Use Watched Faction"] = "Use Watched Faction"
 --[[Translation missing --]]
 L["Vaelastrasz the Corrupt"] = "Vaelastrasz the Corrupt"
 --[[Translation missing --]]

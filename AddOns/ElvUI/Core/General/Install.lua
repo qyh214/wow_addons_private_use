@@ -57,8 +57,9 @@ local ELV_TOONS = {
 
 function E:SetupChat(noDisplayMsg)
 	FCF_ResetChatWindows()
-	FCF_OpenNewWindow(LOOT)
-	FCF_UnDockFrame(E.Retail and _G.ChatFrame4 or _G.ChatFrame3)
+
+	local rightChatFrame = FCF_OpenNewWindow(LOOT)
+	FCF_UnDockFrame(rightChatFrame)
 
 	for _, name in ipairs(_G.CHAT_FRAMES) do
 		local frame = _G[name]
@@ -97,14 +98,14 @@ function E:SetupChat(noDisplayMsg)
 
 	-- keys taken from `ChatTypeGroup` which weren't added above to ChatFrame1
 	chatGroup = { 'COMBAT_XP_GAIN', 'COMBAT_HONOR_GAIN', 'COMBAT_FACTION_CHANGE', 'SKILL', 'LOOT', 'CURRENCY', 'MONEY' }
-	ChatFrame_RemoveAllMessageGroups(_G.ChatFrame4)
+	ChatFrame_RemoveAllMessageGroups(rightChatFrame)
 	for _, v in ipairs(chatGroup) do
-		ChatFrame_AddMessageGroup(_G.ChatFrame4, v)
+		ChatFrame_AddMessageGroup(rightChatFrame, v)
 	end
 
 	ChatFrame_AddChannel(_G.ChatFrame1, GENERAL)
 	ChatFrame_RemoveChannel(_G.ChatFrame1, TRADE)
-	ChatFrame_AddChannel(_G.ChatFrame4, TRADE)
+	ChatFrame_AddChannel(rightChatFrame, TRADE)
 
 	-- set the chat groups names in class color to enabled for all chat groups which players names appear
 	chatGroup = { 'SAY', 'EMOTE', 'YELL', 'WHISPER', 'PARTY', 'PARTY_LEADER', 'RAID', 'RAID_LEADER', 'RAID_WARNING', 'INSTANCE_CHAT', 'INSTANCE_CHAT_LEADER', 'GUILD', 'OFFICER', 'ACHIEVEMENT', 'GUILD_ACHIEVEMENT', 'COMMUNITIES_CHANNEL' }
@@ -152,11 +153,12 @@ function E:SetupCVars(noDisplayMsg)
 	SetCVar('alwaysShowActionBars', 1)
 	SetCVar('lockActionBars', 1)
 	SetCVar('spamFilter', 0)
-	SetCVar('cameraDistanceMaxZoomFactor', E.Retail and 2.6 or 3.4)
 	SetCVar('showQuestTrackingTooltips', 1)
-	SetCVar('fstack_preferParentKeys', 0) --Add back the frame names via fstack!
+	SetCVar('fstack_preferParentKeys', 0) -- Add back the frame names via fstack!
 
-	if not E.Retail then
+	if E.Retail then
+		SetCVar('cameraDistanceMaxZoomFactor', 2.6) -- This has a setting on classic/tbc
+	else
 		SetCVar('chatClassColorOverride', 0)
 	end
 

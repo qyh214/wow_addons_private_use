@@ -154,10 +154,10 @@ local function GetDressingSourceFromActor()
 
     for k, slotButton in pairs(buttons) do
         slotID = slotButton.slotID;
-
         appliedSourceID, secondarySourceID = DataProvider:GetActorSlotSourceID(playerActor, slotID);
-
-        slotButton:SetItemSource(appliedSourceID, secondarySourceID);
+        if (not slotButton.isSlotHidden) and (not slotButton:IsSameSouce(appliedSourceID, secondarySourceID)) then
+            slotButton:SetItemSource(appliedSourceID, secondarySourceID);
+        end
     end
 end
 
@@ -351,9 +351,7 @@ function Narci_UpdateDressingRoom()
                 frame.SlotFrame:Show();
                 frame.OptionFrame:Show();
                 GetDressingSourceFromActor();
-                if NarciDressingRoomGearTextsClipborad:IsVisible() then
-                    PrintItemList();
-                end
+                PrintItemList();
             end
             frame.pauseUpdate = nil;
         end)
@@ -443,12 +441,17 @@ function Narci_ShowDressingRoom()
             local autoDress = true;
             local itemModifiedAppearanceIDs = nil;
             SetupPlayerForModelScene(frame.ModelScene, itemModifiedAppearanceIDs, sheatheWeapons, autoDress);
-            Narci_UpdateDressingRoom();
+            --Narci_UpdateDressingRoom();
         end
         
 
         if slotFrameEnabled then
             UpdateDressingRoomModelByUnit("player");
+        end
+
+        if DressUpFrame.OutfitDetailsPanel then
+            DressUpFrame.OutfitDetailsPanel:SetShown(GetCVarBool("showOutfitDetails"));
+            --DressUpFrame:SetShownOutfitDetailsPanel(GetCVarBool("showOutfitDetails"));
         end
 	end
 end
@@ -558,8 +561,13 @@ local function DressingRoomOverlayFrame_Initialize()
         end)
     end
 
+
+    
+    DressingRoomOverlayFrame.SlotFrame:SetScript("OnShow", Narci_UpdateDressingRoom);
+
+    --expensive call
+    
     DressUpFrame.ModelScene:HookScript("OnDressModel", function(self, ...)
-        --expensive call
         if not (DressingRoomOverlayFrame and slotFrameEnabled) then return end;
         if not DressingRoomOverlayFrame.pauseUpdate then
             DressingRoomOverlayFrame.pauseUpdate = true;
@@ -577,6 +585,7 @@ local function DressingRoomOverlayFrame_Initialize()
             end)
         end
     end)
+    
 end
 
 
@@ -712,9 +721,7 @@ function NarciDressingRoomOverlayMixin:OnEvent(event, ...)
                 After(0, function()
                     self.SlotFrame:SetSources( GetInspectSources() );
                     self.SlotFrame:FadeIn();
-                    if NarciDressingRoomGearTextsClipborad:IsVisible() then
-                        PrintItemList();
-                    end
+                    PrintItemList();
                     ClearInspectPlayer();
                     self.pauseInspect = nil;
                 end);
@@ -881,3 +888,7 @@ Test:SetAttribute("_test", function()
     securecall("DressUpVisual", "item:2092");
 end)
 --]]
+
+hooksecurefunc("DressUpTransmogSet", function()
+    print("DressUpTransmogSet")
+end);

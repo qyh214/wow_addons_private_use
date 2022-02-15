@@ -1,6 +1,6 @@
-## Interface: 90100
+## Interface: 90105
 ## Title: Premade Groups Filter
-## Version: 2.3.1
+## Version: 2.6.2
 ## Notes: Allows filtering of premade groups using an UI or advanced filter expressions.
 ## Author: Elotheon-Arthas-EU
 ## SavedVariables:
@@ -15,6 +15,7 @@ Localization\zhCN.lua
 Localization\zhTW.lua
 Localization\ruRU.lua
 Localization\esES.lua
+FixGetPlaystyleString.lua
 Modules\Util.lua
 Modules\Difficulty.lua
 Modules\Lockout.lua

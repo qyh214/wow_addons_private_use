@@ -596,31 +596,12 @@
                     </Frame>
                 </ScrollChild>
                 <Frames>
-                    <Slider valueStep="0.01" parentKey="scrollBar">
+                    <Slider parentKey="scrollBar" inherits="NarciVerticalLineSliderTemplate">
                         <Size x="8"/>
                         <Anchors>
                             <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="-6" y="-8"/>
                             <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-6" y="12"/>
                         </Anchors>
-                        <Layers>
-                            <Layer level="BACKGROUND">
-                                <Texture file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\VerticleLine" parentKey="Background" alphaMode="ADD" Alpha="0.1"/>
-                            </Layer>
-                        </Layers>
-                        <ThumbTexture parentKey="Thumb" file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\SliderThumb">
-                            <Size x="8" y="8"/>
-                        </ThumbTexture>
-                        <Scripts>
-                            <OnLoad>
-                                self.Thumb:SetVertexColor(0.5, 0.5, 0.5);
-                            </OnLoad>
-                            <OnEnter>
-                                self.Thumb:SetVertexColor(0.8, 0.8, 0.8);
-                            </OnEnter>
-                            <OnLeave>
-                                self.Thumb:SetVertexColor(0.5, 0.5, 0.5);
-                            </OnLeave>
-                        </Scripts>
                     </Slider>
                 </Frames>
             </ScrollFrame>

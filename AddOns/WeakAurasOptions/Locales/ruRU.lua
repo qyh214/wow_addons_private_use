@@ -22,8 +22,7 @@ local L = WeakAuras.L
 	L["%s Inset: %d%%"] = "%s Вставка %d%%"
 	L["%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"] = "%s не является допустимым внутренним событием COMBAT_LOG_EVENT_UNFILTERED"
 	L["%s Keep Aspect Ratio"] = "%s Сохранение пропорций изображения"
-	--[[Translation missing --]]
-	L["%s Texture"] = "%s Texture"
+	L["%s Texture"] = "%s"
 	L["%s total auras"] = "Всего %s |4индикация:индикации:индикаций;"
 	L["%s Zoom: %d%%"] = "%s Увеличение %d%%"
 	L["%s, Border"] = "%s; Граница"
@@ -67,10 +66,8 @@ local L = WeakAuras.L
 	L["Add Option"] = "Добавить параметр"
 	L["Add Overlay"] = "Добавить наложение"
 	L["Add Property Change"] = "Добавить свойство"
-	--[[Translation missing --]]
-	L["Add Raid Mark Information"] = "Add Raid Mark Information"
-	--[[Translation missing --]]
-	L["Add Role Information"] = "Add Role Information"
+	L["Add Raid Mark Information"] = "Использовать информацию о метке цели"
+	L["Add Role Information"] = "Использовать информацию о выбранной роли"
 	L["Add Snippet"] = "Добавить фрагмент кода"
 	L["Add Sub Option"] = "Добавить внутр. параметр"
 	L["Add to group %s"] = "Добавить в группу %s"
@@ -276,7 +273,7 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Dynamic Information"] = "Динамическая информация"
 	L["Dynamic information from first active trigger"] = "Динамическая информация из первого активного триггера"
 	L["Dynamic information from Trigger %i"] = "Динамическая информация из Триггера %i"
-	L["Dynamic text tooltip"] = [=[Несколько специальных кодов для отображения динамической информации в тексте:
+	L["Dynamic text tooltip"] = [=[Несколько специальных шаблонов замены текста для отображения динамической информации:
 
 |cFFFF0000%p|r - Прогресс - Оставшееся время таймера или текущее бестаймерное значение
 |cFFFF0000%t|r - Всего - Максимальное время таймера или бестаймерное значение
@@ -286,7 +283,7 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 |cFFFF0000%c|r - Свой код - Позволяет написать функцию на Lua, которая возвращает одно значение или их список. Для отображения единственного значения используйте |cFFFF0000%c|r, для j-го значения из списка - |cFFFF0000%cj|r
 |cFFFF0000%%|r - Показывает символ процента
 
-Запись формата |cFFFF0000%k.m|r выводит на экран информацию из k-го триггера, определённую посредством кода m.
+Запись формата |cFFFF0000%k.m|r выводит на экран информацию от k-го триггера, указанную посредством шаблона m.
 ]=]
 	L["Ease Strength"] = "Степень функции скорости"
 	L["Ease type"] = "Тип изменения скорости анимации"
@@ -324,6 +321,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Export to Lua table..."] = "Экспорт в таблицу Lua ..."
 	L["Export to string..."] = "Экспорт в строку ..."
 	L["External"] = "Внешний ресурс"
+	L["Extra Height"] = "Дополнительная высота"
+	L["Extra Width"] = "Дополнительная ширина"
 	L["Fade"] = "Выцветание"
 	L["Fade In"] = "Появление"
 	L["Fade Out"] = "Исчезновение"
@@ -443,8 +442,7 @@ Supports multiple entries, separated by commas
 	L["Ignored Spell ID"] = "Исключаемый ID заклинания"
 	L["Import"] = "Импорт"
 	L["Import a display from an encoded string"] = "Импортировать индикацию из закодированной строки"
-	--[[Translation missing --]]
-	L["Include Pets"] = "Include Pets"
+	L["Include Pets"] = "Учитывать питомцев"
 	L["Indent Size"] = "Размер отступа"
 	L["Information"] = "Информация"
 	L["Inner"] = "Внутри"
@@ -718,11 +716,9 @@ Supports multiple entries, separated by commas
 	L["The type of trigger"] = "Тип триггера"
 	L["Then "] = "Тогда "
 	L["Thickness"] = "Толщина"
-	--[[Translation missing --]]
-	L["This adds %raidMark as text replacements."] = "This adds %raidMark as text replacements."
-	--[[Translation missing --]]
-	L["This adds %role, %roleIcon as text replacements."] = "This adds %role, %roleIcon as text replacements."
-	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "Добавляет строки %tooltip, %tooltip1, %tooltip2 и %tooltip3 к специальным кодам отображения динамической информации в тексте."
+	L["This adds %raidMark as text replacements."] = "Добавляет строку %raidMark в качестве шаблона замены текста."
+	L["This adds %role, %roleIcon as text replacements."] = "Добавляет строки %role, %roleIcon в качестве шаблонов замены текста."
+	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "Добавляет строки %tooltip, %tooltip1, %tooltip2 и %tooltip3 в качестве шаблонов замены текста."
 	L["This display is currently loaded"] = "Эта индикация загружена"
 	L["This display is not currently loaded"] = "Эта индикация не загружена"
 	L["This region of type \"%s\" is not supported."] = "Регион типа \"%s\" не поддерживается."

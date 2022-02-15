@@ -1143,16 +1143,56 @@ function NarciResponsiveEditBoxSharedMixin:OnSuccess()
         self:GetParent():GetParent():Glow();
     end
     self:QuitEdit();
+    if self.onCopiedCallback then
+        self.onCopiedCallback(self);
+    end
 end
 
 function NarciResponsiveEditBoxSharedMixin:QuitEdit()
     self:ClearFocus();
 end
 
+function NarciResponsiveEditBoxSharedMixin:OnHide()
+    self:QuitEdit();
+    self.numInput = nil;
+    self:StopAnimating();
+end
+
+function NarciResponsiveEditBoxSharedMixin:OnTextChanged(userInput)
+
+end
+
+function NarciResponsiveEditBoxSharedMixin:SetDefaultCursorPosition(offset)
+    self:SetCursorPosition(offset);
+    self.defaultCursorPosition = offset;
+end
 
 --Subtype: The editbox itself has a border
 NarciResponsiveClipboardMixin = CreateFromMixins(NarciFrameBorderMixin, NarciResponsiveEditBoxSharedMixin);
 
+function NarciResponsiveClipboardMixin:OnTextChanged(userInput)
+    if userInput then
+        self:SetText(self.copiedText);
+        if self.defaultCursorPosition then
+            self:SetCursorPosition(self.defaultCursorPosition);
+        end
+        if not self.numInput then
+            self.numInput = 0;
+        end
+        self.numInput = self.numInput + 1;
+        if self.numInput > 3 then
+            self.numInput = nil;
+            self:QuitEdit();
+        end
+    else
+        self.copiedText = self:GetText();
+    end
+end
+
+function NarciResponsiveEditBoxSharedMixin:OnHide()
+    self:QuitEdit();
+    self.copiedText = nil;
+end
 
 --Subtype: Frame-ScrollFrame-EditBox
 NarciScrollEditBoxMixin = CreateFromMixins(NarciFrameBorderMixin);
@@ -1241,6 +1281,48 @@ end
 function NarciAutoCloseFrameMixin:Toggle()
     self:SetShown(not self:IsShown());
 end
+
+
 --------------------------------------------------------------------------------------------------
+--Simple Line Slider
+
+NarciVerticalLineSliderMixin = {};
+
+function NarciVerticalLineSliderMixin:OnLoad()
+    self.Thumb:SetVertexColor(0.5, 0.5, 0.5);
+    self.Background:SetVertexColor(0.25, 0.25, 0.25);
+    self.Background:SetAlpha(0.4);
+end
+
+function NarciVerticalLineSliderMixin:OnEnter()
+    self:FadeIn();
+end
+
+function NarciVerticalLineSliderMixin:OnLeave()
+    if not self:IsDraggingThumb() then
+        self:FadeOut();
+    end
+end
+
+function NarciVerticalLineSliderMixin:OnMouseUp()
+    if not self:IsMouseOver() then
+        self:FadeOut();
+    end
+end
+
+function NarciVerticalLineSliderMixin:FadeIn()
+    FadeFrame(self.Background, 0.25, 1);
+    self.Thumb:SetVertexColor(0.8, 0.8, 0.8);
+end
+
+function NarciVerticalLineSliderMixin:FadeOut()
+    FadeFrame(self.Background, 0.25, 0.4);
+    self.Thumb:SetVertexColor(0.5, 0.5, 0.5);
+end
+
+
+--------------------------------------------------------------------------------------------------
+
+
 wipe(TEMPS);
 TEMPS = nil;

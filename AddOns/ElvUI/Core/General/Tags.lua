@@ -25,7 +25,6 @@ local GetCreatureDifficultyColor = GetCreatureDifficultyColor
 local GetRelativeDifficultyColor = GetRelativeDifficultyColor
 local GetSpecialization = GetSpecialization
 local GetSpecializationInfo = GetSpecializationInfo
-local GetThreatStatusColor = GetThreatStatusColor
 local GetRuneCooldown = GetRuneCooldown
 local GetTime = GetTime
 local GetUnitSpeed = GetUnitSpeed
@@ -647,7 +646,7 @@ end)
 E:AddTag('threatcolor', 'UNIT_THREAT_LIST_UPDATE UNIT_THREAT_SITUATION_UPDATE GROUP_ROSTER_UPDATE', function(unit)
 	local _, status = UnitDetailedThreatSituation('player', unit)
 	if status and (IsInGroup() or UnitExists('pet')) then
-		return Hex(GetThreatStatusColor(status))
+		return Hex(E:GetThreatStatusColor(status, true))
 	end
 end)
 
@@ -1219,16 +1218,16 @@ do
 	local classIcons = {
 		WARRIOR		= '0:64:0:64',
 		MAGE		= '64:128:0:64',
-		ROGUE		= '128:196:0:64',
-		DRUID		= '196:256:0:64',
+		ROGUE		= '128:192:0:64',
+		DRUID		= '192:256:0:64',
 		HUNTER		= '0:64:64:128',
 		SHAMAN		= '64:128:64:128',
-		PRIEST		= '128:196:64:128',
-		WARLOCK		= '196:256:64:128',
-		PALADIN		= '0:64:128:196',
-		DEATHKNIGHT = '64:128:128:196',
-		MONK		= '128:192:128:196',
-		DEMONHUNTER = '192:256:128:196',
+		PRIEST		= '128:192:64:128',
+		WARLOCK		= '192:256:64:128',
+		PALADIN		= '0:64:128:192',
+		DEATHKNIGHT = '64:128:128:192',
+		MONK		= '128:192:128:192',
+		DEMONHUNTER = '192:256:128:192',
 	}
 
 	E:AddTag('class:icon', 'PLAYER_TARGET_CHANGED', function(unit)

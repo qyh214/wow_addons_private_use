@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Razorgore", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200905140155")
+mod:SetRevision("20220116021832")
 mod:SetCreatureID(12435, 99999)--Bogus detection to prevent invalid kill detection if razorgore happens to die in phase 1
 mod:SetEncounterID(610)--BOSS_KILL is valid, but ENCOUNTER_END is not
 mod:DisableEEKillDetection()--So disable only EE
@@ -47,7 +47,7 @@ function mod:OnCombatStart(delay)
 		self.vb.firstEngageTime = GetServerTime()
 		if self.Options.FastestClear and self.Options.SpeedClearTimer then
 			--Custom bar creation that's bound to core, not mod, so timer doesn't stop when mod stops it's own timers
-			DBM.Bars:CreateBar(self.Options.FastestClear, DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT, 136106)
+			DBT:CreateBar(self.Options.FastestClear, DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT, 136106)
 		end
 	end
 end
@@ -55,7 +55,7 @@ end
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 22425 then
 		if self.Options.SpecWarn22425moveto then
-			specWarnFireballVolley:Show(DBM_CORE_L.BREAK_LOS)
+			specWarnFireballVolley:Show(DBM_COMMON_L.BREAK_LOS)
 			specWarnFireballVolley:Play("findshelter")
 		else
 			warnFireballVolley:Show()

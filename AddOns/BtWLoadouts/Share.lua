@@ -48,7 +48,7 @@ local Base64Encode, Base64Decode
 do
     local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
     function Base64Encode(data)
-        return ((data:gsub('.', function(x) 
+        return ((data:gsub('.', function(x)
             local r,b='',x:byte()
             for i=8,1,-1 do r=r..(b%2^i-b%2^(i-1)>0 and '1' or '0') end
             return r;
@@ -266,7 +266,7 @@ do
 
                     for index,set in ipairs(source[segment.id]) do
                         if type(set) == "table" then
-                            set = AddSource(set, segment.id, 1, name, specID)
+                            set = AddSource(set, segment.id, 1, name)
                             source[segment.id][index] = set
                         end
                         
@@ -294,6 +294,9 @@ do
 	BtWLoadoutsImportFrameMixin = {};
 	function BtWLoadoutsImportFrameMixin:OnLoad()
         BackdropTemplateMixin.OnBackdropLoaded(self)
+        if self.TooltipBackdropOnLoad then
+            self:TooltipBackdropOnLoad()
+        end
 
 		tinsert(UISpecialFrames, self:GetName());
 		self:RegisterForDrag("LeftButton");
@@ -463,6 +466,8 @@ function BtWLoadoutsImportMixin:Update()
     self:GetParent().TitleText:SetText(L["Import"]);
 
     self:GetParent().Sidebar:Hide()
+
+    BtWLoadoutsFrame:SetNPEShown(false);
 
     self.Scroll.EditBox.text = ""
     self.Scroll.EditBox:SetText("")

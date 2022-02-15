@@ -47,7 +47,7 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization({
 	Emerged			= "Предупреждение, когда Ахун появляется",
-	specWarnAttack	= "Спец-предупреждение, когда Ахун становится уязвим",
+	specWarnAttack	= "Спецпредупреждение, когда Ахун становится уязвим",
 	SubmergeTimer	= "Отсчет времени до исчезновения",
 	EmergeTimer		= "Отсчет времени до появления"
 })
@@ -62,17 +62,30 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("d287")
 
 L:SetWarningLocalization({
-	specWarnBrew		= "Избавьтесь от варева прежде, чем она бросит вам другое!",
+	specWarnBrew		= "Избавьтесь от варева, прежде чем она бросит вам другое!",
 	specWarnBrewStun	= "СОВЕТ: Вы получили удар, не забудьте выпить варево в следующий раз!"
 })
 
 L:SetOptionLocalization({
-	specWarnBrew		= "Спец-предупреждение для $spell:47376",
-	specWarnBrewStun	= "Спец-предупреждение для $spell:47340"
+	specWarnBrew		= "Спецпредупреждение для $spell:47376",
+	specWarnBrewStun	= "Спецпредупреждение для $spell:47340"
 })
 
 L:SetMiscLocalization({
 	YellBarrel			= "Бочка на мне!"
+})
+
+----------------
+--  Brewfest  --
+----------------
+L = DBM:GetModLocalization("Brew")
+
+L:SetGeneralLocalization({
+	name = "Хмельной фестиваль"
+})
+
+L:SetOptionLocalization({
+	NormalizeVolume			= "Автоматически нормализуйте громкость звукового канала DIALOG, чтобы она соответствовала громкости музыкального звукового канала в зоне Хмельного фестиваля, чтобы он не был таким раздражающе громким.<br/>Если громкость звука музыки не установлена, то громкость будет отключена."
 })
 
 -----------------------------
@@ -89,7 +102,7 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	WarnPhase				= "Предупреждение о смене фаз",
 	warnHorsemanSoldiers	= "Предупреждать о призыве Пульсирующих тыкв",
-	warnHorsemanHead		= "Спец-предупрежение о появлении головы всадника"
+	warnHorsemanHead		= "Спецпредупреждение о появлении головы всадника"
 })
 
 L:SetMiscLocalization({
@@ -126,7 +139,7 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization({
 	warnTotalAdds	= "Объявлять общее число появившихся аддов между каждой большой волной",
-	specWarnWave	= "Спец-предупреждение когда начинается большая волна",
+	specWarnWave	= "Спецпредупреждение, когда начинается большая волна",
 	timerWave		= "Отсчет времени до следующей большой волны"
 })
 
@@ -152,9 +165,36 @@ L:SetGeneralLocalization({
 	name = "MoA: WotLK"
 })
 
+L:SetWarningLocalization{
+	WarnEmerge				= "Ануб'арак появляется",
+	WarnEmergeSoon			= "Появится в течение 10 секунд",
+	WarnSubmerge			= "Ануб'арак закапывается",
+	WarnSubmergeSoon		= "Закопается в течение 10 секунд",
+	WarningTeleportNow		= "Телепортирован",
+	WarningTeleportSoon		= "Телепортация в течение 10 секунд"
+}
+
+L:SetTimerLocalization{
+	TimerEmerge				= "Появление",
+	TimerSubmerge			= "Закапывание",
+	TimerTeleport			= "Телепортация"
+}
+
 L:SetMiscLocalization{
-	Emerge				= "вылезает на поверхность!",
-	Burrow				= "зарывается в землю!"
+	Emerge					= "вылезает на поверхность!",
+	Burrow					= "зарывается в землю!"
+}
+
+L:SetOptionLocalization{
+	WarnEmerge				= "Показать предупреждение о появлении",
+	WarnEmergeSoon			= "Показать предварительное предупреждение о появлении",
+	WarnSubmerge			= "Показать предупреждение о закапывании",
+	WarnSubmergeSoon		= "Показать предварительное предупреждение о закапывании",
+	TimerEmerge				= "Показать таймер для появления",
+	TimerSubmerge			= "Показать таймер для закапывания",
+	WarningTeleportNow		= "Показать предупреждение для телепортации",
+	WarningTeleportSoon		= "Показать предварительное предупреждение для телепортации",
+	TimerTeleport			= "Показать таймер для телепортации"
 }
 
 --------------------------
@@ -165,3 +205,90 @@ L = DBM:GetModLocalization("CataEvent")
 L:SetGeneralLocalization({
 	name = "MoA: Cataclysm"
 })
+
+L:SetWarningLocalization({
+	warnSplittingBlow		= "%s в %s",--Spellname in Location
+	warnEngulfingFlame		= "%s в %s"--Spellname in Location
+})
+
+L:SetOptionLocalization({
+	warnSplittingBlow			= "Показать предупреждения о местоположении для $spell:98951",
+	warnEngulfingFlame			= "Показать предупреждения о местоположении для $spell:99171"
+})
+
+----------------------------------
+--  Azeroth Event World Bosses  --
+----------------------------------
+
+-- Lord Kazzak (Badlands)
+L = DBM:GetModLocalization("KazzakClassic")
+
+L:SetGeneralLocalization{
+	name = "Владыка Каззак"
+}
+
+L:SetMiscLocalization({
+	Pull		= "За Легион! За Кил'Джедена!"
+})
+
+-- Azuregos (Azshara)
+L = DBM:GetModLocalization("Azuregos")
+
+L:SetGeneralLocalization{
+	name = "Азурегос"
+}
+
+L:SetMiscLocalization({
+	Pull		= "Это место под моей защитой. Тайны тайных останутся неприкосновенными."
+})
+
+-- Taerar (Ashenvale)
+L = DBM:GetModLocalization("Taerar")
+
+L:SetGeneralLocalization{
+	name = "Таэрар"
+}
+
+L:SetMiscLocalization({
+	Pull		= "Мир - всего лишь мимолетный сон! Пусть царит КОШМАР!"
+})
+
+-- Ysondre (Feralas)
+L = DBM:GetModLocalization("Ysondre")
+
+L:SetGeneralLocalization{
+	name = "Исондра"
+}
+
+L:SetMiscLocalization({
+	Pull		= "Нити ЖИЗНИ были разорваны! Мечтатели должны быть отомщены!"
+})
+
+-- Lethon (Hinterlands)
+L = DBM:GetModLocalization("Lethon")
+
+L:SetGeneralLocalization{
+	name = "Летон"
+}
+
+L:SetMiscLocalization({
+--	Pull		= "The strands of LIFE have been severed! The Dreamers must be avenged!"--Does not have one :\
+})
+
+-- Emeriss (Duskwood)
+L = DBM:GetModLocalization("Emeriss")
+
+L:SetGeneralLocalization{
+	name = "Эмерисс"
+}
+
+L:SetMiscLocalization({
+	Pull		= "Надежда - это БОЛЕЗНЬ души! Эта земля засохнет и умрет!"
+})
+
+-- Doomwalker (Tanaris)
+L = DBM:GetModLocalization("DoomwalkerEvent")
+
+L:SetGeneralLocalization{
+	name = "Предвестник Рока (событие)"
+}

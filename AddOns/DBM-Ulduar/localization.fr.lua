@@ -104,7 +104,7 @@ L:SetMiscLocalization{
 	YellAir2			= "Incendie éteint ! Reconstruisons les tourelles !",
 	YellGround		= "Faites vite ! Elle va pas rester au sol très longtemps !",
 	EmotePhase2			= "bloquée au sol",
-	FlamecastUnknown	= DBM_CORE_L.UNKNOWN
+	FlamecastUnknown	= DBM_COMMON_L.UNKNOWN
 }
 
 -------------

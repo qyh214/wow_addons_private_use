@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1438, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211011150925")
+mod:SetRevision("20220116041913")
 mod:SetCreatureID(91331)--Doomfire Spirit (92208), Hellfire Deathcaller (92740), Felborne Overfiend (93615), Dreadstalker (93616), Infernal doombringer (94412)
 mod:SetEncounterID(1799)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -99,7 +99,7 @@ local specWarnTwistedDarkness		= mod:NewSpecialWarningSwitchCount(190821, "Range
 mod:AddTimerLine(SCENARIO_STAGE:format(1))
 local timerDoomfireCD				= mod:NewCDTimer(41.5, 182826, nil, nil, nil, 1)--182826 cast, 182879 fixate. Doomfire only fixates ranged, but ALL dps switch to it.
 local timerAllureofFlamesCD			= mod:NewCDTimer(47.5, 183254, nil, nil, nil, 2)
-local timerFelBurstCD				= mod:NewCDTimer(52, 183817, nil, nil, 2, 3, nil, DBM_CORE_L.DEADLY_ICON)
+local timerFelBurstCD				= mod:NewCDTimer(52, 183817, nil, nil, 2, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerDeathbrandCD				= mod:NewCDCountTimer(42.5, 183828, nil, nil, nil, 1, nil, nil, nil, 1, 3)--Everyone, for tanks/healers to know when debuff/big hit, for dps to know add coming
 local timerDesecrateCD				= mod:NewCDTimer(26.3, 185590, nil, nil, 2, 2)
 local timerLightCD					= mod:NewNextTimer(10, 183963, nil, nil, nil, 5)
@@ -108,7 +108,7 @@ local timerShadowBlastCD			= mod:NewCDTimer(7.3, 183864, nil, "Tank", nil, 5)
 --Phase 2: Hand of the Legion
 mod:AddTimerLine(SCENARIO_STAGE:format(2))
 local timerShackledTormentCD		= mod:NewCDCountTimer(31.5, 184931, nil, nil, nil, 3, nil, nil, nil, not mod:IsTank() and 3, 3)
-local timerWroughtChaosCD			= mod:NewCDTimer(51.7, 184265, nil, nil, nil, 3, nil, DBM_CORE_L.DEADLY_ICON)
+local timerWroughtChaosCD			= mod:NewCDTimer(51.7, 184265, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 --Phase 2.5
 local timerFelborneOverfiendCD		= mod:NewNextCountTimer(44.3, "ej11603", nil, nil, nil, 1, 186662)
 --Phase 3: The Twisting Nether
@@ -123,9 +123,9 @@ mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
 local timerDarkConduitCD			= mod:NewNextCountTimer(107, 190394, nil, "-Melee", 2, 3)
 local timerMarkOfLegionCD			= mod:NewNextCountTimer(107, 187050, 28836, nil, nil, 3)
 local timerInfernalsCD				= mod:NewNextCountTimer(107, 187111, 23426, nil, nil, 1, 1122)
-local timerSourceofChaosCD			= mod:NewNextCountTimer(107, 190703, nil, nil, 2, 1, nil, DBM_CORE_L.TANK_ICON, nil, 2, 4)
+local timerSourceofChaosCD			= mod:NewNextCountTimer(107, 190703, nil, nil, 2, 1, nil, DBM_COMMON_L.TANK_ICON, nil, 2, 4)
 local timerTwistedDarknessCD		= mod:NewNextCountTimer(107, 190821, 189894, nil, nil, 1)
-local timerSeethingCorruptionCD		= mod:NewNextCountTimer(107, 190506, 66911, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON, nil, 1, 4)
+local timerSeethingCorruptionCD		= mod:NewNextCountTimer(107, 190506, 66911, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 4)
 
 --local berserkTimer				= mod:NewBerserkTimer(360)
 

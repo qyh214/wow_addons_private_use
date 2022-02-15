@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2411, "DBM-Party-Shadowlands", 4, 1185)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201122213043")
+mod:SetRevision("20220204091202")
 mod:SetCreatureID(165410)
 mod:SetEncounterID(2403)
 
@@ -33,10 +33,11 @@ local specWarnBoltofPower			= mod:NewSpecialWarningInterrupt(323538, false, nil,
 local specWarnVolleyofPower			= mod:NewSpecialWarningInterrupt(323552, "HasInterrupt", nil, nil, 1, 2)
 --local specWarnGTFO					= mod:NewSpecialWarningGTFO(257274, nil, nil, nil, 1, 8)
 
-local timerVolleyofPowerCD				= mod:NewCDTimer(12.2, 323552, nil, nil, nil, 4, nil, DBM_CORE_L.INTERRUPT_ICON)--12-20
+local timerVolleyofPowerCD				= mod:NewCDTimer(12.2, 323552, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--12-20
 local timerSpectralProcessionCD			= mod:NewCDTimer(20.6, 323597, nil, nil, nil, 1)
 
 mod:AddNamePlateOption("NPAuraOnFixate", 323650, true)
+mod:GroupSpells(323597, 323650)--Group spectral with associated fixate debuff
 
 --local vesselName = DBM:GetSpellInfo(323848)
 

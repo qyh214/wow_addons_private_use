@@ -32,6 +32,7 @@ local CR_ConvertRatio = {      --Combat Rating number/percent
 local GetItemQualityColor = NarciAPI.GetItemQualityColor;
 
 local function SetCombatRatingRatio()
+    local _;
 	local mastery, bonusCoeff = GetMasteryEffect();
 	local masteryBonus = GetCombatRatingBonus(CR_MASTERY) * bonusCoeff;
 	local masteryBase;
@@ -53,13 +54,13 @@ local function SetCombatRatingRatio()
     local crit = math.max(GetCombatRating(CR_CRIT_MELEE), GetCombatRating(CR_CRIT_RANGED), GetCombatRating(CR_CRIT_SPELL));
     local critBonus = math.max(GetCombatRatingBonus(CR_CRIT_MELEE), GetCombatRatingBonus(CR_CRIT_RANGED), GetCombatRatingBonus(CR_CRIT_SPELL));
     local haste = GetCombatRating(CR_HASTE_MELEE);
-    local mastery = GetCombatRating(CR_MASTERY);
+    mastery = GetCombatRating(CR_MASTERY);
     local versatility = GetCombatRating(CR_VERSATILITY_DAMAGE_DONE);
     local stamina = UnitStat("player", LE_UNIT_STAT_STAMINA);
     local Health = UnitHealth("player");
 
-    local _, bonusCoeff = GetMasteryEffect();
-    local masteryBonus = GetCombatRatingBonus(CR_MASTERY) * bonusCoeff;
+    _, bonusCoeff = GetMasteryEffect();
+    masteryBonus = GetCombatRatingBonus(CR_MASTERY) * bonusCoeff;
 
     if crit == 0 then
         CR_ConvertRatio.crit = 0;
@@ -198,18 +199,20 @@ local function DisplayComparison(key, name, number, baseNumber, ratio, CustomCol
     differentialNumber = math.abs(differentialNumber)
 
     Textframe.Label:SetText(name)
+    local labelAlpha = 1;
     if number ~= 0 then
         Textframe.Num:SetText(number);
         Textframe:Show();
     else
         Textframe.Num:SetText("-");
+        labelAlpha = 0.6;
     end
     Textframe.NumDiff:SetText(differentialNumber);
 
     if CustomColor then
-        Textframe.Label:SetTextColor(CustomColor[1], CustomColor[2], CustomColor[3])
+        Textframe.Label:SetTextColor(CustomColor[1], CustomColor[2], CustomColor[3], labelAlpha)
     else
-        Textframe.Label:SetTextColor(1, 0.96, 0.41)
+        Textframe.Label:SetTextColor(1, 0.96, 0.41, labelAlpha);
     end
 
     if ratio then

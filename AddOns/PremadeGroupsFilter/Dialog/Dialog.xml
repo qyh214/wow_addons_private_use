@@ -2,9 +2,9 @@
 ..\FrameXML\UI.xsd">
 
     <Button name="PremadeGroupsFilterInfoButtonTemplate" virtual="true">
-        <Size x="64" y="64"/>
+        <Size x="46" y="46"/>
         <HitRectInsets>
-            <AbsInset left="20" right="20" top="20" bottom="20"/>
+            <AbsInset left="10" right="10" top="10" bottom="10"/>
         </HitRectInsets>
         <Layers>
             <Layer level="BACKGROUND">
@@ -223,14 +223,12 @@
                         </FontString>
                     </Layer>
                 </Layers>
-                <Frames>
-                    <Button parentKey="InfoButton" inherits="PremadeGroupsFilterInfoButtonTemplate">
-                        <Anchors>
-                            <Anchor point="TOPRIGHT" x="15" y="14"/>
-                        </Anchors>
-                    </Button>
-                </Frames>
             </Frame>
+            <Button parentKey="InfoButton" inherits="PremadeGroupsFilterInfoButtonTemplate">
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT" x="0" y="102"/>
+                </Anchors>
+            </Button>
             <ScrollFrame parentKey="Expression" inherits="InputScrollFrameTemplate">
                 <Size y="70"/>
                 <Anchors>
@@ -247,6 +245,32 @@
                     <OnLoad>InputScrollFrame_OnLoad(self)</OnLoad>
                 </Scripts>
             </ScrollFrame>
+            <Frame parentKey="Sorting" hidden="false">
+                <Size y="24"/>
+                <Anchors>
+                    <Anchor point="LEFT" x="7"/>
+                    <Anchor point="RIGHT" x="-7"/>
+                    <Anchor point="BOTTOM" y="25"/>
+                </Anchors>
+                <Layers>
+                    <Layer>
+                        <FontString parentKey="SortingTitle" inherits="GameFontHighlight" wordwrap="false">
+                            <Size x="70" y="20"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" x="0" y="-2"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <EditBox parentKey="SortingExpression" inherits="InputBoxInstructionsTemplate" autoFocus="false" letters="100">
+                        <Size x="175" y="20"/>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT" x="-25" y="-2"/>
+                        </Anchors>
+                    </EditBox>
+                </Frames>
+            </Frame>
             <Button parentKey="ResetButton" inherits="MagicButtonTemplate">
                 <Size x="135" y="22"/>
                 <Anchors>
@@ -256,7 +280,7 @@
             <Button parentKey="RefreshButton" inherits="MagicButtonTemplate">
                 <Size x="135" y="22"/>
                 <Anchors>
-                    <Anchor point="BOTTOMRIGHT" x="-3" y="4"/>
+                    <Anchor point="BOTTOMRIGHT" x="-5" y="4"/>
                 </Anchors>
             </Button>
         </Frames>

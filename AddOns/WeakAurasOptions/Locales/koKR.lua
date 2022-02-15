@@ -350,6 +350,10 @@ UNIT_POWER_UPDATE, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Export to Lua table..."] = "Lua table로 내보내기..."
 	L["Export to string..."] = "문자열로 내보내기..."
 	L["External"] = "외부"
+	--[[Translation missing --]]
+	L["Extra Height"] = "Extra Height"
+	--[[Translation missing --]]
+	L["Extra Width"] = "Extra Width"
 	L["Fade"] = "사라짐"
 	L["Fade In"] = "서서히 나타남"
 	L["Fade Out"] = "서서히 사라짐"

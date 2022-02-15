@@ -7,8 +7,7 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
-	--[[Translation missing --]]
-	L[" Debuff"] = " Debuff"
+	L[" Debuff"] = "Schwächungzauber"
 	--[[Translation missing --]]
 	L["<70% Mana"] = "<70% Mana"
 	--[[Translation missing --]]
@@ -18,10 +17,8 @@ local L = WeakAuras.L
 	L["Add Triggers"] = "Auslöser hinzufügen"
 	L["Always Active"] = "Immer aktiv"
 	L["Always Show"] = "Immer anzeigen"
-	--[[Translation missing --]]
-	L["Always show the aura, highlight it if debuffed."] = "Always show the aura, highlight it if debuffed."
-	--[[Translation missing --]]
-	L["Always show the aura, turns grey if on cooldown."] = "Always show the aura, turns grey if on cooldown."
+	L["Always show the aura, highlight it if debuffed."] = "Zeige immer die Aura, hebe sie hervor, wenn sie geschwächt ist."
+	L["Always show the aura, turns grey if on cooldown."] = "Aura immer anzeigen, wird Grau wenn es auf Abkühlen steht."
 	--[[Translation missing --]]
 	L["Always show the aura, turns grey if the debuff not active."] = "Always show the aura, turns grey if the debuff not active."
 	--[[Translation missing --]]
@@ -62,8 +59,7 @@ local L = WeakAuras.L
 	L["Bloodlust/Heroism"] = "Kampfrausch/Heldentum"
 	--[[Translation missing --]]
 	L["Bonded Buff"] = "Bonded Buff"
-	--[[Translation missing --]]
-	L["Buff"] = "Buff"
+	L["Buff"] = "Stärkungszauber"
 	L["buff"] = "buff"
 	--[[Translation missing --]]
 	L["Buff on Other"] = "Buff on Other"
@@ -90,15 +86,12 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Cooldown Tracking"] = "Cooldown Tracking"
 	L["Create Auras"] = "Auren erstellen"
-	--[[Translation missing --]]
-	L["Debuff"] = "Debuff"
-	--[[Translation missing --]]
-	L["debuff"] = "debuff"
+	L["Debuff"] = "Schwächungszauber"
+	L["debuff"] = "Schwächungszauber"
 	L["Debuffs"] = "Debuffs"
 	--[[Translation missing --]]
 	L["Empowered Buff"] = "Empowered Buff"
-	--[[Translation missing --]]
-	L["Fire"] = "Fire"
+	L["Fire"] = "Feuer"
 	--[[Translation missing --]]
 	L["Frost"] = "Frost"
 	L["General"] = "Allgemein"

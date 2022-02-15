@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 90105
 ## Title: RSA [|c56F58CBAPaladin|r]
 ## Notes: RSA Paladin Module. This is needed to announce Paladin Spells.
 ## Author: Raeli

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1197, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142006")
+mod:SetRevision("20220116041913")
 mod:SetCreatureID(77428, 78623)
 mod:SetEncounterID(1705)
 mod:SetUsedIcons(1, 2, 3)
@@ -103,20 +103,20 @@ local specWarnDarkStar							= mod:NewSpecialWarningSpell(178607, nil, nil, nil,
 local timerArcaneWrathCD						= mod:NewCDTimer(50, 156238, nil, "-Tank", nil, 3)--Pretty much a next timer, HOWEVER can get delayed by other abilities so only reason it's CD timer anyways
 local timerDestructiveResonanceCD				= mod:NewCDTimer(15, 156467, nil, "-Melee", nil, 3)--16-30sec variation noted. I don't like it
 local timerMarkOfChaos							= mod:NewTargetTimer(8, 158605, nil, "Tank")
-local timerMarkOfChaosCD						= mod:NewCDTimer(50.5, 158605, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON, nil, 2, 5)
+local timerMarkOfChaosCD						= mod:NewCDTimer(50.5, 158605, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, 2, 5)
 local timerForceNovaCD							= mod:NewCDCountTimer(45, 157349, nil, nil, nil, 2, nil, nil, nil, 3, 4)--45-52
 local timerForceNovaFortification				= mod:NewNextTimer(9, 157349, nil, nil, nil, 2)--For repeating nova
-local timerSummonArcaneAberrationCD				= mod:NewCDCountTimer(45, "ej9945", nil, "-Healer", nil, 1, 156471, DBM_CORE_L.DAMAGE_ICON)--45-52 Variation Noted
+local timerSummonArcaneAberrationCD				= mod:NewCDCountTimer(45, "ej9945", nil, "-Healer", nil, 1, 156471, DBM_COMMON_L.DAMAGE_ICON)--45-52 Variation Noted
 --Intermission: Lineage of Power
 mod:AddTimerLine(DBM_CORE_L.INTERMISSION)
 local timerTransition							= mod:NewPhaseTimer(74, nil, nil, nil, nil, nil, nil, nil, nil, 1, 5)
-local timerCrushArmorCD							= mod:NewNextTimer(6, 158553, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
-local timerKickToFaceCD							= mod:NewCDTimer(17, 158563, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerCrushArmorCD							= mod:NewNextTimer(6, 158553, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerKickToFaceCD							= mod:NewCDTimer(17, 158563, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 --Mythic
 mod:AddTimerLine(ENCOUNTER_JOURNAL_SECTION_FLAG12)
 local timerGaze									= mod:NewBuffFadesTimer(15, 165595, nil, nil, nil, 3, nil, nil, nil, 2, 4)
 local timerGlimpseOfMadnessCD					= mod:NewNextCountTimer(27, 165243, nil, nil, nil, 1)
-local timerInfiniteDarknessCD					= mod:NewNextTimer(62, 165102, nil, "Healer", 2, 5, nil, DBM_CORE_L.HEALER_ICON)
+local timerInfiniteDarknessCD					= mod:NewNextTimer(62, 165102, nil, "Healer", 2, 5, nil, DBM_COMMON_L.HEALER_ICON)
 local timerEnvelopingNightCD					= mod:NewNextCountTimer(63, 165876, nil, nil, nil, 2, nil, nil, nil, 1, 4)--60 seconds plus 3 second cast
 local timerDarkStarCD							= mod:NewCDTimer(61, 178607, nil, nil, nil, 3, nil, nil, nil, 3, 4)--61-65 Variations noticed
 local timerNightTwistedCD						= mod:NewTimer(30, "timerNightTwistedCD", 172138, nil, nil, 1)

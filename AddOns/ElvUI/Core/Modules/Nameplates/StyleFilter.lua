@@ -100,6 +100,14 @@ mod.TriggerConditions = {
 		[4] = 'legacy25normal',
 		[5] = 'legacy10heroic',
 		[6] = 'legacy25heroic',
+		-- classic / tbc
+		[9] = 'legacy40normal',
+		[148] = 'legacy20normal',
+		[173] = 'normal',
+		[174] = 'heroic',
+		-- wotlk (pretty sure)
+		--[175] = 'legacy10heroic',
+		--[176] = 'legacy25heroic',
 	}
 }
 
@@ -360,7 +368,7 @@ function mod:StyleFilterAuraCheck(frame, names, tickers, filter, mustHaveAll, mi
 				end
 
 				index = index + 1
-				name, _, count, _, _, expiration, _, _, _, spellID = UnitAura(frame.unit, index, filter)
+				name, _, count, _, _, expiration, source, _, _, spellID = UnitAura(frame.unit, index, filter)
 			end
 
 			local stale = matches + 1
@@ -886,7 +894,7 @@ function mod:StyleFilterConditionCheck(frame, filter, trigger)
 	-- Class and Specialization
 	if trigger.class and next(trigger.class) then
 		local Class = trigger.class[E.myclass]
-		if not Class or (E.Retail and Class.specs and next(Class.specs) and not Class.specs[E.myspec and GetSpecializationInfo(E.myspec)]) then
+		if not Class or (Class.specs and next(Class.specs) and not Class.specs[E.myspec and GetSpecializationInfo(E.myspec)]) then
 			return
 		else
 			passed = true
@@ -1243,7 +1251,7 @@ function mod:StyleFilterConfigure()
 	wipe(list)
 
 	if mod.db.filters then
-		for filterName, filter in pairs(E.global.nameplate.filters) do
+		for filterName, filter in pairs(E.global.nameplates.filters) do
 			local t = filter.triggers
 			if t and mod.db.filters[filterName] and mod.db.filters[filterName].triggers and mod.db.filters[filterName].triggers.enable then
 				tinsert(list, {filterName, t.priority or 1})
@@ -1394,7 +1402,7 @@ function mod:StyleFilterUpdate(frame, event)
 	mod:StyleFilterClear(frame)
 
 	for filterNum in ipairs(mod.StyleFilterTriggerList) do
-		local filter = E.global.nameplate.filters[mod.StyleFilterTriggerList[filterNum][1]]
+		local filter = E.global.nameplates.filters[mod.StyleFilterTriggerList[filterNum][1]]
 		if filter then
 			mod:StyleFilterConditionCheck(frame, filter, filter.triggers)
 		end
@@ -1523,14 +1531,14 @@ function mod:StyleFilterRemoveCustomCheck(name)
 end
 
 function mod:PLAYER_LOGOUT()
-	mod:StyleFilterClearDefaults(E.global.nameplate.filters)
+	mod:StyleFilterClearDefaults(E.global.nameplates.filters)
 end
 
 function mod:StyleFilterClearDefaults(tbl)
 	for filterName, filterTable in pairs(tbl) do
-		if G.nameplate.filters[filterName] then
+		if G.nameplates.filters[filterName] then
 			local defaultTable = E:CopyTable({}, E.StyleFilterDefaults)
-			E:CopyTable(defaultTable, G.nameplate.filters[filterName])
+			E:CopyTable(defaultTable, G.nameplates.filters[filterName])
 			E:RemoveDefaults(filterTable, defaultTable)
 		else
 			E:RemoveDefaults(filterTable, E.StyleFilterDefaults)
@@ -1543,7 +1551,7 @@ function mod:StyleFilterCopyDefaults(tbl)
 end
 
 function mod:StyleFilterInitialize()
-	for _, filterTable in pairs(E.global.nameplate.filters) do
+	for _, filterTable in pairs(E.global.nameplates.filters) do
 		mod:StyleFilterCopyDefaults(filterTable)
 	end
 end

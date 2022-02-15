@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("GeneralVezax", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200530203003")
+mod:SetRevision("20220116041927")
 mod:SetCreatureID(33271)
 mod:SetEncounterID(1134)
 mod:SetModelID(28548)
@@ -33,8 +33,8 @@ local specWarnSearingFlames		= mod:NewSpecialWarningInterruptCount(62661, "HasIn
 local specWarnAnimus			= mod:NewSpecialWarningSwitch("ej17651", nil, nil, nil, 1, 2)
 
 local timerEnrage				= mod:NewBerserkTimer(600)
-local timerSurgeofDarkness		= mod:NewBuffActiveTimer(10, 62662, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
-local timerNextSurgeofDarkness	= mod:NewCDTimer(61.7, 62662, nil, "Tank", nil, 5, nil, DBM_CORE_L.TANK_ICON)
+local timerSurgeofDarkness		= mod:NewBuffActiveTimer(10, 62662, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerNextSurgeofDarkness	= mod:NewCDTimer(61.7, 62662, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerSaroniteVapors		= mod:NewNextCountTimer(30, 63322, nil, nil, nil, 5)
 local timerShadowCrashCD		= mod:NewCDTimer(12, 62660, nil, "Ranged", nil, 3)
 local timerLifeLeech			= mod:NewTargetTimer(10, 63276, nil, false, 2, 3)

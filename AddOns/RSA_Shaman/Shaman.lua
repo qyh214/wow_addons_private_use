@@ -87,6 +87,12 @@ function RSA_Shaman:OnEnable()
 			[2825] = { -- BLOODLUST
 				profile = 'Heroism'
 			},
+			[204362] = { -- BLOODLUST
+				profile = 'Heroism'
+			},
+			[204361] = { -- BLOODLUST
+				profile = 'Heroism'
+			},
 			[32182] = { -- HEROISM
 				profile = 'Heroism'
 			},
@@ -168,6 +174,16 @@ function RSA_Shaman:OnEnable()
 				replacements = { TARGET = 1 }
 			},
 			[2825] = { -- BLOODLUST
+				profile = 'Heroism',
+				section = 'End',
+				targetIsMe = 1
+			},
+			[204362] = { -- BLOODLUST
+				profile = 'Heroism',
+				section = 'End',
+				targetIsMe = 1
+			},
+			[204361] = { -- BLOODLUST
 				profile = 'Heroism',
 				section = 'End',
 				targetIsMe = 1

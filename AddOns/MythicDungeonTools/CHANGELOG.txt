@@ -1,3 +1,12 @@
+v3.7.5
+- fix anchor connection bug when dragging and reordering pulls
+v3.7.4
+- nil fix for imported presets without colorpalette
+v3.7.2
+- fixed visual right click menu issues
+- fixed backgrounds missing on dungeon dropdown + note editbox
+- fixed an issue when loading Legion Dungeons
+- added missing stealth detect flags to certain enemies
 v3.6.8
 - affix list update
 v3.6.7

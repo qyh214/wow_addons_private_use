@@ -100,7 +100,7 @@ L:SetMiscLocalization{
 	YellAir2			= "火灭了！准备重建炮台！",
 	YellGround			= "快一点！她马上就要挣脱了！",
 	EmotePhase2			= "%%s被永久地禁锢在地面上！",
-	FlamecastUnknown		= DBM_CORE_L.UNKNOWN
+	FlamecastUnknown		= DBM_COMMON_L.UNKNOWN
 }
 
 ----------------------------

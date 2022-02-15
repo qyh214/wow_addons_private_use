@@ -28,7 +28,7 @@ L.Mod_Enabled				= "Activer ce module"
 L.Mod_Reset					= "Charger les options par défaut"
 L.Reset 					= "Réinit."
 
-L.Enable  					= "Activer"
+L.Enable					= "Activer"
 L.Disable					= "Désactiver"
 
 L.NoSound					= "Pas de son"

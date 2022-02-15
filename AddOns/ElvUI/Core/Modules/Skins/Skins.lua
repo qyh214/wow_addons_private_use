@@ -208,21 +208,28 @@ function S:HandlePortraitFrame(frame, createBackdrop)
 	end
 end
 
+function S:SetBackdropBorderColor(frame, script)
+	if frame.backdrop then frame = frame.backdrop end
+	if frame.SetBackdropBorderColor then
+		frame:SetBackdropBorderColor(unpack(script == 'OnEnter' and E.media.rgbvaluecolor or E.media.bordercolor))
+	end
+end
+
 function S:SetModifiedBackdrop()
 	if self:IsEnabled() then
-		if self.backdrop then self = self.backdrop end
-		if self.SetBackdropBorderColor then
-			self:SetBackdropBorderColor(unpack(E.media.rgbvaluecolor))
-		end
+		S:SetBackdropBorderColor(self, 'OnEnter')
 	end
 end
 
 function S:SetOriginalBackdrop()
 	if self:IsEnabled() then
-		if self.backdrop then self = self.backdrop end
-		if self.SetBackdropBorderColor then
-			self:SetBackdropBorderColor(unpack(E.media.bordercolor))
-		end
+		S:SetBackdropBorderColor(self, 'OnLeave')
+	end
+end
+
+function S:SetDisabledBackdrop()
+	if self:IsMouseOver() then
+		S:SetBackdropBorderColor(self, 'OnDisable')
 	end
 end
 
@@ -447,6 +454,7 @@ function S:HandleButton(button, strip, isDecline, noStyle, createBackdrop, templ
 
 		button:HookScript('OnEnter', S.SetModifiedBackdrop)
 		button:HookScript('OnLeave', S.SetOriginalBackdrop)
+		button:HookScript('OnDisable', S.SetDisabledBackdrop)
 	end
 
 	button.isSkinned = true
@@ -1379,43 +1387,37 @@ end
 
 function S:SkinStatusBarWidget(widgetFrame)
 	local bar = widgetFrame.Bar
-	if bar and not bar.IsSkinned then
-		-- Hide StatusBar textures
-		if bar.BorderLeft then bar.BorderLeft:Hide() end
-		if bar.BorderRight then bar.BorderRight:Hide() end
-		if bar.BorderCenter then bar.BorderCenter:Hide() end
-		if bar.BGLeft then bar.BGLeft:Hide() end
-		if bar.BGRight then bar.BGRight:Hide() end
-		if bar.BGCenter then bar.BGCenter:Hide() end
+	if not bar or bar.backdrop then return end
 
-		if not bar.backdrop then
-			bar:CreateBackdrop('Transparent')
-		end
+	bar:CreateBackdrop('Transparent')
+	bar:SetScale(0.99) -- lol yes, this will keep it placed correctly for Simpy
 
-		local x = E.PixelMode and 1 or 2
-		bar.backdrop:Point('TOPLEFT', -x, x)
-		bar.backdrop:Point('BOTTOMRIGHT', x, -x)
-
-		bar.IsSkinned = true
-	end
+	if bar.BGLeft then bar.BGLeft:SetAlpha(0) end
+	if bar.BGRight then bar.BGRight:SetAlpha(0) end
+	if bar.BGCenter then bar.BGCenter:SetAlpha(0) end
+	if bar.BorderLeft then bar.BorderLeft:SetAlpha(0) end
+	if bar.BorderRight then bar.BorderRight:SetAlpha(0) end
+	if bar.BorderCenter then bar.BorderCenter:SetAlpha(0) end
 end
 
--- For now see the function below
-function S:SkinDoubleStatusBarWidget(widgetFrame)
-	if not widgetFrame.LeftBar or not widgetFrame.RightBar then return end
+do
+	local function handleBar(bar)
+		if not bar or bar.backdrop then return end
 
-	for _, bar in pairs({widgetFrame.LeftBar, widgetFrame.RightBar}) do
-		if not bar.backdrop then
-			bar:CreateBackdrop('Transparent')
+		bar:CreateBackdrop('Transparent')
 
-			bar.BG:SetAlpha(0)
-			bar.BorderLeft:SetAlpha(0)
-			bar.BorderRight:SetAlpha(0)
-			bar.BorderCenter:SetAlpha(0)
-			bar.Spark:SetAlpha(0)
-			bar.SparkGlow:SetAlpha(0)
-			bar.BorderGlow:SetAlpha(0)
-		end
+		if bar.BG then bar.BG:SetAlpha(0) end
+		if bar.Spark then bar.Spark:SetAlpha(0) end
+		if bar.SparkGlow then bar.SparkGlow:SetAlpha(0) end
+		if bar.BorderLeft then bar.BorderLeft:SetAlpha(0) end
+		if bar.BorderRight then bar.BorderRight:SetAlpha(0) end
+		if bar.BorderCenter then bar.BorderCenter:SetAlpha(0) end
+		if bar.BorderGlow then bar.BorderGlow:SetAlpha(0) end
+	end
+
+	function S:SkinDoubleStatusBarWidget(widgetFrame)
+		handleBar(widgetFrame.LeftBar)
+		handleBar(widgetFrame.RightBar)
 	end
 end
 
@@ -1463,8 +1465,7 @@ function S:SkinSpellDisplay(widgetFrame)
 	end
 
 	if spell.Icon then
-		S:HandleIcon(spell.Icon)
-		spell.Icon:SetTemplate()
+		S:HandleIcon(spell.Icon, true)
 	end
 end
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2444, "DBM-SanctumOfDomination", nil, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211011144558")
+mod:SetRevision("20211205163312")
 mod:SetCreatureID(175729)
 mod:SetEncounterID(2432)
 mod:SetUsedIcons(1, 2, 3, 4, 7, 8)
@@ -55,8 +55,8 @@ local specWarnGraspofMalice						= mod:NewSpecialWarningDodge(355123, nil, nil, 
 
 --mod:AddTimerLine(BOSS)
 local timerOrbofTormentCD						= mod:NewCDCountTimer(35, 349908, nil, nil, nil, 1, nil, nil, true)
-local timerMalevolenceCD						= mod:NewCDCountTimer(31.3, 350469, nil, nil, nil, 3, nil, DBM_CORE_L.CURSE_ICON, true)--Rattlecage of Agony 31.7--49.7
-local timerSufferingCD							= mod:NewCDTimer(24.4, 350894, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON, true, mod:IsTank() and 2, 3)
+local timerMalevolenceCD						= mod:NewCDCountTimer(31.3, 350469, nil, nil, nil, 3, nil, DBM_COMMON_L.CURSE_ICON, true)--Rattlecage of Agony 31.7--49.7
+local timerSufferingCD							= mod:NewCDTimer(24.4, 350894, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON, true, mod:IsTank() and 2, 3)
 local timerGraspofMaliceCD						= mod:NewCDTimer(20.7, 355123, nil, nil, nil, 3, nil, nil, true)--Malicious Gauntlet (22 possibly the min time now?)
 --local timerBurstofAgonyCD						= mod:NewAITimer(23, 350096, nil, nil, nil, 3)
 
@@ -184,12 +184,12 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 350894 then
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
-			specWarnSufferingTank:Show(DBM_CORE_L.ORB)
+			specWarnSufferingTank:Show(DBM_COMMON_L.ORB)
 			specWarnSufferingTank:Play("targetyou")--or orbrun.ogg?
 			yellSuffering:Yell()
 			yellSufferingFades:Countdown(3)
 		end
-		timerSufferingCD:Start(self:IsMythic() and 17.3 or self.vb.phase == 4 and 19.5 or 23.1)--17s are SUPER rare. Requires perfect alignment.
+		timerSufferingCD:Start(self:IsMythic() and 17.3 or 19.3)--17s are SUPER rare. Requires perfect alignment.
 		updateAllTimers(self, 12.2)
 	elseif spellId == 355123 then
 		specWarnGraspofMalice:Show()
@@ -416,7 +416,7 @@ function mod:SPELL_SUMMON(args)
 			self.vb.iconCount = 7
 			self.vb.orbCount = self.vb.orbCount + 1
 			warnOrbofTorment:Show(self.vb.orbCount)
-			timerOrbofTormentCD:Start(35, self.vb.orbCount+1)
+			timerOrbofTormentCD:Start(29.4, self.vb.orbCount+1)
 			updateAllTimers(self, 3.5)
 		end
 		if self.Options.SetIconOnOrbs then

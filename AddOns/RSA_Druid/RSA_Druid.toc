@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 90105
 ## Title: RSA [|c52FF7D0ADruid|r]
 ## Notes: RSA Druid Module. This is needed to announce Druid Spells.
 ## Author: Raeli

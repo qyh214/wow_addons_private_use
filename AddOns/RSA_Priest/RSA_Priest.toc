@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 90105
 ## Title: RSA [|c57FFFFFFPriest|r]
 ## Notes: RSA Priest Module. This is needed to announce Priest Spells.
 ## Author: Raeli

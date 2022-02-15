@@ -471,6 +471,10 @@ Off Screen]=]
 	--[[Translation missing --]]
 	L["External"] = "External"
 	--[[Translation missing --]]
+	L["Extra Height"] = "Extra Height"
+	--[[Translation missing --]]
+	L["Extra Width"] = "Extra Width"
+	--[[Translation missing --]]
 	L["Fade"] = "Fade"
 	--[[Translation missing --]]
 	L["Fade In"] = "Fade In"

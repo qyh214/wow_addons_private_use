@@ -1,7 +1,7 @@
 local L = Narci.L;
 
 local GemData = {
-    --[ItemID] = {"Attribute", Amount},
+    --[itemID] = {"attribute", amount},
 
     ----9 SL----
     [173127] = {"crit", 16},        --Deadly Jewel Cluster
@@ -64,9 +64,19 @@ local GemData = {
 Narci.GemData = GemData;
 
 local EnchantData= {
-    --[EnchantID] = {"Attribute", Amount, SpellID},  --need to be parsed from itemstring
+    --[enchantID] = {"attribute", amount, craftingSpellID, [itemID]},  --need to be parsed from itemstring
 
     ----9 SL----
+    ----Temp----
+    [6225] = {"stamina", 32, 324088, 172347},       --Heavy Desolate Armor Kit
+    [6224] = {"stamina", 16, 324087, 172346},       --Desolate Armor Kit
+    [6200] = {"AP", 20, 307718, 171437},            --Shaded Sharpening Stone
+    [6198] = {"AP", 16, 307717, 171436},            --Porous Sharpening Stone
+    [6201] = {"AP", 20, 307720, 171439},            --Shaded Weightstone (Mace & Staff)
+    [6199] = {"AP", 16, 307719, 171438},            --Porous Weightstone (Mace & Staff)
+    [6188] = {"damage", 220, 307118, 171285},       --Shadowcore Oil
+    [6190] = {"heal", 330, 307119, 171286},         --Embalmer's Oil
+
     ----Ring----
     [6163] = {"crit", 12, 309612},          --Bargain of Critical Strike
     [6165] = {"haste", 12, 309613},         --Bargain of Haste
@@ -94,6 +104,28 @@ local EnchantData= {
     [6213] = {"AGI", 20, 309535},           --Eternal Bulwark   +25 Armor & +20 Primary Stat
     [6217] = {"INT", 20, 323761},           --Eternal Bounds    +20 Intellect & +6% Mana
     [6265] = {"INT", 20, 342316},           --Eternal Insight   increase your Intellect by 20 and give your spells and abilities a chance to deal additional shadow damage
+
+    --Wrist
+    [6220] = {"INT", 15, 309609},           --Eternal Intellect
+    [6219] = {"INT", 10, 309608},           --Illuminated Soul
+    [6222] = {"hearthstone", 0, 309610},    --Shaded Hearthing
+
+    --Hands
+    [6205] = {"gather", 0, 309524},         --Shadowlands Gathering
+    [6210] = {"STR", 15, 309526},           --Eternal Strength
+    [6209] = {"STR", 10, 309525},           --Strength of Soul
+
+    --Feet
+    [6207] = {"fall", 0, 323609},           --Soul Treads
+    [6211] = {"AGI", 15, 309534},           --Eternal Agility
+    [6212] = {"AGI", 10, 309532},           --Agile Soulwalker
+
+    --Back
+    [6203] = {"stamina", 20, 309530},       --Fortified Avoidance
+    [6204] = {"stamina", 20, 309531},       --Fortified Leech
+    [6202] = {"stamina", 20, 309528},       --Fortified Speed
+    [6208] = {"stamina", 30, 323755},       --Soul Vitality
+
 
 
     ----8 BFA----
@@ -153,6 +185,106 @@ local EnchantData= {
 }
 
 Narci.EnchantData = EnchantData;
+
+local function GetEnchantDataByEnchantID(enchantID)
+    return EnchantData[enchantID];
+end
+
+NarciAPI.GetEnchantDataByEnchantID = GetEnchantDataByEnchantID;
+
+
+local TypeAbbr = {
+	crit = "cri",	  --CRI
+	haste = "has",	 --HAS
+	mastery = "mst", --MST
+	versatility = "ver",	 --VER
+	STR = "str",	 --STR
+	AGI = "agi",	 --AGI
+	INT = "int",	 --INT
+	speed = "spd",	 --SPD
+	armor = "arm",	 --ARM
+	heal = "hil", 	 --HIL
+	leech = "bld",	 --BLD
+	spell = "mgc",	 --MGC
+    stamina = "con",    --constitution
+    hearthstone = "hrt",
+    gather = "gtr",
+    damage = "dmg",
+    fall = "fal",   --Fall Damage Reduction
+    AP = "atk",
+};
+
+local LatinRunic = {
+    a = "ᚨ",
+    b = "ᛒ",
+    c = "ᚲ",
+    d = "ᛞ",
+    e = "ᛖ",
+    f = "ᚠ",
+    g = "ᚷ",
+    h = "ᚺ",
+    i = "ᛁ",
+    j = "ᛋ",
+    k = "ᚴ",
+    l = "ᛚ",
+    m = "ᛗ",
+    n = "ᚾ",
+    o = "ᛟ",
+    p = "ᛈ",
+    q = "ᚳ",
+    r = "ᚱ",
+    s = "ᛊ",
+    t = "ᛏ",
+    u = "ᚢ",
+    v = "ᚹ",
+    w = "ᚢ",
+    x = "ᛋ",
+    y = "ᛁ",
+    z = "ᛉ",
+};
+
+local RunicLetters = {};
+
+for attribute, abbr in pairs(TypeAbbr) do
+    local letter;
+    local runic;
+    local rune;
+    for i = 1, 3 do
+        letter = string.sub(abbr, i, i);
+        runic = LatinRunic[letter];
+        if i == 1 then
+            rune = runic;
+        else
+            rune = rune.."\n"..runic;
+        end
+    end
+    RunicLetters[attribute] = rune;
+end
+
+local function GetVerticalRunicLetters(attributeType)
+    return RunicLetters[attributeType];
+end
+
+local function GetAttributeAbbrByEnchantID(enchantID)
+    if EnchantData[enchantID] then
+        return TypeAbbr[ EnchantData[enchantID][1] ]
+    else
+        return "enh"
+    end
+end
+
+NarciAPI.GetVerticalRunicLetters = GetVerticalRunicLetters;
+NarciAPI.GetAttributeAbbrByEnchantID = GetAttributeAbbrByEnchantID;
+
+
+
+--Temporary Enchant--
+local tempEnchantIDs = {
+    6224, 6225,
+    6198, 6199, 6200, 6201,
+};
+
+local tempEnchantNames;
 
 
 --Corruption System

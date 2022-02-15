@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2445, "DBM-SanctumOfDomination", nil, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211011144558")
+mod:SetRevision("20220203061508")
 mod:SetCreatureID(175727)
 mod:SetEncounterID(2434)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -56,7 +56,7 @@ local specWarnRuinbladeTaunt				= mod:NewSpecialWarningTaunt(350422, nil, nil, n
 --Mawsworn Agonizer
 local specWarnAgonizingSpike				= mod:NewSpecialWarningInterruptCount(351779, "false", nil, nil, 1, 2)--Opt in
 --Garrosh Hellscream
-local specWarnWarmongerShackles				= mod:NewSpecialWarningSwitch(348985, nil, nil, nil, 1, 2)
+local specWarnWarmongerShackles				= mod:NewSpecialWarningSwitch(350415, nil, nil, nil, 1, 2)
 --local specWarnGTFO						= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
 --mod:AddTimerLine(BOSS)
@@ -64,19 +64,21 @@ local timerTormentCD						= mod:NewCDCountTimer(35, 352158, nil, nil, nil, 3, ni
 local timerTormentedEruptionsCD				= mod:NewCDCountTimer(160.7, 349985, nil, nil, nil, 3, nil, nil, true)--Tied to bosses energy cycle
 local timerSpawnMawswornCD					= mod:NewCDCountTimer(57.5, 350615, nil, nil, nil, 1, nil, nil, true)--Ability is reset by eruption?
 local timerBrandofTormentCD					= mod:NewCDCountTimer(16, 350648, nil, nil, nil, 3)--Secondary ability cast in 3s after each spawn mawsworn
-local timerRuinbladeCD						= mod:NewCDCountTimer(32.9, 350422, nil, "Tank|Healer", nil, 5, nil, DBM_CORE_L.TANK_ICON)--Ability is reset by eruption
+local timerRuinbladeCD						= mod:NewCDCountTimer(32.9, 350422, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Ability is reset by eruption
 local timerShacklesCD						= mod:NewCDCountTimer(161, 350415, 298215, nil, nil, 6)--Tied to bosses energy cycle
 --Hellscream
-local timerHellscream						= mod:NewCastTimer(35, 350411, nil, nil, nil, 2, nil, DBM_CORE_L.DEADLY_ICON)
+local timerHellscream						= mod:NewCastTimer(35, 350411, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 
 --local berserkTimer						= mod:NewBerserkTimer(600)
 
 --mod:AddRangeFrameOption("8")
-mod:AddInfoFrameOption(352158, true)
-mod:AddSetIconOption("SetIconOnBrandofTorment", 342077, true, false, {1, 2, 3, 4})
+mod:AddInfoFrameOption(352158, false)
+mod:AddSetIconOption("SetIconOnBrandofTorment", 350647, true, false, {1, 2, 3, 4})
 mod:AddSetIconOption("SetIconOnMawsworn", 350615, true, true, {5, 6, 7, 8})
 mod:AddNamePlateOption("NPAuraOnDefiance", 350650)
 mod:AddNamePlateOption("NPAuraOnTormented", 350649)
+mod:GroupSpells(350415, 350411)--Shackles and hellscream, same mechanic, hellscream is aoe during shackles
+mod:GroupSpells(350647, 350649)--Brand of torment and tormented debuff from it
 
 local castsPerGUID = {}
 mod.vb.shacklesCount = 0

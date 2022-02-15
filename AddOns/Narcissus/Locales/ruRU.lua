@@ -1,10 +1,11 @@
---Coutesy of Hubbotu. Thank you!    --Translator: Hubbotu as of 1.1.4
+--Coutesy of ZamestoTV. Thank you!    --Translator: ZamestoTV as of 1.1.6
 
 if not (GetLocale() == "ruRU") then
     return;
 end
 
 local L = Narci.L;
+local S = Narci.L.S;
 
 if IsMacClient() then
     --Mac OS
@@ -388,6 +389,10 @@ L["Show Unearned Mark Description"] = "Отметьте достижения, к
 L["Show Dates"] = "Показать даты";
 L["Hide Dates"] = "Скрыть даты";
 
+L["Pinned Entries"] = "Закрепленные записи";
+L["Pinned Entry Format"] = "Закреплено  %d/%d";
+
+
 --Barbershop--
 L["Save New Look"] = "Сохранить новый вид";
 L["No Available Slot"] = "Нет доступного слота";
@@ -495,6 +500,16 @@ L["Extract Shard"] = "Извлечь осколок";
 --Mythic+ Leaderboard--
 L["Mythic Plus"] = "Мифический+";
 L["Mythic Plus Abbrev"] = "М+";
-L["Total Runs"] = "Всего заходов: ";
+L["Total Runs"] = "Всего забегов: ";
 L["Complete In Time"] = "Во время";
 L["Complete Over Time"] = "Не во время";
+L["Runs"] = "Забег";
+
+--Equipment Upgrade--
+L["At Level"] = "На уровне %d:";      --Enchants scale with player level
+L["No Item Alert"] = "Нет совместимых предметов";
+
+--Statistics--
+S["Narcissus Played"] = "Общее время, проведенное в Narcissus";
+S["Format Since"] = "(на %s)";
+S["Screenshots"] = "Скриншоты, сделанные в Narcissus";

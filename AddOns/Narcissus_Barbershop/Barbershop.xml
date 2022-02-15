@@ -640,7 +640,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
-						<Texture parentKey="Divider" file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\VerticleLine">
+						<Texture parentKey="Divider" file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\VerticalLine">
 							<Size x="8" y="180"/>
 							<Anchors>
 								<Anchor point="CENTER" relativeKey="$parent" relativePoint="LEFT" x="80"/>
@@ -673,31 +673,12 @@
 							</Frame>
 						</ScrollChild>
 						<Frames>
-							<Slider valueStep="0.01" parentKey="scrollBar">
+							<Slider parentKey="scrollBar" inherits="NarciVerticalLineSliderTemplate">
 								<Size x="8"/>
 								<Anchors>
 									<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="-6" y="-4"/>
 									<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-6" y="4"/>
 								</Anchors>
-								<Layers>
-									<Layer level="BACKGROUND">
-										<Texture file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\VerticleLine" parentKey="Background"/>
-									</Layer>
-								</Layers>
-								<ThumbTexture parentKey="Thumb" file="Interface\AddOns\Narcissus\Art\Modules\BarberShop\SliderThumb">
-									<Size x="8" y="8"/>
-								</ThumbTexture>
-								<Scripts>
-									<OnLoad>
-										self.Thumb:SetVertexColor(0.5, 0.5, 0.5);
-									</OnLoad>
-									<OnEnter>
-										self.Thumb:SetVertexColor(0.8, 0.8, 0.8);
-									</OnEnter>
-									<OnLeave>
-										self.Thumb:SetVertexColor(0.5, 0.5, 0.5);
-									</OnLeave>
-								</Scripts>
 							</Slider>
 						</Frames>
 					</ScrollFrame>

@@ -311,10 +311,10 @@ local function SetDropDownInit(self, set, index)
     self:OnItemClick(function (self, setID)
 		local index = index or (#set.soulbinds + 1)
 
-    	if set.soulbinds[index] then
-    		local subset = GetSet(set.soulbinds[index]);
-    		subset.useCount = (subset.useCount or 1) - 1;
-    	end
+		if set.soulbinds[index] then
+            local subset = GetSet(set.soulbinds[index]);
+            subset.useCount = (subset.useCount or 1) - 1;
+		end
 
         if setID == "none" then
 			table.remove(set.soulbinds, index);

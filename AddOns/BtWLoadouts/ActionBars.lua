@@ -856,7 +856,6 @@ Internal.AddLoadoutSegment({
         assert(version == 1)
 
         return Internal.AddSet("actionbars", UpdateSetFilters({
-			soulbindID = soulbindID,
 			name = name or source.name,
 			useCount = 0,
 			actions = source.actions,

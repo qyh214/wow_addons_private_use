@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2021, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2022, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -15,11 +15,11 @@ local db, dbChar
 local mediaPath = "Interface\\AddOns\\"..addonName.."\\Media\\"
 local helpPath = mediaPath.."Help\\"
 local helpName = "help"
-local helpNumPages = 11
+local helpNumPages = 12
 local cTitle = "|cffffd200"
 local cBold = "|cff00ffe3"
 local cWarning = "|cffff7f00"
-local cWarning2 = "|cffff0000"
+local cWarning2 = "|cffff4200"
 local cDots = "|cff808080"
 local offs = "\n|T:1:9|t"
 local offs2 = "\n|T:1:18|t"
@@ -164,7 +164,9 @@ local function SetupTutorials()
 		{	-- 7
 			image = helpPath.."help_tracker-modules",
 			text = cTitle.."Order of Modules|r\n\n"..
-					"Allows to change the order of modules inside the tracker. Supports all modules including external (e.g. PetTracker).",
+					"Allows to change the order of modules inside the tracker. Supports all modules including external (e.g. PetTracker).\n\n\n"..
+					cTitle.."Collapsible Modules|r  "..new.."\n\n"..
+					"All modules, including external ones, can be collapsed by clicking on the module header.",
 			shine = KTF,
 			shineTop = 5,
 			shineBottom = -5,
@@ -203,18 +205,41 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 11
-			text = cTitle.."         What's NEW in version |r|cffffffff4.3.0|r\n\n"..
-					"- ADDED - Support for WoW 9.1.0\n"..
-					"- UPDATED - Addon support - Masque 9.0.6\n"..
-					"- UPDATED - Addon support - PetTracker 9.0.8\n"..
-					"- UPDATED - Addon support - TomTom v3.0.2\n"..
-					"- UPDATED - Addon support - ElvUI 12.29, Tukui 20.22, RealUI 2.3.0,"..
-					offs.."SpartanUI 6.0.26\n"..
-					"- REMOVED - Addon support - SuperVillain UI\n\n"..
+			text = cTitle.."LFG Hack|r  "..new.."\n\n"..
+					cBold.."Affects the small Eye buttons|r for finding groups inside the tracker. When the hack is active, "..
+					"the buttons work without errors. When hack is inactive, the buttons are not available.\n\n"..
+					cWarning2.."Negative|r impacts:|r\n"..
+					"- Inside the dialog for create Premade Group is hidden item \"Goal\".\n"..
+					"- Tooltips of items in the list of Premade Groups have a hidden 2nd (green) row"..
+					offs.."with \"Goal\".\n"..
+					"- Inside the dialog for create Premade Group, no automatically set the \"Title\","..
+					offs.."e.g. keystone level for Mythic+.\n\n"..
+					"LFG Hack is enabled by default, you can disable it in "..KT.title.." Options (section \"Hacks\").\n\n"..
+					cWarning.."Warning:|r Hacks may affect other addons!",
+		},
+		{	-- 12
+			text = cTitle.."         What's NEW in version |r|cffffffff4.4.0|r\n\n"..
+					cWarning2.."I'm sorry for the delay in updating ... COVID got me.|r\n\n"..
 
-                    cTitle.."WoW 9.1.0 - Known issues w/o solution|r\n"..
-                    "- Clicking on tracked quests or achievements has no response during combat.\n"..
-                    "- Header buttons Q and A don't work during combat.\n\n"..
+					"- ADDED - Support for WoW 9.1.5\n"..
+					"- ADDED - "..cBold.."Collapsible Tracker sections|r (Quests, Achievements etc.)\n"..
+					"- ADDED - LFG Hack - Affects the small Eye buttons for finding groups inside"..
+					offs.."the tracker (fix errors), "..cBold.."see new Help page 11|r\n"..
+					"- FIXED - Torghast - Wrong display of Blessings and Torments\n"..
+					"- IMPROVED - Selection of tracked quest\n"..
+					"- IMPROVED - Counting quests method - Calling quests not included now\n"..
+					"- IMPROVED - Auto Zone filter - Tracker auto expand\n"..
+					"- UPDATED - Addon support - Masque 9.1.5\n"..
+					"- UPDATED - Addon support - PetTracker 9.1.2\n"..
+					"- UPDATED - Addon support - TomTom v3.0.3\n"..
+					"- UPDATED - Addon support - ElvUI 12.62, Tukui 20.25, RealUI 2.3.1,"..
+					offs.."SpartanUI 6.0.27\n"..
+					"- UPDATED - Help (new page 11)\n"..
+					"- UPDATED - Libs\n\n"..
+
+					cTitle.."WoW 9.1.5 - Known issues w/o solution|r\n"..
+					"- Clicking on tracked quests or achievements has no response during combat.\n"..
+					"- Header buttons Q and A don't work during combat.\n\n"..
 
 					cTitle.."Issue reporting|r\n"..
 					"For reporting please use "..cBold.."Tickets|r instead of Comments on CurseForge.\n\n\n\n"..

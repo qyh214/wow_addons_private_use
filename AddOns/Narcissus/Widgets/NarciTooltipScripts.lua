@@ -34,8 +34,8 @@ local BackdropInfo = {
     edgeFile = "Interface\\AddOns\\Narcissus\\Art\\Tooltip\\Tooltip-White-Border",
     tile = true,
     tileEdge = true,
-    tileSize = 24,
-    edgeSize = 24,
+    tileSize = 22,
+    edgeSize = 22,
 };
 
 -----------------------------------

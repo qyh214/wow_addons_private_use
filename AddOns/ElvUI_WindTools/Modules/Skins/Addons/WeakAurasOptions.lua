@@ -7,7 +7,6 @@ local gsub = gsub
 local hooksecurefunc = hooksecurefunc
 local pairs = pairs
 local strfind = strfind
-local strlower = strlower
 local tinsert = tinsert
 local type = type
 local unpack = unpack
@@ -22,7 +21,7 @@ local function RemoveBorder(frame)
     for _, region in pairs {frame:GetRegions()} do
         if region:GetObjectType() == "Texture" then
             local tex = region:GetTexture()
-            if tex and strfind(strlower(tex), "quickslot2") then
+            if tex and tex == 130841 then
                 region:Kill()
             end
         end
@@ -573,7 +572,7 @@ function S:WeakAuras_ShowOptions()
 
             if not button.windStyle and button.GetNormalTexture then
                 local normalTexturePath = button:GetNormalTexture():GetTexture()
-                if normalTexturePath == "Interface\\BUTTONS\\UI-Panel-CollapseButton-Up" then
+                if normalTexturePath == 252125 then
                     button:StripTextures()
 
                     button.Texture = button:CreateTexture(nil, "OVERLAY")
