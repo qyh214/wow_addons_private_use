@@ -969,7 +969,7 @@ function NarciMinimapButtonMixin:CreatePanel()
 	local button;
 	local buttons = {};
 
-	local LOCALIZED_NAMES = {L["Photo Mode"], DRESSUP_FRAME, "Wardrobe", ACHIEVEMENT_BUTTON};	-- CHARACTER_BUTTON, "Character Info" "Dressing Room" "Achievements"
+	local LOCALIZED_NAMES = {L["Photo Mode"], DRESSUP_FRAME, L["Turntable"], ACHIEVEMENT_BUTTON};	-- CHARACTER_BUTTON, "Character Info" "Dressing Room" "Achievements"
 	local frameNames = {};
 	frameNames[4] = "Narci_Achievement";
 
@@ -980,7 +980,9 @@ function NarciMinimapButtonMixin:CreatePanel()
 			Narci_ShowDressingRoom();
 		end,
 
-		nil,	--function() Narci_Outfit:Open() end,
+		function()
+			NarciOutfitShowcase:Open();
+		end,
 
 		function()
 			if not Narci_AchievementFrame then
@@ -1231,6 +1233,19 @@ function NarciMinimapButtonMixin:InitPosition()
 		local radian = NarcissusDB.MinimapButton.Position;
 		MinimapButton_SetAngle(radian);
 	end
+end
+
+function NarciMinimapButtonMixin:EnableButton()
+	NarcissusDB.ShowMinimapButton = true;
+	self:Show();
+	self:PlayBling();
+end
+
+function NarciMinimapButtonMixin:ResetPosition()
+	NarcissusDB.MinimapButton.Position = (-0.83 * math.pi);
+	NarcissusDB.AnchorToMinimap = true;
+	self:InitPosition();
+	self:EnableButton();
 end
 
 function NarciMinimapButtonMixin:IsAnchoredToMinimap()
@@ -1558,17 +1573,6 @@ local function SetItemSocketingFramePosition(self)		--Let ItemSocketingFrame app
 			ItemSocketingFrame:SetPoint("TOPLEFT", self, "TOPRIGHT", -4, 0);
 		end
 		DefaultTooltip:Hide();
-	end
-end
-
-local function ShowOrHideEquiment(self)
-	if not self.sourceID then return; end;
-	self.isSlotHidden = not self.isSlotHidden;
-	local slotID = self:GetID();
-	if self.isSlotHidden then
-		NarciPlayerModelFrame1:UndressSlot(slotID);
-	else
-		NarciPlayerModelFrame1:TryOn(self.sourceID, Narci.SlotIDtoName[slotID][1]);	--weapon enchant
 	end
 end
 
@@ -2425,9 +2429,7 @@ function NarciEquipmentSlotMixin:PostClick(button)
 		end
 	else
 		if button == "LeftButton" then
-			if MOG_MODE then	--Undress an item from player model while in Xmog Mode
-				ShowOrHideEquiment(self);
-			else
+			if not MOG_MODE then	--Undress an item from player model while in Xmog Mode
 				--EquipmentFlyoutFrame:SetItemSlot(self);
 				Narci_EquipmentOption:SetFromSlotButton(self, true)
 			end
@@ -5103,8 +5105,9 @@ function TopQualityButton_MSAASlider_OnValueChanged(self, value, userInput)
 	end
     self.VirtualThumb:SetPoint("CENTER", self.Thumb, "CENTER", 0, 0)
     if value ~= self.oldValue then
-		self.oldValue = value
-		local value, valueText = tonumber(value), "";
+		self.oldValue = value;
+		local valueText;
+		value, valueText = tonumber(value), "";
 		if value ~= 0 then
 			if value == 1 then
 				valueText = "2x";
@@ -5118,10 +5121,12 @@ function TopQualityButton_MSAASlider_OnValueChanged(self, value, userInput)
 			valueText = "|cffee3224".."OFF";
 		end
 		self.KeyLabel2:SetText(MULTISAMPLE_ANTI_ALIASING.." "..valueText)
-		if value ~=0 then
-			ConsoleExec("MSAAQuality "..value..",0" )
-		else
-			ConsoleExec("MSAAQuality 0")
+		if userInput then
+			if value ~=0 then
+				ConsoleExec("MSAAQuality "..value..",0" )
+			else
+				ConsoleExec("MSAAQuality 0")
+			end
 		end
 	end
 end
@@ -5259,6 +5264,7 @@ function NarciPhotoModeToolbarMixin:OnLoad()
 		end
 		Narci_GearTexts:ClearFocus();
 		Narci_GearTexts:HighlightText(0,0);
+		NarciTooltip:FadeOut();
 		return true
 	end
 
@@ -5499,17 +5505,18 @@ SlashCmdList["NARCI"] = function(msg)
 	if msg == "" then
 		MiniButton:Click();
 	elseif msg == "minimap" then
-		MiniButton:Show();
-		MiniButton:PlayBling();
-		NarcissusDB.ShowMinimapButton = true;
+		MiniButton:EnableButton();
 		print("Minimap button has been re-enabled.");
 	elseif msg == "itemlist" then
 		DressUpFrame_Show(DressUpFrame);
 	elseif msg == "parser" then
 		FadeFrame(Narci_ItemParser, 0.25, 1);
+	elseif msg == "resetposition" then
+		MiniButton:ResetPosition();
 	else
 		local color = "|cff40C7EB";
 		print(color.."Show Minimap Button:|r /narci minimap");
+		print(color.."Reset Minimap Button Position:|r /narci resetposition");
 		print(color.."Copy Item List:|r /narci itemlist");
 		print(color.."Corruption Item Parser:|r /narci parser");
 	end

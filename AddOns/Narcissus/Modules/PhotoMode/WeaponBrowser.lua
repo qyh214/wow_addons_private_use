@@ -1501,9 +1501,21 @@ function NarciWeaponBrowserMixin:Load()
     SearchBox.DefaultText:SetText("Item Name");
     SearchBox.onSearchFunc = function(word)
         local numMacthes, overFlow;
-        DataProvider.searchResult, numMacthes, overFlow = DataAPI.SearchItemByName(word);
+        local id = tonumber(word);
+        if id and id ~= 0 then
+            if GetItemInfoInstant(id) then
+                DataProvider.searchResult = { id };
+                numMacthes = 1;
+            else
+                DataProvider.searchResult = {};
+                numMacthes = 0;
+            end
+        else
+            DataProvider.searchResult, numMacthes, overFlow = DataAPI.SearchItemByName(word);
+            DataProvider.numMacthes = numMacthes;
+        end
+
         DataProvider.weaponList = DataProvider.searchResult;
-        DataProvider.numMacthes = numMacthes;
         ViewUpdator:SetScrollRange(numMacthes);
         ViewUpdator:ForceUpdate();
         Roller:Start();

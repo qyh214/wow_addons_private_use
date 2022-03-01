@@ -795,7 +795,7 @@
                 self.Highlight:Show();
 				local IDFrame = self:GetParent().IDFrame;
 				IDFrame:ClearAllPoints();
-				IDFrame.Label:SetText(self.ID .."  ".. NarciAnimationInfo:GetOfficialName(self.ID) );
+				IDFrame.Label:SetText(self.ID .."  ".. NarciAnimationInfo.GetOfficialName(self.ID) );
 				IDFrame:SetPoint("BOTTOM", self, "TOP", 0, 0);
 				IDFrame:Show();
             </OnEnter>

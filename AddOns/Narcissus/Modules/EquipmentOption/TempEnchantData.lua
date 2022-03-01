@@ -27,7 +27,7 @@ local unpack = unpack;
 --]]
 
 local enchantData = {
-    --[slotID] = { {spellID, itemID, enchantID, attribute, value} }     --default icon: 463531
+    --[slotID] = { {spellID, itemID, enchantID, [requirementID]} }     --requirementID: 1(Bladed), 2(Blunt), 3(Hunter Ranged Weapon)
     --Shadowlands and on
 
     [5] = {     --Chest
@@ -38,10 +38,10 @@ local enchantData = {
     [16] = {    --Weapon
         {320798, 171285, 6188},     --Shadowcore Oil
         {321389, 171286, 6190},     --Embalmer's Oil    --Heal
-        {322762, 171437, 6200},     --Shaded Sharpening Stone
-        {322749, 171436, 6198},     --Porous Sharpening Stone
-        {322763, 171439, 6201},     --Shaded Weightstone (Mace & Staff)
-        {322761, 171438, 6199},     --Porous Weightstone (Mace & Staff)
+        {322762, 171437, 6200, 1},     --Shaded Sharpening Stone
+        {322749, 171436, 6198, 1},     --Porous Sharpening Stone
+        {322763, 171439, 6201, 2},     --Shaded Weightstone (Mace & Staff)
+        {322761, 171438, 6199, 2},     --Porous Weightstone (Mace & Staff)
     },
 };
 

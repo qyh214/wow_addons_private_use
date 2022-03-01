@@ -5,10 +5,19 @@ end
 local L = Narci.L;
 local S = Narci.L.S;
 
-NARCI_GRADIENT = "|cffA236EFN|cff9448F1a|cff865BF2r|cff786DF4c|cff6A80F6i|cff5D92F7s|cff4FA4F9s|cff41B7FAu|cff33C9FCs|r 角色資訊"
-MYMOG_GRADIENT = "|cffA236EFM|cff9448F1y |cff865BF2T|cff786DF4r|cff6A80F6a|cff5D92F7n|cff4FA4F9s|cff41B7FAm|cff33C9FCo|cff32c9fbg|r"
+NARCI_WORDBREAK_COMMA = "，";
+
+--Date--
+L["Today"] = COMMUNITIES_CHAT_FRAME_TODAY_NOTIFICATION;
+L["Yesterday"] = COMMUNITIES_CHAT_FRAME_YESTERDAY_NOTIFICATION;
+L["Format Days Ago"] = "%d天前";
+L["A Month Ago"] = "1個月前";
+L["Format Months Ago"] = "%d個月前";
+L["A Year Ago"] = "1年前";
+L["Format Years Ago"] = "%d年前";
 
 
+L["Swap items"] = "更換裝備";
 L["Movement Speed"] = "移動速度";
 L["Damage Reduction Percentage"] = "減傷%";
 
@@ -124,8 +133,8 @@ L["Always Show Model"] = "在使用對稱布局時顯示3D模組";
 L["AFK Screen Description"] = "在妳的人物暫離後自動打開Narcissus。";
 L["AFK Screen Description Extra"] = "勾選此選項將覆蓋ElvUI的AFK模式。";
 L["Gemma"] = "\"Gemma\"";
-L["Gemma Description"] = "在妳為壹件物品鑲嵌寶石時，顯示可用的寶石列表。"
-L["Dressing Room"] = "試衣間"
+L["Gemma Description"] = "在妳為壹件物品鑲嵌寶石時，顯示可用的寶石列表。";
+L["Dressing Room"] = "試衣間";
 L["Dressing Room Description"] = "增大試衣間窗口大小，並使妳能夠通過試衣間瀏覽、復制其他玩家的幻化調料包。";
 NARCI_REQUIRE_RELOAD = "|cffff5050需要重載UI才能使設置生效。|r";
 L["Show Detailed Stats"] = "顯示詳盡的屬性信息";
@@ -176,7 +185,7 @@ L["Tooltip"] = "小提示";
 L["Name Plate"] = "名條";
 L["Y Offset"] = "縱向偏移";
 L["Sceenshot Quality"] = "截圖質量";
-L["Screenshot Quality Description"] = "更高的截圖質量會增加圖片大小。";
+L["Screenshot Quality Description"] = "更高的截圖質量會增加圖像大小。";
 L["General"] = "通用設定";
 L["Camera Transition"] = "鏡頭過渡";
 L["Camera Transition Description On"] = "當你打開角色面板時鏡頭會平滑地運動到預設位置。";
@@ -428,7 +437,7 @@ L["Splash Content8 Description"] = "按住Shift並拖動此按鈕可使其脫離
 
 --Project Details--
 NARCI_ALL_PROJECTS = "全部項目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100模組作者: Peterodox\n更新日期: 2021.11.28|r\n\n感謝妳使用此模組！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100模組作者: Peterodox\n更新日期: 2022.2.25|r\n\n感謝妳使用此模組！如果妳遇到任何問題，或者有任何想法或建議，請在CurseForge項目主頁上留言，或者在以下網站上聯系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾澤拉斯上的不同景點，並收集各種故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沈浸式角色面板；妳最好的截圖助手。"
 
@@ -461,6 +470,8 @@ L["PetStable Loading"] = "正在獲取寵物信息";
 L["Item Bonus"] = "獎勵：";
 L["Combat Error"] = NARCI_COLOR_RED_MILD.."此操作無法在戰鬥中進行".."|r";
 L["Extract Shard"] = "取下統御裂片";
+L["No Service"] = "沒有服務";
+L["Shards Disabled"] = "統御裂片在淵喉之外的地區無效。";
 
 --Mythic+ Leaderboard--
 L["Mythic Plus"] = "傳奇地城";
@@ -484,3 +495,32 @@ L["In Bags"] = "背包中";
 S["Narcissus Played"] = "Narcissus使用時長";
 S["Format Since"] = "(自%s以來)";
 S["Screenshots"] = "使用Narcissus擷圖";
+
+--Turntable Showcase--
+L["Turntable"] = "轉台";
+L["Picture"] = "圖像";
+L["Elapse"] = "時間軸"
+L["Turntable Tab Animation"] = "人物動作";
+L["Turntable Tab Image"] = "圖像參數";
+L["Turntable Tab Quality"] = "反鋸齒";
+L["Turntable Tab Background"] = "背景";
+L["Spin"] = "旋轉";
+L["Sync"] = "與試衣間同步";
+L["Rotation Period"] = "旋轉周期";
+L["Period Tooltip"] = "角色旋轉一周所用的時間，也應成爲你視頻或動圖的|cffcccccc截取時長|r。";
+L["MSAA Tooltip"] = "暫時調整多重採樣反鋸齒等級來平滑模型邊緣。";
+L["Image Size"] = "圖像大小";
+L["Item Name Show"] = "顯示物品名稱";
+L["Item Name Hide"] = "隱藏物品名稱";
+L["Outline Show"] = "點擊顯示輔助邊框";
+L["Outline Hide"] = "點擊隱藏輔助邊框";
+L["Preset"] = "預設";
+L["File"] = "文件";     --File Name
+L["File Tooltip"] = "把你的圖像文件放在|cffccccccWorld of Warcraft\\retail\\Interface\\AddOns|r目錄下，然後將文件名填入此方框。\n圖像必須爲|cffcccccc512x512|r或|cffcccccc1024x1024|r的|cffccccccJPG|r文件";
+L["Raise Level"] = "置于頂層";
+L["Lower Level"] = "取消置頂";
+L["Click To Continue"] = "點擊以繼續";
+L["Showcase Splash 1"] = "使用Narcissus和錄屏軟件來制作轉台動畫以展示你的塑形。";
+L["Showcase Splash 2"] = "點擊下方按鈕來複制試衣間中的物品。";
+L["Showcase Splash 3"] = "點擊下方按鈕可讓你的角色旋轉起來。";
+L["Showcase Splash 4"] = "錄制屏幕然後將視頻轉換爲GIF動圖。";

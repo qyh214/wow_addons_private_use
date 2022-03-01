@@ -174,7 +174,6 @@ local function DressingRoomOverlayFrame_OnLoad(self)
 
     self.mode = "visual";
 
-
     local GearTextScrollFrame = self.OptionFrame.SharePopup.GearTextContainer.ScrollFrame;
     local totalHeight = 240;
     local maxScroll = totalHeight;
@@ -191,19 +190,29 @@ local function IsDressUpFrameMaximized()
 end
 
 local function InitializeActor(actor, actorInfo)
+    --[[
 	actor:SetUseCenterForOrigin(actorInfo.useCenterForOriginX, actorInfo.useCenterForOriginY, actorInfo.useCenterForOriginZ);
 	actor:SetPosition(actorInfo.position:GetXYZ());
 	actor:SetYaw(actorInfo.yaw);
 	actor:SetPitch(actorInfo.pitch);
 	actor:SetRoll(actorInfo.roll);
-
+    actor.requestedScale = nil;
     actor:SetAnimation(0, 0, 1.0);
     actor:SetAlpha(1.0);
-    actor:SetRequestedScale(1.0);
+    actor:SetScale(actorInfo.scale or 1.0);
+    --]]
 
-    actor:SetNormalizedScaleAggressiveness(actorInfo.normalizeScaleAggressiveness or 0.0);
-    actor:MarkScaleDirty();
-    actor:UpdateScale();
+    actor:SetUseCenterForOrigin(actorInfo.useCenterForOriginX, actorInfo.useCenterForOriginY, actorInfo.useCenterForOriginZ);
+	actor:SetPosition(actorInfo.position:GetXYZ());
+	actor:SetYaw(actorInfo.yaw);
+	actor:SetPitch(actorInfo.pitch);
+	actor:SetRoll(actorInfo.roll);
+	actor.requestedScale = nil;
+    actor:SetAlpha(1.0);
+    actor:SetRequestedScale(1.0);
+	actor:SetNormalizedScaleAggressiveness(actorInfo.normalizeScaleAggressiveness or 0.0);
+	actor:MarkScaleDirty();
+	actor:UpdateScale();
 end
 
 local function UpdateDressingRoomModelByUnit(unit)
@@ -270,8 +279,8 @@ local function UpdateDressingRoomModelByUnit(unit)
         modelInfo = GetActorInfoByUnit(modelUnit);
         if modelInfo then
             After(0.0,function()
-                --ModelScene:InitializeActor(actor, modelInfo);   --Re-scale      --!! This one taints !!
-                InitializeActor(actor, modelInfo)
+                --InitializeActor(actor, modelInfo)
+                actor:ApplyFromModelSceneActorInfo(modelInfo)
             end);
         end
     end
@@ -423,7 +432,7 @@ function Narci_ShowDressingRoom()
     local frame = DressUpFrame;
     --derivated from Blizzard DressUpFrames.lua / DressUpFrame_Show
     if ( not frame:IsShown() ) then
-        if true or InCombatLockdown() then
+        if InCombatLockdown() then
             frame:Show();
             DressingRoomOverlayFrame:ListenEscapeKey(true);
         else
@@ -554,9 +563,60 @@ local function DressingRoomOverlayFrame_Initialize()
     frame.OptionFrame.ShareButton:SetScript("OnClick", ShareButton_OnClick);
     frame.OptionFrame.InspectButton:SetScript("OnClick", InspectButton_OnClick);
 
+    local spinButton = frame.OptionFrame.SpinButton;
+    spinButton.Icon:SetTexCoord(0.5, 0.75, 0.5, 0.75);
+    spinButton.Label:SetText(L["Turntable"]);
+    NarciOutfitShowcase.dressingRoomButton = spinButton;
+    spinButton:SetScript("OnClick", function()
+        NarciOutfitShowcase:Open();
+    end);
+
+
+    local undressButton = frame.UndressButton;
+    local function UB_OnEnter(f)
+        f.Shirt:SetVertexColor(1, 1, 1);
+        f.Arrow:SetVertexColor(1, 1, 1);
+        GameTooltip:SetOwner(f, "ANCHOR_RIGHT", -4, 0);
+        GameTooltip_SetTitle(GameTooltip, L["Undress"]);
+        GameTooltip:Show();
+    end
+    local function UB_OnLeave(f)
+        f.Shirt:SetVertexColor(0.72, 0.72, 0.72);
+        f.Arrow:SetVertexColor(0.72, 0.72, 0.72);
+        GameTooltip_Hide();
+    end
+    local function UB_OnClick(f)
+        f.Arrow.AnimDrop:Play();
+        local playerActor = DressUpFrame.ModelScene:GetPlayerActor();
+        if playerActor then
+            NarciDressingRoomAPI.WipeItemList();
+            for k, slotButton in pairs(DressingRoomItemButtons) do
+                slotButton:SetHiddenVisual(false);
+                slotButton:Desaturate(true);
+            end
+            playerActor:Undress();
+        end
+    end
+
+    local function UB_OnMouseDown(f)
+        f.Shirt:SetPoint("CENTER", f, "CENTER", 2, -2);
+    end
+    local function UB_OnMouseUp(f)
+        f.Shirt:SetPoint("CENTER", f, "CENTER", 0, 0);
+    end
+    undressButton:SetScript("OnEnter", UB_OnEnter);
+    undressButton:SetScript("OnLeave", UB_OnLeave);
+    undressButton:SetScript("OnClick", UB_OnClick);
+    undressButton:SetScript("OnMouseDown", UB_OnMouseDown);
+    undressButton:SetScript("OnMouseUp", UB_OnMouseUp);
+
+    undressButton.Shirt:SetTexture("Interface\\AddOns\\Narcissus\\Art\\Modules\\DressingRoom\\UndressButton", nil, nil, "TRILINEAR");
+    undressButton.Arrow:SetTexture("Interface\\AddOns\\Narcissus\\Art\\Modules\\DressingRoom\\UndressButton", nil, nil, "TRILINEAR");
+    undressButton.Shirt:SetVertexColor(0.72, 0.72, 0.72);
+    undressButton.Arrow:SetVertexColor(0.72, 0.72, 0.72);
 
     if DressUpFrame.ResetButton then
-        DressUpFrame.ResetButton:HookScript("OnClick", function(self)
+        DressUpFrame.ResetButton:HookScript("OnClick", function(f)
             UpdateDressingRoomModelByUnit("player");
         end)
     end
@@ -566,8 +626,7 @@ local function DressingRoomOverlayFrame_Initialize()
     DressingRoomOverlayFrame.SlotFrame:SetScript("OnShow", Narci_UpdateDressingRoom);
 
     --expensive call
-    
-    DressUpFrame.ModelScene:HookScript("OnDressModel", function(self, ...)
+    DressUpFrame.ModelScene:HookScript("OnDressModel", function(f, ...)
         if not (DressingRoomOverlayFrame and slotFrameEnabled) then return end;
         if not DressingRoomOverlayFrame.pauseUpdate then
             DressingRoomOverlayFrame.pauseUpdate = true;
@@ -585,7 +644,6 @@ local function DressingRoomOverlayFrame_Initialize()
             end)
         end
     end)
-    
 end
 
 
@@ -628,7 +686,7 @@ initialize:SetScript("OnEvent",function(self,event,...)
             buttonOffsetY = 48;
             buttonGap = 8;
             function Narci_SetDressUpBackground()
-                return
+
             end
         else
             buttonOffsetX = 0;
@@ -692,7 +750,6 @@ function NarciDressingRoomOverlayMixin:OnHide()
     self:UnregisterEvent("PLAYER_TARGET_CHANGED");
     self:UnregisterEvent("TRANSMOG_COLLECTION_UPDATED");
     self:UnregisterEvent("INSPECT_READY");
-    self.isActorHooked = false;
     self:ListenEscapeKey(false);
 end
 
@@ -742,16 +799,20 @@ function NarciDressingRoomOverlayMixin:OnSizeChanged(width, height)
         if IsDressUpFrameMaximized() then
             self.SlotFrame:SetInvisible(false);
             self.OptionFrame:SetScale(frameScale);
+            self.UndressButton:Show();
         else
             self.SlotFrame:SetInvisible(true);
             self.OptionFrame:SetScale(0.5);
+            self.UndressButton:Hide();
         end
     else
         self.SlotFrame:Hide();
         self.OptionFrame:SetScale(frameScale);
         self.OptionFrame.GroupController:SetLabelScale(frameScale);
+        self.UndressButton:Hide();
     end
 end
+
 
 --[[
 hooksecurefunc("PanelTemplates_TabResize", function(tab, padding, absoluteSize, minWidth, maxWidth, absoluteTextSize)
@@ -888,7 +949,3 @@ Test:SetAttribute("_test", function()
     securecall("DressUpVisual", "item:2092");
 end)
 --]]
-
-hooksecurefunc("DressUpTransmogSet", function()
-    print("DressUpTransmogSet")
-end);

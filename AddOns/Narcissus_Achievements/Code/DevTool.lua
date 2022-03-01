@@ -1,6 +1,3 @@
-local USE_DEV_TOOL = false;
-if not USE_DEV_TOOL then return end;
-
 local After = C_Timer.After;
 local GetAchievementInfo = GetAchievementInfo;
 local GetAchievementNumCriteria = GetAchievementNumCriteria;
@@ -17,6 +14,7 @@ local parentAchievementData = {};
 
 local function BuildCategories(isGuild)
     local categories;
+    local targetTable;
     if isGuild then
         categories = GetGuildCategoryList();
         targetTable = guildCategories;
@@ -123,21 +121,19 @@ function Loader:LoadList(category)
     self:GetStructure(category[1]);
 end
 
-local Builder = CreateFrame("Frame");
-Builder:RegisterEvent("PLAYER_ENTERING_WORLD");
-Builder:SetScript("OnEvent", function(self, event, ...)
+
+--save the output to Narcissus\Modules\Achievement\Meta.lua
+
+function GetAchievementRelationship(isGuild)
     if not NarciDevToolOutput then
         NarciDevToolOutput = {};
     end
     NarciDevToolOutput.parentAchievementData = NarciDevToolOutput.parentAchievementData or {};
-    outputTable = NarciDevToolOutput.parentAchievementData;
-    
-    BuildCategories();
-    local isGuild = false;
-    After(0.5, function()
-        BuildCategories(isGuild);
-        After(0.5, function()
-            Loader:LoadList(playerCategories);
-        end);
+    if not outputTable then
+        outputTable = NarciDevToolOutput.parentAchievementData;
+    end
+    BuildCategories(isGuild);
+    After(1, function()
+        Loader:LoadList((isGuild and guildCategories) or playerCategories);
     end);
-end);
+end

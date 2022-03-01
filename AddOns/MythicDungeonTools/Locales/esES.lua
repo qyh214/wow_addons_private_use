@@ -377,6 +377,8 @@ L["Emissary of the Tides"] = "Emisaria de las mareas"
 L["Enable Minimap Button"] = "Activar Botón del Minimapa"
 L["Enchanted Broodling"] = "Cría encantada"
 L["Enchanted Emissary"] = "Emisaria encantada"
+--[[Translation missing --]]
+--[[ L["Encrypted"] = ""--]] 
 L["Enemies related to seasonal affixes are currently hidden"] = "Los enemigos relacionados a afijos de temporada están actualmente ocultos"
 L["Enemy Info"] = "Información enemiga"
 L["Enemy Info NPC Creature Type"] = "Tipo de Criatura"
@@ -1369,6 +1371,8 @@ L["Upper Library"] = "La Biblioteca Superior"
 L["Upper Livery Stables"] = "Caballerizas Superiores"
 L["Upstairs"] = "Piso de arriba"
 L["Urg'roth, Breaker of Heroes"] = "Urg'roth, Quebrador de Héroes"
+--[[Translation missing --]]
+--[[ L["Urh Relic"] = ""--]] 
 L["Use /mdt reset to restore the default position and scale of MDT."] = "Haga '/mdt reset' para restaurar la posición y escala predeterminadas de MDT."
 L["Use as a starting point:"] = "Usar como punto de referencia:"
 L["Valarjar Aspirant"] = "Aspirante Valarjar"
@@ -1425,6 +1429,8 @@ L["Volcanic"] = "Volcánica"
 L["Vol'kaal"] = "Vol'kaal"
 L["Vol'zith the Whisperer"] = "Vol'zith la Susurradora"
 --[[Translation missing --]]
+--[[ L["Vy Relic"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Wandering Pulsar"] = ""--]] 
 L["Wandering Shellback"] = "Lomocoraza deambulante"
 L["Wanton Sapper"] = "Zapadora maliciosa"
@@ -1447,6 +1453,8 @@ L["Wicked Oppressor"] = "Opresora perversa"
 L["Windspeaker Heldis"] = "Hablavientos Heldis"
 L["Withered Fiend"] = "Maligno Marchito"
 L["Withered Manawraith"] = "Espectro de maná Marchito"
+--[[Translation missing --]]
+--[[ L["Wo Relic"] = ""--]] 
 L["Workshop Defender"] = "Defensor del taller"
 L["Wrath of Azshara"] = "Cólera de Azshara"
 L["Wrathguard Bladelord"] = "Señor de las espadas guardia de cólera"

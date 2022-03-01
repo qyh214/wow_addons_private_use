@@ -11,7 +11,7 @@
                 <Texture file="Interface\AddOns\Narcissus\Art\NavBar\ButtonCorner">
                     <Size x="48" y="24"/>
                     <Anchors>
-                        <Anchor point="RIGHT" x="2"/>
+                        <Anchor point="TOPRIGHT" x="2"/>
                     </Anchors>
                 </Texture>
             </Layer>

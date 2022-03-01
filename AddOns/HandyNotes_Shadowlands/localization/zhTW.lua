@@ -307,7 +307,7 @@ L['mawsworn_cache_note'] = '總共有3個淵誓儲物箱會出現在對應的幾
 L['pile_of_bones'] = '白骨堆'
 L['relic_cache'] = '文物箱'
 L['shardhide_stash'] = '晶皮儲藏物'
-L['korthia_shared_chest_note'] = '你一天可以在這些寶藏收集文物5次. 除此之外的箱子可能會含有科西亞水晶和帳號綁定的裝備兌換物'
+L['korthia_shared_chest_note'] = '半小時內可以從這些寶箱收集文物5次. 進度每半小時會重置, 使其有效地成為無限的'
 L['unusual_nest'] = '不尋常材料之巢'
 L['unusual_nest_note'] = '5個位置的巢一天都可被拾取一次'
 
@@ -671,3 +671,143 @@ L['tormentors_note'] = [[
 
 {item:185972} 每個禮拜可以被拾取一次, 內含有50個 {currency:1906}.
 ]]
+
+-------------------------------------------------------------------------------
+-------------------------------- ZERETH MORTIS --------------------------------
+-------------------------------------------------------------------------------
+
+L['corrupted_architect_note'] = '攻擊 {npc:183958} 和 {npc:183961} 來啟動稀有.'
+L['dune_dominance_note'] = '{achievement:15392} 成就所需的三個稀有菁英都重生在這裡'
+L['feasting_note'] = '有時候在回到此點前會在附近繞行'
+L['furidian_note'] = '在此區域啟動三個 |cFFFFFD00強化的鑰匙|r 就會解鎖 |cFFFFFD00可疑的憤怒儲藏庫|r.'
+L['garudeon_note'] = '從附近的區域收集 {npc:183562} 並且使用 {spell:362655} 來餵食 {npc:183554}. 當三個都被餵食後, {npc:180924} 會啟動.'
+L['gluttonous_overgrowth_note'] = '摧毀所有附近的 {npc:184048} 來啟動稀有'
+L['helmix_emote'] = nil
+L['hirukon_note'] = [[
+  要引誘 {npc:180978} 到水面, 需要製造ㄩ一個 {item:187923}.
+
+  1. 從附近的水里釣起 {item:187662}.
+
+  2. 從贊格沼澤的盤牙蓄湖內的 |cFFFFFD00Pungent Blobfish Cluster|r 釣起一個 {item:187915}. 當你進入山洞後魚群會在你的右手邊.
+
+  3. 從納沙塔爾的凱爾亞的墳墓飛行點附近的 |cFFFFFD00翻滾魚群|r 釣起一個 {item:187922}.
+
+  4. 在閃光瀚洋的納爾朔拉殿堂的二樓陽台 (34.7, 75.0) 拾取 {item:187916} (藏得很好).
+
+  5. 在瑪卓薩斯的統御者之座南邊的池塘找到 {npc:182194}. 並請他製作成 {item:187923}.
+
+  6. 使用 {item:187923}, 允許你可以在 {npc:180978} 附近看到 |cFFFFFD00Aurelid Cluster|r 的魚群15分鐘. 在魚群中釣魚來召喚 {npc:180978} 到水面.
+  ]]
+L['orixal_note'] = nil
+L['protector_first_ones_note'] = '需要兩人. 攜帶對應的符文 (可以在附近區域找到) 到各個控制台來開啟屏障.'
+L['the_engulfer_note'] = '保護 {npc:183505} 直到 {npc:183516} 從裂隙中跳出.'
+L['zatojin_note'] = '吸引附近的 {npc:183721} 並且讓他們對你堆疊20層的 {spell:362976} 直到你受到 {spell:362983}. 當你麻痺時你必須站在 {npc:183774} 屍體上, 以便讓 {npc:183764} 注意到你.'
+
+L['architects_reserve_note'] = '從朝聖者之澤的 {npc:180630} 完成 {quest:64829} 任務線. 隔天, 從 {npc:181273} 完成 {quest:65426} 任務線來解鎖寶藏'
+L['bushel_of_produce_note'] = '在北方殺死一個有 {spell:360945} 增益的 {npc:182368} 來為你自己取得增益. 殺死更多的 {npc:182368} (不需要有增益) 直到你有5層增益, 然後破壞到寶藏的門.'
+L['crushed_crate_note'] = '撿起寶藏上方的大柱子上的 {item:189767}. 把它交給 {npc:185151} 來交換 {item:189768} 用來打碎墜落的石頭.'
+L['domination_cache_note'] = '在此區域的 {npc:181403s} 和 {npc:182426s} 有低機率掉落 {item:189704}'
+L['drowned_broker_supplies_note'] = '與 {npc:181059} 對話來取得附近 {npc:185282} 的控制'
+L['forgotten_protovault_note'] = '僅在世界任務 {wq:蛙蛙} 期間內可取得.'
+L['grateful_boon_note'] = '無法飛行時很難到達, 使用 {spell:300728} 或 {spell:111771} 來爬過山, 舒緩此區域所有的12個生物 {npc:185293} 會刷新寶藏'
+L['library_vault_note'] = '在詞彙石窟點擊石板直到你找到正確的 {spell:362062} 增益來開啟寶庫.'
+L['mistaken_ovoid_note'] = '在次元瀑布洞穴內, 你需要在澤瑞斯莫提斯的綠色區域取得 5個 {item:190239} 然後回來交給 {npc:185280} 他會挪開一點讓你拿到寶藏.'
+L['ripened_protopear_note'] = '開始 {quest:64641} 任務鏈來獲得進入繁盛鑄造場. 在裡面收集5個 {spell:367180} (綠色雲)並且帶給 {npc:185416} 來為她授粉'
+L['sphere_treasure_note'] = '小心的從球體往上跳直到你到達寶藏處.'
+L['submerged_chest_note'] = '吸收南邊的 |cFFFFFD00危險的能量球|r, 然後和寶藏旁邊的 |cFFFFFD00被遺忘的幫浦|r 互動'
+L['symphonic_vault_note'] = '檢查 {npc:183998} 後會聽到4種聲音的序列. 房間內每個 {npc:183950} 會撥放一種聲音. 依照對應的順序和它們互動會解鎖寶藏.'
+L['syntactic_vault_note'] = nil
+L['template_archive_note'] = '推動面向擋住路徑的 {npc:183337} 的 {npc:183339} 來取得寶藏.'
+L['undulating_foliage_note'] = [[
+  按下四個 {npc:185390} 來啟動在滋長界地中間房間的傳送器.
+
+  • 在外面的 |cFFFFFD00滋長界地鎖|r 後方
+  • 在滋長界地西南方的房間
+  • 在有 {npc:181652} 的南邊房間
+  • 在滋長界地東南方的房間
+]]
+
+L['prying_eye_discovery'] = '發現窺探之眼'
+L['prying_eye_discovery_note'] = '當飛行解鎖時會比較容易到達'
+L['pulp_covered_relic'] = '被泥巴覆蓋的聖物'
+L['sandworn_chest'] = '砂蝕寶箱'
+L['sandworn_chest_note'] = '從附近的怪物上拾取5個 {item:190198} 來組合成 {item:190197}.'
+
+L['cache_avian_nest'] = '鳥巢'
+L['cache_cypher_bound'] = '暗語束縛箱子'
+L['cache_discarded_automa'] = '被丟棄的自主機碎塊'
+L['cache_forgotten_vault'] = '被遺忘的藏寶庫'
+L['cache_mawsworn_supply'] = '淵誓補給箱'
+L['cache_tarachnid_eggs'] = '原蛛卵'
+
+L['cache_cantaric'] = '肯塔瑞克原鎖'
+L['cache_fugueal'] = '符古爾原鎖'
+L['cache_glissandian'] = '格里桑迪安原鎖'
+L['cache_mezzonic'] = '梅索尼克原鎖'
+L['cache_toccatian'] = '托卡提安原鎖'
+
+L['schematic_treasure_note'] = '|cFFFF8C00在你還沒有解鎖合成器時此寶藏不會含有結構圖. 如果你已經撿過寶藏後才解鎖, 你可以在旁邊的地上找到結構圖.|r'
+L['schematic_treasure_mount_note'] = '|cFFFF8C00此結構圖可以在附近的一次性寶藏找到. 如果你在解鎖坐騎合成器之前開啟了寶藏, 你可以在此找到結構圖.|r'
+L['schematic_treasure_pet_note'] = '|cFFFF8C00此結構圖可以在附近的一次性寶藏找到. 如果你在解鎖寵物合成器之前開啟了寶藏, 你可以在此找到結構圖.|r'
+L['schematic_bronze_helicid_note'] = '有機率從雙周任務 {quest:65324} 的 {item:190610} 內被找到'
+L['schematic_ambystan_darter_note'] = '藏在水下 {npc:185312} 附近'
+L['schematic_bronzewing_vespoid_note'] = '在育生棲地內'
+L['schematic_buzz_note'] = '在 {npc:185265} 內有機率發現'
+L['schematic_darkened_vombata_note'] = '在一個漂浮的籠子內'
+L['schematic_deathrunner_note'] = '作為 {spell:366367} 的一部分解鎖任務鏈來取得'
+L['schematic_desertwing_hunter_note'] = '在柱子頂端'
+L['schematic_fierce_scarabid_note'] = '藏在 {npc:181870} 所站的平台底下'
+L['schematic_forged_spiteflyer_note'] = '從原蜂巢群中伸出'
+L['schematic_genesis_crawler_note'] = '在創始密室入口的頂端發現'
+L['schematic_goldplate_bufonid_note'] = '{npc:178803} 有低機率掉落'
+L['schematic_heartbond_lupine_note'] = '{npc:179939} 有低機率掉落'
+L['schematic_leaping_leporid_note'] = '在一顆漂浮的樹頂端可以找到'
+L['schematic_microlicid_note'] = '在漂浮樹最低的枝幹上， 在一些葉子之下'
+L['schematic_pale_regal_cervid_note'] = '在 {npc:181397} 處研究所有的暗語來取得 {achievement:15402}.'
+L['schematic_prototickles_note'] = '在稀有 {npc:180978} 之上的藤蔓內連接著的一個漂浮鍊'
+L['schematic_raptora_swooper_note'] = '在轉化廳內發現'
+L['schematic_resonant_echo_note'] = '有機率在 {item:189172} 內發現'
+L['schematic_russet_bufonid_note'] = '有機率在 {item:187780} 巔峰箱內發現'
+L['schematic_scarlet_helicid_note'] = '在拱形建築頂端可以被找到'
+L['schematic_shelly_note'] = '在詞彙石窟內書櫃的背面上. 需要傳送技能來爬上書櫃'
+L['schematic_tarachnid_creeper_note'] = '在無盡沙海內的一個小建築內'
+L['schematic_terror_jelly_note'] = '在坡道附近的方形塔架頂端'
+L['schematic_tunneling_vombata_note'] = '在洛克利安魂核內一個被堵塞的隧道的瓦礫旁'
+L['schematic_vespoid_flutterer_note'] = '在鳴響山嶽的第一位點的一堆沙中伸出'
+
+L['concordance_excitable'] = '躁動索引'
+L['concordance_mercurial'] = '易變索引'
+L['concordance_tranquil'] = '平靜索引'
+L['concordance_note'] = '閱讀每一個索引來解鎖在 |cFFFFFD00流亡者洞穴|r 內 |cFFFFFD00知識控制台|r 的項目.'
+
+L['echoed_jiro_note'] = '消耗 {npc:181059} 能量來取得暫時的增益. 需要 {npc:181397} 的 |cFFFFFD00克里希安|r 研究.'
+
+L['bygone_elemental_note'] = '{npc:181221} 會在此區域任何一個 {npc:179007} 的位置重生'
+L['gaiagantic_note'] = '僅在 {npc:177958} 提供 {quest:64785} 每日任務的時候重生'
+L['misaligned_enforcer_note'] = '巡邏此區域並且會在其路徑終點消失'
+L['overcharged_vespoid_note'] = '在此區域作為任一蟲群的一部分重生'
+L['runethief_xylora_note'] = '在朝聖者之澤區域潛行的重生'
+
+L['patient_bufonid_note'] = '推進澤瑞斯莫提斯的主線任務直到 {npc:180950} 提供 {quest:65727}. 每天完成任務來將 {npc:185798} 引誘出池塘'
+L['patient_bufonid_note_day1'] = '從此區域的原蜂收集15個 {item:190852}'
+L['patient_bufonid_note_day2'] = '從拍賣場購買30個 {item:172053}'
+L['patient_bufonid_note_day3'] = '從拍賣場購買200個 {item:173202}'
+L['patient_bufonid_note_day4'] = '從拍賣場購買10個 {item:173037}'
+L['patient_bufonid_note_day5'] = '從此區域的怪物收集5個 {item:187704}'
+L['patient_bufonid_note_day6'] = '從朝聖者之澤附近的 {npc:185748} 購買5個 {item:190880}'
+L['patient_bufonid_note_day7'] = '從帷幕市集地城的 {npc:180114} 購買1個 {item:187171}'
+
+L['options_icons_code_creature'] = '{achievement:15211}'
+L['options_icons_code_creature_desc'] = '顯示 {achievement:15211} 成就的生物位置'
+L['options_icons_concordances'] = '知識索引'
+L['options_icons_concordances_desc'] = '顯示知識索引控制台的位置'
+L['options_icons_echoed_jiros'] = '回響的機諾'
+L['options_icons_echoed_jiros_desc'] = '顯示提供增益的 |cFFFFFD00回響機諾|r 位置.'
+L['options_icons_exile_tales'] = '{achievement:15509}'
+L['options_icons_exile_tales_desc'] = '顯示 {achievement:15509} 成就所需的傳說位置'
+L['options_icons_protoform_schematics'] = '結構圖'
+L['options_icons_protoform_schematics_desc'] = '顯示坐騎和小寵物結構圖的位置'
+L['options_icons_puzzle_caches'] = '謎題箱'
+L['options_icons_puzzle_caches_desc'] = '顯示謎題箱子的位置'
+L['options_icons_zereth_caches'] = '暗語箱'
+L['options_icons_zereth_caches_desc'] = '顯示暗語箱可能的位置'

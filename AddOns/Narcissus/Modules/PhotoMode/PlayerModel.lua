@@ -12,6 +12,7 @@ local FadeFrame = NarciFadeUI.Fade;
 local FadeIn = NarciFadeUI.FadeIn;
 local After = C_Timer.After;
 local LanguageDetector = NarciAPI.LanguageDetector;
+local NarciAnimationInfo = NarciAnimationInfo;
 local NarciSpellVisualBrowser = NarciSpellVisualBrowser;
 local GetCursorPosition = GetCursorPosition;
 local IsAltKeyDown = IsAltKeyDown;
@@ -1871,7 +1872,6 @@ end
 
 
 -----------------------------------------------------------------------------
-local NarciAnimationInfo = NarciAnimationInfo;
 
 NarciAnimationIDEditboxMixin = {};
 
@@ -1880,7 +1880,7 @@ function NarciAnimationIDEditboxMixin:OnLoad()
 	self:SetAnimationID(0);
 	self.Highlight:SetAlpha(0);
 	self.FavoriteButton = self:GetParent().FavoriteButton;
-	self:SetHighlightColor(1, 1, 1);
+	self:SetHighlightColor(0, 0, 0);
 	AnimationIDEditBox = self;
 	self:SetScript("OnLoad", nil);
 	self.OnLoad = nil;
@@ -1920,7 +1920,7 @@ end
 
 function NarciAnimationIDEditboxMixin:SetAnimationID(id)
 	self:SetNumber(id);
-	self.IDFrame.Label:SetText( NarciAnimationInfo:GetOfficialName(id) );
+	self.IDFrame.Label:SetText( NarciAnimationInfo.GetOfficialName(id) );
 end
 
 function NarciAnimationIDEditboxMixin:OnEnterPressed()
@@ -1958,6 +1958,7 @@ end
 
 function NarciAnimationIDEditboxMixin:OnEditFocusGained()
 	self.oldID = self:GetNumber();
+	self:HighlightText();
 end
 
 function NarciAnimationIDEditboxMixin:OnEnter()
@@ -1981,7 +1982,7 @@ end
 function NarciAnimationIDEditboxMixin:OnTextChanged()
 	self.Timer:Stop();
 	local id = self:GetNumber();
-	self.IDFrame.Label:SetText( NarciAnimationInfo:GetOfficialName(id) );
+	self.IDFrame.Label:SetText( NarciAnimationInfo.GetOfficialName(id) );
 	self.FavoriteButton:UpdateStatus(id);
 end
 
@@ -2123,7 +2124,7 @@ function NarciFavoriteStarMixin:SetVisual(isFavorite)
 end
 
 function NarciFavoriteStarMixin:UpdateStatus(id)
-	local isFavorite = NarciAnimationInfo:IsFavorite(id);
+	local isFavorite = NarciAnimationInfo.IsFavorite(id);
 	self:SetVisual(isFavorite);
 end
 
@@ -2133,10 +2134,10 @@ function NarciFavoriteStarMixin:OnClick()
 
 	local id = AnimationIDEditBox:GetNumber();
 	if isFavorite then
-		NarciAnimationInfo:AddFavorite(id);
+		NarciAnimationInfo.AddFavorite(id);
 		self:PlayStarAnimation();
 	else
-		NarciAnimationInfo:RemoveFavorite(id);
+		NarciAnimationInfo.RemoveFavorite(id);
 	end
 	Narci_AnimationBrowser:RefreshFavorite(id);
 end
@@ -2901,6 +2902,8 @@ function NarciGenericModelMixin:OnModelLoaded()
 	InitializeModel(self);
 	self:UpdateVirtualModel();
 	self.isModelLoaded = true;
+	self.isAnimationCached = nil;
+	self.animationList = {};
 end
 
 function NarciGenericModelMixin:OnAnimFinished()
@@ -3133,6 +3136,8 @@ end
 function NarciMainModelMixin:OnModelLoaded()
 	self:MakeCurrentCameraCustom();
 	self.isModelLoaded = true;
+	self.isAnimationCached = nil;
+	self.animationList = {};
 end
 
 ----------------------------------------------------------------------
@@ -3546,6 +3551,7 @@ local function RemoveActor(actorIndex)
 		model.creatureName = nil;
 		model.equippedWeapons = nil;
 		model.isAnimationCached = nil;
+		model.animationList = {};
 		model.GroundShadow:Hide();
 		model.freezedFrame = 0;
 	end
@@ -3668,10 +3674,6 @@ function Narci_GenderButton_OnClick(self)
 end
 
 local AutoCloseTimer2 = C_Timer.NewTimer(0, function()	end);
-
-function Narci_BioAlertFrame_StopTimer()
-	AutoCloseTimer2:Cancel();
-end
 
 local function AutoCloseRaceOption(time)
 	AutoCloseTimer2:Cancel();

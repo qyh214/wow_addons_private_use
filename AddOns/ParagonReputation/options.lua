@@ -1,5 +1,5 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.38 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.39 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for
@@ -45,7 +45,7 @@ toast.title:SetJustifyH("LEFT")
 toast.description = toast:CreateFontString(nil,"ARTWORK","GameFontHighlightSmall")
 toast.description:SetPoint("TOPLEFT",toast.title,"TOPLEFT",1,-23)
 toast.description:SetWidth(258)
-toast.description:SetHeight(32)			
+toast.description:SetHeight(32)
 toast.description:SetJustifyV("TOP")
 toast.description:SetJustifyH("LEFT")
 
@@ -107,7 +107,8 @@ function ParagonReputation:SetToastPosition()
 end
 
 -- [AddOn Options] Creata AddOn Options
-function ParagonReputation:CreateOptions()	
+function ParagonReputation:CreateOptions()
+
 	-- [Interface Options] Create Options
 	PR.options = CreateFrame("FRAME",nil)
 	PR.options.name = "Paragon Reputation"
@@ -131,7 +132,7 @@ function ParagonReputation:CreateOptions()
 	PR.options.label1:SetText(PR.L["LABEL001"])
 	
 	-- [Interface Options] Color Check
-	local COLOR_CHECK_NAME = {PR.L["BLUE"],PR.L["GREEN"],PR.L["YELLOW"],PR.L["ORANGE"],PR.L["RED"]}	
+	local COLOR_CHECK_NAME = {PR.L["BLUE"],PR.L["GREEN"],PR.L["YELLOW"],PR.L["ORANGE"],PR.L["RED"]}
 	for n=1,#COLOR_CHECK_LIST do
 		PR.options["color"..n] = PR:CreateCheckButton(COLOR_CHECK_LIST[n],COLOR_CHECK_NAME[n],PR.DB.color,"COLOR")
 		if n == 1 then
@@ -171,7 +172,7 @@ function ParagonReputation:CreateOptions()
 	PR.options.toast:SetChecked(PR.DB.toast)
 	PR.options.toast:SetScript("OnClick",function()
 		PlaySound(687,"Master")
-		PR.DB.toast = PR.options.toast:GetChecked()		
+		PR.DB.toast = PR.options.toast:GetChecked()
 	end)
 	
 	-- [Interface Options] Toast Description
@@ -206,7 +207,7 @@ function ParagonReputation:CreateOptions()
 		self.last = value
 		PlaySound(687,"Master")
 		PR.DB.fade = value
-		PR.options.fade1:SetText(PR.options.fade2:GetValue().."s")		
+		PR.options.fade1:SetText(PR.options.fade2:GetValue().."s")
 	end)
 	
 	-- [Interface Options] Sound Check

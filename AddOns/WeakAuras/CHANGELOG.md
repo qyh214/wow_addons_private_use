@@ -1,21 +1,18 @@
-# [3.7.8](https://github.com/WeakAuras/WeakAuras2/tree/3.7.8) (2022-01-27)
+# [3.7.12](https://github.com/WeakAuras/WeakAuras2/tree/3.7.12) (2022-02-23)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.7.7...3.7.8)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.7.11...3.7.12)
 
 ## Highlights
 
- - Bug fixes 
+ - Workaround for spellcache constant table overflow 
 
 ## Commits
 
-Translit (1):
+InfusOnWoW (1):
 
-- additional WA logo textures (#3451)
+- Make spellcache take up less constants
 
-mrbuds (4):
+mrbuds (1):
 
-- fix cast trigger for tbc 2.5.3 #3448
-- Fixing transmission and add a 5mn expiration timer on linked auras
-- fix glow in templates
-- fix bad order of aurabar foreground when importing old version, #3449
+- fix unpackaged copy of weakauras not working on 9.2 WOW_PROJECT_MAINLINE value changed from 5 to 1 in 9.2
 

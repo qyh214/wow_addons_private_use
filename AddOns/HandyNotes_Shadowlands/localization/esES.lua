@@ -241,9 +241,9 @@ L['zolla_note'] = 'Nos tomamos muy en serio nuestras defensas. Seamos grandes o 
 L['carriage_crusher_note'] = 'Sigue al {npc:180182} en las Fauces y deféndelo hasta que ataque el {npc:180246}.'
 L['chamber_note'] = 'Usa un {item:186718} del {npc:178257} en el Teletransportador Antiguo. Usa el Teletransportador Antiguo reparado para acceder a la cámara.'
 L['consumption_note'] = [[
-Este raro no soltará botín hasta que haya consumido a 40x {npc:179758} para transformarse en su forma azul sombreada (Raro).
+Este raro no soltará botín hasta que haya consumido a {npc:179758} x40 para transformarse en su forma azul sombreada (Raro).
 
-Este raro soltará objetos de investigación extra después de consumir otros 40x {npc:179758} para transformarse en su forma verde sombreada (Raro Élite).
+Este raro soltará objetos de investigación extra después de consumir otros {npc:179758} x40 para transformarse en su forma verde sombreada (Raro Élite).
 
 |cFFFF0000El raro no hará aparecer {npc:179758} para consumir si está en combate.|r
 ]]
@@ -274,7 +274,7 @@ L['korthian_shrine_note'] = 'Haz click en la roca con forma de espada para ganar
 L['num_research'] = '%d Investigación'
 L['plus_research'] = '+Investigación'
 L['options_icons_relic'] = '{achievement:15066}'
-L['options_icons_relic_desc'] = 'Muestra donde están las 20 reliquias para {achievement:15066}.'
+L['options_icons_relic_desc'] = 'Muestra dónde están las 20 reliquias para {achievement:15066}.'
 
 L['rift_portal_note'] = [[
 Entra en |cFFFFFF00La Falla|r, una fase alternativa de Korthia y Las Fauces con raros adicionales, reliquias y alijos.
@@ -294,12 +294,12 @@ Estos tres raros de falla suelen aparecer en  orden con 20 minutos de intérvalo
   3. {npc:179911}
 ]]
 L['options_icons_rift_portal'] = '{npc:179595}'
-L['options_icons_rift_portal_desc'] = 'Muestra donde están los {npc:179595} usados para entrar en |cFFFFFF00La Falla|r.'
+L['options_icons_rift_portal_desc'] = 'Muestra dónde están los {npc:179595} usados para entrar en |cFFFFFF00La Falla|r.'
 
 L['riftbound_cache'] = 'Alijo Vinculafalla'
 L['riftbound_cache_note'] = 'Sólo pueden aparecer 4 alijos diferentes en un conjunto de sitios dentro de la falla.'
 L['options_icons_riftbound_cache'] = 'Alijos Vinculafalla'
-L['options_icons_riftbound_cache_desc'] = 'Muestra donde están los alijos dentro de |cFFFFFF00La Falla|r.'
+L['options_icons_riftbound_cache_desc'] = 'Muestra dónde están los alijos dentro de |cFFFFFF00La Falla|r.'
 
 L['invasive_mawshroom'] = 'Champifauces Invasivos'
 L['invasive_mawshroom_note'] = 'Sólo pueden aparecer 5 champifauces diferentes en un conjunto de sitios.'
@@ -308,17 +308,17 @@ L['mawsworn_cache_note'] = 'Sólo pueden aparecer 3 alijos diferentes en un conj
 L['pile_of_bones'] = 'Montón de huesos'
 L['relic_cache'] = 'Alijo de reliquias'
 L['shardhide_stash'] = 'Alijo de pellejosquirla'
-L['korthia_shared_chest_note'] = 'Se pueden coger reliquias de estos tesoros 5 veces al día. Después, los alijos pueden tener cristales legendarios o fichas de equipo ligados a cuenta.'
+L['korthia_shared_chest_note'] = 'Se pueden despojar 5 veces para coger reliquias. Después de 30 minutos se podrá de nuevo otras 5 veces, haciendo el proceso ilimitado.'
 L['unusual_nest'] = 'Nido de materiales inusuales'
 L['unusual_nest_note'] = 'Todos los sitios con nidos se pueden despojar sólo 5 veces al día.'
 
-L['options_icons_invasive_mawshroom_desc'] = 'Muestra donde están los Champifauces Invasivos.'
+L['options_icons_invasive_mawshroom_desc'] = 'Muestra dónde están los Champifauces Invasivos.'
 L['options_icons_invasive_mawshroom'] = 'Champifauces Invasivos'
-L['options_icons_korthia_dailies_desc'] = 'Muestra donde están los tesoros diarios sin marcar.'
-L['options_icons_korthia_dailies'] = 'Tesoros Ocultos'
-L['options_icons_mawsworn_cache_desc'] = 'Muestra donde están los Alijos jurafauces.'
+L['options_icons_korthia_dailies_desc'] = 'Muestra dónde están los Alijos de Reliquias sin marcar.'
+L['options_icons_korthia_dailies'] = 'Alijos de Reliquias'
+L['options_icons_mawsworn_cache_desc'] = 'Muestra dónde están los Alijos jurafauces.'
 L['options_icons_mawsworn_cache'] = 'Alijos jurafauces'
-L['options_icons_nest_materials_desc'] = 'Muestra donde están los Nidos de Materiales Inusuales.'
+L['options_icons_nest_materials_desc'] = 'Muestra dónde están los Nidos de Materiales Inusuales.'
 L['options_icons_nest_materials'] = 'Nidos de Materiales Inusuales'
 
 -------------------------------------------------------------------------------
@@ -494,7 +494,7 @@ L['broken_mirror_61818'] = 'En una habitación pequeña con {npc:173699}.'
 L['broken_mirror_61819'] = 'En una habitación pequeña en el piso inferior.'
 L['broken_mirror_61827'] = 'En una habitación pequeña.'
 L['options_icons_broken_mirror'] = 'Espejos Rotos'
-L['options_icons_broken_mirror_desc'] = 'Muestra donde están los espejos rotos.'
+L['options_icons_broken_mirror_desc'] = 'Muestra dónde están los espejos rotos.'
 
 -------------------------------------------------------------------------------
 ----------------------------------- THE MAW -----------------------------------
@@ -619,7 +619,7 @@ L['nexus_misc_three_chains'] = 'En el suelo cerca de tres cadenas'
 L['stolen_anima_vessel'] = 'Receptáculo de Ánima Robado'
 L['hidden_anima_cache'] = 'Alijo de Ánima Oculto'
 L['options_icons_anima_vessel'] = 'Receptáculos de Ánima Robados'
-L['options_icons_anima_vessel_desc'] = 'Muestra donde están los receptáculos de ánima durante los asaltos y dentro de |cFFFFFF00La Falla|r.'
+L['options_icons_anima_vessel_desc'] = 'Muestra dónde están los receptáculos de ánima durante los asaltos y dentro de |cFFFFFF00La Falla|r.'
 
 L['rift_hidden_cache'] = 'Alijo Oculto de Falla'
 L['options_icons_rift_hidden_cache'] = 'Alijos Ocultos de Falla'
@@ -641,7 +641,7 @@ L['cov_assault_only'] = 'Disponible sólo durante el asalto de %s.'
 L['helgarde_supply'] = 'Alijo de Suministros de Helgarde'
 L['helgarde_supply_note'] = 'Aparece a lo largo de la zona de Desmotaeron. Tu {npc:180598} puede ayudarte a encontrarlos.'
 L['options_icons_helgarde_cache'] = 'Alijos de Suministros de Helgarde'
-L['options_icons_helgarde_cache_desc'] = 'Muestra donde están los Alijos de Suministros de Helgarde en la zona de Desmotaeron.'
+L['options_icons_helgarde_cache_desc'] = 'Muestra dónde están los Alijos de Suministros de Helgarde en la zona de Desmotaeron.'
 
 L['mawsworn_cache_ramparts_note'] = 'Este alijo está sobre las murallas. Usa los puntos de agarre o un {npc:177093} para llegar a ellos.'
 L['mawsworn_cache_tower_note'] = 'Este alijo está sobre una torre y requiere un {npc:177093} para llegar. Usa la habilidad {spell:349853} para saltar arriba.'
@@ -664,7 +664,7 @@ L['desmotaeron'] = 'Desmotaeron'
 
 L['zovault_note'] = 'Trae {npc:179883} a {npc:179904} una vez al día para una piedra de falla garantizada.'
 L['options_icons_zovault'] = '{npc:179883}'
-L['options_icons_zovault_desc'] = 'Muestra donde están {npc:179883}.'
+L['options_icons_zovault_desc'] = 'Muestra dónde están las {npc:179883}.'
 
 L['tormentors'] = 'Torturadores de Torghast'
 L['tormentors_note'] = [[
@@ -672,3 +672,143 @@ Los eventos de torturadores aparecen cada 2 horas impares en punto. Aparecerán 
 
 El {item:185972} se puede despojar una vez a la semana y contiene 50 {currency:1906}.
 ]]
+
+-------------------------------------------------------------------------------
+-------------------------------- ZERETH MORTIS --------------------------------
+-------------------------------------------------------------------------------
+
+L['corrupted_architect_note'] = 'Ataca a {npc:183958} y a {npc:183961} para activar el raro.'
+L['dune_dominance_note'] = 'Los tres élites raros para el logro {achievement:15392} aparecen en el mismo sitio.'
+L['feasting_note'] = 'A veces rodeará la zona antes de volver a este sitio.'
+L['furidian_note'] = 'Activa tres |cFFFFFD00Llave Potenciada|r de la zona, y desbloquea la |cFFFFFD00Cámara Sospechosamente Enfadada|r.'
+L['garudeon_note'] = 'Recoge varios {npc:183562} de los alrededores y usa {spell:362655} para alimentar a los {npc:183554}. Cuando los tres estén alimentados, se activará {npc:180924}.'
+L['gluttonous_overgrowth_note'] = 'Rompe todas las {npc:184048} cercanas para activar la {npc:178778}.'
+L['helmix_emote'] = '|cFFFF8C00El suelo vibra... ¡Hay algo bajo la superfície!|r'
+L['hirukon_note'] = [[
+Para atraer a {npc:180978} a la superfície, tiene que crearse un {item:187923}.
+
+1. Pesca un {item:187662} de las aguas cercanas.
+
+2. Pesca un {item:187915} del |cFFFFFD00Banco de Pez mancha acre|r dentro la Reserva Colmillo Torcido en Zangarmarsh. El banco está a la derecha cuando entras en la caverna.
+
+3. Pesca un {item:187922} del |cFFFFFD00Banco de Pez aletón|r cerca del punto de vuelo Tumba de Kelya en Nazjatar.
+
+4. Despoja una (está muy escondida) {item:187916} de un balcón en el segundo nivel del Bancal de Nar'shola en la Extensión Bruñida (34.7, 75.0).
+
+5. Localiza a la {npc:182194} en el estanque al sur del Trono del Prelado en Maldraxxus. Dile que te construya el {item:187923} acabado.
+
+6. Usa el {item:187923} que te permitirá ver los |cFFFFFD00Banco de Aurélido|r junto a {npc:180978} durante 15min. Pesca dentro para invocar a {npc:180978} a la superfície.
+]]
+L['orixal_note'] = 'Comparte punto de aparición con el {npc:185487} que patrulla la zona.'
+L['protector_first_ones_note'] = 'Requiere dos personas. Lleva las runas correspondientes a cada consola (están en los alrededores) para abrir la barrera.'
+L['the_engulfer_note'] = 'Defiende a {npc:183505} hasta que {npc:183516} salte de la grieta.'
+L['zatojin_note'] = 'Atrae a los {npc:183721} cercanos y deja que te pongan 20 acumulaciones de {spell:362976} hasta que estés {spell:362983}. Tienes que estar dentro del anillo de cuerpos de los {npc:183774} cuando seas paralizado para que {npc:183764} se fije en ti.'
+
+L['architects_reserve_note'] = 'Completa la cadena de misiones {quest:64829} que da {npc:180630} en Gracia del Peregrino. Al día seguiente, completa la cadena de misiones {quest:65426} que da {npc:181273} para desbloquear el tesoro.'
+L['bushel_of_produce_note'] = 'Mata al {npc:182368} al norte mientras tenga el buff {spell:360945} para ganártelo tú. Mata más {npc:182368} (no necesitan tener el buff) hasta que tengas 5 acumulaciones. Ya puedes romper la puerta que da al tesoro.'
+L['crushed_crate_note'] = 'Despoja la {item:189767} que reposa encima del pilar caido por encima del tesoro. Dásela a {npc:185151} a cambio del {item:189768} el cual puede romper las rocas caidas.'
+L['domination_cache_note'] = 'La {item:189704} tiene pocas probabilidades de caer de los {npc:181403} y de los {npc:182426} de la zona.'
+L['drowned_broker_supplies_note'] = 'Dile a {npc:181059} que coja el control de un {npc:185282} cercano.'
+L['forgotten_protovault_note'] = 'Sólo está disponible durante la misión del mundo {wq:A salto de rana}.'
+L['grateful_boon_note'] = 'Es dificul de alcanzar sin volar; usa {spell:300728} o {spell:111771} para subir la montaña. Tranquiliza a las 12 criaturas de la zona y {npc:185293} hará aparecer el tesoro.'
+L['library_vault_note'] = 'Haz click en las tablillas de la Gruta Léxica hasta que encuentres el orden correcto y ganes el buff {spell:362062} para abrir la cámara.'
+L['mistaken_ovoid_note'] = 'Dentro de la caverna Cataratas Dimensionales. Has de recoger {item:190239} x5, y llevarlos a la {npc:185280}.'
+L['ripened_protopear_note'] = 'Inicia la cadena de misiones {quest:64641} para ganar accesso a la Fundición Floreciente. Recoge 5 {spell:367180} (nubes verdes) dentro and y llévalas a la {npc:185416} para polinizarla.'
+L['sphere_treasure_note'] = 'Salta las esferas con cuidado hasta llegar al tesoro.'
+L['submerged_chest_note'] = 'Absorbe el |cFFFFFD00Orbe de Poder Peligroso|r al sur. Ahora interactúa con la |cFFFFFD00Bomba Olvidada|r junto al tesoro.'
+L['symphonic_vault_note'] = 'Examina al {npc:183998} para escuchar una secuencia de cuatro sonidos. Cada {npc:183950} de la sala reproduce un sonido. Interactúa con ellas en el orden adecuado para desbloquear el tesoro.'
+L['syntactic_vault_note'] = 'Para desbloquear el tesoro, has de ganar 6 acumulaciones de {spell:367499} interactuando con las |cFFFFFD00Sílabas Rúnicas|r en la zona del Sepulcro de los Primeros.'
+L['template_archive_note'] = 'Empuja el {npc:183339} de la sala dentro del {npc:183337} que bloquea el paso al tesoro.'
+L['undulating_foliage_note'] = [[
+Pulsa los cuatro {npc:185390} para activar el teleportador del centro de la sala de los Distritos Catalizadores.
+
+• Fuera y detrás del |cFFFFFD00Bloqueo de los Distritos Catalizadores|r
+• En la habitación suroeste de los distritos
+• En la habitación sur con el {npc:181652}
+• En la habitación sureste de los distritos
+]]
+
+L['prying_eye_discovery'] = 'Descubrimiento del Ojo Fisgón'
+L['prying_eye_discovery_note'] = 'Es más fácil de alcanzar cuando el volar esté desbloqueado.'
+L['pulp_covered_relic'] = 'Reliquia Cubierta de Pulpa'
+L['sandworn_chest'] = 'Cofre Erosionado por la Arena'
+L['sandworn_chest_note'] = 'Despoja {item:190198} x5 de los enemigos de la zona para construir la {item:190197}.'
+
+L['cache_avian_nest'] = 'Nido Aviario'
+L['cache_cypher_bound'] = 'Cofre Reforzado con Clave'
+L['cache_discarded_automa'] = 'Chatarra de Automa Desechada'
+L['cache_forgotten_vault'] = 'Cámara del Tesoro Olvidada'
+L['cache_mawsworn_supply'] = 'Cofre de Suministros Jurafauces'
+L['cache_tarachnid_eggs'] = 'Huevos de Tarácnido'
+
+L['cache_cantaric'] = 'Alijo Cantárico'
+L['cache_fugueal'] = 'Alijo de Fuga'
+L['cache_glissandian'] = 'Alijo Glissadiano'
+L['cache_mezzonic'] = 'Alijo Mezzónico'
+L['cache_toccatian'] = 'Alijo Tocata'
+
+L['schematic_treasure_note'] = '|cFFFF8C00Este tesoro no tendrá el esquema de la protoforma si no has desbloqueado todavía la forja de síntesis. Si ya has despojado el tesoro, encontrarás el esquema cerca en el suelo.|r'
+L['schematic_treasure_mount_note'] = '|cFFFF8C00Este esquema está en un tesoro cercano la primera vez. Si el tesoro se abrió antes de desbloquear la forja de síntesis de monturas, el esquema estará aquí.|r'
+L['schematic_treasure_pet_note'] = '|cFFFF8C00Este esquema está en un tesoro cercano la primera vez. Si el tesoro se abrió antes de desbloquear la forja de síntesis de mascotas, el esquema estará aquí.|r'
+L['schematic_bronze_helicid_note'] = 'Probabilidad de que esté en el {item:190610} de la misión bisemanal {quest:65324}.'
+L['schematic_ambystan_darter_note'] = 'Escondido bajo el agua junto al {npc:185312}.'
+L['schematic_bronzewing_vespoid_note'] = 'Dentro del Reposo Grávido.'
+L['schematic_buzz_note'] = 'Probabilidad de que esté en una {npc:185265}.'
+L['schematic_darkened_vombata_note'] = 'Dentro de una jaula flotante.'
+L['schematic_deathrunner_note'] = 'Obtenido a través de la cadena de misiones para la {spell:366367}.'
+L['schematic_desertwing_hunter_note'] = 'Está encima del pilar.'
+L['schematic_fierce_scarabid_note'] = 'Escondido bajo la plataforma donde está el {npc:181870}.'
+L['schematic_forged_spiteflyer_note'] = 'Sobresaliendo de un grupo de colmenas vespoide.'
+L['schematic_genesis_crawler_note'] = 'Está encima de la entrada a la Alcoba de Génesis.'
+L['schematic_goldplate_bufonid_note'] = 'Pequeña probabilidad de caer de los {npc:178803}.'
+L['schematic_heartbond_lupine_note'] = 'Pequeña probabilidad de caer del {npc:179939}.'
+L['schematic_leaping_leporid_note'] = 'Encima de un árbol flotante.'
+L['schematic_microlicid_note'] = 'En la rama más baja del árbol flotante, debajo de algo de follaje.'
+L['schematic_pale_regal_cervid_note'] = 'Investiga todas las Claves de la {npc:181397} para conseguir {achievement:15402}.'
+L['schematic_prototickles_note'] = 'Unido a una cadena flotante dentro de las vides de encima del raro {npc:180978}.'
+L['schematic_raptora_swooper_note'] = 'Dentro de la Cámara de Formación.'
+L['schematic_resonant_echo_note'] = 'Probabilidad de que esté dentro de un |cFFFFFD00Eco Cristalizado de la Primera Canción|r.'
+L['schematic_russet_bufonid_note'] = 'Probabilidad de que esté en el cofre de reputación {item:187780}.'
+L['schematic_scarlet_helicid_note'] = 'Está encima del arco de la estructura.'
+L['schematic_shelly_note'] = 'Situado en la parte trasera de un estante en la Gruta Léxica. Requiere una habilidad de teleportación para saltar al estante.'
+L['schematic_tarachnid_creeper_note'] = 'Dentro de una estructura pequeña en las Arenas Infinitas.'
+L['schematic_terror_jelly_note'] = 'Encima del pilón cuadrado junto a la rampa.'
+L['schematic_tunneling_vombata_note'] = 'Junto a unos escombros en un túnel bloqueado dentro del complejo Locris Esper.'
+L['schematic_vespoid_flutterer_note'] = 'Sobresaliendo de un montón de arena encima del nivel Enclave del Prelado de las Cúspides Resonantes.'
+
+L['concordance_excitable'] = 'Concordancia Excitable'
+L['concordance_mercurial'] = 'Concordancia Mercúrica'
+L['concordance_tranquil'] = 'Concordancia Tranquila'
+L['concordance_note'] = 'Lee cada concordancia para desbloquear entradas en la |cFFFFFD00Consola de Conocimiento|r en la |cFFFFFD00Cuenca del Exilio|r.'
+
+L['echoed_jiro_note'] = 'Gasta energia de {npc:181059} para ganar bufos temporales. Requiere investigar |cFFFFFD00Creatiano|r en la {npc:181397}.'
+
+L['bygone_elemental_note'] = 'Un {npc:181221} puede aparecer en lugar de cualquier {npc:179007} de la zona.'
+L['gaiagantic_note'] = 'Sólo aparece cuando {npc:177958} te ofrece la misión diaria {quest:64785}.'
+L['misaligned_enforcer_note'] = 'Patrulla la zona y entonces desaparece cuando acaba su ruta.'
+L['overcharged_vespoid_note'] = 'Puede aparecer como parte de una multitud de la zona.'
+L['runethief_xylora_note'] = 'Aparece en sigilo en la zona de Gracia del Peregrino.'
+
+L['patient_bufonid_note'] = 'Progresa en la historia de Zereth Mortis hasta que {npc:180950} ofrezca la misión {quest:65727}. Completa las misiones cada día para atraer un {npc:185798} fuera del estanque.'
+L['patient_bufonid_note_day1'] = 'Recoge {item:190852} x15 de los Vespoide de la zona.'
+L['patient_bufonid_note_day2'] = 'Compra {item:172053} x30 de la Casa de Subastas.'
+L['patient_bufonid_note_day3'] = 'Compra {item:173202} x200 de la Casa de Subastas.'
+L['patient_bufonid_note_day4'] = 'Compra {item:173037} x10 de la Casa de Subastas.'
+L['patient_bufonid_note_day5'] = 'Recoge {item:187704} x5 de los enemigos de la zona.'
+L['patient_bufonid_note_day6'] = 'Compra {item:190880} x5 a {npc:185748} cerca de Gracia del Peregrino.'
+L['patient_bufonid_note_day7'] = 'Compra {item:187171} x1 a {npc:180114} en la mazmorra de Tazavesh.'
+
+L['options_icons_code_creature'] = '{achievement:15211}'
+L['options_icons_code_creature_desc'] = 'Muestra dónde están las criaturas para el logro {achievement:15211}.'
+L['options_icons_concordances'] = 'Concordancias de Conocimiento'
+L['options_icons_concordances_desc'] = 'Muestra dónde están las consolas de las concordancias de conocimiento.'
+L['options_icons_echoed_jiros'] = 'Jiro en Eco'
+L['options_icons_echoed_jiros_desc'] = 'Muestra dónde están los |cFFFFFD00Jiro en Eco|r que dan bufos.'
+L['options_icons_exile_tales'] = '{achievement:15509}'
+L['options_icons_exile_tales_desc'] = 'Muestra dónde están los libros para el logro {achievement:15509}.'
+L['options_icons_protoform_schematics'] = 'Esquemas de Protoforma'
+L['options_icons_protoform_schematics_desc'] = 'Muestra dónde están los esquemas de monturas y mascotas.'
+L['options_icons_puzzle_caches'] = 'Alijos Puzzles'
+L['options_icons_puzzle_caches_desc'] = 'Muestra los sitios posibles para los alijos puzzle.'
+L['options_icons_zereth_caches'] = 'Cofres con Clave'
+L['options_icons_zereth_caches_desc'] = 'Muestra los sitios posibles para los cofres con clave.'

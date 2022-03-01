@@ -512,7 +512,7 @@
 					</Anchors>
 					<Size x="390"/>
 				</FontString>
-				<FontString inherits="NarciAchievementDate" parentKey="date" text="12/08/2012" justifyH="RIGHT">
+				<FontString inherits="NarciAchievementTiny" parentKey="date" text="12/08/2012" justifyH="RIGHT">
 					<Anchors>
 						<Anchor point="RIGHT" relativeKey="$parent.border" relativePoint="TOPRIGHT" x="-48" y="-25"/>
 					</Anchors>
@@ -1653,7 +1653,7 @@
 						<Anchor point="TOPLEFT" relativeKey="$parent.icon" relativePoint="TOPRIGHT" x="6" y="-3"/>
 					</Anchors>
 				</FontString>
-				<FontString inherits="GameFontHighlightSmall" parentKey="path" text="120 Results" maxLines="1" justifyH="LEFT" justifyV="MIDDLE">
+				<FontString inherits="NarciAchievementTiny" parentKey="path" text="120 Results" maxLines="1" justifyH="LEFT" justifyV="MIDDLE">
 					<Color r="0.6" g="0.6" b="0.6"/>
 					<Anchors>
 						<Anchor point="BOTTOMLEFT" relativeKey="$parent.icon" relativePoint="BOTTOMRIGHT" x="6" y="2"/>
@@ -1716,6 +1716,9 @@
 		</ScrollChild>
 		<Frames>
 			<Slider valueStep="0.01" parentKey="scrollBar">
+				<HitRectInsets>
+					<AbsInset left="-10" right="-12" top="0" bottom="0"/>
+				</HitRectInsets>
 				<Size x="16" y="0"/>
 				<Anchors>
 					<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="-5.5" y="-12"/>
@@ -1808,6 +1811,9 @@
 		</ScrollChild>
 		<Frames>
 			<Slider valueStep="0.01" parentKey="scrollBar">
+				<HitRectInsets>
+					<AbsInset left="-10" right="-12" top="0" bottom="0"/>
+				</HitRectInsets>
 				<Size x="16" y="0"/>
 				<Anchors>
 					<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="-18" y="-12"/>
@@ -2854,7 +2860,7 @@
 						<Anchors>
 							<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="-67" y="-5"/>
 						</Anchors>
-						<FontString inherits="GameFontHighlightSmall"/>
+						<FontString inherits="NarciAchievementTiny"/>
 						<Layers>
 							<Layer level="OVERLAY">
 								<Texture file="Interface\AddOns\Narcissus_Achievements\Art\Shared\SearchBoxIcons" parentKey="SearchIcon">
@@ -2866,7 +2872,7 @@
 								</Texture>
 							</Layer>
 							<Layer level="BACKGROUND">
-								<FontString parentKey="Instructions" justifyH="LEFT" justifyV="MIDDLE" inherits="GameFontDisableSmall" setAllPoints="true">
+								<FontString parentKey="Instructions" justifyH="LEFT" justifyV="MIDDLE" inherits="NarciAchievementTiny" setAllPoints="true">
 									<Color r="0.35" g="0.35" b="0.35"/>
 								</FontString>
 							</Layer>
@@ -2927,21 +2933,21 @@
 												</MaskTexture>
 											</Layer>
 											<Layer level="OVERLAY">
-												<FontString inherits="GameFontHighlightSmall" parentKey="count" text="120 Results" maxLines="1" justifyH="RIGHT">
+												<FontString inherits="NarciAchievementTiny" parentKey="count" text="120 Results" maxLines="1" justifyH="RIGHT">
 													<Color r="0.8" g="0.8" b="0.8"/>
 													<Size x="0"/>
 													<Anchors>
 														<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="-12" y="-7"/>
 													</Anchors>
 												</FontString>
-												<FontString inherits="GameFontHighlightSmall" parentKey="label" text="Page" maxLines="1" justifyH="RIGHT">
+												<FontString inherits="NarciAchievementTiny" parentKey="label" text="Page" maxLines="1" justifyH="RIGHT">
 													<Color r="0.6" g="0.6" b="0.6"/>
 													<Size x="0"/>
 													<Anchors>
 														<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="12" y="-7"/>
 													</Anchors>
 												</FontString>
-												<FontString inherits="GameFontHighlightSmall" parentKey="pageText" text="25/26" maxLines="1" justifyH="RIGHT">
+												<FontString inherits="NarciAchievementTiny" parentKey="pageText" text="25/26" maxLines="1" justifyH="RIGHT">
 													<Color r="0.8" g="0.8" b="0.8"/>
 													<Size x="40"/>
 													<Anchors>
@@ -3083,7 +3089,7 @@
 								<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" y="0"/>
 							</Anchors>
 						</Texture>
-						<FontString inherits="GameFontHighlightSmall" parentKey="label" text="Incomplete First" maxLines="1" justifyH="LEFT" justifyV="MIDDLE">
+						<FontString inherits="NarciAchievementTiny" parentKey="label" text="Incomplete First" maxLines="1" justifyH="LEFT" justifyV="MIDDLE">
 							<Color r="0.8" g="0.8" b="0.8"/>
 							<Size x="96"/>
 							<Anchors>

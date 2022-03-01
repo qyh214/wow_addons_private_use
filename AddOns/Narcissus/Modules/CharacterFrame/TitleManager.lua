@@ -66,7 +66,7 @@ end
 local function BuildTitleList(sortMethod)
 	local playerTitles = {};
 	local numRare = 0;
-	local titleCount = 2;	
+	local titleCount = 2;
 	local tempName = 0;
 	local CurrentTitle = -1;
 	local numPVP, numPVE, numACHV, numREPU, numEVENT = 0, 0, 0, 0, 0;
@@ -78,6 +78,10 @@ local function BuildTitleList(sortMethod)
 	playerTitles[1].id = -1;
 	playerTitles[1].category = "Z";
 	playerTitles[1].rarity = 0;
+
+	local IsTitleKnown = IsTitleKnown;
+	local GetTitleName = GetTitleName;
+	local strtrim = strtrim;
 
 	for i = 1, GetNumTitles() do
 		if ( IsTitleKnown(i) ) then
@@ -192,8 +196,7 @@ local function CreateTitleOptions(self, buttonTemplate, initialOffsetX, initialO
 	local scrollBar = self.scrollBar;
 	scrollBar:SetMinMaxValues(0, numButtons * buttonHeight);
 	scrollBar.buttonHeight = buttonHeight;
-	scrollBar:SetValueStep(buttonHeight);
-	scrollBar:SetStepsPerPage(numButtons - 2);
+	--scrollBar:SetStepsPerPage(numButtons - 2);
 	scrollBar:SetValue(0);
 
 	ScrollChild:SetScript("OnShow", function(ScrollChild)
@@ -445,22 +448,24 @@ function Narci_TitleManager_ScrollFrame_OnLoad(self)
 	end)
 
 	scrollBar:SetScript("OnLeave", function(scrollBar)
-		if not scrollBar.isMouseDown then
-			scrollBar.thumbTexture:SetColorTexture(0.1, 0.1, 0.1);
+		if not scrollBar:IsDraggingThumb() then
+			scrollBar.thumbTexture:SetColorTexture(0.25, 0.78, 0.92);
 		end
 	end)
 
 	scrollBar:SetScript("OnMouseDown", function(scrollBar)
 		scrollBar.isMouseDown = true;
-		Narci_LinearScrollUpdater:Start(self, 80, true);
+		--Narci_LinearScrollUpdater:Start(self, 80, true);
 	end)
 
 	scrollBar:SetScript("OnMouseUp", function(scrollBar)
 		scrollBar.isMouseDown = false;
 		if not scrollBar:IsMouseOver() then
-			scrollBar.thumbTexture:SetColorTexture(0.1, 0.1, 0.1);
+			scrollBar.thumbTexture:SetColorTexture(0.25, 0.78, 0.92);
 		end
 	end)
+
+	scrollBar:SetObeyStepOnDrag(false);
 end
 
 
@@ -580,11 +585,11 @@ function NarciTitleOptionMixin:OnHide()
 end
 
 function NarciTitleOptionMixin:OnMouseDown(button, isGamepad)
-	Narci_LinearScrollUpdater:Start(Narci_TitleManager.ScrollFrame, 80, true);
+	--Narci_LinearScrollUpdater:Start(Narci_TitleManager.ScrollFrame, 80, true);
 end
 
 function NarciTitleOptionMixin:OnMouseUp(button, isGamepad)
-	Narci_LinearScrollUpdater:Stop();
+	--Narci_LinearScrollUpdater:Stop();
 	TitleTooltip.isPaused = false;
 end
 

@@ -1,5 +1,5 @@
 local currentVersion = 10500;
-local lastMajorVersion = 10200;
+local lastMajorVersion = 0;
 local _, _, _, tocversion = GetBuildInfo();
 tocversion = tonumber(tocversion);
 
@@ -921,7 +921,7 @@ function NarciSplashNavButtonMixin:OnLoad()
         self.Backdrop:SetColorTexture(216/255, 189/255, 90/255);
         self.SelectionMarkLeft:SetVertexColor(4/255, 30/255, 60/255);
         self.SelectionMarkRight:SetVertexColor(4/255, 30/255, 60/255);
-        self.Logo:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Splash\\NarcissusLogoFlatMono128");
+        self.Logo:SetTexture("Interface\\AddOns\\Narcissus\\ART\\Logos\\NarcissusLogoFlatMono128");
         self.Logo:SetVertexColor(4/255, 30/255, 60/255);
         self.Title:SetText( string.format(NARCI_SPLASH_WHATS_NEW_FORMAT, NARCI_VERSION_INFO) );
         self.Title:SetTextColor(4/255, 30/255, 60/255);

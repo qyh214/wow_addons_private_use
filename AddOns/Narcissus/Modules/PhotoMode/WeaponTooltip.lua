@@ -20,7 +20,7 @@ function DataProvider:GetInventoryName(itemEquipLoc)
         if not self.invTypes[itemEquipLoc] then
             self.invTypes[itemEquipLoc] = _G[itemEquipLoc];
         end
-        return self.invTypes[itemEquipLoc]
+        return self.invTypes[itemEquipLoc] or "Invalid Loc"
     end
 end
 
@@ -35,9 +35,9 @@ function NarciWeaponTooltipMixin:OnLoad()
         tileEdge = true,
         tileSize = a,
         edgeSize = a,
-    }
+    };
     self:SetBackdrop(backdropInfo);
-    
+
     local p = self.Pointer;
     p:ClearAllPoints();
     p:SetSize(a, a);

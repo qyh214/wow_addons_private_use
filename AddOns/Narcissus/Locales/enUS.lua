@@ -7,7 +7,7 @@ local S = Narci.L.S;
 NARCI_GRADIENT = "|cffA236EFN|r|cff9448F1a|r|cff865BF2r|r|cff786DF4c|r|cff6A80F6i|r|cff5D92F7s|r|cff4FA4F9s|r|cff41B7FAu|r|cff33C9FCs|r"
 MYMOG_GRADIENT = "|cffA236EFM|cff9448F1y |cff865BF2T|cff786DF4r|cff6A80F6a|cff5D92F7n|cff4FA4F9s|cff41B7FAm|cff33C9FCo|cff32c9fbg|r"
 
-NARCI_VERSION_INFO = "1.1.7";
+NARCI_VERSION_INFO = "1.1.8";
 NARCI_DEVELOPER_INFO = "Developed by Peterodox";
 
 NARCI_NEW_ENTRY_PREFIX = "|cff40C7EB";
@@ -33,6 +33,18 @@ if IsMacClient() then
     NARCI_MODIFIER_ALT = "Option";
     NARCI_SHORTCUTS_COPY = "Command+C";
 end
+
+NARCI_WORDBREAK_COMMA = ", ";
+
+--Date--
+L["Today"] = COMMUNITIES_CHAT_FRAME_TODAY_NOTIFICATION;
+L["Yesterday"] = COMMUNITIES_CHAT_FRAME_YESTERDAY_NOTIFICATION;
+L["Format Days Ago"] = "%d days ago";
+L["A Month Ago"] = "1 month ago";
+L["Format Months Ago"] = "%d months ago";
+L["A Year Ago"] = "1 year ago";
+L["Format Years Ago"] = "%d years ago";
+
 
 L["Swap items"] = "Swap items";
 L["Press Copy"] = NARCI_COLOR_GREY_70.. "Press |r".. NARCI_SHORTCUTS_COPY.. NARCI_COLOR_GREY_70 .." to Copy";
@@ -275,7 +287,7 @@ L["Light Source Interconnected"] = "Interconnected";
 --Animation Browser--
 L["Animation"] = "Animation";
 L["Animation Tooltip"] = "Browse, search animations";
-L["Animation Variation"] = "Animation Variation";
+L["Animation Variation"] = "Variation";
 L["Reset Slider"] = "Reset to zero";
 
 
@@ -308,6 +320,7 @@ L["Close"] = "Close";
 L["Change Pack"] = "Change Pack";
 
 --Dressing Room--
+L["Undress"] = "Undress";
 L["Favorited"] = "Favorited";
 L["Unfavorited"] = "Unfavorited";
 L["Item List"] = "Item List";
@@ -316,7 +329,7 @@ L["Use Your Model"] = "Use Your Model";
 L["Cannot Inspect Target"] = "Cannot Inspect Target"
 L["External Link"] = "External Link";
 L["Add to MogIt Wishlist"] = "Add to MogIt Wishlist";
-L["Show Taint Solution"] = "How to resolve this issue?";
+L["Show Taint Solution"] = "How to solve this issue?";
 L["Taint Solution Step1"] = "1. Reload your UI.";
 L["Taint Solution Step2"] = "2. "..NARCI_MODIFIER_CONTROL.." + Left-click on an item to open the dressing room.";
 
@@ -411,7 +424,6 @@ L["Show Unearned Mark"] = "Show Unearned Mark";
 L["Show Unearned Mark Description"] = "Mark the achievements that were not earned by me with a red X.";
 L["Show Dates"] = "Show Dates";
 L["Hide Dates"] = "Hide Dates";
-
 L["Pinned Entries"] = "Pinned Entries";
 L["Pinned Entry Format"] = "Pinned  %d/%d";
 
@@ -477,7 +489,7 @@ L["Splash Content7 Description"] = "-The hexagon item border gets a new look. Ce
 
 --Project Details--
 NARCI_ALL_PROJECTS = "All Projects";
-NARCI_PROJECT_DETAILS = "|cFFFFD100Developer: Peterodox\nRelease Date: November 28, 2021|r\n\nThank you for trying this add-on! If you have any issues, suggestions, ideas, please leave a comment on the curseforge page or contact me on...";
+NARCI_PROJECT_DETAILS = "|cFFFFD100Developer: Peterodox\nRelease Date: February 25, 2022|r\n\nThank you for trying this add-on! If you have any issues, suggestions, ideas, please leave a comment on the curseforge page or contact me on...";
 NARCI_PROJECT_AAA_TITLE = "|cff008affA|cff0d8ef2z|cff1a92e5e|cff2696d9r|cff339acco|cff409ebft|cff4da1b2h |cff59a5a6A|cff66a999d|cff73ad8cv|cff7fb180e|cff8cb573n|cff99b966t|cffa6bd59u|cffb2c14dr|cffbfc440e |cffccc833A|cffd9cc26l|cffe5d01ab|cfff2d40du|cffffd800m|r";
 NARCI_PROJECT_AAA_SUMMARY = "Explore places of interest and collect lores and photos from all across Azeroth.|cff636363";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "An immersive character pane and your ultimate screenshot tool.";
@@ -519,6 +531,8 @@ L["PetStable Loading"] = "Retrieving Pet Info";
 L["Item Bonus"] = "Bonus:";
 L["Combat Error"] = NARCI_COLOR_RED_MILD.."Leave combat to continue".."|r";
 L["Extract Shard"] = "Extract Shard";
+L["No Service"] = "No Service";
+L["Shards Disabled"] = "Shards of Domination are disabled outside the Maw.";
 
 --Mythic+ Leaderboard--
 L["Mythic Plus"] = "Mythic+";
@@ -533,7 +547,7 @@ L["Temp Enchant"] = "Temporary Enchants";       --ERR_TRADE_TEMP_ENCHANT_BOUND
 L["Owned"] = "Owned";                           --Only show owned items
 L["At Level"] = "At level %d:";                 --Enchants scale with player level
 L["No Item Alert"] = "No compatible items";
-L["Click to Insert"] = "Click to Insert";       --Insert a gem
+L["Click To Insert"] = "Click to Insert";       --Insert a gem
 L["No Socket"] = "No socket";
 L["No Other Item For Slot"] = "No other item for %s";       --where %s is the slot name
 L["In Bags"] = "In bags";
@@ -542,3 +556,34 @@ L["In Bags"] = "In bags";
 S["Narcissus Played"] = "Total time spent in Narcissus";
 S["Format Since"] = "(since %s)";
 S["Screenshots"] = "Screenshots Taken In Narcissus";
+
+
+--Turntable Showcase--
+L["Turntable"] = "Turntable";
+L["Picture"] = "Picture";
+L["Elapse"] = "Elapse";
+L["Turntable Tab Animation"] = "Animation";
+L["Turntable Tab Image"] = "Image";
+L["Turntable Tab Quality"] = "Quality";
+L["Turntable Tab Background"] = "Background";
+L["Spin"] = "Spin";
+L["Sync"] = "Sync";
+L["Rotation Period"] = "Period";
+L["Period Tooltip"] = "The time it takes to complete one spin.\nIt should also be the |cffcccccccut duration|r of your GIF or video.";
+L["MSAA Tooltip"] = "Temporarily modify anti-aliasing to smooth out jaggy edges at the cost of performance.";
+L["Image Size"] = "Image Size";
+L["Font Size"] = FONT_SIZE;
+L["Item Name Show"] = "Show item names";
+L["Item Name Hide"] = "Hide item names";
+L["Outline Show"] = "Click to show outline";
+L["Outline Hide"] = "Click to hide outline";
+L["Preset"] = "Preset";
+L["File"] = "File";     --File Name
+L["File Tooltip"] = "Put your own image under |cffccccccWorld of Warcraft\\retail\\Interface\\AddOns|r and insert the file name in this box.\nThe image must be a |cffcccccc512x512|r or |cffcccccc1024x1024|r |cffccccccJPG|r file";
+L["Raise Level"] = "Bring to front";
+L["Lower Level"] = "Send to back";
+L["Click To Continue"] = "click to continue";
+L["Showcase Splash 1"] = "Create turntable animations to showcase your transmog with Narcissus and screen recorder.";
+L["Showcase Splash 2"] = "Click the button below to copy items from the Dressing Room.";
+L["Showcase Splash 3"] = "Click the button below to spin your character.";
+L["Showcase Splash 4"] = "Record the screen with video recording software then convert it to GIF.";

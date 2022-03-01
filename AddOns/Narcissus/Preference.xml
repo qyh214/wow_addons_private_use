@@ -315,6 +315,47 @@
                                     <Anchor point="TOPLEFT" relativeKey="$parent.Tab1" relativePoint="BOTTOMLEFT"/>
                                     <Anchor point="TOPRIGHT" relativeKey="$parent.Tab1" relativePoint="BOTTOMRIGHT"/>
                                 </Anchors>
+                                <Frames>
+                                    <Button parentKey="ResetButton">
+                                        <Size x="14" y="14"/>
+                                        <Anchors>
+                                            <Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="0" y="-40"/>
+                                        </Anchors>
+                                        <HitRectInsets>
+                                            <AbsInset left="0" right="0" top="-4" bottom="-4"/>
+                                        </HitRectInsets>
+                                        <Layers>
+                                            <Layer level="OVERLAY">
+                                                <FontString inherits="NarciPrefFontWhiteMild" justifyH="RIGHT" justifyV="MIDDLE" parentKey="Label" text="RESET_POSITION">
+                                                    <Size x="0" y="14"/>
+                                                    <Color r="0.25" g="0.78" b="0.92"/>
+                                                    <Anchors>
+                                                        <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-24"/>
+                                                    </Anchors>
+                                                </FontString>
+                                                <Texture parentKey="Icon" file="Interface\AddOns\Narcissus\Art\Preference\ResetButton">
+                                                    <Size x="14" y="14"/>
+                                                    <Anchors>
+                                                        <Anchor point="RIGHT" relativeKey="$parent.Label" relativePoint="LEFT" x="-2"/>
+                                                    </Anchors>
+                                                </Texture>
+                                            </Layer>
+                                        </Layers>
+                                        <Animations>
+                                            <AnimationGroup parentKey="AnimRotate">
+                                                <Rotation smoothing="IN_OUT" order="1" duration="1" degrees="360" childKey="Icon"/>
+                                            </AnimationGroup>
+                                        </Animations>
+                                        <Scripts>
+                                            <OnMouseDown>
+                                                self.Label:SetPoint("RIGHT", self, "RIGHT", -24, -1);
+                                            </OnMouseDown>
+                                            <OnMouseUp>
+                                                self.Label:SetPoint("RIGHT", self, "RIGHT", -24, 0);
+                                            </OnMouseUp>
+                                        </Scripts>
+                                    </Button>
+                                </Frames>
                             </Frame>
 
                             <Frame inherits="Narci_Preference_TabTemplate" parentKey="Tab3" name="NarciPref_Themes">
@@ -331,7 +372,7 @@
                                                 <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="220" y="-10"/>
                                             </Anchors>
                                         </Texture-->
-                                        <Texture file="Interface\AddOns\Narcissus\Art\Preference\TooltipTheme" Alpha="1" hidden="false" parentKey="Preview2">
+                                        <Texture file="Interface\AddOns\Narcissus\Art\Preference\TooltipTheme" hidden="false" parentKey="Preview2">
                                             <TexCoords left="0" right="1" top="0" bottom="0.5"/>
                                             <Size x="200" y="100"/>
                                             <Anchors>
@@ -861,8 +902,9 @@
                                                 <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-24"/>
                                             </Anchors>
                                         </FontString>
-                                        <Texture file="Interface\AddOns\Narcissus\Art\Logos\Twitter" parentKey="Twitter" Alpha="0.72">
+                                        <Texture file="Interface\AddOns\Narcissus\Art\Logos\Twitter" parentKey="Twitter">
                                             <Size x="20" y="20"/>
+                                            <Color r="0.80" g="0.80" b="0.80"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" relativeKey="$parent.Text1" relativePoint="BOTTOMLEFT" x="0" y="-12"/>
                                             </Anchors>
@@ -873,8 +915,9 @@
                                                 <Anchor point="LEFT" relativeKey="$parent.Twitter" relativePoint="RIGHT" x="8" y="0"/>
                                             </Anchors>
                                         </FontString>
-                                        <Texture file="Interface\AddOns\Narcissus\Art\Logos\reddit-64" parentKey="reddit" Alpha="0.72">
+                                        <Texture file="Interface\AddOns\Narcissus\Art\Logos\reddit-64" parentKey="reddit">
                                             <Size x="20" y="20"/>
+                                            <Color r="0.80" g="0.80" b="0.80"/>
                                             <Anchors>
                                                 <Anchor point="TOP" relativeKey="$parent.Twitter" relativePoint="TOP"/>
                                                 <Anchor point="LEFT" relativeKey="$parent" relativePoint="CENTER"/>
@@ -893,8 +936,9 @@
                                             </Anchors>
                                         </FontString>
 
-                                        <Texture file="Interface\AddOns\Narcissus\Art\Logos\AAA" parentKey="AAA" Alpha="0.72">
+                                        <Texture file="Interface\AddOns\Narcissus\Art\Logos\AAA" parentKey="AAA">
                                             <Size x="48" y="48"/>
+                                            <Color r="0.80" g="0.80" b="0.80"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" relativeKey="$parent.Cate1" relativePoint="BOTTOMLEFT" x="0" y="-12"/>
                                             </Anchors>
@@ -913,8 +957,9 @@
                                             </Anchors>
                                         </FontString>
 
-                                        <Texture file="Interface\AddOns\Narcissus\Art\Logos\Narcissus" parentKey="Narcissus" Alpha="0.72">
+                                        <Texture file="Interface\AddOns\Narcissus\Art\Logos\Narcissus" parentKey="Narcissus">
                                             <Size x="48" y="48"/>
+                                            <Color r="0.80" g="0.80" b="0.80"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" relativeKey="$parent.AAA" relativePoint="BOTTOMLEFT" x="0" y="-12"/>
                                             </Anchors>
@@ -942,7 +987,7 @@
                                         </Anchors>
                                         <Layers>
                                             <Layer>
-                                                <FontString inherits="NarciPrefFontWhiteMild" justifyH="RIGHT" justifyV="TOP" parentKey="Text">
+                                                <FontString inherits="NarciPrefFontWhiteMild" justifyH="RIGHT" justifyV="TOP" parentKey="Label" text="SPLASH_BASE_HEADER">
                                                     <Size x="120" y="24"/>
                                                     <Color r="0.25" g="0.78" b="0.92"/>
                                                     <Anchors>
@@ -952,18 +997,21 @@
                                             </Layer>
                                         </Layers>
                                         <Scripts>
-                                            <OnLoad>
-                                                self.Text:SetText(SPLASH_BASE_HEADER);
-                                            </OnLoad>
                                             <OnEnter>
-                                                self.Text:SetTextColor(0.88, 0.88, 0.88);
+                                                self.Label:SetTextColor(0.88, 0.88, 0.88);
                                             </OnEnter>
                                             <OnLeave>
-                                                self.Text:SetTextColor(0.24, 0.78, 0.92);
+                                                self.Label:SetTextColor(0.24, 0.78, 0.92);
                                             </OnLeave>
                                             <OnClick>
                                                 Narci:ShowSplash();
                                             </OnClick>
+                                            <OnMouseDown>
+                                                self.Label:SetPoint("RIGHT", self, "RIGHT", -24, -1);
+                                            </OnMouseDown>
+                                            <OnMouseUp>
+                                                self.Label:SetPoint("RIGHT", self, "RIGHT", -24, 0);
+                                            </OnMouseUp>
                                         </Scripts>
                                     </Button>
                                 </Frames>

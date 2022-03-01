@@ -100,77 +100,10 @@ NarciAPI.GetSlotVisualID = NarciAPI_GetSlotVisualID;
 --------------------
 ----API Datebase----
 --------------------
-local SlotIDtoName = {
-    --[slotID] = {InventorySlotName, Localized Name, invType, textureID}    --GetInventorySlotInfo("SlotName")
-    [1] = {"HeadSlot", HEADSLOT, "INVTYPE_HEAD"},
-    [2] = {"NeckSlot", NECKSLOT, "INVSLOT_NECK"},
-    [3] = {"ShoulderSlot", SHOULDERSLOT, "INVTYPE_SHOULDER"},
-    [4] = {"ShirtSlot", SHIRTSLOT, "INVTYPE_BODY"},
-    [5] = {"ChestSlot", CHESTSLOT, "INVTYPE_CHEST"},
-    [6] = {"WaistSlot", WAISTSLOT, "INVTYPE_WAIST"},
-    [7] = {"LegsSlot", LEGSSLOT, "INVTYPE_LEGS"},
-    [8] = {"FeetSlot", FEETSLOT, "INVTYPE_FEET"},
-    [9] = {"WristSlot", WRISTSLOT, "INVTYPE_WRIST"},
-    [10]= {"HandsSlot", HANDSSLOT, "INVTYPE_HAND"},
-    [11]= {"Finger0Slot", FINGER0SLOT_UNIQUE, "INVSLOT_FINGER1"},
-    [12]= {"Finger1Slot", FINGER1SLOT_UNIQUE, "INVSLOT_FINGER2"},
-    [13]= {"Trinket0Slot", TRINKET0SLOT_UNIQUE, "INVSLOT_TRINKET1"},
-    [14]= {"Trinket1Slot", TRINKET1SLOT_UNIQUE, "INVSLOT_TRINKET2"},
-    [15]= {"BackSlot", BACKSLOT, "INVTYPE_CLOAK"},
-    [16]= {"MainHandSlot", MAINHANDSLOT, "INVTYPE_WEAPONMAINHAND"},
-    [17]= {"SecondaryHandSlot", SECONDARYHANDSLOT, "INVTYPE_WEAPONOFFHAND"},
-    [18]= {"AmmoSlot", RANGEDSLOT, "INVSLOT_RANGED"},
-    [19]= {"TabardSlot", TABARDSLOT, "INVTYPE_TABARD"},
-}
 
-local invTypeSlotID = {
-    INVTYPE_WEAPON = 16,
-    INVTYPE_2HWEAPON = 16,
-    INVTYPE_SHIELD = 17,
-    INVTYPE_HOLDABLE = 17,
-    INVTYPE_RANGED = 16,    --actually held in offhand, 17
-    INVTYPE_RANGEDRIGHT = 16,
-    INVTYPE_FINGER = 11,
-    INVTYPE_TRINKET = 13,
-};
-
-for slotID, info in pairs(SlotIDtoName) do
-    _, info[4] = GetInventorySlotInfo(info[1]);
-    invTypeSlotID[ info[3] ] = slotID;
-end
-
-local function GetSlotIDByInvType(invType)
-    return invTypeSlotID[invType]
-end
-
-local function GetSlotIDByItemID(itemID)
-    local _, _, _, invType = GetItemInfoInstant(itemID);
-    return invTypeSlotID[invType]
-end
-
-NarciAPI.GetSlotIDByInvType = GetSlotIDByInvType;
-NarciAPI.GetSlotIDByItemID = GetSlotIDByItemID;
-
-local function GetSlotNameAndTexture(slotID)
-    return SlotIDtoName[slotID][2], SlotIDtoName[slotID][4]
-end
-
-NarciAPI.GetSlotNameAndTexture = GetSlotNameAndTexture;
-Narci.SlotIDtoName = SlotIDtoName;
-
-
-local function GetSlotButtonNameBySlotID(slotID)
-    if SlotIDtoName[slotID] then
-        return "Character"..SlotIDtoName[slotID][1];
-    end
-end
-
-NarciAPI.GetSlotButtonNameBySlotID = GetSlotButtonNameBySlotID;
------------------------------------------------------
-
-local _, CommanderOfArgus = GetAchievementInfo(12078);                                  --Argus Weapon Transmogs: Arsenal: Weapons of the Lightforged
-CommanderOfArgus = CommanderOfArgus or "Commander of Argus";
-CommanderOfArgus = "|cFFFFD100"..BATTLE_PET_SOURCE_6 .."|r "..CommanderOfArgus;
+local _, COM_OF_ARGUS = GetAchievementInfo(12078);                                  --Argus Weapon Transmogs: Arsenal: Weapons of the Lightforged
+COM_OF_ARGUS = COM_OF_ARGUS or "Commander of Argus";
+COM_OF_ARGUS = "|cFFFFD100"..BATTLE_PET_SOURCE_6 .."|r "..COM_OF_ARGUS;
 --local EnsorcelledEverwyrm = C_MountJournal.GetMountFromSpell(307932);
 local _, _, PROMOTION_SHADOWLANDS = C_MountJournal.GetMountInfoExtraByID(1289);         --EnsorcelledEverwyrm   Promotion: Shadowlands Heroic Edition
 
@@ -203,18 +136,18 @@ local SecretlItemIDs = {
 }
 
 local SpecialItemList = {
-    [152332] = CommanderOfArgus,            --Brilliant Daybreak Aegis
-    [152333] = CommanderOfArgus,            --Lustrous Daybreak Aegis
-    [152334] = CommanderOfArgus,            --Brilliant Eventide Aegis
-    [152335] = CommanderOfArgus,            --Lustrous Eventide Aegis
-    [152336] = CommanderOfArgus,            --Lustrous Daybreak Blade
-    [152337] = CommanderOfArgus,            --Brilliant Daybreak Blade
-    [152338] = CommanderOfArgus,            --Lustrous Eventide Blade
-    [152339] = CommanderOfArgus,            --Brilliant Daybreak Blade
-    [152340] = CommanderOfArgus,            --Lustrous Daybreak Greatsword
-    [152341] = CommanderOfArgus,            --Lustrous Eventide Greatsword
-    [152342] = CommanderOfArgus,            --Lustrous Daybreak Staff
-    [152343] = CommanderOfArgus,            --Lustrous Eventide Staff
+    [152332] = COM_OF_ARGUS,            --Brilliant Daybreak Aegis
+    [152333] = COM_OF_ARGUS,            --Lustrous Daybreak Aegis
+    [152334] = COM_OF_ARGUS,            --Brilliant Eventide Aegis
+    [152335] = COM_OF_ARGUS,            --Lustrous Eventide Aegis
+    [152336] = COM_OF_ARGUS,            --Lustrous Daybreak Blade
+    [152337] = COM_OF_ARGUS,            --Brilliant Daybreak Blade
+    [152338] = COM_OF_ARGUS,            --Lustrous Eventide Blade
+    [152339] = COM_OF_ARGUS,            --Brilliant Daybreak Blade
+    [152340] = COM_OF_ARGUS,            --Lustrous Daybreak Greatsword
+    [152341] = COM_OF_ARGUS,            --Lustrous Eventide Greatsword
+    [152342] = COM_OF_ARGUS,            --Lustrous Daybreak Staff
+    [152343] = COM_OF_ARGUS,            --Lustrous Eventide Staff
 
     [172075] = PROMOTION_SHADOWLANDS,       --The Eternal Traveler's
     [172076] = PROMOTION_SHADOWLANDS,
@@ -937,6 +870,15 @@ NarciAPI.GetItemEnchantText = GetItemEnchantText;
 NarciAPI.GetEnchantTextByEnchantID = GetEnchantTextByEnchantID;
 
 
+local TEMP_ENCHANT_FORMAT = "([^+].+) %((%d+%D+)%)";
+local FORMAT_COLON = ":";
+if TEXT_LOCALE == "zhCN" then
+    FORMAT_COLON = "：";
+    TEMP_ENCHANT_FORMAT = "([^+].+)（(%d+%D+)%）";
+elseif TEXT_LOCALE == "zhTW" then
+    FORMAT_COLON = "：";
+    TEMP_ENCHANT_FORMAT = "([^+].+)%((%d+%D+)%)";
+end
 
 local function GetTemporaryItemBuff(location1, location2)
     if not location1 then return; end
@@ -953,8 +895,8 @@ local function GetTemporaryItemBuff(location1, location2)
         str = _G["NarciVirtualTooltip".."TextLeft"..i];
         if str then
             str = str:GetText();
-            if not match(str, "[:：]") then
-                buffText, durationText = match(str, "([^+].+) %((%d+%D+)%)");
+            if not match(str, FORMAT_COLON) then
+                buffText, durationText = match(str, TEMP_ENCHANT_FORMAT);
                 if buffText and durationText then
                     break
                 end
@@ -1244,6 +1186,11 @@ end
 local screenWidth, screenHeight = GetPhysicalScreenSize();
 local UIParentWidth, UIParentHeight = UIParent:GetSize();
 
+local function GetPixelForWidget(widget)
+    local scale = widget:GetEffectiveScale();
+    return (768/screenHeight)/scale
+end
+
 function NarciAPI_OptimizeBorderThickness(self)
     if not self.HasOptimized then
         local point, relativeTo, relativePoint, xOfs, yOfs = self:GetPoint()
@@ -1287,12 +1234,13 @@ function NarciAPI_SliderWithSteps_OnLoad(self)
     if num_Gap == 0 then return; end;
     local tex;
     local markOffset = 5;
-    width = width - 2*markOffset
-    for i=1, (num_Gap + 1) do
+    width = width - 2*markOffset;
+    local pixel = GetPixelForWidget(self);
+    for i = 1, (num_Gap + 1) do
         tex = self:CreateTexture(nil, "BACKGROUND", nil, 1);
-        tex:SetSize(2, 10);
-        tex:SetColorTexture(0.3, 0.3, 0.3, 1);
-        tex:SetPoint("LEFT", self, "LEFT", markOffset + (i-1)*width/num_Gap, 0);
+        tex:SetSize(2*pixel, 20*pixel);
+        tex:SetColorTexture(0.25, 0.25, 0.25);
+        tex:SetPoint("CENTER", self, "LEFT", markOffset + (i-1)*width/num_Gap, 0);
         tinsert(self.Marks, tex);
     end
 
@@ -2248,7 +2196,7 @@ local ActorIDByRace = {
     [5]  = {472, 487},		-- UD   0.9585 seems small
     [6]  = {449, 484},		-- Tauren
     [7]  = {450, 450},		-- Gnome
-    [8]  = {485, 486},		-- Troll  0.9414 too high?  
+    [8]  = {485, 486},		-- Troll  0.9414 too high?
     [9]  = {476, 477},		-- Goblin
     [11] = {475, 501},		-- Goat
     [22] = {474, 500},      -- Worgen

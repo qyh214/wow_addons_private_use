@@ -69,6 +69,10 @@ local L = WeakAuras.L
 	L["A 48x48 pixels icon"] = "Un icono de 48x48 píxeles"
 	L["A 64x64 pixels icon"] = "Un icono de 64x64 píxeles"
 	L["A group that dynamically controls the positioning of its children"] = "Un grupo que dinámicamente controla la posición de sus hijos"
+	--[[Translation missing --]]
+	L[ [=[A timer will automatically be displayed according to default Interface Settings (overridden by some addons).
+Enable this setting if you want this timer to be hidden, or when using a WeakAuras text to display the timer]=] ] = [=[A timer will automatically be displayed according to default Interface Settings (overridden by some addons).
+Enable this setting if you want this timer to be hidden, or when using a WeakAuras text to display the timer]=]
 	L["A Unit ID (e.g., party1)."] = "Una ID de unidad (ej., party1)."
 	L["Actions"] = "Acciones"
 	L["Add"] = "Añadir"
@@ -217,6 +221,10 @@ Off Screen]=]
 	L["Can be a Name or a Unit ID (e.g. party1). A name only works on friendly players in your group."] = "Can be a Name or a Unit ID (e.g. party1). A name only works on friendly players in your group."
 	--[[Translation missing --]]
 	L["Can be a UID (e.g., party1)."] = "Can be a UID (e.g., party1)."
+	--[[Translation missing --]]
+	L["Can set to 0 if Columns * Width equal File Width"] = "Can set to 0 if Columns * Width equal File Width"
+	--[[Translation missing --]]
+	L["Can set to 0 if Rows * Height equal File Height"] = "Can set to 0 if Rows * Height equal File Height"
 	L["Cancel"] = "Cancelar"
 	--[[Translation missing --]]
 	L["Cast by Player Character"] = "Cast by Player Character"
@@ -284,12 +292,6 @@ Off Screen]=]
 	--[[Translation missing --]]
 	L["Convert to..."] = "Convert to..."
 	--[[Translation missing --]]
-	L["Cooldown Edge"] = "Cooldown Edge"
-	--[[Translation missing --]]
-	L["Cooldown Settings"] = "Cooldown Settings"
-	--[[Translation missing --]]
-	L["Cooldown Swipe"] = "Cooldown Swipe"
-	--[[Translation missing --]]
 	L["Copy"] = "Copy"
 	--[[Translation missing --]]
 	L["Copy settings..."] = "Copy settings..."
@@ -309,16 +311,12 @@ Off Screen]=]
 	--[[Translation missing --]]
 	L["Custom Anchor"] = "Custom Anchor"
 	--[[Translation missing --]]
-	L["Custom Background"] = "Custom Background"
-	--[[Translation missing --]]
 	L["Custom Check"] = "Custom Check"
 	L["Custom Code"] = "Código Personalizado"
 	--[[Translation missing --]]
 	L["Custom Color"] = "Custom Color"
 	--[[Translation missing --]]
 	L["Custom Configuration"] = "Custom Configuration"
-	--[[Translation missing --]]
-	L["Custom Foreground"] = "Custom Foreground"
 	--[[Translation missing --]]
 	L["Custom Frames"] = "Custom Frames"
 	--[[Translation missing --]]
@@ -421,6 +419,14 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
 	L["Else If"] = "Else If"
 	--[[Translation missing --]]
 	L["Else If Trigger %s"] = "Else If Trigger %s"
+	--[[Translation missing --]]
+	L["Enable \"Edge\" part of the overlay"] = "Enable \"Edge\" part of the overlay"
+	--[[Translation missing --]]
+	L["Enable \"swipe\" part of the overlay"] = "Enable \"swipe\" part of the overlay"
+	--[[Translation missing --]]
+	L["Enable Swipe"] = "Enable Swipe"
+	--[[Translation missing --]]
+	L["Enable the \"Swipe\" radial overlay"] = "Enable the \"Swipe\" radial overlay"
 	L["Enabled"] = "Activado"
 	--[[Translation missing --]]
 	L["End Angle"] = "End Angle"
@@ -486,6 +492,10 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
 	--[[Translation missing --]]
 	L["Fetch Affected/Unaffected Names"] = "Fetch Affected/Unaffected Names"
 	--[[Translation missing --]]
+	L["File Height"] = "File Height"
+	--[[Translation missing --]]
+	L["File Width"] = "File Width"
+	--[[Translation missing --]]
 	L["Filter by Arena Spec"] = "Filter by Arena Spec"
 	--[[Translation missing --]]
 	L["Filter by Class"] = "Filter by Class"
@@ -524,10 +534,14 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Frame Count"] = "Frame Count"
 	--[[Translation missing --]]
+	L["Frame Height"] = "Frame Height"
+	--[[Translation missing --]]
 	L["Frame Rate"] = "Frame Rate"
 	--[[Translation missing --]]
 	L["Frame Selector"] = "Frame Selector"
 	L["Frame Strata"] = "Importancia del Marco"
+	--[[Translation missing --]]
+	L["Frame Width"] = "Frame Width"
 	--[[Translation missing --]]
 	L["Frequency"] = "Frequency"
 	--[[Translation missing --]]
@@ -558,6 +572,16 @@ Supports multiple entries, separated by commas
 	L["Group"] = "Group"
 	--[[Translation missing --]]
 	L["Group (verb)"] = "Group (verb)"
+	--[[Translation missing --]]
+	L[ [=[Group and anchor each auras by frame.
+
+- Nameplates: attach to nameplates per unit.
+- Unit Frames: attach to unit frame buttons per unit.
+- Custom Frames: choose which frame each region should be anchored to.]=] ] = [=[Group and anchor each auras by frame.
+
+- Nameplates: attach to nameplates per unit.
+- Unit Frames: attach to unit frame buttons per unit.
+- Custom Frames: choose which frame each region should be anchored to.]=]
 	L["Group aura count description"] = [=[La cantidad de miembros del grupo o banda que deben estar afectados por las auras indicadas para la activación.
 Si el número introducido es un entero (ej. 5), la cantidad de miembros del grupo o banda que deben estar afectados será absoluta.
 Si el número introducido es una fracción (1/2), decimal (0.5) o porcentaje (50%%), se interpretará como que la cantidad de miembros del grupo o banda que deben estar afectados es una fracción del total.
@@ -598,13 +622,15 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	--[[Translation missing --]]
 	L["Hide"] = "Hide"
 	--[[Translation missing --]]
-	L["Hide Cooldown Text"] = "Hide Cooldown Text"
+	L["Hide Background"] = "Hide Background"
 	--[[Translation missing --]]
 	L["Hide Glows applied by this aura"] = "Hide Glows applied by this aura"
 	--[[Translation missing --]]
 	L["Hide on"] = "Hide on"
 	--[[Translation missing --]]
 	L["Hide this group's children"] = "Hide this group's children"
+	--[[Translation missing --]]
+	L["Hide Timer Text"] = "Hide Timer Text"
 	L["Hide When Not In Group"] = "Esconder si no Estas Agrupado"
 	L["Horizontal Align"] = "Alineado Horizontal"
 	--[[Translation missing --]]
@@ -694,6 +720,8 @@ Con |cFF00CC00>= 0|r se activará siempre.]=]
 	L["Inverse"] = "Inverse"
 	--[[Translation missing --]]
 	L["Inverse Slant"] = "Inverse Slant"
+	--[[Translation missing --]]
+	L["Invert the direction of progress"] = "Invert the direction of progress"
 	--[[Translation missing --]]
 	L["Is Boss Debuff"] = "Is Boss Debuff"
 	--[[Translation missing --]]
@@ -788,6 +816,8 @@ Cualquier combinación de valores es posible.]=]
 	L["Multiselect single tooltip"] = [=[
 |cFF777777Ignorado|r - |cFF00FF00Único|r - |cFF777777Múltiple|r
 Sólo un valor coincidente puede ser escogido.]=]
+	--[[Translation missing --]]
+	L["Must be a power of 2"] = "Must be a power of 2"
 	L["Name Info"] = "Información del Nombre"
 	--[[Translation missing --]]
 	L["Name Pattern Match"] = "Name Pattern Match"
@@ -902,7 +932,6 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Press Ctrl+C to copy the URL"] = "Press Ctrl+C to copy the URL"
 	--[[Translation missing --]]
 	L["Prevent Merging"] = "Prevent Merging"
-	L["Processed %i chars"] = "%i personajes procesados"
 	L["Progress Bar"] = "Barra de Progreso"
 	--[[Translation missing --]]
 	L["Progress Bar Settings"] = "Progress Bar Settings"
@@ -973,9 +1002,13 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Rows"] = "Rows"
 	L["Same"] = "Igual"
 	--[[Translation missing --]]
+	L["Same texture as Foreground"] = "Same texture as Foreground"
+	--[[Translation missing --]]
 	L["Scale"] = "Scale"
 	L["Search"] = "Buscar"
 	L["Select the auras you always want to be listed first"] = "Selecciona las auras que quieres que siempre sean listadas primero"
+	--[[Translation missing --]]
+	L["Selected Frame"] = "Selected Frame"
 	L["Send To"] = "Envar A"
 	--[[Translation missing --]]
 	L["Separator Text"] = "Separator Text"
@@ -997,11 +1030,13 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Shadow Y Offset"] = "Shadow Y Offset"
 	--[[Translation missing --]]
 	L["Shift-click to create chat link"] = "Shift-click to create chat link"
+	--[[Translation missing --]]
+	L["Show \"Edge\""] = "Show \"Edge\""
+	--[[Translation missing --]]
+	L["Show \"Swipe\""] = "Show \"Swipe\""
 	L["Show all matches (Auto-clone)"] = "Mostrar todas las coincidencias (Auto-clonar)"
 	--[[Translation missing --]]
 	L["Show Border"] = "Show Border"
-	--[[Translation missing --]]
-	L["Show Cooldown"] = "Show Cooldown"
 	--[[Translation missing --]]
 	L["Show Glow"] = "Show Glow"
 	--[[Translation missing --]]
@@ -1113,6 +1148,8 @@ Sólo un valor coincidente puede ser escogido.]=]
 	L["Sub Elements"] = "Sub Elements"
 	--[[Translation missing --]]
 	L["Sub Option %i"] = "Sub Option %i"
+	--[[Translation missing --]]
+	L["Swipe Overlay Settings"] = "Swipe Overlay Settings"
 	L["Temporary Group"] = "Grupo Temporal"
 	L["Text"] = "Texto"
 	--[[Translation missing --]]

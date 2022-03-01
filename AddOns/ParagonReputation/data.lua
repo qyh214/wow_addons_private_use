@@ -1,5 +1,5 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.38 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.39 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for
@@ -26,7 +26,7 @@ PR.PARAGON_DATA = {
 					itemID = 147841,
 				},
 			},
-		}, 
+		},
 		[48977] = { -- Army of the Light
 			factionID = 2165,
 			cache = 152923,
@@ -51,7 +51,7 @@ PR.PARAGON_DATA = {
 					itemID = 153182,
 				},
 			},
-		}, 
+		},
 		[46745] = { -- Court of Farondis
 			factionID = 1900,
 			cache = 152102,
@@ -62,7 +62,7 @@ PR.PARAGON_DATA = {
 					mountID = 943,
 				},
 			},
-		}, 
+		},
 		[46747] = { -- Dreamweavers
 			factionID = 1883,
 			cache = 152103,
@@ -73,7 +73,7 @@ PR.PARAGON_DATA = {
 					mountID = 942,
 				},
 			},
-		}, 
+		},
 		[46743] = { -- Highmountain Tribes
 			factionID = 1828,
 			cache = 152104,
@@ -84,7 +84,7 @@ PR.PARAGON_DATA = {
 					mountID = 941,
 				},
 			},
-		}, 
+		},
 		[46748] = { -- The Nightfallen
 			factionID = 1859,
 			cache = 152105,
@@ -95,7 +95,7 @@ PR.PARAGON_DATA = {
 					mountID = 905,
 				},
 			},
-		}, 
+		},
 		[46749] = { -- The Wardens
 			factionID = 1894,
 			cache = 152107,
@@ -105,7 +105,7 @@ PR.PARAGON_DATA = {
 					itemID = 147843,
 				},
 			},
-		}, 
+		},
 		[46746] = { -- Valarjar
 			factionID = 1948,
 			cache = 152106,
@@ -116,7 +116,7 @@ PR.PARAGON_DATA = {
 					mountID = 944,
 				},
 			},
-		}, 
+		},
 	
 	--Battle for Azeroth
 		--Neutral
@@ -129,7 +129,7 @@ PR.PARAGON_DATA = {
 					itemID = 166877,
 				},
 			},
-		}, 
+		},
 		[58096] = { --Rajani
 			factionID = 2415,
 			cache = 174483,
@@ -384,6 +384,36 @@ PR.PARAGON_DATA = {
 				},
 			},
 		},
+		[64867] = { --The Enlightened
+			factionID = 2478,
+			cache = 187780,
+			rewards = {
+				{ -- Sphere of Enlightened Cogitation
+					type = TOY,
+					itemID = 190177,
+				},
+				{ -- Walking Staff of the Enlightened Journey
+					type = ITEM_COSMETIC,
+					itemID = 190939,
+				},
+				{ -- Schematic: Russet Bufonoid
+					type = BINDING_HEADER_OTHER,
+					itemID = 189471,
+					questID = 65394,
+				},
+				{ -- Enlightened Portal Research
+					type = BINDING_HEADER_OTHER,
+					itemID = 190234,
+					questID = 65617,
+				},
+				{ -- Ray Soul
+					type = BINDING_HEADER_OTHER,
+					covenant = "|A:sanctumupgrades-nightfae-32x32:14:14:0:-1|a",
+					itemID = 189973,
+					questID = 65506,
+				},
+			},
+		},
 		[61095] = { --The Undying Army
 			factionID = 2410,
 			cache = 180646,
@@ -415,6 +445,18 @@ PR.PARAGON_DATA = {
 				{ -- Hungry Burrower
 					type = PET,
 					itemID = 180635,
+				},
+				{ -- Mammoth Soul
+					type = BINDING_HEADER_OTHER,
+					covenant = "|A:sanctumupgrades-nightfae-32x32:14:14:0:-1|a",
+					itemID = 185054,
+					questID = 63610,
+				},
+				{ -- Porcupine Soul
+					type = BINDING_HEADER_OTHER,
+					covenant = "|A:sanctumupgrades-nightfae-32x32:14:14:0:-1|a",
+					itemID = 187870,
+					questID = 64989,
 				},
 			},
 		},

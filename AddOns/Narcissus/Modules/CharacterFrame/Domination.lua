@@ -19,8 +19,25 @@ local GetItemLink = C_Item.GetItemLink;
 local GetItemID = C_Item.GetItemID;
 local GetPlayerAuraBySpellID = GetPlayerAuraBySpellID;
 local FadeFrame = NarciFadeUI.Fade;
+local GetBestMapForUnit = C_Map.GetBestMapForUnit;
+local GetMapInfo = C_Map.GetMapInfo;
 
 local PaperDollIndicator;
+
+local function IsZoneValidForDomination()
+    --Shard of Domination is only functioning in the Maw since 9.2
+    local mapID = GetBestMapForUnit("player");
+    if mapID then
+        if mapID == 1543 then
+            return true
+        end
+        local info = GetMapInfo(mapID);
+        if info and info.parentMapID and info.parentMapID == 1543 then
+            return true
+        end
+    end
+    return false
+end
 
 local function Mixin(object, mixin)
     for k, v in pairs(mixin) do
@@ -105,6 +122,8 @@ local shardData = {
     [187302] = {3, 4, 5},     --Bek R4
     [187312] = {3, 5, 5},     --Bek R5
 };
+
+
 
 Narci.DominationShards = shardData;
 
@@ -678,12 +697,18 @@ function NarciDominationIndicatorMixin:IsNarcissusUI()
 end
 
 function NarciDominationIndicatorMixin:Update()
-    local data = GetEquippedDomiationGearData();
-    if data then
-        self:Show();
+    local data;
+
+    if IsZoneValidForDomination() then
+        data = GetEquippedDomiationGearData();
+        if data then
+            self:Show();
+        else
+            return false
+        end
     else
         self:Hide();
-        return false;
+        return false
     end
 
     local numShards = #data;
@@ -862,6 +887,126 @@ function NarciDominationIndicatorMixin:CheckSetBonus()
             self.Background:SetTexCoord(0, 0.25, 0, 0.25);
         end
         self.SpellIcon:Hide();
+    end
+end
+
+
+
+----No Effect Alert for Patch 9.2----
+
+NarciDominationNoEffectAlertMixin = {};
+
+function NarciDominationNoEffectAlertMixin:OnLoad()
+    self.Header:SetTextColor(214/255, 31/255, 38/255);
+    self.Header:SetText(Narci.L["No Service"]); --AB1 are disabled outside B33
+    self:SetText(Narci.L["Shards Disabled"]);
+    self:RegisterForDrag("LeftButton");
+
+    local wave;
+    for i = 1, 6 do
+        wave = self:CreateTexture(nil, "ARTWORK", "NarciDominationAlertWaveTexture");
+        wave:ClearAllPoints();
+        wave:SetPoint("CENTER", self.BackgroundLeft, "CENTER", 0, 5);
+    end
+
+    NarciAPI.NineSliceUtil.SetUp(self, "shadowLargeR0", "border");
+end
+
+function NarciDominationNoEffectAlertMixin:OnMouseDown(button)
+    self:Hide();
+end
+
+function NarciDominationNoEffectAlertMixin:PlayIntro()
+    self:StopAnimating();
+    self.AnimIn:Play();
+    for i = 1, #self.Waves do
+        self.Waves[i].Anim:SetLooping("NONE");
+        self.Waves[i]:Hide();
+    end
+    self:Show();
+end
+
+function NarciDominationNoEffectAlertMixin:PlayWaves()
+    local function ClearDelay(f)
+        f.A1:SetStartDelay(0);
+        f.S1:SetStartDelay(0);
+        f:SetScript("OnFinished", nil);
+        f:SetLooping("REPEAT");
+        f:Play();
+    end
+
+    local delay = 0.3;
+    local offset = 0;
+    local wave;
+    for i = 1, #self.Waves do
+        wave = self.Waves[i];
+        wave:ClearAllPoints();
+        wave:SetPoint("CENTER", self.BackgroundLeft, "CENTER", 0, 5);
+        wave.Anim:SetScript("OnFinished", ClearDelay);
+        if i <= 3 then
+            wave.Anim.A1:SetStartDelay((i - 1) * delay + offset);
+            wave.Anim.S1:SetStartDelay((i - 1) * delay + offset);
+        else
+            wave:SetTexCoord(1, 0.5, 0.5, 1);
+            wave.Anim.A1:SetStartDelay((i - 4) * delay + offset);
+            wave.Anim.S1:SetStartDelay((i - 4) * delay + offset);
+        end
+        wave.Anim:Stop();
+        wave:SetAlpha(0);
+        wave.Anim:Play();
+        wave:Show();
+    end
+
+    self.AnimText:Play();
+end
+
+function NarciDominationNoEffectAlertMixin:SetText(text)
+    self.Text1:SetText(text);
+    local textWidth = self.Text1:GetWidth();
+    if textWidth > 160 then
+        self.Text1:SetWidth(162);
+        textWidth = self.Text1:GetWrappedWidth();
+    end
+    local textHeight = self.Header:GetHeight() + self.Text1:GetHeight() + 4;
+    local offsetY = (64 - textHeight) * 0.5;
+    self.Header:ClearAllPoints();
+    self.Header:SetPoint("TOPLEFT", self.BackgroundLeft, "TOPRIGHT", 2, -offsetY);
+    local rightWidth = textWidth + 2 + 16;
+    self.BackgroundRight:SetWidth(rightWidth);
+    self:SetWidth(64 + rightWidth);
+end
+
+function NarciDominationNoEffectAlertMixin:OnEnter()
+	self.Highlight:Show();
+    self.Highlight.Blink:Play();
+    self.Highlight.Blink:SetLooping("REPEAT");
+end
+
+function NarciDominationNoEffectAlertMixin:OnLeave()
+    self.Highlight.Blink:SetLooping("NONE");
+end
+
+function NarciDominationNoEffectAlertMixin:OnHide()
+    self:Hide();
+    self:StopAnimating();
+    self:SetParent(nil);
+    self:ClearAllPoints();
+    Narci_Attribute:SetScript("OnShow", nil);
+end
+
+function NarciDominationNoEffectAlertMixin:OnShow()
+    if self.onShowFunc then
+        self.onShowFunc();
+    end
+end
+
+function NarciDominationNoEffectAlertMixin:ShowAlert()
+    if GetEquippedDomiationGearData() then
+        if not IsZoneValidForDomination() then
+            self:PlayIntro();
+        end
+    else
+        self:OnShow();
     end
 end
 

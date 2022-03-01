@@ -1322,7 +1322,46 @@ end
 
 
 --------------------------------------------------------------------------------------------------
+local _, screenHeight = GetPhysicalScreenSize();
+local PIXEL = (768/screenHeight);
+screenHeight = nil;
+
+NarciLineBorderMixin = {};
+
+function NarciLineBorderMixin:SetWeight(weight)
+    self.weight = weight;
+end
+
+function NarciLineBorderMixin:SetColor(r, g, b)
+    self.Stroke:SetColorTexture(r, g, b);
+end
+
+function NarciLineBorderMixin:OnLoad()
+    self.Exclusion:SetTexture("Interface\\AddOns\\Narcissus\\Art\\Masks\\Exclusion", "CLAMPTOWHITE", "CLAMPTOWHITE", "NEAREST");
+    self:SetWeight(2);
+    self:UpdateStroke();
+end
+
+function NarciLineBorderMixin:OnShow()
+    self:UpdateStroke();
+end
+
+function NarciLineBorderMixin:UpdateStroke()
+    local scale = self:GetEffectiveScale();
+    if scale ~= self.scale then
+        self.scale = scale;
+    else
+        return
+    end
+    local a = (self.weight or 1) * PIXEL / scale;
+    self.Exclusion:ClearAllPoints();
+    self.Exclusion:SetPoint("TOPLEFT", self, "TOPLEFT", a, -a);
+    self.Exclusion:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -a, a);
+end
 
 
-wipe(TEMPS);
+
+--------------------------------------------------------------------------------------------------
+
+
 TEMPS = nil;

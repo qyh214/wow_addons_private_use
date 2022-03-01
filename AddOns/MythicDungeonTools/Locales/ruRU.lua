@@ -377,6 +377,8 @@ L["Emissary of the Tides"] = "Посланница глубин"
 L["Enable Minimap Button"] = "Включить отображение на мини-карте"
 L["Enchanted Broodling"] = "Зачарованный паучонок"
 L["Enchanted Emissary"] = "Зачарованная посланница"
+--[[Translation missing --]]
+--[[ L["Encrypted"] = ""--]] 
 L["Enemies related to seasonal affixes are currently hidden"] = "Враги связанные с сезонными модификаторами не отображены"
 L["Enemy Info"] = "Информация о противнике"
 L["Enemy Info NPC Creature Type"] = "Тип существа"
@@ -1402,6 +1404,8 @@ L["Upper Library"] = "Верхний ярус библиотеки"
 L["Upper Livery Stables"] = "Стойла"
 L["Upstairs"] = "Верхний уровень"
 L["Urg'roth, Breaker of Heroes"] = "Ург'рот Сокрушитель Героев"
+--[[Translation missing --]]
+--[[ L["Urh Relic"] = ""--]] 
 L["Use /mdt reset to restore the default position and scale of MDT."] = "Используйте команду /mdt, чтобы вернуть расположение и размер окна по умолчанию"
 L["Use as a starting point:"] = "Использовать как начальную точку:"
 L["Valarjar Aspirant"] = "Валарьяр-претендентка"
@@ -1458,6 +1462,8 @@ L["Volcanic"] = "Вулканический"
 L["Vol'kaal"] = "Вол'каал"
 L["Vol'zith the Whisperer"] = "Вол'зит Шепчущая"
 --[[Translation missing --]]
+--[[ L["Vy Relic"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Wandering Pulsar"] = ""--]] 
 L["Wandering Shellback"] = "Бродячий панцирник"
 L["Wanton Sapper"] = "Бесшабашная подрывница"
@@ -1481,6 +1487,8 @@ L["Wicked Oppressor"] = "Зловещая подавительница"
 L["Windspeaker Heldis"] = "Говорящая с ветрами Хелдис"
 L["Withered Fiend"] = "Иссохший злодей"
 L["Withered Manawraith"] = "Иссохший - магический призрак"
+--[[Translation missing --]]
+--[[ L["Wo Relic"] = ""--]] 
 L["Workshop Defender"] = "Защитник мастерской"
 L["Wrath of Azshara"] = "Гнев Азшары"
 L["Wrathguard Bladelord"] = "Страж гнева - мастер клинка"

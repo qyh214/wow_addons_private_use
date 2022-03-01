@@ -35,6 +35,7 @@ local FadeFrame = NarciFadeUI.Fade;
 local IsItemDominationShard = NarciAPI.IsItemDominationShard;
 local RemoveColorString = NarciAPI.RemoveColorString;
 local GetCachedItemTooltipTextByLine = NarciAPI.GetCachedItemTooltipTextByLine;
+local GetItemTempEnchantRequirement = NarciAPI.GetItemTempEnchantRequirement;
 
 local sin = math.sin;
 local cos = math.cos;
@@ -215,7 +216,7 @@ NarciEquipmentListFilterButtonMixin = {};
 function NarciEquipmentListFilterButtonMixin:OnLoad()
     FilterButton = self;
     self:OnLeave();
-    self:SetLabelText("Owned");
+    self:SetLabelText(L["Owned"]);
     self.needUpdate = true;
 end
 
@@ -388,10 +389,12 @@ function NarciEquipmentOptionMixin:SetFromSlotButton(slotButton, returnHome)
     FadeFrame(self, 0.15, 1, initialAlpha);
     Narci_EquipmentFlyoutFrame:Hide();
     Narci:HideButtonTooltip();
-
-    self.inUseGemID, self.inUsedEnchantID = GetAppliedEnhancement(slotID);
+    local isWeaponValidForEnchant;
+    self.inUseGemID, self.inUsedEnchantID, isWeaponValidForEnchant = GetAppliedEnhancement(slotID);
     GetNewGemID(false);
     local validForEnchant = EnchantDataProvider:SetSubset(slotID);
+    validForEnchant = validForEnchant and isWeaponValidForEnchant;
+
     TempDataProvider:SetSubset(slotID);
     GemDataProvider:SetSubset(self.isDominationItem);
 
@@ -814,6 +817,12 @@ function NarciEquipmentListTooltipMixin:SetSpell(spellID)
     if text and text ~= "" then
         --text = gsub(text, "(%d[%d,%%]*)","|cffFFFFFF%1|r");   --Make numbers green
         text = TOOLTIP_PREFIX..text;
+        if self.parentButton.showFailureReason and (not self.parentButton:IsEnabled()) then
+            local requirement = GetItemTempEnchantRequirement(self.parentButton.requirementID);
+            if requirement then
+                text = text.."\n\n|cffff5050"..requirement.."|r";
+            end
+        end
         f.Description:SetSize(0, 0);
         f.Description:SetText(text);
         f.Icon:Show();
@@ -878,7 +887,8 @@ function NarciEquipmentListTooltipMixin:SetItem(itemID)
                 end
             end);
             if isCached then
-                self.ClipFrame.Description:SetText(RemoveColorString(tooltipText));
+                tooltipText = RemoveColorString(tooltipText);
+                self.ClipFrame.Description:SetText(tooltipText);
                 self:OnDataReceived();
             else
                 self.ClipFrame.Description:Hide();
@@ -947,6 +957,7 @@ function NarciEquipmentListTooltipMixin:OnShow()
 end
 
 function NarciEquipmentListTooltipMixin:AnchorToButton(button)
+    self.parentButton = button;
     self:ClearAllPoints();
     self:SetPoint("TOPLEFT", button, "TOPRIGHT", 4, 0);
     self.ClipFrame.Icon:SetTexture(button.Icon:GetTexture());

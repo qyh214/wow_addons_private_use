@@ -396,6 +396,8 @@ L["Emissary of the Tides"] = "파도의 사절"
 L["Enable Minimap Button"] = "미니맵 아이콘을 켜기"
 L["Enchanted Broodling"] = "마력 깃든 무리거미"
 L["Enchanted Emissary"] = "마력에 빠진 사절"
+--[[Translation missing --]]
+--[[ L["Encrypted"] = ""--]] 
 L["Enemies related to seasonal affixes are currently hidden"] = "시즌 접두사와 관련된 적들이 숨겨지고 있습니다 "
 L["Enemy Info"] = "적의 정보"
 L["Enemy Info NPC Creature Type"] = "몬스터 유형"
@@ -1407,6 +1409,8 @@ L["Upper Library"] = "도서관 상층"
 L["Upper Livery Stables"] = "마구간 상층"
 L["Upstairs"] = "2층"
 L["Urg'roth, Breaker of Heroes"] = "영웅학살자 우르그로스"
+--[[Translation missing --]]
+--[[ L["Urh Relic"] = ""--]] 
 L["Use /mdt reset to restore the default position and scale of MDT."] = "MDT의 위치와 규모가 기본으로 리싯하도록 '/mdt reset' 하시면 됩니다"
 L["Use as a starting point:"] = "출발점으로 사용하기"
 L["Valarjar Aspirant"] = "발라리아르 지원자"
@@ -1463,6 +1467,8 @@ L["Volcanic"] = "화산"
 L["Vol'kaal"] = "볼카알"
 L["Vol'zith the Whisperer"] = "속삭임의 볼지스"
 --[[Translation missing --]]
+--[[ L["Vy Relic"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Wandering Pulsar"] = ""--]] 
 L["Wandering Shellback"] = "떠도는 등껍질거북"
 L["Wanton Sapper"] = "통제불가 공병"
@@ -1485,6 +1491,8 @@ L["Wicked Oppressor"] = "사악한 탄압자"
 L["Windspeaker Heldis"] = "바람예언자 헬디스"
 L["Withered Fiend"] = "메마른 마귀"
 L["Withered Manawraith"] = "메마른 마나 망령"
+--[[Translation missing --]]
+--[[ L["Wo Relic"] = ""--]] 
 L["Workshop Defender"] = "작업실 방어병"
 L["Wrath of Azshara"] = "아즈샤라의 분노"
 L["Wrathguard Bladelord"] = "격노수호병 검군주"

@@ -42,8 +42,11 @@ L['trinket'] = 'Аксессуар'
 
 L['activation_unknown'] = 'Активация неизвестна!'
 L['requirement_not_found'] = 'Местоположение требования неизвестно!'
+L['multiple_spawns'] = 'Может появляться в нескольких местах.'
 
 L['Requires'] = 'Требуется'
+L['ranked_research'] = '%s (Ранг %d/%d)'
+
 L['focus'] = 'Фокус'
 L['retrieving'] = 'Получение ссылки на предмет ...'
 L['in_cave'] = 'В пещере.'

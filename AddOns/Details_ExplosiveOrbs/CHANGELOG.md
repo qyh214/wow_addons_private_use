@@ -1,7 +1,15 @@
 # Details!: Explosive Orbs (plugin)
 
-## [v9.1.5](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/tree/v9.1.5) (2021-11-08)
-[Full Changelog](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/compare/v9.1.0...v9.1.5) [Previous Releases](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/releases)
+## [v9.2.0](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/tree/v9.2.0) (2022-02-23)
+[Full Changelog](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/compare/v9.1.5...v9.2.0) [Previous Releases](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/releases)
 
-- chore: update toc  
-- fix: attempt to fix broken overall and dynamic overall  
+- chore: toc update  
+- test: update .luacheckrc  
+- test: update .luacheckrc  
+- test: update exclude  
+- test: remove not exists locals  
+- test: ignore 542 in Locale.lua  
+- test: update .luacheckrc  
+- chore: update license  
+- chore: update ci name  
+- ci: find globals, update .luacheckrc & license  

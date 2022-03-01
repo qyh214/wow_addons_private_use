@@ -2,9 +2,8 @@
 local EquipmentFlyoutFrame;
 local hasGapAdjusted = false;
 local STAMINA_STRING = SPELL_STAT3_NAME;
-local DefaultHeight_Comparison = 160;
-local DefaultHeight_StatsComparisonTemplate = 12;
-local Format_Digit = "%.2f";
+local COMPARISON_HEIGHT = 160;
+local FORMAT_DIGIT = "%.2f";
 
 local FormatLargeNumbers = NarciAPI.FormatLargeNumbers --BreakUpLargeNumbers;
 local GetItemExtraEffect = NarciAPI.GetItemExtraEffect;
@@ -22,8 +21,7 @@ local GetGemBorderTexture = NarciAPI.GetGemBorderTexture;
 local DoesItemHaveDomationSocket = NarciAPI.DoesItemHaveDomationSocket;
 local GetDominationBorderTexture = NarciAPI.GetDominationBorderTexture;
 local GetItemDominationGem = NarciAPI.GetItemDominationGem;
-
-local LocalizedSlotName = Narci.SlotIDtoName    --[SlotID] = {InventorySlotName, Localized Name, SlotID}                                                                            
+local GetSlotNameAndTexture = NarciAPI.GetSlotNameAndTexture;
 
 local CR_ConvertRatio = {      --Combat Rating number/percent
     ["stamina"] = 20,              -- 1 stamina = 20 HP
@@ -99,7 +97,7 @@ end
 local ColorTable = {
     Green = {r = 124, g = 197, b = 118},    --7cc576
     Red = {r = 255, g = 80, b = 80},        --ff5050 (1, 0.3137, 0.3137)
-    Positive = {r = 98, g = 239, b = 165}, 
+    Positive = {r = 98, g = 239, b = 165},
     Positive2 = {r = 135, g = 220, b = 153},
     Corrupt = {r = 148, g = 109, b = 209},  --946dd1
 }
@@ -217,7 +215,7 @@ local function DisplayComparison(key, name, number, baseNumber, ratio, CustomCol
 
     if ratio then
         if name ~= STAMINA_STRING then
-            Textframe.PctDiff:SetText(string.format(Format_Digit, ratio*differentialNumber).."%");
+            Textframe.PctDiff:SetText(string.format(FORMAT_DIGIT, ratio*differentialNumber).."%");
         else
             Textframe.PctDiff:SetText(FormatLargeNumbers(ratio*differentialNumber));
         end
@@ -404,13 +402,13 @@ local RequestLoadItemData = C_Item.RequestLoadItemData  --Cache Item info
 function Narci_Comparison_SetComparison(itemLocation, itemButton)
     local frame = Narci_Comparison;
     local FlyOut = EquipmentFlyoutFrame;
+    local slotName, slotTexture = GetSlotNameAndTexture(FlyOut.slotID);
     if not DoesItemExist(itemLocation) then
         frame.Label:SetText(CURRENTLY_EQUIPPED);
         frame.ItemName:SetText(EMPTY);
         frame.ItemName:SetTextColor(0.6, 0.6, 0.6);
-        frame.EquipLoc:SetText(LocalizedSlotName[FlyOut.slotID][2])
-        local _, textureName = GetInventorySlotInfo(LocalizedSlotName[FlyOut.slotID][1])
-        frame.Icon:SetTexture(textureName);
+        frame.EquipLoc:SetText(slotName)
+        frame.Icon:SetTexture(slotTexture);
         frame.BonusButton1:Hide();
         frame.BonusButton2:Hide();
         EmptyComparison();
@@ -439,7 +437,7 @@ function Narci_Comparison_SetComparison(itemLocation, itemButton)
         if FlyOut.slotID == -1 then
             return
         end
-        frame.EquipLoc:SetText(LocalizedSlotName[FlyOut.slotID][2]);
+        frame.EquipLoc:SetText(slotName);
     end
     frame.Label:SetText(itemSubType);
 
@@ -644,7 +642,7 @@ end)
 function Narci_Comparison_Resize()
     local frame = Narci_Comparison;
     local extraHeight = math.floor(frame.PawnText:GetHeight() + frame.ItemName:GetHeight() + 0.5)
-    frame:SetHeight(DefaultHeight_Comparison + extraHeight)
+    frame:SetHeight(COMPARISON_HEIGHT + extraHeight)
     frame.Icon:SetWidth(frame:GetHeight());
 end
 

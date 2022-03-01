@@ -118,6 +118,12 @@ L["Any Triggers"] = "Любые триггеры"
 L["AOE"] = "Урон по области (AOE)"
 L["Arcane Resistance"] = "Сопротивление тайной магии"
 L["Archimonde"] = "Архимонд"
+--[[Translation missing --]]
+L[ [=[Are you sure you want to run the |cffff0000EXPERIMENTAL|r repair tool?
+This will overwrite any changes you have made since the last database upgrade.
+Last upgrade: %s]=] ] = [=[Are you sure you want to run the |cffff0000EXPERIMENTAL|r repair tool?
+This will overwrite any changes you have made since the last database upgrade.
+Last upgrade: %s]=]
 L["Arena"] = "Арена"
 L["Armor (%)"] = "Броня"
 L["Armor against Target (%)"] = "Броня против текущей цели"
@@ -158,11 +164,6 @@ L["Auto"] = "Автоматически"
 L["Autocast Shine"] = "Свечение при автоприменении"
 L["Automatic"] = "Автоматическая"
 L["Automatic Length"] = "Автоматическая длина"
-L["Automatic Repair Confirmation Dialog"] = [=[WeakAuras обнаружил использование более ранней версии аддона (осуществлен downgrade). Ваши индикации могут больше не работать надлежащим образом.
-
-Хотите запустить |cFFFF0000ЭКСПЕРИМЕНТАЛЬНОЕ|r средство восстановления данных? Все изменения, выполненные вами с момента последнего обновления базы данных, будут утеряны.
-
-Дата последнего обновления: %s]=]
 L["Automatic Rotation"] = "Автоматический поворот"
 L["Avoidance (%)"] = "Избегание"
 L["Avoidance Rating"] = "Показатель избегания"
@@ -440,6 +441,10 @@ L["Frame Selector"] = "Выбор кадра"
 L["Frequency"] = "Частота"
 L["Friendly"] = "Дружественный"
 L["Friendly Fire"] = "Урон по союзникам"
+--[[Translation missing --]]
+L["Friendship Max Rank"] = "Friendship Max Rank"
+--[[Translation missing --]]
+L["Friendship Rank"] = "Friendship Rank"
 L["From"] = "От"
 L["Frost Resistance"] = "Сопротивление магии льда"
 L["Full"] = "Полный"
@@ -632,11 +637,6 @@ L["Majordomo Executus"] = "Мажордом Экзекутус"
 L["Make sure you can trust the person who sent it!"] = [=[Убедитесь, что вы можете доверять человеку,
 отправившему ее!]=]
 L["Malformed WeakAuras link"] = "Неверная ссылка WeakAuras"
-L["Manual Repair Confirmation Dialog"] = [=[Вы уверены, что хотите запустить |cFFFF0000ЭКСПЕРИМЕНТАЛЬНОЕ|r средство восстановления данных?
-
-Все изменения, выполненные вами с момента последнего обновления базы данных, будут утеряны.
-
-Дата последнего обновления: %s]=]
 L["Manual Rotation"] = "Ручной поворот"
 L["Marked First"] = "В начале списка"
 L["Marked Last"] = "В конце списка"
@@ -1016,6 +1016,8 @@ L["Supports multiple entries, separated by commas"] = "Можно указать
 L[ [=[Supports multiple entries, separated by commas
 ]=] ] = [=[Можно указать несколько значений, разделенных запятыми.
 ]=]
+--[[Translation missing --]]
+L["Supports multiple entries, separated by commas. Escape ',' with \\"] = "Supports multiple entries, separated by commas. Escape ',' with \\"
 L["Supports multiple entries, separated by commas. Group Zone IDs must be prefixed with 'g', e.g. g277."] = [=[ID группы игровых зон должен иметь префикс g. Например: g227
 
 Можно указать несколько значений, разделенных запятыми.]=]
@@ -1162,6 +1164,14 @@ L["Warning: Full Scan auras checking for both name and spell id can't be convert
 L["Warning: Name info is now available via %affected, %unaffected. Number of affected group members via %unitCount. Some options behave differently now. This is not automatically adjusted."] = "|cFFFFCC00Примечение.|r Теперь имена задействованных и незадействованных игроков доступны посредством %affected и %unaffected; количество задействованных участников группы - %unitCount. Некоторые параметры работают иначе. Эти изменения автоматически не применяются."
 L["Warning: Tooltip values are now available via %tooltip1, %tooltip2, %tooltip3 instead of %s. This is not automatically adjusted."] = "|cFFFFCC00Примечение.|r Теперь значения из текста подсказки доступны посредством %tooltip1, %tooltip2 и %tooltip3. Это изменение автоматически не применяется."
 L["WeakAuras Built-In (63:42 | 3:07 | 10 | 2.4)"] = "WeakAuras (встроенный):  63:42 | 3:07 | 10 | 2.4"
+--[[Translation missing --]]
+L[ [=[WeakAuras has detected that it has been downgraded.
+Your saved auras may no longer work properly.
+Would you like to run the |cffff0000EXPERIMENTAL|r repair tool? This will overwrite any changes you have made since the last database upgrade.
+Last upgrade: %s]=] ] = [=[WeakAuras has detected that it has been downgraded.
+Your saved auras may no longer work properly.
+Would you like to run the |cffff0000EXPERIMENTAL|r repair tool? This will overwrite any changes you have made since the last database upgrade.
+Last upgrade: %s]=]
 L["WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."] = "Во время процесса входа в игру возникла ошибка. Пожалуйста, сообщите об этой проблеме по адресу https://github.com/WeakAuras/Weakauras2/issues/new."
 L["WeakAuras Profiling"] = "Профилирование WeakAuras"
 L["WeakAuras Profiling Report"] = "Отчёт профилирования"

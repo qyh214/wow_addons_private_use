@@ -1,0 +1,29 @@
+## Interface: 90200
+## Title: HandyNotes: Shadowlands Treasures
+## Notes: Where are the hidden treasures in the Shadowlands?
+## Author: Kemayo
+## Version: v40
+## DefaultState: enabled
+## X-Category: Map
+## X-eMail: kemayo @ gmail DOT com
+## X-Curse-Project-ID: 422412
+## X-Wago-ID: Mj6jYMNR
+## SavedVariables: HandyNotes_ShadowlandsTreasuresDB
+## RequiredDeps: HandyNotes
+
+handler\handler.lua
+handler\conditions.lua
+handler\config.lua
+handler\overlay.lua
+handler\routes.xml
+
+shadowlands.lua
+
+zones\Bastion.lua
+zones\Ardenweald.lua
+zones\Maldraxxus.lua
+zones\Revendreth.lua
+zones\Maw.lua
+zones\Oribos.lua
+zones\Korthia.lua
+zones\ZerethMortis.lua

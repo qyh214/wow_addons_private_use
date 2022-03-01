@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2464, "DBM-Sepulcher", nil, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220206083607")
+mod:SetRevision("20220209105329")
 mod:SetCreatureID(180990)--Or 181411
 mod:SetEncounterID(2537)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6)--, 7, 8
@@ -107,7 +107,7 @@ local timerDecimatorCD							= mod:NewAITimer(28.8, 364942, nil, nil, nil, 3)
 mod:AddSetIconOption("SetIconOnCopulsion", 366285, true, false, {1, 2, 3})
 mod:AddSetIconOption("SetIconOnDecimator", 364942, true, false, {7})--7 to ensure no conflict in P3 either
 
---Stage Three: The Unmaking
+--Stage Three: Eternity's End
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24252))
 local warnRuneofDomination						= mod:NewTargetCountAnnounce(365150, 3, nil, nil, nil, nil, nil, nil, true)
 local warnDomination							= mod:NewTargetNoFilterAnnounce(362075, 4)

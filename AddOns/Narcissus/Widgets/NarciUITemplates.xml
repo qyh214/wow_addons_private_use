@@ -2,9 +2,11 @@
     <!-- © 2021 Peter Yu All Rights Reserved -->
 	<Script file="FrameBorder.lua"/>
 	<Script file="ItemBorder.lua"/>
+	<Script file="NineSliceUtil.lua"/>
 	<Script file="ClockFrame.lua"/>
 	<Script file="AnimatedSizingFrame.lua"/>
 	<Script file="RedButton.lua"/>
+	<Script file="FramerateIndicator.lua"/>
 	<Script file="Widgets.lua"/>
 	
 	<Frame name="NarciArtFrameTemplate" frameLevel="20" virtual="true">
@@ -159,12 +161,32 @@
 		</Scripts>
 	</Frame>
 
-	<Frame name="NarciLineBorderTemplate" virtual="true" useParentLevel="true" parentKey="Border" ignoreParentScale="false">
+	<Frame name="NarciLineBorderTemplate" virtual="true" useParentLevel="true" parentKey="Border" mixin="NarciLineBorderMixin">
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
 			<Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT"/>
 		</Anchors>
-		<Frames>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="Stroke">
+					<Color r="0.25" g="0.25" b="0.25"/>
+				</Texture>
+				<MaskTexture parentKey="Exclusion" hWrapMode="CLAMPTOWHITE" vWrapMode="CLAMPTOWHITE">
+					<Size x="40" y="40"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="Stroke"/>
+					</MaskedTextures>
+				</MaskTexture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnShow method="OnShow"/>
+		</Scripts>
+		<!--Frames>
 			<Frame parentKey="Highlight" useParentLevel="true" Alpha="0" mixin="ExpansionTransitionBackdropTemplateMixin">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT"/>
@@ -201,7 +223,7 @@
 					</OnLoad>
 				</Scripts>
 			</Frame>
-		</Frames>
+		</Frames-->
 	</Frame>
 
 	<Frame name="NarciFrameDispersiveShadowBorderTemplate" virtual="true" mixin="ExpansionTransitionBackdropTemplateMixin">
@@ -1313,10 +1335,10 @@
 	</EditBox>
 
     <Actor name="NarciModelSceneActorTemplate" mixin="NarciModelSceneActorMixin" virtual="true">
-      <Scripts>
-        <OnModelLoaded method="OnModelLoaded"/>
-        <OnAnimFinished method="OnAnimFinished"/>
-      </Scripts>
+		<Scripts>
+			<OnModelLoaded method="OnModelLoaded"/>
+			<OnAnimFinished method="OnAnimFinished"/>
+		</Scripts>
     </Actor>
 
     <ModelScene name="NarciNonInteractableModelSceneTemplate" mixin="ModelSceneMixin" virtual="true">
@@ -3179,4 +3201,56 @@
 			<OnMouseDown method="OnMouseDown"/>
 		</Scripts>
 	</Button>
+
+	<Texture name="NarciFramerateIndictorBlipTemplate" file="Interface\AddOns\Narcissus\Art\BasicShapes\Circle16" virtual="true">
+		<Size x="2" y="2"/>
+		<Color r="0.2" g="0.8" b="0.2"/>
+		<Animations>
+			<AnimationGroup parentKey="AnimFade" setToFinalAlpha="true">
+				<Alpha fromAlpha="0.8" toAlpha="0" duration="1.5" order="1"/>
+				<Translation offsetX="-36" duration="1.5" order="1"/>
+			</AnimationGroup>
+		</Animations>
+	</Texture>
+
+	<Frame name="NarciFramerateIndicator" mixin="NarciFramerateIndicatorMixin" clipChildren="true" hidden="true" frameStrata="HIGH">
+		<Size x="80" y="20"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="Backdrop" hidden="true">
+					<Color r="0.1" g="0.1" b="0.1"/>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture parentKey="RefTexture">
+					<Size x="1" y="1"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="MainBlip" inherits="NarciFramerateIndictorBlipTemplate">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.RefTexture" relativePoint="BOTTOM" x="0"/>
+					</Anchors>
+				</Texture>
+				<FontString parentKey="Label" inherits="NarciFontUniversal9" justifyH="LEFT" justifyV="TOP" text="FPS" hidden="true">
+					<Color r="0.5" g="0.5" b="0.5"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="4" y="0"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="FPSText" inherits="NarciFontUniversal9" justifyH="LEFT" justifyV="TOP">
+					<Color r="0.5" g="0.5" b="0.5"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.MainBlip" relativePoint="CENTER" x="8" y="0"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnShow method="OnShow"/>
+			<OnUpdate method="OnUpdate"/>
+		</Scripts>
+	</Frame>
 </Ui>

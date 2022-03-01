@@ -42,8 +42,11 @@ L['trinket'] = 'Bijou'
 
 L['activation_unknown'] = 'Activation inconnue'
 L['requirement_not_found'] = 'Emplacement requis inconnu'
+L['multiple_spawns'] = 'Peut apparaître à plusieurs endroits.'
 
 L['Requires'] = 'Requiert'
+L['ranked_research'] = '%s (Rang %d/%d)'
+
 L['focus'] = 'Focus'
 L['retrieving'] = 'Récupérer le lien de l\'article...'
 L['in_cave'] = 'Dans une grotte.'

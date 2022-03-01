@@ -155,6 +155,7 @@ function NarciItemSocketingActionButtonMixin:OnHide()
     self:StopAnimating();
     self:UnregisterEvent("PLAYER_REGEN_DISABLED");
     self:UnregisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED");
+    self:Release();
 end
 
 function NarciItemSocketingActionButtonMixin:DisableButton()

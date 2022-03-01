@@ -5,7 +5,19 @@ end
 local L = Narci.L;
 local S = Narci.L.S;
 
-L["Swap items"] = "替换装备";
+NARCI_WORDBREAK_COMMA = "，";
+
+--Date--
+L["Today"] = COMMUNITIES_CHAT_FRAME_TODAY_NOTIFICATION;
+L["Yesterday"] = COMMUNITIES_CHAT_FRAME_YESTERDAY_NOTIFICATION;
+L["Format Days Ago"] = "%d天前";
+L["A Month Ago"] = "1个月前";
+L["Format Months Ago"] = "%d个月前";
+L["A Year Ago"] = "1年前";
+L["Format Years Ago"] = "%d年前";
+
+
+L["Swap items"] = "更换装备";
 L["Movement Speed"] = STAT_MOVEMENT_SPEED;
 L["Damage Reduction Percentage"] = COMBAT_TEXT_SHOW_RESISTANCES_TEXT;
 
@@ -273,6 +285,7 @@ L["Return"] = "返回";
 L["Close"] = "关闭";
 
 --Dressing Room--
+L["Undress"] = "脱光";
 L["Favorited"] = "已设为偏好";
 L["Unfavorited"] = "已取消偏好";
 L["Item List"] = "装备清单";
@@ -366,6 +379,8 @@ L["Show Unearned Mark"] = "显示未获取符号";
 L["Show Unearned Mark Description"] = "用红叉标记不是由当前角色获得的成就。";
 L["Show Dates"] = "显示日期";
 L["Hide Dates"] = "隐藏日期";
+L["Pinned Entries"] = "置顶条目";
+L["Pinned Entry Format"] = "已置顶  %d/%d";
 
 --Barbershop--
 L["Save New Look"] = "保存外观";
@@ -424,7 +439,7 @@ L["Splash Content7 Description"] = "-六边形装备边框有了新的外观。�
 
 --Project Details--
 NARCI_ALL_PROJECTS = "全部项目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2021.11.28|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2022.2.25|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾泽拉斯上的不同景点，并收集各种故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沉浸式角色面板；你最好的截图助手。"
 
@@ -460,6 +475,8 @@ L["PetStable Loading"] = "正在获取宠物信息";
 L["Item Bonus"] = "加成：";
 L["Combat Error"] = NARCI_COLOR_RED_MILD.."此操作无法在战斗中进行".."|r";
 L["Extract Shard"] = "取下统御碎片";
+L["No Service"] = "信号不佳";
+L["Shards Disabled"] = "统御碎片在噬渊之外的地区无效。";
 
 --Mythic+ Leaderboard--
 L["Mythic Plus"] = "大秘境";
@@ -483,3 +500,32 @@ L["In Bags"] = "背包内";
 S["Narcissus Played"] = "Narcissus使用时长";
 S["Format Since"] = "(自%s以来)";
 S["Screenshots"] = "使用Narcissus截图";
+
+--Turntable Showcase--
+L["Turntable"] = "转台";
+L["Picture"] = "图片";
+L["Elapse"] = "时间轴"
+L["Turntable Tab Animation"] = "人物动作";
+L["Turntable Tab Image"] = "图像参数";
+L["Turntable Tab Quality"] = "抗锯齿";
+L["Turntable Tab Background"] = "背景";
+L["Spin"] = "旋转";
+L["Sync"] = "与试衣间同步";
+L["Rotation Period"] = "旋转周期";
+L["Period Tooltip"] = "角色旋转一周所用的时间，也应成为你视频或动图的|cffcccccc截取时长|r。";
+L["MSAA Tooltip"] = "暂时调整多重采样抗锯齿等级来平滑模型边缘。";
+L["Image Size"] = "图像大小";
+L["Item Name Show"] = "显示物品名称";
+L["Item Name Hide"] = "隐藏物品名称";
+L["Outline Show"] = "点击显示辅助边框";
+L["Outline Hide"] = "点击隐藏辅助边框";
+L["Preset"] = "预设";
+L["File"] = "文件";     --File Name
+L["File Tooltip"] = "把你的图片文件放在|cffccccccWorld of Warcraft\\retail\\Interface\\AddOns|r目录下，然后将文件名填入此方框。\n图片必须为|cffcccccc512x512|r或|cffcccccc1024x1024|r的|cffccccccJPG|r文件";
+L["Raise Level"] = "置于顶层";
+L["Lower Level"] = "取消置顶";
+L["Click To Continue"] = "点击以继续";
+L["Showcase Splash 1"] = "使用Narcissus和录屏软件来制作转台动画以展示你的幻化。";
+L["Showcase Splash 2"] = "点击下方按钮来复制试衣间中的物品。";
+L["Showcase Splash 3"] = "点击下方按钮可让你的角色旋转起来。";
+L["Showcase Splash 4"] = "录制屏幕然后将视频转换为GIF动图。";

@@ -8,6 +8,8 @@ local GetItemQualityColor = NarciAPI.GetItemQualityColor;
 local GetGemBonus = NarciAPI.GetGemBonus;
 local GetShardBonus = NarciAPI.GetDominationShardBonus;
 local GetItemBagPosition = NarciAPI.GetItemBagPosition;
+local GetItemTempEnchantType = NarciAPI.GetItemTempEnchantType;
+local IsWeaponValidForEnchant = NarciAPI.IsWeaponValidForEnchant;
 
 local GetSpellInfo = GetSpellInfo;
 local GetSpellDescription = GetSpellDescription;
@@ -20,12 +22,13 @@ local InUseIDs = {
     gemID = nil,
     enchantID = nil,
     tempEnchantID = nil,
+    requirementID = nil,
     newGemID = nil;
 };
 
 local function GetAppliedEnhancement(id1, id2)
     --GetContainerItemLink
-    local itemLink;
+    local itemLink, slotID;
     if type(id1) == "string" then
         itemLink = id1;
     else
@@ -33,6 +36,7 @@ local function GetAppliedEnhancement(id1, id2)
             itemLink = GetContainerItemLink(id1, id2);
         else
             itemLink = GetInventoryItemLink("player", id1);
+            slotID = id1;
         end
     end
 
@@ -51,7 +55,14 @@ local function GetAppliedEnhancement(id1, id2)
     end
     InUseIDs.gemID = gemID;
     InUseIDs.enchantID = enchantID;
-    return gemID, enchantID
+    InUseIDs.requirementID = GetItemTempEnchantType(itemLink);
+    local validForEnchant;
+    if slotID and slotID == 17 then
+        validForEnchant = IsWeaponValidForEnchant(itemLink);
+    else
+        validForEnchant = true;
+    end
+    return gemID, enchantID, validForEnchant
 end
 
 local function GetNewGemID(state)
@@ -283,10 +294,12 @@ end
 function NarciEquipmentEnchantButtonMixin:SetDisabledVisual(redNumber)
     self.Icon:SetDesaturation(0.5);
     self.Text1:SetTextColor(0.6, 0.6, 0.6);
-    if redNumber then
-        self.ItemCount:SetTextColor(1, 0.3137, 0.3137);
-    else
-        self.ItemCount:SetTextColor(0.920, 0.920, 0.920);
+    if redNumber ~= nil then
+        if redNumber then
+            self.ItemCount:SetTextColor(1, 0.3137, 0.3137);
+        else
+            self.ItemCount:SetTextColor(0.920, 0.920, 0.920);
+        end
     end
     self.IconBorder:SetVertexColor(0.5, 0.5, 0.5);
     self.Icon:SetVertexColor(0.5, 0.5, 0.5);
@@ -357,7 +370,39 @@ function NarciEquipmentEnchantButtonMixin:SetButtonText(text1, text2)
     end
 end
 
-function NarciEquipmentEnchantButtonMixin:SetEnchantData(spellID, itemID, enchantID, rune, iconFileID)
+function NarciEquipmentEnchantButtonMixin:SetUsed(state, pending)
+    self.InUseMark:SetShown(state);
+    self.isUsed = state;
+    if state then
+        self.InUseMark:SetColorTexture(0.3725, 0.7412, 0.4196);
+    else
+        if pending then
+            self.InUseMark:Show();
+            self.InUseMark:SetColorTexture(0.9686, 0.8941, 0);
+        end
+    end
+end
+
+function NarciEquipmentEnchantButtonMixin:SetItemCount(itemID)
+    if itemID then
+        local count = GetItemCount(itemID);
+        if count <= 0 or self.isUsed then
+            self:Disable();
+            self:SetDisabledVisual(count <= 0);
+        else
+            self:Enable();
+            self:SetEnabledVisual();
+        end
+        self.ItemCount:SetText(count);
+        self.ItemCount:Show();
+        self.ItemCountBackdrop:Show();
+    else
+        self.ItemCount:Hide();
+        self.ItemCountBackdrop:Hide();
+    end
+end
+
+function NarciEquipmentEnchantButtonMixin:SetEnchantData(spellID, itemID, enchantID, iconFileID)
     if spellID ~= self.spellID then
         self.spellID = spellID;
     else
@@ -402,7 +447,7 @@ function NarciEquipmentEnchantButtonMixin:SetEnchantData(spellID, itemID, enchan
     end
 end
 
-function NarciEquipmentEnchantButtonMixin:SetTempEnchantData(spellID, itemID, enchantID)
+function NarciEquipmentEnchantButtonMixin:SetTempEnchantData(spellID, itemID, enchantID, requirementID)
     if spellID ~= self.spellID then
         self.spellID = spellID;
     else
@@ -414,6 +459,7 @@ function NarciEquipmentEnchantButtonMixin:SetTempEnchantData(spellID, itemID, en
     self.isShard = nil;
     self.enchantID = enchantID;
     self.itemID = itemID;
+    self.requirementID = requirementID;
     self.useActionButton = 2;
     if spellID then
         self:SetUsed(false);
@@ -450,27 +496,16 @@ function NarciEquipmentEnchantButtonMixin:SetTempEnchantData(spellID, itemID, en
         self:SetItemCount(itemID);
         self:ShowLoadingIcon(notLoaded);
         self:Show();
+
+        if requirementID and requirementID ~= InUseIDs.requirementID then
+            self.showFailureReason = true;
+            self:Disable();
+            self:SetDisabledVisual();
+        else
+            self.showFailureReason = nil;
+        end
     else
         self:Hide();
-    end
-end
-
-function NarciEquipmentEnchantButtonMixin:SetItemCount(itemID)
-    if itemID then
-        local count = GetItemCount(itemID);
-        if count <= 0 or self.isUsed then
-            self:Disable();
-            self:SetDisabledVisual(count <= 0);
-        else
-            self:Enable();
-            self:SetEnabledVisual();
-        end
-        self.ItemCount:SetText(count);
-        self.ItemCount:Show();
-        self.ItemCountBackdrop:Show();
-    else
-        self.ItemCount:Hide();
-        self.ItemCountBackdrop:Hide();
     end
 end
 
@@ -574,24 +609,13 @@ function NarciEquipmentEnchantButtonMixin:SetDominationShardData(itemID)
     end
 end
 
-function NarciEquipmentEnchantButtonMixin:SetUsed(state, pending)
-    self.InUseMark:SetShown(state);
-    self.isUsed = state;
-    if state then
-        self.InUseMark:SetColorTexture(0.3725, 0.7412, 0.4196);
-    else
-        if pending then
-            self.InUseMark:Show();
-            self.InUseMark:SetColorTexture(0.9686, 0.8941, 0);
-        end
-    end
-end
-
 function NarciEquipmentEnchantButtonMixin:WipeData()
     self.itemID = nil;
     self.spellID = nil;
     self.enchantID = nil;
+    self.requirementID = nil;
     self.isUsed = nil;
+    self.showFailureReason = nil;
 end
 
 NarciItemListButtonHighlightMixin = {};

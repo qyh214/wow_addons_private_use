@@ -770,6 +770,24 @@
 		</Member>
   	</FontFamily>
 
+  	<FontFamily name="NarciFontFremont10" virtual="true">
+		<Member alphabet="roman">
+			<Font font="Interface\AddOns\Narcissus\Font\Fremont-Regular.ttf" height="10"/>
+		</Member>
+		<Member alphabet="korean">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="10"/>
+		</Member>
+		<Member alphabet="simplifiedchinese">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="10"/>
+		</Member>
+		<Member alphabet="traditionalchinese">
+			<Font font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Medium.otf" height="10"/>
+		</Member>
+		<Member alphabet="russian">
+			<Font font="Fonts\FRIZQT___CYR.TTF" height="10"/>
+		</Member>
+  	</FontFamily>
+
   	<FontFamily name="NarciSpeechBalloonFontRegular" virtual="true">
 		<Member alphabet="roman">
 			<Font font="Interface\AddOns\Narcissus\Font\OpenSans-SemiBold.ttf" height="14"/>
@@ -924,6 +942,16 @@
 			</Offset>
 			<Color a="1" r="0.894" g="0.761" b="0.408"/>
 		</Shadow-->
+	</Font>
+
+	<Font name="NarciAchievementTiny" inherits="NarciFontFremont10" virtual="true">
+		<Color r="0.72" g="0.72" b="0.72"/>
+		<Shadow>
+			<Offset>
+				<AbsDimension x="0" y="2"/>
+			</Offset>
+			<Color a="0.5" r="0" g="0" b="0"/>
+		</Shadow>
 	</Font>
 
 	<Font name="NarciLoreBookHeader" inherits="NarciFontFremont14" virtual="true">
@@ -1276,4 +1304,9 @@
 			<Font font="Interface\AddOns\Narcissus\Font\SourceSansPro-Bold.ttf" height="16"/>
 		</Member>
 	</FontFamily>
+
+	<Font name="NarciFontUniversal12" font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Regular.otf" height="12" virtual="true"/>
+	<Font name="NarciFontUniversal9" font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Regular.otf" height="9" virtual="true"/>
+	<Font name="NarciFontUniversal6" font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Regular.otf" height="6" virtual="true"/>
+	<Font name="NarciFontUniversal12Outline" font="Interface\AddOns\Narcissus\Font\NotoSansCJKsc-Regular.otf" height="12" virtual="true" outline="THICK"/>
 </Ui>

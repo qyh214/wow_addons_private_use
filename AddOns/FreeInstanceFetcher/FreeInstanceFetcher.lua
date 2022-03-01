@@ -176,7 +176,7 @@ F.addonPrefix = "\124cFF70B8FF" .. addonName .. "\124r: "
 F.addonLocaleName = "\124cFF70B8FF便利CD获取\124r: "
 F.addonVersion = GetAddOnMetadata(addonName, 'Version')
 --[==[@debug@
-if F.addonVersion == 'v9.1.9' then
+if F.addonVersion == 'v9.2.0' then
     F.addonVersion = 'Dev'
 end
 --@end-debug@]==]
@@ -218,6 +218,10 @@ function F:ToggleSpecialSteps()
         self.specialWindow = window
 
         local editbox = StdUi:MultiLineBox(window, 600, 400, [[
+重要提醒: 插件版本更新，请使用推荐的地址下载，NGA、百度网盘、黑盒工坊、CurseForge等都可以更新，|cFFFF0000不要使用EUI更新器更新|r，有可能导致插件部分功能无法使用。
+排队问题: 非周四时间如果排队超过10请微信联系我，周四排队超过30也可以私信我，大概率是卡队列了。
+问题咨询: 微信 (wowermaster) ===羔羊===
+
 【奥迪尔】大剑幻化、【达萨罗】大工匠坐骑CD获取方法
 
 步骤1: 准备一个好友(游戏朋友)或者双开小号，处于随时待命状态，否则该CD将无法成功获取。
@@ -470,11 +474,7 @@ do
             tinsert(menuTable, {
                 text = "显示主界面", isNotRadio = true,
                 func = function()
-                    self.db.ShowMainFrame = not self.db.ShowMainFrame
-                    self.mainFrame:SetShown(self.db.ShowMainFrame)
-                    if not self.db.ShowMinimap then
-                        self:Print("你可以通过输入命令/%s show以重新显示主界面。", self.addonAbbr)
-                    end
+                    self:ToggleMainFrame()
                 end,
                 checked = function()
                     return self.db.ShowMainFrame
@@ -657,19 +657,46 @@ do
 
     local function SlashCmdHandler(msg)
         if msg == 'show' then
-            F.db.ShowMainFrame = true
+            F:ToggleMainFrame(true)
+
+            -- reset position
+            F.mainFrame:ClearAllPoints()
+            F.mainFrame:SetPoint('TOPLEFT', 10, -100)
             F.mainFrame:Show()
         elseif msg == 'hide' then
-            F.db.ShowMainFrame = false
-            F.mainFrame:Hide()
+            F:ToggleMainFrame(false)
         else
-            F:Print("\n    /%s show 显示界面\n    /%s hide 隐藏界面", F.addonAbbr, F.addonAbbr)
+            F:Print("\n    /%s show 重置界面位置并显示界面\n    /%s hide 隐藏界面", F.addonAbbr, F.addonAbbr)
         end
     end
 
+    function F:ToggleMainFrame(target)
+        if type(target) == 'boolean' then
+            if not self.db.ShowMinimap and not target then
+                F:Print('无法同时隐藏主界面和小地图按钮')
+                return
+            end
+
+            self.db.ShowMainFrame = target
+        else
+            if not self.db.ShowMinimap and self.db.ShowMainFrame then
+                F:Print('无法同时隐藏主界面和小地图按钮')
+                return
+            end
+
+            self.db.ShowMainFrame = not self.db.ShowMainFrame
+        end
+        self.mainFrame:SetShown(self.db.ShowMainFrame)
+    end
+
     function F:ToggleMinimap()
-        F.db.ShowMinimap = not F.db.ShowMinimap
-        brokerConfig.hide = not F.db.ShowMinimap
+        if not self.db.ShowMainFrame and self.db.ShowMinimap then
+            F:Print('无法同时隐藏主界面和小地图按钮')
+            return
+        end
+
+        self.db.ShowMinimap = not self.db.ShowMinimap
+        brokerConfig.hide = not self.db.ShowMinimap
         if brokerConfig.hide then
             LDBI:Hide(addonName)
         else
@@ -708,7 +735,7 @@ do
 
             self:BuildFrame()
             self:ApplySkin(self.db.Skin)
-            self.mainFrame:SetShown(F.db.ShowMainFrame)
+            self.mainFrame:SetShown(self.db.ShowMainFrame)
 
             self:RegisterEvent('PARTY_INVITE_REQUEST')
             self:RegisterEvent('PLAYER_ENTERING_WORLD')
@@ -725,8 +752,7 @@ do
                         if F.db.QuickAccess then
                             buttons[1].func(F.mainFrame.subFrame.buttons[1])
                         else
-                            F.db.ShowMainFrame = not F.mainFrame:IsShown()
-                            F.mainFrame:SetShown(F.db.ShowMainFrame)
+                            F:ToggleMainFrame()
                         end
                     end
                 end,

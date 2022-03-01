@@ -865,7 +865,7 @@
 			}, atributo_custom.mt)
 			
 			new_actor.name_complement = name_complement
-			new_actor.displayName = _detalhes:GetOnlyName (new_actor.nome) .. (name_complement or "")
+			new_actor.displayName = actor.displayName or (_detalhes:GetOnlyName (new_actor.nome) .. (name_complement or ""))
 			new_actor.spec = actor.spec
 			
 			new_actor.enemy = actor.enemy
@@ -1312,7 +1312,7 @@
 			PotionUsed.__index = _detalhes.atributo_custom
 			self.custom [#self.custom+1] = PotionUsed
 		end
-		
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --		/run _detalhes:AddDefaultCustomDisplays()
 
@@ -1356,39 +1356,46 @@
 			return total, top, amount
 			]],
 			tooltip = [[
-			--get the parameters passed
-			local actor, combat, instance = ...
-			
-			--get the cooltip object (we dont use the convencional GameTooltip here)
-			local GameCooltip = GameCooltip
-			local R, G, B, A = 0, 0, 0, 0.75
-			
-			local hs = actor:GetSpell (6262)
-			if (hs) then
-				GameCooltip:AddLine (select (1, GetSpellInfo(6262)),  _detalhes:ToK(hs.total))
-				GameCooltip:AddIcon (select (3, GetSpellInfo (6262)), 1, 1, _detalhes.tooltip.line_height, _detalhes.tooltip.line_height)
-				GameCooltip:AddStatusBar (100, 1, R, G, B, A)
-			end
-			
-			local pot = actor:GetSpell (DETAILS_HEALTH_POTION_ID)
-			if (pot) then
-				GameCooltip:AddLine (select (1, GetSpellInfo(DETAILS_HEALTH_POTION_ID)),  _detalhes:ToK(pot.total))
-				GameCooltip:AddIcon (select (3, GetSpellInfo (DETAILS_HEALTH_POTION_ID)), 1, 1, _detalhes.tooltip.line_height, _detalhes.tooltip.line_height)
-				GameCooltip:AddStatusBar (100, 1, R, G, B, A)
-			end
-			
-			local pot = actor:GetSpell (DETAILS_REJU_POTION_ID)
-			if (pot) then
-				GameCooltip:AddLine (select (1, GetSpellInfo(DETAILS_REJU_POTION_ID)),  _detalhes:ToK(pot.total))
-				GameCooltip:AddIcon (select (3, GetSpellInfo (DETAILS_REJU_POTION_ID)), 1, 1, _detalhes.tooltip.line_height, _detalhes.tooltip.line_height)
-				GameCooltip:AddStatusBar (100, 1, R, G, B, A)
-			end
-
-			--Cooltip code
+				--get the parameters passed
+				local actor, combat, instance = ...
+				
+				--get the cooltip object (we dont use the convencional GameTooltip here)
+				local GameCooltip = GameCooltip
+				local R, G, B, A = 0, 0, 0, 0.75
+				
+				local hs = actor:GetSpell (6262)
+				if (hs) then
+					GameCooltip:AddLine (select (1, GetSpellInfo(6262)),  _detalhes:ToK(hs.total))
+					GameCooltip:AddIcon (select (3, GetSpellInfo (6262)), 1, 1, _detalhes.tooltip.line_height, _detalhes.tooltip.line_height)
+					GameCooltip:AddStatusBar (100, 1, R, G, B, A)
+				end
+				
+				local pot = actor:GetSpell (DETAILS_HEALTH_POTION_ID)
+				if (pot) then
+					GameCooltip:AddLine (select (1, GetSpellInfo(DETAILS_HEALTH_POTION_ID)),  _detalhes:ToK(pot.total))
+					GameCooltip:AddIcon (select (3, GetSpellInfo (DETAILS_HEALTH_POTION_ID)), 1, 1, _detalhes.tooltip.line_height, _detalhes.tooltip.line_height)
+					GameCooltip:AddStatusBar (100, 1, R, G, B, A)
+				end
+				
+				local pot = actor:GetSpell (DETAILS_HEALTH_POTION2_ID)
+				if (pot) then
+					GameCooltip:AddLine (select (1, GetSpellInfo(DETAILS_HEALTH_POTION2_ID)),  _detalhes:ToK(pot.total))
+					GameCooltip:AddIcon (select (3, GetSpellInfo (DETAILS_HEALTH_POTION2_ID)), 1, 1, _detalhes.tooltip.line_height, _detalhes.tooltip.line_height)
+					GameCooltip:AddStatusBar (100, 1, R, G, B, A)
+				end
+				
+				local pot = actor:GetSpell (DETAILS_REJU_POTION_ID)
+				if (pot) then
+					GameCooltip:AddLine (select (1, GetSpellInfo(DETAILS_REJU_POTION_ID)),  _detalhes:ToK(pot.total))
+					GameCooltip:AddIcon (select (3, GetSpellInfo (DETAILS_REJU_POTION_ID)), 1, 1, _detalhes.tooltip.line_height, _detalhes.tooltip.line_height)
+					GameCooltip:AddStatusBar (100, 1, R, G, B, A)
+				end
+				
+				--Cooltip code
 			]],
 			percent_script = false,
 			total_script = false,
-			script_version = 15,
+			script_version = 16,
 		}
 --	/run _detalhes:AddDefaultCustomDisplays()
 		local have = false

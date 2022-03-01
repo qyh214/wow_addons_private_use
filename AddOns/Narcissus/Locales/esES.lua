@@ -11,4 +11,7 @@ NARCI_GROUP_PHOTO = "Foto Grupal";
 NARCI_GROUP_PHOTO_NOTIFICATION = "Por favor seleccione un jugador.";
 
 --NPC Browser--
-NARCI_NPC_BROWSER_TITLE_LEVEL = "d*e*%s*.ivel%s%?%?.?";      --Level ?? --Use this to check if the second line of the tooltip is NPC's title or unit type 
+NARCI_NPC_BROWSER_TITLE_LEVEL = "d*e*%s*.ivel%s%?%?.?";      --Level ?? --Use this to check if the second line of the tooltip is NPC's title or unit type
+
+L["No Service"] = "Sin servicio";
+L["Shards Disabled"] = "Fragmento de dominación están deshabilitadas fuera de Las Fauces";

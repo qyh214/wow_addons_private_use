@@ -84,13 +84,13 @@ function NarciAnimationOptionButtonMixin:SetFavorite(isFavorite)
     self.isFavorite = isFavorite;
 end
 
-function NarciAnimationOptionButtonMixin:SetAnimationInfo(id, name, isFavorite)
+function NarciAnimationOptionButtonMixin:SetAnimationInfo(id, isFavorite)
     if id ~= self.animationID then
         self.animationID = id;
         self.FlyIn:Stop();
         self.ID:SetText(id);
-        self.Name:SetText( NarciAnimationInfo:GetOfficialName(id) );
-        self:SetFavorite( NarciAnimationInfo:IsFavorite(id) );
+        self.Name:SetText( NarciAnimationInfo.GetOfficialName(id) );
+        self:SetFavorite( NarciAnimationInfo.IsFavorite(id) );
         self:Show();
     end
 end
@@ -103,40 +103,22 @@ end
 ----------------------------------------------------
 --Animation Cache
 local DataProvider = {};
-
-DataProvider.playerAnimations = {};
-DataProvider.npcAnimations = {};
-DataProvider.maxAnimID = 1499;
-
+DataProvider.maxAnimID = NarciConstants.Animation.MaxAnimationID or 1499;
 
 function DataProvider:GetAvailableAnimationsForModel(model, forcedUpdate)
-    local type = model:GetObjectType();
-    local id = model.buttonIndex;
-    local animations;
-    if type == "CinematicModel" then
-        animations = self.npcAnimations;
-    else
-        animations = self.playerAnimations;
-    end
-
-    if (not model.isAnimationCached) or forcedUpdate then
-        if animations[id] then
-            wipe(animations[id]);
-        else
-            animations[id] = {};
-        end
-
+    if forcedUpdate or not model.isAnimationCached then
+        local animations = {};
         local numAnim = 0;
         for i = 0, self.maxAnimID do
             if model:HasAnimation(i) then
                 numAnim = numAnim + 1;
-                animations[numAnim] = { i, NarciAnimationInfo:IsFavorite(i) };
+                animations[numAnim] = { i, NarciAnimationInfo.IsFavorite(i) };
             end
         end
         model.isAnimationCached = true;
+        model.animationList = animations;
     end
-
-    return animations;
+    return model.animationList or {}
 end
 
 function DataProvider:GetAnimationsByIndex(fromIndex)
@@ -257,9 +239,9 @@ function NarciAnimationBrowserMixin:OnLoad()
 
         local animationID = button.animationID;
         if isFavorite then
-            NarciAnimationInfo:AddFavorite(button.animationID);
+            NarciAnimationInfo.AddFavorite(button.animationID);
         else
-            NarciAnimationInfo:RemoveFavorite(button.animationID);
+            NarciAnimationInfo.RemoveFavorite(button.animationID);
         end
         button:PlayVisual();
         BrowserFrame.forcedUpdate = true;
@@ -289,7 +271,9 @@ end
 
 function NarciAnimationBrowserMixin:RefreshList()
     --{id, name, isFavorite}
-    sort(self.availableAnimations, SortFunc);
+    if #self.availableAnimations > 1 then
+        sort(self.availableAnimations, SortFunc);
+    end
     After(0, function()
         self:UpdateButtons();
     end)
@@ -338,7 +322,7 @@ function NarciAnimationBrowserMixin:RefreshFavorite(animationID)
         for i = 1, numButtons do
             button = buttons[i];
             if button and (button.animationID == animationID) then
-                local isFavorite = NarciAnimationInfo:IsFavorite(animationID);
+                local isFavorite = NarciAnimationInfo.IsFavorite(animationID);
                 button.isFavorite = isFavorite;
                 button.Star:SetShown(isFavorite);
                 break
@@ -433,13 +417,13 @@ function NarciAnimationBrowserMixin:OnEvent(event)
 end
 
 function NarciAnimationBrowserMixin:OnMouseDown()
-    return
+
 end
 
 function NarciAnimationBrowserMixin:SearchAnimation(keyword)
     keyword = gsub(keyword, "^%s+", "");  --trim left
     if keyword and keyword ~= "" then
-        self.availableAnimations = NarciAnimationInfo:SearchByName(keyword);
+        self.availableAnimations = NarciAnimationInfo.SearchByName(keyword);
         self:RefreshList();
     else
         self:BuildListForModel(true);

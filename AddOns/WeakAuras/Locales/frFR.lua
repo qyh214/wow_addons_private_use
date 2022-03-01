@@ -141,6 +141,12 @@ L["AOE"] = "AOE"
 L["Arcane Resistance"] = "Résistance aux arcanes"
 --[[Translation missing --]]
 L["Archimonde"] = "Archimonde"
+--[[Translation missing --]]
+L[ [=[Are you sure you want to run the |cffff0000EXPERIMENTAL|r repair tool?
+This will overwrite any changes you have made since the last database upgrade.
+Last upgrade: %s]=] ] = [=[Are you sure you want to run the |cffff0000EXPERIMENTAL|r repair tool?
+This will overwrite any changes you have made since the last database upgrade.
+Last upgrade: %s]=]
 L["Arena"] = "Arène"
 L["Armor (%)"] = "Armure (%)"
 L["Armor against Target (%)"] = "Armure contre Cible (%)"
@@ -190,8 +196,6 @@ L["Autocast Shine"] = "Autocast Shine"
 L["Automatic"] = "Automatique"
 --[[Translation missing --]]
 L["Automatic Length"] = "Automatic Length"
---[[Translation missing --]]
-L["Automatic Repair Confirmation Dialog"] = "Automatic Repair Confirmation Dialog"
 L["Automatic Rotation"] = "Rotation automatique"
 L["Avoidance (%)"] = "Evitement (%)"
 L["Avoidance Rating"] = "Pourcentage Evitement "
@@ -553,6 +557,10 @@ L["Frame Selector"] = "Frame Selector"
 L["Frequency"] = "Fréquence"
 L["Friendly"] = "Amical"
 L["Friendly Fire"] = "Tir ami"
+--[[Translation missing --]]
+L["Friendship Max Rank"] = "Friendship Max Rank"
+--[[Translation missing --]]
+L["Friendship Rank"] = "Friendship Rank"
 L["From"] = "De"
 L["Frost Resistance"] = "Résistance au givre"
 L["Full"] = "Plein"
@@ -829,8 +837,6 @@ L["Main Stat"] = "Stat principale"
 L["Majordomo Executus"] = "Majordomo Executus"
 L["Make sure you can trust the person who sent it!"] = "Assurez-vous de pouvoir faire confiance à la personne qui l'a envoyé !"
 L["Malformed WeakAuras link"] = "Lien WeakAuras mal formé"
---[[Translation missing --]]
-L["Manual Repair Confirmation Dialog"] = "Manual Repair Confirmation Dialog"
 L["Manual Rotation"] = "Rotation manuelle"
 L["Marked First"] = "Marqué en premier"
 L["Marked Last"] = "Marqué en dernier"
@@ -1331,6 +1337,8 @@ L["Supports multiple entries, separated by commas"] = "Prend en charge plusieurs
 L[ [=[Supports multiple entries, separated by commas
 ]=] ] = "Prend en charge plusieurs entrées, séparées par des virgules"
 --[[Translation missing --]]
+L["Supports multiple entries, separated by commas. Escape ',' with \\"] = "Supports multiple entries, separated by commas. Escape ',' with \\"
+--[[Translation missing --]]
 L["Supports multiple entries, separated by commas. Group Zone IDs must be prefixed with 'g', e.g. g277."] = "Supports multiple entries, separated by commas. Group Zone IDs must be prefixed with 'g', e.g. g277."
 --[[Translation missing --]]
 L["Supremus"] = "Supremus"
@@ -1532,6 +1540,14 @@ L["Warning: Name info is now available via %affected, %unaffected. Number of aff
 L["Warning: Tooltip values are now available via %tooltip1, %tooltip2, %tooltip3 instead of %s. This is not automatically adjusted."] = "Warning: Tooltip values are now available via %tooltip1, %tooltip2, %tooltip3 instead of %s. This is not automatically adjusted."
 --[[Translation missing --]]
 L["WeakAuras Built-In (63:42 | 3:07 | 10 | 2.4)"] = "WeakAuras Built-In (63:42 | 3:07 | 10 | 2.4)"
+--[[Translation missing --]]
+L[ [=[WeakAuras has detected that it has been downgraded.
+Your saved auras may no longer work properly.
+Would you like to run the |cffff0000EXPERIMENTAL|r repair tool? This will overwrite any changes you have made since the last database upgrade.
+Last upgrade: %s]=] ] = [=[WeakAuras has detected that it has been downgraded.
+Your saved auras may no longer work properly.
+Would you like to run the |cffff0000EXPERIMENTAL|r repair tool? This will overwrite any changes you have made since the last database upgrade.
+Last upgrade: %s]=]
 --[[Translation missing --]]
 L["WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."] = "WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."
 --[[Translation missing --]]

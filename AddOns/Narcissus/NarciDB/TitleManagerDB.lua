@@ -1,6 +1,4 @@
---Made by Peter Yu
---Project Page: https://wow.curseforge.com/projects/narcissus/files
---twitter @Peterodox
+--Derivative of https://wow.tools/dbc/?dbc=chartitles&build=9.2.0.42423#page=18
 
 Narci_CharacterTitlesTable = 
     {--[DBC ID] = {category, rarity, name, TitleID, AchievementID/QuestID, isQuest}
@@ -448,4 +446,15 @@ Narci_CharacterTitlesTable =
     [703] = {"achv", 0, "the Tormented", 446, 15077},    --SL: M+ S2
     [704] = {"pve", 3, "Breaker of Chains", 447, 15121},
     [705] = {"pve", 5, "Famed Bane of the Banshee Queen", 448, 15196},
+
+    [708] = {"pve", 0, "Gauntlet Runner", 449, 15253},
+    [709] = {"pve", 0, "Tower Ranger", 450, 15324},
+    [710] = {"pve", 5, " the Tormented Hero", 451, 15327},  --Tormented Hero: Shadowlands Season 2
+    [712] = {"pvp", 5, "Cosmic Gladiator", 452, 15324},
+    [713] = {"achv", 0, "the [PH] TBD Title", 453, },  --??
+    [714] = {"pve", 5, "Famed Slayer of The Banished One", 454, 15475},
+    [715] = {"pve", 3, "Guardian of the Pattern", 455, 15489},  --Mythic: Jailer
+    [716] = {"pvp", 0, "Soloist", 456, 15544},
+    [717] = {"pve", 0, "the Cryptic", 457, 15498},     --M+ S3
+    [718] = {"achv", 0, "the Cryptic Hero", 458, },
 }

@@ -86,6 +86,7 @@ L.GroupOptionsBySpell		= "모드 설정 주문별 그룹화 (지원하는 모드
 L.GroupOptionsExcludeIcon	= "주문별 그룹화에서 '공격대 징표 설정' 제외 (이전처럼 관련 설정은 '공격대 징표' 카테고리에 배치됩니다)"
 L.AutoExpandSpellGroups		= "주문별로 그룹화된 설정들 자동으로 펼치기"
 --L.ShowSpellDescWhenExpanded	= "그룹화된 설정이 펼쳐진 상태에서도 주문 설명 계속 표시"--Might not be used
+L.NoDescription				= "설명이 없습니다"
 
 -- Panel: Extra Features
 L.Panel_ExtraFeatures		= "기타 기능"

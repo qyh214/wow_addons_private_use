@@ -667,19 +667,19 @@ do
         end
     end
 
-    function F:HandleCollection(instanceID, difficultyID, disabled, collectionData)
+    function F:HandleCollection(instanceID, difficultyID, disabled, collectionData, retries)
         if not showNotAvailable and collectionData.available == false then return end
 
         local difficultyName = difficultyID and GetDifficultyInfo(difficultyID)
         local instanceName, bossName =
             self:GetInstanceAndBossName(instanceID, collectionData.bossIndex, collectionData.bossBit)
 
-        if not instanceName or not bossName then
+        if (not instanceName or not bossName) and (not retries or retries < 2) then
             local index = instanceID .. '-' .. (difficultyID or 0)
             inProgress[index] = true
             C_Timer_After(1, function()
                 inProgress[index] = nil
-                F:HandleCollection(instanceID, difficultyID, disabled, collectionData)
+                F:HandleCollection(instanceID, difficultyID, disabled, collectionData, retries and (retries + 1) or 1)
                 ExportData()
             end)
             return
@@ -777,6 +777,21 @@ do
                 tinsert(data, info)
 
                 ExportData()
+            end)
+
+            C_Timer_After(2, function()
+                if inProgress[item] then
+                    -- timeout
+                    inProgress[item] = nil
+
+                    itemLink = select(2, GetItemInfo(collectionData.itemID))
+                    info.collected = isCollected and 136814 or info.collected
+                    info.collection = itemLink or collectionData.itemID
+                    info.itemID = collectionData.itemID
+                    tinsert(data, info)
+
+                    ExportData()
+                end
             end)
             return
         end

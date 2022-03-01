@@ -1,4 +1,4 @@
---TOC version 90100
+--TOC version 90200
 
 NarciConstants = {
     --Constant
@@ -6,7 +6,7 @@ NarciConstants = {
 
     --Auto-update
     Animation = {
-        MaxAnimationID = 1555,
+        MaxAnimationID = 1681,
     },
 
     Soulbinds = {

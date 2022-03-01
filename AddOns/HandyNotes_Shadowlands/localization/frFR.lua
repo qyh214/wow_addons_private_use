@@ -308,14 +308,14 @@ L['mawsworn_cache_note'] = 'Il y a 3 caches uniques qui peuvent chacune apparaî
 L['pile_of_bones'] = 'Pile d\'ossements'
 L['relic_cache'] = 'Cache à relique'
 L['shardhide_stash'] = 'Cachette de cuirasaure'
-L['korthia_shared_chest_note'] = 'Vous pouvez récupérer des reliques dans ces trésors 5 fois par jour. Les coffres supplémentaires peuvent contenir des cristaux légendaires et des jetons d\'équipement liés au compte.'
+L['korthia_shared_chest_note'] = 'Peuvent être pillés 5 fois pour des reliques. La progression se réinitialise toutes les 30 minutes, ce qui les rendent en réalité illimités.'
 L['unusual_nest'] = 'Tas de matériaux inhabituels.'
 L['unusual_nest_note'] = 'Les 5 emplacements de nids peuvent être pillés chaque jour.'
 
 L['options_icons_invasive_mawshroom_desc'] = 'Afficher les emplacements des Champignantres envahissants.'
 L['options_icons_invasive_mawshroom'] = 'Champignantres envahissants'
-L['options_icons_korthia_dailies_desc'] = 'Afficher les emplacements des trésors quotidiens non marqués.'
-L['options_icons_korthia_dailies'] = 'Trésors cachés'
+L['options_icons_korthia_dailies_desc'] = 'Afficher les emplacements des Caches à reliques non marquées.'
+L['options_icons_korthia_dailies'] = 'Caches à reliques'
 L['options_icons_mawsworn_cache_desc'] = 'Afficher les emplacements des Caches antreliges.'
 L['options_icons_mawsworn_cache'] = 'Caches antreliges'
 L['options_icons_nest_materials_desc'] = 'Afficher les emplacements des Tas de matériaux inhabituels.'
@@ -674,3 +674,143 @@ Un événement de tourmenteur apparaît toutes les 2 heures à heure pile. Les b
 
 La {item:185972} peut être obtenue une fois par semaine et contient 50 {currency:1906}.
 ]]
+
+-------------------------------------------------------------------------------
+-------------------------------- ZERETH MORTIS --------------------------------
+-------------------------------------------------------------------------------
+
+L['corrupted_architect_note'] = 'Engagez en combat {npc:183958} et {npc:183961} pour activer le monstre rare.'
+L['dune_dominance_note'] = 'Les trois monstres élites rares pour le haut-fait {achievement:15392} apparaissent à cet endroit.'
+L['feasting_note'] = 'Va parfois faire le tour de la zone avant de revenir à cet emplacement.'
+L['furidian_note'] = 'Activez trois |cFFFFFD00Serrures renforcées|r dans la zone, puis déverrouillez le |cFFFFFD00Coffre étrangement remonté|r.'
+L['garudeon_note'] = 'Ramassez des {npc:183562s} dans les environs et utilisez {spell:362655} pour nourrir les {npc:183554s}. Une fois les trois nourris, {npc:180924} s\'activera.'
+L['gluttonous_overgrowth_note'] = 'Brisez toutes les {npc:184048s} proches pour activer le monstre rare.'
+L['helmix_emote'] = '|cFFFF8C00Le sol vibre... quelque chose se cache sous la surface !|r'
+L['hirukon_note'] = [[
+Pour attirer {npc:180978} à la surface, il est nécessaire de créer un {item:187923}.
+
+1. Pêchez une {item:187662} dans les eaux voisines.
+
+2. Pêchez un {item:187915} dans l'|cFFFFFD00Amas de Poissons-blobs âcres|r à l'intérieur du Réservoir de Glissecroc au Marécage de Zangar. Le bassin se trouve à droite lorsque vous entrez dans la caverne.
+
+3. Pêchez un {item:187922} dans le |cFFFFFD00Banc de Nectalies|r près du point de vol de la Tombe de Kelya à Nazjatar.
+
+4. Récupérez une {item:187916} (très bien cachée) sur un balcon au deuxième niveau de la Terrasse de Nar'shola aux Étendues Chatoyantes (34,7, 75,0).
+
+5. Trouvez la {npc:182194} près de l'étang au sud du Siège du Primat à Maldraxxus. Demandez-lui de fabriquer l'{item:187923} final.
+
+6. Utilisez l'{item:187923}, qui vous permettra de voir le point de pêche d'|cFFFFFD00Amas d'Aurélides|r près de {npc:180978} pendant 15min. Pêchez dedans pour faire remonter {npc:180978} à la surface.
+]] -- Needs Review on fishing spots names
+L['orixal_note'] = 'Partage son apparition avec l\'{npc:185487} patrouillant dans la zone.'
+L['protector_first_ones_note'] = 'Nécessite deux personnes. Apportez les runes correspondantes à chaque console (trouvées dans les environs) pour ouvrir la barrière.'
+L['the_engulfer_note'] = 'Défendez {npc:183505} jusqu\'à ce que {npc:183516} surgisse de la faille.'
+L['zatojin_note'] = 'Attirez les {npc:183721} proches et laissez-les appliquer 20 charges de {spell:362976} jusqu\'à ce que vous soyez {spell:362983}. Vous devez vous tenir au-dessus des cadavres de {npc:183774} lorsque vous êtes paralysé pour que {npc:183764} vous remarque.'
+
+L['architects_reserve_note'] = 'Complétez la suite de quêtes {quest:64829} de l\'{npc:180630} à la Grâce du Pèlerin. Le lendemain, accomplissez la suite de quêtes {quest:65426} de {npc:181273} pour déverrouiller le trésor.'
+L['bushel_of_produce_note'] = 'Tuez un {npc:182368} au nord alors qu\'il est affecté par {spell:360945} pour obtenir le buff vous-même. Tuez d\'autres {npc:182368} (ils n\'ont pas besoin d\'avoir le buff) jusqu\'à ce que vous ayez accumulé 5 charges, puis brisez la porte menant au trésor.'
+L['crushed_crate_note'] = 'Ramassez l\'{item:189767} reposant sur le pilier effondré au-dessus du trésor. Donnez-le à {npc:185151} en échange du {item:189768} qui peut briser les pierres tombées.'
+L['domination_cache_note'] = 'La {item:189704} a une faible chance de tomber sur les {npc:181403s} et {npc:182426s} de la zone.'
+L['drowned_broker_supplies_note'] = 'Dites à {npc:181059} de prendre le contrôle de l\'{npc:185282} à proximité.'
+L['forgotten_protovault_note'] = 'Uniquement disponible pendant l\'expédition {wq:Frog\'it}.'
+L['grateful_boon_note'] = 'Difficile à atteindre sans voler, utilisez {spell:300728} ou {spell:111771} pour gravir la montagne. Apaisez les 12 créatures de la zone et {npc:185293} fera apparaître le trésor.'
+L['library_vault_note'] = 'Cliquez sur les tablettes dans la Grotte Lexicale jusqu\'à ce que vous trouviez le buff {spell:362062} approprié pour ouvrir le caveau.'
+L['mistaken_ovoid_note'] = 'Dans la Grotte des Chutes dimensionnelles, vous devez collecter 5x {item:190239} et les amener à {npc:185280}.'
+L['ripened_protopear_note'] = 'Commencez la suite de quêtes {quest:64641} pour accéder à la Fonderie de l’Éclosion. Collectez 5 {spell:367180} (nuages verts) à l\'intérieur et apportez-les à la {npc:185416} pour la polliniser.'
+L['sphere_treasure_note'] = 'Sautez prudemment sur les sphères jusqu\'à ce que vous atteigniez le trésor.'
+L['submerged_chest_note'] = 'Absorbez le |cFFFFFD00Dangereux orbe de puissance|r au sud, puis interagissez avec la |cFFFFFD00Pompe oubliée|r près du trésor.' -- Needs Review
+L['symphonic_vault_note'] = 'Examinez l\'{npc:183998} pour entendre une séquence de quatre sons. Chaque {npc:183950} dans la pièce joue un seul son. Interagissez avec elles dans le bon ordre pour déverrouiller le trésor.'
+L['syntactic_vault_note'] = 'Pour déverrouiller le trésor, vous devez accumuler 6 charges de {spell:367499} en interagissant avec les |cFFFFFD00Syllabes Runiques|r dans la zone du Sépulcre des Fondateurs.'
+L['template_archive_note'] = 'Poussez l\'{npc:183339} dans la salle jusqu\'à l\'{npc:183337} bloquant le chemin vers le trésor.'
+L['undulating_foliage_note'] = [[
+Pressez les quatre {npc:185390s} pour activer le téléporteur dans la salle centrale des Champs Catalyseurs.
+
+• Dehors, derrière le |cFFFFFD00Verrou des champs Catalyseurs|r
+• Dans la salle sud-ouest des champs
+• Dans la pièce sud avec {npc:181652}
+• Dans la salle sud-est des champs
+]]
+
+L['prying_eye_discovery'] = 'Découverte d\'œil indiscret'
+L['prying_eye_discovery_note'] = 'Plus facile à atteindre une fois que le vol est déverrouillé.'
+L['pulp_covered_relic'] = 'Relique couverte de pulpe'
+L['sandworn_chest'] = 'Coffre erodé'
+L['sandworn_chest_note'] = 'Récupérez 5x {item:190198} sur les monstres de la zone pour construire la {item:190197}.'
+
+L['cache_avian_nest'] = 'Nid d\'oiseau'
+L['cache_cypher_bound'] = 'Coffre lié par un cryptogramme'
+L['cache_discarded_automa'] = 'Débris d\'Automa abandonné'
+L['cache_forgotten_vault'] = 'Salle du trésor oubliée'
+L['cache_mawsworn_supply'] = 'Coffre de fournitures antreliges'
+L['cache_tarachnid_eggs'] = 'Oeufs de Tarachnidé'
+
+L['cache_cantaric'] = 'Cache cantabilienne'
+L['cache_fugueal'] = 'Cache fuguéal'
+L['cache_glissandian'] = 'Cache glissandienne'
+L['cache_mezzonic'] = 'Cache mezzonique'
+L['cache_toccatian'] = 'Cache toccatienne'
+
+L['schematic_treasure_note'] = '|cFFFF8C00Ce trésor ne contiendra pas le schéma de protoforme si vous n\'avez pas encore débloqué le synthétiseur. Si vous avez déjà récupéré le trésor, vous trouverez le schéma sur le sol à proximité.|r'
+L['schematic_treasure_mount_note'] = '|cFFFF8C00Ce schéma se trouve dans un trésor à usage unique situé à proximité. Si le trésor est ouvert avant le déverrouillage du synthétiseur de montures, le schéma peut être trouvé ici.|r'
+L['schematic_treasure_pet_note'] = '|cFFFF8C00Ce schéma se trouve dans un trésor à usage unique situé à proximité. Si le trésor est ouvert avant le déverrouillage du synthétiseur de familiers, le schéma peut être trouvé ici.|r'
+L['schematic_bronze_helicid_note'] = 'Peut être trouvé dans le {item:190610} de la quête bi-hebdomadaire {quest:65324}.'
+L['schematic_ambystan_darter_note'] = 'Dissimulé sous l\'eau, près du {npc:185312}.'
+L['schematic_bronzewing_vespoid_note'] = 'A l\'intérieur du Repos de la fertilité.'
+L['schematic_buzz_note'] = 'Peut être trouvé dans une {npc:185265}.'
+L['schematic_darkened_vombata_note'] = 'Dans une cage flottante.'
+L['schematic_deathrunner_note'] = 'Obtenu au cours de la suite de quêtes déverrouillant la {spell:366367}.'
+L['schematic_desertwing_hunter_note'] = 'Situé au sommet du pilier.'
+L['schematic_fierce_scarabid_note'] = 'Dissimulé sous la plateforme sur laquelle se trouve le {npc:181870}.'
+L['schematic_forged_spiteflyer_note'] = 'Dépassant d\'un amas de ruches vespoïdes.'
+L['schematic_genesis_crawler_note'] = 'Trouvé au sommet de l\'entrée de l\'Alcôve de la Genèse.'
+L['schematic_goldplate_bufonid_note'] = 'Faible chance de tomber sur les {npc:178803s}.'
+L['schematic_heartbond_lupine_note'] = 'Faible chance de tomber sur un {npc:179939}.'
+L['schematic_leaping_leporid_note'] = 'Trouvé au sommet d\'un arbre flottant.'
+L['schematic_microlicid_note'] = 'Sur la branche la plus basse de l\'arbre flottant, sous le feuillage.'
+L['schematic_pale_regal_cervid_note'] = 'Recherchez tous les cryptogrammes à la {npc:181397} pour recevoir {achievement:15402}.'
+L['schematic_prototickles_note'] = 'Attaché à une chaîne flottante à l\'intérieur des vignes au-dessus du monstre rare {npc:180978}.'
+L['schematic_raptora_swooper_note'] = 'Trouvé à l\'intérieur de la Chambre de Façonnage.'
+L['schematic_resonant_echo_note'] = 'Peut être trouvé dans un |cFFFFFD00Écho du premier chant cristallisé|r.'
+L['schematic_russet_bufonid_note'] = 'Peut être trouvé dans la cache de parangon {item:187780}.'
+L['schematic_scarlet_helicid_note'] = 'Trouvé au sommet de la structure de l\'arche.'
+L['schematic_shelly_note'] = 'Situé à l\'arrière d\'une étagère dans la Grotte Lexicale. Nécessite une capacité de téléportation pour escalader l\'étagère.'
+L['schematic_tarachnid_creeper_note'] = 'A l\'intérieur d\'une petite structure dans les Sables Infinis.'
+L['schematic_terror_jelly_note'] = 'Au sommet du pylône carré à côté de la rampe.'
+L['schematic_tunneling_vombata_note'] = 'A côté de quelques décombres dans un tunnel bloqué à l\'intérieur du complexe Esper locrien.'
+L['schematic_vespoid_flutterer_note'] = 'Dépasse d\'un tas de sable au niveau Locus primus des Pics Résonnants.'
+
+L['concordance_excitable'] = 'Harmonique fébrile'
+L['concordance_mercurial'] = 'Harmonique changeant'
+L['concordance_tranquil'] = 'Harmonique serein'
+L['concordance_note'] = 'Lisez chaque harmonique pour déverrouiller les données de la |cFFFFFD00Console d\'histoire|r au |cFFFFFD00Creux de l\'Exil|r.'
+
+L['echoed_jiro_note'] = 'Dépensez l\'énergie de {npc:181059} pour obtenir des buffs temporaires. Nécessite la recherche |cFFFFFD00Créatien|r à la {npc:181397}.'
+
+L['bygone_elemental_note'] = 'Un {npc:181221} peut apparaître à la place de n\'importe quel {npc:179007} dans la zone.'
+L['gaiagantic_note'] = 'Apparaît uniquement lorsque {npc:177958} propose la quête journalière {quest:64785}.'
+L['misaligned_enforcer_note'] = 'Patrouille la zone et disparaît à la fin de son itinéraire.'
+L['overcharged_vespoid_note'] = 'Peut apparaître dans n\'importe quel essaim de la zone.'
+L['runethief_xylora_note'] = 'Apparaît camouflé à la Grâce du Pèlerin.'
+
+L['patient_bufonid_note'] = 'Progressez dans l\'histoire de Zereth Mortis jusqu\'à ce que {npc:180950} propose {quest:65727}. Complétez les quêtes chaque jour pour attirer le {npc:185798} hors de l\'étang.'
+L['patient_bufonid_note_day1'] = 'Récupérez 15x {item:190852} sur des Vespoïdes dans la zone.'
+L['patient_bufonid_note_day2'] = 'Achetez 30x {item:172053} à l\'Hôtel des Ventes.'
+L['patient_bufonid_note_day3'] = 'Achetez 200x {item:173202} à l\'Hôtel des Ventes.'
+L['patient_bufonid_note_day4'] = 'Achetez 10x {item:173037} à l\'Hôtel des Ventes.'
+L['patient_bufonid_note_day5'] = 'Récupérez 5x {item:187704} sur des monstres dans la zone.'
+L['patient_bufonid_note_day6'] = 'Achetez 5x {item:190880} à {npc:185748} près de la Grâce du Pèlerin.'
+L['patient_bufonid_note_day7'] = 'Acheter 1x {item:187171} auprès du {npc:180114} dans le donjon Tazavesh.'
+
+L['options_icons_code_creature'] = '{achievement:15211}'
+L['options_icons_code_creature_desc'] = 'Afficher les emplacements des créatures pour le haut-fait {achievement:15211}.'
+L['options_icons_concordances'] = 'Harmoniques d\'histoire'
+L['options_icons_concordances_desc'] = 'Afficher les emplacements des consoles d\'harmoniques d\'histoire.'
+L['options_icons_echoed_jiros'] = 'Jiro sonore'
+L['options_icons_echoed_jiros_desc'] = 'Afficher les emplacements des buffs d\'offrandes des |cFFFFFD00Jiros sonores|r.'
+L['options_icons_exile_tales'] = '{achievement:15509}'
+L['options_icons_exile_tales_desc'] = 'Afficher les emplacements des tomes pour le haut-fait {achievement:15509}.'
+L['options_icons_protoform_schematics'] = 'Schémas de protoforme'
+L['options_icons_protoform_schematics_desc'] = 'Afficher les emplacements des schémas de montures et familiers.'
+L['options_icons_puzzle_caches'] = 'Caches des puzzles'
+L['options_icons_puzzle_caches_desc'] = 'Afficher les emplacements possibles des caches de puzzles'
+L['options_icons_zereth_caches'] = 'Caches cryptiques' -- Needs Review
+L['options_icons_zereth_caches_desc'] = 'Afficher les emplacements possibles des Caches cryptiques' -- Needs Review

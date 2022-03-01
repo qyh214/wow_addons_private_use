@@ -1652,29 +1652,29 @@ end
 local FavoriteAnimationIDs;
 local IsFavorite = {};
 
-function NarciAnimationInfo:GetOfficialName(id)
+function NarciAnimationInfo.GetOfficialName(id)
     return colorizedName[id] or "|cffff5050Undefined|r";
 end
 
-function NarciAnimationInfo:IsFavorite(id)
+function NarciAnimationInfo.IsFavorite(id)
 	return IsFavorite[id]
 end
 
-function NarciAnimationInfo:GetInfo(id)
+function NarciAnimationInfo.GetInfo(id)
 	return colorizedName[id] or "|cffff5050Undefined|r", IsFavorite[id]
 end
 
-function NarciAnimationInfo:AddFavorite(id)
+function NarciAnimationInfo.AddFavorite(id)
 	IsFavorite[id] = true;
 	FavoriteAnimationIDs[id] = true;
 end
 
-function NarciAnimationInfo:RemoveFavorite(id)
+function NarciAnimationInfo.RemoveFavorite(id)
 	IsFavorite[id] = nil;
 	FavoriteAnimationIDs[id] = nil;
 end
 
-function NarciAnimationInfo:LoadFavorites()
+function NarciAnimationInfo.LoadFavorites()
     if not NarcissusDB then
         return 0;
     end
@@ -1694,7 +1694,7 @@ function NarciAnimationInfo:LoadFavorites()
     return sum;
 end
 
-function NarciAnimationInfo:RemoveFromFavorites(IDsToBeDeleted)
+function NarciAnimationInfo.RemoveFromFavorites(IDsToBeDeleted)
     if not IDsToBeDeleted then return; end;
 
     local ShouldBeDeleted = {};
@@ -1790,7 +1790,7 @@ end
 DivideListByInitials();
 
 
-function NarciAnimationInfo:SearchByName(str)
+function NarciAnimationInfo.SearchByName(str)
     if not str or str == "" or IsKeyDown("BACKSPACE") then return {}, 0 end
 	
 	--str = gsub(str, "^%s+", "");	--trim left	--Already processed from input
@@ -1856,6 +1856,6 @@ Initialize:RegisterEvent("PLAYER_ENTERING_WORLD");
 Initialize:SetScript("OnEvent", function(self, event, ...)
 	if event == "PLAYER_ENTERING_WORLD" then
 		self:UnregisterEvent("PLAYER_ENTERING_WORLD");
-		NarciAnimationInfo:LoadFavorites();
+		NarciAnimationInfo.LoadFavorites();
 	end
 end)

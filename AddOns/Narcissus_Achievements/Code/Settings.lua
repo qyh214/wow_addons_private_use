@@ -31,10 +31,10 @@ end
 
 local WidgetStructure = {
     [1] = {
-        name = "Narcissus Achievement (BETA)",
+        name = "Narcissus Achievement",
         widgets = {
             [1] = {
-                name = NARCI_NEW_ENTRY_PREFIX..L["Use Achievement Panel"],
+                name = L["Use Achievement Panel"],
                 type = "checkbox",
                 key = "UseAsDefault",
                 data = {
@@ -85,7 +85,7 @@ local WidgetStructure = {
             },
 
             [5] = {
-                name = NARCI_NEW_ENTRY_PREFIX..L["Show Unearned Mark"],
+                name = L["Show Unearned Mark"],
                 type = "checkbox",
                 key = "ShowRedMark",
                 data = {
@@ -222,7 +222,7 @@ local function KeybindingButton_OnClick(self, button)
 
         BindingAlertTimer = C_Timer.NewTimer(2, function()
             UIFrameFadeOut(self.Highlight, 0.5, self.Highlight:GetAlpha(), 0);
-            UIFrameFadeOut(self.Description, 0.5, self.Description:GetAlpha(), 0);    
+            UIFrameFadeOut(self.Description, 0.5, self.Description:GetAlpha(), 0);
         end)
         return;
     end

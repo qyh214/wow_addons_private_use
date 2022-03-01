@@ -1922,13 +1922,13 @@
 							</OnHide>
 							<OnShow>
 								self.Label:SetText(MULTISAMPLE_ANTI_ALIASING);
-								local level = GetCVar("MSAAQuality");
+								local level = GetCVar("MSAAQuality") or 0;
 								local value0 = tonumber(string.sub(level, 1,1));
 								self:SetValue(value0);
 								self.KeyLabel:Hide();
 								self.Label:Hide();
 								self.KeyLabel2:Show();
-								TopQualityButton_MSAASlider_OnValueChanged(self, value0, userInput)
+								TopQualityButton_MSAASlider_OnValueChanged(self, value0, false)
 							</OnShow>
 							<OnValueChanged function="TopQualityButton_MSAASlider_OnValueChanged"/>
 						</Scripts>

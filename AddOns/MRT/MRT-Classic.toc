@@ -1,10 +1,10 @@
-## Interface: 11401
+## Interface: 11402
 ## Title: Method Raid Tools
 ## Author: ykiigor
 ## Notes: Method Raid Tools
 ## OptionalDeps: ExRT
 ## SavedVariables: VMRT
-## Version: 4600
+## Version: 4610
 core.lua
 Functions.lua
 embeds.xml

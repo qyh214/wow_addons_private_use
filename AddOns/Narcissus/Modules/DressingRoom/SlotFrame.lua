@@ -1,3 +1,5 @@
+local _, addon = ...
+
 local MAX_TRY_ON_HISTORY = 5;
 local HIDDEN_ILLUSION = 5360;
 
@@ -11,6 +13,8 @@ local GetAllsources = MogAPI.GetAllAppearanceSources;
 local GetAppearanceSourceDrops = MogAPI.GetAppearanceSourceDrops;
 local IsAppearanceFavorite = MogAPI.GetIsAppearanceFavorite;
 local GetAppearanceInfoBySource = MogAPI.GetAppearanceInfoBySource;
+local IsHiddenVisual = MogAPI.IsAppearanceHiddenVisual;
+
 local GetItemInfoInstant = GetItemInfoInstant;
 
 local GetSlotVisualID = NarciAPI.GetSlotVisualID;
@@ -37,11 +41,12 @@ local emptyTextures = {
     SecondaryHandSlot = 134952,
     ShirtSlot = 135030,
     TabardSlot = 255149,
-}
+};
 
 local alternateSlotName = {
     [3] = {RIGHTSHOULDERSLOT, LEFTSHOULDERSLOT},
-}
+};
+
 ----------------------------------------------------
 local function IsWeaponSlot(slotID)
     return (slotID == 16 or slotID == 17)
@@ -50,8 +55,8 @@ end
 local ItemList = {};
 ItemList.itemList = {};
 
-function ItemList:WipeList()
-    wipe(self.itemList);
+local function WipeItemList()
+    ItemList.itemList = {};
 end
 
 function ItemList:GetList()
@@ -158,6 +163,7 @@ end
 
 ----------------------------------------------------
 local DataProvider = {};
+addon.TransmogDataProvider = DataProvider;
 
 function DataProvider:Init()
     local version, build, date, tocversion = GetBuildInfo();
@@ -291,6 +297,27 @@ function DataProvider:GetIllusionSourceText(illusionID)
         end
         return self.illusionSources[illusionID]
     end
+end
+
+function DataProvider:GetSourceName(sourceID)
+    local sourceInfo = GetSourceInfo(sourceID);
+    if not sourceInfo then return end;
+    return sourceInfo.name
+end
+
+
+DataProvider.isBow = {};
+
+function DataProvider:IsSourceBow(sourceID)
+    --Cache this cuz it might be frequently used
+    if self.isBow[sourceID] == nil then
+        local sourceInfo = GetSourceInfo(sourceID);
+        if sourceInfo then
+            local _, _, _, itemEquipLoc = GetItemInfoInstant(sourceInfo.itemID);
+            self.isBow[sourceID] = itemEquipLoc == "INVTYPE_RANGED";
+        end
+    end
+    return self.isBow[sourceID]
 end
 
 ----------------------------------------------------
@@ -894,12 +921,15 @@ local function DressUpSources(sources, mainHandEnchant, offHandEnchant)
 	if (not playerActor) then
 		return false;
 	end
-
+    playerActor:Undress();
     if playerActor.SetItemTransmogInfo then
         local sourceID, secondarySourceID;
         local currentInfo;
         for slotID, transmogInfo in pairs(sources) do
             sourceID, secondarySourceID = DataProvider:GetSourceIDFromTransmogInfo(transmogInfo);
+            --if transmogInfo and transmogInfo.appearanceID == 0 then
+            --    playerActor:UndressSlot(slotID);
+            --end
             if slotButtons[slotID] then
                 slotButtons[slotID]:SetItemSource(sourceID, secondarySourceID);
             end
@@ -910,9 +940,6 @@ local function DressUpSources(sources, mainHandEnchant, offHandEnchant)
                 end
             else
                 playerActor:SetItemTransmogInfo(transmogInfo);
-            end
-            if transmogInfo and transmogInfo.appearanceID == 0 then
-                playerActor:UndressSlot(slotID);
             end
         end
     else
@@ -940,10 +967,15 @@ local function DressUpSources(sources, mainHandEnchant, offHandEnchant)
             end
         end
     end
+
+    --Hold Bow
+    local sheathed = playerActor:GetSheathed();
+    playerActor:SetSheathed(not sheathed);
+    playerActor:SetSheathed(sheathed);
 end
 
 function NarciDressingRoomSlotFrameMixin:SetSources(sources, mainHandEnchant, offHandEnchant)
-    ItemList:WipeList();
+    WipeItemList();
     DressUpSources(sources, mainHandEnchant, offHandEnchant);
 end
 
@@ -1067,7 +1099,7 @@ local function PrintItemList()
 end
 
 NarciDressingRoomAPI.PrintItemList = PrintItemList;
-
+NarciDressingRoomAPI.WipeItemList = WipeItemList;
 
 DataCache:SetScript("OnUpdate", function(self, elapsed)
     self.t = self.t + elapsed;
@@ -1117,3 +1149,49 @@ function NarciDressingRoomItemIDToggleMixin:OnClick()
 
     PrintItemList();
 end
+
+local PrintOrders = {
+    1, 3, 15, 5, 4, 19, 9, 10, 6, 7, 8, 16, 17,
+};
+
+local function GetItemNames()
+    local slotID;
+    local data, itemName, itemText;
+    local itemList = ItemList:GetList();
+    for i = 1, #PrintOrders do
+        slotID = PrintOrders[i];
+        data = itemList[slotID];
+        if data then
+            itemName = data.name;
+            if itemName then
+                if data.sourceID and IsHiddenVisual(data.sourceID) then
+                    itemName = "|cff808080"..itemName.."|r";
+                end
+                if itemText then
+                    itemText = itemText .. "\n" .. itemName;
+                else
+                    itemText = itemName;
+                end
+                if DataProvider:CanHaveSecondaryAppearanceForSlotID(slotID) then
+                    local secondarySourceID = ItemList:GetSecondarySourceID(slotID);
+                    if secondarySourceID and secondarySourceID ~= 0 then
+                        if IsWeaponSlot(slotID) then
+                            local sourceName = DataProvider:GetIllusionName(secondarySourceID);
+                            if sourceName then
+                                itemText = itemText.." "..sourceName;
+                            end
+                        else
+                            itemName = data.secondaryName;
+                            if itemName then
+                                itemText = itemText.."\n"..itemName;
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return itemText
+end
+
+NarciDressingRoomAPI.GetItemNames = GetItemNames;

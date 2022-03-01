@@ -301,7 +301,7 @@ function NarciEquipmentGemActionButtonMixin:InitFromButton(button, slotID, inUse
         end
     end
     if not hasItemName then
-        self.Header:SetText(L["Click to Insert"]);
+        self.Header:SetText(L["Click To Insert"]);
         self.Header:SetTextColor(0.92, 0.92, 0.92);
     end
 

@@ -68,7 +68,7 @@ function DataProvider:GetAchievementInfo(id, index)
             SetFocusedAchievement(id);
         end
         if description then
-            self.achievementCache[id] = {id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe, nil, isStatistic};
+            self.achievementCache[id] = {id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe, true, isStatistic};
         end
         if index then
             if self.achievementCache[id] then

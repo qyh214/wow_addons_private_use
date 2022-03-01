@@ -89,8 +89,8 @@ local EnchantData= {
     [6170] = {"versatility", 16, 309619},   --Tenet of Versatility
 
     --Weapon
-    [6195] = {"haste", 0, 321535},          --Infra-green Reflex Sight
-    [6196] = {"crit", 0, 321536},           --Optical Target Embiggener
+    [6195] = {"haste", 0, 310534},          --Infra-green Reflex Sight
+    [6196] = {"crit", 0, 310533},           --Optical Target Embiggener
     [6229] = {"STR", 0, 309627},            --Celestial Guidance    sometimes increase your <Primary Stat> by 5%
     [6223] = {"AGI", 0, 309620},            --Lightless Force       send out a wave of Shadow energy in front of you
     [6226] = {"INT", 0, 309621},            --Eternal Grace         healing on the target of your helpful spells and abilities

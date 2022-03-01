@@ -1,10 +1,10 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.38 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.39 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for
 				  helping me with the vars and
-				  the options.						]]--	
+				  the options.						]]--
 
 local ADDON_NAME,ParagonReputation = ...
 local PR = ParagonReputation
@@ -133,7 +133,7 @@ elseif LOCALE == "koKR" then
 	PR.L["ANCHOR"] = "고정기 위치"
 
 -- Chinese (Simplified) (Thanks dxlmike)
-elseif LOCALE == "zhCN" then 
+elseif LOCALE == "zhCN" then
 	PR.L["PARAGON"] = "巅峰"
 	PR.L["OPTIONDESC"] = "可以自定巅峰声望条的一些设定."
 	PR.L["TOASTDESC"] = "切换获得巅峰奖励时是否弹出通知."

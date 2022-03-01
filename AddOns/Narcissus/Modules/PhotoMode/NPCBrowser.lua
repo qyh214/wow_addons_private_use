@@ -999,6 +999,19 @@ local NPCInfo = {
     [179314] = {"", "bk", nil, },   --Banshee Sylvanas
     [180211] = {"", "y", nil, {168268} },    --Thrall SL
     [178295] = {"", "r", nil, },  --Kin'tessa Dread Queen
+    [177514] = {"", "r", nil, },        --Mal'Ganis     Sound File:4078587
+
+    --9.2
+    [185421] = {"", "tt", nil, {185436} },   --The Jailer 2.0
+    [180140] = {"", "bk", 182879, {185955} }, --Primus Regular
+
+    [183685] = {"", "bk", 188855, },     --Pocopoc
+    [181546] = {"", "y", }, --Prototype of Renewal
+    [181548] = {"", "y", }, --Prototype of Absolution
+    [181549] = {"", "y", }, --Prototype of War
+    [181551] = {"", "y", }, --Prototype of Duty
+    [181286] = {"", "bk", 191052, {42775}},    --Sylvanas 9.2
+    [181274] = {"", "bk", 191052},      --Sylvanas Simple
     --[] = {"", "", },
 };
 
@@ -1057,6 +1070,7 @@ local Catalogue = {
         },
 
         [4] = {["name"] = "Maldraxxus",
+            180140,     --Primus
             165182,     --Baroness Draka
             165417,     --Alexandros Mograine <The Ashbringer>
             165819,     --Kel'Thuzad <Archlich>
@@ -1087,6 +1101,18 @@ local Catalogue = {
             167424,     --Overseer Kah-Sher <Will of the Arbiter>
             163490,     --Bolvar
             180211,     --Thrall SL
+        },
+
+        [7] = {["name"] = "Eternity\'End",
+            185421,     --Jailer
+            177514,     --MalGanis
+            183685,     --Pocopoc
+            181546,     --Proto-Winter Queen
+            181548,     --Proto-Denathrius
+            181549,     --Proto-Primus
+            181551,     --Proto-Kyrestia
+            181274,     --Sylvanas
+            181286,     --Sylvanas
         },
     },
 
@@ -2326,14 +2352,15 @@ local function GetNPCTitle(creatureID)
     end
 end
 
+local tempName;
 local function GetNPCNameAndTitle(creatureID)
     VirtualTooltip:SetOwner(UIParent, "ANCHOR_NONE");
     VirtualTooltip:SetHyperlink(format("unit:Creature-0-0-0-0-%d", creatureID));
-
+    tempName = lineName:GetText() or "";
     if IsTooltipLineTitle(lineTitle:GetText()) then
-        return {lineName:GetText() or "", lineTitle:GetText()}, (lineName:GetText() == "")
+        return {tempName, lineTitle:GetText()}, (tempName == "")
     else
-        return {lineName:GetText() or "", nil}, (lineName:GetText() == "")
+        return {tempName, nil}, (tempName == "")
     end
 end
 
@@ -3475,60 +3502,58 @@ end
 local function BuildNPCList()
     RequestAllCreatureInfo(NPCInfo);
     CreateButtonsForScrollFrame(BrowserFrame.Container.EntryTab, NUM_MAX_ENTRY_BUTTONS, "NarciNPCButtonWithPortaitTemplate", NPCCard_OnEnter);
-    --CreateButtonsForScrollFrame(BrowserFrame.Container.MatchTab, NUM_MAX_MATCHES, "NarciNPCMatchButtonTemplate", Match_OnEnter, NPCCard_OnClick);
 
     local npcIDList = GetKeyTable(NPCInfo);
-    After(1, function()
-        local id;
-        local shouldQueue, iteration = false, 0;
-        local titleOverride;
+    local Loader = CreateFrame("Frame");
+    local numTotal = #npcIDList;
+    local numLeft = numTotal;
 
-        local numTotal = #npcIDList;
-        --print("Logged: "..numTotal)
-        local numLeft = numTotal;
+    local id, shouldQueue;
+    local idQueued = {};
+    local pausedTime = 0;
+    local paused;
 
-        local function GetNameRecursively()
-            id = npcIDList[numLeft];
-
-            titleOverride = NPCInfo[id][1];
-            NPCInfo[id][1], shouldQueue = GetNPCNameAndTitle(id);
-
-            if shouldQueue then
-                if iteration < 10 then
-                    --print("Retrieve "..id);
-                    iteration = iteration + 1;
-                else
-                    --print("Failed to retrieve "..id);
-                    numLeft = numLeft - 1;
-                    iteration = 0;
-                end
+    local function Loader_OnUpdate(f, elapsed)
+        if paused then
+            pausedTime = pausedTime + elapsed;
+            if pausedTime > 0.2 then
+                paused = false;
             else
-                numLeft = numLeft - 1;
-                iteration = 0;
-            end
-
-            if titleOverride ~= "" then
-                NPCInfo[id][1][2] = titleOverride;
-            end
-
-            --Show loading progress
-            if numLeft % 2 == 0 then
-                LoadingIndicator.Progress:SetText( (numTotal - numLeft) .."/"..numTotal);
-            end
-
-            if numLeft > 0 then
-                After(0, GetNameRecursively);
-            else
-                --Loading Complete
-                NPCBrowser_OnLoad(BrowserFrame);
-                LoadTexture();
-                LoadingIndicator.Progress:SetText("");
-                LoadingIndicator:Hide();
+                return
             end
         end
+        id = npcIDList[numLeft];
+        NPCInfo[id][1], shouldQueue = GetNPCNameAndTitle(id);
+        if shouldQueue then
+            if idQueued[id] then
+                numLeft = numLeft - 1;
+            else
+                idQueued[id] = true;
+                paused = true;
+                pausedTime = 0;
+            end
+        else
+            numLeft = numLeft - 1;
+        end
 
-        GetNameRecursively();
-    end)
+        if numLeft % 2 == 0 then
+            LoadingIndicator.Progress:SetText( (numTotal - numLeft) .."/"..numTotal);
+        end
+
+        if numLeft == 0 then
+            --Loading Complete
+            f:SetScript("OnUpdate", nil);
+            f:Hide();
+            NPCBrowser_OnLoad(BrowserFrame);
+            LoadTexture();
+            LoadingIndicator.Progress:SetText("");
+            LoadingIndicator:Hide();
+        end
+    end
+    
+    After(1.5, function()
+        Loader:SetScript("OnUpdate", Loader_OnUpdate);
+    end);
 
     FavUtil:Load();
 end
@@ -3564,6 +3589,7 @@ function NarciNPCBrowserMixin:Init()
         LoadingIndicator = self.Container.LoadingIndicator;
         LoadingIndicator:Show();
         BuildNPCList();
+        BuildNPCList = nil;
         self.Container.Header.SearchTrigger:Hide();
     end
 end

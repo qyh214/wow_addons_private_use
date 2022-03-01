@@ -399,6 +399,10 @@ end
 
 local InspectCard;  --function
 
+local function ShutInspection()
+    InspectionFrame:Hide();
+end
+
 local function ToggleTracking(id)
     if not id then return end;
 
@@ -843,7 +847,7 @@ function ScrollUtil:UpdateScrollChild(direction)
     local p = self.position;
     local id;
     local positionIndex;
-    local realID, name, points, completed, month, day, year, description, flags, icon, rewardText;
+    local realID, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe;
     local card;
     for i = 1, NUM_ACHIEVEMENT_CARDS do
         card = self.activeCards[i];
@@ -857,8 +861,8 @@ function ScrollUtil:UpdateScrollChild(direction)
             id = self.achievementID[positionIndex];
             if id then
                 if card.id ~= id then
-                    realID, name, points, completed, month, day, year, description, flags, icon, rewardText = DataProvider:GetAchievementInfo(id);
-                    self.formatFunc(i, id, name, points, completed, month, day, year, description, flags, icon, rewardText);
+                    realID, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe = DataProvider:GetAchievementInfo(id);
+                    self.formatFunc(i, id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe);
                     card:Show();
                 else
                     card:Show();
@@ -2735,23 +2739,23 @@ function DateUtil:GetPastDays(day, month, year)
     local diff = self:GetDifference(day, month, year);
     local d = floor(diff / 86400);
     if d <= 0 then
-        return "Today"
+        return L["Today"]
     elseif d == 1 then
-        return "Yesterday"
+        return L["Yesterday"]
     elseif d < 31 then
-        return d .. " days ago"
+        return format(L["Format Days Ago"], d);
     else
         local m = floor(d / 30.5);
         if m <= 1 then
-            return m .. " month ago"
+            return L["A Month Ago"]
         elseif m < 12 then
-            return m .. " months ago"
+            return format(L["Format Months Ago"], m);
         else
             local y = floor(m / 12 + 0.15);
             if y == 1 then
-                return y .. " year ago"
+                return L["A Year Ago"]
             else
-                return y .. " years ago"
+                return format(L["Format Years Ago"], y);
             end
         end
     end
@@ -2976,6 +2980,7 @@ function TabUtil:SaveOffset()
         self.lastStatButton = button;
         self.lastStatScrollValue = offset;
     end
+    ShutInspection();
 end
 
 function TabUtil:ResumeOffset()

@@ -385,6 +385,8 @@ L["Emissary of the Tides"] = "Emissária das Marés"
 L["Enable Minimap Button"] = "Habilitar botão do minimapa"
 L["Enchanted Broodling"] = "Cria Encantada"
 L["Enchanted Emissary"] = "Emissária Encantada"
+--[[Translation missing --]]
+--[[ L["Encrypted"] = ""--]] 
 L["Enemies related to seasonal affixes are currently hidden"] = "Inimigos relacionados ao afixo de temporada estão atualmente escondidos"
 L["Enemy Info"] = "Informação de Inimigos"
 L["Enemy Info NPC Creature Type"] = "Informação de Inimigo PNJ Tipo de criatura "
@@ -1565,6 +1567,8 @@ L["Unyielding Contender"] = "Competidor Obstinado"
 --[[ L["Upstairs"] = ""--]] 
 L["Urg'roth, Breaker of Heroes"] = "Urg'roth, Rachador de Heróis"
 --[[Translation missing --]]
+--[[ L["Urh Relic"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Use /mdt reset to restore the default position and scale of MDT."] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Use as a starting point:"] = ""--]] 
@@ -1626,6 +1630,8 @@ L["Volatile Memory"] = "Lembrança Volátil"
 L["Vol'kaal"] = "Vol'kaal"
 L["Vol'zith the Whisperer"] = "Vol'zith, a Sussurrante"
 --[[Translation missing --]]
+--[[ L["Vy Relic"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Wandering Pulsar"] = ""--]] 
 L["Wandering Shellback"] = "Errante Cascadura"
 L["Wanton Sapper"] = "Sapadora Devassa"
@@ -1652,6 +1658,8 @@ L["Wicked Oppressor"] = "Opressora Perversa"
 L["Windspeaker Heldis"] = "Voz dos Ventos Heldis"
 L["Withered Fiend"] = "Malévolo Fenecido"
 L["Withered Manawraith"] = "Espectro de Mana Fenecido"
+--[[Translation missing --]]
+--[[ L["Wo Relic"] = ""--]] 
 L["Workshop Defender"] = "Defensor da Oficina"
 L["Wrath of Azshara"] = "Ira de Azshara"
 L["Wrathguard Bladelord"] = "Mestre das Lâminas Guardião Colérico"

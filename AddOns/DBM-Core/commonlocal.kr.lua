@@ -48,3 +48,4 @@ CL.BOSSTOGETHER				= "보스 붙이세요"
 CL.BOSSAPART					= "보스 떨어트리세요"
 CL.TANKCOMBO					= "탱커 연속 공격"
 CL.AOEDAMAGE						= "광역 데미지"
+CL.SEASONAL							= "시즌제"--Used for option headers to label options that apply to seasonal mechanics (Such as season of mastery on classic era)

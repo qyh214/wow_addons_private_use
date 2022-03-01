@@ -27,7 +27,7 @@ local unpack = unpack;
 --]]
 
 local enchantData = {
-    --[slotID] = { {spellID, itemID, enchantID, [icon]} }     --default icon: 463531
+    --[slotID] = { {spellID, itemID, enchantID, [icon], [requirement]} }     --default icon: 463531
     --Shadowlands and on
 
     [5] = {     --Chest
@@ -82,6 +82,9 @@ local enchantData = {
         {309622, 172365, 6227, 135905},     --Ascended Vigor
         {309621, 172367, 6226, 1519263},    --Eternal Grace
         {309620, 172370, 6223, 631519},     --Lightless Force
+
+        {321536, 172920, 6196, 3610512, 3},    --Optical Target Embiggener
+        {321535, 172921, 6195, 3610513, 3},    --Infra-green Reflex Sight
     },
 };
 

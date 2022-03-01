@@ -2,7 +2,7 @@ NarciGuideMixin = {};
 local tutorial;     --NarcissusDB
 local L = Narci.L;
 local After = C_Timer.After;
-local FadeFrame = NarciAPI_FadeFrame;
+local FadeFrame = NarciFadeUI.Fade;
 local FIXED_WIDTH = 270;
 local TEXT_INSET = 18;
 local CRITERIA_MET_MARK = "[OK]";
@@ -12,14 +12,13 @@ local function CloseGuide(self)
 end
 
 local function EmptyFunc()
-    return;
 end
 
 function NarciGuideMixin:OnShow()
     if tutorial[self.KeyValue] then
         tutorial[self.KeyValue] = false;
     end
-    UIFrameFadeIn(self, 0.25, 0, 1);
+    FadeFrame(self, 0.25, 1, 0);
     self:SetScale(NarcissusDB["GlobalScale"]);
     self:SetWidth(FIXED_WIDTH);
     local height = (self.Header:GetHeight() + self.Text:GetHeight() + 2 * (TEXT_INSET - 6) + 24 + 4 + 1);
@@ -52,7 +51,7 @@ function NarciGuideMixin:NewText(title, description, anchorTo, offsetX, offsetY,
     local t = buttonDelay or -1;
     if t >= 0 then
         After(t, function()
-            UIFrameFadeIn(self.Next, 0.25, 0, 1);
+            FadeFrame(self.Next, 0.25, 1, 0);
         end);
         if buttonFunc then
             if type(buttonFunc) == "function" then
@@ -68,28 +67,6 @@ function NarciGuideMixin:NewText(title, description, anchorTo, offsetX, offsetY,
 end
 
 ---------------------------------------------------------------------------------------
--------------------------
------Race Change Alert---
--------------------------
-local StopTimer = Narci_BioAlertFrame_StopTimer;     --PlayerModel.lua
-local function RaceChangeAlert_OnShow(self)
-    StopTimer();
-    --tutorial["RaceChange"] = false;
-end
-
-
---------------------------------
---Model Movement: New Gestures--
---------------------------------
-local function GestureListener()
-
-end
-
-
--------------------------
---Equipment Set Manager--
--------------------------
-
 
 -------------------------
 --Spell Visual Browser---
@@ -284,7 +261,7 @@ Initialization:SetScript("OnEvent", function(self, event, ...)
             IndexButton2:HookScript("OnLeave", function()
                 if not hasHidden then
                     hasHidden = true;
-                    FadeFrame(Entrance, 0.25, "OUT");
+                    FadeFrame(Entrance, 0.25, 0);
                 end
             end)
         end
@@ -300,6 +277,25 @@ Initialization:SetScript("OnEvent", function(self, event, ...)
                 end);
                 self:SetScript("OnShow", nil);
             end);
+        end
+
+        --Shards of Domination
+        key = tutorial["Domination"];
+        if key then
+            local parent = Narci_Attribute;
+            local Alert = CreateFrame("Frame", nil, parent,"NarciDominationNoEffectAlert");
+            local function onShowFunc()
+                Alert:ClearAllPoints();
+                Alert:SetPoint("CENTER", Narci_ItemLevelFrame, "CENTER", 0, 0);
+                Alert:ShowAlert();
+            end
+            local function onAlertShownFunc()
+                tutorial["Domination"] = false;
+            end
+            Alert.onShowFunc = onAlertShownFunc;
+            if not parent:GetScript("OnShow") then
+                parent:SetScript("OnShow", onShowFunc);
+            end
         end
     end)
 end);

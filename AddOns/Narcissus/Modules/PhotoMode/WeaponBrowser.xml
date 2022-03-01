@@ -30,14 +30,14 @@
                     </Anchors>
                 </Texture>
 
-				<FontString inherits="NarciIndicatorLetter" justifyH="LEFT" justifyV="TOP" parentKey="Name" text="Weapon Name" spacing="2">
+				<FontString inherits="NarciIndicatorTiny" justifyH="LEFT" justifyV="TOP" parentKey="Name" text="Weapon Name" spacing="2">
 					<Size x="150" y="0"/>
 					<Color r="0.66" g="0.66" b="0.66"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeKey="$parent.Background" relativePoint="TOPLEFT" x="28" y="-4.5"/>
 					</Anchors>
 				</FontString>
-				<FontString inherits="NarciIndicatorDigitTiny" justifyH="LEFT" justifyV="TOP" parentKey="IDText" text="1208">
+				<FontString inherits="NarciIndicatorTiny" justifyH="LEFT" justifyV="TOP" parentKey="IDText" text="1208">
 					<Size x="0" y="0"/>
 					<Color r="0.5" g="0.5" b="0.5"/>
 					<Anchors>
@@ -334,7 +334,7 @@
                         <Anchors>
                             <Anchor point="BOTTOM" relativeKey="$parent" relativePoint="BOTTOM" x="0" y="0"/>
                         </Anchors>
-                        <ButtonText inherits="NarciIndicatorDigitTiny" justifyH="CENTER" justifyV="CENTER" parentKey="ButtonText" text="SHOW_TUTORIALS">
+                        <ButtonText inherits="NarciIndicatorTiny" justifyH="CENTER" justifyV="CENTER" parentKey="ButtonText" text="SHOW_TUTORIALS">
                             <Color r="0.33" g="0.33" b="0.33"/>
                             <Anchors>
                                 <Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="1"/>
@@ -495,7 +495,7 @@
                                 self.Label:SetTextColor(0.72, 0.72, 0.72);
                             </OnLeave>
                             <OnLoad>
-                                self.Label:SetText("Search");
+                                self.Label:SetText(SEARCH);
                                 self:RegisterForDrag("LeftButton");
                             </OnLoad>
                             <OnDragStart>

@@ -90,16 +90,19 @@ local AchievementOptions = {
     ["ShowRedMark"] = false,                        --Mark achievement that was not earned by me with a red cross
 };
 
+
 local TutorialInclude = {
     "SpellVisualBrowser", "Movement", "ExitConfirmation",    --"IndependentMinimapButton" , "EquipmentSetManager"
     "NPCBrowserEntance", "NPCBrowser",
     "WeaponBrowser",
+    "Domination",   --disabled in 9.2
 };
 
 local function Initialize_NarcissusDB()
     NarcissusDB = NarcissusDB or {};                            --Account-wide Variables
     NarciCreatureOptions = NarciCreatureOptions or {};          --Creature Database
     NarciAchievementOptions = NarciAchievementOptions or {};    --Achievement Settings
+
     NarcissusDB_PC = NarcissusDB_PC or {};                      --Character-specific Variables
     NarcissusDB_PC.EquipmentSetDB = NarcissusDB_PC.EquipmentSetDB or {};
 

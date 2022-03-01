@@ -163,12 +163,15 @@ local difficultyTypes = addon.difficultyTypes;
 
 
 local KILLS = " [Kk]ills";  --Remove the words "kills" leave the boss's name.
+local BRACKET_CONTENT = " %(.+%)";
 
 local locale = GetLocale()
 if locale == "zhCN" then
-    
+    BRACKET_CONTENT = "（.+）";
+    KILLS = "消灭";
 elseif locale == "zhTW" then
-
+    BRACKET_CONTENT = "%(.+%)";
+    KILLS = "擊殺數";
 end
 locale = nil;
 
@@ -191,7 +194,7 @@ local function GetBossName(achievementID, instanceID)
         if not IsRaid(instanceID) then
             name = name .. " - "..DataProvider:GetInstanceName(instanceID)    --Add instance name as a suffix
         end
-        name = string.gsub(name, " %(.+%)", "");
+        name = string.gsub(name, BRACKET_CONTENT, "");
         name = string.gsub(name, KILLS, "");
     else
         name = string.gsub(name, KILLS, "");
@@ -200,7 +203,7 @@ local function GetBossName(achievementID, instanceID)
 end
 
 function DataProvider:GetInstanceName(instanceID)
-    --https://wow.tools/dbc/?dbc=journalinstance&build=9.1.5.40071#page=1
+    --https://wow.tools/dbc/?dbc=journalinstance&build=9.2.0.42423#page=1
     if not self.instanceNames then
         self.instanceNames = {};
     end
@@ -471,6 +474,8 @@ function NarciStatGenericCardMixin:SetData(achievementID, forcedUpdate)
             self:SetStat(achievementID);
         end
     end
+
+    --self.ValueText:SetText(achievementID);  --For Debug Display AchievementID
 end
 
 function NarciStatGenericCardMixin:Refresh()

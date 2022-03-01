@@ -381,6 +381,8 @@ L["Emissary of the Tides"] = "潮汐使者"
 L["Enable Minimap Button"] = "啟用小地圖按鈕"
 L["Enchanted Broodling"] = "魔化巢蛛"
 L["Enchanted Emissary"] = "魔力使者"
+--[[Translation missing --]]
+--[[ L["Encrypted"] = ""--]] 
 L["Enemies related to seasonal affixes are currently hidden"] = "目前已隱藏季詞綴相關的敵人"
 L["Enemy Info"] = "敵人資訊"
 L["Enemy Info NPC Creature Type"] = "種類"
@@ -1250,26 +1252,16 @@ L["Tarspitter Lurker"] = "喷油潜伏者"
 L["Tarspitter Slug"] = "喷油蛞蝓"
 L["Taskmaster Askari"] = "监工阿斯加里"
 L["Taunt"] = "嘲諷"
---[[Translation missing --]]
---[[ L["TazaveshFloor1"] = ""--]] 
---[[Translation missing --]]
---[[ L["TazaveshFloor2"] = ""--]] 
---[[Translation missing --]]
---[[ L["TazaveshFloor3"] = ""--]] 
---[[Translation missing --]]
---[[ L["TazaveshFloor4"] = ""--]] 
---[[Translation missing --]]
---[[ L["TazaveshFloor5"] = ""--]] 
---[[Translation missing --]]
---[[ L["TazaveshFloor6"] = ""--]] 
---[[Translation missing --]]
---[[ L["TazaveshFloor7"] = ""--]] 
---[[Translation missing --]]
---[[ L["TazaveshFloor8"] = ""--]] 
---[[Translation missing --]]
---[[ L["TazaveshLower"] = ""--]] 
---[[Translation missing --]]
---[[ L["TazaveshUpper"] = ""--]] 
+L["TazaveshFloor1"] = "帷幕市集"
+L["TazaveshFloor2"] = "大展示廳"
+L["TazaveshFloor3"] = "郵務總局"
+L["TazaveshFloor4"] = "奧彌薩的綠洲"
+L["TazaveshFloor5"] = "斯鐸海姆"
+L["TazaveshFloor6"] = "阿格拉瑪寶庫"
+L["TazaveshFloor7"] = "波拉勒斯港"
+L["TazaveshFloor8"] = "富饒樞核"
+L["TazaveshLower"] = "塔札維許: 奇觀街道"
+L["TazaveshUpper"] = "塔札維許: 索利亞的險招"
 L["tdBuffGateNote"] = "裡面可能有盟友，會依據他們的種族給你增益效果:%s獸人/矮人: 10%% 力量/敏捷%s不死族/人類: 10%% 耐力%s牛頭人/德萊尼: 每 10 秒回復 1%% 血量+法力%s血精靈/地精: 10%% 智力"
 L["tdGraveyardNote1"] = "擊敗沙后後開放"
 L["tdGraveyardNote2"] = "擊敗傑斯·嚎里斯後開放"
@@ -1394,6 +1386,8 @@ L["Upper Library"] = "圖書館上層"
 L["Upper Livery Stables"] = "獸欄上層"
 L["Upstairs"] = "上層"
 L["Urg'roth, Breaker of Heroes"] = "乌尔格斯，勇士噬灭者"
+--[[Translation missing --]]
+--[[ L["Urh Relic"] = ""--]] 
 L["Use /mdt reset to restore the default position and scale of MDT."] = "輸入 /mdt reset 來重置 MDT 視窗，恢復成預設的大小和位置。"
 L["Use as a starting point:"] = "從這個規劃路線開始編輯:"
 L["Valarjar Aspirant"] = "瓦拉加尔候选者"
@@ -1451,6 +1445,8 @@ L["Volcanic"] = "火山"
 L["Vol'kaal"] = "沃卡尔"
 L["Vol'zith the Whisperer"] = "低语者沃尔兹斯"
 --[[Translation missing --]]
+--[[ L["Vy Relic"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Wandering Pulsar"] = ""--]] 
 L["Wandering Shellback"] = "游荡的硬壳龟"
 L["Wanton Sapper"] = "暴虐的工兵"
@@ -1473,6 +1469,8 @@ L["Wicked Oppressor"] = "邪恶的镇压者"
 L["Windspeaker Heldis"] = "风语者海蒂丝"
 L["Withered Fiend"] = "枯法魔"
 L["Withered Manawraith"] = "枯法法力怨灵"
+--[[Translation missing --]]
+--[[ L["Wo Relic"] = ""--]] 
 L["Workshop Defender"] = "车间防御者"
 L["Wrath of Azshara"] = "艾萨拉之怒"
 L["Wrathguard Bladelord"] = "愤怒卫士剑圣"

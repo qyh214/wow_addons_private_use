@@ -312,14 +312,14 @@ L['mawsworn_cache_note'] = 'Es gibt 3 einzigartige Truhen, die jeweils an festge
 L['pile_of_bones'] = 'Knochenhaufen'
 L['relic_cache'] = 'Relikttruhe'
 L['shardhide_stash'] = 'Splitterfellvorrat'
-L['korthia_shared_chest_note'] = 'Es können täglich 5 Relikte von diesen Schätzen gesammelt werden, zusätzliche Schätze können noch {item:186017} und {item:187187} enthalten.'
+L['korthia_shared_chest_note'] = 'Kann 5 mal für Relikte geplündert werden. Der Fortschritt setzt sich alle 30 min zurück, was diese unbegrenzt macht.'
 L['unusual_nest'] = 'Nest aus ungewöhnlichen Materialien'
 L['unusual_nest_note'] = 'Jedes der 5 Nester kann täglich geplündert werden.'
 
 L['options_icons_invasive_mawshroom_desc'] = 'Zeigt die Positionen von Invasiven Schlundpilzen an.'
 L['options_icons_invasive_mawshroom'] = 'Invasiver Schlundpilz (tägliche)'
-L['options_icons_korthia_dailies_desc'] = 'Zeigt die Positionen von unmakierten täglichen Schätzen an.'
-L['options_icons_korthia_dailies'] = 'Versteckte Schätze (tägliche)'
+L['options_icons_korthia_dailies_desc'] = 'Zeigt die Positionen von unmakierten Relikttruhen an.'
+L['options_icons_korthia_dailies'] = 'Relikttruhen'
 L['options_icons_mawsworn_cache_desc'] = 'Zeigt die Positionen von Schlundgebundenen Truhen an.'
 L['options_icons_mawsworn_cache'] = 'Schlundgebundene Truhe (tägliche)'
 L['options_icons_nest_materials_desc'] = 'Zeigt die Positionen von Nestern aus ungewöhnlichen Materialien an.'
@@ -678,3 +678,143 @@ Die Bosse erscheinen in der unten aufgeführten Reihenfolge.
 
 Die {item:185972} kann wöchentlich geplündert werden und enthält 50 {currency:1906}.
 ]]
+
+-------------------------------------------------------------------------------
+-------------------------------- ZERETH MORTIS --------------------------------
+-------------------------------------------------------------------------------
+
+L['corrupted_architect_note'] = 'Greife {npc:183958} und {npc:183961} an, um den seltenen Gegner zu aktivieren.'
+L['dune_dominance_note'] = 'Alle drei seltenen Elite für den {achievement:15392} Erfolg erscheinen an dieser Position.'
+L['feasting_note'] = 'Umrundet manchmal das Gebiet, bevor er zu dieser Stelle zurückkehrt.'
+L['furidian_note'] = 'Aktiviere drei |cFFFFFD00Ermächtigter Schlüssel|r in dem Bereich, und entriegel dann den |cFFFFFD00Verdächtig wütender Tresor|r.'
+L['garudeon_note'] = 'Sammel {npc:183562} aus der Umgebung und verwenden {spell:362655}, um {npc:183554} zu füttern. Sobald alle drei gefüttert sind, wird {npc:180924} aktiv.'
+L['gluttonous_overgrowth_note'] = 'Zerbrich alle in der Nähe befindlichen {npc:184048n}, um den den selten Gegner zu aktivieren.'
+L['helmix_emote'] = '|cFFFF8C00Der Boden erzittert... Etwas gräbt sich unter der Oberfläche durch die Erde!|r'
+L['hirukon_note'] = [[
+Um {npc:180978} an die Oberfläche zu locken, muss ein {item:187923} hergestellt werden.
+
+1. Fische einen {item:187662} aus den nahen Gewässern.
+
+2. Fische einen {item:187915} aus dem |cFFFFFD00Stinkender Blobfischschwarm|r im Der Echsenkessel in den Zangarmarschen. Das Becken befindet sich rechts, wenn du die Höhle betrittst.
+
+3. Fische einen {item:187922} von der |cFFFFFD00Flipper Fish School|r in der Nähe des Flugplatzes Kelyas Grab in Nazjatar (72.8 24.3).
+
+4. Plündere ein (sehr gut verstecktes) {item:187916} auf einem Balkon in der zweiten Ebene der Terrasse von Nar'shola in der Schimmernde Weiten in Vashj'ir (34.7, 75.0).
+
+5. Finde {npc:182194} am Teich südlich des Sitzes des Primus in Maldraxxus (57.6 92.0). Bitte Sie, den fertigen {item:187923} herzustellen.
+
+6. Benutze den {item:187923}, der es ermöglicht, den Fischteich |cFFFFFD00Aurelid Cluster|r in der Nähe von {npc:180978} für 15min zu sehen. Fische darin, um {npc:180978} an die Oberfläche zu locken.
+]] -- review later
+L['orixal_note'] = 'Teilt sich einen spawn mit dem {npc:185487}, der das Gebiet patrouilliert.'
+L['protector_first_ones_note'] = 'Benötigt zwei Spieler. Bringt die passenden Runen zu jeder Konsole (in der Umgebung zu finden), um die Barriere zu öffnen.'
+L['the_engulfer_note'] = 'Verteidige {npc:183505} bis {npc:183516} aus dem Riss springt.'
+L['zatojin_note'] = 'Greife die in der Nähe befindlichen {npc:183721} an und lass dir 20 Stapel von {spell:362976} verpassen, bis du {spell:362983} bist. Du musst über den {npc:183774} Leichen stehen, wenn du gelähmt bist, damit {npc:183764} dich bemerkt.'
+
+L['architects_reserve_note'] = 'Schließe die {quest:64829} Questreihe von {npc:180630} in der Huld des Pilgers ab. Beende am nächsten Tag die {quest:65426} von {npc:181273}, um den Schatz freizuschalten.'
+L['bushel_of_produce_note'] = 'Töte einen {npc:182368} im Norden während er den Stärkungszauber {spell:360945} hat, um diesen selbst zu erhalten. Töte weitere {npc:182368s} (diese brauchen den Stärkungszauber nicht), bis du 5 Stapel hast, dann brich die Tür zum Schatz auf.'
+L['crushed_crate_note'] = 'Plündere das {item:189767}, das auf der umgestürzten Säule über dem Schatz liegt. Gib dieses {npc:185151} im Austausch für den {item:189768} der die heruntergefallenen Felsen zerbrechen kann.'
+L['domination_cache_note'] = 'Der {item:189704} hat eine geringe Chance von {npc:181403} und {npc:182426} in der Gegend fallen gelassen zu werden.'
+L['drowned_broker_supplies_note'] = 'Sage {npc:181059}, er soll die Kontrolle über einen nahe gelegenen {npc:185282} übernehmen.'
+L['forgotten_protovault_note'] = 'Nur während der {wq:Verfroscht} Weltquest verfügbar.'
+L['grateful_boon_note'] = 'Ohne Fliegen schwer zu erreichen; Benutze das {spell:300728} oder ein {spell:111771}, um den Berg zu besteigen. Besänftige alle 12 Kreaturen in dem Gebiet und {npc:185293} lässt den Schatz erscheinen.'
+L['library_vault_note'] = 'Klicke die Tafeln in der Grotte der Lexik an, bis du den richtigen {spell:362062} Stärkungszauber findest, um damit das Bibliotheksarchiv zu öffnen.'
+L['mistaken_ovoid_note'] = 'In der Höhle der Dimensionenfälle. Sammel 5x {item:190239} und bring diese zu {npc:185280}.'
+L['ripened_protopear_note'] = 'Beginne die {quest:64641} Questreihe, um Zugang zur Blühenden Gießerei zu erhalten. Sammel dort drinne 5 Stapel der {spell:367180} (grüne Wolken) und bestäube damit die {npc:185416}.'
+L['sphere_treasure_note'] = 'Springe vorsichtig die Kugeln hoch, bis du den Schatz erreichst.'
+L['submerged_chest_note'] = 'Nimm die |cFFFFFD00Gefährliche Kugel der Macht|r im Süden auf und interagiere dann mit der |cFFFFFD00Vergessene Pumpe|r nahe des Schatzes.'
+L['symphonic_vault_note'] = 'Untersuche {npc:183998}, um eine Folge von vier Tönen zu hören. Jede {npc:183950} in dem Raum spielt einen einzigen Ton. Interagiere mit ihnen in der richtigen Reihenfolge, um den Schatz freizuschalten.'
+L['syntactic_vault_note'] = 'Sammel 6 Stapel der {spell:367499} durch Interagieren mit |cFFFFFD00Runensilbe|r im Gebiet Mausoleum der Ersten, um den Schatz freizuschalten.'
+L['template_archive_note'] = 'Stoße die {npc:183339} im Raum in die {npc:183337}, die den Weg zum Schatz versperrt.'
+L['undulating_foliage_note'] = [[
+Drücke die vier {npc:185390n}, um den Teleporter im mittleren Raum der Katalysatorstationen zu aktivieren.
+
+• Draußen hinter dem |cFFFFFD00Schloss der Katalysatorstationen|r
+• Im südwestlichen Raum der Stationen
+• Im südlichen Raum mit {npc:181652}
+• Im südöstlichen Raum der Stationen
+]]
+
+L['prying_eye_discovery'] = 'Entdeckung des Spürauges'
+L['prying_eye_discovery_note'] = 'Leichter zu erreichen, sobald das Fliegen freigeschaltet ist.'
+L['pulp_covered_relic'] = 'Breibedecktes Relikt'
+L['sandworn_chest'] = 'Sandgeschliffene Truhe'
+L['sandworn_chest_note'] = 'Plündere 5x {item:190198} von Gegnern in dem Gebiet, um einen {item:190197} zu bauen.'
+
+L['cache_avian_nest'] = 'Ornidennest'
+L['cache_cypher_bound'] = 'Chiffrengebundene Truhe'
+L['cache_discarded_automa'] = 'Weggeworfener Automaschrott'
+L['cache_forgotten_vault'] = 'Vergessener Schatztresor'
+L['cache_mawsworn_supply'] = 'Schlundgebundene Vorratstruhe'
+L['cache_tarachnid_eggs'] = 'Tarachnideneier'
+
+L['cache_cantaric'] = 'Kantarische Truhe'
+L['cache_fugueal'] = 'Fugalische Truhe'
+L['cache_glissandian'] = 'Glissandische Truhe'
+L['cache_mezzonic'] = 'Mezzonische Truhe'
+L['cache_toccatian'] = 'Toccatianische Truhe'
+
+L['schematic_treasure_note'] = '|cFFFF8C00Dieser Schatz wird den Protoform Bauplan nicht enthalten, wenn der Synthesizer noch nicht freigeschaltet wurde. Wenn du den Schatz bereits geplündert hast, findest du den Bauplan in der Nähe auf dem Boden.|r'
+L['schematic_treasure_mount_note'] = '|cFFFF8C00Dieser Bauplan befindet sich in einem nahegelegenen, einmal zu erhaltendem Schatz. Wenn der Schatz geöffnet wird, bevor der Reittier-Synthesizer freigeschaltet wurde, kann der Bauplan hier gefunden werden.|r'
+L['schematic_treasure_pet_note'] = '|cFFFF8C00Dieser Bauplan befindet sich in einem nahegelegenen, einmal zu erhaltendem Schatz. Wenn der Schatz geöffnet wird, bevor der Haustier-Synthesizer freigeschaltet wurde, kann der Bauplan hier gefunden werden.|r'
+L['schematic_bronze_helicid_note'] = 'Hat eine Chance in der {item:190610} von der zweiwöchentlichen Quest {quest:65324} enthalten zu sein.'
+L['schematic_ambystan_darter_note'] = 'Versteckt im Wasser neben dem {npc:185312}.'
+L['schematic_bronzewing_vespoid_note'] = 'Zu finden in der Trächtigen Rast.'
+L['schematic_buzz_note'] = 'Hat eine Chance in einem {npc:185265} enthalten zu sein.'
+L['schematic_darkened_vombata_note'] = 'Befindet sich in einem schwebendem Käfig.'
+L['schematic_deathrunner_note'] = 'Gibt es zur Belohnung als Teil der {spell:366367} Questreihe.'
+L['schematic_desertwing_hunter_note'] = 'Befindet sich oben auf der Säule.'
+L['schematic_fierce_scarabid_note'] = 'Versteckt unter der Plattform, auf der der {npc:181870} steht.'
+L['schematic_forged_spiteflyer_note'] = 'Ragt aus einem Vespiden Bienenstock heraus.'
+L['schematic_genesis_crawler_note'] = 'Befindet sich über dem Eingang zur Genesisalkoven.'
+L['schematic_goldplate_bufonid_note'] = 'Geringe Chance von {npc:178803} fallen gelassen zu werden.'
+L['schematic_heartbond_lupine_note'] = 'Geringe Chance von {npc:179939} fallen gelassen zu werden.'
+L['schematic_leaping_leporid_note'] = 'Zu finden auf einem schwebendem Baum.'
+L['schematic_microlicid_note'] = 'Auf dem untersten Ast des schwebendem Baumes, unter dem Blätterwerk.'
+L['schematic_pale_regal_cervid_note'] = 'Erforsche alle Chiffren an der {npc:181397}, um den Erfolg {achievement:15402} zu erhalten.'
+L['schematic_prototickles_note'] = 'An einer schwebenden Kette im Inneren der Ranken über dem seltenen Gegner {npc:180978}.'
+L['schematic_raptora_swooper_note'] = 'Zu finden in der Kammer der Gestaltung'
+L['schematic_resonant_echo_note'] = 'Hat eine Chance in {item:189172} enthalten zu sein.'
+L['schematic_russet_bufonid_note'] = 'Hat eine Chance in der {item:187780} (Paragontruhe) enthalten zu sein.'
+L['schematic_scarlet_helicid_note'] = 'Zu finden auf der Spitze des Bogens.'
+L['schematic_shelly_note'] = 'Befindet sich auf der Rückseite eines Regals in der Grotte der Lexik. Erfordert eine Teleport Fähigkeit, um das Regal zu erklimmen.'
+L['schematic_tarachnid_creeper_note'] = 'In einem kleinen Gebäude in den Endlosen Sande.'
+L['schematic_terror_jelly_note'] = 'Oben auf dem quadratischen Pylon neben der Rampe.'
+L['schematic_tunneling_vombata_note'] = 'Neben einigen Trümmern in einem versperrten Tunnel im Lokrische Esper Komplex.'
+L['schematic_vespoid_flutterer_note'] = 'Ragt aus einem Sandhaufen auf der Primus-Locus-Ebene der Hallenden Gipfel heraus.' -- review
+
+L['concordance_excitable'] = 'Erregbare Konkordanz'
+L['concordance_mercurial'] = 'Wechselhafte Konkordanz'
+L['concordance_tranquil'] = 'Stille Konkordanz'
+L['concordance_note'] = 'Lese jede Konkordanz, um Einträge in der |cFFFFFD00Wissenskonsole|r freizuschalten, die sich in der |cFFFFFD00Höhle des Verbannten|r befindet.'
+
+L['echoed_jiro_note'] = 'Gebe {npc:181059}energie aus, um temporäre Verstärkungszauber zu erhalten. Benötigt die |cFFFFFD00Createsisch|r Forschung an der {npc:181397}.'
+
+L['bygone_elemental_note'] = 'Ein {npc:181221} kann anstelle eines {npc:179007} in dem Gebiet erscheinen.'
+L['gaiagantic_note'] = 'Erscheint nur, wenn {npc:177958} die tägliche Quest {quest:64785} anbietet.'
+L['misaligned_enforcer_note'] = 'Patrouilliert das Gebiet und verschwindet am Ende seiner Route.'
+L['overcharged_vespoid_note'] = 'Kann als Teil eines Schwarmes in der Gegend erscheinen.'
+L['runethief_xylora_note'] = 'Erscheint getarnt im Gebiet von Huld des Pilgers.'
+
+L['patient_bufonid_note'] = 'Schreite in der Geschichte von Zereth Mortis voran, bis {npc:180950} die Quest {quest:65727} anbietet. Erfülle diese täglich, um {npc:185798} aus dem Teich zu locken.'
+L['patient_bufonid_note_day1'] = 'Sammel 15x {item:190852} von Vespiden aus dieser Zone.'
+L['patient_bufonid_note_day2'] = 'Kaufe 30x {item:172053} aus dem Auktionshaus.'
+L['patient_bufonid_note_day3'] = 'Kaufe 200x {item:173202} aus dem Auktionshaus.'
+L['patient_bufonid_note_day4'] = 'Kaufe 10x {item:173037} aus dem Auktionshaus.'
+L['patient_bufonid_note_day5'] = 'Sammel 5x {item:187704} von Gegner aus dieser Zone.'
+L['patient_bufonid_note_day6'] = 'Kaufe 5x {item:190880} von {npc:185748} (58.3 49.9) in der Nähe von Huld des Pilgers.'
+L['patient_bufonid_note_day7'] = 'Kaufe 1x {item:187171} von dem {npc:180114} aus dem Tazavesh Dungeon.'
+
+L['options_icons_code_creature'] = '{achievement:15211}'
+L['options_icons_code_creature_desc'] = 'Zeigt die Positionen der Kreaturen für den {achievement:15211} Erfolg an.'
+L['options_icons_concordances'] = 'Wissens Konkordanzen'
+L['options_icons_concordances_desc'] = 'Zeigt die Positionen von Konkordanzen an.'
+L['options_icons_echoed_jiros'] = 'Echo von Jiro'
+L['options_icons_echoed_jiros_desc'] = 'Zeigt die Positionen für die Gaben-Stärkungszauber der |cFFFFFD00Echo von Jiro|r an.'
+L['options_icons_exile_tales'] = '{achievement:15509}'
+L['options_icons_exile_tales_desc'] = 'Zeigt die Positionen der Geschichten für den Erfolg {achievement:15509} an.'
+L['options_icons_protoform_schematics'] = 'Protoform Baupläne'
+L['options_icons_protoform_schematics_desc'] = 'Zeigt die Positionen der Reittier und Haustier Baupläne an.'
+L['options_icons_puzzle_caches'] = 'Schätze der Schöpfung'
+L['options_icons_puzzle_caches_desc'] = 'Zeigt die möglichen Positionen von Schätzen der Schöpfung an.'
+L['options_icons_zereth_caches'] = 'Chiffren Truhen'
+L['options_icons_zereth_caches_desc'] = 'Zeigt mögliche Positionen für Truhen, die Chiffren der Ersten enthalten.'

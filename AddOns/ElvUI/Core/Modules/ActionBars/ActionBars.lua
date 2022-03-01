@@ -9,11 +9,13 @@ local ClearOnBarHighlightMarks = ClearOnBarHighlightMarks
 local ClearOverrideBindings = ClearOverrideBindings
 local ClearPetActionHighlightMarks = ClearPetActionHighlightMarks
 local CreateFrame = CreateFrame
+local GetCVarBool = GetCVarBool
 local GetBindingKey = GetBindingKey
 local GetSpellBookItemInfo = GetSpellBookItemInfo
 local HasOverrideActionBar = HasOverrideActionBar
 local hooksecurefunc = hooksecurefunc
 local InCombatLockdown = InCombatLockdown
+local InClickBindingMode = InClickBindingMode
 local IsPossessBarVisible = IsPossessBarVisible
 local PetDismiss = PetDismiss
 local RegisterStateDriver = RegisterStateDriver
@@ -39,6 +41,7 @@ local SPELLS_PER_PAGE = SPELLS_PER_PAGE
 local TOOLTIP_UPDATE_TIME = TOOLTIP_UPDATE_TIME
 local NUM_ACTIONBAR_BUTTONS = NUM_ACTIONBAR_BUTTONS
 local COOLDOWN_TYPE_LOSS_OF_CONTROL = COOLDOWN_TYPE_LOSS_OF_CONTROL
+local CLICK_BINDING_NOT_AVAILABLE = CLICK_BINDING_NOT_AVAILABLE
 local C_PetBattles_IsInBattle = C_PetBattles and C_PetBattles.IsInBattle
 
 local LAB = E.Libs.LAB
@@ -890,6 +893,12 @@ function AB:SpellButtonOnEnter(_, tt)
 	if tt:IsForbidden() then return end
 	tt:SetOwner(self, 'ANCHOR_RIGHT')
 
+	if InClickBindingMode() and not self.canClickBind then
+		tt:AddLine(CLICK_BINDING_NOT_AVAILABLE, 1, .3, .3)
+		tt:Show()
+		return
+	end
+
 	local slot = _G.SpellBook_GetSpellBookSlot(self)
 	local needsUpdate = tt:SetSpellBookItem(slot, _G.SpellBookFrame.bookType)
 
@@ -991,6 +1000,15 @@ function AB:DisableBlizzard()
 		button:SetScript('OnLeave', AB.SpellButtonOnLeave)
 	end
 
+	-- same deal with profession buttons, this will fix the tainting
+	for _, frame in pairs({ _G.SpellBookProfessionFrame:GetChildren() }) do
+		for i = 1, 2 do
+			local button = frame['button'..i]
+			button:SetScript('OnEnter', AB.SpellButtonOnEnter)
+			button:SetScript('OnLeave', AB.SpellButtonOnLeave)
+		end
+	end
+
 	-- MainMenuBar:ClearAllPoints taint during combat
 	_G.MainMenuBar.SetPositionForStatusBars = E.noop
 
@@ -1038,6 +1056,13 @@ function AB:DisableBlizzard()
 	_G.InterfaceOptionsActionBarsPanelPickupActionKeyDropDown:SetAlpha(0)
 	_G.InterfaceOptionsActionBarsPanelLockActionBars:SetScale(0.0001)
 	_G.InterfaceOptionsActionBarsPanelLockActionBars:SetAlpha(0)
+
+	_G.InterfaceOptionsCombatPanelAutoSelfCast:Hide()
+	_G.InterfaceOptionsCombatPanelSelfCastKeyDropDown:Hide()
+	_G.InterfaceOptionsCombatPanelEnableMouseoverCast:Hide()
+	_G.InterfaceOptionsCombatPanelMouseoverCastKeyDropDown:Hide()
+	_G.InterfaceOptionsCombatPanelFocusCastKeyDropDown:Hide()
+	_G.InterfaceOptionsCombatPanel.clickCastingButton:SetPoint(_G.InterfaceOptionsCombatPanelEnableMouseoverCast:GetPoint())
 
 	AB:SecureHook('BlizzardOptionsPanel_OnEvent')
 
@@ -1118,6 +1143,7 @@ function AB:UpdateButtonConfig(barName, buttonName)
 		button:SetAttribute('buttonlock', AB.db.lockActionBars or nil)
 		button:SetAttribute('checkselfcast', AB.db.checkSelfCast or nil)
 		button:SetAttribute('checkfocuscast', AB.db.checkFocusCast or nil)
+		button:SetAttribute('checkmouseovercast', GetCVarBool('enableMouseoverCast') or nil)
 		button:SetAttribute('unit2', AB.db.rightClickSelfCast and 'player' or nil)
 
 		button:UpdateConfig(bar.buttonConfig)

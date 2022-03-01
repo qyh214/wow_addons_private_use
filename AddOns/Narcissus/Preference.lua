@@ -1,8 +1,8 @@
 local L = Narci.L;
 --NARCI_NEW_ENTRY_PREFIX..
 local TabNames = { 
-    L["Interface"], L["Shortcuts"], NARCI_NEW_ENTRY_PREFIX..L["Themes"], L["Effects"], L["Camera"], L["Transmog"],
-    L["Photo Mode"], L["NPC"], NARCI_NEW_ENTRY_PREFIX..EXPANSION_NAME8, L["Extensions"],
+    L["Interface"], L["Shortcuts"], L["Themes"], L["Effects"], L["Camera"], L["Transmog"],
+    L["Photo Mode"], L["NPC"], EXPANSION_NAME8, L["Extensions"],
 };  --Credits and About will be inserted later
 
 local FadeFrame = NarciFadeUI.Fade;
@@ -780,7 +780,7 @@ local Structure = {
     {Category = "Shortcuts", localizedName = L["Shortcuts"], layout = {
         { name = "MinimapButton", type = "header", localizedName = L["Minimap Button"], },
         { name = "ShowMinimapButton", type = "checkbox", localizedName = ENABLE, valueFunc = MinimapButtonSwitch_SetState, onShowFunc = MinimapButtonSwitch_OnShow, parentButton = true, },
-        { name = "ShowModulePanelOnMouseOver", type = "checkbox", localizedName = NARCI_NEW_ENTRY_PREFIX..L["Show Module Panel Gesture"], valueFunc = ModulePanelSwitch_SetState, childButton = true,},
+        { name = "ShowModulePanelOnMouseOver", type = "checkbox", localizedName = L["Show Module Panel Gesture"], valueFunc = ModulePanelSwitch_SetState, childButton = true,},
         { name = "IndependentMinimapButton", type = "checkbox", localizedName = L["Independent Minimap Button"], valueFunc = MinimapButtonParentSwitch_SetState, childButton = true, },
         { name = "FadeButton", type = "checkbox", localizedName = L["Fade Out"], description = L["Fade Out Description"], valueFunc = FadeOutSwitch_SetState, childButton = true, },
         { name = "Space", type = "space", height = -16},
@@ -959,7 +959,7 @@ function NarciPreferenceSliderMixin:SetUp(labelText, minValue, maxValue, valueSt
         self:SetMinMaxValues(minValue, maxValue);
         self:SetValueStep(valueStep);
         NarciAPI_SliderWithSteps_OnLoad(self);  --Draw Markers
-        OptimizeBorderThickness(self);
+        --OptimizeBorderThickness(self);
     end
     if valueFunc then
         if isCVar then
@@ -1686,8 +1686,9 @@ end
 -----------------
 local function SetCreditList()
     local ACIVE_COLOR = "|cffd9ccb4";
-    local ACTIVE_PATRONS = {"Elexys", "Solanya", "Erik Shafer", "Pierre-Yves Bertolus", "Lars Norberg",  "Ernaldo Kalaja", "Alex Boehm", "David Brooks", "Sztuk", "Celierra&Darvian", };
-    local FORMER_PATRONS = {"Adam Stribley", "Valnoressa", "Ellypse", "Stephen Berry", "Mccr Karl", "Christian Williamson", "Tzutzu", "Psyloken", "Victor Torres", "Nina Recchia", "Ben Ashley", "Andrew Phoenix", "Nantangitan", "Blastflight", "Adrien Le Texier", "acein", "Jesse Blick", "Webb", "heiteo"};
+    local ACTIVE_PATRONS = {"Elexys", "Solanya", "Erik Shafer", "Pierre-Yves Bertolus", "Celierra&Darvian", "Alex Boehm", "Terradon", "Brian Haberer", "Albator S.", "Lars Norberg", "Miroslav Kovac", };
+    local FORMER_PATRONS = {"Miroslav Kovac", "Knightlord", "Andrew Phoenix", "Ellypse", "Nantangitan", "Blastflight ", "Valnoressa", "Nimrodan", "Brux", "Karl", "Webb", "Acein", "Christian Williamson", "Tzutzu",
+    "Anthony Cordeiro", "Nina Recchia", "heiteo", "Psyloken", "Jesse Blick", "Victor Torres", };
     local RawList = {};
     for i = 1, #ACTIVE_PATRONS do
         tinsert(RawList, ACIVE_COLOR.. ACTIVE_PATRONS[i] .."|r");
@@ -1700,14 +1701,14 @@ local function SetCreditList()
     local mod = mod;
     local index;
     for i = 1, #RawList do
-            index = mod(i, 3);
-            if index == 1 then
-                tinsert(LeftList, RawList[i]);
-            elseif index == 2 then
-                tinsert(MidList, RawList[i]);
-            else
-                tinsert(RightList, RawList[i]);
-            end
+        index = mod(i, 3);
+        if index == 1 then
+            tinsert(LeftList, RawList[i]);
+        elseif index == 2 then
+            tinsert(MidList, RawList[i]);
+        else
+            tinsert(RightList, RawList[i]);
+        end
     end
 
     local LEFT, MID, RIGHT;
@@ -1782,6 +1783,22 @@ function Narci_CreditList_OnFinished(self)
 end
 
 ----------------------------------------------------
+local function ResetMinimap_OnEnter(self)
+    self.Label:SetTextColor(0.88, 0.88, 0.88);
+    self.Icon:SetVertexColor(0.88, 0.88, 0.88);
+end
+
+local function ResetMinimap_OnLeave(self)
+    self.Label:SetTextColor(0.24, 0.78, 0.92);
+    self.Icon:SetVertexColor(0.66, 0.66, 0.66);
+end
+
+local function ResetMinimap_OnClick(self)
+    self.AnimRotate:Play();
+    Narci_MinimapButton:ResetPosition();
+end
+
+----------------------------------------------------
 NarciPreferenceMixin = CreateFromMixins(NarciChamferedFrameMixin);
 
 function NarciPreferenceMixin:OnLoad()
@@ -1843,6 +1860,14 @@ function NarciPreferenceMixin:OnLoad()
     EditBox:SetScript("OnSpacePressed", OffsetSetting_EditBox_Confirm);
 
     CreateLanguageOptions(tab, tab.Translator);
+
+    --"Reset" Button
+    local resetButton = Tabs.Tab2.ResetButton;
+    resetButton:SetScript("OnEnter", ResetMinimap_OnEnter);
+    resetButton:SetScript("OnLeave", ResetMinimap_OnLeave);
+    resetButton:SetScript("OnClick", ResetMinimap_OnClick);
+    ResetMinimap_OnLeave(resetButton);
+    resetButton:SetWidth( (resetButton.Label:GetWidth() or 20) + 48 );
 
     --Build Tab Buttons
     BuildTabButtonList(self.TabButtonFrame, "Narci_TabButtonTemplate", TabNames, 0, -12);

@@ -14,3 +14,5 @@ NARCI_GROUP_PHOTO_NOTIFICATION = "Por favor selecione um jogador.";
 NARCI_NPC_BROWSER_TITLE_LEVEL = ".ível %?%?.?";
 
 L["Item Bonus"] = "Bônus:";
+L["No Service"] = "Sem Serviço";
+L["Shards Disabled"] = "Estilhaço de Dominação estão desabilitados fora de A Gorja.";

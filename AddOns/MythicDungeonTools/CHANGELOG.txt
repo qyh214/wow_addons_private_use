@@ -1,3 +1,10 @@
+v3.8.2
+- fix nil error
+v3.8.1
+- added Tazavesh M+ Dungeons
+- added Encrypted Affix (big thanks to Blazeton once again for the contribution!)
+v3.7.7
+- fixed an issue for sending presets via chat links for character names starting with lower case letters
 v3.7.5
 - fix anchor connection bug when dragging and reordering pulls
 v3.7.4

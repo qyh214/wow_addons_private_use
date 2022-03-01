@@ -102,7 +102,7 @@ addon.difficultyTypes = difficultyTypes;
 
 ---- Raid InstanceID --
 local raidInstanceID = {
-    1190, 1193,
+    1190, 1193, 1195,
     1031, 1176, 1177, 1179, 1180,
     768, 786, 861, 875, 946,
     477, 457, 669,
@@ -151,7 +151,7 @@ end
 --[categoryID] = { {achievementIDs}, difficultyType, icon, instanceID(optional) }
 
 list[15430] = {
-    --Dungeons & Raids - Shadowlands
+    --Dungeons & Raids - Shadowlands 15430
     { {14387, 14388, 14389}, 3, 3601564, 1188},    --DeOtherSide
     { {14390, 14391, 14392}, 3, 3601530, 1185},    --Atonement
     { {14393, 14394, 14395}, 3, 3601534, 1184},    --Mists
@@ -185,6 +185,19 @@ list[15430] = {
     {{15164, 15165, 15166, 15167}, 4, 4062732, 1193},    --Fatescribe Roh-Kalo
     {{15169, 15170, 15171, 15172}, 4, 4062734, 1193},    --Kel'Thuzad
     {{15173, 15174, 15175, 15176}, 4, 4062738, 1193},    --Sylvanas
+
+    -1195,  --Sepulcher of the First Ones
+    {{15424, 15425, 15426, 15427}, 4, 4254081, 1195},    --Vigilant Guardian
+    {{15428, 15429, 15430, 15431}, 4, 4254082, 1195},    --Skolex
+    {{15432, 15433, 15434, 15435}, 4, 4254076, 1195},    --Artificer Xy'mox2
+    {{15436, 15437, 15438, 15439}, 4, 4254078, 1195},    --Dausegne
+    {{15440, 15441, 15442, 15443}, 4, 4254087, 1195},    --Prototype Pantheon
+    {{15444, 15445, 15446, 15447}, 4, 4254089, 1195},    --Lihuvim
+    {{15448, 15449, 15450, 15451}, 4, 4254083, 1195},    --Halondrus
+    {{15452, 15453, 15454, 15455}, 4, 4254075, 1195},    --Anduin
+    {{15456, 15457, 15458, 15459}, 4, 4254079, 1195},    --Lords of Dread
+    {{15460, 15461, 15462, 15463}, 4, 4254077, 1195},    --Rygelon
+    {{15464, 15465, 15466, 15467}, 4, 4254080, 1195},    --The Jailer
 };
 
 list[15409] = {
@@ -780,7 +793,7 @@ local function GetQuestReading()
         local f = "Completed: %s (%s words)  Reading: %s (%s wpm)";
         return string.format(f, numQuests, numWords, timeReading, speed);
     else
-        return
+        return NONE;
     end
 end
 

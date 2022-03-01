@@ -1,5 +1,5 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.38 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.39 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for
@@ -53,19 +53,21 @@ local ParagonItemInfoReceivedQueue = {}
 local function AddParagonRewardsToTooltip(self,tooltip,rewards)
 	if rewards then
 		for index,data in ipairs(rewards) do
-			local collected
 			local name,link,quality,_,_,_,_,_,_,icon = GetItemInfo(data.itemID)
-			if data.type == MOUNT then
-				collected = select(11,C_MountJournal.GetMountInfoByID(data.mountID))
-			elseif data.type == PET and link then
-				collected = ParagonIsPetOwned(link)
-			elseif data.type == TOY then
-				collected = PlayerHasToy(data.itemID)
-			elseif data.type == BINDING_HEADER_OTHER then
-				collected = C_QuestLog.IsQuestFlaggedCompleted(data.questID)
-			end
 			if name then
-				tooltip:AddLine(string.format("%s|T%d:0|t %s |cffffd000(|r|cffffffff%s|r|cffffd000)|r",collected and "|A:common-icon-checkmark:14:14|a " or "|A:common-icon-redx:14:14|a ",icon,name,data.type),ITEM_QUALITY_COLORS[quality].r,ITEM_QUALITY_COLORS[quality].g,ITEM_QUALITY_COLORS[quality].b)
+				local collected
+				if data.type == MOUNT then
+					collected = select(11,C_MountJournal.GetMountInfoByID(data.mountID))
+				elseif data.type == PET and link then
+					collected = ParagonIsPetOwned(link)
+				elseif data.type == TOY then
+					collected = PlayerHasToy(data.itemID)
+				elseif data.type == ITEM_COSMETIC then
+					collected = C_TransmogCollection.PlayerHasTransmogByItemInfo(data.itemID)
+				elseif data.type == BINDING_HEADER_OTHER then
+					collected = C_QuestLog.IsQuestFlaggedCompleted(data.questID)
+				end
+				tooltip:AddLine(string.format("|A:common-icon-%s:14:14|a |T%d:0|t %s %s",collected and "checkmark" or "redx",icon,name,data.covenant or "|cffffd000(|r|cffffffff"..data.type.."|r|cffffd000)|r"),ITEM_QUALITY_COLORS[quality].r,ITEM_QUALITY_COLORS[quality].g,ITEM_QUALITY_COLORS[quality].b)
 			else
 				tooltip:AddLine(ERR_TRAVEL_PASS_NO_INFO,1,0,0)
 				ParagonItemInfoReceivedQueue[data.itemID] = self
@@ -100,7 +102,7 @@ function ParagonReputation:Tooltip(self,event)
 	end
 end
 
--- [GameTooltip] Hook the Reputation Bars Scripts to show the Tooltip.
+-- [GameTooltip] Hook the Reputation Bars.
 function ParagonReputation:HookScript()
 	for n=1,NUM_FACTIONS_DISPLAYED do
 		if _G["ReputationBar"..n] then
@@ -222,7 +224,7 @@ hooksecurefunc("ReputationFrame_Update",function()
 						paragonFrame.Check:SetShown(true)
 						paragonFrame:Show()
 						-- If value is 0 we force it to 1 so we don't get 0 as result, math...
-						local over = ((value <= 0 and 1) or value)/threshold
+						local over = math.max(value,1)/threshold
 						if not factionBar.ParagonOverlay then PR:CreateBarOverlay(factionBar) end
 						factionBar.ParagonOverlay:Show()
 						factionBar.ParagonOverlay.bar:SetWidth(factionBar.ParagonOverlay:GetWidth()*over)
@@ -245,7 +247,7 @@ hooksecurefunc("ReputationFrame_Update",function()
 					elseif PR.DB.text == "VALUE" then
 						factionStanding:SetText(" "..BreakUpLargeNumbers(value).." / "..BreakUpLargeNumbers(threshold))
 						factionRow.standingText = (" "..BreakUpLargeNumbers(value).." / "..BreakUpLargeNumbers(threshold))
-						factionRow.rolloverText = nil					
+						factionRow.rolloverText = nil
 					elseif PR.DB.text == "DEFICIT" then
 						if hasRewardPending then
 							value = value-threshold
