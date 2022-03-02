@@ -7,12 +7,16 @@ LEG时期全部为单体插件（支持直接单独插件使用，部分模块�
 
 以适用于自身为基准，目前主玩萨满祭司（恢复），所以界面、插件将针对此做出必要调整，并未考虑是否适用于其他专精、职业。
 
-特别提示：部分插件可能功能有重叠，应当只使用其中一个或选择性使用。
+特别提示：部分插件可能功能有重叠，应当只使用其中一个或选择性使用，或者部分插件的某些功能需要关闭，以免出现冲突。
+
+插件包本身虽然可能提供八国语言，但目前只在简体中文客户端下使用，因此无法确保繁体中文等语言是否仍然可用。
 
 ## 使用方法
 将addons文件夹放置在```游戏根目录/_retail_/interface/```下，例如```D:\World of Warcraft\_retail_\interface\addons```，进入后便是插件列表，避免出现```D:\World of Warcraft\_retail_\interface\addons\addons```等情况。
 
 ## 效果图
+请注意：效果图仅供参考，截图时间可能较早。你可以通过直播、录像等形式了解实际情况。
+
 一般
 ![screen](./Screenshots/WoWScrnShot_072418_114147.jpg)
 
@@ -25,10 +29,23 @@ AFK离开状态（```/afk```）
 更多效果图可以查看[Screenshots](./Screenshots/)文件夹。
 
 ## 插件列表
-全部插件请看[插件列表](addonslist.md)。
+全部插件请看[插件列表](ADDONS.md)。
+
+## WA字符串
+全部WA请看[wa列表](WA.md)。
+
+## 工具
+在tools文件夹下提供了一些工具，供使用。
+- fonts：提供一个命令符，供你将想要使用的字体命名为符合要求的字体，用于替换游戏中字体，不提供字体的下载，这可能违反部分字体文件的许可协议。
+- icons：提供个人使用的高清图标文件，具体请自行查看说明并下载。
+- wtfconvert：提供配置文件的备份、覆盖的一个工具，具体请自行查看说明并下载。
 
 ## 许可证
 请查阅[LICENSE](LICENSE)。
+
+根据暴雪守则以及社区相关规定，禁止将插件、插件部分、或者组合提供收费定制服务，本人整合之插件包的部分和全部，禁止并谢绝通过拦截，或阻断，或增加获取难度，或经过部分修改后以收费、会员制度、闭源客户端提供。
+
+本插件包在自管内部搭建之代码管理网站gitlab和国际通行的代码管理网站github免费、完整提供源代码，并在黑盒工坊中免费提供了本插件包的完整配置文件等参数。
 
 ## 说明、贡献指南
 如有兴趣使用，可使用全部插件或提取部分插件使用。
@@ -54,101 +71,6 @@ wa和插件也可以用类似的统一管理客户端管理，例如：
 - ajour：https://github.com/ajour/ajour
 - 黑盒工坊：https://xiaoheihe.cn/workshop
 
-## WA字符串
-#### wa字符串总结和概述
-https://bbs.nga.cn/read.php?tid=24562077
-
-#### 目前使用的字符串
-鼠标跟踪：https://wago.io/SypUT-DPm
-
-属性监控：
-- https://wago.io/rJZgZUxn7
-- https://wago.io/Wz2moZO4Z
-
-全职业中二语音：
-- https://bbs.nga.cn/read.php?tid=20729857
-- https://bbs.nga.cn/read.php?tid=24380263
-
-只狼特效：https://wago.io/sekirowa
-
-奶萨wa技能监控：https://wago.io/Rshaman_AfenarUI
-
-增强、元素萨满wa技能监控：https://wago.io/Afenar_Shaman
-
-蓝量报警：
-- 原始：https://bbs.nga.cn/read.php?tid=21781278
-- 自用修改版：https://wago.io/I8ryBKFbf
-
-炉石：https://wago.io/0owZD6Av9
-
-9.0低保查看：https://wago.io/sMLfbID4n
-
-暗影国度地下城与团队副本：
-- 地下城和团队副本纳斯利亚堡：https://bbs.nga.cn/read.php?tid=24284671
-- 地下城仙林迷雾迷宫wa：https://wago.io/hVLym_eLv
-- 地下城仙林迷雾全自动导航（需要配合前面一个wa完成前2个迷宫）：https://wago.io/16cF_58a5
-
-盟约技能监视：https://wago.io/Covenant
-
-盟约buff监视：https://wago.io/F1dMAfhui
-
-拒绝陌生异常组队邀请：https://wago.io/APzRF_Xz0
-
-奥利波斯WA图标指引：
-- 原版：https://wago.io/U7UFNotjr
-- 自用社区修改版：https://bbs.nga.cn/read.php?tid=24653400
-
-傲慢词缀全套监视：https://wago.io/prideful
-
-震荡词缀打断判断：https://wago.io/OYG84YE0x
-
-怨毒目标：https://wago.io/NPWlnnxt1   【似乎无效了】
-
-暴怒魔法效果提示（怪物buff驱散提示）：https://wago.io/r2QBcOnlT
-
-大秘境-死疽词缀警告-奶妈用：
-- 原版：https://bbs.nga.cn/read.php?tid=24910345
-- 自用修改版：https://wago.io/p1ilh7DKv
-
-奶萨水盾、土盾提示：
-- 原版：https://bbs.nga.cn/read.php?tid=24506536
-- 自用大地之盾+水之护盾整合版：https://wago.io/9YVsyrNgm
-
-Nnoggie大秘境技能CD监视升级版&自制团队CD监视，带技能激活发光监控的技能CD监视：https://bbs.nga.cn/read.php?tid=20621492
-- ZenTracker后端模块：https://wago.io/r14U746B7
-- 小队CD监控前端：https://wago.io/ZRvyWuoub
-- 团队CD监控前端：https://wago.io/0mlLc0qxd
-
-details中文昵称修正补丁：https://wago.io/uq0Uox6Ta
-
-崩裂监视：https://wago.io/Hmm-bO1rv
-
-9.1刻希亚宝箱+圣物+坐标+位面：
-- 圣物坐标：https://bbs.nga.cn/read.php?tid=27452058 （ https://wago.io/QCM2wKxJK ）
-- 每日助手：https://wago.io/v3gssSmaY （略有修改，设置为全部只在噬渊区域生效显示）
-
-9.1团本统御圣所+9.1五人本集市wa：https://bbs.nga.cn/read.php?tid=27412879
-
-奶萨始源波通报：
-- 原版：https://wago.io/MJQ3eXdFA
-- 自用修改版：https://wago.io/WtEbYYcbH
-
-大秘境界面美化增强：
-- 原版：https://wago.io/lNCA6Tv1s
-- 社区汉化：https://bbs.nga.cn/read.php?tid=27955156
-
-第二赛季词缀磨难监视：https://wago.io/47UbmGv1
-
-史诗钥石地下城界面显示分数：https://wago.io/M+LevelDisplay
-
-通灵战潮道具监视：https://wago.io/KyrianArmaments
-
-大米地下城框架上高亮显示点名技能：https://wago.io/BFADungeonTargetedSpells
-
-姓名版目标（可用来显示怨毒目标）：https://wago.io/0QGPOXwHc
-
-彼界尾王分身击杀报警：https://wago.io/-_UWm33O3
-
 ## 一些有用的重要命令
 在游戏内聊天窗口输入，然后回车：
 
@@ -158,7 +80,7 @@ details中文昵称修正补丁：https://wago.io/uq0Uox6Ta
 
 以上命令可借助插件AdvancedInterfaceOptions、ElvUI_WindTools控制。
 
-WTF（WOW安装目录/WTF/config.wtf）：
+- WTF（WOW安装目录/WTF/config.wtf）：
 
 在配置文件内添加以下内容（可能会被覆盖掉，可由插件AdvancedInterfaceOptions再次单角色控制）
 
@@ -166,12 +88,10 @@ WTF（WOW安装目录/WTF/config.wtf）：
 SET overrideArchive "0"
 ```
 
-自2020年4月4日起，cn地区的`SET profanityFilter "0"`被agent强制监管覆盖更新，可配合使用fuckyou等插件以及诸如WA字符串解决。
+自2020年4月4日起，cn地区的`SET profanityFilter "0"`被agent强制监管覆盖更新，可配合使用fuckyou等插件以及诸如WA字符串解决，目前ElvUI_WindTools也提供了相关解锁功能。
 
-## ELVUI配置文件以及其他
+## 配置文件
 导入这个字符串可以形成近似于当前使用的elvui风格：https://wago.io/fpHXHN2wA
-
-在[wtf](./wtf/)文件夹里有其他的部分配置文件存档供参考。
 
 wa自用字符串、合集整理可访问：https://wago.io/p/shihuang214
 
