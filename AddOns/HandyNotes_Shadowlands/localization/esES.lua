@@ -683,13 +683,17 @@ L['feasting_note'] = 'A veces rodeará la zona antes de volver a este sitio.'
 L['furidian_note'] = 'Activa tres |cFFFFFD00Llave Potenciada|r de la zona, y desbloquea la |cFFFFFD00Cámara Sospechosamente Enfadada|r.'
 L['garudeon_note'] = 'Recoge varios {npc:183562} de los alrededores y usa {spell:362655} para alimentar a los {npc:183554}. Cuando los tres estén alimentados, se activará {npc:180924}.'
 L['gluttonous_overgrowth_note'] = 'Rompe todas las {npc:184048} cercanas para activar la {npc:178778}.'
-L['helmix_emote'] = '|cFFFF8C00El suelo vibra... ¡Hay algo bajo la superfície!|r'
+L['helmix_note'] = [[
+Mata {npc:179005} de la zona hasta que aparezca el siguiente mensaje.
+
+|cFFFF8C00El suelo vibra... ¡Hay algo bajo la superfície!|r
+]]
 L['hirukon_note'] = [[
 Para atraer a {npc:180978} a la superfície, tiene que crearse un {item:187923}.
 
 1. Pesca un {item:187662} de las aguas cercanas.
 
-2. Pesca un {item:187915} del |cFFFFFD00Banco de Pez mancha acre|r dentro la Reserva Colmillo Torcido en Zangarmarsh. El banco está a la derecha cuando entras en la caverna.
+2. Pesca un {item:187915} del |cFFFFFD00Banco de Pez mancha acre|r dentro la Reserva Colmillo Torcido en Zangarmarsh.
 
 3. Pesca un {item:187922} del |cFFFFFD00Banco de Pez aletón|r cerca del punto de vuelo Tumba de Kelya en Nazjatar.
 
@@ -710,7 +714,7 @@ L['crushed_crate_note'] = 'Despoja la {item:189767} que reposa encima del pilar 
 L['domination_cache_note'] = 'La {item:189704} tiene pocas probabilidades de caer de los {npc:181403} y de los {npc:182426} de la zona.'
 L['drowned_broker_supplies_note'] = 'Dile a {npc:181059} que coja el control de un {npc:185282} cercano.'
 L['forgotten_protovault_note'] = 'Sólo está disponible durante la misión del mundo {wq:A salto de rana}.'
-L['grateful_boon_note'] = 'Es dificul de alcanzar sin volar; usa {spell:300728} o {spell:111771} para subir la montaña. Tranquiliza a las 12 criaturas de la zona y {npc:185293} hará aparecer el tesoro.'
+L['grateful_boon_note'] = 'Es difícil de alcanzar sin volar; usa {spell:300728} o {spell:111771} para subir la montaña. Tranquiliza a las 12 criaturas de la zona y {npc:185293} hará aparecer el tesoro.'
 L['library_vault_note'] = 'Haz click en las tablillas de la Gruta Léxica hasta que encuentres el orden correcto y ganes el buff {spell:362062} para abrir la cámara.'
 L['mistaken_ovoid_note'] = 'Dentro de la caverna Cataratas Dimensionales. Has de recoger {item:190239} x5, y llevarlos a la {npc:185280}.'
 L['ripened_protopear_note'] = 'Inicia la cadena de misiones {quest:64641} para ganar accesso a la Fundición Floreciente. Recoge 5 {spell:367180} (nubes verdes) dentro and y llévalas a la {npc:185416} para polinizarla.'
@@ -728,6 +732,12 @@ Pulsa los cuatro {npc:185390} para activar el teleportador del centro de la sala
 • En la habitación sureste de los distritos
 ]]
 
+L['provis_cache'] = 'Alijo de Provis cerrado'
+L['provis_cache_note'] = [[
+Completa la misión diaria {quest:64717} que te da {npc:177958} al menos una vez.
+
+Usa el {item:187516} en las forjas de la zona para conseguir {item:187728} x15 y combinarlas en el {item:187787}. Este orbe tiene probabilidad de tener la llave.
+]]
 L['prying_eye_discovery'] = 'Descubrimiento del Ojo Fisgón'
 L['prying_eye_discovery_note'] = 'Es más fácil de alcanzar cuando el volar esté desbloqueado.'
 L['pulp_covered_relic'] = 'Reliquia Cubierta de Pulpa'
@@ -784,10 +794,22 @@ L['concordance_note'] = 'Lee cada concordancia para desbloquear entradas en la |
 L['echoed_jiro_note'] = 'Gasta energia de {npc:181059} para ganar bufos temporales. Requiere investigar |cFFFFFD00Creatiano|r en la {npc:181397}.'
 
 L['bygone_elemental_note'] = 'Un {npc:181221} puede aparecer en lugar de cualquier {npc:179007} de la zona.'
+L['dominated_irregular_note'] = 'Un {npc:184819} puede aparecer en lugar de cualquier {npc:183184} de la zona.'
 L['gaiagantic_note'] = 'Sólo aparece cuando {npc:177958} te ofrece la misión diaria {quest:64785}.'
-L['misaligned_enforcer_note'] = 'Patrulla la zona y entonces desaparece cuando acaba su ruta.'
+L['misaligned_enforcer_note'] = 'Aparece aquí. Patrulla la zona y entonces desaparece cuando acaba su ruta.'
 L['overcharged_vespoid_note'] = 'Puede aparecer como parte de una multitud de la zona.'
 L['runethief_xylora_note'] = 'Aparece en sigilo en la zona de Gracia del Peregrino.'
+
+local proto_area = 'Probabilidad de ser encontrado en las forjas alrededor de |cFFFFFD00%s|r.'
+L['proto_material_zone_chance'] = 'Probabilidad de ser encontrado en forjas seleccionadas por toda la zona.'
+L['anima_charged_yolk_note'] = 'Recoge {item:187728} de cualquier forja y combínalas para un {item:187787}, el cual tiene probabilidad de contener {item:187890}.'
+L['energized_firmament_note'] = string.format(proto_area, 'Cúspides Resonantes')
+L['honeycombed_lattice_note'] = string.format(proto_area, 'Precipicio del Zángano')
+L['incorporeal_sand_note'] = 'Probabilidad de ser encontrado en forjas en las áreas de desierto de la zona.'
+L['pollinated_extraction_note'] = string.format(proto_area, 'Verdor Indómito')
+L['serene_pigment_note'] = 'En una forja sobre la entrada a |cFFFFFD00Cuenca del Exilio|r. Puede necesitar varios intentos.'
+L['volatile_precursor_note'] = 'Está encima de la forja más pequeña. Puede necesitar varios intentos.'
+L['wayward_essence_note'] = 'Es difícil de alcanzar sin volar; usa {spell:300728} o {spell:111771}. En una forja flotante detrás de la |cFFFFFD00Cuenca del Exilio|r. Ponte encima de la hendidura para usar {item:187908}.'
 
 L['patient_bufonid_note'] = 'Progresa en la historia de Zereth Mortis hasta que {npc:180950} ofrezca la misión {quest:65727}. Completa las misiones cada día para atraer un {npc:185798} fuera del estanque.'
 L['patient_bufonid_note_day1'] = 'Recoge {item:190852} x15 de los Vespoide de la zona.'
@@ -806,6 +828,8 @@ L['options_icons_echoed_jiros'] = 'Jiro en Eco'
 L['options_icons_echoed_jiros_desc'] = 'Muestra dónde están los |cFFFFFD00Jiro en Eco|r que dan bufos.'
 L['options_icons_exile_tales'] = '{achievement:15509}'
 L['options_icons_exile_tales_desc'] = 'Muestra dónde están los libros para el logro {achievement:15509}.'
+L['options_icons_proto_materials'] = '{achievement:15229}'
+L['options_icons_proto_materials_desc'] = 'Muestra dónde están los materiales de protoforma raros para el logro {achievement:15229}.'
 L['options_icons_protoform_schematics'] = 'Esquemas de Protoforma'
 L['options_icons_protoform_schematics_desc'] = 'Muestra dónde están los esquemas de monturas y mascotas.'
 L['options_icons_puzzle_caches'] = 'Alijos Puzzles'

@@ -1,6 +1,9 @@
-## Changed in v40
+## Changed in v41
 
-* Pulled in more loot from Wowhead
-* Now have the correct research levels for the lore concordances
-* Show the Synthesis Forge on the map once you've unlocked it
+* Explain the Syntactic Vault and add points for the runic syllables
+* Utility points:
+    * The Ancient Translocator to the Sepulchur
+    * The Wellspring of the First Ones
+* Changed the color of Glissandian caches to be more distinct
+* More questids and note tweaks
 

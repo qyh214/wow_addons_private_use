@@ -96,7 +96,7 @@ ns.path = ns.nodeMaker{
     atlas = "poi-door", -- 'PortalPurple' / 'PortalRed'?
     path = true,
     minimap = true,
-    scale = 1.1,
+    scale = 0.95,
 }
 
 ns.lootitem = function(item)

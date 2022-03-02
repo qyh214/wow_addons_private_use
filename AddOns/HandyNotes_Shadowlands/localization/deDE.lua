@@ -689,24 +689,28 @@ L['feasting_note'] = 'Umrundet manchmal das Gebiet, bevor er zu dieser Stelle zu
 L['furidian_note'] = 'Aktiviere drei |cFFFFFD00Ermächtigter Schlüssel|r in dem Bereich, und entriegel dann den |cFFFFFD00Verdächtig wütender Tresor|r.'
 L['garudeon_note'] = 'Sammel {npc:183562} aus der Umgebung und verwenden {spell:362655}, um {npc:183554} zu füttern. Sobald alle drei gefüttert sind, wird {npc:180924} aktiv.'
 L['gluttonous_overgrowth_note'] = 'Zerbrich alle in der Nähe befindlichen {npc:184048n}, um den den selten Gegner zu aktivieren.'
-L['helmix_emote'] = '|cFFFF8C00Der Boden erzittert... Etwas gräbt sich unter der Oberfläche durch die Erde!|r'
+L['helmix_note'] = [[
+Töte {npc:179005} in dem Gebiet, bis das untere Emote erscheint.
+
+|cFFFF8C00Der Boden erzittert... Etwas gräbt sich unter der Oberfläche durch die Erde!|r
+]]
 L['hirukon_note'] = [[
 Um {npc:180978} an die Oberfläche zu locken, muss ein {item:187923} hergestellt werden.
 
 1. Fische einen {item:187662} aus den nahen Gewässern.
 
-2. Fische einen {item:187915} aus dem |cFFFFFD00Stinkender Blobfischschwarm|r im Der Echsenkessel in den Zangarmarschen. Das Becken befindet sich rechts, wenn du die Höhle betrittst.
+2. Fische einen {item:187915} aus dem |cFFFFFD00Stinkender Blobfischschwarm|r im Der Echsenkessel in den Zangarmarschen.
 
-3. Fische einen {item:187922} von der |cFFFFFD00Flipper Fish School|r in der Nähe des Flugplatzes Kelyas Grab in Nazjatar (72.8 24.3).
+3. Fische einen {item:187922} aus |cFFFFFD00Ein Schwarm Flossenfische|r in der Nähe des Flugplatzes Kelyas Grab in Nazjatar (72.8 24.3).
 
 4. Plündere ein (sehr gut verstecktes) {item:187916} auf einem Balkon in der zweiten Ebene der Terrasse von Nar'shola in der Schimmernde Weiten in Vashj'ir (34.7, 75.0).
 
 5. Finde {npc:182194} am Teich südlich des Sitzes des Primus in Maldraxxus (57.6 92.0). Bitte Sie, den fertigen {item:187923} herzustellen.
 
-6. Benutze den {item:187923}, der es ermöglicht, den Fischteich |cFFFFFD00Aurelid Cluster|r in der Nähe von {npc:180978} für 15min zu sehen. Fische darin, um {npc:180978} an die Oberfläche zu locken.
-]] -- review later
+6. Benutze den {item:187923}, der es ermöglicht, den |cFFFFFD00Aurelidenschwarm|r in der Nähe von {npc:180978} für 15min zu sehen. Fische darin, um {npc:180978} an die Oberfläche zu locken.
+]]
 L['orixal_note'] = 'Teilt sich einen spawn mit dem {npc:185487}, der das Gebiet patrouilliert.'
-L['protector_first_ones_note'] = 'Benötigt zwei Spieler. Bringt die passenden Runen zu jeder Konsole (in der Umgebung zu finden), um die Barriere zu öffnen.'
+L['protector_first_ones_note'] = 'Benötigt zwei Spieler. Bringt die passenden Siegel (in der Umgebung zu finden) zu jeder Konsole, um die Barriere zu öffnen.'
 L['the_engulfer_note'] = 'Verteidige {npc:183505} bis {npc:183516} aus dem Riss springt.'
 L['zatojin_note'] = 'Greife die in der Nähe befindlichen {npc:183721} an und lass dir 20 Stapel von {spell:362976} verpassen, bis du {spell:362983} bist. Du musst über den {npc:183774} Leichen stehen, wenn du gelähmt bist, damit {npc:183764} dich bemerkt.'
 
@@ -734,6 +738,12 @@ Drücke die vier {npc:185390n}, um den Teleporter im mittleren Raum der Katalysa
 • Im südöstlichen Raum der Stationen
 ]]
 
+L['provis_cache'] = 'Verschlossene Provistruhe'
+L['provis_cache_note'] = [[
+Schließe min. einmal die tägliche Quest {quest:64717} von {npc:177958} ab.
+
+Verwende die {item:187516} an Progenitorschmieden (Sphären), die überall in Zereth Mortis zu finden sind, um 15x {item:187728} zu erhalten und kombiniere diese zu einer {item:187787}, die eine Chance hat den Schlüssel zu enthalten.
+]]
 L['prying_eye_discovery'] = 'Entdeckung des Spürauges'
 L['prying_eye_discovery_note'] = 'Leichter zu erreichen, sobald das Fliegen freigeschaltet ist.'
 L['pulp_covered_relic'] = 'Breibedecktes Relikt'
@@ -790,10 +800,22 @@ L['concordance_note'] = 'Lese jede Konkordanz, um Einträge in der |cFFFFFD00Wis
 L['echoed_jiro_note'] = 'Gebe {npc:181059}energie aus, um temporäre Verstärkungszauber zu erhalten. Benötigt die |cFFFFFD00Createsisch|r Forschung an der {npc:181397}.'
 
 L['bygone_elemental_note'] = 'Ein {npc:181221} kann anstelle eines {npc:179007} in dem Gebiet erscheinen.'
+L['dominated_irregular_note'] = 'Ein {npc:184819} kann anstelle eines {npc:183184} in dem Gebiet erscheinen.'
 L['gaiagantic_note'] = 'Erscheint nur, wenn {npc:177958} die tägliche Quest {quest:64785} anbietet.'
-L['misaligned_enforcer_note'] = 'Patrouilliert das Gebiet und verschwindet am Ende seiner Route.'
+L['misaligned_enforcer_note'] = 'Erscheint hier und patrouilliert dann das Gebiet und verschwindet am Ende seiner Route.'
 L['overcharged_vespoid_note'] = 'Kann als Teil eines Schwarmes in der Gegend erscheinen.'
 L['runethief_xylora_note'] = 'Erscheint getarnt im Gebiet von Huld des Pilgers.'
+
+local proto_area = 'Kann in Schmieden rund um das Gebiet |cFFFFFD00%s|r gefunden werden.'
+L['proto_material_zone_chance'] = 'Kann in bestimmten Schmieden dieser Zone gefunden werden.'
+L['anima_charged_yolk_note'] = 'Sammel 15x {item:187728} aus einer beliebigen Schmiede und kombinieren diese zu einer {item:187787}, die eine Chance hat, ein {item:187890} zu enthalten.'
+L['energized_firmament_note'] = string.format(proto_area, 'Hallende Gipfel')
+L['honeycombed_lattice_note'] = string.format(proto_area, 'Surrende Anhöhe')
+L['incorporeal_sand_note'] = 'Kann in Schmieden in den Wüstengebieten dieser Zone gefunden werden.'
+L['pollinated_extraction_note'] = string.format(proto_area, 'Ungezähmtes Grün')
+L['serene_pigment_note'] = 'In einer Schmiede über dem Eingang zur |cFFFFFD00Höhle des Verbannten|r. Benötigt möglicherweise mehrere Versuche.'
+L['volatile_precursor_note'] = 'Zu finden in kleineren Schmieden. Benötigt möglicherweise mehrere Versuche.'
+L['wayward_essence_note'] = 'Ohne Fliegen schwer zu erreichen. In einer schwebenden Schmiede hinter der |cFFFFFD00Höhle des Verbannten|r. Stelle dich in die Vertiefung, um die Schmiede anzuzapfen.'
 
 L['patient_bufonid_note'] = 'Schreite in der Geschichte von Zereth Mortis voran, bis {npc:180950} die Quest {quest:65727} anbietet. Erfülle diese täglich, um {npc:185798} aus dem Teich zu locken.'
 L['patient_bufonid_note_day1'] = 'Sammel 15x {item:190852} von Vespiden aus dieser Zone.'
@@ -801,7 +823,7 @@ L['patient_bufonid_note_day2'] = 'Kaufe 30x {item:172053} aus dem Auktionshaus.'
 L['patient_bufonid_note_day3'] = 'Kaufe 200x {item:173202} aus dem Auktionshaus.'
 L['patient_bufonid_note_day4'] = 'Kaufe 10x {item:173037} aus dem Auktionshaus.'
 L['patient_bufonid_note_day5'] = 'Sammel 5x {item:187704} von Gegner aus dieser Zone.'
-L['patient_bufonid_note_day6'] = 'Kaufe 5x {item:190880} von {npc:185748} (58.3 49.9) in der Nähe von Huld des Pilgers.'
+L['patient_bufonid_note_day6'] = 'Kaufe 5x {item:190880} von {npc:185748} (58.5 49.8) in der Nähe von Huld des Pilgers.'
 L['patient_bufonid_note_day7'] = 'Kaufe 1x {item:187171} von dem {npc:180114} aus dem Tazavesh Dungeon.'
 
 L['options_icons_code_creature'] = '{achievement:15211}'
@@ -812,6 +834,8 @@ L['options_icons_echoed_jiros'] = 'Echo von Jiro'
 L['options_icons_echoed_jiros_desc'] = 'Zeigt die Positionen für die Gaben-Stärkungszauber der |cFFFFFD00Echo von Jiro|r an.'
 L['options_icons_exile_tales'] = '{achievement:15509}'
 L['options_icons_exile_tales_desc'] = 'Zeigt die Positionen der Geschichten für den Erfolg {achievement:15509} an.'
+L['options_icons_proto_materials'] = '{achievement:15229}'
+L['options_icons_proto_materials_desc'] = 'Zeigt die Position der seltenen Protomaterialien für den Erfolg {achievement:15229} an.'
 L['options_icons_protoform_schematics'] = 'Protoform Baupläne'
 L['options_icons_protoform_schematics_desc'] = 'Zeigt die Positionen der Reittier und Haustier Baupläne an.'
 L['options_icons_puzzle_caches'] = 'Schätze der Schöpfung'

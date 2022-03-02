@@ -213,15 +213,6 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             "Order is probably: SW, NE, SW, NW, NE.",
     },
 
-    [77555820] = { -- Syntactic Vault
-        quest=65565,
-        achievement=15331, criteria=53068,
-        active=ns.conditions.QuestComplete(64843), -- Key Crafting (campaign chapter 4)
-        loot={
-            {190457, toy=true}, -- Protopological Cube
-        },
-    },
-
     [58704280] = { -- Template Archive
         quest=65175,
         achievement=15331, criteria=52966,
@@ -231,6 +222,36 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         },
         note="Inside the Nexus of Actualization",
     },
+})
+
+ns.RegisterPoints(1970, {
+    [77555820] = { -- Syntactic Vault
+        quest=65565, -- 65670 is when you unlock it
+        achievement=15331, criteria=53068,
+        active=ns.conditions.QuestComplete(64844), -- The Pilgrimage Ends (campaign chapter 4)
+        loot={
+            {190457, toy=true}, -- Protopological Cube
+        },
+        note="In a cave. Find all six runic syllables before their {spell:367499} buff runs out to unlock the vault.",
+    },
+})
+ns.RegisterPoints(1970, {
+    [78065339] = {label="Runic Syllable", note="Under the platform between waterfalls"},
+    [76924667] = {label="Runic Syllable"},
+    [78214795] = path{label="Path to Runic Syllable",route={78214795,80904790,81265045,r=1,g=0,b=1}},
+    [81265045] = {label="Runic Syllable", note="Behind the Sepulcher's North side"},
+    [78255917] = path{label="Path to Runic Syllable",route={78255917,80005810,80935626,r=1,g=0,b=1}},
+    [80935626] = {label="Runic Syllable", note="Behind the Sepulcher's South side"},
+    [77056032] = {label="Runic Syllable"},
+    [76995879] = {label="Runic Syllable", note="In a cave"},
+    [76315959] = path{label="Cave Entrance",route={76315959,76995879,r=1,g=0,b=1}}, -- also to the vault
+}, {
+    quest=65565,
+    achievement=15331, criteria=53068,
+    hide_before=ns.conditions.QuestComplete(64844), -- The Pilgrimage Ends (campaign chapter 4)
+    atlas="Rune-09-light",
+    minimap=true,
+    note="Find all six runic syllables before their {spell:367499} buff runs out to unlock the Syntactic Vault."
 })
 
 -- Just the Ovoids...
@@ -345,6 +366,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         active={ns.conditions.GarrisonTalent(1902),ns.conditions.QuestComplete(65328)},
     },
     [42005185] = {
+        quest=65183,
         label="Provis Cache",
         active=ns.conditions.Item(188231),
         note="Use {item:187908} to get 15x {item:187728}, which will sometimes give you the {item:188231}",
@@ -401,12 +423,19 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
 })
 
 ns.RegisterPoints(1970, { -- Zereth Mortis
-    [61805895] = {
+    [61805895] = { -- Synthesis Forge
         label="{npc:184172}",
         texture=ns.atlas_texture("teleportationnetwork-32x32", {r=1,g=0.6,b=0.2,a=1,scale=1.2}),
         minimap=true,
         hide_before=ns.conditions.QuestComplete(65419), -- Protoform Synthesis
-    }
+    },
+    [61505370] = { -- Wellspring of the First Ones
+        label="Wellspring of the First Ones",
+        texture=ns.atlas_texture("teleportationnetwork-32x32", {r=0,g=0.8,b=0.8,a=1,scale=1}),
+        minimap=true,
+        hide_before=ns.conditions.QuestComplete(65448), -- A Return To Grace
+        note="Stand in the wellspring to receive {spell:368622}",
+    },
 })
 
 -- Puzzle caches
@@ -434,7 +463,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
 ns.RegisterPoints(1970, { -- Zereth Mortis
     [46056460] = {quest=65093},
     [47107720] = {quest=65093},
-    [57506575] = {quest=65093},
+    [57506575] = {quest={65093,65418,any=true}},
     [63103740] = {quest=65093},
     [44303095] = {quest=65317},
     [47603910] = {quest=65317},
@@ -459,7 +488,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     [51302575] = {quest=65412},
 }, puzzle{
     label="Glissandian Cache",
-    texture=ns.atlas_texture("VignetteLoot", {r=0,g=0.5,b=0.5,a=0.8,scale=0.8}),
+    texture=ns.atlas_texture("VignetteLoot", {r=1,g=1,b=0,a=0.8,scale=0.8}),
 })
 ns.RegisterPoints(1970, { -- Zereth Mortis
     [38357035] = {quest=65091},
@@ -482,11 +511,11 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     [37004645] = {quest=64972},
     [46806700] = {quest=64972},
     [52455705] = {quest=65314},
+    [53258685] = {quest={65314,65418,any=true}},
     [62807390] = {quest=65314},
     [64306330] = {quest=65319},
     [65604760] = {quest=65319},
     [67802745] = {quest=65319},
-    [53258685] = {quest=65418},
 }, puzzle{
     label="Toccatian Cache",
     texture=ns.atlas_texture("VignetteLoot", {r=1,g=0,b=1,a=0.8,scale=0.8}),
@@ -648,7 +677,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             189930, -- Restraints of Boundless Chaos
             189985, -- Curtain of Untold Realms
             189999, -- Dark Sky Gavel
-            189153, -- Resonant Echo
+            189153, -- Unformed Lattice
         },
     },
 
@@ -704,7 +733,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             189937, -- Garudeon's Blanket of Feathers
             189951, -- Sunbathed Avian Armor
             190602, -- Symbol of the Raptora
-            190057, -- Hide of Fenryr
+            190057, -- Protective Raptora's Wing-Glaive
         },
         note="Gather {npc:183562} nearby, feed to {npc:183554}",
     },
@@ -785,8 +814,8 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             189905, -- Hirukon's Syrupy Squeezers
             189946, -- Jellied Aurelid Mantle
             190005, -- Hirukon's Radiant Reach
+            {187636, pet=3230}, -- Terror Jelly
             {187676, mount=1434}, -- Deepstar Aurelid
-            187636, -- Terror Jelly
         },
         -- TODO: add notes on the other maps?
         note=function()
@@ -848,7 +877,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             189925, -- Amphibian's Nimble Leggings
             190046, -- Broker's Stolen Cane
             189995, -- Builder's Alignment Hammer
-            187634, -- Archetype of Metamorphosis
+            187634, -- Ambystan Lattice
         },
     },
 
@@ -929,7 +958,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             189967, -- Hood of Star Topology
             190055, -- Coalescing Energy Implement
             187830, -- Design: Aealic Harmonizing Stone
-            189146, -- Stabilized Geomental
+            189146, -- Geomental Lattice
         },
         note="This doesn't spawn every day",
     },
@@ -1126,6 +1155,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     [63205800] = { -- Over-charged Vespoid
         npc=181222,
         criteria=52606,
+        note="Spawns in this general area",
     },
 
     [39805205] = { -- Runefur
@@ -1175,5 +1205,15 @@ ns.RegisterPoints(1970, {
 }, {
     label="{npc:183968}",
     atlas="progenitorflightmaster-32x32", scale=1,
+    group="Transportation",
+})
+-- Ancient Translocator
+ns.RegisterPoints(1970, {
+    [64855355] = {route=73305340,},
+    [73305340] = {route={73305340,64855355,r=0,g=0.75,b=0},},
+}, {
+    label="{npc:183970}",
+    atlas="progenitorflightmaster-32x32", scale=1,
+    hide_before=ns.conditions.QuestComplete(64844), -- The Pilgrimage Ends
     group="Transportation",
 })
