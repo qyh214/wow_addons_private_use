@@ -1,7 +1,7 @@
-## Interface: 90105
+## Interface: 90200
 ## Title: Multishot Fan Update
 ## Notes: Takes screenshots of memorable events in your World of Warcraft career.
-## Version: 9.1.5.1
+## Version: 9.2.0.3
 ## Author: dlui & dridzt
 ## X-Maintainer: Nukme 
 ## X-Repository: https://github.com/Nukme/Multishot

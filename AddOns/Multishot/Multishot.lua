@@ -33,10 +33,6 @@ function Multishot:OnEnable()
   local ssformat = GetCVar("screenshotFormat")
   extension = (ssformat == "tga") and ".tga" or (ssformat == "png") and ".png" or ".jpg"
   Multishot.watermarkFrame = Multishot.watermarkFrame or Multishot:CreateWatermark()
-    
-  self:RegisterChatCommand("multishot", function()
-    InterfaceOptionsFrame_OpenToCategory(Multishot.PrefPane)
-  end)
 end
 
 function Multishot:PLAYER_LEVEL_UP(strEvent)
