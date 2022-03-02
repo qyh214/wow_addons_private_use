@@ -35,6 +35,8 @@
 - 地下城和团队副本纳斯利亚堡：https://bbs.nga.cn/read.php?tid=24284671
 - 地下城仙林迷雾迷宫wa：https://wago.io/hVLym_eLv
 - 地下城仙林迷雾全自动导航（需要配合前面一个wa完成前2个迷宫）：https://wago.io/16cF_58a5
+- 统御圣所+五人本集市：https://bbs.nga.cn/read.php?tid=27412879
+- 初诞者圣墓：https://wago.io/chudanzhewa
 
 盟约技能监视：https://wago.io/Covenant
 
@@ -46,11 +48,7 @@
 - 原版：https://wago.io/U7UFNotjr
 - 自用社区修改版：https://bbs.nga.cn/read.php?tid=24653400
 
-傲慢词缀全套监视：https://wago.io/prideful
-
 震荡词缀打断判断：https://wago.io/OYG84YE0x
-
-怨毒目标：https://wago.io/NPWlnnxt1   【似乎无效了】
 
 暴怒魔法效果提示（怪物buff驱散提示）：https://wago.io/r2QBcOnlT
 
@@ -75,7 +73,7 @@ details中文昵称修正补丁：https://wago.io/uq0Uox6Ta
 - 圣物坐标：https://bbs.nga.cn/read.php?tid=27452058 （ https://wago.io/QCM2wKxJK ）
 - 每日助手：https://wago.io/v3gssSmaY （略有修改，设置为全部只在噬渊区域生效显示）
 
-9.1团本统御圣所+9.1五人本集市wa：https://bbs.nga.cn/read.php?tid=27412879
+9.2扎雷殁迪斯宝箱+稀有+每日：https://wago.io/Z3_m5bniG
 
 奶萨始源波通报：
 - 原版：https://wago.io/MJQ3eXdFA
@@ -85,7 +83,7 @@ details中文昵称修正补丁：https://wago.io/uq0Uox6Ta
 - 原版：https://wago.io/lNCA6Tv1s
 - 社区汉化：https://bbs.nga.cn/read.php?tid=27955156
 
-第二赛季词缀磨难监视：https://wago.io/47UbmGv1
+第三赛季词缀加密监视：
 
 史诗钥石地下城界面显示分数：https://wago.io/M+LevelDisplay
 
@@ -96,3 +94,5 @@ details中文昵称修正补丁：https://wago.io/uq0Uox6Ta
 姓名版目标（可用来显示怨毒目标）：https://wago.io/0QGPOXwHc
 
 彼界尾王分身击杀报警：https://wago.io/-_UWm33O3
+
+自带预创建组队增强：https://bbs.nga.cn/read.php?tid=30859608
