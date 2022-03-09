@@ -25,7 +25,7 @@
 
 蓝量报警：
 - 原始：https://bbs.nga.cn/read.php?tid=21781278
-- 自用修改版：https://wago.io/I8ryBKFbf
+- 自用修改版：https://wago.io/IzWSkPz42
 
 炉石：https://wago.io/0owZD6Av9
 
@@ -36,7 +36,8 @@
 - 地下城仙林迷雾迷宫wa：https://wago.io/hVLym_eLv
 - 地下城仙林迷雾全自动导航（需要配合前面一个wa完成前2个迷宫）：https://wago.io/16cF_58a5
 - 统御圣所+五人本集市：https://bbs.nga.cn/read.php?tid=27412879
-- 初诞者圣墓：https://wago.io/chudanzhewa
+- 初诞者圣墓：https://wago.io/vB1gucfF0
+- 地下城：https://wago.io/sldungeon
 
 盟约技能监视：https://wago.io/Covenant
 
@@ -83,7 +84,7 @@ details中文昵称修正补丁：https://wago.io/uq0Uox6Ta
 - 原版：https://wago.io/lNCA6Tv1s
 - 社区汉化：https://bbs.nga.cn/read.php?tid=27955156
 
-第三赛季词缀加密监视：
+第三赛季词缀加密监视：等待wago或nga版本
 
 史诗钥石地下城界面显示分数：https://wago.io/M+LevelDisplay
 
