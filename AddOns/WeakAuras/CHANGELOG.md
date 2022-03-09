@@ -1,18 +1,19 @@
-# [3.7.12](https://github.com/WeakAuras/WeakAuras2/tree/3.7.12) (2022-02-23)
+# [3.7.13](https://github.com/WeakAuras/WeakAuras2/tree/3.7.13) (2022-03-03)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.7.11...3.7.12)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.7.12...3.7.13)
 
 ## Highlights
 
- - Workaround for spellcache constant table overflow 
+  
 
 ## Commits
 
-InfusOnWoW (1):
+asakawa (1):
 
-- Make spellcache take up less constants
+- Add a detailed tooltip to the Unit setting in bufftrigger2 (#3509)
 
-mrbuds (1):
+mrbuds (2):
 
-- fix unpackaged copy of weakauras not working on 9.2 WOW_PROJECT_MAINLINE value changed from 5 to 1 in 9.2
+- increase boss units up to boss10 "prototype pantheon" & "generals boss in nathria" has more than 5 boss units
+- fix iconPicker with spellCache change
 

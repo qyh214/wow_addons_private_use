@@ -1,10 +1,16 @@
-lightweight tag 9041406f693a35a90cc3ab8566c3debe106186d9 v1.4.0
-Author:	Meivyn <meivyn@live.ca>
-Date:	Wed Jul 7 03:05:30 2021 -0400
+lightweight tag 5e23370045437820d74e410e84bf0472fac1708a v1.4.1
+Author:	GitHub <noreply@github.com>
+Date:	Thu Mar 3 04:27:35 2022 -0500
 
-commit 9041406f693a35a90cc3ab8566c3debe106186d9
-Author: Meivyn <meivyn@live.ca>
-Date:   Wed Jul 7 03:05:30 2021 -0400
+commit 5e23370045437820d74e410e84bf0472fac1708a
+Author: jrowles <john_rowles@outlook.com>
+Date:   Thu Mar 3 04:27:35 2022 -0500
 
-    Fix Mor'geth quest ID
+    Changes for Patch 9.2 (#16)
+    
+    * Patch 9.2 changes
+    
+    Added Sepulcher of the First Ones raid and Antros world boss.
+    
+    * Fix typo
 

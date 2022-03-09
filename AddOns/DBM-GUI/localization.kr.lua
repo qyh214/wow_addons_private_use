@@ -117,7 +117,6 @@ L.AutoAcceptGuildInvite		= "길드원의 파티/공격대 초대 자동 수락"
 L.Area_Advanced				= "고급 설정"
 L.FakeBW					= "DBM 대신 BigWigs 사용자로 위장하기 (BigWigs 사용을 강제하는 공격대에서 유용)"
 L.AITimer					= "DBM 내장 인공지능 타이머를 사용하여 처음 하는 전투의 타이머를 자동으로 생성합니다. (베타나 테스트 서버에서 보스 테스트시 유용) 이 옵션은 항상 켜놓는걸 권장합니다."
-L.ExtendIcons				= "공격대 징표 API를 16개까지 사용할 수 있도록 확장합니다. (기존 8개) 중요: 16개 징표를 지원하는 사용자 정의 텍스쳐 파일 'UI-RaidTargetingIcons.blp'를 설치하지 않은 사람에게는 보이지 않습니다. 이 기능을 켜거나 끈 뒤에는 반드시 UI를 재시작해야 합니다"
 
 -- Panel: Profiles
 L.Panel_Profile				= "프로필"

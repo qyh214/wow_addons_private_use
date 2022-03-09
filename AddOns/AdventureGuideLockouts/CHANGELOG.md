@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.4.1
+
+- Updated for patch 9.2
+
 ## v1.4.0
 
 - Updated Mor'geth quest ID

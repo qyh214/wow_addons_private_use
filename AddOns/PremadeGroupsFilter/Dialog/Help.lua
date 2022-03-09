@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2020 Elotheon-Arthas-EU
+-- Copyright (C) 2022 Elotheon-Arthas-EU
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ function PGF.Dialog_InfoButton_OnEnter(self, motion)
     AddDoubleWhiteUsingKey("warmode")
     PGF.GameTooltip_AddWhite("boss/bossesmatching/... — " .. L["dialog.tooltip.seewebsite"])
     PGF.GameTooltip_AddDoubleWhite("priests/warriors/...", L["dialog.tooltip.classes"])
-    PGF.GameTooltip_AddDoubleWhite("sod/cn/ny/...", L["dialog.tooltip.raids"])
+    PGF.GameTooltip_AddDoubleWhite("sfo/sod/cn/...", L["dialog.tooltip.raids"])
     PGF.GameTooltip_AddDoubleWhite("taz/pf/dos/hoa/mots", L["dialog.tooltip.dungeons"])
     PGF.GameTooltip_AddWhite("sd/soa/nw/top")
     PGF.GameTooltip_AddDoubleWhite("cos/votw/nl/dht/eoa/brh", L["dialog.tooltip.timewalking"])

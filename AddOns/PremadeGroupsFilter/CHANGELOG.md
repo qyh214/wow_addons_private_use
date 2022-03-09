@@ -1,7 +1,10 @@
 # Premade Groups Filter
 
-## [2.6.2](https://github.com/0xbs/premade-groups-filter/tree/2.6.2) (2022-02-02)
-[Full Changelog](https://github.com/0xbs/premade-groups-filter/compare/2.6.1...2.6.2) [Previous Releases](https://github.com/0xbs/premade-groups-filter/releases)
+## [2.7.1](https://github.com/0xbs/premade-groups-filter/tree/2.7.1) (2022-03-06)
+[Full Changelog](https://github.com/0xbs/premade-groups-filter/compare/2.7.0...2.7.1) [Previous Releases](https://github.com/0xbs/premade-groups-filter/releases)
 
-- Set version to 2.6.2  
-- Fixes #64 ADDON\_ACTION\_BLOCKED due to protected function GetPlaystyleString() by overwriting some of Blizzard's functions and breaking automatic group titles (code from github.com/ChrisKader/LFMPlus)  
+- Set version to 2.7.1  
+- Bumped toc  
+- Added age in seconds via agesecs  
+- Added license header to FixGetPlaystyleString.lua  
+- Fix some locale errors in zhCN  

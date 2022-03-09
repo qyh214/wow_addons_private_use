@@ -1,9 +1,4 @@
-## Changed in v41
+## Changed in v46
 
-* Explain the Syntactic Vault and add points for the runic syllables
-* Utility points:
-    * The Ancient Translocator to the Sepulchur
-    * The Wellspring of the First Ones
-* Changed the color of Glissandian caches to be more distinct
-* More questids and note tweaks
+* Fixed an error when mousing over Anima Shards in Bastion
 

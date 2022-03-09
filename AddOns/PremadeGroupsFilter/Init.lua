@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2020 Elotheon-Arthas-EU
+-- Copyright (C) 2022 Elotheon-Arthas-EU
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ C.MYTHICPLUS = 4
 C.ARENA2V2   = 5
 C.ARENA3V3   = 6
 
--- corresponds to the third parameter of C_LFGList.GetActivityInfo()
+-- corresponds to the third parameter of C_LFGList.GetActivityInfoTable().categoryID
 C.TYPE_QUESTING = 1
 C.TYPE_DUNGEON  = 2
 C.TYPE_RAID     = 3

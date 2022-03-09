@@ -379,6 +379,16 @@ L["STRING_OPTIONS_3D_UANCHOR"] = "Modelo 3D superior:"
 L["STRING_OPTIONS_3D_UENABLED_DESC"] = "Activado o desactivado el uso de un marco de modelo 3D sobre las barras."
 L["STRING_OPTIONS_3D_USELECT_DESC"] = "Elija qué modelo se utilizará en la barra de modelo superior."
 L["STRING_OPTIONS_ADVANCED"] = "Avanzado"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = ""--]] 
 L["STRING_OPTIONS_ALPHAMOD_ANCHOR"] = "Modificadores de opacidad:"
 L["STRING_OPTIONS_ALWAYS_USE"] = "Usar en todos los personajes"
 L["STRING_OPTIONS_ALWAYS_USE_DESC"] = "Se usa el mismo perfil en todos los personajes. Puede anular esto en cualquier personaje simplemente seleccionando otro perfil existente."
@@ -565,10 +575,14 @@ L["STRING_OPTIONS_ED_DESC"] = [=[|cFFFFFF00Manualmente|r: El usuario necesita ha
 L["STRING_OPTIONS_ED1"] = "Manualmente"
 L["STRING_OPTIONS_ED2"] = "Mensaje"
 L["STRING_OPTIONS_ED3"] = "Auto"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = ""--]] 
 L["STRING_OPTIONS_EDITIMAGE"] = "Editar imagen"
 L["STRING_OPTIONS_EDITINSTANCE"] = "Configurando ventana:"
 L["STRING_OPTIONS_ERASECHARTDATA"] = "Borrar gráficos"
 L["STRING_OPTIONS_ERASECHARTDATA_DESC"] = "Durante el cierre de sesión, se borran todos los datos de combate recopilados para crear gráficos."
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_EXPORT_PROFILE"] = ""--]] 
 L["STRING_OPTIONS_EXTERNALS_TITLE"] = "Artilugios externos"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "Estas opciones controlan el comportamiento de muchos artilugios extranjeros."
 L["STRING_OPTIONS_GENERAL"] = "Opciones generales"
@@ -590,6 +604,12 @@ L["STRING_OPTIONS_IGNORENICKNAME_DESC"] = "Cuando está habilitado, los apodos y
 L["STRING_OPTIONS_ILVL_TRACKER"] = "Rastreador de nivel de objeto:"
 L["STRING_OPTIONS_ILVL_TRACKER_DESC"] = "Cuando está habilitado y fuera de combate, el addon consulta y rastrea el nivel de objeto de los jugadores en la banda. Si está deshabilitado, aún lee el nivel de objeto de las consultas de otros addons cuando inspecciona manualmente a otro jugador."
 L["STRING_OPTIONS_ILVL_TRACKER_TEXT"] = "Habilitado"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_IMPORT_PROFILE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = ""--]] 
 L["STRING_OPTIONS_INSTANCE_ALPHA2"] = "Color del fondo"
 L["STRING_OPTIONS_INSTANCE_ALPHA2_DESC"] = "Cambiar el color del fondo de la ventana."
 L["STRING_OPTIONS_INSTANCE_BACKDROP"] = "Textura del fondo"
@@ -687,6 +707,8 @@ L["STRING_OPTIONS_NICKNAME"] = "Apodo"
 L["STRING_OPTIONS_NICKNAME_DESC"] = "Reemplazar el nombre de su personaje. El apodo se envía a los miembres de la hermandad, y se muestra en Details! en vez del nombre de su personaje."
 L["STRING_OPTIONS_OPEN_ROWTEXT_EDITOR"] = "Editor de texto de fila"
 L["STRING_OPTIONS_OPEN_TEXT_EDITOR"] = "Abrir editor de texto"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_OPENBROKER"] = ""--]] 
 L["STRING_OPTIONS_OVERALL_ALL"] = "Todos segmentos"
 L["STRING_OPTIONS_OVERALL_ALL_DESC"] = "Todos segmentos se inclyen en los datos globales."
 L["STRING_OPTIONS_OVERALL_ANCHOR"] = "Datos globales:"

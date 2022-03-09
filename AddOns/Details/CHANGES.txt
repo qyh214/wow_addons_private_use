@@ -1,10 +1,10 @@
-tag 9d76938e94ef41bdce7968ac911ad3d3034abf5a DetailsRetail.v9.2.0.9694.146
+tag 20c6520db00938849b991e6768974cd7fa104163 DetailsRetail.9.2.0.9718.146
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Wed Feb 23 14:39:02 2022 -0300
+Date:	Mon Mar 7 18:20:58 2022 -0300
 
-commit 27f69675caec0c1ad11d38c15425e7f8aa556122
+commit 92e138ed090b037423eade2b3815c0db0a32dd04
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Wed Feb 23 14:38:38 2022 -0300
+Date:   Mon Mar 7 18:20:34 2022 -0300
 
-    Added Cosmic Healing Potion to script 'Health Potion & Stone'.
+    Reverting Tiny Threat update
 

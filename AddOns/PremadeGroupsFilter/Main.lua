@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2020 Elotheon-Arthas-EU
+-- Copyright (C) 2022 Elotheon-Arthas-EU
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -339,16 +339,16 @@ function PGF.DoFilterSearchResults(results)
         local memberCounts = C_LFGList.GetSearchResultMemberCounts(resultID)
         local numGroupDefeated, numPlayerDefeated, maxBosses,
               matching, groupAhead, groupBehind = PGF.GetLockoutInfo(searchResultInfo.activityID, resultID)
-        local avName, avShortName, avCategoryID, avGroupID, avILevel, avFilters,
-              avMinLevel, avMaxPlayers, avDisplayType, avOrderIndex,
-              avUseHonorLevel, avShowQuickJoin = C_LFGList.GetActivityInfo(searchResultInfo.activityID)
-        local difficulty = PGF.GetDifficulty(searchResultInfo.activityID, avName, avShortName)
+        local activityInfo = C_LFGList.GetActivityInfoTable(searchResultInfo.activityID)
+
+        local difficulty = PGF.GetDifficulty(searchResultInfo.activityID, activityInfo.fullName, activityInfo.shortName)
 
         local env = {}
         env.activity = searchResultInfo.activityID
-        env.activityname = avName:lower()
+        env.activityname = activityInfo.fullName:lower()
         env.leader = searchResultInfo.leaderName and searchResultInfo.leaderName:lower() or ""
         env.age = math.floor(searchResultInfo.age / 60) -- age in minutes
+        env.agesecs = searchResultInfo.age -- age in seconds
         env.voice = searchResultInfo.voiceChat and searchResultInfo.voiceChat ~= ""
         env.voicechat = searchResultInfo.voiceChat
         env.ilvl = searchResultInfo.requiredItemLevel or 0
@@ -374,11 +374,11 @@ function PGF.DoFilterSearchResults(results)
         env.bossesmatching = matching
         env.bossesahead = groupAhead
         env.bossesbehind = groupBehind
-        env.maxplayers = avMaxPlayers
-        env.suggestedilvl = avILevel
-        env.minlvl = avMinLevel
-        env.categoryid = avCategoryID
-        env.groupid = avGroupID
+        env.maxplayers = activityInfo.maxNumPlayers
+        env.suggestedilvl = activityInfo.ilvlSuggestion
+        env.minlvl = activityInfo.minLevel
+        env.categoryid = activityInfo.categoryID
+        env.groupid = activityInfo.groupFinderActivityGroupID
         env.autoinv = searchResultInfo.autoAccept
         env.questid = searchResultInfo.questID
         env.declined = PGF.IsDeclinedGroup(searchResultInfo)
@@ -450,9 +450,10 @@ function PGF.DoFilterSearchResults(results)
 
         -- Shadowlands raids
         --             normal        heroic        mythic
-        env.cn       = aID == 720 or aID == 722 or aID == 721  -- Castle Nathria
-        env.sod      = aID == 743 or aID == 744 or aID == 745  -- Sanctum of Domination
-        local slraid = env.cn or env.sod -- all Shadowlands raids
+        env.cn       = aID == 720  or aID == 722  or aID == 721  -- Castle Nathria
+        env.sod      = aID == 743  or aID == 744  or aID == 745  -- Sanctum of Domination
+        env.sfo      = aID == 1020 or aID == 1021 or aID == 1022 -- Sepulcher of the First Ones
+        local slraid = env.cn or env.sod or env.sfo -- all Shadowlands raids
 
         -- Legion dungeons
         --                    normal        heroic        mythic        mythic+
@@ -499,11 +500,15 @@ function PGF.DoFilterSearchResults(results)
         env.soa         = aID == 708 or aID == 711 or aID == 710 or aID == 709  -- Spires of Ascension
         env.nw          = aID == 712 or aID == 715 or aID == 714 or aID == 713  -- The Necrotic Wake
         env.top         = aID == 716 or aID == 719 or aID == 718 or aID == 717  -- Theater of Pain
-        env.taz         = aID == 746                                            -- Tazavesh, the Veiled Market
+        env.tazs        =               aID == 1018              or aID == 1016 -- Tazavesh: Streets of Wonder
+        env.tazg        =               aID == 1019              or aID == 1017 -- Tazavesh: So'leah's Gambit
+        env.taz         = env.tazs or env.tazg     or aID == 746                -- Tazavesh, the Veiled Market
         env.taza        = env.taz
         env.ttvm        = env.taz
         env.mists       = env.mots
         local sldungeon = env.pf or env.dos or env.hoa or env.mots or env.sd or env.soa or env.nw or env.top or env.taz -- all SL dungeons
+
+        -- find more IDs: /run for i=750,2000 do local info = C_LFGList.GetActivityInfoTable(i); if info then print(i, info.fullName) end end
 
         -- Addon filters
         --
@@ -591,10 +596,10 @@ end
 function PGF.OnLFGListSearchEntryOnEnter(self)
     local resultID = self.resultID
     local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID)
-    local _, _, _, _, _, _, _, _, displayType = C_LFGList.GetActivityInfo(searchResultInfo.activityID)
+    local activityInfo = C_LFGList.GetActivityInfoTable(searchResultInfo.activityID)
 
     -- do not show members where Blizzard already does that
-    if displayType == LE_LFG_LIST_DISPLAY_TYPE_CLASS_ENUMERATE then return end
+    if activityInfo.displayType == LE_LFG_LIST_DISPLAY_TYPE_CLASS_ENUMERATE then return end
     if searchResultInfo.isDelisted or not GameTooltip:IsShown() then return end
     GameTooltip:AddLine(" ")
     GameTooltip:AddLine(CLASS_ROLES)

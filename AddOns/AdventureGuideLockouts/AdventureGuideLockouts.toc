@@ -1,9 +1,9 @@
-## Interface: 90100
+## Interface: 90200
 ## Title: Adventure Guide Lockouts
 ## Notes: Adds instance status indicators to Adventure Guide.
 ## Notes-frFR: Ajoute des indicateurs de verrouillage d'instance au Guide de l'aventurier.
 ## Author: alex_chrome, Meivyn
-## Version: 1.4.0
+## Version: 1.4.1
 
 Instances.lua
 WorldBosses.lua

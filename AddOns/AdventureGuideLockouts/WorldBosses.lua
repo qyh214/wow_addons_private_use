@@ -76,7 +76,8 @@ AddOn.worldBosses = {
       { encounterID = 2431, questID = 61816 }, -- Mortanis
       { encounterID = 2432, questID = 61815 }, -- Oranomonos the Everbranching
       { encounterID = 2433, questID = 61814 }, -- Nurgash Muckformed
-      { encounterID = 2456, questID = 64531 }  -- Mor'geth, Tormentor of the Damned
+      { encounterID = 2456, questID = 64531 },  -- Mor'geth, Tormentor of the Damned
+      { encounterID = 2468, questID = 65143 }  -- Antros
     }
   }
 }

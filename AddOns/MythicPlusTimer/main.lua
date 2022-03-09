@@ -255,8 +255,8 @@ local function show_demo()
   local demo_run = {
     cm_level = 30,
     level_key = "l" .. 30,
-    affixes = {9, 7, 13, 128},
-    affixes_key = "affixes-9-7-13-128",
+    affixes = {9, 7, 13, 130},
+    affixes_key = "affixes-9-7-13-130",
     zone_name = "Demo",
     current_zone_id = current_id,
     current_map_id = current_id,

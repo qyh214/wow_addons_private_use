@@ -414,6 +414,16 @@ L["STRING_OPTIONS_3D_UANCHOR"] = "Верхняя 3D модель:"
 L["STRING_OPTIONS_3D_UENABLED_DESC"] = "Включено или отключено, использование 3D модели рамки над полосами."
 L["STRING_OPTIONS_3D_USELECT_DESC"] = "Выберите модель, которая будет использоваться на верхней панели полос."
 L["STRING_OPTIONS_ADVANCED"] = "Дополнительно"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = ""--]] 
 L["STRING_OPTIONS_ALPHAMOD_ANCHOR"] = "Авто-скрытие:"
 L["STRING_OPTIONS_ALWAYS_USE"] = "Использовать на всех персонажах"
 L["STRING_OPTIONS_ALWAYS_USE_DESC"] = "Один и тот же профиль используется для всех персонажей. Вы можете переопределить это для любого персонажа, просто выбрав другой существующий профиль."
@@ -695,10 +705,14 @@ L["STRING_OPTIONS_ED_DESC"] = [=[|cFFFFFF00Вручную|r: пользоват�
 L["STRING_OPTIONS_ED1"] = "Вручную"
 L["STRING_OPTIONS_ED2"] = "Уточнять"
 L["STRING_OPTIONS_ED3"] = "Авто"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = ""--]] 
 L["STRING_OPTIONS_EDITIMAGE"] = "Редактировать изображение"
 L["STRING_OPTIONS_EDITINSTANCE"] = "Редактирование окна:"
 L["STRING_OPTIONS_ERASECHARTDATA"] = "Стереть диаграммы"
 L["STRING_OPTIONS_ERASECHARTDATA_DESC"] = "Во время выхода, все данные боя, собранные для создания графиков, стираются."
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_EXPORT_PROFILE"] = ""--]] 
 L["STRING_OPTIONS_EXTERNALS_TITLE"] = "Внешние виджеты"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "Эти параметры управляют поведением многих внешних виджетов."
 L["STRING_OPTIONS_GENERAL"] = "Общие настройки"
@@ -730,6 +744,12 @@ L["STRING_OPTIONS_ILVL_TRACKER_DESC"] = [=[Когда включено, и вы�
 
 Если отключено, он по-прежнему считывает уровень предметов из запросов других аддонов или когда вы вручную проверяете другого игрока.]=]
 L["STRING_OPTIONS_ILVL_TRACKER_TEXT"] = "Включить"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_IMPORT_PROFILE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = ""--]] 
 L["STRING_OPTIONS_INSTANCE_ALPHA2"] = "Фоновый цвет"
 L["STRING_OPTIONS_INSTANCE_ALPHA2_DESC"] = "Этот параметр позволяет изменить цвет фона окна."
 L["STRING_OPTIONS_INSTANCE_BACKDROP"] = "Фоновая текстура"
@@ -850,6 +870,8 @@ L["STRING_OPTIONS_NICKNAME_DESC"] = [=[Задайте ваш псевдоним.
 Псевдонимы отправляются участникам гильдии с Details! используется вместо имени персонажа.]=]
 L["STRING_OPTIONS_OPEN_ROWTEXT_EDITOR"] = "Текстовый редактор строк"
 L["STRING_OPTIONS_OPEN_TEXT_EDITOR"] = "Открыть текстовый редактор"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_OPENBROKER"] = ""--]] 
 L["STRING_OPTIONS_OVERALL_ALL"] = "Все сегменты"
 L["STRING_OPTIONS_OVERALL_ALL_DESC"] = "Все сегменты добавляются к общим данным."
 L["STRING_OPTIONS_OVERALL_ANCHOR"] = "Общие данные:"

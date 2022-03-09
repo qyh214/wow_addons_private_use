@@ -405,6 +405,16 @@ L["STRING_OPTIONS_3D_UANCHOR"] = "상위 3D 모델:"
 L["STRING_OPTIONS_3D_UENABLED_DESC"] = "바 위에 3D 모델 프레임 사용을 켜거나 끕니다."
 L["STRING_OPTIONS_3D_USELECT_DESC"] = "상위 모델 바에 사용할 모델을 선택합니다."
 L["STRING_OPTIONS_ADVANCED"] = "고급"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = ""--]] 
 L["STRING_OPTIONS_ALPHAMOD_ANCHOR"] = "자동 숨기기:"
 L["STRING_OPTIONS_ALWAYS_USE"] = "모든 캐릭터에 사용"
 L["STRING_OPTIONS_ALWAYS_USE_DESC"] = "모든 캐릭터에 같은 프로필이 사용됩니다. 저장된 다른 프로필을 선택하면 어떤 캐릭터든 강제 적용됩니다."
@@ -691,10 +701,14 @@ L["STRING_OPTIONS_ED_DESC"] = [=[|cFFFFFF00수동|r: 사용자가 초기화 버�
 L["STRING_OPTIONS_ED1"] = "수동"
 L["STRING_OPTIONS_ED2"] = "묻기"
 L["STRING_OPTIONS_ED3"] = "자동"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = ""--]] 
 L["STRING_OPTIONS_EDITIMAGE"] = "이미지 편집"
 L["STRING_OPTIONS_EDITINSTANCE"] = "편집 중인 창:"
 L["STRING_OPTIONS_ERASECHARTDATA"] = "차트 삭제"
 L["STRING_OPTIONS_ERASECHARTDATA_DESC"] = "접속종료 시 차트를 만들기 위해 수집된 모든 전투 데이터가 지워집니다."
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_EXPORT_PROFILE"] = ""--]] 
 L["STRING_OPTIONS_EXTERNALS_TITLE"] = "외부 위젯"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "여러 외부 위젯의 작동 방법을 조절하는 옵션입니다."
 L["STRING_OPTIONS_GENERAL"] = "일반 설정"
@@ -725,6 +739,12 @@ L["STRING_OPTIONS_ILVL_TRACKER_DESC"] = [=[활성화 하고 전투 중이 아니
 
 비활성하면, 다른 애드온이 요청한 아이템 레벨을 읽거나 수동으로 다른 플레이어를 살펴보기 해야합니다.]=]
 L["STRING_OPTIONS_ILVL_TRACKER_TEXT"] = "사용"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_IMPORT_PROFILE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = ""--]] 
 L["STRING_OPTIONS_INSTANCE_ALPHA2"] = "배경 색상"
 L["STRING_OPTIONS_INSTANCE_ALPHA2_DESC"] = "창의 배경색을 변경하는 옵션입니다."
 L["STRING_OPTIONS_INSTANCE_BACKDROP"] = "배경 무늬"
@@ -844,6 +864,8 @@ L["STRING_OPTIONS_NICKNAME_DESC"] = [=[당신의 별명을 정합니다.
 별명은 길드원들에게 보내지며 Details!에서 캐릭터 이름대신 사용합니다.]=]
 L["STRING_OPTIONS_OPEN_ROWTEXT_EDITOR"] = "바 문자 편집기"
 L["STRING_OPTIONS_OPEN_TEXT_EDITOR"] = "문자 편집기 열기"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_OPENBROKER"] = ""--]] 
 L["STRING_OPTIONS_OVERALL_ALL"] = "모든 세분화"
 L["STRING_OPTIONS_OVERALL_ALL_DESC"] = "모든 세분화를 종합 데이터에 추가합니다."
 L["STRING_OPTIONS_OVERALL_ANCHOR"] = "종합 데이터:"

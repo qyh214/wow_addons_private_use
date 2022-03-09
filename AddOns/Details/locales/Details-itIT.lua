@@ -384,6 +384,16 @@ L["STRING_OPTIONS_3D_UANCHOR"] = "Modello 3D Superiore:"
 L["STRING_OPTIONS_3D_UENABLED_DESC"] = "Attiva o Disattiva l'uso di un frame di un modello 3d sopra le barre."
 L["STRING_OPTIONS_3D_USELECT_DESC"] = "Scegli quale modello verrà utilizzato sulla barra del modello superiore."
 L["STRING_OPTIONS_ADVANCED"] = "Avanzate"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = ""--]] 
 L["STRING_OPTIONS_ALPHAMOD_ANCHOR"] = "Nascondimento Automatico:"
 L["STRING_OPTIONS_ALWAYS_USE"] = "Usa Su Tutti i Personaggi"
 L["STRING_OPTIONS_ALWAYS_USE_DESC"] = "Lo stesso profilo viene usato su tutti i personaggi. Potresti dover sovrascrivere questo su tutti i personaggi selezionando un altro profilo esistente."
@@ -568,10 +578,14 @@ L["STRING_OPTIONS_ED_DESC"] = "|cFFFFFF00Manualmente|r: l'utente deve premere su
 L["STRING_OPTIONS_ED1"] = "Manualmente"
 L["STRING_OPTIONS_ED2"] = "Prompt"
 L["STRING_OPTIONS_ED3"] = "Auto"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = ""--]] 
 L["STRING_OPTIONS_EDITIMAGE"] = "Modifica Immagine"
 L["STRING_OPTIONS_EDITINSTANCE"] = "Modifica Finestra:"
 L["STRING_OPTIONS_ERASECHARTDATA"] = "Cancella Grafici"
 L["STRING_OPTIONS_ERASECHARTDATA_DESC"] = "Durante il logout, tutti i dati di combattimento raccolti per creare i grafici vengono cancellati."
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_EXPORT_PROFILE"] = ""--]] 
 L["STRING_OPTIONS_EXTERNALS_TITLE"] = "Widget Esterni"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "Queste opzioni controllano il comportamento di molti widget esterni."
 L["STRING_OPTIONS_GENERAL"] = "Impostazioni Generali"
@@ -593,6 +607,12 @@ L["STRING_OPTIONS_IGNORENICKNAME_DESC"] = "Quando è abilitato, i nickname e gli
 L["STRING_OPTIONS_ILVL_TRACKER"] = "Tracker del Livello Oggetti:"
 L["STRING_OPTIONS_ILVL_TRACKER_DESC"] = "Quando attivo e fuori dal combattimento, l'addon indaga e traccia il livello oggetti dei giocatori nell'incursione. Se disattivato, esso leggerà comunque il livello oggetti dai queries degli altri addon o quando ispezioni manualmente un altro player."
 L["STRING_OPTIONS_ILVL_TRACKER_TEXT"] = "Attivato"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_IMPORT_PROFILE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = ""--]] 
 L["STRING_OPTIONS_INSTANCE_ALPHA2"] = "Colore di Sfondo"
 L["STRING_OPTIONS_INSTANCE_ALPHA2_DESC"] = "Questa opzione ti permette di cambiare il colore dello sfondo della finestra."
 L["STRING_OPTIONS_INSTANCE_BACKDROP"] = "Texture di Sfondo"
@@ -689,6 +709,8 @@ L["STRING_OPTIONS_NICKNAME"] = "NIckname"
 L["STRING_OPTIONS_NICKNAME_DESC"] = "Imposta un nickname per te. I nickname vengono inviati ai membri della gilda e ai dettagli! lo usa al posto del nome del tuo personaggio."
 L["STRING_OPTIONS_OPEN_ROWTEXT_EDITOR"] = "Editor Righe di Testo"
 L["STRING_OPTIONS_OPEN_TEXT_EDITOR"] = "Apri Editor di Testo"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_OPENBROKER"] = ""--]] 
 L["STRING_OPTIONS_OVERALL_ALL"] = "Tutti i Segmenti"
 L["STRING_OPTIONS_OVERALL_ALL_DESC"] = "Tutti i segmenti vengono aggiunti ai dati complessivi."
 L["STRING_OPTIONS_OVERALL_ANCHOR"] = "Dati Complessivi:"

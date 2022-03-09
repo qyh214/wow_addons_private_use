@@ -1,5 +1,39 @@
 # Changelog
 
+## Changed in v46
+
+* Fixed an error when mousing over Anima Shards in Bastion
+
+## Changed in v45
+
+* The right-click menu on points now shows an option to open the Achievements UI to the related achievement
+* Dune Dominance mobs: show individual status in the tooltip
+* Add the Protoform Repository to the map once it's unlocked
+* Hide the Architect's Reserve until the entire protoform chain is complete
+* The Protopear only needs to be ripened once now
+* Add other Moss-Choked Guardian spawns
+
+## Changed in v44
+
+* Dune Dominance mobs: more loot, show notes so you know which mob drops which items
+* Ripened Protopear: show icon on the main map for the entrance to the Blooming Foundry
+* Show spell tooltips on lore concordances and the wellspring so you know what buff you can get
+* Minor tweaks to map icon sizes
+
+## Changed in v43
+
+* March 3rd hotfix: Interrogator's Vicious Dirk now drops from all the Dune Domination mobs
+* Last lore concordance questids added
+* Orixal has moved
+* Assorted minor point tweaks
+
+## Changed in v42
+
+* A hotfix on March 1st put the Ancient Translocators on the Zereth Mortis map (*so* on the map that they're the only thing you can see if you've got no map-completion at all 😁), so I'm removing mine
+* Added some notes to schematic loot drops indicating whether they're for a mount or a pet
+* Remove an item from Hirukon that was incorrectly flagged as being a pet -- it's just an ingredient for a pet
+* Prep-work for adding points for schematic-gathering, all hidden for now
+
 ## Changed in v41
 
 * Explain the Syntactic Vault and add points for the runic syllables

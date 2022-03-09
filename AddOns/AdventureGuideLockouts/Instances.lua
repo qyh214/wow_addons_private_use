@@ -143,5 +143,6 @@ AddOn.instances = {
   [2286] = 1182, -- The Necrotic Wake
   [2293] = 1187, -- Theater of Pain
   [2296] = 1190, -- Castle Nathria
-  [2450] = 1193  -- Sanctum of Domination	
+  [2450] = 1193,  -- Sanctum of Domination
+  [2481] = 1195 -- Sepulcher of the First Ones
 }
