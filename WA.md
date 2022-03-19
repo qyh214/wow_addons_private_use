@@ -33,21 +33,11 @@
 - 原版：https://wago.io/U7UFNotjr
 - 自用社区修改版：https://bbs.nga.cn/read.php?tid=24653400
 
-大秘境-死疽词缀警告-奶妈用：
-- 原版：https://bbs.nga.cn/read.php?tid=24910345
-- 自用修改版：https://wago.io/p1ilh7DKv
-
 奶萨水盾、土盾提示：
 - 原版：https://bbs.nga.cn/read.php?tid=24506536
 - 自用大地之盾+水之护盾整合版：https://wago.io/9YVsyrNgm
 
-震荡词缀打断判断（Quake CD/Interrupt Bar）：https://wago.io/OYG84YE0x
-
-暴怒魔法效果提示（怪物buff驱散提示SL Dungeons Purgeable Buffs）：https://wago.io/r2QBcOnlT
-
 details中文昵称修正补丁（Details! Nickname Extender）：https://wago.io/uq0Uox6Ta
-
-崩裂监视（Bursting Revamp Shadowlands）：https://wago.io/Hmm-bO1rv
 
 9.1刻希亚宝箱+圣物+坐标+位面：
 - 每日助手：https://wago.io/v3gssSmaY （略有修改，设置为全部只在噬渊区域生效显示）
@@ -65,15 +55,23 @@ Nnoggie大秘境技能CD监视升级版&自制团队CD监视，带技能激活�
 
 史诗钥石地下城界面显示分数（M+ Display）：https://wago.io/M+LevelDisplay
 
-通灵战潮道具监视（@SL-Dungeons - NW - Kyrian Armaments）：https://wago.io/KyrianArmaments
-
-大米地下城框架上高亮显示点名技能（Dungeon - Targeted Spells）：https://wago.io/BFADungeonTargetedSpells
-
 姓名版目标（可用来显示怨毒目标）：https://wago.io/0QGPOXwHc
 
 自带预创建组队增强：https://bbs.nga.cn/read.php?tid=30859608
 
 吃食物通告（萌）：https://wago.io/rJLsKGVt-
+
+大秘境-死疽词缀警告-奶妈用：
+- 原版：https://bbs.nga.cn/read.php?tid=24910345
+- 自用修改版：https://wago.io/p1ilh7DKv
+
+大米地下城框架上高亮显示点名技能（Dungeon - Targeted Spells）：https://wago.io/BFADungeonTargetedSpells
+
+震荡词缀打断判断（Quake CD/Interrupt Bar）：https://wago.io/OYG84YE0x
+
+暴怒魔法效果提示（怪物buff驱散提示SL Dungeons Purgeable Buffs）：https://wago.io/r2QBcOnlT
+
+崩裂监视（Bursting Revamp Shadowlands）：https://wago.io/Hmm-bO1rv
 
 暗影国度地下城与团队副本：
 - 彼界尾王分身击杀报警（Mueh'zala spawns health group）：https://wago.io/-_UWm33O3
@@ -82,3 +80,4 @@ Nnoggie大秘境技能CD监视升级版&自制团队CD监视，带技能激活�
 - 集市绿洲+符文控制台：https://bbs.nga.cn/read.php?tid=30865926
 - 5人地下城+第三赛季加密词缀：https://bbs.nga.cn/read.php?tid=24446064
 - 团队副本初诞者圣墓：https://bbs.nga.cn/read.php?tid=30895500
+- 通灵战潮道具监视（@SL-Dungeons - NW - Kyrian Armaments）：https://wago.io/KyrianArmaments
