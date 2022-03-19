@@ -1,15 +1,15 @@
 local mod	= DBM:NewMod(2460, "DBM-Sepulcher", nil, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220302052206")
+mod:SetRevision("20220314074523")
 mod:SetCreatureID(181548, 181551, 181546, 181549)
 mod:SetEncounterID(2544)
 mod:SetBossHPInfoToHighest()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
-mod:SetHotfixNoticeRev(20220301000000)
+mod:SetHotfixNoticeRev(20220311000000)
 mod:SetMinSyncRevision(20220114000000)
 --mod.respawnTime = 29
-mod.NoSortAnnounce = true
+--mod.NoSortAnnounce = true
 
 mod:RegisterCombat("combat")
 
@@ -31,7 +31,7 @@ mod:RegisterEventsInCombat(
 --TODO, Find Phase 3 cd of necrotic ritual (between casts) and P2 time between wracking pain casts on mythic and tons of others
 --TODO, maybe add https://ptr.wowhead.com/spell=362270/anima-shelter tracking to infoframe? seems like might already be crowded though just monitoring sin stacks and deathtouch
 --TODO, tanks wap for Wracking Pain? Feels like tank should just eat it vs putting 2 bosses on one tank for only 25%
---TODO, recheck normal mode timers on live
+--TODO, recheck normal mode timers on live for P3 necro dude
 --TODO, recheck mythic timers on live
 --[[
 (ability.id = 360295 or ability.id = 360636 or ability.id = 365272 or ability.id = 361066 or ability.id = 361304 or ability.id = 361568 or ability.id = 365126 or ability.id = 361300 or ability.id = 366062  or ability.id = 361789) and type = "begincast"
@@ -73,13 +73,13 @@ local warnAscensionsCall						= mod:NewCountAnnounce(361066, 2)
 local warnBastionsWard							= mod:NewCastAnnounce(360845, 1)
 local warnPinned								= mod:NewTargetNoFilterAnnounce(362352, 4)
 
-local specWarnHumblingStrikes					= mod:NewSpecialWarningDefensive(365272, nil, nil, nil, 1, 2)
-local specWarnHumblingStrikesTaunt				= mod:NewSpecialWarningTaunt(365272, nil, nil, nil, 1, 2)
+local specWarnHumblingStrikes					= mod:NewSpecialWarningDefensive(365272, nil, 31907, nil, 1, 2)
+local specWarnHumblingStrikesTaunt				= mod:NewSpecialWarningTaunt(365272, nil, 31907, nil, 1, 2)
 local specWarnPinningVolley						= mod:NewSpecialWarningDodgeCount(361278, nil, nil, nil, 2, 2)--Is it dodgeable?
 local yellPinned								= mod:NewShortYell(362352)
 
-local timerHumblingStrikesCD					= mod:NewCDCountTimer(35.7, 365272, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerAscensionsCallCD						= mod:NewCDCountTimer(57.1, 365272, nil, nil, nil, 1)
+local timerHumblingStrikesCD					= mod:NewCDCountTimer(35.7, 365272, 31907, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--shortname "strike"
+local timerAscensionsCallCD						= mod:NewCDCountTimer(57.1, 361066, nil, nil, nil, 1)
 local timerPinningVolleyCD						= mod:NewCDCountTimer(64.1, 361278, nil, nil, nil, 3)
 
 mod:GroupSpells(361278, 362352)--Pinning Volley and Pinned
@@ -130,7 +130,7 @@ mod.vb.hunterIcon = 1
 mod.vb.ritualistIconMethod = 1
 mod.vb.ritualistIcon = 8
 
-local difficultyName = "None"
+local difficultyName = mod:IsMythic() and "mythic" or mod:IsHeroic() and "heroic" or mod:IsNormal() and "normmal" or "lfr"
 local allTimers = {
 	["lfr"] = {--LFR data as of 1-7-22
 		[1] = {
@@ -279,55 +279,55 @@ local allTimers = {
 	["mythic"] = {
 		[1] = {
 			--Necrotic Ritual
-			[360295] = {12.5},
+			[360295] = {12.5, 59.9},
 			--Runecarver's Deathtouch
-			[360636] = {41.8},
+			[360636] = {41.8, 49.9},
 			--Humbling Strikes
-			[365272] = {10.6, 31.2},
+			[365272] = {10.6, 31.2, 31.2, 31.2},
 			--Ascension's Call
-			[361066] = {38.2},
+			[361066] = {38},--?? Need transcriptor
 			--Pinning Volley
-			[361278] = {56.4},
+			[361278] = {56.4, 55.8},
 			--Night Hunter (Mythic Only)
-			[361745] = {11.9},
+			[361745] = {11.9, 61.2},
 		},
 		[2] = {
 			--Wild Stampede
-			[361304] = {31.3, 35.5, 30, 33.3},
+			[361304] = {54.8, 28.4, 28.4},
 			--Withering Seeds
-			[361568] = {26.4, 127.8},
+			[361568] = {21.5, 109.3, 46.7},
 			--Animastorm
-			[366234] = {52.7, 89.1},
+			[366234] = {44.2, 76.6},
 			--Wracking Pain
-			[365126] = {},
+			[365126] = {55.6, 51.1, 52.5},
 			--Hand of Destruction
-			[361791] = {108.6, 74.9},
+			[361791] = {91.1, 63.8},
 			--Night Hunter (Mythic Only)
-			[361745] = {27.7, 128.3},
+			[361745] = {23, 109.3, 46.2},
 		},
 		[3] = {
 			--Necrotic Ritual
-			[360295] = {17.9},
+			[360295] = {17.8},
 			--Runecarver's Deathtouch
-			[360636] = {130.8},
+			[360636] = {129},
 			--Humbling Strikes
-			[365272] = {41.1, 29.9, 29.9, 29.9},
+			[365272] = {41, 29.8, 29.8, 29.8, 29.8, 29.8},
 			--Ascension's Call
-			[361066] = {121.1},
+			[361066] = {121.1},--IFFY, need transcriptor
 			--Pinning Volley
-			[361278] = {56.7, 84},
+			[361278] = {55.9, 82.5},
 			--Wild Stampede
-			[361304] = {28.7, 31.5},
+			[361304] = {26.4, 33.2, 33.7},--Sometimes 2nd one is skipped
 			--Withering Seeds
-			[361568] = {93.3},
+			[361568] = {17.8, 77.8, 71.5},
 			--Animastorm
-			[366234] = {52.9},
+			[366234] = {50.9},
 			--Wracking Pain
-			[365126] = {41.1, 29.9, 29.9, 29.9},
+			[365126] = {41, 29.8, 29.8, 29.8, 29.8, 29.8},
 			--Hand of Destruction
-			[361791] = {107.8},
+			[361791] = {110, 68.4},
 			--Night Hunter (Mythic Only)
-			[361745] = {21.6, 75},
+			[361745] = {21.1, 75.7, 73.7},
 		},
 	},
 }
@@ -389,12 +389,12 @@ function mod:OnCombatStart(delay)
 	if self:IsMythic() then
 		difficultyName = "mythic"
 		--Necro
-		timerRunecarversDeathtouchCD:Start(41.9-delay, 1)
+		timerRunecarversDeathtouchCD:Start(41.5-delay, 1)
 		--Kyrian
-		timerAscensionsCallCD:Start(25.8-delay, 1)--Time til USCS anyways
-		timerPinningVolleyCD:Start(56.4-delay, 1)
+		timerAscensionsCallCD:Start(38-delay, 1)--Time til USCS anyways
+		timerPinningVolleyCD:Start(55.7-delay, 1)
 		--Venthyr
-		timerNightHunterCD:Start(11.9-delay, 1)
+		timerNightHunterCD:Start(11.5-delay, 1)
 	elseif self:IsHeroic() then
 		difficultyName = "heroic"
 		--Necro
@@ -466,15 +466,19 @@ function mod:SPELL_CAST_START(args)
 		self.vb.ritualistIcon = self.vb.ritualistIconMethod == 2 and 4 or 8
 		specWarnNecroticRitual:Show(self.vb.ritualCount)
 		specWarnNecroticRitual:Play("killmob")
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.ritualCount+1]
-		if timer then
-			timerNecroticRitualCD:Start(timer, self.vb.ritualCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.ritualCount+1]
+			if timer then
+				timerNecroticRitualCD:Start(timer, self.vb.ritualCount+1)
+			end
 		end
 	elseif spellId == 360636 then
 		self.vb.deathtouchCount = self.vb.deathtouchCount + 1
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.deathtouchCount+1]
-		if timer then
-			timerRunecarversDeathtouchCD:Start(timer, self.vb.deathtouchCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.deathtouchCount+1]
+			if timer then
+				timerRunecarversDeathtouchCD:Start(timer, self.vb.deathtouchCount+1)
+			end
 		end
 	elseif spellId == 365272 then
 		self.vb.humblingCount = self.vb.humblingCount + 1
@@ -482,9 +486,11 @@ function mod:SPELL_CAST_START(args)
 			specWarnHumblingStrikes:Show()
 			specWarnHumblingStrikes:Play("defensive")
 		end
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.humblingCount+1]
-		if timer then
-			timerHumblingStrikesCD:Start(timer, self.vb.humblingCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.humblingCount+1]
+			if timer then
+				timerHumblingStrikesCD:Start(timer, self.vb.humblingCount+1)
+			end
 		end
 	elseif spellId == 361066 then
 		DBM:AddMsg("Ascensions call added back to combat log, notify DBM authors")
@@ -499,16 +505,20 @@ function mod:SPELL_CAST_START(args)
 		self.vb.stampedeCount = self.vb.stampedeCount + 1
 		specWarnWildStampede:Show(self.vb.stampedeCount)
 		specWarnWildStampede:Play("watchstep")
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.stampedeCount+1]
-		if timer then
-			timerWildStampedeCD:Start(timer, self.vb.stampedeCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.stampedeCount+1]
+			if timer then
+				timerWildStampedeCD:Start(timer, self.vb.stampedeCount+1)
+			end
 		end
 	elseif spellId == 361568 then
 		self.vb.seedCount = self.vb.seedCount + 1
 		self.vb.seedIcon = 1
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.seedCount+1]
-		if timer then
-			timerWitheringSeedCD:Start(timer, self.vb.seedCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.seedCount+1]
+			if timer then
+				timerWitheringSeedCD:Start(timer, self.vb.seedCount+1)
+			end
 		end
 	elseif spellId == 365126 then
 		self.vb.painCount = self.vb.painCount + 1
@@ -516,9 +526,11 @@ function mod:SPELL_CAST_START(args)
 			specWarnWrackingPain:Show(self.vb.painCount)
 			specWarnWrackingPain:Play("shockwave")
 		end
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.painCount+1]
-		if timer then
-			timerWrackingPainCD:Start(timer, self.vb.painCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.painCount+1]
+			if timer then
+				timerWrackingPainCD:Start(timer, self.vb.painCount+1)
+			end
 		end
 	elseif spellId == 366062 then
 		warnCompleteRecon:Show()
@@ -540,15 +552,15 @@ function mod:SPELL_CAST_START(args)
 		if self.vb.phase == 2 then
 			if self:IsMythic() then
 				--Prototype of Absolution (Venthyr)
-				--timerWrackingPainCD:Start(36, 1)--Unknown, never saw it
-				timerHandofDestructionCD:Start(107.7, 1)
+				timerWrackingPainCD:Start(55.6, 1)
+				timerHandofDestructionCD:Start(91.1, 1)
 				--prototype-of-renewal (Night Fae)
-				timerWildStampedeCD:Start(31.3, 1)
-				timerWitheringSeedCD:Start(26.4, 1)
-				timerAnimastormCD:Start(52.7, 1)
+				timerWitheringSeedCD:Start(21.5, 1)
+				timerAnimastormCD:Start(44.2, 1)
+				timerWildStampedeCD:Start(54.8, 1)
 
 				timerNightHunterCD:Stop()--In case it's not properly cleared by clearalldebuffs
-				timerNightHunterCD:Start(27.7)
+				timerNightHunterCD:Start(23)
 			elseif self:IsHeroic() then
 				--Prototype of Absolution (Venthyr)
 				timerWrackingPainCD:Start(69.7, 1)
@@ -577,22 +589,22 @@ function mod:SPELL_CAST_START(args)
 		else--Stage 3
 			if self:IsMythic() then
 				--Prototype of Absolution (Venthyr)
-				timerWrackingPainCD:Start(41.1, 1)
-				timerHandofDestructionCD:Start(107.7, 1)
+				timerWrackingPainCD:Start(41, 1)
+				timerHandofDestructionCD:Start(110, 1)
 				--prototype-of-duty (Kyrian)
-				timerHumblingStrikesCD:Start(41.1, 1)
-				timerPinningVolleyCD:Start(56.7, 1)
+				timerHumblingStrikesCD:Start(41, 1)
+				timerPinningVolleyCD:Start(55.9, 1)
 				timerAscensionsCallCD:Start(121.1, 1)
 				--prototype-of-renewal (Night Fae)
-				timerWildStampedeCD:Start(28.7, 1)
-				timerAnimastormCD:Start(52.9, 1)
-				timerWitheringSeedCD:Start(93.3, 1)
+				timerWitheringSeedCD:Start(17.8, 1)
+				timerWildStampedeCD:Start(26.4, 1)
+				timerAnimastormCD:Start(50.9, 1)
 				--prototype-of-war (Necro)
-				timerNecroticRitualCD:Start(17.9, 1)
-				timerRunecarversDeathtouchCD:Start(130.8, 1)
+				timerNecroticRitualCD:Start(17.8, 1)
+				timerRunecarversDeathtouchCD:Start(129, 1)
 
 				timerNightHunterCD:Stop()--In case it's not properly cleared by clearalldebuffs
-				timerNightHunterCD:Start(21.6, 1)
+				timerNightHunterCD:Start(21.1, 1)
 			elseif self:IsHeroic() then
 				--Prototype of Absolution (Venthyr)
 				timerWrackingPainCD:Start(41, 1)
@@ -648,17 +660,21 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 361745 and self:AntiSpam(5, 2) then
 		self.vb.nightCount = self.vb.nightCount + 1
 		self.vb.hunterIcon = 1
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.nightCount+1]
-		if timer then
-			timerNightHunterCD:Start(timer, self.vb.nightCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.nightCount+1]
+			if timer then
+				timerNightHunterCD:Start(timer, self.vb.nightCount+1)
+			end
 		end
 	elseif spellId == 361278 then
 		self.vb.volleyCount = self.vb.volleyCount + 1
 		specWarnPinningVolley:Show(self.vb.volleyCount)
 		specWarnPinningVolley:Play("watchstep")
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.volleyCount+1]
-		if timer then
-			timerPinningVolleyCD:Start(timer, self.vb.volleyCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.volleyCount+1]
+			if timer then
+				timerPinningVolleyCD:Start(timer, self.vb.volleyCount+1)
+			end
 		end
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(8)
@@ -735,9 +751,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		self.vb.animaCount = self.vb.animaCount + 1
 		specWarnAnimastorm:Show(DBM_COMMON_L.SHELTER)
 		specWarnAnimastorm:Play("findshelter")
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.animaCount+1]
-		if timer then
-			timerAnimastormCD:Start(timer, self.vb.animaCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.animaCount+1]
+			if timer then
+				timerAnimastormCD:Start(timer, self.vb.animaCount+1)
+			end
 		end
 	elseif spellId == 361745 then
 		local icon = self.vb.hunterIcon
@@ -848,17 +866,21 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	elseif spellId == 361066 then--Ascension's Call
 		self.vb.callCount = self.vb.callCount + 1
 		warnAscensionsCall:Show(self.vb.callCount)
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.callCount+1]
-		if timer then
-			timerAscensionsCallCD:Start(timer, self.vb.callCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.callCount+1]
+			if timer then
+				timerAscensionsCallCD:Start(timer, self.vb.callCount+1)
+			end
 		end
 	elseif spellId == 361791 and self:AntiSpam(10, 3) then--Script Activating to cast Hand of Destruction (2 sec faster than SUCCESS 361789)
 		self.vb.handCount = self.vb.handCount + 1
 		specWarnHandofDestruction:Show()
 		specWarnHandofDestruction:Play("justrun")
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.handCount+1]
-		if timer then
-			timerHandofDestructionCD:Start(timer, self.vb.handCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.handCount+1]
+			if timer then
+				timerHandofDestructionCD:Start(timer, self.vb.handCount+1)
+			end
 		end
 	end
 end

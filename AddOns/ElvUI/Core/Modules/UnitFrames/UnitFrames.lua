@@ -31,6 +31,7 @@ local SOUNDKIT_IG_CHARACTER_NPC_SELECT = SOUNDKIT.IG_CHARACTER_NPC_SELECT
 local SOUNDKIT_IG_CREATURE_NEUTRAL_SELECT = SOUNDKIT.IG_CREATURE_NEUTRAL_SELECT
 local SOUNDKIT_INTERFACE_SOUND_LOST_TARGET_UNIT = SOUNDKIT.INTERFACE_SOUND_LOST_TARGET_UNIT
 local POWERTYPE_ALTERNATE = Enum.PowerType.Alternate or 10
+local MAX_BOSS_FRAMES = _G.MAX_BOSS_FRAMES
 
 -- GLOBALS: ElvUF_Parent, Arena_LoadUI
 local hiddenParent = CreateFrame('Frame', nil, _G.UIParent)
@@ -984,7 +985,7 @@ function UF:CreateHeader(parent, groupFilter, overrideName, template, groupName,
 
 	local header = ElvUF:SpawnHeader(overrideName, headerTemplate, nil,
 		'oUF-initialConfigFunction', format('self:SetWidth(%d); self:SetHeight(%d);', db.width, db.height),
-		'groupFilter', groupFilter, 'showParty', true, 'showRaid', group ~= "party", 'showSolo', true,
+		'groupFilter', groupFilter, 'showParty', true, 'showRaid', group ~= 'party', 'showSolo', true,
 		template and 'template', template
 	)
 
@@ -1273,7 +1274,7 @@ do
 			if id then
 				HandleFrame('Boss' .. id .. 'TargetFrame')
 			else
-				for i = 1, _G.MAX_BOSS_FRAMES do
+				for i = 1, MAX_BOSS_FRAMES do
 					HandleFrame(format('Boss%dTargetFrame', i))
 				end
 			end
@@ -1522,6 +1523,50 @@ function UF:PLAYER_TARGET_CHANGED()
 	end
 end
 
+do -- Clique support for registering clicks
+	function UF:AllowRegisterClicks(frame)
+		if _G.Clique and _G.Clique.IsFrameBlacklisted then
+			return _G.Clique:IsFrameBlacklisted(frame)
+		else
+			return true
+		end
+	end
+
+	local focusUnits = { arena=1, boss=1, tank=1, assist=1, target=1 }
+	function UF:RegisterForClicks(frame, db)
+		if focusUnits[frame.unitframeType] and not frame.isChild and db then
+			if db.middleClickFocus then
+				if frame:GetAttribute('type3') ~= 'focus' then
+					frame:SetAttribute('type3', 'focus')
+				end
+			elseif frame:GetAttribute('type3') == 'focus' then
+				frame:SetAttribute('type3', nil)
+			end
+		end
+
+		frame:RegisterForClicks(UF.db.targetOnMouseDown and 'AnyDown' or 'AnyUp')
+	end
+
+	local clickFrames = {}
+	function UF:UpdateRegisteredClicks()
+		for frame in next, clickFrames do
+			UF:HandleRegisterClicks(frame, true)
+		end
+	end
+
+	function UF:HandleRegisterClicks(frame, skip)
+		if UF:AllowRegisterClicks(frame) then
+			UF:RegisterForClicks(frame, frame.db)
+		elseif focusUnits[frame.unitframeType] and frame:GetAttribute('type3') == 'focus' then
+			frame:SetAttribute('type3', nil)
+		end
+
+		if not skip then
+			clickFrames[frame] = true
+		end
+	end
+end
+
 function UF:AfterStyleCallback()
 	-- this will wait until after ouf pushes `EnableElement` onto the newly spawned frames
 	-- calling an update onto assist or tank in the styleFunc is before the `EnableElement`
@@ -1575,6 +1620,10 @@ function UF:Initialize()
 
 	if (not E.private.unitframe.disabledBlizzardFrames.party) and (not E.private.unitframe.disabledBlizzardFrames.raid) then
 		E.RaidUtility.Initialize = E.noop
+	end
+
+	if _G.Clique and _G.Clique.BLACKLIST_CHANGED then
+		hooksecurefunc(_G.Clique, 'BLACKLIST_CHANGED', UF.UpdateRegisteredClicks)
 	end
 
 	if E.private.unitframe.disabledBlizzardFrames.arena then

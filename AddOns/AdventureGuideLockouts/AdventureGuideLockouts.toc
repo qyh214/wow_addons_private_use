@@ -3,7 +3,7 @@
 ## Notes: Adds instance status indicators to Adventure Guide.
 ## Notes-frFR: Ajoute des indicateurs de verrouillage d'instance au Guide de l'aventurier.
 ## Author: alex_chrome, Meivyn
-## Version: 1.4.1
+## Version: 1.4.2
 
 Instances.lua
 WorldBosses.lua

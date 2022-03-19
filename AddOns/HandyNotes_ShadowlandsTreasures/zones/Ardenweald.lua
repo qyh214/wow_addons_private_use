@@ -142,12 +142,12 @@ ns.RegisterPoints(1565, { -- Ardenweald
 
 local vulpin = {
     achievement=14313, criteria=50038, -- Playful Vulpin Befriended
-    quest=61086, -- also 61080, 61081, 61084, 61085 for progress
+    quest=61086, -- also 61080, 61081, 61084, 61085 for progress (61078 also triggers)
     progress={61080, 61081, 61084, 61085, 61086},
     loot={
         {180645, pet=2905}, -- Dodger
     },
-    note="Find {npc:171206:Playful Vulpin} and play with them 5 times to obtain the treasure. Use emotes related to what they're doing",
+    note="Find {npc:171206:Playful Vulpin} and play with them 5 times to obtain the treasure. Use emotes related to what they're doing, in order: /curious, /sit, /sing, /dance, /pet.",
     atlas="honorsystem-icon-bonus", scale=1,
     minimap=true,
     group="Playful Vulpin",
@@ -167,6 +167,25 @@ ns.RegisterPoints(1565, {
     [65222265] = vulpin,
     [67553191] = vulpin,
     [72393146] = vulpin,
+})
+
+ns.RegisterPoints(1565, { -- Ardenweald
+    [51836923] = {},
+    [60005513] = {},
+    [65083646] = {},
+    [51213104] = {},
+    [37593625] = {},
+    [69852732] = {},
+}, {
+    quest=64961,
+    loot={
+        {187819, quest=64961, covenant=Enum.CovenantType.NightFae}, -- Cat Soul
+    },
+    note="/soothe the {npc:181694:Lost Soul}, at the very top of one of the great trees",
+    covenant=Enum.CovenantType.NightFae,
+    atlas="sanctumupgrades-nightfae-32x32",
+    minimap=true,
+    group="soulshape",
 })
 
 -- Non-achievement treasures
@@ -453,9 +472,10 @@ ns.RegisterPoints(1565, {
             182453, -- Twilight Bloom (N'Zoth)
             182455, -- Dreamers Mending (Xavius)
             -- the vendor sells:
-            {181304, covenant=Enum.CovenantType.NightFae}, -- Winterwoven Branches (night fae only)
-            {182175, covenant=Enum.CovenantType.NightFae}, -- Moose Soul (night fae only)
-            {180748, mount=1332}, -- Silky Shimmermoth
+            {181304, covenant=Enum.CovenantType.NightFae, note="Vendor"}, -- Winterwoven Branches
+            {182175, quest=62430, covenant=Enum.CovenantType.NightFae, note="Vendor"}, -- Moose Soul
+            {187873, quest=64992, covenant=Enum.CovenantType.NightFae, note="Vendor"}, -- Prairie Dog Soul
+            {180748, mount=1332, note="Vendor"}, -- Silky Shimmermoth
         },
         atlas="VignetteLootElite",scale=1.2,
         -- covenant=Enum.CovenantType.NightFae,
@@ -464,6 +484,14 @@ ns.RegisterPoints(1565, {
     [43204710] = {
         label="{npc:163714}",
         note="Buy items unlocked by the Ardenweald's a Stage rares",
+        loot={
+            -- the vendor sells:
+            {181304, covenant=Enum.CovenantType.NightFae}, -- Winterwoven Branches
+            {182175, quest=62430, covenant=Enum.CovenantType.NightFae}, -- Moose Soul
+            {187873, quest=64992, covenant=Enum.CovenantType.NightFae}, -- Prairie Dog Soul
+            {180748, mount=1332}, -- Silky Shimmermoth
+        },
+        active=ns.conditions.QuestComplete(61633),
         atlas="banker",
         minimap=true,
     },

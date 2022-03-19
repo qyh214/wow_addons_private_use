@@ -1,33 +1,5 @@
 local myname, ns = ...
-
-local Base = {
-    Initialize = function() end,
-}
-local Class = function(def)
-    local class = def or {}
-    local class_meta = {
-        __index = function(_, index)
-            local class_walked = class
-            repeat
-                local val = rawget(class_walked, index)
-                if val ~= nil then return val end
-                class_walked = class_walked.__parent
-            until class_walked == nil
-        end,
-    }
-    setmetatable(class, {
-        __call = function(_, ...)
-            local self = {}
-            setmetatable(self, class_meta)
-            self:Initialize(...)
-            return self
-        end,
-        -- inheritance, this is it:
-        __index = def.__parent or Base,
-    })
-
-    return class
-end
+local Class = ns.Class
 
 ns.conditions = {}
 
@@ -112,6 +84,12 @@ ns.conditions.QuestComplete = Class{
     Matched = function(self) return C_QuestLog.IsQuestFlaggedCompleted(self.id) end,
 }
 ns.conditions.QuestIncomplete = Class(Negated(ns.conditions.QuestComplete))
+
+ns.conditions.WorldQuestActive = Class{
+    __parent = Condition,
+    type = 'worldquest',
+    Matched = function(self) return C_TaskQuest.IsActive(self.id) end,
+}
 
 -- Helpers:
 

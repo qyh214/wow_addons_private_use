@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.4.2
+
+- Print the version of the add-on when erroring
+
 ## v1.4.1
 
 - Updated for patch 9.2

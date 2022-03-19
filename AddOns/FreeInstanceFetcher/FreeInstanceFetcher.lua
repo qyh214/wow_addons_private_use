@@ -176,7 +176,7 @@ F.addonPrefix = "\124cFF70B8FF" .. addonName .. "\124r: "
 F.addonLocaleName = "\124cFF70B8FF便利CD获取\124r: "
 F.addonVersion = GetAddOnMetadata(addonName, 'Version')
 --[==[@debug@
-if F.addonVersion == 'v9.2.0' then
+if F.addonVersion == 'v9.2.1' then
     F.addonVersion = 'Dev'
 end
 --@end-debug@]==]
@@ -472,15 +472,6 @@ do
                 end,
             })
             tinsert(menuTable, {
-                text = "显示主界面", isNotRadio = true,
-                func = function()
-                    self:ToggleMainFrame()
-                end,
-                checked = function()
-                    return self.db.ShowMainFrame
-                end,
-            })
-            tinsert(menuTable, {
                 text = "显示小地图图标", isNotRadio = true,
                 func = function()
                     self:ToggleMinimap()
@@ -643,7 +634,7 @@ end
 
 do
     local defaultConfig = {
-        DBVer = 1,
+        DBVer = 2,
         Skin = 1,
         EnableSound = false,
         ShowMainFrame = true,
@@ -715,8 +706,11 @@ do
                 if not FIFConfig.DBVer then
                     -- corrupted
                     FIFConfig = defaultConfig
+                elseif FIFConfig.DBVer == 1 then
+                    -- enforce show main frame once
+                    FIFConfig.ShowMainFrame = true
                 end
-                FIFConfig.DBVer = 1
+                FIFConfig.DBVer = 2
 
                 -- handle deprecated
                 for key in pairs(FIFConfig) do
@@ -748,12 +742,8 @@ do
                 OnClick = function(self, button)
                     if button == 'RightButton' then
                         F:ShowConfigMenu(self)
-                    else
-                        if F.db.QuickAccess then
-                            buttons[1].func(F.mainFrame.subFrame.buttons[1])
-                        else
-                            F:ToggleMainFrame()
-                        end
+                    elseif F.db.QuickAccess then
+                        buttons[1].func(F.mainFrame.subFrame.buttons[1])
                     end
                 end,
             })

@@ -114,6 +114,7 @@ function AddOn:GetInstanceLockout(instanceIndex)
   local instanceID = self.instances[tonumber(instanceMatch)]
   if not instanceID then
     local debugTable = {
+      addonVersion = GetAddOnMetadata(ADDON_NAME, "Version"),
       instanceLink = instanceLink,
       instanceMatch = instanceMatch
     }

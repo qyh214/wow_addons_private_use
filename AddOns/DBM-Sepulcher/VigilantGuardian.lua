@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2458, "DBM-Sepulcher", nil, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220302052007")
+mod:SetRevision("20220314083715")
 mod:SetCreatureID(180773)
 mod:SetEncounterID(2512)
 --mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -47,14 +47,12 @@ local warnDissonance							= mod:NewStackAnnounce(364447, 2, nil, "Tank|Healer")
 local warnBlast									= mod:NewSpellAnnounce(360176, 3, nil, false)--Spammy
 
 local specWarnPreFabricatedSentry				= mod:NewSpecialWarningSwitch(360658, "Tank", nil, nil, 1, 2)
-local specWarnDissonance						= mod:NewSpecialWarningStack(350202, nil, 3, nil, nil, 1, 6)
-local specWarnDissonanceTaunt					= mod:NewSpecialWarningTaunt(350202, nil, nil, nil, 1, 2)
---local specWarnBlast								= mod:NewSpecialWarningMoveAway(350202, nil, nil, nil, 1, 2)
---local yellBlast									= mod:NewYell(360176)
+local specWarnDissonance						= mod:NewSpecialWarningStack(364447, nil, 3, nil, nil, 1, 6)
+local specWarnDissonanceTaunt					= mod:NewSpecialWarningTaunt(364447, nil, nil, nil, 1, 2)
 
 local timerSentryCD								= mod:NewNextTimer(71.2, 360658, nil, nil, nil, 1, nil, DBM_COMMON_L.TANK_ICON)--Every odd Volatile
 local timerWaveofDisintegrationCD				= mod:NewCDTimer(12.2, 361001, nil, nil, nil, 3)--Time between first and second cast usually 14-15 then 12.2 repeating
-local timerDissonanceCD							= mod:NewCDTimer(12.2, 350202, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Second is 16-18 then rest are 12.2-14
+local timerDissonanceCD							= mod:NewCDTimer(12.2, 364447, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Second is 16-18 then rest are 12.2-14
 --Stage One: Systems Online!
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(23875))
 local warnRefractedBlast						= mod:NewCountAnnounce(366693, 2)
@@ -114,18 +112,18 @@ function mod:OnCombatStart(delay)
 	self.vb.refractedCount = 0
 	--Every fucking difficulty has different timers, because why make it easy
 	if self:IsMythic() then
-		timerVolatileMateriumCD:Start(21.9-delay)
-		timerRefractedBlastCD:Start(29.5-delay, 1)
-		timerDeresolutionCD:Start(54.7-delay)
-		timerSentryCD:Start(74.6-delay)
+		timerVolatileMateriumCD:Start(13.3-delay)
+		timerRefractedBlastCD:Start(21-delay, 1)
+		timerDeresolutionCD:Start(46.6-delay)
+		timerSentryCD:Start(66-delay)
 		--Boss Timers
 		timerSplitResolutionCD:Start(46.2)
 --		timerMatterDisolutionCD:Start()--Not used?
 	else--Heroic, Normal. LFR will probably be different too
 		timerVolatileMateriumCD:Start(5-delay)--5-6
 		timerRefractedBlastCD:Start(15.5-delay, 1)
-		timerDeresolutionCD:Start(37.8-delay)
-		timerSentryCD:Start(50.8-delay)
+		timerDeresolutionCD:Start(36.9-delay)
+		timerSentryCD:Start(35-delay)
 	end
 end
 

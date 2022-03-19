@@ -73,23 +73,61 @@ do
         return nodeValueOrFunc('values', options, ...)
     end
 end
-local zoneGroups, zoneHasGroups
+local zoneGroups, zoneHasGroups, zoneAchievements, zoneHasAchievements, allGroups, hasGroups
 do
-    local cache = {}
+    local gcache
+    function allGroups()
+        if not gcache then
+            gcache = {}
+            for _, points in pairs(ns.points) do
+                for _, point in pairs(points) do
+                    if point.group then
+                        gcache[point.group] = true
+                    end
+                end
+            end
+        end
+        return gcache
+    end
+    function hasGroups()
+        local groups = allGroups()
+        for _ in pairs(groups) do
+            return true
+        end
+    end
+    local zcache = {}
     function zoneGroups(uiMapID)
-        if not cache[uiMapID] then
+        if not zcache[uiMapID] then
             local relevant = {}
             for _, point in pairs(ns.points[uiMapID] or {}) do
                 if point.group then
                     relevant[point.group] = point.group
                 end
             end
-            cache[uiMapID] = relevant
+            zcache[uiMapID] = relevant
         end
-        return cache[uiMapID]
+        return zcache[uiMapID]
     end
     function zoneHasGroups(uiMapID)
         for _, _ in pairs(zoneGroups(uiMapID)) do
+            return true
+        end
+    end
+    local acache = {}
+    function zoneAchievements(uiMapID)
+        if not acache[uiMapID] then
+            local relevant = {}
+            for _, point in pairs(ns.points[uiMapID] or {}) do
+                if point.achievement then
+                    relevant[point.achievement] = true
+                end
+            end
+            acache[uiMapID] = relevant
+        end
+        return acache[uiMapID]
+    end
+    function zoneHasAchievements(uiMapID)
+        for _, _ in pairs(zoneAchievements(uiMapID)) do
             return true
         end
     end
@@ -114,6 +152,7 @@ function ns.SetupMapOverlay()
         self.IconOverlay:Hide()
     end
     frame.InitializeDropDown = function(self, level, menuList)
+        local uiMapID = WorldMapFrame.mapID
         local info = UIDropDownMenu_CreateInfo()
         level = level or 1
         if level == 1 then
@@ -175,6 +214,50 @@ function ns.SetupMapOverlay()
 
             UIDropDownMenu_AddSeparator(level)
 
+            if not (ns.hiddenConfig.groupsHiddenByZone and OptionsDropdown.isHidden(ns.options, "groupsHidden")) and zoneHasGroups(uiMapID) then
+                local global = ns.hiddenConfig.groupsHiddenByZone
+                wipe(info)
+                info.isNotRadio = true
+                info.keepShownOnClick = true
+                info.tooltipOnButton = true
+                info.func = function(button, group)
+                    if global then
+                        ns.db.groupsHidden[group] = not button.checked
+                    else
+                        ns.db.groupsHiddenByZone[uiMapID][group] = not button.checked
+                    end
+                    ns.HL:Refresh()
+                end
+                info.tooltipTitle = global and "Hide this type of point everywhere" or "Hide this type of point on this map"
+                for _, group in iterKeysByValue(zoneGroups(uiMapID)) do
+                    info.text = ns.render_string(ns.groups[group] or group)
+                    info.arg1 = group
+                    if global then
+                        info.checked = not ns.db.groupsHidden[group]
+                    else
+                        info.checked = not ns.db.groupsHiddenByZone[uiMapID][group]
+                    end
+                    UIDropDownMenu_AddButton(info, level)
+                end
+            end
+            if not OptionsDropdown.isHidden(ns.options, "achievementsHidden") and zoneHasAchievements(uiMapID) then
+                wipe(info)
+                info.isNotRadio = true
+                info.keepShownOnClick = true
+                info.tooltipOnButton = true
+                info.func = function(button, achievementid)
+                    ns.db.achievementsHidden[achievementid] = not button.checked
+                    ns.HL:Refresh()
+                end
+                info.tooltipTitle = "Hide this type of point"
+                for achievementid in pairs(zoneAchievements(uiMapID)) do
+                    info.text = ns.render_string(("{achievement:%d}"):format(achievementid))
+                    info.arg1 = achievementid
+                    info.checked = not ns.db.achievementsHidden[achievementid]
+                    UIDropDownMenu_AddButton(info, level)
+                end
+            end
+
             wipe(info)
             info.hasArrow = true
             info.keepShownOnClick = true
@@ -191,6 +274,13 @@ function ns.SetupMapOverlay()
             if not OptionsDropdown.isHidden(ns.options, "zonesHidden") then
                 info.text = ZONE
                 info.value = "zonesHidden"
+                UIDropDownMenu_AddButton(info, level)
+                displayed = true
+            end
+
+            if not OptionsDropdown.isHidden(ns.options, "groupsHidden") and hasGroups() then
+                info.text = GROUP
+                info.value = "groupsHidden"
                 UIDropDownMenu_AddButton(info, level)
                 displayed = true
             end
@@ -235,12 +325,7 @@ function ns.SetupMapOverlay()
             end
             local values = OptionsDropdown.values(ns.options, parent)
             if parent == "achievementsHidden" then
-                local relevant = {}
-                for _, point in pairs(ns.points[currentZone] or {}) do
-                    if point.achievement then
-                        relevant[point.achievement] = true
-                    end
-                end
+                local relevant = zoneAchievements(currentZone)
                 for _, achievementid in iterKeysByValue(values) do
                     info.text = values[achievementid]
                     info.value = achievementid
@@ -258,7 +343,7 @@ function ns.SetupMapOverlay()
                     if uiMapID == currentZone then
                         info.text = BRIGHTBLUE_FONT_COLOR:WrapTextInColorCode(info.text) .. " " .. CreateAtlasMarkup("VignetteKill", 0)
                     end
-                    if zoneHasGroups(uiMapID) then
+                    if not ns.hiddenConfig.groupsHiddenByZone and zoneHasGroups(uiMapID) then
                         info.hasArrow = true
                         info.menuList = "groupsHiddenByZone"
                     else
@@ -267,11 +352,21 @@ function ns.SetupMapOverlay()
                     end
                     UIDropDownMenu_AddButton(info, level)
                 end
+            elseif parent == "groupsHidden" then
+                info.arg1 = "groupsHidden"
+                info.tooltipTitle = "Hide this type of point everywhere"
+                local groups = allGroups()
+                for _, group in iterKeysByValue(groups) do
+                    info.text = ns.render_string(ns.groups[group] or group)
+                    info.value = group
+                    info.checked = not ns.db.groupsHidden[group]
+                    UIDropDownMenu_AddButton(info, level)
+                end
             elseif menuList == "groupsHiddenByZone" then
                 local uiMapID = parent
                 info.arg1 = "groupsHiddenByZone"
                 info.arg2 = uiMapID
-                info.tooltipTitle = "Hide this type of point"
+                info.tooltipTitle = "Hide this type of point on this map"
                 local groups = zoneGroups(uiMapID)
                 for _, group in iterKeysByValue(groups) do
                     info.text = ns.render_string(ns.groups[group] or group)

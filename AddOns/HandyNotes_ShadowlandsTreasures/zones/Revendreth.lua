@@ -183,6 +183,25 @@ ns.RegisterPoints(1525, {
     -- },
 })
 
+ns.RegisterPoints(1525, { -- Revendreth
+    [63756169] = {
+        quest=64941, -- Chicken; go work out the well fed cat one, if it has a quest
+        loot={187811}, -- Spectral Feed
+    },
+    [63004200] = {
+        quest=64941,
+        loot={
+            {187813, quest=64941, covenant=Enum.CovenantType.NightFae}, -- Chicken Soul
+        },
+    }
+}, {
+    note="Bring the {item:187811:Spectral Feed} (63.7, 61.7) to the {npc:181660:Lost Soul} (63, 42), then use /chicken at it",
+    covenant=Enum.CovenantType.NightFae,
+    atlas="sanctumupgrades-nightfae-32x32",
+    minimap=true,
+    group="soulshape",
+})
+
 -- Dead Blanchy
 
 ns.RegisterPoints(1525, {

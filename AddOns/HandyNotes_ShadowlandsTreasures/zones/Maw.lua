@@ -207,8 +207,8 @@ ns.RegisterPoints(1543, {
         npc=166398,
         loot={
             183141, -- Stygic Magma
-            185473, -- Soulforger's Tools
             186613, -- Rhovus' Linked Greaves
+            {185473, quest=63667}, -- Soulforger's Tools (for the Feral Shadehound)
         },
         level=60,
     },
@@ -389,8 +389,8 @@ ns.RegisterPoints(1543, {
             186629, -- Sanngor's Spiked Band
         },
         level=60,
+        path=55806755,
     },
-    [55806755] = path{label=CAVE, achievement=14660, criteria=49489, quest=62210,},
     [54507930] = { -- Skittering Broodmother
         achievement=14660, criteria=49491,
         quest=62211,
@@ -399,7 +399,9 @@ ns.RegisterPoints(1543, {
             186240, -- Broodmotherhide Cloak
         },
         level=60,
+        note="In the Pit of Anguish",
     },
+    -- [54558015] = path{label=CAVE, achievement=14660, criteria=49491, quest=62211, route={54558015, 54507930}},
     [36253745] = { -- Soulsmith Yol-Mattar
         achievement=14660, criteria=49482,
         quest=59441,
@@ -788,6 +790,28 @@ ns.RegisterPoints(1543, {
     },
     group="Rift Hidden Caches",
 })
+ns.RegisterPoints(1543, {
+    [23104225] = {
+        quest=64000,
+        label="{item:186191:Infused Etherwyrm}",
+        loot={
+            {186191, pet=3099}, -- Infused Etherwyrm
+        },
+        note="When the {quest:63951} quest is available, find the {item:186190} from the {npc:179030:Elusive Keybinder} in the rift phase, then bring it to the cage inside the Desolate Hollow",
+        path={23104225, label="Desolate Hollow entrance"},
+    },
+    [23804050] = {
+        label="{npc:179030:Elusive Keybinder}",
+        loot={186190}, -- Etherwyrm Cage Key
+        note="In the rift, loot the key",
+    },
+}, {
+    quest=64000,
+    atlas="wildbattlepetcapturable",
+    minimap=true,
+    poi={ASSAULT_NIGHTFAE},
+})
+
 -- Rifts
 ns.RegisterPoints(1543, {
     [47457620] = {quest=64265,texture=icon_blue,note="In rift, in cave",},
@@ -868,7 +892,7 @@ local helgarde = ns.nodeMaker{
 ns.RegisterPoints(1543, {
     [25503680] = {
         label="{npc:179572:Nilganihmaht}",
-        quest=64202,
+        quest=64202, -- signet:64201, silver:64200, gold:64199, runed:64198, stone: 64197
         -- requires_item={186603, 186605, 186606, 186607, 186608},
         texture=ns.atlas_texture("VignetteLootElite", {scale=1.5, r=0, g=0.5, b=1}),
         -- atlas="VignetteLootElite", scale=1.5,
@@ -876,12 +900,18 @@ ns.RegisterPoints(1543, {
         loot={
             {186713, mount=1503}, -- Hand of Nilganihmaht
         },
-        note="In a cave in the rift. Bring the 5 rings.\n"..
-            "* {item:186603:Stone Ring}: assemble during a Necrolord Assault if {quest:63545} is up\n"..
-            "* {item:186605:Runed Band}: kill {npc:179735:Torglluun}\n"..
-            "* {item:186606:Signet Ring}: kill {npc:170303:Exos}\n"..
-            "* {item:186607:Silver Ring}: loot the Domination Chest\n"..
-            "* {item:186608:Gold Band}: climb to find it",
+        note=function()
+            local function q(quest)
+                return CreateAtlasMarkup(C_QuestLog.IsQuestFlaggedCompleted(quest) and "common-icon-checkmark" or "common-icon-redx")
+            end
+            return "In a cave in the rift. Bring the 5 rings.\n"..
+                q(64197).."{item:186603:Stone Ring}: assemble during a Necrolord Assault if {quest:63545} is up\n"..
+                q(64198).."{item:186605:Runed Band}: kill {npc:179735:Torglluun}\n"..
+                q(64201).."{item:186606:Signet Ring}: kill {npc:170303:Exos}\n"..
+                q(64200).."{item:186607:Silver Ring}: loot the Domination Chest\n"..
+                q(64199).."{item:186608:Gold Band}: climb to find it"
+        end,
+        path={25053270, label="Hollow of the Insolent"},
     },
     -- Silver Ring
     [66055740] = {
@@ -937,13 +967,10 @@ ns.RegisterPoints(1543, {
         route=18503925,
         inbag=186608,
         minimap=true,
+        path={18503925, r=0,g=1,b=1, note="Look for the grapple point, then run to the base of the spire",},
     },
-    [18503925] = ns.path{
-        quest=64199,
-        route={18503925,19203225, r=0,g=1,b=1},
-        note="Look for the grapple point, then run to the base of the spire",
-        inbag=186608,
-    },
+}, {
+    group="Nilganihmaht",
 })
 
 -- Teleporters

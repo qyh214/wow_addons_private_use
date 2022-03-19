@@ -1,10 +1,22 @@
-tag 20c6520db00938849b991e6768974cd7fa104163 DetailsRetail.9.2.0.9718.146
+tag b0c004fb037f0207a9fb55f8e083bd2b8acd4cef DetailsRetail.9.2.0.9720.146
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Mon Mar 7 18:20:58 2022 -0300
+Date:	Fri Mar 11 13:07:37 2022 -0300
 
-commit 92e138ed090b037423eade2b3815c0db0a32dd04
+commit 2e7875f46ca7c1daea3da4c841adbaa4d6e7d313
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon Mar 7 18:20:34 2022 -0300
+Date:   Fri Mar 11 13:06:55 2022 -0300
 
-    Reverting Tiny Threat update
+    new release with updates on the framework
+
+commit 1de5bfdc824eeac6ea99a8d4494b1c595b0824a7
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Fri Mar 11 11:01:47 2022 -0300
+
+    Fixed exit logs
+
+commit 6795fd2d6f2982da6f7313f944be9204be0b2799
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Fri Mar 11 10:29:16 2022 -0300
+
+    framework update
 

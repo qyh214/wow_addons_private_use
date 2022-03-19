@@ -66,6 +66,18 @@ function ns.RegisterPoints(zone, points, defaults)
         end
     end
     ns.merge(ns.points[zone], points)
+    for coord, point in pairs(points) do
+        if point.path then
+            local route = type(point.path) == "table" and point.path or {point.path}
+            table.insert(route, 1, coord)
+            ns.points[zone][route[#route]] = setmetatable({
+                label=route.label or (point.npc and "Path to NPC" or "Path to treasure"),
+                atlas="poi-door", scale=0.95, minimap=true, texture=false,
+                note=route.note or false,
+                route=route,
+            }, {__index=point})
+        end
+    end
 end
 
 ns.merge = function(t1, t2)
@@ -94,7 +106,6 @@ end
 ns.path = ns.nodeMaker{
     label = "Path to treasure",
     atlas = "poi-door", -- 'PortalPurple' / 'PortalRed'?
-    path = true,
     minimap = true,
     scale = 0.95,
 }
@@ -153,13 +164,14 @@ local function render_string(s, context)
             if name and icon then
                 return quick_texture_markup(icon) .. " " .. name
             end
-        elseif variant == "quest" then
+        elseif variant == "quest" or variant == "worldquest" then
             local name = C_QuestLog.GetTitleForQuestID(id)
             if not (name and name ~= "") then
                 name = tostring(id)
             end
             local completed = C_QuestLog.IsQuestFlaggedCompleted(id)
-            return CreateAtlasMarkup("questnormal") .. (completed and completeColor or incompleteColor):WrapTextInColorCode(name)
+            return CreateAtlasMarkup(variant == "worldquest" and "worldquest-tracker-questmarker" or "questnormal") ..
+                (completed and completeColor or incompleteColor):WrapTextInColorCode(name)
         elseif variant == "questid" then
             return CreateAtlasMarkup("questnormal") .. (C_QuestLog.IsQuestFlaggedCompleted(id) and completeColor or incompleteColor):WrapTextInColorCode(id)
         elseif variant == "achievement" then
@@ -176,6 +188,11 @@ local function render_string(s, context)
             local info = C_CurrencyInfo.GetCurrencyInfo(id)
             if info then
                 return quick_texture_markup(info.iconFileID) .. " " .. info.name
+            end
+        elseif variant == "currencyicon" then
+            local info = C_CurrencyInfo.GetCurrencyInfo(id)
+            if info then
+                return quick_texture_markup(info.iconFileID)
             end
         elseif variant == "covenant" then
             local data = C_Covenants.GetCovenantData(id)
@@ -198,7 +215,7 @@ local function cache_string(s, context)
             C_Item.RequestLoadItemDataByID(id)
         elseif variant == "spell" then
             C_Spell.RequestLoadSpellData(id)
-        elseif variant == "quest" then
+        elseif variant == "quest" or variant == "worldquest" then
             C_QuestLog.RequestLoadQuestByID(id)
         elseif variant == "npc" then
             mob_name(id)
@@ -263,7 +280,7 @@ local function work_out_label(point)
         return (render_string(point.label, point))
     end
     if point.achievement then
-        if point.criteria and type(point.criteria) ~= "table" then
+        if point.criteria and type(point.criteria) ~= "table" and point.criteria ~= true then
             local criteria = (point.criteria < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(point.achievement, point.criteria)
             if criteria then
                 return criteria
@@ -293,7 +310,7 @@ local function work_out_label(point)
         -- handle multiples?
         local _, link = GetItemInfo(ns.lootitem(point.loot[1]))
         if link then
-            return link
+            return link:gsub("[%[%]]", "")
         end
         fallback = 'item:'..ns.lootitem(point.loot[1])
     end
@@ -558,12 +575,12 @@ local function handle_tooltip(tooltip, point)
                             link = TEXT_MODE_A_STRING_VALUE_TYPE:format(link, RAID_CLASS_COLORS[item.class]:WrapTextInColorCode(LOCALIZED_CLASS_NAMES_FEMALE[item.class]))
                         end
                         if item.note then
-                            link = TEXT_MODE_A_STRING_VALUE_TYPE:format(link, item.note)
+                            link = TEXT_MODE_A_STRING_VALUE_TYPE:format(link, render_string(item.note))
                         end
                     end
                     local known = ns.itemIsKnown(item)
                     if known ~= nil and (known == true or not ns.itemRestricted(item)) then
-                        link = link .. CreateAtlasMarkup(known and "common-icon-checkmark" or "common-icon-redx")
+                        link = link .. " " .. CreateAtlasMarkup(known and "common-icon-checkmark" or "common-icon-redx")
                     end
                     tooltip:AddDoubleLine(label, quick_texture_markup(icon) .. " " .. link)
                 else
@@ -586,6 +603,10 @@ local function handle_tooltip(tooltip, point)
         if point.hide_before and not ns.conditions.check(point.hide_before) then
             tooltip:AddLine(COMMUNITY_TYPE_UNAVAILABLE, 1, 0, 0)
             tooltip:AddLine(ns.render_string(ns.conditions.summarize(point.hide_before), point), 1, 0, 0, true)
+        end
+
+        if point.group then
+            tooltip:AddDoubleLine(GROUP, ns.groups[point.group] or point.group)
         end
 
         if point.quest and ns.db.tooltip_questid then
@@ -897,7 +918,7 @@ end
 
 function HL:OnInitialize()
     -- Set up our database
-    if self.defaultsOverride then
+    if ns.defaultsOverride then
         ns.merge(ns.defaults.profile, ns.defaultsOverride)
     end
     self.db = LibStub("AceDB-3.0"):New(myname.."DB", ns.defaults)

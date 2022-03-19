@@ -20,7 +20,6 @@ local EnchantParts = {
     [12] = {1, FINGER1SLOT},
     [15] = {1, BACKSLOT},
     [16] = {1, MAINHANDSLOT},
-    [17] = {1, SECONDARYHANDSLOT},
 }
 
 --創建圖標框架

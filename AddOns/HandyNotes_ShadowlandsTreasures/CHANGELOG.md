@@ -1,5 +1,64 @@
 # Changelog
 
+## Changed in v55
+
+* Add the locations of the Locus Alcove Arrangements for the optional rooms (Camber, Fulgore, Rondure, Dormant)
+* Add a point for the Sand Sand Everywhere achievement
+* Add a point for Olea Manu, the Jiro vendor after their questline, not at all because I'm bitter that I didn't notice them and so missed out on a week of +50% cyphers, no
+* Add various soulshapes / crittershapes across the Shadowlands (mostly the is the 9.1.5 ones)
+* Domination Cache: note that the key can also drop from the Dreadlord Infiltrators
+* Give the Pulp-Covered Relic its own icon so it's easier to pick out
+
+## Changed in v54
+
+* Show which group a point is assigned to in its tooltip
+* Made it easier for myself to add points that show the path to another point, and used that in a few places
+* Minor tweaks to earlier zones: Nilganihmaht's tooltip shows which rings you've already put on; the Playful Vulpin's tooltip shows the emotes you'll have to use
+* Removed the "show non-achievement" option, since it's been replaced with groups in-practice and I never flagged anything as junk this expansion (it made more sense back in Legion, which had a lot of boring non-achievement respawning treasures)
+
+## Changed in v53
+
+* Locus Shift treasures and schematics are filled out
+* Tweaked the flying requirements on a few treasures
+* Achieved-as-found fix went too far, interfered with quest completion sometimes (todo: rewrite this check more comprehensively...)
+
+## Changed in v52
+
+* Pull the point-groups in the current zone (groups and achievements) up to the top-level of the menu for easier access
+* "Count achieved as found" should only apply to points with quests, as its description claimed
+* Caches of Creation are not-visible by default
+* Put the Pulp-Covered Relic in the Schematics group
+* Note that one of the Crystallized Echo of the First Song locations requires flying
+* Show the locus shift on the minimap as well
+
+## Changed in v51
+
+* Show the Crystallized Echo of the First Song locations
+* Forgotten Proto-Vault: show as inactive if you don't have flying or the Frog'it WQ
+* Prying Eye Discovery: show as inactive if you don't have flying or the Portal Play quest item
+* Improve display if the tooltip's label is coming from the loot (remove the [] around it)
+* Maw: add the pickup quest to the Soulforger's Tools on Rhovus
+
+## Changed in v50
+
+* Fix an error if collectables weren't counting for completion
+* Explain Tahkwitz
+
+## Changed in v49
+
+* Add Protoform Synthesis pattern locations within the Sepulcher of the First Ones raid
+* Maw: add the Infused Etherwyrm pet to the Night Fae assault
+
+## Changed in v48
+
+* Add Protoform Synthesis pet pattern locations (still missing: the ones in the raid)
+* Minor tweaks to some points and notes
+
+## Changed in v47
+
+* Add Protoform Synthesis mount pattern locations (still to come: pet patterns)
+* Add a point for the Locus Shift in the Gravid Repose
+
 ## Changed in v46
 
 * Fixed an error when mousing over Anima Shards in Bastion

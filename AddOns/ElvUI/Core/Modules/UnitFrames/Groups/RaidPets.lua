@@ -49,9 +49,7 @@ end
 
 function UF:Update_RaidpetFrames(frame, db)
 	frame.db = db
-
 	frame.colors = ElvUF.colors
-	frame:RegisterForClicks(UF.db.targetOnMouseDown and 'AnyDown' or 'AnyUp')
 
 	do
 		frame.SHADOW_SPACING = 3
@@ -90,6 +88,8 @@ function UF:Update_RaidpetFrames(frame, db)
 	UF:Configure_AuraWatch(frame, true)
 	UF:Configure_Cutaway(frame)
 	UF:Configure_CustomTexts(frame)
+
+	UF:HandleRegisterClicks(frame)
 
 	frame:UpdateAllElements('ElvUI_UpdateAllElements')
 end

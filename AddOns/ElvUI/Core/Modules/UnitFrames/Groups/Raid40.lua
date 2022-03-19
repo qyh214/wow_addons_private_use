@@ -63,9 +63,7 @@ end
 
 function UF:Update_Raid40Frames(frame, db)
 	frame.db = db
-
 	frame.colors = ElvUF.colors
-	frame:RegisterForClicks(self.db.targetOnMouseDown and 'AnyDown' or 'AnyUp')
 
 	do
 		frame.SHADOW_SPACING = 3
@@ -134,6 +132,8 @@ function UF:Update_Raid40Frames(frame, db)
 		UF:Configure_AltPowerBar(frame)
 		UF:Configure_PvPClassificationIndicator(frame)
 	end
+
+	UF:HandleRegisterClicks(frame)
 
 	frame:UpdateAllElements('ElvUI_UpdateAllElements')
 end

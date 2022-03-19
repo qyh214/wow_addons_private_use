@@ -87,12 +87,12 @@ ns.RegisterPoints(1533, { -- Bastion
         level=60,
         note="Purchase {item:180788:Memorial Wine} from {npc:171526:Kobri} and use it on the drink tray near the treasure to obtain the {item:180797:Memorial Offering Key} and unlock the treasure",
     },
-    [34006650] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, path=true, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Cliffs of Respite)
-    [43603225] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, path=true, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Sagehaven)
-    [47957400] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, path=true, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Aspirant's Rest)
-    [51804640] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, path=true, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Hero's Rest)
-    [52154710] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, path=true, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Hero's Rest)
-    [53508035] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, path=true, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Aspirant's Crucible)
+    [34006650] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Cliffs of Respite)
+    [43603225] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Sagehaven)
+    [47957400] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Aspirant's Rest)
+    [51804640] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Hero's Rest)
+    [52154710] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Hero's Rest)
+    [53508035] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Aspirant's Crucible)
     [35105800] = {
         achievement=14311, criteria=50058, -- Gift of Agthia
         quest=60893,
@@ -305,6 +305,20 @@ ns.RegisterPoints(1533, { -- Bastion
     --     label="Silver Strongbox",
     --     note="Requires Ripe Purian",
     -- },
+})
+
+ns.RegisterPoints(1533, { -- Bastion
+    [49854685] = {
+        quest=64959,
+        loot={
+            {187818, quest=64959, covenant=Enum.CovenantType.NightFae}, -- Otter Soul
+        },
+        note="/hug the {npc:181682:Lost Soul} swimming in the pool. You might have to wait a while for it to spawn, and it'll only stick around for 5 minutes.",
+        covenant=Enum.CovenantType.NightFae,
+        atlas="sanctumupgrades-nightfae-32x32",
+        minimap=true,
+        group="soulshape",
+    },
 })
 
 -- rares

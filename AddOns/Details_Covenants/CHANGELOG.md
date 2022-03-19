@@ -1,3 +1,7 @@
+##### v1.3.3 Update for 9.2
+
+- - update `.toc` for 9.2
+
 ##### v1.3.2 Make covenant detection less aggressive
 
 - make covenant detection less aggressive, now track only players in group

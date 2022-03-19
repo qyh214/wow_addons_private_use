@@ -547,6 +547,7 @@ local instanceList = {
         -- Tazavesh, the Veiled Market
         instanceID = 2441,
         difficulties = {
+            [2] = {1},
             [23] = {1},
         },
         collections = {

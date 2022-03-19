@@ -5,7 +5,6 @@ ns.defaults = {
         default_icon = "VignetteLoot",
         show_on_world = true,
         show_on_minimap = false,
-        show_junk = false,
         show_npcs = true,
         show_treasure = true,
         show_routes = true,
@@ -184,12 +183,6 @@ ns.options = {
                     disabled = function() return not ns.RouteWorldMapDataProvider end,
                     order = 31,
                 },
-                show_junk = {
-                    type = "toggle",
-                    name = "Show non-achievement",
-                    desc = "Show items which don't count for any achievement",
-                    order = 40,
-                },
                 tooltip_questid = {
                     type = "toggle",
                     name = "Show quest ids",
@@ -349,12 +342,22 @@ local itemInBags = testMaker(function(item) return GetItemCount(item, true) > 0 
 local allQuestsComplete = testMaker(function(quest) return C_QuestLog.IsQuestFlaggedCompleted(quest) end)
 ns.allQuestsComplete = allQuestsComplete
 
+local temp_criteria = {}
 local allCriteriaComplete = testMaker(function(criteria, achievement)
     local _, _, completed, _, _, completedBy = (criteria < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(achievement, criteria)
     if not (completed and (not completedBy or completedBy == ns.playerName)) then
         return false
     end
     return true
+end, function(test, input, achievement, ...)
+    if input == true then
+        wipe(temp_criteria)
+        for i=1,GetAchievementNumCriteria(achievement) do
+            table.insert(temp_criteria, i)
+        end
+        input = temp_criteria
+    end
+    return doTest(test, input, achievement, ...)
 end)
 
 local brokenItems = {
@@ -492,7 +495,7 @@ local function everythingFound(point)
         end
         ret = true
     end
-    if ns.db.achievedfound and point.achievement then
+    if (ns.db.achievedfound or not point.quest) and point.achievement then
         if point.criteria then
             if not allCriteriaComplete(point.criteria, point.achievement) then
                 return false
@@ -579,8 +582,11 @@ ns.should_show_point = function(coord, point, currentZone, isMinimap)
     if point.group and ns.db.groupsHidden[point.group] or ns.db.groupsHiddenByZone[currentZone][point.group] then
         return false
     end
-    if point.ShouldShow and not point:ShouldShow() then
-        return false
+    if point.ShouldShow then
+        local show = point:ShouldShow()
+        if show ~= nil then
+            return show
+        end
     end
     if point.outdoors_only and IsIndoors() then
         return false
@@ -589,9 +595,6 @@ ns.should_show_point = function(coord, point, currentZone, isMinimap)
         return false
     end
     if point.poi and not checkPois(point.poi) then
-        return false
-    end
-    if point.junk and not ns.db.show_junk then
         return false
     end
     if point.faction and point.faction ~= ns.playerFaction then

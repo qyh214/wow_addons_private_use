@@ -1,16 +1,10 @@
-lightweight tag 5e23370045437820d74e410e84bf0472fac1708a v1.4.1
-Author:	GitHub <noreply@github.com>
-Date:	Thu Mar 3 04:27:35 2022 -0500
+lightweight tag e658e9a348984bc7dcf534cd30f14fac59304687 v1.4.2
+Author:	Meivyn <793322+Meivyn@users.noreply.github.com>
+Date:	Thu Mar 17 10:47:11 2022 -0400
 
-commit 5e23370045437820d74e410e84bf0472fac1708a
-Author: jrowles <john_rowles@outlook.com>
-Date:   Thu Mar 3 04:27:35 2022 -0500
+commit e658e9a348984bc7dcf534cd30f14fac59304687
+Author: Meivyn <793322+Meivyn@users.noreply.github.com>
+Date:   Thu Mar 17 10:47:11 2022 -0400
 
-    Changes for Patch 9.2 (#16)
-    
-    * Patch 9.2 changes
-    
-    Added Sepulcher of the First Ones raid and Antros world boss.
-    
-    * Fix typo
+    Add addonVersion to debugTable
 

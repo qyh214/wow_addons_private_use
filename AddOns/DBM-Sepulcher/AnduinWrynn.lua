@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod(2469, "DBM-Sepulcher", nil, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220304055859")
+mod:SetRevision("20220314010630")
 mod:SetCreatureID(181954)
 mod:SetEncounterID(2546)
 mod:SetUsedIcons(4, 5, 6, 7, 8)
 mod:SetHotfixNoticeRev(20220303000000)
 mod:SetMinSyncRevision(20220123000000)
 --mod.respawnTime = 29
-mod.NoSortAnnounce = true
+--mod.NoSortAnnounce = true
 
 mod:RegisterCombat("combat")
 
@@ -48,9 +48,9 @@ mod:RegisterEventsInCombat(
 --Stage One: Kingsmourne Hungers
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24462))
 --local warnDespair								= mod:NewTargetNoFilterAnnounce(365235, 2)
-local warnBefouledBarrier						= mod:NewSpellAnnounce(365295, 3)
+local warnBefouledBarrier						= mod:NewSpellAnnounce(365295, 3, nil, nil, 300531)
 local warnWickedStar							= mod:NewTargetCountAnnounce(365030, 3, nil, nil, nil, nil, nil, nil, true)
-local warnDominationWordPain					= mod:NewTargetNoFilterAnnounce(366849, 3, nil, "Healer")
+local warnDominationWordPain					= mod:NewTargetNoFilterAnnounce(366849, 3, nil, "Healer", 249194)
 
 local specWarnKingsmourneHungers				= mod:NewSpecialWarningCount(362405, nil, nil, nil, 1, 2)
 local specWarnMalignantward						= mod:NewSpecialWarningDispel(364031, "RemoveMagic", nil, nil, 1, 2)
@@ -69,13 +69,13 @@ local timerPhaseCD								= mod:NewPhaseTimer(30)
 local timerKingsmourneHungersCD					= mod:NewCDCountTimer(28.8, 362405, nil, nil, nil, 3)
 local timerLostSoul								= mod:NewBuffFadesTimer(35, 362055, nil, nil, nil, 5)
 local timerBlasphemyCD							= mod:NewCDCountTimer(28.8, 361989, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerBefouledBarrierCD					= mod:NewCDCountTimer(28.8, 365295, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
+local timerBefouledBarrierCD					= mod:NewCDCountTimer(28.8, 365295, 300531, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
 local timerWickedStarCD							= mod:NewCDCountTimer(28.8, 365030, nil, nil, nil, 3)
 local timerWickedStar							= mod:NewTargetCountTimer(4, 365021, nil, false, nil, 5)
 local timerHopebreakerCD						= mod:NewCDCountTimer(28.8, 361815, nil, nil, nil, 2)
-local timerDominationWordPainCD					= mod:NewCDCountTimer(28.8, 366849, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
+local timerDominationWordPainCD					= mod:NewCDCountTimer(28.8, 366849, 249194, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
 
-mod:AddSetIconOption("SetIconOnAnduinsHope", "ej24468", false, true, {1, 2, 3})--Up to 4 of them, but we hold 4 for grim reflections
+mod:AddSetIconOption("SetIconOnAnduinsHope", "ej24468", true, true, {1, 2, 3})--Up to 4 of them, but we hold 4 for grim reflections
 mod:GroupSpells(361989, 361992, 361993)--Group two debuffs with parent spell Blasphemy
 mod:GroupSpells(365030, 365021)--Group both wicked star IDs
 --Intermission: Remnant of a Fallen King
@@ -85,7 +85,7 @@ local warnArmyofDead							= mod:NewSpellAnnounce(362862, 3)
 local specWarnSoulReaper						= mod:NewSpecialWarningDefensive(362771, nil, nil, nil, 1, 2)
 local specWarnSoulReaperTaunt					= mod:NewSpecialWarningTaunt(362771, nil, nil, nil, 1, 2)
 
-local timerSoulReaperCD							= mod:NewCDTimer(12, 362771, nil, "Healer|Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerSoulReaperCD							= mod:NewCDCountTimer(12, 362771, nil, "Healer|Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerArmyofDeadCD							= mod:NewCDTimer(37.0, 362862, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
 ----Monstrous Soul
 local specWarnNecroticDetonation				= mod:NewSpecialWarningDefensive(363024, nil, nil, nil, 2, 2)--Aoe defensive, big damage followed by heal immunity
@@ -143,7 +143,7 @@ local hopelessnessTargets = {}
 local totalDebuffs = 0
 local hopelessnessName, overconfidenceName = DBM:GetSpellInfo(361993), DBM:GetSpellInfo(361992)
 local castsPerGUID = {}
-local difficultyName = "None"
+local difficultyName = mod:IsMythic() and "mythic" or "other"
 local allTimers = {
 	["other"] = {--Heroic, Normal, and LFR
 		[1] = {
@@ -164,7 +164,7 @@ local allTimers = {
 			--Befouled Barrier
 			[365295] = {80.6, 47},
 			--Grim Reflections (Replaces Blasphemy in Stage 2)
-			[361989] = {8.5, 87},
+			[365120] = {8.5, 87},
 			--Hopebreaker
 			[361815] = {13.6, 24.9, 32.9, 29, 28.9},
 			--Kingsmourne Hungers
@@ -202,7 +202,7 @@ local allTimers = {
 			--Befouled Barrier
 			[365295] = {80.6, 47},
 			--Grim Reflections (Replaces Blasphemy in Stage 2)
-			[361989] = {8.5, 87},
+			[365120] = {8.5, 87},
 			--Hopebreaker
 			[361815] = {13.6, 24.9, 32.9, 29, 28.9},
 			--Kingsmourne Hungers
@@ -331,12 +331,14 @@ function mod:SPELL_CAST_START(args)
 		self.vb.hungersCount = self.vb.hungersCount + 1
 		specWarnKingsmourneHungers:Show(self.vb.hungersCount)
 		specWarnKingsmourneHungers:Play("shockwave")
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.hungersCount+1]
-		if timer then
-			timerKingsmourneHungersCD:Start(timer, self.vb.hungersCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.hungersCount+1]
+			if timer then
+				timerKingsmourneHungersCD:Start(timer, self.vb.hungersCount+1)
+			end
 		end
 		if self.Options.SetIconOnAnduinsHope then
-			self:ScanForMobs(184493, 1, 1, 3, nil, 12, "SetIconOnAnduinsHope")
+			self:ScanForMobs(184493, 1, 1, 3, nil, 12, "SetIconOnAnduinsHope", true)
 		end
 	elseif spellId == 361989 then
 		self.vb.blastphemyCount = self.vb.blastphemyCount + 1
@@ -344,9 +346,11 @@ function mod:SPELL_CAST_START(args)
 			specWarnBlasphemy:Show()
 			specWarnBlasphemy:Play("scatter")
 		end
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.blastphemyCount+1]
-		if timer then
-			timerBlasphemyCD:Start(timer, self.vb.blastphemyCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.blastphemyCount+1]
+			if timer then
+				timerBlasphemyCD:Start(timer, self.vb.blastphemyCount+1)
+			end
 		end
 		table.wipe(overconfidentTargets)
 		table.wipe(hopelessnessTargets)
@@ -360,17 +364,21 @@ function mod:SPELL_CAST_START(args)
 		self.vb.blastphemyCount = self.vb.blastphemyCount + 1
 		specWarnDireBlasphemy:Show()
 		specWarnDireBlasphemy:Play("scatter")
-		--local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.blastphemyCount+1]
-		--if timer then
-		--	timerHopelessnessCD:Start(timer, self.vb.blastphemyCount+1)
+		--if self.vb.phase then
+		--	local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.blastphemyCount+1]
+		--	if timer then
+		--		timerHopelessnessCD:Start(timer, self.vb.blastphemyCount+1)
+		--	end
 		--end
 		timerHopelessnessCD:Start()--Temp
 	elseif spellId == 365295 then
 		self.vb.befouledCount = self.vb.befouledCount + 1
 		warnBefouledBarrier:Show(self.vb.befouledCount)
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.befouledCount+1]
-		if timer then
-			timerBefouledBarrierCD:Start(timer, self.vb.befouledCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.befouledCount+1]
+			if timer then
+				timerBefouledBarrierCD:Start(timer, self.vb.befouledCount+1)
+			end
 		end
 	elseif spellId == 361815 then
 		self.vb.hopebreakerCount = self.vb.hopebreakerCount + 1
@@ -378,24 +386,29 @@ function mod:SPELL_CAST_START(args)
 			specWarnHopebreaker:Show(self.vb.hopebreakerCount)
 			specWarnHopebreaker:Play("aesoon")
 		end
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.hopebreakerCount+1]
-		if timer then
-			timerHopebreakerCD:Start(timer, self.vb.hopebreakerCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.hopebreakerCount+1]
+			if timer then
+				timerHopebreakerCD:Start(timer, self.vb.hopebreakerCount+1)
+			end
 		end
 	elseif spellId == 365805 then
 		self.vb.hopebreakerCount = self.vb.hopebreakerCount + 1
 		specWarnEmpoweredHopebreaker:Show(self.vb.hopebreakerCount)
 		specWarnEmpoweredHopebreaker:Play("aesoon")
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.hopebreakerCount+1]
-		if timer then
-			timerHopebreakerCD:Start(timer, self.vb.hopebreakerCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.hopebreakerCount+1]
+			if timer then
+				timerHopebreakerCD:Start(timer, self.vb.hopebreakerCount+1)
+			end
 		end
 	elseif spellId == 362771 then
+		self.vb.befouledCount = self.vb.befouledCount + 1--Reused since befoulment not happening here
 		if self:IsTanking("player", nil, nil, nil, args.sourseGUID) then--Change to boss2 if confirmed remnant is always boss2, to save cpu
 			specWarnSoulReaper:Show()
 			specWarnSoulReaper:Play("defensive")
 		end
-		timerSoulReaperCD:Start(12)
+		timerSoulReaperCD:Start(12, self.vb.befouledCount+1)
 	elseif spellId == 363024 then
 		specWarnNecroticDetonation:Show()
 		specWarnNecroticDetonation:Play("defensive")
@@ -404,9 +417,11 @@ function mod:SPELL_CAST_START(args)
 		self.vb.blastphemyCount = self.vb.blastphemyCount + 1--This ability replaces blasphomy in stage 2, so might as well use it's variable
 		specWarnGrimReflections:Show()
 		specWarnGrimReflections:Play("killmob")
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.blastphemyCount+1]
-		if timer then
-			timerGrimReflectionsCD:Start(timer, self.vb.blastphemyCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.blastphemyCount+1]
+			if timer then
+				timerGrimReflectionsCD:Start(timer, self.vb.blastphemyCount+1)
+			end
 		end
 	elseif spellId == 365008 then
 		if not castsPerGUID[args.sourceGUID] then--This should have been set in summon event
@@ -445,9 +460,11 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 365030 or spellId == 367631 then
 		self.vb.wickedCount = self.vb.wickedCount + 1
 		self.vb.wickedSet = 1
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][365030][self.vb.wickedCount+1]
-		if timer then
-			timerWickedStarCD:Start(timer, self.vb.wickedCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][365030][self.vb.wickedCount+1]
+			if timer then
+				timerWickedStarCD:Start(timer, self.vb.wickedCount+1)
+			end
 		end
 	elseif spellId == 363133 then
 		warnMarchoftheDamned:Show()
@@ -599,10 +616,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerWickedStarCD:Stop()
 		timerHopebreakerCD:Stop()
 		timerDominationWordPainCD:Stop()
+		self.vb.befouledCount = 0--Reused for soulreaper to save on sync variables
 		if self.vb.phase == 1 then
 			self:SetStage(1.5)
 			timerArmyofDeadCD:Start(7.5)
-			timerSoulReaperCD:Start(14.5)
+			timerSoulReaperCD:Start(14.5, 1)
 			timerPhaseCD:Start(156)
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(8)
@@ -611,7 +629,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetStage(2.5)
 			timerArmyofDeadCD:Start(12.7)
 			timerMarchofDamnedCD:Start(12.7)--Only used in second intermission
-			timerSoulReaperCD:Start(19.7)
+			timerSoulReaperCD:Start(19.7, 1)
 			timerPhaseCD:Start(80)
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(8)
@@ -741,9 +759,11 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 366849 then
 		self.vb.domCount = self.vb.domCount + 1
-		local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.domCount+1]
-		if timer then
-			timerDominationWordPainCD:Start(timer, self.vb.domCount+1)
+		if self.vb.phase then
+			local timer = allTimers[difficultyName][self.vb.phase] and allTimers[difficultyName][self.vb.phase][spellId][self.vb.domCount+1]
+			if timer then
+				timerDominationWordPainCD:Start(timer, self.vb.domCount+1)
+			end
 		end
 	end
 end

@@ -406,6 +406,20 @@ ns.RegisterPoints(1536, { -- Maldraxxus
     -- },
 })
 
+ns.RegisterPoints(1536, {
+    [44626554] = {
+        quest=64995,
+        loot={
+            {187878, quest=64995, covenant=Enum.CovenantType.NightFae}, -- Saurid Soul
+        },
+        note="/bow to the {npc:182105:Mysterious Trashpile}",
+        covenant=Enum.CovenantType.NightFae,
+        atlas="sanctumupgrades-nightfae-32x32",
+        minimap=true,
+        group="soulshape",
+    },
+})
+
 -- Rares
 
 ns.RegisterPoints(1536, {
