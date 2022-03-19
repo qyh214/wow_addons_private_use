@@ -1,57 +1,37 @@
-### wa字符串总结和概述
-可参考使用这里面的字符串，仅供参考
-- https://bbs.nga.cn/read.php?tid=24562077
-
 ### 目前使用的字符串
-注意：仓库中受到许可、以及大小限制，不提供wa字符串其本身特有的材质、音乐文件，请自行前往相关页面下载。
+注意：仓库中受到许可、大小限制，不提供wa字符串其本身特有的材质、音乐文件，请自行前往相关页面下载。
 
 黑盒工坊的分享码中提供了大多数材质、音乐文件。
 
-鼠标跟踪：https://wago.io/SypUT-DPm
+鼠标跟踪（Titania's Cursor Tracker）：https://wago.io/SypUT-DPm
 
-属性监控：
-- https://wago.io/rJZgZUxn7
-- https://wago.io/Wz2moZO4Z
+属性监控（小属性 Attributes mini）：https://wago.io/Wz2moZO4Z   （其还有属性完整版：https://wago.io/rJZgZUxn7 可供使用）
 
-全职业中二语音：
+全职业中二语音（明日方舟空-奶萨、明日方舟可颂-增强萨、明日方舟惊蛰-元素萨）：
 - https://bbs.nga.cn/read.php?tid=20729857
 - https://bbs.nga.cn/read.php?tid=24380263
 
 只狼特效：https://wago.io/sekirowa
 
-奶萨wa技能监控：https://wago.io/Rshaman_AfenarUI
+奶萨技能监控：https://wago.io/Rshaman_AfenarUI
 
-增强、元素萨满wa技能监控：https://wago.io/Afenar_Shaman
+增强、元素萨满技能监控：https://wago.io/Afenar_Shaman
 
-蓝量报警：
+蓝量报警（法力值通报）：
 - 原始：https://bbs.nga.cn/read.php?tid=21781278
 - 自用修改版：https://wago.io/IzWSkPz42
 
 炉石：https://wago.io/0owZD6Av9
 
-9.0低保查看：https://wago.io/sMLfbID4n
+暗影国度低保查看：https://wago.io/sMLfbID4n
 
-暗影国度地下城与团队副本：
-- 地下城和团队副本纳斯利亚堡：https://bbs.nga.cn/read.php?tid=24284671
-- 地下城仙林迷雾迷宫wa：https://wago.io/hVLym_eLv
-- 地下城仙林迷雾全自动导航（需要配合前面一个wa完成前2个迷宫）：https://wago.io/16cF_58a5
-- 统御圣所+五人本集市：https://bbs.nga.cn/read.php?tid=27412879
-- 初诞者圣墓：https://wago.io/vB1gucfF0
-- 地下城：https://wago.io/sldungeon
+盟约技能监视（.Covenant Spells）：https://wago.io/Covenant
 
-盟约技能监视：https://wago.io/Covenant
-
-盟约buff监视：https://wago.io/F1dMAfhui
-
-拒绝陌生异常组队邀请：https://wago.io/APzRF_Xz0
+盟约buff监视（Soulbinds Tracker - Luxthos）：https://wago.io/F1dMAfhui
 
 奥利波斯WA图标指引：
 - 原版：https://wago.io/U7UFNotjr
 - 自用社区修改版：https://bbs.nga.cn/read.php?tid=24653400
-
-震荡词缀打断判断：https://wago.io/OYG84YE0x
-
-暴怒魔法效果提示（怪物buff驱散提示）：https://wago.io/r2QBcOnlT
 
 大秘境-死疽词缀警告-奶妈用：
 - 原版：https://bbs.nga.cn/read.php?tid=24910345
@@ -61,39 +41,44 @@
 - 原版：https://bbs.nga.cn/read.php?tid=24506536
 - 自用大地之盾+水之护盾整合版：https://wago.io/9YVsyrNgm
 
+震荡词缀打断判断（Quake CD/Interrupt Bar）：https://wago.io/OYG84YE0x
+
+暴怒魔法效果提示（怪物buff驱散提示SL Dungeons Purgeable Buffs）：https://wago.io/r2QBcOnlT
+
+details中文昵称修正补丁（Details! Nickname Extender）：https://wago.io/uq0Uox6Ta
+
+崩裂监视（Bursting Revamp Shadowlands）：https://wago.io/Hmm-bO1rv
+
+9.1刻希亚宝箱+圣物+坐标+位面：
+- 每日助手：https://wago.io/v3gssSmaY （略有修改，设置为全部只在噬渊区域生效显示）
+
+9.2扎雷殁迪斯宝箱+稀有+每日：https://wago.io/Z3_m5bniG
+
 Nnoggie大秘境技能CD监视升级版&自制团队CD监视，带技能激活发光监控的技能CD监视：https://bbs.nga.cn/read.php?tid=20621492
 - ZenTracker后端模块：https://wago.io/r14U746B7
 - 小队CD监控前端：https://wago.io/ZRvyWuoub
 - 团队CD监控前端：https://wago.io/0mlLc0qxd
 
-details中文昵称修正补丁：https://wago.io/uq0Uox6Ta
-
-崩裂监视：https://wago.io/Hmm-bO1rv
-
-9.1刻希亚宝箱+圣物+坐标+位面：
-- 圣物坐标：https://bbs.nga.cn/read.php?tid=27452058 （ https://wago.io/QCM2wKxJK ）
-- 每日助手：https://wago.io/v3gssSmaY （略有修改，设置为全部只在噬渊区域生效显示）
-
-9.2扎雷殁迪斯宝箱+稀有+每日：https://wago.io/Z3_m5bniG
-
-奶萨始源波通报：
+通灵奶萨始源波次数效率通报：
 - 原版：https://wago.io/MJQ3eXdFA
 - 自用修改版：https://wago.io/WtEbYYcbH
 
-大秘境界面美化增强：
-- 原版：https://wago.io/lNCA6Tv1s
-- 社区汉化：https://bbs.nga.cn/read.php?tid=27955156
+史诗钥石地下城界面显示分数（M+ Display）：https://wago.io/M+LevelDisplay
 
-第三赛季词缀加密监视：等待wago或nga版本
+通灵战潮道具监视（@SL-Dungeons - NW - Kyrian Armaments）：https://wago.io/KyrianArmaments
 
-史诗钥石地下城界面显示分数：https://wago.io/M+LevelDisplay
-
-通灵战潮道具监视：https://wago.io/KyrianArmaments
-
-大米地下城框架上高亮显示点名技能：https://wago.io/BFADungeonTargetedSpells
+大米地下城框架上高亮显示点名技能（Dungeon - Targeted Spells）：https://wago.io/BFADungeonTargetedSpells
 
 姓名版目标（可用来显示怨毒目标）：https://wago.io/0QGPOXwHc
 
-彼界尾王分身击杀报警：https://wago.io/-_UWm33O3
-
 自带预创建组队增强：https://bbs.nga.cn/read.php?tid=30859608
+
+吃食物通告（萌）：https://wago.io/rJLsKGVt-
+
+暗影国度地下城与团队副本：
+- 彼界尾王分身击杀报警（Mueh'zala spawns health group）：https://wago.io/-_UWm33O3
+- 仙林迷宫wa：https://wago.io/hVLym_eLv
+- 仙林迷宫全自动导航（需要配合前面一个wa完成前2个迷宫）：https://wago.io/16cF_58a5
+- 集市绿洲+符文控制台：https://bbs.nga.cn/read.php?tid=30865926
+- 5人地下城+第三赛季加密词缀：https://bbs.nga.cn/read.php?tid=24446064
+- 团队副本初诞者圣墓：https://bbs.nga.cn/read.php?tid=30895500
