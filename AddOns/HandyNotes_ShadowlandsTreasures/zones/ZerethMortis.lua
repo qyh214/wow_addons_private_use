@@ -16,10 +16,7 @@ local path = ns.path
 -- gravid repose, rondure alcove arrangement 65345 (also 65378)
 -- gravid repose, fulgore alcove arrangement 65347 47.86 30.46
 -- gravid repose, dormant alcove arrangement 65346 51043248
--- rondure alcove, rondure cache 42904030: 65567, contained a second pocobold...
 -- 58013 tripped while I was killing Dreadlord Infliltrators after I got loot from one
--- 65622 when I was forge-tapping and got a honeycombed lattice
--- 65560 serene pigment (above Firim's)
 -- 65539 after Arbiter in the Making -- could be for flight, it's complete on other characters as well
 
 local MOUNT = "|A:StableMaster:15:15|a"
@@ -470,8 +467,8 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         achievement=15502, -- Sand Sand Everywhere
         criteria=true,
         atlas="storyheader-cheevoicon",
-        hide_before=ns.conditions.Item(189863), -- Spatial Opener
-        active=ns.conditions.QuestComplete(65346), -- Dormant Alcove Arrangement
+        active=ns.conditions.Item(189863), -- Spatial Opener
+        hide_before=ns.conditions.QuestComplete(65346), -- Dormant Alcove Arrangement
         note="In the Dormant Alcove; teleport here from the Inner Locus. Use {item:189863:Spatial Opener} from various treasures to loot the piles of sand.",
         -- quests
         -- lumpy: 65494
@@ -492,16 +489,52 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         --     190390, -- Protector's Diffusion Implement (misshapen)
         -- },
     },
+    [42934006] = {
+        quest=65567,
+        label="Rondure Cache",
+        loot={
+            {190096, quest=65534}, -- Pocobold (even if you already have it -- it just vanishes)
+        },
+        note="Unlock the Rondure Alcove Arrangement to come here from the Inner Locus. Solve a fairly horrible jumping puzzle to reach the orb near the ceiling.",
+        route={50553200, 42934006},
+        hide_before=ns.conditions.QuestComplete(65345), -- Rondure Alcove Arrangement
+    },
 })
+
+local requisites = {
+    quest=65532,
+    label="{npc:185261:Requisites Originator}",
+    atlas="creationcatalyst-32x32",
+    -- TODO: check for updates on loot @ https://www.wowhead.com/npc=185261/requisites-originator
+    note="|cFFFFFF00Unlock the Repertory Alcove Arrangement to come here from the Inner Locus. Once a week you can request items based on your Cypher research level.|r\n"..
+        "{spell:366667}: {item:190336:Thrumming Powerstone} and gold\n"..
+        "{spell:366668}: {item:189865:Anima Matrix}\n"..
+        "{spell:366669}: {currency:1979:Cyphers of the First Ones}\n"..
+        "{spell:366670}: {item:188957:Genesis Motes} and low chance at {item:189179}\n"..
+        "{spell:366671}: Mix of Cyphers, Genesis Modes, Anima, and gold\n"..
+        "{spell:366672}: Spec-appropriate Cypher Equipment\n",
+    hide_before=ns.conditions.QuestComplete(65345), -- Repertory Alcove Arrangement
+}
+ns.RegisterPoints(1970, { -- Zereth Mortis
+    [47503660] = {
+        route={50553200, 47503660},
+    },
+}, requisites)
+ns.RegisterPoints(2029, { -- Gravid Repose
+    [30506380] = requisites,
+})
+
 ns.RegisterPoints(1970, { -- Zereth Mortis
     [47703450] = {quest=65343, label="Camber Alcove Arrangement"},
+    [49553105] = {quest=65344, label="Repertory Alcove Arrangement", note="Inside the Terrestrial Cache cave"},
     [50502760] = {quest=65345, label="Rondure Alcove Arrangement", note="Hidden away between two pillars, you'll need flying or the Tertius Locus to reach it"},
     [51043248] = {quest=65346, label="Dormant Alcove Arrangement"},
     [47863046] = {quest=65347, label="Fulgore Alcove Arrangement"},
 }, {
     atlas="Rune-06-neutral",
+    minimap=true,
     hide_before=ns.conditions.QuestComplete(65328), -- Arbiter in the Making
-    note="|cFFFFFF00Active to unlock a new destination from the Inner Locus|r",
+    note="|cFFFFFF00Activate to unlock a new destination from the Inner Locus|r",
 })
 
 -- Notable locations
@@ -540,7 +573,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             {189980, quest=65510, covenant=Enum.CovenantType.NightFae, note="1000{currencyicon:1979}"}, -- Brutosaur Soul
             {189986, quest=65514, covenant=Enum.CovenantType.NightFae, note="500{currencyicon:1979}"}, -- Armadillo Soul
         },
-        atlas="creationcatalyst-32x32", minimap=true,
+        atlas="banker", minimap=true,
         hide_before=ns.conditions.QuestComplete(65219), -- Jiro to Hero
         note="This is a vendor. Learn {garrisontalent:1902} then complete the {quest:65219} questline",
     },
@@ -703,7 +736,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             ns.conditions.GarrisonTalent(1902), -- Altonian Understanding
             ns.conditions.QuestComplete(65328), -- Arbiter in the Making, end of A Means to an End storyline
         },
-        note="In the Rondure Alcove area of the Resonant Peaks, solve a jumping puzzle to reach it.\nUnlock Rondure Alcove @ 50.5 27.6 on the Tertius level.",
+        note="In the Rondure Alcove area of the Resonant Peaks, solve the shorter jumping puzzle to reach it on top of one of the doorways.\nUnlock Rondure Alcove @ 50.5 27.6 on the Tertius level.",
     }),
     [52207530] = makeSchematic(65354, 189442, PET, { -- Schematic: Prototickles
         note="In a chain overlooking the falls, hidden in the leaves; jump down from the East and edge up to it",
@@ -781,10 +814,10 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
 ns.RegisterPoints(1970, { -- Zereth Mortis
     [46056460] = {quest=65093},
     [47107720] = {quest=65093},
-    [57506575] = {quest={65093,65418,any=true}},
+    [57506575] = {quest=65093},
     [63103740] = {quest=65093},
     [44303095] = {quest=65317},
-    [47603910] = {quest={65317,65418,any=true}},
+    [47603910] = {quest=65317},
     [59702290] = {quest=65317},
     [36455645] = {quest=65322},
     [39204665] = {quest=65322},
@@ -798,7 +831,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     [54254280] = {quest=65092},
     [58903635] = {quest=65092},
     [45109410] = {quest=65316},
-    [56008415] = {quest={65316,65418,any=true}},
+    [56008415] = {quest=65316},
     [56656140] = {quest=65316},
     [33805425] = {quest=65321},
     [39957285] = {quest=65321},
@@ -809,7 +842,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     texture=ns.atlas_texture("VignetteLoot", {r=1,g=1,b=0,a=0.8,scale=0.9}),
 })
 ns.RegisterPoints(1970, { -- Zereth Mortis
-    [38357035] = {quest={65091,65418,any=true}},
+    [38357035] = {quest=65091},
     [39356045] = {quest=65091},
     [52357200] = {quest=65091},
     [55655000] = {quest=65091},
@@ -824,12 +857,12 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     texture=ns.atlas_texture("VignetteLoot", {r=0,g=0.8,b=0,a=0.8,scale=0.9}),
 })
 ns.RegisterPoints(1970, { -- Zereth Mortis
-    [32055260] = {quest={64972,65418,any=true}},
+    [32055260] = {quest=64972},
     [34606880] = {quest=64972},
     [37004645] = {quest=64972},
     [46806700] = {quest=64972},
     [52455705] = {quest=65314},
-    [53258685] = {quest={65314,65418,any=true}},
+    [53258685] = {quest=65314},
     [62807390] = {quest=65314},
     [64306330] = {quest=65319},
     [65604760] = {quest=65319},
@@ -942,6 +975,153 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         minimap=true,
     },
 })
+
+-- Coreless for Pocopoc
+local coreless = ns.nodeMaker{
+    hide_before=ns.conditions.GarrisonTalent(1932), -- Dealic Understanding
+    note="|cFFFFFF00Use with Pocopoc and gain access to a special ability|r",
+    -- atlas="poi-scrapper",
+    minimap=true, scale=0.9,
+    group="coreless",
+}
+ns.RegisterPoints(1970, { -- Zereth Mortis
+    -- Coreless Vombata
+    [33205620] = {},
+    [37203760] = {},
+    [37804720] = {},
+    [38407080] = {},
+    [45407580] = {},
+    [46807860] = {},
+    [56006660] = {},
+}, coreless{
+    label="{npc:181580:Coreless Vombata}",
+    spell=361415, -- Withering Bash
+    texture=ns.atlas_texture("poi-scrapper", {r=1, g=0.5, b=1}),
+})
+ns.RegisterPoints(1970, { -- Zereth Mortis
+    -- Coreless Tarachnid
+    [41602780] = {},
+    [44202460] = {},
+    [53602700] = {},
+    [57002540] = {},
+    [59004900] = {},
+    [59405480] = {},
+    [62806240] = {},
+    [64004380] = {},
+}, coreless{
+    label="{npc:181556:Coreless Tarachnid}",
+    spell=361556, -- Acrid Spit
+    texture=ns.atlas_texture("poi-scrapper", {r=1, g=0.7, b=0.7}),
+})
+ns.RegisterPoints(1970, { -- Zereth Mortis
+    -- Coreless Helicid
+    [32605980] = {},
+    [37207080] = {},
+    [37805500] = {},
+    [42408820] = {},
+    [43806120] = {},
+    [44405640] = {},
+    [50006260] = {},
+    [52407480] = {},
+    [59008420] = {},
+    [63207040] = {},
+}, coreless{
+    label="{npc:181558:Coreless Helicid}",
+    spell=362897, -- Sticky Mucus
+    texture=ns.atlas_texture("poi-scrapper", {r=0.25, g=1, b=0.5}),
+})
+ns.RegisterPoints(1970, { -- Zereth Mortis
+    -- Coreless Geomental
+    [47204600] = {},
+    [50004160] = {},
+    [54003804] = {},
+    [54009080] = {},
+    [55006040] = {},
+    [66403800] = {},
+}, coreless{
+    label="{npc:181586:Coreless Geomental}",
+    spell=360577, -- Earthquake
+    texture=ns.atlas_texture("poi-scrapper", {r=0.5, g=0.25, b=1}),
+})
+ns.RegisterPoints(1970, { -- Zereth Mortis
+    -- Coreless Scarabid
+    [40803160] = {},
+    [42604360] = {},
+    [44403680] = {},
+    [47602420] = {},
+    [51404920] = {},
+    [57403040] = {},
+    [62003200] = {},
+    [67202500] = {},
+}, coreless{
+    label="{npc:181385:Coreless Scarabid}",
+    spell=330595, -- Bite
+    texture=ns.atlas_texture("poi-scrapper", {r=0.7, g=0.7, b=1}),
+})
+ns.RegisterPoints(1970, { -- Zereth Mortis
+    -- Coreless Aurelid
+    [34607060] = {},
+}, coreless{
+    quest=65523,
+    label="{npc:185282:Coreless Aurelid}",
+    note="This one is just used to reach the nearby underwater treasure",
+    texture=ns.atlas_texture("poi-scrapper", {r=0.5, g=0.5, b=1}),
+})
+ns.RegisterPoints(1970, { -- Zereth Mortis
+    -- Coreless Guardian
+    [39405420] = {},
+    [41804560] = {},
+    [42602300] = {},
+    [43403920] = {},
+    [43406880] = {},
+    [45605680] = {},
+    [47209420] = {},
+    [47807720] = {},
+    [48800320] = {},
+    [53604320] = {},
+    [56202840] = {},
+    [56207800] = {},
+    [57005420] = {},
+    [65203660] = {},
+    [66602840] = {},
+}, coreless{
+    label="{npc:183869:Coreless Guardian}",
+    note="Pilot with up to two others",
+    hide_before=ns.conditions.GarrisonTalent(1998), -- Bassalim Understanding
+    texture=ns.atlas_texture("poi-scrapper", {r=0.7, g=1, b=1}),
+})
+
+-- Traversing the Spheres
+-- *Most* of this is in wide areas, but there's a few highly specific ones
+local traverse = ns.nodeMaker{
+    achievement=15229,
+    atlas="ancientmana",
+    minimap=true,
+    active=ns.conditions.Item(187908),
+}
+ns.RegisterPoints(1970, { -- Zereth Mortis
+    [32814036] = {},
+    [43601150] = {},
+    [43908850] = {},
+    [36307090] = {},
+    [51709000] = {},
+}, traverse{
+    quest=65559,
+    criteria=9,
+    loot={190128}, -- Wayward Essence
+    note="Tap the orb with a bird circling around it",
+})
+ns.RegisterPoints(1970, {
+    [34604670] = traverse{
+        quest=65560,
+        criteria=10,
+        note="Above the Exile's Hollow cave entrance",
+    },
+})
+-- 65622 when I was forge-tapping and got a honeycombed lattice
+-- 65560 serene pigment (above Firim's)
+-- 65016 volatile precursor
+-- 65014 incorporeal sand
 
 -- Adventurer of Zerith Mortis
 
@@ -1084,6 +1264,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             190049, -- Perennial Punching Dagger
         },
         note="Break nearby {npc:184048}. This is often bugged.",
+        nearby={52009380, 52409280, 53209300, 53409080, 54009120, label="{npc:184048:Bulging Root}"},
     },
 
     [80404705] = { -- Gorkek

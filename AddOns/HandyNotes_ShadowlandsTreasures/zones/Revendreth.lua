@@ -144,8 +144,8 @@ ns.RegisterPoints(1525, {
     -- Loyal Gorger
     [59305700] = {
         label="{npc:173499}",
-        icon=3601543,
-        quest={
+        quest={61843, 62046, any=true}, -- daily, final
+        progress={
             61839, -- Nipping at the Undergrowth
             61840, -- Vineroot on the Menu
             61842, -- Vineroot Will Not Do
@@ -154,11 +154,12 @@ ns.RegisterPoints(1525, {
             62045, -- Ready for More
             62046  -- A New Pack
         },
-        hide_before=ns.conditions.QuestComplete(58259), -- Worldedge Gorger
+        hide_before=ns.conditions.QuestComplete(61188), -- Worldedge Gorger
         loot={
             {182589, mount=1391}, -- Loyal Gorger
         },
-        note="Kill {npc:160821}, do 7 days of dailies for {npc:173499}, get a mount",
+        note="Kill {npc:160821} until {item:180583} drops, do 7 days of dailies for {npc:173499}, get a mount",
+        atlas="stablemaster", scale=1.2,
         group="Daily Mounts",
     },
     --
@@ -188,14 +189,15 @@ ns.RegisterPoints(1525, { -- Revendreth
         quest=64941, -- Chicken; go work out the well fed cat one, if it has a quest
         loot={187811}, -- Spectral Feed
     },
-    [63004200] = {
+    [63264285] = {
         quest=64941,
         loot={
             {187813, quest=64941, covenant=Enum.CovenantType.NightFae}, -- Chicken Soul
         },
+        active=ns.conditions.Item(187811),
     }
 }, {
-    note="Bring the {item:187811:Spectral Feed} (63.7, 61.7) to the {npc:181660:Lost Soul} (63, 42), then use /chicken at it",
+    note="Bring the {item:187811:Spectral Feed} (63.7, 61.7) to the {npc:181660:Lost Soul} (63, 42), use /chicken at it, then give it the feed",
     covenant=Enum.CovenantType.NightFae,
     atlas="sanctumupgrades-nightfae-32x32",
     minimap=true,
@@ -206,7 +208,8 @@ ns.RegisterPoints(1525, { -- Revendreth
 
 ns.RegisterPoints(1525, {
     [63134311] = { -- Dead Blanchy
-        quest={62050, 62107, any=true}, -- progress:62038, 62042, 62047, 62049, 62048; daily-done is 62107
+        quest={62050, 62107, any=true}, -- daily-done is 62107
+        progress={62038, 62042, 62047, 62049, 62048, 62050},
         loot={
             {182614, mount=1414}, -- Blanchy's Reins
         },
@@ -773,9 +776,9 @@ ns.RegisterPoints(1525, {
         quest=58259,
         npc=160821,
         loot={
-            180583, -- Impressionable Gorger Spawn
+            {180583, quest=61188}, -- Impressionable Gorger Spawn
         },
-        note="Use {item:173939} from nearby mobs near braziers",
+        note="Use {item:173939} from nearby mobs near braziers. There's strong speculation that completing {quest:60480:The Endmire} @ 65 63 is needed for the drop.",
     },
 })
 

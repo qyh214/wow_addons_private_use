@@ -67,6 +67,10 @@ function ns.RegisterPoints(zone, points, defaults)
     end
     ns.merge(ns.points[zone], points)
     for coord, point in pairs(points) do
+        local proxy_meta
+        if point.path or point.related then
+            proxy_meta = {__index=point}
+        end
         if point.path then
             local route = type(point.path) == "table" and point.path or {point.path}
             table.insert(route, 1, coord)
@@ -75,7 +79,18 @@ function ns.RegisterPoints(zone, points, defaults)
                 atlas="poi-door", scale=0.95, minimap=true, texture=false,
                 note=route.note or false,
                 route=route,
-            }, {__index=point})
+            }, proxy_meta)
+        end
+        if point.nearby then
+            local nearby = type(point.nearby) == "table" and point.nearby or {point.nearby}
+            for _, ncoord in ipairs(point.nearby) do
+                ns.points[zone][ncoord] = setmetatable({
+                    label=nearby.label or (point.npc and "Related to nearby NPC" or "Related to nearby treasure"),
+                    atlas=nearby.atlas or "questobjective", scale=0.95, texture=false,
+                    minimap=true, worldmap=false,
+                    note=nearby.note or false,
+                }, proxy_meta)
+            end
         end
     end
 end
@@ -727,6 +742,10 @@ local function hideNode(button, uiMapID, coord)
     ns.hidden[uiMapID][coord] = true
     HL:Refresh()
 end
+local function hideAchievement(button, achievement)
+    ns.db.achievementsHidden[achievement] = true
+    HL:Refresh()
+end
 local function hideGroup(button, uiMapID, coord)
     local point = ns.points[uiMapID] and ns.points[uiMapID][coord]
     if not (point and point.group) then return end
@@ -816,6 +835,16 @@ do
             info.arg2         = currentCoord
             UIDropDownMenu_AddButton(info, level)
             wipe(info)
+
+            if point.achievement then
+                -- Waypoint menu item
+                info.text = render_string("Hide all {achievement:" .. point.achievement .. "} in all zones")
+                info.notCheckable = 1
+                info.func = hideAchievement
+                info.arg1 = point.achievement
+                UIDropDownMenu_AddButton(info, level)
+                wipe(info)
+            end
 
             if point.group then
                 if not ns.hiddenConfig.groupsHiddenByZone then

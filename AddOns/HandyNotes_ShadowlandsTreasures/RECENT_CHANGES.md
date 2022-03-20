@@ -1,9 +1,12 @@
-## Changed in v55
+## Changed in v56
 
-* Add the locations of the Locus Alcove Arrangements for the optional rooms (Camber, Fulgore, Rondure, Dormant)
-* Add a point for the Sand Sand Everywhere achievement
-* Add a point for Olea Manu, the Jiro vendor after their questline, not at all because I'm bitter that I didn't notice them and so missed out on a week of +50% cyphers, no
-* Add various soulshapes / crittershapes across the Shadowlands (mostly the is the 9.1.5 ones)
-* Domination Cache: note that the key can also drop from the Dreadlord Infiltrators
-* Give the Pulp-Covered Relic its own icon so it's easier to pick out
+* Minor performance improvement: code checking whether you could learn an appearance from an item wasn't caching negative results and so was running more than it needed to
+* You can hide all points related to an achievement from the right-click menu
+* Cleaned up some duplication between point-groups and achievements
+* Coreless Automa locations in Zereth Mortis (disabled by default, there's a lot)
+* Missing Dormant Alcove Arrangement added, and explain the Requisites Originator it leads to
+* Better explain the branching jumping puzzle routes for the Rondue Cache / Omnipotential Core schematic
+* Show the Bulging Roots near Gluttonous Overgrowth, but only on your minimap
+* Chicken Soul crittershape: position very slightly fixed
+* Loyal Gorger and Dead Blancy: show progress like the newer mounts
 

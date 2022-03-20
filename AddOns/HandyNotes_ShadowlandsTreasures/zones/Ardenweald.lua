@@ -187,6 +187,10 @@ ns.RegisterPoints(1565, { -- Ardenweald
     minimap=true,
     group="soulshape",
 })
+-- other soulshapes:
+-- In Heart of the Forest
+-- Corgi: /pet Sparkle (64938)
+-- Squirrel: Ask Choofa (64939)
 
 -- Non-achievement treasures
 ns.RegisterPoints(1565, { -- Ardenweald
@@ -238,7 +242,6 @@ ns.RegisterPoints(1565, {
     atlas="Campaign-QuestLog-LoreBook",
     minimap=true,
     level=60,
-    group="faerietales",
 })
 
 -- ns.RegisterPoints(1565, {
