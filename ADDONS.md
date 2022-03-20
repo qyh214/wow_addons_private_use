@@ -82,6 +82,8 @@ RareScanner 稀有扫描（仅利用他的报警功能）
 
 RSA SpeakinSpell替代品，技能喊话辅助
 
+ShihuangNameplate 始皇姓名版增强
+
 TinyInspect 角色面板信息增强显示额外的装备展示、为Tooltip实现玩家装备等级显示
 
 VenturePlan 盟约指挥台任务指派成功率插件
