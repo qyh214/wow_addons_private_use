@@ -59,7 +59,9 @@ Nnoggie大秘境技能CD监视升级版&自制团队CD监视，带技能激活�
 
 自带预创建组队增强：https://bbs.nga.cn/read.php?tid=30859608
 
-吃食物通告（萌）：https://wago.io/rJLsKGVt-
+吃食物通告（萌）：
+- 原版：https://wago.io/rJLsKGVt-
+- 自用修改版：https://wago.io/1pGYlPijc
 
 大秘境-死疽词缀警告-奶妈用：
 - 原版：https://bbs.nga.cn/read.php?tid=24910345
