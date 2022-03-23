@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2457, "DBM-Sepulcher", nil, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220314083715")
+mod:SetRevision("20220320212437")
 mod:SetCreatureID(181398, 181334)--Could be others
 mod:SetEncounterID(2543)
 mod:SetUsedIcons(1, 2, 6, 7, 8)
-mod:SetHotfixNoticeRev(20220308000000)
+mod:SetHotfixNoticeRev(20220320000000)
 mod:SetMinSyncRevision(20220308000000)
 --mod.respawnTime = 29
 
@@ -14,7 +14,6 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 360006 361913 361923 359960 360717 360145 360229 360284 360300 360304",
 	"SPELL_CAST_SUCCESS 360420",
-	"SPELL_SUMMON 361915",
 	"SPELL_AURA_APPLIED 360300 360012 361934 362020 361945 359963 360418 360146 360148 363191 360241 360287",
 	"SPELL_AURA_APPLIED_DOSE 360287",
 	"SPELL_AURA_REMOVED 360300 360304 360012 361934 362020 361945 360418 360146 360148 363191 360241 360516",
@@ -105,6 +104,7 @@ mod:GroupSpells(360717, 360418)--Group paranoia with parent mechanic Infiltratio
 --Mal'Ganis
 mod.vb.darknessCount = 0
 mod.vb.carrionCount = 0
+mod.vb.carrionDebuffs = 0
 mod.vb.shadowsCount = 0
 mod.vb.shadowsIcon = 8
 --Kin'tessa
@@ -115,6 +115,7 @@ mod.vb.slumberCount = 0
 mod.vb.auraofShadowsOn = false
 local castsPerGUID = {}
 local playerDebuffed = false
+local carrionTime = 0
 
 --Things get a bit complicated with debuff priority
 local function updateRangeFrame(self)
@@ -137,6 +138,7 @@ function mod:OnCombatStart(delay)
 	self.vb.shadowsCount = 0
 	self.vb.shadowsIcon = 8
 	self.vb.carrionCount = 0
+	self.vb.carrionDebuffs = 0
 
 	self.vb.trepidationIcon = 1
 	self.vb.infiltrationCount = 0
@@ -153,9 +155,7 @@ function mod:OnCombatStart(delay)
 	timerSlumberCloudCD:Start(12.1-delay, 1)
 	timerFearfulTrepidationCD:Start(25.4-delay, 1)
 	timerInfiltrationofDreadCD:Start(123-delay, 1)
-	if self:IsNormal() then--I'm sure it's longer in LFRr and shorter on heroic/mythic, this is only one blizzard willingly published
-		berserkTimer:Start(780)
-	end
+	berserkTimer:Start(self:IsMythic() and 540 or self:IsHeroic() and 600 or 780)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM_CORE_L.INFOFRAME_POWER)
 		DBM.InfoFrame:Show(2, "enemypower", 1)--TODO, figure out power type
@@ -187,6 +187,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 360006 then
+		carrionTime = GetTime()
 		self.vb.carrionCount = self.vb.carrionCount + 1
 		specWarnCloudofCarrion:Show()
 		specWarnCloudofCarrion:Play("scatter")
@@ -196,15 +197,7 @@ function mod:SPELL_CAST_START(args)
 		warnManifestShadows:Show(self.vb.shadowsCount)
 --		timerManifestShadowsCD:Start(nil, self.vb.shadowsCount+1)--Never recast more than once between stages/rotations
 		self.vb.shadowsIcon = 8
-	elseif spellId == 361923 then
-		if not castsPerGUID[args.sourceGUID] then--This should have been set in summon event
-			--But if that failed, do it again here and scan for mobs again here too
-			castsPerGUID[args.sourceGUID] = 0
-			if self.Options.SetIconOnManifestShadows then
-				self:ScanForMobs(args.sourceGUID, 2, self.vb.shadowsIcon, 1, nil, 12, "SetIconOnManifestShadows")
-			end
-			self.vb.shadowsIcon = self.vb.shadowsIcon - 1
-		end
+	elseif spellId == 361923 and castsPerGUID[args.sourceGUID] then
 		castsPerGUID[args.sourceGUID] = castsPerGUID[args.sourceGUID] + 1
 		local count = castsPerGUID[args.sourceGUID]
 		if self:CheckInterruptFilter(args.sourceGUID, false, false) then
@@ -224,12 +217,12 @@ function mod:SPELL_CAST_START(args)
 			end
 		end
 	elseif spellId == 359960 then
-		if self:IsTanking("player", nil, nil, nil, args.sourseGUID) then--Change to boss1/2 if confirmed it's consistent
+		if self:IsTanking("player", nil, nil, nil, args.sourceGUID) then--Change to boss1/2 if confirmed it's consistent
 			specWarnLeechingClaws:Show()
 			specWarnLeechingClaws:Play("defensive")
 		end
 		timerLeechingClawsCD:Start()
-	elseif spellId == 360717 then
+	elseif spellId == 360717 and self:AntiSpam(3, 1) then
 		self.vb.infiltrationCount = self.vb.infiltrationCount + 1
 		specWarnInfiltrationofDread:Show(self.vb.infiltrationCount)
 		specWarnInfiltrationofDread:Play("specialsoon")
@@ -264,7 +257,7 @@ function mod:SPELL_CAST_START(args)
 		warnSlumberCloud:Show(self.vb.slumberCount)
 --		timerSlumberCloudCD:Start(nil, self.vb.slumberCount+1)--No in between casts
 	elseif spellId == 360284 then
-		if self:IsTanking("player", nil, nil, nil, args.sourseGUID) then--Change to boss1/2 if confirmed it's consistent
+		if self:IsTanking("player", nil, nil, nil, args.sourceGUID) then--Change to boss1/2 if confirmed it's consistent
 			specWarnAnguishingStrike:Show()
 			specWarnAnguishingStrike:Play("defensive")
 		end
@@ -279,33 +272,27 @@ function mod:SPELL_CAST_SUCCESS(args)
 	end
 end
 
-function mod:SPELL_SUMMON(args)
-	local spellId = args.spellId
-	if spellId == 361915 then
-		if not castsPerGUID[args.destGUID] then
-			castsPerGUID[args.destGUID] = 0
-		end
-		if self.Options.SetIconOnManifestShadows then
-			self:ScanForMobs(args.destGUID, 2, self.vb.shadowsIcon, 1, nil, 12, "SetIconOnManifestShadows")
-		end
-		self.vb.shadowsIcon = self.vb.shadowsIcon - 1
-	end
-end
-
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 360300 then
 		timerSwarmofDecay:Start()
 	elseif spellId == 360012 then
+		self.vb.carrionDebuffs = self.vb.carrionDebuffs + 1
 		if args:IsPlayer() then
 			specWarnCloudofCarrionDebuff:Show()
 			specWarnCloudofCarrionDebuff:Play("range5")
 			yellCloudofCarrion:Yell()
 			updateRangeFrame(self)
 		else
-			warnCloudofCarrion:CombinedShow(0.3, args.destName)--More than one on mythic
+			if (GetTime() - carrionTime) < 4 then
+				warnCloudofCarrion:CombinedShow(0.5, args.destName)
+			end
 		end
 	elseif spellId == 361934 or spellId == 362020 then
+		if self.Options.SetIconOnManifestShadows then
+			self:ScanForMobs(args.destGUID, 2, self.vb.shadowsIcon, 1, nil, 12, "SetIconOnManifestShadows")
+		end
+		self.vb.shadowsIcon = self.vb.shadowsIcon - 1
 		if self.Options.NPAuraOnIncompleteForm then
 			DBM.Nameplate:Show(true, args.sourceGUID, spellId)
 		end
@@ -319,9 +306,16 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 359963 then
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId) then--If not on a tank, it's just some numpty in wrong place
-			if not args:IsPlayer() and not DBM:UnitDebuff("player", spellId) then
-				specWarnOpenedVeins:Show(args.destName)
-				specWarnOpenedVeins:Play("tauntboss")
+			if not args:IsPlayer() then
+				local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
+				local remaining
+				if expireTime then
+					remaining = expireTime-GetTime()
+				end
+				if (not remaining or remaining and remaining < 5) and not UnitIsDeadOrGhost("player") then
+					specWarnOpenedVeins:Show(args.destName)
+					specWarnOpenedVeins:Play("tauntboss")
+				end
 			end
 		end
 	elseif spellId == 360418 and args:IsPlayer() then
@@ -338,12 +332,13 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellFearfulTrepidation:Yell(icon, icon)
 			yellFearfulTrepidationFades:Countdown(spellId, nil, icon)
 			updateRangeFrame(self)
+			specWarnCloudofCarrionDebuffMove:Cancel()
+			specWarnCloudofCarrionDebuffMove:CancelVoice()
 		elseif self.Options.SpecWarn360012moveto and DBM:UnitDebuff("player", 360012) then--If have Carrion debuff, spec warn to runt o tepidate debuff to clear it
-			specWarnCloudofCarrionDebuffMove:CombinedShow(0.3, args.destName)
-			specWarnCloudofCarrionDebuffMove:ScheduleVoice(0.3, "gathershare")
-		else
-			warnFearfulTrepidation:Show(icon, args.destName)
+			specWarnCloudofCarrionDebuffMove:CombinedShow(0.5, args.destName)
+			specWarnCloudofCarrionDebuffMove:ScheduleVoice(0.5, "gathershare")
 		end
+		warnFearfulTrepidation:CombinedShow(0.5, args.destName)
 		self.vb.trepidationIcon = self.vb.trepidationIcon + 1
 	elseif spellId == 360148 then
 		if args:IsPlayer() then
@@ -429,12 +424,16 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 360418 and args:IsPlayer() then
 		timerParanoia:Stop()
 	elseif spellId == 360012 then
+		self.vb.carrionDebuffs = self.vb.carrionDebuffs + 1
 		if args:IsPlayer() then
 			updateRangeFrame(self)
 		end
 	elseif spellId == 361934 or spellId == 362020 then
 		if self.Options.NPAuraOnIncompleteForm then
 			DBM.Nameplate:Hide(true, args.sourceGUID, spellId)
+		end
+		if not castsPerGUID[args.destGUID] then
+			castsPerGUID[args.destGUID] = 0
 		end
 	elseif spellId == 361945 then
 		if self.Options.NPAuraOnFullyFormed then

@@ -66,18 +66,18 @@ local function showRealDate(curseDate)
 end
 
 DBM = {
-	Revision = parseCurseDate("20220315002840"),
+	Revision = parseCurseDate("20220322224425"),
 }
 -- The string that is shown as version
 if isRetail then
-	DBM.DisplayVersion = "9.2.7"
-	DBM.ReleaseRevision = releaseDate(2022, 3, 14) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "9.2.8"
+	DBM.ReleaseRevision = releaseDate(2022, 3, 22) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 elseif isClassic then
 	DBM.DisplayVersion = "1.14.17 alpha"
 	DBM.ReleaseRevision = releaseDate(2022, 2, 22) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 elseif isBCC then
-	DBM.DisplayVersion = "2.5.30 alpha"
-	DBM.ReleaseRevision = releaseDate(2022, 2, 22) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	DBM.DisplayVersion = "2.5.30"
+	DBM.ReleaseRevision = releaseDate(2022, 3, 22) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 end
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -429,7 +429,7 @@ local instanceDifficultyBylevel
 if isRetail then
 	instanceDifficultyBylevel = {
 		--World
-		[0]={50,1},[1]={50, 1},--Eastern Kingdoms and Azeroth world events. These would be warfront and aniversery world bosses, so they'd be set to 50 for now. Likely 60 next year
+		[0]={50,1},[1]={50, 1},--Eastern Kingdoms and Kalimdor world events/bosses. These would be warfront and aniversery world bosses, so they'd be set to 50 for now. Likely 60 next year
 		[530]={30, 1},--Outlands World Bosses
 		[870]={30, 1},[1064]={30, 1},--MoP World Bosses
 		[1116]={40, 1},[1159]={40, 1},[1331]={40, 1},[1158]={40, 1},[1153]={40, 1},[1152]={40, 1},[1330]={40, 1},[1160]={40, 1},[1154]={40, 1},[1464]={40, 1},--Wod World and Garrison Bosses
@@ -457,10 +457,24 @@ if isRetail then
 		[1763]={50, 2},[1754]={50, 2},[1762]={50, 2},[1864]={50, 2},[1822]={50, 2},[1877]={50, 2},[1594]={50, 2},[1841]={50, 2},[1771]={50, 2},[1862]={50, 2},[2097]={50, 2},--Bfa Dungeons
 		[2286]={60, 2},[2289]={60, 2},[2290]={60, 2},[2287]={60, 2},[2285]={60, 2},[2293]={60, 2},[2291]={60, 2},[2284]={60, 2},[2441]={60, 2},--Shadowlands Dungeons
 	}
-else
+--elseif isWrath then--Since naxx is moved to northrend, wrath can't use tbc/classics table
+--	instanceDifficultyBylevel = {
+--		--World
+--		[0]={60,1},[1]={60, 1},--Eastern Kingdoms and Kalimdor world bosses.
+--		[530]={70, 1},--Outlands World Bosses
+--		--Raids
+--		[509]={60, 3},[531]={60, 3},[469]={60, 3},[409]={60, 3},[309]={60, 3},[249]={60, 3},--Classic Raids (309 is legacy ZG)
+--		[564]={70, 3},[534]={70, 3},[532]={70, 3},[565]={70, 3},[544]={70, 3},[548]={70, 3},[580]={70, 3},[550]={70, 3},[568]={70, 3},--BC Raids (568 is legacy ZA)
+--		[615]={30, 3},[724]={30, 3},[649]={30, 3},[616]={30, 3},[631]={30, 3},[533]={30, 3},[249]={30, 3},[603]={30, 3},[624]={30, 3},--Wrath Raids
+--		--Dungeons
+--		[429]={45, 2},[389]={18, 2},[349]={52, 2},[329]={60, 2},[289]={60, 2},[230]={60, 2},[229]={60, 2},[209]={54, 2},[189]={45, 2},[129]={47, 2},[109]={60, 2},[90]={34, 2},[70]={52, 2},[48]={32, 2},[47]={42, 2},[43]={27, 2},[36]={25, 2},[34]={32, 2},[33]={30, 2},--Classic Dungeons
+--		[540]={70, 2},[558]={70, 2},[556]={70, 2},[555]={70, 2},[542]={70, 2},[546]={70, 2},[545]={70, 2},[547]={70, 2},[553]={70, 2},[554]={70, 2},[552]={70, 2},[557]={70, 2},[269]={70, 2},[560]={70, 2},[543]={70, 2},[585]={70, 2},--BC Dungeons
+--		[619]={30, 2},[601]={30, 2},[595]={30, 2},[600]={30, 2},[604]={30, 2},[602]={30, 2},[599]={30, 2},[576]={30, 2},[578]={30, 2},[574]={30, 2},[575]={30, 2},[608]={30, 2},[658]={30, 2},[632]={30, 2},[668]={30, 2},[650]={30, 2},--Wrath Dungeons
+--	}
+else--TBC and Vanilla
 	instanceDifficultyBylevel = {
 		--World
-		[0]={60,1},[1]={60, 1},--Eastern Kingdoms and Azeroth world bosses. These would be warfront and aniversery world bosses, so they'd be set to 50 for now. Likely 60 next year
+		[0]={60,1},[1]={60, 1},--Eastern Kingdoms and Kalimdor world bosses.
 		[530]={70, 1},--Outlands World Bosses
 		--Raids
 		[509]={60, 3},[531]={60, 3},[469]={60, 3},[409]={60, 3},[533]={60, 3},[309]={60, 3},[249]={60, 3},--Classic Raids (309 is legacy ZG)
@@ -2316,7 +2330,7 @@ do
 	end
 
 	function DBM:GetRaidUnitId(name)
-		for i = 1, 8 do
+		for i = 1, 10 do
 			local unitId = "boss"..i
 			local bossName = UnitName(unitId)
 			if bossName and bossName == name then
@@ -2327,7 +2341,7 @@ do
 	end
 
 	function DBM:GetEnemyUnitIdByGUID(guid)
-		for i = 1, 8 do
+		for i = 1, 10 do
 			local unitId = "boss"..i
 			local guid2 = UnitGUID(unitId)
 			if guid == guid2 then
@@ -2488,7 +2502,7 @@ end
 
 function DBM:GetBossUnitId(name, bossOnly)--Deprecated, only old mods use this
 	local returnUnitID
-	for i = 1, 8 do
+	for i = 1, 10 do
 		if UnitName("boss" .. i) == name then
 			returnUnitID = "boss"..i
 		end
@@ -2505,7 +2519,7 @@ end
 
 function DBM:GetUnitIdFromGUID(cidOrGuid, bossOnly)
 	local returnUnitID
-	for i = 1, 8 do
+	for i = 1, 10 do
 		local unitId = "boss"..i
 		local bossGUID = UnitGUID(unitId)
 		if type(cidOrGuid) == "number" then--CID passed
@@ -4614,7 +4628,7 @@ function checkWipe(self, confirm)
 		end
 		--hack for no iEEU information is provided.
 		if not bossuIdFound then
-			for i = 1, 8 do
+			for i = 1, 10 do
 				if UnitExists("boss"..i) then
 					bossuIdFound = true
 					break
@@ -7150,7 +7164,7 @@ function bossModPrototype:IsHealer(uId)
 	return role == "HEALER"
 end
 
-function bossModPrototype:IsTanking(unit, boss, isName, onlyRequested, bossGUID, includeTarget)
+function bossModPrototype:IsTanking(unit, boss, isName, onlyRequested, bossGUID, includeTarget, onlyS3)
 	if isName then--Passed combat log name, so pull unit ID
 		unit = DBM:GetRaidUnitId(unit)
 	end
@@ -7162,7 +7176,7 @@ function bossModPrototype:IsTanking(unit, boss, isName, onlyRequested, bossGUID,
 	if boss then--Only checking one bossID as requested
 		--Check threat first
 		local tanking, status = UnitDetailedThreatSituation(unit, boss)
-		if tanking or (status == 3) then
+		if (not onlyS3 and tanking) or (status == 3) then
 			return true
 		end
 		--Non threat fallback
@@ -7174,14 +7188,14 @@ function bossModPrototype:IsTanking(unit, boss, isName, onlyRequested, bossGUID,
 			end
 		end
 	else--Check all of them if one isn't defined
-		for i = 1, 8 do
+		for i = 1, 10 do
 			local unitID = "boss"..i
 			local guid = UnitGUID(unitID)
 			--No GUID, any unit having threat returns true, GUID, only specific unit matching guid
 			if not bossGUID or (guid and guid == bossGUID) then
 				--Check threat first
 				local tanking, status = UnitDetailedThreatSituation(unit, unitID)
-				if tanking or (status == 3) then
+				if (not onlyS3 and tanking) or (status == 3) then
 					return true
 				end
 				--Non threat fallback
@@ -7203,7 +7217,7 @@ function bossModPrototype:IsTanking(unit, boss, isName, onlyRequested, bossGUID,
 				if guid and guid == bossGUID then
 					--Check threat first
 					local tanking, status = UnitDetailedThreatSituation(unit, unitID)
-					if tanking or (status == 3) then
+					if (not onlyS3 and tanking) or (status == 3) then
 						return true
 					end
 					--Non threat fallback
@@ -7266,7 +7280,7 @@ function DBM:GetBossHP(cIdOrGUID, onlyHighest)
 	else
 		--Boss UnitIds
 		if isRetail then
-			for i = 1, 8 do
+			for i = 1, 10 do
 				local unitID = "boss"..i
 				local bossguid = UnitGUID(unitID)
 				if (self:GetCIDFromGUID(bossguid) == cIdOrGUID or bossguid == cIdOrGUID) and UnitHealthMax(unitID) ~= 0 then
@@ -8780,6 +8794,10 @@ do
 
 	function bossModPrototype:NewSpecialWarningYouPos(text, optionDefault, ...)
 		return newSpecialWarning(self, "youpos", text, nil, optionDefault, ...)
+	end
+
+	function bossModPrototype:NewSpecialWarningYouPosCount(text, optionDefault, ...)
+		return newSpecialWarning(self, "youposcount", text, nil, optionDefault, ...)
 	end
 
 	function bossModPrototype:NewSpecialWarningSoakPos(text, optionDefault, ...)

@@ -955,8 +955,12 @@ end
 
 local function MultiUnitLoop(Func, unit, includePets, ...)
   unit = string.lower(unit)
-  if unit == "boss" or unit == "arena" then
-    for i = 1, MAX_BOSS_FRAMES do
+  if unit == "boss" then
+    for i = 1, 10 do
+      Func(unit..i, ...)
+    end
+  elseif unit == "arena" then
+    for i = 1, 5 do
       Func(unit..i, ...)
     end
   elseif unit == "nameplate" then
@@ -2843,6 +2847,7 @@ do
         WeakAuras.ScanEvents("DBM_TimerResume", id)
         if nextExpire == nil then
           recheckTimer = timer:ScheduleTimerFixed(dbmRecheckTimers, bar.expirationTime - GetTime())
+          nextExpire = bar.expirationTime
         elseif bar.expirationTime < nextExpire then
           timer:CancelTimer(recheckTimer)
           recheckTimer = timer:ScheduleTimerFixed(dbmRecheckTimers, bar.expirationTime - GetTime())
@@ -2857,7 +2862,10 @@ do
       if bar then
         bar.duration = duration
         bar.expirationTime = expirationTime
-        if expirationTime < nextExpire then
+        if nextExpire == nil then
+          recheckTimer = timer:ScheduleTimerFixed(dbmRecheckTimers, bar.expirationTime - GetTime())
+          nextExpire = expirationTime
+        elseif nextExpire == nil or expirationTime < nextExpire then
           timer:CancelTimer(recheckTimer)
           recheckTimer = timer:ScheduleTimerFixed(dbmRecheckTimers, duration - elapsed)
           nextExpire = expirationTime

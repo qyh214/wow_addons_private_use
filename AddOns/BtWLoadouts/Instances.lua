@@ -1845,8 +1845,8 @@ if select(4, GetBuildInfo()) >= 90200 then
         2461, -- Lihuvim, Principal Architect
         2463, -- Halondrus the Reclaimer
         2469, -- Anduin Wrynn
-        -- 2457, -- Lords of Dread
-        -- 2467, -- Rygelon
+        2457, -- Lords of Dread
+        2467, -- Rygelon
         2464, -- The Jailer, Zovaal
     }
 end
@@ -1917,9 +1917,10 @@ if select(4, GetBuildInfo()) >= 90200 then
     npcIDToBossID[182169] = 2461 -- Lihuvim, Principal Architect
     npcIDToBossID[180906] = 2463 -- Halondrus the Reclaimer
     npcIDToBossID[181954] = 2469 -- Anduin Wrynn
-    -- npcIDToBossID[182777] = 2457 -- Lords of Dread
-    -- npcIDToBossID[182777] = 2467 -- Rygelon
-    -- npcIDToBossID[183395] = 2464 -- The Jailer, Zovaal
+    npcIDToBossID[181398] = 2457 -- Lords of Dread
+    npcIDToBossID[181399] = 2457 -- Lords of Dread
+    npcIDToBossID[182777] = 2467 -- Rygelon
+    npcIDToBossID[180990] = 2464 -- The Jailer, Zovaal
 end
 -- Although area ids are unique we map them with instance ids so we can translate
 -- area names by instance. We translate them because we cant get the area id where

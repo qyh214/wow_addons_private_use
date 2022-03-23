@@ -1772,7 +1772,7 @@ end)
 
 BtWLoadoutsEquipmentMixin = {}
 function BtWLoadoutsEquipmentMixin:OnLoad()
-    self.RestrictionsDropDown:SetSupportedTypes("spec")
+    self.RestrictionsDropDown:SetSupportedTypes("covenant", "spec", "race")
     self.RestrictionsDropDown:SetScript("OnChange", function ()
         self:Update()
     end)
@@ -1896,7 +1896,7 @@ function BtWLoadoutsEquipmentMixin:Update()
 	self:GetParent().TitleText:SetText(L["Equipment"]);
 	local sidebar = BtWLoadoutsFrame.Sidebar
 
-	sidebar:SetSupportedFilters("spec", "class", "role", "character")
+	sidebar:SetSupportedFilters("covenant", "spec", "class", "role", "race", "character")
 	sidebar:SetSets(BtWLoadoutsSets.equipment)
 	sidebar:SetCollapsed(BtWLoadoutsCollapsed.equipment)
 	sidebar:SetCategories(BtWLoadoutsCategories.equipment)

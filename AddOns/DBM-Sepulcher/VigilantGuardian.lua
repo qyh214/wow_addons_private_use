@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2458, "DBM-Sepulcher", nil, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220314083715")
+mod:SetRevision("20220320053359")
 mod:SetCreatureID(180773)
 mod:SetEncounterID(2512)
 --mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -15,8 +15,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 360412 361001 360176 360162 364447",
 	"SPELL_CAST_SUCCESS 360412 366693 359610 361001 360404 365315 360658 364881 360906",--364425
 	"SPELL_SUMMON 360848 360623",
-	"SPELL_AURA_APPLIED 360458 364447 359610 360415 364881 364962",
-	"SPELL_AURA_APPLIED_DOSE 364447 360415",
+	"SPELL_AURA_APPLIED 360458 364447 359610 360415 360414 364881 364962",
+	"SPELL_AURA_APPLIED_DOSE 364447 360415 360414",
 	"SPELL_AURA_REMOVED 364881 360879",
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
@@ -30,7 +30,7 @@ mod:RegisterEventsInCombat(
 --TODO, proper energy Conversion cast and alert prio
 --[[
 (ability.id = 360412 or ability.id = 360162) and type = "begincast"
- or (ability.id = 359610 or ability.id = 365315 or ability.id = 360658 or ability.id = 364881 or ability.id = 360906) and type = "cast"
+ or (ability.id = 359610 or ability.id = 365315 or ability.id = 360658 or ability.id = 364881 or ability.id = 360906 or ability.id = 364843) and type = "cast"
  or ability.id = 360879
 --]]
 --General
@@ -67,6 +67,7 @@ local timerVolatileMateriumCD					= mod:NewNextTimer(30.6, 365315, nil, nil, nil
 local timerRefractedBlastCD						= mod:NewCDCountTimer(15, 366693, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)--15 but can be delayed by shit
 local timerDeresolutionCD						= mod:NewCDTimer(35.3, 359610, nil, nil, nil, 3)
 local timerExposedCore							= mod:NewCastTimer(10, 360412, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerExposedCoreCD						= mod:NewCDTimer(35.3, 360412, nil, nil, nil, 2)
 
 mod:AddInfoFrameOption(360403, true)
 --Stage Two: Roll Out, then Transform
@@ -74,7 +75,7 @@ mod:AddTimerLine(DBM:EJ_GetSectionInfo(23877))
 local warnMatterDisoilution						= mod:NewTargetNoFilterAnnounce(364881, 4)
 
 local specWarnSplitResolution					= mod:NewSpecialWarningDefensive(360162, nil, nil, nil, 1, 2)
-local specWarnDefenseless						= mod:NewSpecialWarningTaunt(360415, nil, nil, nil, 1, 2)
+local specWarnPneumaticImpact					= mod:NewSpecialWarningTaunt(360414, nil, nil, nil, 1, 2)
 local specWarnMatterDisolution					= mod:NewSpecialWarningYou(364881, nil, nil, nil, 1, 2)--Initial
 local specWarnMatterDisolutionOut				= mod:NewSpecialWarningMoveAway(364881, nil, nil, nil, 1, 2)--Delayed
 local yellMatterDisolutionFades					= mod:NewShortFadesYell(364881)
@@ -88,6 +89,7 @@ local timerMatterDisolutionCD					= mod:NewCDTimer(20.6, 364881, nil, nil, nil, 
 --mod:AddSetIconOption("SetIconOnCallofEternity", 350554, true, false, {1, 2, 3, 4, 5})
 
 mod:GroupSpells(360412, 360403)--Exposed Core and the shield you seek need to deal with mechanic
+--mod:GroupSpells(360412, 360414)
 
 mod.vb.refractedCount = 0
 local castsPerGUID = {}
@@ -121,7 +123,7 @@ function mod:OnCombatStart(delay)
 --		timerMatterDisolutionCD:Start()--Not used?
 	else--Heroic, Normal. LFR will probably be different too
 		timerVolatileMateriumCD:Start(5-delay)--5-6
-		timerRefractedBlastCD:Start(15.5-delay, 1)
+		timerRefractedBlastCD:Start(15.3-delay, 1)
 		timerDeresolutionCD:Start(36.9-delay)
 		timerSentryCD:Start(35-delay)
 	end
@@ -153,11 +155,16 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 360412 then
 		warnExposedCore:Show()
 		timerExposedCore:Start()
+--		timerExposedCoreCD:Start(self:IsMythic() and 105 or 109)--Approx, since it is dps based after all
 		self:Schedule(6, delayedCoreCheck)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(shieldName)
 			DBM.InfoFrame:Show(10, "playerbuff", shieldName)
 		end
+		timerRefractedBlastCD:Stop()
+		timerDeresolutionCD:Stop()
+		timerRefractedBlastCD:Start(self:IsMythic() and 20 or 22.4, self.vb.refractedCount+1)
+		timerDeresolutionCD:Start(self:IsMythic() and 24.7 or 36)
 	elseif spellId == 361001 then
 		if not castsPerGUID[args.sourceGUID] then--Shouldn't happen, but failsafe
 			castsPerGUID[args.sourceGUID] = {}
@@ -245,7 +252,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				if expireTime then
 					remaining = expireTime-GetTime()
 				end
-				if (not remaining or remaining and remaining < 6.7) and not UnitIsDeadOrGhost("player") then--TODO, adjust remaining when Cd known
+				if (not remaining or remaining and remaining < 6.1) and not UnitIsDeadOrGhost("player") then
 					specWarnDissonanceTaunt:Show(args.destName)
 					specWarnDissonanceTaunt:Play("tauntboss")
 				else
@@ -263,15 +270,15 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnDeresolution:Show(args.destName)
 		end
-	elseif spellId == 360415 then
+	elseif spellId == 360415 or spellId == 360414 then
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId) then
 			if args:IsPlayer() then
-				specWarnDefenseless:Cancel()
-				specWarnDefenseless:CancelVoice()
+				specWarnPneumaticImpact:Cancel()
+				specWarnPneumaticImpact:CancelVoice()
 			else
-				specWarnDefenseless:CombinedShow(0.5, args.destName)
-				specWarnDefenseless:ScheduleVoice(0.5, "tauntboss")
+				specWarnPneumaticImpact:CombinedShow(0.5, args.destName)
+				specWarnPneumaticImpact:ScheduleVoice(0.5, "tauntboss")
 			end
 		end
 	elseif spellId == 364881 then
