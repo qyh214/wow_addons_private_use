@@ -75,6 +75,8 @@ Nnoggie大秘境技能CD监视升级版&自制团队CD监视，带技能激活�
 
 崩裂监视（Bursting Revamp Shadowlands）：https://wago.io/Hmm-bO1rv
 
+索·莉亚的究极秘术：https://bbs.nga.cn/read.php?tid=31131244
+
 暗影国度地下城与团队副本：
 - 彼界尾王分身击杀报警（Mueh'zala spawns health group）：https://wago.io/-_UWm33O3
 - 仙林迷宫wa：https://wago.io/hVLym_eLv
@@ -83,3 +85,4 @@ Nnoggie大秘境技能CD监视升级版&自制团队CD监视，带技能激活�
 - 5人地下城+第三赛季加密词缀：https://bbs.nga.cn/read.php?tid=24446064
 - 团队副本初诞者圣墓：https://bbs.nga.cn/read.php?tid=30895500
 - 通灵战潮道具监视（@SL-Dungeons - NW - Kyrian Armaments）：https://wago.io/KyrianArmaments
+- 第三赛季加密词缀内鬼通报：https://wago.io/Htwmqdtru
