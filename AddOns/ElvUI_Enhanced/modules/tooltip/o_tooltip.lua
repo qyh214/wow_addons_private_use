@@ -13,6 +13,7 @@ P["eel"]["progression"] = {
         ["nya"] = false,
         ["nathria"] = false,
         ["sanctum"] = true,
+        ["sepul"] = true,
     },
 }
 
@@ -88,6 +89,7 @@ local function ConfigTable()
                         args = {
                             nathria = { order = -40, type = "toggle", name = "Castle Nathria" },
                             sanctum = { order = -39, type = "toggle", name = "Sanctum of Domination" },
+                            sepul = { order = -38, type = "toggle", name = "Sepulcher of the First Ones" },
                         }
                     }
                 },

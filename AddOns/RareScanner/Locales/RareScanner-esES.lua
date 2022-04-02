@@ -176,6 +176,7 @@ if AL then
 	AL["EXPLORER_FILTER_PETS"] = "Suelta mascotas sin conseguir"
 	AL["EXPLORER_FILTER_STATE"] = "Estado"
 	AL["EXPLORER_FILTER_TOYS"] = "Suelta juguetes sin conseguir"
+	AL["EXPLORER_FILTER_WITHOUT_COLLECTIBLES"] = "Mostrar NPCs sin coleccionables"
 	AL["EXPLORER_FILTERING"] = "Filtrar NPCs"
 	AL["EXPLORER_FILTERING_CONTAINERS"] = "Analizando contenedores a filtrar..."
 	AL["EXPLORER_FILTERING_DESC"] = "Filtra todos los NPCs que no sueltan alguno de los coleccionables seleccionados en \"%s - %s\" y deja de filtrar el resto."

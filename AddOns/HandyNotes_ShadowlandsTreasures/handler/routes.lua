@@ -16,7 +16,6 @@ function RouteWorldMapDataProvider:RemoveAllData()
     end
 end
 
-local pins = {}
 function RouteWorldMapDataProvider:RefreshAllData(fromOnShow)
     if not (self:GetMap() and self:GetMap():IsShown()) then return end
     self:RemoveAllData()
@@ -31,31 +30,39 @@ function RouteWorldMapDataProvider:RefreshAllData(fromOnShow)
     if not ns.points[uiMapID] then return end
 
     for coord, point in pairs(ns.points[uiMapID]) do
-        if point.route and type(point.route) == "table" and ns.should_show_point(coord, point, uiMapID, false) then
-            for _, node in ipairs(point.route) do
-                local x, y = HandyNotes:getXY(node)
-                local pin = self:GetMap():AcquirePin(myname.."RoutePinTemplate")
-                pin:SetPosition(x, y)
-                pin:Show()
-                if pins[#pins] then
-                    self:ConnectPins(pins[#pins], pin, point)
-                end
-                table.insert(pins, pin)
+        if point.routes and ns.should_show_point(coord, point, uiMapID, false) then
+            for _, route in ipairs(point.routes) do
+                self:DrawRoute(route, point)
             end
-            if point.route.loop and #pins > 1 then
-                self:ConnectPins(pins[#pins], pins[1], point)
-            end
-            wipe(pins)
         end
     end
 end
 
-function RouteWorldMapDataProvider:ConnectPins(pin1, pin2, point)
+local pins = {}
+function RouteWorldMapDataProvider:DrawRoute(route, point)
+    for _, node in ipairs(route) do
+        local x, y = HandyNotes:getXY(node)
+        local pin = self:GetMap():AcquirePin(myname.."RoutePinTemplate")
+        pin:SetPosition(x, y)
+        pin:Show()
+        if pins[#pins] then
+            self:ConnectPins(pins[#pins], pin, route, point)
+        end
+        table.insert(pins, pin)
+    end
+    if route.loop and #pins > 1 then
+        self:ConnectPins(pins[#pins], pins[1], route, point)
+    end
+    wipe(pins)
+end
+
+function RouteWorldMapDataProvider:ConnectPins(pin1, pin2, route, point)
     local connection = self.connectionPool:Acquire()
     connection.point = point
+    connection.route = route
     connection:Connect(pin1, pin2)
-    connection.Line:SetVertexColor(point.route.r or 1, point.route.g or 1, point.route.b or 1, point.route.a or 0.6)
-    if not point.route.highlightOnly then
+    connection.Line:SetVertexColor(route.r or 1, route.g or 1, route.b or 1, route.a or 0.6)
+    if not route.highlightOnly then
         connection:Show()
     end
 end
@@ -65,7 +72,7 @@ function RouteWorldMapDataProvider:HighlightRoute(point, uiMapID, coord)
     for connection in self.connectionPool:EnumerateActive() do
         if connection.point == point then
             connection.Line:SetThickness(40)
-            if point.route.highlightOnly then
+            if connection.route.highlightOnly then
                 connection:Show()
             end
         end
@@ -77,7 +84,7 @@ function RouteWorldMapDataProvider:UnhighlightRoute(point, uiMapID, coord)
     for connection in self.connectionPool:EnumerateActive() do
         if connection.point == point then
             connection.Line:SetThickness(20)
-            if point.route.highlightOnly then
+            if connection.route.highlightOnly then
                 connection:Hide()
             end
         end

@@ -294,77 +294,6 @@ local function GetItemWithinLocationsByItemData(locations, itemData)
 	end
 end
 
-
---[[
-    GetItemUniqueness will sometimes return Unique-Equipped info instead of Legion Legendary info,
-    this is a cache of items with that or similar issues
-]]
-local itemUniquenessCache = {
-    [144259] = {357, 2},
-    [144258] = {357, 2},
-    [144249] = {357, 2},
-    [152626] = {357, 2},
-    [151650] = {357, 2},
-    [151649] = {357, 2},
-    [151647] = {357, 2},
-    [151646] = {357, 2},
-    [151644] = {357, 2},
-    [151643] = {357, 2},
-    [151642] = {357, 2},
-    [151641] = {357, 2},
-    [151640] = {357, 2},
-    [151639] = {357, 2},
-    [151636] = {357, 2},
-    [150936] = {357, 2},
-    [138854] = {357, 2},
-    [137382] = {357, 2},
-    [137276] = {357, 2},
-    [137223] = {357, 2},
-    [137220] = {357, 2},
-    [137055] = {357, 2},
-    [137054] = {357, 2},
-    [137052] = {357, 2},
-    [137051] = {357, 2},
-    [137050] = {357, 2},
-    [137049] = {357, 2},
-    [137048] = {357, 2},
-    [137047] = {357, 2},
-    [137046] = {357, 2},
-    [137045] = {357, 2},
-    [137044] = {357, 2},
-    [137043] = {357, 2},
-    [137042] = {357, 2},
-    [137041] = {357, 2},
-    [137040] = {357, 2},
-    [137039] = {357, 2},
-    [137038] = {357, 2},
-    [137037] = {357, 2},
-    [133974] = {357, 2},
-    [133973] = {357, 2},
-    [132460] = {357, 2},
-    [132452] = {357, 2},
-    [132449] = {357, 2},
-    [132410] = {357, 2},
-    [132378] = {357, 2},
-    [132369] = {357, 2},
-}
--- Returns the same as GetItemUniqueness except uses the above cache, also converts -1 family to itemID
-local function GetItemUniquenessCached(itemLink)
-	local itemID = GetItemInfoInstant(itemLink)
-	local uniqueFamily, maxEquipped
-
-	if itemUniquenessCache[itemID] then
-		uniqueFamily, maxEquipped = unpack(itemUniquenessCache[itemID])
-	else
-		uniqueFamily, maxEquipped = GetItemUniqueness(itemLink)
-	end
-
-	if uniqueFamily == -1 then
-		uniqueFamily = -itemID
-	end
-
-	return uniqueFamily, maxEquipped
-end
 local freeSlotsCache = {}
 local function GetContainerItemLocked(bag, slot)
 	local locked = select(3, GetContainerItemInfo(bag, slot))
@@ -564,6 +493,87 @@ local function GetCompareItemInfo(itemLink)
 
 	return itemID, enchantID, gemIDs, suffixID, uniqueID, upgradeTypeID, bonusIDs, upgradeTypeIDs, relic1BonusIDs, relic2BonusIDs, relic3BonusIDs, crafter, enchantID2;
 end
+
+--[[
+    GetItemUniqueness will sometimes return Unique-Equipped info instead of Legion Legendary info,
+    this is a cache of items with that or similar issues
+]]
+local itemUniquenessCache = {
+    [144259] = {357, 2},
+    [144258] = {357, 2},
+    [144249] = {357, 2},
+    [152626] = {357, 2},
+    [151650] = {357, 2},
+    [151649] = {357, 2},
+    [151647] = {357, 2},
+    [151646] = {357, 2},
+    [151644] = {357, 2},
+    [151643] = {357, 2},
+    [151642] = {357, 2},
+    [151641] = {357, 2},
+    [151640] = {357, 2},
+    [151639] = {357, 2},
+    [151636] = {357, 2},
+    [150936] = {357, 2},
+    [138854] = {357, 2},
+    [137382] = {357, 2},
+    [137276] = {357, 2},
+    [137223] = {357, 2},
+    [137220] = {357, 2},
+    [137055] = {357, 2},
+    [137054] = {357, 2},
+    [137052] = {357, 2},
+    [137051] = {357, 2},
+    [137050] = {357, 2},
+    [137049] = {357, 2},
+    [137048] = {357, 2},
+    [137047] = {357, 2},
+    [137046] = {357, 2},
+    [137045] = {357, 2},
+    [137044] = {357, 2},
+    [137043] = {357, 2},
+    [137042] = {357, 2},
+    [137041] = {357, 2},
+    [137040] = {357, 2},
+    [137039] = {357, 2},
+    [137038] = {357, 2},
+    [137037] = {357, 2},
+    [133974] = {357, 2},
+    [133973] = {357, 2},
+    [132460] = {357, 2},
+    [132452] = {357, 2},
+    [132449] = {357, 2},
+    [132410] = {357, 2},
+    [132378] = {357, 2},
+    [132369] = {357, 2},
+}
+-- Returns the same as GetItemUniqueness except uses the above cache, also converts -1 family to itemID
+local function GetItemUniquenessCached(itemLink)
+	local itemID = GetItemInfoInstant(itemLink)
+	local uniqueFamily, maxEquipped
+
+	local _, _, _, _, _, _, bonusIDs = GetCompareItemInfo(itemLink)
+	if bonusIDs then -- Unity Lego
+		for i=8119,8130 do
+			if bonusIDs[i] then
+				return 496, 1
+			end
+		end
+	end
+
+	if itemUniquenessCache[itemID] then
+		uniqueFamily, maxEquipped = unpack(itemUniquenessCache[itemID])
+	else
+		uniqueFamily, maxEquipped = GetItemUniqueness(itemLink)
+	end
+
+	if uniqueFamily == -1 then
+		uniqueFamily = -itemID
+	end
+
+	return uniqueFamily, maxEquipped
+end
+
 local GetBestMatch;
 do
 	local itemLocation = ItemLocation:CreateEmpty();

@@ -104,6 +104,10 @@ local locales = {
         short = L["[ABBR] Sanguine Depths"],
         full = L["Sanguine Depths"]
     },
+    ["Sepulcher of the First Ones"] = {
+        short = L["[ABBR] Sepulcher of the First Ones"],
+        full = L["Sepulcher of the First Ones"]
+    },
     ["Shadowlands Keystone Master: Season One"] = {
         short = L["[ABBR] Shadowlands Keystone Master: Season One"],
         full = L["Shadowlands Keystone Master: Season One"]
@@ -112,10 +116,14 @@ local locales = {
         short = L["[ABBR] Shadowlands Keystone Master: Season Two"],
         full = L["Shadowlands Keystone Master: Season Two"]
     },
+    ["Shadowlands Keystone Master: Season Three"] = {
+        short = L["[ABBR] Shadowlands Keystone Master: Season Three"],
+        full = L["Shadowlands Keystone Master: Season Three"]
+    },
     ["Tazavesh, the Veiled Market"] = {
         short = L["[ABBR] Tazavesh, the Veiled Market"],
         full = L["Tazavesh, the Veiled Market"]
-    }
+    },
 }
 
 local raidAchievements = {
@@ -218,6 +226,60 @@ local raidAchievements = {
             15169,
             15173
         }
+    },
+    ["Sepulcher of the First Ones"] = {
+        ["Mythic"] = {
+            15427,
+            15431,
+            15435,
+            15439,
+            15443,
+            15447,
+            15451,
+            15455,
+            15459,
+            15463,
+            15467
+        },
+        ["Heroic"] = {
+            15426,
+            15430,
+            15434,
+            15438,
+            15442,
+            15446,
+            15450,
+            15454,
+            15458,
+            15462,
+            15466
+        },
+        ["Normal"] = {
+            15425,
+            15429,
+            15433,
+            15437,
+            15441,
+            15445,
+            15449,
+            15453,
+            15457,
+            15461,
+            15465
+        },
+        ["Raid Finder"] = {
+            15424,
+            15428,
+            15432,
+            15436,
+            15440,
+            15444,
+            15448,
+            15452,
+            15456,
+            15460,
+            15464
+        }
     }
 }
 
@@ -235,7 +297,8 @@ local dungeonAchievements = {
 
 local specialAchievements = {
     ["Shadowlands Keystone Master: Season One"] = 14532,
-    ["Shadowlands Keystone Master: Season Two"] = 15078
+    ["Shadowlands Keystone Master: Season Two"] = 15078,
+    ["Shadowlands Keystone Master: Season Three"] = 15499
 }
 
 local function GetLevelColoredString(level, short)

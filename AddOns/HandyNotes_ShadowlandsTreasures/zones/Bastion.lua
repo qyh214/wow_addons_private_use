@@ -2,6 +2,48 @@ local myname, ns = ...
 
 local path = ns.path
 
+-- Technically Gilded Wader ({180866, pet=2938}) drops from most of the
+-- calling treasures, but... it seems to be really really rare and
+-- shadowlands-wide, so I'm leaving it out.
+
+local bell = {
+    label=false, -- Broken/Skyward Bell
+    loot={
+        {184415, toy=true}, -- Soothing Vesper
+    },
+    _uiMapID=1533,
+    _coord=0,
+}
+ns.VignetteIDsToPoints[4239] = bell
+ns.VignetteIDsToPoints[4240] = bell
+ns.VignetteIDsToPoints[4241] = bell
+ns.VignetteIDsToPoints[4242] = bell
+ns.VignetteIDsToPoints[4243] = bell
+ns.VignetteIDsToPoints[4275] = bell
+
+local strongbox = {
+    label=false, -- Silver Strongbox
+    loot={
+        {184418, toy=true}, -- Acrobatic Steward
+    },
+    note="Bring a {item:178915:Ripe Purian} to open",
+    _uiMapID=1533,
+    _coord=0,
+}
+ns.VignetteIDsToPoints[4214] = ns.merge(CopyTable(strongbox), {note=false}) -- actually Gilded Chest
+ns.VignetteIDsToPoints[4263] = strongbox
+ns.VignetteIDsToPoints[4264] = strongbox
+ns.VignetteIDsToPoints[4265] = strongbox
+ns.VignetteIDsToPoints[4266] = strongbox
+ns.VignetteIDsToPoints[4267] = strongbox
+ns.VignetteIDsToPoints[4268] = strongbox
+ns.VignetteIDsToPoints[4269] = strongbox
+ns.VignetteIDsToPoints[4270] = strongbox
+ns.VignetteIDsToPoints[4271] = strongbox
+ns.VignetteIDsToPoints[4272] = strongbox
+ns.VignetteIDsToPoints[4273] = strongbox
+ns.VignetteIDsToPoints[4277] = strongbox
+
 ns.RegisterPoints(1533, { -- Bastion
     [53508030] = {
         achievement=14311, criteria=50047, -- Scroll of Aeons
@@ -487,7 +529,7 @@ ns.RegisterPoints(1533, {
     },
     [30355515] = { -- Reekmonger
         achievement=14307, criteria=50616,
-        quest=61101,
+        quest=61108,
         npc=171327,
         --loot={},
         note="Kill enemies in the Temple of Courage to summon",
@@ -506,11 +548,13 @@ ns.RegisterPoints(1533, {
         achievement=14307, criteria=50618,
         quest=61634,
         npc=156339,
+        areaPoi=6894, -- Black Bell
         loot={
             184365, -- Aegis of Salvation
             {184401, pet=3063, covenant=Enum.CovenantType.Kyrian}, -- Larion Pouncer
         },
         note="Requires Kyrian player to summon",
+        nearby={22702290, label="Black Bell"},
     },
     [43502525] = { -- Unstable Memory
         achievement=14307, criteria=50606,
@@ -526,13 +570,16 @@ ns.RegisterPoints(1533, {
         achievement=14307, criteria=50600,
         quest=60314,-- 62197,
         npc=167078,
+        areaPoi=6896, -- Horn of Courage
         loot={
             182749, -- Regurgitated Kyrian Wings
         },
+        note="A Kyrian player must click the Horn of Courage",
+        nearby={41655455, label="Horn of Courage"},
     },
     [60109350] = { -- Sundancer
         achievement=14307, criteria=50601,
-        quest=60860,
+        quest=60862,
         npc=170548,
         note="Use the statue and a {item:180445:Skystrider Glider}",
         loot={

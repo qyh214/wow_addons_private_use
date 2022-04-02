@@ -1,3 +1,11 @@
+# v1.5.7
+
+- Fixed Unity not working correctly in all slots
+
+# v1.5.6
+
+- Fixed Unity legendary not being equipped correctly
+
 # v1.5.5
 
 - Updated equipment to allow for covenant and race restrictions

@@ -14,3 +14,7 @@ ns.defaults.profile.groupsHiddenByZone[1970] = {
     coreless = true,
 }
 ns.defaults.profile.achievementsHidden[15229] = true
+
+-- After Sylvanas' epilogue in Penance and Renewal (65297)...
+-- 65511 tracks listening to the Windrunner sisters 
+-- 65618 tracks listening to Bolvar and Mograine

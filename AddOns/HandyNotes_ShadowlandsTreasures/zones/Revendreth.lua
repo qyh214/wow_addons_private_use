@@ -2,6 +2,34 @@ local myname, ns = ...
 
 local path = ns.path
 
+local secret_treasure = {
+    label=false, -- Secret Treasure
+    loot={
+        {180589, pet=2894}, -- Soullocked Sinstone
+    },
+    _uiMapID=1525,
+    _coord=0,
+}
+ns.VignetteIDsToPoints[4173] = secret_treasure
+ns.VignetteIDsToPoints[4174] = secret_treasure
+ns.VignetteIDsToPoints[4175] = secret_treasure
+ns.VignetteIDsToPoints[4176] = secret_treasure
+ns.VignetteIDsToPoints[4177] = secret_treasure
+ns.VignetteIDsToPoints[4178] = secret_treasure
+ns.VignetteIDsToPoints[4179] = secret_treasure
+ns.VignetteIDsToPoints[4180] = secret_treasure
+ns.VignetteIDsToPoints[4181] = secret_treasure
+ns.VignetteIDsToPoints[4182] = secret_treasure
+
+ns.VignetteIDsToPoints[4212] = {
+    label=false, -- Bleakwood Chest
+    loot={
+        {180592, pet=2901}, -- Trapped Stonefiend
+    },
+    _uiMapID=1525,
+    _coord=0,
+}
+
 ns.RegisterPoints(1525, { -- Revendreth
     [37706920] = {
         achievement=14314, criteria=50076, -- Lost Quill
@@ -612,10 +640,11 @@ ns.RegisterPoints(1525, {
     [32651545] = { -- Forgemaster Madalav
         quest=61618,
         npc=159496,
+        areaPoi=6913, -- Madlav's Hammer
         loot={
-            {180939,covenant=Enum.CovenantType.Venthyr}, -- Mantle of the Forgemaster's Dark Blades
-            180489,
-            180709,
+            {180939, covenant=Enum.CovenantType.Venthyr}, -- Mantle of the Forgemaster's Dark Blades
+            180489, -- Forgemaster's Many-Fold Rapier
+            180709, -- Tempered Armor Patch
         },
         -- covenant=Enum.CovenantType.Venthyr,
         note="A Venthyr player channeling Dominance Keep must click the hammer",
@@ -633,6 +662,7 @@ ns.RegisterPoints(1525, {
     [45857920] = { -- Harika the Horrid
         quest=59612,
         npc=165290,
+        areaPoi=6912, -- Dredterror Ballista
         loot={
             183720, -- Dredbatskin Jerkin
             {180461, mount=1310, covenant=Enum.CovenantType.Venthyr}, -- Horrid Brood Dredwing
@@ -764,7 +794,7 @@ ns.RegisterPoints(1525, {
     },
     [43007910] = { -- Tomb Burster
         achievement=14310, criteria=48802,
-        quest=61231, -- 56877?
+        quest=56877,
         npc=155779,
         loot={
             {180584, pet=2891}, -- Blushing Spiderling

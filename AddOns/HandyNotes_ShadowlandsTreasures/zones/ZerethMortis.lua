@@ -61,7 +61,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     },
 
     [60001800] = { -- Domination Cache
-        quest=65468,
+        quest=65465,
         achievement=15331, criteria=53018,
         active=ns.conditions.Item(189704),
         loot={
@@ -133,6 +133,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         loot={
             {189447, quest=65360, note=PET}, -- Schematic: Viperid Menace
         },
+        hide_before=ns.conditions.GarrisonTalent(1932), -- Dealic Understanding
         note="In cave. Use tablets to find the correct {spell:362062} buff to make the chest appear",
         path=59258145,
     },
@@ -463,31 +464,61 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
 })
 
 ns.RegisterPoints(1970, { -- Zereth Mortis
+    -- https://www.wowhead.com/object=375363/mawsworn-supply-chest#map
+    [45404640] = {},
+    [46002430] = {},
+    [46702680] = {},
+    [46801240] = {},
+    [47800140] = {},
+    [48104820] = {},
+    [48804240] = {},
+    [50104460] = {},
+    [50705040] = {},
+    [50801000] = {},
+    [51700820] = {},
+    [57602290] = {},
+    [58404030] = {},
+    [59303150] = {},
+    [59901670] = {},
+    [60103230] = {},
+    [61003050] = {},
+    [63002490] = {},
+    [63302100] = {},
+    [67602960] = {},
+}, {
+    label="Mawsworn Supply Chest",
+    loot={
+        {190766, mount=1585}, -- Spectral Mawrat's Tail
+    },
+    note="Multiple spawn points. Mount is a very low drop rate.",
+    texture=ns.atlas_texture("VignetteLoot", {r=0.5,g=1,b=0.5,a=1,scale=0.9}),
+    group="mawsworncache",
+})
+
+ns.RegisterPoints(1970, { -- Zereth Mortis
     [44403680] = {
         achievement=15502, -- Sand Sand Everywhere
         criteria=true,
         atlas="storyheader-cheevoicon",
         active=ns.conditions.Item(189863), -- Spatial Opener
         hide_before=ns.conditions.QuestComplete(65346), -- Dormant Alcove Arrangement
-        note="In the Dormant Alcove; teleport here from the Inner Locus. Use {item:189863:Spatial Opener} from various treasures to loot the piles of sand.",
-        -- quests
-        -- lumpy: 65494
-        -- glinting: 65495
-        -- shifting: 65496
-        -- humming: 65497
-        -- misshapen: 65498
-        -- sparkling: 65499
-        -- ticking: 65500
-        -- loot={
-        --     -- not sure if this is consistent or just random rings/necklaces/trinkets...
-        --     190374, -- Gemstone of Prismatic Brilliance (sparkling)
-        --     188044, -- Discarded Cartel Al Signet (shifting)
-        --     188045, -- Salvaged Viperid Band (lumpy)
-        --     188053, -- Abandoned Automa Loop (humming)
-        --     188055, -- Impossibly Ancient Band (glinting)
-        --     188106, -- Unfathomable Pendant (shifting)
-        --     190390, -- Protector's Diffusion Implement (misshapen)
-        -- },
+        note="In the Dormant Alcove; teleport here from the Inner Locus. Use {item:189863:Spatial Opener} from various treasures to loot the piles of sand. The loot from the Misshapen pile varies based on your class/spec.",
+        loot={
+            {190374, quest=65499, note="Sparkling"}, -- Gemstone of Prismatic Brilliance (sparkling)
+            {188044, quest=65496, note="Shifting"}, -- Discarded Cartel Al Signet (shifting)
+            {188045, quest=65494, note="Lumpy"}, -- Salvaged Viperid Band (lumpy)
+            {188053, quest=65497, note="Humming"}, -- Abandoned Automa Loop (humming)
+            {188055, quest=65495, note="Glinting"}, -- Impossibly Ancient Band (glinting)
+            {188106, quest=65496, note="Shifting"}, -- Unfathomable Pendant (shifting)
+            -- This one could be a bunch of different trinkets:
+            {190389, quest=65498, note="Misshapen"}, -- Broker's Lucky Coin (misshapen)
+            {190390, quest=65498, note="Misshapen"}, -- Protector's Diffusion Implement (misshapen)
+            {190582, quest=65498, note="Misshapen"}, -- Symbol of the Vombata (misshapen)
+            {190597, quest=65498, note="Misshapen"}, -- Symbol of the Lupine (misshapen)
+            {190602, quest=65498, note="Misshapen"}, -- Symbol of the Raptora (misshapen)
+            {190726, quest=65498, note="Misshapen"}, -- Extract of Prodigious Sands (misshapen)
+        },
+        route={50553200, 44403680},
     },
     [42934006] = {
         quest=65567,
@@ -751,6 +782,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     }),
     [55705340] = makeSchematic(65361, 189448, PET, {note="Inside the Locrian Esper"}), -- Schematic: Tunneling Vombata
     [58807720] = makeSchematic(65360, 189447, PET, { -- Schematic: Viperid Menace
+        -- TODO: the Library Vault was made inaccessible until you had Dealic on March 1st 2022, so this should no longer be a possible situation for new players. Remove this someday.
         hide_before=ns.conditions.QuestComplete(65173),
         note="In the Library Vault treasure; if you looted it before unlocking protoforms, it should just be sitting there",
         path=59258144,
@@ -1047,7 +1079,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     -- Coreless Scarabid
     [40803160] = {},
     [42604360] = {},
-    [44403680] = {},
+    [44453685] = {}, -- almost collides with Sand Sand Everywhere
     [47602420] = {},
     [51404920] = {},
     [57403040] = {},
@@ -1129,7 +1161,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     [64753370] = { -- Akkaris
         npc=179006,
         quest=65552,
-        --vignette=4747,
+        vignette=4747,
         criteria=52977,
         loot={
             189903, -- Sand Sifting Sandals
@@ -1144,7 +1176,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         npc=183596,
         quest=65553,
         criteria=52978,
-        --vignette=4948,
+        vignette=4948,
         loot={
             189906, -- Mask of the Resolute Cervid
             189947, -- Majestic Watcher's Girdle
@@ -1158,7 +1190,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         npc=183953,
         quest=65273,
         criteria=53047,
-        --vignette=4989,
+        vignette=4989,
         loot={
             189907, -- Crown of Contorted Thought
             189940, -- Architect's Polluting Touch
@@ -1186,7 +1218,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         npc=184409,
         quest=65555,
         criteria=52982,
-        --vignette=4961,
+        vignette=4961,
         loot={
             189949, -- Shackles of the Bound Guardian
             189956, -- Perverse Champion's Handguards
@@ -1228,7 +1260,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         npc=180924,
         quest=64719,
         criteria=53025,
-        --vignette=4982,
+        vignette=4982,
         loot={
             189937, -- Garudeon's Blanket of Feathers
             189951, -- Sunbathed Avian Armor
@@ -1243,7 +1275,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         npc=182318,
         quest=65583,
         criteria=52985,
-        --vignette=4909,
+        vignette=4909,
         loot={
             189968, -- Dreadlord General's Tunic
             189948, -- Strangulating Chainlink Lasso
@@ -1271,7 +1303,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         npc=178963,
         quest=63988,
         criteria=52986,
-        --vignette=4746,
+        vignette=4746,
         loot={
             189926, -- Poison-Licked Spaulders
             189960, -- Crouching Legs of the Bufonid
@@ -1456,7 +1488,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         npc=181249,
         quest=65550,
         criteria=52987,
-        --vignette=4903,
+        vignette=4903,
         loot={
             189928, -- Centripetal Waistband
             189966, -- Singing Metal Wristbands
@@ -1509,7 +1541,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     [64054975] = { -- Xy'rath the Covetous
         npc=183737,
         quest=65241,
-        --vignette=4938,
+        vignette=4938,
         criteria=52976,
         loot={
             189918, -- Fleeting Broker's Strides

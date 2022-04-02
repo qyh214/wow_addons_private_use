@@ -296,12 +296,14 @@ V.tooltips = {
 		raids = {
 			enable = true,
 			["Castle Nathria"] = true,
-			["Sanctum of Domination"] = true
+			["Sanctum of Domination"] = true,
+			["Sepulcher of the First Ones"] = true
 		},
 		special = {
 			enable = true,
-			["Shadowlands Keystone Master: Season One"] = true,
-			["Shadowlands Keystone Master: Season Two"] = true
+			["Shadowlands Keystone Master: Season One"] = false,
+			["Shadowlands Keystone Master: Season Two"] = true,
+			["Shadowlands Keystone Master: Season Three"] = true
 		},
 		mythicDungeons = {
 			enable = true,

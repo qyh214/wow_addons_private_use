@@ -2,6 +2,23 @@ local myname, ns = ...
 
 local path = ns.path
 
+local husk = {
+    -- these are shared with Hunter Vivianna, but they're BoE high-AH items, so...
+    label=false, -- Decayed Husk
+    loot={
+        179593, -- Darkreach Mask
+        179594, -- Witherscorn Guise
+    },
+    _uiMapID=1565,
+    _coord=0,
+}
+ns.VignetteIDsToPoints[4217] = husk
+ns.VignetteIDsToPoints[4218] = husk
+ns.VignetteIDsToPoints[4219] = husk
+ns.VignetteIDsToPoints[4220] = husk
+ns.VignetteIDsToPoints[4221] = husk
+ns.VignetteIDsToPoints[4554] = husk -- actually Darkreach Supplies
+
 ns.RegisterPoints(1565, { -- Ardenweald
     [55902100] = {
         achievement=14313, criteria=50031, -- Aerto's Body
@@ -34,8 +51,8 @@ ns.RegisterPoints(1565, { -- Ardenweald
             {182729, toy=true}, -- Hearty Dragon Plume
         },
         note="Up in a tree; go to the slow-fall feather above the waterfall at 48.9 41.1",
+        path={48964106, atlas="poi-door-arrow-up", note="Slow-fall feather to reach the treasure"},
     },
-    [48964106] = ns.path{achievement=14313, criteria=50037, quest=61067,atlas="poi-door-arrow-up",note="Slow-fall feather to reach the treasure"},
     [63903750] = {
         achievement=14313, criteria=50039, -- Cache of the Moon
         quest=61074, -- also 61126 for having turned in the tools
@@ -77,9 +94,8 @@ ns.RegisterPoints(1565, { -- Ardenweald
             179594, -- Witherscorn Guise
         },
         note="Use the jumping mushroom on the cliff above at 37.7 61.5",
-        route={37706150, 36106520},
+        path=37706150,
     },
-    [37706150] = path{achievement=14313, criteria=50045, quest=61068, route=36106520,},
     [48202030] = {
         achievement=14313, criteria=50032, -- Lost Satchel
         quest=62187,
@@ -212,14 +228,26 @@ ns.RegisterPoints(1565, { -- Ardenweald
 
 -- Fractured Fairy Tales
 
-local meandering = {criteria=50012,onquest=62619,inbag=183877,loot={{183877,quest=62619}},}
+local meandering = ns.nodeMaker{
+    criteria=50012,onquest=62619,inbag=183877,loot={{183877,quest=62619}},
+}
 local wandering = {criteria=50013,onquest=62620,inbag=183878,loot={{183878,quest=62620}},}
 local escapist = {criteria=50014,onquest=62621,inbag=183879,loot={{183879,quest=62621}},}
 local travel = {criteria=50015,onquest=62622,inbag=183880,loot={{183880,quest=62622}},}
 local naughty = {criteria=50016,onquest=62623,inbag=183881,loot={{183881,quest=62623}},}
 ns.RegisterPoints(1565, {
-    [63602275] = {atlas="Campaign-QuestLog-LoreBook-Back",label="{npc:165867}",note="Bring books to him",group="faerietales",},
-    [54604300] = meandering,
+    [63602275] = {atlas="Campaign-QuestLog-LoreBook-Back",label="{npc:165867}",note="Bring books to him",criteria=true},
+    [54604300] = meandering{
+        routes={
+            {54604300, 53004450, 51604490, 51004580, 50004560},
+            {54604300, 53904260, 53504170, 52204080, 50903970, 50703860, 51503680},
+            {54604300, 55004100, 56503980, 57103960, 57803820, 59003720, 57603590, 56403400, 55603390},
+            {59003720, 59303700, 60303700, 60303630},
+        },
+    },
+    [51405040] = meandering{
+        route={51405040, 52405140, 53605100, 55005360, 56805240},
+    },
     [30004480] = wandering,
     [35602680] = wandering,
     [36104870] = wandering, -- (36404800 is more accurate, but overlaps Macabre)
@@ -259,6 +287,51 @@ ns.RegisterPoints(1565, {
     --     note="Stand on the 5 nearby buds first",
     -- },
 -- })
+
+ns.RegisterPoints(1565, {
+    -- TODO: I got these clusters from https://www.wowhead.com/object=356820/large-lunarlight-pod#comments:id=3283737
+    -- I need to do this across a few days so I can work out which questids line up with these remaining sets:
+    -- Set B: 50043325, 50253164, 51003439, 51983092, 52463341,
+    -- These wind up being in columns by set, but I don't have a good way to trigger filtering it down after you complete one...
+    [-49943207] = {
+        quest=61696,
+        nearby={53093300, 52263243, 52513374, 52903321,
+            color={r=1,g=0,b=0},
+            label="{npc:173005:Lunarlight Bud}"},
+    },
+    [-50593357] = {
+        quest=61695,
+        nearby={52333168, 51883147, 51803235, 52003200,
+            color={r=0,g=1,b=0},
+            label="{npc:173006:Lunarlight Bud}"},
+    },
+    [-50593358] = {
+        quest=61693,
+        nearby={50593358, 50373296, 50863301, 50323272,
+            color={r=0,g=0.5,b=1},
+            label="{npc:173009:Lunarlight Bud}"},
+            -- 50593358 was 173008, but the quest was this one
+    },
+    [-51813384] = {
+        quest=61694,
+        nearby={51813384, 51473408, 51433329, 51893337,
+            color={r=1,g=1,b=0},
+            label="{npc:173008:Lunarlight Bud}"},
+            -- 51813384 was 173009, but the quest was this one
+    },
+    [-51023226] = {
+        quest=61692,
+        nearby={51023226, 50533181, 51183249, 49943207,
+            color={r=0.5,g=0,b=1},
+            label="{npc:173010:Lunarlight Bud}"},
+    },
+}, {
+    quest=61691,
+    label="Large Lunarlight Pod",
+    poi={{1565, 6908}},
+    worldmap=false,
+    minimap=false,
+})
 
 -- Rares
 ns.RegisterPoints(1565, {
@@ -305,8 +378,8 @@ ns.RegisterPoints(1565, {
             180144, -- Faeflayer's Hatchet
         },
         note="Hidden behind the waterfall",
+        path=70403060,
     },
-    [70403060] = path{achievement=14309, criteria=48798, quest=61184,},
     [54057600] = { -- Gormbore
         achievement=14309, criteria=48795,
         quest=59006,
@@ -434,6 +507,7 @@ ns.RegisterPoints(1565, {
         achievement=14309, criteria=48796,
         quest=61632,
         npc=168647,
+        areaPoi=6910, -- Sparkling Animaseed
         loot={
             {180730, mount=1393, covenant=Enum.CovenantType.NightFae}, -- Wild Glimmerfur Prowler
             180154, -- Greataxe of Unrelenting Pursuit
@@ -444,6 +518,7 @@ ns.RegisterPoints(1565, {
         note="A Night Fae player channeling the Tirna Scithe must:\n"..
             "* Pick up a {spell:338045}\n"..
             "* Use {spell:338045} to remove {spell:338038}",
+        nearby={30455555, label="Sparkling Animaseed"},
     },
     [58306180] = { -- Wrigglemortis
         achievement=14309, criteria=48783,
@@ -456,16 +531,16 @@ ns.RegisterPoints(1565, {
     },
     -- Ardenweald's a Stage:
     [41254445] = {
-        achievement=14353, criteria={
-            48708, -- Argus (quest: 61202)
-            48709, -- Azshara (quest: 61201)
-            48706, -- Gul'dan (quest: 61204)
-            48704, -- Jaina
-            48707, -- Kil'jaeden (quest: 61203)
-            48710, -- N'Zoth
-            48705, -- Xavius
-        },
+        achievement=14353, criteria=true,
         quest=61633, -- this is the overall questid for the event, but each rare has its own quest as well
+        -- Argus (quest: 61202)
+        -- Azshara (quest: 61201)
+        -- Gul'dan (quest: 61204)
+        -- Jaina (quest:61205)
+        -- Kil'jaeden (quest: 61203)
+        -- N'Zoth (quest: 61206)
+        -- Xavius (quest: 61207)
+        areaPoi=6909, -- Dapperdew
         loot={
             179534, -- Mikai's Deathscythe (Argus)
             179518, -- Glimmerlight Staff (Azshara)
@@ -523,9 +598,9 @@ ns.RegisterPoints(1565, {
         },
         -- requires_item=178675,
         note="* Loot {item:181243} at 19.7 63.5 (may need a glider)\n"..
-            "* Do Night Fae quests through {quest:57871}\n",
-            "* Ask {npc:165704} to repair {item:181243}\n",
-            "* Get {item:178675} from {npc:160262} (talk to the guards if you're not Night Fae)\n",
+            "* Do Night Fae quests through {quest:57871}\n"..
+            "* Ask {npc:165704} to repair {item:181243}\n"..
+            "* Get {item:178675} from {npc:160262} (talk to the guards if you're not Night Fae)\n"..
             "* Use {item:178675} here, and defeat the rare",
     },
     [18056200] = ns.path{

@@ -1,6 +1,6 @@
-## Interface: 90105
+## Interface: 90200
 ## Title: WIM - ElvUI Skin
-## Version: 90105.01-Retail
+## Version: 90200.01-Retail
 ## Author: fuba
 ## Original Author: Divico / Alleria EU
 ## Notes: A simple skin matching the Design of Elvui

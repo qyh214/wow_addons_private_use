@@ -24,7 +24,8 @@ PT.tiers["LONG"] = {
 		"The Eternal Palace",
 		"Ny'alotha, the Waking City",
 		"Castle Nathria",
-		"Sanctum of Domination"
+		"Sanctum of Domination",
+		"Sepulcher of the First Ones"
 }
 PT.tiers["SHORT"] = {
 		"ULD",
@@ -33,7 +34,8 @@ PT.tiers["SHORT"] = {
 		"EP",
 		"NYA",
 		"CN",
-		"SoD"
+		"SoD",
+		"SotFO"
 }
 
 PT.bosses = {
@@ -172,6 +174,23 @@ PT.bosses = {
 			},
 		},
 	},
+	{ -- Sepulcher of the First Ones
+	["option"] = "sepul",
+	["statIDs"] = {
+		{ -- Mythic
+			15427, 15431, 15435, 15439, 15443, 15447, 15451, 15455, 15459, 15463, 15467
+		},
+		{ -- Heroic
+			15426, 15430, 15434, 15438, 15442, 15446, 15450, 15454, 15458, 15462, 15466
+		},
+		{ -- Normal
+			15425, 15429, 15433, 15437, 15441, 15445, 15449, 15453, 15457, 15461, 15465
+		},
+		{ -- LFR
+			15424, 15428, 15432, 15436, 15440, 15444, 15448, 15452, 15456, 15460, 15464
+		},
+	},
+},
 }
 
 PT.progressCache = {}

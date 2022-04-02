@@ -1,6 +1,6 @@
 if not WeakAuras.IsCorrectVersion() then return end
 
-if not(GetLocale() == "frFR") then
+if GetLocale() ~= "frFR" then
   return
 end
 
@@ -9,18 +9,17 @@ local L = WeakAuras.L
 -- WeakAuras/Options
 	--[[Translation missing --]]
 	L[" and |cFFFF0000mirrored|r"] = " and |cFFFF0000mirrored|r"
-	--[[Translation missing --]]
-	L["-- Do not remove this comment, it is part of this aura: "] = "-- Do not remove this comment, it is part of this aura: "
+	L["-- Do not remove this comment, it is part of this aura: "] = "-- Ne supprimez pas ce commentaire, il fait partie de cette aura :"
 	--[[Translation missing --]]
 	L[" rotated |cFFFF0000%s|r degrees"] = " rotated |cFFFF0000%s|r degrees"
 	L["% of Progress"] = "% de progression"
 	L["%i auras selected"] = "%i auras sélectionnées"
 	L["%i Matches"] = "%i Correspondances"
 	L["%s - Option #%i has the key %s. Please choose a different option key."] = "%s - L'option #%i est attribuée à la touche %s. Veuillez choisir une touche différente."
-	L["%s %s, Lines: %d, Frequency: %0.2f, Length: %d, Thickness: %d"] = "%s %s, Lignes : %d, Fréquence : %0.2f, Longueur : %d, Epaisseur : %d"
+	L["%s %s, Lines: %d, Frequency: %0.2f, Length: %d, Thickness: %d"] = "%s %s, Lignes : %d, Fréquence : %0.2f, Longueur : %d, Épaisseur : %d"
 	L["%s %s, Particles: %d, Frequency: %0.2f, Scale: %0.2f"] = "%s %s, Particules : %d, Fréquence : %0.2f, Échelle : %0.2f"
 	L["%s Alpha: %d%%"] = "%s opacité : %d%%"
-	L["%s Color"] = "%s Couleur"
+	L["%s Color"] = "%s couleur"
 	--[[Translation missing --]]
 	L["%s Default Alpha, Zoom, Icon Inset, Aspect Ratio"] = "%s Default Alpha, Zoom, Icon Inset, Aspect Ratio"
 	L["%s Inset: %d%%"] = "%s Insérer: %d%%"
@@ -36,8 +35,7 @@ local L = WeakAuras.L
 	L["%s, offset: %0.2f;%0.2f"] = "%s, décaler: %0.2f;%0.2f"
 	L["%s|cFFFF0000custom|r texture with |cFFFF0000%s|r blend mode%s%s"] = "%s|cFFFF0000custom|r texture avec |cFFFF0000%s|r mode fusionné%s%s"
 	L["(Right click to rename)"] = "(Clique droit pour renommer)"
-	--[[Translation missing --]]
-	L["|c%02x%02x%02x%02xCustom Color|r"] = "|c%02x%02x%02x%02xCustom Color|r"
+	L["|c%02x%02x%02x%02xCustom Color|r"] = "|c%02x%02x%02x%02xCouleur personnalisée|r"
 	--[[Translation missing --]]
 	L["|cFFE0E000Note:|r This sets the description only on '%s'"] = "|cFFE0E000Note:|r This sets the description only on '%s'"
 	L["|cFFE0E000Note:|r This sets the URL on all selected auras"] = "|cFFE0E000Note:|r Ceci définit l'URL sur toutes les auras sélectionnées"
@@ -79,11 +77,11 @@ local L = WeakAuras.L
 
 |cffffff00*|r Yellow Unit settings can match multiple units and will default to being active even while no affected units are found without a Unit Count or Match Count setting.]=]
 	L["1 Match"] = "1 Correspondance"
-	L["A 20x20 pixels icon"] = "Une icône de 20x20 pixels."
-	L["A 32x32 pixels icon"] = "Une icône de 32x32 pixels."
-	L["A 40x40 pixels icon"] = "Une icône de 40x40 pixels."
-	L["A 48x48 pixels icon"] = "Une icône de 48x48 pixels."
-	L["A 64x64 pixels icon"] = "Une icône de 64x64 pixels."
+	L["A 20x20 pixels icon"] = "Une icône de 20x20 pixels"
+	L["A 32x32 pixels icon"] = "Une icône de 32x32 pixels"
+	L["A 40x40 pixels icon"] = "Une icône de 40x40 pixels"
+	L["A 48x48 pixels icon"] = "Une icône de 48x48 pixels"
+	L["A 64x64 pixels icon"] = "Une icône de 64x64 pixels"
 	L["A group that dynamically controls the positioning of its children"] = "Un groupe qui contrôle dynamiquement le positionnement de ses enfants"
 	--[[Translation missing --]]
 	L[ [=[A timer will automatically be displayed according to default Interface Settings (overridden by some addons).
@@ -100,17 +98,14 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["Add Option"] = "Ajouter Option"
 	L["Add Overlay"] = "Ajouter un Overlay"
 	L["Add Property Change"] = "Ajouter un Changement de Propriété"
-	--[[Translation missing --]]
-	L["Add Raid Mark Information"] = "Add Raid Mark Information"
-	--[[Translation missing --]]
-	L["Add Role Information"] = "Add Role Information"
-	--[[Translation missing --]]
-	L["Add Snippet"] = "Add Snippet"
+	L["Add Raid Mark Information"] = "Ajouter des informations sur les marques de raid"
+	L["Add Role Information"] = "Ajouter une information de rôle"
+	L["Add Snippet"] = "Ajouter un extrait"
 	L["Add Sub Option"] = "Ajouter un sous-option"
 	L["Add to group %s"] = "Ajouter au groupe %s"
 	L["Add to new Dynamic Group"] = "Ajouter à un nouveau groupe dynamique"
 	L["Add to new Group"] = "Ajouter à un nouveau groupe"
-	L["Add Trigger"] = "Ajouter déclencheur"
+	L["Add Trigger"] = "Ajouter un déclencheur"
 	L["Additional Events"] = "Événements supplémentaires"
 	L["Advanced"] = "Avancé"
 	L["Align"] = "Aligner"
@@ -122,14 +117,11 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["Anchor Point"] = "Point d'ancrage"
 	L["Anchored To"] = "Ancré à"
 	L["And "] = "Et"
-	--[[Translation missing --]]
-	L["and"] = "and"
-	L["and aligned left"] = "et alignés à gauche"
-	L["and aligned right"] = "et alignés à droite"
-	--[[Translation missing --]]
-	L["and rotated left"] = "and rotated left"
-	--[[Translation missing --]]
-	L["and rotated right"] = "and rotated right"
+	L["and"] = "et"
+	L["and aligned left"] = "et aligné à gauche"
+	L["and aligned right"] = "et aligné à droite"
+	L["and rotated left"] = "et tourné vers la gauche"
+	L["and rotated right"] = "et tourné vers la droite"
 	L["and Trigger %s"] = "et Déclencheur %s"
 	--[[Translation missing --]]
 	L["and with width |cFFFF0000%s|r and %s"] = "and with width |cFFFF0000%s|r and %s"
@@ -137,8 +129,7 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["Animate"] = "Animer"
 	L["Animated Expand and Collapse"] = "Expansion et réduction animés"
 	L["Animates progress changes"] = "Animer les changement de progression"
-	--[[Translation missing --]]
-	L["Animation End"] = "Animation End"
+	L["Animation End"] = "Fin de l'animation"
 	--[[Translation missing --]]
 	L["Animation Mode"] = "Animation Mode"
 	L["Animation relative duration description"] = [=[La durée de l'animation par rapport à la durée du graphique, exprimée en fraction (1/2), pourcentage (50%), ou décimal (0.5).
@@ -149,8 +140,7 @@ Si la durée de l'animation est définie à |cFF00CC0010%|r, et le déclencheur 
 Si la durée de l'animation est définie à |cFF00CC0010%|r, et le déclencheur du graphique n'a pas de durée définie, aucune d'animation de début ne jouera (mais elle jouerait si vous aviez spécifié une durée en secondes).
 ]=]
 	L["Animation Sequence"] = "Séquence d'animation"
-	--[[Translation missing --]]
-	L["Animation Start"] = "Animation Start"
+	L["Animation Start"] = "Démarrer l'animation"
 	L["Animations"] = "Animations"
 	L["Any of"] = "Un de"
 	L["Apply Template"] = "Appliquer le modèle"
@@ -170,16 +160,14 @@ Off Screen]=]
 	L["Auto-Clone (Show All Matches)"] = "Clonage Automatique (Afficher tous les résultats)"
 	L["Auto-cloning enabled"] = "Auto-clonage activé"
 	L["Automatic"] = "Automatique"
-	--[[Translation missing --]]
-	L["Automatic length"] = "Automatic length"
+	L["Automatic length"] = "Longueur automatique"
 	--[[Translation missing --]]
 	L["Available Voices are system specific"] = "Available Voices are system specific"
 	L["Backdrop Color"] = "Couleur de Fond"
 	L["Backdrop in Front"] = "Fond Devant"
 	L["Backdrop Style"] = "Style de Fond"
-	--[[Translation missing --]]
-	L["Background"] = "Background"
-	L["Background Color"] = "Couleur de fond"
+	L["Background"] = "Arrière-plan"
+	L["Background Color"] = "Couleur d'arrière-plan"
 	--[[Translation missing --]]
 	L["Background Inner"] = "Background Inner"
 	L["Background Offset"] = "Décalage du Fond "
@@ -325,7 +313,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
 	L["Discrete Rotation"] = "Rotation individuelle"
 	L["Display"] = "Affichage"
 	L["Display Name"] = "Nom de l'affichage"
-	L["Display Text"] = "Texte de l'affichage"
+	L["Display Text"] = "Texte d'affichage"
 	L["Displays a text, works best in combination with other displays"] = "Affiche du texte, fonctionne mieux en combinaison avec d'autres affichages."
 	L["Distribute Horizontally"] = "Distribuer horizontalement"
 	L["Distribute Vertically"] = "Distribuer verticalement"
@@ -367,12 +355,9 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
 	L["Else If Trigger %s"] = "Else If Trigger %s"
 	--[[Translation missing --]]
 	L["Enable \"Edge\" part of the overlay"] = "Enable \"Edge\" part of the overlay"
-	--[[Translation missing --]]
-	L["Enable \"swipe\" part of the overlay"] = "Enable \"swipe\" part of the overlay"
-	--[[Translation missing --]]
-	L["Enable Swipe"] = "Enable Swipe"
-	--[[Translation missing --]]
-	L["Enable the \"Swipe\" radial overlay"] = "Enable the \"Swipe\" radial overlay"
+	L["Enable \"swipe\" part of the overlay"] = "Activer la partie \"balayage\" de la superposition"
+	L["Enable Swipe"] = "Activer le balayage"
+	L["Enable the \"Swipe\" radial overlay"] = "Activer la superposition radiale du \"balayage\""
 	L["Enabled"] = "Activé"
 	L["End Angle"] = "Angle de fin"
 	L["End of %s"] = "Fin de %s"
@@ -674,18 +659,15 @@ Seule une unique valeur peut être choisie]=]
 	L["Negator"] = "Pas"
 	L["New Aura"] = "Nouvelle Aura"
 	L["New Value"] = "Nouvelle Valeur"
-	L["No Children"] = "Pas d'Enfants"
+	L["No Children"] = "Aucun enfant"
 	L["None"] = "Aucun"
-	--[[Translation missing --]]
-	L["Not a table"] = "Not a table"
+	L["Not a table"] = "N'est pas une table"
 	L["Not all children have the same value for this option"] = "Tous les enfants n'ont pas la même valeur pour cette option"
 	L["Not Loaded"] = "Non chargé"
 	--[[Translation missing --]]
 	L["Note: Automated Messages to SAY and YELL are blocked outside of Instances."] = "Note: Automated Messages to SAY and YELL are blocked outside of Instances."
-	--[[Translation missing --]]
-	L["Note: The legacy buff trigger is now permanently disabled. It will be removed in the near future."] = "Note: The legacy buff trigger is now permanently disabled. It will be removed in the near future."
-	--[[Translation missing --]]
-	L["Number of Entries"] = "Number of Entries"
+	L["Note: The legacy buff trigger is now permanently disabled. It will be removed in the near future."] = "Remarque : le déclencheur de buff hérités est désormais désactivé de façon permanente. Il sera supprimé dans un avenir proche."
+	L["Number of Entries"] = "Nombre d'entrées"
 	--[[Translation missing --]]
 	L["Offer a guided way to create auras for your character"] = "Offer a guided way to create auras for your character"
 	--[[Translation missing --]]
@@ -814,8 +796,7 @@ Seule une unique valeur peut être choisie]=]
 	L["Shift-click to create chat link"] = "Maj-clic pour créer un lien de discussion"
 	--[[Translation missing --]]
 	L["Show \"Edge\""] = "Show \"Edge\""
-	--[[Translation missing --]]
-	L["Show \"Swipe\""] = "Show \"Swipe\""
+	L["Show \"Swipe\""] = "Afficher le \"balayage\""
 	L["Show all matches (Auto-clone)"] = "Montrer toutes correspondances (Auto-Clone)"
 	L["Show Border"] = "Afficher l'encadrement"
 	L["Show Glow"] = "Surbrillance"
@@ -906,8 +887,7 @@ Seule une unique valeur peut être choisie]=]
 	L["Sub Elements"] = "Sub Elements"
 	--[[Translation missing --]]
 	L["Sub Option %i"] = "Sub Option %i"
-	--[[Translation missing --]]
-	L["Swipe Overlay Settings"] = "Swipe Overlay Settings"
+	L["Swipe Overlay Settings"] = "Paramètres de la superposition des balayages"
 	L["Temporary Group"] = "Groupe temporaire"
 	L["Text"] = "Texte"
 	L["Text %s"] = "Texte %s"
@@ -1042,6 +1022,6 @@ Seule une unique valeur peut être choisie]=]
 	L["Z Offset"] = "Décalage Z"
 	L["Z Rotation"] = "Rotation Z"
 	L["Zoom"] = "Zoom"
-	L["Zoom In"] = "Zoom entrant"
-	L["Zoom Out"] = "Zoom sortant"
+	L["Zoom In"] = "Zoom avant"
+	L["Zoom Out"] = "Zoom arrière"
 

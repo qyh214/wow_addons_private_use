@@ -579,6 +579,7 @@ local function showOnMapType(point, isMinimap)
 end
 
 ns.should_show_point = function(coord, point, currentZone, isMinimap)
+    if not coord or coord < 0 then return false end
     if not showOnMapType(point, isMinimap) then
         return false
     end
