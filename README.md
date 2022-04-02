@@ -61,8 +61,9 @@ ElvUI：
 
 自动截图插件：http://bbs.ngacn.cc/read.php?tid=7534350
 
-TinyInspect、TinyTooltip：http://bbs.ngacn.cc/read.php?tid=10240957
-TinyInspect、TinyTooltip社区9.2更新：https://bbs.nga.cn/read.php?tid=31055323
+TinyInspect、TinyTooltip：
+- 原版：http://bbs.ngacn.cc/read.php?tid=10240957
+- 社区9.2更新：https://bbs.nga.cn/read.php?tid=31055323
 
 其他单体插件可用curse客户端管理，curse客户端下载地址：https://curseforge.overwolf.com
 
