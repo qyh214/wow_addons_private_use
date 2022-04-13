@@ -80,11 +80,16 @@ Nnoggie大秘境技能CD监视升级版&自制团队CD监视，带技能激活�
 
 索·莉亚的究极秘术：https://bbs.nga.cn/read.php?tid=31131244
 
+释魂红玉：https://bbs.nga.cn/read.php?tid=31161256
+
+死亡位置通报+光柱标记：https://wago.io/7KrIM-PVh
+
 暗影国度地下城与团队副本：
 - 彼界尾王分身击杀报警（Mueh'zala spawns health group）：https://wago.io/-_UWm33O3
-- 仙林迷宫wa：https://wago.io/hVLym_eLv
-- 仙林迷宫全自动导航（需要配合前面一个wa完成前2个迷宫）：https://wago.io/16cF_58a5
-- 集市绿洲+符文控制台：https://bbs.nga.cn/read.php?tid=30865926
+- 仙林迷宫wa（Mists of Tirna Scithe guessing game v2）：https://wago.io/hVLym_eLv
+- 仙林迷宫全自动导航（需要配合前面一个wa完成前2个迷宫）（仙林迷宫全自动导航系统 MoTS Maze Automatic Navigator）：https://wago.io/16cF_58a5
+- 集市绿洲npc交易（集市绿洲NPC一键标记）：https://bbs.nga.cn/read.php?tid=31225958
+- 宏图符文控制台：https://bbs.nga.cn/read.php?tid=30402475
 - 5人地下城+第三赛季加密词缀：https://bbs.nga.cn/read.php?tid=24446064
 - 团队副本初诞者圣墓：https://bbs.nga.cn/read.php?tid=30895500
 - 通灵战潮道具监视（@SL-Dungeons - NW - Kyrian Armaments）：https://wago.io/KyrianArmaments
