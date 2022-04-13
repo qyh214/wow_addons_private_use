@@ -406,16 +406,11 @@ L["STRING_OPTIONS_3D_UANCHOR"] = "Modelo 3D Superior"
 L["STRING_OPTIONS_3D_UENABLED_DESC"] = "Ativa ou desativa o uso de modelo 3d acima da barra."
 L["STRING_OPTIONS_3D_USELECT_DESC"] = "Escolha qual o modelo será usado no modelo superior."
 L["STRING_OPTIONS_ADVANCED"] = "Avançado"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = ""--]] 
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = "Colunas de texto alinhadas"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = "Desative colchetes e separadores e alinhe textos de barras em colunas verticais"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = "Deslocamento %d do texto"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = "Deslocamento da borda direita"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = "está habilitado, separadores e colchetes não são usados"
 L["STRING_OPTIONS_ALPHAMOD_ANCHOR"] = "Auto Ocultar:"
 L["STRING_OPTIONS_ALWAYS_USE"] = "Usar Em Todos os Personagens"
 L["STRING_OPTIONS_ALWAYS_USE_DESC"] = "O mesmo perfil é usado em todos os personagens. Você pode sobre escrever ele em qualquer personagem apenas escolhendo um perfil na caixa de cima."
@@ -699,14 +694,12 @@ L["STRING_OPTIONS_ED_DESC"] = [=[|cFFFFFF00Manualmente|r: o usuário precisa cli
 L["STRING_OPTIONS_ED1"] = "Manualmente"
 L["STRING_OPTIONS_ED2"] = "Perguntar"
 L["STRING_OPTIONS_ED3"] = "Automático"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = ""--]] 
+L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = "Editar Texto Personalizado"
 L["STRING_OPTIONS_EDITIMAGE"] = "Editar Imagem"
 L["STRING_OPTIONS_EDITINSTANCE"] = "Editando a Janela:"
 L["STRING_OPTIONS_ERASECHARTDATA"] = "Apagar Gráficos"
 L["STRING_OPTIONS_ERASECHARTDATA_DESC"] = "Quando deslogar do jogo, as informações guardadas para gerar gráficos são apagadas."
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_EXPORT_PROFILE"] = ""--]] 
+L["STRING_OPTIONS_EXPORT_PROFILE"] = "Exportar Perfil"
 L["STRING_OPTIONS_EXTERNALS_TITLE"] = "Widgets Externos"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "Esta opção controla o comportamento de vários widgets externos."
 L["STRING_OPTIONS_GENERAL"] = "Configurações Gerais"
@@ -734,12 +727,9 @@ L["STRING_OPTIONS_ILVL_TRACKER_DESC"] = [=[Quando ativo e fora de combate, o add
 
 Quando desativado, ele ainda lê o level de item a partir de consultas de outros addons ou quando você inspeciona outro jogador.]=]
 L["STRING_OPTIONS_ILVL_TRACKER_TEXT"] = "Ativado"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = ""--]] 
+L["STRING_OPTIONS_IMPORT_PROFILE"] = "Importar Perfil"
+L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = "Insira um Nome para o Novo Perfil"
+L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = "Details! Importar perfil (colar string)"
 L["STRING_OPTIONS_INSTANCE_ALPHA2"] = "Cor de Fundo"
 L["STRING_OPTIONS_INSTANCE_ALPHA2_DESC"] = "Seleciona a cor do fundo da janela."
 L["STRING_OPTIONS_INSTANCE_BACKDROP"] = "Textura de fundo"
@@ -857,8 +847,7 @@ L["STRING_OPTIONS_NICKNAME"] = "Apelido"
 L["STRING_OPTIONS_NICKNAME_DESC"] = "Digite o seu apelido neste campo. O apelido escolhido será enviado aos membros da sua guilda e o Details! ira substituir o nome do personagem pelo apelido."
 L["STRING_OPTIONS_OPEN_ROWTEXT_EDITOR"] = "Editor de Texto das Barras"
 L["STRING_OPTIONS_OPEN_TEXT_EDITOR"] = "Abrir o Editor de Texto"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_OPENBROKER"] = ""--]] 
+L["STRING_OPTIONS_OPENBROKER"] = "Abrir editor de texto do corretor"
 L["STRING_OPTIONS_OVERALL_ALL"] = "Todos os segmentos"
 L["STRING_OPTIONS_OVERALL_ALL_DESC"] = "Todos os segmentos são adicionados aos dados globais."
 L["STRING_OPTIONS_OVERALL_ANCHOR"] = "Dados Globais:"

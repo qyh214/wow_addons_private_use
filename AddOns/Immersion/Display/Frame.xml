@@ -266,9 +266,25 @@
 		<Scripts>
 			<OnLoad inherit="append">
 				self.shoppingTooltips = GameTooltip.shoppingTooltips;
-				self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b);
-				self:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b);
+
+				if ( self.SetBackdropBorderColor ) then
+					self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b);
+				elseif ( self.NineSlice and self.NineSlice.SetBorderColor ) then
+					self.NineSlice:SetBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b);
+				end
+				if ( self.SetBackdropColor ) then
+					self:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b);
+				elseif ( self.NineSlice and self.NineSlice.SetCenterColor ) then
+					self.NineSlice:SetCenterColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b);
+				end
 			</OnLoad>
+			<OnTooltipSetItem>
+				-- Readjust tooltip size to fit the icon
+				C_Timer.After(0, function()
+					local width, height = self:GetSize()
+					self:SetSize(width + 30, height + 4)
+				end)
+			</OnTooltipSetItem>
 		</Scripts>
 	</GameTooltip>
 

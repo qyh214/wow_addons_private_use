@@ -1,10 +1,64 @@
-tag d4a7f0f04e3f7b538e4c5e7e6c53aa0c7c35ea46 DetailsRetail.9.2.0.9722.146
+tag faa11788412efdc6eb2de9c0ba9884ec97e52b43 DetailsRetail.9.2.0.9735.146
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Mon Mar 21 18:14:21 2022 -0300
+Date:	Mon Apr 11 16:20:52 2022 -0300
 
-commit aef114249fcd9e22bfe37adc32a6b413d9972da6
+commit 7762e29d0023ab25abda610c8851d2d490f12154
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Mon Mar 21 18:13:58 2022 -0300
+Date:   Mon Apr 11 15:52:24 2022 -0300
 
-    Removed alpha prints
+    More fixes
+
+commit 80612f2d6f7c9ef43c6d90c66770e0cad717e232
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Mon Apr 11 10:59:21 2022 -0300
+
+    Bug Fix
+
+commit 241200d6c0eb12bf336f3e94f0f4ab852a98c4e7
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Fri Apr 8 14:33:42 2022 -0300
+
+    Arena Enemy Player Deaths improvements
+
+commit a3e38a1e6afae0e8924c00de393e09dee3b901c8
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Thu Apr 7 14:44:42 2022 -0300
+
+    close the All Displays Panel on cooltip interaction
+
+commit 2f94bd93b89e781248b669dbfd4e38047dc524a8
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Thu Apr 7 14:33:46 2022 -0300
+
+    Added M+ Score into the player info tooltip (hover over the spec icon)
+
+commit 2f94bd93b89e781248b669dbfd4e38047dc524a8
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Thu Apr 7 14:33:46 2022 -0300
+
+    Added M+ Score into the player info tooltip (hover over the spec icon)
+
+commit 0a7b62701b603934a5697b951cfaa36a84655a8c
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Fri Apr 1 15:29:00 2022 -0500
+
+    move_janela now actualizes both windows points
+
+commit 0a7b62701b603934a5697b951cfaa36a84655a8c
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Fri Apr 1 15:29:00 2022 -0500
+
+    move_janela now actualizes both windows points
+
+commit 9a63dc12e0ae4f328f1e60093c8d8efafe43b9cd
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Fri Apr 1 15:27:55 2022 -0500
+
+    Change safe_load to allow varargs for LoadProfile
+
+commit 0d8b09ffb7b93d35cc05f1eaf6d1afaa8ae82bef
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Fri Apr 1 11:38:04 2022 -0300
+
+    Update on LibOpenRaid to version 24
 

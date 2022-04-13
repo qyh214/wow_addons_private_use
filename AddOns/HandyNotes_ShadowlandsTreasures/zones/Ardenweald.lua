@@ -19,6 +19,16 @@ ns.VignetteIDsToPoints[4220] = husk
 ns.VignetteIDsToPoints[4221] = husk
 ns.VignetteIDsToPoints[4554] = husk -- actually Darkreach Supplies
 
+ns.RegisterPoints(1565, {
+    [54107640] = path{ -- Decayed Husk entrance
+        quest=60710,
+        requires=ns.conditions.Vignette(4221),
+        routes={{54107640, 53237843}},
+    },
+})
+
+-- Achievement treasures
+
 ns.RegisterPoints(1565, { -- Ardenweald
     [55902100] = {
         achievement=14313, criteria=50031, -- Aerto's Body

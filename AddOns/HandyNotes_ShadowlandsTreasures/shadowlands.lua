@@ -8,10 +8,12 @@ ns.groups["puzzlecache"] = "Caches of Creation"
 ns.groups["lostovoid"] = "{item:190239:Lost Ovoid}"
 ns.groups["soulshape"] = "Soulshapes"
 ns.groups["coreless"] = "Coreless Automa"
+ns.groups["junk"] = BAG_FILTER_JUNK
 
 ns.defaults.profile.groupsHiddenByZone[1970] = {
     puzzlecache = true,
     coreless = true,
+    junk = true,
 }
 ns.defaults.profile.achievementsHidden[15229] = true
 

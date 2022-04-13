@@ -222,7 +222,7 @@ local affixWeeks = {
     [3] =  {6,3,9,130}, -- raging volcanic tyrannical encrypted
     [4] =  {122,12,10,130}, -- inspiring grievous fortified encrypted
     [5] =  {123,4,9,130}, -- spiteful necrotic tyrannical encrypted
-    [6] =  {0,0,10,130}, -- fortified encrypted
+    [6] =  {7,14,10,130}, -- bolstering quaking fortified encrypted
     [7] =  {0,0,9,130}, -- tyrannical encrypted
     [8] =  {0,0,10,130}, -- fortified encrypted
     [9] =  {0,0,9,130}, -- tyrannical encrypted
@@ -1777,7 +1777,7 @@ end
 
 ---IsCurrentPresetFortified
 function MDT:IsCurrentPresetFortified()
-    return self:GetCurrentPreset().week%2 == 1
+    return affixWeeks[self:GetCurrentPreset().week][3] == 10
 end
 
 ---IsCurrentPresetTyrannical

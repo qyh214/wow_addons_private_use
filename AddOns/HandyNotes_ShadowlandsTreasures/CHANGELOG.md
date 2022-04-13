@@ -1,5 +1,17 @@
 # Changelog
 
+## Changed in v60
+
+* Add some new non-quest points to Zereth Mortis (hidden by default in the "Junk" group):
+    * Shrouded Cypher Caches (a Soulshape and some Pocopoc loot)
+    * Discarded Automa Scrap (Pocopoc cores)
+
+## Changed in v59
+
+* Pocopoc customization items are now available. The known ones in fixed locations have been added. (The ones that're in every random chest or on any rare, I've left out. Also, nobody knows where two of them are yet.)
+* Dominance Key has been hotfixed to drop from more mobs
+* A few Korthia improvements: include the really rare cache contents, and add some more vignettes
+
 ## Changed in v58
 
 * Added the Mawsworn Supply Chest locations to Zereth Mortis because it (very rarely) contains the Spectral Mawrat's Tail

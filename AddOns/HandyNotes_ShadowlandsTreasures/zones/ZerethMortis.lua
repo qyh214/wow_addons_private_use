@@ -68,7 +68,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             190638, -- Tormented Mawsteel Greatsword
             189863, -- Spatial Opener
         },
-        note="{item:189704:Dominance Key} drops from {npc:181403:Mawsworn Inquisitor} and {npc:182426:Nazrethim Arcanist} nearby. It can also drop from {npc:184417:Dreadlord Infiltrator} during {quest:65362:Not of the Body} if that's up.",
+        note="{item:189704:Dominance Key} drops from elites and rares nearby. It can also drop from {npc:184417:Dreadlord Infiltrator} during {quest:65362:Not of the Body} if that's up.",
     },
 
     [35157020] = { -- Drowned Broker Supplies
@@ -425,6 +425,9 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         quest=65183,
         label="Provis Cache",
         active=ns.conditions.Item(188231),
+        loot={
+            {189710, quest=65474}, -- Pocopoc's Ruby and Platinum Body
+        },
         note="Use {item:187908} to get 15x {item:187728}, which will sometimes give you the {item:188231}",
     },
 })
@@ -443,6 +446,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     note="Multiple spawn points; you need to be on {quest:65142} or have flying unlocked",
     loot={
         {190096, quest=65534}, -- Pocobold
+        {189711, quest=65476}, -- Pocopoc's Gold and Ruby Components
     },
 })
 
@@ -459,7 +463,9 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     active=ns.conditions.Item(190197), -- Sandworn Chest Key
     note="Multiple spawn points. Get 5x {item:190198} from nearby mobs to make {item:190197}",
     loot={
-        {190734, toy=true} -- Makaris's Satchel of Mines
+        {190734, toy=true}, -- Makaris's Satchel of Mines
+        {189713, quest=65478}, -- Pocopoc's Copper and Cobalt Components
+        {189714, quest=65479}, -- Pocopoc's Platinum and Emerald Components
     },
 })
 
@@ -493,6 +499,65 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     note="Multiple spawn points. Mount is a very low drop rate.",
     texture=ns.atlas_texture("VignetteLoot", {r=0.5,g=1,b=0.5,a=1,scale=0.9}),
     group="mawsworncache",
+})
+
+ns.RegisterPoints(1970, { -- Zereth Mortis
+    [54294965] = {},
+    [41903420] = {},
+    [60906940] = {},
+    [29404930] = {},
+    [66502510] = {},
+    [63704120] = {},
+    [61301550] = {},
+    [69503440] = {},
+    [42805290] = {},
+    [44507140] = {},
+    [53009220] = {},
+    [43908430] = {},
+    [40306260] = {},
+    [54304970] = {},
+    [49003050] = {},
+    [50800470] = {},
+    [61955715] = {},
+    [62204623] = {},
+    [36254810] = {},
+}, {
+    label="Shrouded Cypher Cache",
+    loot={
+        {189983, quest=65513, covenant=Enum.CovenantType.NightFae}, -- Gromit Soul
+        -- This is also in other chests, but:
+        {189707, quest=65471}, -- Pocopoc's Bronze and Gold Body
+    },
+    active={ns.conditions.AuraActive(361917), ns.conditions.AuraActive(364478)},
+    note="You need to be wearing Cypher gear with {spell:364478} and have {spell:361917} active",
+    texture=ns.atlas_texture("VignetteLoot", {r=0.5,g=1,b=1,a=1,scale=0.9}),
+    minimap=true, -- they'll show as a perceptive pocopoc... but it's easier to find them with this up too
+    group="junk",
+})
+
+ns.RegisterPoints(1970, { -- Zereth Mortis
+    [39607760] = {},
+    [40706990] = {},
+    [43608330] = {},
+    [51104690] = {},
+    [54008860] = {},
+    [54804680] = {},
+    [57704360] = {},
+    [58906090] = {},
+    [59905120] = {},
+    [62107480] = {},
+    [64007220] = {},
+    [65804040] = {},
+    [67604030] = {},
+    [69903420] = {},
+}, {
+    label="Discarded Automa Scrap",
+    loot={
+        {189717, quest=65483}, -- Pocopoc's Shielded Core
+        {189718, quest=65484}, -- Pocopoc's Upgraded Core
+    },
+    texture=ns.atlas_texture("mechagon-projects", {r=0.5, g=0.5, b=1, scale=0.9}),
+    group="junk",
 })
 
 ns.RegisterPoints(1970, { -- Zereth Mortis
@@ -1251,10 +1316,8 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             190004, -- Furidian's Inscribed Barb
         },
         note="Find 3x Empowered Keys nearby then unlock the Suspiciously Angry Vault",
+        nearby={62605980, 64005730, 64456040, label="Empowered Key"},
     },
-    -- [62605980] = {quest=65544, criteria=53031, atlas="adventuremapicon-lock", label="Empowered Key: cube", minimap=true},
-    -- [64005730] = {quest=65544, criteria=53031, atlas="adventuremapicon-lock", label="Empowered Key: star", minimap=true},
-    -- [64456040] = {quest=65544, criteria=53031, atlas="adventuremapicon-lock", label="Empowered Key: sphere", minimap=true},
 
     [69053660] = { -- Garudeon
         npc=180924,
@@ -1610,6 +1673,25 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
             {190463, note="All"}, -- Dismal Mystic's Glaive
         },
     },
+})
+
+ns.RegisterPoints(1970, { -- Zereth Mortis
+    [48800560] = { -- Antros
+        npc=182466,
+        quest=65143,
+        worldquest=65143,
+        loot={
+            {189709, quest=65473}, -- Pocopoc's Cobalt and Copper Body
+            190614, -- Antros' Entrusted Bascinet
+            190615, -- Cosmic Guardian's Casing
+            190616, -- Controlled Sequence Clasp
+            190617, -- Destruction-Core Handlers
+            190618, -- Lattice of the Distant Keeper
+            190619, -- Antecedent's Aliform Joggers
+            190620, -- Sav'thul's Calamitous Tantour
+            190621, -- Dealic Deterrent Stockings
+        },
+    }
 })
 
 -- Completing the Code

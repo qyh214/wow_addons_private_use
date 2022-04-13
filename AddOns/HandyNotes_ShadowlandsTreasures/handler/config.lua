@@ -661,6 +661,9 @@ ns.should_show_point = function(coord, point, currentZone, isMinimap)
     if point.requires_worldquest and not C_TaskQuest.IsActive(point.requires_worldquest) then
         return false
     end
+    if point.requires and not ns.conditions.check(point.requires) then
+        return false
+    end
     if not ns.db.upcoming or point.upcoming == false then
         if not ns.point_active(point) then
             return false

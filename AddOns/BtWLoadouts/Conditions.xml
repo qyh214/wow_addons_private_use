@@ -142,6 +142,39 @@
                     <Anchor point="TOPLEFT" relativeKey="$parent.ConditionTypeDropDown" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
                 </Anchors>
             </Frame>
+            <EditBox parentKey="ZoneEditBox" autoFocus="false" inherits="InputBoxTemplate">
+                <Size x="412" y="25"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.ConditionTypeDropDown" relativePoint="BOTTOMLEFT" x="22" y="-10"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <FontString parentKey="Instructions" justifyH="LEFT" justifyV="MIDDLE" inherits="GameFontDisableSmall" setAllPoints="true" text="BTWLOADOUTS_ZONE_NAME">
+                            <Color r="0.35" g="0.35" b="0.35"/>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnKeyDown>
+                        if key == "BACKSPACE" or key == "DELETE" then
+                            self.disallowAutoComplete = true;
+                        end
+                    </OnKeyDown>
+                    <OnKeyUp>
+                        if key == "BACKSPACE" or key == "DELETE" then
+                            self.disallowAutoComplete = false;
+                        end
+                    </OnKeyUp>
+                    <OnTextChanged>
+                        if userInput and not self.disallowAutoComplete then
+                           self:GetParent():UpdateZoneAutoComplete(self) 
+                        end
+                        self:GetParent():UpdateSetZone(self:GetText())
+                        InputBoxInstructions_OnTextChanged(self);
+                    </OnTextChanged>
+                    <OnEnterPressed function="EditBox_ClearFocus"/>
+                </Scripts>
+            </EditBox>
 
             <Button name="BtWLoadoutsConditionsAffixesDropDownList" mixin="BtWLoadoutsConditionsAffixesMixin" toplevel="true" frameStrata="FULLSCREEN_DIALOG" hidden="true">
                 <Size x="400" y="155"/>

@@ -699,8 +699,7 @@ L["STRING_OPTIONS_EDITIMAGE"] = "Bild bearbeiten"
 L["STRING_OPTIONS_EDITINSTANCE"] = "Bearbeitungsfenster:"
 L["STRING_OPTIONS_ERASECHARTDATA"] = "Ranglisten löschen"
 L["STRING_OPTIONS_ERASECHARTDATA_DESC"] = "Beim Ausloggen werden alle gesammelten Daten für Ranglisten gelöscht."
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_EXPORT_PROFILE"] = ""--]] 
+L["STRING_OPTIONS_EXPORT_PROFILE"] = "Profil exportieren"
 L["STRING_OPTIONS_EXTERNALS_TITLE"] = "Externe Widgets"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "Diese Optionen bestimmen das Verhalten vieler fremder Widgets."
 L["STRING_OPTIONS_GENERAL"] = "Allgemeine Einstellungen"
@@ -732,8 +731,7 @@ L["STRING_OPTIONS_ILVL_TRACKER_DESC"] = [=[Aktiviert und außerhalb eines Kampfe
 
 Deaktiviert liest es weiterhin die Gegenstandsstufe auf Anfrage von anderen Addons oder beim manuellen Inspizieren anderer Spieler.]=]
 L["STRING_OPTIONS_ILVL_TRACKER_TEXT"] = "Aktiviert"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE"] = ""--]] 
+L["STRING_OPTIONS_IMPORT_PROFILE"] = "Profil importieren"
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = ""--]] 
 --[[Translation missing --]]

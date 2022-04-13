@@ -176,6 +176,7 @@ if AL then
 	AL["EXPLORER_FILTER_PETS"] = "Добываются отсутствующие питомцы"
 	AL["EXPLORER_FILTER_STATE"] = "Состояние"
 	AL["EXPLORER_FILTER_TOYS"] = "Добываются отсутствующие игрушки"
+	AL["EXPLORER_FILTER_WITHOUT_COLLECTIBLES"] = "Показывать НИПов, с которых собрано всё"
 	AL["EXPLORER_FILTERING"] = "Отфильтровать НИПов"
 	AL["EXPLORER_FILTERING_CONTAINERS"] = "Анализирую контейнеры для фильтрации..."
 	AL["EXPLORER_FILTERING_DESC"] = "Отфильтровать всех НИПов, с которых не добывается ни одного из предметов, выбранных в \"%s - %s\"."

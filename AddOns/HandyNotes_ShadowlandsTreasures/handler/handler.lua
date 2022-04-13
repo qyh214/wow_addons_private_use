@@ -5,7 +5,7 @@ local HL = LibStub("AceAddon-3.0"):NewAddon(myname, "AceEvent-3.0")
 -- local L = LibStub("AceLocale-3.0"):GetLocale(myname, true)
 ns.HL = HL
 
-ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v58'
+ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v60'
 
 ---------------------------------------------------------
 -- Data model stuff:
@@ -59,6 +59,17 @@ ns.points = {
 }
 ns.POIsToPoints = {}
 ns.VignetteIDsToPoints = {}
+ns.WorldQuestsToPoints = {}
+local function intotable(dest, value_or_table, point)
+    if not value_or_table then return end
+    if type(value_or_table) == "table" then
+        for _, value in ipairs(value_or_table) do
+            dest[value] = point
+        end
+        return
+    end
+    dest[value_or_table] = point
+end
 function ns.RegisterPoints(zone, points, defaults)
     if not ns.points[zone] then
         ns.points[zone] = {}
@@ -73,12 +84,9 @@ function ns.RegisterPoints(zone, points, defaults)
     for coord, point in pairs(points) do
         point._coord = coord
         point._uiMapID = zone
-        if point.areaPoi then
-            ns.POIsToPoints[point.areaPoi] = point
-        end
-        if point.vignette then
-            ns.VignetteIDsToPoints[point.vignette] = point
-        end
+        intotable(ns.POIsToPoints, point.areaPoi, point)
+        intotable(ns.VignetteIDsToPoints, point.vignette, point)
+        intotable(ns.WorldQuestsToPoints, point.worldquest, point)
         if point.route and type(point.route) == "table" then
             -- avoiding a data migration
             point.routes = {point.route}
@@ -1049,3 +1057,10 @@ hooksecurefunc(VignettePinMixin, "OnMouseEnter", function(self)
     handle_tooltip(GameTooltip, point)
 end)
 
+hooksecurefunc("TaskPOI_OnEnter", function(self)
+    if not self.questID then return end
+    if not ns.WorldQuestsToPoints[self.questID] then return end
+    local point = ns.WorldQuestsToPoints[self.questID]
+    if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
+    handle_tooltip(GameTooltip, point)
+end)

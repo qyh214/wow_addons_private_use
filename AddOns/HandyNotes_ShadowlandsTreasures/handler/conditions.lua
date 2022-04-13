@@ -91,6 +91,29 @@ ns.conditions.WorldQuestActive = Class{
     Matched = function(self) return C_TaskQuest.IsActive(self.id) end,
 }
 
+ns.conditions.Vignette = Class{
+    __parent = Condition,
+    type = 'vignette',
+    FindVignette = function(self)
+        local vignettes = C_VignetteInfo.GetVignettes()
+        for _, vignetteGUID in ipairs(vignettes) do
+            local vignetteInfo = C_VignetteInfo.GetVignetteInfo(vignetteGUID)
+            if vignetteInfo and vignetteInfo.vignetteID == self.id then
+                return vignetteInfo
+            end
+        end
+        return false
+    end,
+    Matched = function(self) return self:FindVignette() end,
+    Label = function(self)
+        local vignetteInfo = self:FindVignette()
+        if vignetteInfo and vignetteInfo.name then
+            return vignetteInfo.name
+        end
+        return self.__parent.Label(self)
+    end,
+}
+
 -- Helpers:
 
 do

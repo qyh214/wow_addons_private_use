@@ -92,9 +92,12 @@ ns.RegisterPoints(1961, { -- Korthia
         quest=64247,
         -- vignette=4801 locked, 4802 unlocked
         loot = {
-            -- 187020, -- Necrobinder's Shoulderpads (confirm? it's in the caches...)
             187026, -- Field Warden's Torture Kit
             187240, -- Field Warden's Watchful Eye
+            -- These are all incredibly low drop rate, but wowhead comments claim they drop:
+            187020, -- Necrobinder's Shoulderpads
+            187016, -- Eviscerator's Spiked Mantle
+            187023, -- Instructor's Mantle
         },
         label="Spectral Bound Chest",
         -- currency=1767, -- x40
@@ -130,9 +133,12 @@ ns.RegisterPoints(1961, { -- Korthia
 local mawcache = ns.nodeMaker{
     label="Mawsworn Cache",
     loot={
-        187020, -- Necrobinder's Shoulderpads
         187026, -- Field Warden's Torture Kit
         187240, -- Field Warden's Watchful Eye
+        -- These are all incredibly low drop rate, but wowhead comments claim they drop:
+        187020, -- Necrobinder's Shoulderpads
+        187016, -- Eviscerator's Spiked Mantle
+        187023, -- Instructor's Mantle
     },
     note="Multiple spawn points",
     group="mawsworncache",
@@ -685,6 +691,7 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52291,
         quest=64291,
         npc=179931,
+        vignette=4836,
         loot={
             187403, -- Relic Breaker's Drape
         },
@@ -705,6 +712,7 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52273,
         quest=64263,
         npc=179608,
+        vignette=4819,
         loot={
             187362, -- Stinging Shadow Screamer
             187400, -- Mantle of Screaming Shadows
@@ -729,7 +737,7 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52276,
         quest=64313,
         npc=179985,
-        vignette=4832, -- 4831
+        vignette={4831, 4832}, -- 4831
         covenant=Enum.CovenantType.Venthyr,
         loot={
             184790, -- Archdruid Van-Yali's Greenthumbs
@@ -745,7 +753,7 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52300,
         quest=64338,
         npc=180032,
-        vignette=4839, -- 4838 for the patrol...
+        vignette={4838, 4839}, -- 4838 for the patrol...
         covenant=Enum.CovenantType.Kyrian,
         loot={
             {187176, toy=true}, -- Vesper of Harmony
@@ -776,6 +784,7 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52295,
         quest=64257,
         npc=179802,
+        vignette=4859,
         -- requires_item=186718,
         loot={
             {187103, quest=63917}, -- Everliving Statuette
@@ -802,7 +811,7 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52303,
         quest=64246, -- 64280?
         npc=179472,
-        vignette=4800, -- behind vignette=4885 "Devouring Tear"
+        vignette={4800, 4885}, -- behind vignette=4885 "Devouring Tear"
         loot={
             {187183, mount=1514}, -- Rampaging Mauler
             187375, -- Bound Worldeater Tendrils
@@ -816,7 +825,7 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52302,
         quest=64245,
         npc=179760,
-        vignette=4798, -- behind vignette=4885 "Devouring Tear"
+        vignette={4798, 4886}, -- behind vignette=4886 "Mawsworn Portal"
         loot={
             187035, -- Cold Burden of the Damned
             187241, -- Watchful Eye of the Damned
@@ -832,7 +841,7 @@ ns.RegisterPoints(1961, { -- Korthia
         achievement=15107, criteria=52319,
         quest=64457,
         npc=180162,
-        vignette=4866, -- behind vignette=4883 "Abandoned Veilstaff"
+        vignette={4866, 4883}, -- behind vignette=4883 "Abandoned Veilstaff"
         loot={
             {187264, quest=64513}, -- Ve'rayn's Head
             187369, -- Ve'rayn's Formal Robes

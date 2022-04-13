@@ -544,6 +544,16 @@ function frame:ZONE_CHANGED(...)
     end
     Internal.TriggerConditions();
 end
+function frame:ZONE_CHANGED_NEW_AREA(...)
+    Internal.UpdateConditionsForInstance();
+    local bossID = Internal.UpdateConditionsForBoss();
+    Internal.UpdateConditionsForAffixes();
+    -- Boss is unavailable so dont trigger conditions
+    if bossID and not Internal.BossAvailable(bossID) then
+        return
+    end
+    Internal.TriggerConditions();
+end
 function frame:UPDATE_MOUSEOVER_UNIT(...)
     local bossID = Internal.UpdateConditionsForBoss("mouseover");
     -- Boss is unavailable so dont trigger conditions
@@ -1518,6 +1528,7 @@ frame:RegisterEvent("BANKFRAME_OPENED");
 frame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
 frame:RegisterEvent("UPDATE_INSTANCE_INFO");
 frame:RegisterEvent("ZONE_CHANGED");
+frame:RegisterEvent("ZONE_CHANGED_NEW_AREA");
 frame:RegisterEvent("UPDATE_MOUSEOVER_UNIT");
 frame:RegisterEvent("NAME_PLATE_UNIT_ADDED");
 frame:RegisterEvent("PLAYER_TARGET_CHANGED");

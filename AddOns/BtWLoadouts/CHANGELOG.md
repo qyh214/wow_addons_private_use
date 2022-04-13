@@ -1,3 +1,25 @@
+# v1.6.4
+
+- Updated so soulbinds are changed at the Forge of Bonds within Zereth Mortis without a tome
+- Fixed zone conditions not sometimes displaying when moving between zones
+
+# v1.6.3-beta
+
+- Updated with bug fixes from stable branch
+
+# v1.6.2-beta
+
+- Fixed showing condition dropdown when all conditions are active
+- Fixed an error with zone condition checking
+
+# v1.6.1-beta
+
+- Fixed zone condition checking not always matching correctly
+
+# v1.6.0-beta
+
+- Added an optional zone match for world conditions
+
 # v1.5.7
 
 - Fixed Unity not working correctly in all slots

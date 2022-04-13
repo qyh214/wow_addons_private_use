@@ -58,6 +58,30 @@ local CONDITION_TYPE_NAMES = {
 	[CONDITION_TYPE_SCENARIO] = L["Scenarios"]
 }
 
+local function GetMapAncestor(uiMapID, mapTypes)
+	if not uiMapID then
+		return
+	end
+	local info = C_Map.GetMapInfo(uiMapID)
+	if not info then
+		return nil
+	end
+	if mapTypes == nil or mapTypes[info.mapType] then
+		return info.mapID
+	end
+	return GetMapAncestor(info.parentMapID, mapTypes)
+end
+
+local function GenerateZoneTables(idToName, nameToID, uiMapID)
+	local maps = C_Map.GetMapChildrenInfo(946, Enum.UIMapType.Zone, true)
+	for _,map in ipairs(maps) do
+		idToName[map.mapID] = map.name
+		nameToID[map.name] = map.mapID
+	end
+	return idToName, nameToID
+end
+local ZoneIDToNameMap, ZoneNameToIDMap = GenerateZoneTables({}, {}, 946)
+
 local activeConditionSelection;
 local previousActiveConditions = {}; -- List of the previously active conditions
 local activeConditions = {}; -- List of the currently active conditions profiles
@@ -89,6 +113,7 @@ local conditionMap = {
 	instanceType = {},
 	difficultyID = {},
 	instanceID = {},
+	uiMapID = {},
 	bossID = {},
 	affixID1 = {},
 	affixID2 = {},
@@ -227,16 +252,19 @@ end
 -- Update a condition set with current active conditions
 local function RefreshConditionSet(set)
 	local _, instanceType, difficultyID, _, _, _, _, instanceID = GetInstanceInfo();
+	local uiMapID
 
 	if instanceType ~= "party" and instanceType ~= "raid" and instanceType ~= "arena" and instanceType ~= "pvp" and instanceType ~= "scenario" then
 		instanceType = "none"
 		difficultyID = nil
 		instanceID = nil
+		uiMapID = GetMapAncestor(C_Map.GetBestMapForUnit("player"), {[Enum.UIMapType.Zone] = true})
 	end
 
 	set.type = instanceType
 	set.instanceID = instanceID
 	set.difficultyID = difficultyID
+	set.uiMapID = uiMapID
 	set.bossID = nil
 	set.affixID1 = nil
 	set.affixID2 = nil
@@ -318,6 +346,10 @@ local instanceTypeOverride = {
 }
 function Internal.UpdateConditionsForInstance()
 	local _, instanceType, difficultyID, _, _, _, _, instanceID = GetInstanceInfo();
+	local uiMapID
+	if instanceType == "none" then
+		uiMapID = GetMapAncestor(C_Map.GetBestMapForUnit("player"), {[Enum.UIMapType.Zone] = true})
+	end
 
 	instanceType = instanceTypeOverride[instanceID] or instanceType
 
@@ -335,6 +367,11 @@ function Internal.UpdateConditionsForInstance()
 		DeactivateConditionMap(conditionMap.instanceID, previousConditionInfo.instanceID);
 		ActivateConditionMap(conditionMap.instanceID, instanceID);
 		previousConditionInfo.instanceID = instanceID;
+	end
+	if previousConditionInfo.uiMapID ~= uiMapID then
+		DeactivateConditionMap(conditionMap.uiMapID, previousConditionInfo.uiMapID);
+		ActivateConditionMap(conditionMap.uiMapID, uiMapID);
+		previousConditionInfo.uiMapID = uiMapID;
 	end
 end
 function Internal.UpdateConditionsForBoss(unitId)
@@ -462,6 +499,17 @@ function Internal.TriggerConditions()
 				if Internal.IsProfileActive(condition.profile) then
 					return
 				end
+			end
+		else
+			local allActive = true
+			for _,condition in ipairs(sortedActiveConditions) do
+				if not Internal.IsProfileActive(condition.profile) then
+					allActive = false
+					break
+				end
+			end
+			if allActive then
+				return
 			end
 		end
 
@@ -662,6 +710,7 @@ local function ConditionTypeDropDown_OnClick(self, arg1, arg2, checked)
 
 	set.type = arg1;
 	set.instanceID = nil;
+	set.uiMapID = nil;
 	set.difficultyID = nil;
 	set.bossID = nil;
 	set.affixesID = nil;
@@ -1135,6 +1184,50 @@ function BtWLoadoutsConditionsMixin:UpdateSetName(value)
 		self:Update();
 	end
 end
+function BtWLoadoutsConditionsMixin:UpdateSetZone(value)
+	if self.set then
+		local valid = true
+		if type(value) == "number" then
+			self.set.uiMapID = value;
+		elseif tonumber(value) then
+			self.set.uiMapID = tonumber(value);
+		elseif ZoneNameToIDMap[value] then
+			self.set.uiMapID = ZoneNameToIDMap[value];
+		elseif value ~= '' then
+			self.set.uiMapID = value
+			valid = false
+		else
+			self.set.uiMapID = nil
+		end
+		if valid then
+			--@TODO invalid zone?
+		end
+		self:Update();
+	end
+end
+local autoCompleteList = {}
+function BtWLoadoutsConditionsMixin:UpdateZoneAutoComplete(zone)
+	local utf8Position = zone:GetUTF8CursorPosition()
+	local text = strsub(zone:GetText(), 0, utf8Position):lower()
+
+    wipe(autoCompleteList)
+    for _,name in pairs(ZoneIDToNameMap) do
+		if strsub(name, 0, utf8Position):lower() == text then
+			autoCompleteList[#autoCompleteList+1] = name
+		end
+	end
+	if #autoCompleteList == 0 then
+		return
+	end
+	table.sort(autoCompleteList)
+
+	local newText = autoCompleteList[1]
+	if utf8Position == strlenutf8(text) and newText ~= zone:GetText() then
+        zone:SetText(newText);
+        zone:HighlightText(strlen(text), strlen(newText))
+        zone:SetCursorPosition(strlen(text))
+	end
+end
 function BtWLoadoutsConditionsMixin:OnButtonClick(button)
 	CloseDropDownMenus()
 	if button.isAdd then
@@ -1205,6 +1298,7 @@ function BtWLoadoutsConditionsMixin:Update()
 			affixID1, affixID2, affixID3, affixID4 = Internal.GetAffixesForID(set.affixesID)
 		end
 		if set.map.instanceType ~= set.type or
+		   set.map.uiMapID ~= set.uiMapID or
 		   set.map.instanceID ~= set.instanceID or
 		   set.map.difficultyID ~= set.mapDifficultyID or
 		   set.map.bossID ~= set.bossID or
@@ -1221,6 +1315,7 @@ function BtWLoadoutsConditionsMixin:Update()
 
 			wipe(set.map);
 			set.map.instanceType = set.type;
+			set.map.uiMapID = set.uiMapID;
 			set.map.instanceID = set.instanceID;
 			set.map.difficultyID = set.mapDifficultyID;
 			set.map.bossID = set.bossID;
@@ -1334,6 +1429,11 @@ function BtWLoadoutsConditionsMixin:Update()
 			UIDropDownMenu_SetText(self.BattlegroundDropDown, L["Any"]);
 		else
 			UIDropDownMenu_SetText(self.BattlegroundDropDown, GetRealZoneText(set.instanceID));
+		end
+		self.ZoneEditBox:SetShown(set.type == CONDITION_TYPE_WORLD);
+		local zone = set.uiMapID and ZoneIDToNameMap[set.uiMapID] or set.uiMapID
+		if self.ZoneEditBox:GetText() ~= zone then
+			self.ZoneEditBox:SetText(zone or '');
 		end
 
 		local helpTipBox = self:GetParent().HelpTipBox;
