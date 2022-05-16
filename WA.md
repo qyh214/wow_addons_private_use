@@ -14,7 +14,9 @@
 - https://bbs.nga.cn/read.php?tid=20729857
 - https://bbs.nga.cn/read.php?tid=24380263
 
-只狼特效：https://wago.io/sekirowa
+只狼(死+菜+寄+危+治+不死斩+忍杀+回生+月隐+耐怖+夜叉戮)特效【删除了其中菜/死/不死斩/忍杀的效果，改用下面的艾尔登法环特效】：https://wago.io/sekirowa
+
+艾尔登法环 全动态特效+音效（击杀boss、死亡、击杀精英怪）：https://wago.io/eldenring
 
 奶萨技能监控：https://wago.io/Rshaman_AfenarUI
 
@@ -84,6 +86,10 @@ Nnoggie大秘境技能CD监视升级版&自制团队CD监视，带技能激活�
 
 死亡位置通报+光柱标记：https://wago.io/7KrIM-PVh
 
+格里恩瓶子提醒：https://wago.io/g0_xbZPWO
+
+彩虹屁以及yygq：https://wago.io/SJq_TAET2
+
 暗影国度地下城与团队副本：
 - 彼界尾王分身击杀报警（Mueh'zala spawns health group）：https://wago.io/-_UWm33O3
 - 仙林迷宫wa（Mists of Tirna Scithe guessing game v2）：https://wago.io/hVLym_eLv
@@ -94,3 +100,5 @@ Nnoggie大秘境技能CD监视升级版&自制团队CD监视，带技能激活�
 - 团队副本初诞者圣墓：https://bbs.nga.cn/read.php?tid=30895500
 - 通灵战潮道具监视（@SL-Dungeons - NW - Kyrian Armaments）：https://wago.io/KyrianArmaments
 - 第三赛季加密词缀内鬼通报：https://wago.io/Htwmqdtru
+- 第三赛季加密词缀圣物提醒+点图标切目标+标记骷髅：https://wago.io/relicclicker
+- 通灵战潮格里恩自动格利亚+执事者解散：https://wago.io/w-em7aevj
