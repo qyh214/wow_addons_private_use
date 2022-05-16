@@ -30,8 +30,33 @@ options.help = {
     type = "group",
     name = L["Help"],
     args = {
-        contact = {
+        kofi = {
             order = 1,
+            type = "execute",
+            name = format("%s %s (%s)", F.GetIconString(W.Media.Icons.donateKofi, 14), L["Donate"], L["Ko-fi"]),
+            func = function()
+                E:StaticPopup_Show("WINDTOOLS_EDITBOX", nil, nil, "https://ko-fi.com/fang2hou")
+            end,
+            width = 1.2
+        },
+        aiFaDian = {
+            order = 2,
+            type = "execute",
+            name = format("%s %s (%s)", F.GetIconString(W.Media.Icons.donateAiFaDian, 14), L["Donate"], L["AiFaDian"]),
+            func = function()
+                E:StaticPopup_Show("WINDTOOLS_EDITBOX", nil, nil, "https://afdian.net/@fang2hou")
+            end,
+            width = 1.2
+        },
+        betterAlign = {
+            order = 3,
+            type = "description",
+            fontSize = "medium",
+            name = " ",
+            width = "full"
+        },
+        contact = {
+            order = 4,
             type = "group",
             inline = true,
             name = L["Message From the Author"],
@@ -120,7 +145,7 @@ options.help = {
             }
         },
         contributors = {
-            order = 3,
+            order = 5,
             name = L["Contributors (Github.com)"],
             type = "group",
             inline = true,
@@ -192,7 +217,7 @@ options.help = {
             }
         },
         version = {
-            order = 4,
+            order = 6,
             name = L["Version"],
             type = "group",
             inline = true,
@@ -359,7 +384,7 @@ do -- 本地化
         ["Deutsche (deDE)"] = {
             "imna1975 @ CurseForge",
             "|cffff7d0aMerathilis|r",
-            "Dlarge"
+            "|cff00c0faDlarge|r"
         },
         ["русский язык (ruRU)"] = {
             "Evgeniy-ONiX @ Github",
@@ -438,8 +463,10 @@ do -- 插件代码
         },
         [L["Tooltips"]] = {
             "siweia (NDui)",
+            "Witnesscm (NDui_Plus)",
             "Tevoll (ElvUI Enhanced Again)",
-            "MMOSimca (Simple Objective Progress)"
+            "MMOSimca (Simple Objective Progress)",
+            "Merathilis (ElvUI MerathilisUI)"
         },
         [L["Turn In"]] = {
             "p3lim (QuickQuest)",
@@ -606,7 +633,7 @@ options.changelog = {
 
 for version, data in pairs(W.Changelog) do
     local versionString = format("%d.%02d", version / 100, mod(version, 100))
-    local dateTable = {strsplit('/', data.RELEASE_DATE)}
+    local dateTable = {strsplit("/", data.RELEASE_DATE)}
     local dateString = data.RELEASE_DATE
     if #dateTable == 3 then
         dateString = L["%month%-%day%-%year%"]
@@ -614,7 +641,6 @@ for version, data in pairs(W.Changelog) do
         dateString = gsub(dateString, "%%month%%", dateTable[2])
         dateString = gsub(dateString, "%%day%%", dateTable[3])
     end
-
 
     options.changelog.args[tostring(version)] = {
         order = 1000 - version,
@@ -781,30 +807,30 @@ options.reset = {
     type = "group",
     name = L["Reset"],
     args = {
-        import = {
-            order = 0,
-            type = "group",
-            inline = true,
-            name = L["Import Profile"],
-            args = {
-                Fang2houUI = {
-                    order = 1,
-                    type = "execute",
-                    name = L["Fang2hou UI"],
-                    desc = format(
-                        "%s\n%s",
-                        format(
-                            L["Override your ElvUI profile with %s profile."],
-                            E.InfoColor .. L["Fang2hou UI"] .. "|r"
-                        ),
-                        E.NewSign .. L["Support 16:9, 21:9 and 32:9!"]
-                    ),
-                    func = function()
-                        E:StaticPopup_Show("WINDTOOLS_IMPORT_SETTING", L["Fang2hou UI"], "Fang2hou", "Fang2houUI")
-                    end
-                }
-            }
-        },
+        -- import = {
+        --     order = 0,
+        --     type = "group",
+        --     inline = true,
+        --     name = L["Import Profile"],
+        --     args = {
+        --         Fang2houUI = {
+        --             order = 1,
+        --             type = "execute",
+        --             name = L["Fang2hou UI"],
+        --             desc = format(
+        --                 "%s\n%s",
+        --                 format(
+        --                     L["Override your ElvUI profile with %s profile."],
+        --                     E.InfoColor .. L["Fang2hou UI"] .. "|r"
+        --                 ),
+        --                 E.NewSign .. L["Support 16:9, 21:9 and 32:9!"]
+        --             ),
+        --             func = function()
+        --                 E:StaticPopup_Show("WINDTOOLS_IMPORT_SETTING", L["Fang2hou UI"], "Fang2hou", "Fang2houUI")
+        --             end
+        --         }
+        --     }
+        -- },
         announcement = {
             order = 1,
             type = "group",
@@ -901,17 +927,17 @@ options.reset = {
                         )
                     end
                 },
-                thanksForResurrection = {
+                thanks = {
                     order = 6,
                     type = "execute",
-                    name = L["Thanks For Resurrection"],
+                    name = L["Thanks"],
                     func = function()
                         E:StaticPopup_Show(
                             "WINDTOOLS_RESET_MODULE",
-                            L["Thanks For Resurrection"],
+                            L["Thanks"],
                             nil,
                             function()
-                                E.db.WT.announcement.thanksForResurrection = P.announcement.thanksForResurrection
+                                E.db.WT.announcement.thanks = P.announcement.thanks
                             end
                         )
                     end
@@ -1139,6 +1165,21 @@ options.reset = {
                             nil,
                             function()
                                 E.db.WT.item.itemLevel = P.item.itemLevel
+                            end
+                        )
+                    end
+                },
+                extendMerchantPages = {
+                    order = 9,
+                    type = "execute",
+                    name = L["Extend Merchant Pages"],
+                    func = function()
+                        E:StaticPopup_Show(
+                            "WINDTOOLS_RESET_MODULE",
+                            L["Extend Merchant Pages"],
+                            nil,
+                            function()
+                                E.private.WT.item.extendMerchantPages = V.item.extendMerchantPages
                             end
                         )
                     end
@@ -1456,6 +1497,12 @@ options.reset = {
                             nil,
                             function()
                                 E.private.WT.tooltips.icon = V.tooltips.icon
+                                E.private.WT.tooltips.factionIcon = V.tooltips.factionIcon
+                                E.private.WT.tooltips.petIcon = V.tooltips.petIcon
+                                E.private.WT.tooltips.petId = V.tooltips.petId
+                                E.private.WT.tooltips.tierSet = V.tooltips.tierSet
+                                E.private.WT.tooltips.covenant = V.tooltips.covenant
+                                E.private.WT.tooltips.dominationRank = V.tooltips.dominationRank
                                 E.private.WT.tooltips.objectiveProgress = V.tooltips.objectiveProgress
                                 E.private.WT.tooltips.objectiveProgressAccuracy = V.tooltips.objectiveProgressAccuracy
                                 E.db.WT.tooltips.yOffsetOfHealthBar = P.tooltips.yOffsetOfHealthBar
@@ -1503,8 +1550,23 @@ options.reset = {
                         )
                     end
                 },
-                roleIcon = {
+                absorb = {
                     order = 2,
+                    type = "execute",
+                    name = L["Absorb"],
+                    func = function()
+                        E:StaticPopup_Show(
+                            "WINDTOOLS_RESET_MODULE",
+                            L["Absorb"],
+                            nil,
+                            function()
+                                E.db.WT.unitFrames.absorb = P.unitFrames.absorb
+                            end
+                        )
+                    end
+                },
+                roleIcon = {
+                    order = 3,
                     type = "execute",
                     name = L["Role Icon"],
                     func = function()
@@ -1517,7 +1579,7 @@ options.reset = {
                             end
                         )
                     end
-                }
+                },
             }
         },
         skins = {
@@ -1626,13 +1688,13 @@ options.reset = {
                             L["General"],
                             nil,
                             function()
-                                E.private.WT.misc.pauseToSlash = V.misc.pauseToSlash
-                                E.private.WT.misc.saveArtifact = V.misc.saveArtifact
-                                E.private.WT.misc.noKanjiMath = V.misc.noKanjiMath
                                 E.private.WT.misc.autoScreenshot = V.misc.autoScreenshot
-                                E.private.WT.misc.skipCutScene = V.misc.skipCutScene
                                 E.private.WT.misc.moveSpeed = V.misc.moveSpeed
                                 E.private.WT.misc.noKanjiMath = V.misc.noKanjiMath
+                                E.private.WT.misc.pauseToSlash = V.misc.pauseToSlash
+                                E.private.WT.misc.skipCutScene = V.misc.skipCutScene
+                                E.private.WT.misc.tags = V.misc.tags
+
                                 E.db.WT.misc.disableTalkingHead = P.misc.disableTalkingHead
                             end
                         )
@@ -1648,10 +1710,7 @@ options.reset = {
                             L["Move Frames"],
                             nil,
                             function()
-                                E.private.WT.misc.moveBlizzardFrames = V.misc.moveBlizzardFrames
-                                E.private.WT.misc.moveElvUIBags = V.misc.moveElvUIBags
-                                E.private.WT.misc.rememberPositions = V.misc.rememberPositions
-                                E.private.WT.misc.framePositions = V.misc.framePositions
+                                E.private.WT.misc.moveFrames = V.misc.moveFrames
                             end
                         )
                     end

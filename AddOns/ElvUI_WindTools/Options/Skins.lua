@@ -1,7 +1,7 @@
 local W, F, E, L, V, P, G = unpack(select(2, ...))
 local options = W.options.skins.args
 local LSM = E.Libs.LSM
-local S = W:GetModule("Skins")
+local S = W.Modules.Skins
 
 local pairs = pairs
 local type = type
@@ -453,6 +453,11 @@ options.blizzard = {
             type = "toggle",
             name = L["Collections"]
         },
+        clickBinding = {
+            order = 10,
+            type = "toggle",
+            name = L["Click Binding"]
+        },
         communities = {
             order = 10,
             type = "toggle",
@@ -532,6 +537,11 @@ options.blizzard = {
             order = 10,
             type = "toggle",
             name = L["Inspect"]
+        },
+        itemUpgrade = {
+            order = 10,
+            type = "toggle",
+            name = L["Item Upgrade"]
         },
         lookingForGroup = {
             order = 10,
@@ -647,6 +657,11 @@ options.blizzard = {
             order = 10,
             type = "toggle",
             name = L["Taxi"]
+        },
+        ticketStatus = {
+            order = 10,
+            type = "toggle",
+            name = L["Ticket Status"]
         },
         timeManager = {
             order = 10,
@@ -799,6 +814,11 @@ options.elvui = {
             type = "toggle",
             name = L["Chat Panels"]
         },
+        chatVoicePanel = {
+            order = 10,
+            type = "toggle",
+            name = L["Chat Voice Panel"]
+        },
         classBars = {
             order = 10,
             type = "toggle",
@@ -938,6 +958,11 @@ options.addons = {
             type = "toggle",
             name = L["Ace3"]
         },
+        ace3DropdownBackdrop = {
+            order = 10,
+            type = "toggle",
+            name = L["Ace3 Dropdown Backdrop"]
+        },
         angryKeystones = {
             order = 10,
             type = "toggle",
@@ -1027,6 +1052,18 @@ options.addons = {
             name = L["TinyInspect"],
             addonName = "TinyInspect",
             addonskinsKey = "TinyInspect"
+        },
+        tomCats = {
+            order = 10,
+            type = "toggle",
+            name = L["TomCat's Tours"],
+            addonName = "TomCats"
+        },
+        warpDeplete = {
+            order = 10,
+            type = "toggle",
+            name = L["WarpDeplete"],
+            addonName = "WarpDeplete"
         },
         weakAuras = {
             order = 10,

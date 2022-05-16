@@ -61,11 +61,56 @@ O.information = {
     type = "group",
     name = L["Information"],
     args = {
+        kofi = {
+            order = 1,
+            type = "execute",
+            name = format("%s %s (%s)", F.GetIconString(W.Media.Icons.donateKofi, 14), L["Donate"], L["Ko-fi"]),
+            func = function()
+                StaticPopup_Show(
+                    "WIND_DUNGEON_HELPER_EDITBOX",
+                    L["Wind Dungeon Helper"] ..
+                        " - " ..
+                            format("%s %s (%s)", F.GetIconString(W.Media.Icons.donateKofi, 14), L["Donate"], L["Ko-fi"]),
+                    nil,
+                    "https://ko-fi.com/fang2hou"
+                )
+            end,
+            width = 1.2
+        },
+        aiFaDian = {
+            order = 2,
+            type = "execute",
+            name = format("%s %s (%s)", F.GetIconString(W.Media.Icons.donateAiFaDian, 14), L["Donate"], L["AiFaDian"]),
+            func = function()
+                StaticPopup_Show(
+                    "WIND_DUNGEON_HELPER_EDITBOX",
+                    L["Wind Dungeon Helper"] ..
+                        " - " ..
+                            format(
+                                "%s %s (%s)",
+                                F.GetIconString(W.Media.Icons.donateAiFaDian, 14),
+                                L["Donate"],
+                                L["AiFaDian"]
+                            ),
+                    nil,
+                    "https://afdian.net/@fang2hou"
+                )
+            end,
+            width = 1.2
+        },
+        betterAlign = {
+            order = 3,
+            type = "description",
+            fontSize = "medium",
+            name = " ",
+            width = "full"
+        },
         minimapIcon = {
-            order = 0,
+            order = 4,
             name = L["Minimap icon"],
             desc = format(L["Enables / disables %s minimap icon"], L["Wind Dungeon Helper"]),
             type = "toggle",
+            width = "full",
             set = function(info, value)
                 W.db.minimapIcon.hide = not value
                 if value then
@@ -79,7 +124,7 @@ O.information = {
             end
         },
         description = {
-            order = 1,
+            order = 5,
             type = "description",
             fontSize = "medium",
             name = format(
@@ -96,7 +141,7 @@ O.information = {
             )
         },
         contributors = {
-            order = 2,
+            order = 6,
             name = L["Contributors (Github.com)"],
             type = "group",
             inline = true,
@@ -113,7 +158,7 @@ O.information = {
             }
         },
         version = {
-            order = 3,
+            order = 7,
             name = L["Version"],
             type = "group",
             inline = true,
@@ -131,7 +176,7 @@ O.information = {
             }
         },
         contact = {
-            order = 4,
+            order = 8,
             type = "group",
             inline = true,
             name = " ",

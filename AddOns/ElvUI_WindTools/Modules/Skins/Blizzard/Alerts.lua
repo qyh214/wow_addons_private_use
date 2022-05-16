@@ -1,5 +1,5 @@
 local W, F, E, L = unpack(select(2, ...))
-local S = W:GetModule("Skins")
+local S = W.Modules.Skins
 
 local _G = _G
 local pairs = pairs
@@ -28,7 +28,8 @@ function S:SkinAchievementAlert(frame)
     self:CreateBackdropShadow(frame)
 
     F.SetFontOutline(frame.Unlocked)
-    F.SetFontOutline(frame.Name, nil, "+2")
+    F.SetFontOutline(frame.Name, nil, "+4")
+    frame.Name.SetFont = E.noop
     F.SetFontOutline(frame.GuildName)
 
     if frame.Icon.Texture.b then
@@ -66,8 +67,10 @@ function S:SkinCriteriaAlert(frame)
 
     self:CreateBackdropShadow(frame)
 
-    F.SetFontOutline(frame.Unlocked)
-    F.SetFontOutline(frame.Name)
+    frame:SetWidth(frame:GetWidth() + 10)
+
+    F.SetFontOutline(frame.Unlocked, nil, "-1")
+    F.SetFontOutline(frame.Name, nil, "+3")
 
     if frame.Icon.Texture.b then
         frame.Icon.Texture.b:Point("TOPLEFT", frame.Icon.Texture, "TOPLEFT", -1, 1)
@@ -75,7 +78,7 @@ function S:SkinCriteriaAlert(frame)
         S:CreateShadow(frame.Icon.Texture.b)
 
         frame.Icon.Texture:ClearAllPoints()
-        frame.Icon.Texture:Point("RIGHT", frame.backdrop, "LEFT", 50, 0)
+        frame.Icon.Texture:Point("LEFT", frame.backdrop, "LEFT", 10, 0)
     end
 
     frame.windStyle = true
@@ -108,8 +111,8 @@ function S:SkinNewRecipeLearnedAlert(frame)
     end
 
     self:CreateBackdropShadow(frame)
-    F.SetFontOutline(frame.Name)
-    F.SetFontOutline(frame.Title, nil, "+2")
+    F.SetFontOutline(frame.Name, nil, "+4")
+    F.SetFontOutline(frame.Title)
 
     if frame.Icon.b then
         frame.Icon.b:Point("TOPLEFT", frame.Icon, "TOPLEFT", -1, 1)
@@ -227,6 +230,13 @@ function S:SkinLootAlert(frame)
     self:CreateBackdropShadow(frame)
 
     F.SetFontOutline(frame.Label)
+
+    if frame.Label and frame.Label.GetNumPoints and frame.Label:GetNumPoints() == 1 then
+        local point, relativeTo, relativePoint, x, y = frame.Label:GetPoint(0)
+        frame.Label:ClearAllPoints()
+        frame.Label:SetPoint(point, relativeTo, relativePoint, x + 1, y - 5)
+    end
+
     F.SetFontOutline(frame.RollValue)
     F.SetFontOutline(frame.ItemName)
 
@@ -324,6 +334,28 @@ function S:SkinNewItemAlert(frame)
     frame.windStyle = true
 end
 
+function S:SkinGarrisonTalentAlert(frame)
+    if not frame or frame.windStyle then
+        return
+    end
+
+    self:CreateBackdropShadow(frame)
+
+    F.SetFontOutline(frame.Title, nil, "+5")
+    frame.Title:ClearAllPoints()
+    frame.Title:Point("TOP", frame.backdrop, "TOP", 26, -18)
+    frame.Title:SetJustifyH("MIDDLE")
+    frame.Title:SetJustifyV("TOP")
+
+    F.SetFontOutline(frame.Name)
+    frame.Name:ClearAllPoints()
+    frame.Name:Point("BOTTOM", frame.backdrop, "BOTTOM", 26, 15)
+    frame.Name:SetJustifyH("MIDDLE")
+    frame.Name:SetJustifyV("BOTTOM")
+
+    frame.windStyle = true
+end
+
 function S:SkinGarrisonBuildingAlert(frame)
     if not frame or frame.windStyle then
         return
@@ -368,7 +400,7 @@ function S:AlertFrames()
     -- 要塞
     self:SecureHook(_G.GarrisonFollowerAlertSystem, "setUpFunction", "SkinAlert")
     self:SecureHook(_G.GarrisonShipFollowerAlertSystem, "setUpFunction", "SkinAlert")
-    self:SecureHook(_G.GarrisonTalentAlertSystem, "setUpFunction", "SkinAlert")
+    self:SecureHook(_G.GarrisonTalentAlertSystem, "setUpFunction", "SkinGarrisonTalentAlert")
     self:SecureHook(_G.GarrisonBuildingAlertSystem, "setUpFunction", "SkinGarrisonBuildingAlert")
     self:SecureHook(_G.GarrisonMissionAlertSystem, "setUpFunction", "SkinAlert")
     self:SecureHook(_G.GarrisonShipMissionAlertSystem, "setUpFunction", "SkinAlert")

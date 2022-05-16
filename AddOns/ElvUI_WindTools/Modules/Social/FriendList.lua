@@ -137,6 +137,14 @@ local StatusIcons = {
     }
 }
 
+local RegionLocales = {
+    [1] = L["America"],
+    [2] = L["Korea"],
+    [3] = L["Europe"],
+    [4] = L["Taiwan"],
+    [5] = L["China"]
+}
+
 local MaxLevel = {
     [BNET_CLIENT_WOW .. "C"] = 60,
     [BNET_CLIENT_WOW .. "C_TBC"] = 70,
@@ -195,7 +203,7 @@ function FL:UpdateFriendButton(button)
         return
     end
 
-    local game, realID, name, server, class, area, level, faction, status
+    local game, realID, name, server, class, area, level, note, faction, status, isInCurrentRegion, regionID
 
     -- 获取好友游戏情况
     if button.buttonType == FRIENDS_BUTTON_TYPE_WOW then
@@ -206,6 +214,7 @@ function FL:UpdateFriendButton(button)
         level = friendInfo.level
         class = friendInfo.className
         area = friendInfo.area
+        note = friendInfo.notes
         faction = E.myfaction -- 同一阵营才能加好友的吧？
 
         if friendInfo.connected then
@@ -224,6 +233,7 @@ function FL:UpdateFriendButton(button)
         local friendAccountInfo = C_BattleNet_GetFriendAccountInfo(button.id)
         if friendAccountInfo then
             realID = friendAccountInfo.accountName
+            note = friendAccountInfo.note
 
             local gameAccountInfo = friendAccountInfo.gameAccountInfo
             game = gameAccountInfo.clientProgram
@@ -247,6 +257,8 @@ function FL:UpdateFriendButton(button)
                 faction = gameAccountInfo.factionName or nil
                 class = gameAccountInfo.className or ""
                 area = gameAccountInfo.areaName or ""
+                isInCurrentRegion = gameAccountInfo.isInCurrentRegion or false
+                regionID = gameAccountInfo.regionID or false
 
                 if gameAccountInfo.wowProjectID == WOW_PROJECT_CLASSIC then
                     game = BNET_CLIENT_WOW .. "C" -- Classic
@@ -275,11 +287,21 @@ function FL:UpdateFriendButton(button)
     if game and game ~= "" then
         local buttonTitle, buttonText
 
-        -- 名字
+        -- Override Real ID or name with note
+        if self.db.useNoteAsName and note and note ~= "" then
+            if realID then
+                realID = note
+            else
+                name = note
+            end
+        end
+
+        -- Real ID
         local realIDString =
             realID and self.db.useGameColor and BNColor[game] and F.CreateColorString(realID, BNColor[game]) or realID
 
         local nameString = name
+
         local classColor = GetClassColor(class)
         if self.db.useClassColor and classColor then
             nameString = F.CreateColorString(name, classColor)
@@ -303,10 +325,16 @@ function FL:UpdateFriendButton(button)
 
         -- 地区
         if area then
-            if server and server ~= E.myrealm then
+            if server and server ~= "" and server ~= E.myrealm then
                 buttonText = F.CreateColorString(area .. " - " .. server, self.db.areaColor)
             else
                 buttonText = F.CreateColorString(area, self.db.areaColor)
+            end
+
+            if not isInCurrentRegion and RegionLocales[regionID] and not E.db.WT.social.filter.unblockProfanityFilter then
+                -- Unblocking profanity filter will change the region
+                local regionText = format("[%s]", RegionLocales[regionID])
+                buttonText = buttonText .. " " .. F.CreateColorString(regionText, {r = 0.62, g = 0.62, b = 0.62})
             end
 
             button.info:SetText(buttonText)

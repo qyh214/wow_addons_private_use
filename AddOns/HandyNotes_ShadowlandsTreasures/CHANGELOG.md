@@ -1,5 +1,24 @@
 # Changelog
 
+## Changed in v63
+
+* Added Explorer achievements, via a map icon that shows a spot that'll definitely get you the map completion for the achievement
+* Improved paths to some points in several maps
+* Zereth Mortis: some schematics were shown as available too soon (before you'd unlocked protoform synthesis)
+* Group names in tooltips could sometimes be improperly formatted
+
+## Changed in v62
+
+* Show where some Automa Scraps are inside the Locrian Esper
+* Changes to how routes are drawn, which should be completely unnoticed
+* Bundle Taintless, which might(?) help with complaints about the upload dialog
+
+## Changed in v61
+
+* Show the Creation Catalyst on the Zereth Mortis map
+* Minor Zereth Mortis note/point tweaks
+* The last set of Lunarlight Buds was finally up in Ardenweald, so they're added with proper questids
+
 ## Changed in v60
 
 * Add some new non-quest points to Zereth Mortis (hidden by default in the "Junk" group):

@@ -1,9 +1,9 @@
 ## Interface: 90200
 ## Title: Postal
-## Version: v3.7.8
-## X-Build: 522
-## X-ReleaseDate: 2022-02-27T6:13:12Z
-## X-Revision: 522
+## Version: v3.8.0
+## X-Build: 524
+## X-ReleaseDate: 2022-05-01T18:40:00Z
+## X-Revision: 524
 ## Author: Xinhuan
 ## X-Credits: Ammo, Rabbit, Grennon, Mikk, oscarucb, Jonny aka The_Original_Manbot
 ## X-Category: Mail

@@ -568,10 +568,15 @@ do
     end
 end
 
-local function showOnMapType(point, isMinimap)
+local function showOnMapType(point, uiMapID, isMinimap)
     -- nil means to respect the preferences, but points can override
     if isMinimap then
         if point.minimap ~= nil then return point.minimap end
+        if ns.map_spellids[uiMapID] then
+            if ns.map_spellids[uiMapID] == true or GetPlayerAuraBySpellID(ns.map_spellids[uiMapID]) then
+                return false
+            end
+        end
         return ns.db.show_on_minimap
     end
     if point.worldmap ~= nil then return point.worldmap end
@@ -580,7 +585,7 @@ end
 
 ns.should_show_point = function(coord, point, currentZone, isMinimap)
     if not coord or coord < 0 then return false end
-    if not showOnMapType(point, isMinimap) then
+    if not showOnMapType(point, currentZone, isMinimap) then
         return false
     end
     if zoneHidden(currentZone) then

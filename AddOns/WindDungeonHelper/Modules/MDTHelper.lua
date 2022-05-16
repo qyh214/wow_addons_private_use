@@ -18,39 +18,37 @@ function MH:Translate()
 
     local MDT = _G.MDT
 
-    if not MDT or not MDT.dungeonEnemies or not MDT.dungeonBosses or not MDT.L then
+    if not MDT or not MDT.dungeonEnemies or not MDT.L then
         return
     end
 
     for mapID, NPCs in pairs(MDT.dungeonEnemies) do
         if mapID >= 29 and NPCs then
             for _, NPC in pairs(NPCs) do
-                if NPC["id"] and NPC["name"] then
-                    local name = F.GetNPCNameByID(NPC["id"])
-                    if name then
-                        NPC["name"] = name
-                        MDT.L[name] = name
-                    end
+                if NPC.id and NPC.name then
+                    F.HandleNPCNameByID(
+                        NPC.id,
+                        function(name)
+                            MDT.L[NPC.name] = name
+                        end
+                    )
                 end
             end
         end
     end
 end
 
-function MH:MDTLoaded()
-    if not self.db or not self.db.enable then
-        return
-    end
-    self:Translate()
-end
-
 function MH:ProfileUpdate()
     self.db = W.db.mdtHelper
 
+    if not self.db or not self.db.enable then
+        return
+    end
+
     if IsAddOnLoaded("MythicDungeonTools") then
-        self:MDTLoaded()
+        self:Translate()
     else
-        self:RegisterEvent("ADDON_LOADED", "MDTLoaded")
+        self:RegisterEvent("ADDON_LOADED", "Translate")
     end
 end
 

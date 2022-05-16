@@ -1,5 +1,5 @@
 local W, F, E, L = unpack(select(2, ...))
-local S = W:GetModule("Skins")
+local S = W.Modules.Skins
 local GB = W:NewModule("GameBar", "AceEvent-3.0", "AceHook-3.0")
 local DT = E:GetModule("DataTexts")
 
@@ -36,11 +36,14 @@ local GetTime = GetTime
 local HideUIPanel = HideUIPanel
 local InCombatLockdown = InCombatLockdown
 local IsAddOnLoaded = IsAddOnLoaded
+local IsControlKeyDown = IsControlKeyDown
 local IsInGuild = IsInGuild
 local IsModifierKeyDown = IsModifierKeyDown
+local IsShiftKeyDown = IsShiftKeyDown
 local ItemMixin = ItemMixin
 local PlaySound = PlaySound
 local RegisterStateDriver = RegisterStateDriver
+local ReloadUI = ReloadUI
 local ResetCPUUsage = ResetCPUUsage
 local Screenshot = Screenshot
 local ShowUIPanel = ShowUIPanel
@@ -58,11 +61,11 @@ local C_BattleNet_GetFriendAccountInfo = C_BattleNet.GetFriendAccountInfo
 local C_BattleNet_GetFriendGameAccountInfo = C_BattleNet.GetFriendGameAccountInfo
 local C_BattleNet_GetFriendNumGameAccounts = C_BattleNet.GetFriendNumGameAccounts
 local C_CVar_GetCVar = C_CVar.GetCVar
+local C_CVar_GetCVarBool = C_CVar.GetCVarBool
 local C_CVar_SetCVar = C_CVar.SetCVar
 local C_FriendList_GetNumFriends = C_FriendList.GetNumFriends
 local C_FriendList_GetNumOnlineFriends = C_FriendList.GetNumOnlineFriends
 local C_Garrison_GetCompleteMissions = C_Garrison.GetCompleteMissions
-local C_Timer_After = C_Timer.After
 local C_Timer_NewTicker = C_Timer.NewTicker
 
 local FollowerType_8_0 = Enum.GarrisonFollowerType.FollowerType_8_0
@@ -102,14 +105,14 @@ local Hearthstones = {
     188952, -- 統御的爐石
     190237, -- 仲介者傳送矩陣
     ---------------------
-    48933, --蟲洞產生器：北裂境
-    87215, --蟲洞產生器：潘達利亞
-    132517, --達拉然內部蟲洞產生器
-    132524, --劫福斯蟲洞產生器模組
-    151652, --蟲洞產生器：阿古斯
-    168807, --蟲洞產生器：庫爾提拉斯
-    168808, --蟲洞產生器：贊達拉
-    172924, --蟲洞產生器：暗影之境
+    48933, -- 蟲洞產生器：北裂境
+    87215, -- 蟲洞產生器：潘達利亞
+    132517, -- 達拉然內部蟲洞產生器
+    132524, -- 劫福斯蟲洞產生器模組
+    151652, -- 蟲洞產生器：阿古斯
+    168807, -- 蟲洞產生器：庫爾提拉斯
+    168808, -- 蟲洞產生器：贊達拉
+    172924, -- 蟲洞產生器：暗影之境
     ---------------------
     180817 -- 移轉暗語
 }
@@ -158,8 +161,7 @@ local function AddDoubleLineForItem(itemID, prefix)
     )
 end
 
--- 假的数据面板! 为了 event 函数不报错
-
+-- Fake DataText for no errors throwed from ElvUI
 local VirtualDTEvent = {
     Friends = nil,
     Guild = "GUILD_ROSTER_UPDATE"
@@ -455,9 +457,12 @@ local ButtonTypes = {
         name = L["Screenshot"],
         icon = W.Media.Icons.barScreenShot,
         click = {
-            LeftButton = Screenshot,
+            LeftButton = function()
+                DT.tooltip:Hide()
+                Screenshot()
+            end,
             RightButton = function()
-                C_Timer_After(2, Screenshot)
+                E:Delay(2, Screenshot)
             end
         },
         tooltips = {
@@ -808,11 +813,16 @@ function GB:ConstructTimeArea()
     self.bar.middlePanel:SetScript(
         "OnClick",
         function(_, mouseButton)
-            if IsModifierKeyDown() then
-                collectgarbage("collect")
-                ResetCPUUsage()
-                DT.RegisteredDataTexts["System"].eventFunc()
-                DT.RegisteredDataTexts["System"].onEnter()
+            if IsShiftKeyDown() then
+                if IsControlKeyDown() then
+                    C_CVar_SetCVar("scriptProfile", C_CVar_GetCVarBool("scriptProfile") and 0 or 1)
+                    ReloadUI()
+                else
+                    collectgarbage("collect")
+                    ResetCPUUsage()
+                    DT.RegisteredDataTexts["System"].eventFunc()
+                    DT.RegisteredDataTexts["System"].onEnter()
+                end
             elseif mouseButton == "LeftButton" then
                 if not InCombatLockdown() then
                     ToggleCalendar()
@@ -975,7 +985,7 @@ function GB:ButtonOnEnter(button)
                 DTModule.onEnter()
             end
 
-            -- 如果 ElvUI 数据文字鼠标提示没有进行显示的话, 显示一个简单的说明
+            -- If ElvUI Datatext tooltip not shown, display a simple information (e.g. button name) to player
             if not DT.tooltip:IsShown() then
                 DT.tooltip:ClearLines()
                 DT.tooltip:SetText(button.name)
@@ -1150,7 +1160,11 @@ function GB:UpdateButton(button, buttonType)
         end
 
         button.additionalText:ClearAllPoints()
-        button.additionalText:SetPoint(self.db.additionalText.anchor, self.db.additionalText.x, self.db.additionalText.y)
+        button.additionalText:SetPoint(
+            self.db.additionalText.anchor,
+            self.db.additionalText.x,
+            self.db.additionalText.y
+        )
         F.SetFontWithDB(button.additionalText, self.db.additionalText.font)
         button.additionalText:Show()
     else
@@ -1229,7 +1243,7 @@ function GB:UpdateLayout()
         self.bar.leftPanel:SetSize(panelWidth, panelHeight)
     end
 
-    -- 右面板
+    -- Right Panel
     lastButton = nil
     for i = 1, NUM_PANEL_BUTTONS do
         local button = self.buttons[i + NUM_PANEL_BUTTONS]
@@ -1258,10 +1272,10 @@ function GB:UpdateLayout()
         self.bar.rightPanel:SetSize(panelWidth, panelHeight)
     end
 
-    -- 时间区域
+    -- Time Panel
     self.bar.middlePanel:SetSize(self.db.timeAreaWidth, self.db.timeAreaHeight)
 
-    -- 更新移动区域尺寸
+    -- Update the size of moveable zones
     local areaWidth = 20 + self.bar.middlePanel:GetWidth()
     local leftWidth = self.bar.leftPanel:IsShown() and self.bar.leftPanel:GetWidth() or 0
     local rightWidth = self.bar.rightPanel:IsShown() and self.bar.rightPanel:GetWidth() or 0
@@ -1281,7 +1295,7 @@ function GB:PLAYER_REGEN_ENABLED()
 end
 
 function GB:PLAYER_ENTERING_WORLD()
-    C_Timer_After(
+    E:Delay(
         1,
         function()
             if InCombatLockdown() then
@@ -1315,7 +1329,7 @@ function GB:Initialize()
     self:RegisterEvent("PLAYER_ENTERING_WORLD")
 
     self:SecureHook(_G.GuildMicroButton, "UpdateNotificationIcon", "UpdateGuildButton")
-    self.Initialized = true
+    self.initialized = true
 end
 
 function GB:ProfileUpdate()
@@ -1325,7 +1339,7 @@ function GB:ProfileUpdate()
     end
 
     if self.db.enable then
-        if self.Initialized then
+        if self.initialized then
             self.bar:Show()
             self:UpdateHomeButton()
             self:UpdateTimeFormat()
@@ -1343,7 +1357,7 @@ function GB:ProfileUpdate()
             end
         end
     else
-        if self.Initialized then
+        if self.initialized then
             UnregisterStateDriver(self.bar, "visibility")
             self.bar:Hide()
         end
@@ -1393,7 +1407,7 @@ function GB:UpdateHearthStoneTable()
             )
         else
             self:UpdateHomeButton()
-            if self.Initialized then
+            if self.initialized then
                 self:UpdateButtons()
             end
         end

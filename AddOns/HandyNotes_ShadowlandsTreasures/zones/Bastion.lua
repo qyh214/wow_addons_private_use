@@ -44,6 +44,8 @@ ns.VignetteIDsToPoints[4272] = strongbox
 ns.VignetteIDsToPoints[4273] = strongbox
 ns.VignetteIDsToPoints[4277] = strongbox
 
+-- choosing larion: 60294
+
 ns.RegisterPoints(1533, { -- Bastion
     [53508030] = {
         achievement=14311, criteria=50047, -- Scroll of Aeons
@@ -86,8 +88,8 @@ ns.RegisterPoints(1533, { -- Bastion
             183126, -- Kyrian Smith's Kit
         },
         note="Located at the end of the cavern",
+        path=55704290,
     },
-    [55704290] = path{quest=61049},
     [40404980] = {
         achievement=14311, criteria=50052, -- Stolen Equipment
         quest=61044,
@@ -102,8 +104,8 @@ ns.RegisterPoints(1533, { -- Bastion
         -- loot=Random Greens/Materials,
         note="Entrance is hidden behind some bushes",
         level=60,
+        path=46434657,
     },
-    [46434657] = path{achievement=14311, criteria=50053,minimap=true,level=60,},
     [51401790] = {
         achievement=14311, criteria=50054, -- Experimental Construct Part
         quest=61052,
@@ -323,7 +325,6 @@ ns.RegisterPoints(1533, {
 
 -- Non-achievement treasures
 ns.RegisterPoints(1533, { -- Bastion
-    [58701630] = path{quest=61698, note="Bounce on the flowers",},
     [61041511] = {
         quest=61698, -- this one seems to be daily?
         label="Cloudwalker's Coffer",
@@ -332,6 +333,7 @@ ns.RegisterPoints(1533, { -- Bastion
             180783, -- Design: Crown of the Righteous
             {183756, quest=62472, covenant=Enum.CovenantType.Necrolord}, -- Halo of Purity (stitching)
         },
+        path=58701630,
     },
     -- [24531794] = {
     --     quest=60663,

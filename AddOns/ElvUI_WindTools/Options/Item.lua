@@ -10,6 +10,7 @@ local EB = W:GetModule("ExtraItemsBar")
 local CT = W:GetModule("Contacts")
 local IS = W:GetModule("Inspect")
 local IL = W:GetModule("ItemLevel")
+local EMP = W:GetModule("ExtendMerchantPages")
 
 local format = format
 local pairs = pairs
@@ -1041,6 +1042,47 @@ options.inspect = {
                 }
             }
         },
+        slotText = {
+            order = 4,
+            type = "group",
+            inline = true,
+            name = L["Slot"],
+            get = function(info)
+                return E.db.WT.item.inspect.slotText[info[#info]]
+            end,
+            set = function(info, value)
+                E.db.WT.item.inspect.slotText[info[#info]] = value
+            end,
+            args = {
+                name = {
+                    order = 1,
+                    type = "select",
+                    dialogControl = "LSM30_Font",
+                    name = L["Font"],
+                    values = LSM:HashTable("font")
+                },
+                style = {
+                    order = 2,
+                    type = "select",
+                    name = L["Outline"],
+                    values = {
+                        NONE = L["None"],
+                        OUTLINE = L["OUTLINE"],
+                        MONOCHROME = L["MONOCHROME"],
+                        MONOCHROMEOUTLINE = L["MONOCROMEOUTLINE"],
+                        THICKOUTLINE = L["THICKOUTLINE"]
+                    }
+                },
+                size = {
+                    order = 3,
+                    name = L["Size"],
+                    type = "range",
+                    min = 5,
+                    max = 60,
+                    step = 1
+                }
+            }
+        },
         levelText = {
             order = 4,
             type = "group",
@@ -1475,6 +1517,65 @@ options.itemLevel = {
                     }
                 }
             }
+        }
+    }
+}
+
+options.extendMerchantPages = {
+    order = 8,
+    type = "group",
+    name = L["Extend Merchant Pages"],
+    get = function(info)
+        return E.private.WT.item.extendMerchantPages[info[#info]]
+    end,
+    set = function(info, value)
+        E.private.WT.item.extendMerchantPages[info[#info]] = value
+        E:StaticPopup_Show("PRIVATE_RL")
+    end,
+    args = {
+        desc = {
+            order = 0,
+            type = "group",
+            inline = true,
+            name = L["Description"],
+            args = {
+                feature = {
+                    order = 1,
+                    type = "description",
+                    name = function()
+                        if EMP.StopRunning then
+                            return format(
+                                "|cffff0000" .. L["Because of %s, this module will not be loaded."] .. "|r",
+                                EMP.StopRunning
+                            )
+                        else
+                            return L["Extends the merchant page to show more items."]
+                        end
+                    end,
+                    fontSize = "medium"
+                }
+            }
+        },
+        enable = {
+            order = 1,
+            type = "toggle",
+            name = L["Enable"],
+            width = "full",
+            disabled = function()
+                return EMP.StopRunning
+            end
+        },
+        numberOfPages = {
+            order = 2,
+            type = "range",
+            name = L["Number of Pages"],
+            desc = L["The number of pages shown in the merchant frame."],
+            min = 2,
+            max = 6,
+            step = 1,
+            disabled = function()
+                return EMP.StopRunning or not E.private.WT.item.extendMerchantPages.enable
+            end
         }
     }
 }

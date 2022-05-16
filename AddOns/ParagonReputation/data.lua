@@ -1,5 +1,5 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.39 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.40 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for
@@ -392,10 +392,6 @@ PR.PARAGON_DATA = {
 					type = TOY,
 					itemID = 190177,
 				},
-				{ -- Walking Staff of the Enlightened Journey
-					type = ITEM_COSMETIC,
-					itemID = 190939,
-				},
 				{ -- Schematic: Russet Bufonoid
 					type = BINDING_HEADER_OTHER,
 					itemID = 189471,
@@ -411,6 +407,46 @@ PR.PARAGON_DATA = {
 					covenant = "|A:sanctumupgrades-nightfae-32x32:14:14:0:-1|a",
 					itemID = 189973,
 					questID = 65506,
+				},
+				{ -- Distinguished Blade of Cartel Al
+					type = ITEM_COSMETIC,
+					itemID = 190935,
+				},
+				{ -- Edge of the Enlightened
+					type = ITEM_COSMETIC,
+					itemID = 190937,
+				},
+				{ -- Standard of the Wandering Brokers
+					type = ITEM_COSMETIC,
+					itemID = 190934,
+				},
+				{ -- Walking Staff of the Enlightened Journey
+					type = ITEM_COSMETIC,
+					itemID = 190939,
+				},
+				{ -- Cape of the Regal Wanderer
+					type = ITEM_COSMETIC,
+					itemID = 190931,
+				},
+				{ -- Dark Shawl of the Enlightened
+					type = ITEM_COSMETIC,
+					itemID = 190930,
+				},
+				{ -- Ebony Protocloak
+					type = ITEM_COSMETIC,
+					itemID = 190929,
+				},
+				{ -- Majestic Oracle's Drape
+					type = ITEM_COSMETIC,
+					itemID = 190933,
+				},
+				{ -- Protohide Drape
+					type = ITEM_COSMETIC,
+					itemID = 190932,
+				},
+				{ -- Sandtails Drape
+					type = ITEM_COSMETIC,
+					itemID = 190928,
 				},
 			},
 		},

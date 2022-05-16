@@ -34,7 +34,7 @@ P.announcement = {
             enable = true,
             text = L["I interrupted %target%'s %target_spell%!"],
             channel = {
-                solo = "SELF",
+                solo = "NONE",
                 party = "PARTY",
                 instance = "INSTANCE_CHAT",
                 raid = "RAID"
@@ -53,6 +53,7 @@ P.announcement = {
     quest = {
         enable = false,
         paused = true,
+        disableBlizzard = true,
         includeDetails = true,
         channel = {
             party = "PARTY",
@@ -141,10 +142,12 @@ P.announcement = {
             }
         }
     },
-    thanksForResurrection = {
+    thanks = {
         enable = true,
-        normalText = L["%target%, thank you for using %spell% to revive me. :)"],
-        soulstoneText = L["%target%, thank you for soulstone. :)"],
+        resurrection = true,
+        enhancement = true,
+        resurrectionText = L["%target%, thank you for using %spell% to revive me. :)"],
+        enhancementText = L["%target%, thank you for %spell%. :)"],
         delay = 0,
         channel = {
             solo = "WHISPER",
@@ -542,6 +545,11 @@ P.item = {
         inspect = true,
         stats = true,
         playerOnInspect = true,
+        slotText = {
+            name = E.db.general.font,
+            size = W.CompatibleFont and 12 or 9,
+            style = "OUTLINE"
+        },
         levelText = {
             name = F.GetCompatibleFont("Montserrat"),
             size = 13,
@@ -732,6 +740,7 @@ P.social = {
     },
     chatLink = {
         enable = true,
+        translateItem = true,
         level = true,
         icon = true,
         armorCategory = true,
@@ -759,6 +768,7 @@ P.social = {
         hideMaxLevel = true,
         useGameColor = true,
         useClassColor = true,
+        useNoteAsName = false,
         textures = {
             game = "Modern",
             status = "Square",
@@ -817,23 +827,26 @@ P.quest = {
     },
     switchButtons = {
         enable = true,
+        tooltip = true,
+        backdrop = false,
         font = {
             name = E.db.general.font,
             size = 12,
             style = "OUTLINE",
             color = {r = 1, g = 0.82, b = 0}
         },
-        backdrop = false,
         announcement = true,
         turnIn = true
     },
     turnIn = {
         enable = true,
+        mode = "ALL",
+        smartChat = true,
         selectReward = true,
+        getBestReward = false,
         darkmoon = true,
         followerAssignees = true,
-        rogueClassHallInsignia = true,
-        modifierKeyPause = true,
+        pauseModifier = "SHIFT",
         customIgnoreNPCs = {}
     }
 }
@@ -849,152 +862,19 @@ P.tooltips = {
 }
 
 P.unitFrames = {
-    castBar = {
+    absorb = {
         enable = false,
-        player = {
-            enable = false,
-            text = {
-                anchor = "LEFT",
-                offsetX = 0,
-                offsetY = 0,
-                font = {
-                    name = E.db.general.font,
-                    size = 12,
-                    style = "OUTLINE"
-                }
-            },
-            time = {
-                anchor = "RIGHT",
-                offsetX = 0,
-                offsetY = 0,
-                font = {
-                    name = F.GetCompatibleFont("Montserrat"),
-                    size = 12,
-                    style = "OUTLINE"
-                }
-            }
+        texture = {
+            enable = true,
+            custom = E.db.unitframe.statusbar,
+            blizzardStyle = true
         },
-        target = {
-            enable = false,
-            text = {
-                anchor = "LEFT",
-                offsetX = 0,
-                offsetY = 0,
-                font = {
-                    name = E.db.general.font,
-                    size = 12,
-                    style = "OUTLINE"
-                }
-            },
-            time = {
-                anchor = "RIGHT",
-                offsetX = 0,
-                offsetY = 0,
-                font = {
-                    name = F.GetCompatibleFont("Montserrat"),
-                    size = 12,
-                    style = "OUTLINE"
-                }
-            }
-        },
-        pet = {
-            enable = false,
-            text = {
-                anchor = "LEFT",
-                offsetX = 0,
-                offsetY = 0,
-                font = {
-                    name = E.db.general.font,
-                    size = 12,
-                    style = "OUTLINE"
-                }
-            },
-            time = {
-                anchor = "RIGHT",
-                offsetX = 0,
-                offsetY = 0,
-                font = {
-                    name = F.GetCompatibleFont("Montserrat"),
-                    size = 12,
-                    style = "OUTLINE"
-                }
-            }
-        },
-        focus = {
-            enable = false,
-            text = {
-                anchor = "LEFT",
-                offsetX = 0,
-                offsetY = 0,
-                font = {
-                    name = E.db.general.font,
-                    size = 12,
-                    style = "OUTLINE"
-                }
-            },
-            time = {
-                anchor = "RIGHT",
-                offsetX = 0,
-                offsetY = 0,
-                font = {
-                    name = F.GetCompatibleFont("Montserrat"),
-                    size = 12,
-                    style = "OUTLINE"
-                }
-            }
-        },
-        boss = {
-            enable = false,
-            text = {
-                anchor = "LEFT",
-                offsetX = 0,
-                offsetY = 0,
-                font = {
-                    name = E.db.general.font,
-                    size = 12,
-                    style = "OUTLINE"
-                }
-            },
-            time = {
-                anchor = "RIGHT",
-                offsetX = 0,
-                offsetY = 0,
-                font = {
-                    name = F.GetCompatibleFont("Montserrat"),
-                    size = 12,
-                    style = "OUTLINE"
-                }
-            }
-        },
-        arena = {
-            enable = false,
-            text = {
-                anchor = "LEFT",
-                offsetX = 0,
-                offsetY = 0,
-                font = {
-                    name = E.db.general.font,
-                    size = 12,
-                    style = "OUTLINE"
-                }
-            },
-            time = {
-                anchor = "RIGHT",
-                offsetX = 0,
-                offsetY = 0,
-                font = {
-                    name = F.GetCompatibleFont("Montserrat"),
-                    size = 12,
-                    style = "OUTLINE"
-                }
-            }
-        }
+        blizzardOverAbsorbGlow = true,
+        blizzardAbsorbOverlay = true
     }
 }
 
 P.misc = {
-    autoHideBag = false,
-    autoHideWorldMap = false,
     disableTalkingHead = false,
     hideCrafter = false,
     noLootPanel = false,
@@ -1061,5 +941,13 @@ P.misc = {
             [6] = "PET_JOURNAL",
             [7] = "BAGS"
         }
+    },
+    automation = {
+        enable = false,
+        hideBagAfterEnteringCombat = false,
+        hideWorldMapAfterEnteringCombat = false,
+        acceptResurrect = false,
+        acceptCombatResurrect = false,
+        confirmSummon = false,
     }
 }

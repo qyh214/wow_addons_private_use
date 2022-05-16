@@ -1,7 +1,7 @@
 local W, F, E, L = unpack(select(2, ...))
 local ET = E:GetModule("Tooltip")
 local UF = E:GetModule("UnitFrames")
-local T = W:GetModule("Tooltips")
+local T = W.Modules.Tooltips
 
 local _G = _G
 local format = format
@@ -128,10 +128,15 @@ function T:AddGroupInfo(tooltip, resultID, isMeetingStone)
 end
 
 function T:GroupInfo()
-    if IsAddOnLoaded("PremadeGroupsFilter") then
-        if _G.PremadeGroupsFilter and _G.PremadeGroupsFilter.Debug then
-            _G.PremadeGroupsFilter.Debug.OnLFGListSearchEntryOnEnter = E.noop
-        end
+    if IsAddOnLoaded("PremadeGroupsFilter") and E.db.WT.tooltips.groupInfo.enable then
+        F.Print(
+            format(
+                L["%s detected, %s will be disabled automatically."],
+                "|cffff0000" .. L["Premade Groups Filter"] .. "|r",
+                "|cff00a8ff" .. L["Tooltips"] .. " - " .. L["Group Info"] .. "|r"
+            )
+        )
+        E.db.WT.tooltips.groupInfo.enable = false
     end
 
     T:SecureHook("LFGListUtil_SetSearchEntryTooltip", "AddGroupInfo")
@@ -139,6 +144,8 @@ function T:GroupInfo()
     -- Meeting Stone Hook
     if IsAddOnLoaded("MeetingStone") then
         local NetEaseEnv = LibStub("NetEaseEnv-1.0")
+        local MTSAddon = LibStub("AceAddon-3.0"):GetAddon("MeetingStone")
+        
         if NetEaseEnv then
             local NEG
             for k in pairs(NetEaseEnv._NSInclude) do
@@ -147,9 +154,11 @@ function T:GroupInfo()
                 end
             end
 
-            if NEG and NEG.MainPanel then
+            local MainPanel = MTSAddon and MTSAddon:GetModule("MainPanel") or NEG.MainPanel
+
+            if MainPanel and MainPanel.OpenActivityTooltip then
                 T:SecureHook(
-                    NEG.MainPanel,
+                    MainPanel,
                     "OpenActivityTooltip",
                     function(panel, activity, tooltip)
                         local id = activity and activity:GetID()

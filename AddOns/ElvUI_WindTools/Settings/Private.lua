@@ -10,6 +10,13 @@ V.combat = {
 	}
 }
 
+V.item = {
+	extendMerchantPages = {
+		enable = false,
+		numberOfPages = 2
+	}
+}
+
 V.maps = {
 	instanceDifficulty = {
 		enable = false,
@@ -31,8 +38,7 @@ V.maps = {
 			name = E.db.general.font,
 			size = E.db.general.fontSize + 2,
 			style = "OUTLINE",
-			color = {r = 1, g = 1, b = 1},
-			onlyNumber = false
+			color = {r = 1, g = 1, b = 1}
 		}
 	},
 	worldMap = {
@@ -64,15 +70,20 @@ V.maps = {
 
 V.misc = {
 	autoScreenshot = false,
-	pauseToSlash = true,
-	noKanjiMath = false,
-	skipCutScene = false,
-	moveBlizzardFrames = true,
-	moveElvUIBags = true,
 	moveSpeed = false,
-	rememberPositions = false,
-	framePositions = {},
+	noKanjiMath = false,
+	pauseToSlash = true,
+	skipCutScene = false,
 	tags = true,
+	hotKeyAboveCD = false,
+	guildNewsItemLevel = true,
+	moveFrames = {
+		enable = true,
+		elvUIBags = true,
+		tradeSkillMasterCompatible = true,
+		rememberPositions = false,
+		framePositions = {}
+	},
 	mute = {
 		enable = false,
 		mount = {
@@ -82,8 +93,10 @@ V.misc = {
 			[312762] = false
 		},
 		other = {
+			["Crying"] = false,
 			["Tortollan"] = false,
-			["Smolderheart"] = false
+			["Smolderheart"] = false,
+			["Elegy of the Eternals"] = false
 		}
 	},
 	lfgList = {
@@ -118,7 +131,26 @@ V.quest = {
 			name = E.db.general.font,
 			size = E.db.general.fontSize + 2,
 			style = "OUTLINE",
+			color = {r = 1, g = 1, b = 1},
 			shortHeader = true
+		},
+		cosmeticBar = {
+			enable = true,
+			texture = "WindTools Glow",
+			widthMode = "ABSOLUTE",
+			heightMode = "ABSOLUTE",
+			width = 212,
+			height = 2,
+			offsetX = 0,
+			offsetY = -13,
+			border = "SHADOW",
+			borderAlpha = 1,
+			color = {
+				mode = "GRADIENT",
+				normalColor = {r = 0.000, g = 0.659, b = 1.000, a = 1},
+				gradientColor1 = {r = 0.32941, g = 0.52157, b = 0.93333, a = 1},
+				gradientColor2 = {r = 0.25882, g = 0.84314, b = 0.86667, a = 1}
+			}
 		},
 		title = {
 			name = E.db.general.font,
@@ -170,6 +202,7 @@ V.skins = {
 	},
 	addons = {
 		ace3 = true,
+		ace3DropdownBackdrop = true,
 		angryKeystones = true,
 		azerothAutoPilot = true,
 		bigWigs = true,
@@ -184,6 +217,8 @@ V.skins = {
 		rehack = true,
 		rematch = true,
 		tinyInspect = true,
+		tomCats = true,
+		warpDeplete = true,
 		weakAuras = true,
 		weakAurasOptions = true
 	},
@@ -208,6 +243,7 @@ V.skins = {
 		channels = true,
 		character = true,
 		chromieTime = true,
+		clickBinding = true,
 		collections = true,
 		communities = true,
 		covenantRenown = true,
@@ -226,6 +262,7 @@ V.skins = {
 		help = true,
 		inputMethodEditor = true,
 		inspect = true,
+		itemUpgrade = true,
 		lookingForGroup = true,
 		loot = true,
 		lossOfControl = true,
@@ -250,6 +287,7 @@ V.skins = {
 		talent = true,
 		talkingHead = true,
 		taxi = true,
+		ticketStatus = true,
 		timeManager = true,
 		tooltips = true,
 		trade = true,
@@ -271,8 +309,9 @@ V.skins = {
 		castBars = true,
 		chatDataPanels = true,
 		chatPanels = true,
-		classBars = true,
 		chatCopyFrame = true,
+		chatVoicePanel = true,
+		classBars = true,
 		dataBars = true,
 		dataPanels = true,
 		miniMap = true,
@@ -288,11 +327,17 @@ V.skins = {
 
 V.tooltips = {
 	icon = true,
+	factionIcon = true,
+	petIcon = true,
+	petId = true,
+	tierSet = true,
+	covenant = true,
 	dominationRank = true,
 	objectiveProgress = true,
 	objectiveProgressAccuracy = 1,
 	progression = {
 		enable = true,
+		header = "TEXTURE",
 		raids = {
 			enable = true,
 			["Castle Nathria"] = true,
@@ -307,15 +352,17 @@ V.tooltips = {
 		},
 		mythicDungeons = {
 			enable = true,
-			["The Necrotic Wake"] = true,
-			["Plaguefall"] = true,
-			["Mists of Tirna Scithe"] = true,
-			["Halls of Atonement"] = true,
-			["Theater of Pain"] = true,
+			showNoRecord = true,
 			["De Other Side"] = true,
-			["Spires of Ascension"] = true,
+			["Halls of Atonement"] = true,
+			["Mists of Tirna Scithe"] = true,
+			["Plaguefall"] = true,
 			["Sanguine Depths"] = true,
-			["Tazavesh, the Veiled Market"] = true
+			["Spires of Ascension"] = true,
+			["Tazavesh: So'leah's Gambit"] = true,
+			["Tazavesh: Streets of Wonder"] = true,
+			["The Necrotic Wake"] = true,
+			["Theater of Pain"] = true
 		}
 	}
 }
@@ -328,7 +375,7 @@ V.social = {
 
 V.unitFrames = {
 	quickFocus = {
-		enable = true,
+		enable = false,
 		modifier = "shift",
 		button = "BUTTON1"
 	},

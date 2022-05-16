@@ -37,3 +37,6 @@ AddMedia("discord", "Discord.tga", "Icons")
 AddMedia("qq", "QQ.tga", "Icons")
 AddMedia("github", "Github.tga", "Icons")
 AddMedia("nga", "NGA.tga", "Icons")
+
+AddMedia("donateKofi", "Ko-fi.tga", "Icons")
+AddMedia("donateAiFaDian", "AiFaDian.tga", "Icons")

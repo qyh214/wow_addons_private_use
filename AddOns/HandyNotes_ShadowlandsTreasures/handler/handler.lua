@@ -5,7 +5,7 @@ local HL = LibStub("AceAddon-3.0"):NewAddon(myname, "AceEvent-3.0")
 -- local L = LibStub("AceLocale-3.0"):GetLocale(myname, true)
 ns.HL = HL
 
-ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v60'
+ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v63'
 
 ---------------------------------------------------------
 -- Data model stuff:
@@ -101,8 +101,9 @@ function ns.RegisterPoints(zone, points, defaults)
             table.insert(route, 1, coord)
             ns.points[zone][route[#route]] = setmetatable({
                 label=route.label or (point.npc and "Path to NPC" or "Path to treasure"),
-                atlas=route.atlas or "poi-door", scale=0.95, minimap=true, texture=false,
+                atlas=route.atlas or "poi-door", scale=route.scale or 0.95, minimap=true, texture=false,
                 note=route.note or false,
+                loot=route.loot,
                 routes={route},
                 _coord=route[#route],
             }, proxy_meta)
@@ -667,7 +668,7 @@ local function handle_tooltip(tooltip, point)
     end
 
     if point.group then
-        tooltip:AddDoubleLine(GROUP, ns.groups[point.group] or point.group)
+        tooltip:AddDoubleLine(GROUP, render_string(ns.groups[point.group] or point.group, point))
     end
 
     if point.quest and ns.db.tooltip_questid then
@@ -972,14 +973,6 @@ do
         -- Debug("GetNodes2", uiMapID, minimap)
         currentZone = uiMapID
         isMinimap = minimap
-        if minimap and ns.map_spellids[uiMapID] then
-            if ns.map_spellids[uiMapID] == true then
-                return iter
-            end
-            if GetPlayerAuraBySpellID(ns.map_spellids[uiMapID]) then
-                return iter
-            end
-        end
         return iter, ns.points[uiMapID], nil
     end
 end

@@ -1,5 +1,5 @@
 local W, F, E, L = unpack(select(2, ...))
-local S = W:GetModule("Skins")
+local S = W.Modules.Skins
 
 local _G = _G
 
@@ -21,6 +21,9 @@ function S:Blizzard_Communities()
             self:CreateShadow(_G.CommunitiesGuildLogFrame)
         end
     end
+
+    -- Communities Settings
+    self:CreateShadow(_G.CommunitiesSettingsDialog)
 
     -- 搜寻社群
     if _G.ClubFinderCommunityAndGuildFinderFrame then

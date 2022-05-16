@@ -711,8 +711,7 @@ L["STRING_OPTIONS_EDITIMAGE"] = "Редактировать изображени
 L["STRING_OPTIONS_EDITINSTANCE"] = "Редактирование окна:"
 L["STRING_OPTIONS_ERASECHARTDATA"] = "Стереть диаграммы"
 L["STRING_OPTIONS_ERASECHARTDATA_DESC"] = "Во время выхода, все данные боя, собранные для создания графиков, стираются."
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_EXPORT_PROFILE"] = ""--]] 
+L["STRING_OPTIONS_EXPORT_PROFILE"] = "Экспорт профиля"
 L["STRING_OPTIONS_EXTERNALS_TITLE"] = "Внешние виджеты"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "Эти параметры управляют поведением многих внешних виджетов."
 L["STRING_OPTIONS_GENERAL"] = "Общие настройки"
@@ -744,10 +743,8 @@ L["STRING_OPTIONS_ILVL_TRACKER_DESC"] = [=[Когда включено, и вы�
 
 Если отключено, он по-прежнему считывает уровень предметов из запросов других аддонов или когда вы вручную проверяете другого игрока.]=]
 L["STRING_OPTIONS_ILVL_TRACKER_TEXT"] = "Включить"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = ""--]] 
+L["STRING_OPTIONS_IMPORT_PROFILE"] = "Импорт профиля"
+L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = "Введите имя для нового профиля"
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = ""--]] 
 L["STRING_OPTIONS_INSTANCE_ALPHA2"] = "Фоновый цвет"

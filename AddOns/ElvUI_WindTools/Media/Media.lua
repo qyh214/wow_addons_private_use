@@ -1,5 +1,7 @@
 local W, F, E, L, V, P, G = unpack(select(2, ...))
 local LSM = E.Libs.LSM
+
+local ceil = ceil
 local format = format
 
 W.Media = {
@@ -16,10 +18,23 @@ local MediaPath = "Interface/Addons/ElvUI_WindTools/Media/"
     @returns {string} 图标字符串
 ]]
 do
-	local template = "|T%s:%d:%d:0:0:64:64:5:59:5:59|t"
+	local cuttedIconTemplate = "|T%s:%d:%d:0:0:64:64:5:59:5:59|t"
+	local textureTemplate = "|T%s:%d:%d|t"
+	local aspectRatioTemplate = "|T%s:0:aspectRatio|t"
 	local s = 14
-	function F.GetIconString(icon, size)
-		return format(template, icon, size or s, size or s)
+
+	function F.GetIconString(icon, height, width)
+		width = width or height
+		return format(cuttedIconTemplate, icon, height or s, width or s)
+	end
+
+	function F.GetTextureString(texture, height, width, aspectRatio)
+		if aspectRatio then
+			return format(aspectRatioTemplate, texture)
+		else
+			width = width or height
+			return format(textureTemplate, texture, height or s, width or s)
+		end
 	end
 end
 
@@ -32,13 +47,77 @@ local function AddMedia(name, file, type)
 end
 
 do
-	local titlePath = "enUS"
-	if E.global.general.locale then
-		if E.global.general.locale == "zhCN" or E.global.general.locale == "zhTW" or E.global.general.locale == "koKR" then
-			titlePath = E.global.general.locale
+	AddMedia("customHeaders", "CustomHeaders.tga", "Textures")
+
+	-- Custom Header
+	local texTable = {
+		texWidth = 2048,
+		texHeight = 256,
+		headerWidth = 340,
+		headerHeight = 40,
+		type = {
+			-- OffsetX
+			SpecialAchievements = 0,
+			Raids = 348,
+			MythicDungeons = 693
+		},
+		languages = {
+			-- OffsetY
+			zhCN = 0,
+			zhTW = 52,
+			koKR = 103,
+			enUS = 155,
+			deDE = 206
+		}
+	}
+
+	function F.GetCustomHeader(name, scale)
+		local offsetX = texTable.type[name]
+		local offsetY = texTable.languages[E.global.general.locale] or texTable.languages["enUS"]
+		if not offsetX or not offsetY then
+			return
 		end
+
+		scale = scale or 1
+		return format(
+			"|T%s:%d:%d:0:0:%d:%d:%d:%d:%d:%d:255:255:255|t",
+			W.Media.Textures.customHeaders,
+			ceil(texTable.headerHeight * scale),
+			ceil(texTable.headerWidth * scale),
+			texTable.texWidth,
+			texTable.texHeight,
+			offsetX,
+			offsetX + texTable.headerWidth,
+			offsetY,
+			offsetY + texTable.headerHeight
+		)
 	end
-	AddMedia("logo", format("Title/%s.tga", titlePath), "Textures")
+end
+
+do
+	AddMedia("title", "WindToolsTitle.tga", "Textures")
+
+	local texTable = {
+		texHeight = 1024,
+		titleHeight = 150,
+		languages = {
+			-- OffsetY
+			zhCN = 0,
+			zhTW = 160,
+			koKR = 320,
+			enUS = 480,
+			deDE = 640
+		}
+	}
+
+	function F.GetTitleTexCoord()
+		local offsetY = texTable.languages[E.global.general.locale] or texTable.languages["enUS"]
+		if not offsetY then
+			return
+		end
+
+		return {0, 1, offsetY / texTable.texHeight, (offsetY + texTable.titleHeight) / texTable.texHeight}
+	end
 end
 
 do
@@ -69,6 +148,12 @@ AddMedia("shield", "Shield.tga", "Textures")
 AddMedia("smallLogo", "WindToolsSmall.tga", "Textures")
 AddMedia("arrowDown", "ArrowDown.tga", "Textures")
 
+AddMedia("complete", "Complete.tga", "Icons")
+AddMedia("accept", "Accept.tga", "Icons")
+
+AddMedia("donateKofi", "Ko-fi.tga", "Icons")
+AddMedia("donateAiFaDian", "AiFaDian.tga", "Icons")
+
 AddMedia("ffxivTank", "FFXIV/Tank.tga", "Icons")
 AddMedia("ffxivDPS", "FFXIV/DPS.tga", "Icons")
 AddMedia("ffxivHealer", "FFXIV/Healer.tga", "Icons")
@@ -98,6 +183,11 @@ AddMedia("skins", "Skins.tga", "Icons")
 AddMedia("tools", "Hammer.tga", "Icons")
 AddMedia("tooltips", "Tooltips.tga", "Icons")
 AddMedia("unitFrames", "UnitFrames.tga", "Icons")
+
+AddMedia("covenantKyrian", "Covenants/Kyrian.tga", "Icons")
+AddMedia("covenantNecrolord", "Covenants/Necrolord.tga", "Icons")
+AddMedia("covenantNightFae", "Covenants/NightFae.tga", "Icons")
+AddMedia("covenantVenthyr", "Covenants/Venthyr.tga", "Icons")
 
 AddMedia("discord", "Discord.tga", "Icons")
 AddMedia("github", "Github.tga", "Icons")
@@ -147,8 +237,11 @@ do
 		LSM:Register("font", "Accidental Presidency (en)", MediaPath .. "Fonts/AccidentalPresidency.ttf", region)
 		LSM:Register("font", "Montserrat (en)", MediaPath .. "Fonts/Montserrat.ttf", region)
 		LSM:Register("font", "Roadway (en)", MediaPath .. "Fonts/Roadway.ttf", region)
-		LSM:Register("font", "Homespun (en)", "Interface/Addons/ElvUI/Media/Fonts/Homespun.ttf", region)
-		LSM:Register("font", "ContinuumMedium (en)", "Interface/Addons/ElvUI/Media/Fonts/ContinuumMedium.ttf", region)
+		LSM:Register("font", "Homespun (en)", "Interface/Addons/ElvUI/Core/Media/Fonts/Homespun.ttf", region)
+		LSM:Register("font", "ContinuumMedium (en)", "Interface/Addons/ElvUI/Core/Media/Fonts/ContinuumMedium.ttf", region)
+		LSM:Register("font", "Action Man (en)", "Interface/Addons/ElvUI/Core/Media/Fonts/ActionMan.ttf", region)
+		LSM:Register("font", "Die Die Die (en)", "Interface/Addons/ElvUI/Core/Media/Fonts/DieDieDie.ttf", region)
+		LSM:Register("font", "Expressway (en)", "Interface/Addons/ElvUI/Core/Media/Fonts/Expressway.ttf", region)
 		W.CompatibleFont = true
 	else
 		LSM:Register("font", "Accidental Presidency", MediaPath .. "Fonts/AccidentalPresidency.ttf", LSM.LOCALE_BIT_western)

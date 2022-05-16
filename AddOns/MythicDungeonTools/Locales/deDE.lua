@@ -364,6 +364,10 @@ L["Earthrager"] = "Erdwüter"
 L["Ebonclaw Worg"] = "Schwarzklauenworg"
 L["Echelon"] = "Echelon"
 L["Edit"] = "Ändern"
+--[[Translation missing --]]
+--[[ L["Efficiency Score"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["EfficiencyScoreTip"] = ""--]] 
 L["Elder Leaxa"] = "Älteste Leaxa"
 L["Elemental"] = "Elementar"
 L["Elfyra"] = "Elfyra"

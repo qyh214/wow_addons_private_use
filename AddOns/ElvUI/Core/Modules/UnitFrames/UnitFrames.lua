@@ -435,6 +435,10 @@ function UF:UpdateColors()
 	ElvUF.colors.threat[2] = E:SetColorTable(ElvUF.colors.threat[2], db.threat[2])
 	ElvUF.colors.threat[3] = E:SetColorTable(ElvUF.colors.threat[3], db.threat[3])
 
+	ElvUF.colors.happiness[1] = E:SetColorTable(ElvUF.colors.happiness[1], db.happiness[1])
+	ElvUF.colors.happiness[2] = E:SetColorTable(ElvUF.colors.happiness[2], db.happiness[2])
+	ElvUF.colors.happiness[3] = E:SetColorTable(ElvUF.colors.happiness[3], db.happiness[3])
+
 	ElvUF.colors.selection[0] = E:SetColorTable(ElvUF.colors.selection[0], db.selection[0])
 	ElvUF.colors.selection[1] = E:SetColorTable(ElvUF.colors.selection[1], db.selection[1])
 	ElvUF.colors.selection[2] = E:SetColorTable(ElvUF.colors.selection[2], db.selection[2])
@@ -603,6 +607,7 @@ end
 
 function UF:Update_AllFrames()
 	if not E.private.unitframe.enable then return end
+
 	UF:UpdateColors()
 	UF:Update_FontStrings()
 	UF:Update_StatusBars()
@@ -715,16 +720,16 @@ function UF.groupPrototype:Configure_Groups(Header)
 	local width, height, newCols, newRows = 0, 0, 0, 0
 	Header.db = db
 
-	local direction = db.growthDirection
-	local groupsPerRowCol = Header.groupName == 'party' and 1 or db.groupsPerRowCol
+	local isParty = Header.groupName == 'party'
+	local dbWidth, dbHeight = db.width, db.height
+	local groupsPerRowCol = isParty and 1 or db.groupsPerRowCol
 	local invertGroupingOrder = db.invertGroupingOrder
 	local startFromCenter = db.startFromCenter
 	local raidWideSorting = db.raidWideSorting
+	local direction = db.growthDirection
 	local showPlayer = db.showPlayer
 	local groupBy = db.groupBy
 	local sortDir = db.sortDir
-
-	local dbWidth, dbHeight = db.width, db.height
 
 	local groupSpacing = E:Scale(db.groupSpacing)
 	local verticalSpacing = E:Scale(db.verticalSpacing)
@@ -790,7 +795,7 @@ function UF.groupPrototype:Configure_Groups(Header)
 
 		--MATH!! WOOT
 		local point = DIRECTION_TO_GROUP_ANCHOR_POINT[direction]
-		if raidWideSorting and startFromCenter then
+		if (isParty or raidWideSorting) and startFromCenter then
 			point = DIRECTION_TO_GROUP_ANCHOR_POINT['OUT_'..direction]
 		end
 

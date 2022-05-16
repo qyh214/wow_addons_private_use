@@ -1,9 +1,11 @@
 local W, F, E, L = unpack(select(2, ...))
-local S = W:GetModule("Skins")
+local S = W.Modules.Skins
 
 local _G = _G
 local pairs = pairs
 local select = select
+local tinsert = tinsert
+local unpack = unpack
 
 function S:EncounterJournal_DisplayInstance()
     local bossIndex = 1
@@ -12,7 +14,26 @@ function S:EncounterJournal_DisplayInstance()
     while bossID do
         local bossButton = _G["EncounterJournalBossButton" .. bossIndex]
         if bossButton and not bossButton.windStyle then
-            self:CreateShadow(bossButton)
+            self:CreateShadow(
+                bossButton,
+                nil,
+                E.db.general.valuecolor.r * 0.7,
+                E.db.general.valuecolor.g * 0.7,
+                E.db.general.valuecolor.b * 0.7
+            )
+
+            if bossIndex == 1 then -- move the buttons little bit right
+                local history = {}
+                for i = 1, bossButton:GetNumPoints() do
+                    local point, relativeTo, relativePoint, x, y = bossButton:GetPoint(i)
+                    tinsert(history, {point, relativeTo, relativePoint, x + 5, y})
+                end
+                bossButton:ClearAllPoints()
+                for i = 1, #history do
+                    bossButton:SetPoint(unpack(history[i]))
+                end
+            end
+
             F.SetFontOutline(bossButton.text)
             bossButton.text:ClearAllPoints()
             bossButton.text:Point("LEFT", bossButton, "LEFT", 105, 0)
@@ -31,12 +52,12 @@ function S:Blizzard_EncounterJournal()
 
     self:CreateShadow(_G.EncounterJournal)
 
-    -- Boss 按钮
+    -- Boss Button
     if E.private.skins.parchmentRemoverEnable then
         S:SecureHook("EncounterJournal_DisplayInstance")
     end
 
-    -- 下方标签页
+    -- Bottom tabs
     local tabs = {
         _G.EncounterJournal.encounter.info.overviewTab,
         _G.EncounterJournal.encounter.info.lootTab,
@@ -45,7 +66,7 @@ function S:Blizzard_EncounterJournal()
     }
 
     for _, tab in pairs(tabs) do
-        self:CreateBackdropShadow(tab)
+        self:CreateShadow(tab)
     end
 end
 

@@ -2,6 +2,7 @@ local W, F, E, L = unpack(select(2, ...))
 local A = W:GetModule("Announcement")
 
 local _G = _G
+local format = format
 local pairs = pairs
 local strfind = strfind
 
@@ -55,6 +56,28 @@ local function GetQuests()
 	end
 
 	return quests
+end
+
+do
+	local ERR_QUEST_ADD_ITEM_SII = ERR_QUEST_ADD_ITEM_SII
+	local ERR_QUEST_ADD_FOUND_SII = ERR_QUEST_ADD_FOUND_SII
+	local ERR_QUEST_ADD_KILL_SII = ERR_QUEST_ADD_KILL_SII
+	local ERR_QUEST_UNKNOWN_COMPLETE = ERR_QUEST_UNKNOWN_COMPLETE
+	local ERR_QUEST_OBJECTIVE_COMPLETE_S = ERR_QUEST_OBJECTIVE_COMPLETE_S
+
+	function A:UpdateBlizzardQuestAnnouncement()
+		local enable = false
+
+		if not self.db.quest or not self.db.quest.enable or not self.db.quest.disableBlizzard then
+			enable = true
+		end
+
+		_G.ERR_QUEST_ADD_ITEM_SII = enable and ERR_QUEST_ADD_ITEM_SII or E.noop
+		_G.ERR_QUEST_ADD_FOUND_SII = enable and ERR_QUEST_ADD_FOUND_SII or E.noop
+		_G.ERR_QUEST_ADD_KILL_SII = enable and ERR_QUEST_ADD_KILL_SII or E.noop
+		_G.ERR_QUEST_UNKNOWN_COMPLETE = enable and ERR_QUEST_UNKNOWN_COMPLETE or E.noop
+		_G.ERR_QUEST_OBJECTIVE_COMPLETE_S = enable and ERR_QUEST_OBJECTIVE_COMPLETE_S or E.noop
+	end
 end
 
 function A:Quest()
@@ -119,11 +142,7 @@ function A:Quest()
 								questCacheOld[queryIndex].numItems and
 								questCache[queryIndex].numItems > questCacheOld[queryIndex].numItems
 						 then -- 任务有了新的进展
-							local progressColor = {
-								r = 1 - 0.5 * questCache[queryIndex].numItems / questCache[queryIndex].numNeeded,
-								g = 0.5 + 0.5 * questCache[queryIndex].numItems / questCache[queryIndex].numNeeded,
-								b = 0.5
-							}
+							local progressColor = F.GetProgressColor(questCache[queryIndex].numItems / questCache[queryIndex].numNeeded)
 
 							local subGoalIsCompleted = questCache[queryIndex].numItems == questCache[queryIndex].numNeeded
 
@@ -131,8 +150,7 @@ function A:Quest()
 								local progressInfo = questCache[queryIndex].numItems .. "/" .. questCache[queryIndex].numNeeded
 								local progressInfoColored = progressInfo
 								if subGoalIsCompleted then
-									local redayCheckIcon = "|TInterface/RaidFrame/ReadyCheck-Ready:15:15:-1:2:64:64:6:60:8:60|t"
-									progressInfoColored = progressInfoColored .. redayCheckIcon
+									progressInfoColored = progressInfoColored .. format(" |T%s:0|t", W.Media.Icons.complete)
 								else
 									isDetailInfo = true
 								end
@@ -151,7 +169,9 @@ function A:Quest()
 		else -- 新的任务
 			if not questCache.worldQuestType then -- 屏蔽世界任务的接收, 路过不报告
 				mainInfo = questCache.link .. " " .. L["Accepted"]
-				mainInfoColored = questCache.link .. " " .. F.CreateColorString(L["Accepted"], {r = 1.000, g = 0.980, b = 0.396})
+				mainInfoColored =
+					questCache.link ..
+					" " .. F.CreateColorString(L["Accepted"], {r = 1, g = 1, b = 1}) .. format(" |T%s:0|t", W.Media.Icons.accept)
 				needAnnounce = true
 			end
 		end
@@ -161,8 +181,8 @@ function A:Quest()
 			if not E.db.WT.quest.switchButtons.enable or not config.paused then
 				self:SendMessage(message, self:GetChannel(config.channel))
 			end
-
-			if not isDetailInfo then -- 具体进度系统会提示
+			
+			if not isDetailInfo or self.db.quest.disableBlizzard then -- only show details if system do not show that
 				local messageColored = extraInfoColored .. mainInfoColored
 				_G.UIErrorsFrame:AddMessage(messageColored)
 			end

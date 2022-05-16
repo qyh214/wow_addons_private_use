@@ -1,5 +1,5 @@
 local W, F, E, L = unpack(select(2, ...))
-local S = W:GetModule("Skins")
+local S = W.Modules.Skins
 
 local _G = _G
 local hooksecurefunc = hooksecurefunc
@@ -7,6 +7,10 @@ local hooksecurefunc = hooksecurefunc
 local InCombatLockdown = InCombatLockdown
 
 function S:SkinOjectiveTrackerHeaders()
+    if E.private and E.private.WT and E.private.WT.quest.objectiveTracker.enable then
+        return
+    end
+
     local frame = _G.ObjectiveTrackerFrame.MODULES
     if frame then
         for i = 1, #frame do
@@ -26,7 +30,7 @@ function S:SkinItemButton(block)
     if not item then
         return
     end
-    self:CreateBackdropShadow(item, true)
+    self:CreateShadow(item)
 end
 
 function S:SkinFindGroupButton(block)

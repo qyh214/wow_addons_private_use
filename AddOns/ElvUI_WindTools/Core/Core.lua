@@ -14,20 +14,37 @@ local InCombatLockdown = InCombatLockdown
 local ACCEPT = _G.ACCEPT
 local CANCEL = _G.CANCEL
 
--- 一些常量
 W.Title = L["WindTools"]
 W.Locale = GetLocale()
 W.ChineseLocale = strsub(W.Locale, 0, 2) == "zh"
 W.MaxLevelForPlayerExpansion = GetMaxLevelForPlayerExpansion()
-W.SupportElvUIVersion = 12.73
+W.SupportElvUIVersion = 12.75
 
--- 模块部分
 W.RegisteredModules = {}
-
--- 更新记录
 W.Changelog = {}
 
--- 快捷键注册
+-- Alerts
+E.PopupDialogs.WINDTOOLS_ELVUI_OUTDATED = {
+    text = format(
+        "%s\n%s",
+        format(L["%s not been loaded since you are using an outdated version of ElvUI."], W.Title),
+        format(L["Please upgrade your ElvUI to %2.2f or newer version!"], W.SupportElvUIVersion)
+    ),
+    button1 = ACCEPT,
+    hideOnEscape = 1
+}
+
+E.PopupDialogs.WINDTOOLS_OPEN_CHANGELOG = {
+    text = format(L["Welcome to %s %s!"], L["WindTools"], W.Version),
+    button1 = L["Open Changelog"],
+    button2 = CANCEL,
+    OnAccept = function(self)
+        E:ToggleOptionsUI("WindTools,information,changelog")
+    end,
+    hideOnEscape = 1
+}
+
+-- Keybinds
 _G.BINDING_CATEGORY_ELVUI_WINDTOOLS = L["WindTools"]
 for i = 1, 5 do
     _G["BINDING_HEADER_WTEXTRAITEMSBAR" .. i] =
@@ -37,8 +54,14 @@ for i = 1, 5 do
     end
 end
 
+_G.BINDING_CATEGORY_ELVUI_WINDTOOLS_EXTRA = L["WindTools"] .. " - " .. L["Extra"]
+_G.BINDING_HEADER_WTEXTRABUTTONS = L["Extra Buttons"]
+_G["BINDING_NAME_CLICK WTExtraBindingButtonLogout:LeftButton"] = L["Logout"]
+_G["BINDING_NAME_CLICK WTExtraBindingButtonLeaveGroup:LeftButton"] = L["Leave Party"]
+_G["BINDING_NAME_CLICK WTExtraBindingButtonLeavePartyIfSoloing:LeftButton"] = L["Leave Party if soloing"]
+
 --[[
-    注册 WindTools 模块
+    WindTools module registration
     @param {string} name 模块名
 ]]
 function W:RegisterModule(name)
@@ -53,7 +76,7 @@ function W:RegisterModule(name)
     end
 end
 
--- 初始化 WindTools 模块
+-- WindTools module initialization
 function W:InitializeModules()
     for _, moduleName in pairs(W.RegisteredModules) do
         local module = self:GetModule(moduleName)
@@ -63,7 +86,7 @@ function W:InitializeModules()
     end
 end
 
--- 配置更改后的模块更新
+-- WindTools module update after profile switch
 function W.UpdateModules()
     for _, moduleName in pairs(W.RegisteredModules) do
         local module = W:GetModule(moduleName)
@@ -72,16 +95,6 @@ function W.UpdateModules()
         end
     end
 end
-
-E.PopupDialogs.WINDTOOLS_ELVUI_OUTDATED = {
-    text = format(
-        "%s\n%s",
-        format(L["%s not been loaded since you are using an outdated version of ElvUI."], W.Title),
-        format(L["Please upgrade your ElvUI to %2.2f or newer version!"], W.SupportElvUIVersion)
-    ),
-    button1 = ACCEPT,
-    hideOnEscape = 1
-}
 
 -- Check ElvUI version, if not matched, show a popup to user
 function W:CheckElvUIVersion()
@@ -92,38 +105,33 @@ function W:CheckElvUIVersion()
     return true
 end
 
-E.PopupDialogs.WINDTOOLS_OPEN_CHANGELOG = {
-    text = format(L["Welcome to %s %s!"], L["WindTools"], W.Version),
-    button1 = L["Open Changelog"],
-    button2 = CANCEL,
-    OnAccept = function(self)
-        E:ToggleOptionsUI("WindTools,information,changelog")
-    end,
-    hideOnEscape = 1
-}
-
--- 检查安装版本, 提示更新记录
+-- Check install version, show changelog and run update scripts
 function W:CheckInstalledVersion()
-    if not InCombatLockdown() then
-        if not E.global.WT.Version or E.global.WT.Version ~= W.Version then
-            E:StaticPopup_Show("WINDTOOLS_OPEN_CHANGELOG")
-            E.global.WT.Version = W.Version
-        elseif E.private.WT.core.loginMessage then
-            local icon = F.GetIconString(W.Media.Textures.smallLogo, 14)
-            print(
-                format(
-                    icon ..
-                        " " ..
-                            L["%s %s Loaded."] ..
-                                " " .. L["You can send your suggestions or bugs via %s, %s, %s, and the thread in %s."],
-                    L["WindTools"],
-                    W.Version,
-                    L["QQ Group"],
-                    L["Discord"],
-                    L["Github"],
-                    L["NGA.cn"]
-                )
-            )
-        end
+    if InCombatLockdown() then
+        return
     end
+    if not E.global.WT.version or E.global.WT.version ~= W.Version then
+        E:StaticPopup_Show("WINDTOOLS_OPEN_CHANGELOG")
+    end
+
+    if E.private.WT.core.loginMessage then
+        local icon = F.GetIconString(W.Media.Textures.smallLogo, 14)
+        print(
+            format(
+                icon ..
+                    " " ..
+                        L["%s %s Loaded."] ..
+                            " " .. L["You can send your suggestions or bugs via %s, %s, %s, and the thread in %s."],
+                L["WindTools"],
+                W.Version,
+                L["QQ Group"],
+                L["Discord"],
+                L["Github"],
+                L["NGA.cn"]
+            )
+        )
+    end
+    
+    W:ForBetaUser()
+    W:UpdateScripts()
 end

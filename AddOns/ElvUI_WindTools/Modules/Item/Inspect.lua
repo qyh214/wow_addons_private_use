@@ -1,11 +1,11 @@
 local W, F, E, L = unpack(select(2, ...))
 local IL = W:NewModule("Inspect", "AceEvent-3.0", "AceHook-3.0") -- Modified from TinyInspect
-local S = W:GetModule("Skins")
-local MF = W:GetModule("MoveFrames")
-local ES = E:GetModule("Skins")
+local S = W.Modules.Skins
+local MF = W.Modules.MoveFrames
+local ES = E.Skins
 
 local LibEvent = LibStub:GetLibrary("LibEvent.7000")
-local LibItemEnchant = LibStub:GetLibrary("LibItemEnchant.7000")
+local LibItemEnchant = LibStub:GetLibrary("LibItemEnchant.7000.Wind")
 local LibItemInfo = LibStub:GetLibrary("LibItemInfo.7000")
 local LibItemGem = LibStub:GetLibrary("LibItemGem.7000")
 local LibSchedule = LibStub:GetLibrary("LibSchedule.7000")
@@ -39,7 +39,9 @@ local GetSpellInfo = GetSpellInfo
 local GetTime = GetTime
 local IsAddOnLoaded = IsAddOnLoaded
 local IsCorruptedItem = IsCorruptedItem
+local Item = Item
 local SetPortraitTexture = SetPortraitTexture
+local Spell = Spell
 local ToggleFrame = ToggleFrame
 local UnitClass = UnitClass
 local UnitGUID = UnitGUID
@@ -54,6 +56,8 @@ local NORMAL_FONT_COLOR = NORMAL_FONT_COLOR
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 local STAT_AVERAGE_ITEM_LEVEL = STAT_AVERAGE_ITEM_LEVEL
 local UNIT_NAME_FONT = UNIT_NAME_FONT
+
+local C_Item_GetItemInventoryTypeByID = C_Item.GetItemInventoryTypeByID
 
 local guids, inspecting = {}, false
 
@@ -77,14 +81,13 @@ local slots = {
 }
 
 local EnchantParts = {
-    [5]  = {1, CHESTSLOT},
-    [8]  = {1, FEETSLOT},
-    [9]  = {1, WRISTSLOT},
-    [10] = {1, HANDSSLOT},
+    [5] = {1, CHESTSLOT},
+    [8] = {1, FEETSLOT},
     [11] = {1, FINGER0SLOT},
     [12] = {1, FINGER1SLOT},
     [15] = {1, BACKSLOT},
     [16] = {1, MAINHANDSLOT},
+    [17] = {1, SECONDARYHANDSLOT}
 }
 
 local function ReInspect(unit)
@@ -240,20 +243,43 @@ local function onExecute(self)
     end
 end
 
---Schedule模式更新圖標
-local function UpdateIconTexture(icon, texture, data, dataType)
-    if (not texture) then
-        LibSchedule:AddTask(
-            {
-                identity = "InspectGemAndEnchant" .. icon.index,
-                timer = 0.1,
-                elasped = 0.5,
-                expired = GetTime() + 3,
-                onExecute = onExecute,
-                icon = icon,
-                data = data,
-                dataType = dataType
-            }
+-- Use Item and Spell Mixin to dynamically update information
+local function DynamicUpdateIconTexture(type, targetIcon, data)
+    if type == "itemId" then
+        local item = Item:CreateFromItemID(data)
+        item:ContinueOnItemLoad(
+            function()
+                local qualityColor = item:GetItemQualityColor()
+                targetIcon.bg:SetVertexColor(qualityColor.r, qualityColor.g, qualityColor.b)
+                targetIcon.texture:SetTexture(item:GetItemIcon())
+                targetIcon.itemLink = item:GetItemLink()
+            end
+        )
+    elseif type == "itemLink" then
+        local item = Item:CreateFromItemLink(data)
+        item:ContinueOnItemLoad(
+            function()
+                local qualityColor = item:GetItemQualityColor()
+                targetIcon.bg:SetVertexColor(qualityColor.r, qualityColor.g, qualityColor.b)
+                targetIcon.texture:SetTexture(item:GetItemIcon())
+                targetIcon.itemLink = item:GetItemLink()
+            end
+        )
+    elseif type == "spellId" then
+        local spell = Spell:CreateFromSpellID(data)
+        spell:ContinueOnSpellLoad(
+            function()
+                targetIcon.texture:SetTexture(spell:GetSpellTexture())
+                targetIcon.spellID = spell:GetSpellID()
+            end
+        )
+    elseif type == "spellLink" then
+        local spell = Item:CreateFromSpellLink(data)
+        spell:ContinueOnSpellLoad(
+            function()
+                targetIcon.texture:SetTexture(spell:GetSpellTexture())
+                targetIcon.spellID = spell:GetSpellID()
+            end
         )
     end
 end
@@ -268,11 +294,8 @@ local function ShowGemAndEnchant(frame, ItemLink, anchorFrame, itemframe)
     for i, v in ipairs(info) do
         icon = GetIconFrame(frame)
         if (v.link) then
-            _, _, quality, _, _, _, _, _, _, texture = GetItemInfo(v.link)
-            r, g, b = GetItemQualityColor(quality or 0)
-            icon.bg:SetVertexColor(r, g, b)
-            icon.texture:SetTexture(texture or "Interface\\Cursor\\Quest")
-            UpdateIconTexture(icon, texture, v.link, "item")
+            icon.texture:SetTexture("Interface\\Cursor\\Quest")
+            DynamicUpdateIconTexture("itemLink", icon, v.link)
         else
             icon.bg:SetVertexColor(1, 0.82, 0, 0.5)
             icon.texture:SetTexture("Interface\\Cursor\\Quest")
@@ -286,32 +309,24 @@ local function ShowGemAndEnchant(frame, ItemLink, anchorFrame, itemframe)
     end
     local enchantItemID, enchantID = LibItemEnchant:GetEnchantItemID(ItemLink)
     local enchantSpellID = LibItemEnchant:GetEnchantSpellID(ItemLink)
-    if (enchantItemID) then
+    if enchantItemID then
         num = num + 1
         icon = GetIconFrame(frame)
-        _, ItemLink, quality, _, _, _, _, _, _, texture = GetItemInfo(enchantItemID)
-        r, g, b = GetItemQualityColor(quality or 0)
-        icon.bg:SetVertexColor(r, g, b)
-        icon.texture:SetTexture(texture)
-        UpdateIconTexture(icon, texture, enchantItemID, "item")
-        icon.itemLink = ItemLink
+        DynamicUpdateIconTexture("itemId", icon, enchantItemID)
         icon:ClearAllPoints()
         icon:Point("LEFT", anchorFrame, "RIGHT", num == 1 and 6 or 1, 0)
         icon:Show()
         anchorFrame = icon
-    elseif (enchantSpellID) then
+    elseif enchantSpellID then
         num = num + 1
         icon = GetIconFrame(frame)
-        _, _, texture = GetSpellInfo(enchantSpellID)
         icon.bg:SetVertexColor(1, 0.82, 0)
-        icon.texture:SetTexture(texture)
-        UpdateIconTexture(icon, texture, enchantSpellID, "spell")
-        icon.spellID = enchantSpellID
+        DynamicUpdateIconTexture("spellId", icon, enchantSpellID)
         icon:ClearAllPoints()
         icon:Point("LEFT", anchorFrame, "RIGHT", num == 1 and 6 or 1, 0)
         icon:Show()
         anchorFrame = icon
-    elseif (enchantID) then
+    elseif enchantID then
         num = num + 1
         icon = GetIconFrame(frame)
         icon.title = "#" .. enchantID
@@ -321,22 +336,28 @@ local function ShowGemAndEnchant(frame, ItemLink, anchorFrame, itemframe)
         icon:Point("LEFT", anchorFrame, "RIGHT", num == 1 and 6 or 1, 0)
         icon:Show()
         anchorFrame = icon
-    elseif (not enchantID and EnchantParts[itemframe.index]) then
-        if (qty == 6 and (itemframe.index == 2 or itemframe.index == 16 or itemframe.index == 17)) then
-        else
+    elseif not enchantID and EnchantParts[itemframe.index] then
+        if not (qty == 6 and (itemframe.index == 2 or itemframe.index == 16 or itemframe.index == 17)) then
             num = num + 1
             icon = GetIconFrame(frame)
             icon.title = ENCHANTS .. ": " .. EnchantParts[itemframe.index][2]
             icon.bg:SetVertexColor(1, 0.2, 0.2, 0.6)
             icon.texture:SetTexture(
-                "Interface\\Cursor\\" .. (EnchantParts[itemframe.index][1] == 1 and "Quest" or "QuestRepeatable")
+                "Interface/Cursor/" .. (EnchantParts[itemframe.index][1] == 1 and "Quest" or "QuestRepeatable")
             )
             icon:ClearAllPoints()
             icon:Point("LEFT", anchorFrame, "RIGHT", num == 1 and 6 or 1, 0)
             icon:Show()
+            if itemframe.index == 17 then
+                local itemType = C_Item_GetItemInventoryTypeByID(ItemLink)
+                if itemType ~= 13 and itemType ~= 17 then
+                    icon:Hide()
+                end
+            end
             anchorFrame = icon
         end
     end
+
     return num * 18
 end
 
@@ -388,7 +409,7 @@ local function ShowInspectItemStatsFrame(frame, unit)
         mask:SetVertexColor(1, 1, 1)
         mask:SetAlpha(0.2)
 
-        if MF and MF.db and MF.db.moveBlizzardFrames then
+        if MF and MF.db and MF.db.enable then
             MF:HandleFrame(statsFrame.backdrop, frame.MoveFrame or frame)
             statsFrame.MoveFrame = statsFrame.backdrop.MoveFrame
         end
@@ -656,7 +677,6 @@ local function GetInspectItemListFrame(parent)
         )
 
         local itemframe
-        local fontsize = W.Locale:sub(1, 2) == "zh" and 12 or 9
         local backdrop = {
             bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
             edgeFile = "Interface\\Buttons\\WHITE8X8",
@@ -682,7 +702,9 @@ local function GetInspectItemListFrame(parent)
             itemframe.label:SetBackdropBorderColor(0, 0.9, 0.9, 0.2)
             itemframe.label:SetBackdropColor(0, 0.9, 0.9, 0.2)
             itemframe.label.text = itemframe.label:CreateFontString(nil, "ARTWORK")
-            itemframe.label.text:SetFont(UNIT_NAME_FONT, fontsize, "THINOUTLINE")
+            if IL.db and IL.db.equipText then
+                F.SetFontWithDB(itemframe.label.text, IL.db.slotText)
+            end
             itemframe.label.text:Size(34, 14)
             itemframe.label.text:Point("CENTER", 1, 0)
             itemframe.label.text:SetText(v.name)
@@ -754,7 +776,7 @@ local function GetInspectItemListFrame(parent)
             end
         )
 
-        if MF and MF.db and MF.db.moveBlizzardFrames then
+        if MF and MF.db and MF.db.enable then
             MF:HandleFrame(frame.backdrop, parent.MoveFrame or parent)
             frame.MoveFrame = frame.backdrop.MoveFrame
         end
@@ -764,15 +786,16 @@ local function GetInspectItemListFrame(parent)
     else
         for i in ipairs(slots) do
             local itemframe = parent.inspectFrame["item" .. i]
-            if itemframe then
-                if IL.db and IL.db.levelText then
+            if itemframe and IL.db then
+                if IL.db then
+                    F.SetFontWithDB(itemframe.label.text, IL.db.slotText)
                     F.SetFontWithDB(itemframe.levelString, IL.db.levelText)
-                end
-                if IL.db and IL.db.equipText then
                     F.SetFontWithDB(itemframe.itemString, IL.db.equipText)
                 end
             end
         end
+
+        RefreshAlign(parent.inspectFrame)
     end
 
     E:Delay(0.2, RefreshAlign, parent.inspectFrame)
@@ -1078,14 +1101,14 @@ function IL:Initialize()
         return
     end
 
-    if not self.db.enable or self.Initialized then
+    if not self.db.enable or self.initialized then
         return
     end
 
     self:Player()
     self:Inspect()
 
-    self.Initialized = true
+    self.initialized = true
 end
 
 IL.ProfileUpdate = IL.Initialize

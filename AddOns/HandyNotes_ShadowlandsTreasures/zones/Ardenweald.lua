@@ -117,7 +117,8 @@ ns.RegisterPoints(1565, { -- Ardenweald
     },
     [76602970] = {
         achievement=14313, criteria=50034, -- Swollen Anima Seed
-        quest=58013,
+        quest=62186,
+        inbag=182730,
         loot={
             {182730, quest=62186}, -- Swollen Anima Seed
         },
@@ -299,39 +300,39 @@ ns.RegisterPoints(1565, {
 -- })
 
 ns.RegisterPoints(1565, {
-    -- TODO: I got these clusters from https://www.wowhead.com/object=356820/large-lunarlight-pod#comments:id=3283737
-    -- I need to do this across a few days so I can work out which questids line up with these remaining sets:
-    -- Set B: 50043325, 50253164, 51003439, 51983092, 52463341,
-    -- These wind up being in columns by set, but I don't have a good way to trigger filtering it down after you complete one...
+    -- These wind up being in columns by set-of-points, but I don't have a
+    -- good way to trigger filtering it down after you complete one. I could
+    -- change this so that each set is a distinct color, rather than each
+    -- quest? Not sure which is more understandable to the user.
     [-49943207] = {
         quest=61696,
-        nearby={53093300, 52263243, 52513374, 52903321,
+        nearby={53093300, 52263243, 52513374, 52903321, 52463341,
             color={r=1,g=0,b=0},
             label="{npc:173005:Lunarlight Bud}"},
     },
     [-50593357] = {
         quest=61695,
-        nearby={52333168, 51883147, 51803235, 52003200,
+        nearby={52333168, 51883147, 51803235, 52003200, 51983092,
             color={r=0,g=1,b=0},
             label="{npc:173006:Lunarlight Bud}"},
     },
     [-50593358] = {
         quest=61693,
-        nearby={50593358, 50373296, 50863301, 50323272,
+        nearby={50593358, 50373296, 50863301, 50323272, 50043325,
             color={r=0,g=0.5,b=1},
             label="{npc:173009:Lunarlight Bud}"},
             -- 50593358 was 173008, but the quest was this one
     },
     [-51813384] = {
         quest=61694,
-        nearby={51813384, 51473408, 51433329, 51893337,
+        nearby={51813384, 51473408, 51433329, 51893337, 51003439,
             color={r=1,g=1,b=0},
             label="{npc:173008:Lunarlight Bud}"},
             -- 51813384 was 173009, but the quest was this one
     },
     [-51023226] = {
         quest=61692,
-        nearby={51023226, 50533181, 51183249, 49943207,
+        nearby={51023226, 50533181, 51183249, 49943207, 50253164,
             color={r=0.5,g=0,b=1},
             label="{npc:173010:Lunarlight Bud}"},
     },

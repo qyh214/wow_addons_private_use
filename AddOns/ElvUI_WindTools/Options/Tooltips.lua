@@ -1,6 +1,6 @@
 local W, F, E, L, V, P, G = unpack(select(2, ...))
 local options = W.options.tooltips.args
-local T = W:GetModule("Tooltips")
+local T = W.Modules.Tooltips
 
 local ipairs = ipairs
 
@@ -43,11 +43,49 @@ options.general = {
                     name = L["Add Icon"],
                     desc = L["Show an icon for items and spells."]
                 },
-                dominationRank = {
+                factionIcon = {
                     order = 2,
+                    type = "toggle",
+                    name = L["Faction Icon"],
+                    desc = L["Show a faction icon in the top right of tooltips."]
+                },
+                petIcon = {
+                    order = 3,
+                    type = "toggle",
+                    name = L["Pet Icon"],
+                    desc = L["Add an icon for indicating the type of the pet."]
+                },
+                petId = {
+                    order = 4,
+                    type = "toggle",
+                    name = L["Pet ID"],
+                    desc = L["Show battle pet species ID in tooltips."]
+                },
+                dominationRank = {
+                    order = 5,
                     type = "toggle",
                     name = L["Domination Rank"],
                     desc = L["Show the rank of shards."]
+                },
+                tierSet = {
+                    order = 6,
+                    type = "toggle",
+                    name = L["Tier Set"],
+                    desc = format(
+                        "%s\n%s",
+                        L["Show the number of tier set equipments."],
+                        F.CreateColorString(L["You need hold SHIFT to inspect someone."], E.db.general.valuecolor)
+                    )
+                },
+                covenant = {
+                    order = 7,
+                    type = "toggle",
+                    name = L["Covenant"],
+                    desc = format(
+                        "%s\n%s",
+                        L["Show covenant information via the communition with third-party addons."],
+                        F.CreateColorString(L["You need hold SHIFT to inspect someone."], E.db.general.valuecolor)
+                    )
                 }
             }
         },
@@ -161,8 +199,50 @@ options.progression = {
             name = L["Enable"],
             desc = L["Add progression information to tooltips."]
         },
-        raids = {
+        header = {
             order = 2,
+            type = "select",
+            name = L["Header Style"],
+            set = function(info, value)
+                E.private.WT.tooltips.progression[info[#info]] = value
+            end,
+            values = {
+                NONE = L["None"],
+                TEXT = L["Text"],
+                TEXTURE = L["Texture"]
+            }
+        },
+        tips = {
+            order = 3,
+            type = "description",
+            name = F.CreateColorString(L["You need hold SHIFT to inspect someone."], E.db.general.valuecolor) .. "\n",
+            fontSize = "large"
+        },
+        special = {
+            order = 4,
+            type = "group",
+            name = L["Special Achievements"],
+            inline = true,
+            get = function(info)
+                return E.private.WT.tooltips.progression.special[info[#info]]
+            end,
+            set = function(info, value)
+                E.private.WT.tooltips.progression.special[info[#info]] = value
+                E:StaticPopup_Show("PRIVATE_RL")
+            end,
+            disabled = function()
+                return not E.private.WT.tooltips.progression.enable
+            end,
+            args = {
+                enable = {
+                    order = 1,
+                    type = "toggle",
+                    name = L["Enable"]
+                }
+            }
+        },
+        raids = {
+            order = 5,
             type = "group",
             name = L["Raids"],
             inline = true,
@@ -185,7 +265,7 @@ options.progression = {
             }
         },
         mythicDungeons = {
-            order = 2,
+            order = 6,
             type = "group",
             name = L["Mythic Dungeons"],
             inline = true,
@@ -204,29 +284,26 @@ options.progression = {
                     order = 1,
                     type = "toggle",
                     name = L["Enable"]
-                }
-            }
-        },
-        special = {
-            order = 3,
-            type = "group",
-            name = L["Special Achievements"],
-            inline = true,
-            get = function(info)
-                return E.private.WT.tooltips.progression.special[info[#info]]
-            end,
-            set = function(info, value)
-                E.private.WT.tooltips.progression.special[info[#info]] = value
-                E:StaticPopup_Show("PRIVATE_RL")
-            end,
-            disabled = function()
-                return not E.private.WT.tooltips.progression.enable
-            end,
-            args = {
-                enable = {
-                    order = 1,
+                },
+                showNoRecord = {
+                    order = 2,
                     type = "toggle",
-                    name = L["Enable"]
+                    name = L["Show Dungeons with No Record"],
+                    width = 1.5
+                },
+                instances = {
+                    order = 3,
+                    type = "group",
+                    name = L["Instances"],
+                    inline = true,
+                    get = function(info)
+                        return E.private.WT.tooltips.progression.mythicDungeons[info[#info]]
+                    end,
+                    set = function(info, value)
+                        E.private.WT.tooltips.progression.mythicDungeons[info[#info]] = value
+                        E:StaticPopup_Show("PRIVATE_RL")
+                    end,
+                    args = {}
                 }
             }
         }
@@ -241,15 +318,16 @@ do
     }
 
     local dungeons = {
-        "The Necrotic Wake",
-        "Plaguefall",
-        "Mists of Tirna Scithe",
-        "Halls of Atonement",
-        "Theater of Pain",
         "De Other Side",
-        "Spires of Ascension",
+        "Halls of Atonement",
+        "Mists of Tirna Scithe",
+        "Plaguefall",
         "Sanguine Depths",
-        "Tazavesh, the Veiled Market"
+        "Spires of Ascension",
+        "Tazavesh: So'leah's Gambit",
+        "Tazavesh: Streets of Wonder",
+        "The Necrotic Wake",
+        "Theater of Pain"
     }
 
     local special = {
@@ -270,7 +348,7 @@ do
     end
 
     for index, name in ipairs(dungeons) do
-        options.progression.args.mythicDungeons.args[name] = {
+        options.progression.args.mythicDungeons.args.instances.args[name] = {
             order = index + 2,
             type = "toggle",
             name = L[name],

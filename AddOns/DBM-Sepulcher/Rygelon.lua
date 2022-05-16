@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2467, "DBM-Sepulcher", nil, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220405224122")
+mod:SetRevision("20220502232005")
 mod:SetCreatureID(182777)
 mod:SetEncounterID(2549)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -53,8 +53,8 @@ local warnCosmicCore							= mod:NewAddsLeftAnnounce(362770, 2)
 local warnCosmicIrregularity					= mod:NewCountAnnounce(362088, 2)
 local warnCelestialTerminator					= mod:NewSpellAnnounce(363108, 3)
 local warnRadiantPlasma							= mod:NewSpellAnnounce(366606, 4)--No one is tanking him fail check
-local warnDarkDarkQuasarBoss					= mod:NewStackAnnounce(368080, 2)
-local warnDarkDarkQuasarBossFaded				= mod:NewEndAnnounce(368080, 1)
+local warnDarkQuasarBoss						= mod:NewStackAnnounce(368080, 2)
+local warnDarkQuasarBossFaded					= mod:NewEndAnnounce(368080, 1)
 
 local specWarnDarkEclipse						= mod:NewSpecialWarningYou(361548, nil, nil, nil, 1, 2)
 local yellDarkEclipse							= mod:NewShortPosYell(361548)
@@ -75,7 +75,7 @@ local timerCelestialCollapseCD					= mod:NewCDCountTimer(20.6, 362275, nil, nil,
 local timerQuasarRadiation						= mod:NewBuffActiveTimer(21, 361548, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerManifestCosmosCD						= mod:NewCDCountTimer(23.1, 362390, nil, nil, nil, 1, nil, DBM_COMMON_L.HEROIC_ICON)
 local timerStellarShroudCD						= mod:NewCDCountTimer(28.8, 366379, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON .. DBM_COMMON_L.MYTHIC_ICON)
-local timerCorruptedStrikesCD					= mod:NewCDTimer(6, 362184, nil, "Tank", nil, 5, 2, DBM_COMMON_L.TANK_ICON)
+local timerCorruptedStrikesCD					= mod:NewCDTimer(6, 362184, nil, "Tank", 2, 5, nil, DBM_COMMON_L.TANK_ICON)
 --local timerCelestialTerminatorCD				= mod:NewCDCountTimer(28.8, 363108, nil, nil, nil, 3)
 local timerMassiveBangCD						= mod:NewCDCountTimer(28.8, 363533, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerMassiveBang							= mod:NewCastTimer(10, 363533, nil, nil, nil, 5, nil, DBM_COMMON_L.DEADLY_ICON)
@@ -315,8 +315,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnDarkQuasarPersonal:Play("runout")
 		yellarkQuasarPersonal:Countdown(spellId, 2)
 	elseif spellId == 368080 then
-		warnDarkDarkQuasarBoss:Cancel()
-		warnDarkDarkQuasarBoss:Shedule(0.3, args.destName, args.amount or 1)
+		warnDarkQuasarBoss:Cancel()
+		warnDarkQuasarBoss:Schedule(0.3, args.destName, args.amount or 1)
 	elseif spellId == 363773 then--Boss Entering Singularity
 		timerDarkEclipseCD:Stop()
 		timerCelestialCollapseCD:Stop()
@@ -367,7 +367,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	elseif spellId == 368082 and args:IsPlayer() then
 		yellarkQuasarPersonal:Cancel()
 	elseif spellId == 368080 then
-		warnDarkDarkQuasarBossFaded:Show()
+		warnDarkQuasarBossFaded:Show()
 	elseif spellId == 363773 then --Boss Leaving Singularity
 		self.vb.eclipseCount = 0
 		self.vb.collapseCount = 0

@@ -1,6 +1,6 @@
 local W, F, E, L = unpack(select(2, ...))
-local ES = E:GetModule("Skins")
-local S = W:GetModule("Skins")
+local ES = E.Skins
+local S = W.Modules.Skins
 
 local _G = _G
 local gsub = gsub
@@ -24,6 +24,14 @@ local function RemoveBorder(frame)
             if tex and tex == 130841 then
                 region:Kill()
             end
+        end
+    end
+end
+
+local function HandleAllChildButtons(frame)
+    for _, child in pairs {frame:GetChildren()} do
+        if child:IsObjectType("Button") then
+            ES:HandleButton(child)
         end
     end
 end
@@ -728,7 +736,36 @@ function S:WeakAurasOptions()
     -- self:SecureHook(_G.WeakAuras, "TextEditor", "WeakAuras_TextEditor")
 end
 
+function S:WeakAuras_CreateTemplateView(Private, frame)
+    local frame = self.hooks[_G.WeakAuras].CreateTemplateView(Private, frame)
+    HandleAllChildButtons(frame)
+    return frame
+end
+
+function S:WeakAurasTemplatesLoadTimerBody()
+    if _G.WeakAuras and _G.WeakAuras.CreateTemplateView then
+        self:CancelTimer(self.weakAurasTemplatesLoadTimer)
+        self.weakAurasTemplatesLoadTimer = nil
+        self:RawHook(_G.WeakAuras, "CreateTemplateView", "WeakAuras_CreateTemplateView")
+
+        if _G.WeakAurasOptions then
+            if _G.WeakAurasOptions.newView and _G.WeakAurasOptions.newView.frame then
+                HandleAllChildButtons(_G.WeakAurasOptions.newView.frame)
+            end
+        end
+    end
+end
+
+function S:WeakAurasTemplates()
+    if not E.private.WT.skins.enable or not E.private.WT.skins.addons.weakAuras then
+        return
+    end
+
+    self.weakAurasTemplatesLoadTimer = self:ScheduleRepeatingTimer("WeakAurasTemplatesLoadTimerBody", 0.1)
+end
+
 S:AddCallbackForAddon("WeakAurasOptions")
+S:AddCallbackForAddon("WeakAurasTemplates")
 S:AddCallbackForAceGUIWidget("WeakAurasMultiLineEditBox")
 S:AddCallbackForAceGUIWidget("WeakAurasDisplayButton")
 S:AddCallbackForAceGUIWidget("WeakAurasIconButton")

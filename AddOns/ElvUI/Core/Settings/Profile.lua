@@ -386,6 +386,9 @@ P.bags = {
 		showCount = true,
 		justBackpack = false,
 		visibility = E.Retail and '[petbattle] hide; show' or 'show',
+		font = 'PT Sans Narrow',
+		fontOutline = 'OUTLINE',
+		fontSize = 12,
 	},
 }
 
@@ -651,7 +654,10 @@ P.nameplates = {
 	colors = {
 		auraByType = true,
 		auraByDispels = true,
+		preferGlowColor = true,
 		glowColor = {r = 1, g = 1, b = 1, a = 1},
+		lowHealthColor = {r = 1, g = 1, b = 0.3, a = 1},
+		lowHealthHalf = {r = 1, g = 0.3, b = 0.3, a = 1},
 		castColor = {r = 1, g = 0.81, b = 0},
 		tapped = {r = 0.6, g = 0.6, b = 0.6},
 		castNoInterruptColor = {r = 0.78, g = 0.25, b = 0.25},
@@ -1016,7 +1022,6 @@ P.chat = {
 	showHistory = {
 		WHISPER = true,
 		GUILD = true,
-		OFFICER = true,
 		PARTY = true,
 		RAID = true,
 		INSTANCE = true,
@@ -1138,8 +1143,10 @@ P.tooltip = {
 	gender = false,
 	font = 'PT Sans Narrow',
 	fontOutline = 'NONE',
-	headerFontSize = 12,
-	textFontSize = 12,
+	textFontSize = 12, -- is fontSize (has old name)
+	headerFont = 'PT Sans Narrow',
+	headerFontOutline = 'NONE',
+	headerFontSize = 13,
 	smallTextFontSize = 12,
 	colorAlpha = 0.8,
 	visibility = {
@@ -1433,6 +1440,7 @@ local UF_PVPIcon = {
 
 local UF_RaidRoles = {
 	enable = true,
+	scale = 1,
 	position = 'TOPLEFT',
 	xOffset = 0,
 	yOffset = 4,
@@ -1558,6 +1566,11 @@ P.unitframe = {
 		CTRL = 'NONE',
 		ALT = 'NONE',
 	},
+	altManaPowers = {
+		DRUID = { Rage = true, LunarPower = true },
+		SHAMAN = { Maelstrom = true },
+		PRIEST = { Insanity = true }
+	},
 	thinBorders = true,
 	targetSound = false,
 	colors = {
@@ -1620,6 +1633,11 @@ P.unitframe = {
 			INSANITY = {r = 0.55, g = 0.14, b = 0.69},
 			MAELSTROM = {r = 0, g = 0.5, b = 1},
 			ALT_POWER = {r = 0.2, g = 0.4, b = 0.8},
+		},
+		happiness = {
+			[1] = {r = .69, g = .31, b = .31},
+			[2] = {r = .65, g = .63, b = .35},
+			[3] = {r = .33, g = .59, b = .33},
 		},
 		reaction = {
 			BAD = { r = 199/255, g = 64/255, b = 64/255 },
@@ -1740,6 +1758,7 @@ P.unitframe = {
 				xOffset = -3,
 				yOffset = 6,
 				size = 22,
+				hideAtMaxLevel = false,
 			},
 			CombatIcon = CopyTable(UF_CombatIcon),
 			classbar = CopyTable(UF_ClassBar),
@@ -2330,16 +2349,19 @@ P.cooldown = {
 	roundTime = true,
 	hideBlizzard = false,
 	useIndicatorColor = false,
-	expiringColor = { r = 1, g = 0, b = 0 },
-	secondsColor = { r = 1, g = 1, b = 0 },
+	modRateColor = { r = 0.6, g = 1, b = 0.4 },
+	expiringColor = { r = 1, g = 0.2, b = 0.2 },
+	secondsColor = { r = 1, g = 1, b = 0.2 },
 	minutesColor = { r = 1, g = 1, b = 1 },
 	hoursColor = { r = 0.4, g = 1, b = 1 },
 	daysColor = { r = 0.4, g = 0.4, b = 1 },
-	expireIndicator = { r = 1, g = 1, b = 1 },
-	secondsIndicator = { r = 1, g = 1, b = 1 },
-	minutesIndicator = { r = 1, g = 1, b = 1 },
-	hoursIndicator = { r = 1, g = 1, b = 1 },
-	daysIndicator = { r = 1, g = 1, b = 1 },
+
+	modRateIndicator = { r = 0.8, g = 0.8, b = 0.8 },
+	expireIndicator = { r = 0.8, g = 0.8, b = 0.8 },
+	secondsIndicator = { r = 0.8, g = 0.8, b = 0.8 },
+	minutesIndicator = { r = 0.8, g = 0.8, b = 0.8 },
+	hoursIndicator = { r = 0.8, g = 0.8, b = 0.8 },
+	daysIndicator = { r = 0.8, g = 0.8, b = 0.8 },
 	hhmmColorIndicator = { r = 1, g = 1, b = 1 },
 	mmssColorIndicator = { r = 1, g = 1, b = 1 },
 
@@ -2583,7 +2605,7 @@ P.actionbar.bar5.buttonsPerRow = 6
 
 do -- cooldown stuff
 	P.actionbar.cooldown = CopyTable(P.cooldown)
-	P.actionbar.cooldown.expiringColor = { r = 1, g = 0, b = 0 }
+	P.actionbar.cooldown.expiringColor = { r = 1, g = 0.2, b = 0.2 }
 	P.actionbar.cooldown.secondsColor = { r = 1, g = 1, b = 1 }
 	P.actionbar.cooldown.hoursColor = { r = 1, g = 1, b = 1 }
 	P.actionbar.cooldown.daysColor = { r = 1, g = 1, b = 1 }

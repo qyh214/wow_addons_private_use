@@ -1,7 +1,7 @@
 local W, F, E, L = unpack(select(2, ...))
 local CT = W:NewModule("Contacts", "AceHook-3.0")
-local S = W:GetModule("Skins")
-local ES = E:GetModule("Skins")
+local S = W.Modules.Skins
+local ES = E.Skins
 
 local _G = _G
 local floor = floor
@@ -162,8 +162,8 @@ function CT:ConstructFrame()
     S:MerathilisUISkin(frame.backdrop)
 
     -- Register move frames
-    if E.private.WT.misc.moveBlizzardFrames then
-        local MF = W:GetModule("MoveFrames")
+    if E.private.WT.misc.moveFrames.enable then
+        local MF = W.Modules.MoveFrames
         MF:HandleFrame("WTContacts", "MailFrame")
     end
 
@@ -675,7 +675,7 @@ function CT:Initialize()
     self:UpdateAltsTable()
     self.db = E.db.WT.item.contacts
 
-    if not self.db.enable or self.Initialized then
+    if not self.db.enable or self.initialized then
         return
     end
 
@@ -685,7 +685,7 @@ function CT:Initialize()
     self:ConstructPageController()
 
     self:SecureHookScript(_G.SendMailFrame, "OnShow", "SendMailFrame_OnShow")
-    self.Initialized = true
+    self.initialized = true
 end
 
 function CT:ProfileUpdate()
@@ -696,7 +696,7 @@ function CT:ProfileUpdate()
         self.frame:Show()
         self.toggleButton:Show()
     else
-        if self.Initialized then
+        if self.initialized then
             self.frame:Hide()
             self.toggleButton:Hide()
         end

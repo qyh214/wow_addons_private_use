@@ -371,6 +371,10 @@ L["Earthrager"] = "Terracundo"
 L["Ebonclaw Worg"] = "Huargo Garra de Ébano"
 L["Echelon"] = "Echelon"
 L["Edit"] = "Editar"
+--[[Translation missing --]]
+--[[ L["Efficiency Score"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["EfficiencyScoreTip"] = ""--]] 
 L["Elder Leaxa"] = "Anciana Leaxa"
 L["Elemental"] = "Elemental"
 L["Elfyra"] = "Elfyra"

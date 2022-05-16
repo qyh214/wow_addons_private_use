@@ -1,3 +1,49 @@
+v3.9.2.2
+- Theater of Pain: Health update for Minibosses
+v3.9.2.1
+- De Other Side: Fixed npcid and count for Atal'ai Devoted
+v3.9.2
+- New Feature: Efficiency Score! This is a new value on NPC tooltips that indicates how valuable an NPCs dungeon count is compared to their health. If this feature proves valuable it can be extended to pulls and even full routes.
+- Cleaned up Spell Data for enemies and added interruptible flag to appropriate spells.
+- Importing and renaming a preset now requires one less button press
+- Fixed an issue where Tormented enemies (SL Season 2 Affix) could be visible in the pull list and pull outlines
+- Affix update
+- Multiple Tazavesh Streets / Gambit updates including Patrol Paths, Fixed Group Linking and more by walkmanake
+- Health values for Season 3 have been updated for all Shadowlands dungeons
+- Dungeon updates by Blizzard that include count changes will from now on be updated via an automated script. Thanks once again to Stinth!
+- Count updates:
+  - Black Rook Hold
+      Wyrmtongue Trickster with id 98900 has been updated: 4 -> 3
+      Wyrmtongue Scavenger with id 98792 has been updated: 4 -> 3
+      Total dungeon count has been updated: 300 -> 312
+  - Court of Stars
+      Duskwatch Sentry with id 104251 has been updated: 4 -> 3
+      Felbound Enforcer with id 104278 has been updated: 10 -> 12
+  - Darkheart Thicket
+      Vilethorn Blossom with id 99360 has been updated: 9 -> 4
+      Total dungeon count has been updated: 280 -> 273
+  - Eye of Azshara
+      Hatecoil Warrior with id 111637 has been updated: 4 -> 0
+  - Neltharion's Lair
+      Mightstone Breaker with id 90997 has been updated: 4 -> 5
+      Rockback Gnasher with id 91006 has been updated: 4 -> 3
+      Rockback Gnasher with id 91006 has been updated: 4 -> 3
+  - Return to Karazhan Lower
+      Coldmist Widow with id 115019 has been updated: 8 -> 4
+      Arcanid with id 115020 has been updated: 8 -> 4
+  - Return to Karazhan Upper
+      Abstract Nullifier with id 115765 has been updated: 16 -> 12
+  - Siege of Boralus
+      Kul Tiran Halberd with id 141283 has been updated: 4 -> 0
+      Kul Tiran Footman with id 141495 has been updated: 1 -> 0
+      Kul Tiran Marksman with id 141285 has been updated: 4 -> 0
+  - De Other Side
+      Atal'ai Devoted with id 171333 has been updated: 2 -> 0
+v3.9.1
+- affix update
+v3.9.0
+- affix update
+- Streets of wonder: Skulker unlinked from G14
 v3.8.9
 - affix update
 v3.8.8

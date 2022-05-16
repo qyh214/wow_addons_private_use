@@ -139,7 +139,7 @@ end
 function A:Initialize()
     self.db = E.db.WT.announcement
 
-    if not self.db.enable or self.Initialized then
+    if not self.db.enable or self.initialized then
         return
     end
 
@@ -149,14 +149,16 @@ function A:Initialize()
 
     self:InitializeAuthority()
     self:ResetAuthority()
+    self:UpdateBlizzardQuestAnnouncement()
 
-    self.Initialized = true
+    self.initialized = true
 end
 
 function A:ProfileUpdate()
     self:Initialize()
+    self:UpdateBlizzardQuestAnnouncement()
 
-    if self.db.enable or not self.Initialized then
+    if self.db.enable or not self.initialized then
         return
     end
 
@@ -166,7 +168,7 @@ function A:ProfileUpdate()
     end
 
     self:ResetAuthority()
-    self.Initialized = false
+    self.initialized = false
 end
 
 W:RegisterModule(A:GetName())

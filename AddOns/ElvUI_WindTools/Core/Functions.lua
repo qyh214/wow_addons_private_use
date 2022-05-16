@@ -1,17 +1,21 @@
 local W, F, E, L, V, P, G = unpack(select(2, ...))
 local LSM = E.Libs.LSM
 
+local _G = _G
+local abs = abs
 local format = format
+local min = min
 local pairs = pairs
 local pcall = pcall
 local print = print
 local strbyte = strbyte
 local strfind = strfind
 local strlen = strlen
+local strmatch = strmatch
 local strsub = strsub
 local tinsert = tinsert
-local tremove = tremove
 local tonumber = tonumber
+local tremove = tremove
 local type = type
 local unpack = unpack
 
@@ -71,7 +75,7 @@ function F.SetFontOutline(text, font, size)
     end
 
     if font and not strfind(font, "%.ttf") and not strfind(font, "%.otf") then
-        font = LSM:Fetch('font', font)
+        font = LSM:Fetch("font", font)
     end
 
     text:FontTemplate(font or fontName, size or fontHeight, "OUTLINE")
@@ -255,5 +259,54 @@ function F.SetCallback(callback, target, times, ...)
         end
     end
 
-    E:Delay(0.1, F.SetCallback, callback, target, times+1, ...)
+    E:Delay(0.1, F.SetCallback, callback, target, times + 1, ...)
+end
+
+do
+    local pattern = gsub(ITEM_LEVEL, "%%d", "(%%d+)")
+    function F.GetRealItemLevelByLink(link)
+        E.ScanTooltip:SetOwner(_G.UIParent, "ANCHOR_NONE")
+        E.ScanTooltip:ClearLines()
+        E.ScanTooltip:SetHyperlink(link)
+
+        for i = 2, 5 do
+            local leftText = _G[E.ScanTooltip:GetName() .. "TextLeft" .. i]
+            if leftText then
+                local text = leftText:GetText() or ""
+                local level = strmatch(text, pattern)
+                if level then
+                    return level
+                end
+            end
+        end
+    end
+end
+
+do
+    local color = {
+        start = {
+            r = 1.000,
+            g = 0.647,
+            b = 0.008
+        },
+        complete = {
+            r = 0.180,
+            g = 0.835,
+            b = 0.451
+        }
+    }
+
+    function F.GetProgressColor(progress)
+        local r = (color.complete.r - color.start.r) * progress + color.start.r
+        local g = (color.complete.g - color.start.g) * progress + color.start.g
+        local b = (color.complete.r - color.start.b) * progress + color.start.b
+
+        -- algorithm to let the color brighter
+        local addition = 0.35
+        r = min(r + abs(0.5 - progress) * addition, r)
+        g = min(g + abs(0.5 - progress) * addition, g)
+        b = min(b + abs(0.5 - progress) * addition, b)
+
+        return {r = r, g = g, b = b}
+    end
 end

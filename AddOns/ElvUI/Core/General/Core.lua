@@ -313,18 +313,27 @@ function E:UpdateMedia()
 	E.media.rgbvaluecolor = E:SetColorTable(E.media.rgbvaluecolor, value)
 	E.media.hexvaluecolor = E:RGBToHex(value.r, value.g, value.b)
 
-	-- Chat Tab Selector Color
-	E:UpdateClassColor(E.db.chat.tabSelectorColor)
+	if E.private.nameplates.enable then
+		-- Colors for Target Indicator
+		E:UpdateClassColor(E.db.nameplates.colors.glowColor)
+		E:UpdateClassColor(E.db.nameplates.colors.lowHealthColor)
+		E:UpdateClassColor(E.db.nameplates.colors.lowHealthHalf)
+	end
 
-	-- Chat Panel Background Texture
-	local LeftChatPanel, RightChatPanel = _G.LeftChatPanel, _G.RightChatPanel
-	if LeftChatPanel and LeftChatPanel.tex and RightChatPanel and RightChatPanel.tex then
-		LeftChatPanel.tex:SetTexture(E.db.chat.panelBackdropNameLeft)
-		RightChatPanel.tex:SetTexture(E.db.chat.panelBackdropNameRight)
+	if E.private.chat.enable then
+		-- Chat Tab Selector Color
+		E:UpdateClassColor(E.db.chat.tabSelectorColor)
 
-		local a = E.db.general.backdropfadecolor.a or 0.5
-		LeftChatPanel.tex:SetAlpha(a)
-		RightChatPanel.tex:SetAlpha(a)
+		-- Chat Panel Background Texture
+		local LeftChatPanel, RightChatPanel = _G.LeftChatPanel, _G.RightChatPanel
+		if LeftChatPanel and LeftChatPanel.tex and RightChatPanel and RightChatPanel.tex then
+			LeftChatPanel.tex:SetTexture(E.db.chat.panelBackdropNameLeft)
+			RightChatPanel.tex:SetTexture(E.db.chat.panelBackdropNameRight)
+
+			local a = E.db.general.backdropfadecolor.a or 0.5
+			LeftChatPanel.tex:SetAlpha(a)
+			RightChatPanel.tex:SetAlpha(a)
+		end
 	end
 
 	E:ValueFuncCall()
@@ -358,6 +367,7 @@ function E:GeneralMedia_ApplyToAll()
 	E.db.general.minimap.locationFont = font
 	E.db.tooltip.font = font
 	E.db.tooltip.fontSize = fontSize
+	E.db.tooltip.headerFont = font
 	E.db.tooltip.headerFontSize = fontSize
 	E.db.tooltip.textFontSize = fontSize
 	E.db.tooltip.smallTextFontSize = fontSize

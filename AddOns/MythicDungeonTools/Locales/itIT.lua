@@ -370,6 +370,10 @@ L["Earthrager"] = "Spaccaterra"
 L["Ebonclaw Worg"] = "Worg Cupartiglio"
 L["Echelon"] = "Eminenth"
 L["Edit"] = "Modifica"
+--[[Translation missing --]]
+--[[ L["Efficiency Score"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["EfficiencyScoreTip"] = ""--]] 
 L["Elder Leaxa"] = "Anziana Leaxa"
 L["Elemental"] = "Elementale"
 L["Elfyra"] = "Elfaba"

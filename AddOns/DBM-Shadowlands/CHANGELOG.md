@@ -1,23 +1,42 @@
 # <DBM> World Bosses (Shadowlands)
 
-## [9.2.13](https://github.com/DeadlyBossMods/DBM-Retail/tree/9.2.13) (2022-04-12)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/9.2.12...9.2.13) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
+## [9.2.17](https://github.com/DeadlyBossMods/DBM-Retail/tree/9.2.17) (2022-05-11)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/9.2.16...9.2.17) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
 
-- Update DBM-WorldEvents.toc (#750)  
-- fixed bug that caused tbc to flag every update as a new patch update (thus causing force update to run every update since patch 2.5.4. It's not intended behavior for the force to run every update, just for major patches. Also prep for new tags  
-- Fixed a bug where Titantic Insight was using wrong spell id and thus showing wrong spell name in options and alerts  
-- Update DBM-SanctumOfDomination.toc (#749)  
-- fix lua error when calling \"whereami\" command in a zone that has no map  
-- Peel back some of debug spam  
-- Remove this useless variable  
-- Add in some core debug  
-- note it so it doesn't happen again  
-- Fixed a logic regression that caused all regular announces to have no sounds unless they had voice pack sounds. apparently only one user out of hundreds f thousands noticed this in 3 weeks. 🤷‍♂️  
-- Fix something that slipped through last  
-- Remove useless stuff from antros  
-- apply antispam for good measure  
-- Add two more requests for Tazavesh trash.  
-- Fix missing spellid regististration on Lihuvim  
-- bump alpha  
-- prep new tbc tag for the ZA fix  
-- bump alpha  
+- prep new tags  
+- update BW version checker  
+- Update ci.yml update BCC repo  
+- Disable all combat types except ES/EE for Lihuvim  
+- Fix Luacheck  
+- Update DBM-Shadowlands.toc (#758)  
+    Title in Russian  
+- Update DBM-Party-Shadowlands.toc (#757)  
+    Title in Russian  
+- Fix Lihuvim ceature ID for health % reporting  
+- Fix corrupted strikes timer icon  
+- add a slash command for easily directing users to run test mode  
+- Missed the disable  
+- Allow trash warnings during Affront to challengers so when trash is pulled with boss it isn't filtred  
+- Added more Stage 2 data for heroic Pantheon  
+- Update localization.ru.lua (#115) Make title shorter \"L.Panel\_SpecWarnFrame\" and minor edits.  
+- Update localization.ru.lua (#114) Minor typo. Swap.  
+- Update koKR (#112)  
+- Update localization.ru.lua (#111) Missing phrases and correction.  
+- Update zhTW (#110)  
+- AutoLogger Update - Split mythic raid logging rom non mythic logging - Added Mythic 0 logging option - Added note to heroic dungeon logging that if using queuing, the LFG filter needs to be considered (affects retail and possibly wrath classic)  
+- Update koKR (#109) * Update koKR  * Update koKR  
+- Update localization.ru.lua (#108) Missing phrases.  
+- Mini dragon patch 1 (#107)  
+- Update zhTW (#106)  
+- Tidy the logging GUI a bit  
+- Redid auto logging logic to be far more customizable and understandable now.  
+- Update koKR (Retail) (#756)  
+    Co-authored-by: Artemis <QartemisT@gmail.com>  
+- Update localization.cn.lua (#105)  
+- Fix stupidity  
+- detect purged by fire target  
+- Fix whitespace in example code  
+- embed LibSpecialization  
+- added user requested Ancient Core Hound spells to Tazavesh trash  
+- Update koKR (#103)  
+- bump alpha again, hopefully for last time this week  

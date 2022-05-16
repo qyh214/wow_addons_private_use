@@ -1,5 +1,5 @@
 local W, F, E, L = unpack(select(2, ...))
-local S = W:GetModule("Skins")
+local S = W.Modules.Skins
 
 local _G = _G
 
@@ -9,7 +9,7 @@ function S:Blizzard_Calendar()
     end
 
     self:CreateBackdropShadow(_G.CalendarFrame)
-    self:CreateBackdropShadow(_G.CalendarViewHolidayFrame)
+    self:CreateShadow(_G.CalendarViewHolidayFrame)
 end
 
 S:AddCallbackForAddon("Blizzard_Calendar")

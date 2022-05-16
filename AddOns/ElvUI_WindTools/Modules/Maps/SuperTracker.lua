@@ -25,10 +25,6 @@ function ST:ReskinDistanceText()
         self.db.distanceText.color.g,
         self.db.distanceText.color.b
     )
-
-    if self.db.distanceText.onlyNumber then
-        _G.IN_GAME_NAVIGATION_RANGE = "%d"
-    end
 end
 
 function ST:HookPin()

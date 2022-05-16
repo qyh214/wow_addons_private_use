@@ -1126,13 +1126,14 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 	if (RSConstants.CONTAINERS_WITH_PRE_EVENT[entityID]) then
 		local containerID = RSConstants.CONTAINERS_WITH_PRE_EVENT[entityID]
 		RSGeneralDB.RemoveAlreadyFoundEntity(entityID)
+		vignetteInfo.name = RSContainerDB.GetContainerName(entityID)
 		vignetteInfo.atlasName = RSConstants.CONTAINER_VIGNETTE
 		entityID = containerID
 		vignetteInfo.preEvent = true
 	end
 
 	-- Check it it is an entity that use a vignette but it isn't a rare, event or treasure
-	if (RSUtils.Contains(RSConstants.INGNORED_VIGNETTES, entityID)) then
+	if (RSUtils.Contains(RSConstants.IGNORED_VIGNETTES, entityID)) then
 		return
 	end
 
@@ -1934,6 +1935,11 @@ local function UpdateRareNamesDB()
 			end
 			for preEntityID, _ in pairs (RSConstants.CONTAINERS_WITH_PRE_EVENT) do
 				RSGeneralDB.RemoveAlreadyFoundEntity(preEntityID)
+			end
+			
+			-- Remove ignored entities
+			for _, entityID in ipairs (RSConstants.IGNORED_VIGNETTES) do
+				RSGeneralDB.RemoveAlreadyFoundEntity(entityID)
 			end
 			
 			-- Continue refreshing the rest of the database

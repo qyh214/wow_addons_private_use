@@ -41,6 +41,7 @@ local hooksecurefunc = hooksecurefunc
 local InCombatLockdown = InCombatLockdown
 local IsAltKeyDown = IsAltKeyDown
 local IsInRaid, IsInGroup = IsInRaid, IsInGroup
+local IsSecureCmd = IsSecureCmd
 local IsShiftKeyDown = IsShiftKeyDown
 local PlaySound = PlaySound
 local PlaySoundFile = PlaySoundFile
@@ -133,14 +134,13 @@ local tabTexs = {
 	'Highlight'
 }
 
-local historyTypes = { -- the events set on the chats are still in FindURL_Events, this is used to ignore some types only
+local historyTypes = { -- most of these events are set in FindURL_Events, this is mainly used to ignore types
 	CHAT_MSG_WHISPER			= 'WHISPER',
 	CHAT_MSG_WHISPER_INFORM		= 'WHISPER',
 	CHAT_MSG_BN_WHISPER			= 'WHISPER',
 	CHAT_MSG_BN_WHISPER_INFORM	= 'WHISPER',
 	CHAT_MSG_GUILD				= 'GUILD',
 	CHAT_MSG_GUILD_ACHIEVEMENT	= 'GUILD',
-	CHAT_MSG_OFFICER		= 'OFFICER',
 	CHAT_MSG_PARTY			= 'PARTY',
 	CHAT_MSG_PARTY_LEADER	= 'PARTY',
 	CHAT_MSG_RAID			= 'RAID',
@@ -151,7 +151,8 @@ local historyTypes = { -- the events set on the chats are still in FindURL_Event
 	CHAT_MSG_CHANNEL		= 'CHANNEL',
 	CHAT_MSG_SAY			= 'SAY',
 	CHAT_MSG_YELL			= 'YELL',
-	CHAT_MSG_EMOTE			= 'EMOTE' -- this never worked, check it sometime.
+	CHAT_MSG_OFFICER		= 'OFFICER', -- only used for alerts, not in FindURL_Events as this is a protected channel
+	CHAT_MSG_EMOTE			= 'EMOTE' -- this never worked, check it sometime
 }
 
 if not E.Retail then
@@ -1526,8 +1527,8 @@ function CH:HandleShortChannels(msg, hide)
 	msg = gsub(msg, '^(.-|h) '..L["whispers"], '%1')
 	msg = gsub(msg, '^(.-|h) '..L["says"], '%1')
 	msg = gsub(msg, '^(.-|h) '..L["yells"], '%1')
-	msg = gsub(msg, '<'.._G.AFK..'>', '[|cffFF0000'..L["AFK"]..'|r] ')
-	msg = gsub(msg, '<'.._G.DND..'>', '[|cffE7E716'..L["DND"]..'|r] ')
+	msg = gsub(msg, '<'.._G.AFK..'>', '[|cffFF9900'..L["AFK"]..'|r] ')
+	msg = gsub(msg, '<'.._G.DND..'>', '[|cffFF3333'..L["DND"]..'|r] ')
 	msg = gsub(msg, '^%['.._G.RAID_WARNING..'%]', '['..L["RW"]..']')
 	return msg
 end
@@ -1883,9 +1884,9 @@ function CH:ChatFrame_MessageEventHandler(frame, event, arg1, arg2, arg3, arg4, 
 					arg1 = arg1 .. ' ' .. _G.Social_GetShareAchievementLink(achieveID, true)
 				end
 			end
-			frame:AddMessage(format(arg1, GetPlayerLink(arg2, ('[%s]'):format(coloredName))), info.r, info.g, info.b, info.id, nil, nil, isHistory, historyTime)
+			frame:AddMessage(format(arg1, GetPlayerLink(arg2, format('[%s]', coloredName))), info.r, info.g, info.b, info.id, nil, nil, isHistory, historyTime)
 		elseif strsub(chatType,1,18) == 'GUILD_ACHIEVEMENT' then
-			local message = format(arg1, GetPlayerLink(arg2, ('[%s]'):format(coloredName)))
+			local message = format(arg1, GetPlayerLink(arg2, format('[%s]', coloredName)))
 			if C_SocialIsSocialEnabled() then
 				local achieveID = GetAchievementInfoFromHyperlink(arg1)
 				if achieveID then
@@ -1914,7 +1915,7 @@ function CH:ChatFrame_MessageEventHandler(frame, event, arg1, arg2, arg3, arg4, 
 				globalstring = _G['CHAT_'..arg1..'_NOTICE']
 			end
 			if not globalstring then
-				GMError(('Missing global string for %q'):format('CHAT_'..arg1..'_NOTICE_BN'))
+				GMError(format('Missing global string for %q', 'CHAT_'..arg1..'_NOTICE_BN'))
 				return
 			end
 			if arg5 ~= '' then
@@ -1948,7 +1949,7 @@ function CH:ChatFrame_MessageEventHandler(frame, event, arg1, arg2, arg3, arg4, 
 					if not globalstring then
 						globalstring = _G['CHAT_'..arg1..'_NOTICE']
 						if not globalstring then
-							GMError(('Missing global string for %q'):format('CHAT_'..arg1..'_NOTICE'))
+							GMError(format('Missing global string for %q', 'CHAT_'..arg1..'_NOTICE'))
 							return
 						end
 					end
@@ -1959,7 +1960,7 @@ function CH:ChatFrame_MessageEventHandler(frame, event, arg1, arg2, arg3, arg4, 
 		elseif chatType == 'BN_INLINE_TOAST_ALERT' then
 			local globalstring = _G['BN_INLINE_TOAST_'..arg1]
 			if not globalstring then
-				GMError(('Missing global string for %q'):format('BN_INLINE_TOAST_'..arg1))
+				GMError(format('Missing global string for %q', 'BN_INLINE_TOAST_'..arg1))
 				return
 			end
 
@@ -1976,16 +1977,16 @@ function CH:ChatFrame_MessageEventHandler(frame, event, arg1, arg2, arg3, arg4, 
 				if clientProgram and clientProgram ~= '' then
 					local name = _G.BNet_GetValidatedCharacterName(characterName, battleTag, clientProgram) or ''
 					local characterNameText = _G.BNet_GetClientEmbeddedTexture(clientProgram, 14)..name
-					local linkDisplayText = ('[%s] (%s)'):format(arg2, characterNameText)
+					local linkDisplayText = format('[%s] (%s)', arg2, characterNameText)
 					local playerLink = GetBNPlayerLink(arg2, linkDisplayText, arg13, arg11, chatGroup, 0)
 					message = format(globalstring, playerLink)
 				else
-					local linkDisplayText = ('[%s]'):format(arg2)
+					local linkDisplayText = format('[%s]', arg2)
 					local playerLink = GetBNPlayerLink(arg2, linkDisplayText, arg13, arg11, chatGroup, 0)
 					message = format(globalstring, playerLink)
 				end
 			else
-				local linkDisplayText = ('[%s]'):format(arg2)
+				local linkDisplayText = format('[%s]', arg2)
 				local playerLink = GetBNPlayerLink(arg2, linkDisplayText, arg13, arg11, chatGroup, 0)
 				message = format(globalstring, playerLink)
 			end
@@ -1993,7 +1994,7 @@ function CH:ChatFrame_MessageEventHandler(frame, event, arg1, arg2, arg3, arg4, 
 		elseif chatType == 'BN_INLINE_TOAST_BROADCAST' then
 			if arg1 ~= '' then
 				arg1 = RemoveNewlines(RemoveExtraSpaces(arg1))
-				local linkDisplayText = ('[%s]'):format(arg2)
+				local linkDisplayText = format('[%s]', arg2)
 				local playerLink = GetBNPlayerLink(arg2, linkDisplayText, arg13, arg11, chatGroup, 0)
 				frame:AddMessage(format(_G.BN_INLINE_TOAST_BROADCAST, playerLink, arg1), info.r, info.g, info.b, info.id, nil, nil, isHistory, historyTime)
 			end
@@ -2041,7 +2042,7 @@ function CH:ChatFrame_MessageEventHandler(frame, event, arg1, arg2, arg3, arg4, 
 			local usingEmote = (chatType == 'EMOTE') or (chatType == 'TEXT_EMOTE')
 
 			if usingDifferentLanguage or not usingEmote then
-				playerLinkDisplayText = ('[%s]'):format(coloredName)
+				playerLinkDisplayText = format('[%s]', coloredName)
 			end
 
 			local isCommunityType = chatType == 'COMMUNITIES_CHANNEL'
@@ -2280,11 +2281,7 @@ do
 	end
 end
 
-local ignoreChats = {[2]='Log'}
-if not E.Classic then
-	tinsert(ignoreChats, 3, 'Voice')
-end
-
+local ignoreChats = { [2]='Log', [3]='Voice' }
 function CH:SetupChat()
 	if not E.private.chat.enable then return end
 
@@ -2498,33 +2495,12 @@ function CH:SetChatFont(dropDown, chatFrame, fontSize)
 	CH:UpdateEditboxFont(chatFrame)
 end
 
-CH.SecureSlashCMD = {
-	'^/rl',
-	'^/tar',
-	'^/target',
-	'^/startattack',
-	'^/stopattack',
-	'^/assist',
-	'^/cast',
-	'^/use',
-	'^/castsequence',
-	'^/cancelaura',
-	'^/cancelform',
-	'^/equip',
-	'^/exit',
-	'^/camp',
-	'^/logout'
-}
-
 function CH:ChatEdit_AddHistory(_, line) -- editBox, line
 	line = line and strtrim(line)
 
 	if line and strlen(line) > 0 then
-		for _, command in next, CH.SecureSlashCMD do
-			if strmatch(line, command) then
-				return
-			end
-		end
+		local cmd = strmatch(line, '^/%w+')
+		if cmd and IsSecureCmd(cmd) then return end -- block secure commands from history
 
 		for index, text in pairs(ElvCharacterDB.ChatEditHistory) do
 			if text == line then
@@ -2690,13 +2666,13 @@ function CH:GetCombatLog()
 	if LOG then return LOG, CH:GetTab(LOG) end
 end
 
-function CH:FCFDock_UpdateTabs(dock)
-	if dock == _G.GeneralDockManager then
-		local logchat, logchattab = CH:GetCombatLog()
-		dock.scrollFrame:ClearAllPoints()
-		dock.scrollFrame:Point('RIGHT', dock.overflowButton, 'LEFT')
-		dock.scrollFrame:Point('TOPLEFT', (logchat.isDocked and logchattab) or CH:GetTab(dock.primary), 'TOPRIGHT')
-	end
+function CH:FCFDock_ScrollToSelectedTab(dock)
+	if dock ~= _G.GeneralDockManager then return end
+
+	local logchat, logchattab = CH:GetCombatLog()
+	dock.scrollFrame:ClearAllPoints()
+	dock.scrollFrame:Point('RIGHT', dock.overflowButton, 'LEFT')
+	dock.scrollFrame:Point('TOPLEFT', (logchat.isDocked and logchattab) or CH:GetTab(dock.primary), 'TOPRIGHT')
 end
 
 function CH:FCF_SetWindowAlpha(frame, alpha)
@@ -2856,7 +2832,6 @@ local FindURL_Events = {
 	'CHAT_MSG_BN_INLINE_TOAST_BROADCAST',
 	'CHAT_MSG_GUILD_ACHIEVEMENT',
 	'CHAT_MSG_GUILD',
-	'CHAT_MSG_OFFICER',
 	'CHAT_MSG_PARTY',
 	'CHAT_MSG_PARTY_LEADER',
 	'CHAT_MSG_RAID',
@@ -3538,7 +3513,7 @@ function CH:Initialize()
 	CH:SecureHook('ChatEdit_SetLastActiveWindow')
 	CH:SecureHook('FCFTab_UpdateColors')
 	CH:SecureHook('FCFDock_SelectWindow')
-	CH:SecureHook('FCFDock_UpdateTabs')
+	CH:SecureHook('FCFDock_ScrollToSelectedTab')
 	CH:SecureHook('FCF_SetWindowAlpha')
 	CH:SecureHook('FCF_Close', 'PostChatClose')
 	CH:SecureHook('FCF_DockFrame', 'SnappingChanged')

@@ -1,22 +1,31 @@
 local W, F, E, L, V, P, G = unpack(select(2, ...))
 local options = W.options.misc.args
 local LSM = E.Libs.LSM
-local M = W:GetModule("Misc")
-local MF = W:GetModule("MoveFrames")
+local M = W.Modules.Misc
+local MF = W.Modules.MoveFrames
 local CT = W:GetModule("ChatText")
 local GB = W:GetModule("GameBar")
+local AM = W:GetModule("Automation")
 
 local format = format
+local select = select
 local tonumber = tonumber
 local tostring = tostring
 
+local GetClassColor = GetClassColor
 local GetClassInfo = GetClassInfo
 local GetNumClasses = GetNumClasses
-local GetSpellInfo = GetSpellInfo
+local Item = Item
+local Spell = Spell
 
 local C_CVar_GetCVar = C_CVar.GetCVar
 local C_CVar_GetCVarBool = C_CVar.GetCVarBool
 local C_CVar_SetCVar = C_CVar.SetCVar
+
+local function GetClassColorString(class)
+    local hexString = select(4, GetClassColor(class))
+    return "|c" .. hexString
+end
 
 options.general = {
     order = 1,
@@ -87,32 +96,8 @@ options.general = {
                 E.db.WT.misc[info[#info]] = value
             end
         },
-        autoHideWorldMap = {
-            order = 8,
-            type = "toggle",
-            name = L["Auto Hide Map"],
-            desc = L["Automatically close world map if player enters combat."],
-            get = function(info)
-                return E.db.WT.misc[info[#info]]
-            end,
-            set = function(info, value)
-                E.db.WT.misc[info[#info]] = value
-            end
-        },
-        autoHideBag = {
-            order = 9,
-            type = "toggle",
-            name = L["Auto Hide Bag"],
-            desc = L["Automatically close bag if player enters combat."],
-            get = function(info)
-                return E.db.WT.misc[info[#info]]
-            end,
-            set = function(info, value)
-                E.db.WT.misc[info[#info]] = value
-            end
-        },
         noLootPanel = {
-            order = 10,
+            order = 8,
             type = "toggle",
             name = L["No Loot Panel"],
             desc = L["Disable Blizzard loot info which auto showing after combat overed."],
@@ -123,12 +108,117 @@ options.general = {
                 E.db.WT.misc[info[#info]] = value
                 M:LootPanel()
             end
+        },
+        hotKeyAboveCD = {
+            order = 9,
+            type = "toggle",
+            name = L["HotKey Above CD"],
+            desc = format(
+                "%s\n%s %s",
+                L["Show hotkeys above the ElvUI cooldown animation."],
+                E.NewSign,
+                F.CreateColorString(L["Only works with ElvUI action bar and ElvUI cooldowns."], E.db.general.valuecolor)
+            )
+        },
+        guildNewsItemLevel = {
+            order = 10,
+            type = "toggle",
+            name = L["Guild News IL"],
+            desc = L["Show item level of each item in guild news."]
+        }
+    }
+}
+
+options.automation = {
+    order = 2,
+    type = "group",
+    name = L["Automation"],
+    get = function(info)
+        return E.db.WT.misc.automation[info[#info]]
+    end,
+    set = function(info, value)
+        E.db.WT.misc.automation[info[#info]] = value
+        AM:ProfileUpdate()
+    end,
+    args = {
+        desc = {
+            order = 1,
+            type = "group",
+            inline = true,
+            name = L["Description"],
+            args = {
+                feature = {
+                    order = 1,
+                    type = "description",
+                    name = L["Automate your game life."],
+                    fontSize = "medium"
+                }
+            }
+        },
+        enable = {
+            order = 2,
+            type = "toggle",
+            name = L["Enable"],
+            set = function(info, value)
+                E.db.WT.misc.automation[info[#info]] = value
+            end,
+            width = "full"
+        },
+        hideWorldMapAfterEnteringCombat = {
+            order = 3,
+            type = "toggle",
+            name = L["Auto Hide Map"],
+            desc = L["Automatically close world map if player enters combat."],
+            disabled = function()
+                return not E.db.WT.misc.automation.enable
+            end,
+            width = 1.5
+        },
+        hideBagAfterEnteringCombat = {
+            order = 4,
+            type = "toggle",
+            name = L["Auto Hide Bag"],
+            desc = L["Automatically close bag if player enters combat."],
+            disabled = function()
+                return not E.db.WT.misc.automation.enable
+            end,
+            width = 1.5
+        },
+        acceptResurrect = {
+            order = 5,
+            type = "toggle",
+            name = L["Accept Resurrect"],
+            desc = L["Accept resurrect from other player automatically when you not in combat."],
+            disabled = function()
+                return not E.db.WT.misc.automation.enable
+            end,
+            width = 1.5
+        },
+        acceptCombatResurrect = {
+            order = 6,
+            type = "toggle",
+            name = L["Accept Combat Resurrect"],
+            desc = L["Accept resurrect from other player automatically when you in combat."],
+            disabled = function()
+                return not E.db.WT.misc.automation.enable
+            end,
+            width = 1.5
+        },
+        confirmSummon = {
+            order = 7,
+            type = "toggle",
+            name = L["Confirm Summon"],
+            desc = L["Confirm summon from other player automatically."],
+            disabled = function()
+                return not E.db.WT.misc.automation.enable
+            end,
+            width = 1.5
         }
     }
 }
 
 options.cvars = {
-    order = 2,
+    order = 3,
     type = "group",
     name = L["CVars Editor"],
     get = function(info)
@@ -270,10 +360,10 @@ options.moveFrames = {
     type = "group",
     name = L["Move Frames"],
     get = function(info)
-        return E.private.WT.misc[info[#info]]
+        return E.private.WT.misc.moveFrames[info[#info]]
     end,
     set = function(info, value)
-        E.private.WT.misc[info[#info]] = value
+        E.private.WT.misc.moveFrames[info[#info]] = value
         E:StaticPopup_Show("PRIVATE_RL")
     end,
     args = {
@@ -282,6 +372,7 @@ options.moveFrames = {
             type = "group",
             inline = true,
             name = L["Description"],
+            disabled = false,
             args = {
                 feature = {
                     order = 1,
@@ -300,7 +391,7 @@ options.moveFrames = {
                 }
             }
         },
-        moveBlizzardFrames = {
+        enable = {
             order = 1,
             type = "toggle",
             name = L["Enable"],
@@ -308,21 +399,30 @@ options.moveFrames = {
                 return MF.StopRunning
             end
         },
-        moveElvUIBags = {
+        elvUIBags = {
             order = 2,
             type = "toggle",
             name = L["Move ElvUI Bags"],
             disabled = function()
-                return MF.StopRunning
+                return MF.StopRunning or not E.private.WT.misc.moveFrames.enable
+            end
+        },
+        tradeSkillMasterCompatible = {
+            order = 3,
+            type = "toggle",
+            name = L["TSM Compatible"],
+            desc = L["Fix the merchant frame showing when you using Trader Skill Master."],
+            disabled = function()
+                return MF.StopRunning or not E.private.WT.misc.moveFrames.enable
             end
         },
         remember = {
-            order = 3,
+            order = 4,
             type = "group",
             inline = true,
             name = L["Remember Positions"],
             disabled = function()
-                return MF.StopRunning
+                return MF.StopRunning or not E.private.WT.misc.moveFrames.enable
             end,
             args = {
                 rememberPositions = {
@@ -330,7 +430,7 @@ options.moveFrames = {
                     type = "toggle",
                     name = L["Enable"],
                     set = function(info, value)
-                        E.private.WT.misc[info[#info]] = value
+                        E.private.WT.misc.moveFrames[info[#info]] = value
                     end
                 },
                 clearHistory = {
@@ -338,21 +438,22 @@ options.moveFrames = {
                     type = "execute",
                     name = L["Clear History"],
                     func = function()
-                        E.private.WT.misc.framePositions = {}
+                        E.private.WT.misc.moveFrames.framePositions = {}
                     end
                 },
                 notice = {
                     order = 999,
                     type = "description",
                     name = format(
-                        "|cffff0000%s|r %s",
+                        "\n|cffff0000%s|r %s",
                         L["Notice"],
                         format(
                             L["%s may cause some frames to get messed, but you can use %s button to reset frames."],
                             L["Remember Positions"],
-                            "|cff3498db" .. L["Clear History"] .. "|r"
+                            F.CreateColorString(L["Clear History"], E.db.general.valuecolor)
                         )
-                    )
+                    ),
+                    fontSize = "medium"
                 }
             }
         }
@@ -420,12 +521,16 @@ options.mute = {
                 ["Tortollan"] = {
                     order = 1,
                     type = "toggle",
-                    name = L["Tortollan"]
+                    name = L["Tortollan"],
+                    width = 1.3
                 },
-                ["Smolderheart"] = {
+                ["Crying"] = {
                     order = 2,
                     type = "toggle",
-                    name = L["Smolderheart"]
+                    name = L["Crying"],
+                    desc = L["Mute crying sounds of all races."] ..
+                        "\n|cffff0000" .. L["It will affect the cry emote sound."] .. "|r",
+                    width = 1.3
                 }
             }
         }
@@ -434,11 +539,55 @@ options.mute = {
 
 do
     for id in pairs(V.misc.mute.mount) do
-        options.mute.args.mount.args[tostring(id)] = {
-            order = id,
-            type = "toggle",
-            name = GetSpellInfo(id)
+        local spell = Spell:CreateFromSpellID(id)
+        spell:ContinueOnSpellLoad(
+            function()
+                local icon = spell:GetSpellTexture()
+                local name = spell:GetSpellName()
+
+                local iconString = F.GetIconString(icon)
+
+                options.mute.args.mount.args[tostring(id)] = {
+                    order = id,
+                    type = "toggle",
+                    name = iconString .. " " .. name,
+                    width = 1.5
+                }
+            end
+        )
+    end
+
+    local itemList = {
+        ["Smolderheart"] = {
+            id = 180873,
+            desc = nil
+        },
+        ["Elegy of the Eternals"] = {
+            id = 188270,
+            desc = "|cffff0000" .. L["It will also affect the crying sound of all female Blood Elves."] .. "|r"
         }
+    }
+
+    for name, data in pairs(itemList) do
+        local item = Item:CreateFromItemID(data.id)
+        item:ContinueOnItemLoad(
+            function()
+                local icon = item:GetItemIcon()
+                local name = item:GetItemName()
+                local color = item:GetItemQualityColor()
+
+                local iconString = F.GetIconString(icon)
+                local nameString = F.CreateColorString(name, color)
+
+                options.mute.args.other.args[name] = {
+                    order = data.id,
+                    type = "toggle",
+                    name = iconString .. " " .. nameString,
+                    desc = data.desc,
+                    width = 1.3
+                }
+            end
+        )
     end
 end
 
@@ -481,13 +630,70 @@ do
 
     examples.health = {
         name = L["Health"],
+        absorbsLong = {
+            order = 1,
+            tag = "[absorbs-long]",
+            text = L["The amount of absorbs without math unit"]
+        },
         noSign = {
+            order = 2,
             tag = "[health:percent-nosign]",
-            text = L["The percentage of current health without percent sign"]
+            text = L["The percentage of current health without percent sign"] ..
+                format(" (%s)", L["Follow ElvUI Setting"])
+        },
+        noSign0 = {
+            order = 3,
+            tag = "[health:percent-nosign-0]",
+            text = L["The percentage of current health without percent sign"] ..
+                format(" (%s = 0)", L["Decimal Length"])
+        },
+        noSign1 = {
+            order = 4,
+            tag = "[health:percent-nosign-1]",
+            text = L["The percentage of current health without percent sign"] ..
+                format(" (%s = 1)", L["Decimal Length"])
+        },
+        noSign2 = {
+            order = 5,
+            tag = "[health:percent-nosign-2]",
+            text = L["The percentage of current health without percent sign"] ..
+                format(" (%s = 2)", L["Decimal Length"])
+        },
+        noSign3 = {
+            order = 6,
+            tag = "[health:percent-nosign-3]",
+            text = L["The percentage of current health without percent sign"] ..
+                format(" (%s = 3)", L["Decimal Length"])
         },
         noStatusNoSign = {
+            order = 7,
             tag = "[health:percent-nostatus-nosign]",
-            text = L["The percentage of health without percent sign and status"]
+            text = L["The percentage of health without percent sign and status"] ..
+                format(" (%s)", L["Follow ElvUI Setting"])
+        },
+        noStatusNoSign0 = {
+            order = 8,
+            tag = "[health:percent-nostatus-nosign-0]",
+            text = L["The percentage of health without percent sign and status"] ..
+                format(" (%s = 0)", L["Decimal Length"])
+        },
+        noStatusNoSign1 = {
+            order = 9,
+            tag = "[health:percent-nostatus-nosign-1]",
+            text = L["The percentage of health without percent sign and status"] ..
+                format(" (%s = 1)", L["Decimal Length"])
+        },
+        noStatusNoSign2 = {
+            order = 10,
+            tag = "[health:percent-nostatus-nosign-2]",
+            text = L["The percentage of health without percent sign and status"] ..
+                format(" (%s = 2)", L["Decimal Length"])
+        },
+        noStatusNoSign3 = {
+            order = 11,
+            tag = "[health:percent-nostatus-nosign-3]",
+            text = L["The percentage of health without percent sign and status"] ..
+                format(" (%s = 3)", L["Decimal Length"])
         }
     }
 
@@ -545,10 +751,11 @@ do
 
     for i = 1, GetNumClasses() do
         local upperText = select(2, GetClassInfo(i))
+        local coloredClassName = GetClassColorString(upperText) .. className[upperText] .. "|r"
         examples.color[upperText] = {
             order = i,
             tag = format("[classcolor:%s]", strlower(upperText)),
-            text = format(L["The color of %s"], className[upperText])
+            text = format(L["The color of %s"], coloredClassName)
         }
     end
 

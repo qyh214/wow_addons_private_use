@@ -1,16 +1,16 @@
 local W, F, E, L = unpack(select(2, ...))
 local OT = W:NewModule("ObjectiveTracker", "AceHook-3.0", "AceEvent-3.0")
+local S = W.Modules.Skins
+local LSM = E.Libs.LSM
 
 local _G = _G
-local abs = abs
 local format = format
-local floor = floor
-local ipairs = ipairs
-local min = min
+local max = max
 local pairs = pairs
 local strmatch = strmatch
 local tonumber = tonumber
 
+local CreateFrame = CreateFrame
 local IsAddOnLoaded = IsAddOnLoaded
 local ObjectiveTracker_Update = ObjectiveTracker_Update
 
@@ -37,18 +37,6 @@ end
 AddQuestTitleToReplaceRule(57693, L["Torghast"])
 
 local classColor = _G.RAID_CLASS_COLORS[E.myclass]
-local color = {
-    start = {
-        r = 1.000,
-        g = 0.647,
-        b = 0.008
-    },
-    complete = {
-        r = 0.180,
-        g = 0.835,
-        b = 0.451
-    }
-}
 
 local function SetTextColorHook(text)
     if not text.windHooked then
@@ -86,18 +74,88 @@ local function SetTextColorHook(text)
     end
 end
 
-local function GetProgressColor(progress)
-    local r = (color.complete.r - color.start.r) * progress + color.start.r
-    local g = (color.complete.g - color.start.g) * progress + color.start.g
-    local b = (color.complete.r - color.start.b) * progress + color.start.b
+function OT:CosmeticBar(header)
+    local bar = header.windCosmeticBar
 
-    -- 色彩亮度补偿
-    local addition = 0.35
-    r = min(r + abs(0.5 - progress) * addition, r)
-    g = min(g + abs(0.5 - progress) * addition, g)
-    b = min(b + abs(0.5 - progress) * addition, b)
+    if not self.db.cosmeticBar.enable then
+        if bar then
+            bar:Hide()
+            bar.backdrop:Hide()
+        end
+        return
+    end
 
-    return {r = r, g = g, b = b}
+    if not bar then
+        bar = header:CreateTexture()
+        local backdrop = CreateFrame("Frame", nil, header)
+        backdrop:SetFrameStrata("BACKGROUND")
+        backdrop:SetTemplate()
+        backdrop:SetOutside(bar, 1, 1)
+        backdrop.Center:SetAlpha(0)
+        S:CreateShadow(backdrop, 2, nil, nil, nil, true)
+        bar.backdrop = backdrop
+        header.windCosmeticBar = bar
+    end
+
+    -- Border
+    if self.db.cosmeticBar.border == "NONE" then
+        bar.backdrop:Hide()
+    else
+        if self.db.cosmeticBar.border == "SHADOW" then
+            bar.backdrop.shadow:Show()
+        else
+            bar.backdrop.shadow:Hide()
+        end
+        bar.backdrop:Show()
+    end
+
+    -- Texture
+    bar:SetTexture(LSM:Fetch("statusbar", self.db.cosmeticBar.texture) or E.media.normTex)
+
+    -- Color
+    if self.db.cosmeticBar.color.mode == "CLASS" then
+        bar:SetVertexColor(classColor.r, classColor.g, classColor.b)
+    elseif self.db.cosmeticBar.color.mode == "NORMAL" then
+        bar:SetVertexColor(
+            self.db.cosmeticBar.color.normalColor.r,
+            self.db.cosmeticBar.color.normalColor.g,
+            self.db.cosmeticBar.color.normalColor.b,
+            self.db.cosmeticBar.color.normalColor.a
+        )
+    elseif self.db.cosmeticBar.color.mode == "GRADIENT" then
+        bar:SetVertexColor(1, 1, 1)
+        bar:SetGradientAlpha(
+            "HORIZONTAL",
+            self.db.cosmeticBar.color.gradientColor1.r,
+            self.db.cosmeticBar.color.gradientColor1.g,
+            self.db.cosmeticBar.color.gradientColor1.b,
+            self.db.cosmeticBar.color.gradientColor1.a,
+            self.db.cosmeticBar.color.gradientColor2.r,
+            self.db.cosmeticBar.color.gradientColor2.g,
+            self.db.cosmeticBar.color.gradientColor2.b,
+            self.db.cosmeticBar.color.gradientColor2.a
+        )
+    end
+
+    bar.backdrop:SetAlpha(self.db.cosmeticBar.borderAlpha)
+
+    -- Position
+    bar:ClearAllPoints()
+    bar:SetPoint("LEFT", header.Text, "LEFT", self.db.cosmeticBar.offsetX, self.db.cosmeticBar.offsetY)
+
+    -- Size
+    local width = self.db.cosmeticBar.width
+    local height = self.db.cosmeticBar.height
+    if self.db.cosmeticBar.widthMode == "DYNAMIC" then
+        width = width + header.Text:GetStringWidth()
+    end
+    if self.db.cosmeticBar.heightMode == "DYNAMIC" then
+        height = height + header.Text:GetStringHeight()
+    end
+
+    bar:SetSize(max(width, 1), max(height, 1))
+
+    bar:Show()
 end
 
 function OT:ChangeQuestHeaderStyle()
@@ -109,7 +167,11 @@ function OT:ChangeQuestHeaderStyle()
     for i = 1, #frame do
         local modules = frame[i]
         if modules and modules.Header and modules.Header.Text then
+            self:CosmeticBar(modules.Header)
             F.SetFontWithDB(modules.Header.Text, self.db.header)
+            modules.Header.Text:SetShadowColor(0, 0, 0, 0)
+            modules.Header.Text.SetShadowColor = E.noop
+            modules.Header.Text:SetTextColor(self.db.header.color.r, self.db.header.color.g, self.db.header.color.b)
             if self.db.header.shortHeader then
                 modules.Header.Text:SetText(self:ShortTitle(modules.Header.Text:GetText()))
             end
@@ -142,9 +204,13 @@ function OT:HandleInfoText(text)
         if dash.SetText then
             F.SetFontWithDB(dash, self.db.info)
         end
-        dash:Show()
+        if line.Check and line.Check:IsShown() or line.state and line.state == "COMPLETED" then
+            dash:Hide()
+        else
+            dash:Show()
+        end
         text:ClearAllPoints()
-        text:Point("TOPLEFT", dash, "TOPRIGHT", 0, 0)
+        text:Point("TOPLEFT", dash, "TOPRIGHT", -1, 0)
     end
 end
 
@@ -201,14 +267,14 @@ function OT:ColorfulProgression(text)
     local progress = tonumber(current) / tonumber(required)
 
     if self.db.colorfulProgress then
-        info = F.CreateColorString(current .. "/" .. required, GetProgressColor(progress))
+        info = F.CreateColorString(current .. "/" .. required, F.GetProgressColor(progress))
         info = info .. " " .. details
     end
 
     if self.db.percentage then
         local percentage = format("[%.f%%]", progress * 100)
         if self.db.colorfulPercentage then
-            percentage = F.CreateColorString(percentage, GetProgressColor(progress))
+            percentage = F.CreateColorString(percentage, F.GetProgressColor(progress))
         end
         info = info .. " " .. percentage
     end
@@ -241,7 +307,7 @@ function OT:Initialize()
 
     self:UpdateTextWidth()
 
-    if not self.Initialized then
+    if not self.initialized then
         local trackerModules = {
             _G.UI_WIDGET_TRACKER_MODULE,
             _G.BONUS_OBJECTIVE_TRACKER_MODULE,
@@ -258,7 +324,7 @@ function OT:Initialize()
         self:SecureHook("ObjectiveTracker_Update", "ChangeQuestHeaderStyle")
         self:SecureHook(_G.SCENARIO_CONTENT_TRACKER_MODULE, "UpdateCriteria", "ScenarioObjectiveBlock_UpdateCriteria")
 
-        self.Initialized = true
+        self.initialized = true
     end
 
     E:Delay(

@@ -1,7 +1,7 @@
 local W, F, E, L = unpack(select(2, ...))
 local EB = W:NewModule("ExtraItemsBar", "AceEvent-3.0")
-local S = W:GetModule("Skins")
-local AB = E:GetModule("ActionBars")
+local S = W.Modules.Skins
+local AB = E.ActionBars
 
 local _G = _G
 local ceil = ceil
@@ -408,7 +408,7 @@ local utilities = {
     172233, --致命兇殘之鼓
     172346, --荒寂護甲片
     172347, --厚重荒寂護甲片
-    182749, --回收的琪瑞安之翼
+    182749 --回收的琪瑞安之翼
 }
 
 local openableItems = {
@@ -538,10 +538,14 @@ local openableItems = {
     187575, --科西亞釣魚箱
     187576, --科西亞皮革箱
     187577, --科西亞肉類箱
+    187780, --受啟迪的仲介者物資
+    187781, --歐利亞寶箱
     187817, --科西亞水晶簇
     190178, --原生補給品包
     190610, --受啟迪者長老貢品
-    191139, --受啟迪者長老貢品
+    191040, --聖塚寶藏箱
+    191041, --聖塚寶藏箱
+    191139 --受啟迪者長老貢品
 }
 
 -- 更新任务物品列表
@@ -871,7 +875,11 @@ function EB:CreateBar(id)
     bar:SetScript(
         "OnEnter",
         function(self)
-            if barDB.mouseOver then
+            if not barDB then
+                return
+            end
+
+            if barDB.mouseOver and barDB.alphaMax and barDB.alphaMin then
                 local alphaCurrent = bar:GetAlpha()
                 E:UIFrameFadeIn(
                     bar,
@@ -886,7 +894,11 @@ function EB:CreateBar(id)
     bar:SetScript(
         "OnLeave",
         function(self)
-            if barDB.mouseOver then
+            if not barDB then
+                return
+            end
+
+            if barDB.mouseOver and barDB.alphaMax and barDB.alphaMin then
                 local alphaCurrent = bar:GetAlpha()
                 E:UIFrameFadeOut(
                     bar,
@@ -1169,7 +1181,7 @@ end
 
 function EB:Initialize()
     self.db = E.db.WT.item.extraItemsBar
-    if not self.db or not self.db.enable or self.Initialized then
+    if not self.db or not self.db.enable or self.initialized then
         return
     end
 
@@ -1190,7 +1202,7 @@ function EB:Initialize()
     self:RegisterEvent("QUEST_TURNED_IN", "UpdateQuestItem")
     self:RegisterEvent("UPDATE_BINDINGS", "UpdateBinding")
 
-    self.Initialized = true
+    self.initialized = true
 end
 
 function EB:ProfileUpdate()
@@ -1199,7 +1211,7 @@ function EB:ProfileUpdate()
     if self.db.enable then
         UpdateQuestItemList()
         UpdateEquipmentList()
-    elseif self.Initialized then
+    elseif self.initialized then
         self:UnregisterEvent("UNIT_INVENTORY_CHANGED")
         self:UnregisterEvent("BAG_UPDATE_DELAYED")
         self:UnregisterEvent("ZONE_CHANGED")

@@ -225,7 +225,7 @@ function RSCollectionsDB.RemoveNotCollectedToy(itemID, callback) --NEW_TOY_ADDED
 									elseif (source == RSConstants.ITEM_SOURCE.CONTAINER) then
 										RSConfigDB.SetContainerFiltered(entityID, false)
 										RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedToy[%s]: Filtrado Contenedor [%s] por no disponer de mas coleccionables.", itemID, entityID))
-										if (RSContainerDB.GetContainerNamee(entityID)) then
+										if (RSContainerDB.GetContainerName(entityID)) then
 											RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSContainerDB.GetContainerName(entityID))
 										end
 									end
@@ -384,7 +384,7 @@ function RSCollectionsDB.RemoveNotCollectedPet(petGUID, callback) --NEW_PET_ADDE
 									elseif (source == RSConstants.ITEM_SOURCE.CONTAINER) then
 										RSConfigDB.SetContainerFiltered(entityID, false)
 										RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedPet[%s]: Filtrado Contenedor [%s] por no disponer de mas coleccionables.", petGUID, entityID))
-										if (RSContainerDB.GetContainerNamee(entityID)) then
+										if (RSContainerDB.GetContainerName(entityID)) then
 											RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSContainerDB.GetContainerName(entityID))
 										end
 									end
@@ -533,7 +533,7 @@ function RSCollectionsDB.RemoveNotCollectedMount(mountID, callback) --NEW_MOUNT_
 									elseif (source == RSConstants.ITEM_SOURCE.CONTAINER) then
 										RSConfigDB.SetContainerFiltered(entityID, false)
 										RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedMount[%s]: Filtrado Contenedor [%s] por no disponer de mas coleccionables.", mountID, entityID))
-										if (RSContainerDB.GetContainerNamee(entityID)) then
+										if (RSContainerDB.GetContainerName(entityID)) then
 											RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSContainerDB.GetContainerName(entityID))
 										end
 									end
@@ -622,16 +622,19 @@ end
 
 local function DropNotCollectedAppearance(appearanceID)
 	if (private.dbglobal.appearances_item_id and appearanceID and private.dbglobal.appearances_item_id[appearanceID]) then
-		local itemIDs = private.dbglobal.appearances_item_id[appearanceID]
-		for _, itemID in ipairs (itemIDs) do
-			if (GetNotCollectedAppearanceItemIDs()[itemID]) then
-				RSLogger:PrintDebugMessage(string.format("DropNotCollectedAppearance[%s]. Eliminado item [%s].", appearanceID, itemID))
-				GetNotCollectedAppearanceItemIDs()[itemID] = nil
+		if (GetNotCollectedAppearanceItemIDs()) then
+			local itemIDs = private.dbglobal.appearances_item_id[appearanceID]
+			for _, itemID in ipairs (itemIDs) do
+				if (GetNotCollectedAppearanceItemIDs()[itemID]) then
+					RSLogger:PrintDebugMessage(string.format("DropNotCollectedAppearance[%s]. Eliminado item [%s].", appearanceID, itemID))
+					GetNotCollectedAppearanceItemIDs()[itemID] = nil
+				end
 			end
 		end
 
 		private.dbglobal.appearances_item_id[appearanceID] = nil
-				RSLogger:PrintDebugMessage(string.format("DropNotCollectedAppearance[%s]. Eliminada apariencia.", appearanceID))
+		RSLogger:PrintDebugMessage(string.format("DropNotCollectedAppearance[%s]. Eliminada apariencia.", appearanceID))
+		
 		return true
 	end
 	
@@ -646,7 +649,7 @@ local function CheckUpdateAppearance(itemID, entityID, source, checkedItems)
 		return true
 	-- Otherwise query
 	else				
-		if (GetNotCollectedAppearanceItemIDs()[itemID]) then
+		if (GetNotCollectedAppearanceItemIDs() and GetNotCollectedAppearanceItemIDs()[itemID]) then
 			UpdateEntityCollection(itemID, entityID, source, RSConstants.ITEM_TYPE.APPEARANCE)
 			
 			if (not checkedItems[RSConstants.ITEM_TYPE.APPEARANCE][itemID]) then
@@ -715,7 +718,7 @@ function RSCollectionsDB.RemoveNotCollectedAppearance(appearanceID, callback) --
 											elseif (source == RSConstants.ITEM_SOURCE.CONTAINER) then
 												RSConfigDB.SetContainerFiltered(entityID, false)
 												RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedAppearance[%s]: Filtrado Contenedor [%s] por no disponer de mas coleccionables.", appearanceID, entityID))
-												if (RSContainerDB.GetContainerNamee(entityID)) then
+												if (RSContainerDB.GetContainerName(entityID)) then
 													RSLogger:PrintMessage(AL["EXPLORER_AUTOFILTER"], RSContainerDB.GetContainerName(entityID))
 												end
 											end

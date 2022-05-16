@@ -1,12 +1,10 @@
-tag 8706ff2b511db8f44233b296bd5d13321e115525 9.0-8
+lightweight tag 40acc05a7b3bef28cce9573d04dba662582d29cd 9.2.5-3
 Author:	Xuerian <xuerian@gmail.com>
-Date:	Thu May 20 21:41:27 2021 -0400
+Date:	Thu Apr 21 15:22:21 2022 -0400
 
-Potential fixes for GetCurrencyInfo() failing to return a value/asking it for unloaded currencies
-
-commit d7379356c83666c13876f3c5a2f7862f2e0822f3
+commit 40acc05a7b3bef28cce9573d04dba662582d29cd
 Author: Xuerian <xuerian@gmail.com>
-Date:   Thu May 20 21:40:34 2021 -0400
+Date:   Thu Apr 21 15:22:21 2022 -0400
 
-    Potential fixes for GetCurrencyInfo() failing to return a value/asking it for unloaded currencies
+    Monitor: Add offset and spacing options
 

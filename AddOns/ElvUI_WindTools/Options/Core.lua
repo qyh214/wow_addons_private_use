@@ -103,21 +103,36 @@ gsub(
 function W:OptionsCallback()
     -- 标题
     local icon = F.GetIconString(W.Media.Textures.smallLogo, 14)
-    E.Options.name = E.Options.name .. " + " .. icon .. "  " .. W.Title .. " " .. W.Version
+    E.Options.name = E.Options.name .. " + " .. icon .. " " .. W.Title .. " |cff00ff00" .. W.Version .. "|r"
 
     -- 设置主界面
     E.Options.args.WindTools = {
         type = "group",
         childGroups = "tree",
-        name = W.Title,
+        name = icon .. " " .. W.Title,
         args = {
-            logo = {
+            beforeLogo = {
                 order = 1,
+                type = "description",
+                fontSize = "medium",
+                name = " ",
+                width = "full"
+            },
+            logo = {
+                order = 2,
                 type = "description",
                 name = "",
                 image = function()
-                    return W.Media.Textures.logo, 512, 128
-                end
+                    return W.Media.Textures.title, 364, 106.667
+                end,
+                imageCoords = F.GetTitleTexCoord
+            },
+            afterLogo = {
+                order = 3,
+                type = "description",
+                fontSize = "medium",
+                name = " \n ",
+                width = "full"
             }
         }
     }

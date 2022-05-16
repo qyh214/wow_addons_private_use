@@ -1,5 +1,5 @@
 local W, F, E, L = unpack(select(2, ...))
-local S = W:GetModule("Skins")
+local S = W.Modules.Skins
 
 local _G = _G
 local InCombatLockdown = InCombatLockdown
@@ -42,6 +42,9 @@ function S:ElvUI_OptionsUI()
 
     -- 调整位置
     self:SecureHook(E, "ToggleMoveMode", "ElvUI_SkinMoverPopup")
+
+    -- Key Binds
+    self:CreateShadow(_G.ElvUIBindPopupWindowHeader)
 end
 
 S:AddCallback("ElvUI_OptionsUI")

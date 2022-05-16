@@ -1,0 +1,6 @@
+enable-nolib-creation: no
+ignore:
+  - .buildpath
+  - .project
+  - .gitignore
+  - .settings

@@ -262,7 +262,7 @@ function addon:START_LOOT_ROLL(id, length, uid, ongoing)
 	if opt.equip_prefix then
 		local canequip, isupgrade = CanEquipItem(link), IsItemUpgrade(link)
 		if canequip or isupgrade then
-			name = string_format("|cFF%s%s|r%s", isupgrade and "44FF22" or "BBBBBB", is_upgrade and opt.prefix_upgrade or opt.prefix_equippable, name)
+			name = string_format("|cFF%s%s|r%s", isupgrade and "44FF22" or "BBBBBB", isupgrade and opt.prefix_upgrade or opt.prefix_equippable, name)
 			if isupgrade then
 				(need and frame.need or frame.greed).texture_special:SetTexture([[Interface\AddOns\Pawn\Textures\UpgradeArrow.tga]])
 			end
@@ -330,12 +330,13 @@ function addon:LOOT_HISTORY_ROLL_COMPLETE()
 
 	-- Active frame found
 	frame.over = true
-	local top_type, top_roll, top_pid = 0, 0
+	local top_type, top_roll, top_pid, top_is_me = 0, 0
 	for j=1, players do
 		local name, class, rtype, roll, is_winner, is_me = HistoryGetPlayerInfo(hid, j)
 		-- roll = roll and roll or true
 		if is_winner then
 			top_pid = j
+			top_is_me = is_me
 			break
 		elseif rtype ~= 0 and tidx[rtype] >= tidx[top_type] and (not roll or roll > top_roll) then
 			top_type = rtype
@@ -349,18 +350,18 @@ function addon:LOOT_HISTORY_ROLL_COMPLETE()
 		local name, class = HistoryGetPlayerInfo(hid, top_pid)
 		local player, r, g, b = FancyPlayerName(name, class, opt)
 		if opt.win_icon then
-			if rtype == 'need' then
+			if top_type == 'need' then
 				player = [[|TInterface\Buttons\UI-GroupLoot-Dice-Up:16:16:-1:-1|t]]..player
-			elseif rtype == 'greed' then
+			elseif top_type == 'greed' then
 				player = [[|TInterface\Buttons\UI-GroupLoot-Coin-Up:16:16:-1:-2|t]]..player
-			elseif rtype == 'disenchant' then
+			elseif top_type == 'disenchant' then
 				player = [[|TInterface\Buttons\UI-GroupLoot-DE-Up:16:16:-1:-1|t]]..player
 			end
 		end
 		frame.text_status:SetText(player)
 		frame.text_status:SetTextColor(r, g, b)
 		frame.bar.expires = GetTime()
-		anchor:Expire(frame, is_me and opt.expire_won or opt.expire_lost)
+		anchor:Expire(frame, top_is_me and opt.expire_won or opt.expire_lost)
 	else
 	-- No winner/lead
 		frame.text_status:SetText(string_format('%s: %s', PASS, ALL))

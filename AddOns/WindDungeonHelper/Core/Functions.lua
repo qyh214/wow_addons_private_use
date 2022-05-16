@@ -1,4 +1,5 @@
 local W, F, L, P, O = unpack(select(2, ...))
+local NI = LibStub("LibNPCInfo")
 
 local _G = _G
 
@@ -52,30 +53,19 @@ function F.Round(number, decimals)
     return format(format("%%.%df", decimals), number)
 end
 
-function F.GetNPCNameByID(id)
+function F.HandleNPCNameByID(id, callback)
     local cache = W.Database.locale
-
-    if cache.mdtHelper then
-        cache.mdtHelper = nil
-    end
 
     if not cache.npcNames then
         cache.npcNames = {}
     end
 
     if cache.npcNames[id] then
-        return cache.npcNames[id]
+        callback(cache.npcNames[id])
     end
 
-    if not _G.WDHScanTooltip then
-        CreateFrame("GameTooltip", "WDHScanTooltip", _G.UIParent, "GameTooltipTemplate")
-        _G.WDHScanTooltip:SetOwner(_G.UIParent, "ANCHOR_NONE")
-    end
-    _G.WDHScanTooltip:SetHyperlink(format("unit:Creature-0-0-0-0-%d", id))
-
-    if _G.WDHScanTooltipTextLeft1 and _G.WDHScanTooltipTextLeft1.GetText then
-        local name = _G.WDHScanTooltipTextLeft1:GetText()
-        cache.npcNames[id] = name
-        return name
-    end
+    NI.GetNPCInfoByID(id, function(data)
+        callback(data.name)
+        cache.npcNames[id] = data.name
+    end)
 end

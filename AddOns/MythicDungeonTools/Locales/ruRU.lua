@@ -367,6 +367,10 @@ L["Earthrager"] = "Земляной яростень"
 L["Ebonclaw Worg"] = "Эбеновый ворг"
 L["Echelon"] = "Эшелон"
 L["Edit"] = "Изменить"
+--[[Translation missing --]]
+--[[ L["Efficiency Score"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["EfficiencyScoreTip"] = ""--]] 
 L["Elder Leaxa"] = "Старейшина Ликса"
 L["Elemental"] = "Элементаль"
 L["Elfyra"] = "Эльфира"

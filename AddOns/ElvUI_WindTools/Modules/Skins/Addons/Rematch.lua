@@ -1,7 +1,7 @@
 local W, F, E, L = unpack(select(2, ...))
-local S = W:GetModule("Skins")
-local ES = E:GetModule("Skins")
-local MF = W:GetModule("MoveFrames")
+local S = W.Modules.Skins
+local ES = E.Skins
+local MF = W.Modules.MoveFrames
 local Rematch = Rematch
 
 local _G = _G
@@ -890,7 +890,7 @@ function S:Rematch_SkinLoad()
     end
 
     -- Compatible with Move Frames module
-    if MF and MF.db and MF.db.moveBlizzardFrames then
+    if MF and MF.db and MF.db.enable then
         if not _G.CollectionsJournal then
             CollectionsJournal_LoadUI()
         end
