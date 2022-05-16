@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1162, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220127091718")
 mod:SetCreatureID(77692)
 mod:SetEncounterID(1713)
 mod.respawnTime = 29.5
@@ -29,7 +29,7 @@ local warnStoneGeyser				= mod:NewSpellAnnounce(158130, 2)
 local warnWarpedArmor				= mod:NewStackAnnounce(156766, 2, nil, "Tank")
 local warnFrenzy					= mod:NewSpellAnnounce(156861, 3)
 
-local specWarnGraspingEarth			= mod:NewSpecialWarningMoveTo(157060, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(157060), nil, nil, 2)
+local specWarnGraspingEarth			= mod:NewSpecialWarningMoveTo(157060, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(157060), nil, nil, 12)
 local specWarnThunderingBlows		= mod:NewSpecialWarningSpell(157054, nil, nil, nil, 3)
 local specWarnRipplingSmash			= mod:NewSpecialWarningDodge(157592, nil, nil, nil, 2, 2)
 local specWarnStoneBreath			= mod:NewSpecialWarningCount(156852, nil, nil, nil, 2, 2)
@@ -87,7 +87,7 @@ function mod:SPELL_CAST_START(args)
 		timerSlamCD:Stop()
 		timerRipplingSmashCD:Stop()
 		timerWarpedArmorCD:Stop()
-		specWarnGraspingEarth:Play("157060")
+		specWarnGraspingEarth:Play("getinyellowrunes")
 		if self:IsMythic() then
 			timerGraspingEarthCD:Start(66)
 			local remaining = timerTremblingEarthCD:GetRemaining()

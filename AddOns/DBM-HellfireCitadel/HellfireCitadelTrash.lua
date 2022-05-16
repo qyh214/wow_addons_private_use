@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("HellfireCitadelTrash", "DBM-HellfireCitadel")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142006")
+mod:SetRevision("20220127091718")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
@@ -29,7 +29,7 @@ local specWarnCrowdControl			= mod:NewSpecialWarningLookAway(189595, nil, nil, n
 local specWarnSeverSoul				= mod:NewSpecialWarningYou(189533, nil, nil, nil, 1, 2)
 local specWarnSeverSoulOther		= mod:NewSpecialWarningTaunt(189533, nil, nil, nil, 1, 2)
 local specWarnBadBreathOther		= mod:NewSpecialWarningTaunt(188476, nil, nil, nil, 1, 2)
-local specWarnBloodthirster			= mod:NewSpecialWarningSwitch("ej11266", "Dps", nil, 2, 1, 5)
+local specWarnBloodthirster			= mod:NewSpecialWarningSwitch("ej11266", "Dps", nil, 2, 1, 12)
 local specWarnRendingHowl			= mod:NewSpecialWarningInterrupt(189612, "HasInterrupt", nil, 2, 1, 2)
 local yellDarkFate					= mod:NewFadesYell(182644)
 local specWarnPhantasmalCorruption	= mod:NewSpecialWarningYou(187990)
@@ -131,7 +131,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, npc)
 		local kilroggMod = DBM:GetModByName("1396")
 		if not kilroggMod:IsInCombat() and self:AntiSpam(2, 2) then--Don't activate if kilrogg is engaged
 			specWarnBloodthirster:Show()
-			specWarnBloodthirster:Play("ej11266")
+			specWarnBloodthirster:Play("attackbloodthirster")
 		end
 	end
 end

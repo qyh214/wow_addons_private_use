@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("KaelThas", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210826001945")
+mod:SetRevision("20220215231321")
 mod:SetCreatureID(19622)
 mod:SetEncounterID(733)
 mod:SetModelID(20023)
@@ -237,9 +237,9 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		timerPhase1mob:Start(8.4, L.Telonicus)
 	elseif msg == L.YellPhase2 or msg:find(L.YellPhase2) then
 		self.vb.phase = 2
-		timerPhase:Start(105)
+		timerPhase:Start(104.6)
 		warnPhase2:Show()
-		warnPhase3:Schedule(105)
+		warnPhase3:Schedule(104.6)
 	elseif msg == L.YellPhase3 or msg:find(L.YellPhase3) then
 		self.vb.phase = 3
 		if self.Options.RangeFrame then
@@ -251,13 +251,14 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	elseif msg == L.YellPhase4 or msg:find(L.YellPhase4) then
 		self.vb.phase = 4
 		warnPhase4:Show()
-		timerPhase:Cancel()
+		timerPhase:Stop()
+		timerPhoenixCD:Stop()
 		timerPhoenixCD:Start(50)
 		timerShieldCD:Start(60)
 	elseif msg == L.YellPhase5 or msg:find(L.YellPhase5) then
 		self.vb.phase = 5
-		timerPhoenixCD:Cancel()
-		timerShieldCD:Cancel()
+		timerPhoenixCD:Stop()
+		timerShieldCD:Stop()
 		timerPhase:Start(45)
 		warnPhase5:Schedule(45)
 		timerGravityCD:Start(60)

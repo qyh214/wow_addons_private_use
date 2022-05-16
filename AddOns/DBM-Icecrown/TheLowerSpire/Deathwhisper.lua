@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Deathwhisper", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041927")
+mod:SetRevision("20220128073851")
 mod:SetCreatureID(36855)
 mod:SetEncounterID(1100)
 mod:SetModelID(30893)
@@ -80,10 +80,10 @@ local function TrySetTarget(self)
 		for uId in DBM:GetGroupMembers() do
 			if UnitGUID(uId.."target") == deformedFanatic and self.Options.SetIconOnDeformedFanatic then
 				deformedFanatic = nil
-				SetRaidTarget(uId.."target", 8)
+				self:SetIcon(uId.."target", 8)
 			elseif UnitGUID(uId.."target") == empoweredAdherent and self.Options.SetIconOnEmpoweredAdherent then
 				empoweredAdherent = nil
-				SetRaidTarget(uId.."target", 7)
+				self:SetIcon(uId.."target", 7)
 			end
 			if not (deformedFanatic or empoweredAdherent) then
 				break

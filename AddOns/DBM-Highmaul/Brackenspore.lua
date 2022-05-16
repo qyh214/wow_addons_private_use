@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1196, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220127091718")
 mod:SetCreatureID(78491)
 mod:SetEncounterID(1720)
 --Has no audio files
@@ -21,8 +21,8 @@ mod:RegisterEventsInCombat(
 local warnNecroticBreath			= mod:NewSpellAnnounce(159219, 3)--Warn everyone, so they know where not to be.
 local warnRot						= mod:NewStackAnnounce(163241, 2, nil, "Tank")
 --Adds/Mushrooms
-local warnLivingMushroom			= mod:NewCountAnnounce(160022, 1, nil, nil, nil, nil, nil, 2)--Good shroom! (mana/haste)
-local warnRejuvMushroom				= mod:NewCountAnnounce(160021, 1, nil, nil, nil, nil, nil, 2)--Other good shroom (healing)
+local warnLivingMushroom			= mod:NewCountAnnounce(160022, 1, nil, nil, nil, nil, nil, 12)--Good shroom! (mana/haste)
+local warnRejuvMushroom				= mod:NewCountAnnounce(160021, 1, nil, nil, nil, nil, nil, 12)--Other good shroom (healing)
 
 local specWarnCreepingMoss			= mod:NewSpecialWarningMove(163590, "Tank", nil, nil, 2, 2)
 local specWarnInfestingSpores		= mod:NewSpecialWarningCount(159996, nil, nil, nil, 2, 2)
@@ -33,9 +33,9 @@ local specWarnRotOther				= mod:NewSpecialWarningTaunt(163241, nil, nil, nil, 1,
 local specWarnExplodingFungus		= mod:NewSpecialWarningDodge(163794, nil, nil, nil, 2, 2)--Change warning type/sound? need to know more about spawn.
 local specWarnWaves					= mod:NewSpecialWarningDodge(160425, nil, nil, nil, 2, 2)
 --Adds
-local specWarnSporeShooter			= mod:NewSpecialWarningSwitch(163594, "RangedDps", nil, 2, nil, 2)
-local specWarnFungalFlesheater		= mod:NewSpecialWarningSwitch("ej9995", "-Healer", nil, nil, nil, 2)
-local specWarnMindFungus			= mod:NewSpecialWarningSwitch(163141, "Dps", nil, nil, nil, 2)
+local specWarnSporeShooter			= mod:NewSpecialWarningSwitch(163594, "RangedDps", nil, 2, nil, 12)
+local specWarnFungalFlesheater		= mod:NewSpecialWarningSwitch("ej9995", "-Healer", nil, nil, nil, 12)
+local specWarnMindFungus			= mod:NewSpecialWarningSwitch(163141, "Dps", nil, nil, nil, 12)
 
 local timerInfestingSporesCD		= mod:NewCDCountTimer(57, 159996, nil, nil, nil, 2, nil, nil, nil, 1, 4)--57-63 variation
 local timerRotCD					= mod:NewCDTimer(10, 163241, nil, false, nil, 5, nil, DBM_COMMON_L.TANK_ICON)--it's a useful timer, but not mandatory and this fight has A LOT of timers so off by default for clutter reduction
@@ -134,7 +134,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(8)
 		end
-		specWarnSporeShooter:Play("163594k")
+		specWarnSporeShooter:Play("attacksporeshooter")
 	elseif spellId == 163241 then
 		timerRotCD:Start()
 	end
@@ -183,22 +183,22 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 163141 then
 		specWarnMindFungus:Show()
 		timerMindFungusCD:Start()
-		specWarnMindFungus:Play("163141k")
+		specWarnMindFungus:Play("attackmindfungus")
 	elseif spellId == 163142 then
 		self.vb.fleshEaterCount = self.vb.fleshEaterCount + 1
 		specWarnFungalFlesheater:Show(self.vb.fleshEaterCount)
 		timerFungalFleshEaterCD:Start(nil, self.vb.fleshEaterCount+1)
-		specWarnFungalFlesheater:Play("163142k")
+		specWarnFungalFlesheater:Play("attackflesheater")
 	elseif spellId == 160022 then
 		self.vb.greenShroom = self.vb.greenShroom + 1
 		warnLivingMushroom:Show(self.vb.greenShroom)
 		timerLivingMushroomCD:Start(nil, self.vb.greenShroom+1)
-		warnLivingMushroom:Play("160022s") --green one
+		warnLivingMushroom:Play("greenmushroomcoming") --green one
 	elseif spellId == 160021 or spellId == 177820 then--Seems diff ID in mythic vs non mythic?
 		self.vb.blueShroom = self.vb.blueShroom + 1
 		warnRejuvMushroom:Show(self.vb.blueShroom)
 		timerRejuvMushroomCD:Start(nil, self.vb.blueShroom+1)
-		warnRejuvMushroom:Play("160021s") --blue one
+		warnRejuvMushroom:Play("bluemushroomcoming") --blue one
 	elseif spellId == 163794 then
 		specWarnExplodingFungus:Show()
 		timerSpecialCD:Start()

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1447, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220127091718")
 mod:SetCreatureID(93068)
 mod:SetEncounterID(1800)
 mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
@@ -62,7 +62,7 @@ local yellFelChains					= mod:NewYell(186490)
 --Void Phase
 ----Boss
 local specWarnVoidStrike			= mod:NewSpecialWarningSpell(186292, "Tank")
-local specWarnVoidSurge				= mod:NewSpecialWarningYou(186333, nil, nil, nil, 1, 5)
+local specWarnVoidSurge				= mod:NewSpecialWarningYou(186333, nil, nil, nil, 1, 12)
 local yellVoidSurge					= mod:NewYell(186333)
 local specWarnVoids					= mod:NewSpecialWarningCount("ej11714", "Ranged")
 ----Adds
@@ -225,7 +225,7 @@ function mod:SPELL_CAST_START(args)
 					--Not Tanking
 					if self.vb.phase >= 3 and playerTanking == 1 and not DBM:UnitDebuff("player", vanguardTank) then--Vanguard Tank
 						--You're the Vanguard tank and do NOT have aggro for this strike or void debuff, taunt NOW
-						local targetName = UnitName(bossUnitID.."target") or DBM_CORE_L.UNKNOWN
+						local targetName = UnitName(bossUnitID.."target") or DBM_COMMON_L.UNKNOWN
 						if self:AntiSpam(3, targetName) then
 							specWarnPhasing:Show(targetName)
 							specWarnPhasing:Play("tauntboss")
@@ -246,7 +246,7 @@ function mod:SPELL_CAST_START(args)
 					--Not Tanking
 					if self.vb.phase >= 3 and playerTanking == 2 and not DBM:UnitDebuff("player", voidwalkerTank) then--VoidWalker Tank
 						--You're the void walker tank and do NOT have aggro for this strike or fel debuff, taunt NOW
-						local targetName = UnitName(bossUnitID.."target") or DBM_CORE_L.UNKNOWN
+						local targetName = UnitName(bossUnitID.."target") or DBM_COMMON_L.UNKNOWN
 						if self:AntiSpam(3, targetName) then
 							specWarnPhasing:Show(targetName)
 							specWarnPhasing:Play("tauntboss")
@@ -404,7 +404,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnVoidSurge:Show()
 			yellVoidSurge:Yell()
-			specWarnVoidSurge:Play("186333")
+			specWarnVoidSurge:Play("runintofire")
 		end
 	elseif spellId == 186500 and self.Options.ChainsBehavior ~= "Cast" then--Chains! (show warning if type is applied or both)
 		warnFelChains:CombinedShow(0.3, args.destName)

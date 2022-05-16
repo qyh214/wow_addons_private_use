@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1761, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041824")
+mod:SetRevision("20220128073818")
 mod:SetCreatureID(104528)--109042
 mod:SetEncounterID(1886)
 mod:SetUsedIcons(6, 5, 4, 3, 2, 1)
@@ -119,7 +119,7 @@ local function findNaturalistOnPull(self)
 		if UnitExists(bossUnitID) then
 			local cid = self:GetCIDFromGUID(UnitGUID(bossUnitID))
 			if cid == 109041 then
-				SetRaidTarget(bossUnitID, 8)
+				self:SetIcon(bossUnitID, 8)
 				break
 			end
 		end

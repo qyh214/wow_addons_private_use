@@ -224,7 +224,7 @@ L:SetMiscLocalization({
 L:SetOptionLocalization({
 	WarningChargeChanged		= "当你的极性改变时显示特别警报",
 	WarningChargeNotChanged		= "当你的极性没有改变时显示特别警报",
-	ArrowsEnabled			= "显示箭头 (正常 \"两边\" 站位打法)",
+	AirowEnabled			= "显示箭头 (正常 \"两边\" 站位打法)",
 	ArrowsRightLeft			= "显示左/右箭头 给 \"四角\" 站位打法 (如果极性改变显示左箭头, 没变显示右箭头)",
 	ArrowsInverse			= "显示反转的 \"四角\" 站位打法 (如果极性改变显示右箭头, 没变显示左箭头)"
 })
@@ -345,8 +345,6 @@ L:SetOptionLocalization({
 	WarningLanded			= "提示地上阶段",
 	TimerAir			= "为空中阶段显示计时条",
 	TimerLanding			= "为降落显示计时条",
-	TimerIceBlast			= "为冰霜吐息显示计时条",
-	WarningDeepBreath		= "为冰霜吐息显示特别警报",
 	WarningIceblock			= "当你中了冰箱时大喊"
 })
 
@@ -358,14 +356,12 @@ L:SetMiscLocalization({
 L:SetWarningLocalization({
 	WarningAirPhaseSoon		= "10秒后 空中阶段",
 	WarningAirPhaseNow		= "空中阶段",
-	WarningLanded			= "萨菲隆降落了",
-	WarningDeepBreath		= "冰霜吐息"
+	WarningLanded			= "萨菲隆降落了"
 })
 
 L:SetTimerLocalization({
 	TimerAir			= "空中阶段",
-	TimerLanding			= "降落",
-	TimerIceBlast			= "冰霜吐息"
+	TimerLanding			= "降落"
 })
 
 ------------------

@@ -200,7 +200,7 @@ L:SetOptionLocalization({
 	WarningChargeChanged	= "Activer l'avertissement spécial quand votre polarité a changé",
 	WarningChargeNotChanged	= "Activer l'avertissement spécial quand votre polarité n'a pas changé",
 	TimerShiftCast			= "Afficher le timer pour le cast du changement de polarité",
-	ArrowsEnabled			= "Afficher les flèches (stratégie normale : \"2 camps\")",
+	AirowEnabled			= "Afficher les flèches (stratégie normale : \"2 camps\")",
 	ArrowsRightLeft			= "Afficher les flèches droite/gauche pour la stratégie \"4 camps\" (flèche gauche si la polarité a changé et droite sinon)",
 	ArrowsInverse			= "Inverser la statégie \"4 camps\" (afficher la flèche droite si la polarité a changé et la gauche sinon)"
 })
@@ -324,8 +324,6 @@ L:SetOptionLocalization({
 	WarningLanded		    = "Activer l'avertissement pour la phase au sol",
 	TimerAir			    	= "Afficher le timer de la phase en vol",
 	TimerLanding		   	= "Afficher le timer de l'atterrissage",
-	TimerIceBlast		   	= "Afficher le timer du Souffle de givre",
-	WarningDeepBreath		= "Activer l'avertissement spécial pour le Souffle de givre",
 	WarningIceblock			= "Crie dans un glaçon"
 })
 
@@ -337,14 +335,12 @@ L:SetMiscLocalization({
 L:SetWarningLocalization({
 	WarningAirPhaseSoon	= "Envol dans 10 sec",
 	WarningAirPhaseNow	= "Dans les airs",
-	WarningLanded		    = "Atterrissage de Sapphiron",
-	WarningDeepBreath	  = "Souffle de givre !"
+	WarningLanded		    = "Atterrissage de Sapphiron"
 })
 
 L:SetTimerLocalization({
 	TimerAir		   		  = "Envol",
-	TimerLanding			  = "Atterrissage dans",
-	TimerIceBlast			  = "Souffle de givre"
+	TimerLanding			  = "Atterrissage dans"
 })
 
 ------------------

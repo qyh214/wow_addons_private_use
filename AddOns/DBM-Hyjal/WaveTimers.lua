@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("HyjalWaveTimers", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210605154213")
+mod:SetRevision("20220421024839")
 
 mod:RegisterEvents(
 	"GOSSIP_SHOW",
@@ -17,7 +17,7 @@ local warnCannibalize	= mod:NewSpellAnnounce(31538, 2)
 
 local timerWave			= mod:NewTimer(125, "TimerWave", nil, nil, nil, 1)
 
-mod:AddBoolOption("DetailedWave")
+--mod:AddBoolOption("DetailedWave")
 
 local lastWave = 0
 local boss = 0
@@ -30,7 +30,7 @@ local bossNames = {
 }
 
 function mod:GOSSIP_SHOW()
-	if not GetRealZoneText() == L.HyjalZoneName then return end
+	if GetRealZoneText() ~= L.HyjalZoneName then return end
 	local target = UnitName("target")
 	if target == L.Thrall or target == L.Jaina then
 		local table = C_GossipInfo.GetOptions()
@@ -105,45 +105,45 @@ function mod:WaveFunction(currentWave)
 			if currentWave == 8 then
 				timer = 140
 			end
-			if self.Options.DetailedWave and boss == 1 then
-				if currentWave == 1 then
-					warnWave:Show(L.WarnWave_1:format(currentWave, 10, L.Ghoul))
-				elseif currentWave == 2 then
-					warnWave:Show(L.WarnWave_2:format(currentWave, 10, L.Ghoul, 2, L.Fiend))
-				elseif currentWave == 3 then
-					warnWave:Show(L.WarnWave_2:format(currentWave, 6, L.Ghoul, 6 , L.Fiend))
-				elseif currentWave == 4 then
-					warnWave:Show(L.WarnWave_3:format(currentWave, 6, L.Ghoul, 4, L.Fiend, 2, L.Necromancer))
-				elseif currentWave == 5 then
-					warnWave:Show(L.WarnWave_3:format(currentWave, 2, L.Ghoul, 6, L.Fiend, 4, L.Necromancer))
-				elseif currentWave == 6 then
-					warnWave:Show(L.WarnWave_2:format(currentWave, 6, L.Ghoul, 6, L.Abomination))
-				elseif currentWave == 7 then
-					warnWave:Show(L.WarnWave_3:format(currentWave, 4, L.Ghoul, 4, L.Abomination, 4, L.Necromancer))
-				elseif currentWave == 8 then
-					warnWave:Show(L.WarnWave_4:format(currentWave, 6, L.Ghoul, 4, L.Fiend, 2, L.Abomination, 2, L.Necromancer))
-				end
-			elseif self.Options.DetailedWave and boss == 2 then
-				if currentWave == 1 then
-					warnWave:Show(L.WarnWave_1:format(currentWave, 10, L.Ghoul))
-				elseif currentWave == 2 then
-					warnWave:Show(L.WarnWave_2:format(currentWave, 8, L.Ghoul, 4, L.Abomination))
-				elseif currentWave == 3 then
-					warnWave:Show(L.WarnWave_3:format(currentWave, 4, L.Ghoul, 4, L.Fiend, 4, L.Necromancer))
-				elseif currentWave == 4 then
-					warnWave:Show(L.WarnWave_3:format(currentWave, 6, L.Fiend, 4, L.Necromancer, 2, L.Banshee))
-				elseif currentWave == 5 then
-					warnWave:Show(L.WarnWave_3:format(currentWave, 6, L.Ghoul, 4, L.Banshee, 2, L.Necromancer))
-				elseif currentWave == 6 then
-					warnWave:Show(L.WarnWave_3:format(currentWave, 6, L.Ghoul, 2, L.Abomination, 4, L.Necromancer))
-				elseif currentWave == 7 then
-					warnWave:Show(L.WarnWave_4:format(currentWave, 2, L.Ghoul, 4, L.Fiend, 4, L.Abomination, 4, L.Banshee))
-				elseif currentWave == 8 then
-					warnWave:Show(L.WarnWave_5:format(currentWave, 3, L.Ghoul, 3, L.Fiend, 4, L.Abomination, 2, L.Necromancer, 2, L.Banshee))
-				end
-			else
+			--if self.Options.DetailedWave and boss == 1 then
+			--	if currentWave == 1 then
+			--		warnWave:Show(L.WarnWave_1:format(currentWave, 10, L.Ghoul))
+			--	elseif currentWave == 2 then
+			--		warnWave:Show(L.WarnWave_2:format(currentWave, 10, L.Ghoul, 2, L.Fiend))
+			--	elseif currentWave == 3 then
+			--		warnWave:Show(L.WarnWave_2:format(currentWave, 6, L.Ghoul, 6 , L.Fiend))
+			--	elseif currentWave == 4 then
+			--		warnWave:Show(L.WarnWave_3:format(currentWave, 6, L.Ghoul, 4, L.Fiend, 2, L.Necromancer))
+			--	elseif currentWave == 5 then
+			--		warnWave:Show(L.WarnWave_3:format(currentWave, 2, L.Ghoul, 6, L.Fiend, 4, L.Necromancer))
+			--	elseif currentWave == 6 then
+			--		warnWave:Show(L.WarnWave_2:format(currentWave, 6, L.Ghoul, 6, L.Abomination))
+			--	elseif currentWave == 7 then
+			--		warnWave:Show(L.WarnWave_3:format(currentWave, 4, L.Ghoul, 4, L.Abomination, 4, L.Necromancer))
+			--	elseif currentWave == 8 then
+			--		warnWave:Show(L.WarnWave_4:format(currentWave, 6, L.Ghoul, 4, L.Fiend, 2, L.Abomination, 2, L.Necromancer))
+			--	end
+			--elseif self.Options.DetailedWave and boss == 2 then
+			--	if currentWave == 1 then
+			--		warnWave:Show(L.WarnWave_1:format(currentWave, 10, L.Ghoul))
+			--	elseif currentWave == 2 then
+			--		warnWave:Show(L.WarnWave_2:format(currentWave, 8, L.Ghoul, 4, L.Abomination))
+			--	elseif currentWave == 3 then
+			--		warnWave:Show(L.WarnWave_3:format(currentWave, 4, L.Ghoul, 4, L.Fiend, 4, L.Necromancer))
+			--	elseif currentWave == 4 then
+			--		warnWave:Show(L.WarnWave_3:format(currentWave, 6, L.Fiend, 4, L.Necromancer, 2, L.Banshee))
+			--	elseif currentWave == 5 then
+			--		warnWave:Show(L.WarnWave_3:format(currentWave, 6, L.Ghoul, 4, L.Banshee, 2, L.Necromancer))
+			--	elseif currentWave == 6 then
+			--		warnWave:Show(L.WarnWave_3:format(currentWave, 6, L.Ghoul, 2, L.Abomination, 4, L.Necromancer))
+			--	elseif currentWave == 7 then
+			--		warnWave:Show(L.WarnWave_4:format(currentWave, 2, L.Ghoul, 4, L.Fiend, 4, L.Abomination, 4, L.Banshee))
+			--	elseif currentWave == 8 then
+			--		warnWave:Show(L.WarnWave_5:format(currentWave, 3, L.Ghoul, 3, L.Fiend, 4, L.Abomination, 2, L.Necromancer, 2, L.Banshee))
+			--	end
+			--else
 				warnWave:Show(L.WarnWave_0:format(currentWave))
-			end
+			--end
 			self:SendSync("boss", boss)
 		elseif boss == 3 or boss == 4 then
 			timer = 135
@@ -156,45 +156,45 @@ function mod:WaveFunction(currentWave)
 			elseif currentWave == 8 then
 				timer = 225
 			end
-			if self.Options.DetailedWave and boss == 3 then
-				if currentWave == 1 then
-					warnWave:Show(L.WarnWave_4:format(currentWave, 4, L.Ghoul, 4, L.Abomination, 2, L.Necromancer, 2, L.Banshee))
-				elseif currentWave == 2 then
-					warnWave:Show(L.WarnWave_2:format(currentWave, 4, L.Ghoul, 10, L.Gargoyle))
-				elseif currentWave == 3 then
-					warnWave:Show(L.WarnWave_3:format(currentWave, 6, L.Ghoul, 6, L.Fiend, 2, L.Necromancer))
-				elseif currentWave == 4 then
-					warnWave:Show(L.WarnWave_3:format(currentWave, 6, L.Fiend, 2, L.Necromancer, 6, L.Gargoyle))
-				elseif currentWave == 5 then
-					warnWave:Show(L.WarnWave_3:format(currentWave, 4, L.Ghoul, 6, L.Abomination, 4, L.Necromancer))
-				elseif currentWave == 6 then
-					warnWave:Show(L.WarnWave_2:format(currentWave, 8, L.Gargoyle, 1, L.Wyrm))
-				elseif currentWave == 7 then
-					warnWave:Show(L.WarnWave_3:format(currentWave, 6, L.Ghoul, 4, L.Abomination, 1, L.Wyrm))
-				elseif currentWave == 8 then
-					warnWave:Show(L.WarnWave_5:format(currentWave, 6, L.Ghoul, 2, L.Fiend, 4, L.Abomination, 2, L.Necromancer, 2, L.Banshee))
-				end
-			elseif self.Options.DetailedWave and boss == 4 then
-				if currentWave == 1 then
-					warnWave:Show(L.WarnWave_2:format(currentWave, 6, L.Abomination, 6, L.Necromancer))
-				elseif currentWave == 2 then
-					warnWave:Show(L.WarnWave_3:format(currentWave, 5, L.Ghoul, 8, L.Gargoyle, 1, L.Wyrm))
-				elseif currentWave == 3 then
-					warnWave:Show(L.WarnWave_2:format(currentWave, 6, L.Ghoul, 8, L.Infernal))
-				elseif currentWave == 4 then
-					warnWave:Show(L.WarnWave_2:format(currentWave, 6, L.Stalker, 8, L.Infernal))
-				elseif currentWave == 5 then
-					warnWave:Show(L.WarnWave_3:format(currentWave, 4, L.Abomination, 4, L.Necromancer, 6, L.Stalker))
-				elseif currentWave == 6 then
-					warnWave:Show(L.WarnWave_2:format(currentWave, 6, L.Necromancer, 6, L.Banshee))
-				elseif currentWave == 7 then
-					warnWave:Show(L.WarnWave_4:format(currentWave, 2, L.Ghoul, 2, L.Fiend, 2, L.Stalker, 8, L.Infernal))
-				elseif currentWave == 8 then
-					warnWave:Show(L.WarnWave_5:format(currentWave, 4, L.Abomination, 4, L.Fiend, 2, L.Necromancer, 2, L.Stalker, 4, L.Banshee))
-				end
-			else
+			--if self.Options.DetailedWave and boss == 3 then
+			--	if currentWave == 1 then
+			--		warnWave:Show(L.WarnWave_4:format(currentWave, 4, L.Ghoul, 4, L.Abomination, 2, L.Necromancer, 2, L.Banshee))
+			--	elseif currentWave == 2 then
+			--		warnWave:Show(L.WarnWave_2:format(currentWave, 4, L.Ghoul, 10, L.Gargoyle))
+			--	elseif currentWave == 3 then
+			--		warnWave:Show(L.WarnWave_3:format(currentWave, 6, L.Ghoul, 6, L.Fiend, 2, L.Necromancer))
+			--	elseif currentWave == 4 then
+			--		warnWave:Show(L.WarnWave_3:format(currentWave, 6, L.Fiend, 2, L.Necromancer, 6, L.Gargoyle))
+			--	elseif currentWave == 5 then
+			--		warnWave:Show(L.WarnWave_3:format(currentWave, 4, L.Ghoul, 6, L.Abomination, 4, L.Necromancer))
+			--	elseif currentWave == 6 then
+			--		warnWave:Show(L.WarnWave_2:format(currentWave, 8, L.Gargoyle, 1, L.Wyrm))
+			--	elseif currentWave == 7 then
+			--		warnWave:Show(L.WarnWave_3:format(currentWave, 6, L.Ghoul, 4, L.Abomination, 1, L.Wyrm))
+			--	elseif currentWave == 8 then
+			--		warnWave:Show(L.WarnWave_5:format(currentWave, 6, L.Ghoul, 2, L.Fiend, 4, L.Abomination, 2, L.Necromancer, 2, L.Banshee))
+			--	end
+			--elseif self.Options.DetailedWave and boss == 4 then
+			--	if currentWave == 1 then
+			--		warnWave:Show(L.WarnWave_2:format(currentWave, 6, L.Abomination, 6, L.Necromancer))
+			--	elseif currentWave == 2 then
+			--		warnWave:Show(L.WarnWave_3:format(currentWave, 5, L.Ghoul, 8, L.Gargoyle, 1, L.Wyrm))
+			--	elseif currentWave == 3 then
+			--		warnWave:Show(L.WarnWave_2:format(currentWave, 6, L.Ghoul, 8, L.Infernal))
+			--	elseif currentWave == 4 then
+			--		warnWave:Show(L.WarnWave_2:format(currentWave, 6, L.Stalker, 8, L.Infernal))
+			--	elseif currentWave == 5 then
+			--		warnWave:Show(L.WarnWave_3:format(currentWave, 4, L.Abomination, 4, L.Necromancer, 6, L.Stalker))
+			--	elseif currentWave == 6 then
+			--		warnWave:Show(L.WarnWave_2:format(currentWave, 6, L.Necromancer, 6, L.Banshee))
+			--	elseif currentWave == 7 then
+			--		warnWave:Show(L.WarnWave_4:format(currentWave, 2, L.Ghoul, 2, L.Fiend, 2, L.Stalker, 8, L.Infernal))
+			--	elseif currentWave == 8 then
+			--		warnWave:Show(L.WarnWave_5:format(currentWave, 4, L.Abomination, 4, L.Fiend, 2, L.Necromancer, 2, L.Stalker, 4, L.Banshee))
+			--	end
+			--else
 				warnWave:Show(L.WarnWave_0:format(currentWave))
-			end
+			--end
 			self:SendSync("boss", boss)
 		end
 		timerWave:Start(timer)

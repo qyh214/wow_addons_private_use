@@ -24,8 +24,8 @@ L:SetOptionLocalization({
 	timerArcaneLockout			= "Отсчет времени блокировки $spell:91542",
 	timerArcaneBlowbackCast		= "Отсчет времени применения заклинания $spell:91879",
 	timerNefAblity				= "Отсчет времени восстановления баффа (героический режим)",
-	SpecWarnActivated			= "Спец-предупреждение при активации нового босса",
-	specWarnGenerator			= "Спец-предупреждение, когда босс стоит в $spell:91557",
+	SpecWarnActivated			= "Спецпредупреждение при активации нового босса",
+	specWarnGenerator			= "Спецпредупреждение, когда босс стоит в $spell:91557",
 	AcquiringTargetIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79501),
 	ConductorIcon				= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(79888),
 	ShadowConductorIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(92053),
@@ -143,7 +143,7 @@ L:SetOptionLocalization({
 	NefTailSwipe		= "Предупреждение для $spell:77827 Нефариана",
 	OnyBreath			= "Предупреждение для $spell:94124 Ониксии",
 	NefBreath			= "Предупреждение для $spell:94124 Нефариана",
-	specWarnCinderMove	= "Спец-предупреждение за 5 секунд до взрыва $spell:79339",
+	specWarnCinderMove	= "Спецпредупреждение за 5 секунд до взрыва $spell:79339",
 	warnShadowblazeSoon	= "Отсчитывать время до $spell:81031 (за 5 секунд до каста)<br/>(Отсчет пойдет только после первой синхронизации с эмоцией босса)",
 	specWarnShadowblazeSoon	= "Предупреждать заранее о $spell:81031<br/>(За 5 секунд до первого каста, за 1 секунду до каждого следующего)",
 	timerNefLanding		= "Отсчет времени до приземления Нефариана",
@@ -172,5 +172,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("BWDTrash")
 
 L:SetGeneralLocalization({
-	name = "Существа Твердыни Крыла Тьмы"
+	name = "Трэш мобы Твердыни Крыла Тьмы"
 })

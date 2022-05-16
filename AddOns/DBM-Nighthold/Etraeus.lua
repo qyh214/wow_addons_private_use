@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1732, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041824")
+mod:SetRevision("20220127091734")
 mod:SetCreatureID(103758)
 mod:SetEncounterID(1863)
 --mod:SetUsedIcons(8, 7, 6, 3, 2, 1)
@@ -68,7 +68,7 @@ local specWarnVoidNova				= mod:NewSpecialWarningSpell(207439, nil, nil, nil, 2,
 local specWarnWorldDevouringForce	= mod:NewSpecialWarningDodge(216909, nil, nil, nil, 3, 2)
 --Mythic
 local specWarnConjunction			= mod:NewSpecialWarningMoveAway(205408, nil, nil, nil, 3, 2)
-local specWarnConjunctionSign		= mod:NewSpecialWarningYouPos(205408, nil, nil, nil, 1, 6)
+local specWarnConjunctionSign		= mod:NewSpecialWarningYouPos(205408, nil, nil, nil, 1, 12)
 local yellConjunctionSign			= mod:NewPosYell(205408, DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION)
 
 
@@ -409,7 +409,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnConjunctionSign:Show(args.spellName)
 				yellConjunctionSign:Yell(2, "", 2)--Orange Circle
 				self:Schedule(2, updateConjunctionYell, self, 2)
-				specWarnConjunctionSign:Play("205408c")
+				specWarnConjunctionSign:Play("findcrab")
 				timerConjunction:Start()
 				playerAffected = true
 			end
@@ -419,7 +419,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnConjunctionSign:Show(args.spellName)
 				yellConjunctionSign:Yell(6, "", 6)--Blue Square
 				self:Schedule(2, updateConjunctionYell, self, 6)
-				specWarnConjunctionSign:Play("205408d")
+				specWarnConjunctionSign:Play("finddragon")
 				timerConjunction:Start()
 				playerAffected = true
 			end
@@ -429,7 +429,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnConjunctionSign:Show(args.spellName)
 				yellConjunctionSign:Yell(4, "", 4)--Green Triangle
 				self:Schedule(2, updateConjunctionYell, self, 4)
-				specWarnConjunctionSign:Play("205408h")
+				specWarnConjunctionSign:Play("findhunter")
 				timerConjunction:Start()
 				playerAffected = true
 			end
@@ -439,7 +439,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnConjunctionSign:Show(args.spellName)
 				yellConjunctionSign:Yell(7, "", 7)--Red Cross
 				self:Schedule(2, updateConjunctionYell, 7)
-				specWarnConjunctionSign:Play("205408w")
+				specWarnConjunctionSign:Play("findwolf")
 				timerConjunction:Start()
 				playerAffected = true
 			end

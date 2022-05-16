@@ -13,6 +13,10 @@ L:SetOptionLocalization({
 	Adds				= "Показывать количество для всех типов аддов"
 })
 
+L:SetMiscLocalization({
+	AddSpawnNotice		= "As players overgear encounter, add spawns grow increasingly faster as encounter was designed by blizzard with auto pacing code. As such, if you overgear/overkill fight, take the add spawn timers with a grain of salt."
+})
+
 ---------------------------
 -- Elerethe Renferal --
 ---------------------------
@@ -61,5 +65,5 @@ L:SetOptionLocalization({
 L = DBM:GetModLocalization("EmeraldNightmareTrash")
 
 L:SetGeneralLocalization({
-	name =	"Трэш Изумрудного кошмара"
+	name =	"Трэш мобы Изумрудного кошмара"
 })

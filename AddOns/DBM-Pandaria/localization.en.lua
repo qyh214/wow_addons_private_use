@@ -5,11 +5,6 @@ local L
 -----------------------
 L = DBM:GetModLocalization(691)
 
-L:SetOptionLocalization({
-	RangeFrame		= "Show dynamic range frame based on player debuff status for<br/>$spell:119622",
-	SetIconOnMC2	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(119622)
-})
-
 L:SetMiscLocalization({
 	Pull	= "Yes, YES! Bring your rage to bear! Try to strike me down!"
 })
@@ -28,10 +23,6 @@ L:SetMiscLocalization({
 --------------
 L = DBM:GetModLocalization(826)
 
-L:SetOptionLocalization({
-	RangeFrame	= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(10, 137511)
-})
-
 L:SetMiscLocalization({
 	Pull	= "How dare you interrupt our preparations! The Zandalari will not be stopped, not this time!"
 })
@@ -40,10 +31,6 @@ L:SetMiscLocalization({
 -- Nalak, The Storm Lord --
 ---------------------------
 L = DBM:GetModLocalization(814)
-
-L:SetOptionLocalization({
-	RangeFrame	= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(10, 136340)
-})
 
 L:SetMiscLocalization({
 	Pull	= "Can you feel a chill wind blow? The storm is coming..."
@@ -55,7 +42,6 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(857)
 
 L:SetOptionLocalization({
-	SetIconOnBeacon	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(144473),
 	BeaconArrow		= "Show DBM Arrow when someone is affected by $spell:144473"
 })
 
@@ -68,10 +54,6 @@ L:SetMiscLocalization({
 -- Yu'lon, The Jade Serpent --
 ------------------------------
 L = DBM:GetModLocalization(858)
-
-L:SetOptionLocalization({
-	RangeFrame	= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(11, 144532)
-})
 
 L:SetMiscLocalization({
 	Pull	= "The trial begins!",
@@ -97,10 +79,6 @@ L:SetMiscLocalization({
 ---------------------------
 L = DBM:GetModLocalization(860)
 
-L:SetOptionLocalization({
-	RangeFrame	= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(3, 144642)
-})
-
 L:SetMiscLocalization({
 	Pull	= "Ha ha! The trial commences!",
 	Victory	= "You are strong, stronger even than you realize. Carry this thought with you into the darkness ahead, and let it shield you."
@@ -110,11 +88,6 @@ L:SetMiscLocalization({
 -- Ordos, Fire-God of the Yaungol --
 ------------------------------------
 L = DBM:GetModLocalization(861)
-
-L:SetOptionLocalization({
-	SetIconOnBurningSoul	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(144689),
-	RangeFrame				= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(8, 144689)
-})
 
 L:SetMiscLocalization({
 	Pull	= "You will take my place on the eternal brazier."

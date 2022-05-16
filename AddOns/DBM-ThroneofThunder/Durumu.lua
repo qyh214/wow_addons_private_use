@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(818, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041948")
+mod:SetRevision("20220128073905")
 mod:SetCreatureID(68036)--Crimson Fog 69050
 mod:SetEncounterID(1572)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 1)
@@ -140,7 +140,7 @@ local function findBeamJump(spellName, spellId)
 				end
 			end
 			if mod.Options.SetIconRays then
-				SetRaidTarget(uId, 6)--Square
+				mod:SetIcon(uId, 6)--Square
 			end
 			return
 		elseif spellId == 139204 and DBM:UnitDebuff(uId, spellName) and lastRed ~= name then
@@ -149,7 +149,7 @@ local function findBeamJump(spellName, spellId)
 				specWarnRedBeam:Show()
 			end
 			if mod.Options.SetIconRays then
-				SetRaidTarget(uId, 7)--Cross
+				mod:SetIcon(uId, 7)--Cross
 			end
 			return
 		end

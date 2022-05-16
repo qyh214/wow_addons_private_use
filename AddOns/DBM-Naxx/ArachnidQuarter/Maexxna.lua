@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Maexxna", "DBM-Naxx", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210815125804")
+mod:SetRevision("20220221015714")
 mod:SetCreatureID(15952)
 mod:SetEncounterID(1116)
 mod:SetModelID(15928)
@@ -12,6 +12,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 29484 54125"
 )
 
+--TODO, verify nax40 web wrap timer
 local warnWebWrap		= mod:NewTargetAnnounce(28622, 2)
 local warnWebSpraySoon	= mod:NewSoonAnnounce(29484, 1)
 local warnWebSprayNow	= mod:NewSpellAnnounce(29484, 3)
@@ -22,11 +23,13 @@ local specWarnWebWrap	= mod:NewSpecialWarningSwitch(28622, "RangedDps", nil, nil
 local yellWebWrap		= mod:NewYell(28622)
 
 local timerWebSpray		= mod:NewNextTimer(40.5, 29484, nil, nil, nil, 2)
+local timerWebWrap		= mod:NewNextTimer(39.6, 28622, nil, "RangedDps|Healer", nil, 3)-- 39.593-40.885
 local timerSpider		= mod:NewTimer(30, "TimerSpider", 17332, nil, nil, 1)
 
 function mod:OnCombatStart(delay)
 	warnWebSpraySoon:Schedule(35.5 - delay)
 	timerWebSpray:Start(40.5 - delay)
+	timerWebWrap:Start(20.1 - delay)--20.095-21.096
 	warnSpidersSoon:Schedule(25 - delay)
 	warnSpidersNow:Schedule(30 - delay)
 	timerSpider:Start(30 - delay)
@@ -48,6 +51,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		elseif not DBM:UnitDebuff("player", args.spellName) and self:AntiSpam(3, 1) then
 			specWarnWebWrap:Show()
 			specWarnWebWrap:Play("targetchange")
+			timerWebWrap:Start()
 		end
 	end
 end

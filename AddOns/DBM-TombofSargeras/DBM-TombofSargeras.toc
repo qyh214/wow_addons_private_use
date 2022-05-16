@@ -1,4 +1,4 @@
-## Interface: 90105
+## Interface: 90200
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Tomb of Sargeras|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0살게라스의 무덤|r
@@ -20,9 +20,10 @@
 ## X-DBM-Mod-MinExpansion: 6
 ## X-Curse-Project-ID: 301324
 ## X-WoWI-ID: 24905
-## Version: r29
+## Version: r30
 
 localization.en.lua
+localization.ru.lua
 localization.kr.lua
 localization.de.lua
 localization.cn.lua

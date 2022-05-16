@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1391, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220127091718")
 mod:SetCreatureID(89890)
 mod:SetEncounterID(1777)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -34,7 +34,7 @@ local warnSeedofDestruction				= mod:NewTargetCountAnnounce(181508, 4)
 local specWarnWakeofDestruction			= mod:NewSpecialWarningSpell(181499, nil, nil, nil, 2, 2)--Triggered by 3 different things
 --Armed
 local specWarnDisarmedEnd				= mod:NewSpecialWarningEnd(179667)
-local specWarnSoulCleave				= mod:NewSpecialWarningCount(179406, "Melee", nil, nil, 1, 5)
+local specWarnSoulCleave				= mod:NewSpecialWarningCount(179406, "Melee", nil, nil, 1, 12)
 local specWarnDisembodiedYou			= mod:NewSpecialWarningYou(179407)
 local specWarnDisembodied				= mod:NewSpecialWarningTaunt(179407)
 local specWarnBefouled					= mod:NewSpecialWarningMoveAway(179711)--Aoe damage was disabled on ptr, bug?
@@ -101,7 +101,7 @@ local iconedAssignments = {RAID_TARGET_1, RAID_TARGET_2, RAID_TARGET_3, RAID_TAR
 local iconedVoiceAssignments = {"mm1", "mm2", "mm3", "mm4", "mm5"}
 local numberedAssignments = {1, 2, 3, 4, 5}
 local numberedVoiceAssignments = {"\\count\\1", "\\count\\2", "\\count\\3", "\\count\\4", "\\count\\5"}
-local DirectionLineAssignments = {DBM_CORE_L.LEFT, DBM_CORE_L.MIDDLE..DBM_CORE_L.LEFT, DBM_CORE_L.MIDDLE, DBM_CORE_L.MIDDLE..DBM_CORE_L.RIGHT, DBM_CORE_L.RIGHT}
+local DirectionLineAssignments = {DBM_COMMON_L.LEFT, DBM_COMMON_L.MIDDLE..DBM_COMMON_L.LEFT, DBM_COMMON_L.MIDDLE, DBM_COMMON_L.MIDDLE..DBM_COMMON_L.RIGHT, DBM_COMMON_L.RIGHT}
 local DirectionVoiceAssignments = {"left", "centerleft", "center", "centerright", "right"}
 local function warnSeeds(self)
 	--Sort alphabetical to match bigwigs, and since combat log order may diff person to person
@@ -232,7 +232,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 179406 then
 		self.vb.SoulCleaveCount = self.vb.SoulCleaveCount + 1
 		specWarnSoulCleave:Show(self.vb.SoulCleaveCount)
-		specWarnSoulCleave:Play("179406")
+		specWarnSoulCleave:Play("soulcleave")
 		if self.vb.Enraged or self.vb.SoulCleaveCount == 1 then--Only casts two between phases, unless enraged
 			timerSoulCleaveCD:Start(nil, self.vb.SoulCleaveCount+1)
 		end

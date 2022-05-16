@@ -1,7 +1,7 @@
-## Interface: 90105
+## Interface: 90200
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Scenario-MoP|r
-## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Сценарии-MoP|r
+## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Сценарии (Пандария)|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0시나리오-판다리아의 안개|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Szenarien-MoP|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Gestas (MoP)|r
@@ -18,7 +18,7 @@
 ## X-DBM-Mod-Category: MOP
 ## X-DBM-StatTypes: normal,heroic
 ## X-DBM-Mod-Name: Scenario (MoP)
-## X-DBM-Mod-Name-ruRU: Сценарии (MoP)
+## X-DBM-Mod-Name-ruRU: Сценарии (Пандария)
 ## X-DBM-Mod-Name-koKR: 시나리오(판다리아의 안개)
 ## X-DBM-Mod-Name-deDE: Szenarien (MoP)
 ## X-DBM-Mod-Name-esES: Gestas (MoP)
@@ -31,7 +31,7 @@
 ## X-DBM-Mod-MinExpansion: 4
 ## X-Curse-Project-ID: 85688
 ## X-WoWI-ID: 23199
-## Version: r145
+## Version: r146
 
 localization.en.lua
 localization.kr.lua

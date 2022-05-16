@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1394, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220116190114")
 mod:SetCreatureID(90269)
 mod:SetEncounterID(1784)
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
@@ -120,7 +120,7 @@ end
 
 function mod:AnnTarget(targetname, uId)
 	if not targetname then
-		warnAnnihilationStrike:Show(self.vb.annihilationCount, DBM_CORE_L.UNKNOWN)
+		warnAnnihilationStrike:Show(self.vb.annihilationCount, DBM_COMMON_L.UNKNOWN)
 		return
 	end
 	if targetname == UnitName("player") then

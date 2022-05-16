@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1153, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220127091718")
 mod:SetCreatureID(79015)
 mod:SetEncounterID(1723)
 mod:SetUsedIcons(8, 7, 6, 3, 2, 1)--Don't know total number of icons needed yet
@@ -38,15 +38,15 @@ local specWarnTrampleNear			= mod:NewSpecialWarningClose(163101)
 local specWarnExpelMagicFire		= mod:NewSpecialWarningMoveAway(162185, nil, nil, nil, nil, 2)
 local specWarnExpelMagicShadow		= mod:NewSpecialWarningSpell(162184, "Healer", nil, nil, nil, 2)
 local specWarnExpelMagicFrostYou	= mod:NewSpecialWarningYou(161411, false)
-local specWarnExpelMagicFrost		= mod:NewSpecialWarningSpell(161411, false, nil, nil, nil, 2)
+local specWarnExpelMagicFrost		= mod:NewSpecialWarningSpell(161411, false, nil, nil, nil, 12)
 local specWarnExpelMagicArcaneYou	= mod:NewSpecialWarningMoveAway(162186, nil, nil, nil, 3, 2)
 local specWarnExpelMagicArcane		= mod:NewSpecialWarningTaunt(162186, nil, nil, nil, nil, 2)
 local yellExpelMagicArcane			= mod:NewYell(162186)
-local specWarnBallsSoon				= mod:NewSpecialWarningPreWarn(161612, nil, 6.5, nil, nil, nil, 2)
+local specWarnBallsSoon				= mod:NewSpecialWarningPreWarn(161612, nil, 6.5, nil, nil, nil, 12)
 --local specWarnMC					= mod:NewSpecialWarningSwitch(163472, "Dps", nil, nil, 1, 2)
 local specWarnForfeitPower			= mod:NewSpecialWarningInterrupt(163517)--Spammy?
 local specWarnExpelMagicFel			= mod:NewSpecialWarningYou(172895)--Maybe needs "do not move" warning or at very least "try not to move" since sometimes you have to move for trample.
-local specWarnExpelMagicFelFades	= mod:NewSpecialWarning("specWarnExpelMagicFelFades", nil, nil, nil, 3, 2)--No generic that describes this
+local specWarnExpelMagicFelFades	= mod:NewSpecialWarning("specWarnExpelMagicFelFades", nil, nil, nil, 3, 12)--No generic that describes this
 local yellExpelMagicFel				= mod:NewYell(172895)
 local specWarnExpelMagicFelMove		= mod:NewSpecialWarningMove(172917)--Under you (fire). If not enough maybe add periodic damage too?
 
@@ -88,7 +88,7 @@ local function ballsWarning(self)
 	DBM:Debug("Balls should be falling in 6.5 second")
 	if UnitPower("player", 10) > 0 then--Player is soaker
 		specWarnBallsSoon:Show()--Player who soaks
-		specWarnBallsSoon:Play("161612")
+		specWarnBallsSoon:Play("catchballs")
 	else
 		warnBallsSoon:Show()--Everyone else
 	end
@@ -103,7 +103,7 @@ end
 
 local function returnPosition(self)
 	specWarnExpelMagicFelFades:Show()
-	specWarnExpelMagicFelFades:Play("172895")
+	specWarnExpelMagicFelFades:Play("backtowhereyouwere")
 	if self.Options.FelArrow and lastX and LastY then
 		DBM.Arrow:ShowRunTo(lastX, LastY, 0, 5)
 	end
@@ -197,7 +197,7 @@ function mod:SPELL_CAST_START(args)
 		else
 			timerExpelMagicFrost:Start(21.5)
 		end
-		specWarnExpelMagicFrost:Play("161411")
+		specWarnExpelMagicFrost:Play("iceorbmove")
 		self:BossTargetScanner(79015, "FrostTarget", 0.1, 16)
 	elseif spellId == 163517 then
 		warnForfeitPower:Show()

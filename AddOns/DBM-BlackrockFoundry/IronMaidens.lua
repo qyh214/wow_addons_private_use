@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1203, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220127091718")
 mod:SetCreatureID(77557, 77231, 77477)
 mod:SetEncounterID(1695)
 mod:SetBossHPInfoToHighest()
@@ -73,7 +73,7 @@ local specWarnRapidFireNear				= mod:NewSpecialWarningClose(156631, false, nil, 
 local specWarnPenetratingShot			= mod:NewSpecialWarningYou(164271, nil, nil, nil, 1, 2)
 local specWarnPenetratingShotOther		= mod:NewSpecialWarningTargetCount(164271, false)
 local yellPenetratingShot				= mod:NewYell(164271)
-local specWarnDeployTurret				= mod:NewSpecialWarningSwitch(158599, "RangedDps", nil, 3, 3, 2)--Switch warning since most need to switch and kill, but on for EVERYONE because tanks/healers need to avoid it while it's up
+local specWarnDeployTurret				= mod:NewSpecialWarningSwitch(158599, "RangedDps", nil, 3, 3, 12)--Switch warning since most need to switch and kill, but on for EVERYONE because tanks/healers need to avoid it while it's up
 ----Enforcer Sorka
 local specWarnBladeDash					= mod:NewSpecialWarningYou(155794, nil, nil, nil, 1, 2)
 local specWarnBladeDashOther			= mod:NewSpecialWarningClose(155794, nil, nil, nil, 1, 2)
@@ -241,7 +241,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.turret = self.vb.turret + 1
 		if (noFilter or not playerOnBoat) then
 			specWarnDeployTurret:Show()
-			specWarnDeployTurret:Play("158599")
+			specWarnDeployTurret:Play("attackturret")
 			timerDeployTurretCD:Start(nil, self.vb.turret+1)
 		end
 	elseif spellId == 155794 then

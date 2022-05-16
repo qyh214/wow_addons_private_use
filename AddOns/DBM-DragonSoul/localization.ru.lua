@@ -29,8 +29,8 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(324)
 
 L:SetOptionLocalization({
-	ShadowYell			= "Кричать, когда на вас $spell:103434<br/>(Героический уровень сложности)",
-	CustomRangeFrame	= "Настройки окна проверки дистанции (Героический уровень сложности)",
+	ShadowYell			= "Кричать, когда на Вас $spell:103434<br/>(героический уровень сложности)",
+	CustomRangeFrame	= "Настройки окна проверки дистанции (героический уровень сложности)",
 	Never				= "Отключено",
 	Normal				= "Обычное",
 	DynamicPhase2		= "Фильтрация дебафов (фаза 2)",
@@ -120,7 +120,7 @@ L:SetOptionLocalization({
 	Never				= "Никогда",
 	ResetDynamic		= "Сброс на 3/2 (гер./обыч.)",
 	Reset3Always		= "Сброс на 3 всегда",
-	SpecWarnHoTN		= "Спец-предупреждение за 5 сек до \"Время сумерек\". Если сброс счетчика \"Никогда\", используется правило на 3",
+	SpecWarnHoTN		= "Спецпредупреждение за 5 сек до \"Время сумерек\". Если сброс счетчика \"Никогда\", используется правило на 3",
 	One					= "1 (т.е. 1 4 7)",
 	Two					= "2 (т.е. 2 5)",
 	Three				= "3 (т.е. 3 6)"
@@ -145,13 +145,13 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	TimerAdd			= "Отсчет времени до появления следующих помощников",
-	SpecWarnElites		= "Спец-предупреждение для новых Сумеречных Элиток",
+	SpecWarnElites		= "Спецпредупреждение для новых Сумеречных Элиток",
 	SetTextures			= "Автоматически отключать проэцирование текстур на 1 фазе<br/>(возвращает в исходное на 2 фазе)"
 })
 
 L:SetMiscLocalization({
 	SapperEmote			= "Дракон пикирует на палубу, чтобы сбросить на нее сумеречного сапера!",
-	GorionaRetreat			= "screeches in pain and retreats into the swirling clouds"
+	GorionaRetreat			= "Гориона издает полный боли визг и скрывается в клубящихся вокруг облаках."
 })
 
 -------------------------
@@ -166,7 +166,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	warnSealArmor			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.cast:format(105847),
-	SpecWarnTendril			= "Спец-предупреждение, когда на вас нет дебаффа $spell:109454",
+	SpecWarnTendril			= "Спецпредупреждение, когда на Вас нет дебаффа $spell:109454",
 	InfoFrame				= "Показывать информационное окно для игроков без $spell:109454",
 	SetIconOnGrip			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(109459),
 	ShowShieldInfo			= "Показывать полосы здоровья для исцеления $spell:105479"

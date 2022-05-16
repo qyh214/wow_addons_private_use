@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1148, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142006")
+mod:SetRevision("20220127091718")
 mod:SetCreatureID(78238, 78237)--Pol 78238, Phemos 78237
 mod:SetEncounterID(1719)
 --Could not find south path for this one
@@ -25,9 +25,9 @@ local warnArcaneVolatility			= mod:NewTargetAnnounce(163372, 4)--Mythic
 local warnPulverize					= mod:NewCountAnnounce(158385, 3)--158385 is primary activation with SPELL_CAST_SUCCESS, cast at start, followed by 3 channeled IDs using SPELL_CAST_START
 
 --Phemos
-local specWarnEnfeeblingRoar		= mod:NewSpecialWarningCount(158057, nil, nil, nil, nil, 2)
+local specWarnEnfeeblingRoar		= mod:NewSpecialWarningCount(158057, nil, nil, nil, nil, 12)
 local specWarnWhirlWind				= mod:NewSpecialWarningCount(157943, nil, nil, nil, 2, 2)
-local specWarnQuake					= mod:NewSpecialWarningCount(158200, nil, nil, nil, 2, 2)
+local specWarnQuake					= mod:NewSpecialWarningCount(158200, nil, nil, nil, 2, 12)
 local specWarnBlaze					= mod:NewSpecialWarningMove(158241, nil, nil, nil, nil, 2)
 local specWarnArcaneVolatility		= mod:NewSpecialWarningMoveAway(163372, nil, nil, nil, nil, 2)--Mythic
 local yellArcaneVolatility			= mod:NewYell(163372)--Mythic
@@ -207,7 +207,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 158057 then
 		self.vb.EnfeebleCount = self.vb.EnfeebleCount + 1
 		specWarnEnfeeblingRoar:Show(self.vb.EnfeebleCount)
-		specWarnEnfeeblingRoar:Play("158057")
+		specWarnEnfeeblingRoar:Play("enfeeblingroar")
 		if not self:IsMythic() and self.vb.QuakeCount == 1 then--On all other difficulties, quake is 1 second longer (only first)
 			timerQuakeCD:Start(PhemosEnergyRate+1, self.vb.QuakeCount+1)--Next Special
 		else--On mythic, there is no longer ability than other 2, since 84 is more divisible by 3 than 100 is
@@ -234,7 +234,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.LastQuake = GetTime()
 		self.vb.QuakeCount = self.vb.QuakeCount + 1
 		specWarnQuake:Show(self.vb.QuakeCount)
-		specWarnQuake:Play("158200")
+		specWarnQuake:Play("quake")
 		timerWhirlwindCD:Start(PhemosEnergyRate, self.vb.WWCount+1)
 	elseif spellId == 157952 then--Pulverize first cast that needs range finder
 		self.vb.PulverizeCount = self.vb.PulverizeCount + 1

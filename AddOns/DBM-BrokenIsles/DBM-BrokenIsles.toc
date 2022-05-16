@@ -1,4 +1,4 @@
-## Interface: 90105
+## Interface: 90200
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0World Bosses (Legion)|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Verheerten Inseln|r
@@ -6,7 +6,7 @@
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0破碎群島|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Islas Abruptas|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0부서진 섬|r
-## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Мировые боссы (Legion)|r
+## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Мировые боссы (Легион)|r
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
@@ -18,7 +18,7 @@
 ## X-DBM-StatTypes: normal
 ## X-DBM-Mod-SubCategoriesID: 1220,1779
 ## X-DBM-Mod-Name: World Bosses (Legion)
-## X-DBM-Mod-Name-ruRU: Мировые боссы (Legion)
+## X-DBM-Mod-Name-ruRU: Мировые боссы (Легион)
 ## X-DBM-Mod-World-Boss: 1
 ## X-DBM-Mod-Sort: 507
 ## X-DBM-Mod-MapID: 1220,1779
@@ -28,8 +28,9 @@
 ## X-Curse-Project-ID: 301324
 ## X-WoWI-ID: 24905
 ## X-Wago-ID: lQNlbaKe
-## Version: r29
+## Version: r30
 localization.en.lua
+localization.ru.lua
 localization.cn.lua
 localization.de.lua
 localization.kr.lua

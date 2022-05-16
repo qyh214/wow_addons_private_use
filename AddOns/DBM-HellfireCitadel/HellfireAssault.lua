@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1426, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211011150925")
+mod:SetRevision("20220127091718")
 mod:SetCreatureID(90019)--Main ID is door, door death= win. 94515 Siegemaster Mar'tak
 mod:SetEncounterID(1778)
 mod:SetUsedIcons(6, 5, 4, 3, 2, 1)
@@ -37,16 +37,16 @@ local warnCannon					= mod:NewTargetAnnounce(190748, 2)
 
 --Felfire-Imbued Siege Vehicles
 ----Felfire Crusher
-local warnFelfireCrusher			= mod:NewCountAnnounce("ej11439", 2, 160240, nil, nil, nil, nil, 2)
+local warnFelfireCrusher			= mod:NewCountAnnounce("ej11439", 2, 160240, nil, nil, nil, nil, 12)
 ----Felfire Flamebelcher
-local warnFelfireFlamebelcher		= mod:NewCountAnnounce("ej11437", 2, 160240, nil, nil, nil, nil, 2)
+local warnFelfireFlamebelcher		= mod:NewCountAnnounce("ej11437", 2, 160240, nil, nil, nil, nil, 12)
 ----Felfire Artillery
-local warnFelfireArtillery			= mod:NewCountAnnounce("ej11435", 3, 160240, nil, nil, nil, nil, 2)
+local warnFelfireArtillery			= mod:NewCountAnnounce("ej11435", 3, 160240, nil, nil, nil, nil, 12)
 ----Felfire Demolisher (Heroic, Mythic)
-local warnFelfireDemolisher			= mod:NewCountAnnounce("ej11429", 4, 160240, nil, nil, nil, nil, 2)--Heroic & Mythic only
+local warnFelfireDemolisher			= mod:NewCountAnnounce("ej11429", 4, 160240, nil, nil, nil, nil, 12)--Heroic & Mythic only
 local warnNova						= mod:NewSpellAnnounce(180945, 3)
 ----Felfire Transporter (Mythic)
-local warnFelfireTransporter		= mod:NewCountAnnounce("ej11712", 4, 160240, nil, nil, nil, nil, 2)--Mythic Only
+local warnFelfireTransporter		= mod:NewCountAnnounce("ej11712", 4, 160240, nil, nil, nil, nil, 12)--Mythic Only
 ----Things
 
 --Siegemaster Mar'tak
@@ -70,7 +70,7 @@ local yellCannon					= mod:NewYell(190748)
 local specWarnCannonNear			= mod:NewSpecialWarningClose(190748, nil, nil, nil, 1, 2)
 
 --Felfire-Imbued Siege Vehicles
-local specWarnDemolisher			= mod:NewSpecialWarningSwitch("ej11429", "Dps", nil, nil, 1, 5)--Heroic & Mythic only. Does massive aoe damage, has to be killed asap
+local specWarnDemolisher			= mod:NewSpecialWarningSwitch("ej11429", "Dps", nil, nil, 1, 12)--Heroic & Mythic only. Does massive aoe damage, has to be killed asap
 
 --Siegemaster Mar'tak
 local timerHowlingAxeCD				= mod:NewCDTimer(8.47, 184369, nil, nil, nil, 3)
@@ -155,8 +155,8 @@ function mod:OnCombatStart(delay)
 	timerBerserkersCD:Start(29.5-delay, 1)
 	timerFelCastersCD:Start(35-delay, 1)
 	if self:IsMythic() then
-		timerSiegeVehicleCD:Start(52.5-delay, "("..DBM_CORE_L.LEFT..")")
-		timerSiegeVehicleCD:Start(55-delay, "("..DBM_CORE_L.RIGHT..")")
+		timerSiegeVehicleCD:Start(52.5-delay, "("..DBM_COMMON_L.LEFT..")")
+		timerSiegeVehicleCD:Start(55-delay, "("..DBM_COMMON_L.RIGHT..")")
 	else
 		timerSiegeVehicleCD:Start(37.8-delay, "")
 	end
@@ -218,43 +218,43 @@ function mod:SPELL_AURA_APPLIED(args)
 		local cid = self:GetCIDFromGUID(args.destGUID)
 		if cid == 90432 then--Felfire Flamebelcher
 			warnFelfireFlamebelcher:Show(Count)
-			warnFelfireFlamebelcher:Play("ej11437")
+			warnFelfireFlamebelcher:Play("flamebelcher")
 		elseif cid == 90410 then--Felfire Crusher
 			warnFelfireCrusher:Show(Count)
-			warnFelfireCrusher:Play("ej11439")
+			warnFelfireCrusher:Play("crusher")
 		elseif cid == 90485 then--Felfire Artillery
 			warnFelfireArtillery:Show(Count)
-			warnFelfireArtillery:Play("ej11435")
+			warnFelfireArtillery:Play("artillery")
 		elseif cid == 91103 then--Felfire Demolisher
 			if self.Options.SpecWarnej11429switch then
 				specWarnDemolisher:Show()
 			else
 				warnFelfireDemolisher:Show(Count)
 			end
-			warnFelfireDemolisher:Play("ej11429")
+			warnFelfireDemolisher:Play("demolisher")
 		elseif cid == 93435 then--Felfire Transporter
 			warnFelfireTransporter:Show(Count)
-			warnFelfireTransporter:Play("ej11712")
+			warnFelfireTransporter:Play("transporter")
 		end
 		if self:IsMythic() then
 			--Confusing way to do it but it's best way to do it for dual timer support
 			--Code will create left and right and center timers and will almost always show 2 timers at once for the split format of fight
 			--Center timers are only exception
 			if Count == 1 or Count == 3 or Count == 5 or Count == 12 or Count == 14 or Count == 16 or Count == 18 then--Left
-				timerSiegeVehicleCD:Start(mythicVehicleTimers[Count], "("..DBM_CORE_L.LEFT..")")
+				timerSiegeVehicleCD:Start(mythicVehicleTimers[Count], "("..DBM_COMMON_L.LEFT..")")
 				DBM:Debug("Starting a left vehicle timer")
 			elseif Count == 2 or Count == 4 or Count == 6 or Count == 13 or Count == 15 or Count == 17 or Count == 19 then--Right
-				timerSiegeVehicleCD:Start(mythicVehicleTimers[Count], "("..DBM_CORE_L.RIGHT..")")
+				timerSiegeVehicleCD:Start(mythicVehicleTimers[Count], "("..DBM_COMMON_L.RIGHT..")")
 				DBM:Debug("Starting a right vehicle timer")
 			elseif Count == 11 then--Last center, start both next left and right timers
-				timerSiegeVehicleCD:Start(mythicVehicleTimers[Count-1], "("..DBM_CORE_L.LEFT..")")--Time for this one stored in 10 slot in table
-				timerSiegeVehicleCD:Start(mythicVehicleTimers[Count], "("..DBM_CORE_L.RIGHT..")")
+				timerSiegeVehicleCD:Start(mythicVehicleTimers[Count-1], "("..DBM_COMMON_L.LEFT..")")--Time for this one stored in 10 slot in table
+				timerSiegeVehicleCD:Start(mythicVehicleTimers[Count], "("..DBM_COMMON_L.RIGHT..")")
 				DBM:Debug("Starting a left and a right vehicle timer after center phase")
 			elseif Count == 7 or Count == 8 or Count == 9 then--Center
 				if Count == 8 then--Hack to allow timer not to overwrite another center timer
-					timerSiegeVehicleCD:Start(mythicVehicleTimers[Count], "( "..DBM_CORE_L.MIDDLE.." )")
+					timerSiegeVehicleCD:Start(mythicVehicleTimers[Count], "( "..DBM_COMMON_L.MIDDLE.." )")
 				else
-					timerSiegeVehicleCD:Start(mythicVehicleTimers[Count], "("..DBM_CORE_L.MIDDLE..")")
+					timerSiegeVehicleCD:Start(mythicVehicleTimers[Count], "("..DBM_COMMON_L.MIDDLE..")")
 				end
 				DBM:Debug("Starting a Center timer")
 			elseif Count == 10 then--No timer started at 10

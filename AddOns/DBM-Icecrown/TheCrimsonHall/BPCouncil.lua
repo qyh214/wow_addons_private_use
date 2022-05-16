@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BPCouncil", "DBM-Icecrown", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210119194038")
+mod:SetRevision("20220128073851")
 mod:SetCreatureID(37970, 37972, 37973)
 mod:SetEncounterID(1095)
 mod:DisableEEKillDetection()--IEEU fires for this boss.
@@ -106,7 +106,7 @@ function mod:TrySetTarget()
 		for uId in DBM:GetGroupMembers() do
 			if UnitGUID(uId.."target") == activePrince then
 				activePrince = nil
-				SetRaidTarget(uId.."target", 8)
+				self:SetIcon(uId.."target", 8)
 			end
 			if not (activePrince) then
 				break

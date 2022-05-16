@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Faerlina", "DBM-Naxx", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200714235138")
+mod:SetRevision("20220221015714")
 mod:SetCreatureID(15953)
 mod:SetEncounterID(1110)
 mod:SetModelID(15940)
@@ -13,8 +13,8 @@ mod:RegisterEventsInCombat(
 )
 
 local warnEmbraceActive		= mod:NewSpellAnnounce(28732, 1)
-local warnEmbraceExpire		= mod:NewAnnounce("WarningEmbraceExpire", 2, 28732)
-local warnEmbraceExpired	= mod:NewAnnounce("WarningEmbraceExpired", 3, 28732)
+local warnEmbraceExpire		= mod:NewAnnounce("WarningEmbraceExpire", 2, 28732, nil, nil, nil, 28732)
+local warnEmbraceExpired	= mod:NewAnnounce("WarningEmbraceExpired", 3, 28732, nil, nil, nil, 28732)
 local warnEnrageSoon		= mod:NewSoonAnnounce(28131, 3)
 local warnEnrageNow			= mod:NewSpellAnnounce(28131, 4)
 
@@ -22,13 +22,13 @@ local specWarnEnrage		= mod:NewSpecialWarningDefensive(28131, nil, nil, nil, 3, 
 local specWarnGTFO			= mod:NewSpecialWarningGTFO(28794, nil, nil, nil, 1, 8)
 
 local timerEmbrace			= mod:NewBuffActiveTimer(30, 28732, nil, nil, nil, 6)
-local timerEnrage			= mod:NewCDTimer(60, 28131, nil, nil, nil, 6)
+local timerEnrage			= mod:NewCDTimer(56, 28131, nil, nil, nil, 6)
 
 mod.vb.enraged = false
 
 function mod:OnCombatStart(delay)
 	timerEnrage:Start(-delay)
-	warnEnrageSoon:Schedule(55 - delay)
+	warnEnrageSoon:Schedule(51 - delay)
 	self.vb.enraged = false
 end
 

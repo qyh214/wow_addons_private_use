@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1427, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220116190114")
 mod:SetCreatureID(92330)
 mod:SetEncounterID(1794)
 mod:SetUsedIcons(1)
@@ -126,7 +126,7 @@ end
 --if this isn't accurate, or isn't as fast as listing to RAID_BOSS_WHISPER sync i'll switch to a RAID_BOSS_WHISPER transcriptor listener
 function mod:ChargeTarget(targetname, uId)
 	if not targetname then
-		specWarnFelCharge:Show(DBM_CORE_L.UNKNOWN)
+		specWarnFelCharge:Show(DBM_COMMON_L.UNKNOWN)
 		specWarnFelCharge:Play("chargemove")
 		return
 	end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1396, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220127091718")
 mod:SetCreatureID(90378)
 mod:SetEncounterID(1786)
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
@@ -28,7 +28,7 @@ local warnShreddedArmor				= mod:NewStackAnnounce(180200, 4, nil, "Tank|Healer")
 local warnHeartseeker				= mod:NewTargetAnnounce(180372, 4)
 local warnVisionofDeath				= mod:NewTargetAnnounce(181488, 2)--The targets that got picked
 --Adds
-local warnBloodthirster				= mod:NewSpellAnnounce("ej11266", 3, 131150, nil, nil, nil, nil, 2)
+local warnBloodthirster				= mod:NewSpellAnnounce("ej11266", 3, 131150, nil, nil, nil, nil, 12)
 
 --Boss
 local specWarnShred					= mod:NewSpecialWarningDefensive(180199, nil, nil, nil, 3, 2)--Block, or get debuff
@@ -38,10 +38,10 @@ local specWarnDeathThroes			= mod:NewSpecialWarningCount(180224, nil, nil, nil, 
 local specWarnVisionofDeath			= mod:NewSpecialWarningCount(182428)--Seems everyone goes down at some point, dps healers and off tank. Each getting different abiltiy when succeed
 --Adds
 local specWarnSavageStrikes			= mod:NewSpecialWarningSpell(180163, nil, nil, nil, 1, 2)
-local specWarnBloodGlob				= mod:NewSpecialWarningSwitch(180459, "Dps", nil, nil, 1, 5)
-local specWarnFelBloodGlob			= mod:NewSpecialWarningSwitch(180413, "Dps", nil, nil, 3, 5)
-local specWarnBloodthirster			= mod:NewSpecialWarningSwitch("ej11266", "Dps", nil, 2, 1, 5)--Very frequent, let specwarn be an option
-local specWarnHulkingTerror			= mod:NewSpecialWarningSwitch("ej11269", "Tank", nil, 2, 1, 5)
+local specWarnBloodGlob				= mod:NewSpecialWarningSwitch(180459, "Dps", nil, nil, 1, 12)
+local specWarnFelBloodGlob			= mod:NewSpecialWarningSwitch(180413, "Dps", nil, nil, 3, 12)
+local specWarnBloodthirster			= mod:NewSpecialWarningSwitch("ej11266", "Dps", nil, 2, 1, 12)--Very frequent, let specwarn be an option
+local specWarnHulkingTerror			= mod:NewSpecialWarningSwitch("ej11269", "Tank", nil, 2, 1, 12)
 local specWarnRendingHowl			= mod:NewSpecialWarningInterruptCount(183917, "HasInterrupt", nil, 2, 1, 5)
 
 --Boss
@@ -153,10 +153,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 180410 and self:AntiSpam(2, 2) then--Blood Globule
 		specWarnBloodGlob:Show()
-		specWarnBloodGlob:Play("180459")
+		specWarnBloodGlob:Play("attackblood")
 	elseif spellId == 180413 and self:AntiSpam(2, 3) then--Fel Blood Globule
 		specWarnFelBloodGlob:Show()
-		specWarnFelBloodGlob:Play("180199")
+		specWarnFelBloodGlob:Play("attackfelblood")
 	end
 end
 
@@ -204,10 +204,11 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 			if (cid == 92038 or cid == 90521 or cid == 93369) and self:AntiSpam(3, 1) and not self:IsTank() then--Salivating Bloodthirster. Antispam should filter the two that jump down together
 				if self.Options.SpecWarnej11266switch then
 					specWarnBloodthirster:Show()
+					specWarnBloodthirster:Play("attackbloodthirster")
 				else
 					warnBloodthirster:Show()
+					warnBloodthirster:Play("attackbloodthirster")
 				end
-				warnBloodthirster:Play("ej11266")
 			end
 		end
 	end
@@ -218,7 +219,7 @@ end
 function mod:RAID_BOSS_EMOTE(msg, npc)
 	if npc == Bloodthirster then
 		specWarnHulkingTerror:Show()
-		specWarnHulkingTerror:Play("ej11269")
+		specWarnHulkingTerror:Play("attackhulkingterror")
 	end
 end
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1195, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220127091718")
 mod:SetCreatureID(78948, 80557, 80551, 99999)--78948 Tectus, 80557 Mote of Tectus, 80551 Shard of Tectus
 mod:SetEncounterID(1722)--Hopefully win will work fine off this because otherwise tracking shard deaths is crappy
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -37,7 +37,7 @@ local specWarnCrystallineBarrage	= mod:NewSpecialWarningMove(162370, nil, nil, n
 --Night-Twisted NPCs
 local specWarnRavingAssault			= mod:NewSpecialWarningDodge(163312, "Melee", nil, nil, nil, 2)
 local specWarnEarthenFlechettes		= mod:NewSpecialWarningDodge(162968, "Melee", nil, nil, nil, 2)
-local specWarnGiftOfEarth			= mod:NewSpecialWarningCount(162894, "Melee", nil, nil, nil, 2)
+local specWarnGiftOfEarth			= mod:NewSpecialWarningCount(162894, "Melee", nil, nil, nil, 12)
 
 local timerEarthwarperCD			= mod:NewNextTimer(40, "ej10061", nil, nil, nil, 1, 162894)--Both of these get delayed by upheavel
 local timerBerserkerCD				= mod:NewNextTimer(40, "ej10062", nil, "Tank", nil, 1, 163312)--Both of these get delayed by upheavel
@@ -112,7 +112,7 @@ function mod:CustomHealthUpdate()
 	elseif self.vb.healthPhase == 3 then
 		return ("(%d%%, %s)"):format((moteT > 0 and moteT or lmoteT) / (moteC > 0 and moteC or lmoteC), moteN)
 	end
-	return DBM_CORE_L.UNKNOWN
+	return DBM_COMMON_L.UNKNOWN
 end
 
 function mod:OnCombatStart(delay)
@@ -157,7 +157,7 @@ function mod:SPELL_CAST_START(args)
 		earthDuders[GUID] = earthDuders[GUID] + 1
 		specWarnGiftOfEarth:Show(earthDuders[GUID])
 		timerGiftOfEarthCD:Start(GUID)
-		specWarnGiftOfEarth:Play("162894")
+		specWarnGiftOfEarth:Play("giftofearth")
 	elseif spellId == 163312 then
 		specWarnRavingAssault:Show()
 		specWarnRavingAssault:Play("chargemove")

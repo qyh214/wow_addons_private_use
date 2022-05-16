@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1197, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220127091718")
 mod:SetCreatureID(77428, 78623)
 mod:SetEncounterID(1705)
 mod:SetUsedIcons(1, 2, 3)
@@ -62,7 +62,7 @@ local specWarnMarkOfChaosFortificationNear		= mod:NewSpecialWarningClose(164178,
 local yellMarkOfChaosFortification				= mod:NewYell(164178)
 local yellMarkOfChaosReplication				= mod:NewYell(164191)
 
-local specWarnForceNova							= mod:NewSpecialWarningSpell(157349, nil, nil, nil, 2, 2)
+local specWarnForceNova							= mod:NewSpecialWarningSpell(157349, nil, nil, nil, 2, 12)
 local specWarnForceNovaRep						= mod:NewSpecialWarningMoveAway(164240, nil, nil, nil, 3, 2)
 
 local specWarnBranded							= mod:NewSpecialWarningStack(156225, nil, 5)--Debuff Name "Branded" for Arcane Wrath
@@ -108,7 +108,7 @@ local timerForceNovaCD							= mod:NewCDCountTimer(45, 157349, nil, nil, nil, 2,
 local timerForceNovaFortification				= mod:NewNextTimer(9, 157349, nil, nil, nil, 2)--For repeating nova
 local timerSummonArcaneAberrationCD				= mod:NewCDCountTimer(45, "ej9945", nil, "-Healer", nil, 1, 156471, DBM_COMMON_L.DAMAGE_ICON)--45-52 Variation Noted
 --Intermission: Lineage of Power
-mod:AddTimerLine(DBM_CORE_L.INTERMISSION)
+mod:AddTimerLine(DBM_COMMON_L.INTERMISSION)
 local timerTransition							= mod:NewPhaseTimer(74, nil, nil, nil, nil, nil, nil, nil, nil, 1, 5)
 local timerCrushArmorCD							= mod:NewNextTimer(6, 158553, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerKickToFaceCD							= mod:NewCDTimer(17, 158563, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
@@ -280,7 +280,7 @@ function mod:OnCombatStart(delay)
 	timerSummonArcaneAberrationCD:Start(25-delay, 1)
 	timerMarkOfChaosCD:Start(33.5-delay)
 	timerForceNovaCD:Start(-delay, 1)
-	specWarnForceNova:Schedule(38.5-delay, "157349")
+	specWarnForceNova:Schedule(38.5-delay, "forcenovacoming")
 	--Fix number of bosses reported by status whispers for normal
 	--Assuming this can be changed after mod load without breaking things.
 	if self:IsMythic() then
@@ -351,12 +351,12 @@ function mod:SPELL_CAST_START(args)
 		specWarnForceNova:Show()
 		local novaTime = self.vb.forceCount == 1 and 45 or 50.5--Often 51, but 2x I did see 50.5 so 50.5 is safer
 		timerForceNovaCD:Start(novaTime, self.vb.forceCount+1)
-		specWarnForceNova:ScheduleVoice(novaTime-6.5, "157349")
+		specWarnForceNova:ScheduleVoice(novaTime-6.5, "forcenovacoming")
 	elseif spellId == 164232 then
 		self.vb.forceCount = self.vb.forceCount + 1
 		local novaTime = self.vb.forceCount == 1 and 45 or 50.5
 		timerForceNovaCD:Start(novaTime, self.vb.forceCount+1)
-		specWarnForceNova:ScheduleVoice(novaTime-6.5, "157349")
+		specWarnForceNova:ScheduleVoice(novaTime-6.5, "forcenovacoming")
 		if self:IsMythic() and self.vb.phase == 1 then--Also replication empowered
 			self.vb.RepNovaActive = true
 			self:Schedule(9, delayedRangeUpdate, self)
@@ -380,7 +380,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnForceNova:Show()
 		local novaTime = self.vb.forceCount == 1 and 45 or 50.5
 		timerForceNovaCD:Start(novaTime, self.vb.forceCount+1)
-		specWarnForceNova:ScheduleVoice(novaTime-6.5, "157349")
+		specWarnForceNova:ScheduleVoice(novaTime-6.5, "forcenovacoming")
 		--Fortified novas, 3 novas not just 1. Start additional timer for novas 2 and 3
 		timerForceNovaFortification:Start()
 		timerForceNovaFortification:Schedule(9)
@@ -414,7 +414,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnForceNovaRep:Show()
 		local novaTime = self.vb.forceCount == 1 and 45 or 50.5
 		timerForceNovaCD:Start(novaTime, self.vb.forceCount+1)
-		specWarnForceNova:ScheduleVoice(novaTime-6.5, "157349")
+		specWarnForceNova:ScheduleVoice(novaTime-6.5, "forcenovacoming")
 		specWarnForceNova:Play("range5") --keep range 5 yards
 	-----
 	--People complained about my method vs BWs method here too.
@@ -827,7 +827,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		timerSummonArcaneAberrationCD:Start(28, 1)
 		timerMarkOfChaosCD:Start(36.5)
 		timerForceNovaCD:Start(48.5, 1)
-		specWarnForceNova:ScheduleVoice(42, "157349")
+		specWarnForceNova:ScheduleVoice(42, "forcenovacoming")
 		if spellId == 158012 then
 			if self:IsMythic() then
 				self.vb.phase = 2

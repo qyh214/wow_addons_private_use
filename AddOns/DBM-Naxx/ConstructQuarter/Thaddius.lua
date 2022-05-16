@@ -2,7 +2,7 @@
 local mod	= DBM:NewMod("Thaddius", "DBM-Naxx", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041927")
+mod:SetRevision("20220222121625")
 mod:SetCreatureID(15928)
 mod:SetEncounterID(1120)
 mod:SetModelID(16137)
@@ -16,17 +16,19 @@ mod:RegisterEventsInCombat(
 
 local warnShiftSoon			= mod:NewPreWarnAnnounce(28089, 5, 3)
 local warnShiftCasting		= mod:NewCastAnnounce(28089, 4)
-local warnChargeChanged		= mod:NewSpecialWarning("WarningChargeChanged")
-local warnChargeNotChanged	= mod:NewSpecialWarning("WarningChargeNotChanged", false)
 local warnThrow				= mod:NewSpellAnnounce(28338, 2)
 local warnThrowSoon			= mod:NewSoonAnnounce(28338, 1)
+
+local warnChargeChanged		= mod:NewSpecialWarning("WarningChargeChanged", nil, nil, nil, 3, 2, nil, nil, 28089)
+local warnChargeNotChanged	= mod:NewSpecialWarning("WarningChargeNotChanged", false, nil, nil, 1, 12, nil, nil, 28089)
 
 local enrageTimer			= mod:NewBerserkTimer(365)
 local timerNextShift		= mod:NewNextTimer(30, 28089, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerShiftCast		= mod:NewCastTimer(3, 28089, nil, nil, nil, 2)
 local timerThrow			= mod:NewNextTimer(20.6, 28338, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
-mod:AddDropdownOption("ArrowsEnabled", {"Never", "TwoCamp", "ArrowsRightLeft", "ArrowsInverse"}, "Never", "misc")
+--mod:AddMiscLine(DBM_CORE_L.OPTION_CATEGORY_DROPDOWNS)
+mod:AddDropdownOption("AirowEnabled", {"Never", "TwoCamp", "ArrowsRightLeft", "ArrowsInverse"}, "Never", "misc", nil, 28089)
 
 local currentCharge
 local down = 0
@@ -72,6 +74,7 @@ function mod:UNIT_AURA()
 		lastShift = 0
 		if charge == currentCharge then
 			warnChargeNotChanged:Show()
+			warnChargeNotChanged:Play("dontmove")
 			if self.Options.ArrowsEnabled == "ArrowsInverse" then
 				self:ShowLeftArrow()
 			elseif self.Options.ArrowsEnabled == "ArrowsRightLeft" then
@@ -79,6 +82,7 @@ function mod:UNIT_AURA()
 			end
 		else
 			warnChargeChanged:Show(charge)
+			warnChargeChanged:Play("stilldanger")
 			if self.Options.ArrowsEnabled == "ArrowsInverse" then
 				self:ShowRightArrow()
 			elseif self.Options.ArrowsEnabled == "ArrowsRightLeft" then

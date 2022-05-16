@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(169, "DBM-BlackwingDescent", nil, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806141910")
+mod:SetRevision("20220128073805")
 mod:SetCreatureID(42180, 42178, 42179, 42166)
 mod:SetEncounterID(1027)
 mod:SetUsedIcons(1, 3, 6, 7, 8)
@@ -211,10 +211,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			timerNextActivate:Start()
 		end
-		if self.Options.SetIconOnActivated and DBM:GetRaidRank() >= 1 then
+		if self.Options.SetIconOnActivated then
 			for i = 1, 4 do
 				if UnitName("boss"..i) == args.destName then
-					SetRaidTarget("boss"..i, 8)
+					self:SetIcon("boss"..i, 8)
 					break
 				end
 			end

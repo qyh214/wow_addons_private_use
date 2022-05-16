@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(820, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20220128073905")
 mod:SetCreatureID(69017)--69070 Viscous Horror, 69069 good ooze, 70579 bad ooze (patched out of game, :\)
 mod:SetEncounterID(1574)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)--Although if you have 8 viscous horrors up, you are probably doing fight wrong.
@@ -84,7 +84,7 @@ function mod:PLAYER_TARGET_CHANGED()
 			local icon = 9 - bigOozeAlive--Start with skull for big ooze then subtrack from it based on number of oozes up to choose an unused icon
 			bigOozeGUIDS[guid] = true--NOW we add this ooze to the table now that we're done counting old ones
 			self:UnregisterShortTermEvents()--Add is marked, unregister events until next ooze spawns
-			SetRaidTarget("target", icon)
+			self:SetIcon("target", icon)
 			self:SendSync("BigOozeGUID", guid)--Make sure we keep everynoes ooze guid ignore list/counts up to date.
 		end
 	end
@@ -98,7 +98,7 @@ function mod:UPDATE_MOUSEOVER_UNIT()
 			local icon = 9 - bigOozeAlive--Start with skull for big ooze then subtrack from it based on number of oozes up to choose an unused icon
 			bigOozeGUIDS[guid] = true--NOW we add this ooze to the table now that we're done counting old ones
 			self:UnregisterShortTermEvents()--Add is marked, unregister events until next ooze spawns
-			SetRaidTarget("mouseover", icon)
+			self:SetIcon("mouseover", icon)
 			self:SendSync("BigOozeGUID", guid)
 		end
 	end

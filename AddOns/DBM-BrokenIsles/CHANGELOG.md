@@ -1,7 +1,21 @@
 # <DBM> World Bosses (Legion)
 
-## [r29](https://github.com/DeadlyBossMods/DBM-Legion/tree/r29) (2022-01-16)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Legion/compare/r28...r29) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Legion/releases)
+## [r30](https://github.com/DeadlyBossMods/DBM-Legion/tree/r30) (2022-05-08)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Legion/compare/r29...r30) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Legion/releases)
 
-- Fixed a LOT more DBM\_CORE\_L -> DBM\_COMMON\_L  
-- Fix missing uses of DBM\_CORE\_L -> DBM\_COMMON\_L - Closes #9  
+- Update DBM-BrokenIsles.toc (#15)  
+    Title in Russian  
+- Fix Luacheck  
+- bump toc files  
+- re-arranged antorus mods to comply with new mod gui  
+- need to fix this the right way later  
+- Update localization.ru.lua (#14)  
+- Create localization.ru.lua (#12)  
+- Update DBM-BrokenIsles.toc (#13)  
+    Add  localization.ru.lua  
+- Update DBM-TombofSargeras.toc (#11)  
+    Add  localization.ru.lua  
+- Create localization.ru.lua (#10)  
+- Fixed 2 direct calls to SetRaidTarget to properly use SetIcon and honor global disable  
+- fix invalid voice file  
+- change voice pack sounds in 7 files  

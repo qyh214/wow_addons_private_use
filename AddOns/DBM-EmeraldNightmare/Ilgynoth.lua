@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1738, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041824")
+mod:SetRevision("20220128073818")
 mod:SetCreatureID(105393)
 mod:SetEncounterID(1873)
 mod:SetUsedIcons(8, 4, 3, 2, 1)
@@ -194,7 +194,7 @@ do
 			end
 		end
 		if lowestUnitID then
-			SetRaidTarget(lowestUnitID, 8)
+			self:SetIcon(lowestUnitID, 8)
 			found = true
 		end
 		if found and self.Options.SetIconOnlyOnce2 then

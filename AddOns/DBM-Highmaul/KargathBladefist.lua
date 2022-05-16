@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1128, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220127091718")
 mod:SetCreatureID(78714)
 mod:SetEncounterID(1721)
 --mod:SetUsedIcons(7)
@@ -23,16 +23,16 @@ local warnOpenWounds				= mod:NewStackAnnounce(159178, 2, nil, "Tank|Healer")
 local warnPillar					= mod:NewSpellAnnounce("ej9394", 3, nil, 159202, nil, nil, nil, 2)
 local warnOnTheHunt					= mod:NewTargetAnnounce(162497, 4)
 
-local specWarnChainHurl				= mod:NewSpecialWarningSpell(159947, nil, nil, nil, nil, 2)
+local specWarnChainHurl				= mod:NewSpecialWarningSpell(159947, nil, nil, nil, nil, 12)
 local specWarnBerserkerRushOther	= mod:NewSpecialWarningTarget(158986, nil, nil, nil, 2, 2)
-local specWarnBerserkerRush			= mod:NewSpecialWarningMoveTo(158986, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.run:format(158986), nil, 3, 2)--Creative use of warning. Run option text but a moveto warning to get players in LFR to actually run to the flame jet instead of being clueless.
+local specWarnBerserkerRush			= mod:NewSpecialWarningMoveTo(158986, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.run:format(158986), nil, 3, 12)--Creative use of warning. Run option text but a moveto warning to get players in LFR to actually run to the flame jet instead of being clueless.
 local yellBerserkerRush				= mod:NewYell(158986)
 local specWarnImpale				= mod:NewSpecialWarningYou(159113)
 local specWarnOpenWounds			= mod:NewSpecialWarningStack(159178, nil, 2)
 local specWarnOpenWoundsOther		= mod:NewSpecialWarningTaunt(159178)--If it is swap every impale, will move this to impale cast and remove stack stuff all together.
-local specWarnMaulingBrew			= mod:NewSpecialWarningMove(159413)
-local specWarnFlameJet				= mod:NewSpecialWarningMove(159311)
-local specWarnOnTheHunt				= mod:NewSpecialWarningMoveTo(162497, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.run:format(162497), nil, nil, 2)--Does not need yell, tigers don't cleave other targets like berserker rush does.
+local specWarnMaulingBrew			= mod:NewSpecialWarningMove(159413, nil, nil, nil, 1, 2)
+local specWarnFlameJet				= mod:NewSpecialWarningMove(159311, nil, nil, nil, 1, 2)
+local specWarnOnTheHunt				= mod:NewSpecialWarningMoveTo(162497, nil, DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.run:format(162497), nil, nil, 12)--Does not need yell, tigers don't cleave other targets like berserker rush does.
 
 local timerPillarCD					= mod:NewNextTimer(20, "ej9394", nil, nil, nil, nil, 159202)
 local timerChainHurlCD				= mod:NewNextTimer(106, 159947, nil, nil, nil, 6, nil, nil, nil, 1, 5)--177776
@@ -59,9 +59,10 @@ function mod:BerserkerRushTarget(targetname, uId)
 		if targetname == UnitName("player") then
 			specWarnBerserkerRush:Show(firePillar)
 			yellBerserkerRush:Yell()
-			specWarnBerserkerRush:Play("159202f") --find the pillar
+			specWarnBerserkerRush:Play("findflamejet") --find the pillar
 		else
 			specWarnBerserkerRushOther:Show(targetname)
+			specWarnBerserkerRushOther:Play("runaway")
 		end
 	end
 end
@@ -77,7 +78,7 @@ function mod:OnCombatStart(delay)
 	if self:IsMythic() then
 		timerTigerCD:Start()
 	end
-	specWarnChainHurl:ScheduleVoice(84.5-delay, "159947r") --ready for hurl
+	specWarnChainHurl:ScheduleVoice(84.5-delay, "tosscoming") --ready for hurl
 end
 
 function mod:OnCombatEnd()
@@ -100,7 +101,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 159947 then
 		specWarnChainHurl:Show()
 		timerChainHurlCD:Start()
-		specWarnChainHurl:ScheduleVoice(99.5, "159947r") --ready for hurl
+		specWarnChainHurl:ScheduleVoice(99.5, "tosscoming") --ready for hurl
 	elseif spellId == 158986 then
 		timerBerserkerRushCD:Start()
 		self:BossTargetScanner(78714, "BerserkerRushTarget", 0.05, 10)
@@ -114,7 +115,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnChainHurl:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			timerSweeperCD:Start()
-			specWarnChainHurl:Play("159947y") --you are the target
+			specWarnChainHurl:Play("tossonyou") --you are the target
 		else
 			if self:AntiSpam(2, 2) then
 				self:Schedule(0.5, checkHurl)
@@ -124,7 +125,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnBerserkerRush:Show(firePillar)
 			yellBerserkerRush:Yell()
-			specWarnBerserkerRush:Play("159202f") --find the pillar
+			specWarnBerserkerRush:Play("findflamejet") --find the pillar
 		else
 			specWarnBerserkerRushOther:Show(args.destName)
 		end
@@ -146,11 +147,11 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 159202 then
 		warnPillar:Show()
 		timerPillarCD:Start()
-		warnPillar:Play("159202") --pillar
+		warnPillar:Play("flamejet")
 	elseif spellId == 162497 then
 		if args:IsPlayer() then
 			specWarnOnTheHunt:Show(firePillar)
-			specWarnOnTheHunt:Play("159202f") --find the pillar
+			specWarnOnTheHunt:Play("findflamejet") --find the pillar
 		else
 			warnOnTheHunt:Show(args.destName)
 		end
@@ -168,8 +169,10 @@ end
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId)
 	if spellId == 159413 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
 		specWarnMaulingBrew:Show()
+		specWarnMaulingBrew:Play("watchfeet")
 	elseif spellId == 159311 and destGUID == UnitGUID("player") and self:AntiSpam(2, 3) then
 		specWarnFlameJet:Show()
+		specWarnFlameJet:Play("watchfeet")
 	end
 end
 mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1433, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220127091718")
 mod:SetCreatureID(90316)
 mod:SetEncounterID(1788)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
@@ -42,7 +42,7 @@ local warnFelConduit					= mod:NewCastAnnounce(181827, 3, nil, nil, "-Healer")
 
 --Boss
 local specWarnEyeofAnzu					= mod:NewSpecialWarningYou(179202)
-local specWarnThrowAnzu					= mod:NewSpecialWarning("specWarnThrowAnzu", nil, nil, nil, 1, 5)
+local specWarnThrowAnzu					= mod:NewSpecialWarning("specWarnThrowAnzu", nil, nil, nil, 1, 12)
 local specWarnFocusedBlast				= mod:NewSpecialWarningCount(181912, nil, nil, nil, 2, 2)
 local specWarnPhantasmalWinds			= mod:NewSpecialWarningYou(181957, nil, nil, nil, 3, 2)
 local specWarnFelChakram				= mod:NewSpecialWarningMoveAway(182178, nil, nil, nil, 1, 2)
@@ -214,7 +214,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnFelConduit:Show(args.sourceName)
 			if self:IsHealer() then--It's still on healer that did last dispel, they need to throw to better interruptor, probably tank
 				specWarnThrowAnzu:Show(TANK)
-				specWarnThrowAnzu:Play("179202m") --throw to melee (maybe change to throw to tank, in strat i saw, it was best to bounce eye between tank and healer since throwing to tank also made immune to Phantasmal Corruption as added bonus)
+				specWarnThrowAnzu:Play("throweyetank") --throw to melee (maybe change to throw to tank, in strat i saw, it was best to bounce eye between tank and healer since throwing to tank also made immune to Phantasmal Corruption as added bonus)
 			else
 				specWarnFelConduit:Play("kickcast")
 			end
@@ -312,11 +312,11 @@ function mod:SPELL_AURA_APPLIED(args)
 					specWarnFelBombDispel:Play("dispelnow")
 				else--Cannot dispel, get eye to a healer asap!
 					specWarnThrowAnzu:Show(HEALER)
-					specWarnThrowAnzu:Play("179202h")
+					specWarnThrowAnzu:Play("throweyehealer")
 				end
 			elseif self.vb.windsTargets > 0 then
 				specWarnThrowAnzu:Show(phantWinds)
-				specWarnThrowAnzu:Play("179202")
+				specWarnThrowAnzu:Play("throweyedebuff")
 			else--No bombs or winds, show generic "eye on you" warning
 				specWarnEyeofAnzu:Show()
 			end
@@ -334,7 +334,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if playerHasAnzu and self:AntiSpam(3, 1) then
 			specWarnThrowAnzu:Show(args.spellName)
-			specWarnThrowAnzu:Play("179202")
+			specWarnThrowAnzu:Play("throweyedebuff")
 		end
 	elseif spellId == 182325 then
 		warnPhantasmalWounds:CombinedShow(1, args.destName)--It goes out kind of slow
@@ -364,7 +364,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			if playerHasAnzu then
 				specWarnThrowAnzu:Show(args.destName)
-				specWarnThrowAnzu:Play("179202")
+				specWarnThrowAnzu:Play("throweyedebuff")
 			end
 		end
 	elseif spellId == 179219 then
@@ -401,7 +401,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					specWarnFelBombDispel:Play("dispelnow")
 				else--Cannot dispel, get eye to a healer asap!
 					specWarnThrowAnzu:Show(HEALER)
-					specWarnThrowAnzu:Play("179202h")
+					specWarnThrowAnzu:Play("throweyehealer")
 				end
 			end
 		end
@@ -416,7 +416,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if playerHasAnzu and self:AntiSpam(3, 3) then
 			specWarnThrowAnzu:Show(args.spellName)
-			specWarnThrowAnzu:Play("179202")
+			specWarnThrowAnzu:Play("throweyedebuff")
 		end
 	elseif spellId == 182178 or spellId == 182200 then
 		chakramTargets[#chakramTargets+1] = args.destName

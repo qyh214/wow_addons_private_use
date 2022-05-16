@@ -213,7 +213,7 @@ L:SetMiscLocalization({
 L:SetOptionLocalization({
 	WarningChargeChanged	= "Предупреждение, когда ваша полярность изменена",
 	WarningChargeNotChanged	= "Предупреждение, когда ваша полярность не изменена",
-	ArrowsEnabled			= "Отображать стрелки (обычная \"2-сторонняя\" стратегия)",
+	AirowEnabled			= "Отображать стрелки (обычная \"2-сторонняя\" стратегия)",
 	ArrowsRightLeft			= "Стрелки влево/вправо для \"4-сторонней\" стратегии",
 	ArrowsInverse			= "Обратная \"4-сторонняя\" стратегия (вправо, если полярность изменена, влево, если нет)"
 })
@@ -334,8 +334,6 @@ L:SetOptionLocalization({
 	WarningLanded		= "Объявлять Наземную фазу",
 	TimerAir			= "Отсчет времени до Воздушной фазы",
 	TimerLanding		= "Отсчет времени до приземления",
-	TimerIceBlast		= "Отсчет времени до Ледяного дыхания",
-	WarningDeepBreath	= "Специальное объявление Ледяного Дыхания",
 	WarningIceblock		= "Кричать, когда вы в Ледяной глыбе"
 })
 
@@ -347,14 +345,12 @@ L:SetMiscLocalization({
 L:SetWarningLocalization({
 	WarningAirPhaseSoon	= "Воздушная фаза через 10 секунд",
 	WarningAirPhaseNow	= "Воздушная фаза",
-	WarningLanded		= "Сапфирон приземляется",
-	WarningDeepBreath	= "Ледяное дыхание"
+	WarningLanded		= "Сапфирон приземляется"
 })
 
 L:SetTimerLocalization({
 	TimerAir		= "Воздушная фаза",
-	TimerLanding	= "Приземление",
-	TimerIceBlast	= "Ледяное дыхание"
+	TimerLanding	= "Приземление"
 })
 
 ------------------

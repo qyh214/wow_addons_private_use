@@ -100,8 +100,8 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	Nova			= "directs Shadow Nova at (.+)%.",
-	Conflag			= "directs Conflagration at (.+)%.",
+	Nova			= "directs Shadow Nova at (.+)",
+	Conflag			= "directs Conflagration at (.+)",
 	Sacrolash		= "Lady Sacrolash",
 	Alythess		= "Grand Warlock Alythess"
 }

@@ -1,11 +1,11 @@
-## Interface: 90105
+## Interface: 90200
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0World Bosses (WoD)|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Draenor|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0드레노어|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0德拉諾|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0德拉诺|r
-## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Мировые боссы (WoD)|r
+## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Мировые боссы (Дренор)|r
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
@@ -16,7 +16,7 @@
 ## X-DBM-Mod-Category: WOD
 ## X-DBM-StatTypes: normal
 ## X-DBM-Mod-Name: World Bosses (WoD)
-## X-DBM-Mod-Name-ruRU: Мировые боссы (WoD)
+## X-DBM-Mod-Name-ruRU: Мировые боссы (Дренор)
 ## X-DBM-Mod-SubCategories: Draenor,Garrison Invasions
 ## X-DBM-Mod-SubCategories-deDE: Draenor,Garnisonsinvasionen
 ## X-DBM-Mod-SubCategories-esES: Draenor,Invasiones de la ciudadela
@@ -30,7 +30,7 @@
 ## X-Curse-Project-ID: 101956
 ## X-WoWI-ID: 24535
 ## X-Wago-ID: LvNAkBKo
-## Version: r60
+## Version: r61
 
 localization.br.lua
 localization.en.lua

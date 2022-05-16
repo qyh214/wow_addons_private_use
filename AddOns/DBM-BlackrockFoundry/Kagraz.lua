@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1123, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220128073834")
 mod:SetCreatureID(76814)--76794 Cinder Wolf, 80590 Aknor Steelbringer
 mod:SetEncounterID(1689)
 mod:SetUsedIcons(6, 5, 4, 3)
@@ -283,7 +283,7 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 				wolfIcon = wolfIcon + 1
 				activeBossGUIDS[unitGUID] = true
 				if self:CanSetIcon("SetIconOnAdds") then--Check if elected
-					SetRaidTarget(unitID, wolfIcon)
+					self:SetIcon(unitID, wolfIcon)
 				end
 				if wolfIcon == expectedTotal then--All wolves marked
 					self:UnregisterShortTermEvents()

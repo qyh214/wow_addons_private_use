@@ -207,7 +207,7 @@ L:SetMiscLocalization({
 L:SetOptionLocalization({
 	WarningChargeChanged	= "Spezialwarnung, wenn deine Polarität gewechselt hat",
 	WarningChargeNotChanged	= "Spezialwarnung, wenn deine Polarität nicht gewechselt hat",
-	ArrowsEnabled			= "Zeige Pfeile (normale \"2-Camps\"-Strategie)",
+	AirowEnabled			= "Zeige Pfeile (normale \"2-Camps\"-Strategie)",
 	ArrowsRightLeft			= "Zeige Links-/Rechtspfeil für die \"4-Camps\"-Strategie<br/>(Linkspfeil bei Polaritätsänderung, Rechtspfeil bei keiner Änderung)",
 	ArrowsInverse			= "Umgedrehte \"4-Camps\"-Strategie<br/>(Rechtspfeil bei Polaritätsänderung, Linkspfeil bei keiner Änderung)"
 })
@@ -327,9 +327,7 @@ L:SetOptionLocalization({
 	WarningAirPhaseNow	= "Zeige Warnung, wenn Saphiron abhebt",
 	WarningLanded		= "Zeige Warnung, wenn Saphiron landet",
 	TimerAir			= "Zeige Zeit bis nächste Luftphase",
-	TimerLanding		= "Zeige Zeit bis nächste Bodenphase",
-	TimerIceBlast		= "Zeige Zeit bis $spell:28524",
-	WarningDeepBreath	= "Spezialwarnung für $spell:28524"
+	TimerLanding		= "Zeige Zeit bis nächste Bodenphase"
 })
 
 L:SetMiscLocalization({
@@ -339,14 +337,12 @@ L:SetMiscLocalization({
 L:SetWarningLocalization({
 	WarningAirPhaseSoon	= "Luftphase in 10 Sek",
 	WarningAirPhaseNow	= "Luftphase",
-	WarningLanded		= "Bodenphase",
-	WarningDeepBreath	= "Frostatem"
+	WarningLanded		= "Bodenphase"
 })
 
 L:SetTimerLocalization({
 	TimerAir		= "Nächste Luftphase",
-	TimerLanding	= "Nächste Bodenphase",
-	TimerIceBlast	= "Frostatem"
+	TimerLanding	= "Nächste Bodenphase"
 })
 
 ------------------

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(825, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211011150900")
+mod:SetRevision("20220128073905")
 mod:SetCreatureID(67977)
 mod:SetEncounterID(1565)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3)
@@ -145,7 +145,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				local unitid = uId.."target"
 				local guid = UnitGUID(unitid)
 				if args.destGUID == guid then
-					SetRaidTarget(unitid, 0)
+					self:SetIcon(unitid, 0)
 				end
 			end
 		end

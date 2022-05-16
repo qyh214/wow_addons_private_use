@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(971, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220127091718")
 mod:SetCreatureID(77404)
 mod:SetEncounterID(1706)
 --mod:SetModelSound("sound\\creature\\thebutcher\\VO_60_OGRERAID_BUTCHER_AGGRO.ogg", "sound\\creature\\thebutcher\\VO_60_OGRERAID_BUTCHER_SPELL_B.ogg")
@@ -26,7 +26,7 @@ local warnFrenzy					= mod:NewSpellAnnounce(156598, 4)
 local specWarnTenderizer			= mod:NewSpecialWarningStack(156151, nil, 2)
 local specWarnTenderizerOther		= mod:NewSpecialWarningTaunt(156151, nil, nil, nil, nil, 2)
 local specWarnGushingWounds			= mod:NewSpecialWarningStack(156152, nil, 2, nil, nil, nil, 2)
-local specWarnBoundingCleave		= mod:NewSpecialWarningCount(156160, nil, nil, nil, 2, 2)
+local specWarnBoundingCleave		= mod:NewSpecialWarningCount(156160, nil, nil, nil, 2, 12)
 local specWarnBoundingCleaveEnded	= mod:NewSpecialWarningEnd(156160)
 local specWarnPaleVitriol			= mod:NewSpecialWarningMove(163046, nil, nil, nil, nil, 2)--Mythic
 
@@ -51,7 +51,7 @@ function mod:OnCombatStart(delay)
 	timerCleaveCD:Start(10-delay)--Verify this wasn't caused by cleave bug.
 	timerCleaverCD:Start(12-delay)
 	timerBoundingCleaveCD:Start(-delay, 1)
-	specWarnBoundingCleave:ScheduleVoice(53.5-delay, "156160")
+	specWarnBoundingCleave:ScheduleVoice(53.5-delay, "boundingcleave")
 	if self:IsMythic() then
 		berserkTimer:Start(240-delay)
 		self:RegisterShortTermEvents(
@@ -80,7 +80,7 @@ function mod:SPELL_CAST_START(args)
 			timerCleaveCD:Start()
 		end
 		if not self:IsLFR() then --never play this in LFR
-			warnCleave:Play("156157")
+			warnCleave:Play("cleave")
 		end
 	end
 end
@@ -123,7 +123,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerBoundingCleaveCD:Update(bossProgress, 30, self.vb.boundingCleave+1)--Will bar update work correctly on a count bar? Looking at code I don't think it will, it doesn't accept/pass on extra args in Update call.
 		specWarnBoundingCleave:CancelVoice()
 		if timeRemaining >= 8.5 then--Prevent a number lower than 2
-			specWarnBoundingCleave:ScheduleVoice(30-bossProgress-6.5, "156160")
+			specWarnBoundingCleave:ScheduleVoice(30-bossProgress-6.5, "boundingcleave")
 		end
 	end
 end
@@ -171,11 +171,11 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		if self.vb.isFrenzied then
 			timerBoundingCleave:Start(5)
 			timerBoundingCleaveCD:Start(30, self.vb.boundingCleave+1)
-			specWarnBoundingCleave:ScheduleVoice(23.5, "156160")
+			specWarnBoundingCleave:ScheduleVoice(23.5, "boundingcleave")
 		else
 			timerBoundingCleave:Start(9)
 			timerBoundingCleaveCD:Start(nil, self.vb.boundingCleave+1)
-			specWarnBoundingCleave:ScheduleVoice(53.5, "156160")
+			specWarnBoundingCleave:ScheduleVoice(53.5, "boundingcleave")
 		end
 	end
 end

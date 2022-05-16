@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1438, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220127091718")
 mod:SetCreatureID(91331)--Doomfire Spirit (92208), Hellfire Deathcaller (92740), Felborne Overfiend (93615), Dreadstalker (93616), Infernal doombringer (94412)
 mod:SetEncounterID(1799)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -49,22 +49,22 @@ local warnMarkOfLegion				= mod:NewTargetCountAnnounce(187050, 4)
 local warnDarkConduit				= mod:NewCountAnnounce(190394, 2, nil, "Ranged", nil, nil, nil, 2)
 
 --Phase 1: The Defiler
-local specWarnDoomfire				= mod:NewSpecialWarningSwitch(189897, "Dps", nil, nil, 1, 5)
+local specWarnDoomfire				= mod:NewSpecialWarningSwitch(189897, "Dps", nil, nil, 1, 12)
 local specWarnDoomfireFixate		= mod:NewSpecialWarningYou(182879, nil, nil, nil, 4)
 local yellDoomfireFixate			= mod:NewYell(182826)--Use short name for yell
 local specWarnAllureofFlames		= mod:NewSpecialWarningDodge(183254, nil, nil, nil, 2, 2)
-local specWarnDeathCaller			= mod:NewSpecialWarningSwitchCount("ej11582", "Dps", nil, nil, 1, 2)--Tanks don't need switch, they have death brand special warning 2 seconds earlier
+local specWarnDeathCaller			= mod:NewSpecialWarningSwitchCount("ej11582", "Dps", nil, nil, 1, 12)--Tanks don't need switch, they have death brand special warning 2 seconds earlier
 local specWarnFelBurst				= mod:NewSpecialWarningYou(183817)
 local yellFelBurst					= mod:NewPosYell(183817)
 local specWarnFelBurstNear			= mod:NewSpecialWarningMoveTo(183817, nil, nil, nil, 1, 2)--Anyone near by should run in to help soak, should be mostly ranged but if it's close to melee, melee soaking too doesn't hurt
 local specWarnDesecrate				= mod:NewSpecialWarningDodge(185590, "Melee", nil, nil, 1, 2)
 local specWarnDeathBrand			= mod:NewSpecialWarningCount(183828, "Tank", nil, 2, 1, 2)
 --Phase 2: Hand of the Legion
-local specWarnBreakShackle			= mod:NewSpecialWarning("specWarnBreakShackle", nil, nil, nil, 1, 5)
+local specWarnBreakShackle			= mod:NewSpecialWarning("specWarnBreakShackle", nil, nil, nil, 1, 12)
 local yellShackledTorment			= mod:NewPosYell(184964)
-local specWarnWroughtChaos			= mod:NewSpecialWarningYou(186123, nil, nil, nil, 3, 5)
+local specWarnWroughtChaos			= mod:NewSpecialWarningYou(186123, nil, nil, nil, 3, 12)
 local yellWroughtChaos				= mod:NewYell(186123)
-local specWarnFocusedChaos			= mod:NewSpecialWarningYou(185014, nil, nil, nil, 3, 5)
+local specWarnFocusedChaos			= mod:NewSpecialWarningYou(185014, nil, nil, nil, 3, 12)
 local yellFocusedChaos				= mod:NewFadesYell(185014)
 local specWarnDreadFixate			= mod:NewSpecialWarningYou(186574, false)--In case it matters on mythic, it was spammy on heroic and unimportant
 local specWarnFlamesOfArgus			= mod:NewSpecialWarningInterrupt(186663, "HasInterrupt", nil, 2, 1, 2)
@@ -295,7 +295,7 @@ local function showMarkOfLegion(self, spellName)
 			if localMarkBehavior == "LocSmallBack" then
 				number, position = 3, RANGED
 			end
-			local message = position.."-"..DBM_CORE_L.LEFT
+			local message = position.."-"..DBM_COMMON_L.LEFT
 			if localMarkBehavior == "Numbered" then
 				message = self:IconNumToString(number)
 			end
@@ -327,7 +327,7 @@ local function showMarkOfLegion(self, spellName)
 			if localMarkBehavior == "LocSmallBack" then
 				number, position = 4, RANGED
 			end
-			local message = position.."-"..DBM_CORE_L.RIGHT
+			local message = position.."-"..DBM_COMMON_L.RIGHT
 			if localMarkBehavior == "Numbered" then
 				message = self:IconNumToString(number)
 			end
@@ -359,7 +359,7 @@ local function showMarkOfLegion(self, spellName)
 			if localMarkBehavior == "LocSmallBack" then
 				number, position = 1, MELEE
 			end
-			local message = position.."-"..DBM_CORE_L.LEFT
+			local message = position.."-"..DBM_COMMON_L.LEFT
 			if localMarkBehavior == "Numbered" then
 				message = self:IconNumToString(number)
 			end
@@ -391,7 +391,7 @@ local function showMarkOfLegion(self, spellName)
 			if localMarkBehavior == "LocSmallBack" then
 				number, position = 2, MELEE
 			end
-			local message = position.."-"..DBM_CORE_L.RIGHT
+			local message = position.."-"..DBM_COMMON_L.RIGHT
 			if localMarkBehavior == "Numbered" then
 				message = self:IconNumToString(number)
 			end
@@ -433,19 +433,19 @@ local function showMarkOfLegion(self, spellName)
 				DBM:Debug(soakers..", "..marks, 2)
 				local soak = math.ceil(soakers/marks)
 				if (soak == 1) then
-					specWarnMarkOfLegionSoak:Show(MELEE.." "..DBM_CORE_L.LEFT)
+					specWarnMarkOfLegionSoak:Show(MELEE.." "..DBM_COMMON_L.LEFT)
 					specWarnMarkOfLegionSoak:Play("frontleft")
 				end
 				if (soak == 2) then
-					specWarnMarkOfLegionSoak:Show(MELEE.." "..DBM_CORE_L.RIGHT)
+					specWarnMarkOfLegionSoak:Show(MELEE.." "..DBM_COMMON_L.RIGHT)
 					specWarnMarkOfLegionSoak:Play("frontright")
 				end
 				if (soak == 3) then
-					specWarnMarkOfLegionSoak:Show(RANGED.." "..DBM_CORE_L.LEFT)
+					specWarnMarkOfLegionSoak:Show(RANGED.." "..DBM_COMMON_L.LEFT)
 					specWarnMarkOfLegionSoak:Play("backleft")
 				end
 				if (soak == 4) then
-					specWarnMarkOfLegionSoak:Show(RANGED.." "..DBM_CORE_L.RIGHT)
+					specWarnMarkOfLegionSoak:Show(RANGED.." "..DBM_COMMON_L.RIGHT)
 					specWarnMarkOfLegionSoak:Play("backright")
 				end
             end
@@ -494,13 +494,13 @@ local function breakShackles(self, spellName)
 			yellShackledTorment:Yell(i, i, i)
 			if i == 1 then
 				specWarnBreakShackle:Show(L.First)
-				specWarnBreakShackle:Play("184964a")
+				specWarnBreakShackle:Play("breaktormentfirst")
 			elseif i == 2 then
 				specWarnBreakShackle:Show(L.Second)
-				specWarnBreakShackle:Play("184964b")
+				specWarnBreakShackle:Play("breaktormentsecond")
 			elseif i == 3 then
 				specWarnBreakShackle:Show(L.Third)
-				specWarnBreakShackle:Play("184964c")
+				specWarnBreakShackle:Play("breaktormentthird")
 			end
 		end
 		if self.Options.SetIconOnShackledTorment2 then
@@ -710,7 +710,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 189897 then
 		specWarnDoomfire:Show()
 		timerDoomfireCD:Start()
-		specWarnDoomfire:Play("189897")
+		specWarnDoomfire:Play("attackdoomfire")
 		updateAllTimers(self, 7)
 	elseif spellId == 183817 then
 		table.wipe(felburstTargets)
@@ -907,13 +907,13 @@ function mod:SPELL_AURA_APPLIED(args)
 			if self:IsMythic() and self:AntiSpam(20, 7) and self:IsAlive() then
 				--Only warn once on mythic instead of spamming it, since you always get all of them
 				specWarnWroughtChaos:Show()
-				specWarnWroughtChaos:Play("186123")
+				specWarnWroughtChaos:Play("wroughtchaosyou")
 			end
 		end
 		if args:IsPlayer() then
 			if not self:IsMythic() then
 				specWarnWroughtChaos:Show()
-				specWarnWroughtChaos:Play("186123")
+				specWarnWroughtChaos:Play("wroughtchaosyou")
 				yellWroughtChaos:Yell()
 			end
 		end
@@ -926,7 +926,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			if not self:IsMythic() then
 				specWarnFocusedChaos:Show()
-				specWarnFocusedChaos:Play("185014")
+				specWarnFocusedChaos:Play("focusedchaosyou")
 				yellFocusedChaos:Schedule(3, 2)
 				yellFocusedChaos:Schedule(2, 3)
 				yellFocusedChaos:Schedule(1, 4)
@@ -1181,7 +1181,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		local unitGUID = UnitGUID(uId)
 		--timerShadowBlastCD ommited because it's used near instantly on spawn.
 		specWarnDeathCaller:Show(self.vb.deathBrandCount)
-		specWarnDeathCaller:Play("ej11582")
+		specWarnDeathCaller:Play("attackdeathcaller")
 --	"<143.60 23:47:14> [UNIT_SPELLCAST_SUCCEEDED] Archimonde(Stellar) [[boss1:Allow Phase 2 Spells::0:190117]]", -- [4158]
 --	"<143.64 23:47:14> [CHAT_MSG_MONSTER_YELL] CHAT_MSG_MONSTER_YELL#The light will not fail!#Exarch Yrel###Archimonde##0#0##0#2601#nil#0#false#false#false",
 --	"<148.61 23:47:19> [CHAT_MSG_MONSTER_YELL] CHAT_MSG_MONSTER_YELL#I grow tired of this pointless game. You face the immortal Legion, scourge of a thousand worlds.#Archimond

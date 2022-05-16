@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1425, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142006")
+mod:SetRevision("20220127091718")
 mod:SetCreatureID(90284)
 mod:SetEncounterID(1785)
 mod:SetUsedIcons(4, 3, 2)
@@ -31,7 +31,7 @@ local warnFuelStreak				= mod:NewCountAnnounce(182668, 3)
 local specWarnArtillery				= mod:NewSpecialWarningMoveAway(182280, nil, nil, nil, 3, 2)
 local yellArtillery					= mod:NewFadesYell(182108)
 local specWarnImmolation			= mod:NewSpecialWarningMove(182074, nil, nil, nil, 1, 2)
-local specWarnBarrage				= mod:NewSpecialWarningCount(185282, nil, nil, nil, 2, 5)--Count probably better than dodge
+local specWarnBarrage				= mod:NewSpecialWarningCount(185282, nil, nil, nil, 2, 12)--Count probably better than dodge
 local specWarnPounding				= mod:NewSpecialWarningCount(182020, nil, nil, nil, 2, 2)
 local specWarnBlitz					= mod:NewSpecialWarningCount(179889, nil, nil, nil, 2, 2)--Count probably better than dodge
 local specWarnFullCharge			= mod:NewSpecialWarningSpell(182055, nil, nil, nil, 1, 2)--Phase change
@@ -246,7 +246,7 @@ function mod:SPELL_CAST_START(args)
 		if cooldown then
 			timerBarrageCD:Start(cooldown, self.vb.barrageCount+1)
 		end
-		specWarnBarrage:Play("185282")
+		specWarnBarrage:Play("barrageonway")
 	elseif spellId == 182055 then
 		self.vb.groundPhase = false
 		self.vb.fuelCount = 0

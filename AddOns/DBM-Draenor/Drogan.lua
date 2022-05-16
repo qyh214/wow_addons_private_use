@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Drogan", "DBM-Draenor", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201111213748")
+mod:SetRevision("20220127091718")
 mod:SetCreatureID(90841)
 
 mod:RegisterCombat("combat")
@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 local warnWhirlingAxe		= mod:NewSpellAnnounce(180882, 3)
 local warnChainGrasp		= mod:NewTargetAnnounce(180880, 3)
 
-local specWarnChainGrasp	= mod:NewSpecialWarningYou(180880, nil, nil, nil, 1, 5)--Persists for 30 seconds or until you get 30 yards from boss, whichever first.
+local specWarnChainGrasp	= mod:NewSpecialWarningYou(180880, nil, nil, nil, 1, 12)--Persists for 30 seconds or until you get 30 yards from boss, whichever first.
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
@@ -29,7 +29,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 180880 then
 		if args:IsPlayer() then
 			specWarnChainGrasp:Show()
-			specWarnChainGrasp:Play("180880")
+			specWarnChainGrasp:Play("breakchain")
 		else
 			warnChainGrasp:Show(args.destName)
 		end

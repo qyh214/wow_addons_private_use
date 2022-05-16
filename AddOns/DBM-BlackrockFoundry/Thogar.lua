@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1147, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220127093452")
 mod:SetCreatureID(76906)--81315 Crack-Shot, 81197 Raider, 77487 Grom'kar Firemender, 80791 Grom'kar Man-at-Arms, 81318 Iron Gunnery Sergeant, 77560 Obliterator Cannon, 81612 Deforester
 mod:SetEncounterID(1692)
 mod:SetUsedIcons(8, 7, 2, 1)
@@ -405,7 +405,7 @@ local function updateInfoFrame()
 			addLine(TrainTable[train]["speciali"], "")
 		end
 	else
-		addLine(DBM_CORE_L.UNKNOWN, "")
+		addLine(DBM_COMMON_L.UNKNOWN, "")
 	end
 	return lines, sortedLines
 end
@@ -537,7 +537,7 @@ end
 
 function mod:GrenadeTarget(targetname, uId)
 	if not targetname then
-		warnProtoGrenade:Show(DBM_CORE_L.UNKNOWN)
+		warnProtoGrenade:Show(DBM_COMMON_L.UNKNOWN)
 		return
 	end
 	if targetname == UnitName("player") then
@@ -589,7 +589,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerProtoGrenadeCD:Start()
 	elseif spellId == 159481 and args:IsPlayer() then
 		bombFrom = args.sourceGUID
-		specWarnDelayedSiegeBomb:Play("keepmoving")
+		specWarnDelayedSiegeBomb:Play("keepmove")
 		yellDelayedSiegeBomb:Yell(1)
 		specWarnDelayedSiegeBombMove:Show()
 		timerDelayedSiegeBomb:Start(3, 2)
