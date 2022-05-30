@@ -80,15 +80,17 @@ Nnoggie大秘境技能CD监视升级版&自制团队CD监视，带技能激活�
 
 崩裂监视（Bursting Revamp Shadowlands）：https://wago.io/Hmm-bO1rv
 
-索·莉亚的究极秘术：https://bbs.nga.cn/read.php?tid=31131244
+饰品索·莉亚的究极秘术：https://bbs.nga.cn/read.php?tid=31131244
 
-释魂红玉：https://bbs.nga.cn/read.php?tid=31161256
+饰品释魂红玉：https://bbs.nga.cn/read.php?tid=31161256
 
 死亡位置通报+光柱标记：https://wago.io/7KrIM-PVh
 
 格里恩瓶子提醒：https://wago.io/g0_xbZPWO
 
 彩虹屁以及yygq：https://wago.io/SJq_TAET2
+
+武器奥图布拉，宇宙投影：https://bbs.nga.cn/read.php?tid=31674841
 
 暗影国度地下城与团队副本：
 - 彼界尾王分身击杀报警（Mueh'zala spawns health group）：https://wago.io/-_UWm33O3
