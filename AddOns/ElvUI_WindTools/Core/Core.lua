@@ -19,6 +19,7 @@ W.Locale = GetLocale()
 W.ChineseLocale = strsub(W.Locale, 0, 2) == "zh"
 W.MaxLevelForPlayerExpansion = GetMaxLevelForPlayerExpansion()
 W.SupportElvUIVersion = 12.75
+W.ClassColor = _G.RAID_CLASS_COLORS[E.myclass]
 
 W.RegisteredModules = {}
 W.Changelog = {}
@@ -35,7 +36,7 @@ E.PopupDialogs.WINDTOOLS_ELVUI_OUTDATED = {
 }
 
 E.PopupDialogs.WINDTOOLS_OPEN_CHANGELOG = {
-    text = format(L["Welcome to %s %s!"], L["WindTools"], W.Version),
+    text = format(L["Welcome to %s %s!"], W.Title, W.Version),
     button1 = L["Open Changelog"],
     button2 = CANCEL,
     OnAccept = function(self)
@@ -45,7 +46,7 @@ E.PopupDialogs.WINDTOOLS_OPEN_CHANGELOG = {
 }
 
 -- Keybinds
-_G.BINDING_CATEGORY_ELVUI_WINDTOOLS = L["WindTools"]
+_G.BINDING_CATEGORY_ELVUI_WINDTOOLS = W.Title
 for i = 1, 5 do
     _G["BINDING_HEADER_WTEXTRAITEMSBAR" .. i] =
         F.CreateColorString(L["Extra Items Bar"] .. " " .. i, E.db.general.valuecolor)
@@ -54,7 +55,7 @@ for i = 1, 5 do
     end
 end
 
-_G.BINDING_CATEGORY_ELVUI_WINDTOOLS_EXTRA = L["WindTools"] .. " - " .. L["Extra"]
+_G.BINDING_CATEGORY_ELVUI_WINDTOOLS_EXTRA = W.Title .. " - " .. L["Extra"]
 _G.BINDING_HEADER_WTEXTRABUTTONS = L["Extra Buttons"]
 _G["BINDING_NAME_CLICK WTExtraBindingButtonLogout:LeftButton"] = L["Logout"]
 _G["BINDING_NAME_CLICK WTExtraBindingButtonLeaveGroup:LeftButton"] = L["Leave Party"]
@@ -62,11 +63,11 @@ _G["BINDING_NAME_CLICK WTExtraBindingButtonLeavePartyIfSoloing:LeftButton"] = L[
 
 --[[
     WindTools module registration
-    @param {string} name 模块名
+    @param {string} name The name of module
 ]]
 function W:RegisterModule(name)
     if not name then
-        F.DebugMessage(W, "注册模块名为空")
+        F.DebugMessage(W, "The name of module is required!")
         return
     end
     if self.initialized then
@@ -87,8 +88,9 @@ function W:InitializeModules()
 end
 
 -- WindTools module update after profile switch
-function W.UpdateModules()
-    for _, moduleName in pairs(W.RegisteredModules) do
+function W:UpdateModules()
+    self:UpdateScripts()
+    for _, moduleName in pairs(self.RegisteredModules) do
         local module = W:GetModule(moduleName)
         if module.ProfileUpdate then
             pcall(module.ProfileUpdate, module)
@@ -110,7 +112,8 @@ function W:CheckInstalledVersion()
     if InCombatLockdown() then
         return
     end
-    if not E.global.WT.version or E.global.WT.version ~= W.Version then
+
+    if self.showChangeLog then
         E:StaticPopup_Show("WINDTOOLS_OPEN_CHANGELOG")
     end
 
@@ -122,7 +125,7 @@ function W:CheckInstalledVersion()
                     " " ..
                         L["%s %s Loaded."] ..
                             " " .. L["You can send your suggestions or bugs via %s, %s, %s, and the thread in %s."],
-                L["WindTools"],
+                W.Title,
                 W.Version,
                 L["QQ Group"],
                 L["Discord"],
@@ -131,7 +134,4 @@ function W:CheckInstalledVersion()
             )
         )
     end
-    
-    W:ForBetaUser()
-    W:UpdateScripts()
 end

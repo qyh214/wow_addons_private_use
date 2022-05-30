@@ -10,6 +10,7 @@
     - amkoio, talizea (ElitismHelper)
     - ImperialAr @ NGA
     - 追风小熊猫 @ NGA
+    - 水晶瓶 @ NGA
 
 - Enemy Progress
     - MMOSimca (SimpleObjectiveProgress)

@@ -6,43 +6,39 @@ local path = ns.path
 -- calling treasures, but... it seems to be really really rare and
 -- shadowlands-wide, so I'm leaving it out.
 
-local bell = {
-    label=false, -- Broken/Skyward Bell
+local bell = {-- Broken/Skyward Bell
     loot={
         {184415, toy=true}, -- Soothing Vesper
     },
-    _uiMapID=1533,
-    _coord=0,
 }
-ns.VignetteIDsToPoints[4239] = bell
-ns.VignetteIDsToPoints[4240] = bell
-ns.VignetteIDsToPoints[4241] = bell
-ns.VignetteIDsToPoints[4242] = bell
-ns.VignetteIDsToPoints[4243] = bell
-ns.VignetteIDsToPoints[4275] = bell
-
-local strongbox = {
-    label=false, -- Silver Strongbox
+local strongbox = {-- Silver Strongbox
     loot={
         {184418, toy=true}, -- Acrobatic Steward
     },
     note="Bring a {item:178915:Ripe Purian} to open",
-    _uiMapID=1533,
-    _coord=0,
 }
-ns.VignetteIDsToPoints[4214] = ns.merge(CopyTable(strongbox), {note=false}) -- actually Gilded Chest
-ns.VignetteIDsToPoints[4263] = strongbox
-ns.VignetteIDsToPoints[4264] = strongbox
-ns.VignetteIDsToPoints[4265] = strongbox
-ns.VignetteIDsToPoints[4266] = strongbox
-ns.VignetteIDsToPoints[4267] = strongbox
-ns.VignetteIDsToPoints[4268] = strongbox
-ns.VignetteIDsToPoints[4269] = strongbox
-ns.VignetteIDsToPoints[4270] = strongbox
-ns.VignetteIDsToPoints[4271] = strongbox
-ns.VignetteIDsToPoints[4272] = strongbox
-ns.VignetteIDsToPoints[4273] = strongbox
-ns.VignetteIDsToPoints[4277] = strongbox
+ns.RegisterVignettes(1533, {
+    [4239] = bell,
+    [4240] = bell,
+    [4241] = bell,
+    [4242] = bell,
+    [4243] = bell,
+    [4275] = bell,
+
+    [4214] = ns.merge(CopyTable(strongbox), {note=false}), -- actually Gilded Chest
+    [4263] = strongbox,
+    [4264] = strongbox,
+    [4265] = strongbox,
+    [4266] = strongbox,
+    [4267] = strongbox,
+    [4268] = strongbox,
+    [4269] = strongbox,
+    [4270] = strongbox,
+    [4271] = strongbox,
+    [4272] = strongbox,
+    [4273] = strongbox,
+    [4277] = strongbox,
+})
 
 -- choosing larion: 60294
 
@@ -130,13 +126,22 @@ ns.RegisterPoints(1533, { -- Bastion
         -- loot={},
         level=60,
         note="Purchase {item:180788:Memorial Wine} from {npc:171526:Kobri} and use it on the drink tray near the treasure to obtain the {item:180797:Memorial Offering Key} and unlock the treasure",
+        routes={
+            {34006650, 56501720, highlightOnly=true},
+            {43603225, 56501720, highlightOnly=true},
+            {47957400, 56501720, highlightOnly=true},
+            {51804640, 56501720, highlightOnly=true},
+            {52154710, 56501720, highlightOnly=true},
+            {53508035, 56501720, highlightOnly=true},
+        },
+        nearby={56841908},
     },
-    [34006650] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Cliffs of Respite)
-    [43603225] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Sagehaven)
-    [47957400] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Aspirant's Rest)
-    [51804640] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Hero's Rest)
-    [52154710] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Hero's Rest)
-    [53508035] = {quest=61150, label="Kobri", inbag=180788, atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false,}, -- Kobri (Aspirant's Crucible)
+    [34006650] = {quest=61150, label="{npc:171526:Kobri}", atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false, route=56501720}, -- Kobri (Cliffs of Respite)
+    [43603225] = {quest=61150, label="{npc:171526:Kobri}", atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false, route=56501720}, -- Kobri (Sagehaven)
+    [47957400] = {quest=61150, label="{npc:171526:Kobri}", atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false, route=56501720}, -- Kobri (Aspirant's Rest)
+    [51804640] = {quest=61150, label="{npc:171526:Kobri}", atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false, route=56501720}, -- Kobri (Hero's Rest)
+    [52154710] = {quest=61150, label="{npc:171526:Kobri}", atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false, route=56501720}, -- Kobri (Hero's Rest)
+    [53508035] = {quest=61150, label="{npc:171526:Kobri}", atlas="food", scale=1.1, note="Buy {item:180788:Memorial Wine}, go to 56.5 17.2", level=60, upcoming=false, route=56501720}, -- Kobri (Aspirant's Crucible)
     [35105800] = {
         achievement=14311, criteria=50058, -- Gift of Agthia
         quest=60893,
@@ -145,15 +150,12 @@ ns.RegisterPoints(1533, { -- Bastion
         },
         level=60,
         note="Obtain the {spell:333063:Proof of Courage} by interacting with {spell:333365:Agthia's Flame} at 39.1 54.4. Then follow the Path of Courage braziers to reach the treasure.",
-    },
-    [39105440] = {
-        achievement=14311, criteria=50058, -- Gift of Agthia - Agthia's Flame
-        quest=60893,
-        label="{spell:333365:Agthia's Flame}",
-        level=60,
-        note="Take {spell:333063:Proof of Courage} to 35.1 58.0, by following and lighting the braziers",
-        atlas="MantidTower",
-        minimap=true,
+        path={
+            39105440,
+            label="{spell:333365:Agthia's Flame}",
+            note="Take {spell:333063:Proof of Courage} to 35.1 58.0, by following and lighting the braziers",
+            atlas="MantidTower",
+        },
     },
     [65207030] = {
         achievement=14311, criteria=50059, -- Gift of Vesiphone
@@ -190,14 +192,12 @@ ns.RegisterPoints(1533, { -- Bastion
         },
         level=60,
         note="Obtain the {spell:333070:Proof of Loyalty} by taking the {spell:333912:Flame of Devotion} at 23.9 24.8 and bringing it to the nearby brazier",
-    },
-    [23902480] = {
-        achievement=14311, criteria=50062, -- Gift of Devos - Flame of Devotion
-        quest=60895,
-        note="Taking the {spell:333912:Flame of Devotion} to the brazier at 27.6 21.7",
-        atlas="MantidTower",
-        minimap=true,
-        level=60,
+        path={
+            23902480,
+            label="{spell:333912:Flame of Devotion}",
+            note="Taking the {spell:333912:Flame of Devotion} to the brazier at 27.6 21.7",
+            atlas="MantidTower",
+        },
     },
 })
 
@@ -616,14 +616,21 @@ ns.RegisterPoints(1533, {
         },
         level=60,
         note="Ring the five vespers within 5 minutes to summon the council",
+        routes={
+            {53508870, 64306980, highlightOnly=true,},
+            {53508870, 33305980, highlightOnly=true,},
+            {53508870, 71953895, highlightOnly=true,},
+            {53508870, 39152040, highlightOnly=true,},
+            {53508870, 32151775, highlightOnly=true,},
+        },
     },
     -- Rallying Cry of the Ascended
     -- TODO: are there questids for these? Doing if off the Council would be inaccurate...
-    [64306980] = {achievement=14734,criteria=49818,atlas="pathofascension-32x32",}, -- Vesper of Purity
-    [33305980] = {achievement=14734,criteria=49815,atlas="pathofascension-32x32",}, -- Vesper of Courage
-    [71953895] = {achievement=14734,criteria=49816,atlas="pathofascension-32x32",}, -- Vesper of Humility
-    [39152040] = {achievement=14734,criteria=49819,atlas="pathofascension-32x32",}, -- Vesper of Wisdom
-    [32151775] = {achievement=14734,criteria=49817,atlas="pathofascension-32x32",}, -- Vesper of Loyalty
+    [64306980] = {achievement=14734,criteria=49818,atlas="pathofascension-32x32",route=53508870,}, -- Vesper of Purity
+    [33305980] = {achievement=14734,criteria=49815,atlas="pathofascension-32x32",route=53508870,}, -- Vesper of Courage
+    [71953895] = {achievement=14734,criteria=49816,atlas="pathofascension-32x32",route=53508870,}, -- Vesper of Humility
+    [39152040] = {achievement=14734,criteria=49819,atlas="pathofascension-32x32",route=53508870,}, -- Vesper of Wisdom
+    [32151775] = {achievement=14734,criteria=49817,atlas="pathofascension-32x32",route=53508870,}, -- Vesper of Loyalty
 })
 
 -- Swelling tear event

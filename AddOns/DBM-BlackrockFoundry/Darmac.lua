@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1122, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220516021244")
 mod:SetCreatureID(76865)--No need to add beasts to this. It's always main boss that's engaged first and dies last.
 mod:SetEncounterID(1694)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -254,7 +254,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 154960 then
 		warnPinDownTargets:CombinedShow(0.5, args.destName)
 		if self.Options.SetIconOnSpear then
-			self:SetSortedIcon(1, args.destName, 8, nil, true, nil, 2)
+			self:SetSortedIcon("roster", 1, args.destName, 8, nil, true, nil, 2)
 		end
 		if args:IsPlayer() then
 			yellPinDown:Yell()
@@ -267,7 +267,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnConflag:CombinedShow(2.3, args.destName)
 		end
 		if self.Options.SetIconOnConflag and not self:IsLFR() then
-			self:SetSortedIcon(2.3, args.destName, 1, 3, nil, nil, 1)
+			self:SetSortedIcon("roster", 2.3, args.destName, 1, 3, nil, nil, 1)
 		end
 	elseif spellId == 155030 then
 		local amount = args.amount or 1

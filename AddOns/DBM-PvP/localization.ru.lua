@@ -13,8 +13,9 @@ L:SetGeneralLocalization({
 L:SetTimerLocalization({
 	TimerCap		= "%s",
 	TimerInvite		= "%s",
-	TimerWin		= "Победа в",
-	TimerStart		= "Начиная с"
+	TimerWin		= "Победа в", -- May need verification for a more accurate translation
+	TimerStart		= "Начиная с", -- May need verification for a more accurate translation
+	TimerShadow		= "Сумеречное зрение"
 })
 
 L:SetOptionLocalization({

@@ -2,33 +2,29 @@ local myname, ns = ...
 
 local path = ns.path
 
-local secret_treasure = {
-    label=false, -- Secret Treasure
+-- Secret Treasure
+local secret = {
     loot={
         {180589, pet=2894}, -- Soullocked Sinstone
     },
-    _uiMapID=1525,
-    _coord=0,
 }
-ns.VignetteIDsToPoints[4173] = secret_treasure
-ns.VignetteIDsToPoints[4174] = secret_treasure
-ns.VignetteIDsToPoints[4175] = secret_treasure
-ns.VignetteIDsToPoints[4176] = secret_treasure
-ns.VignetteIDsToPoints[4177] = secret_treasure
-ns.VignetteIDsToPoints[4178] = secret_treasure
-ns.VignetteIDsToPoints[4179] = secret_treasure
-ns.VignetteIDsToPoints[4180] = secret_treasure
-ns.VignetteIDsToPoints[4181] = secret_treasure
-ns.VignetteIDsToPoints[4182] = secret_treasure
-
-ns.VignetteIDsToPoints[4212] = {
-    label=false, -- Bleakwood Chest
-    loot={
-        {180592, pet=2901}, -- Trapped Stonefiend
-    },
-    _uiMapID=1525,
-    _coord=0,
-}
+ns.RegisterVignettes(1525, {
+    [4173] = secret,
+    [4174] = secret,
+    [4175] = secret,
+    [4176] = secret,
+    [4177] = secret,
+    [4178] = secret,
+    [4179] = secret,
+    [4180] = secret,
+    [4181] = secret,
+    [4182] = secret,
+    [4212] = {-- Bleakwood Chest
+        loot={
+            {180592, pet=2901}, -- Trapped Stonefiend
+        },
+    }
+})
 
 -- Pepe costume: A Tiny Sinstone, 186580, q 64132
 
@@ -389,7 +385,7 @@ ns.RegisterPoints(1525, {
 }, {
     achievement=14771,
     atlas="vehicle-silvershardmines-minecartred",scale=1.2,
-    always=true,
+    -- always=true,
     group="Carriage Routes",
 })
 
@@ -524,7 +520,7 @@ ns.RegisterPoints(1525, {
 }, {
     achievement=14770,
     texture=ns.merge(ns.atlas_texture("stablemaster"), {r=1, g=0.5, b=1, scale=1.2}),
-    always=true,
+    -- always=true,
     label="{npc:174032}",
     note="Requires {currency:1820} x 5",
     group="Sinrunners",

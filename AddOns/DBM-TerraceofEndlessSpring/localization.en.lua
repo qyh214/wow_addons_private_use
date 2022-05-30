@@ -14,7 +14,7 @@ L:SetOptionLocalization({
 	warnGroupOrder		= "Announce group rotation for $spell:118191<br/>(Currently only supports 25 man 5,2,2,2, etc... strat)",
 	specWarnYourGroup	= "Show special warning when it's your group's turn for $spell:118191<br/>(25 man only)",
 	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(8, 111850) .. "<br/>(Shows everyone if you have debuff, only players with debuff if not)",
-	SetIconOnPrison		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(117436)
+	SetIconOnPrison		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(117436)
 })
 
 ------------
@@ -79,5 +79,5 @@ L:SetOptionLocalization({
 	specWarnMovement			= "Show special warning to move when $spell:120047 is being fired",
 	timerSpecialAbility			= "Show timer for when next special ability will be cast",
 	RangeFrame					= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(2, 119519),
-	SetIconOnHuddle				= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(120629)
+	SetIconOnHuddle				= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(120629)
 })

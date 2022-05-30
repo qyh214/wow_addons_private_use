@@ -117,19 +117,18 @@ function S:WeakAurasMultiLineEditBox(Constructor)
             "OnShow",
             function(frame)
                 onShow(frame)
-                if frame.windStyle then
+                local self = frame.obj
+                
+                if not self then
                     return
                 end
-                local self = frame.obj
-                local option = self.userdata.option
-                local numExtraButtons = 0
-                if option and option.arg and option.arg.extraFunctions then
-                    numExtraButtons = #option.arg.extraFunctions
-                    for i = 1, #option.arg.extraFunctions do
-                        ES:HandleButton(self.extraButtons[i])
+
+                for _, button in pairs(self.extraButtons) do
+                    if not button.windStyle then
+                        ES:HandleButton(button)
+                        button.windStyle = true
                     end
                 end
-                frame.windStyle = true
             end
         )
         return widget
@@ -641,15 +640,6 @@ function S:WeakAuras_ShowOptions()
                     ES:HandleEditBox(subChild)
                     subChild.backdrop:SetInside(nil, 0, 7)
                 end
-            end
-        end
-    end
-
-    local tooltipAnchor = _G.WeakAurasTooltipImportButton:GetParent()
-    if tooltipAnchor then
-        for _, child in pairs {tooltipAnchor:GetChildren()} do
-            if child.Text then
-                ES:HandleButton(child)
             end
         end
     end

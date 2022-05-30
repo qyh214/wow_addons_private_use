@@ -1,26 +1,22 @@
 local myname, ns = ...
 
 local growth = {
-    label=false, -- Sp(r)outing Growth
     loot={
         {181173, pet=2949}, -- Skittering Venomspitter
     },
-    _uiMapID=1536,
-    _coord=0,
 }
-ns.VignetteIDsToPoints[4202] = growth
-ns.VignetteIDsToPoints[4362] = growth
-ns.VignetteIDsToPoints[4363] = growth
-
-ns.VignetteIDsToPoints[4366] = {
-    label=false, -- Slime-Coated Crate
-    loot={
-        {181262, pet=2952}, -- Bubbling Pustule
-        {184447, toy=true}, -- Kevin's Party Supplies
+ns.RegisterVignettes(1536, {
+    -- Sp(r)outing Growth
+    [4202] = growth,
+    [4362] = growth,
+    [4363] = growth,
+    [4366] = { -- Slime-Coated Crate
+        loot={
+            {181262, pet=2952}, -- Bubbling Pustule
+            {184447, toy=true}, -- Kevin's Party Supplies
+        },
     },
-    _uiMapID=1536,
-    _coord=0,
-}
+})
 
 ns.RegisterPoints(1536, { -- Maldraxxus
     [47206210] = {

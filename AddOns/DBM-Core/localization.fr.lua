@@ -351,8 +351,8 @@ L.AUTO_TIMER_OPTIONS.achievement	= "Délai pour réussir %s"
 L.AUTO_TIMER_OPTIONS.stage		= "Afficher le timer de la phase suivante"
 L.AUTO_TIMER_OPTIONS.roleplay	= "Afficher le timer de la durée du roleplay"--This does need localizing though.
 
-L.AUTO_ICONS_OPTION_TEXT			= "Placer des icônes sur les cibles de $spell:%s"
-L.AUTO_ICONS_OPTION_TEXT2		= "Placer des icônes sur $spell:%s"
+L.AUTO_ICONS_OPTION_TARGETS			= "Placer des icônes sur les cibles de $spell:%s"
+L.AUTO_ICONS_OPTION_NPCS		= "Placer des icônes sur $spell:%s"
 L.AUTO_ARROW_OPTION_TEXT		 = "Afficher la flèche DBM en direction de la cible affectée par $spell:%s"
 L.AUTO_ARROW_OPTION_TEXT2		= "Afficher la flèche DBM pour s'éloigner de la cible affectée par $spell:%s"
 L.AUTO_ARROW_OPTION_TEXT3		= "Show DBM Arrow to move toward specific location for $spell:%s"

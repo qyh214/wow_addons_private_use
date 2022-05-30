@@ -2,7 +2,7 @@
 ## Title: Lib: RangeCheck-2.0
 ## Notes: A library to determine estimated range.
 ## Author: mitch0
-## Version: 7adb774
+## Version: f323c95
 ## LoadOnDemand: 1
 ## X-Category: Library
 ## X-AceLibrary-LibRangeCheck-2.0: true

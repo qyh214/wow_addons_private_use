@@ -460,8 +460,8 @@ L.AUTO_TIMER_OPTIONS.adds		= "Mostrar temporizador para la siguiente aparición 
 L.AUTO_TIMER_OPTIONS.addscustom	= "Mostrar temporizador para la siguiente aparición de esbirros"
 L.AUTO_TIMER_OPTIONS.roleplay	= "Mostrar temporizador para la duración del diálogo"
 
-L.AUTO_ICONS_OPTION_TEXT			= "Poner iconos en los objetivos de $spell:%s"
-L.AUTO_ICONS_OPTION_TEXT2		= "Poner iconos en $spell:%s"
+L.AUTO_ICONS_OPTION_TARGETS			= "Poner iconos en los objetivos de $spell:%s"
+L.AUTO_ICONS_OPTION_NPCS		= "Poner iconos en $spell:%s"
 L.AUTO_ARROW_OPTION_TEXT			= "Mostrar flecha indicadora para juntarse con los objetivos afectados por $spell:%s"
 L.AUTO_ARROW_OPTION_TEXT2		= "Mostrar flecha indicadora para alejarse de los objetivos afectados por $spell:%s"
 L.AUTO_ARROW_OPTION_TEXT3		= "Mostrar flecha indicadora para ir a una ubicación específica para $spell:%s"

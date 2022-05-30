@@ -847,8 +847,9 @@ ns.RegisterPoints(1543, {
     quest=64164, -- also 63180, 63433
     npc=179460,
     loot={
-        {186659, id=1502}, -- Fallen Charger's Reins
+        {186659, mount=1502}, -- Fallen Charger's Reins
     },
+    atlas="stablemaster",
     note="Yells, runs from its spawn point to Korthia, then despawns",
 })
 

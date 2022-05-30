@@ -7,6 +7,7 @@ local securecall = securecall
 local AcceptResurrect = AcceptResurrect
 local HideUIPanel = HideUIPanel
 local UnitAffectingCombat = UnitAffectingCombat
+local UnitExists = UnitExists
 local PlayerCanTeleport = PlayerCanTeleport
 
 local C_SummonInfo_ConfirmSummon = C_SummonInfo.ConfirmSummon
@@ -57,11 +58,18 @@ function AM:PLAYER_REGEN_DISABLED()
     end
 end
 
-function AM:RESURRECT_REQUEST()
-    if self.isInCombat and self.db.acceptCombatResurrect then
-        AcceptResurrect()
-    elseif not self.isInCombat and self.db.acceptResurrect then
-        AcceptResurrect()
+function AM:RESURRECT_REQUEST(_, inviterName)
+    local inviterIsInCombat = UnitAffectingCombat(inviterName)
+    local bossIsInCombat = UnitExists("boss1") and UnitAffectingCombat("boss1")
+
+    if self.isInCombat or inviterIsInCombat or bossIsInCombat then
+        if self.db.acceptCombatResurrect then
+            AcceptResurrect()
+        end
+    else
+        if self.db.acceptResurrect then
+            AcceptResurrect()
+        end
     end
 end
 

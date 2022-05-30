@@ -101,7 +101,7 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	WarningSplitSoon	= "Mostrar aviso previo para la separación de banda",
 	RangeFrame			= "Mostrar marco de distancia (12 m)",
-	SetIconOnBrand		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(74505)
+	SetIconOnBrand		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(74505)
 })
 
 ----------------------------
@@ -115,7 +115,7 @@ L:SetGeneralLocalization({
 
 L:SetOptionLocalization({
 	RangeFrame				= "Mostrar marco de distancia (10 m)",
-	BeaconIcon				= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(74453)
+	BeaconIcon				= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(74453)
 })
 
 ------------------------

@@ -16,27 +16,36 @@ local ObjectiveTracker_Update = ObjectiveTracker_Update
 
 local C_QuestLog_GetTitleForQuestID = C_QuestLog.GetTitleForQuestID
 
-local replaceRule = {}
+do
+    local replaceRule = {
+        [L["Tazavesh: Streets of Wonder"]] = L["[ABBR] Tazavesh: Streets of Wonder"],
+        [L["Tazavesh: So'leah's Gambit"]] = L["[ABBR] Tazavesh: So'leah's Gambit"],
+        [L["Tazavesh: Streets of Wonder"]] = L["[ABBR] Tazavesh: Streets of Wonder"],
+        [L["Torghast, Tower of the Damned"]] = L["[ABBR] Torghast, Tower of the Damned"]
+    }
 
-local function AddQuestTitleToReplaceRule(questID, text)
-    F.SetCallback(
-        function(title)
-            if title then
-                replaceRule[title] = text
-                ObjectiveTracker_Update()
-                return true
+    function OT:ShortTitle(title)
+        if not title then
+            return
+        end
+
+        title =
+            F.Strings.Replace(
+            title,
+            {
+                ["，"] = ", ",
+                ["。"] = "."
+            }
+        )
+
+        for longName, shortName in pairs(replaceRule) do
+            if longName == title then
+                return shortName
             end
-            return false
-        end,
-        C_QuestLog_GetTitleForQuestID,
-        nil,
-        questID
-    )
+        end
+        return title
+    end
 end
-
-AddQuestTitleToReplaceRule(57693, L["Torghast"])
-
-local classColor = _G.RAID_CLASS_COLORS[E.myclass]
 
 local function SetTextColorHook(text)
     if not text.windHooked then
@@ -47,9 +56,9 @@ local function SetTextColorHook(text)
                     b == _G.OBJECTIVE_TRACKER_COLOR["Header"].b
              then
                 if OT.db and OT.db.enable and OT.db.titleColor and OT.db.titleColor.enable then
-                    r = OT.db.titleColor.classColor and classColor.r or OT.db.titleColor.customColorNormal.r
-                    g = OT.db.titleColor.classColor and classColor.g or OT.db.titleColor.customColorNormal.g
-                    b = OT.db.titleColor.classColor and classColor.b or OT.db.titleColor.customColorNormal.b
+                    r = OT.db.titleColor.classColor and W.ClassColor.r or OT.db.titleColor.customColorNormal.r
+                    g = OT.db.titleColor.classColor and W.ClassColor.g or OT.db.titleColor.customColorNormal.g
+                    b = OT.db.titleColor.classColor and W.ClassColor.b or OT.db.titleColor.customColorNormal.b
                 end
             elseif
                 r == _G.OBJECTIVE_TRACKER_COLOR["HeaderHighlight"].r and
@@ -57,9 +66,9 @@ local function SetTextColorHook(text)
                     b == _G.OBJECTIVE_TRACKER_COLOR["HeaderHighlight"].b
              then
                 if OT.db and OT.db.enable and OT.db.titleColor and OT.db.titleColor.enable then
-                    r = OT.db.titleColor.classColor and classColor.r or OT.db.titleColor.customColorHighlight.r
-                    g = OT.db.titleColor.classColor and classColor.g or OT.db.titleColor.customColorHighlight.g
-                    b = OT.db.titleColor.classColor and classColor.b or OT.db.titleColor.customColorHighlight.b
+                    r = OT.db.titleColor.classColor and W.ClassColor.r or OT.db.titleColor.customColorHighlight.r
+                    g = OT.db.titleColor.classColor and W.ClassColor.g or OT.db.titleColor.customColorHighlight.g
+                    b = OT.db.titleColor.classColor and W.ClassColor.b or OT.db.titleColor.customColorHighlight.b
                 end
             end
             SetTextColorOld(self, r, g, b, a)
@@ -114,7 +123,7 @@ function OT:CosmeticBar(header)
 
     -- Color
     if self.db.cosmeticBar.color.mode == "CLASS" then
-        bar:SetVertexColor(classColor.r, classColor.g, classColor.b)
+        bar:SetVertexColor(W.ClassColor.r, W.ClassColor.g, W.ClassColor.b)
     elseif self.db.cosmeticBar.color.mode == "NORMAL" then
         bar:SetVertexColor(
             self.db.cosmeticBar.color.normalColor.r,
@@ -288,15 +297,6 @@ function OT:UpdateTextWidth()
     else
         _G.OBJECTIVE_DASH_STYLE_SHOW = 1
     end
-end
-
-function OT:ShortTitle(str)
-    for longName, shortName in pairs(replaceRule) do
-        if longName == str then
-            return shortName
-        end
-    end
-    return str
 end
 
 function OT:Initialize()

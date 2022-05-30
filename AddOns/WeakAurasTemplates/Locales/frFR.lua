@@ -1,4 +1,4 @@
-if not WeakAuras.IsCorrectVersion() then return end
+if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
 
 if GetLocale() ~= "frFR" then
   return
@@ -84,8 +84,7 @@ local L = WeakAuras.L
 	L["Keeps existing triggers intact"] = "Garder intact les déclencheurs existants"
 	--[[Translation missing --]]
 	L["Legendaries"] = "Legendaries"
-	--[[Translation missing --]]
-	L["Meteor Ready"] = "Meteor Ready"
+	L["Meteor Ready"] = "Prêt pour le météore"
 	--[[Translation missing --]]
 	L["Nature"] = "Nature"
 	L["Next"] = "Suivant"
@@ -98,7 +97,7 @@ local L = WeakAuras.L
 	L["Only shows the aura when the ability is ready to use."] = "Afficher uniquement l'aura quand la technique est prête à être utilisée."
 	L["Other cooldown"] = "Autre temps de recharge"
 	L["Pet alive"] = "Familier vivant"
-	L["Pet Behavior"] = "Comportement du Familier"
+	L["Pet Behavior"] = "Comportement du familier"
 	--[[Translation missing --]]
 	L["Preparation"] = "Preparation"
 	L["PvP Talents"] = "Talents JcJ"

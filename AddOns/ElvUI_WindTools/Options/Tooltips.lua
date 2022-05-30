@@ -285,14 +285,20 @@ options.progression = {
                     type = "toggle",
                     name = L["Enable"]
                 },
-                showNoRecord = {
+                markHighestScore = {
                     order = 2,
+                    type = "toggle",
+                    name = L["Mark Highest Score"],
+                    desc = L["Add a small icon to indicate the highest score."]
+                },
+                showNoRecord = {
+                    order = 3,
                     type = "toggle",
                     name = L["Show Dungeons with No Record"],
                     width = 1.5
                 },
                 instances = {
-                    order = 3,
+                    order = 4,
                     type = "group",
                     name = L["Instances"],
                     inline = true,

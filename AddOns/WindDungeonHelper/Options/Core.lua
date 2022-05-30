@@ -13,41 +13,37 @@ local InterfaceOptionsFrame_Show = InterfaceOptionsFrame_Show
 
 local C_Timer_After = C_Timer.After
 
-local locale = GetLocale()
-
-local titleImageConfig = {
-    height = function()
-        if locale == "zhCN" or locale == "zhTW" then
-            return 92
-        else
-            return 114
-        end
-    end,
-    width = function()
-        return 512
-    end,
-    coords = function()
-        if locale == "zhCN" or locale == "zhTW" then
-            return {0, 1, 0.2, 0.92}
-        else
-            return {0, 1, 0.03, 0.92}
-        end
-    end
-}
+local titleImageConfig = F.GetTitleSize(0.8)
 
 local options = {
     type = "group",
     name = "",
     childGroups = "tab",
     args = {
-        logo = {
+        beforeLogo = {
             order = 1,
             type = "description",
+            fontSize = "small",
+            name = " ",
+            width = "full"
+        },
+        logo = {
+            order = 2,
+            type = "description",
             name = "",
-            image = W.Media.Textures.logo,
+            image = function()
+                return W.Media.Textures.title
+            end,
             imageWidth = titleImageConfig.width(),
             imageHeight = titleImageConfig.height(),
-            imageCoords = titleImageConfig.coords()
+            imageCoords = F.GetTitleTexCoord
+        },
+        afterLogo = {
+            order = 3,
+            type = "description",
+            fontSize = "small",
+            name = " \n ",
+            width = "full"
         }
     }
 }
@@ -56,10 +52,11 @@ ns[5] = options.args
 
 function W:BuildOptions()
     local name = "WindDungeonHelper"
+    options.args.profiles = ADBO:GetOptionsTable(W.Database)
+    options.args.profiles.order = 1000
+
     ACR:RegisterOptionsTable(name, options)
-    ACR:RegisterOptionsTable(name .. "Profiles", ADBO:GetOptionsTable(W.Database))
     self.OptionFrame = ACD:AddToBlizOptions(name, W.AddonName)
-    self.OptionFrame.ProfilesFrame = ACD:AddToBlizOptions(name .. "Profiles", L["Profiles"], W.AddonName)
     self.DataBroker =
         LDB:NewDataObject(
         L["Wind Dungeon Helper"],

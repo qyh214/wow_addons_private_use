@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(959, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220127091718")
+mod:SetRevision("20220516021244")
 mod:SetCreatureID(77325)--68168
 mod:SetEncounterID(1704)
 mod:SetUsedIcons(3, 2, 1)
@@ -385,7 +385,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 		if self.Options.SetIconOnMarked then
-			self:SetSortedIcon(1.5, args.destName, 1, expectedMFDCount)
+			self:SetSortedIcon("roster", 1.5, args.destName, 1, expectedMFDCount)
 		end
 		if self.Options.HudMapOnMFD then
 			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3, 5, 1, 1, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)

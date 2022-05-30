@@ -49,7 +49,7 @@ Returns the a tooltip for the additional properties.
 GetTriggerConditions(data, triggernum)
 Returns potential conditions that this trigger provides.
 ]]--
-if not WeakAuras.IsCorrectVersion() then return end
+if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
 local AddonName, Private = ...
 
 -- Lua APIs
@@ -1616,16 +1616,15 @@ do
       end
     elseif (destGUID == selfGUID and (... == "PARRY" or select(4, ...) == "PARRY")) then
       if (lastSwingMain) then
-        local timeLeft = lastSwingMain + swingDurationMain - GetTime();
-        if (timeLeft > 0.6 * swingDurationMain) then
+        local timeLeft = lastSwingMain + swingDurationMain - GetTime() - (mainSwingOffset or 0);
+        if (timeLeft > 0.2 * swingDurationMain) then
+          local offset = 0.4 * swingDurationMain
+          if (timeLeft - offset < 0.2 * swingDurationMain) then
+            offset = timeLeft - 0.2 * swingDurationMain
+          end
           timer:CancelTimer(mainTimer);
-          mainTimer = timer:ScheduleTimerFixed(swingEnd, timeLeft - 0.4 * swingDurationMain, "main");
-          mainSwingOffset = 0.4 * swingDurationMain
-          swingTriggerUpdate()
-        elseif (timeLeft > 0.2 * swingDurationMain) then
-          timer:CancelTimer(mainTimer);
-          mainTimer = timer:ScheduleTimerFixed(swingEnd, timeLeft - 0.2 * swingDurationMain, "main");
-          mainSwingOffset = 0.2 * swingDurationMain
+          mainTimer = timer:ScheduleTimerFixed(swingEnd, timeLeft - offset, "main");
+          mainSwingOffset = (mainSwingOffset or 0) + offset
           swingTriggerUpdate()
         end
       end
@@ -1768,6 +1767,7 @@ do
   local gcdSpellName;
   local gcdSpellIcon;
   local gcdEndCheck;
+  local gcdModrate
 
   local shootStart
   local shootDuration
@@ -1784,20 +1784,20 @@ do
 
   local function CheckGCD()
     local event;
-    local startTime, duration
+    local startTime, duration, _, modRate
     if WeakAuras.IsClassic() or WeakAuras.IsBCC() then
       startTime, duration = GetSpellCooldown(29515);
       shootStart, shootDuration = GetSpellCooldown(5019)
     else
-      startTime, duration = GetSpellCooldown(61304);
+      startTime, duration, _, modRate = GetSpellCooldown(61304);
     end
     if(duration and duration > 0) then
       if not(gcdStart) then
         event = "GCD_START";
-      elseif(gcdStart ~= startTime or gcdDuration ~= duration) then
+      elseif(gcdStart ~= startTime or gcdDuration ~= duration or gcdModrate ~= modRate) then
         event = "GCD_CHANGE";
       end
-      gcdStart, gcdDuration = startTime, duration;
+      gcdStart, gcdDuration, gcdModrate = startTime, duration, modRate
       local endCheck = startTime + duration + 0.1;
       if(gcdEndCheck ~= endCheck) then
         gcdEndCheck = endCheck;
@@ -1807,7 +1807,7 @@ do
       if(gcdStart) then
         event = "GCD_END"
       end
-      gcdStart, gcdDuration = nil, nil;
+      gcdStart, gcdDuration, gcdModrate = nil, nil, nil;
       gcdSpellName, gcdSpellIcon = nil, nil;
       gcdEndCheck = 0;
     end
@@ -1844,12 +1844,12 @@ do
 
   local function FetchSpellCooldown(self, id)
     if self.duration[id] and self.expirationTime[id] then
-      return self.expirationTime[id] - self.duration[id], self.duration[id], self.readyTime[id]
+      return self.expirationTime[id] - self.duration[id], self.duration[id], self.readyTime[id], self.modRate[id] or 1.0
     end
-    return 0, 0, nil
+    return 0, 0, nil, 1.0
   end
 
-  local function HandleSpell(self, id, startTime, duration)
+  local function HandleSpell(self, id, startTime, duration, modRate)
     local changed = false
     local nowReady = false
     local time = GetTime()
@@ -1874,7 +1874,9 @@ do
         if self.expirationTime[id] and self.expirationTime[id] > endTime and self.expirationTime[id] ~= 0 then
           self.duration[id] = 0
           self.expirationTime[id] = 0
-          self.readyTime[id] = time
+          if not self.readyTime[id] then
+            self.readyTime[id] = time
+          end
           changed = true
           nowReady = true
         end
@@ -1895,9 +1897,16 @@ do
     end
 
     if duration == 0 then
-      self.readyTime[id] = time
+      if not self.readyTime[id] then
+        self.readyTime[id] = time
+      end
     else
       self.readyTime[id] = nil
+    end
+
+    if self.modRate[id] ~= modRate then
+      self.modRate[id] = modRate
+      changed = true
     end
 
     RecheckHandles:Schedule(endTime, id)
@@ -1909,6 +1918,7 @@ do
       duration = {},
       expirationTime = {},
       readyTime = {},
+      modRate = {},
       handles = {}, -- Share handles, and use lowest time to schedule
       HandleSpell = HandleSpell,
       FetchSpellCooldown = FetchSpellCooldown
@@ -1985,30 +1995,31 @@ do
     if (not spellKnown[id] and not ignoreSpellKnown) then
       return;
     end
-    local startTime, duration, gcdCooldown, readyTime
+    local startTime, duration, gcdCooldown, readyTime, modRate
     if track == "charges" then
-      startTime, duration, readyTime = spellCdsCharges:FetchSpellCooldown(id)
+      startTime, duration, readyTime, modRate = spellCdsCharges:FetchSpellCooldown(id)
     elseif track == "cooldown" then
       if ignoreRuneCD then
-        startTime, duration, readyTime = spellCdsOnlyCooldownRune:FetchSpellCooldown(id)
+        startTime, duration, readyTime, modRate = spellCdsOnlyCooldownRune:FetchSpellCooldown(id)
       else
-        startTime, duration, readyTime = spellCdsOnlyCooldown:FetchSpellCooldown(id)
+        startTime, duration, readyTime, modRate = spellCdsOnlyCooldown:FetchSpellCooldown(id)
       end
     elseif (ignoreRuneCD) then
-      startTime, duration, readyTime = spellCdsRune:FetchSpellCooldown(id)
+      startTime, duration, readyTime, modRate = spellCdsRune:FetchSpellCooldown(id)
     else
-      startTime, duration, readyTime = spellCds:FetchSpellCooldown(id)
+      startTime, duration, readyTime, modRate = spellCds:FetchSpellCooldown(id)
     end
 
     if (showgcd) then
       if ((gcdStart or 0) + (gcdDuration or 0) > startTime + duration) then
         startTime = gcdStart;
         duration = gcdDuration;
+        modRate = gcdModrate
         gcdCooldown = true;
       end
     end
 
-    return startTime, duration, gcdCooldown, readyTime
+    return startTime, duration, gcdCooldown, readyTime, modRate
   end
 
   function WeakAuras.GetSpellCharges(id, ignoreSpellKnown)
@@ -2037,9 +2048,9 @@ do
 
   function WeakAuras.GetGCDInfo()
     if(gcdStart) then
-      return gcdDuration, gcdStart + gcdDuration, gcdSpellName or "Invalid", gcdSpellIcon or "Interface\\Icons\\INV_Misc_QuestionMark";
+      return gcdDuration, gcdStart + gcdDuration, gcdSpellName or "Invalid", gcdSpellIcon or "Interface\\Icons\\INV_Misc_QuestionMark", gcdModrate;
     else
-      return 0, math.huge, gcdSpellName or "Invalid", gcdSpellIcon or "Interface\\Icons\\INV_Misc_QuestionMark";
+      return 0, math.huge, gcdSpellName or "Invalid", gcdSpellIcon or "Interface\\Icons\\INV_Misc_QuestionMark", 1.0;
     end
   end
 
@@ -2142,14 +2153,17 @@ do
   end
 
   function WeakAuras.GetSpellCooldownUnified(id, runeDuration)
-    local startTimeCooldown, durationCooldown, enabled = GetSpellCooldown(id)
-    local charges, maxCharges, startTimeCharges, durationCharges = GetSpellCharges(id);
+    local startTimeCooldown, durationCooldown, enabled, modRate = GetSpellCooldown(id)
+    local charges, maxCharges, startTimeCharges, durationCharges, modRateCharges = GetSpellCharges(id);
 
     startTimeCooldown = startTimeCooldown or 0;
     durationCooldown = durationCooldown or 0;
 
     startTimeCharges = startTimeCharges or 0;
     durationCharges = durationCharges or 0;
+
+    modRate = modRate or 1.0;
+    modRateCharges = modRateCharges or 1.0;
 
     -- WORKAROUND Sometimes the API returns very high bogus numbers causing client freezes, discard them here. CurseForge issue #1008
     if (durationCooldown > 604800) then
@@ -2175,7 +2189,7 @@ do
       unifiedCooldownBecauseRune = cooldownBecauseRune
     end
 
-    local startTime, duration = startTimeCooldown, durationCooldown
+    local startTime, duration, unifiedModRate = startTimeCooldown, durationCooldown, modRate
     if (charges == nil) then
       -- charges is nil if the spell has no charges.
       -- Nothing to do in that case
@@ -2191,7 +2205,7 @@ do
       -- A few abilities have a minor cooldown just to prevent the user from triggering it multiple times,
       -- ignore them since practically no one wants to see them
       if duration and duration <= 1.5 or (duration == gcdDuration and startTime == gcdStart) then
-        startTime, duration = startTimeCharges, durationCharges
+        startTime, duration, unifiedModRate = startTimeCharges, durationCharges, modRateCharges
         unifiedCooldownBecauseRune = false
       end
     end
@@ -2205,7 +2219,7 @@ do
 
     return charges, maxCharges, startTime, duration, unifiedCooldownBecauseRune,
            startTimeCooldown, durationCooldown, cooldownBecauseRune, startTimeCharges, durationCharges,
-           count;
+           count, unifiedModRate, modRate, modRateCharges;
   end
 
   function Private.CheckSpellKnown()
@@ -2241,7 +2255,7 @@ do
   function Private.CheckSpellCooldown(id, runeDuration)
     local charges, maxCharges, startTime, duration, unifiedCooldownBecauseRune,
           startTimeCooldown, durationCooldown, cooldownBecauseRune, startTimeCharges, durationCharges,
-          spellCount
+          spellCount, unifiedModRate, modRate, modRateCharges
           = WeakAuras.GetSpellCooldownUnified(id, runeDuration);
 
     local time = GetTime();
@@ -2264,18 +2278,16 @@ do
     end
 
     local changed = false
-
-
-    changed = spellCds:HandleSpell(id, startTime, duration) or changed
+    changed = spellCds:HandleSpell(id, startTime, duration, unifiedModRate) or changed
     if not unifiedCooldownBecauseRune then
-      changed = spellCdsRune:HandleSpell(id, startTime, duration) or changed
+      changed = spellCdsRune:HandleSpell(id, startTime, duration, unifiedModRate) or changed
     end
-    local cdChanged, nowReady = spellCdsOnlyCooldown:HandleSpell(id, startTimeCooldown, durationCooldown)
+    local cdChanged, nowReady = spellCdsOnlyCooldown:HandleSpell(id, startTimeCooldown, durationCooldown, modRate)
     changed = cdChanged or changed
     if not cooldownBecauseRune then
-      changed = spellCdsOnlyCooldownRune:HandleSpell(id, startTimeCooldown, durationCooldown) or changed
+      changed = spellCdsOnlyCooldownRune:HandleSpell(id, startTimeCooldown, durationCooldown, modRate) or changed
     end
-    local chargeChanged, chargeNowReady = spellCdsCharges:HandleSpell(id, startTimeCharges, durationCharges)
+    local chargeChanged, chargeNowReady = spellCdsCharges:HandleSpell(id, startTimeCharges, durationCharges, modRateCharges)
     changed = chargeChanged or changed
     nowReady = chargeNowReady or nowReady
 
@@ -2489,21 +2501,21 @@ do
 
     local charges, maxCharges, startTime, duration, unifiedCooldownBecauseRune,
           startTimeCooldown, durationCooldown, cooldownBecauseRune, startTimeCharges, durationCharges,
-          spellCount
+          spellCount, unifiedModRate, modRate, modRateCharges
           = WeakAuras.GetSpellCooldownUnified(id, GetRuneDuration());
 
     spellCharges[id] = charges;
     spellChargesMax[id] = maxCharges;
     spellCounts[id] = spellCount
-    spellCds:HandleSpell(id, startTime, duration)
+    spellCds:HandleSpell(id, startTime, duration, unifiedModRate)
     if not unifiedCooldownBecauseRune then
-      spellCdsRune:HandleSpell(id, startTime, duration)
+      spellCdsRune:HandleSpell(id, startTime, duration, unifiedModRate)
     end
-    spellCdsOnlyCooldown:HandleSpell(id, startTimeCooldown, durationCooldown)
+    spellCdsOnlyCooldown:HandleSpell(id, startTimeCooldown, durationCooldown, modRate)
     if not cooldownBecauseRune then
-      spellCdsOnlyCooldownRune:HandleSpell(id, startTimeCooldown, durationCooldown)
+      spellCdsOnlyCooldownRune:HandleSpell(id, startTimeCooldown, durationCooldown, modRate)
     end
-    spellCdsCharges:HandleSpell(id, startTimeCharges, durationCharges)
+    spellCdsCharges:HandleSpell(id, startTimeCharges, durationCharges, modRateCharges)
   end
 
   function WeakAuras.WatchItemCooldown(id)
@@ -3401,6 +3413,48 @@ do
   end
 end
 
+do
+  local nameplateTargetFrame = nil
+  local nameplateTargets = {}
+
+  local function nameplateTargetOnEvent(self, event, unit)
+    if event == "NAME_PLATE_UNIT_ADDED" then
+      nameplateTargets[unit] = UnitGUID(unit.."-target") or true
+    elseif event == "NAME_PLATE_UNIT_REMOVED" then
+      nameplateTargets[unit] = nil
+    end
+  end
+
+  local tick_throttle = 0.2
+  local throttle_update = tick_throttle
+  local function nameplateTargetOnUpdate(self, delta)
+    throttle_update = throttle_update - delta
+    if throttle_update < 0 then
+      for unit, targetGUID in pairs(nameplateTargets) do
+        local newTargetGUID = UnitGUID(unit.."-target")
+        if (newTargetGUID == nil and targetGUID ~= true)
+        or (newTargetGUID ~= nil and targetGUID ~= newTargetGUID)
+        then
+          nameplateTargets[unit] = newTargetGUID or true
+          WeakAuras.ScanEvents("WA_UNIT_TARGET_NAME_PLATE", unit)
+        end
+      end
+      throttle_update = tick_throttle
+    end
+  end
+
+  WeakAuras.frames["Nameplate Target Handler"] = nameplateTargetFrame
+  function WeakAuras.WatchForNameplateTargetChange()
+    if not nameplateTargetFrame then
+      nameplateTargetFrame = CreateFrame("Frame")
+      nameplateTargetFrame:SetScript("OnUpdate", nameplateTargetOnUpdate)
+      nameplateTargetFrame:RegisterEvent("NAME_PLATE_UNIT_ADDED")
+      nameplateTargetFrame:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
+      nameplateTargetFrame:SetScript("OnEvent", nameplateTargetOnEvent)
+    end
+  end
+end
+
 -- Player Moving
 do
   local playerMovingFrame = nil
@@ -3522,7 +3576,7 @@ function GenericTrigger.CanHaveDuration(data, triggernum)
           return "timed";
         end
       elseif Private.event_prototypes[trigger.event].canHaveDuration then
-        return Private.event_prototypes[trigger.event].canHaveDuration
+        return Private.event_prototypes[trigger.event].canHaveDuration, Private.event_prototypes[trigger.event].useModRate
       elseif Private.event_prototypes[trigger.event].timedrequired then
         return "timed"
       end
@@ -3737,9 +3791,19 @@ local commonConditions = {
     display = L["Remaining Duration"],
     type = "timer",
   },
+  expirationTimeModRate = {
+    display = L["Remaining Duration"],
+    type = "timer",
+    useModRate = true
+  },
   duration = {
     display = L["Total Duration"],
     type = "number",
+  },
+  durationModRate = {
+    display = L["Total Duration"],
+    type = "number",
+    useModRate = true
   },
   value = {
     display = L["Progress Value"],
@@ -3787,7 +3851,7 @@ function GenericTrigger.GetTriggerConditions(data, triggernum)
     if (trigger.event and Private.event_prototypes[trigger.event]) then
       local result = {};
 
-      local canHaveDuration = GenericTrigger.CanHaveDuration(data, triggernum);
+      local canHaveDuration, modRated = GenericTrigger.CanHaveDuration(data, triggernum);
       local timedDuration = canHaveDuration;
       local valueDuration = canHaveDuration;
       if (canHaveDuration == "timed") then
@@ -3797,8 +3861,13 @@ function GenericTrigger.GetTriggerConditions(data, triggernum)
       end
 
       if (timedDuration) then
-        result.expirationTime = commonConditions.expirationTime;
-        result.duration = commonConditions.duration;
+        if modRated then
+          result.expirationTime = commonConditions.expirationTimeModRate;
+          result.duration = commonConditions.durationModRate;
+        else
+          result.expirationTime = commonConditions.expirationTime;
+          result.duration = commonConditions.duration;
+        end
       end
 
       if (valueDuration) then

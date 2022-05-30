@@ -695,20 +695,23 @@ local function DCS_ShowClassicStatFrames()
 	hooksecurefunc("CharacterFrame_Collapse", function() mystrangefunction() end)
 end
 
-gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsShowClassicChecked = {
+gdbprivate.gdbdefaults.gdbdefaults.DCSShowClassicChecked = {
 	SetChecked = false,
+	IsAprilFools = false,
+	DCSShowAFChecked = false,
+	Count = 0,
 }	
 
 local DCS_ShowClassicCheck = CreateFrame("CheckButton", "DCS_ShowClassicCheck", DejaCharacterStatsPanel, "InterfaceOptionsCheckButtonTemplate")
 	DCS_ShowClassicCheck:RegisterEvent("PLAYER_LOGIN")
 	DCS_ShowClassicCheck:ClearAllPoints()
-	DCS_ShowClassicCheck:SetPoint("LEFT", "DejaCharacterStatsPanel", "CENTER", 63, -210) 
+	DCS_ShowClassicCheck:SetPoint("LEFT", 150, -225)
 	DCS_ShowClassicCheck:SetScale(1)
 	DCS_ShowClassicCheck.tooltipText = L["Displays a simulation of Classic WoW's character stats panels. Disabling initiates a UI reload."] --Creates a tooltip on mouseover.
 	_G[DCS_ShowClassicCheck:GetName() .. "Text"]:SetText(L["Classic Stats"])
 	
 	DCS_ShowClassicCheck:SetScript("OnEvent", function(self, event, arg1)
-		local checked = gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowClassicChecked.SetChecked
+		local checked = gdbprivate.gdb.gdbdefaults.DCSShowClassicChecked.SetChecked
 		self:SetChecked(checked)
 		if checked then
 			DCS_ShowClassicStatFrames()
@@ -716,8 +719,8 @@ local DCS_ShowClassicCheck = CreateFrame("CheckButton", "DCS_ShowClassicCheck", 
 	end)
 
 	DCS_ShowClassicCheck:SetScript("OnClick", function(self,event,arg1) 
-		local checked = self:GetChecked(true)
-		gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowClassicChecked.SetChecked = checked
+		local checked = self:GetChecked()
+		gdbprivate.gdb.gdbdefaults.DCSShowClassicChecked.SetChecked = checked
 		if checked == true then
 			DCS_ShowClassicStatFrames()
 		else
@@ -725,29 +728,64 @@ local DCS_ShowClassicCheck = CreateFrame("CheckButton", "DCS_ShowClassicCheck", 
 		end
 	end)
 	
-gdbprivate.gdbdefaults.gdbdefaults.dejacharacterstatsLoginCounter = {
-	Count = 0,
-}	
-
-local DCS_AF_Check = CreateFrame("Frame", "DCS_AF_Check", CharacterModelFrame)
-	DCS_AF_Check:RegisterEvent("PLAYER_LOGIN")
-	DCS_AF_Check:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
-	DCS_AF_Check:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
+local DCS_ShowAFCheck = CreateFrame("CheckButton", "DCS_ShowAFCheck", PaperDollFrame, "InterfaceOptionsCheckButtonTemplate")
+	DCS_ShowAFCheck:RegisterEvent("PLAYER_LOGIN")
+	DCS_ShowAFCheck:ClearAllPoints()
+	DCS_ShowAFCheck:SetPoint("TOPLEFT", PaperDollFrame, "TOPLEFT", 14, 38)
+	DCS_ShowAFCheck:SetScale(1)
+	DCS_ShowAFCheck.tooltipText = L["|cff00c0ffClassic Stats for April Fools! \n\nThey will automatically dissappear tomorrow. \n\nIf you like them, head over to the Interface Options Panel and turn them on at your whim! \n\nIf ya don't like them simply click this checkbox to initiate a UI reload and disable this prank! Your character frame will be set back exactly how it was. \n\nApril Fools!  \n\n|cffff0000<3|r Deja    |r|TInterface\\Addons\\DejaCharacterStats\\DCSArt\\DejaBearPawLogoDejaBlue.blp:40|t"] --Creates a tooltip on mouseover.
+	_G[DCS_ShowAFCheck:GetName() .. "Text"]:SetText("|TInterface\\Addons\\DejaCharacterStats\\DCSArt\\DejoLogo.blp:40|t|cff00c0ffAPRIL FOOLS!|r")
 	
-	DCS_AF_Check:SetScript("OnEvent", function(self, event, ...)
-		local logincounter = gdbprivate.gdb.gdbdefaults.dejacharacterstatsLoginCounter.Count
+	DCS_ShowAFCheck:SetScript("OnEvent", function(self, event, arg1)
+		local checked = gdbprivate.gdb.gdbdefaults.DCSShowClassicChecked.DCSShowAFChecked
+		self:SetChecked(checked)
+		if checked then
+			DCS_ShowClassicStatFrames()
+		end
+	end)
+
+	DCS_ShowAFCheck:SetScript("OnClick", function(self,event,arg1) 
+		local checked = self:GetChecked()
+		gdbprivate.gdb.gdbdefaults.DCSShowClassicChecked.DCSShowAFChecked = checked
+		if checked == true then
+			DCS_ShowClassicStatFrames()
+		else
+			ReloadUI();
+		end
+	end)
+
+local DCS_AFLoginCheck = CreateFrame("Frame", "DCS_AFLoginCheck", CharacterModelFrame)
+DCS_AFLoginCheck:RegisterEvent("PLAYER_LOGIN")
+	DCS_AFLoginCheck:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
+	DCS_AFLoginCheck:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
+	
+	DCS_AFLoginCheck:SetScript("OnEvent", function(self, event, ...)
+		local logincounter = gdbprivate.gdb.gdbdefaults.DCSShowClassicChecked.Count
 		local d = C_DateAndTime.GetCurrentCalendarTime()
-		-- print(d.monthDay, d.month)
+		-- print(d.monthDay, d.month, logincounter)
 		-- print(format("The time is %02d:%02d, %s, %d %s %d", d.hour, d.minute, CALENDAR_WEEKDAY_NAMES[d.weekday], d.monthDay, CALENDAR_FULLDATE_MONTH_NAMES[d.month], d.year))
 		if d.monthDay==1 and d.month==4 then --April Fools
 			if logincounter == 0 then
+				DCS_ShowAFCheck:Show()
+				DCS_ShowAFCheck:SetChecked(true)
 				DCS_ShowClassicStatFrames()
-				DCS_ShowClassicCheck:SetChecked(true)
-				gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowClassicChecked.SetChecked = true
-				gdbprivate.gdb.gdbdefaults.dejacharacterstatsLoginCounter.Count = logincounter + 1
+				gdbprivate.gdb.gdbdefaults.DCSShowClassicChecked.DCSShowAFChecked = true
+				gdbprivate.gdb.gdbdefaults.DCSShowClassicChecked.Count = logincounter + 1
+			elseif logincounter > 0 then
+				local AFchecked = DCS_ShowAFCheck:GetChecked()
+				gdbprivate.gdb.gdbdefaults.DCSShowClassicChecked.DCSShowAFChecked = AFchecked
+				if AFchecked == true then
+					DCS_ShowAFCheck:Show()
+					DCS_ShowClassicStatFrames()
+				else
+					DCS_ShowAFCheck:Hide()
+					DCS_ShowAFCheck:SetChecked(false)
+					gdbprivate.gdb.gdbdefaults.DCSShowClassicChecked.DCSShowAFChecked = false
+				end
 			end
 		else
-			gdbprivate.gdb.gdbdefaults.dejacharacterstatsLoginCounter.Count = 0
+			DCS_ShowAFCheck:Hide()
+			gdbprivate.gdb.gdbdefaults.DCSShowClassicChecked.DCSShowAFChecked = false
+			gdbprivate.gdb.gdbdefaults.DCSShowClassicChecked.Count = 0
 		end
 	end)
-	

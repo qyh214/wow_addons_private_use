@@ -18,7 +18,7 @@ L:SetOptionLocalization({
 	specwarnAttenuation	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(127834),
 	specwarnPlatform	= "Show special warning when boss changes platforms",
 	ArrowOnAttenuation	= "Show DBM Arrow during $spell:127834 to indicate which direction to move",
-	MindControlIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(122740)
+	MindControlIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(122740)
 })
 
 L:SetMiscLocalization({
@@ -48,7 +48,7 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnCrush		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(122774),
 	specwarnUnder	= "Show special warning when you are under boss",
-	PheromonesIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(122835)
+	PheromonesIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(122835)
 })
 
 L:SetMiscLocalization({
@@ -62,7 +62,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(741)
 
 L:SetOptionLocalization({
-	AmberPrisonIcons		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(121885),
+	AmberPrisonIcons		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(121885),
 	specWarnReinforcements	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format("ej6554")
 })
 
@@ -123,8 +123,8 @@ L:SetOptionLocalization({
 	warnAmberTrap		= "Show warning (with progress) when $spell:125826 is making", -- maybe bad translation.
 	InfoFrame			= "Show info frame for players affected by $spell:125390",
 	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(5, 123735),
-	StickyResinIcons	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(124097),
-	HeartOfFearIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(123845)
+	StickyResinIcons	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(124097),
+	HeartOfFearIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(123845)
 })
 
 L:SetMiscLocalization({

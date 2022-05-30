@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(818, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220128073905")
+mod:SetRevision("20220516021321")
 mod:SetCreatureID(68036)--Crimson Fog 69050
 mod:SetEncounterID(1572)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 1)
@@ -328,7 +328,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerDarkParasiteCD:DelayedStart(0.5)
 		end
 		if self.Options.SetIconOnParasite and args:IsDestTypePlayer() then--Filter further on icons because we don't want to set icons on grounding totems
-			self:SetSortedIcon(0.5, args.destName, 5, 3, true)
+			self:SetSortedIcon("roster", 0.5, args.destName, 5, 3, true)
 		end
 	elseif spellId == 133598 then--Dark Plague
 		local _, _, _, _, duration = DBM:UnitDebuff(args.destName, args.spellName)

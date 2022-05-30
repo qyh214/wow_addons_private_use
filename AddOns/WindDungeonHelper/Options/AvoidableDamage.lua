@@ -95,7 +95,7 @@ O.avoidableDamage = {
                     name = L["Channel"],
                     type = "select",
                     values = {
-                        SELF = L["Self(Chat Frame)"],
+                        SELF = L["Self (Chat Frame)"],
                         PARTY = L["Party"],
                         EMOTE = L["Emote"],
                         NONE = L["None"]
@@ -112,7 +112,7 @@ O.avoidableDamage = {
                     name = L["Numeral System"],
                     type = "select",
                     values = {
-                        WESTERN = L["Western - K"],
+                        WESTERN = L["Western - k"],
                         ASIA = L["Asia - W"],
                         NONE = L["None"]
                     }

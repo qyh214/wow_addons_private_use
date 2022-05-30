@@ -80,7 +80,7 @@ L["STRING_CHANNEL_WHISPER"] = "Flüstern"
 L["STRING_CHANNEL_WHISPER_TARGET_COOLDOWN"] = "Ziel anflüstern für Abklingzeit"
 L["STRING_CHANNEL_YELL"] = "Schreien"
 L["STRING_CLICK_REPORT_LINE1"] = "|cFFFFCC22Klick|r: |cFFFFEE00Bericht|r"
-L["STRING_CLICK_REPORT_LINE2"] = "|cFFFFCC22Shift+Click|r: |cFFFFEE00Fenstermodus|r"
+L["STRING_CLICK_REPORT_LINE2"] = "|cFFFFCC22Umschalt+Klick|r: |cFFFFEE00Fenstermodus|r"
 L["STRING_CLOSEALL"] = "Alle Details!-Fenster sind geschlossen, schreibe '/details show', um sie wieder zu öffnen."
 L["STRING_COLOR"] = "Farbe"
 L["STRING_COMMAND_LIST"] = "Befehlsliste"
@@ -108,7 +108,7 @@ L["STRING_CUSTOM_CC_RECEIVED"] = "Erhaltene CCs"
 L["STRING_CUSTOM_CREATE"] = "Erstellen"
 L["STRING_CUSTOM_CREATED"] = "Die neue Anzeige wurde erstellt."
 L["STRING_CUSTOM_DAMAGEONANYMARKEDTARGET"] = "Schaden auf anderweitig markierte Ziele"
-L["STRING_CUSTOM_DAMAGEONANYMARKEDTARGET_DESC"] = "Zeigt den Schaden, der anderweitig markierten Zielen zugefügt wurde."
+L["STRING_CUSTOM_DAMAGEONANYMARKEDTARGET_DESC"] = "Zeigt die Höhe des Schadens an, der auf Ziele mit einer anderen Markierung angewendet wird."
 L["STRING_CUSTOM_DAMAGEONSHIELDS"] = "Schaden auf Schilde"
 L["STRING_CUSTOM_DAMAGEONSKULL"] = "Schaden auf mit dem Totenschädel markierte Ziele"
 L["STRING_CUSTOM_DAMAGEONSKULL_DESC"] = "Zeigt den Schaden, der mit Totenkopf markierten Zielen zugefügt wurde"
@@ -169,6 +169,7 @@ L["STRING_CUSTOM_TARGET_DESC"] = [=[Das ist das Ziel einer Quelle.
 
 Die Schaltfläche auf der rechten Seite zeigt eine Liste der NPCs aus Schlachtzugsbegegnungen.]=]
 L["STRING_CUSTOM_TEMPORARILY"] = "(|cFFFFC000temporär|r)"
+L["STRING_CUSTOM_TEXTURE_GUIDE"] = "Um eine Texturdatei in den World of Warcraft-Client zu laden, benötigst du eine Datei im TGA-Format, deren Breite und Höhe ein Vielfaches von 8 sein muss. Legen Sie die Textur im /WoW-Install-Ordner/retail/Interface/"
 L["STRING_DAMAGE"] = "Schaden"
 L["STRING_DAMAGE_DPS_IN"] = "DPS erhalten von"
 L["STRING_DAMAGE_FROM"] = "Erlitt Schaden von"
@@ -201,7 +202,7 @@ L["STRING_FAIL_ATTACKS"] = "Fehlgeschlagene Attacken"
 L["STRING_FEEDBACK_CURSE_DESC"] = "Eröffne ein Ticket oder hinterlasse eine Nachricht auf der Details!-Seite."
 L["STRING_FEEDBACK_MMOC_DESC"] = "Poste in unserem Thema im Forum von MMO-Champion."
 L["STRING_FEEDBACK_PREFERED_SITE"] = "Wähle deine bevorzugte Community-Seite:"
-L["STRING_FEEDBACK_SEND_FEEDBACK"] = "Sende eine Rückmeldung"
+L["STRING_FEEDBACK_SEND_FEEDBACK"] = "Sende Feedback"
 L["STRING_FEEDBACK_WOWI_DESC"] = "Schreibe ein Kommentar auf der Details!-Projektseite."
 L["STRING_FIGHTNUMBER"] = "Kampf #"
 L["STRING_FORGE_BUTTON_ALLSPELLS"] = "Alle Zauber"
@@ -406,16 +407,13 @@ L["STRING_OPTIONS_3D_UANCHOR"] = "Oberes 3D-Modell:"
 L["STRING_OPTIONS_3D_UENABLED_DESC"] = "Aktiviert oder deaktiviert die Nutzung eines 3D-Modells über den Balken."
 L["STRING_OPTIONS_3D_USELECT_DESC"] = "Wähle, welches 3D-Modell in der oberen Modellleiste verwendet werden soll."
 L["STRING_OPTIONS_ADVANCED"] = "Erweitert"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = ""--]] 
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = "Ausgerichtete Textspalten"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = "Autoausrichtung"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = "Die Ausrichtung erfolgt automatisch anhand der Länge der einzelnen Texte."
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = "Deaktiviert Klammern und Trennzeichen und richtet die Texte der Balken in vertikalen Spalten aus."
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = "Text %d Versatz"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = "Versatz vom rechten Rand."
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = "Wenn aktiviert, werden Trennzeichen und Klammern nicht verwendet!"
 L["STRING_OPTIONS_ALPHAMOD_ANCHOR"] = "Automatisch Verbergen:"
 L["STRING_OPTIONS_ALWAYS_USE"] = "Bei allen Charakteren benutzen"
 L["STRING_OPTIONS_ALWAYS_USE_DESC"] = "Wenn aktiviert, nutzen alle Charaktere das ausgewählte Profil. Andernfalls erscheint eine Anzeige, in der nach einem zu benutzenden Profil gefragt wird."
@@ -507,7 +505,6 @@ Beispiel:
 |cFFFFFF00Escape Sequences|r: benutzt zur Farbänderung oder für Texturen. Suche nach 'UI escape sequences' für mehr Information.]=]
 L["STRING_OPTIONS_BARS"] = "Allgemeine Balkeneinstellungen"
 L["STRING_OPTIONS_BARS_CUSTOM_TEXTURE"] = "Benutzerdefinierte Texturdatei"
-L["STRING_OPTIONS_BARS_CUSTOM_TEXTURE_DESC"] = "|cFFFFFF00Wichtig|r: Das Foto muss aus 256x32 Pixeln bestehen."
 L["STRING_OPTIONS_BARS_DESC"] = "Diese Option kontrolliert das Aussehen der Balken."
 L["STRING_OPTIONS_BARSORT"] = "Rangordnung"
 L["STRING_OPTIONS_BARSORT_DESC"] = "Ordnet Balken absteigend oder aufsteigend."
@@ -693,8 +690,7 @@ L["STRING_OPTIONS_ED_DESC"] = [=[|cFFFFFF00Manuell|r: Der Benutzer muss auf den 
 L["STRING_OPTIONS_ED1"] = "Manuell"
 L["STRING_OPTIONS_ED2"] = "Eingabeaufforderung"
 L["STRING_OPTIONS_ED3"] = "Automatisch"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = ""--]] 
+L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = "Benutzerdefinierten Text bearbeiten"
 L["STRING_OPTIONS_EDITIMAGE"] = "Bild bearbeiten"
 L["STRING_OPTIONS_EDITINSTANCE"] = "Bearbeitungsfenster:"
 L["STRING_OPTIONS_ERASECHARTDATA"] = "Ranglisten löschen"
@@ -732,22 +728,12 @@ L["STRING_OPTIONS_ILVL_TRACKER_DESC"] = [=[Aktiviert und außerhalb eines Kampfe
 Deaktiviert liest es weiterhin die Gegenstandsstufe auf Anfrage von anderen Addons oder beim manuellen Inspizieren anderer Spieler.]=]
 L["STRING_OPTIONS_ILVL_TRACKER_TEXT"] = "Aktiviert"
 L["STRING_OPTIONS_IMPORT_PROFILE"] = "Profil importieren"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = ""--]] 
-L["STRING_OPTIONS_INSTANCE_ALPHA2"] = "Hintergrundfarbe"
-L["STRING_OPTIONS_INSTANCE_ALPHA2_DESC"] = "Mit dieser Option kann die Farbe des Fensterhintergrundes geändert werden."
+L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = "Einen Namen für das neue Profil eingeben"
+L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = "Details! Profil importieren (Zeichenfolge einfügen)"
 L["STRING_OPTIONS_INSTANCE_BACKDROP"] = "Hintergrundtextur"
 L["STRING_OPTIONS_INSTANCE_BACKDROP_DESC"] = [=[Wähle die Hintergrundtextur dieses Fensters.
 
 |cFFFFFF00Standard|r: Details! Hintergrund.]=]
-L["STRING_OPTIONS_INSTANCE_COLOR"] = "Fensterfarbe"
-L["STRING_OPTIONS_INSTANCE_COLOR_DESC"] = [=[Ändert Farbe und Transparenz dieses Fensters.
-
-|cFFFFFF00Wichtig|r: Die hier gewählte Transparenz wird mit |cFFFFFF00Auto-Transparenz|r-Werten überschrieben, wenn aktiviert.
-
-|cFFFFFF00Wichtig|r: Ändern der Fensterfarbe überschreibt die benutzerdefinierte Farbe der Statusleiste.]=]
 L["STRING_OPTIONS_INSTANCE_CURRENT"] = "Automatisch wechseln zu momentan"
 L["STRING_OPTIONS_INSTANCE_CURRENT_DESC"] = "Wenn ein Kampf beginnt, schaltet das Fenster automatisch zum momentanen Segment."
 L["STRING_OPTIONS_INSTANCE_DELETE"] = "Löschen"
@@ -770,7 +756,6 @@ Auf einer höheren Ebene könnten die Fenster über anderen wichtigen Anzeigen l
 Beim Ändern der Fensterebene könnte es Konflikte durch Überlappung mit anderen Fenstern geben.]=]
 L["STRING_OPTIONS_INSTANCES"] = "Fenster:"
 L["STRING_OPTIONS_INTERFACEDIT"] = "Interface-Änderungsmodus"
-L["STRING_OPTIONS_LEFT_MENU_ANCHOR"] = "Menüeinstellungen:"
 L["STRING_OPTIONS_LOCKSEGMENTS"] = "Segmente gesperrt"
 L["STRING_OPTIONS_LOCKSEGMENTS_DESC"] = "Aktiviert: Bei Änderungen am Segment schalten alle anderen Fenster zu der gewählten Sektion."
 L["STRING_OPTIONS_MANAGE_BOOKMARKS"] = "Lesezeichen verwalten"
@@ -855,8 +840,7 @@ L["STRING_OPTIONS_NICKNAME_DESC"] = [=[Lege deinen Spitznamen fest.
 Spitznamen werden an Gildenmitglieder gesendet und von Details! anstelle deines Charakternamens angezeigt.]=]
 L["STRING_OPTIONS_OPEN_ROWTEXT_EDITOR"] = "Balkentexteditor"
 L["STRING_OPTIONS_OPEN_TEXT_EDITOR"] = "Texteditor öffnen"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_OPENBROKER"] = ""--]] 
+L["STRING_OPTIONS_OPENBROKER"] = "Open Broker Text Editor"
 L["STRING_OPTIONS_OVERALL_ALL"] = "Alle Segmente"
 L["STRING_OPTIONS_OVERALL_ALL_DESC"] = "Alle Segmente werden den Gesamtdaten hinzugefügt."
 L["STRING_OPTIONS_OVERALL_ANCHOR"] = "Gesamtdaten:"
@@ -990,7 +974,6 @@ L["STRING_OPTIONS_REPORT_SCHEMA1"] = "Gesamt / Pro Sekunde / Prozent"
 L["STRING_OPTIONS_REPORT_SCHEMA2"] = "Prozent / Pro Sekunde / Gesamt"
 L["STRING_OPTIONS_REPORT_SCHEMA3"] = "Prozent / Gesamt / Pro Sekunde"
 L["STRING_OPTIONS_RESET_TO_DEFAULT"] = "Auf Standard zurücksetzen"
-L["STRING_OPTIONS_ROW_SETTING_ANCHOR"] = "Ausrichtung:"
 L["STRING_OPTIONS_ROWADV_TITLE"] = "Erweiterte Balkeneinstellungen"
 L["STRING_OPTIONS_ROWADV_TITLE_DESC"] = "Diese Optionen erlauben Dir, die Balken ausführlicher zu modifizieren."
 L["STRING_OPTIONS_RT_COOLDOWN1"] = "%s gewirkt auf %s!"
@@ -1087,7 +1070,7 @@ L["STRING_OPTIONS_SEGMENTSSAVE_DESC"] = [=[Zeigt die Anzahl der zu speichernden 
 
 Ein hoher Wert kann das Ausloggen verzögern.]=]
 L["STRING_OPTIONS_SENDFEEDBACK"] = "Rückmeldung"
-L["STRING_OPTIONS_SHOW_SIDEBARS"] = "Rahmen zeigen"
+L["STRING_OPTIONS_SHOW_SIDEBARS"] = "Skin Rand anzeigen"
 L["STRING_OPTIONS_SHOW_SIDEBARS_DESC"] = "Zeigt oder versteckt Fensterrahmen."
 L["STRING_OPTIONS_SHOW_STATUSBAR"] = "Statusbalken zeigen"
 L["STRING_OPTIONS_SHOW_STATUSBAR_DESC"] = "Zeigt oder versteckt den unteren Statusbalken."
@@ -1216,6 +1199,7 @@ L["STRING_OPTIONS_TIMEMEASURE"] = "Zeitmessung"
 L["STRING_OPTIONS_TIMEMEASURE_DESC"] = [=[|cFFFFFF00Aktivität|r: Die Teilnehmer-Uhr stoppt, wenn er inaktiv ist, und läuft bei Aktivitäten weiter. Gewöhnliche Art zur Messung von DpS und HpS.
 
 |cFFFFFF00Effektiv|r: gebräuchlich für Ranglisten. Diese Methode nutzt die Kampfzeit für DpS-/HpS-Messungen aller Schlachtzugteilnehmer.]=]
+L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = "Schaltflächen und Menüeinstellungen"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS"] = "Titelleistenbutton-Enstellungen"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS_DESC"] = "Diese Optionen ändern das Hauptmenü auf dem oberen Rand des Fensters."
 L["STRING_OPTIONS_TOOLBARSIDE"] = "Titelleiste oben"
@@ -1287,7 +1271,7 @@ L["STRING_OPTIONS_TOTALBAR_ANCHOR"] = "Gesamtbalken:"
 L["STRING_OPTIONS_TRASH_SUPPRESSION"] = "Trash-Unterdrückung"
 L["STRING_OPTIONS_TRASH_SUPPRESSION_DESC"] = "Deaktiviert für |cFFFFFF00X|r Sekunden das automatische Umschalten auf Trash-Segmente (|cFFFFFF00nur nach erfolgreichem Bosskampf|r)."
 L["STRING_OPTIONS_WALLPAPER_ALPHA"] = "Transparenz:"
-L["STRING_OPTIONS_WALLPAPER_ANCHOR"] = "Hintergrundwahl:"
+L["STRING_OPTIONS_WALLPAPER_ANCHOR"] = "Hintergrund Auswahl:"
 L["STRING_OPTIONS_WALLPAPER_BLUE"] = "Blau:"
 L["STRING_OPTIONS_WALLPAPER_CBOTTOM"] = "Abschneiden (|cFFC0C0C0unten|r):"
 L["STRING_OPTIONS_WALLPAPER_CLEFT"] = "Abschneiden (|cFFC0C0C0links|r):"
@@ -1335,12 +1319,16 @@ L["STRING_OPTIONS_WINDOW"] = "Optionsmenü"
 L["STRING_OPTIONS_WINDOW_ANCHOR_ANCHORS"] = "Anker:"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE"] = "Massenumschaltung ignorieren"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE_DESC"] = "Aktiviert: Dieses Fenster ignoriert das Verstecken, Zeigen und Umschalten aller Fenster."
+L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = "\"Bereichsfarbe der Zeile\""
+L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = "Lege die Hintergrundfarbe des Bereichs fest, in dem die Zeilen angezeigt werden sollen."
 L["STRING_OPTIONS_WINDOW_SCALE"] = "Skalierung"
 L["STRING_OPTIONS_WINDOW_SCALE_DESC"] = [=[Bestimmt die Skalierung des Fensters.
 
 |cFFFFFF00Tipp|r: Rechtsklick, um einen Wert einzugeben
 
 |cFFFFFF00Aktuell|r: %s]=]
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = "Skin Farbe"
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = "Ändert die Farbe des Skins, die in diesem Fenster angewendet wird. |cFFFFFF00Wichtig|r: Der hier gewählte Alphawert wird mit den Werten von |cFFFFFF00Automatische Transparenz|r überschrieben, wenn dieser aktiviert ist. |cFFFFFF00Wichtig|r: Die Auswahl der Skin Farbe überschreibt jede Farbanpassung der Statusleiste."
 L["STRING_OPTIONS_WINDOW_TITLE"] = "Allgemeine Fenstereinstellungen"
 L["STRING_OPTIONS_WINDOW_TITLE_DESC"] = "Diese Optionen kontrollieren das Aussehen des gewählten Fensters."
 L["STRING_OPTIONS_WINDOWSPEED"] = "Aktual.-Intervall"

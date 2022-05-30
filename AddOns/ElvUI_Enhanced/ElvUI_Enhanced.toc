@@ -1,7 +1,7 @@
 ## Interface: 90200
 ## Title: |cff1784d1ElvUI|r Enhanced Again
 ## Author: Tevoll
-## Version: 4.0.14
+## Version: 4.0.16
 ## Notes: Plugin-Enhancements for |cff1784d1ElvUI|r.
 ## X-Category: Plugins
 ## URL: https://www.curseforge.com/wow/addons/elvui-enhanced-again
@@ -9,6 +9,7 @@
 ## RequiredDeps: ElvUI
 ## DefaultState: Enabled
 ## X-ElvVersion: 12.29
+## X-Wago-ID: WqKQpk6x
 
 libs\load_libs.xml
 locales\load_locales.xml

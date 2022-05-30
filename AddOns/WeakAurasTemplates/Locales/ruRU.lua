@@ -1,4 +1,4 @@
-if not WeakAuras.IsCorrectVersion() then return end
+if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
 
 if GetLocale() ~= "ruRU" then
   return
@@ -137,16 +137,14 @@ local L = WeakAuras.L
 	L["Show Cooldown and Proc Tracking"] = "Show Cooldown and Proc Tracking"
 	--[[Translation missing --]]
 	L["Show Cooldown and Totem Information"] = "Show Cooldown and Totem Information"
-	--[[Translation missing --]]
-	L["Show if Enchant Missing"] = "Show if Enchant Missing"
-	L["Show on Ready"] = "Показывать готовность "
+	L["Show if Enchant Missing"] = "Показать при отсутствии чар"
+	L["Show on Ready"] = "Показывать готовность"
 	L["Show Only if Buffed"] = "Показать бафф"
 	L["Show Only if Debuffed"] = "Показать дебафф"
 	--[[Translation missing --]]
 	L["Show Only if Enchanted"] = "Show Only if Enchanted"
 	L["Show Only if on Cooldown"] = "Показать восстановление"
-	--[[Translation missing --]]
-	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
+	L["Show Totem and Charge Information"] = "Показать информацию о тотеме и заряде"
 	L["Slow"] = "(замедление)"
 	L["slow debuff"] = "(замедление)"
 	L["Sprint"] = "(ускорение)"
@@ -154,14 +152,10 @@ local L = WeakAuras.L
 	L["stun debuff"] = "(оглушение)"
 	L["Stun Debuff"] = "(оглушение)"
 	L["Totem"] = "(тотем)"
-	--[[Translation missing --]]
-	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."
-	--[[Translation missing --]]
-	L["Tracks the charge and the buff, highlight while the buff is active, blue on insufficient resources."] = "Tracks the charge and the buff, highlight while the buff is active, blue on insufficient resources."
-	--[[Translation missing --]]
-	L["Tracks the charge and the debuff, highlight while the debuff is active, blue on insufficient resources."] = "Tracks the charge and the debuff, highlight while the debuff is active, blue on insufficient resources."
-	--[[Translation missing --]]
-	L["Tracks the charge and the duration of spell, highlight while the spell is active, blue on insufficient resources."] = "Tracks the charge and the duration of spell, highlight while the spell is active, blue on insufficient resources."
+	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Отслеживайте заряд и срабатывание, подсвечивайте, пока срабатывание активно, становится красным, когда выходит за пределы диапазона, синим, когда недостаточно ресурсов."
+	L["Tracks the charge and the buff, highlight while the buff is active, blue on insufficient resources."] = "Отслеживает заряд и бафф, подсвечивает, пока бафф активен, синим - недостаточно ресурсов."
+	L["Tracks the charge and the debuff, highlight while the debuff is active, blue on insufficient resources."] = "Отслеживает заряд и дебафф, подсвечивает, пока дебафф активен, синим - недостаточно ресурсов."
+	L["Tracks the charge and the duration of spell, highlight while the spell is active, blue on insufficient resources."] = "Отслеживает заряд и продолжительность заклинания, подсвечивает, пока заклинание активно, синим - недостаточно ресурсов."
 	L["Unknown Item"] = "Неизвестный предмет"
 	L["Unknown Spell"] = "Неизвестное заклинание"
 	L["Warrior cooldown"] = "(восстановление, воин)"

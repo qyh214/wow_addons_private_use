@@ -1,15 +1,20 @@
-# [3.7.16](https://github.com/WeakAuras/WeakAuras2/tree/3.7.16) (2022-03-24)
+# [4.0.1](https://github.com/WeakAuras/WeakAuras2/tree/4.0.1) (2022-05-23)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/3.7.15...3.7.16)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/4.0.0...4.0.1)
 
 ## Highlights
 
- - bug fixes 
+ - Bug fixes 
 
 ## Commits
 
-Stanzilla (2):
+Vardex (1):
 
-- Disable new luacheck rules so we can get a release out
-- Adjust code for new luacheck rules
+- Make right click open group tab by defaut
+
+mrbuds (3):
+
+- Enable Spell Cast Succeeded on bcc & classic
+- fix nil error with modRate in Cooldown Progress Spell trigger
+- rangecheck condition: make it work with neutral
 

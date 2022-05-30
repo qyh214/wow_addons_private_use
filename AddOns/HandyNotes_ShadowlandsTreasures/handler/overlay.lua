@@ -133,7 +133,13 @@ do
     end
 end
 function ns.SetupMapOverlay()
-    local frame = WorldMapFrame:AddOverlayFrame("WorldMapTrackingOptionsButtonTemplate", "DROPDOWNTOGGLEBUTTON", "TOPRIGHT", WorldMapFrame:GetCanvasContainer(), "TOPRIGHT", -68, -2);
+    local frame
+    local Krowi = LibStub("Krowi_WorldMapButtons-1.3", true)
+    if Krowi then
+        frame = Krowi:Add("WorldMapTrackingOptionsButtonTemplate", "DROPDOWNTOGGLEBUTTON")
+    else
+        frame = WorldMapFrame:AddOverlayFrame("WorldMapTrackingOptionsButtonTemplate", "DROPDOWNTOGGLEBUTTON", "TOPRIGHT", WorldMapFrame:GetCanvasContainer(), "TOPRIGHT", -68, -2)
+    end
     frame.Icon:SetAtlas("VignetteLootElite")
     frame.Icon:SetPoint("TOPLEFT", 6, -5)
     hideTextureWithAtlas("MapCornerShadow-Right", frame:GetRegions())

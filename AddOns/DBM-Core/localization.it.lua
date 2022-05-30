@@ -462,8 +462,8 @@ L.AUTO_TIMER_OPTIONS.roleplay	= "Mostra temporizzatore durata gioco di ruolo"
 -- L.AUTO_TIMER_OPTIONS - FINE
 
 
-L.AUTO_ICONS_OPTION_TEXT			= "Imposta icone sui bersagli di $spell:%s"
-L.AUTO_ICONS_OPTION_TEXT2		= "Imposta icone su $spell:%s"
+L.AUTO_ICONS_OPTION_TARGETS			= "Imposta icone sui bersagli di $spell:%s"
+L.AUTO_ICONS_OPTION_NPCS		= "Imposta icone su $spell:%s"
 L.AUTO_ARROW_OPTION_TEXT			= "Mostra la Freccia DBM per muoversi verso i bersagli affetti da $spell:%s"
 L.AUTO_ARROW_OPTION_TEXT2		= "Mostra la Freccia DBM per scansarsi dai bersagli affetti da $spell:%s"
 L.AUTO_ARROW_OPTION_TEXT3		= "Mostra la Freccia DBM per muoversi verso località specifiche per $spell:%s"

@@ -7,10 +7,9 @@ local format = format
 local StaticPopup_Show = StaticPopup_Show
 
 local wowVersion, wowPatch = GetBuildInfo()
-local locale = GetLocale()
 
 local discordURL = "https://discord.gg/nA44TeZ"
-if locale == "zhCN" or locale == "zhTW" then
+if W.Locale == "zhCN" or W.Locale == "zhTW" then
     discordURL = "https://discord.gg/wvV5rQy"
 end
 

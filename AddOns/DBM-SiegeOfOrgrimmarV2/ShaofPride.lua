@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(867, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041948")
+mod:SetRevision("20220516021321")
 mod:SetCreatureID(71734)
 mod:SetEncounterID(1604)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -233,7 +233,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnMark:CombinedShow(0.5, args.destName)
 		timerMarkCD:DelayedStart(0.5)
 		if self.Options.SetIconOnMark and args:IsDestTypePlayer() then--Filter further on icons because we don't want to set icons on grounding totems
-			self:SetSortedIcon(0.5, args.destName, 1)
+			self:SetSortedIcon("roster", 0.5, args.destName, 1)
 		end
 	elseif spellId == 144358 then
 		warnWoundedPride:Show(args.destName)

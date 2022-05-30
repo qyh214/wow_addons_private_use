@@ -73,8 +73,8 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	WarnPhase		= "Show warning for next phase",
 	TimerPhase		= "Show time for next phase",
-	VaporIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(45392),
-	EncapsIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(45665)
+	VaporIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(45392),
+	EncapsIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(45665)
 }
 
 L:SetMiscLocalization{
@@ -94,8 +94,8 @@ L:SetGeneralLocalization{
 }
 
 L:SetOptionLocalization{
-	NovaIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(45329),
-	ConflagIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(45333),
+	NovaIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(45329),
+	ConflagIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(45333),
 	RangeFrame		= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(10, 45333)
 }
 
@@ -167,7 +167,7 @@ L:SetOptionLocalization{
 	SpecWarnBlueOrb	= "Show special warning for Dragon Orbs",
 	TimerBlueOrb	= "Show timer form Dragon Orbs activate",
 	RangeFrame		= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(10, 45641),
-	BloomIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(45641)
+	BloomIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(45641)
 }
 
 L:SetMiscLocalization{

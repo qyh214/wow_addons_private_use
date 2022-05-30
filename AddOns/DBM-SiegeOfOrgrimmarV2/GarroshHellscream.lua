@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(869, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041948")
+mod:SetRevision("20220516021321")
 mod:SetCreatureID(71865)
 mod:SetEncounterID(1623)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -305,7 +305,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnEmpTouchOfYShaarj:CombinedShow(0.5, args.destName)
 		end
 		if self.Options.SetIconOnMC then
-			self:SetSortedIcon(1, args.destName, 1)
+			self:SetSortedIcon("roster", 1, args.destName, 1)
 		end
 	elseif args:IsSpellID(145183, 145195) then
 		local amount = args.amount or 1

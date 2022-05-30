@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1433, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220127091718")
+mod:SetRevision("20220516021244")
 mod:SetCreatureID(90316)
 mod:SetEncounterID(1788)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
@@ -330,7 +330,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellPhantasmalWinds:Yell()
 		end
 		if self.Options.SetIconOnWinds and not self:IsLFR() then
-			self:SetSortedIcon(0.5, args.destName, 3)--Start at 3 and count up
+			self:SetSortedIcon("roster", 0.5, args.destName, 3)--Start at 3 and count up
 		end
 		if playerHasAnzu and self:AntiSpam(3, 1) then
 			specWarnThrowAnzu:Show(args.spellName)

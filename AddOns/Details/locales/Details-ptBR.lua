@@ -169,6 +169,8 @@ L["STRING_CUSTOM_TARGET_DESC"] = [=[Este é o alvo aonde a Fonte esta causando o
 
 O botão na direita mostra uma lista pré-definida com npcs.]=]
 L["STRING_CUSTOM_TEMPORARILY"] = " (|cFFFFC000temporário|r)"
+--[[Translation missing --]]
+--[[ L["STRING_CUSTOM_TEXTURE_GUIDE"] = ""--]] 
 L["STRING_DAMAGE"] = "Dano"
 L["STRING_DAMAGE_DPS_IN"] = "DPS recebido de"
 L["STRING_DAMAGE_FROM"] = "Recebeu dano de"
@@ -407,6 +409,10 @@ L["STRING_OPTIONS_3D_UENABLED_DESC"] = "Ativa ou desativa o uso de modelo 3d aci
 L["STRING_OPTIONS_3D_USELECT_DESC"] = "Escolha qual o modelo será usado no modelo superior."
 L["STRING_OPTIONS_ADVANCED"] = "Avançado"
 L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = "Colunas de texto alinhadas"
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = ""--]] 
 L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = "Desative colchetes e separadores e alinhe textos de barras em colunas verticais"
 L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = "Deslocamento %d do texto"
 L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = "Deslocamento da borda direita"
@@ -507,9 +513,6 @@ Example:
 |cFFFFFF00Chaves de Edição de Texto|r: use para mudar a cor ou adicionar texturas. Busque por 'UI escape sequences' para mais informações.]=]
 L["STRING_OPTIONS_BARS"] = "Configurações das Barras"
 L["STRING_OPTIONS_BARS_CUSTOM_TEXTURE"] = "Arquivo de Textura Customizado"
-L["STRING_OPTIONS_BARS_CUSTOM_TEXTURE_DESC"] = [=[
-
-|cFFFFFF00Importante|r: a imagem precisa ter 256x32 pixels.]=]
 L["STRING_OPTIONS_BARS_DESC"] = "Estas opções controlam a aparência das barra da janela."
 L["STRING_OPTIONS_BARSORT"] = "Ordem do Rank"
 L["STRING_OPTIONS_BARSORT_DESC"] = "Ordena as barras para aparecerem na ordem do menor para o maior ou maior para o menor."
@@ -730,14 +733,10 @@ L["STRING_OPTIONS_ILVL_TRACKER_TEXT"] = "Ativado"
 L["STRING_OPTIONS_IMPORT_PROFILE"] = "Importar Perfil"
 L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = "Insira um Nome para o Novo Perfil"
 L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = "Details! Importar perfil (colar string)"
-L["STRING_OPTIONS_INSTANCE_ALPHA2"] = "Cor de Fundo"
-L["STRING_OPTIONS_INSTANCE_ALPHA2_DESC"] = "Seleciona a cor do fundo da janela."
 L["STRING_OPTIONS_INSTANCE_BACKDROP"] = "Textura de fundo"
 L["STRING_OPTIONS_INSTANCE_BACKDROP_DESC"] = [=[Seleciona a textura de fundo usada por essa janela.
 
 |cFFFFFF00Padrão|r: Details Background.]=]
-L["STRING_OPTIONS_INSTANCE_COLOR"] = "Cor e Transparência"
-L["STRING_OPTIONS_INSTANCE_COLOR_DESC"] = "Altera a cor e a transparência da janela."
 L["STRING_OPTIONS_INSTANCE_CURRENT"] = "Mudar Para Atual"
 L["STRING_OPTIONS_INSTANCE_CURRENT_DESC"] = "Quando qualquer combate começar e não há nenhuma janela no segmento atual, esta janela automaticamente troca para o segmento atual."
 L["STRING_OPTIONS_INSTANCE_DELETE"] = "Apagar"
@@ -760,7 +759,6 @@ Usar uma camada alta fará com que a janela fica na frente dos outros painéis..
 Quando alterando as camadas você pode encontar alguns conflitos com outros painéis cobrindo uns aos outros.]=]
 L["STRING_OPTIONS_INSTANCES"] = "Janelas:"
 L["STRING_OPTIONS_INTERFACEDIT"] = "Editar Interface"
-L["STRING_OPTIONS_LEFT_MENU_ANCHOR"] = "Opções de Menu:"
 L["STRING_OPTIONS_LOCKSEGMENTS"] = "Segmentos travados"
 L["STRING_OPTIONS_LOCKSEGMENTS_DESC"] = "Quando habilitado, modificar um seguimento em uma janela também modifica todas as outras."
 L["STRING_OPTIONS_MANAGE_BOOKMARKS"] = "Gerenciar Atalhos"
@@ -979,7 +977,6 @@ L["STRING_OPTIONS_REPORT_SCHEMA1"] = "Total / Por Segundo / Porcento"
 L["STRING_OPTIONS_REPORT_SCHEMA2"] = "Porcento / Por Segundo / Total"
 L["STRING_OPTIONS_REPORT_SCHEMA3"] = "Porcento / Total / Por Segundo"
 L["STRING_OPTIONS_RESET_TO_DEFAULT"] = "Resetar Para os Padrões"
-L["STRING_OPTIONS_ROW_SETTING_ANCHOR"] = "Layout:"
 L["STRING_OPTIONS_ROWADV_TITLE"] = "Ajustes Avançados das Barras"
 L["STRING_OPTIONS_ROWADV_TITLE_DESC"] = "Neste opções você pode alterar configurações avançadas das barras."
 L["STRING_OPTIONS_RT_COOLDOWN1"] = "%s usado em %s!"
@@ -1207,6 +1204,8 @@ L["STRING_OPTIONS_TIMEMEASURE"] = "Medidas do Tempo"
 L["STRING_OPTIONS_TIMEMEASURE_DESC"] = [=[|cFFFFFFFFTempo de Atividade|r: o tempo de cada membro da raide eh posto em pausa quando ele ficar ocioso e volta a contar o tempo quando ele voltar a atividade, eh a maneira mais comum de medir o Dps e Hps.
 
 |cFFFFFFFFTempo Efetivo|r: muito usado para ranqueamentos, este metodo usa o tempo total da luta para medir o Dps e Hps de todos os membros da raide.]=]
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = ""--]] 
 L["STRING_OPTIONS_TOOLBAR_SETTINGS"] = "Configuração da Barra de Título"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS_DESC"] = "Essa opção altera o menu principal no topo da janela"
 L["STRING_OPTIONS_TOOLBARSIDE"] = "Âncora da Barra de Ferramentas"
@@ -1325,8 +1324,16 @@ L["STRING_OPTIONS_WINDOW"] = "Painel de Opções"
 L["STRING_OPTIONS_WINDOW_ANCHOR_ANCHORS"] = "Âncoras:"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE"] = "Ignorar Alterar em Massa"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE_DESC"] = "Quanto ativa, esta janela é ignorada quando for esconder, mostrar ou alternar todas as janelas."
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = ""--]] 
 L["STRING_OPTIONS_WINDOW_SCALE"] = "Escala"
 L["STRING_OPTIONS_WINDOW_SCALE_DESC"] = "Ajusta a escala da janela."
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = ""--]] 
 L["STRING_OPTIONS_WINDOW_TITLE"] = "Configurações de Janela"
 L["STRING_OPTIONS_WINDOW_TITLE_DESC"] = "Essa opção controla a aparência da janela de uma instância selecionada."
 L["STRING_OPTIONS_WINDOWSPEED"] = "Velocidade de Atualização"

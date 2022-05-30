@@ -6,71 +6,54 @@ local tonumber = tonumber
 
 local isFirstLine = true
 
-local doneIcon = format(" |T%s:0|t", W.Media.Icons.accept)
+local DONE_ICON = format(" |T%s:0|t", W.Media.Icons.accept)
 
-local function UpdateMessage(text, from, to)
+local function UpdateMessage(text, from)
     if isFirstLine then
         isFirstLine = false
-        print(
-            E:TextGradient(
-                "----------------------------------",
-                0.910,
-                0.314,
-                0.357,
-                0.976,
-                0.835,
-                0.431,
-                0.953,
-                0.925,
-                0.761,
-                0.078,
-                0.694,
-                0.671
-            )
-        )
+        F.PrintGradientLine()
         F.Print(L["Update"])
     end
 
-    print(text .. format("(|cff00a8ff%.2f|r -> |cff00a8ff%.2f|r)...", from, to) .. doneIcon)
+    print(text .. format("(|cff00a8ff%.2f|r -> |cff00a8ff%s|r)...", from, W.Version) .. DONE_ICON)
 end
 
-function W:ForBetaUser()
-    local miscDB = E.db.WT.misc
-    miscDB.automation.hideBagAfterEnteringCombat = miscDB.autoHideBag or miscDB.automation.hideBagAfterEnteringCombat
-    miscDB.automation.hideWorldMapAfterEnteringCombat =
-        miscDB.autoHideWorldMap or miscDB.automation.hideWorldMapAfterEnteringCombat
-
-    miscDB.autoHideBag = nil
-    miscDB.autoHideWorldMap = nil
+function W:ForPreReleaseUser()
 end
 
 function W:UpdateScripts()
-    local cv = tonumber(W.Version) -- Installed WindTools Version
-    local gv = tonumber(E.global.WT.version or "0") -- Version in ElvUI Global
+    W:ForPreReleaseUser()
+    local currentVersion = tonumber(W.Version) -- installed WindTools Version
+    local globalVersion = tonumber(E.global.WT.version or "0") -- version in ElvUI Global
+
+    -- changelog display
+    if globalVersion == 0 or globalVersion ~= currentVersion then
+        self.showChangeLog = true
+    end
 
     -- from old updater
-    if gv == 0 then
-        gv = tonumber(E.global.WT.Version or "0")
+    if globalVersion == 0 then
+        globalVersion = tonumber(E.global.WT.Version or "0")
         E.global.WT.Version = nil
     end
 
-    local dv = tonumber(E.db.WT.version or gv) -- Version in ElvUI Profile
-    local pv = tonumber(E.private.WT.version or gv) -- Version in ElvUI Private
+    local profileVersion = tonumber(E.db.WT.version or globalVersion) -- Version in ElvUI Profile
+    local privateVersion = tonumber(E.private.WT.version or globalVersion) -- Version in ElvUI Private
 
-    if gv == cv and dv == cv and pv == cv then
+    if globalVersion == currentVersion and profileVersion == currentVersion and privateVersion == currentVersion then
         return
     end
 
     isFirstLine = true
 
     -- Clear the history of move frames.
-    if gv >= 2.27 and gv <= 2.31 then
+    if privateVersion >= 2.27 and privateVersion <= 2.31 then
         E.private.WT.misc.framePositions = {}
-        UpdateMessage(L["Move Frames"] .. " - " .. L["Clear History"], gv, cv)
+        UpdateMessage(L["Move Frames"] .. " - " .. L["Clear History"], globalVersion)
     end
 
     -- Copy old move frames options to its new db.
-    if gv <= 2.33 then
+    if privateVersion <= 2.33 then
         local miscDB = E.private.WT.misc
         miscDB.moveFrames.enable = miscDB.moveBlizzardFrames or miscDB.moveFrames.enable
         miscDB.moveFrames.elvUIBags = miscDB.moveElvUIBags or miscDB.moveFrames.elvUIBags
@@ -82,10 +65,10 @@ function W:UpdateScripts()
         miscDB.rememberPositions = nil
         miscDB.framePositions = nil
 
-        UpdateMessage(L["Move Frames"] .. " - " .. L["Update Database"], gv, cv)
+        UpdateMessage(L["Move Frames"] .. " - " .. L["Update Database"], globalVersion)
     end
 
-    if dv <= 2.34 then
+    if profileVersion <= 2.34 then
         local miscDB = E.db.WT.misc
         miscDB.automation.hideBagAfterEnteringCombat =
             miscDB.autoHideBag or miscDB.automation.hideBagAfterEnteringCombat
@@ -95,27 +78,11 @@ function W:UpdateScripts()
         miscDB.autoHideBag = nil
         miscDB.autoHideWorldMap = nil
 
-        UpdateMessage(L["Automation"] .. " - " .. L["Update Database"], dv, cv)
+        UpdateMessage(L["Automation"] .. " - " .. L["Update Database"], profileVersion)
     end
 
     if not isFirstLine then
-        print(
-            E:TextGradient(
-                "----------------------------------",
-                0.910,
-                0.314,
-                0.357,
-                0.976,
-                0.835,
-                0.431,
-                0.953,
-                0.925,
-                0.761,
-                0.078,
-                0.694,
-                0.671
-            )
-        )
+        F.PrintGradientLine()
     end
 
     E.global.WT.version = W.Version

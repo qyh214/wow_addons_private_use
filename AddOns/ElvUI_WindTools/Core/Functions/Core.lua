@@ -8,12 +8,8 @@ local min = min
 local pairs = pairs
 local pcall = pcall
 local print = print
-local strbyte = strbyte
 local strfind = strfind
-local strlen = strlen
 local strmatch = strmatch
-local strsub = strsub
-local tinsert = tinsert
 local tonumber = tonumber
 local tremove = tremove
 local type = type
@@ -31,12 +27,15 @@ function F.SetFontWithDB(text, db)
         F.DebugMessage("函数", "[1]找不到处理字体风格的字体")
         return
     end
+
     if not db or type(db) ~= "table" then
         F.DebugMessage("函数", "[1]找不到字体风格数据库")
         return
     end
 
-    text:FontTemplate(LSM:Fetch("font", db.name), db.size, db.style)
+    local fontName, fontHeight = text:GetFont()
+
+    text:FontTemplate(db.name and LSM:Fetch("font", db.name) or fontName, db.size or fontHeight, db.style or "NONE")
 end
 
 --[[
@@ -171,6 +170,29 @@ function F.DebugMessage(module, text)
     E:Delay(0.1, print, message)
 end
 
+do
+    local gradientLine =
+        E:TextGradient(
+        "----------------------------------",
+        0.910,
+        0.314,
+        0.357,
+        0.976,
+        0.835,
+        0.431,
+        0.953,
+        0.925,
+        0.761,
+        0.078,
+        0.694,
+        0.671
+    )
+
+    function F.PrintGradientLine()
+        print(gradientLine)
+    end
+end
+
 --[[
     打印信息
     @param {string} text 文本
@@ -180,7 +202,7 @@ function F.Print(text)
         return
     end
 
-    local message = format("%s: %s", L["WindTools"], text)
+    local message = format("%s: %s", W.Title, text)
     print(message)
 end
 
@@ -202,41 +224,6 @@ function F.DelayUnhookAll(module)
     else
         F.DebugMessage(nil, "找不到模块！")
     end
-end
-
---[[
-    分割 CJK 字符串
-    @param {string} delimiter 分割符
-    @param {string} subject 待分割字符串
-    @return {table/string} 分割结果
-]]
-function F.SplitCJKString(delimiter, subject)
-    if not subject or subject == "" then
-        return {}
-    end
-
-    local length = strlen(delimiter)
-    local results = {}
-
-    local i = 0
-    local j = 0
-
-    while true do
-        j = strfind(subject, delimiter, i + length)
-        if strlen(subject) == i then
-            break
-        end
-
-        if j == nil then
-            tinsert(results, strsub(subject, i))
-            break
-        end
-
-        tinsert(results, strsub(subject, i, j - 1))
-        i = j + length
-    end
-
-    return unpack(results)
 end
 
 function F.Round(number, decimals)
@@ -309,4 +296,17 @@ do
 
         return {r = r, g = g, b = b}
     end
+end
+
+function F.SetVertexColorWithDB(tex, db)
+    if not tex or not tex.GetVertexColor then
+        F.DebugMessage("Function", "No texture to handling")
+        return
+    end
+    if not db or type(db) ~= "table" then
+        F.DebugMessage("Function", "No texture color database")
+        return
+    end
+
+    tex:SetVertexColor(db.r, db.g, db.b, db.a)
 end

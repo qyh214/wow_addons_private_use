@@ -143,7 +143,7 @@ L:SetOptionLocalization{
 	WarnMurlocs		= "警报鱼人群",
 	SpecWarnMurlocs	= "Show special warning when Murlocs spawning",--Translate
 	TimerMurlocs	= "Show timer for Murlocs spawning",--Translate
-	GraveIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(38049)
+	GraveIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(38049)
 }
 
 L:SetMiscLocalization{
@@ -183,7 +183,7 @@ L:SetOptionLocalization{
 	TimerStrider		= "Show time for next Strider",--Translate
 	TimerNaga			= "Show time for next Strider",--Translate
 	SpecWarnElemental	= "Show special warning when Tainted Elemental coming",--Translate
-	ChargeIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(38280),
+	ChargeIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(38280),
 	AutoChangeLootToFFA	= "第3阶段自动转换拾取方式为自由拾取"
 }
 

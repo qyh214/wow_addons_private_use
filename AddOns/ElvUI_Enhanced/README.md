@@ -1,3 +1,5 @@
+[![Package and release](https://github.com/nickbock/ElvUI_Enhanced_Again/actions/workflows/main.yml/badge.svg)](https://github.com/nickbock/ElvUI_Enhanced_Again/actions/workflows/main.yml)
+
 # Important Notice
 ### **The latest version is a rework of the add-on, not all features will be ported. If you move from v3 to v4, old settings will be lost!**
 

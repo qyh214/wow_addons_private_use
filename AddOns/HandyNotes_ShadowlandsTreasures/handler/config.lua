@@ -344,7 +344,7 @@ ns.allQuestsComplete = allQuestsComplete
 
 local temp_criteria = {}
 local allCriteriaComplete = testMaker(function(criteria, achievement)
-    local _, _, completed, _, _, completedBy = (criteria < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(achievement, criteria)
+    local _, _, completed, _, _, completedBy = (criteria < 100 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(achievement, criteria, true)
     if not (completed and (not completedBy or completedBy == ns.playerName)) then
         return false
     end
@@ -500,7 +500,7 @@ local function everythingFound(point)
         ret = true
     end
     if (ns.db.achievedfound or not point.quest) and point.achievement then
-        if point.criteria then
+        if point.criteria and point.criteria ~= true then
             if not allCriteriaComplete(point.criteria, point.achievement) then
                 return false
             end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ICCTrash", "DBM-Icecrown", 6)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20220516021309")
 mod:SetModelID(30459)
 mod:SetUsedIcons(1, 2, 8)
 mod.isTrashMod = true
@@ -90,7 +90,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnBloodMirror:CombinedShow(0.3, args.destName)
 		timerBloodMirror:Start(args.destName)
 		if self.Options.BloodMirrorIcon then
-			self:SetSortedIcon(0.3, args.destName, 2, 2, true)
+			self:SetSortedIcon("roster", 0.3, args.destName, 2, 2, true)
 		end
 	elseif args.spellId == 70432 then
 		warnBloodSap:Show(args.destName)

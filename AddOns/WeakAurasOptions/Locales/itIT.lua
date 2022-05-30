@@ -1,4 +1,4 @@
-if not WeakAuras.IsCorrectVersion() then return end
+if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
 
 if GetLocale() ~= "itIT" then
   return
@@ -14,19 +14,77 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L[" rotated |cFFFF0000%s|r degrees"] = " rotated |cFFFF0000%s|r degrees"
 	L["% of Progress"] = "% di Progresso"
+	--[[Translation missing --]]
+	L["%d |4aura:auras; added"] = "%d |4aura:auras; added"
+	--[[Translation missing --]]
+	L["%d |4aura:auras; deleted"] = "%d |4aura:auras; deleted"
+	--[[Translation missing --]]
+	L["%d |4aura:auras; modified"] = "%d |4aura:auras; modified"
 	L["%i auras selected"] = "%i aure selezionate"
 	L["%i Matches"] = "%i Corrispondenze"
 	--[[Translation missing --]]
+	L["%s - %i. Trigger"] = "%s - %i. Trigger"
+	--[[Translation missing --]]
+	L["%s - Alpha Animation"] = "%s - Alpha Animation"
+	--[[Translation missing --]]
+	L["%s - Color Animation"] = "%s - Color Animation"
+	--[[Translation missing --]]
+	L["%s - Condition Custom Chat %s"] = "%s - Condition Custom Chat %s"
+	--[[Translation missing --]]
+	L["%s - Condition Custom Check %s"] = "%s - Condition Custom Check %s"
+	--[[Translation missing --]]
+	L["%s - Condition Custom Code %s"] = "%s - Condition Custom Code %s"
+	--[[Translation missing --]]
+	L["%s - Custom Anchor"] = "%s - Custom Anchor"
+	--[[Translation missing --]]
+	L["%s - Custom Grow"] = "%s - Custom Grow"
+	--[[Translation missing --]]
+	L["%s - Custom Sort"] = "%s - Custom Sort"
+	--[[Translation missing --]]
+	L["%s - Custom Text"] = "%s - Custom Text"
+	--[[Translation missing --]]
+	L["%s - Finish"] = "%s - Finish"
+	--[[Translation missing --]]
+	L["%s - Finish Action"] = "%s - Finish Action"
+	--[[Translation missing --]]
+	L["%s - Finish Custom Text"] = "%s - Finish Custom Text"
+	--[[Translation missing --]]
+	L["%s - Init Action"] = "%s - Init Action"
+	--[[Translation missing --]]
+	L["%s - Main"] = "%s - Main"
+	--[[Translation missing --]]
 	L["%s - Option #%i has the key %s. Please choose a different option key."] = "%s - Option #%i has the key %s. Please choose a different option key."
+	--[[Translation missing --]]
+	L["%s - Rotate Animation"] = "%s - Rotate Animation"
+	--[[Translation missing --]]
+	L["%s - Scale Animation"] = "%s - Scale Animation"
+	--[[Translation missing --]]
+	L["%s - Start"] = "%s - Start"
+	--[[Translation missing --]]
+	L["%s - Start Action"] = "%s - Start Action"
+	--[[Translation missing --]]
+	L["%s - Start Custom Text"] = "%s - Start Custom Text"
+	--[[Translation missing --]]
+	L["%s - Translate Animation"] = "%s - Translate Animation"
+	--[[Translation missing --]]
+	L["%s - Trigger Logic"] = "%s - Trigger Logic"
 	--[[Translation missing --]]
 	L["%s %s, Lines: %d, Frequency: %0.2f, Length: %d, Thickness: %d"] = "%s %s, Lines: %d, Frequency: %0.2f, Length: %d, Thickness: %d"
 	--[[Translation missing --]]
 	L["%s %s, Particles: %d, Frequency: %0.2f, Scale: %0.2f"] = "%s %s, Particles: %d, Frequency: %0.2f, Scale: %0.2f"
 	--[[Translation missing --]]
+	L["%s %u. Overlay Function"] = "%s %u. Overlay Function"
+	--[[Translation missing --]]
 	L["%s Alpha: %d%%"] = "%s Alpha: %d%%"
 	L["%s Color"] = "%s Colore"
 	--[[Translation missing --]]
+	L["%s Custom Variables"] = "%s Custom Variables"
+	--[[Translation missing --]]
 	L["%s Default Alpha, Zoom, Icon Inset, Aspect Ratio"] = "%s Default Alpha, Zoom, Icon Inset, Aspect Ratio"
+	--[[Translation missing --]]
+	L["%s Duration Function"] = "%s Duration Function"
+	--[[Translation missing --]]
+	L["%s Icon Function"] = "%s Icon Function"
 	--[[Translation missing --]]
 	L["%s Inset: %d%%"] = "%s Inset: %d%%"
 	--[[Translation missing --]]
@@ -34,8 +92,18 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["%s Keep Aspect Ratio"] = "%s Keep Aspect Ratio"
 	--[[Translation missing --]]
+	L["%s Name Function"] = "%s Name Function"
+	--[[Translation missing --]]
+	L["%s Stacks Function"] = "%s Stacks Function"
+	--[[Translation missing --]]
 	L["%s Texture"] = "%s Texture"
+	--[[Translation missing --]]
+	L["%s Texture Function"] = "%s Texture Function"
 	L["%s total auras"] = "%s aure totali"
+	--[[Translation missing --]]
+	L["%s Trigger Function"] = "%s Trigger Function"
+	--[[Translation missing --]]
+	L["%s Untrigger Function"] = "%s Untrigger Function"
 	L["%s Zoom: %d%%"] = "%s Zoom: %d%%"
 	L["%s, Border"] = "%s, Bordo"
 	--[[Translation missing --]]
@@ -47,6 +115,8 @@ local L = WeakAuras.L
 	L["(Right click to rename)"] = "(Tasto destro per rinominare)"
 	--[[Translation missing --]]
 	L["|c%02x%02x%02x%02xCustom Color|r"] = "|c%02x%02x%02x%02xCustom Color|r"
+	--[[Translation missing --]]
+	L["|cff999999Triggers tracking multiple units will default to being active even while no affected units are found without a Unit Count or Match Count setting applied.|r"] = "|cff999999Triggers tracking multiple units will default to being active even while no affected units are found without a Unit Count or Match Count setting applied.|r"
 	--[[Translation missing --]]
 	L["|cFFE0E000Note:|r This sets the description only on '%s'"] = "|cFFE0E000Note:|r This sets the description only on '%s'"
 	--[[Translation missing --]]
@@ -110,6 +180,8 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 Enable this setting if you want this timer to be hidden, or when using a WeakAuras text to display the timer]=]
 	L["A Unit ID (e.g., party1)."] = "Un Unit ID (p.es., party1)"
 	L["Actions"] = "Azioni"
+	--[[Translation missing --]]
+	L["Active Aura Filters and Info"] = "Active Aura Filters and Info"
 	L["Add"] = "Aggiungi"
 	L["Add %s"] = "Aggiungi %s"
 	--[[Translation missing --]]
@@ -122,10 +194,6 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["Add Overlay"] = "Aggiungi Overlay"
 	L["Add Property Change"] = "Aggiungi Cambio Caratteristica"
 	--[[Translation missing --]]
-	L["Add Raid Mark Information"] = "Add Raid Mark Information"
-	--[[Translation missing --]]
-	L["Add Role Information"] = "Add Role Information"
-	--[[Translation missing --]]
 	L["Add Snippet"] = "Add Snippet"
 	--[[Translation missing --]]
 	L["Add Sub Option"] = "Add Sub Option"
@@ -136,6 +204,8 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["Add Trigger"] = "Add Trigger"
 	L["Additional Events"] = "Eventi Addizionali"
 	L["Advanced"] = "Avanzate"
+	--[[Translation missing --]]
+	L["Affected Unit Filters and Info"] = "Affected Unit Filters and Info"
 	L["Align"] = "Allinea"
 	L["Alignment"] = "Allineamento"
 	--[[Translation missing --]]
@@ -182,6 +252,8 @@ Off Screen]=] ] = [=[Aura is
 Off Screen]=]
 	L["Aura Name"] = "Nome Aura"
 	L["Aura Name Pattern"] = "Schema del Nome Aura"
+	--[[Translation missing --]]
+	L["Aura received from: %s"] = "Aura received from: %s"
 	L["Aura Type"] = "Tipo di aura"
 	L["Aura(s)"] = "Aura(e)"
 	L["Author Options"] = "Opzioni Autore"
@@ -207,6 +279,8 @@ Off Screen]=]
 	L["Bar Texture"] = "Texture della Barra"
 	L["Big Icon"] = "Icone Grandi"
 	L["Blend Mode"] = "Modalità di Fusione"
+	--[[Translation missing --]]
+	L["Blizzard Cooldown Reduction"] = "Blizzard Cooldown Reduction"
 	L["Blue Rune"] = "Runa Blu"
 	L["Blue Sparkle Orb"] = "Sfera Luccicante Blu"
 	L["Border"] = "Bordo"
@@ -237,9 +311,9 @@ Off Screen]=]
 	L["Can set to 0 if Rows * Height equal File Height"] = "Can set to 0 if Rows * Height equal File Height"
 	L["Cancel"] = "Cancella"
 	--[[Translation missing --]]
-	L["Cast by Player Character"] = "Cast by Player Character"
+	L["Cast by a Player Character"] = "Cast by a Player Character"
 	--[[Translation missing --]]
-	L["Cast by Players"] = "Cast by Players"
+	L["Categories to Update"] = "Categories to Update"
 	L["Center"] = "Centro"
 	--[[Translation missing --]]
 	L["Chat Message"] = "Chat Message"
@@ -259,6 +333,8 @@ Off Screen]=]
 	--[[Translation missing --]]
 	L["Clipped by Progress"] = "Clipped by Progress"
 	L["Close"] = "Chiudi"
+	--[[Translation missing --]]
+	L["Code Editor"] = "Code Editor"
 	--[[Translation missing --]]
 	L["Collapse"] = "Collapse"
 	--[[Translation missing --]]
@@ -300,6 +376,8 @@ Off Screen]=]
 	--[[Translation missing --]]
 	L["Convert to New Aura Trigger"] = "Convert to New Aura Trigger"
 	L["Convert to..."] = "Converti in..."
+	--[[Translation missing --]]
+	L["Cooldown Reduction changes the duration of seconds instead of showing the real time seconds."] = "Cooldown Reduction changes the duration of seconds instead of showing the real time seconds."
 	L["Copy"] = "Copia"
 	--[[Translation missing --]]
 	L["Copy settings..."] = "Copy settings..."
@@ -311,6 +389,10 @@ Off Screen]=]
 	L["Count"] = "Count"
 	--[[Translation missing --]]
 	L["Counts the number of matches over all units."] = "Counts the number of matches over all units."
+	--[[Translation missing --]]
+	L["Counts the number of matches per unit."] = "Counts the number of matches per unit."
+	--[[Translation missing --]]
+	L["Create a Copy"] = "Create a Copy"
 	--[[Translation missing --]]
 	L["Creating buttons: "] = "Creating buttons: "
 	--[[Translation missing --]]
@@ -327,6 +409,8 @@ Off Screen]=]
 	L["Custom Check"] = "Custom Check"
 	--[[Translation missing --]]
 	L["Custom Code"] = "Custom Code"
+	--[[Translation missing --]]
+	L["Custom Code Viewer"] = "Custom Code Viewer"
 	--[[Translation missing --]]
 	L["Custom Color"] = "Custom Color"
 	--[[Translation missing --]]
@@ -450,6 +534,8 @@ Off Screen]=]
 	--[[Translation missing --]]
 	L["End of %s"] = "End of %s"
 	--[[Translation missing --]]
+	L["Enemy nameplate(s) found"] = "Enemy nameplate(s) found"
+	--[[Translation missing --]]
 	L["Enter a Spell ID"] = "Enter a Spell ID"
 	--[[Translation missing --]]
 	L["Enter an aura name, partial aura name, or spell id"] = "Enter an aura name, partial aura name, or spell id"
@@ -489,9 +575,11 @@ Off Screen]=]
 	--[[Translation missing --]]
 	L["Expansion is disabled because this group has no children"] = "Expansion is disabled because this group has no children"
 	--[[Translation missing --]]
-	L["Export to Lua table..."] = "Export to Lua table..."
+	L["Export debug table..."] = "Export debug table..."
 	--[[Translation missing --]]
-	L["Export to string..."] = "Export to string..."
+	L["Export..."] = "Export..."
+	--[[Translation missing --]]
+	L["Exporting"] = "Exporting"
 	--[[Translation missing --]]
 	L["External"] = "External"
 	--[[Translation missing --]]
@@ -513,9 +601,17 @@ Off Screen]=]
 	--[[Translation missing --]]
 	L["Fetch Affected/Unaffected Names"] = "Fetch Affected/Unaffected Names"
 	--[[Translation missing --]]
+	L["Fetch Raid Mark Information"] = "Fetch Raid Mark Information"
+	--[[Translation missing --]]
+	L["Fetch Role Information"] = "Fetch Role Information"
+	--[[Translation missing --]]
+	L["Fetch Tooltip Information"] = "Fetch Tooltip Information"
+	--[[Translation missing --]]
 	L["File Height"] = "File Height"
 	--[[Translation missing --]]
 	L["File Width"] = "File Width"
+	--[[Translation missing --]]
+	L["Filter based on the spell Name string."] = "Filter based on the spell Name string."
 	--[[Translation missing --]]
 	L["Filter by Arena Spec"] = "Filter by Arena Spec"
 	--[[Translation missing --]]
@@ -527,13 +623,17 @@ Off Screen]=]
 	--[[Translation missing --]]
 	L["Filter by Raid Role"] = "Filter by Raid Role"
 	--[[Translation missing --]]
+	L["Filter by Unit Name"] = "Filter by Unit Name"
+	--[[Translation missing --]]
 	L[ [=[Filter formats: 'Name', 'Name-Realm', '-Realm'.
 
 Supports multiple entries, separated by commas
-]=] ] = [=[Filter formats: 'Name', 'Name-Realm', '-Realm'.
+Can use \ to escape -.]=] ] = [=[Filter formats: 'Name', 'Name-Realm', '-Realm'.
 
 Supports multiple entries, separated by commas
-]=]
+Can use \ to escape -.]=]
+	--[[Translation missing --]]
+	L["Filter to only dispellable de/buffs of the given type(s)"] = "Filter to only dispellable de/buffs of the given type(s)"
 	--[[Translation missing --]]
 	L["Find Auras"] = "Find Auras"
 	--[[Translation missing --]]
@@ -626,6 +726,8 @@ Supports multiple entries, separated by commas
 	L["Group Member Count"] = "Group Member Count"
 	--[[Translation missing --]]
 	L["Group Options"] = "Group Options"
+	--[[Translation missing --]]
+	L["Group player(s) found"] = "Group player(s) found"
 	--[[Translation missing --]]
 	L["Group Role"] = "Group Role"
 	--[[Translation missing --]]
@@ -729,7 +831,25 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Import a display from an encoded string"] = "Import a display from an encoded string"
 	--[[Translation missing --]]
+	L["Import as Copy"] = "Import as Copy"
+	--[[Translation missing --]]
+	L["Import has no UID, cannot be matched to existing auras."] = "Import has no UID, cannot be matched to existing auras."
+	--[[Translation missing --]]
+	L["Importing"] = "Importing"
+	--[[Translation missing --]]
+	L["Importing %s"] = "Importing %s"
+	--[[Translation missing --]]
+	L["Importing a group with %s child auras."] = "Importing a group with %s child auras."
+	--[[Translation missing --]]
+	L["Importing a stand-alone aura."] = "Importing a stand-alone aura."
+	--[[Translation missing --]]
+	L["Importing...."] = "Importing...."
+	--[[Translation missing --]]
 	L["Include Pets"] = "Include Pets"
+	--[[Translation missing --]]
+	L["Incompatible changes to group region types detected"] = "Incompatible changes to group region types detected"
+	--[[Translation missing --]]
+	L["Incompatible changes to group structure detected"] = "Incompatible changes to group structure detected"
 	--[[Translation missing --]]
 	L["Indent Size"] = "Indent Size"
 	--[[Translation missing --]]
@@ -742,6 +862,8 @@ Supports multiple entries, separated by commas
 	L["Invalid Spell ID"] = "Invalid Spell ID"
 	--[[Translation missing --]]
 	L["Invalid Spell Name/ID/Link"] = "Invalid Spell Name/ID/Link"
+	--[[Translation missing --]]
+	L["Invalid target aura"] = "Invalid target aura"
 	--[[Translation missing --]]
 	L["Invalid type for '%s'. Expected 'bool', 'number', 'select', 'string', 'timer' or 'elapsedTimer'."] = "Invalid type for '%s'. Expected 'bool', 'number', 'select', 'string', 'timer' or 'elapsedTimer'."
 	--[[Translation missing --]]
@@ -756,6 +878,8 @@ Supports multiple entries, separated by commas
 	L["Is Boss Debuff"] = "Is Boss Debuff"
 	--[[Translation missing --]]
 	L["Is Stealable"] = "Is Stealable"
+	--[[Translation missing --]]
+	L["Is Unit"] = "Is Unit"
 	--[[Translation missing --]]
 	L["Justify"] = "Justify"
 	--[[Translation missing --]]
@@ -799,6 +923,8 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Match Count"] = "Match Count"
 	--[[Translation missing --]]
+	L["Match Count per Unit"] = "Match Count per Unit"
+	--[[Translation missing --]]
 	L["Matches the height setting of a horizontal bar or width for a vertical bar."] = "Matches the height setting of a horizontal bar or width for a vertical bar."
 	--[[Translation missing --]]
 	L["Max"] = "Max"
@@ -824,6 +950,8 @@ Supports multiple entries, separated by commas
 	L["Model %s"] = "Model %s"
 	--[[Translation missing --]]
 	L["Model Settings"] = "Model Settings"
+	--[[Translation missing --]]
+	L["ModelPaths could not be loaded, the addon is %s"] = "ModelPaths could not be loaded, the addon is %s"
 	--[[Translation missing --]]
 	L["Move Above Group"] = "Move Above Group"
 	--[[Translation missing --]]
@@ -1001,6 +1129,8 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Raid Role"] = "Raid Role"
 	--[[Translation missing --]]
+	L["Range in yards"] = "Range in yards"
+	--[[Translation missing --]]
 	L["Ready for Install"] = "Ready for Install"
 	--[[Translation missing --]]
 	L["Ready for Update"] = "Ready for Update"
@@ -1102,6 +1232,8 @@ Supports multiple entries, separated by commas
 	L["Show \"Swipe\""] = "Show \"Swipe\""
 	--[[Translation missing --]]
 	L["Show all matches (Auto-clone)"] = "Show all matches (Auto-clone)"
+	--[[Translation missing --]]
+	L["Show and Clone Settings"] = "Show and Clone Settings"
 	--[[Translation missing --]]
 	L["Show Border"] = "Show Border"
 	--[[Translation missing --]]
@@ -1209,6 +1341,8 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Spell ID"] = "Spell ID"
 	--[[Translation missing --]]
+	L["Spell Selection Filters"] = "Spell Selection Filters"
+	--[[Translation missing --]]
 	L["Stack Count"] = "Stack Count"
 	--[[Translation missing --]]
 	L["Stack Info"] = "Stack Info"
@@ -1241,6 +1375,8 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Swipe Overlay Settings"] = "Swipe Overlay Settings"
 	--[[Translation missing --]]
+	L["Templates could not be loaded, the addon is %s"] = "Templates could not be loaded, the addon is %s"
+	--[[Translation missing --]]
 	L["Temporary Group"] = "Temporary Group"
 	--[[Translation missing --]]
 	L["Text"] = "Text"
@@ -1271,13 +1407,29 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["This adds %raidMark as text replacements."] = "This adds %raidMark as text replacements."
 	--[[Translation missing --]]
-	L["This adds %role, %roleIcon as text replacements."] = "This adds %role, %roleIcon as text replacements."
+	L["This adds %role, %roleIcon as text replacements. Does nothing if the unit is not a group member."] = "This adds %role, %roleIcon as text replacements. Does nothing if the unit is not a group member."
 	--[[Translation missing --]]
-	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements."
+	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements and also allows filtering based on the tooltip content/values."] = "This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements and also allows filtering based on the tooltip content/values."
+	--[[Translation missing --]]
+	L[ [=[This aura contains custom Lua code.
+Make sure you can trust the person who sent it!]=] ] = [=[This aura contains custom Lua code.
+Make sure you can trust the person who sent it!]=]
+	--[[Translation missing --]]
+	L[ [=[This aura was created with a different version (%s) of World of Warcraft.
+It might not work correctly!]=] ] = [=[This aura was created with a different version (%s) of World of Warcraft.
+It might not work correctly!]=]
+	--[[Translation missing --]]
+	L[ [=[This aura was created with a newer version of WeakAuras.
+It might not work correctly with your version!]=] ] = [=[This aura was created with a newer version of WeakAuras.
+It might not work correctly with your version!]=]
 	--[[Translation missing --]]
 	L["This display is currently loaded"] = "This display is currently loaded"
 	--[[Translation missing --]]
 	L["This display is not currently loaded"] = "This display is not currently loaded"
+	--[[Translation missing --]]
+	L["This is a modified version of your aura, |cff9900FF%s.|r"] = "This is a modified version of your aura, |cff9900FF%s.|r"
+	--[[Translation missing --]]
+	L["This is a modified version of your group: |cff9900FF%s|r"] = "This is a modified version of your group: |cff9900FF%s|r"
 	--[[Translation missing --]]
 	L["This region of type \"%s\" is not supported."] = "This region of type \"%s\" is not supported."
 	--[[Translation missing --]]
@@ -1359,10 +1511,6 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Unit Frames"] = "Unit Frames"
 	--[[Translation missing --]]
-	L["Unit Name Filter"] = "Unit Name Filter"
-	--[[Translation missing --]]
-	L["UnitName Filter"] = "UnitName Filter"
-	--[[Translation missing --]]
 	L["Unknown property '%s' found in '%s'"] = "Unknown property '%s' found in '%s'"
 	--[[Translation missing --]]
 	L["Unlike the start or finish animations, the main animation will loop over and over until the display is hidden."] = "Unlike the start or finish animations, the main animation will loop over and over until the display is hidden."
@@ -1374,6 +1522,8 @@ Supports multiple entries, separated by commas
 	L["Update Custom Text On..."] = "Update Custom Text On..."
 	--[[Translation missing --]]
 	L["URL"] = "URL"
+	--[[Translation missing --]]
+	L["Url: %s"] = "Url: %s"
 	--[[Translation missing --]]
 	L["Use Custom Color"] = "Use Custom Color"
 	--[[Translation missing --]]
@@ -1389,11 +1539,9 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Use tooltip \"size\" instead of stacks"] = "Use tooltip \"size\" instead of stacks"
 	--[[Translation missing --]]
-	L["Use Tooltip Information"] = "Use Tooltip Information"
+	L["Used in auras:"] = "Used in auras:"
 	--[[Translation missing --]]
 	L["Used in Auras:"] = "Used in Auras:"
-	--[[Translation missing --]]
-	L["Used in auras:"] = "Used in auras:"
 	--[[Translation missing --]]
 	L["Uses UnitIsVisible() to check if in range. This is polled every second."] = "Uses UnitIsVisible() to check if in range. This is polled every second."
 	--[[Translation missing --]]
@@ -1405,13 +1553,19 @@ Supports multiple entries, separated by commas
 	--[[Translation missing --]]
 	L["Version: "] = "Version: "
 	--[[Translation missing --]]
+	L["Version: %s"] = "Version: %s"
+	--[[Translation missing --]]
 	L["Vertical Align"] = "Vertical Align"
 	--[[Translation missing --]]
 	L["Vertical Bar"] = "Vertical Bar"
 	--[[Translation missing --]]
 	L["View"] = "View"
 	--[[Translation missing --]]
+	L["View custom code"] = "View custom code"
+	--[[Translation missing --]]
 	L["Voice"] = "Voice"
+	--[[Translation missing --]]
+	L["What do you want to do?"] = "What do you want to do?"
 	--[[Translation missing --]]
 	L["Whole Area"] = "Whole Area"
 	--[[Translation missing --]]
@@ -1442,6 +1596,8 @@ Supports multiple entries, separated by commas
 	L["y-Offset"] = "y-Offset"
 	--[[Translation missing --]]
 	L["Y-Offset"] = "Y-Offset"
+	--[[Translation missing --]]
+	L["You already have this group/aura. Importing will create a duplicate."] = "You already have this group/aura. Importing will create a duplicate."
 	--[[Translation missing --]]
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = "You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"
 	--[[Translation missing --]]

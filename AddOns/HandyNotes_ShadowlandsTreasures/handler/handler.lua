@@ -5,7 +5,7 @@ local HL = LibStub("AceAddon-3.0"):NewAddon(myname, "AceEvent-3.0")
 -- local L = LibStub("AceLocale-3.0"):GetLocale(myname, true)
 ns.HL = HL
 
-ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v63'
+ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v64'
 
 ---------------------------------------------------------
 -- Data model stuff:
@@ -127,6 +127,19 @@ function ns.RegisterPoints(zone, points, defaults)
                 ns.points[zone][ncoord] = npoint
             end
         end
+    end
+end
+function ns.RegisterVignettes(zone, vignettes, defaults)
+    if defaults then
+        defaults = ns.nodeMaker(defaults)
+    end
+    for vignetteID, point in pairs(vignettes) do
+        point._coord = point._coord or 0
+        point._uiMapID = zone
+        point.always = true
+        point.label = false
+
+        ns.VignetteIDsToPoints[vignetteID] = defaults and defaults(point) or point
     end
 end
 
@@ -533,7 +546,7 @@ end
 
 local function tooltip_criteria(tooltip, achievement, criteriaid, ignore_quantityString)
     local getinfo = (criteriaid < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)
-    local criteria, _, complete, _, _, _, _, _, quantityString = getinfo(achievement, criteriaid)
+    local criteria, _, complete, _, _, _, _, _, quantityString = getinfo(achievement, criteriaid, true) -- include hidden
     if quantityString and not ignore_quantityString then
         tooltip:AddDoubleLine(
             (criteria and #criteria > 0) and criteria or PVP_PROGRESS_REWARDS_HEADER, quantityString,
@@ -586,8 +599,22 @@ local function handle_tooltip(tooltip, point)
         )
         if point.criteria then
             if point.criteria == true then
-                for criteria=1, GetAchievementNumCriteria(point.achievement) do
-                    tooltip_criteria(tooltip, point.achievement, criteria, true)
+                local numCriteria = GetAchievementNumCriteria(point.achievement, true) -- include hidden
+                if numCriteria > 10 then
+                    local numComplete = 0
+                    for criteria=1, numCriteria do
+                        if select(3, GetAchievementCriteriaInfo(point.achievement, criteria, true)) then
+                            numComplete = numComplete + 1
+                        end
+                    end
+                    tooltip:AddDoubleLine(" ", GENERIC_FRACTION_STRING:format(numComplete, numCriteria),
+                        nil, nil, nil,
+                        complete and 0 or 1, complete and 1 or 0, 0
+                    )
+                else
+                    for criteria=1, numCriteria do
+                        tooltip_criteria(tooltip, point.achievement, criteria, true)
+                    end
                 end
             elseif type(point.criteria) == "table" then
                 for _, criteria in ipairs(point.criteria) do

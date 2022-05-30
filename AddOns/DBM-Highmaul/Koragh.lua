@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1153, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220127091718")
+mod:SetRevision("20220516021244")
 mod:SetCreatureID(79015)
 mod:SetEncounterID(1723)
 mod:SetUsedIcons(8, 7, 6, 3, 2, 1)--Don't know total number of icons needed yet
@@ -261,7 +261,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnMC:Play("findmc")
 		end
 		if self.Options.SetIconOnMC then
-			self:SetSortedIcon(1, args.destName, 8, nil, true)--TODO, find out number of targets and add
+			self:SetSortedIcon("roster", 1, args.destName, 8, nil, true)--TODO, find out number of targets and add
 		end
 		if self.Options.HudMapOnMC then
 			DBM.HudMap:RegisterRangeMarkerOnPartyMember(spellId, "highlight", args.destName, 3.5, 0, 1, 0, 0, 0.5, nil, true, 1):Pulse(0.5, 0.5)
@@ -281,7 +281,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 		if self.Options.SetIconOnFel then
-			self:SetSortedIcon(1, args.destName, 1, 3)
+			self:SetSortedIcon("roster", 1, args.destName, 1, 3)
 		end
 	elseif spellId == 172917 and args:IsPlayer() then
 		specWarnExpelMagicFelMove:Show()

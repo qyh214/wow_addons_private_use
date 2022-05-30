@@ -21,7 +21,7 @@ L:SetOptionLocalization({
 	specwarnAttenuation	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(127834),
 	specwarnPlatform	= "Mostrar aviso especial cuando el jefe cambie de plataforma",
 	ArrowOnAttenuation	= "Mostrar flecha durante $spell:127834 para indicar la dirección en que moverse",
-	MindControlIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(122740)
+	MindControlIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(122740)
 })
 
 L:SetMiscLocalization({
@@ -52,7 +52,7 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnCrush		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(122774),
 	specwarnUnder	= "Mostrar aviso especial cuando estés debajo del jefe",
-	PheromonesIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(122835)
+	PheromonesIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(122835)
 })
 
 L:SetMiscLocalization({
@@ -66,7 +66,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(741)
 
 L:SetOptionLocalization({
-	AmberPrisonIcons		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(121885),
+	AmberPrisonIcons		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(121885),
 	specWarnReinforcements	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format("ej6554")
 })
 
@@ -126,8 +126,8 @@ L:SetOptionLocalization({
 	warnAmberTrap		= "Mostrar aviso (con progreso) cuando se esté creando una $spell:125826",
 	InfoFrame			= "Mostrar marco de información de jugadores afectados por $spell:125390",
 	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(5, 123735),
-	StickyResinIcons	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(124097),
-	HeartOfFearIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(123845)
+	StickyResinIcons	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(124097),
+	HeartOfFearIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(123845)
 })
 
 L:SetMiscLocalization({

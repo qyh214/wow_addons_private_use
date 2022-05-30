@@ -38,7 +38,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetOptionLocalization{
-	SlagPotIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(63477)
+	SlagPotIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(63477)
 }
 
 ------------------

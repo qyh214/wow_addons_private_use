@@ -85,8 +85,8 @@ L:SetOptionLocalization{
 	WarnBreath		= "Show warning for Deep Breath",--Translate
 	TimerPhase		= "Show time for next phase",--Translate
 	TimerBreath		= "Show timer for Deep Breath cooldown",--Translate
-	VaporIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(45392),
-	EncapsIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(45665),
+	VaporIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(45392),
+	EncapsIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(45665),
 	YellOnEncaps	= "Yell on $spell:45665"
 }
 
@@ -114,8 +114,8 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	NovaIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(45329),
-	ConflagIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(45333),
+	NovaIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(45329),
+	ConflagIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(45333),
 	RangeFrame		= "Show range frame (10 yards)",--Translate
 	NovaWhisper		= "Send whisper to $spell:45329 target (requires Raid Leader)",--Translate
 	ConflagWhisper	= "Send whisper to $spell:45333 target (requires Raid Leader)",--Translate
@@ -193,7 +193,7 @@ L:SetOptionLocalization{
 	SpecWarnBlueOrb	= "Show special warning for Dragon Orbs",--Translate
 	TimerBlueOrb	= "Show timer form Dragon Orbs activate",--Translate
 	RangeFrame		= "Show range frame (10 yards)",--Translate
-	BloomIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(45641),
+	BloomIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(45641),
 	YellOnBloom		= "Yell on $spell:45641",--Translate
 	BloomWhisper	= "Send whisper to $spell:45641 target (requires Raid Leader)"--Translate
 }

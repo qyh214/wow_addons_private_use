@@ -37,8 +37,8 @@ L:SetOptionLocalization({
 	WarnPhase			= "Anunciar cambios de fase",
 	specWarnBarrierNow	= "Mostrar aviso especial cuando debas usar $spell:115817 (buscador de bandas)",
 	RangeFrame	= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format("6") .. " durante la fase Arcana",
-	SetIconOnWS	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(116784),
-	SetIconOnAR	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(116417)
+	SetIconOnWS	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(116784),
+	SetIconOnAR	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(116417)
 })
 
 L:SetMiscLocalization({
@@ -54,7 +54,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(682)
 
 L:SetOptionLocalization({
-	SetIconOnVoodoo	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(122151)
+	SetIconOnVoodoo	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(122151)
 })
 
 L:SetMiscLocalization({
@@ -98,7 +98,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	specWarnDespawnFloor	= "Mostrar aviso especial antes de que desaparezca la plataforma",
 	timerDespawnFloor		= "Mostrar temporizador para la desaparición de la plataforma",
-	SetIconOnDestabilized	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(132222)
+	SetIconOnDestabilized	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(132222)
 })
 
 ----------------------------

@@ -420,8 +420,8 @@ L.AUTO_TIMER_OPTIONS.addscustom	= "Zeige Zeit bis Adds erscheinen"
 L.AUTO_TIMER_OPTIONS.roleplay	= "Dauer des Rollenspiels anzeigen"
 
 
-L.AUTO_ICONS_OPTION_TEXT			= "Setze Zeichen auf Ziele von $spell:%s"
-L.AUTO_ICONS_OPTION_TEXT2		= "Setze Zeichen auf $spell:%s"
+L.AUTO_ICONS_OPTION_TARGETS			= "Setze Zeichen auf Ziele von $spell:%s"
+L.AUTO_ICONS_OPTION_NPCS		= "Setze Zeichen auf $spell:%s"
 L.AUTO_ARROW_OPTION_TEXT			= "Zeige DBM-Pfeil zum Hingehen zum von $spell:%s betroffenen Ziel"
 L.AUTO_ARROW_OPTION_TEXT2		= "Zeige DBM-Pfeil zum Weggehen vom von $spell:%s betroffenen Ziel"
 L.AUTO_ARROW_OPTION_TEXT3		= "Zeige DBM-Pfeil zum Hingehen zum richtigen Ort für $spell:%s"

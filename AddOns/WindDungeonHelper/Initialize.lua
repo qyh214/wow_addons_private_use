@@ -2,6 +2,7 @@ local addonName, addon = ...
 
 local LibStub = _G.LibStub
 local GetAddOnMetadata = GetAddOnMetadata
+local GetLocale = GetLocale
 
 local Engine = LibStub("AceAddon-3.0"):NewAddon(addonName)
 local Locale = LibStub("AceLocale-3.0"):GetLocale(addonName, true)
@@ -16,3 +17,4 @@ _G["WindDungeonHelper"] = addon
 Engine.AddonName = Locale["Wind Dungeon Helper"]
 Engine.Version = GetAddOnMetadata(addonName, "Version")
 Engine.AddonMsgPrefix = "WINDDH"
+Engine.Locale = GetLocale()

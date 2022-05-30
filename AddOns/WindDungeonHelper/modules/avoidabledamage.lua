@@ -215,6 +215,7 @@ local MISTAKE = {
     AURA = 2, -- 得到錯誤的效果
     MELEE = 3 -- 近戰傷害
 }
+
 -- Data
 local MistakeData = {
     ["General"] = {
@@ -258,6 +259,217 @@ local MistakeData = {
             -- 懷恨幽影 (惡意詞綴)
             type = MISTAKE.MELEE,
             npc = 174773
+        },
+        {
+            -- 強力猛擊 (厄拆解者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 366288
+        },
+        {
+            -- 融合光束 (維攔截者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 366409
+        }
+    },
+    ["Tazavesh: Streets of Wonder"] = {
+        -- 小怪
+        {
+            -- 裂隙衝擊 (傳送門法師佐洪)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 355306
+        },
+        {
+            -- 震擊地雷 (指揮官佐發)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 355476
+        },
+        {
+            -- 致命武力 (指揮官佐發)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 355487
+        },
+        {
+            -- 震光屏障 (環境)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 355502
+        },
+        {
+            -- 鎮壓猛襲 (市場保安官)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 355638
+        },
+        {
+            -- 干擾手榴彈 (海關警衛)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 355903
+        },
+        {
+            -- 光束接合者 (武裝監督者, 『追蹤者』佐寇司)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 356011
+        },
+        {
+            -- 腐爛的食物 (脫序的顧客)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 356482
+        },
+        {
+            -- 聖光裂片撤退 (集團幫派)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 357019
+        },
+        -- [1] 佐菲克斯
+        {
+            -- 武裝保全
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 348366
+        },
+        -- [2] 大展示廳
+        {
+            -- 飢餓之握 (阿克魯斯)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 349663
+        },
+        {
+            -- 宏偉吞噬 (阿克魯斯)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 349801
+        },
+        {
+            -- 靈魄引爆 (亞奇力特)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 349999
+        },
+        {
+            -- 散熱震盪 (亞奇力特)
+            -- 測試 (可能無法避免)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 351070
+        },
+        {
+            -- 旋風之滅 (溫札‧金熔)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 350090
+        },
+        -- [3] 佐戈隆
+        {
+            -- 控場
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 350921
+        },
+        {
+            -- 壓制火光
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 355439
+        },
+        {
+            -- 不許進入！
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 357799
+        },
+        -- [4] 郵務主管
+        {
+            -- 灑出的液體
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 346329
+        },
+        -- [5] 索阿茲米
+        {
+            -- 殊離之環
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 347481
+        }
+    },
+    ["Tazavesh: So'leah's Gambit"] = {
+        -- 小怪
+        {
+            -- 易爆河豚 (暗洋魚法師)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 355234
+        },
+        {
+            -- 巨石投擲 (岸行者巨人)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 355465
+        },
+        {
+            -- 轟雷 (風鑄守護者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 355581
+        },
+        {
+            -- 充電脈衝 (風鑄守護者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 355584
+        },
+        {
+            -- 潮汐爆發 (沙漏號浪潮賢者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 356260
+        },
+        {
+            -- 漂流之星 (絢麗觀星者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 357228
+        },
+        -- [1] 海布藍德
+        {
+            -- 淨滅火焰
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 346960
+        },
+        {
+            -- 淨滅力場
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 346961
+        },
+        {
+            -- 泰坦撞擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 347094
+        },
+        {
+            -- 符文回應
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 356796
+        },
+        -- [2] 時光船長鉤尾
+        {
+            -- 無限吐息
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 347149,
+            playerIsNotTank = true -- 朝向是否需要坦克調整?
+        },
+        {
+            -- 鉤尾掃擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 347151
+        },
+        {
+            -- 火砲彈幕
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 347370
+        },
+        {
+            -- 鉤到啦！
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 354334
+        },
+        {
+            -- 燃燒焦油
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 358947
+        },
+        -- [3] 索利亞
+        {
+            -- 能量分離
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 351101
+        },
+        {
+            -- 極光新星
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 351646
         }
     },
     ["The Necrotic Wake"] = {
@@ -331,7 +543,7 @@ local MistakeData = {
     ["Theater of Pain"] = {
         -- 小怪
         {
-            -- 死靈箭雨
+            -- 死靈箭雨 (癲狂縛魂者, [4] 庫薩洛克)
             type = MISTAKE.SPELL_DAMAGE,
             spell = 317367
         },
@@ -341,7 +553,7 @@ local MistakeData = {
             spell = 321041
         },
         {
-            -- 骸骨風暴
+            -- 骸骨風暴 (魂鑄削骨者)
             type = MISTAKE.SPELL_DAMAGE,
             spell = 331224
         },
@@ -351,12 +563,6 @@ local MistakeData = {
             spell = 332708
         },
         {
-            -- 蠻橫跳躍 (『殘暴者』多奇格)
-            type = MISTAKE.SPELL_DAMAGE,
-            spell = 342125
-        },
-        {
-            -- TODO: 和上面技能應該只有一個是對的
             -- 蠻橫跳躍 (『殘暴者』多奇格)
             type = MISTAKE.SPELL_DAMAGE,
             spell = 342126
@@ -372,12 +578,12 @@ local MistakeData = {
             spell = 333297
         },
         {
-            -- 邪惡爆發 (腐臭肉囊 前後雙噴)
+            -- 邪惡爆發 (腐臭肉囊 後噴)
             type = MISTAKE.SPELL_DAMAGE,
             spell = 330592
         },
         {
-            -- 邪惡爆發 (腐臭肉囊 前後雙噴)
+            -- 邪惡爆發 (腐臭肉囊 前噴)
             type = MISTAKE.SPELL_DAMAGE,
             spell = 330608
         },
@@ -426,6 +632,11 @@ local MistakeData = {
             type = MISTAKE.SPELL_DAMAGE,
             spell = 319765,
             noPlayerDebuff = 319626
+        },
+        {
+            -- 抓握之手
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 319639
         },
         -- [5] 『不朽女皇』莫瑞莎
         {
@@ -598,6 +809,16 @@ local MistakeData = {
             spell = 324141
         },
         -- [3] 奧利菲翁
+        {
+            -- 蒼穹砲
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323372
+        },
+        {
+            -- 靈魄力場
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 323792
+        },
         {
             -- 蓄能踐踏
             type = MISTAKE.SPELL_DAMAGE,
@@ -986,7 +1207,15 @@ do
         [1693] = "Spires of Ascension",
         [1694] = "Spires of Ascension",
         [1695] = "Spires of Ascension",
-        [1697] = "Plaguefall"
+        [1697] = "Plaguefall",
+        [1989] = "Tazavesh: Streets of Wonder",
+        [1990] = "Tazavesh: Streets of Wonder",
+        [1991] = "Tazavesh: Streets of Wonder",
+        [1992] = "Tazavesh: Streets of Wonder",
+        [1993] = "Tazavesh: So'leah's Gambit",
+        [1995] = "Tazavesh: So'leah's Gambit",
+        [1996] = "Tazavesh: So'leah's Gambit",
+        [1997] = "Tazavesh: So'leah's Gambit"
     }
 
     function AD:GetCurrentDungeonName()
@@ -1053,7 +1282,7 @@ function AD:FormatNumber(amount)
         end
     elseif self.db.notification.unit == "WESTERN" then
         if amount > math_pow(10, 3) then
-            return F.Round(amount / 1000, self.db.notification.accuracy) .. L["[UNIT] K"]
+            return F.Round(amount / 1000, self.db.notification.accuracy) .. L["[UNIT] k"]
         else
             return amount
         end

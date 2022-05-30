@@ -1,5 +1,4 @@
 local W, F, L = unpack(select(2, ...))
-local locale = GetLocale()
 local format = format
 
 W.Media = {
@@ -21,12 +20,44 @@ local function AddMedia(name, file, type)
 	W.Media[type][name] = MediaPath .. type .. "/" .. file
 end
 
-if locale == "zhCN" then
-	AddMedia("logo", "WindDungeonHelper_zhCN.tga", "Textures")
-elseif locale == "zhTW" then
-	AddMedia("logo", "WindDungeonHelper_zhTW.tga", "Textures")
-else
-	AddMedia("logo", "WindDungeonHelper.tga", "Textures")
+do
+	AddMedia("title", "WindDungeonHelperTitle.tga", "Textures")
+
+	local texTable = {
+		texHeight = 512,
+		texWidth = 1024,
+		languages = {
+			-- {offsetY, width, height}
+			enUS = {0, 655, 122},
+			zhCN = {150, 375, 108},
+			zhTW = {300, 311, 108}
+		}
+	}
+
+	function F.GetTitleSize(scale)
+		local data = texTable.languages[W.Locale] or texTable.languages["enUS"]
+		if not data then
+			return
+		end
+
+		return {
+			width = function()
+				return scale * data[2]
+			end,
+			height = function()
+				return scale * data[3]
+			end
+		}
+	end
+
+	function F.GetTitleTexCoord()
+		local data = texTable.languages[W.Locale] or texTable.languages["enUS"]
+		if not data then
+			return
+		end
+
+		return {0, data[2] / texTable.texWidth, data[1] / texTable.texHeight, (data[1] + data[3]) / texTable.texHeight}
+	end
 end
 
 AddMedia("sunUITank", "SunUI/Tank.tga", "Icons")

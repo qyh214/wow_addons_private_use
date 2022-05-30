@@ -169,6 +169,8 @@ L["STRING_CUSTOM_TARGET_DESC"] = [=[Эта цель источник.
 
 Кнопка справа показывает список нипов из сражений в рейде.]=]
 L["STRING_CUSTOM_TEMPORARILY"] = "(|cFFFFC000временно|r)"
+--[[Translation missing --]]
+--[[ L["STRING_CUSTOM_TEXTURE_GUIDE"] = ""--]] 
 L["STRING_DAMAGE"] = "Урон"
 L["STRING_DAMAGE_DPS_IN"] = "Урон, полученный от "
 L["STRING_DAMAGE_FROM"] = "Получил урон от"
@@ -417,6 +419,10 @@ L["STRING_OPTIONS_ADVANCED"] = "Дополнительно"
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = ""--]] 
@@ -515,9 +521,6 @@ L["STRING_OPTIONS_BARRIGHTTEXTCUSTOM2_DESC"] = [=[|cFFFFFF00{data1}|r: это п
 |cFFFFFF00Escape Sequences|r: используется для изменения цвета или добавления текстур. Для получения более подробной информации в поисковике напишите 'UI escape sequences'.]=]
 L["STRING_OPTIONS_BARS"] = "Основные настройки полос"
 L["STRING_OPTIONS_BARS_CUSTOM_TEXTURE"] = "Файл вашей текстуры"
-L["STRING_OPTIONS_BARS_CUSTOM_TEXTURE_DESC"] = [=[
-
-|cFFFFFF00Важно|r: изображение должно быть на 256x32 пикселей.]=]
 L["STRING_OPTIONS_BARS_DESC"] = "Эти параметры управляют внешним видом полос."
 L["STRING_OPTIONS_BARSORT"] = "Сортировка полос по месту"
 L["STRING_OPTIONS_BARSORT_DESC"] = "Сортировка полос по убыванию или возрастанию."
@@ -747,19 +750,10 @@ L["STRING_OPTIONS_IMPORT_PROFILE"] = "Импорт профиля"
 L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = "Введите имя для нового профиля"
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = ""--]] 
-L["STRING_OPTIONS_INSTANCE_ALPHA2"] = "Фоновый цвет"
-L["STRING_OPTIONS_INSTANCE_ALPHA2_DESC"] = "Этот параметр позволяет изменить цвет фона окна."
 L["STRING_OPTIONS_INSTANCE_BACKDROP"] = "Фоновая текстура"
 L["STRING_OPTIONS_INSTANCE_BACKDROP_DESC"] = [=[Выберите фоновую текстуру, используемую этим окном.
 
 |cFFFFFF00По умолчанию|r: Details Background.]=]
-L["STRING_OPTIONS_INSTANCE_COLOR"] = "Цвет окна"
-L["STRING_OPTIONS_INSTANCE_COLOR_DESC"] = [=[Изменение цвета и альфа-окна.
-
-|cFFFFFF00Важно|r: альфа, выбранная здесь, перезаписывается
-|cFFFFFF00Авто прозрачность|r значение при включении.
-
-|cFFFFFF00Важно|r: Выбор цвета окна перезаписывает любые настройки цвета на панели состояния.]=]
 L["STRING_OPTIONS_INSTANCE_CURRENT"] = "Авто переход к текущему"
 L["STRING_OPTIONS_INSTANCE_CURRENT_DESC"] = "Всякий раз, когда начинается бой, это окно автоматически переключается на текущий сегмент."
 L["STRING_OPTIONS_INSTANCE_DELETE"] = "Удалить"
@@ -782,7 +776,6 @@ L["STRING_OPTIONS_INSTANCE_STRATA_DESC"] = [=[Выбор высоты слоя, 
 При изменении высоты слоя могут возникнуть конфликты с перекрывающимися друг с другом панелями.]=]
 L["STRING_OPTIONS_INSTANCES"] = "Окна:"
 L["STRING_OPTIONS_INTERFACEDIT"] = "Режим редактирования интерфейса"
-L["STRING_OPTIONS_LEFT_MENU_ANCHOR"] = "Настройки меню:"
 L["STRING_OPTIONS_LOCKSEGMENTS"] = "Заблокировать сегменты"
 L["STRING_OPTIONS_LOCKSEGMENTS_DESC"] = "Когда включено, изменение сегмента делает все остальные окна также переключенными на выбранный раздел."
 L["STRING_OPTIONS_MANAGE_BOOKMARKS"] = "Управление закладками"
@@ -1002,7 +995,6 @@ L["STRING_OPTIONS_REPORT_SCHEMA1"] = "Всего / В секунду / Проц�
 L["STRING_OPTIONS_REPORT_SCHEMA2"] = "Процент / В секунду / Всего"
 L["STRING_OPTIONS_REPORT_SCHEMA3"] = "Процент / Всего / В секунду"
 L["STRING_OPTIONS_RESET_TO_DEFAULT"] = "Сброс до значения по умолчанию"
-L["STRING_OPTIONS_ROW_SETTING_ANCHOR"] = "Макет:"
 L["STRING_OPTIONS_ROWADV_TITLE"] = "Дополнительные настройки строки"
 L["STRING_OPTIONS_ROWADV_TITLE_DESC"] = "Эти параметры позволяют более глубоко изменять строки."
 L["STRING_OPTIONS_RT_COOLDOWN1"] = "%s использован(а) на %s!"
@@ -1228,6 +1220,8 @@ L["STRING_OPTIONS_TIMEMEASURE"] = "Мера времени"
 L["STRING_OPTIONS_TIMEMEASURE_DESC"] = [=[|cFFFFFF00Активный|r: таймер каждого участника рейда ставится на удержание, если их активность прекращается, и снова подсчитывается при возобновлении, общий способ измерения УВС и ИВС.
 
 |cFFFFFF00Эффективный|r: используется в рейтинге, этот метод использует прошедшее боевое время для измерения УВС и ИВС - всех участников рейда.]=]
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = ""--]] 
 L["STRING_OPTIONS_TOOLBAR_SETTINGS"] = "Настройки кнопки заголовка полос"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS_DESC"] = "Эти параметры меняют главное меню в верхней части окна."
 L["STRING_OPTIONS_TOOLBARSIDE"] = "Полоса заголовка сверху"
@@ -1350,12 +1344,20 @@ L["STRING_OPTIONS_WINDOW"] = "Панель параметров"
 L["STRING_OPTIONS_WINDOW_ANCHOR_ANCHORS"] = "Крепления:"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE"] = "Игнорировать массовое переключение"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE_DESC"] = "При включении этого окна не влияет на скрытие, отображении или переключении всех окон."
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = ""--]] 
 L["STRING_OPTIONS_WINDOW_SCALE"] = "Масштаб"
 L["STRING_OPTIONS_WINDOW_SCALE_DESC"] = [=[Отрегулируйте масштаб окна.
 
 |cFFFFFF00Совет|r: правый щелчок, чтобы ввести значение.
 
 |cFFFFFF00Текущий|r: %s]=]
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = ""--]] 
 L["STRING_OPTIONS_WINDOW_TITLE"] = "Общие настройки окна"
 L["STRING_OPTIONS_WINDOW_TITLE_DESC"] = "Эти параметры управляют внешним видом окна, выбранного окна."
 L["STRING_OPTIONS_WINDOWSPEED"] = "Интервал обновления"

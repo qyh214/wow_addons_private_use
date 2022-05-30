@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1425, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220127091718")
+mod:SetRevision("20220516021244")
 mod:SetCreatureID(90284)
 mod:SetEncounterID(1785)
 mod:SetUsedIcons(4, 3, 2)
@@ -312,7 +312,7 @@ function mod:SPELL_AURA_APPLIED(args)
 					self.vb.tankIcon = 2
 				end
 			else
-				self:SetSortedIcon(0.5, args.destName, 2, 3)--3 targets at once
+				self:SetSortedIcon("roster", 0.5, args.destName, 2, 3)--3 targets at once
 			end
 		end
 		if self.Options.HudMapOnArt then

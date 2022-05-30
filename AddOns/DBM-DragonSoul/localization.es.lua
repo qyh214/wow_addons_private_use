@@ -91,8 +91,8 @@ L:SetOptionLocalization({
 	RangeFrame				= "Mostrar marco de distancia para $spell:105269 (3 m) y $journal:4327 (10 m)",
 	AnnounceFrostTombIcons	= "Anunciar iconos de los objetivos de $spell:104451 en el chat de banda (requiere líder o ayudante)",
 	warnFrostTombCast		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.cast:format(104448),
-	SetIconOnFrostTomb		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(104451),
-	SetIconOnFrostflake		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(109325),
+	SetIconOnFrostTomb		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(104451),
+	SetIconOnFrostflake		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(109325),
 	SpecialCount			= "Reproducir sonido de cuenta atrás para $spell:105256 y $spell:105465",
 	SetBubbles				= "Desactivar bocadillos de chat automáticamente cuando $spell:104451 esté disponible (se restaurarán cuando termine el encuentro)"
 })
@@ -168,7 +168,7 @@ L:SetOptionLocalization({
 	warnSealArmor			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.cast:format(105847),
 	SpecWarnTendril			= "Mostrar aviso especial cuando no tengas el perjuicio de $spell:105563",
 	InfoFrame				= "Mostrar marco de información de jugadores sin $spell:105563",
-	SetIconOnGrip			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(105490),
+	SetIconOnGrip			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(105490),
 	ShowShieldInfo			= "Mostrar barra de absorción para $spell:105479 (ignora la opción de marco de salud del jefe)"
 })
 
@@ -187,7 +187,7 @@ L= DBM:GetModLocalization(333)
 
 L:SetOptionLocalization({
 	RangeFrame			= "Mostrar marco de distancia dinámico según el estado del perjuicio $spell:108649 (dificultad heroica)",
-	SetIconOnParasite	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(108649)
+	SetIconOnParasite	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(108649)
 })
 
 L:SetMiscLocalization({

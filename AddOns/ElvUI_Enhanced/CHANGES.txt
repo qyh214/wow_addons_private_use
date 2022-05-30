@@ -1,12 +1,10 @@
-tag 86689a9c6e4c17fee5cffdd96d0e1106b3b2286a 4.0.14
+lightweight tag d23482159b4f87cad4f21a19cef10309fc48cebb 4.0.16
 Author:	Bocky <nick@bocky.nl>
-Date:	Fri Mar 25 10:32:47 2022 +0100
+Date:	Wed May 18 17:17:28 2022 +0200
 
-version bumb
+commit d23482159b4f87cad4f21a19cef10309fc48cebb
+Author: Bocky <nick@bocky.nl>
+Date:   Wed May 18 17:17:28 2022 +0200
 
-commit ac2823bb09a387f0498a08061e4e1a6556def394
-Author: Tevoll <git@bockmeulen.nl>
-Date:   Fri Mar 25 10:32:32 2022 +0100
-
-    Update ElvUI_Enhanced.toc
+    added Wago-ID to toc
 

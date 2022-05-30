@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1197, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220127091718")
+mod:SetRevision("20220516021244")
 mod:SetCreatureID(77428, 78623)
 mod:SetEncounterID(1705)
 mod:SetUsedIcons(1, 2, 3)
@@ -612,7 +612,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 			if self.Options.SetIconOnBrandedDebuff then
 				if spellId == 164006 or (self:IsMythic() and spellId == 164004) then--On mythic, displacement/replication in phase 1. Using dipslacemnet spellid, on two targets.
-					self:SetSortedIcon(1, name, 1, 2)
+					self:SetSortedIcon("roster", 1, name, 1, 2)
 				else
 					self:SetIcon(name, 1)
 				end
@@ -695,7 +695,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 165102 then
 		warnInfiniteDarkness:CombinedShow(0.3, args.destName)
 		if self.Options.SetIconOnInfiniteDarkness then
-			self:SetSortedIcon(1, args.destName, 1, 3)
+			self:SetSortedIcon("roster", 1, args.destName, 1, 3)
 		end
 	elseif spellId == 165595 then
 		if args:IsPlayer() then

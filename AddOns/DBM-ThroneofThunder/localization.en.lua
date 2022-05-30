@@ -38,7 +38,7 @@ L:SetOptionLocalization({
 	timerAdds				= "Show timer for when next add jumps down",
 	SetIconOnAdds			= "Set icons on balcony adds",
 	RangeFrame				= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(5, 136480),
-	SetIconOnCharge			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(136769)
+	SetIconOnCharge			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(136769)
 })
 
 L:SetMiscLocalization({
@@ -60,8 +60,8 @@ L:SetOptionLocalization({
 	specWarnPossessed	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.switch:format(136442),
 	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format(5),
 	AnnounceCooldowns	= "Count out (up to 3) which $spell:137166 cast it is for raid cooldowns",
-	SetIconOnBitingCold	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(136992),
-	SetIconOnFrostBite	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(136922)
+	SetIconOnBitingCold	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(136992),
+	SetIconOnFrostBite	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(136922)
 })
 
 ------------
@@ -97,8 +97,8 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	timerBreaths			= "Show timer for next breath",
-	SetIconOnCinders		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(139822),
-	SetIconOnTorrentofIce	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(139889),
+	SetIconOnCinders		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(139822),
+	SetIconOnTorrentofIce	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(139889),
 	AnnounceCooldowns		= "Count out which Rampage cast it is for raid cooldowns",
 	Never					= "Never",
 	Every					= "Every (consecutive)",
@@ -184,9 +184,9 @@ L:SetOptionLocalization({
 	specWarnBlueBeam			= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(139202),
 	specWarnDisintegrationBeam	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format("ej6882"),
 	ArrowOnBeam					= "Show DBM Arrow during $journal:6882 to indicate which direction to move",
-	SetIconRays					= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format("ej6891"),
-	SetIconLifeDrain			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(133795),
-	SetIconOnParasite			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(133597),
+	SetIconRays					= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format("ej6891"),
+	SetIconLifeDrain			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(133795),
+	SetIconOnParasite			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(133597),
 	InfoFrame					= "Show info frame for $spell:133795 stacks",
 	SetParticle					= "Automatically set particle density to low on pull<br/>(Restores previous setting on combat end)"
 })
@@ -221,7 +221,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	warnMatterSwapped	= "Announce targets swapped by $spell:138618",
-	SetIconOnFont		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(138707)
+	SetIconOnFont		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(138707)
 })
 
 L:SetMiscLocalization({
@@ -239,7 +239,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	warnDeadZone			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(137229),
-	SetIconOnLightningStorm	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(136192),
+	SetIconOnLightningStorm	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(136192),
 	RangeFrame				= "Show dynamic range frame (10)<br/>(This is a smart range frame that shows when too many are too close)",
 	InfoFrame				= "Show info frame for players with $spell:136193"
 })
@@ -294,8 +294,8 @@ L:SetOptionLocalization({
 	RangeFrame					= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format("8/6"),--For two different spells
 	StaticShockArrow			= "Show DBM Arrow when someone is affected by $spell:135695",
 	OverchargeArrow				= "Show DBM Arrow when someone is affected by $spell:136295",
-	SetIconOnOvercharge			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(136295),
-	SetIconOnStaticShock		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(135695)
+	SetIconOnOvercharge			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(136295),
+	SetIconOnStaticShock		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(135695)
 })
 
 L:SetMiscLocalization({

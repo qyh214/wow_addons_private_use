@@ -472,8 +472,8 @@ L.AUTO_TIMER_OPTIONS.adds			= "Отсчёт времени до прибытия
 L.AUTO_TIMER_OPTIONS.addscustom		= "Отсчёт времени до прибытия аддов"
 L.AUTO_TIMER_OPTIONS.roleplay		= "Отсчёт времени для ролевой игры"
 
-L.AUTO_ICONS_OPTION_TEXT			= "Устанавливать метки на цели заклинания $spell:%s"
-L.AUTO_ICONS_OPTION_TEXT2			= "Устанавливать метки на $spell:%s"
+L.AUTO_ICONS_OPTION_TARGETS			= "Устанавливать метки на цели заклинания $spell:%s"
+L.AUTO_ICONS_OPTION_NPCS			= "Устанавливать метки на $spell:%s"
 L.AUTO_ICONS_OPTION_CONFLICT		= " (Может конфликтовать с другими параметрами)"
 L.AUTO_ARROW_OPTION_TEXT			= "Показывать стрелку " .. L.DBM .. " к цели, на которой $spell:%s"
 L.AUTO_ARROW_OPTION_TEXT2			= "Показывать стрелку " .. L.DBM .. " от цели, на которой $spell:%s"

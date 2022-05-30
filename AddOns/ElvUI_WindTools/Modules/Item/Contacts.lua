@@ -276,11 +276,6 @@ function CT:ConstructNameButtons()
         button:SetText("")
         button:RegisterForClicks("LeftButtonDown", "RightButtonDown")
         F.SetFontOutline(button.Text)
-        ES:HandleButton(button)
-        S:CreateShadow(button, 2, 1, 1, 1, true)
-        if button.shadow then
-            button.shadow:Hide()
-        end
 
         button:SetScript(
             "OnClick",
@@ -305,9 +300,6 @@ function CT:ConstructNameButtons()
             "OnEnter",
             function(self)
                 CT:SetButtonTooltip(self)
-                if self.shadow then
-                    self.shadow:Show()
-                end
             end
         )
 
@@ -315,11 +307,10 @@ function CT:ConstructNameButtons()
             "OnLeave",
             function(self)
                 GameTooltip:Hide()
-                if self.shadow then
-                    self.shadow:Hide()
-                end
             end
         )
+
+        ES:HandleButton(button)
 
         button:Hide()
         self.frame.nameButtons[i] = button
@@ -454,7 +445,7 @@ function CT:UpdatePage(pageIndex)
             if temp then
                 if temp.memberIndex then -- Only get guild member info if needed
                     local fullname, _, _, _, _, _, _, _, _, _, className = GetGuildRosterInfo(temp.memberIndex)
-                    local name, realm = F.SplitCJKString("-", fullname)
+                    local name, realm = F.Strings.Split(fullname, "-")
                     realm = realm or E.myrealm
                     button.name = name
                     button.realm = realm
@@ -552,7 +543,7 @@ function CT:BuildFriendsData()
     for i = 1, numWoWFriend do
         local info = C_FriendList_GetFriendInfoByIndex(i)
         if info.connected then
-            local name, realm = F.SplitCJKString("-", info.name)
+            local name, realm = F.Strings.Split(info.name, "-")
             realm = realm or E.myrealm
             tinsert(
                 data,
@@ -630,7 +621,7 @@ end
 function CT:BuildFavoriteData()
     data = {}
     for fullName in pairs(E.global.WT.item.contacts.favorites) do
-        local name, realm = F.SplitCJKString("-", fullName)
+        local name, realm = F.Strings.Split(fullName, "-")
         realm = realm or E.myrealm
         tinsert(
             data,

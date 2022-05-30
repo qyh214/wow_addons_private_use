@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1203, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220127091718")
+mod:SetRevision("20220516021244")
 mod:SetCreatureID(77557, 77231, 77477)
 mod:SetEncounterID(1695)
 mod:SetBossHPInfoToHighest()
@@ -341,7 +341,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 158010 then
 		if self.Options.SetIconOnHeartSeeker and not self:IsLFR() then
-			self:SetSortedIcon(1, args.destName, 3, 3)
+			self:SetSortedIcon("roster", 1, args.destName, 3, 3)
 		end
 		if (noFilter or not playerOnBoat) then
 			warnBloodsoakedHeartseeker:CombinedShow(0.5, self.vb.heartseeker, args.destName)

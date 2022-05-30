@@ -169,6 +169,8 @@ L["STRING_CUSTOM_TARGET_DESC"] = [=[행위자의 대상입니다.
 
 오른쪽에 있는 버튼은 공격대 전투 중 npc들의 목록을 표시합니다.]=]
 L["STRING_CUSTOM_TEMPORARILY"] = " (|cFFFFC000임시|r)"
+--[[Translation missing --]]
+--[[ L["STRING_CUSTOM_TEXTURE_GUIDE"] = ""--]] 
 L["STRING_DAMAGE"] = "피해"
 L["STRING_DAMAGE_DPS_IN"] = "받은 DPS:"
 L["STRING_DAMAGE_FROM"] = "피해 출처"
@@ -408,6 +410,10 @@ L["STRING_OPTIONS_ADVANCED"] = "고급"
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = ""--]] 
@@ -507,9 +513,6 @@ L["STRING_OPTIONS_BARRIGHTTEXTCUSTOM2_DESC"] = [=[|cFFFFFF00{data1}|r: 첫번째
 |cFFFFFF00Escape Sequences|r: 색상 변경이나 텍스쳐를 추가합니다. 자세한 정보는 'UI escape sequences' 검색하세요.]=]
 L["STRING_OPTIONS_BARS"] = "바 일반 설정"
 L["STRING_OPTIONS_BARS_CUSTOM_TEXTURE"] = "사용자 설정 텍스쳐 파일"
-L["STRING_OPTIONS_BARS_CUSTOM_TEXTURE_DESC"] = [=[
-
-|cFFFFFF00중요|r: 이미지는 256x32 픽셀이어야 합니다.]=]
 L["STRING_OPTIONS_BARS_DESC"] = "바 모양을 설정하는 옵션들입니다."
 L["STRING_OPTIONS_BARSORT"] = "바 순위 정렬 순서"
 L["STRING_OPTIONS_BARSORT_DESC"] = "오름차순 또는 내림차순으로 바를 정렬합니다."
@@ -745,18 +748,10 @@ L["STRING_OPTIONS_ILVL_TRACKER_TEXT"] = "사용"
 --[[ L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = ""--]] 
-L["STRING_OPTIONS_INSTANCE_ALPHA2"] = "배경 색상"
-L["STRING_OPTIONS_INSTANCE_ALPHA2_DESC"] = "창의 배경색을 변경하는 옵션입니다."
 L["STRING_OPTIONS_INSTANCE_BACKDROP"] = "배경 무늬"
 L["STRING_OPTIONS_INSTANCE_BACKDROP_DESC"] = [=[이 창에 사용할 배경 무늬를 선택하세요.
 
 |cFFFFFF00기본값|r: Details Background.]=]
-L["STRING_OPTIONS_INSTANCE_COLOR"] = "창 색상"
-L["STRING_OPTIONS_INSTANCE_COLOR_DESC"] = [=[이 창의 색상과 투명도를 변경합니다.
-
-|cFFFFFF00중요|r: 여기서 선택한 투명도는 |cFFFFFF00자동 투명도|r가 활성화 되어있으면 동작하지 않습니다.
-
-|cFFFFFF00중요|r: 선택한 창 색상으로 상태바에 설정된 색상을 덮어씁니다.]=]
 L["STRING_OPTIONS_INSTANCE_CURRENT"] = "현재 전투로 자동 변경"
 L["STRING_OPTIONS_INSTANCE_CURRENT_DESC"] = "전투가 시작되면 자동으로 현재 전투 세분화로 변경합니다."
 L["STRING_OPTIONS_INSTANCE_DELETE"] = "삭제"
@@ -779,7 +774,6 @@ High를 사용하면 다른 주요 창들보다 앞에 놓이게 됩니다.
 우선 순위를 수정하면 다른 창과 충돌이나 겹치는 문제가 발생할 수 있습니다.]=]
 L["STRING_OPTIONS_INSTANCES"] = "창:"
 L["STRING_OPTIONS_INTERFACEDIT"] = "인터페이스 편집 모드"
-L["STRING_OPTIONS_LEFT_MENU_ANCHOR"] = "메뉴 설정:"
 L["STRING_OPTIONS_LOCKSEGMENTS"] = "세분화 잠금"
 L["STRING_OPTIONS_LOCKSEGMENTS_DESC"] = "활성화하면 세분화 변경 시 다른 모든 창도 똑같이 선택한 세분화로 변경됩니다."
 L["STRING_OPTIONS_MANAGE_BOOKMARKS"] = "북마크 관리"
@@ -999,7 +993,6 @@ L["STRING_OPTIONS_REPORT_SCHEMA1"] = "총량 / 초당 / 백분율"
 L["STRING_OPTIONS_REPORT_SCHEMA2"] = "백분율 / 초당 / 총량"
 L["STRING_OPTIONS_REPORT_SCHEMA3"] = "백분율 / 총량 / 초당"
 L["STRING_OPTIONS_RESET_TO_DEFAULT"] = "기본값으로 초기화"
-L["STRING_OPTIONS_ROW_SETTING_ANCHOR"] = "배치:"
 L["STRING_OPTIONS_ROWADV_TITLE"] = "바 고급 설정"
 L["STRING_OPTIONS_ROWADV_TITLE_DESC"] = "바를 좀 더 세부적으로 조정할 수 있는 옵션입니다."
 L["STRING_OPTIONS_RT_COOLDOWN1"] = "%s ▶ %s 사용!"
@@ -1227,6 +1220,8 @@ L["STRING_OPTIONS_TIMEMEASURE"] = "시간 측정"
 L["STRING_OPTIONS_TIMEMEASURE_DESC"] = [=[|cFFFFFF00활동 시간|r: 각 공격대원의 타이머가 해당 공대원의 활동이 중단되면 초읽기를 중지했다가 활동 재개시 다시 초읽기에 들어갑니다. Dps와 Hps 산출의 일반적인 방법입니다.
 
 |cFFFFFF00실질 시간|r: 순위를 매길때 쓰입니다, 이 방법은 모든 공격대원의 Dps와 Hps를 산출하기 위해 측정된 전투 시간을 사용합니다.]=]
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = ""--]] 
 L["STRING_OPTIONS_TOOLBAR_SETTINGS"] = "제목 바 버튼 설정"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS_DESC"] = "창의 상단에 있는 메인 메뉴를 변경하는 옵션입니다."
 L["STRING_OPTIONS_TOOLBARSIDE"] = "상단 면에 제목 바 배치"
@@ -1347,12 +1342,20 @@ L["STRING_OPTIONS_WINDOW"] = "옵션 창"
 L["STRING_OPTIONS_WINDOW_ANCHOR_ANCHORS"] = "기준점:"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE"] = "다수 표시 전환 무시하기"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE_DESC"] = "활성화하면 이 창은 모든 창 숨기기나 표시, 표시 전환에 영향을 받지 않습니다."
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = ""--]] 
 L["STRING_OPTIONS_WINDOW_SCALE"] = "크기 비율"
 L["STRING_OPTIONS_WINDOW_SCALE_DESC"] = [=[창의 크기 비율을 조절합니다.
 
 |cFFFFFF00팁|r: 값을 입력하려면 오른쪽 클릭하세요.
 
 |cFFFFFF00현재|r: %s]=]
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = ""--]] 
 L["STRING_OPTIONS_WINDOW_TITLE"] = "창 일반 설정"
 L["STRING_OPTIONS_WINDOW_TITLE_DESC"] = "선택한 창의 모양을 설정하는 옵션입니다."
 L["STRING_OPTIONS_WINDOWSPEED"] = "갱신 주기"

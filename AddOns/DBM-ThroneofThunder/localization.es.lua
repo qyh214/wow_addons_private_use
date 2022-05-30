@@ -41,7 +41,7 @@ L:SetOptionLocalization({
 	timerAdds				= "Mostrar temporizador para los siguientes esbirros",
 	SetIconOnAdds			= "Poner iconos en los esbirros de las gradas",
 	RangeFrame				= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(5, 136480),
-	SetIconOnCharge			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(136769)
+	SetIconOnCharge			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(136769)
 })
 
 L:SetMiscLocalization({
@@ -63,8 +63,8 @@ L:SetOptionLocalization({
 	specWarnPossessed	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.switch:format(136442),
 	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format(5),
 	AnnounceCooldowns	= "Anunciar (con contador, hasta 3) los lanzamientos de $spell:137166 para el uso de facultades potentes de sanación",
-	SetIconOnBitingCold	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(136992),
-	SetIconOnFrostBite	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(136922)
+	SetIconOnBitingCold	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(136992),
+	SetIconOnFrostBite	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(136922)
 })
 
 ------------
@@ -100,8 +100,8 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	timerBreaths			= "Mostrar temporizador para el siguiente aliento",
-	SetIconOnCinders		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(139822),
-	SetIconOnTorrentofIce	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(139889),
+	SetIconOnCinders		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(139822),
+	SetIconOnTorrentofIce	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(139889),
 	AnnounceCooldowns		= "Anunciar Desenfreno (con contador) para el uso de facultades potentes de sanación",
 	Never					= "Nunca",
 	Every					= "Todos (consecutivo)",
@@ -187,9 +187,9 @@ L:SetOptionLocalization({
 	specWarnBlueBeam			= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(139202),
 	specWarnDisintegrationBeam	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format("ej6882"),
 	ArrowOnBeam					= "Mostrar flecha durante $journal:6882 para indicar la dirección en que moverse",
-	SetIconRays					= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format("ej6891"),
-	SetIconLifeDrain			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(133795),
-	SetIconOnParasite			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(133597),
+	SetIconRays					= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format("ej6891"),
+	SetIconLifeDrain			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(133795),
+	SetIconOnParasite			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(133597),
 	InfoFrame					= "Mostrar marco de información para las acumulaciones de $spell:133795",
 	SetParticle					= "Cambiar automáticamente la opción gráfica de densidad de partículas a bajo al iniciar el encuentro (se restaurará al terminar el encuentro)"
 })
@@ -224,7 +224,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	warnMatterSwapped	= "Anunciar objetivos intercambiados por $spell:138618",
-	SetIconOnFont		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(138707)
+	SetIconOnFont		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(138707)
 })
 
 L:SetMiscLocalization({
@@ -242,7 +242,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	warnDeadZone			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(137229),
-	SetIconOnLightningStorm	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(136192),
+	SetIconOnLightningStorm	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(136192),
 	RangeFrame				= "Mostrar marco de distancia (10 m) dinámico (se mostrará si hay demasiados jugadores demasiado juntos)",
 	InfoFrame				= "Mostrar marco de información de jugadores afectados por el perjuicio de $spell:136193"
 })
@@ -297,8 +297,8 @@ L:SetOptionLocalization({
 	RangeFrame					= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format("8/6"),--For two different spells
 	StaticShockArrow			= "Mostrar flecha cuando un jugador esté afectado por $spell:135695",
 	OverchargeArrow				= "Mostrar flecha cuando un jugador esté afectado por $spell:136295",
-	SetIconOnOvercharge			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(136295),
-	SetIconOnStaticShock		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(135695)
+	SetIconOnOvercharge			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(136295),
+	SetIconOnStaticShock		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(135695)
 })
 
 L:SetMiscLocalization({

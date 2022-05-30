@@ -130,7 +130,7 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	SpecWarnMurlocs	= "Show special warning when Murlocs spawning",
 	TimerMurlocs	= "Show timer for Murlocs spawning",
-	GraveIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(38049)
+	GraveIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(38049)
 }
 
 L:SetMiscLocalization{
@@ -172,7 +172,7 @@ L:SetOptionLocalization{
 	TimerStrider		= "Show timer for next Strider",
 	TimerNaga			= "Show timer for next Naga",
 	SpecWarnElemental	= "Show special warning when Tainted Elemental coming",
-	ChargeIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(38280),
+	ChargeIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(38280),
 	AutoChangeLootToFFA	= "Switch loot mode to Free for All in Phase 2"
 }
 

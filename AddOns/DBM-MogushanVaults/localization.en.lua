@@ -34,8 +34,8 @@ L:SetOptionLocalization({
 	WarnPhase			= "Announce Phase transition",
 	specWarnBarrierNow	= "Show special warning when you're supposed to use $spell:115817 (only applies to LFR)",
 	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format("6") .. " during arcane phase",
-	SetIconOnWS			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(116784),
-	SetIconOnAR			= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(116417)
+	SetIconOnWS			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(116784),
+	SetIconOnAR			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(116417)
 })
 
 L:SetMiscLocalization({
@@ -51,7 +51,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(682)
 
 L:SetOptionLocalization({
-	SetIconOnVoodoo	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(122151)
+	SetIconOnVoodoo	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(122151)
 })
 
 L:SetMiscLocalization({
@@ -95,7 +95,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	specWarnDespawnFloor	= "Show special warning before floor vanishes",
 	timerDespawnFloor		= "show timer for when floor vanishes",
-	SetIconOnDestabilized	= DBM_CORE_L.AUTO_ICONS_OPTION_TEXT:format(132222)
+	SetIconOnDestabilized	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(132222)
 })
 
 ------------

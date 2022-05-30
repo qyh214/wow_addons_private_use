@@ -2,22 +2,21 @@ local myname, ns = ...
 
 local path = ns.path
 
-local husk = {
-    -- these are shared with Hunter Vivianna, but they're BoE high-AH items, so...
-    label=false, -- Decayed Husk
+local husk = {-- Decayed Husk
     loot={
+        -- these are shared with Hunter Vivianna, but they're BoE high-AH items, so...
         179593, -- Darkreach Mask
         179594, -- Witherscorn Guise
     },
-    _uiMapID=1565,
-    _coord=0,
 }
-ns.VignetteIDsToPoints[4217] = husk
-ns.VignetteIDsToPoints[4218] = husk
-ns.VignetteIDsToPoints[4219] = husk
-ns.VignetteIDsToPoints[4220] = husk
-ns.VignetteIDsToPoints[4221] = husk
-ns.VignetteIDsToPoints[4554] = husk -- actually Darkreach Supplies
+ns.RegisterVignettes(1565, {
+    [4217] = husk,
+    [4218] = husk,
+    [4219] = husk,
+    [4220] = husk,
+    [4221] = husk,
+    [4554] = husk, -- actually Darkreach Supplies
+})
 
 ns.RegisterPoints(1565, {
     [54107640] = path{ -- Decayed Husk entrance
@@ -72,12 +71,19 @@ ns.RegisterPoints(1565, { -- Ardenweald
         atlas="VignetteLootElite",scale=1.2,
         minimap=true,
         note="Locate 5 tools scattered around the Garden of Night (southeast of Root-Home), combine them into {item:180753:Twinklestar's Gardening Toolkit} and bring them to {npc:171360:Twinklestar} in Tirna Vaal.\nAfter this is done, talk to Twinklestar to receive the {spell:334353:Moonsight} buff",
+        routes={
+            {63903750, 38995696, highlightOnly=true,},
+            {63903750, 39755440, highlightOnly=true,},
+            {63903750, 40315262, highlightOnly=true,},
+            {63903750, 38495808, highlightOnly=true,},
+            {63903750, 38856010, highlightOnly=true,},
+        },
     },
-    [38995696] = {quest=61074,achievement=14313, criteria=50039,label="{item:180759:Diary of the Night}",inbag={180759,180753,any=true},atlas="DruidEclipse-LunarMoon",minimap=true},
-    [39755440] = {quest=61074,achievement=14313, criteria=50039,label="{item:180754:Gardener's Hammer}",inbag={180754,180753,any=true},atlas="DruidEclipse-LunarMoon",minimap=true},
-    [40315262] = {quest=61074,achievement=14313, criteria=50039,label="{item:180758:Gardener's Basket}",inbag={180758,180753,any=true},atlas="DruidEclipse-LunarMoon",minimap=true},
-    [38495808] = {quest=61074,achievement=14313, criteria=50039,label="{item:180756:Gardener's Flute}",inbag={180756,180753,any=true},atlas="DruidEclipse-LunarMoon",minimap=true},
-    [38856010] = {quest=61074,achievement=14313, criteria=50039,label="{item:180757:Gardener's Wand}",inbag={180757,180753,any=true},atlas="DruidEclipse-LunarMoon",minimap=true},
+    [38995696] = {quest=61074,achievement=14313, criteria=50039,label="{item:180759:Diary of the Night}",inbag={180759,180753,any=true},atlas="DruidEclipse-LunarMoon",minimap=true,route=63903750},
+    [39755440] = {quest=61074,achievement=14313, criteria=50039,label="{item:180754:Gardener's Hammer}",inbag={180754,180753,any=true},atlas="DruidEclipse-LunarMoon",minimap=true,route=63903750},
+    [40315262] = {quest=61074,achievement=14313, criteria=50039,label="{item:180758:Gardener's Basket}",inbag={180758,180753,any=true},atlas="DruidEclipse-LunarMoon",minimap=true,route=63903750},
+    [38495808] = {quest=61074,achievement=14313, criteria=50039,label="{item:180756:Gardener's Flute}",inbag={180756,180753,any=true},atlas="DruidEclipse-LunarMoon",minimap=true,route=63903750},
+    [38856010] = {quest=61074,achievement=14313, criteria=50039,label="{item:180757:Gardener's Wand}",inbag={180757,180753,any=true},atlas="DruidEclipse-LunarMoon",minimap=true,route=63903750},
     [37603710] = {
         achievement=14313, criteria=50041, -- Dreamsong Heart
         quest=61070,
@@ -94,8 +100,12 @@ ns.RegisterPoints(1565, { -- Ardenweald
             {184490, toy=true}, -- Fae Pipes
         },
         note="Requires grabbing the {spell:333923:Faerie Lamp} buff at 46.4 70.9 to unlock the treasure",
+        path={
+            46507010,
+            label="{spell:333923:Faerie Lamp}",
+            note="Take to 44.7 75.7",atlas="worldquest-icon-inscription",
+        },
     },
-    [46507010] = {quest=61175,achievement=14313,criteria=50043,label="Faerie Lamp",note="Take to 44.7 75.7",atlas="worldquest-icon-inscription",minimap=true,},
     [36106520] = {
         achievement=14313, criteria=50045, -- Darkreach Supplies
         quest=61068,
@@ -140,8 +150,13 @@ ns.RegisterPoints(1565, { -- Ardenweald
             {180640, pet=2911}, -- Amber Glitterwing
         },
         note="Loot the {item:180784:Aromatic Flowers} at 36.4 59.5, then use the jumping mushroom near the treasure location to jump on to a tree. Use the flowers on the brazier within the tree to attract the treasure",
+        path={
+            36405950,
+            label="{item:180784:Aromatic Flowers}",
+            note="Take to the Dessicated Moth at 41.9 32.5", atlas="worldquest-icon-herbalism", scale=1,
+            highlightOnly=true,
+        },
     },
-    [36405950] = {quest=61147,achievement=14313, criteria=50040,label="{item:180784:Aromatic Flowers}",inbag=180784,note="Take to the Dessicated Moth at 41.9 32.5",atlas="worldquest-icon-herbalism",scale=1,},
     [36402500] = {
         achievement=14313, criteria=50042, -- Enchanted Dreamcatcher
         quest=62259,
@@ -161,10 +176,15 @@ ns.RegisterPoints(1565, { -- Ardenweald
         atlas="VignetteLootElite",scale=1.2,
         minimap=true,
         note="Loot {item:180654:Fae Ornament}, {item:180656:Enchanted Bough} and {item:180655:Raw Dream Fibers} scattered around Ardenweald to create the {item:180652:Fae Dreamcatcher}, which will let you reach the treasure. You might need to relog if you can't see it once you're there",
+        routes={
+            {36006650, 42414672, highlightOnly=true,},
+            {36006650, 51556160, highlightOnly=true,},
+            {36006650, 36982983, highlightOnly=true,},
+        },
     },
-    [42414672] = {quest=61110,achievement=14313,criteria=50044,label="{item:180656:Enchanted Bough}",inbag=180656,atlas="covenantchoice-offering-sigil-nightfae",minimap=true,note="Combine to unlock the Cache of the Night at 36,66"},
-    [51556160] = {quest=61110,achievement=14313,criteria=50044,label="{item:180654:Fae Ornament}",inbag=180654,atlas="covenantchoice-offering-sigil-nightfae",minimap=true,note="Combine to unlock the Cache of the Night at 36,66"},
-    [36982983] = {quest=61110,achievement=14313,criteria=50044,label="{item:180655:Raw Dream Fibers}",inbag=180655,atlas="covenantchoice-offering-sigil-nightfae",minimap=true,note="Combine to unlock the Cache of the Night at 36,66"},
+    [42414672] = {quest=61110,achievement=14313,criteria=50044,label="{item:180656:Enchanted Bough}",inbag=180656,atlas="covenantchoice-offering-sigil-nightfae",minimap=true,note="Combine to unlock the Cache of the Night at 36,66",route=36006650},
+    [51556160] = {quest=61110,achievement=14313,criteria=50044,label="{item:180654:Fae Ornament}",inbag=180654,atlas="covenantchoice-offering-sigil-nightfae",minimap=true,note="Combine to unlock the Cache of the Night at 36,66",route=36006650},
+    [36982983] = {quest=61110,achievement=14313,criteria=50044,label="{item:180655:Raw Dream Fibers}",inbag=180655,atlas="covenantchoice-offering-sigil-nightfae",minimap=true,note="Combine to unlock the Cache of the Night at 36,66",route=36006650},
 })
 
 local vulpin = {
