@@ -965,7 +965,7 @@ do
 	local uniqueFamilies = {};
 	-- This function is destructive to the set
 	function ActivateEquipmentSet(set, state)
-		if not state or not state.ignoreJailersChains then
+		if not state or not state.allowPartial then
 			local ignored = set.ignored;
 			local expected = set.equipment;
 			local extras = set.extras;
@@ -1397,8 +1397,11 @@ local function CombineEquipmentSets(result, state, ...)
 	end
 
     if state then
-		state.noCombatSwap = true
-		state.blockedByJailersChains = true
+		if state.blockers and not IsEquipmentSetActive(result) then
+			state.blockers[Internal.GetCombatBlocker()] = true
+			state.blockers[Internal.GetMythicPlusBlocker()] = true
+			state.blockers[Internal.GetJailersChainBlocker()] = true
+		end
 
 		if result.ignored[INVSLOT_NECK] then
 			state.heartEquipped = GetInventoryItemID("player", INVSLOT_NECK) == 158075

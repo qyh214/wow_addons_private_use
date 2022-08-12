@@ -27,8 +27,14 @@ local function create_deathcounter_frame()
   frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   local font_path, _, font_flags = frame.text:GetFont()
   frame.text:SetFont(font_path, 12, font_flags)
-  frame.text:SetPoint("TOPLEFT")
-  frame.text:SetJustifyH("LEFT")
+
+  if addon.c("align_right") then
+    frame.text:SetPoint("TOPRIGHT")
+    frame.text:SetJustifyH("RIGHT")
+  else 
+    frame.text:SetPoint("TOPLEFT")
+    frame.text:SetJustifyH("LEFT")
+  end
 
   -- tooltip
   local on_enter = function()
@@ -38,7 +44,13 @@ local function create_deathcounter_frame()
 
     GameTooltip:Hide()
     GameTooltip:ClearLines()
-    GameTooltip:SetOwner(deathcounter_frame, "ANCHOR_TOPLEFT")
+
+    if addon.c("align_right") then
+      GameTooltip:SetOwner(deathcounter_frame, "ANCHOR_TOPRIGHT")
+    else 
+      GameTooltip:SetOwner(deathcounter_frame, "ANCHOR_TOPLEFT")
+    end
+    
     for _, v in pairs(deathcounter_frame.tooltip) do
       GameTooltip:AddLine(v)
     end
@@ -64,8 +76,14 @@ local function create_reaping_frame()
   frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   local font_path, _, font_flags = frame.text:GetFont()
   frame.text:SetFont(font_path, 12, font_flags)
-  frame.text:SetPoint("TOPLEFT")
-  frame.text:SetJustifyH("LEFT")
+
+  if addon.c("align_right") then
+    frame.text:SetPoint("TOPRIGHT")
+    frame.text:SetJustifyH("RIGHT")
+  else 
+    frame.text:SetPoint("TOPLEFT")
+    frame.text:SetJustifyH("LEFT")
+  end
 
   reaping_frame = frame
   return reaping_frame
@@ -83,8 +101,14 @@ local function create_prideful_frame()
   frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   local font_path, _, font_flags = frame.text:GetFont()
   frame.text:SetFont(font_path, 12, font_flags)
-  frame.text:SetPoint("TOPLEFT")
-  frame.text:SetJustifyH("LEFT")
+
+  if addon.c("align_right") then
+    frame.text:SetPoint("TOPRIGHT")
+    frame.text:SetJustifyH("RIGHT")
+  else 
+    frame.text:SetPoint("TOPLEFT")
+    frame.text:SetJustifyH("LEFT")
+  end
 
   prideful_frame = frame
   return prideful_frame
@@ -102,8 +126,14 @@ local function create_pull_frame()
   frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   local font_path, _, font_flags = frame.text:GetFont()
   frame.text:SetFont(font_path, 12, font_flags)
-  frame.text:SetPoint("TOPLEFT")
-  frame.text:SetJustifyH("LEFT")
+
+  if addon.c("align_right") then
+    frame.text:SetPoint("TOPRIGHT")
+    frame.text:SetJustifyH("RIGHT")
+  else 
+    frame.text:SetPoint("TOPLEFT")
+    frame.text:SetJustifyH("LEFT")
+  end
 
   pull_frame = frame
   return pull_frame
@@ -203,7 +233,12 @@ local function update_deathcounter(current_run, deathcount, death_timelost)
 
   -- update point (last criteria frame can be different in every dungeon)
   if not deathcounter_frame.ref_frame or deathcounter_frame.ref_frame ~= last_criteria_frame then
-    deathcounter_frame:SetPoint("TOPLEFT", last_criteria_frame, "BOTTOMLEFT", 0, -5)
+    if addon.c("align_right") then
+      deathcounter_frame:SetPoint("TOPRIGHT", last_criteria_frame, "BOTTOMRIGHT", 0, -5)
+    else 
+      deathcounter_frame:SetPoint("TOPLEFT", last_criteria_frame, "BOTTOMLEFT", 0, -5)
+    end
+
     deathcounter_frame.ref_frame = last_criteria_frame
   end
 
@@ -215,13 +250,23 @@ local function update_deathcounter(current_run, deathcount, death_timelost)
 
   -- update prideful frame point
   if prideful_frame and (not prideful_frame.ref_frame or prideful_frame.ref_frame ~= deathcounter_frame) then
-    prideful_frame:SetPoint("TOPLEFT", deathcounter_frame, "BOTTOMLEFT", 0, -5)
+    if addon.c("align_right") then
+      prideful_frame:SetPoint("TOPRIGHT", deathcounter_frame, "BOTTOMRIGHT", 0, -5)
+    else 
+      prideful_frame:SetPoint("TOPLEFT", deathcounter_frame, "BOTTOMLEFT", 0, -5)
+    end
+
     prideful_frame.ref_frame = deathcounter_frame
   end
 
   -- update reaping frame point
   if reaping_frame and (not reaping_frame.ref_frame or reaping_frame.ref_frame ~= deathcounter_frame) then
-    reaping_frame:SetPoint("TOPLEFT", deathcounter_frame, "BOTTOMLEFT", 0, -5)
+    if addon.c("align_right") then
+      reaping_frame:SetPoint("TOPRIGHT", deathcounter_frame, "BOTTOMRIGHT", 0, -5)
+    else 
+      reaping_frame:SetPoint("TOPLEFT", deathcounter_frame, "BOTTOMLEFT", 0, -5)
+    end
+
     reaping_frame.ref_frame = deathcounter_frame
   end
 end
@@ -268,7 +313,12 @@ local function update_reaping(current_run)
   end
 
   if not reaping_frame.ref_frame or reaping_frame.ref_frame ~= ref_frame then
-    reaping_frame:SetPoint("TOPLEFT", ref_frame, "BOTTOMLEFT", 0, -5)
+    if addon.c("align_right") then
+      reaping_frame:SetPoint("TOPRIGHT", ref_frame, "BOTTOMRIGHT", 0, -5)
+    else 
+      reaping_frame:SetPoint("TOPLEFT", ref_frame, "BOTTOMLEFT", 0, -5)
+    end
+
     reaping_frame.ref_frame = ref_frame
   end
 
@@ -358,7 +408,12 @@ local function update_prideful(current_run)
   end
 
   if not prideful_frame.ref_frame or prideful_frame.ref_frame ~= ref_frame then
-    prideful_frame:SetPoint("TOPLEFT", ref_frame, "BOTTOMLEFT", 0, -5)
+    if addon.c("align_right") then
+      prideful_frame:SetPoint("TOPRIGHT", ref_frame, "BOTTOMRIGHT", 0, -5)
+    else 
+      prideful_frame:SetPoint("TOPLEFT", ref_frame, "BOTTOMLEFT", 0, -5)
+    end
+
     prideful_frame.ref_frame = ref_frame
   end
 
@@ -445,7 +500,12 @@ local function update_pull(current_run)
   end
 
   if not pull_frame.ref_frame or pull_frame.ref_frame ~= ref_frame then
-    pull_frame:SetPoint("TOPLEFT", ref_frame, "BOTTOMLEFT", 0, -5)
+    if addon.c("align_right") then
+      pull_frame:SetPoint("TOPRIGHT", ref_frame, "BOTTOMRIGHT", 0, -5)
+    else 
+      pull_frame:SetPoint("TOPLEFT", ref_frame, "BOTTOMLEFT", 0, -5)
+    end
+
     pull_frame.ref_frame = ref_frame
   end
 

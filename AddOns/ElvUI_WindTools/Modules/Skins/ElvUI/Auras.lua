@@ -5,14 +5,15 @@ local S = W.Modules.Skins
 local _G = _G
 
 function S:ElvUI_Auras_SkinIcon(_, button)
-    self:CreateShadow(button)
+    if not button.__windSkin then
+        self:CreateLowerShadow(button)
+        self:BindShadowColorWithBorder(button.shadow, button)
+        button.__windSkin = true
+    end
 end
 
 function S:ElvUI_Auras()
-    if not E.private.auras.enable then
-        return
-    end
-    if not (E.private.WT.skins.elvui.enable and E.private.WT.skins.elvui.auras) then
+    if not E.private.auras.enable or not E.private.WT.skins.elvui.enable or not E.private.WT.skins.elvui.auras then
         return
     end
 

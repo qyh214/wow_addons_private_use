@@ -246,6 +246,9 @@ function frame:ADDON_LOADED(...)
 
         Internal.SetLoadoutSegmentEnabled("essences", Internal.Settings.essences)
         BtWLoadoutsFrame.Essences:SetEnabled(Internal.Settings.essences)
+        
+        Internal.SetLoadoutSegmentEnabled("soulbinds", Internal.Settings.soulbinds)
+        BtWLoadoutsFrame.Soulbinds:SetEnabled(Internal.Settings.soulbinds)
     end
 end
 function frame:PLAYER_LOGIN(...)

@@ -60,8 +60,8 @@ function RM:ChangeShape()
 
     if MinimapPanel:IsShown() then
         MinimapPanel:ClearAllPoints()
-        MinimapPanel:Point("TOPLEFT", Minimap, "BOTTOMLEFT", -E.Border, (E.PixelMode and 0 or -3) + halfDiff * E.mult)
-        MinimapPanel:Point("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", E.Border, -23 + halfDiff * E.mult)
+        MinimapPanel:Point("TOPLEFT", Minimap, "BOTTOMLEFT", -E.Border, (E.PixelMode and 0 or -3) + halfDiff)
+        MinimapPanel:Point("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", E.Border, -23 + halfDiff)
     end
 
     self:MMHolder_Size()
@@ -108,8 +108,11 @@ function RM:SetUpdateHook()
 end
 
 function RM:PLAYER_ENTERING_WORLD()
-    self:SetUpdateHook()
-    self:UnregisterEvent("PLAYER_ENTERING_WORLD")
+    if self.initialized then
+        E:Delay(1, self.ChangeShape, self)
+    else
+        self:SetUpdateHook()
+    end
 end
 
 function RM:Initialize()

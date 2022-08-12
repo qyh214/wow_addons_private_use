@@ -1,3 +1,37 @@
+# v1.7.5
+
+- Updated world conditions to support Oribos and Exile's Reach for zone
+
+# v1.7.4-beta
+
+- Fixed an issue where a Forge of Bonds would sometimes be requested even though conduits
+
+# v1.7.3-beta
+
+- Fixed an error while displaying soulbind conduit list under some circumstances
+
+# v1.7.2-beta
+
+- Fixed an error while activating a soulbind set that is already active
+
+# v1.7.1-beta
+
+- Added support for switching conduits
+
+# v1.7.0-beta
+
+- Updated how activating loadouts decides when to wait or offer partial continuation
+
+# v1.6.6
+
+- Added an settings option to disabled Soulbinds
+- Updated Essence support to be disabled by default, can be enabled from the settings menu in the main window
+- Fixed issues with some settings options causing errors
+
+# v1.6.5
+
+- Updated interface number for 9.2.5
+
 # v1.6.4
 
 - Updated so soulbinds are changed at the Forge of Bonds within Zereth Mortis without a tome

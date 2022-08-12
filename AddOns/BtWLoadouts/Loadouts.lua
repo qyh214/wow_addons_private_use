@@ -44,91 +44,6 @@ local loadoutSegments = {}
 local loadoutSegmentsByID = {}
 local loadoutSegmentsUIOrder = {}
 
-local PlayerNeedsTome;
-do
-	local talentChangeBuffs = {
-		[32727] = true,
-		[44521] = true,
-		[226234] = true,
-		[226241] = true,
-		[227041] = true,
-		[227563] = true,
-		[227564] = true,
-		[227565] = true,
-		[227569] = true,
-		[228128] = true,
-		[248473] = true,
-		[256229] = true,
-		[256230] = true,
-		[256231] = true,
-		[321923] = true,
-		[324028] = true,
-		[325012] = true, -- Swolkin ability
-		[338907] = true, -- Refuge of the Damned
-	};
-	function PlayerNeedsTome()
-		if IsResting() then
-			return false;
-		end
-
-		local index = 1;
-		local name, _, _, _, _, _, _, _, _, spellId = UnitAura("player", index, "HELPFUL");
-		while name do
-			if talentChangeBuffs[spellId] then
-				return false;
-			end
-
-			index = index + 1;
-			name, _, _, _, _, _, _, _, _, spellId = UnitAura("player", index, "HELPFUL");
-		end
-
-		return true;
-	end
-end
-local RequestTome;
-do
-	local tomeLevelRequirements = {
-		[141640] = {10, 50}, -- Tome of the Clear Mind
-		[143780] = {10, 50}, -- Tome of the Tranquil Mind
-		[143785] = {10, 50}, -- Tome of the Tranquil Mind
-		[141446] = {10, 50}, -- Tome of the Tranquil Mind
-		[153647] = {10, 59}, -- Tome of the Quiet Mind
-		[173049] = {51, 60}, -- Tome of the Still Mind
-	};
-	local tomes = {
-		141640, -- Tome of the Clear Mind
-		143780, -- Tome of the Tranquil Mind
-		143785, -- Tome of the Tranquil Mind
-		141446, -- Tome of the Tranquil Mind
-		153647, -- Tome of the Quiet Mind
-		173049, -- Tome of the Still Mind
-	};
-	local function GetBestTome()
-		local level = UnitLevel("player")
-		for _,itemId in ipairs(tomes) do
-			local count = GetItemCount(itemId);
-			local minLevel, maxLevel = unpack(tomeLevelRequirements[itemId])
-			if count >= 1 and minLevel <= level and maxLevel >= level then
-				local name, link, quality, _, _, _, _, _, _, icon = GetItemInfo(itemId);
-				return itemId, name, link, quality, icon;
-			end
-		end
-	end
-	function RequestTome()
-		local itemId, name, link, quality, icon = GetBestTome();
-		if name ~= nil and not StaticPopup_Visible("BTWLOADOUTS_NEEDTOME") then
-			local r, g, b = GetItemQualityColor(quality or 2);
-			StaticPopup_Hide("BTWLOADOUTS_JAILERSCHAINS")
-			StaticPopup_Hide("BTWLOADOUTS_NEEDRESTED")
-			StaticPopup_Show("BTWLOADOUTS_NEEDTOME", "", nil, {["texture"] = icon, ["name"] = name, ["color"] = {r, g, b, 1}, ["link"] = link, ["count"] = 1});
-		elseif itemId == nil and not StaticPopup_Visible("BTWLOADOUTS_NEEDRESTED") then
-			StaticPopup_Hide("BTWLOADOUTS_JAILERSCHAINS")
-			StaticPopup_Hide("BTWLOADOUTS_NEEDTOME")
-			StaticPopup_Show("BTWLOADOUTS_NEEDRESTED")
-		end
-	end
-end
-
 -- We need to add a small delay after switching specs before changing other things because Blizzard is
 -- still changing things after the cast is finished
 local specChangeInfo = {
@@ -165,9 +80,9 @@ local eventHandler = CreateFrame("Frame");
 eventHandler:Hide();
 
 local function HideLoadoutPopups()
-	StaticPopup_Hide("BTWLOADOUTS_JAILERSCHAINS")
-	StaticPopup_Hide("BTWLOADOUTS_NEEDTOME")
-	StaticPopup_Hide("BTWLOADOUTS_NEEDRESTED")
+	StaticPopup_Hide("BTWLOADOUTS_PARTIAL")
+	StaticPopup_Hide("BTWLOADOUTS_NEEDITEM")
+	StaticPopup_Hide("BTWLOADOUTS_NEEDITEMPARTIAL")
 end
 local uiErrorTracking
 local function CancelActivateProfile()
@@ -188,11 +103,18 @@ local function CancelActivateProfile()
 	Internal.LogMessage("--- END ---")
 end
 Internal.CancelActivateProfile = CancelActivateProfile;
-local function ContinueWithoutTomeActivateProfile()
+local function ContinuePartialActivateProfile()
     target.dirty = true
-	target.ignoreTome = true
+	target.allowPartial = true
+	Internal.LogMessage("Allow partial activation")
 end
-Internal.ContinueWithoutTomeActivateProfile = ContinueWithoutTomeActivateProfile;
+Internal.ContinuePartialActivateProfile = ContinuePartialActivateProfile;
+local function ContinueIgnoreItemActivateProfile()
+    target.dirty = true
+	target.ignoreItem = true
+	Internal.LogMessage("Ignore using items for activation")
+end
+Internal.ContinueIgnoreItemActivateProfile = ContinueIgnoreItemActivateProfile;
 local function ContinueIgnoreChainsActivateProfile()
     target.dirty = true
 	target.ignoreJailersChains = true
@@ -525,6 +447,8 @@ local function GetActiveProfiles()
 	return table.concat(activeProfiles, "/");
 end
 local combinedSets = {}
+local blockers = {}
+local blockerTemp = {}
 local function ContinueActivateProfile()
 	local set = target
 	local state = target.state
@@ -548,58 +472,81 @@ local function ContinueActivateProfile()
 	end
 
 	wipe(state)
+	wipe(blockers)
+
+	local segments = 0
+
 	local specID = set.specID;
 	local playerSpecID = GetSpecializationInfo(GetSpecialization())
 	if specID ~= nil and specID ~= playerSpecID then
 		-- Need to change spec
-		state.noCombatSwap = true
-		state.noTaxiSwap = true
-		state.noMovingSwap = true
-		if Internal.HasJailersChains() then
-			-- We attempt to switch the spec to trigger the correct error message
-			for specIndex=1,GetNumSpecializations() do
-				if GetSpecializationInfo(specIndex) == specID then
-					SetSpecialization(specIndex);
-				end
-			end
-			CancelActivateProfile();
-			return;
-		end
+
+		segments = segments + 1
+		blockers[Internal.GetTaxiBlocker()] = 1
+		blockers[Internal.GetFlyingBlocker()] = 1
+		blockers[Internal.GetMovingBlocker()] = 1
+		blockers[Internal.GetCombatBlocker()] = 1
+		blockers[Internal.GetMythicPlusBlocker()] = 1
+		blockers[Internal.GetJailersChainBlocker()] = 1
 	end
-	state.ignoreTome = target.ignoreTome
-	state.ignoreJailersChains = target.ignoreJailersChains
+
+	state.ignoreItem = target.ignoreItem
+	state.allowPartial = target.allowPartial
 
 	wipe(combinedSets)
 	for _,segment in ipairs(loadoutSegments) do
 		if segment.enabled and target[segment.id] then
+			wipe(blockerTemp)
+			state.blockers = blockerTemp
+
 			combinedSets[segment.id] = segment.combine(combinedSets[segment.id], state, segment.get(unpack(target[segment.id])))
+
+			segments = segments + 1
+			for blocker,complete in pairs(blockerTemp) do
+				blockers[blocker] = (blockers[blocker] or 0) + (complete and 1 or 0)
+			end
 		end
 	end
 
-	if not state.ignoreJailersChains and state.blockedByJailersChains and Internal.HasJailersChains() then
-		Internal.SetWaitReason(L["Waiting for you to be freed from the Jailer's Chains"])
-		StaticPopup_Show("BTWLOADOUTS_JAILERSCHAINS")
-		StaticPopup_Hide("BTWLOADOUTS_NEEDTOME")
-		StaticPopup_Hide("BTWLOADOUTS_NEEDRESTED")
-		return;
+	for blocker,count in pairs(blockers) do
+		if count == segments and blocker:IsActive(state) and not blocker:UsableItem() then
+			if blocker:ShouldWait(state) then
+				Internal.SetWaitReason(blocker:GetWaitReasonMessage())
+			else
+				CancelActivateProfile()
+			end
+			return
+		end
 	end
 
-	if state.noCombatSwap and InCombatLockdown() then
-		Internal.SetWaitReason(L["Waiting for combat to end"])
-		HideLoadoutPopups()
-		return;
-	end
+	if not target.allowPartial then
+		local supportPartialMessages = {}
+		local supportPartial = false
+		for blocker,count in pairs(blockers) do
+			if count ~= segments and blocker:IsActive(state) and not blocker:UsableItem() then
+				if blocker:ShouldWait(state) then
+					Internal.SetWaitReason(blocker:GetWaitReasonMessage())
+				end
 
-	if state.noTaxiSwap and UnitOnTaxi("player") then
-		Internal.SetWaitReason(L["Waiting for taxi ride to end"])
-		HideLoadoutPopups()
-        return;
-	end
-
-	if state.noMovingSwap and IsPlayerMoving() then
-		Internal.SetWaitReason(L["Waiting to change specialization"])
-		HideLoadoutPopups()
-		return;
+				local message = blocker:PopupMessagePartial()
+				supportPartialMessages[#supportPartialMessages+1] = message
+				supportPartial = true
+			end
+		end
+		if supportPartial then
+			if #supportPartialMessages > 0 then
+				StaticPopup_Hide("BTWLOADOUTS_NEEDITEMPARTIAL")
+				StaticPopup_Hide("BTWLOADOUTS_NEEDITEM")
+				if not StaticPopup_Visible("BTWLOADOUTS_PARTIAL") then
+					if #supportPartialMessages > 1 then
+						StaticPopup_Show("BTWLOADOUTS_PARTIAL", L["Your loadout cannot be completely activated"]);
+					else
+						StaticPopup_Show("BTWLOADOUTS_PARTIAL", supportPartialMessages[1]);
+					end
+				end
+			end
+			return
+		end
 	end
 
 	if specID ~= nil and specID ~= playerSpecID and UnitLevel("player") >= 10 then
@@ -619,11 +566,41 @@ local function ContinueActivateProfile()
 		HideLoadoutPopups()
 		return
 	end
+	
+	if not target.ignoreItem then
+		for blocker,count in pairs(blockers) do
+			if blocker:IsActive(state) and blocker:UsableItem() and blocker:ShouldWait(state) then
+				Internal.SetWaitReason(blocker:GetWaitReasonMessage())
+					
+				local itemID, name, link, quality, icon = blocker:UsableItem();
 
-	if not state.ignoreTome and not state.ignoreJailersChains and state.needTome and PlayerNeedsTome() then
-		Internal.SetWaitReason(L["Waiting for tome"])
-		RequestTome();
-		return;
+				StaticPopup_Hide("BTWLOADOUTS_PARTIAL")
+
+				if count == segments then
+					StaticPopup_Hide("BTWLOADOUTS_NEEDITEMPARTIAL")
+
+					local message, item = blocker:PopupMessage()
+					if name ~= nil and not StaticPopup_Visible("BTWLOADOUTS_NEEDITEM") then
+						local r, g, b = GetItemQualityColor(quality or 2);
+						StaticPopup_Show("BTWLOADOUTS_NEEDITEM", message, item, {["texture"] = icon, ["name"] = name, ["color"] = {r, g, b, 1}, ["link"] = link, ["count"] = 1});
+					elseif itemID == nil then
+						StaticPopup_Hide("BTWLOADOUTS_NEEDITEM")
+					end
+				else
+					StaticPopup_Hide("BTWLOADOUTS_NEEDITEM")
+
+					local message, item = blocker:PopupMessagePartial()
+					if name ~= nil and not StaticPopup_Visible("BTWLOADOUTS_NEEDITEMPARTIAL") then
+						local r, g, b = GetItemQualityColor(quality or 2);
+						StaticPopup_Show("BTWLOADOUTS_NEEDITEMPARTIAL", message, item, {["texture"] = icon, ["name"] = name, ["color"] = {r, g, b, 1}, ["link"] = link, ["count"] = 1});
+					elseif itemID == nil then
+						StaticPopup_Hide("BTWLOADOUTS_NEEDITEMPARTIAL")
+					end
+				end
+
+				return
+			end
+		end
 	end
 
 	HideLoadoutPopups()

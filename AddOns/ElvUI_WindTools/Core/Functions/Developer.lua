@@ -1,9 +1,12 @@
 local W, F, E, L, V, P, G = unpack(select(2, ...))
 
+local _G = _G
 local format = format
 local pairs = pairs
 local print = print
+local strjoin = strjoin
 local strlen = strlen
+local strlower = strlower
 local strrep = strrep
 local tostring = tostring
 local type = type
@@ -11,9 +14,9 @@ local type = type
 F.Developer = {}
 
 --[[
-    高级打印函数
-    -- 参考自 https://www.cnblogs.com/leezj/p/4230271.html
-    @param {Any} object 随意变量或常量
+    Print pretty
+    -- modified from https://www.cnblogs.com/leezj/p/4230271.html
+    @param {Any} Any Object
 ]]
 function F.Developer.Print(object)
     if type(object) == "table" then
@@ -52,5 +55,95 @@ function F.Developer.Print(object)
         print('(string) "' .. object .. '"')
     else
         print("(" .. type(object) .. ") " .. tostring(object))
+    end
+end
+
+--[[
+    Custom Error Handler
+    @param ...string Error Message
+]]
+function F.Developer.ThrowError(...)
+    local message = strjoin(" ", ...)
+    _G.geterrorhandler()(format("%s |cffff3860[ERROR]|r\n%s", W.Title, message))
+end
+
+--[[
+    Custom Logger [WARNING]
+    @param ...string Message
+]]
+function F.Developer.LogWarning(...)
+    if E.global.WT.core.logLevel < 2 then
+        return
+    end
+
+    local message = strjoin(" ", ...)
+    print(format("%s |cffffdd57[WARNING]|r %s", W.Title, message))
+end
+
+--[[
+    Custom Logger [INFO]
+    @param ...string Message
+]]
+function F.Developer.LogInfo(...)
+    if E.global.WT.core.logLevel < 3 then
+        return
+    end
+
+    local message = strjoin(" ", ...)
+    print(format("%s |cff209cee[INFO]|r %s", W.Title, message))
+end
+
+--[[
+    Custom Logger [DEBUG]
+    @param ...string Message
+]]
+function F.Developer.LogDebug(...)
+    if E.global.WT.core.logLevel < 4 then
+        return
+    end
+
+    local message = strjoin(" ", ...)
+    print(format("%s |cff00d1b2[DEBUG]|r %s", W.Title, message))
+end
+
+--[[
+    Custom Logger Injection
+    @param table Module | string Module Name
+]]
+function F.Developer.InjectLogger(module)
+    if type(module) == "string" then
+        module = W:GetModule(module)
+    end
+
+    if not module or type(module) ~= "table" then
+        F.Developer.ThrowError("Module logger injection: Invalid module.")
+        return
+    end
+
+    if not module.Log then
+        module.Log = function(self, level, message)
+            if not level or type(level) ~= "string" then
+                F.Developer.ThrowError("Invalid log level.")
+                return
+            end
+
+            if not message or type(message) ~= "string" then
+                F.Developer.ThrowError("Invalid log message.")
+                return
+            end
+
+            level = strlower(level)
+
+            local richMessage = format("|cfff6781d[%s]|r %s", self:GetName(), message)
+            if level == "info" then
+                F.Developer.LogInfo(richMessage)
+            elseif level == "warning" then
+                F.Developer.LogWarning(richMessage)
+            elseif level == "debug" then
+                F.Developer.LogDebug(richMessage)
+            else
+                F.Developer.ThrowError("Logger level should be info, warning or debug.")
+            end
+        end
     end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2447, "DBM-SanctumOfDomination", nil, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220205042222")
+mod:SetRevision("20220809233017")
 mod:SetCreatureID(175730)
 mod:SetEncounterID(2431)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -398,6 +398,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 357739 then
 		self:SetStage(2)
+		if self:IsFated() then
+			self:AffixEvent(0)
+		end
 		self.vb.addIcon = 8
 		self.vb.realignCount = self.vb.realignCount + 1
 		specWarnRealignFate:Show(self.vb.realignCount)
@@ -454,6 +457,9 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.portentCount = 0
 		if self.vb.realignCount == 1 then--first cast
 			self:SetStage(1)
+			if self:IsFated() then
+				self:AffixEvent(1, 2)
+			end
 			if self:IsMythic() then
 				timerTwistFateCD:Start(11, 1)
 				timerCallofEternityCD:Start(23, 1)
@@ -468,6 +474,9 @@ function mod:SPELL_AURA_REMOVED(args)
 			end
 		else--Second cast
 			self:SetStage(3)
+			if self:IsFated() then
+				self:AffixEvent(1, 3)
+			end
 			if self:IsMythic() then
 				timerCallofEternityCD:Start(13, 1)
 				timerFatedConjunctionCD:Start(18, 1)

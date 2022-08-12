@@ -62,7 +62,6 @@ L["Only Ranking"] = true
 L["Party"] = "파티"
 L["Percent"] = "%"
 L["Player Name"] = true
-L["Profiles"] = "프로필"
 L["Put the keystone from bag automatically."] = "쐐기돌을 자동으로 삽입합니다."
 L["QQ Group"] = true
 L["Quick Keystone"] = "빠른 쐐기돌 사용"

@@ -35,7 +35,11 @@ local function create_enemy_forces_bar(step_index)
   if enemy_forces_bar then
     local prev_step_frame = step_frames[step_index - 1]
     if not enemy_forces_bar.ref_frame or enemy_forces_bar.ref_frame ~= prev_step_frame then
-      enemy_forces_bar:SetPoint("TOPLEFT", prev_step_frame, "BOTTOMLEFT", 0, -5)
+      if addon.c("align_right") then
+        enemy_forces_bar:SetPoint("TOPRIGHT", prev_step_frame, "BOTTOMRIGHT", 0, -5)
+      else 
+        enemy_forces_bar:SetPoint("TOPLEFT", prev_step_frame, "BOTTOMLEFT", 0, -5)
+      end
       enemy_forces_bar.ref_frame = prev_step_frame
     end
 
@@ -45,7 +49,12 @@ local function create_enemy_forces_bar(step_index)
 
   -- frame
   enemy_forces_bar = CreateFrame("STATUSBAR", nil, main.get_frame(), BackdropTemplateMixin and "BackdropTemplate")
-  enemy_forces_bar:SetPoint("TOPLEFT", step_frames[step_index - 1], "BOTTOMLEFT", 0, -5)
+
+  if addon.c("align_right") then
+    enemy_forces_bar:SetPoint("TOPRIGHT", step_frames[step_index - 1], "BOTTOMRIGHT", 0, -5)
+  else 
+    enemy_forces_bar:SetPoint("TOPLEFT", step_frames[step_index - 1], "BOTTOMLEFT", 0, -5)
+  end
 
   enemy_forces_bar.text = enemy_forces_bar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   local font_path, _, font_flags = enemy_forces_bar.text:GetFont()
@@ -93,17 +102,31 @@ local function create_step_frame(step_index)
   -- frame
   local frame = CreateFrame("Frame", nil, main.get_frame())
   if step_index == 1 then
-    frame:SetPoint("TOPLEFT", timer.get_time_3_frame(), "BOTTOMLEFT", 0, -20)
+    if addon.c("align_right") then
+      frame:SetPoint("TOPRIGHT", timer.get_time_3_frame(), "BOTTOMRIGHT", 0, -20)
+    else 
+      frame:SetPoint("TOPLEFT", timer.get_time_3_frame(), "BOTTOMLEFT", 0, -20)
+    end
   else
-    frame:SetPoint("TOPLEFT", step_frames[step_index - 1], "BOTTOMLEFT", 0, -5)
+    if addon.c("align_right") then
+      frame:SetPoint("TOPRIGHT", step_frames[step_index - 1], "BOTTOMRIGHT", 0, -5)
+    else 
+      frame:SetPoint("TOPLEFT", step_frames[step_index - 1], "BOTTOMLEFT", 0, -5)
+    end
   end
 
   -- text
   frame.text = frame:CreateFontString(nil, "BACKGROUND", "GameFontHighlight")
   local font_path, _, font_flags = frame.text:GetFont()
   frame.text:SetFont(font_path, 12, font_flags)
-  frame.text:SetPoint("TOPLEFT")
-  frame.text:SetJustifyH("LEFT")
+
+  if addon.c("align_right") then
+    frame.text:SetPoint("TOPRIGHT")
+    frame.text:SetJustifyH("RIGHT")
+  else 
+    frame.text:SetPoint("TOPLEFT")
+    frame.text:SetJustifyH("LEFT")
+  end
 
   step_frames[step_index] = frame
   return step_frames[step_index]
@@ -184,7 +207,7 @@ local function resolve_time_info(step_index, current_run)
   local best_times = addon.c("best_times")
 
   --- best time per level and zone
-  if addon.c("objective_time_perlevel") then
+  if addon.c("objective_time_perlevel") and not addon.c("objective_time_perrun") then
     local best_time_zone_level = best_times[current_run.current_zone_id][current_run.level_key][step_index]
     local last_best_time_zone_level = current_run.times[step_index .. "last_best_time_zone_level"]
     if not last_best_time_zone_level then
@@ -195,17 +218,27 @@ local function resolve_time_info(step_index, current_run)
       local diff = time - last_best_time_zone_level
       local diff_info = ""
       if diff > 0 then
-        diff_info = ", +" .. main.format_seconds(diff)
+        diff_info = "+" .. main.format_seconds(diff)
       elseif diff < 0 then
-        diff_info = ", -" .. main.format_seconds(diff * -1)
+        diff_info = "-" .. main.format_seconds(diff * -1)
       end
 
-      time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone_level) .. diff_info .. ")"
+      if addon.c("objective_time_delta_only") then
+        if diff_info ~= "" then
+          time_info = time_info .. " (" .. diff_info .. ")"
+        end
+      else
+        if diff_info ~= "" then
+          diff_info = ", " .. diff_info
+        end
+
+        time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone_level) .. diff_info .. ")"
+      end
     end
   end
 
   --- best time per level and zone and affix
-  if addon.c("objective_time_perlevelaffix") then
+  if addon.c("objective_time_perlevelaffix") and not addon.c("objective_time_perrun") then
     local best_time_zone_level_affixes = best_times[current_run.current_zone_id][current_run.level_key .. current_run.affixes_key][step_index]
     local last_best_time_zone_level_affixes = current_run.times[step_index .. "last_best_time_zone_level_affixes"]
     if not last_best_time_zone_level_affixes then
@@ -216,17 +249,27 @@ local function resolve_time_info(step_index, current_run)
       local diff = time - last_best_time_zone_level_affixes
       local diff_info = ""
       if diff > 0 then
-        diff_info = ", +" .. main.format_seconds(diff)
+        diff_info = "+" .. main.format_seconds(diff)
       elseif diff < 0 then
-        diff_info = ", -" .. main.format_seconds(diff * -1)
+        diff_info = "-" .. main.format_seconds(diff * -1)
       end
 
-      time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone_level_affixes) .. diff_info .. ")"
+      if addon.c("objective_time_delta_only") then
+        if diff_info ~= "" then
+          time_info = time_info .. " (" .. diff_info .. ")"
+        end
+      else
+        if diff_info ~= "" then
+          diff_info = ", " .. diff_info
+        end
+
+        time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone_level_affixes) .. diff_info .. ")"
+      end
     end
   end
 
   --- best time per zone
-  if not addon.c("objective_time_perlevelaffix") and not addon.c("objective_time_perlevel") then
+  if not addon.c("objective_time_perlevelaffix") and not addon.c("objective_time_perlevel") and not addon.c("objective_time_perrun") then
     local best_time_zone = best_times[current_run.current_zone_id][step_index]
     local last_best_time_zone = current_run.times[step_index .. "last_best_time_zone"]
     if not last_best_time_zone then
@@ -237,12 +280,67 @@ local function resolve_time_info(step_index, current_run)
       local diff = time - last_best_time_zone
       local diff_info = ""
       if diff > 0 then
-        diff_info = ", +" .. main.format_seconds(diff)
+        diff_info = "+" .. main.format_seconds(diff)
       elseif diff < 0 then
-        diff_info = ", -" .. main.format_seconds(diff * -1)
+        diff_info = "-" .. main.format_seconds(diff * -1)
       end
 
-      time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone) .. diff_info .. ")"
+      if addon.c("objective_time_delta_only") then
+        if diff_info ~= "" then
+          time_info = time_info .. " (" .. diff_info .. ")"
+        end
+      else
+        if diff_info ~= "" then
+          diff_info = ", " .. diff_info
+        end
+
+        time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone) .. diff_info .. ")"
+      end
+    end
+  end
+
+  -- best time per run
+  if addon.c("objective_time_perrun") then
+    local best_runs = addon.c("best_runs")
+
+    if best_runs[current_run.current_map_id] == nil then
+      best_runs[current_run.current_map_id] = {}
+    end
+
+    local best_run = best_runs[current_run.current_map_id][current_run.level_key .. current_run.affixes_key]
+    if best_run == nil then
+      best_run = {
+        elapsed_time = 0,
+        times = {}
+      }
+    end
+
+    local best_run_time = best_run.times[step_index]
+    if not best_run_time then
+      best_run_time = time
+    end
+
+    if best_run_time then
+      local diff = time - best_run_time
+      local diff_info = ""
+      if diff > 0 then
+        diff_info = "+" .. main.format_seconds(diff)
+      elseif diff < 0 then
+        diff_info = "-" .. main.format_seconds(diff * -1)
+        best_run_time = time
+      end
+
+      if addon.c("objective_time_delta_only") then
+        if diff_info ~= "" then
+          time_info = time_info .. " (" .. diff_info .. ")"
+        end
+      else
+        if diff_info ~= "" then
+          diff_info = ", " .. diff_info
+        end
+
+        time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_run_time) .. diff_info .. ")"
+      end
     end
   end
 
@@ -287,9 +385,9 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
       end
     end
 
-    local pull_value_text = " "
+    local pull_value_text = ""
     if pull_enemies > 0 and addon.c("show_pull_values") and not completed then
-      pull_value_text = pull_value_text .. "|c" .. addon.c("color_current_pull")
+      pull_value_text = pull_value_text .. " |c" .. addon.c("color_current_pull")
 
       if addon.c("show_percent_numbers") then
         pull_value_text = pull_value_text .. "+" .. pull_in_percent .. "%"
@@ -303,13 +401,21 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
         end
       end
 
-      pull_value_text = pull_value_text .. "|r "
+      pull_value_text = pull_value_text .. "|r"
+
+      if not addon.c("align_right") then
+        pull_value_text = pull_value_text .. " "
+      end
+    else 
+      if not addon.c("align_right") then
+        pull_value_text = pull_value_text .. " "
+      end
     end
 
     -- resolve text
     local percent_text = ""
     if addon.c("show_percent_numbers") then
-      percent_text = " " .. quantity_percent .. "% "
+      percent_text = " " .. quantity_percent .. "%"
     end
 
     local absolute_number = ""
@@ -331,7 +437,19 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
     end
 
     if completed or not addon.c("show_enemy_forces_bar") then
-      return "-" .. percent_text .. absolute_number .. pull_value_text .. name
+      if completed then
+        if addon.c("align_right") then
+          return name
+        else 
+          return "- " .. name
+        end
+      else
+        if addon.c("align_right") then
+          return name .. percent_text .. absolute_number .. pull_value_text
+        else 
+          return "-" .. percent_text .. absolute_number .. pull_value_text .. name
+        end
+      end
     else
       return percent_text .. absolute_number .. pull_value_text
     end
@@ -339,10 +457,18 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
 
   -- boss
   if completed then
-    cur_value = final_value
+    if addon.c("align_right") then
+      return name
+    else
+      return "- " .. name
+    end
+  else
+    if addon.c("align_right") then
+      return  name .. " " .. cur_value .. "/" .. final_value
+    else
+      return "- " .. cur_value .. "/" .. final_value .. " " .. name
+    end
   end
-
-  return "- " .. cur_value .. "/" .. final_value .. " " .. name
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -372,6 +498,8 @@ local function on_scenario_criteria_update()
   if completed_steps == steps then
     current_run.is_completed = true
     criteria.update()
+
+    main.on_challenge_mode_complete(current_run)
   end
 end
 
@@ -503,7 +631,11 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
 
   -- show frame
   if step_index == 1 then
-    step_frame:SetPoint("TOPLEFT", timer.get_time_3_frame(), "BOTTOMLEFT", 0, -20)
+    if addon.c("align_right") then
+      step_frame:SetPoint("TOPRIGHT", timer.get_time_3_frame(), "BOTTOMRIGHT", 0, -20)
+    else 
+      step_frame:SetPoint("TOPLEFT", timer.get_time_3_frame(), "BOTTOMLEFT", 0, -20)
+    end
   end
 
   step_frame:Show()
@@ -553,6 +685,8 @@ function criteria:enable()
   addon.register_config_listener("objective_time_inchat", on_config_change)
   addon.register_config_listener("objective_time_perlevel", on_config_change)
   addon.register_config_listener("objective_time_perlevelaffix", on_config_change)
+  addon.register_config_listener("objective_time_perrun", on_config_change)
+  addon.register_config_listener("objective_time_delta_only", on_config_change)
   addon.register_config_listener("objective_time", on_config_change)
   addon.register_config_listener("show_percent_numbers", on_config_change)
   addon.register_config_listener("show_absolute_numbers", on_config_change)

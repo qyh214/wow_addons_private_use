@@ -1,7 +1,6 @@
 # <DBM> Pandaria
 
-## [r147](https://github.com/DeadlyBossMods/DBM-MoP/tree/r147) (2022-05-17)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-MoP/compare/r146...r147) [Previous Releases](https://github.com/DeadlyBossMods/DBM-MoP/releases)
+## [r148](https://github.com/DeadlyBossMods/DBM-MoP/tree/r148) (2022-05-31)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-MoP/compare/r147...r148) [Previous Releases](https://github.com/DeadlyBossMods/DBM-MoP/releases)
 
-- Rename Icon auto local globals  
-- update icon methods  
+- toc bump  

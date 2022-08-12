@@ -13,6 +13,8 @@ local CONFIG_VALUES = {
   objective_time = true,
   objective_time_perlevel = false,
   objective_time_perlevelaffix = true,
+  objective_time_perrun = false,
+  objective_time_delta_only = false,
   objective_time_inchat = true,
   show_deathcounter = true,
   progress_tooltip = true,
@@ -29,6 +31,7 @@ local CONFIG_VALUES = {
   show_pridefultimer = true,
   --
   position = {left = -260, top = 220, relative_point = "RIGHT"},
+  align_right = false,
   --
   color_dungeon_name = "FFFFD100",
   color_affixes = "FFFFFFFF",
@@ -61,6 +64,7 @@ local function on_button_click(button)
 
   if button_name == "delete_besttimes" then
     addon.set_config_value("best_times", {})
+    addon.set_config_value("best_runs", {})
   elseif button_name == "delete_npcprogress" then
     addon.set_config_value("npc_progress", {})
     addon.set_config_value("npc_progress_teeming", {})
@@ -150,35 +154,51 @@ local function on_category_refresh(self)
   end
   category_initialized = true
 
-  local name = self:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+  local frame = CreateFrame("ScrollFrame", nil, self, "UIPanelScrollFrameTemplate")
+  frame:SetPoint("TOPLEFT", 3, -4)
+  frame:SetPoint("BOTTOMRIGHT", -27, 4)
+
+  local container = CreateFrame("Frame")
+  frame:SetScrollChild(container)
+  container:SetWidth(InterfaceOptionsFramePanelContainer:GetWidth()-18)
+  container:SetHeight(1) 
+
+  local name = container:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
   local font_path, _, font_flags = name:GetFont()
   name:SetFont(font_path, 16, font_flags)
   name:SetPoint("TOPLEFT", 10, -16)
   name:SetText(addon_name)
 
-  -- checkboxes
-  local checkboxes = {
-    "objective_time",
-    "objective_time_perlevel",
-    "objective_time_perlevelaffix",
-    "objective_time_inchat",
-    "show_deathcounter",
-    "progress_tooltip",
-    "show_percent_numbers",
-    "show_absolute_numbers",
-    "show_pull_values",
-    "show_enemy_forces_bar",
+  -- unlock checkbox
+  local unlock_name = addon.t("config_unlock_frame")
+
+  local tooltip = {}
+  table.insert(tooltip, unlock_name)
+  table.insert(tooltip, "|cFFFFFFFF" .. addon.t("config_desc_unlock_frame"))
+
+  unlock_checkbox = config_gui.create_checkbox("unlock_frame", unlock_name, addon.c(key), function(config_key, checked)
+    main.toggle_frame_movement()
+  end, tooltip, container)
+  
+  unlock_checkbox:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -5)
+  unlock_checkbox.checkbox:SetChecked(main.is_frame_moveable())
+
+  -- general
+  local general = container:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+  local font_path, _, font_flags = general:GetFont()
+  general:SetFont(font_path, 12, font_flags)
+  general:SetPoint("TOPLEFT", unlock_checkbox, "BOTTOMLEFT", 0, -10)
+  general:SetText(addon.t("config_general"))
+
+  local checkboxes_general = {
     "insert_keystone",
-    "show_affixes_as_text",
-    "show_affixes_as_icons",
-    "hide_default_objectivetracker",
-    -- "show_reapingtimer"
-    -- "show_pridefultimer",
+    "progress_tooltip",
+    "objective_time_inchat",
   }
 
-  local checkboxes_frames = {}
-  local checkboxes_frames_bykey = {}
-  for i, key in ipairs(checkboxes) do
+  local checkboxes_general_frames = {}
+  local checkboxes_general_frames_bykey = {}
+  for i, key in ipairs(checkboxes_general) do
     local config_name = addon.t("config_" .. key)
 
     local tooltip = {}
@@ -191,74 +211,226 @@ local function on_category_refresh(self)
         main.show_demo()
       end
 
-      if config_key == "objective_time_perlevel" and checked and addon.c("objective_time_perlevelaffix") then
-        addon.set_config_value("objective_time_perlevelaffix", false)
-        checkboxes_frames_bykey["objective_time_perlevelaffix"].checkbox:SetChecked(false)
-      end
-
-      if config_key == "objective_time_perlevelaffix" and checked and addon.c("objective_time_perlevel") then
-        addon.set_config_value("objective_time_perlevel", false)
-        checkboxes_frames_bykey["objective_time_perlevel"].checkbox:SetChecked(false)
-      end
-
-      if config_key == "show_percent_numbers" and not checked and not addon.c("show_absolute_numbers") then
-        addon.set_config_value("show_absolute_numbers", true)
-        checkboxes_frames_bykey["show_absolute_numbers"].checkbox:SetChecked(true)
-      end
-
-      if config_key == "show_absolute_numbers" and not checked and not addon.c("show_percent_numbers") then
-        addon.set_config_value("show_percent_numbers", true)
-        checkboxes_frames_bykey["show_percent_numbers"].checkbox:SetChecked(true)
-      end
-
       addon.set_config_value(config_key, checked)
-    end, tooltip, self)
+    end, tooltip, container)
+
     if i == 1 then
-      checkbox:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -5)
+      checkbox:SetPoint("TOPLEFT", general, "BOTTOMLEFT", 0, -5)
     else
-      checkbox:SetPoint("TOPLEFT", checkboxes_frames[i - 1], "BOTTOMLEFT", 0, 0)
+      checkbox:SetPoint("TOPLEFT", checkboxes_general_frames[i - 1], "BOTTOMLEFT", 0, 0)
     end
 
-    checkboxes_frames[i] = checkbox
-    checkboxes_frames_bykey[key] = checkbox
+    checkboxes_general_frames[i] = checkbox
+    checkboxes_general_frames_bykey[key] = checkbox
   end
 
-  -- scale slider
+
+  -- position
+  local position = container:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+  local font_path, _, font_flags = position:GetFont()
+  position:SetFont(font_path, 12, font_flags)
+  position:SetPoint("TOPLEFT", checkboxes_general_frames[#checkboxes_general_frames], "BOTTOMLEFT", 0, -10)
+  position:SetText(addon.t("config_position"))
+
+  local checkboxes_position = {
+    "hide_default_objectivetracker",
+    "align_right"
+  }
+
+  local checkboxes_position_frames = {}
+  local checkboxes_position_frames_bykey = {}
+  for i, key in ipairs(checkboxes_position) do
+    local config_name = addon.t("config_" .. key)
+
+    local tooltip = {}
+    table.insert(tooltip, config_name)
+    table.insert(tooltip, "|cFFFFFFFF" .. addon.t("config_desc_" .. key))
+
+    local checkbox = config_gui.create_checkbox(key, config_name, addon.c(key), function(config_key, checked)
+      local current_run = main.get_current_run()
+      if current_run and current_run.is_completed then
+        main.show_demo()
+      end
+      addon.set_config_value(config_key, checked)
+
+      if config_key == "align_right" then
+        ReloadUI()
+      end
+    end, tooltip, container)
+
+    if i == 1 then
+      checkbox:SetPoint("TOPLEFT", position, "BOTTOMLEFT", 0, -5)
+    else
+      checkbox:SetPoint("TOPLEFT", checkboxes_position_frames[i - 1], "BOTTOMLEFT", 0, 0)
+    end
+
+    checkboxes_position_frames[i] = checkbox
+    checkboxes_position_frames_bykey[key] = checkbox
+  end
+
+  -- - scale slider
   local slider_tooltip = {}
   table.insert(slider_tooltip, addon.t("config_scale"))
   table.insert(slider_tooltip, "|cFFFFFFFF" .. addon.t("config_desc_scale"))
 
   local slider = config_gui.create_slider(addon.t("config_scale"), function(val)
     addon.set_config_value("scale", val)
-  end, 0.5, 3, 0.1, addon.c("scale"), slider_tooltip, self)
-  slider:SetPoint("TOPLEFT", checkboxes_frames[#checkboxes_frames], "BOTTOMLEFT", 0, -10)
+  end, 0.5, 3, 0.1, addon.c("scale"), slider_tooltip, container)
 
-  -- buttons
-  local buttons = {"reset_scale"}
+  slider:SetPoint("TOPLEFT", checkboxes_position_frames[#checkboxes_position_frames], "BOTTOMLEFT", 0, -10)
 
-  local buttons_frames = {}
-  for i, key in ipairs(buttons) do
-    local button_name = addon.t("config_" .. key)
+  local scale_reset_button_name = addon.t("config_reset_scale")
 
-    local tooltip = {}
-    table.insert(tooltip, button_name)
-    table.insert(tooltip, "|cFFFFFFFF" .. addon.t("config_desc_" .. key))
+  local tooltip = {}
+  table.insert(tooltip, scale_reset_button_name)
+  table.insert(tooltip, "|cFFFFFFFF" .. addon.t("config_desc_reset_scale"))
 
-    local button = config_gui.create_button(key, button_name, on_button_click, tooltip, self)
-    if i == 1 then
-      button:SetPoint("TOPLEFT", slider, "BOTTOMLEFT", 0, -3)
-    else
-      button:SetPoint("TOPLEFT", buttons_frames[i - 1], "BOTTOMLEFT", 0, -3)
+  local scale_reset_button = config_gui.create_button("reset_scale", scale_reset_button_name, on_button_click, tooltip, container)
+  scale_reset_button:SetPoint("TOPLEFT", slider, "BOTTOMLEFT", 0, -3)
+  scale_reset_button:SetWidth(scale_reset_button.Text:GetStringWidth() + 30)
+
+  -- data
+  local data = container:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+  local font_path, _, font_flags = data:GetFont()
+  data:SetFont(font_path, 12, font_flags)
+  data:SetPoint("TOPLEFT", scale_reset_button, "BOTTOMLEFT", 0, -10)
+  data:SetText(addon.t("config_data"))
+
+  local checkboxes_data = {
+    "objective_time",
+    "objective_time_perlevel",
+    "objective_time_perlevelaffix",
+    "objective_time_perrun",
+    "objective_time_delta_only",
+
+    "__separator__",
+
+    "show_pull_values",
+    "show_percent_numbers",
+    "show_absolute_numbers",
+
+    "__separator__",  
+    
+    "show_affixes_as_text",
+    "show_affixes_as_icons",
+    "show_enemy_forces_bar",
+  }
+
+  local checkboxes_data_frames = {}
+  local checkboxes_data_frames_bykey = {}
+  local checkbox_margin_top = 0
+  local i = 0
+  for _, key in ipairs(checkboxes_data) do
+    if key == "__separator__" then
+      checkbox_margin_top = -15
+    else 
+      i = i + 1
+      local config_name = addon.t("config_" .. key)
+
+      local tooltip = {}
+      table.insert(tooltip, config_name)
+      table.insert(tooltip, "|cFFFFFFFF" .. addon.t("config_desc_" .. key))
+
+      local checkbox = config_gui.create_checkbox(key, config_name, addon.c(key), function(config_key, checked)
+        local current_run = main.get_current_run()
+        if current_run and current_run.is_completed then
+          main.show_demo()
+        end
+
+        if config_key == "objective_time_perlevel" and checked then
+          addon.set_config_value("objective_time_perlevelaffix", false)
+          checkboxes_data_frames_bykey["objective_time_perlevelaffix"].checkbox:SetChecked(false)
+
+          addon.set_config_value("objective_time_perrun", false)
+          checkboxes_data_frames_bykey["objective_time_perrun"].checkbox:SetChecked(false)
+        end
+
+        if config_key == "objective_time_perlevelaffix" and checked then
+          addon.set_config_value("objective_time_perlevel", false)
+          checkboxes_data_frames_bykey["objective_time_perlevel"].checkbox:SetChecked(false)
+
+          addon.set_config_value("objective_time_perrun", false)
+          checkboxes_data_frames_bykey["objective_time_perrun"].checkbox:SetChecked(false)
+        end
+
+        if config_key == "objective_time_perrun" and checked then
+          addon.set_config_value("objective_time_perlevel", false)
+          checkboxes_data_frames_bykey["objective_time_perlevel"].checkbox:SetChecked(false)
+
+          addon.set_config_value("objective_time_perlevelaffix", false)
+          checkboxes_data_frames_bykey["objective_time_perlevelaffix"].checkbox:SetChecked(false)
+        end
+
+        if config_key == "show_percent_numbers" and not checked and not addon.c("show_absolute_numbers") then
+          addon.set_config_value("show_absolute_numbers", true)
+          checkboxes_data_frames_bykey["show_absolute_numbers"].checkbox:SetChecked(true)
+        end
+
+        if config_key == "show_absolute_numbers" and not checked and not addon.c("show_percent_numbers") then
+          addon.set_config_value("show_percent_numbers", true)
+          checkboxes_data_frames_bykey["show_percent_numbers"].checkbox:SetChecked(true)
+        end
+
+        addon.set_config_value(config_key, checked)
+      end, tooltip, container)
+
+      if i == 1 then
+        checkbox:SetPoint("TOPLEFT", data, "BOTTOMLEFT", 0, -5)
+      else
+        checkbox:SetPoint("TOPLEFT", checkboxes_data_frames[i - 1], "BOTTOMLEFT", 0, checkbox_margin_top)
+        checkbox_margin_top = 0
+      end
+
+      checkboxes_data_frames[i] = checkbox
+      checkboxes_data_frames_bykey[key] = checkbox
     end
-
-    button:SetPoint("RIGHT", -10, 0)
-
-    buttons_frames[i] = button
   end
 
+  -- infos
+  local infos = container:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+  local font_path, _, font_flags = infos:GetFont()
+  infos:SetFont(font_path, 12, font_flags)
+  infos:SetPoint("TOPLEFT", checkboxes_data_frames[#checkboxes_data_frames], "BOTTOMLEFT", 0, -10)
+  infos:SetText(addon.t("config_information"))
+
+  local checkboxes_infos = {
+    "show_deathcounter",
+  }
+
+  local checkboxes_infos_frames = {}
+  local checkboxes_infos_frames_bykey = {}
+  local checkbox_margin_top = 0
+  local i = 0
+  for i, key in ipairs(checkboxes_infos) do
+    local config_name = addon.t("config_" .. key)
+
+    local tooltip = {}
+    table.insert(tooltip, config_name)
+    table.insert(tooltip, "|cFFFFFFFF" .. addon.t("config_desc_" .. key))
+
+    local checkbox = config_gui.create_checkbox(key, config_name, addon.c(key), function(config_key, checked)
+      local current_run = main.get_current_run()
+      if current_run and current_run.is_completed then
+        main.show_demo()
+      end
+
+      addon.set_config_value(config_key, checked)
+    end, tooltip, container)
+
+    if i == 1 then
+      checkbox:SetPoint("TOPLEFT", infos, "BOTTOMLEFT", 0, -5)
+    else
+      checkbox:SetPoint("TOPLEFT", checkboxes_infos_frames[i - 1], "BOTTOMLEFT", 0, checkbox_margin_top)
+      checkbox_margin_top = 0
+    end
+
+    checkboxes_infos_frames[i] = checkbox
+    checkboxes_infos_frames_bykey[key] = checkbox
+  end
+  
   -- line
-  local line = config_gui.create_line(self)
-  line:SetPoint("TOPLEFT", buttons_frames[#buttons_frames], "BOTTOMLEFT", 0, -3)
+  local line = config_gui.create_line(container)
+  line:SetPoint("TOPLEFT", checkboxes_infos_frames[#checkboxes_infos_frames], "BOTTOMLEFT", 0, -3)
 
   -- scary buttons
   local scary_buttons = {"delete_besttimes", "delete_npcprogress"}
@@ -271,7 +443,7 @@ local function on_category_refresh(self)
     table.insert(tooltip, button_name)
     table.insert(tooltip, "|cFFFFFFFF" .. addon.t("config_desc_" .. key))
 
-    local button = config_gui.create_button(key, button_name, on_button_click, tooltip, self)
+    local button = config_gui.create_button(key, button_name, on_button_click, tooltip, container)
     if i == 1 then
       button:SetPoint("TOPLEFT", line, "BOTTOMLEFT", 0, -3)
     else
@@ -282,20 +454,6 @@ local function on_category_refresh(self)
 
     scary_buttons_frames[i] = button
   end
-
-  -- unlock checkbox
-  local unlock_name = addon.t("config_unlock_frame")
-
-  local tooltip = {}
-  table.insert(tooltip, unlock_name)
-  table.insert(tooltip, "|cFFFFFFFF" .. addon.t("config_desc_unlock_frame"))
-
-  unlock_checkbox = config_gui.create_checkbox("unlock_frame", unlock_name, addon.c(key), function(config_key, checked)
-    main.toggle_frame_movement()
-  end, tooltip, self)
-
-  unlock_checkbox:SetPoint("TOPRIGHT", self, "TOPRIGHT", -10, -10)
-  unlock_checkbox.checkbox:SetChecked(main.is_frame_moveable())
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -466,6 +624,10 @@ local function on_slash_command(msg)
     frame:SetHeight(100)
 
     local data = ""
+
+    data = data .. "BEST RUNS\n"
+    local best_runs = addon.c("best_runs")
+    data = print_debug_table(data, best_runs)
 
     data = data .. "BEST TIMES\n"
     local best_times = addon.c("best_times")

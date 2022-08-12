@@ -27,6 +27,29 @@ P.announcement = {
             raid = "RAID"
         }
     },
+    dispel = {
+        enable = false,
+        onlyInstance = true,
+        player = {
+            enable = true,
+            text = L["I dispelled %target%'s %target_spell%!"],
+            channel = {
+                solo = "NONE",
+                party = "PARTY",
+                instance = "INSTANCE_CHAT",
+                raid = "RAID"
+            }
+        },
+        others = {
+            enable = false,
+            text = L["%player% dispelled %target%'s %target_spell%!"],
+            channel = {
+                party = "EMOTE",
+                instance = "NONE",
+                raid = "NONE"
+            }
+        }
+    },
     interrupt = {
         enable = true,
         onlyInstance = true,
@@ -281,6 +304,10 @@ P.combat = {
         backdrop = true,
         backdropSpacing = 3,
         buttonSize = 30,
+        buttonBackdrop = true,
+        buttonAnimation = true,
+        buttonAnimationDuration = 0.2,
+        buttonAnimationScale = 1.33,
         spacing = 4,
         orientation = "HORIZONTAL",
         modifier = "shift",
@@ -291,6 +318,23 @@ P.combat = {
     },
     quickKeystone = {
         enable = true
+    },
+    covenantHelper = {
+        enable = true,
+        replaceSpells = {
+            enable = false
+        },
+        soulbind = {
+            autoActivate = true,
+            showReminder = true,
+            remindText = {
+                name = E.db.general.font,
+                size = 26,
+                style = "OUTLINE",
+                xOffset = 0,
+                yOffset = 0
+            }
+        }
     }
 }
 

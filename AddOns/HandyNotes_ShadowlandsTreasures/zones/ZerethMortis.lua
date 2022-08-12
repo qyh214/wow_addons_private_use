@@ -1625,6 +1625,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         npc=183747,
         quest=65584,
         criteria=52983,
+        vignette=4967,
         loot={
             189901, -- Vitiane's Defiled Vestment
             189922, -- Cowl of Shameful Proliferation
@@ -1654,6 +1655,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         npc=183764,
         quest=65251,
         criteria=53044,
+        vignette=4990,
         loot={
             189902, -- Hapless Traveler's Treads
             189924, -- Buzzing Predator's Legs
@@ -1673,9 +1675,9 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
         achievement=15392, criteria=true,
         atlas="VignetteKillElite", scale=1.2,
         quest={
-            65585, -- Iska, Outrider of Ruin, criteria 52992 (mount Rhuv, 65706)
-            65586, -- High Reaver Damaris, criteria 52993 (mount Edra, 65558)
-            65587, -- Reanimatrox Marzan, criteria 52994 (mount Phalangax, 65707)
+            65585, -- Iska, Outrider of Ruin, criteria 52992 (mount Rhuv, 65706), vignette 4918
+            65586, -- High Reaver Damaris, criteria 52993 (mount Edra, 65558), vignette 4951
+            65587, -- Reanimatrox Marzan, criteria 52994 (mount Phalangax, 65707), vignette 4952
             all=true,
         },
         note="One of these rares is here each day",

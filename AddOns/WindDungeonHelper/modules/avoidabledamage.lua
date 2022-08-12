@@ -251,24 +251,19 @@ local MistakeData = {
             spell = 343520
         },
         {
-            -- 逞凶鬥狠 (第一賽季)
-            type = MISTAKE.SPELL_DAMAGE,
-            spell = 342494
-        },
-        {
-            -- 懷恨幽影 (惡意詞綴)
+            -- 懷恨幽影
             type = MISTAKE.MELEE,
             npc = 174773
         },
         {
-            -- 強力猛擊 (厄拆解者)
-            type = MISTAKE.SPELL_DAMAGE,
-            spell = 366288
+            -- 夢魘 (S4 納斯雷茲姆滲透者)
+            type = MISTAKE.AURA,
+            aura = 373391
         },
         {
-            -- 融合光束 (維攔截者)
+            -- 腐屍蟲群 (S4 納斯雷茲姆滲透者)
             type = MISTAKE.SPELL_DAMAGE,
-            spell = 366409
+            spell = 373429
         }
     },
     ["Tazavesh: Streets of Wonder"] = {
@@ -437,8 +432,7 @@ local MistakeData = {
         {
             -- 無限吐息
             type = MISTAKE.SPELL_DAMAGE,
-            spell = 347149,
-            playerIsNotTank = true -- 朝向是否需要坦克調整?
+            spell = 347149
         },
         {
             -- 鉤尾掃擊
@@ -1175,6 +1169,537 @@ local MistakeData = {
             type = MISTAKE.SPELL_DAMAGE,
             spell = 330135
         }
+    },
+    ["Operation: Mechagon - Junkyard"] = {
+        -- 小怪
+        {
+            -- 螺旋碎塊 (故障的廢料機器人)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 294890 -- TODO: 到底是哪個?
+        },
+        {
+            -- 螺旋碎塊 (故障的廢料機器人)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 300159
+        },
+        {
+            -- 自毀程序 (故障的廢料機器人)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 300129
+        },
+        {
+            -- 急速射擊 (機械岡騎兵)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 301667
+        },
+        {
+            -- B.O.R.K (廢料獵犬)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 299475
+        },
+        {
+            -- 廢料爆炸 (活塞頭技師)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 299535
+        },
+        {
+            -- 超U質模組：廢料火砲 (武裝爬行蛛)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 300188
+        },
+        {
+            -- 震懾波 (廢骨惡霸)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 300427
+        },
+        {
+            -- 爆炸 (廢骨垃圾投擲者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 300561
+        },
+        {
+            -- 黏液波 (軟泥元素)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 300816
+        },
+        -- 勾巴馬克王
+        {
+            -- 土崩石塌
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 297283
+        },
+        -- 髒克
+        {
+            -- 劇毒波
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 297834
+        },
+        {
+            -- 結合
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 297835
+        },
+        {
+            -- 燃盡
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 297985
+        },
+        -- 崔克西和奈洛
+        {
+            -- 燃盡
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 298571
+        },
+        {
+            -- 電力懸浮
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 298849
+        },
+        {
+            -- 螺栓破擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 298940
+        },
+        {
+            -- 油門踩到底
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 299164
+        },
+        {
+            -- 劇烈電擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 302681
+        },
+        -- HK-8型空中壓制單位
+        {
+            -- 火砲轟擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 295536
+        },
+        {
+            -- 排氣口爆發
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 296150
+        },
+        {
+            -- 自體毀滅
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 296522
+        },
+        {
+            -- 靜電迸發
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 302384
+        }
+    },
+    ["Operation: Mechagon - Workshop"] = {
+        -- 小怪
+        {
+            -- 高殺傷性松鼠 (高殺傷性松鼠)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 293861
+        },
+        {
+            -- 音波脈衝 (砲轟機器人X-80型)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 293986
+        },
+        {
+            -- 發射高爆性火箭 (砲轟機器人X-80型)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 294015
+        },
+        {
+            -- 電容器釋電 (砲轟機器人X-80型)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 295168
+        },
+        {
+            -- 火箭彈幕 (火箭機兵)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 294128
+        },
+        {
+            -- 熔爐火焰 (傳送帶)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 301299
+        },
+        {
+            -- 處理廢料 (廢棄物處理器)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 294291
+        },
+        {
+            -- 強力鑽刺 (廢棄物處理器)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 294324
+        },
+        -- 暴力機兵
+        {
+            -- 電鋸
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 282945
+        },
+        {
+            -- 極限衝刺
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 283422
+        },
+        {
+            -- 迴旋刀刃
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 285020
+        },
+        {
+            -- 設置詭雷
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 285344
+        },
+        -- K.U.-J.0.機械犬
+        {
+            -- 空投
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 291930
+        },
+        {
+            -- 噴射烈焰
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 291946
+        },
+        {
+            -- 垃圾炸彈
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 291953
+        },
+        -- 機械工花園
+        {
+            -- 混-亂-榴彈
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 285454
+        },
+        {
+            -- 自我修剪樹籬
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 294954
+        },
+        -- 機械岡國王
+        {
+            -- 校準
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 291856
+        },
+        {
+            -- 電漿球
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 291915
+        }
+    },
+    ["Return to Karazhan: Lower"] = {
+        -- 小怪
+        {
+            -- 哥布林龍槍 (魅影賓客)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 21910
+        },
+        {
+            -- 琅琅詩詞 (鬼魅候補演員)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 227917
+        },
+        {
+            -- 勁爆終曲 (鬼魅候補演員)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 227925
+        },
+        {
+            -- 閃光 (骷髏接待員)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 227966
+        },
+        {
+            -- 閃光 (骷髏接待員)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 227977
+        },
+        {
+            -- 乾坤一擲 (鬼魅慈善家)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 228001
+        },
+        {
+            -- 衝鋒 (鬼靈戰騎)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 228603
+        },
+        {
+            -- 秘法爆發 (秘法看守者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 238606
+        },
+        {
+            -- 盾牌潰擊 (魅影守衛)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 241774
+        },
+        -- 歌劇大廳: 西荒故事
+        {
+            -- 烈焰掃腿
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 227568
+        },
+        {
+            -- 洗淨一切
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 227799
+        },
+        -- 歌劇大廳: 美女與野獸
+        {
+            -- 殘羹
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 228019
+        },
+        {
+            -- 兇猛除塵
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 228215
+        },
+        -- 獵人阿圖曼
+        {
+            -- 苦難共享
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 228852
+        },
+        {
+            -- 舉踏
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 227339
+        },
+        {
+            -- 鬼騎衝鋒
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 227645
+        },
+        -- 摩洛斯
+        {
+            -- 喪志打擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 227672
+        }
+    },
+    ["Return to Karazhan: Upper"] = {
+        -- 小怪
+        {
+            -- 騎士出動 (騎士)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 229298
+        },
+        {
+            -- 騎士出動 (騎士)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 229563
+        },
+        {
+            -- 皇后出動 (皇后)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 229384
+        },
+        {
+            -- 皇家斬擊 (國王)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 229427
+        },
+        {
+            -- 主教出動 (主教)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 229559
+        },
+        {
+            -- 城堡出動 (城堡)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 229568
+        },
+        {
+            -- 燒灼方格 (憤怒守衛烈焰使者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 229988
+        },
+        {
+            -- 不穩定的能量 (受損的魔像)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 242894
+        },
+        -- 館長
+        {
+            -- 能量釋放
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 227285
+        },
+        {
+            -- 能量釋放
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 227465
+        },
+        -- 麥迪文之影
+        {
+            -- 不絕寒冬
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 227806
+        },
+        -- 法力吞噬者
+        {
+            -- 秘法炸彈
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 227620
+        },
+        -- 『監視者』維茲亞頓
+        {
+            -- 崩解
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 229151
+        },
+        {
+            -- 爆裂黑影
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 229161
+        },
+        {
+            -- 魔化能量光束
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 229248
+        },
+        {
+            -- 轟炸
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 229285
+        }
+    },
+    ["Iron Docks"] = {
+        -- [1] 『血肉撕裂者』諾加爾
+        {
+            -- 燃燒箭
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 164632
+        },
+        {
+            -- 倒鉤箭雨
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 164648
+        },
+        -- [2] 恐軌執行者
+        {
+            -- 撕碎肌腱
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 163276
+        },
+        {
+            -- 熔岩掃擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 165152
+        },
+        -- [3] 歐席爾
+        {
+            --  原始突襲
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 161256
+        },
+        -- [4] 史庫洛克
+        {
+            -- 急速射擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 168348,
+            noPlayerDebuff = 168398
+        },
+        {
+            -- 火砲彈幕
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 168390
+        }
+    },
+    ["Grimrail Depot"] = {
+        -- 小怪
+        {
+            -- 黑石炸彈 (恐軌投彈手)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 164188
+        },
+        {
+            -- 破片射擊 (格羅姆卡槍手)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 156303
+        },
+        {
+            -- 黑石迫擊炮 (格羅姆卡砲手)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 160963
+        },
+        {
+            -- 黑石手榴彈 (格羅姆卡擲彈手)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 161153
+        },
+        {
+            -- 風暴之盾 (格羅姆卡先知)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 166336
+        },
+        {
+            -- 雷獄 (格羅姆卡先知)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 166340
+        },
+        {
+            -- 火舌 (格羅姆卡識燼者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 176033
+        },
+        {
+            -- 火舌 (格羅姆卡識燼者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 176039
+        },
+        {
+            -- 火砲彈幕 (格羅姆卡砲手)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 176131
+        },
+        -- [1] 火箭光和波爾卡
+        {
+            -- 瘋狂衝刺
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 161089
+        },
+        {
+            -- VX18-B目標殲滅者
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 162513
+        },
+        -- [2] 奈楚格‧雷塔
+        {
+            -- 壓制射擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 161220
+        },
+        {
+            -- 黑石迫擊炮
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 163741
+        },
+        -- [3] 傲天者托芙菈
+        {
+            -- 散射能量
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 161588
+        },
+        {
+            -- 冰凍陷阱
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 162065
+        },
+        {
+            -- 旋轉長矛
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 162057
+        }
     }
 }
 
@@ -1184,6 +1709,30 @@ local MistakeData = {
 
 do
     local MapTable = {
+        [595] = "Iron Docks",
+        [606] = "Grimrail Depot",
+        [607] = "Grimrail Depot",
+        [608] = "Grimrail Depot",
+        [609] = "Grimrail Depot",
+        [809] = "Return to Karazhan: Lower",
+        [810] = "Return to Karazhan: Lower",
+        [811] = "Return to Karazhan: Lower",
+        [812] = "Return to Karazhan: Lower",
+        [813] = "Return to Karazhan: Lower",
+        [814] = "Return to Karazhan: Lower",
+        [815] = "Return to Karazhan: Upper",
+        [816] = "Return to Karazhan: Upper",
+        [817] = "Return to Karazhan: Upper",
+        [818] = "Return to Karazhan: Upper",
+        [819] = "Return to Karazhan: Upper",
+        [820] = "Return to Karazhan: Upper",
+        [821] = "Return to Karazhan: Upper",
+        [822] = "Return to Karazhan: Upper",
+        [1490] = "Operation: Mechagon - Junkyard",
+        [1491] = "Operation: Mechagon - Workshop",
+        [1493] = "Operation: Mechagon - Junkyard",
+        [1494] = "Operation: Mechagon - Workshop",
+        [1497] = "Operation: Mechagon - Workshop",
         [1663] = "Halls of Atonement",
         [1664] = "Halls of Atonement",
         [1665] = "Halls of Atonement",

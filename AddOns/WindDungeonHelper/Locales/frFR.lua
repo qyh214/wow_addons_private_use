@@ -62,7 +62,6 @@ L["Only Ranking"] = true
 L["Party"] = "Groupe"
 L["Percent"] = "Pourcent"
 L["Player Name"] = true
-L["Profiles"] = "Profiles"
 L["Put the keystone from bag automatically."] = "Mettre automatiquement la clé provenant du sac."
 L["QQ Group"] = "le Groupe QQ"
 L["Quick Keystone"] = "Clef rapide"

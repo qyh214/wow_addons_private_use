@@ -88,7 +88,7 @@ ns.conditions.QuestIncomplete = Class(Negated(ns.conditions.QuestComplete))
 ns.conditions.WorldQuestActive = Class{
     __parent = Condition,
     type = 'worldquest',
-    Matched = function(self) return C_TaskQuest.IsActive(self.id) end,
+    Matched = function(self) return C_TaskQuest.IsActive(self.id) or C_QuestLog.IsQuestFlaggedCompleted(self.id) end,
 }
 
 ns.conditions.Vignette = Class{

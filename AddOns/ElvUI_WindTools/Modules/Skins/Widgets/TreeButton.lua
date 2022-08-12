@@ -13,7 +13,7 @@ function WS:HandleTreeGroup(widget)
         return
     end
 
-    if not E.private.WT.skins.widgets then
+    if not self:IsReady() then
         self:RegisterLazyLoad(widget, "HandleTreeGroup")
         return
     end
@@ -61,17 +61,13 @@ function WS:HandleTreeGroup(widget)
 
                 F.SetVertexColorWithDB(bg, db.backdrop.classColor and W.ClassColor or db.backdrop.color)
 
-                local group, onEnter, onLeave =
+                button.windAnimation =
                     self.Animation(bg, db.backdrop.animationType, db.backdrop.animationDuration, db.backdrop.alpha)
-                button.windAnimation = {
-                    bg = bg,
-                    group = group,
-                    onEnter = onEnter,
-                    onLeave = onLeave
-                }
 
-                self:SecureHookScript(button, "OnEnter", onEnter)
-                self:SecureHookScript(button, "OnLeave", onLeave)
+                self:SecureHookScript(button, "OnEnter", button.windAnimation.onEnter)
+                self:SecureHookScript(button, "OnLeave", button.windAnimation.onLeave)
+                self:SecureHook(button, "Disable", button.windAnimation.onStatusChange)
+                self:SecureHook(button, "Enable", button.windAnimation.onStatusChange)
 
                 -- Avoid the hook is flushed
                 self:SecureHook(
@@ -80,10 +76,10 @@ function WS:HandleTreeGroup(widget)
                     function(frame, scriptType)
                         if scriptType == "OnEnter" then
                             self:Unhook(frame, "OnEnter")
-                            self:SecureHookScript(frame, "OnEnter", onEnter)
+                            self:SecureHookScript(frame, "OnEnter", button.windAnimation.onEnter)
                         elseif scriptType == "OnLeave" then
                             self:Unhook(frame, "OnLeave")
-                            self:SecureHookScript(frame, "OnLeave", onLeave)
+                            self:SecureHookScript(frame, "OnLeave", button.windAnimation.onLeave)
                         end
                     end
                 )

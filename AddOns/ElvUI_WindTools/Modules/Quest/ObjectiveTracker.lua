@@ -180,7 +180,12 @@ function OT:ChangeQuestHeaderStyle()
             F.SetFontWithDB(modules.Header.Text, self.db.header)
             modules.Header.Text:SetShadowColor(0, 0, 0, 0)
             modules.Header.Text.SetShadowColor = E.noop
-            modules.Header.Text:SetTextColor(self.db.header.color.r, self.db.header.color.g, self.db.header.color.b)
+
+            local r = self.db.header.classColor and W.ClassColor.r or self.db.header.color.r
+            local g = self.db.header.classColor and W.ClassColor.g or self.db.header.color.g
+            local b = self.db.header.classColor and W.ClassColor.b or self.db.header.color.b
+
+            modules.Header.Text:SetTextColor(r, g, b)
             if self.db.header.shortHeader then
                 modules.Header.Text:SetText(self:ShortTitle(modules.Header.Text:GetText()))
             end
@@ -213,7 +218,7 @@ function OT:HandleInfoText(text)
         if dash.SetText then
             F.SetFontWithDB(dash, self.db.info)
         end
-        if line.Check and line.Check:IsShown() or line.state and line.state == "COMPLETED" then
+        if line.Check and line.Check:IsShown() or line.state and line.state == "COMPLETED" or line.dashStyle == 2 then
             dash:Hide()
         else
             dash:Show()
@@ -299,6 +304,42 @@ function OT:UpdateTextWidth()
     end
 end
 
+function OT:UpdateBackdrop()
+    if not _G.ObjectiveTrackerBlocksFrame then
+        return
+    end
+
+    local db = self.db.backdrop
+    local backdrop = _G.ObjectiveTrackerBlocksFrame.backdrop
+
+    if not db.enable then
+        if backdrop then
+            backdrop:Hide()
+        end
+        return
+    end
+
+    if not backdrop then
+        if self.db.backdrop.enable then
+            _G.ObjectiveTrackerBlocksFrame:CreateBackdrop()
+            backdrop = _G.ObjectiveTrackerBlocksFrame.backdrop
+            S:CreateShadow(backdrop)
+        end
+    end
+
+    backdrop:Show()
+    backdrop:SetTemplate(db.transparent and "Transparent")
+    backdrop:ClearAllPoints()
+    backdrop:SetPoint("TOPLEFT", _G.ObjectiveTrackerBlocksFrame, "TOPLEFT", db.topLeftOffsetX - 30, db.topLeftOffsetY + 10)
+    backdrop:SetPoint(
+        "BOTTOMRIGHT",
+        _G.ObjectiveTrackerBlocksFrame,
+        "BOTTOMRIGHT",
+        db.bottomRightOffsetX + 10,
+        db.bottomRightOffsetY - 10
+    )
+end
+
 function OT:Initialize()
     self.db = E.private.WT.quest.objectiveTracker
     if not self.db.enable then
@@ -306,6 +347,7 @@ function OT:Initialize()
     end
 
     self:UpdateTextWidth()
+    self:UpdateBackdrop()
 
     if not self.initialized then
         local trackerModules = {

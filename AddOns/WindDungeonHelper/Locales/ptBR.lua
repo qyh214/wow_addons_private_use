@@ -62,7 +62,6 @@ L["Only Ranking"] = true
 L["Party"] = true
 L["Percent"] = "Porcentagem"
 L["Player Name"] = true
-L["Profiles"] = true
 L["Put the keystone from bag automatically."] = true
 L["QQ Group"] = true
 L["Quick Keystone"] = true

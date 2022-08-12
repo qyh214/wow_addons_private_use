@@ -19,22 +19,22 @@ local GetNumAddOns = GetNumAddOns
 local C_CVar_SetCVar = C_CVar.SetCVar
 local C_UI_Reload = C_UI.Reload
 
-local function AddCommand(name, keys, func)
-    if not _G.SlashCmdList[name] then
-        _G.SlashCmdList[name] = func
+function W:AddCommand(name, keys, func)
+    if not _G.SlashCmdList["WINDTOOLS_" .. name] then
+        _G.SlashCmdList["WINDTOOLS_" .. name] = func
 
         if type(keys) == "table" then
             for i, key in next, keys do
                 if strsub(key, 1, 1) ~= "/" then
                     key = "/" .. key
                 end
-                _G["SLASH_" .. name .. i] = key
+                _G["SLASH_WINDTOOLS_" .. name .. i] = key
             end
         else
             if strsub(keys, 1, 1) ~= "/" then
                 keys = "/" .. keys
             end
-            _G["SLASH_" .. name .. "1"] = keys
+            _G["SLASH_WINDTOOLS_" .. name .. "1"] = keys
         end
     end
 end
@@ -49,8 +49,8 @@ do
         ["BugSack"] = true
     }
 
-    AddCommand(
-        "WINDTOOLS_ERROR",
+    W:AddCommand(
+        "ERROR",
         "/wtdebug",
         function(msg)
             local switch = strlower(msg)
@@ -97,7 +97,7 @@ do
     function W.PrintDebugEnviromentTip()
         F.PrintGradientLine()
         F.Print(L["Debug Enviroment"])
-        print(L["You can use |cff00ff00/wtdebug off|r command to exit debug mode."])
+        print(L["You can use |cff00d1b2/wtdebug off|r command to exit debug mode."])
         print(format(L["After you stop debuging, %s will reenable the addons automatically."], W.Title))
         F.PrintGradientLine()
     end

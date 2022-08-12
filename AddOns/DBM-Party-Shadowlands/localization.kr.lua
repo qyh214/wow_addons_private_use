@@ -30,7 +30,7 @@ local L
 L = DBM:GetModLocalization("NecroticWakeTrash")
 
 L:SetGeneralLocalization({
-	name =	"죽음의 각성 일반몹"
+	name =	"죽음의 상흔 일반몹"
 })
 
 -----------------------
@@ -109,7 +109,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("TirnaScitheTrash")
 
 L:SetGeneralLocalization({
-	name =	"티르나 사이드 일반몹"--Or MOTS Trash?
+	name =	"티르너 사이드의 안개 일반몹"
 })
 
 -----------------------
@@ -297,7 +297,12 @@ L:SetGeneralLocalization({
 -----------------------
 -- The Menagerie --
 -----------------------
---L= DBM:GetModLocalization(2454)
+L= DBM:GetModLocalization(2454)
+
+L:SetMiscLocalization({
+	AchilliteRPTrigger	= "날뛰는 야수 때문에 두려우신가요? 여기 해결책이 있습니다!",
+	VenzaRPTrigger		= "지금이 기회다! 저 도끼는 내 거야!"
+})
 
 -----------------------
 -- Mailroom Mayhem --
@@ -312,7 +317,11 @@ L:SetGeneralLocalization({
 -----------------------
 -- So'azmi --
 -----------------------
---L= DBM:GetModLocalization(2451)
+L= DBM:GetModLocalization(2451)
+
+L:SetMiscLocalization({
+	RPTrigger	= "방해해서 참 미안하게 됐습니다, 소레아. 불편할 때 찾아온 거면 좋겠는데 말이죠."
+})
 
 -----------------------
 -- Hylbrande --

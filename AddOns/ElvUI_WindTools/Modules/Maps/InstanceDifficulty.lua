@@ -21,7 +21,7 @@ function ID:UpdateFrame()
     local norm = format("|cff1eff00%s|r", L["[ABBR] Normal"])
     local hero = format("|cff0070dd%s|r", L["[ABBR] Heroic"])
     local myth = format("|cffa335ee%s|r", L["[ABBR] Mythic"])
-    local lfr = format("|cffff8000s|r", L["[ABBR] Looking for raid"])
+    local lfr = format("|cffff8000%s|r", L["[ABBR] Looking for raid"])
 
     if instanceType == "party" or instanceType == "raid" or instanceType == "scenario" then
         if (difficulty == 1) then -- Normal
@@ -39,7 +39,7 @@ function ID:UpdateFrame()
         elseif difficulty == 7 then -- LFR (Legacy)
             self.frame.text:SetText(lfr)
         elseif difficulty == 8 then -- Mythic Keystone
-            self.frame.text:SetText(format("|cffff0000%s|r", L["[ABBR] Mythic Keystone"]) .. mplusdiff)
+            self.frame.text:SetText(format("|cffff3860%s|r", L["[ABBR] Mythic Keystone"]) .. mplusdiff)
         elseif difficulty == 9 then -- 40 Player
             self.frame.text:SetText("40")
         elseif difficulty == 11 or difficulty == 39 then -- Heroic Scenario / Heroic

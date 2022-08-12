@@ -96,6 +96,7 @@ AddMedia('sound','YankieBangBang.ogg',			'Big Yankie Devil')
 AddMedia('texture','GlowTex',		'ElvUI GlowBorder', 'border')
 AddMedia('texture','NormTex',		'ElvUI Gloss',	'statusbar')
 AddMedia('texture','NormTex2',		'ElvUI Norm',	'statusbar')
+AddMedia('texture','NormTex3',		'ElvUI Norm1',	'statusbar')
 AddMedia('texture','White8x8',		'ElvUI Blank', {'statusbar','background'})
 AddMedia('texture','Minimalist',	true, 'statusbar')
 AddMedia('texture','Melli',			true, 'statusbar')
@@ -209,6 +210,7 @@ AddMedia('logo','Rainbow')
 AddMedia('logo','Hibiscus')
 AddMedia('logo','Gem')
 AddMedia('logo','Beer')
+AddMedia('logo','PalmTree')
 AddMedia('logo','TyroneBiggums')
 AddMedia('logo','SuperBear')
 
@@ -237,12 +239,19 @@ do -- LSM Font Preloader ~Simpy
 		cacheFont(key, data)
 	end
 
-	-- Now lets hook it so we can preload any other AddOns add to LSM
-	hooksecurefunc(LSM, 'Register', function(_, mediatype, key, data)
-		if not mediatype or type(mediatype) ~= 'string' then return end
+	-- this helps fix most of the issues with fonts or textures reverting to default because the addon providing them is loading after ElvUI
+	local callMedia = function(mediaType) E:UpdateMedia(mediaType) end
 
-		if mediatype:lower() == 'font' then
+	-- Now lets hook it so we can preload any other AddOns add to LSM
+	hooksecurefunc(LSM, 'Register', function(_, mediaType, key, data)
+		if not mediaType or type(mediaType) ~= 'string' then return end
+
+		local mtype = mediaType:lower()
+		if mtype == 'font' then
 			cacheFont(key, data)
+			callMedia(mtype)
+		elseif mtype == 'background' or mtype == 'statusbar' then
+			callMedia(mtype)
 		end
 	end)
 end

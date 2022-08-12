@@ -7,8 +7,8 @@ local pairs = pairs
 
 function S:Immersion_ReskinTitleButton(frame)
     for _, button in pairs {frame.TitleButtons:GetChildren()} do
-        if button and not button.windStyle then
-            ES:HandleButton(button, nil, nil, nil, true, "Transparent")
+        if button and not button.__windSkin then
+            self:ESProxy("HandleButton", button, nil, nil, nil, true, "Transparent")
             button.backdrop:ClearAllPoints()
             button.backdrop:SetPoint("TOPLEFT", button, "TOPLEFT", 3, -3)
             button.backdrop:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -10, 3)
@@ -19,7 +19,7 @@ function S:Immersion_ReskinTitleButton(frame)
             button.Overlay:StripTextures()
             button:SetBackdrop(nil)
             F.SetFontOutline(button.Label)
-            button.windStyle = true
+            button.__windSkin = true
         end
     end
 end
@@ -47,7 +47,7 @@ function S:Immersion_ReskinItems()
             break
         end
 
-        if not rButton.windStyle then
+        if not rButton.__windSkin then
             if rButton.NameFrame then
                 rButton.NameFrame:StripTextures()
                 rButton.NameFrame:CreateBackdrop("Transparent")
@@ -55,7 +55,7 @@ function S:Immersion_ReskinItems()
                 rButton.NameFrame.backdrop:SetOutside(rButton.NameFrame, -18, -15)
                 self:CreateBackdropShadow(rButton.NameFrame)
             end
-            rButton.windStyle = true
+            rButton.__windSkin = true
         end
     end
 
@@ -65,7 +65,7 @@ function S:Immersion_ReskinItems()
             break
         end
 
-        if not rButton.windStyle then
+        if not rButton.__windSkin then
             if rButton.NameFrame then
                 rButton.NameFrame:StripTextures()
                 rButton.NameFrame:CreateBackdrop("Transparent")
@@ -73,7 +73,7 @@ function S:Immersion_ReskinItems()
                 rButton.NameFrame.backdrop:SetOutside(rButton.NameFrame, -18, -15)
                 self:CreateBackdropShadow(rButton.NameFrame)
             end
-            rButton.windStyle = true
+            rButton.__windSkin = true
         end
     end
 end
@@ -133,7 +133,7 @@ function S:Immersion()
     F.SetFontOutline(talkBox.TextFrame.Text, nil, 15)
 
     -- Close Button
-    ES:HandleCloseButton(talkBox.MainFrame.CloseButton)
+    self:ESProxy("HandleCloseButton", talkBox.MainFrame.CloseButton)
 
     -- Reputation bar
     local repBar = talkBox.ReputationBar

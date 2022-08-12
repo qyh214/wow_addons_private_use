@@ -1,8 +1,8 @@
-## Interface: 90200
+## Interface: 90205
 ## Title: HandyNotes: Shadowlands Treasures
 ## Notes: Where are the hidden treasures in the Shadowlands?
 ## Author: Kemayo
-## Version: v64
+## Version: v68
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com

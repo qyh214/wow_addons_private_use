@@ -13,6 +13,40 @@ local strlower = strlower
 local type = type
 local wipe = wipe
 
+local currentAnimation = {
+    frame = nil,
+    group = nil,
+    Wipe = function(self)
+        self.frame = nil
+        self.group = nil
+    end,
+    WipeIfMatched = function(self, frame, group)
+        if frame and self.frame == frame or group and self.group == group then
+            self:Wipe()
+        end
+    end,
+    Update = function(self, frame, group)
+        if self.frame and self.group then
+            if self.frame ~= frame or self.group ~= group then
+                self.frame.windAnimation.fire(self.frame, "ANIMATION_LEAVE")
+            end
+        end
+        self.frame = frame
+        self.group = group
+    end
+}
+
+local animationFunctions = {
+    fade = {
+        update = function(self, direction, fromAlpha, toAlpha, duration)
+            self:SetFromAlpha(fromAlpha)
+            self:SetToAlpha(toAlpha)
+            self:SetSmoothing(direction)
+            self:SetDuration(duration)
+        end
+    }
+}
+
 function WS.IsUglyYellow(...)
     local r, g, b = ...
     return abs(r - 1) + abs(g - 0.82) + abs(b) < 0.02
@@ -24,15 +58,15 @@ function WS.Animation(texture, aType, duration, data)
 
     if aType == "fade" then
         local alpha = data
+
         local anim = group:CreateAnimation("Alpha")
         group.anim = anim
 
+        anim.Update = animationFunctions[aType].update
+
         -- Set the default status is waiting to play enter animation
         anim.isEnterMode = true
-        anim:SetFromAlpha(0)
-        anim:SetToAlpha(alpha)
-        anim:SetSmoothing("in")
-        anim:SetDuration(duration)
+        anim:Update("in", 0, alpha, duration)
 
         group:SetScript(
             "OnPlay",
@@ -43,46 +77,87 @@ function WS.Animation(texture, aType, duration, data)
 
         group:SetScript(
             "OnFinished",
-            function()
+            function(self)
                 texture:SetAlpha(anim:GetToAlpha())
+                if not group.anim.isEnterMode then
+                    currentAnimation:WipeIfMatched(nil, self)
+                end
             end
         )
 
-        local restart = function()
-            if group:IsPlaying() then
-                group:Pause()
-                group:Restart()
+        function group:ForcePlay(callBack, ...)
+            if self:IsPlaying() then
+                self:Pause()
+                pcall(callBack, ...)
+                self:Restart()
             else
-                group:Play()
+                pcall(callBack, ...)
+                self:Play()
             end
         end
 
-        local onEnter = function()
-            local remainingProgress = anim.isEnterMode and (1 - anim:GetProgress()) or anim:GetProgress()
-            local remainingDuration = remainingProgress * duration
+        function group:StopInstant()
+            if self:IsPlaying() then
+                self:Stop()
+            end
 
-            anim:SetFromAlpha(alpha * (1 - remainingProgress))
-            anim:SetToAlpha(alpha)
-            anim:SetSmoothing("in")
-            anim:SetDuration(remainingDuration)
-            anim.isEnterMode = true
-            restart()
+            texture:SetAlpha(0)
         end
 
-        local onLeave = function()
-            local remainingProgress = anim.isEnterMode and anim:GetProgress() or (1 - anim:GetProgress())
-            local remainingDuration = remainingProgress * duration
+        local function updateAlphaAnimation(isEnterMode)
+            if isEnterMode then
+                local remainingProgress = anim.isEnterMode and (1 - anim:GetProgress()) or anim:GetProgress()
+                anim:Update("in", alpha * (1 - remainingProgress), alpha, remainingProgress * duration)
+            else
+                local remainingProgress = anim.isEnterMode and anim:GetProgress() or (1 - anim:GetProgress())
+                anim:Update("out", alpha * remainingProgress, 0, remainingProgress * duration)
+            end
 
-            anim:SetFromAlpha(alpha * remainingProgress)
-            anim:SetToAlpha(0)
-            anim:SetSmoothing("out")
-            anim:SetDuration(remainingDuration)
-            anim.isEnterMode = false
-            restart()
+            anim.isEnterMode = isEnterMode
         end
 
-        return group, onEnter, onLeave
+        local resultTable = {}
+        resultTable.bg = texture
+        resultTable.group = group
+
+        function resultTable.onEnter(frame)
+            resultTable.onStatusChange(frame)
+            
+            if not texture:IsShown() then
+                return
+            end
+            group:ForcePlay(updateAlphaAnimation, true)
+            currentAnimation:Update(frame, group)
+        end
+
+        function resultTable.onLeave(frame)
+            if not texture:IsShown() then
+                return
+            end
+            group:ForcePlay(updateAlphaAnimation, false)
+        end
+
+        function resultTable.onStatusChange(frame)
+            if frame.IsEnabled and frame:IsEnabled() then
+                texture:Show()
+            else
+                texture:Hide()
+            end
+        end
+
+        function resultTable.fire(frame, event)
+            if frame.IsEnabled and not frame:IsEnabled() then
+                return group:StopInstant()
+            end
+
+            if event == "ANIMATION_LEAVE" then
+                resultTable.onLeave(frame)
+            end
+        end
+
+        return resultTable
     elseif aType == "scale" then
+    -- TODO: Scale animation
     end
 end
 
@@ -115,9 +190,13 @@ WS:SecureHook(ES, "Ace3_RegisterAsContainer")
 
 WS.LazyLoadTable = {}
 
+function WS:IsReady()
+    return E.private and E.private.WT and E.private.WT.skins and E.private.WT.skins.widgets
+end
+
 function WS:RegisterLazyLoad(frame, func)
     if not frame then
-        F.DebugMessage(WS, "frame is nil.")
+        self:Log("debug", "frame is nil.")
         return
     end
 
@@ -125,7 +204,7 @@ function WS:RegisterLazyLoad(frame, func)
         if self[func] and type(self[func]) == "function" then
             func = self[func]
         else
-            F.DebugMessage(WS, func .. " is not a function.")
+            self:Log("debug", func .. " is not a function.")
             return
         end
     end

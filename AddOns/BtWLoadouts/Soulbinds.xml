@@ -103,7 +103,7 @@
 			<OnHide method="OnHide"/>
 		</Scripts>
 	</Frame>
-	<Button name="BtWLoadoutsSoulbindNodeTemplate" mixin="BtWLoadoutsSoulbindNodeMixin" virtual="true">
+	<Button name="BtWLoadoutsSoulbindNodeTemplate" mixin="BtWLoadoutsSoulbindNodeMixin" registerForClicks="LeftButtonUp,RightButtonUp" virtual="true">
 		<Size x="30" y="30"/>
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -190,7 +190,265 @@
 			<OnLeave method="OnLeave"/>
 		</Scripts>
 	</Button>
-    
+	
+	<Button name="BtWLoadoutsConduitListConduitButtonTemplate" mixin="BtWLoadoutsConduitListConduitButtonMixin" registerForClicks="LeftButtonUp,RightButtonUp" virtual="true">
+		<Size x="242" y="42"/>
+		<Layers>
+			
+			<Layer level="BACKGROUND" textureSubLevel="0">
+				<Texture parentKey="Icon">
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="LEFT" x="22"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+
+			<Layer level="BACKGROUND" textureSubLevel="-1">
+				<Texture atlas="Soulbinds_Collection_Conduit_Shadow" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Icon" y="-4"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			
+			<Layer level="BACKGROUND" textureSubLevel="1">
+				<Texture parentKey="Icon2" parentArray="Hovers" hidden="true" alphaMode="ADD" alpha=".3">
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Icon"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+
+			<Layer level="BACKGROUND" textureSubLevel="2">
+				<Texture parentKey="IconDark" alpha=".8">
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Icon"/>
+					</Anchors>
+					<Color color="BLACK_FONT_COLOR"/>
+				</Texture>
+			</Layer>
+
+			<Layer level="BACKGROUND" textureSubLevel="3">
+				<Texture atlas="Soulbinds_Collection_Conduit_Border_Glass" parentArray="Hovers" hidden="true" alphaMode="ADD" alpha=".3">
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Icon"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+
+			<Layer level="OVERLAY" textureSubLevel="1">
+				<Texture parentKey="IconGlassOverlay" atlas="Soulbinds_Collection_Conduit_Border_Glass" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Icon"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+
+			<Layer level="OVERLAY" textureSubLevel="2">
+				<Texture parentKey="IconOverlay" atlas="Soulbinds_Collection_Conduit_Border" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Icon"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+
+			<Layer level="BACKGROUND" textureSubLevel="2">
+				<Texture parentKey="IconPulse" alphaMode="ADD">
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="LEFT" x="22"/>
+					</Anchors>
+					<Animations>
+						<AnimationGroup parentKey="Anim" inherits="VisibleWhilePlayingAnimGroupTemplate" looping="REPEAT">
+							<Alpha parentKey="FadeIn" duration=".8" order="1" fromAlpha=".2" toAlpha="1"/>
+							<Alpha parentKey="FadeOut" duration=".8" order="2" fromAlpha="1" toAlpha=".2"/>
+						</AnimationGroup>
+					</Animations>
+				</Texture>
+			</Layer>
+
+			<Layer level="OVERLAY" textureSubLevel="3">
+				<Texture parentKey="IconOverlayPulse" atlas="Soulbinds_Collection_Conduit_Border" useAtlasSize="true" alphaMode="ADD">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Icon"/>
+					</Anchors>
+					<Animations>
+						<AnimationGroup parentKey="Anim" inherits="VisibleWhilePlayingAnimGroupTemplate" looping="REPEAT">
+							<Alpha parentKey="FadeIn" duration=".8" order="1" fromAlpha=".2" toAlpha="1"/>
+							<Alpha parentKey="FadeOut" duration=".8" order="2" fromAlpha="1" toAlpha=".2"/>
+						</AnimationGroup>
+					</Animations>
+				</Texture>
+			</Layer>
+			
+			<Layer level="OVERLAY" textureSubLevel="3">
+				<Texture parentKey="IconOverlay2" atlas="Soulbinds_Collection_Conduit_Border" parentArray="Hovers" hidden="true" alphaMode="ADD" alpha=".3">
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Icon"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+
+			<Layer level="OVERLAY" textureSubLevel="4">
+				<Texture atlas="Soulbinds_Collection_Entry_Highlight" parentArray="Hovers" hidden="true" alphaMode="ADD"/>
+			</Layer>
+			
+			<Layer level="OVERLAY" textureSubLevel="5">
+				<Texture parentKey="PendingBackground" atlas="Soulbinds_Collection_Entry_Selected" hidden="true" alphaMode="ADD"/>
+			</Layer>
+			
+			<Layer level="OVERLAY" textureSubLevel="6">
+				<Texture parentKey="IconOverlayDark" atlas="Soulbinds_Collection_Conduit_Border" hidden="true" alpha=".5">
+					<Size x="32" y="32"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Icon"/>
+					</Anchors>
+				</Texture>
+				<FontString parentKey="ConduitName" inherits="SystemFont_Shadow_Med1" justifyH="LEFT">
+					<Size y="30"/>
+				</FontString>
+				<FontString parentKey="ItemLevel" inherits="SystemFont_Shadow_Small" justifyH="LEFT">
+					<Size y="15"/>
+					<Color color="WHITE_FONT_COLOR"/>
+				</FontString>
+				<MaskTexture atlas="Soulbinds_Collection_Conduit_Mask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+					<Size x="30" y="30"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Icon"/>
+					</Anchors>
+					<MaskedTextures>
+						<MaskedTexture childKey="Icon"/>
+						<MaskedTexture childKey="Icon2"/>
+						<MaskedTexture childKey="IconPulse"/>
+						<MaskedTexture childKey="IconDark"/>
+					</MaskedTextures>
+				</MaskTexture>
+			</Layer>
+			
+			<Layer level="OVERLAY" textureSubLevel="4">
+				<Texture parentKey="Pending" atlas="Soulbinds_Collection_Conduit_Pending" useAtlasSize="true" hidden="true">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Icon"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+
+
+		</Layers>
+		<Frames>
+			<Button parentKey="Spec">
+				<Size x="16" y="16"/>
+				<Anchors>
+					<Anchor point="RIGHT" x="-10"/>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture parentKey="Icon">
+							<Size x="16" y="16"/>
+							<Anchors>
+								<Anchor point="CENTER"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+					<Layer level="OVERLAY" >
+						<Texture parentKey="IconOverlay">
+							<Anchors>
+								<Anchor point="CENTER"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnShow method="OnShow"/>
+			<OnHide method="OnHide"/>
+			<OnEvent method="OnEvent"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnClick method="OnClick"/>
+			<OnDragStart method="OnDragStart"/>
+		</Scripts>
+	</Button>
+	<EventFrame name="BtWLoadoutsConduitListSectionTemplate" inherits="ResizeLayoutFrame" mixin="BtWLoadoutsConduitListSectionMixin" virtual="true">
+		<Frames>
+			<Frame parentKey="Spacer">
+				<Size x="1" y="10"/>
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+				</Anchors>
+			</Frame>
+			<Button parentKey="CategoryButton" mixin="BtWLoadoutsConduitListCategoryButtonMixin">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Spacer" relativePoint="BOTTOMLEFT" x="10"/>
+				</Anchors>
+				<Size x="216" y="23"/>
+				<Frames>
+					<Frame parentKey="Container" setAllPoints="true">
+						<Layers>
+							<Layer level="BACKGROUND" textureSubLevel="1">
+								<Texture atlas="Soulbinds_Collection_CategoryHeader" useAtlasSize="true"/>
+							</Layer>
+							<Layer level="BACKGROUND" textureSubLevel="2">
+								<Texture atlas="Soulbinds_Collection_CategoryHeader" parentArray="Hovers" useAtlasSize="true" hidden="true" alphaMode="ADD" alpha=".3"/>
+							</Layer>
+							<Layer>
+								<Texture parentKey="ExpandableIcon">
+									<Anchors>
+										<Anchor point="LEFT" x="5"/>
+									</Anchors>
+								</Texture>
+								<FontString parentKey="Name" inherits="SystemFont_Shadow_Med1" text="Category" justifyH="LEFT">
+									<Size x="500" y="50"/>
+									<Anchors>
+										<Anchor point="LEFT" relativePoint="RIGHT" relativeKey="$parent.ExpandableIcon" x="5" y="1"/>
+									</Anchors>
+									<Color r="1.0" g=".674" b=".627"/>
+								</FontString>
+								<Texture parentKey="ConduitIcon">
+									<Size x="18" y="22"/>
+									<Anchors>
+										<Anchor point="LEFT" relativePoint="RIGHT" relativeKey="$parent.Name" x="1" y="-1"/>
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnEnter method="OnEnter"/>
+					<OnLeave method="OnLeave"/>
+					<OnMouseDown method="OnMouseDown"/>
+					<OnMouseUp method="OnMouseUp"/>
+				</Scripts>
+			</Button>
+			<Frame parentKey="Container" inherits="ResizeLayoutFrame">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.CategoryButton" relativePoint="BOTTOMLEFT" x="-10" y="-5"/>
+					<Anchor point="TOPRIGHT" relativeKey="$parent.CategoryButton" relativePoint="BOTTOMRIGHT" y="-5"/>
+				</Anchors>
+			</Frame>
+			<Frame parentKey="Spacer">
+				<Size x="1" y="5"/>
+				<Anchors>
+					<Anchor point="TOP" relativeKey="$parent.Container" relativePoint="BOTTOM"/>
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="layoutIndex" value="4" type="number"/>
+				</KeyValues>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+		</Scripts>
+	</EventFrame>
+
     <Frame name="$parentSoulbinds" parentKey="Soulbinds" mixin="BtWLoadoutsSoulbindsMixin" inherits="BtWLoadoutsTabFrameTemplate">
         <KeyValues>
             <KeyValue key="segment" value="soulbinds" type="string"/>
@@ -254,7 +512,7 @@
 			<ScrollFrame parentKey="Scroll" clipChildren="true" inherits="UIPanelScrollFrameCodeTemplate">
 				<Anchors>
                     <Anchor point="TOPLEFT" x="-4" y="-34" />
-                    <Anchor point="BOTTOMRIGHT" x="4" y="0" />
+                    <Anchor point="BOTTOMRIGHT" x="-260" y="0" />
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="scrollBarHideable" value="true" type="boolean"/>
@@ -269,13 +527,46 @@
 				</Frames>
 				<ScrollChild>
 					<Frame>
-						<Size x="577" y="100"/>
+						<Size x="317" y="100"/>
 						<Anchors>
 							<Anchor point="TOPLEFT" x="0" y="0"/>
 						</Anchors>
 					</Frame>
 				</ScrollChild>
 			</ScrollFrame>
+            <Frame parentKey="ClassDropDown" inherits="BtWLoadoutsClassDropDownTemplate">
+                <Anchors>
+                    <Anchor point="TOPRIGHT" x="-18" y="-34" />
+                </Anchors>
+            </Frame>
+            <Frame parentKey="ConduitList" mixin="BtWLoadoutsConduitListMixin">
+                <Size x="260" y="0"/>
+                <Anchors>
+                    <Anchor point="TOPRIGHT" x="-2" y="-34" />
+                    <Anchor point="BOTTOM" x="0" y="0"/>
+                </Anchors>
+                <Frames>
+					<EventFrame parentKey="ScrollBar" inherits="OribosScrollBar" frameStrata="HIGH">
+						<Size x="10" y="343"/>
+						<Anchors>
+							<Anchor point="TOPRIGHT" x="-6" y="-6"/>
+						</Anchors>
+					</EventFrame>
+					<Frame parentKey="ScrollBox" inherits="WowScrollBoxList" frameStrata="MEDIUM">
+						<KeyValues>
+							<KeyValue key="lowerShadow" value="Soulbinds_Collection_Shadow" type="string"/>
+						</KeyValues>
+						<Anchors>
+							<Anchor point="TOPLEFT" y="-26"/>
+							<Anchor point="BOTTOMRIGHT" y="1"/>
+							<Anchor point="RIGHT" relativeKey="$parent.ScrollBar" relativePoint="LEFT" x="-10"/>
+						</Anchors>
+					</Frame>
+                </Frames>
+				<Scripts>
+					<OnLoad method="OnLoad"/>
+				</Scripts>
+            </Frame>
         </Frames>
         <Scripts>
             <OnLoad inherit="prepend" method="OnLoad"/>

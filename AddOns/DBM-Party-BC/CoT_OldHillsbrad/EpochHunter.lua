@@ -1,0 +1,24 @@
+local mod	= DBM:NewMod(540, "DBM-Party-BC", 11, 251)
+local L		= mod:GetLocalizedStrings()
+
+mod:SetRevision("20210922153837")
+mod:SetCreatureID(18096)
+mod:SetEncounterID(1906)
+
+mod:RegisterCombat("combat")
+
+mod:RegisterEventsInCombat(
+	"SPELL_AURA_APPLIED 33834 31914"
+)
+
+local warnSandBreath		= mod:NewSpellAnnounce(31914, 2)
+
+local timerManaDisruption	= mod:NewBuffActiveTimer(15, 33834, nil, nil, nil, 1)
+
+function mod:SPELL_AURA_APPLIED(args)
+	if args.spellId == 33834 then
+		timerManaDisruption:Show()
+	elseif args.spellId == 31914 then
+		warnSandBreath:Show()
+	end
+end

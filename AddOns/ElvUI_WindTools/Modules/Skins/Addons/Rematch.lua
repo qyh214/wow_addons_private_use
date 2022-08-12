@@ -15,7 +15,7 @@ local CollectionsJournal_LoadUI = CollectionsJournal_LoadUI
 local CreateFrame = CreateFrame
 
 local function ReskinIconButton(button)
-    if button and not button.windStyle then
+    if button and not button.__windSkin then
         button:StyleButton(nil, true)
 
         if button.Status then
@@ -45,7 +45,7 @@ local function ReskinIconButton(button)
             button.hover:SetAllPoints(button.Icon)
         end
 
-        button.windStyle = true
+        button.__windSkin = true
     end
 end
 
@@ -53,7 +53,7 @@ local function ReskinCloseButton(button)
     if not button then
         return
     end
-    ES:HandleCloseButton(button)
+    S:ESProxy("HandleCloseButton", button)
     button.Icon = E.noop
     button.SetNormalTexture = E.noop
     button.SetPushedTexture = E.noop
@@ -85,7 +85,7 @@ local function ReskinButton(button)
             region.SetTexture = E.noop
         end
     end
-    ES:HandleButton(button, true)
+    S:ESProxy("HandleButton", button, true)
 end
 
 local function ReskinFilterButton(button)
@@ -107,7 +107,7 @@ local function ReskinEditBox(editBox)
         editBox.SearchIcon:SetTexture(searchIconTex)
     end
 
-    ES:HandleEditBox(editBox)
+    S:ESProxy("HandleEditBox", editBox)
     editBox.backdrop:SetOutside(0, 0)
 end
 
@@ -121,11 +121,11 @@ local function ReskinDropdown(dropdown) -- modified from NDui
         dropdown.Icon:CreateBackdrop()
     end
     local arrow = dropdown:GetChildren()
-    ES:HandleNextPrevButton(arrow, "down")
+    S:ESProxy("HandleNextPrevButton", arrow, "down")
 end
 
 local function ReskinScrollBar(scrollBar)
-    ES:HandleScrollBar(scrollBar)
+    S:ESProxy("HandleScrollBar", scrollBar)
     scrollBar.Thumb.backdrop:ClearAllPoints()
     scrollBar.Thumb.backdrop:Point("TOPLEFT", scrollBar.Thumb, "TOPLEFT", 3, -3)
     scrollBar.Thumb.backdrop:Point("BOTTOMRIGHT", scrollBar.Thumb, "BOTTOMRIGHT", -1, 3)
@@ -197,7 +197,7 @@ local function ReskinCard(card) -- modified from NDui
 end
 
 local function ReskinInset(frame)
-    if not frame or frame.windStyle then
+    if not frame or frame.__windSkin then
         return
     end
 
@@ -205,7 +205,7 @@ local function ReskinInset(frame)
     frame:CreateBackdrop()
     frame.backdrop:SetInside(frame, 2, 2)
     frame.backdrop.Center:SetVertexColor(1, 1, 1, 0.3)
-    frame.windStyle = true
+    frame.__windSkin = true
 end
 
 local function ReskinTooltip(tooltip)
@@ -225,7 +225,7 @@ local function ReskinPetList(list) -- modified from NDui
     end
     for i = 1, #buttons do
         local button = buttons[i]
-        if not button.windStyle then
+        if not button.__windSkin then
             if button.Pet then
                 button.Pet:CreateBackdrop()
 
@@ -260,7 +260,7 @@ local function ReskinPetList(list) -- modified from NDui
                 end
             end
 
-            ES:HandleButton(button)
+            S:ESProxy("HandleButton", button)
             if not button.Pet then
                 button.backdrop:SetInside(button, 1, 1)
             else
@@ -275,7 +275,7 @@ local function ReskinPetList(list) -- modified from NDui
                 button.backdrop:Hide()
             end
 
-            button.windStyle = true
+            button.__windSkin = true
         else
             if button.Back:IsShown() then
                 button.backdrop:Show()
@@ -293,12 +293,12 @@ local function ReskinOptions(list)
     end
     for i = 1, #buttons do
         local button = buttons[i]
-        if not button.windStyle then
-            ES:HandleButton(button)
+        if not button.__windSkin then
+            S:ESProxy("HandleButton", button)
             button.backdrop:SetInside(button, 1, 1)
             button.HeaderBack:StripTextures()
             button.HeaderBack = button.backdrop
-            button.windStyle = true
+            button.__windSkin = true
         end
     end
 end
@@ -307,9 +307,9 @@ local function ReskinTeamList(panel)
     if panel then
         for i = 1, 3 do
             local loadout = panel.Loadouts[i]
-            if loadout and not loadout.windStyle then
+            if loadout and not loadout.__windSkin then
                 loadout:StripTextures()
-                ES:HandleButton(loadout)
+                S:ESProxy("HandleButton", loadout)
                 loadout.backdrop:SetInside(loadout, 2, 2)
                 ReskinIconButton(loadout.Pet.Pet)
                 if loadout.Pet.Pet.Level then
@@ -325,14 +325,14 @@ local function ReskinTeamList(panel)
                     ReskinIconButton(loadout.Abilities[j])
                 end
 
-                loadout.windStyle = true
+                loadout.__windSkin = true
             end
         end
     end
 end
 
 local function ReskinFlyout(frame)
-    if not frame or frame.windStyle then
+    if not frame or frame.__windSkin then
         return
     end
 
@@ -353,7 +353,7 @@ local function ReskinFlyout(frame)
             end
         end
     )
-    frame.windStyle = true
+    frame.__windSkin = true
 end
 
 function S:Rematch_Header()
@@ -617,14 +617,14 @@ function S:Rematch_Footer()
     ReskinButton(_G.RematchBottomPanel.SaveButton)
     ReskinButton(_G.RematchBottomPanel.SaveAsButton)
     ReskinButton(_G.RematchBottomPanel.FindBattleButton)
-    ES:HandleCheckBox(_G.RematchBottomPanel.UseDefault)
+    S:ESProxy("HandleCheckBox", _G.RematchBottomPanel.UseDefault)
 
     hooksecurefunc(
         _G.RematchJournal,
         "SetupUseRematchButton",
         function()
             if _G.UseRematchButton then
-                ES:HandleCheckBox(_G.UseRematchButton)
+                S:ESProxy("HandleCheckBox", _G.UseRematchButton)
             end
         end
     )
@@ -652,7 +652,7 @@ function S:Rematch_Dialog() -- Modified from NDui
     ReskinEditBox(dialog.EditBox)
     dialog.TeamTabIconPicker:StripTextures()
     dialog.TeamTabIconPicker:CreateBackdrop()
-    ES:HandleScrollBar(dialog.TeamTabIconPicker.ScrollFrame.ScrollBar)
+    S:ESProxy("HandleScrollBar", dialog.TeamTabIconPicker.ScrollFrame.ScrollBar)
     hooksecurefunc(
         _G.RematchTeamTabs,
         "UpdateTabIconPickerList",
@@ -663,11 +663,11 @@ function S:Rematch_Dialog() -- Modified from NDui
                 local line = buttons[i]
                 for j = 1, 10 do
                     local button = line.Icons[j]
-                    if button and not button.windStyle then
+                    if button and not button.__windSkin then
                         button:Size(26, 26)
                         button.Icon = button.Texture
                         ReskinIconButton(button)
-                        button.windStyle = true
+                        button.__windSkin = true
                     end
                 end
             end
@@ -675,7 +675,7 @@ function S:Rematch_Dialog() -- Modified from NDui
     )
 
     -- Checkbox
-    ES:HandleCheckBox(dialog.CheckButton)
+    S:ESProxy("HandleCheckBox", dialog.CheckButton)
 
     -- Dropdown
     ReskinDropdown(dialog.SaveAs.Target)
@@ -733,8 +733,8 @@ function S:Rematch_Dialog() -- Modified from NDui
     collection.Chart:StripTextures()
     collection.Chart:CreateBackdrop("Transparent")
     collection.Chart.backdrop:SetInside(collection.Chart, 2, 2)
-    ES:HandleRadioButton(collection.ChartTypesRadioButton)
-    ES:HandleRadioButton(collection.ChartSourcesRadioButton)
+    S:ESProxy("HandleRadioButton", collection.ChartTypesRadioButton)
+    S:ESProxy("HandleRadioButton", collection.ChartSourcesRadioButton)
 end
 
 function S:Rematch_AbilityCard()
@@ -761,7 +761,7 @@ function S:Rematch_PetCard()
     card:CreateBackdrop("Transparent")
     self:CreateBackdropShadow(card)
     ReskinCloseButton(card.CloseButton)
-    ES:HandleNextPrevButton(card.PinButton, "up")
+    S:ESProxy("HandleNextPrevButton", card.PinButton, "up")
     card.PinButton:ClearAllPoints()
     card.PinButton:Point("TOPLEFT", 3, -3)
     ReskinCard(card.Front)
@@ -781,12 +781,12 @@ function S:Rematch_RightTabs()
         "Update",
         function(tabs)
             for _, tab in next, tabs.Tabs do
-                if tab and not tab.windStyle then
+                if tab and not tab.__windSkin then
                     tab.Background:Kill()
                     ReskinIconButton(tab)
                     self:CreateBackdropShadow(tab.Icon)
                     tab:Size(40, 40)
-                    tab.windStyle = true
+                    tab.__windSkin = true
                 end
             end
         end
@@ -915,7 +915,7 @@ function S:Rematch()
     _G.RematchJournal.portrait:Hide()
     _G.RematchJournal:CreateBackdrop()
     self:CreateBackdropShadow(_G.RematchJournal, true)
-    ES:HandleCloseButton(_G.RematchJournal.CloseButton)
+    S:ESProxy("HandleCloseButton", _G.RematchJournal.CloseButton)
 
     -- Main
     self:Rematch_Header()

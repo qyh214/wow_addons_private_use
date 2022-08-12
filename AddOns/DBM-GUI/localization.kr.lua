@@ -15,6 +15,7 @@ L.OTabPlugins	= "핵심 플러그인"
 L.OTabAbout		= "소개"
 
 L.TabCategory_OTHER			= "기타 모드"
+L.TabCategory_AFFIXES		= "어픽스"
 
 L.BossModLoaded 			= "%s 통계"
 L.BossModLoad_now 			= [[보스 모드가 로딩되지 않았습니다.
@@ -82,11 +83,11 @@ L.Editbox_WindowWidth		= "설정 창 너비"
 L.Editbox_WindowHeight		= "설정 창 높이"
 
 L.UIGroupingOptions			= "UI 그룹 설정 (이미 로딩이 된 모드는 UI 재시작을 해야 변경됩니다)"
-L.GroupOptionsBySpell		= "모드 설정 주문별 그룹화 (지원하는 모드만)"
-L.GroupOptionsExcludeIcon	= "주문별 그룹화에서 '공격대 징표 설정' 제외 (이전처럼 관련 설정은 '공격대 징표' 카테고리에 배치됩니다)"
-L.AutoExpandSpellGroups		= "주문별로 그룹화된 설정들 자동으로 펼치기"
---L.ShowSpellDescWhenExpanded	= "그룹화된 설정이 펼쳐진 상태에서도 주문 설명 계속 표시"--Might not be used
-L.NoDescription				= "설명이 없습니다"
+L.GroupOptionsBySpell		= "주문별로 설정 그룹 형성 (지원하는 모드만)"
+L.GroupOptionsExcludeIcon	= "주문별로 형성된 그룹에서 '공격대 징표 설정'은 제외 (이전처럼 관련 설정은 '공격대 징표' 카테고리에 배치됩니다)"
+L.AutoExpandSpellGroups		= "주문별로 그룹이 형성된 설정들을 자동으로 펼치기"
+--L.ShowSpellDescWhenExpanded	= "설정 그룹이 펼쳐진 상태에서도 주문 설명 계속 표시"--Might not be used
+L.NoDescription				= "이 능력에 대한 설명이 없습니다"
 
 -- Panel: Extra Features
 L.Panel_ExtraFeatures		= "기타 기능"
@@ -377,14 +378,15 @@ L.SpamBlockNoShowTgtAnnounce = "대상자 알림 중 타인에게 영향이 없�
 L.SpamBlockNoTrivialSpecWarnSound	= "현재 레벨에 맞는 콘텐츠 이외에는 특수 알림 효과음 재생이나 화면 점멸 효과 사용 안함 (대신 사용자가 선택한 정규 알림 효과음 재생)"
 
 L.Area_SpamFilter_SpecRoleFilters	= "특수 알림 유형 필터 (DBM 알림 내역 조정)"
-L.SpamSpecRoleDispel				= "'해제' 경고 빼기"
-L.SpamSpecRoleInterrupt				= "'차단' 경고 빼기"
-L.SpamSpecRoleDefensive				= "'생존기' 경고 빼기"
-L.SpamSpecRoleTaunt					= "'도발' 경고 빼기"
-L.SpamSpecRoleSoak					= "'바닥 밟기' 경고 빼기"
-L.SpamSpecRoleStack					= "'고중첩' 경고 빼기"
-L.SpamSpecRoleSwitch				= "'대상 변경' &amp; '쫄' 경고 빼기"
-L.SpamSpecRoleGTFO					= "'바닥 피하기' 경고 빼기"
+L.SpamSpecInformationalOnly			= "특수 알림에서 행동 지시 텍스트/음성 알림을 전부 삭제합니다. (UI 재시작 필요) 알림은 여전히 표시되며 음성도 출력되지만 일반적인 사항만 보여주며 직접적인 지시 사항은 없습니다"
+L.SpamSpecRoleDispel				= "'해제' 경고 완전히 빼기 (텍스트와 효과음 전부)"
+L.SpamSpecRoleInterrupt				= "'차단' 경고 빼기 (텍스트와 효과음 전부)"
+L.SpamSpecRoleDefensive				= "'생존기' 경고 빼기 (텍스트와 효과음 전부)"
+L.SpamSpecRoleTaunt					= "'도발' 경고 빼기 (텍스트와 효과음 전부)"
+L.SpamSpecRoleSoak					= "'바닥 밟기' 경고 빼기 (텍스트와 효과음 전부)"
+L.SpamSpecRoleStack					= "'중첩 높음' 경고 빼기 (텍스트와 효과음 전부)"
+L.SpamSpecRoleSwitch				= "'대상 변경' &amp; '쫄 등장' 경고 빼기 (텍스트와 효과음 전부)"
+L.SpamSpecRoleGTFO					= "'바닥 피하기' 경고 빼기 (텍스트와 효과음 전부)"
 
 L.Area_SpamFilter_SpecFeatures		= "특정 특수 알림 기능 켜기/끄기"
 L.SpamBlockNoSpecWarnText	= "특수 알림 텍스트 표시 안함"
@@ -424,10 +426,10 @@ L.FilterInterrupts3			= "주문 시전 몹이 현재 대상/주시 대상이 아
 L.FilterInterrupts4			= "모든 차단 알림 표시하지 않음 (아예 보고 싶지 않을때)"
 L.FilterInterruptNoteName	= "사용자 메모에 자기 이름이 포함되지 않은 경우 차단 가능 주문의 알림 보지 않기"
 L.FilterDispels				= "해제 주문이 쿨타임일땐 해제 알림 보지 않기"
-L.FilterTrashWarnings		= "일반 및 영웅 던전에선 일반몹 알림 보지 않기"
+L.FilterTrashWarnings		= "일반, 영웅, 이전 확장팩 던전에선 일반몹 알림 보지 않기"
 
 L.Area_PullTimer			= "풀링, 휴식, 전투, 사용자 지정 바 관련 필터 설정"
-L.DontShowPTNoID			= "같은 지역에 없는 사용자가 보낸 DBM 풀링 타이머 차단 (지역ID가 포함되지 않은 상태로 전송된 BigWigs 타이머는 절대 차단하지 않음)"
+L.DontShowPTNoID			= "같은 지역에 없는 사용자가 보낸 DBM 풀링 타이머 차단 (지역의 ID가 포함되지 않은 상태로 전송된 BigWigs 타이머는 절대 차단하지 않음)"
 L.DontShowPT				= "풀링/휴식 타이머 표시 안함"
 L.DontShowPTText			= "풀링/휴식 알림 텍스트 표시 안함"
 L.DontShowPTCountdownText	= "풀링 초읽기 숫자 표시 안함"

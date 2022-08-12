@@ -45,16 +45,13 @@ L[ [=[• |cff00ff00Player|r, |cff00ff00Target|r, |cff00ff00Focus|r, and |cff00f
 
 |cffffff00*|r Yellow Unit settings will create clones for each matching unit while this trigger is providing Dynamic Info to the Aura.]=]
 L["10 Man Raid"] = "Рейд на 10 игроков"
---[[Translation missing --]]
-L["10 Player Raid"] = "10 Player Raid"
+L["10 Player Raid"] = "Рейд на 10 игроков"
 L["10 Player Raid (Heroic)"] = "Рейд на 10 игроков (героический)"
 L["10 Player Raid (Normal)"] = "Рейд на 10 игроков (обычный)"
 L["20 Man Raid"] = "Рейд на 20 игроков"
---[[Translation missing --]]
-L["20 Player Raid"] = "20 Player Raid"
+L["20 Player Raid"] = "Рейд на 20 игроков"
 L["25 Man Raid"] = "Рейд на 25 игроков"
---[[Translation missing --]]
-L["25 Player Raid"] = "25 Player Raid"
+L["25 Player Raid"] = "Рейд на 25 игроков"
 L["25 Player Raid (Heroic)"] = "Рейд на 25 игроков (героический)"
 L["25 Player Raid (Normal)"] = "Рейд на 25 игроков (обычный)"
 L["40 Man Raid"] = "Рейд на 40 игроков"
@@ -208,14 +205,10 @@ L["Buru the Gorger"] = "Буру Ненасытный"
 L["Can be used for e.g. checking if \"boss1target\" is the same as \"player\"."] = [=[Используется для проверки того факта, что две единицы - одна и та же сущность, объект.
 Например: выбрав в качестве единицы игрока и указав для данного параметра значение "boss1target", можно определить, являетесь ли вы целью босса.]=]
 L["Cancel"] = "Отмена"
---[[Translation missing --]]
 L[ [=[Cannot hide secure frame in combat lockdown. Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=] ] = [=[Cannot hide secure frame in combat lockdown. Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=]
---[[Translation missing --]]
+https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=] ] = "Невозможно скрыть безопасный кадр в блокировке боя. Дополнительная информация: https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"
 L[ [=[Cannot show secure frame in combat lockdown. Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=] ] = [=[Cannot show secure frame in combat lockdown. Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=]
+https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=] ] = "Невозможно показать безопасный кадр в блокировке боя. Дополнительная информация: https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"
 L["Can't schedule timer with %i, due to a World of Warcraft bug with high computer uptime. (Uptime: %i). Please restart your computer."] = "Невозможно запустить таймер на %i c. из-за ошибки WoW (переполнение), связанной с большим временем непрерывной работы вашего компьютера - %i с. Пожалуйста, перезагрузите компьютер."
 L["Cast"] = "Применение заклинания"
 L["Cast Bar"] = "Полоса применения заклинания"
@@ -275,8 +268,7 @@ L["Cooldown Progress (Slot)"] = "Восстановление (ячейка)"
 L["Cooldown Ready Event"] = "Восстановление завершено"
 L["Cooldown Ready Event (Item)"] = "Восстановление завершено (предмет)"
 L["Cooldown Ready Event (Slot)"] = "Восстановление завершено (ячейка)"
---[[Translation missing --]]
-L["Cooldown Reduction changes the duration of seconds instead of showing the real time seconds."] = "Cooldown Reduction changes the duration of seconds instead of showing the real time seconds."
+L["Cooldown Reduction changes the duration of seconds instead of showing the real time seconds."] = "Сокращение восстановления изменяет продолжительность секунд  вместо отображения секунд реального времени."
 L["Cooldown/Charges/Count"] = "Восстановление / Заряды / Количество"
 L["Could not load WeakAuras Archive, the addon is %s"] = "Не удалось загрузить WeakAuras Archive. Причина - %s"
 L["Count"] = "Счетчик"
@@ -365,6 +357,7 @@ L["Elide"] = "Опускать слова"
 L["Elite"] = "Элитный"
 L["Emote"] = "Эмоция"
 L["Empty"] = "Пустой"
+L["Enables (incorrect) round down of seconds, which was the previous default behaviour."] = "Округление секунд происходит к меньшему целому числу. Это соответствует предыдущему поведению по умолчанию."
 L["Enchant Applied"] = "Чары применены"
 L["Enchant Found"] = "Чары найдены"
 L["Enchant Missing"] = "Чары отсутствуют"
@@ -386,10 +379,8 @@ L["Equipment Slot"] = "Ячейка экипировки"
 L["Equipped"] = "Надето"
 L["Eredar Twins"] = "Эредарские близнецы"
 L["Error"] = "Ошибка"
---[[Translation missing --]]
 L[ [=[Error '%s' created a secure clone. We advise deleting the aura. For more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=] ] = [=[Error '%s' created a secure clone. We advise deleting the aura. For more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=]
+https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=] ] = "Ошибка '%s' создала безопасный клон. Советуем удалить индикацию. Дополнительная информация: https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"
 L["Error Frame"] = "Область вывода ошибок"
 L["ERROR in '%s' unknown or incompatible sub element type '%s'"] = "Ошибка в индикации %s. Внутренний элемент неизвестного или несовместимого типа %s."
 L["Error in aura '%s' in %s. trigger. All States table contains a non table at key: '%s'."] = "Ошибка в триггере %2$s индикации '%1$s'. В таблице всех состояний (allstates) значение с ключом '%3$s' не является таблицей."
@@ -498,8 +489,7 @@ L["Health (%)"] = "Здоровье (%)"
 L["Health Deficit"] = "Потерянное здоровье"
 L["Heigan the Unclean"] = "Хейган Нечестивый"
 L["Height"] = "Высота"
---[[Translation missing --]]
-L["Heroic Party"] = "Heroic Party"
+L["Heroic Party"] = "Группа (героическая)"
 L["Hex Lord Malacrass"] = "Повелитель проклятий Малакрасс"
 L["Hide"] = "Скрыть"
 L["Hide 0 cooldowns"] = "Скрыть 0"
@@ -716,8 +706,7 @@ L["No Profiling information saved."] = "Нет данных профилиров
 L["None"] = "Нет"
 L["Non-player Character"] = "Неигровой персонаж (NPC)"
 L["Normal"] = "Обычный"
---[[Translation missing --]]
-L["Normal Party"] = "Normal Party"
+L["Normal Party"] = "Группа (обычная)"
 L["Not in Group"] = "Не в группе"
 L["Not in Smart Group"] = "Сторонний субъект"
 L["Not on Cooldown"] = "Не перезаряжается"
@@ -910,10 +899,8 @@ L["Screen/Parent Group"] = "Экран / Исходная группа"
 L["Second"] = "Второе"
 L["Second Value of Tooltip Text"] = "Второе значение из текста подсказки"
 L["Seconds"] = "Секунды"
---[[Translation missing --]]
 L[ [=[Secure frame detected. Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=] ] = [=[Secure frame detected. Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=]
+https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames]=] ] = "Обнаружен безопасный кадр. Дополнительная информация: https://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"
 L["Select Frame"] = "Выбрать кадр"
 L["Separator"] = "Разделитель"
 L["Set IDs can be found on websites such as classic.wowhead.com/item-sets"] = "ID комплектов можно найти на ru.classic.wowhead.com/item-sets"
@@ -1065,10 +1052,8 @@ L["Thickness"] = "Толщина"
 L["Third"] = "Третье"
 L["Third Value of Tooltip Text"] = "Третье значение из текста подсказки"
 L["This aura has legacy aura trigger(s), which are no longer supported."] = "Индикация содержит триггеры Аура устаревшего (legacy) типа, который больше не поддерживается."
---[[Translation missing --]]
-L["This aura plays a sound via a condition."] = "This aura plays a sound via a condition."
---[[Translation missing --]]
-L["This aura plays a sound via an action."] = "This aura plays a sound via an action."
+L["This aura plays a sound via a condition."] = "Индикация воспроизводит звук с помощью условия."
+L["This aura plays a sound via an action."] = "Индикация воспроизводит звук с помощью действия."
 L["This aura tried to show a tooltip on a anchoring restricted region"] = "Индикация попыталась показать подсказку при наведении курсора на кадр, имеющий ограничения для крепления."
 L["Threat Percent"] = "Процент угрозы"
 L["Threat Situation"] = "Положение в списке угроз"
@@ -1141,6 +1126,7 @@ L["Up, then Right"] = "Вверх, затем вправо"
 L["Usage:"] = "Доступные команды:"
 L["Use /wa minimap to show the minimap icon again."] = "Используйте команду /wa minimap, чтобы вновь отобразить иконку на миникарте."
 L["Use Custom Color"] = "Использовать свой цвет"
+L["Use Legacy floor rounding"] = "Использовать метод округления Floor"
 L["Use Watched Faction"] = "Использовать фракцию, репутацию с которой вы сейчас отслеживаете"
 L["Vaelastrasz the Corrupt"] = "Валестраз Порочный"
 L["Value"] = "Значение"
@@ -1187,8 +1173,7 @@ L["Writing to the WeakAuras table is not allowed."] = "Запись в табл�
 L["X-Offset"] = "Смещение по X"
 L["Yell"] = "Крик"
 L["Y-Offset"] = "Смещение по Y"
---[[Translation missing --]]
-L["You have new auras ready to be installed!"] = "You have new auras ready to be installed!"
+L["You have new auras ready to be installed!"] = "У вас есть новые ауры, готовые к установке!"
 L["Your next encounter will automatically be profiled."] = "Ваше следующее сражение с боссом будет профилировано."
 L["Your next instance of combat will automatically be profiled."] = "Ваш следующий бой будет профилирован."
 L["Your scheduled automatic profile has been cancelled."] = "Запланированный запуск профилирования был отменен."

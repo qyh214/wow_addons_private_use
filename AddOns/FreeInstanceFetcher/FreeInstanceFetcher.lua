@@ -10,14 +10,16 @@ local database = {
     Alliance = {
         ['羔羊公益之使-瓦里安'] = {true, '9', '0'},
         ['羔羊公益之命-末日行者'] = {true, '9', '0'},
+        ['羔羊公益之心-冰霜之刃'] = {true, '9', '0'},
     },
     Horde = {
         ['羔羊公益之不-瓦拉纳'] = {true, '9', '0'},
         ['羔羊公益之忘-金色平原'] = {true, '9', '0'},
         ['羔羊公益之初-瓦里安'] = {true, '9', '0'},
-        ['羔羊公益之心-冰霜之刃'] = {true, '9', '0'},
         ['羔羊公益之牢-金色平原'] = {true, '9', '0'},
         ['想当坦公益-安苏'] = {true, '9', '0'},
+        ['怜姐姐的术士-塞拉摩'] = {true, '9', '0'},
+        ['怜姐姐的萨满-塞拉摩'] = {true, '9', '0'},
     },
 }
 
@@ -27,8 +29,8 @@ if not factionData then return end
 -- Lua functions
 local _G = _G
 local bit_lshift, bit_bor, bit_bxor = bit.lshift, bit.bor, bit.bxor
-local format, gsub, ipairs, pairs, random, select = format, gsub, ipairs, pairs, random, select
-local strmatch, strupper, tinsert, type = strmatch, strupper, tinsert, type
+local format, gsub, ipairs, next, pairs, random = format, gsub, ipairs, next, pairs, random
+local select, strmatch, strupper, tinsert, type, wipe = select, strmatch, strupper, tinsert, type, wipe
 
 -- WoW API / Variables
 local AcceptGroup = AcceptGroup
@@ -70,6 +72,11 @@ local buttons = {
         name = "进",
         desc = "发送进组密语",
         func = function(self)
+            if F:IsSendingInv() then
+                F:Print("进组密语正在发送中")
+                return
+            end
+
             local now = GetTime()
             if F.prevInv and F.prevInv > now - 30 then
                 F:Print("你每30秒只能发送一次进组密语")
@@ -79,28 +86,7 @@ local buttons = {
 
             CooldownFrame_Set(self.cooldown, now, 30, 1)
 
-            local postfix = '请组我'
-
-            local iv = random(1, 0xFFFF)
-            local quick = bit_bxor(
-                bit_bor(bit_lshift(iv, 16), iv),
-                F:CRC32(gsub(F.mainFrame.desc, F.addonLocaleName .. F.addonVersion, addonName))
-            )
-
-            local hour = GetGameTime()
-            local hourText = format('%.2d', hour)
-            local prefix = 'V201' .. hourText
-            local final = F:CRC32(prefix .. F.playerFullName .. F:ToHex32(quick) .. postfix)
-
-            local dynamic = prefix .. format('%.4X', iv) .. F:ToHex32(final) .. postfix
-
-            for characterName, data in pairs(factionData) do
-                if dynamic and data[1] then
-                    SendChatMessage(dynamic, 'WHISPER', nil, characterName)
-                elseif data[2] then
-                    SendChatMessage(data[2], 'WHISPER', nil, characterName)
-                end
-            end
+            F:StartSendInv()
 
             if F.db.EnableSound and F.currentSkin and F.currentSkin.sound and F.currentSkin.sound[1] then
                 PlaySoundFile(F.currentSkin.sound[1], 'Master')
@@ -176,7 +162,7 @@ F.addonPrefix = "\124cFF70B8FF" .. addonName .. "\124r: "
 F.addonLocaleName = "\124cFF70B8FF便利CD获取\124r: "
 F.addonVersion = GetAddOnMetadata(addonName, 'Version')
 --[==[@debug@
-if F.addonVersion == 'v9.2.1' then
+if F.addonVersion == 'v9.2.6' then
     F.addonVersion = 'Dev'
 end
 --@end-debug@]==]
@@ -220,9 +206,9 @@ function F:ToggleSpecialSteps()
         local editbox = StdUi:MultiLineBox(window, 600, 400, [[
 重要提醒: 插件版本更新，请使用推荐的地址下载，NGA、百度网盘、黑盒工坊、CurseForge等都可以更新，|cFFFF0000不要使用EUI更新器更新|r，有可能导致插件部分功能无法使用。
 排队问题: 非周四时间如果排队超过10请微信联系我，周四排队超过30也可以私信我，大概率是卡队列了。
-问题咨询: 微信 (wowermaster) ===羔羊===
+问题咨询: 微信 (wower_director) ===羔羊===
 
-【奥迪尔】大剑幻化、【达萨罗】大工匠坐骑CD获取方法
+【奥迪尔】大剑幻化、【达萨罗】大工匠、【统御圣所】九武神坐骑CD获取方法
 
 步骤1: 准备一个好友(游戏朋友)或者双开小号，处于随时待命状态，否则该CD将无法成功获取。
 步骤2: 将需要染CD的号开到FB门口且小号就绪后，请点击插件[进]按钮排队进组。
@@ -307,6 +293,100 @@ do
 end
 
 do
+    local interval = 1
+
+    local timeFrame = CreateFrame('Frame')
+    timeFrame:Hide()
+    timeFrame:SetScript('OnUpdate', function(self, elapsed)
+        self.elapsed = self.elapsed + elapsed
+        if self.elapsed < interval then return end
+
+        self.elapsed = self.elapsed - interval
+
+        local characterName, data = next(self.queue, self.prev)
+        self.prev = characterName
+
+        if not characterName then
+            -- end of the list
+            self:Hide()
+            return
+        end
+
+        if self.dynamic and self.dynamicIndex and data[self.dynamicIndex] then
+            SendChatMessage(self.dynamic, 'WHISPER', nil, characterName)
+        else
+            SendChatMessage(self.index and data[self.index] or data, 'WHISPER', nil, characterName)
+        end
+
+        if self.storeQueue then
+            self.storeQueue[characterName] = self.storeIndex and data[self.storeIndex] or data
+        end
+    end)
+    timeFrame:SetScript('OnShow', function(self)
+        self.prev = nil
+        self.elapsed = interval -- make it work at the very beginning
+    end)
+
+    local function StartTimer(queue, index, dynamic, dynamicIndex, storeQueue, storeIndex)
+        timeFrame:Hide()
+
+        timeFrame.queue = queue
+        timeFrame.index = index
+        timeFrame.dynamic = dynamic
+        timeFrame.dynamicIndex = dynamicIndex
+        timeFrame.storeQueue = storeQueue
+        timeFrame.storeIndex = storeIndex
+        timeFrame:Show()
+    end
+
+    local function StopTimer()
+        timeFrame:Hide()
+    end
+
+    local function IsTimerStarted()
+        return timeFrame:IsShown()
+    end
+
+    -- used to store characters touched
+    local pendingClear = {}
+
+    function F:StartSendInv()
+        wipe(pendingClear)
+
+        local postfix = '请组我'
+
+        local iv = random(1, 0xFFFF)
+        local quick = bit_bxor(
+            bit_bor(bit_lshift(iv, 16), iv),
+            self:CRC32(gsub(self.mainFrame.desc, self.addonLocaleName .. self.addonVersion, addonName))
+        )
+
+        local hour = GetGameTime()
+        local hourText = format('%.2d', hour)
+        local prefix = 'V201' .. hourText
+        local final = self:CRC32(prefix .. self.playerFullName .. self:ToHex32(quick) .. postfix)
+
+        local dynamic = prefix .. format('%.4X', iv) .. self:ToHex32(final) .. postfix
+
+        StartTimer(factionData, 2, dynamic, 1, pendingClear, 3)
+    end
+
+    function F:StopSendInv()
+        StopTimer()
+    end
+
+    function F:IsSendingInv()
+        return IsTimerStarted()
+    end
+
+    function F:SendQuitExcept(name)
+        pendingClear[name] = nil
+
+        StartTimer(pendingClear)
+    end
+end
+
+do
     local serverSuffix = '-' .. GetRealmName()
 
     function F:PARTY_INVITE_REQUEST(_, name)
@@ -318,14 +398,11 @@ do
 
         AcceptGroup()
 
+        F:StopSendInv()
+        F:SendQuitExcept(name)
+
         if self.db.EnableSound and self.currentSkin and self.currentSkin.sound and self.currentSkin.sound[2] then
             PlaySoundFile(self.currentSkin.sound[2], 'Master')
-        end
-
-        for characterName, data in pairs(factionData) do
-            if characterName ~= name and data[3] then
-                SendChatMessage(data[3], 'WHISPER', nil, characterName)
-            end
         end
 
         -- ui tweak
@@ -568,7 +645,7 @@ do
             "魔兽世界第一幻化交流群公益插件，公开免费下载。" .. "\n" ..
             "下载地址: https://bbs.nga.cn/read.php?tid=22958219" .. "\n" ..
             "Code by Rhythm w/ <3" .. "\n" ..
-            "故障处理微信: wowermaster"
+            "故障处理微信: wower_director"
 
         mainFrame.texture = mainFrame:CreateTexture('BACKGROUND')
         mainFrame.texture:ClearAllPoints()

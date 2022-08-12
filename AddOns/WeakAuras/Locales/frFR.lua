@@ -404,6 +404,8 @@ L["Elide"] = "Elider"
 L["Elite"] = "Elite"
 L["Emote"] = "Emote"
 L["Empty"] = "Vide"
+--[[Translation missing --]]
+L["Enables (incorrect) round down of seconds, which was the previous default behaviour."] = "Enables (incorrect) round down of seconds, which was the previous default behaviour."
 L["Enchant Applied"] = "Enchantement appliqué"
 L["Enchant Found"] = "Enchantement présent"
 L["Enchant Missing"] = "Enchantement manquant"
@@ -1416,6 +1418,8 @@ L["Up, then Right"] = "Haut, puis droite"
 L["Usage:"] = "Utilisation:"
 L["Use /wa minimap to show the minimap icon again."] = "Utiliser /wa minimap pour afficher à nouveau l'icône de la mini-carte."
 L["Use Custom Color"] = "Utiliser couleur personnalisée"
+--[[Translation missing --]]
+L["Use Legacy floor rounding"] = "Use Legacy floor rounding"
 --[[Translation missing --]]
 L["Use Watched Faction"] = "Use Watched Faction"
 L["Vaelastrasz the Corrupt"] = "Vaelastrasz le Corrompu"

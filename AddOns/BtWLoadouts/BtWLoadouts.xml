@@ -2,6 +2,12 @@
 ..\FrameXML\UI.xsd">
 	<Script file="BtWLoadouts.lua"/>
 
+	<Frame name="BtWLoadoutsClassDropDownTemplate" mixin="BtWLoadoutsClassDropDownMixin" inherits="UIDropDownMenuTemplate" enableMouse="true" virtual="true">
+		<Scripts>
+			<OnShow method="OnShow"/>
+		</Scripts>
+	</Frame>
+
 	<Frame name="BtWLoadoutsSpecDropDownTemplate" mixin="BtWLoadoutsSpecDropDownMixin" inherits="UIDropDownMenuTemplate" enableMouse="true" virtual="true">
 		<Scripts>
 			<OnShow method="OnShow"/>

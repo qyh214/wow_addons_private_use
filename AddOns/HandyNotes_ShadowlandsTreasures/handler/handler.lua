@@ -5,7 +5,7 @@ local HL = LibStub("AceAddon-3.0"):NewAddon(myname, "AceEvent-3.0")
 -- local L = LibStub("AceLocale-3.0"):GetLocale(myname, true)
 ns.HL = HL
 
-ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v64'
+ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v68'
 
 ---------------------------------------------------------
 -- Data model stuff:
@@ -183,6 +183,20 @@ ns.playerClassLocal = playerClassLocal
 ns.playerClassColor = RAID_CLASS_COLORS[playerClass]
 ns.playerName = UnitName("player")
 ns.playerFaction = UnitFactionGroup("player")
+ns.playerClassMask = ({
+    WARRIOR = 0x1,
+    PALADIN = 0x2,
+    HUNTER = 0x4,
+    ROGUE = 0x8,
+    PRIEST = 0x10,
+    DEATHKNIGHT = 0x20,
+    SHAMAN = 0x40,
+    MAGE = 0x80,
+    WARLOCK = 0x100,
+    MONK = 0x200,
+    DRUID = 0x400,
+    DEMONHUNTER = 0x800,
+})[playerClass] or 0
 
 ---------------------------------------------------------
 -- All the utility code
@@ -209,13 +223,15 @@ local function mob_name(id)
 end
 local function quick_texture_markup(icon)
     -- needs less than CreateTextureMarkup
-    return '|T' .. icon .. ':0:0:1:-1|t'
+    return icon and ('|T' .. icon .. ':0:0:1:-1|t') or ''
 end
 local completeColor = CreateColor(0, 1, 0, 1)
 local incompleteColor = CreateColor(1, 0, 0, 1)
 local function render_string(s, context)
     if type(s) == "function" then s = s(context) end
-    return s:gsub("{(%l+):(%d+):?([^}]*)}", function(variant, id, fallback)
+    return s:gsub("{(%l+):([^:}]+):?([^}]*)}", function(variant, id, fallback)
+        local mainid, subid = id:match("(%d+)%.(%d+)")
+        mainid, subid = mainid and tonumber(mainid), subid and tonumber(subid)
         id = tonumber(id)
         if variant == "item" then
             local name, link, _, _, _, _, _, _, _, icon = GetItemInfo(id)
@@ -238,9 +254,17 @@ local function render_string(s, context)
         elseif variant == "questid" then
             return CreateAtlasMarkup("questnormal") .. (C_QuestLog.IsQuestFlaggedCompleted(id) and completeColor or incompleteColor):WrapTextInColorCode(id)
         elseif variant == "achievement" then
-            local _, name, _, completed = GetAchievementInfo(id)
-            if name and name ~= "" then
-                return CreateAtlasMarkup("storyheader-cheevoicon") .. " " .. (completed and completeColor or incompleteColor):WrapTextInColorCode(name)
+            if mainid and subid then
+                local criteria = (subid < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(mainid, subid)
+                if criteria then
+                    return criteria
+                end
+                id = 'achievement:'..mainid..'.'..subid
+            else
+                local _, name, _, completed = GetAchievementInfo(id)
+                if name and name ~= "" then
+                    return CreateAtlasMarkup("storyheader-cheevoicon") .. " " .. (completed and completeColor or incompleteColor):WrapTextInColorCode(name)
+                end
             end
         elseif variant == "npc" then
             local name = mob_name(id)
@@ -321,10 +345,18 @@ local trimmed_icon = function(texture)
     end
     return icon_cache[texture]
 end
-local atlas_texture = function(atlas, extra)
+local atlas_texture = function(atlas, extra, crop)
     atlas = C_Texture.GetAtlasInfo(atlas)
     if type(extra) == "number" then
         extra = {scale=extra}
+    end
+    if crop then
+        local xcrop = (atlas.rightTexCoord - atlas.leftTexCoord) * crop
+        local ycrop = (atlas.bottomTexCoord - atlas.topTexCoord) * crop
+        atlas.rightTexCoord = atlas.rightTexCoord - xcrop
+        atlas.leftTexCoord = atlas.leftTexCoord + xcrop
+        atlas.bottomTexCoord = atlas.bottomTexCoord - ycrop
+        atlas.topTexCoord = atlas.topTexCoord + xcrop
     end
     return ns.merge({
         icon = atlas.file,
@@ -342,18 +374,12 @@ local function work_out_label(point)
     if point.label then
         return (render_string(point.label, point))
     end
-    if point.achievement then
-        if point.criteria and type(point.criteria) ~= "table" and point.criteria ~= true then
-            local criteria = (point.criteria < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(point.achievement, point.criteria)
-            if criteria then
-                return criteria
-            end
+    if point.achievement and point.criteria and type(point.criteria) ~= "table" and point.criteria ~= true then
+        local criteria = (point.criteria < 40 and GetAchievementCriteriaInfo or GetAchievementCriteriaInfoByID)(point.achievement, point.criteria)
+        if criteria then
+            return criteria
         end
-        local _, achievement = GetAchievementInfo(point.achievement)
-        if achievement then
-            return achievement
-        end
-        fallback = 'achievement:'..point.achievement
+        fallback = 'achievement:'..point.achievement..'.'..point.criteria
     end
     if point.follower then
         local follower = C_Garrison.GetFollowerInfo(point.follower)
@@ -376,6 +402,13 @@ local function work_out_label(point)
             return link:gsub("[%[%]]", "")
         end
         fallback = 'item:'..ns.lootitem(point.loot[1])
+    end
+    if point.achievement and not point.criteria then
+        local _, achievement = GetAchievementInfo(point.achievement)
+        if achievement then
+            return achievement
+        end
+        fallback = 'achievement:'..point.achievement
     end
     if point.currency then
         if ns.currencies[point.currency] then
@@ -560,14 +593,95 @@ local function tooltip_criteria(tooltip, achievement, criteriaid, ignore_quantit
         )
     end
 end
-local function handle_tooltip(tooltip, point)
+local function tooltip_loot(tooltip, item)
+    local knownText
+    local r, g, b = NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b
+    local id = ns.lootitem(item)
+    local _, itemType, itemSubtype, equipLoc, icon, classID, subclassID = GetItemInfoInstant(id)
+    if ns.db.tooltip_charloot and not IsShiftKeyDown() then
+        -- show loot for the current character only
+        -- can't pass in a reusable table for the second argument because it changes the no-data case
+        local specTable = GetItemSpecInfo(id)
+        -- Some cosmetic items seem to be flagged as not dropping for any spec. I
+        -- could only confirm this for some cosmetic back items but let's play it
+        -- safe and say that any cosmetic item can drop regardless of what the
+        -- spec info says...
+        if specTable and #specTable == 0 and not IsCosmeticItem(id) then
+            return true
+        end
+        -- then catch covenants / classes / etc
+        if ns.itemRestricted(item) then return true end
+    end
+    local _, link = GetItemInfo(ns.lootitem(item))
+    local label = ENCOUNTER_JOURNAL_ITEM
+    if classID == Enum.ItemClass.Armor and subclassID ~= Enum.ItemArmorSubclass.Shield then
+        label = _G[equipLoc] or label
+    else
+        label = itemSubtype
+    end
+    if link then
+        link = link:gsub("[%[%]]", "")
+    else
+        r, g, b = 0, 1, 1
+        link = SEARCH_LOADING_TEXT
+    end
+    if type(item) == "table" then
+        if item.mount then label = MOUNT
+        elseif item.toy then label = TOY
+        elseif item.pet then label = TOOLTIP_BATTLE_PET
+        elseif item.set then
+            label = WARDROBE_SETS
+            local info = C_TransmogSets.GetSetInfo(item.set)
+            if info then
+                link = info.name
+                if not info.collected then
+                    local sources = C_TransmogSets.GetSetPrimaryAppearances(item.set)
+                    if sources and #sources > 0 then
+                        local numKnown = 0
+                        for _, source in pairs(sources) do
+                            if source.collected then
+                                numKnown = numKnown + 1
+                            end
+                        end
+                        knownText = RED_FONT_COLOR:WrapTextInColorCode(GENERIC_FRACTION_STRING:format(numKnown, #sources))
+                    end
+                end
+            end
+        end
+        -- todo: faction?
+        if item.covenant then
+            local data = C_Covenants.GetCovenantData(item.covenant)
+            -- local active = item.covenant == C_Covenants.GetActiveCovenantID()
+            link = TEXT_MODE_A_STRING_VALUE_TYPE:format(link, COVENANT_COLORS[item.covenant]:WrapTextInColorCode(data and data.name or ns.covenants[item.covenant]))
+        end
+        if item.class then
+            link = TEXT_MODE_A_STRING_VALUE_TYPE:format(link, RAID_CLASS_COLORS[item.class]:WrapTextInColorCode(LOCALIZED_CLASS_NAMES_FEMALE[item.class]))
+        end
+        if item.note then
+            link = TEXT_MODE_A_STRING_VALUE_TYPE:format(link, render_string(item.note))
+        end
+    end
+    local known = ns.itemIsKnown(item)
+    if known ~= nil and (known == true or not ns.itemRestricted(item)) then
+        if knownText then
+            link = link .. " " .. knownText
+        else
+            link = link .. " " .. CreateAtlasMarkup(known and "common-icon-checkmark" or "common-icon-redx")
+        end
+    end
+    tooltip:AddDoubleLine(label, quick_texture_markup(icon) .. " " .. link,
+        NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b,
+        r, g, b
+    )
+end
+local function handle_tooltip(tooltip, point, skip_label)
     if not point then
         tooltip:SetText(UNKNOWN)
         tooltip:Show()
         return
     end
     -- major:
-    if point.label ~= false then
+    if not skip_label and point.label ~= false then
         tooltip:AddLine(work_out_label(point))
     end
     if point.follower then
@@ -637,40 +751,12 @@ local function handle_tooltip(tooltip, point)
         tooltip:AddLine(render_string(point.note, point), 1, 1, 1, true)
     end
     if point.loot then
+        local hidden
         for _, item in ipairs(point.loot) do
-            local _, link, _, _, _, _, _, _, _, icon = GetItemInfo(ns.lootitem(item))
-            if link then
-                local label = ENCOUNTER_JOURNAL_ITEM
-                link = link:gsub("[%[%]]", "")
-                if type(item) == "table" then
-                    if item.mount then label = MOUNT
-                    elseif item.toy then label = TOY
-                    elseif item.pet then label = TOOLTIP_BATTLE_PET
-                    end
-                    -- todo: faction?
-                    if item.covenant then
-                        local data = C_Covenants.GetCovenantData(item.covenant)
-                        -- local active = item.covenant == C_Covenants.GetActiveCovenantID()
-                        link = TEXT_MODE_A_STRING_VALUE_TYPE:format(link, COVENANT_COLORS[item.covenant]:WrapTextInColorCode(data and data.name or ns.covenants[item.covenant]))
-                    end
-                    if item.class then
-                        link = TEXT_MODE_A_STRING_VALUE_TYPE:format(link, RAID_CLASS_COLORS[item.class]:WrapTextInColorCode(LOCALIZED_CLASS_NAMES_FEMALE[item.class]))
-                    end
-                    if item.note then
-                        link = TEXT_MODE_A_STRING_VALUE_TYPE:format(link, render_string(item.note))
-                    end
-                end
-                local known = ns.itemIsKnown(item)
-                if known ~= nil and (known == true or not ns.itemRestricted(item)) then
-                    link = link .. " " .. CreateAtlasMarkup(known and "common-icon-checkmark" or "common-icon-redx")
-                end
-                tooltip:AddDoubleLine(label, quick_texture_markup(icon) .. " " .. link)
-            else
-                tooltip:AddDoubleLine(ENCOUNTER_JOURNAL_ITEM, SEARCH_LOADING_TEXT,
-                    NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b,
-                    0, 1, 1
-                )
-            end
+            hidden = tooltip_loot(tooltip, item) or hidden
+        end
+        if hidden then
+            tooltip:AddLine("Items for other characters hidden", 0, 1, 1)
         end
     end
     if point.covenant then
@@ -1065,22 +1151,22 @@ hooksecurefunc(AreaPOIPinMixin, "TryShowTooltip", function(self)
     if not self.areaPoiID then return end
     if not ns.POIsToPoints[self.areaPoiID] then return end
     local point = ns.POIsToPoints[self.areaPoiID]
-    if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
-    handle_tooltip(GameTooltip, point)
+    -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
+    handle_tooltip(GameTooltip, point, true)
 end)
 
 hooksecurefunc(VignettePinMixin, "OnMouseEnter", function(self)
     local vignetteInfo = self.vignetteInfo
     if not (vignetteInfo.vignetteID and ns.VignetteIDsToPoints[vignetteInfo.vignetteID]) then return end
     local point = ns.VignetteIDsToPoints[vignetteInfo.vignetteID]
-    if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
-    handle_tooltip(GameTooltip, point)
+    -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
+    handle_tooltip(GameTooltip, point, true)
 end)
 
 hooksecurefunc("TaskPOI_OnEnter", function(self)
     if not self.questID then return end
     if not ns.WorldQuestsToPoints[self.questID] then return end
     local point = ns.WorldQuestsToPoints[self.questID]
-    if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
-    handle_tooltip(GameTooltip, point)
+    -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
+    handle_tooltip(GameTooltip, point, true)
 end)

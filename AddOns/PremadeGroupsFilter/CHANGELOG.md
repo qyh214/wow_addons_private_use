@@ -1,8 +1,8 @@
 # Premade Groups Filter
 
-## [2.8.3](https://github.com/0xbs/premade-groups-filter/tree/2.8.3) (2022-04-21)
-[Full Changelog](https://github.com/0xbs/premade-groups-filter/compare/2.8.2...2.8.3) [Previous Releases](https://github.com/0xbs/premade-groups-filter/releases)
+## [2.9.2](https://github.com/0xbs/premade-groups-filter/tree/2.9.2) (2022-08-03)
+[Full Changelog](https://github.com/0xbs/premade-groups-filter/compare/2.9.1...2.9.2) [Previous Releases](https://github.com/0xbs/premade-groups-filter/releases)
 
-- Set version to 2.8.3  
-- Fixed an issue where the fix for tainting issues regarding GetPlaystyleString() was sometimes applied before player authentication data was fully available.  
-    Also now prints a message when the fix is not applied with hints how to resolve the issue.  
+- Set version to 2.9.2  
+- Add keywords gd, id, lkara=lowr, ukara=uppr, sls4 (all season 4 dungeons)  
+- Add identifier mappings for new mythic+ dungeons  

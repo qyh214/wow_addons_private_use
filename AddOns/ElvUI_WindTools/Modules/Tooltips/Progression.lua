@@ -76,45 +76,37 @@ local locales = {
         short = L["[ABBR] Castle Nathria"],
         full = L["Castle Nathria"]
     },
-    ["The Necrotic Wake"] = {
-        short = L["[ABBR] The Necrotic Wake"],
-        full = L["The Necrotic Wake"]
-    },
-    ["Plaguefall"] = {
-        short = L["[ABBR] Plaguefall"],
-        full = L["Plaguefall"]
-    },
-    ["Mists of Tirna Scithe"] = {
-        short = L["[ABBR] Mists of Tirna Scithe"],
-        full = L["Mists of Tirna Scithe"]
-    },
-    ["Halls of Atonement"] = {
-        short = L["[ABBR] Halls of Atonement"],
-        full = L["Halls of Atonement"]
-    },
-    ["Theater of Pain"] = {
-        short = L["[ABBR] Theater of Pain"],
-        full = L["Theater of Pain"]
-    },
-    ["De Other Side"] = {
-        short = L["[ABBR] De Other Side"],
-        full = L["De Other Side"]
-    },
     ["Sanctum of Domination"] = {
         short = L["[ABBR] Sanctum of Domination"],
         full = L["Sanctum of Domination"]
     },
-    ["Spires of Ascension"] = {
-        short = L["[ABBR] Spires of Ascension"],
-        full = L["Spires of Ascension"]
-    },
-    ["Sanguine Depths"] = {
-        short = L["[ABBR] Sanguine Depths"],
-        full = L["Sanguine Depths"]
-    },
     ["Sepulcher of the First Ones"] = {
         short = L["[ABBR] Sepulcher of the First Ones"],
         full = L["Sepulcher of the First Ones"]
+    },
+    ["Grimrail Depot"] = {
+        short = L["[ABBR] Grimrail Depot"],
+        full = L["Grimrail Depot"]
+    },
+    ["Iron Docks"] = {
+        short = L["[ABBR] Iron Docks"],
+        full = L["Iron Docks"]
+    },
+    ["Operation: Mechagon - Junkyard"] = {
+        short = L["[ABBR] Operation: Mechagon - Junkyard"],
+        full = L["Operation: Mechagon - Junkyard"]
+    },
+    ["Operation: Mechagon - Workshop"] = {
+        short = L["[ABBR] Operation: Mechagon - Workshop"],
+        full = L["Operation: Mechagon - Workshop"]
+    },
+    ["Return to Karazhan: Lower"] = {
+        short = L["[ABBR] Return to Karazhan: Lower"],
+        full = L["Return to Karazhan: Lower"]
+    },
+    ["Return to Karazhan: Upper"] = {
+        short = L["[ABBR] Return to Karazhan: Upper"],
+        full = L["Return to Karazhan: Upper"]
     },
     ["Tazavesh: Streets of Wonder"] = {
         short = L["[ABBR] Tazavesh: Streets of Wonder"],
@@ -135,6 +127,10 @@ local locales = {
     ["Shadowlands Keystone Master: Season Three"] = {
         short = L["[ABBR] Shadowlands Keystone Master: Season Three"],
         full = L["Shadowlands Keystone Master: Season Three"]
+    },
+    ["Shadowlands Keystone Master: Season Four"] = {
+        short = L["[ABBR] Shadowlands Keystone Master: Season Four"],
+        full = L["Shadowlands Keystone Master: Season Four"]
     }
 }
 
@@ -296,14 +292,12 @@ local raidAchievements = {
 }
 
 local mythicKeystoneDungeons = {
-    [375] = "Mists of Tirna Scithe",
-    [376] = "The Necrotic Wake",
-    [377] = "De Other Side",
-    [378] = "Halls of Atonement",
-    [379] = "Plaguefall",
-    [380] = "Sanguine Depths",
-    [381] = "Spires of Ascension",
-    [382] = "Theater of Pain",
+    [166] = "Grimrail Depot",
+    [169] = "Iron Docks",
+    [227] = "Return to Karazhan: Lower",
+    [234] = "Return to Karazhan: Upper",
+    [369] = "Operation: Mechagon - Junkyard",
+    [370] = "Operation: Mechagon - Workshop",
     [391] = "Tazavesh: Streets of Wonder",
     [392] = "Tazavesh: So'leah's Gambit"
 }
@@ -311,7 +305,8 @@ local mythicKeystoneDungeons = {
 local specialAchievements = {
     {14532, "Shadowlands Keystone Master: Season One"},
     {15078, "Shadowlands Keystone Master: Season Two"},
-    {15499, "Shadowlands Keystone Master: Season Three"}
+    {15499, "Shadowlands Keystone Master: Season Three"},
+    {15690, "Shadowlands Keystone Master: Season Four"}
 }
 
 local function GetLevelColoredString(level, short)

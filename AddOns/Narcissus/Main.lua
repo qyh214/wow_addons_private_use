@@ -2766,38 +2766,6 @@ function SlotController:IsMouseOver()
 	return false
 end
 
-local function CacheSourceInfo(slotID)
-	local appliedSourceID, appliedVisualID;
-	if slotID then
-		After(AssignDelay(slotID, true), function()
-			appliedSourceID, appliedVisualID = GetSlotVisualID(slotID);
-			if appliedVisualID > 0 then
-				local sourceInfo = C_TransmogCollection.GetSourceInfo(appliedSourceID);
-				local sources = C_TransmogCollection.GetAppearanceSources(appliedVisualID);
-			
-				if slotTable[slotID] then
-					local slot = slotTable[slotID];
-					slot.sourceInfo = sourceInfo;
-					slot.appliedVisualID = appliedVisualID;
-					local _, sourceID = C_TransmogCollection.GetItemInfo(sourceInfo.itemID, sourceInfo.itemModID);
-					if sourceInfo and sourceInfo.sourceType == 1 then
-						slot.drops = C_TransmogCollection.GetAppearanceSourceDrops(sourceID);
-					end
-				end
-				--print("Caching Slot... #"..slotID)
-			end
-		end)
-	else
-		for id, slotButton in pairs(slotTable) do
-			appliedSourceID, appliedVisualID = GetSlotVisualID(id);
-			if appliedVisualID > 0 then
-				local sourceInfo = C_TransmogCollection.GetSourceInfo(appliedSourceID);
-				local sources = C_TransmogCollection.GetAppearanceSources(appliedVisualID);
-			end
-		end
-	end
-end
-
 
 ------------------------------------------------------------------
 -----Some of the codes are derivated from EquipmentFlyout.lua-----
@@ -5831,28 +5799,8 @@ EL:SetScript("OnEvent",function(self, event, ...)
 			end)
 		end)
 
-		--Cache
-		if false then
-			MiniButton:Disable();			--Disable minimap button while caching
-			After(1.3, function()
-				CacheSourceInfo();
-			end)
-			After(2.9, function()
-				MOG_MODE = true;
-				USE_DELAY = true;
-				SlotController:RefreshAll();					--Cache transmog appearance sources
-			end)
-			After(3.7, function()
-				MOG_MODE = false;
-				SlotController:RefreshAll();
-				MiniButton:Enable();
-				MiniButton:SetMotionScriptsWhileDisabled(false);
-			end)
-		end
-
 	elseif event == "PLAYER_EQUIPMENT_CHANGED" then
 		local slotID, isItem = ...;
-		--CacheSourceInfo(slotID)
 		USE_DELAY = false;
 		SlotController:Refresh(slotID);
 		if EquipmentFlyoutFrame:IsShown() and EquipmentFlyoutFrame.slotID == slotID then

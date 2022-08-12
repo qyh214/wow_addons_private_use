@@ -6,8 +6,10 @@ local L = E.Libs.ACL:GetLocale("ElvUI", E.global.general.locale)
 
 local _G = _G
 local collectgarbage = collectgarbage
+local format = format
 local hooksecurefunc = hooksecurefunc
 local next = next
+local print = print
 local tonumber = tonumber
 
 local GetAddOnMetadata = GetAddOnMetadata
@@ -42,6 +44,18 @@ function W:Initialize()
         return
     end
 
+    for name, module in self:IterateModules() do
+        addon[2].Developer.InjectLogger(module)
+    end
+
+    hooksecurefunc(
+        W,
+        "NewModule",
+        function(_, name)
+            addon[2].Developer.InjectLogger(name)
+        end
+    )
+
     self.initialized = true
 
     self:UpdateScripts() -- Database need update first
@@ -55,8 +69,27 @@ end
 do
     local checked = false
     function W:PLAYER_ENTERING_WORLD(_, isInitialLogin, isReloadingUi)
+        E:Delay(7, self.CheckInstalledVersion, self)
+
         if isInitialLogin then
-            E:Delay(7, self.CheckInstalledVersion, self)
+            if E.global.WT.core.loginMessage then
+                local icon = addon[2].GetIconString(self.Media.Textures.smallLogo, 14)
+                print(
+                    format(
+                        icon ..
+                            " " ..
+                                L["%s %s Loaded."] ..
+                                    " " ..
+                                        L["You can send your suggestions or bugs via %s, %s, %s, and the thread in %s."],
+                        self.Title,
+                        self.Version,
+                        L["QQ Group"],
+                        L["Discord"],
+                        L["Github"],
+                        L["NGA.cn"]
+                    )
+                )
+            end
         end
 
         if not (checked or _G.ElvUIInstallFrame) then
@@ -75,6 +108,8 @@ do
                 E:Delay(4, self.PrintDebugEnviromentTip)
             end
         end
+
+        self:GameFixing()
 
         E:Delay(1, collectgarbage, "collect")
     end

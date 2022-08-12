@@ -8,9 +8,15 @@ local NUM_STANCE_SLOTS = NUM_STANCE_SLOTS
 local NUM_PET_ACTION_SLOTS = NUM_PET_ACTION_SLOTS
 local NUM_ACTIONBAR_BUTTONS = NUM_ACTIONBAR_BUTTONS
 
-local function HandleActionButton(button, useBackdrop)
-    if not button.windStyle then
-        S:CreateShadow(button)
+function S:ElvUI_ActionBar_SkinButton(button, useBackdrop)
+    self:CreateLowerShadow(button)
+
+    if not button.__windSkin then
+        if button.shadow and button.shadow.__wind then
+            self:BindShadowColorWithBorder(button.shadow, button)
+        end
+
+        button.__windSkin = true
     end
 
     if useBackdrop then
@@ -43,17 +49,17 @@ function S:ElvUI_ActionBar_SkinBar(bar, type)
         if type == "PLAYER" then
             for i = 1, NUM_ACTIONBAR_BUTTONS do
                 local button = bar.buttons[i]
-                HandleActionButton(button, bar.db.backdrop)
+                self:ElvUI_ActionBar_SkinButton(button, bar.db.backdrop)
             end
         elseif type == "PET" then
             for i = 1, NUM_PET_ACTION_SLOTS do
                 local button = _G["PetActionButton" .. i]
-                HandleActionButton(button, bar.db.backdrop)
+                self:ElvUI_ActionBar_SkinButton(button, bar.db.backdrop)
             end
         elseif type == "STANCE" then
             for i = 1, NUM_STANCE_SLOTS do
                 local button = _G["ElvUI_StanceBarButton" .. i]
-                HandleActionButton(button, bar.db.backdrop)
+                self:ElvUI_ActionBar_SkinButton(button, bar.db.backdrop)
             end
         end
     end
@@ -140,8 +146,12 @@ function S:ElvUI_ActionBars()
     do
         local button = _G.MainMenuBarVehicleLeaveButton
         self:CreateBackdropShadow(button, true)
+
         local tex = button:GetNormalTexture()
         if tex then
+            tex:ClearAllPoints()
+            tex:SetPoint("TOPLEFT", button, "TOPLEFT", 4, -4)
+            tex:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -4, 4)
             tex:SetTexture(W.Media.Textures.arrowDown)
             tex:SetTexCoord(0, 1, 0, 1)
             tex:SetVertexColor(1, 1, 1)
@@ -149,6 +159,9 @@ function S:ElvUI_ActionBars()
 
         tex = button:GetPushedTexture()
         if tex then
+            tex:ClearAllPoints()
+            tex:SetPoint("TOPLEFT", button, "TOPLEFT", 4, -4)
+            tex:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -4, 4)
             tex:SetTexture(W.Media.Textures.arrowDown)
             tex:SetTexCoord(0, 1, 0, 1)
             tex:SetVertexColor(1, 0, 0)

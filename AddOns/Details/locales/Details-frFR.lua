@@ -696,8 +696,7 @@ L["STRING_OPTIONS_NICKNAME"] = "Surnom"
 L["STRING_OPTIONS_NICKNAME_DESC"] = "Définissez un surnom pour vous. Les surnoms sont envoyés aux membres de la guilde et Details! l'utilise à la place du nom de votre personnage."
 L["STRING_OPTIONS_OPEN_ROWTEXT_EDITOR"] = "Row Text Editor"
 L["STRING_OPTIONS_OPEN_TEXT_EDITOR"] = "Ouvrir l'éditeur de texte"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_OPENBROKER"] = ""--]] 
+L["STRING_OPTIONS_OPENBROKER"] = "Ouvrir l'éditeur de texte du Broker"
 L["STRING_OPTIONS_OVERALL_ALL"] = "Tous les segments"
 L["STRING_OPTIONS_OVERALL_ALL_DESC"] = "Tous les segments sont ajoutés aux données globales."
 L["STRING_OPTIONS_OVERALL_ANCHOR"] = "Données globales :"
@@ -982,8 +981,7 @@ L["STRING_OPTIONS_TEXTEDITOR_TOK"] = "ToK"
 L["STRING_OPTIONS_TEXTEDITOR_TOK_TOOLTIP"] = "Ajouter une fonction pour formater les nombres en abrégeant ses valeurs. Exemple : 1500000 en 1.5kk."
 L["STRING_OPTIONS_TIMEMEASURE"] = "Mesure du temps"
 L["STRING_OPTIONS_TIMEMEASURE_DESC"] = "|cFFFFFF00Activité|r : le chronomètre de chaque membre du raid est mis en pause si son activité est interrompue et reprend le compte quand l'activité reprend, méthode commune de mesure des DPS et HPS. |cFFFFFF00Effective|r : utilisée pour les classements, cette méthode utilise le temps de combat écoulé pour mesurer le DPS et le HPS de tous les membres du raid."
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = ""--]] 
+L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = "Préférences pour le boutons et menus"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS"] = "Paramètres des boutons de la barre de titre"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS_DESC"] = "Ces paramètres modifient le menu principal en haut de la fenêtre."
 L["STRING_OPTIONS_TOOLBARSIDE"] = "Barre de titre sur le dessus"

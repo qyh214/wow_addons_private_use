@@ -75,7 +75,7 @@ local function IsEssenceSetActive(set)
 end
 local function ActivateEssenceSet(set, state)
 	local success, complete = true, true;
-	if (not state or (not state.ignoreTome and not state.ignoreJailersChains)) and state.heartEquipped or GetInventoryItemID("player", INVSLOT_NECK) == 158075 then
+	if (not state or (not state.ignoreItem and not state.allowPartial)) and state.heartEquipped or GetInventoryItemID("player", INVSLOT_NECK) == 158075 then
 		for milestoneID,essenceID in pairs(set.essences) do
 			local info = C_AzeriteEssence.GetEssenceInfo(essenceID)
 			local essenceName, essenceRank = info.name, info.rank
@@ -213,10 +213,13 @@ local function CombineEssenceSets(result, state, ...)
 			local isActive, waitForCooldown = EssenceSetRequirements(result)
 
 			if not isActive then
-				state.needTome = true
-				state.blockedByJailersChains = true
-				state.noCombatSwap = true
-				state.noTaxiSwap = true -- Maybe check for rested area or tomb first?
+				if state.blockers then
+					state.blockers[Internal.GetRestedTomeBlocker()] = true
+					state.blockers[Internal.GetCombatBlocker()] = true
+					state.blockers[Internal.GetMythicPlusBlocker()] = true
+					state.blockers[Internal.GetJailersChainBlocker()] = true
+				end
+				
 				state.customWait = state.customWait or (waitForCooldown and L["Waiting for essence cooldown"])
 			end
 		end

@@ -20,19 +20,32 @@ local atlasToQuality = {
     ["auctionhouse-itemicon-border-account"] = 8
 }
 
-local function HandleTomCatsIcon(icon)
+function S:TomCats_Config()
+    self:ESProxy("HandleButton", _G.TomCats_Config.discoveriesButton)
+    self:ESProxy("HandleButton", _G.TomCats_ConfigDiscoveries.discoveriesButton)
+    self:ESProxy("HandleButton", _G.TomCats_ConfigDiscoveries.discoveriesResetCounterButton)
+    self:ESProxy("HandleSliderFrame", _G.TomCats_ConfigIconSizeSlider)
+    self:ESProxy("HandleCheckBox", _G.TomCats_Config.checkBox_betaFeatures)
+    self:ESProxy("HandleCheckBox", _G.TomCats_Config.checkBox_loveIsInTheAirMinimapButton)
+    self:ESProxy("HandleCheckBox", _G.TomCats_Config.checkBox_lunarFestivalMinimapButton)
+    self:ESProxy("HandleCheckBox", _G.TomCats_Config.checkBox_mapIconAnimation)
+    self:ESProxy("HandleCheckBox", _G.TomCats_Config.checkBox_minimapButton)
+end
+
+function S:TomCats_HandleTomCatsIcon(icon)
     if not icon or not icon:IsShown() then
         return
     end
 
-    if not icon.windStyle then
+    if not icon.__windSkin then
         local maskNum = icon.Icon:GetNumMaskTextures()
         for i = maskNum, 1 do
             icon.Icon:RemoveMaskTexture(icon.Icon:GetMaskTexture(i))
         end
 
-        ES:HandleIcon(icon.Icon, true)
+        self:ESProxy("HandleIcon", icon.Icon, true)
         icon.IconBorder:SetAlpha(0)
+        icon.__windSkin = true
     end
 
     local atlas = icon.IconBorder:IsShown() and icon.IconBorder:GetAtlas()
@@ -46,13 +59,13 @@ local function HandleTomCatsIcon(icon)
 
     if icon.CategoryIcon then
         icon.CategoryIcon:SetFrameLevel(icon:GetFrameLevel() + 2)
-        HandleTomCatsIcon(icon.CategoryIcon)
+        self:TomCats_HandleTomCatsIcon(icon.CategoryIcon)
     end
 end
 
 function S:TomCats_SkinTooltipItems(tt, owner)
     for _, item in pairs(tt.Loot) do
-        HandleTomCatsIcon(item)
+        self:TomCats_HandleTomCatsIcon(item)
     end
 end
 
@@ -81,6 +94,7 @@ function S:TomCats()
         return
     end
 
+    self:TomCats_Config()
     TT:SetStyle(_G.TomCatsVignetteTooltip)
     self:SecureHook(_G.TomCatsVignetteTooltip, "SetOwner", "TomCats_SkinTooltipItems")
 

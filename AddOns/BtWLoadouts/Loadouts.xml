@@ -232,9 +232,12 @@
                     </Slider>
                 </Frames>
                 <Scripts>
-                    <OnLoad>
-                        UIDropDownMenu_Initialize(self.DropDown, nil, "MENU")
-                    </OnLoad>
+                    <OnShow>
+						if not self.initialized then
+                        	UIDropDownMenu_Initialize(self.DropDown, nil, "MENU")
+							self.initialized = true
+						end
+                    </OnShow>
                     <OnMouseWheel>
                         HybridScrollFrame_OnMouseWheel(self, delta, stepSize)
                         if self:GetScrollChild().currentDrag  ~= nil then

@@ -11,6 +11,17 @@ local ReloadUI = ReloadUI
 
 local C_Timer_After = C_Timer.After
 
+local currentPatchMaps = {
+    [9] = true, -- Return to Karazhan: Lower
+    [10] = true, -- Return to Karazhan: Upper
+    [25] = true, -- Operation: Mechagon - Junkyard
+    [26] = true, -- Operation: Mechagon - Workshop
+    [37] = true, -- Tazavesh: Streets of Wonder
+    [38] = true, -- Tazavesh: So'leah's Gambit
+    [40] = true, -- Grimrail Depot
+    [41] = true -- Iron Docks
+}
+
 function MH:Translate()
     if not self.db or not self.db.enable or not self.db.translate then
         return
@@ -23,7 +34,7 @@ function MH:Translate()
     end
 
     for mapID, NPCs in pairs(MDT.dungeonEnemies) do
-        if mapID >= 29 and NPCs then
+        if mapID and currentPatchMaps[mapID] and NPCs then
             for _, NPC in pairs(NPCs) do
                 if NPC.id and NPC.name then
                     F.HandleNPCNameByID(

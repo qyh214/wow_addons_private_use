@@ -62,7 +62,6 @@ L["Only Ranking"] = true
 L["Party"] = "Группа"
 L["Percent"] = "Процент"
 L["Player Name"] = true
-L["Profiles"] = "Профили"
 L["Put the keystone from bag automatically."] = "Выводит автоматически камень возвращения из сумки."
 L["QQ Group"] = "QQ группы"
 L["Quick Keystone"] = "Быстрый камень возвращения"

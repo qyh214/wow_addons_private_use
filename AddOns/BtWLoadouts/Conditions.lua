@@ -71,10 +71,18 @@ local function GetMapAncestor(uiMapID, mapTypes)
 	end
 	return GetMapAncestor(info.parentMapID, mapTypes)
 end
-
+local UiMaps = {
+	[1409] = 1409, [1726] = 1409, [1727] = 1409,
+	[1670] = 1670, [1671] = 1670, [1672] = 1670, [1673] = 1670,
+}
 local function GenerateZoneTables(idToName, nameToID, uiMapID)
 	local maps = C_Map.GetMapChildrenInfo(946, Enum.UIMapType.Zone, true)
 	for _,map in ipairs(maps) do
+		idToName[map.mapID] = map.name
+		nameToID[map.name] = map.mapID
+	end
+	for _,mapID in pairs(UiMaps) do
+		local map = C_Map.GetMapInfo(mapID)
 		idToName[map.mapID] = map.name
 		nameToID[map.name] = map.mapID
 	end
@@ -258,7 +266,10 @@ local function RefreshConditionSet(set)
 		instanceType = "none"
 		difficultyID = nil
 		instanceID = nil
-		uiMapID = GetMapAncestor(C_Map.GetBestMapForUnit("player"), {[Enum.UIMapType.Zone] = true})
+		uiMapID = UiMaps[C_Map.GetBestMapForUnit("player")]
+		if not uiMapID then
+			uiMapID = GetMapAncestor(C_Map.GetBestMapForUnit("player"), {[Enum.UIMapType.Zone] = true})
+		end
 	end
 
 	set.type = instanceType
@@ -348,7 +359,10 @@ function Internal.UpdateConditionsForInstance()
 	local _, instanceType, difficultyID, _, _, _, _, instanceID = GetInstanceInfo();
 	local uiMapID
 	if instanceType == "none" then
-		uiMapID = GetMapAncestor(C_Map.GetBestMapForUnit("player"), {[Enum.UIMapType.Zone] = true})
+		uiMapID = UiMaps[C_Map.GetBestMapForUnit("player")]
+		if not uiMapID then
+			uiMapID = GetMapAncestor(C_Map.GetBestMapForUnit("player"), {[Enum.UIMapType.Zone] = true})
+		end
 	end
 
 	instanceType = instanceTypeOverride[instanceID] or instanceType

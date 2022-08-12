@@ -679,15 +679,31 @@ Die Bosse erscheinen in der unten aufgeführten Reihenfolge.
 Die {item:185972} kann wöchentlich geplündert werden und enthält 50 {currency:1906}.
 ]]
 
+L['options_icons_mawsworn_blackguard'] = '{achievement:14742}'
+L['options_icons_mawsworn_blackguard_desc'] = 'Zeigt {npc:183173} Positionen für den Erfolg {achievement:14742} an.'
+
+L['mawsworn_blackguard'] = 'Schlundgebundene Schwarzwache'
+L['mawsworn_blackguard_note'] = 'Visiere eine verstohlene {npc:183173} an:'
+
 -------------------------------------------------------------------------------
 -------------------------------- ZERETH MORTIS --------------------------------
 -------------------------------------------------------------------------------
 
-L['camber_alcove_note'] = nil
-L['dormant_alcove_note'] = nil
-L['fulgore_alcove_note'] = nil
-L['rondure_alcove_note'] = nil
-L['repertory_alcove_note'] = nil
+local HIDDEN_ALCOVE = [[
+Um die |cFFFFFD00%s Alcove|r zu betreten:
+
+1. Schließe Kapitel 6 der Zereth Mortis Kampagne ab.
+2. Finde das |cFFFFFD00%s Alcove Arrangement|r %s.
+3. Töte im Gebiet |cFFFFFD00Hallende Gipfel|r, die Gegner, die {spell:362651} haben oder stell dich in die weißen Flächen, um 60 {npc:183569} zu bekommen.
+4. Benutze die {npc:184329} im Inneren der Trächtigen Rast, um zur Inneren Kammer zu gelangen. (Benötigt 30 {npc:183569})
+5. Benutze {npc:184485}, um zur %s Alcove zu gelangen. (Benötigt 30 {npc:183569})
+]]
+
+L['camber_alcove_note'] = string.format(HIDDEN_ALCOVE, 'Camber', 'Camber', 'hinter dem Gebäude an der |cFFFFFD00Ultimus Locus|r', 'Camber')
+L['dormant_alcove_note'] = string.format(HIDDEN_ALCOVE, 'Dormant', 'Dormant', 'im Gebiet |cFFFFFD00Hallende Gipfel|r', 'Dormant')
+L['fulgor_alcove_note'] = string.format(HIDDEN_ALCOVE, 'Fulgor', 'Fulgor', 'im Gebiet |cFFFFFD00Hallende Gipfel|r', 'Fulgor')
+L['rondure_alcove_note'] = string.format(HIDDEN_ALCOVE, 'Rondure', 'Rondure', 'auf der |cFFFFFD00Tertius Locus|r Plattform', 'Rondure')
+L['repertory_alcove_note'] = string.format(HIDDEN_ALCOVE, 'Repertory', 'Repertory', 'im Inneren der |cFFFFFD00Terrestrisches Versteck|r Höhle', 'Repertory')
 
 L['corrupted_architect_note'] = 'Greife {npc:183958} und {npc:183961} an, um den seltenen Gegner zu aktivieren.'
 L['dune_dominance_note'] = 'Alle drei seltenen Elite für den {achievement:15392} Erfolg erscheinen an dieser Position.'
@@ -729,7 +745,7 @@ L['forgotten_protovault_note'] = 'Nur während der {wq:Verfroscht} Weltquest ver
 L['grateful_boon_note'] = 'Ohne Fliegen schwer zu erreichen; Benutze das {spell:300728} oder ein {spell:111771}, um den Berg zu besteigen. Besänftige alle 12 Kreaturen in dem Gebiet und {npc:185293} lässt den Schatz erscheinen.'
 L['library_vault_note'] = 'Klicke die Tafeln in der Grotte der Lexik an, bis du den richtigen {spell:362062} Stärkungszauber findest, um damit das Bibliotheksarchiv zu öffnen.'
 L['mistaken_ovoid_note'] = 'In der Höhle der Dimensionenfälle. Sammel 5x {item:190239} und bring diese zu {npc:185280}.'
-L['ripened_protopear_note'] = 'Beginne die {quest:64641} Questreihe, um Zugang zur Blühenden Gießerei zu erhalten. Sammel dort drinne 5 Stapel der {spell:367180} (grüne Wolken) und bestäube damit die {npc:185416}.'
+L['ripened_protopear_note'] = 'Beginne die {quest:64641} Questreihe, um Zugang zur Blühenden Gießerei zu erhalten. Sammel dort drinne nacheinander 5 mal eine {spell:367180} (grüne Wolken) und bestäube damit die {npc:185416}.'
 L['sphere_treasure_note'] = 'Springe vorsichtig die Kugeln hoch, bis du den Schatz erreichst.'
 L['submerged_chest_note'] = 'Nimm die |cFFFFFD00Gefährliche Kugel der Macht|r im Süden auf und interagiere dann mit der |cFFFFFD00Vergessene Pumpe|r nahe des Schatzes.'
 L['symphonic_vault_note'] = 'Untersuche {npc:183998}, um eine Folge von vier Tönen zu hören. Jede {npc:183950} in dem Raum spielt einen einzigen Ton. Interagiere mit ihnen in der richtigen Reihenfolge, um den Schatz freizuschalten.'
@@ -753,15 +769,34 @@ Verwende die {item:187516} an Progenitorschmieden (Sphären), die überall in Ze
 L['prying_eye_discovery'] = 'Entdeckung des Spürauges'
 L['prying_eye_discovery_note'] = 'Leichter zu erreichen, sobald das Fliegen freigeschaltet ist.'
 L['pulp_covered_relic'] = 'Breibedecktes Relikt'
-L['requisites_originator_note'] = nil
-L['rondure_cache'] = nil
-L['rondure_cache_note'] = nil
+L['requisites_originator_note'] = [[
+Eine Maschine, die dir einmal pro Woche verschiedene Belohnungen gibt:
+
+• {spell:366667} = Verzauberungsmaterialien + Gold
+• {spell:366668} = Anima
+• {spell:366669} = Chiffren der Ersten
+• {spell:366670} = Genesispartikel + {item:189179} (chance)
+• {spell:366671} = Chiffren der Ersten/Genesispartikel/Anima
+• {spell:366672} = Chiffrenausrüstung
+]]
+L['rondure_cache'] = 'Rundtruhe'
+L['rondure_cache_note'] = 'Eine interaktive Schmiede an der Spitze eines Sprungrätsels in der Rondure-Nische.'
 L['sandworn_chest'] = 'Sandgeschliffene Truhe'
 L['sandworn_chest_note'] = 'Plündere 5x {item:190198} von Gegnern in dem Gebiet, um einen {item:190197} zu bauen.'
-L['sand_piles'] = nil
-L['sand_piles_note'] = nil
-L['torn_ethereal_drape'] = nil
-L['torn_ethereal_drape_note'] = nil
+L['sand_piles'] = 'Sandhaufen'
+L['sand_piles_note'] = [[
+Alle Sandhaufen befinden sich in der versteckten |cFFFFFD00Dormant Alcove|r Kammer. Für jeden Haufen wird ein {item:189863} benötigt, die in anderen Schätzen in dieser Zone enthalten sind:
+
+• Herrschaftstruhe
+• Gefallenes Gewölbe
+• Geklautes Artefakt
+• Gestohlene Schriftrolle
+• Untergetauchte Truhe
+• Symphonisches Archiv
+• Wogendes Blattwerk
+]]
+L['torn_ethereal_drape'] = 'Zerfleddertes Astraltuch'
+L['torn_ethereal_drape_note'] = 'Zu finden im Inneren der |cFFFFFD00Fulgor Alcove|r. Aktiviere die |cFFFFFD00Automakonsolen|r, dann reiten die {npc:Progenitorkugeln}, um die Decke zu erreichen.'
 
 L['cache_avian_nest'] = 'Ornidennest'
 L['cache_cypher_bound'] = 'Chiffrengebundene Truhe'
@@ -769,8 +804,12 @@ L['cache_discarded_automa'] = 'Weggeworfener Automaschrott'
 L['cache_forgotten_vault'] = 'Vergessener Schatztresor'
 L['cache_mawsworn_supply'] = 'Schlundgebundene Vorratstruhe'
 L['cache_tarachnid_eggs'] = 'Tarachnideneier'
-L['cache_shrouded_cypher'] = nil
-L['cache_shrouded_cypher_note'] = nil
+L['cache_shrouded_cypher'] = 'Verhüllte Chiffrentruhe'
+L['cache_shrouded_cypher_note'] = [[
+Diese Truhen können nur gesehen werden, wenn du den {spell:361917} Stärkungszauber hast und eine geeignete Chiffrenausrüstung trägst:
+
+|cFF00FF00Verbessert Pocopocs Wahrnehmungsfähigkeiten, sodass er zusätzliche versteckte Truhen finden kann.|r
+]]
 
 L['cache_cantaric'] = 'Kantarische Truhe'
 L['cache_fugueal'] = 'Fugalische Truhe'
@@ -798,9 +837,9 @@ L['schematic_ineffable_skitterer_note'] = 'Bring dich um! Nein, wirklich ... du 
 L['schematic_leaping_leporid_note'] = 'Zu finden auf einem schwebendem Baum.'
 L['schematic_mawdapted_raptora_note'] = 'Geringe Chance, von {npc:181412} im Gebiet |cFFFFFD00Endlose Sande|r fallen gelassen zu werden.'
 L['schematic_microlicid_note'] = 'Auf dem untersten Ast des schwebendem Baumes, unter dem Blätterwerk.'
-L['schematic_omnipotential_core_note'] = nil
+L['schematic_omnipotential_core_note'] = 'Zu finden in der |cFFFFFD00Rondure Alcove|r. Der Schaltplan ist hinter der oberen Kante des Torbogens an der Südwestseite des Raums versteckt.'
 L['schematic_prototickles_note'] = 'An einer schwebenden Kette im Inneren der Ranken über dem seltenen Gegner {npc:180978}.'
-L['schematic_prototype_fleetpod_note'] = nil
+L['schematic_prototype_fleetpod_note'] = 'Zu finden in der |cFFFFFD00Camber Alcove|r. Interagiere mit dem {npc:184900}, um ein Minispiel zu starten. Führe die Schnecke durch 5 Ringe, ohne {npc:185455s} zu berühren, um den Schaltplan zu gewinnen.'
 L['schematic_raptora_swooper_note'] = 'Zu finden in der Kammer der Gestaltung'
 L['schematic_resonant_echo_note'] = 'Hat eine Chance in {item:189172} enthalten zu sein.'
 L['schematic_russet_bufonid_note'] = 'Hat eine Chance in der {item:187780} (Paragontruhe) enthalten zu sein.'
@@ -848,8 +887,14 @@ L['patient_bufonid_note_day5'] = 'Sammel 5x {item:187704} von Gegner aus dieser 
 L['patient_bufonid_note_day6'] = 'Kaufe 5x {item:190880} von {npc:185748} (58.5 49.8) in der Nähe von Huld des Pilgers.'
 L['patient_bufonid_note_day7'] = 'Kaufe 1x {item:187171} von dem {npc:180114} aus dem Tazavesh Dungeon.'
 
-L['lost_comb'] = nil
-L['soulshape_penguin_note'] = nil
+L['lost_comb'] = 'Verlorene Wabe'
+L['soulshape_penguin_note'] = 'Befindet sich auf der schwebenden Schmiede.'
+
+L['coreless_automa'] = 'Wildtierautomas'
+L['coreless_automa_note'] = 'Ein Gegenstand mit {spell:364480} auszurüsten verleiht |cFFFFFD00Pocopoc|r die Fähigkeit Kreaturen zu übernehmen ohne Energie zu verbrauchen und ermöglicht es diesen Erfolg schneller zu erhalten.'
+L['coreless_automa_warning'] = '|cFFFF8C00Warte bis der Automat tatsächlich anfängt dir zu folgen, bevor du Pocopoc wegschickst, um einen Fehler zu vermeiden, der dich dazu zwingt, neu einzuloggen.|r'
+
+L['olea_manu'] = 'Verkauft Sammlerstücke und Rezepte im Tausch gegen {currency:1979}.'
 
 L['options_icons_code_creature'] = '{achievement:15211}'
 L['options_icons_code_creature_desc'] = 'Zeigt die Positionen der Kreaturen für den {achievement:15211} Erfolg an.'
@@ -866,8 +911,10 @@ L['options_icons_protoform_schematics_desc'] = 'Zeigt die Positionen der Reittie
 L['options_icons_puzzle_caches'] = 'Schätze der Schöpfung'
 L['options_icons_puzzle_caches_desc'] = 'Zeigt die möglichen Positionen von Schätzen der Schöpfung an.'
 L['options_icons_zereth_caches'] = 'Chiffren Truhen'
-L['options_icons_zereth_caches_desc'] = 'Zeigt mögliche Positionen für Truhen, die Chiffren der Ersten enthalten.'
-L['options_icons_shrouded_cyphers'] = nil
-L['options_icons_shrouded_cyphers_desc'] = nil
-L['options_icons_mawsworn_supply_cache'] = nil
-L['options_icons_mawsworn_supply_cache_desc'] = nil
+L['options_icons_zereth_caches_desc'] = 'Zeigt die möglichen Positionen für Truhen, die Chiffren der Ersten enthalten an.'
+L['options_icons_shrouded_cyphers'] = 'Verhüllte Chiffrentruhen'
+L['options_icons_shrouded_cyphers_desc'] = 'Zeigt die möglichen Positionen für Verhüllte Chiffrentruhen an.'
+L['options_icons_mawsworn_supply_cache'] = 'Schlundgebundene Vorratstruhen'
+L['options_icons_mawsworn_supply_cache_desc'] = 'Zeigt die möglichen Positionen für Schlundgebundene Vorratstruhen an.'
+L['options_icons_coreless_automa'] = '{achievement:15542}'
+L['options_icons_coreless_automa_desc'] = 'Zeigt die Positionen der Wildtierautomas (kernlose Automas) für den Erfolg {achievement:15542} an.'

@@ -43,9 +43,9 @@ L:SetMiscLocalization({
 	FlagCaptured		= "The .+ ha%w+ captured the flag!",
 	FlagDropped			= "The flag has been dropped!", -- Unused
 	--
-	ExprFlagPickUp		= "The (%w+) .lag was picked up by (.+)!", -- Unused
-	ExprFlagCaptured	= "(.+) captured the (%w+) flag!",
-	ExprFlagReturn		= "The (%w+) .lag was returned to its base by (.+)!", -- Unused
+	ExprFlagPickUp		= "The (%w+) Flag was picked up by (.+)!", -- Unused
+	ExprFlagCaptured	= "(.+) captured the (%w+) Flag!",
+	ExprFlagReturn		= "The (%w+) Flag was returned to its base by (.+)!", -- Unused
 	Vulnerable1			= "The flag carriers have become vulnerable to attack!",
 	Vulnerable2			= "The flag carriers have become increasingly vulnerable to attack!",
 	-- Alterac/IsleOfConquest bosses

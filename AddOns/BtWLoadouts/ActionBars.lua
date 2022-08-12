@@ -771,8 +771,8 @@ local function CombineActionBarSets(result, state, ...)
         end
     end
     
-    if state then
-        state.noCombatSwap = true
+    if state and state.blockers and not IsActionBarSetActive(result) then
+        state.blockers[Internal.GetCombatBlocker()] = true
     end
 
 	return result;

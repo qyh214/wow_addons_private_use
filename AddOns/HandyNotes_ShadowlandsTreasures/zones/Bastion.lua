@@ -40,6 +40,8 @@ ns.RegisterVignettes(1533, {
     [4277] = strongbox,
 })
 
+-- Pepe costume: A Tiny Pair of Wings, 186593, q 64136
+
 -- choosing larion: 60294
 
 ns.RegisterPoints(1533, { -- Bastion

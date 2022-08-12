@@ -1,6 +1,10 @@
+##### v1.3.4 Update for 9.2.5
+
+- update `.toc` for 9.2.5
+
 ##### v1.3.3 Update for 9.2
 
-- - update `.toc` for 9.2
+- update `.toc` for 9.2
 
 ##### v1.3.2 Make covenant detection less aggressive
 

@@ -24,8 +24,8 @@ RSConstants.LOOT_ITEM_ID = nil
 -- Current versions
 ---============================================================================
 
-RSConstants.CURRENT_DB_VERSION = 58
-RSConstants.CURRENT_LOOT_DB_VERSION = 74
+RSConstants.CURRENT_DB_VERSION = 61
+RSConstants.CURRENT_LOOT_DB_VERSION = 75
 
 ---============================================================================
 -- Current maps (newer)
@@ -179,6 +179,8 @@ RSConstants.PROFILE_DEFAULTS = {
 			tooltipsState = true,
 			tooltipsSeen = true,
 			tooltipsCommands = true,
+			lootAchievTooltipsScale = 0.7,
+			lootAchievementsPosition = "ANCHOR_LEFT",
 			overlayMaxColours = 10,
 			overlayColour1 = { 1, 0.2, 1 },
 			overlayColour2 = { 0.23, 0.943, 1 },
@@ -351,6 +353,7 @@ RSConstants.NPCS_WITH_PRE_EVENT = {
 	[185836] = 180924;
 	-- Bation
 	[176543] = 171008;
+	[171012] = 171040;
 	-- Revendredth
 	[165230] = 165206;
 	[166483] = 166521;
@@ -361,14 +364,17 @@ RSConstants.NPCS_WITH_PRE_EVENT = {
 	[168053] = 167721;
 	-- Talador
 	[84037] = 88494; 
+	[77764] = 77750;
 	-- Tanaan Jungle
 	[90524] = 90519; 
+	[243386] = 91227;
 	-- Shadowlands (Draenor)
 	[82426] = 75434; 
 	-- Spires of Arak
 	[82084] = 82050;
 	[84918] = 84912;
 	[84821] = 84833;
+	[85758] = 85037;
 	-- Nagrand (Draenor)
 	[84275] = 84263;
 	-- Frostfire Ridge
@@ -378,6 +384,10 @@ RSConstants.NPCS_WITH_PRE_EVENT = {
 	[71944] = 71919;
 	[55421] = 72048;
 	[220815] = 71864;
+	-- The Maw
+	[170315] = 170302;
+	[169828] = 169827;
+	[170305] = 170301;
 }
 
 -- Contains that spawn after completing an event
@@ -410,7 +420,7 @@ RSConstants.NPCS_WITH_PRE_NPCS = {
 -- 156480 Next door entity inside Torghast
 -- 155660 Summons from the Depths
 RSConstants.IGNORED_VIGNETTES = { 156480, 155660, 163373, 370467, 370466, 182160, 182668, 182667, 185261 }
-RSConstants.NPCS_WITH_EVENT_VIGNETTE = { 72156, 154154, 154330, 164547, 164477, 160629, 175012, 157833, 166398, 164064, 162829, 157964, 162844, 171317, 170774, 162849, 170301, 170302, 170711, 170634, 170731, 172862, 172577, 158025, 158278, 170303, 179684, 179791, 179805, 177444, 180246, 179108, 179853, 179755, 179768, 179779, 179460, 179851, 179735 }
+RSConstants.NPCS_WITH_EVENT_VIGNETTE = { 72156, 154154, 154330, 164547, 164477, 160629, 175012, 157833, 166398, 164064, 162829, 157964, 162844, 171317, 170774, 162849, 170301, 170302, 170711, 170634, 170731, 172862, 172577, 158025, 158278, 170303, 179684, 179791, 179805, 177444, 180246, 179108, 179853, 179755, 179768, 179779, 179460, 179851, 179735, 169827 }
 RSConstants.NPCS_WITH_CONTAINER_VIGNETTE = { 179883 }
 RSConstants.CONTAINERS_WITH_NPC_VIGNETTE = { 369435 }
 RSConstants.NPCS_WITH_MULTIPLE_SPAWNS = { 69768, 69769, 69841, 69842, 70323 }

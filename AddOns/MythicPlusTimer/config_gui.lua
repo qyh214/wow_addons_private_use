@@ -54,7 +54,7 @@ function config_gui.create_checkbox(name, text, checked, on_change, tooltip, par
   checkbox.checkbox_name = name
 
   checkbox.Text:SetText(text)
-
+  checkbox.Text:SetWidth(checkbox.Text:GetStringWidth() + 20)
   -- tooltip
   checkbox.tooltip = tooltip
 

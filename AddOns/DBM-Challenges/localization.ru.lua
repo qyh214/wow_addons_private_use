@@ -94,3 +94,66 @@ L:SetGeneralLocalization({
 -- Torghast --
 ------------------------
 --L= DBM:GetModLocalization("d1963")
+
+------------------------
+-- Path of Ascension (Shadowlands)
+------------------------
+L = DBM:GetModLocalization("Echthra")
+
+L:SetGeneralLocalization{
+	name = "Арена Кирий: Эктра"
+}
+
+L = DBM:GetModLocalization("Nuuminuuru")
+
+L:SetGeneralLocalization{
+	name = "Арена Кирий: Нууминууру"
+}
+
+L = DBM:GetModLocalization("Splinterbark")
+
+L:SetGeneralLocalization{
+	name = "Арена Кирий: Изломанный кошмар"
+}
+
+L = DBM:GetModLocalization("CravenCorinth")
+
+L:SetGeneralLocalization{
+	name = "Арена Кирий: Малодушный Коринф"
+}
+
+L = DBM:GetModLocalization("Kalisthene")
+
+L:SetGeneralLocalization{
+	name = "Арена Кирий: Калисфена"
+}
+
+L = DBM:GetModLocalization("AlderynandMynir")
+
+L:SetGeneralLocalization{
+	name = "Арена Кирий: Альдерин и Мин'ир"
+}
+
+L = DBM:GetModLocalization("MadMortimer")
+
+L:SetGeneralLocalization{
+	name = "Арена Кирий: Безумный Мортимер"
+}
+
+L = DBM:GetModLocalization("Thrantiok")
+
+L:SetGeneralLocalization{
+	name = "Арена Кирий: Тран'тиок"
+}
+
+L = DBM:GetModLocalization("Athanos")
+
+L:SetGeneralLocalization{
+	name = "Арена Кирий: Атанос"
+}
+
+L = DBM:GetModLocalization("Azaruux")
+
+L:SetGeneralLocalization{
+	name = "Арена Кирий: Азаруукс"
+}

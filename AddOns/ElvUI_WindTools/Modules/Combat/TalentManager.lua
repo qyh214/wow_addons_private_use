@@ -1,7 +1,6 @@
 local W, F, E, L = unpack(select(2, ...))
 local TM = W:NewModule("TalentManager", "AceEvent-3.0", "AceHook-3.0")
 local S = W.Modules.Skins
-local ES = E.Skins
 
 local _G = _G
 local format = format
@@ -29,12 +28,14 @@ local InCombatLockdown = InCombatLockdown
 local IsAddOnLoaded = IsAddOnLoaded
 local IsResting = IsResting
 local Item = Item
-local Spell = Spell
 local LearnPvpTalent = LearnPvpTalent
 local LearnTalents = LearnTalents
+local Spell = Spell
+local UIParentLoadAddOn = UIParentLoadAddOn
 local UnitLevel = UnitLevel
 
 local AuraUtil_FindAuraByName = AuraUtil.FindAuraByName
+local C_Soulbinds_GetActiveSoulbindID = C_Soulbinds.GetActiveSoulbindID
 local C_SpecializationInfo_GetPvpTalentSlotInfo = C_SpecializationInfo.GetPvpTalentSlotInfo
 
 local ACCEPT = _G.ACCEPT
@@ -125,9 +126,9 @@ function TM:SaveSet(setName)
     end
 
     if isSameName then
-        F.DebugMessage(TM, format(L["Already have a set named %s."], setName))
+        self:Log("warning", format(L["Already have a set named %s."], setName))
     elseif #self.db.sets[self.specID] == 15 then
-        F.DebugMessage(TM, L["Too many sets here, please delete one of them and try again."])
+        self:Log("warning", L["Too many sets here, please delete one of them and try again."])
     else
         tinsert(
             self.db.sets[self.specID],
@@ -195,7 +196,7 @@ function TM:SetTalent(talentString, pvpTalentTable)
         )
 
         if #talentTable < MAX_TALENT_TIERS then
-            F.DebugMessage(TM, L["Talent string is not valid."])
+            self:Log("warning", L["Talent string is not valid."])
         end
 
         local talentIDs = {}
@@ -420,7 +421,7 @@ function TM:BuildFrame()
             E:StaticPopup_Show("WINDTOOLS_TALENT_MANAGER_NEW_SET", nil, nil, nextIndex)
         end
     )
-    ES:HandleButton(newButton)
+    S:ESProxy("HandleButton", newButton)
 
     -- 天赋设定按钮
     frame.setButtons = {}
@@ -462,7 +463,7 @@ function TM:BuildFrame()
             end
         )
 
-        ES:HandleButton(button)
+        S:ESProxy("HandleButton", button)
 
         button:Hide()
         frame.setButtons[i] = button
@@ -489,6 +490,14 @@ function TM:BuildFrame()
             self:RegisterEvent("ZONE_CHANGED", "UpdateStatus")
             self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "UpdateStatus")
             if not InCombatLockdown() then
+                if self.soulbindButton then
+                    if C_Soulbinds_GetActiveSoulbindID() ~= 0 then
+                        self.soulbindButton:Show()
+                    else
+                        self.soulbindButton:Hide()
+                    end
+                end
+
                 self.itemButtonsAnchor:Show()
                 self:UpdateStatus(nil, "player")
                 self:UpdateItemButtons()
@@ -535,13 +544,12 @@ function TM:BuildFrame()
 
     -- 开关按钮
     local toggleButton =
-        CreateFrame("Button", "WTTalentManagerToggleButton", _G.PlayerTalentFrameTalents, "UIPanelButtonTemplate")
-    toggleButton:Point("BOTTOMRIGHT", _G.PlayerTalentFrameTalents, "BOTTOMRIGHT", -5, -15)
-    toggleButton:SetText(L["Toggle Talent Manager"])
-    toggleButton:SetWidth(toggleButton.Text:GetStringWidth() + 20)
-    toggleButton:SetHeight(25)
-    toggleButton:SetScript(
-        "OnClick",
+        F.Widgets.New(
+        "Button",
+        _G.PlayerTalentFrameTalents,
+        L["Toggle Talent Manager"],
+        nil,
+        25,
         function()
             if frame:IsShown() then
                 TM.db.forceHide = true
@@ -552,7 +560,37 @@ function TM:BuildFrame()
             end
         end
     )
-    ES:HandleButton(toggleButton)
+
+    toggleButton:SetPoint("BOTTOMRIGHT", -5, -15)
+    toggleButton:SetWidth(toggleButton.Text:GetStringWidth() + 20)
+
+    -- Soulbind button
+    if self.db.soulbindButton then
+        local soulbindButton =
+            F.Widgets.New(
+            "Button",
+            _G.PlayerTalentFrameTalents,
+            L["Soulbind"],
+            nil,
+            25,
+            function()
+                if not IsAddOnLoaded("Blizzard_Soulbinds") then
+                    UIParentLoadAddOn("Blizzard_Soulbinds")
+                end
+
+                if _G.SoulbindViewer:IsShown() then
+                    _G.SoulbindViewer:OnCloseButtonClicked()
+                else
+                    _G.SoulbindViewer:Open()
+                end
+            end
+        )
+
+        soulbindButton:SetPoint("RIGHT", toggleButton, "LEFT", -7, 0)
+        soulbindButton:SetWidth(soulbindButton.Text:GetStringWidth() + 20)
+
+        self.soulbindButton = soulbindButton
+    end
 
     self.frame = frame
     self:UpdateSetButtons()

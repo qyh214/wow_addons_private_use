@@ -20,7 +20,6 @@ O.mdtHelper = {
             order = 1,
             type = "toggle",
             name = L["Enable"],
-            desc = L["Put the keystone from bag automatically."],
             width = "full"
         },
         translate = {
@@ -28,7 +27,10 @@ O.mdtHelper = {
             type = "toggle",
             name = L["Translate Existing Data"],
             desc = L["Translate NPC names and types with your language."] .. "\n|cffff0000" .. L["Need reload"] .. "|r",
-            width = "full"
+            width = "full",
+            disabled = function(info)
+                return not W.db[info[#info - 1]].enable
+            end
         }
     }
 }

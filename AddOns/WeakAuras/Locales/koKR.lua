@@ -412,6 +412,8 @@ L["Elide"] = "생략"
 L["Elite"] = "정예"
 L["Emote"] = "감정 표현"
 L["Empty"] = "비었을 때"
+--[[Translation missing --]]
+L["Enables (incorrect) round down of seconds, which was the previous default behaviour."] = "Enables (incorrect) round down of seconds, which was the previous default behaviour."
 L["Enchant Applied"] = "마법부여 적용"
 --[[Translation missing --]]
 L["Enchant Found"] = "Enchant Found"
@@ -1358,6 +1360,8 @@ L["Up, then Right"] = "위로, 오른쪽으로"
 L["Usage:"] = "사용법:"
 L["Use /wa minimap to show the minimap icon again."] = "/wa minimap 을 사용하여 미니맵 아이콘을 다시 표시합니다."
 L["Use Custom Color"] = "사용자 설정 색상 사용"
+--[[Translation missing --]]
+L["Use Legacy floor rounding"] = "Use Legacy floor rounding"
 --[[Translation missing --]]
 L["Use Watched Faction"] = "Use Watched Faction"
 L["Vaelastrasz the Corrupt"] = "타락한 밸라스트라즈"
