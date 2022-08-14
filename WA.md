@@ -104,4 +104,5 @@ Nnoggie大秘境技能CD监视升级版&自制团队CD监视，带技能激活�
 - 第三赛季加密词缀内鬼通报：https://wago.io/Htwmqdtru
 - 第三赛季加密词缀圣物提醒+点图标切目标+标记骷髅：https://wago.io/relicclicker
 - 通灵战潮格里恩自动格利亚+执事者解散：https://wago.io/w-em7aevj
-- 第四赛季伪装词缀：https://wago.io/7N5XOd8yg
+- 第四赛季伪装词缀自动根据职业天赋选择属性：https://wago.io/7N5XOd8yg
+- 第四赛季卡拉赞下层阿图门无形（全队需要安装）：https://wago.io/1D739crT6 （https://wago.io/Legion-Dungeons）
