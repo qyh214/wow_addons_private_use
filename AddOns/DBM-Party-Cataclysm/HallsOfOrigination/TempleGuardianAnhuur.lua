@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(124, "DBM-Party-Cataclysm", 4, 70)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20220920232426")
 mod:SetCreatureID(39425)
 mod:SetEncounterID(1080)
 
@@ -19,7 +19,7 @@ local warnShieldSoon			= mod:NewSoonAnnounce(74938, 2)
 local warnReckoning				= mod:NewTargetNoFilterAnnounce(75592, 4)
 
 local specWarnLight				= mod:NewSpecialWarningMove(75117, nil, nil, nil, 1, 2)
-local specWarnDivineReckoning	= mod:NewSpecialWarningDispel(75592, "Healer", nil, nil, 1, 2)
+local specWarnDivineReckoning	= mod:NewSpecialWarningDispel(75592, "RemoveMagic", nil, 2, 1, 2)
 
 local timerReckoning			= mod:NewTargetTimer(8, 75592, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)
 
@@ -33,7 +33,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 74938 then
 		warnShield:Show()
 	elseif args.spellId == 75592 then
-		if self.Options.SpecWarn75592dispel and self:CheckDispelFilter() then
+		if self.Options.SpecWarn75592dispel and self:CheckDispelFilter("magic") then
 			specWarnDivineReckoning:Show(args.destName)
 			specWarnDivineReckoning:Play("helpdispel")
 		else

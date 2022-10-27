@@ -1,0 +1,17 @@
+## Interface: 30400
+## Title: |cff16C3F2AddOn|r|cFFFFFFFFSkins|r
+## Version: 4.60
+## Author: Azilroka
+## SavedVariables: AddOnSkinsDB, AddOnSkinsDS
+## OptionalDeps: AllTheThings, ElvUI
+## X-Curse-Project-ID: 54541
+## X-Wago-ID: RXKqy5Ky
+
+Libs\Load_Libs.xml
+Locale\Load_Locale.xml
+Init.lua
+Core\Load_Core.xml
+Embed\Load_Embed.xml
+
+Skins\AddOns\Load_Skins.xml
+Skins\Classic\Load_Skins.xml

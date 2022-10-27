@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BoralusTrash", "DBM-Party-BfA", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201116014239")
+mod:SetRevision("20220920232426")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
@@ -33,7 +33,7 @@ local specWarnChokingWaters			= mod:NewSpecialWarningInterrupt(272571, false, ni
 local specWarnWatertightShellDispel	= mod:NewSpecialWarningDispel(256957, "MagicDispeller", nil, nil, 1, 2)
 local specWarnCursedSlash			= mod:NewSpecialWarningDispel(257168, "RemoveCurse", nil, nil, 1, 2)
 local specWarnFerocity				= mod:NewSpecialWarningDispel(272888, "RemoveEnrage", nil, 2, 1, 2)
-local specWarnChokingWatersDispel	= mod:NewSpecialWarningDispel(272571, "Healer", nil, nil, 1, 2)
+local specWarnChokingWatersDispel	= mod:NewSpecialWarningDispel(272571, "RemoveMagic", nil, 2, 1, 2)
 local specWarnFear					= mod:NewSpecialWarningSpell(257169, nil, nil, nil, 2, 2)
 
 function mod:SPELL_CAST_START(args)
@@ -75,14 +75,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	if spellId == 256957 and self:IsValidWarning(args.sourceGUID) and not args:IsDestTypePlayer() then
 		specWarnWatertightShellDispel:CombinedShow(1, args.destName)
 		specWarnWatertightShellDispel:ScheduleVoice(1, "helpdispel")
-	elseif spellId == 257168 and self:IsValidWarning(args.sourceGUID) and self:CheckDispelFilter() then
+	elseif spellId == 257168 and self:IsValidWarning(args.sourceGUID) and self:CheckDispelFilter("curse") then
 		specWarnCursedSlash:Show(args.destName)
 		specWarnCursedSlash:Play("helpdispel")
 	elseif spellId == 272421 and args:IsPlayer() then
 		specWarnSightedArt:Show()
 		specWarnSightedArt:Play("targetyou")
 		yellSightedArt:Yell()
-	elseif spellId == 272571 and args:IsDestTypePlayer() and self:CheckDispelFilter() then
+	elseif spellId == 272571 and args:IsDestTypePlayer() and self:CheckDispelFilter("magic") then
 		specWarnChokingWatersDispel:Show(args.destName)
 		specWarnChokingWatersDispel:Play("helpdispel")
 	elseif spellId == 272888 and self:IsValidWarning(args.sourceGUID) then

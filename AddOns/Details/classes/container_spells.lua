@@ -4,12 +4,12 @@ local _detalhes = 		_G._detalhes
 local _
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---> local pointers
+--local pointers
 
-	local _setmetatable = setmetatable --lua local
+	local setmetatable = setmetatable --lua local
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---> constants
+--constants
 	
 	local container_playernpc	=	_detalhes.container_type.CONTAINER_PLAYERNPC
 	local container_damage	=	_detalhes.container_type.CONTAINER_DAMAGE_CLASS
@@ -30,7 +30,7 @@ local _
 	local container_habilidades = 	_detalhes.container_habilidades
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---> internals
+--internals
 	
 	function container_habilidades:NovoContainer (tipo_do_container)
 		local _newContainer = {
@@ -39,7 +39,7 @@ local _
 			_ActorTable = {}
 		}
 		
-		_setmetatable (_newContainer, container_habilidades)
+		setmetatable(_newContainer, container_habilidades)
 		
 		return _newContainer
 	end
@@ -56,7 +56,7 @@ local _
 	end
 	
 	function container_habilidades:ListActors()
-		return pairs (self._ActorTable)
+		return pairs(self._ActorTable)
 	end
 
 	function container_habilidades:GetOrCreateSpell(id, shouldCreate, token)
@@ -100,8 +100,8 @@ local _
 	end
 
 	function _detalhes.refresh:r_container_habilidades (container, shadow)
-		--> reconstr�i meta e indexes
-			_setmetatable (container, _detalhes.container_habilidades)
+		--reconstr�i meta e indexes
+			setmetatable(container, _detalhes.container_habilidades)
 			container.__index = _detalhes.container_habilidades
 			local func_criacao = container_habilidades:FuncaoDeCriacao (container.tipo)
 			container.funcao_de_criacao = func_criacao

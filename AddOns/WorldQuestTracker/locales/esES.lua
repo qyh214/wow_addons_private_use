@@ -156,4 +156,3 @@ L["S_WORLDMAP_QUESTLOCATIONS"] = "Mostrar las Localizaciones de las Misiones"
 L["S_WORLDMAP_QUESTSUMMARY"] = "Mostrar el Sumario de Misiones"
 L["S_WORLDMAP_TOOLTIP_TRACKALL"] = "seguir todas las misiones de la lista"
 L["S_WORLDQUESTS"] = "Misiones del mundo"
-

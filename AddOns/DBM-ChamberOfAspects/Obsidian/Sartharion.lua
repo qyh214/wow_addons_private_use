@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,normal25"
 
-mod:SetRevision("20200912041819")
+mod:SetRevision("20221008045336")
 mod:SetCreatureID(28860)
 mod:SetEncounterID(1090)
 mod:SetModelID(27035)
@@ -18,9 +18,9 @@ mod:RegisterEventsInCombat(
 )
 
 local warnShadowFissure	    = mod:NewSpellAnnounce(59127, 4, nil, nil, nil, nil, nil, 2)
-local warnTenebron          = mod:NewAnnounce("WarningTenebron", 2, 61248, false)
-local warnShadron           = mod:NewAnnounce("WarningShadron", 2, 58105, false)
-local warnVesperon          = mod:NewAnnounce("WarningVesperon", 2, 61251, false)
+local warnTenebron          = mod:NewAnnounce("WarningTenebron", 2, 61248)
+local warnShadron           = mod:NewAnnounce("WarningShadron", 2, 58105)
+local warnVesperon          = mod:NewAnnounce("WarningVesperon", 2, 61251)
 
 local warnFireWall			= mod:NewSpecialWarning("WarningFireWall", nil, nil, nil, 2, 2)
 local warnVesperonPortal	= mod:NewSpecialWarning("WarningVesperonPortal", false, nil, nil, 1, 7)
@@ -29,23 +29,22 @@ local warnShadronPortal		= mod:NewSpecialWarning("WarningShadronPortal", false, 
 
 mod:AddBoolOption("AnnounceFails", false, "announce")
 
-local timerShadowFissure    = mod:NewCastTimer(5, 59128, nil, nil, nil, 3)--Cast timer until Void Blast. it's what happens when shadow fissure explodes.
+local timerShadowFissure    = mod:NewCastTimer(5, 59128, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--Cast timer until Void Blast. it's what happens when shadow fissure explodes.
 local timerWall             = mod:NewCDTimer(30, 43113, nil, nil, nil, 2)
 local timerTenebron         = mod:NewTimer(30, "TimerTenebron", 61248, nil, nil, 1)
 local timerShadron          = mod:NewTimer(80, "TimerShadron", 58105, nil, nil, 1)
 local timerVesperon         = mod:NewTimer(120, "TimerVesperon", 61251, nil, nil, 1)
 
+mod:GroupSpells(59127, 59128)--Shadow fissure with void blast
+
 local lastvoids = {}
 local lastfire = {}
 local tsort, tinsert, twipe = table.sort, table.insert, table.wipe
 
-local function isunitdebuffed(spellID)
-	local name = DBM:GetSpellInfo(spellID)
-	if not name then return false end
-
-	for i=1, DBM:GetNumGroupMembers(), 1 do
-		local debuffname = DBM:UnitDebuff("player", i, "HARMFUL")
-		if debuffname == name then
+local function isunitdebuffed(spellName)
+	for uId in DBM:GetGroupMembers() do
+		local debuff = DBM:UnitDebuff(uId, spellName)
+		if debuff then
 			return true
 		end
 	end
@@ -53,15 +52,15 @@ local function isunitdebuffed(spellID)
 end
 
 local function CheckDrakes(delay)
-	if isunitdebuffed(61248) then	-- Power of Tenebron
+	if isunitdebuffed(DBM:GetSpellInfo(61248)) then	-- Power of Tenebron
 		timerTenebron:Start(30 - delay)
 		warnTenebron:Schedule(25 - delay)
 	end
-	if isunitdebuffed(58105) then	-- Power of Shadron
+	if isunitdebuffed(DBM:GetSpellInfo(58105)) then	-- Power of Shadron
 		timerShadron:Start(75 - delay)
 		warnShadron:Schedule(70 - delay)
 	end
-	if isunitdebuffed(61251) then	-- Power of Vesperon
+	if isunitdebuffed(DBM:GetSpellInfo(61251)) then	-- Power of Vesperon
 		timerVesperon:Start(120 - delay)
 		warnVesperon:Schedule(115 - delay)
 	end
@@ -86,8 +85,8 @@ end
 
 function mod:OnCombatEnd(wipe)
 	if not self.Options.AnnounceFails then return end
-	if DBM:GetRaidRank() < 1 or not self.Options.Announce then return end
-
+	if DBM:GetRaidRank() < 1 or not self.Options.Announce or not IsInGroup() then return end
+	local channel = IsInRaid() and "RAID" or "PARTY"
 	local voids = ""
 	for k, v in pairs(lastvoids) do
 		tinsert(sortedFails, k)
@@ -96,7 +95,7 @@ function mod:OnCombatEnd(wipe)
 	for i, v in ipairs(sortedFails) do
 		voids = voids.." "..v.."("..(lastvoids[v] or "")..")"
 	end
-	SendChatMessage(L.VoidZones:format(voids), "RAID")
+	SendChatMessage(L.VoidZones:format(voids), channel)
 	twipe(sortedFails)
 	local fire = ""
 	for k, v in pairs(lastfire) do
@@ -106,12 +105,12 @@ function mod:OnCombatEnd(wipe)
 	for i, v in ipairs(sortedFails) do
 		fire = fire.." "..v.."("..(lastfire[v] or "")..")"
 	end
-	SendChatMessage(L.FireWalls:format(fire), "RAID")
+	SendChatMessage(L.FireWalls:format(fire), channel)
 	twipe(sortedFails)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-    if args:IsSpellID(57579, 59127) then
+    if args:IsSpellID(57579, 59127) and self:AntiSpam(3, 1) then
         warnShadowFissure:Show()
         warnShadowFissure:Play("watchstep")
         timerShadowFissure:Start()

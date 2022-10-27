@@ -127,6 +127,8 @@ local NUM_OWNED = 0;
 local OWNED_SLOTS;
 
 local function GetEquippedSet(recount)
+    if true then return 0 end;
+
     if recount then
         local itemID;
         local numValid = 0;
@@ -448,6 +450,7 @@ end
 function NarciProgenitorSetIndicatorMixin:OnShow()
     if not NarcissusDB.ProgenitorTheme then
         self.Splash:ShowSplash();
+        self:SetTheme(2, true);
     else
         self:SetTheme(NarcissusDB.ProgenitorTheme);
     end

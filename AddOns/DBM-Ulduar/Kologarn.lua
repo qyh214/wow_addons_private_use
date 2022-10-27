@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kologarn", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041927")
+mod:SetRevision("20220701215737")
 mod:SetCreatureID(32930)--, 32933, 32934
 mod:SetEncounterID(1137)
 mod:SetModelID(28638)
@@ -22,6 +22,7 @@ mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
+--NOTE: Two crunch armors are setup to appear in gui twice on purpose, because they are very different mechanically. One is meant to be ignored and one is meant to be tank swap
 local warnFocusedEyebeam		= mod:NewTargetNoFilterAnnounce(63346, 4)
 local warnGrip					= mod:NewTargetNoFilterAnnounce(64292, 2)
 local warnCrunchArmor			= mod:NewStackAnnounce(64002, 2, nil, "Tank|Healer")
@@ -43,16 +44,16 @@ mod:AddSetIconOption("SetIconOnGripTarget", 64292, true, false, {7, 6, 5})
 mod:AddSetIconOption("SetIconOnEyebeamTarget", 63346, true, false, {8})
 
 mod.vb.disarmActive = false
---local gripTargets = {}
+local gripTargets = {}
 
 local function armReset(self)
 	self.vb.disarmActive = false
 end
 
---local function GripAnnounce(self)
---	warnGrip:Show(table.concat(gripTargets, "<, >"))
---	table.wipe(gripTargets)
---end
+local function GripAnnounce(self)
+	warnGrip:Show(table.concat(gripTargets, "<, >"))
+	table.wipe(gripTargets)
+end
 
 function mod:OnCombatStart(delay)
 	timerNextSmash:Start(10-delay)
@@ -69,17 +70,15 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(64290, 64292) then
 		if self.Options.SetIconOnGripTarget then
-			--self:SetIcon(args.destName, 8 - #gripTargets, 10)
-			self:SetIcon(args.destName, 8, 10)
+			self:SetIcon(args.destName, 8 - #gripTargets, 10)
 		end
-		--[[table.insert(gripTargets, args.destName)
+		table.insert(gripTargets, args.destName)
 		self:Unschedule(GripAnnounce)
 		if #gripTargets >= 3 then
 			GripAnnounce(self)
 		else
 			self:Schedule(0.3, GripAnnounce, self)
-		end--]]
-		warnGrip:Show(args.destName)
+		end
 	elseif args:IsSpellID(64002, 63355) then	-- Crunch Armor
 		local amount = args.amount or 1
 		if amount >= 2 then
@@ -108,6 +107,7 @@ function mod:UNIT_DIED(args)
 		timerNextGrip:Cancel()
 		if not self.vb.disarmActive then
 			self.vb.disarmActive = true
+			--TODO, verify it's 12 and 12, both were changed to 12 later on but early on it was 10 and 12
 			timerTimeForDisarmed:Start(12)
 			self:Schedule(12, armReset, self)
 		end

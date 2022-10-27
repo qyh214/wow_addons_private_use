@@ -47,8 +47,7 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	timerMobOvercharge	= "Отсчет времени для моба с Перегрузкой (стакающего дебафф)",
-	EmalonEnrage		= "Отсчет времени до $spell:26662",
-	RangeFrame			= "Показывать окно проверки дистанции (10)"
+	EmalonEnrage		= "Отсчет времени до $spell:26662"
 }
 
 ---------------------------------
@@ -60,16 +59,11 @@ L:SetGeneralLocalization{
 	name = "Коралон Страж Огня"
 }
 
-L:SetWarningLocalization{
-	BurningFury		= "Пылающая ярость >%d<"
-}
-
 L:SetTimerLocalization{
 	KoralonEnrage	= "Берсерк Коралона"
 }
 
 L:SetOptionLocalization{
-	BurningFury			= "Предупреждение для $spell:66721",
 	KoralonEnrage		= "Отсчет времени до $spell:26662"
 }
 
@@ -86,16 +80,8 @@ L:SetGeneralLocalization{
 	name = "Торавон Страж Льда"
 }
 
-L:SetWarningLocalization{
-	Frostbite	= "Обморожение на |3-5(>%s<) (%d)"
-}
-
 L:SetTimerLocalization{
 	ToravonEnrage	= "Берсерк Торавона"
-}
-
-L:SetOptionLocalization{
-	Frostbite	= "Предупреждение для $spell:72004"
 }
 
 L:SetMiscLocalization{

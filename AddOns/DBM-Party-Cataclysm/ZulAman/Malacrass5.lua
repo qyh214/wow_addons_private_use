@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "heroic,timewalker"
 
-mod:SetRevision("20200912135206")
+mod:SetRevision("20220920232426")
 mod:SetCreatureID(24239)
 mod:SetEncounterID(1193)
 
@@ -69,7 +69,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnSpiritBoltsSoon:Schedule(31)
 		timerSpiritBolts:Start()
 		timerSpiritBoltsNext:Start()
-	elseif args.spellId == 43421 and self:CheckDispelFilter() then
+	elseif args.spellId == 43421 then
 		specWarnLifebloom:Show(args.destName)
 		specWarnLifebloom:Play("dispelboss")
 	end

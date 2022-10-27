@@ -1,5 +1,6 @@
-## Interface: 90205
+## Interface: 100000
 ## X-Min-Interface: 80000
+## X-Min-Interface-Wrath: 30400
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Icecrown Citadel|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Eiskronenzitadelle|r
 ## Title-frFR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Citadelle de la Couronne de glace|r
@@ -24,7 +25,7 @@
 ## X-DBM-Mod-SubCategories-frFR: La Flèche Inférieure, L'Atelier de la Peste, La Salle Cramoisie, Les salles de l'Aile de Glace, Le trône de Glace, Trash
 ## X-DBM-Mod-SubCategories-zhTW: 城塞大門,瘟疫工坊, 赤紅大廳,霜翼大廳, 冰封王座, Trash
 ## X-DBM-Mod-SubCategories-zhCN: The Lower Spire, The Plagueworks, The Crimson Hall, Frostwing Halls, The Frozen Throne, Trash
-## X-DBM-Mod-SubCategories-koKR: 성채 하층부, 역병작업장, 진홍빛 전당, 서리날개 전당, 얼어붙은 왕좌, 일반구간
+## X-DBM-Mod-SubCategories-koKR: 성채 하층부, 역병작업장, 진홍빛 전당, 서리날개 전당, 얼어붙은 왕좌, 일반몹
 ## X-DBM-Mod-SubCategories-ruRU: Шпиль, Чумодельня, Багровый зал, Зал Ледокрылых, Ледяной Трон, Trash
 ## X-DBM-Mod-SubCategories-esES: La Ciudadela Inferior, Los Talleres de la Peste, La Sala Carmesí, Las Cámaras de Alaescarcha, El Trono Helado, Enemigos menores
 ## X-DBM-Mod-SubCategories-esMX: La Ciudadela Inferior, Los Talleres de la Peste, La Sala Carmesí, Las Cámaras de Alaescarcha, El Trono Helado, Enemigos menores
@@ -36,7 +37,7 @@
 ## X-Curse-Project-ID: 43970
 ## X-WoWI-ID: 21522
 ## X-Wago-ID: WqKQg7Nx
-## Version: r307
+## Version: r309
 
 localization.en.lua
 localization.de.lua

@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod("Deathwhisper", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220128073851")
+mod:SetRevision("20220701192851")
 mod:SetCreatureID(36855)
 mod:SetEncounterID(1100)
 mod:SetModelID(30893)
-mod:SetUsedIcons(4, 5, 6, 7, 8)
+mod:SetUsedIcons(1, 2, 3, 7, 8)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
@@ -14,43 +14,41 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 70842",
 	"SPELL_CAST_START 71420 70900 70901 71236",
 	"SPELL_SUMMON 71426",
-	"CHAT_MSG_MONSTER_YELL",
-	"UNIT_TARGET_UNFILTERED"
+	"CHAT_MSG_MONSTER_YELL"
 )
 
-local warnAddsSoon					= mod:NewAnnounce("WarnAddsSoon", 2)
-local warnDominateMind				= mod:NewTargetAnnounce(71289, 3)
+--TODO: Fix absorb infoframe if boss unit Ids don't exist or if not available on combat start
+local warnAddsSoon					= mod:NewAnnounce("WarnAddsSoon", 2, 61131)
+local warnDominateMind				= mod:NewTargetNoFilterAnnounce(71289, 3)
 local warnSummonSpirit				= mod:NewSpellAnnounce(71426, 2)
-local warnReanimating				= mod:NewAnnounce("WarnReanimating", 3)
+local warnReanimating				= mod:NewAnnounce("WarnReanimating", 3, 34018)
 local warnDarkTransformation		= mod:NewSpellAnnounce(70900, 4)
 local warnDarkEmpowerment			= mod:NewSpellAnnounce(70901, 4)
 local warnPhase2					= mod:NewPhaseAnnounce(2, 1)
 local warnTouchInsignificance		= mod:NewStackAnnounce(71204, 2, nil, "Tank|Healer")
 
 local specWarnCurseTorpor			= mod:NewSpecialWarningYou(71237, nil, nil, nil, 1, 2)
-local specWarnDeathDecay			= mod:NewSpecialWarningMove(71001, nil, nil, nil, 1, 2)
+local specWarnDeathDecay			= mod:NewSpecialWarningGTFO(71001, nil, nil, nil, 1, 8)
 local specWarnTouchInsignificance	= mod:NewSpecialWarningStack(71204, nil, 3, nil, nil, 1, 6)
 local specWarnVampricMight			= mod:NewSpecialWarningDispel(70674, "MagicDispeller", nil, nil, 1, 2)
 local specWarnDarkMartyrdom			= mod:NewSpecialWarningRun(71236, "Melee", nil, nil, 4, 2)
 local specWarnFrostbolt				= mod:NewSpecialWarningInterrupt(71420, "HasInterrupt", nil, 2, 1, 2)
 
 local timerAdds						= mod:NewTimer(60, "TimerAdds", 61131, nil, nil, 1, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.DAMAGE_ICON)
-local timerDominateMind				= mod:NewBuffActiveTimer(12, 71289)
+local timerDominateMind				= mod:NewBuffActiveTimer(12, 71289, nil, nil, nil, 5)
 local timerDominateMindCD			= mod:NewCDTimer(40, 71289, nil, nil, nil, 3)
-local timerSummonSpiritCD			= mod:NewCDTimer(10, 71426, nil, false)
+local timerSummonSpiritCD			= mod:NewCDTimer(10, 71426, nil, false, nil, 3)
 local timerTouchInsignificance		= mod:NewTargetTimer(30, 71204, nil, "Tank|Healer", nil, 5)
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 
-mod:AddBoolOption("SetIconOnDominateMind", true)
-mod:AddBoolOption("SetIconOnDeformedFanatic", true)
-mod:AddBoolOption("SetIconOnEmpoweredAdherent", true)
+mod:AddSetIconOption("SetIconOnDominateMind", 71289, true, 0, {1, 2, 3})
+mod:AddSetIconOption("SetIconOnDeformedFanatic", 70900, true, 5, {8})
+mod:AddSetIconOption("SetIconOnEmpoweredAdherent", 70901, true, 5, {7})
 mod:AddInfoFrameOption(70842, true)
 
 local dominateMindTargets = {}
-mod.vb.dominateMindIcon = 6
-local deformedFanatic
-local empoweredAdherent
+mod.vb.dominateMindIcon = 1
 local shieldName = DBM:GetSpellInfo(70842)
 
 local function showDominateMindWarning(self)
@@ -58,13 +56,13 @@ local function showDominateMindWarning(self)
 	timerDominateMind:Start()
 	timerDominateMindCD:Start()
 	table.wipe(dominateMindTargets)
-	self.vb.dominateMindIcon = 6
+	self.vb.dominateMindIcon = 1
 end
 
 local function addsTimer(self)
 	timerAdds:Cancel()
 	warnAddsSoon:Cancel()
-	if self:IsDifficulty("heroic10") or self:IsDifficulty("heroic25") then
+	if self:IsDifficulty("heroic10", "heroic25") then
 		warnAddsSoon:Schedule(40)	-- 5 secs prewarning
 		self:Schedule(45, addsTimer, self)
 		timerAdds:Start(45)
@@ -72,23 +70,6 @@ local function addsTimer(self)
 		warnAddsSoon:Schedule(55)	-- 5 secs prewarning
 		self:Schedule(60, addsTimer, self)
 		timerAdds:Start()
-	end
-end
-
-local function TrySetTarget(self)
-	if DBM:GetRaidRank() >= 1 then
-		for uId in DBM:GetGroupMembers() do
-			if UnitGUID(uId.."target") == deformedFanatic and self.Options.SetIconOnDeformedFanatic then
-				deformedFanatic = nil
-				self:SetIcon(uId.."target", 8)
-			elseif UnitGUID(uId.."target") == empoweredAdherent and self.Options.SetIconOnEmpoweredAdherent then
-				empoweredAdherent = nil
-				self:SetIcon(uId.."target", 7)
-			end
-			if not (deformedFanatic or empoweredAdherent) then
-				break
-			end
-		end
 	end
 end
 
@@ -102,8 +83,6 @@ function mod:OnCombatStart(delay)
 	end
 	table.wipe(dominateMindTargets)
 	self.vb.dominateMindIcon = 6
-	deformedFanatic = nil
-	empoweredAdherent = nil
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(shieldName)
 		DBM.InfoFrame:Show(2, "enemyabsorb", nil, UnitGetTotalAbsorbs("boss1"))
@@ -122,7 +101,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.SetIconOnDominateMind then
 			self:SetIcon(args.destName, self.vb.dominateMindIcon, 12)
 		end
-		self.vb.dominateMindIcon = self.vb.dominateMindIcon - 1
+		self.vb.dominateMindIcon = self.vb.dominateMindIcon + 1
 		self:Unschedule(showDominateMindWarning)
 		if self:IsDifficulty("heroic10", "normal25") or (self:IsDifficulty("heroic25") and #dominateMindTargets >= 3) then
 			showDominateMindWarning(self)
@@ -132,12 +111,12 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args.spellId == 71001 and not self:IsTrivial() then
 		if args:IsPlayer() then
 			specWarnDeathDecay:Show()
-			specWarnDeathDecay:Play("runaway")
+			specWarnDeathDecay:Play("watchfeet")
 		end
 	elseif args.spellId == 71237 and args:IsPlayer() and not self:IsTrivial() then
 		specWarnCurseTorpor:Show()
 		specWarnCurseTorpor:Play("targetyou")
-	elseif args.spellId == 70674 and not args:IsDestTypePlayer() and (UnitName("target") == L.Fanatic1 or UnitName("target") == L.Fanatic2 or UnitName("target") == L.Fanatic3) then
+	elseif args.spellId == 70674 and not args:IsDestTypePlayer() and UnitGUID("target") == args.destGUID then
 		specWarnVampricMight:Show(args.destName)
 		specWarnVampricMight:Play("helpdispel")
 	elseif args.spellId == 71204 then
@@ -174,14 +153,12 @@ function mod:SPELL_CAST_START(args)
 	elseif args.spellId == 70900 then
 		warnDarkTransformation:Show()
 		if self.Options.SetIconOnDeformedFanatic then
-			deformedFanatic = args.sourceGUID
-			TrySetTarget(self)
+			self:ScanForMobs(args.sourceGUID, 2, 8, 1, nil, 12, "SetIconOnDeformedFanatic")
 		end
 	elseif args.spellId == 70901 then
 		warnDarkEmpowerment:Show()
 		if self.Options.SetIconOnEmpoweredAdherent then
-			empoweredAdherent = args.sourceGUID
-			TrySetTarget(self)
+			self:ScanForMobs(args.sourceGUID, 2, 7, 1, nil, 12, "SetIconOnEmpoweredAdherent")
 		end
 	elseif args.spellId == 71236 and not self:IsTrivial() then
 		specWarnDarkMartyrdom:Show()
@@ -193,12 +170,6 @@ function mod:SPELL_SUMMON(args)
 	if args.spellId == 71426 and self:AntiSpam(5, 1) then -- Summon Vengeful Shade
 		warnSummonSpirit:Show()
 		timerSummonSpiritCD:Start()
-	end
-end
-
-function mod:UNIT_TARGET_UNFILTERED()
-	if empoweredAdherent or deformedFanatic then
-		TrySetTarget(self)
 	end
 end
 

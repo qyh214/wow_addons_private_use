@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2485, "DBM-Party-Dragonflight", 7, 1202)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220803233609")
+mod:SetRevision("20221018020559")
 mod:SetCreatureID(189232)
 mod:SetEncounterID(2609)
 --mod:SetUsedIcons(1, 2, 3)
@@ -12,10 +12,9 @@ mod:SetEncounterID(2609)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 372107 372863 373017 373087",
+	"SPELL_CAST_START 372107 372863 373017 373087 384823",
 	"SPELL_CAST_SUCCESS 372858",
 	"SPELL_AURA_APPLIED 372858",
---	"SPELL_AURA_APPLIED_DOSE",
 --	"SPELL_AURA_REMOVED"
 	"SPELL_PERIODIC_DAMAGE 372820",
 	"SPELL_PERIODIC_MISSED 372820"
@@ -28,14 +27,16 @@ mod:RegisterEventsInCombat(
 (ability.id = 372107 or ability.id = 372863) and type = "begincast"
  or ability.id = 372858 and type = "cast"
  or (ability.id = 373017 or ability.id = 373087) and type = "begincast"
+ or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnBurnout								= mod:NewCastAnnounce(373087, 4)
+local warnInferno								= mod:NewCastAnnounce(384823, 3)
 
 local specWarnSearingBlows						= mod:NewSpecialWarningDefensive(372858, nil, nil, nil, 1, 2)
 local specWarnMoltenBoulder						= mod:NewSpecialWarningDodge(372107, nil, nil, nil, 1, 2)
 local yellMoltenBoulder							= mod:NewYell(372107)
 local specWarnRitualofBlazebinding				= mod:NewSpecialWarningSwitch(372863, nil, nil, nil, 1, 2)
-local specWarnRoaringBlaze						= mod:NewSpecialWarningInterrupt(373017, "HasInterrupt", nil, nil, 1, 2)
+local specWarnRoaringBlaze						= mod:NewSpecialWarningInterruptCount(373017, "HasInterrupt", nil, nil, 1, 2)
 local specWarnBurnout							= mod:NewSpecialWarningRun(373087, "Melee", nil, nil, 4, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(372820, nil, nil, nil, 1, 8)
 
@@ -49,6 +50,8 @@ local timerRitualofBlazebindingCD				= mod:NewCDTimer(33.9, 372863, nil, nil, ni
 --mod:AddInfoFrameOption(361651, true)
 --mod:AddSetIconOption("SetIconOnStaggeringBarrage", 361018, true, false, {1, 2, 3})
 
+local castsPerGUID = {}
+
 function mod:BoulderTarget(targetname)
 	if not targetname then return end
 	if targetname == UnitName("player") then
@@ -57,19 +60,21 @@ function mod:BoulderTarget(targetname)
 end
 
 function mod:OnCombatStart(delay)
+	table.wipe(castsPerGUID)
 	timerRitualofBlazebindingCD:Start(6.9-delay)
 	timerMoltenBoulderCD:Start(14.2-delay)
 	timerSearingBlowsCD:Start(21.4-delay)
 end
 
---function mod:OnCombatEnd()
+function mod:OnCombatEnd()
+	table.wipe(castsPerGUID)
 --	if self.Options.RangeFrame then
 --		DBM.RangeCheck:Hide()
 --	end
 --	if self.Options.InfoFrame then
 --		DBM.InfoFrame:Hide()
 --	end
---end
+end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
@@ -83,8 +88,27 @@ function mod:SPELL_CAST_START(args)
 		specWarnRitualofBlazebinding:Play("killmob")
 		timerRitualofBlazebindingCD:Start()
 	elseif spellId == 373017 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
-		specWarnRoaringBlaze:Show(args.sourceName)
-		specWarnRoaringBlaze:Play("kickcast")
+		if not castsPerGUID[args.sourceGUID] then
+			castsPerGUID[args.sourceGUID] = 0
+		end
+		castsPerGUID[args.sourceGUID] = castsPerGUID[args.sourceGUID] + 1
+		local count = castsPerGUID[args.sourceGUID]
+		if self:CheckInterruptFilter(args.sourceGUID, false, false) then--Count interrupt, so cooldown is not checked
+			specWarnRoaringBlaze:Show(args.sourceName, count)
+			if count == 1 then
+				specWarnRoaringBlaze:Play("kick1r")
+			elseif count == 2 then
+				specWarnRoaringBlaze:Play("kick2r")
+			elseif count == 3 then
+				specWarnRoaringBlaze:Play("kick3r")
+			elseif count == 4 then
+				specWarnRoaringBlaze:Play("kick4r")
+			elseif count == 5 then
+				specWarnRoaringBlaze:Play("kick5r")
+			else
+				specWarnRoaringBlaze:Play("kickcast")
+			end
+		end
 	elseif spellId == 373087 then
 		if self.Options.SpecWarn373087run then
 			specWarnBurnout:Show()
@@ -92,6 +116,8 @@ function mod:SPELL_CAST_START(args)
 		else
 			warnBurnout:Show()
 		end
+	elseif spellId == 384823 then
+		warnInferno:Show()
 	end
 end
 
@@ -111,7 +137,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	end
 end
---mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 --[[
 function mod:SPELL_AURA_REMOVED(args)

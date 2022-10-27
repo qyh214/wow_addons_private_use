@@ -67,7 +67,7 @@ L:SetGeneralLocalization({
 L = DBM:GetModLocalization("UldamanLegacyofTyrTrash")
 
 L:SetGeneralLocalization({
-	name =	"Трэш мобы Ульдаман: Наследие Тира"
+	name =	"Трэш мобы Ульдаман: наследие Тира"
 })
 
 -----------------------
@@ -136,7 +136,7 @@ L:SetGeneralLocalization({
 })
 
 -----------------------
--- <<<Taz'algeth Academy >>> --
+-- <<<Algeth'ar Academy >>> --
 -----------------------
 -----------------------
 -- Crawth --
@@ -146,25 +146,25 @@ L:SetGeneralLocalization({
 -----------------------
 -- Vexamus --
 -----------------------
---L= DBM:GetModLocalization(9999)
+--L= DBM:GetModLocalization(2509)
 
 -----------------------
 -- Accidental Amalgamation --
 -----------------------
---L= DBM:GetModLocalization(9999)
+--L= DBM:GetModLocalization(2512)
 
 -----------------------
 -- Headmaster --
 -----------------------
---L= DBM:GetModLocalization(9999)
+--L= DBM:GetModLocalization(2513)
 
 ---------
 --Trash--
 ---------
-L = DBM:GetModLocalization("TazalgethAcademyTrash")
+L = DBM:GetModLocalization("AlgetharAcademyTrash")
 
 L:SetGeneralLocalization({
-	name =	"Трэш мобы Академия Таз'алгет"
+	name =	"Трэш мобы Академия Алгет'ар"
 })
 
 -----------------------
@@ -196,7 +196,7 @@ L:SetGeneralLocalization({
 L = DBM:GetModLocalization("TheAzurevaultTrash")
 
 L:SetGeneralLocalization({
-	name =	"Трэш мобы Лазурное Хранилище"
+	name =	"Трэш мобы Лазурное хранилище"
 })
 
 -----------------------
@@ -223,7 +223,7 @@ L:SetGeneralLocalization({
 L = DBM:GetModLocalization("RubyLifePoolsTrash")
 
 L:SetGeneralLocalization({
-	name =	"Трэш мобы Рубиновые омуты Жизни"
+	name =	"Трэш мобы Рубиновые Омуты Жизни"
 })
 
 -----------------------
@@ -242,12 +242,12 @@ L:SetGeneralLocalization({
 -----------------------
 -- Khajin the Unyielding --
 -----------------------
---L= DBM:GetModLocalization(9999)
+--L= DBM:GetModLocalization(2510)
 
 -----------------------
 -- Primal Tsunami --
 -----------------------
---L= DBM:GetModLocalization(9999)
+--L= DBM:GetModLocalization(2511)
 
 ---------
 --Trash--

@@ -1,11 +1,21 @@
 local myname, ns = ...
+local _, myfullname = GetAddOnInfo(myname)
 
 local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes")
 local HL = LibStub("AceAddon-3.0"):NewAddon(myname, "AceEvent-3.0")
 -- local L = LibStub("AceLocale-3.0"):GetLocale(myname, true)
 ns.HL = HL
 
-ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v68'
+local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
+
+ns.DEBUG = GetAddOnMetadata(myname, "Version") == 'v71.1'
+
+ns.CLASSIC = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
+
+local ATLAS_CHECK, ATLAS_CROSS = "common-icon-checkmark", "common-icon-redx"
+if ns.CLASSIC then
+    ATLAS_CHECK, ATLAS_CROSS = "Tracker-Check", "Objective-Fail"
+end
 
 ---------------------------------------------------------
 -- Data model stuff:
@@ -403,7 +413,7 @@ local function work_out_label(point)
         end
         fallback = 'item:'..ns.lootitem(point.loot[1])
     end
-    if point.achievement and not point.criteria then
+    if point.achievement and not point.criteria or point.criteria == true then
         local _, achievement = GetAchievementInfo(point.achievement)
         if achievement then
             return achievement
@@ -606,7 +616,7 @@ local function tooltip_loot(tooltip, item)
         -- could only confirm this for some cosmetic back items but let's play it
         -- safe and say that any cosmetic item can drop regardless of what the
         -- spec info says...
-        if specTable and #specTable == 0 and not IsCosmeticItem(id) then
+        if specTable and #specTable == 0 and not (_G.IsCosmeticItem and IsCosmeticItem(id)) then
             return true
         end
         -- then catch covenants / classes / etc
@@ -666,7 +676,7 @@ local function tooltip_loot(tooltip, item)
         if knownText then
             link = link .. " " .. knownText
         else
-            link = link .. " " .. CreateAtlasMarkup(known and "common-icon-checkmark" or "common-icon-redx")
+            link = link .. " " .. CreateAtlasMarkup(known and ATLAS_CHECK or ATLAS_CROSS)
         end
     end
     tooltip:AddDoubleLine(label, quick_texture_markup(icon) .. " " .. link,
@@ -879,7 +889,18 @@ function HLHandler:OnEnter(uiMapID, coord)
 end
 
 local function showAchievement(button, achievement)
-    OpenAchievementFrameToAchievement(achievement)
+    if OpenAchievementFrameToAchievement then
+        OpenAchievementFrameToAchievement(achievement)
+    else
+        -- probably classic
+        if ( not AchievementFrame ) then
+            AchievementFrame_LoadUI()
+        end
+        if ( not AchievementFrame:IsShown() ) then
+            AchievementFrame_ToggleAchievementFrame()
+        end
+        AchievementFrame_SelectAchievement(achievement)
+    end
 end
 
 local function createWaypoint(button, uiMapID, coord)
@@ -937,7 +958,7 @@ local function sendToChat(button, uiMapID, coord)
 end
 
 local function closeAllDropdowns()
-    CloseDropDownMenus(1)
+    LibDD:CloseDropDownMenus(1)
 end
 
 do
@@ -945,13 +966,13 @@ do
     local function generateMenu(button, level)
         local point = ns.points[currentZone] and ns.points[currentZone][currentCoord]
         if not (level and point) then return end
-        local info = UIDropDownMenu_CreateInfo()
+        local info = LibDD:UIDropDownMenu_CreateInfo()
         if (level == 1) then
             -- Create the title of the menu
-            info.isTitle      = 1
-            info.text         = "HandyNotes - " .. myname:gsub("HandyNotes_", "")
+            info.isTitle = 1
+            info.text = myfullname
             info.notCheckable = 1
-            UIDropDownMenu_AddButton(info, level)
+            LibDD:UIDropDownMenu_AddButton(info, level)
             wipe(info)
 
             if point.achievement then
@@ -960,7 +981,7 @@ do
                 info.notCheckable = 1
                 info.func = showAchievement
                 info.arg1 = point.achievement
-                UIDropDownMenu_AddButton(info, level)
+                LibDD:UIDropDownMenu_AddButton(info, level)
                 wipe(info)
             end
 
@@ -971,17 +992,19 @@ do
                 info.func = createWaypoint
                 info.arg1 = currentZone
                 info.arg2 = currentCoord
-                UIDropDownMenu_AddButton(info, level)
+                LibDD:UIDropDownMenu_AddButton(info, level)
                 wipe(info)
             end
 
-            info.text = COMMUNITIES_INVITE_MANAGER_LINK_TO_CHAT -- Link to chat
-            info.notCheckable = 1
-            info.func = sendToChat
-            info.arg1 = currentZone
-            info.arg2 = currentCoord
-            UIDropDownMenu_AddButton(info, level)
-            wipe(info)
+            if _G.MAP_PIN_HYPERLINK then
+                info.text = COMMUNITIES_INVITE_MANAGER_LINK_TO_CHAT -- Link to chat
+                info.notCheckable = 1
+                info.func = sendToChat
+                info.arg1 = currentZone
+                info.arg2 = currentCoord
+                LibDD:UIDropDownMenu_AddButton(info, level)
+                wipe(info)
+            end
 
             -- Hide menu item
             info.text         = "Hide node"
@@ -989,7 +1012,7 @@ do
             info.func         = hideNode
             info.arg1         = currentZone
             info.arg2         = currentCoord
-            UIDropDownMenu_AddButton(info, level)
+            LibDD:UIDropDownMenu_AddButton(info, level)
             wipe(info)
 
             if point.achievement then
@@ -998,7 +1021,7 @@ do
                 info.notCheckable = 1
                 info.func = hideAchievement
                 info.arg1 = point.achievement
-                UIDropDownMenu_AddButton(info, level)
+                LibDD:UIDropDownMenu_AddButton(info, level)
                 wipe(info)
             end
 
@@ -1010,7 +1033,7 @@ do
                     info.func = hideGroupZone
                     info.arg1 = currentZone
                     info.arg2 = currentCoord
-                    UIDropDownMenu_AddButton(info, level)
+                    LibDD:UIDropDownMenu_AddButton(info, level)
                     wipe(info)
                 end
                 if not ns.hiddenConfig.groupsHidden then
@@ -1019,7 +1042,7 @@ do
                     info.func = hideGroup
                     info.arg1 = currentZone
                     info.arg2 = currentCoord
-                    UIDropDownMenu_AddButton(info, level)
+                    LibDD:UIDropDownMenu_AddButton(info, level)
                     wipe(info)
                 end
             end
@@ -1028,14 +1051,12 @@ do
             info.text         = "Close"
             info.func         = closeAllDropdowns
             info.notCheckable = 1
-            UIDropDownMenu_AddButton(info, level)
+            LibDD:UIDropDownMenu_AddButton(info, level)
             wipe(info)
         end
     end
-    local HL_Dropdown = CreateFrame("Frame", myname.."DropdownMenu")
-    HL_Dropdown.displayMode = "MENU"
-    HL_Dropdown.initialize = generateMenu
 
+    local HL_Dropdown
     function HLHandler:OnClick(button, down, uiMapID, coord)
         if down then return end
         currentZone = uiMapID
@@ -1044,9 +1065,14 @@ do
         local point = ns.points[currentZone] and ns.points[currentZone][currentCoord]
         if point then
             if button == "RightButton" then
-                ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
+                if not HL_Dropdown then
+                    HL_Dropdown = LibDD:Create_UIDropDownMenu(myname .. "PointDropdown")
+                    LibDD:UIDropDownMenu_SetInitializeFunction(HL_Dropdown, generateMenu)
+                    LibDD:UIDropDownMenu_SetDisplayMode(HL_Dropdown, "MENU")
+                end
+                LibDD:ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
             end
-            if button == "LeftButton" and IsShiftKeyDown() then
+            if button == "LeftButton" and IsShiftKeyDown() and _G.MAP_PIN_HYPERLINK then
                 sendToChat(button, uiMapID, coord)
             end
         end
@@ -1110,8 +1136,10 @@ function HL:OnInitialize()
     self:RegisterEvent("CRITERIA_EARNED", "RefreshOnEvent")
     self:RegisterEvent("BAG_UPDATE", "RefreshOnEvent")
     self:RegisterEvent("QUEST_TURNED_IN", "RefreshOnEvent")
-    self:RegisterEvent("SHOW_LOOT_TOAST", "RefreshOnEvent")
-    self:RegisterEvent("GARRISON_FOLLOWER_ADDED", "RefreshOnEvent")
+    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+        self:RegisterEvent("SHOW_LOOT_TOAST", "RefreshOnEvent")
+        self:RegisterEvent("GARRISON_FOLLOWER_ADDED", "RefreshOnEvent")
+    end
     -- This is sometimes spammy, but is the only thing that tends to get us casts:
     self:RegisterEvent("CRITERIA_UPDATE", "RefreshOnEvent")
 
@@ -1163,10 +1191,12 @@ hooksecurefunc(VignettePinMixin, "OnMouseEnter", function(self)
     handle_tooltip(GameTooltip, point, true)
 end)
 
-hooksecurefunc("TaskPOI_OnEnter", function(self)
-    if not self.questID then return end
-    if not ns.WorldQuestsToPoints[self.questID] then return end
-    local point = ns.WorldQuestsToPoints[self.questID]
-    -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
-    handle_tooltip(GameTooltip, point, true)
-end)
+if _G.TaskPoi_OnEnter then
+    hooksecurefunc("TaskPOI_OnEnter", function(self)
+        if not self.questID then return end
+        if not ns.WorldQuestsToPoints[self.questID] then return end
+        local point = ns.WorldQuestsToPoints[self.questID]
+        -- if not ns.should_show_point(point._coord, point, point._uiMapID, false) then return end
+        handle_tooltip(GameTooltip, point, true)
+    end)
+end

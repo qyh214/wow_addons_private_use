@@ -1,11 +1,9 @@
 if GetLocale() ~= "koKR" then return end
-
 local L
 
-----------------
---  아카본  --
-----------------
-
+----------------------------------
+--  Archavon the Stone Watcher  --
+----------------------------------
 L = DBM:GetModLocalization("Archavon")
 
 L:SetGeneralLocalization({
@@ -13,7 +11,7 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
-	WarningGrab		= "분쇄의 도약 : >%s<"
+	WarningGrab		= "아카본이 >%s<에게 돌진"
 })
 
 L:SetTimerLocalization({
@@ -25,22 +23,17 @@ L:SetMiscLocalization({
 })
 
 L:SetOptionLocalization({
-	WarningGrab 	= "분쇄의 도약 대상 알림 보기",
-	ArchavonEnrage	= "$spell:26662 바 보기"
+	WarningGrab 	= "돌진 대상 알림",
+	ArchavonEnrage	= "$spell:26662 타이머 바 보기"
 })
 
---------------
---  Emalon  --
---------------
-
+--------------------------------
+--  Emalon the Storm Watcher  --
+--------------------------------
 L = DBM:GetModLocalization("Emalon")
 
 L:SetGeneralLocalization{
 	name = "폭풍의 감시자 에말론"
-}
-
-L:SetWarningLocalization{
---	specWarnNova 		= "번개 회오리 - 피하세요!"
 }
 
 L:SetTimerLocalization{
@@ -49,23 +42,17 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	timerMobOvercharge	= "과충전 폭발까지 남은시간 바 보기",
-	EmalonEnrage		= "$spell:26662 바 보기",
-	RangeFrame			= "거리 창 보기(10m)"
+	timerMobOvercharge	= "과충전된 몹 (디버프 중첩) 타이머 바 보기",
+	EmalonEnrage		= "$spell:26662 타이머 바 보기"
 }
 
----------------
---  Koralon  --
----------------
-
+---------------------------------
+--  Koralon the Flame Watcher  --
+---------------------------------
 L = DBM:GetModLocalization("Koralon")
 
 L:SetGeneralLocalization{
 	name = "화염 감시자 코랄론"
-}
-
-L:SetWarningLocalization{
-	BurningFury			= "불타는 격노 (%d)"
 }
 
 L:SetTimerLocalization{
@@ -73,8 +60,7 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	BurningFury			= "$spell:66721 알림 보기",
-	KoralonEnrage		= "$spell:26662 바 보기"
+	KoralonEnrage		= "$spell:26662 타이머 바 보기"
 }
 
 L:SetMiscLocalization{
@@ -90,18 +76,10 @@ L:SetGeneralLocalization{
 	name = "얼음 감시자 토라본"
 }
 
-L:SetWarningLocalization{
-	Frostbite		= "냉증 : >%s< (%d)"
-}
-
 L:SetTimerLocalization{
 	ToravonEnrage	= "토라본 광폭화"
 }
 
-L:SetOptionLocalization{
-	Frostbite		= "$spell:72004 중첩 알림 보기"
-}
-
 L:SetMiscLocalization{
-	ToravonEnrage	= "$spell:26662 바 보기"
+	ToravonEnrage	= "광폭화 타이머 바 보기"
 }

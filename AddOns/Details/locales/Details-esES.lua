@@ -157,8 +157,7 @@ L["STRING_CUSTOM_SPELLID_DESC"] = "Opcional. El hechizo que la fuente utiliza pa
 L["STRING_CUSTOM_TARGET"] = "Objetivo:"
 L["STRING_CUSTOM_TARGET_DESC"] = "Este está el objetivo del fuente. El botón a la derecha muestra una lista de PNJs de los encuentros de banda."
 L["STRING_CUSTOM_TEMPORARILY"] = " (|cFFFFC000temporalmente|r)"
---[[Translation missing --]]
---[[ L["STRING_CUSTOM_TEXTURE_GUIDE"] = ""--]] 
+L["STRING_CUSTOM_TEXTURE_GUIDE"] = "Para cargar un archivo de texturas en el cliente de World of Warcraft necesitas un archivo en formato .TGA y tanto su ancho como su alto deben ser un múltiplo de 8. Pon el archivo dentro de la carpeta /carpeta_de_instalacion_de_wow/retail/Interface/"
 L["STRING_DAMAGE"] = "Daño"
 L["STRING_DAMAGE_DPS_IN"] = "DPS recibido por"
 L["STRING_DAMAGE_FROM"] = "Recibió daño por"
@@ -381,12 +380,9 @@ L["STRING_OPTIONS_3D_UANCHOR"] = "Modelo 3D superior:"
 L["STRING_OPTIONS_3D_UENABLED_DESC"] = "Activado o desactivado el uso de un marco de modelo 3D sobre las barras."
 L["STRING_OPTIONS_3D_USELECT_DESC"] = "Elija qué modelo se utilizará en la barra de modelo superior."
 L["STRING_OPTIONS_ADVANCED"] = "Avanzado"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = ""--]] 
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = "Columnas de texto alineadas"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = "Auto Alineación"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = "La alineación se hace automáticamente basada en la longitud de cada texto"
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = ""--]] 
 --[[Translation missing --]]
@@ -580,14 +576,12 @@ L["STRING_OPTIONS_ED_DESC"] = [=[|cFFFFFF00Manualmente|r: El usuario necesita ha
 L["STRING_OPTIONS_ED1"] = "Manualmente"
 L["STRING_OPTIONS_ED2"] = "Mensaje"
 L["STRING_OPTIONS_ED3"] = "Auto"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = ""--]] 
+L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = "Editar Texto Personalizado"
 L["STRING_OPTIONS_EDITIMAGE"] = "Editar imagen"
 L["STRING_OPTIONS_EDITINSTANCE"] = "Configurando ventana:"
 L["STRING_OPTIONS_ERASECHARTDATA"] = "Borrar gráficos"
 L["STRING_OPTIONS_ERASECHARTDATA_DESC"] = "Durante el cierre de sesión, se borran todos los datos de combate recopilados para crear gráficos."
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_EXPORT_PROFILE"] = ""--]] 
+L["STRING_OPTIONS_EXPORT_PROFILE"] = "Exportar perfil"
 L["STRING_OPTIONS_EXTERNALS_TITLE"] = "Artilugios externos"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "Estas opciones controlan el comportamiento de muchos artilugios extranjeros."
 L["STRING_OPTIONS_GENERAL"] = "Opciones generales"
@@ -609,12 +603,9 @@ L["STRING_OPTIONS_IGNORENICKNAME_DESC"] = "Cuando está habilitado, los apodos y
 L["STRING_OPTIONS_ILVL_TRACKER"] = "Rastreador de nivel de objeto:"
 L["STRING_OPTIONS_ILVL_TRACKER_DESC"] = "Cuando está habilitado y fuera de combate, el addon consulta y rastrea el nivel de objeto de los jugadores en la banda. Si está deshabilitado, aún lee el nivel de objeto de las consultas de otros addons cuando inspecciona manualmente a otro jugador."
 L["STRING_OPTIONS_ILVL_TRACKER_TEXT"] = "Habilitado"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = ""--]] 
+L["STRING_OPTIONS_IMPORT_PROFILE"] = "Importar perfil"
+L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = "Inserta un nombre para el nuevo perfil"
+L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = "Details! Importar perfil (pega la cadena de importación)"
 L["STRING_OPTIONS_INSTANCE_BACKDROP"] = "Textura del fondo"
 L["STRING_OPTIONS_INSTANCE_BACKDROP_DESC"] = "Escoger la textura del fondo de la ventana. |cffffff00Defecto|r: Details Background."
 L["STRING_OPTIONS_INSTANCE_CURRENT"] = "Auto-cambiar al actual"
@@ -999,8 +990,7 @@ L["STRING_OPTIONS_TEXTEDITOR_TOK_TOOLTIP"] = [=[Añadir una función para abrevi
 Por ejemplo: 1500000 a 1.5kk.]=]
 L["STRING_OPTIONS_TIMEMEASURE"] = "Medida de tiempo"
 L["STRING_OPTIONS_TIMEMEASURE_DESC"] = "|cFFFFFF00Actividad|r: el temporizador de cada miembro de la banda se pone en espera si se detiene su actividad y vuelve a contar cuando se reanuda, forma común de medir DPS y SPS.  |cFFFFFF00Efectivo|r: utilizado en las clasificaciones, este método utiliza el tiempo de combate transcurrido para medir el DPS y el SPS de todos los miembros de la banda."
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = ""--]] 
+L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = "Botones y opciones de menú"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS"] = "Configuración del botón de la barra de título"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS_DESC"] = "Estas opciones cambian el menú principal en la parte superior de la ventana."
 L["STRING_OPTIONS_TOOLBARSIDE"] = "Barra de título en el lado superior"

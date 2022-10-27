@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("SethralissTrash", "DBM-Party-BfA", 6)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201116014239")
+mod:SetRevision("20220920232426")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
@@ -33,8 +33,8 @@ local specWarnNeurotoxinDispel		= mod:NewSpecialWarningDispel(273563, "RemovePoi
 local specWarnCytotoxin				= mod:NewSpecialWarningDispel(267027, "RemovePoison", nil, nil, 1, 2)
 local specWarnVenomousSpit			= mod:NewSpecialWarningDispel(272699, "RemovePoison", nil, nil, 1, 2)
 local specWarnElectrifiedScales		= mod:NewSpecialWarningDispel(272659, "MagicDispeller", nil, nil, 1, 2)
-local specWarnFlameShock			= mod:NewSpecialWarningDispel(268013, "Healer", nil, nil, 1, 2)
-local specWarnSnakeCharm			= mod:NewSpecialWarningDispel(268008, "Healer", nil, nil, 1, 2)
+local specWarnFlameShock			= mod:NewSpecialWarningDispel(268013, "RemoveMagic", nil, 2, 1, 2)
+local specWarnSnakeCharm			= mod:NewSpecialWarningDispel(268008, "RemoveMagic", nil, 2, 1, 2)
 local specWarnNeurotoxin			= mod:NewSpecialWarningYou(273563, nil, nil, nil, 1, 2)
 
 function mod:SPELL_CAST_START(args)
@@ -72,7 +72,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if spellId == 273563 and args:IsDestTypePlayer() then
-		if self.Options.SpecWarn273563dispel and self:CheckDispelFilter() then
+		if self.Options.SpecWarn273563dispel and self:CheckDispelFilter("poison") then
 			specWarnNeurotoxinDispel:Show(args.destName)
 			specWarnNeurotoxinDispel:Play("helpdispel")
 		elseif args:IsPlayer() then
@@ -82,16 +82,16 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 272659 and not args:IsDestTypePlayer() and self:AntiSpam(3, 3) then
 		specWarnElectrifiedScales:Show(args.destName)
 		specWarnElectrifiedScales:Play("helpdispel")
-	elseif spellId == 267027 and args:IsDestTypePlayer() and self:CheckDispelFilter() and self:AntiSpam(3, 4) then
+	elseif spellId == 267027 and args:IsDestTypePlayer() and self:CheckDispelFilter("poison") and self:AntiSpam(3, 4) then
 		specWarnCytotoxin:Show(args.destName)
 		specWarnCytotoxin:Play("helpdispel")
-	elseif spellId == 272699 and args:IsDestTypePlayer() and self:CheckDispelFilter() and self:AntiSpam(3, 4) then
+	elseif spellId == 272699 and args:IsDestTypePlayer() and self:CheckDispelFilter("poison") and self:AntiSpam(3, 4) then
 		specWarnVenomousSpit:Show(args.destName)
 		specWarnVenomousSpit:Play("helpdispel")
-	elseif spellId == 268013 and args:IsDestTypePlayer() and self:CheckDispelFilter() and self:AntiSpam(3, 8) then
+	elseif spellId == 268013 and args:IsDestTypePlayer() and self:CheckDispelFilter("magic") and self:AntiSpam(3, 8) then
 		specWarnFlameShock:Show(args.destName)
 		specWarnFlameShock:Play("helpdispel")
-	elseif spellId == 268008 and args:IsDestTypePlayer() and self:CheckDispelFilter() and self:AntiSpam(3, 8) then
+	elseif spellId == 268008 and args:IsDestTypePlayer() and self:CheckDispelFilter("magic") and self:AntiSpam(3, 8) then
 		specWarnSnakeCharm:Show(args.destName)
 		specWarnSnakeCharm:Play("helpdispel")
 	end

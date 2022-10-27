@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod("Putricide", "DBM-Icecrown", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041927")
+mod:SetRevision("20220701192851")
 mod:SetCreatureID(36678)
 mod:SetEncounterID(1102)
 mod:SetModelID(30881)
-mod:SetUsedIcons(5, 6, 7, 8)
+mod:SetUsedIcons(1, 2, 3, 4)
 --mod:SetMinSyncRevision(3860)
 mod:SetMinSyncRevision(7)--Could break if someone is running out of date version with higher revision
 
@@ -25,8 +25,8 @@ mod:RegisterEventsInCombat(
 local warnSlimePuddle				= mod:NewSpellAnnounce(70341, 2)
 local warnUnstableExperimentSoon	= mod:NewSoonAnnounce(70351, 3)
 local warnUnstableExperiment		= mod:NewSpellAnnounce(70351, 4)
-local warnVolatileOozeAdhesive		= mod:NewTargetAnnounce(70447, 3)
-local warnGaseousBloat				= mod:NewTargetAnnounce(70672, 3)
+local warnVolatileOozeAdhesive		= mod:NewTargetNoFilterAnnounce(70447, 3)
+local warnGaseousBloat				= mod:NewTargetNoFilterAnnounce(70672, 3)
 local warnPhase2Soon				= mod:NewPrePhaseAnnounce(2)
 local warnTearGas					= mod:NewSpellAnnounce(71617, 2)		-- Phase transition normal
 local warnVolatileExperiment		= mod:NewSpellAnnounce(72840, 4)		-- Phase transition heroic
@@ -34,7 +34,7 @@ local warnChokingGasBombSoon		= mod:NewPreWarnAnnounce(71255, 5, 3, nil, "Melee"
 local warnChokingGasBomb			= mod:NewSpellAnnounce(71255, 3, nil, "Melee")		-- Phase 2 ability
 local warnPhase3Soon				= mod:NewPrePhaseAnnounce(3)
 local warnMutatedPlague				= mod:NewStackAnnounce(72451, 3, nil, "Tank|Healer") -- Phase 3 ability
-local warnUnboundPlague				= mod:NewTargetAnnounce(70911, 3)		-- Heroic Ability
+local warnUnboundPlague				= mod:NewTargetNoFilterAnnounce(70911, 3)		-- Heroic Ability
 
 local specWarnVolatileOozeAdhesive	= mod:NewSpecialWarningYou(70447, nil, nil, nil, 1, 2)
 local specWarnVolatileOozeAdhesiveT	= mod:NewSpecialWarningMoveTo(70447, nil, nil, nil, 1, 2)
@@ -54,7 +54,7 @@ local timerSlimePuddleCD			= mod:NewCDTimer(35, 70341, nil, nil, nil, 5, nil, DB
 local timerUnstableExperimentCD		= mod:NewNextTimer(38, 70351, nil, nil, nil, 1, nil, DBM_COMMON_L.DEADLY_ICON)			-- Used every 38 seconds exactly except after phase changes
 local timerChokingGasBombCD			= mod:NewNextTimer(35.5, 71255, nil, nil, nil, 3)
 local timerMalleableGooCD			= mod:NewCDTimer(25, 72295, nil, nil, nil, 3)
-local timerTearGas					= mod:NewBuffFadesTimer(16, 71615, nil, nil, nil, 6)
+local timerTearGas					= mod:NewBuffFadesTimer(16, 71617, nil, nil, nil, 6)
 local timerPotions					= mod:NewBuffActiveTimer(30, 71621, nil, nil, nil, 6)
 local timerMutatedPlagueCD			= mod:NewCDTimer(10, 72451, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)				-- 10 to 11
 local timerUnboundPlagueCD			= mod:NewNextTimer(60, 70911, nil, nil, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON)
@@ -66,94 +66,15 @@ local timerRegurgitatedOoze			= mod:NewTargetTimer(20, 70539, nil, nil, nil, 5, 
 
 local berserkTimer					= mod:NewBerserkTimer(600)
 
-mod:AddBoolOption("OozeAdhesiveIcon")
-mod:AddBoolOption("GaseousBloatIcon")
-mod:AddBoolOption("MalleableGooIcon")
-mod:AddBoolOption("UnboundPlagueIcon")
+mod:AddSetIconOption("OozeAdhesiveIcon", 70447, true, 0, {4})--green icon for green ooze
+mod:AddSetIconOption("GaseousBloatIcon", 70672, true, 0, {2})--Orange Icon for orange/red ooze
+mod:AddSetIconOption("MalleableGooIcon", 72295, true, 0, {1})
+mod:AddSetIconOption("UnboundPlagueIcon", 70911, true, 0, {3})
 
 mod.vb.warned_preP2 = false
 mod.vb.warned_preP3 = false
 
-function mod:OnCombatStart(delay)
-	self:SetStage(1)
-	berserkTimer:Start(-delay)
-	timerSlimePuddleCD:Start(10-delay)
-	timerUnstableExperimentCD:Start(30-delay)
-	warnUnstableExperimentSoon:Schedule(25-delay)
-	self.vb.warned_preP2 = false
-	self.vb.warned_preP3 = false
-	if self:IsDifficulty("heroic10", "heroic25") then
-		timerUnboundPlagueCD:Start(10-delay)
-	end
-end
-
-function mod:MalleableGooTarget(targetname, uId)
-	if not targetname then return end
-		if self.Options.MalleableGooIcon then
-			self:SetIcon(targetname, 6, 10)
-		end
-	if targetname == UnitName("player") then
-		specWarnMalleableGoo:Show()
-		specWarnMalleableGoo:Play("targetyou")
-		yellMalleableGoo:Yell()
-	else
-		if uId then
-			local inRange = CheckInteractDistance(uId, 2)
-			if inRange then
-				specWarnMalleableGooNear:Show(targetname)
-				specWarnMalleableGooNear:Play("watchstep")
-			else
-				specWarnMalleableGooCast:Show()
-				specWarnMalleableGooCast:Play("watchstep")
-			end
-		else
-			specWarnMalleableGooCast:Show()
-			specWarnMalleableGooCast:Play("watchstep")
-		end
-	end
-end
-
-function mod:SPELL_CAST_START(args)
-	if args.spellId == 70351 then
-		warnUnstableExperimentSoon:Cancel()
-		warnUnstableExperiment:Show()
-		timerUnstableExperimentCD:Start()
-		warnUnstableExperimentSoon:Schedule(33)
-	elseif args.spellId == 71617 then				--Tear Gas, normal phase change trigger
-		warnTearGas:Show()
-		warnUnstableExperimentSoon:Cancel()
-		warnChokingGasBombSoon:Cancel()
-		timerUnstableExperimentCD:Cancel()
-		timerMalleableGooCD:Cancel()
-		timerSlimePuddleCD:Cancel()
-		timerChokingGasBombCD:Cancel()
-		timerUnboundPlagueCD:Cancel()
-	elseif args.spellId == 72840 then		--Volatile Experiment (heroic phase change begin)
-		warnVolatileExperiment:Show()
-		warnUnstableExperimentSoon:Cancel()
-		warnChokingGasBombSoon:Cancel()
-		timerUnstableExperimentCD:Cancel()
-		timerMalleableGooCD:Cancel()
-		timerSlimePuddleCD:Cancel()
-		timerChokingGasBombCD:Cancel()
-		timerUnboundPlagueCD:Cancel()
-	elseif args.spellId == 71621 then		--Create Concoction (Heroic phase change end)
-		if self:IsDifficulty("heroic10", "heroic25") then
-			self:ScheduleMethod(40, "NextPhase")	--May need slight tweaking +- a second or two
-			timerPotions:Start()
-		end
-	elseif args.spellId == 71893 then		--Guzzle Potions (Heroic phase change end)
-		if self:IsDifficulty("heroic10") then
-			self:ScheduleMethod(40, "NextPhase")	--May need slight tweaking +- a second or two
-			timerPotions:Start()
-		elseif self:IsDifficulty("heroic25") then
-			self:ScheduleMethod(30, "NextPhase")
-			timerPotions:Start(20)
-		end
-	end
-end
-
-function mod:NextPhase()
+local function NextPhase(self)
 	self:SetStage(0)
 	if self.vb.phase == 2 then
 		warnUnstableExperimentSoon:Schedule(15)
@@ -176,13 +97,84 @@ function mod:NextPhase()
 	end
 end
 
+function mod:MalleableGooTarget(targetname, uId)
+	if not targetname then return end
+		if self.Options.MalleableGooIcon then
+			self:SetIcon(targetname, 6, 10)
+		end
+	if targetname == UnitName("player") then
+		specWarnMalleableGoo:Show()
+		specWarnMalleableGoo:Play("targetyou")
+		yellMalleableGoo:Yell()
+	elseif self:CheckNearby(11, targetname) then
+		specWarnMalleableGooNear:Show(targetname)
+		specWarnMalleableGooNear:Play("watchstep")
+	else
+		specWarnMalleableGooCast:Show()
+		specWarnMalleableGooCast:Play("watchstep")
+	end
+end
+
+function mod:OnCombatStart(delay)
+	self:SetStage(1)
+	berserkTimer:Start(-delay)
+	timerSlimePuddleCD:Start(10-delay)
+	timerUnstableExperimentCD:Start(30-delay)
+	warnUnstableExperimentSoon:Schedule(25-delay)
+	self.vb.warned_preP2 = false
+	self.vb.warned_preP3 = false
+	if self:IsDifficulty("heroic10", "heroic25") then
+		timerUnboundPlagueCD:Start(10-delay)
+	end
+end
+
+function mod:SPELL_CAST_START(args)
+	if args.spellId == 70351 then
+		warnUnstableExperimentSoon:Cancel()
+		warnUnstableExperiment:Show()
+		timerUnstableExperimentCD:Start()
+		warnUnstableExperimentSoon:Schedule(33)
+	elseif args.spellId == 71617 then		--Tear Gas, normal phase change trigger
+		warnTearGas:Show()
+		warnUnstableExperimentSoon:Cancel()
+		warnChokingGasBombSoon:Cancel()
+		timerUnstableExperimentCD:Cancel()
+		timerMalleableGooCD:Cancel()
+		timerSlimePuddleCD:Cancel()
+		timerChokingGasBombCD:Cancel()
+		timerUnboundPlagueCD:Cancel()
+	elseif args.spellId == 72840 then		--Volatile Experiment (heroic phase change begin)
+		warnVolatileExperiment:Show()
+		warnUnstableExperimentSoon:Cancel()
+		warnChokingGasBombSoon:Cancel()
+		timerUnstableExperimentCD:Cancel()
+		timerMalleableGooCD:Cancel()
+		timerSlimePuddleCD:Cancel()
+		timerChokingGasBombCD:Cancel()
+		timerUnboundPlagueCD:Cancel()
+	elseif args.spellId == 71621 then		--Create Concoction (Heroic phase change end)
+		if self:IsDifficulty("heroic10", "heroic25") then
+			self:Schedule(40, NextPhase, self)	--May need slight tweaking +- a second or two
+			timerPotions:Start()--30
+		end
+	elseif args.spellId == 71893 then		--Guzzle Potions (Heroic phase change end)
+		if self:IsDifficulty("heroic10") then
+			self:Schedule(40, NextPhase, self)	--May need slight tweaking +- a second or two
+			timerPotions:Start()--30
+		elseif self:IsDifficulty("heroic25") then
+			self:Schedule(30, NextPhase, self)
+			timerPotions:Start(20)
+		end
+	end
+end
+
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 70341 and self:AntiSpam(5, 1) then
 		warnSlimePuddle:Show()
 		if self.vb.phase == 3 then
 			timerSlimePuddleCD:Start(20)--In phase 3 it's faster
 		else
-			timerSlimePuddleCD:Start()
+			timerSlimePuddleCD:Start()--35
 		end
 	elseif args.spellId == 71255 then
 		warnChokingGasBomb:Show()
@@ -212,7 +204,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnVolatileOozeAdhesive:Show(args.destName)
 		end
 		if self.Options.OozeAdhesiveIcon then
-			self:SetIcon(args.destName, 8)
+			self:SetIcon(args.destName, 1)
 		end
 	elseif args.spellId == 70672 then	--Red Slime
 		timerGaseousBloat:Start(args.destName)
@@ -224,7 +216,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnGaseousBloat:Show(args.destName)
 		end
 		if self.Options.GaseousBloatIcon then
-			self:SetIcon(args.destName, 7)
+			self:SetIcon(args.destName, 2)
 		end
 	elseif args:IsSpellID(71615, 71618) then	--71615 used in 10 and 25 normal, 71618?
 		timerTearGas:Start()
@@ -245,7 +237,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif args.spellId == 70911 then	 -- Unbound Plague
 		if self.Options.UnboundPlagueIcon then
-			self:SetIcon(args.destName, 5)
+			self:SetIcon(args.destName, 3)
 		end
 		if args:IsPlayer() and not self:IsTrivial() then
 			specWarnUnboundPlague:Show()
@@ -291,7 +283,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:SetIcon(args.destName, 0)
 		end
 	elseif args.spellId == 71615 and self:AntiSpam(5, 2) then 	-- Tear Gas Removal
-		self:NextPhase()
+		NextPhase(self)
 	elseif args.spellId == 70539 then
 		timerRegurgitatedOoze:Cancel(args.destName)
 	elseif args.spellId == 70542 then

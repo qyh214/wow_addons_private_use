@@ -22,10 +22,23 @@ local PGF = select(2, ...)
 local L = PGF.L
 local C = PGF.C
 
+StaticPopupDialogs["PGF_CONFIRM_RESET"] = {
+	text = L["dialog.reset.confirm"],
+	button1 = OKAY,
+	button2 = CANCEL,
+	OnAccept = function (self, data) PGF.Dialog_ResetButton_OnConfirm(self, data) end,
+	exclusive = 1,
+    hideOnEscape = 1,
+    timeout = 0,
+    whileDead = 1,
+}
+
 function PGF.Dialog_ClearFocus()
     local dialog = PremadeGroupsFilterDialog
-    dialog.Ilvl.Min:ClearFocus()
-    dialog.Ilvl.Max:ClearFocus()
+    dialog.MPRating.Min:ClearFocus()
+    dialog.MPRating.Max:ClearFocus()
+    dialog.PVPRating.Min:ClearFocus()
+    dialog.PVPRating.Max:ClearFocus()
     dialog.Defeated.Min:ClearFocus()
     dialog.Defeated.Max:ClearFocus()
     dialog.Members.Min:ClearFocus()
@@ -66,13 +79,6 @@ function PGF.Dialog_Act_OnClick(self, button, down)
     local checked = self:GetChecked()
     local model = PGF.GetModel()
     model[key:lower()].act = checked
-    if key == "Ilvl" then
-        dialog.Noilvl.Act:SetEnabled(checked)
-        if not checked then
-            dialog.Noilvl.Act:SetChecked(false)
-            PGF.Dialog_Act_OnClick(dialog.Noilvl.Act)
-        end
-    end
     PGF.Dialog_OnModelUpdate()
 end
 
@@ -133,8 +139,8 @@ function PGF.Dialog_Reset(excludeExpression)
     local dialog = PremadeGroupsFilterDialog
     -- TODO reset the difficulty dropdown
     PGF.Dialog_ResetGenericField(dialog, "Difficulty")
-    PGF.Dialog_ResetMinMaxField(dialog, "Ilvl")
-    PGF.Dialog_ResetGenericField(dialog, "Noilvl")
+    PGF.Dialog_ResetMinMaxField(dialog, "MPRating")
+    PGF.Dialog_ResetMinMaxField(dialog, "PVPRating")
     PGF.Dialog_ResetMinMaxField(dialog, "Members")
     PGF.Dialog_ResetMinMaxField(dialog, "Tanks")
     PGF.Dialog_ResetMinMaxField(dialog, "Heals")
@@ -157,9 +163,13 @@ function PGF.Dialog_RefreshButton_OnClick(self, button, down)
 end
 
 function PGF.Dialog_ResetButton_OnClick(self, button, down)
-    PGF.Dialog_Reset()
-    PGF.Dialog_Expression_OnTextChanged(PremadeGroupsFilterDialog.Expression.EditBox)
-    PGF:Dialog_RefreshButton_OnClick(PremadeGroupsFilterDialog.RefreshButton)
+     StaticPopup_Show("PGF_CONFIRM_RESET")
+end
+
+function PGF.Dialog_ResetButton_OnConfirm(self, data)
+     PGF.Dialog_Reset()
+     PGF.Dialog_Expression_OnTextChanged(PremadeGroupsFilterDialog.Expression.EditBox)
+     PGF:Dialog_RefreshButton_OnClick(PremadeGroupsFilterDialog.RefreshButton)
 end
 
 function PGF.Dialog_DifficultyDropdown_OnClick(item)
@@ -196,19 +206,7 @@ function PGF.Dialog_Toggle()
     end
 end
 
-local buttonHooksInitialized = false
-function PGF.OnLFGListFrameSetActivePanel(self, panel)
-    PGF.Dialog_Toggle()
-    if not buttonHooksInitialized and panel == self.SearchPanel then
-        buttonHooksInitialized = true
-        local buttons = self.SearchPanel.ScrollFrame.buttons
-        for i = 1, #buttons do
-            buttons[i]:HookScript("OnEnter", PGF.OnLFGListSearchEntryOnEnter)
-        end
-    end
-end
-
-hooksecurefunc("LFGListFrame_SetActivePanel", PGF.OnLFGListFrameSetActivePanel)
+hooksecurefunc("LFGListFrame_SetActivePanel", PGF.Dialog_Toggle)
 hooksecurefunc("GroupFinderFrame_ShowGroupFrame", PGF.Dialog_Toggle)
 hooksecurefunc("PVEFrame_ShowFrame", PGF.Dialog_Toggle)
 hooksecurefunc("InputScrollFrame_OnTextChanged", PGF.Dialog_Expression_OnTextChanged)

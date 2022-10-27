@@ -45,6 +45,7 @@ function RSGroupPinMixin:OnAcquired(POI)
 		self.RightTexture:SetTexture(nil)
 	end
 	self:SetPosition(POI.x, POI.y);
+	self:SetPassThroughButtons("MiddleButton");
 end
 
 function RSGroupPinMixin:OnMouseEnter()
@@ -76,6 +77,9 @@ function RSGroupPinMixin:ShowOverlay(childPOI)
 	end
 
 	if (overlay) then
+		-- Checks if the overlay is already shown, in which case is already active in the minimap
+		local hasOverlayActive = RSGeneralDB.HasOverlayActive(childPOI.entityID);
+		
 		local r, g, b, replacedEntityID = RSGeneralDB.AddOverlayActive(childPOI.entityID)
 		
 		-- Cleans the replaced overlay
@@ -97,6 +101,8 @@ function RSGroupPinMixin:ShowOverlay(childPOI)
 		end
 		
 		-- Adds the new one to the minimap
-		RSMinimap.AddOverlay(childPOI.entityID)
+		if (not hasOverlayActive) then
+			RSMinimap.AddOverlay(childPOI.entityID)
+		end
 	end
 end

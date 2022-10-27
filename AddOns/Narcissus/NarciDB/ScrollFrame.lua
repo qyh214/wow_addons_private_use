@@ -27,6 +27,11 @@ local function Driver_OnUpdate(self, elapsed)
                 self.onScrollFinishedFunc();
             end
             self.toValue = nil;
+
+            if self.onValueChangedFunc then
+                self.onValueChangedFunc(self.bar:GetValue());
+            end
+            return
         else
             self.bar:SetValue(max(0, value - step));
         end
@@ -40,8 +45,31 @@ local function Driver_OnUpdate(self, elapsed)
                 self.onScrollFinishedFunc();
             end
             self.toValue = nil;
+
+            if self.onValueChangedFunc then
+                self.onValueChangedFunc(self.bar:GetValue());
+            end
+            return
         else
             self.bar:SetValue(min(self.range, value + step));
+        end
+    end
+
+    if self.t and self.onValueChangedFunc then
+        self.t = self.t + elapsed;
+        if self.t > self.updateIntervel then
+            self.t = 0;
+            self.onValueChangedFunc(self.bar:GetValue());
+        end
+    end
+end
+
+local function Driver_RunValueChangedFunc(self, elapsed)
+    if self.t and self.onValueChangedFunc then
+        self.t = self.t + elapsed;
+        if self.t > self.updateIntervel then
+            self.t = 0;
+            self.onValueChangedFunc(self.bar:GetValue());
         end
     end
 end
@@ -63,18 +91,33 @@ local function ScrollFrame_OnMouseWheel(self, delta)
         end
     end
     
+    if self:IsScrollLocked() then
+        return
+    end
+
     local d = self.Driver;
 	d.delta = delta;
 
 	local current = self.ScrollBar:GetValue();
-    if not((current <= 0.1 and delta > 0) or (current >= d.range - 0.1 and delta < 0 )) then
+    if (current <= 0.1 and delta > 0) then
+        --already at top but still scroll up
+        if self.AnimAlertAtTop then
+            self.AnimAlertAtTop:Play();
+        end
+        return
+    elseif (current >= d.range - 0.1 and delta < 0 ) then
+        --already at bottom but still scroll down
+        if self.AnimAlertAtBottom then
+            self.AnimAlertAtBottom:Play();
+        end
+        return
+    else
         d.isScrolling = true;
         if d.onScrollStartedFunc then
             d.onScrollStartedFunc();
         end
+        d:SetScript("OnUpdate", Driver_OnUpdate);
         d:Show();
-    else
-        return;
 	end
 	
     local deltaMultiplier = d.deltaMultiplier or 1;
@@ -93,10 +136,65 @@ local function ScrollFrame_OnMouseWheel(self, delta)
         local isBottom = toValue >= d.range - 1;
         d.positionFunc(toValue, isTop, isBottom);
     end
+
+    d.t = 1;
+end
+
+
+local GetCursorDelta = GetCursorDelta;
+
+local PressAndMoveDriver = CreateFrame("Frame");
+
+local function PressAndMoveDriver_OnUpdate(self, elapsed)
+    self.deltaX, self.deltaY = GetCursorDelta();
+    if self.deltaY ~= 0 then
+        self.scrollFrame:ScrollBy(self.deltaY * self.ratio);
+    end
+    if self.t and self.updateFunc then
+        self.t = self.t + elapsed;
+        if self.t > 0.2 then
+            self.t = 0;
+            self.updateFunc(self.scrollFrame:GetOffset());
+        end
+    end
+end
+
+local function ScrollFrame_OnDragStart(self)
+    self:StopScrolling();
+    local scale = self:GetEffectiveScale();
+    PressAndMoveDriver.ratio = 1/scale;
+    PressAndMoveDriver.scrollFrame = self;
+    if self.Driver.onValueChangedFunc then
+        PressAndMoveDriver.updateFunc = self.Driver.onValueChangedFunc
+        PressAndMoveDriver.t = 0;
+    else
+        PressAndMoveDriver.updateFunc = nil;
+        PressAndMoveDriver.t = nil;
+    end
+    PressAndMoveDriver:SetScript("OnUpdate", PressAndMoveDriver_OnUpdate);
+end
+
+local function ScrollFrame_OnDragStop(self)
+    PressAndMoveDriver:SetScript("OnUpdate", nil);
+    PressAndMoveDriver.ratio = nil;
+    PressAndMoveDriver.scrollFrame = nil;
+    if self.Driver.onValueChangedFunc then
+        self.Driver.onValueChangedFunc(self:GetOffset());
+    end
+end
+
+local function ScrollFrame_OnHide(self)
+    ScrollFrame_OnDragStop(self);
+    self:StopScrolling();
 end
 
 
 local ScrollFrameMixin = {};
+
+
+function ScrollFrameMixin:StopScrolling()
+    self.Driver:Hide();
+end
 
 function ScrollFrameMixin:SetScrollRange(range)
     self.Driver.range = range;
@@ -120,7 +218,11 @@ function ScrollFrameMixin:SetSpeedMultiplier(multiplier)
 end
 
 function ScrollFrameMixin:SetOnValueChangedFunc(onValueChangedFunc)
-    self.ScrollBar.onValueChangedFunc = onValueChangedFunc;
+    self.Driver.onValueChangedFunc = onValueChangedFunc;
+end
+
+function ScrollFrameMixin:SetUpdateInterval(interval)
+    self.Driver.updateIntervel = interval or 0.2;
 end
 
 function ScrollFrameMixin:SetOnScrollStartedFunc(onScrollStartedFunc)
@@ -141,8 +243,8 @@ function ScrollFrameMixin:Reset()
         self.Driver.onResetFunc();
     else
         if self.ScrollBar:GetValue() == 0 then
-            if self.ScrollBar.onValueChangedFunc then
-                self.ScrollBar.onValueChangedFunc(0);
+            if self.Driver.onValueChangedFunc then
+                self.Driver.onValueChangedFunc(0);
             end
         else
             self.ScrollBar:SetValue(0);
@@ -154,6 +256,10 @@ function ScrollFrameMixin:SetOffset(value)
     self.Driver:Hide();
     self.Driver.toValue = value;
     self.ScrollBar:SetValue(value);
+end
+
+function ScrollFrameMixin:GetOffset()
+    return self.ScrollBar:GetValue();
 end
 
 function ScrollFrameMixin:ScrollToOffset(offset)
@@ -179,15 +285,26 @@ function ScrollFrameMixin:ScrollToOffset(offset)
         local isBottom = toValue >= d.range - 1;
         d.positionFunc(toValue, isTop, isBottom);
     end
+
     if d.onScrollStartedFunc then
         d.onScrollStartedFunc();
     end
 
     d.isScrolling = true;
+    d.t = nil;
+    d:SetScript("OnUpdate", Driver_OnUpdate);
     d:Show();
 end
 
-function ScrollFrameMixin:ScrollByValue(value)
+function ScrollFrameMixin:ScrollBy(value)
+    local current = self.ScrollBar:GetValue();
+    local offset = current + value;
+    if offset ~= current then
+        self:SetOffset(offset);
+    end
+end
+
+function ScrollFrameMixin:SmoothScrollByValue(value)
     local current = self.ScrollBar:GetValue();
     local offset = current + value;
     if offset ~= current then
@@ -195,17 +312,23 @@ function ScrollFrameMixin:ScrollByValue(value)
     end
 end
 
-function ScrollFrameMixin:ScrollToWidget(widget, scrollToInvisible)
+function ScrollFrameMixin:ScrollToWidget(widget, extraOffset)
     local top = self:GetTop();
     local bottom = self:GetBottom();
     local wTop = widget:GetTop();
     local wBottom = widget:GetBottom();
-    if scrollToInvisible or ( (wTop > top) and (wBottom < top - 4) ) then
-        self:ScrollByValue(top - wTop);
+
+    if extraOffset then
+        wTop = wTop + extraOffset;
+        wBottom = wBottom - extraOffset;
+    end
+
+    if (wTop > top) and (wBottom < top - 4) then
+        self:SmoothScrollByValue(top - wTop);
         return true
     else
-        if scrollToInvisible or ( (wBottom < bottom) and (wTop > bottom + 4) ) then
-            self:ScrollByValue(bottom - wBottom);
+        if (wBottom < bottom) and (wTop > bottom + 4)then
+            self:SmoothScrollByValue(bottom - wBottom);
             return true
         end
     end
@@ -218,8 +341,28 @@ end
 function ScrollFrameMixin:IsScrolling()
     return self.Driver.isScrolling;
 end
+
+function ScrollFrameMixin:LockScroll(state)
+    if state or state == nil then
+        self.locked = true;
+    else
+        self.locked = nil;
+    end
+end
+
+function ScrollFrameMixin:IsScrollLocked()
+    return self.locked
+end
+
 ---------------------------------------------------------------------
-local function ApplySmoothScrollToScrollFrame(scrollFrame)
+local function VirtualScrollBar_OnValueChanged(self, value, userInput)
+    scrollFrame:SetVerticalScroll(value);
+    if userInput then
+        d.toValue = value;
+    end
+end
+
+local function ApplySmoothScrollToScrollFrame(scrollFrame, enableSwipe, useReachLimitAnimation)
     if not scrollFrame.Driver then
         for k, v in pairs(ScrollFrameMixin) do
             scrollFrame[k] = v;
@@ -238,17 +381,27 @@ local function ApplySmoothScrollToScrollFrame(scrollFrame)
         end
         bar:SetValue(0);
         bar:SetValueStep(0.001);
+
         bar:SetScript("OnValueChanged", function(self, value, userInput)
             scrollFrame:SetVerticalScroll(value);
             if userInput then
                 d.toValue = value;
             end
-            if self.onValueChangedFunc then
-                self.onValueChangedFunc(value);
-            end
-        end)
+        end);
+
+        bar:SetScript("OnMouseDown", function()
+            d.t = 0;
+            d:SetScript("OnUpdate", Driver_RunValueChangedFunc);
+            d:Show();
+        end);
+
+        bar:SetScript("OnMouseUp", function()
+            d:SetScript("OnUpdate", nil)
+            d:Hide();
+        end);
 
         d.toValue = 0;
+        d.updateIntervel = 0.2;
         d:Hide();
         d:SetScript("OnUpdate", Driver_OnUpdate);
         d:SetScript("OnHide", Driver_OnHide);
@@ -269,6 +422,50 @@ local function ApplySmoothScrollToScrollFrame(scrollFrame)
             step = 64;
         end
         scrollFrame:SetStepSize(step);
+        scrollFrame:SetScript("OnHide", ScrollFrame_OnHide);
+
+        if enableSwipe then
+            scrollFrame:SetScript("OnDragStart", ScrollFrame_OnDragStart);
+            scrollFrame:SetScript("OnDragStop", ScrollFrame_OnDragStop);
+            scrollFrame:RegisterForDrag("LeftButton");
+            scrollFrame:EnableMouse(true);
+        end
+
+        if useReachLimitAnimation and scrollFrame.ScrollChild then
+            local ag, a1, p1, p2, p3;
+
+            scrollFrame.AnimAlertAtTop = scrollFrame.ScrollChild:CreateAnimationGroup();
+            ag = scrollFrame.AnimAlertAtTop;
+
+            a1 = ag:CreateAnimation("Path");
+            --a1:SetCurveType("SMOOTH");
+            a1:SetDuration(0.4);
+            p1 = a1:CreateControlPoint();
+            p1:SetOffset(0, -6);
+            p1:SetOrder(1);
+            p2 = a1:CreateControlPoint();
+            p2:SetOffset(0, 2);
+            p2:SetOrder(2);
+            p3 = a1:CreateControlPoint();
+            p3:SetOffset(0, 0);
+            p3:SetOrder(3);
+
+            scrollFrame.AnimAlertAtBottom = scrollFrame.ScrollChild:CreateAnimationGroup();
+            ag = scrollFrame.AnimAlertAtBottom;
+
+            a1 = ag:CreateAnimation("Path");
+            --a1:SetCurveType("SMOOTH");
+            a1:SetDuration(0.4);
+            p1 = a1:CreateControlPoint();
+            p1:SetOffset(0, 6);
+            p1:SetOrder(1);
+            p2 = a1:CreateControlPoint();
+            p2:SetOffset(0, -2);
+            p2:SetOrder(2);
+            p3 = a1:CreateControlPoint();
+            p3:SetOffset(0, 0);
+            p3:SetOrder(3);
+        end
     end
 end
 

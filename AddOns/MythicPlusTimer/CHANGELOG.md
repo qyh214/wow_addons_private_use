@@ -1,3 +1,11 @@
+# MythicPlusTimer 5.0.0
+
+- Update for WoW 10.0.0 Dragonflight
+
+# MythicPlusTimer 4.8.2
+
+- Update for WoW 9.2.7
+
 # MythicPlusTimer 4.8.1
 
 - Fixed scenario (timewalking) lua error

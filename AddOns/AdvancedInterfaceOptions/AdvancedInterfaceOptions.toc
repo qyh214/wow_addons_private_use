@@ -1,7 +1,7 @@
-## Interface: 90200
+## Interface: 100000
 ## Title: Advanced Interface Options
 ## Author: Stanzilla, Semlar
-## Version: 1.7.1
+## Version: 1.8.1
 ## Notes: Restores access to removed interface options in Legion
 ## X-Category: Interface Enhancements
 ## X-Website: https://www.curseforge.com/wow/addons/advancedinterfaceoptions
@@ -17,4 +17,3 @@ cvars.lua
 basicOptions.lua
 browser.lua
 
-tempfix.lua

@@ -18,7 +18,6 @@ local GetItemInfoInstant = GetItemInfoInstant;
 local GetDetailedItemLevelInfo = GetDetailedItemLevelInfo;
 local GetInventoryItemLink = GetInventoryItemLink;
 local GetInventoryItemDurability = GetInventoryItemDurability;
-
 local Model_ApplyUICamera = Model_ApplyUICamera;
 local C_TransmogCollection = C_TransmogCollection;
 local C_Item = C_Item;
@@ -29,12 +28,14 @@ local GetItemQualityColor = NarciAPI.GetItemQualityColor;
 local GetSlotVisualID = NarciAPI.GetSlotVisualID;
 
 local SharedTooltipDelay = addon.SharedTooltipDelay;
-
+local TransmogDataProvider = addon.TransmogDataProvider;
+local SetModelByUnit = addon.TransitionAPI.SetModelByUnit;
 
 local PT_EQUIPMENT_SETS = gsub(EQUIPMENT_SETS, ".cFF.+", "");
 local PT_ITEM_SOULBOUND = ITEM_SOULBOUND;
 local PT_DURABILITY = "|TInterface\\AddOns\\Narcissus\\Art\\GameTooltip\\ExclamationMark:14:14:2:-2:32:32:0:32:0:32:255:109:15|t   "..(DURABILITY_TEMPLATE or "Durability %d / % d");
 local PT_DPS_TEMPLATE = gsub(DPS_TEMPLATE, "%%s", "%%.1f");
+local ENCHANTED_TOOLTIP_LINE = ENCHANTED_TOOLTIP_LINE or "Enchanted: %s";
 
 local GenericTooltip, EquipmentTooltip;
 
@@ -68,6 +69,8 @@ local function VoidFunc(self)
 end
 
 local function AppendItemIDToGameTooltip(self)
+    if not self.GetItem then return end;
+
     local name, itemLink = self:GetItem();
     if itemLink then
         local itemID = match(itemLink, "item:(%d+)");
@@ -82,10 +85,14 @@ local function AppendItemIDToGameTooltip(self)
 end
 
 local GENERIC_SETUP_FUNC = VoidFunc;
+local GameTooltip_ClearMoney = GameTooltip_ClearMoney or VoidFunc;
 
+if addon.IsDragonflight() and TooltipDataHandlerMixin then
+    NarciGameTooltipMixin = CreateFromMixins(TooltipDataHandlerMixin);
+else
+    NarciGameTooltipMixin = {};
+end
 
-
-NarciGameTooltipMixin = {};
 
 function NarciGameTooltipMixin:OnLoad()
     GenericTooltip = self;
@@ -95,6 +102,9 @@ function NarciGameTooltipMixin:OnLoad()
     self:SetPadding(p, p, p, p);
     self.leftTexts = {};
     self.rightTexts = {};
+
+    self:SetFrameStrata("TOOLTIP");
+    self:SetFixedFrameStrata(true);
 end
 
 function NarciGameTooltipMixin:OnShow()
@@ -104,6 +114,7 @@ end
 function NarciGameTooltipMixin:OnHide()
     SharedTooltipDelay:Kill();
     self:SetScript("OnUpdate", nil);
+    --GameTooltip_ClearMoney(self);
 end
 
 function NarciGameTooltipMixin:OnSizeChanged(w, h)
@@ -377,8 +388,6 @@ function NarciEquipmentTooltipMixin:OnLoad()
     self:SetFrameStrata("TOOLTIP");
     self:SetFixedFrameStrata(true);
 
-    NarciAPI.InitializeModelLight(self.ItemModel);
-
     local alwaysShown = true;
     self.HotkeyFrame = CreateFrame("Frame", nil, self, "NarciHotkeyNotificationTemplate");
     self.HotkeyFrame:SetPoint("BOTTOM", self, "TOP", 0, 8);
@@ -387,6 +396,8 @@ function NarciEquipmentTooltipMixin:OnLoad()
     self.HotkeyFrame:Show();
 
     addon.ModuleManager:AddGamePadCallbackWidget(self);
+
+    NarciAPI.InitializeModelLight(self.ItemModel);
 end
 
 function NarciEquipmentTooltipMixin:OnShow()
@@ -605,13 +616,36 @@ function NarciEquipmentTooltipMixin:DisplayItemData(link, itemData, slotID, visu
     end
     if itemData then
         local levelSubtext;
+
         if itemData.context then
             levelSubtext = itemData.context;
         end
+
         if itemData.upgradeLevel then
             levelSubtext = format("%s/%s", itemData.upgradeLevel[1], itemData.upgradeLevel[2]);
         end
         self.HeaderFrame.LevelSubText:SetText(levelSubtext);
+
+        if itemData.craftingQuality then
+            local craftingQuality = itemData.craftingQuality;
+            local qualityAtlas = format("Professions-Icon-Quality-Tier%d-Small", craftingQuality);
+            self.HeaderFrame.CraftingQualityIcon:ClearAllPoints();
+            if craftingQuality == 2 then
+                self.HeaderFrame.CraftingQualityIcon:SetSize(18, 18);
+                self.HeaderFrame.CraftingQualityIcon:SetPoint("TOPLEFT", self.HeaderFrame.ItemLevel, "TOPRIGHT", 4, 2);
+            elseif craftingQuality == 3 then
+                self.HeaderFrame.CraftingQualityIcon:SetSize(16, 16);
+                self.HeaderFrame.CraftingQualityIcon:SetPoint("TOPLEFT", self.HeaderFrame.ItemLevel, "TOPRIGHT", 4, -1);
+            else
+                self.HeaderFrame.CraftingQualityIcon:SetSize(12, 12);
+                self.HeaderFrame.CraftingQualityIcon:SetPoint("TOPLEFT", self.HeaderFrame.ItemLevel, "TOPRIGHT", 4, -1);
+            end
+            self.HeaderFrame.CraftingQualityIcon:SetAtlas(qualityAtlas, false);
+            self.HeaderFrame.CraftingQualityIcon:Show();
+        else
+            self.HeaderFrame.CraftingQualityIcon:Hide();
+        end
+
         if itemData.weaponInfo then
             self:AddDoubleLine(itemData.weaponInfo[1], itemData.weaponInfo[2], GetColorByIndex(1));
         end
@@ -790,6 +824,15 @@ function NarciEquipmentTooltipMixin:SetTransmogSource(appliedSourceID)
             self:AddLine(sourceText, GetColorByIndex(1));
         end
 
+        local specialSourceText = TransmogDataProvider:GetSpecialItemSourceText(appliedSourceID, sourceInfo.itemID, sourceInfo.itemModID);
+
+        if specialSourceText then
+            if TransmogDataProvider:IsLegionArtifactBySourceID(appliedSourceID) then
+                specialSourceText = (ARTIFACTS_APPEARANCE_TAB_TITLE or "Artifact Appearance") .. ":  "..specialSourceText;
+            end
+            self:AddLine(specialSourceText, GetColorByIndex(1));
+        end
+
         --Model
         self.ItemModel.FadeIn:Stop();
         local cameraID = C_TransmogCollection.GetAppearanceCameraIDBySource(appliedSourceID);
@@ -799,7 +842,7 @@ function NarciEquipmentTooltipMixin:SetTransmogSource(appliedSourceID)
         self.ItemModel.FadeIn.Hold:SetDuration(1);
         --self.ItemModel.FadeIn:Play();
         if not self.isWeapon then
-            self.ItemModel:SetUnit("player", false);
+            SetModelByUnit(self.ItemModel, "player");
             self.ItemModel:TryOn(appliedSourceID);
         else
             self.ItemModel:SetItemAppearance(appliedVisualID);
@@ -966,7 +1009,7 @@ function NarciEquipmentTooltipMixin:SetItemModel()
         if self.isWeapon then
             self.ItemModel:SetItemAppearance(self.baseVisualID);
         else
-            self.ItemModel:SetUnit("player", false);
+            SetModelByUnit(self.ItemModel, "player")
             self.ItemModel:TryOn(self.baseSourceID);
         end
         self.HeaderFrame.ItemIcon:Hide();
@@ -1023,7 +1066,7 @@ function NarciEquipmentTooltipMixin:UpdateSize()
     local modelHeight = headerHeight - 10;
     local modelWidth = MODEL_SIZE_RATIO * modelHeight;
     self.ItemModel:SetSize(modelWidth, modelHeight);
-    local headerWidth = self.HeaderFrame.ItemName:GetWrappedWidth() + ((self.showItemModel and (modelWidth + 16) or 0));
+    local headerWidth = math.max(self.HeaderFrame.ItemName:GetWrappedWidth() + (self.showItemModel and 0 or 52), self.HeaderFrame.ItemType:GetWrappedWidth()) + ((self.showItemModel and (modelWidth + 16) or 0));
     local maxWidth = self.maxWidth;
     if headerWidth > maxWidth then
         maxWidth = headerWidth;
@@ -1154,13 +1197,19 @@ function NarciEquipmentTooltipMixin:FadeIn()
 end
 
 
---For Preferences--
-function Narci:ShowAdditionalInfoOnTooltip(state)
-    if state then
-        ADDTIONAL_SETUP_FUNC = AppendItemID;
-        GENERIC_SETUP_FUNC = AppendItemIDToGameTooltip;
-    else
-        ADDTIONAL_SETUP_FUNC = VoidFunc;
-        GENERIC_SETUP_FUNC = VoidFunc;
+do
+    local SettingFunctions = addon.SettingFunctions;
+
+    function SettingFunctions.ShowItemIDOnTooltip(state, db)
+        if state == nil then
+            state = db["ShowItemID"];
+        end
+        if state then
+            ADDTIONAL_SETUP_FUNC = AppendItemID;
+            GENERIC_SETUP_FUNC = AppendItemIDToGameTooltip;
+        else
+            ADDTIONAL_SETUP_FUNC = VoidFunc;
+            GENERIC_SETUP_FUNC = VoidFunc;
+        end
     end
 end

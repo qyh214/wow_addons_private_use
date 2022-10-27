@@ -97,8 +97,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	WarningSplitSoon	= "Zeige Vorwarnung für Aufspaltung",
-	RangeFrame			= "Zeige Abstandsfenster (12m)"
+	WarningSplitSoon	= "Zeige Vorwarnung für Aufspaltung"
 })
 
 -------------------------
@@ -108,10 +107,6 @@ L = DBM:GetModLocalization("Saviana")
 
 L:SetGeneralLocalization({
 	name = "Saviana Flammenschlund"
-})
-
-L:SetOptionLocalization({
-	RangeFrame				= "Zeige Abstandsfenster (10m)"
 })
 
 --------------------------
@@ -156,8 +151,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	TwilightCutterCast		= "Zeige Warnung, wenn $spell:74769 gewirkt wird",
-	AnnounceAlternatePhase	= "Zeige auch Warnungen/Timer für Phasen, in denen du dich nicht befindest",
-	SetIconOnConsumption	= "Setze Zeichen auf Ziele von $spell:74562 und $spell:74792"
+	AnnounceAlternatePhase	= "Zeige auch Warnungen/Timer für Phasen, in denen du dich nicht befindest"
 })
 
 L:SetMiscLocalization({

@@ -142,7 +142,7 @@ local Settings = SettingsCreate({
 			Internal.SetLoadoutSegmentEnabled(id, value)
 			BtWLoadoutsFrame:Update()
         end,
-        default = false,
+        default = GetExpansionLevel() == 7,
     },
     {
         name = L["Enable Soulbinds"],
@@ -152,7 +152,7 @@ local Settings = SettingsCreate({
 			Internal.SetLoadoutSegmentEnabled(id, value)
 			BtWLoadoutsFrame:Update()
         end,
-        default = true,
+        default = GetExpansionLevel() == 8,
     },
     {
         name = L["Sort classes by name"],
@@ -438,14 +438,6 @@ function Internal.DropDownSetOnChange(self, func)
 	self.OnChange = func;
 end
 
-local function shallowcopy(tbl)
-	local result = {}
-	for k,v in pairs(tbl) do
-		result[k] = v
-	end
-	return result
-end
-
 BtWLoadoutsClassDropDownMixin = {}
 function BtWLoadoutsClassDropDownMixin:OnShow()
 	if not self.initialized then
@@ -469,13 +461,15 @@ function BtWLoadoutsClassDropDownMixin:Init(level, menuList)
 		end
 
 		for classIndex=1,GetNumClasses() do
-			local className, classFile = GetClassInfo(classIndex);
-			local classColor = C_ClassColor.GetClassColor(classFile);
-			info.text = classColor and classColor:WrapTextInColorCode(className) or className;
-			info.arg1 = classIndex;
-			info.arg2 = classFile;
-			info.checked = selected == classIndex;
-			UIDropDownMenu_AddButton(info, level);
+			if GetNumSpecializationsForClassID(classIndex) > 0 then
+				local className, classFile = GetClassInfo(classIndex);
+				local classColor = C_ClassColor.GetClassColor(classFile);
+				info.text = classColor and classColor:WrapTextInColorCode(className) or className;
+				info.arg1 = classIndex;
+				info.arg2 = classFile;
+				info.checked = selected == classIndex;
+				UIDropDownMenu_AddButton(info, level);
+			end
 		end
 	end
 end
@@ -484,93 +478,69 @@ end
 function BtWLoadoutsClassDropDownMixin:SetValue(button, classIndex, classFile, checked)
 end
 
-local function SpecDropDown_OnClick(self, arg1, arg2, checked)
-	local selectedTab = PanelTemplates_GetSelectedTab(BtWLoadoutsFrame) or 1;
-	local tab = GetTabFrame(BtWLoadoutsFrame, selectedTab);
-
-	CloseDropDownMenus();
-	local set = tab.set;
-
-	if selectedTab == TAB_LOADOUTS then
-		local classFile = set.specID and select(6, GetSpecializationInfoByID(set.specID))
-		tab.temp[classFile or "NONE"] = set.character
-
-		set.specID = arg1;
-
-		classFile = set.specID and select(6, GetSpecializationInfoByID(set.specID))
-		set.character = tab.temp[classFile or "NONE"] or shallowcopy(set.character)
-	elseif selectedTab == TAB_TALENTS or selectedTab == TAB_PVP_TALENTS then
-		local temp = tab.temp;
-		-- @TODO: If we always access talents by set.talents then we can just swap tables in and out of
-		-- the temp table instead of copying the talentIDs around
-
-		-- We are going to copy the currently selected talents for the currently selected spec into
-		-- a temporary table incase the user switches specs back
-		local specID = set.specID;
-		if temp[specID] then
-			wipe(temp[specID]);
-		else
-			temp[specID] = {};
-		end
-		for talentID in pairs(set.talents) do
-			temp[specID][talentID] = true;
-		end
-
-		-- Clear the current talents and copy back the previously selected talents if they exist
-		specID = arg1;
-		set.specID = specID;
-		wipe(set.talents);
-		if temp[specID] then
-			for talentID in pairs(temp[specID]) do
-				set.talents[talentID] = true;
-			end
-		end
+BtWLoadoutsSpecDropDownMixin = {}
+function BtWLoadoutsSpecDropDownMixin:OnShow()
+	if not self.initialized then
+		UIDropDownMenu_Initialize(self, self.Init);
+		self.initialized = true
 	end
-	BtWLoadoutsFrame:Update();
 end
-local function SpecDropDownInit(self, level, menuList)
+function BtWLoadoutsSpecDropDownMixin:Init(level, menuList)
 	local info = UIDropDownMenu_CreateInfo();
+	local selectedSpecID, selectedClassID = self:GetValue();
 
-	local set = self:GetParent().set;
-	local selected = set and set.specID;
+	info.func = function (button, arg1, arg2, checked)
+		self:SetValue(button, arg1, arg2, checked)
+	end
 
 	if (level or 1) == 1 then
 		if self.includeNone then
 			info.text = L["None"];
-			info.func = SpecDropDown_OnClick;
-			info.checked = selected == nil;
+			info.checked = (not self.includeClass or selectedClassID == nil) and selectedSpecID == nil;
 			UIDropDownMenu_AddButton(info, level);
 		end
 
+		info.func = nil;
 		for classIndex=1,GetNumClasses() do
-			local className, classFile = GetClassInfo(classIndex);
-			local classColor = C_ClassColor.GetClassColor(classFile);
-			info.text = classColor and classColor:WrapTextInColorCode(className) or className;
-			info.hasArrow, info.menuList = true, classIndex;
-			info.keepShownOnClick = true;
-			info.notCheckable = true;
-			UIDropDownMenu_AddButton(info, level);
+			if GetNumSpecializationsForClassID(classIndex) > 0 then
+				local className, classFile = GetClassInfo(classIndex);
+				local classColor = C_ClassColor.GetClassColor(classFile);
+				info.text = classColor and classColor:WrapTextInColorCode(className) or className;
+				info.hasArrow, info.menuList = true, classIndex;
+				info.keepShownOnClick = true;
+				info.notCheckable = true;
+				UIDropDownMenu_AddButton(info, level);
+			end
 		end
 	else
 		local classID = menuList;
+
+		if self.includeClass then
+			local className, classFile = GetClassInfo(classID);
+			local classColor = C_ClassColor.GetClassColor(classFile);
+			info.text = classColor and classColor:WrapTextInColorCode(className) or className;
+			info.arg1 = nil;
+			info.arg2 = classID;
+			info.checked = selectedClassID == classID and selectedSpecID == nil;
+			UIDropDownMenu_AddButton(info, level);
+		end
+
 		for specIndex=1,GetNumSpecializationsForClassID(classID) do
 			local specID, name, _, icon, role = GetSpecializationInfoForClassID(classID, specIndex);
 			info.text = name;
 			info.icon = icon;
 			info.arg1 = specID;
-			info.func = SpecDropDown_OnClick;
-			info.checked = selected == specID;
+			info.arg2 = classID;
+			info.checked = selectedSpecID == specID;
 			UIDropDownMenu_AddButton(info, level);
 		end
 	end
 end
-
-BtWLoadoutsSpecDropDownMixin = {}
-function BtWLoadoutsSpecDropDownMixin:OnShow()
-	if not self.initialized then
-		UIDropDownMenu_Initialize(self, SpecDropDownInit);
-		self.initialized = true
-	end
+-- Override. return specID, classID (classID only needed if includeClass = true).
+function BtWLoadoutsSpecDropDownMixin:GetValue()
+end
+-- Override.
+function BtWLoadoutsSpecDropDownMixin:SetValue(button, specID, classID, checked)
 end
 
 -- Restrictions Drop Down, used by sets to handle limit activation
@@ -1457,18 +1427,26 @@ do
 		tab:SetText(self.name)
 
 		if previous then
-			tab:SetPoint("LEFT", previous, "RIGHT", -16, 0)
+			if select(4, GetBuildInfo()) >= 100000 then
+				tab:SetPoint("TOPLEFT", previous, "TOPRIGHT", 1, 0);
+			else
+				tab:SetPoint("LEFT", previous, "RIGHT", -16, 0);
+			end
 		else
 			tab:SetPoint("BOTTOMLEFT", 7, -30)
 		end
 
-		tab:SetShown(self.enabled ~= false)
-
 		if self.segment then
 			frame.TabSegments[self.segment] = self
+
+			if self.enabled == nil then
+				self.enabled = Internal.GetLoadoutSegmentEnabled(self.segment)
+			end
 		end
 
-		PanelTemplates_SetNumTabs(frame, id);
+		tab:SetShown(self.enabled ~= false)
+
+		frame.numTabs = id;
 		if id == 1 then
 			PanelTemplates_SetTab(frame, id);
 		end
@@ -1496,7 +1474,11 @@ do
 			tab:SetShown(tabFrame.enabled ~= false)
 			if tabFrame.enabled ~= false then
 				if previous then
-					tab:SetPoint("LEFT", previous, "RIGHT", -16, 0)
+					if select(4, GetBuildInfo()) >= 100000 then
+						tab:SetPoint("TOPLEFT", previous, "TOPRIGHT", 1, 0);
+					else
+						tab:SetPoint("LEFT", previous, "RIGHT", -16, 0);
+					end
 				else
 					tab:SetPoint("BOTTOMLEFT", 7, -30)
 				end
@@ -1512,10 +1494,25 @@ do
 
 		self.Tabs = {}
 		self.TabSegments = {}
-		self.TabPool = CreateFramePool("Button", self, "BtWLoadoutsTabTemplate")
+		if select(4, GetBuildInfo()) >= 100000 then
+			self.TabPool = CreateFramePool("Button", self, "BtWLoadoutsTabTemplateDragonflight")
+		else
+			self.TabPool = CreateFramePool("Button", self, "BtWLoadoutsTabTemplate")
+		end
 
-		self.TitleText:SetText(BTWLOADOUTS_LOADOUTS)
-		self.TitleText:SetHeight(24)
+		if self.TitleContainer then
+			self.TitleContainer.TitleText:SetText(BTWLOADOUTS_LOADOUTS)
+		else
+			self.TitleText:SetText(BTWLOADOUTS_LOADOUTS)
+			self.TitleText:SetHeight(24)
+		end
+	end
+	function BtWLoadoutsFrameMixin:SetTitle(text)
+		if self.TitleContainer then
+			self.TitleContainer.TitleText:SetText(text)
+		else
+			self.TitleText:SetText(text)
+		end
 	end
 	function BtWLoadoutsFrameMixin:OnDragStart()
 		self:StartMoving();
@@ -1681,7 +1678,7 @@ do
 	end
 	function BtWLoadoutsFrameMixin:SetExport(value)
 		PanelTemplates_SetTab(self, 0);
-		self.TitleText:SetText(L["Export"]);
+		self:SetTitle(L["Export"]);
 	
 		self.Sidebar:Hide()
 		for id,frame in ipairs(self.TabFrames) do
@@ -1972,8 +1969,12 @@ function BtWLoadoutsLogFrameMixin:OnLoad()
 	tinsert(UISpecialFrames, self:GetName());
 	self:RegisterForDrag("LeftButton");
 
-	self.TitleText:SetText(BTWLOADOUTS_LOG)
-	self.TitleText:SetHeight(24)
+	if self.TitleContainer then
+		self.TitleContainer.TitleText:SetText(BTWLOADOUTS_LOG)
+	else
+		self.TitleText:SetText(BTWLOADOUTS_LOG)
+		self.TitleText:SetHeight(24)
+	end
 end
 function BtWLoadoutsLogFrameMixin:OnDragStart()
 	self:StartMoving();
@@ -2030,79 +2031,41 @@ SlashCmdList["BTWLOADOUTS"] = function (msg)
 	if command == "activate" or command == "a" then
 		local aType, rest = rest:match("^[%s]*([^%s]+)(.*)");
 		local set;
+
+		if aType == "action-bars" then
+			aType = "actionbars"
+		end
+
 		if aType == "profile" or aType == "loadout" then
-			if tonumber(rest) then
-				set = Internal.GetProfile(tonumber(rest));
+			local num = tonumber(rest)
+			if num then
+				set = Internal.GetProfile(num);
 			else
 				set = Internal.GetProfileByName(rest);
-			end
-		elseif aType == "talents" then
-			local subset;
-			if tonumber(rest) then
-				subset = Internal.GetTalentSet(tonumber(rest));
-			else
-				subset = Internal.GetTalentSetByName(rest);
-			end
-			if subset then
-				set = {
-					talents = {subset.setID}
-				}
-			end
-		elseif aType == "pvptalents" then
-			local subset;
-			if tonumber(rest) then
-				subset = Internal.GetPvPTalentSet(tonumber(rest));
-			else
-				subset = Internal.GetPvPTalentSetByName(rest);
-			end
-			if subset then
-				set = {
-					pvptalents = {subset.setID}
-				}
-			end
-		elseif aType == "essences" then
-			local subset;
-			if tonumber(rest) then
-				subset = Internal.GetEssenceSet(tonumber(rest));
-			else
-				subset = Internal.GetEssenceSetByName(rest);
-			end
-			if subset then
-				set = {
-					essences = {subset.setID}
-				}
-			end
-		elseif aType == "equipment" then
-			local subset;
-			if tonumber(rest) then
-				subset = Internal.GetEquipmentSet(tonumber(rest));
-			else
-				subset = Internal.GetEquipmentSetByName(rest);
-			end
-			if subset then
-				set = {
-					equipment = {subset.setID}
-				}
-			end
-		elseif aType == "action-bars" or aType == "actionbars" then
-			local subset;
-			if tonumber(rest) then
-				subset = Internal.GetActionBarSet(tonumber(rest));
-			else
-				subset = Internal.GetActionBarSetByName(rest);
-			end
-			if subset then
-				set = {
-					actionbars = {subset.setID}
-				}
 			end
 		else
-			-- Assume profile
-			rest = aType .. rest;
-			if tonumber(rest) then
-				set = Internal.GetProfile(tonumber(rest));
+			local segment = Internal.GetLoadoutSegment(aType)
+			if segment then
+				local num = tonumber(rest)
+				local subset
+				if num then
+					subset = segment.get(num)
+				else
+					subset = segment.getByName(rest)
+				end
+				if subset then
+					set = {
+						[segment.id] = {subset.setID}
+					}
+				end
 			else
-				set = Internal.GetProfileByName(rest);
+				-- Assume profile
+				rest = aType .. rest;
+				if tonumber(rest) then
+					set = Internal.GetProfile(tonumber(rest));
+				else
+					set = Internal.GetProfileByName(rest);
+				end
 			end
 		end
 		if set and Internal.IsLoadoutActivatable(set) then

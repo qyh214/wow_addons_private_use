@@ -1,5 +1,13 @@
---/run Narci.ActiveModel:SetDisplayInfo(C_MountJournal.GetMountAllCreatureDisplayInfoByID(GetMouseFocus().mountID)[1].creatureDisplayID)
---/run Narci.ActiveModel:TryOn(C_TransmogCollection.GetAppearanceSources(GetMouseFocus().visualInfo.visualID)[1].sourceID)
+local _, addon = ...
+
+local TransitionAPI = addon.TransitionAPI;
+local SetModelLight = addon.TransitionAPI.SetModelLight;
+local GetModelLight = addon.TransitionAPI.GetModelLight;
+local SetGradient = addon.TransitionAPI.SetGradient;
+local SetModelByUnit = addon.TransitionAPI.SetModelByUnit;
+
+local GetAlternateFormInfo = C_PlayerInfo.GetAlternateFormInfo or HasAlternateForm;
+
 local Narci = Narci;
 local L = Narci.L;
 local pi = math.pi;
@@ -26,6 +34,8 @@ local FullSceenChromaKey, FullScreenAlphaChannel;
 local PrimaryPlayerModel, ActorPanel;	--PrimaryPlayerModel
 local AnimationIDEditBox;
 local OutfitToggle;
+local ModelContainer;
+
 -----------------------------------
 local defaultZ = -0.275;
 local defaultY = 0.4;
@@ -40,15 +50,19 @@ local IndexButtonPosition = {
 
 local HIT_RECT_OFFSET = 0;
 
-local function HighlightButton(button, bool)
-	if bool then
+local function HighlightButton(button, state, sound)
+	if state then
 		button:LockHighlight();
 		button.Label:SetTextColor(0.88, 0.88, 0.88);
-		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
+		if sound then
+			PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
+		end
 	else
 		button:UnlockHighlight();
 		button.Label:SetTextColor(0.65, 0.65, 0.65);
-		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF);
+		if sound then
+			PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF);
+		end
 	end
 end
 
@@ -122,7 +136,10 @@ local TranslateValue_Male = {
 
 	[35] = {[1] = {0.3, 0.73, 0.111},
 				[2] = {0, 0.95, 0.2375}},		--35 Vulpera √
-}
+
+	[52] = {[1] = {-0.1, 1.02, -0.57},
+				[2] = {-0.8, 2.13, -0.55}},		--35 Dracthyr √
+};
 
 local TranslateValue_Female = {
 	--[raceID] = {ZoomValue, defaultY, defaultZ},
@@ -185,6 +202,10 @@ local TranslateValue_Female = {
 }
 
 TranslateValue_Female[36] = TranslateValue_Female[2];
+TranslateValue_Male[70] = TranslateValue_Male[52];
+TranslateValue_Female[52] = TranslateValue_Male[52];
+TranslateValue_Female[70] = TranslateValue_Male[52];
+
 
 local function ReAssignRaceID(raceID, custom)
 	if raceID == 30 then	--Lightforged
@@ -193,8 +214,8 @@ local function ReAssignRaceID(raceID, custom)
 		--raceID = 2;
 	elseif raceID == 34 then	--DarkIron
 		raceID = 3;
-	elseif raceID == 22 then	--Worgen
-		local _, inAlternateForm = HasAlternateForm();
+	elseif raceID == 22 then	--WorgenXgenderID
+		local _, inAlternateForm = GetAlternateFormInfo();
 		if inAlternateForm and not custom then		--Human form is Worgen's alternate form
 			raceID = 1;
 		end
@@ -206,6 +227,11 @@ local function ReAssignRaceID(raceID, custom)
 		raceID = 10;
 	elseif raceID == 37 then				--Mechagnome
 		raceID = 7;
+	elseif raceID == 52 or raceID == 70 then	--dracthyr visage
+		local _, inAlternateForm = GetAlternateFormInfo();
+		if inAlternateForm then		--Human form is Worgen's alternate form
+			raceID = 10;	--blood elf
+		end
 	end
 
 	return raceID;
@@ -214,16 +240,23 @@ end
 local TranslateValue;
 
 local function AssignModelPositionTable(race, gender)
-	local _, _, XraceID = UnitRace("player")
-	XraceID = race or XraceID;
-	XraceID = ReAssignRaceID(XraceID);
-	local XgenderID = gender or UnitSex("player");		--2 Male	3 Female
-	if XgenderID == 2 then
-		TranslateValue = TranslateValue_Male[XraceID];
+	local _, _, raceID = UnitRace("player");
+	raceID = race or raceID;
+	raceID = ReAssignRaceID(raceID);
+	local genderID = gender or UnitSex("player");		--2 Male	3 Female
+	if genderID == 2 then
+		TranslateValue = TranslateValue_Male[raceID];
 	else
-		TranslateValue = TranslateValue_Female[XraceID];
+		TranslateValue = TranslateValue_Female[raceID];
+	end
+
+	if not TranslateValue then
+		print("AssignModelPositionTable Failed Unrecognized Race: "..raceID);
+		TranslateValue = TranslateValue_Male[1];
 	end
 end
+
+
 -----------------------------------
 
 local function outSine(t, b, c, d)
@@ -309,7 +342,7 @@ local function UpdateGroundShadowOption()
 	local model = ModelFrames[ACTIVE_MODEL_INDEX];
 	local shadowFrame = model.GroundShadow;
 	local state = shadowFrame:IsShown();
-	HighlightButton(button, state);
+	HighlightButton(button, state, true);
 
 	Narci_GroundShadowOption:ReAnchor(model, shadowFrame.Option);
 end
@@ -345,6 +378,8 @@ local function DisablePauseButton()
 end
 
 local function Narci_CharacterModelFrame_OnShow(self)
+	--xmogMode -- 0 off	1 "Texts Only" 	2 "Texts & Model"
+
 	if self.xmogMode == 2 then
 		--NarciModel_RightGradient:Show();
 	else
@@ -352,10 +387,7 @@ local function Narci_CharacterModelFrame_OnShow(self)
 	end
 
 	if not SettingFrame:IsShown() then
-		SettingFrame:Show();
-		After(1, function()
-			SettingFrame:FadeIn(0.5);
-		end);
+		SettingFrame:FadeIn(0.5, 1);
 	end
 end
 
@@ -404,15 +436,16 @@ local LightControl = {};
 LightControl.ambientMode = false;
 LightControl.angleZ = pi/4;
 LightControl.angleXY = -3*pi/4;
+LightControl.targetModelIndex = 1;
 
 function LightControl:SetLightWidgetFromActiveModel()
 	local model = ModelFrames[ACTIVE_MODEL_INDEX];
-	local _, _, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB = model:GetLight();
+	local _, _, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB = GetModelLight(model);
 	local hypotenuse = sqrt(dirX*dirX + dirY*dirY);
 
 	local angleZ = -atan2(dirZ, hypotenuse);
 	local angleXY = - pi - atan2(dirX, dirY);
-	
+
 	local r = self.radius;
 	local button1 = self.parentButton1;
 	local button2 = self.parentButton2;
@@ -422,7 +455,7 @@ function LightControl:SetLightWidgetFromActiveModel()
 	button1:SetPoint("CENTER", x1, y1);
 	button1.Tex:SetRotation(angleZ);
 	button1.Highlight:SetRotation(angleZ);
-	BasicPanel.LeftView.LightColor:SetRotation(angleZ);
+	BasicPanel.SideView.LightColor:SetRotation(angleZ);
 
 	button2:SetPoint("CENTER", x2, y2);
 	button2.Tex:SetRotation(angleXY);
@@ -430,7 +463,7 @@ function LightControl:SetLightWidgetFromActiveModel()
 	BasicPanel.TopView.LightColor:SetRotation(angleXY);
 
 	local h, s, v;
-	
+
 	if self.ambientMode then
 		h, s, v = RGBRatio2HSV(ambR, ambG, ambB);
 	else
@@ -442,9 +475,15 @@ function LightControl:SetLightWidgetFromActiveModel()
 	NarciModelControl_BrightnessSlider:SetValue(v);
 
 	BasicPanel.TopView.AmbientColor:SetColorTexture(ambR, ambG, ambB, 0.6);
-	BasicPanel.LeftView.AmbientColor:SetColorTexture(ambR, ambG, ambB, 0.6);
+	BasicPanel.SideView.AmbientColor:SetColorTexture(ambR, ambG, ambB, 0.6);
 	BasicPanel.TopView.LightColor:SetVertexColor(dirR, dirG, dirB, 0.6);
-	BasicPanel.LeftView.LightColor:SetVertexColor(dirR, dirG, dirB, 0.6);
+	BasicPanel.SideView.LightColor:SetVertexColor(dirR, dirG, dirB, 0.6);
+end
+
+function LightControl:CopyLightToNewModel(newModel)
+	if self.targetModelIndex and ModelFrames[self.targetModelIndex] then
+		TransitionAPI.SetModelLightFromModel(newModel, ModelFrames[self.targetModelIndex]);
+	end
 end
 
 function LightControl:UpdateModel()
@@ -454,21 +493,14 @@ function LightControl:UpdateModel()
 	local rZ = -cos(phi);
 	--print(rX, rY, rZ);
 
-	local _, _, _, _, _, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB = ModelFrames[ACTIVE_MODEL_INDEX]:GetLight();
-
-	--Override Target
-	--[[
-	local model = TestFrame.WeaponModel;
-	model:SetLight(true, false, rX, rY, rZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB);
-	if true then return end;
-	--]]
+	local _, _, _, _, _, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB = GetModelLight(ModelFrames[ACTIVE_MODEL_INDEX]);
 	
 	if LINK_LIGHT then
 		for i = 1, #ModelFrames do
-			ModelFrames[i]:SetLight(true, false, rX, rY, rZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB);
+			SetModelLight(ModelFrames[i], true, false, rX, rY, rZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB);
 		end
 	else
-		ModelFrames[ACTIVE_MODEL_INDEX]:SetLight(true, false, rX, rY, rZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB);
+		SetModelLight(ModelFrames[ACTIVE_MODEL_INDEX], true, false, rX, rY, rZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB);
 		--[[
 		local ModelScene = Narci_InteractiveSplash.ClipFrame.ModelScene;
 		ModelScene:SetLightDirection(rX, rY, rZ);
@@ -491,95 +523,9 @@ function LightControl:SetDirection(radian, heightRatio)
 	button2.Tex:SetRotation(radian);
 	button2.Highlight:SetRotation(radian);
 	BasicPanel.TopView.LightColor:SetRotation(radian);
-
 	self.angleXY = radian;
 
-	--[[
-	local angleZ = heightRatio * 1.5708;	--pi/2
-	if angleZ >= 1.309 then
-		angleZ = 1.309		--90 - 15
-	elseif angleZ <= 0.2618 then
-		angleZ = 0.2618;	--15
-	end
-
-	local x1, y1 = r*cos(angleZ), r*sin(angleZ);
-	button1:SetPoint("CENTER", x1, y1);
-	button1.Tex:SetRotation(angleZ);
-	button1.Highlight:SetRotation(angleZ);
-	rotateTexture(self.BeamMask1, angleZ);
-	self.angleZ = angleZ;
-	--]]
-
-
 	self:UpdateModel();
-end
-
-function LightButton_UpdateFrame_OnLoad(self)
-	local r = self:GetParent():GetWidth()/2 - 4;
-	self.r = r;
-	LightControl.radius = r;
-
-	local button = self:GetParent().Thumb;
-	local radian = self.radian;
-	local x, y = self.r*math.cos(radian), self.r*math.sin(radian);
-	button:SetPoint("CENTER", x, y);
-	button.Tex:SetRotation(radian);
-	button.Highlight:SetRotation(radian);
-	self:GetParent().LightColor:SetRotation(radian);
-
-	if self.limit then
-		LightControl.parentButton1 = button;
-		--LightControl.BeamMask1 = self:GetParent().BeamMask;
-	else
-		LightControl.parentButton2 = button;
-		--LightControl.BeamMask2 = self:GetParent().BeamMask;
-	end
-end
-
-function LightButton_UpdateFrame_OnUpdate(self)
-	local button = self:GetParent().Thumb;
-	local radian;
-
-	local mx, my = self:GetParent():GetCenter();
-	local px, py = GetCursorPosition();
-
-	--Adjust for mousedown start offset
-	px, py = (px + self.dx) / self.scale, (py + self.dy) / self.scale;
-	radian = atan2(py - my, px - mx);
-	
-	if self.limit then
-		if radian >= pi/2 then
-			radian = pi/2 - 0.001;
-		elseif radian <= -pi/2 then
-			radian = -pi/2 + 0.001;
-		end
-		LightControl.angleZ = radian;
-	else
-		LightControl.angleXY = radian;
-		local FaceLeft = self:GetParent():GetParent().LeftView.FaceLeft;
-		local FaceRight = self:GetParent():GetParent().LeftView.FaceRight;
-		if FaceLeft and FaceRight then
-			local degree2 = math.deg(radian);
-			if degree2 > 0 then
-				FaceLeft:SetAlpha(1);
-				FaceRight:SetAlpha(0);
-			elseif degree2 <= 0 and degree2 >= -180 then
-				FaceLeft:SetAlpha(0);
-				FaceRight:SetAlpha(1);
-			end
-		end
-	end
-
-	--Not sure why MaskTexture can only get rotated after mouse-up event.
-	self:GetParent().LightColor:SetRotation(radian);
-
-	local r = self.r;
-	local x, y = r*cos(radian), r*sin(radian);
-	button:SetPoint("CENTER", x, y);
-	button.Tex:SetRotation(radian);
-	button.Highlight:SetRotation(radian);
-
-	LightControl:UpdateModel();
 end
 
 
@@ -699,7 +645,7 @@ function WeaponUpdator:ProcessInspect(inspecteeGUID)
 			end
 			if transmogInfoList[17] then
 				model:TryOn(transmogInfoList[17], "SECONDARYHANDSLOT", offHandEnchant);
-				model.equippedWeapons[1] = transmogInfoList[17];
+				model.equippedWeapons[2] = transmogInfoList[17];
 			end
 		end
 
@@ -772,7 +718,8 @@ local function PlayerModelAnimIn_Update_Style1(self, elapsed)
 end
 
 local function InitializeModel(model)
-	model:SetLight(true, false, cos(pi/4)*sin(-pi/4) ,  cos(pi/4)*cos(-pi/4) , -cos(pi/4), 1, 204/255, 204/255, 204/255, 1, 0.8, 0.8, 0.8);
+	LightControl:CopyLightToNewModel(model);
+
 	local zoomLevel = -0.5;
 	model:MakeCurrentCameraCustom();
 	model:SetPortraitZoom(zoomLevel)
@@ -787,7 +734,8 @@ local _, _, classID = UnitClass("player");
 local EntranceAnimation = Narci.ClassEntranceVisuals[classID];
 PMAI:SetScript("OnShow", function(self)		--PlayerModelAnimIn
 	local model = PrimaryPlayerModel;
-	model:RefreshUnit();
+	--model:RefreshUnit();
+	SetModelByUnit(model, "player");
 	model.isItemLoaded = false;
 	model.isPlayer = true;
 	model.hasRaceChanged = false;
@@ -887,7 +835,7 @@ local function PlayerModelAnimOut_Update(self, elapsed)
 	end
 
 	if self.t >= t then
-		ModelFrame:SetUnit("player");
+		SetModelByUnit(ModelFrame, "player");
 		self.t = 0;
 		self:Hide();
 	end
@@ -926,7 +874,7 @@ PMAO:SetScript("OnShow", function(self)
 	local _;
 	_, self.PosY, self.PosZ = PrimaryPlayerModel:GetPosition();
 	FadeFrame(SettingFrame, 0.4, 0)
-	HideAllModels();
+	ModelContainer:ClearOtherActors();
 end)
 
 PMAO:SetScript("OnUpdate", PlayerModelAnimOut_Update);
@@ -935,25 +883,27 @@ PMAO:SetScript("OnHide", function(self)
 	self.faceTime = 0;
 	self.trigger = true;
 	InitializePlayerInfo(1);	--Reset Actor#1 portrait and name
-	PrimaryPlayerModel:SetUnit("player");
+	SetModelByUnit(PrimaryPlayerModel, "player");
 end);
 
 
 ----------------------------------------------------------------
-function Narci_Xmog_UseCompactMode(state)
+local function UseCompactMode(state)
 	local frame = PrimaryPlayerModel;
 	if state then
-		FadeFrame(frame.GuideFrame, 0.5, 1);
+		FadeFrame(frame.GuideFrame, 0.5, 1, 0);
 		Narci_PlayerModelGuideFrame.VignetteRightSmall:Show();
-		UIFrameFadeOut(NarciModel_RightGradient, 0.5, NarciModel_RightGradient:GetAlpha(), 0)
+		FadeFrame(NarciModel_RightGradient, 0.5, 0);
 	else
 		FadeFrame(frame.GuideFrame, 0.5, 0);
-		if PrimaryPlayerModel.xmogMode == 2 and Narci_Character:IsShown() then
-			FadeFrame(NarciModel_RightGradient, 0.5, 1)
-		end
+		FadeFrame(NarciModel_RightGradient, 0.5, 1)
 	end
 end
 
+local function CompactModeButton_OnHide(self)
+	HighlightButton(self, false);
+	self.isOn = false;
+end
 
 local Smooth_Zoom = CreateFrame("Frame");
 Smooth_Zoom.t = 0;
@@ -1162,7 +1112,7 @@ local function LayerButton_OnClick(self)
 	end
 
 	self.isOn = not self.isOn;
-	HighlightButton(self, self.isOn);
+	HighlightButton(self, self.isOn, true);
 end
 
 local function SlotLayerButton_OnClick(self)
@@ -1528,23 +1478,23 @@ end
 function Narci_Model_UseCompactMode_OnClick(self)
 	self.isOn = not self.isOn;
 	if self.isOn then
-		HighlightButton(self, true);
+		HighlightButton(self, true, true);
 		if not Narci_HidePlayerButton.isOn then
 			Narci_HidePlayerButton:Click();
 		end
 	else
-		HighlightButton(self, false);
+		HighlightButton(self, false, true);
 		if Narci_HidePlayerButton.isOn then
 			Narci_HidePlayerButton:Click();
 		end
 	end
-	Narci_Xmog_UseCompactMode(self.isOn);
+	UseCompactMode(self.isOn);
 end
 
 function Narci_Model_HidePlayer_OnClick(self)
 	self.isOn = not self.isOn;
 	ConsoleExec("showPlayer");
-	HighlightButton(self, self.isOn);
+	HighlightButton(self, self.isOn, true);
 end
 
 function Narci_ModelShadow_SizeSlider_OnValueChanged(self, value, isUserInput)
@@ -1620,10 +1570,10 @@ local XdirX, XdirY, XdirZ, XdirR, XdirG, XdirB;
 local function SetLightViewerColor(r, g, b)
 	if LightControl.ambientMode then
 		BasicPanel.TopView.AmbientColor:SetColorTexture(r, g, b, 0.6);
-		BasicPanel.LeftView.AmbientColor:SetColorTexture(r, g, b, 0.6);
+		BasicPanel.SideView.AmbientColor:SetColorTexture(r, g, b, 0.6);
 	else
 		BasicPanel.TopView.LightColor:SetVertexColor(r, g, b, 0.6);
-		BasicPanel.LeftView.LightColor:SetVertexColor(r, g, b, 0.6);
+		BasicPanel.SideView.LightColor:SetVertexColor(r, g, b, 0.6);
 	end
 end
 
@@ -1694,7 +1644,6 @@ end
 ---------------------------
 local LayersToBeCaptured = -1;
 local Temps = {
-	Alpha1 = 1,
 	Alpha2 = 1,
 	Vignette = 0,
 	Brightness = 0,
@@ -2167,10 +2116,10 @@ local sHue, sSAT, sBRT = 0, 0, 0.8;
 
 local function PlayLightBling(index)
 	if index == 1 then
-		BasicPanel.LeftView.LightColor.Bling:Play();
+		BasicPanel.SideView.LightColor.Bling:Play();
 		BasicPanel.TopView.LightColor.Bling:Play();
 	else
-		BasicPanel.LeftView.AmbientColor.Bling:Play();
+		BasicPanel.SideView.AmbientColor.Bling:Play();
 		BasicPanel.TopView.AmbientColor.Bling:Play();
 	end
 end
@@ -2261,8 +2210,8 @@ end
 
 function LightControl:Initialize(newModel)
 	local model = ModelFrames[ACTIVE_MODEL_INDEX];
-	local enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB = model:GetLight();
-	newModel:SetLight(true, false, dirX, dirY, dirZ, 1, ambR, ambG, ambB, 1, dirR, dirG, dirB);
+	local enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB = GetModelLight(model);
+	SetModelLight(newModel, true, false, dirX, dirY, dirZ, 1, ambR, ambG, ambB, 1, dirR, dirG, dirB);
 end
 
 function LightControl:UpdateLight()
@@ -2271,25 +2220,25 @@ function LightControl:UpdateLight()
 	local _;
 	if self.linkLight then
 		if self.ambientMode then
-			_, _, XdirX, XdirY, XdirZ, _, _, _, _, _, XdirR, XdirG, XdirB = model:GetLight();
+			_, _, XdirX, XdirY, XdirZ, _, _, _, _, _, XdirR, XdirG, XdirB = GetModelLight(model);
 			for i = 1, #ModelFrames do
-				ModelFrames[i]:SetLight(true, false, XdirX, XdirY, XdirZ, 1, r, g, b, 1, XdirR, XdirG, XdirB);
+				SetModelLight(ModelFrames[i], true, false, XdirX, XdirY, XdirZ, 1, r, g, b, 1, XdirR, XdirG, XdirB);
 			end
 		else
 			local r0, g0, b0;
-			_, _, XdirX, XdirY, XdirZ, _, r0, g0, b0, _, XdirR, XdirG, XdirB = model:GetLight();
+			_, _, XdirX, XdirY, XdirZ, _, r0, g0, b0, _, XdirR, XdirG, XdirB = GetModelLight(model);
 			for i = 1, #ModelFrames do
-				ModelFrames[i]:SetLight(true, false, XdirX, XdirY, XdirZ, 1, r0, g0, b0, 1, r, g, b);
+				SetModelLight(ModelFrames[i], true, false, XdirX, XdirY, XdirZ, 1, r0, g0, b0, 1, r, g, b);
 			end
 		end
 	else
 		if self.ambientMode then
-			_, _, XdirX, XdirY, XdirZ, _, _, _, _, _, XdirR, XdirG, XdirB = model:GetLight();
-			model:SetLight(true, false, XdirX, XdirY, XdirZ, 1, r, g, b, 1, XdirR, XdirG, XdirB);
+			_, _, XdirX, XdirY, XdirZ, _, _, _, _, _, XdirR, XdirG, XdirB = GetModelLight(model);
+			SetModelLight(model, true, false, XdirX, XdirY, XdirZ, 1, r, g, b, 1, XdirR, XdirG, XdirB);
 		else
 			local r0, g0, b0;
-			_, _, XdirX, XdirY, XdirZ, _, r0, g0, b0, _, XdirR, XdirG, XdirB = model:GetLight();
-			model:SetLight(true, false, XdirX, XdirY, XdirZ, 1, r0, g0, b0, 1, r, g, b);
+			_, _, XdirX, XdirY, XdirZ, _, r0, g0, b0, _, XdirR, XdirG, XdirB = GetModelLight(model);
+			SetModelLight(model, true, false, XdirX, XdirY, XdirZ, 1, r0, g0, b0, 1, r, g, b);
 		end
 	end
 	SetLightViewerColor(r, g, b);
@@ -2297,20 +2246,8 @@ end
 
 local function InitializeModelLight(newModel)
 	local model = ModelFrames[ACTIVE_MODEL_INDEX];
-	local r, g, b = HSV2RGB(xHUE, xSAT, xBRT);
-	local _;
 	if LINK_LIGHT then
-		newModel:SetLight(model:GetLight());
-		--[[
-		if LightControl.ambientMode then
-			_, _, XdirX, XdirY, XdirZ, _, _, _, _, _, XdirR, XdirG, XdirB = model:GetLight();
-			newModel:SetLight(true, false, XdirX, XdirY, XdirZ, 1, r, g, b, 1, XdirR, XdirG, XdirB);
-		else
-			local r0, g0, b0;
-			_, _, XdirX, XdirY, XdirZ, _, r0, g0, b0, _, XdirR, XdirG, XdirB = model:GetLight();
-			newModel:SetLight(true, false, XdirX, XdirY, XdirZ, 1, r0, g0, b0, 1, r, g, b);
-		end
-		--]]
+		TransitionAPI.SetModelLightFromModel(newModel, model);
 	end
 end
 
@@ -2320,25 +2257,25 @@ local function SetModelLightColor()
 	local _;
 	if LINK_LIGHT then
 		if LightControl.ambientMode then
-			_, _, XdirX, XdirY, XdirZ, _, _, _, _, _, XdirR, XdirG, XdirB = model:GetLight();
+			_, _, XdirX, XdirY, XdirZ, _, _, _, _, _, XdirR, XdirG, XdirB = GetModelLight(model);
 			for i = 1, #ModelFrames do
-				ModelFrames[i]:SetLight(true, false, XdirX, XdirY, XdirZ, 1, r, g, b, 1, XdirR, XdirG, XdirB);
+				SetModelLight(ModelFrames[i], true, false, XdirX, XdirY, XdirZ, 1, r, g, b, 1, XdirR, XdirG, XdirB);
 			end
 		else
 			local r0, g0, b0;
-			_, _, XdirX, XdirY, XdirZ, _, r0, g0, b0, _, XdirR, XdirG, XdirB = model:GetLight();
+			_, _, XdirX, XdirY, XdirZ, _, r0, g0, b0, _, XdirR, XdirG, XdirB = GetModelLight(model);
 			for i = 1, #ModelFrames do
-				ModelFrames[i]:SetLight(true, false, XdirX, XdirY, XdirZ, 1, r0, g0, b0, 1, r, g, b);
+				SetModelLight(ModelFrames[i], true, false, XdirX, XdirY, XdirZ, 1, r0, g0, b0, 1, r, g, b);
 			end
 		end
 	else
 		if LightControl.ambientMode then
-			_, _, XdirX, XdirY, XdirZ, _, _, _, _, _, XdirR, XdirG, XdirB = model:GetLight();
-			model:SetLight(true, false, XdirX, XdirY, XdirZ, 1, r, g, b, 1, XdirR, XdirG, XdirB);
+			_, _, XdirX, XdirY, XdirZ, _, _, _, _, _, XdirR, XdirG, XdirB = GetModelLight(model);
+			SetModelLight(model, true, false, XdirX, XdirY, XdirZ, 1, r, g, b, 1, XdirR, XdirG, XdirB);
 		else
 			local r0, g0, b0;
-			_, _, XdirX, XdirY, XdirZ, _, r0, g0, b0, _, XdirR, XdirG, XdirB = model:GetLight();
-			model:SetLight(true, false, XdirX, XdirY, XdirZ, 1, r0, g0, b0, 1, r, g, b);
+			_, _, XdirX, XdirY, XdirZ, _, r0, g0, b0, _, XdirR, XdirG, XdirB = GetModelLight(model);
+			SetModelLight(model, true, false, XdirX, XdirY, XdirZ, 1, r0, g0, b0, 1, r, g, b);
 		end
 	end
 	SetLightViewerColor(r, g, b);
@@ -2365,8 +2302,8 @@ function NarciModelControl_HueSlider_OnValueChanged(self, value, isUserInput)
 		end
 		
 
-		NarciModelControl_SaturationSlider.Color:SetGradient("HORIZONTAL", 1, 1, 1, xR, xG, xB);
-		NarciModelControl_BrightnessSlider.Color:SetGradient("HORIZONTAL", 0, 0, 0, xR + (1-xSAT), xG + (1-xSAT), xB + (1-xSAT));
+		SetGradient(NarciModelControl_SaturationSlider.Color, "HORIZONTAL", 1, 1, 1, xR, xG, xB);
+		SetGradient(NarciModelControl_BrightnessSlider.Color, "HORIZONTAL", 0, 0, 0, xR + (1-xSAT), xG + (1-xSAT), xB + (1-xSAT));
 
 		if isUserInput then
 			SetModelLightColor();
@@ -2382,7 +2319,7 @@ function NarciModelControl_SaturationSlider_OnValueChanged(self, value, isUserIn
 		self.oldValue = value;
 		xSAT = value;
 
-		NarciModelControl_BrightnessSlider.Color:SetGradient("HORIZONTAL", 0, 0, 0, xR + (1-xSAT), xG + (1-xSAT), xB + (1-xSAT));
+		SetGradient(NarciModelControl_BrightnessSlider.Color, "HORIZONTAL", 0, 0, 0, xR + (1-xSAT), xG + (1-xSAT), xB + (1-xSAT));
 
 		if isUserInput then
 			SetModelLightColor();
@@ -2606,7 +2543,7 @@ function Narci_ModelIndexButton_OnClick(self, button)
 			ModelFrames[ID] = model;
 			SwitchPortrait(ID, unit);
 			model.isModelLoaded = false;
-			model:SetUnit(unit);
+			SetModelByUnit(model, unit);
 			model.race, model.gender = InitializePlayerInfo(ID, unit);
 			ResetModelPosition(model);
 			InitializeModelLight(model);
@@ -2707,13 +2644,6 @@ end
 
 function NarciGenericModelMixin:OnLoad()
 	self.isModelLoaded = false;
-	--[[
-	if UnitExists("target") and UnitIsPlayer("target") then
-		self:SetUnit("target");
-	else
-		self:SetUnit("player");
-	end
-	--]]
 	self:SetKeepModelOnHide(true);
 	self.cameraPitch = pi/2;
 	self.t = 0;
@@ -3114,11 +3044,11 @@ NarciMainModelMixin = CreateFromMixins(NarciGenericModelMixin);
 function NarciMainModelMixin:OnLoad()
 	self.isVirtual = false;
 	self.isModelLoaded = false;
-	self:SetUnit("player");
+	SetModelByUnit(self, "player");
 	self.mouseDown = false;
 	self.panning = false;
 	self.cameraPitch = pi/2;
-	self:SetLight(true, false, cos(pi/4)*sin(-pi/4) ,  cos(pi/4)*cos(-pi/4) , -cos(pi/4), 1, 0.8, 0.8, 0.8, 1, 0.8, 0.8, 0.8);
+	SetModelLight(self, true, false, cos(pi/4)*sin(-pi/4) ,  cos(pi/4)*cos(-pi/4) , -cos(pi/4), 1, 0.8, 0.8, 0.8, 1, 0.8, 0.8, 0.8);
 	self.t = 0;
 	self.buttonIndex = 1;
 
@@ -3180,7 +3110,7 @@ local function CreateEmptyModelForNPCBrowser(actorIndex, isPet)
 		model = CreateFrame("CinematicModel", "NarciNPCModelFrame"..ID, Narci_ModelContainer, "Narci_NPCModelFrame_Template");
 		model:SetID(ID);
 	end
-	model:SetModel(124640);
+	--model:SetModel(124640);
 	model.isLoaded = false;
 	model.isPlayer = false;
 	ModelFrames[ID] = model;
@@ -3290,7 +3220,7 @@ local function CreateAndSelectNewActor(actorIndex, unit, isVirtual)
 			NarciModelControl_AnimationSlider:ResetValueVisual();
 		end
 		model.isModelLoaded = false;
-		model:SetUnit(unit);
+		SetModelByUnit(model, unit);
 		model.isPlayer = true;
 		NarciPhotoModeOutfitSelect:AddPlayerActor(unit, model);
 
@@ -3689,7 +3619,7 @@ function Narci_GenderButton_OnClick(self)
 	local model = ModelFrames[ACTIVE_MODEL_INDEX];
 	local genderID = playerInfo[index].gender or 2;
 	local raceID = playerInfo[index].raceID;
-	local _, _, dirX, dirY, dirZ, _, ambR, ambG, ambB, _, dirR, dirG, dirB = model:GetLight();
+	local _, _, dirX, dirY, dirZ, _, ambR, ambG, ambB, _, dirR, dirG, dirB = GetModelLight(model);
 	model:SetBarberShopAlternateForm();
 	if genderID == 2 then
 		model:SetCustomRace(raceID, 1);
@@ -3705,8 +3635,8 @@ function Narci_GenderButton_OnClick(self)
 		CustomModelPosition(model, raceID, genderID);
 		After(0, function()
 			RestoreModelAfterRaceChange(model);
-			model:SetLight(true, false, dirX, dirY, dirZ, 1, ambR, ambG, ambB, 1, dirR, dirG, dirB);
-		end)	
+			SetModelLight(model, true, false, dirX, dirY, dirZ, 1, ambR, ambG, ambB, 1, dirR, dirG, dirB);
+		end);
 	end);
 end
 
@@ -3737,7 +3667,7 @@ function Narci_RaceOptionButton_OnClick(self)
 	local genderID = playerInfo[ACTIVE_MODEL_INDEX].gender;
 	local raceID = self:GetID() or 1;
 	playerInfo[ACTIVE_MODEL_INDEX].raceID = raceID;
-	local _, _, dirX, dirY, dirZ, _, ambR, ambG, ambB, _, dirR, dirG, dirB = model:GetLight();
+	local _, _, dirX, dirY, dirZ, _, ambR, ambG, ambB, _, dirR, dirG, dirB = GetModelLight(model);
 	model:SetBarberShopAlternateForm();
 	if genderID == 2 then
 		model:SetCustomRace(raceID, 0);
@@ -3751,15 +3681,15 @@ function Narci_RaceOptionButton_OnClick(self)
 		CustomModelPosition(model, raceID, genderID);
 		After(0, function()
 			RestoreModelAfterRaceChange(model);
-			model:SetLight(true, false, dirX, dirY, dirZ, 1, ambR, ambG, ambB, 1, dirR, dirG, dirB);
-		end)	
+			SetModelLight(model, true, false, dirX, dirY, dirZ, 1, ambR, ambG, ambB, 1, dirR, dirG, dirB);
+		end);
 	end);
 end
 
 function Narci_LinkLightButton_OnClick(self)
 	self.isOn = not self.isOn;
 	LINK_LIGHT = self.isOn;
-	HighlightButton(self, self.isOn);
+	HighlightButton(self, self.isOn, true);
 	self.ClipFrame.LinkButton:Click();
 	--self.LinkButton.FadeOut:Play();
 end
@@ -3767,7 +3697,7 @@ end
 function Narci_LinkScaleButton_OnClick(self)
 	self.isOn = not self.isOn;
 	LINK_SCALE = self.isOn;
-	HighlightButton(self, self.isOn);
+	HighlightButton(self, self.isOn, true);
 	self.ClipFrame.LinkButton:Click();
 	--self.LinkButton.FadeOut:Play();
 end
@@ -3932,7 +3862,7 @@ end
 
 local function CacheModel()
 	local model = PrimaryPlayerModel;
-	model:SetUnit("player");
+	SetModelByUnit(model, "player");
 	WeaponUpdator:GetPlayerWeapons("player");
 	model:SetAlpha(0);
 	model:Show();
@@ -4169,6 +4099,8 @@ function NarciShadowRotationMixin:OnMouseDown()
 
 	self.UpdateFrame:Show();
 	self:LockHighlight();
+
+	LightControl.targetModelIndex = ACTIVE_MODEL_INDEX;
 end
 
 function NarciShadowRotationMixin:OnMouseUp()
@@ -4430,13 +4362,15 @@ function NarciModelSettingsMixin:OnLoad()
 	BasicPanel = self.BasicPanel;
 	self:RegisterForDrag("LeftButton");
 	NarciAPI_CreateFadingFrame(self);
+
+	BasicPanel.CompactModeButton:SetScript("OnHide", CompactModeButton_OnHide);
 end
 
 function NarciModelSettingsMixin:OnEnter()
 	if IsMouseButtonDown() then return end;
 
 	HideGroundShadowControl();
-	Narci_PhotoModeToolbar:SetAlpha(0);
+	NarciScreenshotToolbar:FadeOut(true);
 	self:FadeIn(0.15);
 end
 
@@ -4453,7 +4387,9 @@ function NarciModelSettingsMixin:OnLeave()
 end
 
 function NarciModelSettingsMixin:OnHide()
-	self:SetAlpha(0);
+	--self:SetAlpha(0);
+	self:FadeOut(0, 0);
+
 	ResetIndexButton();
 	ExitGroupPhoto();
 	RestorePlayerInfo(1);
@@ -4570,12 +4506,10 @@ ScreenshotListener:RegisterEvent("SCREENSHOT_SUCCEEDED")
 ScreenshotListener:RegisterEvent("PLAYER_ENTERING_WORLD");
 ScreenshotListener:SetScript("OnEvent",function(self,event,...)
 	if event == "SCREENSHOT_STARTED" then
-		Temps.Alpha1 = Narci_PhotoModeToolbar:GetAlpha();
 		Temps.Alpha2 = SettingFrame:GetAlpha();
-		Narci_PhotoModeToolbar:SetAlpha(0);
+		NarciScreenshotToolbar:FadeOut(true);
 		SettingFrame:SetAlpha(0);
 	elseif event == "SCREENSHOT_SUCCEEDED" then
-		Narci_PhotoModeToolbar:SetAlpha(Temps.Alpha1);
 		SettingFrame:SetAlpha(Temps.Alpha2);
 		if LayersToBeCaptured >= 0 then
 			After(1.5, function()
@@ -4621,25 +4555,6 @@ function Narci:EquipmentItemByItemID(modelIndex, itemID, itemModID)
 	end
 end
 
-function Narci:ShrinkModelHitRect(offsetX)
-	HIT_RECT_OFFSET = offsetX;
-	local W0 = WorldFrame:GetWidth();
-	local newWidth = 2/3*W0 + offsetX;
-	local _G = _G;
-	local model;
-	for i = 1, NUM_MAX_ACTORS do
-		model = _G["NarciPlayerModelFrame"..i];
-		if model then
-			model:SetHitRectInsets(newWidth, 0 ,0 , 32.0);
-		end
-		model = _G["NarciNPCModelFrame"..i];
-		if model then
-			model:SetHitRectInsets(newWidth, 0 ,0 , 32.0);
-		end
-	end
-	Narci_ModelInteractiveArea:SetWidth(W0 - newWidth);
-end
-
 function Narci:GetActiveActor()
 	return ModelFrames[ACTIVE_MODEL_INDEX]
 end
@@ -4653,6 +4568,192 @@ end
 
 
 
+NarciPhotoModeModelContainerMixin = {};
+
+function NarciPhotoModeModelContainerMixin:OnLoad()
+	ModelContainer = self;
+end
+
+function NarciPhotoModeModelContainerMixin:OnShow()
+	self.newCanvas = true;
+end
+
+function NarciPhotoModeModelContainerMixin:OnHide()
+	self:ClearOtherActors();
+end
+
+function NarciPhotoModeModelContainerMixin:ClearOtherActors()
+	--excepet the player
+	if self.newCanvas then
+		HideAllModels();
+	end
+end
+
+
+NarciPhotoModeLightDirectionControllerMixin = {
+	thumb_OnMouseDown = function(self)
+		self:LockHighlight();
+		local UpdateFrame = self:GetParent().UpdateFrame;
+		local mx, my = self:GetCenter();
+		local px, py = GetCursorPosition();
+		local scale = self:GetEffectiveScale();
+		UpdateFrame.dx, UpdateFrame.dy = mx * scale - px, my * scale - py;
+		UpdateFrame.mx, UpdateFrame.my = self:GetParent():GetCenter();
+		UpdateFrame:Show();
+	end,
+
+	thumb_OnMouseUp = function(self)
+		self:UnlockHighlight();
+		self:GetParent().UpdateFrame:Hide();
+	end,
+
+	updateFrame_OnShow = function(self)
+		self.scale = self:GetParent():GetEffectiveScale() or 1;
+	end
+
+};
+
+local function LightButtonUpdateFrame_OnUpdate(self, elapsed)
+	self.t = self.t + elapsed;
+	if self.t < 0.016 then return end;
+
+	local radian;
+	local px, py = GetCursorPosition();
+
+	--Adjust for mousedown start offset
+	px, py = (px + self.dx) / self.scale, (py + self.dy) / self.scale;
+	radian = atan2(py - self.my, px - self.mx);
+	
+	if self.limit then
+		if radian >= pi/2 then
+			radian = pi/2 - 0.001;
+		elseif radian <= -pi/2 then
+			radian = -pi/2 + 0.001;
+		end
+		LightControl.angleZ = radian;
+	else
+		LightControl.angleXY = radian;
+		local FaceLeft = self:GetParent():GetParent().SideView.FaceLeft;
+		local FaceRight = self:GetParent():GetParent().SideView.FaceRight;
+		if FaceLeft and FaceRight then
+			local degree2 = math.deg(radian);
+			if degree2 > 0 then
+				FaceLeft:SetAlpha(1);
+				FaceRight:SetAlpha(0);
+			elseif degree2 <= 0 and degree2 >= -180 then
+				FaceLeft:SetAlpha(0);
+				FaceRight:SetAlpha(1);
+			end
+		end
+	end
+
+	--Not sure why MaskTexture can only get rotated after mouse-up event.
+	self:GetParent().LightColor:SetRotation(radian);
+
+	local r = self.r;
+	local x, y = r*cos(radian), r*sin(radian);
+	self.Thumb:SetPoint("CENTER", x, y);
+	self.Thumb.Tex:SetRotation(radian);
+	self.Thumb.Highlight:SetRotation(radian);
+
+	LightControl:UpdateModel();
+end
+
+
+local function LightButtonUpdateFrame_OnLoad(self)
+	local r = self:GetParent():GetWidth()/2 - 4;
+	self.r = r;
+	self.t = 0;
+	LightControl.radius = r;
+
+	local button = self:GetParent().Thumb;
+	local radian = self.radian;
+	local x, y = self.r*math.cos(radian), self.r*math.sin(radian);
+	button:SetPoint("CENTER", x, y);
+	button.Tex:SetRotation(radian);
+	button.Highlight:SetRotation(radian);
+	self:GetParent().LightColor:SetRotation(radian);
+
+	if self.limit then
+		LightControl.parentButton1 = button;
+		--LightControl.BeamMask1 = self:GetParent().BeamMask;
+	else
+		LightControl.parentButton2 = button;
+		--LightControl.BeamMask2 = self:GetParent().BeamMask;
+	end
+
+	self:SetScript("OnUpdate", LightButtonUpdateFrame_OnUpdate);
+end
+
+function NarciPhotoModeLightDirectionControllerMixin:OnLoad()
+	if self.view == "side" then
+		self.Background:SetTexCoord(0.375, 0.75, 0, 0.75);
+		self.UpdateFrame.dx, self.UpdateFrame.dy = 0, 0;
+		self.UpdateFrame.radian = math.pi/4;
+		self.UpdateFrame.limit = true;
+	elseif self.view == "top" then
+		self.Background:SetTexCoord(0, 0.375, 0, 0.75);
+		self.UpdateFrame.dx, self.UpdateFrame.dy = 0, 0;
+		self.UpdateFrame.radian = -3*math.pi/4;
+	end
+
+	self.Thumb:SetScript("OnMouseDown", self.thumb_OnMouseDown);
+	self.Thumb:SetScript("OnMouseUp", self.thumb_OnMouseUp);
+	LightButtonUpdateFrame_OnLoad(self.UpdateFrame);
+	self.UpdateFrame:SetScript("OnShow", self.updateFrame_OnShow);
+	self.UpdateFrame.Thumb = self.Thumb;
+end
+
+
+
+local function ShrinkModelHitRect(offsetX)
+	HIT_RECT_OFFSET = offsetX;
+	local W0 = WorldFrame:GetWidth();
+	local newWidth = 2/3*W0 + offsetX;
+	local _G = _G;
+	local model;
+	for i = 1, NUM_MAX_ACTORS do
+		model = _G["NarciPlayerModelFrame"..i];
+		if model then
+			model:SetHitRectInsets(newWidth, 0, 0, 32.0);
+		end
+		model = _G["NarciNPCModelFrame"..i];
+		if model then
+			model:SetHitRectInsets(newWidth, 0, 0, 32.0);
+		end
+	end
+
+	local indicator = Narci_ModelInteractiveArea;
+	indicator:SetWidth(W0 - newWidth);
+
+	if ModelContainer:IsShown() then
+		indicator.InOut:Stop();
+		indicator.InOut:Play();
+		indicator:Show();
+	else
+		indicator:Hide();
+	end
+end
+
+
+do
+	local _, addon = ...
+    local SettingFunctions = addon.SettingFunctions;
+
+    function SettingFunctions.SetModelPanelScale(scale, db)
+        if scale == nil then
+            scale = db["ModelPanelScale"] or 1;
+        end
+		SettingFrame:SetScale(scale);
+    end
+
+	function SettingFunctions.SetModelHitRectShrinkage(shrinkX, db)
+        if shrinkX == nil then
+            shrinkX = db["ShrinkArea"] or 0;
+        end
+		ShrinkModelHitRect(shrinkX);
+    end
+end
 
 --[[
 function PrintIcon(id)

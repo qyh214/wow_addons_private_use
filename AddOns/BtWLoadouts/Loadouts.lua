@@ -771,6 +771,9 @@ do
 	function Internal.SetLoadoutSegmentEnabled(id, value)
 		loadoutSegmentsByID[id].enabled = value and true or false
 	end
+	function Internal.GetLoadoutSegmentEnabled(id)
+		return loadoutSegmentsByID[id].enabled and true or false
+	end
 end
 function Internal.IsActivatingLoadout()
     return target.active
@@ -1194,6 +1197,14 @@ local function BuildSetItems(set, items, collapsed, errors)
 	return items
 end
 
+local function shallowcopy(tbl)
+	local result = {}
+	for k,v in pairs(tbl) do
+		result[k] = v
+	end
+	return result
+end
+
 -- Stores errors for currently viewed set
 local errors = {}
 
@@ -1216,6 +1227,28 @@ function BtWLoadoutsLoadoutsMixin:OnShow()
 		self.SpecDropDown.includeNone = true;
 		UIDropDownMenu_SetWidth(self.SpecDropDown, 175);
 		UIDropDownMenu_JustifyText(self.SpecDropDown, "LEFT");
+		
+        self.SpecDropDown.GetValue = function ()
+            if self.set then
+                return self.set.specID
+            end
+        end
+        self.SpecDropDown.SetValue = function (_, _, arg1)
+            CloseDropDownMenus();
+
+            local set = self.set;
+            if set then
+				local classFile = set.specID and select(6, GetSpecializationInfoByID(set.specID))
+				self.temp[classFile or "NONE"] = set.character
+		
+				set.specID = arg1;
+		
+				classFile = set.specID and select(6, GetSpecializationInfoByID(set.specID))
+				set.character = self.temp[classFile or "NONE"] or shallowcopy(set.character)
+
+                self:Update()
+            end
+        end
 
 		self.CharacterDropDown.GetValue = function (self)
 			local frame = self:GetParent()
@@ -1375,7 +1408,7 @@ function BtWLoadoutsLoadoutsMixin:OnSidebarItemDragStart(button)
 	end
 end
 function BtWLoadoutsLoadoutsMixin:Update()
-	self:GetParent().TitleText:SetText(L["Loadouts"]);
+	self:GetParent():SetTitle(L["Loadouts"]);
 	local sidebar = BtWLoadoutsFrame.Sidebar
 
 	sidebar:SetSupportedFilters("spec", "class", "role", "character", "disabled")

@@ -1,4 +1,4 @@
-if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
+if not WeakAuras.IsLibsOK() then return end
 local AddonName, OptionsPrivate = ...
 
 local L = WeakAuras.L;
@@ -80,7 +80,7 @@ local function createOptions(parentData, data, index, subIndex)
       type = "toggle",
       name = L["Use SetTransform"],
       order = 14,
-      width = WeakAuras.normalWidth
+      width = WeakAuras.normalWidth,
     },
     model_z = {
       type = "range",

@@ -1,10 +1,98 @@
-tag ac314744089c122a3c852fe6209b7b6ae646dc91 DetailsRetail.9.2.5.9824.146
+tag 57355ba98fa4fcc2412e9332df56a2faceae6f31 Details.DF.Wrath.10205.146
 Author:	Tercio Jose <terciob19@hotmail.com>
-Date:	Thu Jun 9 10:04:25 2022 -0300
+Date:	Wed Oct 26 21:51:17 2022 -0300
 
-commit 419999fb097ed9c700515e934483a5ad29eb4c3c
+commit 4c11441c3eb1da7d61bfda946d43470a6ac16a02
 Author: Tercio Jose <terciob19@hotmail.com>
-Date:   Thu Jun 9 09:59:35 2022 -0300
+Date:   Wed Oct 26 21:50:34 2022 -0300
 
-    Check if the left text has a valid text string before sending it to Truncate
+    Round of general fixes
+
+commit 60397057e74bad53c66cb21d6bfa5f59b078f30d
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Wed Oct 26 13:28:34 2022 -0300
+
+    rogue secret technique fix, and small fixes
+
+commit ae819a6096ab068433071749bdadffac846a4069
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Tue Oct 25 21:31:20 2022 -0500
+
+    Bump toc to Prepatch version
+
+commit ae819a6096ab068433071749bdadffac846a4069
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Tue Oct 25 21:31:20 2022 -0500
+
+    Bump toc to Prepatch version
+
+commit da2ee21682582792500ebdeb50e87460df3bd7a5
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Tue Oct 25 04:06:10 2022 -0500
+
+    Add the Version value to Wrath toc file for /details
+
+commit da2ee21682582792500ebdeb50e87460df3bd7a5
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Tue Oct 25 04:06:10 2022 -0500
+
+    Add the Version value to Wrath toc file for /details
+
+commit d216a1d9d2946bc7d0d91dbd5461557f2df01fe0
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Mon Oct 24 19:49:22 2022 -0500
+
+    Move bad skin check to after ReajustaGump
+    
+    ReajustaGump sets up the bar objects which are used in the ChangeSkin function and it's children functions.
+
+commit d216a1d9d2946bc7d0d91dbd5461557f2df01fe0
+Author: Flamanis <Flamanis@users.noreply.github.com>
+Date:   Mon Oct 24 19:49:22 2022 -0500
+
+    Move bad skin check to after ReajustaGump
+    
+    ReajustaGump sets up the bar objects which are used in the ChangeSkin function and it's children functions.
+
+commit d9c4f9b3f4e0560e86fb00a4915853344d5ae532
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Sun Oct 23 13:44:13 2022 -0300
+
+    Update on Blood Shield icon
+
+commit d97fe98a782b010a4994b374d2b0ecb2e9d2889a
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Sun Oct 23 13:13:20 2022 -0300
+
+    Division by zero fix
+
+commit 31688a759c3b8502be3ad532599fa69ec2fe4d02
+Author: kerrsmith <12290040+kerrsmith@users.noreply.github.com>
+Date:   Fri Oct 21 10:54:41 2022 +0100
+
+    Fixed a spelling error in Details_Vanguard.lua
+
+commit 06d08637de9df0d18fb0df0982a11dfc9edcb6cb
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Thu Oct 20 11:56:28 2022 -0300
+
+    spec icons update, lib open raid update
+
+commit 31688a759c3b8502be3ad532599fa69ec2fe4d02
+Author: kerrsmith <12290040+kerrsmith@users.noreply.github.com>
+Date:   Fri Oct 21 10:54:41 2022 +0100
+
+    Fixed a spelling error in Details_Vanguard.lua
+
+commit 06d08637de9df0d18fb0df0982a11dfc9edcb6cb
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Thu Oct 20 11:56:28 2022 -0300
+
+    spec icons update, lib open raid update
+
+commit a9e858d86476db42569b7f9229589a004454d4ce
+Author: Tercio Jose <terciob19@hotmail.com>
+Date:   Thu Oct 20 09:47:48 2022 -0300
+
+    Disabled Bindings.xml to avoid taints in 10.0
 

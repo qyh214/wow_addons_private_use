@@ -1,3 +1,4 @@
+local _, addon = ...
 
 local strmatch = string.match;
 local gmatch = string.gmatch;
@@ -5,7 +6,7 @@ local After = C_Timer.After;
 local unpack = unpack;
 
 local FadeFrame = NarciFadeUI.Fade;
-
+local outQuart = addon.EasingFunctions.outQuart;
 local MAX_ROW = NarciConstants.Soulbinds.MaxRow or 8;   --12
 local FILE_PATH = "Interface\\AddOns\\Narcissus\\Art\\Modules\\CharacterFrame\\Soulbinds\\";
 local CONDUIT_OFFSET = 60;
@@ -22,11 +23,6 @@ local QUALITY_COLORS = {
 };
 --]]
 
-local pow = math.pow;
-local function outQuart(t, b, e, d)
-    t = t / d - 1;
-    return (b - e) * (pow(t, 4) - 1) + b
-end
 
 local QUALITY_COLORS = NarciAPI.GetItemQualityColorTable();
 QUALITY_COLORS[1] = {0.8, 0.8, 0.8};
@@ -50,6 +46,20 @@ local function GetConduitItemQualityByRank(rank)
     end
 end
 
+local function SetTextColorByQuality(text, quality, darker)
+    local r, g, b = unpack(QUALITY_COLORS[quality]);
+
+    if not r then
+        r, g, b = 0.8, 0.8, 0.8;
+    end
+
+    if darker then
+        text:SetTextColor(r, g, b);
+    else
+        text:SetTextColor(r*0.66, g*0.66, b*0.66);
+    end
+end
+
 local function SetConduitItemQualityColorByItemLevel(widget, itemLevel, isCurrentSpec)
     local i;
     if itemLevel < 158 then
@@ -63,19 +73,21 @@ local function SetConduitItemQualityColorByItemLevel(widget, itemLevel, isCurren
     if isCurrentSpec then
         widget.Border:SetVertexColor(1, 1, 1);
         widget.Icon:SetVertexColor(1, 1, 1);
-        widget.Name:SetTextColor(unpack(QUALITY_COLORS[i + 2]));
+        SetTextColorByQuality(widget.Name, i+2);
     else
-        local r, g, b = unpack(QUALITY_COLORS[i + 2]);
-        widget.Name:SetTextColor(r * 0.66, g * 0.66, b * 0.66);
         widget.Border:SetVertexColor(0.66, 0.66, 0.66);
         widget.Icon:SetVertexColor(0.66, 0.66, 0.66);
+        SetTextColorByQuality(widget.Name, i+2, true);
     end
 end
+
 
 -----------------------------------------------------------------------------------
 local QueueFrame = NarciAPI.CreateProcessor();
 
 local ReferenceTooltip = CreateFrame("GameTooltip", "NarciSoulbindsConduitReferenceTooltip", UIParent, "GameTooltipTemplate");
+ReferenceTooltip:SetScript("OnTooltipAddMoney", nil);
+ReferenceTooltip:SetScript("OnTooltipCleared", nil);
 
 local DataProvider = {};
 DataProvider.conduitItemIDs = {};
@@ -620,7 +632,8 @@ function NarciSoulbindsConduitFrameMixin:SetUp(conduitID, rank, spellID, conduit
         self.spellID = spellID;
         self:SetNameAndIcon();
     end
-    self.Name:SetTextColor(unpack(QUALITY_COLORS[quality]));
+
+    SetTextColorByQuality(self.Name, quality);
     
     if not rank or rank == 0 then
         rank = "";
@@ -737,7 +750,7 @@ function NarciConduitFlatButtonMixin:OnEnter()
         tooltip:Show();
     end
 
-    Narci_NavBar:PlayTimer(false);
+    Narci_NavBar:PauseTimer(true);
 end
 
 function NarciConduitFlatButtonMixin:OnLeave()
@@ -745,7 +758,7 @@ function NarciConduitFlatButtonMixin:OnLeave()
     local tooltip = NarciGameTooltip;
     tooltip:Hide();
 
-    Narci_NavBar:PlayTimer(true);
+    Narci_NavBar:PauseTimer(false);
 end
 
 function NarciConduitFlatButtonMixin:SetConduit(nodeData)
@@ -1732,11 +1745,17 @@ end)
 --]]
 
 TooltipHooks:Hook(NarciGameTooltip);
-NarciAPI.EnableConduitTooltip = function(state)
-    if state then
-        TooltipHooks:Hook(GameTooltip);
-    else
-        TooltipHooks:Unhook(GameTooltip);
+
+do
+    function addon.SettingFunctions.EnableConduitTooltip(state, db)
+        if state == nil then
+            state = db["ConduitTooltip"];
+        end
+        if state then
+            TooltipHooks:Hook(GameTooltip);
+        else
+            TooltipHooks:Unhook(GameTooltip);
+        end
     end
 end
 

@@ -20,7 +20,7 @@ function WS:HandleTreeGroup(widget)
 
     local db = E.private.WT.skins.widgets.treeGroupButton
 
-    if widget.CreateButton then
+    if widget.CreateButton and not widget.CreateButton_ then
         widget.CreateButton_ = widget.CreateButton
         widget.CreateButton = function(...)
             local button = widget.CreateButton_(...)
@@ -45,9 +45,14 @@ function WS:HandleTreeGroup(widget)
             end
 
             if db.backdrop.enable then
-                -- Create background
+                -- Clear original highlight texture
                 button:SetHighlightTexture("")
+                if button.highlight then
+                    button.highlight:SetTexture("")
+                    button.highlight:Hide()
+                end
 
+                -- Create background
                 local bg = button:CreateTexture()
                 bg:SetInside(button, 2, 0)
                 bg:SetAlpha(0)

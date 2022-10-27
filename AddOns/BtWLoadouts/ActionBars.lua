@@ -96,7 +96,7 @@ do
     local function BuildMacroMap()
         mapCreated = true
         if MacroFrame and MacroFrame:IsShown() then
-            MacroFrame_Update()
+            MacroFrame:Update()
         end
 
         local global, character = GetNumMacros()
@@ -831,6 +831,7 @@ Internal.AddLoadoutSegment({
     events = "ACTIONBAR_SLOT_CHANGED",
     add = AddActionBarSet,
     get = GetActionBarSets,
+    getByName = GetActionBarSetByName,
     combine = CombineActionBarSets,
     isActive = IsActionBarSetActive,
     activate = ActivateActionBarSet,
@@ -1249,7 +1250,7 @@ function BtWLoadoutsActionBarsMixin:OnSidebarItemDragStart(button)
 	end
 end
 function BtWLoadoutsActionBarsMixin:Update()
-	self:GetParent().TitleText:SetText(L["Action Bars"]);
+	self:GetParent():SetTitle(L["Action Bars"]);
 	local sidebar = BtWLoadoutsFrame.Sidebar
 
 	sidebar:SetSupportedFilters("covenant", "spec", "class", "role", "race")

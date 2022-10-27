@@ -296,7 +296,7 @@ do -- Build Spec List
 
 	local playerClassID = classID;
 	for classIndex=1,GetNumClasses() do
-		if classIndex ~= playerClassID then
+		if classIndex ~= playerClassID and GetNumSpecializationsForClassID(classID) > 0 then
 			classes[#classes+1] = classIndex
 
 			local _, _, classID = GetClassInfo(classIndex)

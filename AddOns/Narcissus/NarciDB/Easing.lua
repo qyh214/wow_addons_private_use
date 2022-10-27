@@ -36,6 +36,11 @@ local cos = math.cos;
 local pow = math.pow;
 local pi = math.pi;
 
+--t: total time elapsed
+--b: beginning position
+--e: ending position
+--d: animation duration
+
 function EasingFunctions.linear(t, b, e, d)
 	return (e - b) * t / d + b
 end
@@ -51,4 +56,14 @@ end
 function EasingFunctions.outQuart(t, b, e, d)
     t = t / d - 1;
     return (b - e) * (pow(t, 4) - 1) + b
+end
+
+function EasingFunctions.outQuint(t, b, e, d)
+    t = t / d
+    return (b - e)* (pow(1 - t, 5) - 1) + b
+end
+
+function EasingFunctions.inQuad(t, b, e, d)
+    t = t / d
+    return (e - b) * pow(t, 2) + b
 end

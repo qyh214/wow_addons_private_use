@@ -1,10 +1,12 @@
-lightweight tag d23482159b4f87cad4f21a19cef10309fc48cebb 4.0.16
-Author:	Bocky <nick@bocky.nl>
-Date:	Wed May 18 17:17:28 2022 +0200
+tag a8ce817bb6d0421a7d346031ffddb9d80e9d1ef1 4.1.1
+Author:	Tevoll <git@bockmeulen.nl>
+Date:	Wed Oct 26 13:52:57 2022 +0200
 
-commit d23482159b4f87cad4f21a19cef10309fc48cebb
-Author: Bocky <nick@bocky.nl>
-Date:   Wed May 18 17:17:28 2022 +0200
+commit d128511188525d6756a6fb1e700d38a0efa22285
+Author: Tevoll <git@bockmeulen.nl>
+Date:   Wed Oct 26 13:52:44 2022 +0200
 
-    added Wago-ID to toc
+    10.0 fix
+    
+    - Disabled skinning of covenant button for now.
 

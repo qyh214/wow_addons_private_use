@@ -55,6 +55,7 @@ function RSEventPOI.GetEventPOI(eventID, mapID, eventInfo, alreadyFoundInfo)
 	local POI = {}
 	POI.entityID = eventID
 	POI.isEvent = true
+	POI.grouping = true
 	POI.name = RSEventDB.GetEventName(eventID) or AL["EVENT"]
 	POI.mapID = mapID
 	if (alreadyFoundInfo) then
@@ -67,7 +68,7 @@ function RSEventPOI.GetEventPOI(eventID, mapID, eventInfo, alreadyFoundInfo)
 	POI.foundTime = alreadyFoundInfo and alreadyFoundInfo.foundTime
 	POI.isCompleted = RSEventDB.IsEventCompleted(eventID)
 	POI.isDiscovered = POI.isCompleted or alreadyFoundInfo ~= nil
-	POI.achievementLink = RSAchievementDB.GetNotCompletedAchievementLinkByMap(eventID, mapID)
+	POI.achievementIDs = RSAchievementDB.GetNotCompletedAchievementIDsByMap(eventID, mapID)
 	if (eventInfo) then
 		POI.worldmap = eventInfo.worldmap
 	end
@@ -77,11 +78,11 @@ function RSEventPOI.GetEventPOI(eventID, mapID, eventInfo, alreadyFoundInfo)
 		POI.Texture = RSConstants.BLUE_EVENT_TEXTURE
 	elseif (RSRecentlySeenTracker.IsRecentlySeen(eventID, POI.x, POI.y)) then
 		POI.Texture = RSConstants.PINK_EVENT_TEXTURE
-	elseif (not POI.isDiscovered and not POI.achievementLink) then
+	elseif (not POI.isDiscovered and RSUtils.GetTableLength(POI.achievementIDs) == 0) then
 		POI.Texture = RSConstants.RED_EVENT_TEXTURE
-	elseif (not POI.isDiscovered and POI.achievementLink) then
+	elseif (not POI.isDiscovered and RSUtils.GetTableLength(POI.achievementIDs) > 0) then
 		POI.Texture = RSConstants.YELLOW_EVENT_TEXTURE
-	elseif (POI.achievementLink) then
+	elseif (RSUtils.GetTableLength(POI.achievementIDs) > 0) then
 		POI.Texture = RSConstants.GREEN_EVENT_TEXTURE
 	else
 		POI.Texture = RSConstants.NORMAL_EVENT_TEXTURE
@@ -112,6 +113,12 @@ local function IsEventPOIFiltered(eventID, mapID, zoneQuestID, vignetteGUIDs, on
 			RSLogger:PrintDebugMessageEntityID(eventID, string.format("Saltado Evento [%s]: Evento asociado no esta activo.", eventID))
 			return true
 		end
+	end
+
+	-- Skip if the entity is filtered
+	if (RSConfigDB.IsEventFiltered(eventID) and not RSEventDB.IsWorldMap(eventID) and (not RSConfigDB.IsEventFilteredOnlyOnWorldMap() or (RSConfigDB.IsEventFilteredOnlyOnWorldMap() and not RSGeneralDB.IsRecentlySeen(eventID)))) then
+		RSLogger:PrintDebugMessageEntityID(eventID, string.format("Saltado Evento [%s]: Filtrado en opciones.", eventID))
+		return true
 	end
 
 	-- A 'not discovered' event will be setted as completed when the action is detected while loading the addon and its questID is completed

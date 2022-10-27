@@ -32,6 +32,19 @@ function EV:GARRISON_MISSION_NPC_CLOSED()
 	end
 end
 
+local function Mission_OnHintRequested(me, isMotionInduced)
+	local ms = S[me]
+	local mid = ms.missionID
+	local ga = U.GetSuggestedGroups(mid, 4, 2, ms.offerEndTime)
+	if #ga.ord == 0 then return false end
+	U.FlushMissionPredictionQueue()
+	local gl, sl = T.CreateObject("Singleton", "GroupList")
+	sl:Acquire(me, me:GetParent():GetParent():ScrollToward(me) == 1, 0, isMotionInduced)
+	sl:SetGroups(mid, ms.offerEndTime, ms.baseCost, ga)
+	gl:SetFrameLevel(me:GetFrameLevel()+10)
+	return true
+end
+
 local bufferedTentativeGroup = {}
 local function ConfigureMission(me, mi, haveSpareCompanions, availAnima)
 	local mid = mi.missionID
@@ -39,7 +52,7 @@ local function ConfigureMission(me, mi, haveSpareCompanions, availAnima)
 	local ms = S[me]
 	mi.encounterIconInfo, mi.isElite, mi.isRare = emi, emi.isElite, emi.isRare
 	
-	ms.missionID, ms.baseXPReward = mid, mi.xp or 0
+	ms.missionID, ms.baseXPReward, ms.winXPReward, ms.baseCost = mid, mi.xp or 0, mi.xp2 or 0, mi.cost
 	ms.Name:SetText(mi.name)
 	if (mi.description or "") ~= "" then
 		ms.Description:SetText(mi.description)
@@ -47,7 +60,7 @@ local function ConfigureMission(me, mi, haveSpareCompanions, availAnima)
 	
 	local timeNow = GetTime()
 	local expirePrefix, expireAt, expireRoundUp = false, nil, nil, false
-	ms.completableAfter = nil
+	ms.offerEndTime, ms.completableAfter = mi.offerEndTime, nil
 	if mi.offerEndTime then
 		expirePrefix = "|A:worldquest-icon-clock:0:0:0:0|a"
 		expireAt = mi.offerEndTime
@@ -78,6 +91,7 @@ local function ConfigureMission(me, mi, haveSpareCompanions, availAnima)
 	ms.Veil:SetShown(isMissionActive)
 	ms.ProgressBar:SetShown(isMissionActive and not mi.isFakeStart)
 	ms.ViewButton:SetShown(not isMissionActive)
+	ms.GroupHints:SetShown(not isMissionActive and U.HaveSuggestedGroups(mid))
 	ms.ViewButton:SetText(showPendingStart and L"Starting soon..." or isSufficientAnima and (showTentative and L"Edit party" or L"Select adventurers") or L"Insufficient anima")
 	ms.DoomRunButton:Hide()
 	ms.DoomRunButton:SetShown(showDoomRun)
@@ -109,6 +123,7 @@ local function ConfigureMission(me, mi, haveSpareCompanions, availAnima)
 	ms.statLine:SetWidth(ms.duration:GetRight() - ms.statLine:GetLeft())
 	ms.TagText:SetText(tag)
 	ms:SetGroupPortraits(showTentative and U.GetTentativeGroup(mid, bufferedTentativeGroup) or U.GetInProgressGroup(mi.followers, bufferedTentativeGroup), isMissionActive, ms.Description)
+	ms.OnHintRequested = Mission_OnHintRequested
 	
 	me:Show()
 end
@@ -185,20 +200,26 @@ local function UpdateMissions()
 		local m = missions[i]
 		local mid = m.missionID
 		if not m.timeLeftSeconds then
-			local sg = 0
+			local sg, xp2 = 0, 0
 			for j=1, m.rewards and #m.rewards or 0 do
 				local i = m.rewards[j]
-				if i.currencyID == 1828 and sg < 3 then
+				local iid = i.itemID
+				if i.followerXP and sg < 4 then
+					sg = haveRookies and 4 or j == 1 and -1 or sg
+				elseif iid and C_Item.IsAnimaItemByID(iid) and sg < 3 then
 					sg = 3
-				elseif i.followerXP and sg < 2 then
-					sg = haveRookies and 2 or j == 1 and -1 or sg
-				elseif i.itemID and C_Item.IsAnimaItemByID(i.itemID) and sg < 1 then
+				elseif i.currencyID == 0 and i.quantity and sg < 2 then
+					sg = 2
+				elseif iid and U.FOLLOWER_XP_ITEMS[iid] and sg < 1 then
 					sg = 1
 				elseif sg < 0 then
 					sg = 0
 				end
+				if i.followerXP then
+					xp2 = xp2 + i.followerXP
+				end
 			end
-			m.sortGroup = sg
+			m.sortGroup, m.xp2 = sg, (m.xp or 0) + xp2
 		end
 		m.hasTentativeGroup = U.MissionHasTentativeGroup(mid)
 		m.hasPendingStart = U.IsMissionStartingSoon(mid)
@@ -216,6 +237,9 @@ local function UpdateMissions()
 	MissionPage.hasCompletedMissions = cMissions and #cMissions > 0 or false
 	MissionPage.UnButton:Sync()
 	MissionPage.CompanionCounter:SetText(numFreeCompanions-numAssignedCompanions)
+	if GameTooltip:IsOwned(MissionPage.CompanionCounter) then
+		MissionPage.CompanionCounter:GetScript("OnEnter")(MissionPage.CompanionCounter)
+	end
 end
 local function CheckItemRewards(w)
 	local hadItems, hadUnknowns = false, false
@@ -303,7 +327,7 @@ local function HookAndCallOnShow(frame, f)
 	end
 end
 function EV:I_ADVENTURES_UI_LOADED()
-	MissionPage = T.CreateObject("MissionPage", CovenantMissionFrame.MissionTab)
+	MissionPage = T.CreateObject("OneTime", "MissionPage", CovenantMissionFrame.MissionTab)
 	MissionList = MissionPage.MissionList
 	T.MissionList = MissionList
 	HookAndCallOnShow(CovenantMissionFrame.MissionTab.MissionList, function(self)
@@ -326,6 +350,15 @@ function EV:I_ADVENTURES_UI_LOADED()
 	EV.I_UPDATE_CURRENCY_SHIFT = function(e, cid)
 		local p = MissionPage.ProgressCounter:GetScript("OnEvent")
 		p(MissionPage.ProgressCounter, e, cid)
+	end
+	local pqRunner = CreateFrame("Frame", nil, S[MissionPage])
+	pqRunner:SetScript("OnUpdate", function(s)
+		if U.RunMissionPredictionQueue(5) then
+			s:Hide()
+		end
+	end)
+	function EV.I_MPQ_ITEM_ADDED()
+		pqRunner:Show()
 	end
 	return "remove"
 end

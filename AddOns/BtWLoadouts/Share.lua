@@ -463,7 +463,7 @@ end
 -- /run BtWLoadoutsFrame:SetExport(BtWLoadouts.Export(1))
 BtWLoadoutsImportMixin = {}
 function BtWLoadoutsImportMixin:Update()
-    self:GetParent().TitleText:SetText(L["Import"]);
+    self:GetParent():SetTitle(L["Import"]);
 
     self:GetParent().Sidebar:Hide()
 

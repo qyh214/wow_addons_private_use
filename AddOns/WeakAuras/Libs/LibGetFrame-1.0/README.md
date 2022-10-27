@@ -7,46 +7,34 @@ Return unit frame for a given unit
 ```Lua
 local LGF = LibStub("LibGetFrame-1.0")
 local frame = LGF.GetUnitFrame(unit , options)
+
+local callback = function(event, frame, unit)
+  if event == "GETFRAME_REFRESH" then
+    -- cache was refreshed
+  end
+  if event == "FRAME_UNIT_UPDATE" then
+    -- 'frame' was updated and is now a match for 'unit'
+  end
+  if event == "FRAME_UNIT_REMOVED" then
+    -- 'frame' was updated and is no longer a match for 'unit'
+  end
+end
+
+LGF.RegisterCallback("MyAddonName", "GETFRAME_REFRESH", callback)
+LGF.RegisterCallback("MyAddonName", "FRAME_UNIT_UPDATE", callback)
+LGF.RegisterCallback("MyAddonName", "FRAME_UNIT_REMOVED", callback)
+
 ```
 
-## Options
-
-- framePriorities : array, default :
+## Public functions
 
 ```Lua
-{
-    -- raid frames
-    "^Vd1", -- vuhdo
-    "^Vd2", -- vuhdo
-    "^Vd3", -- vuhdo
-    "^Vd4", -- vuhdo
-    "^Vd5", -- vuhdo
-    "^Vd", -- vuhdo
-    "^HealBot", -- healbot
-    "^GridLayout", -- grid
-    "^Grid2Layout", -- grid2
-    "^PlexusLayout", -- plexus
-    "^ElvUF_RaidGroup", -- elv
-    "^oUF_bdGrid", -- bdgrid
-    "^oUF_.-Raid", -- generic oUF
-    "^LimeGroup", -- lime
-    "^SUFHeaderraid", -- suf
-    -- party frames
-    "^AleaUI_GroupHeader", -- Alea
-    "^SUFHeaderparty", --suf
-    "^ElvUF_PartyGroup", -- elv
-    "^oUF_.-Party", -- generic oUF
-    "^PitBull4_Groups_Party", -- pitbull4
-    "^CompactRaid", -- blizz
-    "^CompactParty", -- blizz
-    -- player frame
-    "^SUFUnitplayer",
-    "^PitBull4_Frames_Player",
-    "^ElvUF_Player",
-    "^oUF_.-Player",
-    "^PlayerFrame",
-}
+LGF:GetUnitFrame(unit, options)
 ```
+
+Options:
+
+- framePriorities : array
 
 - ignorePlayerFrame : boolean (default true)
 - ignoreTargetFrame : boolean (default true)
@@ -55,94 +43,54 @@ local frame = LGF.GetUnitFrame(unit , options)
 - ignorePartyTargetFrame : boolean (default true)
 - ignoreRaidFrame : boolean (default false)
 
-- playerFrames : array, default :
-
-```Lua
-{
-    "SUFUnitplayer",
-    "PitBull4_Frames_Player",
-    "ElvUF_Player",
-    "oUF_.-Player",
-    "oUF_PlayerPlate",
-    "PlayerFrame",
-}
-```
-
-- targetFrames : array, default :
-
-```Lua
-{
-    "SUFUnittarget",
-    "PitBull4_Frames_Target",
-    "ElvUF_Target",
-    "oUF_.-Target",
-    "TargetFrame",
-}
-```
-
-- targettargetFrames : array, default :
-
-```Lua
-{
-    "SUFUnittargetarget",
-    "PitBull4_Frames_Target's target",
-    "ElvUF_TargetTarget",
-    "oUF_.-TargetTarget",
-    "oUF_ToT",
-    "TargetTargetFrame",
-}
-```
-
-- partyFrames : array, default :
-
-```Lua
-{
-    "^AleaUI_GroupHeader",
-    "^SUFHeaderparty",
-    "^ElvUF_PartyGroup",
-    "^oUF_.-Party",
-    "^PitBull4_Groups_Party",
-    "^CompactParty",
-}
-```
-
-- partyTargetFrames : array, default :
-
-```Lua
-{
-    "SUFChildpartytarget",
-}
-```
-
-- raidFrames : array, default :
-
-```Lua
-{
-    "^Vd",
-    "^HealBot",
-    "^GridLayout",
-    "^Grid2Layout",
-    "^PlexusLayout",
-    "^ElvUF_RaidGroup",
-    "^oUF_.-Raid",
-    "^LimeGroup",
-    "^SUFHeaderraid",
-    "^CompactRaid",
-}
-```
-
-- ignoreFrames : array, default :
-
-```Lua
-{
-        "PitBull4_Frames_Target's target's target",
-        "ElvUF_PartyGroup%dUnitButton%dTarget",
-        "ElvUF_FocusTarget",
-        "RavenButton"
-}
-```
-
+- playerFrames : array
+- targetFrames : array
+- targettargetFrames : array
+- partyFrames : array
+- partyTargetFrames : array
+- raidFrames : array
+- ignoreFrames : array
 - returnAll : boolean (default false)
+
+If returnAll is false, GetUnitFrame will return a single best match
+
+For arrays check LibGetFrame-1.0.lua code for defaults
+
+```Lua
+LGF:ScanForUnitFrames()
+```
+
+Ask lib to do a new scan of frames.
+
+This scan can take a few frames to be completed.
+
+You should not expect the cache use by LGF:GetUnitFrame to be updated in the same frame as this ScanForUnitFrames call.
+
+Use lib's callbacks to know when the cache is refresh.
+
+```Lua
+LGF:GetUnitNameplate(unit)
+```
+
+Return health bar for a nameplate unit, works with a variety of addons
+
+
+## Callbacks
+
+```Lua
+-- Fired after a scan complete and cache refreshed
+LGF.RegisterCallback("MyAddonName", "GETFRAME_REFRESH", function(event) end)
+```
+
+```Lua
+-- Fired when a frame is a new match for a unit (it does not test if it is the BEST match!)
+LGF.RegisterCallback("MyAddonName", "FRAME_UNIT_UPDATE", function(event, frame, unit) end)
+```
+
+```Lua
+-- Fired when a frame is not a new match for a unit anymore
+LGF.RegisterCallback("MyAddonName", "FRAME_UNIT_REMOVED", function(event, frame, unit) end)
+```
 
 ## Examples
 
@@ -166,15 +114,15 @@ local LGF = LibStub("LibGetFrame-1.0")
 local LCG = LibStub("LibCustomGlow-1.0")
 
 local frames = LGF.GetUnitFrame("target", {
-      ignorePlayerFrame = false,
-      ignoreTargetFrame = false,
-      ignoreTargettargetFrame = false,
-      returnAll = true,
+  ignorePlayerFrame = false,
+  ignoreTargetFrame = false,
+  ignoreTargettargetFrame = false,
+  returnAll = true,
 })
 
 for _, frame in pairs(frames) do
-   LCG.ButtonGlow_Start(frame)
-   --LCG.ButtonGlow_Stop(frame)
+  LCG.ButtonGlow_Start(frame)
+  --LCG.ButtonGlow_Stop(frame)
 end
 ```
 
@@ -182,8 +130,58 @@ end
 
 ```Lua
 local frame = LGF.GetUnitFrame("player", {
-      ignoreFrames = { "Vd2.*", "Vd3.*" }
+  ignoreFrames = { "Vd2.*", "Vd3.*" }
 })
+```
+
+### Glow specific units and update glow when frames changes
+
+```Lua
+local LGF = LibStub("LibGetFrame-1.0")
+local LCG = LibStub("LibCustomGlow-1.0")
+
+-- list of units i want glowing
+local glow_units = {
+  player = true
+}
+-- track which frame is glowing per unit
+local glow_unit_frames = {}
+
+-- glow them using current cache
+for unit in pairs(glow_units) do
+  local frame = LGF.GetUnitFrame("player")
+  if frame then
+    LCG.ButtonGlow_Start(frame)
+    glow_unit_frames[unit] = frame
+  end
+end
+
+local callback = function(event, frame, unit)
+  if not glow_units[unit] then
+    return
+  end
+  -- new match for GetUnitFrame(unit), check if it's different from previous "best match" returned
+  local new_best_match = LGF.GetUnitFrame(unit)
+  if new_best_match == nil then
+    -- didn't found a best match for this unit
+    if glow_unit_frames[unit] then
+      -- stop previous glow
+      LCG.ButtonGlow_Stop(glow_unit_frames[unit])
+      glow_unit_frames[unit] = nil
+    end
+  elseif new_best_match ~= glow_unit_frames[unit] then
+    -- best match found, but different from previous one
+    if glow_unit_frames[unit] then
+      -- stop previous glow
+      LCG.ButtonGlow_Stop(glow_unit_frames[unit])
+    end
+    LCG.ButtonGlow_Start(new_best_match)
+    glow_unit_frames[unit] = new_best_match
+  end
+end
+
+LGF.RegisterCallback("MyAddonName", "FRAME_UNIT_UPDATE", callback)
+LGF.RegisterCallback("MyAddonName", "FRAME_UNIT_REMOVED", callback)
 ```
 
 [GitHub Project](https://github.com/mrbuds/LibGetFrame)

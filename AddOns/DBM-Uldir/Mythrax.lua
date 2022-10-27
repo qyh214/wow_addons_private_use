@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2194, "DBM-Uldir", nil, 1031)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116032237")
+mod:SetRevision("20220908201350")
 mod:SetCreatureID(134546)--138324 Xalzaix
 mod:SetEncounterID(2135)
 mod:SetBossHPInfoToHighest()

@@ -672,6 +672,14 @@ function RSConfigDB.SetShowingEvents(value)
 	private.db.map.displayEventIcons = value
 end
 
+function RSConfigDB.IsEventFilteredOnlyOnWorldMap()
+	return private.db.eventFilters.filterOnlyMap
+end
+
+function RSConfigDB.SetEventFilteredOnlyOnWorldMap(value)
+	private.db.eventFilters.filterOnlyMap = value
+end
+
 function RSConfigDB.IsShowingCompletedEvents()
 	return private.db.map.keepShowingAfterCompleted
 end
@@ -716,6 +724,47 @@ function RSConfigDB.SetMaxSeenEventTimeFilter(value, clearBak)
 	if (clearBak) then
 		private.db.map.maxSeenEventTimeBak = nil
 	end
+end
+
+function RSConfigDB.IsEventFiltered(eventID)
+	if (eventID) then
+		return private.db.general.filteredEvents[eventID] == false
+	end
+
+	return false
+end
+
+function RSConfigDB.GetEventFiltered(eventID)
+	if (eventID) then
+		local value = private.db.general.filteredEvents[eventID]
+		if (value == nil) then
+			return true
+		else
+			return value
+		end
+	end
+end
+
+function RSConfigDB.SetEventFiltered(eventID, value)
+	if (eventID) then
+		if (value == false) then
+			private.db.general.filteredEvents[eventID] = false
+		else
+			private.db.general.filteredEvents[eventID] = nil
+		end
+	end
+end
+
+---============================================================================
+-- Dragon glyphs filters
+---============================================================================
+
+function RSConfigDB.IsShowingDragonGlyphs()
+	return private.db.map.displayDragonGlyphsIcons
+end
+
+function RSConfigDB.SetShowingDragonGlyphs(value)
+	private.db.map.displayDragonGlyphsIcons = value
 end
 
 ---============================================================================
@@ -900,6 +949,14 @@ function RSConfigDB.SetFilteringConduitItems(value)
 	private.db.loot.filterConduitItems = value
 end
 
+function RSConfigDB.IsFilteringByExplorerResults()
+	return private.db.loot.filterByExplorerResults
+end
+
+function RSConfigDB.SetFilteringByExplorerResults(value)
+	private.db.loot.filterByExplorerResults = value
+end
+
 ---============================================================================
 -- Collection filters
 ---============================================================================
@@ -992,52 +1049,6 @@ function RSConfigDB.GetExplorerMapID()
 	return private.db.collections.mapID
 end
 
-function RSConfigDB.ApplyCollectionsLootFilters()
-	-- Quality Uncommon and supperior
-	RSConfigDB.SetLootFilterMinQuality(Enum.ItemQuality.Uncommon)
-	
-	-- Type/Subtype
-	for mainTypeID, subtypesIDs in pairs(private.ITEM_CLASSES) do
-		-- Everything else
-		if (RSUtils.Contains({ Enum.ItemClass.Consumable, Enum.ItemClass.Container, Enum.ItemClass.Gem, Enum.ItemClass.Reagent, Enum.ItemClass.Projectile, Enum.ItemClass.Tradegoods, Enum.ItemClass.ItemEnhancement, Enum.ItemClass.Recipe, Enum.ItemClass.Quiver, Enum.ItemClass.Questitem, Enum.ItemClass.Key, Enum.ItemClass.Glyph, Enum.ItemClass.Battlepet, Enum.ItemClass.WowToken }, mainTypeID)) then
-			for _, typeID in pairs (subtypesIDs) do
-				RSConfigDB.SetLootFilterByCategory(mainTypeID, typeID, false)
-			end
-		-- Armor and weapons
-		elseif (RSUtils.Contains({ Enum.ItemClass.Weapon, Enum.ItemClass.Armor }, mainTypeID)) then
-			for _, typeID in pairs (subtypesIDs) do
-				-- Rings/necklaces/trinkets
-				if (not RSConfigDB.IsSearchingAppearances() or (mainTypeID == Enum.ItemClass.Armor and typeID == Enum.ItemArmorSubclass.Generic)) then
-					RSConfigDB.SetLootFilterByCategory(mainTypeID, typeID, false)
-				else
-					RSConfigDB.SetLootFilterByCategory(mainTypeID, typeID, true)
-				end
-			end
-		-- Miscellaneous
-		elseif (mainTypeID == Enum.ItemClass.Miscellaneous) then
-			for _, typeID in pairs (subtypesIDs) do
-				-- Toys are usually in the next types, but the filter by category doesn't apply to toys (who wants to filter toys??)
-				if (RSUtils.Contains({ Enum.ItemMiscellaneousSubclass.Junk, Enum.ItemMiscellaneousSubclass.Reagent, Enum.ItemMiscellaneousSubclass.Other }, typeID)) then
-					RSConfigDB.SetLootFilterByCategory(mainTypeID, typeID, false)
-				elseif (not RSConfigDB.IsSearchingMounts() and typeID == Enum.ItemMiscellaneousSubclass.Mount) then
-					RSConfigDB.SetLootFilterByCategory(mainTypeID, typeID, false)
-				elseif (not RSConfigDB.IsSearchingPets() and typeID == Enum.ItemMiscellaneousSubclass.CompanionPet) then
-					RSConfigDB.SetLootFilterByCategory(mainTypeID, typeID, false)
-				else
-					RSConfigDB.SetLootFilterByCategory(mainTypeID, typeID, true)
-				end
-			end
-		end
-	end
-	
-	-- Custom filters
-	RSConfigDB.SetFilteringLootByNotEquipableItems(true)
-	RSConfigDB.SetFilteringLootByTransmog(true)
-	RSConfigDB.SetFilteringByCollected(true)
-	RSConfigDB.SetFilteringLootByNotMatchingClass(false)
-	RSConfigDB.SetFilteringLootByNotMatchingFaction(false)
-end
-
 function RSConfigDB.ResetLootFilters()
 	-- Quality Uncommon and supperior
 	RSConfigDB.SetLootFilterMinQuality(Enum.ItemQuality.Poor)
@@ -1055,6 +1066,7 @@ function RSConfigDB.ResetLootFilters()
 	RSConfigDB.SetFilteringByCollected(true)
 	RSConfigDB.SetFilteringLootByNotMatchingClass(false)
 	RSConfigDB.SetFilteringLootByNotMatchingFaction(true)
+	RSConfigDB.SetFilteringByExplorerResults(false)
 end
 
 ---============================================================================
@@ -1146,11 +1158,11 @@ function RSConfigDB.IsShowingWorldMapSearcher()
 end
 
 function RSConfigDB.SetClearingWorldMapSearcher(value)
-	private.db.map.cleanWorldMapSearcherOnHide = value
+	private.db.map.cleanWorldMapSearcherOnChange = value
 end
 
 function RSConfigDB.IsClearingWorldMapSearcher()
-	return private.db.map.cleanWorldMapSearcherOnHide
+	return private.db.map.cleanWorldMapSearcherOnChange
 end
 
 ---============================================================================

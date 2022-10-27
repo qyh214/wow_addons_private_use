@@ -1,12 +1,12 @@
-﻿## Interface: 90200
-## X-Min-Interface: 90200
+﻿## Interface: 100000
+## X-Min-Interface: 100000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Voicepack Taotao|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cffFF83FA桃桃语音包|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cffFF83FA桃桃語音包|r
 ## DefaultState: enabled
 ## RequiredDeps: DBM-Core
 ## Author: 桃桃
-## Version: 20220303
+## Version: 20221027
 ## Notes: http://bbs.ngacn.cc/read.php?tid=11262040
 ## X-DBM-Voice: 1
 ## X-DBM-Voice-Name: 桃桃(普通话女)

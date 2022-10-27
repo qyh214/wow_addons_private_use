@@ -1588,6 +1588,7 @@ function NarciOutfitShowcaseMixin:Init()
     PlayerActor:SetPosition(0, 0, 0);
     ActiveActor = PlayerActor;
     ModelScene.actor = PlayerActor;
+    self.actor = PlayerActor;
     ModelScene:SetCameraPosition(DEFAULT_CAM_DISTANCE, 0, 0);
     ModelScene:SetCameraOrientationByYawPitchRoll(PI, 0, 0);
     ModelScene:SetCameraFieldOfView(FOV_DIAGONAL);
@@ -1695,7 +1696,6 @@ function NarciOutfitShowcaseMixin:Init()
 
     --Backdrop Tab
     CreateBackgroundOptions(self.ControlPanel.BackgroundTab);
-    CreateBackgroundOptions = nil;
 
     --Load User Settings
     LoadSettings();
@@ -2425,8 +2425,15 @@ function NarciShowcaseItemTextMixin:SetItemTextBySlotInfo(slotID, transmogInfo)
             self:SetText(name);
         end
     else
-        self:SetItemText(name);
         if slotID == 16 or slotID == 17 then
+            if TransmogDataProvider:IsLegionArtifactBySourceID(sourceID) then
+                local artifactAppearanceSetName = TransmogDataProvider:GetArtifactAppearanceSetName(sourceID);
+                if artifactAppearanceSetName and name ~= artifactAppearanceSetName then
+                    name = name .. " ("..artifactAppearanceSetName..")";
+                end
+            end
+            self:SetItemText(name);
+
             if TransmogDataProvider:IsSourceBow(sourceID) then
                 ModelScene.actor.bowData = transmogInfo;
                 ModelScene.actor:UndressSlot(16);
@@ -2450,6 +2457,8 @@ function NarciShowcaseItemTextMixin:SetItemTextBySlotInfo(slotID, transmogInfo)
                     SourceCacher:AddToQueue(fontString, sourceID);
                 end
             end
+        else
+            self:SetItemText(name);
         end
     end
 end
@@ -2753,3 +2762,6 @@ function NarciShowcaseLoopToggleMixin:UpdateVisual()
         self.Icon:SetTexCoord(0, 0.5, 0, 1);
     end
 end
+
+
+--/script local m=MountJournal.MountDisplay.ModelScene:GetActorByTag("unwrapped");if m then m:SetAnimation(97) end;

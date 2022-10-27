@@ -36,21 +36,21 @@ L.MOD_AVAILABLE				= "Das Mod \"%s\" ist für diese Zone/Boss verfügbar. Du kan
 
 L.COMBAT_STARTED				= "Kampf gegen %s hat begonnen. Viel Glück! :)";
 L.COMBAT_STARTED_IN_PROGRESS	= "Du wurdest in den laufenden Kampf gegen %s verwickelt. Viel Glück! :)"
-L.GUILD_COMBAT_STARTED		= "Kampf gegen %s wurde von deiner Gilde begonnen."
+--L.GUILD_COMBAT_STARTED		= "Kampf gegen %s wurde von deiner Gilde begonnen."--Uncomment when updated, args have changed
 L.SCENARIO_STARTED			= "%s gestartet. Viel Glück! :)"
 L.SCENARIO_STARTED_IN_PROGRESS	=	"Du bist dem laufenden Szenario %s beigetreten. Viel Glück! :)"
 L.BOSS_DOWN					= "%s besiegt nach %s!"
 L.BOSS_DOWN_I				= "%s besiegt! Das war dein %d. Sieg."
 L.BOSS_DOWN_L				= "%s besiegt nach %s! Dein letzter Sieg hat %s gedauert und der schnellste %s. Das war dein %d. Sieg."
 L.BOSS_DOWN_NR				= "%s besiegt nach %s! Das ist ein neuer Rekord! (Der alte Rekord war %s.) Das war dein %d. Sieg."
-L.GUILD_BOSS_DOWN			= "%s wurde durch deine Gilde besiegt nach %s!"
+--L.GUILD_BOSS_DOWN			= "%s wurde durch deine Gilde besiegt nach %s!"--Uncomment when updated, args have changed
 L.SCENARIO_COMPLETE			= "%s abgeschlossen nach %s!"
 L.SCENARIO_COMPLETE_I		= "%s abgeschlossen! Das war dein %d. Abschluss."
 L.SCENARIO_COMPLETE_L		= "%s abgeschlossen nach %s! Dein letzter Abschluss hat %s gedauert und der schnellste %s. Das war dein %d. Abschluss."
 L.SCENARIO_COMPLETE_NR		= "%s abgeschlossen nach %s! Das ist ein neuer Rekord! (Der alte Rekord war %s.) Das war dein %d. Abschluss."
 L.COMBAT_ENDED_AT			= "Kampf gegen %s (%s) hat nach %s aufgehört."
 L.COMBAT_ENDED_AT_LONG		= "Kampf gegen %s (%s) hat nach %s aufgehört. Das war deine %d. Niederlage auf diesem Schwierigkeitsgrad."
-L.GUILD_COMBAT_ENDED_AT		= "Deine Gilde war %s (%s) unterlegen nach %s."
+--L.GUILD_COMBAT_ENDED_AT		= "Deine Gilde war %s (%s) unterlegen nach %s."--Uncomment when updated, args have changed
 L.SCENARIO_ENDED_AT			= "%s abgebrochen nach %s."
 L.SCENARIO_ENDED_AT_LONG		= "%s abgebrochen nach %s. Das war dein %d. Abbruch auf diesem Schwierigkeitsgrad."
 L.COMBAT_STATE_RECOVERED		= "Kampf gegen %s hat vor %s begonnen, Neukalibrierung der Timer erfolgt..."
@@ -233,13 +233,6 @@ L.SLASHCMD_HELP2				= {
 	"/dbm version2: Führt eine Boss Mod Versionsprüfung durch und flüstert Nutzer mit veralteten Versionen an (Alias: ver2).",
 	"/dbm lag: Prüft die Latenz im gesamten Schlachtzug.",
 	"/dbm durability: Prüft die Haltbarkeit im gesamten Schlachtzug."
-}
-L.TIMER_USAGE	= {
-	"DBM-Timer Kommandos:",
-	"/dbm timer <sec> <text>: Startet einen <sec> Sekunden langen Timer mit deinem <text>.",
-	"/dbm ltimer <sec> <text>: Startet einen Timer, der automatisch wiederholt wird, bis er abgebrochen wird.",
-	"/dbm broadcast timer/ltimer/cltimer <sec> <text>: schickt den Timer an den Schlachtzug (nur als Leiter/Assistent).",
-	"/dbm timer endloop: Stoppt alle ltimer-.",
 }
 
 L.ERROR_NO_PERMISSION				= "Du hast nicht die benötigte Berechtigung für diesen Befehl!"
@@ -510,11 +503,85 @@ L.LAG_FOOTER					= "Keine Antwort: %s"
 L.LDB_TOOLTIP_HELP1	= "Links-Klick, um DBM zu öffnen."
 L.LDB_TOOLTIP_HELP2	= "Rechts-Klick, um das Konfigurationsmenü zu öffnen."
 
-L.WORLD_BUFFS.hordeOny		= "Miembros de la Horda, ciudadanos de Orgrimmar, vengan y reúnanse para homenajear un hecho heroico" --needs translation
 L.WORLD_BUFFS.allianceOny	= "Bürger und Verbündete Stormwinds, am heutigen Tage ist Geschichte geschrieben worden."
-L.WORLD_BUFFS.hordeNef		= "NEFARIAN IS SLAIN! People of Orgrimmar"    --needs translation
 L.WORLD_BUFFS.allianceNef	= "Angehörige der Allianz, der Herrscher des Blackrocks wurde besiegt!"
 L.WORLD_BUFFS.zgHeart		= "Nun ist nur noch ein letzter Schritt nötig, um uns von der Bedrohung des Seelenschinders zu befreien"
 L.WORLD_BUFFS.zgHeartBooty	= "Der Blutgott, der Seelenschinder, wurde besiegt! Wir werden nicht länger unterdrückt!"
 L.WORLD_BUFFS.zgHeartYojamba= "Beginnt mit dem Ritual, meine Diener. Wir müssen das Herz von Hakkar wieder in das Nichts verbannen!"
 L.WORLD_BUFFS.rendHead		= "Rend Blackhand, der falsche Kriegshäuptling, ist gefallen!"
+L.WORLD_BUFFS.hordeOny		= "Mitglieder der Horde, Bewohner von Ogrimmar, kommt und sammelt euch um den Held der Horde zu feiern"
+L.WORLD_BUFFS.hordeNef		= "NEFARIAN WURDE GETÖTET! Einwohner von Orgrimmar"
+
+L.COPY_URL_DIALOG_NEWS="Die aktuellsten Meldungen findest du immer unter dem unten stehenden Link"
+L.LOAD_MOD_TOC_MISMATCH="%s konnte nicht geladen werden das es für einen WoW Patch (%s) designt wurde der aktuell nicht verfügbar ist. Wenn das Update verfügbar ist funktioniert dieser Mod automatisch."
+L.RAID_DOWN="%s gecleared nach %s"
+L.RAID_DOWN_L="%s gecleared nach %s! Dein schnellster Clear hat %s gedauert."
+L.RAID_DOWN_NR="%s gecleared nach %s! Dies ist ein neue Record! (der Alte Rekord war %s)."
+L.WORLDBUFF_STARTED="%s wurde auf deinem Realm für die Fraktion %s gestartet (Gesendet von %s)."
+L.OPTION_CATEGORY_SPECWARNINGS="Spezialansagen"
+L.OPTION_CATEGORY_YELLS="Schreie"
+L.OPTION_CATEGORY_NAMEPLATES="Namensplaketten"
+L.OPTION_CATEGORY_ICONS="Icons"
+L.OUTDATEDSPELLTIMERS="WARNUNG: DBM-SpellTimers funktioniert nicht mehr und muss deaktiviert werden damit " .. L.DBM .. " richtig funktioniert."
+L.VICTORYSOUND="WARNUNG: DBM-VictorySound ist nicht kompatible mit dieser version von " .. L.DBM .. " und muss, um Konflikte zu vermeiden, deaktiviert werden damit " .. L.DBM .. " genutzt werden kann."
+L.OUTDATEDRLT="WARNUNG: DBM-RaidLeadTools funktioniert nicht mehr und muss entfernt werden damit " .. L.DBM .. "  richtig funktioniert."
+L.DBMLOOTREMINDER="WARNUNG: 3rd party mod DBM-LootReminder ist installiert. Dieses Addon ist nicht mehr Kompatibel mit dem Retail WoW Client und führt dazu das " .. L.DBM .. " nicht mehr funktioniert und keine Pull-Timer mehr senden kann. Komplette Entfernung des Addons wird empfohlen."
+L.RANGECHECK_HEADERT="Abstandscheck (%dy-%dP)"
+L.RANGECHECK_IN_RANGE_TEXT="%d in Reichweite"
+L.RANGECHECK_HEADER="Abstandscheck (%dy)"
+L.RANGECHECK_RHEADER="Radar-Abstandscheck (%dy)"
+L.RANGECHECK_RHEADERT="Radar-Abstandscheck (%dy-%dP)"
+L.RANGERADAR_RHEADER="Radarabstand:%d Spieler:%d"
+L.RANGERADAR_HEADER="Abstand:%d Spieler:%d"
+L.INFOFRAME_SETCOLS="Setze maximale Spaltenanzahl"
+L.INFOFRAME_AGGRO="Aggro"
+L.TIMER_USAGE	= {
+	"DBM-Timer Kommandos:",
+	"-----------------",
+	"/dbm timer <sec> <text>: Startet einen <sec> Sekunden langen Timer mit deinem <text>.",
+	"/dbm ltimer <sec> <text>: Startet einen Timer, der automatisch wiederholt wird, bis er abgebrochen wird.",
+	"/dbm broadcast timer/ltimer/cltimer <sec> <text>: schickt den Timer an den Schlachtzug (nur als Leiter/Assistent).",
+	"/dbm timer endloop: Stoppt alle ltimer-.",
+}
+L.TIME_TOO_SHORT="Pull-Timer muss länger als 3 Sekunden sein"
+L.AUTO_ANNOUNCE_TEXTS.targetsource=">%%s< wirkt %s auf >%%s<"
+L.AUTO_ANNOUNCE_TEXTS.countdown="%s in %%ds"
+L.AUTO_ANNOUNCE_TEXTS.bait="%s bald - bait jetzt"
+L.AUTO_ANNOUNCE_TEXTS.moveto="%s - gehe zu >%%s<"
+L.AUTO_ANNOUNCE_OPTIONS.targetNF="Verkünde Ziele von $spell:%s (ignoriert globalen Ziel Filtert)"
+L.AUTO_ANNOUNCE_OPTIONS.targetsource="Verkünde Ziele von $spell:%s (mit Quelle)"
+L.AUTO_ANNOUNCE_OPTIONS.countdown="Zeige Vorwarnungs-Countdown für $spell:%s"
+L.AUTO_ANNOUNCE_OPTIONS.bait="Zeige Vorwarnungs (zum Baiten) für $spell:%s"
+L.AUTO_ANNOUNCE_OPTIONS.moveto="Zeige Warnung für Bewegungen zu Spieler oder Ort für $spell:%s"
+L.AUTO_SPEC_WARN_TEXTS.bait="%s bald - bait jetzt"
+L.AUTO_SPEC_WARN_TEXTS.youposcount="%s (%%s) (Position: %%s) auf dir!"
+L.AUTO_SPEC_WARN_TEXTS.dodgecount="%s (%%s) - Angriff ausweichen"
+L.AUTO_SPEC_WARN_TEXTS.soak="%s - soaken"
+L.AUTO_SPEC_WARN_TEXTS.soakcount="%s - soake %%s"
+L.AUTO_SPEC_WARN_TEXTS.targetchange="Zielwechsel - wechsel zu  %%s"
+L.AUTO_SPEC_WARN_OPTIONS.bait="Spezialvorwarnung (zum Baiten) für $spell:%s"
+L.AUTO_SPEC_WARN_OPTIONS.youposcount="Spezialwarnung (mit Position und Zählung), wenn du von $spell:%s betroffen bist"
+L.AUTO_SPEC_WARN_OPTIONS.dodgecount="Spezialwarnung (mit Zählung) zum Ausweichen bei $spell:%s"
+L.AUTO_SPEC_WARN_OPTIONS.soak="Spezialwarnung zum Soaken für $spell:%s"
+L.AUTO_SPEC_WARN_OPTIONS.soakcount="Spezialwarnung (mit Zählung) zum Soaken für $spell:%s"
+L.AUTO_SPEC_WARN_OPTIONS.targetchange="Spezialwarnung für wechsel des Prioritätsziels"
+L.AUTO_TIMER_TEXTS.targetcount="%s (%%2$s): %%1$s"
+L.AUTO_TIMER_TEXTS.castcount="%s (%%s)"
+L.AUTO_TIMER_TEXTS.roleplay="GUILD_INTEREST_RP oder \"Rollenspiel\""
+L.AUTO_TIMER_OPTIONS.target="Dauer des Debuffs für $spell:%s anzeigen"
+L.AUTO_TIMER_OPTIONS.targetcount="Dauer des Debuffs (mit Zählung) für $spell:%s anzeigen"
+L.AUTO_TIMER_OPTIONS.castcount="Wirkzeit (mit Zählung) von $spell:%s anzeigen"
+L.AUTO_ICONS_OPTION_TARGETS_MELEE_A="Setze Zeichen auf Ziele von $spell:%s beginnend mit melee und nach Alphabetischer Reihenfolge"
+L.AUTO_ICONS_OPTION_TARGETS_MELEE_R="Setze Zeichen auf Ziele von $spell:%s beginnend mit melee und nach Raidroster Reihenfolge"
+L.AUTO_ICONS_OPTION_TARGETS_RANGED_A="Setze Zeichen auf Ziele von $spell:%s beginnend mit ranged und nach Alphabetischer Reihenfolge"
+L.AUTO_ICONS_OPTION_TARGETS_RANGED_R="Setze Zeichen auf Ziele von $spell:%s beginnend mit ranged und nach Raidroster Reihenfolge"
+L.AUTO_ICONS_OPTION_TARGETS_ALPHA="Setze Zeichen auf Ziele von $spell:%s nach Alphabetischer Reihenfolge"
+L.AUTO_ICONS_OPTION_TARGETS_ROSTER="Setze Zeichen auf Ziele von $spell:%s  nach Raidroster Reihenfolge"
+L.AUTO_ICONS_OPTION_CONFLICT="(kann zu Konflikten mit anderen Optionen führen)"
+L.AUTO_YELL_OPTION_TEXT.shortposition="Schreie (mit Position), wenn du von $spell:%s betroffen bist"
+L.AUTO_YELL_OPTION_TEXT.position="Schreie (mit Position und Spielername), wenn du von $spell:%s betroffen bist"
+L.AUTO_YELL_OPTION_TEXT.repeatplayer="Schreie wiederholt (mit Spielername) wenn du von $spell:%s betroffen bist"
+L.AUTO_YELL_OPTION_TEXT.repeaticon="Schreie wiederholt (mit Icon) wenn du von $spell:%s betroffen bist"
+L.AUTO_INFO_FRAME_OPTION_TEXT3="Zeige Infofenster für $spell:%s (falls der Schwellwert von %%s übertroffen ist)"
+L.AUTO_SPEEDCLEAR_OPTION_TEXT="Zeige Timer für den schnellsten Clear von %s"
+L.SILENTMODE_IS="stummer Modus ist"

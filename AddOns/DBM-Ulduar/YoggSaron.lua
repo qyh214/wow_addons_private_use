@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("YoggSaron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211011150912")
+mod:SetRevision("20220701215737")
 mod:SetCreatureID(33288)
 mod:SetEncounterID(1143)
 mod:SetModelID(28817)
@@ -17,23 +17,22 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED_DOSE 63050"
 )
 
---TODO, if blizzard writes a dungeon journal for ulduar in 7.3.5, convert more of these warnings to auto local
 local warnMadness 					= mod:NewCastAnnounce(64059, 2)
-local warnSqueeze					= mod:NewTargetAnnounce(64125, 3)
+local warnSqueeze					= mod:NewTargetNoFilterAnnounce(64125, 3)
 local warnFervor					= mod:NewTargetAnnounce(63138, 4)
 local warnDeafeningRoarSoon			= mod:NewPreWarnAnnounce(64189, 5, 3)
 local warnGuardianSpawned 			= mod:NewAnnounce("WarningGuardianSpawned", 3, 62979)
 local warnCrusherTentacleSpawned	= mod:NewAnnounce("WarningCrusherTentacleSpawned", 2, 93708)
 local warnP2 						= mod:NewPhaseAnnounce(2, 2)
 local warnP3 						= mod:NewPhaseAnnounce(3, 2)
-local warnSanity 					= mod:NewAnnounce("WarningSanity", 3, 63050)
+local warnSanity 					= mod:NewAnnounce("WarningSanity", 3, 63050, nil, nil, nil, 63050)
 local warnBrainLink 				= mod:NewTargetAnnounce(63802, 3)
 local warnBrainPortalSoon			= mod:NewAnnounce("WarnBrainPortalSoon", 2, 57687)
 local warnEmpowerSoon				= mod:NewSoonAnnounce(64465, 4)
 
 local specWarnBrainLink 			= mod:NewSpecialWarningYou(63802, nil, nil, nil, 1, 2)
-local specWarnSanity 				= mod:NewSpecialWarning("SpecWarnSanity")
-local specWarnMadnessOutNow			= mod:NewSpecialWarning("SpecWarnMadnessOutNow")
+local specWarnSanity 				= mod:NewSpecialWarning("SpecWarnSanity", nil, nil, nil, 1, nil, nil, nil, 63050)--Warning, no voice pack support
+local specWarnMadnessOutNow			= mod:NewSpecialWarning("SpecWarnMadnessOutNow", nil, nil, nil, 1, nil, nil, nil, 64059)--Warning, no voice pack support
 local specWarnDeafeningRoar			= mod:NewSpecialWarningSpell(64189, nil, nil, nil, 1, 2)
 local specWarnFervor				= mod:NewSpecialWarningYou(63138, nil, nil, nil, 1, 2)
 local specWarnMalady				= mod:NewSpecialWarningYou(63830, nil, nil, nil, 1, 2)
@@ -42,8 +41,8 @@ local yellSqueeze					= mod:NewYell(64125)
 
 local enrageTimer					= mod:NewBerserkTimer(900)
 local timerFervor					= mod:NewTargetTimer(15, 63138, nil, false, 2)
---local timerMaladyCD					= mod:NewCDTimer(18.1, 63830, nil, nil, nil, 3)
---local timerBrainLinkCD				= mod:NewCDTimer(32, 63802, nil, nil, nil, 3)
+--local timerMaladyCD				= mod:NewCDTimer(18.1, 63830, nil, nil, nil, 3)
+--local timerBrainLinkCD			= mod:NewCDTimer(32, 63802, nil, nil, nil, 3)
 local brainportal					= mod:NewTimer(20, "NextPortal", 57687, nil, nil, 5)
 local timerLunaricGaze				= mod:NewCastTimer(4, 64163, nil, nil, nil, 2)
 local timerNextLunaricGaze			= mod:NewCDTimer(8.5, 64163, nil, nil, nil, 2)
@@ -52,13 +51,18 @@ local timerEmpowerDuration			= mod:NewBuffActiveTimer(10, 64465, nil, nil, nil, 
 local timerMadness 					= mod:NewCastTimer(60, 64059, nil, nil, nil, 5)
 local timerCastDeafeningRoar		= mod:NewCastTimer(2.3, 64189, nil, nil, nil, 2)
 local timerNextDeafeningRoar		= mod:NewNextTimer(30, 64189, nil, nil, nil, 2)
-local timerAchieve					= mod:NewAchievementTimer(420, 12396)--3012
+local timerAchieve
+if WOW_PROJECT_ID == (WOW_PROJECT_MAINLINE or 1) then
+	timerAchieve					= mod:NewAchievementTimer(420, 12396)
+else
+	timerAchieve					= mod:NewAchievementTimer(420, 3012)
+end
 
 mod:AddSetIconOption("SetIconOnFearTarget", 63802, true, false, {6})
 mod:AddSetIconOption("SetIconOnFervorTarget", 63802, false, false, {7})
 mod:AddSetIconOption("SetIconOnBrainLinkTarget", 63802, true, false, {1, 2})
 mod:AddSetIconOption("SetIconOnBeacon", 64465, true, true, {1, 2, 3, 4, 5, 6, 7, 8})
-mod:AddInfoFrameOption(212647)
+mod:AddInfoFrameOption(63050)
 
 local brainLinkTargets = {}
 local SanityBuff = DBM:GetSpellInfo(63050)

@@ -89,16 +89,16 @@ L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_TITLE"] = "Verbleibende Zeit"
 L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "Accountweit"
 L["S_OPTIONS_ACCESSIBILITY"] = "Barrierefreiheit"
 --[[Translation missing --]]
---[[ L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = ""--]] 
+L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = "Extra Tracker Mark"
 --[[Translation missing --]]
---[[ L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = ""--]] 
+L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "Show Bounty Ring"
 L["S_OPTIONS_ANIMATIONS"] = "Animationen verwenden"
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "Kartenfenster zentrieren"
 L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "Du musst zuerst 'Kartenfensterskalierung' aktivieren, kein Wert wurde geändert."
 L["S_OPTIONS_MAPFRAME_SCALE"] = "Kartenfensterskalierung"
 L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = "Kartenfensterskalierung einschalten"
 --[[Translation missing --]]
---[[ L["S_OPTIONS_QUESTBLACKLIST"] = ""--]] 
+L["S_OPTIONS_QUESTBLACKLIST"] = "Quest Blacklist"
 L["S_OPTIONS_RESET"] = "Zurücksetzen"
 L["S_OPTIONS_SHOWFACTIONS"] = "Fraktionen anzeigen"
 L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = "Verbleibende Zeit nicht priorisieren"
@@ -159,4 +159,3 @@ L["S_WORLDMAP_QUESTLOCATIONS"] = "Questorte anzeigen"
 L["S_WORLDMAP_QUESTSUMMARY"] = "Questübersicht anzeigen"
 L["S_WORLDMAP_TOOLTIP_TRACKALL"] = "Alle Quests auf dieser Liste verfolgen"
 L["S_WORLDQUESTS"] = "Weltquests"
-

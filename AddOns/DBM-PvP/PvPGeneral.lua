@@ -3,12 +3,14 @@ local L		= mod:GetLocalizedStrings()
 
 local DBM = DBM
 local GetPlayerFactionGroup = GetPlayerFactionGroup or UnitFactionGroup -- Classic Compat fix
-local isClassic = WOW_PROJECT_ID == (WOW_PROJECT_CLASSIC or 2)
-local isTBC = WOW_PROJECT_ID == (WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5)
 
+local isRetail = WOW_PROJECT_ID == (WOW_PROJECT_MAINLINE or 1)
+local isClassic = WOW_PROJECT_ID == (WOW_PROJECT_CLASSIC or 2)
+local isBCC = WOW_PROJECT_ID == (WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5)
+local isWrath = WOW_PROJECT_ID == (WOW_PROJECT_WRATH_CLASSIC or 11)
 local playerFaction = GetPlayerFactionGroup("player")
 
-mod:SetRevision("20220409210448")
+mod:SetRevision("20220919212406")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 mod:RegisterEvents(
 	"ZONE_CHANGED_NEW_AREA",
@@ -16,13 +18,14 @@ mod:RegisterEvents(
 	"PLAYER_ENTERING_WORLD",
 	"PLAYER_DEAD",
 	"START_TIMER",
-	"AREA_POIS_UPDATED"
+	"AREA_POIS_UPDATED",
+	"CHAT_MSG_BG_SYSTEM_NEUTRAL"
 )
 
 mod:AddBoolOption("HideBossEmoteFrame", false)
 mod:AddBoolOption("AutoSpirit", false)
 mod:AddBoolOption("ShowRelativeGameTime", true)
-mod:AddBoolOption("ShowBasesToWin", false)
+--mod:AddBoolOption("ShowBasesToWin", false)
 
 do
 	local IsInInstance, RepopMe, GetSelfResurrectOptions = IsInInstance, RepopMe, C_DeathInfo.GetSelfResurrectOptions
@@ -61,8 +64,7 @@ local subscribedMapID, numObjectives, objectivesStore
 function mod:SubscribeAssault(mapID, objectsCount)
 	self:RegisterShortTermEvents(
 		"AREA_POIS_UPDATED",
-		"UPDATE_UI_WIDGET",
-		"CHAT_MSG_BG_SYSTEM_NEUTRAL"
+		"UPDATE_UI_WIDGET"
 	)
 	subscribedMapID = mapID
 	objectivesStore = {}
@@ -73,8 +75,7 @@ end
 function mod:SubscribeFlags()
 	self:RegisterShortTermEvents(
 		"CHAT_MSG_BG_SYSTEM_ALLIANCE",
-		"CHAT_MSG_BG_SYSTEM_HORDE",
-		"CHAT_MSG_BG_SYSTEM_NEUTRAL"
+		"CHAT_MSG_BG_SYSTEM_HORDE"
 	)
 end
 
@@ -86,7 +87,7 @@ do
 		local _, instanceType = IsInInstance()
 		if instanceType == "pvp" or instanceType == "arena" then
 			if not bgzone then
-				SendAddonMessage(isTBC and "D4BC" or isClassic and "D4C" or "D4", "H", "INSTANCE_CHAT")
+				SendAddonMessage(isWrath and "D4WC" or isBCC and "D4BC" or isClassic and "D4C" or "D4", "H", "INSTANCE_CHAT")
 				self:Schedule(3, DBM.RequestTimers, DBM)
 				if self.Options.HideBossEmoteFrame then
 					DBM:HideBlizzardEvents(1, true)
@@ -171,6 +172,7 @@ do
 			healthScan:Cancel()
 			healthScan = nil
 		end
+		trackedUnitsCount = 0
 		twipe(trackedUnits)
 		twipe(syncTrackedUnits)
 		self:UnregisterShortTermEvents()
@@ -194,7 +196,7 @@ do
 	local flagTimer			= mod:NewTimer(12, "TimerFlag", "132483") -- Interface\\icons\\inv_banner_02.blp
 	local startTimer		= mod:NewTimer(120, "TimerStart", playerFaction == "Alliance" and "132486" or "132485") -- Interface\\Icons\\INV_BannerPVP_02.blp || Interface\\Icons\\INV_BannerPVP_01.blp
 	local vulnerableTimer, timerShadow, timerDamp
-	if not isClassic and not isTBC then
+	if isRetail then
 		vulnerableTimer	= mod:NewNextTimer(60, 46392)
 		timerShadow		= mod:NewNextTimer(90, 34709)
 		timerDamp		= mod:NewCastTimer(300, 110310)
@@ -215,7 +217,7 @@ do
 			end
 		end
 		local _, instanceType = IsInInstance()
-		if not isClassic and not isTBC and instanceType == "arena" then
+		if isRetail and instanceType == "arena" then
 			self:Schedule(timeSeconds + 1, function()
 				timerShadow:Start()
 				timerDamp:Start()
@@ -227,7 +229,7 @@ do
 		if not self.Options.TimerFlag then
 			return
 		end
-		if msg == L.ExprFlagCaptured or msg:match(L.ExprFlagCaptured) then
+		if msg == L.FlagCaptured or msg:match(L.FlagCaptured) then
 			flagTimer:Start()
 			if msg:find(FACTION_ALLIANCE) then
 				flagTimer:SetColor({r=0, g=0, b=1})
@@ -236,7 +238,7 @@ do
 				flagTimer:SetColor({r=1, g=0, b=0})
 				flagTimer:UpdateIcon("132485") -- Interface\\Icons\\INV_BannerPVP_01.blp
 			end
-			if not isClassic and not isTBC then
+			if isRetail then
 				vulnerableTimer:Cancel()
 			end
 		end
@@ -253,10 +255,12 @@ do
 	function mod:CHAT_MSG_BG_SYSTEM_NEUTRAL(msg)
 		if self.Options.TimerStart and msg == L.BgStart120 or msg:find(L.BgStart120) then
 			startTimer:Update(isClassic and 1.5 or 0, 120)
-		elseif self.Options.TimerStart and msg == L.BgStart60 or msg:find(L.BgStart60) then
+		elseif self.Options.TimerStart and msg == L.BgStart60 or msg:find(L.BgStart60) or msg == L.ArenaStart60 or msg:find(L.ArenaStart60) then
 			startTimer:Update(isClassic and 61.5 or 60, 120)
-		elseif self.Options.TimerStart and msg == L.BgStart30 or msg:find(L.BgStart30) then
+		elseif self.Options.TimerStart and msg == L.BgStart30 or msg:find(L.BgStart30) or msg == L.ArenaStart30 or msg:find(L.ArenaStart30) then
 			startTimer:Update(isClassic and 91.5 or 90, 120)
+		elseif self.Options.TimerStart and msg == L.ArenaStart15 or msg:find(L.ArenaStart15) then
+			startTimer:Update(isClassic and 106.5 or 105, 120)
 		elseif not isClassic and (msg == L.Vulnerable1 or msg == L.Vulnerable2 or msg:find(L.Vulnerable1) or msg:find(L.Vulnerable2)) then
 			vulnerableTimer:Start()
 		end
@@ -275,7 +279,7 @@ do
 		[5] = {1e-300, 1, 1.5, 2, 3.5, 30} -- Arathi/Deepwind
 	}
 
-	if isClassic or isTBC then
+	if not isRetail then
 		-- 2014 values seem ok https://github.com/DeadlyBossMods/DBM-PvP/blob/843a882eae2276c2be0646287c37b114c51fcffb/DBM-PvP/Battlegrounds/Arathi.lua#L32-L39
 		resourcesPerSec[5] = {1e-300, 10/12, 10/9, 10/6, 10/3, 30}
 	end
@@ -361,7 +365,7 @@ do
 		-- retail av
 		[91]    = 243,
 		-- classic av
-		[1459]  = isTBC and 243 or 304,
+		[1459]  = (isBCC or isWrath) and 243 or 304,
 		-- korrak
 		[1537]  = 243
 	}
@@ -373,15 +377,15 @@ do
 	}
 	local icons = {
 		-- Graveyard
-		[(isClassic or isTBC) and 3 or 4]      = State.ALLY_CONTESTED,
-		[(isClassic or isTBC) and 14 or 15]    = State.ALLY_CONTROLLED,
-		[(isClassic or isTBC) and 13 or 14]    = State.HORDE_CONTESTED,
-		[(isClassic or isTBC) and 12 or 13]    = State.HORDE_CONTROLLED,
+		[(isClassic or isBCC) and 3 or 4]   = State.ALLY_CONTESTED,
+		[(isClassic or isBCC) and 14 or 15] = State.ALLY_CONTROLLED,
+		[(isClassic or isBCC) and 13 or 14] = State.HORDE_CONTESTED,
+		[(isClassic or isBCC) and 12 or 13] = State.HORDE_CONTROLLED,
 		-- Tower/Lighthouse
-		[(isClassic or isTBC) and 8 or 9]      = State.ALLY_CONTESTED,
-		[(isClassic or isTBC) and 10 or 11]    = State.ALLY_CONTROLLED,
-		[(isClassic or isTBC) and 11 or 12]    = State.HORDE_CONTESTED,
-		[(isClassic or isTBC) and 9 or 10]     = State.HORDE_CONTROLLED,
+		[(isClassic or isBCC) and 8 or 9]   = State.ALLY_CONTESTED,
+		[(isClassic or isBCC) and 10 or 11] = State.ALLY_CONTROLLED,
+		[(isClassic or isBCC) and 11 or 12] = State.HORDE_CONTESTED,
+		[(isClassic or isBCC) and 9 or 10]  = State.HORDE_CONTROLLED,
 		-- Mine/Quarry
 		[17]                        = State.ALLY_CONTESTED,
 		[18]                        = State.ALLY_CONTROLLED,
@@ -443,7 +447,7 @@ do
 		[219]                       = State.HORDE_CONTESTED,
 		[216]                       = State.HORDE_CONTROLLED
 	}
-	local capTimer = mod:NewTimer((isTBC or isClassic) and 64 or 60, "TimerCap", "136002") -- Interface\\icons\\spell_misc_hellifrepvphonorholdfavor.blp
+	local capTimer = mod:NewTimer(isRetail and 60 or 64, "TimerCap", "136002") -- Interface\\icons\\spell_misc_hellifrepvphonorholdfavor.blp
 
 	function mod:AREA_POIS_UPDATED(widget)
 		local allyBases, hordeBases = 0, 0
@@ -506,7 +510,8 @@ do
 				self:UpdateWinTimer(info.leftBarMax, info.leftBarValue, info.rightBarValue, allyBases, hordeBases)
 			end
 			if widgetID == 1893 or widgetID == 1894 then -- Classic Arathi Basin
-				self:UpdateWinTimer(2000, tonumber(smatch(GetIconAndTextWidgetVisualizationInfo(1893).text, '(%d+)/2000')), tonumber(smatch(GetIconAndTextWidgetVisualizationInfo(1894).text, '(%d+)/2000')), allyBases, hordeBases)
+				local totalScore = isWrath and 1600 or 2000
+				self:UpdateWinTimer(totalScore, tonumber(smatch(GetIconAndTextWidgetVisualizationInfo(1893).text, '(%d+)/' .. tostring(totalScore))), tonumber(smatch(GetIconAndTextWidgetVisualizationInfo(1894).text, '(%d+)/' .. tostring(totalScore))), allyBases, hordeBases)
 			end
 		elseif widgetID == 1683 then -- Temple Of Kotmogu
 			local widgetInfo = GetDoubleStateIconRowVisualizationInfo(1683)

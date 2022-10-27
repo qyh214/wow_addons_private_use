@@ -3,15 +3,17 @@
 local _detalhes = 		_G._detalhes
 
 function _detalhes:WipeConfig()
-	local Loc = LibStub ("AceLocale-3.0"):GetLocale ( "Details" )
+	local Loc = LibStub("AceLocale-3.0"):GetLocale ( "Details" )
 	
-	local b = CreateFrame ("button", "DetailsResetConfigButton", UIParent, "OptionsButtonTemplate")
-	tinsert (UISpecialFrames, "DetailsResetConfigButton")
+	local b = CreateFrame("button", "DetailsResetConfigButton", UIParent)
+	tinsert(UISpecialFrames, "DetailsResetConfigButton")
 	
-	b:SetSize (250, 40)
-	b:SetText (Loc ["STRING_SLASH_WIPECONFIG_CONFIRM"])
-	b:SetScript ("OnClick", function() _detalhes.wipe_full_config = true; ReloadUI(); end)
-	b:SetPoint ("center", UIParent, "center", 0, 0)
+	DetailsFramework:ApplyStandardBackdrop(b)
+
+	b:SetSize(250, 40)
+	b:SetText(Loc ["STRING_SLASH_WIPECONFIG_CONFIRM"])
+	b:SetScript("OnClick", function() _detalhes.wipe_full_config = true; ReloadUI(); end)
+	b:SetPoint("center", UIParent, "center", 0, 0)
 end
 
 local is_exception = {
@@ -21,24 +23,24 @@ local is_exception = {
 function _detalhes:SaveLocalInstanceConfig()
 
 	for index, instance in _detalhes:ListInstances() do
-		--> check for the max size toggle, don't save it
+		--check for the max size toggle, don't save it
 		if (instance.is_in_max_size) then
 			instance.is_in_max_size = false
-			instance:SetSize (instance.original_width, instance.original_height)
+			instance:SetSize(instance.original_width, instance.original_height)
 		end
 		
-		--> save local instance data
+		--save local instance data
 		local a1, a2 = instance:GetDisplay()
 		
 		local t = {
-			pos = Details.CopyTable (instance:GetPosition()),
+			pos = Details.CopyTable(instance:GetPosition()),
 			is_open = instance:IsEnabled(),
 			attribute = a1 or 1,
 			sub_attribute = a2 or 1,
 			modo = instance:GetMode() or 2,
 			mode = instance:GetMode() or 2,
 			segment = instance:GetSegment() or 0,
-			snap = Details.CopyTable (instance.snap),
+			snap = Details.CopyTable(instance.snap),
 			horizontalSnap = instance.horizontalSnap,
 			verticalSnap = instance.verticalSnap,
 			sub_atributo_last = instance.sub_atributo_last or {1, 1, 1, 1, 1},
@@ -54,10 +56,10 @@ function _detalhes:SaveLocalInstanceConfig()
 			local cprofile = _detalhes:GetProfile()
 			local skin = cprofile.instances [instance:GetId()]
 			if (skin) then
-				t.pos = Details.CopyTable (skin.__pos)
+				t.pos = Details.CopyTable(skin.__pos)
 				t.horizontalSnap = skin.__snapH
 				t.verticalSnap = skin.__snapV
-				t.snap = Details.CopyTable (skin.__snap)
+				t.snap = Details.CopyTable(skin.__snap)
 				t.is_open = skin.__was_opened
 				t.isLocked = skin.__locked
 			end
@@ -69,10 +71,10 @@ end
 
 function _detalhes:SaveConfig()
 
-	--> save instance configs localy
+	--save instance configs localy
 	_detalhes:SaveLocalInstanceConfig()
 	
-	--> cleanup
+	--cleanup
 	
 		_detalhes:PrepareTablesForSave()
 
@@ -85,33 +87,33 @@ function _detalhes:SaveConfig()
 		
 		local name, ttype, difficulty, difficultyName, maxPlayers, playerDifficulty, isDynamicInstance, mapID, instanceGroupSize = GetInstanceInfo()
 		if (ttype == "party" or ttype == "raid") then
-			--> salvar container de pet
+			--salvar container de pet
 			_detalhes_database.tabela_pets = _detalhes.tabela_pets.pets
 		end
 		
-		xpcall (_detalhes.TimeDataCleanUpTemporary, _detalhes.saver_error_func)
+		xpcall(_detalhes.TimeDataCleanUpTemporary, _detalhes.saver_error_func)
 		
-	--> buffs
-		xpcall (_detalhes.Buffs.SaveBuffs, _detalhes.saver_error_func)
+	--buffs
+		xpcall(_detalhes.Buffs.SaveBuffs, _detalhes.saver_error_func)
 	
-	--> date
+	--date
 		_detalhes.last_day = date ("%d")
 	
-	--> salva o container do personagem
-		for key, value in pairs (_detalhes.default_player_data) do
+	--salva o container do personagem
+		for key, value in pairs(_detalhes.default_player_data) do
 			if (not is_exception [key]) then
 				_detalhes_database [key] = _detalhes [key]
 			end
 		end
 	
-	--> salva o container das globais
-		for key, value in pairs (_detalhes.default_global_data) do
+	--salva o container das globais
+		for key, value in pairs(_detalhes.default_global_data) do
 			if (key ~= "__profiles") then
 				_detalhes_global [key] = _detalhes [key]
 			end
 		end
 
-	--> solo e raid mode
+	--solo e raid mode
 		if (_detalhes.SoloTables.Mode) then
 			_detalhes_database.SoloTablesSaved = {}
 			_detalhes_database.SoloTablesSaved.Mode = _detalhes.SoloTables.Mode
@@ -122,16 +124,16 @@ function _detalhes:SaveConfig()
 		
 		_detalhes_database.RaidTablesSaved = nil
 		
-	--> salva switch tables
+	--salva switch tables
 		_detalhes_global.switchSaved.slots = _detalhes.switch.slots
 		_detalhes_global.switchSaved.table = _detalhes.switch.table
 	
-	--> last boss
+	--last boss
 		_detalhes_database.last_encounter = _detalhes.last_encounter
 	
-	--> last versions
-		_detalhes_database.last_realversion = _detalhes.realversion --> core number
-		_detalhes_database.last_version = _detalhes.userversion --> version
+	--last versions
+		_detalhes_database.last_realversion = _detalhes.realversion --core number
+		_detalhes_database.last_version = _detalhes.userversion --version
 		_detalhes_global.got_first_run = true
 	
 end

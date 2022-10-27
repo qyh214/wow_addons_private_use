@@ -23,7 +23,18 @@ end
 --function to dispatch events
 function Details:DispatchAutoRunCode(codeKey)
     local func = Details.AutoRunCode[codeKey]
-    DF:QuickDispatch(func)
+
+	if (type(func) ~= "function") then
+        Details:Msg("error running function for auto run script", codeKey)
+		return
+	end
+
+	local okay, errortext = pcall(func)
+
+	if (not okay) then
+        Details:Msg("error running auto run script: ", codeKey, errortext)
+		return
+	end
 end
 
 --auto run frame to dispatch scrtips for some events that details! doesn't handle
@@ -34,23 +45,23 @@ if (not _G.DetailsFramework.IsTimewalkWoW()) then
 end
 
 autoRunCodeEventFrame.OnEventFunc = function(self, event)
-    --> ignore events triggered more than once in a small time window
-    if (autoRunCodeEventFrame [event] and not autoRunCodeEventFrame [event]._cancelled) then
+    --ignore events triggered more than once in a small time window
+    if (autoRunCodeEventFrame [event] and not autoRunCodeEventFrame [event]:IsCancelled()) then
         return
     end
 
     if (event == "PLAYER_SPECIALIZATION_CHANGED") then
-        --> create a trigger for the event, many times it is triggered more than once
-        --> so if the event is triggered a second time, it will be ignored
+        --create a trigger for the event, many times it is triggered more than once
+        --so if the event is triggered a second time, it will be ignored
         local newTimer = C_Timer.NewTimer(1, function()
             Details:DispatchAutoRunCode("on_specchanged")
             
-            --> clear and invalidate the timer
+            --clear and invalidate the timer
             autoRunCodeEventFrame[event]:Cancel()
             autoRunCodeEventFrame[event] = nil
         end)
         
-        --> store the trigger
+        --store the trigger
         autoRunCodeEventFrame[event] = newTimer
     end
 end

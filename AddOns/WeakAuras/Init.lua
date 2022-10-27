@@ -1,35 +1,137 @@
+--- @type string, Private
 local AddonName, Private = ...
 WeakAuras = {}
 WeakAuras.L = {}
-WeakAuras.frames = {}
+Private.frames = {}
+
+--- @alias uid string
+--- @alias auraId string
+
+--- @class state
+--- @field id auraId
+--- @field cloneId string?
+
+--- @class Private
+--- @field ActivateAuraEnvironment fun(id: auraId?, cloneId: string?, state: state?, states: state[]?, onlyConfig: boolean?)
+--- @field ActivateAuraEnvironmentForRegion fun(region: table, onlyConfig: boolean?)
+--- @field AuraWarnings AuraWarnings
+--- @field AuraEnvironmentWrappedSystem AuraEnvironmentWrappedSystem
+--- @field callbacks callbacks
+--- @field DebugLog debugLog
+--- @field clones table<auraId, table<string, table>>
+--- @field ExecEnv table
+--- @field LibSpecWrapper LibSpecWrapper
+--- @field regions table<auraId, table>
+--- @field UIDtoID fun(uid: uid): auraId
+
+--- @alias triggerTypes
+--- | "aura"
+--- | "aura2"
+--- | "custom"
+
+--- @class triggerData
+--- @field buffShowOn string
+--- @field event string|nil
+--- @field itemTypeName table|nil
+--- @field instance_size table|nil
+--- @field type triggerTypes
+--- @field use_showOn boolean|nil
+--- @field use_alwaystrue boolean|nil
+
+
+--- @class triggerUntriggerData
+--- @field trigger triggerData
+--- @field untrigger triggerData
+
+--- @class conditionCheck
+--- @field variable string
+--- @field trigger number
+--- @field checks conditionCheck[]|nil
+
+--- @class conditionChanges
+--- @field property string
+
+--- @class conditionData
+--- @field check conditionCheck
+--- @field changes conditionChanges
+
+--- @class subRegionData
+
+--- @class actionData
+--- @field do_glow boolean
+--- @field do_message boolean
+--- @field message string
+--- @field message_type string
+
+
+--- @class actions
+--- @field start actionData
+--- @field finish actionData
+
+--- @class load
+--- @field use_realm boolean
+--- @field itemtypeequipped table
+--- @field size table
+
+--- @alias regionTypes
+--- | "aurabar"
+--- | "dynamicgroup"
+--- | "fallback"
+--- | "group"
+--- | "icon"
+--- | "model"
+--- | "progresstexture"
+--- | "stopmotion"
+--- | "text"
+--- | "texture"
+
+--- @class information
+--- @field forceEvents boolean|nil
+--- @field ignoreOptionsEventErrors boolean|nil
+--- @field groupOffset boolean|nil
+
+
+--- @class auraData
+--- @field arcLength number
+--- @field actions actions
+--- @field conditions conditionData[]|nil
+--- @field controlledChildren auraId[]|nil
+--- @field displayText string|nil
+--- @field grow string|nil
+--- @field id auraId
+--- @field internalVersion number
+--- @field information information
+--- @field load load
+--- @field orientation string|nil
+--- @field parent auraId|nil
+--- @field regionType regionTypes
+--- @field subRegions subRegionData|nil
+--- @field triggers triggerUntriggerData[]
+--- @field url string|nil
 
 WeakAuras.normalWidth = 1.3
 WeakAuras.halfWidth = WeakAuras.normalWidth / 2
 WeakAuras.doubleWidth = WeakAuras.normalWidth * 2
 
 local versionStringFromToc = GetAddOnMetadata("WeakAuras", "Version")
-local versionString = "4.0.2"
-local buildTime = "20220601013052"
-local isDevVersion = false
+local versionString = "5.0.4"
+local buildTime = "20221026195621"
+
+local flavorFromToc = GetAddOnMetadata("WeakAuras", "X-Flavor")
+local flavorFromTocToNumber = {
+  Vanilla = 1,
+  TBC = 2,
+  Wrath = 3,
+  Mainline = 10
+}
+local flavor = flavorFromTocToNumber[flavorFromToc]
 
 --[==[@debug@
-if versionStringFromToc == "4.0.2" then
+if versionStringFromToc == "5.0.4" then
   versionStringFromToc = "Dev"
   buildTime = "Dev"
-  isDevVersion = true
 end
 --@end-debug@]==]
-
-local intendedWoWProject = WOW_PROJECT_MAINLINE
-
---[===[@non-version-retail@
---[====[@version-classic@
-intendedWoWProject = WOW_PROJECT_CLASSIC
---@end-version-classic@]====]
---[====[@version-bcc@
-intendedWoWProject = WOW_PROJECT_BURNING_CRUSADE_CLASSIC or WOW_PROJECT_MAINLINE
---@end-version-bcc@]====]
---@end-non-version-retail@]===]
 
 WeakAuras.versionString = versionStringFromToc
 WeakAuras.buildTime = buildTime
@@ -37,20 +139,50 @@ WeakAuras.newFeatureString = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeat
 WeakAuras.BuildInfo = select(4, GetBuildInfo())
 
 function WeakAuras.IsClassic()
-  return WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+  return flavor == 1
 end
 
 function WeakAuras.IsBCC()
-  return WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+  return flavor == 2
+end
+
+function WeakAuras.IsWrathClassic()
+  return flavor == 3
 end
 
 function WeakAuras.IsRetail()
-  return WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+  return flavor == 10
 end
 
-function WeakAuras.IsCorrectVersion()
-  return isDevVersion or intendedWoWProject == WOW_PROJECT_ID
+function WeakAuras.IsShadowlands()
+  return WeakAuras.IsRetail() and not WeakAuras.IsDragonflight()
 end
+
+local IsDragonflight = floor(select(4, GetBuildInfo()) / 10000) == 10
+function WeakAuras.IsDragonflight()
+  return IsDragonflight
+end
+
+function WeakAuras.IsClassicOrBCC()
+  return WeakAuras.IsClassic() or WeakAuras.IsBCC()
+end
+
+function WeakAuras.IsClassicOrBCCOrWrath()
+  return WeakAuras.IsClassic() or WeakAuras.IsBCC() or WeakAuras.IsWrathClassic()
+end
+
+function WeakAuras.IsBCCOrWrath()
+  return WeakAuras.IsBCC() or WeakAuras.IsWrathClassic()
+end
+
+function WeakAuras.IsBCCOrWrathOrRetail()
+  return WeakAuras.IsBCC() or WeakAuras.IsWrathClassic() or WeakAuras.IsRetail()
+end
+
+function WeakAuras.IsWrathOrRetail()
+  return WeakAuras.IsRetail() or WeakAuras.IsWrathClassic()
+end
+
 
 WeakAuras.prettyPrint = function(...)
   print("|cff9900ffWeakAuras:|r ", ...)
@@ -90,6 +222,9 @@ do
     tinsert(LibStubLibs, "LibClassicCasterino")
     tinsert(LibStubLibs, "LibClassicDurations")
   end
+  if WeakAuras.IsRetail() then
+    tinsert(LibStubLibs, "LibSpecialization")
+  end
   for _, lib in ipairs(StandAloneLibs) do
     if not lib then
         libsAreOk = false
@@ -110,21 +245,6 @@ end
 
 function WeakAuras.IsLibsOK()
   return libsAreOk
-end
-
-local intendedWoWProjectName = {
-  [WOW_PROJECT_MAINLINE] = "Retail",
-  [WOW_PROJECT_CLASSIC] = "Classic",
-  [WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5] = "The Burning Crusade Classic" -- TODO: Remove when every flavor build has the constant
-}
-
-Private.wrongTargetMessage = "This version of WeakAuras was packaged for World of Warcraft " .. intendedWoWProjectName[intendedWoWProject] ..
-                              ". Please install the " .. intendedWoWProjectName[WOW_PROJECT_ID] ..
-                              " version instead.\nIf you are using an addon manager, then" ..
-                              " contact their support for further assistance and reinstall WeakAuras manually."
-
-if not WeakAuras.IsCorrectVersion() then
-  C_Timer.After(1, function() WeakAuras.prettyPrint(Private.wrongTargetMessage) end)
 end
 
 if not WeakAuras.IsLibsOK() then
@@ -155,6 +275,8 @@ end
 
 function Private.StopProfileUID()
 end
+
+Private.ExecEnv = {}
 
 -- If WeakAuras shuts down due to being installed on the wrong target, keep the bindings from erroring
 function WeakAuras.StartProfile()

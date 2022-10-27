@@ -1,4 +1,5 @@
-if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
+if not WeakAuras.IsLibsOK() then return end
+--- @type string, Private
 local AddonName, Private = ...
 
 local L = WeakAuras.L
@@ -26,7 +27,7 @@ local default = {
   zoom = 0,
   keepAspectRatio = false,
   frameStrata = 1,
-  cooldown = false,
+  cooldown = true,
   cooldownTextDisabled = false,
   cooldownSwipe = true,
   cooldownEdge = false,
@@ -79,6 +80,11 @@ local properties = {
   cooldownEdge = {
     display = { L["Cooldown"], L["Edge"]},
     setter = "SetCooldownEdge",
+    type = "bool",
+  },
+  cooldownText = {
+    display = { L["Cooldown"], L["Hide Timer Text"]},
+    setter = "SetHideCountdownNumbers",
     type = "bool",
   },
   zoom = {
@@ -182,7 +188,11 @@ local function create(parent, data)
   region.regionType = "icon"
   region:SetMovable(true);
   region:SetResizable(true);
-  region:SetMinResize(1, 1);
+  if region.SetResizeBounds then
+    region:SetResizeBounds(1, 1)
+  else
+    region:SetMinResize(1, 1)
+  end
 
   function region.UpdateInnerOuterSize()
     local width = region.width * math.abs(region.scalex);
@@ -324,8 +334,7 @@ local function modify(parent, region, data)
     end
 
     if region.MSQGroup then
-      region.MSQGroup:RemoveButton(button)
-      region.MSQGroup:AddButton(button, {Icon = icon, Cooldown = cooldown}, "WA_Aura", true)
+      region.MSQGroup:ReSkin(button)
     end
 
     local ulx, uly, llx, lly, urx, ury, lrx, lry = GetTexCoord(region, texWidth, aspectRatio)
@@ -371,10 +380,14 @@ local function modify(parent, region, data)
   end
 
   cooldown:SetReverse(not data.inverse);
-  cooldown:SetHideCountdownNumbers(data.cooldownTextDisabled);
-  if OmniCC and OmniCC.Cooldown and OmniCC.Cooldown.SetNoCooldownCount then
-    OmniCC.Cooldown.SetNoCooldownCount(cooldown, data.cooldownTextDisabled)
+
+  function region:SetHideCountdownNumbers(cooldownTextDisabled)
+    cooldown:SetHideCountdownNumbers(cooldownTextDisabled);
+    if OmniCC and OmniCC.Cooldown and OmniCC.Cooldown.SetNoCooldownCount then
+      OmniCC.Cooldown.SetNoCooldownCount(cooldown, cooldownTextDisabled)
+    end
   end
+  region:SetHideCountdownNumbers(data.cooldownTextDisabled)
 
   function region:Color(r, g, b, a)
     region.color_r = r;
@@ -475,7 +488,7 @@ local function modify(parent, region, data)
       cooldown:SetCooldown(0, 0);
       cooldown:SetCooldown(cooldown.expirationTime - cooldown.duration,
                            cooldown.duration,
-                           cooldown.useCooldownModRate and cooldown.modRate);
+                           cooldown.useCooldownModRate and cooldown.modRate or nil);
     end
   end
 
@@ -521,7 +534,7 @@ local function modify(parent, region, data)
         cooldown.expirationTime = expirationTime;
         cooldown.duration = duration;
         cooldown.modRate = modRate;
-        cooldown:SetCooldown(expirationTime - duration, duration, cooldown.useCooldownModRate and modRate);
+        cooldown:SetCooldown(expirationTime - duration, duration, cooldown.useCooldownModRate and modRate or nil);
       else
         cooldown.expirationTime = expirationTime;
         cooldown.duration = duration;
@@ -533,7 +546,7 @@ local function modify(parent, region, data)
     function region:PreShow()
       if (cooldown.duration and cooldown.duration > 0.01) then
         cooldown:Show();
-        cooldown:SetCooldown(cooldown.expirationTime - cooldown.duration, cooldown.duration, cooldown.useCooldownModRate and cooldown.modRate);
+        cooldown:SetCooldown(cooldown.expirationTime - cooldown.duration, cooldown.duration, cooldown.useCooldownModRate and cooldown.modRate or nil);
         cooldown:Resume()
       end
     end

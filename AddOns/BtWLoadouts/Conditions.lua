@@ -657,7 +657,7 @@ local function ProfilesDropDownInit(self, level, menuList)
 
 		local playerClassID = classID;
 		for classID=1,GetNumClasses() do
-			if classID ~= playerClassID then
+			if classID ~= playerClassID and GetNumSpecializationsForClassID(classID) > 0 then
 				local className, classFile = GetClassInfo(classID);
 				local classColor = C_ClassColor.GetClassColor(classFile);
 				className = classColor and classColor:WrapTextInColorCode(className) or className;
@@ -1277,7 +1277,7 @@ end
 function BtWLoadoutsConditionsMixin:OnSidebarItemDragStart(button)
 end
 function BtWLoadoutsConditionsMixin:Update()
-	self:GetParent().TitleText:SetText(L["Conditions"]);
+	self:GetParent():SetTitle(L["Conditions"]);
 	local sidebar = BtWLoadoutsFrame.Sidebar
 
 	sidebar:SetSupportedFilters("spec", "class", "role", "character", "instanceType", "disabled")

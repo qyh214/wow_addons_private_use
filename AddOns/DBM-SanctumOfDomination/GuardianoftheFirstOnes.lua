@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2446, "DBM-SanctumOfDomination", nil, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220301011458")
+mod:SetRevision("20220830203003")
 mod:SetCreatureID(175731)
 mod:SetEncounterID(2436)
 mod:SetUsedIcons(1, 2, 3)
@@ -49,7 +49,6 @@ local yellThreatNeutralization					= mod:NewShortPosYell(350496, 37859)
 local yellThreatNeutralizationFades				= mod:NewIconFadesYell(350496, 37859)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
---mod:AddTimerLine(BOSS)
 local timerEliminationPatternCD					= mod:NewCDCountTimer(31.6, 350735, 350732, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--Time between casts not known, but link reset kinda works
 local timerDisintegrationCD						= mod:NewCDCountTimer(34.6, 352833, 182908, nil, nil, 3)--Continues whether linked or not
 local timerFormSentryCD							= mod:NewCDTimer(72.6, 352660, nil, nil, nil, 1)--Time between casts not known, but link reset kinda works
@@ -494,6 +493,9 @@ function mod:SPELL_CAST_START(args)
 			timerDisintegrationCD:Stop()
 			timerEliminationPatternCD:Stop()
 			timerFormSentryCD:Stop()
+			if self:IsFated() then
+				self:AffixEvent(0)
+			end
 		end
 	elseif spellId == 350732 then
 		self.vb.comboCount = self.vb.comboCount + 1
@@ -546,6 +548,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerDisintegrationCD:Start(self:IsEasy() and 18 or 5.8)
 		timerFormSentryCD:Start(self:IsEasy() and 10.7 or 18)
 		timerEliminationPatternCD:Start(28.2, self.vb.patternCount+1)
+		if self:IsFated() then
+			--Not as good as form sentry in accuracy of timer, but better for start accuracy to avoid starting on pull form sentry
+			self:AffixEvent(1, 2)
+		end
 	elseif spellId == 352394 then
 		playersSafe[args.destName] = true
 		if args:IsPlayer() then

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BPCouncil", "DBM-Icecrown", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220128073851")
+mod:SetRevision("20220701192851")
 mod:SetCreatureID(37970, 37972, 37973)
 mod:SetEncounterID(1095)
 mod:DisableEEKillDetection()--IEEU fires for this boss.
@@ -17,7 +17,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED_DOSE 72999",
 	"SPELL_SUMMON 71943",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
-	"UNIT_TARGET_UNFILTERED",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3"
 )
 
@@ -25,11 +24,11 @@ local warnTargetSwitch			= mod:NewAnnounce("WarnTargetSwitch", 3, 70952)
 local warnTargetSwitchSoon		= mod:NewAnnounce("WarnTargetSwitchSoon", 2, 70952)
 local warnConjureFlames			= mod:NewCastAnnounce(71718, 2)
 local warnEmpoweredFlamesCast	= mod:NewCastAnnounce(72040, 3)
-local warnEmpoweredFlames		= mod:NewTargetAnnounce(72040, 4)
+local warnEmpoweredFlames		= mod:NewTargetNoFilterAnnounce(72040, 4)
 local warnGliteringSparks		= mod:NewTargetAnnounce(71807, 2, nil, false)
-local warnShockVortex			= mod:NewTargetAnnounce(72037, 3)				-- 1,5sec cast
 local warnKineticBomb			= mod:NewSpellAnnounce(72053, 3, nil, "Ranged")
 local warnDarkNucleus			= mod:NewSpellAnnounce(71943, 1, nil, false)	-- instant cast
+local warnShockVortex			= mod:NewTargetAnnounce(72037, 3)				-- 1,5sec cast
 
 local specWarnVortex			= mod:NewSpecialWarningYou(72037, nil, nil, nil, 1, 2)
 local yellVortex				= mod:NewYell(72037)
@@ -48,11 +47,10 @@ local timerShadowPrison			= mod:NewBuffFadesTimer(10, 72999, nil, nil, nil, 5)		
 
 local berserkTimer				= mod:NewBerserkTimer(600)
 
-mod:AddBoolOption("EmpoweredFlameIcon", true)
-mod:AddBoolOption("ActivePrinceIcon", false)
-mod:AddBoolOption("RangeFrame", true)
+mod:AddSetIconOption("EmpoweredFlameIcon", 72040, true, 0, {7})
+mod:AddSetIconOption("ActivePrinceIcon", nil, false, 5, {8})
+mod:AddRangeFrameOption(12, 72037)
 
-local activePrince
 local glitteringSparksTargets	= {}
 
 local function warnGlitteringSparksTargets()
@@ -65,7 +63,6 @@ function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
 	warnTargetSwitchSoon:Schedule(42-delay)
 	timerTargetSwitch:Start(-delay)
-	activePrince = nil
 	table.wipe(glitteringSparksTargets)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(12)
@@ -101,20 +98,6 @@ function mod:HideRange()
 	DBM.RangeCheck:Hide()
 end
 
-function mod:TrySetTarget()
-	if DBM:GetRaidRank() >= 1 then
-		for uId in DBM:GetGroupMembers() do
-			if UnitGUID(uId.."target") == activePrince then
-				activePrince = nil
-				self:SetIcon(uId.."target", 8)
-			end
-			if not (activePrince) then
-				break
-			end
-		end
-	end
-end
-
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 72037 then		-- Shock Vortex
 		timerShockVortex:Start()
@@ -134,7 +117,6 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 70952 then
-		activePrince = args.destGUID
 		if self:IsInCombat() then
 			warnTargetSwitch:Show(L.Valanar)
 			warnTargetSwitchSoon:Schedule(42)
@@ -143,21 +125,28 @@ function mod:SPELL_AURA_APPLIED(args)
 				DBM.RangeCheck:Show(12)
 			end
 		end
-	elseif args.spellId == 70981 and self:IsInCombat() then
+		if self.Options.ActivePrinceIcon then
+			self:ScanForMobs(args.destGUID, 2, 8, 1, nil, 12, "ActivePrinceIcon")
+		end
+	elseif args.spellId == 70981 then
 		warnTargetSwitch:Show(L.Keleseth)
 		warnTargetSwitchSoon:Schedule(42)
 		timerTargetSwitch:Start()
-		activePrince = args.destGUID
 		if self.Options.RangeFrame then
 			self:ScheduleMethod(4.5, "HideRange")--delay hiding range frame for a few seconds after change incase valanaar got a last second vortex cast off
+		end
+		if self.Options.ActivePrinceIcon then
+			self:ScanForMobs(args.destGUID, 2, 8, 1, nil, 12, "ActivePrinceIcon")
 		end
 	elseif args.spellId == 70982 and self:IsInCombat() then
 		warnTargetSwitch:Show(L.Taldaram)
 		warnTargetSwitchSoon:Schedule(42)
 		timerTargetSwitch:Start()
-		activePrince = args.destGUID
 		if self.Options.RangeFrame then
 			self:ScheduleMethod(4.5, "HideRange")--delay hiding range frame for a few seconds after change incase valanaar got a last second vortex cast off
+		end
+		if self.Options.ActivePrinceIcon then
+			self:ScanForMobs(args.destGUID, 2, 8, 1, nil, 12, "ActivePrinceIcon")
 		end
 	elseif args.spellId == 72999 and not self:IsTrivial() then	--Shadow Prison (hard mode)
 		if args:IsPlayer() then
@@ -184,8 +173,8 @@ end
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg:match(L.EmpoweredFlames) and target then
-		target = DBM:GetUnitFullName(target)
 		if self:IsTrivial() then return end
+		target = DBM:GetUnitFullName(target)
 		if target == UnitName("player") then
 			specWarnEmpoweredFlames:Show()
 			specWarnEmpoweredFlames:Play("justrun")
@@ -198,16 +187,10 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	end
 end
 
-function mod:UNIT_TARGET_UNFILTERED()
-	if self.Options.ActivePrinceIcon and activePrince then
-		self:TrySetTarget()
-	end
-end
-
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 72080 then--Verify spellIDs
 		warnKineticBomb:Show()
-		if self:IsDifficulty("normal10") or self:IsDifficulty("heroic10") then
+		if self:IsDifficulty("normal10", "heroic10") then
 			timerKineticBombCD:Start(27)
 		else
 			timerKineticBombCD:Start()

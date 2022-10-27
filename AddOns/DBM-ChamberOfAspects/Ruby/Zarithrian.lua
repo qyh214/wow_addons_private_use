@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Zarithrian", "DBM-ChamberOfAspects", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20190417005949")
+mod:SetRevision("20220607192516")
 mod:SetCreatureID(39746)
 mod:SetEncounterID(1148)
 mod:SetModelID(32179)
@@ -21,8 +21,8 @@ local warnCleaveArmor			= mod:NewStackAnnounce(74367, 2, nil, "Tank|Healer")
 local specWarnFear				= mod:NewSpecialWarningSpell(244016, nil, nil, nil, 2, 2)
 local specWarnCleaveArmor		= mod:NewSpecialWarningStack(74367, nil, 2, nil, nil, 1, 6)--ability lasts 30 seconds, has a 15 second cd, so tanks should trade at 2 stacks.
 
-local timerAddsCD				= mod:NewTimer(45.5, "TimerAdds", 74398, nil, nil, 1)
-local timerCleaveArmor			= mod:NewTargetTimer(30, 74367, nil, "Tank|Healer", nil, 5)
+local timerAddsCD				= mod:NewTimer(45.5, "TimerAdds", 74398, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
+local timerCleaveArmor			= mod:NewTargetTimer(30, 74367, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerFearCD				= mod:NewCDTimer(33, 74384, nil, nil, nil, 2)--anywhere from 33-40 seconds in between fears.
 
 function mod:OnCombatStart(delay)

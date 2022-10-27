@@ -1,4 +1,4 @@
-if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
+if not WeakAuras.IsLibsOK() then return end
 
 if GetLocale() ~= "deDE" then
   return
@@ -7,13 +7,7 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
-	L[" Debuff"] = "Schwächungzauber"
-	--[[Translation missing --]]
-	L["<70% Mana"] = "<70% Mana"
-	--[[Translation missing --]]
-	L[">70% Mana"] = ">70% Mana"
 	L["Abilities"] = "Fähigkeiten"
-	L["Ability"] = "Fähigkeit"
 	L["Add Triggers"] = "Auslöser hinzufügen"
 	L["Always Active"] = "Immer aktiv"
 	L["Always Show"] = "Immer anzeigen"
@@ -57,15 +51,8 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Basic Show On Ready"] = "Basic Show On Ready"
 	L["Bloodlust/Heroism"] = "Kampfrausch/Heldentum"
-	--[[Translation missing --]]
-	L["Bonded Buff"] = "Bonded Buff"
-	L["Buff"] = "Stärkungszauber"
 	L["buff"] = "buff"
-	--[[Translation missing --]]
-	L["Buff on Other"] = "Buff on Other"
 	L["Buffs"] = "Buffs"
-	--[[Translation missing --]]
-	L["Build Up"] = "Build Up"
 	L["Cancel"] = "Abbrechen"
 	L["Cast"] = "Zauberwirken"
 	--[[Translation missing --]]
@@ -76,24 +63,14 @@ local L = WeakAuras.L
 	L["Charge and Duration Tracking"] = "Charge and Duration Tracking"
 	--[[Translation missing --]]
 	L["Charge Tracking"] = "Charge Tracking"
-	--[[Translation missing --]]
-	L["Combustion Ready"] = "Combustion Ready"
-	--[[Translation missing --]]
-	L["Conduits"] = "Conduits"
-	--[[Translation missing --]]
-	L["Cooldown"] = "Cooldown"
 	L["cooldown"] = "Abklingzeit"
 	--[[Translation missing --]]
 	L["Cooldown Tracking"] = "Cooldown Tracking"
+	--[[Translation missing --]]
+	L["Cooldowns"] = "Cooldowns"
 	L["Create Auras"] = "Auren erstellen"
-	L["Debuff"] = "Schwächungszauber"
 	L["debuff"] = "Schwächungszauber"
 	L["Debuffs"] = "Debuffs"
-	--[[Translation missing --]]
-	L["Empowered Buff"] = "Empowered Buff"
-	L["Fire"] = "Feuer"
-	--[[Translation missing --]]
-	L["Frost"] = "Frost"
 	L["General"] = "Allgemein"
 	L["Health"] = "Gesundheit"
 	--[[Translation missing --]]
@@ -114,15 +91,7 @@ local L = WeakAuras.L
 	L["Highlight while spell is active."] = "Highlight while spell is active."
 	--[[Translation missing --]]
 	L["Hold CTRL to create multiple auras at once"] = "Hold CTRL to create multiple auras at once"
-	--[[Translation missing --]]
-	L["Initial Buff"] = "Initial Buff"
 	L["Keeps existing triggers intact"] = "Verändert existierende Auslöser nicht"
-	--[[Translation missing --]]
-	L["Legendaries"] = "Legendaries"
-	--[[Translation missing --]]
-	L["Meteor Ready"] = "Meteor Ready"
-	--[[Translation missing --]]
-	L["Nature"] = "Nature"
 	L["Next"] = "Nächste"
 	--[[Translation missing --]]
 	L["Only show the aura if the target has the debuff."] = "Only show the aura if the target has the debuff."
@@ -142,8 +111,6 @@ local L = WeakAuras.L
 	L["Other cooldown"] = "Other cooldown"
 	L["Pet alive"] = "Begleiter am Leben"
 	L["Pet Behavior"] = "Begleiterverhalten"
-	--[[Translation missing --]]
-	L["Preparation"] = "Preparation"
 	L["PvP Talents"] = "PvP-Talente"
 	L["Replace all existing triggers"] = "Ersetzt alle vorhandenen Auslöser "
 	L["Replace Triggers"] = "Auslöser ersetzen"
@@ -151,12 +118,8 @@ local L = WeakAuras.L
 	L["Resources and Shapeshift Form"] = "Ressourcen und Gestaltwandlungsform"
 	--[[Translation missing --]]
 	L["Rogue cooldown"] = "Rogue cooldown"
-	--[[Translation missing --]]
-	L["Root"] = "Root"
 	L["Runes"] = "Runen"
 	L["Shapeshift Form"] = "Gestaltwandlungsform"
-	--[[Translation missing --]]
-	L["Shards Of Domination"] = "Shards Of Domination"
 	--[[Translation missing --]]
 	L["Show Always, Glow on Missing"] = "Show Always, Glow on Missing"
 	--[[Translation missing --]]
@@ -214,19 +177,7 @@ local L = WeakAuras.L
 	L["Show Only if on Cooldown"] = "Show Only if on Cooldown"
 	--[[Translation missing --]]
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
-	--[[Translation missing --]]
-	L["Slow"] = "Slow"
-	--[[Translation missing --]]
-	L["slow debuff"] = "slow debuff"
-	--[[Translation missing --]]
-	L["Sprint"] = "Sprint"
 	L["Stance"] = "Haltung"
-	--[[Translation missing --]]
-	L["stun debuff"] = "stun debuff"
-	--[[Translation missing --]]
-	L["Stun Debuff"] = "Stun Debuff"
-	--[[Translation missing --]]
-	L["Totem"] = "Totem"
 	--[[Translation missing --]]
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."
 	--[[Translation missing --]]

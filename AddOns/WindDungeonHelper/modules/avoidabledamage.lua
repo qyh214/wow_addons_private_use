@@ -1528,7 +1528,28 @@ local MistakeData = {
             type = MISTAKE.SPELL_DAMAGE,
             spell = 242894
         },
-        -- 館長
+        {
+            -- 奔竄 (老鼠)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 229696
+        },
+        {
+            -- 魔化炸彈 (溢能火占師)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 229678
+        },
+        {
+            -- 魔化迫擊砲 (魔化蝙蝠)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 229597
+        },
+        {
+            -- 順劈斬 (憤怒守衛烈焰使者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 230044,
+            playerIsNotTank = true
+        },
+        -- [1] 館長
         {
             -- 能量釋放
             type = MISTAKE.SPELL_DAMAGE,
@@ -1539,19 +1560,19 @@ local MistakeData = {
             type = MISTAKE.SPELL_DAMAGE,
             spell = 227465
         },
-        -- 麥迪文之影
+        -- [2] 麥迪文之影
         {
             -- 不絕寒冬
             type = MISTAKE.SPELL_DAMAGE,
             spell = 227806
         },
-        -- 法力吞噬者
+        -- [3] 法力吞噬者
         {
             -- 秘法炸彈
             type = MISTAKE.SPELL_DAMAGE,
             spell = 227620
         },
-        -- 『監視者』維茲亞頓
+        -- [4] 『監視者』維茲亞頓
         {
             -- 崩解
             type = MISTAKE.SPELL_DAMAGE,
@@ -1574,6 +1595,61 @@ local MistakeData = {
         }
     },
     ["Iron Docks"] = {
+        {
+            -- 火炮彈幕
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 168514
+        },
+        {
+            -- 火炮彈幕
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 168540
+        },
+        {
+            -- 高爆榴彈 (格羅姆卡技師)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 178299
+        },
+        {
+            -- 燃焰之箭 (格羅姆卡火箭手)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 173149
+        },
+        {
+            -- 燃燒箭 (格羅姆卡火箭手)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 164632
+        },
+        {
+            -- 投擲短斧 (格羅姆卡水手)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 173113
+        },
+        {
+            -- 劍刃風暴 (格羅姆卡戰場軍官)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 167233
+        },
+        {
+            -- 裂空順劈斬 (雷霆王牧者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 167815
+        },
+        {
+            -- 鋸齒釘爪刺 (雷霆王牧者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 173324
+        },
+        {
+            -- 熔岩衝擊 (鐵翼噴火者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 173517
+        },
+        {
+            -- 熔岩彈幕 (鐵翼噴火者)
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 173489
+        },
         -- [1] 『血肉撕裂者』諾加爾
         {
             -- 燃燒箭
@@ -1585,6 +1661,11 @@ local MistakeData = {
             type = MISTAKE.SPELL_DAMAGE,
             spell = 164648
         },
+        {
+            -- 撕碎掃擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 164734
+        },
         -- [2] 恐軌執行者
         {
             -- 撕碎肌腱
@@ -1595,6 +1676,11 @@ local MistakeData = {
             -- 熔岩掃擊
             type = MISTAKE.SPELL_DAMAGE,
             spell = 165152
+        },
+        {
+            -- 熔岩掃擊
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 163668
         },
         -- [3] 歐席爾
         {
@@ -1610,9 +1696,24 @@ local MistakeData = {
             noPlayerDebuff = 168398
         },
         {
+            -- 爆燃
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 169129
+        },
+        {
+            -- 劍刃風暴
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 168401
+        },
+        {
             -- 火砲彈幕
             type = MISTAKE.SPELL_DAMAGE,
             spell = 168390
+        },
+        {
+            -- 火炮彈幕
+            type = MISTAKE.SPELL_DAMAGE,
+            spell = 168148
         }
     },
     ["Grimrail Depot"] = {

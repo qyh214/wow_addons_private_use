@@ -27,7 +27,7 @@ L["STRING_ASCENDING"] = "오름차순"
 L["STRING_ATACH_DESC"] = "창 #%d|1이;가; 창 #%d|1과;와; 그룹이 되었습니다."
 L["STRING_ATTRIBUTE_CUSTOM"] = "사용자 설정"
 L["STRING_ATTRIBUTE_DAMAGE"] = "피해"
-L["STRING_ATTRIBUTE_DAMAGE_BYSPELL"] = "주문 별 받은 피해"
+L["STRING_ATTRIBUTE_DAMAGE_BYSPELL"] = "주문별 받은 피해"
 L["STRING_ATTRIBUTE_DAMAGE_DEBUFFS"] = "효과 & 바닥"
 L["STRING_ATTRIBUTE_DAMAGE_DEBUFFS_REPORT"] = "약화 효과 피해와 유지 시간"
 L["STRING_ATTRIBUTE_DAMAGE_DONE"] = "피해량"
@@ -409,10 +409,8 @@ L["STRING_OPTIONS_3D_USELECT_DESC"] = "상위 모델 바에 사용할 모델을 
 L["STRING_OPTIONS_ADVANCED"] = "고급"
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = ""--]] 
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = "자동 정렬"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = "각 문자의 길이에 따라 정렬이 자동으로 수행됩니다."
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = ""--]] 
 --[[Translation missing --]]
@@ -710,8 +708,7 @@ L["STRING_OPTIONS_EDITIMAGE"] = "이미지 편집"
 L["STRING_OPTIONS_EDITINSTANCE"] = "편집 중인 창:"
 L["STRING_OPTIONS_ERASECHARTDATA"] = "차트 삭제"
 L["STRING_OPTIONS_ERASECHARTDATA_DESC"] = "접속종료 시 차트를 만들기 위해 수집된 모든 전투 데이터가 지워집니다."
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_EXPORT_PROFILE"] = ""--]] 
+L["STRING_OPTIONS_EXPORT_PROFILE"] = "프로필 내보내기"
 L["STRING_OPTIONS_EXTERNALS_TITLE"] = "외부 위젯"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "여러 외부 위젯의 작동 방법을 조절하는 옵션입니다."
 L["STRING_OPTIONS_GENERAL"] = "일반 설정"
@@ -742,12 +739,10 @@ L["STRING_OPTIONS_ILVL_TRACKER_DESC"] = [=[활성화 하고 전투 중이 아니
 
 비활성하면, 다른 애드온이 요청한 아이템 레벨을 읽거나 수동으로 다른 플레이어를 살펴보기 해야합니다.]=]
 L["STRING_OPTIONS_ILVL_TRACKER_TEXT"] = "사용"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE"] = ""--]] 
+L["STRING_OPTIONS_IMPORT_PROFILE"] = "프로필 가져오기"
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = ""--]] 
+L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = "Details! 프로필 가져오기 (문자열 붙여넣기)"
 L["STRING_OPTIONS_INSTANCE_BACKDROP"] = "배경 무늬"
 L["STRING_OPTIONS_INSTANCE_BACKDROP_DESC"] = [=[이 창에 사용할 배경 무늬를 선택하세요.
 
@@ -1220,8 +1215,7 @@ L["STRING_OPTIONS_TIMEMEASURE"] = "시간 측정"
 L["STRING_OPTIONS_TIMEMEASURE_DESC"] = [=[|cFFFFFF00활동 시간|r: 각 공격대원의 타이머가 해당 공대원의 활동이 중단되면 초읽기를 중지했다가 활동 재개시 다시 초읽기에 들어갑니다. Dps와 Hps 산출의 일반적인 방법입니다.
 
 |cFFFFFF00실질 시간|r: 순위를 매길때 쓰입니다, 이 방법은 모든 공격대원의 Dps와 Hps를 산출하기 위해 측정된 전투 시간을 사용합니다.]=]
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = ""--]] 
+L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = "버튼 및 메뉴 설정"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS"] = "제목 바 버튼 설정"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS_DESC"] = "창의 상단에 있는 메인 메뉴를 변경하는 옵션입니다."
 L["STRING_OPTIONS_TOOLBARSIDE"] = "상단 면에 제목 바 배치"
@@ -1352,8 +1346,7 @@ L["STRING_OPTIONS_WINDOW_SCALE_DESC"] = [=[창의 크기 비율을 조절합니�
 |cFFFFFF00팁|r: 값을 입력하려면 오른쪽 클릭하세요.
 
 |cFFFFFF00현재|r: %s]=]
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = ""--]] 
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = "스킨 색상"
 --[[Translation missing --]]
 --[[ L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = ""--]] 
 L["STRING_OPTIONS_WINDOW_TITLE"] = "창 일반 설정"

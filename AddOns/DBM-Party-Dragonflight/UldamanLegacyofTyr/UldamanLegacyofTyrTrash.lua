@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("UldamanLegacyofTyrTrash", "DBM-Party-Dragonflight", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220803233609")
+mod:SetRevision("20220920232426")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
@@ -52,7 +52,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 369365 and args:IsDestTypePlayer() and self:CheckDispelFilter() and self:AntiSpam(3, 5) then
+	if spellId == 369365 and args:IsDestTypePlayer() and self:CheckDispelFilter("curse") and self:AntiSpam(3, 5) then
 		specWarnCurseofStone:Show(args.destName)
 		specWarnCurseofStone:Play("helpdispel")
 	end

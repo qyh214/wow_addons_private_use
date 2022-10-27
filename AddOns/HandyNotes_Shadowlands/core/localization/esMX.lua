@@ -62,6 +62,7 @@ L['hard'] = 'Difícil'
 L['mount'] = 'Montura'
 L['pet'] = 'Mascota'
 L['spell'] = nil
+L['title'] = nil
 L['toy'] = 'Juguete'
 L['rep'] = nil
 L['completed'] = 'Terminado'
@@ -72,6 +73,10 @@ L['unobtainable'] = 'No se puede obtener'
 L['unlearnable'] = 'No se puede aprender'
 L['defeated'] = nil
 L['undefeated'] = nil
+
+L['follower_type_follower'] = nil
+L['follower_type_champion'] = nil
+L['follower_type_companion'] = nil
 
 -------------------------------------------------------------------------------
 --------------------------------- CONTEXT MENU --------------------------------

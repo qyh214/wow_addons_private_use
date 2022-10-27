@@ -58,7 +58,7 @@
       bigStep (optional) -> step size of the slider. Defaults to 0.05
       step (optional) -> like bigStep, but applies to number input as well
 ]]
-if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
+if not WeakAuras.IsLibsOK() then return end
 local AddonName, OptionsPrivate = ...
 
 local WeakAuras = WeakAuras
@@ -676,8 +676,18 @@ typeControlAdders = {
     bigStep = option.bigStep
     min = option.min
     max = option.max
-    if max and min then
-      max = math.max(min, max)
+    local effectiveMin = softMin or min or 0
+    local effectiveMax = softMax or max or 100
+    if (effectiveMin > effectiveMax) then
+      -- This will cause a error inside the slider
+      -- Fix up either softMax or max, depending on which one is the effective one
+      if softMax then
+        softMax = effectiveMin
+      elseif max then
+        max = effectiveMin
+      else
+        softMax = effectiveMin
+      end
     end
     step = option.step
     args[prefix .. "default"] = {
@@ -964,7 +974,6 @@ typeControlAdders = {
   end,
   multiselect = function(options, args, data, order, prefix, i)
     local option = options[i]
-    args[prefix .. "width"] = nil
     local values = getValues(option)
     local defaultValues = {}
     for i, v in ipairs(values) do
@@ -1176,6 +1185,15 @@ typeControlAdders = {
         WeakAuras.ClearAndUpdateOptions(data.id, true)
       end,
       disabled = function() return not option.useCollapse end
+    }
+    args[prefix .. "noMerge"] = {
+      type = "toggle",
+      name = WeakAuras.newFeatureString .. name(option, "noMerge", L["Prevent Merging"]),
+      desc = desc(option, "noMerge", L["If checked, then this group will not merge with other group when selecting multiple auras."]),
+      order = order(),
+      width = WeakAuras.doubleWidth,
+      get = get(option, "noMerge"),
+      set = set(data, option, "noMerge"),
     }
     if option.groupType ~="simple" then
       args[prefix .. "limitType"] = {
@@ -1993,7 +2011,7 @@ local function addUserModeOption(options, args, data, order, prefix, i)
             while i <= #values or i <= #childValues do
               if firstChild then
                 values[i] = childValues[i][nameSource] or conflictBlue .. L["Entry %i"]:format(i)
-              elseif childValues[i][nameSource] ~= values[i] then
+              elseif not childValues[i] or childValues[i][nameSource] ~= values[i] then
                 values[i] = conflictBlue .. L["Entry %i"]:format(i)
               end
               i = i + 1
@@ -2101,6 +2119,7 @@ local function addUserModeOption(options, args, data, order, prefix, i)
             type = "execute",
             name = L["Delete Entry"],
             order = order(),
+            confirm = true,
             func = function()
               for id, optionData in pairs(option.references) do
                 local childOption = optionData.options[optionData.index]
@@ -2219,8 +2238,18 @@ local function addUserModeOption(options, args, data, order, prefix, i)
       userOption.bigStep = option.bigStep
       userOption.min = option.min
       userOption.max = option.max
-      if userOption.max and userOption.min then
-        userOption.max = max(userOption.min, userOption.max)
+      local effectiveMin = userOption.softMin or userOption.min or 0
+      local effectiveMax = userOption.softMax or userOption.max or 100
+      if (effectiveMin > effectiveMax) then
+        -- This will cause a error inside the slider
+        -- Fix up either softMax or max, depending on which one is the effective one
+        if userOption.softMax then
+          userOption.softMax = effectiveMin
+        elseif userOption.max then
+          userOption.max = effectiveMin
+        else
+          userOption.softMax = effectiveMin
+        end
       end
       userOption.step = option.step
     elseif optionType == "color" then

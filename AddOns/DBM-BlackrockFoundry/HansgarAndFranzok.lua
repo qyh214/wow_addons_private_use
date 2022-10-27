@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1155, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20221007005623")
 mod:SetCreatureID(76974, 76973)
 mod:SetEncounterID(1693)
 
@@ -85,7 +85,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnDisruptingRoar:Show()
 		timerDisruptingRoarCD:Start()
 		specWarnDisruptingRoar:Play("stopcast")
-		local uId = DBM:GetUnitIdFromGUID(args.sourceGUID)
+		local uId = self:GetUnitIdFromGUID(args.sourceGUID)
 		if uId then
 			local _, _, _, startTime, endTime = UnitCastingInfo(uId)
 			local time = ((endTime or 0) - (startTime or 0)) / 1000

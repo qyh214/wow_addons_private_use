@@ -10,6 +10,14 @@ L['covenant_required'] = '%s 성약의 단 소속이어야 합니다.'
 L['anima_channeled'] = '%s 지역으로 령을 보내야 합니다.'
 
 -------------------------------------------------------------------------------
+--------------------------------- SHADOWLANDS ---------------------------------
+-------------------------------------------------------------------------------
+
+L['squirrels_note'] = nil
+L['options_icons_squirrels'] = '{achievement:14731}'
+L['options_icons_squirrels_desc'] = nil
+
+-------------------------------------------------------------------------------
 --------------------------------- ARDENWEALD ----------------------------------
 -------------------------------------------------------------------------------
 
@@ -58,6 +66,31 @@ L['glitterdust_note'] = nil
 L['lost_book_note'] = nil
 L['options_icons_faerie_tales'] = '{achievement:14788}'
 L['options_icons_faerie_tales_desc'] = nil
+
+L['options_icons_wild_hunting'] = '{achievement:14779}'
+L['options_icons_wild_hunting_desc'] = nil
+
+L['options_icons_wildseed_spirits'] = nil
+L['options_icons_wildseed_spirits_desc'] = nil
+
+L['divine_martial_spirit'] = nil
+L['divine_dutiful_spirit'] = nil
+L['divine_prideful_spirit'] = nil
+L['divine_untamed_spirit'] = nil
+
+L['martial_spirit_label'] = '{item:178874}'
+L['dutiful_spirit_label'] = '{item:178881}'
+L['prideful_spirit_label'] = '{item:178882}'
+L['untamed_spirit_label'] = '{item:177698}'
+
+L['0x_wildseed_root_grain'] = '0x {item:176832}'
+L['1x_wildseed_root_grain'] = '1x {item:176832}'
+L['2x_wildseed_root_grain'] = '2x or 3x {item:176832}'
+L['4x_wildseed_root_grain'] = '4x {item:176832}'
+
+L['soulshape_cat_note'] = nil
+L['soulshape_corgi_note'] = nil
+L['soulshape_well_fed_cat_note'] = nil
 
 -------------------------------------------------------------------------------
 ----------------------------------- BASTION -----------------------------------
@@ -188,6 +221,8 @@ L['options_icons_hymns_desc'] = nil
 L['stratios_note'] = nil
 L['thenia_note'] = nil
 L['zolla_note'] = nil
+
+L['soulshape_otter_soul'] = nil
 
 -------------------------------------------------------------------------------
 ----------------------------------- KORTHIA -----------------------------------
@@ -322,6 +357,32 @@ L['dundley_note'] = nil
 L['maximillian_note'] = nil
 L['rotgut_note'] = nil
 
+L['ashen_ink_label'] = '{item:183690}'
+L['ashen_ink_note'] = nil
+
+L['jagged_bonesaw_label'] = '{item:183692}'
+L['jagged_bonesaw_note'] = nil
+
+L['discarded_grimoire_label'] = '{item:183394}'
+L['discarded_grimoire_note'] = nil
+
+L['sorcerers_blade_label'] = '{item:183397}'
+L['sorcerers_blade_note'] = nil
+
+L['mucosal_pigment_label'] = '{item:183691}'
+L['mucosal_pigment_note'] = nil
+
+L['amethystine_dye_label'] = '{item:183401}'
+L['amethystine_dye_note'] = nil
+
+L['ritualists_mantle_label'] = '{item:183399}'
+L['ritualists_mantle_note'] = nil
+
+L['options_icons_crypt_couture'] = '{achievement:14763}'
+L['options_icons_crypt_couture_desc'] = nil
+
+L['soulshape_saurid_note'] = nil
+
 -------------------------------------------------------------------------------
 --------------------------------- REVENDRETH ----------------------------------
 -------------------------------------------------------------------------------
@@ -393,6 +454,15 @@ L['inquisitor_note'] = nil
 L['options_icons_inquisitors'] = nil
 L['options_icons_inquisitors_desc'] = nil
 
+L['bell_of_shame_note'] = nil
+L['atonement_crypt_label'] = nil
+L['atonement_crypt_note'] = nil
+L['atonement_crypts_opened'] = nil
+L['atonement_crypt_key_label'] = '{item:172957}'
+L['atonement_crypt_key_note'] = nil
+L['options_icons_crypt_kicker'] = '{achievement:14273}'
+L['options_icons_crypt_kicker_desc'] = nil
+
 L['broken_mirror'] = nil
 L['broken_mirror_note'] = nil
 L['broken_mirror_crypt'] = nil
@@ -404,6 +474,10 @@ L['broken_mirror_61819'] = nil
 L['broken_mirror_61827'] = nil
 L['options_icons_broken_mirror'] = nil
 L['options_icons_broken_mirror_desc'] = nil
+
+L['soulshape_chicken_note'] = nil
+L['spectral_feed_label'] = '{item:187811}'
+L['spectral_feed_note'] = nil
 
 -------------------------------------------------------------------------------
 ----------------------------------- THE MAW -----------------------------------
@@ -563,6 +637,70 @@ L['options_icons_mawsworn_blackguard_desc'] = 'Mawsworn Blackguard locations for
 
 L['mawsworn_blackguard'] = '나락살이 검은경비병'
 L['mawsworn_blackguard_note'] = 'Easily target a stealthed {npc:183173}:'
+
+L['options_icons_covenant_assaults'] = 'Covenant Assaults'
+L['options_icons_covenant_assaults_desc'] = 'Rewards for covenant assaults'
+
+L['assault_sublabel_US'] = nil
+L['assault_sublabel_EU'] = nil
+L['assault_sublabel_CN'] = nil
+
+L['necrolord_assault'] = '{quest:63543}'
+L['necrolord_assault_note'] = nil
+L['necrolord_assault_quantity_note'] = nil
+L['venthyr_assault'] = '{quest:63822}'
+L['venthyr_assault_note'] = nil
+L['venthyr_assault_quantity_note'] = nil
+L['night_fae_assault'] = '{quest:63823}'
+L['night_fae_assault_note'] = nil
+L['night_fae_assault_quantity_note'] = nil
+L['kyrian_assault'] = '{quest:63824}'
+L['kyrian_assault_note'] = nil
+L['kyrian_assault_quantity_note1'] = nil
+L['kyrian_assault_quantity_note2'] = nil
+
+-------------------------------------------------------------------------------
+---------------------- TORGHAST, THE TOWER OF THE DAMNED ----------------------
+-------------------------------------------------------------------------------
+
+L['torghast_the_tower_of_the_damned'] = nil
+L['torghast_reward_sublabel'] = nil
+L['torghast_boss_note'] = nil
+L['torghast_vendor_note'] = nil
+L['torghast_reward_note'] = nil
+L['torghast_soulshape_note'] = nil
+L['colossal_umbrahide_mawrat_note'] = nil
+
+L['skoldus_hall'] = nil
+L['fracture_chambers'] = nil
+L['the_soulforges'] = nil
+L['coldheart_interstitia'] = nil
+L['mortregar'] = nil
+L['the_upper_reaches'] = nil
+L['adamant_vaults'] = nil
+L['twisting_corridors'] = nil
+L['the_jailers_gauntlet'] = nil
+
+L['torghast_layer1'] = nil
+L['torghast_layer2'] = nil
+L['torghast_layer3'] = nil
+L['torghast_layer4'] = nil
+L['torghast_layer6'] = nil
+L['torghast_layer8'] = nil
+
+L['phantasma_note'] = nil
+L['bloating_fodder_note'] = nil
+L['flawless_master_note'] = nil
+L['tower_ranger_note'] = nil
+
+L['the_jailers_gauntlet_note'] = nil
+
+L['the_box_of_many_things'] = nil
+L['the_box_of_many_things_note'] = nil
+L['many_many_things_section'] = nil
+
+L['the_runecarver'] = '{npc:164937}'
+L['clearing_the_fog_suffix'] = nil
 
 -------------------------------------------------------------------------------
 -------------------------------- ZERETH MORTIS --------------------------------
@@ -765,6 +903,9 @@ L['coreless_automa_note'] = 'Equiping an item with {spell:364480} will grant |cF
 L['coreless_automa_warning'] = '|cFFFF8C00Wait for the automa to actually start following you before telling Pocopoc to leave to avoid causing a bug that requires you to relog.|r'
 
 L['olea_manu'] = nil
+
+L['venaris_fate_sublabel'] = nil
+L['venaris_fate_note'] = nil
 
 L['options_icons_code_creature'] = '{achievement:15211}'
 L['options_icons_code_creature_desc'] = '{achievement:15211} 업적을 위한 생명체의 위치를 표시합니다.'

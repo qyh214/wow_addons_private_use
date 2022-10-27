@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20220218034305")
+mod:SetRevision("20220920232426")
 mod:SetCreatureID(56439)
 mod:SetEncounterID(1439)
 
@@ -51,7 +51,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerBoundsOfReality:Start()
 		timerBoundsOfRealityCD:Start()
 	elseif args.spellId == 106113 then
-		if self:CheckDispelFilter() then
+		if self:CheckDispelFilter("magic") then
 			specWarnTouchOfNothingness:Show(args.destName)
 			specWarnTouchOfNothingness:Play("helpdispel")
 		end

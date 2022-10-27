@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20220221000356")
+mod:SetRevision("20221013055548")
 mod:SetCreatureID(29307)
 mod:SetEncounterID(1983)
 --
@@ -14,8 +14,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_PERIODIC_DAMAGE 59451"
 )
 
-local warningStone			= mod:NewSpellAnnounce("ej6418", 3, 54878)
-local warningElemental		= mod:NewSpellAnnounce("ej6421", 3, 54850)
+local warningStone			= mod:NewSpellAnnounce(54878, 3)
+local warningElemental		= mod:NewSpellAnnounce(54850, 3)
 
 local specWarnPurpleShit	= mod:NewSpecialWarningGTFO(59451, nil, nil, nil, 1, 8)
 

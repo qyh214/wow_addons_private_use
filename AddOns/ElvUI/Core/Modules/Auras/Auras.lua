@@ -18,6 +18,7 @@ local GameTooltip = GameTooltip
 local CreateFrame = CreateFrame
 local UIParent = UIParent
 local UnitAura = UnitAura
+local SetCVar = SetCVar
 local GetTime = GetTime
 
 local Masque = E.Masque
@@ -258,8 +259,8 @@ function A:UpdateAura(button, index)
 
 	local db = A.db[button.auraType]
 	button.text:SetShown(db.showDuration)
-	button.count:SetText(count > 1 and count)
 	button.statusBar:SetShown((db.barShow and duration > 0) or (db.barShow and db.barNoDuration and duration == 0))
+	button.count:SetText(not count or count <= 1 and '' or count)
 	button.texture:SetTexture(icon)
 
 	local dtype = debuffType or 'none'
@@ -295,7 +296,7 @@ function A:UpdateTempEnchant(button, index, expiration)
 		button:SetBackdropBorderColor(r, g, b)
 		button.statusBar.backdrop:SetBackdropBorderColor(r, g, b)
 
-		local remaining = (expiration / 1000) or 0
+		local remaining = (expiration * 0.001) or 0
 		A:SetAuraTime(button, remaining + GetTime(), (remaining <= 3600 and remaining > 1800) and 3600 or (remaining <= 1800 and remaining > 600) and 1800 or 600)
 	else
 		A:ClearAuraTime(button)
@@ -428,7 +429,6 @@ function A:UpdateHeader(header)
 	E:UpdateClassColor(db.barColor)
 
 	if header.filter == 'HELPFUL' then
-		header:SetAttribute('consolidateTo', 0)
 		header:SetAttribute('weaponTemplate', template)
 	end
 
@@ -521,7 +521,18 @@ end
 function A:Initialize()
 	if E.private.auras.disableBlizzard then
 		_G.BuffFrame:Kill()
-		_G.TemporaryEnchantFrame:Kill()
+
+		if _G.DebuffFrame then
+			_G.DebuffFrame:Kill()
+		end
+
+		if not E.Retail then
+			_G.TemporaryEnchantFrame:Kill()
+		end
+
+		if E.Wrath then
+			_G.ConsolidatedBuffs:Kill()
+		end
 	end
 
 	if not E.private.auras.enable then return end
@@ -529,9 +540,14 @@ function A:Initialize()
 	A.Initialized = true
 	A.db = E.db.auras
 
+	if E.Retail then -- set for now to get Auras right click to work
+		SetCVar('ActionButtonUseKeyDown', 0)
+	end
+
 	local xoffset = -(6 + E.Border)
 	if E.private.auras.buffsHeader then
 		A.BuffFrame = A:CreateAuraHeader('HELPFUL')
+
 		A.BuffFrame:ClearAllPoints()
 		A.BuffFrame:SetPoint('TOPRIGHT', _G.MMHolder or _G.MinimapCluster, 'TOPLEFT', xoffset, -E.Spacing)
 		E:CreateMover(A.BuffFrame, 'BuffsMover', L["Player Buffs"], nil, nil, nil, nil, nil, 'auras,buffs')

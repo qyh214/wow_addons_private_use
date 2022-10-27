@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod("Lanathel", "DBM-Icecrown", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222200840")
+mod:SetRevision("20220624005857")
 mod:SetCreatureID(37955)
 mod:SetEncounterID(1103)
 mod:SetModelID(31165)
-mod:SetUsedIcons(4, 5, 6, 7, 8)
+mod:SetUsedIcons(1, 2, 3, 4, 7)
 
 mod:RegisterCombat("combat")
 
@@ -20,47 +20,47 @@ mod:RegisterEventsInCombat(
 )
 
 local warnPactDarkfallen			= mod:NewTargetAnnounce(71340, 4)
-local warnBloodMirror				= mod:NewTargetAnnounce(71510, 3, nil, "Tank|Healer")
+local warnBloodMirror				= mod:NewTargetNoFilterAnnounce(71510, 3, nil, "Tank|Healer")
 local warnSwarmingShadows			= mod:NewTargetAnnounce(71266, 4)
 local warnInciteTerror				= mod:NewSpellAnnounce(73070, 3, nil, nil, nil, nil, nil, 2)
-local warnVampricBite				= mod:NewTargetAnnounce(70946, 2)
+local warnVampricBite				= mod:NewTargetNoFilterAnnounce(70946, 2)
 local warnBloodthirstSoon			= mod:NewSoonAnnounce(70877, 2)
-local warnBloodthirst				= mod:NewTargetAnnounce(70877, 3, nil, false)
-local warnEssenceoftheBloodQueen	= mod:NewTargetAnnounce(70867, 3, nil, false)
+local warnBloodthirst				= mod:NewTargetNoFilterAnnounce(70877, 3, nil, false)
+local warnEssenceoftheBloodQueen	= mod:NewTargetNoFilterAnnounce(70867, 3, nil, false)
 
 local specWarnBloodBolt				= mod:NewSpecialWarningSpell(71772, nil, nil, nil, 2, 2)
 local specWarnPactDarkfallen		= mod:NewSpecialWarningYou(71340, nil, nil, nil, 1, 2)
 local specWarnEssenceoftheBloodQueen= mod:NewSpecialWarningYou(70867, nil, nil, nil, 1, 2)
 local specWarnBloodthirst			= mod:NewSpecialWarningYou(70877, nil, nil, nil, 3, 2)
 local yellBloodthirst				= mod:NewYell(70877, L.YellFrenzy)
-local specWarnSwarmingShadows		= mod:NewSpecialWarningMove(71266, nil, nil, nil, 1, 2)
+local specWarnSwarmingShadows		= mod:NewSpecialWarningYou(71266, nil, nil, nil, 1, 2)
 local specWarnMindConrolled			= mod:NewSpecialWarningTarget(70923, "-Healer", nil, nil, 1, 2)
+local specWarnGTFO					= mod:NewSpecialWarningGTFO(71266, nil, nil, nil, 1, 8)
 
 local timerNextInciteTerror			= mod:NewNextTimer(100, 73070, nil, nil, nil, 6)
 local timerFirstBite				= mod:NewNextTimer(15, 70946, nil, "Dps", nil, 5)
 local timerNextPactDarkfallen		= mod:NewNextTimer(30.5, 71340, nil, nil, nil, 3)
 local timerNextSwarmingShadows		= mod:NewNextTimer(30.5, 71266, nil, nil, nil, 3)
 local timerInciteTerror				= mod:NewBuffActiveTimer(4, 73070)
-local timerBloodBolt				= mod:NewBuffActiveTimer(6, 71772, nil, nil, nil, 2)
+local timerBloodBolt				= mod:NewBuffActiveTimer(6, 71772, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
 local timerBloodThirst				= mod:NewBuffFadesTimer(10, 70877, nil, nil, nil, 5)
-local timerEssenceoftheBloodQueen	= mod:NewBuffFadesTimer(60, 70867, nil, nil, nil, 5)
+local timerEssenceoftheBloodQueen	= mod:NewBuffFadesTimer(60, 70867, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)
 
 local berserkTimer					= mod:NewBerserkTimer(320)
 
-mod:AddBoolOption("BloodMirrorIcon", false)
-mod:AddBoolOption("SwarmingShadowsIcon", true)
-mod:AddBoolOption("SetIconOnDarkFallen", true)
-mod:AddBoolOption("RangeFrame", true)
-mod:AddBoolOption("YellOnFrenzy", false, "announce")
+mod:AddSetIconOption("BloodMirrorIcon", 71510, false, 0, {7})--red x for blood link
+mod:AddSetIconOption("SwarmingShadowsIcon", 71266, true, 0, {4})
+mod:AddSetIconOption("SetIconOnDarkFallen", 71340, true, 0, {1, 2, 3})
+mod:AddRangeFrameOption(8, 71446)
 
 local pactTargets = {}
-mod.vb.pactIcons = 6
+mod.vb.pactIcons = 1
 
 local function warnPactTargets(self)
 	warnPactDarkfallen:Show(table.concat(pactTargets, "<, >"))
 	table.wipe(pactTargets)
 	timerNextPactDarkfallen:Start(30)
-	self.vb.pactIcons = 6
+	self.vb.pactIcons = 1
 end
 
 function mod:OnCombatStart(delay)
@@ -69,7 +69,7 @@ function mod:OnCombatStart(delay)
 	timerNextPactDarkfallen:Start(15-delay)
 	timerNextSwarmingShadows:Start(-delay)
 	table.wipe(pactTargets)
-	self.vb.pactIcons = 6
+	self.vb.pactIcons = 1
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(8)
 	end
@@ -93,10 +93,10 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnPactDarkfallen:Show()
 			specWarnPactDarkfallen:Play("linegather")
 		end
-		if self.Options.SetIconOnDarkFallen then--Debuff doesn't actually last 30 seconds
-			self:SetIcon(args.destName, self.vb.pactIcons, 28)--it lasts forever, but if you still have it after 28 seconds
+		if self.Options.SetIconOnDarkFallen then
+			self:SetIcon(args.destName, self.vb.pactIcons)
 		end
-		self.vb.pactIcons = self.vb.pactIcons - 1--then you're probably dead anyways
+		self.vb.pactIcons = self.vb.pactIcons + 1
 		self:Unschedule(warnPactTargets)
 		if #pactTargets >= 3 then
 			warnPactTargets(self)
@@ -180,10 +180,10 @@ function mod:SPELL_DAMAGE(sourceGUID, _, _, _, _, destName, _, _, spellId)
 	end
 end
 
-function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
+function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
 	if spellId == 71277 and destGUID == UnitGUID("player") and self:AntiSpam() then		--Swarn of Shadows (spell damage, you're standing in it.)
-		specWarnSwarmingShadows:Show()
-		specWarnSwarmingShadows:Play("runaway")
+		specWarnGTFO:Show(spellName)
+		specWarnGTFO:Play("watchfeet")
 	end
 end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
@@ -200,7 +200,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 			warnSwarmingShadows:Show(target)
 		end
 		if self.Options.SwarmingShadowsIcon then
-			self:SetIcon(target, 8, 6)
+			self:SetIcon(target, 4, 6)
 		end
 	end
 end

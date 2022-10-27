@@ -162,4 +162,3 @@ L["S_WORLDMAP_QUESTLOCATIONS"] = "Show Quest Locations"
 L["S_WORLDMAP_QUESTSUMMARY"] = "Show Quest Summary"
 L["S_WORLDMAP_TOOLTIP_TRACKALL"] = "track all quests on this list"
 L["S_WORLDQUESTS"] = "World Quests"
-

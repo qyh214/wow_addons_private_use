@@ -42,7 +42,7 @@ function Details.CooldownTracking.DisableTracker()
 end
 
 
---> Library Open Raid Callbacks
+--Library Open Raid Callbacks
     --callback on the event 'CooldownListUpdate', this is triggered when a player in the group sent the list of cooldowns
     --@unitId: which unit got updated
     --@unitCooldows: a table with [spellId] = cooldownInfo
@@ -100,10 +100,10 @@ end
     end
 
 
---> Frames
+--Frames
     --hide all bars created
     function Details.CooldownTracking.HideAllBars()
-        for _, bar in ipairs (DetailsOnlineCDTrackerScreenPanel.bars) do
+        for _, bar in ipairs(DetailsOnlineCDTrackerScreenPanel.bars) do
             bar:ClearAllPoints()
             bar:Hide()
 
@@ -173,6 +173,7 @@ end
         local spellIcon = GetSpellTexture(cooldownFrame.spellId)
         if (spellIcon) then
             cooldownFrame:SetIcon(spellIcon, .1, .9, .1, .9)
+
             local classColor = C_ClassColor.GetClassColor(cooldownFrame.class)
             cooldownFrame:SetStatusBarColor(classColor.r, classColor.g, classColor.b)
             cooldownFrame:SetLeftText(DF:RemoveRealmName(cooldownFrame.unitName))
@@ -210,7 +211,7 @@ end
         end
     end
 
---> update cooldown frames based on the amount of players in the group or raid
+--update cooldown frames based on the amount of players in the group or raid
     function Details.CooldownTracking.RefreshCooldownFrames()
         local screenPanel = DetailsOnlineCDTrackerScreenPanel
 
@@ -333,7 +334,7 @@ end
     end
 
 
---> Options panel
+--Options panel
 
     --initialize the cooldown options window and embed it to Details! options panel
     function Details:InitializeCDTrackerWindow()
@@ -369,17 +370,17 @@ end
             --enabled with a toggle button
             --execute to reset position
             --misc configs
-            local options_text_template = DF:GetTemplate ("font", "OPTIONS_FONT_TEMPLATE")
-            local options_dropdown_template = DF:GetTemplate ("dropdown", "OPTIONS_DROPDOWN_TEMPLATE")
-            local options_switch_template = DF:GetTemplate ("switch", "OPTIONS_CHECKBOX_TEMPLATE")
-            local options_slider_template = DF:GetTemplate ("slider", "OPTIONS_SLIDER_TEMPLATE")
-            local options_button_template = DF:GetTemplate ("button", "OPTIONS_BUTTON_TEMPLATE")
+            local options_text_template = DF:GetTemplate("font", "OPTIONS_FONT_TEMPLATE")
+            local options_dropdown_template = DF:GetTemplate("dropdown", "OPTIONS_DROPDOWN_TEMPLATE")
+            local options_switch_template = DF:GetTemplate("switch", "OPTIONS_CHECKBOX_TEMPLATE")
+            local options_slider_template = DF:GetTemplate("slider", "OPTIONS_SLIDER_TEMPLATE")
+            local options_button_template = DF:GetTemplate("button", "OPTIONS_BUTTON_TEMPLATE")
 
             local generalOptions = {
                 {--enable ocd
                     type = "toggle",
                     get = function() return Details.ocd_tracker.enabled end,
-                    set = function (self, fixedparam, value)
+                    set = function(self, fixedparam, value)
                         if (value) then
                             Details.CooldownTracking.EnableTracker()
                         else
@@ -393,7 +394,7 @@ end
                 {--show only in group
                     type = "toggle",
                     get = function() return Details.ocd_tracker.show_conditions.only_in_group end,
-                    set = function (self, fixedparam, value)
+                    set = function(self, fixedparam, value)
                         Details.ocd_tracker.show_conditions.only_in_group = value
                         Details.CooldownTracking.RefreshCooldownFrames()
                     end,
@@ -404,7 +405,7 @@ end
                 {--show only inside instances
                     type = "toggle",
                     get = function() return Details.ocd_tracker.show_conditions.only_inside_instance end,
-                    set = function (self, fixedparam, value)
+                    set = function(self, fixedparam, value)
                         Details.ocd_tracker.show_conditions.only_inside_instance = value
                         Details.CooldownTracking.RefreshCooldownFrames()
                     end,
@@ -414,7 +415,7 @@ end
                 {--lock frame
                     type = "toggle",
                     get = function() return Details.ocd_tracker.framme_locked end,
-                    set = function (self, fixedparam, value)
+                    set = function(self, fixedparam, value)
                         Details.ocd_tracker.framme_locked = value
                         Details.CooldownTracking.RefreshCooldownFrames()
                     end,
@@ -427,7 +428,7 @@ end
                 {--filter: show raid wide defensive cooldowns
                     type = "toggle",
                     get = function() return Details.ocd_tracker.filters["defensive-raid"] end,
-                    set = function (self, fixedparam, value)
+                    set = function(self, fixedparam, value)
                         Details.ocd_tracker.filters["defensive-raid"] = value
                         Details.CooldownTracking.RefreshCooldownFrames()
                     end,
@@ -438,7 +439,7 @@ end
                 {--filter: show target defensive cooldowns
                     type = "toggle",
                     get = function() return Details.ocd_tracker.filters["defensive-target"] end,
-                    set = function (self, fixedparam, value)
+                    set = function(self, fixedparam, value)
                         Details.ocd_tracker.filters["defensive-target"] = value
                         Details.CooldownTracking.RefreshCooldownFrames()
                     end,
@@ -449,7 +450,7 @@ end
                 {--filter: show personal defensive cooldowns
                     type = "toggle",
                     get = function() return Details.ocd_tracker.filters["defensive-personal"] end,
-                    set = function (self, fixedparam, value)
+                    set = function(self, fixedparam, value)
                         Details.ocd_tracker.filters["defensive-personal"] = value
                         Details.CooldownTracking.RefreshCooldownFrames()
                     end,
@@ -460,7 +461,7 @@ end
                 {--filter: show ofensive cooldowns
                     type = "toggle",
                     get = function() return Details.ocd_tracker.filters["ofensive"] end,
-                    set = function (self, fixedparam, value)
+                    set = function(self, fixedparam, value)
                         Details.ocd_tracker.filters["ofensive"] = value
                         Details.CooldownTracking.RefreshCooldownFrames()
                     end,
@@ -471,7 +472,7 @@ end
                 {--filter: show utility cooldowns
                     type = "toggle",
                     get = function() return Details.ocd_tracker.filters["utility"] end,
-                    set = function (self, fixedparam, value)
+                    set = function(self, fixedparam, value)
                         Details.ocd_tracker.filters["utility"] = value
                         Details.CooldownTracking.RefreshCooldownFrames()
                     end,
@@ -482,7 +483,7 @@ end
                 {--filter: show interrupt cooldowns
                     type = "toggle",
                     get = function() return Details.ocd_tracker.filters["interrupt"] end,
-                    set = function (self, fixedparam, value)
+                    set = function(self, fixedparam, value)
                         Details.ocd_tracker.filters["interrupt"] = value
                         Details.CooldownTracking.RefreshCooldownFrames()
                     end,
@@ -495,7 +496,7 @@ end
                 {--bar width
                     type = "range",
                     get = function() return Details.ocd_tracker.width end,
-                    set = function (self, fixedparam, value)
+                    set = function(self, fixedparam, value)
                         Details.ocd_tracker.width = value
                         Details.CooldownTracking.RefreshCooldownFrames()
                     end,
@@ -509,7 +510,7 @@ end
                 {--bar height
                     type = "range",
                     get = function() return Details.ocd_tracker.height end,
-                    set = function (self, fixedparam, value)
+                    set = function(self, fixedparam, value)
                         Details.ocd_tracker.height = value
                         Details.CooldownTracking.RefreshCooldownFrames()
                     end,
@@ -523,7 +524,7 @@ end
                 {--bar height
                     type = "range",
                     get = function() return Details.ocd_tracker.lines_per_column end,
-                    set = function (self, fixedparam, value)
+                    set = function(self, fixedparam, value)
                         Details.ocd_tracker.lines_per_column = floor(value)
                         Details.CooldownTracking.RefreshCooldownFrames()
                     end,
@@ -554,7 +555,7 @@ end
             DF:SetFontSize(warning1, 14)
             local animationHub = DF:CreateAnimationHub(warning1)
             local anim1 = DF:CreateAnimation(animationHub, "rotation", 1, 0, 35)
-            anim1:SetEndDelay(math.huge)
+            anim1:SetEndDelay(10000000)
             anim1:SetSmoothProgress(1)
             animationHub:Play()
             animationHub:Pause()

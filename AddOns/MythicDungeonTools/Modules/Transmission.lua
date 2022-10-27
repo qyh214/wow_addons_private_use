@@ -274,7 +274,9 @@ function MDTcommsObject:OnCommReceived(prefix, message, distribution, sender)
   end
 
   if prefix == MDT.dataCollectionPrefixes.distribute then
+    if sender == UnitFullName("player") then return end
     local package = MDT:StringToTable(message, false)
+    print("Received data package from " .. fullName)
     MDT.DataCollection:MergeReceiveData(package)
   end
 
@@ -597,7 +599,7 @@ end
 function MDT:MakeSendingStatusBar(f)
   f.SendingStatusBar = CreateFrame("StatusBar", nil, f)
   local statusbar = f.SendingStatusBar
-  statusbar:SetMinMaxValues(0, 1)
+  -- statusbar:SetMinMaxValues(0, 1)
   statusbar:SetPoint("LEFT", f.bottomPanel, "LEFT", 5, 0)
   statusbar:SetWidth(200)
   statusbar:SetHeight(20)
@@ -606,7 +608,7 @@ function MDT:MakeSendingStatusBar(f)
   statusbar:GetStatusBarTexture():SetVertTile(false)
   statusbar:SetStatusBarColor(0.26, 0.42, 1)
 
-  statusbar.bg = statusbar:CreateTexture(nil, "BACKGROUND")
+  statusbar.bg = statusbar:CreateTexture(nil, "BACKGROUND", nil, 0)
   statusbar.bg:SetTexture("Interface\\TARGETINGFRAME\\UI-StatusBar")
   statusbar.bg:SetAllPoints(true)
   statusbar.bg:SetVertexColor(0.26, 0.42, 1)
@@ -667,7 +669,6 @@ local function displaySendingProgress(userArgs, bytesSent, bytesToSend)
 
       local fullName = name .. "+" .. realm
       SendChatMessage(prefix .. fullName .. " - " .. dungeon .. ": " .. presetName .. "]", distribution)
-      MDT:SetThrottleValues(true)
     end
   end
 end
@@ -708,15 +709,9 @@ function MDT:GetPresetSize(forChat, level)
   return string.len(export)
 end
 
-local defaultCPS = tonumber(_G.ChatThrottleLib.MAX_CPS)
-local defaultBURST = tonumber(_G.ChatThrottleLib.BURST)
-function MDT:SetThrottleValues(default)
+function MDT:SetThrottleValues()
   if not _G.ChatThrottleLib then return end
-  if default then
-    _G.ChatThrottleLib.MAX_CPS = defaultCPS
-    _G.ChatThrottleLib.BURST = defaultBURST
-  else --4000/16000 is fine but we go safe with 2000/10000
-    _G.ChatThrottleLib.MAX_CPS = 2000
-    _G.ChatThrottleLib.BURST = 10000
-  end
+  --4000/16000 is fine but we go safe with 2000/10000
+  _G.ChatThrottleLib.MAX_CPS = 2000
+  _G.ChatThrottleLib.BURST = 10000
 end

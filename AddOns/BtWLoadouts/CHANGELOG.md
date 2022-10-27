@@ -1,3 +1,65 @@
+# v1.8.6
+
+- Fixed some errors reading talent trees for some specs
+- Updated dragonflight talents to select Default Loadout after talent switching
+- Updated talent tree data for all specs
+
+# v1.8.5
+
+- Fixed error displaying conduit list
+- Fixed error tracking macro changes
+
+# v1.8.4
+
+- Updated for Dragonflight prepatch
+- Fixed title bar settings button appearing behind the title bar 
+
+# v1.8.3
+
+- Fixed adding equipment errors to tooltips for Dragonflight
+
+# v1.8.2-beta
+
+- Fixed error while loading Dragonflight talents on 9.2.7
+- Fixed error adding equipment sets to tooltips
+
+# v1.8.1-beta
+
+- Added import/export of Dragonflight talent trees
+- Updated macros for sets to support soulbinds and Dragonflight talents
+- Fixed not correctly updating which loadouts are active after changing Dragonflight talents
+- Fixed error on loadout change for Dragonflight Talents on 9.2
+
+# v1.8.0-beta
+
+- Initial support for Dragonflight Talent trees
+
+# v1.7.11
+
+- Removed some debug code, bad Breeni
+
+# v1.7.10
+
+- Updated talents and pvp talents
+- Updated for latest Dragonflight Beta build
+
+# v1.7.9
+
+- Added support for Dragonflight tabs
+- Fixed displaying Adventurer class in Dragonflight
+
+# v1.7.8
+
+- Fixed error setting title text on Dragonflight Beta 
+
+# v1.7.7
+
+- Initial changes for Dragonflight
+
+# v1.7.6
+
+- Updated for 9.2.7
+
 # v1.7.5
 
 - Updated world conditions to support Oribos and Exile's Reach for zone

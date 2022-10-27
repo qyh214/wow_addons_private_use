@@ -1,5 +1,5 @@
 local _, T = ...
-local EV = T.Evie
+local EV, U = T.Evie, T.Util
 
 local function GetCompletedMissionInfo(mid)
 	local ma = C_Garrison.GetCompleteMissions(123)
@@ -111,6 +111,8 @@ function EV:GARRISON_MISSION_COMPLETE_RESPONSE(mid, _canCom, _suc, _bonusOK, _fo
 	cr.environment = C_Garrison.GetAutoMissionEnvironmentEffect(mid)
 	for _, v in pairs(cr.encounters) do
 		v.scale, v.portraitFileDataID, v.mechanics, v.height, v.displayID = nil
+		local aa = v.autoCombatAutoAttack
+		v.auto, v.autoCombatAutoAttack = aa and aa.autoCombatSpellID
 		if v.autoCombatSpells then
 			for _, s in pairs(v.autoCombatSpells) do
 				s.previewMask, s.schoolMask, s.icon, s.spellTutorialFlag = nil
@@ -122,20 +124,24 @@ function EV:GARRISON_MISSION_COMPLETE_RESPONSE(mid, _canCom, _suc, _bonusOK, _fo
 		s.previewMask, s.schoolMask, s.icon, s.spellTutorialFlag = nil
 	end
 	
-	local fm, mi = {}, GetCompletedMissionInfo(mid)
+	local fm, fb, mi = {}, {}, GetCompletedMissionInfo(mid)
 	for i=1,#mi.followers do
 		local fid = mi.followers[i]
 		local mci = C_Garrison.GetFollowerMissionCompleteInfo(fid)
 		local stat = C_Garrison.GetFollowerAutoCombatStats(fid)
-		local spa = C_Garrison.GetFollowerAutoCombatSpells(fid, mci.level)
+		local spa, aa = C_Garrison.GetFollowerAutoCombatSpells(fid, mci.level)
 		for _, s in pairs(spa) do
 			s.previewMask, s.schoolMask, s.icon, s.spellTutorialFlag = nil
 		end
 		fm[fid] = {
 			name=mci.name, role=mci.role, level=mci.level,
 			boardIndex=mci.boardIndex, health=stat.currentHealth, maxHealth=stat.maxHealth, attack=stat.attack,
-			spells=spa,
+			spells=spa, auto=aa and aa.autoCombatSpellID
 		}
+		fb[1+mci.boardIndex] = C_Garrison.GetFollowerInfo(fid).garrFollowerID
+	end
+	if cr.winner then
+		U.SaveMissionGroup(mid, unpack(fb,1,5))
 	end
 	cr.followers = fm
 	cr.missionScalar = mi.missionScalar

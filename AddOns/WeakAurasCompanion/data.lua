@@ -1,4 +1,4 @@
-WeakAurasCompanion = {
+WeakAurasCompanionWagoData = {
 ["ids"] = {  },
 ["slugs"] = {  },
 ["uids"] = {  },

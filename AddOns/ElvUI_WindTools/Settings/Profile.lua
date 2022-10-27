@@ -810,12 +810,12 @@ P.social = {
         enable = true,
         level = true,
         hideMaxLevel = true,
-        useGameColor = true,
+        useClientColor = true,
         useClassColor = true,
         useNoteAsName = false,
         textures = {
-            game = "Modern",
-            status = "Square",
+            client = "modern",
+            status = "square",
             factionIcon = false
         },
         areaColor = {
@@ -901,7 +901,8 @@ P.tooltips = {
     groupInfo = {
         enable = true,
         title = true,
-        mode = "NORMAL"
+        mode = "NORMAL",
+        template = "{{classIcon:18}} {{specIcon:14,18}} {{classColorStart}}{{className}} ({{specName}}){{classColorEnd}}{{amountStart}} x {{amount}}{{amountEnd}}"
     }
 }
 
@@ -922,6 +923,10 @@ P.misc = {
     disableTalkingHead = false,
     hideCrafter = false,
     noLootPanel = false,
+    spellActivationAlert = {
+        enable = false,
+        scale = 1
+    },
     gameBar = {
         enable = true,
         mouseOver = false,

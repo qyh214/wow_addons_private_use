@@ -43,8 +43,7 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	timerMobOvercharge	= "Zeige Zeit bis $spell:64219 (erfolgt bei 10 Stapeln von $spell:64217)",
-	EmalonEnrage		= "Zeige Zeit bis $spell:26662",
-	RangeFrame			= "Zeige Abstandsfenster (10m)"
+	EmalonEnrage		= "Zeige Zeit bis $spell:26662"
 }
 
 ---------------------------------
@@ -56,16 +55,11 @@ L:SetGeneralLocalization{
 	name = "Koralon der Flammenwächter"
 }
 
-L:SetWarningLocalization{
-	BurningFury		= "Brennender Atem >%d<"
-}
-
 L:SetTimerLocalization{
 	KoralonEnrage	= "Berserker (Koralon)"
 }
 
 L:SetOptionLocalization{
-	BurningFury			= "Zeige Warnung für $spell:66721",
 	KoralonEnrage		= "Zeige Zeit bis $spell:26662"
 }
 
@@ -82,16 +76,8 @@ L:SetGeneralLocalization{
 	name = "Toravon der Eiswächter"
 }
 
-L:SetWarningLocalization{
-	Frostbite	= "Erfrierung auf >%s< (%d)"
-}
-
 L:SetTimerLocalization{
 	ToravonEnrage	= "Berserker (Toravon)"
-}
-
-L:SetOptionLocalization{
-	Frostbite	= "Zeige Warnung für $spell:72004"
 }
 
 L:SetMiscLocalization{

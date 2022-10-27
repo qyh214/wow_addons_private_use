@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Ignis", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200530203003")
+mod:SetRevision("20220701215737")
 mod:SetCreatureID(33118)
 mod:SetEncounterID(1136)
 mod:SetModelID(29185)
@@ -27,7 +27,12 @@ local timerActivateConstruct	= mod:NewCDCountTimer(30, 62488, nil, nil, nil, 1)
 local timerFlameJetsCooldown	= mod:NewCDTimer(23.5, 63472, nil, nil, nil, 2)--23.5-31
 local timerScorchCooldown		= mod:NewCDTimer(20.5, 63473, nil, nil, nil, 5)
 local timerSlagPot				= mod:NewTargetTimer(10, 63477, nil, nil, nil, 3)
-local timerAchieve				= mod:NewAchievementTimer(240, 12325)--2930
+local timerAchieve
+if WOW_PROJECT_ID == (WOW_PROJECT_MAINLINE or 1) then
+	timerAchieve				= mod:NewAchievementTimer(240, 12325)
+else
+	timerAchieve				= mod:NewAchievementTimer(240, 2930)
+end
 
 mod.vb.ConstructCount = 0
 

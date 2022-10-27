@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod("Sindragosa", "DBM-Icecrown", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041927")
+mod:SetRevision("20220624005857")
 mod:SetCreatureID(36853)
 mod:SetEncounterID(1105)
 mod:SetModelID(30362)
-mod:SetUsedIcons(3, 4, 5, 6, 7, 8)
-mod:SetMinSyncRevision(7)--Could break if someone is running out of date version with higher revision
+mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
+mod:SetMinSyncRevision(20220623000000)
 
 mod:RegisterCombat("combat")
 
@@ -14,7 +14,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 69649 73061",
 	"SPELL_AURA_APPLIED 70126 69762 70106 69766 70127",
 	"SPELL_AURA_APPLIED_DOSE 70106 69766 70127",
-	"SPELL_AURA_REMOVED 69762 70157 70126 70106 69766 70127",
+	"SPELL_AURA_REMOVED 69762 70157 70106 69766 70127",
 	"SPELL_CAST_SUCCESS 70117",
 	"UNIT_HEALTH boss1",
 	"CHAT_MSG_MONSTER_YELL"
@@ -27,7 +27,7 @@ local warnPhase2				= mod:NewPhaseAnnounce(2, 2)
 local warnInstability			= mod:NewCountAnnounce(69766, 2, nil, false)
 local warnChilledtotheBone		= mod:NewCountAnnounce(70106, 2, nil, false)
 local warnMysticBuffet			= mod:NewCountAnnounce(70128, 2, nil, false)
-local warnFrostBeacon			= mod:NewTargetAnnounce(70126, 4)
+local warnFrostBeacon			= mod:NewTargetNoFilterAnnounce(70126, 4)
 local warnFrostBreath			= mod:NewSpellAnnounce(69649, 2, nil, "Tank|Healer")
 local warnUnchainedMagic		= mod:NewTargetAnnounce(69762, 2, nil, "SpellCaster", 2)
 
@@ -53,74 +53,43 @@ local timerMysticAchieve		= mod:NewAchievementTimer(30, 4620, "AchievementMystic
 
 local berserkTimer				= mod:NewBerserkTimer(600)
 
-mod:AddBoolOption("SetIconOnFrostBeacon", true)
-mod:AddBoolOption("SetIconOnUnchainedMagic", true)
-mod:AddBoolOption("ClearIconsOnAirphase", true)
-mod:AddBoolOption("AnnounceFrostBeaconIcons", false)
-mod:AddBoolOption("AchievementCheck", false, "announce")
-mod:AddBoolOption("RangeFrame")
+mod:AddSetIconOption("SetIconOnFrostBeacon", 70126, true, 7, {1, 2, 3, 4, 5, 6})
+mod:AddSetIconOption("SetIconOnUnchainedMagic", 69762, true, 0, {1, 2, 3, 4, 5, 6})
+mod:AddBoolOption("ClearIconsOnAirphase", true, nil, nil, nil, nil, 70126)
+mod:AddBoolOption("AnnounceFrostBeaconIcons", false, nil, nil, nil, nil, 70126)
+mod:AddBoolOption("AchievementCheck", false, "announce", nil, nil, nil, 70127)
+mod:AddRangeFrameOption("10/20")
 
 local beaconTargets		= {}
-local beaconIconTargets	= {}
 local unchainedTargets	= {}
 mod.vb.warned_P2 = false
 mod.vb.warnedfailed = false
-mod.vb.unchainedIcons = 7
-mod.vb.activeBeacons	= false
+mod.vb.unchainedIcons = 1
 local playerUnchained = false
 local playerBeaconed = false
-local beaconDebuff, unchainedDebuff = DBM:GetSpellInfo(70126), DBM:GetSpellInfo(69762)
 
-local function ClearBeaconTargets(self)
-	table.wipe(beaconIconTargets)
-	if self.Options.RangeFrame then
-		DBM.RangeCheck:Hide()
-	end
-end
-
+local beaconDebuffFilter, unchainedDebuffFilter
 do
-	local function sort_by_group(v1, v2)
-		return DBM:GetRaidSubgroup(DBM:GetUnitFullName(v1)) < DBM:GetRaidSubgroup(DBM:GetUnitFullName(v2))
-	end
-	function mod:SetBeaconIcons()
-		table.sort(beaconIconTargets, sort_by_group)
-		local beaconIcons = 8
-		for i, v in ipairs(beaconIconTargets) do
-			if self.Options.AnnounceFrostBeaconIcons and DBM:GetRaidRank() > 0 then
-				SendChatMessage(L.BeaconIconSet:format(beaconIcons, DBM:GetUnitFullName(v)), "RAID")
-			end
-			self:SetIcon(v, beaconIcons)
-			beaconIcons = beaconIcons - 1
-		end
-		self:Schedule(8, ClearBeaconTargets, self)
-	end
-end
-
-local beaconDebuffFilter
-do
+	local beaconDebuff, unchainedDebuff = DBM:GetSpellInfo(70126), DBM:GetSpellInfo(69762)
 	beaconDebuffFilter = function(uId)
 		return DBM:UnitDebuff(uId, beaconDebuff)
+	end
+	unchainedDebuffFilter = function(uId)
+		return DBM:UnitDebuff(uId, unchainedDebuff)
 	end
 end
 
 local function warnBeaconTargets(self)
 	if self.Options.RangeFrame then
 		if not playerBeaconed then
-			DBM.RangeCheck:Show(10, beaconDebuffFilter)
+			DBM.RangeCheck:Show(10, beaconDebuffFilter, nil, nil, nil, 9)
 		else
-			DBM.RangeCheck:Show(10)
+			DBM.RangeCheck:Show(10, nil, nil, nil, nil, 9)
 		end
 	end
 	warnFrostBeacon:Show(table.concat(beaconTargets, "<, >"))
 	table.wipe(beaconTargets)
 	playerBeaconed = false
-end
-
-local unchainedDebuffFilter
-do
-	unchainedDebuffFilter = function(uId)
-		return DBM:UnitDebuff(uId, unchainedDebuff)
-	end
 end
 
 local function warnUnchainedTargets(self)
@@ -138,8 +107,14 @@ local function warnUnchainedTargets(self)
 		timerUnchainedMagic:Start()
 	end
 	table.wipe(unchainedTargets)
-	self.vb.unchainedIcons = 7
+	self.vb.unchainedIcons = 1
 	playerUnchained = false
+end
+
+function mod:AnnounceBeaconIcons(uId, icon)
+	if self.Options.AnnounceFrostBeaconIcons and IsInGroup() and DBM:GetRaidRank() > 1 then
+		SendChatMessage(L.BeaconIconSet:format(icon, DBM:GetUnitFullName(uId)), IsInRaid() and "RAID" or "PARTY")
+	end
 end
 
 function mod:OnCombatStart(delay)
@@ -150,12 +125,10 @@ function mod:OnCombatStart(delay)
 	self.vb.warned_P2 = false
 	self.vb.warnedfailed = false
 	table.wipe(beaconTargets)
-	table.wipe(beaconIconTargets)
 	table.wipe(unchainedTargets)
-	self.vb.unchainedIcons = 7
+	self.vb.unchainedIcons = 1
 	playerUnchained = false
 	playerBeaconed = false
-	self.vb.activeBeacons = false
 end
 
 function mod:OnCombatEnd()
@@ -179,31 +152,26 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnFrostBeacon:Show()
 			specWarnFrostBeacon:Play("scatter")
 		end
-		if self.vb.phase == 1 and self.Options.SetIconOnFrostBeacon then
-			table.insert(beaconIconTargets, DBM:GetRaidUnitId(args.destName))
-			self:UnscheduleMethod("SetBeaconIcons")
-			if (self:IsDifficulty("normal25") and #beaconIconTargets >= 5) or (self:IsDifficulty("heroic25") and #beaconIconTargets >= 6) or (self:IsDifficulty("normal10", "heroic10") and #beaconIconTargets >= 2) then
-				self:SetBeaconIcons()--Sort and fire as early as possible once we have all targets.
-			else
-				if self:LatencyCheck() then--Icon sorting is still sensitive and should not be done by laggy members that don't have all targets.
-					self:ScheduleMethod(0.3, "SetBeaconIcons")
-				end
-			end
-		end
 		if self.vb.phase == 2 then--Phase 2 there is only one icon/beacon, don't use sorting method if we don't have to.
 			timerNextBeacon:Start()
 			if self.Options.SetIconOnFrostBeacon then
 				self:SetIcon(args.destName, 8)
-				if self.Options.AnnounceFrostBeaconIcons then
-					SendChatMessage(L.BeaconIconSet:format(8, args.destName), "RAID")
+				if self.Options.AnnounceFrostBeaconIcons and IsInGroup() and DBM:GetRaidRank() > 1 then
+					SendChatMessage(L.BeaconIconSet:format(8, args.destName), IsInRaid() and "RAID" or "PARTY")
 				end
 			end
-		end
-		self:Unschedule(warnBeaconTargets)
-		if self.vb.phase == 2 or (self:IsDifficulty("normal25") and #beaconTargets >= 5) or (self:IsDifficulty("heroic25") and #beaconTargets >= 6) or (self:IsDifficulty("normal10", "heroic10") and #beaconIconTargets >= 2) then
 			warnBeaconTargets(self)
-		else
-			self:Schedule(0.3, warnBeaconTargets, self)
+		else--Phase 1 air phase, multiple beacons
+			local maxBeacon = self:IsDifficulty("heroic25") and 6 or self:IsDifficulty("normal25") and 5 or 2--Heroic 10 and normal 2 are both 2
+			if self.Options.SetIconOnFrostBeacon then
+				self:SetSortedIcon("roster", 0.3, args.destName, 1, maxBeacon, false, "AnnounceBeaconIcons")
+			end
+			self:Unschedule(warnBeaconTargets)
+			if #beaconTargets >= maxBeacon then
+				warnBeaconTargets(self)
+			else
+				self:Schedule(0.3, warnBeaconTargets, self)
+			end
 		end
 	elseif args.spellId == 69762 then
 		unchainedTargets[#unchainedTargets + 1] = args.destName
@@ -215,7 +183,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.SetIconOnUnchainedMagic then
 			self:SetIcon(args.destName, self.vb.unchainedIcons)
 		end
-		self.vb.unchainedIcons = self.vb.unchainedIcons - 1
+		self.vb.unchainedIcons = self.vb.unchainedIcons + 1
 		self:Unschedule(warnUnchainedTargets)
 		if #unchainedTargets >= 6 then
 			warnUnchainedTargets(self)
@@ -283,15 +251,13 @@ end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 69762 then
-		if self.Options.SetIconOnUnchainedMagic and not self.vb.activeBeacons then
+		if self.Options.SetIconOnUnchainedMagic then
 			self:SetIcon(args.destName, 0)
 		end
 	elseif args.spellId == 70157 then
 		if self.Options.SetIconOnFrostBeacon then
 			self:SetIcon(args.destName, 0)
 		end
-	elseif args.spellId == 70126 then
-		self.vb.activeBeacons = false
 	elseif args.spellId == 70106 then	--Chilled to the bone (melee)
 		if args:IsPlayer() then
 			timerChilledtotheBone:Cancel()
@@ -327,7 +293,6 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		timerNextAirphase:Start()
 		timerNextGroundphase:Start()
 		warnGroundphaseSoon:Schedule(40)
-		self.vb.activeBeacons = true
 	elseif (msg == L.YellPhase2 or msg:find(L.YellPhase2)) or (msg == L.YellPhase2Dem or msg:find(L.YellPhase2Dem)) then
 		self:SetStage(2)
 		warnPhase2:Show()

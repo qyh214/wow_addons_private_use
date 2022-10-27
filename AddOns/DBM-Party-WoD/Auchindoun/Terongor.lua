@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision("20220220013546")
+mod:SetRevision("20220920232426")
 mod:SetCreatureID(77734)
 mod:SetEncounterID(1714)
 
@@ -31,7 +31,7 @@ local warnDoom					= mod:NewTargetNoFilterAnnounce(156965, 3, nil, "Healer")
 
 --Basic Abilities
 local specWarnDrainLife			= mod:NewSpecialWarningInterrupt(156854, "HasInterrupt", nil, nil, 1, 2)
-local specWarnCorruption		= mod:NewSpecialWarningDispel(156842, "Healer", nil, nil, 1, 2)
+local specWarnCorruption		= mod:NewSpecialWarningDispel(156842, "RemoveMagic", nil, 2, 1, 2)
 local specWarnRainOfFire		= mod:NewSpecialWarningSpell(156857, nil, nil, nil, 2, 2)--156856 fires SUCCESS but do not use, it fires for any player walking in or out of it
 local specWarnRainOfFireMove	= mod:NewSpecialWarningGTFO(156857, nil, nil, nil, 1, 8)
 --Unknown Abilities
@@ -42,7 +42,7 @@ local specWarnSeedOfMelevolence	= mod:NewSpecialWarningMoveAway(156921, nil, nil
 local specWarnExhaustion		= mod:NewSpecialWarningDispel(164841, "RemoveCurse", nil, 2, 1, 2)
 --Destruction Abilities
 local specWarnChaosBolt			= mod:NewSpecialWarningInterrupt(156975, "HasInterrupt", nil, nil, 3, 2)
-local specWarnImmolate			= mod:NewSpecialWarningDispel(156964, "Healer", nil, nil, 1, 2)
+local specWarnImmolate			= mod:NewSpecialWarningDispel(156964, "RemoveMagic", nil, 2, 1, 2)
 --Demonic Abilities
 local specWarnDemonicLeap		= mod:NewSpecialWarningYou(157039, nil, nil, nil, 1, 2)
 local yellDemonicLeap			= mod:NewYell(157039)
@@ -114,7 +114,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 156965 then
 		warnDoom:Show(args.destName)
-	elseif spellId == 156842 and self:CheckDispelFilter() then
+	elseif spellId == 156842 and self:CheckDispelFilter("magic") then
 		specWarnCorruption:Show(args.destName)
 		specWarnCorruption:Play("dispelnow")
 	elseif spellId == 156921 and args:IsDestTypePlayer() then--This debuff can be spread to the boss. bugged?
@@ -141,11 +141,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			warnFixate:Show(args.destName)
 		end
-	elseif spellId == 164841 and self:CheckDispelFilter() then
+	elseif spellId == 164841 and self:CheckDispelFilter("curse") then
 		specWarnExhaustion:Show(args.destName)
 		specWarnExhaustion:Play("dispelnow")
 		--timerExhaustionCD:Start()
-	elseif spellId == 156964 and self:CheckDispelFilter() then--Base version cast only in phase 1
+	elseif spellId == 156964 and self:CheckDispelFilter("magic") then--Base version cast only in phase 1
 		specWarnImmolate:Show(args.destName)
 		timerImmolateCD:Start()
 		specWarnImmolate:Play("dispelnow")

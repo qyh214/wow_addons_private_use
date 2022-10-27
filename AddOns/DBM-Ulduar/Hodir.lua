@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Hodir", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041927")
+mod:SetRevision("20220701215737")
 mod:SetCreatureID(32845,32926)
 mod:SetEncounterID(1135)
 mod:SetModelID(28743)
@@ -22,14 +22,19 @@ local warnStormCloud		= mod:NewTargetNoFilterAnnounce(65123)
 
 local warnFlashFreeze		= mod:NewSpecialWarningSpell(61968, nil, nil, nil, 3, 2)
 local specWarnStormCloud	= mod:NewSpecialWarningYou(65123, nil, nil, nil, 1, 2)
-local yellStormCloud		= mod:NewYell(65133)
+local yellStormCloud		= mod:NewYell(65123)
 local specWarnBitingCold	= mod:NewSpecialWarningMove(62188, nil, nil, nil, 1, 2)
 
 local enrageTimer			= mod:NewBerserkTimer(475)
 local timerFlashFreeze		= mod:NewCastTimer(9, 61968, nil, nil, nil, 2)
 local timerFrozenBlows		= mod:NewBuffActiveTimer(20, 63512, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON)
 local timerFlashFrCD		= mod:NewCDTimer(50, 61968, nil, nil, nil, 2)
-local timerAchieve			= mod:NewAchievementTimer(179, 12347)--3182
+local timerAchieve
+if WOW_PROJECT_ID == (WOW_PROJECT_MAINLINE or 1) then
+	timerAchieve = mod:NewAchievementTimer(179, 12347)
+else
+	timerAchieve = mod:NewAchievementTimer(179, 3182)
+end
 
 mod:AddSetIconOption("SetIconOnStormCloud", 65123, true, false, {8, 7})
 

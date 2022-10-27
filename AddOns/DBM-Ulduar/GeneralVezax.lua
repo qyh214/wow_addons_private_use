@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("GeneralVezax", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041927")
+mod:SetRevision("20220701215737")
 mod:SetCreatureID(33271)
 mod:SetEncounterID(1134)
 mod:SetModelID(28548)
@@ -30,7 +30,12 @@ local specWarnLifeLeechYou		= mod:NewSpecialWarningMoveAway(63276, nil, nil, nil
 local yellLifeLeech				= mod:NewYell(63276)
 local specWarnLifeLeechNear 	= mod:NewSpecialWarningClose(63276, nil, nil, 2, 1, 2)
 local specWarnSearingFlames		= mod:NewSpecialWarningInterruptCount(62661, "HasInterrupt", nil, nil, 1, 2)
-local specWarnAnimus			= mod:NewSpecialWarningSwitch("ej17651", nil, nil, nil, 1, 2)
+local specWarnAnimus
+if WOW_PROJECT_ID == (WOW_PROJECT_MAINLINE or 1) then
+	specWarnAnimus			= mod:NewSpecialWarningSwitch("ej17651", nil, nil, nil, 1, 2)
+else
+	specWarnAnimus			= mod:NewSpecialWarning("specWarnAnimus", nil, nil, nil, 1, 2)
+end
 
 local timerEnrage				= mod:NewBerserkTimer(600)
 local timerSurgeofDarkness		= mod:NewBuffActiveTimer(10, 62662, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)

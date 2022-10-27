@@ -3,9 +3,9 @@ WeakAurasTreeGroup Container
 Container that uses a tree control to switch between groups.
 This file was forked from AceGUIContainer-TreeGroup.lua version 41
 -------------------------------------------------------------------------------]]
-if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
+if not WeakAuras.IsLibsOK() then return end
 
-local Type, Version = "WeakAurasTreeGroup", 2
+local Type, Version = "WeakAurasTreeGroup", 3
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
 
@@ -574,7 +574,7 @@ local methods = {
 		if maxtreewidth > 100 and status.treewidth > maxtreewidth then
 			self:SetTreeWidth(maxtreewidth, status.treesizable)
 		end
-		treeframe:SetMaxResize(maxtreewidth, 1600)
+		-- treeframe:SetMaxResize(maxtreewidth, 1600)
 	end,
 
 	["OnHeightSet"] = function(self, height)
@@ -651,8 +651,12 @@ local function Constructor()
 	treeframe:EnableMouseWheel(true)
 
 	treeframe:SetResizable(true)
-	treeframe:SetMinResize(100, 1)
-	treeframe:SetMaxResize(400, 1600)
+	if treeframe.SetResizeBounds then
+		treeframe:SetResizeBounds(100, 1, 400, 1600)
+	else
+		treeframe:SetMinResize(100, 1)
+		treeframe:SetMaxResize(400, 1600)
+	end
 	treeframe:SetScript("OnUpdate", FirstFrameUpdate)
 	treeframe:SetScript("OnSizeChanged", Tree_OnSizeChanged)
 	treeframe:SetScript("OnMouseWheel", Tree_OnMouseWheel)

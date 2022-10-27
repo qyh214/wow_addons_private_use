@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2484, "DBM-Party-Dragonflight", 2, 1197)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220803233609")
+mod:SetRevision("20220820005632")
 mod:SetCreatureID(184124)
 mod:SetEncounterID(2557)
 mod:SetUsedIcons(1, 2, 3)
@@ -62,14 +62,14 @@ function mod:OnCombatStart(delay)
 	timerCrushingStompCD:Start(8.1-delay)
 end
 
-function mod:OnCombatEnd()
+--function mod:OnCombatEnd()
 --	if self.Options.RangeFrame then
 --		DBM.RangeCheck:Hide()
 --	end
 --	if self.Options.InfoFrame then
 --		DBM.InfoFrame:Hide()
 --	end
-end
+--end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId

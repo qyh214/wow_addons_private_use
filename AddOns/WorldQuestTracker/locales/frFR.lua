@@ -168,4 +168,3 @@ L["S_WORLDMAP_QUESTLOCATIONS"] = "Affiche les emplacements de Quêtes"
 L["S_WORLDMAP_QUESTSUMMARY"] = "Affiche les Résumés de Quêtes "
 L["S_WORLDMAP_TOOLTIP_TRACKALL"] = "Suivre toutes les quêtes de cette liste"
 L["S_WORLDQUESTS"] = "Expéditions"
-

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Noth", "DBM-Naxx", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041927")
+mod:SetRevision("20221024011807")
 mod:SetCreatureID(15954)
 mod:SetEncounterID(1117)
 mod:SetModelID(16590)
@@ -9,10 +9,10 @@ mod:RegisterCombat("combat_yell", L.Pull)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 29213 54835 29212 29208",
-	"CHAT_MSG_RAID_BOSS_EMOTE",
-	"UNIT_SPELLCAST_SUCCEEDED boss1"
+	"CHAT_MSG_RAID_BOSS_EMOTE"
 )
 
+--TODO, if boss unit Ids are missing from wrath (at this point I wouldn't put it past blizzard since it was a 3.3 feature not 3.0), port the classic vanilla mod
 local warnTeleportNow	= mod:NewAnnounce("WarningTeleportNow", 3, "135736")
 local warnTeleportSoon	= mod:NewAnnounce("WarningTeleportSoon", 1, "135736")
 local warnCurse			= mod:NewSpellAnnounce(29213, 2)
@@ -48,9 +48,39 @@ function mod:Balcony()
 		timer = 55
 	end
 	timerTeleportBack:Start(timer)
-	warnTeleportSoon:Schedule(timer - 20)
+	warnTeleportSoon:Schedule(timer - 10)
 	warnTeleportNow:Show()
---	self:ScheduleMethod(timer, "BackInRoom")
+	if self:IsClassic() then
+		self:ScheduleMethod(timer, "BackInRoom")
+	end
+end
+
+--Wrath classic has to use shitter code because blizz decided not to support boss unitIds
+function mod:BackInRoom()
+	self.vb.addsCount = 0
+	self.vb.curseCount = 0
+	timerAddsCD:Stop()
+	local timer
+	if self.vb.teleCount == 1 then
+		timer = 109
+		timerAddsCD:Start(10)
+	elseif self.vb.teleCount == 2 then
+		timer = 173
+		timerAddsCD:Start(17)
+	elseif self.vb.teleCount == 3 then
+		timer = 93
+	else
+		timer = 35
+	end
+	timerTeleport:Start(timer)
+	warnTeleportSoon:Schedule(timer - 10)
+	warnTeleportNow:Show()
+	if self.vb.teleCount == 4 then--11-12 except after 4th return it's 17
+		timerCurseCD:Start(17)--verify consistency though
+	else
+		timerCurseCD:Start(11)
+	end
+	self:ScheduleMethod(timer, "Balcony")
 end
 
 function mod:OnCombatStart(delay)
@@ -60,8 +90,17 @@ function mod:OnCombatStart(delay)
 	timerAddsCD:Start(7-delay)
 	timerCurseCD:Start(9.5-delay)
 	timerTeleport:Start(90.8-delay)
-	warnTeleportSoon:Schedule(70.8-delay)
+	warnTeleportSoon:Schedule(80.8-delay)
 	self:ScheduleMethod(90.8-delay, "Balcony")
+	if not self:IsClassic() then--Use better more accurate method on retail where boss UnitIds are available
+		self:RegisterShortTermEvents(
+			"UNIT_SPELLCAST_SUCCEEDED boss1"
+		)
+	end
+end
+
+function mod:OnCombatEnd()
+	self:UnregisterShortTermEvents()
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
@@ -106,7 +145,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 			timer = 35
 		end
 		timerTeleport:Start(timer)
-		warnTeleportSoon:Schedule(timer - 20)
+		warnTeleportSoon:Schedule(timer - 10)
 		warnTeleportNow:Show()
 		if self.vb.teleCount == 4 then--11-12 except after 4th return it's 17
 			timerCurseCD:Start(17)--verify consistency though

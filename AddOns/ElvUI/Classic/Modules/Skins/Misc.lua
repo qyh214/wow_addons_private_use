@@ -2,8 +2,10 @@ local E, L, V, P, G = unpack(ElvUI)
 local S = E:GetModule('Skins')
 
 local _G = _G
-local pairs, unpack = pairs, unpack
+local pairs, ipairs, unpack = pairs, ipairs, unpack
+
 local hooksecurefunc = hooksecurefunc
+local UnitIsUnit = UnitIsUnit
 local CreateFrame = CreateFrame
 
 local function SkinNavBarButtons(self)
@@ -43,6 +45,29 @@ function S:BlizzardMiscFrames()
 		_G[skins[i]]:StripTextures()
 		_G[skins[i]]:SetTemplate('Transparent')
 	end
+
+	-- here we reskin all 'normal' buttons
+	S:HandleButton(_G.ReadyCheckFrameYesButton)
+	S:HandleButton(_G.ReadyCheckFrameNoButton)
+
+	local ReadyCheckFrame = _G.ReadyCheckFrame
+	_G.ReadyCheckFrameYesButton:SetParent(ReadyCheckFrame)
+	_G.ReadyCheckFrameNoButton:SetParent(ReadyCheckFrame)
+	_G.ReadyCheckFrameYesButton:ClearAllPoints()
+	_G.ReadyCheckFrameNoButton:ClearAllPoints()
+	_G.ReadyCheckFrameYesButton:Point('TOPRIGHT', ReadyCheckFrame, 'CENTER', -3, -5)
+	_G.ReadyCheckFrameNoButton:Point('TOPLEFT', ReadyCheckFrame, 'CENTER', 3, -5)
+	_G.ReadyCheckFrameText:SetParent(ReadyCheckFrame)
+	_G.ReadyCheckFrameText:ClearAllPoints()
+	_G.ReadyCheckFrameText:Point('TOP', 0, -15)
+
+	_G.ReadyCheckListenerFrame:SetAlpha(0)
+	ReadyCheckFrame:HookScript('OnShow', function(self)
+		-- bug fix, don't show it if player is initiator
+		if self.initiator and UnitIsUnit('player', self.initiator) then
+			self:Hide()
+		end
+	end)
 
 	S:HandleButton(_G.StaticPopup1ExtraButton)
 
@@ -96,20 +121,19 @@ function S:BlizzardMiscFrames()
 	end)
 
 	local ChatMenus = {
-		'ChatMenu',
-		'EmoteMenu',
-		'LanguageMenu',
-		'VoiceMacroMenu',
+		_G.ChatMenu,
+		_G.EmoteMenu,
+		_G.LanguageMenu,
+		_G.VoiceMacroMenu,
 	}
 
-	for i = 1, #ChatMenus do
-		if _G[ChatMenus[i]] == _G.ChatMenu then
-			_G[ChatMenus[i]]:HookScript('OnShow', function(menu) menu:SetTemplate('Transparent', true) menu:SetBackdropColor(unpack(E.media.backdropfadecolor)) menu:ClearAllPoints() menu:Point('BOTTOMLEFT', _G.ChatFrame1, 'TOPLEFT', 0, 30) end)
+	for _, frame in ipairs(ChatMenus) do
+		if frame == _G.ChatMenu then
+			frame:HookScript('OnShow', function(menu) menu:SetTemplate('Transparent', true) menu:SetBackdropColor(unpack(E.media.backdropfadecolor)) menu:ClearAllPoints() menu:Point('BOTTOMLEFT', _G.ChatFrame1, 'TOPLEFT', 0, 30) end)
 		else
-			_G[ChatMenus[i]]:HookScript('OnShow', function(menu) menu:SetTemplate('Transparent', true) menu:SetBackdropColor(unpack(E.media.backdropfadecolor)) end)
+			frame:HookScript('OnShow', function(menu) menu:SetTemplate('Transparent', true) menu:SetBackdropColor(unpack(E.media.backdropfadecolor)) end)
 		end
 	end
-
 
 	-- reskin popup buttons
 	for i = 1, 4 do

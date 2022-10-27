@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2474, "DBM-Party-Dragonflight", 1, 1196)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220803233609")
+mod:SetRevision("20220904205606")
 mod:SetCreatureID(186121)
 mod:SetEncounterID(2569)
 mod:SetUsedIcons(8)
@@ -71,6 +71,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:OnCombatEnd()
+	table.wipe(WitheringRotStacks)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end

@@ -1,0 +1,171 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="DFTalents.lua"/>
+
+	<Frame name="BtWLoadoutsTalentSelectionChoiceFrameTemplate" mixin="BtWLoadoutsDFTalentSelectionChoiceFrameMixin" inherits="ResizeLayoutFrame" virtual="true">
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnShow method="OnShow"/>
+			<OnHide method="OnHide"/>
+			<OnEvent method="OnEvent"/>
+		</Scripts>
+	</Frame>
+
+	<Frame name="BtWLoadoutsTalentFrameGateTemplate" mixin="TalentFrameGateMixin" clipChildren="true" virtual="true">
+		<Size x="50" y="30"/>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString parentKey="GateText" inherits="GameFontHighlightHuge2" hidden="true" justifyV="RIGHT">
+					<Size x="30" y="30"/>
+					<KeyValues>
+						<KeyValue key="ignoreInLayout" value="true" type="boolean"/>
+					</KeyValues>
+					<Anchors>
+						<Anchor point="LEFT" x="0" y="1"/>
+					</Anchors>
+					<Color r="1" g="0.64" b="0.56"/>
+				</FontString>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture parentKey="LockIcon" atlas="talents-gate" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.GateText" relativePoint="RIGHT" x="10" y="1"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				self.GateText:SetTextScale(0.8);
+			</OnLoad>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+		</Scripts>
+	</Frame>
+
+    <Frame name="$parentDFTalents" parentKey="DFTalents" mixin="BtWLoadoutsDFTalentsMixin" inherits="BtWLoadoutsTabFrameTemplate">
+        <KeyValues>
+            <KeyValue key="segment" value="dftalents" type="string"/>
+            <KeyValue key="name" value="BTWLOADOUTS_TALENTS" type="global"/>
+			<KeyValue key="getTemplateType" value="TalentButtonUtil.GetTemplateForTalentType" type="global"/>
+			<KeyValue key="getEdgeTemplateType" value="TalentButtonUtil.GetTemplateForEdgeVisualStyle" type="global"/>
+			<KeyValue key="buttonSize" value="40" type="number"/>
+			<KeyValue key="topPadding" value="0" type="number"/>
+			<KeyValue key="leftPadding" value="0" type="number"/>
+			<KeyValue key="bottomPadding" value="0" type="number"/>
+			<KeyValue key="rightPadding" value="0" type="number"/>
+			<KeyValue key="basePanOffsetX" value="0" type="number"/>
+			<KeyValue key="basePanOffsetY" value="0" type="number"/>
+			<KeyValue key="enableCommitCastBar" value="false" type="boolean"/>
+			<KeyValue key="enableCommitEndFlash" value="false" type="boolean"/>
+        </KeyValues>
+        <Frames>
+            <Frame parentKey="Inset" useParentLevel="true" inherits="InsetFrameTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="-4" y="-31" />
+                    <Anchor point="BOTTOMRIGHT" x="4" y="-2" />
+                </Anchors>
+            </Frame>
+            <Frame name="$parentSpecDropDown" parentKey="SpecDropDown" inherits="BtWLoadoutsSpecDropDownTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="0" y="0"/>
+                </Anchors>
+            </Frame>
+            <EditBox name="$parentName" letters="50" parentKey="Name" autoFocus="false" inherits="InputBoxTemplate">
+                <Size x="0" y="22"/>
+                <Anchors>
+                    <Anchor point="LEFT" relativeKey="$parent.SpecDropDown" relativePoint="RIGHT" x="10" y="2"/>
+					<Anchor point="RIGHT" x="-30" y="0"/>
+                </Anchors>
+                <Scripts>
+                    <OnTextChanged>
+                        self:GetParent():UpdateSetName(self:GetText())
+                    </OnTextChanged>
+                    <OnEnterPressed function="EditBox_ClearFocus"/>
+                </Scripts>
+            </EditBox>
+			<Frame parentKey="RestrictionsDropDown" inherits="BtWLoadoutsRestrictionsDropDownTemplate"/>
+			<DropDownToggleButton parentKey="RestrictionsButton">
+				<Size x="22" y="22"/>
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.Name" relativePoint="RIGHT" x="4" y="0"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture file="Interface\WorldMap\GEAR_64GREY" alpha="0.5" parentKey="texture"/>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						self.texture:SetAlpha(1.0);
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText(BTWLOADOUTS_RESTRICTIONS);
+					</OnEnter>
+					<OnLeave>
+						self.texture:SetAlpha(0.5);
+						GameTooltip_Hide();
+					</OnLeave>
+					<OnMouseDown>
+						ToggleDropDownMenu(1, nil, self:GetParent().RestrictionsDropDown, self, 0, 0);
+					</OnMouseDown>
+					<OnMouseUp>
+						self.texture:SetPoint("TOPLEFT", 0, 0);
+					</OnMouseUp>
+				</Scripts>
+			</DropDownToggleButton>
+			<Frame parentKey="SelectionChoiceFrame" inherits="BtWLoadoutsTalentSelectionChoiceFrameTemplate" enableMouse="true" frameLevel="2000"/>
+			<ScrollFrame parentKey="Scroll" clipChildren="true" inherits="UIPanelScrollFrameCodeTemplate">
+				<Anchors>
+                    <Anchor point="TOPLEFT" x="0" y="-34" />
+                    <Anchor point="BOTTOMRIGHT" x="0" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="scrollBarHideable" value="true" type="boolean"/>
+				</KeyValues>
+				<Frames>
+					<Slider name="$parentScrollBar" inherits="UIPanelScrollBarTemplate" parentKey="ScrollBar">
+						<Anchors>
+							<Anchor point="TOPRIGHT" x="1.5" y="-16"/>
+							<Anchor point="BOTTOMRIGHT" x="1.5" y="15"/>
+						</Anchors>
+					</Slider>
+				</Frames>
+				<ScrollChild>
+					<Frame mixin="BtWLoadoutsDFTalentFrameBaseButtonsParentMixin">
+						<Size x="1209" y="580.5"/>
+						<Anchors>
+							<Anchor point="TOPLEFT" x="0" y="0"/>
+						</Anchors>
+						<Frames>
+							<Frame>
+								<Size x="1" y="1"/>
+								<Anchors>
+									<Anchor point="TOPLEFT" x="0" y="0"/>
+								</Anchors>
+							</Frame>
+						</Frames>
+					</Frame>
+				</ScrollChild>
+				<Scripts>
+					<OnDragStart>
+						self:GetParent():BeginScrollDrag();
+					</OnDragStart>
+					<OnDragStop>
+						self:GetParent():EndScrollDrag();
+					</OnDragStop>
+				</Scripts>
+			</ScrollFrame>
+			<Frame parentKey="DragHandler" hidden="true">
+				<Scripts>
+					<OnUpdate>
+						self:GetParent():OnDrag();
+					</OnUpdate>
+				</Scripts>
+			</Frame>
+        </Frames>
+        <Scripts>
+            <OnLoad inherit="prepend" method="OnLoad"/>
+            <OnShow inherit="prepend" method="OnShow"/>
+        </Scripts>
+    </Frame>
+</Ui>

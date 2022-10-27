@@ -48,8 +48,8 @@ local OverlayFrameUpdate, OverlayFrameHide, GetModulesOptionsTable, MoveModule, 
 local defaults = {
 	profile = {
 		anchorPoint = "TOPRIGHT",
-		xOffset = -85,
-		yOffset = -200,
+		xOffset = -115,
+		yOffset = -280,
 		maxHeight = 400,
 		frameScrollbar = true,
 		frameStrata = "LOW",
@@ -188,6 +188,30 @@ local options = {
 							end,
 							order = 0.4,
 						},
+						supportersSpacer = {
+							name = " ",
+							type = "description",
+							width = "normal",
+							order = 0.51,
+						},
+						supportersLabel = {
+							name = "                |cff00ff00Become a Patron",
+							type = "description",
+							width = "normal",
+							fontSize = "medium",
+							order = 0.52,
+						},
+						supporters = {
+							name = "Supporters",
+							type = "execute",
+							disabled = function()
+								return not KT.Help:IsEnabled()
+							end,
+							func = function()
+								KT.Help:ShowSupporters()
+							end,
+							order = 0.53,
+						},
 					},
 				},
 				sec1 = {
@@ -271,7 +295,8 @@ local options = {
 								overlayShown = not overlayShown
 								if overlayShown and not overlay then
 									overlay = CreateFrame("Frame", KTF:GetName().."Overlay", KTF)
-									overlay:SetFrameLevel(KTF:GetFrameLevel() + 11)
+									overlay:SetFrameLevel(KTF:GetFrameLevel() + 12)
+									overlay:EnableMouse(true)
 									overlay.texture = overlay:CreateTexture(nil, "BACKGROUND")
 									overlay.texture:SetAllPoints()
 									overlay.texture:SetColorTexture(0, 1, 0, 0.3)
@@ -963,6 +988,7 @@ local options = {
 								return not db.qiActiveButton
 							end,
 							func = function()
+								HideUIPanel(SettingsPanel)
 								KTF.ActiveFrame.overlay:Show()
 								StaticPopup_Show(addonName.."_LockUI", nil, "Addon UI elements unlocked.\nMove them and click Lock when you are done.\n\n"..cBold.."Right Click|r on mover restore the default position.")
 							end,
@@ -1432,9 +1458,7 @@ function KT:CheckAddOn(addon, version, isUI)
 end
 
 function KT:OpenOptions()
-	InterfaceOptionsFrame_OpenToCategory(self.optionsFrame.profiles)
-	InterfaceOptionsFrame_OpenToCategory(self.optionsFrame.profiles)
-	InterfaceOptionsFrame_OpenToCategory(self.optionsFrame.general)
+	Settings.OpenToCategory(self.optionsFrame.general.name, true)
 end
 
 function KT:InitProfile(event, database, profile)
@@ -1517,21 +1541,7 @@ function KT:SetupOptions()
 	end
 end
 
-KT.settings = {}
-InterfaceOptionsFrame:HookScript("OnHide", function(self)
-	for k, v in pairs(KT.settings) do
-		if strfind(k, "Save") then
-			KT.settings[k] = false
-		else
-			db[k] = v
-		end
-	end
-	ACR:NotifyChange(addonName)
-
-	OverlayFrameHide()
-end)
-
-hooksecurefunc("OptionsList_SelectButton", function(listFrame, button)
+SettingsPanel:HookScript("OnHide", function(self)
 	OverlayFrameHide()
 end)
 

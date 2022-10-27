@@ -6,6 +6,7 @@ local next = next
 local unpack = unpack
 
 local CreateFrame = CreateFrame
+local UnitIsUnit = UnitIsUnit
 local hooksecurefunc = hooksecurefunc
 
 local NavBarCheck = {
@@ -51,6 +52,29 @@ function S:BlizzardMiscFrames()
 		frame:SetTemplate('Transparent')
 	end
 
+	-- ReadyCheck thing
+	S:HandleButton(_G.ReadyCheckFrameYesButton)
+	S:HandleButton(_G.ReadyCheckFrameNoButton)
+
+	local ReadyCheckFrame = _G.ReadyCheckFrame
+	S:HandleFrame(_G.ReadyCheckListenerFrame)
+	_G.ReadyCheckPortrait:Kill()
+	_G.ReadyCheckFrameYesButton:SetParent(ReadyCheckFrame)
+	_G.ReadyCheckFrameNoButton:SetParent(ReadyCheckFrame)
+	_G.ReadyCheckFrameYesButton:ClearAllPoints()
+	_G.ReadyCheckFrameNoButton:ClearAllPoints()
+	_G.ReadyCheckFrameYesButton:Point('TOPRIGHT', ReadyCheckFrame, 'CENTER', -3, -5)
+	_G.ReadyCheckFrameNoButton:Point('TOPLEFT', ReadyCheckFrame, 'CENTER', 3, -5)
+	_G.ReadyCheckFrameText:ClearAllPoints()
+	_G.ReadyCheckFrameText:Point('TOP', 0, -15)
+
+	-- Bug fix, don't show it if player is initiator
+	ReadyCheckFrame:HookScript('OnShow', function(self)
+		if self.initiator and UnitIsUnit('player', self.initiator) then
+			self:Hide()
+		end
+	end)
+
 	S:HandleButton(_G.StaticPopup1ExtraButton)
 
 	hooksecurefunc('QueueStatusEntry_SetFullDisplay', function(entry, _, _, _, isTank, isHealer, isDPS)
@@ -81,7 +105,7 @@ function S:BlizzardMiscFrames()
 		end
 	end)
 
-	hooksecurefunc('QueueStatusFrame_Update', function()
+	--[[hooksecurefunc('QueueStatusFrame_Update', function()
 		for frame in _G.QueueStatusFrame.statusEntriesPool:EnumerateActive() do
 			frame.HealersFound.Texture:SetTexture(E.Media.Textures.RolesHQ)
 			frame.TanksFound.Texture:SetTexture(E.Media.Textures.RolesHQ)
@@ -90,7 +114,7 @@ function S:BlizzardMiscFrames()
 			frame.TanksFound.Texture:SetTexCoord(_G.LFDQueueFrameRoleButtonTank.background:GetTexCoord())
 			frame.DamagersFound.Texture:SetTexCoord(_G.LFDQueueFrameRoleButtonDPS.background:GetTexCoord())
 		end
-	end)
+	end)]] -- WoW10
 
 	-- reskin all esc/menu buttons
 	if not E:IsAddOnEnabled('ConsolePortUI_Menu') then
@@ -175,12 +199,9 @@ function S:BlizzardMiscFrames()
 		roleButton:DisableDrawLayer('OVERLAY')
 
 		--[=[ these use the ready check icons, which are more square
-		for i=1, roleButton:GetNumRegions() do
-			local region = select(i, roleButton:GetRegions())
-			if region and region:IsObjectType('Texture') then
-				if region:GetTexture() == [[Interface\LFGFrame\UI-LFG-ICON-ROLES]] then
-					region:SetTexture(E.Media.Textures.RoleIcons)
-				end
+		for _, region in next, { roleButton:GetRegions() } do
+			if region:IsObjectType('Texture') and region:GetTexture() == [[Interface\LFGFrame\UI-LFG-ICON-ROLES]] then
+				region:SetTexture(E.Media.Textures.RoleIcons)
 			end
 		end
 		]=]

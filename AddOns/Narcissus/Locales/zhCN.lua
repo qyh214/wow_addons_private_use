@@ -22,32 +22,32 @@ L["Movement Speed"] = STAT_MOVEMENT_SPEED;
 L["Damage Reduction Percentage"] = COMBAT_TEXT_SHOW_RESISTANCES_TEXT;
 
 L["Advanced Info"] = "点击以显示更详细的装备、属性信息";
-
+L["Restore On Exit"] = "你先前的设置会在退出后自动恢复。"
 L["Photo Mode"] = "照片模式";
 L["Photo Mode Tooltip Open"] = "点击以打开截图工具箱";
 L["Photo Mode Tooltip Close"] = "点击以关闭截图工具箱";
 L["Photo Mode Tooltip Special"] = "此控件不会出现在你(魔兽安装目录Screenshots文件夹内)的游戏截图里";
 
-L["Xmog Button"] = "分享幻化";
-L["Xmog Button Tooltip Open"] = "点击以显示幻化的名称及来源，而非装备栏内的实际物品";
-L["Xmog Button Tooltip Close"] = "点击以显示装备栏内的实际物品";
-L["Xmog Button Tooltip Special"] = "您可以尝试不同的布局，或是为当前的外观起一个名字";
+L["Toolbar Mog Button"] = "照相模式";
+L["Toolbar Mog Button Tooltip"] = "展示的你幻化。或创建一个场景并添加其他玩家或NPC的模型。";
 
-L["Xmog Button Layout"] = "布局";
-L["Xmog Button Copy Texts"] = "导出文本";
-
-L["Emote Button"] = "快捷表情";
-L["Emote Button Tooltip Open"] = "播放具有独特动画效果的表情";
+L["Toolbar Emote Button"] = "快捷表情";
+L["Toolbar Emote Button Tooltip"] = "播放具有独特动画效果的表情。";
 L["Auto Capture"] = "自动截图";
 
-L["HideTexts Button"] = "隐藏文本";
-L["HideTexts Button Tooltip Open"] = "隐藏所有姓名、聊天气泡和战斗文字";
-L["HideTexts Button Tooltip Close"] = "恢复姓名、聊天气泡和战斗文字的设置";
-L["HideTexts Button Tooltip Special"] = "您先前的设置将会在你退出照片模式后自动恢复";
+L["Toolbar HideTexts Button"] = "隐藏文本";
+L["Toolbar HideTexts Button Tooltip"] = "隐藏所有姓名、聊天气泡和战斗文字。" ..L["Restore On Exit"];
 
-L["TopQuality Button"] = "最佳画质";
-L["TopQuality Button Tooltip Open"] = "将画面设置中的所有选项都调至极佳";
-L["TopQuality Button Tooltip Close"] = "点击以恢复先前的画质设置";
+L["Toolbar TopQuality Button"] = "最佳画质";
+L["Toolbar TopQuality Button Tooltip"] = "将画面设置中的所有选项都调至极佳" ..L["Restore On Exit"];
+
+L["Toolbar Location Button"] = "位置信息";
+L["Toolbar Location Button Tooltip"] = "显示当前区域名称和你的坐标。"
+
+L["Toolbar Camera Button"] = "相机";
+L["Toolbar Camera Button Tooltip"] = "暂时修改相机参数。"
+
+L["Toolbar Preferences Button Tooltip"] = "打开偏好设定。";
 
 L["Heritage Armor"] = "传承护甲";
 L["Secret Finding"] = "解密活动";
@@ -395,7 +395,9 @@ L["No Available Slot"] = "保存栏位已满";
 L["Look Saved"] = "已保存";
 L["Cannot Save Forms"] = "不支持形态";
 L["Profiles"] = "存档管理";
+L["Share"] = "分享";
 L["Save Notify"] = "提示你保存新外观";
+L["Save Notify Tooltip"] = "在你应用一个套新外观后提示你是否保存。";
 L["Show Randomize Button"] = "显示随机外观按钮";
 L["Coins Spent"] = "支出";
 L["Locations"] = "地点";
@@ -404,6 +406,22 @@ L["Visits"] = "访问次数";
 L["Duration"] = "时长";
 L["Edit Name"] = "修改名称";
 L["Delete Look"] = "长按删除";
+L["Export"] = "导出";
+L["Import"] = "导入";
+L["Paste Here"] = "此处粘贴";
+L["Press To Copy"] = "按 |cffcccccc".. NARCI_SHORTCUTS_COPY.."|r 复制";
+L["String Copied"] = NARCI_COLOR_GREEN_MILD.. "已复制".."|r";
+L["Failure Reason Unknown"] = "未知错误";
+L["Failure Reason Decode"] = "解码失败";
+L["Failure Reason Wrong Character"] = "当前种族，性别或形态与导入的档案不符。";
+L["Failure Reason Dragonriding"] = "这是订制巨龙的档案。";
+L["Wrong Character Format"] = "需要 %s %s."; --e.g. Rquires Male Human
+L["Import Lack Option"] = "有%d|4个类别:个类别;没有找到";
+L["Import Lack Choice"] = "有%d|4个选项:个选项;没有找到";
+L["Decode Good"] = "解码成功";
+L["Barbershop Export Tooltip"] = "用当前外观生成一串可在网上分享的字符串。\n你可以修改冒号前的文字。";
+L["Settings And Share"] = "设置与分享";
+L["Loading Portraits"] = "生成头像";
 
 --Tutorial--
 L["Alert"] = "警告";
@@ -446,7 +464,7 @@ L["Splash Content7 Description"] = "-六边形装备边框有了新的外观。�
 
 --Project Details--
 NARCI_ALL_PROJECTS = "全部项目";
-NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2022.6.26|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
+NARCI_PROJECT_DETAILS = "|cFFFFD100插件作者: Peterodox\n更新日期: 2022.8.18|r\n\n感谢你使用此插件！如果你遇到任何问题，或者有任何想法或建议，请在CurseForge项目主页上留言，或者在以下网站上联系我。";
 NARCI_PROJECT_AAA_SUMMARY = "探索艾泽拉斯上的不同景点，并收集各种故事和照片。";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "沉浸式角色面板；你最好的截图助手。"
 

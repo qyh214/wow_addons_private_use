@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Thorim", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041927")
+mod:SetRevision("20220701215737")
 mod:SetCreatureID(32865)
 mod:SetEncounterID(1141)
 mod:SetModelID(28977)
@@ -18,9 +18,9 @@ mod:RegisterEventsInCombat(
 )
 
 local warnPhase2					= mod:NewPhaseAnnounce(2, 1)
-local warnStormhammer				= mod:NewTargetAnnounce(62470, 2)
+local warnStormhammer				= mod:NewTargetNoFilterAnnounce(62470, 2)
 local warnLightningCharge			= mod:NewSpellAnnounce(62466, 2)
-local warningBomb					= mod:NewTargetAnnounce(62526, 4)
+local warningBomb					= mod:NewTargetNoFilterAnnounce(62526, 4)
 
 local yellBomb						= mod:NewYell(62526)
 local specWarnBomb					= mod:NewSpecialWarningClose(62526, nil, nil, nil, 1, 2)
@@ -28,7 +28,7 @@ local specWarnLightningShock		= mod:NewSpecialWarningMove(62017, nil, nil, nil, 
 local specWarnUnbalancingStrikeSelf	= mod:NewSpecialWarningDefensive(62130, nil, nil, nil, 1, 2)
 local specWarnUnbalancingStrike		= mod:NewSpecialWarningTaunt(62130, nil, nil, nil, 1, 2)
 
-mod:AddBoolOption("AnnounceFails", false, "announce")
+mod:AddBoolOption("AnnounceFails", false, "announce", nil, nil, nil, 62017)
 
 local enrageTimer					= mod:NewBerserkTimer(369)
 local timerStormhammer				= mod:NewBuffActiveTimer(16, 62042, nil, nil, nil, 3)--Cast timer? Review if i ever do this boss again.
@@ -37,7 +37,7 @@ local timerUnbalancingStrike		= mod:NewCDTimer(25.6, 62130, nil, "Tank", nil, 5,
 local timerHardmode					= mod:NewTimer(175, "TimerHardmode", 62042)
 
 mod:AddRangeFrameOption("10")
-mod:AddSetIconOption("SetIconOnRunic", 62527, false, false, {7})
+mod:AddSetIconOption("SetIconOnBomb", 62526, false, false, {7})
 
 local lastcharge = {}
 
@@ -75,9 +75,9 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 62042 then 					-- Storm Hammer
+	if args.spellId == 62042 and self:CheckBossDistance(args.sourceGUID, true, 34471) then--Within range of Vial of the Sunwell (43)
 		warnStormhammer:Show(args.destName)
-	elseif args.spellId == 62130 then				-- Unbalancing Strike
+	elseif args.spellId == 62130 then
 		if args:IsPlayer() then
 			specWarnUnbalancingStrikeSelf:Show()
 			specWarnUnbalancingStrikeSelf:Play("defensive")
@@ -85,28 +85,28 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnUnbalancingStrike:Show(args.destName)
 			specWarnUnbalancingStrike:Play("tauntboss")
 		end
-	elseif args:IsSpellID(62526, 62527) then	-- Runic Detonation
+	elseif args:IsSpellID(62526, 62527) then
 		if args:IsPlayer() then
 			yellBomb:Yell()
 		elseif self:CheckNearby(10, args.destName) then
 			specWarnBomb:Show(args.destName)
 			specWarnBomb:Play("runaway")
-		else
+		elseif self:CheckBossDistance(args.sourceGUID, true, 1180) then--Within Scroll of Stamina range (33)
 			warningBomb:Show(args.destName)
 		end
-		if self.Options.SetIconOnRunic then
+		if self.Options.SetIconOnBomb then
 			self:SetIcon(args.destName, 7, 5)
 		end
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 62042 then 		-- Storm Hammer
+	if args.spellId == 62042 then
 		timerStormhammer:Schedule(2)
-	elseif args.spellId == 62466 then   	-- Lightning Charge
+	elseif args.spellId == 62466 then
 		warnLightningCharge:Show()
 		timerLightningCharge:Start()
-	elseif args.spellId == 62130 then	-- Unbalancing Strike
+	elseif args.spellId == 62130 then
 		timerUnbalancingStrike:Start()
 	end
 end

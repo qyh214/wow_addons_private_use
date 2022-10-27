@@ -31,6 +31,11 @@ local DIFFICULTY_TEXT = {
     [C.ARENA3V3] = C_LFGList.GetActivityInfoTable(7).shortName, -- Arena 3v3
 }
 
+-- Calling Minimize or Maximize (regardless of param isAutomaticAction) will always trigger the callback
+-- causing yet another Minimize or Maximize call. To break the infinite loop, we simply remember in this var
+-- when we do not wish to run the callback code.
+PGF.ignoreNextMaximizeMinimizeCallback = false
+
 function PGF.Dialog_LoadMinMaxFromModel(dialog, model, key)
     dialog[key].Act:SetChecked(model[key:lower()].act)
     dialog[key].Min:SetText(model[key:lower()].min)
@@ -41,13 +46,13 @@ function PGF.Dialog_LoadFromModel(dialog)
     local model = PGF.GetModel()
     PGF.UsePFGButton:SetChecked(model.enabled)
     PGF.previousSearchExpression = model.expression
-    PGF.Dialog_LoadMinMaxFromModel(dialog, model, "Ilvl")
+    PGF.Dialog_LoadMinMaxFromModel(dialog, model, "MPRating")
+    PGF.Dialog_LoadMinMaxFromModel(dialog, model, "PVPRating")
     PGF.Dialog_LoadMinMaxFromModel(dialog, model, "Defeated")
     PGF.Dialog_LoadMinMaxFromModel(dialog, model, "Members")
     PGF.Dialog_LoadMinMaxFromModel(dialog, model, "Tanks")
     PGF.Dialog_LoadMinMaxFromModel(dialog, model, "Heals")
     PGF.Dialog_LoadMinMaxFromModel(dialog, model, "Dps")
-    dialog.Noilvl.Act:SetChecked(model.noilvl.act)
     dialog.Expression.EditBox:SetText(model.expression)
     dialog.Sorting.SortingExpression:SetText(model.sorting)
     dialog.Difficulty.Act:SetChecked(model.difficulty.act)
@@ -58,29 +63,34 @@ function PGF.Dialog_OnShow(dialog)
     RequestRaidInfo() -- need the dungeon/raid lockout information later for filtering
     PGF.Dialog_LoadFromModel(dialog)
     PGF.Dialog_AdjustToMode()
-    PremadeGroupsFilterDialog.MoveableToggle:SetChecked(PremadeGroupsFilterState.moveable)
-    if (not PremadeGroupsFilterState.moveable) then
+end
+
+function PGF.Dialog_OnMouseDown(self, button)
+    PremadeGroupsFilterDialog:StartMoving()
+end
+
+function PGF.Dialog_OnMouseUp(self, button)
+    PremadeGroupsFilterDialog:StopMovingOrSizing()
+    if button == "RightButton" then
         PGF.Dialog_ResetPosition()
     end
 end
 
-function PGF.Dialog_OnMouseDown()
-    if PremadeGroupsFilterState.moveable then
-        PremadeGroupsFilterDialog:StartMoving()
-    end
-end
-
-function PGF.Dialog_OnMouseUp()
-    PremadeGroupsFilterDialog:StopMovingOrSizing()
-end
-
 function PGF.Dialog_MinimizeButton_OnClick(self, button, down)
+    if PGF.ignoreNextMaximizeMinimizeCallback then
+        PGF.ignoreNextMaximizeMinimizeCallback = false
+        return
+    end
     PremadeGroupsFilterState.expert = true
     PGF.Dialog_Reset(true)
     PGF.Dialog_AdjustToMode()
 end
 
 function PGF.Dialog_MaximizeButton_OnClick(self, button, down)
+    if PGF.ignoreNextMaximizeMinimizeCallback then
+        PGF.ignoreNextMaximizeMinimizeCallback = false
+        return
+    end
     PremadeGroupsFilterState.expert = false
     PGF.Dialog_Reset(true)
     PGF.Dialog_AdjustToMode()
@@ -88,10 +98,12 @@ end
 
 function PGF.Dialog_AdjustToMode()
     local dialog = PremadeGroupsFilterDialog
+    PGF.ignoreNextMaximizeMinimizeCallback = true
     if PremadeGroupsFilterState.expert then
+    	dialog.MaximizeMinimizeFrame:Minimize()
         dialog.Difficulty:Hide()
-        dialog.Ilvl:Hide()
-        dialog.Noilvl:Hide()
+        dialog.MPRating:Hide()
+        dialog.PVPRating:Hide()
         dialog.Defeated:Hide()
         dialog.Members:Hide()
         dialog.Tanks:Hide()
@@ -101,21 +113,21 @@ function PGF.Dialog_AdjustToMode()
         dialog.StateExplanation:Hide()
         dialog.MinExplanation:Hide()
         dialog.MaxExplanation:Hide()
-        dialog.Advanced:Hide()
-        dialog.InfoButton:SetPoint("BOTTOMRIGHT", 5, 14)
+        dialog.AdvancedExplanation:Hide()
+        dialog.Inset:Hide()
+        dialog.InfoButton:SetPoint("BOTTOMRIGHT", dialog.Sorting, "BOTTOMRIGHT", 2, -3)
+        dialog.InfoButton:SetSize(32, 32)
         dialog.InfoButton.I:SetSize(32, 32)
+        dialog.InfoButton.H:SetSize(32, 32)
         dialog.Sorting:Show()
         dialog.Expression:SetPoint("BOTTOM", 0, 58)
         dialog.Expression:SetHeight(130)
         dialog:SetSize(300, 218)
-        dialog.InsetBg:SetPoint("TOPLEFT", 4, -23)
-        dialog.InsetBg:SetPoint("BOTTOMRIGHT", -6, 50)
-        dialog.MinimizeButton:Hide()
-        dialog.MaximizeButton:Show()
     else
+        dialog.MaximizeMinimizeFrame:Maximize()
         dialog.Difficulty:Show()
-        dialog.Ilvl:Show()
-        dialog.Noilvl:Show()
+        dialog.MPRating:Show()
+        dialog.PVPRating:Show()
         dialog.Defeated:Show()
         dialog.Members:Show()
         dialog.Tanks:Show()
@@ -125,33 +137,24 @@ function PGF.Dialog_AdjustToMode()
         dialog.StateExplanation:Show()
         dialog.MinExplanation:Show()
         dialog.MaxExplanation:Show()
-        dialog.Advanced:Show()
+        dialog.AdvancedExplanation:Show()
+        dialog.Inset:Show()
         dialog.InfoButton:SetPoint("BOTTOMRIGHT", 0, 102)
+        dialog.InfoButton:SetSize(46, 46)
         dialog.InfoButton.I:SetSize(46, 46)
+        dialog.InfoButton.H:SetSize(46, 46)
         dialog.Sorting:Hide()
         dialog.Expression:SetPoint("BOTTOM", 0, 32)
         dialog.Expression:SetHeight(70)
         dialog:SetSize(300, 427)
-        dialog.InsetBg:SetPoint("TOPLEFT", 4, -62)
-        dialog.InsetBg:SetPoint("BOTTOMRIGHT", -6, 26)
-        dialog.MaximizeButton:Hide()
-        dialog.MinimizeButton:Show()
     end
 end
 
 function PGF.Dialog_ResetPosition()
     local dialog = PremadeGroupsFilterDialog
     dialog:ClearAllPoints()
-    dialog:SetPoint("TOPLEFT", GroupFinderFrame, "TOPRIGHT")
+    dialog:SetPoint("TOPLEFT", PVEFrame, "TOPRIGHT")
     dialog:SetWidth(300)
-end
-
-function PGF.Dialog_ToggleMoveable(checkButton)
-    local checked = checkButton:GetChecked()
-    PremadeGroupsFilterState.moveable = checked
-    if not checked then
-        PGF.Dialog_ResetPosition()
-    end
 end
 
 function PGF.Dialog_DifficultyDropdown_Init(dropdown)
@@ -197,7 +200,7 @@ function PGF.Dialog_SetUpUsePGFCheckbox()
     local button = CreateFrame("CheckButton", "UsePFGButton", LFGListFrame.SearchPanel, "UICheckButtonTemplate")
     button:SetSize(26, 26)
     button:SetHitRectInsets(-2, -30, -2, -2)
-    button.text:SetText("PGF")
+    button.text:SetText(L["addon.name.short"])
     button.text:SetFontObject("GameFontHighlight")
     button.text:SetWidth(30)
     button:SetPoint("LEFT", LFGListFrame.SearchPanel.RefreshButton, "LEFT", -62, 0)
@@ -222,9 +225,13 @@ function PGF.Dialog_OnLoad()
     dialog:SetScript("OnMouseDown", PGF.Dialog_OnMouseDown)
     dialog:SetScript("OnMouseUp", PGF.Dialog_OnMouseUp)
 
-    dialog.InsetBg:SetPoint("TOPLEFT", 4, -62)
-    dialog.InsetBg:SetPoint("BOTTOMRIGHT", -6, 26)
-    dialog.Title:SetText("Premade Groups Filter")
+    dialog:SetBorder("ButtonFrameTemplateNoPortraitMinimizable")
+	dialog:SetPortraitShown(false)
+    dialog:SetTitle(L["addon.name.long"])
+    dialog.MaximizeMinimizeFrame:SetOnMaximizedCallback(PGF.Dialog_MaximizeButton_OnClick)
+    dialog.MaximizeMinimizeFrame:SetOnMinimizedCallback(PGF.Dialog_MinimizeButton_OnClick)
+    --dialog.MaximizeMinimizeFrame:SetMinimizedCVar("miniPremadeGroupsFilter")
+
     dialog.ResetButton:SetText(L["dialog.reset"])
     dialog.ResetButton:SetScript("OnClick", PGF.Dialog_ResetButton_OnClick)
     dialog.RefreshButton:SetText(L["dialog.refresh"])
@@ -233,25 +240,21 @@ function PGF.Dialog_OnLoad()
     dialog.StateExplanation:SetText(L["dialog.expl.state"])
     dialog.MinExplanation:SetText(L["dialog.expl.min"])
     dialog.MaxExplanation:SetText(L["dialog.expl.max"])
-    dialog.Advanced.Explanation:SetText(L["dialog.expl.advanced"])
+    dialog.AdvancedExplanation:SetText(L["dialog.expl.advanced"])
     dialog.InfoButton:EnableMouse(true)
     dialog.InfoButton:SetScript("OnEnter", PGF.Dialog_InfoButton_OnEnter)
     dialog.InfoButton:SetScript("OnLeave", PGF.Dialog_InfoButton_OnLeave)
-    dialog.Ilvl.Min:SetMaxLetters(3)
-    dialog.Ilvl.Max:SetMaxLetters(3)
-    dialog.Noilvl.Title:SetWidth(210)
-    dialog.Noilvl.Act:SetEnabled(false)
-    dialog.Defeated.Title:SetWordWrap(true)
-    dialog.Defeated.Title:SetHeight(28)
-    dialog.MoveableToggle:SetScript("OnClick", PGF.Dialog_ToggleMoveable)
-    dialog.MinimizeButton:SetScript("OnClick", PGF.Dialog_MinimizeButton_OnClick)
-    dialog.MaximizeButton:SetScript("OnClick", PGF.Dialog_MaximizeButton_OnClick)
+    dialog.InfoButton:SetScript("OnClick", PGF.Dialog_InfoButton_OnClick)
+    dialog.MPRating.Min:SetMaxLetters(4)
+    dialog.MPRating.Max:SetMaxLetters(4)
+    dialog.PVPRating.Min:SetMaxLetters(4)
+    dialog.PVPRating.Max:SetMaxLetters(4)
     dialog.Sorting.SortingTitle:SetText(L["dialog.sorting"])
     dialog.Sorting.SortingExpression.Instructions:SetText("friends desc, age asc")
 
     PGF.Dialog_SetUpGenericField(dialog, "Difficulty")
-    PGF.Dialog_SetUpMinMaxField(dialog, "Ilvl")
-    PGF.Dialog_SetUpGenericField(dialog, "Noilvl")
+    PGF.Dialog_SetUpMinMaxField(dialog, "MPRating")
+    PGF.Dialog_SetUpMinMaxField(dialog, "PVPRating")
     PGF.Dialog_SetUpMinMaxField(dialog, "Members")
     PGF.Dialog_SetUpMinMaxField(dialog, "Tanks")
     PGF.Dialog_SetUpMinMaxField(dialog, "Heals")
@@ -259,12 +262,12 @@ function PGF.Dialog_OnLoad()
     PGF.Dialog_SetUpMinMaxField(dialog, "Defeated")
     PGF.Dialog_SetUpUsePGFCheckbox()
 
-    local font = dialog.SimpleExplanation:GetFont()
-    dialog.Expression.EditBox:SetFont(font, C.FONTSIZE_TEXTBOX)
-    dialog.Expression.EditBox.Instructions:SetFont(font, C.FONTSIZE_TEXTBOX)
+    local fontFile, _, fontFlags = dialog.SimpleExplanation:GetFont()
+    dialog.Expression.EditBox:SetFont(fontFile, C.FONTSIZE_TEXTBOX, fontFlags)
+    dialog.Expression.EditBox.Instructions:SetFont(fontFile, C.FONTSIZE_TEXTBOX, fontFlags)
     --dialog.Expression.EditBox:SetScript("OnTextChanged", PGF.Dialog_Expression_OnTextChanged) -- overrides Blizz
-    dialog.Sorting.SortingExpression:SetFont(font, C.FONTSIZE_TEXTBOX)
-    dialog.Sorting.SortingExpression.Instructions:SetFont(font, C.FONTSIZE_TEXTBOX)
+    dialog.Sorting.SortingExpression:SetFont(fontFile, C.FONTSIZE_TEXTBOX, fontFlags)
+    dialog.Sorting.SortingExpression.Instructions:SetFont(fontFile, C.FONTSIZE_TEXTBOX, fontFlags)
     --dialog.Sorting.SortingExpression:SetScript("OnTextChanged", PGF.Dialog_SortingExpression_OnTextChanged) -- overrides Blizz
 
     PGF.Dialog_DifficultyDropdown_Init(dialog.Difficulty.DropDown)

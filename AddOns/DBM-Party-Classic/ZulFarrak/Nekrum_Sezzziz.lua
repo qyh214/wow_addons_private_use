@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(487, "DBM-Party-Classic", 15, 241)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20220920232426")
 mod:SetCreatureID(7796, 7275)--nekrum-gutchewer, shadowpriest-sezzziz
 mod:SetEncounterID(598, 599)--Each boss has it's own encounter ID?
 mod:DisableEEKillDetection()--So we have to disable using encounter events for win detection since you don't win until BOTH died
@@ -54,7 +54,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 8600 and self:CheckDispelFilter() then
+	if args.spellId == 8600 and self:CheckDispelFilter("disease") then
 		warningFeveredPlague:Show(args.destName)
 	end
 end

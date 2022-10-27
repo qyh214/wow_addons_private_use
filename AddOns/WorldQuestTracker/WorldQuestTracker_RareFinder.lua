@@ -105,9 +105,11 @@ function rf.SendRareList (channel)
 	if (type (channel) == "table") then
 		channel = "GUILD"
 	else
-		channel = channel or "GUILD"
+		if (type(channel) ~= "string") then
+			channel = "GUILD"
+		end
 	end
-	
+
 	--> make sure the player is in a local group
 	if (channel == "PARTY") then
 		if (not IsInGroup (LE_PARTY_CATEGORY_HOME)) then
@@ -139,7 +141,9 @@ function rf.SendRareList (channel)
 		end
 	end
 	
-	local data = LibStub ("AceSerializer-3.0"):Serialize ({rf.COMM_IDS.RARE_LIST, UnitName ("player"), listToSend, channel})
+	--print(rf.COMM_IDS.RARE_LIST, UnitName ("player"), listToSend, channel)
+	--print(type(rf.COMM_IDS.RARE_LIST), type(UnitName("player")), type(listToSend), type(channel))
+	local data = LibStub ("AceSerializer-3.0"):Serialize ({rf.COMM_IDS.RARE_LIST, UnitName("player"), listToSend, channel})
 	WorldQuestTracker:SendCommMessage (WorldQuestTracker.COMM_PREFIX, data, channel)
 	rf.FullRareListSendCooldown = time()
 	WorldQuestTracker.Debug ("SendRareList () > sent list of rares > COMM_IDS.RARE_LIST on channel " .. (channel or "invalid channel"))
@@ -605,7 +609,7 @@ function rf.IsTargetARare()
 	end
 end
 
-rf:SetScript ("OnEvent", function (self, event, ...)
+rf:SetScript("OnEvent", function (self, event, ...)
 
 	if (event == "COMBAT_LOG_EVENT_UNFILTERED") then
 
@@ -706,7 +710,7 @@ function WorldQuestTracker.RareWidgetOnEnter (self)
 		GameCooltip:Show()
 		GameTooltip:Hide()
 		
-		parent.TextureCustom:SetBlendMode ("ADD")
+		parent.TextureCustom:SetBlendMode("ADD")
 	end
 	 
 end
@@ -716,7 +720,7 @@ function WorldQuestTracker.RareWidgetOnLeave (self)
 	if (not WorldMapFrame.isMaximized) then
 		GameCooltipFrame1:SetParent (UIParent)
 	end
-	self:GetParent().TextureCustom:SetBlendMode ("BLEND")
+	self:GetParent().TextureCustom:SetBlendMode("BLEND")
 end
 
 function WorldQuestTracker.RareWidgetOnClick (self, button)
@@ -805,13 +809,13 @@ function WorldQuestTracker.UpdateRareIcons (mapID)
 					end
 					
 					local pin = WorldQuestTrackerDataProvider:GetMap():AcquirePin ("WorldQuestTrackerRarePinTemplate", "rarePin")
-					pin:SetSize (1, 1)
+					pin:SetSize(1, 1)
 					
 					if (not pin.InitializedForRare) then
 						pin.InitializedForRare = true
 						local widget = WorldQuestTracker.GetOrCreateZoneWidget (math.random (1, 99999999))
 						WorldQuestTracker.ResetWorldQuestZoneButton (widget)
-						widget:SetPoint ("center", pin, "center")
+						widget:SetPoint("center", pin, "center")
 						pin.RareWidget = widget
 					end
 					
@@ -828,8 +832,8 @@ function WorldQuestTracker.UpdateRareIcons (mapID)
 					pin.RareWidget.RareOverlay:Show()
 					
 					pin.RareWidget.Texture:Hide()
-					pin.RareWidget.TextureCustom:SetTexture ([[Interface\AddOns\WorldQuestTracker\media\icon_star]])
-					pin.RareWidget.TextureCustom:SetSize (22, 22)
+					pin.RareWidget.TextureCustom:SetTexture([[Interface\AddOns\WorldQuestTracker\media\icon_star]])
+					pin.RareWidget.TextureCustom:SetSize(22, 22)
 					pin.RareWidget.TextureCustom:Show()
 					
 					pin.RareWidget:Show()

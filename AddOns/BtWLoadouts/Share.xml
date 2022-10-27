@@ -116,6 +116,7 @@
                     <Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
                 </Anchors>
                 <KeyValues>
+                    <KeyValue key="maxLetters" value="0" type="number"/>
                     <KeyValue key="hideCharCount" value="true" type="boolean"/>
                     <KeyValue key="cursorOffset" value="0" type="number"/>
                 </KeyValues>
@@ -202,6 +203,7 @@
                     <Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
                 </Anchors>
                 <KeyValues>
+                    <KeyValue key="maxLetters" value="0" type="number"/>
                     <KeyValue key="hideCharCount" value="true" type="boolean"/>
                     <KeyValue key="cursorOffset" value="0" type="number"/>
                 </KeyValues>

@@ -55,8 +55,7 @@ L:SetOptionLocalization{
 	specWarnNova 		= ("Montre une alerte spéciale pour |cff71d5ff|Hspell:%d|h%s|h|r"):format(64216, "Nova de foudre"),
 	warnNova 			= ("Montre une alerte pour |cff71d5ff|Hspell:%d|h%s|h|r"):format(64216, "Nova de foudre"),
 	warnOverCharge 		= ("Montre une alerte pour |cff71d5ff|Hspell:%d|h%s|h|r"):format(64218, "Surcharge explosive"),
-	timerMobOvercharge	= "Montre le timer pour le séide surchargé (debuff empilable)",
-	RangeFrame			= "Montre la fenêtre de portée"
+	timerMobOvercharge	= "Montre le timer pour le séide surchargé (debuff empilable)"
 }
 
 ---------------

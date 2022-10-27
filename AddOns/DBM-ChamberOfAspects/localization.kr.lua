@@ -40,52 +40,45 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
-	WarningTenebron			= "테네브론 진입",
-	WarningShadron			= "샤드론 진입",
-	WarningVesperon			= "베스페론 진입",
-	WarningFireWall			= "화염의 벽!",
-	WarningVesperonPortal	= "베스페론의 차원문 생성!!",
-	WarningTenebronPortal	= "테네브론의 차원문 생성!!",
-	WarningShadronPortal	= "샤드론의 차원문 생성!!"
+	WarningTenebron			= "테네브론 등장",
+	WarningShadron			= "샤드론 등장",
+	WarningVesperon			= "베스페론 등장",
+	WarningFireWall			= "용암 파도",
+	WarningVesperonPortal	= "베스페론의 차원문",
+	WarningTenebronPortal	= "테네브론의 차원문",
+	WarningShadronPortal	= "샤드론의 차원문"
 })
 
 L:SetTimerLocalization({
-	TimerTenebron		= "테네브론 진입",
-	TimerShadron		= "샤드론 진입",
-	TimerVesperon		= "베스페론 진입"
+	TimerTenebron		= "테네브론 도착",
+	TimerShadron		= "샤드론 도착",
+	TimerVesperon		= "베스페론 도착"
 })
 
 L:SetOptionLocalization({
-	AnnounceFails			= "화염의 벽 및 어둠의 균열을 피하지 못한 공대원을 대화창에 알리기(승급 권한 필요)",
-	TimerTenebron			= "테네브론 진입 바 보기",
-	TimerShadron			= "샤드론 진입 바 보기",
-	TimerVesperon			= "베스페론 진입 바 보기",
-	WarningFireWall			= "화염의 벽 특수 경고 보기",
-	WarningTenebron			= "테네브론 진입 알림",
-	WarningShadron			= "샤드론 진입 알림",
-	WarningVesperon			= "베스페론 진입 알림",
-	WarningTenebronPortal	= "테네브론의 차원문 특수 경고 보기",
-	WarningShadronPortal	= "샤드론의 차원문 특수 경고 보기",
-	WarningVesperonPortal	= "베스페론의 차원문 특수 경고 보기"
+	AnnounceFails			= "용암 파도와 어둠의 균열을 맞은 공대원을 공격대 대화로 알림 (승급 권한 필요)",
+	TimerTenebron			= "테네브론 도착 타이머 바 보기",
+	TimerShadron			= "샤드론 도착 타이머 바 보기",
+	TimerVesperon			= "베스페론 도착 타이머 바 보기",
+	WarningFireWall			= "용암 파도 특수 알림 보기",
+	WarningTenebron			= "테네브론 등장 알림",
+	WarningShadron			= "샤드론 등장 알림",
+	WarningVesperon			= "베스페론 등장 알림",
+	WarningTenebronPortal	= "테네브론의 차원문 특수 알림 보기",
+	WarningShadronPortal	= "샤드론의 차원문 특수 알림 보기",
+	WarningVesperonPortal	= "베스페론의 차원문 특수 알림 보기"
 })
 
 L:SetMiscLocalization({
---	Wall			= "%s를 둘러싼 용암이 끓어오릅니다!",
---	Portal			= "%s이 황혼의 차원문을 엽니다!!",
-	Wall			= "둘러싼 용암이 끓어오릅니다!",
-	Portal			= "황혼의 차원문을 엽니다!!",
+	Wall			= "%s|1을;를; 둘러싼 용암이 끓어오릅니다!",
+	Portal			= "%s|1이;가; 황혼의 차원문을 엽니다!!",
 	NameTenebron	= "테네브론",
 	NameShadron		= "샤드론",
 	NameVesperon	= "베스페론",
-	FireWallOn		= "용암 파도 : %s",
-	VoidZoneOn		= "어둠의 균열 : %s",
-	VoidZones		= "어둠의 균열 실패(현재 시도): %s",
-	FireWalls		= "용암 파도 실패(현재 시도): %s"
-	--[[ not in use; don't translate.
-	Vesperon	= "베스페론, 알이 위험하다! 날 도와라!",
-	Shadron		= "샤드론! 이리 와라! 위험한 상황이다!",
-	Tenebron	= "테네브론! 너도 알을 지킬 책임이 있어!"
-	--]]
+	FireWallOn		= "용암 파도: %s",
+	VoidZoneOn		= "어둠의 균열: %s",
+	VoidZones		= "어둠의 균열 맞은 사람 (이번 트라이): %s",
+	FireWalls		= "용암 파도 맞은 사람 (이번 트라이): %s"
 })
 
 ------------------------
@@ -104,8 +97,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	WarningSplitSoon	= "분리 이전에 알림 보기",
-	RangeFrame			= "거리 창 보기(12m)"
+	WarningSplitSoon	= "분리 사전 경고 보기"
 })
 
 -------------------------
@@ -115,10 +107,6 @@ L = DBM:GetModLocalization("Saviana")
 
 L:SetGeneralLocalization({
 	name = "사비아나 레이지파이어"
-})
-
-L:SetOptionLocalization({
-	RangeFrame				= "거리 창 보기(10m)"
 })
 
 --------------------------
@@ -131,17 +119,17 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
-	WarnAdds			= "지원 병력",
-	warnCleaveArmor		= "%s : >%s< (%s)"
+	WarnAdds			= "새 쫄",
+	warnCleaveArmor		= "%s: >%s< (%s)"
 })
 
 L:SetTimerLocalization({
-	TimerAdds	= "다음 지원 병력"
+	TimerAdds	= "새 쫄"
 })
 
 L:SetOptionLocalization({
-	WarnAdds		= "지원 병력 알림 보기",
-	TimerAdds		= "다음 지원 병력 바 보기"
+	WarnAdds		= "새 쫄 알림",
+	TimerAdds		= "새 쫄 타이머 바 보기"
 })
 
 L:SetMiscLocalization({
@@ -157,13 +145,12 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
-	TwilightCutterCast	= "주문시전 황혼 절단기 : 5 초"
+	TwilightCutterCast	= "황혼 절단기 시전: 5초"
 })
 
 L:SetOptionLocalization({
-	TwilightCutterCast		= "$spell:74769 시전 알림 보기",
-	AnnounceAlternatePhase	= "다른 위상 우두머리 알림/바 보기",
-	SetIconOnConsumption	= "$spell:74562 또는 $spell:74792 대상에게 전술 목표 아이콘 설정"
+	TwilightCutterCast		= "$spell:74769 시전시 경고 보기",
+	AnnounceAlternatePhase	= "당신이 없는 위상의 경고/타이머 바 보기"
 })
 
 L:SetMiscLocalization({

@@ -4,6 +4,9 @@ local ES = E.Skins
 
 local _G = _G
 local pairs = pairs
+
+local CreateFrame = CreateFrame
+
 local UIDROPDOWNMENU_MAXLEVELS = UIDROPDOWNMENU_MAXLEVELS
 
 function S:Blizzard_DeathRecap()
@@ -60,7 +63,9 @@ function S:BlizzardMiscFrames()
     self:CreateShadow(_G.CinematicFrameCloseDialog)
 
     -- 举报玩家
-    self:CreateShadow(_G.ReportFrame)
+    local reportFrameShadowContainer = CreateFrame("Frame", nil, _G.ReportFrame)
+    reportFrameShadowContainer:SetAllPoints(_G.ReportFrame)
+    self:CreateShadow(reportFrameShadowContainer)
 
     -- 分离物品
     self:CreateShadow(_G.StackSplitFrame)

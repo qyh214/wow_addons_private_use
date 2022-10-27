@@ -7,7 +7,6 @@ local S = Narci.L.S;
 NARCI_GRADIENT = "|cffA236EFN|r|cff9448F1a|r|cff865BF2r|r|cff786DF4c|r|cff6A80F6i|r|cff5D92F7s|r|cff4FA4F9s|r|cff41B7FAu|r|cff33C9FCs|r"
 MYMOG_GRADIENT = "|cffA236EFM|cff9448F1y |cff865BF2T|cff786DF4r|cff6A80F6a|cff5D92F7n|cff4FA4F9s|cff41B7FAm|cff33C9FCo|cff32c9fbg|r"
 
-NARCI_VERSION_INFO = "1.2.5";
 NARCI_DEVELOPER_INFO = "Developed by Peterodox";
 
 NARCI_NEW_ENTRY_PREFIX = "|cff40C7EB";
@@ -44,39 +43,43 @@ L["A Month Ago"] = "1 month ago";
 L["Format Months Ago"] = "%d months ago";
 L["A Year Ago"] = "1 year ago";
 L["Format Years Ago"] = "%d years ago";
+L["Version Colon"] = (GAME_VERSION_LABEL or "Version")..": ";
+L["Date Colon"] = "Date: ";
 
 
 L["Swap items"] = "Swap items";
 L["Press Copy"] = NARCI_COLOR_GREY_70.. "Press |r".. NARCI_SHORTCUTS_COPY.. NARCI_COLOR_GREY_70 .." to Copy";
-L["Copied"] = NARCI_COLOR_GREEN_MILD.. "Link Copied";
-
+L["Copied"] = NARCI_COLOR_GREEN_MILD.. "Link Copied|r";
 L["Movement Speed"] = "MSPD";
 L["Damage Reduction Percentage"] = "DR%";
-
 L["Advanced Info"] = "Left click to toggle advanced info.";
+L["Restore On Exit"] = "\nYour previous settings will be restored after exit.";
 
 L["Photo Mode"] = "Photo Mode";
 L["Photo Mode Tooltip Open"] = "Open the screenshot toolbox.";
 L["Photo Mode Tooltip Close"] = "Close the screenshot toolbox.";
 L["Photo Mode Tooltip Special"] = "Your captured screenshots in the WoW Screenshots folder will not include this widget.";
 
-L["Xmog Button"] = "Share Transmog";
-L["Xmog Button Tooltip Open"] = "Show the transmog items instead of actual gears.";
-L["Xmog Button Tooltip Close"] = "Show the actual gears in your equipment slots.";
-L["Xmog Button Tooltip Special"] = "Your may try different layouts.";
+L["Toolbar Mog Button"] = "Photo Mode";
+L["Toolbar Mog Button Tooltip"] = "Showcase your transmog or create a photo booth where you can add other players and NPCs.";
 
-L["Emote Button"] = "Do Emote";
-L["Emote Button Tooltip Open"] = "Do the emotes with unique animations.";
+L["Toolbar Emote Button"] = "Do Emote";
+L["Toolbar Emote Button Tooltip"] = "Use the emotes with unique animations.";
 L["Auto Capture"] = "Auto Capture";
 
-L["HideTexts Button"] = "Hide Texts";
-L["HideTexts Button Tooltip Open"] = "Hide all unit names, chat bubbles and combat texts.";
-L["HideTexts Button Tooltip Close"] = "Restore the unit names, chat bubbles and combat texts.";
-L["HideTexts Button Tooltip Special"] = "Previous settings will be restored when you exit.";
+L["Toolbar HideTexts Button"] = "Hide Texts";
+L["Toolbar HideTexts Button Tooltip"] = "Hide all names, chat bubbles and combat texts." ..L["Restore On Exit"];
 
-L["TopQuality Button"] = "Top Quality";
-L["TopQuality Button Tooltip Open"] = "Set every graphics quality option to its maximum.";
-L["TopQuality Button Tooltip Close"] = "Restore your graphics settings.";
+L["Toolbar TopQuality Button"] = "Top Quality";
+L["Toolbar TopQuality Button Tooltip"] = "Set every option in the graphics settings to max." ..L["Restore On Exit"];
+
+L["Toolbar Location Button"] = "Player Location";
+L["Toolbar Location Button Tooltip"] = "Show current zone name and player's coordinates."
+
+L["Toolbar Camera Button"] = "Camera";
+L["Toolbar Camera Button Tooltip"] = "Temporarily change camera settings."
+
+L["Toolbar Preferences Button Tooltip"] = "Open Preferences panel.";
 
 --Special Source--
 L["Heritage Armor"] = "Heritage Armor";
@@ -109,7 +112,7 @@ NARCI_CLIPBOARD = "Clipboard";
 L["Layout"] = "Layout";
 L["Symmetry"] = "Symmetry";
 L["Asymmetry"] = "Asymmetry";
-L["Copy Texts"] = "Copy Texts";
+L["Copy Texts"] = "Copy Item List";
 L["Syntax"] = "Syntax";
 L["Plain Text"] = "Plain Text";
 L["BB Code"] = "BB Code";
@@ -146,12 +149,19 @@ L["Transmog Layout1"] = "Symmetry, 1 Model";
 L["Transmog Layout2"] = "2 Models";
 L["Transmog Layout3"] = "Compact Mode";
 L["Always Show Model"] = "Show 3D Model While Using Symmetry Layout";
-L["AFK Screen Description"] = "Automatically open Narcissus when yo go AFK.";
+L["AFK Screen Description"] = "Open Narcissus when yo go AFK";
 L["AFK Screen Description Extra"] = "This will override ElvUI AFK Mode.";
+L["AFK Screen Delay"] = "After a Cancellable Delay";
+L["Item Names"] = "Item Names";
+L["Open Narcissus"] = "Open Narcissus";
+L["Character Panel"] = "Character Panel";
+L["Screen Effects"] ="Screen Effects";
+
 L["Gemma"] = "\"Gemma\"";   --Don't translate
 L["Gemma Description"] = "Show a list of gems when socketing an item.";
+L["Gem Manager"] = "Gem Manager";
 L["Dressing Room"] = "Dressing Room"
-L["Dressing Room Description"] = "Bigger dressing room pane with the abilities to view and copy other players' item lists and generate Wowhead dressing room links.";
+L["Dressing Room Description"] = "Bigger dressing room with the abilities to view and copy other players' item lists and generate Wowhead dressing room links.";
 L["General"] = "General";   --General options
 L["Interface"] = "Interface";
 L["Shortcuts"] = "Shortcuts";
@@ -168,11 +178,11 @@ L["Truncate Text"] = "Truncate Text";
 L["Stat Sheet"] = "Stat Sheet";
 L["Minimap Button"] = "Minimap Button";
 L["Fade Out"] = "Fade Out On Mouseout";
-L["Fade Out Description"] = "Button fades out when you move the cursor out of it.";
-L["Hotkey"] = "Hotkey";
-L["Double Tap"] = "Enable Double-tap";
+L["Fade Out Description"] = "Fades Out When Mouseout";
+L["Hotkey"] = "Hotkeys";
+L["Double Tap"] = "Open Narcissus By Double-tapping";
 L["Double Tap Description"] = "Double-tap the key bound to Character Pane to open Narcissus.";
-L["Show Detailed Stats"] = "Show Detailed Stats";
+L["Show Detailed Stats"] = "Detailed Stats";
 L["Tooltip Color"] = "Tooltip Color";
 L["Entrance Visual"] = "Entrance Visual";
 L["Entrance Visual Description"] = "Play spell visuals when your model shows up.";
@@ -183,15 +193,12 @@ L["Exit Confirmation Leave"] = "Yes";
 L["Exit Confirmation Cancel"] = "No";
 L["Ultra-wide"] = "Ultra-wide";
 L["Ultra-wide Optimization"] = "Ultra-wide Optimization";
-L["Baseline Offset"] = "Baseline Offset";
+L["Baseline Offset"] = "Ultra-wide Offset";
 L["Ultra-wide Tooltip"] = "You can see this option because you are using a %s:9 monitor.";
 L["Interactive Area"] = "Interactable  Area";
-L["Item Socketing Tooltip"] = "Click and hold to embed";
-L["No Available Gem"] = "|cffd8d8d8No available gem|r";
-L["Use Bust Shot"] = "Use Bust Shot";
-L["Use Escape Button"] = "Esc Key";
-L["Use Escape Button Description1"] = "Press the Escape key to exit.";
-L["Use Escape Button Description2"] = "Exit by clicking the hidden X button on the top-right of your screen.";
+L["Use Bust Shot"] = "Zoom to Upper Body";
+L["Use Escape Button"] = "Exit Narcissus By Pressing |cffffdd10(Esc)|r";
+L["Use Escape Button Description"] = "Alternatively, you can click the hidden X button on the top-right of your screen to exit.";
 L["Show Module Panel Gesture"] = "Show Module Panel On Mouseover";
 L["Independent Minimap Button"] = "Unaffected By Other Addons";
 L["AFK Screen"] = "AFK Screen";
@@ -207,26 +214,26 @@ L["Find Relatives"] = "Find Relatives";
 L["Find Related Creatures Description"] = "Search for creatures with the same last name.";
 L["Find Relatives Hotkey Format"] = "Press %s to find relatives.";
 L["Translate Names"] = "Translate Names";
-L["Translate Names Description On"] = "Show unit's translated name(s) on...";
-L["Translate Names Description Off"] = "";
-L["Select A Language"] = "Selected languge:";
-L["Select Multiple Languages"] = "Selected languges:";
+L["Translate Names Description"] = "Show Translated Names On";
+L["Translate Names Languages"] = "Translate Into";
+L["Select Language Single"] = "Select one language to show on nameplates";
+L["Select Language Multiple"] = "Select languages to show on tooltip";
 L["Load on Demand"] = "Load on Demand";
 L["Load on Demand Description On"] = "Don't load database until using search functions.";
 L["Load on Demand Description Off"] = "Load creature database when you log in.";
 L["Load on Demand Description Disabled"] = NARCI_COLOR_YELLOW.. "This toggle is locked because you have enabled creature tooltip.";
 L["Tooltip"] = "Tooltip";
 L["Name Plate"] = "Name Plate";
-L["Y Offset"] = "Y Offset";
+L["Offset Y"] = "Offset Y";
 L["Sceenshot Quality"] = "Sceenshot Quality";
 L["Screenshot Quality Description"] = "Higher quality results in bigger file size.";
 L["Camera Movement"] = "Camera Movement";
 L["Orbit Camera"] = "Orbit Camera";
 L["Orbit Camera Description On"] = "When you open this character panel, the camera will be rotated to your front and begin orbiting.";
-L["Orbit Camera Description Off"] = "When you open this character panel, the camera will be zoomed in without rotation";
+L["Orbit Camera Description Off"] = "When you open this character panel, the camera will be zoomed in without rotation.";
 L["Camera Safe Mode"] = "Camera Safe Mode";
-L["Camera Safe Mode Description"] = "Fully disable ActionCam feature after closing this addon.";
-L["Camera Safe Mode Description Extra"] = "Untoggled because you are using DynamicCam."
+L["Camera Safe Mode Description"] = "Fully disable ActionCam feature after closing the character panel.";
+L["Camera Safe Mode Description Extra"] = "This option is locked because you are using DynamicCam.";
 L["Camera Transition"] = "Camera Transition";
 L["Camera Transition Description On"] = "Camera will move smoothly to the predetermined position when you open this character panel.";
 L["Camera Transition Description Off"] = "Camera transition becomes instant. Starts from the second time you use this character panel.\nInstant transition will override camera preset #4.";
@@ -240,7 +247,12 @@ L["Tooltip Style 1"] = "Next Generation";
 L["Tooltip Style 2"] = "The Original";
 L["Addtional Info"] = "Additional Info";
 L["Item ID"] = "Item ID";
-
+L["Camera Reset Notification"] = "Camera offset has been reset to zero. If you wish to disable this feature, go to Preferences - Camera, then toggle off Camera Safe Mode.";
+L["Binding Name Open Narcissus"] = "Open Narcissus Character Panel";
+L["Developer Colon"] = "Developer: ";
+L["Project Page"] = "Project Page";
+L["Press Copy Yellow"] = "Press |cffffd100".. NARCI_SHORTCUTS_COPY .."|r to Copy";
+L["New Option"] = NARCI_NEW_ENTRY_PREFIX.." NEW".."|r"
 
 --Model Control--
 NARCI_STAND_IDLY = "Stand Idly";
@@ -437,11 +449,13 @@ L["Pinned Entry Format"] = "Pinned  %d/%d";
 
 --Barbershop--
 L["Save New Look"] = "Save New Look";
-L["No Available Slot"] = "No Available Slot";
+L["No Available Slot"] = "No Available Save Slot";
 L["Look Saved"] = "Look Saved";
 L["Cannot Save Forms"] = "Cannot Save Forms";
-L["Profiles"] = "Profiles";
+L["Profiles"] = SOCIAL_SHARE_TEXT or "Share";
+L["Share"] = "Share";
 L["Save Notify"] = "Notify You to Save New Appearance";
+L["Save Notify Tooltip"] = "Notify you to save the customization after clicking Accept button.";
 L["Show Randomize Button"] = "Show Randomize Appearance Button";
 L["Coins Spent"] = "Coins Spent";
 L["Locations"] = "Locations";
@@ -450,6 +464,22 @@ L["Visits"] = "Visits";     --number of visits
 L["Duration"] = "Duration";
 L["Edit Name"] = "Edit Name";
 L["Delete Look"] = "Delete Look\n(Click and Hold)";
+L["Export"] = "Export";
+L["Import"] = "Import";
+L["Paste Here"] = "Paste Here";
+L["Press To Copy"] = "Press |cffcccccc".. NARCI_SHORTCUTS_COPY.."|r to Copy";
+L["String Copied"] = NARCI_COLOR_GREEN_MILD.. "Copied".."|r";
+L["Failure Reason Unknown"] = "Unknown error";
+L["Failure Reason Decode"] = "Failed to decode.";
+L["Failure Reason Wrong Character"] = "Current race/gender/form did not match the imported profile.";
+L["Failure Reason Dragonriding"] = "This profile is for Dragonriding.";
+L["Wrong Character Format"] = "Requires %s %s."; --e.g. Rquires Male Human
+L["Import Lack Option"] = "%d |4option:options; were not found.";
+L["Import Lack Choice"] = "%d |4choice:choices; were not found.";
+L["Decode Good"] = "Decoded successfully.";
+L["Barbershop Export Tooltip"] = "Encodes the currently used customization into a string that can be shared online.\n\nYou may change any texts before the colon (:)";
+L["Settings And Share"] = (SETTINGS or "Settings") .." & ".. (SOCIAL_SHARE_TEXT or "Share");
+L["Loading Portraits"] = "Loading Portraits";
 
 --Tutorial--
 L["Alert"] = "Warning";
@@ -458,7 +488,7 @@ L["Race Change Line1"] = "You can again change your race and gender. But there a
 L["Guide Spell Headline"] = "Try or Apply";
 L["Guide Spell Criteria1"] = "Left-click to TRY";
 L["Guide Spell Criteria2"] = "Right-click to APPLY";
-L["Guide Spell Line1"] = "Most spell visuals that you add by clicking left button will fade away in seconds, while those you add by clicking right button will not.\n\nNow please move to an entry then:";
+L["Guide Spell Line1"] = "Most spell visuals that you add by clicking left button will fade away in seconds, while those you add by clicking right button will not.\n\nNow please move your cursor to an entry below then:";
 L["Guide Spell Choose Category"] = "You can add spell visuals to your model. Choose any category you like. Then choose a subcategory.";
 L["Guide History Headline"] = "History Panel";
 L["Guide History Line1"] = "At most 5 recently applied visuals can retain here. You can select one and delete it by clicking the Remove button on the right end.";
@@ -496,12 +526,13 @@ L["Splash Content7 Description"] = "-The hexagon item border gets a new look. Ce
 
 --Project Details--
 NARCI_ALL_PROJECTS = "All Projects";
-NARCI_PROJECT_DETAILS = "|cFFFFD100Developer: Peterodox\nRelease Date: June 26, 2022|r\n\nThank you for trying this add-on! If you have any issues, suggestions, ideas, please leave a comment on the curseforge page or contact me on...";
 NARCI_PROJECT_AAA_TITLE = "|cff008affA|cff0d8ef2z|cff1a92e5e|cff2696d9r|cff339acco|cff409ebft|cff4da1b2h |cff59a5a6A|cff66a999d|cff73ad8cv|cff7fb180e|cff8cb573n|cff99b966t|cffa6bd59u|cffb2c14dr|cffbfc440e |cffccc833A|cffd9cc26l|cffe5d01ab|cfff2d40du|cffffd800m|r";
 NARCI_PROJECT_AAA_SUMMARY = "Explore places of interest and collect lores and photos from all across Azeroth.|cff636363";
 NARCI_PROJECT_NARCISSUS_SUMMARY = "An immersive character pane and your ultimate screenshot tool.";
 
---Credits-- (moved to Preference.lua)
+L["AboutTab Developer Note"] = "Thank you for trying this add-on! If you have any issues, suggestions, ideas, please leave a comment on the curseforge page or contact me on...";
+
+
 
 --Conversation--
 L["Q1"] = "What is this?";
@@ -527,7 +558,7 @@ L["WeaponBrowser Guide Hotkey"] = "Specify which hand to hold the weapon:";
 L["WeaponBrowser Guide ModelType"] = "Some items are limited to certain type of model:";
 L["WeaponBrowser Guide DressUpModel"] = "This will be the default type if your target is a player unless you are holding <%s> while creating it.";
 L["WeaponBrowser Guide CinematicModel"] = "The model type will always be Cinematic if the creature is an NPC. You cannot sheathe weapons.";
-L["Outfit"] = "Outfit";
+L["Weapon Browser Specify Hand"] = "|cffffd100"..NARCI_MODIFIER_CONTROL.." + Left-click|r to equip item in the main hand.\n|cffffd100"..NARCI_MODIFIER_ALT.." + Left-click|r for off hand.";
 
 --Pet Stables--
 L["PetStable Tooltip"] = "Choose a pet from your stable";
@@ -557,6 +588,10 @@ L["Click To Insert"] = "Click to Insert";       --Insert a gem
 L["No Socket"] = "No socket";
 L["No Other Item For Slot"] = "No other item for %s";       --where %s is the slot name
 L["In Bags"] = "In bags";
+L["Item Socketing Tooltip"] = "Click and hold to embed";
+L["No Available Gem"] = "|cffd8d8d8No available gem|r";
+L["Missing Enchant Alert"] = "Missing Enchant Alert";
+L["Missing Enchant"] = NARCI_COLOR_RED_MILD.."No Enchant".."|r";
 
 --Statistics--
 S["Narcissus Played"] = "Total time spent in Narcissus";
@@ -602,8 +637,26 @@ L["Paperdoll Splash 1"] = "Enable class set indicator?";
 L["Paperdoll Splash 2"] = "Choose a theme";
 
 --Outfit Select--
+L["Outfit"] = "Outfit";
 L["Models"] = "Models";
 L["Origin Outfits"] = "Original outfits";
 L["Outfit Owner Format"] = "%s's outfits";
 L["SortMethod Recent"] = "Recent";
 L["SortMethod Name"] = "Name";
+
+--Tooltip Match Format--
+L["Find Cooldown"] = " cooldown";
+L["Find Recharge"] = " recharge";
+
+
+--Talent Tree--
+L["Mini Talent Tree"] = "Mini Talent Tree";
+L["Show Talent Tree When"] = "Show Talent Tree When You...";
+L["Show Talent Tree Paperdoll"] = "Open Paper Doll";
+L["Show Talent Tree Inspection"] = "Inspect Other Players";
+L["Truncate Talent Description"] = "Truncate Talent Description";
+L["Appearance"] = "Appearance";
+L["Use Class Background"] = "Use Class Background";
+L["Empty Loadout Name"] = "Name";
+L["No Save Slot Red"] = NARCI_COLOR_RED_MILD.. "No Save Slot" .."|r";
+L["Save"] = "Save";

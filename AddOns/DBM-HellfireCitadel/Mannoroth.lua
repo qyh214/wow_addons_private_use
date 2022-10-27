@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1395, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20220908201412")
 mod:SetCreatureID(91349)--91305 Fel Iron Summoner
 mod:SetEncounterID(1795)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)

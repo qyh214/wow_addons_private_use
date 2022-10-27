@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod("Sapphiron", "DBM-Naxx", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220221015714")
+mod:SetRevision("20220807204706")
 mod:SetCreatureID(15989)
 mod:SetEncounterID(1119)
 mod:SetModelID(16033)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED 28522 28547",
+	"SPELL_AURA_APPLIED 28522 28547 55699",
 	"RAID_BOSS_EMOTE",
 --	"SPELL_CAST_START 28524",
 	"SPELL_CAST_SUCCESS 28542 55665"
@@ -87,7 +87,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			yellIceBlock:Yell()
 		end
-	elseif args.spellId == 28547 and args:IsPlayer() and not self:IsTrivial() then
+	elseif args:IsSpellID(28547, 55699) and args:IsPlayer() and not self:IsTrivial() then
 		warnBlizzard:Show(args.spellName)
 		warnBlizzard:Play("watchfeet")
 	end

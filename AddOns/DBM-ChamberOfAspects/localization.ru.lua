@@ -98,8 +98,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	WarningSplitSoon	= "Предупреждать заранее о разделении",
-	RangeFrame			= "Показывать окно проверки дистанции (12 м)"
+	WarningSplitSoon	= "Предупреждать заранее о разделении"
 })
 
 -------------------------
@@ -109,10 +108,6 @@ L = DBM:GetModLocalization("Saviana")
 
 L:SetGeneralLocalization({
 	name = "Савиана Огненная Пропасть"
-})
-
-L:SetOptionLocalization({
-	RangeFrame				= "Показывать окно проверки дистанции (10 м)"
 })
 
 --------------------------
@@ -157,8 +152,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	TwilightCutterCast		= "Предупреждать о применении заклинания $spell:77844",
-	AnnounceAlternatePhase	= "Показывать предупреждения и таймеры для обоих миров",
-	SetIconOnConsumption	= "Устанавливать метки на цели заклинаний $spell:74562 или $spell:74792"--So we can use single functions for both versions of spell.
+	AnnounceAlternatePhase	= "Показывать предупреждения и таймеры для обоих миров"
 })
 
 L:SetMiscLocalization({

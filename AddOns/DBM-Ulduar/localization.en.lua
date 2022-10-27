@@ -68,8 +68,8 @@ L:SetOptionLocalization{
 	warnTurretsReady			= "Show warning for turrets",
 	timerTurret1				= "Show timer for turret 1",
 	timerTurret2				= "Show timer for turret 2",
-	timerTurret3				= "Show timer for turret 3 (25 player)",
-	timerTurret4				= "Show timer for turret 4 (25 player)",
+	timerTurret3				= "Show timer for turret 3 (25 player Classic or Retail)",
+	timerTurret4				= "Show timer for turret 4 (25 player Classic or Retail)",
 	timerGrounded			    = "Show timer for ground phase duration"
 }
 
@@ -330,12 +330,17 @@ L:SetGeneralLocalization{
 	name = "General Vezax"
 }
 
+L:SetWarningLocalization{
+	specWarnAnimus 	= "Saronite Animus - switch targets"
+}
+
 L:SetTimerLocalization{
-	hardmodeSpawn = "Saronite Animus spawn"
+	hardmodeSpawn	= "Saronite Animus spawn"
 }
 
 L:SetOptionLocalization{
-	hardmodeSpawn					= "Show timer for Saronite Animus spawn (hard mode)",
+	specWarnAnimus 	= "Show special announce to switch targets for Saronite Animus",
+	hardmodeSpawn	= "Show timer for Saronite Animus spawn (hard mode)"
 }
 
 L:SetMiscLocalization{

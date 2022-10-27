@@ -22,6 +22,9 @@ self:Wiki([[
 == Silent mode ==
 typing /gac silent in chat will eliminate every chat message from GarrisonCommander
 ]])
+self:RelNotes(3,3,7,[[
+Fix: Restored ShipYard auto processing
+]])
 self:RelNotes(3,3,6,[[
 Fix: Message: Interface\AddOns\GarrisonCommander\MissionCache.lua:479: 'end' expected (to close 'function' at line 58) near '<eof>'
 ]])

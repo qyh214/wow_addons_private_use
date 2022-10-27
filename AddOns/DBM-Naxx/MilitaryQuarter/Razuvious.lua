@@ -1,14 +1,15 @@
 local mod	= DBM:NewMod("Razuvious", "DBM-Naxx", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220221015714")
+mod:SetRevision("20220629223621")
 mod:SetCreatureID(16061)
 mod:SetEncounterID(1113)
 mod:SetModelID(16582)
 mod:RegisterCombat("combat_yell", L.Yell1, L.Yell2, L.Yell3, L.Yell4)
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_SUCCESS 55543 29107 29060 29061"
+	"SPELL_CAST_SUCCESS 55543 29107 29060 29061",
+	"UNIT_DIED"
 )
 
 local warnShoutNow		= mod:NewSpellAnnounce(29107, 1)
@@ -30,10 +31,18 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnShoutNow:Show()
 		warnShoutSoon:Schedule(11)
 	elseif args.spellId == 29060 then -- Taunt
-		timerTaunt:Start()
+		timerTaunt:Start(20, args.sourceGUID)
 	elseif args.spellId == 29061 then -- ShieldWall
-		timerShieldWall:Start()
+		timerShieldWall:Start(20, args.sourceGUID)
 		warnShieldWall:Schedule(15)
 	end
 end
 
+function mod:UNIT_DIED(args)
+	local guid = args.destGUID
+	local cid = self:GetCIDFromGUID(guid)
+	if cid == 16803 then--Deathknight Understudy
+		timerTaunt:Stop(args.destGUID)
+		timerShieldWall:Stop(args.destGUID)
+	end
+end

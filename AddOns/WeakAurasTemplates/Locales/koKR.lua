@@ -1,4 +1,4 @@
-if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
+if not WeakAuras.IsLibsOK() then return end
 
 if GetLocale() ~= "koKR" then
   return
@@ -7,11 +7,7 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
-	L[" Debuff"] = "약화 효과"
-	L["<70% Mana"] = "<70% 마나"
-	L[">70% Mana"] = ">70% 마나"
 	L["Abilities"] = "능력"
-	L["Ability"] = "능력"
 	L["Add Triggers"] = "활성 조건 추가"
 	L["Always Active"] = "항상 활성화"
 	L["Always Show"] = "항상 표시"
@@ -38,35 +34,21 @@ local L = WeakAuras.L
 	L["Basic Show On Cooldown"] = "재사용 대기 중 표시"
 	L["Basic Show On Ready"] = "준비완료 시 표시"
 	L["Bloodlust/Heroism"] = "피의 욕망/영웅심"
-	--[[Translation missing --]]
-	L["Bonded Buff"] = "Bonded Buff"
-	L["Buff"] = "강화 효과"
 	L["buff"] = "강화 효과"
-	--[[Translation missing --]]
-	L["Buff on Other"] = "Buff on Other"
 	L["Buffs"] = "강화 효과"
-	--[[Translation missing --]]
-	L["Build Up"] = "Build Up"
 	L["Cancel"] = "취소"
 	L["Cast"] = "시전"
 	L["Charge and Buff Tracking"] = "충전량 및 강화 효과 추적"
 	L["Charge and Debuff Tracking"] = "충전량 및 약화 효과 추적"
 	L["Charge and Duration Tracking"] = "충전량 및 지속시간 추적"
 	L["Charge Tracking"] = "충전량 추적"
-	--[[Translation missing --]]
-	L["Combustion Ready"] = "Combustion Ready"
-	L["Conduits"] = "도관"
-	L["Cooldown"] = "재사용 대기시간"
 	L["cooldown"] = "재사용 대기시간"
 	L["Cooldown Tracking"] = "재사용 대기시간 추적"
+	--[[Translation missing --]]
+	L["Cooldowns"] = "Cooldowns"
 	L["Create Auras"] = "aura 생성"
-	L["Debuff"] = "약화 효과"
 	L["debuff"] = "약화 효과"
 	L["Debuffs"] = "약화 효과"
-	--[[Translation missing --]]
-	L["Empowered Buff"] = "Empowered Buff"
-	L["Fire"] = "화염"
-	L["Frost"] = "냉기"
 	L["General"] = "일반"
 	L["Health"] = "생명력"
 	--[[Translation missing --]]
@@ -79,13 +61,7 @@ local L = WeakAuras.L
 	L["Highlight while debuffed."] = "약화 효과가 있는 동안 강조합니다."
 	L["Highlight while spell is active."] = "주문이 활성화 되어 있는 동안 강조"
 	L["Hold CTRL to create multiple auras at once"] = "한 번에 여러 효과를 만드려면 CTRL 키를 누르세요"
-	--[[Translation missing --]]
-	L["Initial Buff"] = "Initial Buff"
 	L["Keeps existing triggers intact"] = "활성 조건 그대로 유지"
-	L["Legendaries"] = "전설"
-	--[[Translation missing --]]
-	L["Meteor Ready"] = "Meteor Ready"
-	L["Nature"] = "자연"
 	L["Next"] = "다음"
 	L["Only show the aura if the target has the debuff."] = "대상에 약화 효과가 있을 때만 효과를 표시합니다."
 	L["Only show the aura when the item is on cooldown."] = "아이템이 재사용 대기 중일 때만 효과를 표시합니다."
@@ -99,8 +75,6 @@ local L = WeakAuras.L
 	L["Other cooldown"] = "Other cooldown"
 	L["Pet alive"] = "소환수 생존"
 	L["Pet Behavior"] = "소환수 행동"
-	--[[Translation missing --]]
-	L["Preparation"] = "Preparation"
 	L["PvP Talents"] = "명예 특성"
 	L["Replace all existing triggers"] = "모든 활성 조건 교체"
 	L["Replace Triggers"] = "활성 조건 교체"
@@ -108,12 +82,8 @@ local L = WeakAuras.L
 	L["Resources and Shapeshift Form"] = "자원과 태세 변환"
 	--[[Translation missing --]]
 	L["Rogue cooldown"] = "Rogue cooldown"
-	--[[Translation missing --]]
-	L["Root"] = "Root"
 	L["Runes"] = "룬"
 	L["Shapeshift Form"] = "태세 변환"
-	--[[Translation missing --]]
-	L["Shards Of Domination"] = "Shards Of Domination"
 	--[[Translation missing --]]
 	L["Show Always, Glow on Missing"] = "Show Always, Glow on Missing"
 	--[[Translation missing --]]
@@ -162,16 +132,7 @@ local L = WeakAuras.L
 	L["Show Only if on Cooldown"] = "재사용 대기 중일 때만 표시"
 	--[[Translation missing --]]
 	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
-	--[[Translation missing --]]
-	L["Slow"] = "Slow"
-	--[[Translation missing --]]
-	L["slow debuff"] = "slow debuff"
-	--[[Translation missing --]]
-	L["Sprint"] = "Sprint"
 	L["Stance"] = "태세"
-	L["stun debuff"] = "기절 약화 효과"
-	L["Stun Debuff"] = "기절 약화 효과"
-	L["Totem"] = "토템"
 	--[[Translation missing --]]
 	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."
 	--[[Translation missing --]]

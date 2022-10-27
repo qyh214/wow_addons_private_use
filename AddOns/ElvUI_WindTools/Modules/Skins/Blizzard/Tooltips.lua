@@ -72,7 +72,7 @@ function S:TooltipFrames()
 
     self:SecureHook(TT, "SetStyle", "TTSetStyle")
     self:SecureHook(TT, "GameTooltip_SetDefaultAnchor", "TTGameTooltip_SetDefaultAnchor")
-    self:SecureHook("QueueStatusFrame_Update", "CreateShadow")
+    self:SecureHook(_G.QueueStatusFrame, "Update", "CreateShadow")
     self:SecureHook(_G.GameTooltip, "Show", "StyleTooltipsIcons")
 end
 
@@ -80,14 +80,6 @@ local function styleIconString(text)
     if not text or not strfind(text, "|T.+|t") then
         return
     end
-
-    -- text = gsub(text, "|T([^:]+):(%d+):(%d+):(.-)|t", function(texture, width, height, oldStyle)
-    --     if strfind(texture, "Addons") or texture == "0" then
-    --         return format("|T%s:%d:%d:%s|t", texture, width, height, oldStyle)
-    --     else
-    --         return format("|T%s:%d:%d:0:0:64:64:5:59:5:59|t", texture, width, height)
-    --     end
-    -- end)
 
     text = gsub(text, "|T([^:]+):0|t", function(texture)
         if strfind(texture, "Addons") or texture == "0" then

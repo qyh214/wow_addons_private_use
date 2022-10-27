@@ -1,46 +1,34 @@
-lightweight tag 3c13831775d945b3ea247492dd799139fd8cbf8d v5.8.0
+lightweight tag 1459dd879d10c8455b22099a220be690435e9087 v5.8.2-v10.0.0
 Author:	Boshi Lian <farmer1992@gmail.com>
-Date:	Mon Nov 15 03:21:39 2021 -0800
+Date:	Wed Oct 26 23:36:52 2022 -0700
 
-commit 3c13831775d945b3ea247492dd799139fd8cbf8d
+commit 1459dd879d10c8455b22099a220be690435e9087
 Author: Boshi Lian <farmer1992@gmail.com>
-Date:   Mon Nov 15 03:21:39 2021 -0800
+Date:   Wed Oct 26 23:36:52 2022 -0700
 
-    bump ver
-
-commit 04c292e13c46ac1718a4b365e79d4957a05bcfe8
-Author: yh_victor <yhvictor@users.noreply.github.com>
-Date:   Fri Nov 12 17:03:07 2021 -0800
-
-    Update Myslot.lua
-
-commit 04c292e13c46ac1718a4b365e79d4957a05bcfe8
-Author: yh_victor <yhvictor@users.noreply.github.com>
-Date:   Fri Nov 12 17:03:07 2021 -0800
-
-    Update Myslot.lua
-
-commit 737cf4c8948e583fb0a5a5aaadf483214f4c42da
-Author: yh_victor <yhvictor@users.noreply.github.com>
-Date:   Fri Nov 12 17:00:58 2021 -0800
-
-    Update gui.lua
-
-commit 71054e03e03380377c25e22e177ea210e588cfa5
-Author: yh_victor <yhvictor@users.noreply.github.com>
-Date:   Fri Nov 12 16:59:35 2021 -0800
-
-    Update gui.lua
-
-commit f6987d138f8395a31ac2e2a15e9ffc49aa1f56b3
-Author: yh_victor <yhvictor@users.noreply.github.com>
-Date:   Fri Nov 12 16:56:38 2021 -0800
-
-    Update Myslot.lua
-
-commit fe85673a57399b6ce95c28e32b0ce669aef9a65f
-Author: yh_victor <yhvictor@users.noreply.github.com>
-Date:   Fri Nov 12 12:14:56 2021 -0800
-
-    Update Myslot.lua
+    Squashed commit of the following:
+    
+    commit 4199f88c38541f278ac73b556461bacd70a88d57
+    Author: Boshi Lian <farmer1992@gmail.com>
+    Date:   Mon Sep 5 04:35:03 2022 -0700
+    
+        fix weird totem err
+    
+    commit 8da2d8bf1ea7b0aeffbda4713145a9f29a9c0068
+    Author: Boshi Lian <farmer1992@gmail.com>
+    Date:   Sun Oct 16 02:22:32 2022 -0700
+    
+        fix flyout nil format
+    
+    commit 86fffafddd61482c6cf4e00a4f4495b26fd17974
+    Author: Boshi Lian <farmer1992@gmail.com>
+    Date:   Sun Oct 16 02:04:40 2022 -0700
+    
+        fix highlight text err
+    
+    commit 7060103f2b96226e31cbbc1573fcb06fb5b8bd96
+    Author: Boshi Lian <farmer1992@gmail.com>
+    Date:   Sun Oct 16 02:04:28 2022 -0700
+    
+        bump ver 10
 

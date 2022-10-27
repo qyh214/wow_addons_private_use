@@ -64,9 +64,9 @@ L["S_MAPBAR_OPTIONSMENU_QUESTTRACKER"] = "Habilitar seguimiento de misiones"
 L["S_MAPBAR_OPTIONSMENU_REFRESH"] = "Refrescar"
 L["S_MAPBAR_OPTIONSMENU_SOUNDENABLED"] = "Habilitar sonido"
 --[[Translation missing --]]
---[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_ONDISABLE"] = ""--]] 
+L["S_MAPBAR_OPTIONSMENU_STATUSBAR_ONDISABLE"] = "use '/wqt statusbar' or the addon option under the Interface options to restore the statusbar."
 --[[Translation missing --]]
---[[ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = ""--]] 
+L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = "Show Statusbar"
 L["S_MAPBAR_OPTIONSMENU_STATUSBARANCHOR"] = "Anclar arriba"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_CURRENTZONE"] = "Zona actual solamente"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_SCALE"] = "Escala de seguimiento: %s"
@@ -156,4 +156,3 @@ L["S_WORLDMAP_QUESTLOCATIONS"] = "Mostrar Ubicaciones de Misión"
 L["S_WORLDMAP_QUESTSUMMARY"] = "Mostrar Resumen de Misión"
 L["S_WORLDMAP_TOOLTIP_TRACKALL"] = "seguir todas las misiones en esta lista"
 L["S_WORLDQUESTS"] = "Misiones de mundo"
-

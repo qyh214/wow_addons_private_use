@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision("20200912135206")
+mod:SetRevision("20220920232426")
 mod:SetCreatureID(74366, 74475)--74366 Forgemaster Gog'duh, 74475 Magmolatus
 mod:SetEncounterID(1655)
 mod:SetMainBossID(74475)
@@ -24,11 +24,11 @@ local specWarnRoughSmash		= mod:NewSpecialWarningDodge(149941, "Melee", nil, nil
 local specWarnRuination			= mod:NewSpecialWarningSwitch("ej8622", "-Healer", nil, nil, 1, 2)
 local specWarnCalamity			= mod:NewSpecialWarningSwitch("ej8626", "-Healer", nil, nil, 1, 2)
 local specWarnFirestorm			= mod:NewSpecialWarningInterrupt(149997, "HasInterrupt", nil, 2, 1, 2)
-local specWarnDancingFlames		= mod:NewSpecialWarningDispel(149975, "Healer", nil, nil, 1, 2)
+local specWarnDancingFlames		= mod:NewSpecialWarningDispel(149975, "RemoveMagic", nil, nil, 1, 2)
 local specWarnMagmolatus		= mod:NewSpecialWarningSwitch("ej8621", nil, nil, 2, 1, 2)--Dps can turn this on too I suppose but 5 seconds after boss spawns they are switching to add anyways, so this is mainly for tank to pick it up
 local specWarnSlagSmash			= mod:NewSpecialWarningDodge(150023, "Melee", nil, nil, 4, 2)
 local specWarnMoltenImpact		= mod:NewSpecialWarningSpell(150038, nil, nil, nil, 2, 2)
-local specWarnWitheringFlames	= mod:NewSpecialWarningDispel(150032, "Healer", nil, nil, 1, 2)
+local specWarnWitheringFlames	= mod:NewSpecialWarningDispel(150032, "RemoveMagic", nil, nil, 1, 2)
 
 local timerMoltenImpactCD		= mod:NewNextTimer(21.5, 150038, nil, nil, nil, 1)
 
@@ -79,15 +79,13 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnFirestorm:Play("helpkick")
 		end
 	elseif spellId == 149975 then
-		if self:CheckDispelFilter() then--only show once. (prevent loud sound)
+		if self:CheckDispelFilter("magic") then--only show once. (prevent loud sound)
 			specWarnDancingFlames:CombinedShow(0.3, args.destName)
-			if self:AntiSpam(2, 2) then
-				specWarnDancingFlames:Play("dispelnow")
-			end
+			specWarnDancingFlames:ScheduleVoice(0.3, "dispelnow")
 		else
 			warnDancingFlames:CombinedShow(0.3, args.destName)--heroic is 2 targets so combined.
 		end
-	elseif spellId == 150032 and self:CheckDispelFilter() then
+	elseif spellId == 150032 and self:CheckDispelFilter("magic") then
 		specWarnWitheringFlames:Show(args.destName)
 		specWarnWitheringFlames:Play("dispelnow")
 	end

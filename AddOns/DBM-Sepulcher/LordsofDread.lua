@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2457, "DBM-Sepulcher", nil, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220406015212")
+mod:SetRevision("20220920224913")
 mod:SetCreatureID(181398, 181399)
 mod:SetEncounterID(2543)
 mod:SetUsedIcons(1, 2, 6, 7, 8)
@@ -17,8 +17,6 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 360300 360304 360012 361934 362020 361945 359963 360418 360146 360148 363191 360241 360287 364985",
 	"SPELL_AURA_APPLIED_DOSE 360287",
 	"SPELL_AURA_REMOVED 360300 360304 360012 361934 362020 361945 360418 360146 360148 363191 360241 360516 364985",
---	"SPELL_PERIODIC_DAMAGE",
---	"SPELL_PERIODIC_MISSED",
 	"UNIT_DIED"
 )
 
@@ -228,6 +226,9 @@ function mod:SPELL_CAST_START(args)
 		--Kin'tessa
 		timerAnguishingStrikeCD:Stop()
 		timerSlumberCloudCD:Stop()
+		if self:IsFated() then
+			self:AffixEvent(0)
+		end
 	elseif (spellId == 360300 or spellId == 360304) and self:AntiSpam(3, 2) then
 		self.vb.darknessCount = self.vb.darknessCount + 1
 		specWarnUntoDarkness:Show(self.vb.darknessCount)
@@ -318,6 +319,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			DBM:Debug("timerSlumberCloudCD extended by: "..extend, 2)
 		end
 		timerSlumberCloudCD:Pause(self.vb.slumberCount+1)
+		if self:IsFated() then
+			self:AffixEvent(0)
+		end
 	elseif spellId == 360516 and self:AntiSpam(3, 5) then--Infiltration
 		timerUntoDarknessCD:Pause(self.vb.darknessCount+1)--Pauses since bosses stop gaining energy
 		--This timer pauses, but also has a min time of 5 seconds so first we need to check and extend that if applicable
@@ -356,7 +360,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnBurstingDread:CancelVoice()
 		end
 		--Smart code that only warns player to dispel it, if they thesmelves aren't a victim of it and dispel is off CD
-		if self:CheckDispelFilter() and not playerDebuffed then
+		if self:CheckDispelFilter("magic") and not playerDebuffed then
 			specWarnBurstingDread:CombinedShow(0.3, args.destName)
 			specWarnBurstingDread:ScheduleVoice(0.3, "helpdispel")
 		end
@@ -367,7 +371,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnUnsettlingDreams:CancelVoice()
 		end
 		--Smart code that only warns player to dispel it, if they thesmelves aren't a victim of it and dispel is off CD
-		if self:CheckDispelFilter() and not playerDebuffed then
+		if self:CheckDispelFilter("magic") and not playerDebuffed then
 			specWarnUnsettlingDreams:CombinedShow(0.3, args.destName)
 			specWarnUnsettlingDreams:ScheduleVoice(0.3, "helpdispel")
 		end
@@ -379,23 +383,9 @@ function mod:SPELL_AURA_APPLIED(args)
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId) then--If not on a tank, it's just some numpty in wrong place
 			local amount = args.amount or 1
-			if amount >= 3 then
-				if args:IsPlayer() then
-					specWarnAnguishingStrikeStack:Show(amount)
-					specWarnAnguishingStrikeStack:Play("stackhigh")
-				else
---					local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
---					local remaining
---					if expireTime then
---						remaining = expireTime-GetTime()
---					end
---					if (not remaining or remaining and remaining < 6.7) and not UnitIsDeadOrGhost("player") then--TODO, adjust remaining when Cd known
---						specWarnAnguishingStrikeTaunt:Show(args.destName)
---						specWarnAnguishingStrikeTaunt:Play("tauntboss")
---					else
-						warnAnguishingStrike:Show(args.destName, amount)
---					end
-				end
+			if args:IsPlayer() and amount >= 3 then
+				specWarnAnguishingStrikeStack:Show(amount)
+				specWarnAnguishingStrikeStack:Play("stackhigh")
 			else
 				warnAnguishingStrike:Show(args.destName, amount)
 			end
@@ -425,6 +415,9 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerAnguishingStrikeCD:Start(7.4)--7.4-9.7
 		--This timer resumes
 		timerSlumberCloudCD:Resume(self.vb.slumberCount+1)
+		if self:IsFated() then
+			self:AffixEvent(1, 2)
+		end
 	elseif spellId == 360516 and self:AntiSpam(3, 7) then--Infiltration
 		--May still be missing some that actually pause/resume instead, but seems accurate enough
 		--Mal
@@ -438,6 +431,9 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerInfiltrationofDreadCD:Start(nil, self.vb.infiltrationCount+1)--122.5
 		--These timers resume
 		timerFearfulTrepidationCD:Resume(self.vb.fearfulCount+1)
+		if self:IsFated() then
+			self:AffixEvent(1, 2)
+		end
 	elseif spellId == 360418 and args:IsPlayer() then
 		timerParanoia:Stop()
 	elseif spellId == 360012 then
@@ -499,13 +495,3 @@ function mod:UNIT_DIED(args)
 		timerAnguishingStrikeCD:Stop()
 	end
 end
-
---[[
-function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
-	if spellId == 340324 and destGUID == UnitGUID("player") and not playerDebuff and self:AntiSpam(2, 8) then
-		specWarnGTFO:Show(spellName)
-		specWarnGTFO:Play("watchfeet")
-	end
-end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
---]]

@@ -48,8 +48,7 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	timerMobOvercharge		= "为能量超载的小怪显示爆炸倒计时(debuff叠加)",
-	EmalonEnrage			= "为$spell:26662显示计时条",
-	RangeFrame			= "显示距离框 (10码)"
+	EmalonEnrage			= "为$spell:26662显示计时条"
 }
 
 ---------------------------------
@@ -61,16 +60,11 @@ L:SetGeneralLocalization{
 	name 				= "火焰看守者科拉隆"
 }
 
-L:SetWarningLocalization{
-	BurningFury			= "燃烧之怒 >%d<"
-}
-
 L:SetTimerLocalization{
 	KoralonEnrage			= "科拉隆狂暴"
 }
 
 L:SetOptionLocalization{
-	BurningFury			= "为$spell:66721显示警报",
 	KoralonEnrage			= "为$spell:26662显示计时条"
 }
 

@@ -1,8 +1,3 @@
--- if not C_Covenants or GetExpansionLevel() ~= 8 then -- Skip for pre-Shadowlands
---     return
--- end
-BTWLOADOUTS_SOULBINDS_ACTIVE = GetExpansionLevel() == 8
-
 local ADDON_NAME,Internal = ...
 local L = Internal.L
 
@@ -178,6 +173,18 @@ local function GetSets(id, ...)
     if id ~= nil then
 		return GetSet(id), GetSets(...);
 	end
+end
+-- In General, For Player, For Player Spec
+local function SetIsValid(set)
+	set = GetSet(set);
+
+    local soulbindData = GetSoulbindData(set.soulbindID)
+    local playerCovenantID = GetActiveCovenantID()
+
+	return true, (soulbindData.covenantID ==playerCovenantID )
+end
+local function GetByName(name)
+    return Internal.GetSetByName("soulbinds", name, SetIsValid)
 end
 local function IsSetActive(set, ignoreConduits)
     if set.soulbindID then
@@ -375,9 +382,9 @@ Internal.AddLoadoutSegment({
     id = "soulbinds",
     name = L["Soulbinds"],
     events = "SOULBIND_ACTIVATED",
-    enabled = BTWLOADOUTS_SOULBINDS_ACTIVE,
     add = AddSet,
     get = GetSets,
+    getByName = GetSets,
     combine = CombineSets,
     isActive = IsSetActive,
 	activate = ActivateSet,
@@ -2810,9 +2817,15 @@ function BtWLoadoutsConduitListMixin:OnLoad()
 			return (#elementData.conduitDatas * buttonHeight) + expandedExtent;
 		end
 	end);
-	view:SetElementInitializer("EventFrame", "BtWLoadoutsConduitListSectionTemplate", function(list, elementData)
-		list:Init(self.owner, elementData);
-	end);
+    if Internal.IsDragonflight() then
+        view:SetElementInitializer("BtWLoadoutsConduitListSectionTemplate", function(list, elementData)
+            list:Init(self.owner, elementData);
+        end);
+    else
+        view:SetElementInitializer("EventFrame", "BtWLoadoutsConduitListSectionTemplate", function(list, elementData)
+            list:Init(self.owner, elementData);
+        end);
+    end
 
 	ScrollUtil.InitScrollBoxListWithScrollBar(self.ScrollBox, self.ScrollBar, view);
 	ScrollUtil.AddResizableChildrenBehavior(self.ScrollBox);
@@ -3398,7 +3411,7 @@ function BtWLoadoutsSoulbindsMixin:IsConduitSlotted(conduitID)
 end
 
 function BtWLoadoutsSoulbindsMixin:Update()
-    self:GetParent().TitleText:SetText(L["Soulbinds"]);
+    self:GetParent():SetTitle(L["Soulbinds"]);
 	local sidebar = BtWLoadoutsFrame.Sidebar
 
 	sidebar:SetSupportedFilters("covenant", "spec", "class", "role", "race")
@@ -3534,7 +3547,7 @@ function BtWLoadoutsSoulbindsMixin:Update()
             local nodeFrame = self.nodes:Acquire()
             nodeFrame:SetFrameLevel(6)
             nodeFrame:SetPoint("TOP", self.Inset, "TOP", (node.column - 1) * (nodeFrame:GetWidth() + 30), -node.row * (nodeFrame:GetHeight() + 12) - 17)
-            nodeFrame:SetNode(node)
+            nodeFrame:Init(self, node)
             nodeFrame:SetSelected(false)
             nodeFrame:Show()
 

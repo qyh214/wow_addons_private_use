@@ -1,10 +1,11 @@
-## Interface: 90205
+## Interface: 100000
 ## X-Min-Interface: 80000
+## X-Min-Interface-Wrath: 30400
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Chamber of Aspects|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Kammer der Aspekte|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Палата Аспектов|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0守護巨龍之間|r
-## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0흑요석 성소|r
+## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0위상의 방|r
 ## Title-frFR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Chambre des Aspects|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Cámara de los Aspectos|r
 ## Author: Tandanu/Nitram/MysticalOS
@@ -30,7 +31,7 @@
 ## X-DBM-Mod-Name-ruRU: Палата Аспектов
 ## X-DBM-Mod-Name-zhTW: 守護巨龍之間
 ## X-DBM-Mod-Name-zhCN: 龙眠神殿
-## X-DBM-Mod-Name-koKR: 고룡쉼터 사원
+## X-DBM-Mod-Name-koKR: 위상의 방
 ## X-DBM-Mod-Name-frFR : Chambre des aspects
 ## X-DBM-Mod-Name-esES: Cámara de los Aspectos
 ## X-DBM-Mod-Name-esMX: Cámara de los Aspectos
@@ -38,7 +39,7 @@
 ## X-DBM-Mod-MapID: 615,724
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
 ## X-DBM-Mod-MinExpansion: 2
-## Version: r307
+## Version: r309
 
 localization.en.lua
 localization.de.lua

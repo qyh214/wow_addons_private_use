@@ -1,4 +1,4 @@
-## Interface: 90205
+## Interface: 100000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Dungeons (Dragonflight)|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Mazmorras (Dragonflight)|r
 ## Title-esMX:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Mazmorras (Dragonflight)|r
@@ -27,12 +27,13 @@
 ## X-Curse-Project-ID: 314994
 ## X-WoWI-ID: 24904
 ## X-Wago-ID: xZKxZENk
-## Version: r38
+## Version: r42
 
 localization.en.lua
 localization.kr.lua
 localization.ru.lua
 localization.cn.lua
+localization.tw.lua
 
 # Commented lines aren't in dungeon journal yet
 
@@ -61,16 +62,16 @@ Neltharus\Magmatusk.lua
 Neltharus\WarlordSargha.lua
 Neltharus\NeltharusTrash.lua
 
-TazalgethAcademy\Crawth.lua
-TazalgethAcademy\Vexamus.lua
-TazalgethAcademy\AccidentalAmalgamation.lua
-TazalgethAcademy\Headmaster.lua
-TazalgethAcademy\TazalgethAcademyTrash.lua
+AlgetharAcademy\Vexamus.lua
+AlgetharAcademy\OvergrownAncient.lua
+AlgetharAcademy\Crawth.lua
+AlgetharAcademy\EchoofDoragosa.lua
+AlgetharAcademy\AlgetharAcademyTrash.lua
 
-TheAzurevault\Umbrelskul.lua
+TheAzurevault\Leymor.lua
 TheAzurevault\Azureblade.lua
 TheAzurevault\TalashGreywing.lua
-TheAzurevault\Leymor.lua
+TheAzurevault\Umbrelskul.lua
 TheAzurevault\TheAzurevaultTrash.lua
 
 RubyLifePools\MelidrussaChillworn.lua

@@ -1,0 +1,13 @@
+## Interface: 11403
+## Title: |cff1784d1ElvUI Classic|r Bag Filters
+## Version: v7.8
+## Author: Warmexx [Neighbours]
+## Dependencies: ElvUI
+## X-Date: 2022-10-11T15:21:04Z
+## X-Donate: PayPal:warmexx AT wow-neighbours DOT com
+## X-Website: https://github.com/warmexx/elvui-bag-filters
+## X-Curse-Project-ID: 49767
+## X-WoWI-ID: 26030
+## X-Wago-ID: WL6JJj6v
+
+BagFilter.lua

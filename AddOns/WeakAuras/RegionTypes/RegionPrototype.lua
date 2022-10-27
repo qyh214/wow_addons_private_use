@@ -1,4 +1,5 @@
-if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
+if not WeakAuras.IsLibsOK() then return end
+--- @type string, Private
 local AddonName, Private = ...
 
 local WeakAuras = WeakAuras;
@@ -119,13 +120,13 @@ local screenWidth, screenHeight = math.ceil(GetScreenWidth() / 20) * 20, math.ce
 function Private.GetAnchorsForData(parentData, type)
   local result
   if not parentData.controlledChildren then
-    if not WeakAuras.regionOptions[parentData.regionType] then
+    if not Private.regionOptions[parentData.regionType] then
       return
     end
 
     local anchors
-    if WeakAuras.regionOptions[parentData.regionType].getAnchors then
-      anchors = WeakAuras.regionOptions[parentData.regionType].getAnchors(parentData)
+    if Private.regionOptions[parentData.regionType].getAnchors then
+      anchors = Private.regionOptions[parentData.regionType].getAnchors(parentData)
     else
       anchors = Private.default_types_for_anchor
     end
@@ -273,7 +274,7 @@ end
 local function RunCode(self, func)
   if func and not WeakAuras.IsOptionsOpen() then
     Private.ActivateAuraEnvironment(self.id, self.cloneId, self.state, self.states);
-    xpcall(func, geterrorhandler());
+    xpcall(func, Private.GetErrorHandlerId(self.id, L["Custom Condition Code"]));
     Private.ActivateAuraEnvironment(nil);
   end
 end
@@ -294,7 +295,7 @@ local function UpdatePosition(self)
   local yOffset = self.yOffset + (self.yOffsetAnim or 0) + (self.yOffsetRelative or 0)
   self:RealClearAllPoints();
 
-  xpcall(self.SetPoint, geterrorhandler(), self, self.anchorPoint, self.relativeTo, self.relativePoint, xOffset, yOffset);
+  xpcall(self.SetPoint, Private.GetErrorHandlerId(self.id, L["Update Position"]), self, self.anchorPoint, self.relativeTo, self.relativePoint, xOffset, yOffset);
 end
 
 local function ResetPosition(self)
@@ -469,7 +470,7 @@ end
 WeakAuras.regionPrototype.AnchorSubRegion = AnchorSubRegion
 
 function WeakAuras.regionPrototype.create(region)
-  local defaultsForRegion = WeakAuras.regionTypes[region.regionType] and WeakAuras.regionTypes[region.regionType].default;
+  local defaultsForRegion = Private.regionTypes[region.regionType] and Private.regionTypes[region.regionType].default;
   region.SoundPlay = SoundPlay;
   region.SoundStop = SoundStop;
   region.SoundRepeatStop = SoundRepeatStop;
@@ -519,7 +520,7 @@ function WeakAuras.regionPrototype.modify(parent, region, data)
   region.states = nil
   region.subRegionEvents:ClearSubscribers()
 
-  local defaultsForRegion = WeakAuras.regionTypes[data.regionType] and WeakAuras.regionTypes[data.regionType].default;
+  local defaultsForRegion = Private.regionTypes[data.regionType] and Private.regionTypes[data.regionType].default;
 
   if region.SetRegionAlpha then
     region:SetRegionAlpha(data.alpha)
@@ -559,7 +560,7 @@ function WeakAuras.regionPrototype.modify(parent, region, data)
   region:SetOffsetAnim(0, 0);
 
   if data.anchorFrameType == "CUSTOM" and data.customAnchor then
-    region.customAnchorFunc = WeakAuras.LoadFunction("return " .. data.customAnchor, data.id, "custom anchor")
+    region.customAnchorFunc = WeakAuras.LoadFunction("return " .. data.customAnchor)
   else
     region.customAnchorFunc = nil
   end
@@ -644,7 +645,7 @@ local regionsForFrameTick = {}
 
 local frameForFrameTick = CreateFrame("Frame");
 
-WeakAuras.frames["Frame Tick Frame"] = frameForFrameTick
+Private.frames["Frame Tick Frame"] = frameForFrameTick
 
 local function FrameTick()
   if WeakAuras.IsOptionsOpen() then
@@ -775,8 +776,8 @@ function WeakAuras.regionPrototype.AddExpandFunction(data, region, cloneId, pare
       region.subRegionEvents:Notify("PreHide")
       if region:IsProtected() then
         if InCombatLockdown() then
-          Private.AuraWarnings.UpdateWarning(uid, "protected_frame", "error",
-            L["Cannot hide secure frame in combat lockdown. Find more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"],
+          Private.AuraWarnings.UpdateWarning(uid, "protected_frame_error", "error",
+          L["Cannot change secure frame in combat lockdown. Find more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"],
             true)
         else
           Private.AuraWarnings.UpdateWarning(uid, "protected_frame", "warning",
@@ -806,8 +807,8 @@ function WeakAuras.regionPrototype.AddExpandFunction(data, region, cloneId, pare
 
       if region:IsProtected() then
         if InCombatLockdown() then
-          Private.AuraWarnings.UpdateWarning(uid, "protected_frame", "error",
-            L["Cannot hide secure frame in combat lockdown. Find more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"],
+          Private.AuraWarnings.UpdateWarning(uid, "protected_frame_error", "error",
+          L["Cannot change secure frame in combat lockdown. Find more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"],
             true)
         else
           Private.AuraWarnings.UpdateWarning(uid, "protected_frame", "warning",
@@ -833,7 +834,6 @@ function WeakAuras.regionPrototype.AddExpandFunction(data, region, cloneId, pare
         return;
       end
       region.toShow = false;
-      region:SetScript("OnUpdate", nil)
 
       Private.PerformActions(data, "finish", region);
       if (not Private.Animate("display", data.uid, "finish", data.animation.finish, region, false, hideRegion, nil, cloneId)) then
@@ -861,8 +861,8 @@ function WeakAuras.regionPrototype.AddExpandFunction(data, region, cloneId, pare
       Private.ApplyFrameLevel(region)
       if region:IsProtected() then
         if InCombatLockdown() then
-          Private.AuraWarnings.UpdateWarning(uid, "protected_frame", "error",
-            L["Cannot show secure frame in combat lockdown. Find more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"],
+          Private.AuraWarnings.UpdateWarning(uid, "protected_frame_error", "error",
+            L["Cannot change secure frame in combat lockdown. Find more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"],
             true)
         else
           Private.AuraWarnings.UpdateWarning(uid, "protected_frame", "warning",
@@ -889,7 +889,6 @@ function WeakAuras.regionPrototype.AddExpandFunction(data, region, cloneId, pare
         return;
       end
       region.toShow = false;
-      region:SetScript("OnUpdate", nil)
 
       Private.PerformActions(data, "finish", region);
       if (not Private.Animate("display", data.uid, "finish", data.animation.finish, region, false, hideRegion, nil, cloneId)) then
@@ -930,8 +929,8 @@ function WeakAuras.regionPrototype.AddExpandFunction(data, region, cloneId, pare
 
       if region:IsProtected() then
         if InCombatLockdown() then
-          Private.AuraWarnings.UpdateWarning(uid, "protected_frame", "error",
-            L["Cannot show secure frame in combat lockdown. Find more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"],
+          Private.AuraWarnings.UpdateWarning(uid, "protected_frame_error", "error",
+            L["Cannot change secure frame in combat lockdown. Find more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Protected-Frames"],
             true)
         else
           Private.AuraWarnings.UpdateWarning(uid, "protected_frame", "warning",
@@ -979,15 +978,12 @@ function WeakAuras.SetTextureOrAtlas(texture, path, wrapModeH, wrapModeV)
   if type(path) == "string" and GetAtlasInfo(path) then
     return texture:SetAtlas(path);
   else
-    local needToClear = true
     if (texture.wrapModeH and texture.wrapModeH ~= wrapModeH) or (texture.wrapModeV and texture.wrapModeV ~= wrapModeV) then
-      needToClear = true
+      -- WORKAROUND https://github.com/Stanzilla/WoWUIBugs/issues/250
+      texture:SetTexture(nil)
     end
     texture.wrapModeH = wrapModeH
     texture.wrapModeV = wrapModeV
-    if needToClear then
-      texture:SetTexture(nil)
-    end
     return texture:SetTexture(path, wrapModeH, wrapModeV);
   end
 end

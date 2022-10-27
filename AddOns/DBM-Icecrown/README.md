@@ -3,12 +3,14 @@
 
 <p><img src="https://media.forgecdn.net/attachments/76/25/patreon-medium-button.png" width="408" height="80" /></p>
 <p><a href="https://www.patreon.com/deadlybossmods">https://www.patreon.com/deadlybossmods</a></p>
-<h2 id="w-wot-lk-boss-mods-for-dbm"><strong>WotLK boss mods for DBM</strong></h2>
+<h2 id="w-wot-lk-boss-mods-for-dbm"><strong>WotLK boss mods for DBM (on retail)</strong></h2>
 <p>Wrath of the Lich King raid mods for <a href="http://wow.curse.com/downloads/wow-addons/details/deadly-boss-mods.aspx">Deadly Boss Mods</a></p>
 <h2 id="w-features"><strong>Features</strong></h2>
 <ul>
-<li>Raid mods for all Wrath of the Lich King raids</li>
+<li>Raid mods for all Retail Wrath of the Lich King raids</li>
 </ul>
+<h2><strong>Looking for WoTLK Classic mods?</strong></h2>
+<p>Mods for Wrath of the Lich King Classic are found in main DBM download here: <a href="https://www.curseforge.com/wow/addons/deadly-boss-mods">Deadly Boss Mods</a></p>
 <h2><strong>Looking for Dungeons?</strong></h2>
 <p>Dungeon mods are now all grouped together in <a href="https://wow.curseforge.com/projects/deadly-boss-mods-dbm-dungeons">DBM-Dungeons package</a></p>
 <h2 id="w-old-content-mods-are-split-into-multiple-packages"><strong>Looking for other Raid mods?</strong></h2>

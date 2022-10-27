@@ -20,7 +20,7 @@ db_defaults.stats = {
 local credits = {
     "Pazza <Bronzebeard-US>\n\n",
     "MysicalOS\nHumfras\nSylvaanar\n\nStewarta <Emerald Dream - EU>\n\nAstaldo <Bronzebeard - EU>\nZeke <Coilfang - US>\nMorphieus <Spinebreaker>\nNachonut <Bronzebeard - US>\n\nChiaki <Frostwolf - EU> - deDE\n"..
-    "BlueNyx <bluenyx@gmail.com> - koKR\nStingerSoft <stingersoft@iti.lt> - ruRU\nJunxian <junxian1121@hotmail.com> - zhCN & zhTW\nWoopy <Loatheb - NA> - esES & esMX\n"
+    "BlueNyx <bluenyx@gmail.com> - koKR\nStingerSoft <stingersoft@iti.lt> - ruRU\nJunxian <junxian1121@hotmail.com> - zhCN & zhTW\nWoopy <Loatheb - NA> - esES & esMX\n\n\nAstrosloth and Zezerat are noobs! ;-p"
 };
 
 local states = {"arena", "combat", "pvp", "raid", "party", "resting", "other"};
@@ -511,7 +511,7 @@ local function Whispers_Filters(isChat)
     local filterActions = {L["Allow"], L["Ignore"], L["Block"]}
     local frame = options.CreateOptionsFrame();
     local filters = isChat and chatFilters or filters;
-    frame.sub = frame:CreateSection((isChat and _G.CHAT..": " or "")..L["Filtering"], L["Filtering allows you to control which messages are handled as well as how they are handlef by WIM."]);
+    frame.sub = frame:CreateSection((isChat and _G.CHAT..": " or "")..L["Filtering"], L["Filtering allows you to control which messages are handled as well as how they are handled by WIM."]);
     frame.sub.nextOffSetY = -10;
     frame.sub:CreateCheckButton(L["Enable Filtering"], isChat and WIM.modules.ChatFilters or WIM.modules.Filters, "enabled", nil, function(self, button) EnableModule(isChat and "ChatFilters" or "Filters", self:GetChecked()); end);
     frame.sub.nextOffSetY = -15;

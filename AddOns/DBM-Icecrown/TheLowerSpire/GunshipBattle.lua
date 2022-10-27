@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("GunshipBattle", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041927")
+mod:SetRevision("20220701192851")
 local addsIcon
 local bossID
 --mod:SetEncounterID(1099)--No ES fires this combat
@@ -34,17 +34,17 @@ mod:RegisterEvents(
 
 --TODO, see if IEEU fires here and if we need yell triggers for engage
 local warnBelowZero			= mod:NewSpellAnnounce(69705, 4)
-local warnExperienced		= mod:NewTargetAnnounce(71188, 1, nil, false)		-- might be spammy
-local warnVeteran			= mod:NewTargetAnnounce(71193, 2, nil, false)		-- might be spammy
-local warnElite				= mod:NewTargetAnnounce(71195, 3, nil, false)		-- might be spammy
+local warnExperienced		= mod:NewTargetNoFilterAnnounce(71188, 1, nil, false)		-- might be spammy
+local warnVeteran			= mod:NewTargetNoFilterAnnounce(71193, 2, nil, false)		-- might be spammy
+local warnElite				= mod:NewTargetNoFilterAnnounce(71195, 3, nil, false)		-- might be spammy
 local warnBattleFury		= mod:NewStackAnnounce(69638, 2, nil, "Tank|Healer", 2)
 local warnBladestorm		= mod:NewSpellAnnounce(69652, 3, nil, "Melee")
-local warnWoundingStrike	= mod:NewTargetAnnounce(69651, 2)
+local warnWoundingStrike	= mod:NewTargetNoFilterAnnounce(69651, 2)
 local warnAddsSoon			= mod:NewAnnounce("WarnAddsSoon", 2, addsIcon)
 
 local timerCombatStart		= mod:NewCombatTimer(42)
 local timerBelowZeroCD		= mod:NewNextTimer(33.5, 69705, nil, nil, nil, 5)
-local timerBattleFuryActive	= mod:NewBuffFadesTimer(17, 69638, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerBattleFuryActive	= mod:NewBuffActiveTimer(17, 69638, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerAdds				= mod:NewTimer(60, "TimerAdds", addsIcon, nil, nil, 1)
 
 mod.vb.firstMage = false

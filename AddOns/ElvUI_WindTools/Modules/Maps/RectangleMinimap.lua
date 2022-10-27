@@ -1,6 +1,6 @@
 local W, F, E, L = unpack(select(2, ...))
 local RM = W:NewModule("RectangleMinimap", "AceEvent-3.0", "AceHook-3.0")
-local MM = E:GetModule("Minimap")
+local M = E:GetModule("Minimap")
 
 local _G = _G
 local ceil = ceil
@@ -21,7 +21,6 @@ function RM:ChangeShape()
     end
 
     local Minimap = _G.Minimap
-    local MMHolder = _G.MMHolder
     local MinimapPanel = _G.MinimapPanel
     local MinimapBackdrop = _G.MinimapBackdrop
 
@@ -39,7 +38,7 @@ function RM:ChangeShape()
     Minimap:SetClampRectInsets(0, 0, 0, 0)
     _G.MinimapMover:SetClampRectInsets(0, 0, halfDiff * E.mult, -halfDiff * E.mult)
     Minimap:ClearAllPoints()
-    Minimap:Point("TOPLEFT", MMHolder, "TOPLEFT", E.Border, -E.Border + halfDiff)
+    Minimap:Point("TOPLEFT", M.holder, "TOPLEFT", E.Border, -E.Border + halfDiff)
     Minimap.backdrop:SetOutside(Minimap, 1, -halfDiff + 1)
     MinimapBackdrop:SetOutside(Minimap.backdrop)
 
@@ -55,7 +54,7 @@ function RM:ChangeShape()
 
     if Minimap.location then
         Minimap.location:ClearAllPoints()
-        Minimap.location:Point("TOP", MMHolder, "TOP", 0, -5)
+        Minimap.location:Point("TOP", M.holder, "TOP", 0, -5)
     end
 
     if MinimapPanel:IsShown() then
@@ -64,12 +63,12 @@ function RM:ChangeShape()
         MinimapPanel:Point("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", E.Border, -23 + halfDiff)
     end
 
-    self:MMHolder_Size()
+    self:Minimap_Holder_Size()
 end
 
 do
     local isRunning
-    function RM:MMHolder_Size()
+    function RM:Minimap_Holder_Size()
         if isRunning then
             return
         end
@@ -77,7 +76,6 @@ do
         isRunning = true
 
         local MinimapPanel = _G.MinimapPanel
-        local MMHolder = _G.MMHolder
 
         local fileID = self.db.enable and self.db.heightPercentage and floor(self.db.heightPercentage * 128) or 128
         local newHeight = E.MinimapSize * fileID / 128
@@ -88,7 +86,7 @@ do
             1
         local holderHeight = newHeight + (panelSize - joinPanel)
 
-        MMHolder:Size(E.MinimapSize + borderWidth, holderHeight + borderHeight)
+        M.holder:Size(E.MinimapSize + borderWidth, holderHeight + borderHeight)
         _G.MinimapMover:Size(E.MinimapSize + borderWidth, holderHeight + borderHeight)
         isRunning = false
     end
@@ -96,11 +94,11 @@ end
 
 function RM:SetUpdateHook()
     if not self.initialized then
-        self:SecureHook(MM, "SetGetMinimapShape", "ChangeShape")
-        self:SecureHook(MM, "UpdateSettings", "ChangeShape")
-        self:SecureHook(MM, "Initialize", "ChangeShape")
+        self:SecureHook(M, "SetGetMinimapShape", "ChangeShape")
+        self:SecureHook(M, "UpdateSettings", "ChangeShape")
+        self:SecureHook(M, "Initialize", "ChangeShape")
         self:SecureHook(E, "UpdateAll", "ChangeShape")
-        self:SecureHook(_G.MMHolder, "Size", "MMHolder_Size")
+        self:SecureHook(M.holder, "Size", "Minimap_Holder_Size")
         self.initialized = true
     end
     self:ChangeShape()

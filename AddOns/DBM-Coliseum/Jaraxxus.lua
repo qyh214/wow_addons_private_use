@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Jaraxxus", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041927")
+mod:SetRevision("20220609005636")
 mod:SetCreatureID(34780)
 mod:SetEncounterID(1087)
 mod:SetModelID(29615)
@@ -15,18 +15,20 @@ mod:RegisterEvents(
 )
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_DAMAGE",
-	"SPELL_MISSED"
+	"SPELL_CAST_START 66532",
+	"SPELL_CAST_SUCCESS 67009 66258 66269 66197",
+	"SPELL_AURA_APPLIED 66237 66197 66334 66532",
+	"SPELL_AURA_REMOVED 66237",
+	"SPELL_DAMAGE 66877 66496",
+	"SPELL_MISSED 66877 66496"
 )
 
+--TODO, possibly just use args.amount from combatlog versus debuff scanning for flesh?
+--TODO, see where ENCOUNTER_START fires for this, as SetMinCombatTime might not be needed if ES fires at entering combat and not at RP
 local warnPortalSoon			= mod:NewSoonAnnounce(66269, 3)
 local warnVolcanoSoon			= mod:NewSoonAnnounce(66258, 3)
 local warnFlame					= mod:NewTargetAnnounce(66197, 4)
-local warnFlesh					= mod:NewTargetAnnounce(66237, 4, nil, "Healer")
+local warnFlesh					= mod:NewTargetNoFilterAnnounce(66237, 4, nil, "Healer")
 
 local specWarnFlame				= mod:NewSpecialWarningRun(66877, nil, nil, 2, 4, 2)
 local specWarnFlameGTFO			= mod:NewSpecialWarningMove(66877, nil, nil, 2, 4, 2)
@@ -48,8 +50,8 @@ local timerVolcanoCD			= mod:NewCDTimer(120, 66258, nil, nil, nil, 1)
 
 local enrageTimer				= mod:NewBerserkTimer(600)
 
-mod:AddSetIconOption("LegionFlameIcon", 66197)
-mod:AddSetIconOption("IncinerateFleshIcon", 66237)
+mod:AddSetIconOption("LegionFlameIcon", 66197, true, 0, {7})
+mod:AddSetIconOption("IncinerateFleshIcon", 66237, true, 0, {8})
 mod:AddInfoFrameOption(66237, true)
 
 mod.vb.fleshCount = 0
@@ -71,16 +73,28 @@ function mod:OnCombatEnd()
 	end
 end
 
-function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 66877 and destGUID == UnitGUID("player") and self:AntiSpam(3, 1) then
-		specWarnFlameGTFO:Show()
-		specWarnFlameGTFO:Play("runaway")
-	elseif spellId == 66496 and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
-		specWarnFelInferno:Show()
-		specWarnFelInferno:Play("runaway")
+function mod:SPELL_CAST_START(args)
+	if args.spellId == 66532 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
+		SpecWarnFelFireball:Show(args.sourceName)
+		SpecWarnFelFireball:Play("kickcast")
 	end
 end
-mod.SPELL_MISSED = mod.SPELL_DAMAGE
+
+function mod:SPELL_CAST_SUCCESS(args)
+	if args.spellId == 67009 then
+		specWarnNetherPower:Show(args.sourceName)
+		specWarnNetherPower:Play("dispelboss")
+		timerNetherPowerCD:Start()
+	elseif args.spellId == 66258 then
+		timerVolcanoCD:Start()
+		warnVolcanoSoon:Schedule(110)
+	elseif args.spellId == 66269 then
+		timerPortalCD:Start()
+		warnPortalSoon:Schedule(110)
+	elseif args.spellId == 66197 then
+		warnFlame:Show(args.destName)
+	end
+end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 66237 then
@@ -133,28 +147,16 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
-function mod:SPELL_CAST_START(args)
-	if args.spellId == 66532 and self:CheckInterruptFilter(args.sourceGUID) then
-		SpecWarnFelFireball:Show(args.sourceName)
-		SpecWarnFelFireball:Play("kickcast")
+function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
+	if spellId == 66877 and destGUID == UnitGUID("player") and self:AntiSpam(3, 1) then
+		specWarnFlameGTFO:Show()
+		specWarnFlameGTFO:Play("runaway")
+	elseif spellId == 66496 and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
+		specWarnFelInferno:Show()
+		specWarnFelInferno:Play("runaway")
 	end
 end
-
-function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 67009 then
-		specWarnNetherPower:Show(args.sourceName)
-		specWarnNetherPower:Play("dispelboss")
-		timerNetherPowerCD:Start()
-	elseif args.spellId == 66258 then
-		timerVolcanoCD:Start()
-		warnVolcanoSoon:Schedule(110)
-	elseif args.spellId == 66269 then
-		timerPortalCD:Start()
-		warnPortalSoon:Schedule(110)
-	elseif args.spellId == 66197 then
-		warnFlame:Show(args.destName)
-	end
-end
+mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.FirstPull or msg:find(L.FirstPull) then

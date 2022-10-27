@@ -543,7 +543,8 @@ local openableItems = {
     190610, --受啟迪者長老貢品
     191040, --聖塚寶藏箱
     191041, --聖塚寶藏箱
-    191139 --受啟迪者長老貢品
+    191139, --受啟迪者長老貢品
+    192438, --命定寶箱
 }
 
 -- 更新任务物品列表
@@ -603,7 +604,7 @@ function EB:CreateButton(name, barDB)
     button:SetClampedToScreen(true)
     button:SetAttribute("type", "item")
     button:EnableMouse(false)
-    button:RegisterForClicks("AnyUp")
+    button:RegisterForClicks(E.global.WT.core.buttonFix)
 
     local tex = button:CreateTexture(nil, "OVERLAY", nil)
     tex:SetPoint("TOPLEFT", button, "TOPLEFT", 1, -1)

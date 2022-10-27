@@ -1,20 +1,34 @@
-if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
+if not WeakAuras.IsLibsOK() then return end
+--- @type string, Private
 local AddonName, Private = ...
+
+--- @alias AuraWarningSeverity
+--- | "info"
+--- | "sound"
+--- | "warning"
+--- | "error"
+
+--- @class AuraWarnings
+--- @field UpdateWarning fun(uid: uid, key: string, severity: AuraWarningSeverity?, message: string?, printOnConsole: boolean?)
+--- @field FormatWarnings fun(uid: uid): string?, string?, string?
 
 local WeakAuras = WeakAuras
 local L = WeakAuras.L
 
--- keyed on uid, key, { severity, message }
+--- @type table<uid, table<string, {severity: AuraWarningSeverity, message: string}>>
 local warnings = {}
+--- @type table<uid, table<string, boolean>>
 local printedWarnings = {}
 
 local function OnDelete(event, uid)
   warnings[uid] = nil
+  printedWarnings[uid] = nil
 end
 
 Private.callbacks:RegisterCallback("Delete", OnDelete)
+Private.AuraWarnings = {}
 
-local function UpdateWarning(uid, key, severity, message, printOnConsole)
+function Private.AuraWarnings.UpdateWarning(uid, key, severity, message, printOnConsole)
   if not uid then
     WeakAuras.prettyPrint(L["Warning for unknown aura:"], message)
     return
@@ -37,11 +51,15 @@ local function UpdateWarning(uid, key, severity, message, printOnConsole)
   else
     if warnings[uid][key] then
       warnings[uid][key] = nil
+      if printedWarnings[uid] then
+        printedWarnings[uid][key] = nil
+      end
       Private.callbacks:Fire("AuraWarningsUpdated", uid)
     end
   end
 end
 
+--- @type table<AuraWarningSeverity, number>
 local severityLevel = {
   info = 0,
   sound = 1,
@@ -49,6 +67,7 @@ local severityLevel = {
   error = 3
 }
 
+--- @type table<AuraWarningSeverity, string>
 local icons = {
   info = [[Interface/friendsframe/informationicon.blp]],
   sound = [[chatframe-button-icon-voicechat]],
@@ -56,13 +75,19 @@ local icons = {
   error =  [[Interface/DialogFrame/UI-Dialog-Icon-AlertNew]]
 }
 
+--- @type table<AuraWarningSeverity, string>
 local titles = {
   info = L["Information"],
   sound = L["Sound"],
   warning = L["Warning"],
-  error = L["Error"]
+  error = L["Error"],
 }
 
+---@param result string
+---@param messages string[]
+---@param icon string
+---@param mixedSeverity boolean
+---@return string
 local function AddMessages(result, messages, icon, mixedSeverity)
   if not messages then
     return result
@@ -73,7 +98,7 @@ local function AddMessages(result, messages, icon, mixedSeverity)
     end
     if mixedSeverity then
       if C_Texture.GetAtlasInfo(icon) then
-        result = result .. "|A" .. icon .. ":12:12:0:0:64:64:4:60:4:60|t"
+        result = result .. "|A:" .. icon .. ":12:12:0:0|a"
       else
         result = result .. "|T" .. icon .. ":12:12:0:0:64:64:4:60:4:60|t"
       end
@@ -83,14 +108,17 @@ local function AddMessages(result, messages, icon, mixedSeverity)
   return result
 end
 
-local function FormatWarnings(uid)
+function Private.AuraWarnings.FormatWarnings(uid)
   if not warnings[uid] then
     return
   end
 
+  --- @type AuraWarningSeverity
   local maxSeverity
+  --- @type boolean
   local mixedSeverity = false
 
+  ---@type table<AuraWarningSeverity, string[]>
   local messagePerSeverity = {}
 
   for key, warning in pairs(warnings[uid]) do
@@ -109,6 +137,7 @@ local function FormatWarnings(uid)
     return
   end
 
+  --- @type string
   local result = ""
   result = AddMessages(result, messagePerSeverity["error"], icons["error"], mixedSeverity)
   result = AddMessages(result, messagePerSeverity["warning"], icons["warning"], mixedSeverity)
@@ -116,7 +145,3 @@ local function FormatWarnings(uid)
   result = AddMessages(result, messagePerSeverity["info"], icons["info"], mixedSeverity)
   return icons[maxSeverity], titles[maxSeverity], result
 end
-
-Private.AuraWarnings = {}
-Private.AuraWarnings.UpdateWarning = UpdateWarning
-Private.AuraWarnings.FormatWarnings = FormatWarnings

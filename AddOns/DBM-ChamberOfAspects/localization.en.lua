@@ -96,9 +96,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	WarningSplitSoon	= "Show pre-warning for Split",
-	RangeFrame			= "Show range frame (12 yards)",
-	SetIconOnBrand		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(74505)
+	WarningSplitSoon	= "Show pre-warning for Split"
 })
 
 -------------------------
@@ -108,11 +106,6 @@ L = DBM:GetModLocalization("Saviana")
 
 L:SetGeneralLocalization({
 	name = "Saviana Ragefire"
-})
-
-L:SetOptionLocalization({
-	RangeFrame				= "Show range frame (10 yards)",
-	BeaconIcon				= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(74453)
 })
 
 --------------------------
@@ -158,8 +151,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	TwilightCutterCast		= "Show warning when $spell:74769 is being cast",
-	AnnounceAlternatePhase	= "Show warnings/timers for phase you aren't in as well",
-	SetIconOnConsumption	= "Set icons on $spell:74562 or $spell:74792 targets"--So we can use single functions for both versions of spell.
+	AnnounceAlternatePhase	= "Show warnings/timers for phase you aren't in as well"
 })
 
 L:SetMiscLocalization({

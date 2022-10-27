@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(100, "DBM-Party-Cataclysm", 6, 64)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20220920232426")
 mod:SetCreatureID(46964)
 mod:SetEncounterID(1072)
 
@@ -34,7 +34,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args.spellId == 93707 then
 		warnGhouls:Show()
 		timerGhouls:Start()
-	elseif args.spellId == 93629 and self:CheckDispelFilter() then
+	elseif args.spellId == 93629 and self:CheckDispelFilter("curse") then
 		specWarnCursedBullets:Show(args.destName)
 		specWarnCursedBullets:Play("helpdispel")
 	end

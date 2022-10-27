@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NorthrendBeasts", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041927")
+mod:SetRevision("20220701194344")
 mod:SetCreatureID(34796, 35144, 34799, 34797)
 --mod:SetEncounterID(1088)--Buggy, never enable this
 mod:SetMinSyncRevision(104)
@@ -17,16 +17,19 @@ mod:RegisterEvents(
 )
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED 66331 66759 66823 66869 66758 66636 68335",
-	"SPELL_AURA_APPLIED_DOSE 66331 66636",
 	"SPELL_CAST_START 66689 66313 66330 66794 66821 66818 66901 66902",
 	"SPELL_CAST_SUCCESS 66883 66824 66879",
+	"SPELL_AURA_APPLIED 66331 66759 66823 66869 66758 66636 68335",
+	"SPELL_AURA_APPLIED_DOSE 66331 66636",
+	"SPELL_AURA_REMOVED 66869",
 	"SPELL_DAMAGE 66317 66320 66881",
 	"SPELL_MISSED 66317 66320 66881",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"UNIT_DIED"
 )
 
+--TODO: Is Encounter start still buggy?
+--TODO, maybe resort abilities by stage. Abilities aren't cleanly separated though so it'd be PITA
 local warnImpaleOn			= mod:NewStackAnnounce(66331, 2, nil, "Tank|Healer")
 local warnFireBomb			= mod:NewSpellAnnounce(66317, 3, nil, false)
 local warnBreath			= mod:NewSpellAnnounce(66689, 2)
@@ -35,7 +38,7 @@ local warnToxin				= mod:NewTargetAnnounce(66823, 3)
 local warnBile				= mod:NewTargetAnnounce(66869, 3)
 local WarningSnobold		= mod:NewAnnounce("WarningSnobold", 4)
 local warnEnrageWorm		= mod:NewSpellAnnounce(68335, 3)
-local warnCharge			= mod:NewTargetAnnounce(52311, 4)
+local warnCharge			= mod:NewTargetNoFilterAnnounce(52311, 4)
 
 local specWarnImpale3		= mod:NewSpecialWarningStack(66331, nil, 3, nil, nil, 1, 6)
 local specWarnAnger3		= mod:NewSpecialWarningStack(66636, "Tank|Healer", 3, nil, nil, 1, 6)
@@ -45,7 +48,7 @@ local specWarnBile			= mod:NewSpecialWarningYou(66869, nil, nil, nil, 1, 2)
 local specWarnSilence		= mod:NewSpecialWarningSpell(66330, "SpellCaster", nil, nil, 1, 2)
 local specWarnCharge		= mod:NewSpecialWarningRun(52311, nil, nil, nil, 4, 2)
 local specWarnChargeNear	= mod:NewSpecialWarningClose(52311, nil, nil, nil, 3, 2)
-local specWarnTranq			= mod:NewSpecialWarningDispel(66759, "RemoveEnrage", nil, nil, 1, 2)
+local specWarnFrothingRage	= mod:NewSpecialWarningDispel(66759, "RemoveEnrage", nil, nil, 1, 2)
 
 local enrageTimer			= mod:NewBerserkTimer(223)
 local timerCombatStart		= mod:NewCombatTimer(21.5)
@@ -68,23 +71,23 @@ local timerBurningSprayCD	= mod:NewCDTimer(21, 66902, nil, nil, nil, 3)
 local timerParalyticBiteCD	= mod:NewCDTimer(25, 66824, nil, "Melee", nil, 3)
 local timerBurningBiteCD	= mod:NewCDTimer(15, 66879, nil, "Melee", nil, 3)
 
-mod:AddSetIconOption("SetIconOnChargeTarget", 52311)
-mod:AddSetIconOption("SetIconOnBileTarget", 66869, false)
+mod:AddSetIconOption("SetIconOnChargeTarget", 52311, true, 0, {8})
+mod:AddSetIconOption("SetIconOnBileTarget", 66869, false, 0, {1, 2, 3, 4, 5, 6, 7, 8})
 mod:AddBoolOption("ClearIconsOnIceHowl", false)
 mod:AddRangeFrameOption("10")
 
-local bileTargets = {}
+mod:GroupSpells(66902, 66869)--Burning Spray with Burning Bile
+mod:GroupSpells(66901, 66823)--Paralytic Spray with Toxic Bile
+mod:GroupSpells(52311, 66758, 66759)--Furious Charge, Staggering Daze, and frothing rage
+
 local bileName = DBM:GetSpellInfo(66869)
-local toxinTargets = {}
-mod.vb.burnIcon = 8
+mod.vb.burnIcon = 1
 mod.vb.DreadscaleActive = true
 mod.vb.DreadscaleDead = false
 mod.vb.AcidmawDead = false
 
 function mod:OnCombatStart(delay)
-	table.wipe(bileTargets)
-	table.wipe(toxinTargets)
-	self.vb.burnIcon = 8
+	self.vb.burnIcon = 1
 	self.vb.DreadscaleActive = true
 	self.vb.DreadscaleDead = false
 	self.vb.AcidmawDead = false
@@ -105,17 +108,7 @@ function mod:OnCombatEnd()
 	end
 end
 
-function mod:warnToxin()
-	warnToxin:Show(table.concat(toxinTargets, "<, >"))
-	table.wipe(toxinTargets)
-end
-
-function mod:warnBile()
-	warnBile:Show(table.concat(bileTargets, "<, >"))
-	table.wipe(bileTargets)
-	self.vb.burnIcon = 8
-end
-
+--These remain methods since they can't reverse schedule each other as local functions
 function mod:WormsEmerge()
 	timerSubmerge:Show()
 	if not self.vb.AcidmawDead then
@@ -155,33 +148,64 @@ function mod:WormsSubmerge()
 	self:ScheduleMethod(10, "WormsEmerge")
 end
 
+function mod:SPELL_CAST_START(args)
+	if args.spellId == 66689 then
+		timerBreath:Start()
+		warnBreath:Show()
+	elseif args.spellId == 66313 then
+		warnFireBomb:Show()
+	elseif args.spellId == 66330 then
+		timerNextStomp:Start()
+		specWarnSilence:Schedule(19)
+		specWarnSilence:ScheduleVoice(19, "silencesoon")
+	elseif args.spellId == 66794 then
+		timerSweepCD:Start()
+	elseif args.spellId == 66821 then
+		timerMoltenSpewCD:Start()
+	elseif args.spellId == 66818 then
+		timerAcidicSpewCD:Start()
+	elseif args.spellId == 66901 then
+		timerParalyticSprayCD:Start()
+	elseif args.spellId == 66902 then
+		self.vb.burnIcon = 1
+		timerBurningSprayCD:Start()
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	if args.spellId == 66883 then
+		warnSlimePool:Show()
+		timerSlimePoolCD:Show()
+	elseif args.spellId == 66824 then
+		timerParalyticBiteCD:Start()
+	elseif args.spellId == 66879 then
+		timerBurningBiteCD:Start()
+	end
+end
+
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 66331 then
 		timerNextImpale:Start()
 		warnImpaleOn:Show(args.destName, 1)
 	elseif args.spellId == 66759 then
-		specWarnTranq:Show()
-		specWarnTranq:Play("trannow")
+		specWarnFrothingRage:Show()
+		specWarnFrothingRage:Play("trannow")
 	elseif args.spellId == 66823 then
-		self:UnscheduleMethod("warnToxin")
-		toxinTargets[#toxinTargets + 1] = args.destName
+		warnToxin:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnToxin:Show(bileName)
 			specWarnToxin:Play("targetyou")
 		end
-		self:ScheduleMethod(0.2, "warnToxin")
 	elseif args.spellId == 66869 then
-		self:UnscheduleMethod("warnBile")
-		bileTargets[#bileTargets + 1] = args.destName
+		warnBile:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnBile:Show()
 			specWarnBile:Play("targetyou")
 		end
-		if self.Options.SetIconOnBileTarget and self.vb.burnIcon > 0 then
-			self:SetIcon(args.destName, self.vb.burnIcon, 15)
-			self.vb.burnIcon = self.vb.burnIcon - 1
+		if self.Options.SetIconOnBileTarget and self.vb.burnIcon < 9 then
+			self:SetIcon(args.destName, self.vb.burnIcon)
+			self.vb.burnIcon = self.vb.burnIcon + 1
 		end
-		self:ScheduleMethod(0.2, "warnBile")
 	elseif args.spellId == 66758 then
 		timerStaggeredDaze:Start()
 	elseif args.spellId == 66636 then
@@ -216,37 +240,11 @@ function mod:SPELL_AURA_APPLIED_DOSE(args)
 	end
 end
 
-function mod:SPELL_CAST_START(args)
-	if args.spellId == 66689 then
-		timerBreath:Start()
-		warnBreath:Show()
-	elseif args.spellId == 66313 then
-		warnFireBomb:Show()
-	elseif args.spellId == 66330 then
-		timerNextStomp:Start()
-		specWarnSilence:Schedule(19)
-		specWarnSilence:ScheduleVoice(19, "silencesoon")
-	elseif args.spellId == 66794 then
-		timerSweepCD:Start()
-	elseif args.spellId == 66821 then
-		timerMoltenSpewCD:Start()
-	elseif args.spellId == 66818 then
-		timerAcidicSpewCD:Start()
-	elseif args.spellId == 66901 then
-		timerParalyticSprayCD:Start()
-	elseif args.spellId == 66902 then
-		timerBurningSprayCD:Start()
-	end
-end
-
-function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 66883 then
-		warnSlimePool:Show()
-		timerSlimePoolCD:Show()
-	elseif args.spellId == 66824 then
-		timerParalyticBiteCD:Start()
-	elseif args.spellId == 66879 then
-		timerBurningBiteCD:Start()
+function mod:SPELL_AURA_REMOVED(args)
+	if args.spellId == 66869 then
+		if self.Options.SetIconOnBileTarget then
+			self:SetIcon(args.destName, 0)
+		end
 	end
 end
 

@@ -202,7 +202,7 @@ function Titles:UpdateAvailableQuests(data)
 		----------------------------------
 		button:SetPriority(P_AVAILABLE_QUEST)
 		----------------------------------
-		button:SetID(i)
+		button:SetID(API.IsWoW10 and quest.questID or i)
 		button.type = 'Available'
 		----------------------------------
 		self.idx = self.idx + 1
@@ -222,7 +222,7 @@ function Titles:UpdateActiveQuests(data)
 		----------------------------------
 		button:SetPriority(quest.isComplete and P_COMPLETE_QUEST or P_INCOMPLETE_QUEST)
 		----------------------------------
-		button:SetID(i)
+		button:SetID(API.IsWoW10 and quest.questID or i)
 		button:SetType('Active')
 		----------------------------------
 		self.idx = self.idx + 1
@@ -234,10 +234,10 @@ function Titles:UpdateGossipOptions(data)
 		local button = self:GetButton(self.idx)
 		----------------------------------
 		button:SetText(option.name)
-		button:SetGossipIcon(option.type)
+		button:SetGossipIcon(option.type or option.icon)
 		button:SetPriority(P_AVAILABLE_GOSSIP)
 		----------------------------------
-		button:SetID(i)
+		button:SetID(option.gossipOptionID or i)
 		button:SetType('Gossip')
 		----------------------------------
 		self.idx = self.idx + 1
@@ -263,8 +263,8 @@ function Titles:QUEST_GREETING()
 	self.idx = 1
 	self.type = 'Quests'
 	self:Show()
-	self:UpdateActiveGreetingQuests(GetNumActiveQuests())
-	self:UpdateAvailableGreetingQuests(GetNumAvailableQuests())
+	self:UpdateActiveGreetingQuests(API:GetNumActiveQuests())
+	self:UpdateAvailableGreetingQuests(API:GetNumAvailableQuests())
 	for i = self.idx, #self.Buttons do
 		self.Buttons[i]:Hide()
 	end
@@ -297,7 +297,7 @@ function Titles:UpdateAvailableGreetingQuests(numAvailableQuests)
 	for i=1, numAvailableQuests do
 		local button = self:GetButton(self.idx)
 		local title = GetAvailableTitle(i)
-		local isTrivial, frequency, isRepeatable, isLegendary = API:GetAvailableQuestInfo(i)
+		local isTrivial, frequency, isRepeatable, isLegendary, questID = API:GetAvailableQuestInfo(i)
 		----------------------------------
 		local qType = ( isTrivial and TRIVIAL_QUEST_DISPLAY )
 		button:SetFormattedText(qType or NORMAL_QUEST_DISPLAY, title)

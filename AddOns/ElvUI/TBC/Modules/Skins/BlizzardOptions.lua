@@ -2,12 +2,11 @@ local E, L, V, P, G = unpack(ElvUI)
 local S = E:GetModule('Skins')
 
 local _G = _G
-local select = select
-local ipairs = ipairs
+local next = next
 local pairs = pairs
+local ipairs = ipairs
 
 local hooksecurefunc = hooksecurefunc
-local UnitIsUnit = UnitIsUnit
 local InCombatLockdown = InCombatLockdown
 
 local function HandlePushToTalkButton(button)
@@ -22,11 +21,21 @@ local function HandlePushToTalkButton(button)
 	button.MiddleRight:Hide()
 	button.BottomMiddle:Hide()
 	button.MiddleMiddle:Hide()
-	button:SetHighlightTexture('')
+	button:SetHighlightTexture(E.ClearTexture)
 
 	button:SetTemplate(nil, true)
 	button:HookScript('OnEnter', S.SetModifiedBackdrop)
 	button:HookScript('OnLeave', S.SetOriginalBackdrop)
+end
+
+local function Skin_InterfaceOptions_Buttons()
+	for i = 1, #_G.INTERFACEOPTIONS_ADDONCATEGORIES do
+		local button = _G['InterfaceOptionsFrameAddOnsButton'..i..'Toggle']
+		if button and not button.IsSkinned then
+			S:HandleCollapseTexture(button, true)
+			button.IsSkinned = true
+		end
+	end
 end
 
 function S.AudioOptionsVoicePanel_InitializeCommunicationModeUI(btn)
@@ -35,29 +44,6 @@ end
 
 function S:BlizzardOptions()
 	if not (E.private.skins.blizzard.enable and E.private.skins.blizzard.blizzardOptions) then return end
-
-	-- here we reskin all 'normal' buttons
-	S:HandleButton(_G.ReadyCheckFrameYesButton)
-	S:HandleButton(_G.ReadyCheckFrameNoButton)
-
-	local ReadyCheckFrame = _G.ReadyCheckFrame
-	_G.ReadyCheckFrameYesButton:SetParent(ReadyCheckFrame)
-	_G.ReadyCheckFrameNoButton:SetParent(ReadyCheckFrame)
-	_G.ReadyCheckFrameYesButton:ClearAllPoints()
-	_G.ReadyCheckFrameNoButton:ClearAllPoints()
-	_G.ReadyCheckFrameYesButton:Point('TOPRIGHT', ReadyCheckFrame, 'CENTER', -3, -5)
-	_G.ReadyCheckFrameNoButton:Point('TOPLEFT', ReadyCheckFrame, 'CENTER', 3, -5)
-	_G.ReadyCheckFrameText:SetParent(ReadyCheckFrame)
-	_G.ReadyCheckFrameText:ClearAllPoints()
-	_G.ReadyCheckFrameText:Point('TOP', 0, -15)
-
-	_G.ReadyCheckListenerFrame:SetAlpha(0)
-	ReadyCheckFrame:HookScript('OnShow', function(frame)
-		-- bug fix, don't show it if player is initiator
-		if frame.initiator and UnitIsUnit('player', frame.initiator) then
-			frame:Hide()
-		end
-	end)
 
 	_G.InterfaceOptionsFrame:SetClampedToScreen(true)
 	_G.InterfaceOptionsFrame:SetMovable(true)
@@ -283,8 +269,7 @@ function S:BlizzardOptions()
 
 	for _, Panel in pairs(InterfaceOptions) do
 		if Panel then
-			for i = 1, Panel:GetNumChildren() do
-				local Child = select(i, Panel:GetChildren())
+			for _, Child in next, { Panel:GetChildren() } do
 				if Child:IsObjectType('CheckButton') then
 					S:HandleCheckBox(Child)
 				elseif Child:IsObjectType('Button') then
@@ -306,20 +291,9 @@ function S:BlizzardOptions()
 	_G.InterfaceOptionsFrameTab2:StripTextures()
 	_G.InterfaceOptionsSocialPanel.EnableTwitter.Logo:SetAtlas('WoWShare-TwitterLogo')
 
-	do -- plus minus buttons in addons category
-		local function skinButtons()
-			for i = 1, #_G.INTERFACEOPTIONS_ADDONCATEGORIES do
-				local button = _G['InterfaceOptionsFrameAddOnsButton'..i..'Toggle']
-				if button and not button.IsSkinned then
-					S:HandleCollapseTexture(button, true)
-					button.IsSkinned = true
-				end
-			end
-		end
-
-		hooksecurefunc('InterfaceOptions_AddCategory', skinButtons)
-		skinButtons()
-	end
+	-- Plus minus buttons in addons category
+	hooksecurefunc('InterfaceOptions_AddCategory', Skin_InterfaceOptions_Buttons)
+	Skin_InterfaceOptions_Buttons()
 
 	--Create New Raid Profle
 	local newProfileDialog = _G.CompactUnitFrameProfilesNewProfileDialog

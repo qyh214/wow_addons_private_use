@@ -3,11 +3,13 @@ local L = Internal.L
 
 local ClearCursor = ClearCursor
 local PickupInventoryItem = PickupInventoryItem
-local PickupContainerItem = PickupContainerItem
-local GetContainerFreeSlots = GetContainerFreeSlots
+local PickupContainerItem = C_Container and C_Container.PickupContainerItem or PickupContainerItem
+local GetContainerFreeSlots = C_Container and C_Container.GetContainerFreeSlots or GetContainerFreeSlots
+local GetContainerItemInfo = C_Container and C_Container.GetContainerItemInfo or GetContainerItemInfo
 local EquipmentManager_UnpackLocation = EquipmentManager_UnpackLocation
 local GetInventoryItemLink = GetInventoryItemLink
-local GetContainerItemLink = GetContainerItemLink
+local GetContainerItemLink = C_Container and C_Container.GetContainerItemLink or GetContainerItemLink
+local GetContainerNumSlots = C_Container and C_Container.GetContainerNumSlots or GetContainerNumSlots
 local GetVoidItemHyperlinkString = GetVoidItemHyperlinkString
 local GetItemUniqueness = GetItemUniqueness
 
@@ -1499,7 +1501,11 @@ do
 			wipe(currentCursorSource);
 		end
 	end
-	hooksecurefunc("PickupContainerItem", Hook_PickupContainerItem);
+	if C_Container and C_Container.PickupContainerItem then
+		hooksecurefunc(C_Container, "PickupContainerItem", Hook_PickupContainerItem);
+	else
+		hooksecurefunc("PickupContainerItem", Hook_PickupContainerItem);
+	end
 	local function Hook_PickupInventoryItem(slot)
 		if CursorHasItem() then
 			currentCursorSource.slot = slot;
@@ -1524,6 +1530,7 @@ Internal.AddLoadoutSegment({
     events = "PLAYER_EQUIPMENT_CHANGED",
     add = AddEquipmentSet,
     get = GetEquipmentSets,
+	getByName = GetEquipmentSetByName,
     combine = CombineEquipmentSets,
     isActive = IsEquipmentSetActive,
 	activate = ActivateEquipmentSet,
@@ -1776,12 +1783,24 @@ function BtWLoadoutsItemSlotButtonMixin:Update()
 	self.ErrorOverlay:SetShown(errors ~= nil)
 	self.ignoreTexture:SetShown(ignored);
 end
-GameTooltip:HookScript("OnTooltipSetItem", function (self)
-	local name, link = self:GetItem()
-	if gameTooltipErrorLink == link and gameTooltipErrorText then
-		self:AddLine(format("\n|cffff0000%s|r", gameTooltipErrorText))
-	end
-end)
+if TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall then
+	TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, function (self, data)
+		if self ~= GameTooltip then
+			return
+		end
+		local name, link = self:GetItem()
+		if gameTooltipErrorLink == link and gameTooltipErrorText then
+			self:AddLine(format("\n|cffff0000%s|r", gameTooltipErrorText))
+		end
+	end)
+else
+	GameTooltip:HookScript("OnTooltipSetItem", function (self)
+		local name, link = self:GetItem()
+		if gameTooltipErrorLink == link and gameTooltipErrorText then
+			self:AddLine(format("\n|cffff0000%s|r", gameTooltipErrorText))
+		end
+	end)
+end
 
 BtWLoadoutsEquipmentMixin = {}
 function BtWLoadoutsEquipmentMixin:OnLoad()
@@ -1906,7 +1925,7 @@ function BtWLoadoutsEquipmentMixin:OnSidebarItemDragStart(button)
 	end
 end
 function BtWLoadoutsEquipmentMixin:Update()
-	self:GetParent().TitleText:SetText(L["Equipment"]);
+	self:GetParent():SetTitle(L["Equipment"]);
 	local sidebar = BtWLoadoutsFrame.Sidebar
 
 	sidebar:SetSupportedFilters("covenant", "spec", "class", "role", "race", "character")
@@ -2716,7 +2735,11 @@ do
 		local function hook_SocketContainerItem(bagId, slotId)
 			itemLocation:SetBagAndSlot(bagId, slotId)
 		end
-		hooksecurefunc("SocketContainerItem", hook_SocketContainerItem)
+		if C_Container and C_Container.SocketContainerItem then
+			hooksecurefunc(C_Container, "SocketContainerItem", hook_SocketContainerItem)
+		else
+			hooksecurefunc("SocketContainerItem", hook_SocketContainerItem)
+		end
 		Internal.GemApplied = GemApplied
 	end
 	do
@@ -2757,7 +2780,11 @@ do
 		local function hook_UseContainerItem(bagId, slotId)
 			itemLocation:SetBagAndSlot(bagId, slotId)
 		end
-		hooksecurefunc("UseContainerItem", hook_UseContainerItem)
+		if C_Container and C_Container.UseContainerItem then
+			hooksecurefunc(C_Container, "UseContainerItem", hook_UseContainerItem)
+		else
+			hooksecurefunc("UseContainerItem", hook_UseContainerItem)
+		end
 		
 		local isRemovingDominationSocket = false
 		function Internal.CastedSoulFireChisel()
@@ -2831,7 +2858,11 @@ do
 				
 				if _G[name .. "PrefixText"]:GetText() == sellPricePrefix then
 					sellPriceFrame = moneyFrame
-					_, sellPriceFrameAnchor, _, sellPriceFrameXOffset = sellPriceFrame:GetPoint("LEFT")
+					if sellPriceFrame.GetPointByName then
+						_, sellPriceFrameAnchor, _, sellPriceFrameXOffset = sellPriceFrame:GetPointByName("LEFT")
+					else
+						_, sellPriceFrameAnchor, _, sellPriceFrameXOffset = sellPriceFrame:GetPoint("LEFT")
+					end
 					break
 				end
 			end
@@ -2910,11 +2941,11 @@ do
 
 		self:Show()
 	end
-	GameTooltip:HookScript("OnTooltipSetItem", function (self, ...)
-		if location then
+	-- GameTooltip:HookScript("OnTooltipSetItem", function (self, ...)
+	-- 	if location then
 
-		end
-	end)
+	-- 	end
+	-- end)
 	hooksecurefunc(GameTooltip, "SetInventoryItem", function (self, unit, slot, nameOnly)
 		if not nameOnly and unit == "player" then
 			location = PackLocation(nil, slot)

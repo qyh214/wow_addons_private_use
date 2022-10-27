@@ -98,8 +98,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	WarningSplitSoon	= "為分裂顯示預先警告",
-	RangeFrame			= "顯示距離框(12碼)"
+	WarningSplitSoon	= "為分裂顯示預先警告"
 })
 
 -------------------------
@@ -109,10 +108,6 @@ L = DBM:GetModLocalization("Saviana")
 
 L:SetGeneralLocalization({
 	name = "薩薇安娜‧怒焰"
-})
-
-L:SetOptionLocalization({
-	RangeFrame			= "顯示距離框(10碼)"
 })
 
 --------------------------
@@ -157,8 +152,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	TwilightCutterCast	= "當$spell:77844開始施放時顯示警告",
-	AnnounceAlternatePhase	= "不管你進不進下一階段一樣顯示警告/計時器",
-	SetIconOnConsumption	= "為$spell:74562或$spell:74792的目標設置標記"
+	AnnounceAlternatePhase	= "不管你進不進下一階段一樣顯示警告/計時器"
 })
 
 L:SetMiscLocalization({

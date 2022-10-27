@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Razorscale", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041927")
+mod:SetRevision("20220701220005")
 mod:SetCreatureID(33186)
 mod:SetEncounterID(1139)
 mod:SetModelID(28787)
@@ -22,7 +22,7 @@ mod:RegisterEventsInCombat(
 --TODO, fuse armor taunt/swap warnings
 local warnTurretsReadySoon			= mod:NewAnnounce("warnTurretsReadySoon", 1, 48642)
 local warnTurretsReady				= mod:NewAnnounce("warnTurretsReady", 3, 48642)
-local warnFlame						= mod:NewTargetAnnounce(62660, 2, nil, false)
+local warnFlame						= mod:NewTargetAnnounce(64733, 2, nil, false)--Very spammy, requires turning on AND disabling target filter. Power user setting
 local warnFuseArmor					= mod:NewStackAnnounce(64771, 2, nil, "Tank")
 
 local specWarnDevouringFlame		= mod:NewSpecialWarningMove(64733, nil, nil, nil, 1, 2)
@@ -66,12 +66,19 @@ end
 function mod:OnCombatStart(delay)
 	enrageTimer:Start(-delay)
 	combattime = GetTime()
-	warnTurretsReadySoon:Schedule(93-delay)
-	warnTurretsReady:Schedule(113-delay)
-	timerTurret1:Start(-delay) -- 53sec
-	timerTurret2:Start(-delay) -- +20
-	timerTurret3:Start(-delay) -- +20
-	timerTurret4:Start(-delay) -- +20
+	if self:IsClassic() and self:IsDifficulty("normal10") then
+		warnTurretsReadySoon:Schedule(53-delay)
+		warnTurretsReady:Schedule(73-delay)
+		timerTurret1:Start(-delay)
+		timerTurret2:Start(-delay)
+	else
+		warnTurretsReadySoon:Schedule(93-delay)
+		warnTurretsReady:Schedule(113-delay)
+		timerTurret1:Start(-delay) -- 53sec
+		timerTurret2:Start(-delay) -- +20
+		timerTurret3:Start(-delay) -- +20
+		timerTurret4:Start(-delay) -- +20
+	end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -132,12 +139,19 @@ end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg, mob)
 	if (msg == L.YellAir or msg == L.YellAir2) and GetTime() - combattime > 30 then
-		warnTurretsReadySoon:Schedule(93)
-		warnTurretsReady:Schedule(113)
-		timerTurret1:Start()
-		timerTurret2:Start()
-		timerTurret3:Start()
-		timerTurret4:Start()
+		if self:IsClassic() and self:IsDifficulty("normal10") then
+			warnTurretsReadySoon:Schedule(53)
+			warnTurretsReady:Schedule(73)
+			timerTurret1:Start(53)
+			timerTurret2:Start(73)
+		else
+			warnTurretsReadySoon:Schedule(93)
+			warnTurretsReady:Schedule(113)
+			timerTurret1:Start()
+			timerTurret2:Start()
+			timerTurret3:Start()
+			timerTurret4:Start()
+		end
 	elseif msg == L.YellGround then
 		timerGrounded:Start()
 	end

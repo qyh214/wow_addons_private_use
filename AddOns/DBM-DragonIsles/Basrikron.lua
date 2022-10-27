@@ -1,8 +1,8 @@
 local mod	= DBM:NewMod(2506, "DBM-DragonIsles", nil, 1205)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220802223858")
---mod:SetCreatureID(182466)
+mod:SetRevision("20220817215746")
+mod:SetCreatureID(193535)
 mod:SetEncounterID(2640)
 mod:SetReCombatTime(20)
 mod:EnableWBEngageSync()--Enable syncing engage in outdoors

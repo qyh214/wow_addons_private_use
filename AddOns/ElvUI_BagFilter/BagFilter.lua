@@ -3,7 +3,7 @@ if not IsAddOnLoaded('ElvUI') then return; end
 local E, L, V, P, G = unpack(ElvUI); -- Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local B = E:GetModule('Bags');
 
-local U = select(2, ...);
+local AddOnName, U = ...;
 local L = {};
 
 local function SetSlotFilter(self, bagID, slotID)
@@ -238,4 +238,6 @@ do
     hooksecurefunc(B, 'UpdateSlot', function(self, frame, bagID, slotID)
         SetSlotFilter(frame, bagID, slotID);
     end);
+
+    E.Libs.EP:RegisterPlugin(AddOnName);
 end

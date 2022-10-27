@@ -22,6 +22,26 @@ local PGF = select(2, ...)
 local L = PGF.L
 local C = PGF.C
 
+StaticPopupDialogs["PGF_COPY_URL_KEYWORDS"] = {
+    text = L["dialog.copy.url.keywords"],
+    button2 = CLOSE,
+    OnShow = function(self)
+        local editBox = _G[self:GetName().."EditBox"]
+        if editBox then
+            editBox:SetText("https://github.com/0xbs/premade-groups-filter/wiki/Keywords")
+            editBox:SetFocus()
+            editBox:HighlightText(0)
+        end
+    end,
+    EditBoxOnEscapePressed = function(self) self:GetParent():Hide() end,
+    editBoxWidth = 400,
+    hasEditBox = 1,
+    hideOnEscape = 1,
+    maxLetters = 1024,
+    timeout = 0,
+    whileDead = 1,
+}
+
 function PGF.GameTooltip_AddWhite(left)
     GameTooltip:AddLine(left, 255, 255, 255)
 end
@@ -58,9 +78,9 @@ function PGF.Dialog_InfoButton_OnEnter(self, motion)
     AddDoubleWhiteUsingKey("warmode")
     PGF.GameTooltip_AddWhite("boss/bossesmatching/... — " .. L["dialog.tooltip.seewebsite"])
     PGF.GameTooltip_AddDoubleWhite("priests/warriors/...", L["dialog.tooltip.classes"])
-    PGF.GameTooltip_AddDoubleWhite("sfo/sod/cn/...", L["dialog.tooltip.raids"])
-    PGF.GameTooltip_AddDoubleWhite("taz/pf/dos/hoa/mots", L["dialog.tooltip.dungeons"])
-    PGF.GameTooltip_AddWhite("sd/soa/nw/top")
+    PGF.GameTooltip_AddDoubleWhite("voti/sfo/sod/cn/...", L["dialog.tooltip.raids"])
+    PGF.GameTooltip_AddDoubleWhite("aa/av/bh/hoi/lot", L["dialog.tooltip.dungeons"])
+    PGF.GameTooltip_AddWhite("no/nt/rlp/hov/cos/sbg/tjs")
     PGF.GameTooltip_AddDoubleWhite("cos/votw/nl/dht/eoa/brh", L["dialog.tooltip.timewalking"])
     PGF.GameTooltip_AddDoubleWhite("arena2v2/arena3v3", L["dialog.tooltip.arena"])
     GameTooltip:AddLine(" ")
@@ -79,4 +99,8 @@ end
 
 function PGF.Dialog_InfoButton_OnLeave(self, motion)
     GameTooltip:Hide()
+end
+
+function PGF.Dialog_InfoButton_OnClick(self, button, down)
+    StaticPopup_Show("PGF_COPY_URL_KEYWORDS")
 end

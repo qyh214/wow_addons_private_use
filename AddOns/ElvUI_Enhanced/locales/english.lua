@@ -4,6 +4,7 @@ if not L then return end
 
 -- Init
 L["ENH_LOGIN_MSG"] = "You are using |cff1784d1ElvUI Enhanced Again|r |cffff8000(Shadowlands)|r version %s%s|r."
+L["ENH_LOGIN_MSG_WRATH"] = "You are using |cff1784d1ElvUI Enhanced Again|r |cffff8000(Wrath Classic)|r version %s%s|r."
 L["MSG_EEL_ELV_OUTDATED"] = "Your version of ElvUI is older than recommended to use with |cff1784d1ElvUI Enhanced Lite|r |cffff8000(Shadowlands)|r. Your version is |cff1784d1%.2f|r (recommended is |cff1784d1%.2f|r). Please update your ElvUI."
 
 --OLD

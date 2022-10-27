@@ -62,6 +62,7 @@ L['hard'] = 'Schwer'
 L['mount'] = 'Reittier'
 L['pet'] = 'Haustier'
 L['spell'] = 'Fähigkeit'
+L['title'] = 'Titel'
 L['toy'] = 'Spielzeug'
 L['rep'] = 'Ruf'
 L['completed'] = 'Abgeschlossen'
@@ -72,6 +73,10 @@ L['unobtainable'] = 'Nicht erhältlich'
 L['unlearnable'] = 'Nicht erlernbar'
 L['defeated'] = 'Besiegt'
 L['undefeated'] = 'Unbesiegt'
+
+L['follower_type_follower'] = 'Anhänger'
+L['follower_type_champion'] = 'Champion'
+L['follower_type_companion'] = 'Abenteurer'
 
 -------------------------------------------------------------------------------
 --------------------------------- CONTEXT MENU --------------------------------

@@ -1,4 +1,4 @@
-if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
+if not WeakAuras.IsLibsOK() then return end
 local AddonName, OptionsPrivate = ...
 
 -- Lua APIs
@@ -55,6 +55,7 @@ local editor_themes = {
 }
 
 if not WeakAurasSaved.editor_tab_spaces then WeakAurasSaved.editor_tab_spaces = 4 end
+if not WeakAurasSaved.editor_font_size then WeakAurasSaved.editor_font_size = 12 end -- set default font size if missing
 local color_scheme = {[0] = "|r"}
 local function set_scheme()
   if not WeakAurasSaved.editor_theme then
@@ -168,7 +169,7 @@ local function ConstructTextEditor(frame)
   editor:DisableButton(true)
   local fontPath = SharedMedia:Fetch("font", "Fira Mono Medium")
   if (fontPath) then
-    editor.editBox:SetFont(fontPath, 12)
+    editor.editBox:SetFont(fontPath, WeakAurasSaved.editor_font_size, "")
   end
   group:AddChild(editor)
   editor.frame:SetClipsChildren(true)
@@ -233,7 +234,7 @@ local function ConstructTextEditor(frame)
 
   local urlText = CreateFrame("EditBox", nil, group.frame)
   urlText:SetFrameLevel(cancel:GetFrameLevel() + 1)
-  urlText:SetFont(STANDARD_TEXT_FONT, 12)
+  urlText:SetFont(STANDARD_TEXT_FONT, 12, "")
   urlText:EnableMouse(true)
   urlText:SetAutoFocus(false)
   urlText:SetCountInvisibleLetters(false)
@@ -286,6 +287,14 @@ local function ConstructTextEditor(frame)
           menuList = "spaces"
         },
       level)
+      UIDropDownMenu_AddButton(
+        {
+          text = WeakAuras.newFeatureString .. L["Font Size"],
+          hasArrow = true,
+          notCheckable = true,
+          menuList = "sizes"
+        },
+      level)
     elseif menu == "spaces" then
       local spaces = {2,4}
       for _, i in pairs(spaces) do
@@ -301,6 +310,23 @@ local function ConstructTextEditor(frame)
               IndentationLib.enable(editor.editBox, color_scheme, WeakAurasSaved.editor_tab_spaces)
               editor.editBox:SetText(editor.editBox:GetText().."\n")
               IndentationLib.indentEditbox(editor.editBox)
+            end
+          },
+        level)
+      end
+    elseif menu == "sizes" then
+      local sizes = {10, 12, 14, 16}
+      for _, i in pairs(sizes) do
+        UIDropDownMenu_AddButton(
+          {
+            text = i,
+            isNotRadio = false,
+            checked = function()
+              return WeakAurasSaved.editor_font_size == i
+            end,
+            func = function()
+              WeakAurasSaved.editor_font_size = i
+              editor.editBox:SetFont(fontPath, WeakAurasSaved.editor_font_size, "")
             end
           },
         level)
@@ -496,15 +522,12 @@ local function ConstructTextEditor(frame)
       end
   )
 
-  -- CTRL + S saves and closes, ESC cancels and closes
+  -- CTRL + S saves and closes
   editor.editBox:HookScript(
     "OnKeyDown",
     function(_, key)
       if IsControlKeyDown() and key == "S" then
         group:Close()
-      end
-      if key == "ESCAPE" then
-        group:CancelClose()
       end
     end
   )
@@ -529,7 +552,7 @@ local function ConstructTextEditor(frame)
   )
 
   local editorError = group.frame:CreateFontString(nil, "OVERLAY")
-  editorError:SetFont(STANDARD_TEXT_FONT, 12)
+  editorError:SetFont(STANDARD_TEXT_FONT, 12, "")
   editorError:SetJustifyH("LEFT")
   editorError:SetJustifyV("TOP")
   editorError:SetTextColor(1, 0, 0)
@@ -539,7 +562,7 @@ local function ConstructTextEditor(frame)
   local editorLine = CreateFrame("EditBox", nil, group.frame)
   -- Set script on enter pressed..
   editorLine:SetPoint("BOTTOMRIGHT", editor.frame, "TOPRIGHT", -100, -15)
-  editorLine:SetFont(STANDARD_TEXT_FONT, 10)
+  editorLine:SetFont(STANDARD_TEXT_FONT, 10, "")
   editorLine:SetJustifyH("RIGHT")
   editorLine:SetWidth(80)
   editorLine:SetHeight(20)
@@ -645,7 +668,7 @@ local function ConstructTextEditor(frame)
     editor.editBox:SetScript(
       "OnEscapePressed",
       function()
-        group:CancelClose()
+        -- catch it so that escape doesn't default to losing focus (after which another escape would close config)
       end
     )
     self.oldOnTextChanged = editor.editBox:GetScript("OnTextChanged")

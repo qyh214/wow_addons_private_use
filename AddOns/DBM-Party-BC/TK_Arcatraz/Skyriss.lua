@@ -3,7 +3,7 @@ local L = mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20210922153837")
+mod:SetRevision("20220810032020")
 
 mod:SetCreatureID(20912)
 mod:SetEncounterID(1914)
@@ -63,7 +63,7 @@ do
 		if not self.vb.warnedSplit1 and self:GetUnitCreatureId(uId) == 20912 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.70 then
 			self.vb.warnedSplit1 = true
 			warnSplitSoon:Show()
-		elseif not self.vb.warnedSplit2 and self:IsHeroic() and self:GetUnitCreatureId(uId) == 20912 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.37 then
+		elseif not self.vb.warnedSplit2 and self:IsHard() and self:GetUnitCreatureId(uId) == 20912 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.37 then
 			self.vb.warnedSplit2 = true
 			warnSplitSoon:Show()
 		end

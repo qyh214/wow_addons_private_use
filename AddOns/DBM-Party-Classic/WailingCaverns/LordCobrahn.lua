@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(475, "DBM-Party-Classic", 14, 240)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20220920232426")
 mod:SetCreatureID(3669)
 mod:SetEncounterID(586)
 
@@ -54,7 +54,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 8040 then
 		warningDruidSlumber:Show(args.destName)
-	elseif args.spellId == 17330 and self:CheckDispelFilter() then
+	elseif args.spellId == 17330 and self:CheckDispelFilter("poison") then
 		warningPoison:Show(args.destName)
 	end
 end

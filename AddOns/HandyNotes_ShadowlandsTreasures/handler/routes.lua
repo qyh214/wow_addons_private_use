@@ -146,8 +146,12 @@ function RoutePinConnectionMixin:Connect(pin1, pin2)
     local angle = RegionUtil.CalculateAngleBetween(pin1, pin2) - quarter
     self:RotateTextures(angle, 0.5, 0)
 
-    self.Line:SetAtlas("_AnimaChannel-Channel-Line-horizontal")
-    -- self.Line:SetTexture("Interface\\TaxiFrame\\UI-Taxi-Line")
+    if ns.CLASSIC then
+        -- self.Line:SetTexture("Interface\\TaxiFrame\\UI-Taxi-Line")
+        self.Line:SetAtlas("_UI-Taxi-Line-horizontal")
+    else
+        self.Line:SetAtlas("_AnimaChannel-Channel-Line-horizontal")
+    end
 
     self.Line:SetStartPoint("CENTER", pin1)
     self.Line:SetEndPoint("CENTER", pin2)

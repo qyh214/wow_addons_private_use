@@ -49,7 +49,6 @@ local Screenshot = Screenshot
 local ShowUIPanel = ShowUIPanel
 local SpellBookFrame = SpellBookFrame
 local ToggleAchievementFrame = ToggleAchievementFrame
-local ToggleAllBags = ToggleAllBags
 local ToggleCalendar = ToggleCalendar
 local ToggleCharacter = ToggleCharacter
 local ToggleFriendsFrame = ToggleFriendsFrame
@@ -104,6 +103,7 @@ local Hearthstones = {
     184353, -- 琪瑞安族爐石
     188952, -- 統御的爐石
     190237, -- 仲介者傳送矩陣
+    193588, -- 時光行者的爐石
     ---------------------
     48933, -- 蟲洞產生器：北裂境
     87215, -- 蟲洞產生器：潘達利亞
@@ -199,7 +199,9 @@ local ButtonTypes = {
         name = L["Bags"],
         icon = W.Media.Icons.barBags,
         click = {
-            LeftButton = ToggleAllBags
+            LeftButton = function()
+                _G.ToggleAllBags()
+            end
         },
         tooltips = "Bags"
     },
@@ -317,13 +319,6 @@ local ButtonTypes = {
                 if not InCombatLockdown() then
                     -- Open game menu | From ElvUI
                     if not _G.GameMenuFrame:IsShown() then
-                        if _G.VideoOptionsFrame:IsShown() then
-                            _G.VideoOptionsFrameCancel:Click()
-                        elseif _G.AudioOptionsFrame:IsShown() then
-                            _G.AudioOptionsFrameCancel:Click()
-                        elseif _G.InterfaceOptionsFrame:IsShown() then
-                            _G.InterfaceOptionsFrameCancel:Click()
-                        end
                         CloseMenus()
                         CloseAllWindows()
                         PlaySound(850) --IG_MAINMENU_OPEN
@@ -636,7 +631,7 @@ function GB:ConstructBar()
     middlePanel:SetSize(81, 50)
     middlePanel:SetPoint("CENTER")
     middlePanel:CreateBackdrop("Transparent")
-    middlePanel:RegisterForClicks("AnyUp")
+    middlePanel:RegisterForClicks(E.global.WT.core.buttonFix)
     bar.middlePanel = middlePanel
 
     local leftPanel = CreateFrame("Frame", "WTGameBarLeftPanel", bar)
@@ -1015,7 +1010,7 @@ function GB:ConstructButton()
 
     local button = CreateFrame("Button", nil, self.bar, "SecureActionButtonTemplate")
     button:SetSize(self.db.buttonSize, self.db.buttonSize)
-    button:RegisterForClicks("AnyUp")
+    button:RegisterForClicks(E.global.WT.core.buttonFix)
 
     local normalTex = button:CreateTexture(nil, "ARTWORK")
     normalTex:SetPoint("CENTER")

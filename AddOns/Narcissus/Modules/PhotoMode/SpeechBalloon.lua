@@ -1,3 +1,7 @@
+local _, addon = ...
+
+local SetModelLight = addon.TransitionAPI.SetModelLight;
+
 local BACKGROUND_INSET = 3.5;
 local TEXT_INSET = 16;
 local SPEECH_BALLOON_MIN_SIZE = 16;
@@ -28,7 +32,6 @@ local min = math.min;
 local floor = math.floor;
 local sqrt = math.sqrt;
 local abs = math.abs;
-local sin = math.sin;
 local atan2 = math.atan2;
 local pi = math.pi;
 local pi90 = pi/2;
@@ -114,7 +117,7 @@ local function SmartFontType(fontstring, text)
 	fontstring:SetText(text);
 	local Language = NarciAPI.LanguageDetector(text);
 	if Language and ActorNameFont[Language] then
-		fontstring:SetFont(ActorNameFont[Language][1] , ActorNameFont[Language][2]);
+		fontstring:SetFont(ActorNameFont[Language][1] , ActorNameFont[Language][2], "");
 	end
 end
 
@@ -426,7 +429,7 @@ function NarciSimpleSpeechBalloonMixin:UpdateText()
         self.ShownText:SetText(self.rawText);
     end
 
-    self.ShownText:SetFont(font, height);
+    self.ShownText:SetFont(font, height, "");
 end
 
 function NarciSimpleSpeechBalloonMixin:SetFontColor(r, g, b)
@@ -473,7 +476,7 @@ function LetteringSystem:GetLine(object, index)
     if not line then
         local font, height = object.fontPath, object.fontHeight;
         line = object:CreateFontString(nil, "OVERLAY");
-        line:SetFont(font, height);
+        line:SetFont(font, height, "");
         local r, g, b = object.ShownText:GetTextColor();
         line:SetTextColor(r, g, b);
         line:SetMaxLines(1);
@@ -496,7 +499,7 @@ function LetteringSystem:UpdateFont(object)
         local font, height = object.fontPath, object.fontHeight;
         for i = 1, #object.lines do
             line = object.lines[i];
-            line:SetFont(font, height);
+            line:SetFont(font, height, "");
             line:SetTextColor(r, g, b);
             line:SetHeight(round(height) + 0.10);
         end
@@ -1076,7 +1079,7 @@ function NarciAdjustableSpeechBalloonMixin:UpdateText()
             self.ShownText:SetText(self.rawText);
         end
     end
-    self.ShownText:SetFont(font, height);
+    self.ShownText:SetFont(font, height, "");
 end
 
 function NarciAdjustableSpeechBalloonMixin:SetBorderColor(r, g, b, a)
@@ -1514,8 +1517,8 @@ function ToggleFontSizeOptions(self, visible)
             widget.value = value;
         end
 
-        function FontSizeDropDown:IsFocused(f)
-            return f:IsShown() and f:IsMouseOver()
+        function FontSizeDropDown:IsFocused()
+            return FontSizeDropDown:IsShown() and FontSizeDropDown:IsMouseOver()
         end
     end
 
@@ -1819,7 +1822,7 @@ function NarciSpeechBalloonEditBoxMixin:SetParentObject(object)
     self:SetEnabled(true);
     
     local font, height = object.ShownText:GetFont();
-    self:SetFont(font, height);
+    self:SetFont(font, height, "");
     self:SetTextColor(object.ShownText:GetTextColor());
 
     object.ShownText:Hide();
@@ -2558,10 +2561,6 @@ end);
 local function InteractableLineBorder_OnDragStart(self)
     if self:GetParent().OnDragStart then
         self:GetParent():OnDragStart();
-        self.lt:Hide();
-        self.ll:Hide();
-        self.lr:Hide();
-        self.lb:Hide();
     end
 end
 
@@ -2675,7 +2674,7 @@ function NarciCustomTalkingHeadMixin:SetCreature(creatureID, creatureName)
 end
 
 function NarciCustomTalkingHeadMixin:OnModelLoaded()
-    self.Model:SetLight(true, false, -0.5124, -0.4872, -0.7071, 1, 204/255, 204/255, 204/255, 1, 0.8, 0.8, 0.8);
+    SetModelLight(self.Model, true, false, -0.5124, -0.4872, -0.7071, 1, 204/255, 204/255, 204/255, 1, 0.8, 0.8, 0.8);
     self.Model:SetCamera(0);
     self.Model:SetPortraitZoom(1);
     self.Model:SetPortraitZoom(0.975);
@@ -2694,10 +2693,10 @@ function NarciTextOverlayGenericEditBoxMixin:SetParentObject(fontString)
     self:SetPoint("TOPLEFT", fontString.area, "TOPLEFT", 0, 0);
     self:SetPoint("BOTTOMRIGHT", fontString.area, "BOTTOMRIGHT", 0, 0);
     local font, height = fontString:GetFont();
-    self:SetFont(font, height);
+    self:SetFont(font, height, "");
     self:SetTextColor( fontString:GetTextColor() );
     self:Show();
-    self:SetText(fontString:GetText() or "")
+    self:SetText(fontString:GetText() or "");
     self:SetFocus();
     self:SetCursorPosition(999);
     self:SetScale(fontString:GetEffectiveScale());

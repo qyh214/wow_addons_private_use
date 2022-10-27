@@ -1,15 +1,6 @@
 local W, F, E, L, V, P, G = unpack(select(2, ...))
 
-V.combat = {
-    talentManager = {
-        enable = true,
-        itemButtons = true,
-        soulbindButton = true,
-        pvpTalent = false,
-        statusIcon = true,
-        sets = {}
-    }
-}
+V.combat = {}
 
 V.item = {
     extendMerchantPages = {
@@ -32,6 +23,7 @@ V.maps = {
     superTracker = {
         enable = true,
         noLimit = false,
+        noUnit = true,
         autoTrackWaypoint = true,
         rightClickToClear = true,
         distanceText = {
@@ -73,8 +65,8 @@ V.maps = {
         spacing = 2,
         inverseDirection = false,
         orientation = "HORIZONTAL",
-        calendar = false,
-        garrison = false
+        -- calendar = false,
+        expansionLandingPage = false
     }
 }
 
@@ -368,12 +360,12 @@ V.skins = {
         barberShop = true,
         binding = true,
         blackMarket = true,
-        blizzardOptions = true,
         calendar = true,
         challenges = true,
         channels = true,
         character = true,
         chromieTime = true,
+        classTalent = true,
         clickBinding = true,
         collections = true,
         communities = true,
@@ -409,22 +401,22 @@ V.skins = {
         orderHall = true,
         petBattle = true,
         playerChoice = true,
+        professions = true,
         quest = true,
         raidInfo = true,
         scenario = true,
         scrappingMachine = true,
+        settingsPanel = true,
         soulbinds = true,
         spellBook = true,
         staticPopup = true,
         subscriptionInterstitial = true,
-        talent = true,
         talkingHead = true,
         taxi = true,
         ticketStatus = true,
         timeManager = true,
         tooltips = true,
         trade = true,
-        tradeSkill = true,
         trainer = true,
         tutorial = true,
         warboard = true,

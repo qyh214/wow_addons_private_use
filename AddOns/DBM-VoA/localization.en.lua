@@ -42,8 +42,7 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	timerMobOvercharge	= "Show timer for Overcharged mob (stacking debuff)",
-	EmalonEnrage		= "Show timer for $spell:26662",
-	RangeFrame			= "Show range frame (10)"
+	EmalonEnrage		= "Show timer for $spell:26662"
 }
 
 ---------------------------------
@@ -55,16 +54,11 @@ L:SetGeneralLocalization{
 	name = "Koralon the Flame Watcher"
 }
 
-L:SetWarningLocalization{
-	BurningFury		= "Burning Fury >%d<"
-}
-
 L:SetTimerLocalization{
 	KoralonEnrage	= "Koralon berserk"
 }
 
 L:SetOptionLocalization{
-	BurningFury			= "Show warning for $spell:66721",
 	KoralonEnrage		= "Show timer for $spell:26662"
 }
 
@@ -81,16 +75,8 @@ L:SetGeneralLocalization{
 	name = "Toravon the Ice Watcher"
 }
 
-L:SetWarningLocalization{
-	Frostbite	= "Frostbite on >%s< (%d)"
-}
-
 L:SetTimerLocalization{
 	ToravonEnrage	= "Toravon berserk"
-}
-
-L:SetOptionLocalization{
-	Frostbite	= "Show warning for $spell:72004"
 }
 
 L:SetMiscLocalization{

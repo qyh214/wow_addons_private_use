@@ -1,5 +1,5 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.41 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.43 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for
@@ -50,7 +50,7 @@ toast.description:SetJustifyV("TOP")
 toast.description:SetJustifyH("LEFT")
 
 -- [Toast] Create Reset Button
-toast.reset = CreateFrame("Button",nil,toast,"OptionsButtonTemplate")
+toast.reset = CreateFrame("Button",nil,toast,"UIPanelButtonTemplate")
 toast.reset:SetPoint("BOTTOMLEFT",toast,"BOTTOMLEFT",5,6)
 toast.reset:SetWidth(146)
 toast.reset:SetScript("OnClick",function()
@@ -58,7 +58,7 @@ toast.reset:SetScript("OnClick",function()
 end)
 
 -- [Toast] Create Lock Button
-toast.lock = CreateFrame("Button",nil,toast,"OptionsButtonTemplate")
+toast.lock = CreateFrame("Button",nil,toast,"UIPanelButtonTemplate")
 toast.lock:SetPoint("BOTTOMRIGHT",toast,"BOTTOMRIGHT", -5, 6)
 toast.lock:SetWidth(146)
 toast.lock:SetScript("OnClick",function()
@@ -95,7 +95,6 @@ vars:SetScript("OnEvent",function(self,event,name)
 		PR.DB = ParagonReputationDB
 		PR:SetToastPosition()
 		PR:CreateOptions()
-		PR:HookScript()
 	end
 end)
 
@@ -223,7 +222,7 @@ function ParagonReputation:CreateOptions()
 	end)
 
 	-- [Interface Options] Toggle Button
-	PR.options.toggle = CreateFrame("Button",nil,PR.options,"OptionsButtonTemplate")
+	PR.options.toggle = CreateFrame("Button",nil,PR.options,"UIPanelButtonTemplate")
 	PR.options.toggle:SetPoint("TOPLEFT",PR.options.description2,"BOTTOMLEFT",208,-10)
 	PR.options.toggle:SetText(PR.L["ANCHOR"])
 	PR.options.toggle:SetWidth(192)
@@ -248,7 +247,7 @@ function ParagonReputation:CreateOptions()
 	end)
 
 	-- [Interface Options] Reset Button
-	PR.options.reset = CreateFrame("Button",nil,PR.options,"OptionsButtonTemplate")
+	PR.options.reset = CreateFrame("Button",nil,PR.options,"UIPanelButtonTemplate")
 	PR.options.reset:SetPoint("TOPLEFT", PR.options.description2,"BOTTOMLEFT", 208, -32)
 	PR.options.reset:SetText(RESET_POSITION)
 	PR.options.reset:SetWidth(192)

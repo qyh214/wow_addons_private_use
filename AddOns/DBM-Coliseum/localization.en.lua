@@ -102,8 +102,8 @@ L:SetOptionLocalization{
 	TimerSpecialSpell			= "Show timer for next special ability",
 	WarnSpecialSpellSoon		= "Show pre-warning for next special ability",
 	SpecWarnSpecial				= "Show special warning when you have to change color",
-	SpecWarnSwitchTarget		= "Show special warning when the other Twin is casting",
-	SpecWarnKickNow				= "Show special warning when you have to interrupt",
+	SpecWarnSwitchTarget		= "Show special warning to twitch targets if other Twin is casting heal",
+	SpecWarnKickNow				= "Show special warning when you are able to interrupt heal",
 	SpecialWarnOnDebuff			= "Show change color special warning when touch debuffed (to switch debuff)",
 	SetIconOnDebuffTarget		= "Set icons on Touch of Light/Darkness debuff targets (heroic)",
 	WarningTouchDebuff			= "Announce Touch of Light/Darkness debuff targets",
@@ -151,7 +151,7 @@ L:SetOptionLocalization{
 	timerAdds				= "Show timer for new adds",
 	TimerEmerge				= "Show timer for emerge",
 	TimerSubmerge			= "Show timer for submerge",
-	AnnouncePColdIcons		= "Announce icons for $spell:66013 targets to raid chat<br/>(requires raid leader)",
-	AnnouncePColdIconsRemoved	= "Also announce when icons are removed for $spell:66013<br/>(requires above option)"
+	AnnouncePColdIcons		= "Announce icons for $spell:66013 targets to raid chat (requires raid leader)",
+	AnnouncePColdIconsRemoved	= "Announce when icons are removed for $spell:66013 (requires raid leader)"
 }
 

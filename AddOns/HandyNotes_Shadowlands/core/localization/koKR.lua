@@ -62,6 +62,7 @@ L['hard'] = '어려움'
 L['mount'] = '탈것'
 L['pet'] = '애완동물'
 L['spell'] = '주문'
+L['title'] = nil
 L['toy'] = '장난감'
 L['rep'] = '평판'
 L['completed'] = '완료'
@@ -72,6 +73,10 @@ L['unobtainable'] = '획득불가'
 L['unlearnable'] = '습득불가'
 L['defeated'] = '처치함'
 L['undefeated'] = '처치하지 않음'
+
+L['follower_type_follower'] = nil
+L['follower_type_champion'] = nil
+L['follower_type_companion'] = nil
 
 -------------------------------------------------------------------------------
 --------------------------------- CONTEXT MENU --------------------------------

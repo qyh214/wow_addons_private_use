@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("KingsRestTrash", "DBM-Party-BfA", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20201116014239")
+mod:SetRevision("20220920232426")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
@@ -36,7 +36,7 @@ local specWarnInduceRegeneration	= mod:NewSpecialWarningInterrupt(270901, "HasIn
 local specWarnHex					= mod:NewSpecialWarningInterrupt(270492, "HasInterrupt", nil, nil, 1, 2)
 local specWarnBladestorm			= mod:NewSpecialWarningRun(270927, nil, nil, nil, 4, 2)
 local specWarnChannelLighting		= mod:NewSpecialWarningRun(270889, nil, nil, nil, 4, 2)
-local specWarnSeduction				= mod:NewSpecialWarningDispel(270920, "Healer", nil, nil, 1, 2)
+local specWarnSeduction				= mod:NewSpecialWarningDispel(270920, "RemoveMagic", nil, 2, 1, 2)
 local specWarnAncestralFury			= mod:NewSpecialWarningDispel(269976, "RemoveEnrage", nil, 2, 1, 2)
 local specWarnHiddenBladeDispel		= mod:NewSpecialWarningDispel(270865, "RemovePoison", nil, nil, 1, 2)
 local specWarnHuntingLeap			= mod:NewSpecialWarningYou(270500, nil, nil, nil, 1, 2)
@@ -122,14 +122,14 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 270927 and self:AntiSpam(3, 6) then
 		specWarnBladestorm:Show()
 		specWarnBladestorm:Play("justrun")
-	elseif spellId == 270920 and self:CheckDispelFilter() then
+	elseif spellId == 270920 and self:CheckDispelFilter("magic") then
 		specWarnSeduction:Show(args.destName)
 		specWarnSeduction:Play("helpdispel")
 	elseif spellId == 270865 and args:IsDestTypePlayer() and self:AntiSpam(3, args.destName) then
 		if args:IsPlayer() then
 			specWarnHiddenBlade:Show()
 			specWarnHiddenBlade:Play("runout")
-		elseif self:CheckDispelFilter() then
+		elseif self:CheckDispelFilter("poison") then
 			specWarnHiddenBladeDispel:Show(args.destName)
 			specWarnHiddenBladeDispel:Play("helpdispel")
 		end

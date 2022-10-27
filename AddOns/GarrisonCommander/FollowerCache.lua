@@ -35,15 +35,14 @@ local EMPTY={}
 local GMCUsedFollowers={}
 local GMCUsedFollowersCount=0
 function module:OnInitialized()
+--[===[@debug@
+  print("OnInitialized")
+--@end-debug@]===]
 	self:RegisterEvent("GARRISON_FOLLOWER_REMOVED","OnEvent")
 	self:RegisterEvent("GARRISON_FOLLOWER_ADDED","OnEvent")
 	self:RegisterEvent("GARRISON_FOLLOWER_LIST_UPDATE","OnEvent")
 	self:RegisterEvent("GARRISON_FOLLOWER_UPGRADED","OnEvent")
 	self:RegisterEvent("GARRISON_FOLLOWER_XP_CHANGED","OnEvent")
-	self.caches={}
-	for _,f in ipairs(cacheTypes) do
-		self.caches[f]=cache:new(f)
-	end
 end
 function module:OnEvent(event,...)
 --[===[@debug@
@@ -281,4 +280,8 @@ function addon:GMCBusy(followerID,value)
 end
 function addon:GMCBusyCount()
 	return GMCUsedFollowersCount
+end
+module.caches={}
+for _,f in ipairs(cacheTypes) do
+  module.caches[f]=cache:new(f)
 end

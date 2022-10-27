@@ -24,7 +24,7 @@ RSConstants.LOOT_ITEM_ID = nil
 -- Current versions
 ---============================================================================
 
-RSConstants.CURRENT_DB_VERSION = 61
+RSConstants.CURRENT_DB_VERSION = 62
 RSConstants.CURRENT_LOOT_DB_VERSION = 75
 
 ---============================================================================
@@ -92,6 +92,7 @@ RSConstants.PROFILE_DEFAULTS = {
 			scanWorldmapVignette = false,
 			filteredRares = {},
 			filteredContainers = {},
+			filteredEvents = {},
 			filteredZones = {},
 			enableTomtomSupport = false,
 			autoTomtomWaypoints = false,
@@ -134,6 +135,10 @@ RSConstants.PROFILE_DEFAULTS = {
 			filtersToggled = true,
 			filterOnlyMap = false
 		},
+		eventFilters = {
+			filtersToggled = true,
+			filterOnlyMap = false
+		},
 		zoneFilters = {
 			filtersToggled = true,
 			filterOnlyMap = false
@@ -158,6 +163,7 @@ RSConstants.PROFILE_DEFAULTS = {
 			displayFriendlyNpcIcons = false,
 			displayNotDiscoveredMapIcons = true,
 			displayOldNotDiscoveredMapIcons = true,
+			displayDragonGlyphsIcons = true,
 			keepShowingAfterDead = false,
 			keepShowingAfterDeadReseteable = false,
 			keepShowingAfterCollected = false,
@@ -208,6 +214,7 @@ RSConstants.PROFILE_DEFAULTS = {
 			filterNotMatchingFaction = true,
 			filterAnimaItems = true,
 			filterConduitItems = true,
+			filterByExplorerResults = false,
 			numItems = 10,
 			numItemsPerRow = 10,
 			tooltipsCommands = true,
@@ -251,6 +258,7 @@ RSConstants.CMD_TOGGLE_TREASURES = "tt"
 RSConstants.CMD_TOGGLE_TREASURES_ALERTS = "tta"
 RSConstants.CMD_TOGGLE_SCANNING_WORLD_MAP_VIGNETTES = "swmv"
 RSConstants.CMD_TOMTOM_WAYPOINT = "waypoint"
+RSConstants.CMD_TOGGLE_DRAGON_GLYPHS = "tdg"
 
 ---============================================================================
 -- AtlasNames
@@ -278,11 +286,13 @@ RSConstants.EVENT_TORMENTORS_VIGNETTE = "Tormentors-Event"
 RSConstants.ALL_ZONES_CUSTOM_NPC = 0
 RSConstants.ALL_ZONES = "all"
 RSConstants.UNKNOWN_ZONE_ID = 0
+RSConstants.TANAAN_JUNGLE_MAPID = 534
 RSConstants.MECHAGON_MAPID = 1462
 RSConstants.VALLEY_OF_ETERNAL_BLOSSOMS_MAPID = 1530
 RSConstants.ULDUM_MAPID = 1527
 RSConstants.THE_MAW_MAPID = 1543
 RSConstants.ZERETH_MORTIS_MAPID = 1970
+RSConstants.DRAGON_ISLES = 1978
 
 ---============================================================================
 -- NpcIDS
@@ -326,6 +336,7 @@ RSConstants.SHARDHIDE_STASH = { 369296 }
 RSConstants.CACHES_SWAGSNOUT_GROMIT = { 369292, 369294, 369310, 369297, 369295, 369296 }
 RSConstants.STOLEN_ANIMA_VESSEL = { 368946, 368947, 368948, 368949, 368950, 368951, 368952, 368953 }
 RSConstants.STOLEN_ANIMA_VESSEL_RIFT = { 369227, 369235, 369236 }
+RSConstants.DISTURBED_DIRT = { 382029, 376386, 383733, 383734, 383735 }
 
 -- NPCs that spawn after completing an event
 RSConstants.NPCS_WITH_PRE_EVENT = {
@@ -354,6 +365,7 @@ RSConstants.NPCS_WITH_PRE_EVENT = {
 	-- Bation
 	[176543] = 171008;
 	[171012] = 171040;
+	[356756] = 167078;
 	-- Revendredth
 	[165230] = 165206;
 	[166483] = 166521;
@@ -388,6 +400,12 @@ RSConstants.NPCS_WITH_PRE_EVENT = {
 	[170315] = 170302;
 	[169828] = 169827;
 	[170305] = 170301;
+	-- The Azure Span
+	[379234] = 194270;
+	-- Ohn'ahran Plains
+	[193166] = 187559;
+	-- The Azure Span
+	[192747] = 192749;
 }
 
 -- Contains that spawn after completing an event
@@ -424,7 +442,7 @@ RSConstants.NPCS_WITH_EVENT_VIGNETTE = { 72156, 154154, 154330, 164547, 164477, 
 RSConstants.NPCS_WITH_CONTAINER_VIGNETTE = { 179883 }
 RSConstants.CONTAINERS_WITH_NPC_VIGNETTE = { 369435 }
 RSConstants.NPCS_WITH_MULTIPLE_SPAWNS = { 69768, 69769, 69841, 69842, 70323 }
-RSConstants.CONTAINERS_WITH_MULTIPLE_SPAWNS = { 375366, 375530, 375362, 375363, 375373, 375290 }
+RSConstants.CONTAINERS_WITH_MULTIPLE_SPAWNS = { 375366, 375530, 375362, 375363, 375373, 375290, 376587, 382029, 376386, 383733, 383734, 383735 }
 RSConstants.FIRIM_EXILE_OBJECTS = { 375973, 375982, 375983, 375984, 375985, 375986, 375987 }
 
 ---============================================================================
@@ -455,6 +473,7 @@ RSConstants.GARRISON_CACHE_IDS = { 236916, 237191, 237724, 237722, 237723, 23772
 RSConstants.ETERNAL_DEATH = -1
 RSConstants.ETERNAL_OPENED = -1
 RSConstants.ETERNAL_COMPLETED = -1
+RSConstants.ETERNAL_COLLECTED = -1
 
 ---============================================================================
 -- Textures
@@ -497,6 +516,7 @@ RSConstants.GUIDE_STEP6_FILE = "Number6"
 RSConstants.GUIDE_STEP7_FILE = "Number7"
 RSConstants.GUIDE_STEP8_FILE = "Number8"
 RSConstants.GUIDE_STEP9_FILE = "Number9"
+RSConstants.DRAGON_GLYFH_FILE = "DragonGlyphSmall"
 
 RSConstants.NORMAL_NPC_TEXTURE = string.format(RSConstants.TEXTURE_PATH, RSConstants.NORMAL_NPC_TEXTURE_FILE);
 RSConstants.GROUP_NORMAL_NPC_T_TEXTURE = string.format(RSConstants.TEXTURE_PATH, string.format("%s%s", RSConstants.NORMAL_NPC_TEXTURE_FILE, RSConstants.GROUP_TOP_TEXTURE_FILE));
@@ -588,6 +608,7 @@ RSConstants.GUIDE_STEP6_TEXTURE = string.format(RSConstants.TEXTURE_PATH, RSCons
 RSConstants.GUIDE_STEP7_TEXTURE = string.format(RSConstants.TEXTURE_PATH, RSConstants.GUIDE_STEP7_FILE);
 RSConstants.GUIDE_STEP8_TEXTURE = string.format(RSConstants.TEXTURE_PATH, RSConstants.GUIDE_STEP8_FILE);
 RSConstants.GUIDE_STEP9_TEXTURE = string.format(RSConstants.TEXTURE_PATH, RSConstants.GUIDE_STEP9_FILE);
+RSConstants.DRAGON_GLYPH_TEXTURE = string.format(RSConstants.TEXTURE_PATH, RSConstants.DRAGON_GLYFH_FILE);
 
 ---============================================================================
 -- Guide constants
@@ -632,7 +653,7 @@ RSConstants.EXPLORER_FILTER_WITHOUT_COLLECTIBLES = 8
 
 RSConstants.RAID_WARNING_SHOWING_TIME = 3
 RSConstants.MINIMUM_DISTANCE_PINS_WORLD_MAP = 0.015
-RSConstants.TOOLTIP_MAX_WIDTH = 250
+RSConstants.TOOLTIP_MAX_WIDTH = 300
 
 ---============================================================================
 -- Auxiliar functions

@@ -1,11 +1,12 @@
 local mod	= DBM:NewMod("Anub'arak_Coliseum", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041927")
+mod:SetRevision("20220624005857")
 mod:SetCreatureID(34564)
 mod:SetEncounterID(1085)
 mod:SetModelID(29268)
-mod:SetUsedIcons(3, 4, 5, 6, 7, 8)
+mod:SetUsedIcons(1, 2, 3, 4, 5, 8)
+mod:SetMinSyncRevision(20220623000000)
 
 mod:RegisterCombat("combat")
 
@@ -20,9 +21,9 @@ mod:RegisterEventsInCombat(
 local warnAdds				= mod:NewAnnounce("warnAdds", 3, 45419)
 local preWarnShadowStrike	= mod:NewSoonAnnounce(66134, 3)
 local warnShadowStrike		= mod:NewSpellAnnounce(66134, 4)
-local warnPursue			= mod:NewTargetAnnounce(67574, 4)
-local warnFreezingSlash		= mod:NewTargetAnnounce(66012, 2, nil, "Tank|Healer")
-local warnHoP				= mod:NewTargetAnnounce(1022, 2, nil, false)--Heroic strat revolves around kiting pursue and using Hand of Protection.
+local warnPursue			= mod:NewTargetNoFilterAnnounce(67574, 4)
+local warnFreezingSlash		= mod:NewTargetNoFilterAnnounce(66012, 2, nil, "Tank|Healer")
+local warnHoP				= mod:NewTargetNoFilterAnnounce(1022, 2, nil, false)--Heroic strat revolves around kiting pursue and using Hand of Protection.
 local warnEmerge			= mod:NewAnnounce("WarnEmerge", 3, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
 local warnEmergeSoon		= mod:NewAnnounce("WarnEmergeSoon", 1, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
 local warnSubmerge			= mod:NewAnnounce("WarnSubmerge", 3, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")
@@ -43,71 +44,53 @@ local timerHoP				= mod:NewBuffActiveTimer(10, 1022, nil, false, nil, 5)--So we 
 
 local enrageTimer			= mod:NewBerserkTimer(570)	-- 9:30 ? hmpf (no enrage while submerged... this sucks)
 
-mod:AddSetIconOption("PursueIcon", 67574, true)
-mod:AddSetIconOption("SetIconsOnPCold", 66013, false)
-mod:AddBoolOption("AnnouncePColdIcons", false)
-mod:AddBoolOption("AnnouncePColdIconsRemoved", false)
+mod:AddSetIconOption("PursueIcon", 67574, true, 0, {8})
+mod:AddSetIconOption("SetIconsOnPCold", 66013, true, 7, {1, 2, 3, 4, 5})
+mod:AddBoolOption("AnnouncePColdIcons", false, nil, nil, nil, nil, 66013)
+mod:AddBoolOption("AnnouncePColdIconsRemoved", false, nil, nil, nil, nil, 66013)
 
-local PColdTargets = {}
 mod.vb.Burrowed = false
 
-function mod:OnCombatStart(delay)
-	self.vb.Burrowed = false
-	timerAdds:Start(10-delay)
-	warnAdds:Schedule(10-delay)
-	self:ScheduleMethod(10-delay, "Adds")
-	warnSubmergeSoon:Schedule(70-delay)
-	timerSubmerge:Start(80-delay)
-	enrageTimer:Start(-delay)
-	timerFreezingSlash:Start(-delay)
-	table.wipe(PColdTargets)
-	if self:IsDifficulty("heroic10", "heroic25") then
-		timerShadowStrike:Start()
-		preWarnShadowStrike:Schedule(25.5-delay)
-		self:ScheduleMethod(30.5-delay, "ShadowStrike")
-	end
-end
-
-function mod:Adds()
+local function Adds(self)
 	if self:IsInCombat() then
 		if not self.vb.Burrowed then
 			timerAdds:Start()
 			warnAdds:Schedule(45)
-			self:ScheduleMethod(45, "Adds")
+			self:Schedule(45, Adds, self)
 		end
 	end
 end
 
-function mod:ShadowStrike()
-	self:UnscheduleMethod("ShadowStrike")
+local function ShadowStrike(self)
+	self:Unschedule(ShadowStrike)
 	if self:IsInCombat() then
 		timerShadowStrike:Stop()
 		timerShadowStrike:Start()
 		preWarnShadowStrike:Cancel()
 		preWarnShadowStrike:Schedule(25.5)
-		self:ScheduleMethod(30.5, "ShadowStrike")
+		self:Schedule(30.5, ShadowStrike, self)
 	end
 end
 
-local function ClearPcoldTargets()
-	table.wipe(PColdTargets)
+function mod:OnCombatStart(delay)
+	self.vb.Burrowed = false
+	timerAdds:Start(10-delay)
+	warnAdds:Schedule(10-delay)
+	self:Schedule(10-delay, Adds, self)
+	warnSubmergeSoon:Schedule(70-delay)
+	timerSubmerge:Start(80-delay)
+	enrageTimer:Start(-delay)
+	timerFreezingSlash:Start(-delay)
+	if self:IsDifficulty("heroic10", "heroic25") then
+		timerShadowStrike:Start()
+		preWarnShadowStrike:Schedule(25.5-delay)
+		self:Schedule(30.5-delay, ShadowStrike, self)
+	end
 end
 
-do
-	local function sort_by_group(v1, v2)
-		return DBM:GetRaidSubgroup(DBM:GetUnitFullName(v1)) < DBM:GetRaidSubgroup(DBM:GetUnitFullName(v2))
-	end
-	function mod:SetPcoldIcons()
-		table.sort(PColdTargets, sort_by_group)
-		local PColdIcon = 7
-		for i, v in ipairs(PColdTargets) do
-			if self.Options.AnnouncePColdIcons and DBM:GetRaidRank() > 1 then
-				SendChatMessage(L.PcoldIconSet:format(PColdIcon, DBM:GetUnitFullName(v)), "RAID")
-			end
-			self:SetIcon(v, PColdIcon)
-			PColdIcon = PColdIcon - 1
-		end
-		self:Schedule(5, ClearPcoldTargets)
+function mod:AnnouncePcoldIcons(uId, icon)
+	if self.Options.AnnouncePColdIcons and IsInGroup() and DBM:GetRaidRank() > 1 then
+		SendChatMessage(L.PcoldIconSet:format(icon, DBM:GetUnitFullName(uId)), IsInRaid() and "RAID" or "PARTY")
 	end
 end
 
@@ -130,15 +113,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnPCold:Play("targetyou")
 		end
 		if self.Options.SetIconsOnPCold then
-			table.insert(PColdTargets, DBM:GetRaidUnitId(args.destName))
-			self:UnscheduleMethod("SetPcoldIcons")
-			if (self:IsDifficulty("normal25", "heroic25") and #PColdTargets >= 5) or (self:IsDifficulty("normal10", "heroic10") and #PColdTargets >= 2) then
-				self:SetPcoldIcons()
-			else
-				if self:LatencyCheck() then
-					self:ScheduleMethod(0.5, "SetPcoldIcons")
-				end
-			end
+			local maxIcon = self:IsDifficulty("normal25", "heroic25") and 5 or 2
+			self:SetSortedIcon("roster", 1, args.destName, 1, maxIcon, false, "AnnouncePcoldIcons")
 		end
 	elseif args.spellId == 66012 then
 		warnFreezingSlash:Show(args.destName)
@@ -154,7 +130,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 66013 then
 		if self.Options.SetIconsOnPCold then
 			self:SetIcon(args.destName, 0)
-			if self.Options.AnnouncePColdIconsRemoved and DBM:GetRaidRank() > 0 then
+			if self.Options.AnnouncePColdIconsRemoved and DBM:GetRaidRank() > 1 then
 				SendChatMessage(L.PcoldIconRemoved:format(args.destName), "RAID")
 			end
 		end
@@ -173,11 +149,11 @@ function mod:SPELL_CAST_START(args)
 		if self:IsDifficulty("normal10", "normal25") then
 			timerAdds:Cancel()
 			warnAdds:Cancel()
-			self:UnscheduleMethod("Adds")
+			self:Unschedule(Adds)
 		end
 	elseif args.spellId == 66134 then
-		self:UnscheduleMethod("ShadowStrike")
-		self:ShadowStrike()
+		self:Unschedule(ShadowStrike)
+		ShadowStrike(self)
 		if self.Options.SpecWarn66134spell then
 			specWarnShadowStrike:Show()
 		else
@@ -199,15 +175,15 @@ function mod:RAID_BOSS_EMOTE(msg)
 		self.vb.Burrowed = false
 		timerAdds:Start(5)
 		warnAdds:Schedule(5)
-		self:ScheduleMethod(5, "Adds")
+		self:Schedule(5, Adds, self)
 		warnEmerge:Show()
 		warnSubmergeSoon:Schedule(65)
 		timerSubmerge:Start()
 		if self:IsDifficulty("heroic10", "heroic25") then
 			timerShadowStrike:Stop()
 			preWarnShadowStrike:Cancel()
-			self:UnscheduleMethod("ShadowStrike")
-			self:ScheduleMethod(5.5, "ShadowStrike")
+			self:Unschedule(ShadowStrike)
+			self:Schedule(5.5, ShadowStrike, self)
 		end
 	end
 end

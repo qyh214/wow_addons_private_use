@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2499, "DBM-VaultoftheIncarnates", nil, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220719215058")
+mod:SetRevision("20220822021157")
 --mod:SetCreatureID(181224)--way too many CIDs to guess right now
 mod:SetEncounterID(2607)
 --mod:SetUsedIcons(1, 2, 3)
@@ -31,7 +31,7 @@ mod:RegisterEventsInCombat(
 --local specWarnDominationBolt					= mod:NewSpecialWarningInterrupt(363607, "HasInterrupt", nil, nil, 1, 2)
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
---mod:AddTimerLine(BOSS)
+--mod:AddTimerLine(DBM:EJ_GetSectionInfo(24883))
 --local timerStaggeringBarrageCD					= mod:NewAITimer(35, 361018, nil, nil, nil, 3)
 --local timerDecaySprayCD							= mod:NewAITimer(35, 376811, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
@@ -45,14 +45,14 @@ function mod:OnCombatStart(delay)
 
 end
 
-function mod:OnCombatEnd()
+--function mod:OnCombatEnd()
 --	if self.Options.RangeFrame then
 --		DBM.RangeCheck:Hide()
 --	end
 --	if self.Options.InfoFrame then
 --		DBM.InfoFrame:Hide()
 --	end
-end
+--end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId

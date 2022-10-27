@@ -1,7 +1,7 @@
 local ADDON_NAME, ns = ...
 local L = ns.NewLocale('ruRU')
 if not L then return end
--- Russian translation by Hubbotu
+-- Russian translation by ZamestoTV
 
 -------------------------------------------------------------------------------
 ---------------------------------- COVENANTS ----------------------------------
@@ -9,6 +9,14 @@ if not L then return end
 
 L['covenant_required'] = 'Требуется член ковенанта %s.'
 L['anima_channeled'] = 'анима направленая на %s.'
+
+-------------------------------------------------------------------------------
+--------------------------------- SHADOWLANDS ---------------------------------
+-------------------------------------------------------------------------------
+
+L['squirrels_note'] = 'Вы должны использовать эмоцию /любовь на зверьках, а не на боевых питомцах.'
+L['options_icons_squirrels'] = '{achievement:14731}'
+L['options_icons_squirrels_desc'] = 'Места появления зверьков для {achievement:14731}'
 
 -------------------------------------------------------------------------------
 --------------------------------- ARDENWEALD ----------------------------------
@@ -93,6 +101,49 @@ L['glitterdust_note'] = 'Существа Арденвельда могут вы
 L['lost_book_note'] = 'Верните эту потерянную книгу {npc:165867} в Рощу Памяти.'
 L['options_icons_faerie_tales'] = '{achievement:14788}'
 L['options_icons_faerie_tales_desc'] = 'Показать местонахождение потерянных книг для достижения {achievement:14788}.'
+
+L['options_icons_wild_hunting'] = '{achievement:14779}'
+L['options_icons_wild_hunting_desc'] = 'Животные в Арденвельде для {achievement:14779}'
+
+L['options_icons_wildseed_spirits'] = 'Духи из семян'
+L['options_icons_wildseed_spirits_desc'] = 'Награды от духов из семян'
+
+L['divine_martial_spirit'] = 'Божественный воинственный дух'
+L['divine_dutiful_spirit'] = 'Божественный дух служения'
+L['divine_prideful_spirit'] = 'Божественный дух гордыни'
+L['divine_untamed_spirit'] = 'Божественный неукрощенный дух'
+
+L['martial_spirit_label'] = '{item:178874}'
+L['dutiful_spirit_label'] = '{item:178881}'
+L['prideful_spirit_label'] = '{item:178882}'
+L['untamed_spirit_label'] = '{item:177698}'
+
+L['0x_wildseed_root_grain'] = '0x {item:176832}'
+L['1x_wildseed_root_grain'] = '1x {item:176832}'
+L['2x_wildseed_root_grain'] = '2x or 3x {item:176832}'
+L['4x_wildseed_root_grain'] = '4x {item:176832}'
+
+L['soulshape_cat_note'] = [[
+Возьмите в цель {npc:181694} и используйте эмоцию /утешить
+Может появиться в центре вершины 6 Великих Деревьев вокруг |cFFFFFF00Арденвельда|r:
+• |cFFFFFF00Роща Песни Сна|r
+• |cFFFFFF00Низина Мерцающих Каскадов|r
+• |cFFFFFF00Тирна Ваал|r
+• |cFFFFFF00Спящая лощина|r
+• |cFFFFFF00Сердцевинная роща|r
+• |cFFFFFF00Урочищий Коготь|r
+]]
+L['soulshape_corgi_note'] = [[
+Возьмите в цель {npc:174608} и используйте эмоцию /погладить
+Затем сразу после разговора с корги идите к {npc:181582}
+]]
+L['soulshape_well_fed_cat_note'] = [[
+1. Заберите {item:187811} в |cffffff00Темном Приюте|r
+2. Возьмите в цель {npc:182093} и используйте эмоцию /мау
+3. |cFFFF8C00Ма'о жадно мяукает на тебя.|r
+4. Возьмите в цель {npc:182093} и используйте {item:187811}
+При разговоре с {npc:181582} сразу станет доступна опция Душа кошки (Сытой).
+]]
 
 -------------------------------------------------------------------------------
 ----------------------------------- BASTION -----------------------------------
@@ -233,6 +284,8 @@ L['options_icons_hymns_desc'] = 'Отображение расположения
 L['stratios_note'] = 'Даже самые маленькие битвы нужно вести с честью и осторожностью. Представьте свою команду, когда будете готовы.'
 L['thenia_note'] = 'Вот такие великолепные открытые равнины. Славное место для битв. Вы готовы?'
 L['zolla_note'] = 'Мы очень серьезно относимся к нашей защите. Независимо от того, малые они или большие, мы полностью привержены поддержанию и обучению ресурсов, которые делают Бастион сильным.'
+
+L['soulshape_otter_soul'] = 'Возьмите в цель {npc:181682} и используйте эмоцию /обнять'
 
 -------------------------------------------------------------------------------
 ----------------------------------- KORTHIA -----------------------------------
@@ -409,6 +462,32 @@ L['dundley_note'] = 'Я буду сражаться за свой путь к п
 L['maximillian_note'] = 'Я десятки лет ждал достойного соперника. К победителю идут трофеи!'
 L['rotgut_note'] = 'Гнилобрюх. Остатки. Дополнительные части. Ты сражаешься.'
 
+L['ashen_ink_label'] = '{item:183690}'
+L['ashen_ink_note'] = 'Случайная добыча из {npc:157125}'
+
+L['jagged_bonesaw_label'] = '{item:183692}'
+L['jagged_bonesaw_note'] = 'Случайная добыча из {npc:159105}'
+
+L['discarded_grimoire_label'] = '{item:183394}'
+L['discarded_grimoire_note'] = 'Выполните {quest:62297} у {npc:174020}'
+
+L['sorcerers_blade_label'] = '{item:183397}'
+L['sorcerers_blade_note'] = 'Выполните {quest:62317} у |cFFFFFF00Записки чародея|r внутри |cFFFFFF00Хранилище душ|r. Вниз по лестнице и налево на книжном шкафу.'
+
+L['mucosal_pigment_label'] = '{item:183691}'
+L['mucosal_pigment_note'] = 'Выпадает из любой слизи вокруг |cFFFFFF00Дома чумы|r или в окрестностях {npc:162727}'
+
+L['amethystine_dye_label'] = '{item:183401}'
+L['amethystine_dye_note'] = 'Выполните {quest:62320} у {npc:174120}'
+
+L['ritualists_mantle_label'] = '{item:183399}'
+L['ritualists_mantle_note'] = 'Выполните {quest:62308} у {npc:172813}. Требуется 3 игрока, чтобы вызвать {npc:174127}.'
+
+L['options_icons_crypt_couture'] = '{achievement:14763}'
+L['options_icons_crypt_couture_desc'] = 'Некроаколит маскирует вас в этой местности для {achievement:14763}'
+
+L['soulshape_saurid_note'] = 'В небольшой пещере. Возьмите в цель {npc:182105} и используйте эмоцию /поклон'
+
 -------------------------------------------------------------------------------
 --------------------------------- REVENDRETH ----------------------------------
 -------------------------------------------------------------------------------
@@ -484,6 +563,15 @@ L['inquisitor_note'] = 'Сдайте 100 {currency:1816} у {npc:160248}, что
 L['options_icons_inquisitors'] = 'Инквизиторы'
 L['options_icons_inquisitors_desc'] = 'Показать местоположения инквизиторов для достижения {achievement:14276}.'
 
+L['bell_of_shame_note'] = nil
+L['atonement_crypt_label'] = nil
+L['atonement_crypt_note'] = nil
+L['atonement_crypts_opened'] = nil
+L['atonement_crypt_key_label'] = '{item:172957}'
+L['atonement_crypt_key_note'] = nil
+L['options_icons_crypt_kicker'] = '{achievement:14273}'
+L['options_icons_crypt_kicker_desc'] = nil
+
 L['broken_mirror'] = 'Сломанные зеркала'
 L['broken_mirror_note'] = 'Группа из трех разбитых зеркал будет активна каждый день. Используйте {item:181363}, чтобы починить каждое зеркало и открыть |cFFFFFD00Позабытый сундук|r внутри.'
 L['broken_mirror_crypt'] = 'Внутри склепа.'
@@ -495,6 +583,10 @@ L['broken_mirror_61819'] = 'В маленькой комнате на перво
 L['broken_mirror_61827'] = 'В маленькой комнате.'
 L['options_icons_broken_mirror'] = 'Сломанные зеркала'
 L['options_icons_broken_mirror_desc'] = 'Показать расположение сломанных зеркал.'
+
+L['soulshape_chicken_note'] = nil
+L['spectral_feed_label'] = '{item:187811}'
+L['spectral_feed_note'] = nil
 
 -------------------------------------------------------------------------------
 ----------------------------------- THE MAW -----------------------------------
@@ -678,6 +770,70 @@ L['options_icons_mawsworn_blackguard_desc'] = 'Mawsworn Blackguard locations for
 
 L['mawsworn_blackguard'] = 'Верный Утробе черный страж'
 L['mawsworn_blackguard_note'] = 'Easily target a stealthed {npc:183173}:'
+
+L['options_icons_covenant_assaults'] = 'Covenant Assaults'
+L['options_icons_covenant_assaults_desc'] = 'Rewards for covenant assaults'
+
+L['assault_sublabel_US'] = nil
+L['assault_sublabel_EU'] = nil
+L['assault_sublabel_CN'] = nil
+
+L['necrolord_assault'] = '{quest:63543}'
+L['necrolord_assault_note'] = nil
+L['necrolord_assault_quantity_note'] = nil
+L['venthyr_assault'] = '{quest:63822}'
+L['venthyr_assault_note'] = nil
+L['venthyr_assault_quantity_note'] = nil
+L['night_fae_assault'] = '{quest:63823}'
+L['night_fae_assault_note'] = nil
+L['night_fae_assault_quantity_note'] = nil
+L['kyrian_assault'] = '{quest:63824}'
+L['kyrian_assault_note'] = nil
+L['kyrian_assault_quantity_note1'] = nil
+L['kyrian_assault_quantity_note2'] = nil
+
+-------------------------------------------------------------------------------
+---------------------- TORGHAST, THE TOWER OF THE DAMNED ----------------------
+-------------------------------------------------------------------------------
+
+L['torghast_the_tower_of_the_damned'] = nil
+L['torghast_reward_sublabel'] = nil
+L['torghast_boss_note'] = nil
+L['torghast_vendor_note'] = nil
+L['torghast_reward_note'] = nil
+L['torghast_soulshape_note'] = nil
+L['colossal_umbrahide_mawrat_note'] = nil
+
+L['skoldus_hall'] = nil
+L['fracture_chambers'] = nil
+L['the_soulforges'] = nil
+L['coldheart_interstitia'] = nil
+L['mortregar'] = nil
+L['the_upper_reaches'] = nil
+L['adamant_vaults'] = nil
+L['twisting_corridors'] = nil
+L['the_jailers_gauntlet'] = nil
+
+L['torghast_layer1'] = nil
+L['torghast_layer2'] = nil
+L['torghast_layer3'] = nil
+L['torghast_layer4'] = nil
+L['torghast_layer6'] = nil
+L['torghast_layer8'] = nil
+
+L['phantasma_note'] = nil
+L['bloating_fodder_note'] = nil
+L['flawless_master_note'] = nil
+L['tower_ranger_note'] = nil
+
+L['the_jailers_gauntlet_note'] = nil
+
+L['the_box_of_many_things'] = nil
+L['the_box_of_many_things_note'] = nil
+L['many_many_things_section'] = nil
+
+L['the_runecarver'] = '{npc:164937}'
+L['clearing_the_fog_suffix'] = nil
 
 -------------------------------------------------------------------------------
 -------------------------------- ZERETH MORTIS --------------------------------
@@ -882,11 +1038,19 @@ L['patient_bufonid_note_day7'] = 'Купите 1x {item:187171} у {npc:180114} 
 L['lost_comb'] = 'Потерянные соты'
 L['soulshape_penguin_note'] = 'Расположены на вершине летающей кузницы.'
 
-L['coreless_automa'] = nil
-L['coreless_automa_note'] = 'Equiping an item with {spell:364480} will grant |cFFFFFD00Pocopoc|r the ability to take over creatures without consuming energy and will make earning this achievement faster.'
-L['coreless_automa_warning'] = '|cFFFF8C00Wait for the automa to actually start following you before telling Pocopoc to leave to avoid causing a bug that requires you to relog.|r'
+L['coreless_automa'] = 'звери автомы'
+L['coreless_automa_note'] = 'Экипировка с {spell:364480} даст |cFFFFFD00Покопоку|r возможность захватывать существ без расхода энергии и ускорит получение этого достижения.'
+L['coreless_automa_warning'] = '|cFFFF8C00Подождите, пока автомата действительно начнет следовать за вами, прежде чем отозвать Покопока, чтобы избежать ошибки, требующей повторного входа в игру.|r'
 
-L['olea_manu'] = nil
+L['olea_manu'] = 'Продает предметы коллекционирования и рецепты в обмен на {currency:1979}.'
+
+L['venaris_fate_sublabel'] = 'Расположен в |cFFFFFF00Катализаторе творения|r'
+L['venaris_fate_note'] = [[
+1. Поговорите с проекцией {npc:162804} в |cFFFFFF00убежище Ве'нари|r в |cFFFFFF00Утробе|r.
+2. Если вы видите не проекцию, требуется пройти дополнительные сюжетные задания в 9.2.
+3. Взаимодействуйте с трупом {npc:162804} возле |cFFFFFF00Катализатора творения|r в |cFFFFFF00Зерет Мортис|r.
+4. Через 5 дней вы получите письмо по почте от {npc:162804} вместе с {item:192485}.
+]]
 
 L['options_icons_code_creature'] = '{achievement:15211}'
 L['options_icons_code_creature_desc'] = 'Показать местонахождение существ для достижения {achievement:15211}.'

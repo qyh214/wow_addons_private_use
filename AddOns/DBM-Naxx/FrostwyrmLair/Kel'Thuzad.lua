@@ -1,7 +1,8 @@
 local mod	= DBM:NewMod("Kel'Thuzad", "DBM-Naxx", 5)
 local L		= mod:GetLocalizedStrings()
+local isRetail = WOW_PROJECT_ID == (WOW_PROJECT_MAINLINE or 1)
 
-mod:SetRevision("20220221015714")
+mod:SetRevision("20221018215140")
 mod:SetCreatureID(15990)
 mod:SetEncounterID(1114)
 --mod:SetModelID(15945)--Doesn't work at all, doesn't even render.
@@ -18,10 +19,24 @@ mod:RegisterEventsInCombat(
 	"UNIT_TARGETABLE_CHANGED"
 )
 
+--Check if UNIT_TARGETABLE_CHANGED exists in classic wrath. It was a tech they didn't really use until WoD
 local warnAddsSoon			= mod:NewAnnounce("warnAddsSoon", 1, "134321")
 local warnPhase2			= mod:NewPhaseAnnounce(2, 3)
 local warnBlastTargets		= mod:NewTargetAnnounce(27808, 2)
-local warnFissure			= mod:NewSpellAnnounce(27810, 4, nil, nil, nil, nil, nil, 2)
+
+--Fissure needs custom code since blizzard went out of their way to break it in classic
+local warnFissure
+local specWarnFissureYou
+local specWarnFissureClose
+local yellFissure
+if isRetail then
+	warnFissure				= mod:NewTargetNoFilterAnnounce(27810, 4)
+	specWarnFissureYou		= mod:NewSpecialWarningYou(27810, nil, nil, nil, 3, 2)
+	specWarnFissureClose	= mod:NewSpecialWarningClose(27810, nil, nil, nil, 2, 2)
+	yellFissure				= mod:NewYell(27810)
+else
+	warnFissure				= mod:NewSpellAnnounce(27810, 4, nil, nil, nil, nil, nil, 2)
+end
 local warnMana				= mod:NewTargetAnnounce(27819, 2)
 local warnChainsTargets		= mod:NewTargetNoFilterAnnounce(28410, 4)
 
@@ -29,20 +44,17 @@ local specwarnP2Soon		= mod:NewSpecialWarning("specwarnP2Soon")
 local specWarnManaBomb		= mod:NewSpecialWarningMoveAway(27819, nil, nil, nil, 1, 2)
 local yellManaBomb			= mod:NewShortYell(27819)
 local specWarnBlast			= mod:NewSpecialWarningTarget(27808, "Healer", nil, nil, 1, 2)
-local specWarnFissureYou	= mod:NewSpecialWarningYou(27810, nil, nil, nil, 3, 2)
-local specWarnFissureClose	= mod:NewSpecialWarningClose(27810, nil, nil, nil, 2, 2)
-local yellFissure			= mod:NewYell(27810)
 
 local blastTimer			= mod:NewBuffActiveTimer(4, 27808, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
 local timerManaBomb			= mod:NewCDTimer(20, 27819, nil, nil, nil, 3)--20-50
-local timerFrostBlast		= mod:NewCDTimer(40.1, 27808, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--40-46 (might be 33-46)
+local timerFrostBlast		= mod:NewCDTimer(35, 27808, nil, false, 2, 3, nil, DBM_COMMON_L.DEADLY_ICON)--35-77.7
 local timerMC				= mod:NewBuffActiveTimer(20, 28410, nil, nil, nil, 3)
 --local timerMCCD			= mod:NewCDTimer(90, 28410, nil, nil, nil, 3)--actually 60 second cdish but its easier to do it this way for the first one.
-local timerPhase2			= mod:NewTimer(218, "TimerPhase2", "136116", nil, nil, 6)
+local timerPhase2			= mod:NewTimer(225, "TimerPhase2", "136116", nil, nil, 6)
 
 mod:AddSetIconOption("SetIconOnMC", 28410, true, false, {1, 2, 3})
 mod:AddSetIconOption("SetIconOnManaBomb", 27819, false, false, {8})
-mod:AddSetIconOption("SetIconOnFrostTomb", 28169, true, false, {1, 2, 3, 4, 5, 6, 7, 8})
+mod:AddSetIconOption("SetIconOnFrostTomb", 27808, true, false, {1, 2, 3, 4, 5, 6, 7, 8})
 mod:AddRangeFrameOption(10, 27819)
 
 mod.vb.warnedAdds = false
@@ -72,14 +84,29 @@ local function AnnounceBlastTargets(self)
 	end
 end
 
+local function RangeToggle(show)
+	if show then
+		DBM.RangeCheck:Show(10)
+	else
+		DBM.RangeCheck:Hide()
+	end
+end
+
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
 	table.wipe(chainsTargets)
 	table.wipe(frostBlastTargets)
 	self.vb.warnedAdds = false
 	self.vb.MCIcon = 1
-	specwarnP2Soon:Schedule(208.1-delay)
+	specwarnP2Soon:Schedule(214-delay)
 	timerPhase2:Start()
+	--Redundancy below here isn't needed on retail but may be on wrath classic
+	if not isRetail then
+		warnPhase2:Schedule(224)
+		if self.Options.RangeFrame then
+			self:Schedule(224-delay, RangeToggle, true)
+		end
+	end
 end
 
 function mod:OnCombatEnd()
@@ -90,15 +117,20 @@ end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 27810 then
-		if args:IsPlayer() then
-			specWarnFissureYou:Show()
-			specWarnFissureYou:Play("targetyou")
-			yellFissure:Yell()
-		elseif self:CheckNearby(8, args.destName) then
-			specWarnFissureClose:Show(args.destName)
-			specWarnFissureClose:Play("watchfeet")
+		if isRetail then
+			if args:IsPlayer() then
+				specWarnFissureYou:Show()
+				specWarnFissureYou:Play("targetyou")
+				yellFissure:Yell()
+			elseif self:CheckNearby(8, args.destName) then
+				specWarnFissureClose:Show(args.destName)
+				specWarnFissureClose:Play("watchfeet")
+			else
+				warnFissure:Show(args.destName)
+				warnFissure:Play("watchstep")
+			end
 		else
-			warnFissure:Show(args.destName)
+			warnFissure:Show()
 		end
 	elseif args.spellId == 27819 then
 		timerManaBomb:Start()
@@ -159,6 +191,8 @@ end
 
 function mod:UNIT_TARGETABLE_CHANGED()
 	if self.vb.phase == 1 then
+		self:Unschedule(RangeToggle)
+		warnPhase2:Cancel()
 		self:SetStage(2)
 		warnPhase2:Show()
 		warnPhase2:Play("ptwo")

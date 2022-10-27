@@ -1,6 +1,6 @@
-## Interface: 90205
+## Interface: 90207
 ## Title: |cff16C3F2AddOn|r|cFFFFFFFFSkins|r
-## Version: 4.58
+## Version: 4.60
 ## Author: Azilroka
 ## SavedVariables: AddOnSkinsDB, AddOnSkinsDS
 ## OptionalDeps: AllTheThings, ElvUI

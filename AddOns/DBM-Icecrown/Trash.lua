@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ICCTrash", "DBM-Icecrown", 6)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220516021309")
+mod:SetRevision("20220624005857")
 mod:SetModelID(30459)
 mod:SetUsedIcons(1, 2, 8)
 mod.isTrashMod = true
@@ -20,18 +20,18 @@ mod:RegisterEvents(
 
 --Lower Spire
 local warnDisruptingShout		= mod:NewSpellAnnounce(71022, 2)
-local warnDarkReckoning			= mod:NewTargetAnnounce(69483, 3)
+local warnDarkReckoning			= mod:NewTargetNoFilterAnnounce(69483, 3)
 --Plagueworks
 local warnZombies				= mod:NewSpellAnnounce(71159, 2)
 local warnMortalWound			= mod:NewStackAnnounce(71127, 2, nil, "Tank|Healer")
 local warnDecimateSoon			= mod:NewSoonAnnounce(71123, 3)
 --Crimson Hall
-local warnBloodMirror			= mod:NewTargetAnnounce(70451, 3, nil, "Healer")
-local warnBloodSap				= mod:NewTargetAnnounce(70432, 4)
-local warnChainsofShadow		= mod:NewTargetAnnounce(70645, 3)
+local warnBloodMirror			= mod:NewTargetNoFilterAnnounce(70451, 3, nil, "Healer|Tank")
+local warnBloodSap				= mod:NewTargetNoFilterAnnounce(70432, 4, nil, "Healer|Tank")
+local warnChainsofShadow		= mod:NewTargetNoFilterAnnounce(70645, 3, nil, false)
 --Frostwing Hall
-local warnConflag				= mod:NewTargetAnnounce(71785, 4)
-local warnBanish				= mod:NewTargetAnnounce(71298, 3)
+local warnConflag				= mod:NewTargetNoFilterAnnounce(71785, 4, nil, false)
+local warnBanish				= mod:NewTargetNoFilterAnnounce(71298, 3, nil, false)
 
 --Lower Spire
 local specWarnDisruptingShout	= mod:NewSpecialWarningCast(71022)
@@ -47,20 +47,20 @@ local specWarnGosaEvent			= mod:NewSpecialWarning("SpecWarnGosaEvent")
 local specWarnBlade				= mod:NewSpecialWarningMove(70305)
 
 --Lower Spire
-local timerDisruptingShout		= mod:NewCastTimer(3, 71022)
-local timerDarkReckoning		= mod:NewTargetTimer(8, 69483)
+local timerDisruptingShout		= mod:NewCastTimer(3, 71022, nil, nil, nil, 2)
+local timerDarkReckoning		= mod:NewTargetTimer(8, 69483, nil, nil, nil, 5)
 --Plagueworks
-local timerZombies				= mod:NewNextTimer(20, 71159)
-local timerMortalWound			= mod:NewTargetTimer(15, 71127)
-local timerDecimate				= mod:NewNextTimer(33, 71123)
-local timerBlightBomb			= mod:NewCastTimer(5, 71088)
+local timerZombies				= mod:NewNextTimer(20, 71159, nil, nil, nil, 1)
+local timerMortalWound			= mod:NewTargetTimer(15, 71127, nil, nil, nil, 5)
+local timerDecimate				= mod:NewNextTimer(33, 71123, nil, nil, nil, 2)
+local timerBlightBomb			= mod:NewCastTimer(5, 71088, nil, nil, nil, 3)
 --Crimson Hall
-local timerBloodMirror			= mod:NewTargetTimer(30, 70451, nil, "Healer")
-local timerBloodSap				= mod:NewTargetTimer(8, 70432)
-local timerChainsofShadow		= mod:NewTargetTimer(10, 70645)
+local timerBloodMirror			= mod:NewTargetTimer(30, 70451, nil, "Healer|Tank", nil, 5)
+local timerBloodSap				= mod:NewTargetTimer(8, 70432, nil, "Healer|Tank", nil, 5)
+local timerChainsofShadow		= mod:NewTargetTimer(10, 70645, nil, false, nil, 3)
 --Frostwing Hall
-local timerConflag				= mod:NewTargetTimer(10, 71785)
-local timerBanish				= mod:NewTargetTimer(6, 71298)
+local timerConflag				= mod:NewTargetTimer(10, 71785, nil, false, nil, 3)
+local timerBanish				= mod:NewTargetTimer(6, 71298, nil, false, nil, 3)
 
 --Lower Spire
 mod:AddSetIconOption("SetIconOnDarkReckoning", 69483, true)

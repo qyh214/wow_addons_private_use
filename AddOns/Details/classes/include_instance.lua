@@ -11,9 +11,9 @@ local _detalhes = 		_G._detalhes
 local SharedMedia = LibStub:GetLibrary("LibSharedMedia-3.0")
 
 function _detalhes:ResetInstanceConfig (maintainsnap)
-	for key, value in pairs (_detalhes.instance_defaults) do 
-		if (type (value) == "table") then
-			self [key] = Details.CopyTable (value)
+	for key, value in pairs(_detalhes.instance_defaults) do 
+		if (type(value) == "table") then
+			self [key] = Details.CopyTable(value)
 		else
 			self [key] = value
 		end
@@ -57,10 +57,10 @@ _detalhes.instance_skin_ignored_values = {
 }
 
 function _detalhes:ResetInstanceConfigKeepingValues (maintainsnap)
-	for key, value in pairs (_detalhes.instance_defaults) do 
+	for key, value in pairs(_detalhes.instance_defaults) do 
 		if (not _detalhes.instance_skin_ignored_values [key]) then
-			if (type (value) == "table") then
-				self [key] = Details.CopyTable (value)
+			if (type(value) == "table") then
+				self [key] = Details.CopyTable(value)
 			else
 				self [key] = value
 			end
@@ -75,19 +75,19 @@ function _detalhes:ResetInstanceConfigKeepingValues (maintainsnap)
 end
 
 function _detalhes:LoadInstanceConfig()
-	for key, value in pairs (_detalhes.instance_defaults) do 
+	for key, value in pairs(_detalhes.instance_defaults) do 
 		if (self [key] == nil) then
-			if (type (value) == "table") then
-				self [key] = Details.CopyTable (_detalhes.instance_defaults [key])
+			if (type(value) == "table") then
+				self [key] = Details.CopyTable(_detalhes.instance_defaults [key])
 			else
 				self [key] = value
 			end
 			
-		elseif (type (value) == "table") then
-			for key2, value2 in pairs (value) do 
+		elseif (type(value) == "table") then
+			for key2, value2 in pairs(value) do 
 				if (self [key] [key2] == nil) then
-					if (type (value2) == "table") then
-						self [key] [key2] = Details.CopyTable (_detalhes.instance_defaults [key] [key2])
+					if (type(value2) == "table") then
+						self [key] [key2] = Details.CopyTable(_detalhes.instance_defaults [key] [key2])
 					else
 						self [key] [key2] = value2
 					end
@@ -99,13 +99,13 @@ end
 
 _detalhes.instance_defaults = {
 
-	--> click through settings
+	--click through settings
 	clickthrough_toolbaricons = false,
 	clickthrough_rows = false,
 	clickthrough_window = false,
 	clickthrough_incombatonly = true,
 
-	--> window settings
+	--window settings
 		ignore_mass_showhide = false,
 	--skin
 		skin = _detalhes.default_skin_to_use,
@@ -175,6 +175,9 @@ _detalhes.instance_defaults = {
 			enable_custom_text = false,
 			custom_text = "{name}",
 			show_timer = true,
+			show_timer_always = false, --show the timer even when not in an encounter
+			show_timer_bg = true, --show the timer within battleground, the timer is the elapsed battleground time
+			show_timer_arena = true, ---show the timer within arena, the timer is the elapsed time of the arena match
 		},
 	--auto hide window borders statusbar main menu
 		menu_alpha = {enabled = false, iconstoo = true, onenter = 1, onleave = 1, ignorebars = false},
@@ -275,6 +278,7 @@ _detalhes.instance_defaults = {
 			--space between bars
 				space = {left = 3, right = -5, between = 1},
 			--icon file
+				icon_size_offset = 0,
 				icon_file = [[Interface\AddOns\Details\images\classes_small]],
 				no_icon = false,
 				start_after_icon = true,
@@ -304,6 +308,12 @@ _detalhes.instance_defaults = {
 			--show spec icons
 				use_spec_icons = false,
 				spec_file = [[Interface\AddOns\Details\images\spec_icons_normal]],
+			--show faction icon
+				show_faction_icon = true,
+				faction_icon_size_offset = -10,
+			--show arena role icon
+				show_arena_role_icon = false,
+				arena_role_icon_size_offset = -10,
 		},
 	--instance window color
 		color = {1, 1, 1, 1},
@@ -415,7 +425,8 @@ _detalhes.instance_defaults = {
 			texcoord = {0, 1, 0, 1},
 			width = 0,
 			height = 0,
-			overlay = {1, 1, 1, 1}
+			overlay = {1, 1, 1, 1},
+			level = 2,
 		},
 	--tooltip amounts
 	tooltip = {

@@ -1,19 +1,24 @@
 # <DBM> World Bosses (Shadowlands)
 
-## [9.2.29](https://github.com/DeadlyBossMods/DBM-Retail/tree/9.2.29) (2022-08-09)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/9.2.28...9.2.29) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
+## [10.0.0](https://github.com/DeadlyBossMods/DBM-Retail/tree/10.0.0) (2022-10-25)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/9.2.37...10.0.0) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
 
-- prep new retail tag  
-- The rest of sanctum affix support  
-- Don't auto import stage, manual stage or 1, otherwise it creates problems with fated table structure that would require a lot of duplicating.  
-- Input timer data for first 5 bosses of sanctum including eye of the jailer phasing affects on timers  
-- Finish table construction to avoid lua errors from missing table entries  
-- More PvP map ID's  
-- Many users are missing the on load message, so add an additional message on first wipe of session.  
-- Fix bad option key in alert  
-- Update localization.ru.lua (#152) Minor typo.  
-- update zhCN (#151)  
-- Update localization.ru.lua (#149) Clean up.  
-- Update localization.ru.lua (#148)  
-- Fixed a bug where backup (non targget scan) for leap target on SLG was reporting unknown target/count  
-- bump alpha  
+- bump toc files and prep retail and wrath tags  
+- bump toc files  
+- Update DBM-DragonIsles.toc (#815)  
+- Dont send combat syncs for solo challenges  
+- Update localization.cn.lua (#161)  
+- Update zhTW (#162)  
+- Update localization.ru.lua (#814)  
+- Update terros from pubblic logs  
+- Fix bug with blizzard changing spellids for sake of changing spellids  
+- Fix div by 0 errors  
+- Fix bar icon update code  
+- Deploy some test icon options using new table method  
+- Fixes  
+- Update localization.tw.lua (#160)  
+- Update DBM-VaultoftheIncarnates.toc (#813)  
+    Add zhTW  
+- tweak/fix stage 3 detection guess  
+- Updates from todays build, drycodes of changed staging and new mythic spells  
+- bump alphas  

@@ -1,11 +1,11 @@
-## Interface: 90205
-## Interface-Mainline: 90205
-## Interface-BCC: 20502
+## Interface: 100000
 ## Title: Details! Damage Meter
 ## Notes: Essential tool to impress that chick in your raid.
 ## SavedVariables: _detalhes_global
 ## SavedVariablesPerCharacter: _detalhes_database
-## OptionalDeps: Ace3, LibSharedMedia-3.0, LibWindow-1.1, LibDBIcon-1.0, NickTag-1.0, LibDataBroker-1.1, LibItemUpgradeInfo-1.0, LibGroupInSpecT-1.1, LibCompress, LibGraph-2.0
+## OptionalDeps: Ace3, LibSharedMedia-3.0, LibWindow-1.1, LibDBIcon-1.0, NickTag-1.0, LibDataBroker-1.1, LibGraph-2.0
+## Version: #Details.DF.Wrath.10205.146
+
 #@no-lib-strip@
 Libs\libs.xml
 #@end-no-lib-strip@
@@ -43,6 +43,7 @@ functions\savedata.lua
 functions\slash.lua
 functions\playerclass.lua
 functions\timedata.lua
+functions\currentdps.lua
 functions\report.lua
 functions\rowanimation.lua
 functions\raidinfo.lua
@@ -57,6 +58,7 @@ functions\plater.lua
 functions\deathmenu.lua
 functions\macros.lua
 functions\testbars.lua
+functions\editmode.lua
 
 core\timemachine.lua
 
@@ -79,6 +81,7 @@ frames\window_welcome.lua
 frames\window_news.lua
 frames\window_wa.lua
 frames\window_forge.lua
+frames\window_spellcategory.lua
 frames\window_switch.lua
 frames\window_scrolldamage.lua
 frames\window_dump.lua
@@ -94,6 +97,7 @@ frames\window_brokertexteditor.lua
 frames\window_bookmark.lua
 frames\window_classcolor.lua
 frames\window_statistics.lua
+frames\window_aura_tracker.lua
 
 classes\class_error.lua
 classes\class_combat.lua

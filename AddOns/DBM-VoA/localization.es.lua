@@ -43,8 +43,7 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	timerMobOvercharge	= "Mostrar temporizador para la explosión del Esbirro tempestuoso afectado por Sobrecarga",
-	EmalonEnrage		= "Mostrar temporizador para $spell:26662",
-	RangeFrame			= "Mostrar marco de distancia (10 m)"
+	EmalonEnrage		= "Mostrar temporizador para $spell:26662"
 }
 
 ------------------------------------
@@ -56,16 +55,11 @@ L:SetGeneralLocalization{
 	name = "Koralon el Vigía de las Llamas"
 }
 
-L:SetWarningLocalization{
-	BurningFury		= "Furia ardiente >%d<"
-}
-
 L:SetTimerLocalization{
 	KoralonEnrage	= "Rabia (Koralon)"
 }
 
 L:SetOptionLocalization{
-	BurningFury			= "Mostrar aviso para $spell:66721",
 	KoralonEnrage		= "Mostrar temporizador para $spell:26662"
 }
 
@@ -82,16 +76,8 @@ L:SetGeneralLocalization{
 	name = "Toravon el Vigía de Hielo"
 }
 
-L:SetWarningLocalization{
-	Frostbite	= "Congelamiento en >%s< (%d)"
-}
-
 L:SetTimerLocalization{
 	ToravonEnrage	= "Rabia (Toravon)"
-}
-
-L:SetOptionLocalization{
-	Frostbite	= "Mostrar aviso para $spell:72004"
 }
 
 L:SetMiscLocalization{

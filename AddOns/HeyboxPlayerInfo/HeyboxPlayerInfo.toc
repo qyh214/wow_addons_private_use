@@ -1,5 +1,6 @@
-## Interface: 90205
+## Interface: 100000
 ## Title: 黑盒工坊配置同步模块
 ## Version: 1.0
 ## SavedVariables:  HEYBOX_SAVED_PLAYER_INFOS
+## SavedVariablesPerCharacter:  HEYBOX_SAVED_PER_PLAYER_INFOS
 HeyboxPlayerInfo.lua

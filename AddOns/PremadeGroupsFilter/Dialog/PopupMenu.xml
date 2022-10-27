@@ -1,11 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 
-    <Frame name="PremadeGroupsFilterPopupMenuFrameTemplate" enableMouse="true" clampedToScreen="true" virtual="true">
-        <Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-            <EdgeSize val="16"/>
-            <BorderColor r="0.5" g="0.5" b="0.5"/>
-        </Backdrop>
+    <Frame name="PremadeGroupsFilterPopupMenuFrameTemplate" enableMouse="true" clampedToScreen="true" virtual="true" inherits="TooltipBorderBackdropTemplate">
         <Layers>
             <Layer level="BACKGROUND" textureSubLevel="-1">
                 <Texture>
@@ -29,7 +25,7 @@
     </Frame>
 
     <Button name="PremadeGroupsFilterPopupMenuButtonTemplate" motionScriptsWhileDisabled="true" virtual="true">
-        <Size x="200" y="20"/>
+        <Size x="205" y="20"/>
         <Layers>
             <Layer level="ARTWORK">
                 <FontString parentKey="Text" inherits="GameFontHighlight" justifyH="LEFT">
@@ -57,7 +53,7 @@
     </Button>
 
     <Frame name="PremadeGroupsFilterDropDownPopupMenuTemplate" virtual="true">
-        <Size x="140" y="32"/>
+        <Size x="145" y="32"/>
         <Layers>
             <Layer level="ARTWORK">
                 <Texture parentKey="Left" file="Interface\Glues\CharacterCreate\CharacterCreate-LabelFrame">
@@ -68,7 +64,7 @@
                     <TexCoords left="0" right="0.1953125" top="0" bottom="1"/>
                 </Texture>
                 <Texture parentKey="Middle" file="Interface\Glues\CharacterCreate\CharacterCreate-LabelFrame">
-                    <Size x="90" y="64"/>
+                    <Size x="95" y="64"/>
                     <Anchors>
                         <Anchor point="LEFT" relativeKey="$parent.Left" relativePoint="RIGHT"/>
                     </Anchors>
@@ -82,7 +78,7 @@
                     <TexCoords left="0.8046875" right="1" top="0" bottom="1"/>
                 </Texture>
                 <FontString parentKey="Text" inherits="GameFontHighlight" wordwrap="false" justifyH="LEFT">
-                    <Size x="68" y="10"/>
+                    <Size x="73" y="10"/>
                     <Anchors>
                         <Anchor point="RIGHT" relativeKey="$parent.Right" x="-46" y="2"/>
                     </Anchors>

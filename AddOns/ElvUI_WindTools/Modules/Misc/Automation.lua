@@ -9,6 +9,7 @@ local HideUIPanel = HideUIPanel
 local UnitAffectingCombat = UnitAffectingCombat
 local UnitExists = UnitExists
 local PlayerCanTeleport = PlayerCanTeleport
+local StaticPopup_Hide = StaticPopup_Hide
 
 local C_SummonInfo_ConfirmSummon = C_SummonInfo.ConfirmSummon
 
@@ -32,7 +33,13 @@ function AM:CONFIRM_SUMMON()
         return
     end
 
-    C_SummonInfo_ConfirmSummon()
+    E:Delay(
+        0.6,
+        function()
+            C_SummonInfo_ConfirmSummon()
+            StaticPopup_Hide("CONFIRM_SUMMON")
+        end
+    )
 end
 
 function AM:PLAYER_REGEN_ENABLED()
@@ -42,6 +49,7 @@ function AM:PLAYER_REGEN_ENABLED()
         confirmSummonAfterCombat = false
         if self.db and self.db.confirmSummon then
             C_SummonInfo_ConfirmSummon()
+            StaticPopup_Hide("CONFIRM_SUMMON")
         end
     end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2441, "DBM-SanctumOfDomination", nil, 1193)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220809233017")
+mod:SetRevision("20220908201246")
 mod:SetCreatureID(175732)
 mod:SetEncounterID(2435)
 mod:SetUsedIcons(1, 2, 3)

@@ -49,6 +49,7 @@ local partialIgnores = {
 	"Note",
 	"Pin",
 	"POI",
+	"Questie",
 }
 
 -- whitelist all frames starting with
@@ -77,10 +78,10 @@ local function OnLeave(self)
 	end
 end
 
-function MB:ResetGarrisonSize()
-	if InCombatLockdown() then return end
-		GarrisonLandingPageMinimapButton:Size(E.minimapbuttons.db.buttonSize);
-	end
+-- function MB:ResetGarrisonSize()
+-- 	if InCombatLockdown() then return end
+-- 		ExpansionLandingPageMinimapButton:Size(E.minimapbuttons.db.buttonSize);
+-- 	end
 
 function MB:SkinButton(frame)
 	if not E.minimapbuttons.db.mbcalendar then
@@ -110,25 +111,27 @@ function MB:SkinButton(frame)
 		end
 	end
 	
-	if name ~= "GarrisonLandingPageMinimapButton" then 
-		frame:SetPushedTexture(nil)
-		frame:SetDisabledTexture(nil)
-		frame:SetHighlightTexture(nil)
-	end
+
+	
+	-- if name ~= "ExpansionLandingPageMinimapButton" then 
+	-- 	frame:SetPushedTexture(nil)
+	-- 	frame:SetDisabledTexture(nil)
+	-- 	frame:SetHighlightTexture(nil)
+	-- end
 	--frame:SetHighlightTexture(nil)
 	
 	if name == "DBMMinimapButton" then frame:SetNormalTexture("Interface\\Icons\\INV_Helmet_87") end
 	if name == "SmartBuff_MiniMapButton" then frame:SetNormalTexture(select(3, GetSpellInfo(12051))) end
-	if name == "GarrisonLandingPageMinimapButton" and E.minimapbuttons.db.mbgarrison then 
-		frame:SetScale(1)
-		if not frame.isRegister then
-			MB:RegisterEvent("ZONE_CHANGED_NEW_AREA", "ResetGarrisonSize");
-			MB:RegisterEvent("ZONE_CHANGED", "ResetGarrisonSize");
-			MB:RegisterEvent("ZONE_CHANGED_INDOORS", "ResetGarrisonSize");
-			MB:RegisterEvent("GARRISON_SHOW_LANDING_PAGE", "ResetGarrisonSize"); 
-		end
-		frame.isRegister = true
-	end
+	-- if name == "ExpansionLandingPageMinimapButton" and E.minimapbuttons.db.mbgarrison then 
+	-- 	frame:SetScale(1)
+	-- 	if not frame.isRegister then
+	-- 		MB:RegisterEvent("ZONE_CHANGED_NEW_AREA", "ResetGarrisonSize");
+	-- 		MB:RegisterEvent("ZONE_CHANGED", "ResetGarrisonSize");
+	-- 		MB:RegisterEvent("ZONE_CHANGED_INDOORS", "ResetGarrisonSize");
+	-- 		MB:RegisterEvent("GARRISON_SHOW_LANDING_PAGE", "ResetGarrisonSize"); 
+	-- 	end
+	-- 	frame.isRegister = true
+	-- end
 	if name == "GRM_MinimapButton" then frame.GRM_MinimapButtonBorder:Hide() end
 	
 	if not frame.isSkinned then
@@ -350,9 +353,10 @@ function MB:SkinMinimapButtons()
 	for i = 1, Minimap:GetNumChildren() do
 		self:SkinButton(select(i, Minimap:GetChildren()))
 	end
-	if E.minimapbuttons.db.mbgarrison then
-		self:SkinButton(GarrisonLandingPageMinimapButton)
-	end
+	
+	-- if E.minimapbuttons.db.mbgarrison then
+	-- 	self:SkinButton(ExpansionLandingPageMinimapButton)
+	-- end
 	MB:UpdateLayout()
 end
 

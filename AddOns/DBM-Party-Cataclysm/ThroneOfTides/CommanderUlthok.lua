@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20220920232426")
 mod:SetCreatureID(40765)
 mod:SetEncounterID(1044)
 
@@ -27,7 +27,7 @@ local timerSqueezeCD		= mod:NewCDTimer(29, 76026, nil, nil, nil, 3)
 local timerEnrage			= mod:NewBuffActiveTimer(10, 76100, nil, "Tank", 2, 5)
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 76094 and self:CheckDispelFilter() then
+	if args.spellId == 76094 and self:CheckDispelFilter("curse") then
 		specWarnCurse:Show(args.destName)
 		specWarnCurse:Play("helpdispel")
 	elseif args.spellId == 76100 then

@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20210614202848")
+mod:SetRevision("20221013055548")
 mod:SetCreatureID(26731)
 mod:SetEncounterID(2010)
 
@@ -14,8 +14,14 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_MONSTER_YELL"
 )
 
-local warningSplitSoon	= mod:NewSoonAnnounce("ej7395", 2)
-local warningSplitNow	= mod:NewSpellAnnounce("ej7395", 3)
+local warningSplitSoon, warningSplitNow
+if mod:IsClassic() then
+	warningSplitSoon	= mod:NewSoonAnnounce(19570, 2)
+	warningSplitNow		= mod:NewSpellAnnounce(19570, 3)
+else
+	warningSplitSoon	= mod:NewSoonAnnounce("ej7395", 2)
+	warningSplitNow		= mod:NewSpellAnnounce("ej7395", 3)
+end
 
 mod.vb.warnedSplit1		= false
 mod.vb.warnedSplit2		= false

@@ -281,7 +281,7 @@ function M:CreateSlotStrings(frame, which)
 
 	if which == 'Inspect' then
 		frame.ItemLevelText = _G.InspectPaperDollItemsFrame:CreateFontString(nil, 'ARTWORK')
-		frame.ItemLevelText:Point('BOTTOMRIGHT', -6, 6)
+		frame.ItemLevelText:Point('BOTTOMLEFT', 6, 6)
 	else
 		frame.ItemLevelText = _G.CharacterStatsPane.ItemLevelFrame:CreateFontString(nil, 'ARTWORK')
 		frame.ItemLevelText:Point('BOTTOM', _G.CharacterStatsPane.ItemLevelFrame.Value, 'BOTTOM', 0, 0)
@@ -305,7 +305,7 @@ function M:CreateSlotStrings(frame, which)
 				slot.enchantText:Point(justify, slot, x + (justify == 'BOTTOMLEFT' and 5 or -5), z)
 			end
 
-			for u=1, 10 do
+			for u = 1, 10 do
 				local offset = 8+(u*16)
 				local newX = ((justify == 'BOTTOMLEFT' or i == 17) and x+offset) or x-offset
 				slot['textureSlot'..u], slot['textureSlotBackdrop'..u] = M:CreateInspectTexture(slot, newX, --[[newY or]] y)
@@ -315,7 +315,10 @@ function M:CreateSlotStrings(frame, which)
 end
 
 function M:SetupInspectPageInfo()
-	M:CreateSlotStrings(_G.InspectFrame, 'Inspect')
+	local frame = _G.InspectFrame
+	if frame and not frame.ItemLevelText then
+		M:CreateSlotStrings(frame, 'Inspect')
+	end
 end
 
 function M:UpdateInspectPageFonts(which)

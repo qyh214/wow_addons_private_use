@@ -1,5 +1,5 @@
-## Interface: 90205
-## X-Min-Interface: 90205
+## Interface: 100000
+## X-Min-Interface: 100000
 ## X-Min-Interface-Classic: 11403
 ## X-Min-Interface-BCC: 20504
 ## X-Min-Interface-Wrath: 30400
@@ -21,7 +21,7 @@
 ## LoadOnDemand: 0
 ## DefaultState: enabled
 ## Author: MysticalOS, QartemisT
-## Version: 93304df
+## Version: 494a4d8
 ## X-Website: https://deadlybossmods.com
 
 Libs\LibStub\LibStub.lua
@@ -61,6 +61,7 @@ commonlocal.ru.lua
 # Pre-core modules
 modules\Modules.lua
 
+modules\SpecRole.lua
 modules\Scheduler.lua
 modules\DevTools.lua
 modules\Icons.lua
@@ -81,7 +82,6 @@ modules\Hyperlinks.lua
 modules\MinimapButton.lua
 modules\Notes.lua
 modules\Sounds.lua
-modules\SpecRole.lua
 modules\UpdateReminder.lua
 
 modules\objects\Localization.lua

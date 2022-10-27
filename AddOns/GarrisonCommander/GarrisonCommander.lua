@@ -389,7 +389,7 @@ end
 
 function addon:OnInitialized()
 	--[===[@debug@
-	print("Initialize")
+	print("Initialized")
 	--@end-debug@]===]
 	--
 	ns.custom={
@@ -2766,7 +2766,9 @@ function addon:DrawSingleButton(source,frame,progressing,bigscreen)
 				end
 			end
 		end
+		if type(blacklist) == "table" then
 		if (blacklist[missionID]) then frame.Title:SetTextColor(0,0,0) else frame.Title:SetTextColor(1,1,1) end
+		end
 
 		frame:Show();
 

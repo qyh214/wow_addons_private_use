@@ -1,3 +1,7 @@
+local _, addon = ...;
+
+local SetModelLight = addon.TransitionAPI.SetModelLight;
+
 local Narci = Narci;
 local L = Narci.L;
 local FadeFrame = NarciFadeUI.Fade;
@@ -26,28 +30,19 @@ local LoadingIndicator;
 local TARGET_MODEL_INDEX = 1;     --Add an NPC to NarciNPCModelFrame(n)
 local ACTOR_CREATED = false;      --Whether user has added an NPC from browser or not
 
-local _;
 local _G = _G;
-local pi = math.pi;
 local min = math.min;
 local max = math.max;
-local sin = math.sin;
-local cos = math.cos;
 local floor = math.floor;
 local tinsert = table.insert;
 local tremove = table.remove;
 
-local function outSine(t, b, e, d)                  --elapsed, begin, end, duration
-	return (e - b) * sin(t / d * (pi / 2)) + b
-end
-
-local function inOutSine(t, b, e, d)
-	return (b - e) / 2 * (cos(pi * t / d) - 1) + b
-end
+local outSine = addon.EasingFunctions.outSine;
+local inOutSine = addon.EasingFunctions.inOutSine;
 
 local function GetApproximation(number)
     --4 Decimals
-    return floor(number* 10^4 + 0.5)/ 10^4
+    return floor(number* 10000 + 0.5)/ 10000
 end
 
 local sub = string.sub;
@@ -2308,12 +2303,14 @@ end
 --------------------
 local VirtualTooltipName = "Narci_CreatureNameRetriever";
 local NPCTooltipName = "Narci_NPCSearchBoxTooltip";
-
+local UIParent = UIParent;
 local VirtualTooltip = CreateFrame("GameTooltip", VirtualTooltipName, UIParent, "GameTooltipTemplate");
+VirtualTooltip:SetScript("OnTooltipAddMoney", nil);
+VirtualTooltip:SetScript("OnTooltipCleared", nil);
+
 local lineName = _G[VirtualTooltipName.. "TextLeft1"];
 local lineTitle = _G[VirtualTooltipName.. "TextLeft2"];
 
-local TOOLTIP_UNIT_LEVEL = "%?";                    --"Level %d"
 local NARCI_NPC_BROWSER_TITLE_LEVEL = NARCI_NPC_BROWSER_TITLE_LEVEL;      --"Level ??"
 
 local find = string.find;
@@ -2321,7 +2318,7 @@ local function IsTooltipLineTitle(text)
     if not text then
         return false
     else
-        return not (find(text, TOOLTIP_UNIT_LEVEL) or find(text, NARCI_NPC_BROWSER_TITLE_LEVEL))
+        return not (find(text, "%?") or find(text, NARCI_NPC_BROWSER_TITLE_LEVEL))--"Level %d"
     end
 end
 
@@ -2361,15 +2358,20 @@ local function GetNPCTitle(creatureID)
     end
 end
 
-local tempName;
+local TEMP_NAME;
 local function GetNPCNameAndTitle(creatureID)
     VirtualTooltip:SetOwner(UIParent, "ANCHOR_NONE");
     VirtualTooltip:SetHyperlink(format("unit:Creature-0-0-0-0-%d", creatureID));
-    tempName = lineName:GetText() or "";
+    TEMP_NAME = lineName:GetText() or "";
+
+    if find(TEMP_NAME, "%?") then
+        return {creatureID}, false
+    end
+
     if IsTooltipLineTitle(lineTitle:GetText()) then
-        return {tempName, lineTitle:GetText()}, (tempName == "")
+        return {TEMP_NAME, lineTitle:GetText()}, (TEMP_NAME == "")
     else
-        return {tempName, nil}, (tempName == "")
+        return {TEMP_NAME, nil}, (TEMP_NAME == "")
     end
 end
 
@@ -2463,7 +2465,6 @@ local function ShowMouseOverButtons(anchorButton)
 end
 
 local function SetNPCModel(model, id, isDisplayID)
-    local _, _, dirX, dirY, dirZ, _, ambR, ambG, ambB, _, dirR, dirG, dirB = model:GetLight();
     model.isModelLoaded = false;
     if isDisplayID then
         model:SetDisplayInfo(id);
@@ -2478,7 +2479,6 @@ local function SetNPCModel(model, id, isDisplayID)
     model:SetModelAlpha(0);
     After(0.1, function()
         model:SetModelAlpha(1);
-        model:SetLight(true, false, dirX, dirY, dirZ, 1, ambR, ambG, ambB, 1, dirR, dirG, dirB);
 	end);
 end
 
@@ -2913,7 +2913,7 @@ end
 
 local function Match_OnEnter(self)
     FadeFrame(self.Highlight, 0.2, 1);
-    MatchPreviewModel:SetLight(true, false, - 0.44699833180028 ,  0.72403680806459 , -0.52532198881773, 0.8, 172/255, 172/255, 172/255, 1, 0.8, 0.8, 0.8);
+    SetModelLight(MatchPreviewModel, true, false, - 0.44699833180028 ,  0.72403680806459 , -0.52532198881773, 0.8, 172/255, 172/255, 172/255, 1, 0.8, 0.8, 0.8);
     if self.displayID then
         UpdatePreviewModel(self.displayID, true);
         MouseOverButtons:Hide();
@@ -3727,6 +3727,7 @@ local function CreateVirtualTooltip(index)
         return VirtualTooltip.lineName:GetText() or ""
     end
     
+    C_TooltipInfo.GetHyperlink(format("unit:Creature-0-0-0-0-%d", 1748))
     VirtualTooltip.GetName = GetName;
 
     return VirtualTooltip

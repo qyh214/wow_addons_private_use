@@ -19,11 +19,12 @@ local KTF = KT.frame
 
 local eventFrame
 local activeFrame, abutton
-local point, relativeTo, relativePoint, xOfs, yOfs
 
 local extraAbilityFrame = ExtraAbilityContainer
 local pointNum = 2
 local isMoveAnything, isElvui, isTukui = false, false, false
+
+local stopUpdate = false
 
 --------------
 -- Internal --
@@ -61,19 +62,24 @@ local function RemoveHotkey(button)
 end
 
 local function ActiveFrame_Update()
-	if dbChar.activeButtonPosition then return end
-	point, relativeTo, relativePoint, xOfs, yOfs = extraAbilityFrame:GetPoint(pointNum)
-	if not point then return end
+	if stopUpdate or dbChar.activeButtonPosition then return end
+	local point, relativeTo, relativePoint, xOfs, yOfs = "BOTTOM", UIParent, "BOTTOM", 0, 220
+	if EncounterBar:IsInDefaultPosition() then
+		point, relativeTo, relativePoint, xOfs, yOfs = "BOTTOM", EncounterBar, "TOP", 0, 25
+	end
 	if isElvui then
+		-- TODO: Test it
+		point, relativeTo, relativePoint, xOfs, yOfs = extraAbilityFrame:GetPoint(pointNum)
 		yOfs = yOfs - 29
 	end
-	if HasExtraActionBar() or #C_ZoneAbility.GetActiveAbilities() > 0 then
-		yOfs = yOfs + 100
+	if not EncounterBar:IsInDefaultPosition() and (HasExtraActionBar() or #C_ZoneAbility.GetActiveAbilities() > 0) then
+		yOfs = yOfs + 130
 	end
 	KT:prot("ClearAllPoints", activeFrame)
 	KT:prot("SetPoint", activeFrame, point, relativeTo, relativePoint, xOfs, yOfs)
 end
 
+-- TODO: Test it (MoveAnything, Elvui, Tukui)
 local function ActiveFrame_Init()
 	pointNum = extraAbilityFrame:GetNumPoints()
 	if isMoveAnything then
@@ -136,12 +142,6 @@ local function SetFrames()
 	eventFrame:RegisterEvent("PET_BATTLE_OPENING_START")
 	eventFrame:RegisterEvent("PET_BATTLE_CLOSE")
 
-	-- Player Alternative Power Bar
-	PlayerPowerBarAlt:ClearAllPoints()
-	PlayerPowerBarAlt:SetPoint("TOP", UIParent, "TOP", 0, -40)
-	PlayerPowerBarAlt:SetMovable(true)
-	PlayerPowerBarAlt:SetUserPlaced(true)
-
 	-- Main frame
 	if not KTF.ActiveFrame then
 		local name = addonName.."ActiveFrame"
@@ -161,11 +161,13 @@ local function SetFrames()
 		activeFrame.overlay = overlay
 
 		overlay:SetScript("OnDragStart", function(self)
+			stopUpdate = true
 			self:StartMoving()
 		end)
 		overlay:SetScript("OnDragStop", function(self)
 			self:StopMovingOrSizing()
 			dbChar.activeButtonPosition = { self:GetPoint() }
+			stopUpdate = false
 		end)
 		overlay:SetScript("OnMouseUp", function(self, button)
 			if button == "RightButton" and dbChar.activeButtonPosition then
@@ -240,8 +242,8 @@ local function SetFrames()
 		button:SetScript("OnHide", QuestObjectiveItem_OnHide)
 		button:SetScript("OnEnter", QuestObjectiveItem_OnEnter)
 		button:SetScript("OnLeave", QuestObjectiveItem_OnLeave)
-		button:RegisterForClicks("AnyUp")
-		button:SetAttribute("type","item")
+		button:RegisterForClicks("AnyDown")
+		button:SetAttribute("type", "item")
 		
 		button:SetPushedTexture("Interface\\Buttons\\UI-Quickslot-Depress")
 		do local tex = button:GetPushedTexture()
@@ -261,19 +263,46 @@ local function SetFrames()
 end
 
 local function SetHooks()
+	-- ExtraActionBar.lua
 	hooksecurefunc("ExtraActionBar_Update", function()
 		KT:protStop(ActiveFrame_Update)
 	end)
 
+	-- ZoneAbility.lua
 	hooksecurefunc(ZoneAbilityFrame, "UpdateDisplayedZoneAbilities", function(self)
 		KT:protStop(ActiveFrame_Update)
 	end)
 
-	PetActionBarFrame:HookScript("OnUpdate", function(self, elapsed)
+	-- PetActionBar.lua
+	PetActionBar:HookScript("OnUpdate", function(self, elapsed)
 		if abutton.isPet ~= self.completed then
-			ActiveFrame_Update()
+			KT:protStop(ActiveFrame_Update)
 			abutton.isPet = self.completed
 		end
+	end)
+
+	-- ExtraAbilityContainer.lua
+	hooksecurefunc(ExtraAbilityContainer, "UpdateShownState", function(self)
+		KT:prot(ActiveFrame_Update)
+	end)
+
+	-- Edit Mode
+	hooksecurefunc(EncounterBar, "OnDragStart", function(self)
+		stopUpdate = true
+		KT:prot("ClearAllPoints", activeFrame)
+	end)
+
+	hooksecurefunc(EncounterBar, "OnDragStop", function(self)
+		stopUpdate = false
+		KT:prot(ActiveFrame_Update)
+	end)
+
+	hooksecurefunc(EditModeManagerFrame, "RevertSystemChanges", function(self, systemFrame)
+		KT:prot(ActiveFrame_Update)
+	end)
+
+	hooksecurefunc(EncounterBar, "ResetToDefaultPosition", function(self)
+		KT:prot(ActiveFrame_Update)
 	end)
 end
 

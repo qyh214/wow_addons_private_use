@@ -145,14 +145,28 @@ local function MasteryFrame_OnEnter(object)
 
 	local masteryRating = GetCombatRating(CR_MASTERY);
 	local primaryTalentTree = GetSpecialization();
-	if (primaryTalentTree) then
+	if (primaryTalentTree) then	--dragonflight
 		local masterySpell, masterySpell2 = GetSpecializationMasterySpells(primaryTalentTree);
-		if (masterySpell) then
-			DefaultTooltip:AddSpellByID(masterySpell);
-		end
-		if (masterySpell2) then
-			DefaultTooltip:AddLine(" ");
-			DefaultTooltip:AddSpellByID(masterySpell2);
+		if DefaultTooltip.AddSpellByID then
+			if (masterySpell) then
+				DefaultTooltip:AddSpellByID(masterySpell);
+			end
+			if (masterySpell2) then
+				DefaultTooltip:AddLine(" ");
+				DefaultTooltip:AddSpellByID(masterySpell2);
+			end
+		else
+			if (masterySpell) then
+				local tooltipInfo = CreateBaseTooltipInfo("GetSpellByID", masterySpell);
+				tooltipInfo.append = true;
+				DefaultTooltip:ProcessInfo(tooltipInfo);
+			end
+			if (masterySpell2) then
+				DefaultTooltip:AddLine(" ");
+				local tooltipInfo = CreateBaseTooltipInfo("GetSpellByID", masterySpell2);
+				tooltipInfo.append = true;
+				DefaultTooltip:ProcessInfo(tooltipInfo);
+			end
 		end
 		DefaultTooltip:AddLine(" ");
 		local tooltip = format(STAT_MASTERY_TOOLTIP, BreakUpLargeNumbers(masteryRating), masteryBonus);
@@ -645,7 +659,7 @@ function UpdateFunc:Regen(object)
 		return;
 	end
 	if labelText then
-		object.tooltip = "|cffffffff".. labelText .." "..regenRateText.."|r";
+		object.tooltip = "|cffffffff".. labelText .." "..regenRatePerSec.."|r";
 	end
 	object:SetLabelAndValue(labelText, regenRatePerSec);
 end

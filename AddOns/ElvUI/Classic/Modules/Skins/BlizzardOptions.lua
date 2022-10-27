@@ -2,11 +2,10 @@ local E, L, V, P, G = unpack(ElvUI)
 local S = E:GetModule('Skins')
 
 local _G = _G
-local select, ipairs, pairs = select, ipairs, pairs
+local next, ipairs, pairs = next, ipairs, pairs
 
 local hooksecurefunc = hooksecurefunc
 local InCombatLockdown = InCombatLockdown
-local UnitIsUnit = UnitIsUnit
 local MAX_ADDONS_DISPLAYED = MAX_ADDONS_DISPLAYED
 
 local function HandlePushToTalkButton(button)
@@ -21,7 +20,7 @@ local function HandlePushToTalkButton(button)
 	button.MiddleRight:Hide()
 	button.BottomMiddle:Hide()
 	button.MiddleMiddle:Hide()
-	button:SetHighlightTexture('')
+	button:SetHighlightTexture(E.ClearTexture)
 
 	button:SetTemplate(nil, true)
 	button:HookScript('OnEnter', S.SetModifiedBackdrop)
@@ -34,29 +33,6 @@ end
 
 function S:BlizzardOptions()
 	if not (E.private.skins.blizzard.enable and E.private.skins.blizzard.blizzardOptions) then return end
-
-	-- here we reskin all 'normal' buttons
-	S:HandleButton(_G.ReadyCheckFrameYesButton)
-	S:HandleButton(_G.ReadyCheckFrameNoButton)
-
-	local ReadyCheckFrame = _G.ReadyCheckFrame
-	_G.ReadyCheckFrameYesButton:SetParent(ReadyCheckFrame)
-	_G.ReadyCheckFrameNoButton:SetParent(ReadyCheckFrame)
-	_G.ReadyCheckFrameYesButton:ClearAllPoints()
-	_G.ReadyCheckFrameNoButton:ClearAllPoints()
-	_G.ReadyCheckFrameYesButton:Point('TOPRIGHT', ReadyCheckFrame, 'CENTER', -3, -5)
-	_G.ReadyCheckFrameNoButton:Point('TOPLEFT', ReadyCheckFrame, 'CENTER', 3, -5)
-	_G.ReadyCheckFrameText:SetParent(ReadyCheckFrame)
-	_G.ReadyCheckFrameText:ClearAllPoints()
-	_G.ReadyCheckFrameText:Point('TOP', 0, -15)
-
-	_G.ReadyCheckListenerFrame:SetAlpha(0)
-	ReadyCheckFrame:HookScript('OnShow', function(self)
-		-- bug fix, don't show it if player is initiator
-		if self.initiator and UnitIsUnit('player', self.initiator) then
-			self:Hide()
-		end
-	end)
 
 	_G.InterfaceOptionsFrame:SetClampedToScreen(true)
 	_G.InterfaceOptionsFrame:SetMovable(true)
@@ -291,8 +267,7 @@ function S:BlizzardOptions()
 
 	for _, Panel in pairs(InterfaceOptions) do
 		if Panel then
-			for i = 1, Panel:GetNumChildren() do
-				local Child = select(i, Panel:GetChildren())
+			for _, Child in next, { Panel:GetChildren() } do
 				if Child:IsObjectType('CheckButton') then
 					S:HandleCheckBox(Child)
 				elseif Child:IsObjectType('Button') then

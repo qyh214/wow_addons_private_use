@@ -163,4 +163,3 @@ L["S_WORLDMAP_QUESTLOCATIONS"] = "퀘스트 지역 표시"
 L["S_WORLDMAP_QUESTSUMMARY"] = "퀘스트 요약 표시"
 L["S_WORLDMAP_TOOLTIP_TRACKALL"] = "이 목록에 있는 모든 퀘스트 추적"
 L["S_WORLDQUESTS"] = "전역 퀘스트"
-

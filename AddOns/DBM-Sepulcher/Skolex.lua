@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(2465, "DBM-Sepulcher", nil, 1195)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220423221722")
+mod:SetRevision("20220920224913")
 mod:SetCreatureID(181395)
 mod:SetEncounterID(2542)
---mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 mod:SetHotfixNoticeRev(20220301000000)
 mod:SetMinSyncRevision(20211203000000)
 --mod.respawnTime = 29
@@ -14,7 +13,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 359770 359829 364778 359979 359975 360451",
 	"SPELL_CAST_SUCCESS 360092",--364893
-	"SPELL_AURA_APPLIED 359778 364522 359976 359981",
+	"SPELL_AURA_APPLIED 359778 359976 359981",
 	"SPELL_AURA_APPLIED_DOSE 359778 359976 359981",
 	"SPELL_AURA_REMOVED 359778",
 	"SPELL_AURA_REMOVED_DOSE 359778",
@@ -35,12 +34,10 @@ local warnDestroy								= mod:NewCastAnnounce(364778, 4)
 local specWarnRaveningBurrow					= mod:NewSpecialWarningCount(359770, nil, nil, nil, 2, 2)
 local specWarnDustFlail							= mod:NewSpecialWarningCount(359829, "Healer", nil, nil, 2, 2)
 local specWarnRetch								= mod:NewSpecialWarningDodgeCount(360448, nil, nil, nil, 2, 2)
-local specWarnDevouringBlood					= mod:NewSpecialWarningDispel(364522, false, nil, nil, 1, 2)--Opt in
 local specWarnRiftmaw							= mod:NewSpecialWarningTaunt(359976, nil, nil, nil, 1, 2)
 local specWarnRend								= mod:NewSpecialWarningTaunt(359979, nil, nil, nil, 1, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(366070, nil, nil, nil, 1, 8)
 
---mod:AddTimerLine(BOSS)
 local timerDustflailCD							= mod:NewCDCountTimer(16.4, 359829, nil, nil, nil, 2)--16.4-17.5
 local timerRetchCD								= mod:NewCDCountTimer(32.9, 360448, nil, nil, nil, 3)--32.9-35
 local timerComboCD								= mod:NewTimer(33.9, "timerComboCD", 359976, nil, nil, 5, DBM_COMMON_L.TANK_ICON)
@@ -48,7 +45,6 @@ local timerBurrowCD								= mod:NewCDCountTimer(75, 359770, nil, nil, nil, 3)--
 
 local berserkTimer								= mod:NewBerserkTimer(420)--Final Consumption
 
---mod:AddRangeFrameOption("8")
 mod:AddInfoFrameOption(359778, true, nil, 5)
 
 mod.vb.burrowCount = 0
@@ -115,7 +111,7 @@ function mod:SPELL_CAST_START(args)
 		end
 		timerDustflailCD:Start(self:IsHard() and 16.4 or 19.4, self.vb.dustCount+1)
 	elseif args:IsSpellID(359979, 359975) then--Rend, Riftmaw
---		if self:AntiSpam(20, 1) then
+--		if self:AntiSpam(20, 1) then--In case unit event stops working
 --			self.vb.comboCast = 0
 --			timerComboCD:Start()
 --		end
@@ -166,9 +162,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:UpdateTable(EphemeraDustStacks, 0.2)
 		end
-	elseif spellId == 364522 and args:IsDestTypePlayer() and self:CheckDispelFilter() then
-		specWarnDevouringBlood:CombinedShow(0.5, args.destName)
-		specWarnDevouringBlood:ScheduleVoice(0.5, "helpdispel")
 	elseif spellId == 359976 then--Riftmaw
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if self:IsTanking(uId) then

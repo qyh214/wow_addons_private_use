@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Faerlina", "DBM-Naxx", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220221015714")
+mod:SetRevision("20220724003246")
 mod:SetCreatureID(15953)
 mod:SetEncounterID(1110)
 mod:SetModelID(15940)
@@ -34,15 +34,14 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(28798, 54100) then			-- Frenzy
-		warnEnrageNow:Show()
 		self.vb.enraged = true
-		if self:IsTanking("player", "boss1", nil, true) then
+		if self:IsClassic() and self:IsTanking("player", nil, nil, nil, args.destGUID) or self:IsTanking("player", "boss1", nil, true) then
 			specWarnEnrage:Show()
 			specWarnEnrage:Play("defensive")
 		else
 			warnEnrageNow:Show()
 		end
-	elseif args:IsSpellID(28732, 54097)	and args:GetDestCreatureID() == 15953 and self:AntiSpam(5) then
+	elseif args:IsSpellID(28732, 54097)	and args:GetDestCreatureID() == 15953 and self:AntiSpam(5, 2) then
 		warnEmbraceExpire:Cancel()
 		warnEmbraceExpired:Cancel()
 		warnEnrageSoon:Cancel()

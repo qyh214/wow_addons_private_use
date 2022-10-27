@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2489, "DBM-Party-Dragonflight", 4, 1199)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220803233609")
+mod:SetRevision("20220820005632")
 mod:SetCreatureID(189478)--Forgemaster Gorek
 mod:SetEncounterID(2612)
 --mod:SetUsedIcons(1, 2, 3)
@@ -58,14 +58,14 @@ function mod:OnCombatStart(delay)
 	timerForgestormCD:Start(26.7-delay)
 end
 
-function mod:OnCombatEnd()
+--function mod:OnCombatEnd()
 --	if self.Options.RangeFrame then
 --		DBM.RangeCheck:Hide()
 --	end
 --	if self.Options.InfoFrame then
 --		DBM.InfoFrame:Hide()
 --	end
-end
+--end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId

@@ -99,9 +99,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	WarningSplitSoon	= "Mostrar aviso previo para la separación de banda",
-	RangeFrame			= "Mostrar marco de distancia (12 m)",
-	SetIconOnBrand		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(74505)
+	WarningSplitSoon	= "Mostrar aviso previo para la separación de banda"
 })
 
 ----------------------------
@@ -111,11 +109,6 @@ L = DBM:GetModLocalization("Saviana")
 
 L:SetGeneralLocalization({
 	name = "Saviana Furia Ardiente"
-})
-
-L:SetOptionLocalization({
-	RangeFrame				= "Mostrar marco de distancia (10 m)",
-	BeaconIcon				= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(74453)
 })
 
 ------------------------
@@ -161,8 +154,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	TwilightCutterCast		= "Mostrar aviso cuando se esté lanzando $spell:74769",
-	AnnounceAlternatePhase	= "Mostrar avisos y temporizadores que no pertenezcan a tu fase actual",
-	SetIconOnConsumption	= "Poner iconos en los objetivos de $spell:74562 y $spell:74792"--So we can use single functions for both versions of spell.
+	AnnounceAlternatePhase	= "Mostrar avisos y temporizadores que no pertenezcan a tu fase actual"
 })
 
 L:SetMiscLocalization({

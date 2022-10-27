@@ -30,6 +30,7 @@ function frame:ADDON_LOADED(...)
         BtWLoadoutsSets = setmetatable(BtWLoadoutsSets or {
             profiles = {},
             talents = {},
+            dftalents = {},
             pvptalents = {},
             essences = {},
             equipment = {},
@@ -45,6 +46,7 @@ function frame:ADDON_LOADED(...)
         BtWLoadoutsCollapsed = setmetatable(BtWLoadoutsCollapsed or {
             profiles = {},
             talents = {},
+            dftalents = {},
             pvptalents = {},
             essences = {},
             equipment = {},
@@ -60,6 +62,7 @@ function frame:ADDON_LOADED(...)
         BtWLoadoutsCategories = setmetatable(BtWLoadoutsCategories or {
             profiles = {"spec"},
             talents = {"spec"},
+            dftalents = {"spec"},
             pvptalents = {"spec"},
             essences = {"role"},
             equipment = {"character"},
@@ -76,6 +79,7 @@ function frame:ADDON_LOADED(...)
         BtWLoadoutsFilters = setmetatable(BtWLoadoutsFilters or {
             profiles = {},
             talents = {},
+            dftalents = {},
             pvptalents = {},
             essences = {},
             equipment = {},
@@ -94,6 +98,9 @@ function frame:ADDON_LOADED(...)
         BtWLoadoutsEssenceInfo = BtWLoadoutsEssenceInfo or {}
         BtWLoadoutsCharacterInfo = BtWLoadoutsCharacterInfo or {}
         BtWLoadoutsHelpTipFlags = BtWLoadoutsHelpTipFlags or {}
+        BtWLoadoutsTraitsInfo = BtWLoadoutsTraitsInfo or {}
+        BtWLoadoutsTraitsInfo.trees = BtWLoadoutsTraitsInfo.trees or {}
+        BtWLoadoutsTraitsInfo.nodes = BtWLoadoutsTraitsInfo.nodes or {}
 
         -- Clean up filters
         for _,sets in pairs(BtWLoadoutsSets) do
@@ -175,8 +182,12 @@ function frame:ADDON_LOADED(...)
             end
         end
         if BtWLoadoutsSpecInfo.version ~= Internal.GetSpecInfoVersion() then
-            wipe(BtWLoadoutsSpecInfo)
+            BtWLoadoutsSpecInfo = {}
             BtWLoadoutsSpecInfo.version = Internal.GetSpecInfoVersion()
+        end
+        if BtWLoadoutsTraitsInfo.version ~= Internal.GetTraitInfoVersion() then
+            BtWLoadoutsTraitsInfo = {trees = {}, nodes = {}}
+            BtWLoadoutsTraitsInfo.version = Internal.GetTraitInfoVersion()
         end
         -- Make sure equipment sets have all the tables needed
         for setID,set in pairs(BtWLoadoutsSets.equipment) do
@@ -371,6 +382,7 @@ function frame:PLAYER_ENTERING_WORLD(isInitialLogin, isReloadingUi)
         end
     end
 
+    Internal.UpdateTraitInfoFromPlayer();
     Internal.UpdatePlayerInfo();
     Internal.UpdateAreaMap();
 
@@ -523,6 +535,7 @@ function frame:PLAYER_SPECIALIZATION_CHANGED(...)
         BtWLoadoutsSpecInfo[specID] = spec;
     end
     Internal.UpdateLauncher(Internal.GetActiveProfiles());
+    Internal.UpdateTraitInfoFromPlayer();
 end
 function frame:UPDATE_INSTANCE_INFO(...)
     local name, realm = UnitFullName("player")

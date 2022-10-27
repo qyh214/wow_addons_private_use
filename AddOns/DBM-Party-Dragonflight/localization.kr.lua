@@ -136,7 +136,7 @@ L:SetGeneralLocalization({
 })
 
 -----------------------
--- <<<Taz'algeth Academy >>> --
+-- <<<Algeth'ar Academy >>> --
 -----------------------
 -----------------------
 -- Crawth --
@@ -149,22 +149,22 @@ L:SetGeneralLocalization({
 --L= DBM:GetModLocalization(2509)
 
 -----------------------
--- Accidental Amalgamation --
+-- Overgrown Ancient --
 -----------------------
 --L= DBM:GetModLocalization(2512)
 
 -----------------------
--- Headmaster Doragosa --
+-- Echo of Doragosa --
 -----------------------
---L= DBM:GetModLocalization(2513)
+--L= DBM:GetModLocalization(2514)
 
 ---------
 --Trash--
 ---------
-L = DBM:GetModLocalization("TazalgethAcademyTrash")
+L = DBM:GetModLocalization("AlgetharAcademyTrash")
 
 L:SetGeneralLocalization({
-	name =	"타즈알게스 대학 일반몹"
+	name =	"알게스라 대학 일반몹"
 })
 
 -----------------------

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Malygos", "DBM-EyeOfEternity")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210614230125")
+mod:SetRevision("20220724003246")
 mod:SetCreatureID(28859)
 mod:SetEncounterID(1094)
 mod:SetModelID(26752)
@@ -16,9 +16,7 @@ mod:RegisterEvents(
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 60936 57407",
 	"SPELL_CAST_START 56505",
-	"SPELL_CAST_SUCCESS 56105 57430",
-	"RAID_BOSS_EMOTE",
-	"UNIT_SPELLCAST_SUCCEEDED boss1"
+	"SPELL_CAST_SUCCESS 56105 57430"
 )
 
 local warnSpark					= mod:NewSpellAnnounce(56140, 2, 59381)
@@ -26,7 +24,7 @@ local warnVortex				= mod:NewSpellAnnounce(56105, 3)
 local warnVortexSoon			= mod:NewSoonAnnounce(56105, 2)
 local warnBreathInc				= mod:NewSoonAnnounce(56505, 3)
 local warnSurge					= mod:NewTargetAnnounce(60936, 3)
-local warnStaticField			= mod:NewTargetAnnounce(57430, 3)
+local warnStaticField			= mod:NewTargetNoFilterAnnounce(57430, 3)
 
 local specWarnBreath			= mod:NewSpecialWarningSpell(56505, nil, nil, nil, 2, 2)
 local specWarnSurge				= mod:NewSpecialWarningDefensive(60936, nil, nil, nil, 1, 2)
@@ -34,10 +32,10 @@ local specWarnStaticField		= mod:NewSpecialWarningYou(57430, nil, nil, nil, 1, 2
 local specWarnStaticFieldNear	= mod:NewSpecialWarningClose(57430, nil, nil, nil, 1, 2)
 local yellStaticField			= mod:NewYell(57430)
 
-local timerSpark				= mod:NewNextTimer(30, 56140, nil, nil, nil, 1, 59381)
-local timerVortex				= mod:NewCastTimer(11, 56105, nil, nil, nil, 2)
+local timerSpark				= mod:NewNextTimer(30, 56140, nil, nil, nil, 1, 59381, DBM_COMMON_L.DAMAGE_ICON)
+local timerVortex				= mod:NewCastTimer(11, 56105, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
 local timerVortexCD				= mod:NewNextTimer(60, 56105, nil, nil, nil, 2)
-local timerBreath				= mod:NewBuffActiveTimer(8, 56505, nil, nil, nil, 2)--lasts 5 seconds plus 3 sec cast.
+local timerBreath				= mod:NewBuffActiveTimer(8, 56505, nil, nil, nil, 5)--lasts 5 seconds plus 3 sec cast.
 local timerBreathCD				= mod:NewCDTimer(59, 56505, nil, nil, nil, 2)
 local timerStaticFieldCD		= mod:NewCDTimer(15.5, 57430, nil, nil, nil, 3)--High 15-25 second variatoin
 local timerAchieve      		= mod:NewAchievementTimer(360, 1875)
@@ -71,23 +69,16 @@ function mod:StaticFieldTarget()
 		buildGuidTable()
 	end
 	local announcetarget = guids[targetGuid]
+	if not announcetarget then return end
 	if announcetarget == UnitName("player") then
 		specWarnStaticField:Show()
 		specWarnStaticField:Play("runaway")
 		yellStaticField:Yell()
+	elseif self:CheckNearby(13, announcetarget) then
+		specWarnStaticFieldNear:Show(announcetarget)
+		specWarnStaticFieldNear:Play("runaway")
 	else
-		local uId2 = DBM:GetRaidUnitId(announcetarget)
-		if uId2 then
-			local inRange = DBM.RangeCheck:GetDistance("player", uId2)
-			if inRange and inRange < 13 then
-				specWarnStaticFieldNear:Show(announcetarget)
-				specWarnStaticFieldNear:Play("runaway")
-			else
-				warnStaticField:Show(announcetarget)
-			end
-		else
-			warnStaticField:Show(announcetarget)
-		end
+		warnStaticField:Show(announcetarget)
 	end
 end
 
@@ -98,6 +89,15 @@ function mod:OnCombatStart(delay)
 	enrageTimer:Start(-delay)
 	timerAchieve:Start(-delay)
 	table.wipe(guids)
+	if not self:IsClassic() then--Use better more accurate method on retail where boss UnitIds are available
+		self:RegisterShortTermEvents(
+			"UNIT_SPELLCAST_SUCCEEDED boss1"
+		)
+	else--Use legacy localized trigger and syncs
+		self:RegisterShortTermEvents(
+			"RAID_BOSS_EMOTE"
+		)
+	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
@@ -157,14 +157,14 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	end
 end
 
+--Localized trigger for Wrath Classic
 function mod:RAID_BOSS_EMOTE(msg)
 	if msg == L.EmoteSpark or msg:find(L.EmoteSpark) then
 		self:SendSync("Spark")
 	end
 end
 
---local free triggers but not reliable in instances that didn't impliment bossN args so backup emote/yell triggers still in place.
---Anti spam will be handled by sync handler
+--localization free triggers that's better but can only be used on retail where boss1 UnitId available
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 --	"<39.8> [UNIT_SPELLCAST_SUCCEEDED] Malygos:Possible Target<Omegal>:target:Summon Power Spark::0:56140", -- [998]
 	if spellId == 56140 then
@@ -174,6 +174,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 end
 
 function mod:OnSync(event, arg)
+	if not self:IsInCombat() then return end
 	if event == "Phase2" then
 		self:SetStage(2)
 		timerSpark:Cancel()
@@ -187,5 +188,8 @@ function mod:OnSync(event, arg)
 		self:Schedule(6, buildGuidTable)
 		timerBreathCD:Cancel()
 --		timerStaticFieldCD:Start(49.5)--Consistent?
+	elseif event == "Spark" then
+		warnSpark:Show()
+		timerSpark:Start()
 	end
 end

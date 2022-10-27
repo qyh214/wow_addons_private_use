@@ -8,7 +8,7 @@ function NPC:GOSSIP_SHOW(customGossipHandler)
 end
 
 function NPC:GOSSIP_CLOSED(...)
-	API:CloseGossip()
+	API:CloseGossip(true, ...)
 	self:PlayOutro()
 	L.ClickedTitleCache = nil
 end
@@ -43,7 +43,7 @@ function NPC:QUEST_COMPLETE(...)
 end
 
 function NPC:QUEST_FINISHED(...)
-	API:CloseQuest()
+	API:CloseQuest(true)
 	self:PlayOutro()
 --	if self:IsGossipAvailable(true) then
 --		self:OnEvent('GOSSIP_SHOW')
@@ -129,4 +129,10 @@ end
 function NPC:SUPER_TRACKING_CHANGED()
 	self:PlaySuperTrackedQuestToast(ImmersionAPI:GetSuperTrackedQuestID())
 	return self.lastEvent
+end
+
+function NPC:PLAYER_INTERACTION_MANAGER_FRAME_SHOW(type)
+	if API:ShouldCloseOnInteraction(type) then
+		self:ForceClose(false)
+	end
 end

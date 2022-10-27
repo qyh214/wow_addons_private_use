@@ -41,9 +41,13 @@ Note: All other arguments can be used as a general!
  textHeight ..... Default is 0 (auto height).
  textX .......... Default is 25. Left and Right margin.
  textY .......... Default is 20 (top margin).
- editbox ........ [optional] Edit box text string (directing value). Edit box is out of content flow.
- editboxWidth ... Default is 400.
- editboxLeft, editboxBottom
+ editbox ........ [optional] Table of edit boxes. Edit box is out of content flow.
+                  One table keys:
+                  - text ..... [required]
+                  - width .... Default is 400
+                  - left ..... Default is 0
+                  - top ...... Default is 0
+                  - bottom ... Default is 0
  button ......... [optional] Button text string (directing value). Button is out of content flow.
  buttonWidth .... Default is 100.
  buttonClick .... Function with button's click action.
@@ -63,7 +67,7 @@ local format = string.format
 local strfind = string.find
 local round = function(n) return floor(n + 0.5) end
 
-local Lib = LibStub:NewLibrary('MSA-Tutorials-1.0', 4)
+local Lib = LibStub:NewLibrary('MSA-Tutorials-1.0', 11)
 if Lib then
 	Lib.NewFrame, Lib.NewButton, Lib.UpdateFrame = nil
 	Lib.numFrames = Lib.numFrames or 1
@@ -74,6 +78,7 @@ end
 
 local BUTTON_TEX = 'Interface\\Buttons\\UI-SpellbookIcon-%sPage-%s'
 local Frames = Lib.frames
+local freeEditboxes = {}
 
 local default = {
 	title = "Tutorial",
@@ -85,7 +90,6 @@ local default = {
 	textHeight = 0,
 	textX = 25,
 	textY = 20,
-	editboxWidth = 400,
 	buttonWidth = 100,
 	point = "CENTER",
 	anchor = UIParent,
@@ -95,6 +99,35 @@ local default = {
 }
 
 --[[ Internal API ]]--
+
+local function ConvertPixelsToUI(pixels, frameScale)
+	local physicalScreenHeight = select(2, GetPhysicalScreenSize());
+	return (pixels * 768.0)/(physicalScreenHeight * frameScale);
+end
+
+local function NewEditbox(frame, width)
+	local numFreeEditboxes = #freeEditboxes
+	local editbox
+	if numFreeEditboxes > 0 then
+		editbox = tremove(freeEditboxes, numFreeEditboxes)
+		editbox:SetParent(frame)
+	else
+		editbox = CreateFrame('EditBox', nil, frame, 'InputBoxTemplate')
+		editbox:SetAutoFocus(false)
+	end
+	editbox:SetWidth(width)
+	editbox:SetHeight(20)
+	editbox:Show()
+	return editbox
+end
+
+local function RemoveEditboxes(frame)
+	for i = 1, #frame.editboxes do
+		tinsert(freeEditboxes, frame.editboxes[i])
+		frame.editboxes[i]:Hide()
+		frame.editboxes[i] = nil
+	end
+end
 
 local function UpdateFrame(frame, i)
 	local data = frame.data[i]
@@ -119,16 +152,14 @@ local function UpdateFrame(frame, i)
 	if frame.data.onShow then
 		frame.data.onShow(frame.data, i)
 	end
-	if frame.data.onHide then
-		frame.data.onHide()
-	end
 
 	-- Frame
 	frame:ClearAllPoints()
 	frame:SetPoint(data.point, data.anchor, data.relPoint, data.x, data.y)
 	frame:SetWidth(data.width + 16)
-	frame.TitleText:SetPoint('TOP', 0, -5)
-	frame.TitleText:SetText(data.title)
+    local titleText = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and frame.TitleContainer.TitleText or frame.TitleText
+	titleText:SetPoint('TOP', 0, -5)
+	titleText:SetText(data.title)
 	
 	-- Cache inline texture
 	local j, idx = 1, 1
@@ -177,14 +208,19 @@ local function UpdateFrame(frame, i)
 	frame:Show()
 
 	-- EditBox
+	RemoveEditboxes(frame)
 	if data.editbox then
-		frame.editbox:ClearFocus()
-		frame.editbox:SetWidth(data.editboxWidth)
-		frame.editbox:SetPoint('BOTTOMLEFT', 14 + data.textX + (data.editboxLeft or 0), 28 + 18 + (data.editboxBottom or 0))
-		frame.editbox:SetText(data.editbox)
-		frame.editbox:Show()
-	else
-		frame.editbox:Hide()
+		for i = 1, #data.editbox do
+			frame.editboxes[i] = NewEditbox(frame, data.editbox[i].width or 400)
+			frame.editboxes[i]:ClearFocus()
+			frame.editboxes[i]:ClearAllPoints()
+			if data.editbox[i].top then
+				frame.editboxes[i]:SetPoint('TOPLEFT', 14 + data.textX + (data.editbox[i].left or 0), -(60 + data.textY + (data.editbox[i].top or 0)))
+			elseif data.editbox[i].bottom then
+				frame.editboxes[i]:SetPoint('BOTTOMLEFT', 14 + data.textX + (data.editbox[i].left or 0), 28 + 18 + (data.editbox[i].bottom or 0))
+			end
+			frame.editboxes[i]:SetText(data.editbox[i].text)
+		end
 	end
 
 	-- Button
@@ -237,7 +273,7 @@ local function NewButton(frame, name, direction)
 	button:SetDisabledTexture(BUTTON_TEX:format(name, 'Disabled'))
 	button:SetPushedTexture(BUTTON_TEX:format(name, 'Down'))
 	button:SetNormalTexture(BUTTON_TEX:format(name, 'Up'))
-	button:SetPoint('BOTTOM'..((direction == -1) and 'LEFT' or 'RIGHT'), -(30 * direction), 2)
+	button:SetPoint('BOTTOM'..((direction == -1) and 'LEFT' or 'RIGHT'), -(30 * direction), 1)
 	button:SetSize(26, 26)
 	button:SetScript('OnClick', function()
 		UpdateFrame(frame, frame.i + direction)
@@ -252,8 +288,13 @@ end
 
 local function NewFrame(data)
 	local frame = CreateFrame('Frame', 'Tutorials'..Lib.numFrames, UIParent, 'ButtonFrameTemplate')
-	frame.portrait:SetPoint('TOPLEFT', data.icon and -4 or -3, data.icon and 6 or 5)
-	frame.portrait:SetTexture(data.icon or 'Interface\\TutorialFrame\\UI-HELP-PORTRAIT')
+	if UIParent:GetScale() < 0.65 then
+		local scale = ConvertPixelsToUI(1, frame:GetEffectiveScale())
+		frame:SetScale(scale)  -- UIParent 0.64 scale correction
+	end
+	local portrait = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and frame:GetPortrait() or frame.portrait
+	portrait:SetPoint('TOPLEFT', -3, 5)
+	portrait:SetTexture(data.icon or 'Interface\\TutorialFrame\\UI-HELP-PORTRAIT')
 	frame.Inset:SetPoint('TOPLEFT', 4, -23)
 	frame.Inset.Bg:SetColorTexture(0, 0, 0)
 
@@ -263,12 +304,13 @@ local function NewFrame(data)
 		frame.text:SetFont(data.font, 12)
 	end
 	frame.text:SetJustifyH('LEFT')
+	frame.editboxes = {}
 	
 	frame.prev = NewButton(frame, 'Prev', -1)
 	frame.next = NewButton(frame, 'Next', 1)
 	
 	frame.pageNum = frame:CreateFontString(nil, nil, 'GameFontHighlightSmall')
-	frame.pageNum:SetPoint('BOTTOM', 0, 10)
+	frame.pageNum:SetPoint('BOTTOM', 0, 9)
 	
 	frame:SetFrameStrata('DIALOG')
 	frame:SetClampedToScreen(true)
@@ -277,19 +319,17 @@ local function NewFrame(data)
 	frame:SetScript('OnHide', function()
 		frame.flash:Stop()
 		frame.shine:Hide()
+		if frame.data.onHide then
+			frame.data.onHide()
+		end
 	end)
-
-	frame.editbox = CreateFrame('EditBox', nil, frame, 'InputBoxTemplate')
-	frame.editbox:SetHeight(20)
-	frame.editbox:SetAutoFocus(false)
-	frame.editbox:Hide()
 
 	frame.button = CreateFrame('Button', nil, frame, 'UIPanelButtonTemplate')
 	frame.button:SetSize(100, 22)
 	frame.button:SetPoint("CENTER")
 	frame.button:Hide()
 
-	frame.shine = CreateFrame('Frame', nil, frame, 'BackdropTemplate')
+	frame.shine = CreateFrame('Frame', nil, frame, BackdropTemplateMixin and 'BackdropTemplate')
 	frame.shine:SetBackdrop({edgeFile = 'Interface\\TutorialFrame\\UI-TutorialFrame-CalloutGlow', edgeSize = 16})
 	for i = 1, frame.shine:GetNumRegions() do
 		select(i, frame.shine:GetRegions()):SetBlendMode('ADD')
@@ -348,8 +388,6 @@ function Lib:ResetTutorial()
 			local table = frame.data.key and frame.data.savedvariable or _G
 			table[sv] = false
 		end
-		
-		frame:Hide()
 	end
 end
 

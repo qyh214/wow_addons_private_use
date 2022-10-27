@@ -74,6 +74,13 @@ options.superTracker = {
                     name = L["No Distance Limitation"],
                     desc = L["Force to track the target even if it over 1000 yds."],
                     width = 1.5
+                },
+                noUnit = {
+                    order = 4,
+                    type = "toggle",
+                    name = L["No Unit"],
+                    desc = L["Remove the unit in distance text."],
+                    width = 1.5
                 }
             }
         },
@@ -645,17 +652,18 @@ options.minimapButtons = {
                 E:StaticPopup_Show("PRIVATE_RL")
             end,
             args = {
-                calendar = {
-                    order = 1,
-                    type = "toggle",
-                    name = L["Calendar"],
-                    desc = L["Add calendar button to the bar."]
-                },
-                garrison = {
+                -- calendar = {
+                --     order = 1,
+                --     type = "toggle",
+                --     name = L["Calendar"],
+                --     desc = L["Add calendar button to the bar."]
+                -- },
+                expansionLandingPage = {
                     order = 2,
                     type = "toggle",
-                    name = L["Garrison"],
-                    desc = L["Add garrison button to the bar."]
+                    name = L["Expansion Landing Page"],
+                    desc = L["Add expansion landing page (ex. garrison) to the bar."],
+                    width = 2
                 }
             }
         }

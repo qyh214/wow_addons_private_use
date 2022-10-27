@@ -1,9 +1,10 @@
 local mod	= DBM:NewMod("Champions", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200222200840")
+mod:SetRevision("20221010034753")
 mod:SetCreatureID(34458, 34451, 34459, 34448, 34449, 34445, 34456, 34447, 34441, 34454, 34444, 34455, 34450, 34453, 34461, 34460, 34469, 34467, 34468, 34471, 34465, 34466, 34473, 34472, 34470, 34463, 34474, 34475)
 --mod:SetEncounterID(1086)--This must never be enabled
+mod:SetBossHPInfoToHighest()
 
 mod:RegisterCombat("combat")
 mod:RegisterKill("yell", L.AllianceVictory, L.HordeVictory)
@@ -21,11 +22,11 @@ local preWarnBladestorm 	= mod:NewSoonAnnounce(65947, 3)
 local warnBladestorm		= mod:NewSpellAnnounce(65947, 4)
 local warnHeroism			= mod:NewSpellAnnounce(65983, 3)
 local warnBloodlust			= mod:NewSpellAnnounce(65980, 3)
-local warnHandofFreedom		= mod:NewTargetAnnounce(66115, 2)
+local warnHandofFreedom		= mod:NewTargetNoFilterAnnounce(66115, 2)
 local warnShadowstep		= mod:NewSpellAnnounce(66178, 2)
-local warnDeathgrip			= mod:NewTargetAnnounce(66017, 2)
-local warnCyclone			= mod:NewTargetAnnounce(65859, 1, nil, false)
-local warnSheep				= mod:NewTargetAnnounce(65801, 1, nil, false)
+local warnDeathgrip			= mod:NewTargetNoFilterAnnounce(66017, 2)
+local warnCyclone			= mod:NewTargetNoFilterAnnounce(65859, 1, nil, false)
+local warnSheep				= mod:NewTargetNoFilterAnnounce(65801, 1, nil, false)
 
 local specWarnHellfire		= mod:NewSpecialWarningMove(65816, nil, nil, nil, 1, 2)
 local specWarnHandofProt	= mod:NewSpecialWarningDispel(66009, "MagicDispeller", nil, nil, 1, 2)

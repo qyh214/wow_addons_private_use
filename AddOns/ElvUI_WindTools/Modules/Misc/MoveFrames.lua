@@ -20,6 +20,7 @@ local BlizzardFrames = {
     "BankFrame",
     "ChatConfigFrame",
     "CinematicFrame",
+    "ContainerFrameCombinedBags",
     "DestinyFrame",
     "FriendsFrame",
     "GameMenuFrame",
@@ -27,7 +28,6 @@ local BlizzardFrames = {
     "GuildInviteFrame",
     "GuildRegistrarFrame",
     "HelpFrame",
-    "InterfaceOptionsFrame",
     "ItemTextFrame",
     "LFDRoleCheckPopup",
     "LFGDungeonReadyDialog",
@@ -37,6 +37,7 @@ local BlizzardFrames = {
     "PetitionFrame",
     "PetStableFrame",
     "ReportFrame",
+    "PVEFrame",
     "PVPReadyDialog",
     "QuestFrame",
     "QuestLogPopupDetailFrame",
@@ -44,6 +45,7 @@ local BlizzardFrames = {
     "RaidParentFrame",
     "ReadyCheckFrame",
     "ReportCheatingDialog",
+    "SettingsPanel",
     "SpellBookFrame",
     "SplashFrame",
     "TabardFrame",
@@ -55,8 +57,7 @@ local BlizzardFrames = {
         "PaperDollFrame",
         "ReputationFrame",
         "TokenFrame",
-        "TokenFramePopup",
-        "TokenFrameContainer"
+        "TokenFramePopup"
     },
     ["DressUpFrame"] = {
         "DressUpFrame.OutfitDetailsPanel"
@@ -66,10 +67,6 @@ local BlizzardFrames = {
         "OpenMailFrame",
         "OpenMailSender"
     },
-    ["PVEFrame"] = {
-        "LFGListApplicationViewerScrollFrame",
-        "LFGListSearchPanelScrollFrame"
-    },
     ["WorldMapFrame"] = {
         "QuestMapFrame"
     }
@@ -78,9 +75,8 @@ local BlizzardFrames = {
 local BlizzardFramesOnDemand = {
     ["Blizzard_AchievementUI"] = {
         ["AchievementFrame"] = {
-            "AchievementFrameHeader",
-            "AchievementFrameAchievementsContainer",
-            "AchievementFrameCategoriesContainer"
+            "AchievementFrame.Header",
+            "AchievementFrame.SearchResults"
         }
     },
     ["Blizzard_AlliedRacesUI"] = {
@@ -109,6 +105,11 @@ local BlizzardFramesOnDemand = {
     },
     ["Blizzard_BlackMarketUI"] = {
         "BlackMarketFrame"
+    },
+    ["Blizzard_ClassTalentUI"] = {
+        ["ClassTalentFrame"] = {
+            "ClassTalentFrame.TalentsTab.ButtonsParent"
+        }
     },
     ["Blizzard_Calendar"] = {
         ["CalendarFrame"] = {
@@ -142,10 +143,13 @@ local BlizzardFramesOnDemand = {
     },
     ["Blizzard_Communities"] = {
         "ClubFinderGuildFinderFrame.RequestToJoinFrame",
-        ["CommunitiesFrame"] = {
-            "ClubFinderCommunityAndGuildFinderFrame.CommunityCards.ListScrollFrame"
-        },
+        "ClubFinderCommunityAndGuildFinderFrame.RequestToJoinFrame",
+        -- ["CommunitiesFrame"] = {
+        --     "CommunitiesFrame.GuildMemberDetailFrame",
+        --     "CommunitiesFrame.NotificationSettingsDialog"
+        -- }
         "CommunitiesFrame.RecruitmentDialog",
+        "CommunitiesSettingsDialog",
         "CommunitiesGuildLogFrame",
         "CommunitiesGuildNewsFiltersFrame",
         "CommunitiesGuildTextEditFrame"
@@ -167,12 +171,13 @@ local BlizzardFramesOnDemand = {
     },
     ["Blizzard_EncounterJournal"] = {
         ["EncounterJournal"] = {
-            "EncounterJournal.instanceSelect.scroll",
-            "EncounterJournal.encounter.instance.loreScroll",
+            "EncounterJournal.instanceSelect.ScrollBox",
             "EncounterJournal.encounter.info.overviewScroll",
-            "EncounterJournal.encounter.info.lootScroll",
             "EncounterJournal.encounter.info.detailsScroll"
         }
+    },
+    ["Blizzard_ExpansionLandingPage"] = {
+        "ExpansionLandingPage"
     },
     ["Blizzard_FlightMap"] = {
         "FlightMapFrame"
@@ -180,10 +185,6 @@ local BlizzardFramesOnDemand = {
     ["Blizzard_GarrisonUI"] = {
         "GarrisonBuildingFrame",
         "GarrisonCapacitiveDisplayFrame",
-        ["GarrisonLandingPage"] = {
-            "GarrisonLandingPageReportListListScrollFrame",
-            "GarrisonLandingPageFollowerListListScrollFrame"
-        },
         "GarrisonMissionFrame",
         "GarrisonMonumentFrame",
         "GarrisonRecruiterFrame",
@@ -199,6 +200,15 @@ local BlizzardFramesOnDemand = {
             "CovenantMissionFrame.MissionTab.MissionList.MaterialFrame",
             "CovenantMissionFrame.FollowerList.listScroll",
             "CovenantMissionFrame.FollowerList.MaterialFrame"
+        },
+        ["GarrisonLandingPage"] = {
+            "GarrisonLandingPageReportListListScrollFrame",
+            "GarrisonLandingPageFollowerListListScrollFrame"
+        }
+    },
+    ["Blizzard_GenericTraitUI"] = {
+        ["GenericTraitFrame"] = {
+            "GenericTraitFrame.ButtonsParent"
         }
     },
     ["Blizzard_GMChatUI"] = {
@@ -240,6 +250,9 @@ local BlizzardFramesOnDemand = {
     ["Blizzard_MacroUI"] = {
         "MacroFrame"
     },
+    ["Blizzard_MajorFactions"] = {
+        "MajorFactionRenownFrame"
+    },
     ["Blizzard_ObliterumUI"] = {
         "ObliterumForgeFrame"
     },
@@ -248,6 +261,15 @@ local BlizzardFramesOnDemand = {
     },
     ["Blizzard_PlayerChoice"] = {
         "PlayerChoiceFrame"
+    },
+    ["Blizzard_Professions"] = {
+        "ProfessionsFrame"
+    },
+    ["Blizzard_ProfessionsCustomerOrders"] = {
+        ["ProfessionsCustomerOrdersFrame"] = {
+            "ProfessionsCustomerOrdersFrame.Form",
+            "ProfessionsCustomerOrdersFrame.Form.CurrentListings"
+        }
     },
     ["Blizzard_PVPMatch"] = {
         "PVPMatchResults"
@@ -275,12 +297,6 @@ local BlizzardFramesOnDemand = {
     },
     ["Blizzard_TorghastLevelPicker"] = {
         "TorghastLevelPickerFrame"
-    },
-    ["Blizzard_TradeSkillUI"] = {
-        ["TradeSkillFrame"] = {
-            "TradeSkillFrame.RecipeList",
-            "TradeSkillFrame.OptionalReagentList"
-        }
     },
     ["Blizzard_TrainerUI"] = {
         "ClassTrainerFrame"

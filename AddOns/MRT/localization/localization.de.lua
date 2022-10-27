@@ -1045,4 +1045,4 @@ L.creatureNames = {	--> Used LibBabble-CreatureType and WowHead
 	[3] = "Wildheit",
 }
 
-L.TranslateBy = "Ruuldan, Gyffes und Cathlin von IHL-Gilneas EU und Ilki(Magier). Wenn Ihr fehler oder Verbesserungen findet lasst es uns wissen IHL-Gilneas.de"
+L.TranslateBy = "Ruuldan, Gyffes und Cathlin von IHL-Gilneas EU und Ilki. Wenn ihr Fehler oder Verbesserungen findet, lasst es uns wissen IHL-Gilneas.de"

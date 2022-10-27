@@ -1,9 +1,9 @@
-## Interface: 90205
+## Interface: 100000
 ## Title: BtWLoadouts
-## Version: v1.7.5
+## Version: v1.8.6
 ## Notes: Change your characters spec, talents, equipment, essences, and action bars all at once
 ## Author: Breen
-## SavedVariables: BtWLoadoutsSets, BtWLoadoutsSpecInfo, BtWLoadoutsRoleInfo, BtWLoadoutsEssenceInfo, BtWLoadoutsCharacterInfo, BtWLoadoutsHelpTipFlags, BtWLoadoutsSettings
+## SavedVariables: BtWLoadoutsSets, BtWLoadoutsSpecInfo, BtWLoadoutsRoleInfo, BtWLoadoutsEssenceInfo, BtWLoadoutsCharacterInfo, BtWLoadoutsHelpTipFlags, BtWLoadoutsSettings, BtWLoadoutsTraitsInfo
 ## SavedVariablesPerCharacter: BtWLoadoutsCollapsed, BtWLoadoutsCategories, BtWLoadoutsFilters
 ## OptionalDeps: OPie, Adibags, Bagnon
 ## X-Curse-Project-ID: 336400
@@ -28,6 +28,7 @@ BtWLoadouts.xml
 
 Loadouts.xml
 Talents.xml
+DFTalents.xml
 PvPTalents.xml
 Essences.xml
 Soulbinds.xml

@@ -44,7 +44,7 @@
 --   - setter: The setter function, called both on activating and deactivating a property change
 ---  - action: The action function, called on activating a condition
 --   - type: The type
-if not WeakAuras.IsCorrectVersion() or not WeakAuras.IsLibsOK() then return end
+if not WeakAuras.IsLibsOK() then return end
 local AddonName, OptionsPrivate = ...
 
 local WeakAuras = WeakAuras;
@@ -557,6 +557,7 @@ local function addControlsForChange(args, order, data, conditionVariable, totalA
       type = "select",
       width = WeakAuras.normalWidth,
       values = OptionsPrivate.Private.sound_types,
+      sorting = OptionsPrivate.Private.SortOrderForValues(OptionsPrivate.Private.sound_types),
       name = blueIfNoValue2(data, conditions[i].changes[j], "value", "sound", L["Differences"]),
       desc = descIfNoValue2(data, conditions[i].changes[j], "value", "sound", propertyType, OptionsPrivate.Private.sound_types),
       order = order,
@@ -564,7 +565,6 @@ local function addControlsForChange(args, order, data, conditionVariable, totalA
         return type(conditions[i].changes[j].value) == "table" and conditions[i].changes[j].value.sound;
       end,
       set = wrapWithPlaySound(setValueComplex("sound")),
-      control = "WeakAurasSortedDropdown",
       hidden = function() return not (anySoundType("Play") or anySoundType("Loop")) end
     }
     order = order + 1;
@@ -660,6 +660,7 @@ local function addControlsForChange(args, order, data, conditionVariable, totalA
       type = "select",
       width = WeakAuras.normalWidth,
       values = OptionsPrivate.Private.send_chat_message_types,
+      sorting = OptionsPrivate.Private.SortOrderForValues(OptionsPrivate.Private.send_chat_message_types),
       name = blueIfNoValue2(data, conditions[i].changes[j], "value", "message_type", L["Differences"]),
       desc = descIfNoValue2(data, conditions[i].changes[j], "value", "message_type", propertyType, OptionsPrivate.Private.send_chat_message_types),
       order = order,
@@ -667,7 +668,6 @@ local function addControlsForChange(args, order, data, conditionVariable, totalA
         return type(conditions[i].changes[j].value) == "table" and conditions[i].changes[j].value.message_type;
       end,
       set = setValueComplex("message_type"),
-      control = "WeakAurasSortedDropdown"
     }
     order = order + 1;
 

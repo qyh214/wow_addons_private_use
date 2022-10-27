@@ -2,11 +2,11 @@
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	local _detalhes = _G._detalhes
-	local Loc = LibStub ("AceLocale-3.0"):GetLocale ( "Details" )
+	local Loc = LibStub("AceLocale-3.0"):GetLocale ( "Details" )
 	local _
 	
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---> local pointers
+--local pointers
 
 	local _math_floor = math.floor --lua local
 	local _cstr = string.format --lua local
@@ -19,13 +19,13 @@
 	local CLASS_ICON_TCOORDS = CLASS_ICON_TCOORDS
 	
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---> constants
+--constants
 
 	local modo_raid = _detalhes._detalhes_props["MODO_RAID"]
 	local modo_alone = _detalhes._detalhes_props["MODO_ALONE"]
 	
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---> internal functions	
+--internal functions	
 	
 	function _detalhes.RaidTables:DisableRaidMode (instance)
 		--free
@@ -40,10 +40,10 @@
 	
 	function _detalhes:RaidPluginInstalled (plugin_name)
 		if (self.waiting_raid_plugin) then
-			--print (self.meu_id, 2, self.last_raid_plugin, " == ", plugin_name)
+			--print(self.meu_id, 2, self.last_raid_plugin, " == ", plugin_name)
 			if (self.last_raid_plugin == plugin_name) then
 				if (self.waiting_pid) then
-					self:CancelTimer (self.waiting_pid, true)
+					self:CancelTimer(self.waiting_pid, true)
 				end
 				self:CancelWaitForPlugin()
 				_detalhes.RaidTables:EnableRaidMode (self, plugin_name)
@@ -59,28 +59,28 @@
 	
 	function _detalhes.RaidTables:EnableRaidMode (instance, plugin_name, from_cooltip, from_mode_menu)
 
-		--> check if came from cooltip
+		--check if came from cooltip
 		if (from_cooltip) then
 			self = _detalhes.RaidTables
 			instance = plugin_name
 			plugin_name = from_cooltip
 		end
 	
-		--> set the mode
+		--set the mode
 		if (instance.modo == modo_alone) then
 			instance:SoloMode (false)
 		end
 		instance.modo = modo_raid
 		
-		--> hide rows, scrollbar
-		Details.FadeHandler.Fader (instance, 1, nil, "barras")
+		--hide rows, scrollbar
+		Details.FadeHandler.Fader(instance, 1, nil, "barras")
 		if (instance.rolagem) then
-			instance:EsconderScrollBar (true) --> hida a scrollbar
+			instance:EsconderScrollBar (true) --hida a scrollbar
 		end
 		_detalhes:ResetaGump (instance)
-		instance:RefreshMainWindow (true)
+		instance:RefreshMainWindow(true)
 		
-		--> get the plugin name
+		--get the plugin name
 		
 		--if the desired plugin isn't passed, try to get the latest used.
 		if (not plugin_name) then
@@ -107,11 +107,11 @@
 
 		--last check if the name is okey
 		if (self:IsAvailable (plugin_name, instance)) then
-			self:switch (nil, plugin_name, instance)
+			self:switch(nil, plugin_name, instance)
 			
 			if (from_mode_menu) then
 				--refresh
-				instance.baseframe.cabecalho.modo_selecao:GetScript ("OnEnter")(instance.baseframe.cabecalho.modo_selecao, _, true)
+				instance.baseframe.cabecalho.modo_selecao:GetScript("OnEnter")(instance.baseframe.cabecalho.modo_selecao, _, true)
 			end
 		else
 			if (not instance.wait_for_plugin) then
@@ -124,9 +124,9 @@
 
 	function _detalhes.RaidTables:GetAvailablePlugins()
 		local available = {}
-		for index, plugin in ipairs (self.Menu) do
+		for index, plugin in ipairs(self.Menu) do
 			if (not self.PluginsInUse [ plugin [4] ] and plugin [3].__enabled) then -- 3 = plugin object 4 = absolute name
-				tinsert (available, plugin)
+				tinsert(available, plugin)
 			end
 		end
 		return available
@@ -161,7 +161,7 @@
 
 	----------------
 	
-	function _detalhes.RaidTables:switch (_, plugin_name, instance)
+	function _detalhes.RaidTables:switch(_, plugin_name, instance)
 	
 		local update_menu = false
 		if (not self) then --came from cooltip
@@ -212,10 +212,10 @@
 			
 			self:SetInUse (plugin_name, instance:GetId())
 			plugin_object.instance_id = instance:GetId()
-			plugin_object.Frame:SetPoint ("TOPLEFT", instance.bgframe)
+			plugin_object.Frame:SetPoint("TOPLEFT", instance.bgframe)
 			plugin_object.Frame:Show()
-			instance:ChangeIcon (plugin_object.__icon)--; print (instance:GetId(),"icon",plugin_object.__icon)
-			_detalhes:SendEvent ("DETAILS_INSTANCE_CHANGEATTRIBUTE", nil, instance, instance.atributo, instance.sub_atributo)
+			instance:ChangeIcon (plugin_object.__icon)--; print(instance:GetId(),"icon",plugin_object.__icon)
+			_detalhes:SendEvent("DETAILS_INSTANCE_CHANGEATTRIBUTE", nil, instance, instance.atributo, instance.sub_atributo)
 			
 			if (update_menu) then
 				GameCooltip:ExecFunc (instance.baseframe.cabecalho.atributo)
@@ -238,7 +238,7 @@
 
 	
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---> built in announcers
+--built in announcers
 	
 	function _detalhes:SendMsgToChannel (msg, channel, towho)
 		if (channel == "RAID" or channel == "PARTY") then
@@ -249,10 +249,10 @@
 			
 		elseif (channel == "BNET") then
 		
-			if (type (towho) == "number") then
+			if (type(towho) == "number") then
 				BNSendWhisper (towho, msg)
 			
-			elseif (type (towho) == "string") then
+			elseif (type(towho) == "string") then
 				--local BnetFriends = BNGetNumFriends()
 				--for i = 1, BnetFriends do 
 				--	local presenceID, presenceName, battleTag, isBattleTagPresence, toonName, toonID, client, isOnline, lastOnline, isAFK, isDND, messageText, noteText, isRIDFriend, broadcastTime, canSoR = BNGetFriendInfo (i)
@@ -270,7 +270,7 @@
 			SendChatMessage (msg, channel, nil, towho)
 		
 		elseif (channel == "PRINT") then
-			print (msg)
+			print(msg)
 		
 		else --say channel?
 			if (IsInInstance()) then --patch 80205 cannot use 'say' channel outside instances
@@ -300,9 +300,9 @@
 			
 			local spellname
 			if (spellid > 10) then
-				spellname = GetSpellLink (extraSpellID)
+				spellname = GetSpellLink(extraSpellID)
 			else
-				spellname = _GetSpellInfo (extraSpellID)
+				spellname = _GetSpellInfo(extraSpellID)
 			end
 
 			if (channel == "RAID") then
@@ -323,9 +323,9 @@
 			end
 			
 			if (custom ~= "") then
-				custom = custom:gsub ("{spell}", spellname)
-				custom = custom:gsub ("{target}", alvo_name or "")
-				custom = custom:gsub ("{next}", next)
+				custom = custom:gsub("{spell}", spellname)
+				custom = custom:gsub("{target}", alvo_name or "")
+				custom = custom:gsub("{next}", next)
 				_detalhes:SendMsgToChannel (custom, channel, _detalhes.announce_interrupts.whisper)
 			else
 				local msg = _cstr (Loc ["STRING_OPTIONS_RT_INTERRUPT"], spellname)
@@ -342,20 +342,20 @@
 			
 			local spellname
 			if (spellid > 10) then
-				spellname = GetSpellLink (extraSpellID)
+				spellname = GetSpellLink(extraSpellID)
 			else
-				spellname = _GetSpellInfo (extraSpellID)
+				spellname = _GetSpellInfo(extraSpellID)
 			end
 
 			if (custom ~= "") then
-				custom = custom:gsub ("{spell}", spellname)
-				custom = custom:gsub ("{next}", who_name)
-				custom = custom:gsub ("{target}", alvo_name or "")
+				custom = custom:gsub("{spell}", spellname)
+				custom = custom:gsub("{next}", who_name)
+				custom = custom:gsub("{target}", alvo_name or "")
 				_detalhes:SendMsgToChannel (custom, "PRINT")
 			else
 				local minute, second = _detalhes:GetCombat():GetFormatedCombatTime()
 				
-				local _, class = _UnitClass (who_name)
+				local _, class = _UnitClass(who_name)
 				local class_color = "|cFFFF3333"
 				
 				if (class) then
@@ -366,7 +366,7 @@
 				if (second < 10) then
 					second = "0" .. second
 				end
-				local msg = "|cFFFFFF00[|r".. minute ..  ":" .. second .. "|cFFFFFF00]|r Interrupt: " .. spellname .. " (" .. class_color .. _detalhes:GetOnlyName (who_name) .. "|r)"
+				local msg = "|cFFFFFF00[|r".. minute ..  ":" .. second .. "|cFFFFFF00]|r Interrupt: " .. spellname .. " (" .. class_color .. _detalhes:GetOnlyName(who_name) .. "|r)"
 				
 				_detalhes:SendMsgToChannel (msg, "PRINT")
 			end
@@ -416,16 +416,16 @@
 
 			local spellname
 			if (spellid > 10) then
-				spellname = GetSpellLink (spellid)
+				spellname = GetSpellLink(spellid)
 			else
-				spellname = _GetSpellInfo (spellid)
+				spellname = _GetSpellInfo(spellid)
 			end
 
 			local custom = _detalhes.announce_cooldowns.custom
 			
 			if (custom ~= "") then
-				custom = custom:gsub ("{spell}", spellname)
-				custom = custom:gsub ("{target}", alvo_name or "")
+				custom = custom:gsub("{spell}", spellname)
+				custom = custom:gsub("{target}", alvo_name or "")
 				_detalhes:SendMsgToChannel (custom, channel, _detalhes.announce_interrupts.whisper)
 			else
 				local msg
@@ -457,10 +457,10 @@
 			local msg
 			local minute, second = _detalhes:GetCombat():GetFormatedCombatTime()
 			
-			local _, class = _UnitClass (who_name)
+			local _, class = _UnitClass(who_name)
 			local class_color = "|cFFFFFFFF"
 			
-			local _, class2 = _UnitClass (alvo_name)
+			local _, class2 = _UnitClass(alvo_name)
 			local class_color2 = "|cFFFFFFFF"
 			
 			if (class) then
@@ -471,22 +471,22 @@
 			if (class2) then
 				local coords = CLASS_ICON_TCOORDS [class2]
 				class_color2 = " -> |TInterface\\AddOns\\Details\\images\\classes_small_alpha:12:12:0:0:128:128:" .. coords[1]*128 .. ":" .. coords[2]*128 .. ":" .. coords[3]*128 .. ":" .. coords[4]*128 .. "|t |c" .. RAID_CLASS_COLORS [class2].colorStr
-				alvo_name = _detalhes:GetOnlyName (alvo_name)
+				alvo_name = _detalhes:GetOnlyName(alvo_name)
 			else
 				alvo_name = ""
 			end
 			
 			local spellname
 			if (spellid > 10) then
-				spellname = GetSpellLink (spellid)
+				spellname = GetSpellLink(spellid)
 			else
-				spellname = _GetSpellInfo (spellid)
+				spellname = _GetSpellInfo(spellid)
 			end
 			
 			if (second < 10) then
 				second = "0" .. second
 			end
-			msg = "|cFF8F8FFF[|r".. minute ..  ":" .. second .. "|cFF8F8FFF]|r Cooldown: " .. spellname .. " (" .. class_color .. _detalhes:GetOnlyName (who_name) .. "|r" .. class_color2 .. alvo_name .. "|r)"
+			msg = "|cFF8F8FFF[|r".. minute ..  ":" .. second .. "|cFF8F8FFF]|r Cooldown: " .. spellname .. " (" .. class_color .. _detalhes:GetOnlyName(who_name) .. "|r" .. class_color2 .. alvo_name .. "|r)"
 
 			_detalhes:SendMsgToChannel (msg, "PRINT")
 			
@@ -531,20 +531,20 @@
 					channel = "INSTANCE_CHAT"
 				end
 				
-			elseif (where == 4) then --> observer
+			elseif (where == 4) then --observer
 				if (zone ~= "raid" and zone ~= "party") then
 					return
 				end
 				channel = "PRINT"
 			
-			elseif (where == 5) then --> officers
+			elseif (where == 5) then --officers
 				if (IsInGuild()) then
 					channel = "OFFICER"
 				end
 			end
 			
 			local only_first = _detalhes.announce_deaths.only_first
-			--_detalhes:GetCombat ("current"):GetDeaths() is the same thing, but, it's faster without using the API.
+			--_detalhes:GetCombat("current"):GetDeaths() is the same thing, but, it's faster without using the API.
 			if (zone == "raid" and not _detalhes.tabela_vigente.is_boss) then
 				return
 			end
@@ -552,11 +552,11 @@
 				return
 			end
 			
-			alvo_name = _detalhes:GetOnlyName (alvo_name)
+			alvo_name = _detalhes:GetOnlyName(alvo_name)
 			
 			local msg
-			if (where == 4) then --> observer
-				local _, class = _UnitClass (alvo_name)
+			if (where == 4) then --observer
+				local _, class = _UnitClass(alvo_name)
 				local class_color = "|cFFFFFFFF"
 				
 				if (class) then
@@ -575,14 +575,14 @@
 			for i = 1, _detalhes.announce_deaths.last_hits do
 				for o = last, 1, -1 do
 					local this_death = death_table [o]
-					if (type (this_death[1]) == "boolean" and this_death[1] and this_death[4]+5 > time) then
+					if (type(this_death[1]) == "boolean" and this_death[1] and this_death[4]+5 > time) then
 						local spelllink
 						if (this_death [2] > 10) then
-							spelllink = GetSpellLink (this_death [2])
+							spelllink = GetSpellLink(this_death [2])
 						else
-							spelllink = "[" .. _GetSpellInfo (this_death [2]) .. "]"
+							spelllink = "[" .. _GetSpellInfo(this_death [2]) .. "]"
 						end
-						spells = spelllink .. ": " .. _detalhes:ToK2 (_math_floor (this_death [3])) .. " " .. spells
+						spells = spelllink .. ": " .. _detalhes:ToK2 (_math_floor(this_death [3])) .. " " .. spells
 						last = o-1
 						break
 					end
@@ -591,7 +591,7 @@
 			
 			msg = msg .. " " .. spells
 			
-			if (where == 4) then --> observer
+			if (where == 4) then --observer
 				local minute, second = _detalhes:GetCombat():GetFormatedCombatTime()
 				if (second < 10) then
 					second = "0" .. second

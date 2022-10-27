@@ -1,3 +1,7 @@
+##### v1.3.5 Update for 9.2.7
+
+- update `.toc` for 9.2.7
+
 ##### v1.3.4 Update for 9.2.5
 
 - update `.toc` for 9.2.5
